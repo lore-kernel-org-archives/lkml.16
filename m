@@ -1,30 +1,25 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 777E1188580;
-	Tue, 22 Apr 2025 16:04:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0046B284B51
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745337892; cv=none; b=sL3T7yPNZ/FD9v4il7Mq2dYzebaEXjhUlveZeLr/z6Tp1SCedYKP+2awkUgM9k6aE2lcGhTUQ+LClDww8+p+X9/Uejennn3io75VyX1qmXG6nD3cy2vECPFN8getOVX7u4pnEvS6QFWMeXR61w7fnL0KtBuAZurJHCq+b2wJDns=
+	t=1745337960; cv=none; b=iJgt42QvR5Mds10PzoLEExT/0A8vrqEecSXTtmLNc7huIxU7wQ0JQTw0ujyomysCm1Z/mvxTl5k6kGDLlGbeNC/3at0VMdKF2Ibx9XxHl6ReZI5NPcf+wyFylh/B9rszofTu+gkCwg8NLGKSK8AZaUZo3PLavNAYU1WgO5Xkn1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745337892; c=relaxed/simple;
-	bh=9HbhIWQP91wR77BNQftG9Q0h3zb/aQNho4ixkkWOukw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L7GHlhT4s/fbmfVxF9naDekimNjOyLisgfTtCXBdOTXRv1KcgTF/Fi5mdld+hIyroVOFO0sz/ccjudVz5gSfqUq09c+UnFsX+INOW2Pch4T0UtxZo3bZJ4ZlKBPuEofj0gzBrCkl2HmLG2qoJhw+kZD73/U/py5ynxACa2ImgPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Y62cNb7h; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Y62cNb7h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=+kc1HcyFadApejOKhHPMGEBRAlKE59o9rLPd0PpuBik=;
-	b=Y62cNb7hI8toORNjyNf+5+ifAGKiGWZC+DxV44iarNTU+P3wmYCOdcSMUqJ4TJ
-	qheM/rW/DIXq1jeFHqp4vW2HGUYcKRjBRq6X9hHkwkawmJ8x+OwDqDnrSJiOioEh
-	Ctl5CvYG/a0BM/M3ZlvjmbyWy+9IQbd0qX0grkK//nAtc=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCH5SrSvQdo6ojTBg--.18334S2;
-	Wed, 23 Apr 2025 00:03:31 +0800 (CST)
-Message-ID: <6c962047-c258-40f5-966b-ec1e985e6cb7@163.com>
-Date: Wed, 23 Apr 2025 00:03:30 +0800
+	s=arc-20240116; t=1745337960; c=relaxed/simple;
+	bh=KDs//5oUpg0VSA3+2RTj00OPt5E7x7Y+uh8cwKS7qGg=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=PtnGmcAVy7jAZRKLTb1+xUwKk2V1tJ0mN4MrWvFGStLhr/T04xw5e8yLrJY4cu696zdQ/vKXEWdJn/sxxgPnFN2a4cu86nTXRxXXxpC3iQo/zpJPFZudlXfaI95xQ/sxmLhuji6fJdVi6Pi7Gt2bQimuownbEYTA8x+GJ66qHrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1u7G81-0003jx-Ha; Tue, 22 Apr 2025 18:05:45 +0200
+Message-ID: <53024a1d-a9a9-448f-9ddb-45efe4bece21@pengutronix.de>
+Date: Tue, 22 Apr 2025 18:05:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -32,177 +27,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] PCI: dw-rockchip: Reorganize register and bitfield
- definitions
-To: Niklas Cassel <cassel@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250422112830.204374-1-18255117159@163.com>
- <20250422112830.204374-3-18255117159@163.com> <aAeL_Wr42ETm7S96@ryzen>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aAeL_Wr42ETm7S96@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wCH5SrSvQdo6ojTBg--.18334S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr13ZFy5Xr43Gr47Aw4rAFb_yoW7CrykpF
-	WUJa4Skrs8t3yUC3sYg3Z8AFyIqr4fKFWYgr4SgrWUC3Z5A3W8Gr10qFW5WFy7Xr4kurWf
-	uwn8Ww17WF90krJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3Oz3UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwg3o2gHuI61MQAAsa
+Subject: Re: [PATCH 1/2] i2c: imx: use guard to take spinlock
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+To: Troy Mitchell <troymitchell988@gmail.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org,
+ Oleksij Rempel <o.rempel@pengutronix.de>, linux-i2c@vger.kernel.org,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Yongchao Jia <jyc0019@gmail.com>
+References: <20250421-i2c-imx-update-v1-0-1137f1f353d5@gmail.com>
+ <20250421-i2c-imx-update-v1-1-1137f1f353d5@gmail.com>
+ <20250422161213.0000597d@huawei.com>
+ <918e0177-8e26-405c-93ad-8b0d2dfd3b3d@gmail.com>
+ <54d062af-40ff-47b7-baec-c7e883defea3@pengutronix.de>
+Content-Language: en-US, de-DE, de-BE
+In-Reply-To: <54d062af-40ff-47b7-baec-c7e883defea3@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-
-
-On 2025/4/22 20:30, Niklas Cassel wrote:
-> On Tue, Apr 22, 2025 at 07:28:29PM +0800, Hans Zhang wrote:
->> Register definitions were scattered with ambiguous names (e.g.,
->> PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
->> hierarchical grouping. Magic values for bit operations reduced code
->> clarity.
+On 4/22/25 17:53, Ahmad Fatoum wrote:
+> Hello Troy,
+> 
+> On 4/22/25 17:26, Troy Mitchell wrote:
+>> On 2025/4/22 23:12, Jonathan Cameron wrote:
+>>> On Mon, 21 Apr 2025 13:36:38 +0800
+> 
+> [snip]
+> 
+>>> In this path the patch changes the lock release to occur after
+>>> i2c_imx_master_isr(i2c_imx, status);
+>>>
+>>> That may well be safe; I have no idea!  You should talk about that
+>>> in the patch description if it is.
+>> You're correct that this change slightly alters the lock release timing.
 >>
->> Group registers and their associated bitfields logically. This improves
->> maintainability and aligns the code with hardware documentation.
+>> However, both i2c_imx_slave_handle() and i2c_imx_master_isr() can safely be
+>> entered with the lock held — there's no requirement for the lock to be released
+>> before calling them.
+> 
+> Why would we want to hold a spinlock out of all things longer than
+> absolutely necessary?
+> 
+>> Using guard(spinlock_irqsave) simplifies the control flow by ensuring consistent
+>> and automatic unlock, which improves readability without affecting correctness.
 >>
->> Signed-off-by: Hans Zhang <18255117159@163.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 42 +++++++++++--------
->>   1 file changed, 24 insertions(+), 18 deletions(-)
+>> I'll update the commit message to clarify this.
+> 
+> Sorry, I don't think that this simplification is worth potentially
+> increasing the time we spend with preemption disabled,
+> i2c_imx_master_isr() even has a loop inside.
+
+Ah the loop is in lpi2c_imx_master_isr, sorry about the confusion.
+I still think that the simplification isn't worth increasing critical
+section size.
+
+> Guards that don't increase critical section size however are fine by me.
+
+Thanks,
+Ahmad
+
+> 
+> Thanks,
+> Ahmad
+> 
 >>
->> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> index fd5827bbfae3..cdc8afc6cfc1 100644
->> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
->> @@ -8,6 +8,7 @@
->>    * Author: Simon Xue <xxm@rock-chips.com>
->>    */
->>   
->> +#include <linux/bitfield.h>
->>   #include <linux/clk.h>
->>   #include <linux/gpio/consumer.h>
->>   #include <linux/irqchip/chained_irq.h>
->> @@ -34,30 +35,35 @@
->>   
->>   #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
->>   
->> -#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
->> -#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
->> -#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
->> -#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
->> -#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
->> +#define PCIE_CLIENT_GENERAL_CONTROL	0x0
->> +#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
->> +#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
->> +#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
->> +#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
->> +
->> +#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x4
->> +#define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
->> +
->>   #define PCIE_CLIENT_INTR_STATUS_MISC	0x10
->> +#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
->> +#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
->> +
->> +#define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
->>   #define PCIE_CLIENT_INTR_MASK_MISC	0x24
->> +
->>   #define PCIE_CLIENT_POWER		0x2c
->> +#define  PME_READY_ENTER_L23		BIT(3)
->> +
->>   #define PCIE_CLIENT_MSG_GEN		0x34
->> -#define PME_READY_ENTER_L23		BIT(3)
->> -#define PME_TURN_OFF			(BIT(4) | BIT(20))
->> -#define PME_TO_ACK			(BIT(9) | BIT(25))
->> -#define PCIE_SMLH_LINKUP		BIT(16)
->> -#define PCIE_RDLH_LINKUP		BIT(17)
->> -#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+>>>
+>>>> +
+>>>>  		return i2c_imx_master_isr(i2c_imx, status);
+>>>>  	}
+>>>> -	spin_unlock_irqrestore(&i2c_imx->slave_lock, flags);
+>>>>  
+>>>>  	return IRQ_NONE;
+>>>>  }
+>>
 > 
-> This patch removes PCIE_LINKUP, without adding it somewhere else
-> so I don't think this patch will compile.
-> 
-> I think the removal of this line has to be in patch 3/3.
-> 
-> 
-> 
-> Also, I think that Bjorn's primary concern:
-> """
-> The #defines for register offsets and bits are kind of a mess,
-> e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
-> PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
-> PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
-> names, and they're not even defined together.
-> """"
-> 
-> is that the fields are not prefixed with the register name.
 
-Hi Niklas,
-
-As per rk3588 TRM, section "11.4.2.1 PCIE_CLIENT Registers Summary 
-Detail Registers Description"
-
-The register names are as follows. I plan to add comments for each 
-register in the next version, and the comments come from the register 
-description of TRM.
-
-/* General Control Register */
-#define PCIE_CLIENT_GENERAL_CON		0x0
-#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
-#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
-
-/* Interrupt Status Register Related to Message Reception */
-#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x4
-
-/* Interrupt Status Register Related to Legacy Interrupt */
-#define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
-
-/*  Interrupt Status Register Related to Miscellaneous Operation */
-#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
-#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
-#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
-
-/* Interrupt Mask Register Related to Legacy Interrupt */
-#define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
-
-/* Interrupt Mask Register Related to Miscellaneous Operation */
-#define PCIE_CLIENT_INTR_MASK_MISC	0x24
-
-/* Power Management Control Register */
-#define PCIE_CLIENT_POWER_CON		0x2c
-#define  PME_READY_ENTER_L23		BIT(3)
-
-/*  Message Generation Control Register */
-#define PCIE_CLIENT_MSG_GEN_CON		0x34
-#define  PME_TURN_OFF			HIWORD_UPDATE_BIT(BIT(4))
-#define  PME_TO_ACK			HIWORD_UPDATE_BIT(BIT(9))
-
-/* Hot Reset Control Register */
-#define PCIE_CLIENT_HOT_RESET_CTRL	0x180
-#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
-
-/* LTSSM Status Register */
-#define PCIE_CLIENT_LTSSM_STATUS	0x300
-#define  PCIE_SMLH_LINKUP		BIT(16)
-#define  PCIE_RDLH_LINKUP		BIT(17)
-#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-#define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
-
-Best regards,
-Hans
-
-> 
-> the secondary concern is that they are not grouped together.
-> 
-> This patch is just solving the secondary concern.
-> 
-> Since you are fixing his secondary concern, should you perhaps also
-> address his primary concern?
-> 
-> 
-> 
-> Kind regards,
-> Niklas
+-- 
+Pengutronix e.K.                  |                             |
+Steuerwalder Str. 21              | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
 
