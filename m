@@ -1,101 +1,110 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B64281517;
-	Tue, 22 Apr 2025 14:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF517281517
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331810; cv=none; b=M8L9EavAO2uG+33y2G7pgeQiNfguPyzYfxteRWSmQkLolMtRIBaLZSYVJCX1zbgYeXjYe6FO9cU9jzTOf1lwZ/SRhWDYi1YSVOdaJru6R14ZTbRaS1AMPTAPzB3xtveWllh0Gh8nXVc82Uf2lOiMUdfsf4Olk4v3UTIvkPxiH1I=
+	t=1745331824; cv=none; b=fFnScBI4h/nofu9ri2lvZcUUYLbjyfIWzdUUjk/Lvzg7YYIIuT6QzdvhpzcZkwNovlJyfg+kiR0hN1Ae+jO3mmQsl9HxXPoCi+MeTnY8h8IX8LE2Xez7dG4TjrDfKwsJ9f/FaQmi5LcJjGFAAG1NLDU51bHldgxnYE/QftnvNTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331810; c=relaxed/simple;
-	bh=2+irYqNqFtPSbvXEoNWRSPMp4kiaSzXHKbIMOd/mHaU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bILi0+xbjgYMSIytHjckp9L7m763oVGpCzP7IJYleFBVwWWTsF3FrA8pHtjTTQCHa8yjOHmcCXgX+3TsiqPDPG/ejHCNU7Lsl8B5/od4TJVsln+ZqpxuJ+lOjXxHkcCcAnRtfr6zEWXIHQ09BdOqC620qdr9Sf35WH1euqXHK1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hAKjzfDG; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745331824; c=relaxed/simple;
+	bh=ooDsQXFWqad5t5so/svstwpDcOe7ADhJfj0lmr3/Ngg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=LNn9BMCdKfU0XjFr+FA09eq+TbErUyIDWPw/54BD0OA2rwTn7U6Wk1UBMgjiPoM3sNw710f5UpLmmdd/lspWWicLGK6HApaK+A6BiuRK6OeDZffqqh8CCDeg4tlBzU2MxUJ5tANDVEawlpYB+V338oO0LSVEK++kAkNXRIUX4PA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WKbocqX2; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hAKjzfDG"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22403c99457so8555795ad.3;
-        Tue, 22 Apr 2025 07:23:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745331808; x=1745936608; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LhgxihL4Wib3NE2BGbErbJZ7/JG0NsxC0J0y3dShv7g=;
-        b=hAKjzfDGE35oVVzFlWH3B723Q8Er1nvOByCL52MIb23ImZgafIzfLFko1Wc7Uk4SbF
-         UC34vlPrjBt3dLcjkP9OdmbHO5Imc6UDx0weMkHR3rBkv35ujZt9DF3KTriEjal5Q3Ut
-         sKRdCkzXFNws6fMjZYxdSGiVmqZIlbQuWZs9HW/alImfuS7Wo+HKzch2UGSdJOmf8Bd2
-         7F9O2eTkmBLSDigAvE5ig6vtRM8SwitGde2sQXOU8JtW8m2hjpvlLNytV6mjqgYGfcfD
-         olqes424KmO3E3O/rGDWEREXwL3EVob/FzHNI0S+VpgrU9JFiRZCYkqgsapceposRJ56
-         9UuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745331808; x=1745936608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LhgxihL4Wib3NE2BGbErbJZ7/JG0NsxC0J0y3dShv7g=;
-        b=Lq6auxaUg0gHcTBW06n/7nGmr0Wa0F3ZQaw2C+PL4OtEtV+1J1zM5WVT+sqK7uaXg6
-         teScfsuj4P6b65VQiK4ASx8x6orTMemsKFa0ADileIW87BVphKRGnh3uPn5ZBL/ukVIK
-         rZigRJXPgXWtjf7d6w821EsyWzz15BdqvHTqmzqO3pF1iHW14PWty7sVUI4GYbDOjZdP
-         YzL0x5FIZd95fM6qfUC4saLpIxY2BRkVvFTLXV4ONLB5ZYx78ZtKXPKMI6MjTvB9wqdP
-         a5Il9QIPcWex/HXum2QMKbTpzsKB739aWw2v5AFm310WLAJ3VY06mx+IgsAWPeVjMdwy
-         KoBw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8C5OtNaekGqaV+qDYyXaWG7SxFoBNmQ/J4HH+b1gqz2BszSbn/UacTWLb+hGdCDNx5LbmvehKoQRjKhx4m00=@vger.kernel.org, AJvYcCV6e5/YZX6QeQGaO0CCW/Hbw0V5tbwTaTqZxL9TvfjDSdgY/BodB0O/EhPU8HkaR5TE8v8upQ1IK9Jx@vger.kernel.org, AJvYcCVA7D0dMD1Kdxel+07DtCuYD9ECrjTrWcPZh4E69FK1cS/+mz+98EE9eK6PhHufWP0jPg0kJAAJthJKSKA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyL874h0H7QLGHdesqT1wX9gXdbF3lTJ1Z1HQf9CfgJq/BhFg3D
-	9dJDTDTd/vhmKyniXmJ+1rW30xRC+/hVd2pXryV65l/4OUfTnEeY54aN05AQdyAZWXLpOeJb0sU
-	YJyN7N5d7G+TC8zl6j+SUS164esY=
-X-Gm-Gg: ASbGncszxxSF1K7jNUQZdWXX3vI8YDH/jYP4xm9Kwpt9PzWBUnSSrQKr9cP9hTr9UZO
-	bA6O8u/8/ysHi6bZJn+ENXL3+yzdNscj++vnwxKMhpwKORiOY1C/bJa9Upa7CnNLk/quGyoB9AE
-	G7B11ZVUGmLkI1wuGG9VomOg==
-X-Google-Smtp-Source: AGHT+IHxirjvMU1TYZxcmHGblsxt1IPtANgT3JFCJeU00c0KjBh9bGSsGqXSUY61Z0zbHKWPIr/Oet/I9La4hLsWddU=
-X-Received: by 2002:a17:902:c405:b0:223:5525:622f with SMTP id
- d9443c01a7336-22c53472977mr79904275ad.1.1745331808145; Tue, 22 Apr 2025
- 07:23:28 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WKbocqX2"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MENRxV1230927
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 09:23:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745331807;
+	bh=T+KF6QErdbY2aGPv8cN6+b4qKLV/yGuzbUNxXqDuDzo=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=WKbocqX2ZNL+tQd5wEGF/zAANTA9bOepLYZvKBUIuA7z6kT45tol0AXFXKl76ge85
+	 B0R9p02Auohxbg2vH6yLoljQ7IqPVTyGyAJvbduJEJ5WLIyqe+Nh4UmS6S/haIKGho
+	 1bfnQEl90lv098tvP/H3wnYS2bl4ams6rmAw6nE0=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MENRAF000308
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 22 Apr 2025 09:23:27 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
+ Apr 2025 09:23:26 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 22 Apr 2025 09:23:26 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MENQjG000925;
+	Tue, 22 Apr 2025 09:23:26 -0500
+Message-ID: <86938add-1ccc-4be3-af3f-cff911c96d42@ti.com>
+Date: Tue, 22 Apr 2025 09:23:26 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-try_with-v4-0-f470ac79e2e2@nvidia.com> <20250411-try_with-v4-1-f470ac79e2e2@nvidia.com>
-In-Reply-To: <20250411-try_with-v4-1-f470ac79e2e2@nvidia.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Tue, 22 Apr 2025 16:23:15 +0200
-X-Gm-Features: ATxdqUHiTDekx23W0XaXQBL6uKW239ZNoGTSz_vkHVe_W_-qxe72aUF4qvNLNU0
-Message-ID: <CANiq72=1YtvFDEMJw_=SWWC8E5vUwK7XSt23kzrKvxYMjkbXug@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] rust/revocable: add try_access_with() convenience method
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	Danilo Krummrich <dakr@kernel.org>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Bjorn Helgaas <bhelgaas@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: defconfig: Enable hwspinlock and eQEP for K3
+To: Nishanth Menon <nm@ti.com>
+CC: Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bjorn Andersson
+	<bjorn.andersson@oss.qualcomm.com>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>,
+        Geert Uytterhoeven
+	<geert+renesas@glider.be>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>
+References: <20250421201055.3889680-1-jm@ti.com>
+ <55d306d4-c9cd-4119-8798-b65a6956f4df@app.fastmail.com>
+ <54b6880a-bf65-4a79-8f3e-9fa66b6c3550@ti.com>
+ <20250422142207.2tu7gmhnjercmoa2@basil>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20250422142207.2tu7gmhnjercmoa2@basil>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Fri, Apr 11, 2025 at 2:09=E2=80=AFPM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
->
-> +    /// Returns `None` if the object has been revoked and is therefore n=
-o longer accessible, or the
+Hi Nishanth,
 
-[`None`]
+On 4/22/25 9:22 AM, Nishanth Menon wrote:
+> On 09:15-20250422, Judith Mendez wrote:
+>> Hi Arnd,
+>>
+>> On 4/22/25 1:37 AM, Arnd Bergmann wrote:
+>>> On Mon, Apr 21, 2025, at 22:10, Judith Mendez wrote:
+>>>> Enable CONFIG_HWSPINLOCK_OMAP to allow usage of these devices
+>>>> across K3 SoC's. Also enable CONFIG_TI_EQEP which is enabled by
+>>>> default on am64x SK board.
+>>>>
+>>>> Signed-off-by: Judith Mendez <jm@ti.com>
+>>>
+>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>>>
+>>> The patch seems fine to me, but you should address it at the
+>>> TI K3 maintainers, so they know they should apply it and forward
+>>> it to the SoC tree. You have Nishanth and Vignesh in Cc already,
+>>> so I assume they will pick it up from here, just put them in
+>>> 'To' instead next time and move Catalin and Will to 'Cc' or
+>>> leave them off entirely.
+>>>
+>>
+>> Will re-spin and fix the to and cc lists, thanks for reviewing!
+> 
+> There is no need to respin, it is already in my queue. Will pick it up
+> as part of usual process. The above information that Arnd provided is
+> for future reference.
+> 
+Sounds good, thanks for the help.
 
-> +    /// result of the closure wrapped in `Some`. If the closure returns =
-a [`Result`] then the
-
-[`Some`]
-
-> +    /// define their own macro that turns the `Option` into a proper err=
-or code and flattens the
-
-[`Option`]
-
-(Assuming each one works)
-
-Cheers,
-Miguel
+~ Judith
