@@ -1,45 +1,37 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C96D27C860;
-	Tue, 22 Apr 2025 11:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.4
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5EE25F97B
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745321370; cv=none; b=qSVOcbo3mFeNv9RYAxwkD7xj4Hue16XHe+1/bj/A4tF5kw7XaTXkrOHXIuhxox/mRTqsewtZkrU+Uv/BVE3TqYvx5dmqyMFZRAWeB4xMOVwqkbs/iWYzCzLtXWn2Y4KyvtJGj0GzjU1zk41II2Ci39D7kdRXmRrRCPmB6CsbH4o=
+	t=1745321399; cv=none; b=R2IQUWu4Bp3Psn8a56H8OTPSS+iaTjC36dOiDHiTT6bIAngN4QeRMvLbTaT9zxTRP4cE5If2fwo65arM380RG1ZCSizAKLa7NLPUmIfYkixTTwj+azvcNo5s01Cs7lTrmN5AtCZXmC6SJ39E0WeuiJ7cg5v6XbeJmpsa0WCrYgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745321370; c=relaxed/simple;
-	bh=AmnegAGf3G44zAjt+HxnrgnyyFqitKP3Mq6tvhHo/R8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FpLoTd800tyXfBmqp1N8rs0+eMUcUvpexeWTED/JrLjbYAUbWDrjLFEd0uaiZlGuhDVFDkb7glm76lYPQrCJqeKmg4c36uTx5hwVkkIhalBAONwTrQcurhyblKsGHK8JZPJxkjOntU8tB4B4VUyfKtg+Lwjx+o5PajBrwyVLhY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lp8bbt1A; arc=none smtp.client-ip=117.135.210.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lp8bbt1A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=hk85i
-	Y4ymzyKE4GF/XJIv+VOxpEfbG0odDZoakglHzU=; b=lp8bbt1AYA98UYm7u9TfQ
-	ynqlrk6uZpn4Yt2QLQDYSlHVGrZWmWmzl4cQGOuoLtfKNfbQafTsg3ExvSVV1SUi
-	1qlhPQFeyhWntuZSTOZ23yUHa6DdhBtV67b8lZefbIkAMFxWaEgQZrjBC1Vb2nYz
-	USj6gNOPnihzMm/y2DqpjA=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wCXbK1gfQdoRW2NBg--.44191S2;
-	Tue, 22 Apr 2025 19:28:33 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	heiko@sntech.de
-Cc: manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	shawn.lin@rock-chips.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH 0/3] PCI: dw-rockchip: Reorganize register and bitfield definitions
-Date: Tue, 22 Apr 2025 19:28:27 +0800
-Message-Id: <20250422112830.204374-1-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1745321399; c=relaxed/simple;
+	bh=FjLB0iMYF7hTQsWMg45OZgnD0PlXwpaWW3crZca3r4Q=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aigwG9+k96mUGmL8hKPUTPy56W7GRt2rIcpZw7ZcRKe7lbf4fzbQZolSF5ZNt9i8UZ0187zyBa+jyuNHZ6X/3mkQvqHwCFldN4EqClyD2bmU7eqckMFb6/NUEnkoS6PVQbUfQMNag8rc1j32jgsrRiFzlTHyyQIJWXUgVezlTTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Zhg3q5Rrvz1d0R7;
+	Tue, 22 Apr 2025 19:28:55 +0800 (CST)
+Received: from kwepemj200003.china.huawei.com (unknown [7.202.194.15])
+	by mail.maildlp.com (Postfix) with ESMTPS id 611751400CD;
+	Tue, 22 Apr 2025 19:29:53 +0800 (CST)
+Received: from localhost.huawei.com (10.90.30.45) by
+ kwepemj200003.china.huawei.com (7.202.194.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 22 Apr 2025 19:29:52 +0800
+From: Qinxin Xia <xiaqinxin@huawei.com>
+To: <will@kernel.org>, <robin.murphy@arm.com>, <yangyicong@huawei.com>,
+	<wangzhou1@hisilicon.com>
+CC: <linuxarm@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <xiaqinxin@huawei.com>
+Subject: [PATCH] iommu/arm-smmu-v3: Fix incorrect return in arm_smmu_attach_dev
+Date: Tue, 22 Apr 2025 19:29:51 +0800
+Message-ID: <20250422112951.2027969-1-xiaqinxin@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,58 +39,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCXbK1gfQdoRW2NBg--.44191S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7WFykKw4ruF18XrW7Xr4kCrg_yoW8Kryxp3
-	Z8JFWrur4fJw40vws7tw17ZFy8K3ZrCFyY9w4DKw10qa40qa48WFyftF1F9ry7Xr4xKF17
-	ZwsrX34I93Wav3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0pEJPEPUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDw83o2gHegpLtwADs0
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemj200003.china.huawei.com (7.202.194.15)
 
-1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
-2. PCI: dw-rockchip: Reorganize register and bitfield definitions
-3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
+An error is introduced in commit '48e7b8e284e5'. When the smmu
+does not match with domain,an error code is not returned.
+An example of an error scenario: In vfio_iommu_type1_attach_group,
+vfio will try to match an existing compatible domain. During this process,
+iommu invokes the attach_dev interface.The mismatched dev and domain
+does not return an error code as expected.
+As a result, an exception occurs when the vfio operates the smmu.
 
+Fixes: 48e7b8e284e5 ("iommu/arm-smmu-v3: Remove arm_smmu_domain_finalise() during attach")
+Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
 ---
-https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bjorn Helgaas:
-These would be material for a separate patch:
-
-- The #defines for register offsets and bits are kind of a mess,
-  e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
-  PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
-  PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
-  names, and they're not even defined together.
-
-- Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
-  PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
-
-- PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
-  Sure wouldn't guess that from the names or the order of #defines.
-
-- PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
-
-- Submissions based on the following v5 patches:
-https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
-https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
-https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
-https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
----
-
-Hans Zhang (3):
-  PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
-  PCI: dw-rockchip: Reorganize register and bitfield definitions
-  PCI: dw-rockchip: Unify link status checks with FIELD_GET
-
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 58 +++++++++----------
- 1 file changed, 29 insertions(+), 29 deletions(-)
-
-
-base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
-prerequisite-patch-id: 5d9f110f238212cde763b841f1337d0045d93f5b
-prerequisite-patch-id: b63975b89227a41b9b6d701c9130ee342848c8b6
-prerequisite-patch-id: 46f02da0db4737b46cd06cd0d25ba69b8d789f90
-prerequisite-patch-id: d06e25de3658b73ad85d148728ed3948bfcec731
+diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+index 358072b4e293..cb2698325809 100644
+--- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
++++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+@@ -2932,7 +2932,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+ 	smmu = master->smmu;
+ 
+ 	if (smmu_domain->smmu != smmu)
+-		return ret;
++		return -EINVAL;
+ 
+ 	if (smmu_domain->stage == ARM_SMMU_DOMAIN_S1) {
+ 		cdptr = arm_smmu_alloc_cd_ptr(master, IOMMU_NO_PASID);
 -- 
-2.25.1
+2.33.0
 
