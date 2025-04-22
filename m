@@ -1,202 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACF3290BB7;
-	Tue, 22 Apr 2025 16:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6377D1E8353
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 16:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745338170; cv=none; b=dd+vUnNbyhFDvGzt3phZwnMsGBbsF1obFWHZuMhQmhlNwOAESqe0mmez4S6kuTvks+hmbzzxW5ZHMsXXLnB/w52AimS9iB4h/itReefH/5dBHD6Cuggl0swE+abjNHxwconxZF20/yiqs2Vj3Dhh0BfBsF5bpVIzlEnclgwDq7A=
+	t=1745338224; cv=none; b=i+LdSkCoF+1j2ba33HTPBZ4Z11ZPRMHOdbMpItE/wYqtXIHdDEaalS5mhgaU54pdrj1DY8tYKaUYJauNaHr1rR5egXuTRdDyYUQcwg3GRhcYm/tNBLwye6ZUj+ghXcwEXrCviXZb5UFyrsrHm5yAtyXLj8H13XTQwFN1OZ2pHpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745338170; c=relaxed/simple;
-	bh=C7P71zkwBaNY9uWlP0+qfCmkJrs2cKd4Jolmem8FPMc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WyVNgee9V0FmFocIiUhPPTrcZRhDaPbHAVpiVsKU7lCOqTk2Auv66+5G9dPoHFrQPCuKXeBCx1Cp80zw1Z4TzmDg38Yvpry21/TN15OzwJqZOHd+VdwQV+38XP91kvgGkwAi5YJSg+IebgO+SKPT2wgNvse4wWMqfRjSD98gg8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IMtzI6jS; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IMtzI6jS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745338168; x=1776874168;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=C7P71zkwBaNY9uWlP0+qfCmkJrs2cKd4Jolmem8FPMc=;
-  b=IMtzI6jSF5RDKhKviVKrIb2vx0QdfbXv+3dmAB5L9GMjuTzk340R2nXy
-   eTWeGbyd59i0HNnOkcmX0wKjdd7pw1ND61MLzwSDv87OoAJd7XWhcTGhX
-   W9wrZAaZ9m1xCJ2mh1+BJHC1jzSCTdG38sbZ8PsueWIC4ionBXdZLR0m6
-   zQzhf6yKIooxEae9duvj39u5ro1Xm7jnw6Gn+rnok3fed31qnn2uUMBqo
-   OJ6LQnHpDGjx9k5uTlUNXTAPiBvPiH7Do9zD2afZp2HT1T3w3I9cqP6/d
-   +u95BGl17+3hXP//+oFNgKD4mQZgZ66AG27gdcxS+W6iTRrJLvNf6Cs2H
-   w==;
-X-CSE-ConnectionGUID: moBUE26QTA2iAwU0tWFPng==
-X-CSE-MsgGUID: 4PM0ADaUR2uPRQ+4u9JjBA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57889250"
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="57889250"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:09:28 -0700
-X-CSE-ConnectionGUID: 5/P/pHRyRZq4y9ard5ewPQ==
-X-CSE-MsgGUID: dAOLPTsTQmipMWxPU6GsJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
-   d="scan'208";a="137039421"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.132])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 09:09:22 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
- Robert Richter <rrichter@amd.com>
-Subject:
- Re: [PATCH v4 08/14] cxl/region: Factor out code to find the root decoder
-Date: Tue, 22 Apr 2025 18:09:18 +0200
-Message-ID: <18685083.PsWsQAL7t4@fdefranc-mobl3>
-In-Reply-To: <20250306164448.3354845-9-rrichter@amd.com>
-References:
- <20250306164448.3354845-1-rrichter@amd.com>
- <20250306164448.3354845-9-rrichter@amd.com>
+	s=arc-20240116; t=1745338224; c=relaxed/simple;
+	bh=nJevJKzYAzfxBEgFa8pg+lNR+fuS5jiwgYumveiDxJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cx/B0gOE/3gJUgTdKy5W13jjCaEj5VD4HBDocDbVhIotOPw3gqFkYGK/W+bCNecy6BLgrWsXXfNh2XJOeAlmT+jSL2MWPE+c4RoaCM4536DvlqWAQayB4dxZEetWWOuq9C9LhztVe9onT4NOewMvwIYnGk6p3BujsyX3pEiV9IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1u7GCK-0004il-Im; Tue, 22 Apr 2025 18:10:12 +0200
+Message-ID: <4c195c2a-81c6-41c8-a134-1c7813904115@pengutronix.de>
+Date: Tue, 22 Apr 2025 18:10:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] i2c: imx: drop master prefix
+To: Troy Mitchell <troymitchell988@gmail.com>,
+ Oleksij Rempel <o.rempel@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Andi Shyti <andi.shyti@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <festevam@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+ Yongchao Jia <jyc0019@gmail.com>
+References: <20250421-i2c-imx-update-v1-0-1137f1f353d5@gmail.com>
+ <20250421-i2c-imx-update-v1-2-1137f1f353d5@gmail.com>
+Content-Language: en-US, de-DE, de-BE
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <20250421-i2c-imx-update-v1-2-1137f1f353d5@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Thursday, March 6, 2025 5:44:42=E2=80=AFPM Central European Summer Time =
-Robert Richter wrote:
-> In function cxl_add_to_region() there is code to determine the root
-> decoder associated to an endpoint decoder. Factor out that code for
-> later reuse. This has the benefit of reducing cxl_add_to_region()'s
-> function complexity.
->=20
-> The reference of cxlrd_dev can be freed earlier. Since the root
-> decoder exists as long as the root port exists and the endpoint
-> already holds a reference to the root port, this additional reference
-> is not needed. Though it looks obvious to use __free() for the
-> reference of cxlrd_dev here too, this is done in a later rework. So
-> just move the code.
->=20
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Tested-by: Gregory Price <gourry@gourry.net>
+On 4/21/25 07:36, Troy Mitchell wrote:
+> In light of the recent updates to the i2c subsystem,
+> drop master prefix.
+> 
+> Signed-off-by: Troy Mitchell <troymitchell988@gmail.com>
+
+Reviewed-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+
+Please use a different cover letter title for your v2, adapting the
+mainline doesn't tell the reader anything about what the series is about.
+
+Perhaps something like i2c: imx: lock guards and cleanup
+
+Thanks,
+Ahmad
+
 > ---
-
-Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-
->  drivers/cxl/core/region.c | 55 ++++++++++++++++++++++++++-------------
->  1 file changed, 37 insertions(+), 18 deletions(-)
->=20
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index 8244a27d0fd6..7d9d9b8f9eea 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -3212,6 +3212,38 @@ static int match_root_decoder_by_range(struct devi=
-ce *dev,
->  	return range_contains(r1, r2);
+>  drivers/i2c/busses/i2c-imx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index cb96a57df4a0..dd07fde79632 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -1690,8 +1690,8 @@ static u32 i2c_imx_func(struct i2c_adapter *adapter)
 >  }
-> =20
-> +static struct cxl_root_decoder *
-> +cxl_find_root_decoder(struct cxl_endpoint_decoder *cxled)
-> +{
-> +	struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
-> +	struct cxl_port *port =3D cxled_to_port(cxled);
-> +	struct cxl_root *cxl_root __free(put_cxl_root) =3D find_cxl_root(port);
-> +	struct cxl_decoder *cxld =3D &cxled->cxld;
-> +	struct range *hpa =3D &cxld->hpa_range;
-> +	struct device *cxlrd_dev;
-> +
-> +	cxlrd_dev =3D device_find_child(&cxl_root->port.dev, hpa,
-> +				      match_root_decoder_by_range);
-> +	if (!cxlrd_dev) {
-> +		dev_err(cxlmd->dev.parent,
-> +			"%s:%s no CXL window for range %#llx:%#llx\n",
-> +			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
-> +			cxld->hpa_range.start, cxld->hpa_range.end);
-> +		return NULL;
-> +	}
-> +
-> +	/*
-> +	 * device_find_child() created a reference to the root
-> +	 * decoder. Since the root decoder exists as long as the root
-> +	 * port exists and the endpoint already holds a reference to
-> +	 * the root port, this additional reference is not needed.
-> +	 * Free it here.
-> +	 */
-> +	put_device(cxlrd_dev);
-> +
-> +	return to_cxl_root_decoder(cxlrd_dev);
-> +}
-> +
->  static int match_region_by_range(struct device *dev, const void *data)
->  {
->  	struct cxl_region_params *p;
-> @@ -3386,29 +3418,17 @@ static struct cxl_region *construct_region(struct=
- cxl_root_decoder *cxlrd,
-> =20
->  int cxl_add_to_region(struct cxl_endpoint_decoder *cxled)
->  {
-> -	struct cxl_memdev *cxlmd =3D cxled_to_memdev(cxled);
-> -	struct cxl_port *port =3D cxled_to_port(cxled);
-> -	struct cxl_root *cxl_root __free(put_cxl_root) =3D find_cxl_root(port);
->  	struct range *hpa =3D &cxled->cxld.hpa_range;
-> -	struct cxl_decoder *cxld =3D &cxled->cxld;
-> -	struct device *cxlrd_dev, *region_dev;
-> +	struct device *region_dev;
->  	struct cxl_root_decoder *cxlrd;
->  	struct cxl_region_params *p;
->  	struct cxl_region *cxlr;
->  	bool attach =3D false;
->  	int rc;
-> =20
-> -	cxlrd_dev =3D device_find_child(&cxl_root->port.dev, &cxld->hpa_range,
-> -				      match_root_decoder_by_range);
-> -	if (!cxlrd_dev) {
-> -		dev_err(cxlmd->dev.parent,
-> -			"%s:%s no CXL window for range %#llx:%#llx\n",
-> -			dev_name(&cxlmd->dev), dev_name(&cxld->dev),
-> -			cxld->hpa_range.start, cxld->hpa_range.end);
-> +	cxlrd =3D cxl_find_root_decoder(cxled);
-> +	if (!cxlrd)
->  		return -ENXIO;
-> -	}
-> -
-> -	cxlrd =3D to_cxl_root_decoder(cxlrd_dev);
-> =20
->  	/*
->  	 * Ensure that if multiple threads race to construct_region() for @hpa
-> @@ -3426,7 +3446,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *=
-cxled)
-> =20
->  	rc =3D PTR_ERR_OR_ZERO(cxlr);
->  	if (rc)
-> -		goto out;
-> +		return rc;
-> =20
->  	attach_target(cxlr, cxled, -1, TASK_UNINTERRUPTIBLE);
-> =20
-> @@ -3447,8 +3467,7 @@ int cxl_add_to_region(struct cxl_endpoint_decoder *=
-cxled)
->  	}
-> =20
->  	put_device(region_dev);
-> -out:
-> -	put_device(cxlrd_dev);
-> +
->  	return rc;
->  }
->  EXPORT_SYMBOL_NS_GPL(cxl_add_to_region, "CXL");
->=20
+>  
+>  static const struct i2c_algorithm i2c_imx_algo = {
+> -	.master_xfer = i2c_imx_xfer,
+> -	.master_xfer_atomic = i2c_imx_xfer_atomic,
+> +	.xfer = i2c_imx_xfer,
+> +	.xfer_atomic = i2c_imx_xfer_atomic,
+>  	.functionality = i2c_imx_func,
+>  	.reg_slave	= i2c_imx_reg_slave,
+>  	.unreg_slave	= i2c_imx_unreg_slave,
+> 
 
-
-
+-- 
+Pengutronix e.K.                  |                             |
+Steuerwalder Str. 21              | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany         | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686  | Fax:   +49-5121-206917-5555 |
 
