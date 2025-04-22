@@ -1,148 +1,154 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27DD524C;
-	Tue, 22 Apr 2025 07:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADE0C524C;
+	Tue, 22 Apr 2025 07:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745307679; cv=none; b=dIRm3agA3kmWXyGkz/psSBg8P1bc+hDueaAx2iiHci6tKOmAhYvsbsIgBUAlDdroUiTB7cqQ+u0B5Tcy8dgcfPpPB331vAfenjK54216jH9jXIdbDmhc4uzonthH6cb5ruQ4DPp7nWlbR+kbyEK7M2HqVaPKo5Qxun05ONn9XHA=
+	t=1745307686; cv=none; b=X/2nuMwAUz/QrfSbAkdTephUzvjqlBfHlQX+lBWG/Ngwfhsc0YnpDdfBRQCnzd+77cL4fmOcgZmubGBV8/XbDJZvaTu8CH2Uameax0r2fnIwoXwdE25iqa2RcIuBHER0wM3sI57wW2oFQeEgEBsx5APwwaZsZAHuIXBbb4+kBkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745307679; c=relaxed/simple;
-	bh=MssVCiqVxYKVe+2VsYfw38Hcx5DEN4Ftbbc3n2ktrTs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=tgghNPv++2VK0pcN3dVCAImwc1dU09H2CBM5hWJVG0Ty11l8J76t897fUcQmK+n4bBRDexVMzEZiBhFrgmqcM2ZOl03OoOWHfTjPyFyLzr3718NxeEljCN3qXGwVyPEZH3R9+8aKh7nim5fUErx/7WLOGDYrDaFtCcO/VwrCltU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ZMevcdKH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ZMevcdKH"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53M4P0b5011611;
-	Tue, 22 Apr 2025 07:41:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=G6hZ6ApnRi6XuWlKJClmIK
-	YDy9RsG27nPvbmfsOp1MA=; b=ZMevcdKHvwm2yz0fpjJuxogiwxFpz5znnn+LkJ
-	oZ7QmxlPCe/xInIQXHobwYV/lCdDrGZJyDo9FUhk99TZDmQ3/BaNHZyo+4qLM1si
-	9Ka9L+GwCEKdPoID8SUPVQOxxR4hpzJVsYDKo+er4M4yjSPTh4AyVFmkbSEjOSyh
-	E5aH/NMJp+LbjgZFs1fFjmTT2/5HclgBKTI36sdSuDB6d0yVx+lTp2bYsS2EnN9H
-	o+lkkeusG2zgaRxrQmzu7OVYAZS67boBiXsUH/3SI5OQlDnQ6G1fz8g8sq9B4Y18
-	Qoigw8QDoEKSyWHAdGxNmx8PI2zjBoSd/NTqvVshOaLEVsOw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46450peeag-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 07:41:14 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53M7fDnE029037
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 22 Apr 2025 07:41:13 GMT
-Received: from songxue-gv.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 22 Apr 2025 00:40:10 -0700
-From: Song Xue <quic_songxue@quicinc.com>
-Date: Tue, 22 Apr 2025 15:39:54 +0800
-Subject: [PATCH] arm64: dts: qcom: qcs615-ride: Add PSCI SYSTEM_RESET2
- types
+	s=arc-20240116; t=1745307686; c=relaxed/simple;
+	bh=FxOW94RSk0PhfFr/bcRz1bIIkwQd1iZ7rYc2ls+gbhE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i5Cm1fsd9p6/kz/Ml9QpEInNhJRst2iKdiHPmR1FjxVOG+MofZgDtzwjibSFbisU7zUOdIXwWyNRuxuN9PYq0d4mOGl+e5A9YBzSsGQr3NG+yKWB5ncHiCVw1YhA5f8BlgM0Mr2YOrGgqpZ+4fm/JhC+KNTIDjeA4cKnjlsFDuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so1547300241.1;
+        Tue, 22 Apr 2025 00:41:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745307681; x=1745912481;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CchbbGjqvUvjIqESIBqdCzQiBA7qsjtrrzbifnEpKqk=;
+        b=RSpSp0ajuVg8GxYgupymLh37kJzQ5mT+SurO5X6yEcW8Z05tg1/kfvIDmttooO2UoD
+         hndZIXQzDiNpgrBjKaNHecPIqh54FoXJePo2cSr+E+HEx1wTKnCO7tLEm/SBt++ddH4c
+         SLZi6Vp/Zk8/AieJmWvKKKi3Zbo301CrViWx1omRHGcUHIM5GobpOKaUXBGTX6B/Xdt2
+         1TVqqU8GuNZq3y0PjhWLoC/FuxWlmSnL5TTCLogm0ipGLFiry4Pf9w4tKlKaLQivZwUM
+         Qp5X/Jxca9daWsvKgRBKr/HW6srudhkxLlUCpam6gorThKgKUprJLH8ZunVXxYyWQ0gH
+         eMgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUlveypS3bZXsmVdvk/Aw5mREHaVgTgcLzvy0BNJVsl70w2DywU695cpc3uZlXgXAq0mhDUFU9TGjzXDOxdyfixJr4=@vger.kernel.org, AJvYcCWVA5HU6Nl3eDfVHLqT5s0+dVGBlWDpI8F3J4vJh/fJCHtT1Coh8Blhwy78QyFTzw1CegmwTCmi0PA6@vger.kernel.org, AJvYcCWcFX856CQbuDRxYzuj8Dp/2G0lYZQjwZPLcN5QIeWsBrpVaOzt7WrcCdPpJQoJTOYp8NW/iWV+tECm@vger.kernel.org, AJvYcCXhyn6kSbnAbR7uToNZT4wfLs2qdaWkfwOSvhdp66h0ExV1xfpNRBRIQjYv0TcxH1BdiYek1z1phYB43+HY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxx9OgzLamtQB4D0q2UdDWvKDaCzTNzkplsWWwivvTTtCwYreYn
+	R5XWq28Y1COOzDWt0lLqkp2P4o9Nsgkx9DDAo3dZqfzJitsAtupQeX9/U1Rz
+X-Gm-Gg: ASbGncshra5DV/QOdqUhQMDxsJ20tww6v9d8faOTHZdy6+FMjlRmFQr1h10ycN2KcQV
+	OgrLRlb7WcFB0v/W8xdLQgGiD8CeERput6+sIdV8k8d5KnIZvnfRykS7LRFIB4em+Xu7yKFw7if
+	JcuLIetyfBHdQhMqbCAhiNkvV9uANQ5NhqeyTLpqEcHIuhZfwpJI2iUJDeFCCxwwJVbEzhp2rM2
+	LtwxF8CQGvOXB9wvDmRx6nYGTNE5Nm4F1/LHCi7+pXUtuh1cfkJy0wtbc15aanFwUouj1sJciK2
+	EER77S4SIF6sLOF6Ly6QG93ZfvlNbxQPvOqf94d/rbKNU7wyhSAli8EOUzm2OQbgnrGdvaM37gc
+	oGkE=
+X-Google-Smtp-Source: AGHT+IHcUQZUEexCvSUT1zjP8LMLjqDuURWPRPRNEprBILwEitFTscx+/3xSURl2HwbOud5CUO8YzA==
+X-Received: by 2002:a05:6102:226f:b0:4c4:e415:6737 with SMTP id ada2fe7eead31-4cb802368f5mr7887164137.23.1745307681024;
+        Tue, 22 Apr 2025 00:41:21 -0700 (PDT)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4cb7dde4512sm1994847137.18.2025.04.22.00.41.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 00:41:20 -0700 (PDT)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-86f9c719d63so1547275241.1;
+        Tue, 22 Apr 2025 00:41:20 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVHSa7nRFESbfAVlwjFKqopdauUQIY6dwdykDEAPBepX8qrhBoKDauNC9Big0V1uLl5vvAcpJYZtIoO7/Lz@vger.kernel.org, AJvYcCVVazg+jfwaKjHpFhSaxhtLfEiqpSuTzLEoLSnsVg8hMxXZCBqh5qxEBbZE2UQcuE+wWT0mYQwvRJNS@vger.kernel.org, AJvYcCVsnCtQnnH1lkH5USOemUVUNwN/1kSnecR9elIh6MlxQSAkPj3WP9oIfm7kLdOG/+t3FG7YHHVj6oPiFYDbPenboWM=@vger.kernel.org, AJvYcCWUhfbeEjQL3DLelHoch8RWhE8xIKQTcPpeMkBCakGnE/cYAghM2vFd1wO7DE9+skVCJU7nphYthySp@vger.kernel.org
+X-Received: by 2002:a05:6102:3235:b0:4bb:cdc0:5dd7 with SMTP id
+ ada2fe7eead31-4cb801fcb0emr7598638137.16.1745307679790; Tue, 22 Apr 2025
+ 00:41:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250422-add_psci_sys_reset2_modes_for_qcs615-v1-1-7faaf877366e@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAMpHB2gC/x3NwQrCMAyA4VcZOVtoMzvEVxEJo0k1B9eZiChj7
- 27x+F3+fwMXU3E4DxuYvNW1LR3pMEC5z8tNgnI3YMQcxzGGmZlWL0r+dTJxeSE9GotTbUbP4lP
- K4ShV0gmRU56gp1aTqp//5nLd9x8LYOR/dgAAAA==
-X-Change-ID: 20250330-add_psci_sys_reset2_modes_for_qcs615-4efe1822d156
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Song Xue
-	<quic_songxue@quicinc.com>
-X-Mailer: b4 0.15-dev-88a27
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745307610; l=1643;
- i=quic_songxue@quicinc.com; s=20240911; h=from:subject:message-id;
- bh=MssVCiqVxYKVe+2VsYfw38Hcx5DEN4Ftbbc3n2ktrTs=;
- b=OpYX2+03nu0djG4RcgASUmq7flkmxbp8Ko+g5jbZ27t3ePbHPacuYCblB0/0Uu+l4AjJwhVfl
- 4KWvl01vm7sAmutRS7j/qwQPcAn+LvwKFdTU7R/X+VD9PUZOAzWSJn1
-X-Developer-Key: i=quic_songxue@quicinc.com; a=ed25519;
- pk=Z6tjs+BBbyg1kYqhBq0EfW2Pl/yZdOPXutG9TOVA1yc=
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Hd0UTjE8 c=1 sm=1 tr=0 ts=6807481a cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8
- a=nkDiZCTAP52MG6eO84oA:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: nO7UhOxAJtwTGYAxUF7dSeXbRE31NaYA
-X-Proofpoint-ORIG-GUID: nO7UhOxAJtwTGYAxUF7dSeXbRE31NaYA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-22_04,2025-04-21_02,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 malwarescore=0 suspectscore=0 bulkscore=0
- adultscore=0 mlxlogscore=967 phishscore=0 clxscore=1011 spamscore=0
- impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2504220058
+References: <20250418184658.456398-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250418184658.456398-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250418184658.456398-11-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 22 Apr 2025 09:41:07 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWs7R9rtS7Ur6PP9e3m9ghkM1jc_Xn3QOWG4rvTtB2omA@mail.gmail.com>
+X-Gm-Features: ATxdqUFBeCs2oJ7izTqYxFnW1BxjoUqkEqYOurERQsS1p8loeCSNnydQw8JebiM
+Message-ID: <CAMuHMdWs7R9rtS7Ur6PP9e3m9ghkM1jc_Xn3QOWG4rvTtB2omA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY
+ frequency calculations
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Add properties to support Bootloader and Edl mode for PSCI system
-reset2 reboot modes. The cookie and magic values set will be used
-by SYSTEM_RESET2 call.
+Hi Prabhakar,
 
-Signed-off-by: Song Xue <quic_songxue@quicinc.com>
----
-Dependencies:
-Link to bindings and driver changes:
-https://lore.kernel.org/all/20250303-arm-psci-system_reset2-vendor-reboots-v9-0-b2cf4a20feda@oss.qualcomm.com/
----
- arch/arm64/boot/dts/qcom/qcs615-ride.dts | 7 +++++++
- arch/arm64/boot/dts/qcom/qcs615.dtsi     | 2 +-
- 2 files changed, 8 insertions(+), 1 deletion(-)
+On Fri, 18 Apr 2025 at 20:47, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Pass the HSFREQ in milli-Hz to the `dphy_init()` callback to improve
+> precision, especially for the RZ/V2H(P) SoC, where PLL dividers require
+> high accuracy.
+>
+> These changes prepare the driver for upcoming RZ/V2H(P) SoC support.
+>
+> Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v2->v3:
+> - Replaced `unsigned long long` with `u64`
+> - Replaced *_mhz with *_millihz` in functions
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-index 2b5aa3c66867676bda59ff82b902b6e4974126f8..7dec44de8143939e52899c4bed9f57a417688b76 100644
---- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-+++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
-@@ -236,6 +236,13 @@ &pon_resin {
- 	status = "okay";
- };
- 
-+&psci {
-+	reset-types {
-+		mode-bootloader = <0x10001 0x2>;
-+		mode-edl = <0 0x1>;
-+	};
-+};
-+
- &qupv3_id_0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index edfb796d8dd38f5d65fd4327308fb5ac52d2b95e..48f7b975b6205a659e5c7ecd296e59b0d3ee50f4 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -352,7 +352,7 @@ opp-128000000 {
- 		};
- 	};
- 
--	psci {
-+	psci: psci {
- 		compatible = "arm,psci-1.0";
- 		method = "smc";
- 
+Thanks for the update!
 
----
-base-commit: e21edb1638e82460f126a6e49bcdd958d452929c
-change-id: 20250330-add_psci_sys_reset2_modes_for_qcs615-4efe1822d156
+> @@ -203,8 +203,9 @@ static u32 rzg2l_mipi_dsi_link_read(struct rzg2l_mipi_dsi *dsi, u32 reg)
+>   */
+>
+>  static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
+> -                                   unsigned long hsfreq)
+> +                                   u64 hsfreq_millihz)
+>  {
+> +       unsigned long hsfreq = DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, KILO);
 
-Best regards,
+MILLI (everywhere)
+
+It's a strange world where KILO == MILLI ;-)
+
+    include/linux/units.h:#define KILO      1000UL
+    include/linux/units.h-#define MILLI     1000UL
+
+>         const struct rzg2l_mipi_dsi_timings *dphy_timings;
+>         unsigned int i;
+>         u32 dphyctrl0;
+> @@ -277,6 +278,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+>                                   const struct drm_display_mode *mode)
+>  {
+>         unsigned long hsfreq, vclk_rate;
+> +       u64 hsfreq_millihz;
+>         unsigned int bpp;
+>         u32 txsetr;
+>         u32 clstptsetr;
+> @@ -305,9 +307,9 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
+>          */
+>         bpp = mipi_dsi_pixel_format_to_bpp(dsi->format);
+>         vclk_rate = clk_get_rate(dsi->vclk);
+> -       hsfreq = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
+> +       hsfreq_millihz = DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp * KILO * 1ULL, dsi->lanes);
+
+The "* 1ULL" only makes the last factor unsigned long long.
+"vclk_rate * bpp" is still unsigned long, causing overflow on 32-bit.
+As there is no rounding variant of mul_u64_u32_div(), you probably
+want to use mul_u32_u32() instead.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-Song Xue <quic_songxue@quicinc.com>
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
