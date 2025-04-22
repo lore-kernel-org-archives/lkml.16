@@ -1,183 +1,107 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3A423E355;
-	Tue, 22 Apr 2025 07:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A463230273
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:06:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745305561; cv=none; b=p2cL3JXRNYxe7S50YUf7wSJsif/lrKUtGjJ3jgm9Ir1+SZ+LMwMbkS6mrCRZH+YjuNq9ehBsIA3IlUN+TDNrZEFWLsUKZGAUKmrCJIGthmyASkKnivi2Y8Az1koFAnD6in+3j/Zh9K1jFl/7DtWRJEFUmCBh6i+n7oTG38FLAws=
+	t=1745305590; cv=none; b=hvFwX8wBx5Rp+AIIz/OUDNQ33ozPzLsUT/SUMPNaAJJJv4mbtcmpfzdIXTG99XuJMK0WfaJKMgsOBJSreeGKPAW4LjE3rkWTNWwkfLLHvZKQ0uiIc8w9kSkvJmXCeSLVFKu7JGAr0w+yA76UaRXqXHL8ykAAF3PhaNFFTUB9He0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745305561; c=relaxed/simple;
-	bh=RY1wOESZWxNAL6kdiDv+BIzI3pjPPM9sK0ZV9d7NMYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TUxI3HDa1L1gec5oSS+ydcLh+Hznz7ogbhagUDHGFWvwQr2BmlHFr2HMO/IbufDsGNMbwTGddzKpdJPc/nkp5iDs7/ojHpagt7A5woYid/PEpyMd7dML9dzln+p5NLOGFbOhIoAK232TyqSH42qXicKhoDIvk8rO/hre3vyaAqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mcrSfFPK; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745305590; c=relaxed/simple;
+	bh=nKX/sv2aM8nB5vm2iXjyyUWyTpBPI7X1J5ID9/bKuJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QhJ5Y+Xdwlri70MNZq6zYA4jIOIWyUjuWlBkphsWkiumio6EqPP4rej6eqfWixPoytocsn2PIp1MZ9T48i4v5lj/O4HlWv7Ni0t90oPkGW5cs4yH+pSfT/fU+QYeWXwhDmyE2jAeokGUXpO4UN6ghOq+7RLe+oCrDm5tWnhWitI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtOVoDnM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mcrSfFPK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=CBuVD
-	5mLxW1qWVh3yysFaNPsNmOWSZ6Qe90zC/Vn6b4=; b=mcrSfFPK1lcjdYAV1LUz4
-	gX95wW5vObTfSWe6/aVPY0cwa5ug1UJ032FOp+rshXXe43xrG0zBQ0wOTCreYIm7
-	jce1UZnM9vCIUTCe35tNhMmMI+2YgSlPpIadMWt4xEkDoJqASx22/UrKZ6h5KIAo
-	UUGYVhGOCRB5aD9gSlVeoU=
-Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g1-3 (Coremail) with SMTP id _____wCHACaZPwdowMxzBg--.7474S6;
-	Tue, 22 Apr 2025 15:05:06 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: conor+dt@kernel.org,
-	krzk+dt@kernel.org,
-	robh@kernel.org,
-	hjc@rock-chips.com,
-	mripard@kernel.org,
-	neil.armstrong@linaro.org,
-	dmitry.baryshkov@oss.qualcomm.com,
-	knaerzche@gmail.com,
-	devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v4 4/7] drm/rockchip: inno-hdmi: Fix video timing HSYNC/VSYNC polarity setting for rk3036
-Date: Tue, 22 Apr 2025 15:04:43 +0800
-Message-ID: <20250422070455.432666-5-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250422070455.432666-1-andyshrk@163.com>
-References: <20250422070455.432666-1-andyshrk@163.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtOVoDnM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FC46C4CEE9;
+	Tue, 22 Apr 2025 07:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745305589;
+	bh=nKX/sv2aM8nB5vm2iXjyyUWyTpBPI7X1J5ID9/bKuJI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HtOVoDnMC953b+2tA3VLtfeggSdzsjmWapDTwNw6xT3hEMmjc9HNFIXmQ//u+aC0h
+	 9j/cHL3sGBxPKNRh4zZRKYC96lwpoxIr9mde71YcBvUOmJY9vEuq3QkrxR2XvmaR7P
+	 KEEpFzEAC8cZodRazbebJcLV7c+wEH/sSgUfv3ZnvTc5cvzTz8pg+DqGPTqU7JFL0T
+	 863FFG2ZWt9/Ybr9pQFgIZvgy2Xme8Ks8AEPdtwMHvJ+82ycrVSIMp7DhKM9PDCxuA
+	 DMPeHeXze9lwXaWM6iiDfgpJtJ7OQP0Jca43zGaTRO6IQ4A05TB5q+0YNidf8WdrZ4
+	 ZSZ45HSGNII9g==
+Date: Tue, 22 Apr 2025 10:06:21 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Arnd Bergmann <arnd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Juergen Gross <jgross@suse.com>, "H . Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Paul Menzel <pmenzel@molgen.mpg.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	David Woodhouse <dwmw@amazon.co.uk>
+Subject: Re: [PATCH 08/29] x86/boot/e820: Print E820_TYPE_RAM entries as ...
+ RAM entries
+Message-ID: <aAc_7Zm1PqeRmKMW@kernel.org>
+References: <20250421185210.3372306-1-mingo@kernel.org>
+ <20250421185210.3372306-9-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wCHACaZPwdowMxzBg--.7474S6
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZr17Gry3Ar18CFW5Xw4xZwb_yoWrJF4xpa
-	yUCFyUJF43Xa13Jw4xAa97Cr1aga97ta12yry7W3Wa9w12gr9YyF1kZF43uF1rAF93Was7
-	trWkGa4UG3W7Zw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jsNVkUUUUU=
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gU3XmgHOe-cKwABsx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421185210.3372306-9-mingo@kernel.org>
 
-From: Andy Yan <andy.yan@rock-chips.com>
+On Mon, Apr 21, 2025 at 08:51:48PM +0200, Ingo Molnar wrote:
+> So it is a bit weird that the actual RAM entries of the E820 table
+> are not actually called RAM, but 'usable':
+> 
+> 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB usable
+> 
+> 'usable' is pretty passive-aggressive in that context and ambiguous,
+> most E820 entries denote 'usable' address ranges - reserved ranges
+> may be used by devices, or the platform.
+> 
+> Clarify and disambiguate this by making the boot log entry
+> explicitly say 'kernel usable RAM':
+> 
+> 	BIOS-e820: [mem 0x0000000000100000-0x000000007ffdbfff]    1.9 GB kernel usable RAM
+> 
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> Cc: Andy Shevchenko <andy@kernel.org>
+> Cc: Arnd Bergmann <arnd@kernel.org>
+> Cc: David Woodhouse <dwmw@amazon.co.uk>
+> Cc: H. Peter Anvin <hpa@zytor.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  arch/x86/kernel/e820.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+> index 8ee89962fcbf..99f997ae88dc 100644
+> --- a/arch/x86/kernel/e820.c
+> +++ b/arch/x86/kernel/e820.c
+> @@ -187,7 +187,7 @@ void __init e820__range_add(u64 start, u64 size, enum e820_type type)
+>  static void __init e820_print_type(enum e820_type type)
+>  {
+>  	switch (type) {
+> -	case E820_TYPE_RAM:		pr_cont(" usable");			break;
+> +	case E820_TYPE_RAM:		pr_cont(" kernel usable RAM");		break;
+>  	case E820_TYPE_RESERVED:	pr_cont(" reserved");			break;
+>  	case E820_TYPE_SOFT_RESERVED:	pr_cont(" soft reserved");		break;
+>  	case E820_TYPE_ACPI:		pr_cont(" ACPI data");			break;
 
-The HSYNC/VSYNC polarity of rk3036 HDMI are controlled by GRF.
-Without the polarity configuration in GRF, it can be observed
-from the HDMI protocol analyzer that the H/V front/back timing
-output by RK3036 HDMI are currently not in line with the specifications.
+We have e820_type_to_string(), IMO the whole switch here can be replaced by
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+	pr_cont(" %s", e820_type_to_string(type));
 
----
+> -- 
+> 2.45.2
+> 
 
-(no changes since v2)
-
-Changes in v2:
-- First included in this series
-
- drivers/gpu/drm/rockchip/inno_hdmi.c | 36 +++++++++++++++++++++++++++-
- 1 file changed, 35 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/rockchip/inno_hdmi.c b/drivers/gpu/drm/rockchip/inno_hdmi.c
-index e891d42dd08a4..db4b4038e51d5 100644
---- a/drivers/gpu/drm/rockchip/inno_hdmi.c
-+++ b/drivers/gpu/drm/rockchip/inno_hdmi.c
-@@ -10,10 +10,12 @@
- #include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/hdmi.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- 
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-@@ -29,8 +31,19 @@
- 
- #include "inno_hdmi.h"
- 
-+#define HIWORD_UPDATE(val, mask)	((val) | (mask) << 16)
-+
- #define INNO_HDMI_MIN_TMDS_CLOCK  25000000U
- 
-+#define RK3036_GRF_SOC_CON2	0x148
-+#define RK3036_HDMI_PHSYNC	BIT(4)
-+#define RK3036_HDMI_PVSYNC	BIT(5)
-+
-+enum inno_hdmi_dev_type {
-+	RK3036_HDMI,
-+	RK3128_HDMI,
-+};
-+
- struct inno_hdmi_phy_config {
- 	unsigned long pixelclock;
- 	u8 pre_emphasis;
-@@ -38,6 +51,7 @@ struct inno_hdmi_phy_config {
- };
- 
- struct inno_hdmi_variant {
-+	enum inno_hdmi_dev_type dev_type;
- 	struct inno_hdmi_phy_config *phy_configs;
- 	struct inno_hdmi_phy_config *default_phy_config;
- };
-@@ -58,6 +72,7 @@ struct inno_hdmi {
- 	struct clk *pclk;
- 	struct clk *refclk;
- 	void __iomem *regs;
-+	struct regmap *grf;
- 
- 	struct drm_connector	connector;
- 	struct rockchip_encoder	encoder;
-@@ -374,7 +389,15 @@ static int inno_hdmi_config_video_csc(struct inno_hdmi *hdmi)
- static int inno_hdmi_config_video_timing(struct inno_hdmi *hdmi,
- 					 struct drm_display_mode *mode)
- {
--	int value;
-+	int value, psync;
-+
-+	if (hdmi->variant->dev_type == RK3036_HDMI) {
-+		psync = mode->flags & DRM_MODE_FLAG_PHSYNC ? RK3036_HDMI_PHSYNC : 0;
-+		value = HIWORD_UPDATE(psync, RK3036_HDMI_PHSYNC);
-+		psync = mode->flags & DRM_MODE_FLAG_PVSYNC ? RK3036_HDMI_PVSYNC : 0;
-+		value |= HIWORD_UPDATE(psync, RK3036_HDMI_PVSYNC);
-+		regmap_write(hdmi->grf, RK3036_GRF_SOC_CON2, value);
-+	}
- 
- 	/* Set detail external video timing polarity and interlace mode */
- 	value = v_EXTERANL_VIDEO(1);
-@@ -904,6 +927,15 @@ static int inno_hdmi_bind(struct device *dev, struct device *master,
- 		goto err_disable_pclk;
- 	}
- 
-+	if (hdmi->variant->dev_type == RK3036_HDMI) {
-+		hdmi->grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
-+		if (IS_ERR(hdmi->grf)) {
-+			ret = dev_err_probe(dev, PTR_ERR(hdmi->grf),
-+					    "Unable to get rockchip,grf\n");
-+			goto err_disable_clk;
-+		}
-+	}
-+
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
- 		ret = irq;
-@@ -988,11 +1020,13 @@ static void inno_hdmi_remove(struct platform_device *pdev)
- }
- 
- static const struct inno_hdmi_variant rk3036_inno_hdmi_variant = {
-+	.dev_type = RK3036_HDMI,
- 	.phy_configs = rk3036_hdmi_phy_configs,
- 	.default_phy_config = &rk3036_hdmi_phy_configs[1],
- };
- 
- static const struct inno_hdmi_variant rk3128_inno_hdmi_variant = {
-+	.dev_type = RK3128_HDMI,
- 	.phy_configs = rk3128_hdmi_phy_configs,
- 	.default_phy_config = &rk3128_hdmi_phy_configs[1],
- };
 -- 
-2.43.0
-
+Sincerely yours,
+Mike.
