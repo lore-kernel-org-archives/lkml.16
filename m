@@ -1,70 +1,263 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5C227817A
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 11:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 223EE1F152D;
+	Tue, 22 Apr 2025 11:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322311; cv=none; b=A4g1aSTITfGjxTM9/dYN2XR2zmEAgKK7iMTd+smvrsmEErOcPlpJJK7pNIxUVU+Xm03x7q+YwgNMg9pp9VXWQQoHNqvIn3ZPYj0jeV9jUcdoIMnlSu3w7QnMYsZMSlv1KO/8jAVSyvXhlELP/wN37hoOmpX2UqqTiC1navTP8rs=
+	t=1745322315; cv=none; b=abSl9o9GsBJvYEtcDRKbwMcw0JZk8+d/nYcqcrHZTn0cOhtOsZxFTXOeYZiW6qtQHFg++Oetj7Uo2gmZUDpU297+nR9mTnmGCbUdoLS/nXcbdOlTV3pcBfOj4Sx/pee0DEMI6AdBqD/kQPs+iNO0qe+5ACqIB1bS2hOtyELjMwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745322311; c=relaxed/simple;
-	bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MKkRrIVDly8TacIMvMKlCLAVLaZPfxHgi1oCNGf2JKIpevb42xOsjcsTOdlBoab9aT1Fbf1WKbItMFUnkU8ZuN9B//ihItwFdnzf+3M2KcVY+c2qo9akKM7Bleuoz793FKcJd8mVX/SrBDE2EGMugRbVJpd5iK4v3ulZ1jzpyuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grimberg.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ede096d73so36860665e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 04:45:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745322308; x=1745927108;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nWpDQmZNg8zKVk12QskQ7NNS05C4fI/JmZBKLdKyu8Q=;
-        b=om/2EBaBKXzncOkyfi+s7bieasPvV5NulhgAO8Uy5sWWWL94s9auJ9gxf+GtKeyTCv
-         KSlFl2Cazl8+YiubNL58JOhk7irUNt3+gLAV16LLID6sasQ7dEQFzIs+RQ4Ppa/iM+6j
-         PklwwHFJZdbsPRk0Ma1wF/yIwIjjMng8OjxM3WryMo7eVLy0pcxaQ9bNo/Yh2Tj0eTw8
-         ZOvhaJnrNf9mBXVN7Bp+8VhS8zL0CJR2Ab19B+9bERDArSWsqlw1MeF/HXwV+z/oKi7K
-         sHry6v9PCV9kUZ6Aph4OSfZ8xDiA9IF1XsfnELGvGF8U4UXu7iTaJb19NIJxt0ms/Sjh
-         MVyA==
-X-Forwarded-Encrypted: i=1; AJvYcCVCISGSH5hrLkhCypJwjG+bV+ZgtXJnH3+EUZhlQPdTu5NO4VZqBJCRZA/Zo1Xlic5tZ1J/5RlUq69Zovw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwNWtZHZP/pIveE5vdbjgOT7WSRgNtIxN/J/aJhkoutDJHjPLD
-	CWx+O58eJOg5N1c7SeI/Tlg9/iOvhAeJBmehK8noJgkfGZLlpIeZ
-X-Gm-Gg: ASbGnctBWCK/BDYUb6X89acLlumiquUssCb8jfLP+4Suq0omt2gY9L6whPuPzh62Z5s
-	pxhGiBPWjHpCticZNG/wgE0LYjiAnbfRymeQHzejgBoIp2NKse2cdVJxsX4BcUvEYTjPSr9Bf5a
-	kDffeJBBex3GpGQYwawU8FPju4f4x9DN6DfgqjIBuTL4NXXYgP8AvVsegXJphsJzZP1HbmlvaVS
-	W5zOO0LXZNRpJetSKOgLEil3N38CZa50/wH4MOjaHP1PEhghwBRcJLm7K33zaH5x93/6kBgZ4r1
-	pQnllzhQqy49CyQFYZY4uD0l+A0+XTAMdICVA3pVm1GxRVA1/56nvc618JZJDsRLEf2SoNr/BLi
-	odReM7nFDWpJcE4wW
-X-Google-Smtp-Source: AGHT+IGJklG+oYWUNhV6aCUmeX7ELGO7ly0rpUv7KbZChA9Y/w+LBLStuVC4QgbdfmLnoKp93pzDJA==
-X-Received: by 2002:a5d:59a2:0:b0:397:8f09:600 with SMTP id ffacd0b85a97d-39efba3cc22mr12376813f8f.13.1745322307762;
-        Tue, 22 Apr 2025 04:45:07 -0700 (PDT)
-Received: from [10.50.5.11] (bzq-84-110-32-226.static-ip.bezeqint.net. [84.110.32.226])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4206ecsm15228837f8f.17.2025.04.22.04.45.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 04:45:07 -0700 (PDT)
-Message-ID: <0c5aa410-f3a0-4834-b90a-702ba09379e5@grimberg.me>
-Date: Tue, 22 Apr 2025 14:45:06 +0300
+	s=arc-20240116; t=1745322315; c=relaxed/simple;
+	bh=+cAYzrgPIFB3bmk1XxbsIRRVowOU2YhzebrGhkUwKb4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZVGYl1JC2SeA/jdkLaRd/DrPwvKz8AAIN76IxZCiL29kuqoFBI5a13BOVvD+sV4nrug52kUiFx8Lpn1B88LMnfG83a0CTHlQHKc+B5H6K9nEvso/wKSvssL+yKdJ9BbhwLDddGcH35rQKzIFlz7Gkr6AUnn9dUp+WbMx+r7mkJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8YE7EP8; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8YE7EP8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3373C4CEEA;
+	Tue, 22 Apr 2025 11:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745322314;
+	bh=+cAYzrgPIFB3bmk1XxbsIRRVowOU2YhzebrGhkUwKb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W8YE7EP8Qz+DcdeKrJkBB1/rGjSrMnbo2Q2vRh0AIMZmEgBnUY0o+AydUKhahshoj
+	 4Bawqk4u+v3YY/GTETtTrYIuz+VZ+PRGguLd8GUF3rW9Ak1/sh7XDc8QjCuBRGwyCe
+	 jIv8nmZygCFxxxMkgEueTHGnI5Gqdd9IlJGg2ou+oX28tAdkjgnoB1n54fh9osVutT
+	 zGcKkSp2W7XmaKO8gSBw8fT/9zIzhZp7Jrv3TOA6TkNj+DB0YmshjE15f14/5Trp3h
+	 xDgfM4tb75YIGHsYtJCyrjHy5f7iW3RpzHtX024NXJ4reh+jFMfsjqBZf9O+W8x0ad
+	 XSXB1f9E0th2Q==
+Date: Tue, 22 Apr 2025 13:45:07 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 09/16] gpu: nova-core: register sysmem flush page
+Message-ID: <aAeBQ1aCQSrGFqCd@cassiopeiae>
+References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
+ <20250420-nova-frts-v1-9-ecd1cca23963@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] nvme/pci: factor out nvme_init_hctx() helper
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>
-Cc: Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250421165525.1618434-1-csander@purestorage.com>
- <20250421165525.1618434-2-csander@purestorage.com>
-Content-Language: en-US
-From: Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <20250421165525.1618434-2-csander@purestorage.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250420-nova-frts-v1-9-ecd1cca23963@nvidia.com>
 
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+On Sun, Apr 20, 2025 at 09:19:41PM +0900, Alexandre Courbot wrote:
+> A page of system memory is reserved so sysmembar can perform a read on
+> it if a system write occurred since the last flush. Do this early as it
+> can be required to e.g. reset the GPU falcons.
+> 
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  drivers/gpu/nova-core/dma.rs       | 54 ++++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/nova-core/gpu.rs       | 53 +++++++++++++++++++++++++++++++++++--
+>  drivers/gpu/nova-core/nova_core.rs |  1 +
+>  drivers/gpu/nova-core/regs.rs      | 10 +++++++
+>  4 files changed, 116 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/nova-core/dma.rs b/drivers/gpu/nova-core/dma.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..a4162bff597132a04e002b2b910a4537bbabc287
+> --- /dev/null
+> +++ b/drivers/gpu/nova-core/dma.rs
+> @@ -0,0 +1,54 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Simple DMA object wrapper.
+> +
+> +// To be removed when all code is used.
+> +#![allow(dead_code)]
+> +
+> +use kernel::device;
+> +use kernel::dma::CoherentAllocation;
+> +use kernel::page::PAGE_SIZE;
+> +use kernel::prelude::*;
+> +
+> +pub(crate) struct DmaObject {
+> +    pub dma: CoherentAllocation<u8>,
+> +    pub len: usize,
+
+This should be covered by CoherentAllocation already, no? If it does not have a
+public accessor for its size, please add it for CoherentAllocation instead. I
+can take the corresponding patch through the nova tree.
+
+> +    #[allow(dead_code)]
+
+Please prefer #[expect(dead_code)], such that we are forced to remove it once
+it's subsequently used.
+
+> +    pub name: &'static str,
+> +}
+> +
+> +impl DmaObject {
+> +    pub(crate) fn new(
+> +        dev: &device::Device<device::Bound>,
+> +        len: usize,
+> +        name: &'static str,
+> +    ) -> Result<Self> {
+> +        let len = core::alloc::Layout::from_size_align(len, PAGE_SIZE)
+> +            .map_err(|_| EINVAL)?
+> +            .pad_to_align()
+> +            .size();
+> +        let dma = CoherentAllocation::alloc_coherent(dev, len, GFP_KERNEL | __GFP_ZERO)?;
+> +
+> +        Ok(Self { dma, len, name })
+> +    }
+> +
+> +    pub(crate) fn from_data(
+> +        dev: &device::Device<device::Bound>,
+> +        data: &[u8],
+> +        name: &'static str,
+> +    ) -> Result<Self> {
+> +        Self::new(dev, data.len(), name).and_then(|mut dma_obj| {
+> +            // SAFETY:
+> +            // - The copied data fits within the size of the allocated object.
+> +            // - We have just created this object and there is no other user at this stage.
+> +            unsafe {
+> +                core::ptr::copy_nonoverlapping(
+> +                    data.as_ptr(),
+> +                    dma_obj.dma.start_ptr_mut(),
+> +                    data.len(),
+> +                );
+> +            }
+> +            Ok(dma_obj)
+> +        })
+> +    }
+> +}
+
+The DMA wrapper should probably be added in a separate patch.
+
+> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+> index 1f7799692a0ab042f2540e01414f5ca347ae9ecc..d43e710cc983d51f053dacbd77cbbfb79fa882c3 100644
+> --- a/drivers/gpu/nova-core/gpu.rs
+> +++ b/drivers/gpu/nova-core/gpu.rs
+> @@ -3,6 +3,7 @@
+>  use kernel::{device, devres::Devres, error::code::*, pci, prelude::*};
+>  
+>  use crate::devinit;
+> +use crate::dma::DmaObject;
+>  use crate::driver::Bar0;
+>  use crate::firmware::Firmware;
+>  use crate::regs;
+> @@ -145,12 +146,30 @@ fn new(bar: &Devres<Bar0>) -> Result<Spec> {
+>  }
+>  
+>  /// Structure holding the resources required to operate the GPU.
+> -#[pin_data]
+> +#[pin_data(PinnedDrop)]
+>  pub(crate) struct Gpu {
+>      spec: Spec,
+>      /// MMIO mapping of PCI BAR 0
+>      bar: Devres<Bar0>,
+>      fw: Firmware,
+> +    sysmem_flush: DmaObject,
+
+Please add a doc-comment for this DmaObject explaining what it is used for by
+the driver and why it is needed.
+
+> +}
+> +
+> +#[pinned_drop]
+> +impl PinnedDrop for Gpu {
+> +    fn drop(self: Pin<&mut Self>) {
+> +        // Unregister the sysmem flush page before we release it.
+> +        let _ = with_bar!(&self.bar, |b| {
+> +            regs::PfbNisoFlushSysmemAddr::default()
+> +                .set_adr_39_08(0)
+> +                .write(b);
+> +            if self.spec.chipset >= Chipset::GA102 {
+> +                regs::PfbNisoFlushSysmemAddrHi::default()
+> +                    .set_adr_63_40(0)
+> +                    .write(b);
+> +            }
+> +        });
+> +    }
+>  }
+>  
+>  impl Gpu {
+> @@ -173,6 +192,36 @@ pub(crate) fn new(
+>          devinit::wait_gfw_boot_completion(&bar)
+>              .inspect_err(|_| pr_err!("GFW boot did not complete"))?;
+>  
+> -        Ok(pin_init!(Self { spec, bar, fw }))
+> +        // System memory page required for sysmembar to properly flush into system memory.
+> +        let sysmem_flush = {
+> +            let page = DmaObject::new(
+> +                pdev.as_ref(),
+> +                kernel::bindings::PAGE_SIZE,
+> +                "sysmem flush page",
+> +            )?;
+> +
+> +            // Register the sysmem flush page.
+> +            with_bar!(bar, |b| {
+> +                let handle = page.dma.dma_handle();
+> +
+> +                regs::PfbNisoFlushSysmemAddr::default()
+> +                    .set_adr_39_08((handle >> 8) as u32)
+> +                    .write(b);
+> +                if spec.chipset >= Chipset::GA102 {
+> +                    regs::PfbNisoFlushSysmemAddrHi::default()
+> +                        .set_adr_63_40((handle >> 40) as u32)
+> +                        .write(b);
+> +                }
+> +            })?;
+> +
+> +            page
+> +        };
+> +
+> +        Ok(pin_init!(Self {
+> +            spec,
+> +            bar,
+> +            fw,
+> +            sysmem_flush,
+> +        }))
+>      }
+>  }
+> diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/nova_core.rs
+> index 878161e060f54da7738c656f6098936a62dcaa93..37c7eb0ea7a926bee4e3c661028847291bf07fa2 100644
+> --- a/drivers/gpu/nova-core/nova_core.rs
+> +++ b/drivers/gpu/nova-core/nova_core.rs
+> @@ -21,6 +21,7 @@ macro_rules! with_bar {
+>  }
+>  
+>  mod devinit;
+> +mod dma;
+>  mod driver;
+>  mod firmware;
+>  mod gpu;
+> diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
+> index fd7096f0ddd4af90114dd1119d9715d2cd3aa2ac..1e24787c4b5f432ac25fe399c8cb38b7350e44ae 100644
+> --- a/drivers/gpu/nova-core/regs.rs
+> +++ b/drivers/gpu/nova-core/regs.rs
+> @@ -14,6 +14,16 @@
+>      28:20   chipset => try_into Chipset, "chipset model"
+>  );
+>  
+> +/* PFB */
+> +
+> +register!(PfbNisoFlushSysmemAddr@0x00100c10;
+> +    31:0    adr_39_08 => as u32
+> +);
+> +
+> +register!(PfbNisoFlushSysmemAddrHi@0x00100c40;
+> +    23:0    adr_63_40 => as u32
+> +);
+
+Please add some documentation for the register and its fields.
