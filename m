@@ -1,65 +1,50 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888251F150B;
-	Tue, 22 Apr 2025 14:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA2E2147F9;
+	Tue, 22 Apr 2025 14:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331459; cv=none; b=qB4PghmNQD+ZzA2xV97/FlRDOTYEmOpTLPHP+qJ8pmUImiZoud04kECXk3AQnbLjotgNMvlSEWYYqsfm2xPGqVXRlGGSeN1Umnga9MVyJEMoVHwID2NzK/7kzFY1D/6T2E8lEB4x7wiRVUczfXA+uQFMj2ocWM1oLCGvKFmOQaI=
+	t=1745331525; cv=none; b=U9LUSLrE3lEnztIS34geSU+e0Iq2MzT2nRhIg0INzv6HDHcMkHntofrYLBk+Pnbm5jmDYNoEnqphxEBqP+s9FoaXkcxO2UBWz24j8R4h/oPm0SeVWpW7ogxi05ua8NKWwUrJNMEEy5EgPiIBMBIczY2WAzm7EbT61f5Ji5J3T/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331459; c=relaxed/simple;
-	bh=gYlWEQIlw77JGv7XiwEGeNo2Aw8VD0SndyzCjOAIY8o=;
+	s=arc-20240116; t=1745331525; c=relaxed/simple;
+	bh=7og7s6hoXNGAFJwwFuz4N620MswjEFEpEFE01/gyPhc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2wMNvKKqMrV64zwr+S12zFe0oArdTLxEcK9IysJ+fv7RjsXbPX/HYVUQyfpxvgOiEM6CQyt4VAy4S7DlEp6RRI7PAKVyVZvg1lgUS/EPz42IxuJ4myKrT3dlJJklaJanDR1ZhpD3b/+6AvU6vRBPCbdHv0m0X3+qxAj4LM9cOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2a6cWMy; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=XkcT25jqV7B1H69sDlyyBLDWWntbyQIUma7HPTDJvFSao+vZgwaTK9bpuSfinzmF/rlzT9sqd+7zUshQ6sM7640drrbGozFxlXWHEP53JvAP9zQnJMZqiC4CA9tCbBVAGzZxs3v35V1o7f5VzteQ1GywU7LB3jvqJOXf64P7J5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PsLyfEyJ; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2a6cWMy"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso34121905e9.0;
-        Tue, 22 Apr 2025 07:17:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745331456; x=1745936256; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9I/uqzoZdA9AWIABIKeUfPFhsWMyq0LGojHFzDLdp0M=;
-        b=F2a6cWMybtp3ue+Godh14f4hDRq7yCZorbMoQgWBR3UD5sVZ3Act/q86JksCvfREOt
-         N5/OV2PAIHiBKTcCNFGQBuSSINvn8Sc7rj1WcKqRQpU6mnv3r1PaeOlir4lWjnRstQlb
-         5vFrPMw6aeru2ycMt6a5H+vVc9kzCcR8XQ7pjm8g4xm3ifRDNwN22FbZOFncCja+U+DC
-         1JT/HiavmnGDNoDzOymyqYXtA7cDk/IlbAIJ21xqs3wmiB9Y2sMYZKVFzT9A6PXCc1XW
-         LSBn/ec2VZC5IF4JSt7gb/Nhx9zzHkxcx0wUQOLHDXqNANctaxALDUr4wARdj2DPXSGt
-         Kdxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745331456; x=1745936256;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9I/uqzoZdA9AWIABIKeUfPFhsWMyq0LGojHFzDLdp0M=;
-        b=XG7SelXSRKhBz9HUXuPSKszZwDQYZnwTsvJAj4UoQUciB0Oe0aI+YDUdTsdxQNIUHY
-         es1s1cYzBzi7jY6r5WA3WX23obAZFpDRibgefR9WjbP7CVXkv3u4CtCiopBwIDQkayHY
-         Es4q4x0Po/iYdFhcgec3L5D250o/+QVorSaQsYibdD+gTzVHzZCtQOUICin20l9BIQVS
-         VlNwB1dL2W/yxhzAwX9UYDLit0pXLKtFpgSKoyELE1dzltypWOcPccodHvqkoNp0p/7T
-         +LUYf17whQNp5G+6I80+/kC6KUL+cWDaXFRcKhpROAkTIw3wWqS6V6YqLP9H6dYbJBX+
-         Oo8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVPznWNb6vnMd0RfBaAiCcXPnhYwa5w8dXGy131IUg8LqByHHRnJdyQp0InFk3p3xAz31454SK8xcxI0Yg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHwLFQoKUdVVuii1+JQY3xMAR3F27IcLAvx/OmbVQXifE4ZWSg
-	0+dfxL+I1Tn3tnZOi0zvdvX0WpoczbmKpU/cSIo5yQQvMcrLIUGA
-X-Gm-Gg: ASbGncvj+pAnkR4vXhnDnzwB9qBVXS3u1AgnVs7nlHU3Un1en+Xuzlr4MNUbNcyPezD
-	OXdbeZI+3BNXR/O8KwQvGIh8/UH2uo0Sb7xqm6VCzQNxz/o27epLKqZr3AjxnolCnI2ybaZLgPP
-	Xptu2FlFLhHcPoG4eW6C9y63xULHjRRlw00ClexujvHc5CiGxO8p7KCCrDxbLx2YZ1i8/QFxgT1
-	RoX/cOnwtJDMDjtXYvCiBtyjXpzDuRatc9gCzl85INjmjMwvIW7ggiAsHQy7VH7YNvG8wjbKIA6
-	kJODxCeQGR8O1iF+TDBUjNuP00WD65s1g2wji0W01eZ1HqAnis7Xn1zyqrr2Z9UPyA7DBtwtqv/
-	1uII4WPv6ZLsbUi2jBG1iNg==
-X-Google-Smtp-Source: AGHT+IHQ4BsuRjz6JVL8wwc24WrJX2pvwSm2cSBp+O4iJGzv95SQ1ijWxZ5mEA7FK7II9H1JdzLaPA==
-X-Received: by 2002:a05:600c:43d4:b0:440:67d4:ec70 with SMTP id 5b1f17b1804b1-44069732095mr115981345e9.8.1745331455479;
-        Tue, 22 Apr 2025 07:17:35 -0700 (PDT)
-Received: from ?IPV6:2001:4bc9:1f91:3f49:880a:9a87:b7c1:e3a3? ([2001:4bc9:1f91:3f49:880a:9a87:b7c1:e3a3])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9ed9sm180011125e9.3.2025.04.22.07.17.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 07:17:35 -0700 (PDT)
-Message-ID: <a27d97ff-7d40-4595-9c0d-51415d958ebe@gmail.com>
-Date: Tue, 22 Apr 2025 16:17:33 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PsLyfEyJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745331523; x=1776867523;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=7og7s6hoXNGAFJwwFuz4N620MswjEFEpEFE01/gyPhc=;
+  b=PsLyfEyJulOWN6ixc92QNtXUYu/7N1PVsmOgjFr1odepTtNZuVlCQRv5
+   p+tGntCO4rAMw5DeC+LcPMoOP001qwYnttI/R4WSms054wwD1nUOU0RNL
+   Vqmc2tNA3IFxhWva/OaN6vNxABglXQPSVu1m3uoNaVvFVTDEJzD3Yh/DJ
+   Uo9hEA4sYuLQDs1aRVk/ySbOd72g/wUYaQwTJ/F6Jw1R4dF4kRfM1A+mU
+   qknC1M/NXPOIHNAahCigSDNtczlhzcxl6F2DInMKjTXWfmjm+Yk8Rk1xC
+   bnjiWkFm9/KgtFzg0s++R2H1DNyIZp18noWQAvaVafowd+TrwFkb54hvz
+   Q==;
+X-CSE-ConnectionGUID: ny//4h1qSjCi3DgV7K6Q+Q==
+X-CSE-MsgGUID: 2v8+SZE/Sm6be+lWG2Tv0A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="58258269"
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="58258269"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 07:18:43 -0700
+X-CSE-ConnectionGUID: g/BlTnMSRIiDqmbvuowq9w==
+X-CSE-MsgGUID: lf9Bf2fyR8ab6GilzS6szQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,231,1739865600"; 
+   d="scan'208";a="136886954"
+Received: from johunt-mobl9.ger.corp.intel.com (HELO [10.124.220.191]) ([10.124.220.191])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 07:18:42 -0700
+Message-ID: <4ea35cc4-1720-494c-9d90-e4669c8cde08@intel.com>
+Date: Tue, 22 Apr 2025 07:18:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,58 +52,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/8] rust: pin-init: Implement `Wrapper` for
- `UnsafePinned` behind feature flag.
-To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250421221728.528089-1-benno.lossin@proton.me>
- <20250421221728.528089-4-benno.lossin@proton.me>
- <4df4e3a0-9caa-4253-bf65-66c238bf0291@gmail.com>
- <D9D4M8XF14X9.1YUVFH9EW0IMX@proton.me>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <D9D4M8XF14X9.1YUVFH9EW0IMX@proton.me>
+Subject: Re: [PATCH] Handle Ice Lake MONITOR erratum
+To: Ingo Molnar <mingo@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, andrew.cooper3@citrix.com,
+ Len Brown <len.brown@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+ stable@vger.kernel.org
+References: <20250421192205.7CC1A7D9@davehans-spike.ostc.intel.com>
+ <aAc7Y5x_frQUB2Gc@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <aAc7Y5x_frQUB2Gc@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 22.04.25 1:21 PM, Benno Lossin wrote:
-> On Tue Apr 22, 2025 at 11:42 AM CEST, Christian Schrefl wrote:
->> On 22.04.25 12:18 AM, Benno Lossin wrote:
->>> @@ -1557,3 +1561,11 @@ fn pin_init<E>(value_init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
->>>          unsafe { cast_pin_init(value_init) }
->>>      }
->>>  }
->>> +
->>> +#[cfg(all(feature = "unsafe-pinned", CONFIG_RUSTC_HAS_UNSAFE_PINNED))]
->>> +impl<T> Wrapper<T> for core::pin::UnsafePinned<T> {
->>> +    fn pin_init<E>(init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
->>> +        // SAFETY: `UnsafePinned<T>` has a compatible layout to `T`.
->>> +        unsafe { cast_pin_init(init) }
->>> +    }
->>> +}
->>
->> I've realized that for us to use `UnsafePinned` in `Opaque` internally 
->> we need to have a `T: ?Sized` for this implementation. `cast_pin_init`
->> won't work for that since we can't cast pointers between different DSTs.
->> We could add something similar that uses a closure to convert a
->> `*mut T` to `*mut U`.
+On 4/21/25 23:46, Ingo Molnar wrote:
+>>  /*
+>> + * These CPUs have buggy MWAIT/MONITOR implementations that
+>> + * usually manifest as hangs or stalls at boot.
+>> + */
+>> +#define MWAIT_VFM(_vfm)	\
+>> +	X86_MATCH_VFM_FEATURE(_vfm, X86_FEATURE_MWAIT, 0)
+>> +static const struct x86_cpu_id monitor_bug_list[] = {
+>> +	MWAIT_VFM(INTEL_ATOM_GOLDMONT),
+>> +	MWAIT_VFM(INTEL_LUNARLAKE_M),
+>> +	MWAIT_VFM(INTEL_ICELAKE_X),	/* Erratum ICX143 */
+>> +	{},
+>> +};
+> While it's just an internal helper, macro names should still be 
+> intuitive:
 > 
-> I don't follow, which types do you need to wrap in `Opaque` that are not
-> sized?
-> 
-> Since `Opaque` uses `MaybeUninit` under the hood, it cannot support
-> `!Sized` types anyways, so I'm a bit confused.
+>   s/MWAIT_VFM
+>    /VFM_MWAIT_BUG
 
-Sorry I got an `?Sized` error and convinced myself that `Opaque` had
-a `T: ?Sized` bound. After looking at it again there is no problem.
+The current convention is to end with the thing that's being matched,
+like "_FEATURE" or "_VFM" in the X86_MATCH*() macros. That's why I
+ordered it the way I did.
 
-I'll work on V2 of my `UnsafePinned` patch with a second commit
-for using it in `Opaque`.
+As for including "BUG", the _macro_ doesn't match CPUs with the bug.
+It's just matching CPUs with the specified VFM that have MWAIT. It could
+(theoretically) get used for non-bug things so I don't think it's
+intuitive to put "BUG" in the name.
 
-Cheers
-Chrisitan
+But, honestly, we have a tone of these one-off x86_cpu_id macros around.
+They have lots of pretty silly naming, but they're mostly only used at
+one isolated site so I don't worry about the naming _too_ much.
