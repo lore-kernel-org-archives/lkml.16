@@ -1,94 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8049525C71D;
-	Tue, 22 Apr 2025 02:17:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7243625B687
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 02:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745288241; cv=none; b=kd/y9eP+N1o45nwMWhnrZ+hvV7YTKK3h+E+0QxhrGpg4y8yT8j5NP5rEnJxN3zlyGGqrcbeQtA1FWwisjpQAoHKzUbJ2FuXNN0JdogqrRsBiUDYI6oeJLsd2e+hWX3UydI1FeH1vGrk439X0VKyosPSs2RP2+J4NwQd/0Hl/TL0=
+	t=1745288243; cv=none; b=lXKndPA+YvxAMw6Q07yfBjp6Di0Vj42gsOOAcfMUcqXZToUOzSKi/mOiI+K1Fwj0ZvBxuyTtIXhjk8Q8PSLUC5lbkZAk7q2hSXbNUQ1hBJRRdS2qR6r+bKgT5ODvZ5I4nRo3crMl7JFTNtB3yKc/7s7sYskvsb2RuFNov63zEPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745288241; c=relaxed/simple;
-	bh=qxyipcJEF9nFX73cKSAdI23BfVbU1XVJJxhmAjlrpXQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DXW5+SIPYhaCZCVPPaxQJ5MEn38hp1yBByMBob1UlPEsUin3cCiOZR1OSlE+J56HtY6u6VchrisEinz4rRKlFhYqzuvb2vRFEYB8nyyYVPoHV8hWrSCm4qxlwuMuT0e3zhACQu/Sf8FO1EVepHb5e8y7G5l/MWdE0Dfcvxi8IbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDxIhazk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745288243; c=relaxed/simple;
+	bh=ZZHqkKq+49cIqgAl6qN3d5wawWQS8Uabq7s40p983kk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s1iY2/Eqhvs+45OLfFYJuD+4bpoRiQhg/TGX9+rZvTbg9RXcBfie9BAaxjCFOFtrNO9dCkkSfIN/raJmVxiKZs4uv80Cda1rZ7gJ/EC2PWLSrIpcfsNHoxfsW6w8BHInmXz3khWkk/wOTACqhUwYvoBJbfW+VqkpK6uxXog45OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TazcazY3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDxIhazk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C98AEC4CEEF;
-	Tue, 22 Apr 2025 02:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745288241;
-	bh=qxyipcJEF9nFX73cKSAdI23BfVbU1XVJJxhmAjlrpXQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qDxIhazkJjmqo0DZuRZbpBp1lmU6viEPY8MmfdIYUYV8ljB9XOPqvi6gm9V/8/JQJ
-	 CvTS4rIe7s85IUKALma8uFSzA1CWmg/hxCWR9K4EL52WZPSxUxAHGRN7LkFncvaR8m
-	 9xKOC90Ifp/sitfGXjYL7aejyLqev4ljjHEpuKJeBKM6zO6TyRQDd0nvdNdJ1c72Ru
-	 HIGqSh6ldMHsGgbfcgUCh1eEzQM695jIMRm9OivHofYR/j/SoiRirxt+iVfomNVAVE
-	 jY7Pb/FCE6fp59Pja8/iqCwvQ35kCeObHXeCKfy7mjl9a/hhZdm+/xhtPN0Rep9sT4
-	 KhXzd7VOElTBQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Gou Hao <gouhao@uniontech.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Christoph Hellwig <hch@infradead.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.12 10/23] iomap: skip unnecessary ifs_block_is_uptodate check
-Date: Mon, 21 Apr 2025 22:16:50 -0400
-Message-Id: <20250422021703.1941244-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250422021703.1941244-1-sashal@kernel.org>
-References: <20250422021703.1941244-1-sashal@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TazcazY3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745288239;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vPTnMwL4/AxLUZBgsDv5fiQPI73zQZ0VZKJSDjiN8Nk=;
+	b=TazcazY3LPDUoo4BuTnJGUYbbWZsVz6+1H1+/kVDbcZKKAlnsUplB5AW1Z+Bt2cJxA5ZZ8
+	3owG+7f92o7AFawtdKn+vleK438Ma0L2uFTPpFTmVkvV8OsOZQhoF6+rF+YSvcivr30cRt
+	J+7G9sfntWw4hezFOCcZ6hiaPuCsYqM=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-357-XTG-6jzWMSWJA0fWr1fcAA-1; Mon,
+ 21 Apr 2025 22:17:15 -0400
+X-MC-Unique: XTG-6jzWMSWJA0fWr1fcAA-1
+X-Mimecast-MFC-AGG-ID: XTG-6jzWMSWJA0fWr1fcAA_1745288234
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A3A43180087F;
+	Tue, 22 Apr 2025 02:17:14 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.137])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5D1A5180045C;
+	Tue, 22 Apr 2025 02:17:10 +0000 (UTC)
+Date: Tue, 22 Apr 2025 10:17:06 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: Re: [PATCH 3/4] ublk: factor out ublk_get_data
+Message-ID: <aAb8IgxW85Ncxv74@fedora>
+References: <20250421-ublk_constify-v1-0-3371f9e9f73c@purestorage.com>
+ <20250421-ublk_constify-v1-3-3371f9e9f73c@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.24
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421-ublk_constify-v1-3-3371f9e9f73c@purestorage.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-From: Gou Hao <gouhao@uniontech.com>
+On Mon, Apr 21, 2025 at 05:46:42PM -0600, Uday Shankar wrote:
+> Move all the logic for the UBLK_IO_NEED_GET_DATA opcode into its own
+> function. This also allows us to mark ublk_queue pointers as const for
+> that operation, which can help prevent data races since we may allow
+> concurrent operation on one ublk_queue in the future.
+> 
+> Suggested-by: Ming Lei <ming.lei@redhat.com>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> Reviewed-by: Caleb Sander Mateos <csander@purestorage.com>
 
-[ Upstream commit 8e3c15ee0d292c413c66fe10201d1b035a0bea72 ]
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-In iomap_adjust_read_range, i is either the first !uptodate block, or it
-is past last for the second loop looking for trailing uptodate blocks.
-Assuming there's no overflow (there's no combination of huge folios and
-tiny blksize) then yeah, there is no point in retesting that the same
-block pointed to by i is uptodate since we hold the folio lock so nobody
-else could have set it uptodate.
-
-Signed-off-by: Gou Hao <gouhao@uniontech.com>
-Link: https://lore.kernel.org/20250410071236.16017-1-gouhao@uniontech.com
-Reviewed-by: "Darrick J. Wong" <djwong@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Christian Brauner <brauner@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/iomap/buffered-io.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index 1bad460275ebe..d4b990938399c 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -263,7 +263,7 @@ static void iomap_adjust_read_range(struct inode *inode, struct folio *folio,
- 		}
- 
- 		/* truncate len if we find any trailing uptodate block(s) */
--		for ( ; i <= last; i++) {
-+		while (++i <= last) {
- 			if (ifs_block_is_uptodate(ifs, i)) {
- 				plen -= (last - i + 1) * block_size;
- 				last = i - 1;
--- 
-2.39.5
+thanks,
+Ming
 
