@@ -1,180 +1,157 @@
-Received: from mta-64-225.siemens.flowmailer.net (mta-64-225.siemens.flowmailer.net [185.136.64.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEB40146A60
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1674128CF45
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:54:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745333676; cv=none; b=t0ku52LyPvNY7hAXiUwAYG3Dcx0Y9wE0FmvYuU0tTfeY+EJcvkUB/OUl/I1HLa+kMfjM1w7KoAtl5P+mnb1gXX0sZ5DeKanEkX6Rvb9+HIDlRk3/NIncRD4WqVDwWplRhgPuNN5+j69qeoaGcYUvRY6/fkYxguCRQTpRqUKz4Ys=
+	t=1745333678; cv=none; b=GpQhlI3gnLec8pGBzB2nJNY2zsfQvo+AqabpkRjZoN+BzVI3T9OHlmI09sK1lFRvx+yTh+NqdMmyD17XQF2Pq9OVhg1v/b9I2LZalm8Zp78xK4fSVrpFDc2/S8SG9/E8U3TzK4gmm4Xjvp1CB0t/QtwckJgIUXmQQSjLZ9aPBlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745333676; c=relaxed/simple;
-	bh=WwXtJRbHgg+XQHn0+MFKZtRBFSSaBHEl/mDkR4j/oKA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ScujLAd1krLJ1uRfzNf6KAK1hFd1J3xfvkrQcCZexXDlPX3xaP3JhcEdgQ3WffQBZ/16J/tskzR95UkdlsmjPcuWTNdqm32gkFnoJrt+zwga5Li2pGs2WyG0TGcohve4urrczuYarmfwaLSJWYWoNq4UAzVh62XFjyehYn/zY5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=aYMEXlm3; arc=none smtp.client-ip=185.136.64.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1745333678; c=relaxed/simple;
+	bh=5jwVtzCgD4uNjqyYTuvqwhiQR8nTsDDM1aNFemeBRzg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NiGoCB6B6lkJR+luglOup+dnzxnkBlkiqB2asU0wNm960KLei1xk5nfCdRQ4y4yo6Ox/Zmgil7943QJbjiEZxTAcX2ZXMu1hnb0ecNUauWaGpzmGtfufvdRFQkY9V8izjfEUncqkMvLmgugj29jhZIpqr8BnPHSLe5xUxIaohbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JVKCvhEZ; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="aYMEXlm3"
-Received: by mta-64-225.siemens.flowmailer.net with ESMTPSA id 202504221454297cffedfec602a62282
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 22 Apr 2025 16:54:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=florian.bezdeka@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=o+2QKvSlwCqUuSsj2WRmkKUQKEwdpqxVgMFG2KgWACg=;
- b=aYMEXlm3QsZGBRM1nYuYKtJY4g8p1DaMXSdNYSvDJq9TprQrZ6aHfjsTL37IpobV7hEpR8
- L4jkFqunOH/N4S/bMwuGFMQtm0VNOrQwHCF/zaOhbQqxtf4FaFWoO8/GKeiES7nqy6Bu1Ne/
- 6sR2dTBWtfSb3ZINpBkauOZY2DyL2mkXQcrkxSasX04UedlNGlEf051nxpig8msbF8FgepoN
- H3PxXn44rxLhs1ZvkOPlHWFYC0nQ5Z86z7gfZBmn8mkNZzDTVJhSoHAGCMiNFbU0b7/QTsAi
- ihxvMXkBWcNS8KNtE0+V9NyV130GcvrZx9NNU/KTWooqsVwIHkCDxY+A==;
-Message-ID: <f320d90db90df2d9583a1af4d83880f052768a64.camel@siemens.com>
-Subject: Re: [RFC PATCH v2 0/7] Defer throttle when task exits to user
-From: Florian Bezdeka <florian.bezdeka@siemens.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>, Aaron Lu
- <ziqianlu@bytedance.com>
-Cc: Jan Kiszka <jan.kiszka@siemens.com>, Valentin Schneider	
- <vschneid@redhat.com>, Ben Segall <bsegall@google.com>, Peter Zijlstra	
- <peterz@infradead.org>, Josh Don <joshdon@google.com>, Ingo Molnar	
- <mingo@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Xi Wang	
- <xii@google.com>, linux-kernel@vger.kernel.org, Juri Lelli
- <juri.lelli@redhat.com>,  Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>, 
- Chengming Zhou <chengming.zhou@linux.dev>, Chuyi Zhou
- <zhouchuyi@bytedance.com>, "Sebastian Andrzej Siewior,"	
- <bigeasy@linutronix.de>
-Date: Tue, 22 Apr 2025 16:54:28 +0200
-In-Reply-To: <610fcbfa-a8e7-483c-a112-579879628b99@amd.com>
-References: <20250409120746.635476-1-ziqianlu@bytedance.com>
-	 <cee5bca4e2b024d3406b40b84c0d5db91c7d276f.camel@siemens.com>
-	 <20250414120407.GC3558904@bytedance>
-	 <7483d3ae-5846-4067-b9f7-390a614ba408@siemens.com>
-	 <0a06f6c4-5d69-4fd1-badd-92fd55d8f38d@amd.com>
-	 <55687bb5-7e8a-4d7d-a597-6f97087cab32@siemens.com>
-	 <5e919998-338c-4055-b58a-e4586134956c@amd.com>
-	 <f5111e9f-bdee-480a-b29a-d8d1c207a600@siemens.com>
-	 <ec2cea83-07fe-472f-8320-911d215473fd@amd.com>
-	 <e65a32af-271b-4de6-937a-1a1049bbf511@amd.com>
-	 <20250421120648.GA3357499@bytedance>
-	 <610fcbfa-a8e7-483c-a112-579879628b99@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JVKCvhEZ"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso3768288f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 07:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745333674; x=1745938474; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gG9ubyGdNF+k3tFycmy59fjgpr52bVfS4Acl0aGZAog=;
+        b=JVKCvhEZSiMXjdtYmsX4QZchmIVsCwQ2KKceuACtt1B/c08nGs8hiSYqf74pxAusb+
+         G5E4ZX9mXS5DQgp164GFLAtLjaODOqJZ1r3lGRijuMwKHdv8wcp+SPR01uBdhfGUjrK/
+         Vg/cGn9EjQIfIDCLu260IwcS131EonK2Mo/o02k9eHnOQXj+4poUiRqlU3DknE2Jwxlo
+         hz4n8fqd5cnrcSbC6Nb96voo0qZrhGsjbc/HMgbcFRVwhy8DuaUhR+rOFxG02b3deo5s
+         Zb++UttApGmpTPu5Qc9xAaJaQDX18p0VQjoElU2d5CcOduNbawYbxb9WwOUIzaVFldW8
+         E57Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745333674; x=1745938474;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gG9ubyGdNF+k3tFycmy59fjgpr52bVfS4Acl0aGZAog=;
+        b=cLmkkZn/a9Bm3LYfsV9jaZsSI4YKxxEERPvS0ef5MY5My/nrd88zqwbRCArbAU7WIR
+         rQDmLQji5xOr9mqFoBfOQKgKysf4tIqHaNtueMWWrJspQp7b0S7E1zUBqlmA7S7s96GG
+         Sl15GGn1tRjrb4EMpisENDQzwekNpl5eb9fR9+bLsxD78PB31uVgvDkw8CJebSLwTbK/
+         2YUwbBZN/QpgE/XfmWUNwlQc6aVckCTn37py6TOMqAEnF5YmspAt8/wuiXUXO3vTmj2V
+         MI7ek79PMzNyWq1u6ian5t8i25FS2L+WmLBqsTPH7QrNKBefieraFCQPtgRZ4qh6iVk1
+         pxJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5cv8sMVRO2acXjpyBlRQJIqHvdLBZTjlxTBTEJRQTLOEF9nq4FLrtuT7/K6ez8g5sVuAMoqYj4IV6LU8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynLE/b/IcC33Hje4vSlJm8dQd1EHUN7YMmKrrb+a6iGdYqGKZI
+	5Cgp97oi+rOcmE20W6yZ6W2bOY+sFE+ft9lMDNAswzb1ikvshl6IcRo/nz0sck4=
+X-Gm-Gg: ASbGncsCyQfHCbjnC9UJ3TMvl4Z1Ry5kjPtKys//I0aB4WrXMKFPbP0estMiOt+BT03
+	uleACxgVo/TPZ70cUnvnn1UnAs8v9wkwtjDQRWjMhqKyfaPqs9pnV5qj8enFfieNguIRIrF2Bsa
+	fbx/yzP/pdEYN6eX00aTbR0OEU9B4h6EPbErceK8vPCgUXwPZokWqrYqTJzrTeomOwYx3gWSa5i
+	k1vmPfOjetOPbeL52+iFLpfdPKj5kAzgAbq3x1N2rmvYM3M2fm99ZMo7ELRBPwAL3LOjjIMhdJ9
+	HnGZAjfn0jK8PzNbRgp4Nq/nRSPpGmYA7ENr5ZKXdxFu2EotrxNEk3PyfS3/269wLQ==
+X-Google-Smtp-Source: AGHT+IFiry1aEcsv4RSjsJlDXhIh520EjsJLXwPy2Ze0MY+e/aA2sn5B9Azs+BhIspTbKr+bPv5+Ag==
+X-Received: by 2002:a05:6000:2281:b0:390:ea34:7d83 with SMTP id ffacd0b85a97d-39efba6dcb8mr14706176f8f.31.1745333674270;
+        Tue, 22 Apr 2025 07:54:34 -0700 (PDT)
+Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:5f77:7d42:6228:3358])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9de9sm177304635e9.6.2025.04.22.07.54.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 07:54:33 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v4 0/2] PCI: endpoint: space allocation fixups
+Date: Tue, 22 Apr 2025 16:54:18 +0200
+Message-Id: <20250422-pci-ep-size-alignment-v4-0-6bd58443fee9@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-68982:519-21489:flowmailer
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJqtB2gC/4XNTQ6CMBCG4auYrq0phcLgynsYF20ZYRL+0pJGN
+ NzdwkZjNC7fL5lnHsyjI/TsuHswh4E8DX2MbL9jttF9jZyq2EwKqUQqgY+WOI7c0x25bqnuO+w
+ nXlagjAQDQgkWb0eHV7pt7vkSuyE/DW7e3oRkXf+JIeGCIypTgEmULvXJ6Lkl4/Bgh46taJAvK
+ BPZL0hGyKZaVCazV6uKL1D6DhW/oDRCkCsoAHOwFj6gZVmey+3KfU8BAAA=
+X-Change-ID: 20250328-pci-ep-size-alignment-9d85b28b8050
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Jon Mason <jdmason@kudzu.us>, 
+ Dave Jiang <dave.jiang@intel.com>, Allen Hubbe <allenbh@gmail.com>, 
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: Marek Vasut <marek.vasut+renesas@gmail.com>, 
+ Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, 
+ Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, ntb@lists.linux.dev, 
+ linux-nvme@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2104; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=5jwVtzCgD4uNjqyYTuvqwhiQR8nTsDDM1aNFemeBRzg=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoB62msl/2CkXYLO9zyFLv1uQ0Yj/jKbC/61ZS3
+ 7z19ghgj7yJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaAetpgAKCRDm/A8cN/La
+ heIoEACzFnt6rpj7masrbEMu1F8A9oCj4q9PQWn5yJSbzp9ySmczV8yUCf4bW5FDI4pMN2BRRQT
+ BeyfH72Up79X20K+hWqCaX4m/eE7C2F0elheS5MNiShHsS7TzDzP6sytfMyYnv308uOB03JaCh0
+ 6jNw0ETb3brLlGAlNwV15cGhGZLtzTEClDHPwOj3OtoVXlmEaRJR//5vMR+SeP5xwJSo57Eoiwk
+ bfdIQ7QXz47zR8wFC46oc/EvnSW5YYy/LvHsfffRIuavC/e/6gJOlgV+npmzDI3xrcJ6lMx1rh1
+ T+WwfNdlSBy09hhpCQLMOmUfAL20Tyes2v64SbkSc3TST3ybbhzH6tO2N/3kuOtfmuAow/GQAOJ
+ 28eJUpx/tt0IQ/XXfs63Qd3lJH3fqLjhENN4FHVX94LhcAlcv1vbH07SbLXAQi9NyBONqr5vXVy
+ Z8ebnH5+QLPfmU57CWaYEWIXnzZue1kWCiTZuQMJZ3iwc9qo2Qfhdtt7NkEpqCWWYZT0dfbImwj
+ Y3vNxPzyRXEuLNxWx2oofbHn/B8bC8pi/7voKoqR3Wm/eqNhGxIEl5+1OXiVVVeacKw2HLsxeye
+ xvMZ8a/IypQ20/VrSTxJhgvxmZkAzOYU4v+MpidhrkAksGFJVLjDsCa9CsTLb/NUlM5deHvYRJm
+ 67VQCvd59/k2aqw==
+X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
+ fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-On Tue, 2025-04-22 at 08:24 +0530, K Prateek Nayak wrote:
-> Hello Aaron,
->=20
-> On 4/22/2025 7:40 AM, Aaron Lu wrote:
-> > > anon_pipe_write()
-> > >    __wake_up_common()
-> > >      ep_poll_callback() {
-> > >        read_lock_irq(&ep->lock)		/* Read lock acquired here */
-> > I was confused by this function's name. I had thought irq is off but
-> > then realized under PREEMPT_RT, read_lock_irq() doesn't disable irq...
->=20
-> Yup! Most of the interrupt handlers are run by the IRQ threads on
-> PREEMPT_RT and the ones that do run in the interrupt context have all
-> been adapted to use non-blocking locks whose *_irq variants disables
-> interrupts on PREEMPT_RT too.
->=20
-> >=20
-> > >        __wake_up_common()
-> > >          ep_autoremove_wake_function()
-> > >            try_to_wake_up()		/* Wakes up "epoll-stall" */
-> > >              preempt_schedule()
-> > >              ...
-> > >=20
-> > > # "epoll-stall-writer" has run out of bandwidth, needs replenish to r=
-un
-> > Luckily in this "only throttle when ret2user" model, epoll-stall-writer
-> > does not need replenish to run again(and then unblock the others).
->=20
-> I can confirm that throttle deferral solves this issue. I have run Jan's
-> reproducer for a long time without seeing any hangs on your series. I
-> hope Florian can confirm the same.
->=20
+This patchset fixes problems while trying to allocate space for PCI
+endpoint function.
 
-Partially, yes.
+The problems, and related fixups, have been found while trying to link two
+renesas rcar-gen4 r8a779f0-spider devices with the vNTB endpoint
+function. This platform has 2 configurable BAR0 and BAR2, with an alignment
+of 1MB, and fairly small fixed BAR4 of 256B.
 
-First, let me clarify what I am testing: I'm testing with PREEMPT_RT
-enabled, as that is the setup that makes problems in the field. For
-those setups it's not a performance/jitter optimization it's a critical
-fix. The system locks up completely.
+This was tested with
+ * BAR0 (1MB):  CTRL+SPAD
+ * BAR2 (1MB):  MW0
+ * BAR4 (256B): Doorbell
 
-I ported the series to 6.14. Background was stability and the
-possibility to replace one of the devices in the field with a patched
-version. We do not trust anything newer yet.
+This setup is currently not supported by the vNTB EP driver and requires a
+small hack. I'm working on that too.
 
-The test results: 6.14 + backport is still running fine for ~10 days
-now on a system where the reproducer (that Jan posted already) crashed
-a unpatched 6.14 in a couple of minutes. Success.
+Changes in v4:
+- Drop patch 1 of v3 and add new .aligned_size in struct pci_epf_bar
+  instead re-computing the aligned size on the path freeing the memory
+- Link to v3: https://lore.kernel.org/r/20250407-pci-ep-size-alignment-v3-0-865878e68cc8@baylibre.com
 
-But: I also started a test with 6.14 vanilla (so unpatched) on a
-different system. This one crashes within a couple of minutes. This is
-a completely different story - as the series we're discussing here is
-not even applied - but to be complete, this is the last message we get
-from the device:
+Changes in v3:
+- Rebased on v6.15-rc1
+- Fix build issue with newly introduced nvme endpoint function
+- Link to v2: https://lore.kernel.org/r/20250404-pci-ep-size-alignment-v2-0-c3a0db4cfc57@baylibre.com
 
-The device is completely locked up afterwards. PID 34 is ktimers on
-CPU1.
+Changes in v2:
+- Allocate space that match the iATU alignment requirement, as previously
+  done.
+- Chose not to add a new member in struct pci_epf_bar, as initially
+  discussed. After reworking the code, that did not seem necessary.
+- Make sure SPAD registers are 4 bytes aligned in the vNTB endpoint function
+- Link to v1: https://lore.kernel.org/r/20250328-pci-ep-size-alignment-v1-0-ee5b78b15a9a@baylibre.com
 
-kernel: ------------[ cut here ]------------
-kernel: !se->on_rq
-kernel: WARNING: CPU: 1 PID: 34 at kernel/sched/fair.c:699 update_entity_la=
-g+0x7d/0x90
-kernel: Modules linked in: veth xt_nat nft_chain_nat xt_MASQUERADE nf_nat n=
-f_conntrack_netlink xfr>
-kernel:  sd_mod mptspi ata_generic mptscsih mptbase psmouse scsi_transport_=
-spi ata_piix libata scs>
-kernel: CPU: 1 UID: 0 PID: 34 Comm: ktimers/1 Not tainted 6.14.0 #1
-kernel: Hardware name: VMware, Inc. VMware7,1/440BX Desktop Reference Platf=
-orm, BIOS VMW71.00V.242>
-kernel: RIP: 0010:update_entity_lag+0x7d/0x90
-kernel: Code: 0f 4d d7 48 89 53 78 5b 5d c3 cc cc cc cc 80 3d e7 f4 dd 01 0=
-0 75 a9 48 c7 c7 d0 81 >
-kernel: RSP: 0018:ffffacf58012fbe8 EFLAGS: 00010082
-kernel: RAX: 0000000000000000 RBX: ffff9ee43ca00080 RCX: 0000000000000027
-kernel: RDX: ffff9ee6efd21988 RSI: 0000000000000001 RDI: ffff9ee6efd21980
-kernel: RBP: ffff9ee421929800 R08: 00000000462951bd R09: ffffffff8e654811
-kernel: R10: ffffffff8e654811 R11: ffffffff8e608a2a R12: 000000000000000e
-kernel: R13: 0000000000000000 R14: 0000000000000000 R15: 000000000000000e
-kernel: FS:  0000000000000000(0000) GS:ffff9ee6efd00000(0000) knlGS:0000000=
-000000000
-kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-kernel: CR2: 000000c00082a000 CR3: 0000000113416002 CR4: 00000000007706f0
-kernel: PKRU: 55555554
-kernel: Call Trace:
-kernel:  <TASK>
-kernel:  ? __warn+0x91/0x190
-kernel:  ? update_entity_lag+0x7d/0x90
-kernel:  ? report_bug+0x164/0x190
-kernel:  ? handle_bug+0x58/0x90
-kernel:  ? exc_invalid_op+0x17/0x70
-kernel:  ? asm_exc_invalid_op+0x1a/0x20
-kernel:  ? ret_from_fork_asm+0x1a/0x30
-kernel:  ? ret_from_fork+0x31/0x50
-kernel:  ? ret_from_fork+0x31/0x50
-kernel:  ? update_entity_lag+0x7d/0x90
-kernel:  ? update_entity_lag+0x7d/0x90
-kernel:  dequeue_entity+0x90/0x5a0
-kernel:  dequeue_entities+0x121/0x640
-kernel:  dequeue_task_fair+0xbf/0x290
-kernel:  rt_mutex_setprio+0x37c/0x690
-kernel:  rtlock_slowlock_locked+0xca1/0x1860
-kernel:  ? lock_acquire+0xcb/0x2e0
-kernel:  ? run_ktimerd+0xe/0x80
-kernel:  ? __pfx_smpboot_thread_fn+0x10/0x10
-kernel:  rt_spin_lock+0x86/0x160
-kernel:  __local_bh_disable_ip+0x9d/0x190
-kernel:  ksoftirqd_run_begin+0xe/0x30
-kernel:  run_ktimerd+0xe/0x80
-kernel:  smpboot_thread_fn+0xda/0x1d0
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+Jerome Brunet (2):
+      PCI: endpoint: improve fixed_size bar handling when allocating space
+      PCI: endpoint: pci-epf-vntb: simplify ctrl/spad space allocation
 
+ drivers/pci/endpoint/functions/pci-epf-vntb.c | 26 +++-----------------------
+ drivers/pci/endpoint/pci-epf-core.c           | 21 ++++++++++++++-------
+ include/linux/pci-epf.h                       |  3 +++
+ 3 files changed, 20 insertions(+), 30 deletions(-)
+---
+base-commit: 92713f0ea620bbe923eb4e7bda408e5c79597cd4
+change-id: 20250328-pci-ep-size-alignment-9d85b28b8050
+
+Best regards,
+-- 
+Jerome
 
