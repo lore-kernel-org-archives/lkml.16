@@ -1,98 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14DD27C179;
-	Tue, 22 Apr 2025 11:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1C3433A6;
+	Tue, 22 Apr 2025 11:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745322158; cv=none; b=BLwvbSyhiF5ytTbOotvIjkRTAxFcO4pOqhM+NE5kiwBasD/u0hLWX5f2834s9XG7NxushEYHWA1OG+7Sb0JcWZ4hPSoYzf9I42/qZE3oNg4qDuT1bgbxqFrlMT+lxZxcNI0XtzwPoMKjv3I90Rt6yEc6ThAH29PEbG0we4ReQlo=
+	t=1745322284; cv=none; b=sECR/uUbx8S7WiUaBpMLve/0Q66JhEBDeefhkvKi9TFaorlpn15sFVWpAHw3NrSq0ZEJS8Iz6oAxBPYIHylYQdE8IbYgPRoOO9qxN4n+fi7l6473lHaNa4GXCz28xOFndT0HfSa7lw4zsv+LraJshLDARWaJuS/CeKtAXi5lw+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745322158; c=relaxed/simple;
-	bh=guD+pmTen+SJhmKQrtY4L3C2tvnC0Lj1veqlQl2WMC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PFQR31dvL+/6Wshwf3Ks5f4hwEMDyo3dWf+sRJMc5k3RkfgN4R4TFiMBi16g0vaik6trVrLiD+SZj9XKHcokPwWW8pRBDhSI8AWb+UM4JjUA+izWeO50j9170wUToAilbTj0yzEVf+g0IAebnam+DKpOtSqukBjkyxkmSHZI/hE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bRpxmNO1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745322284; c=relaxed/simple;
+	bh=EdwYZFSFjLIu2qTKO0uo1rUfdkI6jb3DPa92uYe5N9Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a4k8bNYlx+u5j8roPVpfQLbDmBH651kYfxWNSh6KzPjfEB5EHY28BsWxCauxGGizbQ/S1RKxwFz6+DZcOMckMOxPzgc8QAuLcf/iwl0v2QiU8QpYTlkb5udiad55nLS8Oni1Ef4XDbwYb1irEF+bszZj3AdCQt3kRpTZnnwsDtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=L2hb+1eX; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bRpxmNO1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B35E0C4CEEC;
-	Tue, 22 Apr 2025 11:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745322157;
-	bh=guD+pmTen+SJhmKQrtY4L3C2tvnC0Lj1veqlQl2WMC4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bRpxmNO1M2nP5dfnzGb0w1KqKO0WeB86nRdQwtwoLB2BGAEO4qd/HSzg7pA+K19gz
-	 KbDt7rX6WSZ0pn7PuEg+rvTS7ZFAoCD7HBmuTS9TUkqnvXke2tFBW3LJfzm7AAv83H
-	 83IhDe6l02jJ6oRjFgnV4dovZM6LJmLr9fbWXjm66hRCFdrJcUkbQfLjW41lp7nuTe
-	 IysQD3uOJoe4Oe7JMpNSzpFwmw1oTHTbeJ0ZB02IDAyxCr8jBMdqx2pAPVV7MwNGKu
-	 JW0eMAIHQLR54qol3YSCy+DAIyYsAOkXwwoUQQXAJ97ZwLqUW150LC05PZXf4O1SQ9
-	 GBMgG/vlSBB8w==
-From: cem@kernel.org
-To: linux-xfs@vger.kernel.org
-Cc: hch@lst.de,
-	Hans.Holmberg@wdc.com,
-	linux@roeck-us.net,
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="L2hb+1eX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:Content-Type:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=5ivL5Ti0Q3RhIMz3cs6p0pT2tGV00FkMsE3PCGA6DQc=; b=L2hb+1eXc4+jkulhn4CY7JiPMu
+	dv9x9FghMf2tSeBqEH85SPHARyjSF9XKCJA8JiXIYah9w0bTIIlvzvyZwZzSM/kwuzasuXY8O/0Dp
+	QzP7IrR9igpe+w/YeDWKiXAmU6Ofkm6f7EdEX4jNFtXMqEBDymsAbx4aWmcshTPa4ALGuIUEYY35i
+	V4p2YZF6JZZlxfqHXwVFORF/omyAugz7mv+B/0pssUNdlPtyAjZpGU3FoGmQrKyc2k0KAlXWQtDjU
+	Cw1K0WD1IP19Go2evvzV3L55EUCxQLU28zARhbgSC+lTZMmrtAdyjpnFElcZMRhRdoBnX1ch6aDyg
+	7MLaueIw==;
+Received: from i53875b95.versanet.de ([83.135.91.149] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1u7C3G-0002kK-9A; Tue, 22 Apr 2025 13:44:34 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: Andy Yan <andyshrk@163.com>
+Cc: Heiko Stuebner <heiko@sntech.de>,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	oe-kbuild-all@lists.linux.dev
-Subject: [PATCH] XFS: fix zoned gc threshold math for 32-bit arches
-Date: Tue, 22 Apr 2025 13:42:23 +0200
-Message-ID: <20250422114231.1012462-1-cem@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	inux-rockchip@lists.infradead.org
+Subject: Re: [PATCH 1/3] arm64: dts: rockchip: Rename hdmi-con to hdmi0-con for Cool Pi CM5 EVB
+Date: Tue, 22 Apr 2025 13:44:22 +0200
+Message-ID: <174532226020.263993.13170766558495320938.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250419121326.388298-1-andyshrk@163.com>
+References: <20250419121326.388298-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Carlos Maiolino <cem@kernel.org>
 
-xfs_zoned_need_gc makes use of mult_frac() to calculate the threshold
-for triggering the zoned garbage collector, but, turns out mult_frac()
-doesn't properly work with 64-bit data types and this caused build
-failures on some 32-bit architectures.
+On Sat, 19 Apr 2025 20:13:16 +0800, Andy Yan wrote:
+> There are two hdmi connector on Cool Pi CM5 EVB, the current supported
+> is hdmi0, assign corresponding index to it. It will be convenient for
+> us to add support for another one.
+> 
+> 
 
-Fix this by essentially open coding mult_frac() in a 64-bit friendly
-way.
+Applied, thanks!
 
-Notice we don't need to bother with counters underflow here because
-xfs_estimate_freecounter() will always return a positive value, as it
-leverages percpu_counter_read_positive to read such counters.
+[1/3] arm64: dts: rockchip: Rename hdmi-con to hdmi0-con for Cool Pi CM5 EVB
+      commit: 99685162462c2c70f9e2fbe06481a84a5d0220ca
+[2/3] arm64: dts: rockchip: Enable HDMI1 on Cool Pi CM5 EVB
+      commit: 85e3fd37204a79e0cd3105176081439ddefbd3b2
+[3/3] arm64: dts: rockchip: Enable HDMI audio outputs for Cool Pi CM5 EVB
+      commit: abfe411af85aa6ecde580b1f75b9c8145b635fa7
 
-Fixes: 845abeb1f06a ("xfs: add tunable threshold parameter for triggering zone GC")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202504181233.F7D9Atra-lkp@intel.com/
-Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
----
-
- fs/xfs/xfs_zone_gc.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/fs/xfs/xfs_zone_gc.c b/fs/xfs/xfs_zone_gc.c
-index 8c541ca71872..b0e8915ef733 100644
---- a/fs/xfs/xfs_zone_gc.c
-+++ b/fs/xfs/xfs_zone_gc.c
-@@ -171,6 +171,7 @@ xfs_zoned_need_gc(
- 	struct xfs_mount	*mp)
- {
- 	s64			available, free;
-+	s32			threshold, remainder;
- 
- 	if (!xfs_group_marked(mp, XG_TYPE_RTG, XFS_RTG_RECLAIMABLE))
- 		return false;
-@@ -183,7 +184,12 @@ xfs_zoned_need_gc(
- 		return true;
- 
- 	free = xfs_estimate_freecounter(mp, XC_FREE_RTEXTENTS);
--	if (available < mult_frac(free, mp->m_zonegc_low_space, 100))
-+
-+	threshold = div_s64_rem(free, 100, &remainder);
-+	threshold = threshold * mp->m_zonegc_low_space +
-+		    remainder * div_s64(mp->m_zonegc_low_space, 100);
-+
-+	if (available < threshold)
- 		return true;
- 
- 	return false;
+Best regards,
 -- 
-2.49.0
-
+Heiko Stuebner <heiko@sntech.de>
