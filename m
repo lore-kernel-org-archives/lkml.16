@@ -1,60 +1,62 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 828FF28DEF7
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D2A290BAF
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 08:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745310369; cv=none; b=h8W+0FH3fbDC8Bj+JNL7EyhWWX/fJHLrgGSQmEuvLRwVZU701JAbtWR5g5FaIe+U2q4smXP3099sijcsdTr5bdmO3DgJRN2TIMRxTXQWGYU0wnUPVIkZeFaFKQ8AyBkQTIUObjQrVt8D5y2ddJrMG6/WzdmhosNXdHttxLl6gFU=
+	t=1745310441; cv=none; b=JaKsZ4DmYiImUKk05RgLJ4qL7WoH+CEKgqUDO9l746tkZI7IB0Pr3C01ACPt4N2J+hU4Ab0hUvdxEIHMT48Up8RBEauzLdVSFaZlQ38bwRHtl/QeK2wDDidW59aFWdUTz6BwOksoUC+bOhhp0HYqzao+uqfC+/R17MFSSugUA7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745310369; c=relaxed/simple;
-	bh=bQe59A9azQVJqinMp0+l3jtvX9SIwHQ4hfIDHa5112A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=itcCDtyrJgE1aj8/wFFwWuK5THndWl3ISWht8FJ7hsEHR4iXYp4yNX5ZcZjKd95pL12w1tW9dAQBQmHCU9hMMdE+MUpXmOAHSiEsBVI9BBSPfO2Zzt9ifKlRTB0vIitWlu6tEGMIO3VytfSD0bK9JnBjr3CIcdA3prkyUuJ4Dw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=gYMUr2E/; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1745310441; c=relaxed/simple;
+	bh=RTx+HnoIXEQkRJd/nDQjtn2NnXrBxY1VcXeuIlhDK78=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=UVx7plAAQxtGHBbkNdTjUqQ5LDKKlCgTPpnhoyZBc0rPT1vo23oVk8J5r4EJf+1ONmWRffmF6BwsUIhOVyn3PdyFBCVsoexWu2g6AgOxnPaEIeGW6CWtA2DyXwB0GEQ/lTYIXMqhjUtnFqLCJ5/LuxSeCWbLLc+v0z1XeQdN7rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=d/WXT1JI; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="gYMUr2E/"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3913b539aabso2888954f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:26:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="d/WXT1JI"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so44710595e9.3
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 01:27:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745310366; x=1745915166; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=V/cAgNjQa95gQP7B/B/snS+8c4HbJCPXR5Eh8cVo7zg=;
-        b=gYMUr2E/GetuiLt9uIuYO2RHM1W85FEnHqFOEl3z+lhJiNkmABS3SG/KpuEenHAbW0
-         EsTw2FuCl13+9edAcvvdJHfExOdPJZwdJ1Gxewn519elxNbGTzlocB+3xJI/P8BA0zcx
-         LlubrBXiOsE3rAODylnRWu2wuU3cH6m4j1vvxQR/2e/oBXcEMsS2YOWCNr86TqGijJ8y
-         ccabahVrf67Jogt2DoYpJ7wajogsibD40BdhlxLJrvA34BY7Rnyn2Mt9NzrnZg0VXkUH
-         F5z9IxbxBlTwvl3PhSTEeyY6kv40BKnqNoKq24BGpwCxjswJflp0Pgu6i4hZHSAKn5uG
-         HRog==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745310437; x=1745915237; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p2nnnGh2oXeC0IbaXY+fafQ44YKw6BKWItIZxE22UTc=;
+        b=d/WXT1JIx/RiTcQsWEZaD0gUoHn6AT9f+rYczdPU+M19nNoQVkHtM639vSrrXQ4zbu
+         sH6CYxINeqaMBksfay7LEBf/zYlSd60+CUTdcgRC6vbmAMh2eJTpAKYlRNegnwNiiRzl
+         w7awPYhJaqyiaBFbFabp6dPpa4DwYUZ0745B2v//sj3gh56dPrNY/z6jqryUF9lyW12u
+         oG2M1AKP5RY7qvu7i92Nz7UxGXjz/6NkKAsg7/7FiAkLQDQwRu76cH8ryMQlLHueLJS/
+         a/IW4mzgCYI6koEQ5LS/Z0OYkJDEOiQBTWH2TFS9CKdesVt2P37ttTTuSy9FkFe2g3g1
+         yEZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745310366; x=1745915166;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=V/cAgNjQa95gQP7B/B/snS+8c4HbJCPXR5Eh8cVo7zg=;
-        b=DvaKwtUEmUpONB0ctZd7Rfke84vmoNQ/pxgPYqYOr7Qi4WjYVB/T3Nfa+sr1Ew+SPp
-         Q7Wtqw/mr9C3BfS/6cZAQQwVEZF5xHF4xtDCeirI1N4dy96o7ZZ7UWwN/g+v5Dv9K4Ma
-         DhYx2pVGq423qgWNl9INfgKR0SWpWaoqfqfj98ajM37h8Gabmhg5f3b6cf9/0tnk9LNW
-         06iW2huYm3yL/5OxYxVFi47G1J5fShkp2j12fx8cxKRvR3BDpdtuRC71k8jWZwE/pO/r
-         Yrgl8UV2XFg63P5XWwBxQ2f5sopwEY1iszssNxsIxe6+J05uxYnjoVGfSKv7i4hbauvN
-         KKsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUFoJUMoQ/NY6x7RPLFSn4zXuU1m4gkKf9LWbQTZ74o0/w0kDt3HXWkkxhYczkut0Vx8yAysNOtKPQpVs4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8W0xRbcfyU92vtcNJdewixUV0nDRQ0kIG2oWolKoPrQcBd7/t
-	2i4bsoxidO/uILhp8x2iGFLT43OZcemezvJpoLe5jjWPy4uCuwgHPW18fv3CV3g=
-X-Gm-Gg: ASbGncsj1dz9ad+5SMFwuwTOcQEPr43uObqCuJt4s0ZQau56Fppd/XOmirMIkFscpC4
-	v32ZqPetQeac1rB+ViZxkRSUfZVVPdENs2Y2JPl9+Re6E1/MaiGFIkkTdMKp07xuVM4yVJRO6TP
-	/xtuuiSZrSTTyBZr5vLJq5gauEY+AWHeZ8k0gzRk38+0+q0+LbijfSEYxUleJkOGGBcdcFDdxfp
-	UTMlHZgBbvJBAYpPyvj47Huy0hIOFIOjVmRjRGVGFXgXQx7j4qtGDdpacXz0znIYvJXHg77rIqa
-	TkD+g8P4UTwjU1mSBd9uK88bGOJ+YO4FtEbZvLgP2+YT5jN7BGhDGdMTqgS1
-X-Google-Smtp-Source: AGHT+IE5rRNC75MFtRNKzdS288HbyuZMTD2nZQBhaznTRZ3kRoPBwHGrzOWpkgGI+7InsS8Jm3kQ6Q==
-X-Received: by 2002:a05:6000:1846:b0:39a:cd84:a77a with SMTP id ffacd0b85a97d-39efbae005amr10068227f8f.37.1745310365805;
-        Tue, 22 Apr 2025 01:26:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745310437; x=1745915237;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p2nnnGh2oXeC0IbaXY+fafQ44YKw6BKWItIZxE22UTc=;
+        b=kYlBNSdosAvPaWJetgN8KiKoeLTmRRXQuFNeymdDtGLo0v7722Spt2uKppxXIr2wkf
+         fhuoM+tAvv8QleLgsO2Y9oopjjGi0dDbWZ/LMOmj4xsX02ETucUF238VWi7dRlJYM7Ny
+         MU3RlgYUCIhDmLOCcWTvYhYTSwBoiX292hUt01XQjQyCu+AkIOVxHCcfB14d6/EfL4Jp
+         SJ+p2nWMwi0Lwrqib9kF8UXUEmTV1e3qWbyJEvsDaF95EsSaVATDmzqH9iE4LfzCCJhP
+         hkb6MYVjK+kTeeJru+bZwnbGBA9F17pOHMb2jPcV4UNP45SJ2ZvYktSJ1z5UpZxQZFo0
+         ZoMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgpTNeAUWjMw8o2ZxzbzmRrRai/keqHd6F+3wck5ge3nkbQE6vXJ3RRahDRGkre0ytbL+WjMpiOAan+YQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyi4mORKvSFFZBAfki5mJ5F595Cp0YM8BZgA1vtE2sAfRJahGsg
+	jOT5w1251LU7LdVVox7MJhQzG80KU8iZxFxJDRZ2O6nHuVygrOaGSbkAxz4/VuQ=
+X-Gm-Gg: ASbGnctl29nraEQTbV7oMAo4Zjnuv1cGM40A6HLgee8OczYo8GBEXZcOJ62Q8774kSM
+	9TJiFH1O95fTjzuVxbNP1q/D/ESICbNo7Hic1tl0FF4SUeWtfgNJk9UHAFOjPPOVmtBKd5ino9T
+	n40WOiccFz5yiiznJ4Y7iLFPdlU5VGenH5adzKd04B1yYOAaCuutEv8G36rCtsxp2h8h14PAiyS
+	a8gKvWSUFwzXPEv6GX0jEw4GCJYFNufd6ZwOb2Y7BcQpb38uBCAJFvPBWx5rm698ROXpG1+AN/l
+	/4Kk/M/+rZvJoFGYZ83v7Ejn3WqwJ7FOQBnCAW8IFMt2VYBJVk6moadi/v++
+X-Google-Smtp-Source: AGHT+IEAXQjlvVXuUS+hvcD4d/xsSZzW3BjuYaxD4G0D6IJrYehsEjbaj37l5/daqRdzRScEtV0rfA==
+X-Received: by 2002:a05:600c:5110:b0:43c:e70d:44f0 with SMTP id 5b1f17b1804b1-4406aba758cmr110202625e9.19.1745310437275;
+        Tue, 22 Apr 2025 01:27:17 -0700 (PDT)
 Received: from localhost.localdomain ([2001:861:3382:ef90:9fbe:20e3:2fc3:8d19])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43314fsm14735392f8f.39.2025.04.22.01.26.04
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5bbd35sm163735605e9.22.2025.04.22.01.27.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 01:26:05 -0700 (PDT)
+        Tue, 22 Apr 2025 01:27:16 -0700 (PDT)
 From: Alexandre Ghiti <alexghiti@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
@@ -66,10 +68,12 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 	kvm@vger.kernel.org,
 	kvm-riscv@lists.infradead.org
 Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH 0/3] Move duplicated instructions macros into asm/insn.h
-Date: Tue, 22 Apr 2025 10:25:42 +0200
-Message-Id: <20250422082545.450453-1-alexghiti@rivosinc.com>
+Subject: [PATCH 1/3] riscv: Fix typo EXRACT -> EXTRACT
+Date: Tue, 22 Apr 2025 10:25:43 +0200
+Message-Id: <20250422082545.450453-2-alexghiti@rivosinc.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250422082545.450453-1-alexghiti@rivosinc.com>
+References: <20250422082545.450453-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,23 +82,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The instructions parsing macros were duplicated and one of them had different
-implementations, which is error prone.
+Simply fix a typo.
 
-So let's consolidate those macros in asm/insn.h.
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/include/asm/insn.h | 2 +-
+ arch/riscv/kernel/vector.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Alexandre Ghiti (3):
-  riscv: Fix typo EXRACT -> EXTRACT
-  riscv: Strengthen duplicate and inconsistent definition of RV_X()
-  riscv: Move all duplicate insn parsing macros into asm/insn.h
-
- arch/riscv/include/asm/insn.h        | 205 ++++++++++++++++++++++++---
- arch/riscv/kernel/elf_kexec.c        |   2 +-
- arch/riscv/kernel/traps_misaligned.c | 137 +-----------------
- arch/riscv/kernel/vector.c           |   2 +-
- arch/riscv/kvm/vcpu_insn.c           | 128 +----------------
- 5 files changed, 189 insertions(+), 285 deletions(-)
-
+diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
+index 09fde95a5e8f..2a589a58b291 100644
+--- a/arch/riscv/include/asm/insn.h
++++ b/arch/riscv/include/asm/insn.h
+@@ -352,7 +352,7 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
+ 	({typeof(x) x_ = (x); RV_X(x_, RVFDQ_FL_FS_WIDTH_OFF, \
+ 				   RVFDQ_FL_FS_WIDTH_MASK); })
+ 
+-#define RVV_EXRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
++#define RVV_EXTRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
+ 
+ /*
+  * Get the immediate from a J-type instruction.
+diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
+index 184f780c932d..901e67adf576 100644
+--- a/arch/riscv/kernel/vector.c
++++ b/arch/riscv/kernel/vector.c
+@@ -93,7 +93,7 @@ bool insn_is_vector(u32 insn_buf)
+ 		return true;
+ 	case RVV_OPCODE_VL:
+ 	case RVV_OPCODE_VS:
+-		width = RVV_EXRACT_VL_VS_WIDTH(insn_buf);
++		width = RVV_EXTRACT_VL_VS_WIDTH(insn_buf);
+ 		if (width == RVV_VL_VS_WIDTH_8 || width == RVV_VL_VS_WIDTH_16 ||
+ 		    width == RVV_VL_VS_WIDTH_32 || width == RVV_VL_VS_WIDTH_64)
+ 			return true;
 -- 
 2.39.2
 
