@@ -1,144 +1,138 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2.mymailcheap.com (relay2.mymailcheap.com [217.182.66.162])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC6613541B
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 06:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D599EE56F;
+	Tue, 22 Apr 2025 06:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.182.66.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745302625; cv=none; b=gcS6grUDr0VXseowy/CriWACEI80BqR7+QBtF9X7RCAznACNJUIn3+pR0lWlXGTGsPEkhPBHTHND9WJl3kOE2WJ2tqdJV98BaxLOhacOJFoRL+tFoxcdNKlvjBASmmISdjJbHIBgO25LHGLVXreLxAn0eZjnlbTLB+YO+VcAarg=
+	t=1745302702; cv=none; b=TDTfUd9Nq+p+YCSWMmJnA7WEFrS7i/sZmSrGAf8koJWJCq2TOXPa7EhLURMcQlr2Z5l7tt5OUB5RFCB6W3ZNqLFY9d3eBEJphlo9Q1tIeIy19j3utMBcKi7BEZ5URM7MP9O/54mDkciqfQ8neA57VUfxgt4y8kqaI63aSxeOqjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745302625; c=relaxed/simple;
-	bh=5D2izRsgAKYHtxRvzimEvoU0qAt1TpW/2ApDuRS+Tj8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ez2ANXjqkHQeiGoJQuYxYSoDgn+VuTSPkDfqPB4FRb3xcnk0sOct61DDxlZM6BuD4gz/uqw5RWIUR8NLQWQtXFfdyaYYFtI7CJaNOcBySUfT1Y7RuITTzAYlsqNm9kfEIpnN/btaEjKZtQKglde7jbfWe4y0OvPHhrHWnYFzGFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Wp7mPs3s; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1745302702; c=relaxed/simple;
+	bh=r6vl2FpaPYnpaqdusFI5msn9JVcDcophXwwsZfaOChQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DYwtIPbgUq0LzlUm1fhsKrNyd8qm+NxLorRJqga2usFg+LOX2rYwKO2FG7192tn/LkAXZEUcdGCxCoPv8DlJCUFgfbH/Jeh/ocm6NNjhYJfyj0GZA3o27ate0cPEg9449byNE7JnXEwhJQ/bIRMdwRLGYYUTjB3YAWLfx4Hv6TA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=vjtgOsEa; arc=none smtp.client-ip=217.182.66.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Wp7mPs3s"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so44197921fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 21 Apr 2025 23:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1745302621; x=1745907421; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5D2izRsgAKYHtxRvzimEvoU0qAt1TpW/2ApDuRS+Tj8=;
-        b=Wp7mPs3spkgrIc6JmNrG5ZGxrrSqw/y45+WeP8rmA0FSDyEBmbZsP5ApsMcoaBIRJO
-         +9Yutr/IEusLIR7tqnNkVQ7SbtjjPPwB1K5crtTCQfFlbijaHbQ5ENCwOOK7OspjISFA
-         7eEVsSO0aj+yxhBWe9+eTEJTT86FFQCrYOgLTZPiYMwMlBMNuSZ8J3RUAQpAD+F0PLwi
-         dj7zXRPSpTQljKMeLHmKyzdiLq+RpjTg0+E3DK0a8fvdyi8vwelTkGTC08eKvnDEghrf
-         POFPp/sX3yl1hJ0M4FHi4fXJsV7dr9KZc/EeCLSCbKEs7JwZzOn4KeMPs7qdOyjcI4cP
-         Ir9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745302621; x=1745907421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5D2izRsgAKYHtxRvzimEvoU0qAt1TpW/2ApDuRS+Tj8=;
-        b=vRp4Bgwtt2avQgp5mGP3jRjD0Cd+KBQnKgSCo7rabfhwtR7hrU/ywqQWe2BFojzPP6
-         d9JD2nOIy7VsxywzyBVa/YqRaHZUl8EtEhXzD/DIv7xRaUydIEaLH0Lck1y7EhlSvrYj
-         Wrv9yJNtr+gP8uNkyyGzT/wh0dnnpAuIDlSIjtq40biWWLTsas0Ra/CEOjR722wwtKsS
-         MJqtJYb9DK35Tw9DpDaJ7fhzAOgmzPgpZNvz9GNjOAcTl0026SqJuAO/MdxSd5c08VjS
-         YhcTr2Op4Nwng7znSQ9LUpk80x+XsWRkp3j+ue028iUuI7g9fKUhZH40HtqUnifcJ6Ja
-         0XGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjir5iQNbsb91zoTnk+sdMeIz+4U1zBKaRqeaghdrI23HGwcN9gFJkCPIyLpLcOphWwSDgQTYDBTa/Oms=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuH8eQG8tqT5FGmRRfv4LOEBcbVQ/ZTs/6MBwt/VNytof2E4VL
-	JR41XAfJJzkjPrLs/OieXa5E3db6Puktm5cDMU44C55+6yHC997fNL0UskUQKf6zlOjnx+iQhgA
-	Pzp5/y616WE2xAMQrzr/6Du0VV0GiOSN/E2ZZEQ==
-X-Gm-Gg: ASbGncviu7dag5qB/JJ5GgNE38P4x00W7ImBpxRu1oQWYnLJh5AsQ3wMFXNrX5tsw0X
-	bhZtpplTKO2yrl6/z41XGUu2LjLOlNPkQdz49DIA9zBIK5j7G2yTxHGnoT/0FHyt7pVAUWkgj2R
-	OhOsMzC1fAiMjTG8m83TdNZNKBnSI9s8BdNvkMLom/WPmanw==
-X-Google-Smtp-Source: AGHT+IHGRS0qXzqle3yGdgHA6X1Qi3PEyAPNmnLh3Z4tRHEAfO7fglaouhYhsnKctKLyXZ43gMvBVIsV8Ih4fj9V2oc=
-X-Received: by 2002:a05:651c:154c:b0:30b:fdc0:5e5d with SMTP id
- 38308e7fff4ca-310904c7bc7mr43871941fa.4.1745302621034; Mon, 21 Apr 2025
- 23:17:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="vjtgOsEa"
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay2.mymailcheap.com (Postfix) with ESMTPS id E200B3E885;
+	Tue, 22 Apr 2025 06:18:18 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 8868E40047;
+	Tue, 22 Apr 2025 06:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1745302698; bh=r6vl2FpaPYnpaqdusFI5msn9JVcDcophXwwsZfaOChQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=vjtgOsEaupt/Djm7Yo24ehIcw7gIHpuh6J6DjzJLrp5M5SpIezJiUKEe7mI/y1dkD
+	 YN9YN4j0QiJUiTx5LfHMLdX9FhnYmgeo3HjHLdeX3GeuwUtvIXkW39u2SAjSXXzBWp
+	 z6kySvKlSC7bRVTqiAacRvvL85szxaYBm2acoY4M=
+Received: from JellyZhongke.localdomain (unknown [203.175.14.48])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 8FC1141F59;
+	Tue, 22 Apr 2025 06:18:14 +0000 (UTC)
+From: Mingcong Bai <jeffbai@aosc.io>
+To: Ping-Ke Shih <pkshih@realtek.com>
+Cc: Kexy Biscuit <kexybiscuit@aosc.io>,
+	Mingcong Bai <jeffbai@aosc.io>,
+	stable@vger.kernel.org,
+	Liangliang Zou <rawdiamondmc@outlook.com>,
+	Larry Finger <Larry.Finger@lwfinger.net>,
+	"John W. Linville" <linville@tuxdriver.com>,
+	linux-wireless@vger.kernel.org (open list:REALTEK WIRELESS DRIVER (rtlwifi family)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH rtw-next v2] wifi: rtlwifi: disable ASPM for RTL8723BE with subsystem ID 11ad:1723
+Date: Tue, 22 Apr 2025 14:17:54 +0800
+Message-ID: <20250422061755.356535-1-jeffbai@aosc.io>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745225696.git.hezhongkun.hzk@bytedance.com>
- <519e12b9b1f8c31a01e228c8b4b91a2419684f77.1745225696.git.hezhongkun.hzk@bytedance.com>
- <972CD38C-9084-4CC0-8AD7-127745CACCDF@linux.dev>
-In-Reply-To: <972CD38C-9084-4CC0-8AD7-127745CACCDF@linux.dev>
-From: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Date: Tue, 22 Apr 2025 14:16:23 +0800
-X-Gm-Features: ATxdqUE7T5mpqo-BO9nWbrFqaTpCcysceYqZubv9UTiQZybzW2fT_qeWz6DV_qY
-Message-ID: <CACSyD1Ouy=iYY85V7rEHq5sU_VNUsninMkBow=RWbyOSJ6n4WQ@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH V4 1/4] mm: add swappiness=max arg to
- memory.reclaim for only anon reclaim
-To: Muchun Song <muchun.song@linux.dev>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@suse.com, 
-	yosry.ahmed@linux.dev, yuzhao@google.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Spamd-Result: default: False [3.50 / 10.00];
+	FORGED_RECIPIENTS(2.00)[m:kexybiscuit@aosc.io,m:jeffbai@aosc.io,s:linux-kernel@vger.kernel.org];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	SUBJECT_RANDOM_CHARS_1(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[rawdiamondmc.outlook.com:server fail,jeffbai.aosc.io:server fail,stable.vger.kernel.org:server fail];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FREEMAIL_ENVRCPT(0.00)[outlook.com];
+	FREEMAIL_CC(0.00)[aosc.io,vger.kernel.org,outlook.com,lwfinger.net,tuxdriver.com];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[]
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 8868E40047
 
-On Mon, Apr 21, 2025 at 5:35=E2=80=AFPM Muchun Song <muchun.song@linux.dev>=
- wrote:
->
->
->
-> > On Apr 21, 2025, at 17:13, Zhongkun He <hezhongkun.hzk@bytedance.com> w=
-rote:
-> >
-> > With this patch 'commit <68cd9050d871> ("mm: add swappiness=3D arg to
-> > memory.reclaim")', we can submit an additional swappiness=3D<val> argum=
-ent
-> > to memory.reclaim. It is very useful because we can dynamically adjust
-> > the reclamation ratio based on the anonymous folios and file folios of
-> > each cgroup. For example,when swappiness is set to 0, we only reclaim
-> > from file folios.
-> >
-> > However,we have also encountered a new issue: when swappiness is set to
-> > the MAX_SWAPPINESS, it may still only reclaim file folios.
-> >
-> > So, we hope to add a new arg 'swappiness=3Dmax' in memory.reclaim where
-> > proactive memory reclaim only reclaims from anonymous folios when
-> > swappiness is set to max. The swappiness semantics from a user
-> > perspective remain unchanged.
-> >
-> > For example, something like this:
-> >
-> > echo "2M swappiness=3Dmax" > /sys/fs/cgroup/memory.reclaim
->
-> We already have this kind of style (mixing numbers and strings) within
-> io.max under cgroup v2. As a result, I'm okay with this change.
->
-> >
-> > will perform reclaim on the rootcg with a swappiness setting of 'max' (=
-a
-> > new mode) regardless of the file folios. Users have a more comprehensiv=
-e
-> > view of the application's memory distribution because there are many
-> > metrics available. For example, if we find that a certain cgroup has a
-> > large number of inactive anon folios, we can reclaim only those and ski=
-p
-> > file folios, because with the zram/zswap, the IO tradeoff that
-> > cache_trim_mode or other file first logic is making doesn't hold -
-> > file refaults will cause IO, whereas anon decompression will not.
-> >
-> > With this patch, the swappiness argument of memory.reclaim has a new
-> > mode 'max', means reclaiming just from anonymous folios both in traditi=
-onal
-> > LRU and MGLRU.
-> >
-> > Here is the previous discussion:
-> > https://lore.kernel.org/all/20250314033350.1156370-1-hezhongkun.hzk@byt=
-edance.com/
-> > https://lore.kernel.org/all/20250312094337.2296278-1-hezhongkun.hzk@byt=
-edance.com/
-> > https://lore.kernel.org/all/20250318135330.3358345-1-hezhongkun.hzk@byt=
-edance.com/
-> >
-> > Suggested-by: Yosry Ahmed <yosry.ahmed@linux.dev>
-> > Signed-off-by: Zhongkun He <hezhongkun.hzk@bytedance.com>
->
-> Acked-by: Muchun Song <muchun.song@linux.dev>
+RTL8723BE found on some ASUSTek laptops, such as F441U and X555UQ with
+subsystem ID 11ad:1723 are known to output large amounts of PCIe AER
+errors during and after boot up, causing heavy lags and at times lock-ups:
 
-Thank you for your time, Muchun.
+  pcieport 0000:00:1c.5: AER: Correctable error message received from 0000:00:1c.5
+  pcieport 0000:00:1c.5: PCIe Bus Error: severity=Correctable, type=Physical Layer, (Receiver ID)
+  pcieport 0000:00:1c.5:   device [8086:9d15] error status/mask=00000001/00002000
+  pcieport 0000:00:1c.5:    [ 0] RxErr
 
->
-> Thanks.
+Disable ASPM on this combo as a quirk.
+
+This patch is a revision of a previous patch (linked below) which
+attempted to disable ASPM for RTL8723BE on all Intel Skylake and Kaby Lake
+PCIe bridges. I take a more conservative approach as all known reports
+point to ASUSTek laptops of these two generations with this particular
+wireless card.
+
+Please note, however, before the rtl8723be finishes probing, the AER
+errors remained. After the module finishes probing, all AER errors would
+indeed be eliminated, along with heavy lags, poor network throughput,
+and/or occasional lock-ups.
+
+Cc: <stable@vger.kernel.org>
+Fixes: a619d1abe20c ("rtlwifi: rtl8723be: Add new driver")
+Reported-by: Liangliang Zou <rawdiamondmc@outlook.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=218127
+Link: https://lore.kernel.org/lkml/05390e0b-27fd-4190-971e-e70a498c8221@lwfinger.net/T/
+Tested-by: Liangliang Zou <rawdiamondmc@outlook.com>
+Signed-off-by: Mingcong Bai <jeffbai@aosc.io>
+---
+ drivers/net/wireless/realtek/rtlwifi/pci.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/net/wireless/realtek/rtlwifi/pci.c b/drivers/net/wireless/realtek/rtlwifi/pci.c
+index 0eafc4d125f9..898f597f70a9 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/pci.c
++++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
+@@ -155,6 +155,16 @@ static void _rtl_pci_update_default_setting(struct ieee80211_hw *hw)
+ 	    ((u8)init_aspm) == (PCI_EXP_LNKCTL_ASPM_L0S |
+ 				PCI_EXP_LNKCTL_ASPM_L1 | PCI_EXP_LNKCTL_CCC))
+ 		ppsc->support_aspm = false;
++
++	/* RTL8723BE found on some ASUSTek laptops, such as F441U and
++	 * X555UQ with subsystem ID 11ad:1723 are known to output large
++	 * amounts of PCIe AER errors during and after boot up, causing
++	 * heavy lags, poor network throughput, and occasional lock-ups.
++	 */
++	if (rtlpriv->rtlhal.hw_type == HARDWARE_TYPE_RTL8723BE &&
++	    (rtlpci->pdev->subsystem_vendor == 0x11ad &&
++	     rtlpci->pdev->subsystem_device == 0x1723))
++		ppsc->support_aspm = false;
+ }
+ 
+ static bool _rtl_pci_platform_switch_device_pci_aspm(
+-- 
+2.49.0
+
