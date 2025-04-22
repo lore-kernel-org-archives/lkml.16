@@ -1,243 +1,296 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A788D27CB16;
-	Tue, 22 Apr 2025 08:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745310250; cv=none; b=R2qzG/2DsJeehUo5bbN9XVEQOkuVsoF9/bY041fxXkXEJxDBve9mBoqWP0AI2hp3lsUtD6s0BNeyOT3LG8CCQrO2rsv0Vx97R0oDNQUPCxZrmxLILeLhHBbWO8KsRn8cQXExA78/zoEBczK9GLMAG4cOZz/YEG5e/GJD5D1gCeM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745310250; c=relaxed/simple;
-	bh=XbDXvYcElCcfq+8gEblHBkbqG3o6yF+PbS6zjYXFWPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ryezTV/9eW9XxJyMlDdG6du+OqshykWLEsTSzcnHnjklevdrxJDjI6YPQjTqc6WcWXp/Pm42Tp0YB84EkB8UDpUsDjbzc2bPEv6g+bOLPyM2g9T3pbMjycyk1d6MW0cEfM5rFoDZO2ql0Eg0t3QvvpJBVAjQEm6yQeQLWH3qW5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=P7TTfABu; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40128254862;
+	Tue, 22 Apr 2025 08:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745310298; cv=fail; b=ugroSiumwhr7QR7ag3eGIm475cBjYTcihgWU1SJjgb22X22l/kbDMT/tMgQGsXtDZ8LKDPXY+LYNetKDke8OEutZB3RgAkUrFqjVlEz5fKNxw7/11IkKXe6BswZHQXOrjQDdqHf6mmOm2DzLCnPPFZOoTAyWORPh6D6uMGKGfYI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745310298; c=relaxed/simple;
+	bh=Z/hy10v0SwSfWs7ORgtlhEWa9Fh9QmPfa9GwoNatexE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=ETYycjKuFHGLQww2jWNFXfbmxKVEAaJ/WoI18rVDKPkoU63FJ9baSujTbZmIp/qJcNYCn2dFUU4SgTHOwFBEFBW9Hls4cTcFzu3dzPd2tK4UQvMjIu84MDPbZ6ePoJhodqJu8Bb6AXK4GYUebDmAU33Jst2tKPtH3oIRGRuFD2w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ugv71S/j; arc=fail smtp.client-ip=40.107.223.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P7TTfABu"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53M8MG9T1954391
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Tue, 22 Apr 2025 01:22:51 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53M8MG9T1954391
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745310173;
-	bh=EmAyA4H2zym7MMXbzGaqyeyz7QXZZDV9O+Z4+Oh7wSA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P7TTfABuMHPAhcQRaJGoDAbjaTPcJUAkbZU5kypZHeWS/AMW1L/3K2v2yCDUtHiyF
-	 NSHf1DyvbWITNZpDRj5sbGWdR8CvrQ/XCywXQghInGFqOhC2P6JM/YbpnLVao7rZH6
-	 JOvEZQjD0cdY/iFs0oG7WcdBLLgBjXxfuMVsbznGP+03gLNj6TryaD94VK6pPnRQhw
-	 Joqd+sPZhGyYu1MUzVX21z1/v/K3WlRsT8j6cO6IkXbUOaOBSw4YNml4XxSFGD01Oa
-	 ktEgcbhadMBm/y96Z1Qx2KggyySX9ZJLplswD7wOAepciggZt4HsF7uj0cuZFb4nqI
-	 JWhKcTqnwJerg==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-Subject: [RFC PATCH v2 15/34] x86/msr: Replace wrmsr(msr, low, 0) with wrmsrq(msr, low)
-Date: Tue, 22 Apr 2025 01:21:56 -0700
-Message-ID: <20250422082216.1954310-16-xin@zytor.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250422082216.1954310-1-xin@zytor.com>
-References: <20250422082216.1954310-1-xin@zytor.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ugv71S/j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VnjJ+YT/Ey1XbDPiQLNSvtihikkZAy5OUiARVpsOWm0R6LYM77JuBgUzc8MuzuZCYqne957HBsRyUYp20DBqX8vOVSKEcE9+Qh1ZtWdfYSae879GpD5qTz/ZY1tOCNwaE1oMwZwE/OjEHPr1Mx34QcVMiDuTyO95h+9ZKDAz0a9qXMD+AyLqGbr4dqY4cXhpeQ3fgF83QOGec7mAunJ1E/k2GIhCpfSLe4p3tOyLM+SdZNJwJv6S3/0WkdIkotY7gUGofgK9z+4X1aOuGC9WJr+T8SFiVayp9U0iAHqbqNGENBPbD9dspOQJb3kyZJf4v8gOFpSCr5M0Z826hkjBZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nGIfBsoBmTE35RvPCoxDuaKU5iOM51w+3iI61XMIWjY=;
+ b=QBxwpg+NeOLYXDnBisnc4tAICSsG6lKgsliqaFVuwlLnKshHVQ60ZH1Ae9paqCuPog6JNU8mo4TGnFfjcD1d+f6LfQ/5eLN1XAJOWZ+Vw/INCZNUfO96sKR4qSitpcqLtu5BBEuDMEV6frh7LZm/CHp0Z2fXASWU8juSI2ysMnNAa3YIF6bF9BPmIuRd6godWTU5EOp6TPpHs53HCYrJMH1I+z0Z3lfGU5tRGM6encvNJKR4GQ6fVlwO+rj8ToN9iHNiBb8wORA5KDNKtrzg5qIFsVKWtvSZ+0W4lfB0Bkxj7m6xT1LBuE84e5uQRaJ9rZTPCkKne3w3FoVygvgHmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nGIfBsoBmTE35RvPCoxDuaKU5iOM51w+3iI61XMIWjY=;
+ b=ugv71S/jzqV6/s7jj5fxbX14kL5ly0pMu9ItosfhatpFI7JViWShL23C7b+2n9IUH/5AsP5v3nGhqFKBQ+XQer+43cINKJCs2Kass9qgirUmAPixfn7JoWJTSvQbbZcUj3iswETmGNfMkYvmdAxoiKUQDM+SkSe5TlGztEIw5W0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CY5PR12MB6576.namprd12.prod.outlook.com (2603:10b6:930:40::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.22; Tue, 22 Apr
+ 2025 08:24:53 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%6]) with mapi id 15.20.8655.025; Tue, 22 Apr 2025
+ 08:24:53 +0000
+Message-ID: <a4f72149-70a0-4bbe-bdcc-70384c152f83@amd.com>
+Date: Tue, 22 Apr 2025 10:24:45 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dma-buf: system_heap: No separate allocation for
+ attachment sg_tables
+To: "T.J. Mercier" <tjmercier@google.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+References: <20250417180943.1559755-1-tjmercier@google.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <20250417180943.1559755-1-tjmercier@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR0P281CA0206.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:ad::15) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CY5PR12MB6576:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1cbdf9a4-ea69-48b9-d909-08dd81772845
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WUhCb3pMd3BNTXFKMDV0eUg2OXhVZzFHbmRNSHJuWkkxdEc5dnlKQ0liWmE4?=
+ =?utf-8?B?R1VXWTNCVTd1SnY0UUVZYUoxVVBCMnZXaDljWkw2enJ3b3dqRVo3QlZMRVlj?=
+ =?utf-8?B?L1pLZEVrbHBFV0FUVGxSL1JleUROV25KdDFpOThZbDlYbEozNzQweU5XemNs?=
+ =?utf-8?B?eitzNWNCUnJ5aWxwQk5TVUQ2UkhhRHpKWGRkSk1zbmZMcVQ0ZDlLSGxOZ2dq?=
+ =?utf-8?B?b2F3MUVBTDJXYjRHbDlNRmYzVUdhYWFEbk5jNzVlYTROdnFNNmxzK1ptSE5s?=
+ =?utf-8?B?cktNRzlnei9xSTdDNW9nWUhkL3ZVSStYZ0lKSTZHZERpdTA3OE5wclZZakZR?=
+ =?utf-8?B?Tld0blhPMHVUVFlwOEljSmpXUGRTc3Zkc2NUS2xsVTF2OVdGU3BsWG8yc3pZ?=
+ =?utf-8?B?aVYzMEFOQUNOVmlEeWhSZmpPQUZET0lMRHVoclAva3E3YzZqd3IvR3hxNytH?=
+ =?utf-8?B?YjQ4bElJWEtXT3o0MmJUYXVoblYwbkVGNFZVR3BkTTRnaHF3aXJlNTNMalFh?=
+ =?utf-8?B?NmlFKzk4WUVYazNMMXlTWTNvYm9EQi9GUjRzTE03bUZKR1V0WGR6d29EaEQ1?=
+ =?utf-8?B?ZnpmRGYrWjZsbWZZODNoR3RzZVpMUW1BbW84WTRnUGt6QUkzc0NvZmtBMks2?=
+ =?utf-8?B?VlJWb2VCYkErTFd1N3Uycm0zZ0VVU0ZmRzVtWVFyRElOeEZtYjBxemg2Z3M4?=
+ =?utf-8?B?Vm4vRndPT3pDZ3l2WEkwdExMcU1jR1BjSkhTNU5BcDdjT1hYTUZCVmZxVTB4?=
+ =?utf-8?B?dDlNanRya3NtL2RyRHhYT3pNcU9tTld6K2QxVjZWYk0wU1djS3Q0YndpZXFk?=
+ =?utf-8?B?T3gvTHNnQmNkaVZ5VEIwZGd6eHFlc2wyanhuaHBtK1J1RkVObXZJMks0S2Jv?=
+ =?utf-8?B?eWdRN2plcTNWeEFTR0tSS1VoQXVXVTZNb1ZXZkZjN3BtM2VzRUdFMDhIOGRO?=
+ =?utf-8?B?UVpsQmNLeDBzbGRqcXlET3pUOUFLTmgvU1BYT083dlF2WDg1ZHBwU1RZVUJD?=
+ =?utf-8?B?N2YyRGp0TkhZaWlTeWNpNlJyZlRQQ1ZiWmRaTnhjZmdBY0w1dzdiYnNOQWJu?=
+ =?utf-8?B?czRKVmdEdmwzQWdGQTRKTWp1VFZRUjlwR1JtK0hncWJzT3Y4dWJkbTNNeUh6?=
+ =?utf-8?B?Z0I5bVJLUS91czFTTU9zY2owZXh0NVJxZjJyYmVGZGpGSXQrZ3UyR1pMMmts?=
+ =?utf-8?B?QVNtTHpJM0xGMTlTNDU4bFdHRUMyNEhBTDByNkdvaGlyZUp3cW95MUZaeVRZ?=
+ =?utf-8?B?U0d3UTZDREp5Y1o3YkVaRTdDOVQ0aE9pbGwySmdIako0M1EvYTFMbnZCTjgz?=
+ =?utf-8?B?VnAzU01LajdjR1Z2QngwOG1TSEU5NmJHRUVpdSs2cFFSUHI5T2dISTNOd3dr?=
+ =?utf-8?B?Y2FtU1FHQWlTVlNuM2Y3WHl5WmFmdEo2U1B1YkhySnFVQVVPZFl5MWg3Zk41?=
+ =?utf-8?B?TldvUU9vUXZqZG4xUndXQ2ZsVjZuYmQ3Q0tPRFhOZjBYMTlpcldkc1hxeXZH?=
+ =?utf-8?B?RngzTEErWnd6YVFYU2FIS3pmK3lmRTdSdlNYYkhUY3hLRm1lNkU5M1VPVUFa?=
+ =?utf-8?B?bkR6Nm42TmdMZVFOZ0x0TVFIbC9wTjRaQTVickFDWTVEWDh6Q1ptbkdMTmM1?=
+ =?utf-8?B?WWo2SzBTdFRHSkNqMmtCbmZMeEU4VFVyUVN4QzRTYXVWeldJb1M0SVQvZzlG?=
+ =?utf-8?B?Q2h6OW9UdmZzbTJzbU9CdDNZcUtTRHBsN29ScWpkNEpQOEs3V0ZJci9xdlFY?=
+ =?utf-8?B?eExLNXBma2tUYmVwb3Z0MXh6ajdocENidzUyS0xrcWFNenZSem5SdWpCYTRC?=
+ =?utf-8?B?SS8xdjczdytTTmFOY0RvOEI0dlFMRDBzMWpPR1RUalplellDZEJYaC96U2lW?=
+ =?utf-8?B?d2NZd0ZJL1dPMzcwMXo1L01xRThRV2VKV2NBWVRXdjRqWEtwU29yc1ZTZ2w2?=
+ =?utf-8?Q?2TAdnz/rqC8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cmFjeE1oSjdEOHBHNkNPQTRNcUUwNW9yRW12VCtsVU9Scmp6TFAxcEtJdWZn?=
+ =?utf-8?B?ck5sZGJ4SFNOdHphMUFsNW9hRUllUjFMcUp2d3dDb0ROcEJURDBWMG11ak16?=
+ =?utf-8?B?TC9jeUZnWnRlaXBFb1EwUGlWSlpMeHg5ZXIyMGFhQjZnMzZlclVUYTA4cVF6?=
+ =?utf-8?B?V0VzZ3gzZ2JaVEk5S2c0S0h6bHcxdUI5OGxPMTdlQUxsR3lJN2FDRkZHQ0c3?=
+ =?utf-8?B?cGNRdzh0Wnoxdi9XOStlblg4QlltaStGbHVFR0RldERsZDFNL2c3R095NXpP?=
+ =?utf-8?B?VFVhNXd1YjRMb25TYUdHUWJCQnZ0elgwNVdYalVQbFlDc3cyU3ovSlhJaVdl?=
+ =?utf-8?B?SUs4OFNnWUpaYmZQVi95UnFPMVFsdlRGM3I0bjdSUFVvV2JDQXB4VTFTb3cw?=
+ =?utf-8?B?cTgySlhuMWZ5MjVCRnlaa2VneUd1WmxZQk9ad1Q5bGpaa08vS3BxeldxLzB0?=
+ =?utf-8?B?bWlXdk9ROE53UjcyU3laZ2xlMU14YnR5Yld0V1AxQzFRVlpGZWRnMWJsOUI0?=
+ =?utf-8?B?T2ZwWGJubFVidm1scDhDcU9zNDVxa054MzlHbm9hQjhRRlBBSDlHdXA1UHZP?=
+ =?utf-8?B?ZHgyQU9FaERIcnp1L3VodUE4dlMyN09zbldCRnFxc2xpR0J1QXhUbDE5Z1Yr?=
+ =?utf-8?B?MGNVcndFVHFGMFBFMHhtMWZmL0Y5QisrK1d5U0xNSDE3Z1BsN1ZGc1cxMm1F?=
+ =?utf-8?B?R3JzRUJINk1EcWp1Yk8ycWFXS2d0U0VIM2pmYTM0bDJZamUvYUMvWTExUC9Q?=
+ =?utf-8?B?dlFGNnFpaW5FaTZOMHBPQ3l3SzRtQXFIc2RFNEhnamxBSkVoVW1XT0srTFQz?=
+ =?utf-8?B?V0pDamZnUVUxQ2JWVlY5cnFZOGh2TW03NThHdk53cG5UQjhMNUVqaWJjVmd3?=
+ =?utf-8?B?cXczNDlhUDR1eFJWek12Nmw1bEY1ZmpmdG5ZcVNsTDI4SDVjQml4Z2JrTzlu?=
+ =?utf-8?B?OGZxRlJEaVpFYytFSmpPaERJaEU4bGRoc3haSmtPOG82dW5ra3BiOVEzNzZy?=
+ =?utf-8?B?SWp5S25CR2I2RC9FN3c0MHl0QWZDdFBoUVUrVDc5U2NNK3RuRkxNT3JwWlp3?=
+ =?utf-8?B?WWorVFlxR2V5cERxd3VibzBFeFpXdkRrSWRmY1Z0TjJ4WWRrT0JWTndnclFm?=
+ =?utf-8?B?ZU9QTWxCZXp0YVVkK1JOUk9CakduZGtRQWhZZmIzOFA1bkpLZXJzVGpGVGE2?=
+ =?utf-8?B?S3pubVRYUzNDVUFTR0o5bmpuL2pheUpWN1FQa2dIWk5GeU93a09jZFNjaXhG?=
+ =?utf-8?B?RjBhOG56alVPZEtvMkNEdzlYdUdaVm8zSXV6UWVRTThKMHZTRVpVSVVaMGdG?=
+ =?utf-8?B?TkM4UWUycERRSXl2TkwxbWhBWUNFaXZESTJzV3dkY1hMQW1GMVpMZFFSa2R6?=
+ =?utf-8?B?d3pHV3ViK0dlc2ZPaStPc3BjeVlaOGkweElQZkpFNW54eFZ2NGhjTjNma1dF?=
+ =?utf-8?B?Z1RXL3ZRTmdwbVdHVE1uNWplYk9mWVdnb2JSUnc5dkxRd3IzdE40OUt2SE5k?=
+ =?utf-8?B?TzJvSU9RZVlGL2xjRnJUUW9VSnArcDM1TGJkbStYYmpHVUFhNVRxazdFclJ3?=
+ =?utf-8?B?YUcxUzJNbk5wak11T2VxeWNJSVZFSXpsNkdnWVVQY3Q0YzBSb3huc0ZiZU1B?=
+ =?utf-8?B?czRLRWdjZERrV1RZOXhBN3NkZEdlOXk4MSt3SHdJK0pDL0hnekluZkxldjVR?=
+ =?utf-8?B?QlQ0aE1uTjJtSmlTcWxObU1nQ0IrZlNKVUtXTjF6Y28vNHVLcnhHeVZRcG9E?=
+ =?utf-8?B?cXBjU1g1TnVXT2FoVlJ3bXBTRURpeUluTmdxRXZBRnluZEVkYXYzcldWMnZD?=
+ =?utf-8?B?UDBMNjRMMW0yWXZTU1pDcncwbmN0c05LOXBBTVpmV1dKY2drVE5idkhDTmxE?=
+ =?utf-8?B?UDJlcGJNbWVsTEo4aHJIV0h4R2haSjFMcFJpakxGbFJrRmlJUUFRMGxYM3RW?=
+ =?utf-8?B?RmhtT0pmTzE3bFNScSs0UjRSTHlqanZhRjEwUCtsRnRxUDAzWjVoeTBWMHBo?=
+ =?utf-8?B?UExTak54YjdhRHRET3E1anpGcEtUbVZYek1ldGx1ZFk0T3JNR2J0ZC9oTW9n?=
+ =?utf-8?B?ZDFraUtqS3pFYjJWUFJkUnpyVFVaYnVCdkRydTlKS1lwcnFOOVBrNGU3bFhG?=
+ =?utf-8?Q?9RCtbJaQdPoEzPPF5W1xNSkqh?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cbdf9a4-ea69-48b9-d909-08dd81772845
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 08:24:53.6090
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: q5Rn4J4rMn0/brI9iDZKRvpriH3gBgBnclQUnHC4WvFMtIALAnb0yCJlIdisL713
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6576
 
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
- arch/x86/hyperv/hv_apic.c                 | 6 +++---
- arch/x86/include/asm/apic.h               | 2 +-
- arch/x86/include/asm/switch_to.h          | 2 +-
- arch/x86/kernel/cpu/amd.c                 | 2 +-
- arch/x86/kernel/cpu/common.c              | 8 ++++----
- arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 4 ++--
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 2 +-
- arch/x86/kernel/cpu/umwait.c              | 4 ++--
- arch/x86/kernel/kvm.c                     | 2 +-
- 9 files changed, 16 insertions(+), 16 deletions(-)
+Am 17.04.25 um 20:09 schrieb T.J. Mercier:
+> struct dma_heap_attachment is a separate allocation from the struct
+> sg_table it contains, but there is no reason for this. Let's use the
+> slab allocator just once instead of twice for dma_heap_attachment.
+>
+> Signed-off-by: T.J. Mercier <tjmercier@google.com>
 
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index c450e67cb0a4..4d617ee59377 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -75,10 +75,10 @@ static void hv_apic_write(u32 reg, u32 val)
- {
- 	switch (reg) {
- 	case APIC_EOI:
--		wrmsr(HV_X64_MSR_EOI, val, 0);
-+		wrmsrq(HV_X64_MSR_EOI, val);
- 		break;
- 	case APIC_TASKPRI:
--		wrmsr(HV_X64_MSR_TPR, val, 0);
-+		wrmsrq(HV_X64_MSR_TPR, val);
- 		break;
- 	default:
- 		native_apic_mem_write(reg, val);
-@@ -92,7 +92,7 @@ static void hv_apic_eoi_write(void)
- 	if (hvp && (xchg(&hvp->apic_assist, 0) & 0x1))
- 		return;
- 
--	wrmsr(HV_X64_MSR_EOI, APIC_EOI_ACK, 0);
-+	wrmsrq(HV_X64_MSR_EOI, APIC_EOI_ACK);
- }
- 
- static bool cpu_is_self(int cpu)
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index 0174dd548327..68e10e30fe9b 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -209,7 +209,7 @@ static inline void native_apic_msr_write(u32 reg, u32 v)
- 	    reg == APIC_LVR)
- 		return;
- 
--	wrmsr(APIC_BASE_MSR + (reg >> 4), v, 0);
-+	wrmsrq(APIC_BASE_MSR + (reg >> 4), v);
- }
- 
- static inline void native_apic_msr_eoi(void)
-diff --git a/arch/x86/include/asm/switch_to.h b/arch/x86/include/asm/switch_to.h
-index 4f21df7af715..499b1c15cc8b 100644
---- a/arch/x86/include/asm/switch_to.h
-+++ b/arch/x86/include/asm/switch_to.h
-@@ -61,7 +61,7 @@ static inline void refresh_sysenter_cs(struct thread_struct *thread)
- 		return;
- 
- 	this_cpu_write(cpu_tss_rw.x86_tss.ss1, thread->sysenter_cs);
--	wrmsr(MSR_IA32_SYSENTER_CS, thread->sysenter_cs, 0);
-+	wrmsrq(MSR_IA32_SYSENTER_CS, thread->sysenter_cs);
- }
- #endif
- 
-diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
-index 1f7925e45b46..6132a3c529cc 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -1206,7 +1206,7 @@ void amd_set_dr_addr_mask(unsigned long mask, unsigned int dr)
- 	if (per_cpu(amd_dr_addr_mask, cpu)[dr] == mask)
- 		return;
- 
--	wrmsr(amd_msr_dr_addr_masks[dr], mask, 0);
-+	wrmsrq(amd_msr_dr_addr_masks[dr], mask);
- 	per_cpu(amd_dr_addr_mask, cpu)[dr] = mask;
- }
- 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 10da3da5b81f..99d8a8c15ba5 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -2019,9 +2019,9 @@ void enable_sep_cpu(void)
- 	 */
- 
- 	tss->x86_tss.ss1 = __KERNEL_CS;
--	wrmsr(MSR_IA32_SYSENTER_CS, tss->x86_tss.ss1, 0);
--	wrmsr(MSR_IA32_SYSENTER_ESP, (unsigned long)(cpu_entry_stack(cpu) + 1), 0);
--	wrmsr(MSR_IA32_SYSENTER_EIP, (unsigned long)entry_SYSENTER_32, 0);
-+	wrmsrq(MSR_IA32_SYSENTER_CS, tss->x86_tss.ss1);
-+	wrmsrq(MSR_IA32_SYSENTER_ESP, (unsigned long)(cpu_entry_stack(cpu) + 1));
-+	wrmsrq(MSR_IA32_SYSENTER_EIP, (unsigned long)entry_SYSENTER_32);
- 
- 	put_cpu();
- }
-@@ -2235,7 +2235,7 @@ static inline void setup_getcpu(int cpu)
- 	struct desc_struct d = { };
- 
- 	if (boot_cpu_has(X86_FEATURE_RDTSCP) || boot_cpu_has(X86_FEATURE_RDPID))
--		wrmsr(MSR_TSC_AUX, cpudata, 0);
-+		wrmsrq(MSR_TSC_AUX, cpudata);
- 
- 	/* Store CPU and node number in limit. */
- 	d.limit0 = cpudata;
-diff --git a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-index 185317c6b509..cc534a83f19d 100644
---- a/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-+++ b/arch/x86/kernel/cpu/resctrl/pseudo_lock.c
-@@ -905,7 +905,7 @@ int resctrl_arch_measure_cycles_lat_fn(void *_plr)
- 	 * Disable hardware prefetchers.
- 	 */
- 	rdmsr(MSR_MISC_FEATURE_CONTROL, saved_low, saved_high);
--	wrmsr(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits, 0x0);
-+	wrmsrq(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits);
- 	mem_r = READ_ONCE(plr->kmem);
- 	/*
- 	 * Dummy execute of the time measurement to load the needed
-@@ -1001,7 +1001,7 @@ static int measure_residency_fn(struct perf_event_attr *miss_attr,
- 	 * Disable hardware prefetchers.
- 	 */
- 	rdmsr(MSR_MISC_FEATURE_CONTROL, saved_low, saved_high);
--	wrmsr(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits, 0x0);
-+	wrmsrq(MSR_MISC_FEATURE_CONTROL, prefetch_disable_bits);
- 
- 	/* Initialize rest of local variables */
- 	/*
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index f4a2ee2a6404..73ed83f1dff8 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1707,7 +1707,7 @@ void resctrl_arch_mon_event_config_write(void *_config_info)
- 		pr_warn_once("Invalid event id %d\n", config_info->evtid);
- 		return;
- 	}
--	wrmsr(MSR_IA32_EVT_CFG_BASE + index, config_info->mon_config, 0);
-+	wrmsrq(MSR_IA32_EVT_CFG_BASE + index, config_info->mon_config);
- }
- 
- static void mbm_config_write_domain(struct rdt_resource *r,
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index 0050eae153bb..933fcd7ff250 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -33,7 +33,7 @@ static DEFINE_MUTEX(umwait_lock);
- static void umwait_update_control_msr(void * unused)
- {
- 	lockdep_assert_irqs_disabled();
--	wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
-+	wrmsrq(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached));
- }
- 
- /*
-@@ -71,7 +71,7 @@ static int umwait_cpu_offline(unsigned int cpu)
- 	 * the original control MSR value in umwait_init(). So there
- 	 * is no race condition here.
- 	 */
--	wrmsr(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached, 0);
-+	wrmsrq(MSR_IA32_UMWAIT_CONTROL, orig_umwait_control_cached);
- 
- 	return 0;
- }
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 44a45df7200a..bc9d21d7395f 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -399,7 +399,7 @@ static void kvm_disable_steal_time(void)
- 	if (!has_steal_clock)
- 		return;
- 
--	wrmsr(MSR_KVM_STEAL_TIME, 0, 0);
-+	wrmsrq(MSR_KVM_STEAL_TIME, 0);
- }
- 
- static u64 kvm_steal_clock(int cpu)
--- 
-2.49.0
+I'm not *that* expert for this code, but looks totally reasonable to me.
+
+Reviewed-by: Christian König <christian.koenig@amd.com>
+
+Let me know if I should push that to drm-misc-next.
+
+Regards,
+Christian.
+
+> ---
+>  drivers/dma-buf/heaps/system_heap.c | 43 ++++++++++++-----------------
+>  1 file changed, 17 insertions(+), 26 deletions(-)
+>
+> diff --git a/drivers/dma-buf/heaps/system_heap.c b/drivers/dma-buf/heaps/system_heap.c
+> index 26d5dc89ea16..bee10c400cf0 100644
+> --- a/drivers/dma-buf/heaps/system_heap.c
+> +++ b/drivers/dma-buf/heaps/system_heap.c
+> @@ -35,7 +35,7 @@ struct system_heap_buffer {
+>  
+>  struct dma_heap_attachment {
+>  	struct device *dev;
+> -	struct sg_table *table;
+> +	struct sg_table table;
+>  	struct list_head list;
+>  	bool mapped;
+>  };
+> @@ -54,29 +54,22 @@ static gfp_t order_flags[] = {HIGH_ORDER_GFP, HIGH_ORDER_GFP, LOW_ORDER_GFP};
+>  static const unsigned int orders[] = {8, 4, 0};
+>  #define NUM_ORDERS ARRAY_SIZE(orders)
+>  
+> -static struct sg_table *dup_sg_table(struct sg_table *table)
+> +static int dup_sg_table(struct sg_table *from, struct sg_table *to)
+>  {
+> -	struct sg_table *new_table;
+> -	int ret, i;
+>  	struct scatterlist *sg, *new_sg;
+> +	int ret, i;
+>  
+> -	new_table = kzalloc(sizeof(*new_table), GFP_KERNEL);
+> -	if (!new_table)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	ret = sg_alloc_table(new_table, table->orig_nents, GFP_KERNEL);
+> -	if (ret) {
+> -		kfree(new_table);
+> -		return ERR_PTR(-ENOMEM);
+> -	}
+> +	ret = sg_alloc_table(to, from->orig_nents, GFP_KERNEL);
+> +	if (ret)
+> +		return ret;
+>  
+> -	new_sg = new_table->sgl;
+> -	for_each_sgtable_sg(table, sg, i) {
+> +	new_sg = to->sgl;
+> +	for_each_sgtable_sg(from, sg, i) {
+>  		sg_set_page(new_sg, sg_page(sg), sg->length, sg->offset);
+>  		new_sg = sg_next(new_sg);
+>  	}
+>  
+> -	return new_table;
+> +	return 0;
+>  }
+>  
+>  static int system_heap_attach(struct dma_buf *dmabuf,
+> @@ -84,19 +77,18 @@ static int system_heap_attach(struct dma_buf *dmabuf,
+>  {
+>  	struct system_heap_buffer *buffer = dmabuf->priv;
+>  	struct dma_heap_attachment *a;
+> -	struct sg_table *table;
+> +	int ret;
+>  
+>  	a = kzalloc(sizeof(*a), GFP_KERNEL);
+>  	if (!a)
+>  		return -ENOMEM;
+>  
+> -	table = dup_sg_table(&buffer->sg_table);
+> -	if (IS_ERR(table)) {
+> +	ret = dup_sg_table(&buffer->sg_table, &a->table);
+> +	if (ret) {
+>  		kfree(a);
+> -		return -ENOMEM;
+> +		return ret;
+>  	}
+>  
+> -	a->table = table;
+>  	a->dev = attachment->dev;
+>  	INIT_LIST_HEAD(&a->list);
+>  	a->mapped = false;
+> @@ -120,8 +112,7 @@ static void system_heap_detach(struct dma_buf *dmabuf,
+>  	list_del(&a->list);
+>  	mutex_unlock(&buffer->lock);
+>  
+> -	sg_free_table(a->table);
+> -	kfree(a->table);
+> +	sg_free_table(&a->table);
+>  	kfree(a);
+>  }
+>  
+> @@ -129,7 +120,7 @@ static struct sg_table *system_heap_map_dma_buf(struct dma_buf_attachment *attac
+>  						enum dma_data_direction direction)
+>  {
+>  	struct dma_heap_attachment *a = attachment->priv;
+> -	struct sg_table *table = a->table;
+> +	struct sg_table *table = &a->table;
+>  	int ret;
+>  
+>  	ret = dma_map_sgtable(attachment->dev, table, direction, 0);
+> @@ -164,7 +155,7 @@ static int system_heap_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
+>  	list_for_each_entry(a, &buffer->attachments, list) {
+>  		if (!a->mapped)
+>  			continue;
+> -		dma_sync_sgtable_for_cpu(a->dev, a->table, direction);
+> +		dma_sync_sgtable_for_cpu(a->dev, &a->table, direction);
+>  	}
+>  	mutex_unlock(&buffer->lock);
+>  
+> @@ -185,7 +176,7 @@ static int system_heap_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
+>  	list_for_each_entry(a, &buffer->attachments, list) {
+>  		if (!a->mapped)
+>  			continue;
+> -		dma_sync_sgtable_for_device(a->dev, a->table, direction);
+> +		dma_sync_sgtable_for_device(a->dev, &a->table, direction);
+>  	}
+>  	mutex_unlock(&buffer->lock);
+>  
+>
+> base-commit: 8ffd015db85fea3e15a77027fda6c02ced4d2444
 
