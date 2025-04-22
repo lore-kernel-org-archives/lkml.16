@@ -1,75 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951BA27CCFA
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:25:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528771A317D;
+	Tue, 22 Apr 2025 12:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324739; cv=none; b=T6J49roEdZTOwZW+iMKhyLLyZRsB/fog4BxDkrko+su7oOvu/JwNhSe8LmD7BofqBwKWcW55Cx2ZPzK0z6rSim7YuFfGo4o3ENEDTwL2Wdcw0HDPw3ppw8/e0R71/6Hf4AvoidUOYO6ee6LK/sd+rlgg3UkfpiRpO2vc+gDmIm0=
+	t=1745324794; cv=none; b=b6pvdVaQDYDki3wn2/nrcex0AomKFqQiPCzkEZoL7oh+fHZg/K7asKt/H1Nt4prMIf51jpDzLdNumgM4+bnqtimat12Hp8GVFIDtVoU+9OPCwgj4eUZhXNZQAe64KqiH/yjuxSFqHy+HDuPjxBsHmuMEunhBFLHOXy0e6PinKiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324739; c=relaxed/simple;
-	bh=J9XHANGMqOthXkxTgCt1OqkEDHiUiYVX+WKl+1QDb5Q=;
+	s=arc-20240116; t=1745324794; c=relaxed/simple;
+	bh=5i2eKqt3grM515ivR68NWJHFNMh7VbwhNibc8UtARLw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uDrFWYJ5heIxi4KH/uX/pQz05lXxYhVs0KtXwVH/5H0yZXDmbwYvrrfIAKNrYhN+4fqWCaA4QJ7Plz6fSQNI0L9lGk/HY6fl/+AGUmGOQHxLYEfOYJb/AHk7neBGCMgbXy3AGYzgE7IibsIyB85I5wk071ilCeH3QTHytQJ9ekc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VZsC0bkz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JQY4FilfvqkS0XdRMlvEV5afmkw/2SzwbSpdyx9c33R92H62F6Qk7aCIdTJ4Itv2VspyR8DEzviTYIJR/880oduOj2qhl6/yCAhuxz9N9Uer4a6Cy8HNhHZqOQN9Y2U0r6/kx9we0C3mgFebTPF0ojpT4vT9DRT9KHxQ565KLe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCIdcj8i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VZsC0bkz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2DF2C4CEE9;
-	Tue, 22 Apr 2025 12:25:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCIdcj8i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8BAEC4CEE9;
+	Tue, 22 Apr 2025 12:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745324739;
-	bh=J9XHANGMqOthXkxTgCt1OqkEDHiUiYVX+WKl+1QDb5Q=;
+	s=k20201202; t=1745324793;
+	bh=5i2eKqt3grM515ivR68NWJHFNMh7VbwhNibc8UtARLw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VZsC0bkzKRn7MZWfQcI6IPRFCT+ozTG8HWBR4ZWVZfsItfn7Mw+YqGqE2W3m2DdJr
-	 P+t/8aN5xFXs9XLh4qVyxbDSuaqHKRkbOiCWpCrEye92KQQrYxLWw//5Hrlu84ORLH
-	 OT7kzEN/TyQsl3JSgLqnil+i2CnzhVL8BeAuPbyspgM+jF1RnGHLzDFauIBMuzV3Lm
-	 KN06xoWY8C52DeRTqy1dwFlvo4KioATxTc6B2Udr4AA3RUrtquouVfavs2vL5yNdfR
-	 rIvzzxbfmCpuy+IDDrhvgdxs1LUr9OwZn0N5IldcMo8ssV4xCSTlzoWfxjH+gHqrWg
-	 4kJbiEYwUgtLA==
-Date: Tue, 22 Apr 2025 14:25:34 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCH 0/2] x86: vdso: Two small ifdef cleanups
-Message-ID: <aAeKvpzKsLsKzK8J@gmail.com>
-References: <20240910-x86-vdso-ifdef-v1-0-877c9df9b081@linutronix.de>
+	b=rCIdcj8i9zsKYw7UQrtIOwu6YkK3wvt8T98u4iSwj4Yn/hxFhjR1iu/3WvNg3dGmf
+	 gXlA7fVu3M+e8fj8wZV4RZzUizSmQmlNAr4jWLlt7W2eu/G01ZS7/YfrtNx/Ob92kg
+	 kUIOTI0BFJjJcj+IC4tkdzEC9UIHxZR1/ssDPztrXaLYPmoafMWiM4aFzk6Q5FogBG
+	 lPCebaYZ3qIXnYNAjHXHHNc706U9HDKctITrVfrzA2C1OtA6wyq17eUHxiE7952VO8
+	 dk08JfcMDNuQgZapXv0eGpZyTkjRMB5u+BXbRoh0X8w419HlV0G0f+MzslEQBoYEFq
+	 CeJ7IYOix5kdA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1u7Chr-000000004Lw-1HSq;
+	Tue, 22 Apr 2025 14:26:32 +0200
+Date: Tue, 22 Apr 2025 14:26:31 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Subject: Re: [PATCH v2 0/2] arm64: dts: x1e001de-devkit: USB retimers related
+ fixes
+Message-ID: <aAeK9wFdtnzyD8J_@hovoldconsulting.com>
+References: <20250422-x1e001de-devkit-dts-fix-retimer-gpios-v2-0-0129c4f2b6d7@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240910-x86-vdso-ifdef-v1-0-877c9df9b081@linutronix.de>
+In-Reply-To: <20250422-x1e001de-devkit-dts-fix-retimer-gpios-v2-0-0129c4f2b6d7@linaro.org>
 
-
-* Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de> wrote:
-
-> Some small non-functional cleanups to make the vdso setup easier to
-> read.
+On Tue, Apr 22, 2025 at 02:25:21PM +0300, Abel Vesa wrote:
+> These fixes align all the USB retimer related nodes on the Devkit with the
+> CRD and T14s.
 > 
-> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> ---
-> Thomas Weiﬂschuh (2):
->       x86: vdso: Remove ifdeffery around page setup variants
->       x86: vdso: Remove redundant ifdeffery around in_ia32_syscall()
-> 
->  arch/x86/entry/vdso/vma.c   | 35 ++++++++++++-----------------------
->  arch/x86/include/asm/elf.h  |  4 ----
->  arch/x86/include/asm/vdso.h |  8 --------
->  3 files changed, 12 insertions(+), 35 deletions(-)
+> This patchset is based on Johan's:
+> https://lore.kernel.org/all/20250318074907.13903-1-johan+linaro@kernel.org/
 
-Looks like these patches fell between the cracks - I'm applying them to 
-tip:x86/vdso if nobody objects.
+> Changes in v2:
+> - Added space between voltage value and SI unit in comments, like Johan
+>   suggested.
+> - Picked up Konrad's R-b tags
+> - Link to v1: https://lore.kernel.org/r/20250318-x1e001de-devkit-dts-fix-retimer-gpios-v1-0-1c092f630b0c@linaro.org
 
-Thanks,
+Assuming you verified that PMIC power-source settings matches what the
+firmware has configured:
 
-	Ingo
+Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+
+Johan
