@@ -1,118 +1,106 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3C018E3F;
-	Tue, 22 Apr 2025 09:18:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B319E56A
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745313501; cv=none; b=GY4WqioB5GH703ansIB9T73gdKUvBZmED1UBh0vTC+XGybU5smkjg/UmKDllAEekIjBVyxNI35adzN9pxxzQanrMnNDhfhdRGfXRfzZ3qVYowkTAzloxS/2xhyYyv3rEaGAiKHVsRePlPUR9VEZhZoRSqpUJga/kREMZPIH3VXg=
+	t=1745313676; cv=none; b=p0cmuVniPVswxNpK9M7kNTqsV57MbC7SlTzdLPTsPxEFRjmMU+5kiQzIx+92y2piyFpEeyjcxVaE/RByqkPDWtIs/93ScpSCJh10vwod9KHTmMlIQpFywaucG/G3MZL2fqNh/ItctYru8aatubHm2TVJ9lSjKmshsXpw6lKwJns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745313501; c=relaxed/simple;
-	bh=ahUrLKUy5cKBw3CCcbzKd4Qd4em2A+c8Vv02kzDIBzI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=V6JtccoJjDfV61TQFGT/wlncylv8Ccq70lRsHXrhW/b1gmCpyZYWvIsazxjcmYtvACdSxJyIZaELHo6uIpqRIOTOTejbHvrY7PfAhnlBe2Y3udv06PWuCM36XeicDs9tG0dMq5Ng6JC7xBekAV5od4C7LeiXY8yR5z7lxvJfe5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=aHdWa7rb; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="aHdWa7rb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745313433;
-	bh=iGkIVWXFOyVsd4uMO+SSpTfRM67ip4m1rYsko5Qs5AA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=aHdWa7rby8JmH/g6tVdSKt2CgjT4BpgsVgk1sv/CFWUI2mM0G/vMY7e2nGVBuhayy
-	 XAcpW0kfFx7KH/1o6pajPBt1SWkF1q0xzFndEYmHHSq1vdcFqVLCV0/iQ9ZUdNMoH4
-	 W3tuhp9Udle+nAIUJfBYU2eJtN5tMspEuXtR96Wo=
-X-QQ-mid: zesmtpip3t1745313415t3daaa261
-X-QQ-Originating-IP: j1RNao9pu3ZOoDyXZrFlPdWn5P6r/D0upx564EzC170=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Tue, 22 Apr 2025 17:16:54 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 4643946903979290159
-EX-QQ-RecipientCnt: 8
-From: WangYuli <wangyuli@uniontech.com>
-To: gregkh@linuxfoundation.org,
-	sashal@kernel.org,
-	stable@vger.kernel.org
-Cc: macro@orcam.me.uk,
-	tsbogend@alpha.franken.de,
-	wangyuli@uniontech.com,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5.4+] MIPS: cevt-ds1287: Add missing ds1287.h include
-Date: Tue, 22 Apr 2025 17:16:48 +0800
-Message-ID: <CB3E3A9CEA5227BE+20250422091648.116984-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1745313676; c=relaxed/simple;
+	bh=CaPUPBto2TK7JH6QlfJ4aRRREIMXKvac2Kcpnoc280c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hxwYD7vWvABNIORmycSXy4riyH7PHatD+znf+opXTfl18Nq0acR6tX9b3hPI4dQdNQFj0hNyYvl3q45erOZvv+S1EjtHUGpgsjRBIRnkC1EVJFwUXUeE8vqALkRvVAqj2f3qTTy3Lckqb1Va4J7rdXVEyIy08f7kCiJFhWkgZLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E99BC152B;
+	Tue, 22 Apr 2025 02:21:08 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C22443F5A1;
+	Tue, 22 Apr 2025 02:21:12 -0700 (PDT)
+Date: Tue, 22 Apr 2025 10:21:07 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v1 7/9] coresight: Make clock sequence consistent
+Message-ID: <20250422092107.GC28953@e132581.arm.com>
+References: <20250327113803.1452108-1-leo.yan@arm.com>
+ <20250327113803.1452108-8-leo.yan@arm.com>
+ <d94c6f97-4ca8-4a3a-ae8a-8e872eaa8d3b@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: N34HGxtl3nZNGOKxccmAw5hb6+nu/qSRzx28mLLa0xo0l3x4TJObnebb
-	uc5Dii4gWRaCibxuC02o3LhUFTqLj1M6wY6T2D8FR6DYtiaDnjSkiIWfvjXVq2bDHhKLZ2e
-	UA3wEk1qlAt26kqmHJpvDJQp6lKmF6wCAT716pzW+/bC5uWPaRVVqLw1ge4YCWCsqZvd+XX
-	LwXUmXnNENSfMVBCXwF8zns7vIwu8EXde6K7LI+daTu9PexaEusNL1fawFPuMs8XZfm2i/U
-	jqJzaB0A5uonemKYsKJNVL8emtvi02aLViGVu9xb4LO3GK4vKpLkj8uEzFGxxFpebn0M310
-	LNq9ggnB+8z0sXDzIqMDCpxqS4j9twi8kyZaApaWhbxNoFrh9H/L23vCT0ikSfMO05+Z927
-	xPxvcWqrxHlsahsY57x5j3ceJoVfPAkRr/9B2vIQOabJV265EGTmWdnksvi3tZTq7C91RAX
-	dPCbrUhWc9qs0cgmjWOHVD9ivluuRrCPD9wT/sbb1TBdsvTe6Mbk0dSmxzuNtruO/7vXMZz
-	Agk5pMY+6MazjxmOIZLQhhwqzdCEThqguUCivWavmiIveWnjW7TNLsUDcvDkULoDa0/UFrP
-	FyrKRy605rxajAt5yNSQjJv5o9Za/z+XXAh2Per2nddp0LhxDcpG4kqcwXlcnsqk6BeBedn
-	l5d1MMF/JHJ4oGye4Dc8DApl0/IaTKeC8+GJcmkTz/gRA4plOCoXJwTwzlJHJKagS5LF7FI
-	5CPrW4ScOPHkwMQOt+uXJ9tKvc5doLGzJIPw3cboMaeaoNKuvpavRgFcj/C3cwquwZAJnXq
-	IsvhSg7G/hGhx4aOfgoCiktWpL9PUyu1AIo9mY17gli3QsWtqKAQJNl+4tW5cuqkY+czMXl
-	nrISiU5oknnU9mILfQILANK+FsmnJYiHVBUdsxQ9QRxOpOjAmCrpDPgGesUBDs5yNzGfhY+
-	66eAa1YCXUFdW510yvO9ApXy0qC722wgyfIAFCePVgg5L/HBFaZuuPia8MK9PTln6ekZcpf
-	t5CV5p1KFaOXd+rSkO7UipK1SxF7k=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-X-QQ-RECHKSPAM: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d94c6f97-4ca8-4a3a-ae8a-8e872eaa8d3b@arm.com>
 
-[ Upstream commit f3be225f338a578851a7b607a409f476354a8deb ]
+On Thu, Apr 03, 2025 at 12:40:39PM +0530, Anshuman Khandual wrote:
+> On 3/27/25 17:08, Leo Yan wrote:
+> > Since atclk is enabled after pclk during the probe phase, this commit
+> > maintains the same sequence for the runtime resume flow.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > ---
+> >  drivers/hwtracing/coresight/coresight-funnel.c     | 6 +++---
+> >  drivers/hwtracing/coresight/coresight-replicator.c | 6 +++---
+> >  drivers/hwtracing/coresight/coresight-stm.c        | 6 +++---
+> >  drivers/hwtracing/coresight/coresight-tpiu.c       | 6 +++---
+> >  4 files changed, 12 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+> > index ec6d3e656548..e378c2fffca9 100644
+> > --- a/drivers/hwtracing/coresight/coresight-funnel.c
+> > +++ b/drivers/hwtracing/coresight/coresight-funnel.c
+> > @@ -299,11 +299,11 @@ static int funnel_runtime_resume(struct device *dev)
+> >  {
+> >  	struct funnel_drvdata *drvdata = dev_get_drvdata(dev);
+> >  
+> > -	if (drvdata && !IS_ERR(drvdata->atclk))
+> > -		clk_prepare_enable(drvdata->atclk);
+> > -
+> >  	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
+> >  		clk_prepare_enable(drvdata->pclk);
+> > +
+> > +	if (drvdata && !IS_ERR(drvdata->atclk))
+> > +		clk_prepare_enable(drvdata->atclk);
+> >  	return 0;
+> >  }
+> 
+> funnel_probe() enables pclk after atclk though - which needs to be
+> reversed as well ?
 
-Address the issue of cevt-ds1287.c not including the ds1287.h header
-file.
+Good point!
 
-Fix follow errors with gcc-14 when -Werror:
+The key point is a dynamic probe enables pclk clock in AMBA bus driver,
+which is anyway prior to enable atclk.
 
-arch/mips/kernel/cevt-ds1287.c:15:5: error: no previous prototype for ‘ds1287_timer_state’ [-Werror=missing-prototypes]
-   15 | int ds1287_timer_state(void)
-      |     ^~~~~~~~~~~~~~~~~~
-arch/mips/kernel/cevt-ds1287.c:20:5: error: no previous prototype for ‘ds1287_set_base_clock’ [-Werror=missing-prototypes]
-   20 | int ds1287_set_base_clock(unsigned int hz)
-      |     ^~~~~~~~~~~~~~~~~~~~~
-arch/mips/kernel/cevt-ds1287.c:103:12: error: no previous prototype for ‘ds1287_clockevent_init’ [-Werror=missing-prototypes]
-  103 | int __init ds1287_clockevent_init(int irq)
-      |            ^~~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[7]: *** [scripts/Makefile.build:207: arch/mips/kernel/cevt-ds1287.o] Error 1
-make[7]: *** Waiting for unfinished jobs....
-make[6]: *** [scripts/Makefile.build:465: arch/mips/kernel] Error 2
-make[6]: *** Waiting for unfinished jobs....
+We need to keep consistent flow for all flows (static probe, dynamic
+probe, runtime PM resume).  The patch 09 consolidates clock enabling for
+static and dynamic probe, and this patch is for runtime PM.
 
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
----
- arch/mips/kernel/cevt-ds1287.c | 1 +
- 1 file changed, 1 insertion(+)
+For a better organization, I will place this patch after the patch 09
+in the next spin.
 
-diff --git a/arch/mips/kernel/cevt-ds1287.c b/arch/mips/kernel/cevt-ds1287.c
-index 9a47fbcd4638..de64d6bb7ba3 100644
---- a/arch/mips/kernel/cevt-ds1287.c
-+++ b/arch/mips/kernel/cevt-ds1287.c
-@@ -10,6 +10,7 @@
- #include <linux/mc146818rtc.h>
- #include <linux/irq.h>
- 
-+#include <asm/ds1287.h>
- #include <asm/time.h>
- 
- int ds1287_timer_state(void)
--- 
-2.49.0
+[...]
 
+> I assume this patch is trying to have the same clock sequence enablement
+> during original probe and resume path and then just the reverse sequence
+> during suspend path.
+
+Correct.  As said, the patch 09 is for clock enabling sequence in
+probe, and this patch is for the resume path.
+
+Thanks,
+Leo
