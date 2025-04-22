@@ -1,64 +1,33 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C21F1EEA40;
-	Tue, 22 Apr 2025 07:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756D31EEA40;
+	Tue, 22 Apr 2025 07:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745308743; cv=none; b=LMKvbFkIjzkF3hz3s095Pc91OKxJZCcLz/qikZv8UqHxpx4r5hIoGwi6A3Q6j/U3rk8uJ7wep8sj6qqIWtgmQvPTRIWrfWtFxHC0A5324+sUhAqmeGr4BcxM7XccHzejx7k5XmbyWV4cKIZvCYxQlUv+U1RGZWtQhBtFmW4dAB4=
+	t=1745308756; cv=none; b=d/18Qvs2qh/D57yU2X/2/qwBd21XXb700DGrlfovbVIFNLhXvYlol1oYnQ1OjbdpGKhw6O9ZK/eetmX8EPk7xxhm4PDnSnSa6ms1+ASVz9umIfZ5xJbISOvhEpk65RMoma99WjJUyR4tXEm79WbPyxwACRAaYnvIxAcEymJh6Ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745308743; c=relaxed/simple;
-	bh=U1NSlMKH2Q4QiOM+gX1bIuX+5W3KYfjTCa1ADvz2nCk=;
+	s=arc-20240116; t=1745308756; c=relaxed/simple;
+	bh=UAPA1cBdJuhl2cpNWrYkJ/eaemaqFe7c4XOIf1O/9k0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dt7emZPvndCoe7lIhJ8IfO5MH8PmnWpU2PUJ7+75HgXMmAwNu+gpdAKcXtpLOEsGYG+3sUITlTgPrfCEMf05/1x4+xXbCnf9GLlq8XlukB3hmqJCnpQxW04sXCOI19OEJineZO0dLsp3fIsn6xJNsOrOcegkshz9ArLvAayvZ2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y5Fu2Bye; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=uHPyNKVvtDznH7lyR5IYmB8PLYIZl+/7+auUia9WQyo85J0Z1mbWMCZp4Q/WmGdHaWD9AL7Ssrsr3e0dHgVf877/1i60PrSAaHjFi6JcVpOGTFYeN6NJu8ZBjzmRuycl6+lzVqInrz1G53ZNxt1urHWDrf0QwQn5h3IaZRgO1MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cmoZVKWT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y5Fu2Bye"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f5bef591d6so8252472a12.1;
-        Tue, 22 Apr 2025 00:59:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745308740; x=1745913540; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L/lN4gz+2egV7k5JlUuUM2b1n/evNrqq8ZZ3C9Kek9Q=;
-        b=Y5Fu2Byec2xYXc55f/QvIaS2/oHBVmwM+gB4VYBbOOYCtjueeeek5h5mnYfw4Pj6di
-         fNhUTBpRarHLv5R1t+svNVfe/1xPKC5n46OxTK4Plje2tVAUr9Iws227MXsUnMoC99cE
-         mayi/8SXo0ehmO1uOkovZ2xsiEHQrogdvSrkX1D+SaxxpaxH4sZFnIqGZMUdCBeJ5kQB
-         e2DkNoe3fumfhbYbVppVfqtnI/ZVXmirr+C2HeO/Qk8jS6xIOc7lpB068XA/WEEkfPUv
-         a6h45VFpNsgOcxSXsVpf5W5wXLPxS6S9hMcuAjDWXlj4rSEQtqrbdCwhXo43NBHGDl1+
-         vzDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745308740; x=1745913540;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L/lN4gz+2egV7k5JlUuUM2b1n/evNrqq8ZZ3C9Kek9Q=;
-        b=TP5XIK8PlWh5EA6R+sapoArLao/W9Sf7HiOnZwYpNKLYZQXB/yPPjOvMcc7VdBK8Mj
-         RXjJEwOaQEXB/9NyrgPaKtjZwPjRfi8wbTqRXyfA1fLvoQtTmOYJidDZtLU3zCc0Csjy
-         zQQvpuS8AujHPdCPUSZEtIOOtH4sEe/gJ8gS066ppQnY2t9SORf8Ha8CLYgv611IDIRf
-         X3h60sz+ItXZKIroIbk335k7pHJHAW09V4/t+AGVVfPNIDHnmyjGk+r5X0T3E+TDwwNu
-         3ERInCBLImC4zcE8f8jzvylvGoRRgo7nzc8wy3MTJbGZ+s/M9EpElgD+b6y0ZeNcrPP6
-         Swaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVZJfwsDw2QasgKg2aH+MQvyoC1sqQCNXunzMPMxloWUeed42ZokuVyEc4h0kvFFkJn74rrSNagoQvauls=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv8o4r+n+AQZE2SFgTCI97yQO/hIrl57sjnm9simeO21TceDxn
-	QT6klfkf5ZqmqpTjvtYKqWVIYrLQB7Jvvk7TYIaV3FKbB08umjQR
-X-Gm-Gg: ASbGncs32Ahck5KgUA2dubh7UYe7d0wrBroudbThgOqGa7oVQDfbUa2k11YYgSwq2C3
-	vQ9CXigGfohsjigvepYgJX4fCEJkJBUUhHSpHnJ6hvyPqSZwqKEda7uCtzyy+OYz8tIaoNu2wQM
-	B+oitN+f3fD1+l2ldU25uqq9VRJyCj1xSf46hd+CRwH53wQOB2jQwYixuhP4hhIkJJG8LRgeYWn
-	PXl9SfydcGhra84fu4z4gaEO5xKVaal3lMivOWnZF2FtPdY+DZeeo/BAEWL+KkgvcNiD5gf0W1P
-	t17IRxszV1E5DVNvFdXSaVxYCDj7D/Umf7dE1x9UbM695kjo65QjAw==
-X-Google-Smtp-Source: AGHT+IFvpIcLDY6F7tda9PqHwKLcSMUx565gU6GKa5rJkI682BO1i9+d+z+pfGEJYtvXfllstDVdxQ==
-X-Received: by 2002:a05:6402:27cf:b0:5e7:c782:ba94 with SMTP id 4fb4d7f45d1cf-5f628545bf1mr12637873a12.13.1745308740050;
-        Tue, 22 Apr 2025 00:59:00 -0700 (PDT)
-Received: from ?IPV6:2620:10d:c096:325::158? ([2620:10d:c092:600::1:558d])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f625833be4sm5818271a12.50.2025.04.22.00.58.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 00:58:59 -0700 (PDT)
-Message-ID: <1c141101-035f-4ff6-a260-f31dca39fdc8@gmail.com>
-Date: Tue, 22 Apr 2025 09:00:14 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cmoZVKWT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E60ECC4CEEA;
+	Tue, 22 Apr 2025 07:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745308756;
+	bh=UAPA1cBdJuhl2cpNWrYkJ/eaemaqFe7c4XOIf1O/9k0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cmoZVKWTflUAR9TEvpZN8KuqhtxZtJzEpcDyfMZkO5IQeX8fXKlq8BaEnwWHJWlp0
+	 wjKq/SCQA2OkRKtpThVKw1D9OhdUFTf3NS52oYku+aicOrcecoFUsqR/Yc5PUCsS9R
+	 1qfzjWUQHopXAwgDWlk5c7OBI1BOoaVTEOaJcKf3keSv9xgKHGL85GSPARxYAFi/N2
+	 9Izydx/TbO3dkkwWse/l/L294yKz6gS6Y3Tt4A/kC6umOa+T5gld9pMcLl74bsYMUi
+	 glH5oc9VJ6SyF+5mGGSs5wBRAsHlkLmfwAQB5G+8eUxVy1xd86k5XADpy6tCrcMS0H
+	 y/DGnxAnoIMwA==
+Message-ID: <6de6030a-af26-4fda-8d49-fa8ac65a672f@kernel.org>
+Date: Tue, 22 Apr 2025 09:59:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,38 +35,77 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] io_uring: Add new functions to handle user fault
- scenarios
-To: Zhiwei Jiang <qq282012236@gmail.com>, axboe@kernel.dk
-Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250422030153.1166445-1-qq282012236@gmail.com>
+Subject: Re: [PATCH 2/3] clk: samsung: exynosautov920: add cpucl0 clock
+ support
+To: Shin Son <shin.son@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Sunyeal Hong <sunyeal.hong@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250418061500.1629200-1-shin.son@samsung.com>
+ <CGME20250418061515epcas2p138fa2f5edacbfba8f73b40182fb8d83f@epcas2p1.samsung.com>
+ <20250418061500.1629200-3-shin.son@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250422030153.1166445-1-qq282012236@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250418061500.1629200-3-shin.son@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/22/25 04:01, Zhiwei Jiang wrote:
-...
-> I tracked the address that triggered the fault and the related function
-> graph, as well as the wake-up side of the user fault, and discovered this
-> : In the IOU worker, when fault in a user space page, this space is
-> associated with a userfault but does not sleep. This is because during
-> scheduling, the judgment in the IOU worker context leads to early return.
-> Meanwhile, the listener on the userfaultfd user side never performs a COPY
-> to respond, causing the page table entry to remain empty. However, due to
-> the early return, it does not sleep and wait to be awakened as in a normal
-> user fault, thus continuously faulting at the same address,so CPU loop.
+On 18/04/2025 08:14, Shin Son wrote:
+> Register compatible and cmu_info data to support clock CMU_CPUCL0,
+> this provides clock for CPUCL0_SWTICH/DBG/CLUSTER.
 > 
-> Therefore, I believe it is necessary to specifically handle user faults by
-> setting a new flag to allow schedule function to continue in such cases,
-> make sure the thread to sleep.Export the relevant functions and struct for
-> user fault.
 
-That's an interesting scenario. Not looking deeper into it, I don't see
-any callers to set_userfault_flag_for_ioworker(), and so there is no one
-to set IO_WORKER_F_FAULT. Is there a second patch patch I lost?
+Explain why this is needed as clk of declare, instead of platform driver.
 
--- 
-Pavel Begunkov
 
+
+Best regards,
+Krzysztof
