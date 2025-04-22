@@ -1,147 +1,225 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905821DEFC8;
-	Tue, 22 Apr 2025 19:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02BB42989BC
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745351552; cv=none; b=njYdQIr1DBzkY+GsaM/PTTz34QmSRAdDL5sF/1F1y909p54WbjyaCQvmniImfqTr8mwtJBGNfNRskRCWBR142cocXgjy1MNRecbbydSujfcrtFwLrx+E5VKohCz5No72fz9NSeL/Apfd9H7Gx5UFhSWwcxC8Ig4Qcj4kxSIPqFA=
+	t=1745351596; cv=none; b=GXOZ7yDIhnj/pQf37c0UUedKT1pkZg7fuqe/u5GaAxc2djzKEKSZb5YOZaaGbqnDeU+wbEWuqshuyCNcvuPy661TIrNk/CsIKA7/EdMIBHznBETVF7F/qR4Bc1gtH/0g8RhgRwf/EHWD0+FwqHxkEucsGt5q9nLkfPMr1csnpaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745351552; c=relaxed/simple;
-	bh=TsKpKK9AIx4BTd1yFG2C5c7DbVWMwacOB58VibFxJvM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rDSIfjlI8W4XQYM9WVJgU2Gsph4tfmC6x9y1dI6qXqVrmGKR5QWz/RiSbFpBoJw2Fg27bLrGqOKwJb6IhNKa3DWb18F2ZY6Vjz4XbaiSVP+KnWpfaMSXG3LrCdJde6ZcjOuFxXvuAS802Hs6riwVKkn4ZeP2a23mJyUxBQlxRxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZFjJkvh3; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745351596; c=relaxed/simple;
+	bh=IwAWbmdSxUyTMHT5B54kwJAXHfPAJQo/18ZEaaxAN2w=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=D71pTwIkb/2YP9obfSml7ajHCoBCn6KzMhVHZfqa2mK2kkGVbbP9JvnigYPlJyC7eYvFvXzxHgToSI3kcoKDdxIqv7TlHb6PdhWARF7BluVhOnvzWFKGE9yR5Gl9TcA/JFcoWmwhDAw9xXcXYn1AW+1HrAEs0ZahydAefQRKNis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=2AhcQFKs; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZFjJkvh3"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso61428405e9.1;
-        Tue, 22 Apr 2025 12:52:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="2AhcQFKs"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e8f7019422so55461796d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 12:53:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745351549; x=1745956349; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XaJv2nPBZFqC9cL0CpWH1eeCNJ8QkWT+UyTio/7U2Qc=;
-        b=ZFjJkvh38BHdCipp9eJLyiQNkOzz52MbXV4Sj+9UR5xCQNVEYrEQcyXu9dlvsfTN5R
-         5fGIes2x8vz1xw5wWnGa7TfuDt2GQb6ullNc0sL0mp0qV/N7W/RsrLizK684SlFwnE2H
-         d+RgYK8f0lkj5QhW9Gw67lWKwV6xAHO56DSSFguHkSwF8eC07s33TdujZEV33+aDyOvW
-         wmA1fhuLloA7v5kouwLNKbmina8ORS7BFPcAC4v8eEM+ktfH6OcqZvsQr4gx0ZyVl3Jx
-         neMT0vqGOZIOF5n8XPgBdqhUC8Tb4ouk4xtjAiQaBlVcn5mKH22WQV0t/Rj4T+II903m
-         tSpQ==
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745351594; x=1745956394; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rYsIXJ0VH1fBZwKk67xkFa5qHHB2W1M/DHJM5j7x72w=;
+        b=2AhcQFKsPB4b1eeIxXxxcG015taR+aZtipBkxzTXTbpguZshQyMv5AEVC7rnK9yAvR
+         tRzvocT1BRhFvoO7WbuZKB0FpsjgRJw6acoBJLq95FoauWCifk3xmVgSXhRbfC71GBDu
+         w6SSGOTRqyTrgb6CVwJMnWaXMTz98CIuAz5zcqzHFmfjsd3pvys1JRGWC8DCjluiamgN
+         WneSIModrXsioHPhES6t8guG/FfstQXwqcpEbVRX6X1JnWg+7Eb/xNSk5Lte9qCyCs8v
+         rKHh+EAmo7BpepNQcHOTd2LctY6E1ByvKIm1FyDI+jh3qlFiO7MMGRnEEqOcyu0/A0kT
+         oNYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745351549; x=1745956349;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XaJv2nPBZFqC9cL0CpWH1eeCNJ8QkWT+UyTio/7U2Qc=;
-        b=abeiJzOtap2Rd09jh4Y2+jMxKiMrDeVMR5zwb0cygEtu17b0RhqFoRSNC1NO23aaaT
-         8v6H6hnuXfhnQhY7t8INouXq7vBTxnC9doMEAQCRBiIxXCs0gpxxfR5XZL2EKe/DNljV
-         /bYr5Oxa6HwLRZadGqUEkTz4MfyHul9VQVtOgfZgbFKIp9vLYbNBXE0dNfHokEYkEfdg
-         y6W/82A7LV0mehJwNte0AbHRClIszSCYkkPq0UECbA38FHeIXV3e3ywDtEekVgjYTJBm
-         z6YJzEonEOCGCJEnn673FpoxrN2aqjp4jlD6lVyVqooi9jzE+c48aGJPbGV+q21bSMg8
-         tDzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUERe/KhjSg6zw+AKH1mEygucFHSch1m71efNXt+nZFAqIwwutU/3zrqURxmvOtaAS8g4Dt@vger.kernel.org, AJvYcCVtLvU4l8SBicqo0anIPT1ZUqsB8MTkwlyKRwRkOemJ9U2rLDm0l2r64WTWIXQQRkbIxD2mk/YG6dipIsj9@vger.kernel.org, AJvYcCW4b/NRiGPnRg9smYea1BdYgd/cOgQkGcvKbgU1U0ZlEwPmjyjnar7sjHOfEyH34lJZk5P30M3O1oRv@vger.kernel.org, AJvYcCXezD2/TtrhsA+vtNMEn7JzURDHY/7/ahdmlQqRAheMUG1AsxJx26RCIXInzzYSY66UoA3BG4sDfCL9PPfjTCBs@vger.kernel.org, AJvYcCXo6SaB6zy+sWcZn50yJI3bL0TbR96bNoZKvg2TOQ2vhXQ4DJlrFuFO06eCz+cb9vXv1AUz5n+adQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx42k/vxkqa+DJD6XA2nTCJlKOJCGLy80p9QjCkdgFg/+FWXkT7
-	t9UZoje5n3F1G5/EH0kdvChSqK8/8h1++A6b53deqw9Jtqxn/rb+
-X-Gm-Gg: ASbGncu4qxjryBvPfyTzojRDaFM309MEcqjz8JqHRtb4fqbdPF69H7+gk6ZoIz3YJ3D
-	ThXK+wZkOyJW9l9Nq/cCDq6iy65ThuRSdZ/t+TrIHpYDPSI6O1QdsBazyzaGS2u0Jonu57jk4M+
-	LfuDkHhsBKrAaTLVJ5Hhf4cg6CyRtUFNjMov34lhsfbVsE6Et93IZBXDoVWcmkUSlPtRNHagQ7N
-	nLYnH6qdYeGAfv1dbjrScae4MRnJ+ylaStOoDlPmVwef7rGDsfZKQToaIPRjHjpbHwW0eCuVz+6
-	F9d0JCRV2GhdUe+9QZrYPHQyFrVrPrzextV2ppx+A8eWTT3n
-X-Google-Smtp-Source: AGHT+IEl6pg04k8aqg4kCSPz/epA7Jsgnzijdyhk9uUD8rpuhWFSBuVeC+Gc0wxgNurOByb1LeTItQ==
-X-Received: by 2002:a05:600c:1914:b0:43d:45a:8fc1 with SMTP id 5b1f17b1804b1-4406ab70701mr143149385e9.4.1745351548385;
-        Tue, 22 Apr 2025 12:52:28 -0700 (PDT)
-Received: from [192.168.8.100] ([85.255.235.90])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d6e034csm183795355e9.39.2025.04.22.12.52.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 12:52:27 -0700 (PDT)
-Message-ID: <5d2f86ce-e2bb-406a-8d53-58a464958d2d@gmail.com>
-Date: Tue, 22 Apr 2025 20:53:41 +0100
+        d=1e100.net; s=20230601; t=1745351594; x=1745956394;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=rYsIXJ0VH1fBZwKk67xkFa5qHHB2W1M/DHJM5j7x72w=;
+        b=pqSgeC+hkqQxDg2rBvzrirImxbs9SRIQjmJpQ40rTvY4A7BQwGtRmwYhORTSa7RKnE
+         ze6MSYwrqsgGjq3Tqb5H+Ux94Hq3GXrPuBb58EsMzWZ9COFwn0gqD0TWucCJCzjAjsvR
+         C2S7uAfeTJR4ydIuALGbrkhb6t3QxVinBdyEw689lFzXsMbEQypHWCWYFY/cRTeFKvZw
+         wu35TzcXOokmHGELj5vtEWP8Sj1PO7MxEU0oIWAT98kdVPkBliCU+GSBuvtE6T2Z//gI
+         law/1lkkSa2rJ8/4fmJfs9oeWJfXblLAQVKIAkbpwdS7ntOn3qympZNOhbFb5M9Tx939
+         hivg==
+X-Forwarded-Encrypted: i=1; AJvYcCUKQZBkylv1qeu+bOjtegJQQGt5O6WA7jfRAZb0F3bH5kv+XT/Y4PMfmHH8/+na+6wscSxOFeXDAsTgT0c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywvr3RdOWz3UI8pWttLOzhxVPJAw2Np2pc1pxnxnfHlLbif+scm
+	ANeBjOrNJSyd4YNzHfnL3lx7/aRoW8T6G5NpdRpQHHkKe6u+yXK6QWGq7B30dqg=
+X-Gm-Gg: ASbGnctRR4240es3TmTDlEaG4Rc6dcBDhC7SMjTCrAP7Q8iiuFMfs8NM2fqFl1NP112
+	gDWmjIA36zWB4aGIa1RiZXnuECy+MXjBcO96LBLqbJBXwqPqOJHhx0L72nMbfZ1H6CGy0BRe+n8
+	3BMhSQNM45XDGQAsH9Qh37RXu4eMF51g9ygjTcYgnDRaJD8wF4B62/jo7fBzVBsNAap+W/2MvVT
+	NHDTNKTyENGnkHvXmqG4xYUdgS6cA3AQfT+RlfhjkX3ieJepSMfsMGEODrSwti2BiHzFDSU2nKF
+	FvfrJP6QB+BUrmrfUKnEHpz6Z4KHy1iUR2sj0ILoLTDMRA==
+X-Google-Smtp-Source: AGHT+IFx37IZxz2XZRa4HUxytJgkJVsEXuyDvydowgtq1jU/C5yFgExdGRxaZiK2dG6HIZZz2N702A==
+X-Received: by 2002:a05:6214:21e7:b0:6e8:f4e2:26ef with SMTP id 6a1803df08f44-6f2c4656c2cmr318324046d6.31.1745351593565;
+        Tue, 22 Apr 2025 12:53:13 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2bfcfd0sm61261036d6.82.2025.04.22.12.53.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 12:53:12 -0700 (PDT)
+Message-ID: <419ba5e518be4a35ed0277f749ca9a317f6bff5c.camel@ndufresne.ca>
+Subject: Re: [PATCH v3 1/3] media: uapi: add WebP uAPI
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Hugues Fruchet <hugues.fruchet@foss.st.com>, Mauro Carvalho Chehab	
+ <mchehab@kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Sebastian Fricke	
+ <sebastian.fricke@collabora.com>, Ricardo Ribalda <ribalda@chromium.org>, 
+ Erling Ljunggren <hljunggr@cisco.com>, Hans Verkuil <hverkuil@xs4all.nl>,
+ Laurent Pinchart	 <laurent.pinchart@ideasonboard.com>, Sakari Ailus
+ <sakari.ailus@linux.intel.com>,  Jacopo Mondi
+ <jacopo.mondi@ideasonboard.com>, Jean-Michel Hautbois
+ <jeanmichel.hautbois@ideasonboard.com>,  Benjamin Gaignard
+ <benjamin.gaignard@collabora.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	linux-rockchip@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
+Date: Tue, 22 Apr 2025 15:53:11 -0400
+In-Reply-To: <20241121131904.261230-2-hugues.fruchet@foss.st.com>
+References: <20241121131904.261230-1-hugues.fruchet@foss.st.com>
+	 <20241121131904.261230-2-hugues.fruchet@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 (3.56.0-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v9 1/9] netmem: add niov->type attribute to
- distinguish different net_iov types
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, io-uring@vger.kernel.org,
- virtualization@lists.linux.dev, kvm@vger.kernel.org,
- linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
- <willemb@google.com>, Jens Axboe <axboe@kernel.dk>,
- David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
- sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>,
- Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
- <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-References: <20250417231540.2780723-1-almasrymina@google.com>
- <20250417231540.2780723-2-almasrymina@google.com>
- <f7a96367-1bb0-4ed2-8fbf-af7558fccc20@gmail.com>
- <CAHS8izMFxDG5E07ZdqnDH_2D_g1fW8X0M7u3gGyV8efzxDNZbg@mail.gmail.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <CAHS8izMFxDG5E07ZdqnDH_2D_g1fW8X0M7u3gGyV8efzxDNZbg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 4/22/25 15:03, Mina Almasry wrote:
-> On Tue, Apr 22, 2025 at 1:16 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
->>
->> On 4/18/25 00:15, Mina Almasry wrote:
->>> Later patches in the series adds TX net_iovs where there is no pp
->>> associated, so we can't rely on niov->pp->mp_ops to tell what is the
->>> type of the net_iov.
->>
->> That's fine, but that needs a NULL pp check in io_uring as well,
->> specifically in io_zcrx_recv_frag().
->>
-> 
-> I think you mean this update in the code:
-> 
-> if (!niov->pp || niov->pp->mp_ops != &io_uring_pp_zc_ops ||
->      io_pp_to_ifq(niov->pp) != ifq)
-> return -EFAULT;
-> 
-> Yes, thanks, will do.
+Hi,
 
-That will work. I'm assuming that those pp-less niovs can
-end up in the rx path. I think it was deemed not impossible,
-right?
+sorry for the late come back.
 
->> You can also move it to struct net_iov_area and check niov->owner->type
->> instead. It's a safer choice than aliasing with struct page, there is
->> no cost as you're loading ->owner anyway (e.g. for
->> net_iov_virtual_addr()), and it's better in terms of normalisation /
->> not unnecessary duplicating it, assuming we'll never have niovs of
->> different types bound to the same struct net_iov_area.
->>
-> 
-> Putting it in niov->owner->type is an alternative approach. I don't
-> see a strong reason to go with one over the other. I'm thinking there
-> will be fast code paths that want to know the type of the frag or skb> and don't need the owner, so it will be good to save loading another
-> cacheline. We have more space in struct net_iov than we know what to
-> do with anyway.
+Le jeudi 21 novembre 2024 =C3=A0 14:19 +0100, Hugues Fruchet a =C3=A9crit=
+=C2=A0:
+> This patch adds the WebP picture decoding kernel uAPI.
+>=20
+> This design is based on currently available VP8 API implementation and
+> aims to support the development of WebP stateless video codecs
+> on Linux.
 
-That's fine. I wouldn't say it's about space, we can grow net_iov
-private bits beyond the pp fields in sturct page, but it's rather
-about the mess from the aliasing page. The fact that it's net_iov
-makes it better, but I'd rather avoid any additional aliasing
-altogether.
+Should mention that this new pix fmt is added to make it possible to
+support both intra-only and VP8 with reference, while advertising
+different frame sizes.
 
--- 
-Pavel Begunkov
+>=20
+> Signed-off-by: Hugues Fruchet <hugues.fruchet@foss.st.com>
+> ---
+> =C2=A0.../userspace-api/media/v4l/biblio.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 9 +++++++++
+> =C2=A0.../media/v4l/pixfmt-compressed.rst=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 17 +++++++++++++++++
+> =C2=A0drivers/media/v4l2-core/v4l2-ioctl.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0include/uapi/linux/videodev2.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 =
+1 +
+> =C2=A04 files changed, 28 insertions(+)
+>=20
+> diff --git a/Documentation/userspace-api/media/v4l/biblio.rst b/Documenta=
+tion/userspace-api/media/v4l/biblio.rst
+> index 35674eeae20d..df3e963fc54f 100644
+> --- a/Documentation/userspace-api/media/v4l/biblio.rst
+> +++ b/Documentation/userspace-api/media/v4l/biblio.rst
+> @@ -447,3 +447,12 @@ AV1
+> =C2=A0:title:=C2=A0=C2=A0=C2=A0=C2=A0 AV1 Bitstream & Decoding Process Sp=
+ecification
+> =C2=A0
+> =C2=A0:author:=C2=A0=C2=A0=C2=A0 Peter de Rivaz, Argon Design Ltd, Jack H=
+aughton, Argon Design Ltd
+> +
+> +.. _webp:
+> +
+> +WEBP
+> +=3D=3D=3D=3D
+> +
+> +:title:=C2=A0=C2=A0=C2=A0=C2=A0 WEBP picture Bitstream & Decoding Proces=
+s Specification
+> +
+> +:author:=C2=A0=C2=A0=C2=A0 Google (https://developers.google.com/speed/w=
+ebp)
+> diff --git a/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst =
+b/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst
+> index 806ed73ac474..08a989511e7d 100644
+> --- a/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst
+> +++ b/Documentation/userspace-api/media/v4l/pixfmt-compressed.rst
+> @@ -169,6 +169,23 @@ Compressed Formats
+> =C2=A0	this pixel format. The output buffer must contain the appropriate =
+number
+> =C2=A0	of macroblocks to decode a full corresponding frame to the matchin=
+g
+> =C2=A0	capture buffer.
+> +=C2=A0=C2=A0=C2=A0 * .. _V4L2-PIX-FMT-WEBP-FRAME:
+> +
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - ``V4L2_PIX_FMT_WEBP_FRAME``
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - 'WEBP'
 
+After plenty of thinking, WebP is a container the support 2 codecs. We
+should not name this WebP, but instead VP8_INTRA_FRAME. Meaning, intra
+only VP8 decoder.
+
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 - WEBP VP8 parsed frame, excluding WEBP R=
+IFF header, keeping only the VP8
+> +	bitstream including the frame header, as extracted from the container.
+
+This comment will then not be needed, since VP8_INTRA will make it
+clear.
+
+regards,
+Nicolas
+
+> +	This format is adapted for stateless video decoders that implement a
+> +	WEBP pipeline with the :ref:`stateless_decoder`.
+> +	Metadata associated with the frame to decode is required to be passed
+> +	through the ``V4L2_CID_STATELESS_VP8_FRAME`` control.
+> +	See the :ref:`associated Codec Control IDs <v4l2-codec-stateless-vp8>`.
+> +	Because of key frames only bitstream, ``V4L2_VP8_FRAME_FLAG_KEY_FRAME``
+> +	flag must be set, see :ref:`Frame Flags <vp8_frame_flags>`.
+> +	Exactly one output and one capture buffer must be provided for use with
+> +	this pixel format. The output buffer must contain the appropriate numbe=
+r
+> +	of macroblocks to decode a full corresponding frame to the matching
+> +	capture buffer.
+> =C2=A0
+> =C2=A0=C2=A0=C2=A0=C2=A0 * .. _V4L2-PIX-FMT-VP9:
+> =C2=A0
+> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-co=
+re/v4l2-ioctl.c
+> index 0304daa8471d..e2ff03d0d773 100644
+> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
+> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+> @@ -1501,6 +1501,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *f=
+mt)
+> =C2=A0		case V4L2_PIX_FMT_VC1_ANNEX_L:	descr =3D "VC-1 (SMPTE 412M Annex =
+L)"; break;
+> =C2=A0		case V4L2_PIX_FMT_VP8:		descr =3D "VP8"; break;
+> =C2=A0		case V4L2_PIX_FMT_VP8_FRAME:=C2=A0=C2=A0=C2=A0 descr =3D "VP8 Fra=
+me"; break;
+> +		case V4L2_PIX_FMT_WEBP_FRAME:=C2=A0=C2=A0=C2=A0 descr =3D "WEBP VP8 Fr=
+ame"; break;
+> =C2=A0		case V4L2_PIX_FMT_VP9:		descr =3D "VP9"; break;
+> =C2=A0		case V4L2_PIX_FMT_VP9_FRAME:=C2=A0=C2=A0=C2=A0 descr =3D "VP9 Fra=
+me"; break;
+> =C2=A0		case V4L2_PIX_FMT_HEVC:		descr =3D "HEVC"; break; /* aka H.265 */
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev=
+2.h
+> index e7c4dce39007..09fff269e852 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -757,6 +757,7 @@ struct v4l2_pix_format {
+> =C2=A0#define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L') /*=
+ SMPTE 421M Annex L compliant stream */
+> =C2=A0#define V4L2_PIX_FMT_VP8=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 v4l2_fourcc(=
+'V', 'P', '8', '0') /* VP8 */
+> =C2=A0#define V4L2_PIX_FMT_VP8_FRAME v4l2_fourcc('V', 'P', '8', 'F') /* V=
+P8 parsed frame */
+> +#define V4L2_PIX_FMT_WEBP_FRAME v4l2_fourcc('W', 'B', 'P', 'F') /* WEBP =
+VP8 parsed frame */
+> =C2=A0#define V4L2_PIX_FMT_VP9=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 v4l2_fourcc(=
+'V', 'P', '9', '0') /* VP9 */
+> =C2=A0#define V4L2_PIX_FMT_VP9_FRAME v4l2_fourcc('V', 'P', '9', 'F') /* V=
+P9 parsed frame */
+> =C2=A0#define V4L2_PIX_FMT_HEVC=C2=A0=C2=A0=C2=A0=C2=A0 v4l2_fourcc('H', =
+'E', 'V', 'C') /* HEVC aka H.265 */
