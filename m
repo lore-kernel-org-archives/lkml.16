@@ -1,119 +1,117 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D662DA0F0;
-	Tue, 22 Apr 2025 20:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C685C244676;
+	Tue, 22 Apr 2025 20:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745355322; cv=none; b=YZBtcZ3sPMIwACqlogW6w/SETPHuPExGP4T+c5/1aql0yIO/fE2wQjMtg7XmDOA5NlLQP+atSioATtDXAGIvVsSWTx+U51rBPjS7NaBZMfH/Bn3EjWtkqonLPUDjKYBw3z1jSsLNqk6w0EzQTAptWfSF2+qbkfd+ug+bd3x00MY=
+	t=1745355466; cv=none; b=CMAHF7ak2GOZFcfBYzEDQdYd+UBKXwx6Nl0yUrJE/AVdyIG0sArR2ElFJOToxavG19r3CoDb5eY9AXP6+zafjlR9ZvJ6INVlEfQafT5ccH99/peOH0iAjMoSjyHPMrD1KLPIBE1RtM0hKLOktD3CttU6/ke6PUNMC/8yXPsR+yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745355322; c=relaxed/simple;
-	bh=mYYMs9Y9SFdWAQ8K0/Eq8i6h3bLpc7eVwC6yojKBfDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m759u81iQU44u+ol1c5HR3jttdt6iac9cv3HPBPqLjG2C/rW39Wnz8plt81lL7Zny4YneMDywo47if+OoQsn+5YahbuDrZ5b9gh4/aEBxQsTbB1gfYkHSiLwv2Zjl++ZjPxup59x2p9Nhsxk7yNaPgaNnYpUTK8aQoQuQJlY8yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Td9rOfDt; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745355466; c=relaxed/simple;
+	bh=UwwaIRx7DzNpf+e2zP137gEqPfoImRPx00geFNMzItQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GstzdLuMEWJ1i/KeFxh7okeI8/qcdJ3BlCw3EWrs4W12HWWnI9wPlYgEvigU9biEGZzop+LnAJ41aD5Yqgnsw66PuXqRbwprK1qA1MSdVUaiNZH5vTTYEY5Zhf98h9pHxupSH9mQo7Aygu1Q3retl8XtTi+7YXuyn6kIiJNDVss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DihY70s/; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Td9rOfDt"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DC41C10D;
-	Tue, 22 Apr 2025 22:55:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745355318;
-	bh=mYYMs9Y9SFdWAQ8K0/Eq8i6h3bLpc7eVwC6yojKBfDM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Td9rOfDtMNLpm8yTFyKPuY9ww5XnbmdYcNSYVxMBL0fNBwoGiwADqIRRme1SnYwWf
-	 kDLXV2wUgg2j74PcWkObO5q0+gEF6xGq9LPV2889gBLCmAHS9etJyyF6+9vdNqw98y
-	 IPv0hxPYrgDnO0n9tgjPcYlSi+i04gOHPgagnmds=
-Date: Tue, 22 Apr 2025 23:55:15 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@kernel.org
-Subject: Re: [PATCH v2 2/3] media: uvcvideo: Send control events for partial
- succeeds
-Message-ID: <20250422205515.GN17813@pendragon.ideasonboard.com>
-References: <20250224-uvc-data-backup-v2-0-de993ed9823b@chromium.org>
- <20250224-uvc-data-backup-v2-2-de993ed9823b@chromium.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DihY70s/"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-aaee2c5ee6eso595262466b.1;
+        Tue, 22 Apr 2025 13:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745355461; x=1745960261; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ACryD6HUvzVZZNuuQQMpAgIXQmMe5NYVrLKyNsZ0hzA=;
+        b=DihY70s/m37KYLkwJtqLWf/TM1fmmj7j1CrqpBvy9G6HGb1KQVyeCZPbZTMoXg/Q3S
+         k11fiwUPNTSkTvAsKGn8WLpATGxP/p3ILQkpooRGwL+HFodGLKIFF2F6eSZije2pKvdK
+         8ADcBmjN2pJFhdVCNiNXPL9VICuUG+q2d+vBZfmkK/+l2JCeQ4CpZ5MJU5/JbHH3Rxm3
+         TtfZ3LIs21X1cDTl5idm1vN3NkA3Tps2kVMvwMr/uAp0phQwOfjeG+Jq1Jvg13q54K+a
+         CNQaBxQEkUMT7LdSGmK5bb72Y7D0I2SbsibLROUTUyQ+iWIXCCmUTiqiLuRneTW1SI8h
+         REaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745355461; x=1745960261;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ACryD6HUvzVZZNuuQQMpAgIXQmMe5NYVrLKyNsZ0hzA=;
+        b=f6h7D6wBmVW3J8XTyBJ6kxDEeCCYZdsC2mH8zsWPczh81SHBEVeEzFRCDExUfmV2E7
+         Ptv6S0fbt/AXOXsLC7rQ7ALfXF+pS7paU9uwh+IX7vVGNlzEz3DHKfTgHiKzerisC9Mr
+         cbJXrZpN2K4Rav0DuER7GKXlf/1mWXDyvNTodaaGYjvsS3qtYGiUeQeGBZRkEXkknEj8
+         3oIjKlLktyuoYM3e/Ga2vNG7yyktfzS+ODA9DUSS/LSQqo9RVC9eMu/A6aqDSoAoywdW
+         6L4koVty91f7fz5dH621SD15I4/LvmOXb5ylfDixl9zPlSvc0XIjDK8646hcyWbuSGzv
+         eZYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVdPEeKh6ETP8HA7weK640JCwpApNdf/UJ1LDcqf8+htyzOGrCU9Yxg5gP2oj9seY2P8XL7g638+I7oMeST@vger.kernel.org, AJvYcCW606Kw3G1ONRSExLMrXn4pgra7flDYYfloEEy85mMmJY6SbQmKo/fMlLODuV6Lft6+ZHlBwL34iy0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNPTzmDvV0o9OlqdWDBFRQQyT0O/Wy1bNuI2muCNM1IxKlfHP5
+	gaRD2oZQq85fKwxewPFcc7o1aENBQImBsu3FgjFtjuyZL2aR2wQYkwV+v8UQtCBn08Dd4zmRuo+
+	mSBSFX7BY8K++f4yQm8pQ943MbCJi8Mwj
+X-Gm-Gg: ASbGncthR8aqx0xECXNBrcBLZXyFUCQsgQJ8IYaoUMj1bQ5TEAhZ74kCTFyiNDqKj1J
+	t110vZE/psOVRZezr99396q+wqYCErrmd6pCxnfwj+SZG9pg0+zP2kW3uzyrOxjG4tmmrqNsPcJ
+	cOLCFETyZ5sdIzaz+/mO+DhyUe5z5Q1cbG
+X-Google-Smtp-Source: AGHT+IEhk2EMQWAKRwX9NCabHzQ3Vzzvv2iZ7d9RrcsUVWLAP2GIZq8ft6qTnSahDEtLvHMgape2xQnRJpRlfiykHBY=
+X-Received: by 2002:a17:907:2d29:b0:ac2:7a6d:c927 with SMTP id
+ a640c23a62f3a-acb74dd4166mr1251413466b.50.1745355460777; Tue, 22 Apr 2025
+ 13:57:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250224-uvc-data-backup-v2-2-de993ed9823b@chromium.org>
+References: <20250422-iio-pressure-bmp280-rework-push-to-buffers-v1-1-ee722f29aeca@baylibre.com>
+In-Reply-To: <20250422-iio-pressure-bmp280-rework-push-to-buffers-v1-1-ee722f29aeca@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 22 Apr 2025 23:57:04 +0300
+X-Gm-Features: ATxdqUF-oSMchupKET0XykLjWGb_SUEW5Va9B8qPNOL3TfAUmzMI_Zy3DGgTC0g
+Message-ID: <CAHp75Ve_C6BXo75xy4+xZ5b1O9-TT5TGGQDgTR_F1s3TFK3p6Q@mail.gmail.com>
+Subject: Re: [PATCH] iio: pressure: bmp280: drop sensor_data array
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ricardo,
+On Tue, Apr 22, 2025 at 10:28=E2=80=AFPM David Lechner <dlechner@baylibre.c=
+om> wrote:
+>
+> Drop the sensor_data array from struct bmp280_data and replace it using
+> local structs in each interrupt handler.
+>
+> The sensor_data array in struct bmp280_data is not used to share data
+> between functions and isn't used for DMA, so there isn't really a need
+> to have it in the struct. Instead, we can use the struct pattern for
+> scan data in each interrupt handler. This has the advantage of allowing
+> us to see the actual layout of each scan buffer for each different type
+> of supported sensor. It also avoid juggling values between local
 
-Thank you for the patch.
+of the supported
 
-On Mon, Feb 24, 2025 at 10:34:54AM +0000, Ricardo Ribalda wrote:
-> Today, when we are applying a change to entities A, B. If A succeeds and B
-> fails the events for A are not sent.
-> 
-> This change changes the code so the events for A are send right after
+> variables and the array which makes the code a bit simpler by avoiding
+> some extra assignments.
+>
+> We can also drop the BME280_NUM_MAX_CHANNELS macro as it is no longer
+> used.
 
-s/send/sent/
+I like this change so much, thanks!
+But one comment below.
 
-> they happen.
-> 
-> Cc: stable@kernel.org
-> Fixes: b4012002f3a3 ("[media] uvcvideo: Add support for control events")
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+...
 
-> ---
->  drivers/media/usb/uvc/uvc_ctrl.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/usb/uvc/uvc_ctrl.c b/drivers/media/usb/uvc/uvc_ctrl.c
-> index f2484f6d21c1..7d074686eef4 100644
-> --- a/drivers/media/usb/uvc/uvc_ctrl.c
-> +++ b/drivers/media/usb/uvc/uvc_ctrl.c
-> @@ -1705,7 +1705,9 @@ static bool uvc_ctrl_xctrls_has_control(const struct v4l2_ext_control *xctrls,
->  }
->  
->  static void uvc_ctrl_send_events(struct uvc_fh *handle,
-> -	const struct v4l2_ext_control *xctrls, unsigned int xctrls_count)
-> +				 struct uvc_entity *entity,
-> +				 const struct v4l2_ext_control *xctrls,
-> +				 unsigned int xctrls_count)
->  {
->  	struct uvc_control_mapping *mapping;
->  	struct uvc_control *ctrl;
-> @@ -1716,6 +1718,9 @@ static void uvc_ctrl_send_events(struct uvc_fh *handle,
->  		u32 changes = V4L2_EVENT_CTRL_CH_VALUE;
->  
->  		ctrl = uvc_find_control(handle->chain, xctrls[i].id, &mapping);
-> +		if (ctrl->entity != entity)
-> +			continue;
-> +
->  		if (ctrl->info.flags & UVC_CTRL_FLAG_ASYNCHRONOUS)
->  			/* Notification will be sent from an Interrupt event. */
->  			continue;
-> @@ -1954,11 +1959,12 @@ int __uvc_ctrl_commit(struct uvc_fh *handle, int rollback,
->  					uvc_ctrl_find_ctrl_idx(entity, ctrls,
->  							       err_ctrl);
->  			goto done;
-> +		} else if (ret > 0 && !rollback) {
-> +			uvc_ctrl_send_events(handle, entity,
-> +					     ctrls->controls, ctrls->count);
->  		}
->  	}
->  
-> -	if (!rollback)
-> -		uvc_ctrl_send_events(handle, ctrls->controls, ctrls->count);
->  	ret = 0;
->  done:
->  	mutex_unlock(&chain->ctrl_mutex);
+>         /* Pressure calculations */
+> -       memcpy(&data->sensor_data[offset], &data->buf[3], 3);
+> -
+> -       offset +=3D sizeof(s32);
+> +       memcpy(&buffer.comp_press, &data->buf[3], 3);
+>
+>         /* Temperature calculations */
+> -       memcpy(&data->sensor_data[offset], &data->buf[0], 3);
+> +       memcpy(&buffer.comp_temp, &data->buf[0], 3);
 
--- 
-Regards,
+Shouldn't these memcpy():s be get_unaligned_be24()/get_unaligned_le24()?
 
-Laurent Pinchart
+--=20
+With Best Regards,
+Andy Shevchenko
