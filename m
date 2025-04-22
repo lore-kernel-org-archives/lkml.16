@@ -1,301 +1,124 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67AE191F66
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 14:17:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888251F150B;
+	Tue, 22 Apr 2025 14:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745331425; cv=none; b=rg2m9BX1W6AoAF/tfCnDQwg0PhWD5QLYTcs62siGzohc25GWBQ70Pgnh9gpYRLRZA7OnGJNCoog6EeeZidtu7stgXCdqIrEPC69bQgzGCJipl9rXcdSMPx6AAiL1pqEq9Z23isKL5NZ069BbvNu4DhXCuKUdyyVNDXwHvOoRAiQ=
+	t=1745331459; cv=none; b=qB4PghmNQD+ZzA2xV97/FlRDOTYEmOpTLPHP+qJ8pmUImiZoud04kECXk3AQnbLjotgNMvlSEWYYqsfm2xPGqVXRlGGSeN1Umnga9MVyJEMoVHwID2NzK/7kzFY1D/6T2E8lEB4x7wiRVUczfXA+uQFMj2ocWM1oLCGvKFmOQaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745331425; c=relaxed/simple;
-	bh=B7LtyxZabqxldyU5RLs4vfwzAyWuZQ0DIMUXm0snWbA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eWe1KGpCYIhXOoxX2rIOKfl5SPUdfRTpbKOCoouqgPt+VK/8+Q/nhocxQ9VAQUgKyPuGCiz/3gzuEL20lIFj21IiD8/06tBXMxb4/Lodedg3+TblIG8d6PWFYV1L2sZ3hx0PBmKP5co1yjeslixRNIAPcTygofe9kbbn06IuXRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=yATb8UOf; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1745331459; c=relaxed/simple;
+	bh=gYlWEQIlw77JGv7XiwEGeNo2Aw8VD0SndyzCjOAIY8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q2wMNvKKqMrV64zwr+S12zFe0oArdTLxEcK9IysJ+fv7RjsXbPX/HYVUQyfpxvgOiEM6CQyt4VAy4S7DlEp6RRI7PAKVyVZvg1lgUS/EPz42IxuJ4myKrT3dlJJklaJanDR1ZhpD3b/+6AvU6vRBPCbdHv0m0X3+qxAj4LM9cOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2a6cWMy; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="yATb8UOf"
-Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Zhknd6yrtz9thF;
-	Tue, 22 Apr 2025 16:16:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1745331414; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B7LtyxZabqxldyU5RLs4vfwzAyWuZQ0DIMUXm0snWbA=;
-	b=yATb8UOfgTRN2yvF8+olL/fpXoht6MNPP+JVvDFSFyv6AC1gfHs7lG3LZOjc972u0TF0+5
-	qGrgHPOcRfKyC7//weDnc6aDHrZZpwwd/m1b+DuPd+R5aO3Y9WwTSSDiQiXefdjxTBn7lt
-	/RPmgshQj8sLWLrVz2euXOeAJ2BE1yNhSsBe/R1EziZ7w/34tASu+lF9r9BZiSrw36LDF9
-	nw8MOj1tAPxz8wxpfxm6u1be+lVNmfU6GvuW/LLtjboLfMJiFDilrfpLhvuZ5EbN5OX8ub
-	UTAw+GruRlvPNkpz4l3pPPpT2yAm02iJUUE9j0GzLt2a6XCCNz5T3ojHKkPPMA==
-Message-ID: <f0ae2d411c21e799491244fe49880a4acca32918.camel@mailbox.org>
-Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Danilo Krummrich <dakr@kernel.org>, Tvrtko Ursulin
-	 <tvrtko.ursulin@igalia.com>
-Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Matthew Brost
- <matthew.brost@intel.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <ckoenig.leichtzumerken@gmail.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
- nouveau@lists.freedesktop.org,  linux-kernel@vger.kernel.org
-Date: Tue, 22 Apr 2025 16:16:48 +0200
-In-Reply-To: <aAeiwZ2j2PhEwhVh@cassiopeiae>
-References: <aADv4ivXZoJpEA7k@pollux>
-	 <83758ca7-8ece-433e-b904-3d21690ead23@igalia.com>
-	 <aAEUwjzZ9w9xlKRY@cassiopeiae>
-	 <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
-	 <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
-	 <5a5d4a33-2f7b-46e4-8707-7445ac3de376@igalia.com>
-	 <aAd54jUwBwgc-_g2@cassiopeiae>
-	 <d3c0f721-2d19-4a1c-a086-33e8d6bd7be6@igalia.com>
-	 <aAeMVtdkrAoMrmVk@cassiopeiae>
-	 <52574769-2120-41a1-b5dc-50a42da5dca6@igalia.com>
-	 <aAeiwZ2j2PhEwhVh@cassiopeiae>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2a6cWMy"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso34121905e9.0;
+        Tue, 22 Apr 2025 07:17:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745331456; x=1745936256; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9I/uqzoZdA9AWIABIKeUfPFhsWMyq0LGojHFzDLdp0M=;
+        b=F2a6cWMybtp3ue+Godh14f4hDRq7yCZorbMoQgWBR3UD5sVZ3Act/q86JksCvfREOt
+         N5/OV2PAIHiBKTcCNFGQBuSSINvn8Sc7rj1WcKqRQpU6mnv3r1PaeOlir4lWjnRstQlb
+         5vFrPMw6aeru2ycMt6a5H+vVc9kzCcR8XQ7pjm8g4xm3ifRDNwN22FbZOFncCja+U+DC
+         1JT/HiavmnGDNoDzOymyqYXtA7cDk/IlbAIJ21xqs3wmiB9Y2sMYZKVFzT9A6PXCc1XW
+         LSBn/ec2VZC5IF4JSt7gb/Nhx9zzHkxcx0wUQOLHDXqNANctaxALDUr4wARdj2DPXSGt
+         Kdxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745331456; x=1745936256;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9I/uqzoZdA9AWIABIKeUfPFhsWMyq0LGojHFzDLdp0M=;
+        b=XG7SelXSRKhBz9HUXuPSKszZwDQYZnwTsvJAj4UoQUciB0Oe0aI+YDUdTsdxQNIUHY
+         es1s1cYzBzi7jY6r5WA3WX23obAZFpDRibgefR9WjbP7CVXkv3u4CtCiopBwIDQkayHY
+         Es4q4x0Po/iYdFhcgec3L5D250o/+QVorSaQsYibdD+gTzVHzZCtQOUICin20l9BIQVS
+         VlNwB1dL2W/yxhzAwX9UYDLit0pXLKtFpgSKoyELE1dzltypWOcPccodHvqkoNp0p/7T
+         +LUYf17whQNp5G+6I80+/kC6KUL+cWDaXFRcKhpROAkTIw3wWqS6V6YqLP9H6dYbJBX+
+         Oo8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVPznWNb6vnMd0RfBaAiCcXPnhYwa5w8dXGy131IUg8LqByHHRnJdyQp0InFk3p3xAz31454SK8xcxI0Yg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHwLFQoKUdVVuii1+JQY3xMAR3F27IcLAvx/OmbVQXifE4ZWSg
+	0+dfxL+I1Tn3tnZOi0zvdvX0WpoczbmKpU/cSIo5yQQvMcrLIUGA
+X-Gm-Gg: ASbGncvj+pAnkR4vXhnDnzwB9qBVXS3u1AgnVs7nlHU3Un1en+Xuzlr4MNUbNcyPezD
+	OXdbeZI+3BNXR/O8KwQvGIh8/UH2uo0Sb7xqm6VCzQNxz/o27epLKqZr3AjxnolCnI2ybaZLgPP
+	Xptu2FlFLhHcPoG4eW6C9y63xULHjRRlw00ClexujvHc5CiGxO8p7KCCrDxbLx2YZ1i8/QFxgT1
+	RoX/cOnwtJDMDjtXYvCiBtyjXpzDuRatc9gCzl85INjmjMwvIW7ggiAsHQy7VH7YNvG8wjbKIA6
+	kJODxCeQGR8O1iF+TDBUjNuP00WD65s1g2wji0W01eZ1HqAnis7Xn1zyqrr2Z9UPyA7DBtwtqv/
+	1uII4WPv6ZLsbUi2jBG1iNg==
+X-Google-Smtp-Source: AGHT+IHQ4BsuRjz6JVL8wwc24WrJX2pvwSm2cSBp+O4iJGzv95SQ1ijWxZ5mEA7FK7II9H1JdzLaPA==
+X-Received: by 2002:a05:600c:43d4:b0:440:67d4:ec70 with SMTP id 5b1f17b1804b1-44069732095mr115981345e9.8.1745331455479;
+        Tue, 22 Apr 2025 07:17:35 -0700 (PDT)
+Received: from ?IPV6:2001:4bc9:1f91:3f49:880a:9a87:b7c1:e3a3? ([2001:4bc9:1f91:3f49:880a:9a87:b7c1:e3a3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4406d5a9ed9sm180011125e9.3.2025.04.22.07.17.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 07:17:35 -0700 (PDT)
+Message-ID: <a27d97ff-7d40-4595-9c0d-51415d958ebe@gmail.com>
+Date: Tue, 22 Apr 2025 16:17:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: f6d09d6099a7957f0c4
-X-MBO-RS-META: 8wq86bq79z1ouchutggxfm4d3o8toyh3
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/8] rust: pin-init: Implement `Wrapper` for
+ `UnsafePinned` behind feature flag.
+To: Benno Lossin <benno.lossin@proton.me>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>, Fiona Behrens <me@kloenk.dev>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250421221728.528089-1-benno.lossin@proton.me>
+ <20250421221728.528089-4-benno.lossin@proton.me>
+ <4df4e3a0-9caa-4253-bf65-66c238bf0291@gmail.com>
+ <D9D4M8XF14X9.1YUVFH9EW0IMX@proton.me>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <D9D4M8XF14X9.1YUVFH9EW0IMX@proton.me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 2025-04-22 at 16:08 +0200, Danilo Krummrich wrote:
-> On Tue, Apr 22, 2025 at 02:39:21PM +0100, Tvrtko Ursulin wrote:
-> >=20
-> > On 22/04/2025 13:32, Danilo Krummrich wrote:
-> > > On Tue, Apr 22, 2025 at 01:07:47PM +0100, Tvrtko Ursulin wrote:
-> > > >=20
-> > > > On 22/04/2025 12:13, Danilo Krummrich wrote:
-> > > > > On Tue, Apr 22, 2025 at 11:39:11AM +0100, Tvrtko Ursulin
-> > > > > wrote:
-> > > > > > Question I raised is if there are other drivers which
-> > > > > > manage to clean up
-> > > > > > everything correctly (like the mock scheduler does), but
-> > > > > > trigger that
-> > > > > > warning. Maybe there are not and maybe mock scheduler is
-> > > > > > the only false
-> > > > > > positive.
-> > > > >=20
-> > > > > So far the scheduler simply does not give any guideline on
-> > > > > how to address the
-> > > > > problem, hence every driver simply does something (or
-> > > > > nothing, effectively
-> > > > > ignoring the problem). This is what we want to fix.
-> > > > >=20
-> > > > > The mock scheduler keeps it's own list of pending jobs and on
-> > > > > tear down stops
-> > > > > the scheduler's workqueues, traverses it's own list and
-> > > > > eventually frees the
-> > > > > pending jobs without updating the scheduler's internal
-> > > > > pending list.
-> > > > >=20
-> > > > > So yes, it does avoid memory leaks, but it also leaves the
-> > > > > schedulers internal
-> > > > > structures with an invalid state, i.e. the pending list of
-> > > > > the scheduler has
-> > > > > pointers to already freed memory.
-> > > > >=20
-> > > > > What if the drm_sched_fini() starts touching the pending
-> > > > > list? Then you'd end up
-> > > > > with UAF bugs with this implementation. We cannot invalidate
-> > > > > the schedulers
-> > > > > internal structures and yet call scheduler functions - e.g.
-> > > > > drm_sched_fini() -
-> > > > > subsequently.
-> > > > >=20
-> > > > > Hence, the current implementation of the mock scheduler is
-> > > > > fundamentally flawed.
-> > > > > And so would be *every* driver that still has entries within
-> > > > > the scheduler's
-> > > > > pending list.
-> > > > >=20
-> > > > > This is not a false positive, it already caught a real bug --
-> > > > > in the mock
-> > > > > scheduler.
-> > > >=20
-> > > > To avoid furher splitting hairs on whether real bugs need to be
-> > > > able to
-> > > > manifest or not, lets move past this with a conclusion that
-> > > > there are two
-> > > > potential things to do here:
-> > >=20
-> > > This is not about splitting hairs, it is about understanding that
-> > > abusing
-> > > knowledge about internals of a component to clean things up is
-> > > *never* valid.
-> > >=20
-> > > > First one is to either send separately or include in this
-> > > > series something
-> > > > like:
-> > > >=20
-> > > > diff --git a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > > > b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > > > index f999c8859cf7..7c4df0e890ac 100644
-> > > > --- a/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > > > +++ b/drivers/gpu/drm/scheduler/tests/mock_scheduler.c
-> > > > @@ -300,6 +300,8 @@ void drm_mock_sched_fini(struct
-> > > > drm_mock_scheduler
-> > > > *sched)
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drm_mock_sched_job_complete(job);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 spin_unlock_irqres=
-tore(&sched->lock, flags);
-> > > >=20
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_fini(&sched->base);
-> > > > +
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Free compl=
-eted jobs and jobs not yet processed by
-> > > > the DRM
-> > > > scheduler
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * free worke=
-r.
-> > > > @@ -311,8 +313,6 @@ void drm_mock_sched_fini(struct
-> > > > drm_mock_scheduler
-> > > > *sched)
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 list_for_each_entr=
-y_safe(job, next, &list, link)
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 mock_sched_free_job(&job->base);
-> > > > -
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_fini(&sched->base);
-> > > > =C2=A0 }
-> > > >=20
-> > > > =C2=A0 /**
-> > > >=20
-> > > > That should satisfy the requirement to "clear" memory about to
-> > > > be freed and
-> > > > be 100% compliant with drm_sched_fini() kerneldoc (guideline
-> > > > b).
-> > > >=20
-> > > > But the new warning from 3/5 here will still be there AFAICT
-> > > > and would you
-> > > > then agree it is a false positive?
-> > >=20
-> > > No, I do not agree.
-> > >=20
-> > > Even if a driver does what you describe it is not the correct
-> > > thing to do and
-> > > having a warning call it out makes sense.
-> > >=20
-> > > This way of cleaning things up entirely relies on knowing
-> > > specific scheduler
-> > > internals, which if changed, may fall apart.
-> > >=20
-> > > > Secondly, the series should modify all drivers (including the
-> > > > unit tests)
-> > > > which are known to trigger this false positive.
-> > >=20
-> > > Again, there are no false positives. It is the scheduler that
-> > > needs to call
-> > > free_job() and other potential cleanups. You can't just stop the
-> > > scheduler,
-> > > leave it in an intermediate state and try to clean it up by hand
-> > > relying on
-> > > knowledge about internals.
-> >=20
-> > Sorry I don't see the argument for the claim it is relying on the
-> > internals
-> > with the re-positioned drm_sched_fini call. In that case it is
-> > fully
-> > compliant with:
-> >=20
-> > /**
-> > =C2=A0* drm_sched_fini - Destroy a gpu scheduler
-> > =C2=A0*
-> > =C2=A0* @sched: scheduler instance
-> > =C2=A0*
-> > =C2=A0* Tears down and cleans up the scheduler.
-> > =C2=A0*
-> > =C2=A0* This stops submission of new jobs to the hardware through
-> > =C2=A0* drm_sched_backend_ops.run_job(). Consequently,
-> > drm_sched_backend_ops.free_job()
-> > =C2=A0* will not be called for all jobs still in
-> > drm_gpu_scheduler.pending_list.
-> > =C2=A0* There is no solution for this currently. Thus, it is up to the
-> > driver to
-> > make
-> > =C2=A0* sure that:
-> > =C2=A0*
-> > =C2=A0*=C2=A0 a) drm_sched_fini() is only called after for all submitte=
-d jobs
-> > =C2=A0*=C2=A0=C2=A0=C2=A0=C2=A0 drm_sched_backend_ops.free_job() has be=
-en called or that
-> > =C2=A0*=C2=A0 b) the jobs for which drm_sched_backend_ops.free_job() ha=
-s not
-> > been
-> > called
-> > =C2=A0*
-> > =C2=A0* FIXME: Take care of the above problem and prevent this function
-> > from
-> > leaking
-> > =C2=A0* the jobs in drm_gpu_scheduler.pending_list under any
-> > circumstances.
-> >=20
-> > ^^^ recommended solution b).
->=20
-> This has been introduced recently with commit baf4afc58314
-> ("drm/sched: Improve
-> teardown documentation") and I do not agree with this. The scheduler
-> should
-> *not* make any promises about implementation details to enable
-> drivers to abuse
-> their knowledge about component internals.
->=20
-> This makes the problem *worse* as it encourages drivers to rely on
-> implementation details, making maintainability of the scheduler even
-> worse.
->=20
-> For instance, what if I change the scheduler implementation, such
-> that for every
-> entry in the pending_list the scheduler allocates another internal
-> object for
-> ${something}? Then drivers would already fall apart leaking those
-> internal
-> objects.
->=20
-> Now, obviously that's pretty unlikely, but I assume you get the idea.
->=20
-> The b) paragraph in drm_sched_fini() should be removed for the given
-> reasons.
->=20
-> AFAICS, since the introduction of this commit, driver implementations
-> haven't
-> changed in this regard, hence we should be good.
->=20
-> So, for me this doesn't change the fact that every driver
-> implementation that
-> just stops the scheduler at an arbitrary point of time and tries to
-> clean things
-> up manually relying on knowledge about component internals is broken.
+On 22.04.25 1:21 PM, Benno Lossin wrote:
+> On Tue Apr 22, 2025 at 11:42 AM CEST, Christian Schrefl wrote:
+>> On 22.04.25 12:18 AM, Benno Lossin wrote:
+>>> @@ -1557,3 +1561,11 @@ fn pin_init<E>(value_init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+>>>          unsafe { cast_pin_init(value_init) }
+>>>      }
+>>>  }
+>>> +
+>>> +#[cfg(all(feature = "unsafe-pinned", CONFIG_RUSTC_HAS_UNSAFE_PINNED))]
+>>> +impl<T> Wrapper<T> for core::pin::UnsafePinned<T> {
+>>> +    fn pin_init<E>(init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+>>> +        // SAFETY: `UnsafePinned<T>` has a compatible layout to `T`.
+>>> +        unsafe { cast_pin_init(init) }
+>>> +    }
+>>> +}
+>>
+>> I've realized that for us to use `UnsafePinned` in `Opaque` internally 
+>> we need to have a `T: ?Sized` for this implementation. `cast_pin_init`
+>> won't work for that since we can't cast pointers between different DSTs.
+>> We could add something similar that uses a closure to convert a
+>> `*mut T` to `*mut U`.
+> 
+> I don't follow, which types do you need to wrap in `Opaque` that are not
+> sized?
+> 
+> Since `Opaque` uses `MaybeUninit` under the hood, it cannot support
+> `!Sized` types anyways, so I'm a bit confused.
 
-To elaborate on that, this documentation has been written so that we at
-least have *some* documentation about the problem, instead of just
-letting new drivers run into the knife.
+Sorry I got an `?Sized` error and convinced myself that `Opaque` had
+a `T: ?Sized` bound. After looking at it again there is no problem.
 
-The commit explicitly introduced the FIXME, marking those two hacky
-workarounds as undesirable.
+I'll work on V2 of my `UnsafePinned` patch with a second commit
+for using it in `Opaque`.
 
-But back then we couldn't fix the problem quickly, so it was either
-document the issue at least a bit, or leave it completely undocumented.
-
-P.
-
->=20
-> However, this doesn't mean we can't do a brief audit.
->=20
-> - Danilo
-
+Cheers
+Chrisitan
