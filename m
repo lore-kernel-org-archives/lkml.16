@@ -1,121 +1,228 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD51C2153F1;
-	Tue, 22 Apr 2025 23:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B50215160;
+	Tue, 22 Apr 2025 23:52:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745365896; cv=none; b=NAA7ub8QFEKYpOoPgTlSxWUJWKMVWK3C5zY+84AgTi2tAH3qdXurPcMDGV1iSepAyW4joKhxo6C/FH9QcYiNkmywAHIM4djlEUY1zlRPgmcW+NTnXCBir7/BOZ1zBDjuVburS/ZM/1f3LDqKlNPahsg1bOnljlA0HK78/+BxLpQ=
+	t=1745365928; cv=none; b=Id0Ah2w33I4qt1qk11dnjF2/05mkTe1D6F5alE2JaRtXF0GNgHqGCZveAblfBeIhYFxJn1yydCtMpIrHTFRYxiayNXNwWk9uYBnjn/mNjBXGQcyMdxAA9JPzalMFdbpPjdl3ddP2QL5w3WHyKYT8cZj5NzUddmID/HmprkCbh2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745365896; c=relaxed/simple;
-	bh=47mgIUPEmnqKXz/PLYEKltr862V6myQcvKqgl3Z+nec=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D8fab/4X7OeZz9e04VyBcon6iCe+3oPFgUt4F9mQKw2gYKTyjOtjnJxiElgdBMf3ATRmQ7D4UkQwv+ytD9IL59qedisbvfETEvZqp1w5lDIQP0V36tn+vr+uuoaTTZd8u4af5RUia9i+2lBAjDo79V7aWSQaQCF4cwLrG+lxX4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IVyWpmh4; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745365928; c=relaxed/simple;
+	bh=IKd+z45KHPynbqhXPNDIBcgAPl1PU2QsOXeUwlI7E0k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CfKbFkA1JK5Si5uDLVXsLnyUcn5UVru0FY2oJH265/uX1AUwfRYH+Ugw+zHQTNzaXWO2RlB4h+Aev8aYw1BrmC5HncyEQIbQaUqYA8Kw3uxoWxc1h3+NrlhAeuw9ee4SWit2vbHdGHtCf7cuyWo0NJGraWAUrTQxU5Xqv3RqcUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=hgimGChY; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVyWpmh4"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so988465966b.2;
-        Tue, 22 Apr 2025 16:51:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745365893; x=1745970693; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xg+s/Iw6X8yaE3B8JJTx72qYDKDFUZrmT+dSRqA4IeI=;
-        b=IVyWpmh4oY+omzLnN6uua68mpqe2ZUt07xsU/K8/Owj0p5/Hf6brhgpjUAZra5aZ5L
-         9iIQbCuRzYeEeNVmffb6sMZ5IEJBmIuI8YDlMU3hX61APcXYww4UD+ybBib8BPbsEKPr
-         g4/4kfbOoPuqppBYzvqiktIwh3C8uomDfdZpQjRTYLGzevJBH8/J3DGx/zaSqijXhR70
-         DQo2R4ycNqnYKwMYt6CjLtsfNMPta4JrxNK2LzjEIqP77XRHxvIYp/TRiScHSrXiZ1YW
-         YYjvnGeOasxX7yrkZKZ6tErN26fTazGeczchIQyHkiXEmRCV/T1FbWUyladWvG8EENho
-         JPXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745365893; x=1745970693;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xg+s/Iw6X8yaE3B8JJTx72qYDKDFUZrmT+dSRqA4IeI=;
-        b=plIcFFwf8XRJFOcwNq+LcaqWGMsS7ICRK38wYETsYwgnRVJ6Y7abFys4Q3bK7Jm2m7
-         J6PDXq5DPsvWkQRGntofzXLlnfryfvDHLWYCQZcUmDYUIiJeg1ApwvNJyetKpi1snsPa
-         F4hUepBV/AIARHcEk9VWyT+vdRp615o/qokfq2rKz4QH7VEKoU1zA+XoHVmcRitFOd6o
-         i1KNt4L2Pp8RYBYKTMrZO2HAXIqvBuRZRPh1Jz9GFb0puyyP/wv1lSQxT/ao2RGDAGQF
-         ArfU2BxdqeMYufpAgLKIJ5zbvkiH0s8+J4sZaX6E4t8ytRbJ1r1o5CdZP96YOijy+0Io
-         ajYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQAqO7zzGelZ5IImywc+VouGNxnzvTgFLj6VX9MSkXQapPpPnRfSONHb2WqxEAr9T7s6k=@vger.kernel.org, AJvYcCXTT8bku5EVjyMW0jiSVKZrDLImQVuEUdgZTTso5HmC7xaLRpNQHYKYcVdDRIpcqUChp/TsFv140SDryLxQ@vger.kernel.org, AJvYcCXnS36W6trgEELN/Hk9C0cfwIHDtXzwQoOqIen+4p5LJBTtL7xyuYwNd80WvxzqwAC9iiK2wCjk0bUhlPLnkRlNLYk1@vger.kernel.org
-X-Gm-Message-State: AOJu0YywwnhLpQKNesefotGNPbeoX+8yrRT45/dBErYKRG2SVGMVdhKv
-	atAVC85ZnHg7qnpJw6/SmW4HmQj0M7RMhuB7twIrHkS5McAUHQHXkRi7JaxXSBztGExIYey9b9Y
-	kVlJQSQq0Sakw1g9Y40GeTMT9xjk=
-X-Gm-Gg: ASbGnctzqZ2oQRr1YZNnN+/nW0Pn5On+ucqR8EoyZ7ecz2OepgqzDNoCcj1vO4Tf3yA
-	rn82b24djxThHnk4lcPtxGoXm4INLerVtTr+9twcxXz7QWq4Cf3L1PiS9KSnH43c+Vevv0IHsRL
-	FNgcYTULtFCXozHU++HuoNe3RFIH77GYQJ+650ENrUgMAJDkMA
-X-Google-Smtp-Source: AGHT+IHyAxULzTdEALIdLh/47hFrO5HqVTo+nyAjApTOHGeMs7oYrbiYnzS/P2SIpTRme5S1tLtozFtUcAGPdo9/uqE=
-X-Received: by 2002:a17:907:da3:b0:ac7:cfcc:690d with SMTP id
- a640c23a62f3a-acb74db7dd9mr1571295566b.40.1745365892975; Tue, 22 Apr 2025
- 16:51:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="hgimGChY"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=VilT9XDvLQXBLLBfiH0Gyi/0dFwIoLcpzrL6/PGti1w=; b=hgimGChYxFktyhbr
+	6Tf668i7LCiFiNh7qJ4v9uLdlRrIo+3tGBDlD3gfq9Fnp9IJljHJLRT9Mw/Ry8ElUoZ5kBxcuZX5T
+	V/kxV/oivK34W0zxAemtWrUos4Fu3/ZVDvjcAK10VW9rPWmAxix/oa8aaDF/6elbO06J6mIt6mlLR
+	NJ8tRbzpHguAjXPKiKqQRJ3Sx4a4ggVNEk1MwnU9e/aWTRUHabe+dyRTRFuUD1BX/rcKzSZNJqCoA
+	z7YUBWXBT89kH2iqUx8RM3O8v6QWrxhzugekHpOyEhyR6XqxinIQToWCwokda9MfNdLTzauFpxfsq
+	PgqhUhHAb8cXDazK6A==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1u7NP2-00DCSP-1U;
+	Tue, 22 Apr 2025 23:51:48 +0000
+From: linux@treblig.org
+To: horms@kernel.org,
+	dhowells@redhat.com,
+	marc.dionne@auristor.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	corbet@lwn.net,
+	linux-afs@lists.infradead.org,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH net-next v2] rxrpc: Remove deadcode
+Date: Wed, 23 Apr 2025 00:51:47 +0100
+Message-ID: <20250422235147.146460-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-9-jolsa@kernel.org>
-In-Reply-To: <20250421214423.393661-9-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 22 Apr 2025 16:51:19 -0700
-X-Gm-Features: ATxdqUGZOr4xpWeNMWzNKVtyrAwgvT_FIS8Dc_B9jZszIO0y398gDWRx3eXT9Hk
-Message-ID: <CAEf4BzbBykRTQJxNLYN5zXzdK+xMMzNT9LCRp3+N7R2=+xbLZw@mail.gmail.com>
-Subject: Re: [PATCH perf/core 08/22] uprobes/x86: Add mapping for optimized
- uprobe trampolines
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 21, 2025 at 2:46=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding support to add special mapping for for user space trampoline
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-for for
+Remove three functions that are no longer used.
 
-> with following functions:
->
->   uprobe_trampoline_get - find or add uprobe_trampoline
->   uprobe_trampoline_put - remove or destroy uprobe_trampoline
->
-> The user space trampoline is exported as arch specific user space special
-> mapping through tramp_mapping, which is initialized in following changes
-> with new uprobe syscall.
->
-> The uprobe trampoline needs to be callable/reachable from the probed addr=
-ess,
-> so while searching for available address we use is_reachable_by_call func=
-tion
-> to decide if the uprobe trampoline is callable from the probe address.
->
-> All uprobe_trampoline objects are stored in uprobes_state object and are
-> cleaned up when the process mm_struct goes down. Adding new arch hooks
-> for that, because this change is x86_64 specific.
->
-> Locking is provided by callers in following changes.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/x86/kernel/uprobes.c | 131 ++++++++++++++++++++++++++++++++++++++
->  include/linux/uprobes.h   |   6 ++
->  kernel/events/uprobes.c   |  10 +++
->  kernel/fork.c             |   1 +
->  4 files changed, 148 insertions(+)
->
+rxrpc_get_txbuf() last use was removed by 2020's
+commit 5e6ef4f1017c ("rxrpc: Make the I/O thread take over the call and
+local processor work")
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+rxrpc_kernel_get_epoch() last use was removed by 2020's
+commit 44746355ccb1 ("afs: Don't get epoch from a server because it may be
+ambiguous")
 
-[...]
+rxrpc_kernel_set_max_life() last use was removed by 2023's
+commit db099c625b13 ("rxrpc: Fix timeout of a call that hasn't yet been
+granted a channel")
+
+Both of the rxrpc_kernel_* functions were documented.  Remove that
+documentation as well as the code.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+v2 rebase on top of net-next 45bd443bfd86
+
+ Documentation/networking/rxrpc.rst | 24 -----------------
+ include/net/af_rxrpc.h             |  3 ---
+ net/rxrpc/af_rxrpc.c               | 41 ------------------------------
+ net/rxrpc/ar-internal.h            |  1 -
+ net/rxrpc/txbuf.c                  |  8 ------
+ 5 files changed, 77 deletions(-)
+
+diff --git a/Documentation/networking/rxrpc.rst b/Documentation/networking/rxrpc.rst
+index fe2ea73be441..d63e3e27dd06 100644
+--- a/Documentation/networking/rxrpc.rst
++++ b/Documentation/networking/rxrpc.rst
+@@ -1062,30 +1062,6 @@ The kernel interface functions are as follows:
+      first function to change.  Note that this must be called in TASK_RUNNING
+      state.
+ 
+- (#) Get remote client epoch::
+-
+-	u32 rxrpc_kernel_get_epoch(struct socket *sock,
+-				   struct rxrpc_call *call)
+-
+-     This allows the epoch that's contained in packets of an incoming client
+-     call to be queried.  This value is returned.  The function always
+-     successful if the call is still in progress.  It shouldn't be called once
+-     the call has expired.  Note that calling this on a local client call only
+-     returns the local epoch.
+-
+-     This value can be used to determine if the remote client has been
+-     restarted as it shouldn't change otherwise.
+-
+- (#) Set the maximum lifespan on a call::
+-
+-	void rxrpc_kernel_set_max_life(struct socket *sock,
+-				       struct rxrpc_call *call,
+-				       unsigned long hard_timeout)
+-
+-     This sets the maximum lifespan on a call to hard_timeout (which is in
+-     jiffies).  In the event of the timeout occurring, the call will be
+-     aborted and -ETIME or -ETIMEDOUT will be returned.
+-
+  (#) Apply the RXRPC_MIN_SECURITY_LEVEL sockopt to a socket from within in the
+      kernel::
+ 
+diff --git a/include/net/af_rxrpc.h b/include/net/af_rxrpc.h
+index f15341594cc8..0fb4c41c9bbf 100644
+--- a/include/net/af_rxrpc.h
++++ b/include/net/af_rxrpc.h
+@@ -88,9 +88,6 @@ int rxrpc_kernel_charge_accept(struct socket *sock, rxrpc_notify_rx_t notify_rx,
+ 			       unsigned int debug_id);
+ void rxrpc_kernel_set_tx_length(struct socket *, struct rxrpc_call *, s64);
+ bool rxrpc_kernel_check_life(const struct socket *, const struct rxrpc_call *);
+-u32 rxrpc_kernel_get_epoch(struct socket *, struct rxrpc_call *);
+-void rxrpc_kernel_set_max_life(struct socket *, struct rxrpc_call *,
+-			       unsigned long);
+ 
+ int rxrpc_sock_set_min_security_level(struct sock *sk, unsigned int val);
+ int rxrpc_sock_set_security_keyring(struct sock *, struct key *);
+diff --git a/net/rxrpc/af_rxrpc.c b/net/rxrpc/af_rxrpc.c
+index 3a558c1a541e..36df0274d7b7 100644
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -460,22 +460,6 @@ bool rxrpc_kernel_check_life(const struct socket *sock,
+ }
+ EXPORT_SYMBOL(rxrpc_kernel_check_life);
+ 
+-/**
+- * rxrpc_kernel_get_epoch - Retrieve the epoch value from a call.
+- * @sock: The socket the call is on
+- * @call: The call to query
+- *
+- * Allow a kernel service to retrieve the epoch value from a service call to
+- * see if the client at the other end rebooted.
+- *
+- * Return: The epoch of the call's connection.
+- */
+-u32 rxrpc_kernel_get_epoch(struct socket *sock, struct rxrpc_call *call)
+-{
+-	return call->conn->proto.epoch;
+-}
+-EXPORT_SYMBOL(rxrpc_kernel_get_epoch);
+-
+ /**
+  * rxrpc_kernel_set_notifications - Set table of callback operations
+  * @sock: The socket to install table upon
+@@ -492,31 +476,6 @@ void rxrpc_kernel_set_notifications(struct socket *sock,
+ }
+ EXPORT_SYMBOL(rxrpc_kernel_set_notifications);
+ 
+-/**
+- * rxrpc_kernel_set_max_life - Set maximum lifespan on a call
+- * @sock: The socket the call is on
+- * @call: The call to configure
+- * @hard_timeout: The maximum lifespan of the call in ms
+- *
+- * Set the maximum lifespan of a call.  The call will end with ETIME or
+- * ETIMEDOUT if it takes longer than this.
+- */
+-void rxrpc_kernel_set_max_life(struct socket *sock, struct rxrpc_call *call,
+-			       unsigned long hard_timeout)
+-{
+-	ktime_t delay = ms_to_ktime(hard_timeout), expect_term_by;
+-
+-	mutex_lock(&call->user_mutex);
+-
+-	expect_term_by = ktime_add(ktime_get_real(), delay);
+-	WRITE_ONCE(call->expect_term_by, expect_term_by);
+-	trace_rxrpc_timer_set(call, delay, rxrpc_timer_trace_hard);
+-	rxrpc_poke_call(call, rxrpc_call_poke_set_timeout);
+-
+-	mutex_unlock(&call->user_mutex);
+-}
+-EXPORT_SYMBOL(rxrpc_kernel_set_max_life);
+-
+ /*
+  * connect an RxRPC socket
+  * - this just targets it at a specific destination; no actual connection
+diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
+index ca62a1db3286..5bd3922c310d 100644
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -1503,7 +1503,6 @@ static inline void rxrpc_sysctl_exit(void) {}
+ extern atomic_t rxrpc_nr_txbuf;
+ struct rxrpc_txbuf *rxrpc_alloc_data_txbuf(struct rxrpc_call *call, size_t data_size,
+ 					   size_t data_align, gfp_t gfp);
+-void rxrpc_get_txbuf(struct rxrpc_txbuf *txb, enum rxrpc_txbuf_trace what);
+ void rxrpc_see_txbuf(struct rxrpc_txbuf *txb, enum rxrpc_txbuf_trace what);
+ void rxrpc_put_txbuf(struct rxrpc_txbuf *txb, enum rxrpc_txbuf_trace what);
+ 
+diff --git a/net/rxrpc/txbuf.c b/net/rxrpc/txbuf.c
+index c550991d48fa..29767038691a 100644
+--- a/net/rxrpc/txbuf.c
++++ b/net/rxrpc/txbuf.c
+@@ -60,14 +60,6 @@ struct rxrpc_txbuf *rxrpc_alloc_data_txbuf(struct rxrpc_call *call, size_t data_
+ 	return txb;
+ }
+ 
+-void rxrpc_get_txbuf(struct rxrpc_txbuf *txb, enum rxrpc_txbuf_trace what)
+-{
+-	int r;
+-
+-	__refcount_inc(&txb->ref, &r);
+-	trace_rxrpc_txbuf(txb->debug_id, txb->call_debug_id, txb->seq, r + 1, what);
+-}
+-
+ void rxrpc_see_txbuf(struct rxrpc_txbuf *txb, enum rxrpc_txbuf_trace what)
+ {
+ 	int r = refcount_read(&txb->ref);
+-- 
+2.49.0
+
