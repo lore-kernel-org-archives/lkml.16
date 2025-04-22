@@ -1,321 +1,233 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE88B666;
-	Tue, 22 Apr 2025 19:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745350163; cv=none; b=ufmv8/gIYYLDOY6ktI5T6aURo976gFBFy4BUPLI/wymRImdNVFqPpxiUTwKC8/3U+jmyXZ7IszzpfKORURvYozs0zEwv/435lx9yKnFF31W0ZKEqJSlVwehQMPHBS9U6sgbOaT0SH6uCB0CLLVSVBHXImzanKxlxATq49V428/U=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745350163; c=relaxed/simple;
-	bh=p0kdsvYEYrbvxL3gSgxSwf0Fq5IQ06R5Wh+VNVLqTpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ds2Zmjq4AgqLEtZ0PTscKHjjXffOasrXzbTz1c5caqusrGkgDH2ONih6OOH8SxB5nhOETny5oKqnEu9rvznt2tmre2pS1aE26f7+50OGyegFtzcnwKW7SOhgXd+qgAP5J62wX8Qndn7pHEt1lPOkGzTvC8yBfvHe1G3SCKMZE7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/Dai9It; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BB6035949;
+	Tue, 22 Apr 2025 19:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745350322; cv=fail; b=EMg+Khz/zx8V3iBKQezNNiLxb7xcxmO0eI689R7ffeNmwlK1q7Ydpq4F1h87bE+mIhqCAczOfHubuIJfx7XhDlbo95TbfAku+EOFBmlodbk8XB4HSOob7yWL9sRLrM1gwYHE6Had3n9fqdIeaSucf9s1ro7QogORia5zE3YExj4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745350322; c=relaxed/simple;
+	bh=lIx7zsjamnN1B1okkHBQy0whHOtuJ3+mRa1sqSNsPuI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=VWa89/07Wyg/Lb+EoCpS5zGpXjw/03YvWIWsGpX0YQBYTwyXpADohLyji27xWzh46ytP0fWtsIWhOvZJvigT5v7cjCJhVAwTEwTjmPd3Ynlpq3Itd82suMtpLr6lAWRc8Ro0vgXBeUxktyHUog2kzDonOX2XLRG7fBp9huG7Trs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=W8dBTssK; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=YIkB4dO2; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/Dai9It"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e8efefec89so51631086d6.3;
-        Tue, 22 Apr 2025 12:29:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W8dBTssK";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="YIkB4dO2"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MFso2v002859;
+	Tue, 22 Apr 2025 19:31:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=klRNZRUT0LaEvISqox/uvmbGELDUrh89SEEtAS9el88=; b=
+	W8dBTssKM1ZNiq65PNLvJ4BORmeD5gYG/4Kj+HdxTHy4Y+9r/uBNzXrzqG4T+79w
+	e3ci4JcXE/4i63F6JniToIoV3y1u511SBBzTWEehE6S9B3/436Q6ZKFeAD0iJQVZ
+	zcxnrMkgAbWPdO3Ox8bsiHjyi4jRyPZUDor/GdGowvrcgv82aa7QkzSSCZMFC4LB
+	MC7qfyOu8OZC5LW6s1EMJp5/sv55TpKn8breHYzjhyuXTsAAuHuz2GCZbWnn/xcw
+	XCwXozjo0x0AecmRwDOmoWxuWml62crbKlxzVyIxBCE1HaoIncivBxwoq5YDNxyg
+	EeA2zgDC+JkOJz2v2Z1oJQ==
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46428c5b6v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 19:31:09 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53MHuWDZ005870;
+	Tue, 22 Apr 2025 19:31:09 GMT
+Received: from cy3pr05cu001.outbound.protection.outlook.com (mail-westcentralusazlp17013074.outbound.protection.outlook.com [40.93.6.74])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 465dek1wte-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 22 Apr 2025 19:31:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aCZIu72f2ESARbuHYqj32bjwaXYoqfV3Sx8cZj1Id0/UKNlMe8eBmObnNy6ONs7SMnwQmEPcP9rVWb48qv0ZJRoSrLdFvF+/4X+h6hTmpVPuyzaCqKeg8EzQqePWKvkCJuA4gC7xbpu0tHzBuhowqSKwPRBAgkoOq0HD0/w5D/CC6lP6iEnvk++fR9OhG9eh9I446y0XuRO1UkOxHY9MzjmpYOh5BOSEzYF342kv9DR+JuhuGrLzgVo6XdKok/zV++dimVzDSh55hSDxRAAfK111cLPC0q8cJyWRnjnQvgYMpahbVacHF42GUSQjx2Jj+yCdxbY22pl8pGLi9lSZjw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=klRNZRUT0LaEvISqox/uvmbGELDUrh89SEEtAS9el88=;
+ b=nfvSmGmgyI3H4xgEBhgjBGaoRW3gKQFX5fo5dsdqXV+wkxhiV8E4gwJC0wWDytHytMX/MGDzYieLy4BUb7GVPrtPsbV9mrtpJ+vn6VYpUuwEu2/UvmFOyIt7odSK5nx6giocyxPALfe/b+4qhHKEKZaTw6XRo5FcNPKnS61TW0f37sAWVZaNwFhp65ciYn5aGpaveN9xXWOH78gPsy2IXvgxdYZctqvWk5SY56gVDbAm7p99GyED0AvcUAhr1AMyYCPI5+bA4hVtzs3pqqfVuJBZtvYvwffEBbtgNlVLsPfR8Hl6M+3fEU/7dHxwD/A4g/saZCAajMqkADPGM8rvdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745350160; x=1745954960; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ndpKGQSvZ0aqLqjETeu44ATYoM5vYBNDUrHip9UxeY=;
-        b=i/Dai9ItEWTvWa218QAfvIO/MTOGC1R1Nm89p2ZmX5t/QeCY2nqkfwRUZo8Kzm/M2q
-         X0onE5zW/f0RW03Fxg0yr/yhGYFsxYT9VElZdFTbC11cHFYWchqDmTq3wahbZKrJ5BoY
-         HiMLCDnJc7xFdEfA0vCtgNGRpPHVASXZeqVdkHzm8jbC2K5rY/Wq3u+vknIKaYBuHZYN
-         KS0dL1qzTVMk9FVGrYQU4W7Ud+PPhyP3+EkGvu+RAdR7YRuvyVlh9JR7vT/PmpP4eX08
-         SoAridXEFAWxE4XQe/pzlzwqTdAERJ3mJneZ4uAgaMm1K7XuURLuHDuynjXLVXwSgh60
-         ArEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745350160; x=1745954960;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ndpKGQSvZ0aqLqjETeu44ATYoM5vYBNDUrHip9UxeY=;
-        b=xL7/nq1rlX590S6sLJjPFbuKlgy+3QaE7eiC/5FunWixUMjahpOnUQa9wQ8t6+et0c
-         rbKLu1igDok1cUSGunzr8vJnprY9+oZuoDCIYTvZYB4pHjvrGVJ3qZ/DlcW8exnbRaoo
-         D4X7oIvCslFdhxxZnh7jo3yppr9DPAk6n+ND9YCF4P21eeLkfx/tBDl8zj5X1rVzFggS
-         hv3ztQO6io4/lanROFX4d9TKFy9+gTLYqlnSmZkbebU6KZox+0VBLBnOqy/fdc5m778B
-         tMA/XBgAUEdjWCAF1ZkcGthC3Cq3GPv0cX8FjW1x6cTHrqtKTv+aWVwIndrI0G1ra2/O
-         26iA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3p95974t8iVvyx7Om6sdw0vORW03A4KwQGDgYB7UmAE9OihKvVNMvplbcuKQ/a+AOPG4qZPfYBp0=@vger.kernel.org, AJvYcCWQelW82YL4HmTzye9cxLk71H8spWoggzdqI9t6VgnV1D9X5wxhlNqbcfnk7OagzH8yjwxR6qJd@vger.kernel.org, AJvYcCWmaz7sOtyJkwIQWKQRq3qQurqtWfHrOtU6DNvVL3okDqGO8uCU/BxUvOrItyvLSDlZnocFauRYgkeNgDpC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQTwOfiRWCPCgGi3h7i4EXaSeU6WS/ijgc9GxjiBP0Z9Ab0lnB
-	/saSa/BnjFgRFSAoUPQYqCjU3ZvTQ89YpZwz/omn3QSWiKbJwkMwR8EEtw1wk20sm84JNPhyptS
-	BsRAqfelsl+koI/ObqvpZARuh5o0=
-X-Gm-Gg: ASbGncvexMajBw/62BIU3so/ApmH/aJk0wPoJtmM6KBbqRypT1VgC3qNBE4Z7tlTCli
-	mjZ6BcKa/ibrsmAV8SChiTMlUoJT88drQbGtYKlUxaNDXul9m9ZyPFBlH6FGPfObs70rn2KqF8n
-	wXjdyqkRG24T9F1P6zbYeUTps=
-X-Google-Smtp-Source: AGHT+IGkSPCMeFkbaE7r9rhzr8WggAH+kF6OiQcpyNCNspqhZ0ybhXGaBNOVK+jQ3HgCZRgPGQgp1f3RLPGlBD4qBuk=
-X-Received: by 2002:a05:6214:20a3:b0:6e4:4484:f354 with SMTP id
- 6a1803df08f44-6f2c4671b1cmr334524676d6.38.1745350160485; Tue, 22 Apr 2025
- 12:29:20 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=klRNZRUT0LaEvISqox/uvmbGELDUrh89SEEtAS9el88=;
+ b=YIkB4dO2/7u/ApfLHfQK3BY4CY6FZUOJx4K06B/wpTNlEb76pbKdqwmRnp/+rKhvi1LAG/RX612o51HfynmxXaAGLrLwWtF6EAiYpidsYg0JoUBQk2BMFmqzMkxmdxjU+SC6gJ0H0iy9uhvFLjz4YTcCgYtq1Lkl64wmQwfU0ys=
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com (2603:10b6:8:f5::14) by
+ SA1PR10MB6414.namprd10.prod.outlook.com (2603:10b6:806:259::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.35; Tue, 22 Apr 2025 19:31:04 +0000
+Received: from DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::c57:383f:cfb2:47f8]) by DS0PR10MB7224.namprd10.prod.outlook.com
+ ([fe80::c57:383f:cfb2:47f8%5]) with mapi id 15.20.8655.033; Tue, 22 Apr 2025
+ 19:31:04 +0000
+Message-ID: <84ce64c8-838d-4b62-abb0-cf46282ce548@oracle.com>
+Date: Tue, 22 Apr 2025 12:31:00 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 13/19] x86/reboot: Secure Launch SEXIT support on
+ reboot paths
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-integrity@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        iommu@lists.linux.dev
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+        dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+References: <20250421162712.77452-1-ross.philipson@oracle.com>
+ <20250421162712.77452-14-ross.philipson@oracle.com>
+ <26278368-cd3b-4bfb-9091-f3eec4cab35f@intel.com>
+Content-Language: en-US
+From: ross.philipson@oracle.com
+In-Reply-To: <26278368-cd3b-4bfb-9091-f3eec4cab35f@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH7P220CA0113.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:32d::31) To DS0PR10MB7224.namprd10.prod.outlook.com
+ (2603:10b6:8:f5::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407234223.1059191-1-nphamcs@gmail.com> <6807afd0.a70a0220.2ae8b9.e07cSMTPIN_ADDED_BROKEN@mx.google.com>
- <CAKEwX=NQyDqNBoS2kPePZO1iTkt88MgrtEKexxu7uLhaeA6rsQ@mail.gmail.com>
-In-Reply-To: <CAKEwX=NQyDqNBoS2kPePZO1iTkt88MgrtEKexxu7uLhaeA6rsQ@mail.gmail.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Tue, 22 Apr 2025 12:29:08 -0700
-X-Gm-Features: ATxdqUF5O_YtzRFDfeJ1JbJJt-RugNOBNDCB-M-afZovyBAPOYL5Iv1Eurn4SUU
-Message-ID: <CAKEwX=OBC3n-+hPXGnpoZChCqjtQUt-nbBrjj0kRqsCdTcqghA@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/14] Virtual Swap Space
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hannes@cmpxchg.org, 
-	hughd@google.com, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, muchun.song@linux.dev, len.brown@intel.com, 
-	chengming.zhou@linux.dev, kasong@tencent.com, chrisl@kernel.org, 
-	huang.ying.caritas@gmail.com, ryan.roberts@arm.com, viro@zeniv.linux.org.uk, 
-	baohua@kernel.org, osalvador@suse.de, lorenzo.stoakes@oracle.com, 
-	christophe.leroy@csgroup.eu, pavel@kernel.org, kernel-team@meta.com, 
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB7224:EE_|SA1PR10MB6414:EE_
+X-MS-Office365-Filtering-Correlation-Id: 161cb944-6012-4de2-bbcd-08dd81d43889
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T05ENmZaZTh6UjBQdFpiY2VoUnJaYURldDZyNDZ0NXJaejJyd04xcHJwbmc5?=
+ =?utf-8?B?eXRJZ2UxZWdHS0pmU01WQUdDMkJBLzBiR3krYmd1K2ZGbHhSZFdTVVJ2SlZ2?=
+ =?utf-8?B?WFhVbURQeWtjem0wT0JYN0V0MnJuNlRFYUE5Q2RQRlYycHp2a01lZXVhZzFp?=
+ =?utf-8?B?SElTK3AxK2ViSVF5OUdvZlhrZkkyMHFvRzdNTHlNV1RoSTVqeXcxWC9Kc0JM?=
+ =?utf-8?B?b2JoV05oTUloZ0ZPVi9HdVkyUnhybnFYakwwWnErSUUwN1pSZTFWNXVTTzNY?=
+ =?utf-8?B?WWpibkczbk1JZitVZVNydXhLWUUxLzZYc25FcFQzZWxMVDF1TlhMWFM0ejYw?=
+ =?utf-8?B?Nnpod2FVTkZhU1RtbDJZN3ZTNEZvdjVHdUNXR3ErbEZWVXMwMHcva1RTQWt4?=
+ =?utf-8?B?T0JDZUdHR29Yc2MrZXRONVgwOWJ5YVc5TDFKbmhPU2FYb0w3Wm5raTVDclRw?=
+ =?utf-8?B?T1VHQWZHdFRNL1VsMkd5VGw2b0xVemxlMWxDOVpibWFWU1FZajRiNWdGSmpK?=
+ =?utf-8?B?YVVLVTJCZXRGTzF6SFllSUJmL3J2WERCR1JNQnZUZFBEYS81dCsvYlB6cU14?=
+ =?utf-8?B?c3QrK2ZncTg2VFVNY0xnMElyQWdkR3oxNEhYZzJVdHVPNEFLK2QzeTJUZ0R5?=
+ =?utf-8?B?WXhXNW9SbzdaNmM1ZEFscmRRQkZXYmZpOER6WFFJTmROdW55bWRScU9FZG1K?=
+ =?utf-8?B?R1JURXhJNVBDblRHNFRDeGFqRHNVSGNCSUhHemVsZWxmeWxnRUZxcERtZ1NJ?=
+ =?utf-8?B?L0tEMlZZR1B4RnVxb2xRTHdrNktaNWJyU2c3WWw1Z09JNzRzV0I2Y1o3L1l0?=
+ =?utf-8?B?NjRmMExpMGlEbXp6TTVYNUVXYk53WWxLSFZidXlnVWozR2RVbks3R1Vtc01v?=
+ =?utf-8?B?cHI5VkRFMDFjZGYwWlZOVnFaWXRPcnYyY0lTVDVuVUd4N0p6NldSSHJPWXoy?=
+ =?utf-8?B?THpqWWpvT3RJdmwycXNhYzF4TytxNDM4VFlWbGFNVCtodURLZW8zdUhuZW16?=
+ =?utf-8?B?dy9EalViMytBVTZpdkIxTmRaME8wSS94Si9zT2xMbXFkMGFmcWRHd0ZzbVJH?=
+ =?utf-8?B?Yk1nRXZFclJVQWJNNDRidDNaNzhmdmxIbExJb1RLQjYxenNJTmcxazFsTUdk?=
+ =?utf-8?B?ZGRZUTJocWpDOVA5UVMrTldBblloUWdVVE9FM1pZS3NyZnRKUEZGRDhXeW5E?=
+ =?utf-8?B?N1FkMFJiOEhKMzhlL3lHT0Jyd3E0cGdVTWRYQjhyMFV3U3J6WnZOZGFxdWtt?=
+ =?utf-8?B?VkVmTHYvMVlOSDJTSm52YW9EWnV1L3c2RkV5YWtXMTlZMU1KZ3ZWVE94MVhJ?=
+ =?utf-8?B?RlEwRmw0TFpRMnl3KytMdWhUUHorU1B0Vm9ZQlFxYm5KZ3VFR1F3QUV5bW9S?=
+ =?utf-8?B?MXdZaU5DQ2NabUFYeXl4R0cwWXJxRnNrdXpEbDM0Y29rWm9sWHRZWlhjVkdQ?=
+ =?utf-8?B?ZFdQRGN6S2ZEdEFLVkg3Mm5JWHJtYVdzaEN5WE50L3dsS3VwemNaYWJQMUtn?=
+ =?utf-8?B?SGJvU3RTT3h0U3hVNXNDVzB5YlFaRUQremlqcm9YQ0NOb2E2U2hoSS9FWEZT?=
+ =?utf-8?B?T2N6L3BDUkIzMzc2dmo3VlQyazZpZXJ1T0Vnc1lWMXZZYVdDL3FmYktMLzJp?=
+ =?utf-8?B?Mk9WN2hCVVBSMUFNR2N3dUJKdDQ4bjUvanBEaFZQT25WNlRXYmhGcnNER00w?=
+ =?utf-8?B?NmJ4UXlXK054WCtYWnkxcU5SM3VkZjZTaXdMUHJ2UmF2M3MyaVlmbVVacTIv?=
+ =?utf-8?B?WitlYkd1VVgwMUd5ZUJlS1BNdFdZbXpyZlZvblFWWGc2bDBqMmVUeUEwbmlm?=
+ =?utf-8?B?anVpMUprOWlxSExVdWxnUXY2VUFZTGFOYjRWMFpLZjJodGlmSzlFZGF6eU1j?=
+ =?utf-8?B?d05LdldUZzZ5TDUxLzBPUndhcEgwZ3FOQTlUclowQTNFcWx0eFFKMTl6OVow?=
+ =?utf-8?Q?whukgQyKAJY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7224.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TkowMmUwOHl1WmhaZyt4Q1F0c1FuUU1TODB3UEJkUTJEcVNmRno1ZE02cnVo?=
+ =?utf-8?B?T2ZRZE02NlF2Vyt0N3VrK2tWR2hYU1FNWXFwRHdzMmxQTUhScFdwb2lJbDRC?=
+ =?utf-8?B?Yy9OS3RMV1h3d3FaOHc0SDRFQlFKRVVSM0JuVDFFRzFHRG1QY0pLb25jWEtU?=
+ =?utf-8?B?Z2FWeGZWWmdVS3BCanFSTG9raHN2RUhEL1o0RDlkbkY2N3pXbWk1VFNzVnR0?=
+ =?utf-8?B?b2VlUW1PMTdPblBpQkhDNktGdEJjT3daaDhPSGdyOUo1TXhHK05aTkFxTWpQ?=
+ =?utf-8?B?bGJWVzZVbmtUbXdEVk1jeGZhdnNpOHNjNGNscWFVSVM5ZzI2YlBWbUJtSUlu?=
+ =?utf-8?B?Q0c3amlRVlJ5ZVBicE1YRy8zSGdDRVlLOEp1cVlvclk1Z1cvTFhKcllvZGpR?=
+ =?utf-8?B?Zkx1cXRsQU51blQzbFEycFA0aE9odVpTeHQ0TVJsY3JBRkNGQjdPOEhQL0Ja?=
+ =?utf-8?B?alh4L3g5aTlPU3dVQW90aFM1ajEvV1FJNnd1V3grRGdhT2dTcmlrWk1IQXJm?=
+ =?utf-8?B?SnhtRHNkbkwzS0NMeFc4RlBBbVZWU3JLdmd1R01kblBsRGNKUHlna0s2SkZO?=
+ =?utf-8?B?aXRKU2lVVXVFbTZzWm9DV0Nob0VkTi95Uy9sMnc1aUkvN2NZYVFhMUE1VkM4?=
+ =?utf-8?B?UE5ZTUtPd3RmS3NhbEp1WjI0UEdObzh6LzAxV2hEbTk1TVg3NS91SkZvRkdi?=
+ =?utf-8?B?cWsyalJqYUNmbkVaMGF3RFFXWkkyZlhrQjR2Ym1tQmNvVm5NRHQ5WVFXN3do?=
+ =?utf-8?B?ZGJ5SDZ1SE5PLzZ3S25wRDlyNEdUZStRN2FpaE5VLy9hdmgrUm5mWnRwOEts?=
+ =?utf-8?B?d2JNRGlFbngwTHc2Wk1XRG03ZUI5aHVGT0FFZ1dUMkFYWW8vZXgxOW9iSlVJ?=
+ =?utf-8?B?M1V0ZjZMS08wUnBEbzFuV1VGdnFIc3libFZTN2l6UXJndjRzRTR0TlA4ZzlU?=
+ =?utf-8?B?WkEvczVZS3dTMkFvd1RMRGJGUHAwNVJmdXJQNUlleUNqaHUySWJEdy9vM05W?=
+ =?utf-8?B?S2dycWVMSUV0eEpTUHlhUkdWcUJ1MFhLR3dsaVZ6VUFvMVFUSXErVnlMWG1a?=
+ =?utf-8?B?R0pvTlFDZHl5WHJ4TFlIcHMvTUZ2VEZ2a3paMGNLQllBOVFtUmdYNUdkQ0ls?=
+ =?utf-8?B?NlRpUU5qbkNTZkJ4WEgvZXVDNGpTcTA5YzZNT3BYVHdZRUVsZkVWWlZab2xO?=
+ =?utf-8?B?SzNOREE2ZDFwRDdVOE1lUUIrTVltSVE0cGY3RklsU2VQYjBsZEQ3Yk1uVjlF?=
+ =?utf-8?B?c1hxK1lyajZZR1BpTUoxRjZRdmlYWWxFelpsaUIzdUU5c0EyYzdxVFZUTHI5?=
+ =?utf-8?B?aU5VWGNVd0xvOFJWU0R0RE1wcXBESWlWRThFSE9IbmY2eWhadjZyVnBFZlNq?=
+ =?utf-8?B?cmJNL1puaTlHR0d5N0NzNDJMR2VSZkZSSjNNdS9kMHRLUURTa05YNGZJWGdx?=
+ =?utf-8?B?N29Wa2k2anNqZ0l1K29UNW5FMmczOTZpSWt1Z0VSWDNvYml1eVd1VXBYU2d3?=
+ =?utf-8?B?M2NqaTB6R0p6Zysxek9qcVFQL3JQMXlMSUpKN1l1cVQ1Rjh6VlhCMGtOVHd2?=
+ =?utf-8?B?RnNKUUNwK3NocmZqWUJSZTJhYW9IY1NBU2RxN29BSG1QekpvVVMwTDl0cVZR?=
+ =?utf-8?B?TS9veU1xRy9sN0xzZEVBeHE1cnlSYTQ2VGdnWG9wWlF1UC9jYmcwTU80QWlY?=
+ =?utf-8?B?QVpxbmZyaEZCakljUFh3cVF3WGk0enNTMGlBUXdBRjlTY1FFTUpKWW5wZ3ln?=
+ =?utf-8?B?MmpLWTZJNVlyVTZZVUhZVnljL0Rja3lZL0xTblFlSmxyYWtJME5wVC9UWU8r?=
+ =?utf-8?B?Q0tVWmI2cVR4ZUQ3bmh0WkgwNFo2WUt4U3NGZEpPUVRxTkpzdk8vMHdaOU1S?=
+ =?utf-8?B?ekZ1MWJUaDg1TmRRT21seW00VldJMVBjU3Q3dlJsYldiUndxNlh1Wmhkc1N0?=
+ =?utf-8?B?QUlwNTNBWnFScU0zRTRiWHBFekoreWdOa210aTlBUy8wZW5leWdBNC9FUWhS?=
+ =?utf-8?B?TENwS2pUdWxOcE8zV2V5MmhpUTA1cnIzYW1mU3hDNmdrS3dQQWhGWWMwTG1W?=
+ =?utf-8?B?TEU0MFZRejZBaEEzR21nQ3F1RkJYWTBlS1VpRktUYWE3YXhiYk1PbjF0N1hj?=
+ =?utf-8?B?TUNMdDV4bmlXejk0NVpTZGZURHJsbCt3bFFsYXdTUFZZODRKQ0NsR1BaenVM?=
+ =?utf-8?B?UGc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	/FgzNW/Lv5j45t6dGjU5FMYLPNsIkBMDjRSOTF/ubou3ij+CwseDVsIp/AFOImjQAyjHxKPfNOdxDBm+3L/Btoa3iKD1mDBF74Z/9AC7g2G/hLIhyr3MeFlvLR4jJKscGewU8WGmlRLiQcrwHRfJ6AtXx44xAe0Fqdz77uxiSZJQraXiY07QeRlCIsW9p3a58zHhbPToUze62DbikAlb8rzmMCWhgGUZw30b/YFjCJjog/wnhzgZxApMRoWWTie6u5vCeI4BH6Ztq6zPJpYOf2E4EWRgLMF/DWRIxWFdahLBzjehGhtJ1HvvJwLXNVV9lujK+vbzzn48Nbq/yJad1G854WKEEyh708BRy9mdvQOCRjvPsONufrFl+1xc6cGz9wvY6BXqUc5XqNs3xhMhZatz9DB5FfN0NPo9vgil38ju+M9oFrbHtHYRiIiaSZGzdj1H/vKa19npj/VLPm/3WTIRvSwG6fsC+duQhRsu3oHJIoi1uDl9InFbbHDxyuX2AESsrqbOd3I+u9bS/q1627BvUwEM36XXPM1Bdit6G5igDJ7QNdymJg/NrlFrlsm2qf0Bn+WGj37XC39nykztmbE8QLEuNclG1l9PzTogP6Q=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 161cb944-6012-4de2-bbcd-08dd81d43889
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7224.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 19:31:04.1295
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cU7AIwXYsaLPdP6pGp4cuP6nY0Tr8zJ3DAKy0pYGG12Lrj+SXoHNHecliYp1zKPeuI4n2XRavozpvDAb8Mrl8R7v4p9mVh21wg0XnLYr/mw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6414
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_09,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
+ spamscore=0 suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
+ definitions=main-2504220146
+X-Proofpoint-ORIG-GUID: a2P6PhqCrQUrQaEYfCPQQPENY40tBR6r
+X-Proofpoint-GUID: a2P6PhqCrQUrQaEYfCPQQPENY40tBR6r
 
-On Tue, Apr 22, 2025 at 10:15=E2=80=AFAM Nhat Pham <nphamcs@gmail.com> wrot=
-e:
->
-> On Tue, Apr 22, 2025 at 8:03=E2=80=AFAM Yosry Ahmed <yosry.ahmed@linux.de=
-v> wrote:
-> >
-> > On Mon, Apr 07, 2025 at 04:42:01PM -0700, Nhat Pham wrote:
-> > It's exciting to see this proposal materilizing :)
-> >
-> > I didn't get a chance to look too closely at the code, but I have a few
-> > high-level comments.
-> >
-> > Do we need separate refcnt and swap_count? I am aware that there are
-> > cases where we need to hold a reference to prevent the descriptor from
-> > going away, without an extra page table entry referencing the swap
-> > descriptor -- but I am wondering if we can get away by just incrementin=
-g
-> > the swap count in these cases too? Would this mess things up?
->
-> Actually, you're right - we might not even need a separate refcnt
-> field at all :) Here's my original thought process:
->
-> 1. We need something that keeps the virtual swap slot and its metadata
-> data structure (the swap descriptor) valid while we work with it.
->
-> 2. In the old design, this is all stored at the swap device, so we
-> need to obtain a reference to the swap device itself.
->
-> 3. In the new design, this is no longer even possible. The backend
-> might change under us even! So the refcnting needs to be done at the
-> virtual swap level.
->
-> 3. The refcnting needs to be separate from the swap count field,
-> because certain operations/optimizations do check for the actual swap
-> count, and incrementing the swap count willy nilly like that might
-> accidentally throw these off. Think readahead-induced swap reads, for
-> example. So I need a separate refcnt field that takes into account 3
-> sources: PTE references (swap count), swap cache, and "ephemeral" (i.e
-> temporary) references, that replace the role of the swap device
-> reference in the old design.
->
-> However, I have thought more about it. I don't think I need to obtain
-> any ephemeral reference. I do need a refcnting mechanism, but one
-> atomic field (that stores both the swap count and swap cache pin)
-> should suffice.
->
-> Refcnt + RCU should already guarantee the existence of the swap
-> descriptor while I work with it. So there won't be any UAF issue, as
-> long as I am disciplined and check if the swap descriptor still exists
-> etc. in the virtual swap implementation, which I already am doing
-> anyway.
->
-> This should be safe enough, even in the face of swapoff, because
-> swapoff also relies on the same reference counting mechanism to free
-> the virtual swap slot and its descriptor. It tries to swap_free() the
-> virtual swap slot, as it unmaps the virtual swap slot from the page
-> table entry, which will decrement the swap count. So we're all good on
-> this front.
->
-> We DO need to obtain a reference to the swap device in certain places
-> though, if we want to use it down the line for some sort of
-> optimizations (for example, to look at its swap device flags to check
-> if it is a SWP_SYNCHRONOUS_IO device - see do_swap_page()). But this
-> is a separate matter.
->
-> The end result is I will reduce 4 fields:
->
-> 1. swp_entry_t vswap
-> 2. atomic_t in_swapcache
-> 3. atomic_t swap_count
-> 4. struct kref kref;
->
-> Into a single swap_refs field.
->
->
-> >
-> > >
-> > > This design allows us to:
-> > > * Decouple zswap (and zeromapped swap entry) from backing swapfile:
-> > >   simply associate the virtual swap slot with one of the supported
-> > >   backends: a zswap entry, a zero-filled swap page, a slot on the
-> > >   swapfile, or an in-memory page .
-> > > * Simplify and optimize swapoff: we only have to fault the page in an=
-d
-> > >   have the virtual swap slot points to the page instead of the on-dis=
-k
-> > >   physical swap slot. No need to perform any page table walking.
-> > >
-> > > Please see the attached patches for implementation details.
-> > >
-> > > Note that I do not remove the old implementation for now. Users can
-> > > select between the old and the new implementation via the
-> > > CONFIG_VIRTUAL_SWAP build config. This will also allow us to land the
-> > > new design, and iteratively optimize upon it (without having to inclu=
-de
-> > > everything in an even more massive patch series).
-> >
-> > I know this is easier, but honestly I'd prefer if we do an incremental
-> > replacement (if possible) rather than introducing a new implementation
-> > and slowly deprecating the old one, which historically doesn't seem to
-> > go well :P
->
-> I know, I know :P
->
-> >
-> > Once the series is organized as Johannes suggested, and we have better
-> > insights into how this will be integrated with Kairui's work, it should
-> > be clearer whether it's possible to incrementally update the current
-> > implemetation rather than add a parallel implementation.
->
-> Will take a look at Kairui's work when it's available :)
->
-> >
-> > >
-> > > III. Future Use Cases
-> > >
-> > > Other than decoupling swap backends and optimizing swapoff, this new
-> > > design allows us to implement the following more easily and
-> > > efficiently:
-> > >
-> > > * Multi-tier swapping (as mentioned in [5]), with transparent
-> > >   transferring (promotion/demotion) of pages across tiers (see [8] an=
-d
-> > >   [9]). Similar to swapoff, with the old design we would need to
-> > >   perform the expensive page table walk.
-> > > * Swapfile compaction to alleviate fragmentation (as proposed by Ying
-> > >   Huang in [6]).
-> > > * Mixed backing THP swapin (see [7]): Once you have pinned down the
-> > >   backing store of THPs, then you can dispatch each range of subpages
-> > >   to appropriate swapin handle.
-> > > * Swapping a folio out with discontiguous physical swap slots (see [1=
-0])
-> > >
-> > >
-> > > IV. Potential Issues
-> > >
-> > > Here is a couple of issues I can think of, along with some potential
-> > > solutions:
-> > >
-> > > 1. Space overhead: we need one swap descriptor per swap entry.
-> > > * Note that this overhead is dynamic, i.e only incurred when we actua=
-lly
-> > >   need to swap a page out.
-> > > * It can be further offset by the reduction of swap map and the
-> > >   elimination of zeromapped bitmap.
-> > >
-> > > 2. Lock contention: since the virtual swap space is dynamic/unbounded=
-,
-> > > we cannot naively range partition it anymore. This can increase lock
-> > > contention on swap-related data structures (swap cache, zswap=E2=80=
-=99s xarray,
-> > > etc.).
-> > > * The problem is slightly alleviated by the lockless nature of the ne=
-w
-> > >   reference counting scheme, as well as the per-entry locking for
-> > >   backing store information.
-> > > * Johannes suggested that I can implement a dynamic partition scheme,=
- in
-> > >   which new partitions (along with associated data structures) are
-> > >   allocated on demand. It is one extra layer of indirection, but glob=
-al
-> > >   locking will only be done only on partition allocation, rather than=
- on
-> > >   each access. All other accesses only take local (per-partition)
-> > >   locks, or are completely lockless (such as partition lookup).
-> > >
-> > >
-> > > V. Benchmarking
-> > >
-> > > As a proof of concept, I run the prototype through some simple
-> > > benchmarks:
-> > >
-> > > 1. usemem: 16 threads, 2G each, memory.max =3D 16G
-> > >
-> > > I benchmarked the following usemem commands:
-> > >
-> > > time usemem --init-time -w -O -s 10 -n 16 2g
-> > >
-> > > Baseline:
-> > > real: 33.96s
-> > > user: 25.31s
-> > > sys: 341.09s
-> > > average throughput: 111295.45 KB/s
-> > > average free time: 2079258.68 usecs
-> > >
-> > > New Design:
-> > > real: 35.87s
-> > > user: 25.15s
-> > > sys: 373.01s
-> > > average throughput: 106965.46 KB/s
-> > > average free time: 3192465.62 usecs
-> > >
-> > > To root cause this regression, I ran perf on the usemem program, as
-> > > well as on the following stress-ng program:
-> > >
-> > > perf record -ag -e cycles -G perf_cg -- ./stress-ng/stress-ng  --page=
-swap $(nproc) --pageswap-ops 100000
-> > >
-> > > and observed the (predicted) increase in lock contention on swap cach=
-e
-> > > accesses. This regression is alleviated if I put together the
-> > > following hack: limit the virtual swap space to a sufficient size for
-> > > the benchmark, range partition the swap-related data structures (swap
-> > > cache, zswap tree, etc.) based on the limit, and distribute the
-> > > allocation of virtual swap slotss among these partitions (on a per-CP=
-U
-> > > basis):
-> > >
-> > > real: 34.94s
-> > > user: 25.28s
-> > > sys: 360.25s
-> > > average throughput: 108181.15 KB/s
-> > > average free time: 2680890.24 usecs
-> > >
-> > > As mentioned above, I will implement proper dynamic swap range
-> > > partitioning in a follow up work.
-> >
-> > I thought there would be some improvements with the new design once the
-> > lock contention is gone, due to the colocation of all swap metadata. Do
-> > we know why this isn't the case?
->
-> The lock contention is reduced on access, but increased on allocation
-> and free step (because we have to go through a global lock now due to
-> the loss of swap space partitioning).
->
-> Virtual swap allocation optimization will be the next step, or it can
-> be done concurrently, if we can figure out a way to make Kairui's work
-> compatible with this.
+On 4/21/25 3:57 PM, Dave Hansen wrote:
+> On 4/21/25 09:27, Ross Philipson wrote:
+>> @@ -788,6 +790,9 @@ static void native_machine_halt(void)
+>>   
+>>   	tboot_shutdown(TB_SHUTDOWN_HALT);
+>>   
+>> +	/* SEXIT done after machine_shutdown() to meet TXT requirements */
+>> +	slaunch_finalize(1);
+> 
+> This is the kind of stuff that needs to get fixed up before this series
+> can go _anywhere_.
+> 
+> "TXT requirements" is not useful to a maintainer. *WHAT* requirement?
+> *WHY* must it be done this way?
+> 
+> This code is unmaintainable as it stands.
 
-To clarify a bit - what Kairui's proposal gives us (IIUC) is a dynamic
-clustered approach on swap slot allocation. It's already done at the
-physical level.
+Sorry we understand the frustration especially for maintainers. We have 
+gone over your responses so far. We will do whatever it takes to make 
+this patch set maintainable and acceptable to upstream. I think we are 
+starting to understand what the main issues are with the set overall 
+from what you are pointing out.
 
-This is precisely what this RFC is missing. So if there is a way to
-combine the work, I think it will go a long way in reducing the
-regression.
-
-That said, I haven't looked closely at his code yet, so I don't know
-how easy/hard it is to combine the efforts :)
+Thank you for your feedback,
+Ross
