@@ -1,146 +1,138 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+Received: from mail-vk1-f228.google.com (mail-vk1-f228.google.com [209.85.221.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6970B2C2ADE
-	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C37127056B
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745359733; cv=none; b=soDtfYKKkiRxLjATYVm5H8YhAyUO51VKRFdWFVaFohqR/rJaiq+IaEw07oLuEss9YUkLcUxkXTZmQoWM87XFsq7oTU2RDfOZjFM8H3aL+PP23Yol3Jedv9uK9XB5S9d4ERTUGnE1X0b3XYxN+4VjQUBWya2gM149xipmE7H0HaA=
+	t=1745359806; cv=none; b=tqft+nLwgjoUD5G/HKp2sVGiwh2aEpKg5pGRw6cfv4JPfBEXSFnRMn8GUGqvDfGys8It6tibaebkc9D506ToKdD2RU3pSYx9TUu6sNgDdXKM/4v686YIVWVPQiwUKtGdLEWOYeAlLDE5Vuh5AcVH3EqL5uvXvaPW/FGBmwcl0Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745359733; c=relaxed/simple;
-	bh=bNzghGrt115+ZKNUZFU+xQJSBPkqwVs5iV+9xGBsm0g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F0KxyNA5NqnepBOOf0JufLt1iDacd89XbhgCTwpujyk4/mxGKpf+dFpfnRjdgL3MKdVgmYnvCoVxzXdntWgvAYpo16vVRne4OKz4ZmL4EHYVq9ZiRSlrA8Auc9M4xLw5NXc92eAbhKeBj9PRl1qI8W+UEBTLfMoh2Qy7vFFhufY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=wwP0vpVX; arc=none smtp.client-ip=209.85.210.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745359806; c=relaxed/simple;
+	bh=99JxTRLgZjCmHoulfV6B/DMSLqRmfo8mvgyjr4bpb3M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hNhvODXiFbwHmvxNbEXcwB8xoelsnWx9LyqfuHeujV5NlHj39gcfBBeIu4dmM9VAstK4IJ2CN2+BmRrSqBqvlDYTj0gkckjB3DZ01uSwaW0XnmoIqQbELtBTBoBInvgKNCILvMqI3Qu5kKYP9b3/mQjGmxkEMkFtqEztEhSEjXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=O3NYZ6v8; arc=none smtp.client-ip=209.85.221.228
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="wwP0vpVX"
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-72c09f8369cso1821209a34.3
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:08:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="O3NYZ6v8"
+Received: by mail-vk1-f228.google.com with SMTP id 71dfb90a1353d-5240d07fee1so130066e0c.1
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 15:10:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745359730; x=1745964530; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OcAjMtDsEwOO8O58Cs5cDx4aKARQOhUbmH4snH5r6Ms=;
-        b=wwP0vpVXveZpmTzOqMCFvr2+JpZPkCrlyyBPngKI7UH1rQ3ONsXMczrsodi5+qk/oN
-         YgL8aDq27iBcdk5Vm6va03r0k1viRip3K7PNbySL8DwVNhAj7nIFLvx6eHWRTCN5/dse
-         K5QFJMRNv/P64JpCI3Z04l4DTy5WnU7wH8afVcPJX5pF3Wu1uCXGjuE12cP+mnsyFyMZ
-         oR7LXtggDdU7ns7ACc2xOPLODQBhWMxUiYVnLbxHnHaSEMm4EkmqoczwKxdLi4c1tHyL
-         bBdJvo6kR1xKPnsJb400nUD/5UeLRPOJn1FZBdxHcndiNJHiAIoT+5J2ql1uuZndc/Ld
-         S34A==
+        d=purestorage.com; s=google2022; t=1745359803; x=1745964603; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KwOPiQZIcSoYiJQce8m9Bf0/9Br1sjvbT2lnDAfcS9w=;
+        b=O3NYZ6v84M1q3AawtzDDRbDGDQNFwyHCs8gK4Ah2KVHUNBB5N5qyDomgPDVALNuyzK
+         ue3mwYuFaEdb9VdFAmUPDCY3SmeO0hFx14O2E7ixc9pmLm5ZLuXZdJiBcHFvDUaOcfZ3
+         opivm2piMMY+J/zVwHCe6ish3QjD9ZOh1JNYgYc+S6prxYhH72c66onGCmoYpUO0K4f4
+         kjy4UwtaUk/SOA/VRiOY54Rkqu+9VoMlG3LC9G9FYXNGV2T3Jwds0tCXVMiNnsR59/KW
+         rVXvYI6JDxIl2s6kd/95VhLA5ZkPKIYBjSjuuuC4zgOvQMse/lxSvO46FDemIT0vKhlH
+         ogXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745359730; x=1745964530;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OcAjMtDsEwOO8O58Cs5cDx4aKARQOhUbmH4snH5r6Ms=;
-        b=XHLUQVR74esTXWgg4NtbLLjISAdq7aVxOXbvDMi+xbdMOS5RYYz/bdXE3SJbpeukt6
-         xiRZabu/mKX/Xv7BdKiATVGfTw/6qxi5T8xty0JBaTZpY6OiR/vC6ZNfDOMFm9k+EERZ
-         xQJFrwiY9+fZOkSpoSBRYyVI/bizB8c89JUXYZrELOfMbU5/mlOvEUcY4Lc2GIGhgIKl
-         wgsru9qDG0wP8jAjino1brVhrf/4EpeDYSDbHB9l5SL8E4UTvZ9h5x8zx6PLkAm8Yu8y
-         w33VySqqI48E90H5fmtqOi35nh21qUd71GYx8OgeCCGRL5uoOm9tBcTD0P6MrnURfwP8
-         68Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCUwDPp9mtXrUCqpLLGyZ8EmL+POnqgAO2vFyqE8sYEqWSXk/AvUqWArVOVohWeN+JidGbuBnFJu2E4xemQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk1N+V5P7mzimos7gcISBfDJ3PREkgZEXk+gMpFFrXAy8nSe8/
-	YPggWla7hmJ2mqThem4ONNAbpWbZyaVnT2MAFOTaofnotmIaBkZzo0cT6WTkzaQ=
-X-Gm-Gg: ASbGncsJg7J33j7uDjxMaLemNa6CgxcifGA+X4MXuzrRPrLQgBx/qaI6xuvskOSNFNI
-	DTcTgcQ2abn+if3H9cs6X+zQTt7XNpVvtEfz+0BMQkaEXl4DjUUR4OLMWL1eU2BPcxR+Mt/zY7Y
-	2tSVFn8lRnfq4C+ckKijHZjb1obLxdPSSWqLMEvu04/pBCM9U0BcBP+j8dhh2Ly/ENqLRRZT/Jp
-	rq58KSUS1bBflJfGo+omObKPZTZwDTO0q5S3s9UweVzUeFpsD5pibpXxU88X+rI2g2gUBx85Bs6
-	USIOKG+taxDgbvttMG7iVYLe9rzo2AK+60es0jjLHpmcoE4=
-X-Google-Smtp-Source: AGHT+IHzzwKW3y0fInhdjWSpsuJ5JmWctR16v6GWhHHGSelSclI2sxPnML9dTnb8TnnyDMSSFW1wDQ==
-X-Received: by 2002:a05:6830:61cb:b0:72a:1dfc:c981 with SMTP id 46e09a7af769-730063304edmr11661860a34.25.1745359730406;
-        Tue, 22 Apr 2025 15:08:50 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:c8d1:e0ed:ce8b:96a3])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-730048848dfsm2265938a34.52.2025.04.22.15.08.49
+        d=1e100.net; s=20230601; t=1745359803; x=1745964603;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KwOPiQZIcSoYiJQce8m9Bf0/9Br1sjvbT2lnDAfcS9w=;
+        b=A+knTPj0+GYZRFWdqsbxka02NYtUSTw8min22Fj9u1TEpQWt+WIDNUZt4pFClrt4pC
+         zrq4JeIPBsqFEntP91MUfdNg2x+20tq0plkDqkV7GhaQW5F5ytEN7q2hXvCZCjuO19FZ
+         iwBbXPjRD7J544S47votcYwWGkOA06axgFpmjKtkCKYBLZumpljfpVovvMS2mR8qGguE
+         5dELsL5whhLUN5S8StkFvp2vJbMbbu1e6p3OAbBZdOxzPBwnbTxqZiWGESQqUC3gv3hK
+         ph+MlfYP3nObjSSObUQO6OuVfOPtCj38Farg7GP+fP5/wtbhZzuylZPGBHNiCdpRVmTI
+         QzNg==
+X-Forwarded-Encrypted: i=1; AJvYcCU6QIfd0mkNRtybPP+OSF0p4U48BQv/4MP0sQCE+IF2+/QZU5rULnU1tWCaSfS6r0po3TEe0IsEHHqWQhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywhz406AkHa7SnzdyT37rHkvIGkjYajt77XPhJqHZnv4Utuz330
+	88LAvE0oPVb1bP9Ivp0lYAq5qA1LG5XBYsWfDwuerpDvy4HApzrqr4UkiVZzRf9YUuOO47TqTSV
+	g0/Cpqo+6Wifccw6ZcpqHpGpH4tYNLS8r
+X-Gm-Gg: ASbGncsu4EGHQJ/05eIVyAI/JqbmHdfyqCFB3aqwL5trQUz/n+L+PfzLrFiu0BQ7gZa
+	wm5YZ9K0uyEfP1y4E4sHC9h8pN9XOGXiEI4aqgcFMYUUovd38MvkHmTwfiK7IB4z5R5K0ebK5JM
+	CT1vmolK9Ok0cb861XWbAdmwzPiy++5Zy9fcjqxE/LrukGXzEQ/htbJOO/D8ttmsGujYQJ7InlT
+	bgFx6FG7Q8xUUAV9Q/n/L9iHnHLfv/6ByHezXkU9PV8sqHLvgpq57Qtn5g4AOJwdp8kwmd+sIfE
+	45tfrRP8qfYKhG3SUrfsJCd0Dap415IiqEh3YUaawTVd
+X-Google-Smtp-Source: AGHT+IFxdjGFL/VvbqbDrlnoQYfdKyqz0v7X9GEE7nLpcx5NH6BX81xcZcT2Wtr3f6QKNmjvv2s/vLJ60LMH
+X-Received: by 2002:a05:6122:1051:b0:527:67da:74eb with SMTP id 71dfb90a1353d-529253b58b4mr3568089e0c.1.1745359803082;
+        Tue, 22 Apr 2025 15:10:03 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 71dfb90a1353d-52922c112ffsm364279e0c.5.2025.04.22.15.10.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 15:08:50 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 22 Apr 2025 17:07:51 -0500
-Subject: [PATCH v2 6/6] iio: adc: at91-sama5d2: use
- IIO_DECLARE_BUFFER_WITH_TS
+        Tue, 22 Apr 2025 15:10:03 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 6653234045E;
+	Tue, 22 Apr 2025 16:10:02 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 60268E41D69; Tue, 22 Apr 2025 16:10:02 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Kanchan Joshi <joshi.k@samsung.com>,
+	linux-nvme@lists.infradead.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH v5 0/3] nvme/pci: PRP list DMA pool partitioning
+Date: Tue, 22 Apr 2025 16:09:49 -0600
+Message-ID: <20250422220952.2111584-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-6-3fd36475c706@baylibre.com>
-References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
-In-Reply-To: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Eugen Hristev <eugen.hristev@linaro.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1674; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=bNzghGrt115+ZKNUZFU+xQJSBPkqwVs5iV+9xGBsm0g=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoCBNjAzzt1sRYLcJPXzefhzYxHcbR4XNJFDKvZ
- JN6D57NVvyJATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaAgTYwAKCRDCzCAB/wGP
- wFKfB/45NebbapbIP3t4eBe7IDDKz2IX0X7vuL1EOiu0sCj5YLzAqoCos3aGbC3nAYBmnTV/9hu
- cGfDIiEMSXlDgH7ASvPN7SFQ/ANjGO2xc896/FcMxGq/kyx3dOp33a9ienXD+mFjne9N1/PXWIg
- oO+XPo6f+HtvNvjb/uyALdwB822D7BpmRJ2i765kt5mysIPkY5yd1SBIXUu4sT9gLI9lMfV+oIo
- MqxuocA4UYA0VEMFVRssN3TAOhlHC5i+k06k7VuE04rpLH+kqyuHDcLJvBuDJnsLBOsic2D2h+q
- 5Kbts705K+v72L/z4sznTI1YwjSMGRe0UILK+jAPLEOzrS4u
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
+Content-Transfer-Encoding: 8bit
 
-Use IIO_DECLARE_BUFFER_WITH_TS to declare the buffer that gets used with
-iio_push_to_buffers_with_ts(). This makes the code a bit easier to read
-and understand.
+NVMe commands with more than 4 KB of data allocate PRP list pages from
+the per-nvme_device dma_pool prp_page_pool or prp_small_pool. Each call
+to dma_pool_alloc() and dma_pool_free() takes the per-dma_pool spinlock.
+These device-global spinlocks are a significant source of contention
+when many CPUs are submitting to the same NVMe devices. On a workload
+issuing 32 KB reads from 16 CPUs (8 hypertwin pairs) across 2 NUMA nodes
+to 23 NVMe devices, we observed 2.4% of CPU time spent in
+_raw_spin_lock_irqsave called from dma_pool_alloc and dma_pool_free.
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
-This is an alternative to [1].
+Ideally, the dma_pools would be per-hctx to minimize
+contention. But that could impose considerable resource costs in a
+system with many NVMe devices and CPUs.
 
-[1]: https://lore.kernel.org/linux-iio/20250418-iio-prefer-aligned_s64-timestamp-v1-2-4c6080710516@baylibre.com/
----
- drivers/iio/adc/at91-sama5d2_adc.c | 13 ++-----------
- 1 file changed, 2 insertions(+), 11 deletions(-)
+As a compromise, allocate per-NUMA-node PRP list DMA pools. Map each
+nvme_queue to the set of DMA pools corresponding to its device and its
+hctx's NUMA node. This reduces the _raw_spin_lock_irqsave overhead by
+about half, to 1.2%. Preventing the sharing of PRP list pages across
+NUMA nodes also makes them cheaper to initialize.
 
-diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-index 414610afcb2c4128a63cf76767803c32cb01ac5e..4ebaeb41aa4568e2461506471af0540af9d1a041 100644
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -586,15 +586,6 @@ struct at91_adc_temp {
- 	u16				saved_oversampling;
- };
- 
--/*
-- * Buffer size requirements:
-- * No channels * bytes_per_channel(2) + timestamp bytes (8)
-- * Divided by 2 because we need half words.
-- * We assume 32 channels for now, has to be increased if needed.
-- * Nobody minds a buffer being too big.
-- */
--#define AT91_BUFFER_MAX_HWORDS ((32 * 2 + 8) / 2)
--
- struct at91_adc_state {
- 	void __iomem			*base;
- 	int				irq;
-@@ -616,8 +607,8 @@ struct at91_adc_state {
- 	struct at91_adc_temp		temp_st;
- 	struct iio_dev			*indio_dev;
- 	struct device			*dev;
--	/* Ensure naturally aligned timestamp */
--	u16				buffer[AT91_BUFFER_MAX_HWORDS] __aligned(8);
-+	/* We assume 32 channels for now, has to be increased if needed.*/
-+	IIO_DECLARE_BUFFER_WITH_TS(u16, buffer, 32);
- 	/*
- 	 * lock to prevent concurrent 'single conversion' requests through
- 	 * sysfs.
+Allocating the dmapool structs on the desired NUMA node further reduces
+the time spent in dma_pool_alloc from 0.87% to 0.50%.
+
+Caleb Sander Mateos (2):
+  nvme/pci: factor out nvme_init_hctx() helper
+  nvme/pci: make PRP list DMA pools per-NUMA-node
+
+Keith Busch (1):
+  dmapool: add NUMA affinity support
+
+ drivers/nvme/host/pci.c | 171 +++++++++++++++++++++++-----------------
+ include/linux/dmapool.h |  17 +++-
+ mm/dmapool.c            |  16 ++--
+ 3 files changed, 121 insertions(+), 83 deletions(-)
+
+v5:
+- Allocate dmapool structs on desired NUMA node (Keith)
+- Add Reviewed-by tags
+
+v4:
+- Drop the numa_node < nr_node_ids check (Kanchan)
+- Add Reviewed-by tags
+
+v3: simplify nvme_release_prp_pools() (Keith)
+
+v2:
+- Initialize admin nvme_queue's nvme_prp_dma_pools (Kanchan)
+- Shrink nvme_dev's prp_pools array from MAX_NUMNODES to nr_node_ids (Kanchan)
 
 -- 
-2.43.0
+2.45.2
 
