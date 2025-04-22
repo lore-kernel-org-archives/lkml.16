@@ -1,74 +1,110 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE737CA64;
-	Tue, 22 Apr 2025 07:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39AFD1AA7BF;
+	Tue, 22 Apr 2025 07:44:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745307824; cv=none; b=bQV73ImKmN65ipSIBdDS3doPXNugEjhbxNtZpb4ayiiFaF4mwj97e4adTs4UQFtJNBe+v2aWNq6LXNBs2f/XQKl/G8KDVrjBUUR81ivHrvWYcq69ChNK6YZWcFinaDUqiCt9TP1xMsaZtYzocHuQ7QN6/KbdpaHBd3d/ormn9H0=
+	t=1745307865; cv=none; b=cO17jTsCO7oSyOR3r1LNStvi1N5Jk7hq6pOjo5R30LiL787IV+AmwzaADxGIhXBECqNdb4On6GCDRAQRaxAkWOh/AOCmO3yFzMxjEzzYAEeT7mJEPFr747hNBAzQyKPt4XTJvuNKO814Hf6FshZ93AaxNjwtUAeVV1OVbIGzWDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745307824; c=relaxed/simple;
-	bh=R5SFfORZyHAzVkPV76H8wV6285XhlcAIVYEAw7yOVvk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t9HdzlxvA4Y65q3sNeq4hnEkrBg+G5/HDOGaywQSe79CGPlGzHIcjlPJZ4TRTr966sEFN2X899vvL+PAfaUjIl9ydIBtlSRWLg5QgPqREEQJKLBRnHWf0V6T/8jInTxukwg+9/e/8OmKsLONMXqGS3zPJlVOOSLauwoVHWztOzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XdSGTa6W; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745307865; c=relaxed/simple;
+	bh=IkpCJe6iK3e0zmgzu4HOe7msfQx4RRcdkVXQ/zE59nM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ghuAmtZq9agKJWtBtrJ4QVSApCurcl/OHo3VzjYE3LoRXfQG064ckH44pn10T8cDP8YjSj/cvjZHRe295IHPKvm1pg8zus3fP2TIEdC+WrLT/eoPByVru5ZdFOTa9VLdEtVC5sYMQZ4bVrMISbblcpHSwltQwnANaZKMvGgpeUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UWT8zpQs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XdSGTa6W"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745307807;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=OudTtl9ifhGoOWeWZyumebbyu3fyKvkdq2X/syYruzc=;
-	b=XdSGTa6WnFgv860U++wFbXqW6yV3Z+iN1/kEXX8RQsqavIEFXgbncR4hKZdtl6uzYwWZE6
-	hAXU8oAND2S72L4qw9R/1J0N06ycSVmbajeOyjahnw/GhIhVsnFlIMKBVlhAg9ZWMdfGrA
-	AiV29uU+BFWdvXqZeDHcKaPFad/I5QA=
-From: Thorsten Blum <thorsten.blum@linux.dev>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	linux-mips@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: BCM63XX: Replace strcpy() with strscpy() in board_prom_init()
-Date: Tue, 22 Apr 2025 09:42:55 +0200
-Message-ID: <20250422074257.544016-2-thorsten.blum@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UWT8zpQs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1566FC4CEE9;
+	Tue, 22 Apr 2025 07:44:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745307865;
+	bh=IkpCJe6iK3e0zmgzu4HOe7msfQx4RRcdkVXQ/zE59nM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UWT8zpQsdCGRmAI20Z+3AYlApwN36Cmhj6cwB5IbEbE/IARvNVu0tWdo4mIoQ7tla
+	 jNP/ANqauZjnvPJUDWeJ8zADeaD5f36aQ2RWsAs+HUooXKhuTuo6yu/E07zazBROX6
+	 xznqv+BPsU6Ncghg2SNTxJe37syfeyaxQcr9WAF/Foen5407hErRIFOLLYGI7pgvGN
+	 CyJIqFICxTnqDUBmc1sGRXnHfviqEbMmgDyblOZ2xNZJFl02u19GY6Nbpt7EgtHA8c
+	 CrDGpNwLguDhhfqO7ogHBVTsHjC7XaO9VuKIwQLJaY5iHytN6aNXhIGafF6/jV6lt1
+	 HqZxDZY2NWy3Q==
+Date: Tue, 22 Apr 2025 10:44:19 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+	Kanchan Joshi <joshi.k@samsung.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Nitesh Shetty <nj.shetty@samsung.com>
+Subject: Re: [PATCH v8 24/24] nvme-pci: optimize single-segment handling
+Message-ID: <20250422074419.GD48485@unreal>
+References: <cover.1744825142.git.leon@kernel.org>
+ <670389227a033bd5b7c5aa55191aac9943244028.1744825142.git.leon@kernel.org>
+ <20250422043955.GA28077@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422043955.GA28077@lst.de>
 
-strcpy() is deprecated; use strscpy() instead.
+On Tue, Apr 22, 2025 at 06:39:56AM +0200, Christoph Hellwig wrote:
+> On Fri, Apr 18, 2025 at 09:47:54AM +0300, Leon Romanovsky wrote:
+> > From: Kanchan Joshi <joshi.k@samsung.com>
+> > 
+> > blk_rq_dma_map API is costly for single-segment requests.
+> > Avoid using it and map the bio_vec directly.
+> 
+> This needs to be folded into the earlier patches or split prep patches
+> instead of undoing work done earlier, preferably combined with a bit
+> of code movement so that the new nvme_try_setup_prp_simple stays in
+> the same place as before and the diff shows it reusing code.
+> 
+> E.g. change
+> 
+> "nvme-pci: use a better encoding for small prp pool allocations" to
+> already use the flags instead of my boolean, and maybe include 
+> abort in the flags instead of using a separate bool so that we
+> don't increase hte iod size.
+> 
+> Slot in a new patch after that that dropping the single SGL segment
+> fastpath if we think we don't need that, although if we need the PRP
+> one I suspect that one would still be very helpful as well.
+> 
+> Add a patch if we want the try_ version of, although when keeping
+> the optimization for SGLs as well that are will look a bit different.
+> 
+> I'm happy to give away my patch authorship credits if that helps with
+> the folding.
 
-Link: https://github.com/KSPP/linux/issues/88
-Cc: linux-hardening@vger.kernel.org
-Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
----
- arch/mips/bcm63xx/boards/board_bcm963xx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I used this patch separation for two reasons:
+1. Your conversion patch is absolutely correct and this patch is an
+optimization.
+2. Wanted to make sure that I'll post to the ML the code exactly as it
+was tested.
 
-diff --git a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-index 9cc8fbf218a5..c5617b889b1c 100644
---- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
-+++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-@@ -764,7 +764,7 @@ void __init board_prom_init(void)
- 			snprintf(cfe_version, 12, "%s", (char *) &cfe[4]);
- 		}
- 	} else {
--		strcpy(cfe_version, "unknown");
-+		strscpy(cfe_version, "unknown");
- 	}
- 	pr_info("CFE version: %s\n", cfe_version);
- 
--- 
-2.49.0
+I'll try to split/fold this patch now.
 
+Thanks
