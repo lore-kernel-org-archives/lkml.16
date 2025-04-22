@@ -1,182 +1,144 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48EA32139CE;
-	Tue, 22 Apr 2025 10:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52921F0E49
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 10:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745317677; cv=none; b=lWX6i2ZiWKHciNX3B2JB1so8oJGtN0vapXeV4qdFWw4xHEVP68QVThUCRrGCfBNCUiC9yy/CTp95kWCnkcIvwytVOhHD77fenVDr1kPXx2Rq+w/3RLi4InrIvhyNP2pED008s2TJ/mrHvOFW9463/R+iWDiknY4fBBr6I1t3dWs=
+	t=1745317751; cv=none; b=T/psRJOwV15XrxpuibuYhQbu9k0xvTubrttIKvHyORwowLFQgN5Mp6yqZVvEd2NWA0ED8zJXgqvrWGwuWCAnm4HM9FYcxdq4g2Gx5lIeOjibt/Ew8/Y/IPf65h4QdZc0T46S9iF3yNiqpT33lPZEd6G0d30mDa5i2B94yz7wKiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745317677; c=relaxed/simple;
-	bh=B2UZi9ugbozdfNpiJDP5cOj3pRIQYoJbDLco0LpvDNM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Lpj9klk7d7ShpJpN8fsbgidVCacS9cjubnp4azHZjzXAVjVrs62WvfgeqyOuRyUEZvszj7I+GFEgKrmHkYFX0zD4LgBAM9XI2jL4jRkNAF5y94vP0zKroux6dZbOpK/aG5pzvzhfXVqH6K3w7ARG5P11ms1F8u/A3ApMmvn0/m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=EfgEK072; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745317751; c=relaxed/simple;
+	bh=OtKUFMsCCXQuyXdiECTB3D04cRKpceApukek+qlG2Xk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=l0Cy2ukTBjk9dE8auNMqkx+gnYu9a0UCyy8OVug7dK/xWGCmjgujdzYE6Ir8JtFGPG4F5TwE2EmvntiMB9c87MuZUXRneF9WpuQ83IRtN4nHQ51iE87N6Le+DhxC4/0LOtWavzXHAgHZhVIjZb7TexKKq7Pv8l6dRv2OymGWvoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com; spf=pass smtp.mailfrom=inventec.com; dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b=QKymG9BT; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=inventec.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inventec.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EfgEK072"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MARlGm1181497
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 05:27:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745317667;
-	bh=+tqEJztsEGWVhO4AAXHU0QU5LU+OnvvfKfNHDEDrh+I=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=EfgEK072ZvCgXi6UPy5O9lKiZLuZ3SpBheWeO8X1yZ3jramrmXyXkVRHDBiVBQKlK
-	 EtIpygt05eMkYrYipLoI7pEqy7lkK0ixc7uFZ4RDzspHHaxi2ey/JwrkTC04eeFdmb
-	 Mir8OGBUqYtmc4+3wbPsn0ujb/4gYVkDwe77QL60=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MARlxQ006133
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 22 Apr 2025 05:27:47 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
- Apr 2025 05:27:46 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 22 Apr 2025 05:27:46 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MARj4Y125210;
-	Tue, 22 Apr 2025 05:27:46 -0500
-Date: Tue, 22 Apr 2025 15:57:45 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: "Kumar, Udit" <u-kumar1@ti.com>
-CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>
-Subject: Re: [PATCH 2/7] arm64: dts: ti: k3-j7200-main: switch to 64-bit
- address space for PCIe1
-Message-ID: <7f6ea98c-df6d-4c94-8f42-76cc8306b6c4@ti.com>
-References: <20250417120407.2646929-1-s-vadapalli@ti.com>
- <20250417120407.2646929-3-s-vadapalli@ti.com>
- <8b707fbc-9d82-48d0-a227-366d4e83e8a7@ti.com>
- <231e009e-0dc2-4876-b052-d11b64ee5a0a@ti.com>
- <d517b2bb-2bf2-44ec-8509-6281c5566972@ti.com>
- <8d43fdc6-760d-49cd-b4f5-95d13a52220b@ti.com>
- <8c7b68fc-c275-45c3-830a-3ea3174f38f5@ti.com>
+	dkim=pass (2048-bit key) header.d=inventec.com header.i=@inventec.com header.b="QKymG9BT"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so5171303b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 03:29:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=inventec.com; s=google; t=1745317746; x=1745922546; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wtwwt/qGVMfOAJ61/DZj57iTfzywR/wMkolYpyXZwMg=;
+        b=QKymG9BTaQM/G9cl6fJZmX1DLUhOVviZlTuu7TEKn/JLEzF1C1oBOCeG7qYH7i9fmv
+         CX1ciJbvdYkLqUj2qDmGnQjr/NjYTseiG3TQs9jDGD1q75jhbpXyx+IVe9hLIyKAJuPN
+         2Wmrxxc+WlY4HnZnm3acXCvQpv+RaD8MA9EbNzCN0tDgwmdZa+b260/7OkQGncMoh8Jg
+         diTGNiXX/w5uoOpGcerSSWr49haDExVjHl4FRYMKUc6ZXU8WMHjnuGMPxFEUJCJcTPq5
+         N2tAJjHRQg1uuUoaPIapfIOu4YcmWjvHdyCZIFwGMwu68SfMqasogjvnZPE6J5s3Nh1E
+         yjIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745317746; x=1745922546;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wtwwt/qGVMfOAJ61/DZj57iTfzywR/wMkolYpyXZwMg=;
+        b=OJUq23ayoR6X4UU5o8QA8MkTnJ61WopiGav02m9a7VuJ2eXYIdgnixner6sjlcEj4/
+         3JMpL4eZ3fni5A60NJGvuzTd+p83HJvVCizgsnCQuTGvyqP2RoiH5PqcnvI/pgxtxfA2
+         pHDwnhZv95O6eKVs3bfIa57MNolR5O1NpiJTUJcZ6yliWWaFyqlEBIVrkjzzOMpqZgFZ
+         GxbeawX/MOV6tg/RyLgb0a1fJkgQgxokc4OjGqO5QzAIpSe0nTmpUNIF8k1AuXIE+wDx
+         AO6duZMrpj6IkxuhGTBGHb+JgaYfvK00K9TE1TUwwKjMM279FkhkUiz3cEC87pxnLvnX
+         ESLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWg/WCWX1kf6DWbsWQ/yx7hB51mEXg8vYj0KrmYd0py2PR8fZcylv8rm5ZTJDtFYgRsF0eMfwjxYwEx4OQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+sK3zzEOBaT2mNi3FVt7N+j6nKV71lrKU90jypraOVKiYS8D3
+	IQBC4KupREoc9LvzuGY0quyn2ihgCOixtHaWaBnAWClxMweSu8/kSPaKK+De5fA=
+X-Gm-Gg: ASbGncsXTufrwumwQXfid+5MNmMGUN7Q2eyhlvjKPOMZKYBJab8m6NbfWt4ezTy69CQ
+	NPAa1rtpTd14WcMtyUH8e4VuzemV3xEG3u7UEfgKyyaZd7LwDKYUPcXjMzzHtvXHXJLmDMYfWqt
+	0fTI8V5jYysTYQRW0p2y51b5JMN0F+hakeeTSihpgSa2+zakZtMIIXb5wG4zo6za9utDTMyGrz7
+	0LYJjGL9fDHJqw+NoJZknOWIDFYIcY4nOeMAlXjZaVEbhRLxMHRC0sk22JwKzyH7kxCKcojtpRL
+	3qUoVHBk3SQYUcPLw2wxBmsS133nc0sTHQZBRGOM0jtOtcipT2Vn/btwAJkmfUTitD/DhP86qwX
+	+5HHmSMh1crWE4H4KY7AIa9dezWWlGrG335NCMAfv8mNqSO9f+t8LVKO5oog=
+X-Google-Smtp-Source: AGHT+IGWvQiFpLLb/JnK+vxMBI1uFfmAhPCio9warje9sSHRSfH/F8j7WFctbSygpqJcvFqmOTJrmg==
+X-Received: by 2002:a05:6a21:3a83:b0:1e1:9e9f:ae4 with SMTP id adf61e73a8af0-203cc6e03e3mr20985847637.13.1745317745940;
+        Tue, 22 Apr 2025 03:29:05 -0700 (PDT)
+Received: from localhost.localdomain (60-250-242-163.hinet-ip.hinet.net. [60.250.242.163])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13c1c40sm5541763a12.33.2025.04.22.03.29.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 03:29:05 -0700 (PDT)
+From: Chiang Brian <chiang.brian@inventec.com>
+X-Google-Original-From: Chiang Brian <chiang.brian@inventec.corp-partner.google.com>
+To: linux@roeck-us.net
+Cc: chiang.brian@inventec.com,
+	gnoack@google.com,
+	gpiccoli@igalia.com,
+	jdelvare@suse.com,
+	kees@kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	mic@digikod.net,
+	tony.luck@intel.com
+Subject: Re: [PATCH v5] hwmon: (pmbus/tps53679) Add support for TPS53685
+Date: Tue, 22 Apr 2025 18:20:57 +0800
+Message-Id: <20250422102057.2846899-1-chiang.brian@inventec.corp-partner.google.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <2628dd1f-1b8f-478a-aa89-4c0f78b27962@roeck-us.net>
+References: <2628dd1f-1b8f-478a-aa89-4c0f78b27962@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <8c7b68fc-c275-45c3-830a-3ea3174f38f5@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Apr 21, 2025 at 01:29:47PM +0530, Kumar, Udit wrote:
-> 
-> On 4/20/2025 7:48 PM, Siddharth Vadapalli wrote:
-> > On Sun, Apr 20, 2025 at 10:17:46AM +0530, Kumar, Udit wrote:
-> > > Hello Siddharth
-> > > 
-> > > On 4/20/2025 8:33 AM, Siddharth Vadapalli wrote:
-> > > > On Sat, Apr 19, 2025 at 11:35:50PM +0530, Kumar, Udit wrote:
-> > > > 
-> > > > Hello Udit,
-> > > > 
-> > > > > On 4/17/2025 5:34 PM, Siddharth Vadapalli wrote:
-> > > > > > The PCIe0 instance of PCIe in J7200 SoC supports:
-> > > > > > 1. 128 MB address region in the 32-bit address space
-> > > > > > 2. 4 GB address region in the 64-bit address space
-> > > > > > 
-> > > > > > The default configuration is that of a 128 MB address region in the
-> > > > > > 32-bit address space. While this might be sufficient for most use-cases,
-> > > > > > it is insufficient for supporting use-cases which require larger address
-> > > > > > spaces. Therefore, switch to using the 64-bit address space with a 4 GB
-> > > > > > address region.
-> > > > > > 
-> > > > > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> > > > > > ---
-> > > > > >     arch/arm64/boot/dts/ti/k3-j7200-main.dtsi | 7 ++++---
-> > > > > >     1 file changed, 4 insertions(+), 3 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-> > > > > > index 5ab510a0605f..e898dffdebbe 100644
-> > > > > > --- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-> > > > > > +++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-> > > > > > @@ -759,7 +759,7 @@ pcie1_rc: pcie@2910000 {
-> > > > > >     		reg = <0x00 0x02910000 0x00 0x1000>,
-> > > > > >     		      <0x00 0x02917000 0x00 0x400>,
-> > > > > >     		      <0x00 0x0d800000 0x00 0x00800000>,
-> > > > > > -		      <0x00 0x18000000 0x00 0x00001000>;
-> > > > > > +		      <0x41 0x00000000 0x00 0x00001000>;
-> > > > > >     		reg-names = "intd_cfg", "user_cfg", "reg", "cfg";
-> > > > > >     		interrupt-names = "link_state";
-> > > > > >     		interrupts = <GIC_SPI 330 IRQ_TYPE_EDGE_RISING>;
-> > > > > > @@ -778,8 +778,9 @@ pcie1_rc: pcie@2910000 {
-> > > > > >     		device-id = <0xb00f>;
-> > > > > >     		msi-map = <0x0 &gic_its 0x0 0x10000>;
-> > > > > >     		dma-coherent;
-> > > > > > -		ranges = <0x01000000 0x0 0x18001000  0x00 0x18001000  0x0 0x0010000>,
-> > > > > > -			 <0x02000000 0x0 0x18011000  0x00 0x18011000  0x0 0x7fef000>;
-> > > > > > +		ranges = <0x01000000 0x00 0x00001000 0x41 0x00001000 0x00 0x00100000>, /* IO (1 MB) */
-> > > > > > +			 <0x02000000 0x00 0x00101000 0x41 0x00101000 0x00 0x08000000>, /* 32-bit Non-Prefetchable MEM (128 MB) */
-> > > > > > +			 <0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>; /* 64-bit Prefetchable MEM (4 GB - (129 MB + 4 KB)) */
-> > > > > Sorry for novice question,
-> > > > > 
-> > > > > with this change,  How do you see  old EP working which supports 32 bit
-> > > > > addressing,
-> > > > > 
-> > > > > or some translation is possible ?
-> > > > > 
-> > > > > 0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
-> > > > > 
-> > > > > to
-> > > > > 
-> > > > > 0x63000000 0x00 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
-> > > > I didn't understand the question completely, but I shall try to explain
-> > > > the changes being made which might possibly answer your question.
-> > > If I understood well then what you are doing here
-> > > 
-> > > 0x43000000 0x41 0x08101000 0x41 0x08101000 0x00 0xf7eff000>
-> > > 
-> > > PCIe address
-> > > 0x43000000 0x41 0x08101000 -->
-> > > Property 0x43
-> > > 0x43 as npt000ss ->relocatable, prefetch and 64 Bit memory space PCIe Bus address  0x41 0x08101000
-> > > CPU address space 0x41 0x08101000
-> > > This will work fine, if EP supports 64 bit addressing scheme.
-> > > 
-> > > In case, we want to work with EP of 32 Bit, Then do you see , we need to relocate PCIe (lower 32 bits) to CPU address (64 bits)
-> > A total of 3 Address Regions have been defined:
-> > 1. 1 MB IO in the 32-bit PCIe Bus Address Space
-> > 2. 128 MB Non-Prefetchable MEM in the 32-bit PCIe Bus Address Space
-> > 3. (4 GB - 129 MB - 4 KB) Prefetchable MEM in the 64-bit PCIe Bus
-> > Address Space
+On 3/14/25 10:44, Guenter Roeck wrote:
+> On 3/13/25 20:30, Chiang Brian wrote:
+> > The TPS53685 is a fully AMD SVI3 compliant step down
+> > controller with trans-inductor voltage regulator
+> > (TLVR) topology support, dual channels, built-in
+> > non-volatile memory (NVM), PMBus interface, and
+> > full compatible with TI NexFET smart power
+> > stages.
+> > Add support for it to the tps53679 driver.
 > > 
-> > '1' and '2' above provide backward compatibility with Endpoint Devices
-> > that can only support 32-bit PCIe Bus Addressing. The __newly__ added
-> > '3' enables Endpoint Devices that support 64-bit PCIe Bus Addressing to
-> > claim larger Memory Address Space on top of what is supported by '1' and
-> > '2'.
+> > Signed-off-by: Chiang Brian <chiang.brian@inventec.com>
+> > ---
+> > v4 -> V5:
+> >      1. document the compatible of tps53685 into dt-bindings
+> > 	2. add the buffer length as argument for %*ph
+> > 	3. Add Changelog
+> > v3 -> V4:
+> >      1. Add length comparison into the comparison of "id",or it may be true when
+> > 	   the substring of "id" matches device id.
+> > 	2. Restore `return 0;` in `tps53679_identify_chip()`
+> > V2 -> V3:
+> >      1. Remove the length comparsion in the comparison of "id".
+> > V1 -> V2:
+> > 	1. Modify subject and description to meet requirements
+> > 	2. Add "tps53685" into enum chips with numeric order
+> > 	3. Modify the content of marco "TPS53681_DEVICE_ID" from 0x81 to "\x81"
+> > 	   Add marco "TPS53685_DEVICE_ID" with content "TIShP"
+> > 	4. Modify the type of "id" from u16 to char* in `tps53679_identify_chip()`
+> > 	5. Modify the comparison of "id". It will be true if the string "id" matches
+> > 	   device ID and compare with type char*,
+> > 	6. Add the length comparsion into the comparison of "id".
+> > 	7. Modify "len" as return code in `tps53679_identify_chip()`
+> > 	8. Output device error log with %*ph, instead of 0x%x\n"
+> >      9. Use existing tps53679_identify_multiphase() with argument
+> > 	   "TPS53685_DEVICE_ID" in tps53685_identify() rather than creating one
+> > 	   tps53685_identify_multiphase()
+> > 
+> > boot-log:
 > 
-> Thanks Siddharth,
-> 
-> I understand, you are enabling 64 bit addressing, keeping previous
-> addressing scheme unchanged.
-> 
-> Since, you are changing, it will be good to give max possible addresses for
-> 32 bits EP.
-> 
-> or
-> 
-> If you are saying , 32 bit EP has to be limited to 128MB then
+> This is completely useless noise.
 
-Based on the offline discussion, since the total address region is 4 GB,
-and given that all of it is addressable in the 32-bit PCIe Bus Address
-Space, I will update the patch series to allocate the 4 GB region as:
-1. 1MB IO in the 32-bit PCIe Bus Address Space
-2. (4GB - 1MB - 4KB) Non-Prefetchable MEM in the 32-bit PCIe Bus Address
-   Space
+Sorry for the delay, I've got the approval for posting the boot-log from our 
+customer. I was afraid that there's any confidential information in the boot-log
+of our project. So, I decided to post a boot-log with my laptop then, and I'll 
+append a new one once new patch has been finished and uploaded. 
 
-Regards,
-Siddharth.
+And thanks for the suggestion of adding a buffer length for %*ph.
+The kernel crashes and keeps rebooting without adding that.
+
+In addition, should I in-reply-to the existing thread or create a new one 
+since the dt-bindings should be included in the same thread as well?
+
+Thank you.
+
+Best Regards,
+Brian Chiang
