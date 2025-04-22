@@ -1,158 +1,140 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010049.outbound.protection.outlook.com [52.101.69.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08661EFFAB;
-	Tue, 22 Apr 2025 09:06:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745312804; cv=fail; b=VmB/Lfsgyg/m3XCbq2xtIXxbV5A1gPha9k8eJ7FnR15BlK+iiFkb/L9RvteIxo+0H8hyjSl7fvc2yzWylCj7TQEU15vYfpQA53wbzzeHVuesiUvbk/xnQesiUSZA5iVXuljWQRZcRE0GpC5IounRCcCzUlKNkHUurotwUShELgU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745312804; c=relaxed/simple;
-	bh=DoMmLt05+dVQaGSQLDhFL6olUM9fU2ScDn4mSfIdfOI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jhox0POXt9VJnByNDlS4V43MISLyrXfHaWE0uIEVORNH6VNM+T96sZZbVLwRJraYupsOhoRFt5bLYtdKVaDpcTWtfS0+fUbl21+1HVXGTSMV8+2zJc+wxNSjKFgCnrMJX/yLtP7vxOg5UuFQblR/ELIV3zbBiInFo6udfCNibBY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=CDiAeWH9; arc=fail smtp.client-ip=52.101.69.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
+Received: from pku.edu.cn (mx18.pku.edu.cn [162.105.129.181])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB8511EFF8D
+	for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 09:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.105.129.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745312912; cv=none; b=Yf87pE1vzCmMP1JUykB6bmlr0b2ianZ7qfRH4x1pNiKNF1hHL+7P6hjHjictFoNo1o5zqVx2xG+sFxMJk20JqzpttI2oOuKlavbU8ndTRxbIT9jswFi9RSR89JV8Y08EfIlrc1KxXyhpATIKyBoM/hpVHFH2gf3gWDs7mkf7/+M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745312912; c=relaxed/simple;
+	bh=Sp25wwf7qqFpEL4lSw3Bf5tva/tvWrwtapTAmZEwo+8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uipkYNQSJIady88ukGqBBEpDc7z4r4bKWnV+lcPPhaTSdcCXqAYCfR/TGEbFSDBlcCUBZuMdz+gqAye/xNs/zpFdYUVCgBZHZVbRSlJTDKq5upU80luX2Ezj8wR5QUj+rc9ZEPHz0eR2JJLPH0rsXkTOFaTh7Hij87lfE/LNEv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn; spf=pass smtp.mailfrom=pku.edu.cn; dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b=ImZG9Pnv; arc=none smtp.client-ip=162.105.129.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=pku.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pku.edu.cn
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="CDiAeWH9"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=aDCu5ZczMx2OltNrBWWif1yK0SbtkQTmiJy+eR78BTuLDLdn6dFfGVQ+BGuXD7zdY/eBXDDOKeN4fBjRt1S68BVydbIMisRxwPp0oqYH8PwBjrJtaqRoAY8mKTHC1sHFi9MahJTjut1e5nBaR6siOT/vaybkmC5qSbbTZsC24TpM4anV9NinHrF09HMIF6TdY3YBpD+OOrueUzotfVzIrVXusaLS8SxPPNsmMZdEhhVwpCLTC69gU9cIKcvVBUSFbzvTJjYjs1Q0tKp/dSYiuXHYVqubvbEf0V+L4e/OQwp/W/+eNVUuX+YEJVLk8rw3a5m/7jF8hi/bKM8HwuSUIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hrTKIOumvKP8HT8o1Xi8ttGxMYZBT78PsbScPtmIjY8=;
- b=Zy34FzwhPp3BhGZ0mBxDRYbtJ0jf7ITF8xC9jESKV43oy+xNgJYZLVHncbt2FBru6XqR8g9WuqpU4/8IcyPAIi7/PvlmaHqa+Rk1YNL1kteSAIYW1R+iEqQ3UIaDHddHqsFXHrhzlMlFD9prhtJf9qGfecr2Qbr2UfQ/mVzGqRqQJcKQAQkPS36iyNZ+v3wajTiI6l616P4GFrCvjiHUutmay4IN4fJW6YceE7lWU74xZMMt5dLVPNYsqlKkqALczyKe73Xp8DFB0vscsCOLefzGPwZJi84HVv06jpGgK998/Y27xtj9T9SCBONFqK/HvkrqrBmK2ZBK5gq5L0bn+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 193.8.40.94) smtp.rcpttodomain=vger.kernel.org
- smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
- action=none header.from=leica-geosystems.com; dkim=none (message not signed);
- arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hrTKIOumvKP8HT8o1Xi8ttGxMYZBT78PsbScPtmIjY8=;
- b=CDiAeWH9+Ya56WdRPf1FxoBiQyPhsFkIvRGMdlrQ/zRfUm+YCXSVQO+lcSUp/hJplDjsvIgLuSp8VEZmXY9u6k6D0xmxmLYrceKM8uW9WkBbzol6GJ9MxWX9+leyQ+ZB3lgWItajWtvjbX4Hho7uLvy+n3boB9VXdhbC4u7UwKo=
-Received: from AM6PR10CA0027.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:89::40)
- by AM8PR06MB7556.eurprd06.prod.outlook.com (2603:10a6:20b:354::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.22; Tue, 22 Apr
- 2025 09:06:38 +0000
-Received: from AM4PEPF00027A62.eurprd04.prod.outlook.com
- (2603:10a6:209:89:cafe::50) by AM6PR10CA0027.outlook.office365.com
- (2603:10a6:209:89::40) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Tue,
- 22 Apr 2025 09:06:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
- smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
-Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
- designates 193.8.40.94 as permitted sender) receiver=protection.outlook.com;
- client-ip=193.8.40.94; helo=hexagon.com; pr=C
-Received: from hexagon.com (193.8.40.94) by
- AM4PEPF00027A62.mail.protection.outlook.com (10.167.16.71) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Tue, 22 Apr 2025 09:06:36 +0000
-Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
-	 Tue, 22 Apr 2025 11:06:36 +0200
-From: Johannes Schneider <johannes.schneider@leica-geosystems.com>
-To: dmurphy@ti.com
-Cc: andrew@lunn.ch,
-	davem@davemloft.net,
-	f.fainelli@gmail.com,
-	hkallweit1@gmail.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux@armlinux.org.uk,
-	michael@walle.cc,
-	netdev@vger.kernel.org,
-	bsp-development.geo@leica-geosystems.com,
-	Johannes Schneider <johannes.schneider@leica-geosystems.com>
-Subject: [PATCH net v2] net: dp83822: Fix OF_MDIO config check
-Date: Tue, 22 Apr 2025 11:06:34 +0200
-Message-Id: <20250422090634.4145880-1-johannes.schneider@leica-geosystems.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=pku.edu.cn header.i=@pku.edu.cn header.b="ImZG9Pnv"
+Received: from pku.edu.cn (unknown [10.4.225.203])
+	by mtasvr (Coremail) with SMTP id _____7Dwaw9_XAdoLaQ+AQ--.6526S3;
+	Tue, 22 Apr 2025 17:08:16 +0800 (CST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=pku.edu.cn; s=dkim; h=Received:Date:From:To:Cc:Subject:
+	Message-ID:References:MIME-Version:Content-Type:
+	Content-Disposition:In-Reply-To; bh=xkmO7o7TalhowvM/TAuF7xAW+te2
+	csJOkvZPiWkEcVA=; b=ImZG9PnvBu8HnsZ+jpI6Xvru2jWZuq2ECkT1cONufd/v
+	ghEH3i+GxPT8cU/DvTMxo40HTDkfPbd7W+N0vPpeb6wbd8uGsOlp60OIYSE2ehlL
+	NBNwtUJY/pPfKSAjIAJor7iMoMQz2PqpsR/JCqYOYU583No9M78kqON0DOpp2Vk=
+Received: from localhost (unknown [10.4.225.203])
+	by front01 (Coremail) with SMTP id 5oFpogBHEcZ3XAdoYrFxAA--.50827S2;
+	Tue, 22 Apr 2025 17:08:13 +0800 (CST)
+Date: Tue, 22 Apr 2025 17:08:06 +0800
+From: Ruihan Li <lrh2000@pku.edu.cn>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Ruihan Li <lrh2000@pku.edu.cn>
+Subject: Re: [PATCH v2] mm/mm_init: Don't iterate pages below ARCH_PFN_OFFSET
+Message-ID: <asgvzub435pimtmjt7bsve2hyon6as5twncg3scmdwztvr2tct@nlaw5qsyw33g>
+References: <20250419122801.1752234-1-lrh2000@pku.edu.cn>
+ <aAZ1RzQdgllQYM04@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 22 Apr 2025 09:06:36.0207 (UTC) FILETIME=[D9A48BF0:01DBB365]
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM4PEPF00027A62:EE_|AM8PR06MB7556:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 97c50340-b0e3-4b70-7487-08dd817cfc61
-X-SET-LOWER-SCL-SCANNER: YES
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9npoyGPo/3hjz0XcANwZpcnjvFu/XwoAtrZRiW+EPLMuj9Umb1z2U/jZvoHf?=
- =?us-ascii?Q?jwcblg2zWQTuikQ6Spokd7xrqjRpiTZOdDobg/x80zoG24FjWBsh/Uyhgn6y?=
- =?us-ascii?Q?XZAF5MVpAL1RvlEeY4fKQEUk1DHARxugzxATFUJkI4rlLZr8S1aIjSIl5VB1?=
- =?us-ascii?Q?bLZyJ0fviyvB8TEjfVfMK0bmH8/ze1c7lLZSDIsnbT2SXmB4uVyNZcR8S1KI?=
- =?us-ascii?Q?0aXiDr7BBYgD8Bgtr0bmHPbhqiyogTupHxS0/xQHdku3TzKlXorSQbGUw4It?=
- =?us-ascii?Q?/gJw3vCSIhxowQZuvL/NaxH/g45JPhaxQ9/C1X6Ak8TNZz8tZjwFolkNXWAh?=
- =?us-ascii?Q?8GSczUj246FbckAOtPWaVh+hxZhI9vpxYrOmW/4G/BC8JRN1exzKee5JfHhk?=
- =?us-ascii?Q?RTAbWww4lr29KGgn2krpVodX6HddD5+wv5sj8kphBJ5BxnIgUX5xoURjCvba?=
- =?us-ascii?Q?r8Jh7/3AG0EvG8bxF2+eQewZbdcg/LA2M8nuupx0dkK9WZA5quONG7SDES0w?=
- =?us-ascii?Q?SkGG39R73LlsbaKbesjNl5XWekdtEtj+79ognLl4keNrlg6m5Xl+SLSJ8Taq?=
- =?us-ascii?Q?FT2ltRuGAxMbrQDUZQZBSoj4Wf8ecZ/tzdzilNRnxiN9k7G+Ezk5G8dzadOF?=
- =?us-ascii?Q?ZFruzEmux4vVsIL0FQ/MYrsg4CNQUmHEzrX4rwQxRovVSVhklTRLM36pmzhe?=
- =?us-ascii?Q?zub2vbNqczauCaXe8bVPYzcpDJQxkXPnD+4SUxzeelDR9M3CScf8fH6bhuR/?=
- =?us-ascii?Q?XZKbdzcQSZ8XdwzFbMPlJyOGQrJmRc0QXZbzZ0mTizppM5uZ02icbB+X+5W3?=
- =?us-ascii?Q?SuFNWKJ8V3FLGNtRwea7oeeyiKsV3FUx835SUGhy4x/UUjmk/sHdzvw+LPe3?=
- =?us-ascii?Q?c4WZXbwwSiJlMDM8cuRkCrn7ZzIC7ub1ItPOrMiRHMCFZM1L6BnLBE/MxoNk?=
- =?us-ascii?Q?oNHAwRYxmDcTLf4AYiN+AHEV1lYTCzioCRBryOKL4OHsjIIWsQXz/Kyr5QIh?=
- =?us-ascii?Q?Xfes/FwxxTMnTWo6ovl1+0dANGnfs44mqM00fmtmqqTpGpFqDzWQhMhX6Xi7?=
- =?us-ascii?Q?VJHsniIS/D2P2X8fdtqOuT3R/ybR4D4ev9nC3mtDNz+th3XYSkfymKTHYmW2?=
- =?us-ascii?Q?QIZMZsGEviw4o6dH713cCpoHi6FH8WlZFBvk/6igI2BCxXU1Z0IGtlcFDinv?=
- =?us-ascii?Q?deCmatHLfKQMRVrYn0ECKJdvZfL2vH3CHoTeHFq4mVBtMlrro6qnBCnDTpX6?=
- =?us-ascii?Q?x63/4KumREahw1qRsPNLUtgolXrAgSqsTC8PtU2QC0wc8s2BgzkK88d+bZJM?=
- =?us-ascii?Q?0+Qm2ooTO5Ye2nzZxW1T5Vp+/gZBMwbmP4Dc98iJEHE9sMSO2tOmgxGgxDKv?=
- =?us-ascii?Q?fVgwHscEc20ZQaFhJMjSbJpAfe5chE/3oebIDIu2ntibCx5VHad/Ukit01vc?=
- =?us-ascii?Q?y1luqfnn07+q2sOLfPXGJEWgRMBs0lH0F4mcZtqKZkmqTL/V9kDKH59v1/Ik?=
- =?us-ascii?Q?TMAlYUJjAqU60EMk9Hzv/Ghc9HJqE9JMoeA0?=
-X-Forefront-Antispam-Report:
-	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: leica-geosystems.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2025 09:06:36.5713
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97c50340-b0e3-4b70-7487-08dd817cfc61
-X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AM4PEPF00027A62.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR06MB7556
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAZ1RzQdgllQYM04@kernel.org>
+X-CM-TRANSID:5oFpogBHEcZ3XAdoYrFxAA--.50827S2
+X-CM-SenderInfo: yssqiiarrvmko6sn3hxhgxhubq/1tbiAgEIBWf35XUDOwAgsW
+X-CM-DELIVERINFO: =?B?OSVrjqaAH6dYjNjDbLdWX9VB7ttaQFyXTaecYZzOeDisy/krtsX5TsLkpeAzENeCPc
+	0+BDdXjm5Mlm64oODP/CxX7CdHrAr06XGcwRbF9fF2WKf3sOM4KfjVzXEXUZJNGnDxNS+C
+	CLbkwtEUkO2DmRqJzedd8mz6gv+Cykv5cvqS1q3k21LQR7vDiuSLjtOS7+y72w==
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+	ZEXasCq-sGcSsGvfJ3UbIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnUUvcSsGvfC2Kfnx
+	nUUI43ZEXa7xR_UUUUUUUUU==
 
-When CONFIG_OF_MDIO is set to be a module the code block is not
-compiled. Use the IS_ENABLED macro that checks for both built in as
-well as module.
+Hi Mike,
 
-Fixes: 5dc39fd ("net: phy: DP83822: Add ability to advertise Fiber connection")
-Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
----
- drivers/net/phy/dp83822.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for your review!
 
-diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-index 14f361549638..e32013eb0186 100644
---- a/drivers/net/phy/dp83822.c
-+++ b/drivers/net/phy/dp83822.c
-@@ -730,7 +730,7 @@ static int dp83822_phy_reset(struct phy_device *phydev)
- 	return phydev->drv->config_init(phydev);
- }
- 
--#ifdef CONFIG_OF_MDIO
-+#if IS_ENABLED(CONFIG_OF_MDIO)
- static const u32 tx_amplitude_100base_tx_gain[] = {
- 	80, 82, 83, 85, 87, 88, 90, 92,
- 	93, 95, 97, 98, 100, 102, 103, 105,
--- 
-2.34.1
+On Mon, Apr 21, 2025 at 07:41:43PM +0300, Mike Rapoport wrote:
+> On Sat, Apr 19, 2025 at 08:28:01PM +0800, Ruihan Li wrote:
+> > Currently, memmap_init initializes pfn_hole with 0 instead of
+> > ARCH_PFN_OFFSET. Then init_unavailable_range will start iterating each
+> > page from the page at address zero to the first available page, but it
+> > won't do anything for pages below ARCH_PFN_OFFSET because pfn_valid
+> > won't pass.
+> > 
+> > If ARCH_PFN_OFFSET is very large (e.g., something like 2^64-2GiB if the
+> > kernel is used as a library and loaded at a very high address), the
+> > pointless iteration for pages below ARCH_PFN_OFFSET will take a very
+> > long time, and the kernel will look stuck at boot time.
+> > 
+> > This commit sets the initial value of pfn_hole to ARCH_PFN_OFFSET, which
+> > avoids the problematic and useless iteration mentioned above.
+> > 
+> > This problem has existed since commit 907ec5fca3dc ("mm: zero remaining
+> > unavailable struct pages").
+> > 
+> > Signed-off-by: Ruihan Li <lrh2000@pku.edu.cn>
+> > ---
+> > Link to v1:
+> >  - https://lore.kernel.org/linux-mm/20250418162727.1535335-1-lrh2000@pku.edu.cn/
+> > Changes since v1:
+> >  - Removed the unnecessary Fixes tag.
+> >  - Fixed the build issue for CONFIG_SPARSEMEM.
+> > 
+> >  mm/mm_init.c | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> > 
+> > diff --git a/mm/mm_init.c b/mm/mm_init.c
+> > index 84f14fa12..a697a83ff 100644
+> > --- a/mm/mm_init.c
+> > +++ b/mm/mm_init.c
+> > @@ -969,6 +969,15 @@ static void __init memmap_init(void)
+> >  	unsigned long hole_pfn = 0;
+> >  	int i, j, zone_id = 0, nid;
+> >  
+> > +#ifdef CONFIG_FLATMEM
+> > +	/*
+> > +	 * Pages below ARCH_PFN_OFFSET are invalid as far as pfn_valid is
+> > +	 * concerned, so don't waste time iterating on them when looking
+> > +	 * for holes.
+> > +	 */
+> > +	hole_pfn = ARCH_PFN_OFFSET;
+> > +#endif
+> > +
+> 
+> I'd prefer a solution for both FLATMEM and SPARSMEM. 
+> 
+> David Woodhouse proposed a for_each_valid_pfn() a while ago:
+> 
+> https://lore.kernel.org/all/20250404155959.3442111-1-dwmw2@infradead.org
+> 
+> It can be used in init_unavailable_range() and will essentially skip the
+> unpopulated memory map.
+
+for_each_valid_pfn sounds much better. Thanks for your input.
+
+However, the problem is that David's patch is not showing up in the
+mainline, so what can I do to move forward with my patch?
+
+Perhaps you mean that I should wait until David's patch is merged and
+send another patch to fix the problem?
+
+> 
+> >  	for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+> >  		struct pglist_data *node = NODE_DATA(nid);
+> >  
+> > -- 
+> > 2.49.0
+> > 
+> 
+> -- 
+> Sincerely yours,
+> Mike.
+
+Thanks,
+Ruihan Li
 
