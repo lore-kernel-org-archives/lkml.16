@@ -1,47 +1,47 @@
 Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9392853EA;
-	Tue, 22 Apr 2025 12:32:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6B628BAA2;
+	Tue, 22 Apr 2025 12:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745325159; cv=none; b=t5KdyHZlPPzzLwFeJGGxIMDLr8X72vW+KFAzz+s2ZTPIoUkBp7LN5KEXCtmv+t75R+7qQ88c4aZJdXaBfhQIWBeeqpNn13z90MVFpywBHat+j5PqT+sxPQv9tw63Dyrk8VB4dni0Is+eREo2rNBAg8n4HS5Dz8uc271ClnINARg=
+	t=1745325163; cv=none; b=j0/YYftlg51op6EBokTeK0KoY2H9N8qWQ++fYLIiBdh7HRwa1OZagiRU2L/lhO33krc8pretaodx9ErIfcSVQp+qoMqAY1ufk+epsEbxQNzBUiPuWBQPmZg6B9t3zIpNph1PNJYj9K6ssPTo2WE7OWu9pH0xGj/r9dDJWGBudsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745325159; c=relaxed/simple;
-	bh=sfiOkDVYW8b3fyO6+ZbCuewBk5+8hC5AKLyBwtvH290=;
+	s=arc-20240116; t=1745325163; c=relaxed/simple;
+	bh=2xQU8BaV38kff2mc7nWiXV/wXGFel8LmTfX3EHVK1Dc=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LFtlPvyD7yKWWAejOZOVRzGrEwILOgv7End46pctpAdO9RF7BRMHQjiB5oyYBgWWgyXqnsPTqSwF3Pv9mZ1wAWd8wngWnJwOzIRJwFsrqiAlNGbGrY1U0R7nBpzXc/s2qyaAlrbvqTgVEFQncdKkngXlHNAsy2ojEkSikFPHFzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aZpozZsf; arc=none smtp.client-ip=198.47.19.245
+	 MIME-Version:Content-Type; b=NRbR/g7cNFVPqom97ilpbYczoKNB2D7Cd0XABOziodya0pLgVnFvqvS10N603mA9KvGSfm9HH5vYp3rXdoDM0o+h8ACpJHOYxKSZ47iDNkbO7RIABMjUUgp8nco4+2oI6VUMxX8vXCg00OuqIr2ADZ89tEM3uXmZEOnUOQoC3aQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=i+Wt4AXY; arc=none smtp.client-ip=198.47.19.245
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aZpozZsf"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MCWSAe1209456
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i+Wt4AXY"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53MCWWYQ1209463
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 22 Apr 2025 07:32:28 -0500
+	Tue, 22 Apr 2025 07:32:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745325148;
-	bh=wgYXgaEaXMDKqGIqrSUF5MgVxHZmBbmXcS2Rs4S2afw=;
+	s=ti-com-17Q1; t=1745325152;
+	bh=ifIZS36bPmBp16e6k20HHvVOE/BgKCs/pEKPzQ6EFhs=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=aZpozZsftmVHZGlTecInRFU0QxNZvnNXDVvfnXg/hUTRfY4z9q8WWoMmkPEYBgK3N
-	 PPzCWlRd3A57FGcQErMd01DxsNrLr/MlHtAnbgx5K0ghL4QLeS3IH6ZWvzjck+qA+s
-	 xhme2DpopX9pXGMabrAGRhiMoh7a4L379F4GtfJE=
+	b=i+Wt4AXY+fvWCNpUqCKrKx8B375RdoStLSlVOpXm4oEFc98GMjiANe2MDaQR18Ggi
+	 f95fSAB9o/RmRRvLPYJA8uh38Y3ZvOCc/ovSbcsVw6tPloC9k4pbSHbyV/mth9ep2G
+	 8LCjOMqN71rN9HyyqYoKaljb0D+0/pOBq1sER7UA=
 Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MCWS08018099
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53MCWWv3042976
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 22 Apr 2025 07:32:28 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE105.ent.ti.com
+	Tue, 22 Apr 2025 07:32:32 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE105.ent.ti.com
  (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 22
- Apr 2025 07:32:27 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ Apr 2025 07:32:31 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 22 Apr 2025 07:32:27 -0500
+ Frontend Transport; Tue, 22 Apr 2025 07:32:31 -0500
 Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MCWIKu117965;
-	Tue, 22 Apr 2025 07:32:23 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53MCWIKv117965;
+	Tue, 22 Apr 2025 07:32:28 -0500
 From: Siddharth Vadapalli <s-vadapalli@ti.com>
 To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <u-kumar1@ti.com>,
@@ -49,9 +49,9 @@ To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
 CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>,
         <s-vadapalli@ti.com>
-Subject: [PATCH v3 1/2] arm64: dts: ti: k3-j784s4-j742s2-main-common: add ACSPCIE0 node
-Date: Tue, 22 Apr 2025 18:02:17 +0530
-Message-ID: <20250422123218.3788223-2-s-vadapalli@ti.com>
+Subject: [PATCH v3 2/2] arm64: dts: ti: k3-j784s4-j742s2-evm-common: enable ACSPCIE0 output for PCIe1
+Date: Tue, 22 Apr 2025 18:02:18 +0530
+Message-ID: <20250422123218.3788223-3-s-vadapalli@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250422123218.3788223-1-s-vadapalli@ti.com>
 References: <20250422123218.3788223-1-s-vadapalli@ti.com>
@@ -65,10 +65,10 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The ACSPCIE0 module on TI's J784S4 SoC is capable of driving the
-reference clock required by the PCIe Endpoint device. It is an
-alternative to on-board and external reference clock generators.
-Add the device-tree node for the same.
+The PCIe reference clock required by the PCIe Endpoints connected to the
+PCIe connector corresponding to the PCIe1 instance of PCIe on J784S4-EVM
+and J742S2-EVM is driven by the ACSPCIE0 module. Add the device-tree
+support for enabling the same.
 
 Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 ---
@@ -88,25 +88,37 @@ Changes since v2 patch:
 Regards,
 Siddharth.
 
- arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-index 1944616ab357..f03b2b6d5d03 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
-@@ -126,6 +126,11 @@ audio_refclk1: clock@82e4 {
- 			assigned-clock-parents = <&k3_clks 157 63>;
- 			#clock-cells = <0>;
- 		};
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi
+index 2664f74a9c7a..fa656b7b13a1 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-evm-common.dtsi
+@@ -5,6 +5,9 @@
+  * EVM Board Schematics(j784s4): https://www.ti.com/lit/zip/sprr458
+  * EVM Board Schematics(j742s2): https://www.ti.com/lit/zip/SPAC001
+  */
 +
-+		acspcie0_proxy_ctrl: clock-controller@1a090 {
-+			compatible = "ti,j784s4-acspcie-proxy-ctrl", "syscon";
-+			reg = <0x1a090 0x4>;
-+		};
- 	};
++#include <dt-bindings/phy/phy-cadence.h>
++
+ / {
+ 	chosen {
+ 		stdout-path = "serial2:115200n8";
+@@ -1407,10 +1410,13 @@ &main_mcan4 {
  
- 	main_ehrpwm0: pwm@3000000 {
+ &pcie1_rc {
+ 	status = "okay";
++	clocks = <&k3_clks 333 0>, <&serdes0 CDNS_TORRENT_REFCLK_DRIVER>;
++	clock-names = "fck", "pcie_refclk";
+ 	num-lanes = <2>;
+ 	reset-gpios = <&exp1 2 GPIO_ACTIVE_HIGH>;
+ 	phys = <&serdes0_pcie1_link>;
+ 	phy-names = "pcie-phy";
++	ti,syscon-acspcie-proxy-ctrl = <&acspcie0_proxy_ctrl 0x1>;
+ };
+ 
+ &serdes1 {
 -- 
 2.34.1
 
