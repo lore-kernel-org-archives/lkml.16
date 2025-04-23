@@ -1,102 +1,56 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C541F6679;
-	Wed, 23 Apr 2025 00:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE9C1F6679;
+	Wed, 23 Apr 2025 00:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745368347; cv=none; b=n2Y2yVopOMz+iDpnOzWvOI3GU77uACSPgrYYCZDf/RhWEC3dDP33TE9p8San73PsitL4MGY7EzozNfkuQsy07CNcH+pdeStRZeWCT4p50VB6sxOv0Nzy6ONDfOQvAPKf6ML9fqYLmQwRGd1LuCV4grh8K3ZstrCx/uTfDiSd3Fo=
+	t=1745368351; cv=none; b=oAynKeL+GdrtIvIarvAcnC62Gz8y1ut08iaZpoVtf5r5jJoZbbhlYq/Nsv6G1zuYlcGGIDnSOFAzS5EhYT1OWJOrSFigrpg34ijbNfaOW0cjxm3THzgRZExXqPrXGcTSqU+zO239/IWwSPsnynn+HjKqN6dkSX4ODBoa0t7IE30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745368347; c=relaxed/simple;
-	bh=XQCyn8ocFK8z5nmU9bKGp4a87D5nosmzUFeI++J+pIs=;
+	s=arc-20240116; t=1745368351; c=relaxed/simple;
+	bh=lp1Re+DHc+mgySgQWvfsd6t9SXf7l9beLDcsufq2Vcg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AdGp3na8pMSb43fT1W++ZtA+4WdThLw+TJYf8HGUMcufYUrCfXCd1AKDPQ9OMdCVV4D/gf2wOChcooaUyjKylUXmqm0DsjgiHPH407hmUO3JpQyVYSY14yQtFao3o/YTkEycPLGMGr+gHp61FoEmucnqvNRfRAU9Vnah6Rr3HyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=YIRUNDY/; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	 MIME-Version:Content-Type; b=Nf1EU9dc+bp6LuhD1wN5sB01dPKt/OzPLUBrN/psp4vWgBwZVN3d3WlL8NJvB3RTRUR48k2Y6ppILAAD2UmxwBlpf0Zu6OWs2zFwNqk9jHz3KEbo4DSanud75O3To6fsA4V5XTo/Np0ZXOCjv+xvcRrokTUspePdNY4xxsKkOVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EcBzlkSw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YIRUNDY/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1745368340;
-	bh=7Mu1fq/IB1qTiVkFifyN55a8gm4qCLeG0LyImlBhkH4=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EcBzlkSw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11C4CC4CEEC;
+	Wed, 23 Apr 2025 00:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745368350;
+	bh=lp1Re+DHc+mgySgQWvfsd6t9SXf7l9beLDcsufq2Vcg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YIRUNDY/vFb9BfeQhup9hcEbTa4r8zIPmOYIdmCav+mGHNhsC3i9R2r8sXXHtQMEV
-	 mXFO7e+HEvY7x2eKsqVXdSQgjJaTv6DG2Sk4FO0daNzBM4gLy05rX1ZRqJx0v4ZkN9
-	 EcOUEHnf0Htt8xmotAxdKNyJqTM1TKOhwoOJNW7UfckpgDKQblv+gBCjfjxBxbvG48
-	 WJB3tDI4bgPRHkbziTQ39d56jDzUTM+k8B50FECo/fywxx8d+17g218WR+i139IW74
-	 KD1JZoGyV4t6pShxms40ZCTPxgU5GMGL7SBSPxDY/ZJIERqNlPcDryr3BzV9ZTp3mL
-	 /cDpvFCVskgBA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zj0Rm2QH7z4wnp;
-	Wed, 23 Apr 2025 10:32:20 +1000 (AEST)
-Date: Wed, 23 Apr 2025 10:32:19 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: David Sterba <dsterba@suse.cz>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the btrfs tree
-Message-ID: <20250423103219.445081ec@canb.auug.org.au>
-In-Reply-To: <20250423082924.0304a186@canb.auug.org.au>
-References: <20250423082924.0304a186@canb.auug.org.au>
+	b=EcBzlkSwgVXeXq0OP9SDOs2b6Jr32j/lLepVrtr2Sja/t9U7Wud84tvfCStkBSD3a
+	 jB789nR2EqmmU4fhGZPrq4f6qDZvMZpKME0Fgz0rPko8oVDUl34bGfTxCdvJ1hwOv1
+	 Eqwyucb87XHd9AQK5J1t1RkOBmfDMIkAt6J2xoNLBJqA7w7pbw0ZSOCLmRbklZhvGp
+	 2q/TPYHXUuiMtkQZBdh8xErMRdj0BsfGCdoVSJ6CQt/Nsz6u/+CCiuXQVDccuJ7h73
+	 OkZKZAOmrP4kl7+trV7jHFFEd/7+l/lgkuNJ6Jl6bEqW1I/WoxoPguOBbFwxGFjvp1
+	 p4+vyaCPH7Hhg==
+Date: Tue, 22 Apr 2025 17:32:29 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+ <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+ <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+ <larry.chiu@realtek.com>
+Subject: Re: [PATCH net-next v4] rtase: Add ndo_setup_tc support for CBS
+ offload in traffic control setup
+Message-ID: <20250422173229.6dc21ff5@kernel.org>
+In-Reply-To: <20250416115757.28156-1-justinlai0215@realtek.com>
+References: <20250416115757.28156-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/tx2lAelr/Lx8SQ.fAzTUpUy";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/tx2lAelr/Lx8SQ.fAzTUpUy
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi all,
+On Wed, 16 Apr 2025 19:57:57 +0800 Justin Lai wrote:
+> Add support for ndo_setup_tc to enable CBS offload functionality as
+> part of traffic control configuration for network devices, where CBS
+> is applied from the CPU to the switch. More specifically, CBS is
+> applied at the GMAC in the topmost architecture diagram.
 
-On Wed, 23 Apr 2025 08:29:24 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> The following commits are also in Linus Torvalds' tree as different
-> commits (but the same patches):
->=20
->   0343f88be454 ("btrfs: subpage: access correct object when reading bitma=
-p start in subpage_calc_start_bit()")
->   308a921d5c45 ("btrfs: zoned: return EIO on RAID1 block group write poin=
-ter mismatch")
->   39b4c6395e2a ("btrfs: fix invalid inode pointer after failure to create=
- reloc inode")
->   4853650cc31d ("btrfs: fix the ASSERT() inside GET_SUBPAGE_BITMAP()")
->   4a50116e0850 ("btrfs: tree-checker: adjust error code for header level =
-check")
->   53dda1b821c4 ("btrfs: avoid page_lockend underflow in btrfs_punch_hole_=
-lock_range()")
-
-The above duplication is causing an unnecessary conflict.
-
->   5605a0903ce1 ("btrfs: zoned: skip reporting zone for new block group")
->   982446a056f3 ("block: introduce zone capacity helper")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/tx2lAelr/Lx8SQ.fAzTUpUy
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgINRMACgkQAVBC80lX
-0GzdnggAlRxB77MmUzoh3IwnRV39BieSb4jNM5EyuVUjk2umt4DawFaST0X0QXpy
-u5VJnDieL1gD2PXT8Aoazfi+sq9xRRHj/yArnUCWA32Z2QGwDkbXGRQMg+AarB6j
-L312eGeFGd2PA/gDqiwv+/6agZcTQ8SRW63qA+7xXpAQJasBDuyZwUDlPi9WAZ+0
-h9UKv4sJPLcAixj33aZsxl2AOvA7Cezj+1j1zz/pJR08rlbeXpX727FjvlkAF3LI
-HyGdxQRw2zFjuNqiIi+EoY5RowSqZWkkx8KvnYqJ9dQrYkD5vh09O8eznzF0F+++
-8Ex2SQsALpn2Ht9Z5sOu1US+7xfSrw==
-=3TNj
------END PGP SIGNATURE-----
-
---Sig_/tx2lAelr/Lx8SQ.fAzTUpUy--
+Applied, thanks!
