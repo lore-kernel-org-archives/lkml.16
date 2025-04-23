@@ -1,111 +1,175 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mout.web.de (mout.web.de [212.227.15.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073C413C3F6;
-	Wed, 23 Apr 2025 06:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979B41DE4E7;
+	Wed, 23 Apr 2025 06:35:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745390072; cv=none; b=gBbeBhIjYfMRGTl/9ZGbSTb2QteWCQ9fB4y1EFZf3XnukSNsaNaS1zWTkCtmmgezwa71OCxP0lOkD+pprZ6wgvF4vto4F7vPb6fWYXpDf7tldG9UQAAhqH6VtxeYtr/fUaomoPplqnkkaASgL6PJsnp0I7aB1eyGeIAivyFY8TQ=
+	t=1745390161; cv=none; b=AUI7z3lmF7/KKRcmUhpqj0FrySY5bGumdCMUTA/8ZljhpZotWIiDFvbWLPMLIvHsLPctEoiNiLgyOiFfOkC0H5TfXk9YGAJlANRoyKU4/5xHRroyMEdHy97GfFHM4dJhciZnM0DyLp8qEV4B3yVpUiKzyKrNb4A4brDqT1ZdkIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745390072; c=relaxed/simple;
-	bh=Qlt8fOU7S3qN3z2CYEB2iLHJtb0RRgm0RQ9Hv1XYFIs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OOzGgsSpvuloulz2VwGDlld4LReFktBZWv6PPjmyPYqfUUkm9VHx2kec0YqY7RjRCtWVEurs6ns+MHAZDp0LS3KYVhASWKEeFbpuaMPyjxaaetLiNjGovJ+gIqoI/LOBEm/gOlEwkJR3hMutokkYPxjK4TuST5ikATXWCtpwbJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zj8T45MPnz4f3lCm;
-	Wed, 23 Apr 2025 14:34:00 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 3BD031A06DC;
-	Wed, 23 Apr 2025 14:34:26 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgCnCl_wiQhoEV49KQ--.26381S4;
-	Wed, 23 Apr 2025 14:34:25 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	hpa@zytor.com,
-	ravi.bangoria@amd.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86: Fix open counting event error
-Date: Wed, 23 Apr 2025 06:47:24 +0000
-Message-Id: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1745390161; c=relaxed/simple;
+	bh=4sueNLSXZyEnCvgfTumwCoU8uLt8qTggA0SiY1v7lOM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=IZqKcz9EO+jXRVjDGiPBRGjEWOD2K8nSfpTKMCmrO6u1Iy0gYNLJGBbqtqDphflZZ0d3veg0T4XvNDI0vfWAMt6thTw5tqH1wVxscCZ3GxaA2ESp6AJkJbB4OuDvqIZ1awapZyQouTa7bsGz5sTUaVgxmUHKL8j0I4fCJDjweMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=HGm/3o1D; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="HGm/3o1D"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1745390113; x=1745994913; i=markus.elfring@web.de;
+	bh=Mf0YxB47xn6cTkgijZrbPJ6w00QCzMLFlOWIetZPPTs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
+	 Subject:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=HGm/3o1DciErxDYuuf1SwaacYOcQ5kCKZpbnpmnb4U2BUj6map3PQ0K9jC6rxwbg
+	 UNN6CmZJsp0VsPUyI6DtPHQL41ieKJ+J0Yz0fcVsaKEl3vI7dli+ZpeQMyjQhxkdn
+	 ez0r/46bLWC5f2NpvzmHWnOsP54YjSwC+3E1wug+75yRqZ4IYGNcMYRGz27MpVqRJ
+	 fnNHnCVE4LPo+PLld8/c7qoKMrRo4amZk7Ibv4COEnNtFKFgKWPZox2gUjB8K/AHu
+	 YcYo6yC6i1hyPhhuvnjltFGs/aSguoRzJrzFhzWI33C3ocC5+inBWQuEdDb5JQJVr
+	 cx/xXn8BzfoklKMaaA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.6]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MnG2C-1uqTcT1Uc0-00ZYoN; Wed, 23
+ Apr 2025 08:35:13 +0200
+Message-ID: <a70bf317-33c3-48eb-a454-9d95117eaa6c@web.de>
+Date: Wed, 23 Apr 2025 08:35:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnCl_wiQhoEV49KQ--.26381S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7tr1xGF1rZr45JryrCFyfWFg_yoW8Gr15p3
-	47Crn3KFyIgrn8Wwn8JF4Iya1UZF4ktr9rJ3WfWr45A345WwnxXFWxKFs8Wa15Ar1fJ34f
-	tanagF9rurWkA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAa
-	w2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
-	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
-	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
-	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
-	xUIa0PDUUUU
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+User-Agent: Mozilla Thunderbird
+To: netdev@vger.kernel.org, Abdun Nihaal <abdun.nihaal@gmail.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Potnuri Bharat Teja <bharat@chelsio.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Jacob Keller <jacob.e.keller@intel.com>,
+ Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+ Simon Horman <horms@kernel.org>, Vishal Kulkarni <vishal@chelsio.com>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] cxgb4: Return an error code only as a constant in
+ cxgb4_init_ethtool_filters()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lL1AMBKvJOUcW1Sfg112ZkjgkBc8nYS4dsBmae+dWmLh0LepZ7h
+ Ng8DGwpIbJdQUJGZeNxKSmrS7ctTviL08XuTUsYce9KQVuE8TWW1nMWkM/RdE5cG8LSQWlq
+ Gq17COPC/+jsMickWvnzLeK+k5Jt+wc0UHQnfKAxaseTSuBZnL2NuZANgJLMMXA0eztx+ll
+ r4O2yc51QI4t5NIodQLYQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/qcuy12rYWQ=;eceuahPHyge+M6HdOpZszTP2ORf
+ b6cR5ErNAM9eFrBVNphTFXM0EfUDnTost69lo1oOjntEm8+HnZk9tf4OQLXg3h1h7NqCZrrOn
+ kYWTdNPZZ/hvBHkHDF9l5dSEyfCK4ME8gDEaODJzhc6ofO8/F62/keXF/OUgd6lrI7U/y+7uD
+ 1VNTEai4LAQVhWS6MT2Ws47ebJZr+pqpnRj2ScMuynKGYpcn9lRgr7UX5Ofo3FFZbFb5Ect2t
+ kdAoFkpqqXW9CxU03iHNsEEYDT3VVyyfr4LlqCk89lA7DCmjmvrAEzcnvsGbGucSrpAM8VtsV
+ R76ejCaSQJn8m9fpuoRX0JS2o9CowBaEeYyj9X9gAvK1t4gbD8YVLOmM5Td5BqziCbDc5FEYd
+ A2SS1CzrBJTh11RBeiyhm+aRcYF2FpgylQi8nFwYYHBcqzCVOPJjOqUY/vk86xtsLvQQ56BB3
+ jjPxly4bspj676vRyuh4Gc+ciHGN5gOkqi2SXBmTyT0OB5Zf7RuEZHzSE6O1l6GX6YPeea6Qt
+ Y6f/yEWuHBav8iqEiUnU+hT+kp+TxRY3JzOUe/zgJ3uw55JuSS5iKq1AUCJ0KdAK3f71qVeav
+ irUIA4WRBrj4pHHnOhNejNeZoq5cwNfF/dquSwdJuQxhGRUB1Ds97SjoIlnevCGFgMRfIO33S
+ kJaSGMPLxbrcRGkqAKzjGXHyh8D7vd4ZL/KmYzpAABOZy9Xf7IRAKJSM7oZYZvBNDavGqT4l3
+ DHZ+94UZfXJhA+LqKdcFBnDfi4ZfXOGC+Oe2ErEmRgmIuzCznwi5SVShChMdJtNpEWGcBBcRr
+ hdBJiN+J8Ctpcz4hQeuKztvvck0yEFvh5CcNpuN3m8snwKctakcdOFIS+di70e1l1mUwlztyx
+ 7MOgqjoUFmcHt2r/huvZY1u8G1gRQO2gIvsSmYhv6qVbJyb7NuarCWPJpgeqKspj8h/9ngqvX
+ 4COxlzWHpW2GH5sOc5VqcPA9T2cCHnqMQIXe3DDi9/fuvsgG4SAlKCzr/sFZJsFriUln7lBhL
+ nswPr46OL7c7yXzz5Q7isvrUYXZaNTJQbqMuwbokOVl4x53WYCGyIqnDm+Q02r/VWM4Fyn509
+ bqQzLuibEr5gjBlmgv4QaNyBWzwke8zkKJhQMQnvtHTJWI9Mhy4o0gNSb4mkElFM7waL2xhsL
+ p9O8G9iiMwso4OMH4dEqnx+IVwFPoOh0lhvrvBnjeyp6lB7d1LVUKshAObpVxhfIHMjDiW+C8
+ pu5HAAi2TNBTDIl0/FjqmseXLMDJdvF9SDChy2wYsQhuOPPs3GYM3Gm/aYjNHnHNVu43bFG/b
+ abPcebRQ4ByboWY9A7+/+X1rhWTuEftMTp1LY7Rw/QWukcdzC84WEzCTB5d4vZ2/xIpKtV2+F
+ oe3JvrP63dRII2z1psTnIk3WniorWTgOtHiF4hyXyBnjYMyTzSGmLEhi+D1gFyNybkkdhhs0o
+ TsIAPKNUFYm7kkkrI7junlApDtEbcz/HGwgG7K/P9BYm3H79qkVbKRgnFA9FO5hFJJ39o7dHL
+ v6BIMOqJMM4sRL3cdtO/auQ5uKyNOvP9v9M5BrreO9MLxTaThq5yte+KKPFj4Ey7aS29vkaCo
+ y48GYcpGUuAekOGYNDFfthGjSDfrR0FR4sk56Jg+bxWLJlLgYM0ErJPIsdy2rxsGQupzkKEYR
+ gvmtoaX1YdHO7h95CMlVhgii1hXwCvKKH7yuK0MJ4Vj7r4UUBgR2a6g1+PZIFrWi/cRE3oDyc
+ QqqLWIbYWW5HPa43olcyu8uDhNhSD9a3XUQE5d7aqICz3BHIPsJL1lzI9jhMXtpuRGQzA7LLd
+ bY9mQE60PipWX0IrisRoleEvGN/9lQupiU/od98/Ff8nsi211mR3YZ9sWz91kvENC+VXa+LrM
+ 57SNSDWGfhoAhiRXQahflhAtLfZfh0sZ9avUkH7OHSqiYNdjuyngzruzDD7qdcJv9UwF4bfdV
+ T7s7zNSTKG89p1/SRUZCYsdKPvFIXr/NKQeEEDBLyPv9vLGv6lYXtAU+Ym5O6YDW7EuBHVn/X
+ cqPoFCh9JuPLyDzl9geJ7MOdy2mUZNdQZQRGaKFo3yJuZRT5qIjAFalDd1BToBKOnXjFUcXUT
+ 7YQx6GYSOOnYwHMRbspPqwr0wtQhbUJ/lRE8WLOCe2aXRjc+e+lcEK0T2H9iEajlwzR6OphLL
+ 54e9Wsy6n32e8txakC4JeW+zYDRl5Fdo7SFQ7ulPscFkMQ1/SobseHoFBxZBX5fxGIYT10S2H
+ mXy9bhoyCQVDZRPU1tqJrLNX8xCZgUsUu7jHIJ5m0X6ZXh3TZuNbhwOqvhdw+mLvH0wn4PxDu
+ 37REBhnDTiIszBb9DmYdzpVxfkIETEKq8UtYUbEOKjKDqm2WiHql1R/ufhmkOZCxvXrqQi1WR
+ Jfbzzio8ckaEM1Kms9cWd7RZbhp1viJAq8XAsqKgL5eo5u2lXmHmiKyTwBM62llw7J3+LShy6
+ AXrlm0PW34v3TdnZbxXFkxYkHWQ1bMNUHi+TDbsast8feo8deudJYiAliyrloLdqNK1ZdwLpE
+ nDwpPH5X5vsU61WcgynDruLSxzmxlL6JH1HGXKLSa8pVmTygycwLfgpHw6Ps1zY2jvtxrd7gl
+ Cs+iZ/qcGBTwEEtN2s0EHMFhZ5XcSKWX+7v8ivQTdkEanm7qBaE2Kzast9Uziae6Uux4cm/f5
+ TW9kcgNbY4Hydh2l5Jl890Dukr/whQEG958S5yXLl4R6QPHZ61Z+sRjzlpT2QUAAdiqpdSCdT
+ EumqR4HX/G3KG9vHXjVCr3+uRni57v6dR5sYgBErZRe7IHxdNsTn3yRYLoa3/4C5m/SgJPVKX
+ d1B22t0XjXmxJ+nJoa9gqoGrDyFlM53WLq8CR8BZiqeynOuQtIeR1ZiC2RXjgtpNDxpbR8wOo
+ 29+fZihcLxU5Si7HTCk+8QxiLc5DkHleIov3aKBPPqvfwMMPcYDrUIBxMOG0HC7Pa7nuVvm/o
+ IboMvw6fLtwFanHd+KRgwIkPUrqwuTyY7skYKnYS53TuQ/2vrhHc6YJH7eGl/H6ZVwLgOie1v
+ P+vOE6Jk8kRZoWD/LtAGdwWyPJ4ydHZoZm7arn0VvuNULW8UD76/3X9etBLgoFBySgJKQc/0Y
+ czvTkopZN/6qI=
 
-Perf doesn't work at perf stat for hardware events:
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 23 Apr 2025 08:15:24 +0200
 
- $perf stat -- sleep 1
- Performance counter stats for 'sleep 1':
-             16.44 msec task-clock                       #    0.016 CPUs utilized
-                 2      context-switches                 #  121.691 /sec
-                 0      cpu-migrations                   #    0.000 /sec
-                54      page-faults                      #    3.286 K/sec
-   <not supported>	cycles
-   <not supported>	instructions
-   <not supported>	branches
-   <not supported>	branch-misses
+Return an error code without storing it in an intermediate variable.
 
-The reason is that the check in x86_pmu_hw_config for sampling event is
-unexpectedly applied to the counting event.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c | 13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
-Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
----
- arch/x86/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 6866cc5acb0b..3a4f031d2f44 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
- 	if (event->attr.type == event->pmu->type)
- 		event->hw.config |= x86_pmu_get_event_config(event);
- 
--	if (!event->attr.freq && x86_pmu.limit_period) {
-+	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
- 		s64 left = event->attr.sample_period;
- 		x86_pmu.limit_period(event, &left);
- 		if (left > event->attr.sample_period)
--- 
-2.34.1
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c b/drivers/=
+net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+index 1546c3db08f0..fd4f6c146ad2 100644
+=2D-- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_ethtool.c
+@@ -2238,7 +2238,6 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
+ 	struct cxgb4_ethtool_filter *eth_filter;
+ 	struct tid_info *tids =3D &adap->tids;
+ 	u32 nentries, i;
+-	int ret;
+=20
+ 	eth_filter =3D kzalloc(sizeof(*eth_filter), GFP_KERNEL);
+ 	if (!eth_filter)
+@@ -2247,10 +2246,8 @@ int cxgb4_init_ethtool_filters(struct adapter *adap=
+)
+ 	eth_filter_info =3D kcalloc(adap->params.nports,
+ 				  sizeof(*eth_filter_info),
+ 				  GFP_KERNEL);
+-	if (!eth_filter_info) {
+-		ret =3D -ENOMEM;
++	if (!eth_filter_info)
+ 		goto free_eth_filter;
+-	}
+=20
+ 	eth_filter->port =3D eth_filter_info;
+=20
+@@ -2262,14 +2259,11 @@ int cxgb4_init_ethtool_filters(struct adapter *ada=
+p)
+=20
+ 	for (i =3D 0; i < adap->params.nports; i++) {
+ 		eth_filter->port[i].loc_array =3D kvzalloc(nentries, GFP_KERNEL);
+-		if (!eth_filter->port[i].loc_array) {
+-			ret =3D -ENOMEM;
++		if (!eth_filter->port[i].loc_array)
+ 			goto free_eth_finfo;
+-		}
+=20
+ 		eth_filter->port[i].bmap =3D bitmap_zalloc(nentries, GFP_KERNEL);
+ 		if (!eth_filter->port[i].bmap) {
+-			ret =3D -ENOMEM;
+ 			kvfree(eth_filter->port[i].loc_array);
+ 			goto free_eth_finfo;
+ 		}
+@@ -2287,8 +2281,7 @@ int cxgb4_init_ethtool_filters(struct adapter *adap)
+=20
+ free_eth_filter:
+ 	kfree(eth_filter);
+-
+-	return ret;
++	return -ENOMEM;
+ }
+=20
+ void cxgb4_set_ethtool_ops(struct net_device *netdev)
+=2D-=20
+2.49.0
 
