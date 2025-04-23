@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B404B26E164;
-	Wed, 23 Apr 2025 07:54:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F034526F476;
+	Wed, 23 Apr 2025 07:54:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394875; cv=none; b=Ra28H8xmbM0txqgj+z3OYmvRntFy/MkYMb8gkg2vyRj9FD5zy8KHo1ZRPkltu3Y6rwK3XYRnERpilT2avfFWrUTuZQ2doSBw5d1PhDDGrf40AZDrAKqMbwi00b34btOffcZFFIWzuhR/75OFM+yHwnLtPqvM3k9f8WKrlPTx+94=
+	t=1745394883; cv=none; b=J9egekx/7I6DEpb024qg9891PT0uTfOTSVnheuSVqVUYAuurZ9tA79pa3lAgX17Ih2Qh1C6pLStHu9RCp54vFFwLrFx1oR3kvHVsvJwuoV5ZQH9ayDjKTTo8dICVy+NwStkOc4p0s3i7+OvLU1neUlraSZSr4iE9P5eiQBPAEn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394875; c=relaxed/simple;
-	bh=W6L41CxhyxSigRjUiN6FHg7+GUS5vkh+LQ9hrJpAbEs=;
+	s=arc-20240116; t=1745394883; c=relaxed/simple;
+	bh=cyoX0S0RxKOZeNzlIOigmhm5/jak5UazXis0dWDaZX0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RLno2lfOpQ2ddyw3eZSi0mH7uFqQtBxB4oH4wjtzXReudGYL53gvPnMevEX70M2mnGQHQLYsezq13nzwe0RUpJtjCNQOFDb+K5a2BTu+uYtnl4M2Vq4PRuvQbF2U7585s8w4bkCs/pFBFEaxoiKnCZIZvgYCuEe/7fibu7XzT/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nv7t6Ut1; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gXwWYxzMVzPGpmqzWNdsSqs4Fi00nnNz4MS2ZZSZjidim88GkZNviLJtdI9oWITT/pCjJayxCuz/H1k7k9zmFfXN7GnNG8EX+jNMDfXXpWd73L1ZVzNtqx3VvNk3YYXCIQikF5k47uOmX94i87xXYHjrW+YrMuPWSUug0bDcUxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=da+Ppkt/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nv7t6Ut1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54974C4CEEA;
-	Wed, 23 Apr 2025 07:54:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="da+Ppkt/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCABC4CEE2;
+	Wed, 23 Apr 2025 07:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745394875;
-	bh=W6L41CxhyxSigRjUiN6FHg7+GUS5vkh+LQ9hrJpAbEs=;
+	s=k20201202; t=1745394881;
+	bh=cyoX0S0RxKOZeNzlIOigmhm5/jak5UazXis0dWDaZX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nv7t6Ut17hfgwPSrcjDDZzhlBr5lA7//4GOC3MHMWbWlW/cRsCVcdJYYlCqBuETDx
-	 beLmlk0Svxn2LKsYAW+qFqGaIJHIX/l28Zx5K35jGOAl23ilPb0yCg92k62j5J8X31
-	 clsplmKROr+X2jz+irigBbQrHPYT8CfFkGWMm/2Q040lcefUcCCxIOiCM2NTUh2hcC
-	 tzk6ejwwxprFVPxylUdZzSVCtLjU2E3ciZ4aVC3Iz9RbtnsljVpr30gvX/FHHdrw7N
-	 kjLz4ScY/6K8Xz/pYOsuoH5IV28U7+44p5BtxVzcO8EAtryu8XJTohoJ+g/vXS0p5a
-	 Pz0gci28xSLFg==
+	b=da+Ppkt/9EGu1Cxjj6ADT7OaQmwPVcxmWkfPavQbs4xPpvX+rMDREw5r4f37FUO5l
+	 tJSrnH6rHdP/A3hm6eBCWY9ar1ORZAy5gT3hHwMZAYhoNKMfV7fLjWs1VTyJxfGCph
+	 Fl3FuXk5Sgpx8stjg3/kHTs7aL15JshOzSlnY7T41tnLSy6Ku2GPYyYc9n1KVBnQ5D
+	 /wUPENFe+hePwrkKSOolS6b0ohzhw6qPRgBzxEMIlfZ/lhgPL2iSnyttLD6kucUS1W
+	 LKsOgI4c29hSQW2KxLwwF58f4Q2iMqCo05qQ8xePsAPhnQSzFyQhgLg05VirjY8yF3
+	 e66ySe4kuBEJA==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
@@ -45,9 +45,9 @@ To: Jaroslav Kysela <perex@perex.cz>,
 	Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 06/28] ALSA: via82: Use pure devres PCI
-Date: Wed, 23 Apr 2025 09:53:24 +0200
-Message-ID: <20250423075346.45907-7-phasta@kernel.org>
+Subject: [PATCH v2 07/28] ALSA: sis7019: Use pure devres PCI
+Date: Wed, 23 Apr 2025 09:53:25 +0200
+Message-ID: <20250423075346.45907-8-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
 References: <20250423075346.45907-1-phasta@kernel.org>
@@ -69,36 +69,22 @@ pcim_request_all_regions().
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- sound/pci/via82xx.c       | 2 +-
- sound/pci/via82xx_modem.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/sis7019.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/via82xx.c b/sound/pci/via82xx.c
-index 89838b4fb118..a04dbc0a420f 100644
---- a/sound/pci/via82xx.c
-+++ b/sound/pci/via82xx.c
-@@ -2326,7 +2326,7 @@ static int snd_via82xx_create(struct snd_card *card,
- 	pci_write_config_byte(chip->pci, VIA_FUNC_ENABLE,
- 			      chip->old_legacy & ~(VIA_FUNC_ENABLE_SB|VIA_FUNC_ENABLE_FM));
+diff --git a/sound/pci/sis7019.c b/sound/pci/sis7019.c
+index 53206beb2cb5..42b22f123fa7 100644
+--- a/sound/pci/sis7019.c
++++ b/sound/pci/sis7019.c
+@@ -1273,7 +1273,7 @@ static int sis_chip_create(struct snd_card *card,
+ 	sis->irq = -1;
+ 	sis->ioport = pci_resource_start(pci, 0);
  
--	err = pci_request_regions(pci, card->driver);
-+	err = pcim_request_all_regions(pci, card->driver);
- 	if (err < 0)
- 		return err;
- 	chip->port = pci_resource_start(pci, 0);
-diff --git a/sound/pci/via82xx_modem.c b/sound/pci/via82xx_modem.c
-index a0a49b8d1511..eef0f9ddaae0 100644
---- a/sound/pci/via82xx_modem.c
-+++ b/sound/pci/via82xx_modem.c
-@@ -1071,7 +1071,7 @@ static int snd_via82xx_create(struct snd_card *card,
- 	chip->pci = pci;
- 	chip->irq = -1;
- 
--	err = pci_request_regions(pci, card->driver);
-+	err = pcim_request_all_regions(pci, card->driver);
- 	if (err < 0)
- 		return err;
- 	chip->port = pci_resource_start(pci, 0);
+-	rc = pci_request_regions(pci, "SiS7019");
++	rc = pcim_request_all_regions(pci, "SiS7019");
+ 	if (rc) {
+ 		dev_err(&pci->dev, "unable request regions\n");
+ 		return rc;
 -- 
 2.48.1
 
