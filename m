@@ -1,104 +1,115 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC8725B663
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 6F0B119A288;
+	Wed, 23 Apr 2025 02:05:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745373197; cv=none; b=Ne829SPtEbw/XWdXcjcUWvPG0VqvFNLdeKXaRs405h/R8VJqc65bKekxQdLaPBQRZj5Fu/CEAZQaU0lE8w+XKtSGjFYmgtZdKUxjarQyEMpM7mz7jZwhwMr/H1ojhGWt66vnzGkRPF4/zjSePG0on2fsdc9xRgS17oQyDlBzQiE=
+	t=1745373905; cv=none; b=HveHvm2J1mpicwN26xZ/Xrvf9jEoy3rP2Vm5bQ0iSXStfYHXrg13k62OvgLN/nbvJwb9CQRn0EP5LASexz7QZIdd2LwQ/TeEAxT6PjPVaaAq+2lZ8ZmaBN1PksAm1D9YlV839YqAb3/kJP0/ip0DSacdUq6LHyGoCEuuOp/Wklk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745373197; c=relaxed/simple;
-	bh=YOADREcuXzeFJ/7ogJYsiWtLPdbvIBRLVZcgwkoXONI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNVvgdKhin5vXljvaN1REvJPONDzbpnJ2o/yUruc1mkAG29n9kZyYmknuBV4zc4ZMYGr9AKoaqZVMIs6ZisR8NQR2TsHX/b1X5WuAInecgZsEQHcftGgiiPD4GlMtQ1ryAPKjjYpoUMzsWzMLvxbaaxQDnmTNLBEK/oAuHTsJkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=OB9tJ4Xs; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="OB9tJ4Xs"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736c3e7b390so5118995b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:53:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1745373195; x=1745977995; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KGiT7L93EPMhEGwb6/RngvZihZULdSMhV4XtuXAOh98=;
-        b=OB9tJ4XsxdyY/okBWZ+ZgsXXDwRpzO7HaQtbRIYoocmCWVh7+vs2HPWdFWGJLqN5Az
-         gXbPkcvzHrc5J2KRgH8IFNYDAzz/N2ABGjKL142XMAWnGwBJISHMO3y0NLJz9LEBqK3O
-         QpbGV/id3TOHmTa520zLLQ7YrRtSoyPzpE7Qc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745373195; x=1745977995;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KGiT7L93EPMhEGwb6/RngvZihZULdSMhV4XtuXAOh98=;
-        b=NP52PVFIkwkDZz18AGueSsTA030DH1D+L8ihogK7Pj1vHt3uRyyMYvSvl2xYNVM11I
-         fXNKRnBl/xpZRcC+sSqgvqDtgJDqDXPALHKSst3s+f53CKl4sUQwAz22eTSquEHiB0tC
-         JTUSd/prdbgdw3Px33eLjwxqY+u1f7E6zfnQMpfSGAIre7V1dzMFCslCehmhImcRUYWU
-         UCIDiNSK4/L6PtQFbKACK8pJrw7ve3y/NXdAnnt4Wsr1vq+6kcLoDKQNIBdbJgT84tA3
-         BPY76HvDe97DfnaPZzRX+Kp+GNQMJpuUNnQ6Xn7qGmDjcsPPQMeUOrCRNv3VyMvGbTNK
-         80tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWX8sm4q9HJnQpWB4OOmMWhMAM9JCZk0Oc+9qsnlu5uXuBKI3LseuUju4XczDopz+kRajiTRxRkw2nfUms=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHcgtfubjMQgkzsJIiR/EAcBNJIo6zGf+LNZDDPP6AeeoDXOOB
-	yC+xgggQU7rH7BtQknddqNvNoF3Qmx2XPnh2CUQvU6Mk3P5B4ApCgyPJOqFc/g8=
-X-Gm-Gg: ASbGncuDgc+oIDSaoL5MiM6VQUxtRyURAu/liLU3uakGC9vuZTPB01hhmS676Rzko1Y
-	LP1nx8y7K1oc/WJGGmDPolSj98Lwb3ocI0wdnr/BGRCCHn3tAuX0SiKQmE79vZoQO+AAY+Jpy3x
-	hgyfDFtYciovH6HGWzaxQgjdxuXWlwGxHMRWCMqkF4v7GGHHM8ehWc3+Xn+FUS+zZ+znDJu3dFM
-	ngNobbV+EB2q2B5r1eKIkH1y2YPDoQHG1C1SFUIG/1ZZThgJVR1OOgbwcFNQj2A5p0AehzfmZKf
-	uuck6PhRpEiymho0xGoD5r4wts0hjEUXyLD0Pl6EdzX18bscGlMtrdOeybofpY3knoDAADwAQJV
-	yfIgx1wA=
-X-Google-Smtp-Source: AGHT+IHB4kTggl2g+HQj4syvd8yW2jw969FjiGdBYuNYXKvY4w6+RCyzB+/uh6VxNaqouYmzneOtFw==
-X-Received: by 2002:a05:6a00:1142:b0:736:fff2:9ac with SMTP id d2e1a72fcca58-73dc15d0c1amr23847999b3a.23.1745373195665;
-        Tue, 22 Apr 2025 18:53:15 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c0200sm9332236b3a.1.2025.04.22.18.53.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 18:53:15 -0700 (PDT)
-Date: Tue, 22 Apr 2025 18:53:12 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Harshitha Ramamurthy <hramamurthy@google.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
-	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com,
-	pkaligineedi@google.com, yyd@google.com, joshwash@google.com,
-	shailend@google.com, linux@treblig.org, thostet@google.com,
-	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 6/6] gve: Advertise support for rx hardware
- timestamping
-Message-ID: <aAhICMrep5YHu2hO@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
-	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com,
-	pkaligineedi@google.com, yyd@google.com, joshwash@google.com,
-	shailend@google.com, linux@treblig.org, thostet@google.com,
-	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org
-References: <20250418221254.112433-1-hramamurthy@google.com>
- <20250418221254.112433-7-hramamurthy@google.com>
+	s=arc-20240116; t=1745373905; c=relaxed/simple;
+	bh=yZJ7jR/aZW12eQ5iq+8UpKsm9trXaGEY8ZAigEhAObE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=YFPut3euEaeNgjmroUh1pfoErGA5me91yph77luNP1SrvwFn0hxKnZObS6kzmljpxfZ/36c/JF+TMmkuJW5uEmAR3mXrV/Q4JG/pMoWaowOxQIKNFNj1549hBG/PeG9iUoDmlFXk3GTIDEMuL3KodAftEdkm1dL4kDXR3w8jvjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 3A5DD6018E571;
+	Wed, 23 Apr 2025 10:04:57 +0800 (CST)
+Message-ID: <21407408-78e4-48eb-8296-fcddc702ae25@nfschina.com>
+Date: Wed, 23 Apr 2025 10:04:56 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418221254.112433-7-hramamurthy@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] mm/damon/sysfs-schemes: using kmalloc_array() and
+ size_add()
+Content-Language: en-US
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ SeongJae Park <sj@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Su Hui <suhui@nfschina.com>, akpm@linux-foundation.org,
+ damon@lists.linux.dev, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, linux-hardening@vger.kernel.org
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <501ea9b1-017b-4517-8de4-7056803e7127@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 10:12:54PM +0000, Harshitha Ramamurthy wrote:
-> From: John Fraker <jfraker@google.com>
-> 
-> This patch expands our get_ts_info ethtool handler with the new
-> gve_get_ts_info which advertises support for rx hardware timestamping.
-> 
-> With this patch, the driver now fully supports rx hardware timestamping.
-> 
-> Co-developed-by: Ziwei Xiao <ziweixiao@google.com>
-> Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
-> Reviewed-by: Willem de Bruijn <willemb@google.com>
-> Signed-off-by: John Fraker <jfraker@google.com>
-> Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
+On 2025/4/23 02:50, Christophe JAILLET wrote:
+> Le 22/04/2025 à 20:23, SeongJae Park a écrit :
+>> On Tue, 22 Apr 2025 13:44:39 +0300 Dan Carpenter 
+>> <dan.carpenter@linaro.org> wrote:
+>>
+>>> On Tue, Apr 22, 2025 at 01:38:05PM +0300, Dan Carpenter wrote:
+>>>> On Mon, Apr 21, 2025 at 02:24:24PM +0800, Su Hui wrote:
+>>>>> It's safer to using kmalloc_array() and size_add() because it can
+>>>>> prevent possible overflow problem.
+>>>>>
+>>>>> Signed-off-by: Su Hui <suhui@nfschina.com>
+>> [...]
+>>>>> --- a/mm/damon/sysfs-schemes.c
+>>>>> +++ b/mm/damon/sysfs-schemes.c
+>>>>> @@ -465,7 +465,8 @@ static ssize_t memcg_path_store(struct kobject 
+>>>>> *kobj,
+>>>>>   {
+>>>>>       struct damon_sysfs_scheme_filter *filter = container_of(kobj,
+>>>>>               struct damon_sysfs_scheme_filter, kobj);
+>>>>> -    char *path = kmalloc(sizeof(*path) * (count + 1), GFP_KERNEL);
+>>>>> +    char *path = kmalloc_array(size_add(count, 1), sizeof(*path),
+>>>>> +                   GFP_KERNEL);
+>>>>
+>>>> Count is clamped in rw_verify_area().
+>>>>
+>>>> Smatch does a kind of ugly hack to handle rw_verify_area() which is 
+>>>> that
+>>>> it says neither the count nor the pos can be more than 1G. And 
+>>>> obviously
+>>>> files which are larger than 2GB exist but pretending they don't 
+>>>> silences
+>>>> all these integer overflow warnings.
+>>>>
+>>>
+>>> Actually rw_verify_area() ensures that "pos + count" can't 
+>>> overflow.  But
+>>> here we are multiplying.  Fortunately, we are multiplying by 1 so 
+>>> that's
+>>> safe and also count can't be larger than PAGE_SIZE here which is 
+>>> safe as
+>>> well.
+>>
+>> Thank you for adding these details, Dan.  I understand the size_add() 
+>> change
+>> can make warnings slience, though it is not really fixing a real 
+>> bug.  So I
+>> believe there is no action item to make a change to this patch. Maybe 
+>> making
+>> the commit message more clarified can be helpful, though?
+>>
+>> Please let me know if I'm misunderstanding your point and/or you want 
+>> some
+>> changes.
+>
+> As sizeof(*path) = 1, maybe, just change it to:
+>     char *path = kmalloc(count + 1, GFP_KERNEL);
+Maybe nothing should change?
+Thanks for Dan's explanation again.
+I send this patch because  it is mentioned in 
+Documentation/process/deprecated.rst that:
 
-Reviewed-by: Joe Damato <jdamato@fastly.com>
+"
+Dynamic size calculations (especially multiplication) should not be
+performed in memory allocator (or similar) function arguments due to the
+risk of them overflowing.
+"
+
+Although in this case, this dynamic size calculations is  safe.
+But it's also fine for me to change this patch or discard this patch 
+because there is no
+bug really fixed.
+
+Su Hui
+
