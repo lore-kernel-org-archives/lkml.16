@@ -1,145 +1,182 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADAF28A1D2
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C8428BAA8;
+	Wed, 23 Apr 2025 17:15:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428541; cv=none; b=dwAOgbIDxJhTmPwEAWudfI56hVlEHUpHcLlVTz3Z1vxJxPh5kQvNgyyiMuNhPT8Gkpf0EkbfnAHaw3A33D+XPRh8P1+vH7IkRyu6GZciaP4+1+TumfcM9vUPH1tGCEXTvocaREGiR4lUAToU/OTvN0Vv7PEImjWPsHj2Q3IuIeE=
+	t=1745428546; cv=none; b=hFBP+J6Wu3g7RAtIW53MGZt8XJPxnbyLchbhoUyd7v1n3HqIuFt8zxtVsglgUx05MlVRuQkh0USQXbzoh0TgPcawMba7i9R9rS9QcKa3Y9ZMCbiSxERPtYo/Nyi0NuyJzx/R2ar9vHuXL+YBG4RJLbU+Ek8C1qyQ0QoulTwfyNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428541; c=relaxed/simple;
-	bh=ZSWmIXnoHeqHpg22is4DCb+FQUxyjWQhdchI0xl2uAo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tqf00ac7tqg6A1JztbHOCyp8DYkyFcIxGe0Bpb5+jVNEj6PGih1SE85TBOR++lRxYTAGowYWa3EYano2c+VpYs2qjSGKTx7P9qGvEeCXqZs2Hda6AXrwbmxvNQknBPbf/ryXp7bAs4ttwpeLtCMDc599Qv3/BB2pUR3beMascLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=f3RJOF+9; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1745428546; c=relaxed/simple;
+	bh=qnewsdTEiU9wbm6OnE47hsHNxgG19vfCD7IgfGQJEho=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rfxgAogGkLVnjG9VqjEBeANLZxqER8P3AqMoPFeay8Wx0agF4IXq2GBK3IcwCJ3FkSlrs8nIEJEvmOXZZVBjOb08RVfuCwO1TGr/aSy4VBm8p5oH7gdI09yeMGZkG7zFJ4tCDtJxKLFl6IRkvY9vskFhpj1aoblnLJWW6VVZB1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9B4Wko/; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="f3RJOF+9"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86cce5dac90so71142241.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:15:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9B4Wko/"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac7bd86f637so244951866b.1;
+        Wed, 23 Apr 2025 10:15:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745428539; x=1746033339; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sAA3ahIS+2Nb+9ARKVTXCSjk2uwR/TOFzjA5DEQnqxg=;
-        b=f3RJOF+9I5aUeLfKwhY41cyNNsV/7gzE8mnt0B7y7vbeRVxS8lsyPkRNroBYBI3tAJ
-         LoOcUnWESA/cjHCPlWjRHA3M+53oDTrejya0NpMfeL6ljH+lfqQ/w5WsXx5ptqIdwRDv
-         nsp4EdSeE1qB0xl7OhzzYJKM36aE0m+MI2XLpfk6xpvXrCfNBJoewKHE7+njIVYSVVE9
-         uh237S2zCPLxHmND8hCSoBynFpTclSrt0aPYz/VfLhJATgS9agmNsggyOtAJAI5FOQCt
-         Odf2Xxn7vp+XAbxZin8Yl6xswoHmQ5A7Db9GS23ti5naaSYjMpciujFTq8n0nXWju1+8
-         8EaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745428539; x=1746033339;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745428543; x=1746033343; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sAA3ahIS+2Nb+9ARKVTXCSjk2uwR/TOFzjA5DEQnqxg=;
-        b=NWZUYF/cDfFo+2dRNy88ZtsEU68azNn48MOWGWpoQpN0rqC3thqtPVbW/DeLtPh/EW
-         ltEk38IvY4CgB+6UGnt4G/kcisa7Xecw7UVfbhxTCr6bNaU4ivajmGdEnjQtw1XcAwZs
-         pkMrqPaAMk9SFHutssjYD3zBkLoxPnd5iH2IWtHCdnV++bU4tsfSsXQ3II7z6kPXMwdk
-         tdeF6yOyYnq7W5vuM40otnLWd2Ykc/f5LjZpvTKZp0sb/LwaFc2DzVinM7xlKwT7znQl
-         7StrHaDqhIO9O4iXwwZmLhwaTY6ufgYY5AbEDNenl1BRGThUS1uStSkC4RVj6/8ZW1tr
-         Kzjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlLmLaZoxg8LAVFoFMuNcUDxWDLINqKN1NVACVxIYAdEtyLOY7Rl9i1jWLSir8gcvSVLk296t8rmDXzuo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNEmhGZSpAuov+eC2oBZyMngZweRE6hH2XFgkMHSGNIskaPBss
-	Dam1lq3xBMbLG6mp1gjltNxVd1MEl4L8rGY2FU8s5kk0gXGiGx4BQMSAW+QyPIU=
-X-Gm-Gg: ASbGnctr37EXbnVOHFIwWx1iQdicn+pklsecVwVbvA0s0xBuuioDDyOHy4JRsKWp3fm
-	vNk0ujJA9UpYEdfXjQ+qqdnK/ZPlBQWFM72AtrkFtInrJFxhuHqhm7Gwi8Eeh3I7pbmGXXCDI0s
-	ztqwTh1o+MhZ0vVyMCO7ZCCAPCF19ymN89NHCBv90xi6YATekUcKZGUqVVzyud2mZJmEkcqrygE
-	08unyO63x0TnPoraKjExcfn8DSZ5lKbN/Az/YAYI1Fv6DtesJDBsFxgRlLX7hn9ch7Fg9pYWiro
-	nFzjiiD5Nt0VHGPvwJr/r78mt8RpecadLeMGJOXUv8dAtmHl+ZQVZiBNjW4Rmw8t/V8jlDcFLtS
-	siruecPMmH990K/F3OvRCIODqKGd+sg==
-X-Google-Smtp-Source: AGHT+IG91ka296h4XrJ4QPDo73jdYlZoOj1Zkc9PInMILwbVuqXEZMd5w4C/WgEttaatAxBubBvu3Q==
-X-Received: by 2002:a05:6122:3c54:b0:529:24f8:dbdd with SMTP id 71dfb90a1353d-529253da601mr17813854e0c.4.1745428538734;
-        Wed, 23 Apr 2025 10:15:38 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52a74d3a2d0sm79186e0c.40.2025.04.23.10.15.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:15:38 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7dhB-00000007LQW-2UhV;
-	Wed, 23 Apr 2025 14:15:37 -0300
-Date: Wed, 23 Apr 2025 14:15:37 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Leon Romanovsky <leonro@nvidia.com>
-Subject: Re: [PATCH v9 03/24] iommu: generalize the batched sync after map
- interface
-Message-ID: <20250423171537.GJ1213339@ziepe.ca>
-References: <cover.1745394536.git.leon@kernel.org>
- <2ce6a74ddf5e13a7fdb731984aa781a15f17749d.1745394536.git.leon@kernel.org>
+        bh=IXqH3/APdtQJoO7o2nnXO+aSVxcwfTQhNjLKJExRtA4=;
+        b=k9B4Wko/3mzGLbuvyqr2fNnAZ17jmnQGZrj3JGmzklttP7qBuhxbN1Rld6dtah/He6
+         hUmpc8NiObCojnvpP5sbkNMKqw8Bvy2df9ymPyJcmdXge/8tJCKEV4dd7w7kVlqmxauZ
+         fEVEcBJ36yf9WUrV+tjkcbG9+SB+BLeHEdmGiTqpTaSZiPt2YZlezU27Zvll76bbsynt
+         2ZTOdi6hzxC1aFvgCSo0EZ+F+Vx07wivoW0Qa9mPy24VjGcfO6tGupUUaUmH6pg3YJjW
+         FkXKkd6WTZ6qUWcZ5SSY8jo6u0PnEhbwhw4rTQIKb6gqKqmJ1sO5CfFIhlb9RKIHZENz
+         J0Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745428543; x=1746033343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IXqH3/APdtQJoO7o2nnXO+aSVxcwfTQhNjLKJExRtA4=;
+        b=bszRDBC6aRJTu9EXBpStRaF+Z/9weaEoRTB6jmbgQxVP8TGg3mVoAY0YvEjqiP/dMC
+         y2qSZexJZCu35kqv1JwSHBEVrItQV8TBCbpGB49782F1bm8YO9cnKebX+4hjk0G8gA1T
+         Du5m+oYawD4X63iX6HgBtEo0C2s6uK8tiBYedayu26BG390TXRzdqUIvjXrYj5t455qM
+         nuaLHgWROYtwLfExn2ekpwTlF/GlQiyJs+hkrC+QGS4au3JHIf6d9WPfs9l6PWO+uZj1
+         3E+GjS7uTFs9g90+HRR3ICvVpgNpwpR/eruiE+BckirpBQiSrqLNb6fiQyddd27ramTK
+         p5Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCUN1W7LysZPLbMxvoGNQZaeCmlV95fxUVWOX1K52wFCOnVXZemCMpKM7tnxiCNVPmX8g0Q=@vger.kernel.org, AJvYcCUfgX/OZ51M/5kqTXxg1W59s2ONSpXbWeWsUM06fmxIlO1/p+0W7B1po6DDaz2NMNTmplRhc3Slf8fFGizi@vger.kernel.org, AJvYcCXUJQrOQOZaMEJpqell8NspBGwinVIlWbqBNPUw1/JhgRukENRSdZI2Dccgf3rBc4r0hWnEtFk87Qqu+ORRzydm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6NO8ZHccoJsJ9VO5IMJCrQTPwUQfdIHvREJ9TXsbZAB+ML5af
+	MW3rPyKjqJihpJMpONlrPwRTGFF5afAmVgPoYjPjkk1jOanzl9h64PG93avssMte8rMr2Eme5TY
+	jNWY3w3xABI+WkmbglLDgZuzx57Y=
+X-Gm-Gg: ASbGnctwMuL4eHc1lfdLfDelBe1YCa2zMmMFSUdgddhi4y8oWIN3fQCd/2t4kbF13TS
+	otjRQxxZRGrFVcjUumO4zd8QmoVP7EOcYS0WcFWuPMUK3p8dPKjn75xdy0+EIGmRz45v2M0t/aH
+	Xq3NhvFE09SWTNRThSA/8n7ZYgMnup0tVjXUElwA==
+X-Google-Smtp-Source: AGHT+IENhXSbehQqfBW1svYcq0D4UIHBuJbvet0xcZ1l8BgXjBl9sSRbuFPUI4WEPm1PyA5ibhgYTL9d/lGV71q9Wms=
+X-Received: by 2002:a17:906:942:b0:ac7:3441:79aa with SMTP id
+ a640c23a62f3a-ace5459c3b0mr1838766b.13.1745428542340; Wed, 23 Apr 2025
+ 10:15:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ce6a74ddf5e13a7fdb731984aa781a15f17749d.1745394536.git.leon@kernel.org>
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com> <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
+ <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+In-Reply-To: <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 23 Apr 2025 10:15:20 -0700
+X-Gm-Features: ATxdqUE91QmVoMb8-9fNRcAVpV6sKAYDYDexZM632tte0cXJZXh3_ehQWPpgTAs
+Message-ID: <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
+Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
+ func model
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
+	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Florent Revest <revest@chromium.org>, Bastien Curutchet <bastien.curutchet@bootlin.com>, 
+	ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 11:12:54AM +0300, Leon Romanovsky wrote:
-> From: Christoph Hellwig <hch@lst.de>
-> 
-> For the upcoming IOVA-based DMA API we want to use the interface batch the
-> sync after mapping multiple entries from dma-iommu without having a
-> scatterlist.
+On Thu, Apr 17, 2025 at 12:14=E2=80=AFAM Alexis Lothor=C3=A9
+<alexis.lothore@bootlin.com> wrote:
+>
+> Hi Andrii,
+>
+> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
+> > On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Found=
+ation)
+> > <alexis.lothore@bootlin.com> wrote:
+> >>
+> >> In order to properly JIT the trampolines needed to attach BPF programs
+> >> to functions, some architectures like ARM64 need to know about the
+> >> alignment needed for the function arguments. Such alignment can
+> >> generally be deduced from the argument size, but that's not completely
+> >> true for composite types. In the specific case of ARM64, the AAPCS64 A=
+BI
+> >> defines that a composite type which needs to be passed through stack
+> >> must be aligned on the maximum between 8 and the largest alignment
+> >> constraint of its first-level members. So the JIT compiler needs more
+> >> information about the arguments to make sure to generate code that
+> >> respects those alignment constraints.
+> >>
+> >> For struct arguments, add information about the size of the largest
+> >> first-level member in the struct btf_func_model to allow the JIT
+> >> compiler to guess the needed alignment. The information is quite
+> >
+> > I might be missing something, but how can the *size* of the field be
+> > used to calculate that argument's *alignment*? i.e., I don't
+> > understand why arg_largest_member_size needs to be calculated instead
+> > of arg_largest_member_alignment...
+>
+> Indeed I initially checked whether I could return directly some alignment
+> info from btf, but it then involves the alignment computation in the btf
+> module. Since there could be minor differences between architectures abou=
+t
+> alignment requirements, I though it would be better to in fact keep align=
+ment
+> computation out of the btf module. For example, I see that 128 bits value=
+s
+> are aligned on 16 bytes on ARM64, while being aligned on 8 bytes on S390.
+>
+> And since for ARM64, all needed alignments are somehow derived from size
+> (it is either directly size for fundamental types, or alignment of the
+> largest member for structs, which is then size of largest member),
+> returning the size seems to be enough to allow the JIT side to compute
+> alignments.
 
-Grammer:
+If you mean the size of "primitive" field and/or array element
+(applied recursively for all embedded structs/unions) then yes, that's
+close enough. But saying just "largest struct member" is wrong,
+because for
 
- For the upcoming IOVA-based DMA API we want to batch the
- ops->iotlb_sync_map() call after mapping multiple IOVAs from
- dma-iommu without having a scatterlist. Improve the API.
+struct blah {
+    struct {
+        int whatever[128];
+    } heya;
+};
 
- Add a wrapper for the map_sync as iommu_sync_map() so that callers don't
- need to poke into the methods directly.
 
- Formalize __iommu_map() into iommu_map_nosync() which requires the
- caller to call iommu_sync_map() after all maps are completed.
+blah.heya has a large size, but alignment is still just 4 bytes.
 
- Refactor the existing sanity checks from all the different layers
- into iommu_map_nosync().
+I'd suggest looking at btf__align_of() in libbpf (tools/lib/bpf/btf.c)
+to see how we calculate alignment there. It seems to work decently
+enough. It won't cover any arch-specific extra rules like double
+needing 16-byte alignment (I vaguely remember something like that for
+some architectures, but I might be misremembering), or anything
+similar. It also won't detect (I don't think it's possible without
+DWARF) artificially increased alignment with attribute((aligned(N))).
 
->  drivers/iommu/iommu.c | 65 +++++++++++++++++++------------------------
->  include/linux/iommu.h |  4 +++
->  2 files changed, 33 insertions(+), 36 deletions(-)
-
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-
-> +	/* Discourage passing strange GFP flags */
-> +	if (WARN_ON_ONCE(gfp & (__GFP_COMP | __GFP_DMA | __GFP_DMA32 |
-> +				__GFP_HIGHMEM)))
-> +		return -EINVAL;
-
-There is some kind of overlap with the new iommu_alloc_pages_node()
-here that does a similar check, nothing that can be addressed in this
-series but maybe a TBD for later..
-
-Jason
+>
+> >> specific, but it allows to keep arch-specific concerns (ie: guessing t=
+he
+> >> final needed alignment for an argument) isolated in each JIT compiler.
+> >
+> > couldn't all this information be calculated in the JIT compiler (if
+> > JIT needs that) from BTF?
+>
+> From what I understand, the JIT compiler does not have access to BTF info=
+,
+> only a substract from it, arranged in a struct btf_func_model ? This
+> struct btf_func_model already has size info for standard types, but for
+> structs we need some additional info about the members, hence this
+> arg_largest_member_alignment addition in btf_func_model.
+>
+> Thanks,
+>
+> Alexis
+>
+> --
+> Alexis Lothor=C3=A9, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
