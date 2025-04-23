@@ -1,64 +1,66 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0ACB52F88;
-	Wed, 23 Apr 2025 19:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A560752F88;
+	Wed, 23 Apr 2025 19:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745435912; cv=none; b=utN8PtHtSH2gqheFhNXnQ/nX6Tm1hf7fkh3k9nj1E8RV+D72RrSpybM7pH7TL9bcmXW+16kdLN7KIoCoU+SNbpDscpYi6EksAWYcBOk2y9rgn5FH4Gmcrt8SUGhKreYA1dhe4QfbF5ceEoiH9y85BqhJuzLvcQ914RHu/k4fUZA=
+	t=1745435918; cv=none; b=jYf8WeaSX7uPV3WO2QlEEV2scbtTkn1zPkMRoYVEJ4Acle2N/GuUNWCjViQT6ZYLLEj3qbw0LRAIWjENLwhdv0zmt7uc9mjNHr5p7VSiiomDaStkqmV1wcC11GVGJNaa7/949nyP8CRdSYiHy94aVSgi7TCHVoxEcLS8k0+Cgvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745435912; c=relaxed/simple;
-	bh=F8SSjqtBe9E0HYlX9U1a01n/FwOQ8nwnabHjcE9VkKA=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hFds1VZZVjSeLrs9C4fZbIpjN6S3sBI3j43Bq715XoD7ld7oU7kE8gL41fUpdfKhrAxATAVsLyeYG7f1ECbi9WRL2yvVoVIghwf9mdQN3LUgGh7jQ1nxDMa6Bwq4sldB3JrV7Dp6t2wYKUMtzC7TIv/PeX8MuV1wQ6tezJKImYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YCzJ2Aw+; arc=none smtp.client-ip=209.85.214.170
+	s=arc-20240116; t=1745435918; c=relaxed/simple;
+	bh=P4t9q9q6HNFRvbE1rkBp9UJp/QgyD0QTFlp6sfgadw0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=bvHIEZUhD5bscPRkHJzPrr/SWFBBKekZpoCJ8ljf1ncNHYMisQm77W6BGWC/m+Hqow0hGtE2FRx2pmZ13CNLi7gUwnzL8KimWg6ZdqWHR2gqWQJfxZSgH3gKaOm3dldVkpemmd8qx3T8gjYbzqt3+RSL8iOfiHDEhqdv2vxd/lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GCIH+JvB; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YCzJ2Aw+"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22409077c06so3175095ad.1;
-        Wed, 23 Apr 2025 12:18:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCIH+JvB"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-224019ad9edso2560945ad.1;
+        Wed, 23 Apr 2025 12:18:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745435910; x=1746040710; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XAlKzRIEDmOMNM6L0NhSyuVo569RcMS78YotCgYOSqI=;
-        b=YCzJ2Aw+rALydtaNTLLeoRzTJN7nAk2hxbJTkuMt5vxuClky4a1IaySv1CTLHteDqw
-         cCLjS3n1evLS/PHewDK9hJGqYUVTxt8IJK828TPkL+a5ucvsxom2wcQIvVY4hx42Am2b
-         gudkk4kCrHxxuiDhTW/tQZEfAAnTXhOTKvh38WqavV6JdeFOo7pSutoR9YLNZj7jRjYY
-         AJf9HgcsL8VCgml6dCgDTvG0fdmRl/RVH2snecvT5Yttn2QARK1XoGUuBDa9dVDxaZ8S
-         jDhdGCvZLgwlmtdHesXiSCQpoJF7SnRb5bZp7pQFoncb0N45LOUdHXTE0w2MyZ1bsul6
-         EbUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745435910; x=1746040710;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1745435916; x=1746040716; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XAlKzRIEDmOMNM6L0NhSyuVo569RcMS78YotCgYOSqI=;
-        b=veuVrDY3z9XQirXd/z9+P3mlCuncqU3rONx/SVhGmYqfnyq6DOPb93ZoB0u2W4x6Sy
-         sLINnN54Vps/SpMEqYpot5nQvyIdIKTa0SjunbCm7Oo1xHsGNxvyzDuinJUp9jVj1BKa
-         tLH+OCI+2uTpcgmmawX+drBfbNtA5w4Xqf0J2NOBG48G45Oh8xQkQsEBMS+/GSharJb3
-         aWCJ74HwYpwK5YDgaRTZqooFyvUg8BcHCus9eJqyFWPMfglKJDdeHt4zofVsaWt9XZWG
-         SLhkC3cz90m3W3UBL694SgMBxdlMYzZVBWgbU9BpXRFvFnxA1NozTkBa66LKmVBCFDOv
-         qXjg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkMgRHs0U5QzvPX6B86OFw1wLCqLz5LjijTL3743DIopvpg5Vup9tpJBLixM4wk72FGgzgdU+1RX+DVDY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzpg+lQ0XEL4me7RVCwdW4rBTecL4oRnDDfgMBPo7T7T7Prr67b
-	7nreGnQoyVu86QA0etBKyOb9UQNBnRSnfCfJG+KV7lLPci1DzyLj
-X-Gm-Gg: ASbGncu9EEoy32cQOQmu/cw6apRd91OMXhmP9VZ6ztBjLI2ZQKTJpmiLSqzraULQfo6
-	SYO8g8wvIesXB7qFPj45c9SRHAzREr4COEVGMY+BjenbCeJUCeZxF6U5kdGf63hpELXEYDugpM/
-	s6e7kwG9uRP/TcewWZuUVpfi8kcnpUpejHjI41t+V9WpTcg4Y0WjIvS+4ccx1/mfmVY1D+IeJBd
-	TX6Rhm+9+OZnvN0dGkG3ZkdA/UwDqLjfbUPgNmjTPv15l+erChiqEL2nrxtsO9I1PXddG4gAIyl
-	1x7Co3i4T+RpeYCLwnvYKTe8LeD0s7iUd5MfB6ZAxiuvIiO23Yz2
-X-Google-Smtp-Source: AGHT+IFqtVLMUYCI3a91c+3WdvO87nsZUIASaOWcsedUdf92cp9GVuS79Tnp76Wh41NEsYpqtvSNhg==
-X-Received: by 2002:a17:902:c40f:b0:227:e74a:a05a with SMTP id d9443c01a7336-22c5361d29emr313472595ad.44.1745435910020;
-        Wed, 23 Apr 2025 12:18:30 -0700 (PDT)
+        bh=qTG8DAFdHnp2dP0ywoyFdyZYrfquR0mqHFgjbLDe2VA=;
+        b=GCIH+JvB/CIZjtwDlWmN66Ab785q8RaQ3LRmdMqaZAP6GODhmzCzB/hmEq7UwhxlLm
+         vPf0DLQMc0vVRVgPi7Ix6QTDM0ayudWb7+GAViiNzr5vKOh84BIUoLslLMtF82qkX3Ws
+         4xubl3z8DWoDpDvY3j0BlMbiQqJNEp51mgBMG1n0JKD703W4V++rw2v8aUN5vVijL89b
+         GfMK4r/Fl1F459Rl0gPKkuWifw9ayuUQwB3iUmJ6+dfYiqGQudXDtv1JKrt10QFBisdT
+         2UdhOe34Qc8RxaDYp1abv9IVEbLMRUviyENVYmF7xtbcRZ6y/VR3i1bqGTTPR0NI+6aG
+         mebw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745435916; x=1746040716;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qTG8DAFdHnp2dP0ywoyFdyZYrfquR0mqHFgjbLDe2VA=;
+        b=FneRHNSwf5JjyQT09ScMOe7OY8PHCRwNqlAVS04rMIgFUb/Z0mxYRQDAdnRuBtOx/j
+         0xEUQQvM75A+QMkTllVnqlGViw89N0jNRQ9IhM4dR5P4WHnj5IsNSjVJK6JJSC6yP2BV
+         zeKLNPm3GEr+HtvXouiaACzuBk91pTwV4PURD7CLMH+waSdvOucQwnZWrZzLm1oeYuvA
+         ZyW5eyHFC7z1qnvMmUoysZY0OoLV8la6PzGyegLLeh4lhK/GkFFD1907RGF45MUtsDgE
+         poq7OZ0xgJJcssEHg6sTidM9HHaiwQZLs2mzKLTYdI5dQvYniPkGNLRpi4mXxaagmAu0
+         3kxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXrLIOG4VODoDG3XdImVxvrzr6Ijl9i3LQkw7TGFssF1hHXVqrSK8EmxHyLPxgsPYKAUtYj3o4rWNeZXFc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsaO0E8beCYKzTa7saDf2lQaeFs54LdeI2tsuB59TS+r/qqWgQ
+	pjTRqaCoMUa9+AUhEz8PXvgLdVqLWs0uHt9uhGVgy5mhOv+2g0JE
+X-Gm-Gg: ASbGncsQmV9rBC9JSxE4IBLL6p7+CDpjJZXFN9jTxFBu99nL6WJeI1oTlGtxEiLIE2O
+	LdAQ3hI+UA7hO4lLXKKeUtaPHOGhU38YAi0ttmqD8qbLwQsnv0+SCkZxFZkczn3fyb58vAgf8SE
+	OibomcnObB1tWZ2RDplwueNdmLyUEQ9i//FhiHGevSaEOnpClv1e1QPRpv9u1wjAX/MuqcienV1
+	Aj1Yn4wEoZGath5e3uxRuLkgSmA3lLOlGns3SnJTAfmG4QpWxODZbJevDRPrsjrN5Y/rRId2Dr/
+	cEX3qErNbn1C0KnMtVeGVXoiVBzRG/puguys3KZNATwFI3fWl2OT
+X-Google-Smtp-Source: AGHT+IGVUpukk6IH6oBCSYckzehJVWDoFyKFCFz+R+5pqwO+XdOKln8KhlOaepxc13szHyqhG89q2g==
+X-Received: by 2002:a17:902:f549:b0:223:635d:3e38 with SMTP id d9443c01a7336-22db1a8d6b1mr8150975ad.15.1745435915841;
+        Wed, 23 Apr 2025 12:18:35 -0700 (PDT)
 Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4897sm108204025ad.143.2025.04.23.12.18.24
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4897sm108204025ad.143.2025.04.23.12.18.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 12:18:29 -0700 (PDT)
+        Wed, 23 Apr 2025 12:18:35 -0700 (PDT)
 From: Alexey Charkov <alchark@gmail.com>
-Subject: [PATCH 0/3] ARM: vt8500: Add runtime SoC version identification
-Date: Wed, 23 Apr 2025 23:18:30 +0400
-Message-Id: <20250423-wmt-soc-driver-v1-0-bd8bf32521c2@gmail.com>
+Date: Wed, 23 Apr 2025 23:18:31 +0400
+Subject: [PATCH 1/3] dt-bindings: soc: Add VIA/WonderMedia SoC
+ identification
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,62 +69,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAY9CWgC/x3MQQ5AMBBA0avIrE1CUYmriAVmMAutTAWJ9O4ay
- 7f4/4XAKhygy15QviSIdwllnsG8jW5lFEoGU5imqE2F935i8DOSysWKxMaSbSeqeYEUHcqLPP+
- wH2L8AORdRgRgAAAA
-X-Change-ID: 20250423-wmt-soc-driver-de26d67bd4ef
+Message-Id: <20250423-wmt-soc-driver-v1-1-bd8bf32521c2@gmail.com>
+References: <20250423-wmt-soc-driver-v1-0-bd8bf32521c2@gmail.com>
+In-Reply-To: <20250423-wmt-soc-driver-v1-0-bd8bf32521c2@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745435922; l=1942;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745435922; l=1697;
  i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=F8SSjqtBe9E0HYlX9U1a01n/FwOQ8nwnabHjcE9VkKA=;
- b=pisJxblZif4j+2IG4v9/QlR/sxLCnoZAYCaH1elEBlp3VqDubQ8vrbYnb9NfDjmqRfv2Z8mad
- pJpR2Mq4yRzABROxYSU6Yv/472p2j/zknOmwkrYGiD9EqQsIUXyAzAl
+ bh=P4t9q9q6HNFRvbE1rkBp9UJp/QgyD0QTFlp6sfgadw0=;
+ b=1+FGgFYBJHV6/0XVa9XKgAQpOA3+7YGbHCSVG44rcyhweBnrNGsV6t1fFSPmZwqEi3gpKQ+l5
+ 5/ZxGQqAHWbA20ME5pMssU9tVhASX90L+ZOFiK0yIPPt0jBjpLVuRQ9
 X-Developer-Key: i=alchark@gmail.com; a=ed25519;
  pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-VIA/WonderMedia SoCs have a chip ID register, which is helpful for
-selecting support for correct sets of hardware quirks at runtime, add
-code for it.
-
-This will enable the use of SOC bus match tables in individual drivers,
-allowing for finer grained feature selection where device trees might
-not provide full information about what the hardware expects (such as
-with non-user-visible SoC revisions having different behavior within
-the same user-visible SoC version).
-
-This series intentionally omits the updates to MAINTAINERS, as there
-are multiple VT8500 related submissions this cycle which may go via
-different trees (and cause pain in sequencing the merges). It will be
-updated separately in a single pass to cover everything VT8500 related.
+VIA/WonderMedia SoC's have a chip ID register inside their system
+configuration controller space, which can be used to identify
+appropriate hardware quirks at runtime. Add binding for it.
 
 Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
-Alexey Charkov (3):
-      dt-bindings: soc: Add VIA/WonderMedia SoC identification
-      soc: Add VIA/WonderMedia SoC identification driver
-      ARM: dts: vt8500: add DT nodes for the system config ID register
+ .../devicetree/bindings/soc/vt8500/via,scc-id.yaml | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
- .../devicetree/bindings/soc/vt8500/via,scc-id.yaml |  37 +++++++
- arch/arm/boot/dts/vt8500/vt8500.dtsi               |   5 +
- arch/arm/boot/dts/vt8500/wm8505.dtsi               |   5 +
- arch/arm/boot/dts/vt8500/wm8650.dtsi               |   5 +
- arch/arm/boot/dts/vt8500/wm8750.dtsi               |   5 +
- arch/arm/boot/dts/vt8500/wm8850.dtsi               |   5 +
- drivers/soc/Kconfig                                |   1 +
- drivers/soc/Makefile                               |   1 +
- drivers/soc/vt8500/Kconfig                         |  20 ++++
- drivers/soc/vt8500/Makefile                        |   2 +
- drivers/soc/vt8500/wmt-socinfo.c                   | 121 +++++++++++++++++++++
- 11 files changed, 207 insertions(+)
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250423-wmt-soc-driver-de26d67bd4ef
+diff --git a/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml b/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..eac72bd66fd6331c8d9316288bc1acc3e337efaa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/vt8500/via,scc-id.yaml
+@@ -0,0 +1,37 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/soc/vt8500/via,scc-id.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: VIA/WonderMedia SoC system configuration information
++
++maintainers:
++  - Alexey Charkov <alchark@gmail.com>
++
++description:
++  The system configuration controller on VIA/WonderMedia SoC's contains a chip
++  identifier and revision used to differentiate between different hardware
++  versions of on-chip IP blocks having their own peculiarities which may or
++  may not be captured by their respective DT compatible strings
++
++properties:
++  compatible:
++    items:
++      - const: via,scc-id
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    system-configuration@d8120000 {
++        compatible = "via,scc-id";
++        reg = <0xd8120000 0x4>;
++    };
 
-Best regards,
 -- 
-Alexey Charkov <alchark@gmail.com>
+2.49.0
 
