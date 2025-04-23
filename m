@@ -1,83 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A3D18DB17;
-	Wed, 23 Apr 2025 14:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C483175BF;
+	Wed, 23 Apr 2025 14:54:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420034; cv=none; b=cM2alSHBFWM7eUNldPHu78CcViMRCxpR1pQdzwq/PUnLBoLFv2dubpHm49vmBhy37hQfNklDumTUNHOa53xvNMlo/XoIeH5upzUdJmSRWWAhJUAdXdVrwNJBCoC467FM79hSvYHV5JK3a1XPZ9biV7OkDdyeD7oAskwLcM9LXU4=
+	t=1745420097; cv=none; b=QAqmyAflNNd+yQj+QIcvmuGkxkwmOHS3HepbLLTWJuOTbBE3QeXVCNBlJunjA3SPX4W8NpUpwKQbFMwn/24qHMbBMLH9Nr9UtKlQl5aJZUOIeuhC2VEXn95H19d+WJrygX9ZJuvVL2vBRQkHxyAFSSsrM2dY2p7SjWf9A1xRxfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420034; c=relaxed/simple;
-	bh=WUcb1wgsCsDQUCHQW+xnzIj+1l0qgA5o4uNMx5f63MY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GjfmAPM4zCOMAns48Fzh1fqH8L990LhEAiwIs64WJrFkdJTf4Cq5K3BPZ/5gbGJNnfd8IlUmX0NuOfy/YLnaRz/EkDQ7ay//p425tnfhTVUXc/ccUccejHC2RUV7Rv64qlk7tgL6sSjsYwcTs8UM8EeKx0CSi8RPwdx9ar5S8vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g78qYIYi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745420097; c=relaxed/simple;
+	bh=Wc9A61Zz11g83tlqW1DOFQ4UvW/DyqTaN8gqahVHOB0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ke+CpKGWRtMKCq29ja9I2mODAfnyZVy3Imnru0P4WjI9n1y2YWhXKZmxW1vmBOI5rXw7Gkh8MNqjPS3Y483Fm8nn8bTCh9ZsyI/7ssg9xcH6kRc33z+OaBqz8xBWXnnfxm4GSBoFlTJRtd4xniIYE+jCcF4FTICg8ExdGZ9qgrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aAgSCVkP; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g78qYIYi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC69C4CEE2;
-	Wed, 23 Apr 2025 14:53:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745420033;
-	bh=WUcb1wgsCsDQUCHQW+xnzIj+1l0qgA5o4uNMx5f63MY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g78qYIYiFDx8egynq2Hs1ZkD5E38gAYAzKPhxTVa5iNrvZhXIAsrW9Fwl5ZKtGgtY
-	 YpfIb2rbdgmTyp1pCUcT+b3PIkQbigRF7aeZjjoR+txEKGy91vAIwN1dF8ufq8sTw9
-	 ziExqxgKYB30uRtnMi/UX2NGF1g192BZbAASIEXSxdNYJuYjY6KILBAad217UKiUvb
-	 RNxCZH6omu2dBAwwaWdXqDLQvVvJZl1uQ5l+r+0En4zKn1/vYQv+XmIaB3T2/jcU+T
-	 fKZViLWQmI5MRq43U01EKltdIyfVjCPOSB22MI634UVI1KnbDLW7Nysk21E18unNrY
-	 dMxDD0OMAFtiw==
-Date: Wed, 23 Apr 2025 07:53:52 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v7 11/14] xfs: add xfs_file_dio_write_atomic()
-Message-ID: <20250423145352.GZ25675@frogsfrogsfrogs>
-References: <20250415121425.4146847-1-john.g.garry@oracle.com>
- <20250415121425.4146847-12-john.g.garry@oracle.com>
- <20250421040002.GU25675@frogsfrogsfrogs>
- <2467484b-382b-47c2-ae70-4a41d63cf4fc@oracle.com>
- <20250421164241.GD25700@frogsfrogsfrogs>
- <20250423054251.GA23087@lst.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aAgSCVkP"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224100e9a5cso78414475ad.2;
+        Wed, 23 Apr 2025 07:54:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745420095; x=1746024895; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C9L8NT1sI5HElpk2OIo93kPkVW1JxEsqlLvUnFwGIVQ=;
+        b=aAgSCVkPQ4Gl9maXmVTmKJ4W3NSC0v6RnqCYX5auccYA+DIMzZr+eszcJqIVB08VrW
+         w2r8oAMWz3De7PXZZjSEnMUbAEZikyHeYBdhE/QrjR8PkEl8JAhfBQHONqjh1zRvb1xW
+         wMlWurCVBgtVgy98mGGQUtEz6v8iRaHq1NQPGWRRWIoQTgx2Q/Uelsb6PysRNZ5LNbrz
+         XF8i95cTYL8iuIY0E5zjdL19GoPLOSHwpT2xF8XFlhUEcGgOnhCrxsvimSHbYRFEmUDS
+         M9obLoWy9AZ5pFldFlYa4XYQRXKUd+AuExUUJXfZMBCXWmbnhv0/GqgtZvmdw4ETrHDk
+         L9IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745420095; x=1746024895;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C9L8NT1sI5HElpk2OIo93kPkVW1JxEsqlLvUnFwGIVQ=;
+        b=N57JcWCZE91CYsGYBt9Vx/9YE7rhdIeZn2Chuwd7Cq5fdYz6wzHEtsgw0kogQdvO3b
+         dzp3ZCHdojF1+AKZKnNAK/eE9UZ3VyzGSFZd9+kTjFktGWAR4nbHrqlg+qloZy7kCxzV
+         A8amiREiuOQYZ4BBlmHQjse/uzgtoDonbRfwSc9G0QnuDIIxeAwee0Oqdr118MLdJt2G
+         KqoosXi2/wpCQs5Rlpls908H5PSllQhXLO0zxHlUoRvutUPb0NZQPTnLf5FXqz8xCUDp
+         hnX4f/4zP9KwD4kp8R1DipXg0FcWZrPlRnNCju3A6QGkM4TLp7Ov5Ml2jwXpabRdnGr7
+         jqsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgJkJEP2nCCZYzr5C8QxUAErkBRQT4KnsLCgnxMo5bMVfpOhcDH9ZJmVriwdyUfrl5HQKoYEQ5FSnpXWs=@vger.kernel.org, AJvYcCVtglsA5G+tntymvOvbkpOk1egSu2NlVg4VGkbtmyUUwD9R5XIQBsGHkEAS7xrcjXSou75IfkYA8cOKoes=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyU5f1FM6k1R1kABgJ2hkHse9/6ZkOe79lg0Ia+8Vfy/0MonAcI
+	ijL0vNNX+RlEkOrib45UwJ3nHWR+VsVArRTL1XAWPbUi4wWd8A+uuBxJxw==
+X-Gm-Gg: ASbGncuc4IeU+LnEOaFw342+KMb+oNeMNLfu3lVZwGkJSjlUHdfc8s5eNUXa5BtHUx0
+	8//cy2euGaE0inq2C3XKq+BYwJZKNckVxJoLMMW7odZwBz6BLkxHQq0ApxH/YfsegxCV/h1bUM0
+	mFZmo0+Zo7XTxCOjrpT0zHxrdtKTyEcjqf6mIr5mOWlK+Gs7tmRdXiqZ6+OaP6J2wReC+WImv9t
+	2SZJsypihLR3nP1UPnW5gWgeZhnX2UkvdgiT5foCXkm2TrBwGFU/eNKhssw1hUJxfP4sHn+/HxR
+	BeXTnV1SZLuzWjtfTgnE6jb8uhZOYmkD9IczsvxTuGxsNvk40EFopgyGMym65DQRYsRLqhYwWQ=
+	=
+X-Google-Smtp-Source: AGHT+IHdcTVX4/eBv3Iqn7kRy+NUkrDvuMMXYukENO07KV6GaDePMGVg/liTiBO2A70wYw1AQ8x42Q==
+X-Received: by 2002:a17:902:d506:b0:220:d439:2485 with SMTP id d9443c01a7336-22c535acc7amr277796265ad.29.1745420094490;
+        Wed, 23 Apr 2025 07:54:54 -0700 (PDT)
+Received: from tech-Alienware-m15-R6.. ([223.185.129.6])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdae69sm105318405ad.1.2025.04.23.07.54.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 07:54:54 -0700 (PDT)
+From: Sunny Patel <nueralspacetech@gmail.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sunny Patel <nueralspacetech@gmail.com>
+Subject: [PATCH V2] media: i2c: ov13858: Define macro for EXTCLK frequency
+Date: Wed, 23 Apr 2025 20:23:03 +0530
+Message-ID: <20250423145448.23407-1-nueralspacetech@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <Z_5K9Kz2i8TouhC4@kekkonen.localdomain>
+References: <Z_5K9Kz2i8TouhC4@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423054251.GA23087@lst.de>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 07:42:51AM +0200, Christoph Hellwig wrote:
-> On Mon, Apr 21, 2025 at 09:42:41AM -0700, Darrick J. Wong wrote:
-> > Well it turns out that was a stupid question -- zoned=1 can't be enabled
-> > with reflink, which means there's no cow fallback so atomic writes just
-> > plain don't work:
-> 
-> Exactly.  It is still on my todo list to support it, but there are a
-> few higher priority items on it as well, in addition to constant
-> interruptions for patch reviews :)
+Defines a macro `OV13858_EXTCLK` for the clock frequency (19.2 MHz)
+and use it instead of the hardcoded value in the probe function.
 
-Heheh I'll try to go dig through all the stuff you've sent to the list
-yesterday, though I've got an hour of paperwork ahead of me that has to
-get done asap. :/
+Signed-off-by: Sunny Patel <nueralspacetech@gmail.com>
 
---D
+Thanks for the feedback. I have revised the commit message to use
+correct terminology
 
-> > I /think/ all you'd have to do is create an xfs_zoned_end_atomic_io
-> > function that does what xfs_zoned_end_io but with a single
-> > tr_atomic_ioend transaction; figure out how to convey "this is an
-> > atomic out of place write" to xfs_end_ioend so that it knows to call
-> > xfs_zoned_end_atomic_io; and then update the xfs_get_atomic_write*
-> > helpers.
-> 
-> Roughly, yes.
-> 
-> 
+---
+ drivers/media/i2c/ov13858.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
+index 7a3fc1d28514..a1242a90cdc9 100644
+--- a/drivers/media/i2c/ov13858.c
++++ b/drivers/media/i2c/ov13858.c
+@@ -21,6 +21,8 @@
+ #define OV13858_REG_SOFTWARE_RST	0x0103
+ #define OV13858_SOFTWARE_RST		0x01
+ 
++#define OV13858_MCLK				19200000
++
+ /* PLL1 generates PCLK and MIPI_PHY_CLK */
+ #define OV13858_REG_PLL1_CTRL_0		0x0300
+ #define OV13858_REG_PLL1_CTRL_1		0x0301
+@@ -1664,7 +1666,7 @@ static int ov13858_probe(struct i2c_client *client)
+ 	u32 val = 0;
+ 
+ 	device_property_read_u32(&client->dev, "clock-frequency", &val);
+-	if (val != 19200000)
++	if (val != OV13858_MCLK)
+ 		return -EINVAL;
+ 
+ 	ov13858 = devm_kzalloc(&client->dev, sizeof(*ov13858), GFP_KERNEL);
+-- 
+2.43.0
+
