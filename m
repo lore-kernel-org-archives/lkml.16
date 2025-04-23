@@ -1,210 +1,213 @@
-Received: from HK3PR03CU002.outbound.protection.outlook.com (mail-eastasiaazon11011038.outbound.protection.outlook.com [52.101.129.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EFE26B2C3;
-	Wed, 23 Apr 2025 08:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.129.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745397875; cv=fail; b=cwQZC2jwo5qnzG6QxAEtfURuw0mgarh6giHd2kPgAHnBF1CEympz6v9kDq8tNG/+2roG4uCa0U67Jrrf267XNm8FzkRVqaKf2uuSdLsC2KvIJD1GoCCOC6XiEZovlZouj9OGurpFmOd6YQshxOvJcxaWOL1+HRsP/9Bt/vdhs5Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745397875; c=relaxed/simple;
-	bh=hkxGm/cxkHIB2UHUwWlxx36tWdohDFgzgfaoW5zHjBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ukWdgnTTus4v1QPx6j83qWHv//fqTXdUyYu5SW4NOErMV9By9AZG/0mLUIgXol0Xy6xlyquBp6O+PM0CDL3l/roDpdZKCSo393J51wyj+VNGHOFRw5xO87GRzrUZ4esAZJrHVC3FJOoxZQy/d0oTVPAvLjop1cph9Mmu9dDcHuM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=LyAATyFY; arc=fail smtp.client-ip=52.101.129.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B717255229;
+	Wed, 23 Apr 2025 08:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745397898; cv=none; b=iBrQUodbhw0baASCi5e5sbVyWdFlWqySd1HIcXT74tp+b6VgpPfgZCchO8Z3A/65LeHgbwGuU8TzfP3LW6yOh5l2QqdUNUC6vsC66ifk9MLtqfrdNbrvGFVxZ6XOGkRfc6ZyaKChyin+wzV5tLB/JshaqzQd3B6tOnUeUJZOTIE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745397898; c=relaxed/simple;
+	bh=fB5j9Qh2d3h0SnxxtIGEil8fLk3S4gA+eewhDbj2B6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kFMnXzMJUtx/X54PUgBi+d5XV6mJhj8NF0MPuEOqyfowUr1cnpbyjidU5Gh3xbB+gJh6XFwG01R/blUuZiK3g4TgHF8dPWCkTcnQ1761Y+bkoi4MG1KgMy1ncvIAw/3F5ZXhr4tvlfMktytlJU+nLKDdd9rRdvzovQKqy+1BYbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=mPONR0tJ; arc=none smtp.client-ip=1.95.21.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="LyAATyFY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zB3i3efFnUQkEE+OnGuxu/nonyCwzCuE0sz8iqaqkd3gl8Vp3dXDOnezdchxAbguAgs0ZVFO5D6ZczZSgLjxKcnFo9iiYAppaGgx2sZfTKYvGMMP09Nlxq5fL5G9SDY71RxxPkDCgPouRS6KZP1fcp/76TtmcNldVfnSmZMXwFt0TKa1a/A8c0PchWzL/SVcPLUJCVQAg2eeKG3PW+skDpW6K2JhXkY/ggsI5lKnw7PhE42Uv42KqBhuW3ZW2obhBsFXZ9bC8yJiTj+5TpYVkzk9jtNCnBsOKfzm6N7uDWgemn1FT/kc4G44vYjqsY0Pk5rjGjECZw7oboi8XFutqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dkj5cVHxKIsG2Sx6wH0Vn2VjO66YRdldPUq0Jpu4mYQ=;
- b=xSTDivbIxHU6+TiTdwH1Gu2cheMkdaD3yUJDVE2bJS49vtEVYQkkipLeBDkzRgqGvZP/U4e9ur/3aa6xP6Pdo4dSn87+ytGoochHm8srdSMrkRSfsRE04dcWvKRaTsRo8e8KkOLlRpA4sMG1bJSWOgx0x4YASONFaBkTkrhXIicpWv72m1FzaG+MCPIMVch1d4lvH0s6JpDk5h9CxkBIgMdpFIfZXEmkxDpFpVldiGGvrAc1FIC7dSafNpPqTP7XY0E8Hk0IPk6QK/ZnQ/PZDbSSMmFqS81jHHp0DWVZR+pl7MuJIGScIJT18/tShHtAyKZbpfFJ6PCVHrdVGFpcxw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dkj5cVHxKIsG2Sx6wH0Vn2VjO66YRdldPUq0Jpu4mYQ=;
- b=LyAATyFYZs/21WC7XXDljlGvfDQxaHFQHyozGdFSXLzsQBgdD9sFmAqY5ws3+4Eh3SFp6MCkSJtdBT3gTA3K/k/nq0MuwpCFXBfs/yrurzzgTnkYULCnpJxzNFDW1009/wNiJqaDGnHVFu65HI2/2iSQhNPO/R4fKSCAYzLsKtbN3lw554d82gpnFSPMoA5AqW1lCnYal/23hddVPQH5OzlSic+Ve/B64TFMYw0X3EyFbOM89LV27of4ykfM/RNkZUB/FdZ0w0r/zEk/bjLK73jBn2RjF/IRdgZjXeqSdyzq54HOMA12QP0hU5+HJOZG+TQiWLqUFlEo18LmUMmkQQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from PUZPR06MB5676.apcprd06.prod.outlook.com (2603:1096:301:f8::10)
- by TYZPR06MB7275.apcprd06.prod.outlook.com (2603:1096:405:b8::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Wed, 23 Apr
- 2025 08:44:27 +0000
-Received: from PUZPR06MB5676.apcprd06.prod.outlook.com
- ([fe80::a00b:f422:ac44:636f]) by PUZPR06MB5676.apcprd06.prod.outlook.com
- ([fe80::a00b:f422:ac44:636f%6]) with mapi id 15.20.8632.036; Wed, 23 Apr 2025
- 08:44:26 +0000
-From: Huan Yang <link@vivo.com>
-To: Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: opensource.kernel@vivo.com,
-	Huan Yang <link@vivo.com>
-Subject: [PATCH 2/2] mm/memcg: use kmem_cache when alloc memcg pernode info
-Date: Wed, 23 Apr 2025 16:43:05 +0800
-Message-ID: <20250423084306.65706-3-link@vivo.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250423084306.65706-1-link@vivo.com>
-References: <20250423084306.65706-1-link@vivo.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYAPR01CA0162.jpnprd01.prod.outlook.com
- (2603:1096:404:7e::30) To PUZPR06MB5676.apcprd06.prod.outlook.com
- (2603:1096:301:f8::10)
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="mPONR0tJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=cTTTAQDf6fHnIShOY7nHVrkl1CzARvdCJOI3IZdV3Ac=;
+	b=mPONR0tJ6JOAJK6st/hPw4OWfYhiQ3c37toLpvSvAaTUNYLlNVJC1R9nNG+9bO
+	H8o+3/NoDauh6x0yPfh+wYor+sUeJSUF4A25f5qsCk4oitUYlN9mKUDmXZZeIpqs
+	hptJqog/aAY1kmbLxXjDx5rYnCbMdc1NB+fa+38LBlu4Q=
+Received: from dragon (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id Mc8vCgD39tU8qAhoAhnAAw--.25448S3;
+	Wed, 23 Apr 2025 16:43:42 +0800 (CST)
+Date: Wed, 23 Apr 2025 16:43:40 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@ew.tq-group.com
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mp-tqma8mpql-mba8mp-ras314: Add
+ Raspberry Pi Camera V2 overlay
+Message-ID: <aAioPO9pZUFfyjpc@dragon>
+References: <20250324071102.23765-1-alexander.stein@ew.tq-group.com>
+ <20250324071102.23765-2-alexander.stein@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PUZPR06MB5676:EE_|TYZPR06MB7275:EE_
-X-MS-Office365-Filtering-Correlation-Id: f006b816-563c-41a9-6639-08dd82430def
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|376014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?TbdctyTuMmmAi4r96T0fHeAydh3iCqUi4n2ZD3DgdmzioHup09dnFaj1ooE1?=
- =?us-ascii?Q?JpjTTk9rGsDNB4H/iJ10+32xG7uh8RD4WlAc7duMZIl77oayAPmkD8gv9we0?=
- =?us-ascii?Q?I1MiP+B7Srjn+d4lg4mPINK2li1XgUN2Xty4LBCDXWJSOPMC42ZLUvSLaAIu?=
- =?us-ascii?Q?7QOU/MpidVhd+S0XD2NH0VSp6YIV/2qn7PAGFCwEe7jbbIXNiU3gNHY2PNVx?=
- =?us-ascii?Q?Tka7JP1YmYhw14agxgMhbFvYqKMdi+LH0AN4zGJ8QMRBUcaL+5sAFhHZBWMJ?=
- =?us-ascii?Q?LKcGp5FSw6IvibiP8sD6Fk44RDivIAnm58WpCe9+D1JiU8GRzTWk7EjV0byL?=
- =?us-ascii?Q?7BfqGFH5lMgcxSytVSRFtIxNbCRL1SAc7eJwEZJIYt6G7Iuz8qZf8zJfjiy3?=
- =?us-ascii?Q?SAoHsBMB3uZj1w7XC7NwOXG+GS13qf5Q4D0qcG/qvqG+HYKOg2IfnZ2owiMg?=
- =?us-ascii?Q?gpMDpEdH170OkaAOcXwhKX+IPquuUlwArpkz7UsJRuE/8GUNyf6mdt4CHnUs?=
- =?us-ascii?Q?Uy1JGrXyw5qPREPQSYiftAsvmhcYvlG5E5ZLWC6SCe63DvAKe137FFx67hhu?=
- =?us-ascii?Q?/dAR0oOoiUFNUbwg4AnyweISGveRycFe5PMgi5sM/fI1AcB6tGxGVQdyr5fq?=
- =?us-ascii?Q?DF0R3v/MPifoCiMqmF46l8TKKh0uk+Uva4bP6yzWRNKrl51asNAkbYcKMnAk?=
- =?us-ascii?Q?vwqLL2LT9UMBmRVhmHK80j0yurF77LX6SpOyXlwrKZ3yWnjbEDWHvaHFALAS?=
- =?us-ascii?Q?mYEiTSYj9O2qhiVzS9Zjb5yf9hDjS8iW+dmeJjo6/QI9p+2G12+E0lYcyjJ4?=
- =?us-ascii?Q?OjiAz8HOLgVsQprai4HuW8BTjKNJONrhh+wI7udrJ4AbR4NoyatvaLFQNeS3?=
- =?us-ascii?Q?0zJeFzGp4ABNLzcI79T/jYq/qfMFRF1wdMKsuZ/SHPWphHgcQtSRIM8YbYUZ?=
- =?us-ascii?Q?M1mt8S8rpEO3P7VfnvpBVH/CCWlKRYiik9q8WP/nzcmevU532NLG5i3rXc4S?=
- =?us-ascii?Q?3tIqrcR1Ve/gf6G/+T2z+vHI5d6ccSYpCVQWfdS9Y1xVgsgtaxCdvqEPncX5?=
- =?us-ascii?Q?yNcAmoMjMidLwWNUSntSawtYxH1P4w1t5m81C++sCf+Gzk8f0e/5voRogoZq?=
- =?us-ascii?Q?Dr3QV9F6XY59cQNUNYb8bssG2l887cnRw1Sbq2vRYktINfkJsfYNdXsOSZtF?=
- =?us-ascii?Q?LnrVPYNV3oZwJytqF5wh4LYY8X7kM4sr7uFOgQghYQSDWneDEnWVZ3+y+F1a?=
- =?us-ascii?Q?AUdssvccxlr2LIifxrrJAlKIG96ruQmORnMTx9WInz/7Z/csjOVb357nBNl1?=
- =?us-ascii?Q?JTyfHc5Fuw/7dfrXBcmZJxKGnzhe+Huz6SQ5wc2LkWTCEt2z35PE6ZkOsL+f?=
- =?us-ascii?Q?VcQWT7Dsgglnog4lF6X1t+yIK/oUbKFNTNtZmC/X7lOWxGhR09MMvz9T1crY?=
- =?us-ascii?Q?Kbwdblu/V2Rp7SN93hb8GabKA+ZMKY6kGtyq+OiAgGq4JsU09Y3Mmw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PUZPR06MB5676.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NZ51vdHO+b4vPMZpque+wzNA5OS28WxlmOZgLQyVWY7bqzjgEA+aGeEJoCaI?=
- =?us-ascii?Q?sGGwy0D84FWrHnzjRYg8xope/TNYZu8ZwPbq/IzM6iUjDVDnrXixsyC5zt3z?=
- =?us-ascii?Q?RgIqZ637iSyJ3VOgqfHBpuIRQ7riyeku/PqPxDRcEJsKfcHP67AcQqr2lDg6?=
- =?us-ascii?Q?CitjrCCTJGgtpZBVl5tDt9iDjItiYKwFtfXnnaTAcXNVvALGHmuaPvuhBxgc?=
- =?us-ascii?Q?Abz46PyPaEqznG7U5HNwpNUVOUyPj5HUfBv32gpsBWbESw/mKLHHCnweDc0Y?=
- =?us-ascii?Q?LyRWHZKHEfS3bz0Bqlw7NRPwROKy8lr5Ce5e5hAn+ZS/agN5aPJ9B8vxOcEK?=
- =?us-ascii?Q?FlO6mSfMybU+BuYZFYNc9VyOvXAy3fNbFS0iQO/fchrITT7qKusAEKdnN6Wp?=
- =?us-ascii?Q?/hQ6mI1RtLwCG5mw/2tCOF73U7UPq3yDT2SYmhOtKnkhPaL4vPMSm2w1A8/c?=
- =?us-ascii?Q?/j7efpCBeZ0mhB0GbKo62IjrxZVNw+fzlM3wz7yML5kyTd1zjwD8YR3ReHNi?=
- =?us-ascii?Q?FA7SWVSMUskwxD4Zxfgke+ErUPyuqiCr2Sbz7btWym8DQdcSPEmICoMKYreN?=
- =?us-ascii?Q?EmnwChAoSL/Pfry9/A7acxOG6NDIHXnigtyIF8OWVBxqNtvNpG2Zv1KyCFSB?=
- =?us-ascii?Q?scmjELW8+4bSXM41v0t1lhIYGvVKD2VCYo1eCv3jm6dbSqP700eRQtTwzPek?=
- =?us-ascii?Q?6lyadG8/cit+acShB9BTLGENy8NixSscyPBrEACaEmWhkCPMSo2GZS4QhAtG?=
- =?us-ascii?Q?Ca1NfQQj8rfCspMB0h/BZBsr3yoGGZmkp0dRvTxqDkddiMyTTVeTZK22JdpB?=
- =?us-ascii?Q?bFSP4Wc+gLzs1amdm33wUMrb+Oc3EyEoIM2/H7piAAQdYwJBUiDEx4zvbEXK?=
- =?us-ascii?Q?SeIKdE0RgIP6PE1FuWsPYExZrg9NW7ogujFl9xqfHqdg6LQ2F/647dnmYDkx?=
- =?us-ascii?Q?pNubMAX9H58YzDWRXzGrR/KGJgi4TpMeBvEWXxHnrGnVEeI/9KLb7AyiPlVp?=
- =?us-ascii?Q?88VbHnev9cwUaZdW4TFBt2O0YsWaviGPZ2Sy/4LGKOtOPbdJ5DNgAW+Sn3lb?=
- =?us-ascii?Q?/rdzPnFPro6nodA25hrwOlU/l/+CLHZcv0z9i7w2DqVCAOT0mErEdf0qlhpM?=
- =?us-ascii?Q?FmdM14zKYtiOPKspPrYyhu6+YFWqC6H9cX9pu9Fe2pZwswNn4T6Ti+uCssyK?=
- =?us-ascii?Q?4HZ/X9dCVQ3db2C31RkruaLIoCqmNbsD7jchquWeZK8myaFW5Ejv7jcU95/l?=
- =?us-ascii?Q?7DxdnI7O0uvN4Uy5fjWxqNqgxEHEPnW2/4Mu0+8p2QGpj9ZJA/8Cx+V82NGu?=
- =?us-ascii?Q?UAY3ZCeGT88E2FogOKzVsyyY+wpdZeesKkfGQH7hwebiBH09X+SWTrJjy2rW?=
- =?us-ascii?Q?SRl3HmrlviM2Am/8W0j+QyXz7k5vJcA+AF/J02qDr+7GqIy45L0WRI5Es3PY?=
- =?us-ascii?Q?nKGr6Xbcybt6RWtOQuEw+88Gdj3esD81WlyI/IVvLZ7KsELXYA11rcdSUTaL?=
- =?us-ascii?Q?gOG6ZvYvSRq1o3mSMBsEjYpk3PXyu42Oe4LEu628fV00CBH+2Xk9MEmli9PO?=
- =?us-ascii?Q?k+w3YsHwX+bIqu4lW4IEVPhHXSzQxVKHG01EHQ8h?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f006b816-563c-41a9-6639-08dd82430def
-X-MS-Exchange-CrossTenant-AuthSource: PUZPR06MB5676.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 08:44:26.7309
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fbcF9kNWaGeERghcDPUFUrSNmceR4xHWpi6XGqMDxDtNUSEsCsYiZW3hB39GaEL18n35iElX5uUN/1UG1RdE0Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB7275
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324071102.23765-2-alexander.stein@ew.tq-group.com>
+X-CM-TRANSID:Mc8vCgD39tU8qAhoAhnAAw--.25448S3
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXrWDKFyfXrWkJrWxJFWfGrg_yoWrKryfpr
+	n7Ca93GFs7Jr4xAwsIqrnIgrn0y3y8GF4jvr1UAry8Cr129FyxtF90qr15urWfWFnFv3yj
+	vF92qry2gFnIqaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jO8nOUUUUU=
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEQ04ZWgIgd2b8QAAsX
 
-When trace mem_cgroup_alloc using trace_kmalloc, may get this output:
+On Mon, Mar 24, 2025 at 08:11:00AM +0100, Alexander Stein wrote:
+> This overlay configures IMX219 MIPI-CSI-2 camera attached to ISP1.
+> Also add additional overlay both using LVDS display and camera.
+> 
+> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+> ---
+>  arch/arm64/boot/dts/freescale/Makefile        |   4 +
+>  ...imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso | 107 ++++++++++++++++++
+>  2 files changed, 111 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+> index d7ac8dda4bde5..b5cd2efd260cb 100644
+> --- a/arch/arm64/boot/dts/freescale/Makefile
+> +++ b/arch/arm64/boot/dts/freescale/Makefile
+> @@ -247,10 +247,14 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk-pcie-ep.dtb
+>  
+>  imx8mp-tqma8mpql-mba8mpxl-lvds-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds.dtbo
+>  imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01.dtbo
+> +imx8mp-tqma8mpql-mba8mp-ras314-imx219-dtbs += imx8mp-tqma8mpql-mba8mp-ras314.dtb imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtbo
+>  imx8mp-tqma8mpql-mba8mp-ras314-lvds-dtbs += imx8mp-tqma8mpql-mba8mp-ras314.dtb imx8mp-tqma8mpql-mba8mpxl-lvds.dtbo
+> +imx8mp-tqma8mpql-mba8mp-ras314-lvds-imx219-dtbs += imx8mp-tqma8mpql-mba8mp-ras314.dtb imx8mp-tqma8mpql-mba8mpxl-lvds.dtbo imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtbo
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mp-ras314-lvds.dtb
+> +dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mp-ras314-lvds-imx219.dtb
+>  
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
+>  dtb-$(CONFIG_ARCH_MXC) += imx8mq-hummingboard-pulse.dtb
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso b/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso
+> new file mode 100644
+> index 0000000000000..0bc96d242f33f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso
+> @@ -0,0 +1,107 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
+> +/*
+> + * Copyright 2022-2025 TQ-Systems GmbH <linux@ew.tq-group.com>,
+> + * D-82229 Seefeld, Germany.
+> + * Author: Alexander Stein
+> + */
+> +/dts-v1/;
+> +/plugin/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/media/video-interfaces.h>
+> +
+> +#include "imx8mp-pinfunc.h"
+> +
+> +&{/} {
+> +	/*
+> +	 * The three camera regulators are controlled by a single GPIO. Declare
+> +	 * a single regulator for the three supplies.
+> +	 */
+> +	reg_cam: regulator-cam {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "reg_cam";
+> +		/* pad muxing already done in gpio2grp */
+> +		gpio = <&gpio2 6 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		vin-supply = <&reg_vcc_3v3>;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	cam24m: cam24m {
 
-kmalloc: call_site=mem_cgroup_css_alloc+0x1d8/0x5b4 ptr=00000000d798700c
-bytes_req=2896 bytes_alloc=4096 gfp_flags=GFP_KERNEL|__GFP_ZERO node=0
-accounted=false
+Can we name the node clock-cam24m?
 
-Due to each memcg will alloc per_nodeinfo for each NUMA node, and each
-NUMA node is 2896bytes but kmalloc also given 4096bytes, that mean 1
-memcg on each NUMA node will waste 1200bytes.
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <24000000>;
+> +		clock-output-names = "cam24m";
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	camera@1a {
+> +		compatible = "sony,imx219";
+> +		reg = <0x10>;
 
-This patch use kmem_cache when alloc mem_cgroup_per_nodeinfo for each
-NUMA node. By this, ftrace how like:
+'reg' doesn't match unit address.
 
-kmem_cache_alloc: call_site=mem_cgroup_css_alloc+0x1b8/0x5d4
-ptr=000000002989e63a bytes_req=2896 bytes_alloc=2944
-gfp_flags=GFP_KERNEL|__GFP_ZERO node=0 accounted=false
+Shawn
 
-Compare to kmalloc, this only "waste" 48bytes per node due to HW
-cacheline align
-
-Signed-off-by: Huan Yang <link@vivo.com>
----
- mm/memcontrol.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index cb32a498e5ae..e8797382aeb4 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -96,6 +96,7 @@ static bool cgroup_memory_nokmem __ro_after_init;
- static bool cgroup_memory_nobpf __ro_after_init;
- 
- static struct kmem_cache *memcg_cachep;
-+static struct kmem_cache *memcg_pn_cachep;
- 
- #ifdef CONFIG_CGROUP_WRITEBACK
- static DECLARE_WAIT_QUEUE_HEAD(memcg_cgwb_frn_waitq);
-@@ -3601,7 +3602,10 @@ static bool alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
- {
- 	struct mem_cgroup_per_node *pn;
- 
--	pn = kzalloc_node(sizeof(*pn), GFP_KERNEL, node);
-+	pn = likely(memcg_pn_cachep) ?
-+		     kmem_cache_alloc_node(memcg_pn_cachep,
-+					   GFP_KERNEL | __GFP_ZERO, node) :
-+		     kzalloc_node(sizeof(*pn), GFP_KERNEL, node);
- 	if (!pn)
- 		return false;
- 
-@@ -5065,6 +5069,9 @@ static int __init mem_cgroup_init(void)
- 	memcg_cachep = kmem_cache_create("mem_cgroup", memcg_size, 0,
- 					 SLAB_PANIC | SLAB_HWCACHE_ALIGN, NULL);
- 
-+	memcg_pn_cachep = KMEM_CACHE(mem_cgroup_per_node,
-+				     SLAB_PANIC | SLAB_HWCACHE_ALIGN);
-+
- 	return 0;
- }
- subsys_initcall(mem_cgroup_init);
--- 
-2.48.1
+> +		clocks = <&cam24m>;
+> +		VANA-supply = <&reg_cam>;
+> +		VDIG-supply = <&reg_cam>;
+> +		VDDL-supply = <&reg_cam>;
+> +		orientation = <2>;
+> +		rotation = <0>;
+> +
+> +		port {
+> +			sony_imx219: endpoint {
+> +				remote-endpoint = <&imx8mp_mipi_csi_in>;
+> +				clock-lanes = <0>;
+> +				clock-noncontinuous;
+> +				data-lanes = <1 2>;
+> +				link-frequencies = /bits/ 64 <456000000>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&isi_0 {
+> +	status = "disabled";
+> +
+> +	ports {
+> +		port@0 {
+> +			/delete-node/ endpoint;
+> +		};
+> +	};
+> +};
+> +
+> +&isp_0 {
+> +	status = "okay";
+> +
+> +	ports {
+> +		port@1 {
+> +			isp0_in: endpoint {
+> +				bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
+> +				remote-endpoint = <&mipi_csi_0_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&mipi_csi_0 {
+> +	status = "okay";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			imx8mp_mipi_csi_in: endpoint {
+> +				remote-endpoint = <&sony_imx219>;
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&mipi_csi_0_out {
+> +	remote-endpoint = <&isp0_in>;
+> +};
+> -- 
+> 2.43.0
+> 
 
