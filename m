@@ -1,231 +1,147 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB816DCE1;
-	Wed, 23 Apr 2025 08:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396464; cv=pass; b=iLf13MOe22gxO/DiXyOjvljjv2qxiMWucR5PPMmRm/L/pc3DlRQUzIO8yfPtK1T4sIwEj4N8TuFvTaPIMXIpymbn0jRLm6jInvePCXHP08xjpt2/xE3XuXtsDl6Bjv26erv1PFxfjdYnsoTBzP5vCT7dS6grNZVcBUZ5iTk29J8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396464; c=relaxed/simple;
-	bh=z/VFE68McJikREOj00utWmBcPu+wN/7Ot0NDbMCTCEU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ETKvG4E3U+IaNUGffhKaEe43+yJEWwG26c+vPL3WwWIH5U722FLEniQ8C+cKkyzTDFe34ilnquctPR8oQWdkbf1zbWGxcWJ6ngvXzlfxkIDxutqMMKUBXBl8MqP/DAed6rSf+QhZFS9lXvfN8+FFdOFIs/6UuzryoIpmKrTk7EA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b=RZ56arMH; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F6426AA93;
+	Wed, 23 Apr 2025 08:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745396473; cv=none; b=Ir33WbvjqmOIIBWHZya7ddGEKmUWdsF7bQMZpU5ap6yZWUKzxLssXwdcgbDZU1eBhnz6awy17gDFCA3e+d2g6lOOzWYVo9g5yXfD1EhvhJ741CWQ3+GhWS0GR7wo1zDI8FVBjm5B1bs5Qg5EhK7tLdbnHQ07GvYY6WatvJFvKWM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745396473; c=relaxed/simple;
+	bh=I1q2Dpm1ydFtkNUSvYSxkbmRdd0OEB80H9jvtglEtt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I/BXibv1Joio41Axxq5jimWF6ES5yKVBLFKER+UKjhT4kV0keK/Kasyas3IVZblZo99o0rW1ncCsjI9mPZt07hM9oyRUJe/1r0INQrThVIQF7l4uQK0qAKP/0VtQWktTbJHToWJQPTSgT9vuCno57CL9t13JItpnp/bU/yrD1qA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hkIdFz1W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=louisalexis.eyraud@collabora.com header.b="RZ56arMH"
-ARC-Seal: i=1; a=rsa-sha256; t=1745396424; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=YpNkN/pgf05gdme5+SmEoxgIpTRcwbXhKWK7mhcpVskQoM8Sq8/FJry5KcIip0QNC6Iz75imDO0NKmWUCYVt2SbZykmh7qMlHWQVBpHkcBXo7HXACFed2Oq3mNrNMLkxdhb/1mwdTkncyuodkJ2OWVnOxI1vEYJmxq0m4TqY2CU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745396424; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=G1j8PYHcrNhQFqwI+btrCagt/+/2s6uq2LXIr8341kM=; 
-	b=lCfjYTHbja/eTRgBlQwBC/4w/1KOq0DjHRYJK5mZLDDuaNKhzP+zhNqECX9Ha/0unqOcGP+ywF2PBcqnjrEqJWAIqEA3NRwfslvZEtCj190T/lfmXbKdAzzQsVEQb9vygCVREx6iLt9tZEZnfL3223J3j4/jsnxAKHVsCwLBrAo=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=louisalexis.eyraud@collabora.com;
-	dmarc=pass header.from=<louisalexis.eyraud@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745396424;
-	s=zohomail; d=collabora.com; i=louisalexis.eyraud@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=G1j8PYHcrNhQFqwI+btrCagt/+/2s6uq2LXIr8341kM=;
-	b=RZ56arMHO8C8+mqDRUiyaCnAOcOnoC5BNhsvBbXBIcQcVJHW8MAirtsFs5yQbP8g
-	1QZNnexv+YodMsp9qqZoCNiyMLNsHwfHaq7QjvvqYSNdyvex0ftAlzISAWs2a1kyfPJ
-	1ttsYrrQ9O6HtYFOEUMp/BzreXoaMXMqH36BIdWY=
-Received: by mx.zohomail.com with SMTPS id 1745396422848172.7246656316138;
-	Wed, 23 Apr 2025 01:20:22 -0700 (PDT)
-Message-ID: <11d6b91a73b69924e954defe613eef7c4af45c56.camel@collabora.com>
-Subject: Re: [PATCH 1/2] net: ethernet: mtk-star-emac: fix spinlock
- recursion issues on rx/tx poll
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>, 
- Lorenzo Bianconi <lorenzo@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>,  Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,  Biao
- Huang <biao.huang@mediatek.com>, Yinghua Pan <ot_yinghua.pan@mediatek.com>,
- kernel@collabora.com, 	netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, 	linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
-Date: Wed, 23 Apr 2025 10:20:17 +0200
-In-Reply-To: <20250422160046.73aa854a@fedora.home>
-References: 
-	<20250422-mtk_star_emac-fix-spinlock-recursion-issue-v1-0-1e94ea430360@collabora.com>
-		<20250422-mtk_star_emac-fix-spinlock-recursion-issue-v1-1-1e94ea430360@collabora.com>
-	 <20250422160046.73aa854a@fedora.home>
-Organization: Collabora Ltd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hkIdFz1W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4539CC4CEE2;
+	Wed, 23 Apr 2025 08:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745396472;
+	bh=I1q2Dpm1ydFtkNUSvYSxkbmRdd0OEB80H9jvtglEtt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hkIdFz1WcY8wkJlqvDDv1ObJS2X/+ILWIFxxo9VTzxv6asQdnhfZV/IJUZDESK/48
+	 ZSQmTspuewRjK8lk/5OJ2CMTFWG/ihC8p89dMgGUCsSNxBe8AIssTOa6z62q4RKUH7
+	 ufugjgn4/t7KTqLP2yPqslYeNgkLBHzuySM5ulFk=
+Date: Wed, 23 Apr 2025 10:21:04 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
+ allocation failure
+Message-ID: <2025042301-flammable-masculine-ec48@gregkh>
+References: <2024122837-CVE-2024-56705-049b@gregkh>
+ <aAicoAmxX0B_O3Ok@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAicoAmxX0B_O3Ok@tiehlicka>
 
-Hi Maxime,
+On Wed, Apr 23, 2025 at 09:54:08AM +0200, Michal Hocko wrote:
+> Hi,
+> our internal tools which are working with vulns.git tree have noticed
+> that this CVE entry has been altered after the announcement.
 
-On Tue, 2025-04-22 at 16:00 +0200, Maxime Chevallier wrote:
-> Hi Louis-Alexis :)
->=20
-> On Tue, 22 Apr 2025 15:03:38 +0200
-> Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com> wrote:
->=20
-> > Use spin_lock_irqsave and spin_unlock_irqrestore instead of
-> > spin_lock
-> > and spin_unlock in mtk_star_emac driver to avoid spinlock recursion
-> > occurrence that can happen when enabling the DMA interrupts again
-> > in
-> > rx/tx poll.
-> >=20
-> > ```
-> > BUG: spinlock recursion on CPU#0, swapper/0/0
-> > =C2=A0lock: 0xffff00000db9cf20, .magic: dead4ead, .owner: swapper/0/0,
-> > =C2=A0=C2=A0=C2=A0 .owner_cpu: 0
-> > CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted
-> > =C2=A0=C2=A0=C2=A0 6.15.0-rc2-next-20250417-00001-gf6a27738686c-dirty #=
-28 PREEMPT
-> > Hardware name: MediaTek MT8365 Open Platform EVK (DT)
-> > Call trace:
-> > =C2=A0show_stack+0x18/0x24 (C)
-> > =C2=A0dump_stack_lvl+0x60/0x80
-> > =C2=A0dump_stack+0x18/0x24
-> > =C2=A0spin_dump+0x78/0x88
-> > =C2=A0do_raw_spin_lock+0x11c/0x120
-> > =C2=A0_raw_spin_lock+0x20/0x2c
-> > =C2=A0mtk_star_handle_irq+0xc0/0x22c [mtk_star_emac]
-> > =C2=A0__handle_irq_event_percpu+0x48/0x140
-> > =C2=A0handle_irq_event+0x4c/0xb0
-> > =C2=A0handle_fasteoi_irq+0xa0/0x1bc
-> > =C2=A0handle_irq_desc+0x34/0x58
-> > =C2=A0generic_handle_domain_irq+0x1c/0x28
-> > =C2=A0gic_handle_irq+0x4c/0x120
-> > =C2=A0do_interrupt_handler+0x50/0x84
-> > =C2=A0el1_interrupt+0x34/0x68
-> > =C2=A0el1h_64_irq_handler+0x18/0x24
-> > =C2=A0el1h_64_irq+0x6c/0x70
-> > =C2=A0regmap_mmio_read32le+0xc/0x20 (P)
-> > =C2=A0_regmap_bus_reg_read+0x6c/0xac
-> > =C2=A0_regmap_read+0x60/0xdc
-> > =C2=A0regmap_read+0x4c/0x80
-> > =C2=A0mtk_star_rx_poll+0x2f4/0x39c [mtk_star_emac]
-> > =C2=A0__napi_poll+0x38/0x188
-> > =C2=A0net_rx_action+0x164/0x2c0
-> > =C2=A0handle_softirqs+0x100/0x244
-> > =C2=A0__do_softirq+0x14/0x20
-> > =C2=A0____do_softirq+0x10/0x20
-> > =C2=A0call_on_irq_stack+0x24/0x64
-> > =C2=A0do_softirq_own_stack+0x1c/0x40
-> > =C2=A0__irq_exit_rcu+0xd4/0x10c
-> > =C2=A0irq_exit_rcu+0x10/0x1c
-> > =C2=A0el1_interrupt+0x38/0x68
-> > =C2=A0el1h_64_irq_handler+0x18/0x24
-> > =C2=A0el1h_64_irq+0x6c/0x70
-> > =C2=A0cpuidle_enter_state+0xac/0x320 (P)
-> > =C2=A0cpuidle_enter+0x38/0x50
-> > =C2=A0do_idle+0x1e4/0x260
-> > =C2=A0cpu_startup_entry+0x34/0x3c
-> > =C2=A0rest_init+0xdc/0xe0
-> > =C2=A0console_on_rootfs+0x0/0x6c
-> > =C2=A0__primary_switched+0x88/0x90
-> > ```
-> >=20
-> > Fixes: 0a8bd81fd6aa ("net: ethernet: mtk-star-emac: separate tx/rx
-> > handling with two NAPIs")
-> > Signed-off-by: Louis-Alexis Eyraud
-> > <louisalexis.eyraud@collabora.com>
->=20
-> As this is a fix, you need to indicate in your subject that you're
-> targetting the "net" tree, something like :
->=20
-> [PATCH net 1/2] net: ethernet: mtk-star-emac: fix spinlock recursion
-> issues on rx/tx poll
->=20
-> > ---
-> > =C2=A0drivers/net/ethernet/mediatek/mtk_star_emac.c | 10 ++++++----
-> > =C2=A01 file changed, 6 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> > b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> > index
-> > 76f202d7f05537642ec294811ace2ad4a7eae383..41d6af31027f4d827dbfdfecd
-> > b7de44326bb3de1 100644
-> > --- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> > +++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-> > @@ -1163,6 +1163,7 @@ static int mtk_star_tx_poll(struct
-> > napi_struct *napi, int budget)
-> > =C2=A0	struct net_device *ndev =3D priv->ndev;
-> > =C2=A0	unsigned int head =3D ring->head;
-> > =C2=A0	unsigned int entry =3D ring->tail;
-> > +	unsigned long flags =3D 0;
->=20
-> You don't need to init flags to 0
->=20
-> > =C2=A0
-> > =C2=A0	while (entry !=3D head && count < (MTK_STAR_RING_NUM_DESCS -
-> > 1)) {
-> > =C2=A0		ret =3D mtk_star_tx_complete_one(priv);
-> > @@ -1182,9 +1183,9 @@ static int mtk_star_tx_poll(struct
-> > napi_struct *napi, int budget)
-> > =C2=A0		netif_wake_queue(ndev);
-> > =C2=A0
-> > =C2=A0	if (napi_complete(napi)) {
-> > -		spin_lock(&priv->lock);
-> > +		spin_lock_irqsave(&priv->lock, flags);
-> > =C2=A0		mtk_star_enable_dma_irq(priv, false, true);
-> > -		spin_unlock(&priv->lock);
-> > +		spin_unlock_irqrestore(&priv->lock, flags);
-> > =C2=A0	}
-> > =C2=A0
-> > =C2=A0	return 0;
-> > @@ -1342,15 +1343,16 @@ static int mtk_star_rx_poll(struct
-> > napi_struct *napi, int budget)
-> > =C2=A0{
-> > =C2=A0	struct mtk_star_priv *priv;
-> > =C2=A0	int work_done =3D 0;
-> > +	unsigned long flags =3D 0;
->=20
-> There's a rule in netdev that definitions must be ordered from
-> longest
-> to shortest lines (reverse xmas tree, or RCT), so you should have in
-> the end :
->=20
-> struct mtk_star_priv *priv;
-> unsigned long flags;
-> int work_done =3D 0;
->=20
-> > =C2=A0
-> > =C2=A0	priv =3D container_of(napi, struct mtk_star_priv, rx_napi);
-> > =C2=A0
-> > =C2=A0	work_done =3D mtk_star_rx(priv, budget);
-> > =C2=A0	if (work_done < budget) {
-> > =C2=A0		napi_complete_done(napi, work_done);
-> > -		spin_lock(&priv->lock);
-> > +		spin_lock_irqsave(&priv->lock, flags);
-> > =C2=A0		mtk_star_enable_dma_irq(priv, true, false);
-> > -		spin_unlock(&priv->lock);
-> > +		spin_unlock_irqrestore(&priv->lock, flags);
-> > =C2=A0	}
-> > =C2=A0
-> > =C2=A0	return work_done;
-> >=20
->=20
-> Besides these small comments, the patch looks correct to me :)
->=20
-> Regards,
->=20
-> Maxime
+Good catch!
 
-Thanks for the review, Maxime.
-I'll add the missing subject prefix and fix the other issues in the v2
-patchset.
+> There was an additional commit added to the CVE entry. The current state
+> is
+> $ cat cve/published/2024/CVE-2024-56705.sha1
+> ed61c59139509f76d3592683c90dc3fdc6e23cd6
+> 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
 
-Regards,
-Louis-Alexis
+Yup!
 
+> There seem to be handful of other cases like this one AFAICS.
+
+Yes, we had to add support for this type of problem.
+
+> I have 3 questions:
+> 1) What is 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
+>    relation to the original CVE which seems to be about a missing memory
+>    allocation failure check?
+
+Removing the driver entirely from the kernel "fixed" the vulnerability :)
+
+> 2) What is the process when a CVE is altered? have I missed any email
+>    notification?
+
+We do not do email notifications when CVEs are altered.  You have to
+watch the cve.org json feed for that.  Otherwise the email list would
+just be too confusing.  Think about every new stable update that happens
+which causes 10+ different CVEs to be updated showing where they are now
+resolved.  That does not come across well in an email feed, but the json
+feed shows it exactly.
+
+Or you can follow the github cve feed, which shows this, OR you can just
+follow the vulns.git git commits which also show this.
+
+> 3) Until now CVE -> sha was a 1:1 mapping. Can we expect this to change
+>    and what exactly is the process here?
+
+The process has changed in that we have had to handle a number of CVEs
+where both the commit that caused the vulnerabilty has been tracked to
+mutiple commits (think of one-off changes that only happened on
+different stable branches, and then were fixed with different commit
+ids, like what happened in CVE-2025-40364), or this example you are
+pointing out where a vulnerability was introduced, later removed by
+having the entire driver removed, and then added back by adding the
+driver back and then resolving the vulnerability.
+
+The original CVE had this information as you point out:
+
+ 	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 5.10.231 with commit 0c24b82bc4d12c6a58ceacbf2598cd4df63abf9a
+ 	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 5.15.174 with commit 4676e50444046b498555b849e6080a5c78cdda9b
+ 	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.1.120 with commit 02a97d9d7ff605fa4a1f908d1bd3ad8573234b61
+ 	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.6.64 with commit 8066badaf7463194473fb4be19dbe50b11969aa0
+ 	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.11.11 with commit 74aa783682c4d78c69d87898e40c78df1fec204e
+ 	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.12.2 with commit 0c25ab93f2878cab07d37ca5afd302283201e5af
+ 	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.13-rc1 with commit ed61c59139509f76d3592683c90dc3fdc6e23cd6
+
+And now it shows this:
+
+	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 4.18 with commit 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
+	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 5.10.231 with commit 0c24b82bc4d12c6a58ceacbf2598cd4df63abf9a
+	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 5.15.174 with commit 4676e50444046b498555b849e6080a5c78cdda9b
+	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.1.120 with commit 02a97d9d7ff605fa4a1f908d1bd3ad8573234b61
+	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.6.64 with commit 8066badaf7463194473fb4be19dbe50b11969aa0
+	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.11.11 with commit 74aa783682c4d78c69d87898e40c78df1fec204e
+	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.12.2 with commit 0c25ab93f2878cab07d37ca5afd302283201e5af
+	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.13 with commit ed61c59139509f76d3592683c90dc3fdc6e23cd6
+
+Showing that the kernel ranges from 4.18 -> 5.8 were NOT vulnerable to
+this specific issue.  Information that is hopefully very valuable to
+distros dealing with old kernels, like yours :)
+
+So now we can properly handle this types of issues in an automated
+fashion, thanks again for noticing, this was a non-trivial amount of
+work to implement.  Given that no one had ever done this before, we have
+had to create all of this "from scratch".
+
+Our trees are crazy, hopefully this helps explain the lifecycle of
+vulnerabilities and their fixes better than before.
+
+One other note, perhaps you just want to parse the .dyad files we
+create instead of mbox files?  That provides a machine-readable format
+of what commits caused a specific vulnerability, and what commits fixed
+it, if any, in any specific kernel branch that is known.  I know at
+least one distro and one company that just relies on those files
+directly instead of attempting to parse the crazy json output that
+cve.org requires which in some places, I would argue, shows actually
+incorrect information, but that's a different topic...
+
+I really should write up more information about all of this one day, but
+we've just been heads-down trying to implement all of this to deal with
+the complexity involved in a way that is scalable over time.
+
+Does that help?
+
+thanks,
+
+greg k-h
