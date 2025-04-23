@@ -1,118 +1,109 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BC726659B;
-	Wed, 23 Apr 2025 05:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D5D266594
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 05:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745386214; cv=none; b=Y0limrKqbb7oKQmb9EwsPcKwTLS7dNjGwyhWUx+iTFBvWuLYNgyeenzkiECbetV5l2IQwRPU8zXLzLXLnMXkJLs1kC+GzQdPV9gGdXpRdVkmqRwFEaPaDvI+zBJXAzBj95dIg4nuJVLPVjDdRoL3Yt/8D9Ik60CHviiRA7Qz1jA=
+	t=1745386571; cv=none; b=bTno6gx4Ky4HhuuG8NQu92Exh5R6p6K29Ogl66yshBeCLfjFULFRIRf5btt1HhRL6h3RC8y8aI/N/js3vhYjXBJN0pjmWkYOMhn6qzO+KUBFzgbuYvm5aTLjX2TNnzgW6VVzavWlQdEOhsSEbZPOjjvkLFh17qr8EkEhHp9+YDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745386214; c=relaxed/simple;
-	bh=FlriVym+Js+dNVuPnyNYfAgam4ZC1vp+i/CRui2G3sg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EiNFPI4B4B53Cr1eG4IRUw/RYD9KoZsyr6N4py2kyEediSE5z/B10Bb0K8wuZ2wE5u9/d33mbVM90bdv0Dv13TDCb21cIYz3jTZYv47OzAM8j8ImXjJZxz7J9kBc4r+M2WMpJFnTqiMBnzMbHDAiqIGWI1EELoAOkDBlCYnhz5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org; spf=none smtp.mailfrom=yoseli.org; dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b=FPivEqvB; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yoseli.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=yoseli.org
+	s=arc-20240116; t=1745386571; c=relaxed/simple;
+	bh=znd3Gx+1i6NPOJ5fHPpMjC5QdTJie7kovH5k6mPOKO4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EhgNlgm7yO0t6FtbzhLLrJ+FFdQqZqLsHZSBgA1wei0VIn7/vtS3fo6tKCCgSYnMjuxRHpHQ4LQNB/rM9ysejzp+0yrRGbi7JuRwB47Dwb7hfd78tnc5zi+sRo0ScFN7HTE5b8ir5m9Q3T1bBE26KOjFXJdqz2TGeIgCIRT/BtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yfn0ie8l; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yoseli.org header.i=@yoseli.org header.b="FPivEqvB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 0424743A3A;
-	Wed, 23 Apr 2025 05:30:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yoseli.org; s=gm1;
-	t=1745386209;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RvQcDheIAFurSmOQdGUk8xpL5w1EwUFvHhEtcJWMar4=;
-	b=FPivEqvBosI4uRVdEGLIEh6h9o8eGiBwF9OwgqoFKwYP9oTRB38ocxcOCxJL7odPXt5VIU
-	AlFvtorWE6gagqPL5GG47uMYpfQQPiqTBYLdnE0xI/qP+QtjERYfytjy9HF5KH2zDoF+zf
-	gfVeMXLD1ms0Cng4um79k7TVBMT3n/z4pzR6F3kem8v45wVTg+qE05mlEwVAJP18HTwYzw
-	EtBNkuFonQ81SEGnVm7ax1Au8KXts3nFpluOQdsSwQX48BDMDKQo5kM2Sfq+UcmMs+R8Dj
-	1zbM0tP2PDonalESMZPlhXt0r+uHXnlrUY4P3TMW3iufmxJGaOQt0ruItgyREA==
-Message-ID: <a1c58126-8a1e-41dd-8bf7-b2d721421dbb@yoseli.org>
-Date: Wed, 23 Apr 2025 07:30:08 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yfn0ie8l"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-739be717eddso4662047b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 22:36:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745386568; x=1745991368; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=FqXZmhQqMpQ55WXDkvwtb6bzPG8ypT7T0jmt2s5ZCM4=;
+        b=yfn0ie8l1kYua/HCnXdMB4UPmI749NcR0wtsumJFxdtMr9ul2cJXyy2NrmAIvbZBqz
+         KG6dYBb3ySWWeVEbv3kdV6gNwEl7ynbZ2uZ1VIU/HjliuFsaG3Ci/0gNu4JaRaASuzck
+         WHSqgSShz3DWLxdMlaDw5q7LVbSN8Irg20jqFCyADjw3a/frVe3aL0vhvYHcuWL+iWiE
+         9TWtX/URv0O784ADQO0wD21sFD+Q3VaL2dj9x5ZWpmK5WMVMfQ2MwL3gVzfOcdqnGOMf
+         WlayqPWJc+GbFVX4ebBY5Xm8y9hq7D0U7O73gEH+LiZg2xr2TRemVM67QzhZpgrRjAQb
+         HMJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745386568; x=1745991368;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FqXZmhQqMpQ55WXDkvwtb6bzPG8ypT7T0jmt2s5ZCM4=;
+        b=OCdNOFiHkmGPB0ijkyNUVVq+mJK9ayIMdBLpxJpdIPGCP+RmlNwP+D/K1BLlXoaoz1
+         JiMnzS5MsX9e6fjdfpG1TsHy8Kgfj/YNoHVZPwNA+3sQ5sXRnQq4OjE8l1DJp3ntBrDm
+         yCauhBC3x/WKOeinOlSyH0LwPmvy9xGx5m72E5n5UJtyd3VrQUk2GUArtxWB2794GM3h
+         8suHgL5Hu0e6msqEuLWrL1vFNIK4ZzqGE+Pt0VR/avA4s5OA7pAnCWmK9biMkVJhOiqN
+         2tKGYQirQYAQbADLPqCRWghiXXTF+yBXB+nvkxFsfIuccXjHEujOm/tt9crToSUgzR2p
+         u7iA==
+X-Forwarded-Encrypted: i=1; AJvYcCXPlrSH5KF/CweVN3+Z1l/nzIurJmm8zxbxBI/zh4fCizp3h6Dd3sMfjG6jeoZ+MrWhKIQ6YjcO6HSIbD8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEuAFcIqfkpJsQh3nPcynX8R5v4NYhBTwgxqLu5vmayKuPp1fu
+	JDrZFp3bIMYz4GOLDaX/r3EijsKS55LfG5E7wuyWzmeWqCR/A+4H9uSwRTDDdxw=
+X-Gm-Gg: ASbGncu1koM5NnVG3Qb+GN+eFA4StGhfbc8CRDsMnSytkvMNLFXkIMn7FAhZBAvuouu
+	IB0wqhuzJDzvetxbtUVPKt7/eA30REFGOx5lRCfaUSGhXYbXQfz3EaHIH7Cc3YoMzoWID4Tnck1
+	XLXzJojG4Xw3KfNIVDO29WPUs7gm84iis1s1mKUVQ5dBQeJ2N2/Mx5c7ZUgGKZsskk9Rxb6dD01
+	WIel0rXLEjF2g4zuIP15v61jW5YKO1xHFq2/A0oFk7HNLMcbsIpkkfmhIsQQ3bwRO8Y6Q7ZpTw4
+	0YSVXjDerhDnempKjVH3mwn0XIN/uEu3XT1iuerpbw==
+X-Google-Smtp-Source: AGHT+IGH5CEH3qbiKs7N8VcrCjZGvYVDP7IFgmEG+4RsZjJN0YJwU+Ch1jF6olLdlhwBTsOOZVjUQg==
+X-Received: by 2002:a05:6a00:3928:b0:736:755b:8317 with SMTP id d2e1a72fcca58-73dc15d32b0mr25849726b3a.21.1745386568035;
+        Tue, 22 Apr 2025 22:36:08 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8be876sm9697501b3a.36.2025.04.22.22.36.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 22:36:07 -0700 (PDT)
+Date: Wed, 23 Apr 2025 11:06:05 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Praveen Talari <quic_ptalari@quicinc.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-pm@vger.kernel.org, psodagud@quicinc.com, djaggi@quicinc.com,
+	quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com,
+	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com,
+	quic_shazhuss@quicinc.com, Nikunj Kela <quic_nkela@quicinc.com>
+Subject: Re: [PATCH v2 1/9] opp: add new helper API dev_pm_opp_set_level()
+Message-ID: <20250423053605.63njjtz3s3krdeqb@vireshk-i7>
+References: <20250418151235.27787-1-quic_ptalari@quicinc.com>
+ <20250418151235.27787-2-quic_ptalari@quicinc.com>
+ <20250421074004.yttb42qq4p5xzi3o@vireshk-i7>
+ <e6e1ee6d-a12f-4e18-b2d7-65d1ccca5308@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Documentation: leds: improve readibility of multicolor
- doc
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Lee Jones <lee@kernel.org>,
- Pavel Machek <pavel@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-leds@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250421-leds-doc-v1-1-9a32df7fc6f4@yoseli.org>
- <aAhYDY2DBxFW0yI_@archie.me>
-Content-Language: en-US
-From: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>
-In-Reply-To: <aAhYDY2DBxFW0yI_@archie.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeehjeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttddvjeenucfhrhhomheplfgvrghnqdfoihgthhgvlhcujfgruhhtsghoihhsuceojhgvrghnmhhitghhvghlrdhhrghuthgsohhisheshihoshgvlhhirdhorhhgqeenucggtffrrghtthgvrhhnpeefieetgeehvdeggffgffetheehhfetkeefhefhgeeuheetueffueeikefgffffteenucfkphepledurdduieehrdduieehrdduleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledurdduieehrdduieehrdduleejpdhhvghloheplgduledvrdduieekrddurdeingdpmhgrihhlfhhrohhmpehjvggrnhhmihgthhgvlhdrhhgruhhtsghoihhsseihohhsvghlihdrohhrghdpnhgspghrtghpthhtohepjedprhgtphhtthhopegsrghgrghsughothhmvgesghhmrghilhdrtghomhdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprghvvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopehlihhnuhigqdhlvggushesvhhgvghrrdhkvghrnhgvlhdro
- hhrghdprhgtphhtthhopehlihhnuhigqdguohgtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: jeanmichel.hautbois@yoseli.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e6e1ee6d-a12f-4e18-b2d7-65d1ccca5308@quicinc.com>
 
-Hi Bagas,
+On 22-04-25, 22:37, Praveen Talari wrote:
+> most of helper APIs in core.c and even i don't see any helper API in
+> pm_opp.c.
 
-On 23/04/2025 05:01, Bagas Sanjaya wrote:
-> On Mon, Apr 21, 2025 at 06:48:10PM +0200, Jean-Michel Hautbois wrote:
->> +.. code-block:: console
->> +
->> +    root:/sys/class/leds/multicolor:status# ls -lR
-> 
-> The equivalent is ``ls -lR /sys/class/leds/multicolor``.
-> 
+This is more of a wrapper over the existing C routines which is being
+added to reduce some boilerplate code from drivers. And so it makes
+sense to add this as an inline helper. May be there are others which
+can be moved too.
 
-This patch was only to add markups, I did not want to change the content 
-more than that. The result of ls -lR must also be in the same 
-code-block, so I am not certain your proposal is equivalent ?
+> as reference of APIs in core.c, i have used  -EINVAl instead of IS_ERR(opp).
 
->> +    -rw-r--r--    1 root     root          4096 Oct 19 16:16 brightness
->> +    -r--r--r--    1 root     root          4096 Oct 19 16:16 max_brightness
->> +    -r--r--r--    1 root     root          4096 Oct 19 16:16 multi_index
->> +    -rw-r--r--    1 root     root          4096 Oct 19 16:16 multi_intensity
->> +
->> +..
->>   
->> <snipped>...
->>
->> @@ -71,16 +79,28 @@ may want to dim the LED color group to half.  The user would write a value of
->>   128 to the global brightness file then the values written to each LED will be
->>   adjusted base on this value.
->>   
->> -cat /sys/class/leds/multicolor:status/max_brightness
->> -255
->> -echo 128 > /sys/class/leds/multicolor:status/brightness
->> +.. code-block:: console
->> +
->> +    # cat /sys/class/leds/multicolor:status/max_brightness
->> +    255
->> +    # echo 128 > /sys/class/leds/multicolor:status/brightness
->>   
->> -adjusted_red_value = 128 * 138/255 = 69
->> -adjusted_green_value = 128 * 43/255 = 21
->> -adjusted_blue_value = 128 * 226/255 = 113
->> +..
->> +
->> +.. code-block:: none
->> +
->> +    adjusted_red_value = 128 * 138/255 = 69
->> +    adjusted_green_value = 128 * 43/255 = 21
->> +    adjusted_blue_value = 128 * 226/255 = 113
->> +
->> +..
-> 
-> Are these adjusted values intended to be part of previous block on brightness
-> status? If not, I'd like to interleave these two blocks with "The adjusted
-> values are now::".
+That would likely be wrong, maybe we should fix those too.
 
-Interesting, yes, it could be added.
-
-Thanks !
-JM
+-- 
+viresh
