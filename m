@@ -1,141 +1,162 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9D8227FD49
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA8517B421;
+	Wed, 23 Apr 2025 15:51:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423436; cv=none; b=uCvvzsaXpumiUOKe2zCxhtOAjzbWHK1lGGkhv9GtFz3/I2AMMJ2gAsIIfqPv0yButEGelAJxykR1rQWIc3M6AOGVRCGnpTdP+IM2xrq0/YCZsOHbxIGMVf84kjaJq4C/TZMl869U1LKuXJPHHX7crHtJtrCDXdLqJTBHmrZ+8+M=
+	t=1745423467; cv=none; b=PpvCgUcdx6ijn5ZawuK9W84DtLu8/S3ck+pYK9SLBxKXP4Gu2tvQ4V/L42XjVtgt8H2MushJZgBDIdUuQcQ4l/HBynLr08NpkBpRywT0m26jysBy2CV+8MGu2j5i9os3NbtJTLlxyh9PFUj5usP9YbTVjTD5iobSz8KFKL2CUhw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423436; c=relaxed/simple;
-	bh=obJ4KNRdop1ri6ey3P8GkkISiNkN9TepbOopmkOaHtM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YfTnYkOL0hYjHlzRTolEGJkM2mnPaDejuBHvPhao/0UYmca3fWfmkRhP3rQih1sU7eFzvECIathIPtpF+K3NwigLffsmRKTe2jEm7aZSr3S2s0qIHBbBN0V3hFqPPEsXOyZQp7zOfAqmlYs9B9/l4ep1n7Sp0hjZSgah+JtXUq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FB331063;
-	Wed, 23 Apr 2025 08:50:29 -0700 (PDT)
-Received: from [10.57.74.63] (unknown [10.57.74.63])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA5153F66E;
-	Wed, 23 Apr 2025 08:50:31 -0700 (PDT)
-Message-ID: <4129dca9-07fa-4b9d-a7d8-de7561d509e7@arm.com>
-Date: Wed, 23 Apr 2025 16:50:29 +0100
+	s=arc-20240116; t=1745423467; c=relaxed/simple;
+	bh=B1YKMJ/VnCvb13tK2on40+VgvnHD3klALa7QqH6XHwg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qwD9DK8jJwl5mfFE0gZ6V56FDlbhJi7xa6kAXvF+uqlyeCs5crCESoCJOXwm1xqpR8zKB25xQJ7FAnedQPkxjipBHt+ayWTS5yvOPgKU+4YSCdbYNqi2OuHatvE56N4q6ygMAz7XgR15ziubYNdYEiy6dK8FU/pPN4G4cbx29BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NWLEduGE; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWLEduGE"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22c33ac23edso66860585ad.0;
+        Wed, 23 Apr 2025 08:51:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745423462; x=1746028262; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1x0LjQOtwd7ZGiLXKIcfaebNJm+NkVU0O+im0vtc/gI=;
+        b=NWLEduGEMeXuU4QId0UOeUDjZ1zm5eVoKsLFfAMyXRNR9Yw2AZFTKS0MlPvj0qxJSV
+         D5KHe6za5HiL1SmK6K4XioOB8svZd4JZjYtsJPZJNY0+OFE7lroBDaiJcNfs/gAjop3P
+         0PXJtkwXuvgCctsMrKLtNuw/dPgptUDTDX3EEya1ubTETRKdl2uTXDkQTdFkq6VMsHXg
+         fAoGHlezXe3XqlskXmbMHwdkr07PQtHT9yS8KWm0XHXEHtWVHKgsrsTPJUu4sVP0+wCk
+         By9DevaGQC0EjKf0rVJD4+ZfCZsC1WEe5bWL40H58ynSqfEWllc8VZ2OHbYJdhtO9VJM
+         moAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745423462; x=1746028262;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1x0LjQOtwd7ZGiLXKIcfaebNJm+NkVU0O+im0vtc/gI=;
+        b=xIl85koxElVmVVBmKy59a4PpvpulnO8+5BCRc+DQJfLN4eGkEEvABeplfBgkVg31vf
+         wPnjHQqd3szIMSHsvDakDRos6Spow3XX0neeVwULhv+hFdEW06OyDnC0KorUIZlewPED
+         VydVkLSm5bmarJUKWsobgFrVa7reGfxK8EGsN2a7J7WmMin9FcBCTzwQhFL9g8HG43+I
+         yTyrG3gMFdkaPLPvDCawDxafAwLyZiOPzEvLiOrBvNAHoNT17e3baHwtQEyhdgXpcMTY
+         VMxKy5coirgEpHuHJBOuqJfCsO3XPq2NVBp6Y02NVfK+vo04qoGe4bjJQkAKWs2d9P5j
+         aKzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVu4pT4QTvPFVfLdvFdijiv1EClLMiWLZvuPNvJtcX9i+OIv99GxE1u88nUYVdWCrvs6pMLl2ayjsBsB8k=@vger.kernel.org, AJvYcCWGSGw3jDIvRTL6xOjnp2zflRZcN2AiOx1G9TlC0gQrczAkV2qLLhuRUWgpY3DCbzKFF09/TQZqv/hxA4DSlqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXvAi39Yf1xe2WukVhQ0TcR7hU1J1AHs2zpBrFyaA37eiiO79c
+	/VYisFGREKF9g/TGLT4BsGejG9M8CNZyR48LSfOqhTqYdqPl3N2U
+X-Gm-Gg: ASbGncvAftKR6ZdfhsivAi7ZhYQie2M2piiPsx5OzyFER1q5Vv+4tZj/5f3oMBiNgn6
+	+aj6f6jAyRJ8KQL82N+jb15s3px+/0FNjDiJbstWn+N85HLSxKutxzgRzIe95FhYO8ItUe8hpZp
+	hOcoEQbNr7qqMFMb1c2488MgncyyfViS0FU/GHBn7OiYoVfuOBc6iGR1RsUp7Xy/zErYtm0f6cY
+	Vw8g5q01A/DojuxYfCD+woLX8B4AqquvsUBBgZDE5SRdYpuX6GTWIVH4gq6lF+rAxyEQAZR2I5v
+	HRoXZM26FVrgsGxytVnLMpMmqD8kCzc07lmFK4Gb
+X-Google-Smtp-Source: AGHT+IGmT+yDYzc6f9FEH4JY+azUgWMSi7aZqK6fuTmOSzIp64TCmCxmBamClG/qmaIP+RwQylsdIA==
+X-Received: by 2002:a17:90b:2f06:b0:305:5f25:59a5 with SMTP id 98e67ed59e1d1-3087bcc8b21mr27744965a91.35.1745423461783;
+        Wed, 23 Apr 2025 08:51:01 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309df9232f2sm1813224a91.0.2025.04.23.08.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 08:51:01 -0700 (PDT)
+Date: Wed, 23 Apr 2025 11:50:59 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Burak Emir <bqe@google.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/5] rust: add bindings for bitops.h
+Message-ID: <aAkMY2QBG5btKVIO@yury>
+References: <20250423134344.3888205-2-bqe@google.com>
+ <20250423134344.3888205-4-bqe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] platform: Fix race condition during DMA configure at
- IOMMU probe time
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Will McVicker <willmcvicker@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, "Rob Herring (Arm)" <robh@kernel.org>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Joerg Roedel <jroedel@suse.de>,
- Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
- Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
- linux-kernel@vger.kernel.org
-References: <20250423150823.GA422889@bhelgaas>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250423150823.GA422889@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423134344.3888205-4-bqe@google.com>
 
-On 2025-04-23 4:08 pm, Bjorn Helgaas wrote:
-> On Tue, Apr 22, 2025 at 04:26:49PM -0700, Will McVicker wrote:
->> If devices are probed asynchronously, then there is a chance that during
->> the IOMMU probe the driver is bound to the device in parallel. If this
->> happens after getting the platform_driver pointer while in the function
->> `platform_dma_configure()`, then the invalid `drv` pointer
->> (drv==0xf...ffd8) will be de-referenced since `dev->driver != NULL`.
+On Wed, Apr 23, 2025 at 01:43:34PM +0000, Burak Emir wrote:
+> Makes atomic set_bit and clear_bit inline functions as well as the
+> non-atomic variants __set_bit and __clear_bit available to Rust.
+> Adds a new MAINTAINERS section BITOPS API BINDINGS [RUST].
 > 
-> I need a little more hand-holding to make sense out of this.
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Burak Emir <bqe@google.com>
+
+Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+
+> ---
+>  MAINTAINERS            |  5 +++++
+>  rust/helpers/bitops.c  | 23 +++++++++++++++++++++++
+>  rust/helpers/helpers.c |  1 +
+>  3 files changed, 29 insertions(+)
+>  create mode 100644 rust/helpers/bitops.c
 > 
-> After digging out
-> https://lore.kernel.org/all/aAa2Zx86yUfayPSG@google.com/, I see that
-> drv==0xf...ffd8 must be a result of applying to_platform_driver() to a
-> NULL pointer.  This patch still applies to_platform_driver(NULL), but
-> avoids using the result by testing drv for NULL later, which seems
-> prone to error.
-> 
-> I think this would all be clearer if we tested for the NULL pointer
-> explicitly before applying to_platform_driver().  I don't like setting
-> a pointer to an invalid value.  I think it's better if the pointer is
-> either valid or uninitialized because the compiler can help find uses
-> of uninitialized pointers.
-
-Yeah, I was also in the middle of looking at this after managing to hit 
-it playing with driver_async_probe at the end of last week. I guess when 
-I originally wrote this pattern I was maybe thinking the compiler would 
-defer the to_x_driver() computation to the point it's eventually 
-dereferenced, but I suppose it can't since dev is passed to an external 
-function in program order in between.
-
-Indeed in my half-written version of this patch I was leaning towards 
-removing the drv variable altogether (just doing 
-to_x_driver(dev->driver)->driver_managed_dma inline), or at least doing 
-the same as Will's previous diff. I figure the one-liner replacing 
-"!dev->driver" with "!&drv->driver" would be too disgustingly 
-non-obvious for anyone else's tastes...
-
-For consistency we should really fix all the buses the same way - sorry 
-for the bother (I can write up the other patches if you'd like). FWIW 
-this part really was the most temporary stopgap, as my planned next step 
-is to propose moving driver_managed_dma and the use_default_domain() 
-call up into the driver core and so removing all this bus-level code 
-anyway, hence trying to minimise the effort spent churning it. Oh well.
-
->> To avoid a kernel panic and eliminate the race condition, we should
->> guard the usage of `dev->driver` by only reading it once at the
->> beginning of the function.
->>
->> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
->> Signed-off-by: Will McVicker <willmcvicker@google.com>
->> ---
->>   drivers/base/platform.c | 7 ++++---
->>   1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
->> index 1813cfd0c4bd..b948c6e8e939 100644
->> --- a/drivers/base/platform.c
->> +++ b/drivers/base/platform.c
->> @@ -1440,7 +1440,8 @@ static void platform_shutdown(struct device *_dev)
->>   
->>   static int platform_dma_configure(struct device *dev)
->>   {
->> -	struct platform_driver *drv = to_platform_driver(dev->driver);
->> +	struct device_driver *drv = READ_ONCE(dev->driver);
-
-Beware this might annoy a different set of people as it's not paired 
-with a WRITE_ONCE(), but for now I guess using it is still arguably 
-better than not. Really we should be under device_lock at this point and 
-so have no race at all, but we can't do that without keeping track of 
-which devices are IOMMUs themselves to avoid deadlock, and that's not 
-something I fancy throwing out as an -rc fix in a hurry...
-
-Thanks,
-Robin.
-
->> +	struct platform_driver *pdrv = to_platform_driver(drv);
->>   	struct fwnode_handle *fwnode = dev_fwnode(dev);
->>   	enum dev_dma_attr attr;
->>   	int ret = 0;
->> @@ -1451,8 +1452,8 @@ static int platform_dma_configure(struct device *dev)
->>   		attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
->>   		ret = acpi_dma_configure(dev, attr);
->>   	}
->> -	/* @drv may not be valid when we're called from the IOMMU layer */
->> -	if (ret || !dev->driver || drv->driver_managed_dma)
->> +	/* @dev->driver may not be valid when we're called from the IOMMU layer */
->> +	if (ret || !drv || pdrv->driver_managed_dma)
->>   		return ret;
->>   
->>   	ret = iommu_device_use_default_domain(dev);
->> -- 
->> 2.49.0.805.g082f7c87e0-goog
->>
-
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b11eb9ebc53d..1f162f64eded 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4149,6 +4149,11 @@ F:	include/linux/bitops.h
+>  F:	lib/test_bitops.c
+>  F:	tools/*/bitops*
+>  
+> +BITOPS API BINDINGS [RUST]
+> +M:	Yury Norov <yury.norov@gmail.com>
+> +S:	Maintained
+> +F:	rust/helpers/bitops.c
+> +
+>  BLINKM RGB LED DRIVER
+>  M:	Jan-Simon Moeller <jansimon.moeller@gmx.de>
+>  S:	Maintained
+> diff --git a/rust/helpers/bitops.c b/rust/helpers/bitops.c
+> new file mode 100644
+> index 000000000000..1fe9e3b23a39
+> --- /dev/null
+> +++ b/rust/helpers/bitops.c
+> @@ -0,0 +1,23 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/bitops.h>
+> +
+> +void rust_helper___set_bit(unsigned int nr, unsigned long *addr)
+> +{
+> +	__set_bit(nr, addr);
+> +}
+> +
+> +void rust_helper___clear_bit(unsigned int nr, unsigned long *addr)
+> +{
+> +	__clear_bit(nr, addr);
+> +}
+> +
+> +void rust_helper_set_bit(unsigned int nr, volatile unsigned long *addr)
+> +{
+> +	set_bit(nr, addr);
+> +}
+> +
+> +void rust_helper_clear_bit(unsigned int nr, volatile unsigned long *addr)
+> +{
+> +	clear_bit(nr, addr);
+> +}
+> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> index aa0c0c2cdee2..aaf0f735d1c2 100644
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include "bitmap.c"
+> +#include "bitops.c"
+>  #include "blk.c"
+>  #include "bug.c"
+>  #include "build_assert.c"
+> -- 
+> 2.49.0.805.g082f7c87e0-goog
