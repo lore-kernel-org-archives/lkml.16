@@ -1,64 +1,67 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D585D26B0B6
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA5BD26B087
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:30:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745393441; cv=none; b=mGxB05As+knFzQod7FFQ8dTLMWQNe6D9mRMpFx3DZowsW7kU126tqv3fDgGMvzOYvF0rbgLiYK7xdXCjoPD8cqXxiRVD2LwehnHQqlALsN5IUcnZoHSEU7bSX6JTle0Fbw2BW2r2BSKdt5kfLMUMg/S1h9eJ9eCH/GeRc/gc6Yc=
+	t=1745393441; cv=none; b=DW+itKRa9dO+my8XoK2JdyDdtV7oIUEBKneI04ABhySvJ1ssphKY11zj3kBLk2B/Y6tWE23Yw5uwJrrD1BWP+bDzmvwi5hiHP0OEaf4JKQ36R0OBAea4jdv4BIe76s2ILOMeL6+k4R8L8qN0czgfibIPjMWAIsSDZB0RWhHKwFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745393441; c=relaxed/simple;
-	bh=ugdh0Jwg8OtNDnnvSXX+JcwFs/E/9kEcCZ1PVSsw1oo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jErZZhv6rz7tx76jQ3uFhTH/6cs6bzbCV9TRbJF6O7R5XPVP75rbCTHLbmjQ1be/f2GWm8DK9kwvoPVOlSrdcFf2b7huf7YgnJL/z1eaQDl4NG8EcXXWqi4YFxIBiuBN8M2z8v4VNdXwN7XpTDE2ZWN/pyb/aigjzbkbZkQnBDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TICk2Rj1; arc=none smtp.client-ip=209.85.221.51
+	bh=RnLVNTomoaoA0GKAFcSpwz9U3Q5q3LRauTcFWCoJCig=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=dSmvrwRYw9BQGgP/Mh2JTkaaOJe0hio5D0UWEsrkfFr/d0fJcMpwSm5nbcS7L4G+i2hbK1N/VUMHJRKFHoqn2pKlHyOGjYwYM4oSI4DPPqHj+nBSQGYEnkE3NxYPVAt2nS1/uxGJQReS659pXqTkGivWUe0sHMqC6EDk1Su/gSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x0z52FoP; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TICk2Rj1"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c1ee0fd43so5494087f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:30:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x0z52FoP"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so4242335f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:30:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745393436; x=1745998236; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IAVOf9WwZt5yb8GSwQ0W6u8pvseS1B6MX+loQMEGJLQ=;
-        b=TICk2Rj1l2YRJmLdqOz5FZwY43nDW2Lk32jG8grGPWZPJneWLq7G9cL+ffkwAclNsE
-         Rz/0Atm00/xafJJfGnHaNe2rSY6AuE6tjc6Hhp6UM0r+MK++tJP+rRntbBXwS1lHPtt8
-         lt8rGmFOCk2ElOs5VUEHS2Ck+7AjbUonhJ+FfhBLyIqSy/rd33MVj5M/rEMGbmfrRThA
-         KVgbXeR2QkZA4ixX3D616vpaga9OH1g9mPyV4hVBiG2tgX6+WxByuzPQ7Qp12fSl8wLF
-         RJAcoGFUTMYnfDVXD0ZCIGw4xWctHP9TbMho/W6aqwt08gDbOWBkSWuNmFab3/0hgqIX
-         fOMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745393436; x=1745998236;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1745393438; x=1745998238; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IAVOf9WwZt5yb8GSwQ0W6u8pvseS1B6MX+loQMEGJLQ=;
-        b=P+73KAMLF9eKQO89X1PFdwy3TLvNbrjJ0Q3HD5c5aM45E6peyHqYdhURJn20Ajn54o
-         9ikdid0HF6mm6ZdfJdknQpR+8ZBELgoIlvh6d70PZ7sxxAZKEPVY4cjXWYsMFGy1oBKQ
-         2d2DGV7uoTHNtb3HmWlRNl0QhuKPyMwOyJiK2sA9So1nq4adKTzFx8BKAr4kswGalDUH
-         aEcZSTQBbF9ClEVmEcKkgwwFVFlZ1LexAs0LvWIAqQtoA5orxn06F0NBoP/x0/6YFLrs
-         nn7Q2BtINt7+F0k0SmCw0ZReH1lTvlE3PcvjNwBNU15j+EEG9KQa3JPBlp1RO2GLzBfP
-         6/LA==
-X-Forwarded-Encrypted: i=1; AJvYcCUGDSPyli4jV70HM534ezvUHse8dsX57LdMPb8DmFVNaVZgMxKU5Rs8HKVbUed5RdKDN9+FgSPgLVCmhAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtgsevmL5BYcQdn00s2dYvKc9gd/IdwHybQUic00PXJclG5Yg1
-	OPWbz1l652AhYa6FpJGgzLNpcrxcHjgJ/QmaadPYI+EgJNziNjHzeiK3cPRSDII=
-X-Gm-Gg: ASbGncvTL+Piql3henkylzB2FV/wq7lBDzYkt/aktPuhsWiLfyyLukGAHCVncy5Qwdi
-	CLpMwkzZz3ymUNtn2cafKJ/jJdQdO8jvbg4GmrgTKnQ+IrSjy4V5mMB5uw/7fWX5sxrJ7AqFBMi
-	2cHnp3y9oD2JDTBuTKR7Whxq/Xv2b+o5ARgawhBJglo1PL5xB2wO/3PIKlSGWGkBvlZyq24/l0p
-	Qq1s8xQ9l/m3T+jI9hflz/enXhv420qXCNKDQTlfYL3rTeqfB80wo2m0yWv3xsFiy3uTVx/34oX
-	slzNVUFOQcbaCvwwVH0ULa/NF9yDObynjInZmd4OfNGIKfxiEoy0LBc=
-X-Google-Smtp-Source: AGHT+IFDeOQJ84DRhqUsU2I2qejWhkxN7owbw0EAeDx/ORw4YLo17BdfeLQzG90l677GOD8n8erpdw==
-X-Received: by 2002:a05:6000:438a:b0:391:298c:d673 with SMTP id ffacd0b85a97d-39efbade41emr14796194f8f.40.1745393436055;
-        Wed, 23 Apr 2025 00:30:36 -0700 (PDT)
+        bh=aw90kBhonzt0etQPaYxZ0xyZQADb6qJo1Aqd5nSon8w=;
+        b=x0z52FoPxET3ef8Rsdm8vGx6dJT4hZIsPWC4taDnfzIZeGGxmRIWMwbbx1tydtEfOz
+         WjVfbJA07GqDjKdOKct4k8gqXelGLlo1LpyLcCgADwNrVMyTEDMh5tVXip+9gStRrusb
+         fXOZZb78Sz69xoLRi6kK545VvH3xKacTv3f4dnZ824UODWbzXHaqTNWweUe+/KuAg79w
+         wk5KkiuCKLZp1YSO+0e4WoH7MMyZstGDx7vTrU527EG5d1Ue564iKMwsrRT/IMFuAB+M
+         00EwLVHxMdWGW4LKKHhT3SJRP/BjGyySkvMeOV9Vn0lZNNEUwFYjhsYMQ9v/V/eEajpX
+         5A/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745393438; x=1745998238;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aw90kBhonzt0etQPaYxZ0xyZQADb6qJo1Aqd5nSon8w=;
+        b=D2j0XfWYsreLE8GsBtbX7ptIRg45bgE1vwDyahraPDlDai9hSwmGB296ikoNxd0Y1G
+         iTHlq2y2W0Uk2vifYs1Uz7WIE8RR2P22mDbGy/yn1EVHqVJ1PYCvECubnWY2257FQMby
+         QxLogcJ4WF4uoqajUgjdYwQPzbXlxMApvAnv9PdSyQruxvx9bDbIONDt0RD8RQg7NXfn
+         oSt8gbLvRuPyb+ES+1JnAtd91AEFnJRlt9OaAyzt95nTSAvGNx6J34l2XYtJ51itjKUv
+         T6fnNd98pC7OU58donfrIXU2S3BQ4N7ME/zsQ09BL0G4vk37o1kZlM3lthh4mdVjpgT/
+         4yaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW4jIdaLU4jtHLCgBybnXArxNWuh7IxhIERi6JzUTVm31o8QK9KO96GJyw2I/XKIvY7wR/Y3YcG6K9Bsn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykW2TbIH7pPK8BBSlB07u5RVn/7WBMc8Ih/F7gPiAQ6acZDvPl
+	jUewRR3smjZ7ATggadQUjvOmZxjqBvgd94dTV30DN2cu4OTtUOu+MBe8uJU3pGpR9pm+3CBB8Yi
+	Q
+X-Gm-Gg: ASbGncuC8LLb17YifmcIuTt41c138LarcrBThsQhllPYbn6xCjrBh5HsIGQxhev6lPk
+	hrH6bC9uejRdf77BUL38wRAKJTtfGSuIwsozlNHoEMjFwnKW+kXpuyeIcraL2z9uotY4MSvsUvT
+	nQtoWgpPDoa3bLh9KVoGdcZx6VXdAZ8ZpVYLU1hLK+DiR2I6Na8rxHyjjywxtRmS/x4FchTFmxA
+	VKCaD3TGaE89IXnHNeedhNdEylYU774XA03jYcwtE98PfZacez9S9pcxRz0R0V1nyhid888e7++
+	tTyB7d7kvyNuMBNGPD5dw9K6A21f7dVW37AYhOwJFKlhzhDWqIcrZQU=
+X-Google-Smtp-Source: AGHT+IFcdiZukzdWt+N7jGpyVttEY2AZ2bkU0KD8aSTOXRWRwbpjuOWS+5eqy6YaGVuCLbhK04RUNA==
+X-Received: by 2002:a5d:59ab:0:b0:38d:d701:419c with SMTP id ffacd0b85a97d-39efbace33fmr13697317f8f.41.1745393438070;
+        Wed, 23 Apr 2025 00:30:38 -0700 (PDT)
 Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:67a8:3ed8:e19f:5eaa])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493115sm17761699f8f.78.2025.04.23.00.30.35
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493115sm17761699f8f.78.2025.04.23.00.30.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 00:30:35 -0700 (PDT)
+        Wed, 23 Apr 2025 00:30:37 -0700 (PDT)
 From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Subject: [PATCH 0/6] arm64: dts: qcom: x1*: Fix vreg_l2j_1p2 voltage
-Date: Wed, 23 Apr 2025 09:30:06 +0200
-Message-Id: <20250423-x1e-vreg-l2j-voltage-v1-0-24b6a2043025@linaro.org>
+Date: Wed, 23 Apr 2025 09:30:08 +0200
+Subject: [PATCH 2/6] arm64: dts: qcom: x1e001de-devkit: Fix vreg_l2j_1p2
+ voltage
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,10 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAP6WCGgC/x2MQQqAIBAAvyJ7biEXw+gr0SFyqw3R0JAg+nvSc
- WBmHsichDMM6oHERbLEUEE3CpZ9DhujuMpALXWtIcJbM5bEG3o6sER/zdUx1GvnrLFke6jpmXi
- V+9+O0/t+/insk2YAAAA=
-X-Change-ID: 20250422-x1e-vreg-l2j-voltage-4281dd747278
+Message-Id: <20250423-x1e-vreg-l2j-voltage-v1-2-24b6a2043025@linaro.org>
+References: <20250423-x1e-vreg-l2j-voltage-v1-0-24b6a2043025@linaro.org>
+In-Reply-To: <20250423-x1e-vreg-l2j-voltage-v1-0-24b6a2043025@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konradybcio@kernel.org>
 Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -84,38 +86,33 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Johan Hovold <johan@kernel.org>
 X-Mailer: b4 0.14.2
 
-Several of the Qualcomm X1* device trees upstream specify the wrong voltage
-for the L2J regulator. In the ACPI DSDT table, PPP_RESOURCE_ID_LDO2_J is
-configured with 1256000 uV instead of the 1200000 uV. Change all affected
-device trees to use the same for consistency and correctness.
+In the ACPI DSDT table, PPP_RESOURCE_ID_LDO2_J is configured with 1256000
+uV instead of the 1200000 uV we have currently in the device tree. Use the
+same for consistency and correctness.
 
-In the other device trees upstream, the voltage is already correct:
- - x1e78100-lenovo-thinkpad-t14s.dtsi
- - x1e80100-dell-xps13-9345.dts
- - x1e80100-microsoft-romulus.dtsi
-
+Cc: stable@vger.kernel.org
+Fixes: 7b8a31e82b87 ("arm64: dts: qcom: Add X1E001DE Snapdragon Devkit for Windows")
 Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 ---
-Stephan Gerhold (6):
-      arm64: dts: qcom: x1-crd: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e001de-devkit: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100-asus-vivobook-s15: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100-hp-omnibook-x14: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100-lenovo-yoga-slim7x: Fix vreg_l2j_1p2 voltage
-      arm64: dts: qcom: x1e80100-qcp: Fix vreg_l2j_1p2 voltage
+ arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- arch/arm64/boot/dts/qcom/x1-crd.dtsi                     | 4 ++--
- arch/arm64/boot/dts/qcom/x1e001de-devkit.dts             | 4 ++--
- arch/arm64/boot/dts/qcom/x1e80100-asus-vivobook-s15.dts  | 4 ++--
- arch/arm64/boot/dts/qcom/x1e80100-hp-omnibook-x14.dts    | 4 ++--
- arch/arm64/boot/dts/qcom/x1e80100-lenovo-yoga-slim7x.dts | 4 ++--
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts                | 4 ++--
- 6 files changed, 12 insertions(+), 12 deletions(-)
----
-base-commit: 39155a896925c3af2156ad61e821aa9fa5a1dbdb
-change-id: 20250422-x1e-vreg-l2j-voltage-4281dd747278
+diff --git a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+index 74911861a3bf2606add8cf4aaa3816542e837513..4693e4c9986a6f7d14282fabd584cc16f43f0f80 100644
+--- a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
++++ b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
+@@ -747,8 +747,8 @@ vreg_l1j_0p8: ldo1 {
+ 
+ 		vreg_l2j_1p2: ldo2 {
+ 			regulator-name = "vreg_l2j_1p2";
+-			regulator-min-microvolt = <1200000>;
+-			regulator-max-microvolt = <1200000>;
++			regulator-min-microvolt = <1256000>;
++			regulator-max-microvolt = <1256000>;
+ 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+ 		};
+ 
 
-Best regards,
 -- 
-Stephan Gerhold <stephan.gerhold@linaro.org>
+2.47.2
 
