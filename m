@@ -1,111 +1,142 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AB328CF52
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:16:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 640D0284685;
+	Wed, 23 Apr 2025 15:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421411; cv=none; b=CYsDsJD32yHvues4OBgnLnqrjVHAyXGcDVwBBZ4XroX6ddUEmSCKaLDJ8VlZuGzrnBOOuMqivXyspt52YqBv3f5RUD6AwpIQ99Zr9ZHKovW2mTkbA1XK70nifG8fEMgpZfu21/B/MpO6JsCkx7bTZrcu4fwpwJnE2K10MGchmGk=
+	t=1745421459; cv=none; b=npFrpNqWWmsiW37YVtcyGrACWfJpHSQuKynhF2/jU/efpIKNJqnt711344z9jpyCyDJC9payfqCmOeOkgl5C66XZ2tWg5HQk2EZ9v0j5TeUIxWwPsaFRIo3xldQWTMvz5cEi+bHuaXKGnPRRYhK4mhTn3IIuTq6LEnA7YMVEguI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421411; c=relaxed/simple;
-	bh=wiQRxjVfq6FHjvTR4eF4WEQlEgSYtFXiwIFHwN6ZJdA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=G7ZJRby5ddlVmDCdeXBwJNXW04QJZ3dkAzVJ2sc8nOAKFb1EpnMlDvJ6/Sx298uU8M5yEvAxxY6cjqlqrV1PZNAkGjIubinpPTcTXrmCFezMkhOhsTv36oZ4qUCZaHFtHnZ8WmR8Z97syy5ltqif8DgoXCfeX3oY+yb7b9eHjWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OjPls7wN; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745421459; c=relaxed/simple;
+	bh=RLOU3IDmax4zTd10jqcY2sq4SEHMcbxI1llMeEizx/c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ENj0eJ+KddI+tWcSutrA21sq3ctO2fngRXfiyDk1IVdB0a/ZdWebKzWn/q49s3NodsqVn1pK4e4ZCnHxZLFAEAVDfnu7Pcc7jBp8SgdXSKEQ5ze+u/nmwekXrI37ZnReVM+Axb9+LGUgVCahr2p7B0z6iDQs5LBj0QqGPTO2pwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=eDZnm2MS; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OjPls7wN"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-3105ef2a06cso17781fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:16:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745421407; x=1746026207; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9jo5fNYX7M8KjPw/nzhDjJuKY3qNiI/6SOFAiqZVsVI=;
-        b=OjPls7wNqoIHWJqn8Vtmy4jfhirj5aOrFBgpxDsy4m1towrIGT5zXUMNjwFJUO8/IL
-         g7jsiWCs5cA8zDI8bGU1znOZXshKwoEX6iqtDXaf9nn/jfZqF64bJ8Zka1mYpCbcRMGr
-         KIgHo7WtE2Gofn1RG8ZgGnWel8B5hTJi+IMenI3Zj8hYk2K661e7iNfoahxBX3xG6eOq
-         zBO4VR2dYMweIw7CBFBTt+n7ks7rU09WAcSDA2i79ZnCrRDM+nUOpyXh/aalXYIUsTq6
-         Frmmyt+DZiPRLJAfqopWdKFCdHGzxYW4Fdw6WWGrPJX9XgeBJzFA/F24E3JwnspCciVz
-         +7pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745421407; x=1746026207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9jo5fNYX7M8KjPw/nzhDjJuKY3qNiI/6SOFAiqZVsVI=;
-        b=M/5vlFwIc7njYXx8ZoLmH7g1zk8noOqbGfwmF0wXUCvCKitp1uLQzGV+ytvgoJWIWv
-         dNQEL7cZSB5FUMMoNAYaOOcI4x+RmWS6NI2COVyOIotcl5pJwfPiL4RyA5a0ejFSMUxF
-         fBmAbVt2OISxDY1o7GdOK0NEya/JEZIP9Xgh28tCCXc6vJRcF8jev9BR2YmNyDNCboBz
-         y11N311RmhSZd9tSw8MHwCzalf7bJ7DGj4DRNmMnkMa3eCYhONpTvEHdhxJe7z9tJkDr
-         Vhr0BhbnALwbnVwELdEoTjm5uZPzQTSk7XFvDb2JZ69M2ktn8KIcggoA4j+Wp8FTI2Kd
-         ACBw==
-X-Forwarded-Encrypted: i=1; AJvYcCVyoHmpdJ5g8BPRevdPyWMm71RoLYOuGsz8/WsrdRqGxhvRD+xDn9Qox3IMYD3tVmoI4wMPVehJmIoULXA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqlxkbKdbe39Ep9acAvJF/CHECiB9BKMSPVN9RKEX+ltV15c6I
-	5Rpl5kyCQdKyGZaGFadTaWzWMbw5l7ibuWj4xXdDHaD9AOKAYiKK5VHJ5WRyGB44iFwdSGxyYRp
-	cj4WgKb+h5uazGQh3r5O7LQ2rWNwvgaBul3mkRA==
-X-Gm-Gg: ASbGncuVzRMlKlBUy7+4XS7Lh2NNpSgCOl9qqtD2ZS2Fmr/LyzG+xmc2mlbZkkeu6JW
-	2e4fr1VY/nOeH86JEEZzzqY1dyRrmc4rE84WpIY2bJCH4pR7oZJ8onQWnQg2RjSeYyGb12Errwl
-	019ZrDd1u3TMbq6NO4i+M3gZ8VuRI6/TxV4yqBh9WtW+wmh56lO3MmQg==
-X-Google-Smtp-Source: AGHT+IETE/k4w1fu2U8cN+Dnfk6dutM38e/zDtMkQO31fN5/T3kjC7GQG5tDFfOMiRyAghFnvFrA/27CKuuGkDO0Ong=
-X-Received: by 2002:a05:651c:1463:b0:30b:b956:53bd with SMTP id
- 38308e7fff4ca-310904c7e91mr63840301fa.4.1745421407059; Wed, 23 Apr 2025
- 08:16:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="eDZnm2MS"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=0lL7SuiPgUfyiSheen74q8JqInT1gIRp7Z1Ky9LkvS4=;
+	t=1745421457; x=1746631057; b=eDZnm2MSlpvUCcyDhOUZ74kWUJ/5YVJtg4PPvM2N5vJQsC6
+	ZULfSrXFv/ApcZJHhCkHe5afnD5gIj9Tv3nHLo08NXLZ1JnAaDlmsUA6WmOSto1cBQzFiY6E6U2Jk
+	j1jSk6dx+HPG3WKB86VL002dXz51NZ0pKjHg2M79zfzFXpYXSD/einBpr70j//w/v371AWvHJmhQ2
+	suLlK9XGwvSGckxEfE1CPyauO7KfQfweDC1SWbJwx9pUdMBOrJYfl+jroNulooGWOcBkGHxJFyji1
+	HxfNWquJQHFMvVN1ry9Zj3XEtN/XjEo1SbCjygLx6yT6G4TV99ChkIvSMH0I46Fg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <benjamin@sipsolutions.net>)
+	id 1u7bqu-0000000EmZ9-2uns;
+	Wed, 23 Apr 2025 17:17:32 +0200
+Message-ID: <db0f8ec385762e6edb3edf5054a76ea189135e6e.camel@sipsolutions.net>
+Subject: Re: [PATCH v3 15/28] module: Use RCU in all users of
+ __module_text_address().
+From: Benjamin Berg <benjamin@sipsolutions.net>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
+	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	johannes@sipsolutions.net
+Cc: Daniel Gomez <da.gomez@samsung.com>, Luis Chamberlain
+ <mcgrof@kernel.org>,  "Paul E . McKenney"	 <paulmck@kernel.org>, Peter
+ Zijlstra <peterz@infradead.org>, Petr Pavlu	 <petr.pavlu@suse.com>, Sami
+ Tolvanen <samitolvanen@google.com>, Thomas Gleixner	 <tglx@linutronix.de>
+Date: Wed, 23 Apr 2025 17:17:31 +0200
+In-Reply-To: <20250108090457.512198-16-bigeasy@linutronix.de>
+References: <20250108090457.512198-1-bigeasy@linutronix.de>
+	 <20250108090457.512198-16-bigeasy@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250407-gpiochip-set-rv-mips-v1-0-e7f74a4eee2b@linaro.org>
-In-Reply-To: <20250407-gpiochip-set-rv-mips-v1-0-e7f74a4eee2b@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 23 Apr 2025 17:16:34 +0200
-X-Gm-Features: ATxdqUELgS6WCJFQes3519gHJSdg6pzOWNNHSfSI0N6izE-OdLoImE-rCQIjitc
-Message-ID: <CAMRc=MdOVSWzt-J4_g+4H-TSVYyc0tCOmog0WSpHUqE+hCEe6w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] MIPS: convert board-file GPIO drivers to using new
- value setters
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-malware-bazaar: not-scanned
 
-On Mon, Apr 7, 2025 at 9:25=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. We're in the process of
-> converting all GPIO drivers to using the new API. This series converts
-> all MIPS board-file level controllers.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi,
+
+On Wed, 2025-01-08 at 10:04 +0100, Sebastian Andrzej Siewior wrote:
+> __module_text_address() can be invoked within a RCU section, there is no
+> requirement to have preemption disabled.
+>=20
+> Replace the preempt_disable() section around __module_text_address()
+> with RCU.
+
+Unfortunately, this patch causes a performance regression for us. The
+trouble is that we enable kmemleak and run trace-cmd so a lot of stack
+traces need to be collected. Obviously, we also have lockdep enabled.
+
+Now, combine this with the UML stack dumping code calling into
+__kernel_text_address a lot[1] and it really has a relevant performance
+impact. I saw the kernel spending 40% of its own CPU time just on the
+lock in is_module_text_address.
+
+Maybe kernel_text_address should leave the RCU handling to the caller
+and assume that the RCU read lock is already taken?
+
+Benjamin
+
+[1] The UM arch dump_stack function reads every "unsigned long" on the
+stack and tests it using __kernel_text_address.
+
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
-> Bartosz Golaszewski (4):
->       MIPS: rb532: gpio: use new line value setter callbacks
->       MIPS: bcm63xx: gpio: use new line value setter callbacks
->       MIPS: alchemy: gpio: use new line value setter callbacks
->       MIPS: txx9: gpio: use new line value setter callbacks
->
->  arch/mips/alchemy/common/gpiolib.c | 6 ++++--
->  arch/mips/bcm63xx/gpio.c           | 7 ++++---
->  arch/mips/kernel/gpio_txx9.c       | 8 +++++---
->  arch/mips/rb532/gpio.c             | 8 +++++---
->  arch/mips/txx9/generic/setup.c     | 8 +++++---
->  5 files changed, 23 insertions(+), 14 deletions(-)
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250324-gpiochip-set-rv-mips-43c07e67328e
->
-> Best regards,
-> --
-> Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
+> =C2=A0kernel/module/main.c | 16 +++++-----------
+> =C2=A01 file changed, 5 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/kernel/module/main.c b/kernel/module/main.c
+> index 80877741ac7e5..6a99076146cbc 100644
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -823,13 +823,12 @@ void symbol_put_addr(void *addr)
+> =C2=A0
+> =C2=A0	/*
+> =C2=A0	 * Even though we hold a reference on the module; we still
+> need to
+> -	 * disable preemption in order to safely traverse the data
+> structure.
+> +	 * RCU read section in order to safely traverse the data
+> structure.
+> =C2=A0	 */
+> -	preempt_disable();
+> +	guard(rcu)();
+> =C2=A0	modaddr =3D __module_text_address(a);
+> =C2=A0	BUG_ON(!modaddr);
+> =C2=A0	module_put(modaddr);
+> -	preempt_enable();
+> =C2=A0}
+> =C2=A0EXPORT_SYMBOL_GPL(symbol_put_addr);
+> =C2=A0
+> @@ -3694,20 +3693,15 @@ struct module *__module_address(unsigned long
+> addr)
+> =C2=A0 */
+> =C2=A0bool is_module_text_address(unsigned long addr)
+> =C2=A0{
+> -	bool ret;
+> -
+> -	preempt_disable();
+> -	ret =3D __module_text_address(addr) !=3D NULL;
+> -	preempt_enable();
+> -
+> -	return ret;
+> +	guard(rcu)();
+> +	return __module_text_address(addr) !=3D NULL;
+> =C2=A0}
+> =C2=A0
+> =C2=A0/**
+> =C2=A0 * __module_text_address() - get the module whose code contains an
+> address.
+> =C2=A0 * @addr: the address.
+> =C2=A0 *
+> - * Must be called with preempt disabled or module mutex held so that
+> + * Must be called within RCU read section or module mutex held so
+> that
+> =C2=A0 * module doesn't get freed during this.
+> =C2=A0 */
+> =C2=A0struct module *__module_text_address(unsigned long addr)
 
-Gentle ping.
-
-Bart
