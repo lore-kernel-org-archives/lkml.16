@@ -1,105 +1,129 @@
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B75D1553A3
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDB059460
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745414248; cv=none; b=ejFR60EDtXaJFm2dISmwdJUKoNz/MgJBOwGJ+EFtmXMLVZR825VoJZWEB05VhM/Y4wI7GcuR7jtmABmabdFXwn5RPxOJU9POjIyKw+sy0mkYZv+MjuHbxcqs0aIhjUidw8w2Q4wmzuCHoY7lbL3sEV6SqWL5k0thwLH06jmMKTA=
+	t=1745414282; cv=none; b=l9/I2lBu3AwIO0dJNPLBx9teDY+pr/Z3y6UDAOaEcXacbcSVGZ2Xyzsye9NOAnijnjeKlRN+QKQD0z13s/pQbY3SHq/3MJsFH8wSReayHEsKinV5BHXen10Q5xylP4hcQT0TMqtg2UKPG9qK0H16iFrzuob2PpFpugCs1yQi91E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745414248; c=relaxed/simple;
-	bh=y/8rtSvifbRVc2f+TMVr5JRsOBv+lpYpJqMnR/GTad4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o7uO8sZ4ABs2u0Q9HT2J6H78w5EK+SznnJ7ElqbYUgZ9D1saQFkthG1OsNJPEfe+/fE67WKLGT7VvwhYewHmXuZA3DDwgRtoeawOHO229BbpsbPeLq1B+KHmdv27aNVZ07dfTwzAQMGdwKxwtV1gKyHz2BafmVRSMtxJgwphV+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=popyCkHd; arc=none smtp.client-ip=209.85.219.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745414282; c=relaxed/simple;
+	bh=SHjWYbn5WkeKcmIqhVF+HHwMxRYFZfSoxCXUjjtCIxo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=u9tYk20YArjgSM+YI1M6+1M86p+Q9a0lRj10ufTvmNJ7MO57FW1fwh5MchKsH+6dPXxsbJxVruVR+ZUw1rnKOVMkpvtE1PSYg4belKruhqstAsPwtNBF1aJAPhdfSoo0iPcvtXloaW1zHIiAvZWuzlfwozaD5d71v2Vemx/UMqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=S5bn3l+5; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="popyCkHd"
-Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e8ec399427so54229346d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:17:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="S5bn3l+5"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso4654488f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:17:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745414245; x=1746019045; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=47n91vIA+7F3IZw3KWGYOVVfAlHkRgnHFR90Rbj0tB8=;
-        b=popyCkHdNUyITWcHEQ8YfKPxaNIDMpcuJtn3S6547VPTJOfdWqedw8QgzXljYTeSOC
-         0GNgUw4DhrTkPYdzV+DltXCpgEMRz7sD7qHVJIxyoORO9t4la3BTvUsNVrFMxp2/0hmB
-         JjxDPjVuJfkypFbUHxqR5/niko98mVrPG5hOMAxNugD6Y65ohroEkqptNbki6ncRsAsA
-         6ZO16nrlgzy0s4xgiiJWzsdFht5eCTXmRaMuLQGe56IjSiWkqhheo9r7e7aUdnuY+gDS
-         SM8xqJ6JfggmM9JmuaWYzVeKBN2zWbkjcX2Tp/a9NBFARtMwWOYPx0BmrXlFKTWranZI
-         +Yqw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745414278; x=1746019078; darn=vger.kernel.org;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ba5AfVNw33NAfhYW0ZQ8jsvM44DbHtT1wO+n7IyhglM=;
+        b=S5bn3l+5xAOr2hPLy7pax5VkihG5Mh+gIzxm1+WZKPlny4cVA3d23b1jRsjJEVqcuK
+         e6vm6pb7xSW49UnvhY0HTnfQQRewKiqggneTgmxXAHHxkwWOQOgMSr2ZQoK3OHELcxH0
+         K1QZuXIhxLk/fp9e138+42Bxo479S3S6FJjD//2ghqzvxZz3tXyF+C/u3JoZt8vsj+lR
+         slsBlPCSZVo3ZJCbEsAbNohpnjuJxYVvACO0BuRJDlI+w1tHUTJN4P5tNJHtesYCDcmq
+         sNlA6sYeoWOeLlw8Fv4XOjbkEThpJIRMwMKSAvv9PL4oHAlM51ZNjU10K6lVBtu2qw6k
+         wsBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745414245; x=1746019045;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=47n91vIA+7F3IZw3KWGYOVVfAlHkRgnHFR90Rbj0tB8=;
-        b=i9hxyc/LLWUVdQyMb6ll+U31+WU908Ke9h3Uol1y/6SG+eolQ8h9HWoR6PGGSquHC0
-         jGRIEvrjRVi/u+oP+vvm4nUKzAOTPNTQWRagXstFL8CeGbR8smuE+RiUEhoOW3Iy2cDR
-         I5RbSGOyCyutjxlz3aMP09TZd18eoLTKBdHlbA2sA3bhRdl2To8hEbIJNu+xHlCp6JFo
-         UB/tLlaQ+u3iBXSoAVHj53yaypHQdA8AnfDUsgdYtkTiEkBUuBs7XLdIy33hw/xylFlc
-         Yfio3DfTAwCt4GAyZzD9n1OOYx3+2ZrHUvRMpCkbq2zbBFcUKxAxpGPTChUEtGJMLhKR
-         cL6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWRiIYuPPTiCQksbpxn1jx17WgIKxA27s6kaK7livk9KQOQpyFSOz18egdjuaQ1dW+r2uhDrXRhE7XHd58=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5PVPvHWER3uxOfNG2kUsLvW2nLidd957bwq44hxUhFFhPVCSi
-	RNk9WgPmVjvPorMRweDLUTMt9+sUtUR3lhFivN46aqAdT+UYhT0xuicFblUcib8eHu97ayF8Qw7
-	MG4bd8FxIcGVbf2d2e7IXJTXdCrHxZsefoQv2
-X-Gm-Gg: ASbGnctRVi7hXjqkeqt/oynCnaKqmPlBBzxe6hGiSDFuWeIGk/N1ZD2DBFBAAn+7Zx6
-	/ADAkbCvD84Vm6codnR5AZOUtQE9hVuXtFnpg/RJRyzk0u6yozt5GxXqNqyHn/dVWCU0RvkKarY
-	UNljhJMiuN1xSvBCZq/K3nZTOxxNmol7KxvdZoaaUtuf8AV2Feoac8/knykZGruA==
-X-Google-Smtp-Source: AGHT+IFI6tbQKYRQR6qMRG6M2ZrsLlzZM1+bPOO+V6KSlbn3nxXW7N5btQB0SOVz/XF86XDiEn+gXDIsb8IOeLC3gio=
-X-Received: by 2002:a05:6214:1c47:b0:6e4:7307:51c6 with SMTP id
- 6a1803df08f44-6f2c4664a1fmr345097686d6.34.1745414244765; Wed, 23 Apr 2025
- 06:17:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745414278; x=1746019078;
+        h=mime-version:message-id:date:user-agent:references:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ba5AfVNw33NAfhYW0ZQ8jsvM44DbHtT1wO+n7IyhglM=;
+        b=UZ1Az9pENw3k+2/de6+VzK/L5GyDur61CD37PG1svtidttlBa6u9lA20V9WbUkfhbd
+         dvOZmkto4/rcFceicKd0QB01cgrUA9q7zDf45wXvYy9/1L9Qh0dxGKf4bozCucXGbQiG
+         +ybXc6IeszY+A7SfmK96C8lDPvpUZ3EZGIbz20hpCO7WeWAfmdhXZL1SlKIInTCpxuZH
+         JKWGaS+eO4c5v4t5WNQc+/Y2Bi1JDau/Yi6FqSoo0F39or7+b5zOBTSeqqtg5Siq3YzI
+         2AxkoFCnX9UP9yBmyDui/bsRIVN22LG92nRqIChnswT/7PzdKQ49ZY/A69biToRQkvlk
+         RO3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVZozAx5T0d3Z/f/2hsFRTf2h9SBWTIAglUQTGs+ZEpR47XDzYqGuxGc6eZwRbN/8xkUdIOT/HoKhR4fjs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXE5/MSld3P9HKck5n5EspB+P7/v/NT8nDAh19PVU2jT+UODQu
+	eSDDT+UGhHfZLuYJ9y/omex897ldsgCEf/JfaLYSqiR+5KuUWl9qLHbMwpM+ObA=
+X-Gm-Gg: ASbGncvZp3ZQ569JMaG5/lM6cOarDMxqnoeaate5kEJ5NqKD86jr/MLQW0zLkF1+17y
+	CfDHfTE9zZ0cAy658j0WvM3YIkkanZ6PWpHdiMDZd3zAzb1B6YA2V/AyypX+3lG+eEjDPwtf465
+	PfrulOXl0MMIASPueTbgSBzPdbysvQ+nbNjwO5nzDDCbHtu+8zKuVCfVWUZkrBANWL0tRyL+TYv
+	g4k8jqd5Y1is2r0n8fNtnwvOWpiOPdapfrJkX2xOFWJhlNO9miE+wcEOIxNHykq/F1v+MKfzKis
+	E90sKrdYnjexmfCmjTwdjXOIUq4KTvcTTwhfJ8pYhmQ2sjPsmZk=
+X-Google-Smtp-Source: AGHT+IEOWCFtN8WC6LmkUw2g4vml73X+8RArIcZBxgibY4zfqw3U4CU4njM2C2foaCrE7QcWo8jVCg==
+X-Received: by 2002:a05:6000:4282:b0:39c:1257:feb8 with SMTP id ffacd0b85a97d-39efbb0a99emr15239383f8f.56.1745414277943;
+        Wed, 23 Apr 2025 06:17:57 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:cf73:b178:1f43:c630])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa43ce2esm19098407f8f.57.2025.04.23.06.17.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 06:17:57 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,  Dave Ertman
+ <david.m.ertman@intel.com>,  Ira Weiny <ira.weiny@intel.com>,  Leon
+ Romanovsky <leon@kernel.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  Danilo Krummrich <dakr@kernel.org>,  linux-kernel@vger.kernel.org,
+  kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2 next] driver core: auxiliary bus: Fix IS_ERR() vs
+ NULL mixup in __devm_auxiliary_device_create()
+In-Reply-To: <aAi7Kg3aTguFD0fU@stanley.mountain> (Dan Carpenter's message of
+	"Wed, 23 Apr 2025 13:04:26 +0300")
+References: <aAi7Kg3aTguFD0fU@stanley.mountain>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Wed, 23 Apr 2025 15:17:56 +0200
+Message-ID: <1jtt6fnhiz.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416085446.480069-1-glider@google.com> <20250416085446.480069-6-glider@google.com>
- <CANpmjNM=AAtiXeDHgG+ec48=xwBTzphG3rpJZ3krpG2Hd1FixQ@mail.gmail.com> <CAG_fn=WD3ZuJCQ4TiVKXLhn5-=tsaW0d=zrM-TuEokP5zEvOSw@mail.gmail.com>
-In-Reply-To: <CAG_fn=WD3ZuJCQ4TiVKXLhn5-=tsaW0d=zrM-TuEokP5zEvOSw@mail.gmail.com>
-From: Alexander Potapenko <glider@google.com>
-Date: Wed, 23 Apr 2025 15:16:48 +0200
-X-Gm-Features: ATxdqUGP6Sm5jILBJHeySVhpgt2vOiTNYZA_rN6aN2uLH5lQDDhJQbQKZx7QM4c
-Message-ID: <CAG_fn=UrJGBcmqYkaqy3qckg=vVQZ4fA2cwruSnCdphkP0ZoZQ@mail.gmail.com>
-Subject: Re: [PATCH 5/7] kcov: add ioctl(KCOV_UNIQUE_ENABLE)
-To: Marco Elver <elver@google.com>
-Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
-	kasan-dev@googlegroups.com, Aleksandr Nogikh <nogikh@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-> > >  void notrace __sanitizer_cov_trace_pc_guard(u32 *guard)
-> > >  {
-> > > -       if (!check_kcov_mode(KCOV_MODE_TRACE_PC, current))
-> > > -               return;
-> > > +       u32 pc_index;
-> > > +       enum kcov_mode mode = get_kcov_mode(current);
-> > >
-> > > -       sanitizer_cov_write_subsequent(current->kcov_state.s.trace,
-> > > -                                      current->kcov_state.s.trace_size,
-> > > -                                      canonicalize_ip(_RET_IP_));
-> > > +       switch (mode) {
-> > > +       case KCOV_MODE_TRACE_UNIQUE_PC:
-> > > +               pc_index = READ_ONCE(*guard);
-> > > +               if (unlikely(!pc_index))
-> > > +                       pc_index = init_pc_guard(guard);
-> >
-> > This is an unlikely branch, yet init_pc_guard is __always_inline. Can
-> > we somehow make it noinline? I know objtool will complain, but besides
-> > the cosmetic issues, doing noinline and just giving it a better name
-> > ("kcov_init_pc_guard") and adding that to objtool whilelist will be
-> > better for codegen.
+On Wed 23 Apr 2025 at 13:04, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+
+> This code was originally going to use error pointers but we decided it
+> should return NULL instead.  The error pointer code in
+> __devm_auxiliary_device_create() was left over from the first version.
+> Update it to use NULL.  No callers have been merged yet, so that makes
+> this change simple and self contained.
 >
-> I don't expect it to have a big impact on the performance, but let's
-> check it out.
+> Fixes: eaa0d30216c1 ("driver core: auxiliary bus: add device creation helpers")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Oh wait, now I remember that when we uninline that function, that
-introduces a register spill in __sanitizer_cov_trace_pc_guard, which
-we want to avoid.
+Thanks !
+
+Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+
+> ---
+> v2: Originally I just updated the check for auxiliary_device_create()
+>     failure and returned ERR_PTR(-ENOMEM) but obviously the
+>     auxiliary_device_create() and devm_auxiliary_device_create()
+>     functions should return the same thing, NULL.
+>
+>  drivers/base/auxiliary.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+> index 810b6105a75d..dba7c8e13a53 100644
+> --- a/drivers/base/auxiliary.c
+> +++ b/drivers/base/auxiliary.c
+> @@ -491,13 +491,13 @@ struct auxiliary_device *__devm_auxiliary_device_create(struct device *dev,
+>  	int ret;
+>  
+>  	auxdev = auxiliary_device_create(dev, modname, devname, platform_data, id);
+> -	if (IS_ERR(auxdev))
+> -		return auxdev;
+> +	if (!auxdev)
+> +		return NULL;
+>  
+>  	ret = devm_add_action_or_reset(dev, auxiliary_device_destroy,
+>  				       auxdev);
+>  	if (ret)
+> -		return ERR_PTR(ret);
+> +		return NULL;
+>  
+>  	return auxdev;
+>  }
+
+-- 
+Jerome
