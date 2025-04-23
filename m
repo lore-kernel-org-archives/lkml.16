@@ -1,109 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out162-62-58-216.mail.qq.com (out162-62-58-216.mail.qq.com [162.62.58.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6BC26A082;
-	Wed, 23 Apr 2025 15:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BBE27FD7A;
+	Wed, 23 Apr 2025 15:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420517; cv=none; b=qB7YNcUXXJywqXZbtM7Dtlw2ryXuqVdztym6Xnffok4pSNHL/As2a6elFkmmI8Do7T1Xt1m1NnC9Ll8inATWi81sl5W8X22oyMgymPQ3k95JY6IKjZ9nxjjk1tQsLTnm2UuSmhoRW+voKDpzLkB9nCk5eTn+8b71t/OWBGIR078=
+	t=1745420543; cv=none; b=ODYcvuVFhKPlE+Vb2LM3comtb0ESabcGDjigGxBd4Y8WhLaO9xsyAgfgNElAGFQ9mlQ0sSqAfEmgboN/7fx4JsCG5NgxaS4RvEoxo3J/3ZFqpsLvdThv4ksjJg+U3IdKgMe1kPPjJa67fdhHJ/sBk74Nejq0D7VP2qVP8UqraOE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420517; c=relaxed/simple;
-	bh=tQ5WuliRJvwcD2ksGop6yO+1sA09407P6BEmUGUWq6k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UkLxneXKuHLB7SojBonmVl6plW12QuX/dcv8yRI6C4yWsEqFGF4T4d6dU1kjoSXKAZzGcZodXnTi6G6drm+x8RaQLpqNCi/Uh9tUOD0TiqdYbyEaYv1wXhN8ffGxBjCIfPSnS2g+xUNBAl0P/35AbcuSOc8Qh7TQM9zx50n30+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ouW/wBxa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745420543; c=relaxed/simple;
+	bh=m4X9pNOHsc7T2z08TBIhPjyUadOODJKOYSxeSZHs7GU=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=SAruNrseevVl/1z37JI5q7e8qAzMfheHGzqnzSMgg/OC0/mUyW7o7dqTA93Pm234gRS6e2sh5zjaa9EMWa+xXFhN3ssluTO3km0fJjQy3PE88th44HmddiaA5/ydxbTo5D2TUEbiqhPRtcwuFmiHFv7rjP0Enefk5dEpGJwjGRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=H4zmsSu8; arc=none smtp.client-ip=162.62.58.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ouW/wBxa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2566FC4CEE3;
-	Wed, 23 Apr 2025 15:01:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745420515;
-	bh=tQ5WuliRJvwcD2ksGop6yO+1sA09407P6BEmUGUWq6k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ouW/wBxaeKMwR+BAXHBjp5BVlj55baRrrgszNZrGVrX/kM6VVON224jd5YIUIEHgg
-	 7jmVxxS0JK7d9CrLm2vgvIqapsdckKNdSOXwcsVOWiTZYdVjIARRgS59otjCgHtEaz
-	 zRJZD6TeZwHsfFq46GPZoh6O5eMeuzCJ5/X4Of8LyYsJmxK67jhRoMWcU5JrGOFCv8
-	 Z1geBlk/c2zmSlcaB9rMbbOImOuoER6okmb3Lb1LeXMgVu5cYNRw+ogLypNaW5Lo5F
-	 +F24d/CFcsQyrINp2P6JZpX+4lI+5Eo3AmJELd3IDlBh03jDJMi2f7GeYcn/rU6QIr
-	 YqNr0trcKyBuw==
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bf1d48843so56600271fa.2;
-        Wed, 23 Apr 2025 08:01:55 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVhKO8b8tu6q3gOa36jaBQ319Zc43E8T7HtDQOMujMwecGqTeJqCQ6fkjr4msMboqGCLjUSFHqInQaEOoBSWsAGaHQ=@vger.kernel.org, AJvYcCVwle+dMfq2Zo3H25AHTnOvC5n7koUV4B0PWa1S5KF1KkSwyBV/VTKLbS/aMNTqxNlVDLPU35465xcNG5eY@vger.kernel.org, AJvYcCVxjWgVqnmRjsz7tMKWhBzphAfeaLHceYLtNa1VamWHq7bxiU4WjBYgB6JwiA5qdexHoZ6MnIi4oYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwcYDzkxMJztmEoPzrhnCzbaSRY1Dnmnq+K5q6FYSrYoV0v1PW
-	mPG6KQf5m1pg7iCwlZdEGpxELIJ5MDAVs2MtffKGxY5rkmUfRX9X9BddhiWibpEdhgG/McSPBTF
-	1JwBg6Rt6W33S9791UwYNFbRtOy4=
-X-Google-Smtp-Source: AGHT+IG2CDF+UodCIQHaafpJRyR/ccpNZb7CjOiGJ6oVpwDftbX6t5n1A8Nk9bWvGYjTETNxukRBteMmCOyyzvR34NQ=
-X-Received: by 2002:a05:651c:1592:b0:30b:ed8c:b1e7 with SMTP id
- 38308e7fff4ca-310904f0efbmr53117761fa.18.1745420513361; Wed, 23 Apr 2025
- 08:01:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="H4zmsSu8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1745420534; bh=PbsmIm23XBEYvGxVRz/EvPQr2pSsFB6HCJforH58gAw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=H4zmsSu8vZzAFTSVrLn1g1+joIxYviFibcOtXNWAVEqXyrkKOeRh1HfRWeO5rcp8L
+	 KkVKPgbklpSgfJdlen/IkOrQq3ow1orTh/22/tsb066YgTcLY0kvP27q5vXFxM02VO
+	 J0O31r4GyBFEbaUZqov3tLR8EmckqiDbroHK4qXs=
+Received: from ubuntu.localdomain ([112.5.207.89])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id C24B3211; Wed, 23 Apr 2025 22:48:36 +0800
+X-QQ-mid: xmsmtpt1745419716twgvx82xi
+Message-ID: <tencent_B16F0FDE60249B5B302F900AE6EEE48C4F06@qq.com>
+X-QQ-XMAILINFO: Ma5fc9cIcIhRIAXKF1anoehPcR6M+5t9py8p47x5lifCL4G5e1wu91/Xab6FIc
+	 sFSNWmid3jkFuNli+8plOx6noPps7t4no02oKwow2I8IshYI0cJv28xw/YyGkxSq31ZT2o+ErlUW
+	 F2nm1WpxsacAJQbtmJBrs26ieZlpZ+vI8iSgMlBA1AcardkmJld/FoBtjDjPmeqtrPeEmyMyPyZP
+	 rldnv1yU/cmOsHPP/m2CszLllXcGI+4fjc8sO1bCFx+ilyWuKbWIuhBEDNz2IZh34ITTiey5rD/g
+	 fib9WoZc0f6pfEuxXLTrqkp8wW/Xy8d5AmHNbOZSRpp+R9ZKoJRrA6fY6FpzX0/iPwu0V7suPd1a
+	 7ytKvPuVc/KaN0iILg8NFXYcaapHKcj28xKW+bj30DJfatpyEuOfmpcyLNOwdGsnO/sCHBePAGkr
+	 9MZOjuCLqTze8KeN2BEMMqPP0Pfhbci4Qy1BC8DuZVLDJUageWNp6QaHdVbD5mxXiHrTs8Zpx/q6
+	 c0XRI0pf4AeLZY7UFao+uD7NDZFE9ReZ+m9ePTL7FU0zaYAH2pErRZptappHtdXBRZqzagC5REnT
+	 upS8iXfb0gygVVvFOb+GJ0QIaqMAmPfwqUGSAubhgDgwjwM0Gn9nSB5sEinip54IYTgo7l0ky5Hx
+	 i0B7RUW85VjZIcNss5PrLH04CXLRKQexE4xHaxRxQ7XSuN3WY/RwfB5EWdifWqVEaFRHOldXY2OE
+	 p9GjQNXnVXMx9U9psllK5xrZxbn1SUDVWhT1KvQ5Z0PcNbI2dP5rnixnnvk6V12+Mu3vcs4ccdI6
+	 hJ7LEzYzzPIhKGjecbdObruc9vq+jAH5PBy4HFy5C5dDhENgFF2mMZ0prK6QIirII5Q/ak423ePA
+	 dsd7NqwGbF++94OpfdTog7V8c6L7Vz7NcoAtguqs9Cau2TwnCovDn0jvQfuXPmInhn3mOG8bRXy8
+	 u+P+tu4kIhTUQACfcnD9mwyzdM27mGVTjwIF72ZmsfVb47XsvHvcJl+n3GbEF/
+X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
+From: 1425075683@qq.com
+To: robin.murphy@arm.com
+Cc: 1425075683@qq.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	robh@kernel.org,
+	saravanak@google.com
+Subject: Re: [PATCH] of: Build warn for missing fn() in _OF_DECLARE
+Date: Wed, 23 Apr 2025 22:48:35 +0800
+X-OQ-MSGID: <20250423144835.294788-1-1425075683@qq.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <a4277fb4-c982-43c7-9f02-e0050eff417a@arm.com>
+References: <a4277fb4-c982-43c7-9f02-e0050eff417a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422210510.600354-2-ardb+git@google.com> <174539448176.31282.2929835259793717594.tip-bot2@tip-bot2>
- <odoambb32hnupncbqfisrlqih2b2ggthhebcrg42e5fg25uxol@xe5veqq52xif>
-In-Reply-To: <odoambb32hnupncbqfisrlqih2b2ggthhebcrg42e5fg25uxol@xe5veqq52xif>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 23 Apr 2025 17:01:42 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFpE=P0_a3fTAnb7qQmXLt19dCtuEcd5U8xwYzAcO=ufQ@mail.gmail.com>
-X-Gm-Features: ATxdqUEFwtCb4nqIi7NO0Py2cAxP4hjMqkFdrhvexGPyj24fTTWcg1ZgiO_bY9E
-Message-ID: <CAMj1kXFpE=P0_a3fTAnb7qQmXLt19dCtuEcd5U8xwYzAcO=ufQ@mail.gmail.com>
-Subject: Re: [tip: x86/boot] x86/boot: Disable jump tables in PIC code
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: tip-bot2 for Ard Biesheuvel <tip-bot2@linutronix.de>, linux-tip-commits@vger.kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-efi@vger.kernel.org, 
-	x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, 23 Apr 2025 at 16:55, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>On 2025-04-17 2:23 pm, Liya Huang wrote:
+>> The function pointer fn() in _OF_DECLARE macro might be NULL. For example,
+>> in __reserved_mem_init_node(), only non-NULL cases are handled, and NULL
+>> function pointers are ignored.
+>> 
+>> This patch introduces a check to handle cases where fn() is NULL. If fn()
+>> is found to be NULL, a warning is issued during compilation to notify
+>> developers about the missing function pointer.
+>> 
+>> ---
+>> The function pointer fn() in _OF_DECLARE macro might be NULL. For example,
+>> in __reserved_mem_init_node(), only non-NULL cases are handled, and NULL
+>> function pointers are ignored.
+>> 
+>> This patch introduces a check to handle cases where fn() is NULL. If fn()
+>> is found to be NULL, a warning is issued during compilation to notify
+>> developers about the missing function pointer.
 >
-> On Wed, Apr 23, 2025 at 07:48:01AM +0000, tip-bot2 for Ard Biesheuvel wrote:
-> > The following commit has been merged into the x86/boot branch of tip:
-> >
-> > Commit-ID:     121c335b36e02d6aefb72501186e060474fdf33c
-> > Gitweb:        https://git.kernel.org/tip/121c335b36e02d6aefb72501186e060474fdf33c
-> > Author:        Ard Biesheuvel <ardb@kernel.org>
-> > AuthorDate:    Tue, 22 Apr 2025 23:05:11 +02:00
-> > Committer:     Ingo Molnar <mingo@kernel.org>
-> > CommitterDate: Wed, 23 Apr 2025 09:30:57 +02:00
-> >
-> > x86/boot: Disable jump tables in PIC code
-> >
-> > objtool already struggles to identify jump tables correctly in non-PIC
-> > code, where the idiom is something like
-> >
-> >   jmpq  *table(,%idx,8)
-> >
-> > and the table is a list of absolute addresses of jump targets.
-> >
-> > When using -fPIC, both the table reference as well as the jump targets
-> > are emitted in a RIP-relative manner, resulting in something like
-> >
-> >   leaq    table(%rip), %tbl
-> >   movslq  (%tbl,%idx,4), %offset
-> >   addq    %offset, %tbl
-> >   jmpq    *%tbl
-> >
-> > and the table is a list of offsets of the jump targets relative to the
-> > start of the entire table.
-> >
-> > Considering that this sequence of instructions can be interleaved with
-> > other instructions that have nothing to do with the jump table in
-> > question, it is extremely difficult to infer the control flow by
-> > deriving the jump targets from the indirect jump, the location of the
-> > table and the relative offsets it contains.
-> >
-> > So let's not bother and disable jump tables for code built with -fPIC
-> > under arch/x86/boot/startup.
+>This patch in -next appears to be responsible for syzbot complaining 
+>about build errors for some configs:
 >
-> Hm, does objtool even run on boot code?
+>"
+>kernel/dma/coherent.c:410:1: error: static assertion expression is not 
+>an integral constant expression
+>kernel/dma/contiguous.c:497:1: error: static assertion expression is not 
+>an integral constant expression
+>"
 >
+>https://lore.kernel.org/linux-iommu/6808d00a.050a0220.7184a.0010.GAE@google.com/
+>
+>Also on closer inspection, just outside the diff context we still seem 
+>to be explicitly anticipating fn being NULL with:
+>
+>	.data = (fn == (fn_type)NULL) ? fn : fn
+>
+>so something doesn't seem quite right...
+>
+>Thanks,
+>Robin.
 
-This is about startup code, not boot code. This is code that is part
-of vmlinux, but runs from a different mapping of memory than the one
-the linker assumes, and so it needs to be built with -fPIC to
-discourage the compiler and linker from inserting symbol references
-via the kernel virtual mapping, which may not be up yet when this code
-runs.
+I tested this patch, and it compiled successfully with GCC but failed with
+Clang.I couldn't find a better way to consistently check for null function
+pointers during compilation across these two compilers.
+I even tried using the method of preventing negative array indexing, but 
+it failed to compile with GCC instead.
+Perhaps it would be better to abandon this patch. :(
+
+--
+Thanks, 
+Liya Huang <1425075683@qq.com>
+
