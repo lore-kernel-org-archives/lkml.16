@@ -1,166 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A77269AFB;
-	Wed, 23 Apr 2025 07:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8CB215771;
+	Wed, 23 Apr 2025 07:33:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745393508; cv=none; b=Og4hb2ImbPk6IQtjI/oSyopHAP0Zs9bES9HYDVIRwvWXz51Oh+J22WD4jHO/AxF5ARJqT6/JG0fpRcIFMd2SKZa4UqyxUdk/5syJOXMUMih/4t70gAq75gYc5Dk7bnBN3NqD4WJW1TWaquQlZUQdZGrcri5qgTK47MhXFqdT3AU=
+	t=1745393614; cv=none; b=CiHxXXAi3kbHcLs8aJU729tB0GBovso5k7pI+UjdWsFmjMRVvT4NSuLgLyg2IBxcA0/OS+KXt7O6uvHpAg6PgjIwWk92HDcIymcOYKbDIP8xT9VaxvHFxB22cWHiK4K2kkTy/hB1Ha4hffG2572ucOXUKi46LnUIifsoSCaru3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745393508; c=relaxed/simple;
-	bh=W27QoYWozWtPlg4CTM+qPGkbqa9JdnugfOcLmSEveHs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S98aowJqdaUEOsFtoas41xL4wb2i7N5A1scbPsr/dWuEqGSTtZPCLfGEorPAuBbB1EIF7cfZIRZz7pIcx8dZCM1pJnQ8fS2ecNXhquuF9nQ7j2iJq2qF73k1szkIfQEc/par5DVOsUHOUuUW5O5UpXauVFBxDm7QfsawKbjyhjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fw7O2SvM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745393614; c=relaxed/simple;
+	bh=Dvyz6DITaxkdGp0a835ONmkSb8MvYzExGjAgvoMRHRs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lj6AA9utY7TkSaDe4TIK8tIitdcXQYdd+53LZSSFLxvctnH/4I6abPfsgV2kyyjOBLNwRm9uZRvgME1oOxHMpD9eBxZbWnbun20dyaO9m1lrCcvHzMhvcrKdaAY0CO0gXljSjkiRqWJBvlFtTUhTACd/5owyjyzG0g5jpmXyxHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TtIE0T5T; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fw7O2SvM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86695C4CEE2;
-	Wed, 23 Apr 2025 07:31:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745393507;
-	bh=W27QoYWozWtPlg4CTM+qPGkbqa9JdnugfOcLmSEveHs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fw7O2SvMmm2uF1LyiC8TLQisXJyIMB988RU7Aa4PZYFg6vQ/6tcPrxuw0KNEcwfRv
-	 nG2tAV9/cxuDCdedvZeHsUI8qZ01BYTWJo22PoRfP5KOvHqSnU3R+wT29KS15NG6bm
-	 MoPKTDwn2Vz+aPDQK0FiKi7bhXXFB1UVlwfMlpvEsYJZP3D2Rn9barfHSl4gxtLpd+
-	 zfppa0ufv/t4xy3j2ahzTvwMW2ZPhsHi8aw9D1TFoE4eKmp3jGtNqxEcu8RJh84gz7
-	 HXMWRYMQ5Tg33GGzTpCL0kbkxyT1HOH94s2sIUZsIv/M0ZL9YrkvjzhrCvMMV4KEdW
-	 MtrWchJKEs+aA==
-Date: Wed, 23 Apr 2025 09:31:42 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-man@vger.kernel.org
-Subject: Re: newlines in filenames; POSIX.1-2024
-Message-ID: <3wpydsib5maytq4m4ve4b7wfbfkxwzd5m6u5woqr43qr6mickk@gw4ww6vvgyo5>
-References: <iezzxq25mqdcapusb32euu3fgvz7djtrn5n66emb72jb3bqltx@lr2545vnc55k>
- <20250422222131.GE569616@mit.edu>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TtIE0T5T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=MSxQX
+	vQax8p9c+hmvlHTDibnsDBQVDBYA+HPPCGtZ74=; b=TtIE0T5TyFciWIB6aKQRs
+	8VMYjsvHplMURfiVMt12Kyvo24xUzp313aQVI6VQIOF/zj13jx+S2MmtNpMfm5aD
+	w6EbQdY4rXFRvL5IN9+ODR5TAuagWUcadQGcTZ/UAQLPVd5OxnVoCWOAHaIjppz1
+	rA6m0OVvdAOfv4ENuMixUQ=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id PigvCgDHqhNulwhohX4qAg--.21421S2;
+	Wed, 23 Apr 2025 15:32:00 +0800 (CST)
+From: Feng Yang <yangfeng59949@163.com>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	mattbobrowski@google.com,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v4] bpf: streamline allowed helpers between tracing and base sets
+Date: Wed, 23 Apr 2025 15:31:51 +0800
+Message-Id: <20250423073151.297103-1-yangfeng59949@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vlxqfgmgmh5zxyxe"
-Content-Disposition: inline
-In-Reply-To: <20250422222131.GE569616@mit.edu>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:PigvCgDHqhNulwhohX4qAg--.21421S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxtF4fJry3WFyUtFyrAF17Awb_yoW3Xw1rpF
+	sxtrW3Crs7tw4aqFy7Jr1fZa4Fk3srX3yUWa95Gw18ur4jvr47tF129F42gF1rAr98W347
+	u3yvvFZ0kFy293JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ja4E_UUUUU=
+X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiThQ4eGgIPm4qYQABsg
 
+From: Feng Yang <yangfeng@kylinos.cn>
 
---vlxqfgmgmh5zxyxe
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-man@vger.kernel.org
-Subject: Re: newlines in filenames; POSIX.1-2024
-References: <iezzxq25mqdcapusb32euu3fgvz7djtrn5n66emb72jb3bqltx@lr2545vnc55k>
- <20250422222131.GE569616@mit.edu>
-MIME-Version: 1.0
-In-Reply-To: <20250422222131.GE569616@mit.edu>
+Many conditional checks in switch-case are redundant
+with bpf_base_func_proto and should be removed.
 
-Hi Ted,
+Regarding the permission checks bpf_base_func_proto:
+The permission checks in bpf_prog_load (as outlined below)
+ensure that the trace has both CAP_BPF and CAP_PERFMON capabilities,
+thus enabling the use of corresponding prototypes
+in bpf_base_func_proto without adverse effects.
+bpf_prog_load
+	......
+	bpf_cap = bpf_token_capable(token, CAP_BPF);
+	......
+	if (type != BPF_PROG_TYPE_SOCKET_FILTER &&
+	    type != BPF_PROG_TYPE_CGROUP_SKB &&
+	    !bpf_cap)
+		goto put_token;
+	......
+	if (is_perfmon_prog_type(type) && !bpf_token_capable(token, CAP_PERFMON))
+		goto put_token;
+	......
 
-On Tue, Apr 22, 2025 at 05:21:31PM -0500, Theodore Ts'o wrote:
-> On Wed, Apr 16, 2025 at 06:50:00PM +0200, Alejandro Colomar wrote:
-> >=20
-> > I'm updating the manual pages for POSIX.1-2024.  One of the changes
-> > in this revision is that POSIX now encourages implementations to
-> > disallow using new-line characters in file names.
-> >=20
-> > Historically, Linux (and maybe all existing POSIX systems?) has
-> > allowed new-line characters in file names.
->=20
-> Do we have any information of which implementations (if any) might
-> decide to disallow new-line characters?
+Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
+Acked-by: Song Liu <song@kernel.org>
+---
+Changes in v4:
+- Only modify patch description information.
+- At present, bpf_tracing_func_proto still has the following ID:
+- BPF_FUNC_get_current_uid_gid
+- BPF_FUNC_get_current_comm
+- BPF_FUNC_get_smp_processor_id
+- BPF_FUNC_perf_event_read
+- BPF_FUNC_probe_read
+- BPF_FUNC_probe_read_str
+- BPF_FUNC_current_task_under_cgroup
+- BPF_FUNC_send_signal
+- BPF_FUNC_send_signal_thread
+- BPF_FUNC_get_task_stack
+- BPF_FUNC_copy_from_user
+- BPF_FUNC_copy_from_user_task
+- BPF_FUNC_task_storage_get
+- BPF_FUNC_task_storage_delete
+- BPF_FUNC_get_func_ip
+- BPF_FUNC_get_branch_snapshot
+- BPF_FUNC_find_vma
+- BPF_FUNC_probe_write_user
+- I'm not sure which ones can be used by all programs, as Zvi Effron said(https://lore.kernel.org/all/CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=pzTEbQ@mail.gmail.com/)
+- get_smp_processor_id also be retained(https://lore.kernel.org/all/CAADnVQ+WYLfoR1W6AsCJF6fNKEUgfxANXP01EQCJh1=99ZpoNw@mail.gmail.com/)
 
-Such a list doesn't exist.
+- Link to v3: https://lore.kernel.org/all/20250410070258.276759-1-yangfeng59949@163.com/
 
-<http://austingroupbugs.net/view.php?id=3D251>
+Changes in v3:
+- Only modify patch description information.
+- Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfeng59949@163.com/
 
-> If the Austin Group is going to add these sorts of "encouragements"
-> without engaging with us dirctly, it seems to be much like King Canute
-> commanding that the tide not come in....
->=20
-> Personally, I'm not convinced a newline is any different from any
-> number of weird-sh*t characters, such as zero-width space Unicode
-> characters, ASCII ETX or EOF characters, etc.
+Changes in v2:
+- Only modify patch description information.
+- Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfeng59949@163.com/
+---
+ kernel/trace/bpf_trace.c | 72 ----------------------------------------
+ 1 file changed, 72 deletions(-)
 
-Newline is slightly more problematic than those, especially in scripts.
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 0f5906f43d7c..52c432a44aeb 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1430,56 +1430,14 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 	const struct bpf_func_proto *func_proto;
+ 
+ 	switch (func_id) {
+-	case BPF_FUNC_map_lookup_elem:
+-		return &bpf_map_lookup_elem_proto;
+-	case BPF_FUNC_map_update_elem:
+-		return &bpf_map_update_elem_proto;
+-	case BPF_FUNC_map_delete_elem:
+-		return &bpf_map_delete_elem_proto;
+-	case BPF_FUNC_map_push_elem:
+-		return &bpf_map_push_elem_proto;
+-	case BPF_FUNC_map_pop_elem:
+-		return &bpf_map_pop_elem_proto;
+-	case BPF_FUNC_map_peek_elem:
+-		return &bpf_map_peek_elem_proto;
+-	case BPF_FUNC_map_lookup_percpu_elem:
+-		return &bpf_map_lookup_percpu_elem_proto;
+-	case BPF_FUNC_ktime_get_ns:
+-		return &bpf_ktime_get_ns_proto;
+-	case BPF_FUNC_ktime_get_boot_ns:
+-		return &bpf_ktime_get_boot_ns_proto;
+-	case BPF_FUNC_tail_call:
+-		return &bpf_tail_call_proto;
+-	case BPF_FUNC_get_current_task:
+-		return &bpf_get_current_task_proto;
+-	case BPF_FUNC_get_current_task_btf:
+-		return &bpf_get_current_task_btf_proto;
+-	case BPF_FUNC_task_pt_regs:
+-		return &bpf_task_pt_regs_proto;
+ 	case BPF_FUNC_get_current_uid_gid:
+ 		return &bpf_get_current_uid_gid_proto;
+ 	case BPF_FUNC_get_current_comm:
+ 		return &bpf_get_current_comm_proto;
+-	case BPF_FUNC_trace_printk:
+-		return bpf_get_trace_printk_proto();
+ 	case BPF_FUNC_get_smp_processor_id:
+ 		return &bpf_get_smp_processor_id_proto;
+-	case BPF_FUNC_get_numa_node_id:
+-		return &bpf_get_numa_node_id_proto;
+ 	case BPF_FUNC_perf_event_read:
+ 		return &bpf_perf_event_read_proto;
+-	case BPF_FUNC_get_prandom_u32:
+-		return &bpf_get_prandom_u32_proto;
+-	case BPF_FUNC_probe_read_user:
+-		return &bpf_probe_read_user_proto;
+-	case BPF_FUNC_probe_read_kernel:
+-		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+-		       NULL : &bpf_probe_read_kernel_proto;
+-	case BPF_FUNC_probe_read_user_str:
+-		return &bpf_probe_read_user_str_proto;
+-	case BPF_FUNC_probe_read_kernel_str:
+-		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+-		       NULL : &bpf_probe_read_kernel_str_proto;
+ #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+ 	case BPF_FUNC_probe_read:
+ 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
+@@ -1489,10 +1447,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		       NULL : &bpf_probe_read_compat_str_proto;
+ #endif
+ #ifdef CONFIG_CGROUPS
+-	case BPF_FUNC_cgrp_storage_get:
+-		return &bpf_cgrp_storage_get_proto;
+-	case BPF_FUNC_cgrp_storage_delete:
+-		return &bpf_cgrp_storage_delete_proto;
+ 	case BPF_FUNC_current_task_under_cgroup:
+ 		return &bpf_current_task_under_cgroup_proto;
+ #endif
+@@ -1500,20 +1454,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_send_signal_proto;
+ 	case BPF_FUNC_send_signal_thread:
+ 		return &bpf_send_signal_thread_proto;
+-	case BPF_FUNC_perf_event_read_value:
+-		return &bpf_perf_event_read_value_proto;
+-	case BPF_FUNC_ringbuf_output:
+-		return &bpf_ringbuf_output_proto;
+-	case BPF_FUNC_ringbuf_reserve:
+-		return &bpf_ringbuf_reserve_proto;
+-	case BPF_FUNC_ringbuf_submit:
+-		return &bpf_ringbuf_submit_proto;
+-	case BPF_FUNC_ringbuf_discard:
+-		return &bpf_ringbuf_discard_proto;
+-	case BPF_FUNC_ringbuf_query:
+-		return &bpf_ringbuf_query_proto;
+-	case BPF_FUNC_jiffies64:
+-		return &bpf_jiffies64_proto;
+ 	case BPF_FUNC_get_task_stack:
+ 		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
+ 				       : &bpf_get_task_stack_proto;
+@@ -1521,12 +1461,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_copy_from_user_proto;
+ 	case BPF_FUNC_copy_from_user_task:
+ 		return &bpf_copy_from_user_task_proto;
+-	case BPF_FUNC_snprintf_btf:
+-		return &bpf_snprintf_btf_proto;
+-	case BPF_FUNC_per_cpu_ptr:
+-		return &bpf_per_cpu_ptr_proto;
+-	case BPF_FUNC_this_cpu_ptr:
+-		return &bpf_this_cpu_ptr_proto;
+ 	case BPF_FUNC_task_storage_get:
+ 		if (bpf_prog_check_recur(prog))
+ 			return &bpf_task_storage_get_recur_proto;
+@@ -1535,18 +1469,12 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		if (bpf_prog_check_recur(prog))
+ 			return &bpf_task_storage_delete_recur_proto;
+ 		return &bpf_task_storage_delete_proto;
+-	case BPF_FUNC_for_each_map_elem:
+-		return &bpf_for_each_map_elem_proto;
+-	case BPF_FUNC_snprintf:
+-		return &bpf_snprintf_proto;
+ 	case BPF_FUNC_get_func_ip:
+ 		return &bpf_get_func_ip_proto_tracing;
+ 	case BPF_FUNC_get_branch_snapshot:
+ 		return &bpf_get_branch_snapshot_proto;
+ 	case BPF_FUNC_find_vma:
+ 		return &bpf_find_vma_proto;
+-	case BPF_FUNC_trace_vprintk:
+-		return bpf_get_trace_vprintk_proto();
+ 	default:
+ 		break;
+ 	}
+-- 
+2.43.0
 
-But yes, other characters (mainly control characters) were also
-discussed in that bug.  From what I can read, it seems they were scared
-that if they attempted to suggest banning all control characters at
-once, there might be more opposition, and the standard would be toilet
-paper.
-
-> I suppose we could add a new mount option which disallows the
-> weird-sh*t characters, but I bet it will break some userspace
-> programs,
-
-That's an interesting approach.  Being an opt-in mount option, users
-will only break at their will, and they can always go back to old mode
-when they need to do some operation with weird-sh*t characters.
-
-TBH, while I see the chances of breaking stuff (so I don't see this
-being the default in a long time; maybe ever), I think an opt-in mode
-would be interesting, for those that know that don't need to handle such
-broken file names, to have a tighter system.  I would enable such a mode
-in my systems.
-
-> and it also begs the question of *which* weird-sh*t
-> characters should be disallowed by the kernel.
-
-I think a mode for disallowing _any control characters_ (aka [:cntrl:],
-aka 0-31) would be a good choice.
-
-> > I guess there's no intention to change that behavior.  But I should
-> > ask.  I thought of adding this paragraph to all pages that create
-> > file names:
-> >=20
-> > 	+.SH CAVEATS
-> > 	+POSIX.1-2024 encourages implementations to
-> > 	+disallow creation of filenames containing new-line characters.
-> > 	+Linux doesn't follow this,
-> > 	+and allows using new-line characters.
-> >=20
-> > Are there any comments?
->=20
-> I think this is giving the Austin Group way more attention/respect
-> than they deserve, especially when it's an optional "encourage", but
-> whatever...
-
-I'm not worried about that, I was more worried about the churn in the
-pages.  I later remembered we have a pathname(7) page, so I'll put it
-there, just once.
-
-
-Have a lovely day!
-Alex
-
---=20
-<https://www.alejandro-colomar.es/>
-
---vlxqfgmgmh5zxyxe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgIl1cACgkQ64mZXMKQ
-wqmslhAAvhbTL05ZlYEhBpF5LFyyKUz9kIUb93sFyaenaNfydBgqCuH2Lreyo3yG
-z8ac7C8kBtsShQ71eQU9Z98hxRxkt2qOC5m5iTLLIG/Gb6cp08xuhyMG94FNl22c
-nQDVR9ETlywpUGwUfBLYeti2tf2UlOnlqkJvL9liY87PGTgdOLnJwPwoxyHw6yM5
-WDRfveife0cR/k1paA5kngqm26naF7Fi0ChUiQH6PEJiwkg8ZrbiFG7QaW2MWLeS
-LBzE+aFYW3ALJQGrnN9HsZ8bJoqz3YnNv/wu7J/BNXCQE/ky+uE14UxmneF6Rez0
-uMvZYaKif6LYjF3C7U+iKTIYoGw46DZyNFdC6unEWVfryemM3iN3n1wLFA3rCaA6
-ABPnYBcuLtRQaPJ2L0r1xnnh9hexwvagQ4C8tO4ibVo0TC6m2aPa5Y89WWpDjjsa
-s2b95DJLITJpwtgUtH+sclh5YyQtSqha/Uq9q2TiOifaKG4+Oo5owmYPI7+LhWfL
-A4QN1XkK8Wg6uPcgzKujJd+rNwTdNLGyUMD4qSL4W/54PEYSB2o5kJvmBAZL5u4h
-OoNQoc0Q5xbrrqUq5aAfXi2BaFFAO4la0vN3K4PIiboHYjoBjwTAPG6oTJ7Uvpps
-OzCmwTLFpB4O3gkU2Rp5XYwXrBa3YIW8jmyyR+HMPwNmG/WWJJ0=
-=x3q5
------END PGP SIGNATURE-----
-
---vlxqfgmgmh5zxyxe--
