@@ -1,81 +1,65 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF8626868F
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:46:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBB0A2701BF;
+	Wed, 23 Apr 2025 23:46:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745451961; cv=none; b=ggP+1puXSvuFreBMACPhD+LVrR1A9/pkJ05aI45KArLnUmVEzMljFa9OVB4clAHTlH+HjsllLZVfzMqmASkUhYE55LyFzs43H58BZBqHIJBD/QRXaUOADPWXSIR3HQNNFvRWnWKDcCYXDmOUkeB5bD6Ixctj/0BIm84jI8AFVe4=
+	t=1745452016; cv=none; b=N/WBWiRd6MJnf7lttBha5Vd6qIezYDYPgOW2qXiJhLLK9PXvZLV4ly/MVuYJ5JrNlCI2TETZcrYmORbKTj51ENSUv8PiaMx2VNd9Y3aXt0i1YUU6T2ezVn80dp2353PSEtgcKvfUSZBdKxdai1LHfX0/8OFQ40HDiuw3bktx8VQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745451961; c=relaxed/simple;
-	bh=uCC9DO68y8+JlmMQrcLGfGpDqTbOtuWORndFoJjnp4g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e0sa69LQ+xh/wp1P3hoQx2muLQhGnCq4XrRfwmyKTQBlLDEj4W10qjkon9ScqDgzPDoHFWRY/GjSTVOAk/wGUgmAincVmv69UpM18cEN3fd6MTi97E8C8h0DMyVXqDRxGX370mo76hlyxw9yT7AXGWzet+NqU52Rw30smNIPyik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWqPN1a0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745452016; c=relaxed/simple;
+	bh=Av9q60C/8mDddQ+gZDyjx1Lly+8wTurMKem5qxUYBnY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nHZh4VSelbLNFBxUMqnLHE21sPgeGCGMm7xO0Sirfl91l5NZ6ge9lz4M9LAqUWVCetJLQbcayut5BuhCspW7Eumv3SJ9iZ26HV9C1XfYMQHG8kLgCz9JBS2NoJ0KpJVvPCTGvWke6IeGBmNvsbnv4NDpYPqpGsaXqG0sB1srtNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JZJ8u/84; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWqPN1a0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC20C4CEE2;
-	Wed, 23 Apr 2025 23:46:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JZJ8u/84"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7BA6C4CEE2;
+	Wed, 23 Apr 2025 23:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745451960;
-	bh=uCC9DO68y8+JlmMQrcLGfGpDqTbOtuWORndFoJjnp4g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pWqPN1a047cwQ6i7KmI8Hxv81Z2JBAAlEUxUAVLPLi2C4S/csw31ObVDhspujMrIO
-	 mJHVK0xsONalY7IuCwUb534VXQ7UtvL05kQvuMuvGZPfPjPeuXqod0ZIVTz1jgaCEr
-	 Y8iZLFjdIk7RUw9lliQnj6qo/X+EnghnEhYtiejFOSJ1OeKmsUE5/fYzDOaPzaQbNj
-	 AIcvlHU7c1KGHUDuRkYbC1zBUpqfXpqaitE9A0NaHzeC8ulHFzhYRaUCA1hMXBrVdE
-	 K0tlEk66Wi1WITFxWi9RQODVHYRpFpWW3b10lderWOlR2QRReEUtJa17nALgNHY0Rl
-	 iO8FcWJIVVOQg==
-From: Tejun Heo <tj@kernel.org>
-To: David Vernet <void@manifault.com>,
-	Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>,
-	linux-kernel@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>
-Subject: [PATCH 12/12] sched_ext: Clean up SCX_EXIT_NONE handling in scx_disable_workfn()
-Date: Wed, 23 Apr 2025 13:44:50 -1000
-Message-ID: <20250423234542.1890867-13-tj@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250423234542.1890867-1-tj@kernel.org>
-References: <20250423234542.1890867-1-tj@kernel.org>
+	s=k20201202; t=1745452016;
+	bh=Av9q60C/8mDddQ+gZDyjx1Lly+8wTurMKem5qxUYBnY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JZJ8u/84UgQBxWmODGXIF9w6EwgpbnudFLmCdxHLBoQTWQUGFGYvmooRxeTfUKMfn
+	 KU2bEbKGe4DqXt4TxcjbGzoRcLXMazK8TVTUBR8ulAyJ7A6QVFjBNy9DkLOtIkgxmQ
+	 m51w8z90BtSPFIaTvugeKRss/MkKsGaQ+bmQIpJdqz8LAQNsHLJqoTPN1/l2ZMWcYt
+	 IpkY/H6GbgvgSgj8ayoeal0Ps2tMXX0kcS0K2xBHOlhoAegcTidKmD5HWiX9m5l83N
+	 AxXkmErq7RRlvJmuyoS5heqlOdEH9Gx/oR1YUfoXC/YSoj3xd+Rl+mwvQ0/2CWuTjC
+	 xj8w1eazHPKug==
+Date: Wed, 23 Apr 2025 16:46:55 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Kuniyuki Iwashima
+ <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor
+ <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas.weissschuh@linutronix.de>
+Subject: Re: [PATCH v4 1/7] ref_tracker: don't use %pK in pr_ostream()
+ output
+Message-ID: <20250423164655.36e53244@kernel.org>
+In-Reply-To: <20250418-reftrack-dbgfs-v4-1-5ca5c7899544@kernel.org>
+References: <20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org>
+	<20250418-reftrack-dbgfs-v4-1-5ca5c7899544@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-With the global states and disable machinery moved into scx_sched,
-scx_disable_workfn() can only be scheduled and run for the specific
-scheduler instance. This makes it impossible for scx_disable_workfn() to see
-SCX_EXIT_NONE. Turn that condition into WARN_ON_ONCE().
+On Fri, 18 Apr 2025 10:24:25 -0400 Jeff Layton wrote:
+> -		pr_ostream(s, "%s@%pK: couldn't get stats, error %pe\n",
+> +		pr_ostream(s, "%s@%p: couldn't get stats, error %pe\n",
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- kernel/sched/ext.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+FTR I think this is counter productive. 
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index d27193010b6a..d963aa5c99e1 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -4749,13 +4749,9 @@ static void scx_disable_workfn(struct kthread_work *work)
- 
- 	kind = atomic_read(&sch->exit_kind);
- 	while (true) {
--		/*
--		 * NONE indicates that a new scx_ops has been registered since
--		 * disable was scheduled - don't kill the new ops. DONE
--		 * indicates that the ops has already been disabled.
--		 */
--		if (kind == SCX_EXIT_NONE || kind == SCX_EXIT_DONE)
-+		if (kind == SCX_EXIT_DONE)	/* already disabled? */
- 			return;
-+		WARN_ON_ONCE(kind == SCX_EXIT_NONE);
- 		if (atomic_try_cmpxchg(&sch->exit_kind, &kind, SCX_EXIT_DONE))
- 			break;
- 	}
--- 
-2.49.0
+Reference tracking is a debug feature and you may want to find that
+object with a debugger and inspect it. That's not the same as random
+drivers printing kernel addresses into logs for not apparent reason.
 
+Does kmemleak use the hashed address representation? It's a very
+similar situation.
