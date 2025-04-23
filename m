@@ -1,89 +1,84 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C22E1EA7FD;
-	Wed, 23 Apr 2025 01:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAABD1A23BE;
+	Wed, 23 Apr 2025 01:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745371694; cv=none; b=p2GTG+kvF0cq/44F0vwYJDruYbRV0o0vbt6PDK71HAd9gFAnXSESKBC7yV2zCvTzOxwt2F24HLVnuBQPVf9uhnvC7A87g1Qoy2ZcDIsKCnk/fYy6WXCRYAD0ezARhu6hAFd7CbSQbGF6/taADFvQX5T3abb0bqg522o9V+najDg=
+	t=1745371791; cv=none; b=Je0rhwcyiBrqLEIqyzZr9yQstXSoRhZseN4QUw8j38TO32gdMDAhjjZDFWjR7jqLB2Hincd01NH8JL9y3PC9UDgj5bWtEzDeTuXIPNCbnwDNbG9WDstIylgPNhANcaXEcY8huhHpcDVGq5Yrd9k2KxnCD2VbbFxcJcBeiTcpP/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745371694; c=relaxed/simple;
-	bh=raHCsdM6p0oc+ERO+qqhoYKMKdxIncSRd/5/ilrt4Vs=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=n/4cfOPPVCChgqXENBCe6ZjhrttS5JCushruqSukOI1Ni5zmiLbqdPFVq9gyXRa5aydNsY6hVcX0j8BY3fAQEKwX4Bxo7CsbyOA2Ob3QuBZCf2jJ2b/RlZzN/xQV9pFeCD0KYWQ+9IBF4QpXVoB2tr7hHP7LiUooRtx02c7QmqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8AxQK0pQghoAl_EAA--.46287S3;
-	Wed, 23 Apr 2025 09:28:09 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMDxvhsmQghoROaQAA--.46948S3;
-	Wed, 23 Apr 2025 09:28:06 +0800 (CST)
-Subject: Re: BUG: bpf test case fails to run on LoongArch
-To: bibo mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-References: <32989acf-93ef-b90f-c3ba-2a3c07dee4a3@loongson.cn>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <8cd87100-88f3-687d-6704-f4fec0ca48b3@loongson.cn>
-Date: Wed, 23 Apr 2025 09:28:06 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1745371791; c=relaxed/simple;
+	bh=Gevgh82HxT5cgQiOLTNIo9KgIKveEH4Cs3+gRb6Ds1I=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=R/Tz4dzvddyn9TueZ1fyVjsBdRdEsV4yF+gb1b1XigEuckXMRFyWLCRzlilbe5S1uUJyZbuTtNYoyFDx8iVpQyycu8reJ9h29YSOrPXrpfT2ArJcmPypVvKt291QaTtyE0kcTmAnx/HXI12S5zmo79WJpBGl+eADYB40baFxTEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNHgy3Ai; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNHgy3Ai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED77FC4CEE9;
+	Wed, 23 Apr 2025 01:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745371791;
+	bh=Gevgh82HxT5cgQiOLTNIo9KgIKveEH4Cs3+gRb6Ds1I=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nNHgy3AiKbv8wcZPEZW3KBW/5mPh8iihtY9t9bC5gBx0CzxrpCdqDkrHq1xBOw7z0
+	 tJvF8t0N9DITn+HJsXvkBRcBi887jrBfzewRxaWjrhxasBeWm6RN6ocHzEtGQSpEGr
+	 WzIhGCaV5xYq1EBZu6EJBn7bT69zHw4Sn4rgZqgIqNUu2DxezIXuIDc3tTutkMZZg4
+	 4kMpKYgMyOXCiwP/I261BeOyWkso45Y6zn2mY/qR+KWuTnWy31X/uoul8cQGFHYzkr
+	 EcT+tB20BjT1Z4m58Td0ScGM35z27uEARVHeThDTxA8uP8RF5g2JPRUwmDT3xD8y4Z
+	 pxDlOH7/Cwkig==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD4F380CEF4;
+	Wed, 23 Apr 2025 01:30:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <32989acf-93ef-b90f-c3ba-2a3c07dee4a3@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:qMiowMDxvhsmQghoROaQAA--.46948S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7JrWDWr4Uuw1fCr13Cw47WrX_yoWkXFg_ua
-	4kWFWktr90vrs8tr4Ykw4DZrZxCFsrtryUXr1DX3yUG3yxJ3Z8Zr4UXFZxWayDW393Wrnr
-	WrnIg3s8K3WjkosvyTuYvTs0mTUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbx8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	WUJVW8JwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F4
-	0EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_
-	Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbI
-	xvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AK
-	xVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrx
-	kI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v2
-	6r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8Jw
-	CI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UWHqcUUUUU
-	=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: phy: leds: fix memory leak
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174537182950.2107432.13440582690052227566.git-patchwork-notify@kernel.org>
+Date: Wed, 23 Apr 2025 01:30:29 +0000
+References: <20250417032557.2929427-1-dqfext@gmail.com>
+In-Reply-To: <20250417032557.2929427-1-dqfext@gmail.com>
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: andrew@lunn.ch, hkallweit1@gmail.com, linux@armlinux.org.uk,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ mail@maciej.szmigiero.name, nathan.sullivan@ni.com, josh.cartwright@ni.com,
+ zach.brown@ni.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ gch981213@gmail.com, qingfang.deng@siflower.com.cn, hao.guan@siflower.com.cn
 
-On 04/21/2025 10:52 AM, bibo mao wrote:
-> Hi,
->
-> When I run built-in bpf test case with lib/test_bpf.c,
-> it reports such error, I do not know whether it is a problem.
->
->  test_bpf: #843 ALU32_RSH_X: all shift values jited:1 239 PASS
->  test_bpf: #844 ALU32_ARSH_X: all shift values jited:1 237 PASS
->  test_bpf: #845 ALU64_LSH_X: all shift values with the same register
->  ------------[ cut here ]------------
->  kernel BUG at lib/test_bpf.c:794!
+Hello:
 
-This is a known issue I have ever encountered.
-I guess your GCC version is 14.1, this is a bug of GCC,
-it has been fixed in the higher version, you can update
-you GCC version (14.2+).
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-$ gcc --version | head -1
-gcc (GCC) 14.2.1 20241104
-$ dmesg -t | grep Summary
-test_bpf: Summary: 1053 PASSED, 0 FAILED, [0/1041 JIT'ed]
-test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [0/10 JIT'ed]
-test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
-test_bpf: Summary: 1053 PASSED, 0 FAILED, [1041/1041 JIT'ed]
-test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 JIT'ed]
-test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
+On Thu, 17 Apr 2025 11:25:56 +0800 you wrote:
+> From: Qingfang Deng <qingfang.deng@siflower.com.cn>
+> 
+> A network restart test on a router led to an out-of-memory condition,
+> which was traced to a memory leak in the PHY LED trigger code.
+> 
+> The root cause is misuse of the devm API. The registration function
+> (phy_led_triggers_register) is called from phy_attach_direct, not
+> phy_probe, and the unregister function (phy_led_triggers_unregister)
+> is called from phy_detach, not phy_remove. This means the register and
+> unregister functions can be called multiple times for the same PHY
+> device, but devm-allocated memory is not freed until the driver is
+> unbound.
+> 
+> [...]
 
-Thanks,
-Tiezhu
+Here is the summary with links:
+  - [net] net: phy: leds: fix memory leak
+    https://git.kernel.org/netdev/net/c/b7f0ee992adf
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
