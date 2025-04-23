@@ -1,90 +1,47 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476C01A9B3D
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECAC81A3161;
+	Wed, 23 Apr 2025 13:56:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416503; cv=none; b=M6KlJUnnTVkTTRBSQuVnUa3S/8fVwxZ9/fW8AJTaZsptrNFgp3mHUWF/FrFl17V7ab4JbpOwAjstaZ1l+5KvnsD4BrYnP4iEMAX6AqeG00PUP9/BtbREDJ7Ohv7bxyBXcV4ATyg/CDeEcKNHo8drtmY+DFbcuSQ99hQqUtEOySw=
+	t=1745416580; cv=none; b=NWjheYi6WmQg394E3WLrBSNPHAqY7g+SdKVNvAkEvazx2PcimLzPQWJqX2ONLp24OycwnlE3CvtkwOq7GJANV2D1Ahz7ruAvnBTfdpROkpS9705evE6jl6s3EbuxGN3GuNfoosm3Zx5RelqaGnBXEDo79PmAsp+dEkvzhVlJSeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416503; c=relaxed/simple;
-	bh=k62o+ay2M0IbQRNfbp10YC+dWMBh5vmDDp0amjZHXxw=;
+	s=arc-20240116; t=1745416580; c=relaxed/simple;
+	bh=TLNo+cEr9a5ZaMfW1syRuCKSQsHU8Gj546QRb+xgVrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WN6EMiZzFbFIY5SR1GB1Jz1mAdwanx4UO6Lgoyx3OVNZBdayW+jDcYpT5w1y3Tmr7PskOAoAiwtWVcjCqYIx9ttaCBYpEjepyQYx/kdghQW5CJ+aTaMmbjpiA7P1Xoc1zgb6iec84Pxd9LZ3nr+W+Jpgqkz5T+hIFKO+zX8zxFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Mhe/JN8p; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GRSCABhg3Tc0rHlg8nkI4cwnQtphYzNUGF7bbamaEY3F1ldsLFuc3DLEK2EOt3+sGvJho0KFUHajIWvr5f7J15uT0idchyK6dRx4CDr5hkdyVVJv9wSRAUxtmY8hVNNJGKg/yB2uGPfwtBk1aRw2Fon2xgiwx71tXfqZ9p97+nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fo+4qxsF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Mhe/JN8p"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NALFkQ014799
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:55:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=Ch6JIJp6fDzsw1vuIJ2eZ7S5
-	WCWU4GzfWZUvcdjbWkA=; b=Mhe/JN8pCtR+E92A8mMd4EhXFKMkh2kZiPy+dN0q
-	Mt0QhakfGp0lFBe5ucWHN9RoxBj7DMIYf2b9je+98CsBB7qHlVV8+GCtTX5TPivh
-	25f9FZ6nTPnG5fGN1gjA7fugN1lsoo/LZe61BL3aUyckyq5zeuZ4afmCO11lgeIT
-	wQpKADPDvbsWamqduJw0k41OZdiXrFVtMZJZr8Gk5E1kJdiQLRpfPT5Sdbh6w6dW
-	EHrQNryfSL6ukFxcGoNw97aNpQSlMK3LVTxpUfFrqHU52WvrzcMqlJSR56q+Kkv2
-	hCT7Gyvu6nSAJ6FBlyr7eKNBj5LHMzSU+njlPslSKdomrw==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0ja5n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:55:00 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c0b0cf53f3so959598385a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:54:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745416499; x=1746021299;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ch6JIJp6fDzsw1vuIJ2eZ7S5WCWU4GzfWZUvcdjbWkA=;
-        b=b5XONqv2qLp17SczDc9ufn8f/ccFes90ggoVhKRiP2fxGobULo1LimG6qT1y5IHMe6
-         trak+eSaOTGWQrlx0QI2CG9xBnJrbaQE4e5KOK6au3bQwc5iarZqoP2Wz3yaFuZzxZ/V
-         vN+LcByGs4OSxX5ehoCLXdKJAZ/l/bCcPFF5u7tQ1G0gWi8lHnZuXcUTRGCKZwCSm8tV
-         xOBh1O1VZiAumrCl/xFS7RGKYVyLLL9gIuTdHCrAEOkDOJzksdNnSAAERgMy1gDoqGAa
-         x49hDStZvqLsnlWxNLjVwMrsnAK+XONoDR/wN+cFCVt+1+05fSeBdh5epJTPtNzqCdY2
-         pTKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZaUg8KJZTaOdNRDkCU9160kOTTnghyPF8FTqLeq/FOtX+jzUZooPBFqwMLml5j1rav5d3MnqQZiW45Fw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhhprxQ6nXX/New7vQdfqJ/8Y+y04mJu5m70yqo518/dbW7xT6
-	HqHyb2RuNWuqavC0qYZFkHNiwNx8z8hBZNmCEzrMLTtdPCRtGQexMXJ/8cy4RjTsfpawelzrBn9
-	iQvDyMiT1ZVqcp2JDrXrgZuMOetS3ZrGO3K8b7JDL8sZrEUae8I1m6r6Uqdlz7sU=
-X-Gm-Gg: ASbGncumj+PvwS6wskk9imgmBFSFDqAXM5woUtifbETvv0jZorsdrl6Y9dAG5Z+cSgV
-	y7elv4L2TU/+oOwEdUAGn/RU+9shwgoAK7DTSu9zl3/KJEuEjZh21JNFvhZx9QmmuOgdY1QtXnB
-	15fdmHL49rYP327WimuG+3uZNprnGnIKHPtVn/MdQ/ZY54bdSU7R7Tic5zOViyLTz0CozdOIWpl
-	tHRZIoCGAbvU6/yrEjKbKU/rMmj33L3/aWdXeU7iuzC8v8jFDMQKHsSQVebxDWEtixBpPtCPgBA
-	nB91NnktyVy6K6UM7MIwcfMa8SkWTSlIkPvUQazY9QItErhf6mA/Qia0GIFruTOvh4LdooLRWns
-	=
-X-Received: by 2002:a05:620a:1a1f:b0:7c5:642f:b22c with SMTP id af79cd13be357-7c927f99563mr2964406485a.20.1745416499211;
-        Wed, 23 Apr 2025 06:54:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHCYGAKdZu53by47MDLIJhd7FQhQZJw0CY/lsfFM4Rh7noGH96BnMs9HrnTEVjA/8jZt7RYLA==
-X-Received: by 2002:a05:620a:1a1f:b0:7c5:642f:b22c with SMTP id af79cd13be357-7c927f99563mr2964401385a.20.1745416498738;
-        Wed, 23 Apr 2025 06:54:58 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-310907844f3sm18420431fa.38.2025.04.23.06.54.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 06:54:58 -0700 (PDT)
-Date: Wed, 23 Apr 2025 16:54:56 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] clk: qcom: camcc-sc8180x: Add SC8180X camera clock
- controller driver
-Message-ID: <xlueboano26kjqkukhdmealdkzdpxdde57w6v5r4rjegydce35@i3e77s54t6yt>
-References: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
- <20250422-sc8180x-camcc-support-v1-2-691614d13f06@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fo+4qxsF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B1D6C4CEE2;
+	Wed, 23 Apr 2025 13:56:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745416579;
+	bh=TLNo+cEr9a5ZaMfW1syRuCKSQsHU8Gj546QRb+xgVrQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fo+4qxsF6nP7HbesDNMloUvlp5AnUsCJmOmU5XTAJxhlZgTUXLnI+nR2n81HBU0cd
+	 EsKhcl0iyzecjZHxg1PSe/cRyIRE9BCrILh9wYu9X7b62e5+qB2x9C9p5p9Xw31spt
+	 JR7i+DGelkQMFpo7vAjjVTkbhJF30g5km5k1IjvC7FHz5p8f9j8jEduo6cO2RV9nk+
+	 MB422YGaYHw6tu4h1sAcLQnh0Uk/pk6pGGiUzQKvU91wPLxYT7WDOVdSOfU2vrzJeT
+	 A2nfMox06SpE2u3i5dUR5wMM92CvtwN/Gy5sK5WmPgAV/28DdFPuT9gcWXGQ8OvbuZ
+	 enxzzqqRc8A7w==
+Date: Wed, 23 Apr 2025 08:56:17 -0500
+From: Rob Herring <robh@kernel.org>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>
+Cc: alim.akhtar@samsung.com, avri.altman@wdc.com, bvanassche@acm.org,
+	krzk+dt@kernel.org, mani@kernel.org, conor+dt@kernel.org,
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+	beanhuo@micron.com, peter.wang@mediatek.com,
+	linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH V1 3/3] scsi: ufs: qcom: Add support to disable UFS LPM
+ Feature
+Message-ID: <20250423135617.GA227946-robh@kernel.org>
+References: <20250417124645.24456-1-quic_nitirawa@quicinc.com>
+ <20250417124645.24456-4-quic_nitirawa@quicinc.com>
+ <20250422124546.GB896279-robh@kernel.org>
+ <06c6c892-c597-4d1f-9d28-52455d6471f9@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -93,39 +50,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422-sc8180x-camcc-support-v1-2-691614d13f06@quicinc.com>
-X-Proofpoint-ORIG-GUID: QwkZQh206aNiWbJ0ThywVHzomXlPsDn7
-X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=6808f134 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=TIlaLBFy8nvcEV5Zc5gA:9 a=CjuIK1q_8ugA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: QwkZQh206aNiWbJ0ThywVHzomXlPsDn7
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA5NyBTYWx0ZWRfX4qUU1JfwZH0M CmMj8mq+X8RZPf6WLxWOgvEAJ+vpZ7DeI8vmZSJh2ynMFvr1Y2TfZnBv6eWyCRrBihpmk3ZuZUX doiscQe7Z9QkUQqVpJFosWZ/l+3WL09aTcPY7OSnLUblAnwww7db3DHJUkEFZCZDEQ/eyLCp5J/
- m4Te3TfJXmnWvbIk9CQ9TaKQfZag6xNHQezHTpUjx7a8uDXorZiYPm4LostlDdBjfjQ6h9W7cK3 Sp54zc34l4QG7V5lg+ZUd8YR5R5A8EWyb0jgqei90mcHg6vdNe2Q4K2UYWZn9aIXuhYso/yUEqp 7BhuxmOA3B34cnXJhiMKoyToLbVc5DTeECOgJRb5O6AfxPfQw5HRoqMIsd5JENpbKEcXC8IDn7g
- 1BxSotU/3kgzNNpd1RxG7GCd3ir30DvxyfHWHrPykKfd/UYMMlUOonv4zyTgbSmkh0bleTXz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=869 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230097
+In-Reply-To: <06c6c892-c597-4d1f-9d28-52455d6471f9@quicinc.com>
 
-On Tue, Apr 22, 2025 at 11:12:11AM +0530, Satya Priya Kakitapalli wrote:
-> Add support for the camera clock controller for camera clients to
-> be able to request for camcc clocks on SC8180X platform.
+On Wed, Apr 23, 2025 at 01:14:27AM +0530, Nitin Rawat wrote:
 > 
-> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-> ---
->  drivers/clk/qcom/Kconfig         |   10 +
->  drivers/clk/qcom/Makefile        |    1 +
->  drivers/clk/qcom/camcc-sc8180x.c | 2896 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 2907 insertions(+)
 > 
+> On 4/22/2025 6:15 PM, Rob Herring wrote:
+> > On Thu, Apr 17, 2025 at 06:16:45PM +0530, Nitin Rawat wrote:
+> > > There are emulation FPGA platforms or other platforms where UFS low
+> > > power mode is either unsupported or power efficiency is not a critical
+> > > requirement.
+> > > 
+> > > Disable all low power mode UFS feature based on the "disable-lpm" device
+> > > tree property parsed in platform driver.
+> > > 
+> > > Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+> > > ---
+> > >   drivers/ufs/host/ufs-qcom.c | 15 ++++++++-------
+> > >   1 file changed, 8 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+> > > index 1b37449fbffc..1024edf36b68 100644
+> > > --- a/drivers/ufs/host/ufs-qcom.c
+> > > +++ b/drivers/ufs/host/ufs-qcom.c
+> > > @@ -1014,13 +1014,14 @@ static void ufs_qcom_set_host_caps(struct ufs_hba *hba)
+> > > 
+> > >   static void ufs_qcom_set_caps(struct ufs_hba *hba)
+> > >   {
+> > > -	hba->caps |= UFSHCD_CAP_CLK_GATING | UFSHCD_CAP_HIBERN8_WITH_CLK_GATING;
+> > > -	hba->caps |= UFSHCD_CAP_CLK_SCALING | UFSHCD_CAP_WB_WITH_CLK_SCALING;
+> > > -	hba->caps |= UFSHCD_CAP_AUTO_BKOPS_SUSPEND;
+> > > -	hba->caps |= UFSHCD_CAP_WB_EN;
+> > > -	hba->caps |= UFSHCD_CAP_AGGR_POWER_COLLAPSE;
+> > > -	hba->caps |= UFSHCD_CAP_RPM_AUTOSUSPEND;
+> > > -
+> > > +	if (!hba->disable_lpm) {
+> > > +		hba->caps |= UFSHCD_CAP_CLK_GATING | UFSHCD_CAP_HIBERN8_WITH_CLK_GATING;
+> > > +		hba->caps |= UFSHCD_CAP_CLK_SCALING | UFSHCD_CAP_WB_WITH_CLK_SCALING;
+> > > +		hba->caps |= UFSHCD_CAP_AUTO_BKOPS_SUSPEND;
+> > > +		hba->caps |= UFSHCD_CAP_WB_EN;
+> > > +		hba->caps |= UFSHCD_CAP_AGGR_POWER_COLLAPSE;
+> > > +		hba->caps |= UFSHCD_CAP_RPM_AUTOSUSPEND;
+> > > +	}
+> > 
+> > Doesn't RuntimePM already have userspace controls? And that's a Linux
+> > feature that shouldn't really be controlled by DT. I think this property
+> > should still to things defined by the UFS spec.
+> 
+> Hi Rob,
+> Yes userspace has runtime PM control but by the time UFS driver probes
+> completes and userspace is up, there are chances runtime PM may get kicked
+> in.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> 
+That sounds like a problem more than 1 device would have...
 
--- 
-With best wishes
-Dmitry
+Rob
