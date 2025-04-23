@@ -1,150 +1,124 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FD525CC73;
-	Wed, 23 Apr 2025 18:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9053288C9A
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745433776; cv=none; b=sw8xtn9LRBd1NjrnpMsD04SyUW0o+X9dodnuoLywGl5jXZ2LqNl+XJrTrctw4R6F0pmV9Ph0yAL2H36y5w0ghOcAze5B0TeLLdxNap1Sx7IKtteqn5rRGL4z90XcDQFqVVXtv7uaiMmjCD+Rp0/of1ibQlm/se9RDrk0bQ/vi58=
+	t=1745433892; cv=none; b=JFlWUAcOfjS8vFdNSHlMhf+wJkOlkOT+DGXgPoBRfSFeoCZePtmcaVNcxQ5lfqpkvroG688yuPEMoJiNza7XemkbTJCmUqBGrEklROS84KPRe7F6p+NYLetaV/IDc2EDa1Bo5CxRBk3CglIWycBRQsfN1+Ad2HtXMRyfTf5dTE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745433776; c=relaxed/simple;
-	bh=5z7cjOyEamlQH3pwzXxO5wp1qSdeGHjnJYbTuF++6OU=;
+	s=arc-20240116; t=1745433892; c=relaxed/simple;
+	bh=C8Vy0QjWrcwscWvUeewG3k/22VJUo67jEM+Dw8FZWfE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BsO73p/tZyGm9lfBTG8JTbhoe2TA0a4z2emXGVA/ON093ojOvGIZ0ClGJ01dX6aRMItTMfQoKonoqNon7GzldYdii0pvB5ajKy/2LvB4vmK34Vzkt+5FmQNBPoTyCQrc13xqJDne2aUdn4JZqLit9v5BFAeLHMRfGBOuMir1ePc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DIrA19eE; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=DGY/+C/3NIzR/zvgVY4VldLzEQFKFJ4T1TgBXah6oy4F82iKVq35U7Ln2Zx1mkkmLB797pNGYaXhmGO5gb0Dx6aG8GITzn/pm5EWNoFrIEQsyiQOzfyXSTyKu77E31EMfFrkVTesDRBkIGBy7bpub5Pkk6Nt5yGHLMUlYUJ1t5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PICXdsfl; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DIrA19eE"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1BA5F40E0192;
-	Wed, 23 Apr 2025 18:42:48 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id b_q9ku6oQs4F; Wed, 23 Apr 2025 18:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745433764; bh=4QYwqXRcz4L81CMD3HxW+21FD+WaKwTbBEoH7IXvigA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DIrA19eEjNfWtT787gu6rEJSRExOKb0AL8To3VBmth7NyiM+X66qOLiRb5hHhK+qn
-	 VLR216whrM4s8CTXnkPf1NP+DY7nobyd5e4swJIJTbbBbhhS2B1fVhYRU890QL5Ae0
-	 /c9r1XbzS4E5e8Ja0KD3DVT+w2KjUIW+fN+jtxRuDB+Mrlfs6vXLk27ZZwFxt4Dzwc
-	 YzsayQSYgiMVfVLRhM/Ry+1LVGLkYfqsbZHE/52Okn9PQ/nPPKifq+X0GTE+FL7i6l
-	 5+jmSd0W2CZAlbNdXYzJ1xMNaFQ6CXT6tWhTjurtbAhEkxT83tWeIxZJa7o5rQEfjZ
-	 TgpB0dahyiUPY9yuMMXRzPIBpYD/NpFywzUzom4pr2jZVLA8fZrc7dbFaYyLklvPV2
-	 v+M1UEQ63McL/5Io8VGXldkd7EZLTO7dZCp61m6Pj4KgwCCIKjRk5U16FkYwPugq90
-	 31v9oxY8ELx+t0DV3+ci8ugxNFMrwtQEzfl2Cb/l79lkNKQ1e1OJp2omeSEY5dvjLt
-	 1AmM948qC4IsYGbN0VEuHcFRvrq+quYFStqL6H78ExPPk5vsUsGtpyNQyJkpKU4kmW
-	 9q5ttq8JP4fEdAjprrwrLEo5L5YXY+F+zs4zEdDgeAceMnv1ZARqwyuvmVvFcdxJI4
-	 7GTAilLzyQDGL9KGebdKFGxE=
-Received: from rn.tnic (unknown [78.130.214.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 4F45240E01ED;
-	Wed, 23 Apr 2025 18:42:25 +0000 (UTC)
-Date: Wed, 23 Apr 2025 20:43:26 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
-	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6]
- x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when
- running in a virtual machine)
-Message-ID: <20250423184326.GCaAk0zinljkNHa_M7@renoirsky.local>
-References: <aAKDyGpzNOCdGmN2@duo.ucw.cz>
- <aAKJkrQxp5on46nC@google.com>
- <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
- <aAKaf1liTsIA81r_@google.com>
- <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
- <aAfQbiqp_yIV3OOC@google.com>
- <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
- <aAfynEK3wcfQa1qQ@google.com>
- <20250423072017.GAaAiUsYzDOdt7cmp2@renoirsky.local>
- <aAj0ySpCnHf_SX2J@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PICXdsfl"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22928d629faso1611855ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745433890; x=1746038690; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dyuD9/sJAUbk/RnjGg0DeufQJHAxdMe3Ujkj8v1B1G8=;
+        b=PICXdsflgT0BWtC/wy2HnVBs7qQH6EuC91V5mX9kav1QK2XDNRHZrFO77mACMbp3IL
+         woFJHXYmB1YPwVmG8nx8fDdjm4fRAH4l7dsdFq0H2CtLo2GJp5sN+xTkSW1wXrZXjHUa
+         kp75v7SAe9UFBTkeCSndZLeWY5+jKUQOOnnqCdxBaySKkRZ5CYQgZVR5hX+S8lh9Ymcu
+         3rcUdF7O4AIvdY9QW412SFM2y6piVhgPMeBq2LCqShnBCxc2QNLs1N+tTQLqY6p7LLlY
+         DLJNsOgzu2l8fcRf4CrP4BWv8hBs0Q+8lMHx/+8uQ/1E5R372EdrjhlROKAIxHKRLfR1
+         Qcjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745433890; x=1746038690;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dyuD9/sJAUbk/RnjGg0DeufQJHAxdMe3Ujkj8v1B1G8=;
+        b=BkgE+0LZPeD0aUYOSH53H+ia1K0M3uUaeZdDdZ14ZXqmqKr6gzt2iyAEgKgVhS55qW
+         iVNf+L9CEgtjyk6PxRCeLtBQS+tqtgX5d6KN2RLv++GY7+dTwTWK+VrH/+YeVsGe6DN1
+         HsN1wTHLpli3xbYCvq5/PA/3RV1xK9WyLGQ5/eLLFu3qt40knWGbXCHr3Gy1OBaOVl5m
+         3FM/0QYtG0m4az0uDoKoVKnIpe9lg0xghOrv8adUA4MBI7cDvd5xzyfFQJa2mkd/rc3O
+         TVANUzBvWzNOcF3I0jgrwaov/PpaV0jFoGPzAJbZwt3rxQNyoBgrF1qV5y7dwihd0NSm
+         H0sA==
+X-Forwarded-Encrypted: i=1; AJvYcCX9BfDUdpTBwlJT5z2aSzlCoXOQJv+cu9QeBa0ckPbi23n3dNy721+CGpq1ksWfMN3wNSZ6ElV4xyhbo5c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/Q+jQLMNzbuYDknNFh5Ww2hJdr8zw0O/ahpn9F6+z3Nu2vTpu
+	U9d4j8lsjfF4zpY72M4hiZQLVbkcmwV4iUzsbF21lG6sjjPjyN50
+X-Gm-Gg: ASbGncvYr+PUsZLjXNe9tkdZWWRwuopusDhGOnsf6lDfcDv51SrmKHmqEHgoqWeAwKd
+	M/xuBTgDkBCnGtOCFTU2ThKxaisNavsceInJdf/Ex+4kOM7DnfWONZx9EmErn78xW/0gRAyUm3f
+	BYKo4JXZyiX/PmCurUp33q2v1mwvd7I9k4zEcqg2RRDQy7chuj9FEpt0pIoEIeLvbnJAv6iCJIj
+	rMCZpCZNgrSRFyfebeoISPkazjvKKx8+dwEs5sVVLIC2iGLXsFVQIOtzxKUmaBbOrhdNDpO/SuK
+	sSn8fe9DOXdEH9jEy46UktGmHOdxLY8RhsI+60aE22GCI+bPON8=
+X-Google-Smtp-Source: AGHT+IHehkEM0GpRg5zfuUpHGpY51Oz35KQoy2mf8GVVVNyjw21DRg3BRF5CuxGd2alCupb+hBqELw==
+X-Received: by 2002:a17:903:247:b0:220:da88:2009 with SMTP id d9443c01a7336-22c53619eb5mr285278835ad.45.1745433889820;
+        Wed, 23 Apr 2025 11:44:49 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13a3e63sm9433123a12.29.2025.04.23.11.44.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 11:44:49 -0700 (PDT)
+Date: Wed, 23 Apr 2025 14:44:47 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Luo Jie <quic_luoj@quicinc.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, quic_kkumarcs@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+Subject: Re: [PATCH v3 0/6] Add FIELD_MODIFY() helper
+Message-ID: <aAk1H0Msi3lMKNR9@yury>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <86sem7jb5t.wl-maz@kernel.org>
+ <0c97c659-bd28-45e0-8537-d9be2637cb22@lunn.ch>
+ <86mscek7h3.wl-maz@kernel.org>
+ <aAJq9mGswYsnAOS8@yury>
+ <aAkm79R8f5Vf6TLh@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAj0ySpCnHf_SX2J@google.com>
+In-Reply-To: <aAkm79R8f5Vf6TLh@shell.armlinux.org.uk>
 
-On Wed, Apr 23, 2025 at 07:10:17AM -0700, Sean Christopherson wrote:
-> On Wed, Apr 23, 2025, Borislav Petkov wrote:
-> > > Eww.  Optimization to lessen the pain of DR7 interception.  It'd be nice to clean
-> > > this up at some point, especially with things like SEV-ES with DebugSwap, where
-> > > DR7 is never intercepted.
-> > >   arch/x86/include/asm/debugreg.h:        if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
-> > >   arch/x86/kernel/hw_breakpoint.c:                 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
+On Wed, Apr 23, 2025 at 06:44:15PM +0100, Russell King (Oracle) wrote:
+> On Fri, Apr 18, 2025 at 11:08:38AM -0400, Yury Norov wrote:
+> > The _replace_bits() functions return fixed-width values, and intended
+> > for: "manipulating bitfields both in host- and fixed-endian", as the
+> > very first line in the commit message says.
 > > 
-> > Patch adding it says "Because DRn access is 'difficult' with virt;..."
-> > so yeah. I guess we need to agree how to do debug exceptions in guests.
-> > Probably start documenting it and then have guest and host adhere to
-> > that. I'm talking completely without having looked at what the code does
-> > but the "handshake" agreement should be something like this and then we
-> > can start simplifying code...
+> > Those using _replace_bits() for something else abuse the API, and
+> > should switch to FIELD_MODIFY().
 > 
-> I don't know that we'll be able to simplify the code.
+> Sorry, but please explain this statement, because it means nothing to
+> me.
 > 
-> #DBs in the guest are complex because DR[0-3] aren't context switched by hardware,
-> and running with active breakpoints is uncommon.  As a result, loading the guest's
-> DRs into hardware on every VM-Enter is undesirable, because it would add significant
-> latency (load DRs on entry, save DRs on exit) for a relatively rare situation
-> (guest has active breakpoints).
+> FIELD_MODIFY() replaces bits in host endian. _replace_bits() also
+> replaces bits, but has a wider range of which encompass FIELD_MODIFY().
 > 
-> KVM (and presumably other hypervisors) intercepts DR accesses so that it can
-> detect when the guest has active breakpoints (DR7 bits enabled), at which point
-> KVM does load the guest's DRs into hardware and disables DR interception until
-> the next VM-Exit.
+> I see nothing that precludes using using _replace_bits() with
+> bitfields.
 > 
-> KVM also allows the host user to utilize hardware breakpoints to debug the guest,
-> which further adds to the madness, and that's not something the guest can change
-> or even influence.
-> 
-> So removing the "am I guest logic" entirely probably isn't feasible, because in
-> the common case where there are no active breakpoints, reading cpu_dr7 instead
-> of DR7 is a significant performance boost for "normal" VMs.
+> I see nothing that would differentiate the behaviour, other than maybe
+> religous ideals about C functions vs macros or upper vs lower case.
 
-So I see three modes:
+Interesting, never heard about religious ideals in C.
+ 
+> Please explain why you think there's a difference between the two
+> because I really can't see any reason not to use one over the other
+> apart from asthetics.
 
-- default off - the usual case
-
-- host debugs the guest
-
-- guests are allowed to do breakpoints
-
-So depending on what is enabled, the code can behave properly - it just
-needs logic which tells the relevant code - guest or host - which of the
-debugging mode is enabled. And then everything adheres to that and DTRT.
-
-But before any of that, the even more important question is: do we even
-care to beef it up that much?
-
-I get the feeling that we don't so it likely is a "whatever's the
-easiest" game.
-
-> I mentioned SEV-ES+ DebugSwap because in that case DR7 is effectively guaranteed
-> to not be intercepted, and so the native behavior of reading DR7 instead of the
-> per-CPU variable is likely desirable.  I believe TDX has similar functionality
-> (I forget if it's always on, or opt-in).
-
-Aha, the choice was made by the CoCo hw designers - guests are allowed
-to do breakpoints.
-
-Oh well...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+I explained that in subtread for 4/6 in this series. Shortly it's
+about compiler's ability to catch various errors, like overflows,
+and (not unlikely) generated code quality.
