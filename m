@@ -1,122 +1,110 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5727526B0B6
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27BB26C381
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745405524; cv=none; b=BlziLgjU7iYqJDx0eJEsDHZkaJoxZGV6XKmlOLrgTBizZPliQeJbQdmBdJYTCHqn4OlmoCgI2nhuXFpyZb5i/ibrsnqfHOtbvOnqdaOALZXFV4LtjrEQXLzquJ3lXPvkLskMovG/le/DjmhE/cWDvZ0PkD9BOVE9/72Zz0v5ENs=
+	t=1745405544; cv=none; b=SjjIvOBlsTMIAosZn5GjzpPF9nJQ3J2c2gDgdCuFem+lxSrfBoZ9r9ApuvsC9GxO4Tvjs2HY7FL2d8/sy0bP+KpRseLpSNhh/lUYZ5NrApOdfS8EGcRbQYw8Q3qd0RKqsFqYFA/lwFEO60bgLsDFzVWg/LZNkLz46D2hYmCBSoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745405524; c=relaxed/simple;
-	bh=2F36LOlrnYgPW+20PAv1FMuxvBNKqoBjcgw/bp9pnBw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HeQOo03xYezl+0uQznQu3mHjxLTUC+2jiHE+ryLTIjDp7hRzXIfeGFp52w4bAJGI7QzEDCr0tErpb8jDRbkmQhx0D2PJIF+OoDeZSg+3OAa02hg4lF1E81xfHPF9QkA2Dj8H5qD/eS+4e1WNUvqaiOoWztvp8guQuei1QR0Cr+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=F+wDET03; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	s=arc-20240116; t=1745405544; c=relaxed/simple;
+	bh=U3wzNp/NwHoqYYZjs0ZiVLFiY3SDynRcynk9vCv22hg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gS5kIZr5lkXZQkBn3WRzukxkeZr3dhyinXU8ZC7P1Vj8senpbKmq0MqUpcwU4O9QHrHLrBThFljxd/Fo8fCyg1+lEo9qTDkAepgtO5bluX17s6MeZ6+7n5LNVR/hcVH9cK0kF4BECHpDNikO34LZ3s0S1ofVv25k/Fo2XpI/8Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=VvJat+yN; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="F+wDET03"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac339f53df9so1055734166b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1745405521; x=1746010321; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zFO2mmTugaYerF/bVgaeCak/CfVfIQBIS6clL7bKh/Y=;
-        b=F+wDET03+W6kL+nT3x6gKvGTlS3O2sQb8t9udKdEDmi6cf0GapHa7ONs2TLBPb6+Vm
-         eBcs339yY5hwqf6USiauefJmy9xTbKGkoX9Z70qlF/irS9S3s+T101MbzOmGs6W9JzVx
-         h5xNB2MdvjnABbCJDVwyhsmAqbt1L0kJ7EyEh8ZzXU2y+7UxzCnVR84NhgrRhLIdV8gw
-         +aWWI9oGsqNMFn4OuDN3T5c/gT5dsY26Sgu5fQoIYomUofifl3bzegVi+5TbQKJHUHAZ
-         gbFdH9GyjHlSmhntbwapCEFlIjYUGQar0Nq3eigQDtum4El38+wuLz5zUR+KA34yKTKo
-         o0gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745405521; x=1746010321;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zFO2mmTugaYerF/bVgaeCak/CfVfIQBIS6clL7bKh/Y=;
-        b=D2Vq74FxOZJbBR0bzPIntMI8Ddh7jTw+eyhrNUNn7WpXzVzHFjJ1+YFfMNhMObtoJd
-         cWU+qsd3mnhlHWdg7VvB9xo5U0S2q25Se9XwG/BsR4xjQ7/mFJUGpkVOJ5YVEdc5hUgH
-         zjqk5W4oJXEAF0UXouuUIEfYkGd8VXhAyy/dnK2wuMbCc9gSI1LWP5NuXyKb9bn8WxOd
-         7QrfEDHoNENHQno/CWgXudUrOUx0rCkrHejRNe5nU5kpqt0c0X+V8BpPLEXLbKvubWqo
-         ar9Rue4f1nqcFd1bJ20y02yuQx5juaS9CY+rkuT4K7Vwz2T87FmJ7d+2JJn2jFPxXyxf
-         fOQw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5FoCR8GunlGAJTcXhw9ET1MYV8wCKoM1LUVizxSEBWWQWOdNiTy7kbiTplSlLY94rJkoB+2np05E6PgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCVX3/VFNp5IXxtgpFPhR8zz+csTpvFpTTZ73ASjDcQuC/OV2V
-	dOQuktAtiXGJJDlGBbQghkzCzrPFaUpGkxcmtv0TsUOuuQXTAg/tcEUfyWmP1asLFKdYrOLD6jP
-	UHC3Tk2P5+ZXw1nPBQblJZimc+jVfGtaFsEFzgg==
-X-Gm-Gg: ASbGncvnmD+kFTue+H6h6nmO3TDbmzDzl0yyeyjWdKMDJrCifUUDmAmWMSipuzhOCYr
-	2+8yH7JwrBVvRQPALTvLPQs0BtFyOkIAqy2mPYtHZj7pci5CW3Rls+8ztkdogYno0oBzdwErDCA
-	pwkCTIvVIAEB0vOze7eASFRY7rLww9hNerBOMRXQ==
-X-Google-Smtp-Source: AGHT+IE/6pYUsMYMqhI2sEYVYX9i4m5CojtOxAROai1tsh+YLxDn4eQAJh180vtKXL3rYE+ymaXy85dh6zaYjIY7VKo=
-X-Received: by 2002:a17:907:7e84:b0:ac7:6222:4869 with SMTP id
- a640c23a62f3a-acb74dbf2demr1572534466b.37.1745405520636; Wed, 23 Apr 2025
- 03:52:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="VvJat+yN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=J5kO8HOcTIEVYwvohRyo6zyhFztvJgpIS0+e5/7HALg=; b=VvJat+yNygjhbneEzwboF6I8hh
+	bFTLP43ULTlE6/FTi+JXvWGVjk2DoAVxQbqCoReoAqSFhM7f3arueKj+42VtB5Umg6pOG00Fhs4gD
+	2e7EFwVjF7c3CKqMdwMKeP0BcxYBPuYSvvF6Zk7EZrGBWBvTCrWJFOAOv5T77DWJHz6vqGAtPfHLM
+	nVdozT3kTu8UrWwauMaKJVb3jtF01sNAcqbQ+zQ/YrBYYVyFJaGiLzLGZQzq8ATDms+nJ0qzOmoD9
+	WeQt2beE0vYp1S2hoheFgJuVZ5Bs4ftCQpANOProNLVvlUhLYfe4Uvpd81uu+NQWzjLq1o8BiOUpu
+	lSI0TU+A==;
+Received: from [189.7.87.174] (helo=[192.168.0.224])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1u7Xhu-006sMM-Db; Wed, 23 Apr 2025 12:51:58 +0200
+Message-ID: <a6c2baa7-521f-4c9f-b6f8-ff18e35dd941@igalia.com>
+Date: Wed, 23 Apr 2025 07:51:50 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
- <dd2db843-843f-db15-c54f-f2c44548dee3@huaweicloud.com>
-In-Reply-To: <dd2db843-843f-db15-c54f-f2c44548dee3@huaweicloud.com>
-From: Matt Fleming <mfleming@cloudflare.com>
-Date: Wed, 23 Apr 2025 11:51:49 +0100
-X-Gm-Features: ATxdqUHvdxhkEJsQjh9v6htOzoAzXGkLqhK6uEUE3jiVW8bPlhzCFKk6UwnvJNs
-Message-ID: <CAGis_TWtWMK93nVBa_D_Y2D3Su8x_dDNwNw9h=v=8zoaHuAXBA@mail.gmail.com>
-Subject: Re: 10x I/O await times in 6.12
-To: Yu Kuai <yukuai1@huaweicloud.com>
-Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel-team <kernel-team@cloudflare.com>, 
-	"yukuai (C)" <yukuai3@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC 0/1] drm/mipi-dbi: Use drm_device for debugfs, drop
+ drm_minor
+To: Jagath Jog J <jagathjog1996@gmail.com>, mripard@kernel.org,
+ tzimmermann@suse.de, airlied@gmail.com, simona@ffwll.ch,
+ maarten.lankhorst@linux.intel.com
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20250421085907.24972-1-jagathjog1996@gmail.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+In-Reply-To: <20250421085907.24972-1-jagathjog1996@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, 21 Apr 2025 at 13:21, Yu Kuai <yukuai1@huaweicloud.com> wrote:
->
-> Can you drop this expensive bpftrace script which might affect IO
-> performance, and replace __submit_bio directly to __blk_flush_plug? If
-> nsecs - plug->cur_ktime is still milliseconds, can you check if the
-> following patch can fix your problem?
+Hi Jagath,
 
-Yep, the below patch fixes the regression and restores I/O wait times
-that are comparable to 6.6. Thanks!
+On 21/04/25 05:59, Jagath Jog J wrote:
+> This patch updates the MIPI DBI driver to use drm_device.debugfs_root
+> instead of drm_minor for creating debugfs files. The debugfs setup is now
+> done earlier in probe(), before drm_dev_register(), and the drivers can
+> avoid using the .debugfs_init callback.
+> 
+> This is an initial version, and only a few drivers are updated for now.
+> 
+> I noticed that some newer drivers or patches still use
+> drm_debugfs_create_files(), which relies on drm_minor. I was wondering if
+> there is a specific reason for this, or if there's a plan to switch to
+> drm_debugfs_add_files? I can send patches to update more drivers if
+> that helps.
 
-> diff --git a/block/blk-mq.c b/block/blk-mq.c
-> index ae8494d88897..37197502147e 100644
-> --- a/block/blk-mq.c
-> +++ b/block/blk-mq.c
-> @@ -1095,7 +1095,9 @@ static inline void blk_account_io_start(struct
-> request *req)
->                  return;
->
->          req->rq_flags |= RQF_IO_STAT;
-> -       req->start_time_ns = blk_time_get_ns();
-> +
-> +       if (!current->plug)
-> +               req->start_time_ns = blk_time_get_ns();
->
->          /*
->           * All non-passthrough requests are created from a bio with one
-> @@ -2874,6 +2876,7 @@ void blk_mq_flush_plug_list(struct blk_plug *plug,
-> bool from_schedule)
->   {
->          struct request *rq;
->          unsigned int depth;
-> +       u64 now;
->
->          /*
->           * We may have been called recursively midway through handling
-> @@ -2887,6 +2890,10 @@ void blk_mq_flush_plug_list(struct blk_plug
-> *plug, bool from_schedule)
->          depth = plug->rq_count;
->          plug->rq_count = 0;
->
-> +       now = ktime_get_ns();
-> +       rq_list_for_each(&plug->mq_list, rq)
-> +               rq->start_time_ns = now;
-> +
->          if (!plug->multiple_queues && !plug->has_elevator &&
-> !from_schedule) {
->                  struct request_queue *q;
->
+Yes, there was a plan to switch to drm_debugfs_add_files(), as it
+centers the debugfs files management on the drm_device instead of
+drm_minor.
+
+But, in the end, we concluded that we needed a few more changes in the
+infrastructure to make things more generic. Here are some discussions
+[1][2] and this was my plan to make things more generic [3], which
+needed some improvements.
+
+It would be create if you help us to cleanup debugfs and feel free to
+use my patches as a base for it.
+
+[1] 
+https://lore.kernel.org/dri-devel/20230209081838.45273-1-christian.koenig@amd.com/
+[2] https://lore.kernel.org/dri-devel/87eds0gm9b.fsf@intel.com/
+[3] 
+https://lore.kernel.org/dri-devel/20230131195825.677487-1-mcanal@igalia.com/
+
+Best Regards,
+- Maíra
+
+> 
+> This patch helps move toward the debugfs cleanup task listed here:
+> https://docs.kernel.org/gpu/todo.html#clean-up-the-debugfs-support
+> 
+> Looking forward to your feedback.
+> 
+> Jagath Jog J (1):
+>    drm/mipi-dbi: Use drm_device for debugfs, drop drm_minor and
+>      .debugfs_init
+> 
+>   drivers/gpu/drm/drm_mipi_dbi.c        | 8 ++++----
+>   drivers/gpu/drm/tiny/ili9163.c        | 3 ++-
+>   drivers/gpu/drm/tiny/panel-mipi-dbi.c | 3 ++-
+>   include/drm/drm_mipi_dbi.h            | 4 ++--
+>   4 files changed, 10 insertions(+), 8 deletions(-)
+> 
+
