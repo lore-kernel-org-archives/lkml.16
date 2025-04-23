@@ -1,108 +1,93 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB991E2606;
-	Wed, 23 Apr 2025 17:44:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513A11E2606;
+	Wed, 23 Apr 2025 17:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430262; cv=none; b=K+80Gz0/TqppfZv079wvCeQrNNbe7+NxAtXLfOZ5mYyRBr6AfJAi0FVzqr1ZuH5dcOqHKBtMzHz9FKQ45cRQtbslhTsRUPHNUtBF0QTFBFFf7T4kf+C2QArzNysFidZJiHnf5mAC8V1mMPJ0V+erQx6E/2t4gzGMjanUaMYPC3U=
+	t=1745430271; cv=none; b=ZeQK3oVnksT8IOJzaG8A+I9slS4o0fJW4h6UyHY76ZrB5huYLAgT6OsqFmdJ4m5Ps0kQ6i148ljwtd93CvW+anNGQbweTbNwN26qpWn2L5hzpd0uhacXc5SJi9LINpahn+GxNHbS93+SjrHD56E5mLk+JNr0sLC4V28BpeTsAX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430262; c=relaxed/simple;
-	bh=iBqZrtUF65GxCBEB/tBmx3CX5f4LbQNLDGq7Zc9HeEo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UmZhMCf8+00dMA5b32UOa6kQ7cGwa5IbpcmC9PAowEK+ZeZy2jpillf8E3jZFNJqLcAZqF6CJUhq4JYkdXgzz6Om3kIM3BucwNlxnpXspbLWvT4FbN+FI5vTE8s/DqXwiwXhx5y9W3czJf6toCgqMq7x/JUDywPeMqwPgp2usL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cfHgI4V7; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745430271; c=relaxed/simple;
+	bh=llem0D4ATDI6T5o6sjQUewox5CfgKQJnmzI3EcK5Pj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=heYR0alFbt/Ukt7cPjcbX0c2FXehnRnWQ3mCZV2n6QPdBSKGAWZtUrv7C3oZxHDMcUUl7p/AsiK73HzdFOdIqqolhK+MoDOgnB4jr6N5I1CPxFDVgIQ+LJNh0gp4MRBCiGwVoP9QIkeyMfAudIRkXRu5xbHd4Jpt4E5HwuN9mv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jy/A49MZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfHgI4V7"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso25083066b.3;
-        Wed, 23 Apr 2025 10:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745430258; x=1746035058; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=te3m5kvvTYT3R1fNk+O6lgZtuB7zTSSbqk9CYuqTNH8=;
-        b=cfHgI4V7ZSGFMJZ7HNnYeBZ/5csFizhDDhBtHtL5P/Ndq+moEIvKWuhT16RDsrKnyq
-         eiB5Mlp1At/m01PBlspW2Xh6/UUeJ+BgLENnSOoXplXmSHmUMhNFaG4zGiXwFnBi61/r
-         JkQgCbVF1IftUFTPdNFDGLCvKKqTtaXK4UO3EDIOcHAE8QSSMC/v17nX2/JBbiM1y64s
-         3QK8mVh5ZdW9MZuAcnwAPLEklKtgSXHbfajk2xvT+myaWW3/qJ+feYgvXmJYiFaowpRh
-         U9k2CjIB1vgrZGUN+silYVY0bfKx5yUNPu6Lq6XGzsyOdPOHI6iTvMkPcF7IftdtXuRB
-         sKKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745430258; x=1746035058;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=te3m5kvvTYT3R1fNk+O6lgZtuB7zTSSbqk9CYuqTNH8=;
-        b=BhaEshduEOjg4i+nf1WhsKOcHSh2dwdTQilOk9E6LDzdHCjagNjOOJzm7JXHsbtAHt
-         ZR8ZhI9dYtoKC7psRWrC0iCUD7cOoTehIhdvM+5vQH/BpVPuScXo+XsdzNgGUgNNjaYX
-         SZchMpidwhRFfmh+dyXIe/g2gNF/nYzXKNr8qTeCUN4PyMNtyHPFeqPzfBZrLQIiWjDR
-         x2JqauFIGGk6lxuAr/FFmjjejk8ndoswHkZ3gF1ECj+TzuiwjHySktacy2WS5dK/8FRc
-         Zsx2WEkg0hIdXah0zDunaHSo5S82hTWdrQY7G04tv3wblMg6AafZGxicbt40abZwDp5b
-         6ZNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIgbuzeIDDmIIfQ79LrfRxbVvOt71jF6fVHD7wvIUToJ54vWmAyrGg0j2wjrJSJNua/ec=@vger.kernel.org, AJvYcCUMMSL8CXARVsNMYLAF4RBNUAjYTXR4YZiL7LmMY+3o/fy52i6hBETkmO7dWS/9BDC8CFhwh+6BE1D/x7+f@vger.kernel.org, AJvYcCWo4Z2F7qkupa/l++1tnPABioLsuImnEFXm1PcI/+cSyh63S6pHaf3fWqXZ/peIoXImDoBVrROuCoqLyOo9YO42m/0R@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyjz+OhSZfatdHVJcBJ+kSav4X1hAlr4tYywo5t25vuRm44g4I1
-	eI1ACVo3G3lhL032sAxpetJL5Wpcjn5uGEjL1xiVy3zZYY0JnC1XdATL8yzK0zhg8uHP2a1rQ7F
-	WwHQWfFDaYUr2y09uhC/Ti+Fco4w=
-X-Gm-Gg: ASbGnct8D5of2pJ0+ZAv/50kM1/9Cwa8NwKntqY50XkbQ9TLD+8QuYB4l+X8dnbPMPb
-	JqAvdQfCyImTUgyve8yshX+KXzpVV26pLGIi8FMNt8JxEw7IfrnX+QYRPIENTh8P3aA83kK54B9
-	1rvb3XSjKl9fTp5cypYlDAG7LVNRbnfNexk9hIvg==
-X-Google-Smtp-Source: AGHT+IGB3SPDItC+6gD8fM3F/cH/O6vPqeY7c3S0HbRaRKqc54QechD95yEyJzGqD+f31CetLXp7OciSn4jm15CqXxY=
-X-Received: by 2002:a17:907:60ce:b0:ac7:cfcc:690d with SMTP id
- a640c23a62f3a-ace5525c6fbmr340366b.40.1745430258398; Wed, 23 Apr 2025
- 10:44:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jy/A49MZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F09C4CEE8;
+	Wed, 23 Apr 2025 17:44:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745430271;
+	bh=llem0D4ATDI6T5o6sjQUewox5CfgKQJnmzI3EcK5Pj8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Jy/A49MZDzCLBXYnUn4t4vwseHKFwyR3byI7Kl3qOIGr1MXXGKAONVfV6+yQ4UC9B
+	 i/7hz2Hv546V7nbVnjV9E+JfdZU+7kFD9laAkDxU8ftxnVpOespE1y7hohw8fSKG1a
+	 W86uRzMUwPP+n9LX3+f2B51jmbhlKtHOV+IuuAosppg8mWPicIZV3Z2DIwb1BjBqiR
+	 AjlGEU2HeBqWqkHc6HxMeF9b76pLXn38ULza+2VvRbifgz6S8l7wL94raFz4GO7qQ2
+	 x2jAb/F1ErK4gAId5HGOkYs2SvzdG+sMx2jr/gBiCptHoiADid8BRxPhc752qoxp6I
+	 SEF+3UApACXew==
+Date: Wed, 23 Apr 2025 12:44:29 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Brian Norris <briannorris@google.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] PCI/pwrctrl: Cancel outstanding rescan work when
+ unregistering
+Message-ID: <20250423174429.GA441684@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-18-jolsa@kernel.org>
-In-Reply-To: <20250421214423.393661-18-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Apr 2025 10:44:04 -0700
-X-Gm-Features: ATxdqUG9D5LkDuQUuyKNSLt3iaC9fuF-CZvsCMSmG0lYrDX9BeFFGTJZy-lWPIY
-Message-ID: <CAEf4BzYH3EBxswa_6SC7uWDmwSR6RMAZNbuKVqbfzaf3CCorxA@mail.gmail.com>
-Subject: Re: [PATCH perf/core 17/22] selftests/bpf: Add optimized usdt variant
- for basic usdt test
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
 
-On Mon, Apr 21, 2025 at 2:47=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Adding optimized usdt variant for basic usdt test to check that
-> usdt arguments are properly passed in optimized code path.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+On Wed, Apr 09, 2025 at 11:53:13AM -0700, Brian Norris wrote:
+> From: Brian Norris <briannorris@google.com>
+> 
+> It's possible to trigger use-after-free here by:
+> (a) forcing rescan_work_func() to take a long time and
+> (b) utilizing a pwrctrl driver that may be unloaded for some reason.
+> 
+> I'm unlucky to trigger both of these in development. It's likely much
+> more difficult to hit this in practice.
+> 
+> Anyway, we should ensure our work is finished before we allow our data
+> structures to be cleaned up.
+> 
+> Fixes: 8f62819aaace ("PCI/pwrctl: Rescan bus on a separate thread")
+> Cc: Konrad Dybcio <konradybcio@kernel.org>
+> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Brian Norris <briannorris@google.com>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+
+Looking for ack/reviewed-by from Bartosz before doing anything here.
+
 > ---
->  tools/testing/selftests/bpf/prog_tests/usdt.c | 38 ++++++++++++-------
->  1 file changed, 25 insertions(+), 13 deletions(-)
->
-
-LGTM
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
-> diff --git a/tools/testing/selftests/bpf/prog_tests/usdt.c b/tools/testin=
-g/selftests/bpf/prog_tests/usdt.c
-> index 495d66414b57..3a5b5230bfa0 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/usdt.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/usdt.c
-> @@ -40,12 +40,19 @@ static void __always_inline trigger_func(int x) {
->         }
->  }
->
-
-[...]
+> 
+>  drivers/pci/pwrctrl/core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+> index 9cc7e2b7f2b5..6bdbfed584d6 100644
+> --- a/drivers/pci/pwrctrl/core.c
+> +++ b/drivers/pci/pwrctrl/core.c
+> @@ -101,6 +101,8 @@ EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
+>   */
+>  void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
+>  {
+> +	cancel_work_sync(&pwrctrl->work);
+> +
+>  	/*
+>  	 * We don't have to delete the link here. Typically, this function
+>  	 * is only called when the power control device is being detached. If
+> -- 
+> 2.49.0.604.gff1f9ca942-goog
+> 
