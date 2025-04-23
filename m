@@ -1,89 +1,59 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1D613C1F;
-	Wed, 23 Apr 2025 12:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E311E522;
+	Wed, 23 Apr 2025 12:22:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745410919; cv=none; b=CMBP+VwO/5dajvJ/y9k2+O3pMuZt50d3B2MnFl8Gr2BOrS9u/2FC66wIN+TcePtRJiswky8LaoiRQyXT0G7dIWl+ACs0/7pJzJc/dNpar6DUAMaG9PSUg+WzmXZWt8KLrRxLCGIKxjy9mXmUq9AdPMbEKMOhmE9Yrp6xB/rxalk=
+	t=1745410933; cv=none; b=Yh8NTtFjD1zpG0lqULCNx6r/mX9tcK/BWyUgqf1tErQth9Ue2wqE8S0Y5YtACJ/4wjHj65bWkUXCdavQtLZaO37IdwZH1YcFc2FQS71HBKDU8HPJpyzf/wdJlEUJkJsiXQNzjUsbq5679AjQtu1XcS3Lgc+19As9YK6e3L6K1bM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745410919; c=relaxed/simple;
-	bh=WX7rPuPkvDk0XuA2VnYO8jujklzQsPuEfILh7N5cuN8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qBZ1ScAaPfAxxtf+zz/RqCyAUw+Wge3bG8gcalkRED1b7rDU3JRZVD80JEnIH54hmwj5RSXB6lpnbtcOEPkHwqGJv2WRtdnuZcJDoqZ2lCJ6I3YRwOxIP00OPE9MEe9gvVC3GKikdsPGxeedKg3or58nQ31LG16iZoHrnTsQzTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LrTRneJF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745410933; c=relaxed/simple;
+	bh=QCm61VieQxpPevx/SjjmuDLkEjGYZGkn9RuPgTGXB2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n0o8hh/rpvDga4ONMBnpRf/IdCHEw2VBFWZvutDm+VBdS8hJId2g5BXIOwGUClQHZ7cD87fUalML06ht6oFy/KKdaIpVu+lAM2ETO/5edQGeZ7xK2uU60BV90SL9DcLp15Xs3StAxyvyqLG1g1Nte5mUcYtRwNVBzzdsTQqj8UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BLHo1FsW; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LrTRneJF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C77CC4CEEF;
-	Wed, 23 Apr 2025 12:21:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745410918;
-	bh=WX7rPuPkvDk0XuA2VnYO8jujklzQsPuEfILh7N5cuN8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=LrTRneJFCRtGaUQEv02ADQ+9HNdI9A3C1iCxioOhqNvwuYyC+BTo6AoB2Q7iUB+vn
-	 Us74GEi/hhikAdR6xJ2S40NDZkyPfcxNB6DJaw7tDzXCAxyn9NJfi8yKUckCl2jtfQ
-	 1vrzmQuJsuvu0Ca1o80qd6+3hzLPHULH5ROkBITdGwkScaUrQ6sV9XxRN2Q87IBCO8
-	 dL7oQ8OGC6igLFY8Lj4ACJ8zQ2973+AR+5skQm9z6dV2eqLF5qxisXzj+YfcXkGgE3
-	 GigYzEAfdF7pAqm/TuSkbqWXIClYoiXm+/I1OjA/GNJbim1SaWvoEuaO9wVFtWY16n
-	 QSxTdGbdlj6+g==
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-2c873231e7bso3904333fac.3;
-        Wed, 23 Apr 2025 05:21:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWmz6uhVbDcnMJ8/FVZR1WhEXgGts/2G2YGiVfPbmXYF7rAKMMwcf4sKBNDmUWFJ2g/BR5zFKKyvY5n@vger.kernel.org, AJvYcCXD7AdMeEkDL2RIe7O6+RVgnB+wfcjaQHCDdnBA3Wd+vxkkXG4GUJc5FTgokStrbyCv0CYrR6FxGP4=@vger.kernel.org, AJvYcCXSHxvwJ5hxPtRuRgFQuY6OmG2CATsHqJEAW6E7EcV/fkQEAHG6lcyz8UaZly1FYI2wkJJlMizKQuOZigU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG2Zctg3pFP/j6Xv0dgMRlNAhZAk6RMthgod6GiXm7EZUUZscy
-	Zaz+bm6IQpt5GZ8ny0R5au9qNpDSjPYnYdqFqLWu9l1KpsTQOWc7Z8cukf1gZXZSLmEFivqx4rZ
-	he8GuPimX9hPVjobmeCzdOWnp19A=
-X-Google-Smtp-Source: AGHT+IEmpazg5C/baNnLvzuO2g4IFJ0tUqG6TJifhYQZwFMOVgH9K9qTLQUXpHxKCQN6hotN4srKR9cydUu1JLL3UEg=
-X-Received: by 2002:a05:6871:20c3:b0:2d4:ea06:b11 with SMTP id
- 586e51a60fabf-2d526974c88mr10504842fac.7.1745410917580; Wed, 23 Apr 2025
- 05:21:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BLHo1FsW"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=m1xiJ9IzuYwcg+d6s9ghzDmz6oBr/yFCCp9TZPFW8PE=; b=BLHo1FsWFS5cCyuPpl01UPQKve
+	g0wBBEGkdDbhiAmoapTKqpLZWSw9ALj8+8EaV7q3o8O0O/3HEGDoUcwgeb4EBwCSvCkUcSOsSSESw
+	f7Rd8x/dTcTvy3i57HfVPotCNjPFGtPftIzT9Sh8/ReR3DsWJBOUKljga9RtDkOBGg3hx6K7W86yU
+	DT0jN/gESowzhXyDvbn8P4N4PFd8u8TpKx9Q3b+yzr5J8USSHhKJaI5HZh8FRwUGJ/04hY1np4l/n
+	lX8BNNCdEbLHPmT0O7U/wwvmWXC0G2B9ORh0c69ItEkIgEf9sFlLagfyEKkCKEETp9qN9M2mU54yk
+	Di09XAQA==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7Z79-00000008qvc-3gDX;
+	Wed, 23 Apr 2025 12:22:07 +0000
+Date: Wed, 23 Apr 2025 13:22:07 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: xu xin <xu.xin.sc@gmail.com>, xu.xin16@zte.com.cn, david@redhat.com,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, wang.yaxin@zte.com.cn, yang.yang29@zte.com.cn
+Subject: Re: [PATCH RESEND 1/6] memcontrol: rename mem_cgroup_scan_tasks()
+Message-ID: <aAjbb1fBR-tq1h93@casper.infradead.org>
+References: <20250422191407770210-193JBD0Fgeu5zqE2K@zte.com.cn>
+ <20250422111919.3231273-1-xu.xin16@zte.com.cn>
+ <20250422162952.19be32aa8cead5854a7699a8@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422230534.2295291-1-alex.williamson@redhat.com> <20250422230534.2295291-2-alex.williamson@redhat.com>
-In-Reply-To: <20250422230534.2295291-2-alex.williamson@redhat.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 23 Apr 2025 14:21:45 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hwjLqGE8CWOVhckCpvvRa1EEazFhh_pcKT_4_CnT7j8Q@mail.gmail.com>
-X-Gm-Features: ATxdqUH7A2UksY-_33_U26l7SoK80Yn4VQ-6zfO0xB6TmLDriae28RLvZKG5O1k
-Message-ID: <CAJZ5v0hwjLqGE8CWOVhckCpvvRa1EEazFhh_pcKT_4_CnT7j8Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] PM: runtime: Define pm_runtime_put cleanup helper
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: bhelgaas@google.com, rafael@kernel.org, linux-pci@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422162952.19be32aa8cead5854a7699a8@linux-foundation.org>
 
-On Wed, Apr 23, 2025 at 1:05=E2=80=AFAM Alex Williamson
-<alex.williamson@redhat.com> wrote:
->
-> Define a cleanup helper for use with __free to automatically drop the
-> device usage count when out of scope.
->
-> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+On Tue, Apr 22, 2025 at 04:29:52PM -0700, Andrew Morton wrote:
+> Patchset looks nice to me, thanks.  I'll await reviewer feedback before
+> proceeding.
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-
-> ---
->  include/linux/pm_runtime.h | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/include/linux/pm_runtime.h b/include/linux/pm_runtime.h
-> index 7fb5a459847e..69d4b2929ee6 100644
-> --- a/include/linux/pm_runtime.h
-> +++ b/include/linux/pm_runtime.h
-> @@ -466,6 +466,8 @@ static inline int pm_runtime_put(struct device *dev)
->         return __pm_runtime_idle(dev, RPM_GET_PUT | RPM_ASYNC);
->  }
->
-> +DEFINE_FREE(pm_runtime_put, struct device *, if (_T) pm_runtime_put(_T))
-> +
->  /**
->   * __pm_runtime_put_autosuspend - Drop device usage counter and queue au=
-tosuspend if 0.
->   * @dev: Target device.
-> --
-> 2.48.1
->
+I thought we had a policy against adding new features to memcg-v1?
+Certainly adding the feature to memcg-v2 would be a requirement before
+it could be added to v1.
