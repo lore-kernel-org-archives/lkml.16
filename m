@@ -1,185 +1,92 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12E11386DA
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F911465AE;
+	Wed, 23 Apr 2025 16:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745425397; cv=none; b=sKCcJ1sx64zUEraSJqXVOv8EnvGS/60pZKwyN0l8YqJETeQ7sj1ojebhAQ1diySz0nYnkqOIWsjijd/HlIg4+zu3UAZ1skq+OXHt9ApkpZct7KB6mFOW/wQrI2931a5L+EzuYA+znrdxBE5bcsKYGW6zYo1wZQaM6KzHXUilTIg=
+	t=1745425474; cv=none; b=HfMk1aCr/mC8MTadIQGkkZHcGuyMEj+9anjd8Mn1RzmS0XVpl1+ADviP+qg5rJIK31bVp2UKZTkI9YmJVdHzgiaavpZPu5Oy6weIN03/goXSH+7R81FsBWACNCbENZN8MmNIlkOMMedlI52GSaAEwPDcLCJrYudLKHYAiASWCOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745425397; c=relaxed/simple;
-	bh=shKmVGgvfgHgWNRKSnZX1dkD3RfPimNOXfffdFYgLjs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gcXyiNUHPVd+NZYdM5YoXfC+HOZQnpTpbM9uxkKx1Ky+hAW+Y6DiqrdSLA5uEHN/XLEpqE1jehiLcL4Xtrlm0n9i/Er4alv5xIXtBL0kMJ1B2kD3FknxpVJbf8j+P2dpBirj+zOZ3zmKY6nEBySx6evqyhzqO6+wDXBs7Djj1+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=LVrjJUUu; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745425474; c=relaxed/simple;
+	bh=G++E0BbS8a2hLlYRQNjKfQSgLliGyf9HwygxEobBzkw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N8X/X0ByW7zRl4cs0eIe5Ez+/yTRQQsH9KDhF58E5waJYG9nCn4J+8lyKyuCCJ0cfaL9HVi+fD1FrVM0afSfYUZQ3p38XqoKZFL5cbm1lI+eDU7V9UaWaaEhmhDRNs4u9TL7v0ujGfrdcmbN2gODKF3A8pVEx4c0I2C110okPE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nsantKmV; arc=none smtp.client-ip=209.85.128.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="LVrjJUUu"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-8616987c261so2959139f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:23:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsantKmV"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6ff27ad48beso1310787b3.0;
+        Wed, 23 Apr 2025 09:24:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745425394; x=1746030194; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9WgwtqZXRJEQM3pZXQxpD7hzXVzbdAqM+KQzabDh7EY=;
-        b=LVrjJUUuqXwuml3zowXO4tjw603keuvkMjClgwmQW0tCev0d2POf9jz54S0mslLDSw
-         wB2087rREdO+GW3K8KW4AcMvsCCTlxxhJmJXEASAz/r5jgEXezFaeVjS797lsuF8ZpCt
-         422wIUW2aPPB3XJzdN6+5cukC/gp48idsfwP4pemQBq4EFmUYSCaFsQCMtU/vwfZOgkT
-         EIJwVtLYoY775W7zDVkvB/x8b5kCo3E9PukE+5/fj8RkHe2uN0UPKH/W/1uV76+RYdjM
-         BW7u734CzzOjlqEvFt5qriH9oQNHW3tdgNBqHcXt0tX87ZLkrArkAnXv8Kzd9mBkYSkl
-         yuPA==
+        d=gmail.com; s=20230601; t=1745425472; x=1746030272; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=G++E0BbS8a2hLlYRQNjKfQSgLliGyf9HwygxEobBzkw=;
+        b=nsantKmVAF2XQiMdY5CFwQEXdouqTpCjHWeIX8GLGOybU20xYSQ6Xgc+R6hCTS27l3
+         YFAwyzZ/Pt+T9KpqFamRVdd/CJfGaqHzROjPtHvnQ117aWxtPZlYZsxui26ml3MnUui4
+         fhetK7sHMKNO04rPOlh75S9gHS7zK+cknE4J6CkxmNu4+FwLo7WzttYChJxTr6Jguzep
+         s0xfINFUZSMIYOveis1qDEpPpyLpJ6rFu1fyFybX2jkFL3JdUj1OknRhRqxz9wT+yO1Z
+         8aSQ0Q7ARs/cZ7yHon8Zdjh3ar2D22TnI/6r+RxsiG+Cp8JmBWEkiFRdc4mJj6L0E5dj
+         UO5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745425394; x=1746030194;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9WgwtqZXRJEQM3pZXQxpD7hzXVzbdAqM+KQzabDh7EY=;
-        b=R8xpFYqN7Yoz0hu+iiUXyEJ8i5KL4bMqoIMVAsJxMwnQOGdhWTrKTp10/knAinUcJY
-         BI8U9LkboAoEGMDX87wMqrPBAsi9/1noVuDP3DJSPjw5rdet2+y4Y7+UILtIf2+R/WRs
-         cn11k+c2CQ7nZNCauhEg8VLawuViDddeu1JRJfsRUFiQrIUfVM77eoxpkUbrZktqhq2o
-         OzaTUzvswW5AmP0AC52cpYcxtZKO12cixVkekIljjS5WH8oGe6uT/iRjd49duXBxPk9t
-         ortC1Oem1EHUhUvqQR1oskEsOt2LQQqAw3n+qNWafv6AOrQ5mk1/RCvImixEl8joIbGD
-         qM8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWGyo/zYVHCQO7QheRT8pWK0mFiiT88y3fZpvXClkLBMnG0rpT//FbSei9ZG8iLXhi55Da8e4pBBrVOQ8o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwamjDB26OdrJi1djnM56FxIwLfRu/lOaKTdEyBTmjhgjsOrKs/
-	+zKLx+W83dPhTATL31xBa38gC9fpNbjPbaegl7/thATiXiETL2hNaxayJ0gBubM=
-X-Gm-Gg: ASbGncsMmX2qh2MIi1kZV+aG1HSvJ5A8AZEorzyESnx6YKv3P139YEJXgoplL6AF7gP
-	Ako37X9EULfH2/cj+XzQxhcTcJtJ6W6L4/b30ieGi7mvgfKLd4jInWybtxbwdSYnSfN9iDtvR1I
-	AEvhPnsLF9YQFrmSxM80WlM8vMQD0++dOlrBAUHpCpK4wpHDqGeiUkGvMyxVY9hYz7D/wyI7UHq
-	KWAQtohGVd2XLtgKKVSBJ3gW6dOd6HPEeKF9PxGS3Lm7rGiw2/p5KWJLmtvhP+hEldQTvtOK/+V
-	q3T6ZdQLmd9bvLoBwezbxjsoH6rO05M7+0q5
-X-Google-Smtp-Source: AGHT+IF57jCcvc6iss1E50MTJGmLwy68aLSyNWDrvGVMv0IcOE+2tTptvX1cLdDwGLpgUH9kkYlOYg==
-X-Received: by 2002:a5d:9f54:0:b0:862:fe54:df4e with SMTP id ca18e2360f4ac-862ff49043dmr1599069739f.7.1745425393949;
-        Wed, 23 Apr 2025 09:23:13 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-86444801669sm37130139f.29.2025.04.23.09.23.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 09:23:13 -0700 (PDT)
-Message-ID: <4ec65451-d183-453e-a873-97b4abb4f884@kernel.dk>
-Date: Wed, 23 Apr 2025 10:23:12 -0600
+        d=1e100.net; s=20230601; t=1745425472; x=1746030272;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G++E0BbS8a2hLlYRQNjKfQSgLliGyf9HwygxEobBzkw=;
+        b=vxEwMvA/AaKtGfvg2unXW8TkEfghPTMgKsUxrC6e0CEBremHRmaeRlAjwUTnAk4P3o
+         LmXU68m22cXT8LqSHnsMUc7JQKAUg0V9GhAVzCDbmhiSMbLGALH/dfEG4idvoPrANhMe
+         YNBSBQY5wKJzalvjUS4VVEqMGvijYfZ8aN4iaG8uB+n2l4+9wL7CkBIZnJvLp/aa8I51
+         6G8CR6n28Iwb00cREjQ0FOkYf6gvP0nkSgmx7OUPrLzDfdNfKucjRGjKWoklpwg1eXvi
+         kRC9wYnOjHUvHsqFFnbm5BsEnrXlvUXwNqw/luJ+8zC0rDuKn47FL1pc+O5gwC83gq/z
+         X/Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCV2n4lyM4CXpwctmdl+SC77pSEpfY40uxpe3KOMy9F/z6xP0mVioOGG3uU9GfUu+v0PJhCGdVsE1tDQ@vger.kernel.org, AJvYcCWEHqiAKBa39u50SCl2BsEtLW5QI2RWkMiXYOGgNqEWV1INKrvIXMi4Y2ZXIDKOphF2VLA4kmo3jJyxpCxb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzaYwFKQuD1AeXN6o/PlXMLCsA2pEo5KkzQDn9/6OdvpBRx3Ef1
+	F1B42c7bMHCffA0GjgUUt6StAEQSaejvVofIdz/W7fne5vAaGUs1YIbGG1BdVVMkNZIi6mi75fk
+	c1OFgDrWqBk/BMmDSeWXZAKBE7yY=
+X-Gm-Gg: ASbGncuPN8pAEr1Uc297kCObR7HUed7m18jKEKn33a0q3CEmMy25yaH61s44hSmwhUc
+	6ds7EdKhH/vN9PG9/3/lGxt79PsRMjlOEjJRIL8n6Ein1FUjYenDX5hDlNkD35Fsz0j41Zo+OVE
+	3FnmaHjLiUwKn+A/m1vUWdEEW1nTgKqL6eQg==
+X-Google-Smtp-Source: AGHT+IHs7VB0iY6Hw7N5rvnV+mLaMrJKNgLLnkV8ud2KiERF243U4X7v8mCrDhf5Lox17WfhwqI4Z2HUJBZfiX1i/DE=
+X-Received: by 2002:a05:690c:370a:b0:702:72e5:793f with SMTP id
+ 00721157ae682-7083c566db4mr2968467b3.23.1745425471982; Wed, 23 Apr 2025
+ 09:24:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault
- scenarios
-To: Pavel Begunkov <asml.silence@gmail.com>, =?UTF-8?B?5aec5pm65Lyf?=
- <qq282012236@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- akpm@linux-foundation.org, peterx@redhat.com, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
- <20250422162913.1242057-2-qq282012236@gmail.com>
- <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
- <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
- <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk>
- <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
- <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk>
- <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
- <00c7d434-d923-4b91-8ad0-5f3c8e0c6465@gmail.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <00c7d434-d923-4b91-8ad0-5f3c8e0c6465@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250417-spmi-nvmem-v2-0-b88851e34afb@gmail.com>
+ <20250417-spmi-nvmem-v2-1-b88851e34afb@gmail.com> <20250422133619.GA1095169-robh@kernel.org>
+ <CAMT+MTTwY=z1-_94ws+Oi+wvE2PA_s57dPmpMABC26q=MPw1Mg@mail.gmail.com>
+ <e4159c2b-4081-4a4b-9a53-d6d559a3196c@gmail.com> <CAL_JsqKwASbUtpO=wU-16v=y8S_wLyBxnFUmQqsE8GkzCz0hDg@mail.gmail.com>
+ <aAkLY3TYIPG7ojwx@blossom>
+In-Reply-To: <aAkLY3TYIPG7ojwx@blossom>
+From: Sasha Finkelstein <fnkl.kernel@gmail.com>
+Date: Wed, 23 Apr 2025 18:24:21 +0200
+X-Gm-Features: ATxdqUG6yRu6Z589SiaPf7hPYu4E07bIBQRBOixmyYz2zFeCy4cnqCijifN7bws
+Message-ID: <CAMT+MTREnfB2MH=i84ZPa0LvgdYz6a+aRs+Nb07Ck10y3wstmA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: spmi: Add generic SPMI NVMEM
+To: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Cc: Rob Herring <robh@kernel.org>, Nick Chan <towinchenmi@gmail.com>, 
+	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, Neal Gompa <neal@gompa.dev>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/23/25 10:17 AM, Pavel Begunkov wrote:
-> On 4/23/25 16:55, Jens Axboe wrote:
->> Something like this, perhaps - it'll ensure that io-wq workers get a
->> chance to flush out pending work, which should prevent the looping. I've
->> attached a basic test case. It'll issue a write that will fault, and
->> then try and cancel that as a way to trigger the TIF_NOTIFY_SIGNAL based
->> looping.
->>
->> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
->> index d80f94346199..e18926dbf20a 100644
->> --- a/fs/userfaultfd.c
->> +++ b/fs/userfaultfd.c
->> @@ -32,6 +32,7 @@
->>   #include <linux/swapops.h>
->>   #include <linux/miscdevice.h>
->>   #include <linux/uio.h>
->> +#include <linux/io_uring.h>
->>     static int sysctl_unprivileged_userfaultfd __read_mostly;
->>   @@ -376,6 +377,8 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
->>        */
->>       if (current->flags & (PF_EXITING|PF_DUMPCORE))
->>           goto out;
->> +    else if (current->flags & PF_IO_WORKER)
->> +        io_worker_fault();
->>         assert_fault_locked(vmf);
->>   diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
->> index 85fe4e6b275c..d93dd7402a28 100644
->> --- a/include/linux/io_uring.h
->> +++ b/include/linux/io_uring.h
->> @@ -28,6 +28,7 @@ static inline void io_uring_free(struct task_struct *tsk)
->>       if (tsk->io_uring)
->>           __io_uring_free(tsk);
->>   }
->> +void io_worker_fault(void);
->>   #else
->>   static inline void io_uring_task_cancel(void)
->>   {
->> @@ -46,6 +47,9 @@ static inline bool io_is_uring_fops(struct file *file)
->>   {
->>       return false;
->>   }
->> +static inline void io_worker_fault(void)
->> +{
->> +}
->>   #endif
->>     #endif
->> diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
->> index d52069b1177b..f74bea028ec7 100644
->> --- a/io_uring/io-wq.c
->> +++ b/io_uring/io-wq.c
->> @@ -1438,3 +1438,13 @@ static __init int io_wq_init(void)
->>       return 0;
->>   }
->>   subsys_initcall(io_wq_init);
->> +
->> +void io_worker_fault(void)
->> +{
->> +    if (test_thread_flag(TIF_NOTIFY_SIGNAL))
->> +        clear_notify_signal();
->> +    if (test_thread_flag(TIF_NOTIFY_RESUME))
->> +        resume_user_mode_work(NULL);
->> +    if (task_work_pending(current))
->> +        task_work_run();
-> 
-> Looking at the stacktrace, that sounds dangerous
-> 
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
-> iou-wrk-44588  [kernel.kallsyms]  [k] io_write
-> iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
-> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
-> iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
-> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
-> iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
-> iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
-> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
-> iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
-> iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
-> 
-> It might be holding a good bunch of locks, and then it's trapped
-> in a page fault handler. Do normal / non-PF_IO_WORKER tasks run
-> task_work from handle_userfault?
+On Wed, 23 Apr 2025 at 17:46, Alyssa Rosenzweig <alyssa@rosenzweig.io> wrote:
+> It sounds like the path of least resistance here is then:
+>
+> 1. rename the bindings to be apple m1+ (at least for now)
+> 2. keep the driver as-is (no mfd, etc - at least for now)
+> 3. land just that (at least for now)
+>
+> Evolving the driver to share with not-Apple, or evolving the
+> bindings+driver to share with pre-M1, can happen in future series
+> if/when somebody wants to do that work.
 
-Yeah, it's really just a test patch. Ideally we want this to do the
-usual thing, which is fall back and let it retry, where we can handle
-all of this too.
-
--- 
-Jens Axboe
+That is precisely my plan for v3, which I intend to send soon-ish.
