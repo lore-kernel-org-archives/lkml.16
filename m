@@ -1,344 +1,248 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A4A1F09A1;
-	Wed, 23 Apr 2025 04:09:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CA0119CC3A;
+	Wed, 23 Apr 2025 04:31:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745381386; cv=none; b=KrTah9FGfD5zKqmVOSGVF4FESJibkQ6IgeuU5v6tY0jMDyY9NIQmhgPe/lOcB3SVPwCGg6Zdb8hM5y+u51qexncFDz4HCz0e2aBlrwTtbp4p3DABTx6nKVYQuTqzr0VjkZpa0AVE0/vaU7PeBEhMOzvGqI8LM4EESTXc8dkCpfo=
+	t=1745382720; cv=none; b=njO5HMPxY5yn1rz6veijJ4r+73vTIboTjKO3+RdZPCa2owiJIwcF2sJSzY73Nqks3WLImMqEMiv05kJbiyOuaqWMxMvZ2fASQb2sXDMpSmQWFHoBirqtUA9nmz8D93UIu12aqYeXWTeH6sGNdbK36AEA2pj4cj7IQPiTilX7qEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745381386; c=relaxed/simple;
-	bh=KISXD0ltBB9Z0bhlbMH9MxL/r8xahZ8DX/KFQwdLNi4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XZk6zznhVO+wWXqf3r9sFLT4ggEKf8KS9R+lLWMqoPDCakBCJrkSQCr7n6O8QvekOQVYRJ7X6/Crws1GYjaT4eF4bGiCba2EtWugdK0UHXf1N0A2+grZaFfrv1PO8pCaKwY7qbylMdfcvNVCK1fWAUpoBv0HXaN10njkgQnb+z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YAHotNKn; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745382720; c=relaxed/simple;
+	bh=P1w1LWSbsZN3WyeYHfmOFNLcHEWldP9/sO4hdjzrTik=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W3cstDlIBfoeWfG90TbeyhPysqYseIlwx2YpkS9Qswim1Q5DbiJMEuP+QGfv3TIIco4jN5vzemmcgkmgApeDtGeaBfJ2nfyKfPIjttD0mmHaDxEwY0a5yqGNyL9UZnNrCSv0G9zvD3XsSGpUvfkLKcZMUig8rpinnWgLbpH7jsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LfG8CBr0; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YAHotNKn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745381385; x=1776917385;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KISXD0ltBB9Z0bhlbMH9MxL/r8xahZ8DX/KFQwdLNi4=;
-  b=YAHotNKn2abv+LhZ1NRIk2+IXb/SMUUEGnG+7DqSz2PSE57UWt7hv2AW
-   pX8qn4QlEEj8DZrClItFXlMvvPB4ibKINx632YGKvPEr3xNnk5mLKfpQH
-   PnnORTF182DLSNsc+1S+q35h84pxXDckeNcqRzIOK5YatHjGhG5BgeR/z
-   fJB8do723m4XTDUZKXpZ1bAsynPLo+TajO7cz4JmLzsYmB1QkgOeriD14
-   rZ0Dj7JTW8LEI77iU5CvtKvDDVXmUF/HiODy+JUjYfotj5lAaPw+Rf8D0
-   5Nvd8/IMEn4RTzdG6sAtPia35hVMVjot4/cAFNUehBbSKYH6LUV0TWggd
-   Q==;
-X-CSE-ConnectionGUID: s4liCc67SySyOmi3hvtV1w==
-X-CSE-MsgGUID: mJJkFqskTY2JKvGthJM2Dg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="72342466"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="72342466"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 21:09:44 -0700
-X-CSE-ConnectionGUID: veazpDj7QZmxOlZWUAIC5Q==
-X-CSE-MsgGUID: BGgUw+7bSPiwYlKCWUgOXg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="133076123"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 22 Apr 2025 21:09:40 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u7RQY-0001aF-0q;
-	Wed, 23 Apr 2025 04:09:38 +0000
-Date: Wed, 23 Apr 2025 12:08:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Nylon Chen <nylon.chen@sifive.com>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Nylon Chen <nylon.chen@sifive.com>, Zong Li <zong.li@sifive.com>
-Subject: Re: [PATCH v12 4/5] pwm: sifive: Fix rounding issues in apply and
- get_state functions
-Message-ID: <202504231136.Cr4O6Zg5-lkp@intel.com>
-References: <20250422085312.812877-5-nylon.chen@sifive.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LfG8CBr0"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5499c5d9691so6699696e87.2;
+        Tue, 22 Apr 2025 21:31:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745382716; x=1745987516; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EfU6WjNv7EhQ1b3F1YgcLr0oW56464U4m7MZVKTAVBM=;
+        b=LfG8CBr08Ag7up2WOUrO9ycPp1fgAFnEmJr87Bycd7SWBhEuwUu3N3PL9+Oj7bnl6a
+         tAN3wPauilv9ZKkP2ppsbZen8PCs/IVlGg0SitdBov0+7oj5W09T0/5yp1BgRjDV9xxs
+         2krf+jzDYRdjKBg1ds3conn5ztZM1t4ggw0dkyziXqQl8as4Q0AgE/Pc3nHg+QKXovoo
+         cqdQGAA8VxZhsnMNBz11LTvJaSCmiUvXscgTiebXulyahSXfZ8CbOLm7ukoKKX1iRb6m
+         5g+DLaA7QbiESAA/OeA4iqv6M2bjfX2+A2qVqG0BOrCR/k9tAnurM8yb0+K2XqeFVX/V
+         oaLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745382716; x=1745987516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EfU6WjNv7EhQ1b3F1YgcLr0oW56464U4m7MZVKTAVBM=;
+        b=rPfx8TCuLZWIu9j01XkVwfhjZaXjx7Dawc7gVMCaR636Y5yXp6la7yzBiBF1Xoc3Re
+         RHe6vmuZyf59crMX95JTswx6pPBDUdO4/S3R0adwxHg9TH5tWCtbWqI186ijKY+eRm4G
+         CsPX69YhymstziMemQaZp//PRV1xD97NgQ0+32QlAQmIp9qekbyKXbhd3BQNn3p/mAcT
+         Ula50TYr/P5vZdkdgyvnVj9S71Ix2Ko/DqQLXXVMswMaliZ7Ky7mSOkOSrj7dbaKS+e1
+         8B++Y9XBOCPVX0mkQSj6D+85QMYjIXA2sER4KFF3yUfT+5Q8Gxtb2Vqx9UVUqpdvq8BV
+         ZbsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2NwznDajgu7nLRv5wiT4GhZFB4z3NoQoAXaKPFat7ojCgB/zB2PFC6NDkzoA788L2tu/TZiA3e5bK@vger.kernel.org, AJvYcCWG3OnWH21XqCO6tFzEqsLmikj63mHEwGUFNkcwLOx9oh98/oQIeyOM5E0Mtr91G/GzbvZstYu1UWzGoYZI@vger.kernel.org, AJvYcCX5d9Y9V54fXTeISog9p/0pLLEpNyvHDA+IJmArjJpS6KjZyLxJPwTyfwaSiCyoyAiPekaNNigvvAtn/5E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMQk7dMYJhvUVFWArmsPHTMroYrVca/fv2G/UnZZj4MP2pMVdh
+	I+QTMrCiRtceOXu5X7VUirpMYUxlUcW4z9sbsG4hvGnD8CynU/1PjwwPVAUUunfwKVncMSSaa6T
+	CrEVyr321js0RvU97UN6GDSpXD/4=
+X-Gm-Gg: ASbGncsR61chFjzyrg/lEjQxZONryojDm7jo0XpIWfmDoK40OJRMMLnrdJfHrxTwSwr
+	irtnggbVdwztlvYbR/T79Hqy5mD+DYRbtFhCe0mAEBkbjMDQg2hJAQl1DpXl5/eKdyRQ/JlPXiK
+	nYtYMN1dD5WaOTGBYWIJkZGA==
+X-Google-Smtp-Source: AGHT+IHrhTx/MdAoqHZhA/XltNRI8gY7Qpv0iUa8fCoTK3yi48+MnrjeKBXmmWBDH2fdMJ2UBb3ov8ARoW/15k3JAeQ=
+X-Received: by 2002:a2e:be9f:0:b0:30b:d44d:e76d with SMTP id
+ 38308e7fff4ca-31090553fb7mr54534981fa.26.1745382715958; Tue, 22 Apr 2025
+ 21:31:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422085312.812877-5-nylon.chen@sifive.com>
+References: <20250420-tx1-therm-v1-1-58516c7fc429@gmail.com>
+ <d0da9dbd-7ea7-4047-bab3-22f416c45938@gmail.com> <CALHNRZ-1wY2D4FOauh7tD+2QKBfhtfdJcvpV_B9Y0tEpE1kTVA@mail.gmail.com>
+ <03de9272-dbcc-4473-a267-c3a32e3fd844@gmail.com>
+In-Reply-To: <03de9272-dbcc-4473-a267-c3a32e3fd844@gmail.com>
+From: Aaron Kling <webgeek1234@gmail.com>
+Date: Tue, 22 Apr 2025 23:31:43 -0500
+X-Gm-Features: ATxdqUFNNymFd9pSDXZBQVufkK6hibgt7Q7sXOUNoBMMd9XRCOgNUOfdi-xI_IU
+Message-ID: <CALHNRZ8i=gOrHfgjhL5X_mqM8=1KeW_cXpp2R32hmT5wUjkw5A@mail.gmail.com>
+Subject: Re: [PATCH] arm64: tegra: Enable PWM fan on the Jetson TX1 Devkit
+To: Tomasz Maciej Nowak <tmn505@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Nylon,
+On Tue, Apr 22, 2025 at 11:19=E2=80=AFAM Tomasz Maciej Nowak <tmn505@gmail.=
+com> wrote:
+>
+> W dniu 22.04.2025 o 17:58, Aaron Kling pisze:
+> > On Tue, Apr 22, 2025 at 9:52=E2=80=AFAM Tomasz Maciej Nowak <tmn505@gma=
+il.com> wrote:
+> >>
+> >> Hi.
+> >>
+> >> W dniu 21.04.2025 o 00:42, Aaron Kling via B4 Relay pisze:
+> >>> From: Aaron Kling <webgeek1234@gmail.com>
+> >>>
+> >>> This is based on 6f78a94, which enabled added the fan and thermal zon=
+es
+> >>> for the Jetson Nano Devkit. The fan and thermal characteristics of th=
+e
+> >>> two devkits are similar, so usng the same configuration.
+> >>
+> >> Does this work on Your DevKit? Doesn't on mine, the fan won't budge. M=
+aybe the
+> >> revision difference? What I'm using ATM is [1] and [2]. Because invert=
+ed polarity
+> >> of PWM, not submitted since that'll need the driver changes [3],[4].
+> >
+> > I would have sworn I verified this before sending it in. I've had the
+> > patches for some time. But you are correct, this does not work as-is.
+> > Maybe I lost something cleaning up for submission or just plain
+> > misremembered the verification. I will send a v2 once I've fixed and
+> > verified. Apologies to the list for the bad submission.
+> >
+> > For inverted polarity, listing them backwards already has precedence
+> > in mainline, see the Banana Pi R3 dt. This makes me want to double
+> > check the existing Nano pwm-fan entry in mainline, though. Cause I
+> > thought all the t210 devices were the same in regards to pwm fan
+> > inversion. And it doesn't have reversed entries.
+>
+> That Banana Pi R3 reverse levels look ugly, but if it's permitted I'm not=
+ against.
+>
+> I would assume they fixed that in Nano, since PWM controller doesn't impl=
+ement
+> inverted polarity in hardware. Looking at Switch [5] it seems the TX1 Dev=
+Kit was
+> used for developing, since they replicated the issue.
+>
+> 5. https://github.com/fail0verflow/switch-linux/commit/b23e8b89081415f2a6=
+3bc625db041c8092e2a8a2
+>   >
+> > Sincerely,
+> > Aaron Kling
+> >
+> >>
+> >> 1. https://github.com/tmn505/linux/commit/a78c520ec94aeab2c9dc8e1f4659=
+7c4174ff957d
+> >> 2. https://github.com/tmn505/linux/commit/99beee4f0cd5d3a6f30e1829d823=
+c11cb8b54bac
+> >> 3. https://libera.irclog.whitequark.org/tegra/2024-07-19#36707118;
+> >> 4. https://libera.irclog.whitequark.org/tegra/2024-10-14#37145211;
+> >>
+> >> Regards
+> >>
+> >>>
+> >>> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> >>> ---
+> >>>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 60 ++++++++++++++++=
+++++++++++
+> >>>  1 file changed, 60 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/ar=
+m64/boot/dts/nvidia/tegra210-p2597.dtsi
+> >>> index 83ed6ac2a8d8f403fb588edce83dc401065c162f..bc02f2eb14bcbd99627c5=
+8b398bbf43061c8110b 100644
+> >>> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> >>> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> >>> @@ -1623,6 +1623,14 @@ key-volume-up {
+> >>>               };
+> >>>       };
+> >>>
+> >>> +     fan: pwm-fan {
+> >>> +             compatible =3D "pwm-fan";
+> >>> +             pwms =3D <&pwm 3 45334>;
+> >>> +
+> >>> +             cooling-levels =3D <0 64 128 255>;
+> >>> +             #cooling-cells =3D <2>;
+> >>> +     };
+> >>> +
+> >>>       vdd_sys_mux: regulator-vdd-sys-mux {
+> >>>               compatible =3D "regulator-fixed";
+> >>>               regulator-name =3D "VDD_SYS_MUX";
+> >>> @@ -1778,4 +1786,56 @@ vdd_usb_vbus_otg: regulator-vdd-usb-vbus-otg {
+> >>>               enable-active-high;
+> >>>               vin-supply =3D <&vdd_5v0_sys>;
+> >>>       };
+> >>> +
+> >>> +     thermal-zones {
+> >>> +             cpu-thermal {
+> >>> +                     trips {
+> >>> +                             cpu_trip_critical: critical {
+> >>> +                                     temperature =3D <96500>;
+> >>> +                                     hysteresis =3D <0>;
+> >>> +                                     type =3D "critical";
+> >>> +                             };
+> >>> +
+> >>> +                             cpu_trip_hot: hot {
+> >>> +                                     temperature =3D <70000>;
+> >>> +                                     hysteresis =3D <2000>;
+> >>> +                                     type =3D "hot";
+> >>> +                             };
+> >>> +
+> >>> +                             cpu_trip_active: active {
+> >>> +                                     temperature =3D <50000>;
+> >>> +                                     hysteresis =3D <2000>;
+> >>> +                                     type =3D "active";
+> >>> +                             };
+> >>> +
+> >>> +                             cpu_trip_passive: passive {
+> >>> +                                     temperature =3D <30000>;
+> >>> +                                     hysteresis =3D <2000>;
+> >>> +                                     type =3D "passive";
+> >>> +                             };
+> >>> +                     };
+> >>> +
+> >>> +                     cooling-maps {
+> >>> +                             cpu-critical {
+> >>> +                                     cooling-device =3D <&fan 3 3>;
+> >>> +                                     trip =3D <&cpu_trip_critical>;
+> >>> +                             };
+> >>> +
+> >>> +                             cpu-hot {
+> >>> +                                     cooling-device =3D <&fan 2 2>;
+> >>> +                                     trip =3D <&cpu_trip_hot>;
+> >>> +                             };
+> >>> +
+> >>> +                             cpu-active {
+> >>> +                                     cooling-device =3D <&fan 1 1>;
+> >>> +                                     trip =3D <&cpu_trip_active>;
+> >>> +                             };
+> >>> +
+> >>> +                             cpu-passive {
+> >>> +                                     cooling-device =3D <&fan 0 0>;
+> >>> +                                     trip =3D <&cpu_trip_passive>;
+> >>> +                             };
+> >>> +                     };
+> >>> +             };
+> >>> +     };
+> >>>  };
+> >>>
+> >>> ---
+> >>> base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+> >>> change-id: 20250420-tx1-therm-9fb3c30fa43f
+> >>>
+> >>> Best regards,
+> >> --
+> >> TMN
+> >>
+>
+> --
+> TMN
+>
+Mmm, so this is strange. I am currently unable to get the fan to move
+on any t210 device. But it works just fine on t186, such as the tx2 nx
+setup supported by mainline. Tomasz, does your change work on 6.12 or
+current mainline? Even if I match your changes on the tx1 devkit, I
+get nothing. The pwm duty cycle is changing as expected, per the
+debugfs pwm listing. Gpio state for pin 4 of the tca9539@74 matches
+the 4.9 kernel when the fan is running. Best I can tell, it should be
+working. But it's not.
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.15-rc3 next-20250422]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Nylon-Chen/riscv-dts-sifive-unleashed-unmatched-Remove-PWM-controlled-LED-s-active-low-properties/20250422-165644
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250422085312.812877-5-nylon.chen%40sifive.com
-patch subject: [PATCH v12 4/5] pwm: sifive: Fix rounding issues in apply and get_state functions
-config: arm-randconfig-004-20250423 (https://download.01.org/0day-ci/archive/20250423/202504231136.Cr4O6Zg5-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250423/202504231136.Cr4O6Zg5-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504231136.Cr4O6Zg5-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/pwm/pwm-sifive.c:161:2: error: unterminated function-like macro invocation
-     161 |         do_div(frac, state->period;
-         |         ^
-   include/asm-generic/div64.h:180:10: note: macro 'do_div' defined here
-     180 | # define do_div(n,base) ({                              \
-         |          ^
->> drivers/pwm/pwm-sifive.c:351:26: error: expected '}'
-     351 | MODULE_LICENSE("GPL v2");
-         |                          ^
-   drivers/pwm/pwm-sifive.c:134:1: note: to match this '{'
-     134 | {
-         | ^
-   2 errors generated.
-
-
-vim +161 drivers/pwm/pwm-sifive.c
-
-   131	
-   132	static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-   133				    const struct pwm_state *state)
-   134	{
-   135		struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
-   136		struct pwm_state cur_state;
-   137		unsigned int duty_cycle;
-   138		unsigned long long num;
-   139		bool enabled;
-   140		int ret = 0;
-   141		u32 frac, inactive;
-   142	
-   143		if (state->polarity != PWM_POLARITY_NORMAL)
-   144			return -EINVAL;
-   145	
-   146		cur_state = pwm->state;
-   147		enabled = cur_state.enabled;
-   148	
-   149		duty_cycle = state->duty_cycle;
-   150		if (!state->enabled)
-   151			duty_cycle = 0;
-   152	
-   153		/*
-   154		 * The problem of output producing mixed setting as mentioned at top,
-   155		 * occurs here. To minimize the window for this problem, we are
-   156		 * calculating the register values first and then writing them
-   157		 * consecutively
-   158		 */
-   159		num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
-   160		frac = num;
- > 161		do_div(frac, state->period;
-   162		/* The hardware cannot generate a 0% duty cycle */
-   163		frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-   164		inactive = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
-   165	
-   166		mutex_lock(&ddata->lock);
-   167		if (state->period != ddata->approx_period) {
-   168			/*
-   169			 * Don't let a 2nd user change the period underneath the 1st user.
-   170			 * However if ddate->approx_period == 0 this is the first time we set
-   171			 * any period, so let whoever gets here first set the period so other
-   172			 * users who agree on the period won't fail.
-   173			 */
-   174			if (ddata->user_count != 1 && ddata->approx_period) {
-   175				mutex_unlock(&ddata->lock);
-   176				return -EBUSY;
-   177			}
-   178			ddata->approx_period = state->period;
-   179			pwm_sifive_update_clock(ddata, clk_get_rate(ddata->clk));
-   180		}
-   181		mutex_unlock(&ddata->lock);
-   182	
-   183		/*
-   184		 * If the PWM is enabled the clk is already on. So only enable it
-   185		 * conditionally to have it on exactly once afterwards independent of
-   186		 * the PWM state.
-   187		 */
-   188		if (!enabled) {
-   189			ret = clk_enable(ddata->clk);
-   190			if (ret) {
-   191				dev_err(pwmchip_parent(chip), "Enable clk failed\n");
-   192				return ret;
-   193			}
-   194		}
-   195	
-   196		writel(inactive, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-   197	
-   198		if (!state->enabled)
-   199			clk_disable(ddata->clk);
-   200	
-   201		return 0;
-   202	}
-   203	
-   204	static const struct pwm_ops pwm_sifive_ops = {
-   205		.request = pwm_sifive_request,
-   206		.free = pwm_sifive_free,
-   207		.get_state = pwm_sifive_get_state,
-   208		.apply = pwm_sifive_apply,
-   209	};
-   210	
-   211	static int pwm_sifive_clock_notifier(struct notifier_block *nb,
-   212					     unsigned long event, void *data)
-   213	{
-   214		struct clk_notifier_data *ndata = data;
-   215		struct pwm_sifive_ddata *ddata =
-   216			container_of(nb, struct pwm_sifive_ddata, notifier);
-   217	
-   218		if (event == POST_RATE_CHANGE) {
-   219			mutex_lock(&ddata->lock);
-   220			pwm_sifive_update_clock(ddata, ndata->new_rate);
-   221			mutex_unlock(&ddata->lock);
-   222		}
-   223	
-   224		return NOTIFY_OK;
-   225	}
-   226	
-   227	static int pwm_sifive_probe(struct platform_device *pdev)
-   228	{
-   229		struct device *dev = &pdev->dev;
-   230		struct pwm_sifive_ddata *ddata;
-   231		struct pwm_chip *chip;
-   232		int ret;
-   233		u32 val;
-   234		unsigned int enabled_pwms = 0, enabled_clks = 1;
-   235	
-   236		chip = devm_pwmchip_alloc(dev, 4, sizeof(*ddata));
-   237		if (IS_ERR(chip))
-   238			return PTR_ERR(chip);
-   239	
-   240		ddata = pwm_sifive_chip_to_ddata(chip);
-   241		ddata->parent = dev;
-   242		mutex_init(&ddata->lock);
-   243		chip->ops = &pwm_sifive_ops;
-   244	
-   245		ddata->regs = devm_platform_ioremap_resource(pdev, 0);
-   246		if (IS_ERR(ddata->regs))
-   247			return PTR_ERR(ddata->regs);
-   248	
-   249		ddata->clk = devm_clk_get_prepared(dev, NULL);
-   250		if (IS_ERR(ddata->clk))
-   251			return dev_err_probe(dev, PTR_ERR(ddata->clk),
-   252					     "Unable to find controller clock\n");
-   253	
-   254		ret = clk_enable(ddata->clk);
-   255		if (ret) {
-   256			dev_err(dev, "failed to enable clock for pwm: %d\n", ret);
-   257			return ret;
-   258		}
-   259	
-   260		val = readl(ddata->regs + PWM_SIFIVE_PWMCFG);
-   261		if (val & PWM_SIFIVE_PWMCFG_EN_ALWAYS) {
-   262			unsigned int i;
-   263	
-   264			for (i = 0; i < chip->npwm; ++i) {
-   265				val = readl(ddata->regs + PWM_SIFIVE_PWMCMP(i));
-   266				if (val > 0)
-   267					++enabled_pwms;
-   268			}
-   269		}
-   270	
-   271		/* The clk should be on once for each running PWM. */
-   272		if (enabled_pwms) {
-   273			while (enabled_clks < enabled_pwms) {
-   274				/* This is not expected to fail as the clk is already on */
-   275				ret = clk_enable(ddata->clk);
-   276				if (unlikely(ret)) {
-   277					dev_err_probe(dev, ret, "Failed to enable clk\n");
-   278					goto disable_clk;
-   279				}
-   280				++enabled_clks;
-   281			}
-   282		} else {
-   283			clk_disable(ddata->clk);
-   284			enabled_clks = 0;
-   285		}
-   286	
-   287		/* Watch for changes to underlying clock frequency */
-   288		ddata->notifier.notifier_call = pwm_sifive_clock_notifier;
-   289		ret = clk_notifier_register(ddata->clk, &ddata->notifier);
-   290		if (ret) {
-   291			dev_err(dev, "failed to register clock notifier: %d\n", ret);
-   292			goto disable_clk;
-   293		}
-   294	
-   295		ret = pwmchip_add(chip);
-   296		if (ret < 0) {
-   297			dev_err(dev, "cannot register PWM: %d\n", ret);
-   298			goto unregister_clk;
-   299		}
-   300	
-   301		platform_set_drvdata(pdev, chip);
-   302		dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
-   303	
-   304		return 0;
-   305	
-   306	unregister_clk:
-   307		clk_notifier_unregister(ddata->clk, &ddata->notifier);
-   308	disable_clk:
-   309		while (enabled_clks) {
-   310			clk_disable(ddata->clk);
-   311			--enabled_clks;
-   312		}
-   313	
-   314		return ret;
-   315	}
-   316	
-   317	static void pwm_sifive_remove(struct platform_device *dev)
-   318	{
-   319		struct pwm_chip *chip = platform_get_drvdata(dev);
-   320		struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
-   321		struct pwm_device *pwm;
-   322		int ch;
-   323	
-   324		pwmchip_remove(chip);
-   325		clk_notifier_unregister(ddata->clk, &ddata->notifier);
-   326	
-   327		for (ch = 0; ch < chip->npwm; ch++) {
-   328			pwm = &chip->pwms[ch];
-   329			if (pwm->state.enabled)
-   330				clk_disable(ddata->clk);
-   331		}
-   332	}
-   333	
-   334	static const struct of_device_id pwm_sifive_of_match[] = {
-   335		{ .compatible = "sifive,pwm0" },
-   336		{},
-   337	};
-   338	MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
-   339	
-   340	static struct platform_driver pwm_sifive_driver = {
-   341		.probe = pwm_sifive_probe,
-   342		.remove = pwm_sifive_remove,
-   343		.driver = {
-   344			.name = "pwm-sifive",
-   345			.of_match_table = pwm_sifive_of_match,
-   346		},
-   347	};
-   348	module_platform_driver(pwm_sifive_driver);
-   349	
-   350	MODULE_DESCRIPTION("SiFive PWM driver");
- > 351	MODULE_LICENSE("GPL v2");
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Sincerely,
+Aaron
