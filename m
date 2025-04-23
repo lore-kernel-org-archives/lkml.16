@@ -1,104 +1,152 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B67041C69;
-	Wed, 23 Apr 2025 17:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE2E10957
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:59:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745431110; cv=none; b=dXiPJWeKSHMDRUazcFU22YlsdKVubeFtRg339CMA16CLyiNU7bmzkeeWG0/SwviDXXDYPkjTzLzOoAZlYVcJuXtPg3gAYjlIGT/J9CoIUehm4OoJ6K5HwLn4CvhaqDoVQCrfu6xrNO9sd0E/QI1n1PAHmPbqd1FqHjFW7qMwNqY=
+	t=1745431173; cv=none; b=c91qb0OuK6wKFCrtkAzQQ5tjbB1MnbFJ3rpk2izqSYsFD/9tXwyYFrh1NfJhJeocU9/y6/uzf7mFiq+CWe6TfXOwj4M29qF8dzWVHwVxIPEZ1DWp8PBm/3C1XPwhr1SNlksMeeahekCNY6fwtFKXouwarI8SHCLpwlgiku6FGww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745431110; c=relaxed/simple;
-	bh=n8yECHIKn8yVX6a3GHWM1uCLevpPfZKJp8WUnunLZuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xy8y2+DoZ0FZOcDgoheu9KmBuH6Kzcr0+Ro+giaBIGmUoGTQ8BR/CBpG/YdP3X8NmgSpmf0RWIR4Hb37Um3MJkruCbCqJ1QIgPlq4MjrVkkhTq6PQU1haPrLB2WFPwQ/jlnpsFmUqmYvr3J6BSfqrADlVvyJEJqiacUtTNRzj6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PTWm+xoq; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745431173; c=relaxed/simple;
+	bh=T2TBlvkxpqSt4Yg66wrWZfHI9nHaKVofCMCsYRliPm4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OaLtBzBJWA6iPZE670pJQEHvxbQ1On0BkqF0XbN0CQ/ZqRcwywveZ5XRago3AJ5ON+/WJLcGcoXlHDG4Gx1b3LLc0R9Ei1bOU747uZlCbQVLxtKqsy/qaRbCXWGxCYtwuiO27fyMYv+ck0gm9M3i/Hg9mCQKIgE4UwNaO5xFVO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HACIZgpw; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PTWm+xoq"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22435603572so1613495ad.1;
-        Wed, 23 Apr 2025 10:58:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HACIZgpw"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2264c9d0295so27525ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:59:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745431109; x=1746035909; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1745431171; x=1746035971; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=n8yECHIKn8yVX6a3GHWM1uCLevpPfZKJp8WUnunLZuI=;
-        b=PTWm+xoq41UOH9bI5UTwD60mGWj8wX7aO+xu0X1L7cCMbHKUiTmm/ay5ZsjiDrVlmJ
-         b3O6HgBUABBU++djLZ/n+RS8WST+a77e0vPvKeOMrfih0CwLpwU/O1M29YbKl5pgY+Of
-         H+w7QY7e+PLLqFoCsQEp1UmC5INyUt70BOYbxpNi+yj0xYtY+DtRNmlWiq3CuCWebocT
-         ILHziHPqFSh6hCwzkDWMd7L4gFZCY6NwJGzZgcO0ig4pPcu43h2KO6dLKXO4lUWTp/2m
-         43F79Pr+bfv+Vmk2IozAytftGNo3N/nrSIBPVJ1vxM0pQXJCv9H7WyVLCwDYb63IOWCH
-         XA8g==
+        bh=+8ET6hBVRzBDqshUdhbgCvSUTaazcby/sOi3F1Bc3pI=;
+        b=HACIZgpw4Xflv3W6XmdPwNuTYxQ8zATeYzoR01w5U1QhvU797QxfB3VWNBYsoEXN0D
+         r1sBI0OEbn075eeaSweSTK9Kt/MJ+oPdDAesZPl/+gwjrSyjiKHi/louVdIOC2rBhz0F
+         gfHVMBUSPw9v6u9oUVGZYXOL2Hsolk65Haz4RZ3eyh8VtpyVn4oN+idH/iRyUan57kOv
+         VJ6+rf3ozumb3R4FPyShUVTDwoFxVdmAp+3zSh7bj83RiPJA3ghFhOAXou/grUCVcWQN
+         ED6+2Mxhsurs/2rbbxTEY/C3kPb4RP2/y6TjS8R445L88/BoxlCYyj8cauarXMlwAt0F
+         s43Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745431109; x=1746035909;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745431171; x=1746035971;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=n8yECHIKn8yVX6a3GHWM1uCLevpPfZKJp8WUnunLZuI=;
-        b=bGw9sOLsSsfcTJa3RMOXeqswkjdMQ5n41Bz5XTC4Cj3ygDue4WukEQjiK2HnK7s/pO
-         J4+VZO3+xLnr1edjT0EyuGmIrtEQEtXeRgHWlDr0fJB2F2QUcJ5d5VyiDcnA2aYaIDoo
-         vj55aSb4GInepAH/b8FBLYlQ8rWeOXMzzGUmp3xjVRxdWUMKQfIXdpnavAxhHCJoodeR
-         R88QgQTV+CNLkwT4mlF0hbKRAoAlG5tjXrht1z7aRd5vKfAKORTwfbW9b4S7aLjbyRm2
-         9ohXerjz79DcLzH2YjnKlNep9B1BfAsuygLsXlumlWi9PU8tVREZ/931Yv9Vs4MyAjCt
-         W3HA==
-X-Forwarded-Encrypted: i=1; AJvYcCU4PSrwX0YzDcO7mJRt1gwYKhI4yRMLNiepz59aq+BGWwxqdIr7nQYGvQGYk7tifc4ugNU5EJXGgVvWz/y+@vger.kernel.org, AJvYcCWSWq3ZGEGCPxhmyYbn6z8XW7BiSfmnIyQOXVxjgEH+zv4WxykT5vHv9nXzByqjNH2+B7nxXnDmUG1P8gXldh++@vger.kernel.org, AJvYcCXIGefua2yCuw9EmJ17tTBvx0LHLLekJEPWwTJyZvCGVLMYAHxXx2icJcG2oGFwRJ/JcpY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdxJJt7I9V9rPK/a7NHoWBzQCzx0cEKiIJ4p/Y5YcE7fUDivx0
-	SvAEamhCF2mpHNdl5YP62AU3m0uT9AxC03QOxGcC1ZJkXxuEUYKV
-X-Gm-Gg: ASbGnctKi8Qj2ozRa2HUxVwbmnTnjpwDd09HnY2mAdsWDS7sjW7pA1ok/LwlGaKFurC
-	Sbgv85qQtqhqdeEmBzJyM6BnvU4P1E8WCopb7SMIujSw2ZXQOMtcG+P9XJUz/c3x+jFPA/fvqxA
-	8EyZ+OZj+xTxU1PWg8+ZjrIB7KYoAOm/v1gFj8Ftoy7JlM8G0b81VmlJ/Z7tfH8QUXEV7qfZWlS
-	Br6vVRcI4WfrW0gCOeIYky8IqnxlAtGB7NnDnYbS5WrQjSHc50n2VIHo2nJInd4Ptli1tyHtGiy
-	KIHnhs/7sa4/IYAtnDkQR+SMHS1QSpEmvcrwG8FNLLI=
-X-Google-Smtp-Source: AGHT+IG4CA1htCgHu1Hm2Mfkm0GaZN6lb8+ytF7ev8DwGyZF7LxdAhTv4nfu1t+Sq9O6JVmd3o2RXg==
-X-Received: by 2002:a17:903:2410:b0:224:3c9:19ae with SMTP id d9443c01a7336-22c53601521mr337572005ad.34.1745431108499;
-        Wed, 23 Apr 2025 10:58:28 -0700 (PDT)
-Received: from prabhav.. ([115.99.163.92])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bd9949sm107650295ad.10.2025.04.23.10.58.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:58:27 -0700 (PDT)
-From: Prabhav Kumar Vaish <pvkumar5749404@gmail.com>
-To: martin.lau@linux.dev
-Cc: andrii@kernel.org,
-	ast@kernel.org,
-	bpf@vger.kernel.org,
-	daniel@iogearbox.net,
-	eddyz87@gmail.com,
-	haoluo@google.com,
-	john.fastabend@gmail.com,
-	jolsa@kernel.org,
-	kpsingh@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	mykolal@fb.com,
-	pvkumar5749404@gmail.com,
-	sdf@fomichev.me,
-	shuah@kernel.org,
-	song@kernel.org,
-	yonghong.song@linux.dev
-Subject: Re: [PATCH] selftests/bpf: Fix potential null pointer dereference in skb_pkt_end.c
-Date: Wed, 23 Apr 2025 23:28:14 +0530
-Message-Id: <20250423175814.1273032-1-pvkumar5749404@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <e7ee365f-f275-4ee0-80fb-370cb3c242ea@linux.dev>
-References: <e7ee365f-f275-4ee0-80fb-370cb3c242ea@linux.dev>
+        bh=+8ET6hBVRzBDqshUdhbgCvSUTaazcby/sOi3F1Bc3pI=;
+        b=omECl59PIlSc4cXsYr8zewMzSFN20WHLtZbbKXnSjrmVnKSoVGH/aOkh0aXNY4jcwd
+         2ewnSsp+P7p2jBX3mIdgAHPLiDmuUQYItSD15kkn31ygueUAXg7PeLagntns1eQc3SW0
+         nDPEWAtr1js1I2GKUJf+C1+EyRLTi7NNbx6KZU5IM8YLc4uTB7t6/V1gDeF3r+y8OTvA
+         9PBTNMqeVW4nZDKbM8W2vr4SELtvEZX75z4gF9nKV0NRJ/BC4bgqeCGsSx5pSrsUvfDs
+         XKIV3/c4LG7Y2SfFtucWz5VdfAeyAiPexttyXDst7eP1zC2yY2JUS0zWz2Ynp8Bk52sf
+         fs4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUwRknAzoBU7w7NAgEwgTu2520kAGji0sPZ0QdrJ+YAzCNaml4yQ68fc2p+KKcerjyHUM6CmSTSTfrFMf8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaPwkdngIwCvbQXS2v5cpLPrc+8wmiRxEdPf3ar2euxVJ8B8LD
+	zIMpAWv/bZAnX2KCi+Aix4x6KwPoSXv8Kg5QapIRE/C6wwMW6IBZKNCxTLjmCXAsdRhu309u3Uq
+	z3/rH61+m7sgeYcjB7ED8B5kMu7ySR5zkdc57
+X-Gm-Gg: ASbGncuhY2mdVgO+yM1XijybT0IUSCxp90VScTr7MxCYejQs6/Gy0pXuijdTCkUJZkk
+	WFpEysR+fJrNlQW78Og5vuwcAww1xQ0CMEYMLivARf3iX/zHsB17VoeeNnvP8TGrJv3J2QZALs3
+	2ICCwOxO0ost+1iAg2KGKFL/ynqnyi9tNEpfedkPbKtxlYmagXLIGY
+X-Google-Smtp-Source: AGHT+IHvMK0SV6VtztVj+YoeYQ5/i4hvqsncQiTOPb2g+BToFdj7TZ78J3grFAhStRy75jc6hEr26BgE749DHVAlZwc=
+X-Received: by 2002:a17:902:ce08:b0:21f:3f5c:d24c with SMTP id
+ d9443c01a7336-22db2089754mr282595ad.0.1745431171080; Wed, 23 Apr 2025
+ 10:59:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250423031117.907681-1-almasrymina@google.com>
+ <20250423031117.907681-4-almasrymina@google.com> <m2y0vrtd5i.fsf@gmail.com>
+In-Reply-To: <m2y0vrtd5i.fsf@gmail.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Wed, 23 Apr 2025 10:59:17 -0700
+X-Gm-Features: ATxdqUHq-n2Ogx9j37-VJ8KU3c5QgjU5O-8PAbfORQ_YtioEYEuiwEUpYsuISUQ
+Message-ID: <CAHS8izNUOO-X0WHFTMd3_yEjCDu4sPYADE1oDEtWTYFNNMB5wQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v10 3/9] net: devmem: TCP tx netlink api
+To: Donald Hunter <donald.hunter@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
+	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>, 
+	Harshitha Ramamurthy <hramamurthy@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+	Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
+	Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>, 
+	Neal Cardwell <ncardwell@google.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+	Stefano Garzarella <sgarzare@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, dw@davidwei.uk, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
+	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Prabhav Kumar <pvkumar5749404@gmail.com>
+On Wed, Apr 23, 2025 at 5:11=E2=80=AFAM Donald Hunter <donald.hunter@gmail.=
+com> wrote:
+>
+> Mina Almasry <almasrymina@google.com> writes:
+>
+> > From: Stanislav Fomichev <sdf@fomichev.me>
+> >
+> > Add bind-tx netlink call to attach dmabuf for TX; queue is not
+> > required, only ifindex and dmabuf fd for attachment.
+> >
+> > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> > Signed-off-by: Mina Almasry <almasrymina@google.com>
+> >
+> > ---
+> >
+> > v3:
+> > - Fix ynl-regen.sh error (Simon).
+> >
+> > ---
+> >  Documentation/netlink/specs/netdev.yaml | 12 ++++++++++++
+> >  include/uapi/linux/netdev.h             |  1 +
+> >  net/core/netdev-genl-gen.c              | 13 +++++++++++++
+> >  net/core/netdev-genl-gen.h              |  1 +
+> >  net/core/netdev-genl.c                  |  6 ++++++
+> >  tools/include/uapi/linux/netdev.h       |  1 +
+> >  6 files changed, 34 insertions(+)
+> >
+> > diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/ne=
+tlink/specs/netdev.yaml
+> > index f5e0750ab71db..c0ef6d0d77865 100644
+> > --- a/Documentation/netlink/specs/netdev.yaml
+> > +++ b/Documentation/netlink/specs/netdev.yaml
+> > @@ -743,6 +743,18 @@ operations:
+> >              - defer-hard-irqs
+> >              - gro-flush-timeout
+> >              - irq-suspend-timeout
+> > +    -
+> > +      name: bind-tx
+> > +      doc: Bind dmabuf to netdev for TX
+>
+> nit: maybe add "for RX" to the bind-rx doc.
+>
 
-Hi Martin,
-Thank you for the feedback.
+Thanks, will pull this with the next iteration.
 
-You're right — I reviewed commit 9cc873e85800 and now understand that the test is designed to validate specific LLVM code generation, not just runtime behavior. I see how my change, although addressing the warning, could unintentionally alter the generated instructions and defeat the purpose of the test.
+> > +      attribute-set: dmabuf
+>
+> The bind-rx op has "flags: [ admin-perm ]", should bind-tx also?
+>
 
-I'll drop this patch to preserve the original test intent. Thanks again for the context!
+The omission of admin-perm for tx is intentional.
 
-Best Regards,
-Prabhav
+Binding a dmabuf to an rx queue should and is a privileged operation,
+because basically the application doing the binding is taking
+ownership of this rx queue. For TX, no such queue ownership is being
+taken. The TX binding just gives the netdevice access to the dmabuf
+dma-addresses so the netdevice can send from there. It's very similar
+to a normal dma-map with normal memory. There is no need for privilege
+checks.
+
+--=20
+Thanks,
+Mina
