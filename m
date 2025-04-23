@@ -1,131 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2622027CCC7;
-	Wed, 23 Apr 2025 14:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F70627C87C
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418328; cv=none; b=i4TZmWIEe5QWG5eFpaq0F2Wr5zdTZFFaco7HG4QvAshOYVjM4vZKYhrz1UUrjC1TV1lFaMG3LWRi/UBu1AdsusSXHZYwPXhsQ4OBfgDEn/QjsoW9NmcySnArd39jzlhaYShwMzp0/hj2WbOrCxSJ6nfE892UFmrXIGLYYpR8w4M=
+	t=1745418379; cv=none; b=cm630R6jazVyhYK/wDFWAguqQIyJ+DrhU4DD3fcU5+YFUjLNqNBLmvNCRl3+NGkqKxtgYYIA+HxMtKGeIHtYqhFEtDEmKdYZY4F4H1jtWCS2KlUwSjctILm1xIx/+ejM8Yc9W5UpsxkY2cr8db0LAFm1XBUfV1in5+rVMjkbd1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418328; c=relaxed/simple;
-	bh=lnoxov44YiijcxAHjS45FDcwQ1bLTT0pk3Dflv1VlkY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NkAbrifaaBpkhIuuDZ75t+XW+4vsTBnL1Y7TDMOaCP2sSKzurBTvMuRDPFHDh7YrigeR3ASMksRMXYoGnnLU3CHxuxB9h9l/Boov139gRi0DCdZI6tK19+cVfJMWNkQF1TnYeWJzASvCkPvr+BG7XJNzTqkbHQPHiNqnq7xiOek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K6v+F0GD; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745418379; c=relaxed/simple;
+	bh=2PnMWJoU9CfQIN5xfqfk8HzXGyVnk1rUgJBtPJB/9Bk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=Vcz+uUk7ADz+xgNvx7M3aH6Qd1jPaD5ivgx9zGyTA7ahuKlDgV/WfM7Q5lvcETO9LwEYgN7xzbSfLlRzeLL6G6lRCzTazxV9P48M4sm/Y+iCiTESNviVLWGXm6mnEn2F6YvHozJGE1n6sZu53o6D8SjsaGGtFkFB03G+3rEfu9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qvPF+39H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MhYKBDkO; arc=none smtp.client-ip=103.168.172.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K6v+F0GD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745418328; x=1776954328;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lnoxov44YiijcxAHjS45FDcwQ1bLTT0pk3Dflv1VlkY=;
-  b=K6v+F0GD8t+DtESZ+/X1b88mea/QjLFKsM4fbYIT57JZGgxl0QQ6c2KW
-   E9ZKnbuPKPxlyCD+j0OmODna2J66K8w1ojFZV/v+d5lb6TWdMJdXcQR14
-   ecOmGNlOSlRrB6Sg7F4v2r1nw9/70vyAPrDX5O8ARgaCmzoQso6QhBtru
-   boxJdwmefyRW44O6Jsh9l2mzsjtTIxNMhYjNc/Etxx8gzGY3Gt6k8o9p/
-   bRHiOdPrBkJ4jfvnOkKnUpvuoy4+olunnClmmdY26ri81epGgZq7pLCGq
-   xVtrL7i9Mnl6hDWbFpb/Ximu+fXC7AZbn3VIAWR1jv1SP5W43C7lHgRcu
-   A==;
-X-CSE-ConnectionGUID: 5VrWcW1ZSy+Dfvixkj0ttg==
-X-CSE-MsgGUID: bo5P0Ji8QbqMMx9QKzf5XA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="46717322"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="46717322"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:25:27 -0700
-X-CSE-ConnectionGUID: 5hu8NpZuRYSvcXVBz8M0Ow==
-X-CSE-MsgGUID: tLM2ERpfQ4aMi5ZC9w+9wA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="137404934"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.124.221.81]) ([10.124.221.81])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 07:25:24 -0700
-Message-ID: <61a51aac-4692-4049-85ce-c780c25f6332@intel.com>
-Date: Wed, 23 Apr 2025 07:25:22 -0700
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qvPF+39H";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MhYKBDkO"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 50FC31140241;
+	Wed, 23 Apr 2025 10:26:15 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Wed, 23 Apr 2025 10:26:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm2; t=1745418375; x=1745504775; bh=RQ
+	HuFyRBEdBA6ZXvRnun39XQy6tPOiyfd7cH9yIyuFc=; b=qvPF+39Hmqo0aihsUN
+	jmC8u+OJzaWwCsFbUTmCNs5Wq3QrCFX0Ax2xMFth1HVUVmFd+KRWQKF8Oo4sC9x9
+	+oLlX6MBQZtXaqB9jpAPc9zNuAb+Pn3zsQ06in7H6VguCT1T+o6nyZjlwBOBCgJu
+	t7pGqUt6RE8EUALgOUMBKGwqqjzKu2LwMBN83fEULLfx3SQdcBgHrb+ptKXHvj7e
+	0WgS32HaFKTuZebvu2EpNvnQCeuyDqmbsiUfYe+QJGJB7uOarHt0ujyfcQNMIBv+
+	pPAM3E22MfR6ewXA1K0y6H2mKR++9pGxnuE7+fxwP7iv/UBn0ZTzUumcIBGKm4VA
+	ZRaw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1745418375; x=1745504775; bh=RQHuFyRBEdBA6ZXvRnun39XQy6tP
+	Oiyfd7cH9yIyuFc=; b=MhYKBDkOVa/DYl8lu5+EL1jWwAbk8T/VeXHbvVSkL+n5
+	I0CsxKgKv3GsjWCbNJfVEFFVNnCKvQTu6HmvdbkA4nE80Nb9NEaD9+RjkFGSk5v0
+	Ko3fiJJns1t9qLkXs/SewqNATdLIVP9MEvjgm11V3DqR9zgC9vqUP2rRXH76dB/c
+	QBR15AN9QZogzogcc+i9abKUk81zEl4TdF8VcOL0eGHyL799iRbH1RfkllbyOEvk
+	zxsXg2VDitWrRq2shenWRyqqIuRugwLEm5CfodHpJHehKaBNf/MiJePuHdlraZcS
+	5k1w5g1Ns6v93KUZC5Goi0lID73RZ4qKZuDhmW6PjA==
+X-ME-Sender: <xms:h_gIaBupqtuONzLiTkl1P95dy1UBUj0TbK_RCUrMmkdfArckdfHX2g>
+    <xme:h_gIaKdecnKeCZ1mbETBZqalHFe-dhomIObaG7JqssaDLmLpTqvbzskVF47hT1WuM
+    ZIla3p-koPpfcWANxg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeikeefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkffutgfgsehtjeertdertddt
+    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
+    guvgeqnecuggftrfgrthhtvghrnhepfefhkeefgfejleduveevleduhedvueelheekuefh
+    geduheejvedujefgffffveelnecuffhomhgrihhnpehllhhvmhdrohhrghdpphgrshhtvg
+    gsihhnrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepgedpmhhouggvpe
+    hsmhhtphhouhhtpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhg
+    pdhrtghpthhtohepjhhpohhimhgsohgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
+    hnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
+    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:h_gIaEyvEIe65oaPgG7qwE-H3vh2jSULZUJhw9_K_qm1IQ91wY_A5A>
+    <xmx:h_gIaINXjEbsP_hhIePeXyXwpvpyyf_L5nn7YiGqY1tYDpjv5Ls9Kg>
+    <xmx:h_gIaB-5aKPHk7WDHT2dYjzBmxlcfd8De8c4ap4k-QwetJfiDwRD6A>
+    <xmx:h_gIaIVIY7V7R2Bpw_MrXeA2BjLJwMPv-HM8yEPqyEfAjayXBb16rA>
+    <xmx:h_gIaA3REe5Fc6DAIlNjEANwOMPXsvrUOKRKxhlN128JYe62bPiJkrkt>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 016D22220074; Wed, 23 Apr 2025 10:26:14 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 04/34] x86/msr: Convert rdpmcq() into a function
-To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
- ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
- tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
- seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
- kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-5-xin@zytor.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250422082216.1954310-5-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8
+X-ThreadId: T3e40cc2738116353
+Date: Wed, 23 Apr 2025 16:25:54 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Josh Poimboeuf" <jpoimboe@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, "Nathan Chancellor" <nathan@kernel.org>
+Message-Id: <ed3bdbc7-63d0-4d9f-be2f-22fcdb52d32c@app.fastmail.com>
+Subject: objtool errors and warnings with clang-21
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On 4/22/25 01:21, Xin Li (Intel) wrote:
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Here is a list of issues I currently see with linux-next and llvm-21 from
+https://apt.llvm.org/bookworm, along with the .config files:
 
-Code: good.  No changelog: bad.
+https://pastebin.com/mRxkgudJ 
+drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: warning: objtool: vmw_host_printf+0xe: unknown CFA base reg 0
+make[8]: *** [/home/arnd/arm-soc/scripts/Makefile.build:195: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o] Error 255
 
-Once there's some semblance of a changelog:
+https://pastebin.com/7XEcstHP
+drivers/input/misc/uinput.o: warning: objtool: uinput_str_to_user+0x17f: undefined stack state
+drivers/input/misc/uinput.o: warning: objtool: uinput_str_to_user+0x17c: unknown CFA base reg -1
+make[7]: *** [/home/arnd/arm-soc/scripts/Makefile.build:195: drivers/input/misc/uinput.o] Error 255
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+https://pastebin.com/6wAzkUL5
+vmlinux.o: warning: objtool: ___bpf_prog_run+0x208: sibling call from callable instruction with modified stack frame
+vmlinux.o: warning: objtool: __ubsan_handle_type_mismatch+0xdb: call to __msan_memset() with UACCESS enabled
+vmlinux.o: warning: objtool: __ubsan_handle_type_mismatch_v1+0xf8: call to __msan_memset() with UACCESS enabled
+
+https://pastebin.com/PQZDZV18
+fs/fat/dir.o: warning: objtool: fat_ioctl_filldir+0x717: stack state mismatch: cfa1=4+168 cfa2=4+160
+
+https://pastebin.com/StQRVCfQ
+sound/soc/codecs/snd-soc-wcd9335.o: warning: objtool: wcd9335_slimbus_irq() falls through to next function __cfi_wcd9335_set_channel_map()
+
+and a bunch more fallthrough warnings that are likely all related to that one:
+
+drivers/gpu/drm/amd/amdgpu/../display/dc/basics/fixpt31_32.o: warning: objtool: dc_fixpt_recip() falls through to next function __cfi_dc_fixpt_sinc()
+drivers/gpu/drm/msm/msm.o: warning: objtool: msm_dp_catalog_ctrl_config_msa() falls through to next function msm_dp_catalog_ctrl_set_pattern_state_bit()
+drivers/iio/imu/bmi160/bmi160_core.o: warning: objtool: bmi160_setup_irq() falls through to next function bmi160_data_rdy_trigger_set_state()
+drivers/media/i2c/ccs/ccs-core.o: warning: objtool: ccs_set_selection() falls through to next function ccs_propagate()
+sound/soc/codecs/aw88399.o: warning: objtool: aw_dev_dsp_update_cfg() falls through to next function aw_dev_get_int_status()
+
+     Arnd
