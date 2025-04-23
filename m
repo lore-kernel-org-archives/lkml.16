@@ -1,155 +1,89 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2062.outbound.protection.outlook.com [40.107.236.62])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 801671B0F17
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745391024; cv=fail; b=lr5xtoCGueEt2MgIbPS+GTQVkrjyG1F7hlNSJmcvczmkdAF8In1Vwqp4JWOZvrsfpX5VRiFtzDw7TLxImrerj8qZhgeIO1s3XdvxRhfR+WA0PSNhX29kOJzYeOaNwNHUMnRp3K56DXF3mqsCMedffze5IRMgPqMYNHuKHT+IM+U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745391024; c=relaxed/simple;
-	bh=5ZWxQC1HLR0nz12my6TG5vQO/Nc99R0lcg0Sb7Its64=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dpAicnq8atN3Cj7iodEHTWqSMm5rsV8HILuAE+RE790Y4blkwuZOFmVMTjqxsDgFRNa1kfl76v6z6XCQxc6mdr4EAC+bASFd2wOPObMoOc5J9753VffpS0fl2RE+S9xigPKTXRObX277jXxasW/MjyC6DMJj7TU7T5qIHX28ekQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ah7u7P3q; arc=fail smtp.client-ip=40.107.236.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C25FE223DFB;
+	Wed, 23 Apr 2025 06:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745391041; cv=none; b=Z7G6e/TKoPZUwAzZ/dvApnn9KlHQdAE8+GFDRcg26wzWJbb2dWR74bWcGi7T4S2aqZlAb3Aqu2l8NdwCgOV+qDE4pB1W380nB+VQQ01EYC6N8jyxLjgVQPjxpS5Vxnj6OFak5EdvgJhx9jbODWnhHbNAap9ccxExnBX0cA+FDmQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745391041; c=relaxed/simple;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ai93VPH112QVSAZyCftNWMRZoyp1P1LLcxTklijpGhC5xF+Nm+/cn1KuarQAQIdNrKBfrhhc1s9p4as8yqC12R8/bKFYrEU0NcJUKGszxpiCs/QwFNULckHOU5+XnmRALK7qrkBM0Wo4YhmO4iPRkue1oArJ5NXM/G8nFST6wKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M+oK8mcC; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tPgFZ0il; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ah7u7P3q"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WsERsQbpxyKUPRbm9vw4euRYyoKRtAPHhdOyK64vaGcPdy+kqEAYcpE+DNg6BBWMXI7C6ZzAkvalIICoovSX9x1f04sRoMxxxIJk6/UrGayNideCqgQc6eQvl53eXabUfDC7HWuAMAsK6UkMbicwWwQJh0WuHcEcpIyXV0o8a4Bb3AJ4dpg2thUGtEZGaIKI94CHqD0X+VfiQ+q9C7+XVnpMjougYW8trDKCQ+rzpcefxSa6YzqbLXYDOyShQYgdcCqU8iZUBL+iLlOLoyP6qtxEjFgl9IIena0IC0Dj71FQMsSikR7Z9UcKWOCuLNQ66WyKmw9KDmhiypkDFKLjRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=REgGOEY1JcBaO2PuRwZsCK1IsSxduTYqqv+tOnD4x9o=;
- b=ojO255DphRDtZubZPCd2hmWAEzIbWA4EQl0v7v/5f/xrzVIamm7OnK1SWtoJQyvAT9HZ2+T0lmno0hk/9MZP/Jc/mNaq8pgLeKobbi0e1ptHyVYNqENH7QyQT/nyRqfpwCfwOHE9YRGZh6R2kzrxVkjGBHGSlGmERVaSxogXDg7gNTJ8uILzpidE8kbtMqYnKcRbHoqJ6E5N+6+gqvjmMULAFqwJ7DsWNNRVp6Zh3+YUcDG+42D5sNh9OYyb1+NAORXE2dTYuW1GqCyffIyCLTLQsiJ1o9E1g0q71NWIIDtwb38YHeQUykep9M6mGrxMcN2QnHkWnhOJk1gYhBEqKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.linux.dev smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=REgGOEY1JcBaO2PuRwZsCK1IsSxduTYqqv+tOnD4x9o=;
- b=Ah7u7P3qbeuGUyLx2M165GC7QEOWTu/EQEmSS9eP8PoPXAU5OA1XVW0VhuNxNgLR3VwvslRAFyaRzJ0903eLEZPAsSH4nUiaKfa8Fxn3EFuvR6Dpg2/5RriYHv057aAqajgJzVtqx01HmlVTnSrymkiK396DDh+Hr8PhTzfB/U8=
-Received: from CH2PR18CA0009.namprd18.prod.outlook.com (2603:10b6:610:4f::19)
- by PH0PR12MB7929.namprd12.prod.outlook.com (2603:10b6:510:284::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.32; Wed, 23 Apr
- 2025 06:50:17 +0000
-Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
- (2603:10b6:610:4f:cafe::da) by CH2PR18CA0009.outlook.office365.com
- (2603:10b6:610:4f::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Wed,
- 23 Apr 2025 06:50:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8655.12 via Frontend Transport; Wed, 23 Apr 2025 06:50:16 +0000
-Received: from BLRANKISONI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
- 2025 01:50:13 -0500
-From: Ankit Soni <Ankit.Soni@amd.com>
-To: <iommu@lists.linux.dev>
-CC: <suravee.suthikulpanit@amd.com>, <joro@8bytes.org>, <will@kernel.org>,
-	<robin.murphy@arm.com>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/2] iommu/amd: Support for HATdis and HATS features
-Date: Wed, 23 Apr 2025 06:50:01 +0000
-Message-ID: <cover.1745389415.git.Ankit.Soni@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M+oK8mcC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tPgFZ0il"
+From: Nam Cao <namcao@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745391032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	b=M+oK8mcCxPmkSTRolSOmcElhvwHEgJHBtX5ImHx8qONeIGZo5k6VDGssftg/lz9lULkryL
+	Ansv0nNhJMP58zrVa8Ts7gufHquTHsQ8zJhUvNUXWYqedk7j9zFGrydzlJCM5fwnNc5XDp
+	RhfruS8gw9cgW+n6ydQGzo1GUiflI466uo8OMPAdHuZBXbCeggGHTj2N2PJ63oP3tFKp5T
+	pcxtEwgJkia7yPhfubUMTc6fJL9EyxvbZBQKKikgFcHl0Z08SGC9FnEcLsrnMCVajhK606
+	7OXxoM+vA8ixYf787bXHCLMUaraM9FFCZVZ7zuNaabGN0hQUwDw1hc+6oDUiSA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745391032;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9REGFnfyFOEyIjAE1cjJKsPFnrPKw4O7e9wg4waN3vU=;
+	b=tPgFZ0ilaz4zAyLrHPnEztzAYkSkSwOcvwohA/VSWh8w6EljxOSvkSVcDevkGrwIYvJ+IK
+	uZ+2jZ94fAJC51Cw==
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Gabriele Monaco <gmonaco@redhat.com>,
+	linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de,
+	Nam Cao <namcao@linutronix.de>
+Subject: [PATCH v4 01/22] rv: Add #undef TRACE_INCLUDE_FILE
+Date: Wed, 23 Apr 2025 08:49:56 +0200
+Message-Id: <22e7471794f399a61cafb695c0c388dea10a5976.1745390829.git.namcao@linutronix.de>
+In-Reply-To: <cover.1745390829.git.namcao@linutronix.de>
+References: <cover.1745390829.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|PH0PR12MB7929:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60e5cf19-20c8-4e73-f6bf-08dd82331b56
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6VSb53FbhRHN7ZM/DZXLX9b2voNZC+HXZ/JEhzkvmwU18kdcLvcPw5hyke/6?=
- =?us-ascii?Q?S2kqQGkXGbcsENKzQ1sYJIIkAj40hGtDL7prc99AumvhAAaW3wPM8DdPS6T4?=
- =?us-ascii?Q?P89IWoz1rUntriDJNSvVgOlQ8MoEqfjhQjszdl+eqH4VfgzHLUtL7aeEtuld?=
- =?us-ascii?Q?1M1oo0OKHZ7PU5hfn6fNcqK6BZtYBVoNdLx+mNkMO4qta7ALLPn9RKAk4vy2?=
- =?us-ascii?Q?SIO75MxU8E6EiLzhmxXIhpvkSJKqns3PK51XdhSu5Fqd978zLb3beNJXH5w6?=
- =?us-ascii?Q?uCdVpeon0haAsungyoWTK5C95wj2ZkDBCUGl0j4F8c46RtY/oL29n4zo45g+?=
- =?us-ascii?Q?P9uGAJH9GEHHLqcJXSoT6kiJVKFOfRC0+mVc57SJGXPb+pLNs+MOWx2bl+9w?=
- =?us-ascii?Q?m/QkxZnFqauawjN3peArvlYrrem3I4EE55Sx0xNZMYbhD+hWs/w+S3wQwcCM?=
- =?us-ascii?Q?8AdlomJP3bvQNuCahQZ0FJikKxUUDprJQPLaibsmKy87k871qu5LsOMsxh/w?=
- =?us-ascii?Q?Ao0HpLT10Jmc/avMPPny74qUPVHWqg+JPrXeVe7X/c6m/9mOImcL+/AUOczo?=
- =?us-ascii?Q?In9KPNtSVDrSVMWM9Ol2FDoHHKoqz1soX1YaVOdhdxwvxm4suQP0p3NeBNfI?=
- =?us-ascii?Q?E1QPFncLNJh2CPwdBT4ZXfw2XPb/eXMeZQNdCA/DbphEyPHg60ciyLQJvq7O?=
- =?us-ascii?Q?PYU6a1YRVVyaUtqhuZxi6XjNKf9m1s86x54qzOeDTngwzsgnNkAYxlyMEWb1?=
- =?us-ascii?Q?j4oTfnmEb83Ifddr8BCcoTySvo/2RXjcGoy1GWwgmom8SWH0jsACILOceIHU?=
- =?us-ascii?Q?Oe25VODedKdMzTiKMLycnIy+zEqgEIc7MqdO57wRu7gXcT/ve6V3kekClip6?=
- =?us-ascii?Q?nVkwcTRkP9RKM+GUtiecHOBZD8Jj4+gd+/REOQ9ttQ9EM7ymyDrBiOIlof2t?=
- =?us-ascii?Q?8LVH+6rOlvEaNeSfXhFbCQ+T6TcDjVGD90mVORndXdRJjgXU2pgmSRYYFx5r?=
- =?us-ascii?Q?2+yB1wRwQtnvRAhK4AmH2v9aSSxHDboJfjZhzYe6W7OqODY8qyOBf9chefAg?=
- =?us-ascii?Q?svOEDOibyS9rf45/4mJgFhVhBFgc/mohi2+bzAUlupnYEVp9tbnrOWE/IFXR?=
- =?us-ascii?Q?BUn0IdwnWtJG9EBqiymLv6cFSZodcQBipua1XBsEPhMOe1cW30MaXo1uA8WZ?=
- =?us-ascii?Q?EpYvjoc/LJOysjnKmNyjQHNaeiRTQwCmjVJpELMKbiEQLz9iC3sgf1wIoPpm?=
- =?us-ascii?Q?cZ/WgN+a3Ghrgwj+YazwmaFS7DCNvCt+8w98t1GFjpfK7Gw7FVkS1Hkdqy+i?=
- =?us-ascii?Q?6V7Bwx87V4samBU3ek7oSlyeij/U0hOAKORI195w1vMKZFeOzQwJ+RG+cH+n?=
- =?us-ascii?Q?cJvlFLJ3CPrX0FT5N8EHAaqlLC11id/XHe5Dk92TgG4TyXEjoJAvkDfbqHCN?=
- =?us-ascii?Q?1wg1VHCCL6xyInQv//fYWWN0oN/zFfVRk5P1fV4pM2QyHsy5ucIPZKC+BP2S?=
- =?us-ascii?Q?kPuos9cN5p1GUizS5Vu6oMu/tl8EybUOFthx?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 06:50:16.9324
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60e5cf19-20c8-4e73-f6bf-08dd82331b56
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D8.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7929
+Content-Transfer-Encoding: quoted-printable
 
-This series comprises two features:
+Without "#undef TRACE_INCLUDE_FILE", there could be a build error due to
+TRACE_INCLUDE_FILE being redefined. Therefore add it.
 
-HATDis: When host address translation is not supported by the IOMMU,
-the IVHD->attr[HATDis] bit is set. For instance, QEMU emulated vIOMMU
-does not support dma tranlation for VFIO passthrough device.
-Support has been added to check this bit and switch to guest page table 
-mode, if supported. This feature is useful for cases where only interrupt
-remapping is required.
+Also fix a typo while at it.
 
-EFR[HATS]: These bits indicate the maximum level supported for host page table
-by the IOMMU. Modifications have been made to adjust the maximum host page table
-level, starting with level 4. If these bits are set to 11b, the driver will
-attempt to use the guest page table.
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ kernel/trace/rv/rv_trace.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-If guest page table mode is not supported, the driver will fail to probe
-devices for DMA translations.
-The interrupt remapping will continue to be supported.
-
-Ankit Soni (2):
-  iommu/amd: Add HATDis feature support
-  iommu/amd: Add efr[HATS] max v1 page table level
-
- drivers/iommu/amd/amd_iommu.h       |  2 ++
- drivers/iommu/amd/amd_iommu_types.h |  7 +++++-
- drivers/iommu/amd/init.c            | 39 +++++++++++++++++++++++++++--
- drivers/iommu/amd/io_pgtable.c      |  4 +--
- drivers/iommu/amd/iommu.c           | 15 ++++++++++-
- 5 files changed, 61 insertions(+), 6 deletions(-)
-
--- 
-2.43.0
+diff --git a/kernel/trace/rv/rv_trace.h b/kernel/trace/rv/rv_trace.h
+index 422b75f58891..99c3801616d4 100644
+--- a/kernel/trace/rv/rv_trace.h
++++ b/kernel/trace/rv/rv_trace.h
+@@ -129,8 +129,9 @@ DECLARE_EVENT_CLASS(error_da_monitor_id,
+ #endif /* CONFIG_DA_MON_EVENTS_ID */
+ #endif /* _TRACE_RV_H */
+=20
+-/* This part ust be outside protection */
++/* This part must be outside protection */
+ #undef TRACE_INCLUDE_PATH
+ #define TRACE_INCLUDE_PATH .
++#undef TRACE_INCLUDE_FILE
+ #define TRACE_INCLUDE_FILE rv_trace
+ #include <trace/define_trace.h>
+--=20
+2.39.5
 
