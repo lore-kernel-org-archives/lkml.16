@@ -1,115 +1,87 @@
-Received: from mail-pl1-f225.google.com (mail-pl1-f225.google.com [209.85.214.225])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFC91FC10E
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.225
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1617D1FC10E
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745440009; cv=none; b=DAnPlW8oPyUqSbOtCCnzpddHYpmArQWZqUZKYTgK2BfGo/yqzltPc35cKqvLUT3DlAi7I/VnIvHIJ8lK7b+NKrBYrVMJW5EQOv8dzQwbAqLAn3fbU10hUw6WmtOd87Y02/pg9KcqeZxYtZZOi3n8sB0lmEhumETAf62ZvsOrDFY=
+	t=1745440076; cv=none; b=D+1LX6gXqof7qCyS61ahn3nnS57D0WsRK5T5VkPriIhWFsHH3bIRvZqYe+RQ2/YUQQUg4UKTjRWT0fp/1NgAh2HomyilPjQbkw4bNBtHpqiR/v9jxplEiEkJfbWilUzhyhjjsqA84tw3lGrH/wphrs0nEpTkXAkkjuvUGOJG18Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745440009; c=relaxed/simple;
-	bh=UtiG6C3ePVTMaP6Gy85DuOb898RAmJXEx39uAd37NPw=;
-	h=From:To:Cc:Subject:Date:Message-ID; b=RBYWNcJXEgMlk85x6gsKJ+9W2YUpgeL0V6prCv+3LWioaHH0+5RYT9LnsvOaKCZ8DHivu6eYVtKhkkVJJLufIXV4oYFhIS5L0QQd7Fc1Hz85BfJpjbJ9NHTW7HOABPlP1ZVuO7VjncnUnjay54/eZ1ki50BqHvUOKjcNGBrZW9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com; spf=pass smtp.mailfrom=arista.com; dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b=NJ4Jaoyr; arc=none smtp.client-ip=209.85.214.225
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=arista.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arista.com
+	s=arc-20240116; t=1745440076; c=relaxed/simple;
+	bh=guGqrLyF/UfkIOG7hzSkbW1E0cva2VFPvrXecL0SQt8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=PWOsyfk+T8yg4RmO5tcWYpTBT4KujWyWdI/2uUhryTOP0qm8e3Xmo72p+jR83xdW/UsScJcjiH5g+NY8mrPyKNiBoXJt8/1v82NS/Le3YCbkojNCuTRXm40PCVHjfnprthpmI5DowAkZa4GBxFosqXqd+984DrTzfKQzlmch8Dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=y6cC8Mwn; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=picldoR9; arc=none smtp.client-ip=210.171.160.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="NJ4Jaoyr"
-Received: by mail-pl1-f225.google.com with SMTP id d9443c01a7336-2279915e06eso2880955ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:26:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745440007; x=1746044807;
-        h=content-transfer-encoding:message-id:date:subject:cc:to:from
-         :dkim-signature:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n9VzpnqKaBUOLcjy0iBYoA9/MIid2WGRZFWdfEXFXtU=;
-        b=U9qHBB0DPjXID+32dMrRQNydm3HJb4UbTwIV7PTfnJJrEbX3RDqYxLTc3skViGnrES
-         rv64pMdULPMWufMPBD7Mqkc33jSlRVh1B612ZTDiROsAdewqKBbpRKRL9IkQCYzfo8Dc
-         ZICYZ9NOj9qf34qxwgYS/vhfCcwySTJC2jnKvk35FlXPcs5Ne6MK5Rz94tmze6ScXqDc
-         6FD9z8cxBbX5nD396TjdtHSOV3OiIViSDUhQTTCgSQpIu13TaBGrjEdALuAIvzU9Ka3e
-         zaLLasqAbV+h0ALjl84q72AIzSlSEs0txIcaZvOd43Zz/N+QeYwKlT35Hndw3b4JBBlA
-         xU6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWWi9FIeFhYJmkgEDyf0O3uhyP8cJJBFQrjI5TBzrOMUCPA4+3E1OZZB5te4nsyMhYmC4LJnTTULd4MTyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoczVprZyXZS8TFowvrarIln9mR4Z3Ms4G/Og+rcUQF5bmIjWw
-	hxlIGqXlHM0u/RGptgMigBOnufl/nqygLXMEjie2Tcsa6AsrYjO5jopILYTlb0rMH17AJJ8KKpW
-	janAjLPONH9VLmtMyzXtgl1YcaDm0Nw==
-X-Gm-Gg: ASbGnctxiQP5T5lyqLM0+AnWrG75SLZ0QAG2P0dfkLvmZmcHje/1bCrv9CbkTSTKM2p
-	A64W8cDfOyqw8Ej01++XOMyBjKlibU5BaRke1ONPbv1zeKoHvJqOe7o8+pxmbk4Anc3Aah4lFxZ
-	5TQ+4F8QugNlVhiyyWJhugaP32MGtbWMRxd/kFuq14s8T0qdligvrItiAaTAy43R//9yFAFFWgB
-	2wHVaYdZS+sCpunxn5x2CXhhtcy/BeHNoaMQLwKpyCxeffmq6TKdj0t4SlxIXt3DP67Dzkrargq
-	qi2mGZgWlZH/UjrnfEW7yp66mefRZ+jrAVmHQfraP55RtRQVrOTtFJ7mP0w83AZPP2a1snY=
-X-Google-Smtp-Source: AGHT+IEPyfWnPE2zgbDmhgAvZ+4h1eHB1ZVOkuhjQtBmvmmCgMA1uIjtTMe0J23uUPqY6b1O+vXJSwpOWCzH
-X-Received: by 2002:a17:90b:2c8e:b0:2ff:796b:4d05 with SMTP id 98e67ed59e1d1-309ed270499mr251259a91.11.1745440006583;
-        Wed, 23 Apr 2025 13:26:46 -0700 (PDT)
-Received: from smtp.aristanetworks.com (ec2-54-84-120-176.compute-1.amazonaws.com. [54.84.120.176])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-309dfa3ec16sm140664a91.11.2025.04.23.13.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 13:26:46 -0700 (PDT)
-X-Relaying-Domain: arista.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-	s=Arista-A; t=1745440005;
-	bh=n9VzpnqKaBUOLcjy0iBYoA9/MIid2WGRZFWdfEXFXtU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NJ4Jaoyr6SE4P7qKacXCe5CXXrXPwurmb4Ltg03Hf/o3LiQpflguLf1fFltI5Goxr
-	 YkP4L3ZqFdhzehCbzKDjjyX0sbAYNrIn0ms7WxemRblon/6RQfDTGR22XeRVPONVPn
-	 76RVXHFp7u+FJJYbFlvXYZLLUIO8PblWF2sTtQQiTX4eQQdBTbjmW+YppH3S6zetRg
-	 B3Q1EnBt97FhIvsXfzu7XCVPsRw4jWBdH+RGMD4jcqA8ATfzbpzh302PhXdtwQFqsx
-	 85NWWoP2QExq6mtk5FPwI430XBIyE/Q3ffHGP4tZHRDcKuh0poJg1vfBLDRR4yB/E6
-	 R93PbjGfuSRqg==
-Received: from kevmitch-g-eos-trunk-kernel63.sjc.aristanetworks.com (unknown [10.243.109.61])
-	by smtp.aristanetworks.com (Postfix) with ESMTP id B9612C023F;
-	Wed, 23 Apr 2025 20:26:44 +0000 (UTC)
-X-SMTP-Authentication: Allow-List-permitted
-X-SMTP-Authentication: Allow-List-permitted
-From: Kevin Mitchell <kevmitch@arista.com>
-To: "Guilherme G . Piccoli" <gpiccoli@igalia.com>
-Cc: Kevin Mitchell <kevmitch@arista.com>,
-	Petr Mladek <pmladek@suse.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Ryo Takakura <takakura@valinux.co.jp>,
-	Joel Granados <joel.granados@kernel.org>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] printk/panic: deduplicate backtrace on PANIC_PRINT_ALL_CPU_BT
-Date: Wed, 23 Apr 2025 13:26:17 -0700
-Message-ID: <20250423202620.1686446-1-kevmitch@arista.com>
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="y6cC8Mwn";
+	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="picldoR9"
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+	by mail.parknet.co.jp (Postfix) with ESMTPSA id A6D19209655C;
+	Thu, 24 Apr 2025 05:20:20 +0900 (JST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
+	s=20250114; t=1745439620;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HV8lXwcdIJI2t6jVsYzsmLu181G/eR1BqpBO9hmuwFg=;
+	b=y6cC8MwnLEMlYxKn2xb1//B1skbOcjfCUcizUY8Mm103UimeTQwfnIIbvTkv3H8g5mkjW8
+	92ZxY5OYKuVlVCVuyfzoGDmg3StQy72SPSIlQb71/l3zWO5q1iTxSOrE0KP6Vt0a8pMMu7
+	q+6NXZWcDMIB/pEwI7/0pNGatdyw2YyogLYch2XxkBXWmgsQrb1DDOhZat1b5x4sbZVIVI
+	RHzy7YfbQX2Wy568r/xWpm6CDImu9UBjv7v9Ox3HjsWASDSWzYKve8qGKsZmuE7u+17P2P
+	7XKcQKqodqNt0HGAfIpHI0l1XH3mGxYDIV+8ncKsSM7X3StNH0qTtzjLag93dw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
+	s=20250114-ed25519; t=1745439620;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HV8lXwcdIJI2t6jVsYzsmLu181G/eR1BqpBO9hmuwFg=;
+	b=picldoR9oqAr/UqMgs28TfAybJnkNFe9k+hoin+j6DqspqtpwXy2Ztagnsf4/0ASrKgRtw
+	Mq9AaFPxpHIRtTCg==
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 53NKKJFj149017
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 05:20:20 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 53NKKJsl347945
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 05:20:19 +0900
+Received: (from hirofumi@localhost)
+	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 53NKKJLD347944;
+	Thu, 24 Apr 2025 05:20:19 +0900
+From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To: "now4yreal" <now4yreal@foxmail.com>
+Cc: "linux-kernel" <linux-kernel@vger.kernel.org>
+Subject: Re: [Bug Report] warning in FAT filesystem
+In-Reply-To: <tencent_C03A9DA8102E348E06CBA9C15201F369BB06@qq.com>
+References: <tencent_C03A9DA8102E348E06CBA9C15201F369BB06@qq.com>
+Date: Thu, 24 Apr 2025 05:20:19 +0900
+Message-ID: <87y0vqhbp8.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
 
-On panic, the backtrace of the panicking CPU will be printed either from
-within panic() itself or by the oops handling. Previously, when
-PANIC_PRINT_ALL_CPU_BT was enabled, the backtrace of the panicking CPU
-would be printed again.
+"now4yreal" <now4yreal@foxmail.com> writes:
 
-To avoid cluttering up the crash log or console with this redundant
-information, this commit omits the panicking CPU from the all-cpu
-backtrace printed by panic_printk=PANIC_PRINT_ALL_CPU_BT.
+> Although I understand that errors caused by maliciously crafted file
+> systems may not be within your scope of consideration, please consider
+> whether such validation might indeed lead to any other chain
+> reactions? Please feel free to reach out if you need any clarification
+> or would like additional information.
+>
+> I’ve attached the POC (written in C) for your convenience ― it can be
+> compiled directly with `gcc`.
 
-Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
----
- kernel/panic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, corrupted image can be the cause of fatal error. Can you real
+reproducible program instead of stress test?  If it can be prevented
+easily, we would be able to add the check.
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index a3889f38153d..e53b23449fcf 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -258,7 +258,7 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
- 	if (panic_print & PANIC_PRINT_ALL_CPU_BT) {
- 		/* Temporary allow non-panic CPUs to write their backtraces. */
- 		panic_triggering_all_cpu_backtrace = true;
--		trigger_all_cpu_backtrace();
-+		trigger_allbutcpu_cpu_backtrace(raw_smp_processor_id());
- 		panic_triggering_all_cpu_backtrace = false;
- 	}
- 
+Thanks.
 -- 
-2.34.1
-
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
