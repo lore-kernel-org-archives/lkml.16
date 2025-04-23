@@ -1,145 +1,98 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B9A1F2365;
-	Wed, 23 Apr 2025 08:59:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097A72701B1
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745398795; cv=none; b=maMN+9zAbrzZTXcQcDLxrlDD+VgDVaB6XMe0UYMXn1iQwUvvshibN7FoMQFbGox/+kpoIwzEhA9aLpA2c5hjszhaAauK3Byx8UGpTBBvcSiU410IuKOzd3d8DK485C7ceYSTGoqQ44qhT1enmkGqhVKLfxlyTYVgpTYwKncGadI=
+	t=1745398873; cv=none; b=KAIW9yJHZuQvXFM0ThAcx7H1KqdhDpdxukt5A+h1KMgJh++zoJMbR6KB5/RTjH0KCm1rGPl/YGm2i5aqY89vMBRcRky618hJD4YCN5kMbxt14DJxh4YKdQ4UhxUuwsUgijntaBFJXPsTkQJgyMnYLmdWNpRHmT5xzntUHbfP5wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745398795; c=relaxed/simple;
-	bh=D+UMp305emUDWoNQq7isR9+zbumo1GF0fkmUTSlPRvo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=shklYz8PjvUuxbuDp+umpX1qUCaj4Wt9SDfPkgApDIkxxskhTLwbm4kWNotY1xCHkh/aXAiC64cLkhF6xTtQdF2upKezxgnSPBvrqOp9e/+7LeVj3yFOu/qQ336AKVQWd9Lig5LgENXFx1urZqfIGUxrowU/XFW+d2mq4Mitirk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N4cJ9R020546;
-	Wed, 23 Apr 2025 01:59:41 -0700
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 466jhd0gts-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 23 Apr 2025 01:59:41 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Wed, 23 Apr 2025 01:59:40 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Wed, 23 Apr 2025 01:59:37 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-        <jianqi.ren.cn@windriver.com>, <jhs@mojatatu.com>,
-        <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-        <michal.swiatkowski@linux.intel.com>
-Subject: [PATCH 5.10.y] net/sched: act_mirred: don't override retval if we already lost the skb
-Date: Wed, 23 Apr 2025 16:59:36 +0800
-Message-ID: <20250423085936.2892096-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1745398873; c=relaxed/simple;
+	bh=l4ONh9IizedqA6W3QPhG+iwsoh6uJslCMo9BpNc/j+E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S5f1KUgrCMa0+6jwlyOaUN5i7tnsbUkmZkmNibhWhTJ4b2nyYh4vsQhrJNPWErpI52gvsDFggpIfCbxvEl2xc6YvPHw7Xlth80roB5BSSRPnNmjorLM6ACSep6tFKHLFH77SrVQ9wEB9gXa1vbeuvYrcuDpILYbPGVFuVgNfjM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wmYogycs; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wmYogycs"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-54b10956398so913904e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:01:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745398869; x=1746003669; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l4ONh9IizedqA6W3QPhG+iwsoh6uJslCMo9BpNc/j+E=;
+        b=wmYogycsPxJrT5IkGprAIkXL+9jDAOIzLQieuEh85TszOBHxPFwG9p5PzljEidlh9+
+         jxUbO3Bs7L3VzNxJCG3vQOvxvwU2DWndvi3ZmNqMjkOsvNHzS1Kd9Gwpt0ieuSIzpkzp
+         E00k4LvPWP3IQWV+IIP0whnT3x7gij/Gn8YDAUqvs7vTHimgW3aRByw5dRewYdZYYv+Z
+         TGpDFP0SUJl7kwYo4+Hd3Xxg8+05yyZQdtvEgL67A++QxvrTw+goSumWNlJvG5Dn90Js
+         CuAsqfDh6ZQgnmmwg7gfNaf55Ns7AD3pvbd9IhMSzw/cieBV21UxQCLF9F9j0spVAjqD
+         Obzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745398869; x=1746003669;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l4ONh9IizedqA6W3QPhG+iwsoh6uJslCMo9BpNc/j+E=;
+        b=prcItTOfvbSqpNa+xJiU/V728uARgwIJf0xcSFPc0U1Ei39/jb2yska4jlomYG3VxY
+         8g51XF+PEvt8LYhUYc+5J+P6EwUB0GZY7RWVOcCwwd0vS7RoSmSIPjbtsAXiwEKfyVDV
+         L2+g0JP5xGBB+yO/VzNvKrpFjUcrdQ7po8+AgzhPvUrWK/z16uJvbtc2+/6AJF9UtW0W
+         fTTirlVkZLltnZuWFytnL01XgFhLkJYEwc03araJPvRUmRlm3uQjikhaxUQ5qR7b9O5G
+         aTR2/bfVJkgL1Fu655z341LpwaWXuVhqQ4lDCnQ9O4W7bq/sqAZKNPlNN4YuKVu+Zwno
+         k8iQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXzBXBPLXOzkCDPd3YgPyLKOPlVk68AtXq5uihPCGztF6GaOZhn810aBtjQGsWP+hz4SwyXd0d3oxj9wo8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYe1vMNgWtn5jU2oFuwY/fScVH7Rg15LYavaFPsQY3DKVcHzxR
+	ux7ElcWzgO/agLJgzcEnyCDtwql9M7gl1lNp+Lh7KFWjwUjf/kis2ETMKZrkdBUEmMqU4tfNwxK
+	7SmWVpKuEzbSY7htVxdQ2Fw3O5Av63N2HlZZc2Q==
+X-Gm-Gg: ASbGnctud15NROLSXCxfwAApvKrxpL0o3ZTwUnELg7hbbl1NGnKWFBqh++fBZDDWNGx
+	quIj415p/CjmqfCMw95rqtofLkTGaLBPNg6hp//60B6czppkktA+d83EyK9n/WtSYuX8xSUmXCH
+	VBW2rGV+AUckRuFIXj/A598w==
+X-Google-Smtp-Source: AGHT+IEEUsAi88UCbofnaku2lk+aEb48FzRJxri8OckiCKB/AVx4JpJsbdKyriMomMEWTnYqEIv4ataPoB16Fz19o6E=
+X-Received: by 2002:a05:6512:a8e:b0:549:8d2f:86dd with SMTP id
+ 2adb3069b0e04-54e76b22a2bmr572698e87.20.1745398869092; Wed, 23 Apr 2025
+ 02:01:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=ZNDXmW7b c=1 sm=1 tr=0 ts=6808abfd cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=A7XncKjpAAAA:8 a=J1Y8HTJGAAAA:8 a=t7CeM3EgAAAA:8
- a=z6SZLS2PjRZJ6NiNSX0A:9 a=R9rPLQDAdC6-Ub70kJmZ:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-ORIG-GUID: hh35COSBTRb_j_HFiMsLPNNvsrM-ULbI
-X-Proofpoint-GUID: hh35COSBTRb_j_HFiMsLPNNvsrM-ULbI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA2MCBTYWx0ZWRfXyqRk6/V2NLAi QGE3YnxsNl/PtmV7dz8DswCOxjwzv44oP6LzZzbsct3gob5l3C/uodrn9av0dl0Cpl9Y5yuiobu gErqDqsyO6Xqg5HNcbWYwtMDO7wxOV5T9e/GcDLqdXzbM1wyqrjgRXiZYK1yrn2NM47U9A/+9CZ
- 2f2J7lguReouQrMsLZs6yIf905pGleoDWQAtv3iKSYhj354ZI6BJnfAvXjwRVtdbqTUMGbLRs4o w2dcetE/5mW/o8Vs7K6unphiKIP5BVFchsxqkOVMS+1AQ7WG9/zP5Rv0QlVBALSUyBCR52OmOTt 288PZx1sc3aLOjbCy6CM+KQdrnHj2+su7Zhbjy557MbQLlQtWofkD7sRXNvgFdC6RfnuN8LOsoh
- HH8vLA1VAiBhuqHfMVDqGAGv5CGRAise95aAP50VKx4xdeP+5aNvuuAzaGNNsD764SVxB2EO
-X-Sensitive_Customer_Information: Yes
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-23_06,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 adultscore=0 spamscore=0 bulkscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
- definitions=main-2504230060
+References: <20250417152158.3570936-1-Frank.Li@nxp.com>
+In-Reply-To: <20250417152158.3570936-1-Frank.Li@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 23 Apr 2025 11:00:57 +0200
+X-Gm-Features: ATxdqUFs6bNpuAZ8C-mefVn5vnH3rPvKnGkG9Xz5ALDijczN73qOaRKozbezrQE
+Message-ID: <CACRpkdZkhQRdDCTBxOUifT3uX047us8cFExhZiuAUueegD-zeg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] dt-bindings: pinctrl: convert fsl,imx7ulp-pinctrl.txt
+ to yaml format
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, NXP S32 Linux Team <s32@nxp.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, 
+	"open list:PIN CONTROLLER - FREESCALE" <linux-gpio@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, 
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, 
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Jakub Kicinski <kuba@kernel.org>
+On Thu, Apr 17, 2025 at 5:22=E2=80=AFPM Frank Li <Frank.Li@nxp.com> wrote:
 
-[ Upstream commit 166c2c8a6a4dc2e4ceba9e10cfe81c3e469e3210 ]
+> Convert fsl,imx7ulp-pinctrl.txt to yaml format.
+>
+> Additional changes:
+> - remove label in example
+> - fsl,pin direct use hex value instead of macro because macro define in
+> dts local directory.
+>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-If we're redirecting the skb, and haven't called tcf_mirred_forward(),
-yet, we need to tell the core to drop the skb by setting the retcode
-to SHOT. If we have called tcf_mirred_forward(), however, the skb
-is out of our hands and returning SHOT will lead to UaF.
+Patch applied!
 
-Move the retval override to the error path which actually need it.
-
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Fixes: e5cf1baf92cb ("act_mirred: use TC_ACT_REINSERT when possible")
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[Minor conflict resolved due to code context change.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- net/sched/act_mirred.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
-index 91a19460cb57..89201c223d7c 100644
---- a/net/sched/act_mirred.c
-+++ b/net/sched/act_mirred.c
-@@ -260,13 +260,13 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
- 	dev = rcu_dereference_bh(m->tcfm_dev);
- 	if (unlikely(!dev)) {
- 		pr_notice_once("tc mirred: target device is gone\n");
--		goto out;
-+		goto err_cant_do;
- 	}
- 
- 	if (unlikely(!(dev->flags & IFF_UP)) || !netif_carrier_ok(dev)) {
- 		net_notice_ratelimited("tc mirred to Houston: device %s is down\n",
- 				       dev->name);
--		goto out;
-+		goto err_cant_do;
- 	}
- 
- 	/* we could easily avoid the clone only if called by ingress and clsact;
-@@ -280,7 +280,7 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
- 	if (!use_reinsert) {
- 		skb2 = skb_clone(skb, GFP_ATOMIC);
- 		if (!skb2)
--			goto out;
-+			goto err_cant_do;
- 	}
- 
- 	want_ingress = tcf_mirred_act_wants_ingress(m_eaction);
-@@ -323,12 +323,16 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
- 	}
- 
- 	err = tcf_mirred_forward(want_ingress, skb2);
--	if (err) {
--out:
-+	if (err)
- 		tcf_action_inc_overlimit_qstats(&m->common);
--		if (tcf_mirred_is_act_redirect(m_eaction))
--			retval = TC_ACT_SHOT;
--	}
-+	__this_cpu_dec(mirred_nest_level);
-+
-+	return retval;
-+
-+err_cant_do:
-+	if (is_redirect)
-+		retval = TC_ACT_SHOT;
-+	tcf_action_inc_overlimit_qstats(&m->common);
- 	__this_cpu_dec(mirred_nest_level);
- 
- 	return retval;
--- 
-2.34.1
-
+Yours,
+Linus Walleij
