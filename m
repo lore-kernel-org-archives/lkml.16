@@ -1,113 +1,104 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CC526B2DF;
-	Wed, 23 Apr 2025 20:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07139269AF9;
+	Wed, 23 Apr 2025 20:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745441342; cv=none; b=QpX1Nsyho6Y3hkgKGlrb2N9jVbXHsibqxWaKaLo7pfp2jRreZ9KvW5byj8+chXjQ0DxcPfTgRKejHmMOQFDCoJRrtm6vGSGPG5R/f8htbGvbqT8Dlai4k08nl6PESoxEphhjfNnv7IEwMiFHcZSuD4rXEB0+LGXDJUIW2AmHuf4=
+	t=1745441369; cv=none; b=UlnyWAWayJqCWmFTNK1jXKFOb1mSKtXbOvD5g/R8IL4gDEoR7H7br2QXxaUlyP1zONJ5L/1yb0/Kf3UdMG4VZgyiz6muzpPG32WiCEs5CAUA0NIkLKDJp2lykMN4fqkaLG1KOTdLgbr5Gp9SPsy1M71qCkp5S++mqdclhHdUAck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745441342; c=relaxed/simple;
-	bh=5RGhKAeaBreTh9VWG4EzD+6h2QPBnL+J7yh0wfrjIk0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q6zt7R/312xc7vPhGeuBJW850Gcyn6CFlT0Dd3hlfOPu47E30N/7i9ONwpRvdT8W4BZeAKw2jQZ2yvtOZBpC+L7ha04+JpCesQuW4VV1WoDZP4XTgDlUM1A7SnoDdhrlhq7I00oEK8Ha3g/NIvKQEAYiubJOrsGaAOgtXKnW1pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dkoOvwuD; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745441369; c=relaxed/simple;
+	bh=d1k9gomSqLICNqAukAmQAOjJWV3hq4GG2jes7N+MC6E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XtTJmncbWx+2KI6dWJJcX84jFeeXTWVKk2VUBvl9oR1EIo1VSEKDHNZcLspsntPJxT1+ho1PeCjlc6ahfATIdgHVD3pMI2ShWS9a88/+YQYZMIo4nzUwvfSStt2fnUTTSEjg9VkIkYjHiRF0Fol5u7mUmbt6XpDBV5Eh6d2tIFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RRUKawQV; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dkoOvwuD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745441336;
-	bh=5RGhKAeaBreTh9VWG4EzD+6h2QPBnL+J7yh0wfrjIk0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dkoOvwuDSavrmBG4/mjqPJmqID78hvqezOcjLGZfV+fI2+XSq2hg+ZOO3graW23Cc
-	 jmuhsAjPqiFrIMFMjWa6048+3NJg/A3SlQlP5VvFqnvuIeBmXHH+tRcPKh8H7cQNBu
-	 Yv0c1Pqo8kzR5gtk5HnPiEBW65EDtcPH6RpgEshfkKo62D2wgMXbSQiXLrrYgG46n8
-	 Tk9903y7h+3OnSMUvKiWM6ALi8jFD/kUe8Cv6F0uJkVC/YBYb5IV/xYWRiIq4aYxsN
-	 foqHrbq1lfwbfCJUpTdtNomL6WhByRulyCm/MbHp+3LRk1+ASMaVKDafQszTK9Qor+
-	 2nZ+9115szOYw==
-Received: from notapiano (unknown [70.107.117.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id EF7A217E0649;
-	Wed, 23 Apr 2025 22:48:53 +0200 (CEST)
-Date: Wed, 23 Apr 2025 16:48:51 -0400
-From: =?utf-8?B?TsOtY29sYXMgRi4gUi4gQS4=?= Prado <nfraprado@collabora.com>
-To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	kernel@collabora.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] arm64: dts: mediatek: mt8390-genio-common: Force ssusb2
- dual role mode to host
-Message-ID: <2da6560b-8444-48ae-bb01-397756cecbc0@notapiano>
-References: <20250331-mtk-genio-510-700-fix-bt-detection-v1-1-34ea2cf137f3@collabora.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RRUKawQV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745441368; x=1776977368;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=d1k9gomSqLICNqAukAmQAOjJWV3hq4GG2jes7N+MC6E=;
+  b=RRUKawQVRewPbBHjdqP/W24JDy4TCSARjsL/QmtAT2UKbkyLoa3v31IA
+   nM680TRM9e+TxivJdhC08L+I+LaqStA6vzwceHgAnpg69t7IIJ1SR1tyk
+   WL3BrlaYlxWLLjFSpkKPOfpX8fX5otmTMWEQ8FQnv58bUoHPbPVD9nVY0
+   2kpyr/Nm9Qa5dTKQq/pB3V4sB1NafvWfPIB9JZZBeE9VBvdyuabgFjgAF
+   EvCXlf7n1iTgQv5XefId/OIA1jtTOviSmwu1tShXtHoaod8nAkUK8seo8
+   xbWqzDUMFEQrId1hWg0FKQ+JZVcB3YmCmjRYjgiZfmomsA4ZqVADhNoA+
+   Q==;
+X-CSE-ConnectionGUID: GsL+Iz32TkKhhV7BGe0wsA==
+X-CSE-MsgGUID: zTfHkPYdSia539RZIr7caQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="57694274"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="57694274"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:49:27 -0700
+X-CSE-ConnectionGUID: vrIxLQdeQ0a956p9P0Dd6g==
+X-CSE-MsgGUID: ffoZS7vqRqWWBNtQ0JACBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="137501881"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.208])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:49:24 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>
+Subject:
+ Re: [PATCH v4 11/14] cxl/region: Add a dev_warn() on registration failure
+Date: Wed, 23 Apr 2025 22:49:20 +0200
+Message-ID: <2827426.aRXLXkqSa3@fdefranc-mobl3>
+In-Reply-To: <20250306164448.3354845-12-rrichter@amd.com>
+References:
+ <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-12-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250331-mtk-genio-510-700-fix-bt-detection-v1-1-34ea2cf137f3@collabora.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, Mar 31, 2025 at 11:25:52AM +0200, Louis-Alexis Eyraud wrote:
-> On the Mediatek Genio 510-EVK and 700-EVK boards, ssusb2 controller is
-> one but has two ports: one is routed to the M.2 slot, the other is on
-> the RPi header who does support full OTG.
-> Since Mediatek Genio 700-EVK USB support was added, dual role mode
-> property is set to otg for ssusb2. This config prevents the M.2
-> Wifi/Bluetooth module, present on those boards and exposing Bluetooth
-> as an USB device to be properly detected at startup, so configure for
-> the ssusb2 dr_mode property as host instead.
-> 
-> Fixes: 1afaeca17238 ("arm64: dts: mediatek: mt8390-genio-700: Add USB, TypeC Controller, MUX")
-> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+On Thursday, March 6, 2025 5:44:45=E2=80=AFPM Central European Summer Time =
+Robert Richter wrote:
+> Esp. in complex system configurations with multiple endpoints and
+> interleaving setups it is hard to detect region setup failures as its
+> registration may silently fail. Add messages to show registration
+> failures.
+>=20
+> Example log message:
+>=20
+>   cxl region5: region sort successful
+>   cxl region5: mem0:endpoint5 decoder5.0 add: mem0:decoder5.0 @ 0 next: n=
+one nr_eps: 1 nr_targets: 1
+>   cxl_port endpoint5: decoder5.0: range: 0x22350000000-0x2634fffffff iw: =
+1 ig: 256
+>   cxl region5: pci0000:e0:port1 decoder1.2 add: mem0:decoder5.0 @ 0 next:=
+ mem0 nr_eps: 1 nr_targets: 1
+>   cxl region5: pci0000:e0:port1 iw: 1 ig: 256
+>   cxl region5: pci0000:e0:port1: decoder1.2 expected 0000:e0:01.2 at 0
+>   cxl endpoint5: failed to attach decoder5.0 to region5: -6
+>   cxl_port endpoint5: probe: 0
+>=20
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
 > ---
-> I've tested this patch on Mediatek Genio 510-EVK board with a kernel
-> based on linux-next (tag: next-20250331).
-> ---
->  arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-> index 60139e6dffd8e0e326690d922f3360d829ed026b..3a9d429f0f14b501ae41551dfe7272f242345138 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-> @@ -1199,7 +1199,13 @@ xhci_ss_ep: endpoint {
->  };
->  
->  &ssusb2 {
-> -	dr_mode = "otg";
-> +	/*
-> +	 * the ssusb2 controller is one but we got two ports : one is routed
-> +	 * to the M.2 slot, the other is on the RPi header who does support
-> +	 * full OTG but we keep it disabled otherwise the BT on the M.2 slot
-> +	 * USB line goes obviously dead if switching to gadget mode.
-> +	 */
-> +	dr_mode = "host";
 
-Hi,
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-while I agree with this change, now that this controller is fixed to host mode,
-the connector child node here which is supposed to probe with driver
-usb-conn-gpio, which would monitor the ID and VBUS lines and change the USB role
-as needed, will fail to probe with:
 
-  platform 112a1000.usb:connector: deferred probe pending: usb-conn-gpio: failed to get role switch
 
-as indeed there no longer is a role switch registered.
-
-For that reason, I believe as part of this commit you should also disable the
-connector. Since role switching is no longer supported by this controller,
-there's no sense in even trying to probe this driver.
-
-Thanks,
-Nícolas
