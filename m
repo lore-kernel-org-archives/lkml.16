@@ -1,131 +1,149 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACFC26F450
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:29:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43EA62701C0;
+	Wed, 23 Apr 2025 11:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745407786; cv=none; b=jDbYBI/S5uAeWHDT2X4LWnk0sCKIa5326gBaN/iBU4DLZ8qXiMfOaBrRx/O47OHBY7kIOowsl0KlBKZozn6myqt2t+3l+PXEA+58CiktAFJLBClAMyTOLv/cpPFI7Hq5PaUuGM9vOAge9yAhKhUZJWHwQse5vok9S5cRQTndBzA=
+	t=1745407952; cv=none; b=FdjmrIKfFdeeGTxdCJLrfeOO43v7kJvCvvsaxgFEoclgGXhFWVHM4jCHXwaO4z5dCJTyS5owtXT+4Xq1WmOdpQDYi0UXFR9RJMvk7Ja9XAvMKzkXmw9mb44A0/q0WoXbJyLz51oGjfryIhSJJG9dWZv90mXks4F9kFgEekf+A4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745407786; c=relaxed/simple;
-	bh=JTT75Mn1aCr++Zw+4/sd68fJWxFJ+nXgtTCekw8+jOM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JVvcvS154EC5ib4U5Z3oXkGgHZO7e0v67rQ1ckICWjc2wemLydbWZHE82SpycwO4RGFInmKxWXQdSyf2xqgIVGWmdsjeHX4grIdjwIpCmhpaWYmSiroMN+A593ZlwHGCkaZ+IOsAbBSQAdFj9F6WGViMH8UuufdJh3iIo3H3fo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mwRh8Og5; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745407952; c=relaxed/simple;
+	bh=DxaGI1hjzmUVNeyuzADxz1+yGkPl6JZZjtGe+adGZ4o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Y/V8upXT7xylVbhs+qNtLOcRjMGOGZcjayOKm9gTH5mRohfDy9lJr+hvT/TYXL6CDebV1aLfsD6sGwwm7v7KnXy2AklaYsbSTgw3WVANybqaf8zbDimcZzTWP10/7znn5XpiH5aTQcjaeD2ikE9Ke+zc+VHoFwPeKgSMiBR14ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=YLY04CUA; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mwRh8Og5"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NANVOm015695
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:29:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	aiLYMeII1DzKYJXChQAXWDo4SsnOHw7fzuxji7XmLYs=; b=mwRh8Og5wI59bfsL
-	gzcq8bksEhmk+alL70SE5tmEiJhgWm7v3YoUgydWlPoy9QAdCYsgkNOyGJtbXtv/
-	Bg5QhlVnctg/enbmUjwnHTC4cksMLN/VapnjkbNxEJpxn/xLYAtT9oBDXOfa/c/M
-	rb4CBs96lm1bd6OhuVU3oV0E/HHaEcyQeLApr1o+z5kg9tbcw2PLUbhaOc1zCA3a
-	NWRlTw3JoQAuSYjJf+Pk3PD96mtt8NsP08IOsOUgp3GyOnvC7O1QBJslOhpB7Vq/
-	znAYxLHsTLMXGr1NzCuKPtesTkkG2HU4EWkUxHdBqTgucees4a/htP/It0+i3UN4
-	o7vDRA==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh09y3s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:29:43 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6eeb8a269a7so26044216d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:29:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745407782; x=1746012582;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aiLYMeII1DzKYJXChQAXWDo4SsnOHw7fzuxji7XmLYs=;
-        b=Gir6E3gf76O0DgPPhMh5sAjtuEQ8zn9Z1BjcvFercszVT0dDRwedQYD/Pa/4MWoZXO
-         rJBkySNsEoHz1zscIPQ8Q5LQ9TTOKJkHKmNj804aHIiAejBST45Ag4IciSMP3vjmbdMm
-         iwwKKbNtTMJsFfLiQ49EbXWuKGPaJtBXgjc2V0LhKCov3U4yeg1RF5ZYl002nzTbF1+U
-         ppVMzVtm3gmfLGw7qInicukwBp92riWRqTT641eQva2dRzvkS2L/bC0oy8ykHzp8DSjR
-         1ooT5OpljWHlOR+a7ETKg1j3KnTXL/LvYd8Av7kebesYA+ux6/nhM8mmlNgolvz/WCXm
-         /49Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUuDylffGoPOWGLjOER53pFsyGx4DvWh34Htf2IyxALJV6mi18w2m6VYMKEOpgY2bH/wYR/5QnDJbKxwaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywE141TF0VubbW6CZuRRfjvVCiPofCEaI4b6D32QW/ZatHptgb
-	+CqmCLlJba59LeVGHI8APDZ0p0IOdTUomlIVorZeo8lIrOgs9U/+29M7DEdqhLPRLt87oVAbEjL
-	MHH5KsIMfgCOcpDQGajkMfPRfSCXxtwCaOaYPyYWz0PfIwBaK04TB8DedUvJYdzU=
-X-Gm-Gg: ASbGncvPJK2tinLytb2ujPXl/1Zv6wIywvmEiiB4IqcibJ9CSG1KtO7EahKlqclzS3A
-	M3jFsjSXlkyi4neqKt9WbNitfIASGUpbFpYN5R5pl3CkdAbdJCraXHbUMtUZwzlPa1xCxOHq543
-	uRhZswJYi7Yi00mrCKiVabuNTcbvq2rfC0i1LWUBra2UytA33nRqveRUO0N+L9wyec/pu31oSft
-	LO/hOAJPnCTwD1729LT/WO5JG7b9IzYMd3CYqWBglzbMQAeC55nu3WankccoxUtLkq0Vqydx7mX
-	kKVptaxt3DoX/WFCAlYkJemtSRMfRHxtyk7m4Z7eavhbY54Bgi4KIU2AHpUGcUBPzow=
-X-Received: by 2002:a05:620a:4543:b0:7c9:2465:8731 with SMTP id af79cd13be357-7c94d123bd5mr169985385a.0.1745407782434;
-        Wed, 23 Apr 2025 04:29:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEgFbGmUp8j9I7o53Gg0IqLCwRf3sb8p8Am2LmvgQJTpn9FJCrHSFbcU5fZ7b4kD9OfN5zyGA==
-X-Received: by 2002:a05:620a:4543:b0:7c9:2465:8731 with SMTP id af79cd13be357-7c94d123bd5mr169982485a.0.1745407782052;
-        Wed, 23 Apr 2025 04:29:42 -0700 (PDT)
-Received: from [192.168.65.183] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef48e5csm802900666b.148.2025.04.23.04.29.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 04:29:41 -0700 (PDT)
-Message-ID: <052fe049-a17f-4fa7-80f3-a198de21b3c1@oss.qualcomm.com>
-Date: Wed, 23 Apr 2025 13:29:39 +0200
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="YLY04CUA"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53NBW2pgC2492977, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1745407922; bh=DxaGI1hjzmUVNeyuzADxz1+yGkPl6JZZjtGe+adGZ4o=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=YLY04CUAgHpN/0C1YO9mQSWWpH2I79YiYOCI+z40ntEhfj8paNzDP9bzdjkIAWpFh
+	 C9xNFoYgwJGbYLzHZF13KVZ2q90CQXl/J9c2CDfGX1SlmeaMG0NUXegGvtzJj5EFtU
+	 3GKOe81/7bMSP7fjfG+0i0JlILCAmH3dnlaQWg1uAklgW/uUY5+dbSZI7M6dc1WfEx
+	 Tf9Fv6Lovi7/YvdNjkYnjSdKY/OQbk/gpYzZILM/QMocqDJQ4g5exh2d/EKh+WkCNC
+	 hUqXEPEzJ/cJbZ5zr7xHTdZekwpn827a5oENccvFjEe0NN7enBk8JkWCYxAIM71wBe
+	 pTBTJR6lQAAkw==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53NBW2pgC2492977
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 19:32:02 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 23 Apr 2025 19:32:02 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 23 Apr 2025 19:32:01 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Wed, 23 Apr 2025 19:32:01 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: Simon Horman <horms@kernel.org>
+CC: "kuba@kernel.org" <kuba@kernel.org>,
+        "davem@davemloft.net"
+	<davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "andrew+netdev@lunn.ch"
+	<andrew+netdev@lunn.ch>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Larry Chiu
+	<larry.chiu@realtek.com>,
+        kernel test robot <lkp@intel.com>
+Subject: RE: [PATCH net v3 1/3] rtase: Modify the condition used to detect overflow in rtase_calc_time_mitigation
+Thread-Topic: [PATCH net v3 1/3] rtase: Modify the condition used to detect
+ overflow in rtase_calc_time_mitigation
+Thread-Index: AQHbr3bGQZBcM8+BV0aT2Y9FDkzNELOvLZGAgAHx31A=
+Date: Wed, 23 Apr 2025 11:32:01 +0000
+Message-ID: <59893ad874224d209b1b43c00c56ba00@realtek.com>
+References: <20250417085659.5740-1-justinlai0215@realtek.com>
+ <20250417085659.5740-2-justinlai0215@realtek.com>
+ <20250422132023.GG2843373@horms.kernel.org>
+In-Reply-To: <20250422132023.GG2843373@horms.kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 6/9] phy: qcom-qmp-ufs: Refactor qmp_ufs_exit callback.
-To: Nitin Rawat <quic_nitirawa@quicinc.com>, vkoul@kernel.org,
-        kishon@kernel.org, manivannan.sadhasivam@linaro.org,
-        James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
-        bvanassche@acm.org, bjorande@quicinc.com, neil.armstrong@linaro.org
-Cc: quic_rdwivedi@quicinc.com, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org
-References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
- <20250410090102.20781-7-quic_nitirawa@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250410090102.20781-7-quic_nitirawa@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: dtkvpLlAfo_kWLWbUg33rfR57n7xZLRs
-X-Proofpoint-ORIG-GUID: dtkvpLlAfo_kWLWbUg33rfR57n7xZLRs
-X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=6808cf27 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=0G_SUc_-HujNE8ZPJPcA:9 a=QEXdDO2ut3YA:10
- a=OIgjcC2v60KrkQgK7BGD:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA3OSBTYWx0ZWRfX9tX3S4qxXpa0 fTCucZW4RjQCOWtAdANNN8AGhgOrSQkrEkj8GY+PNX85XjyQsI6Jh06efMuktXhsruYl+YVsUuO MReuVfFBAyYmSq+LIVpAs7/H0meZx+JujB3c+HnmGlhyabePHk3exjDYOdR5E70XYfuy4WqbB5C
- AF1ZRQ2reOCDqRjq2e+iAP5BgipYk6H3/DDaP5I7Ss5GafPnz3o3bcKp0h67Z2tyn2NYD3L8QrI SY3MLyaJo4FwKEK0eEyw0NDQYT5DJ7+AjYtzA2B1+KdACq3Z0Ko+9yKF85jBk80/DLSuCGpCxaJ lwAXupeyvGmnWssF+APyT8ED9QqqLyoEsRgUhzI6nMoKmkW327bGECilGxWl1WgaT7uq9ASY0ah
- Su8YHP8R1FGDBEqxQO6sfXKdvMqqcmv4aG1RtykoZZI8xYmd/m9lkE5+rIXVmT+b/9ed33pc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_07,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230079
 
-On 4/10/25 11:00 AM, Nitin Rawat wrote:
-> Rename qmp_ufs_disable to qmp_ufs_power_off and refactor
-> the code to move all the power off sequence to qmp_ufs_power_off.
-> 
-> Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-> Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
-> ---
+> On Thu, Apr 17, 2025 at 04:56:57PM +0800, Justin Lai wrote:
+> > Fix the following compile error reported by the kernel test robot by
+> > modifying the condition used to detect overflow in
+> > rtase_calc_time_mitigation.
+> >
+> > In file included from include/linux/mdio.h:10:0,
+> >                   from
+> drivers/net/ethernet/realtek/rtase/rtase_main.c:58:
+> >  In function 'u16_encode_bits',
+> >      inlined from 'rtase_calc_time_mitigation.constprop' at drivers/net=
+/
+> >      ethernet/realtek/rtase/rtase_main.c:1915:13,
+> >      inlined from 'rtase_init_software_variable.isra.41' at drivers/net=
+/
+> >      ethernet/realtek/rtase/rtase_main.c:1961:13,
+> >      inlined from 'rtase_init_one' at drivers/net/ethernet/realtek/
+> >      rtase/rtase_main.c:2111:2:
+> > >> include/linux/bitfield.h:178:3: error: call to '__field_overflow'
+> >       declared with attribute error: value doesn't fit into mask
+> >     __field_overflow();     \
+> >     ^~~~~~~~~~~~~~~~~~
+> >  include/linux/bitfield.h:198:2: note: in expansion of macro
+> > '____MAKE_OP'
+> >    ____MAKE_OP(u##size,u##size,,)
+> >    ^~~~~~~~~~~
+> >  include/linux/bitfield.h:200:1: note: in expansion of macro
+> > '__MAKE_OP'
+> >   __MAKE_OP(16)
+> >   ^~~~~~~~~
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Closes:
+> > https://lore.kernel.org/oe-kbuild-all/202503182158.nkAlbJWX-lkp@intel.
+> > com/
+> > Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this
+> > module")
+> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+>=20
+> Hi Justin,
+>=20
+> FWIIW, I note that this problem is reported by GCC 7.5.0 on sparc64 but n=
+ot by
+> GCC 14.2.0. And I think that is because in the end the values passed to
+> u16_encode_bits (line 1915 in the trace above) are the same with and with=
+out
+> this patch. That is to say, this the compiler error above is a false posi=
+tive of
+> sorts.
+>=20
+> But I believe GCC 7.5.0 is a supported compiler version for sparc64.
+> And this does result in an error, without W=3D1 or any other extra KCFLAG=
+S set.
+> So I agree this is appropriate to treat as a fix for net.
+>=20
+> And in any case, fix or no fix, it seems nice to limit the scope of the
+> initialisation of msb.
+>=20
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-So this patch does quite a lot without explaining the context
-that isn't visible in just the diff below
+Hi Simon,
 
-- .power_on is altered to no longer reset the PHY (but it only did so
-   on docs with !no_pcs_sw_reset?)
-- partially inlines com_exit (dropping the reset assert)
-- removes .disable in favor of .power_off that we can't tell
-  what it does just by looking at this patch in the middle of the
-  series
+Thank you for your review. I will repost this patch separately in the
+net tree.
 
-Please improve the commit message and consider splitting this change
-in two
+Thanks,
+Justin
 
-Konrad
