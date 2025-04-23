@@ -1,229 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from 190-102-104-130.static.hvvc.us (190-102-104-130.static.hvvc.us [190.102.104.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEF91A76DA;
-	Wed, 23 Apr 2025 13:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A5A1A3161
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=190.102.104.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416597; cv=none; b=E3mkUAhkG53d6vAVItplK5xHeOP1oWbMkvuczNnfLbJbzT1kePG86sBa5+Y4hrE6GrF1cyZcfBrdUZlxpZfERcmzRO0GGMfF71KzUxAPWm7spGC9cMvl2bZ4lPviMt96MbFLlLqvfrLoMzYxANY5zEW68Bt5Bt0yYD58G8HuGNo=
+	t=1745416651; cv=none; b=RnXGBvDCMi9//kAqxQZ/E0XePKxcadbjDUgn9gI4wz/QcvPtaDRwT+AR+U6yJ2eKS50wI/ADQi9RemBYb6hc0y+OR8Awr8uQt4YwVuC+4DellTueKl2/7PAvPxAyktJdUjAzMLEFl83O3MyOOxu2XQsHt+dULUf/iLpjJkRC/rE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416597; c=relaxed/simple;
-	bh=auoAlb7hyUDmuDCP7tSTUj94impkQjqeg8PWz3X6bZk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i2+8mCkpfFzS8o9v2+PiDpP1a3bEUeZwudtCKNW21xLATlEYwDjUC0udxiRtMrTyrKr03BAewgg6I5Woxt+BPkmN87+oGNRxBGyrvK21qi/ElstzpJyfV0pGUtptnK3IPLZd6/nimgvg2IRipfiLPvORJErNCy4nW7EnhPCayi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOw2jYP6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOw2jYP6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E13DC4CEE3;
-	Wed, 23 Apr 2025 13:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745416597;
-	bh=auoAlb7hyUDmuDCP7tSTUj94impkQjqeg8PWz3X6bZk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HOw2jYP6JnnyE7JT1A8t4YbBPzzYQtoDfjbpb8ElFbCUpjOifA6LunLn905SjHVLf
-	 4lvhHb2aHoMB7E9SBQ047amXeT5Rf+/xOIk5e4HMx/9k8ayAixMFW0PLhdCMsOk5/5
-	 89dIuZVu2uPOdlQ99NpSIJ+sGCLrhXyRBB6KFDuLNRqqopvez67dcHyg3dX8ItGMDu
-	 EYN7CfWoi4ETm0ULCL67Nt9Qh6wfSHeZpmdm6kCKGDZJ0UkhHyHKCNrCv9t7Du0hYk
-	 a/LMiR2ED9zl3IthveSn/gkda5n4pltgmjM5Pc6Mfxcotj4l9tZO3dnVNRL7VU9147
-	 iN6uuhIrf0UdA==
-Date: Wed, 23 Apr 2025 10:56:33 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Caleb Biggers <caleb.biggers@intel.com>,
-	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Thomas Falcon <thomas.falcon@intel.com>
-Subject: Re: [PATCH v5 14/16] perf stat: Add mean, min, max and last
- --tpebs-mode options
-Message-ID: <aAjxkfz4rSHe5Eoi@x1>
-References: <20250414174134.3095492-1-irogers@google.com>
- <20250414174134.3095492-15-irogers@google.com>
+	s=arc-20240116; t=1745416651; c=relaxed/simple;
+	bh=hXi467e5lK9y8o8T9Dbl+dFVYltnzBAE6NeASwbtAU0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SFaZnr+GH6jYzpUvk516XFuDWfgTtqSc62RqVY2d+wJXstVaPBYozSpoDcF2bESLr0HDJYkTGOwDHsH8uQTVRsh3hLcSB9+Bjc+KUB+vj9g5g4m3rxsQkX4lL5T6kFoMiBHWWKhrMQP1DNOPn8b/dAuMI9zHaoFNuf4sd9GN2Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=phoronix.com; spf=pass smtp.mailfrom=phoronix.com; arc=none smtp.client-ip=190.102.104.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=phoronix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phoronix.com
+Received: from c-24-15-38-32.hsd1.in.comcast.net ([24.15.38.32]:5249 helo=[192.168.1.194])
+	by milan.phoronix.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <Michael@phoronix.com>)
+	id 1u7abR-0000000F7nL-2hOf;
+	Wed, 23 Apr 2025 09:57:27 -0400
+Message-ID: <173297ef-d806-4c5f-bc88-90b5bad03671@phoronix.com>
+Date: Wed, 23 Apr 2025 08:57:23 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414174134.3095492-15-irogers@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: Linux 6.15-rc3
+To: Vlastimil Babka <vbabka@suse.cz>, Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Dave Airlie <airlied@gmail.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Sebastian Sewior <bigeasy@linutronix.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAHk-=wgjZ4fzDKogXwhPXVMA7OmZf9k0o1oB2FJmv-C1e=typA@mail.gmail.com>
+ <CAPM=9tzj_OBFJNsN9j7nMs4OR3=V9yrPmaH7VvN-KNYUYhf-vQ@mail.gmail.com>
+ <CAADnVQ+KnfDLd-=Mg1BDJxCf80K_=RN0dJy_yp681gf1dQMhtg@mail.gmail.com>
+ <mhewqdlvb5ahqordw2nuebq7yvsxo7xvdas4vl6gehmbmypcil@v3fn7nzllglj>
+ <896a67ec-9f48-4137-9d34-4bb16861e284@phoronix.com>
+ <27d55aab-c2d8-4edf-bab5-91a04b8383c5@suse.cz>
+Content-Language: en-CA
+From: Michael Larabel <Michael@phoronix.com>
+In-Reply-To: <27d55aab-c2d8-4edf-bab5-91a04b8383c5@suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - milan.phoronix.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - phoronix.com
+X-Get-Message-Sender-Via: milan.phoronix.com: authenticated_id: michael@phoronix.com
+X-Authenticated-Sender: milan.phoronix.com: michael@phoronix.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On Mon, Apr 14, 2025 at 10:41:32AM -0700, Ian Rogers wrote:
-> Add command line configuration option for how retirement latency
-> events are combined. The default "mean" gives the average of
-> retirement latency. "min" or "max" give the smallest or largest
-> retirment latency times respectively. "last" uses the last retirment
-> latency sample's time.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Tested-by: Weilin Wang <weilin.wang@intel.com>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+On 4/23/25 3:42 AM, Vlastimil Babka wrote:
+> On 4/23/25 02:54, Michael Larabel wrote:
+>> On 4/22/25 7:12 PM, Shakeel Butt wrote:
+>>> Ccing Michael
+>>>
+>>> On Tue, Apr 22, 2025 at 04:37:59PM -0700, Alexei Starovoitov wrote:
+>>>> On Tue, Apr 22, 2025 at 4:01 PM Dave Airlie <airlied@gmail.com> wrote:
+>>>>>> Alexei Starovoitov (2):
+>>>>>>         locking/local_lock, mm: replace localtry_ helpers with
+>>>>>> local_trylock_t type
+>>>>> This seems to have upset some phoronix nginx workload
+>>>>> https://www.phoronix.com/review/linux-615-nginx-regression/2
+>>>> 3x regression? wow.
+>>>> Thanks for heads up.
+>>>> I'm staring at the patch and don't see it.
+>>>> Adding more experts.
+>>> Hi Michael,
+>>>
+>>> Can you please share a bit more on your nginx workload and how can we
+>>> reproduce locally? In the mean time, I can try netperf locally to
+>>> reproduce.
+>>>
+>>> I do have some followup optimizations [1, 2] which hopefully are aimed
+>>> for next release but we can try those as well.
+>>>
+>>> [1] https://lkml.kernel.org/r/20250416180229.2902751-1-shakeel.butt@linux.dev
+>>> [2] https://lkml.kernel.org/r/20250410025752.92159-1-shakeel.butt@linux.dev
+>>>
+>>> thanks,
+>>> Shakeel
+>> The Nginx test case is a fairly stock Nginx build measuring HTTPS
+>> throughput for serving some static web page with Wrk used as the
+>> stressor, all on the same host for stressing just the local host. All of
+>> the assets and execution scripts used for that Nginx test in raw form
+>> are here -
+>> https://openbenchmarking.org/innhold/c7b555063f5732b4f1bb08444e258984d1dbb94b
+>> Let me know if any problems reproducing, etc.
+>>
+>> Thanks, I can try out those patches tomorrow. At the moment on that same
+>> server currently running through some of the other workloads I also
+>> found regressed on Linux 6.15 GIt to see if attributed to same commit or
+>> not.
+> Hi, please try the following patch. I also realized I left you out of my previous
+> replies leading to it, due to replying to an earlier mail of the thread:
+> https://lore.kernel.org/all/0981c1fe-05d2-4bab-a0a4-6dc5666d98d7@suse.cz/
+>
+> Thanks,
+> Vlastimil
+
+
+Thanks, Vlastimil. I tested your later patch @ 
+https://lore.kernel.org/all/d1c0f057-63c8-4be5-9638-d1a67d9b9e15@suse.cz/#t
+
+I can confirm that latest Git + that patch does indeed correct the 
+regression affecting Nginx. All the Nginx runs I have carried out this 
+morning are back aligned with the 6.14 and the results prior to the 
+bisected commit.
+
+Currently repeating tests for other regressed workloads to confirm there 
+but at least for the Nginx case is resolved by that patch.
+
+Michael
+
+
+>
+> ----8<----
+> From: Vlastimil Babka <vbabka@suse.cz>
+> Date: Wed, 23 Apr 2025 10:21:29 +0200
+> Subject: [PATCH] locking/local_lock: fix _Generic() matching of
+>   local_trylock_t
+>
+> Michael Larabel reported [1] a nginx performance regression in v6.15-rc3 and
+> bisected it to commit 51339d99c013 ("locking/local_lock, mm: replace
+> localtry_ helpers with local_trylock_t type")
+>
+> The problem is the _Generic() usage with a default association that
+> masks the fact that "local_trylock_t *" association is not being
+> selected as expected. Replacing the default with the only other expected
+> type "local_lock_t *" reveals the underlying problem:
+>
+> ./include/linux/local_lock_internal.h:174:26: error: ‘_Generic’ selector of
+> type ‘__seg_gs local_lock_t *’ is not compatible with any association
+>
+> The local_locki's are part of __percpu structures and thus the __percpu
+> attribute is needed to associate the type properly. Add the attribute
+> and keep the default replaced to turn any further mismatches into
+> compile errors.
+>
+> The failure to recognize local_try_lock_t in __local_lock_release()
+> means that a local_trylock[_irqsave]() operation will set tl->acquired
+> to 1 (there's no _Generic() part in the trylock code), but then
+> local_unlock[_irqrestore]() will not set tl->acquired back to 0, so
+> further trylock operations will always fail on the same cpu+lock, while
+> non-trylock operations continue to work - a lockdep_assert() is also
+> not being executed in the _Generic() part of local_lock() code.
+>
+> This means consume_stock() and refill_stock() operations will fail
+> deterministically, resulting in taking the slow paths and worse
+> performance.
+>
+> Fixes: 51339d99c013 ("locking/local_lock, mm: replace localtry_ helpers with local_trylock_t type")
+> Reported-by: Michael Larabel <Michael@phoronix.com>
+> Closes: https://www.phoronix.com/review/linux-615-nginx-regression/2 [1]
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 > ---
->  tools/perf/Documentation/perf-stat.txt |  7 +++++++
->  tools/perf/builtin-stat.c              | 27 ++++++++++++++++++++++++++
->  tools/perf/util/intel-tpebs.c          | 20 ++++++++++++++++++-
->  tools/perf/util/intel-tpebs.h          |  8 ++++++++
->  4 files changed, 61 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index 2bc063672486..61d091670dee 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -506,6 +506,13 @@ this option is not set. The TPEBS hardware feature starts from Intel Granite
->  Rapids microarchitecture. This option only exists in X86_64 and is meaningful on
->  Intel platforms with TPEBS feature.
->  
-> +--tpebs-mode=[mean|min|max|last]::
-> +Set how retirement latency events have their sample times
-> +combined. The default "mean" gives the average of retirement
-> +latency. "min" or "max" give the smallest or largest retirment latency
-> +times respectively. "last" uses the last retirment latency sample's
-> +time.
-> +
->  --td-level::
->  Print the top-down statistics that equal the input level. It allows
->  users to print the interested top-down metrics level instead of the
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 80e491bd775b..4adf2ae53b11 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2327,6 +2327,30 @@ static void setup_system_wide(int forks)
->  	}
->  }
->  
-> +static int parse_tpebs_mode(const struct option *opt, const char *str,
-> +			    int unset __maybe_unused)
-> +{
-> +	enum tpebs_mode *mode = opt->value;
-> +
-> +	if (!strcasecmp("mean", str)) {
-> +		*mode = TPEBS_MODE__MEAN;
-> +		return 0;
-> +	}
-> +	if (!strcasecmp("min", str)) {
-> +		*mode = TPEBS_MODE__MIN;
-> +		return 0;
-> +	}
-> +	if (!strcasecmp("max", str)) {
-> +		*mode = TPEBS_MODE__MAX;
-> +		return 0;
-> +	}
-> +	if (!strcasecmp("last", str)) {
-> +		*mode = TPEBS_MODE__LAST;
-> +		return 0;
-> +	}
-> +	return -1;
-> +}
-> +
->  int cmd_stat(int argc, const char **argv)
->  {
->  	struct opt_aggr_mode opt_mode = {};
-> @@ -2431,6 +2455,9 @@ int cmd_stat(int argc, const char **argv)
->  #ifdef HAVE_ARCH_X86_64_SUPPORT
->  		OPT_BOOLEAN(0, "record-tpebs", &tpebs_recording,
->  			"enable recording for tpebs when retire_latency required"),
-> +		OPT_CALLBACK(0, "tpebs-mode", &tpebs_mode, "tpebs-mode",
-> +			"Mode of TPEBS recording: mean, min or max",
-> +			parse_tpebs_mode),
->  #endif
-
-  20     5.60 debian:experimental-x-mips    : FAIL gcc version 14.2.0 (Debian 14.2.0-1) 
-    builtin-stat.c:2330:12: error: 'parse_tpebs_mode' defined but not used [-Werror=unused-function]
-     2330 | static int parse_tpebs_mode(const struct option *opt, const char *str,
-          |            ^~~~~~~~~~~~~~~~
-    --
-
-
-I'm enclosing parse_tpebs_mode() under #ifdef HAVE_ARCH_X86_64_SUPPORT
-to fix this.
-
-- Arnaldo
-
->  		OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
->  			"Set the metrics level for the top-down statistics (0: max level)"),
-> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-> index de9fea601964..6b00bd5b0af1 100644
-> --- a/tools/perf/util/intel-tpebs.c
-> +++ b/tools/perf/util/intel-tpebs.c
-> @@ -31,6 +31,7 @@
->  #define PERF_DATA		"-"
->  
->  bool tpebs_recording;
-> +enum tpebs_mode tpebs_mode;
->  static LIST_HEAD(tpebs_results);
->  static pthread_t tpebs_reader_thread;
->  static struct child_process tpebs_cmd;
-> @@ -45,6 +46,8 @@ struct tpebs_retire_lat {
->  	char *event;
->  	/** @stats: Recorded retirement latency stats. */
->  	struct stats stats;
-> +	/** @last: Last retirement latency read. */
-> +	uint64_t last;
->  	/* Has the event been sent to perf record? */
->  	bool started;
->  };
-> @@ -142,6 +145,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
->  	 * latency value will be used. Save the number of samples and the sum of
->  	 * retire latency value for each event.
->  	 */
-> +	t->last = sample->retire_lat;
->  	update_stats(&t->stats, sample->retire_lat);
->  	mutex_unlock(tpebs_mtx_get());
->  	return 0;
-> @@ -517,7 +521,21 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu_map_idx, int thread)
->  			return ret;
->  		mutex_lock(tpebs_mtx_get());
->  	}
-> -	val = rint(t->stats.mean);
-> +	switch (tpebs_mode) {
-> +	case TPEBS_MODE__MIN:
-> +		val = rint(t->stats.min);
-> +		break;
-> +	case TPEBS_MODE__MAX:
-> +		val = rint(t->stats.max);
-> +		break;
-> +	case TPEBS_MODE__LAST:
-> +		val = t->last;
-> +		break;
-> +	default:
-> +	case TPEBS_MODE__MEAN:
-> +		val = rint(t->stats.mean);
-> +		break;
-> +	}
->  	mutex_unlock(tpebs_mtx_get());
->  
->  	if (old_count) {
-> diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
-> index 218a82866cee..9475e2e6ea74 100644
-> --- a/tools/perf/util/intel-tpebs.h
-> +++ b/tools/perf/util/intel-tpebs.h
-> @@ -8,7 +8,15 @@
->  struct evlist;
->  struct evsel;
->  
-> +enum tpebs_mode {
-> +	TPEBS_MODE__MEAN,
-> +	TPEBS_MODE__MIN,
-> +	TPEBS_MODE__MAX,
-> +	TPEBS_MODE__LAST,
-> +};
-> +
->  extern bool tpebs_recording;
-> +extern enum tpebs_mode tpebs_mode;
->  
->  int evsel__tpebs_open(struct evsel *evsel);
->  void evsel__tpebs_close(struct evsel *evsel);
-> -- 
-> 2.49.0.604.gff1f9ca942-goog
+>   include/linux/local_lock_internal.h | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/local_lock_internal.h b/include/linux/local_lock_internal.h
+> index bf2bf40d7b18..8d5ac16a9b17 100644
+> --- a/include/linux/local_lock_internal.h
+> +++ b/include/linux/local_lock_internal.h
+> @@ -102,11 +102,11 @@ do {								\
+>   		l = (local_lock_t *)this_cpu_ptr(lock);			\
+>   		tl = (local_trylock_t *)l;				\
+>   		_Generic((lock),					\
+> -			local_trylock_t *: ({				\
+> +			__percpu local_trylock_t *: ({			\
+>   				lockdep_assert(tl->acquired == 0);	\
+>   				WRITE_ONCE(tl->acquired, 1);		\
+>   			}),						\
+> -			default:(void)0);				\
+> +			__percpu local_lock_t *: (void)0);		\
+>   		local_lock_acquire(l);					\
+>   	} while (0)
+>   
+> @@ -171,11 +171,11 @@ do {								\
+>   		tl = (local_trylock_t *)l;				\
+>   		local_lock_release(l);					\
+>   		_Generic((lock),					\
+> -			local_trylock_t *: ({				\
+> +			__percpu local_trylock_t *: ({			\
+>   				lockdep_assert(tl->acquired == 1);	\
+>   				WRITE_ONCE(tl->acquired, 0);		\
+>   			}),						\
+> -			default:(void)0);				\
+> +			__percpu local_lock_t *: (void)0);		\
+>   	} while (0)
+>   
+>   #define __local_unlock(lock)					\
