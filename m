@@ -1,240 +1,220 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2029281524
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:57:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5835281363;
+	Wed, 23 Apr 2025 14:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420242; cv=none; b=mSS1el7BU3E0u4uOAAeiCP9hHH/EhZnqTjA5hJ31S4spD/EJFaiMJll3FFMgP9+2cZNs8R5FHxlQJlLIwo2vud8+UATaYiGsvN/qkTkOf4NxP393ZWZxaFkAySwKY/s2oVytjr6QGCH41j8eMntblBk5s06uz7tanGKK54Xe9qo=
+	t=1745420289; cv=none; b=gMO+Z59N17PJQZC79FOUSzqSlmgHrFZ+pQ5x+6RxpETQjA1WRDPanfOVa/TToZ9kIHMZdhLSp4c+E8AcjqlxMUQY1r7TG2fe/5vnhuMBNjrZUNAc9LMBLVGSeWRSZDZtGot6IsezGU6+D87AkgAAU/gTRmfgnzLaAUEaKC7sOWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420242; c=relaxed/simple;
-	bh=48oi0bMYSWCsrjjCcocriFjUmnSTwf74bn6dRV0xbTE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A9z+SFBFAfG7/JuGRoonuKNgugXmbluVt0cre3K8QHLOlIrO9FVCOKatPV6joYAC+4GH7qeh06NEQ3oY1uHQ62IKgy/27+JeGHgkAEY4yeikFRQAv2SzjbExrc2Hu/6ICRfLadPljER48C6Fl/pZ4SadKqNye8k5V8Nqf1ZznqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nvTunfoH; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nvTunfoH"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAmZm2016562
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:57:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	2NRWiVsbvNnHIcTKizG+XsT0FlriKnOrULiycN0aiQQ=; b=nvTunfoHTEC8X1zn
-	QR3LnOD5QTP/KHCQnZIJv82ptdIsFjV36ZOl9IqTjeni4mcK0UCSfuaHotPOtdnQ
-	LRFlVnVToEzL/RCq+yzS+kr2blw2jFwvXFhdz1hQQ/9qt9Dc8OfwsgqoVeFmd8P0
-	gdLz0Oo7Hce459E4OKdZUpawGnoL2D7NN+k6qIvtAUU7P1Zk2tvJTYcj5JxUl8FF
-	s6nOSZToJuSFP7JaE6GVZcAVym+2VVsadr+VQe2maYe42hf6PQ18LWVglfEwW+4z
-	vV5t2kd+cJL4Fylk9oegXYXAfP5TBW0weF6VZQeubaNApbLei7NRMQv+xJ0veAhj
-	Ll0R6w==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0ah1k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:57:19 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c53d5f85c9so137140685a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:57:19 -0700 (PDT)
+	s=arc-20240116; t=1745420289; c=relaxed/simple;
+	bh=jnfqlRhyk0nxJXxoUORXfipw+CR6jruRhOi93htI5a8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MWhZAT2PT9QuBGoWD4K0PU4hYbhODA6gebNk+q9tAbwC+1EYWlxw+RFouwLPmNJ3uddwUu9hJvaGtsu6tyRYqzDO56fCxK2rAqyqc8pljwmF4Kgk9k909YMKp4SvAmcnSFbzwJhoj4zY4TC/X06B/o3vicAQTlhtLp9O1R48k/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5aecec8f3so397944485a.1;
+        Wed, 23 Apr 2025 07:58:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745420238; x=1746025038;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2NRWiVsbvNnHIcTKizG+XsT0FlriKnOrULiycN0aiQQ=;
-        b=q7lsA9Lc3fwiJAtzQ2M//glsZwoi4mf3/sROHVFI+Ck8P0DXADpS9yTQUyRqSNDs5M
-         UNb5UvUjO65nHB9KtfpzknJi1feoJtREF67KyQ1rMlZ+MAtC9FydktNhjqUaIGLN7xpx
-         AMcKb8Xi87diIX6BEOrzM+6KQYJ2xXdjDBv/y1iWejx4CvsvXNcGthgB6vrDCWZF2aqE
-         YKh0Eb59BkKO39p0y2ak3wOx8d3Zxoy+kVQE7xyFfBVFnVxHiiyzNNlaBAL5Slmal1V+
-         immXFfDTbGmZwvHHMSrQp/xSwbQJ1qIPjT/mTGCsPG3ijmJxa6IlDd+t+GCq35KDDF2n
-         DcTA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUX+yHk7Gr3T9ugExZKS3m4fwLFqFV2nFeN8d2E94CqOhS/SJrF0NOWx639WOG9zKlJt/6n7f9xZCCAZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvNIzZ6bd4ILdug7wK2BRiABovt/c3cFrjdY1ZNX9qQWucvuYn
-	oS7G/8UD/2aONpuBaqGHNVGiiImb7Z9I/wrbNhSoOK9/6PdDEjCu3L/vwfZdJrOgSafylWWlnIc
-	IJtnYSvpdunNHYUwIGUl8sNAKFXpRf2jnOz0TjIcMoSAvkXqiyj6duuqjNMXJYV8=
-X-Gm-Gg: ASbGncvr6+r0ih79utU97XrQN3DoQaR3KDpHJDaB61E7llUYUWuN947sZwjEIxLVHUI
-	j/OTbHGL5zEkCE9FpTET/3f46edOaCA3pu3AG6hjF5Bs4Lf7dm7LWvO7A7db65YYk0bi+SL2eX1
-	4Bajq37SAHYeCdJIcp0aUmezVrGlx/Z+AseqCM6+CzW5xGVJUehlmvcH8OaDRsuO0edyqkdhDiN
-	L6UI69LIXCqqUPiYyu6LDhdHWFvjuKofkzMM9BWL9BW0DX1N3xvTefyyLtC76rjiVZ7C2TeAmkA
-	ZO1chlClOko568eB4LIos91LiKoRbI29VovBlQz47pU2UBoPKQAkAsqw0MdwjT3Z4Ww=
-X-Received: by 2002:a05:620a:1a83:b0:7c0:c024:d5 with SMTP id af79cd13be357-7c94d298995mr245300185a.8.1745420238252;
-        Wed, 23 Apr 2025 07:57:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE7NASz5S114ThP0dvyExe5F00+leMGaZwFVeXLrWh9p/BkVwDIsMC0C1e5A37iHj6HGPixnA==
-X-Received: by 2002:a05:620a:1a83:b0:7c0:c024:d5 with SMTP id af79cd13be357-7c94d298995mr245297785a.8.1745420237855;
-        Wed, 23 Apr 2025 07:57:17 -0700 (PDT)
-Received: from [192.168.65.183] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f62594985bsm7594334a12.74.2025.04.23.07.57.15
+        d=1e100.net; s=20230601; t=1745420284; x=1746025084;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hlyPTphf+x28unQ9fsmlIwni94vcWgQaX/dq2nBGd2c=;
+        b=uo70yKrNm5TbrHdXKvXWi8VnQESgYgOVM1K5HXlAo16VYU45OYFJe9ua/Sa2iwLV6+
+         28WHwOkgnXp9EQjg21NVCeYrNWh9xiZZhO8FP6rNkBvDgz2AiYgSDW7ZOASqyY9cmkPf
+         BTP2J/NTbYUVFOhKF3l/AT+k+rKw96giRmEFMFlD77ggnkP93jk6zAk9cpr6d4setTiq
+         H20Oj+AFMqW0rZ9nT7JYi2aq8cNWgd6iT+3TxEsSKAiX56Z61og1+GyMJq4t92Qi48kQ
+         ORC066vv1rMfoyMpKOSsNVUZNreZDGpmij5axRIJoCXb+OmTZSO23aqKXjfrKKupXZKJ
+         XQ4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVbZaWCugcFVPmvcT9h4IJu+gAbtzcXOTOhnXfHYnlEYimt1l8LRTOoA1bnt+HPPKaw1fRZiS/+@vger.kernel.org, AJvYcCWJ7+toTLi1se2nADmhVQnjsi5cju3HVfi9U5h0Xb7k4+jPTJ/mbBQEHu/lrYVp9vGdAza01ym70M8=@vger.kernel.org, AJvYcCWmAR8UNFF/kdfTltg92iPVUWvqfqBqenGXPPEBjaHCC8aNDtLcrI7APaW2OoxX2/M9FyKrwpRXP+8+Eo3N@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCAjyH46+Wi163XODQ7KI/n1/qHZAh71DulJyRjfovY0HkRSpO
+	lqhBny7gCTap7ilY9CVCm1+CaE8pBzmsJEk/a3tOAEDsozjjZ40Kv6E0JYZ3m+c=
+X-Gm-Gg: ASbGncu4LKHFcUuoVZBEuLcCiDylHBrBINwVtGYkmlWsn7d5KmMNrheIbn2OGAZXrn8
+	aUbCCror/X0gqli0zxpe1iFvDEXsSxT8t3cn+/OVHDWyWAv5EWwL5ACCyQF7EvEI/MkmM6z43rJ
+	kU7KweJiZoiStWd0zmspQp2pb2s0iUedrE9zpa0mFIGqPkpRUGr5/GO83AD7L0bR7tzvH0MUe2X
+	vajEiijipBkB18jtfaec/Wq14UPTHtjDQZYAmSF+rYEV5qTsq9U4rR58O0V1X+pcY01PPNfvjoo
+	2L5f1+jfV6VETp1ehaJXkkcUvWwKuJvnoQeE07Z7Jxed6SRZ27BYo65xAw8j4R7SQsJG6lCvl2e
+	VGGAl9E0=
+X-Google-Smtp-Source: AGHT+IGsXgE4cnpqPU+SPp8fFl9Kxl40eBT7/qjgJZoSA8IrqAUo4bACVTD1sY9dv1/pRyXoi8nFUA==
+X-Received: by 2002:a05:620a:1790:b0:7c5:4b24:468d with SMTP id af79cd13be357-7c927f594f8mr2723135285a.2.1745420284118;
+        Wed, 23 Apr 2025 07:58:04 -0700 (PDT)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com. [209.85.222.180])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4dbdbsm688524185a.68.2025.04.23.07.58.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 07:57:17 -0700 (PDT)
-Message-ID: <4b1f9228-2600-4d97-a60e-9099878b3f2a@oss.qualcomm.com>
-Date: Wed, 23 Apr 2025 16:57:14 +0200
+        Wed, 23 Apr 2025 07:58:03 -0700 (PDT)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c54b651310so902884985a.0;
+        Wed, 23 Apr 2025 07:58:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7L5GOAoLnNdpzwNAd+rhMJM+znc5VuHw2IfNDUbsdwNDyKtk5weFJmCyk1ERe3px2DAp8mdoF8vc=@vger.kernel.org, AJvYcCX3efPKSfbUpf4hWr9NrfiVUxOZCNewxx2qjUwajaxji8siOvkKj/13zMZ5rVY+k5H9X47pWaQD@vger.kernel.org, AJvYcCXYvXlEmKLEusF2FZBenHXVXs9R9BMApYP1nTXFE+L5+pCq+GurBi2ip7Io3/TBpEd7cA6AEvR029TWxM/n@vger.kernel.org
+X-Received: by 2002:a05:6122:793:b0:526:285a:f4b3 with SMTP id
+ 71dfb90a1353d-529253b90f7mr17209301e0c.2.1745419814638; Wed, 23 Apr 2025
+ 07:50:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
-To: Rob Clark <robdclark@gmail.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>,
-        Connor Abbott <cwabbott0@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Sean Paul <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        dri-devel
- <dri-devel@lists.freedesktop.org>,
-        freedreno@lists.freedesktop.org
-References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
- <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
- <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com>
- <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
- <1282bf58-e431-4a07-97e5-628437e7ce5f@quicinc.com>
- <CACu1E7GwMCt6+JJQGgSvJObTMMWYLPd69owyFo7S=sxu_EEsUw@mail.gmail.com>
- <16845de2-a40a-4e3d-b3aa-c91e7072b57f@quicinc.com>
- <CAF6AEGvyeRLHFBYmxkevgT+hosXGiH_w8Z+UjQmL+LdbNfVZ+w@mail.gmail.com>
- <acd1c8dd-286b-40b7-841d-e53e2d155a61@oss.qualcomm.com>
- <CAF6AEGts5rWvgyZy8RtAaUOsad362AG-uNjxF9vyj4szg=b5Bw@mail.gmail.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <CAF6AEGts5rWvgyZy8RtAaUOsad362AG-uNjxF9vyj4szg=b5Bw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: 6TFm8YwlOOZ4j9T9gpzlzavZNNyTfyAP
-X-Proofpoint-ORIG-GUID: 6TFm8YwlOOZ4j9T9gpzlzavZNNyTfyAP
-X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=6808ffcf cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=INHOtyMNgn4pQtdJY3IA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDEwNSBTYWx0ZWRfX2IYZbOw+14EF zIuOG53hCto/VsDB+cuRcr77PS/SMyYQAC60E41ybmkHuvi4m8Re6HrdAPZdEQeFONmqYmgLvLF jgQ50zMSywmS1cTpKOua2XIng5HtXbOO0reAw/RBNfciHLdVnJw17aUjSeVS62FwuO5wrnOGL92
- 7qfW/Gl5BlnJaqp6YweWBChPJhkhQqb0fM6FPt3HCNYBGVWUj9mqE9sCZrkqT/lr5Uod+zW4jFZ iWPwvbVdeHbnzX+OJQ+3mQvaOnhQOlgHq5q/wM0qePmk/pVL1JfMQ4iKw3HvCxK/K73lLEtjiSq Yhw24fd4tMeIVASbvgza9SWgIk1bKaWI7M5FWDZ4Ex02kXmyF6esL3CvouvoiBI0TnovRSbtIUB
- f5zwpZlb7z6fYIhekj3c1wZw1WUZZNnQl3Sr68D0cW3WWUfN859CNDxHEawmNYPPbkEdCUPN
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230105
+References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <PN3PR01MB9597B01823415CB7FCD3BC27B8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMuHMdV9tX=TG7E_CrSF=2PY206tXf+_yYRuacG48EWEtJLo-Q@mail.gmail.com>
+ <PN3PR01MB9597B3AE75E009857AA12D4DB8BB2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+ <CAMuHMdWpqHLest0oqiB+hG47t=G7OScLmHz5zr2u0ZgED_+Obg@mail.gmail.com> <aAjthvTuIeUIO4CT@pathway.suse.cz>
+In-Reply-To: <aAjthvTuIeUIO4CT@pathway.suse.cz>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 23 Apr 2025 16:50:02 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXuawN0eC0yO40-zrz70TH-3_Y-CFSy6=hHCCMLAPvU5w@mail.gmail.com>
+X-Gm-Features: ATxdqUEtXjwX1Xvi6EF4OaIe3skICOJiGJO6vzaZtD0WSg84WGPiul-c6IaIVeg
+Message-ID: <CAMuHMdXuawN0eC0yO40-zrz70TH-3_Y-CFSy6=hHCCMLAPvU5w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] lib/vsprintf: Add support for generic FourCCs by
+ extending %p4cc
+To: Petr Mladek <pmladek@suse.com>
+Cc: Aditya Garg <gargaditya08@live.com>, Hector Martin <marcan@marcan.st>, alyssa@rosenzweig.io, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sven Peter <sven@svenpeter.dev>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Aun-Ali Zaidi <admin@kodeit.net>, 
+	Maxime Ripard <mripard@kernel.org>, airlied@redhat.com, Simona Vetter <simona@ffwll.ch>, 
+	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Jonathan Corbet <corbet@lwn.net>, 
+	Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com, joe@perches.com, 
+	dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, 
+	tamird@gmail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	Asahi Linux Mailing List <asahi@lists.linux.dev>, netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 4/23/25 4:55 PM, Rob Clark wrote:
-> On Tue, Apr 22, 2025 at 4:57 PM Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
->>
->> On 4/21/25 10:13 PM, Rob Clark wrote:
->>> On Fri, Apr 18, 2025 at 9:00 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
->>>>
->>>> On 4/18/2025 6:40 AM, Connor Abbott wrote:
->>>>> On Thu, Apr 17, 2025, 1:50 PM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
->>>>>>
->>>>>> On 4/17/2025 9:02 PM, Connor Abbott wrote:
->>>>>>> On Thu, Apr 17, 2025 at 3:45 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
->>>>>>>>
->>>>>>>> On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
->>>>>>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>>>>>>>
->>>>>>>>> The Highest Bank address Bit value can change based on memory type used.
->>>>>>>>>
->>>>>>>>> Attempt to retrieve it dynamically, and fall back to a reasonable
->>>>>>>>> default (the one used prior to this change) on error.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
->>>>>>>>> ---
->>>>>>>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
->>>>>>>>>  1 file changed, 14 insertions(+), 1 deletion(-)
->>>>>>>>>
->>>>>>>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>>>>>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f20ae5f8f5e57f38ecc62d9f 100644
->>>>>>>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>>>>>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
->>>>>>>>> @@ -13,6 +13,7 @@
->>>>>>>>>  #include <linux/firmware/qcom/qcom_scm.h>
->>>>>>>>>  #include <linux/pm_domain.h>
->>>>>>>>>  #include <linux/soc/qcom/llcc-qcom.h>
->>>>>>>>> +#include <linux/soc/qcom/smem.h>
->>>>>>>>>
->>>>>>>>>  #define GPU_PAS_ID 13
->>>>>>>>>
->>>>>>>>> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
->>>>>>>>>
->>>>>>>>>  static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>>>>>>>>  {
->>>>>>>>> +     int hbb;
->>>>>>>>> +
->>>>>>>>>       gpu->ubwc_config.rgb565_predicator = 0;
->>>>>>>>>       gpu->ubwc_config.uavflagprd_inv = 0;
->>>>>>>>>       gpu->ubwc_config.min_acc_len = 0;
->>>>>>>>> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>>>>>>>>           adreno_is_a690(gpu) ||
->>>>>>>>>           adreno_is_a730(gpu) ||
->>>>>>>>>           adreno_is_a740_family(gpu)) {
->>>>>>>>> -             /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
->>>>>>>>>               gpu->ubwc_config.highest_bank_bit = 16;
->>>>>>>>>               gpu->ubwc_config.amsbc = 1;
->>>>>>>>>               gpu->ubwc_config.rgb565_predicator = 1;
->>>>>>>>> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
->>>>>>>>>               gpu->ubwc_config.highest_bank_bit = 14;
->>>>>>>>>               gpu->ubwc_config.min_acc_len = 1;
->>>>>>>>>       }
->>>>>>>>> +
->>>>>>>>> +     /* Attempt to retrieve the data from SMEM, keep the above defaults in case of error */
->>>>>>>>> +     hbb = qcom_smem_dram_get_hbb();
->>>>>>>>> +     if (hbb < 0)
->>>>>>>>> +             return;
->>>>>>>>> +
->>>>>>>>> +     gpu->ubwc_config.highest_bank_bit = hbb;
->>>>>>>>
->>>>>>>> I am worried about blindly relying on SMEM data directly for HBB for
->>>>>>>> legacy chipsets. There is no guarantee it is accurate on every chipset
->>>>>>>> and every version of firmware. Also, until recently, this value was
->>>>>>>> hardcoded in Mesa which matched the value in KMD.
->>>>>>>
->>>>>>> To be clear about this, from the moment we introduced host image
->>>>>>> copies in Mesa we added support for querying the HBB from the kernel,
->>>>>>> explicitly so that we could do what this series does without Mesa ever
->>>>>>> breaking. Mesa will never assume the HBB unless the kernel is too old
->>>>>>> to support querying it. So don't let Mesa be the thing that stops us
->>>>>>> here.
->>>>>>
->>>>>> Thanks for clarifying about Mesa. I still don't trust a data source that
->>>>>> is unused in production.
->>>>>
->>>>> Fair enough, I'm not going to argue with that part. Just wanted to
->>>>> clear up any confusion about Mesa.
->>>>>
->>>>> Although, IIRC kgsl did set different values for a650 depending on
->>>>> memory type... do you know what source that used?
->>>>
->>>> KGSL relies on an undocumented devicetree node populated by bootloader
->>>> to detect ddrtype and calculates the HBB value based on that.
->>>
->>> Would it be reasonable to use the smem value, but if we find the
->>> undocumented dt property, WARN_ON() if it's value disagrees with smem?
->>>
->>> That would at least give some confidence, or justified un-confidence
->>> about the smem values
->>
->> The aforementioned value is populated based on the data that this
->> driver reads out, and only on the same range of platforms that this
->> driver happens to cater to
-> 
-> Did I understand that correctly to mean that the dt property is based
-> on the same smem value that you are using?
+Hi Petr,
 
-Yes, abl reads it out and modifies the FDT based on what's in there
+On Wed, 23 Apr 2025 at 15:39, Petr Mladek <pmladek@suse.com> wrote:
+> On Tue 2025-04-22 10:43:59, Geert Uytterhoeven wrote:
+> > On Tue, 22 Apr 2025 at 10:30, Aditya Garg <gargaditya08@live.com> wrote:
+> > > On 22-04-2025 01:37 pm, Geert Uytterhoeven wrote:
+> > > > On Tue, 8 Apr 2025 at 08:48, Aditya Garg <gargaditya08@live.com> wrote:
+> > > >> From: Hector Martin <marcan@marcan.st>
+> > > >>
+> > > >> %p4cc is designed for DRM/V4L2 FourCCs with their specific quirks, but
+> > > >> it's useful to be able to print generic 4-character codes formatted as
+> > > >> an integer. Extend it to add format specifiers for printing generic
+> > > >> 32-bit FourCCs with various endian semantics:
+> > > >>
+> > > >> %p4ch   Host byte order
+> > > >> %p4cn   Network byte order
+> > > >> %p4cl   Little-endian
+> > > >> %p4cb   Big-endian
+> > > >>
+> > > >> The endianness determines how bytes are interpreted as a u32, and the
+> > > >> FourCC is then always printed MSByte-first (this is the opposite of
+> > > >> V4L/DRM FourCCs). This covers most practical cases, e.g. %p4cn would
+> > > >> allow printing LSByte-first FourCCs stored in host endian order
+> > > >> (other than the hex form being in character order, not the integer
+> > > >> value).
+> > > >>
+> > > >> Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > > >> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > >> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > > >> Tested-by: Petr Mladek <pmladek@suse.com>
+> > > >> Signed-off-by: Hector Martin <marcan@marcan.st>
+> > > >> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> > > >
+> > > > Thanks for your patch, which is now commit 1938479b2720ebc0
+> > > > ("lib/vsprintf: Add support for generic FourCCs by extending %p4cc")
+> > > > in drm-misc-next/
+> > > >
+> > > >> --- a/Documentation/core-api/printk-formats.rst
+> > > >> +++ b/Documentation/core-api/printk-formats.rst
+> > > >> @@ -648,6 +648,38 @@ Examples::
+> > > >>         %p4cc   Y10  little-endian (0x20303159)
+> > > >>         %p4cc   NV12 big-endian (0xb231564e)
+> > > >>
+> > > >> +Generic FourCC code
+> > > >> +-------------------
+> > > >> +
+> > > >> +::
+> > > >> +       %p4c[hnlb]      gP00 (0x67503030)
+> > > >> +
+> > > >> +Print a generic FourCC code, as both ASCII characters and its numerical
+> > > >> +value as hexadecimal.
+> > > >> +
+> > > >> +The generic FourCC code is always printed in the big-endian format,
+> > > >> +the most significant byte first. This is the opposite of V4L/DRM FourCCs.
+> > > >> +
+> > > >> +The additional ``h``, ``n``, ``l``, and ``b`` specifiers define what
+> > > >> +endianness is used to load the stored bytes. The data might be interpreted
+> > > >> +using the host byte order, network byte order, little-endian, or big-endian.
+> > > >> +
+> > > >> +Passed by reference.
+> > > >> +
+> > > >> +Examples for a little-endian machine, given &(u32)0x67503030::
+> > > >> +
+> > > >> +       %p4ch   gP00 (0x67503030)
+> > > >> +       %p4cn   00Pg (0x30305067)
+> > > >> +       %p4cl   gP00 (0x67503030)
+> > > >> +       %p4cb   00Pg (0x30305067)
+> > > >> +
+> > > >> +Examples for a big-endian machine, given &(u32)0x67503030::
+> > > >> +
+> > > >> +       %p4ch   gP00 (0x67503030)
+> > > >> +       %p4cn   00Pg (0x30305067)
+> > > >
+> > > > This doesn't look right to me, as network byte order is big endian?
+> > > > Note that I didn't check the code.
+> > >
+> > > Originally, it was %p4cr (reverse-endian), but on the request of the maintainers, it was changed to %p4cn.
+> >
+> > Ah, I found it[1]:
+> >
+> > | so, it needs more information that this mimics htonl() / ntohl() for
+> > networking.
+> >
+> > IMHO this does not mimic htonl(), as htonl() is a no-op on big-endian.
+> > while %p4ch and %p4cl yield different results on big-endian.
+> >
+> > > So here network means reverse of host, not strictly big-endian.
+> >
+> > Please don't call it "network byte order" if that does not have the same
+> > meaning as in the network subsystem.
+> >
+> > Personally, I like "%p4r" (reverse) more...
+> > (and "%p4ch" might mean human-readable ;-)
+> >
+> > [1] https://lore.kernel.org/all/Z8B6DwcRbV-8D8GB@smile.fi.intel.com
+>
+> I have to admit that I was always a bit confused by the meaning of the
+> new modifiers. And I did give up at some point and decided to do not
+> block the patch when it made sense to others.
+>
+> But I have to agree with Geert here. The current behavior of %p4ch
+> is confusing on big endian system. I would expect that it does not
+> revert the ordering.
+>
+> Well, I still think that people might find all 4 variants useful.
+> Andy does not like "r". What about "hR"? It is inspired by
+> the existing %pmR.
 
-Konrad
+I am not a fan of complicating the format specifier even more by adding
+more characters...  But seeing %pmR, I have to admit it does make sense.
 
->  In that case, there should
-> be no argument against using the smem value as the source of truth.
-> 
-> BR,
-> -R
+> The problem is that the semantic is not the same. The modifiers affect
+> the output ordering of IPv4 addresses while they affect the reading order
+> in case of FourCC code.
+
+Note that for IPv4 addresses we have %pI4, which BTW also takes [hnbl]
+modifiers.
+
+> Avoid the confusion by replacing the "n" modifier with "hR", aka
+> reverse host ordering.
+>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+
+Thanks, LGTM!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
