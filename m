@@ -1,114 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C2681885B4
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:14:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E741885B4;
+	Wed, 23 Apr 2025 22:14:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745446482; cv=none; b=WDMbVnSMpHjk4BbAkouJJTCtMq7FRzuAm8tRiq3HRGVe13737Op9r+r4Jb6nN4u9Da0mIaqV2ws6mzadLhvrMjt1E5omYUwKye3fNm7a/eFIZzjjCDrfndDHqCNoE14HlmL8Wo6SYHcDeVcO4JtmJqHZ7eaLoTvEatqWsmkyAkI=
+	t=1745446490; cv=none; b=ZAVWcbS7CmjLMpwlRgg85l7HvecH0DhTTMwvHLr9QkX/K9/TPkC3vsIZoOp0EGaVpBv6HWmeEl1CSy9J1VNJkbp5DW6naFjzQ2BH3kyCywwqIaDuGsGN1AEw2KTkk98/Pnr/ihV19enPYoa2PVK7nKHqIr0TWMtWSeHEaFa5MNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745446482; c=relaxed/simple;
-	bh=LWuADTgrS1pSWRwHKJ+tLGSK/D21jutRBFucPMZcr2A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9cAvwVZRST3untTU6f5RkYQXpnOQ3mI1j4i7KZ1qlfZpad5zaaQpzDA5f7shyd8EG7bAZhaMXT59qot8HAqag9aiUMbObfjqCbc0IEBNVTz7jSSGDMxNhEA+HIYz6N3rP0NLi/2k2D5wmCtKeo8TD2vShQDRLZq9bFx4bjYpQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DLluPbFx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745446490; c=relaxed/simple;
+	bh=yA5ENDOU6WR/6eoqizFm8BUxphmvVuGLV+xi0KRrHsc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l2JIO8ArVv1cQLV9gVjMqGvCnGabPkSSqAoJ5hOG+S6hODicdqA1+NZuShLW46AfRqIFlxixHYTYJmP5BBzlJmoZYFdUd+0yjhRhCM1HtPhbNPdetcadwflX4zb90ijdJR2dGglhjXCEGd0nUe4fAXARZ+p8f0lOOc11Ft0XhFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=riwSNAm/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DLluPbFx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745446479;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=X+SVN4y1JKQSP55HTLXPO4iRpA3jkVvTn+JT+tIaCQk=;
-	b=DLluPbFx5HxNHhQ9nGAZYPNFh8w27KaMAmTALcwTi7uFSfHzC8rK2Qv5MDYAUCqc0TbKTm
-	fRpDWrwYbpg9jCwxHY5eajXv7a4NVPgYnIHyz4OYk6qUQkPykfB0WwX9nKxPd0kx2of+U/
-	IlJEbuKMzn8f9ZYdZ83y+dAVI5XKmE8=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-21-1MCwXPx6PYW6Ni2JQtQ3rQ-1; Wed, 23 Apr 2025 18:14:38 -0400
-X-MC-Unique: 1MCwXPx6PYW6Ni2JQtQ3rQ-1
-X-Mimecast-MFC-AGG-ID: 1MCwXPx6PYW6Ni2JQtQ3rQ_1745446477
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-476664bffbeso5273171cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:14:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745446477; x=1746051277;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X+SVN4y1JKQSP55HTLXPO4iRpA3jkVvTn+JT+tIaCQk=;
-        b=impaZvTw5Ddm5R2aOW33+QmWETTnMRj6Jna4TtRDTc+U8T64axq4tbW3k91dN3OyVW
-         QZyzx07g3PI0+t1s1v9JBrVg3m2JxosWM3C7s789sXVLca3+9fuXCO682l+JW3x2xMNk
-         eK5acGh5Al7uTPH/IfSgRXcT/dLvhuCUc22Eu+AI0XoJVQlRBp57r00BCy5lYP1xla7q
-         JGCg/ZuzhLPWWhpsAVx0GlCfXpCeOj5Jn4ZaFfkKfEthA8clpHAR3blmQ4OlsoptdPyP
-         N6YUcGttapJujBAvbwNtPFyUcEgXTQFrqITsteXHNLJVB4n0Sx3TpN5cp7KcxL2OePq0
-         kmpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVSNIQ5O2uA+xi/FMIyIOg+8kQUVwkv5NO81d8XSPHkKT8LThuzU/1WpBH1ovhTTx7kHtCyGzv8JIDK+z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPNTjnWKawYfcCXGaFiaqxo6TuWiLCDY8m5qK4/ta4dTRuBMjP
-	GyOrMplTno/ycWE/McvRgFp609XLMenHlYMkMcIhYm0UanF3V1fIu65kGoWzPX7yfgbaQV/UcL1
-	tWAOqkFzhfuFiAofQX3edyMBN2CEV4MKlMDBHIx0yfTyGWGTm6gthkIEw94PtoS3lf443UQ==
-X-Gm-Gg: ASbGncuHxQ+qidnBbr1nAvf/n3jqBTA7hG0gk6v+NkENwhACXktNxIUSfs1CQRgsgbi
-	fa9Xq8aIshWGRJ/YO+YIz95TOKwO4DNMLfpsSmphUd4R3kaCCasD3wQ/ZjSzhcb7pVF6ul/GTzK
-	R87K3+fsfyk6s5foREhVqC2XGZN2Yxffr8qkR4q/cAkyMo/00+Tl160l/fZLrJRoe4McLrxc2DN
-	vPOt4fsRNsiLaE39C8mx26MUt6QR1oTJcUFM2PnQS6mf4l1xvwMMRcEp+gZtNkgl4yW/Sc73azy
-	2Hc=
-X-Received: by 2002:ac8:7d96:0:b0:477:d00:b46f with SMTP id d75a77b69052e-47eb52b3fdemr2212331cf.43.1745446477113;
-        Wed, 23 Apr 2025 15:14:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGQUt9OkSCwidgJV/Cvb/1qDknNRPIdRwt+RzGozQl9XpNN2HI+ThdD0/kcioZXw7xqh3K5DA==
-X-Received: by 2002:ac8:7d96:0:b0:477:d00:b46f with SMTP id d75a77b69052e-47eb52b3fdemr2212111cf.43.1745446476829;
-        Wed, 23 Apr 2025 15:14:36 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9efda31fsm1710991cf.18.2025.04.23.15.14.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 15:14:36 -0700 (PDT)
-Date: Wed, 23 Apr 2025 18:14:32 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Marty Kareem <MartyKareem@outlook.com>
-Cc: "linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"shuah@kernel.org" <shuah@kernel.org>
-Subject: Re: [PATCH v2] mm/selftest: Fix race condition in userfaultfd
- dynamic address allocation
-Message-ID: <aAlmSDSF9E23z8Qa@x1.local>
-References: <Z9rQU64AAnrGlATV@x1.local>
- <LV3P220MB1815E7BF036FFA1B1D19D38BBAA02@LV3P220MB1815.NAMP220.PROD.OUTLOOK.COM>
- <LV3P220MB1815EE1BD144C6613F164511BABC2@LV3P220MB1815.NAMP220.PROD.OUTLOOK.COM>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="riwSNAm/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14146C4CEE2;
+	Wed, 23 Apr 2025 22:14:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745446489;
+	bh=yA5ENDOU6WR/6eoqizFm8BUxphmvVuGLV+xi0KRrHsc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=riwSNAm/IP7hpOveudhoxer5Kf/aotbjwxCXUtk3nzygYvgSsL6ONNw1BRs54fBDb
+	 Yfe6SP7JqDLkwCMjTytT1pow9SxXz9vaO2aKzm8yShqTD9bkayFdWVmdJDO6+hFV5B
+	 QGr8wGMsp+Blk+SaETw9oSmG47z9ithxfSLJI2DoieZGg0QFXF7ZMH8ocXhpyy12Jv
+	 Cq5IFsSwbaEZFInLrNCnX0bm3FrKvXlRf6uny3iL0r80RC+Gk8vqTPZKoLiczx6s9f
+	 52JzTTWyJw45ekwLLIjoIUzt2xfez0G/unjv0b3jivQQO+Dtn2oDk32xFQECWPEXKz
+	 OADngvh80wKPQ==
+Date: Wed, 23 Apr 2025 15:14:48 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Philipp Stanner <phasta@mailbox.org>
+Cc: phasta@kernel.org, Sunil Goutham <sgoutham@marvell.com>, Andrew Lunn
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Geetha
+ sowjanya <gakula@marvell.com>, Subbaraya Sundeep <sbhatta@marvell.com>,
+ hariprasad <hkelam@marvell.com>, Bharat Bhushan <bbhushan2@marvell.com>,
+ Taras Chornyi <taras.chornyi@plvision.eu>, Daniele Venzano
+ <venza@brownhat.org>, Heiner Kallweit <hkallweit1@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Helge Deller
+ <deller@gmx.de>, Ingo Molnar <mingo@kernel.org>, Simon Horman
+ <horms@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, Sabrina Dubroca
+ <sd@queasysnail.net>, Jacob Keller <jacob.e.keller@intel.com>,
+ linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org
+Subject: Re: [PATCH 2/8] net: octeontx2: Use pure PCI devres API
+Message-ID: <20250423151448.15a4a13e@kernel.org>
+In-Reply-To: <00189e0a036e1bc7af8f78cc9fa934f1ad23efba.camel@mailbox.org>
+References: <20250416164407.127261-2-phasta@kernel.org>
+	<20250416164407.127261-4-phasta@kernel.org>
+	<20250422174914.43329f7f@kernel.org>
+	<5e20b320cbbe492769c87ed60b591b22d5e8e264.camel@mailbox.org>
+	<00189e0a036e1bc7af8f78cc9fa934f1ad23efba.camel@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <LV3P220MB1815EE1BD144C6613F164511BABC2@LV3P220MB1815.NAMP220.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 06:18:55PM +0000, Marty Kareem wrote:
-> Hello,
-
-Hi,
-
-Apologies on the late response.  I was on a very long leave, and your email
-by accident arrived right after I left.
-
+On Wed, 23 Apr 2025 10:38:01 +0200 Philipp Stanner wrote:
+> > > This error path should be renamed. Could you also apply your
+> > > conversion
+> > > to drivers/net/ethernet/marvell/octeontx2/af/ ?  
+> > 
+> > Hm, those must have slipped me for some reason. Will reiterate with
+> > them and the error path.  
 > 
-> I'm writing to follow up on the patch I submitted regarding improved dynamic address allocation in userfaultfd tests. The patch aims to prevent race conditions by keeping temporary PROT_NONE reservations active until they can be atomically replaced with MAP_FIXED mappings.
+> Wait, false alarm. I actually did look at them and those in af/ don't
+> seem to use the combination of pcim_enable_device() + pci_request_*
 > 
-> I sent the patch through git send and I was wondering if you've had a chance to review this submission and if you have any feedback or questions about the implementation. As mentioned in the original submission, this approach makes the tests more reliable, especially when running in parallel, with minimal performance impact.
+> Only users of that combination have to be ported. Users of
+> pci_enable_device() + pcim_* functions and pcim_enable_device() +
+> pcim_* functions are fine.
 > 
-> Thank you for your time. I look forward to hearing from you.
+> Correct me if I missed the first mentioned combination up there.
 
-Your patch v2 doesn't look like to apply to akpm's branches.  Are you sure
-you generated on top of a correct base commit?
-
-Meanwhile, please consider sending it separately instead of replying to
-your other versions.  You can send a fresh new v3.
-
-Thanks,
-
--- 
-Peter Xu
-
+I think you're right, there are apparently multiple but separate
+drivers in that directory.
