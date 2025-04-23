@@ -1,33 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDA726C3AC;
-	Wed, 23 Apr 2025 07:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7922026F444;
+	Wed, 23 Apr 2025 07:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394841; cv=none; b=PlW/SKkFvMILd6pckHRtJ1xIX7ND/KUXGFN3qqYoFBJtVIe+GkIFHsRYjXww7dDsJ8dOaAl5is3x96g0l98HIlatG9uVHm5oI6o0w/tDtfxqQmdFrd+CEtsOjsaXBeMfTLORUI6FWbdkr8Dvll2GDQlIKxikkbsiT2iGJQYqu78=
+	t=1745394841; cv=none; b=b65t444dzbDreM9H8JEhVr0t2qUzSnHijl8BUdXDOs1VyQZFzXI3xbtvCJQrmDMsap2YHJoB1lsjbOIUr6fUz0RgW1/wKPwyaUdXNSVX5zA+ssZ4keBkyzwdWmuhU1aVnFDXWdPn2NFfk3N+NEfR8asBeh+/Y2EiY0q2wQh5utU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745394841; c=relaxed/simple;
-	bh=w3N1b5wUaWGFT1fCSk/q4Qs8p2Hl8Jq/47UGxXM5li8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ijibjzFNAmTzGmI4PnpIsA+hsbDKCoN3CmszZPa6wczc/ToNPcCNbNXqP48Y+9LvWvCvTiEziMuP5xztgFYvUsMOCXMRl5c/fjd35g5OFZ73xHf8eEDj/CHLNJgXEjfiTvpeQtEoR/I5PlJ6C+TJHVoBoAMexkVDqnt3q3uVZXs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u3wP0MK4; arc=none smtp.client-ip=10.30.226.201
+	bh=wZmVIbw/lQthHIrwcOBgr2yuApg1OYgWGTelA61EH1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nYP/cZgRyJ/+CTj2/RPWCe8qnwHQC27uoU7gUcfdnvsy/dxRqY9xRBPmemdpO+VBuvjiyIqrmvoHJ+C/IIFsQ69nv4a/GNkP7JZbTCeAIPeV6O3GwbcnRC4SOUpFdd5pI7qQbTVnsN+VMd5mpGq1jpzn4Rtn+igWM8lAardBFag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODGa/Wv0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u3wP0MK4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC181C4CEEA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODGa/Wv0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4031C4CEF9;
 	Wed, 23 Apr 2025 07:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745394840;
-	bh=w3N1b5wUaWGFT1fCSk/q4Qs8p2Hl8Jq/47UGxXM5li8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=u3wP0MK4FEDGfkOEOAmbjKjRknuKSNmzGC2pqAMfl2hLmtLN166yr6TgGT31Q5+7i
-	 2BCdI8a/BCmC8QoSTBAl+Pu/LPtueHcBYS7y/Xa91JYKXbQ/ixo8I7/zYu5sLPjkKO
-	 dDGphDs0/HUbZKJxcc0m5jE0afllZyMnhVT9XLOIeS3oAZJdoQfTZMVAyN/GwMKx5Y
-	 avn1UHPnrrD9KjTxjiiRP5gosqafiaTFwWlYyOZZbc5AMRrybvQjQ7fpY8KCfD5cg0
-	 IuqQ9CDFyiI1hOzvvo4ACZM5l3349TuiS/a1cd88GnePZFSI9NSfOjjW7XhexU7Seb
-	 CBffiP+SM3d4Q==
+	s=k20201202; t=1745394841;
+	bh=wZmVIbw/lQthHIrwcOBgr2yuApg1OYgWGTelA61EH1M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ODGa/Wv0EW6YjAydX6uA/bH14EN8i4pWoMUtptnE/kGBA9stKEr9HSH0e/h1WIt5R
+	 +/vMRKsP6b1JP/BbQCp8BsvrKcwJ8BkejO6fkmmu4gtPNTZ41RIxbHB9NqK3mrYvpz
+	 W33YK/awH668yE99yI84SgHdr5x4QHwhS+eGqmSliVhZVOTxgKTrRDMdUCI57njzz9
+	 Si3LD0xuygUSVBmbEkH10dxOP1rIISDg8eF+ohuXzxYhlOR1OeKgjfxSYe/2tT5keK
+	 qEj3viucpCdJirsII+oswJpGtDPlrkZyBM4H3xo9FdWgq9DeZwKHUhc25vhoNTO23L
+	 gbbSt0f6anfNw==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1u7Uve-000000002xB-2OFB;
+	id 1u7Uvf-000000002xH-2Def;
 	Wed, 23 Apr 2025 09:53:59 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
@@ -41,10 +42,12 @@ Cc: Rob Herring <robh@kernel.org>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 0/4] rtc: pm8xxx: fix uefi offset lookup
-Date: Wed, 23 Apr 2025 09:51:39 +0200
-Message-ID: <20250423075143.11157-1-johan+linaro@kernel.org>
+Subject: [PATCH 3/4] arm64: dts: qcom: sc8280xp-x13s: describe uefi rtc offset
+Date: Wed, 23 Apr 2025 09:51:42 +0200
+Message-ID: <20250423075143.11157-4-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250423075143.11157-1-johan+linaro@kernel.org>
+References: <20250423075143.11157-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,47 +64,31 @@ driver can take into account.
 On platforms where the offset is stored in a Qualcomm specific UEFI
 variable the variables are also accessed in a non-standard way, which
 means that the OS cannot assume that the variable service is available
-by the time the driver probes.
+by the time the RTC driver probes.
 
-This series adds a 'qcom,uefi-rtc-info' boolean DT property to indicate
-that the RTC offset is stored in a Qualcomm specific UEFI variable so
-that the OS can determine whether to wait for it to become available.
+Use the new 'qcom,uefi-rtc-info' property to indicate that the offset is
+stored in a UEFI variable so that the OS can determine whether to wait
+for it to become available.
 
-I used such a property in v1 of the series adding support for the UEFI
-offset [1], but mistakenly convinced myself that it was not needed given
-that the efivars driver would need to remain built in. As Rob Clark
-noticed, this is however not sufficient and the driver can currently
-fail to look up the offset if the RTC driver is built in or if a
-dependency of the efivars driver is built as a module. [2]
+Fixes: 409803681a55 ("arm64: dts: qcom: sc8280xp-x13s: switch to uefi rtc offset")
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-As with the rest of this driver, hopefully all of this goes away (for
-future platforms) once Qualcomm fix their UEFI implementation so that
-the time service can be used directly.
-
-Preferably the binding and driver fix can be merged for 6.15-rc by
-Alexandre, while Bjorn takes the DT changes through the branch which has
-the DT patches from v2 (which unfortunately missed 6.15 but may possibly
-be sent as hw enablement fixups). [3]
-
-Johan
-
-
-[1] https://lore.kernel.org/all/20250120144152.11949-1-johan+linaro@kernel.org/
-[2] https://lore.kernel.org/all/aAecIkgmTTlThKEZ@hovoldconsulting.com/
-[3] https://lore.kernel.org/lkml/20250219134118.31017-1-johan+linaro@kernel.org/
-
-Johan Hovold (4):
-  dt-bindings: rtc: qcom-pm8xxx: add uefi-variable offset
-  rtc: pm8xxx: fix uefi offset lookup
-  arm64: dts: qcom: sc8280xp-x13s: describe uefi rtc offset
-  arm64: dts: qcom: x1e80100: describe uefi rtc offset
-
- .../bindings/rtc/qcom-pm8xxx-rtc.yaml           |  6 ++++++
- .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts  |  2 ++
- arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi    |  1 +
- drivers/rtc/rtc-pm8xxx.c                        | 17 ++++++++++++-----
- 4 files changed, 21 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+index 8000254f4db5..66c39765225f 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
+@@ -1090,6 +1090,8 @@ &pmk8280_pon_resin {
+ };
+ 
+ &pmk8280_rtc {
++	qcom,uefi-rtc-info;
++
+ 	status = "okay";
+ };
+ 
 -- 
 2.49.0
 
