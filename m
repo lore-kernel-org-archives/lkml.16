@@ -1,91 +1,116 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA89EEAB
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:33:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689FBEEAB;
+	Wed, 23 Apr 2025 16:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426007; cv=none; b=iGsY0SRkCj9wVwwSscMA8giE1by27VvRwkfykIBX6Ug2uvSsQ697AgOtMOBEquPr7PlpRZlMfXxrozsj7OJvcQR+oPYSjL4WTMwAP33O/6kmFZ6PCD82f1daCBtHk2RTT16DIOQu1SWdDW010d9EoD4PjMD8MH8C3aRboeyhQUs=
+	t=1745426034; cv=none; b=CWusHeHQ/yWh3gyrT0afk4Jdg5HzxDsp4GIwaMIgiHH3grL8rkOxOa4tD9SYzeAj0iFCCcjbjN4qPOCHBqZjTJdFtkSBo5T+yBOYu6wFCGwCbZ+WJolZhtFgOmLx4nwXFqgciHBgj9u3yNONgw6XSTNmnc4mlrj4TPeGsSIPxz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426007; c=relaxed/simple;
-	bh=rSM+EFsjSD1fQZVjOGIdDi+cXZqnNDV9jV/QfQczB/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JftK6sGuO2+sdM/mR+4GGK5APhdCRlMI+7GEMNO+MYFAa/pQalrKP/Y+xhNZrRHR6SJ/LMcACxGTpsJmVAIlW5SoTOLbhjMm6lf9zi9xjKFIObGaUH9obAq2bzsD7Yhb0FwkepeAnfqyvrQpDpSlFr3uwNEix2ASJev/M2M1EZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fRrWudTT; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745426034; c=relaxed/simple;
+	bh=hOyUu0pImrYreJA4V4WZnnkWM6YpzzOiZblnlSREHVo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gDsne3mEFu9I3IZz4JStbnvJb5eI6KiYSznYsNeyFkEqq4qlbHG/dSGQnted3soog+H1Nhc2sy8sZpbZjOmBrz+t5mV0NPcq5ShJzLeuFA7cBMkNSJxi6t3i8EOigrqKb6ElQc22RqLfyiBFP/ElAOJB6GoiYaNZQlIKonySMyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cv4HlPyR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fRrWudTT"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso55875e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:33:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745426004; x=1746030804; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aasRYpj7F05sOufZTkv6nipdyRlL5vXxtfAyn5Wy74g=;
-        b=fRrWudTTxwcsyy6GQki44IlD4UCC8nodK7zBT7HhvFnSIvK1Ieci3nPDv8k3j392VG
-         2XfL8qNbYquFddgfgDP87zKNjeiW5Z2fTU1MwFAAGt1dE/XqpgBAisVTvRlOXAV+jnWZ
-         iaB7xjueubsZXLhvih7GTIcLXtz55iB6NaCchtDUVx/Fa7Jz1/HeuGRslJTBnPBDlVou
-         Vnwnf7xxzyXWtuyB7kBA1E0eOBVy7KayUIDDnFNZxdgjsRnSY07J6yvYQ40rHpcaBJwg
-         /jqwylFMFQ9OTafN3r84qoENr95g3YEnISclwgzznpKnRrZJp6foou+Nxtxo8hGVmVVT
-         JRzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745426004; x=1746030804;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aasRYpj7F05sOufZTkv6nipdyRlL5vXxtfAyn5Wy74g=;
-        b=NIElDxOKRDaEFUOgcfK3Wi1BfkOGbQHoTX2DCsevyQBJLEDG4/7f83G6LdISpMapM1
-         dAKxXrm4XaOT6VuVLUx9cKv5+uFUykwYbWDlzmKknbOxgx6Js9q3vTUj3po/R876JtdY
-         YTDPVijngzzsR6HSTkNfbrmBRjj5GsauEWJrQkTDTc+rryKiblQoxCU1F5g1rbFXmyjB
-         waD14t+g96MNaeFomgdpthsrumgA3gZpbHd7/j5ttUpodXu2/VhCo+tPmYjBUg6CGui7
-         89k0ausyW90gZjVZcUR77C6aGG9ZWDEVkqocpVSGHD24JvL35a6Va4W53QUOg7sHqCAX
-         0XoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOhPr/jv/6cSTC5Oqn7LLAet9XuON6jV+/Plea9PP5s3nWYv6robloE/t7INYl1DwUi0ulYCa8/rKk0aY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCh5d+lyhs6SPWgCdLxmDqk5KF5Od2K38gFEtV+PpzDLllm+M8
-	5S1Sqp0hb6Q6I9QEc4mGnmI2gkFDdG42Ah3lVniULn9/wIRT4oQU
-X-Gm-Gg: ASbGncsTTgcjlBzU1e8vkiTxU+OeAKkwnLn05fmJn7rYK6I3Z+A9f8uMCdtVdiaR/JQ
-	4IfO6ZfovwMKwgMwun2h2sQRCslUS2vHBD3bJIkzy/US6GyqCuXN99AufSFtcLbLRB8cYYpG+UC
-	5ATL0ArExQAi+5Cx2twOxMy2duWdMXLJgcSJa5+wncinCUplmL17xEyN1mG/lLc3mHau8lh5PaK
-	kA6BZUvnFnhoET5Y7bA+8exZ+AXi77R1ZrAYJzKc1CvwkPKYMXat/sItyXTsF3jGV8jx+FXkmCQ
-	8xwSMYKcOVbX5gya9MxeK53gvS8iU1JQR6io
-X-Google-Smtp-Source: AGHT+IHTxs5ApM4KX8y8JA6bgu6ME1GUQlOV5BttcxQMOG6MHXCWxullTHlG0OYtrJZj79e57BvGlA==
-X-Received: by 2002:a05:600c:5008:b0:43c:f0ae:da7 with SMTP id 5b1f17b1804b1-4409a0403a1mr1854745e9.7.1745426004071;
-        Wed, 23 Apr 2025 09:33:24 -0700 (PDT)
-Received: from andrea ([151.76.46.108])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408d19ffe8sm27847985e9.3.2025.04.23.09.33.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 09:33:23 -0700 (PDT)
-Date: Wed, 23 Apr 2025 18:33:19 +0200
-From: Andrea Parri <parri.andrea@gmail.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] riscv: Add Zicbop & prefetchw support
-Message-ID: <aAkWT3AN8xDeASFf@andrea>
-References: <20250421142441.395849-1-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cv4HlPyR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E997C4CEE2;
+	Wed, 23 Apr 2025 16:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745426033;
+	bh=hOyUu0pImrYreJA4V4WZnnkWM6YpzzOiZblnlSREHVo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cv4HlPyRr3sTKmq/NqoIDVmRJhecyaGyqg/TW7+zcFXNMJp73s2y9HE9nJrxn9kiS
+	 tNrpF1bVfnnJRhW7XejEVfjiXkNLxwDpznGtsHtRXJxI7r9BH0vPo2BV9Th0bH3ewy
+	 3Vamoa95BGd+A17FxlSZMLg0EA8O6COhw6Mgz3ICs68BGa+kTuM2u1KlsRkiv6tI9e
+	 /F5idRG2nBqU5wbfRg3ZDgkZsZ97Z/+YJ3zmABI8FU7yNO0O1qa6xqhG1yHYQH3V6t
+	 xOhtnSU2Xu9M8z2/xWdGLzLz2wjzZd/Dc1JOqnm5vT50PK9dY5c9ozP2OiMKcmm5Au
+	 5OFqrPRns7xDA==
+Message-ID: <6af9145e-2682-43d6-8315-223c26c69e18@kernel.org>
+Date: Wed, 23 Apr 2025 18:33:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421142441.395849-1-alexghiti@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] mfd: exynos-lpass: Fix another error handling path
+ in exynos_lpass_probe()
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>, lee@kernel.org,
+ alim.akhtar@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com,
+ ideal.song@samsung.com, beomho.seo@samsung.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <cover.1745247209.git.christophe.jaillet@wanadoo.fr>
+ <69471e839efc0249a504492a8de3497fcdb6a009.1745247209.git.christophe.jaillet@wanadoo.fr>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <69471e839efc0249a504492a8de3497fcdb6a009.1745247209.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-> Alexandre Ghiti (2):
->   riscv: Introduce Zicbop instructions
->   riscv: Add support for Zicbop
+On 21/04/2025 17:00, Christophe JAILLET wrote:
+> If devm_of_platform_populate() fails, some clean-up needs to be done, as
+> already done in the remove function.
 > 
-> Guo Ren (2):
->   riscv: Add ARCH_HAS_PREFETCH[W] support with Zicbop
->   riscv: xchg: Prefetch the destination word for sc.w
+> Add a new devm_add_action_or_reset() to fix the leak in the probe and
+> remove the need of a remove function.
+> 
+> Fixes: c695abab2429 ("mfd: Add Samsung Exynos Low Power Audio Subsystem driver")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Compile tested only.
+> 
+> Changes in v2:
+>   - Use a new devm_add_action_or_reset() to fix the leak in the probe
+>     and remove the need of a remove function.
+>   - Update the commit description accordingly
 
-For this series,
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Tested-by: Andrea Parri <parri.andrea@gmail.com>
-
-  Andrea
+Best regards,
+Krzysztof
