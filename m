@@ -1,114 +1,97 @@
-Received: from server.wki.vra.mybluehostin.me (server.wki.vra.mybluehostin.me [162.240.238.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5942726E165;
-	Wed, 23 Apr 2025 12:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.240.238.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F2419AD8B;
+	Wed, 23 Apr 2025 12:41:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745411990; cv=none; b=hl48F8P+LbQ2lJia7l+KSVB2+UFAbuRxuaAik9vXujZlO7Z7NVGgpu8MIH5XY9wjpxb7MHf6ekxQvzFbuuU9U5XBorgCgKIS1/P//3KUh+ygc9IFotx2JPKeSDRFnwGXaJX/4SNmNL3HxK3ia269IUkRBrBi+cqe/TdxFucGQzU=
+	t=1745412073; cv=none; b=REwxqBWcyayAsimcgGxXdw3JVW9fXAcuQqMzTmDNaDZQrx/JXdkd/4aUJzT/AAf3MgYdg/rG5qfpm6fUbsOpSw637s8tSbYB7TJeFLqKbB4e/tP+/nLcmYrx7vxy9JGyZ06DPj1W8rKHeBd8iiE4JO1XMnud2i4rdPo6Ce+RndQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745411990; c=relaxed/simple;
-	bh=bqsE/wefBMSFpl+lZS8viS6c+r4FhfHizYbstk43JFU=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=RlIQkicEu9cWKfy/VNunw3OkDinXNYhkBIr0O0YbBhdpeSLvC9mAf3mdmHMFce4hF+2gcv7qIUu+bfapMQjMCora1BLYI+iTfndX/RH3UPyD2pNIUtokvp433ewXXNyLoA5W+X/qEsghjM5Pc2d+WiqDe9HeAQWx53nMHTZ2Z8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com; spf=pass smtp.mailfrom=couthit.com; dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b=Msb2GjoA; arc=none smtp.client-ip=162.240.238.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=couthit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=couthit.com
+	s=arc-20240116; t=1745412073; c=relaxed/simple;
+	bh=vuPHSXDYGJIDkCqEVb7xzubmHAFjmIAu6deVCTDXe5k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zt/mBxGeStUmVYx1lXlNMam3e6mjsqs7n1w2wOm/ZYaJ2HE4dNBk8hsaBSvzgAJOP0RuswKuniRsaHLL9iXpVOs1nbjLXnyBiy5Z1X6uPzZr4t6C9LjCvX8jdAdT/p19OzcFLRsvHmrcDDmS7Ek4QDOZ17WwFbPfrIXT6UdkCs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SDH4MpuZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=couthit.com header.i=@couthit.com header.b="Msb2GjoA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=couthit.com
-	; s=default; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:
-	References:In-Reply-To:Message-ID:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=+785VF6wf30WYbsN36DFocTAix1Cw2QRRtSgmA1b0mA=; b=Msb2GjoAwZAIjJl8zVc/M8FmVw
-	pYxra9w5JfOBQHdCvh+gnNpkASeHxNUqeaQWQcsGtbwnAzi8dFPm5YZ3dTftgckx5kbQVhRgNq9K9
-	h19oy09iu0vCYYnvDfgbKReOZ07kR02HLT2Wn67szJEvyR2ztkRAvI3XN0yIHuKr1w5Ch9pJDQPA4
-	1Bx1mevYKhtn1el3BT1MXT2n/YSOLkwYIi9difoKs7V5Czgwrbwen0IqB4CYT7DPje9kjj33aiF1z
-	1x0SJYvkRyA2ukHxrN64t5S49VVOEglV3+3DBNV9J9jISx2F4PPPeRQT8retbOaPd0DyHa8pj2mOd
-	D/n7m6Og==;
-Received: from [122.175.9.182] (port=50077 helo=zimbra.couthit.local)
-	by server.wki.vra.mybluehostin.me with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.1)
-	(envelope-from <parvathi@couthit.com>)
-	id 1u7ZOB-000000002Er-2d9B;
-	Wed, 23 Apr 2025 18:09:43 +0530
-Received: from zimbra.couthit.local (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTPS id B1C601781E1E;
-	Wed, 23 Apr 2025 18:09:37 +0530 (IST)
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.couthit.local (Postfix) with ESMTP id 981B01781F8D;
-	Wed, 23 Apr 2025 18:09:37 +0530 (IST)
-Received: from zimbra.couthit.local ([127.0.0.1])
-	by localhost (zimbra.couthit.local [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id SUAdxjcaZ9Di; Wed, 23 Apr 2025 18:09:37 +0530 (IST)
-Received: from zimbra.couthit.local (zimbra.couthit.local [10.10.10.103])
-	by zimbra.couthit.local (Postfix) with ESMTP id 4D4C51781E1E;
-	Wed, 23 Apr 2025 18:09:37 +0530 (IST)
-Date: Wed, 23 Apr 2025 18:09:37 +0530 (IST)
-From: Parvathi Pudi <parvathi@couthit.com>
-To: aaro koskinen <aaro.koskinen@iki.fi>, andreas@kemnade.info, 
-	Kevin Hilman <khilman@baylibre.com>, rogerq <rogerq@kernel.org>, 
-	tony <tony@atomide.com>
-Cc: linux-omap <linux-omap@vger.kernel.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, nm <nm@ti.com>, 
-	pratheesh <pratheesh@ti.com>, Prajith Jayarajan <prajith@ti.com>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, 
-	danishanwar <danishanwar@ti.com>, praneeth <praneeth@ti.com>, 
-	srk <srk@ti.com>, rogerq <rogerq@ti.com>, afd <afd@ti.com>, 
-	krishna <krishna@couthit.com>, pmohan <pmohan@couthit.com>, 
-	mohan <mohan@couthit.com>, basharath <basharath@couthit.com>, 
-	parvathi <parvathi@couthit.com>
-Message-ID: <724357882.1133776.1745411977085.JavaMail.zimbra@couthit.local>
-In-Reply-To: <20250407072134.1044797-1-parvathi@couthit.com>
-References: <20250407072134.1044797-1-parvathi@couthit.com>
-Subject: Re: [PATCH v1 0/1] Adds support for OCP master port configuration
- of PRU-ICSS
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SDH4MpuZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0FC1C4CEE2;
+	Wed, 23 Apr 2025 12:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745412072;
+	bh=vuPHSXDYGJIDkCqEVb7xzubmHAFjmIAu6deVCTDXe5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SDH4MpuZmgQybX1eY37H/yKYnZhDg6DAis3McprvezR9yjHdpSgM2sn1I2aE9x1AB
+	 xIGpL0+YBtK5II54K4yMp6WWpNcX7HxtM0+FHw4xhtzqVF22nFmM0ZOCQffQ9ZvIIW
+	 zlrtKxncSH83B/Y3id0o3PCZ7zXwDPhkv7LnjhtVfncL3y1c3h/j6rCosB5gqlu2Au
+	 Jpxy+N29g3AE6P+Sl9Nh6Sohr9boBRizf1CkAHWtFKCe+hiBmTV/vlTn3iZhmWyusC
+	 Sa4RlgUGvnkE/aLBq2ArHOWsV8fYIV6i1BWi5hQeY2olu0dwCtQLZ07TgMimOk7SJr
+	 72ekoDy3dr1Bw==
+Date: Wed, 23 Apr 2025 07:41:10 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
+	Thinh Nguyen <Thinh.Nguyen@synopsys.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH next] usb: dwc3: qcom: Fix error handling in probe
+Message-ID: <al4hz5pukil2mc263cyzq5atm4gdjn6v2kdanayhd7edfueidu@obr7h7365w2w>
+References: <aAijmfAph0FlTqg6@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 8.8.15_GA_3968 (ZimbraWebClient - FF113 (Linux)/8.8.15_GA_3968)
-Thread-Topic: Adds support for OCP master port configuration of PRU-ICSS
-Thread-Index: 7g8Hzj8NpLh4XB+icw2rQ1sMuCtyyQ==
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.wki.vra.mybluehostin.me
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - couthit.com
-X-Get-Message-Sender-Via: server.wki.vra.mybluehostin.me: authenticated_id: smtp@couthit.com
-X-Authenticated-Sender: server.wki.vra.mybluehostin.me: smtp@couthit.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAijmfAph0FlTqg6@stanley.mountain>
 
-Hi,
+On Wed, Apr 23, 2025 at 11:23:53AM +0300, Dan Carpenter wrote:
+> There are two issues:
+> 1) Return -EINVAL if platform_get_resource() fails.  Don't return
+>    success.
+> 2) The devm_ioremap() function doesn't return error pointers, it returns
+>    NULL.  Update the check.
+> 
+> Fixes: 1881a32fe14d ("usb: dwc3: qcom: Transition to flattened model")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-> 
-> This patch updates OCP master port configuration to enable memory access
-> outside of the PRU-ICSS subsystem.
-> 
-> It configures PRUSS_SYSCFG.STANDBY_INIT bit to enable the OCP master ports
-> on AM335x, AM437x and AM57x devices.
-> 
-> Thanks and Regards,
-> Parvathi.
-> 
-> Parvathi Pudi (1):
->  bus: ti-sysc: PRUSS OCP configuration
-> 
-> drivers/bus/ti-sysc.c | 17 ++++++++++++++++-
-> 1 file changed, 16 insertions(+), 1 deletion(-)
-> 
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-This is a follow-up request for feedback in case this patch is missed, as it's
-been two weeks since the patch was submitted and no feedback has been received.
+Regards,
+Bjorn
 
-
-Thanks and Regards,
-Parvathi.
+> ---
+>  drivers/usb/dwc3/dwc3-qcom.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index d512002e1e88..b63fcaf823aa 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -740,15 +740,17 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!r)
+> +	if (!r) {
+> +		ret = -EINVAL;
+>  		goto clk_disable;
+> +	}
+>  	res = *r;
+>  	res.end = res.start + SDM845_QSCRATCH_BASE_OFFSET;
+>  
+>  	qcom->qscratch_base = devm_ioremap(dev, res.end, SDM845_QSCRATCH_SIZE);
+> -	if (IS_ERR(qcom->qscratch_base)) {
+> -		dev_err(dev, "failed to map qscratch region: %pe\n", qcom->qscratch_base);
+> -		ret = PTR_ERR(qcom->qscratch_base);
+> +	if (!qcom->qscratch_base) {
+> +		dev_err(dev, "failed to map qscratch region\n");
+> +		ret = -ENOMEM;
+>  		goto clk_disable;
+>  	}
+>  
+> -- 
+> 2.47.2
+> 
+> 
