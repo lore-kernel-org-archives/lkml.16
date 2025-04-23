@@ -1,157 +1,108 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3902927FD60
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:41:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC6CA79F5;
+	Wed, 23 Apr 2025 15:43:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745422906; cv=none; b=EaQvy9XFVy71ORoqN+QvBv2nXb72NTZe8ftp8w9x9GP4AkoxvMnVl8f932fzkpM3Lziv1zhILsSPOh9IEwDQ57UYFRhLdLWNjXuByEQO/Fwuqch3SvKvLCHtPD5gFBNbEWvnLrO3FoVZdCxg2a4mnAGZdR9m2OV6SwqwBJ6g3+s=
+	t=1745423010; cv=none; b=s5jIUmYqzzWck3c6GV81dBiFuEfW40sEFjmB2kAL8R5u1Laz6qkAd6ZabK3odp3ndQaKTLD/Rh5cVbayEEJyzBIhi6q9edv0bS0zD0w1JI+7ZN4MhxRCQhuarN6MXdtRfuojBmVUE55G201dUD/1Xz8ZNR0lm57oi65pV5AKXyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745422906; c=relaxed/simple;
-	bh=tRB/9U1tz6B7vNhElrvexJPFByCaa9dubFPADr5B5YE=;
+	s=arc-20240116; t=1745423010; c=relaxed/simple;
+	bh=ssY7ST5iazLsi96Tqvu4S0HIOKZR8jCoJKR0Xsh0u74=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BNxnB2fkUPWG7qJmX0OrDMBhnSu6BALVr0Psona2eJ5mSzDhxgJK+H8PDaRqrnVrysf3VuorXf4M/czRpG4XOzHT2wNhJNQddIJXaB+4RgaodSoiQmkwP1gz8Hj1u0qsuAtHsYV7smNCCWTDtPs1SWC2Fp1IHT++SUUu6cAaPcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P8vR4Fwv; arc=none smtp.client-ip=209.85.218.41
+	 To:Cc:Content-Type; b=VntVkJss6sFiAkLUsjzcPsuhiJr8dpkJFHQ7LKjXGcMRAnRrHBajSzPMgeFWGj5pC/FkKj45Cn02xCYgF0B4mcCj+u+yONTsGXO99TsX4wGKAYzc9/q7FmlLc4UE2LCPkaepLdqJ0PGYwVZfkty3WnZosFUBXwDaIQMH5CvS0GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IXT/H5i3; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P8vR4Fwv"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so3826766b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:41:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IXT/H5i3"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4769f3e19a9so45144981cf.0;
+        Wed, 23 Apr 2025 08:43:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745422902; x=1746027702; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745423007; x=1746027807; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FY5iFmMpDxty68PdcolHspUbhFrNF3/l2f5Aqnh/ngs=;
-        b=P8vR4FwvWwhGr078ZhI1XhmUkH1hQRMdJD7AwHn+LnwZHtmSl6xIzvzDfd0mgrKDD4
-         WkpSEkA2ctjnscjt/19QA85fGJELW1d5lc1ttRxfLI5Vx/pU/5qpZMIP5cjQrwOOwmUi
-         VFG0BqQIR7ojOTqEpp0HsRCBns7kLmKjpcS1rjyI+gCQcKZyZ+zicmW7jdBnGjQxQRvw
-         IMJAciDWiDapb9bUmP1DXUxRHZCQ18T158DNIrR5QjCimOeK/+ztVKVu328Xxmzm/cXu
-         5uGGZfDmYgUTV522XGGnIFDB+82PIJRAFDvwMYK7UvBbuIKYIwhTvrmmBLR/doPZMMTN
-         Id+g==
+        bh=6dvEbMYZC7h9hdSPfZirwVppIxgbewmNlUntIutHcto=;
+        b=IXT/H5i3lh4ggIpXeYsSHGHj8F7N5e22GfhWKm0TtmQZVZoJOxQRj5tjVIPNGD9br2
+         I2gd8YwDVhSjCxu8FUezXqr8F0PdSHtVBhcRJGEtKUceXi+j7yT61J1+fYDf9h2kdI4l
+         l0t2EC5MRFPNK9ExAMEkex7NW9TiIhwGJ/0yIDu3AnqiGT8iXBSjxPBzva5Oz7biIm6v
+         mdX55bCBkYJvl/KhaG3bdkJwGpoBT08g4zZdoHp8J5LaHEmMBbBNlJbr1Yk63goik96z
+         UsbcGkKNcKVbGu1DoKRwYHyw2MT9ZMWugavyRM4hlsx7A3zYS2N38N42y+wyHciyxx/L
+         aJmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745422902; x=1746027702;
+        d=1e100.net; s=20230601; t=1745423007; x=1746027807;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FY5iFmMpDxty68PdcolHspUbhFrNF3/l2f5Aqnh/ngs=;
-        b=KT1baHBVbQzqslJLRmoM1DZRq7fzGOJUxVnHeWHKhAqdVovq9G2GdjUwhY8lo++qPF
-         oK8hDnv3y4dPMzqHb++OGJmpZjqgtYhKP+eFfuFWzL4AmFPbsw9DCnyTWtNb8MsH6fP2
-         jaFkoESAvgXAkU+LNgwiF5VWfbd2pjw1lH9updW3QGc5ckN/Pxtj4DE18XoFsrecCgMx
-         RyPdO9oxs0zIOlOU3tY8K4TA9XqJsyfanNvWOXWGtrEEWy6AcScq3sKq4U9mch6gDe9w
-         vC/aGsG2yu47Fb9PhiuU98Q7a5ehCYKnIpgXMYtKDK6v6RvTYD3ARRu3G7pH4DBygP/N
-         rspQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVH7+v5vVroxa8Ut2Iman8FcCIcKdZ9Sub2H04RLs+AsAitSoXAgi+X4Tl9B07CpSSFF/RtMb6aWSpTKMs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGhxapnizGxA+9JQ1duuBhl3obIqGJE1Nn/mg+tmSqJxz7Uv4m
-	Hd+vjLbKZ7zsm7aoTsr6IO3l+hyDjzLcqH++ecHDIrC9FcYNvCa1ukWgc0Yv88wuoqHmHueKVn0
-	AXAspB1IQ02QlcKBZoJMuTeJf2iM=
-X-Gm-Gg: ASbGnctxr39DAaHVc54ncM1VTSYCG87cux4hdu/MwIrN73lvvLmc/VhiXJzDTRkuBbD
-	afBYwoFtDTAm3pEiW11FOPs63xEUYvvgdasfo+H4dOQ5U04YDP/LBcfHamx1O6zwEY4zgu2eDbE
-	gt4vgkh7b3OoebHI2ZA66ce9LR9PKk/s5ixN/YTA==
-X-Google-Smtp-Source: AGHT+IHR/oeBWJlb4wmu01u8pToo9FDg1AmiwDv2N4Y6sp66tX6UMuweAynTZ6K7KqT8Wby0PxAsbuBil7NRcm/Qo2U=
-X-Received: by 2002:a17:906:d0c3:b0:ac7:b366:c331 with SMTP id
- a640c23a62f3a-acb74dde4d0mr1497093066b.53.1745422902230; Wed, 23 Apr 2025
- 08:41:42 -0700 (PDT)
+        bh=6dvEbMYZC7h9hdSPfZirwVppIxgbewmNlUntIutHcto=;
+        b=MN0pscQRHuVqLVkSPrtQ7j8tH7G8oIGjioz/Mj9522pQqjJcRktBub0ZVX5LS2WrLs
+         mbm0sjsAtz3Vyp+0LLHc1mahoa3qMGc4pbvhrgO5tVl19vBGIti317Idw/jCUN+ngIn7
+         rOEMMJBHtYspdAtJ9j25ETGToTonz9a6Tz1Vg+eeVCvj95KG1MkE/U4KiOWNlolYPsEU
+         lgDvNxAf5dKzS11IZeqsSAU2TRfh17uPwz09CI9367Rq3oQAXubI8SS8Llw3uYMOrqdm
+         KU0CXXxhaJOjz4MeFSqJezB57Lxg8+2IHl3M9drO2TzCd20qEGV5zmavUiGzkbstm/bg
+         HP2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVvadbpHd97DXAzbP5mSJzjKw5Gcp8TkjOJ5juyZUSeuzk2NgbYjqWHcc2JvFAWbm8mWaiqC5wFJg4SgRK+@vger.kernel.org, AJvYcCXKpI9fquRyOqjyCu712Kks5eRbQgQBvmNP7/iKBZuLLQ8RnQ6UmpPTGKtkb0vmZU8+iFR9xZB5a6ZS@vger.kernel.org
+X-Gm-Message-State: AOJu0YziYmAh4kMYmDJwPm/Z0IzlObRQ8KEx1YJ4AZv67ZCh/+t9pXrl
+	C94+oIgLxT2VKtHG64CLV5LBtm4tPq2K+TWx/pC3NKOCEix5XMTB8JTOwdvTJ2jC/Nw4GzZMjCt
+	l68Sk+BRmfVsNJU579PQysqgEtGw=
+X-Gm-Gg: ASbGncuggB0eTGZg2T5rYl6kb9x2H/shgu9/6RH/WO1qRacdhprMbrPu0s+N0FVKDcj
+	ekTT7tjt/ZXoP263Pzxd62tGYhR28A9zfUYOG96HhL65nFhaiGkj1QlvGk2SN9s7O0Ncd0mVWgr
+	bSKpUnq4gi8J+beMDsHhHpCMDTVkl0WMU6ItcSMaERoVY6O17scZM=
+X-Google-Smtp-Source: AGHT+IGdz/NzWj1aEvnvgg90NCdRbUnEKeBpXHV/ehEUITidqcy1/33fajsmWc0TIu1ipHhyh6QNeEGMqWqYe+Q0HxE=
+X-Received: by 2002:ac8:5890:0:b0:476:a6bc:a94a with SMTP id
+ d75a77b69052e-47aec3923d9mr333870471cf.8.1745423007634; Wed, 23 Apr 2025
+ 08:43:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wgjZ4fzDKogXwhPXVMA7OmZf9k0o1oB2FJmv-C1e=typA@mail.gmail.com>
- <CAPM=9tzj_OBFJNsN9j7nMs4OR3=V9yrPmaH7VvN-KNYUYhf-vQ@mail.gmail.com>
- <CAADnVQ+KnfDLd-=Mg1BDJxCf80K_=RN0dJy_yp681gf1dQMhtg@mail.gmail.com>
- <mhewqdlvb5ahqordw2nuebq7yvsxo7xvdas4vl6gehmbmypcil@v3fn7nzllglj>
- <896a67ec-9f48-4137-9d34-4bb16861e284@phoronix.com> <27d55aab-c2d8-4edf-bab5-91a04b8383c5@suse.cz>
-In-Reply-To: <27d55aab-c2d8-4edf-bab5-91a04b8383c5@suse.cz>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 23 Apr 2025 08:41:30 -0700
-X-Gm-Features: ATxdqUFIcenwHiM9UYGGSiwEU3iDIWncv0ysFnfihZeRvDquBA-XPgCy2Q4YDc4
-Message-ID: <CAADnVQ+iFBxauKq99=-Xk+BdG+Lv=Xgvwi1dC4fpG0utmXJiiA@mail.gmail.com>
-Subject: Re: Linux 6.15-rc3
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michael Larabel <Michael@phoronix.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Dave Airlie <airlied@gmail.com>, Sebastian Sewior <bigeasy@linutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20250418-apc_paper_binding-v2-1-17c9023b7c9b@gmail.com> <20250423153505.GA561193-robh@kernel.org>
+In-Reply-To: <20250423153505.GA561193-robh@kernel.org>
+From: Alexey Charkov <alchark@gmail.com>
+Date: Wed, 23 Apr 2025 19:43:34 +0400
+X-Gm-Features: ATxdqUFih5A5ETgoEVEVx22tVbPmblZ68v4pMBnuKdVGysFb-8q6QbGm_op82DM
+Message-ID: <CABjd4Yyiz0A4cSDmS7Tn1B03Hcoi+wTLXZqMTo1qRy-vWG0rvw@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: arm: vt8500: Add VIA APC Rock/Paper boards
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 1:42=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
+On Wed, Apr 23, 2025 at 7:35=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
+:
 >
+> On Fri, Apr 18, 2025 at 07:24:25PM +0400, Alexey Charkov wrote:
+> > APC Rock is a development board based on WonderMedia WM8950 SoC
+> > released around 2013. Paper is the same as Rock but lacking a
+> > VGA port and shipped with a recycled cardboard case.
+> >
+> > While at that, put myself as the maintainer, given that Tony is
+> > unavailable as of lately.
+> >
+> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> > ---
+> > Split the series from v1 into separate bindings patches so as not to
+> > spam all the subsystems with unrelated changes, per Rob's suggestion
+> >
+> > Changes in v2:
+> > - kept single-valued compatibles in a single enum (thanks Rob)
+> > - dropped the empty overall description node
+> >
+> > Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-7-f9af6=
+89cdfc2@gmail.com/
+> > ---
+> >  Documentation/devicetree/bindings/arm/vt8500.yaml | 23 ++++++++++++++-=
+--------
+> >  1 file changed, 14 insertions(+), 9 deletions(-)
 >
-> ----8<----
-> From: Vlastimil Babka <vbabka@suse.cz>
-> Date: Wed, 23 Apr 2025 10:21:29 +0200
-> Subject: [PATCH] locking/local_lock: fix _Generic() matching of
->  local_trylock_t
->
-> Michael Larabel reported [1] a nginx performance regression in v6.15-rc3 =
-and
-> bisected it to commit 51339d99c013 ("locking/local_lock, mm: replace
-> localtry_ helpers with local_trylock_t type")
->
-> The problem is the _Generic() usage with a default association that
-> masks the fact that "local_trylock_t *" association is not being
-> selected as expected. Replacing the default with the only other expected
-> type "local_lock_t *" reveals the underlying problem:
->
-> ./include/linux/local_lock_internal.h:174:26: error: =E2=80=98_Generic=E2=
-=80=99 selector of
-> type =E2=80=98__seg_gs local_lock_t *=E2=80=99 is not compatible with any=
- association
->
-> The local_locki's are part of __percpu structures and thus the __percpu
-> attribute is needed to associate the type properly. Add the attribute
-> and keep the default replaced to turn any further mismatches into
-> compile errors.
->
-> The failure to recognize local_try_lock_t in __local_lock_release()
-> means that a local_trylock[_irqsave]() operation will set tl->acquired
-> to 1 (there's no _Generic() part in the trylock code), but then
-> local_unlock[_irqrestore]() will not set tl->acquired back to 0, so
-> further trylock operations will always fail on the same cpu+lock, while
-> non-trylock operations continue to work - a lockdep_assert() is also
-> not being executed in the _Generic() part of local_lock() code.
->
-> This means consume_stock() and refill_stock() operations will fail
-> deterministically, resulting in taking the slow paths and worse
-> performance.
->
-> Fixes: 51339d99c013 ("locking/local_lock, mm: replace localtry_ helpers w=
-ith local_trylock_t type")
-> Reported-by: Michael Larabel <Michael@phoronix.com>
-> Closes: https://www.phoronix.com/review/linux-615-nginx-regression/2 [1]
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> Do you want me to apply or you will take via vt8500 tree?
 
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+We don't have a dedicated public vt8500 tree right now, so if you
+could apply it would be much appreciated!
 
-Another lesson learned. I stayed on gcc-13 for too long :(
-
-Linus,
-
-maybe take the fix directly, since perf regression is severe
-for network heavy workloads.
-
-I can confirm netperf -t TCP_STREAM 3x regression and "perf report" shows:
-
-12.90%  netperf          [kernel.kallsyms]           [k] page_counter_uncha=
-rge
-        |
-        ---page_counter_uncharge
-           |
-           |--11.68%--try_charge_memcg
-           |          |
-           |           --11.68%--mem_cgroup_charge_skmem
-           |                     |
-           |                      --11.50%--__sk_mem_raise_allocated
-           |                                __sk_mem_schedule
-           |                                |
-           |                                |--9.42%--tcp_wmem_schedule
-           |                                |          tcp_sendmsg_locked
-           |                                |          tcp_sendmsg
-
-
-With the fix memcg accounting takes < 1 %.
+Best regards,
+Alexey
