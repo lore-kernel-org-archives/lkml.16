@@ -1,153 +1,185 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90861A2389
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:47:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E02253921
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:48:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745441244; cv=none; b=PIt6+1TFGI7jGi3noKWqi3ZPyzz448wycFBtlnKbU0X3QYf1HdH/4u8CdMKPdUVfq/PAyTJnhqeXeVvPBBUJZSsxvnhl6IfciAoytQoR4lx3DcmAyXyTDj+lt37dtEbTRMBiR1oGslvwR0kf4lv1HTMaV9UzQaRXuJRvDgRLeeE=
+	t=1745441316; cv=none; b=uDaCVIKV/wuKozRMmsZHjZdTPO0scmBPd12OdTI5TjkfPCqO0euiILiyMUtZIHTL/Etl100q5iebSSoQD9uz++5le4ZTLqlYDNq3GPJq4+/4ZWQBDwn//YS0+kFBWJixc2I8NMcg6mzNIqK7QiuInYdEWuGYTnl9mjefuQ6ljI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745441244; c=relaxed/simple;
-	bh=9o+fog/E8/Y/Ep3sI6pTRlp7waYxHqWZlzLlUSvxIbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BA2AXTp//6dFIiuCnP30TPqw1sf8Dk20QtLuUKSb4qixJP1euODhthUWgAU4vYZlVDmbA4biAX0MJZqmBCZWx8qsG66hjR3fT0jCJJboVQ+dRFwxFT3S1tmkqus8ANG2bG5cG2xEMpjMPAhipztRZbMNTsgz7ED9FGxYOJIr+ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=K0BKg295; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1745441316; c=relaxed/simple;
+	bh=GMkKnDZs2TogS+OZnK3g/cGnwU+bgfYk9NTXbGCQMeI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dQHKgIt8L1datHWJY/g5LyenVcZhFP7OPasYRZKk1PpFkk+lmC+tt+5qL9gYdFzMv4/y0Y0hOeMZ9EOdKZ2o53MWMOrtnT3TDLolXh9qgRI2amiqml48LQGzHQuuRhw6EyBBIAra7yheL1kJLpIqcB5wfDP36E5wTfvtoKuyMRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r0h6jKF5; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="K0BKg295"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-aee773df955so1274301a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:47:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r0h6jKF5"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so13745ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:48:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1745441242; x=1746046042; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qadNYoaJhFPVnikI7MqGvzeOQWIRrwJCqdY+2xJb3Ik=;
-        b=K0BKg2958DiU4hWdg/ztCOoAJvYPW3CMDZWb+ZwOdV6Vl9Pv5dXsC/jmzEMVjtPXBB
-         gHX+Xdkfw0E6jHzenQLnmmZkOTn8LG6zIg3qudIRXqOpWNqOQgUBOQJrAf9UIBrL5OLf
-         LZeEWySKA3ix1BiFJxTB28jx3On+Wq0TN+eXE=
+        d=google.com; s=20230601; t=1745441314; x=1746046114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7T7e3sZe+hUN4WNXu8vyuvnIhtGlIZfELcc/drShjUE=;
+        b=r0h6jKF5mxSbKqVCNQ927I7hJWgyo98H9GT+dnhO1gKb3UGJ+CSMRd8Q/IvINjVY0l
+         FXDYO99siitfEa9lDCo3GO1wGNaTE2auPIYNrv5lyg+0ArAT3qNL7uziSkZD1S8ybrnc
+         1LDmbsu2Ft+L8ujw4c/p4cmqM2uMxutt0D0ijYSTqrl3Ae3DD71cFARJB3+6B3dHW3vy
+         lrueD8386q1CCvTXXKUjT1AW/MSbkOTbeJcLrCMyZOUHJFY5B/L9AjzWURMHuVUh9TsO
+         QBNk5bsaB0Kv57yL5eNlFBrO1bQLv7MxfSG+Z7TjoGo24OCVTHKT/NTqIUr12CizMBHm
+         7uDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745441242; x=1746046042;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qadNYoaJhFPVnikI7MqGvzeOQWIRrwJCqdY+2xJb3Ik=;
-        b=w27Zss6fCv5cB/biDgjPLfJrFalHEDOz6hgiUBVlp6zjs0YsFmLoumt5jWKO+6Y7qi
-         spa4qf4NtSrv+I8OFljv6zEQiXTgx/TjjUwz2k72bmhIyaMcYlm0Dmz2ImQ+UQxw7xSW
-         6vb4zepLZbsGXSQ9dNNC/WW2IDMq7F+E3W43e1lCJA/+ZrK3XA0+O6q0AgrYu8EJpqyI
-         wKwqaNkgpPp3ihFwP9mMdqF1zcz1lHdvQEvJ23pcCCNn2wrsUUe2JGvCgoZUgyt7MZOO
-         qN6i67NdTwwTX2r/TdDR3E7REHxpeINEWDmNpSRaIf+1J8Gm13jpxLry+LAwHLXsbLlr
-         za7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX6eFNFKif4Av6YjOn3iA+wb7yJCw0TRx0LcZsRJzBqdulYOilRT2ankcfq/7yPXnDxBhyaWrBS7i4joho=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6b6t2qaOlf4hx8a67kr17bSpKksMzFyh/bNSM+Eue58bk3dT+
-	gILcocXPQUgjk/JmI3+1RN4tnjG/8meDFChASTLGKKS/WRZ7d31U1P6AyS5QDwg=
-X-Gm-Gg: ASbGncstJ5miiQ0OgKAtvzzU2m+7haBCWx/TfzoFpIw0R4gwcsnDJE0wN4hiUumewhT
-	Z/ewmI+a7AOAiXJNf837W/IX32MTBT93RYzwU+iKkyfJemYPU59ZFYbNRGmvIvBaqmaKUDQ+tDx
-	eku2oDWbX9fOPshOgLX2/6qnsGzOOnNbam38riSOlbjtFzhzaFgriqmcQn/60VbbL5mQeofz/Uy
-	drdkoSt0EvkkJgPtRUXTUQyDrTgDBy8GPLJtGvOsg9GqH5K80rcIsjhqRQ64acElF+6XLRUSJJj
-	cN+4W0B3agrxTBKtsGZSPHwA7oKTp5yqBE7kZaynSGVpm1iMoGLfPxQBAWU=
-X-Google-Smtp-Source: AGHT+IF5+OdbC6uuNEBaPHTOjQ76F8Y9VNe3wZx/cneGiXQy2TYO2E3fpZtgPx1i/wPR7pX74IsDUw==
-X-Received: by 2002:a17:90b:2801:b0:2f1:2e10:8160 with SMTP id 98e67ed59e1d1-309edab1bd7mr1408a91.11.1745441241864;
-        Wed, 23 Apr 2025 13:47:21 -0700 (PDT)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309e0d09cacsm2120908a91.49.2025.04.23.13.47.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 13:47:21 -0700 (PDT)
-From: Joe Damato <jdamato@fastly.com>
-To: netdev@vger.kernel.org
-Cc: kuba@kernel.org,
-	donald.hunter@gmail.com,
-	Joe Damato <jdamato@fastly.com>,
-	Jianfeng Liu <liujianfeng1994@gmail.com>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Hao Luo <haoluo@google.com>,
-	Tejun Heo <tj@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] tools/Makefile: Add ynl target
-Date: Wed, 23 Apr 2025 20:46:44 +0000
-Message-ID: <20250423204647.190784-1-jdamato@fastly.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1745441314; x=1746046114;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7T7e3sZe+hUN4WNXu8vyuvnIhtGlIZfELcc/drShjUE=;
+        b=iN8vemMwhzREiKOjbDw0DJF3p4RwcnpYoHXvG1rQEGJcq5ykB93Gpd3nOdZqZrQkQc
+         dOva4olD2b+Lm77WKwDUBokUuRn7houlwVZkJ2WNaPUX77tEyNnk5knshNGa5pJshm/L
+         C0S1zatQLYxoj5ircmk3xfqem7m34rXC/G5sitTNKVmaAJeu9BAlQi71UUHKGCqJW7gR
+         fTMCqNroigL/QJI5Buoif3tQFjwrZjK6jMkZfyk9oCbFOiDWsibjxoQif84+pno6XEvj
+         6MfM0t3mfFzF9Wzl938R7YRIa+P/SaBngC+U++koVZd0qh3HLtPQGximC+A96tP+wvqw
+         PN/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWz6kmSoQAsUGi77/47FCUzIcEY2ZDYDgg+Cz60PAcLEsqCjo3zMYT2aTsy2EXp9UaPTbJO/fHOjVJmIqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsdGKeEUAW7ZtVSvPicsJOYOVNCuUybU5THZjRoFfk1+quAbJw
+	RrrkeYhBId6obtI7WeukqwTepWr/ORR/6aWvGWx26v+rVCg4zJ7sN/VJZEDLd/Ix9eNMgwoksuo
+	BJ/zZyEVJtEXnrGceMVSlHZNq36x9mRLuZmzt
+X-Gm-Gg: ASbGncsQLFIS7MbYxBIOKr4YFx4Is+5iqWSili76xgk3MIN6FzDEIwnKDZ4X7NZdIPd
+	3j52JT6AW2MM41t8Zrdkl3tjEVTNWA59N/jPf0uRqPSkbIK0vvMxQKk/QU85wieGCXGJvUzvyII
+	LBLOv2J2kwQ0APLLItnJOYOyQptWFAysWVlaiY2BZX/t6K+Q3Y0aE=
+X-Google-Smtp-Source: AGHT+IExdZYQcSL4ZSE7r1r2DmT7LBXNbY8cNlCpvdhQiBrWm3wh+b/AgOTeN8dIsbroRlDeDuYqAySGeHwYi5u0CYk=
+X-Received: by 2002:a05:6e02:1b05:b0:3ce:46e2:42c7 with SMTP id
+ e9e14a558f8ab-3d9303a5da2mr152855ab.13.1745441313785; Wed, 23 Apr 2025
+ 13:48:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250410044532.52017-1-irogers@google.com> <Z_dp7E2wtSek-KHo@z2>
+In-Reply-To: <Z_dp7E2wtSek-KHo@z2>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 23 Apr 2025 13:48:22 -0700
+X-Gm-Features: ATxdqUHWMdNSnRzm2rl_aY_rXQ9Wb0DO-h_rZ2fPkL42xi7zcht25wdHFLc9Iq4
+Message-ID: <CAP-5=fU6NM4LZWt9SdTFX9JKTgfghwAVvtXc-qBuUb0vpUeTQA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Metric related performance improvements
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	John Garry <john.g.garry@oracle.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add targets to build, clean, and install ynl headers, libynl.a, and
-python tooling.
+On Wed, Apr 9, 2025 at 11:49=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hi Ian,
+>
+> On Wed, Apr 09, 2025 at 09:45:29PM -0700, Ian Rogers wrote:
+> > The "PMU JSON event tests" have been running slowly, these changes
+> > target improving them with an improvement of the test running 8 to 10
+> > times faster.
+> >
+> > The first patch changes from searching through all aliases by name in
+> > a list to using a hashmap. Doing a fast hashmap__find means testing
+> > for having an event needn't load from disk if an event is already
+> > present.
+> >
+> > The second patch switch the fncache to use a hashmap rather than its
+> > own hashmap with a limited number of buckets. When there are many
+> > filename queries, such as with a test, there are many collisions with
+> > the previous fncache approach leading to linear searching of the
+> > entries.
+> >
+> > The final patch adds a find function for metrics. Normally metrics can
+> > match by name and group, however, only name matching happens when one
+> > metric refers to another. As we test every "id" in a metric to see if
+> > it is a metric, the find function can dominate performance as it
+> > linearly searches all metrics. Add a find function for the metrics
+> > table so that a metric can be found by name with a binary search.
+> >
+> > Before these changes:
+> > ```
+> > $ time perf test -v 10
+> >  10: PMU JSON event tests                                            :
+> >  10.1: PMU event table sanity                                        : =
+Ok
+> >  10.2: PMU event map aliases                                         : =
+Ok
+> >  10.3: Parsing of PMU event table metrics                            : =
+Ok
+> >  10.4: Parsing of PMU event table metrics with fake PMUs             : =
+Ok
+> >  10.5: Parsing of metric thresholds with fake PMUs                   : =
+Ok
+> >
+> > real    0m18.499s
+> > user    0m18.150s
+> > sys     0m3.273s
+> > ```
+> >
+> > After these changes:
+> > ```
+> > $ time perf test -v 10
+> >  10: PMU JSON event tests                                            :
+> >  10.1: PMU event table sanity                                        : =
+Ok
+> >  10.2: PMU event map aliases                                         : =
+Ok
+> >  10.3: Parsing of PMU event table metrics                            : =
+Ok
+> >  10.4: Parsing of PMU event table metrics with fake PMUs             : =
+Ok
+> >  10.5: Parsing of metric thresholds with fake PMUs                   : =
+Ok
+> >
+> > real    0m2.338s
+> > user    0m1.797s
+> > sys     0m2.186s
+> > ```
+>
+> Great, I also see the speedup on my machine from 32s to 3s.
+>
+> Tested-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Joe Damato <jdamato@fastly.com>
----
- tools/Makefile | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+Ping.
 
-diff --git a/tools/Makefile b/tools/Makefile
-index 5e1254eb66de..c31cbbd12c45 100644
---- a/tools/Makefile
-+++ b/tools/Makefile
-@@ -41,6 +41,7 @@ help:
- 	@echo '  mm                     - misc mm tools'
- 	@echo '  wmi			- WMI interface examples'
- 	@echo '  x86_energy_perf_policy - Intel energy policy tool'
-+	@echo '  ynl			- ynl headers, library, and python tool'
- 	@echo ''
- 	@echo 'You can do:'
- 	@echo ' $$ make -C tools/ <tool>_install'
-@@ -118,11 +119,14 @@ freefall: FORCE
- kvm_stat: FORCE
- 	$(call descend,kvm/$@)
- 
-+ynl: FORCE
-+	$(call descend,net/ynl)
-+
- all: acpi counter cpupower gpio hv firewire \
- 		perf selftests bootconfig spi turbostat usb \
- 		virtio mm bpf x86_energy_perf_policy \
- 		tmon freefall iio objtool kvm_stat wmi \
--		debugging tracing thermal thermometer thermal-engine
-+		debugging tracing thermal thermometer thermal-engine ynl
- 
- acpi_install:
- 	$(call descend,power/$(@:_install=),install)
-@@ -157,13 +161,16 @@ freefall_install:
- kvm_stat_install:
- 	$(call descend,kvm/$(@:_install=),install)
- 
-+ynl_install:
-+	$(call descend,net/$(@:_install=),install)
-+
- install: acpi_install counter_install cpupower_install gpio_install \
- 		hv_install firewire_install iio_install \
- 		perf_install selftests_install turbostat_install usb_install \
- 		virtio_install mm_install bpf_install x86_energy_perf_policy_install \
- 		tmon_install freefall_install objtool_install kvm_stat_install \
- 		wmi_install debugging_install intel-speed-select_install \
--		tracing_install thermometer_install thermal-engine_install
-+		tracing_install thermometer_install thermal-engine_install ynl_install
- 
- acpi_clean:
- 	$(call descend,power/acpi,clean)
-@@ -214,12 +221,15 @@ freefall_clean:
- build_clean:
- 	$(call descend,build,clean)
- 
-+ynl_clean:
-+	$(call descend,net/$(@:_clean=),clean)
-+
- clean: acpi_clean counter_clean cpupower_clean hv_clean firewire_clean \
- 		perf_clean selftests_clean turbostat_clean bootconfig_clean spi_clean usb_clean virtio_clean \
- 		mm_clean bpf_clean iio_clean x86_energy_perf_policy_clean tmon_clean \
- 		freefall_clean build_clean libbpf_clean libsubcmd_clean \
- 		gpio_clean objtool_clean leds_clean wmi_clean firmware_clean debugging_clean \
- 		intel-speed-select_clean tracing_clean thermal_clean thermometer_clean thermal-engine_clean \
--		sched_ext_clean
-+		sched_ext_clean ynl_clean
- 
- .PHONY: FORCE
+Thanks,
+Ian
 
-base-commit: 45bd443bfd8697a7da308c16c3e75e2bb353b3d1
--- 
-2.43.0
-
+> Thanks,
+> Namhyung
+>
+> >
+> > Ian Rogers (3):
+> >   perf pmu: Change aliases from list to hashmap
+> >   perf fncache: Switch to using hashmap
+> >   perf metricgroup: Binary search when resolving referred to metrics
+> >
+> >  tools/perf/builtin-stat.c                |   6 +-
+> >  tools/perf/pmu-events/empty-pmu-events.c |  66 ++++++++-
+> >  tools/perf/pmu-events/jevents.py         |  66 ++++++++-
+> >  tools/perf/pmu-events/pmu-events.h       |  23 +++-
+> >  tools/perf/tests/pmu-events.c            | 129 +++++++++--------
+> >  tools/perf/util/fncache.c                |  69 +++++-----
+> >  tools/perf/util/fncache.h                |   1 -
+> >  tools/perf/util/hwmon_pmu.c              |  43 +++---
+> >  tools/perf/util/metricgroup.c            | 102 ++++++--------
+> >  tools/perf/util/metricgroup.h            |   2 +-
+> >  tools/perf/util/pmu.c                    | 167 +++++++++++++++--------
+> >  tools/perf/util/pmu.h                    |   4 +-
+> >  tools/perf/util/srccode.c                |   4 +-
+> >  tools/perf/util/tool_pmu.c               |  17 +--
+> >  14 files changed, 430 insertions(+), 269 deletions(-)
+> >
+> > --
+> > 2.49.0.504.g3bcea36a83-goog
+> >
