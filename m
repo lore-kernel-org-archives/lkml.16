@@ -1,104 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA5D2820AC;
-	Wed, 23 Apr 2025 16:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C72E27FD71;
+	Wed, 23 Apr 2025 16:43:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426628; cv=none; b=KD0izm7ElFq+P4hjQhmu61bzhlkwKNuxpr0efENCFgl1hKfDJSQr5MxKd4TpLUv3xy66W7wVqThCMSGZ63sFxfCqxGDdcP5nRAJJAftlGEG4GCaEyrj/bBDsohCrO5J24UhGajyNDmR4IVr/WJEm0jMUtDfGxQvr1hqJr0fAYsY=
+	t=1745426640; cv=none; b=o6BdYyoch/Q7yKVacyCe+2kXoD+g3PxdxSQgjLP3/S3ZQxTgG0AZBiDM/6kANzuMFc7c2CSvr6FLP5hE3kq9wbBdYVDdo3GH1XDuU395t2K9HsNMRa46s9o/xAbmNZNJN4Gkm7KPHJ3vcJvki03sA3lJfCYhc9kBCjbalPEmVxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426628; c=relaxed/simple;
-	bh=2zTwYcMG8ogoTuHfXKsMTzT7WR40ubEfn19/fvEvN6U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MvRwR0TI2g/uzVqpQdC8jzIXLxM07hVBSxj+zRm2fgz2iTROviX4XiNzWYmaEn2opjpB+eYtAcD6MAWsMx0j3KQ0oeETdHMhg6bf8sH7Eo40GRnX5ms3vrdUO8O4AjRZLPowWdL0quUgLDELYSXUUZWp+CsLhXxeC1AhYFKMzw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: R9QLMutORNKbTNz6IvWsAA==
-X-CSE-MsgGUID: 1oDmtaNlSC2pcYgHLxfXUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47160718"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="47160718"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:43:46 -0700
-X-CSE-ConnectionGUID: s5cnf4AERSaFpT/2Uwc5/Q==
-X-CSE-MsgGUID: oay+8vSfQAa4aiFXkXdhCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="155580835"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:43:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u7dCG-0000000F7Si-3R6f;
-	Wed, 23 Apr 2025 19:43:40 +0300
-Date: Wed, 23 Apr 2025 19:43:40 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Haibo Chen <haibo.chen@nxp.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1745426640; c=relaxed/simple;
+	bh=TmsFT/k12epNq9WbCUQlZuVOv21gEQBz/+cdNiERNiI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vm2MprSue0OtOfNpMMgzr9NJFwI2hxctYy9wI6j8BI/WSgj9ZSdpisRp+VBHsiny9Kpu1ZxJNkimQ1xMf1iqFVl/RS6BXalEZY2Fov+8LdUwKpC4ruYPxXIC0R5xZPGzq9MnrnweBMQpUI3ZGX5reGvhjcNKmGtFf5YEo5E4iZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0NkUkM1; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0NkUkM1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C83C4CEE2;
+	Wed, 23 Apr 2025 16:43:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745426639;
+	bh=TmsFT/k12epNq9WbCUQlZuVOv21gEQBz/+cdNiERNiI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Z0NkUkM1gS05G7ZhhzLOynJtCcpxr1SUirwv5yFZ7WT3+MXuhtT9zBzxL2n/DgF/A
+	 h70A1xojccbukVxLejEoR1ovHnh5A9nWRYSPQGt2Rv0tPBKFeGrxmk2cU/9uu/US5X
+	 ydx25KmOJdURwmv726dCeInBVLuX9ml2RRwT7KvICwMowis+/fXZz3b/K5uEAt1bHH
+	 qsL7FfEIR3KcEFNKZDlmMOHEKK4gkCuEo5mnsL+6jyUcCK8xKzQ9nEFjnnnws0iBHD
+	 Cjwjav15sZu4fLYeIvKZQiHT/rgZf14D8rR1LTHp7DJb0AAFdMBAJVQtxjVZSAlvFj
+	 e9gUeFfeGtDlg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: "Theodore Ts'o" <tytso@mit.edu>,
+	Andreas Dilger <adilger.kernel@dilger.ca>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Jan Kara <jack@suse.cz>,
+	Zhang Yi <yi.zhang@huawei.com>,
+	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
+	Shida Zhang <zhangshida@kylinos.cn>,
+	Baokun Li <libaokun1@huawei.com>,
+	Jann Horn <jannh@google.com>,
+	Brian Foster <bfoster@redhat.com>,
+	linux-ext4@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: imx93_adc: load calibrated values even
- calibration failed
-Message-ID: <aAkYvE6VtoQItM5o@smile.fi.intel.com>
-References: <20250423-adcpatch-v1-1-b0e84c27ae98@nxp.com>
+Subject: [PATCH] ext4: avoid -Wformat-security warning
+Date: Wed, 23 Apr 2025 18:43:49 +0200
+Message-Id: <20250423164354.2780635-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423-adcpatch-v1-1-b0e84c27ae98@nxp.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 04:02:48PM +0800, Haibo Chen wrote:
-> ADC calibration might fail because of the noise on reference voltage.
-> To avoid calibration fail, need to meet the following requirement:
-> ADC reference voltage Noise < 1.8V * 1/2^ENOB
-> 
-> For the case which the ADC reference voltage on board do not meet
-> the requirement, still load the calibrated values, so ADC can also
-> work but maybe not that accurate.
+From: Arnd Bergmann <arnd@arndb.de>
 
-...
+check_igot_inode() prints a variable string, which causes a harmless
+warning with 'make W=1':
 
->  #define IMX93_ADC_PCDR6		0x118
->  #define IMX93_ADC_PCDR7		0x11c
->  #define IMX93_ADC_CALSTAT	0x39C
-> +#define IMX93_ADC_CALCFG0	0X3A0
+fs/ext4/inode.c:4763:45: error: format string is not a string literal (potentially insecure) [-Werror,-Wformat-security]
+ 4763 |         ext4_error_inode(inode, function, line, 0, err_str);
 
-Please, keep one style of the hex values.
-If the small letters are less used, prepare a patch to convert them, otherwise
-do that for capital letters.
+Use a trivial "%s" format string instead.
 
-...
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ fs/ext4/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +	if (msr & IMX93_ADC_MSR_CALFAIL_MASK)
-
-Please keep {} as the body is quite long and it's easy to make a mistake in a
-long term.
-
-> +		/*
-> +		 * Only give warning here, this means the noise of the
-> +		 * reference voltage do not meet the requirement:
-> +		 *     ADC reference voltage Noise < 1.8V * 1/2^ENOB
-> +		 * And the reault of ADC is not that accurate.
-> +		 */
->  		dev_warn(adc->dev, "ADC calibration failed!\n");
-> -		imx93_adc_power_down(adc);
-> -		return -EAGAIN;
-> -	}
-
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 94c7d2d828a6..3cfb1b670ea4 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -4760,7 +4760,7 @@ static int check_igot_inode(struct inode *inode, ext4_iget_flags flags,
+ 	return 0;
+ 
+ error:
+-	ext4_error_inode(inode, function, line, 0, err_str);
++	ext4_error_inode(inode, function, line, 0, "%s", err_str);
+ 	return -EFSCORRUPTED;
+ }
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.5
 
