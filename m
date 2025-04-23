@@ -1,240 +1,235 @@
-Received: from sender4-of-o50.zoho.com (sender4-of-o50.zoho.com [136.143.188.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79ACE28A1F7;
-	Wed, 23 Apr 2025 19:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745437185; cv=pass; b=kx5gduC7zpLbEx9KmyOHGdOhTkQFwPOdDM4RPQZIsQ0+jBvtl/9DEd6cWK+3ziC6piwV7J3ejIHCYLXgXab6oB9G3RAN8Ay1TSb83fu5wq1jglfjoga/dYm04OdtpDofx18MROZUnjqDnFUM2kZJR75JLi6AKGhudD7Nr3A+xHc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745437185; c=relaxed/simple;
-	bh=JQ+3b0W/MNKeBpR4ba1CCpDH+a2ulOgu0Qk3jNG/zgs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FtwnTnnM1hdcM1ZoR1qurpHFz+KEBQd4H+wWUhn8vBE6EuFT9Wmsys/DG4u795a/RaSJ1WTbiPLPqYyh482pbzIxj+15+rUk7wIAVUKIl5whto6jtlivpCu5Sjpdj/4PxK+9W8bmu5uTCguXMoKh0q68llzRdrPATvMQepUkZ0E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apertussolutions.com; spf=pass smtp.mailfrom=apertussolutions.com; dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b=s0J2v2eH; arc=pass smtp.client-ip=136.143.188.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apertussolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apertussolutions.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29938291170
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 19:40:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745437250; cv=none; b=kg+UMVkAObdcI6VNwW0LVAdIAfPQXJVP2/hkWS7YJxDe26NxAJW4nR63r18oSiM5WsuVZ3oGp58yI9aZYD7yqC6zek/8sYjv6bzkOqRVlyL25Fbmm1i6sUxoGXy7Ukg2Yxq51kTI9tF/kizZZfr/qAuevacJ04b713bmdFSpjqQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745437250; c=relaxed/simple;
+	bh=aMRE5rhqUubTGLzmZ1zkM/Gk1z4kf8WuzNsoKArWtNE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nXggCA4QRPmXhrpRHV8jhLn+o7G1LShRj/iAlSCfpsUtgJZCJNX73Y/s7WwVFaKPr6NehFPlQJlVJ2yuEw8Dls0L6TcsoF4EP07llk9tDZQia2uCxkzzsoSYwPYOvBlMelXH2sXjM5+ra2Soyni8RK08+MhynOIQB7welVG17Bs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T6hQsKZY; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="s0J2v2eH"
-ARC-Seal: i=1; a=rsa-sha256; t=1745437122; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=VnVKjdl3e3iMvdK9Rxuf4HSbjbQzdwR/xipAehrjgOAnz255F+p1SoBty458RRvh7Ue+EXWgZN8hNlRHX7hO1vLiaju/zyYl0c+AdaOO6i4ChBky0g58XIHIWKeYPz7u/4HBUVA5tHTqvuhCotP1VCtXh3QekGd5UoOHogNsuFg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745437122; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=FETEiRCISdYgHI8lwABdikQrD0gNW/XmKFvVVI6xmiM=; 
-	b=SoA5Y+iC4DE+GNaDavJMbE2dO+1m9ibXWll07xF16DS1elQrx+v6HjO5c7PGvah8WbNWAcB9kjA154/TIuj5+C9T8lgeJYe6rVGG1CgFDaotfGf8hx7dRP0bmhM6Ug7VtQJ1aP6qG4VAeRkmBNCxpOiPx/w2bs6KlAT7J7h/QuQ=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745437122;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=FETEiRCISdYgHI8lwABdikQrD0gNW/XmKFvVVI6xmiM=;
-	b=s0J2v2eHuQm04u0jvNRhD0qBjB4NQUt8srdfSMnQO5LyaPub+xNWCNivjEuNxzCr
-	YcnGqtpHFu48DxKvWd1JyG5ay73dTnw4h6CggzZ8tmGxa5eMBz3zD+zdRgVUUuKMgOk
-	BwP0ixBLGLLFFexacW9Do97Hb8vRUgc6HPkTcmMo=
-Received: by mx.zohomail.com with SMTPS id 1745437118502545.35750540574;
-	Wed, 23 Apr 2025 12:38:38 -0700 (PDT)
-Message-ID: <799b6ed6-c23f-44ca-96bb-d4683fc92c33@apertussolutions.com>
-Date: Wed, 23 Apr 2025 15:38:35 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T6hQsKZY"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22423adf751so2360505ad.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:40:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745437248; x=1746042048; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F4TIb8/cGcT5YOO6jpwMUaKc5ramXtbgTdB6E61EUK4=;
+        b=T6hQsKZYB93ZdFvt2SPQwDgyETsy/e4T8S942RayAZ1djgPTMDhqK6YU5CIJ0odjuQ
+         AKA2j3tre4fVIqal00IZf5ReeqHzLBSrEraBqGf1HIA3c9fdYp5MZbMoZKxUkMncMqO9
+         f/9i5LIu7r9mseNs9cH27YDPvmorY0duXUnFA7le7cFe7E/92KdNW5l6gGdkTp/zoZHV
+         PBTHBg/LueAzlR77K4KYx/xqaqZmu2uAxJtYgpGErNbTngZ8smFQjqbLTukugzHPs1Ro
+         Ued9xdBB3K2GdaBBi73SHD/nGqtHx3Rf/AHKWKA9XVCGri0TvvO75SEEYTzxtOOrIh5u
+         zwRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745437248; x=1746042048;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F4TIb8/cGcT5YOO6jpwMUaKc5ramXtbgTdB6E61EUK4=;
+        b=OWnXRn9yYv9pkBnNyuBC57B9rtQzYx8AQdU12oUGT6q/JjYmFPdrWEIX46RZ6bapcM
+         0G7tQzF0Negz9MfuZBVONB/vZuk/RWHS2L7U4aDyIvldMRqOQ4aOswZ9w44xFFYJztCn
+         Ugw9n2fpeBvO0OJ83rV0q2Wf1FSMctsjf5rtbhLi3+pOVj1Jhh4yRsdaxNw86e4qbBi3
+         tAOOeVyVqQKyrHAfHznHLrZMYjB+X7iyGT7psaZTxQDVioM8+3uIVoO6Q443uzltMu60
+         jiDYXGIBed2ykxMznpPHK9O9AmUwQ9QVkNEu7LMLUJ5M8MFkfojJMPOzuKgUO+XqQ1BT
+         PtWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWa1nu8TH99UV4MdBPMJLA4inpWF0cpaIV/OA9zjioZpDiuK2Z/ys5qerxFGRrPNWASjwn+sFNp0SZnIYo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylspeQtOqXDII9t6N3b5iJa8zbYgZYORWdIPtgXDAlqnqtNdQF
+	/2Gtk7FN1UXNzUjxejfocv3yhjdY/Ejy59QFf+XWsdQc+npJ0II9
+X-Gm-Gg: ASbGncsZ1bRC+ZWr+OobDRxbIwC5HrkcQPu8k1NVCRycJi0pD5WjvzDjqrrgxnSQ2nL
+	V3FMyrzZVITuugmXikeZK7+uM5nZZ3Dau6wvPrBWPiMCAuXefCHM1nPUNiePy1esX7270wkZQX5
+	mFE98jwoVYV54YeQiTMhXESMl/Tj6CaoGlDbDFTlHsepeGm7GyZs5YbgchsMu6sJpRNyJvVt+zv
+	kT/ni+/2095RjCx20j+PxYoBuc38FaoT8sLXBa3wkGqK5Blv7szS3yK1M/MuVfpwRr8Bbt7ouJB
+	VMcn2VBL1zaEl+Y/dDYmPNwc3EkjfzzrXBrVBfIJ
+X-Google-Smtp-Source: AGHT+IGJTj4t3YyBeTpu99dqNzdz4h1Gumsi9bbZoo/nwDcyxygthxC2epv2+Ql+pGJESwDyMuUhMw==
+X-Received: by 2002:a17:902:d492:b0:224:1af1:87f4 with SMTP id d9443c01a7336-22db1aa28a4mr9176975ad.22.1745437248148;
+        Wed, 23 Apr 2025 12:40:48 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fe0976sm108905785ad.245.2025.04.23.12.40.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 12:40:47 -0700 (PDT)
+Date: Wed, 23 Apr 2025 15:40:45 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Marc Zyngier <maz@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+Subject: Re: [PATCH v3 4/6] arm64: nvhe: Convert the opencoded field modify
+Message-ID: <aAlCPZQtFjr4F-re@yury>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <20250417-field_modify-v3-4-6f7992aafcb7@quicinc.com>
+ <86r01rjald.wl-maz@kernel.org>
+ <aAJsaNdznnz-1qap@yury>
+ <aAkn8lvzoa1grdkt@shell.armlinux.org.uk>
+ <aAkw-tFctkk3xyS8@yury>
+ <aAk7VqNOLujcyZS0@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 16/19] tpm, tpm_tis: Allow locality to be set to a
- different value
-Content-Language: en-US
-To: Stefano Garzarella <sgarzare@redhat.com>,
- Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
- ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
- nivedita@alum.mit.edu, herbert@gondor.apana.org.au, davem@davemloft.net,
- corbet@lwn.net, ebiederm@xmission.com, dwmw2@infradead.org,
- baolu.lu@linux.intel.com, kanth.ghatraju@oracle.com,
- andrew.cooper3@citrix.com, trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-17-ross.philipson@oracle.com>
- <4w5oshnh6opkrhngzy74cagd7vio45wz6cv3ltmowfbcipdjvs@rijgzlucl6jd>
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
- 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
-In-Reply-To: <4w5oshnh6opkrhngzy74cagd7vio45wz6cv3ltmowfbcipdjvs@rijgzlucl6jd>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAk7VqNOLujcyZS0@shell.armlinux.org.uk>
 
-On 4/22/25 06:20, Stefano Garzarella wrote:
-> On Mon, Apr 21, 2025 at 09:27:09AM -0700, Ross Philipson wrote:
->> DRTM needs to be able to set the locality used by kernel. Provide
->> a one-shot function tpm_chip_set_locality() for the purpose.
->>
->> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->> Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
->> ---
->> drivers/char/tpm/tpm-chip.c     | 34 ++++++++++++++++++++++++++++++++-
->> drivers/char/tpm/tpm_tis_core.c |  2 ++
->> include/linux/tpm.h             |  4 ++++
->> 3 files changed, 39 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
->> index e25daf2396d3..a603f0dadd43 100644
->> --- a/drivers/char/tpm/tpm-chip.c
->> +++ b/drivers/char/tpm/tpm-chip.c
->> @@ -44,7 +44,7 @@ static int tpm_request_locality(struct tpm_chip *chip)
->>     if (!chip->ops->request_locality)
->>         return 0;
->>
->> -    rc = chip->ops->request_locality(chip, 0);
->> +    rc = chip->ops->request_locality(chip, chip->kernel_locality);
->>     if (rc < 0)
->>         return rc;
->>
->> @@ -380,6 +380,7 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
->>     }
->>
->>     chip->locality = -1;
->> +    chip->kernel_locality = 0;
->>     return chip;
->>
->> out:
->> @@ -695,3 +696,34 @@ void tpm_chip_unregister(struct tpm_chip *chip)
->>     tpm_del_char_device(chip);
->> }
->> EXPORT_SYMBOL_GPL(tpm_chip_unregister);
->> +
->> +/**
->> + * tpm_chip_set_locality() - Set the TPM locality kernel uses
->> + * @chip:    &tpm_chip instance
->> + * @locality:   new locality
->> + *
->> + * This a one-shot function. Returns zero or POSIX error on failure.
->> + */
->> +int tpm_chip_set_locality(struct tpm_chip *chip, u8 locality)
->> +{
->> +    int ret;
->> +
->> +    if (locality < 0 || locality >= TPM_MAX_LOCALITY)
+On Wed, Apr 23, 2025 at 08:11:18PM +0100, Russell King (Oracle) wrote:
+> On Wed, Apr 23, 2025 at 02:27:06PM -0400, Yury Norov wrote:
+> > On Wed, Apr 23, 2025 at 06:48:34PM +0100, Russell King (Oracle) wrote:
+> > > On Fri, Apr 18, 2025 at 11:14:48AM -0400, Yury Norov wrote:
+> > > > On Thu, Apr 17, 2025 at 12:23:10PM +0100, Marc Zyngier wrote:
+> > > > > On Thu, 17 Apr 2025 11:47:11 +0100,
+> > > > > Luo Jie <quic_luoj@quicinc.com> wrote:
+> > > > > > 
+> > > > > > Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
+> > > > > > - reg &= ~MASK;
+> > > > > > - reg |= FIELD_PREP(MASK, val);
+> > > > > > The semantic patch that makes this change is available
+> > > > > > in scripts/coccinelle/misc/field_modify.cocci.
+> > > > > > 
+> > > > > > More information about semantic patching is available at
+> > > > > > https://coccinelle.gitlabpages.inria.fr/website
+> > > > > > 
+> > > > > > Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> > > > > > ---
+> > > > > >  arch/arm64/kvm/hyp/include/nvhe/memory.h | 3 +--
+> > > > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > > > > 
+> > > > > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > > > index 34233d586060..b2af748964d0 100644
+> > > > > > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > > > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > > > @@ -30,8 +30,7 @@ enum pkvm_page_state {
+> > > > > >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
+> > > > > >  						 enum pkvm_page_state state)
+> > > > > >  {
+> > > > > > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
+> > > > > > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
+> > > > > > +	FIELD_MODIFY(PKVM_PAGE_STATE_PROT_MASK, &prot, state);
+> > > > > >  	return prot;
+> > > > > >  }
+> > > > > 
+> > > > > Following up on my suggestion to *not* add anything new, this patch
+> > > > > could be written as:
+> > > > > 
+> > > > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > > index 34233d5860607..08cb6ba0e0716 100644
+> > > > > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > > @@ -30,9 +30,8 @@ enum pkvm_page_state {
+> > > > >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
+> > > > >  						 enum pkvm_page_state state)
+> > > > >  {
+> > > > > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
+> > > > > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
+> > > > > -	return prot;
+> > > > > +	u64 p = prot;
+> > > > > +	return u64_replace_bits(p, state, PKVM_PAGE_STATE_PROT_MASK);
+> > > > >  }
+> > > > 
+> > > > This is a great example where u64_replace_bit() should NOT be used. 
+> > > 
+> > > Why not? Explain it. Don't leave people in the dark, because right
+> > > now it looks like it's purely a religous fanaticism about what
+> > > should and should not be used. Where's the technical reasoning?
+> > 
+> > Because enum is an integer, i.e. 32-bit type.
 > 
-> Since `locality` is unsigned, we can skip the `locality < 0` check.
-
-You are correct, will be fixed.
-
->> +        return -EINVAL;
->> +
->> +    ret = tpm_try_get_ops(chip);
->> +    if (ret)
->> +        return ret;
->> +
->> +    if (!(chip->flags & TPM_CHIP_FLAG_SET_LOCALITY_ENABLED)) {
->> +        tpm_put_ops(chip);
->> +        return -EINVAL;
+> This statement is false, in this case.
 > 
-> IIUC this operation is allowed only one time.
-> So, this case seems more like an operation that's not allowed because 
-> it's already been done, so what about returning "-EPERM".
-
-Sure we can change it to "-EPERM".
-
-
-v/r,
-Daniel P. Smith
-
+> The kernel currently uses -std=gnu11, and GNU tends to be more relaxed
+> about things, and while the C standard may say that enums are ints,
+> that isn't the case - gcc appears to follow C++ and allow enums that
+> are wider than ints.
 > 
->> +    }
->> +
->> +    chip->kernel_locality = locality;
->> +    chip->flags &= ~TPM_CHIP_FLAG_SET_LOCALITY_ENABLED;
->> +    tpm_put_ops(chip);
->> +
->> +    return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(tpm_chip_set_locality);
->> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/ 
->> tpm_tis_core.c
->> index 222081e5c7f7..2bc0cf46adbf 100644
->> --- a/drivers/char/tpm/tpm_tis_core.c
->> +++ b/drivers/char/tpm/tpm_tis_core.c
->> @@ -1124,6 +1124,8 @@ int tpm_tis_core_init(struct device *dev, struct 
->> tpm_tis_data *priv, int irq,
->>     if (IS_ERR(chip))
->>         return PTR_ERR(chip);
->>
->> +    chip->flags |= TPM_CHIP_FLAG_SET_LOCALITY_ENABLED;
->> +
->> #ifdef CONFIG_ACPI
->>     chip->acpi_dev_handle = acpi_dev_handle;
->> #endif
->> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
->> index 86fe8f6a2d52..884791acba2e 100644
->> --- a/include/linux/tpm.h
->> +++ b/include/linux/tpm.h
->> @@ -207,6 +207,8 @@ struct tpm_chip {
->>
->>     /* active locality */
->>     int locality;
->> +    /* the locality used by kernel */
->> +    u8 kernel_locality;
->>
->> #ifdef CONFIG_TCG_TPM2_HMAC
->>     /* details for communication security via sessions */
->> @@ -355,6 +357,7 @@ enum tpm_chip_flags {
->>     TPM_CHIP_FLAG_SUSPENDED            = BIT(8),
->>     TPM_CHIP_FLAG_HWRNG_DISABLED        = BIT(9),
->>     TPM_CHIP_FLAG_DISABLE            = BIT(10),
->> +    TPM_CHIP_FLAG_SET_LOCALITY_ENABLED    = BIT(11),
->> };
->>
->> #define to_tpm_chip(d) container_of(d, struct tpm_chip, dev)
->> @@ -448,6 +451,7 @@ static inline u32 tpm2_rc_value(u32 rc)
->> extern int tpm_is_tpm2(struct tpm_chip *chip);
->> extern __must_check int tpm_try_get_ops(struct tpm_chip *chip);
->> extern void tpm_put_ops(struct tpm_chip *chip);
->> +int tpm_chip_set_locality(struct tpm_chip *chip, u8 locality);
->> extern ssize_t tpm_transmit_cmd(struct tpm_chip *chip, struct tpm_buf 
->> *buf,
->>                 size_t min_rsp_body_length, const char *desc);
->> extern int tpm_pcr_read(struct tpm_chip *chip, u32 pcr_idx,
->> -- 
->> 2.39.3
->>
->>
+> $ aarch64-linux-gnu-gcc -S -o - -std=gnu99 -x c -
+> enum foo {
+> A = 1L << 0,
+> B = 1L << 53,
+> };
+> int main()
+> { return sizeof(enum foo); }
 > 
+> Gives the following code:
+> 
+> main:
+> .LFB0:
+>         .cfi_startproc
+>         mov     w0, 8
+>         ret
+>         .cfi_endproc
+> 
+> meaning that sizeof(enum foo) is 8 or 64-bit.
+> 
+> If B were 1L << 31, then sizeof(enum foo) is 4.
+> 
+> > Now, the snippet above
+> > typecasts it to 64-bit fixed size type, passes to 64-bit fixed-type
+> > function, and the returned value is typecasted back to 32-bit int.
+> 
+> In this case, the enum is defined using:
+> 
+>         KVM_PGTABLE_PROT_X                      = BIT(0),
+>         KVM_PGTABLE_PROT_W                      = BIT(1),
+>         KVM_PGTABLE_PROT_R                      = BIT(2),
+> 
+>         KVM_PGTABLE_PROT_DEVICE                 = BIT(3),
+>         KVM_PGTABLE_PROT_NORMAL_NC              = BIT(4),
+> 
+>         KVM_PGTABLE_PROT_SW0                    = BIT(55),
+>         KVM_PGTABLE_PROT_SW1                    = BIT(56),
+>         KVM_PGTABLE_PROT_SW2                    = BIT(57),
+>         KVM_PGTABLE_PROT_SW3                    = BIT(58),
+> 
+> As it contains bits beyond bit 31, and we use -std=gnu11 when building
+> the kernel, this enum is represented using a 64-bit integer type. So,
+> the casting to a u64 is not increasing the size of the enum, and the
+> return value is not getting truncated down to 32-bits.
+> 
+> > Doesn't sound the most efficient solution, right? On 32-bit arch it
+> > may double the function size, I guess.
+> 
+> Given that there's no inefficiency here, and that this is arm64 code
+> which is a 64-bit arch, both those points you mention seem to be
+> incorrect or not relevant.
+> 
+> > But the most important is that if we adopt this practice and spread it
+> > around, it will be really easy to overflow the 32-bit storage. The
+> > compiler will keep silence about that.
+> 
+> Given that in Marc's suggestion, "prot" is a 64-bit value, it's being
+> assigned to a u64, which is then being operated on by the u64 variant
+> of _replace_bits(), which returns the u64 result, which then gets
+> returned as a 64-bit enum, there is no issue here as far as I can see.
 
+Ah, OK. You're right. On the other hand, enum is a bad specifier here,
+because this thing is not an enumeration. It's clearly a bit structure
+that reflects attributes in the page table record.
+
+This enum confused me (and probably others), and could better be an
+u64. And because this is really the 64-bit storage that tightly coupled
+to MMU layout, it should be a fixed-type, and should be handled with
+u64_xx_bits() functions.
+
+If it was a true enumeration, something like dma_data_direction or
+ucount_type, or if it was a true native type like long, using this
+u64_xx_bits() is not optimal.
