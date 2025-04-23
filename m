@@ -1,69 +1,73 @@
 Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA90A202978
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:10:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF2726C38B
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:10:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745406638; cv=none; b=o8LRu7WtYWT7SseIvqOB7z8+w3FFP0GwB6W12dCUF1iyxeT8aQ2yooNdY+N1XglmBRrK3VVPGEE4m9aVjUD0VfyHEuN/Xv2LyD2v9Ie6jgQufHa/ZxOz0f5iRCME7t4NkBD6cjVPjU+B0F9Cd9MlFkSEfDY/PzU+xnLcjSbqag0=
+	t=1745406640; cv=none; b=AO44P1U0dpBy4euEgM8J7v8r1UOOzJkH39l9i8c2sOApTDGoyimDApxyzVKd5dvNRi+q99T/RrldKUlJAh/IxzfGVVvFrxPXAF/Sps+IqM16SFbksYGbO8gyxRyGNWJmtA+TtV9olDDkhOX0zeqeHvHpoPT8Kl2znQDgwlZNJgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745406638; c=relaxed/simple;
-	bh=k3Bn/GBxkfNx/u4lwNAFdGdIkKWNz1KfOT2CNV/pQCc=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XO/N9raf1P2UWiarIkFIHfEHMpotmDJ5ZDm+geJ9aHGvPGCWzd8ihCa2NAKQawa9+tlJ34DZ27mJQDMaqOVtzrNhsJNUdCqi6XqOvMUFsNfe/d7kUbM/i4ss10540NrDuZFEYaYPW6zEO4yyy5qbWEX4P4vdZoVrduv9KLOes5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aSqLbbDt; arc=none smtp.client-ip=209.85.221.74
+	s=arc-20240116; t=1745406640; c=relaxed/simple;
+	bh=AIhGYwkLeED8QStPdAydMCUNiRnP/CVX0kIh57deXpY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=HZyI8qga9rUPOv1rBBIfG3ppaGIN7mx1f26if4iiNn9Ho/UBH2PRZ4kPmGsuisUS4B0OliW6aBAB1I5Z7pOj+iyV8TMgwAJEzWspvpwQ9yA/ak2fDtX8C3fw7Z7XkKQMHWwfD1tXrEa1HVfb+VGCwHhhyAMgcCzjhf8cA+tQGcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NHXc3JyT; arc=none smtp.client-ip=209.85.221.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aSqLbbDt"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39ee54d5a00so2176071f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:10:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NHXc3JyT"
+Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39ee57e254aso2978762f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:10:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745406635; x=1746011435; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=R+Jgdo0E/3+F++54iSxrOokJDtZIP7Sy3xrh+eNgtec=;
-        b=aSqLbbDtFRM98iVCiQIG0bftvVPdTAKzkmqpLDFPldmR2WUyIRTXo2YGcjD8rODZZQ
-         C2ImAMB61xu5ujEGXGqG6wyzRJBt1Dx18m7iCljzHMY0VudDcr5hbcrfTP0DIw+ttO/S
-         1nFwHsaX8nWmpu0Alvr3jlcxTXgWhWennJzk8I9whWw5+y2ThIkjZfDQqxYQ3xPLJA7w
-         L//m9h9lwwuL+9evf0BYEw/KbPaJeYvA/UVvR7TwHZZ2VDUP3C5ljRvLTzL4ik/oMg9J
-         TVIsNHreCJALThbpz2qjlLSEk+SYDF8GNA1oDGnsPf3G7wahoeKJYCX9gWS1Q86/Rjgg
-         LWrQ==
+        d=google.com; s=20230601; t=1745406637; x=1746011437; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=b9EdJfoFvntZ3Aijc9ezm1SvO5dYoA86SEzEWFMBPBA=;
+        b=NHXc3JyTYp29mEwMOlzM1kpx+KT2QA7/6WpjVaX7UpDF6PZtR1YwKxiEABKZJxEwx8
+         ggrmk7qJ4cvYsWsQKyOG4aezL5XOHwFQ3dsmdw6OLWTdrm2KPdvsMh19JYhxIsl7IQ0J
+         weaLBMBNqFm8lUhOwfOQeUE/OGuPuoD2YnVC3jv5P9xbX5/3HKNXslcJVNIeRgxgWE+5
+         kGNXxg4dW7lufyioi5dOmA2plj5Ok6DVyscgUFCI5CeoP2hpuvLpdsWRb5Fm5Sm3Uobc
+         x0o1wiZx+OaO2UMv6Ter7t1mVEQNpQVDzlMyYBUN+XAnXZ7TNRVHvIx3yXQ6ygrczr4l
+         cOPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745406635; x=1746011435;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=R+Jgdo0E/3+F++54iSxrOokJDtZIP7Sy3xrh+eNgtec=;
-        b=rVhQ8RyM+dOGeg3BelRJVU1FBrDMN1714LEwHfzldP+ZLWPN32gxsrfpukkWeTVcpj
-         zdtcZ+mJePA3m1Nurppd2SeF5o44kPwitzH59haqhUmFGLa+8qfQKpRHBKVVQ9jZ+DWT
-         SStflnTOw7SsfN2Scc3H2L/PiEvPSkR2lNOrOWyk6eC0rdFesY5nm8FhegLlbd+EOvnl
-         CzgAioh3N47kIS4l2YloO5lIU7pbROcM+xIoUDwnu3vOLtjUhUI56sH8zeJsvcArQUCQ
-         4uCLBxkrZtTaNg4iaOFp7BaqJmQn2clxF+2EpJccbIIzDlvxf2qylE6Dd29BHMZJ7FBE
-         k79g==
-X-Gm-Message-State: AOJu0Yx94TsVVlPkmAUmKZYlIhlmSuWTfnYpG+GjQ4dCly/sS/CwYT1C
-	xYEhYqkcXf0ln0BOkqhDK9Gxd7F8DMNYEW7K+QENpInAkJbKymfrLR39LWMaL36spRK3HXb9En3
-	AkW3uzqNPx+Hf49rH6K/08eGDDP29IDicUZwH8FxknpO6dA6KmZXIPyYIL4JzTgNQb1qVPbfjBF
-	abH8HXG0GkOgfNvQu40wNvo+LDPX04zw==
-X-Google-Smtp-Source: AGHT+IH2YISglLSqfDiqsez4L1Y7R2x7evvEn/OLPoRH4Tz9n3j+Yd+5GGsnkRg0ugTYxwyVIT9CR0GF
-X-Received: from wre10.prod.google.com ([2002:a05:6000:4b0a:b0:39a:d20b:5c20])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:178d:b0:39c:1258:2dca
- with SMTP id ffacd0b85a97d-39efbaf22d7mr14574151f8f.59.1745406635141; Wed, 23
- Apr 2025 04:10:35 -0700 (PDT)
-Date: Wed, 23 Apr 2025 13:09:49 +0200
+        d=1e100.net; s=20230601; t=1745406637; x=1746011437;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b9EdJfoFvntZ3Aijc9ezm1SvO5dYoA86SEzEWFMBPBA=;
+        b=h++hFUbfgekSGrkE+X6fc0t456L8Ts5SUpujxyPzhAqHsv3oE/eh76C7XligEw2ngL
+         1D7gRFnS4HOtKXNIbLMonRymNXgS7aKYCq2Bn4b64ROsw3s7qoTeww0j5yoR9ApMUUje
+         +9TGvizDwCpfNkEtyDVx84EZeIJWhX3s8bZxdiZj2PbeLnUyO/vMl0it7GTleKFHvieG
+         yt81OKsKfLat//mO7XPIgpkPRoU21wOBfrjqMizZ6jZ+6kbiRfZOYQHNKX7l+hsR9J8P
+         wpIp8BjPBjq/8/WY4tNF0Bo1PV4Vbi98oceZMp7tpeoEjtWPy3xacGxI29XSHEh9M3J8
+         ygLg==
+X-Gm-Message-State: AOJu0Yz+SotJQBfxKmHCACvyxvGj9BXIe7ICDTPXFG8CjB4/ZLxTYinQ
+	C0oKiXMesh89LglBHBMX/LBH/HvUJLNddFXNnhfffMk4ZkS9A7x67n7ykybm6NvTxLTPcTDsMz0
+	hdDyQKqSjFn+brVJy64ZNlyDvtQ7iOvjkRnUKxCaTwAxSjK6rds+n3fbzDLkE9ohY3kXbudjoue
+	9l2infOtNhmw+tVaRWmSpH39X93LoZ3Q==
+X-Google-Smtp-Source: AGHT+IGh7kubV1d3R3ZD3F79F3LXSp3GH8VsTNG4XhDosIDSpzfMdrMwDFzmMjz7Yn7jCRbX7GhQxSXK
+X-Received: from wrbaz1.prod.google.com ([2002:adf:e181:0:b0:39e:e3f9:60d2])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:144a:b0:391:2a9a:478c
+ with SMTP id ffacd0b85a97d-39efba3cc88mr16844764f8f.23.1745406637306; Wed, 23
+ Apr 2025 04:10:37 -0700 (PDT)
+Date: Wed, 23 Apr 2025 13:09:50 +0200
+In-Reply-To: <20250423110948.1103030-13-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250423110948.1103030-13-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3090; i=ardb@kernel.org;
- h=from:subject; bh=F1iFvvG9z8EAcxJtrjR9394llOYTs56SJlf/F0unljM=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYPjVKPeEh4r2/ZvrPt7mr5PW9Ft+Hz5diu5g9cP5m2Yt
- /HZ/07ejlIWBjEOBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjCRk+KMDBuLI9xXP0ozdru0
- JjyR/YvshlNJ/jMebQg9fqLu0hKdqNMM/xP26O4yTxHY9mDLPMuueVc8a5P6DH9W206+sHi2t+u JVj4A
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1039; i=ardb@kernel.org;
+ h=from:subject; bh=kVSqHU9mGbp8hJj8L+zQL1y2c7Ahk8a3EXR2gn1jxkA=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYPjVJfJ9jUVgpt49pavfxKhmvjpWBGf/IPHtYt8Tr1Yd
+ Mh0/3nVjlIWBjEOBlkxRRaB2X/f7Tw9UarWeZYszBxWJpAhDFycAjAR015GhqOLvh5rq5vuFLls
+ h4C0XAtbY1us4rJNc16Jey/NO2bzpZThf+2MXKeCGWrtrfH8kjOm1K5ZFqrqtk2Sw74p9Pyvhj/ OXAA=
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250423110948.1103030-13-ardb+git@google.com>
-Subject: [RFC PATCH PoC 00/11] x86: strict separation of startup code
+Message-ID: <20250423110948.1103030-14-ardb+git@google.com>
+Subject: [RFC PATCH PoC 01/11] x86/linkage: Add SYM_PI_ALIAS() macro helper to
+ emit symbol aliases
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, mingo@kernel.org, Ard Biesheuvel <ardb@kernel.org>
@@ -71,70 +75,34 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-This is a proof-of-concept series that implements a strict separation
-between startup code and ordinary code, where startup code is built in a
-way that tolerates being invoked from the initial 1:1 mapping of memory.
+Startup code that may execute from the early 1:1 mapping of memory will
+be confined into its own address space, and only be permitted to access
+ordinary kernel symbols if this is known to be safe.
 
-The current approach of emitting this code into .head.text and checking
-for absolute relocations in that section is not 100% safe, and produces
-diagnostics that are sometimes difficult to interpret.
+Introduce a macro helper PI_ALIAS() that emits a __pi_ prefixed alias
+for a symbol, which allows startup code to access it.
 
-Instead, rely on symbol prefixes, similar to how this is implemented for
-the EFI stub and for the startup code in the arm64 port. This ensures
-that startup code can only call other startup code, unless a special
-symbol alias is emitted that exposes a non-startup routine to the
-startup code.
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/x86/include/asm/linkage.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-This is somewhat intrusive, as there are many data objects that are
-referenced both by startup code and by ordinary code, and an alias needs
-to be emitted for each of those.
-
-This ultimately allows the .head.text section to be dropped entirely, as
-it no longer has a special significance. Instead, code that only
-executes at boot is emitted into .init.text as it should.
-
-This series is presented for discussion only - defconfig should build
-and run correctly, but allmodconfig will likely need the last patch
-omitted. 
-
-Ard Biesheuvel (11):
-  x86/linkage: Add SYM_PI_ALIAS() macro helper to emit symbol aliases
-  x86/boot: Move early_setup_gdt() back into head64.c
-  x86/boot: Disregard __supported_pte_mask in __startup_64()
-  x86/boot: Add a bunch of PI aliases
-  HACK: provide __pti_set_user_pgtbl() to startup code
-  x86/boot: Created a confined code area for startup code
-  HACK: work around sev-startup.c being omitted for now
-  x86/boot: Move startup code out of __head section
-  x86/boot: Disallow absolute symbol references in startup code
-  x86/boot: Revert "Reject absolute references in .head.text"
-  x86/boot: Get rid of the .head.text section
-
- arch/x86/boot/startup/Makefile      | 26 ++++++++++++++--
- arch/x86/boot/startup/gdt_idt.c     | 17 ++---------
- arch/x86/boot/startup/map_kernel.c  |  6 ++--
- arch/x86/boot/startup/sev-startup.c |  3 ++
- arch/x86/boot/startup/sme.c         | 31 ++++++++++++--------
- arch/x86/coco/core.c                |  2 ++
- arch/x86/include/asm/linkage.h      |  6 ++++
- arch/x86/include/asm/setup.h        |  2 ++
- arch/x86/include/asm/sev.h          |  2 +-
- arch/x86/kernel/cpu/common.c        |  1 +
- arch/x86/kernel/head64.c            | 19 ++++++++++++
- arch/x86/kernel/head_32.S           |  2 +-
- arch/x86/kernel/head_64.S           | 16 +++++++---
- arch/x86/kernel/setup.c             |  1 +
- arch/x86/kernel/vmlinux.lds.S       |  9 +++---
- arch/x86/lib/retpoline.S            |  1 +
- arch/x86/mm/mem_encrypt_amd.c       |  2 ++
- arch/x86/mm/mem_encrypt_boot.S      |  6 ++--
- arch/x86/mm/pgtable.c               |  1 +
- arch/x86/platform/pvh/head.S        |  2 +-
- arch/x86/tools/relocs.c             |  8 +----
- 21 files changed, 107 insertions(+), 56 deletions(-)
-
-
-base-commit: 121c335b36e02d6aefb72501186e060474fdf33c
+diff --git a/arch/x86/include/asm/linkage.h b/arch/x86/include/asm/linkage.h
+index b51d8a4673f5..ad59ff384f72 100644
+--- a/arch/x86/include/asm/linkage.h
++++ b/arch/x86/include/asm/linkage.h
+@@ -141,5 +141,11 @@
+ #define SYM_FUNC_START_WEAK_NOALIGN(name)		\
+ 	SYM_START(name, SYM_L_WEAK, SYM_A_NONE)
+ 
++#ifdef __ASSEMBLER__
++#define SYM_PI_ALIAS(sym)	SYM_ALIAS(__pi_ ## sym, sym, SYM_L_GLOBAL)
++#else
++#define SYM_PI_ALIAS(sym)	extern typeof(sym) __PASTE(__pi_, sym) __alias(sym)
++#endif
++
+ #endif /* _ASM_X86_LINKAGE_H */
+ 
 -- 
 2.49.0.805.g082f7c87e0-goog
 
