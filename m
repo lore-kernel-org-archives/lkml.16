@@ -1,160 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2122018DF86;
-	Wed, 23 Apr 2025 18:16:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FCA28D843
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432211; cv=none; b=DBaYY3DTaYamvZia1L+W4GYyCfLxOsKzXfkWKW+dh1p7NVKq7svH05a3326LHNK2VnJVFqCwSAPn33OfaDcaDQuCWDTaCIzHAfrB7unjhzrZlRlsgPLEyZASPWURnB9QRyJzUiLftKuv1AJ0acIYcmUKeT/vVsyJpTT33OeguGs=
+	t=1745432231; cv=none; b=HXO23N0DYm0+7OuyhxPiAVLvs7Bj9dvcx2q/d5UMGEul2KpLeXuJ4Y0+wVB38v2ZrJtdbcKuq6xFEWpW/urvoSg6cpVL7mT4RokB/mBWQvqEIm7VwjKgCRCqQsrZt6f3tfVFg99+Ylj4qsw9SL8YXZZ91zkDAVCe3idSQCiXAok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432211; c=relaxed/simple;
-	bh=UCMgqoUk/35E+0AbklcegPwWnbbccv3El9DIubtxTbA=;
+	s=arc-20240116; t=1745432231; c=relaxed/simple;
+	bh=ZwDA7dKaeXsaxB3idhnk/64Z7wWQuL5MluTl3MVfp1Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjSSV1CVeFii86prIFZZCq0FZx173dplr9KlqOxk7Dq6pCV1JNr0c0HUg+dlMzlziBo1cSiZh7xbBAMZWpJTT377vlAHimPcknA8zEuTVa5vIdcc7QhtnTpHE4KT4JW8YO7G8/2t2LVHmTWpU3COzEqI+ZgHmmxU+4/B6UKaSXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbVgA2W7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=obcYWuYpIanxo89eisa5RQ23STfcF8x8lBVn7uDgxH11ipRNZsbBvFwaFZtvIS3JuL/A1WNx+jN1H4m8bPUOQXJJntUEsYe90ZTfE/tLJsNf8zSA5yqdRPwJfnEjhhl/rHCpS3O1s6cZLKZkpdDtTH3NQneAqIzPWqYNNCcCZWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=dzaUhanA; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbVgA2W7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC3CC4CEE2;
-	Wed, 23 Apr 2025 18:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745432210;
-	bh=UCMgqoUk/35E+0AbklcegPwWnbbccv3El9DIubtxTbA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=kbVgA2W7BzGd24i9NZuPM5D1kKlokI9fRXpflISX/6YJ1QJEoqxHGs2S2/7a/htw8
-	 GwkgO2DlW6rqb3KavlQWXeOfABadxRNzO8cQj4sjug1tLbpV3DokH6q1XF/4sVrrGN
-	 uiTytMLFteY9fhzTR4XWbJQE6uA8AVNgVH/TtVMSAr80LTNEOZOJiyR6vEdYZaAziV
-	 leJVlJWfHrLQsV9kivxEVHa4uP9Z9iGJXRw9KkPIJQ0yjIUi9lsyq/+kiT6fB2v+gX
-	 ispA8YeqtUs3xbQ1GwCWFMPt5Z+hxZ0t0FPf5nMzyQJhfe4GgeKlF1rKHP6VVRNB99
-	 QP0sDdHG9CA/g==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 3E58DCE0B75; Wed, 23 Apr 2025 11:16:49 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:16:49 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Benjamin Berg <benjamin@sipsolutions.net>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
-	johannes@sipsolutions.net, Daniel Gomez <da.gomez@samsung.com>,
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dzaUhanA"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47663aeff1bso1561681cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1745432227; x=1746037027; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=jJ8s1tHlAlZHZLBcym34Knli5JlhGSSEZ8s9pr2exho=;
+        b=dzaUhanAGnWmjNzX6EyAJDr56KrTb45PN/EThCXWubagFRugBhYwJihgbUIyGS7Oy1
+         7GCzjFgYzXJUcXpS8X+v0qNySEabX0xTyun1iMVdJj3qj7/oFbt6x+cURruzijRAYdDk
+         zJXE80/VTSJyoH+CBJNYr9Vdstbr/gur7d8cvS2fLvOMqEGRPHY5k6Y6gLOO5/5May8s
+         H49s9x4oaXHEAdgo7tHaFvKLT9alL5RGrDTb+nerpdzTtDdRYFk429vfBzWlKvfpumte
+         pXaxpLOcpJsZjP3xS3wk5BUoqNCzCRTm/fkrFCf4Nifmgv7OBgK+QHEISYKhL//7rMfK
+         9lMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745432227; x=1746037027;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jJ8s1tHlAlZHZLBcym34Knli5JlhGSSEZ8s9pr2exho=;
+        b=beVF6uyAYzEV3fNecWJhqvsU8RkDjuxzYu0mGuNiv8UVhw2SskVsEzxT0RVbn+rYsV
+         oUZDwkSLbMb4chfBA9IfbqGKlp/u6zGX/QKy79liAJzt2JMPu9ItwhhAbcMuEsZek3mM
+         L5o6ur5muxq+P1d77vjCMEC4z3X1BZItQWno9ULf7qgjGgjG0m+Cpo4qEZ08+gHiePgD
+         fXQqCTrwuHkaVDDPL6J7T4vc3I2vfWEUW3+x0OSs/G3ZcbIqr//f3fZXqgol6agLClYo
+         CCUiAIk+0xxq7BSiYKKzG2PxvCZHsOViV/e6NIbPrlbUt/+ImNtbMrzx9KjMBJ6hJMAA
+         Br3w==
+X-Forwarded-Encrypted: i=1; AJvYcCUuNhne+iP77gA4SlRTLASDRdL8ZD/w7AoWad/1yIduvPcqmgjPLq0Qr3+8+0gwEW8Gvg8ZTbsTl3xXwrc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxyfgn9zyUzkk7Eq1WOTYmaQ3mLzZJ+Igdw01dSNDLO/Td/hebH
+	nwIO6xI601qeLwzvGw86ESeblXIIexDYhSytVyAyLfbJmg2bDlkOaUuXpn95EF8=
+X-Gm-Gg: ASbGncvkUftCy0fXN9nCNGgEoBZ3YpKtCKbb4/VIhovhkBXcyumc/ZegDRXNbOg8kvJ
+	YmD1n6JugmHaBMBnQ+Uf6h5/AHP+5Xb7LPBDHjsTP1gUSQ6NxIfbK/pPUHQW9vTcPQe8y1pZOvw
+	anv1GugcolxwUT7utTTb6fnl0BLCz6bvYpyo/H0EpZQyzW7wxSw3aTwhYy5n8gytfHeEL5+xjxV
+	GzAoRqSb0CzsC8/HQsD5a9CKum9V7cCbDPWuxJUMO+mHf+8/lPYK4rSXKvQA8hDy9WCZOEppQUm
+	lBVW4fXR0HHE2B5+0XUTZkWUcUAqBR+L7O+ERLHpHA/zLFj5j9fi7c2W117eSqDnUOwAQpGBcdg
+	FRjcrIDoEiAywh8U7Poc=
+X-Google-Smtp-Source: AGHT+IECPlcFTYHnkwAKKk3B5MzEp2J+Q23qmmOis8VDE/Xdu9ZIh9LzQbjBc0+xoVESECxntDW6lg==
+X-Received: by 2002:a05:622a:d4:b0:476:95a2:64a1 with SMTP id d75a77b69052e-47e76175c16mr4073601cf.17.1745432227237;
+        Wed, 23 Apr 2025 11:17:07 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9c16dd2sm70921841cf.14.2025.04.23.11.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 11:17:06 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u7eeg-00000007Lzi-1CSb;
+	Wed, 23 Apr 2025 15:17:06 -0300
+Date: Wed, 23 Apr 2025 15:17:06 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Mika =?utf-8?B?UGVudHRpbMOk?= <mpenttil@redhat.com>
+Cc: Leon Romanovsky <leon@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
 	Luis Chamberlain <mcgrof@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 15/28] module: Use RCU in all users of
- __module_text_address().
-Message-ID: <4446525f-4e89-41bb-91a0-89c72dd0e8f8@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250108090457.512198-1-bigeasy@linutronix.de>
- <20250108090457.512198-16-bigeasy@linutronix.de>
- <db0f8ec385762e6edb3edf5054a76ea189135e6e.camel@sipsolutions.net>
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 10/24] mm/hmm: let users to tag specific PFN with DMA
+ mapped bit
+Message-ID: <20250423181706.GT1213339@ziepe.ca>
+References: <cover.1745394536.git.leon@kernel.org>
+ <0a7c1e06269eee12ff8912fe0da4b7692081fcde.1745394536.git.leon@kernel.org>
+ <7185c055-fc9e-4510-a9bf-6245673f2f92@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <db0f8ec385762e6edb3edf5054a76ea189135e6e.camel@sipsolutions.net>
+In-Reply-To: <7185c055-fc9e-4510-a9bf-6245673f2f92@redhat.com>
 
-On Wed, Apr 23, 2025 at 05:17:31PM +0200, Benjamin Berg wrote:
-> Hi,
+On Wed, Apr 23, 2025 at 08:54:05PM +0300, Mika PenttilÃ¤ wrote:
+> > @@ -36,6 +38,13 @@ enum hmm_pfn_flags {
+> >  	HMM_PFN_VALID = 1UL << (BITS_PER_LONG - 1),
+> >  	HMM_PFN_WRITE = 1UL << (BITS_PER_LONG - 2),
+> >  	HMM_PFN_ERROR = 1UL << (BITS_PER_LONG - 3),
+> > +
+> > +	/*
+> > +	 * Sticky flags, carried from input to output,
+> > +	 * don't forget to update HMM_PFN_INOUT_FLAGS
+> > +	 */
+> > +	HMM_PFN_DMA_MAPPED = 1UL << (BITS_PER_LONG - 7),
+> > +
 > 
-> On Wed, 2025-01-08 at 10:04 +0100, Sebastian Andrzej Siewior wrote:
-> > __module_text_address() can be invoked within a RCU section, there is no
-> > requirement to have preemption disabled.
-> > 
-> > Replace the preempt_disable() section around __module_text_address()
-> > with RCU.
-> 
-> Unfortunately, this patch causes a performance regression for us. The
-> trouble is that we enable kmemleak and run trace-cmd so a lot of stack
-> traces need to be collected. Obviously, we also have lockdep enabled.
-> 
-> Now, combine this with the UML stack dumping code calling into
-> __kernel_text_address a lot[1] and it really has a relevant performance
-> impact. I saw the kernel spending 40% of its own CPU time just on the
-> lock in is_module_text_address.
-> 
-> Maybe kernel_text_address should leave the RCU handling to the caller
-> and assume that the RCU read lock is already taken?
-> 
-> Benjamin
-> 
-> [1] The UM arch dump_stack function reads every "unsigned long" on the
-> stack and tests it using __kernel_text_address.
+> How is this playing together with the mapped order usage?
 
-Use of a single guard(rcu)() is regressing performance?  Interesting and
-quite unexpected.  That said, tiven the amount of debug you have enabled,
-I am not so sure that people are going to be all that excited about a
-further performance regression.
+Order shift starts at bit 8, DMA_MAPPED is at bit 7
 
-But is this regression due to the cleanup hook that guard(rcu)()
-registers?  If so, please feel free to try using rcu_read_lock()
-and rcu_read_unlock() instead.  I would be surprised if this makes a
-difference, but then again, your initial regression report also comes
-as a surprise, so...
+The pfn array is linear and simply indexed. The order is intended for
+page table like HW to be able to build larger entries from the hmm
+data without having to scan for contiguity.
 
-Another way to reduce guard(rcu)() overhead is to build your kernel
-with CONFIG_PREEMPT_NONE=y.  Not so good for real-time response, but
-then again, neither are your debug options.
+Even if order is present the entry is still replicated across all the
+pfns that are inside the order.
 
-							Thanx, Paul
+At least this series should replicate the dma_mapped flag as well as
+it doesn't pay attention to order.
 
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > ---
-> >  kernel/module/main.c | 16 +++++-----------
-> >  1 file changed, 5 insertions(+), 11 deletions(-)
-> > 
-> > diff --git a/kernel/module/main.c b/kernel/module/main.c
-> > index 80877741ac7e5..6a99076146cbc 100644
-> > --- a/kernel/module/main.c
-> > +++ b/kernel/module/main.c
-> > @@ -823,13 +823,12 @@ void symbol_put_addr(void *addr)
-> >  
-> >  	/*
-> >  	 * Even though we hold a reference on the module; we still
-> > need to
-> > -	 * disable preemption in order to safely traverse the data
-> > structure.
-> > +	 * RCU read section in order to safely traverse the data
-> > structure.
-> >  	 */
-> > -	preempt_disable();
-> > +	guard(rcu)();
-> >  	modaddr = __module_text_address(a);
-> >  	BUG_ON(!modaddr);
-> >  	module_put(modaddr);
-> > -	preempt_enable();
-> >  }
-> >  EXPORT_SYMBOL_GPL(symbol_put_addr);
-> >  
-> > @@ -3694,20 +3693,15 @@ struct module *__module_address(unsigned long
-> > addr)
-> >   */
-> >  bool is_module_text_address(unsigned long addr)
-> >  {
-> > -	bool ret;
-> > -
-> > -	preempt_disable();
-> > -	ret = __module_text_address(addr) != NULL;
-> > -	preempt_enable();
-> > -
-> > -	return ret;
-> > +	guard(rcu)();
-> > +	return __module_text_address(addr) != NULL;
-> >  }
-> >  
-> >  /**
-> >   * __module_text_address() - get the module whose code contains an
-> > address.
-> >   * @addr: the address.
-> >   *
-> > - * Must be called with preempt disabled or module mutex held so that
-> > + * Must be called within RCU read section or module mutex held so
-> > that
-> >   * module doesn't get freed during this.
-> >   */
-> >  struct module *__module_text_address(unsigned long addr)
-> 
+I suspect a page table implementation may need to make some small
+changes. Indeed with guarenteed contiguous IOVA there may be a
+significant optimization available to have the HW page table cover all
+the contiguous present pages in the iommu, which would be a higher
+order than the pages themselves. However this would require being able
+to punch non-present holes into contiguous mappings...
+
+Jason
