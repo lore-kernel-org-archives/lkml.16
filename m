@@ -1,182 +1,124 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C8428BAA8;
-	Wed, 23 Apr 2025 17:15:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BBC28A3F2
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428546; cv=none; b=hFBP+J6Wu3g7RAtIW53MGZt8XJPxnbyLchbhoUyd7v1n3HqIuFt8zxtVsglgUx05MlVRuQkh0USQXbzoh0TgPcawMba7i9R9rS9QcKa3Y9ZMCbiSxERPtYo/Nyi0NuyJzx/R2ar9vHuXL+YBG4RJLbU+Ek8C1qyQ0QoulTwfyNM=
+	t=1745428557; cv=none; b=PSNLOvxSpD3wVe+moHOz3raqZpG6fB7OS+ThUvc3sby0GgBRNcu6vGrM4JvJ1CnadrwmooQitOaK5udRseuoMshJKVchu0B52CzTZxImWfdMQJV2wwDI5vj8lYMSwg7xns7L0vAsj+s3B8ep+0MINn6W6A2EDkxQYYf61UBgDGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428546; c=relaxed/simple;
-	bh=qnewsdTEiU9wbm6OnE47hsHNxgG19vfCD7IgfGQJEho=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rfxgAogGkLVnjG9VqjEBeANLZxqER8P3AqMoPFeay8Wx0agF4IXq2GBK3IcwCJ3FkSlrs8nIEJEvmOXZZVBjOb08RVfuCwO1TGr/aSy4VBm8p5oH7gdI09yeMGZkG7zFJ4tCDtJxKLFl6IRkvY9vskFhpj1aoblnLJWW6VVZB1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9B4Wko/; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745428557; c=relaxed/simple;
+	bh=vMXucndq2S6GHUftC4QAjKIvCRBxtQ3mQadyEEn05iE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=on30cp1LYW3RdJXvGBsQTHiVuxJLM1z6yzIHGVA4tkBjMcaNQSe0BhvW49oDaDAH/COBJHD2oRaYGCekLTxtavjOhgJZxLjRmZJKcpNSlfU8XvCRWF1Psf0LBO4cp97eUY5MFqTKXUWj9LCNkMNhYoXoC6MQcpqcincKjf/TOm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=igc8GuoA; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9B4Wko/"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac7bd86f637so244951866b.1;
-        Wed, 23 Apr 2025 10:15:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="igc8GuoA"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c58974ed57so4742985a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745428543; x=1746033343; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IXqH3/APdtQJoO7o2nnXO+aSVxcwfTQhNjLKJExRtA4=;
-        b=k9B4Wko/3mzGLbuvyqr2fNnAZ17jmnQGZrj3JGmzklttP7qBuhxbN1Rld6dtah/He6
-         hUmpc8NiObCojnvpP5sbkNMKqw8Bvy2df9ymPyJcmdXge/8tJCKEV4dd7w7kVlqmxauZ
-         fEVEcBJ36yf9WUrV+tjkcbG9+SB+BLeHEdmGiTqpTaSZiPt2YZlezU27Zvll76bbsynt
-         2ZTOdi6hzxC1aFvgCSo0EZ+F+Vx07wivoW0Qa9mPy24VjGcfO6tGupUUaUmH6pg3YJjW
-         FkXKkd6WTZ6qUWcZ5SSY8jo6u0PnEhbwhw4rTQIKb6gqKqmJ1sO5CfFIhlb9RKIHZENz
-         J0Dg==
+        d=ziepe.ca; s=google; t=1745428555; x=1746033355; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=K5HpTnu16aeUYpErbp5yUwht+j3Mgf+r7FFUrUseQ0w=;
+        b=igc8GuoAzkxq23x3zTwtP5oibqkeQg53VG0Iq7gad/MlX8rlFoaVwdhQ0apeqpKH2h
+         U63IQo5nrNVr/aYRLNtMYNdCv4gydkVivRxSKp9R7pa6wsgSApmCtQMmO9kL+FNLuCYl
+         X/+CooWu7xCeo0ATpiDWk+fOrcm0n3wgS7PLKA/bTH1rXQkbm6fbMji0uJQNUxm58yoB
+         Rqu6j7oRTifpHPPn+9M3hN6fwsO7KeVdJS2pUvi/LGbn6oETIDds/1hWRCeug9xrcImW
+         WzY6PYLDgjbbO+z5bnOFm9GEuBEpX2dZ4T7e+CqVXT1fnIfwTIv3FZayq4iQBioe8nnf
+         CfWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745428543; x=1746033343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IXqH3/APdtQJoO7o2nnXO+aSVxcwfTQhNjLKJExRtA4=;
-        b=bszRDBC6aRJTu9EXBpStRaF+Z/9weaEoRTB6jmbgQxVP8TGg3mVoAY0YvEjqiP/dMC
-         y2qSZexJZCu35kqv1JwSHBEVrItQV8TBCbpGB49782F1bm8YO9cnKebX+4hjk0G8gA1T
-         Du5m+oYawD4X63iX6HgBtEo0C2s6uK8tiBYedayu26BG390TXRzdqUIvjXrYj5t455qM
-         nuaLHgWROYtwLfExn2ekpwTlF/GlQiyJs+hkrC+QGS4au3JHIf6d9WPfs9l6PWO+uZj1
-         3E+GjS7uTFs9g90+HRR3ICvVpgNpwpR/eruiE+BckirpBQiSrqLNb6fiQyddd27ramTK
-         p5Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCUN1W7LysZPLbMxvoGNQZaeCmlV95fxUVWOX1K52wFCOnVXZemCMpKM7tnxiCNVPmX8g0Q=@vger.kernel.org, AJvYcCUfgX/OZ51M/5kqTXxg1W59s2ONSpXbWeWsUM06fmxIlO1/p+0W7B1po6DDaz2NMNTmplRhc3Slf8fFGizi@vger.kernel.org, AJvYcCXUJQrOQOZaMEJpqell8NspBGwinVIlWbqBNPUw1/JhgRukENRSdZI2Dccgf3rBc4r0hWnEtFk87Qqu+ORRzydm@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6NO8ZHccoJsJ9VO5IMJCrQTPwUQfdIHvREJ9TXsbZAB+ML5af
-	MW3rPyKjqJihpJMpONlrPwRTGFF5afAmVgPoYjPjkk1jOanzl9h64PG93avssMte8rMr2Eme5TY
-	jNWY3w3xABI+WkmbglLDgZuzx57Y=
-X-Gm-Gg: ASbGnctwMuL4eHc1lfdLfDelBe1YCa2zMmMFSUdgddhi4y8oWIN3fQCd/2t4kbF13TS
-	otjRQxxZRGrFVcjUumO4zd8QmoVP7EOcYS0WcFWuPMUK3p8dPKjn75xdy0+EIGmRz45v2M0t/aH
-	Xq3NhvFE09SWTNRThSA/8n7ZYgMnup0tVjXUElwA==
-X-Google-Smtp-Source: AGHT+IENhXSbehQqfBW1svYcq0D4UIHBuJbvet0xcZ1l8BgXjBl9sSRbuFPUI4WEPm1PyA5ibhgYTL9d/lGV71q9Wms=
-X-Received: by 2002:a17:906:942:b0:ac7:3441:79aa with SMTP id
- a640c23a62f3a-ace5459c3b0mr1838766b.13.1745428542340; Wed, 23 Apr 2025
- 10:15:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745428555; x=1746033355;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K5HpTnu16aeUYpErbp5yUwht+j3Mgf+r7FFUrUseQ0w=;
+        b=RY/XIjA8qCSRsR0sy8PrtmUD7rmyN8zSqxi3WCwT3ZhHTavA1PKeD+uELOPjIMNJjN
+         +4weAihbBNh0kJFBUjS98AEAteFKUDGERPjgEsBNvBU6heC0ti3VDwWdKJASeufKDpE1
+         tXDqZcIQbI/yHqzTogQJ7Kn1z/8M/jZvsR+B9vRE8H76pGRE2117JzDE/lm23OAa6Vf0
+         Hw/CoXThQBqh/rPehlP0/9S5HRE2MgBYjCsoDcEKR72AqPQ577AukfiNclg2Y6WrYNbz
+         Q4D8CERas2WfFsGj9aXqYYI6kLxIMHvsVyhX5fzrJCLe95nP5kDrn2HuQGbHLnnQGMmh
+         Us6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXppbHY4A4MAjkoZ0sWgFB1RNHDrXdtkBbUF8DPgmgQDjWA5/veIVPISIwZFG/EpZ3KQ5Zqimyi1Pvz2F8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDpE6xtPkblegVFTwl2f/2zLKZf8/jVnNRc3uiVNRhEv8sRk8+
+	xGjQS7PwNpxetcPch3CNOvPEBdH9OkCQItpzYxlAaF16KpQVek0ER9CXTrn0AOM=
+X-Gm-Gg: ASbGncsGi/EvDwnk9uZvXaj7qE7tqrAP40P1gBpyQ6VQtLS6rjl5ZTND0q/53TjkjxP
+	3bHsyfFz8nXc6pjhcUJ3xdBEtOimgF+0pRQviYbXf0plBVp7i41ktbKrfckGBWXxhUK/YB7VMsQ
+	Wymvxvt3ReurVATjTYZPiN2T9kKzWBzIIGlr4LShXsTJjQTmSN/62cWjnlGkUxTG/LHpeI0Sr5s
+	rhWVRkGdcLCMEjjupIYwMRiaAFZB5+GSrinqscinZ9436rdUJ4CoLKTclq+gn2uncB/zexD/z18
+	d5qFv7s3iJXgHnIkPDqyv9aNdHwpFqiP6GY72tsEpaNTLMh2ytyEjfE+EzbZnKN5RLVsQac4o85
+	cQ2S3lAHEuwx2Q3Pj8G0=
+X-Google-Smtp-Source: AGHT+IHusnUQ6QwwVsDnvg+0qYOM6lcQLPltCEX7WmRgNJP3vwJodfip7PxZnn5pgy7BG5cQ6pnE/Q==
+X-Received: by 2002:a05:620a:4456:b0:7c7:a5e1:f204 with SMTP id af79cd13be357-7c955e14768mr54555485a.56.1745428554903;
+        Wed, 23 Apr 2025 10:15:54 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4e93asm705867885a.70.2025.04.23.10.15.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 10:15:54 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u7dhR-00000007LQy-3kud;
+	Wed, 23 Apr 2025 14:15:53 -0300
+Date: Wed, 23 Apr 2025 14:15:53 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 04/24] iommu: add kernel-doc for iommu_unmap_fast
+Message-ID: <20250423171553.GK1213339@ziepe.ca>
+References: <cover.1745394536.git.leon@kernel.org>
+ <9becc0989ed0a6770e4e320580d1152b716acd0d.1745394536.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com> <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
-In-Reply-To: <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Apr 2025 10:15:20 -0700
-X-Gm-Features: ATxdqUE91QmVoMb8-9fNRcAVpV6sKAYDYDexZM632tte0cXJZXh3_ehQWPpgTAs
-Message-ID: <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
-Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
- func model
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	John Fastabend <john.fastabend@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai <xukuohai@huaweicloud.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	Florent Revest <revest@chromium.org>, Bastien Curutchet <bastien.curutchet@bootlin.com>, 
-	ebpf@linuxfoundation.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9becc0989ed0a6770e4e320580d1152b716acd0d.1745394536.git.leon@kernel.org>
 
-On Thu, Apr 17, 2025 at 12:14=E2=80=AFAM Alexis Lothor=C3=A9
-<alexis.lothore@bootlin.com> wrote:
->
-> Hi Andrii,
->
-> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
-> > On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Found=
-ation)
-> > <alexis.lothore@bootlin.com> wrote:
-> >>
-> >> In order to properly JIT the trampolines needed to attach BPF programs
-> >> to functions, some architectures like ARM64 need to know about the
-> >> alignment needed for the function arguments. Such alignment can
-> >> generally be deduced from the argument size, but that's not completely
-> >> true for composite types. In the specific case of ARM64, the AAPCS64 A=
-BI
-> >> defines that a composite type which needs to be passed through stack
-> >> must be aligned on the maximum between 8 and the largest alignment
-> >> constraint of its first-level members. So the JIT compiler needs more
-> >> information about the arguments to make sure to generate code that
-> >> respects those alignment constraints.
-> >>
-> >> For struct arguments, add information about the size of the largest
-> >> first-level member in the struct btf_func_model to allow the JIT
-> >> compiler to guess the needed alignment. The information is quite
-> >
-> > I might be missing something, but how can the *size* of the field be
-> > used to calculate that argument's *alignment*? i.e., I don't
-> > understand why arg_largest_member_size needs to be calculated instead
-> > of arg_largest_member_alignment...
->
-> Indeed I initially checked whether I could return directly some alignment
-> info from btf, but it then involves the alignment computation in the btf
-> module. Since there could be minor differences between architectures abou=
-t
-> alignment requirements, I though it would be better to in fact keep align=
-ment
-> computation out of the btf module. For example, I see that 128 bits value=
-s
-> are aligned on 16 bytes on ARM64, while being aligned on 8 bytes on S390.
->
-> And since for ARM64, all needed alignments are somehow derived from size
-> (it is either directly size for fundamental types, or alignment of the
-> largest member for structs, which is then size of largest member),
-> returning the size seems to be enough to allow the JIT side to compute
-> alignments.
+On Wed, Apr 23, 2025 at 11:12:55AM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
+> 
+> Add kernel-doc section for iommu_unmap_fast to document existing
+> limitation of underlying functions which can't split individual ranges.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Acked-by: Will Deacon <will@kernel.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Tested-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+> ---
+>  drivers/iommu/iommu.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 
-If you mean the size of "primitive" field and/or array element
-(applied recursively for all embedded structs/unions) then yes, that's
-close enough. But saying just "largest struct member" is wrong,
-because for
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
-struct blah {
-    struct {
-        int whatever[128];
-    } heya;
-};
-
-
-blah.heya has a large size, but alignment is still just 4 bytes.
-
-I'd suggest looking at btf__align_of() in libbpf (tools/lib/bpf/btf.c)
-to see how we calculate alignment there. It seems to work decently
-enough. It won't cover any arch-specific extra rules like double
-needing 16-byte alignment (I vaguely remember something like that for
-some architectures, but I might be misremembering), or anything
-similar. It also won't detect (I don't think it's possible without
-DWARF) artificially increased alignment with attribute((aligned(N))).
-
->
-> >> specific, but it allows to keep arch-specific concerns (ie: guessing t=
-he
-> >> final needed alignment for an argument) isolated in each JIT compiler.
-> >
-> > couldn't all this information be calculated in the JIT compiler (if
-> > JIT needs that) from BTF?
->
-> From what I understand, the JIT compiler does not have access to BTF info=
-,
-> only a substract from it, arranged in a struct btf_func_model ? This
-> struct btf_func_model already has size info for standard types, but for
-> structs we need some additional info about the members, hence this
-> arg_largest_member_alignment addition in btf_func_model.
->
-> Thanks,
->
-> Alexis
->
-> --
-> Alexis Lothor=C3=A9, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
+Jason
