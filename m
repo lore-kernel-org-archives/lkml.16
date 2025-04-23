@@ -1,64 +1,72 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C19C27A12D
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2029281524
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:57:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420236; cv=none; b=K0B+CEmCqDCFYswuf0dd533ilAtEb62uNRQ4E0MY2br7bFYMoUG2RIH4bpio/xy44iAkF4IeNLZvyE+3n9ee8B9IBH9dvxkz23Wp+npylbyHSCc+4Ucq5LVrsJzc/q0VdnYbDERdcXYAqW/oOqL2MOBqSjZyzC4wGL+YHxQ4LkI=
+	t=1745420242; cv=none; b=mSS1el7BU3E0u4uOAAeiCP9hHH/EhZnqTjA5hJ31S4spD/EJFaiMJll3FFMgP9+2cZNs8R5FHxlQJlLIwo2vud8+UATaYiGsvN/qkTkOf4NxP393ZWZxaFkAySwKY/s2oVytjr6QGCH41j8eMntblBk5s06uz7tanGKK54Xe9qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420236; c=relaxed/simple;
-	bh=L2+fFsOOIiiVFpcGVxzqurqwQu7AtginQsSOZ6MVl7k=;
+	s=arc-20240116; t=1745420242; c=relaxed/simple;
+	bh=48oi0bMYSWCsrjjCcocriFjUmnSTwf74bn6dRV0xbTE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m3q+EJTcm8/Fc/RMmeBhp3MSYYkErySmV+ONlMMocX02kbbMdySh9ijcfprTKiTJIBlLGZXAZWQuhsPgb304ES+ZUIzila1Hh8or1G9GHCdx/F5GO2dKPwuliE5781CeZK4vUMqaqeXozuRpNTZGx/NHBqjnz6TC1bKURbT5ff4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KlqLblJD; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=A9z+SFBFAfG7/JuGRoonuKNgugXmbluVt0cre3K8QHLOlIrO9FVCOKatPV6joYAC+4GH7qeh06NEQ3oY1uHQ62IKgy/27+JeGHgkAEY4yeikFRQAv2SzjbExrc2Hu/6ICRfLadPljER48C6Fl/pZ4SadKqNye8k5V8Nqf1ZznqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=nvTunfoH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KlqLblJD"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c266c1389so4844166f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745420232; x=1746025032; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zUDCtlDdD9FnwLrhTU1YzOhKTBBommPMrgobNX2rsFQ=;
-        b=KlqLblJD/GB/8kX8O4kM4PJ5mTKFCZtbfhAnvz2OImjG+PfplT1w6/rko7CrJYuDB4
-         Sg0zfPKbGgzOC3L/kyU8hr8eF9wwfboFMgS/4MVjfUejSVCOp4b1C0TUrngcMrvOFNdl
-         H7piY/AfpGe+RPX7cgefEgXJFH9iepGblfIOAWuqFOAlTcuyL7bkCDpIM16Ugo1kYpan
-         FTgH27+RWPjjGVOXi5ZTrjL+GMHi+mWCkZ+etq/UiRFp/T5B6eoL77zwRgWg6uMOeryc
-         yDClHefgivfpXM1LkOPMhiok6iFHPDUs9foKKGUvby67tN76D5yBW16gLjgxb2pvD4MB
-         HPPQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="nvTunfoH"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAmZm2016562
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:57:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2NRWiVsbvNnHIcTKizG+XsT0FlriKnOrULiycN0aiQQ=; b=nvTunfoHTEC8X1zn
+	QR3LnOD5QTP/KHCQnZIJv82ptdIsFjV36ZOl9IqTjeni4mcK0UCSfuaHotPOtdnQ
+	LRFlVnVToEzL/RCq+yzS+kr2blw2jFwvXFhdz1hQQ/9qt9Dc8OfwsgqoVeFmd8P0
+	gdLz0Oo7Hce459E4OKdZUpawGnoL2D7NN+k6qIvtAUU7P1Zk2tvJTYcj5JxUl8FF
+	s6nOSZToJuSFP7JaE6GVZcAVym+2VVsadr+VQe2maYe42hf6PQ18LWVglfEwW+4z
+	vV5t2kd+cJL4Fylk9oegXYXAfP5TBW0weF6VZQeubaNApbLei7NRMQv+xJ0veAhj
+	Ll0R6w==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0ah1k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:57:19 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c53d5f85c9so137140685a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:57:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745420232; x=1746025032;
+        d=1e100.net; s=20230601; t=1745420238; x=1746025038;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zUDCtlDdD9FnwLrhTU1YzOhKTBBommPMrgobNX2rsFQ=;
-        b=sxJVbuAXAHYNf5ZIFUkEE9mZNrzYQBTBYhhS45tz9X7nz5bZELqv3OIN3CXgzGpf0H
-         QipqHJbpntM21Uub97haJ/0XCxqQckJLctl38inTyz8i+i/go2UxEj87TGV3uriJxCLl
-         bnjkCONs4gZygKkTl6s7HS00NDrcTn3GuMppGordHi9jaR6kakh0aZKPQj9YnuxHl/5a
-         7HwxQ4tFIucMkegLyLZ8lpLXzkElUI3dgznMA6CgWAmRI/M1Aa+tXlz/eVIVeRyHvEah
-         bDmUIHIakERhOWRm0ZIy2wKy150PYmpopslQvAPCT0rF6PalM2Cp3GZI/yVhIhs5VqvD
-         z2Mw==
-X-Forwarded-Encrypted: i=1; AJvYcCURZRjcxiziqu2QvIa+fKS3McEy9fCALFkFY+i9pM8TwP+5nNQyAdwR7uC4wGdTXgkYj5v3F1X3fijV4nw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrLu+WTjkzzqS1rcmHnQ7sQuVc/s60Ms4SFoZ4LhSmvZbbqh9m
-	byL+PCtEXP+rAenckt7wem5OzS0Cqi8Riu01xU/sSPXQJBfsvqdzU8nSRKQO6Jk=
-X-Gm-Gg: ASbGncvBtzV1gkI4PTFbzKDN8qfUh9UhqN1qB7/BUEXq4NojD7I8zR9wAyp19kVoUmG
-	5dFJAsLF3mC3hOyQ9OlMXcGKRp7/FVBWDy66IGvL60CY0+C/hOLVipXw1Uppgiy8mYVX4zRN2Mt
-	CTmqeHi4aapn0coOFTAevAyg3DvLuiNKwHyi1gmC06PAE/vFmzjUmEDjfUwxP6wz28J2S3cQunW
-	gfX955qYDf3Yr8uvMlJ1F5SJMeJlJvd8ZWR50YqwzrcoayZgfYJJRvZAznmJ1mMhN8/bq3/WUor
-	inTrnIbU0wVkzItzzKSQ2QZAxOEvnMWnqoFFfuwFe9Y=
-X-Google-Smtp-Source: AGHT+IEPainaGmGjpIiItMGlmlLgvOsPNvqLrthDPksqJiSBGTCfDQ36eqcMYcBmtNhgVr1tdiOcrA==
-X-Received: by 2002:a05:6000:2409:b0:39c:1efb:ec9a with SMTP id ffacd0b85a97d-39efba2ab3cmr14435427f8f.6.1745420232327;
-        Wed, 23 Apr 2025 07:57:12 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43bf2csm19239229f8f.51.2025.04.23.07.57.11
+        bh=2NRWiVsbvNnHIcTKizG+XsT0FlriKnOrULiycN0aiQQ=;
+        b=q7lsA9Lc3fwiJAtzQ2M//glsZwoi4mf3/sROHVFI+Ck8P0DXADpS9yTQUyRqSNDs5M
+         UNb5UvUjO65nHB9KtfpzknJi1feoJtREF67KyQ1rMlZ+MAtC9FydktNhjqUaIGLN7xpx
+         AMcKb8Xi87diIX6BEOrzM+6KQYJ2xXdjDBv/y1iWejx4CvsvXNcGthgB6vrDCWZF2aqE
+         YKh0Eb59BkKO39p0y2ak3wOx8d3Zxoy+kVQE7xyFfBVFnVxHiiyzNNlaBAL5Slmal1V+
+         immXFfDTbGmZwvHHMSrQp/xSwbQJ1qIPjT/mTGCsPG3ijmJxa6IlDd+t+GCq35KDDF2n
+         DcTA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUX+yHk7Gr3T9ugExZKS3m4fwLFqFV2nFeN8d2E94CqOhS/SJrF0NOWx639WOG9zKlJt/6n7f9xZCCAZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvNIzZ6bd4ILdug7wK2BRiABovt/c3cFrjdY1ZNX9qQWucvuYn
+	oS7G/8UD/2aONpuBaqGHNVGiiImb7Z9I/wrbNhSoOK9/6PdDEjCu3L/vwfZdJrOgSafylWWlnIc
+	IJtnYSvpdunNHYUwIGUl8sNAKFXpRf2jnOz0TjIcMoSAvkXqiyj6duuqjNMXJYV8=
+X-Gm-Gg: ASbGncvr6+r0ih79utU97XrQN3DoQaR3KDpHJDaB61E7llUYUWuN947sZwjEIxLVHUI
+	j/OTbHGL5zEkCE9FpTET/3f46edOaCA3pu3AG6hjF5Bs4Lf7dm7LWvO7A7db65YYk0bi+SL2eX1
+	4Bajq37SAHYeCdJIcp0aUmezVrGlx/Z+AseqCM6+CzW5xGVJUehlmvcH8OaDRsuO0edyqkdhDiN
+	L6UI69LIXCqqUPiYyu6LDhdHWFvjuKofkzMM9BWL9BW0DX1N3xvTefyyLtC76rjiVZ7C2TeAmkA
+	ZO1chlClOko568eB4LIos91LiKoRbI29VovBlQz47pU2UBoPKQAkAsqw0MdwjT3Z4Ww=
+X-Received: by 2002:a05:620a:1a83:b0:7c0:c024:d5 with SMTP id af79cd13be357-7c94d298995mr245300185a.8.1745420238252;
+        Wed, 23 Apr 2025 07:57:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE7NASz5S114ThP0dvyExe5F00+leMGaZwFVeXLrWh9p/BkVwDIsMC0C1e5A37iHj6HGPixnA==
+X-Received: by 2002:a05:620a:1a83:b0:7c0:c024:d5 with SMTP id af79cd13be357-7c94d298995mr245297785a.8.1745420237855;
+        Wed, 23 Apr 2025 07:57:17 -0700 (PDT)
+Received: from [192.168.65.183] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f62594985bsm7594334a12.74.2025.04.23.07.57.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 07:57:11 -0700 (PDT)
-Message-ID: <b2a5cfc4-190f-4983-8d5e-3483a02be980@linaro.org>
-Date: Wed, 23 Apr 2025 15:57:10 +0100
+        Wed, 23 Apr 2025 07:57:17 -0700 (PDT)
+Message-ID: <4b1f9228-2600-4d97-a60e-9099878b3f2a@oss.qualcomm.com>
+Date: Wed, 23 Apr 2025 16:57:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,199 +74,167 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/10] tools headers: Update the syscall table with the
- kernel sources
-To: Jon Hunter <jonathanh@nvidia.com>, Namhyung Kim <namhyung@kernel.org>,
- Arnd Bergmann <arnd@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
- linux-arch@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
- "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <20250410001125.391820-1-namhyung@kernel.org>
- <20250410001125.391820-6-namhyung@kernel.org>
- <f950fe96-34d3-4631-b04d-4a1584f4c2f1@linaro.org>
- <95c9bd53-ccef-4a34-b6d2-7203df84db01@linaro.org>
- <4c042dd9-50d6-401a-bce7-d22213b07bca@nvidia.com>
+Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Rob Clark <robdclark@gmail.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>,
+        Connor Abbott <cwabbott0@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Sean Paul <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        dri-devel
+ <dri-devel@lists.freedesktop.org>,
+        freedreno@lists.freedesktop.org
+References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
+ <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
+ <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com>
+ <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
+ <1282bf58-e431-4a07-97e5-628437e7ce5f@quicinc.com>
+ <CACu1E7GwMCt6+JJQGgSvJObTMMWYLPd69owyFo7S=sxu_EEsUw@mail.gmail.com>
+ <16845de2-a40a-4e3d-b3aa-c91e7072b57f@quicinc.com>
+ <CAF6AEGvyeRLHFBYmxkevgT+hosXGiH_w8Z+UjQmL+LdbNfVZ+w@mail.gmail.com>
+ <acd1c8dd-286b-40b7-841d-e53e2d155a61@oss.qualcomm.com>
+ <CAF6AEGts5rWvgyZy8RtAaUOsad362AG-uNjxF9vyj4szg=b5Bw@mail.gmail.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <4c042dd9-50d6-401a-bce7-d22213b07bca@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <CAF6AEGts5rWvgyZy8RtAaUOsad362AG-uNjxF9vyj4szg=b5Bw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 6TFm8YwlOOZ4j9T9gpzlzavZNNyTfyAP
+X-Proofpoint-ORIG-GUID: 6TFm8YwlOOZ4j9T9gpzlzavZNNyTfyAP
+X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=6808ffcf cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=INHOtyMNgn4pQtdJY3IA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDEwNSBTYWx0ZWRfX2IYZbOw+14EF zIuOG53hCto/VsDB+cuRcr77PS/SMyYQAC60E41ybmkHuvi4m8Re6HrdAPZdEQeFONmqYmgLvLF jgQ50zMSywmS1cTpKOua2XIng5HtXbOO0reAw/RBNfciHLdVnJw17aUjSeVS62FwuO5wrnOGL92
+ 7qfW/Gl5BlnJaqp6YweWBChPJhkhQqb0fM6FPt3HCNYBGVWUj9mqE9sCZrkqT/lr5Uod+zW4jFZ iWPwvbVdeHbnzX+OJQ+3mQvaOnhQOlgHq5q/wM0qePmk/pVL1JfMQ4iKw3HvCxK/K73lLEtjiSq Yhw24fd4tMeIVASbvgza9SWgIk1bKaWI7M5FWDZ4Ex02kXmyF6esL3CvouvoiBI0TnovRSbtIUB
+ f5zwpZlb7z6fYIhekj3c1wZw1WUZZNnQl3Sr68D0cW3WWUfN859CNDxHEawmNYPPbkEdCUPN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230105
 
-
-
-On 23/04/2025 10:24 am, Jon Hunter wrote:
-> 
-> On 16/04/2025 14:26, James Clark wrote:
+On 4/23/25 4:55 PM, Rob Clark wrote:
+> On Tue, Apr 22, 2025 at 4:57 PM Konrad Dybcio
+> <konrad.dybcio@oss.qualcomm.com> wrote:
 >>
+>> On 4/21/25 10:13 PM, Rob Clark wrote:
+>>> On Fri, Apr 18, 2025 at 9:00 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
+>>>>
+>>>> On 4/18/2025 6:40 AM, Connor Abbott wrote:
+>>>>> On Thu, Apr 17, 2025, 1:50 PM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
+>>>>>>
+>>>>>> On 4/17/2025 9:02 PM, Connor Abbott wrote:
+>>>>>>> On Thu, Apr 17, 2025 at 3:45 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
+>>>>>>>>
+>>>>>>>> On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
+>>>>>>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>>>>>>>
+>>>>>>>>> The Highest Bank address Bit value can change based on memory type used.
+>>>>>>>>>
+>>>>>>>>> Attempt to retrieve it dynamically, and fall back to a reasonable
+>>>>>>>>> default (the one used prior to this change) on error.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>>>>>>> ---
+>>>>>>>>>  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
+>>>>>>>>>  1 file changed, 14 insertions(+), 1 deletion(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>>>>>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f20ae5f8f5e57f38ecc62d9f 100644
+>>>>>>>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>>>>>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>>>>>>> @@ -13,6 +13,7 @@
+>>>>>>>>>  #include <linux/firmware/qcom/qcom_scm.h>
+>>>>>>>>>  #include <linux/pm_domain.h>
+>>>>>>>>>  #include <linux/soc/qcom/llcc-qcom.h>
+>>>>>>>>> +#include <linux/soc/qcom/smem.h>
+>>>>>>>>>
+>>>>>>>>>  #define GPU_PAS_ID 13
+>>>>>>>>>
+>>>>>>>>> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+>>>>>>>>>
+>>>>>>>>>  static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>>>>>>>  {
+>>>>>>>>> +     int hbb;
+>>>>>>>>> +
+>>>>>>>>>       gpu->ubwc_config.rgb565_predicator = 0;
+>>>>>>>>>       gpu->ubwc_config.uavflagprd_inv = 0;
+>>>>>>>>>       gpu->ubwc_config.min_acc_len = 0;
+>>>>>>>>> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>>>>>>>           adreno_is_a690(gpu) ||
+>>>>>>>>>           adreno_is_a730(gpu) ||
+>>>>>>>>>           adreno_is_a740_family(gpu)) {
+>>>>>>>>> -             /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+>>>>>>>>>               gpu->ubwc_config.highest_bank_bit = 16;
+>>>>>>>>>               gpu->ubwc_config.amsbc = 1;
+>>>>>>>>>               gpu->ubwc_config.rgb565_predicator = 1;
+>>>>>>>>> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>>>>>>>               gpu->ubwc_config.highest_bank_bit = 14;
+>>>>>>>>>               gpu->ubwc_config.min_acc_len = 1;
+>>>>>>>>>       }
+>>>>>>>>> +
+>>>>>>>>> +     /* Attempt to retrieve the data from SMEM, keep the above defaults in case of error */
+>>>>>>>>> +     hbb = qcom_smem_dram_get_hbb();
+>>>>>>>>> +     if (hbb < 0)
+>>>>>>>>> +             return;
+>>>>>>>>> +
+>>>>>>>>> +     gpu->ubwc_config.highest_bank_bit = hbb;
+>>>>>>>>
+>>>>>>>> I am worried about blindly relying on SMEM data directly for HBB for
+>>>>>>>> legacy chipsets. There is no guarantee it is accurate on every chipset
+>>>>>>>> and every version of firmware. Also, until recently, this value was
+>>>>>>>> hardcoded in Mesa which matched the value in KMD.
+>>>>>>>
+>>>>>>> To be clear about this, from the moment we introduced host image
+>>>>>>> copies in Mesa we added support for querying the HBB from the kernel,
+>>>>>>> explicitly so that we could do what this series does without Mesa ever
+>>>>>>> breaking. Mesa will never assume the HBB unless the kernel is too old
+>>>>>>> to support querying it. So don't let Mesa be the thing that stops us
+>>>>>>> here.
+>>>>>>
+>>>>>> Thanks for clarifying about Mesa. I still don't trust a data source that
+>>>>>> is unused in production.
+>>>>>
+>>>>> Fair enough, I'm not going to argue with that part. Just wanted to
+>>>>> clear up any confusion about Mesa.
+>>>>>
+>>>>> Although, IIRC kgsl did set different values for a650 depending on
+>>>>> memory type... do you know what source that used?
+>>>>
+>>>> KGSL relies on an undocumented devicetree node populated by bootloader
+>>>> to detect ddrtype and calculates the HBB value based on that.
+>>>
+>>> Would it be reasonable to use the smem value, but if we find the
+>>> undocumented dt property, WARN_ON() if it's value disagrees with smem?
+>>>
+>>> That would at least give some confidence, or justified un-confidence
+>>> about the smem values
 >>
->> On 14/04/2025 5:28 pm, James Clark wrote:
->>>
->>>
->>> On 10/04/2025 1:11 am, Namhyung Kim wrote:
->>>> To pick up the changes in:
->>>>
->>>>    c4a16820d9019940 fs: add open_tree_attr()
->>>>    2df1ad0d25803399 x86/arch_prctl: Simplify sys_arch_prctl()
->>>>    e632bca07c8eef1d arm64: generate 64-bit syscall.tbl
->>>>
->>>> This is basically to support the new open_tree_attr syscall.  But it
->>>> also needs to update asm-generic unistd.h header to get the new syscall
->>>> number.  And arm64 unistd.h header was converted to use the generic
->>>> 64-bit header.
->>>>
->>>> Addressing this perf tools build warning:
->>>>
->>>>    Warning: Kernel ABI header differences:
->>>>      diff -u tools/scripts/syscall.tbl scripts/syscall.tbl
->>>>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_32.tbl arch/ 
->>>> x86/entry/syscalls/syscall_32.tbl
->>>>      diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl arch/ 
->>>> x86/entry/syscalls/syscall_64.tbl
->>>>      diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl 
->>>> arch/ powerpc/kernel/syscalls/syscall.tbl
->>>>      diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/ 
->>>> s390/kernel/syscalls/syscall.tbl
->>>>      diff -u tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl 
->>>> arch/ mips/kernel/syscalls/syscall_n64.tbl
->>>>      diff -u tools/perf/arch/arm/entry/syscalls/syscall.tbl arch/ 
->>>> arm/ tools/syscall.tbl
->>>>      diff -u tools/perf/arch/sh/entry/syscalls/syscall.tbl arch/sh/ 
->>>> kernel/syscalls/syscall.tbl
->>>>      diff -u tools/perf/arch/sparc/entry/syscalls/syscall.tbl arch/ 
->>>> sparc/kernel/syscalls/syscall.tbl
->>>>      diff -u tools/perf/arch/xtensa/entry/syscalls/syscall.tbl arch/ 
->>>> xtensa/kernel/syscalls/syscall.tbl
->>>>      diff -u tools/arch/arm64/include/uapi/asm/unistd.h arch/arm64/ 
->>>> include/uapi/asm/unistd.h
->>>>      diff -u tools/include/uapi/asm-generic/unistd.h include/uapi/ 
->>>> asm- generic/unistd.h
->>>>
->>>> Please see tools/include/uapi/README for further details.
->>>>
->>>> Cc: linux-arch@vger.kernel.org
->>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->>>> ---
->>>>   tools/arch/arm64/include/uapi/asm/unistd.h    | 24 
->>>> +------------------
->>>>   tools/include/uapi/asm-generic/unistd.h       |  4 +++-
->>>>   .../perf/arch/arm/entry/syscalls/syscall.tbl  |  1 +
->>>>   .../arch/mips/entry/syscalls/syscall_n64.tbl  |  1 +
->>>>   .../arch/powerpc/entry/syscalls/syscall.tbl   |  1 +
->>>>   .../perf/arch/s390/entry/syscalls/syscall.tbl |  1 +
->>>>   tools/perf/arch/sh/entry/syscalls/syscall.tbl |  1 +
->>>>   .../arch/sparc/entry/syscalls/syscall.tbl     |  1 +
->>>>   .../arch/x86/entry/syscalls/syscall_32.tbl    |  3 ++-
->>>>   .../arch/x86/entry/syscalls/syscall_64.tbl    |  1 +
->>>>   .../arch/xtensa/entry/syscalls/syscall.tbl    |  1 +
->>>>   tools/scripts/syscall.tbl                     |  1 +
->>>>   12 files changed, 15 insertions(+), 25 deletions(-)
->>>>
->>>> diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h b/tools/ 
->>>> arch/ arm64/include/uapi/asm/unistd.h
->>>> index 9306726337fe005e..df36f23876e863ff 100644
->>>> --- a/tools/arch/arm64/include/uapi/asm/unistd.h
->>>> +++ b/tools/arch/arm64/include/uapi/asm/unistd.h
->>>> @@ -1,24 +1,2 @@
->>>>   /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
->>>> -/*
->>>> - * Copyright (C) 2012 ARM Ltd.
->>>> - *
->>>> - * This program is free software; you can redistribute it and/or 
->>>> modify
->>>> - * it under the terms of the GNU General Public License version 2 as
->>>> - * published by the Free Software Foundation.
->>>> - *
->>>> - * This program is distributed in the hope that it will be useful,
->>>> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>> - * GNU General Public License for more details.
->>>> - *
->>>> - * You should have received a copy of the GNU General Public License
->>>> - * along with this program.  If not, see <http://www.gnu.org/ 
->>>> licenses/>.
->>>> - */
->>>> -
->>>> -#define __ARCH_WANT_RENAMEAT
->>>> -#define __ARCH_WANT_NEW_STAT
->>>> -#define __ARCH_WANT_SET_GET_RLIMIT
->>>> -#define __ARCH_WANT_TIME32_SYSCALLS
->>>> -#define __ARCH_WANT_MEMFD_SECRET
->>>> -
->>>> -#include <asm-generic/unistd.h>
->>>> +#include <asm/unistd_64.h>
->>>
->>> Hi Namhyung,
->>>
->>> Since we're not including the generic syscalls here anymore we now 
->>> need to generate the syscall header file for the Perf build to work 
->>> (build error pasted at the end for reference).
->>>
->>> I had a go at adding the rule for it, but I saw that we'd need to 
->>> pull in quite a bit from the kernel so it was blurring the lines 
->>> about the separation of the tools/ folder. For example this file has 
->>> the arm64 defs:
->>>
->>>   arch/arm64/kernel/Makefile.syscalls
->>>
->>> To make this common part of the makefile work:
->>>
->>>   scripts/Makefile.asm-headers
->>>
->>> Maybe we can just copy or reimplement Makefile.syscalls, but I'm not 
->>> even sure if Makefile.asm-headers will work with the tools/ build 
->>> structure so maybe that has to be re-implemented too. Adding Arnd to 
->>> see what he thinks.
->>>
->>> As far as I can tell this is a separate issue to the work that 
->>> Charlie and Ian did recently to build all arch's syscall numbers into 
->>> Perf to use for reporting, as this is requires a single header for 
->>> the build.
->>>
->>> Thanks
->>> James
->>>
->>> ---
->>>
->>> In file included from /usr/include/aarch64-linux-gnu/sys/syscall.h:24,
->>>                   from evsel.c:4:
->>> /home/jamcla02/workspace/linux/linux/tools/arch/arm64/include/uapi/ 
->>> asm/ unistd.h:2:10: fatal error: asm/unistd_64.h: No such file or 
->>> directory
->>>      2 | #include <asm/unistd_64.h>
->>>        |          ^~~~~~~~~~~~~~~~~
->>>
->>>
->>>
->>
->> Hmmm I see this was also mentioned a while ago here [1]. Maybe I can 
->> have another go at adding the makerule to generate the file. I'll 
->> probably start by including as much as possible from the existing make 
->> rules from the kernel side. I think something similar was already done 
->> for generating the sysreg defs in commit 02e85f74668e ("tools: arm64: 
->> Add a Makefile for generating sysreg-defs.h")
->>
->>
->> [1]: https://lore.kernel.org/lkml/ZrO5HR9x2xyPKttx@google.com/T/ 
->> #m269c1d3c64e3e0c96f45102d358d9583c69b722f
+>> The aforementioned value is populated based on the data that this
+>> driver reads out, and only on the same range of platforms that this
+>> driver happens to cater to
 > 
+> Did I understand that correctly to mean that the dt property is based
+> on the same smem value that you are using?
+
+Yes, abl reads it out and modifies the FDT based on what's in there
+
+Konrad
+
+>  In that case, there should
+> be no argument against using the smem value as the source of truth.
 > 
-> FWIW I am seeing this build issue too on ARM64 and these changes have 
-> now landed in the mainline :-(
-> 
-> So would be great to get this fixed or reverted.
-> 
-> Jon
-> 
-
-Hi Jon,
-
-I probably should have updated this thread, but the fix is here:
-
-https://lore.kernel.org/linux-perf-users/20250417-james-perf-fix-gen-syscall-v1-1-1d268c923901@linaro.org/
-
-Thanks
-James
-
+> BR,
+> -R
