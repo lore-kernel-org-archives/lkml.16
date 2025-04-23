@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A385F28D85D;
-	Wed, 23 Apr 2025 17:50:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB02F28E61A;
+	Wed, 23 Apr 2025 17:50:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430656; cv=none; b=rZUo1Ub18D4EsR/nnpHyTqM1ZzwtAl1+DI83ku6nIQZrxiyXNKP7zMa/3u2jJFMN5nPxz8DM5B9P+MCrFJX1VjTw4eLohkFeAlqt0+HSuKYB5f6i+1W1PtnOn5dqFBJhKuWJm1PZQSo4UNBN+NVtOgDRcsbAMCp6NhmXiiFFRIU=
+	t=1745430657; cv=none; b=YBgRmPm5jc2+sgUzW3ILuz6PUxGv0iOkSnFzi7ot89VkUd2D/rVa1mU2HzQ2b0E+zuE1icvmCGjH8nFftBTeD5zjR/VLNIQYjdqr/jGkRmw7HN4Rwaud7kOdsdaeviF7mT0B3044+Q8Mqx8mhiC7lrQDlIejRAqaZ0HnVu7Bc7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430656; c=relaxed/simple;
-	bh=pspP0LoaB25ewweJpkQNKt1iGCUbJ6t/mkm9l0BSOVU=;
+	s=arc-20240116; t=1745430657; c=relaxed/simple;
+	bh=Anj1LmE3HMj4PrtjKAY91OthCI8uL5I4H5KJF+CQhR0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YxfuWen+cTAwU+6hcvZlLK9iS5Fe4kGW5VVn4hdI6pgWWXncKiMTtNbOhlX5HcTs7X6H+rvKbDlhBfo3LQ4VnOe49wp2y9EL1Nx5DyBOVMEvEIIJR14cvf2fH5QjdiSO743aZZT2Ijbd7SJ4Ihw41HTKvN5NhOvzAsx/idxmx5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IPooBr7l; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=G9eNy0Bj8AD/UwAKXZ0hHLasd9nnucGJiJGkAHb6MnEn0diV5DCEqt+M5y8ZQt54jZwYOiCzDjlrRYXKToVuMIU/laMTbFUwyCvVV2pnT7PEvm2t+G3qh5WJMgOymWD2SfBXaxN0cridGQOVRt7OrFFn32BWB9KeUjWPYpRFBoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hMy/5VOP; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IPooBr7l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hMy/5VOP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745430655; x=1776966655;
+  t=1745430656; x=1776966656;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pspP0LoaB25ewweJpkQNKt1iGCUbJ6t/mkm9l0BSOVU=;
-  b=IPooBr7lFf1+faR8WHphNIrnWXXxlevJ6tDgrQihw1kqjyUC3+V3Pst0
-   W5HhhMMiYCIZ2okCl1jkhGF6F0tm3K1Bwo0cuJvd+gcKH9G9X9a0wG8Xh
-   X3q7ZvP8BtJRVSRoOhkvqwcyXUC/7eXzHYBKcUe536lqDj4EP1nX7iWAX
-   Xbq1yPdL7zrM3CqFfgo19iKvxMM4/8xXEamfxk5w6x9LGMM8K8a8Na9vq
-   3Fff/hPHxdxWB+j/FwqJZz8ToLbOQxOFNVb9Ore50yEwlyKzv/X4uSfON
-   SMsZKtygw0V+V0K9PSl9Ti7uxoZ0mw9Sf55jupDn/mP1uIBhHELQOYrKR
-   w==;
-X-CSE-ConnectionGUID: I9ztMGPQRP6foR41NcRO3w==
-X-CSE-MsgGUID: y9s1ZnT5R2ODGOWmE3v0Wg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47168352"
+  bh=Anj1LmE3HMj4PrtjKAY91OthCI8uL5I4H5KJF+CQhR0=;
+  b=hMy/5VOP1AXp0XlMTP5xgapXB/aVUdKWF9zjdP/kcy0VcZ3Q0U9mJI4U
+   KdA86bSU2hyw7sw9TOFXj63zlvZ0LGfP7vIGp0i6wxV/BVCFCmrjZm/Rx
+   bCfO7Wi3Ae1suUIE9l/YSWECZVpT/nFz85u0BphEuUOpa8Ix7Ty6gs/Eu
+   I2VxHY4O1u3JAb6jOHZ8wGfwjnAoyNqyaeWe/zt1s94pjhfxLQETQH+t4
+   6L8rAtU2v1HDP58eg/HljmMsZ14lVyv8hJ6yav4tzYetnj4Ztb1l95p1w
+   ADmF/wNIgfPvYfwI03JAz6+76EuPmNsinRYCCTgUPoBeqZdd/KMYynN53
+   g==;
+X-CSE-ConnectionGUID: EsYSrsqySUG5CWGK+PVwfg==
+X-CSE-MsgGUID: 4pl+teqyTT6Iq+H6wa0gqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47168370"
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="47168352"
+   d="scan'208";a="47168370"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:52 -0700
-X-CSE-ConnectionGUID: xwHH6O9mSkq8biLXi0V1ig==
-X-CSE-MsgGUID: H3DH1ZQyT1+9xMampYd3Kw==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:53 -0700
+X-CSE-ConnectionGUID: fGvrM/tlSRuTUeCqu2SAug==
+X-CSE-MsgGUID: MoJ3ndr2S1KcaJAjbhCHag==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="163350474"
+   d="scan'208";a="163350486"
 Received: from ldmartin-desk2.corp.intel.com (HELO debox1-desk4.lan) ([10.125.111.241])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:52 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
@@ -65,9 +65,9 @@ Cc: linux-doc@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	Dell.Client.Kernel@dell.com,
 	linux-sound@vger.kernel.org
-Subject: [PATCH 5/7] soundwire: sysfs: Use ATTRIBUTE_GROUP_VISIBLE()
-Date: Wed, 23 Apr 2025 10:50:35 -0700
-Message-ID: <20250423175040.784680-6-david.e.box@linux.intel.com>
+Subject: [PATCH 7/7] sysfs: Remove transitional attribute group alias macros
+Date: Wed, 23 Apr 2025 10:50:37 -0700
+Message-ID: <20250423175040.784680-8-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250423175040.784680-1-david.e.box@linux.intel.com>
 References: <20250423175040.784680-1-david.e.box@linux.intel.com>
@@ -79,99 +79,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Replace the manual definition of the dp0 attribute group with the newly
-introduced ATTRIBUTE_GROUP_VISIBLE() macro, simplifying the code and
-improving maintainability.
-
-Consolidate the definition of dp0_attrs and move the attribute array above
-the macro so that they are visibly tied together.  While here, also remove
-the unneeded trailing comma after NULL at the end of all attribute arrays.
-No functional changes are intended.
+Remove transitional macros used to alias named and visible sysfs attribute
+group definitions. These were temporarily introduced to ease migration but
+are now redundant due to the adoption of the new encapsulated
+NAMED_ATTRIBUTE_* macros across all relevant drivers.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/soundwire/sysfs_slave.c | 32 +++++++++++++-------------------
- 1 file changed, 13 insertions(+), 19 deletions(-)
+ include/linux/sysfs.h | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/soundwire/sysfs_slave.c b/drivers/soundwire/sysfs_slav=
-e.c
-index c5c22d1708ec..400f2a17f140 100644
---- a/drivers/soundwire/sysfs_slave.c
-+++ b/drivers/soundwire/sysfs_slave.c
-@@ -103,7 +103,7 @@ static DEVICE_ATTR_RO(modalias);
+diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+index 0804bffd6013..877fd1976668 100644
+--- a/include/linux/sysfs.h
++++ b/include/linux/sysfs.h
+@@ -220,12 +220,6 @@ struct attribute_group {
+ 		return a->mode;                                             \
+ 	}
 =20
- static struct attribute *slave_attrs[] =3D {
- 	&dev_attr_modalias.attr,
--	NULL,
-+	NULL
- };
-=20
- static const struct attribute_group slave_attr_group =3D {
-@@ -126,7 +126,7 @@ static struct attribute *slave_dev_attrs[] =3D {
- 	&dev_attr_master_count.attr,
- 	&dev_attr_source_ports.attr,
- 	&dev_attr_sink_ports.attr,
--	NULL,
-+	NULL
- };
-=20
- static const struct attribute_group sdw_slave_dev_attr_group =3D {
-@@ -170,16 +170,6 @@ static ssize_t words_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(words);
-=20
--static struct attribute *dp0_attrs[] =3D {
--	&dev_attr_max_word.attr,
--	&dev_attr_min_word.attr,
--	&dev_attr_words.attr,
--	&dev_attr_BRA_flow_controlled.attr,
--	&dev_attr_simple_ch_prep_sm.attr,
--	&dev_attr_imp_def_interrupts.attr,
--	NULL,
--};
+-/* Transitional aliases: so legacy code using old names continues to work =
+*/
+-#define DEFINE_SYSFS_GROUP_VISIBLE(name) DEFINE_SYSFS_GROUP_COMBO_VISIBILI=
+TY(name)
+-#define DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(name) DEFINE_SYSFS_GROUP_VISIBIL=
+ITY(name)
+-#define DEFINE_SYSFS_BIN_GROUP_VISIBLE(name) DEFINE_SYSFS_BIN_GROUP_COMBO_=
+VISIBILITY(name)
+-#define DEFINE_SIMPLE_SYSFS_BIN_GROUP_VISIBLE(name) DEFINE_SYSFS_BIN_GROUP=
+_VISIBILITY(name)
 -
- static umode_t dp0_attr_visible(struct kobject *kobj, struct attribute *at=
-tr,
- 			      int n)
- {
-@@ -198,19 +188,23 @@ static bool dp0_group_visible(struct kobject *kobj)
- 		return true;
- 	return false;
- }
--DEFINE_SYSFS_GROUP_VISIBLE(dp0);
-=20
--static const struct attribute_group dp0_group =3D {
--	.attrs =3D dp0_attrs,
--	.is_visible =3D SYSFS_GROUP_VISIBLE(dp0),
--	.name =3D "dp0",
-+static struct attribute *dp0_attrs[] =3D {
-+	&dev_attr_max_word.attr,
-+	&dev_attr_min_word.attr,
-+	&dev_attr_words.attr,
-+	&dev_attr_BRA_flow_controlled.attr,
-+	&dev_attr_simple_ch_prep_sm.attr,
-+	&dev_attr_imp_def_interrupts.attr,
-+	NULL
- };
-+NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(dp0);
-=20
- const struct attribute_group *sdw_attr_groups[] =3D {
- 	&slave_attr_group,
- 	&sdw_slave_dev_attr_group,
- 	&dp0_group,
--	NULL,
-+	NULL
- };
-=20
- /*
-@@ -249,7 +243,7 @@ static DEVICE_ATTR_RO(device_number);
- static struct attribute *slave_status_attrs[] =3D {
- 	&dev_attr_status.attr,
- 	&dev_attr_device_number.attr,
--	NULL,
-+	NULL
- };
+ #define SYSFS_GROUP_VISIBLE(fn) sysfs_group_visible_##fn
 =20
  /*
 --=20
