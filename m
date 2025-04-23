@@ -1,127 +1,216 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF851F4171;
-	Wed, 23 Apr 2025 07:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5699826FA5A;
+	Wed, 23 Apr 2025 07:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394485; cv=none; b=FveWindI8s++jYAB0esx8F4vAg0gu6z8wcXv8iHfmzptQA32Ko2O+nfLNMsW84sYeronyk9uM7xUdsTHp1x9i9iyaP1YR+QZba52sYv/VZLAzLh21f/V/ylMbCf4GqrodSWALbXKGq46l0ii1dBSC5MmOMTKzOFb/RWNPTcxeiA=
+	t=1745394525; cv=none; b=ub5iEBnkYI4xdbT4iBRLCJlYwAIHeU4uuzLQxxjU7r0ye7/zyv6wiwT0jynVOLyzXrxKsgW8DEohbWLh8KCsVq9C8j90ASfKBC3a5umI4102hJSJdnmHc8JDOjtFKw0UILjJw1yAE04Z8ntLQjep96HDwfJbVaxPZ1fjT9b0CUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394485; c=relaxed/simple;
-	bh=ZCq9kT5F1hlUKckchQHoUy3rpJpJ6Erjv1VBOGMNspU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=obax4Jj2/VAtQcJZweUpJ+KnnX9mBgTnL+Q1V2rZjFEb3NRQ53A0CUlqcHpntFHCcIUNl9BLvnfcZpMTAtuzZw3Vgzd1bxbbX1N2uw7bOPzOmTvaZ2ptOjjmbq/JDSaycCsEkcE0C/isGAvjaIupKRZRzAt/PRCOjmDr5oNVj3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qXld7wyZ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=tQWH0pm4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745394525; c=relaxed/simple;
+	bh=2rybtEtSnHp1L55DE1SNTbFRr5L1knAygEYcRmKOZtM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AsGsAg+NDEFg90wtwTTe4DJASnZwVn6OTust6gMl/dE6fpXAM40/fL5u+5CQr1hus/B9/PEJc0o5lXvL0ulZuZ6HSu9WcYVmvxtuGvnY445JT26p+3bH3zlqjiXqmaVBtNYsfRDvfHoiJZM2wk5QYyUc1kwu65bLozn32Fwoblk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=XKoJi92r; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qXld7wyZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="tQWH0pm4"
-Date: Wed, 23 Apr 2025 07:48:01 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745394482;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EhtksW+UkwY1zWbbWhaQ5zWYA23x0Jq2UsBmThTPVX8=;
-	b=qXld7wyZsv28HIyrjqQCTQznKRiR4+qR+XWyT0fTRi69n00VxgwJ3frhkpHEbMzvvOa59z
-	fWsPKya0sU2EBzzOhcVP6END6oJ4ncNwu+qm8ceiGJ0QK8YxrC+OcT6Pv1byg/d363ctE0
-	ox4K9gW1TRORM0pREmOhWTLY2dpqKKQc2rrh92hzdtRj1xMMyjk1fVsthqfc+/w7H8oQaN
-	rJ8ROgXLXxMt98PGmxYggFeXQ7eq15dg4ZMLXE7mkYqcXXXzsTii7flAOenY9bTRPmR4QN
-	wpPIUy3mOLJLkiLz3vdWkrTyjXjuwjJEXakuOL7Eb79eK8GcgLxQkzgANLQKsQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745394482;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EhtksW+UkwY1zWbbWhaQ5zWYA23x0Jq2UsBmThTPVX8=;
-	b=tQWH0pm4n1pLquYm5w/zCe2cOGjcyAA/inr9rO5bZid/UojYnEEtz9r9fvUk1dEH42Dihx
-	M8E869xhi5wR4vCQ==
-From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/boot] x86/boot: Disable jump tables in PIC code
-Cc: Ard Biesheuvel <ardb@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Josh Poimboeuf <jpoimboe@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- linux-efi@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250422210510.600354-2-ardb+git@google.com>
-References: <20250422210510.600354-2-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="XKoJi92r"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Cc:To:In-Reply-To:References:Message-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=goPStM+OHyszIMkIuQDRqTecOxbPHrLiRh4AOrQUaAk=; b=XKoJi92rSZSLPyuT9H437LmEIf
+	IJAScnygoceMshJYbhfwoxYlpzDr0N/uAug6BYzrxFufiWs524hkAcJvNbwTsv4jA9yXXz4lMdyOI
+	CoR5DzQt0rijZ/xHVKUkDrAvno2Ew9gHW7x+HP8G5AINSQPzA+EefILTpfShm+W8JgOc=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:55820 helo=[127.0.1.1])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1u7UHr-0063ZQ-Mp; Wed, 23 Apr 2025 09:12:52 +0200
+From: Matthias Fend <matthias.fend@emfend.at>
+Date: Wed, 23 Apr 2025 09:12:49 +0200
+Subject: [PATCH v3 1/2] dt-bindings: leds: add Texas Instruments TPS6131x
+ flash LED driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174539448176.31282.2929835259793717594.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-
-The following commit has been merged into the x86/boot branch of tip:
-
-Commit-ID:     121c335b36e02d6aefb72501186e060474fdf33c
-Gitweb:        https://git.kernel.org/tip/121c335b36e02d6aefb72501186e060474fdf33c
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Tue, 22 Apr 2025 23:05:11 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 23 Apr 2025 09:30:57 +02:00
-
-x86/boot: Disable jump tables in PIC code
-
-objtool already struggles to identify jump tables correctly in non-PIC
-code, where the idiom is something like
-
-  jmpq  *table(,%idx,8)
-
-and the table is a list of absolute addresses of jump targets.
-
-When using -fPIC, both the table reference as well as the jump targets
-are emitted in a RIP-relative manner, resulting in something like
-
-  leaq    table(%rip), %tbl
-  movslq  (%tbl,%idx,4), %offset
-  addq    %offset, %tbl
-  jmpq    *%tbl
-
-and the table is a list of offsets of the jump targets relative to the
-start of the entire table.
-
-Considering that this sequence of instructions can be interleaved with
-other instructions that have nothing to do with the jump table in
-question, it is extremely difficult to infer the control flow by
-deriving the jump targets from the indirect jump, the location of the
-table and the relative offsets it contains.
-
-So let's not bother and disable jump tables for code built with -fPIC
-under arch/x86/boot/startup.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-efi@vger.kernel.org
-Link: https://lore.kernel.org/r/20250422210510.600354-2-ardb+git@google.com
----
- arch/x86/boot/startup/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index 21d911b..b514f7e 100644
---- a/arch/x86/boot/startup/Makefile
-+++ b/arch/x86/boot/startup/Makefile
-@@ -5,6 +5,7 @@ KBUILD_CFLAGS		+= -D__DISABLE_EXPORTS -mcmodel=small -fPIC \
- 			   -Os -DDISABLE_BRANCH_PROFILING \
- 			   $(DISABLE_STACKLEAK_PLUGIN) \
- 			   -fno-stack-protector -D__NO_FORTIFY \
-+			   -fno-jump-tables \
- 			   -include $(srctree)/include/linux/hidden.h
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250423-leds-tps6131x-v3-1-ca67d346a4ea@emfend.at>
+References: <20250423-leds-tps6131x-v3-0-ca67d346a4ea@emfend.at>
+In-Reply-To: <20250423-leds-tps6131x-v3-0-ca67d346a4ea@emfend.at>
+To: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Matthias Fend <matthias.fend@emfend.at>, 
+ bsp-development.geo@leica-geosystems.com, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Spam-Score: -1.0
+X-Spam-Bar: -
+X-Spam-Report: Spam detection software, running on the system "lx20.hoststar.hosting",
+ has NOT identified this incoming email as spam.  The original
+ message has been attached to this so you can view it or label
+ similar future email.  If you have any questions, see
+ the administrator of that system for details.
  
- # disable ftrace hooks and LTO
+ Content preview:  The TPS61310/TPS61311 is a flash LED driver with I2C interface.
+    Its power stage is capable of supplying a maximum total current of roughly
+    1500mA. The TPS6131x provides three constant-current sinks, c [...] 
+ 
+ Content analysis details:   (-1.0 points, 5.0 required)
+ 
+  pts rule name              description
+ ---- ---------------------- --------------------------------------------------
+ -1.0 ALL_TRUSTED            Passed through trusted hosts only via SMTP
+  0.0 TVD_RCVD_IP            Message was received from an IP address
+  0.0 Local_hs1_NotHoststar  Sender is not from hoststar.ch|de|com
+  0.0 KAM_DMARC_STATUS       Test Rule for DKIM or SPF Failure with Strict
+                             Alignment
+
+Document Texas Instruments TPS61310/TPS61311 flash LED driver devicetree
+bindings.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Matthias Fend <matthias.fend@emfend.at>
+---
+ .../devicetree/bindings/leds/ti,tps61310.yaml      | 120 +++++++++++++++++++++
+ 1 file changed, 120 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/leds/ti,tps61310.yaml b/Documentation/devicetree/bindings/leds/ti,tps61310.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..1f631889a06a70185bb7ca2cef531e2618f83765
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/ti,tps61310.yaml
+@@ -0,0 +1,120 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/ti,tps61310.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Texas Instruments TPS6131X flash LED driver
++
++maintainers:
++  - Matthias Fend <matthias.fend@emfend.at>
++
++description: |
++  The TPS61310/TPS61311 is a flash LED driver with I2C interface.
++  Its power stage is capable of supplying a maximum total current of roughly 1500mA.
++  The TPS6131x provides three constant-current sinks, capable of sinking
++  up to 2 × 400mA (LED1 and LED3) and 800mA (LED2) in flash mode.
++  In torch mode, each sink (LED1, LED2, LED3) supports currents up to 175mA.
++  Since the three current sinks share most of the control components such as
++  flash timer, control logic, safety timer and the operating mode, they cannot
++  be used completely independently of each other. Therefore, only one LED is
++  supported, but the current sinks can be combined accordingly.
++
++  The data sheet can be found at:
++    https://www.ti.com/lit/ds/symlink/tps61310.pdf
++
++properties:
++  compatible:
++    oneOf:
++      - items:
++          - enum:
++              - ti,tps61311
++          - const: ti,tps61310
++      - items:
++          - const: ti,tps61310
++
++  reg:
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++    description: GPIO connected to NRESET pin
++
++  ti,valley-current-limit:
++    type: boolean
++    description:
++      Reduce the valley peak current limit from 1750mA to 1250mA (TPS61310) or
++      from 2480mA to 1800mA (TPS61311).
++
++  led:
++    type: object
++    $ref: common.yaml#
++    unevaluatedProperties: false
++
++    properties:
++      led-sources:
++        minItems: 1
++        maxItems: 3
++        items:
++          enum: [1, 2, 3]
++
++      led-max-microamp:
++        oneOf:
++          - minimum: 50000
++            maximum: 350000
++            multipleOf: 50000
++          - minimum: 25000
++            maximum: 525000
++            multipleOf: 25000
++
++      flash-max-microamp:
++        oneOf:
++          - minimum: 50000
++            maximum: 800000
++            multipleOf: 50000
++          - minimum: 25000
++            maximum: 1500000
++            multipleOf: 25000
++
++      flash-max-timeout-us:
++        enum: [ 5300, 10700, 16000, 21300, 26600, 32000, 37300, 68200, 71500,
++                102200, 136300, 170400, 204500, 340800, 579300, 852000 ]
++
++    required:
++      - led-sources
++      - led-max-microamp
++      - flash-max-microamp
++      - flash-max-timeout-us
++
++required:
++  - compatible
++  - reg
++  - led
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      led-controller@33 {
++        compatible = "ti,tps61311", "ti,tps61310";
++        reg = <0x33>;
++
++        reset-gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;
++
++        led {
++          function = LED_FUNCTION_FLASH;
++          color = <LED_COLOR_ID_WHITE>;
++          led-sources = <1>, <2>, <3>;
++          led-max-microamp = <525000>;
++          flash-max-microamp = <1500000>;
++          flash-max-timeout-us = <852000>;
++        };
++      };
++    };
+
+-- 
+2.34.1
+
