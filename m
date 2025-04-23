@@ -1,56 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37B0214815;
-	Wed, 23 Apr 2025 12:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA2A7215795;
+	Wed, 23 Apr 2025 12:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745410454; cv=none; b=mNGN02P8nutNTtjFscKr9Ej5IQpTa/+iBzl1N9rbPTyV03Dxm/nYW/k2OmTj+UctKqAGmZ8NZjwvrP4A+ywJIqFiRkuW5Ifm7p3DMHm3ag5e/MPU/0RWpIBiR7epI8o+EHW4HuDXG1gOHI5GFKkscbATabRjvYsuBL6gN54Zk/8=
+	t=1745410461; cv=none; b=ooJrqd+45lPDtAY9hYkpwLDdRSwNy/cSrWwfL8zV9nOMb+0aXOrWlJf0TzA6yUFBguKRybqVR6ry+f5W08OrBTKsXQL1bviZCLISI0TLwSlNCBAEk36ZbpRfXZDnQT7L1BezRfPRjVoyVtmGsn+4jdkYAmbodzOENYwh66YSmzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745410454; c=relaxed/simple;
-	bh=qJa3kE6G8/sIR51ZaZVy15sVgm9YDb2D201emaJOzaI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TMYXa5/CkXv8PaQYg+4c6ZwZbkZCwv+J2spk1mZifkBQDe6ih4MSlK5UV8OHkKXcxdxCTPwOc5Cs53ZRN5EpVJX+JiDO3vgZQFSdAogVi+ARRBuHb+W44zY77mGEIWDZ2MgAybK93M63+oYL6m5luVE7cDerFvJvau9Wx5nIOUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZuPrwEJO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745410461; c=relaxed/simple;
+	bh=MaeSoSWlAm4xCtD8eh/EXsSuw6MtRPVfsDzpLs0HcTs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s9p0E4vH3zsxphm+bHZ6B2CT2nzhY6saqrfJvS2MoO+p3OH0/ELlIaa6PYGcS9Ta8XyfW7uji1McBBvez9HTu8yf4tibmUWgqOuMV6LVVmRzA0zNvyFOIts9gdP8cofX05UiVGE9y25alc42B9I+vhArrpCqtNFCdU4tSRfy0Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hpkOLn9f; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZuPrwEJO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3685C4CEE2;
-	Wed, 23 Apr 2025 12:14:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745410454;
-	bh=qJa3kE6G8/sIR51ZaZVy15sVgm9YDb2D201emaJOzaI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZuPrwEJOSC6vlYGprtTuw50CemnncuW0c5U+bK6x8mne874StdOTD50o12cXcUtQP
-	 HDCvDz++vZhk9YjLpwjJVH5WjKu773XxsA4MuQAum5DkkDkjmwCLku+6VaGqBSmCRG
-	 G5G+iez/GDxnqmoNBYn96Ja+QI29hUIni5I+8kNmcWvN8nkNamNQ2X9/4Q+qiXa+yZ
-	 tJFK29AKCQKfc2TgjIJdFb5hCe821Ab9N2hZT6VOav5Mf3MkpONBxr2GLVSPY/BTlM
-	 p607n+YvyLS2YGLIqyW5ReQbD4qnjCZjjYWqowMJJ6qODxdEf8NGpRWOoYyD5vbAUa
-	 YNeK6WvWatSvQ==
-Message-ID: <5fb8bfb7-961a-442a-b091-0349c8aa5ddc@kernel.org>
-Date: Wed, 23 Apr 2025 14:14:11 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpkOLn9f"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2295d78b433so74060455ad.2;
+        Wed, 23 Apr 2025 05:14:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745410459; x=1746015259; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/xp7lM7Rh3BsiOx64d/oS0aSVgZov84XaA8u+TBgH7s=;
+        b=hpkOLn9fm0E6tSZ1EcPRwL9oXCk+B1Kw7QWoWd/4k43bUmkNJ7uC4S0A8ILORTJ9b/
+         wBXMLW60O1eau7KW60XcnqqJhyeudOv91vd14ANMFP0e8MNMMn/WkLc34V8GtjOJjoT9
+         dS6l4t7wti+y7r1PkvJyErOPsh2E8rfY/kvoEeE+slWMAwIjWzuMCWC0oMJgv2dR4Oyd
+         ko++3rdOWwukpONie6lYSKxzGFF0eTm2byNWDBLA/Png20DeVpdWLik+pj6XnanNK0zm
+         Mn14Kg61hOD5vc7CeNRYacdR8DOX9I22Ld7eCr/7Xp8Ruo/sF2Oc8mtC9cB9FG2tSNCZ
+         MlrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745410459; x=1746015259;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/xp7lM7Rh3BsiOx64d/oS0aSVgZov84XaA8u+TBgH7s=;
+        b=OiWPclw3ztrEa2Y/oA6c+Ch8ctMeREtfkFBCUUrRhmL2wjt7WyEOK//39/umCbh66I
+         qggH3E2IG/rds6qMGvrMozSNbF8NZKWh2ApcJDllFpXdAd1z150F5oR6k+Eb9ZTBOqV7
+         FA+XdusFqZ8cYGsHjvrENAN4nzVj0cTWbK/hk0qGI/tinfaIOr3iOVd3wmfJcYfCOUKl
+         30aIO+qWpgdURNVGclEOQsSd97/8iMOpfdo0izPLeLqFPjhoZoyybNng+C52wrTNwUfm
+         AIT3zf01vJ16mbwAHDJQ3mjnQQX8zVPm+FIHjcetoZ2+zYFE40fkJefg8SkrxV+kKvF0
+         is9A==
+X-Forwarded-Encrypted: i=1; AJvYcCV3dSrR9Lky/KgR0Nx8O4KS8VEtyWERpHwuG5UsqlMCyzI1LFnKB23eIKs6wiLdvJEImAjYfChRdc20v34=@vger.kernel.org, AJvYcCVPLMuqGLEp+75mqE0JsVFMh8hOZYczujrb50ZEitX47a/Jcuvo6eIZTJIUSpNeiPOa6gL10hQkWpsPUyOHgDAA@vger.kernel.org, AJvYcCVq/hzfTtWM0wfQ3qMZYRxCE5PK3k0jzNtIiqOdcdhETKAgKfevSwHdKzvkGsrDHd448xkyphd9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRUvihpnNfdFS8uPd50+ev97nrABfoFG3t67ZBxkHzUd/SxiH7
+	Jmi/W/+4CWGbso4TP6F7Nn9x9C5ErH/0EotlCLC7h+m9qfJ9kyVu
+X-Gm-Gg: ASbGncsBKBHP80vVTp7tHssjwtYGHsHW/KFRZW34BnclZkWIBW6Sh1H12xizcsDY90/
+	+LjA+KoPuZzbtwKaTdkSxL+ze2DW/z3lyu1l2BNC0YMbfDnLRlobX1qTh0J8Q9VTqgp9p2varm8
+	mvkrUf9YNfieqdVF3TCdDQki4GI/BNOPBPNk6uIcD+4rrkscYb/OLl8irGjuwN3fOmtmw7g0rv6
+	3oytG91q1I7npOqsxcYMCdXjntyBr8YlVKhmj1HPQgQBGS0IXXggMkSp4jB5cdULGJFugfuANXC
+	QZ+kSkfAEuQLR4GSK5qBob9OsyTjjtyAtjM6VwvYGyI=
+X-Google-Smtp-Source: AGHT+IHDJ7LCyTaOCeEviSCl6yoxwE65PGOilNvCWQjjpo+schzqn24NE+OxFtHGzsDdduz16UD+6g==
+X-Received: by 2002:a17:903:fad:b0:224:c47:cb7 with SMTP id d9443c01a7336-22c530b581fmr289428275ad.0.1745410458974;
+        Wed, 23 Apr 2025 05:14:18 -0700 (PDT)
+Received: from ubuntu2404.. ([122.231.145.226])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf5528sm102647295ad.100.2025.04.23.05.14.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 05:14:17 -0700 (PDT)
+From: KaFai Wan <mannkafai@gmail.com>
+To: alexei.starovoitov@gmail.com,
+	martin.lau@linux.dev,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	mykolal@fb.com,
+	shuah@kernel.org,
+	memxor@gmail.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	leon.hwang@linux.dev,
+	KaFai Wan <mannkafai@gmail.com>
+Subject: [PATCH bpf-next v4 0/2] bpf: Allow access to const void pointer arguments in tracing programs
+Date: Wed, 23 Apr 2025 20:13:27 +0800
+Message-ID: <20250423121329.3163461-1-mannkafai@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/7] rust: alloc: add Vec::retain
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
- <20250422-vec-methods-v3-5-deff5eea568a@google.com>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250422-vec-methods-v3-5-deff5eea568a@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/22/25 11:52 AM, Alice Ryhl wrote:
-> Unfortunately this can't be a kunit test because it uses the upstream
-> Rust implementation of Vec::retain as a comparison, which we can't call
-> from a kunit test.
+If we try to access argument which is pointer to const void, it's an 
+UNKNOWN type, verifier will fail to load.
 
-Would it work from the rusttest target? We can use our kernel Vec type from 
-there, but I don't remember if we still can use std Vec from there.
+Use is_void_or_int_ptr to check if type is void or int pointer. 
+Add a selftest to check it.
+
+---
+KaFai Wan (2):
+  bpf: Allow access to const void pointer arguments in tracing programs
+  selftests/bpf: Add test to access const void pointer argument in
+    tracing program
+
+ kernel/bpf/btf.c                                    | 13 +++----------
+ net/bpf/test_run.c                                  |  8 +++++++-
+ .../selftests/bpf/progs/verifier_btf_ctx_access.c   | 12 ++++++++++++
+ 3 files changed, 22 insertions(+), 11 deletions(-)
+
+Changelog:
+v3->v4: Addressed comments from Alexei Starovoitov
+- change SOB to match From email address
+- add Acked-by from jirka
+Details in here:
+https://lore.kernel.org/all/20250417151548.1276279-1-kafai.wan@hotmail.com/
+
+v2->v3: Addressed comments from jirka
+- remove duplicate checks for void pointer
+Details in here:
+https://lore.kernel.org/bpf/20250416161756.1079178-1-kafai.wan@hotmail.com/
+
+v1->v2: Addressed comments from jirka
+- use btf_type_is_void to check if type is void
+- merge is_void_ptr and is_int_ptr to is_void_or_int_ptr
+- fix selftests
+Details in here:
+https://lore.kernel.org/all/20250412170626.3638516-1-kafai.wan@hotmail.com/
+
+-- 
+2.43.0
+
