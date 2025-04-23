@@ -1,132 +1,150 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283102701A7
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:47:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90438645;
+	Wed, 23 Apr 2025 10:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745405244; cv=none; b=nPC009gcbU9A11LwWpvHb1pZs1KiAjn3gdaoTGkozNrf8huMhSfYkt+zJLc0CxodvZDjZUm8HWOTTNx3iF628ytDEC7lbA4zwHRfJlyv9X/s0JczoKoHZlDaN/5N1oARskxN8aO7W2CyJ0eJcrjBiNmlEcMiwP57ywZDRbyp7cE=
+	t=1745405294; cv=none; b=hjBhT7cnFNcv//uaT18PFLVZG20VWFW4gUL/dRV1muOeorklZgLgeyN2mK/f02VUYM93n4+RW5RmGn5sIF3/4OOYZsgMlcxala4Q1NblgTg5ZLgE3bTlrwUDp97UfPVDRkXZs00JvyzeKRR6zdQcpaimekurLB2uOyAA6wyASv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745405244; c=relaxed/simple;
-	bh=UU9YoAHKOkXYDXJAShmuDPdc1qbY8RZWY4PpxLmQsaU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=dAouqawTf5fUcP/iTS8w3/VGEscFDoLUEW/KNXR9TAM7uSlKb9TgSDe0tfvIuUAchDpCAqrnjydJ/MxXdvzR5aLaU7iEIscbPbp/+gMbbFTT2yETJiF1utnDssncL8nN5FOp+XuJGIV7AkunbX51rD5vBAsAf6wMmrVJ6Yu02ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=ibM4+fvo; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
+	s=arc-20240116; t=1745405294; c=relaxed/simple;
+	bh=QBBn9vTmnK8rVIlRrvQjN8xkipKr+QbWyEEEv7UESDY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NyeMTHGqagBtnbYr71nF424nsVeeg4lqV9H7HWRuBdg88iaTwZn2Frbluu6X5gDXbHfgG2EVBg1OyYH963k3oo/BiJQi3G6R0D/YhrmoXRc/7RzlJv9q/obDMxyFTxXamR4ATZjLGkZxnGxsvgdI1UdgBdHCwykaoKgDCMOAXvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VgvUxBX7; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="ibM4+fvo"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so6261508f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:47:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VgvUxBX7"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac3b12e8518so1015933466b.0;
+        Wed, 23 Apr 2025 03:48:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google; t=1745405239; x=1746010039; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fMrbMlTagXkTnenmyJmmNlOF+FvuaE9CmrOSpWPOLlw=;
-        b=ibM4+fvoC/i1nZm6QjOLYEBcEtNY4VRglgE1h9FtCfApED6ztndjIFTTsaUJVbYMHP
-         OiTGl9IvNvI08ZjkU+mbfgE/DaLyykjEqJEhSety9WnAM1/ZpvmWl7HhKVp4gwICAeYX
-         CDleHED2ciEYCw6j3RsTTXemJULWU4cjZWWMEbKFmjFi48VXhZYWhaffvNgg8GSpKzGa
-         +csGPJz5tqp0jJ9yWsA04Nee/aP52jd+btsdtZ6wRDzgUiBp5ZiE3elcSEbzT1/zqNkj
-         wPMHqyyMmdRqQlxe+XopSsRkBaXoZek2ju9py5UI265vVOoRhjNgl6+pyAk0a71UQjX6
-         /Wkw==
+        d=gmail.com; s=20230601; t=1745405291; x=1746010091; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yW3Ewl9XC1g0tqlHWENmHDvEOdSUdHOSXTlz2TpUlQc=;
+        b=VgvUxBX7vTM0r2bj2dFyo8yJFi+Ea5noljGABIYpREsNbCunDQj2xgK5AlOarTmyBH
+         NgamrjLxq12t1ee6ure23084joLR/c4xhdR8QRUdlfBa2T70VneQo0qb56o/8tJnjGnq
+         cKUb+E2+BECgtwAwleomTaCwBy1smXoYX8gAU+uQm5JpzBWadUTP7ElQHxnWgyjpIUNG
+         qVIYu2wroxf/PJm7SEyBDm6y4Eh8OQ6SzSvbXYqRLPTNSUk6uhZc/4nqBiY4HpQA5Hc6
+         5xzfR/yE1UokMN7zhTNnigENHECBbxAY+bG9nrtrjY1nZP2lZvFIbZpBRD30pZOrc44b
+         4yPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745405239; x=1746010039;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fMrbMlTagXkTnenmyJmmNlOF+FvuaE9CmrOSpWPOLlw=;
-        b=b6FXviTUwAWGouRkdDCWgUHYrjCcWjZJarvUFr9zi6UtOoVZPO2zl0pryh04yTPGyL
-         uPXguvFHa9Y165KI0xAzyt307lSX25z+JB3RuNhmXjnMFYyO7LXrjOw5kyLuSN8j6mp1
-         49GNsVHcPUPXiXMkgNgRzYSV8rvK+vczs2Va98gZMSPTBtwe+JbIuZexpTzZ8hy+5IGp
-         PAzyMTdIkplJZ9CB+X5DzBK/9XK1tMoSYS1sjQH4HpmhvswAHSO2KVZ9XskXKljwzeDb
-         nd0yuj5iuEKWl4To7/AIDSoJi8NoLw3WrjbUXq6uVexPnvJsK15dmTG6Aglpa70bkY1F
-         oOVA==
-X-Forwarded-Encrypted: i=1; AJvYcCXrrVTS11cxMDzRyUTT+6TC9NMgDkdGXnmdKElCjBzq0T4yvR0cpxKR+LBzgP83hf6nL6n47fe4CTcs4KY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUewVnTzuWYWjGZgjTn9NFv1kJuj+PDLkQ9DNzAiAuq2XUtNwM
-	OvYLGsOww+mdPKobQEQNVue5C3egIkKK/tuer/cipyziuei/64dvcIaSglJBmbs=
-X-Gm-Gg: ASbGnct+elgZT4vSFztT/UZANiX35pL0RxByFrwWHse5JX0ypswUefu1sMSMmSL87We
-	ldDY3vlzoQRVeedMYDeSJlL1xw4PZrutX8qpC6nnVDv57TLmbPxIENjjXi6wa1x4A9eNATvT3tx
-	4MRIGCpBv19dpt0He7zosZArpy7CD9gKYZRV2mypUs8XWSfboCmmigOcvrx+Am7h/IdgZc4SKGo
-	8R43/+62eRX4vui4EFooW71duWCY22gyaXImv7qVZTzwsm3gPjN9T7Tpcw2LP8PE/yQy/xvLF11
-	sCPQi3jubeascx6m0Krh/JGtZSKtA3j129/NxpAncSM=
-X-Google-Smtp-Source: AGHT+IHzSNJo3Tq0+q1KtrvricG5SZh6DtKPLrPA5t2OxS4b3WEMt4hP3LFMNMdr80qgkwfOW+ZF3g==
-X-Received: by 2002:a05:6000:4308:b0:390:f6aa:4e7c with SMTP id ffacd0b85a97d-39efba5e837mr14942355f8f.28.1745405239415;
-        Wed, 23 Apr 2025 03:47:19 -0700 (PDT)
-Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-44092d2f514sm21242895e9.24.2025.04.23.03.47.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 03:47:18 -0700 (PDT)
-From: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Date: Wed, 23 Apr 2025 11:47:15 +0100
-Subject: [PATCH v2] staging: bcm2835-camera: Initialise dev in v4l2_dev
+        d=1e100.net; s=20230601; t=1745405291; x=1746010091;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yW3Ewl9XC1g0tqlHWENmHDvEOdSUdHOSXTlz2TpUlQc=;
+        b=ti771MtiwXhNhj3eRikGjaZYmDiu2hO4uidPSYDZmQh0+T0VShHc0WVEId06DS9VVK
+         FDx/6dkMNdLzKy+/1VqfPblbVIVcsEczesiFrhx+ndh1v6hQu/7YIDeqjBGWnlOFXVqy
+         cezEPUBq+Ku0JmYViIZzZS4cNVVBCboecexoFJ9rtreSKrtVo78t5AtbshsF2aafknsP
+         fDmZV9FdpQampSNDrjDKoDVvIfN/8a8YuwEuUPwVrICMJPD6pfgL6x/R9LbUxqVLhUtT
+         xJD+Qu3BC49O6PoxXe3FULUM3v68KtkD2kmUuS/j/DlFQwmxc8BjKGmi0xjCtdPJYm4+
+         xCYw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwXAhdrGU3mfGOGDpVFd7hEYKaWvtPyfwjCphXYcEo/ZnCxWabqsZGhnXxgZEvzG6o4k/ABx21N5CH@vger.kernel.org, AJvYcCVAEEcUi1ju5kfrqVHUYOsxnlyHzP4Tg1mPej7rX3vgZSvcSwDmFAorVND5olKOPSZ76TpZamQXSA==@vger.kernel.org, AJvYcCVYvN+tb4cuKCFUyEVbyc2ApRXWZBUsjhq+KHSRRIqdlWeZnQ8kuLncRcol5OSlr7e+BpJwRI8rgDtqXysy@vger.kernel.org, AJvYcCXjkiuFWTQlA8eu3xCBFgYiFDYBpMgMbCtklL6sRf1U6AiQ3n9FmFoilDehV5tByURQtoiGJgTGnJTpL1QVzNqn@vger.kernel.org, AJvYcCXo2yudBq+kcO17evophJZ73LPv0bc4L4axo3cbL3YRxCGQ/+hfIJJt8rSnMLHeZOcoIKf7@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzm5eyTPyL2uLxt5NvN9F2jYzQgWCQkl6Lb/xBZElQNZkMg5Mde
+	dB+scppkH7AJnXxRGlAh+/Sw4UijPWH2lc25aOmSI2CPaL2DLYhq
+X-Gm-Gg: ASbGncsFeoIaWwnetB6qbq2OQ2lM3K8wyEJBUm92rOK2G9Rwb133F0PCSd7Lj0P9BSA
+	RT22wSCMdguwwiGoNvV29OMJWR3IuVungpi+i1xrz4LAC2useXqh8b8jK6zaGJvoEBXwBvSqia6
+	Zc0/e+QwVeYhpV1fyb6kifUbztcuxy0pPmFOoavghYa2wzYJh5cAfF9sEVigAsT6VUYpLo8ctDF
+	eG189lqt1lOt+paGfPxPio9vmg2CMHbt/K9qyqrprVNO+HL0nDzg6GfxF9DoxWkv1vQ3kIdop4J
+	soK8Wxl7Yfh5C0o2NjV6+RznIQFQ4LqCT3tCg3BI/mxmC/8eKpI=
+X-Google-Smtp-Source: AGHT+IGSOkms0vGWAQQk5LDkY0uQOFjlrtaq8CZWRZeiflOHa+/oqFgsKRBzQiPT5EoHF60fgvH8Mw==
+X-Received: by 2002:a17:907:1c21:b0:ab7:1012:3ccb with SMTP id a640c23a62f3a-acb74b2e84cmr1451252366b.14.1745405290671;
+        Wed, 23 Apr 2025 03:48:10 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.144.224])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef9669csm780506166b.161.2025.04.23.03.48.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 03:48:09 -0700 (PDT)
+Message-ID: <97fd3326-94d0-4d85-bb33-802ed88fcbda@gmail.com>
+Date: Wed, 23 Apr 2025 11:49:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v9 2/9] net: add get_netmem/put_netmem support
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, io-uring@vger.kernel.org,
+ virtualization@lists.linux.dev, kvm@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>,
+ Harshitha Ramamurthy <hramamurthy@google.com>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
+ <willemb@google.com>, Jens Axboe <axboe@kernel.dk>,
+ David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>,
+ Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
+ <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
+References: <20250417231540.2780723-1-almasrymina@google.com>
+ <20250417231540.2780723-3-almasrymina@google.com>
+ <484ecaad-56de-4c0d-b7fa-a3337557b0bf@gmail.com>
+ <CAHS8izPw9maOMqLALTLc22eOKnutyLK9azOs4FzO1pfaY8xE6g@mail.gmail.com>
+ <957b74ed-f29c-4bb8-b819-af4e1168d6c1@gmail.com>
+ <CAHS8izM8+zG6KOhV7ysTsCj_PEty5eL+P+uUxTZhdsOSZTwmow@mail.gmail.com>
+ <c0bd45f7-0325-4e4b-b0ea-ccae24a1eabd@gmail.com>
+ <8c1c6405-1e60-4512-a675-4c00b00d400a@gmail.com>
+ <CAHS8izPGuF1PxfdmXUC1XJHpmRqotXh=vUY_a-AEHdAgPmLQ1g@mail.gmail.com>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <CAHS8izPGuF1PxfdmXUC1XJHpmRqotXh=vUY_a-AEHdAgPmLQ1g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-staging-bcm2835-v4l2-fix-v2-1-3227f0ba4700@raspberrypi.com>
-X-B4-Tracking: v=1; b=H4sIADLFCGgC/3WNSwqDQBAFrxJ6nQ5Oj4JmlXsEF/NTG+KHHhki4
- t0zEbLMsgpevR1iEA4R7pcdJCSOPE8Z6HoBN5ipD8g+M1BBVVGqAuNqep56tG6kWleYyhdhx2+
- 0tbe+0dqRtpDni4Ssz/SzzTxwXGfZzqekvvYXLf9Hk0KFZMnbxtQdNfohJi42iGwL39w8Qnscx
- wclnBYlxgAAAA==
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Florian Fainelli <florian.fainelli@broadcom.com>, 
- Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
- Umang Jain <umang.jain@ideasonboard.com>
-Cc: Stefan Wahren <wahrenst@gmx.net>, linux-staging@lists.linux.dev, 
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- stable@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.14.1
 
-Commit 42a2f6664e18 ("staging: vc04_services: Move global g_state to
-vchiq_state") changed mmal_init to pass dev->v4l2_dev.dev to
-vchiq_mmal_init, however nothing iniitialised dev->v4l2_dev, so we got
-a NULL pointer dereference.
+On 4/22/25 22:10, Mina Almasry wrote:
+...
+>>> Instead of adding net_iov / devmem handling in generic paths affecting
+>>> everyone, you could change those functions where it's get_page() are
+>>> called legitimately. The niov/devmem part of get/put_netmem doesn't
+>>> even have the same semantics as the page counterparts as it cannot
+>>> prevent from reallocation. That might be fine, but it's not clear
+>>
+>> Actually, maybe it's not that exclusive to netiov, same reallocation
+>> argument is true for user pages, even though they're reffed
+>> separately.
+>>
+>> It might be fine to leave this approach, while suboptimal it should
+>> be easier for you. Depends on how folks feel about the extra
+>> overhead in the normal tx path.
+>>
+> 
+> Right, I think there is only 2 ways to handle all the code paths in
+> the tcp stack that hit skb_frag_ref:
+> 
+> 1. We go over all of them and make sure they're unreachable for unreadable skbs:
+> 
+> if (!skb_frags_readable()) return; // or something
+> 
+> 2. or, we just add net_iov support in skb_frag_ref.
+> 
+> This patch series does the latter, which IMO is much preferred.
+> 
+> FWIW I'm surprised that adding net_iov support to skb_frag_ref/unref
+> is facing uncertainty. I've added net_iov support for many skb helpers
+> in commit 65249feb6b3df ("net: add support for skbs with unreadable
+> frags") and commit 9f6b619edf2e8 ("net: support non paged skb frags").
+> skb_frag_ref/unref is just 1 helper I "missed" because it's mostly
+> (but not entirely) used by the TX path.
 
-Set dev->v4l2_dev.dev during bcm2835_mmal_probe. The device pointer
-could be passed into v4l2_device_register to set it, however that also
-has other effects that would need additional changes.
+It'd have looked completely different if you did it back then, which
+is the same semantics mismatch I mentioned. For pp rx niovs it'd
+have incremented the niovs ref pinning that specific niov down
+and preventing reallocation (by pp), and that with no devmem specific
+code sticking into generic code.
+This patch adds a 3rd way to refcount a frag (after page refs and
+pp_ref_count), which is why it attracted attention.
 
-Fixes: 42a2f6664e18 ("staging: vc04_services: Move global g_state to vchiq_state")
-Cc: stable@vger.kernel.org
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
----
-Noted as we switched to 6.12 that the driver would fail during probe
-with an invalid dereference if a camera module was actually configured
-for the legacy camera stack.
-https://github.com/raspberrypi/linux/issues/6753
----
-Changes in v2:
-- cc stable
-- Add Stefan's R-b
-- Link to v1: https://lore.kernel.org/r/20250414-staging-bcm2835-v4l2-fix-v1-1-2b2db9a8f293@raspberrypi.com
----
- drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-index b839b50ac26a..fa7ea4ca4c36 100644
---- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-@@ -1900,6 +1900,7 @@ static int bcm2835_mmal_probe(struct vchiq_device *device)
- 				__func__, ret);
- 			goto free_dev;
- 		}
-+		dev->v4l2_dev.dev = &device->dev;
- 
- 		/* setup v4l controls */
- 		ret = bcm2835_mmal_init_controls(dev, &dev->ctrl_handler);
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250410-staging-bcm2835-v4l2-fix-b8dbd933c23b
-
-Best regards,
 -- 
-Dave Stevenson <dave.stevenson@raspberrypi.com>
+Pavel Begunkov
 
