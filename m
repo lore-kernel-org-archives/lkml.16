@@ -1,117 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 025A12701CD;
-	Wed, 23 Apr 2025 09:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425392BAF7
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:48:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745401679; cv=none; b=LMwPSvMpAgUO03cr8m+w6gdPD64H6UnFCBNeb6aICPIQ3AZSaMpRGv1R/W2PnqEHo9x+1Z0xHdPXKeXGpxi0uhaCZktQ8ZMiWZSUFGmFsqBo8mskqSezujKEivvS+DYOAFkee525vdYbUgfxGLHggGdtZ5vJzfz1JRG9d2XmSHE=
+	t=1745401697; cv=none; b=YW+yKcyAO+l5phPsGpd5WcaaAfMhZA0xG1mkHbVLMe9HHB2ZXV6ByyOxCT+8XFa5JaQ5ORSPoUYq4MPlL/F+FQrWTBeBaxApTB2gYGqrXpMD98IyvrFIZUlyPjl/EzPtcmJiAnN/RUm939/EWcJjNTM01cU11tbOD19eSX2MXKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745401679; c=relaxed/simple;
-	bh=PqYJq9oZkOdQmkfiQj9hyoOPAeTJSuyzDq9FSEgRuyY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TZzWcccrHXLcxAIjUoEBkObIujh8xOu2upPvCv5UMpeJdb6ALLG25mJiS8iwbOkfmW+WlX18txogsjkdDlm/qzEw+YBWbCht60c1lhVETDmY2OOo24jkBDlGinwqYAk6Eehc0euTjG9c1SAlZYOnwWfpxDd/yeqmI51dDybj+V8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJlCsg/R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745401697; c=relaxed/simple;
+	bh=CkYe7KQz50Vk5hVwM4De0HxlJ6l/u7mNP1mNAfjOGrw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uoRW7NwYcfPZ9INSLnuB+t6OgHzCldC9XjO+Qf7AJBMuO7rXsjLfF6q8AzmsMnWiWXI5rLQvdMgXourxBaUeP+46CwLhhjygRdgPamBQ2/0Q1X3/4j1xOtEjpnq6uKQuXprpjOs0TfXa4jSl/Tf6K0s7AMmvklU0XEBiickguUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Pygl6aTV; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJlCsg/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998A9C4CEE2;
-	Wed, 23 Apr 2025 09:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745401678;
-	bh=PqYJq9oZkOdQmkfiQj9hyoOPAeTJSuyzDq9FSEgRuyY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DJlCsg/RL/e7DuGGd/o/8Q3m92BsIntu3KEKbc3IV9EQcodmIn1VeWuj5HAPgRbXI
-	 L/lHN5f2XsxrH3LGU5h0kgoZ9awidUoxIPtqs+kQT2cQj/LZcPaIGmtqR5UEre1Eic
-	 cHBIYHMPSla8doMO7wRmqcEad7eHg/TS4KgMAnDh9+gKVseT688fh4kBX3WmOxiGEQ
-	 qPdtcvLowJ9ni2GD/x6LF7JAZn2t+T7Mz4Yxf43UjTnsTCk8WWMthR9pQnpD9DDD+6
-	 5X15pmjWK8tb3nR+Y5XaybvmBb9ZBHcGNUbjRhMa0d7WOgVQxjwEgAmjrVGZsK056Y
-	 GFgva7SNBbqnA==
-Date: Wed, 23 Apr 2025 11:47:52 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] rust: alloc: implement `extend` for `Vec`
-Message-ID: <aAi3SMn2MgGv8eWB@pollux>
-References: <20250406-vec_extend-v3-1-ec5c5c0acf2a@nvidia.com>
- <Z_OwmEKHgsZlt2cs@pollux>
- <D91AOKOTDXWC.7R5K5DI87QU4@nvidia.com>
- <D9C61DDI99JX.31T59XPQGYBB1@nvidia.com>
- <aAfL-e6qA9oBce5t@cassiopeiae>
- <D9DM3AR3FUAF.6JSNSB9WAJ4T@nvidia.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Pygl6aTV"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5ec9d24acfbso1414843a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:48:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745401693; x=1746006493; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rgKA9pbsvNPBxBjf1g70tKPE1M+bS/FmY4rPNG02f4Q=;
+        b=Pygl6aTV7U9v4W2dprD2mc1cWVtL9+4NVQ3vMrCi75xRrylGLb5joQf7n7b/DIpHn2
+         7B6MjMNZwvNVw0XnSR5Ev67G23kvw9Tfedqa7BQ1kWLgy89Q/+XedxgbHiRpXxjzc44o
+         G6k68arsHzCPcsDFDvHzg431/ILtZhY8TT+E4v6CqMLgJtAVMz7VZLxobgf9ivgDKg2T
+         kIuhoUI9QyDL66lhnSyIKKRhk02rkW56zJX5K8qAS22JhLVCCsKO19nO9r12nJsqB+fP
+         UraqQX8mdKIHMuMK/i/VSVa7f8/IcgLxUkIYAGIWEGVAWuNTZdwx/YVwfc9NhfhgGuJV
+         SWVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745401693; x=1746006493;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rgKA9pbsvNPBxBjf1g70tKPE1M+bS/FmY4rPNG02f4Q=;
+        b=IKPmYnppumY+9+efxSGobJCOkecenVTBWWR/7OtSvrpuvxnFqBekAe8asl5QoxbF89
+         KCqKZmfaUgLKOMmifp29hscI+yLpiFXxYV9V6rINn2b9UQ0gnB0FbxBvAHMzMOc8sMPv
+         WYXhOGKGA7fYoWKXOYaYkKSLY+pNvINPSvt0CoCR0Q/mAZFXmifpYMQXZtUDpjaojMBC
+         dr0uj/Hjbsjg/HlMfBPesTwkuHQNC6vuQAEC+hyN5MuNhfqocSJJiiOYZi6FGFU4zcgQ
+         vaOeJY3t1qkwlyi+BJNKkxB2tERCaRnKoibPJj3kGoUu+0QFXLFfwfTE014/2UaofyM3
+         AqLw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkE5r5GcPnEbxjoFC/jdhoux+oHM02qBPbsOOkQqHzBK5hPaYRg0CNigVqEk0qtDlJEajs3cnFo0M2+Y0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDeevrXVLLMEkS8Qw7MUsy0N+RXOMd4LlotpeWjKw1GZ5AoIN2
+	glZykvLrhOFEpkC2itHjzH+cpsdMBvZXKkUlusp+s5U5Wxus/2e3O40G5B4JBKLlbwGP7bQnWlf
+	OSPTOraTxFSTFfpzSh9TcMwLYicRaNArDjUpRnA==
+X-Gm-Gg: ASbGncujHUdEmy/ESQ6hqny7TWeHM5psW22S1pr23HcVeQbXG/ZV6Kna5Nm6xl7dp0T
+	YvftqymUCndpbXHpOVj1AbhDMc6OTy7BPtOxFmQddNKxnrGxRlvjYjxSJdS9OJ161PAT23gJU0V
+	diy00vCRvpEEFf709Gk3YIZ15/yVSC5YQ=
+X-Google-Smtp-Source: AGHT+IE+8bYSke4FP+p6PQMgiRcJuZXFwIGogu92r+zEM6Bmo3Q+Idw1dhZWveMvN+FH++UzViCxM7RmqkVA0x2IHms=
+X-Received: by 2002:a17:907:1c8c:b0:aca:c699:8d3c with SMTP id
+ a640c23a62f3a-ace3f254e7bmr220960366b.2.1745401693592; Wed, 23 Apr 2025
+ 02:48:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9DM3AR3FUAF.6JSNSB9WAJ4T@nvidia.com>
+References: <20250423080940.4025020-1-neelx@suse.com> <CAL3q7H7A_OnTQviZpCgzrGUFe1K=VfMiWXaba56E3ucPHnVkNg@mail.gmail.com>
+In-Reply-To: <CAL3q7H7A_OnTQviZpCgzrGUFe1K=VfMiWXaba56E3ucPHnVkNg@mail.gmail.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Wed, 23 Apr 2025 11:48:01 +0200
+X-Gm-Features: ATxdqUF3U4FzwbWeM5rcfOACcVKfWJgB7wLcEF0eM2OaXd5lqZeWqt45UzCmIy4
+Message-ID: <CAPjX3Fdor0TgkQtb2meJD4PFerOQV1Qcjs5HEyBCt5TNt8-vsA@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: fiemap: make the assert more explicit after
+ handling the error cases
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 10:02:58AM +0900, Alexandre Courbot wrote:
-> On Wed Apr 23, 2025 at 2:03 AM JST, Danilo Krummrich wrote:
-> >> Well, that turned out to be an interesting rabbit hole.
-> >> 
-> >> Leveraging the existing traits seems a bit difficult:
-> >> 
-> >> - `ExactSizeIterator` cannot be implemented for adapters that increase the
-> >>   length of their iterators, because if one of them is already `usize::MAX` long
-> >>   then the size wouldn't be exact anymore. [1]
-> >> 
-> >> - And `TrustedLen` cannot be implemented for adapters that make an iterator
-> >>   shorter, because if the iterator returns more than `usize::MAX` items (i.e.
-> >>   has an upper bound set to `None`) then the adapter can't predict the actual
-> >>   length. [2]
+On Wed, 23 Apr 2025 at 11:04, Filipe Manana <fdmanana@kernel.org> wrote:
+>
+> On Wed, Apr 23, 2025 at 9:10=E2=80=AFAM Daniel Vacek <neelx@suse.com> wro=
+te:
 > >
-> > Why is this a problem for the above implementation of Vec::extend()?
+> > Let's not assert the errors and clearly state the expected result only
+> > after eventual error handling. It makes a bit more sense this way.
+>
+> It doesn't make more sense to me...
+> I prefer to assert expected results right after the function call.
+
+Oh well, if an error is expected then I get it. Is an error likely
+here? I understood the comment says there can't be a file extent item
+at offset (u64)-1 which implies a strict return value of 1 and not an
+error or something >1. So that's why. And it's still quite after the
+function call.
+
+But I'm happy to scratch it if you don't like it.
+
+> Thanks.
+>
 > >
-> > I just looked it up and it seems that std [1] does the same thing. Do I miss
-> > anything?
+> > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > ---
+> >  fs/btrfs/fiemap.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
 > >
-> > [1] https://github.com/rust-lang/rust/blob/master/library/alloc/src/vec/spec_extend.rs#L25
-> 
-> The problem I see is that if you try and do something like:
-> 
->   vec.extend((0..10).into_iter().skip(2));
-> 
-> with the standard library, then the use of `skip` will remove the
-> `TrustedLen` implementation from the resulting iterator
-
-Skip implements TrustedLen, no?
-
-> and
-> `extend_desugared` will be called instead of `extend_trusted`, which
-> could add some unwanted (and unexpected) overhead.
-> 
-> If we want an implementation of `extend` as simple as "confidently
-> increase the length of the vector and copy the new items into it, once",
-> then we need a trait that can be implemented on both shrinking and
-> extending adapters. Anything else and we might trick the caller into a
-> code path less efficient than expected (i.e. my original version, which
-> generates more core even for the obvious cases that are `extend_with`
-> and `extend_from_slice`). Or if we rely on `TrustedLen` solely in the
-> kernel, then `extend` could not be called at all with this particular
-> iterator.
-
-I think you can't solve all problems within this single function, since other
-than std we don't have spcialization.
-
-So, if we need both the fastpath and the slowpath it needs to be separate
-methods unfortunately. I'd rather stick to the fastpath for now. Unless you have
-a specific use-case for something else?
-
-> There is also the fact that `TrustedLen` is behind a nightly feature,
-> which I guess is another obstacle for using it.
-
-Yeah, I think we have to implement our own TrustedLen trait for this reason and
-add the corresponding impls. However, if we can come up with a marker trait that
-deviates in requirements and guarantees from std, but is a better fit for the
-kernel, I'm fine exploring this direction too.
+> > diff --git a/fs/btrfs/fiemap.c b/fs/btrfs/fiemap.c
+> > index b80c07ad8c5e7..034f832e10c1a 100644
+> > --- a/fs/btrfs/fiemap.c
+> > +++ b/fs/btrfs/fiemap.c
+> > @@ -568,10 +568,10 @@ static int fiemap_find_last_extent_offset(struct =
+btrfs_inode *inode,
+> >          * there might be preallocation past i_size.
+> >          */
+> >         ret =3D btrfs_lookup_file_extent(NULL, root, path, ino, (u64)-1=
+, 0);
+> > -       /* There can't be a file extent item at offset (u64)-1 */
+> > -       ASSERT(ret !=3D 0);
+> >         if (ret < 0)
+> >                 return ret;
+> > +       /* There can't be a file extent item at offset (u64)-1 */
+> > +       ASSERT(ret =3D=3D 1);
+> >
+> >         /*
+> >          * For a non-existing key, btrfs_search_slot() always leaves us=
+ at a
+> > --
+> > 2.47.2
+> >
+> >
