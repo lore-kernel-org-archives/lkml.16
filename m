@@ -1,83 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A1B1A0711;
-	Wed, 23 Apr 2025 14:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8555519DF4C
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745419878; cv=none; b=ajEXkFM9vZESJvdRvpciX96shCtM/hqVJpmduh4f3Sf2I5on7aJ/QKoO/oQeNdSl94/cRR9hyjwWia+dA71AhD7vP3RBVDMK5FImfpiMgM47PfHYfUF8zqFfPcDBRxbDvvnfT2ClQ6Y1kENmH6jOQqE1fm1muBLiUkNgmAwMLa0=
+	t=1745419891; cv=none; b=DwswoUV98zkOZif/GgdFiPkjNclMi7scNsohtNvpnzKiWkIusfT+kDNvr6cEGpDhQVyLIO6ZA/3m0ANFNKOh1ZTXKarLa9icKYBNoaz0/tRx09MCUpXkSX1H+sY604+cilgf4PbzWCX19rzPVzvCfplDEFGwOF3ue82V7/bU+rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745419878; c=relaxed/simple;
-	bh=hAjNAGLE2JHJoSv/yP/EQBtFAc8W1Wwcb53racrQZ4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lP4BkbBTwHl2y8MFWX19lLz96gvxc4qbCCLujgYm/X8JLDT5np+3mE/alXInsinEwIWTrXIJUPUkNfh89mDPPWGZ0+8aKTG3rHjZf1MQ3frzE1Vq5t0pw/o/yo+31MTvPPYs0+BmvTr2hk7DhW8gTdy6w/oqiy6BW3rrrqTqPKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKrkXWJU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745419891; c=relaxed/simple;
+	bh=8BPdvxvbsK0vZmPrPm8yRAj5fOOZelwn9qPF1WNyEuo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eCEZ/Jvq3l0EQtO1hRI1bu+wx5DMKSQ7VLK4y9jOucjRXlQCmExM/6EQ8PH0mxpphFAJfVv62wdH8IvZ93Wz9XHk3naabYB9qLHR8da7xynO7sGGyTlOzMgrG08zmXbJw/aCCSgo7PnXsHmU2FqwLD/TmwEF//c9L6sL6owmfPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qJhwYU9V; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKrkXWJU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86D04C4CEE3;
-	Wed, 23 Apr 2025 14:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745419876;
-	bh=hAjNAGLE2JHJoSv/yP/EQBtFAc8W1Wwcb53racrQZ4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qKrkXWJUBMpJ3Rlb1ky7vb/LcIxhy7RONl35uZKc7Tix0uDV2Nz99NL6QZ7vBJk4q
-	 i4py3zMjNQcHs8+3vZDZg+7r21c1j4edOlgg936KFFLCGLWrdjr2HPdt9rYhTqOKfc
-	 O67DXhq/WiLAmRzaxKWFxvS5s1l1B5hx+6xqMSNVOiOMvq8kJTqZCEHV2MZ3napJpg
-	 oxAQDqvOJf/iTbXO5C/nO3n8Z+/VXb58+IwQMLZitD06sXlN4luH5dwfG/D8pt3otc
-	 n8PmFPNZjCphJISW6lk1MRgYcXzHLevmfCEXKL90v6mKP8wiXfz5omLIYAZg1ziu6N
-	 8hhCOkTANqJVQ==
-Date: Wed, 23 Apr 2025 07:51:16 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v7 11/14] xfs: add xfs_file_dio_write_atomic()
-Message-ID: <20250423145116.GY25675@frogsfrogsfrogs>
-References: <20250415121425.4146847-1-john.g.garry@oracle.com>
- <20250415121425.4146847-12-john.g.garry@oracle.com>
- <20250421040002.GU25675@frogsfrogsfrogs>
- <2467484b-382b-47c2-ae70-4a41d63cf4fc@oracle.com>
- <20250421164241.GD25700@frogsfrogsfrogs>
- <20250423054251.GA23087@lst.de>
- <20250423081902.GD28307@lst.de>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qJhwYU9V"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3f6ab1b8fc1so4201842b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745419887; x=1746024687; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wvwv047VfCd6UZH9Jh21KmwpSxODx1nElqK+UFecJ5w=;
+        b=qJhwYU9VQlPjIZUEbZHRpFGb0ZxsUqPXvCv3ejzCXF5hCw4/57VY879vrUVE5gVROw
+         ZS9Eo2sHEp3tcc24JHjZ5Oq+FPEX8MQOa47rZas+nM3pTT7FFgRYdWgebuTmgMUB5Rds
+         cAfPcDqpTznQBqqjdOMwfqGDw5urwqlHGPMzxW1kaV1kfUtvo9lqELuEMEQidQ7L9PKr
+         K0rcStqkxB8fqUsS45EFW0fFR2C2T/1GRfw5BOJKXqBS6VEiq+xX1mdCiTxSS1bcviAP
+         vIpCaQPJF+CQxLIddAIPJ4f21esVl8SxqXMDk7unyH1xzzhAFyi1qzidEbmkcBD9WQ9g
+         ODGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745419887; x=1746024687;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wvwv047VfCd6UZH9Jh21KmwpSxODx1nElqK+UFecJ5w=;
+        b=E8xlp/uAE7NGdv7hynR5w4gzmnxtll8bk/BhTLKqgbRvVL/h+WUSvceGCxksdrDINC
+         of/xUE5WsiixBiDefCv0NfdimER8gfkEYdzIyY055b7aC7fr0HvHCqa+9DUe6x6CGbJg
+         cyZZfhgBZCJF58cBlVnbMb5t1hxHXp6xm1T+H3oaQ7fuXr+ROrdRaWuzfYJHkp5BrOvF
+         NIRSQft32WGI6J7jBDu9UUpgHRzpiv6QOuT6cGAtm53WI5R1QVmdBMb6yLi6Bp0LSqhS
+         l4F4xMGfTjMQGyqDBfdPgcGXqo+emr5bgDGA7IwK1prXlB2y2Ysag16jarXY/89Bid2G
+         O8TA==
+X-Forwarded-Encrypted: i=1; AJvYcCVP7yXfVomi6OqPgazS8UGx3u8lou48L+7hb2LGoksqUB4xfFCOPWxRFHCjILk5nEryeT/zPhIgqrvk/I4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvEx8HnxnEz0b0yB84XnGd2HqkfpbiXi6XMIyf2VpjnFEFHPri
+	pu0bD5A/37UHrTS7S/f2iZYn+4yP9Izi9yctoce3vwSc15kNgEPHQQXfoQggD8s=
+X-Gm-Gg: ASbGncuZa+OoNVtsYu/wLzQ9nJsongG/5vDleLjA01FljnpjM0mrb27LZLGdYBBLGB1
+	Y+CHXJCqNUxGMYQp3qMd7xtHlLnFdm0uvrc3n7N29Bzct+WTz0pV/JTJPhD2TG8J282TT5MekUs
+	yGwSIwCAb6gv1J+IykdOp05GrAy2cNIeQbrRWv7uiEBmFwDomYnB5h5xtkgo8WuZYIUecDE6DHh
+	Hj9ZXZdDK+f5WWPmqt2LNSwa28OkGLvdbkTwvFJQdQL1cZg5YaGDUIIc27V7M7htAJXVsT9qvTW
+	q+nDOflYUgeoCr4ClZ6kMav4qcvRdUzpzAlNKEF60EQoLA/n35XBV/13oHOO9lmg4VE7Zd8zpou
+	ungSxRNZ+8VidTus=
+X-Google-Smtp-Source: AGHT+IEBGwoz+Ahwpfgm/4AVjbIfHM/ADajlJxdstdyq4SXFSdYnpTORxWm+CfhjvRe0zr/nrusBmw==
+X-Received: by 2002:a05:6808:2f17:b0:3f8:c486:9b27 with SMTP id 5614622812f47-401c0a8cc72mr14379361b6e.22.1745419887508;
+        Wed, 23 Apr 2025 07:51:27 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:581:f155:b9de:68de? ([2600:8803:e7e4:1d00:581:f155:b9de:68de])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-401beed73e9sm2630018b6e.12.2025.04.23.07.51.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 07:51:27 -0700 (PDT)
+Message-ID: <b4218efe-3785-4065-a3f7-57824e882f09@baylibre.com>
+Date: Wed, 23 Apr 2025 09:51:25 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423081902.GD28307@lst.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Eugen Hristev <eugen.hristev@linaro.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
+ <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+ <701bfc6a715046044dbc789f1c11c7f85395c7a8.camel@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <701bfc6a715046044dbc789f1c11c7f85395c7a8.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 10:19:02AM +0200, Christoph Hellwig wrote:
-> On Wed, Apr 23, 2025 at 07:42:51AM +0200, Christoph Hellwig wrote:
-> > On Mon, Apr 21, 2025 at 09:42:41AM -0700, Darrick J. Wong wrote:
-> > > Well it turns out that was a stupid question -- zoned=1 can't be enabled
-> > > with reflink, which means there's no cow fallback so atomic writes just
-> > > plain don't work:
-> > 
-> > Exactly.  It is still on my todo list to support it, but there are a
-> > few higher priority items on it as well, in addition to constant
-> > interruptions for patch reviews :)
+On 4/23/25 4:18 AM, Nuno Sá wrote:
+> Hi David,
 > 
-> Actually, for zoned we don't need reflink support - as we always write
-> out place only the stuffing of multiple remaps into a single transaction
-> is needed.  Still no need to force John to do this work, I can look into
-> this (probably fairly trivial) work once we have good enough test cases
-> in xfstests that I can trust them to verify I got things right.
+> Nice patch, I really think these will be very helpful... Just one comment bellow
+> 
+> On Tue, 2025-04-22 at 17:07 -0500, David Lechner wrote:
+>> Add new macros to help with the common case of declaring a buffer that
+>> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
+>> to do correctly because of the alignment requirements of the timestamp.
+>> This will make it easier for both authors and reviewers.
+>>
+>> To avoid double __align() attributes in cases where we also need DMA
+>> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS.
+>>
+>> Signed-off-by: David Lechner <dlechner@baylibre.com>
+>> ---
+>>  include/linux/iio/iio.h | 36 ++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 36 insertions(+)
+>>
+>> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+>> index
+>> 638cf2420fbd85cf2924d09d061df601d1d4bb2a..4dd811e3530e228a6fadbd80cfb2f5068c3d
+>> 6a9a 100644
+>> --- a/include/linux/iio/iio.h
+>> +++ b/include/linux/iio/iio.h
+>> @@ -7,6 +7,7 @@
+>>  #ifndef _INDUSTRIAL_IO_H_
+>>  #define _INDUSTRIAL_IO_H_
+>>  
+>> +#include <linux/align.h>
+>>  #include <linux/device.h>
+>>  #include <linux/cdev.h>
+>>  #include <linux/compiler_types.h>
+>> @@ -777,6 +778,41 @@ static inline void *iio_device_get_drvdata(const struct
+>> iio_dev *indio_dev)
+>>   * them safe for use with non-coherent DMA.
+>>   */
+>>  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
+>> +
+>> +#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+>> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) /
+>> sizeof(type)]
+>> +
+>> +/**
+>> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
+>> + * @type: element type of the buffer
+>> + * @name: identifier name of the buffer
+>> + * @count: number of elements in the buffer
+>> + *
+>> + * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts().
+>> In
+>> + * addition to allocating enough space for @count elements of @type, it also
+>> + * allocates space for a s64 timestamp at the end of the buffer and ensures
+>> + * proper alignment of the timestamp.
+>> + */
+>> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+>> +	_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
+>> +
+>> +/**
+>> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with
+>> timestamp
+>> + * @type: element type of the buffer
+>> + * @name: identifier name of the buffer
+>> + * @count: number of elements in the buffer
+>> + *
+>> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses
+>> __aligned(IIO_DMA_MINALIGN)
+>> + * to ensure that the buffer doesn't share cachelines with anything that
+>> comes
+>> + * before it in a struct. This should not be used for stack-allocated buffers
+>> + * as stack memory cannot generally be used for DMA.
+>> + */
+>> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
+>> +	_IIO_DECLARE_BUFFER_WITH_TS(type, name, count)
+>> __aligned(IIO_DMA_MINALIGN)
+>> +
+>> +_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+>> +	"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp
+>> alignment");
+>>
+> 
+> I wonder about the usefulness of the above assert... AFAICT, the default
 
-<nod> I think we'll need a new fstest to set an error trap on a step
-midway through a multi-extent ioend completion to make sure that's
-actually working properly.  And probably new write commands for fsx and
-fsstress to exercise RWF_ATOMIC.
+Jonathan seemed minorly concerned that a strange new architecture might have
+IIO_DMA_MINALIGN is < 8 some day, so I threw it in there. But agree, it seems
+highly unlikely to actually happen.
 
-(Catherine: please send the accumulated atomic writes fstests)
+> alignment is 8 bytes and I could not find any arch defining ARCH_DMA_MINALIGN
+> smaller than that (would be very odd to have a cacheline smaller than that these
+> days). For bigger values, nowadays they are all power of 2 and I would be
+> surprised otherwise. But the more important question to me is what if the above
+> assert fails? Will we not allow IIO or some drivers to be used in that
+> architecture? It can become a very "painful" situation (assuming these macros
+> get widely used). So, IMHO, either we assume the above can happen and rework the
+> macros to make it work for that hypotetical case or we assume the above is
+> always true and drop the assert. TBH, I think it would be a fair assumption...
+> 
+> On top of that the assertion is wrong:
+> 
+> sizeof(IIO_DMA_MINALIGN) != IIO_DMA_MINALIGN :)
 
---D
+Doh!
+
+> 
+> On the other hand, as I mentioned in V1, I think that an assertion or
+> BUILD_BUG_ON_MSG for making sure 'count' is a compile time constant expression
+> would be helpful. Sure, we'll get -Wvla but some developers might still ignore
+> the warning and send patches with these arrays. So, it would be neater if we
+> fail to build and force them to fix their code.
+
+BUILD_BUG_ON_MSG() won't work because it expands to a do/while loop which won't
+work in static struct declarations. But I can try to see if we can come up with
+something that works.
+
