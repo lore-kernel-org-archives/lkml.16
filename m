@@ -1,65 +1,60 @@
-Received: from smtpbgsg1.qq.com (smtpbgsg1.qq.com [54.254.200.92])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503712627EC;
-	Wed, 23 Apr 2025 03:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.254.200.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B195945948
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745377653; cv=none; b=i99ujQUxLb98NnKXde2OD0TF/a9NSywie7LankKx8fZg8aCUlUEzBgsV9jx/bFmwC9232IbGLTbREkXtr0qCqQAivYsLY/TkPGaV0NJE1PFR51v7k2g+a0cxNCQUbA8aX3ggOeYitlwp1OHljWkGENL02kIrz59tFodVlDDRfks=
+	t=1745377794; cv=none; b=Cj4UjzpASh1MasekaFv3nCKJ6Xvz5ZBdGJz8bySgyrRgRi+t3rpqFup6ESHuttYNhjP1Xh/t0/qXQzbYlqv0JddyAGLgxpo1GjVwmQeQChh0So/w1ht/mbe6Xl2aRDYcXFpVNIxUEPF+WOnoAMrPb/oULrGeN0Z0AjDzL6KCrlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745377653; c=relaxed/simple;
-	bh=hA90ZuESohqk54ATH6Bc81QbVyOvEr18HVCgZ1JaJS8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dhsFN3jqIgSLnxuzZ2gGTHh6w22aXPt1oY7Rhjmm3Aqw+zYZqE6eyCxbFXimpJrk8/PImOCAxvRqFeWj4gxLPo3Isno5ZeTJB4h1uqNfffXyKK2xJSVJsMxmPdZqrVeYGzImSeDiE1IngF6k/+FWOPV9VqpOZgwJhdln5M0aPBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=A9uLzmLD; arc=none smtp.client-ip=54.254.200.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1745377794; c=relaxed/simple;
+	bh=+bobhXJWy4M7WcoZFS6BHPfG6IDFULlMrkxEId7YGRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sfBNHEInNzE3B7sr3f0fHVxwCo3nVp8pF4mjH0O2diWp/xQmiFqTaUgf/U0HzsibvqYb0zTtxdcm1EkIwkmRO1MGcSpofI1q28sCjpE2KdkfD4oIfiNHBspJr2jhSDk2ed/fHwQNUcGOP++IUObDYCZDBCwnTkoruAB0msFKl5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UoN9jzmC; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="A9uLzmLD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745377613;
-	bh=YlbavwK4ijk6OQzwlNHVeqYb/SvZ1tfITRJFThEGh80=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=A9uLzmLD+SLBSGe22+Gtf/RISftzJNC1lHj0l6vleVjV+CnxuDV41OCIB/Wp4GAjc
-	 mXq/Do+SlI0iL1ZSFAyk2qJFqDEQXY2wxV/Crcmiqsizxiri1KLaXDp827ojpBcfPx
-	 yPfLTk5OnrIqQidGwqzIP4Q/g29cPPaOQUIfSXUI=
-X-QQ-mid: zesmtpip3t1745377600tadf8fc5c
-X-QQ-Originating-IP: X5Aw6R2DDq/YO33JgpDlNDuCWKFjBcQ+z/6flHw0eNo=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 23 Apr 2025 11:06:37 +0800 (CST)
-X-QQ-SSF: 0002000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 16401725662011210989
-EX-QQ-RecipientCnt: 24
-From: WangYuli <wangyuli@uniontech.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	corbet@lwn.net
-Cc: bpf@vger.kernel.org,
-	linux-doc@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UoN9jzmC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745377791; x=1776913791;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+bobhXJWy4M7WcoZFS6BHPfG6IDFULlMrkxEId7YGRE=;
+  b=UoN9jzmCqZPWkVaP2yj/TeKmETS7ugM6WSzVu17rSAaA18YQ41xzEvzt
+   onicKiq7r0D7fUF5+2Uc/a/KSipBoA+LXmE8ihdQ3f1T19fcxgjCuyPlY
+   rVBgSCsbtVS9LXJPS1B/rFE2xmeP1hL6DySOgpmqlibROveEkp83dCvw3
+   q+xI90WLiWlN3JGuL0he6umXKGX5eO9BrHP400BuAeTU2lEJd2jLuSPPq
+   qd6Mk1C2bSwKfyMwDVxwOLZ12hKhGJksuT5CP+0uiepyyNbdHdXDSXqJp
+   UUgwqICcB6bwsLE2FWyfqitT54/ztRuqnjtnkt9R+jTIW1uahgFUYf6Zo
+   w==;
+X-CSE-ConnectionGUID: FN7Q8Uy2TyyBOKtsxcv2/g==
+X-CSE-MsgGUID: R6uEfFM+Seml0b6vyl9hCg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57145930"
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="57145930"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 20:09:51 -0700
+X-CSE-ConnectionGUID: vAPBAFEpTx+WNLLjhagOdA==
+X-CSE-MsgGUID: J8N37Cn3RgKBGhQudSW08w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="155398692"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by fmviesa002.fm.intel.com with ESMTP; 22 Apr 2025 20:09:49 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Kevin Tian <kevin.tian@intel.com>
+Cc: iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	void@manifault.com,
-	psreep@gmail.com,
-	yhs@fb.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	guanwentao@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>,
-	Chen Linxuan <chenlinxuan@uniontech.com>
-Subject: [PATCH] bpf, docs: iterator: Rectify non-standard line break
-Date: Wed, 23 Apr 2025 11:06:32 +0800
-Message-ID: <DB66473733449DB0+20250423030632.17626-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 0/3] iommu/vt-d: Use ida for domain ID management
+Date: Wed, 23 Apr 2025 11:10:17 +0800
+Message-ID: <20250423031020.2189546-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,54 +62,27 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: ORfZ13EUooM/eCcKeC1dM/vs289RsBJavTcKc7grA4nkbIYZZcJAimOk
-	h7lvcr0fqTNfjE4ozS2J7oOBdgY6SImH6+jW0XyhoH+h8ttu9VjZBdrF/flT4OTc4M00nIE
-	kUkBBWmaWt6NTTIO2rOf1v16m7mzLsE7Q6c44oEyvjIFVBRriAWdmMQAnzDjMk+t21PvZA1
-	mBVdhumNXUW1/WuBiu04gjWuGbA2K3yAePwHvWybrbBcTONfsURE9i5+IImo/bzKzrvj3BW
-	EBDJySRxWs1dQkoTP7WGYjEMj/EY+pHiGfpCRSeZ3LNe/dfE5FAeb81Hu3GSBG+i2xo1e2j
-	G1IjBQiyKdfUb2NlbGFVhqYIdxiRadzyIpBEKrA2vSbP7SVJ6ErAkV21u1knsD1JR/n2kiz
-	1Xz5HHaun0wOxHRK9sahxEjC+D19kwetV2rs4eGXK91Ocu7ToB4JG4m/uRd19Ok76Au7TGv
-	DS3YXha3FoW61sg16rrmt6+7sEnPulu6GtZIsF7a4U2nUzDqQtodVXvlFTttUtUMttcMPRV
-	qQFj5rGB8jUFI+PSWjBT6Gx1cW36oihAHoAoAwttNzlV6sEeWngM2t4FtAnubeAHmpQUVbK
-	+9yiyvSsFbuVC2lhAuok15+o2fJIme7x/f8mRzTL1DIQZyLm6D5ZMdF0CTRrTjaWTPxnsvI
-	4OIdFtuJO1dUT6OC6u8lxHQeNTQlJVa9LsCWNlStclxLsONNdKJ2R0qnB6yp2mvtsDkh853
-	91IsB0Rc8C/MSCGtfW0WEfZpegwJK99KMeO2mIO2q73EV1RcWJEgmobgmaFECeCGzzSxyi+
-	DIoFyenp4Y5S+QQ4asfYbLHd6OUP2DFRsoT/EFkWzb6vsnFTpawnMPx9BPmXoYkSwdgAylK
-	UajsxPKCW+R1S9nyGQlE3CDmmywkquKPZ+9+OZt7psrCxoLVa/skr2QbVNk1Os/yNSRy8Ci
-	C2nh2Sit3hj+SC1U8/zPLIHgN4BQ1rveo6TbxbpUaIbUPHuPuZDDLb7gRvQmP4yytvcVjz7
-	K5PeqEChK7uHqDEsXsiccLMh+DP+U=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
 
-Even though the kernel's coding-style document does not explicitly
-state this, we generally put a newline after the semicolon of every
-C language statement to enhance code readability.
+This converts the Intel iommu driver's domain ID management from a
+fixed-size bitmap to the dynamic ida allocator. This improves memory
+efficiency by only allocating resources for the domain IDs actually in
+use, rather than the maximum possible number.
 
-Adjust the placement of newlines to adhere to this convention.
+The also includes necessary cleanups after the ida conversion, including
+locking adjustment for the ida and code simplification.
 
-Reported-by: Chen Linxuan <chenlinxuan@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
- Documentation/bpf/bpf_iterators.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Please review and comment.
 
-diff --git a/Documentation/bpf/bpf_iterators.rst b/Documentation/bpf/bpf_iterators.rst
-index 7f514cb6b052..385cd05aabf5 100644
---- a/Documentation/bpf/bpf_iterators.rst
-+++ b/Documentation/bpf/bpf_iterators.rst
-@@ -323,8 +323,8 @@ Now, in the userspace program, pass the pointer of struct to the
- 
- ::
- 
--  link = bpf_program__attach_iter(prog, &opts); iter_fd =
--  bpf_iter_create(bpf_link__fd(link));
-+  link = bpf_program__attach_iter(prog, &opts);
-+  iter_fd = bpf_iter_create(bpf_link__fd(link));
- 
- If both *tid* and *pid* are zero, an iterator created from this struct
- ``bpf_iter_attach_opts`` will include every opened file of every task in the
+Lu Baolu (3):
+  iommu/vt-d: Use ida to manage domain id
+  iommu/vt-d: Replace spin_lock with mutex to protect domain ida
+  iommu/vt-d: Simplify domain_attach_iommu()
+
+ drivers/iommu/intel/dmar.c  |   3 +
+ drivers/iommu/intel/iommu.c | 113 ++++++++----------------------------
+ drivers/iommu/intel/iommu.h |  20 +++++--
+ 3 files changed, 44 insertions(+), 92 deletions(-)
+
 -- 
-2.49.0
+2.43.0
 
