@@ -1,220 +1,124 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F318267B16
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825C81A83E2;
+	Wed, 23 Apr 2025 09:55:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745402010; cv=none; b=GKBGI569WbB9AaT4OOUuiXlXzZYCg1iZAKlIhichzJzVSqYFNGMUQt7RTnjI/eIWDKgJVsRkdwBxWBB2myhYmtiWcsGDjjIRY5/i1crLvf7QHv2G9auUX4CIiGtxHjQTPLapEijoveECr5oCGKgqqAlJlbAD9GJv/CGLMwDtt3I=
+	t=1745402112; cv=none; b=fjwBTTOd8apIDLZQYKo9BORPlfmHmdBhnCre4ULiN7xg4f7lDBKuR1DAtKl1nrMVz3HJUY1TUrXk3Krnt2vGEryyC+pQwkMk3YE3PX/sW1W8u9LuAraz6IzeIRGZzMkfloKppqDFUSCPZU+mj3vO0uXQfV12ipFuzi8VH3UgaoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745402010; c=relaxed/simple;
-	bh=EUt9Pc3d/cQ830Ysfg1KDOqUA0z0jpWmWw3HLSWOSdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZQ2gL7VTH1eXhmlIAj9UwV2OJxqXW0qFUAwpOTU6954mGQaQOHT5Z8IDTSuplm3VBGaZA8BNCg9txnYSzlyml6cPrG37IomiA7eYQNlaRI+W1Gkj9CQHQRhG+pu3e0zFKvJM9XUnBG+J26BZbsFrHvCZrBO5E2QbHqIqgQ+H/Bo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MkBnnBgU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=JV9vpkpW; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MkBnnBgU; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=JV9vpkpW; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1745402112; c=relaxed/simple;
+	bh=HSftoXvQSlOw4Xxkgs6KWUUAYAy78hGoeqnzScItdHY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pejJk2cdPngchZm9q456q3y6tSZfdnkYUGRTME/ROsTCV1UBvC/XP+PCgdqcepgY6qfFla8lQas9O2+yq9ycuyqK6UT4k0usdsFTBa+fotuUi+y4YqA0DySeYRo/6WIv2DhIKKBTzBpYbKKvsYximKhwVUi5/LvoBOPweOMxlQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XLw7TtcG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MkBnnBgU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="JV9vpkpW";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MkBnnBgU";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="JV9vpkpW"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 53EC121192;
-	Wed, 23 Apr 2025 09:53:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745402006; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bAMJg+22aX8wNXOVQU/q0Slu5K2ETQkFa+MaYS1q1Aw=;
-	b=MkBnnBgUY4DejLxyqWELETbhQDSZbHRBCNcJ2SL2jANKjsmepr5ez71Lc+6XleLSZfpZrU
-	TZVIrwAG2mGYIiL+u5itSCcJjvabGWmDlypht/2m5b4xnKMjA73DuYr+ZRRUAYxQRyrlLB
-	7MnS/Z/KvF6Q+pV3yLCv4FTBynvtKsg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745402006;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bAMJg+22aX8wNXOVQU/q0Slu5K2ETQkFa+MaYS1q1Aw=;
-	b=JV9vpkpWivR2j2l2iOWTdS74vSAmYn3ZCfrfQCySD6Ap21BM7ulYL6yd2KEBTFx0uVIzmS
-	IUaaLaSNx/k8B8DQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745402006; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bAMJg+22aX8wNXOVQU/q0Slu5K2ETQkFa+MaYS1q1Aw=;
-	b=MkBnnBgUY4DejLxyqWELETbhQDSZbHRBCNcJ2SL2jANKjsmepr5ez71Lc+6XleLSZfpZrU
-	TZVIrwAG2mGYIiL+u5itSCcJjvabGWmDlypht/2m5b4xnKMjA73DuYr+ZRRUAYxQRyrlLB
-	7MnS/Z/KvF6Q+pV3yLCv4FTBynvtKsg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745402006;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bAMJg+22aX8wNXOVQU/q0Slu5K2ETQkFa+MaYS1q1Aw=;
-	b=JV9vpkpWivR2j2l2iOWTdS74vSAmYn3ZCfrfQCySD6Ap21BM7ulYL6yd2KEBTFx0uVIzmS
-	IUaaLaSNx/k8B8DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3548813A6A;
-	Wed, 23 Apr 2025 09:53:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id pUq5DJa4CGhWFQAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 23 Apr 2025 09:53:26 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id BEC8BA07A7; Wed, 23 Apr 2025 11:53:25 +0200 (CEST)
-Date: Wed, 23 Apr 2025 11:53:25 +0200
-From: Jan Kara <jack@suse.cz>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>, 
-	=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] fs: introduce getfsxattrat and setfsxattrat
- syscalls
-Message-ID: <rbzlwvecvrp4xawwp5nywdq6wp5hgjhrtrabpszv74xmfqbj4f@x7v6eqfc5gcd>
-References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
- <20250321-xattrat-syscall-v4-3-3e82e6fb3264@kernel.org>
- <20250422-abbekommen-begierde-bcf48dd74a2e@brauner>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLw7TtcG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E953BC4AF09;
+	Wed, 23 Apr 2025 09:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745402111;
+	bh=HSftoXvQSlOw4Xxkgs6KWUUAYAy78hGoeqnzScItdHY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XLw7TtcGATvcTkoSrmSWCq0a4RsoQkjXbc8l+MFxcdOliZqFXabh1E30KeXYwG/L1
+	 UMyjkVdyIJN+rinnRlX8JJrNP8aNbo1zPVA9IalEVMy0DJsQaflqXGokMx7exK4Ypp
+	 ls0eQqEaac5CRT+gC6HvKYs0x3dCar78snDjeCjSknXM4RG5tdT4ZVSLdDiHegMxDp
+	 SS4tqK/CB/9oHMZBNtcPJiFHz2fUCrOr9jbZbIUAMeqZqS+aoBcLuxrTyUnG+zbEn6
+	 sGDS4IgP15c8aV5WZLwF6bcpJtkCOXoFwX+AUHYmZf4aLlS6gcvo1JaDPQX54XpMx1
+	 yYouWxhd5QN2Q==
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f4ca707e31so9260049a12.2;
+        Wed, 23 Apr 2025 02:55:11 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU16YM2oIpfWxf7R27R0B5JK1llbrEBiFBAzWhEv9Kb4PDKmWThWQbclV0JHNxu20Q3BEmzDdZfQFP93Q==@vger.kernel.org, AJvYcCXnp7nNzTUSbThGWcCFBOKd0KUpLFYU6WG+6V2gE4K5SiCeMctc3l93h79+/ieEvchjZLGxJF6mhQ/Pg/gX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGJsegCVsxElGI2XU3osfjMlsQzRvzfcSMqbbOoLhR+jHbd+w0
+	lYa/+QMytmr6MVTEyJcrfqU1w/xEVkT2kf++mIs13MxO7Su7EvrHS2AYhK0zNWqpr7jY3FP+BhS
+	zGBjwpqTQswZ4MZRWWyVaRjkhvkw=
+X-Google-Smtp-Source: AGHT+IFFkT/rib5KuvX63LPygFLm+a3qeCHF988/Xzsb491RdVNuxslG2Tt4cSq2zr8PqIsXGxawPeC+UOy1uPdF3pA=
+X-Received: by 2002:a17:907:9727:b0:acb:5f9a:7303 with SMTP id
+ a640c23a62f3a-acb74bcc517mr1552608966b.35.1745402110486; Wed, 23 Apr 2025
+ 02:55:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422-abbekommen-begierde-bcf48dd74a2e@brauner>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_THREE(0.00)[3];
-	TO_DN_SOME(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,linaro.org,gmail.com,armlinux.org.uk,arm.com,kernel.org,linux-m68k.org,monstr.eu,alpha.franken.de,hansenpartnership.com,gmx.de,linux.ibm.com,ellerman.id.au,csgroup.eu,users.sourceforge.jp,libc.org,physik.fu-berlin.de,davemloft.net,gaisler.com,linutronix.de,alien8.de,linux.intel.com,zytor.com,zankel.net,zeniv.linux.org.uk,suse.cz,digikod.net,google.com,arndb.de,paul-moore.com,namei.org,hallyn.com,vger.kernel.org,lists.infradead.org,lists.linux-m68k.org,lists.ozlabs.org];
-	R_RATELIMIT(0.00)[to_ip_from(RLyerg7kx5bdf6cnfzf33td54o)];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[60];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+References: <20250423080940.4025020-1-neelx@suse.com> <CAL3q7H7A_OnTQviZpCgzrGUFe1K=VfMiWXaba56E3ucPHnVkNg@mail.gmail.com>
+ <CAPjX3Fdor0TgkQtb2meJD4PFerOQV1Qcjs5HEyBCt5TNt8-vsA@mail.gmail.com>
+In-Reply-To: <CAPjX3Fdor0TgkQtb2meJD4PFerOQV1Qcjs5HEyBCt5TNt8-vsA@mail.gmail.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Wed, 23 Apr 2025 10:54:33 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H7g3xvs8TnSsYwaBP1n_EyRn1eC6SgeMP41G7BT=VZ2-A@mail.gmail.com>
+X-Gm-Features: ATxdqUGGvf68i6_amx5SyZJ_4EZLwc7s01Fa8LpDbspgq3qUeFU-G7uawmhhJJQ
+Message-ID: <CAL3q7H7g3xvs8TnSsYwaBP1n_EyRn1eC6SgeMP41G7BT=VZ2-A@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: fiemap: make the assert more explicit after
+ handling the error cases
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue 22-04-25 16:59:02, Christian Brauner wrote:
-> On Fri, Mar 21, 2025 at 08:48:42PM +0100, Andrey Albershteyn wrote:
-> > From: Andrey Albershteyn <aalbersh@redhat.com>
-> > 
-> > Introduce getfsxattrat and setfsxattrat syscalls to manipulate inode
-> > extended attributes/flags. The syscalls take parent directory fd and
-> > path to the child together with struct fsxattr.
-> > 
-> > This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
-> > that file don't need to be open as we can reference it with a path
-> > instead of fd. By having this we can manipulated inode extended
-> > attributes not only on regular files but also on special ones. This
-> > is not possible with FS_IOC_FSSETXATTR ioctl as with special files
-> > we can not call ioctl() directly on the filesystem inode using fd.
-> > 
-> > This patch adds two new syscalls which allows userspace to get/set
-> > extended inode attributes on special files by using parent directory
-> > and a path - *at() like syscall.
-> > 
-> > CC: linux-api@vger.kernel.org
-> > CC: linux-fsdevel@vger.kernel.org
-> > CC: linux-xfs@vger.kernel.org
-> > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-...
-> > +		struct fsxattr __user *, ufsx, size_t, usize,
-> > +		unsigned int, at_flags)
-> > +{
-> > +	struct fileattr fa = {};
-> > +	struct path filepath;
-> > +	int error;
-> > +	unsigned int lookup_flags = 0;
-> > +	struct filename *name;
-> > +	struct fsxattr fsx = {};
-> > +
-> > +	BUILD_BUG_ON(sizeof(struct fsxattr) < FSXATTR_SIZE_VER0);
-> > +	BUILD_BUG_ON(sizeof(struct fsxattr) != FSXATTR_SIZE_LATEST);
-> > +
-> > +	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-> > +		return -EINVAL;
-> > +
-> > +	if (!(at_flags & AT_SYMLINK_NOFOLLOW))
-> > +		lookup_flags |= LOOKUP_FOLLOW;
-> > +
-> > +	if (at_flags & AT_EMPTY_PATH)
-> > +		lookup_flags |= LOOKUP_EMPTY;
-> > +
-> > +	if (usize > PAGE_SIZE)
-> > +		return -E2BIG;
-> > +
-> > +	if (usize < FSXATTR_SIZE_VER0)
-> > +		return -EINVAL;
-> > +
-> > +	name = getname_maybe_null(filename, at_flags);
-> > +	if (!name) {
-> 
-> This is broken as it doesn't handle AT_FDCWD correctly. You need:
-> 
->         name = getname_maybe_null(filename, at_flags);
->         if (IS_ERR(name))
->                 return PTR_ERR(name);
-> 
->         if (!name && dfd >= 0) {
-> 		CLASS(fd, f)(dfd);
+On Wed, Apr 23, 2025 at 10:48=E2=80=AFAM Daniel Vacek <neelx@suse.com> wrot=
+e:
+>
+> On Wed, 23 Apr 2025 at 11:04, Filipe Manana <fdmanana@kernel.org> wrote:
+> >
+> > On Wed, Apr 23, 2025 at 9:10=E2=80=AFAM Daniel Vacek <neelx@suse.com> w=
+rote:
+> > >
+> > > Let's not assert the errors and clearly state the expected result onl=
+y
+> > > after eventual error handling. It makes a bit more sense this way.
+> >
+> > It doesn't make more sense to me...
+> > I prefer to assert expected results right after the function call.
+>
+> Oh well, if an error is expected then I get it. Is an error likely
+> here?
 
-Ah, you're indeed right that if dfd == AT_FDCWD and filename == NULL, the
-we should operate on cwd but we'd bail with error here. I've missed that
-during my review. But as far as I've checked the same bug is there in
-path_setxattrat() and path_getxattrat() so we should fix this there as
-well?
+The assertion serves to state what is never expected, and not what is
+likely or unlikely.
+It's about stating that an exact match shouldn't happen, i.e. ret =3D=3D 0.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+We do this sort of asserts in many places, and I find it more clear this wa=
+y.
+
+> I understood the comment says there can't be a file extent item
+> at offset (u64)-1 which implies a strict return value of 1 and not an
+> error or something >1. So that's why. And it's still quite after the
+> function call.
+>
+> But I'm happy to scratch it if you don't like it.
+>
+> > Thanks.
+> >
+> > >
+> > > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > > ---
+> > >  fs/btrfs/fiemap.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/fs/btrfs/fiemap.c b/fs/btrfs/fiemap.c
+> > > index b80c07ad8c5e7..034f832e10c1a 100644
+> > > --- a/fs/btrfs/fiemap.c
+> > > +++ b/fs/btrfs/fiemap.c
+> > > @@ -568,10 +568,10 @@ static int fiemap_find_last_extent_offset(struc=
+t btrfs_inode *inode,
+> > >          * there might be preallocation past i_size.
+> > >          */
+> > >         ret =3D btrfs_lookup_file_extent(NULL, root, path, ino, (u64)=
+-1, 0);
+> > > -       /* There can't be a file extent item at offset (u64)-1 */
+> > > -       ASSERT(ret !=3D 0);
+> > >         if (ret < 0)
+> > >                 return ret;
+> > > +       /* There can't be a file extent item at offset (u64)-1 */
+> > > +       ASSERT(ret =3D=3D 1);
+> > >
+> > >         /*
+> > >          * For a non-existing key, btrfs_search_slot() always leaves =
+us at a
+> > > --
+> > > 2.47.2
+> > >
+> > >
