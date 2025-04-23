@@ -1,97 +1,124 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC80149E17;
-	Wed, 23 Apr 2025 14:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B35B1A08A6
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418796; cv=none; b=mNheshvAlWdKncDN0yUdeRX536CIEbmLuhfdUOmo/qFQrJ92EjbPrSTCkjacKuckqC5+oCEH8w9LfT/xBRkqNl060VDVcgCS/Nu006vhk4XEii/T7ZCZvjz3iupGaFFpvQOfK02xFZVj9i29/3tX2EwtWH5jaf8gcYtYwi/VSjI=
+	t=1745418827; cv=none; b=hfA1A6Th+y/ZUa3JUwzzWPLtVA4Tcq0G1TQXooW+7gISHdEiEAB+oqdElPlZ6Neplw6d5BEsczt5qLxRYEzshCfJRYCZ4tfQIHfGb+KVJwQ6fJzV7+lyStEDL234Zi6JFlfeFNr3OwX32U3mKySTG04UndEIkC3hpeaQjV20MB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418796; c=relaxed/simple;
-	bh=fu6098lFZ/qu32M1cciGKiqo7TuTW0yAqRpasxv511k=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GHToQFqnZ74s1fdWj3PyZCPiyHCGqUK3RYsVfON24c3b7bI8cpWojsy/V3qT2v7tA+QUD166tuNrw8KpMOhYel5s/mD1LqX/xdiw/BJFifuq0DlRIGAvK1JnjRJPY1fa5ESwsuJArMuMXwScUGEtnmsJ43PeI5mgaHSdud9Gpr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZjM182jtvz6M4kt;
-	Wed, 23 Apr 2025 22:29:00 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id D990B14020B;
-	Wed, 23 Apr 2025 22:33:09 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 23 Apr
- 2025 16:33:09 +0200
-Date: Wed, 23 Apr 2025 15:33:07 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v8 03/16] CXL/AER: Introduce Kfifo for forwarding CXL
- errors
-Message-ID: <20250423153307.000074a7@huawei.com>
-In-Reply-To: <20250327014717.2988633-4-terry.bowman@amd.com>
-References: <20250327014717.2988633-1-terry.bowman@amd.com>
-	<20250327014717.2988633-4-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1745418827; c=relaxed/simple;
+	bh=VWzDmQfDjmNuHosOsuI+sYmac9/sp/eY8ADrNc5j/7A=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=dpYlbFDvoJFccVEto0nXMOXC4a2h3IjBqXD98916VinfLsRyPFMGNQqIvfia2co5utrAWlYWs3mt9P4eqtJXtsCbOYsYtPnoBkH3n8J0aQC82n4lJCk6WgpsZ+jOmyDXFR3aF+AlIHElLl7jiudO5/HMUnS4C5AV/fwsHYcx3pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kVaPNwGP; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kVaPNwGP"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- frapeml500008.china.huawei.com (7.182.85.71)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745418821;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xykOVv1TcngA9kOcdv/u1zueQQzoqln1oIzC7czVqfI=;
+	b=kVaPNwGPgKBDLuHusWUpBqNTgLqGQTq4b7N4nQTO0S23fV/FfS5/gkV1CSO/nLUpaDbRhP
+	0qS9+aElPEF+m375HKzn76YqN4Pa8gEDWJ9ZEMckv1VOhtmiG34ctfkrqXenqguwhmpmZs
+	jeXyf7YwM5C1A8M27bS+us+ZmjET3JY=
+Date: Wed, 23 Apr 2025 14:33:37 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <25a402bb9ddfecba22b5b24684d950494fc7410d@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH v1] pid: annotate data-races around pid_ns->pid_allocated
+To: "Oleg Nesterov" <oleg@redhat.com>
+Cc: linux-kernel@vger.kernel.org, mrpre@163.com, mkoutny@suse.com,
+ syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com,
+ syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com,
+ syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Christian Brauner" <brauner@kernel.org>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Liam R. Howlett"
+ <Liam.Howlett@oracle.com>, "Suren Baghdasaryan" <surenb@google.com>, "Wei
+ Yang" <richard.weiyang@gmail.com>, "David Hildenbrand"
+ <david@redhat.com>, "Al Viro" <viro@zeniv.linux.org.uk>, "Mateusz Guzik"
+ <mjguzik@gmail.com>, "Joel Granados" <joel.granados@kernel.org>, "Jens
+ Axboe" <axboe@kernel.dk>, "Wei Liu" <wei.liu@kernel.org>, "Frederic
+ Weisbecker" <frederic@kernel.org>
+In-Reply-To: <20250423135101.GA28646@redhat.com>
+References: <20250423115542.7081-1-jiayuan.chen@linux.dev>
+ <20250423135101.GA28646@redhat.com>
+X-Migadu-Flow: FLOW_OUT
+
+April 23, 2025 at 21:51, "Oleg Nesterov" <oleg@redhat.com> wrote:
 
 
-> +int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
-> +			     struct cxl_prot_error_info *err_info)
-> +{
-> +	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(_pdev);
-> +	struct cxl_dev_state *cxlds;
-> +
-> +	if (!pdev || !err_info) {
-> +		pr_warn_once("Error: parameter is NULL");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
-> +	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)) {
-> +		pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
-> +		return -ENODEV;
-> +	}
-> +
-> +	cxlds = pci_get_drvdata(pdev);
-> +	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
-> +
-> +	if (!dev)
-> +		return -ENODEV;
-> +
-> +	*err_info = (struct cxl_prot_error_info){ 0 };
-> +	err_info->ras_base = cxlds->regs.ras;
-> +	err_info->severity = severity;
-> +	err_info->pdev = pdev;
-> +	err_info->dev = dev;
 
-I missed this before but might as well do...
+>=20
+>=20On 04/23, Jiayuan Chen wrote:
+>=20
+>=20>=20
+>=20> Suppress syzbot reports by annotating these accesses using
+> >=20
+>=20>  READ_ONCE() / WRITE_ONCE().
+> >=20
+>=20
+> ...
+>=20
+>=20>=20
+>=20> --- a/kernel/pid.c
+> >=20
+>=20>  +++ b/kernel/pid.c
+> >=20
+>=20>  @@ -122,7 +122,8 @@ void free_pid(struct pid *pid)
+> >=20
+>=20>  for (i =3D 0; i <=3D pid->level; i++) {
+> >=20
+>=20>  struct upid *upid =3D pid->numbers + i;
+> >=20
+>=20>  struct pid_namespace *ns =3D upid->ns;
+> >=20
+>=20>  - switch (--ns->pid_allocated) {
+> >=20
+>=20>  + WRITE_ONCE(ns->pid_allocated, READ_ONCE(ns->pid_allocated) - 1);
+> >=20
+>=20>  + switch (READ_ONCE(ns->pid_allocated)) {
+> >=20
+>=20
+> I keep forgetting how kcsan works, but we don't need
+>=20
+>=20READ_ONCE(ns->pid_allocated) under pidmap_lock?
+>=20
+>=20Same for other functions which read/modify ->pid_allocated with
+>=20
+>=20this lock held.
+>=20
+>=20Oleg.
+>
 
-	*err_info = (struct cxl_prot_error_info) {
-		.ras_base = cxlds->regs.ras,
-		.severity = serverity,
-	...
-	};
+However, not all places that read/write pid_allocated are locked,
+for example:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/t=
+ree/kernel/pid_namespace.c#n271
+https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/t=
+ree/kernel/fork.c#n2602
 
-> +
-> +	return 0;
-> +}
+So, in fact, the pidmap_lock is not effective. And if we were to add lock=
+s
+to all these places, it would be too heavy.
+
+There's no actual impact on usage without locks, so I think it might be m=
+ore
+suitable to add these macros, KASAN can recognize READ_ONCE and WRITE_ONC=
+E
+and suppress warnings.
+
+Thanks.
