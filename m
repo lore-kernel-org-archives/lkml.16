@@ -1,78 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-4317.protonmail.ch (mail-4317.protonmail.ch [185.70.43.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEE51EDA3F
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55621EDA3F
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:20:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745367613; cv=none; b=plhYpFSTLrBJpklJVV2NFU8mg0SnQiU/y1H7mCCX+M75LI8UACqyvYwssp9l1rNOc6H9BraqhVbXZ+Sdp2q4wK/ekyyRG7ZLksoIgFfyM/TEaDEmQRSyUPyGT635Kd6CnS3fTlsSqKzxgJ7jbM+erK0PnTRW4oWA96rmtyIPNXM=
+	t=1745367618; cv=none; b=ob3FnteyoFFDFzwDmx2YyWLLEGF/oG9ibjesxexbt+TObdkbk0ADe3gK01zOS9ayaI45F4Xi1SrkxMjXpF4gWutHBKdRtXm5tkmWnhSII7lD1mARDEpTmDRCk3/5MknbZ9sU/3exlWIdcE2MPJa7/mdaorQhug+wZ5Pbvy6gixo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745367613; c=relaxed/simple;
-	bh=JiYKYwIlggoXaMGUSuySy12m3WMDMH23uuAhv8VzJ9E=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=Dm+pbUtJqhaPK8DAxnkWDIonSfOgOLtaCBiJMEuQaVJXOH3LSG5mLN0/wPQkf7h9xEIVq6d5zCas81hZD4QO9U/jz/2IYDimRKjZRxXV2jQAMh+KElXT7AMWk0lBVwszuf/Jvwm56DsyEKeNhoObJZzOy4AmC+o34bgspm/ZUVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=wGqd3kU4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745367618; c=relaxed/simple;
+	bh=bl3djlCh13/JgV2cS+vRgPMrELu/1OX8ds+lNWmeiz4=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=Yp4Iuo5WgaK3aA1gFLYuIQioDt3E/lF166yirvQFdu0HJtXTtebD6lFFHWv6p24E8TfuAS78/mcVyhDj2lLY3G++hrBzYH31GewPhBnNCpVsIsD2hqd7mP6D2/bW4ozQCaegOOH36vS5knDLcMvfBwt8B+1UFfY3Fjs+qZuAOTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca; spf=pass smtp.mailfrom=gianis.ca; dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b=gwdVBpjD; arc=none smtp.client-ip=185.70.43.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gianis.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="wGqd3kU4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72546C4CEEC;
-	Wed, 23 Apr 2025 00:20:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1745367612;
-	bh=JiYKYwIlggoXaMGUSuySy12m3WMDMH23uuAhv8VzJ9E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=wGqd3kU4TiUNozMylRf7ZRapHRxqFfIXkVFguKnhcTggZUKOihtgqz5wqh69hAvPA
-	 D7qD7DX/6iQSzMQrz58Bhx44lxaByL5qpiRAA5sB18+zXK0VBgRD3+IMLLi7YIsI8o
-	 bqsmnMAywBXWauX4H5YQHU2w5zVGebPKBs82xrWQ=
-Date: Tue, 22 Apr 2025 17:20:11 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-Cc: linux-mm@kvack.org, rostedt@goodmis.org, mhiramat@kernel.org,
- andrii@kernel.org, kernel-team@meta.com, linux-kernel@vger.kernel.org,
- Mykyta Yatsenko <yatsenko@meta.com>, Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v2] maccess: fix strncpy_from_user_nofault empty string
- handling
-Message-Id: <20250422172011.feb243d2f7478c0e7109b74c@linux-foundation.org>
-In-Reply-To: <20250422131449.57177-1-mykyta.yatsenko5@gmail.com>
-References: <20250422131449.57177-1-mykyta.yatsenko5@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b="gwdVBpjD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gianis.ca;
+	s=protonmail; t=1745367614; x=1745626814;
+	bh=UK+yaoHH+O3rgV/wGr+xWV4QxYCSeYcQk2YWtKSZ3hQ=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=gwdVBpjDithviqMf8Q5CPNzc9/9dzoVpoQQb251TxqcZySCJwNoBkM0YFaq0TYVMX
+	 4nUZfOYowTAbUZJdFfkrP6ISZ4+Q3mPLP8LtZq9bj+DUS/uALJ+IJ1UUV6GzkzgtUS
+	 xzVdWJzZXif8dhPafkhzZ8jrphXD6vWDA7y7ntPiKB3GmoSrgTPLz6QWllewhhHA8w
+	 sGCEUbCUKWEPYZPaZ7fX1sPTqHFan9n7F7ceRy3gljp/4kGzIy5DEf27dtHthqJUBz
+	 n6agXnoQWZiwcT0PcGAnrTkMS3P1S422G+UQtdHKkPv1p+H60vne+hnuzE+IiHncr2
+	 Fixlk2rI440Ag==
+Date: Wed, 23 Apr 2025 00:20:07 +0000
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+From: "Dhaval Giani (AMD)" <dhaval@gianis.ca>
+Cc: linux-kernel@vger.kernel.org, Dhaval Giani <dhaval.giani@amd.com>, Gautham Shenoy <gautham.shenoy@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "Dhaval Giani (AMD)" <dhaval@gianis.ca>
+Subject: [PATCH 0/3] sched/eevdf: Introduce functional invariants for EEVDF
+Message-ID: <20250422-b4-eevdf-tests-v1-post-v1-0-35d158254c72@gianis.ca>
+Feedback-ID: 128275035:user:proton
+X-Pm-Message-ID: fe70808ad1d3b08f57abb991096f9834a9f728a9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 22 Apr 2025 14:14:49 +0100 Mykyta Yatsenko <mykyta.yatsenko5@gmail.com> wrote:
+Introducing test cases for testing invariants for EEVDF. These are based
+of the original tech report available at
+https://citeseerx.ist.psu.edu/document?repid=3Drep1&type=3Dpdf&doi=3D805acf=
+7726282721504c8f00575d91ebfd750564
 
-> From: Mykyta Yatsenko <yatsenko@meta.com>
-> 
-> strncpy_from_user_nofault should return the length of the copied string
-> including the trailing NUL, but if the argument unsafe_addr points to
-> an empty string ({'\0'}), the return value is 0.
-> 
-> This happens as strncpy_from_user copies terminal symbol into dst
-> and returns 0 (as expected), but strncpy_from_user_nofault does not
-> modify ret as it is not equal to count and not greater than 0, so 0 is
-> returned, which contradicts the contract.
-> 
-> ...
->
+There are two invariants being tested here
 
-Thanks.
+1. This is based of Lemma 1 in the paper, which states that if a task
+has positive lag, it is eligible. We do not test exactly this. Instead
+we test if a task is eligible (which it is, if it is being to run), that
+it has a positive lag.
 
-Does this fix any known runtime issue?  If so, please fully describe this?
+2. This test is based of Lemma 2, which states that the sum of the lags
+of all the tasks in the system is zero.
 
-> --- a/mm/maccess.c
-> +++ b/mm/maccess.c
-> @@ -196,7 +196,7 @@ long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
->  	if (ret >= count) {
->  		ret = count;
->  		dst[ret - 1] = '\0';
-> -	} else if (ret > 0) {
-> +	} else if (ret >= 0) {
->  		ret++;
->  	}
->  
+The patch series introduce a debugfs directory with triggers to run
+each test.
+
+This is not meant to enabled in production. This is a development tool
+for scheduler developers
+
+Changes since v1
+- Add a tunable to change number of tasks to check for Lemma 1
+- Remove the recursion in Lemma 2
+- Use functions to detect overflows in Lemma 2
+
+Signed-off-by: Dhaval Giani (AMD) <dhaval@gianis.ca>
+---
+Dhaval Giani (AMD) (3):
+      sched/fair: Introduce a new debugfs directory for EEVDF tests
+      sched/fair: Add a test to test that a task selected to run has positi=
+ve lag
+      sched/fair: Test that the average lag across the system is zero
+
+ include/linux/sched.h      |   7 ++
+ kernel/Kconfig.preempt     |   9 ++
+ kernel/sched/Makefile      |   1 +
+ kernel/sched/debug.c       |   2 +
+ kernel/sched/eevdf-tests.c | 242 +++++++++++++++++++++++++++++++++++++++++=
+++++
+ kernel/sched/fair.c        |   5 +
+ kernel/sched/sched.h       |   9 ++
+ 7 files changed, 275 insertions(+)
+---
+base-commit: c70fc32f44431bb30f9025ce753ba8be25acbba3
+change-id: 20250402-b4-eevdf-tests-v1-post-a7550c4a94cf
+
+Best regards,
+--=20
+Dhaval Giani (AMD) <dhaval@gianis.ca>
+
 
