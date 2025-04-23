@@ -1,44 +1,37 @@
-Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.241.64])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B56D3D81
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.100.241.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94F43D81;
+	Wed, 23 Apr 2025 03:50:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745380125; cv=none; b=G094nlUIoOcblSU29i7MdFy53z7qwk6Xvbj8qCQIhn3xOzxFN++6PUNo0Hhh+K2WXJxLWalisrhkNQRBIbKpP6mj5/tXufsT/rn4Hkudv+flRJCxCDPr4YKzdObhLrfX33XktxZ4g9HAQ+KxE9Fnf9F/r/ywl1hwaS3Rl8V7NFw=
+	t=1745380210; cv=none; b=QKlQUcy/i+Ve8gC+JLRvZp5PG2M1OxMzgg+naGIkCFZ8V6oW7bz/tCxNcfHGWL7de1+wq18Sm+NGJvlMXkUgn8rzb67PNCO3IGG+CBBZ6MrcBf/U8hNoG9GvzME/HIJ7qOQbEuDM8r2X5kr27x65vSYw+0oM3lx4FNANktpls24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745380125; c=relaxed/simple;
-	bh=2XL6ixfoDpURIpoCw5CidzLKNggYQxj1Gaju6sbV1kU=;
+	s=arc-20240116; t=1745380210; c=relaxed/simple;
+	bh=ZsyM7pKfLQ1GSJex7G8wkgg7irJ0es/s+56m+9aXwvw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RKPel7HO+PzGJc3MwGUoiby1S6+Kk+CluXfLEJ+rtAkzw+3gAJ9DZH6IuB938t6ubVn1Th5teW44NfR2FEcB4CR0IVDLGF8iGT3aWz4GKcRmE170ZB44O0PhpjL6XLMN+/An5OCB8VRJ4NiYCc3gxhJG3WiZsQc0ESrxh3lznjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=pjh1pdQC; arc=none smtp.client-ip=159.100.241.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+	 In-Reply-To:Content-Type; b=PufjiPZeKrYH4dc+9Gu/NtxZBv08cXVEqXsf6pJOrdtfF66rmws9jITRygvJgqgXHLz8Tql18JkNl+qFiug15VcsGebvm7bfeS0ixUrGxaGGYfYaua0yfEwWjrJNfDrftD4pFNJswzQKb95alEgxxvUKV9YrZYeHpSRHxm/Xh3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=LTY/4WeN; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="pjh1pdQC"
-Received: from relay4.mymailcheap.com (relay4.mymailcheap.com [137.74.80.156])
-	by relay5.mymailcheap.com (Postfix) with ESMTPS id A6D732005F
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:48:35 +0000 (UTC)
-Received: from nf2.mymailcheap.com (nf2.mymailcheap.com [54.39.180.165])
-	by relay4.mymailcheap.com (Postfix) with ESMTPS id D5F30209CE;
-	Wed, 23 Apr 2025 03:48:27 +0000 (UTC)
-Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
-	by nf2.mymailcheap.com (Postfix) with ESMTPSA id D6E3440168;
-	Wed, 23 Apr 2025 03:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
-	t=1745380105; bh=2XL6ixfoDpURIpoCw5CidzLKNggYQxj1Gaju6sbV1kU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pjh1pdQCK38Wp8MSJgAvBRaRjTLU++31bZOoNV8JxG+KbVUcHVgAZ0OpH7CSzmGIO
-	 zf3crQabzIzTw28HzTC7Gyr+fI87AvUX5vhlE7vVofccmszqi6SuG7mlun/VEpueZK
-	 ewAvMZe65/WopydXRQRDIHrsZ42YPYdOAPz5PfsE=
-Received: from [198.18.0.1] (unknown [203.175.14.48])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 23EED4036E;
-	Wed, 23 Apr 2025 03:48:18 +0000 (UTC)
-Message-ID: <ab7f1ba8-a49c-41a1-9b6f-ca142fbbe9d2@aosc.io>
-Date: Wed, 23 Apr 2025 11:48:14 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LTY/4WeN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=NSCt4vR2msWj/6nqRwvajHdSPnfmkoRmQAKsfracq1A=; b=LTY/4WeNhc5egfFUcE4RI9nMwE
+	E7OVb+5QUQUpFYumkhQ2uKGqGi5GkWR3hQbKINZ9RhETIcqz5XDlM3ZfpnrOqjDi8CbTlxG0lim92
+	dTM5nEhCGIQ00dPleNaWNzy+1XLFw9gvPG6qawpPjrXlZM95B5hbE/TOPbDKy2nAWpge7gcybwQh8
+	9yTV8p5fDkmb3ZrWMJ/0YZQLQ4KFJQ8YVUCM5QB6ydKBMDelI1/d/M5iPaX2oHonvaqMbG2EIruDg
+	sax0ggxBdnnkwogXsZtNq1XKcLabr8alwpMFmYa/vv2x+oZOtOj5PUDQKnNVFFMcfvylAcOMoGxhd
+	MOOAmPBw==;
+Received: from [50.39.124.201] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7R7e-000000076Ci-11AV;
+	Wed, 23 Apr 2025 03:50:06 +0000
+Message-ID: <1f7c8220-09e8-42ae-a611-9a21779badaf@infradead.org>
+Date: Tue, 22 Apr 2025 20:50:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,77 +39,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/3] drm/amd/display: Stop control flow if the divisior
- is zero
-To: Tiezhu Yang <yangtiezhu@loongson.cn>,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Xinhui Pan <Xinhui.Pan@amd.com>, Harry Wentland <harry.wentland@amd.com>,
- Leo Li <sunpeng.li@amd.com>, Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
- Huacai Chen <chenhuacai@loongson.cn>
-Cc: Nathan Chancellor <nathan@kernel.org>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- loongarch@lists.linux.dev, amd-gfx@lists.freedesktop.org,
- llvm@lists.linux.dev, linux-kernel@vger.kernel.org,
- Kexy Biscuit <kexybiscuit@aosc.io>
-References: <20250114132856.19463-1-yangtiezhu@loongson.cn>
+Subject: Re: [PATCH] EISA: Move devlist.h out of obj to always
+To: Kees Cook <kees@kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alejandro Colomar <alx@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250423023743.work.350-kees@kernel.org>
 Content-Language: en-US
-From: Mingcong Bai <jeffbai@aosc.io>
-In-Reply-To: <20250114132856.19463-1-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: D6E3440168
-X-Rspamd-Server: nf2.mymailcheap.com
-X-Spamd-Result: default: False [0.00 / 10.00];
-	SUBJECT_RANDOM_CHARS_1(0.10)[];
-	MIME_GOOD(-0.10)[text/plain];
-	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_ONE(0.00)[1];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Action: no action
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250423023743.work.350-kees@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi all,
 
-在 2025/1/14 21:28, Tiezhu Yang 写道:
-> As far as I can tell, with the current existing macro definitions, there
-> is no better way to do the minimal and proper changes to stop the control
-> flow if the divisior is zero.
-> 
-> In order to keep the current ability for the aim of debugging and avoid
-> printing the warning message twice, it is better to only use ASSERT_BUG()
-> and SPL_ASSERT_BUG() directly after doing the following two steps:
-> 
-> (1) Add ASSERT_BUG() macro definition
-> (2) Add SPL_ASSERT_BUG() macro definition
-> 
-> This version is based on 6.13-rc7, tested on x86 and LoongArch.
-> 
-> Tiezhu Yang (3):
->    drm/amd/display: Add ASSERT_BUG() macro definition
->    drm/amd/display: Add SPL_ASSERT_BUG() macro definition
->    drm/amd/display: Harden callers of division functions
-> 
->   drivers/gpu/drm/amd/display/dc/basics/fixpt31_32.c  |  2 +-
->   drivers/gpu/drm/amd/display/dc/os_types.h           |  7 +++++++
->   drivers/gpu/drm/amd/display/dc/spl/spl_debug.h      | 11 +++++++++++
->   drivers/gpu/drm/amd/display/dc/spl/spl_fixpt31_32.c |  2 +-
->   4 files changed, 20 insertions(+), 2 deletions(-)
-> 
 
-Gentle ping on this series...
+On 4/22/25 7:37 PM, Kees Cook wrote:
+> I put devlist.h into the wrong Makefile macro ("obj") to get it included
+> in "targets". Put it into "always" so nothing tries to link against it.
+> Solves CONFIG_EISA=y i386 build failure:
+> 
+> ld: vmlinux.a: member drivers/eisa/devlist.h in archive is not an object
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Closes: https://lore.kernel.org/all/4a8ba1d0-d2d9-41f8-abf1-d45ec8996d10@infradead.org
+> Fixes: dd09eb0e2cc4 ("EISA: Increase length of device names")
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-Harry and Huacai, can you please take a look at this updated series 
-(since you have both provided comments on previous revisions?), thank you!
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-Best Regards,
-Mingcong Bai
+Thanks.
+
+> ---
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Alejandro Colomar <alx@kernel.org>
+> ---
+>  drivers/eisa/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/eisa/Makefile b/drivers/eisa/Makefile
+> index f0d6cf7d1f32..552bd9478340 100644
+> --- a/drivers/eisa/Makefile
+> +++ b/drivers/eisa/Makefile
+> @@ -1,7 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Makefile for the Linux device tree
+>  
+> -obj-$(CONFIG_EISA)	        += devlist.h eisa-bus.o
+> +always-$(CONFIG_EISA)		+= devlist.h
+> +obj-$(CONFIG_EISA)	        += eisa-bus.o
+>  obj-${CONFIG_EISA_PCI_EISA}     += pci_eisa.o
+>  
+>  # virtual_root.o should be the last EISA root device to initialize,
+
+-- 
+~Randy
