@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0931F4CAB;
-	Wed, 23 Apr 2025 09:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7DD22F773;
+	Wed, 23 Apr 2025 09:03:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745399013; cv=none; b=L5ZYmHgDnwMG9WyJsHru25s8LFF1PFumNaeuClmiAeHom7UEuM//ei1ji7gwE1MJAgPQTWRLmcQ+qWRjf/mu8MxDj7EH1OJ2qcXfpN4iK1tKIWjf/GplxCHuM1+gTVZiYAP7B+t527Ve1edB2epnfJGtHvU60MY0AaM8hgS7ZS4=
+	t=1745399014; cv=none; b=i+siRmEhvIKuRD2dAjdRopsDEZahwZH1ztPbrNoEWlrGD4vtrSRGyUUoP1hVRv7n2hbl26Q7vZ2c2G3umfqOXIr5Pa68S7b6w82cyFJZxqs8cfbUzwxJfsFAbYJrzv5vtk4maN6F2+pSIH9vxbD6ySkrgZcfkqaBaoZoLnvPtgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745399013; c=relaxed/simple;
-	bh=yAlMglq+y6vsv7ewTFbaTZ+Cqsqx8wf8fK0bBboZhsE=;
+	s=arc-20240116; t=1745399014; c=relaxed/simple;
+	bh=FcZJDwChboXMI56Jg7v4MIg7rQOojrMI74gGFAOu9h4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oAIn6wCm9zp2hASJfS3pX1o7wcZxwmXoNJBm89l2IxZzgllz+2QNTAWAPqYIdPD0dWS7f9H1wPh0fFcNAke+eMVzP0aIbYAfjqhMvDxzsobwqX7dF3u4sMauRQySZqdi2nq/Y4afP3hcfmJM0HY64VRsAILkDCEFfoxb5aNoQtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=CdrdveLFhE3aHY1qNL6Bkm8I3fZ1KnXjGSpOQkPe95ar1+ToBOjy2tllXbQRECewU5+ST67Vu/RvghAJkeMR5bYxEGSD6G1bnSqd43pZTkmms/zDlAJow1JvkHYR/1IcLZL3pP4UT2mrEFE1FaznvX2K+YC4a4xM5NXkJpMYJEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZjCn21lYDz4f3jtT;
-	Wed, 23 Apr 2025 17:03:02 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZjCmy65LPz4f3jdR;
+	Wed, 23 Apr 2025 17:02:58 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id D959E1A1C68;
-	Wed, 23 Apr 2025 17:03:20 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id C86611A018D;
+	Wed, 23 Apr 2025 17:03:22 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP3 (Coremail) with SMTP id _Ch0CgAXacPQrAhoJkGrKA--.8976S5;
-	Wed, 23 Apr 2025 17:03:20 +0800 (CST)
+	by APP3 (Coremail) with SMTP id _Ch0CgAXacPQrAhoJkGrKA--.8976S9;
+	Wed, 23 Apr 2025 17:03:22 +0800 (CST)
 From: Zhang Yi <yi.zhang@huaweicloud.com>
 To: linux-ext4@vger.kernel.org
 Cc: linux-fsdevel@vger.kernel.org,
@@ -35,9 +35,9 @@ Cc: linux-fsdevel@vger.kernel.org,
 	libaokun1@huawei.com,
 	yukuai3@huawei.com,
 	yangerkun@huawei.com
-Subject: [PATCH 1/9] ext4: ext4: unify EXT4_EX_NOCACHE|NOFAIL flags in ext4_ext_remove_space()
-Date: Wed, 23 Apr 2025 16:52:49 +0800
-Message-ID: <20250423085257.122685-2-yi.zhang@huaweicloud.com>
+Subject: [PATCH 5/9] ext4: prevent stale extent cache entries caused by concurrent get es_cache
+Date: Wed, 23 Apr 2025 16:52:53 +0800
+Message-ID: <20250423085257.122685-6-yi.zhang@huaweicloud.com>
 X-Mailer: git-send-email 2.46.1
 In-Reply-To: <20250423085257.122685-1-yi.zhang@huaweicloud.com>
 References: <20250423085257.122685-1-yi.zhang@huaweicloud.com>
@@ -48,120 +48,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAXacPQrAhoJkGrKA--.8976S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxWFW5tr43Ww18ur1fWw4kZwb_yoW5try3pr
-	sIyFn5Gr4fW3409FWIqF47Zr1ag3W8Aa1UJFyfC3W3XFyUJ3s5KFyftFW5AFy5tFWruayF
-	yFWrtw15Ga17KaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm014x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUxDGrUUUUU=
+X-CM-TRANSID:_Ch0CgAXacPQrAhoJkGrKA--.8976S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7tw4UWry7uF13XrW8GF1fCrg_yoW8tF1fpr
+	ZIkF1DGw40q34DC392gF48Ww1UKay8Gw4UCFWfG3W7ZFW3J340gF1UtFyUAF1Fqay8Jaya
+	vFWFkw1UJayDW37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
+	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
+	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
+	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
+	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
+	IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
+	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
+	kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
+	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnI
+	WIevJa73UjIFyTuYvjfUo73vUUUUU
 X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
 From: Zhang Yi <yi.zhang@huawei.com>
 
-When removing space, we should use EXT4_EX_NOCACHE because we don't
-need to cache extents, and we should also use EXT4_EX_NOFAIL to prevent
-metadata inconsistencies that may arise from memory allocation failures.
-While ext4_ext_remove_space() already uses these two flags in most
-places, they are missing in ext4_ext_search_right() and
-read_extent_tree_block() calls. Unify the flags to ensure consistent
-behavior throughout the extent removal process.
+The EXT4_IOC_GET_ES_CACHE and EXT4_IOC_PRECACHE_EXTENTS currently
+invokes ext4_ext_precache() to preload the extent cache without holding
+the inode's i_rwsem. This can result in stale extent cache entries when
+competing with operations such as ext4_collapse_range() which calls
+ext4_ext_remove_space() or ext4_ext_shift_extents().
+
+The problem arises when ext4_ext_remove_space() temporarily releases
+i_data_sem due to insufficient journal credits. During this interval, a
+concurrent EXT4_IOC_GET_ES_CACHE or EXT4_IOC_PRECACHE_EXTENTS may cache
+extent entries that are about to be deleted. As a result, these cached
+entries become stale and inconsistent with the actual extents.
+
+Loading the extents cache without holding the inode's i_rwsem or the
+mapping's invalidate_lock is not permitted besides during the writeback.
+Fix this by holding the i_rwsem during EXT4_IOC_GET_ES_CACHE and
+EXT4_IOC_PRECACHE_EXTENTS.
 
 Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 ---
- fs/ext4/extents.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ fs/ext4/extents.c | 2 ++
+ fs/ext4/ioctl.c   | 8 +++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index c616a16a9f36..d8eac736cc9a 100644
+index 3adf05fbdd59..b5eb89ef7ae2 100644
 --- a/fs/ext4/extents.c
 +++ b/fs/ext4/extents.c
-@@ -1530,7 +1530,7 @@ static int ext4_ext_search_left(struct inode *inode,
- static int ext4_ext_search_right(struct inode *inode,
- 				 struct ext4_ext_path *path,
- 				 ext4_lblk_t *logical, ext4_fsblk_t *phys,
--				 struct ext4_extent *ret_ex)
-+				 struct ext4_extent *ret_ex, int flags)
- {
- 	struct buffer_head *bh = NULL;
- 	struct ext4_extent_header *eh;
-@@ -1604,7 +1604,8 @@ static int ext4_ext_search_right(struct inode *inode,
- 	ix++;
- 	while (++depth < path->p_depth) {
- 		/* subtract from p_depth to get proper eh_depth */
--		bh = read_extent_tree_block(inode, ix, path->p_depth - depth, 0);
-+		bh = read_extent_tree_block(inode, ix, path->p_depth - depth,
-+					    flags);
- 		if (IS_ERR(bh))
- 			return PTR_ERR(bh);
- 		eh = ext_block_hdr(bh);
-@@ -1612,7 +1613,7 @@ static int ext4_ext_search_right(struct inode *inode,
- 		put_bh(bh);
+@@ -5011,7 +5011,9 @@ int ext4_get_es_cache(struct inode *inode, struct fiemap_extent_info *fieinfo,
  	}
  
--	bh = read_extent_tree_block(inode, ix, path->p_depth - depth, 0);
-+	bh = read_extent_tree_block(inode, ix, path->p_depth - depth, flags);
- 	if (IS_ERR(bh))
- 		return PTR_ERR(bh);
- 	eh = ext_block_hdr(bh);
-@@ -2821,6 +2822,7 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
- 	struct partial_cluster partial;
- 	handle_t *handle;
- 	int i = 0, err = 0;
-+	int flags = EXT4_EX_NOCACHE | EXT4_EX_NOFAIL;
+ 	if (fieinfo->fi_flags & FIEMAP_FLAG_CACHE) {
++		inode_lock_shared(inode);
+ 		error = ext4_ext_precache(inode);
++		inode_unlock_shared(inode);
+ 		if (error)
+ 			return error;
+ 		fieinfo->fi_flags &= ~FIEMAP_FLAG_CACHE;
+diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+index d17207386ead..0e240013c84d 100644
+--- a/fs/ext4/ioctl.c
++++ b/fs/ext4/ioctl.c
+@@ -1505,8 +1505,14 @@ static long __ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+ 		return 0;
+ 	}
+ 	case EXT4_IOC_PRECACHE_EXTENTS:
+-		return ext4_ext_precache(inode);
++	{
++		int ret;
  
- 	partial.pclu = 0;
- 	partial.lblk = 0;
-@@ -2851,8 +2853,7 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
- 		ext4_fsblk_t pblk;
- 
- 		/* find extent for or closest extent to this block */
--		path = ext4_find_extent(inode, end, NULL,
--					EXT4_EX_NOCACHE | EXT4_EX_NOFAIL);
-+		path = ext4_find_extent(inode, end, NULL, flags);
- 		if (IS_ERR(path)) {
- 			ext4_journal_stop(handle);
- 			return PTR_ERR(path);
-@@ -2918,7 +2919,7 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
- 			 */
- 			lblk = ex_end + 1;
- 			err = ext4_ext_search_right(inode, path, &lblk, &pblk,
--						    NULL);
-+						    NULL, flags);
- 			if (err < 0)
- 				goto out;
- 			if (pblk) {
-@@ -2994,8 +2995,7 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
- 				  i + 1, ext4_idx_pblock(path[i].p_idx));
- 			memset(path + i + 1, 0, sizeof(*path));
- 			bh = read_extent_tree_block(inode, path[i].p_idx,
--						    depth - i - 1,
--						    EXT4_EX_NOCACHE);
-+						    depth - i - 1, flags);
- 			if (IS_ERR(bh)) {
- 				/* should we reset i_size? */
- 				err = PTR_ERR(bh);
-@@ -4314,7 +4314,8 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
- 	if (err)
- 		goto out;
- 	ar.lright = map->m_lblk;
--	err = ext4_ext_search_right(inode, path, &ar.lright, &ar.pright, &ex2);
-+	err = ext4_ext_search_right(inode, path, &ar.lright, &ar.pright,
-+				    &ex2, 0);
- 	if (err < 0)
- 		goto out;
- 
++		inode_lock_shared(inode);
++		ret = ext4_ext_precache(inode);
++		inode_unlock_shared(inode);
++		return ret;
++	}
+ 	case FS_IOC_SET_ENCRYPTION_POLICY:
+ 		if (!ext4_has_feature_encrypt(sb))
+ 			return -EOPNOTSUPP;
 -- 
 2.46.1
 
