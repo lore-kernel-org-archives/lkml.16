@@ -1,140 +1,83 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4AC28BAA9;
-	Wed, 23 Apr 2025 15:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D09028935F;
+	Wed, 23 Apr 2025 15:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423474; cv=none; b=dIT+h51xFVAjMDF3wE1tbwLmk0UJt5+brXLXzuQqArrN0h9P7AQDzGB4/+CZapVIznNqHOMYaExlD86LbyKGw3EcZtXSxlIovxQlbDNQBKMAiLTXMjBegZkhZqoBWgZj4EibQHz7AL4fkbq+cWwY6Ab1XiFlYZjdNe4AbCsJ+v0=
+	t=1745423507; cv=none; b=DrXCEYnE+JAzQqEAsIcD0Sduw099yQO+tjuPIXRxQlc2SyLdqkVWMMJMM6vf5HmU1p1O/uwYNzpgohU3osGGQckFsgTWwD+amSgP8cyTbM/bHY5wyuA5SE5bqLLfHF9uF/6h3nAqgo1nZtwWrnq01ytwefbOATV0az4Vfs9irxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423474; c=relaxed/simple;
-	bh=aa7/f5Zh9n06yla3BDP8426xRfbXJ+bYThqtSMu5iMI=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UPWiNuIVnO45LCf2WbYeTCKPicb1uOsVTIXUcGTXBO/lZlSKwdLOxzVHQY81wZnuDCS4XW3yN0g2VjImVAswB359HvJGvEfB+y39JZdJ0j5muiUwN5rBwC07c+8k0mhDyS8zBWt9DgauyQMX6WERu8mLN+htRSxzZykuQt7xavM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKB56hZl; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745423507; c=relaxed/simple;
+	bh=Q6PcQ8O3FSmUk2TwPF7gCzpyOKQyy07Lo0eWC7IuJ7U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=avLB2IP1KGGtlePQTqMHxEKqvyjkxOePi4YUILHeNEbHqw1WRiPd4xMEkzkejRYHdmoHO3Nnyxzvsqbz+QkMZARxLAJ0EPRc8lj2jQhUlU16nyfvMY8V4543wM6NdEqlvuPSzyuPy4/Xje5fGBsPgyF0EptVs5yt7l8osWhzUwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmgPy7oN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKB56hZl"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf848528aso49448855e9.2;
-        Wed, 23 Apr 2025 08:51:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745423471; x=1746028271; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=x6aidtYCoBxwfa+luGgigfHv2I9RMSlPDA/HH3ouHUw=;
-        b=nKB56hZl26a06tlMQWcS3UbiFrqStyCqMP6+kL+mcq8jvUP3zRVdW3wbtSyDZabY2P
-         pQ7R+Gcox3dqVpTZt/p/ISqWwZYB1WZ3Mv7YouPiKoWhAot2t9RBLIhZKFn20ju/zvUl
-         +U2ZTSeO7i6pQRIRBh0gA2Oqm+f/ZYbZ3lYPbBW1lq9jJdp+8boZyAvNzoj4sM+Y0zE/
-         A4kwdPVTgndHScp4QzEQuEk2f1nEF2gpFkC6TeQsNyiBODHK+exDOBHK1AlKNktFfuf+
-         cLIFskFo89Qk91zaa9tZq1eRfpHg1bRAXtGXdOaYlzhqfV8Dzmx92LxJwX/Y8tmrjaV/
-         4utA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745423471; x=1746028271;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x6aidtYCoBxwfa+luGgigfHv2I9RMSlPDA/HH3ouHUw=;
-        b=r4EwtPb0V1+wbRfT0QPKsDqAzvE/92jtGc7zfiokgpDaWqid2mt+TQvlXhuoUWvBqQ
-         GKY1e8vLrO0GnZooluJZGj9ZudQ7o1Lp2/mY5UOrOhDNgg6vrV8QKRUi/1f9Ex9uhqI/
-         8Zq5DDnQRv9EFlUCCEGGlQa7b2I/lnwiUbqoX3/4Rp7DnnfHL8EzcJxPsK7kNbUhcmhN
-         JJk8vP2PiRpisS7PId8NgCZXv1UpnUKT1wnEhCbvZqjr7mUMLoPplICxytwhra0wvpNF
-         V0QErintGK1Z6G+BGm6YoAhtJxtgHz+iyh6j2V69cgHs81FrVeLrRajCh7HNeF1YDYRB
-         RKrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTUPV0hawQJk4W8LuFcOHT5zIoEjErl4kT8iGo5OlF38WeScyy2EE5kf80I7GMHlngS3o3ofB+XIBHnwdI@vger.kernel.org, AJvYcCXmaaQnoJwBkfH/qkOyYB5u9eZ7hf+i4xngXXOPnbr2iFIcgya6GrBDH2Wqf9mma2DDhUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8VJbTftJ4CZ9UVBe5zUvCju3ACse7CfCix6WOXhDJSGXlvJ4D
-	h/PfE+/mhSxSfjgsAPHxXFTgvMxWgTqfEwrvS4MOfDb2fhnX8GU+
-X-Gm-Gg: ASbGnctELq/y/yjwzKevG7ioQURqsN2exY658VWrZJqY9vqvWIVHPkUOLROX6fHmCf8
-	gTwunLZZU2eeCE/zDrW5vswHVPkByismXZrWBqV4uQCdKu0EkQ07Wimk/Nelp2WcgzJnKb30GN3
-	hm0s1hqgLQkQ8nSY5QfLwc3qCwGVAPDu0ogt0tajieX37N0DD4E+HVXRFXdEueslpBTsuOxefQx
-	LNzs2oX3Rzx6cl2H2V/K49Kf2XO5ehCaILW0ZCvXR/UKftq8xT1CWduIBFGG6XYLOfbjCz+mDg3
-	aQN1cw1saKanKFEsr0899g96q8kQ8M+7bhkzK9CRCCgc/pg=
-X-Google-Smtp-Source: AGHT+IGS33U0SQfEUtTQ/6SINRbclcHrXy1+ioipbh+69IqIa03G439XHh9lBMNutBMrCfUiOq1QHA==
-X-Received: by 2002:a05:6000:cc6:b0:39f:a553:3d98 with SMTP id ffacd0b85a97d-3a06c43f9a4mr23357f8f.56.1745423470916;
-        Wed, 23 Apr 2025 08:51:10 -0700 (PDT)
-Received: from krava (85-193-35-16.rib.o2.cz. [85.193.35.16])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43bee6sm18983897f8f.45.2025.04.23.08.51.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 08:51:10 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 23 Apr 2025 17:51:08 +0200
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Tao Chen <chen.dylane@linux.dev>,
-	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
-	daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
-	yonghong.song@linux.dev, john.fastabend@gmail.com,
-	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
-	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH bpf-next] libbpf: remove sample_period init in
- perf_buffer
-Message-ID: <aAkMbBdzWX_iE1zM@krava>
-References: <20250422091558.2834622-1-chen.dylane@linux.dev>
- <aAedDw7fWAF2ej1f@krava>
- <aAfok3ha8QQkP8VB@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmgPy7oN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBFD3C4CEE2;
+	Wed, 23 Apr 2025 15:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745423506;
+	bh=Q6PcQ8O3FSmUk2TwPF7gCzpyOKQyy07Lo0eWC7IuJ7U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KmgPy7oNLM0uB7pP3DNkeEMd8gByPbo3asds+AarzLLyrC3Gzj86gGQNq1pVjbJ5N
+	 g7JU98A9UbuJuyqi5Y6icJSXeVltbtdDoNSSSD3NIs/gc8XhO6WMPuR2VlZauZq4du
+	 eB/3iqRuz7qJJLIP0ICaiq6y7u4sXqy807rLeUWT2bxgBphAHgJ3xMF8jzwjdMlgz8
+	 7tPFVgLqnQAVM5l90H6TJirFaT+OExzULT45LJJP4s1qRoriaeZyiUEgK8BQ0QkFH6
+	 Vv0q3Te2Xe4j3ElXN0hJgRQ4eRVm7sNcyMLIRoGCL5dFl22cXQDstZE8m8KRY9WhhL
+	 xIg4IxhWm7z2w==
+Date: Wed, 23 Apr 2025 10:51:44 -0500
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado <nfraprado@collabora.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Tinghan Shen <tinghan.shen@mediatek.com>,
+	Olivia Wen <olivia.wen@mediatek.com>, kernel@collabora.com,
+	linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 3/5] dt-bindings: remoteproc: mediatek: Drop redundant
+ maxItems for mt8192/95
+Message-ID: <20250423155144.GA581441-robh@kernel.org>
+References: <20250421-scp-dual-core-mt8390-v2-0-c84117a959a9@collabora.com>
+ <20250421-scp-dual-core-mt8390-v2-3-c84117a959a9@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <aAfok3ha8QQkP8VB@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250421-scp-dual-core-mt8390-v2-3-c84117a959a9@collabora.com>
 
-On Tue, Apr 22, 2025 at 12:05:55PM -0700, Namhyung Kim wrote:
-> Hello,
+On Mon, Apr 21, 2025 at 04:49:06PM -0400, Nícolas F. R. A. Prado wrote:
+> reg's maxItems is already defined as 3 in the base schema. Remove the
+> redundant assignment in the if branch for mt8192/mt8195.
 > 
-> On Tue, Apr 22, 2025 at 03:43:43PM +0200, Jiri Olsa wrote:
-> > On Tue, Apr 22, 2025 at 05:15:58PM +0800, Tao Chen wrote:
-> > > It seems that sample_period no used in perf buffer, actually only
-> > > wakeup_events valid about events aggregation for wakeup. So remove
-> > > it to avoid causing confusion.
-> > 
-> > I don't see too much confusion in keeping it, but I think it
-> > should be safe to remove it
-> > 
-> > PERF_COUNT_SW_BPF_OUTPUT is "trigered" by bpf_perf_event_output,
-> > AFAICS there's no path checking on sample_period for this event
-> > used in context of perf_buffer__new, Namhyung, thoughts?
+> Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+> ---
+>  Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> It seems to be ok to call mmap(2) for non-sampling events.
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml b/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+> index 04348cfcb0424dc78ff1ddd77665285a052925e9..82c7edd5a2fbb8610315881a4033a3a43198162e 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.yaml
+> @@ -187,7 +187,6 @@ allOf:
+>        properties:
+>          reg:
+>            minItems: 3
+> -          maxItems: 3
 
-Tao Chen,
-could you please resend without rfc tag? plz keeps acks
+Sigh. I would squash this as using maxItems was the error in the first 
+place. But either way:
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
-
-> 
-> Thanks,
-> Namhyung
-> 
-> > 
-> > > 
-> > > Fixes: fb84b8224655 ("libbpf: add perf buffer API")
-> > > Signed-off-by: Tao Chen <chen.dylane@linux.dev>
-> > > ---
-> > >  tools/lib/bpf/libbpf.c | 1 -
-> > >  1 file changed, 1 deletion(-)
-> > > 
-> > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-> > > index 194809da5172..1830e3c011a5 100644
-> > > --- a/tools/lib/bpf/libbpf.c
-> > > +++ b/tools/lib/bpf/libbpf.c
-> > > @@ -13306,7 +13306,6 @@ struct perf_buffer *perf_buffer__new(int map_fd, size_t page_cnt,
-> > >  	attr.config = PERF_COUNT_SW_BPF_OUTPUT;
-> > >  	attr.type = PERF_TYPE_SOFTWARE;
-> > >  	attr.sample_type = PERF_SAMPLE_RAW;
-> > > -	attr.sample_period = sample_period;
-> > >  	attr.wakeup_events = sample_period;
-> > >  
-> > >  	p.attr = &attr;
-> > > -- 
-> > > 2.43.0
-> > > 
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
