@@ -1,94 +1,80 @@
-Received: from mta-65-228.siemens.flowmailer.net (mta-65-228.siemens.flowmailer.net [185.136.65.228])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EA533062
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDBC1E86E;
+	Wed, 23 Apr 2025 12:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745410570; cv=none; b=r4TYRDDxACvZZb1HMi2RcI/d5uI0LWJqfaxByA4nwWABUr38aVW2AZKkpaZtDJjcCOSANzd2tyIcJzpPrCp82PfR5AtijJIjrRP7/DcMHm/iH7KrHvNQ/toKQHe6O92pMZbHVue1epKMEWKZa9XGLRmCQ2GP9giA3L9dmMtwF0I=
+	t=1745410626; cv=none; b=mq2W0iGaLsoz6YxF375mDqIGufQ62hrF+g4447V00OvvPz+n3iQFO/l1MpFl9KoM1EiCjVEV4gh9CeHIZO1Wrd0UZld0apYoAYfTb7ZQMBuDugsl557Ww9AXc8aAVqDaoXUmEjgk4XItSV8Jj+2d9XeWG6Qis7kka1rObVaGDI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745410570; c=relaxed/simple;
-	bh=qRoCsAChPe7q/2eN3nI2BTBi5wqWI0Ci+iYd84NLMGw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kJbweuiPEenyKchs9mMK4e63jRz6GWZ8a8hYd4dEDFjpOPjzzy8tLxfpmwNiZlyJEQzU1NtthCr3UkIgJY5yBBZyyn0FBeGSRvX2Pi/oB9rlGKI1BOYyoZeFzt/y1BE4SFpzm+FwHK+CZmn21SWsJj3L5sOTSJGFCAGqBB+3/S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com; dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b=AFPe3gzP; arc=none smtp.client-ip=185.136.65.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rts-flowmailer.siemens.com
+	s=arc-20240116; t=1745410626; c=relaxed/simple;
+	bh=s6sHA2mYPiaTg1SBSDd0rm5YqfRkSrgtUKA0vRyKMRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tnktyvKvpW42JjQ8l6qeeOEQQX0LM5bTBQFtbtY48WOPGISH3XUPtpxlRItGrzTd6EprHvLstWiZcopGNd7xbN2likxYiOgS5bCe2euqMNJJ2otaG+vL0QOnJtlbKIhlZreOWsatjSEtArGqzYPOGQ7kAuCuE/1v/DK0Sq++MoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzB+jlA3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=siemens.com header.i=florian.bezdeka@siemens.com header.b="AFPe3gzP"
-Received: by mta-65-228.siemens.flowmailer.net with ESMTPSA id 202504231215564751507c6a6c06f386
-        for <linux-kernel@vger.kernel.org>;
-        Wed, 23 Apr 2025 14:15:56 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm2;
- d=siemens.com; i=florian.bezdeka@siemens.com;
- h=Date:From:Subject:To:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Cc:References:In-Reply-To;
- bh=qRoCsAChPe7q/2eN3nI2BTBi5wqWI0Ci+iYd84NLMGw=;
- b=AFPe3gzPUeVMxVrZY9NuCBerTQj6tJ8byfbP9+nxdm6DiHPcG4pTr1uADB3a+yQMNy+nDq
- F9r4X11DlyG9mUHpyCWI6dFa0fkkANxWxSNumInawegfCMl6QM56AebY/6J3D+58d6qFtXuI
- xRG0gAT0knqhjrMruprSUIOnEotxRE03Eg+3D1XSRAK1NMRY9Nkz762CZsKOZ/3nO18SMOCj
- YMO/Hk0uGdWawZgr8wj8GiHVf1HUYZ/M1IyEAGGoPN0wkOfsGjo8qqBZH15kbxIGWfGHAENA
- /i/ZxOP0FCvB9WM4uwji+7qk2EqZFuwzqzl2WhjC1BFVJpQPISSj8M1A==;
-Message-ID: <d2f72ac5650f740835ab09a562f24bf68ea581cd.camel@siemens.com>
-Subject: Re: [RFC PATCH v2 7/7] sched/fair: alternative way of accounting
- throttle time
-From: Florian Bezdeka <florian.bezdeka@siemens.com>
-To: Aaron Lu <ziqianlu@bytedance.com>
-Cc: Valentin Schneider <vschneid@redhat.com>, Ben Segall
- <bsegall@google.com>,  K Prateek Nayak <kprateek.nayak@amd.com>, Peter
- Zijlstra <peterz@infradead.org>, Josh Don <joshdon@google.com>,  Ingo
- Molnar <mingo@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, Xi
- Wang <xii@google.com>, 	linux-kernel@vger.kernel.org, Juri Lelli
- <juri.lelli@redhat.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Steven Rostedt <rostedt@goodmis.org>, Mel Gorman	 <mgorman@suse.de>,
- Chengming Zhou <chengming.zhou@linux.dev>, Chuyi Zhou	
- <zhouchuyi@bytedance.com>, Jan Kiszka <jan.kiszka@siemens.com>
-Date: Wed, 23 Apr 2025 14:15:55 +0200
-In-Reply-To: <20250423112651.GA437160@bytedance>
-References: <20250409120746.635476-1-ziqianlu@bytedance.com>
-	 <20250409120746.635476-8-ziqianlu@bytedance.com>
-	 <099db50ce28f8b4bde37b051485de62a8f452cc2.camel@siemens.com>
-	 <20250418031550.GA1516180@bytedance>
-	 <87776d335eec8fe02b29d96818fd5c2dde5ed7af.camel@siemens.com>
-	 <20250423112651.GA437160@bytedance>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzB+jlA3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C995C4CEEC;
+	Wed, 23 Apr 2025 12:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745410624;
+	bh=s6sHA2mYPiaTg1SBSDd0rm5YqfRkSrgtUKA0vRyKMRE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KzB+jlA3mrMH9LuaG5V+4T5n5YnQaMTgGdJSpCiIKLO8ug7B48W22vYV6EIaG3ek8
+	 JLHTKfDq6A9uN4hAmJ1MPs6VOyODGxKGUt7Jtxjp/gq0vn0ipixo0OQqcoHieGAfDG
+	 8Sa7ixVZLU8ZKoxd6iq0JJTHPg5Ce7Q8CDmq0F98T9xPPlcGfdz0Ysj7Ri0yEniGaY
+	 BVD2FNR5AzyOyw8fhiBscwIz1gqYJeG/kocGjz0XoY2KUBuuzlVl0l60sZAFwR/U+V
+	 y6YpZlqueU54lyP15YD/aoMI2Km3y4g07jRL7J5513Rti3PKSjEvypD1iONOzQy1g5
+	 zs1pIMmpPe2dA==
+Date: Wed, 23 Apr 2025 17:47:01 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: ARM_DMA350 should depend on ARM/ARM64
+Message-ID: <aAjaPV/2DSyPAGRB@vaman>
+References: <50dbaf4ce962fa7ed0208150ca987e3083da39ec.1745345400.git.geert+renesas@glider.be>
+ <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
+ <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
+ <aAjTg8dgvxqLQOwQ@vaman>
+ <CAMuHMdXQKG0qptWMi169MVBL1S3hPo1TsaOSxWspoHAwRd+fug@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Flowmailer-Platform: Siemens
-Feedback-ID: 519:519-68982:519-21489:flowmailer
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXQKG0qptWMi169MVBL1S3hPo1TsaOSxWspoHAwRd+fug@mail.gmail.com>
 
-On Wed, 2025-04-23 at 19:26 +0800, Aaron Lu wrote:
-> On Tue, Apr 22, 2025 at 05:03:19PM +0200, Florian Bezdeka wrote:
-> ... ...
->=20
-> > Right, I should have mentioned that crucial detail. Sorry.
-> >=20
-> > I ported your series to 6.14.2 because we did/do not trust anything
-> > newer yet for testing. The problematic workload was not available in
-> > our lab at that time, so we had to be very carefully about deployed
-> > kernel versions.
-> >=20
-> > I'm attaching the backported patches now, so you can compare / review
-> > if you like. Spoiler: The only differences are line numbers ;-)
->=20
-> I didn't notice any problem regarding backport after a quick look.
->=20
-> May I know what kind of workload triggered this warning? I haven't been
-> able to trigger it, I'll have to stare harder at the code.
+On 23-04-25, 14:13, Geert Uytterhoeven wrote:
+> Hi Vinod,
+> 
+> On Wed, 23 Apr 2025 at 13:48, Vinod Koul <vkoul@kernel.org> wrote:
+> > On 23-04-25, 13:11, Geert Uytterhoeven wrote:
+> > > On Wed, 23 Apr 2025 at 12:59, Robin Murphy <robin.murphy@arm.com> wrote:
+> > > > On 2025-04-22 7:11 pm, Geert Uytterhoeven wrote:
+> > > > > The Arm DMA-350 controller is only present on Arm-based SoCs.
+> > > >
+> > > > Do you know that for sure? I certainly don't. This is a licensable,
+> > > > self-contained DMA controller IP with no relationship whatsoever to any
+> > > > particular CPU ISA - our other system IP products have turned up in the
+> > > > wild paired with non-Arm CPUs, so I don't see any reason that DMA-350
+> > > > wouldn't either.
+> > >
+> > > The dependency can always be relaxed later, when the need arises.
+> > > Note that currently there are no users at all...
+> >
+> > True, but do we have any warnings generated as a result, if there are no
+> > dependency should we still limit a driver to an arch?
+> 
+> I am not aware of any warnings (I built it on MIPS yesterday ;-).
+> It is just one more question that pops up during "make oldconfig",
+> and Linus may notice and complain, too...
 
-There are a couple of containers running. Nothing special as far as I
-can tell. Network, IO, at least one container heavily using the epoll
-interface.
+True, give there are no users, lets pick this and drop if we get a non
+arm user
 
-The system is still operating fine though...
-
-Once again: PREEMPT_RT enabled, so maybe handling an IRQ over the
-accounting code could happen? Looking at the warning again it looks
-like unthrottle_cfs_rq() is called from IRQ context. Is that expected?
-
-Best regards,
-Florian
+-- 
+~Vinod
