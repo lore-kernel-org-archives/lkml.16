@@ -1,117 +1,283 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B72289351
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B6326AA82;
+	Wed, 23 Apr 2025 08:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396641; cv=none; b=JboMV9phU1/w0liPCQcOIUzsI45lv7GxdhZYdCvejMIsAJVdsihTWGy9sxC4V5XqjmgBPCdPWkOG5Tq45zXPMKNtcTCJuICHs8TA/wSdZiDGKDe3LtsXiP5G6As2R+wZz3CyYk0hKKmdniXGRXFK0E6WV7EoWMoZkcD5yta/fpA=
+	t=1745396701; cv=none; b=UoSdO5sD4LUk/vfbO2azWd9+H9igoSdwTmw2Bp3ZxjmiYE82cLDXOMFPfKc2ws1Y5gX7TVT+O6dPk0UKdy9L5UUL8RPndOR81hmXNgmO9qapBTDGu0R3w7Y4WGmwGdsqRT1U1ELEPdSmVaN31JV+L8W2DMjPFt9iAvzcU1qv20g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396641; c=relaxed/simple;
-	bh=9AoM/AIPb3N4elSC5sH2DHMkFgmxak1AJlaKm7usVmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AjEJODZClq0+Paxldg5KtAFXp+uoW0XfhYVeSSUWA0FbhFVIuEm9dWwOoyxw4f1SSECC0M2qi1yE+gffZu9OfIZG+0aGUvbvnMsSu6gh4dTdIP9kQQPIpv57vuKJJosyRp1J1yWCMm5i1CZ/NOaK/8Kx9H8SbY45HscAwRtIXf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j4NijQWT; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745396701; c=relaxed/simple;
+	bh=uWx4zG+ptzv4J5UeWLAIl7GClwbZalEfmKWv3r+7ToE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QS2tZkYGjMAYzYBuHWJtgNTF1OrN1/T1OpYxb6yfL4KZh7t3q3SbIN1frNDqp52shGoXF20zmPVjOObq7FzWEkWK8pBs/mB2MdYcrRCZjx4tvu8eR3WT6sAEAIUhEtFbG7vao/MypkMypkVVUYXhiy4Uqb7hVKd/KMK6QrAAylc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=d7DhCcIb; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4NijQWT"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso29233735e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:23:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745396638; x=1746001438; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y01SW2UsKHrmSkBJiFRdXdGr5Bt5eDkwEO8sgbkacPw=;
-        b=j4NijQWT3Gg1tDJocMoFEem4SPvLpQNMi3fnLglvwIhwRm06Ip/qae0ZxWvzzh55Gh
-         EhYRxQzZj90KqHQ4+Ae07w+kCu0BAZEj4+VdXZg35PXNGRzV3miI6t6OIRWnbU+bQkJR
-         ABNtMCpXYSdB6g1bEQdzWBJTbSXW0Q+xtlxCSDaegFVTC+d6rN6N3xopJEBu25/7tveI
-         UMfl4ksJpz5FTbqR9+UfCqTlGh4Oey1A8XHo5/EwBCV3XJ8gLgYwvS0mRs6OfWJUZJei
-         TdfG8elIZnZswCnnVM0OCBXUrxPZCwnLHWHFO8qdoJ+Oe0CqXcMi8tYdW8luSz5OLmSK
-         vhKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745396638; x=1746001438;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y01SW2UsKHrmSkBJiFRdXdGr5Bt5eDkwEO8sgbkacPw=;
-        b=hl9kDiRqAGL610y2JQ6iSMz2zU7uBNgIBuyL6zSB0MYz1O3QvNKa2U0jCQok1D+RgF
-         hz+D4zM1HsIYuvFbYgzp2kw42OOHaNA/ZafCvsf9x0cc3Vggiov/cxFyXaIRUIkf6pHH
-         8Pz/ajU0egL+jO2uw7vJXmY/G/1h7ah4H3koRsY90cAmh2jNnadLHkYhckuwsNK21d+e
-         8yQW7ZQzCCN6eNmTRaILHo2+1+7aHCANrJOt/6IgzSSLlTUjXquJ+hHSIRTLpS27MJ/m
-         ES4sPMvAyh/nhvyKbxSHQJU3t+VYFmpnTtP7qBfhj+s0+ke04qjmayiDzjOw8ikUZa8S
-         E4Ug==
-X-Forwarded-Encrypted: i=1; AJvYcCUDGK6fQfl3RCjpMBhOyNeMw1lWw6Nr88rWw6H/5uYVcA/lHatoenR8z5ng6JK8icTsV7xO4juYqQU7gWE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0JJOZDzGs6atcWFY6KvTYpizqXe8Ivf1JIfhs4uQrBjkav0wN
-	3at7CzPFKH5qJ271jHOb2w3z7yy6p5kZOw5fHsckUW5B0o4mSFxsE5zP/l1nBYE=
-X-Gm-Gg: ASbGncu0Z9UUyqLpjIJyq+sYmXJDhAlodvbTqHv6265JtxQ2vPcj0mtUzMzuQ/MX6/y
-	1kUV+PGUX2PC8A3bDJBWSyQGNQQRCXao6C+69atKBqvcigwvDormfJRKq5rs6Io1djvxrHOfsji
-	8jOKdmC3CbmoR9exfiGCZ0b6roCpn8bmoOIs+mbTK47Fvo5KRICmp3QnndpHbexfm40BXCQI5fk
-	MUXj1sC5VgmU2nweW0mvQeWJVmypXzvfQ7JEuzKIK0KNBzXXr8CqYrhl53rRAoUtDzPS2/fd8Gq
-	SQzgbiybAWF3sktBPzDi2upeq1UxyMmCH5dkDlhjvkYJLMbtaZlkguOc
-X-Google-Smtp-Source: AGHT+IECPr27/stUCSI1PWk+UsjbUIKYWkA1fnIwKTwVRmawMohMG5diVeFjOVyCEZb5VbXMG1aMDA==
-X-Received: by 2002:a05:600c:4e52:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-4408efbaebemr33514505e9.26.1745396637683;
-        Wed, 23 Apr 2025 01:23:57 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-44092b0a52asm17463555e9.0.2025.04.23.01.23.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 01:23:57 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:23:53 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] usb: dwc3: qcom: Fix error handling in probe
-Message-ID: <aAijmfAph0FlTqg6@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d7DhCcIb"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53N8Omrh2248312
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 03:24:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745396688;
+	bh=uWx4zG+ptzv4J5UeWLAIl7GClwbZalEfmKWv3r+7ToE=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=d7DhCcIb6jIzPzg+j0G6W+pS5S2LLNb0axjOhGXTAcznHP5wLc0ZIP6V8x2gMfome
+	 +FMreTnXlBZweOOPTJavmhjhC4CAUq50Tdwd/WRqQfHxtCi6toThXcol/4jHkgnLaA
+	 aOg4BN+XWnW53UahriIhY0+Xf9I6b2+l65EauD1M=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53N8OmjO021324
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 23 Apr 2025 03:24:48 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 23
+ Apr 2025 03:24:48 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 23 Apr 2025 03:24:48 -0500
+Received: from [172.24.227.151] (uda0510294.dhcp.ti.com [172.24.227.151])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53N8OiOP072753;
+	Wed, 23 Apr 2025 03:24:45 -0500
+Message-ID: <69eb8bc7-a0ef-4f33-afbc-a5ff52e6f4f5@ti.com>
+Date: Wed, 23 Apr 2025 13:54:44 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 15/33] remoteproc: k3: Refactor rproc_reset()
+ implementation into common driver
+To: Andrew Davis <afd@ti.com>, <andersson@kernel.org>,
+        <mathieu.poirier@linaro.org>
+CC: <hnagalla@ti.com>, <u-kumar1@ti.com>, <jm@ti.com>,
+        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
+        <jkangas@redhat.com>, <eballetbo@redhat.com>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250417182001.3903905-1-b-padhi@ti.com>
+ <20250417182001.3903905-16-b-padhi@ti.com>
+ <00ba399d-7a26-4ced-8f77-334839bb54c6@ti.com>
+ <f34d7439-fa13-4359-ae20-e88449591d4b@ti.com>
+ <5a64069d-f586-4894-b81d-b7b131fceafc@ti.com>
+Content-Language: en-US
+From: Beleswar Prasad Padhi <b-padhi@ti.com>
+In-Reply-To: <5a64069d-f586-4894-b81d-b7b131fceafc@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-There are two issues:
-1) Return -EINVAL if platform_get_resource() fails.  Don't return
-   success.
-2) The devm_ioremap() function doesn't return error pointers, it returns
-   NULL.  Update the check.
 
-Fixes: 1881a32fe14d ("usb: dwc3: qcom: Transition to flattened model")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/usb/dwc3/dwc3-qcom.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+On 22/04/25 19:51, Andrew Davis wrote:
+> On 4/22/25 12:53 AM, Beleswar Prasad Padhi wrote:
+>> Hi Andrew,
+>>
+>> On 21/04/25 20:12, Andrew Davis wrote:
+>>> On 4/17/25 1:19 PM, Beleswar Padhi wrote:
+>>>> The rproc_reset() implementations in TI K3 DSP and M4 remoteproc drivers
+>>>> assert reset in the same way. Refactor the above function into the
+>>>> ti_k3_common.c driver as k3_rproc_reset() and use it throughout DSP and
+>>>> M4 drivers for resetting the remote processor.
+>>>>
+>>>> Signed-off-by: Beleswar Padhi <b-padhi@ti.com>
+>>>> ---
+>>>> v10: Changelog:
+>>>> 1. Split [v9 12/26] into [v10 14/33] and [v10 15/33] patches.
+>>>>
+>>>> Link to v9:
+>>>> https://lore.kernel.org/all/20250317120622.1746415-13-b-padhi@ti.com/
+>>>>
+>>>>    drivers/remoteproc/ti_k3_common.c         | 25 ++++++++++++++++++++
+>>>>    drivers/remoteproc/ti_k3_common.h         |  1 +
+>>>>    drivers/remoteproc/ti_k3_dsp_remoteproc.c | 28 ++---------------------
+>>>>    drivers/remoteproc/ti_k3_m4_remoteproc.c  | 16 +++----------
+>>>>    4 files changed, 31 insertions(+), 39 deletions(-)
+>>>>
+>>>> diff --git a/drivers/remoteproc/ti_k3_common.c b/drivers/remoteproc/ti_k3_common.c
+>>>> index aace308b49b0e..19bb6c337af77 100644
+>>>> --- a/drivers/remoteproc/ti_k3_common.c
+>>>> +++ b/drivers/remoteproc/ti_k3_common.c
+>>>> @@ -105,5 +105,30 @@ void k3_rproc_kick(struct rproc *rproc, int vqid)
+>>>>    }
+>>>>    EXPORT_SYMBOL_GPL(k3_rproc_kick);
+>>>>    +/* Put the remote processor into reset */
+>>>> +int k3_rproc_reset(struct k3_rproc *kproc)
+>>>> +{
+>>>> +    struct device *dev = kproc->dev;
+>>>> +    int ret;
+>>>> +
+>>>> +    if (kproc->data->uses_lreset) {
+>>>> +        ret = reset_control_assert(kproc->reset);
+>>>> +        if (ret)
+>>>> +            dev_err(dev, "local-reset assert failed (%pe)\n", ERR_PTR(ret));
+>>>> +        return ret;
+>>>> +    }
+>>>> +
+>>>> +    ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+>>>> +                            kproc->ti_sci_id);
+>>>> +    if (ret) {
+>>>> +        dev_err(dev, "module-reset assert failed (%pe)\n", ERR_PTR(ret));
+>>>> +        if (reset_control_deassert(kproc->reset))
+>>>> +            dev_warn(dev, "local-reset deassert back failed\n");
+>>>> +    }
+>>>> +
+>>>> +    return ret;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(k3_rproc_reset);
+>>>> +
+>>>>    MODULE_LICENSE("GPL");
+>>>>    MODULE_DESCRIPTION("TI K3 common Remoteproc code");
+>>>> diff --git a/drivers/remoteproc/ti_k3_common.h b/drivers/remoteproc/ti_k3_common.h
+>>>> index 6ae7ac4ec5696..f3400fc774766 100644
+>>>> --- a/drivers/remoteproc/ti_k3_common.h
+>>>> +++ b/drivers/remoteproc/ti_k3_common.h
+>>>> @@ -90,4 +90,5 @@ struct k3_rproc {
+>>>>      void k3_rproc_mbox_callback(struct mbox_client *client, void *data);
+>>>>    void k3_rproc_kick(struct rproc *rproc, int vqid);
+>>>> +int k3_rproc_reset(struct k3_rproc *kproc);
+>>>>    #endif /* REMOTEPROC_TI_K3_COMMON_H */
+>>>> diff --git a/drivers/remoteproc/ti_k3_dsp_remoteproc.c b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>>>> index 0a8c9e61393d2..f8a5282df5b71 100644
+>>>> --- a/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>>>> +++ b/drivers/remoteproc/ti_k3_dsp_remoteproc.c
+>>>> @@ -24,30 +24,6 @@
+>>>>      #define KEYSTONE_RPROC_LOCAL_ADDRESS_MASK    (SZ_16M - 1)
+>>>>    -/* Put the DSP processor into reset */
+>>>> -static int k3_dsp_rproc_reset(struct k3_rproc *kproc)
+>>>> -{
+>>>> -    struct device *dev = kproc->dev;
+>>>> -    int ret;
+>>>> -
+>>>> -    if (kproc->data->uses_lreset) {
+>>>> -        ret = reset_control_assert(kproc->reset);
+>>>> -        if (ret)
+>>>> -            dev_err(dev, "local-reset assert failed (%pe)\n", ERR_PTR(ret));
+>>>> -        return ret;
+>>>> -    }
+>>>> -
+>>>> -    ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
+>>>> -                            kproc->ti_sci_id);
+>>>> -    if (ret) {
+>>>> -        dev_err(dev, "module-reset assert failed (%pe)\n", ERR_PTR(ret));
+>>>> -        if (reset_control_deassert(kproc->reset))
+>>>> -            dev_warn(dev, "local-reset deassert back failed\n");
+>>>> -    }
+>>>> -
+>>>> -    return ret;
+>>>> -}
+>>>> -
+>>>>    /* Release the DSP processor from reset */
+>>>>    static int k3_dsp_rproc_release(struct k3_rproc *kproc)
+>>>>    {
+>>>> @@ -201,7 +177,7 @@ static int k3_dsp_rproc_stop(struct rproc *rproc)
+>>>>    {
+>>>>        struct k3_rproc *kproc = rproc->priv;
+>>>>    -    k3_dsp_rproc_reset(kproc);
+>>>> +    k3_rproc_reset(kproc);
+>>>>          return 0;
+>>>>    }
+>>>> @@ -565,7 +541,7 @@ static int k3_dsp_rproc_probe(struct platform_device *pdev)
+>>>>                    return dev_err_probe(dev, ret, "failed to get reset status\n");
+>>>>                } else if (ret == 0) {
+>>>>                    dev_warn(dev, "local reset is deasserted for device\n");
+>>>> -                k3_dsp_rproc_reset(kproc);
+>>>> +                k3_rproc_reset(kproc);
+>>>>                }
+>>>>            }
+>>>>        }
+>>>> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>>>> index 8a6917259ce60..7d5b75be2e4f8 100644
+>>>> --- a/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>>>> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
+>>>> @@ -65,11 +65,9 @@ static int k3_m4_rproc_prepare(struct rproc *rproc)
+>>>>         * Ensure the local reset is asserted so the core doesn't
+>>>>         * execute bogus code when the module reset is released.
+>>>>         */
+>>>> -    ret = reset_control_assert(kproc->reset);
+>>>> -    if (ret) {
+>>>> -        dev_err(dev, "could not assert local reset\n");
+>>>> +    ret = k3_rproc_reset(kproc);
+>>>> +    if (ret)
+>>>>            return ret;
+>>>> -    }
+>>>>          ret = reset_control_status(kproc->reset);
+>>>>        if (ret <= 0) {
+>>>> @@ -374,16 +372,8 @@ static int k3_m4_rproc_start(struct rproc *rproc)
+>>>>    static int k3_m4_rproc_stop(struct rproc *rproc)
+>>>>    {
+>>>>        struct k3_rproc *kproc = rproc->priv;
+>>>> -    struct device *dev = kproc->dev;
+>>>> -    int ret;
+>>>>    -    ret = reset_control_assert(kproc->reset);
+>>>> -    if (ret) {
+>>>> -        dev_err(dev, "local-reset assert failed, ret = %d\n", ret);
+>>>> -        return ret;
+>>>> -    }
+>>>> -
+>>>> -    return 0;
+>>>> +    return k3_rproc_reset(kproc);
+>>>
+>>> This doesn't feel right. The new common k3_rproc_reset() function
+>>> matches what ti_k3_dsp_remoteproc.c did for reset, you made it that
+>>> way in the previous patch [14/33]. But it doesn't match what this
+>>> M4 version does (yes I know logically they are the same as `uses_lreset`
+>>> will be always true for M4). Maybe you want to do the same as you
+>>> did for DSP to the M4 driver first, before you make this change so
+>>> it is 100% clear the code is the same (and so bisect lands on the
+>>> right patch should someday this be an issue).
+>>
+>>
+>> Sure, I can make that change in next revision...
+>>
+>>>
+>>> Also, the common k3_rproc_reset() calls put_device() unconditionally.
+>>> Something that wasn't done at all here in the M4 prepare() and stop()
+>>> functions.
+>>
+>>
+>> There is a 'return ret' in the 'if (kproc->data->uses_lreset)' condition flow in k3_rproc_reset().
+>>
+>> put_device() should not be unconditional...
+>>
+>
+> Ah, I must have looked right past the return statement. So it is one or
+> the other, but not both? Might be good to put the put_device() side into
+> an `else` block.
 
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index d512002e1e88..b63fcaf823aa 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -740,15 +740,17 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
- 	}
- 
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!r)
-+	if (!r) {
-+		ret = -EINVAL;
- 		goto clk_disable;
-+	}
- 	res = *r;
- 	res.end = res.start + SDM845_QSCRATCH_BASE_OFFSET;
- 
- 	qcom->qscratch_base = devm_ioremap(dev, res.end, SDM845_QSCRATCH_SIZE);
--	if (IS_ERR(qcom->qscratch_base)) {
--		dev_err(dev, "failed to map qscratch region: %pe\n", qcom->qscratch_base);
--		ret = PTR_ERR(qcom->qscratch_base);
-+	if (!qcom->qscratch_base) {
-+		dev_err(dev, "failed to map qscratch region\n");
-+		ret = -ENOMEM;
- 		goto clk_disable;
- 	}
- 
--- 
-2.47.2
 
+Sure I will do that in revision.
+
+>
+> Then it seems in the !uses_lreset path you still undo the reset_control_assert()
+> by calling reset_control_deassert() if put_device() fails. Think you messed
+> this one up in back in [14/33].
+
+
+My bad. Will address in revision.. Do you have any other review comments for the series before I re-spin?
+
+Thanks,
+Beleswar
+
+>
+> Andrew
+>
+>>>
+>>> These two changes make this patch not strictly a pure "refactor"
+>>> patch, which IMHO should in no way change the calls being made nor
+>>> the logical flow, only the code structure.
+>>
+>>
+>> Got it. Will address in revision. Will wait for more reviews (if any) before re-spinning.
+>>
+>> Thanks,
+>> Beleswar
+>>
+>>>
+>>> Andrew
+>>>
+>>>>    }
+>>>>      /*
