@@ -1,98 +1,152 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB2726D4F6;
-	Wed, 23 Apr 2025 08:35:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A5726771F
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:36:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745397322; cv=none; b=sISeXJgiG6zr6tZwqAdvh7/bCx25wcQwLtTjD+xKSgM9gtwD3AXgtF0KXMVcky68VfNN2MdkM2fSDBXOId1011hm7jSHUG8bWUf+fdBLMnHaMC2hgP/MmLoxOjSykmRSVAz3aMIk4WXAjOCI2HbAhz1Ok+BvC/TRFyJl6J+0Umo=
+	t=1745397392; cv=none; b=n/3W2EhF1oN+We4iLJ4z+vWCWW5knZEHS77YGSZkrOMbMvgenhsx6AnpL41kHleVznmZMZGS+ZPi4dVDJX29sGpe9nnZKvNb8HDG7yic9920QCPplc0sk8P69WeMQUpbPmvhGGxIXackfGBFBpoMo1+Osl/elRLDOPvU8+xJzvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745397322; c=relaxed/simple;
-	bh=BZSLijxSXMIiXrMszqB3BP92kAcntEir0dS6YlGxXnk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IOjDzryE9CAlf9CQMY1C+6ccpLS1X4Qi47b5AE3jDqicJc51o0U3Cin2EZ+GLC1QbNkHLq+yH52xGgIVpnHAKf8raU3ctl7ZCbKuv+B8rkk3an9xQredbk5oAtgzWywN+ozICwhQF/YU1YAOKNvQbITHLO0rBgZiBpoKSLkoyxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hT9a5pGD; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745397392; c=relaxed/simple;
+	bh=CMgueHlFXZUotyZU8ge0rGS/3vwqIXsNLIe3dmF84Jo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LQpgtKwBjtu6CEoi2d7O4el1/xehb0bz3O6nj0LBTGKDVuZkwxh9w9sm2+1xVG8ktsDx8G1GMhlxqDDn8Hbw7X2iqZDYxVWJjP1rppYuLBg06lpGrsmdhSInJaF4mubVaiVEiHl8U5fOCWTqvJz+RavO/3qGoVEvANdOJ97gyd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NKA1Mh7T; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hT9a5pGD"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so4191001f8f.0;
-        Wed, 23 Apr 2025 01:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745397319; x=1746002119; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MsqunO9lss/uBzeiIi4q3QDIiMQHRXAesVvljbjm2ZY=;
-        b=hT9a5pGDmKHJ3LB/pYIbp31pmxgbdYvmxkrxlHunRsVyQmyyascqRwapaYXiEJ3+le
-         fxON6MrJAMb1sbD4mR9A+MerAIdjotwQrUiRI4DO1fGu5YuYMpmuJ5LBbxe6R9fA9b2z
-         JLJdITa1AVmbShhz2tPh3EB0fPQmnxIthd4eoMrnIHlgYztkSGqR65XGxRG6Pryil8vQ
-         eOtIDpKfvw4JeA4a8wI0Ddl0qKSY+68jy8cxU7nPOG2fPAdhEzXpy6F2x8ok5tYZpOYK
-         S245A2FxvJOHQKHQ7buSzYNhAAfPUhgB2B2bshTM97T9VZ0pGSi64Je70NQZVK5Gdpg1
-         5O+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745397319; x=1746002119;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MsqunO9lss/uBzeiIi4q3QDIiMQHRXAesVvljbjm2ZY=;
-        b=oevYDj14rZsysqKNKG2vPuIbU4XsbmHKLw/7zrl6uxBGA2AuhXL5uCONZtRgJ9qFOu
-         N+ZpfAuQB9lBvkbsIqZLTUExWO/sN3Z8c4x3nRNzYFwDHyh5drmCvpfgy73Qg/8SPESx
-         sCU7B2AncxErC/rE1sV0HL2BmbZYYypc1TRnNcmBD76plgh+ZrOp12CZiINWKmSUnmS4
-         h5ol4SLZIYluQTTf8DFIhAMkFsGuwmPcj+51DHny0D7vQjr00s+NR/486VpObTQJIN9l
-         /dZXWoRtNsYFscgbWxg9x3T29liqoCH8pB/bWRUK6AVTxdjgRq3MXSeeQA8nlpVD6h6X
-         rGmw==
-X-Forwarded-Encrypted: i=1; AJvYcCUTsCjA+IZL0UiTqozXwGVXSJnuUgg7etdTJYoiU6iMYlgf/fQzeaBCpgaWegDrnYIthoLYLax+sDfuKPs=@vger.kernel.org, AJvYcCVD1wjv6yAvGITN359Ov1y4Tayzl3ZOrVXoAJYOwla+DSrn+kHdMGhx4NiwINxE9d4rEKUmprnOLDTR5wwirW65@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlcItChbbWd3UGrQ4rJtBYsu+VQGWsdsL2yfxDjcgFYOKLfBQx
-	1H6/uS9nzSXnjZl6RayO7MPDEpznbWBG5g7EjgJgn2chpDt8ME/2
-X-Gm-Gg: ASbGncssUBPrmlTpwKZ3K7p63lP7BkWKdy1Eukr7KiyRJwjFs1W0WKy9GgpSEDv+oed
-	fqtqwGi0Ec0pkK8htvrIR6EM3FPo1Eg8L//o2jPMY69rDqH+LeHkFS0rbic4S8qQgLXIXmzbJtM
-	vbR3MVSx+welrApXV7b0Nevnw0M3fTnMNnjgQAI0+b0ntoHM8/FQN/cQ/mXTpnpsE9OzseMks5A
-	GCfuzKjMAzcHLQzcoOtF35Vh1Ux71JVLk1UKxkDzuX0nFRrrvaptAFkwCVgBL78ckRwDuUfkDSv
-	hdkRurCbMX+ITeACpy0t6oQJAaKxcW+p9vegaGQboyfBioacVJ7s
-X-Google-Smtp-Source: AGHT+IHq+qc9wzwJk0+h6l/1r7L8EKtIf1dbPpgU53Uopd7ij6Jpyj36OOnzVIYCr9XQy8gtMHHv3w==
-X-Received: by 2002:a05:6000:184c:b0:38f:4d40:358 with SMTP id ffacd0b85a97d-39efba39a4amr12792668f8f.9.1745397318513;
-        Wed, 23 Apr 2025 01:35:18 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa4a517dsm17742256f8f.100.2025.04.23.01.35.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 01:35:18 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Shuah Khan <shuah@kernel.org>,
-	linux-kselftest@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] selftests/perf_events: Fix spelling mistake "sycnhronize" -> "synchronize"
-Date: Wed, 23 Apr 2025 09:35:11 +0100
-Message-ID: <20250423083511.139896-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NKA1Mh7T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745397388;
+	bh=CMgueHlFXZUotyZU8ge0rGS/3vwqIXsNLIe3dmF84Jo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NKA1Mh7TOAuUKbCkFN8QWi/M6JVhYLKcd1bas8iS7V6CX0kldmId9tCqrktVo8YSc
+	 YpVHcf4Gklognd+mBjfqhIt+hmHDPcShgS09xIwpOvtRyiuQAe/WG8JRudaAMewEu3
+	 LIskSJ+gNxWssehUQ6q5GtpnhTUHIuZBKZmdaZL3CS00+bbplQeRhby9nSa3fd3n/q
+	 LSAAk84KyOERbUkjTrsk/Wq6+5WGHVcTlhZSoUti/nVT7aExX6rxp8c1E9CsnxAeMW
+	 uHCfm9XofeRXlOZLanF9J5jdb3D1pUVpPgGEUonTtJAYS+zqxPSlQF0DJP1LwsaK+T
+	 30vixbFDICojw==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0EDBD17E0C96;
+	Wed, 23 Apr 2025 10:36:28 +0200 (CEST)
+Date: Wed, 23 Apr 2025 10:36:24 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ kernel@collabora.com
+Subject: Re: [PATCH v10 0/4] Panthor BO tagging and GEMS debug display
+Message-ID: <20250423103624.22d55b6f@collabora.com>
+In-Reply-To: <20250423021238.1639175-1-adrian.larumbe@collabora.com>
+References: <20250423021238.1639175-1-adrian.larumbe@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-There is a spelling mistake in an error message. Fix it.
+On Wed, 23 Apr 2025 03:12:30 +0100
+Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/testing/selftests/perf_events/watermark_signal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> This patch series is aimed at providing UM with detailed memory profiling
+> information in debug builds. It is achieved through a device-wide list of
+> DRM GEM objects, and also implementing the ability to label BO's from UM
+> through a new IOCTL.
+>=20
+> The new debugfs file shows a list of driver DRM GEM objects in tabular mo=
+de.
+> To visualise it, cat sudo cat /sys/kernel/debug/dri/*.gpu/gems.
+> To test this functionality from UM, please refer to this Mesa patch serie=
+s:
+> https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34224
+>=20
+> Discussion of previous revision of this patch series can be found at:
+> https://lore.kernel.org/dri-devel/20250418022710.74749-1-adrian.larumbe@c=
+ollabora.com/
+>=20
+> Changelog:
+> v10:
+>  - Simplified printing of GEM state and usage flags: now they're printed =
+numericaly,
+>    and their meanings given in the DebugFS file prelude
+>  - Some minor formating changes
+>  - Fixed all checkpatch issues with --strict
+>=20
+> v9:
+>  - Added padding field to uAPI BO label ioctl struct
+>  - Simplified copying and bounds checking of label in ioctl function
+>=20
+> v8:
+>  - Renamed NULL to NUL in comments describing NUL-terminated strings
+>  - Removed 'size' parameter from labelling ioctl() as max length can be
+>    handled by the kernel itself
+>  - Made sure to use kfree_const() everywhere labels are freed
+>  - Replaced maximum label size with numerical constant rather than page s=
+ize
+>  - Added some warnings and checks in kernel BO labelling function
+>=20
+> v7:
+>  - Improved formating of DebugFS GEM's status and usage flags
+>  - Deleted some spurious white spaces
+>  - Renamed usage flags setting function
+>=20
+> v6:
+>  - Replaced some mutex calls with scoped guards
+>  - Documented data size limits in the label ioctl
+>  - Simplified GEMS status flags treatment (Panthor doesn't use madvise)
+>  - Fixed some array size and string bugs
+>  - Improved the naming of GEM status and usage flags to reflect their mea=
+ning
+>  - Improved the formatting of the output table
+>=20
+> v5:
+>  - Kept case and naming of kernel BO's consistent
+>  - Increased the driver minor after new ioctl
+>  - Now adds BO to debugfs GEMs list at GEM object creation time
+>  - No longer try to hide BO creator's name when it's a workqueue or modpr=
+obe
+>  - Reworked the procedure for printing GEM state and kernel BO flags
+>  - Turned kernel BO flags and GEM state flags into bit enums
+>  - Wait until BO state is marked as initialied for debugfs display
+>=20
+> v4:
+>  - Labelled all kernel BO's, not just heap chunks.
+>  - Refactored DebugGFs GEMs list handling functions
+>  - Added debugfs GEMS node mask to tell different kinds of BO's
+>=20
+>=20
+> Adri=C3=A1n Larumbe (4):
+>   drm/panthor: Introduce BO labeling
+>   drm/panthor: Add driver IOCTL for setting BO labels
+>   drm/panthor: Label all kernel BO's
+>   drm/panthor: show device-wide list of DRM GEM objects over DebugFS
 
-diff --git a/tools/testing/selftests/perf_events/watermark_signal.c b/tools/testing/selftests/perf_events/watermark_signal.c
-index 49dc1e831174..e03fe1b9bba2 100644
---- a/tools/testing/selftests/perf_events/watermark_signal.c
-+++ b/tools/testing/selftests/perf_events/watermark_signal.c
-@@ -75,7 +75,7 @@ TEST(watermark_signal)
- 	if (waitpid(child, &child_status, WSTOPPED) != child ||
- 	    !(WIFSTOPPED(child_status) && WSTOPSIG(child_status) == SIGSTOP)) {
- 		fprintf(stderr,
--			"failed to sycnhronize with child errno=%d status=%x\n",
-+			"failed to synchronize with child errno=%d status=%x\n",
- 			errno,
- 			child_status);
- 		goto cleanup;
--- 
-2.49.0
+Queued to drm-misc-next.
+
+Thanks,
+
+Boris
+
+>=20
+>  drivers/gpu/drm/panthor/panthor_device.c |   5 +
+>  drivers/gpu/drm/panthor/panthor_device.h |  11 ++
+>  drivers/gpu/drm/panthor/panthor_drv.c    |  69 +++++++-
+>  drivers/gpu/drm/panthor/panthor_fw.c     |   8 +-
+>  drivers/gpu/drm/panthor/panthor_gem.c    | 207 ++++++++++++++++++++++-
+>  drivers/gpu/drm/panthor/panthor_gem.h    |  86 +++++++++-
+>  drivers/gpu/drm/panthor/panthor_heap.c   |   6 +-
+>  drivers/gpu/drm/panthor/panthor_sched.c  |   9 +-
+>  include/uapi/drm/panthor_drm.h           |  23 +++
+>  9 files changed, 413 insertions(+), 11 deletions(-)
+>=20
+> --
+> 2.48.1
 
