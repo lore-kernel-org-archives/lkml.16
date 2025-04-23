@@ -1,39 +1,42 @@
-Received: from mail-4317.protonmail.ch (mail-4317.protonmail.ch [185.70.43.17])
+Received: from mail-10626.protonmail.ch (mail-10626.protonmail.ch [79.135.106.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337927E9
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582D6522F
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745367065; cv=none; b=EZZgttPeaFroZiaD6P2elVwpaRvsDrr5pGFnuIZGwga7TQQuuCqeLVJCO0TaoNyWDdOsA3+H4W70gryoPc0Kqg99N5x76EwM3NV54y4aHvouovUCVczxAYUw5X84Lvs74drYmoJIpmzFlVibnKDpnCzOGV7KwqGolwItP5IFbOg=
+	t=1745367074; cv=none; b=Hv2UppxoL8p52H/jt6usiK0cdz/2BpJdDVg/LbVFlkWynOs5ioP4Aht67vdhFkIFFu46ovph/Jt8a4vzKQl31u/tnDNUE+Um1XLTQpWeckfDpYLwEIlNtsRlH+5bcIHKNlhkCXVtriw4kirUxn7t+VP/tDSk6X90q0ebUmeVJfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745367065; c=relaxed/simple;
-	bh=bl3djlCh13/JgV2cS+vRgPMrELu/1OX8ds+lNWmeiz4=;
-	h=Date:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=FHBF/3uBLUtA8doQMFZxoTbnUU+aGVEnxeakQ5mJRIIDgz6JrUMwwfmmJxHpjfGqmO9GgxRNfXVBfF6NJh/ON2kjYylRCDDUSpT1UOvT51GwMUPoH8t+8kqr5RDbV7llgVVCuUcccl3Y9KBkpanwMRx+NepgHCjmwHKHBos3KIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca; spf=pass smtp.mailfrom=gianis.ca; dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b=R38/YUsh; arc=none smtp.client-ip=185.70.43.17
+	s=arc-20240116; t=1745367074; c=relaxed/simple;
+	bh=xjFT1BsKeziYp5OXKe9QaSfd2f8za/kuJvE82IPdGHY=;
+	h=Date:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MD5zNJByma1oc+dV1rsqM+FXNPcfrtm7oQv8exXzj9V3XnAEKh7GXhIveDud2Dc6MdK8KXJOfQNLQ2eBiMHYGQqRqpffzyARICEB//48sHchiU8WhehtvwXNleoWVdNpLDm++VP1Ng3ceECw7k9ATfVGsjJeZTAEIW7P85XUatk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca; spf=pass smtp.mailfrom=gianis.ca; dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b=NH/QOGsJ; arc=none smtp.client-ip=79.135.106.26
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gianis.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b="R38/YUsh"
+	dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b="NH/QOGsJ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gianis.ca;
-	s=protonmail; t=1745367058; x=1745626258;
-	bh=UK+yaoHH+O3rgV/wGr+xWV4QxYCSeYcQk2YWtKSZ3hQ=;
-	h=Date:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=R38/YUshE8K/HpaImMW50Lx1Th90DLMOxwCkWFmh6OfZwbeBzq3HFnwmv38PDlBQK
-	 qQBX2at0llMUy/K396PnAjSU3hXk0juZluK5O5LumUJqi3jGJLfopsQKKnoRmr4xu2
-	 I5UrAw1bgrH4hx4yLBTx9hnfp+WbHFEnJWRi6xYhwMKTP2jN5QINB8nSR7p3wTYy9r
-	 J0URb+lGV8ahkNxRcuxqGnmbUZX2Etjd4lJxF7hj4aWmjB+/CjVfDfzMSa5SQroURH
-	 26m89wWbjQfzgFoSLJqO70cTWyxJhjQWI1YAJyApxh9quP1e2gEgvnZBvJQTXIaZCf
-	 JzuN8e6Hf/u1A==
-Date: Wed, 23 Apr 2025 00:10:52 +0000
+	s=protonmail; t=1745367064; x=1745626264;
+	bh=JUJQII/lUEIwd34hQkjYLzqBX3js9lHg0TcXHHDqtng=;
+	h=Date:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=NH/QOGsJVaa2DcngfyzVo8p7U4fR/QM+6U7dcuncJ3kLVJyIKolMK/kcAVL90nFHp
+	 rJ1Usz+3p5VuvYyTs9GZkAknDxj4sVjjxYwHvdM2uJ08HaJpSlI/IBd09MSGzUWZkv
+	 h04s0Hl5zjjSwVHOIzQs9h6sNCPMWAE5FSwjeRpnM5wi5vF62eEKNrGvpdGJFDyfGD
+	 nCs4pX+FUjN/e1CAeyhyHMUo39i5/RjSA7WpREInOeNFKOUkINRMMpnb+S6JrBOFqj
+	 E03GV3inawLydjX9E+gzhsjA7h8V33ZIFKgV4GpUods7gHpQYbzsbuZRAfyh6sdrcW
+	 ETKy3OthgMGJA==
+Date: Wed, 23 Apr 2025 00:11:00 +0000
 From: "Dhaval Giani (AMD)" <dhaval@gianis.ca>
 Cc: linux-kernel@vger.kernel.org, Dhaval Giani <dhaval.giani@amd.com>, Gautham Shenoy <gautham.shenoy@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, "Dhaval Giani (AMD)" <dhaval@gianis.ca>
-Subject: [PATCH 0/3] sched/eevdf: Introduce functional invariants for EEVDF
-Message-ID: <20250422-b4-eevdf-tests-v1-post-v1-0-d005d1c7cf61@gianis.ca>
+Subject: [PATCH 1/3] sched/fair: Introduce a new debugfs directory for EEVDF tests
+Message-ID: <20250422-b4-eevdf-tests-v1-post-v1-1-d005d1c7cf61@gianis.ca>
+In-Reply-To: <20250422-b4-eevdf-tests-v1-post-v1-0-d005d1c7cf61@gianis.ca>
+References: <20250422-b4-eevdf-tests-v1-post-v1-0-d005d1c7cf61@gianis.ca>
 Feedback-ID: 128275035:user:proton
-X-Pm-Message-ID: 2a23017f978162b8870f09117e25aedf8991044b
+X-Pm-Message-ID: 3b38da9376c847684e1ba2c7ed33f8b99409ccf9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,55 +46,120 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Introducing test cases for testing invariants for EEVDF. These are based
-of the original tech report available at
-https://citeseerx.ist.psu.edu/document?repid=3Drep1&type=3Dpdf&doi=3D805acf=
-7726282721504c8f00575d91ebfd750564
-
-There are two invariants being tested here
-
-1. This is based of Lemma 1 in the paper, which states that if a task
-has positive lag, it is eligible. We do not test exactly this. Instead
-we test if a task is eligible (which it is, if it is being to run), that
-it has a positive lag.
-
-2. This test is based of Lemma 2, which states that the sum of the lags
-of all the tasks in the system is zero.
-
-The patch series introduce a debugfs directory with triggers to run
-each test.
-
-This is not meant to enabled in production. This is a development tool
-for scheduler developers
-
-Changes since v1
-- Add a tunable to change number of tasks to check for Lemma 1
-- Remove the recursion in Lemma 2
-- Use functions to detect overflows in Lemma 2
-
 Signed-off-by: Dhaval Giani (AMD) <dhaval@gianis.ca>
 ---
-Dhaval Giani (AMD) (3):
-      sched/fair: Introduce a new debugfs directory for EEVDF tests
-      sched/fair: Add a test to test that a task selected to run has positi=
-ve lag
-      sched/fair: Test that the average lag across the system is zero
+ kernel/Kconfig.preempt     |  9 +++++++++
+ kernel/sched/Makefile      |  1 +
+ kernel/sched/debug.c       |  2 ++
+ kernel/sched/eevdf-tests.c | 27 +++++++++++++++++++++++++++
+ kernel/sched/sched.h       |  7 +++++++
+ 5 files changed, 46 insertions(+)
 
- include/linux/sched.h      |   7 ++
- kernel/Kconfig.preempt     |   9 ++
- kernel/sched/Makefile      |   1 +
- kernel/sched/debug.c       |   2 +
- kernel/sched/eevdf-tests.c | 242 +++++++++++++++++++++++++++++++++++++++++=
-++++
- kernel/sched/fair.c        |   5 +
- kernel/sched/sched.h       |   9 ++
- 7 files changed, 275 insertions(+)
----
-base-commit: c70fc32f44431bb30f9025ce753ba8be25acbba3
-change-id: 20250402-b4-eevdf-tests-v1-post-a7550c4a94cf
+diff --git a/kernel/Kconfig.preempt b/kernel/Kconfig.preempt
+index 54ea59ff8fbeb653b7084a78bd0d933076deaad5..96f47cf498aa10d7cbb375093e5=
+533753ed7a414 100644
+--- a/kernel/Kconfig.preempt
++++ b/kernel/Kconfig.preempt
+@@ -176,3 +176,12 @@ config SCHED_CLASS_EXT
+ =09  For more information:
+ =09    Documentation/scheduler/sched-ext.rst
+ =09    https://github.com/sched-ext/scx
++
++config SCHED_EEVDF_TESTING
++=09bool "EEVDF testing"
++=09help
++=09  This option is a debug option to test that your changes to the
++=09  fair scheduling code do not break EEVDF invariants. There are
++=09  controls exposted in debugfs to allow tests to be run. This has a
++=09  performance impact, so do not enable unless you are a scheduler
++=09  developer and know what you are doing.
+diff --git a/kernel/sched/Makefile b/kernel/sched/Makefile
+index 8ae86371ddcddf836172ee93ca34f2e91b4057a7..1a8416b8009ebf7cf38ac7b326f=
+4b6472e62909a 100644
+--- a/kernel/sched/Makefile
++++ b/kernel/sched/Makefile
+@@ -37,3 +37,4 @@ obj-y +=3D core.o
+ obj-y +=3D fair.o
+ obj-y +=3D build_policy.o
+ obj-y +=3D build_utility.o
++obj-y +=3D eevdf-tests.o
+diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+index 557246880a7e0839277df662703b7bfabeb3a497..e61acd5463145e4a54dcc816c1d=
+a774922ed0127 100644
+--- a/kernel/sched/debug.c
++++ b/kernel/sched/debug.c
+@@ -536,6 +536,8 @@ static __init int sched_init_debug(void)
+=20
+ =09debugfs_fair_server_init();
+=20
++=09debugfs_eevdf_testing_init(debugfs_sched);
++
+ =09return 0;
+ }
+ late_initcall(sched_init_debug);
+diff --git a/kernel/sched/eevdf-tests.c b/kernel/sched/eevdf-tests.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..3bc016d3025733e53f586e30fcd=
+31f650156d47e
+--- /dev/null
++++ b/kernel/sched/eevdf-tests.c
+@@ -0,0 +1,27 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright (C) 2025 Advanced Micro Devices, Inc
++ *
++ * Author: Dhaval Giani (AMD) <dhaval@gianis.ca>
++ *
++ * Basic functional tests for EEVDF - Invariants
++ *
++ * Use the debugfs triggers to run them
++ *
++ */
++
++#include <linux/debugfs.h>
++#include <linux/sched.h>
++
++#include "sched.h"
++
++#ifdef CONFIG_SCHED_EEVDF_TESTING
++
++static struct dentry *debugfs_eevdf_testing;
++void debugfs_eevdf_testing_init(struct dentry *debugfs_sched)
++{
++=09debugfs_eevdf_testing =3D debugfs_create_dir("eevdf-testing", debugfs_s=
+ched);
++
++}
++#endif /* CONFIG_SCHED_EEVDF_TESTING */
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index c5a6a503eb6de3867ea25f13dca3660da2805ff8..09cefe2aa871bbd533a413c7602=
+6895e969a58e7 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -44,6 +44,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/minmax.h>
+ #include <linux/mm.h>
++#include <linux/mmu_context.h>
+ #include <linux/module.h>
+ #include <linux/mutex_api.h>
+ #include <linux/plist.h>
+@@ -3987,4 +3988,10 @@ void sched_enq_and_set_task(struct sched_enq_and_set=
+_ctx *ctx);
+=20
+ #include "ext.h"
+=20
++#ifdef CONFIG_SCHED_EEVDF_TESTING
++void debugfs_eevdf_testing_init(struct dentry *debugfs_sched);
++#else /* CONFIG_SCHED_EEVDF_TESTING */
++static inline void init_eevdf_testing_debugfs(struct dentry *debugfs_sched=
+) {}
++#endif /* CONFIG_SCHED_EEVDF_TESTING */
++
+ #endif /* _KERNEL_SCHED_SCHED_H */
 
-Best regards,
 --=20
-Dhaval Giani (AMD) <dhaval@gianis.ca>
+2.49.0
 
 
