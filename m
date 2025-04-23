@@ -1,87 +1,53 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9362028A3EF;
-	Wed, 23 Apr 2025 15:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F417D176AC8;
+	Wed, 23 Apr 2025 15:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423151; cv=none; b=WNwJsywg2rW8SkACKXa54DGUXE2nuWpiSY5ErNTdqtcHyx4kmcERHGFskVjQPzfGvXyrb1qYQtpDCcB9zUD8BQGNICvdnLvF+eF9T9GYzzyPkJzLmBKK0oNRVu9h4YdMupTwvLMzionvf2lvbYmkXiFLV+lZCJKI2Pe9lQrvaOw=
+	t=1745423183; cv=none; b=tiyott2uZN+pIVjRiMokVobfHExQ2vRXX1VXN3o/IRq3dzL9bD5Esu9dmlKfT0Cw20d3dswqT1YMB5egNZOXrcwf27tyJKwjq7c+t6DFC0SvRpQiFvmpWi62wh1ycNBzd5Rni5PNyMHMm/0Ifj06dJWj5sj6lcqvmqsELvMVelo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423151; c=relaxed/simple;
-	bh=NIYBVH9kpFEZnQu4Yjso/RzDo5cDJB1ShWTh2eQv9WE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CwyZiSdvh65iMxNq1H31TowFls2UwkCRTjUPX/9bPe5dCp+ST1UaNQ5dkQ7cab9NiKElfggXYwNY/jWOzekeQRfp8tMH2bDw8WYYp4tfjeVJN8fJTl55BSFKM6psrUxfZiAOGnKzQ+ZM9yGLR/RQ2QPVzebbp3HkdK93/Paz1ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:d851:318b:70da:57a7])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 5B9973B5463;
-	Wed, 23 Apr 2025 15:45:38 +0000 (UTC)
-Authentication-Results: Plesk;
-	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:d851:318b:70da:57a7) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-To: syzbot+843981bb836d699c07d1@syzkaller.appspotmail.com
-Cc: kent.overstreet@linux.dev,
-	linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Sub volumes handling in bch2_fsck_update_backpointers
-Date: Wed, 23 Apr 2025 17:45:31 +0200
-Message-ID: <20250423154531.376838-1-contact@arnaud-lcm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <6806d857.050a0220.f25bb.07a8.GAE@google.com>
-References: <6806d857.050a0220.f25bb.07a8.GAE@google.com>
+	s=arc-20240116; t=1745423183; c=relaxed/simple;
+	bh=Bs2vkrYkdLBN+hEWYlKD6nWHngnhzbBykaskkdjOSbI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qz5mARTMAVjGSRLdbtZSFJ2IHJ+P0WFYm/iqqxaUPdt04kpaFYe19kvnJNz0eBLlPh1hgfjXTABJz/YvWaXykh5oRod+lo+20noaGJHPtonTPq7oRtP3oiowf7hqfNmyIrckojX0Wr2iKB8fmcnJB8e1bfT8/jAqi0dhiw4P4uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 8483368C4E; Wed, 23 Apr 2025 17:46:15 +0200 (CEST)
+Date: Wed, 23 Apr 2025 17:46:15 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, John Garry <john.g.garry@oracle.com>,
+	brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v8 05/15] xfs: ignore HW which cannot atomic write a
+ single block
+Message-ID: <20250423154615.GA31899@lst.de>
+References: <20250422122739.2230121-1-john.g.garry@oracle.com> <20250422122739.2230121-6-john.g.garry@oracle.com> <20250423003823.GW25675@frogsfrogsfrogs> <f467a921-e7dd-4f5b-ac9f-c6e8c043143c@oracle.com> <20250423081055.GA28307@lst.de> <f27ea8f7-700a-4fb1-b9cd-a0cba04c9e47@oracle.com> <20250423083317.GB30432@lst.de> <20250423151224.GC25675@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: <174542313871.6255.12048170017684785252@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423151224.GC25675@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Hey everyone, in fsck.c, we have:
-/*
- * Prefer to delete the first one, since that will be the one at the wrong
- * offset:
- * return value: 0 -> delete k1, 1 -> delete k2
- */
-int bch2_fsck_update_backpointers(struct btree_trans *trans,
-				  struct snapshots_seen *s,
-				  const struct bch_hash_desc desc,
-				  struct bch_hash_info *hash_info,
-				  struct bkey_i *new)
-{
-	if (new->k.type != KEY_TYPE_dirent)
-		return 0;
+On Wed, Apr 23, 2025 at 08:12:24AM -0700, Darrick J. Wong wrote:
+> I disagree, leaving the hardware awu_min/max in the buftarg makes more
+> sense to me because the buftarg is our abstraction for a block device,
+> and these fields describe the atomic write units that we can use with
+> that block device.
 
-	struct bkey_i_dirent *d = bkey_i_to_dirent(new);
-	struct inode_walker target = inode_walker_init();
-	int ret = 0;
+Yeah.  If you want to keep it I'd suggest we go back to my earlier
+suggestion.
 
-	if (d->v.d_type == DT_SUBVOL) {
-		BUG();
-	} else {
-		ret = get_visible_inodes(trans, &target, s, le64_to_cpu(d->v.d_inum));
-		if (ret)
-			goto err;
-
-		darray_for_each(target.inodes, i) {
-			i->inode.bi_dir_offset = d->k.p.offset;
-			ret = __bch2_fsck_write_inode(trans, &i->inode);
-			if (ret)
-				goto err;
-		}
-	}
-err:
-	inode_walker_exit(&target);
-	return ret;
-}
-
-What is the current state for handling subvolumes ? In someone already working on or it is something we don't want to implement
-for some reasons ?
-
-Regards,
-Arnaud
