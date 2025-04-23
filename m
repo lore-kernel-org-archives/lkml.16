@@ -1,158 +1,158 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FE828EB;
-	Wed, 23 Apr 2025 16:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C482C155342
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745424454; cv=none; b=ghvkeCwT1oJQhhiWbOo7q0Qsp/69m4EMgoMfnXTfKI+fi7a5bbXXB3KvkLQOJI8sXMwQ9o6e/UPoJbkTiWXdA6oHyoPs2ghTmtIQYxvkeN9qSW7Y9sJgZrHY1ZowWxB8q7QhEebbmK8UTZ5f8e6es7Qu4t6aSHAu7tcPkhsuQVs=
+	t=1745424514; cv=none; b=OPoektCcTQdq7yZdThDZmSwp+p6vmaw0tOxLgJfG+5YMDoRYpF7Srl3rdYljKmXUKGstEOQebOf97KIpZtgmNUfWtONDaBo5kheAdALvxW7UjMwwjwsJDPi4YxeWw1e7WvAjVC2OLbAvDfdiY4IM9B1CWrQqYubu1Mytvnuu6ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745424454; c=relaxed/simple;
-	bh=zK2xckH0k298gNDB5m7I40ePyWIZJZDP8UH/tnif+4M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DhqtSEqeln2TBNHlGZijCj/KgFz8cxfoZhStps3UKnoZGRxKHugNmq/VN6DEvBNAiVzJN0e0/7EPEFyNKCM+6J4erAAZJxeF+y1805gassYa1Pwu7okU6tGiNrl7QGEfkTgEbvhqM9ssEmBgad5LjSHa4ZCR2dtTRxDLXlbfw/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M1YavuLW; arc=none smtp.client-ip=209.85.167.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745424514; c=relaxed/simple;
+	bh=tecvClq+rk+3b8V+Qs3YoQ0Th7ilIVvh0CG+JCzviVk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cYLBDsFur2n4ozou+IZvpyMi+nNO5CWXHCdGOfRAc95fjsGDwSvTzx+SPHDVTalrFleA72+pP8t2gnrXhAxq2iQi+ZNFKJwE+S0/l1vZnD1TPvYS4SqbU7r+yyqLJObE5W8nRTziAnKvVYXguWRD3/kGY6naoZpxoY2pqEr01SI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j3HKBKcd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1YavuLW"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3fefbbc7dd4so3530778b6e.2;
-        Wed, 23 Apr 2025 09:07:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745424451; x=1746029251; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jp3c2R+Dvzznb6QyRdQyTKPd8rsyETvRlusI2YyXXuU=;
-        b=M1YavuLWC80Pb/qyGkDc7Z8an3CQ29M/4CtFE+BbUuN6OaqP/qe5uLOhaFHmo3F78r
-         ERCB3/1aoXUw1dPy2H+BDAvBSBhZ2F9+o4t4BEXTqj8hzKz3Iud6xJfeXNZweF9GG/pr
-         ZOO7RbbMESTgNdxxaH4hwME7m7HnnYRLEGEqNhl3eiQE+DKvcwaUSAQs+WJ0wrGHZRFY
-         qnd1OY3yZmLgPRp36j7sVD/aOQuAPLtv2MNr7zqKESBW7UyosvjX7dgtg/PoL7cd0aTC
-         /rv22uuhD2sMShoPFaZ7NWCLCyzrWpT4JYJqeYUM4ESBRNxTDK8/cDeND12vQHW33o3k
-         AjZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745424451; x=1746029251;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jp3c2R+Dvzznb6QyRdQyTKPd8rsyETvRlusI2YyXXuU=;
-        b=Onjvo5qmnnC3dwxqhhVV96okagLQKlIoJVKRLd1pYmefnol4GUmS8zC7nidjZEi3f/
-         uOTP044CMC6QDWkY/tdsAj9SCVjH5Hhf4zP9mlijAL0cV0UJlt2e8XhYqNHfNb3KV5vS
-         6+PwOzu5LYGrXoE2YHfdxPdO0A9q2cBKjXK1s/qijdT9sk0ZRJ0TCQ335HO8MI8cdeEj
-         ozr1mDrVCRoq5N81Bkq9wecfdxEWRlkVhSX5voGangdCzlxaSueNpjQs9niY+6k0Dlof
-         PaOVcxWtQtLTvk4n6KQn3x6+EA+Y28Jba94Zvd2Hwx9Ie8oSIPc2TlHhPtzKMSKpfif5
-         FxLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbzr7oVhEgrlNOdIn53kbqppqyeEpx8dijH0D2hD46QE0optjdqDfrpoDdQa0L5NK5C9f+tyOHGA==@vger.kernel.org, AJvYcCVqS6n49eDeo1fQDPDJ36dy/ZFAvZnQoweFKKynlHe7okDK7V82lJXJ1YyveIyT0KyMMoyAg4WcsumZsqmE@vger.kernel.org, AJvYcCXSNmuV2h+4Dc8vgIk65rFpEK5fksE29HH9LXuYeaO88I/MDiV+IJ3zEvSW0ol7KT6SMTDLEabluTdjez2xzg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTQdelyuXpSwGEOtpkWnxp4be90ZsxbF/cVPTdQFrevFA+x6Tn
-	ae60RbbBci8gTc+EuqcGqvQybCf/oroQB2ACG9+Jg5Nk35galJzIYOb8dFUXL1t7b/nphEqY9QT
-	owAsRYlss6McYMhm2mUhGgZXaz0c=
-X-Gm-Gg: ASbGnctB55Dt/rNcU+Cx2BGDpafakIx2lbhBPGKSitMQaw+SFqUfpie0XtZWc6v9s8t
-	As1QQX8+09Zh3N/EWQOhSA5CZrgB4YwyvNmXsGQrq0RYHTnkM7m0rhECXGzBjPZjaA80dKJyivO
-	Z9Fw9oaerQHNsh0iqA6CvWVYE=
-X-Google-Smtp-Source: AGHT+IH1ISvr9dZJpB5Px4chBc/FyF3c67oME1zTTLXitkE9Juv28cyF/3TrJNwl8N7dAJInbUFKI4JvrvIE4TqHCzQ=
-X-Received: by 2002:a05:6870:b410:b0:2d5:ba2d:80dd with SMTP id
- 586e51a60fabf-2d5ba2d8877mr5021109fac.12.1745424451426; Wed, 23 Apr 2025
- 09:07:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j3HKBKcd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DD56C4CEE2;
+	Wed, 23 Apr 2025 16:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745424514;
+	bh=tecvClq+rk+3b8V+Qs3YoQ0Th7ilIVvh0CG+JCzviVk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j3HKBKcdJQYtNXhAM8rAx8+6fquRpLE0nJp2ticfzUo+6Pl7cPWkOoWYaBUjOccgp
+	 Xiu+v3802FVYg93dhOIFy+TiE6AfbEuEC0SXxStiT7DhK1lSFJwn+XT1WqaDN3V5IZ
+	 Qe2XKJklG8ju1ruCQFBt8ud2BxEoBusCaXhUfSWzydn0jiRhvfJNos9dwVinfc6Fy1
+	 XnhAdCo8rkRB4PhgObOQ0uU6FnIbh5hJlA7BWl8f68aMf8k4XPLhkpnlBuy+ne7UML
+	 2bxi181/vNwnCNzZwgsuHbL53b8as9D6EAWGF8GYdX7B8fKniosn/PYs2idnrTKQx4
+	 9totkA2UUB1rA==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Changyuan Lyu <changyuanl@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	David Hildenbrand <david@redhat.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Barry Song <baohua@kernel.org>,
+	Jeff Xu <jeffxu@chromium.org>,
+	Wei Yang <richard.weiyang@gmail.com>,
+	Baoquan He <bhe@redhat.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Frank van der Linden <fvdl@google.com>,
+	York Jasper Niebuhr <yjnworkstation@gmail.com>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] memblock: mark init_deferred_page as __init_memblock
+Date: Wed, 23 Apr 2025 18:08:08 +0200
+Message-Id: <20250423160824.1498493-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
- <20250422162913.1242057-2-qq282012236@gmail.com> <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
- <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
- <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk> <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
- <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk> <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
-In-Reply-To: <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
-From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Date: Thu, 24 Apr 2025 00:07:19 +0800
-X-Gm-Features: ATxdqUFKq1W7-Omh1z5DPQ-NHXJK1dKargy_MWbOfKOS25w3ULb7O98bWs12Xhs
-Message-ID: <CANHzP_tGxKmcQpVZOt077a-MYb3YHLcZvZDcFxsha4BLt1y16g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault scenarios
-To: Jens Axboe <axboe@kernel.dk>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Jens Axboe <axboe@kernel.dk> =E4=BA=8E2025=E5=B9=B44=E6=9C=8823=E6=97=A5=E5=
-=91=A8=E4=B8=89 23:55=E5=86=99=E9=81=93=EF=BC=9A
->
-> Something like this, perhaps - it'll ensure that io-wq workers get a
-> chance to flush out pending work, which should prevent the looping. I've
-> attached a basic test case. It'll issue a write that will fault, and
-> then try and cancel that as a way to trigger the TIF_NOTIFY_SIGNAL based
-> looping.
->
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index d80f94346199..e18926dbf20a 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -32,6 +32,7 @@
->  #include <linux/swapops.h>
->  #include <linux/miscdevice.h>
->  #include <linux/uio.h>
-> +#include <linux/io_uring.h>
->
->  static int sysctl_unprivileged_userfaultfd __read_mostly;
->
-> @@ -376,6 +377,8 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, uns=
-igned long reason)
->          */
->         if (current->flags & (PF_EXITING|PF_DUMPCORE))
->                 goto out;
-> +       else if (current->flags & PF_IO_WORKER)
-> +               io_worker_fault();
->
->         assert_fault_locked(vmf);
->
-> diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-> index 85fe4e6b275c..d93dd7402a28 100644
-> --- a/include/linux/io_uring.h
-> +++ b/include/linux/io_uring.h
-> @@ -28,6 +28,7 @@ static inline void io_uring_free(struct task_struct *ts=
-k)
->         if (tsk->io_uring)
->                 __io_uring_free(tsk);
->  }
-> +void io_worker_fault(void);
->  #else
->  static inline void io_uring_task_cancel(void)
->  {
-> @@ -46,6 +47,9 @@ static inline bool io_is_uring_fops(struct file *file)
->  {
->         return false;
->  }
-> +static inline void io_worker_fault(void)
-> +{
-> +}
->  #endif
->
->  #endif
-> diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
-> index d52069b1177b..f74bea028ec7 100644
-> --- a/io_uring/io-wq.c
-> +++ b/io_uring/io-wq.c
-> @@ -1438,3 +1438,13 @@ static __init int io_wq_init(void)
->         return 0;
->  }
->  subsys_initcall(io_wq_init);
-> +
-> +void io_worker_fault(void)
-> +{
-> +       if (test_thread_flag(TIF_NOTIFY_SIGNAL))
-> +               clear_notify_signal();
-> +       if (test_thread_flag(TIF_NOTIFY_RESUME))
-> +               resume_user_mode_work(NULL);
-> +       if (task_work_pending(current))
-> +               task_work_run();
-> +}
->
-> --
-> Jens Axboe
-I understand some of what you said. I was indeed lost in appearances.
-It's very late here now, and I'll take a deeper look tomorrow.
-Thank you very much.
+From: Arnd Bergmann <arnd@arndb.de>
+
+On architectures that set CONFIG_ARCH_KEEP_MEMBLOCK, memmap_init_kho_scratch_pages
+is not discarded but calls a function that is:
+
+WARNING: modpost: vmlinux: section mismatch in reference: memmap_init_kho_scratch_pages+0x120 (section: .text) -> init_deferred_page (section: .init.text)
+ERROR: modpost: Section mismatches detected.
+Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.
+
+Mark init_deferred_page the same way as memmap_init_kho_scratch_pages
+to avoid that warning. Unfortunately this requires marking additional
+functions the same way to have them stay around as well.
+
+Ideally memmap_init_kho_scratch_pages would become __meminit instead
+of __init_memblock, but I could not convince myself that this is safe.
+
+Fixes: 1b7936623970 ("memblock: introduce memmap_init_kho_scratch()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ mm/internal.h | 7 ++++---
+ mm/mm_init.c  | 8 ++++----
+ 2 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/mm/internal.h b/mm/internal.h
+index 838f840ded83..40464f755092 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -9,6 +9,7 @@
+ 
+ #include <linux/fs.h>
+ #include <linux/khugepaged.h>
++#include <linux/memblock.h>
+ #include <linux/mm.h>
+ #include <linux/mm_inline.h>
+ #include <linux/pagemap.h>
+@@ -543,7 +544,7 @@ extern int defrag_mode;
+ 
+ void setup_per_zone_wmarks(void);
+ void calculate_min_free_kbytes(void);
+-int __meminit init_per_zone_wmark_min(void);
++int __init_memblock init_per_zone_wmark_min(void);
+ void page_alloc_sysctl_init(void);
+ 
+ /*
+@@ -1532,9 +1533,9 @@ static inline bool pte_needs_soft_dirty_wp(struct vm_area_struct *vma, pte_t pte
+ 	return vma_soft_dirty_enabled(vma) && !pte_soft_dirty(pte);
+ }
+ 
+-void __meminit __init_single_page(struct page *page, unsigned long pfn,
++void __init_memblock __init_single_page(struct page *page, unsigned long pfn,
+ 				unsigned long zone, int nid);
+-void __meminit __init_page_from_nid(unsigned long pfn, int nid);
++void __init_memblock __init_page_from_nid(unsigned long pfn, int nid);
+ 
+ /* shrinker related functions */
+ unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
+diff --git a/mm/mm_init.c b/mm/mm_init.c
+index 7bb5f77cf195..31cf8bc31cc2 100644
+--- a/mm/mm_init.c
++++ b/mm/mm_init.c
+@@ -578,7 +578,7 @@ static void __init find_zone_movable_pfns_for_nodes(void)
+ 	node_states[N_MEMORY] = saved_node_state;
+ }
+ 
+-void __meminit __init_single_page(struct page *page, unsigned long pfn,
++void __init_memblock __init_single_page(struct page *page, unsigned long pfn,
+ 				unsigned long zone, int nid)
+ {
+ 	mm_zero_struct_page(page);
+@@ -669,7 +669,7 @@ static inline void fixup_hashdist(void) {}
+ /*
+  * Initialize a reserved page unconditionally, finding its zone first.
+  */
+-void __meminit __init_page_from_nid(unsigned long pfn, int nid)
++void __init_memblock __init_page_from_nid(unsigned long pfn, int nid)
+ {
+ 	pg_data_t *pgdat;
+ 	int zid;
+@@ -744,7 +744,7 @@ defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
+ 	return false;
+ }
+ 
+-static void __meminit __init_deferred_page(unsigned long pfn, int nid)
++static void __init_memblock __init_deferred_page(unsigned long pfn, int nid)
+ {
+ 	if (early_page_initialised(pfn, nid))
+ 		return;
+@@ -769,7 +769,7 @@ static inline void __init_deferred_page(unsigned long pfn, int nid)
+ }
+ #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+ 
+-void __meminit init_deferred_page(unsigned long pfn, int nid)
++void __init_memblock init_deferred_page(unsigned long pfn, int nid)
+ {
+ 	__init_deferred_page(pfn, nid);
+ }
+-- 
+2.39.5
+
