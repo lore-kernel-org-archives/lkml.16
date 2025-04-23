@@ -1,188 +1,177 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109441ACEC6
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685C81E1E1E
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392063; cv=none; b=LPK7wqG2NvvSTjEwgULLl/CsyFr35RscentdAkSkd2TMKtjv0HWhLarueuidu/YevksLY7moIEWJHjMjFks7X6+jMNdO0pk3n9x5v7QuUVMhgGV13tUtDUAm8WrtaozviwQ3algToaH6korUvGCCPUZvPipH05rKzQ+SZCsrYek=
+	t=1745392088; cv=none; b=RPMtweTejWrtV5ynSta506hqWpxdpWTcImShk9NUkgh4EDTBAT4J4XBeX/GuhZDsFonLqE7Cqf2aRW22lyyaMx9kyQUvYeX6P9KXP1m0Au6XgySJMOg0oOU84SoyCfayMNsvu/Fw3z/MoZSjet6c+lW1TUON5HRmUENSLp9M9NA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745392063; c=relaxed/simple;
-	bh=XPPxI1EePJ4jyAPmTekOSjxtM9GFxM850aU6g30qXUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OJmuDbknimmwaRTO/vCIwiGXGkI+ZUvpsTEpGukXE6AZELCrezIbxDes6h9XTPucyRU3V9BMzFCu5yPDhjyUZcqpknM1XwnXByikmR2exSDbnKcyqQNY0JKO1tuAT51D7z8Jrwj3DPMA1i1ZOV3zPiPznpWj/6fG8iDZ8hSiDD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ex9FfhoB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745392088; c=relaxed/simple;
+	bh=WAg9j14egnq/UsvlKZWeYxfZf8S5VtNSLNLTfzky/QA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=raXc2xZ5TTkn7ddpHTKeBdp5Nw8s1Jok/aWe3u/9Cg5wo/vqxtHfBUOuarTb4os+STAk0t8SEv8lua+GYGY0A3Fv4DJrpUnSpfeuIBkT4HnS46WxweErnQCCiUjCNnfRWpG+py4L4ggrMUNOkb4/e7aYe+oh4Xl2NRGYM9ZSiyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ga1LUKQH; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ex9FfhoB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745392060;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=bSQuFpFcF+zoT6TtvXA/st2f5GKi8OfxXR7q5g/A83o=;
-	b=Ex9FfhoBYAL+u1qgGQTZAzH2OXLL2xL4uvWQt2N2/5y/6ylGznI7OA6LRMgyBdrbuwG3BT
-	tuSDba3k0MGLhoegZJuk1qDPsGfPMjiZikEsXGxDcmhSwG4ZfslD8ht3KldLnISl8uQhRo
-	tXoED99IMfDWepyYkpkbIM1ypUIp59E=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-661-aNh9AGqnNVWmIrnqkkb3xw-1; Wed, 23 Apr 2025 03:07:39 -0400
-X-MC-Unique: aNh9AGqnNVWmIrnqkkb3xw-1
-X-Mimecast-MFC-AGG-ID: aNh9AGqnNVWmIrnqkkb3xw_1745392058
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43f251dc364so37590185e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:07:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ga1LUKQH"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so56405521fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:08:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745392084; x=1745996884; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tDVZZVmLWPVUyZUrEP5wnstWpu6T03XwnNTWfvpgsmc=;
+        b=Ga1LUKQH0XHBhHbe8Bic1/PHYMx1FFBB1VkLdmu6jdHAG3qFkATVG5bbGuU5aP2uoZ
+         5ub4tQqif+wUWtTCpWbgOMfanRGY/nTpOtJJFtr0Ab3MTqR7AGR8o86gh0/qHIreVWAy
+         XFRETXWAFb75yP/m8XCNirq8XboZZ8PmMfQmSSyQPKEdqeGtPUur6zCirPX1On2KQtnQ
+         o8mSIDHCNLdKqv4c0z0MrkiEKfwdMVt48JqOHv2qUPSDKmMrMbdObONwT0g+UG9HqcwN
+         1nRRBFiypaqK5/VC3WOOBOAGqDhKxfixKQu1m2Q3H+0nyZ8SAYTvFJt9cEIsVZaRykfF
+         vBvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745392058; x=1745996858;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bSQuFpFcF+zoT6TtvXA/st2f5GKi8OfxXR7q5g/A83o=;
-        b=E0ADpHmRjbwL64C663q0pcYJJWVoZYRE7fM3Tn6sBfBvijVJ6ffNShiJ+N9Rz3JnpA
-         6uSrfpJxML2Sm7LjFJ4jDqIeer4qRTH+iqWjJ9N3z31oR3pxKvm0jo4XzwfCCDYipAhP
-         qXoF5Blc2u0NdtzHf5mgX1U0t+Lo4MRQmsjMuc+QxjNt9Y7cZrZ+Yfyri/hf0MF7fj7o
-         tgwkJ8eRRb1snVwgL0o42J+RMsBiVJL42g54yyxIo67HQzxt3sm1JeMX84vrSxlBb8o6
-         /ZVhs7WebXgd7nKGBZ4bnUlWIL66ONk2+il1waC6jNnk9InLLm6Gx+hiq95ePpWSfTf9
-         gQRg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+xWXV4RKr1E4RycikaYWwzXB2QjFnsT/Q9TkNRK8PUPLi9rwcn3YDvI7s9LRimJgmAUeEafxVZAgGBWg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVyGhtcZ9U7nrLeYtxomkPfHU8HfWJAHMckIu/SDZclZ+RRpFi
-	ldPou2tIhboYH234ZIB8aD7wyj3ehmuE8SMn6iv1jc9VcNKenUMpIw85iuhlqnmxodJ2WNwMzkF
-	2/PGRHdlN6Mi9l18hHD/i2ZWOa/CJjvRCk0E+uupVEyk7wsIt/nBFpoKMgfYbZA==
-X-Gm-Gg: ASbGncsc+840zMddQV1lI6KLMNyboepB9CQHzO2O6DSwBWp3rEYVEQaYZD9tgOpaCYY
-	SDMUA9Ohh67wGkSFzmMbZxUh8t3La9l103xv8cIDdgZ2fuXLRFv0aRed2QAF1JV09WIUVxTbDFx
-	ne8BUf/NozzbNjtxZJm7f2ZeVgkfm33PO7N2zVtZNvRj9/K9akqKZB1Hbrt6Hc0XOewxf3c9lys
-	y1NVodHwmIsIgzxQ+9HnCzP7UmTbpRXPObcOpD2KD43Ehz2hi3EEqVzyKVpwRKxf2pwGT9ZnH8A
-	BsXWdMSkdwuaHR3d8i2wlVG824t3Sag9FpANJoHTPQO2y8koe1a8FO4UBl4lFKFuQHV/cZJwGM+
-	xogvR1xxL4w2uKshP6xqTb3QOM3+VKA575EUhP0k=
-X-Received: by 2002:a05:600c:1e0a:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-4406abfba46mr151994865e9.20.1745392058235;
-        Wed, 23 Apr 2025 00:07:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0EPZTLlGttK0N2o8iNNcN0hsdGNP9+NvPegWHPoUw3XLmkd9/3/Wm2sbUUOuSp9r9Fx8Cqg==
-X-Received: by 2002:a05:600c:1e0a:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-4406abfba46mr151994555e9.20.1745392057893;
-        Wed, 23 Apr 2025 00:07:37 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c740:2c00:d977:12ba:dad2:a87f? (p200300cbc7402c00d97712badad2a87f.dip0.t-ipconnect.de. [2003:cb:c740:2c00:d977:12ba:dad2:a87f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d37332sm14653105e9.30.2025.04.23.00.07.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 00:07:37 -0700 (PDT)
-Message-ID: <b64aea02-cc44-433a-8214-854feda2c06d@redhat.com>
-Date: Wed, 23 Apr 2025 09:07:36 +0200
+        d=1e100.net; s=20230601; t=1745392084; x=1745996884;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tDVZZVmLWPVUyZUrEP5wnstWpu6T03XwnNTWfvpgsmc=;
+        b=lcLKK6MdzegYa35lOLbEEanYh8o4O4BRyKwKsqfcx82/EV7bMDen377m8hr95S5mNu
+         Lgas5r/SWFqdljZttoHtPkQl/92bTbF+a1RN7qEjXNNvX2XwA4MTDU/nDD5yUnLqvuUI
+         X46F519ePmmdzrhEXdPD3t/Dn5Rcsjll4xGP1aMrMMPjbHx8SyWG0OYBAkzrVPpBw1Dx
+         G3jYnQIrKDRYSXXL7JxVqHj94rK0G10Gp1wBRdyfYMLtYUAb/Ttw5RtCv4C6Luum2/Zc
+         9XlFx75479hIyVjk2YV4HIclC25VBhd8wirv3VhoSeoga+l95qbr4Om+X14Xmw0YQ9zj
+         P7vg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGK0xBy1Be4AkwefSDV/+rYhhnodxW1WyfKV21VBtVGMlMyjuHCgZstP2/K69ryprPWwei3N38CC1ZmWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFOerz8sSil3jvbdfP13EsunWlLJ63f5y4CYY0VA0p4WLR0M2T
+	J80frcdZBceOt6H4/a8K2XS2JR/01osr8WMWtqbQzRxx2PHHR2amzjoIuuUT/U+hjMQwOOTDdhW
+	Jdwzdq6Bi0FKEFJDG41k3Z5Zyv3aeuzJhBA0=
+X-Gm-Gg: ASbGncus4wB6AF7NSsARaHwdqD208WJuhpUIwmZfOXdsXXL2SWdngRw94sGrq0v9KaX
+	4xKQT8v37myxKB9XBVpWN479e0JVOV3BJ9PubPpDWJSncdamyZxBycxp4WeihHoEfPeMje6Yb6A
+	LNuuCqWdao+LEQ4QfFLDV0T+rmO+UcSGYX
+X-Google-Smtp-Source: AGHT+IH1P0mnXtz8esd9+KqnGwXccxh0aHTWyQCPU0QhX+GwULmkrPxirVAnyshtY25FyLkeNkMyJKJu698H7M/MDTc=
+X-Received: by 2002:a2e:ad86:0:b0:30b:d44d:e76a with SMTP id
+ 38308e7fff4ca-31090553ed6mr68721551fa.25.1745392084031; Wed, 23 Apr 2025
+ 00:08:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] smaps: Fix crash in smaps_hugetlb_range for non-present
- hugetlb entries
-To: Ming Wang <wangming01@loongson.cn>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Oscar Salvador <osalvador@suse.de>,
- Andrii Nakryiko <andrii@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>, Michal Hocko <mhocko@suse.cz>,
- David Rientjes <rientjes@google.com>, Joern Engel <joern@logfs.org>,
- Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>, lixuefeng@loongson.cn,
- Hongchen Zhang <zhanghongchen@loongson.cn>
-References: <20250423010359.2030576-1-wangming01@loongson.cn>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250423010359.2030576-1-wangming01@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <165d2a0b882050f3f6cc0315af66cd2d16e5925b.1744676674.git.jpoimboe@kernel.org>
+ <aAeFYB7E2QiRNeoM@gmail.com> <CAFULd4bo0NGzZGLEs+pYoOJrDVLyKt2=Piug-LtU-WhFGwYTzQ@mail.gmail.com>
+ <aAf2crZau98tHFSn@gmail.com>
+In-Reply-To: <aAf2crZau98tHFSn@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 23 Apr 2025 09:07:52 +0200
+X-Gm-Features: ATxdqUFR0l-Mc3_bvQj2u3F0H_j-iJW7DCOmA_78cTUrjEsf0ActbMekxNP6F_8
+Message-ID: <CAFULd4ZiaboD7zT5tfz4Bdjah68E3iuBRVzrBOW3qQMoaBT5+g@mail.gmail.com>
+Subject: Re: [PATCH v2] noinstr: Use asm_inline() in instrumentation_{begin,end}()
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
+	"H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23.04.25 03:03, Ming Wang wrote:
-> When reading /proc/pid/smaps for a process that has mapped a hugetlbfs
-> file with MAP_PRIVATE, the kernel might crash inside pfn_swap_entry_to_page.
-> This occurs on LoongArch under specific conditions.
-> 
-> The root cause involves several steps:
-> 1. When the hugetlbfs file is mapped (MAP_PRIVATE), the initial PMD
->     (or relevant level) entry is often populated by the kernel during mmap()
->     with a non-present entry pointing to the architecture's invalid_pte_table
->     On the affected LoongArch system, this address was observed to
->     be 0x90000000031e4000.
-> 2. The smaps walker (walk_hugetlb_range -> smaps_hugetlb_range) reads
->     this entry.
-> 3. The generic is_swap_pte() macro checks `!pte_present() && !pte_none()`.
->     The entry (invalid_pte_table address) is not present. Crucially,
->     the generic pte_none() check (`!(pte_val(pte) & ~_PAGE_GLOBAL)`)
->     returns false because the invalid_pte_table address is non-zero.
->     Therefore, is_swap_pte() incorrectly returns true.
-> 4. The code enters the `else if (is_swap_pte(...))` block.
-> 5. Inside this block, it checks `is_pfn_swap_entry()`. Due to a bit
->     pattern coincidence in the invalid_pte_table address on LoongArch,
->     the embedded generic `is_migration_entry()` check happens to return
->     true (misinterpreting parts of the address as a migration type).
-> 6. This leads to a call to pfn_swap_entry_to_page() with the bogus
->     swap entry derived from the invalid table address.
-> 7. pfn_swap_entry_to_page() extracts a meaningless PFN, finds an
->     unrelated struct page, checks its lock status (unlocked), and hits
->     the `BUG_ON(is_migration_entry(entry) && !PageLocked(p))` assertion.
-> 
-> The original code's intent in the `else if` block seems aimed at handling
-> potential migration entries, as indicated by the inner `is_pfn_swap_entry()`
-> check. The issue arises because the outer `is_swap_pte()` check incorrectly
-> includes the invalid table pointer case on LoongArch.
+On Tue, Apr 22, 2025 at 10:05=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > > That still doesn't make it clear where the apparently ~10
+> > > instructions per inlining come from, right?
+> >
+> > The growth is actually from different inlining decisions, that cover
+> > not only inlining of small functions, but other code blocks (hot vs.
+> > cold, tail duplication, etc) too. The compiler uses certain
+> > thresholds to estimate inlining gain (thresholds are different for
+> > -Os and -O2). Artificially bloated functions that don't use
+> > asm_inline() fall under this threshold (IOW, the inlining would
+> > increase size too much), so they are not inlined; code blocks that
+> > enclose unfixed asm clauses are treated differently than when they
+> > use asm_inline() instead of asm(). When asm_inline() is introduced,
+> > the size of the function (and consequently inlining gain) is
+> > estimated more accurately, the estimated size is lower, so there is
+> > more inlining happening.
+> >
+> > I'd again remark that the code size is not the right metric when
+> > compiling with -O2.
+>
+> Understood, but still we somehow have to be able to measure whether the
+> marking of these primitives with asm_inline() is beneficial in
+> isolation - even if on a real build the noise of GCC's overall inlining
+> decisions obscure the results - and may even reverse them.
+>
+> Is there a way to coax GCC into a mode of build where such changes can
+> be measured in a better fashion?
 
-This has a big loongarch smell to it.
+There are several debug options that report details of inliner
+decisions. You can add -fdump-ipa-inline or -fdump-ipa-inline-details
+[1] to generate a debug file for interprocedural inlining.
 
-If we end up passing !pte_present() && !pte_none(), then loongarch must 
-be fixed to filter out these weird non-present entries.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Developer-Options.html
 
-is_swap_pte() must not succeed on something that is not an actual swap pte.
+> For example would setting -finline-limit=3D1000 or -finline-limit=3D10 (o=
+r
+> some other well-chosen inlining threshold value, or tweaking any of the
+> inliner parameters via --param values?), just for the sake of
+> measurement, give us more representative .text size change values?
 
--- 
-Cheers,
+I don't think so, because inliner uses pseudo instructions [2] where:
 
-David / dhildenb
+    _Note:_ pseudo instruction represents, in this particular context,
+    an abstract measurement of function's size.  In no way does it
+    represent a count of assembly instructions and as such its exact
+    meaning might change from one release to an another.
 
+[2] https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-finline-=
+limit
+
+OTOH, there are plenty of --param choices to play with the inliner
+besides -finline-limit=3D option. Please see [3]
+
+[3] https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-param
+
+In the dump mentioned above, you will  get e.g.:
+
+IPA function summary for pfmemalloc_match/5736 inlinable
+  global time:     8.200000
+  self size:       11
+  global size:     11
+  min size:       7
+  self stack:      0
+  global stack:    0
+    size:4.000000, time:4.000000
+    size:3.000000, time:2.000000,  executed if:(not inlined)
+    size:0.500000, time:0.500000,  executed if:(op0 not sra candidate)
+&& (not inlined)
+    size:0.500000, time:0.500000,  executed if:(op0 not sra candidate)
+...
+
+The estimator estimates size and execution time and decides how to
+(and if) inline the function.
+
+> Because, ideally, if we do these decisions correctly at the asm()
+> level, compilers will, eventually, after a few decades, catch up
+> and do the right thing as well. ;-)
+
+We (as in gcc developers) are eagerly waiting for better tuning
+parameters that would satisfy everyone's needs. Rest assured that many
+have tried to fine-tune the heuristics, with various levels of success
+;)
+
+Jokes aside, it is important to feed the estimator correct data, as
+precise as possible. There are limitations with asm(), because the
+compiler doesn't know what is inside the asm template. It estimates
+one instruction for every instruction delimiter, where the size of
+"one instruction" is estimated to 16 bytes. In case of __ASM_ANNOTATE,
+the estimator estimates 5 instructions and 80 bytes total vs. one
+instruction when asm_inline() is used. Based on this fact, I think
+that changing asm() to asm_inline() for insns with __ASM_ANNOTATE is
+beneficial.
+
+Thanks,
+Uros.
