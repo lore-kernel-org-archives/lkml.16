@@ -1,107 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B98C2BE0F4;
-	Wed, 23 Apr 2025 15:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2AD81A08A4;
+	Wed, 23 Apr 2025 15:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745422389; cv=none; b=KZuXfUs45wR3lYdxGw/HcT/Cnq8Ujf2W8K/PluJTG7d304A5DRVyt49KzCpRjt5ctjOfb306kaUQsXU8knX8j5jjNBHMyYn7TUIXYg3PDnaQ2ysMQamZJ+mbdOWI16KkWveCKjokH4deFMQqYaVaDDI/kCbMlpnGkSeIQu3BjEc=
+	t=1745422432; cv=none; b=fH9v9InmG+rwVHTw0X4oTn8noUqydtHVOfsFLf5wfQdM6AVeRoE1cz9zmvDkd7QbW6S6dVGQxNhc+6DBdTmxP/gk0ZggkUO3FctBrxEaFncXc+Odu2u081dI4QO80yxl5s4OYERnTjfGF0Y1ZQLi7Wuoa3PC2t2COuQ0Cmj6c80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745422389; c=relaxed/simple;
-	bh=QGIDE6jHCVvxMU/bZQi+KvAf0v/Q7SkGJgaBWu+WIjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JFUX1FfCCl3Rc/Y6IAbKhlNG3CtBNO8XDEESLhXcYjsCPc7OHDthlNsXwtTMkqk+3EbxXtQTGssSYsFslEOXF/OyDvDgDF5L+PDcVYBF610FN/IxBCpGzK2cPH/PuO6lsmPfYK7xELZ6xRAGTO01rU8NAIqtLs9rLwLP68sA6WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90DEC4CEE3;
-	Wed, 23 Apr 2025 15:33:06 +0000 (UTC)
-Date: Wed, 23 Apr 2025 11:34:59 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Libo Chen <libo.chen@oracle.com>
-Cc: peterz@infradead.org, mgorman@suse.de, mingo@redhat.com,
- juri.lelli@redhat.com, vincent.guittot@linaro.org, tj@kernel.org,
- akpm@linux-foundation.org, llong@redhat.com, kprateek.nayak@amd.com,
- raghavendra.kt@amd.com, yu.c.chen@intel.com, tim.c.chen@intel.com,
- vineethr@linux.ibm.com, chris.hyser@oracle.com, daniel.m.jordan@oracle.com,
- lorenzo.stoakes@oracle.com, mkoutny@suse.com, Dhaval.Giani@amd.com,
- cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] sched/numa: Add tracepoint that tracks the
- skipping of numa balancing due to cpuset memory pinning
-Message-ID: <20250423113459.0e53be50@gandalf.local.home>
-In-Reply-To: <20250417191543.1781862-3-libo.chen@oracle.com>
-References: <20250417191543.1781862-1-libo.chen@oracle.com>
-	<20250417191543.1781862-3-libo.chen@oracle.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745422432; c=relaxed/simple;
+	bh=HKLmHV0ZtG/a4Tkd0yHHJS/176AZM+g1/tCMQTabZzk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=P3ZRLhlUo+Nnc6OwYmYzW5OctZk4oapgkshkkjmZeBHwm7SHaMgeZz3ZxfZuBsVYrY7LsctJWsoGb2MZe6hhEXpcwB5luwgfFUHjfT9NPx9GOZtt4a3WOOYKiX2osfwONU9CFeh/19dLJ+2TY6paGPsnYopZm0cyigruCQsPTZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ncaZrwL5; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ncaZrwL5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=EY9gG
+	G+ynYNdnB1j3/6lY26zStHwpPSt9Msjmy1Whvk=; b=ncaZrwL59hzIp0+ge+E0O
+	21ImkguoI3jiNwf6M03zCOVeA1Qr2/j03j49kF53eQc5Y95yKEN0tyND4Nso5iwW
+	O6WaIetY+zY1U4VcCxKcPmvaNkSb+xWD7BzvwQqpR2bEnrD4lOTfidVZ2giP6dSW
+	uInkZC3qjQJfWEHQVvc7ko=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wCnosAACAlogeYfCA--.9428S3;
+	Wed, 23 Apr 2025 23:32:19 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	heiko@sntech.de
+Cc: manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	shawn.lin@rock-chips.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Hans Zhang <18255117159@163.com>,
+	Niklas Cassel <cassel@kernel.org>
+Subject: [PATCH v3 1/3] PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+Date: Wed, 23 Apr 2025 23:32:12 +0800
+Message-Id: <20250423153214.16405-2-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250423153214.16405-1-18255117159@163.com>
+References: <20250423153214.16405-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCnosAACAlogeYfCA--.9428S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWruw1kCw48Gw15WrykXrW8WFg_yoWkXrXE9r
+	yUuF4xXryDKrWSk392yw4xZFn0yas7ur1xGFZYgFsIva47Kr4rXry8ZrWrX3WDGr43JFyf
+	t34vyF4ruayxtjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sR_66wJUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxg4o2gJAM7G6gAAsb
 
-On Thu, 17 Apr 2025 12:15:43 -0700
-Libo Chen <libo.chen@oracle.com> wrote:
+The PCIE_CLIENT_GENERAL_DEBUG register offset is defined but never
+used in the driver. Its presence adds noise to the register map and
+may mislead future developers.
 
-> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> index 8994e97d86c13..25ee542fa0063 100644
-> --- a/include/trace/events/sched.h
-> +++ b/include/trace/events/sched.h
-> @@ -745,6 +745,36 @@ TRACE_EVENT(sched_skip_vma_numa,
->  		  __entry->vm_end,
->  		  __print_symbolic(__entry->reason, NUMAB_SKIP_REASON))
->  );
-> +
-> +TRACE_EVENT(sched_skip_cpuset_numa,
-> +
-> +	TP_PROTO(struct task_struct *tsk, nodemask_t *mem_allowed_ptr),
-> +
-> +	TP_ARGS(tsk, mem_allowed_ptr),
-> +
-> +	TP_STRUCT__entry(
-> +		__array( char,		comm,		TASK_COMM_LEN	)
-> +		__field( pid_t,		pid				)
-> +		__field( pid_t,		tgid				)
-> +		__field( pid_t,		ngid				)
-> +		__field( nodemask_t *,	mem_allowed_ptr			)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-> +		__entry->pid		 = task_pid_nr(tsk);
-> +		__entry->tgid		 = task_tgid_nr(tsk);
-> +		__entry->ngid		 = task_numa_group_id(tsk);
-> +		__entry->mem_allowed_ptr = mem_allowed_ptr;
+Remove this redundant definition to keep the register list minimal
+and aligned with actual hardware usage.
 
-This is a bug. You can't save random pointers in the TP_fast_assign() and
-reference it later in the TP_printk().
+Signed-off-by: Hans Zhang <18255117159@163.com>
+Reviewed-by: Niklas Cassel <cassel@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The TP_fast_assign() is executed during the normal kernel workflow when the
-tracepoint is triggered. The pointer is saved into the ring buffer.
+diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+index 0e0c09bafd63..fd5827bbfae3 100644
+--- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
++++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+@@ -54,7 +54,6 @@
+ #define PCIE_CLIENT_GENERAL_CONTROL	0x0
+ #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
+ #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
+-#define PCIE_CLIENT_GENERAL_DEBUG	0x104
+ #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+ #define PCIE_CLIENT_LTSSM_STATUS	0x300
+ #define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+-- 
+2.25.1
 
-> +	),
-> +
-> +	TP_printk("comm=%s pid=%d tgid=%d ngid=%d mem_nodes_allowed=%*pbl",
-> +		  __entry->comm,
-> +		  __entry->pid,
-> +		  __entry->tgid,
-> +		  __entry->ngid,
-> +		  nodemask_pr_args(__entry->mem_allowed_ptr))
-
-The TP_printk() is executed when a user reads the /sys/kernel/tracing/trace
-file. Which could be literally months later.
-
-The nodemask_pr_args() will dereference the __entry->mem_allowed_ptr from
-what was saved in the ring buffer, which the content it points to could
-have been freed days ago.
-
-If that happens, then BOOM! Kernel goes bye-bye!
-
-The trace event verifier is made to find bugs like his. And with the recent
-update to handle "%*p" it found this bug. ;-)
-
--- Steve
-
-
-> +);
->  #endif /* CONFIG_NUMA_BALANCING */
