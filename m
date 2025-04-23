@@ -1,73 +1,71 @@
-Received: from mail-qt1-f225.google.com (mail-qt1-f225.google.com [209.85.160.225])
+Received: from mail-il1-f228.google.com (mail-il1-f228.google.com [209.85.166.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C038024468E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FA224469B
 	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:29:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.225
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745443747; cv=none; b=KXqTZBvANKixDPcHuNZVWaskogHHpjeedvlBpbL49/LMd6xOW53EhgGmBjcuFdWgK8VANJY1xFWVrHouf14ZH7tTAW3ObvsKq1r/QLWPz2o/NSnHvDKPtiYZ4eVPmMZEi62stbxR2o6V+rOQJwAJexgrI64oqROMj6sAunoC/jw=
+	t=1745443748; cv=none; b=VX6gYuDMya9aTdP3NgW1+tjK8Kn6joU/YtJ3c549Jhj4i1jsao4tWxPkFzM7Mvo/f6E35En8dHoPowTe9ribspxOobOQT9bkQUjNIaGthhu+P2J0FkSCK73/2lFJHjzX6sTBP8QEJ03eDZ87eatYY9edhVZhUq+hABddyRFdNWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745443747; c=relaxed/simple;
-	bh=VQOLPE77VFynA3OuP+UbKKlDLBd4nZcwYEnXe3Z4ge0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aBRTzIZEsTOmER+Sw6qi3PmdSWW/RqIUvzaHtLNRhB6Tebx4AhxDxR/bkFoAqxYovaUNCggqGT6hE/8PpZpXwSdvGycwde4kKgd/tlDxjdgCyaz4HtlnE0r/wDfgG8Raaqmjhh5ndHINUoXM3OYcCZrpswU00dqpjwWm1PS8tfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=R3bsEbHl; arc=none smtp.client-ip=209.85.160.225
+	s=arc-20240116; t=1745443748; c=relaxed/simple;
+	bh=jJSiliExjwUUvw/BU9r1P+5HjN0QJ5w1C+YK80oL/2w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=D98zPG1bhBwS/Ga9iuFUiQ+vesnrCA3LfQmbVPZkPor5YQ7a8pKt3/yHCpn16FKZ+zVNhECVQ+PKEZN+Rl8QohArAp66PbHwrFdjm5rkKnC0UL/PdrYByIkfB/4hZNhvzrxH50OEdvbWh2ZmaFyS2GF2t5BfI/2Zp2X5wgiWZbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=cJ2EuQGV; arc=none smtp.client-ip=209.85.166.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="R3bsEbHl"
-Received: by mail-qt1-f225.google.com with SMTP id d75a77b69052e-47ae894e9b7so5869211cf.3
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="cJ2EuQGV"
+Received: by mail-il1-f228.google.com with SMTP id e9e14a558f8ab-3cf82bd380bso3514345ab.0
         for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:29:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745443744; x=1746048544; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JCLEBLaRRQintuh2DWGEvr+93VgxR5KQlNFuF1s8elg=;
-        b=R3bsEbHl9k2XqkAG7VrttB9h0tJ+LLbqMhDgYj68NVu0/IEuF54hp1SoZYxQ/LUdR8
-         itGUpTUfUBM01vhn7NqHG8qOiXuvIoNbLHusrvykp+OHvqVIQ4uxebZ/SsuudI/124C6
-         mJKupJqejpnQVmKPcmLItLAYF/RH+w3rnWLGVcoFCbndPZn2MAB/PlrePnCp6iko/LUy
-         UN3Jbr0vV7LVlHt+5h35V/VfzAXtfFEyWT3x7NjuR687uEZjLtaRRv2BoimDGUxACFz9
-         cjLjq6aZPUf+B9DCg6qN8HZHMueuMC/0fDUHqNyc+nyeww1FxU0AjeEzcSnhTyI7Al6e
-         MJew==
+        d=purestorage.com; s=google2022; t=1745443745; x=1746048545; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p70N9HNH8cUqo3HNYWsa7JaG+3jvutETuIK4V8wGm8A=;
+        b=cJ2EuQGVBAZjd6DeGTUxu/SqNrcAiyXtOdWlQclZmXKCE6JN7jQhE3o2LDmgIZvYxC
+         pxmkMKkwAzBWRumnE6s2KqBY1+h9Q0MvCWPahgkl9QRtNIohtaXJnSxJVGCydbrHvxws
+         vjckyHKVcv/gp5CaKpeZNxPla1uNk8aWfPv0T1QlhOUnL98ED2LxbhefVC9wTpAc2wHS
+         qBaBHEisUm73GsBopd0dAr4Xjy2kk12d/ea88nv2AQTZtWUtpqJUA+S+Di6/TkjQHpcQ
+         3IKBdwsJDTcCKA8kewMIbzPFUUdlV6dD7qKbNKpzd8QSf7JMernFf7k8tKnFLjaO4W3r
+         IpcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745443744; x=1746048544;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JCLEBLaRRQintuh2DWGEvr+93VgxR5KQlNFuF1s8elg=;
-        b=WQuJIVytx5WETu0uKVAZgznN4qFtb5Za5hEgXx3FVaLWahjuf7tV1W1oCmIJT/MWEF
-         dCFQfzz1E6WmUFU9ibHsEXZABrOZ72NW0VaJtRGWbDan1AgqRMflW9BQ6m98cZsy277W
-         x5A6zKyoilVw7oW2BWpWpQQFZBTwVwIs7llOnInuewQ2dUI4L9h2IrQzGRqOV/7iJBZ3
-         GprzCUvHrXwk4jALj9yWn7X/kDBrP6XFTXAwtPsh2vNkOmcvqe+jl3HMXl2EEhIhP8Df
-         pvIlDl4GHXWjD+EyR3t0vPyxZo2nIEWDc0vvcEsyeAeLOX8OH/8CoLBNrxa2aLWkkihD
-         BBLg==
-X-Forwarded-Encrypted: i=1; AJvYcCWk3FFBDeoFQvJ/bs39pJBqjJhiXGvCYSvAhO+Ct/srgZ6lV2g/slw9v6ls0UYXGquvw3mjRhLCdj6BM3w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGOzhbmqgn1gnG1gaM61UxFWK+kOm/wC5kdnJaU/DGl9KwIdqO
-	Oh6aJ/UGDaHgj+/c+qN/J/ZpKwJgAxjCNPHqYB7dtEw5y4DAo2TB0/dNfQCDzy3XguCB3H2oHWQ
-	Qpf8L4/09XcI7OApOjUcnfWvnbb1EjuJzgUzWcHLbAQpnBvcQ
-X-Gm-Gg: ASbGncsN8c4P+C5xfQTsSQz0bFCTxuJ20awjdTNfJHPxxmiziPhDqcaJFzDnqXaE+0t
-	RlFYLwiLEaQt/EpAHl8TbXSMUJh3OIGvFm3vhQMIRjufkYsErTmUEzTtIo3rzOtGtPw7/siXrUn
-	4TePyvEuq6nng/YTsYY0R4RuMb/GQeSYsFKbEePD88qNp88ofp/n5qgk2O5B76ltQYB6FUnL3rJ
-	pJjv6pvieXMDe0gva9QuJkPPuiZ4SL5GNoQilkbEIalPg+6n9O/JkFyy0rO8fwjvy8sJfWXZgkk
-	Gubs45WnoPpnydTN7cfk4PnuN/HzZrs=
-X-Google-Smtp-Source: AGHT+IHnxwparxBZcK/VdcwSG32LkVIXSTRmpTrN+S3RXdjd04hZ9i9TCbHB9cDNMgycgsgCMiBSIn3HDpqA
-X-Received: by 2002:a05:6214:500d:b0:6ea:d629:f492 with SMTP id 6a1803df08f44-6f4bfc7a7d9mr3649076d6.29.1745443744638;
-        Wed, 23 Apr 2025 14:29:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745443745; x=1746048545;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p70N9HNH8cUqo3HNYWsa7JaG+3jvutETuIK4V8wGm8A=;
+        b=IEgSWkPINP0SBfKV12M0uXxS8SnfKxhWNpBPB+Sds6/eygb17hw/Uq70ys7cCuAtLn
+         GnGik3kT+oAOJFxmXx9a9QirFPCl6F0Gcx4jwLLqLMYiHHPNcJY2zGgWVNMjiaBY8wyv
+         nMle1e+bbxg3/7V7r4bVrTIL7cESv1Q2tEhORU903i/u7Wjk+xWljdR3sI6LF7m3FaLD
+         A4CYwmigjca6f5XnjloHFwcAyxdUiQgrut3YQlSmzWfYqXOF7pdfQtzY5dTMrT/wtEV8
+         xDFHox9DBdNXhsniwTnW8TWF/0n8Y6pgB9xXTHIqUgmcKYgnvMUNS0xelP1ZhUYJwjBL
+         vyng==
+X-Forwarded-Encrypted: i=1; AJvYcCW28HNP0oYntlIzKIamaZMUZa9K5lQ66hhUcm/3MAe66t4aEzg93OvniQSBGy3c4qZEKogJcpS0oe6c3iI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlUQ0QyGrynudTNJJM1jJDxT+ZnyN5Tg9Nl4xQ1IfJDNzqvBJU
+	LIRey6twK/DlKYDBTrNASIG+UZvn992YBiNsovVqwfGLe9MkpUE+Jccn/AWHitb9zpTiki4OLFY
+	w+DnbSI5qKB4EAAdJ77wCM4YMefeVTTaXA4YBi/LYkW7/2ZrH
+X-Gm-Gg: ASbGncsJaYWhGvh67zmPIx3M7QQoS9gIEdRtGxzPMUlXdE8uX8Gex3Iy72M8UHt7Wzr
+	UV9xnhAZXNqdU/zizSVTl//rFcfUHIgkRE+ClrduIltWmPxKL1DNnt5kDJd/67h0Nef3x19Dz1b
+	/Robi0MpEGVisrt9l09rBUmi3Mg5D/MyNEDiXLo/hJ/qsMjb/94SPYY+Irsr5EDK2XTCiA3yUPn
+	jRmrjvQeRi5s0/P/4MJfIEEr9QpfkXXOdfzqXZnHleL0thROkBBmmOOrKBdPwpPxfq4sV4QYEvf
+	pOHbGlgpH6odpx8Sd49bXEEASvnMwU8=
+X-Google-Smtp-Source: AGHT+IHQLlCt2rIpn1OkhY9M+ASyaXRIpQfgsycsrGOxsBZNZm0fdBuOgsIDF+Bpowlmb+xJRe3aHQmKkEh8
+X-Received: by 2002:a05:6e02:1fc5:b0:3d3:d823:5402 with SMTP id e9e14a558f8ab-3d9303af911mr2416635ab.7.1745443745096;
+        Wed, 23 Apr 2025 14:29:05 -0700 (PDT)
 Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6f2c2b1e111sm5267576d6.37.2025.04.23.14.29.04
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d92758f821sm1201265ab.10.2025.04.23.14.29.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 14:29:04 -0700 (PDT)
+        Wed, 23 Apr 2025 14:29:05 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
-Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [IPv6:2620:125:9007:640:7:70:36:0])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id F2CA43409F5;
+Received: from dev-ushankar.dev.purestorage.com (dev-ushankar.dev.purestorage.com [10.7.70.36])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id EBDE43404EA;
 	Wed, 23 Apr 2025 15:29:03 -0600 (MDT)
 Received: by dev-ushankar.dev.purestorage.com (Postfix, from userid 1557716368)
-	id EBDFBE40E4A; Wed, 23 Apr 2025 15:29:03 -0600 (MDT)
+	id E1482E40371; Wed, 23 Apr 2025 15:29:03 -0600 (MDT)
 From: Uday Shankar <ushankar@purestorage.com>
-Date: Wed, 23 Apr 2025 15:29:03 -0600
-Subject: [PATCH 2/2] selftests: ublk: common: fix _get_disk_dev_t for
- pre-9.0 coreutils
+Subject: [PATCH 0/2] selftests: ublk: misc fixes
+Date: Wed, 23 Apr 2025 15:29:01 -0600
+Message-Id: <20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,48 +74,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-ublk_selftests-v1-2-7d060e260e76@purestorage.com>
-References: <20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com>
-In-Reply-To: <20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com>
+X-B4-Tracking: v=1; b=H4sIAJ1bCWgC/x3MwQpAQBCA4VfRnG2NwcWrSLLMMtmWdpCSd7c5f
+ of/f0A5Cis02QORL1HZQkKRZzAuQ5jZyJQMhFRjRaU5rV97Ze8O1kNNaYkJ0RZuqCBFe2Qn9z9
+ su/f9AC8mi6pgAAAA
+X-Change-ID: 20250423-ublk_selftests-3b2e200b1fa4
 To: Ming Lei <ming.lei@redhat.com>, Shuah Khan <shuah@kernel.org>
 Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Uday Shankar <ushankar@purestorage.com>
 X-Mailer: b4 0.14.2
 
-Some distributions, such as centos stream 9, still have a version of
-coreutils which does not yet support the %Hr and %Lr formats for stat(1)
-[1, 2]. Running ublk selftests on these distributions results in the
-following error in tests that use the _get_disk_dev_t helper:
-
-line 23: ?r: syntax error: operand expected (error token is "?r")
-
-To better accommodate older distributions, rewrite _get_disk_dev_t to
-use the much older %t and %T formats for stat instead.
-
-[1] https://github.com/coreutils/coreutils/blob/v9.0/NEWS#L114
-[2] https://pkgs.org/download/coreutils
+Fix a couple of small issues in the ublk selftests
 
 Signed-off-by: Uday Shankar <ushankar@purestorage.com>
 ---
+Uday Shankar (2):
+      selftests: ublk: kublk: build with -Werror
+      selftests: ublk: common: fix _get_disk_dev_t for pre-9.0 coreutils
+
+ tools/testing/selftests/ublk/Makefile       | 2 +-
  tools/testing/selftests/ublk/test_common.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+---
+base-commit: d2ce053979d1d302fb009f6e1538a0776f177e1a
+change-id: 20250423-ublk_selftests-3b2e200b1fa4
 
-diff --git a/tools/testing/selftests/ublk/test_common.sh b/tools/testing/selftests/ublk/test_common.sh
-index 9fc111f64576f91adb731d436c2d535f7dfe5c2e..a81210ca3e99d264f84260aab35827e0c00add01 100755
---- a/tools/testing/selftests/ublk/test_common.sh
-+++ b/tools/testing/selftests/ublk/test_common.sh
-@@ -17,8 +17,8 @@ _get_disk_dev_t() {
- 	local minor
- 
- 	dev=/dev/ublkb"${dev_id}"
--	major=$(stat -c '%Hr' "$dev")
--	minor=$(stat -c '%Lr' "$dev")
-+	major="0x"$(stat -c '%t' "$dev")
-+	minor="0x"$(stat -c '%T' "$dev")
- 
- 	echo $(( (major & 0xfff) << 20 | (minor & 0xfffff) ))
- }
-
+Best regards,
 -- 
-2.34.1
+Uday Shankar <ushankar@purestorage.com>
 
