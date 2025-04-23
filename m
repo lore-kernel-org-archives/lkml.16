@@ -1,97 +1,107 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster6-host2-snip4-3.eps.apple.com [57.103.67.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80721A239D
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25A817B421
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:28:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418452; cv=none; b=dQ1kwAEy+N8prR6Lo0IyFOOLJ/zZfepluGFN5CcPh5fGwmbjmQ7lg72stjuxnR2AMY/s7t+JFCNZcZ71nDob0IBkywnsizD5jrTRBWXM7kjaJgnRD3dKFyjO3i+R/eTW5RpRYhDfskRlnP7b+RS2NY/hqg+bXw98KQKbSn45jkg=
+	t=1745418523; cv=none; b=shwU+jnwBFVHb+QujRBYvHaLGMaOM+yl/OIrz9Qsq1A5CI98Goq4DyKhkjW3cIfSFhr/g2A/FwWdKox0B4kVegjIsi+h1RZuJmiybgUPUXMoBUc8jardjVH3SDLjAiVi+QTHFe0lUYOZ/VNEV2ocnky5USn2KrNknWdyRSmm7yI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418452; c=relaxed/simple;
-	bh=nXM6AtnLN1ZYma1X8iT5aCvbm82H6Km8UHls5cOvQwU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sXSKjyULA3W4LXtHt3Lzm02ZXaFC+KG/uHsdnr8O8C87WV04bIghagH++iZuHNV3s+F0g6K9XvCUOD6xyJm6E+AXvOE2t+spBYI3hTVDs7qX5Lp5ix4LRNgt+sUqVnFOgCsf3WuPyWZ35ZoIrgGPrNFtatcHIlq1kiHH5DyZiJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=l90t+uL5; arc=none smtp.client-ip=57.103.67.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1745418523; c=relaxed/simple;
+	bh=olgEi8hkKOP25EqBnRGPkbqDG4k0ZvkVsXbAyxVuiMs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hitDm7YBwXP9HGFp1BnSNPe6HYLiCUxxuBc7NV5BqzQFvKuTUAd1zrtsLLcLZ6ahGmnzzt2Gzbxn9jgiPpOxN12g61aYYaWfnncyv8NUAwjQDCNHxaa6vhU2UsvfICLkI4DP4pZ/NW728nsy+owehkEsJ/zzLd1u+3rVDQk8ZNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZbhweNAj; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="l90t+uL5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=8kCbBm/AY2YEx86pOWpcj7Bacq0Dl+t7vQBYVAMNewo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=l90t+uL5t0JUhuluYM4CfGZzd/4ElHfi0EpGncKalxCRRawtXnktgfNfn6aPTMOgf
-	 UHAMiuN4iN3o9ZozX2tWBIWgkoUp2I2OsavtPS+q2naTIJ21+jrRM4WiCQ7j3cXZZC
-	 eWHuRSSNxFO1sIW8+nETrEwLINreG0XOQ80T7jDZo6TntxQOX+ELZ+8SjSa0Kf9Ni+
-	 3UGH6cVoB1DUDik50MwICZUpgKqjMFsgdmvJHAfmJIyjIo9cCL6HgZkbWk7F6N97ls
-	 SUcYQtJBYmtghdTi0BFPnGtlGFAm80qV/VFYZEUyeXqnqI8a8+9qAaUBLKN6LMb8oJ
-	 hZabAm7bOmVrQ==
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id D409C18019D2;
-	Wed, 23 Apr 2025 14:27:27 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Wed, 23 Apr 2025 22:27:00 +0800
-Subject: [PATCH] serdev: Get serdev controller's name by dev_name()
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZbhweNAj"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2255ae39f8fso10740785ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:28:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745418521; x=1746023321; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=40rtvLOwDeuUbiOuCoW1t5olyX8gz8CZJ5ahJ10eU+w=;
+        b=ZbhweNAj3oT2cEITBANR85a+3AC9Kt8YpgVC+0pS/UdzooqO2KwBAg8PnRDG2w+8V8
+         qLox6rQ6BGUGoe3b/N5PTjmCpYwAoHz1scAtDySO/OO++U+IIv/fCY/b2WTSqa4ICql1
+         WiIiDOMpIhKQ3+58D9U7phiYIB7CsXdaZox63CJKsMLu08KEtuOwmEvM+ddRmi5Pjhgh
+         kSOrUE9BxdriaP9tjWEYTWIkAfttmZeIiL0RgKlYphs6LmDQ2TlevtGepgZwoacX5Tx8
+         Egys+nSCqTDinlziB4MkKZqQgUmV+WE37wRkdZq4JtNRtANFxJucZbcim1uDIP9NEFhi
+         FVOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745418521; x=1746023321;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=40rtvLOwDeuUbiOuCoW1t5olyX8gz8CZJ5ahJ10eU+w=;
+        b=E7D5G/WVDXnn5af0GpMtzH2RKj+4Wx1LSqPfZA/CfBKHUoQIJK0U9/vhqArWKLsg+G
+         pzvMZ4oeTncSObN30XBLjovcgNUKHwhSBeXkxgQJ8l0HhGJOxVbJRDljeuimvI7t4Obz
+         WfSP3s4TTHP1y+WfIQZkNVwDsDbxTelTaasfYGKvSgeYtD3h1M8ae1yJ1XHZGcn2lL5v
+         pk6oBYA0vp4lRdtcw0QYqDqh5RmJXIXJ2jjEOTfY5sRGyyzt8Oq8xR6p7OGM32rZkfwR
+         +t3f4EcT/amvpyoP9IByDDj2FRSoGL4OJP4V6KMNBF6H5yTguJXw3hktgMqyNHM/PbgB
+         X0qQ==
+X-Gm-Message-State: AOJu0Yyd7nKmjgGWgC40z4wqagkg+kO2Q7MZIpzwXhL5m5r0rqS3zYkx
+	AhYD4ej8836gKJmR2ISC460m2dJRj9jAnQRHidTjMAiRTxKTY5qflglOhSVTFWvDmqVPxvDw+jk
+	6dA==
+X-Google-Smtp-Source: AGHT+IEHFWhYz0oAsCQCzYVGgs17eJ2RdOv2pA+CJ/89PxdUza1pyAyGtkAfHJad1QU5DCSNGF6B8Gtgtdo=
+X-Received: from pjxx4.prod.google.com ([2002:a17:90b:58c4:b0:301:1ea9:63b0])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:c2cd:b0:2fa:21d3:4332
+ with SMTP id 98e67ed59e1d1-309df187b6dmr4574319a91.12.1745418521285; Wed, 23
+ Apr 2025 07:28:41 -0700 (PDT)
+Date: Wed, 23 Apr 2025 07:28:39 -0700
+In-Reply-To: <20250422082216.1954310-4-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-fix_serdev-v1-1-26ca3403fd33@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIALP4CGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEyMj3bTMinignpTUMl3LlESQkKWBhWGSElBDQVEqUBZsWHRsbS0A3pq
- 2tlwAAAA=
-X-Change-ID: 20250422-fix_serdev-9da04229081b
-To: Rob Herring <robh@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-serial@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-ORIG-GUID: q-hAJCDiicWJMw6D8RkcY1pff6e-Kkve
-X-Proofpoint-GUID: q-hAJCDiicWJMw6D8RkcY1pff6e-Kkve
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
- mlxscore=0 bulkscore=0 adultscore=0 clxscore=1015 spamscore=0 malwarescore=0
- phishscore=0 mlxlogscore=890 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.22.0-2503100000 definitions=main-2504230102
+Mime-Version: 1.0
+References: <20250422082216.1954310-1-xin@zytor.com> <20250422082216.1954310-4-xin@zytor.com>
+Message-ID: <aAj5F9IZXG7MB0ai@google.com>
+Subject: Re: [RFC PATCH v2 03/34] x86/msr: Rename rdpmcl() to rdpmcq()
+From: Sean Christopherson <seanjc@google.com>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
+	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
+	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
+	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
+	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
+	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
+	decui@microsoft.com
+Content-Type: text/plain; charset="us-ascii"
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On Tue, Apr 22, 2025, Xin Li (Intel) wrote:
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> ---
+>  arch/x86/events/amd/uncore.c              |  2 +-
+>  arch/x86/events/core.c                    |  2 +-
+>  arch/x86/events/intel/core.c              |  4 ++--
+>  arch/x86/events/intel/ds.c                |  2 +-
+>  arch/x86/include/asm/msr.h                |  2 +-
+>  arch/x86/include/asm/paravirt.h           |  2 +-
+>  arch/x86/kernel/cpu/resctrl/pseudo_lock.c | 12 ++++++------
+>  7 files changed, 13 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index f231e1078e51..b9933ab3116c 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -152,7 +152,7 @@ static void amd_uncore_read(struct perf_event *event)
+>  	if (hwc->event_base_rdpmc < 0)
+>  		rdmsrq(hwc->event_base, new);
+>  	else
+> -		rdpmcl(hwc->event_base_rdpmc, new);
+> +		rdpmcq(hwc->event_base_rdpmc, new);
 
-serdev_controller_add() uses hardcoded serdev controller's name, and that
-may be wrong once user changes the name after serdev_controller_alloc().
-
-Fix by using dev_name() instead of hardcoded name.
-
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/tty/serdev/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-index eb2a2e58fe78fbbdb5839232936a994bda86d0b4..971651b8e18dcbb5b7983cdfa19e7d60d4cd292b 100644
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -783,8 +783,8 @@ int serdev_controller_add(struct serdev_controller *ctrl)
- 		goto err_rpm_disable;
- 	}
- 
--	dev_dbg(&ctrl->dev, "serdev%d registered: dev:%p\n",
--		ctrl->nr, &ctrl->dev);
-+	dev_dbg(&ctrl->dev, "%s registered: dev:%p\n",
-+		dev_name(&ctrl->dev), &ctrl->dev);
- 	return 0;
- 
- err_rpm_disable:
-
----
-base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
-change-id: 20250422-fix_serdev-9da04229081b
-
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
-
+Now that rdpmc() is gone, i.e. rdpmcl/rdpmcq() is the only helper, why not simply
+rename rdpmcl() => rdpmc()?  I see no point in adding a 'q' qualifier; it doesn't
+disambiguate anything and IMO is pure noise.
