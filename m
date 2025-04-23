@@ -1,78 +1,77 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA8517B421;
-	Wed, 23 Apr 2025 15:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4AC28BAA9;
+	Wed, 23 Apr 2025 15:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423467; cv=none; b=PpvCgUcdx6ijn5ZawuK9W84DtLu8/S3ck+pYK9SLBxKXP4Gu2tvQ4V/L42XjVtgt8H2MushJZgBDIdUuQcQ4l/HBynLr08NpkBpRywT0m26jysBy2CV+8MGu2j5i9os3NbtJTLlxyh9PFUj5usP9YbTVjTD5iobSz8KFKL2CUhw=
+	t=1745423474; cv=none; b=dIT+h51xFVAjMDF3wE1tbwLmk0UJt5+brXLXzuQqArrN0h9P7AQDzGB4/+CZapVIznNqHOMYaExlD86LbyKGw3EcZtXSxlIovxQlbDNQBKMAiLTXMjBegZkhZqoBWgZj4EibQHz7AL4fkbq+cWwY6Ab1XiFlYZjdNe4AbCsJ+v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423467; c=relaxed/simple;
-	bh=B1YKMJ/VnCvb13tK2on40+VgvnHD3klALa7QqH6XHwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qwD9DK8jJwl5mfFE0gZ6V56FDlbhJi7xa6kAXvF+uqlyeCs5crCESoCJOXwm1xqpR8zKB25xQJ7FAnedQPkxjipBHt+ayWTS5yvOPgKU+4YSCdbYNqi2OuHatvE56N4q6ygMAz7XgR15ziubYNdYEiy6dK8FU/pPN4G4cbx29BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NWLEduGE; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1745423474; c=relaxed/simple;
+	bh=aa7/f5Zh9n06yla3BDP8426xRfbXJ+bYThqtSMu5iMI=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UPWiNuIVnO45LCf2WbYeTCKPicb1uOsVTIXUcGTXBO/lZlSKwdLOxzVHQY81wZnuDCS4XW3yN0g2VjImVAswB359HvJGvEfB+y39JZdJ0j5muiUwN5rBwC07c+8k0mhDyS8zBWt9DgauyQMX6WERu8mLN+htRSxzZykuQt7xavM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nKB56hZl; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NWLEduGE"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22c33ac23edso66860585ad.0;
-        Wed, 23 Apr 2025 08:51:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nKB56hZl"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf848528aso49448855e9.2;
+        Wed, 23 Apr 2025 08:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745423462; x=1746028262; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745423471; x=1746028271; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1x0LjQOtwd7ZGiLXKIcfaebNJm+NkVU0O+im0vtc/gI=;
-        b=NWLEduGEMeXuU4QId0UOeUDjZ1zm5eVoKsLFfAMyXRNR9Yw2AZFTKS0MlPvj0qxJSV
-         D5KHe6za5HiL1SmK6K4XioOB8svZd4JZjYtsJPZJNY0+OFE7lroBDaiJcNfs/gAjop3P
-         0PXJtkwXuvgCctsMrKLtNuw/dPgptUDTDX3EEya1ubTETRKdl2uTXDkQTdFkq6VMsHXg
-         fAoGHlezXe3XqlskXmbMHwdkr07PQtHT9yS8KWm0XHXEHtWVHKgsrsTPJUu4sVP0+wCk
-         By9DevaGQC0EjKf0rVJD4+ZfCZsC1WEe5bWL40H58ynSqfEWllc8VZ2OHbYJdhtO9VJM
-         moAw==
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x6aidtYCoBxwfa+luGgigfHv2I9RMSlPDA/HH3ouHUw=;
+        b=nKB56hZl26a06tlMQWcS3UbiFrqStyCqMP6+kL+mcq8jvUP3zRVdW3wbtSyDZabY2P
+         pQ7R+Gcox3dqVpTZt/p/ISqWwZYB1WZ3Mv7YouPiKoWhAot2t9RBLIhZKFn20ju/zvUl
+         +U2ZTSeO7i6pQRIRBh0gA2Oqm+f/ZYbZ3lYPbBW1lq9jJdp+8boZyAvNzoj4sM+Y0zE/
+         A4kwdPVTgndHScp4QzEQuEk2f1nEF2gpFkC6TeQsNyiBODHK+exDOBHK1AlKNktFfuf+
+         cLIFskFo89Qk91zaa9tZq1eRfpHg1bRAXtGXdOaYlzhqfV8Dzmx92LxJwX/Y8tmrjaV/
+         4utA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745423462; x=1746028262;
+        d=1e100.net; s=20230601; t=1745423471; x=1746028271;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1x0LjQOtwd7ZGiLXKIcfaebNJm+NkVU0O+im0vtc/gI=;
-        b=xIl85koxElVmVVBmKy59a4PpvpulnO8+5BCRc+DQJfLN4eGkEEvABeplfBgkVg31vf
-         wPnjHQqd3szIMSHsvDakDRos6Spow3XX0neeVwULhv+hFdEW06OyDnC0KorUIZlewPED
-         VydVkLSm5bmarJUKWsobgFrVa7reGfxK8EGsN2a7J7WmMin9FcBCTzwQhFL9g8HG43+I
-         yTyrG3gMFdkaPLPvDCawDxafAwLyZiOPzEvLiOrBvNAHoNT17e3baHwtQEyhdgXpcMTY
-         VMxKy5coirgEpHuHJBOuqJfCsO3XPq2NVBp6Y02NVfK+vo04qoGe4bjJQkAKWs2d9P5j
-         aKzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVu4pT4QTvPFVfLdvFdijiv1EClLMiWLZvuPNvJtcX9i+OIv99GxE1u88nUYVdWCrvs6pMLl2ayjsBsB8k=@vger.kernel.org, AJvYcCWGSGw3jDIvRTL6xOjnp2zflRZcN2AiOx1G9TlC0gQrczAkV2qLLhuRUWgpY3DCbzKFF09/TQZqv/hxA4DSlqs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXvAi39Yf1xe2WukVhQ0TcR7hU1J1AHs2zpBrFyaA37eiiO79c
-	/VYisFGREKF9g/TGLT4BsGejG9M8CNZyR48LSfOqhTqYdqPl3N2U
-X-Gm-Gg: ASbGncvAftKR6ZdfhsivAi7ZhYQie2M2piiPsx5OzyFER1q5Vv+4tZj/5f3oMBiNgn6
-	+aj6f6jAyRJ8KQL82N+jb15s3px+/0FNjDiJbstWn+N85HLSxKutxzgRzIe95FhYO8ItUe8hpZp
-	hOcoEQbNr7qqMFMb1c2488MgncyyfViS0FU/GHBn7OiYoVfuOBc6iGR1RsUp7Xy/zErYtm0f6cY
-	Vw8g5q01A/DojuxYfCD+woLX8B4AqquvsUBBgZDE5SRdYpuX6GTWIVH4gq6lF+rAxyEQAZR2I5v
-	HRoXZM26FVrgsGxytVnLMpMmqD8kCzc07lmFK4Gb
-X-Google-Smtp-Source: AGHT+IGmT+yDYzc6f9FEH4JY+azUgWMSi7aZqK6fuTmOSzIp64TCmCxmBamClG/qmaIP+RwQylsdIA==
-X-Received: by 2002:a17:90b:2f06:b0:305:5f25:59a5 with SMTP id 98e67ed59e1d1-3087bcc8b21mr27744965a91.35.1745423461783;
-        Wed, 23 Apr 2025 08:51:01 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309df9232f2sm1813224a91.0.2025.04.23.08.51.00
+        bh=x6aidtYCoBxwfa+luGgigfHv2I9RMSlPDA/HH3ouHUw=;
+        b=r4EwtPb0V1+wbRfT0QPKsDqAzvE/92jtGc7zfiokgpDaWqid2mt+TQvlXhuoUWvBqQ
+         GKY1e8vLrO0GnZooluJZGj9ZudQ7o1Lp2/mY5UOrOhDNgg6vrV8QKRUi/1f9Ex9uhqI/
+         8Zq5DDnQRv9EFlUCCEGGlQa7b2I/lnwiUbqoX3/4Rp7DnnfHL8EzcJxPsK7kNbUhcmhN
+         JJk8vP2PiRpisS7PId8NgCZXv1UpnUKT1wnEhCbvZqjr7mUMLoPplICxytwhra0wvpNF
+         V0QErintGK1Z6G+BGm6YoAhtJxtgHz+iyh6j2V69cgHs81FrVeLrRajCh7HNeF1YDYRB
+         RKrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTUPV0hawQJk4W8LuFcOHT5zIoEjErl4kT8iGo5OlF38WeScyy2EE5kf80I7GMHlngS3o3ofB+XIBHnwdI@vger.kernel.org, AJvYcCXmaaQnoJwBkfH/qkOyYB5u9eZ7hf+i4xngXXOPnbr2iFIcgya6GrBDH2Wqf9mma2DDhUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8VJbTftJ4CZ9UVBe5zUvCju3ACse7CfCix6WOXhDJSGXlvJ4D
+	h/PfE+/mhSxSfjgsAPHxXFTgvMxWgTqfEwrvS4MOfDb2fhnX8GU+
+X-Gm-Gg: ASbGnctELq/y/yjwzKevG7ioQURqsN2exY658VWrZJqY9vqvWIVHPkUOLROX6fHmCf8
+	gTwunLZZU2eeCE/zDrW5vswHVPkByismXZrWBqV4uQCdKu0EkQ07Wimk/Nelp2WcgzJnKb30GN3
+	hm0s1hqgLQkQ8nSY5QfLwc3qCwGVAPDu0ogt0tajieX37N0DD4E+HVXRFXdEueslpBTsuOxefQx
+	LNzs2oX3Rzx6cl2H2V/K49Kf2XO5ehCaILW0ZCvXR/UKftq8xT1CWduIBFGG6XYLOfbjCz+mDg3
+	aQN1cw1saKanKFEsr0899g96q8kQ8M+7bhkzK9CRCCgc/pg=
+X-Google-Smtp-Source: AGHT+IGS33U0SQfEUtTQ/6SINRbclcHrXy1+ioipbh+69IqIa03G439XHh9lBMNutBMrCfUiOq1QHA==
+X-Received: by 2002:a05:6000:cc6:b0:39f:a553:3d98 with SMTP id ffacd0b85a97d-3a06c43f9a4mr23357f8f.56.1745423470916;
+        Wed, 23 Apr 2025 08:51:10 -0700 (PDT)
+Received: from krava (85-193-35-16.rib.o2.cz. [85.193.35.16])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43bee6sm18983897f8f.45.2025.04.23.08.51.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 08:51:01 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:50:59 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Burak Emir <bqe@google.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/5] rust: add bindings for bitops.h
-Message-ID: <aAkMY2QBG5btKVIO@yury>
-References: <20250423134344.3888205-2-bqe@google.com>
- <20250423134344.3888205-4-bqe@google.com>
+        Wed, 23 Apr 2025 08:51:10 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 23 Apr 2025 17:51:08 +0200
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Tao Chen <chen.dylane@linux.dev>,
+	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+	daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+	yonghong.song@linux.dev, john.fastabend@gmail.com,
+	kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH bpf-next] libbpf: remove sample_period init in
+ perf_buffer
+Message-ID: <aAkMbBdzWX_iE1zM@krava>
+References: <20250422091558.2834622-1-chen.dylane@linux.dev>
+ <aAedDw7fWAF2ej1f@krava>
+ <aAfok3ha8QQkP8VB@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,82 +80,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423134344.3888205-4-bqe@google.com>
+In-Reply-To: <aAfok3ha8QQkP8VB@google.com>
 
-On Wed, Apr 23, 2025 at 01:43:34PM +0000, Burak Emir wrote:
-> Makes atomic set_bit and clear_bit inline functions as well as the
-> non-atomic variants __set_bit and __clear_bit available to Rust.
-> Adds a new MAINTAINERS section BITOPS API BINDINGS [RUST].
+On Tue, Apr 22, 2025 at 12:05:55PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Suggested-by: Yury Norov <yury.norov@gmail.com>
-> Signed-off-by: Burak Emir <bqe@google.com>
-
-Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-
-> ---
->  MAINTAINERS            |  5 +++++
->  rust/helpers/bitops.c  | 23 +++++++++++++++++++++++
->  rust/helpers/helpers.c |  1 +
->  3 files changed, 29 insertions(+)
->  create mode 100644 rust/helpers/bitops.c
+> On Tue, Apr 22, 2025 at 03:43:43PM +0200, Jiri Olsa wrote:
+> > On Tue, Apr 22, 2025 at 05:15:58PM +0800, Tao Chen wrote:
+> > > It seems that sample_period no used in perf buffer, actually only
+> > > wakeup_events valid about events aggregation for wakeup. So remove
+> > > it to avoid causing confusion.
+> > 
+> > I don't see too much confusion in keeping it, but I think it
+> > should be safe to remove it
+> > 
+> > PERF_COUNT_SW_BPF_OUTPUT is "trigered" by bpf_perf_event_output,
+> > AFAICS there's no path checking on sample_period for this event
+> > used in context of perf_buffer__new, Namhyung, thoughts?
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index b11eb9ebc53d..1f162f64eded 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4149,6 +4149,11 @@ F:	include/linux/bitops.h
->  F:	lib/test_bitops.c
->  F:	tools/*/bitops*
->  
-> +BITOPS API BINDINGS [RUST]
-> +M:	Yury Norov <yury.norov@gmail.com>
-> +S:	Maintained
-> +F:	rust/helpers/bitops.c
-> +
->  BLINKM RGB LED DRIVER
->  M:	Jan-Simon Moeller <jansimon.moeller@gmx.de>
->  S:	Maintained
-> diff --git a/rust/helpers/bitops.c b/rust/helpers/bitops.c
-> new file mode 100644
-> index 000000000000..1fe9e3b23a39
-> --- /dev/null
-> +++ b/rust/helpers/bitops.c
-> @@ -0,0 +1,23 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/bitops.h>
-> +
-> +void rust_helper___set_bit(unsigned int nr, unsigned long *addr)
-> +{
-> +	__set_bit(nr, addr);
-> +}
-> +
-> +void rust_helper___clear_bit(unsigned int nr, unsigned long *addr)
-> +{
-> +	__clear_bit(nr, addr);
-> +}
-> +
-> +void rust_helper_set_bit(unsigned int nr, volatile unsigned long *addr)
-> +{
-> +	set_bit(nr, addr);
-> +}
-> +
-> +void rust_helper_clear_bit(unsigned int nr, volatile unsigned long *addr)
-> +{
-> +	clear_bit(nr, addr);
-> +}
-> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-> index aa0c0c2cdee2..aaf0f735d1c2 100644
-> --- a/rust/helpers/helpers.c
-> +++ b/rust/helpers/helpers.c
-> @@ -8,6 +8,7 @@
->   */
->  
->  #include "bitmap.c"
-> +#include "bitops.c"
->  #include "blk.c"
->  #include "bug.c"
->  #include "build_assert.c"
-> -- 
-> 2.49.0.805.g082f7c87e0-goog
+> It seems to be ok to call mmap(2) for non-sampling events.
+> 
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Tao Chen,
+could you please resend without rfc tag? plz keeps acks
+
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
+
+> 
+> Thanks,
+> Namhyung
+> 
+> > 
+> > > 
+> > > Fixes: fb84b8224655 ("libbpf: add perf buffer API")
+> > > Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+> > > ---
+> > >  tools/lib/bpf/libbpf.c | 1 -
+> > >  1 file changed, 1 deletion(-)
+> > > 
+> > > diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+> > > index 194809da5172..1830e3c011a5 100644
+> > > --- a/tools/lib/bpf/libbpf.c
+> > > +++ b/tools/lib/bpf/libbpf.c
+> > > @@ -13306,7 +13306,6 @@ struct perf_buffer *perf_buffer__new(int map_fd, size_t page_cnt,
+> > >  	attr.config = PERF_COUNT_SW_BPF_OUTPUT;
+> > >  	attr.type = PERF_TYPE_SOFTWARE;
+> > >  	attr.sample_type = PERF_SAMPLE_RAW;
+> > > -	attr.sample_period = sample_period;
+> > >  	attr.wakeup_events = sample_period;
+> > >  
+> > >  	p.attr = &attr;
+> > > -- 
+> > > 2.43.0
+> > > 
