@@ -1,53 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0E82857C3;
-	Wed, 23 Apr 2025 17:17:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812D728BABA
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428637; cv=none; b=GsA/7WTDPFttdKDdwYihZMOEhqtEUQi0ymiqYyclh1+Or0M+pZNS/hol7QiFgKs2any+DgT6di908PyyZ2TNMXM6y4WGMz7LUWICfVPxBAijpqHRYWlfQJ8omAjgEcIVFG6WE9CUANB44JnlNreWdO/Ex+rJXocnynBrTBbeSQs=
+	t=1745428644; cv=none; b=s6cQrR2FkXPiQR0ku4ENAbtf7kB0pIB2jFXsaZ6BEkob6YDXXpFvQQ97Qg57QwS+oFdUfy2Ka9Z0yY/xnnE4T1opyOiztCsXseRriTOi/n9GZYjXUOCzSpEqWszvSVk9N89tx+ssHOQx6evQLek5hzCqBI4WZAO3lUAjjYiXVPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428637; c=relaxed/simple;
-	bh=5zuLKKZD6t7o07tEGhpoSHITV1456s45wx0bf1ltqFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Bu003cpWzRvLO6FmuyfPVYMrkfuIrCJFCifcauCDpqzNmFy7UQHAozKosDK67AuMfFmToNjxfjBEpaP53sP4iCgGFMh/oRGDQQFjKUwgsIPKQ0HtR9UZ9e3W/1Qnh/6/kjC431Uo/2wJvu8pdTYl559y5KR3Zbj0q7QmLVEY2N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxPnZ76B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745428644; c=relaxed/simple;
+	bh=EiBhyUfzV2Z7UDyJtWT+jDVz3vG5z4pmjKVdd/tf4pw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oNhjfVrKFSeBk/r6bcx6ql+BH44IrWbOJd4UYX2XAk8r4AXmciOfNKPvXMb3+IjbhMNwB8Sib+WVnJO7m/8aJ3lKqVx5EY9fFKQCLFWukgimV1qP9iXiwQ2S8JbifiQ+KEdmP3d00xboGwkJ38vMJVlvMU0xF9H0EmivRL4bfOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=npaeDpuZ; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxPnZ76B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12F3C4CEE2;
-	Wed, 23 Apr 2025 17:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745428637;
-	bh=5zuLKKZD6t7o07tEGhpoSHITV1456s45wx0bf1ltqFY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=QxPnZ76Bip0N0EzbDxLFq45byCvtqYqWbORH1JnPdt3SM0Q1yn8SRPrsr5JwCT8MX
-	 yzG2x3Rsg/5ZMowmZAiXcEetxAaDmRRD+DqMmN7eawirBaL12ETTQLq6Hdr6GjOZWu
-	 XT3sSvEVKKOZ6YSqP6isJEKsRO0lMWp+pqng57bRI6x4KQ4eUFw2KPW/avjtGqGGWa
-	 36JN6n2NcmrT3LqSvKXMEkN7mWsj+yFq4oIphytGaAfAsqbaz2WMXldmidYKxBCvzQ
-	 mP1Zy7n8BGLdGsCmJEeWjbs1NEEW6QaVH2ehHmz2fGmdx4ZGeFKMPRJJdrB55eaO+I
-	 fm6TIGtoIPbCA==
-Date: Wed, 23 Apr 2025 12:17:15 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com,
-	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-	quic_vpernami@quicinc.com,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, Niklas Cassel <cassel@kernel.org>
-Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
-Message-ID: <20250423171715.GA430351@bhelgaas>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="npaeDpuZ"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4766631a6a4so837481cf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:17:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1745428641; x=1746033441; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dFsItIzcNoABKT1tTnR+L3KluEl/QW6UiWkd3yuS4gc=;
+        b=npaeDpuZ5VPkOZqrigtgKEO3dCkGR0IX2y98q9Ii9PH6a4ySKU1Jl4WwtNJ6vivJox
+         7hEhKgYIFPYqeHFyrzJiO3d33Z8ckzVE0eaA8fEtLnT8cYn03BrtVZuBiETLqrfiK/nf
+         gFTPKeLi7Cpt7+qx2b+ZjMHPmjzmah7oNakivA1lRSbQMUGY1if5wHCAKmZlpI9uAt6a
+         Zy6Lvyyn98F2uzFdf2FiWobaepLTsF6ukZ61MMk+0nGEE0Blu0FjWpPxnQrpfafrFL4m
+         rX9Cge4tjMFyn+s+tbrBkE7lZCL4t6Rs9j2pRiBe6X2c5Xq9grXs9D9XN/yfjfw31f4z
+         4q3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745428641; x=1746033441;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dFsItIzcNoABKT1tTnR+L3KluEl/QW6UiWkd3yuS4gc=;
+        b=EvxNwibcC0uWoijW6e9PFlur0qE5LGK7I4oHFmN61ObWex8qGqYijnJT9uSlzb0s7u
+         3DYzQFmAFXDlawpMaifENTd//UcqRtGQxVUSULtbi59lMpvkw6ugKR1QkZ9Y6rCZV3z2
+         B+w0s3iNYAyEOsyyPXnxsx86CnP3Z0py5Tbqur+8Oz9PP1RGU3WpEENfdqDDPWhmWVyE
+         gAw5tpL6C3IpJVUd5ykpCz6F87kugzqeIt2FeqsTjfi3HMk/7bfLB4CAke24OGBvzJDx
+         kxuaeQl6+X5u3q8lhKwABTshz837EZiztgXomUjStskw85cE8x9Wd8tTDTfEZDrs7jfY
+         4lIg==
+X-Forwarded-Encrypted: i=1; AJvYcCXNpHowINoh1zgvD+gAOTP7jJXBEPFu/MxVaRt0bqGmBh1Z2XoomxZzq8ufa7pJzb5QFMRtPZNjTUOpNZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxT1c/bDA5LpKvHf/y/rffBFYIDy7i521auaD2qt7ZwgoEq838U
+	f67t7F8pBKG+Bcf3U9iVI1RJ/mvmOBLKzZeK1fHYcKmxD3o38BRnQ/7n4WjCKHI=
+X-Gm-Gg: ASbGncv1pg5Xxgnr8eHn4UQ21Ph85ek0c5hvWBUqswxy24J1mLO4w0HOUbkt3FCLgfP
+	rSla/vKY94aWJe+jQAkxdSq0o4VvmoTJHAxy2TgKZkE15JPd6z2++pg/vOZx89Tr3D1pYJY99g3
+	vM40Zy5SAZEX8q5eDL/vf5jf39SPMKWAPziILJMk69APwy2Ua3nmwQeSoYocbpjeztq/rPo4/2j
+	bt2+Bzapl0bBLHCDZwFRZg5bpD0Hs0DWi8H/haz2AXiiHrELjaRhLkRn3Nsjs5qDuoMxvhaH46T
+	9hE9fwUX4UcPKF4qnbWycdTdCtdQ9USt/XtVN7JLvy6f69w3JDuoijEqIud2K17uaBkMfI8WsjT
+	9LymIFg5vEAzMVywGpK8=
+X-Google-Smtp-Source: AGHT+IFtKlYmuMPWfMKQK8kh2VV5wwxeBA4j6ePEQHIEvAPMlC2NtpfOcLZrcYI7RZQRiXVuJwSHAw==
+X-Received: by 2002:ac8:7f51:0:b0:476:838c:b0ce with SMTP id d75a77b69052e-47e7607d5ddmr844071cf.13.1745428641397;
+        Wed, 23 Apr 2025 10:17:21 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9cf9f29sm70808611cf.71.2025.04.23.10.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 10:17:20 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u7diq-00000007LSZ-1iS9;
+	Wed, 23 Apr 2025 14:17:20 -0300
+Date: Wed, 23 Apr 2025 14:17:20 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 10/24] mm/hmm: let users to tag specific PFN with DMA
+ mapped bit
+Message-ID: <20250423171720.GL1213339@ziepe.ca>
+References: <cover.1745394536.git.leon@kernel.org>
+ <0a7c1e06269eee12ff8912fe0da4b7692081fcde.1745394536.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,73 +103,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
+In-Reply-To: <0a7c1e06269eee12ff8912fe0da4b7692081fcde.1745394536.git.leon@kernel.org>
 
-[+cc Greg, Rafael, Danilo for driver model .shutdown() question]
-[+cc Heiner et al for related conversation at
-https://lore.kernel.org/r/20250415095335.506266-2-cassel@kernel.org]
-
-On Tue, Apr 01, 2025 at 04:51:37PM +0530, Krishna Chaitanya Chundru wrote:
-> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+On Wed, Apr 23, 2025 at 11:13:01AM +0300, Leon Romanovsky wrote:
+> From: Leon Romanovsky <leonro@nvidia.com>
 > 
-> PCIe host controller drivers are supposed to properly remove the
-> endpoint drivers and release the resources during host shutdown/reboot
-> to avoid issues like smmu errors, NOC errors, etc.
-
-The effect of this patch is:
-
-    .shutdown()
-  +   qcom_pcie_shutdown
-  +     dw_pcie_host_deinit
-  +       pci_stop_root_bus     # release all drivers of downstream pci_devs
-  +       pci_remove_root_bus   # remove all downstream pci_devs
-
-I'm not sure about removing all these drivers in the .shutdown() path.
-The generic .shutdown() doc is "quiesce the device" [1], and my
-current interpretation for PCI is that it should disable DMA and
-interrupts from the device [2].
-
-If PCI host controller drivers are supposed to remove all downstream
-drivers and devices in .shutdown(), they're all broken because that's
-currently only done in .remove() (and not even all of those).
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/device/driver.h?id=v6.14#n73
-[2] https://lore.kernel.org/all/61f70fd6-52fd-da07-ce73-303f95132131@codeaurora.org/
-
-> So, stop and remove the root bus and its associated devices and release
-> its resources during system shutdown to ensure a clean shutdown/reboot.
+> Introduce new sticky flag (HMM_PFN_DMA_MAPPED), which isn't overwritten
+> by HMM range fault. Such flag allows users to tag specific PFNs with
+> information if this specific PFN was already DMA mapped.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> Tested-by: Jens Axboe <axboe@kernel.dk>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
 > ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index e4d3366ead1f9198693e6f9da4ae1dc40a3a0519..926811a0e63eb3663c1f41dc598659993546d832 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1754,6 +1754,16 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->  	return ret;
->  }
->  
-> +static void qcom_pcie_shutdown(struct platform_device *pdev)
-> +{
-> +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
-> +
-> +	dw_pcie_host_deinit(&pcie->pci->pp);
-> +	phy_exit(pcie->phy);
-> +	pm_runtime_put(&pdev->dev);
-> +	pm_runtime_disable(&pdev->dev);
-> +}
-> +
->  static int qcom_pcie_suspend_noirq(struct device *dev)
->  {
->  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> @@ -1890,5 +1900,6 @@ static struct platform_driver qcom_pcie_driver = {
->  		.pm = &qcom_pcie_pm_ops,
->  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
->  	},
-> +	.shutdown = qcom_pcie_shutdown,
->  };
->  builtin_platform_driver(qcom_pcie_driver);
+>  include/linux/hmm.h | 17 +++++++++++++++
+>  mm/hmm.c            | 51 ++++++++++++++++++++++++++++-----------------
+>  2 files changed, 49 insertions(+), 19 deletions(-)
+
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+
+This would be part of the RDMA bits
+
+Jason
