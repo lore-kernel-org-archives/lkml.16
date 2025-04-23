@@ -1,20 +1,20 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67F558F40;
-	Wed, 23 Apr 2025 13:59:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F0525DD15;
+	Wed, 23 Apr 2025 14:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416764; cv=none; b=Rhfme/5Tv9iGQ03xNqEZX5wZB9G86xju5ngjljgGQG2nLgfKX9Jr5dvW8Vv9k4+rxMoPI7YYF2rCkEGCy3JYUFCCqEnhFaJAAwFzlMkt0AcwOteZOtjwQWeLGgJUbOCvl0HDgtxOsqqryBHkWSx+5hyEXGLXiJ4Ac2vBe1V6TB0=
+	t=1745416867; cv=none; b=lqck+TaamdSBwxZIGbgOX1vgFlzFMyHRvF4VLalqPZWWj4T6qQsEzcF7D25Zykl4hKku7iAWWEDcs61u87sf0gDefJLQBJF7KGB8uB+wPfTl/Uc0m1RfXUDgLtsKOnHYtWeeaLI54IPWC/ZArlmr9vqSZlmTopubdPQexq40H9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416764; c=relaxed/simple;
-	bh=NIsvHkb3YAHcStXHbWWTCowsMopNVZxMx4x+Yl26gZk=;
+	s=arc-20240116; t=1745416867; c=relaxed/simple;
+	bh=n5pvX38w2XH3jmyJc/4T51GiVPoZ4YjwhB1Cjy/LJeE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ltk+Vdj/k8w+xmd61nd8bfu9sgD03uHACHwE/DBT9jOT43bH0GMs/6xrpEm/p12OjRTzEM0DDAeURa274boj8+GSfEUys612imp+Lm48X56CJiAY1NSeidjcsOH9NSr+GzVjGLgWQrALBjS2/nlnITQpbB7+1HQfAjZtDSgOiVQ=
+	 MIME-Version:Content-Type; b=AcJfBquwhdbM7L/BffG7xvXAev5MokRCqRGEjRV15StNiDCKV0VGWxrGdp0NMnS/MVmMN8mJ03rrrlfVBmWQiS1TBAgbgc3Vn1lGjiMC3hoS7uDXrR2MAWulP6fb4Puc3/H6xoWDJGAt7N4p+ocfI7xdkLdP2fhGHcvJ8guHeRU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1432C4CEE3;
-	Wed, 23 Apr 2025 13:59:22 +0000 (UTC)
-Date: Wed, 23 Apr 2025 10:01:15 -0400
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40BFEC4CEE2;
+	Wed, 23 Apr 2025 14:01:04 +0000 (UTC)
+Date: Wed, 23 Apr 2025 10:02:56 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: "Aithal, Srikanth" <sraithal@amd.com>
 Cc: Bert Karwatzki <spasswolf@web.de>, "Paul E . McKenney"
@@ -24,12 +24,13 @@ Cc: Bert Karwatzki <spasswolf@web.de>, "Paul E . McKenney"
  Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org,
  Linux-Next Mailing List <linux-next@vger.kernel.org>
 Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
-Message-ID: <20250423100115.657c68be@gandalf.local.home>
-In-Reply-To: <8f7671cc-32f1-4028-a1b0-c7dccf472f76@amd.com>
+Message-ID: <20250423100256.0e3d0a38@gandalf.local.home>
+In-Reply-To: <20250423100115.657c68be@gandalf.local.home>
 References: <20250423115409.3425-1-spasswolf@web.de>
 	<647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
 	<20250423094655.2a0e25e0@gandalf.local.home>
 	<8f7671cc-32f1-4028-a1b0-c7dccf472f76@amd.com>
+	<20250423100115.657c68be@gandalf.local.home>
 X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,15 +41,14 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 23 Apr 2025 19:17:43 +0530
-"Aithal, Srikanth" <sraithal@amd.com> wrote:
+On Wed, 23 Apr 2025 10:01:15 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On todays linux-next build the commit id is 
-> c8943bdecfc76711f83241e21da9d4530f872f0d.
+> Which is why you should always state the subject of the commit and not only
+> use the sha of the commit.
 
-Which is why you should always state the subject of the commit and not only
-use the sha of the commit.
-
-Thanks,
+To explain this better, when referencing a commit, the standard way to do
+so is by saying commit dd4cf8c9e1f4 ("ratelimit: Force re-initialization
+when rate-limiting re-enabled").
 
 -- Steve
