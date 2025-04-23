@@ -1,149 +1,214 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E839E33F9;
-	Wed, 23 Apr 2025 17:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F4B01EFFBB
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:14:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428286; cv=none; b=aDBtnV55UlTFjYRxrm70OeG8qfbw/EsviPuUlTJDjiJlz2WbqaXFsWi82OrTZ2MmmjwKrQTyhpVz18U/BIn3nyvuNdlMAopsLljPEbvpjw8Lfykz/pV6JYKkyHEZEC41tjw4LRcB1V6uy5qyb5dZ+76qOUWcmTRhyoChU7NoyWI=
+	t=1745428448; cv=none; b=ZEcHXcUdnUp86LfKIhAx3lHOBKHNAPfO7GbYqN/1VKemjwef1mdg20NC90SVBpx0njur9BXkZag4PpgndPb6lQvflChzHYG23SBYfVj0qekzwUM1GNxvRtNtOzMu0G3Rp2VYDZEHEHG+cwdfh6Ot5Vd/ORMtwtq3KyDt6j1xlnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428286; c=relaxed/simple;
-	bh=VPSNIsrVtVvb+Z0HPJ9c+8YF3WuGmiYCXd6OpsmU9SE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fmioME3kAaqp7tX3fTiVnRzgzuZDLE996nF5d5SFijuAax8D/qNgfYW3+XtIFodtFbz8yrzdypcgpGNcg0XfHYj0erBWsNr6X/w48J/kX7EJ5AQCEjEW75nUM2ksP4RXLjzDPi+fbjOyQS+DoBaZNaVTiTrm+oAfOKHS53B9h9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MW8XfP+R; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745428448; c=relaxed/simple;
+	bh=u726+L+2oFTMFgN4P3RXRTbhmAIBIw1FdZRgTNCgABE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZXWiC85CUGNY8n15wvOP2X1tHj+er8u+7Gzp5V9hiZqIKW6/vHgd0uU8J5KDRFYD2lqhlXg1T1eXzc0AAVoKIGN4ZMcgFHTXstO393Cw3fZDmqSiXK4P93gHH3c6mSXiOOVw8EdL0HRjbdJ+iXCTAg2mPKvTDqLCrt5h2vDVz84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mgq9NvJ1; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MW8XfP+R"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-af59c920d32so15368a12.0;
-        Wed, 23 Apr 2025 10:11:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mgq9NvJ1"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4774611d40bso16551cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:14:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745428284; x=1746033084; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7NGzf0sBJgI4CBjmqIxURhs+Jg8zyaDDzk3h+fbV2ZI=;
-        b=MW8XfP+RSx8Cait7EqlMkG0ygvdkOWHiodFEeTPjE18Ogo1ESPgIwJEX7y85b0dCwo
-         yOkdtzRrTEPjMSRNBEtiREtST4sHp4OLzBltRX+6yvKJxoV475q+vBGT+9IRmADaMmTM
-         5PzoEQjFpNzsOKFfCj8Tc3nGfwUYMzGaYukAPF08mzwNOTxbz00rHfx65I4f4iD/PA2W
-         /pXWm9w3q2sDK3pzyEriEiUW6ERMEe9OqNlMOL7RyporYLilI2wGAzzu1hrjtIfO3BG3
-         UU5rqZMA+lRc6SDE/N7SZTP0JNJDPAsrGdeWSStlJ9OnxU08bzZ+UFsa2guN5YgJGRdY
-         /viQ==
+        d=google.com; s=20230601; t=1745428445; x=1746033245; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gZlHk0IEwmTveeH9vxcXCwphmflVIjvR9gZOHVKJlFI=;
+        b=mgq9NvJ1JEG+ZvR0VSEPcZjnKR7SXWUusPpBGVZg055may19dWxWdNHf5+/kQFmujv
+         vcERZWoAm05rriqG/Uuh5Olmyrn9pgHrwvGiMsl5Z5S0hH/Wpjvub9jnpJrzG6rsmh3g
+         buEp3ZeXF9RzAf/KlhfTfA+zjEIMXhdORuQzNjFB+3WE8LI4/PhRUzPWEP3AI57mOS7Y
+         ZpJ4nYBT5g8bsoTnwhpctTyJ9SxOWasgs6jr9i4o7eCT6XeMGsqfOO/LhjwVPluyv46I
+         kV7bwmV+jX+SH/x4W3o1t5qmfP7TruYJcFeLj4ySWOIe88pFnwRPfxhAgHkYK17VRFL2
+         52uQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745428284; x=1746033084;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7NGzf0sBJgI4CBjmqIxURhs+Jg8zyaDDzk3h+fbV2ZI=;
-        b=eG5tC+MJWAu2/vPiGRYtvOJ6QvzvvmZRBraMxE57uyoAEOOtCXIACHNXIwwZRhuIlP
-         y1sUZCs/ypQlzUYLWoGi8nyw7SZxBEG8xW/W3CIjxLgfv4MOIWRbEVfM/MUqEp9zhSrV
-         9F0RYZvLEd68vEugTirm2+FiQ9qzadtZrDDZBTRRiO5NTVeLOZcxp8LxrB5D7Obmqp5b
-         TRdhDae6dpU3Te4jHfXtQm7Ak71CRiaHRghXOYDOQvGog1LYQaDd97qSCf+i+Pgb5SJY
-         n4liyQa0ZXA/be1OQdDUbxawbiYGZnL7qkFlS7CXyt6qjGnukPJAiHclsFmyE8Jj4ix6
-         Rn1w==
-X-Forwarded-Encrypted: i=1; AJvYcCWTzEzNGbvE0OgF1+qoS5cNgBU/ANSOhT0TiCsAyJv90I/P3Oao22LppQTl1RAivTWAJPlgTHGMnXNN3oU=@vger.kernel.org, AJvYcCXPACdDI1DBcXQqwro+kCS0/d//yCy/cKEWpDJ+nu8DPRdRsFb2/1EFiwsKyTEuMDN617gpBLqr2pSzz8lhLSk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlqHqy4FK5c7u9bT5RNZI81XmZCpsz1cBn870eHCcOEgBqFBN9
-	i5FbSJyE/WCLXpWWqvfAZn/ssxYveYkDFbww/1dxg3pKB1VosPYj
-X-Gm-Gg: ASbGncsgewAt301Y8RHXeF6RnEMwJajUBohDcGrwTxQTM9bAl6+nHr9ot1lPIj8uekk
-	qIN1DwRh9R10g3vxJr0xekIjpXul5PdBuf6JbD3WOo0AKGiOd7vsI9PAIA8cptgoxy+WGJ8zZIM
-	JgSKbY8BS5ypov2qlqi2ryfe5xjMtF+TFpNLO5PvRujTRG0BieKuu9EVoZl5LLDseWfunjU8enP
-	MNJfwljzhA9Z5cdxZtDsB6aLlDhP5mewiJTy6EmpbGOsVSatgUJtMmFoUDB2wbIggeodV/Gp8BZ
-	9lVrIdRTAozDNnp06EADeKbHzA4py434ySGkvRNL
-X-Google-Smtp-Source: AGHT+IHMWmY9+gK8c618FUN9E8FcY+Iq3UZOXDOwQwudJTsNRBGremZgzfJyr/f0ecXNdIk3hQsayQ==
-X-Received: by 2002:a17:90b:4b4a:b0:2ff:6e72:b8e9 with SMTP id 98e67ed59e1d1-3087bbbbd74mr28006293a91.25.1745428283950;
-        Wed, 23 Apr 2025 10:11:23 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309d3472785sm2496241a91.0.2025.04.23.10.11.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:11:23 -0700 (PDT)
-Date: Wed, 23 Apr 2025 13:11:21 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/5] rust: adds Bitmap API, ID pool and bindings
-Message-ID: <aAkfOe5ZDUgIawyU@yury>
-References: <20250423134344.3888205-2-bqe@google.com>
- <aAkKoQQH0t9KtIxD@yury>
- <CAH5fLggFUM=eJR2u06QsLMxXP+cJwm881ip+rze_sM=tXpA9og@mail.gmail.com>
- <aAkVu8Uf3J8F25fY@Mac.home>
+        d=1e100.net; s=20230601; t=1745428445; x=1746033245;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gZlHk0IEwmTveeH9vxcXCwphmflVIjvR9gZOHVKJlFI=;
+        b=TwN0jqeuF4h0gmFJIrWcbY8haYv1F06gcbTFKw7vC4diXC/AuzNUUG8y6C+yWlIEgQ
+         R8OD94WJT85US5AzXyHQjxJ1Wpsx/18rvGbScL8peQ7KX1CqkW4eaMAfDFYSd4rpSuWv
+         nteyvknZofjmZaI6d56A15VUqczMIoTc5uB8oueTJZfgKtUzhOyqNnWRg6NLf3diX6jk
+         OBhldg0e+RuJkeb3zYMdJ8ReTB3/GRPVQo54LTfnuqfk/u+M1a30tWKdpmpmwYI4zBNd
+         K+7Y21jlvho61lf0xLwkf7PVAMoj7dcIZQaV4/WgItsu95j+Ue399bdWIotGBBD0h+9r
+         xIhA==
+X-Forwarded-Encrypted: i=1; AJvYcCWlydOKeavloaVb6eNtoe4EYGdNMNtaqvKF0F/Y8JB48TF+lkkxjxMVlloJqz5hpc1Jh9wsdRzBjuFVxIs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb0VtAuukNnMyODU6B7J7A6wziuUZLPptAdyA4U9oh0MLiHlZH
+	4dOOouUecseW6OlJ8oevMitR/rZdoNb+Nbm8y6xpCjgEl3svsF2VigytFbFwcLD6Uz2oh2mjksH
+	J1uqGee47Du01fV//ubrc07V1ZaYx1Nwjbutv
+X-Gm-Gg: ASbGncuru9tJBzLMA2eZI/UMV1mFM2JMYYBBpzY2fdf0Rc6v1PeSOm+YdHTKFiamX7L
+	2vBW3dQ600oFvkuuCU4Te2zZddtS12YyAIsUeEf1cT/vP+twLGHCozBb2cLBBgTBhO3cFO9bIDu
+	inqrDaSUsifj7c8g/BRfpQW+KmowKsHkm4kPmSP2ZIae9o6cSyO3knpsTcTKktUJE=
+X-Google-Smtp-Source: AGHT+IFemTcKUy6fxMlOI4jhn/Hhuu8/huR+owTvyVraA5YSBg1pXC76xUTvyFCR85NVFf7HslnCsGlciVWVETFFKZ4=
+X-Received: by 2002:a05:622a:228c:b0:47b:4be:8572 with SMTP id
+ d75a77b69052e-47d13ae63f5mr5126871cf.18.1745428445177; Wed, 23 Apr 2025
+ 10:14:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAkVu8Uf3J8F25fY@Mac.home>
+References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
+ <20250317-slub-percpu-caches-v3-4-9d9884d8b643@suse.cz> <CAJuCfpEg8bXVy2F61VNfn2AGW-SJBovGf69SEhK9oJeijjVpJA@mail.gmail.com>
+ <7c4fe3af-a38b-4d40-9824-2935b46e1ecd@suse.cz>
+In-Reply-To: <7c4fe3af-a38b-4d40-9824-2935b46e1ecd@suse.cz>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 23 Apr 2025 10:13:53 -0700
+X-Gm-Features: ATxdqUEzf-fg78GSI15nKo9lP9ML7j0Z7oXB6Y9N1-xuSsNihrXGsraffOmbrPk
+Message-ID: <CAJuCfpHV7kewvi9kghPAE_JGCBchDDWxe0_LP8_2QkpQePWyDw@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 4/8] slab: sheaf prefilling for guaranteed allocations
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Christoph Lameter <cl@linux.com>, 
+	David Rientjes <rientjes@google.com>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Harry Yoo <harry.yoo@oracle.com>, Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org, 
+	maple-tree@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 09:30:51AM -0700, Boqun Feng wrote:
-> On Wed, Apr 23, 2025 at 06:19:18PM +0200, Alice Ryhl wrote:
-> > On Wed, Apr 23, 2025 at 5:43 PM Yury Norov <yury.norov@gmail.com> wrote:
-> > >
-> > > I received it twice - with timestamps 1:36 and 1:43. Assuming they are
-> > > identical, and ignoring the former.
-> > >
-> > > On Wed, Apr 23, 2025 at 01:43:32PM +0000, Burak Emir wrote:
-> > > > This series adds a Rust bitmap API for porting the approach from
-> > > > commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
-> > > > to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
-> > > >
-> > > > The Rust bitmap API provides a safe abstraction to underlying bitmap
-> > > > and bitops operations. For now, only includes method necessary for
-> > > > dbitmap.h, more can be added later. We perform bounds checks for
-> > > > hardening, violations are programmer errors that result in panics.
-> > > >
-> > > > We include set_bit_atomic and clear_bit_atomic operations. One has
-> > > > to avoid races with non-atomic operations, which is ensure by the
-> > > > Rust type system: either callers have shared references &bitmap in
-> > > > which case the mutations are atomic operations. Or there is a
-> > > > exclusive reference &mut bitmap, in which case there is no concurrent
-> > > > access.
-> > >
-> > > It's not about shared references only. One can take a mutable
-> > > reference, and still may have a race:
-> > >
-> > > CPU1                            CPU2
-> > >
-> > > take mut ref
-> > > bitmap.set() // non-atomic
-> > > put mut ref
-> > >                                 take mut ref
-> > >                                 bitmap.test() // read as 0
-> > > data propagated to memory
-> > >                                 bitmap.test() // read as 1
-> > >
-> > > To make this scenario impossible, either put or take mut ref
-> > > should imply global cache flush, because bitmap array is not
-> > > an internal data for the Bitmap class (only the pointer is).
-> > >
-> > > I already asked you to point me to the specification that states that
-> > > taking mutable reference implies flushing all the caches to the point
-> > > of coherency, but you didn't share it. And I doubt that compiler does
-> > > it, for the performance considerations.
-> > 
-> > The flushing of caches and so on *is* implied. It doesn't happen every
-> > time you take a mutable reference, but for you to be able to take a
-> > mut ref on CPU2 after releasing it on CPU1, there must be a flush
-> > somewhere in between.
-> > 
-> 
-> Yeah, and it's not just "flushing of caches", it's making CPU1's memory
-> operations on the object pointed by "mut ref" observable to CPU2. If
-> CPU1 and CPU2 sync with the a lock, then lock guarantees that, and if
-> CPU1 and CPU2 sync with a store-release+load-acquire, the
-> RELEASE-ACQUIRE ordering guarantees that as well.
+On Wed, Apr 23, 2025 at 6:06=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
+ote:
+>
+> On 4/10/25 22:47, Suren Baghdasaryan wrote:
+> >> +/*
+> >> + * refill a sheaf previously returned by kmem_cache_prefill_sheaf to =
+at least
+> >> + * the given size
+> >> + *
+> >> + * the sheaf might be replaced by a new one when requesting more than
+> >> + * s->sheaf_capacity objects if such replacement is necessary, but th=
+e refill
+> >> + * fails (returning -ENOMEM), the existing sheaf is left intact
+> >> + *
+> >> + * In practice we always refill to full sheaf's capacity.
+> >> + */
+> >> +int kmem_cache_refill_sheaf(struct kmem_cache *s, gfp_t gfp,
+> >> +                           struct slab_sheaf **sheafp, unsigned int s=
+ize)
+> >
+> > nit: Would returning a refilled sheaf be a slightly better API than
+> > passing pointer to a pointer?
+>
+> I'm not sure it would be simpler to use, since we need to be able to
+> indicate -ENOMEM which would presumably become NULL, so the user would ha=
+ve
+> to store the existing sheaf pointer and not just blindly do "sheaf =3D
+> refill(sheaf)".
 
-Not sure what you mean. Atomic set_bit() and clear() bit are often
-implemented in asm, and there's no acquire-release semantic.
+Ack.
+
+> Or the semantics would have to be that in case of failure
+> the existing sheaf is returned and caller is left with nothing. Liam, wha=
+t
+> do you think?
+
+That sounds confusing. Compared to that alternative, I would prefer
+keeping it the way it is now.
+
+>
+> >> +{
+> >> +       struct slab_sheaf *sheaf;
+> >> +
+> >> +       /*
+> >> +        * TODO: do we want to support *sheaf =3D=3D NULL to be equiva=
+lent of
+> >> +        * kmem_cache_prefill_sheaf() ?
+> >> +        */
+> >> +       if (!sheafp || !(*sheafp))
+> >> +               return -EINVAL;
+> >> +
+> >> +       sheaf =3D *sheafp;
+> >> +       if (sheaf->size >=3D size)
+> >> +               return 0;
+> >> +
+> >> +       if (likely(sheaf->capacity >=3D size)) {
+> >> +               if (likely(sheaf->capacity =3D=3D s->sheaf_capacity))
+> >> +                       return refill_sheaf(s, sheaf, gfp);
+> >> +
+> >> +               if (!__kmem_cache_alloc_bulk(s, gfp, sheaf->capacity -=
+ sheaf->size,
+> >> +                                            &sheaf->objects[sheaf->si=
+ze])) {
+> >> +                       return -ENOMEM;
+> >> +               }
+> >> +               sheaf->size =3D sheaf->capacity;
+> >> +
+> >> +               return 0;
+> >> +       }
+> >> +
+> >> +       /*
+> >> +        * We had a regular sized sheaf and need an oversize one, or w=
+e had an
+> >> +        * oversize one already but need a larger one now.
+> >> +        * This should be a very rare path so let's not complicate it.
+> >> +        */
+> >> +       sheaf =3D kmem_cache_prefill_sheaf(s, gfp, size);
+> >> +       if (!sheaf)
+> >> +               return -ENOMEM;
+> >> +
+> >> +       kmem_cache_return_sheaf(s, gfp, *sheafp);
+> >> +       *sheafp =3D sheaf;
+> >> +       return 0;
+> >> +}
+> >> +
+> >> +/*
+> >> + * Allocate from a sheaf obtained by kmem_cache_prefill_sheaf()
+> >> + *
+> >> + * Guaranteed not to fail as many allocations as was the requested si=
+ze.
+> >> + * After the sheaf is emptied, it fails - no fallback to the slab cac=
+he itself.
+> >> + *
+> >> + * The gfp parameter is meant only to specify __GFP_ZERO or __GFP_ACC=
+OUNT
+> >> + * memcg charging is forced over limit if necessary, to avoid failure=
+.
+> >> + */
+> >> +void *
+> >> +kmem_cache_alloc_from_sheaf_noprof(struct kmem_cache *s, gfp_t gfp,
+> >> +                                  struct slab_sheaf *sheaf)
+> >> +{
+> >> +       void *ret =3D NULL;
+> >> +       bool init;
+> >> +
+> >> +       if (sheaf->size =3D=3D 0)
+> >> +               goto out;
+> >> +
+> >> +       ret =3D sheaf->objects[--sheaf->size];
+> >> +
+> >> +       init =3D slab_want_init_on_alloc(gfp, s);
+> >> +
+> >> +       /* add __GFP_NOFAIL to force successful memcg charging */
+> >> +       slab_post_alloc_hook(s, NULL, gfp | __GFP_NOFAIL, 1, &ret, ini=
+t, s->object_size);
+> >> +out:
+> >> +       trace_kmem_cache_alloc(_RET_IP_, ret, s, gfp, NUMA_NO_NODE);
+> >> +
+> >> +       return ret;
+> >> +}
+> >> +
+> >> +unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf)
+> >> +{
+> >> +       return sheaf->size;
+> >> +}
+> >>  /*
+> >>   * To avoid unnecessary overhead, we pass through large allocation re=
+quests
+> >>   * directly to the page allocator. We use __GFP_COMP, because we will=
+ need to
+> >>
+> >> --
+> >> 2.48.1
+> >>
+>
