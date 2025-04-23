@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B0213B797;
-	Wed, 23 Apr 2025 13:01:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E4541C69;
+	Wed, 23 Apr 2025 13:02:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745413319; cv=none; b=Q9lxKZnqddg4In5YgRx7czKmNtjv4g5HNTd6KYPmVy3m1jRHlfa+u4rTUkNNXJvfXMc7B6yk1Ltzs8Xijqo6m1N1g6PsAcW1f8RAUjK8JhFltZIQmbxngK549+yOuGsI72+2zRiLc4/Or2JJNLUv89SvRI+mFqxBS/LEIa3a5aM=
+	t=1745413324; cv=none; b=l5REBMyVsZOOhpcskBhJEPMvYxxDalohSBnJz0Ctm0WR7i42AD+YeVhfKQIGQ61awlOnMY9/43hy0Un9WkHk0nYgxiNXuTjZCBHyHSY+psk87Fy+jgswFmXKWk9nhW6b0CKWgKtxTZ3sQbSHSikbleMCp6VqHCj5AJPGaeIlJ+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745413319; c=relaxed/simple;
-	bh=nr7eK+0dqXRK1d1tXygpO9kC8XuZU4HynoNFnbIr94s=;
+	s=arc-20240116; t=1745413324; c=relaxed/simple;
+	bh=0yi/5RGccvozn62Qin1Y2rrPalzPKkJWKkwLeXjcir4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rYNqHtG4aw/AS9xhtNxf5NNGYGO6T62bvheb+0i64WQ9v2oKu+IxiP14u73e2bdmaxAPeZjRK0bwJ8g6hbYxPLrjXJRuy/9A08sxHKQom8o6jof3JhShjC+3heKSJn3djTmVjOLO0QFGfQSjKx93hmrGAjcR5+AMUkx7yj14ZGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GT6E4KPG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=tvIPUUVEA+NERPSxiK+YCslWPzEk9iueclASYdXnn/8FqW/dUgz9ouLywp+tZRH+DUXzqUl4lpuSY/2hQNji2ynJPJKto5u5E72X1k1ol6rW31d4B8s4qCOO7nE0NGwkyHCxv/ZnbK89cYLxVSFbwp4i87Utah+g4iVmJEeTyII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OOhDTP6A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GT6E4KPG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B33C4CEE2;
-	Wed, 23 Apr 2025 13:01:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OOhDTP6A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F39C4CEEB;
+	Wed, 23 Apr 2025 13:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745413319;
-	bh=nr7eK+0dqXRK1d1tXygpO9kC8XuZU4HynoNFnbIr94s=;
+	s=k20201202; t=1745413324;
+	bh=0yi/5RGccvozn62Qin1Y2rrPalzPKkJWKkwLeXjcir4=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=GT6E4KPGX1gTcnndAeGg/LyYOg5GRjXy0BFKn0uMevUJmalFrX/Y5DwMLkQzJ4UhY
-	 SsBr6/yh6rqk0JNhmM7aqtsv4GKeFz5kRNX/8lKlMpUjL3ax3eeDo65mWg8yKqI1pJ
-	 RkGBXgb/E4HVJuankYkR9WPlFT3ojrT/KyJFeyoPDpja4HfrQXifk2xPnZQ8I3fjdC
-	 JdgV58it8RiGMpsvMXg8z3jvgqZHB7wbRNICHBmt9j1XoBuW6FasR6HOHNi1hEiCQo
-	 M4rCeTaU7q94mxNKs0MnE/SfTzNroT8ikSa/3evf6L6dOdono5GZPk4SOaV9WEL1HJ
-	 lM9TszioR2lAg==
+	b=OOhDTP6AfVpGYb3OLtzvCU68EeqoqzOMMvcfZUadM3r29Xciwv2sSA9Jn0QlXMtd5
+	 HcAtk9v53g5ALrwG1+oar6pajGOICQkCMhgkvLAkWA4S0vf299LoyGucW+QMmaS6Y+
+	 iHfyBQajs35k+aHKnISlhzUSNniQlB4SI90No+zKeDtxE6gKwVlj573Iva8wixH3fP
+	 wnSQaMBx1HK4Nwd8tR5JaAvNNJsIAYu3ZHLnfTqFhitulGdEwrk4gc35qdxw5/ueUQ
+	 GtS92jL9jrzlp06zA58JG89HuckbR8DhwaGedUn28UvmfBi2mz3GzaKvB7KP/woXJG
+	 JpS8HU/6A/dKg==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: Lyude Paul <lyude@redhat.com>
 Cc: rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,  Boqun
@@ -39,87 +39,159 @@ Cc: rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,  Boqun
   Benno Lossin <benno.lossin@proton.me>,  Alice Ryhl
  <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,  Danilo
  Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH v2 8/8] rust: hrtimer: Add HrTimer::expires()
-In-Reply-To: <20250415195020.413478-9-lyude@redhat.com> (Lyude Paul's message
-	of "Tue, 15 Apr 2025 15:48:29 -0400")
+Subject: Re: [PATCH v2 2/8] rust: hrtimer: Add HrTimer::raw_forward() and
+ forward()
+In-Reply-To: <20250415195020.413478-3-lyude@redhat.com> (Lyude Paul's message
+	of "Tue, 15 Apr 2025 15:48:23 -0400")
 References: <20250415195020.413478-1-lyude@redhat.com>
-	<20250415195020.413478-9-lyude@redhat.com>
+	<20250415195020.413478-3-lyude@redhat.com>
 User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Wed, 23 Apr 2025 15:01:41 +0200
-Message-ID: <87cyd3kp56.fsf@kernel.org>
+Date: Wed, 23 Apr 2025 14:57:24 +0200
+Message-ID: <87ikmvkpcb.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
 Lyude Paul <lyude@redhat.com> writes:
 
-> This adds the ability to read the expiry time of the given timer.
+> Within the hrtimer API there are quite a number of functions that can only
+> be safely called from one of two contexts:
+>
+> * When we have exclusive access to the hrtimer and the timer is not activ=
+e.
+> * When we're within the hrtimer's callback context as it is being execute=
+d.
+>
+> This commit adds bindings for hrtimer_forward() for the first such contex=
+t,
+> along with HrTimer::raw_forward() for later use in implementing the
+> hrtimer_forward() in the latter context.
+>
+> Since we can only retrieve a &mut reference to an HrTimer<T> in contexts
+> where it is not possible for the timer to be accessed by others or
+> currently executing (e.g. a UniqueArc), a &mut is actually enough of a
+> guarantee to safely fulfill the C API requirements here.
 >
 > Signed-off-by: Lyude Paul <lyude@redhat.com>
->
 > ---
-> V2:
-> * Convert from Ktime to Instant
-> * Use read_volatile instead of read and add a FIXME
->
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  rust/kernel/time/hrtimer.rs | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
+>  rust/kernel/time/hrtimer.rs | 36 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 35 insertions(+), 1 deletion(-)
 >
 > diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-> index c84dcdacb4882..b8a74c15e6609 100644
+> index bfe0e25f5abd0..aadae8666f7ea 100644
 > --- a/rust/kernel/time/hrtimer.rs
 > +++ b/rust/kernel/time/hrtimer.rs
-> @@ -73,7 +73,10 @@
->      time::{Delta, Instant},
->      types::Opaque,
->  };
-> -use core::{marker::PhantomData, ptr::NonNull};
-> +use core::{
-> +    marker::PhantomData,
-> +    ptr::{addr_of, NonNull},
+> @@ -68,7 +68,11 @@
+>  //! `start` operation.
+>=20=20
+>  use super::ClockId;
+> -use crate::{prelude::*, time::Instant, types::Opaque};
+> +use crate::{
+> +    prelude::*,
+> +    time::{Delta, Instant},
+> +    types::Opaque,
 > +};
+>  use core::marker::PhantomData;
 >  use pin_init::PinInit;
->  
->  /// A timer backed by a C `struct hrtimer`.
-> @@ -136,7 +139,7 @@ unsafe fn raw_get(this: *const Self) -> *mut bindings::hrtimer {
->          // SAFETY: The field projection to `timer` does not go out of bounds,
->          // because the caller of this function promises that `this` points to an
->          // allocation of at least the size of `Self`.
-> -        unsafe { Opaque::raw_get(core::ptr::addr_of!((*this).timer)) }
-> +        unsafe { Opaque::raw_get(addr_of!((*this).timer)) }
->      }
->  
->      /// Cancel an initialized and potentially running timer.
-> @@ -225,6 +228,21 @@ pub fn forward(&mut self, now: Instant, duration: Delta) -> u64 {
->      pub fn forward_now(&mut self, duration: Delta) -> u64 {
->          self.forward(self.clock_base().time(), duration)
+>=20=20
+> @@ -164,6 +168,36 @@ pub(crate) unsafe fn raw_cancel(this: *const Self) -=
+> bool {
+>          // handled on the C side.
+>          unsafe { bindings::hrtimer_cancel(c_timer_ptr) !=3D 0 }
 >      }
 > +
-> +    /// Return the time expiry for this [`HrTimer`].
+> +    /// Forward the timer expiry for a given timer pointer.
 > +    ///
-> +    /// This value should only be used as a snapshot, as the actual expiry time could change after
-> +    /// this function is called.
-> +    pub fn expires(&self) -> Instant {
-> +        // SAFETY: `self` is an immutable reference and thus always points to a valid `HrTimer`.
-> +        let c_timer_ptr = unsafe { HrTimer::raw_get(self) };
+> +    /// # Safety
+> +    ///
+> +    /// `self_ptr` must point to a valid `Self`.
+> +    unsafe fn raw_forward(self_ptr: *mut Self, now: Instant, interval: D=
+elta) -> u64 {
+> +        // SAFETY:
+> +        // * The C API requirements for this function are fulfilled by o=
+ur safety contract.
+> +        // * `self_ptr` is guaranteed to point to a valid `Self` via our=
+ safety contract
+> +        unsafe {
+> +            bindings::hrtimer_forward(Self::raw_get(self_ptr), now.as_na=
+nos(), interval.as_nanos())
+> +        }
+> +    }
 > +
-> +        // SAFETY: There's no actual locking here, a racy read is fine and expected.
-> +        Instant::from_nanos(unsafe {
-> +            // FIXME: read_volatile
+> +    /// Forward the timer expiry so it expires at `duration` after `now`.
+> +    ///
+> +    /// This is mainly useful for timer types that can start off providi=
+ng a mutable reference (e.g.
+> +    /// `Pin<Box<=E2=80=A6>>`) before the timer is started.
+> +    ///
+> +    /// Note that this does not requeue the timer, it simply updates its=
+ expiry value. It returns
+> +    /// the number of overruns that have occurred as a result of the exp=
+iry change.
 
-Please adopt similar wording as in `file.rs`:
+Looking at C `hrtimer_forward`, I don't think the description is
+correct:
 
-        // This `read_volatile` is intended to correspond to a READ_ONCE call.
-        // FIXME(read_once): Replace with `read_once` when available on the Rust side.
+    u64 hrtimer_forward(struct hrtimer *timer, ktime_t now, ktime_t interva=
+l)
+    {
+      u64 orun =3D 1;
+      ktime_t delta;
+
+      delta =3D ktime_sub(now, hrtimer_get_expires(timer));
+
+      if (delta < 0)
+        return 0;
+
+      if (WARN_ON(timer->state & HRTIMER_STATE_ENQUEUED))
+        return 0;
+
+      if (interval < hrtimer_resolution)
+        interval =3D hrtimer_resolution;
+
+      if (unlikely(delta >=3D interval)) {
+        s64 incr =3D ktime_to_ns(interval);
+
+        orun =3D ktime_divns(delta, incr);
+        hrtimer_add_expires_ns(timer, incr * orun);
+        if (hrtimer_get_expires_tv64(timer) > now)
+          return orun;
+        /*
+        * This (and the ktime_add() below) is the
+        * correction for exact:
+        */
+        orun++;
+      }
+      hrtimer_add_expires(timer, interval);
+
+      return orun;
+    }
+
+As I read the code:
+
+  If the timer expires 2s after `now` and `interval` is 6s, then the new ex=
+piry
+  time is moved 6s forward. Not to 6s after `now`. Return value will be 0.
+
+  If the timer expires 3s after `now` and `interval` is 2s, then the
+  expiry time is moved 2s forward and the return value is 1.
+
+  If the timer expires 4s after `now` and `interval` is 2s, then the
+  expiry time is moved 4s forward and the return value is 2.
+
+  If the timer expires 5s after `now` and `interval` is 2s, then the
+  expiry time is moved 4s forward and the return value is 2.
+
+Can you capture this behavior in the docs?
 
 
 Best regards,
 Andreas Hindborg
+
 
 
