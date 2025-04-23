@@ -1,84 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBE1253921;
-	Wed, 23 Apr 2025 20:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44618269AFA;
+	Wed, 23 Apr 2025 20:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745441451; cv=none; b=u9B3oDJLEA0wSFjr0A0+HRV9YyZC13M1LTfEfiAdAj//CsHqu/WgAWkszmhH3POUzSlNi1tiTuSIGPQW1WVjdC/tapguIepN5pmQJ/S+O0iNDGc8Y6eVAVhhEfvO0QQvzkXyoZQxUOmm7C7G4zK8Mg+egk9VoYG3kRx7gcM/osY=
+	t=1745441467; cv=none; b=bInfIGZykIBCBrO9Mb+onZuhe/bJLqEORCXnEJvPNMaaSYVhDOSFk+Rh+e7UjyAKYpcumfX0zRhoCoze6bbiHb5Lz0C7bNwVlc0fQsjAd9yWEj8kL0GIVLG/3r3vptnJ40aE9yxcQ6dZ8fKPGryVCYEnhbOfeYgQS3F7kv99TwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745441451; c=relaxed/simple;
-	bh=QtGXRfFMS/QaPxnRDW/0E9DsynCEdAmHR+SsZfWDV1A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p4xKqJXPHEZtqcWImdyWxubzjOuCiA/U0aRuILuKP0aFMp1u86EjHG1YTQvBjxzxcus8uNkkBm5Lewa7QBlhTs2oOXlYHPTnncmfXhDFr37LSawCIU2fNtyEaWX3PfKC3DgAYlobYkcOuAGnJEby9wG3B+5W1/zvnORRbygJWPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilumO0+D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745441467; c=relaxed/simple;
+	bh=VHbbMJuX7r40zHS6tBiWqdLTzFu3joUoRD0NBWIpb7M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DtkojRfSW/1lp3OT5YJ0r/M3Xv3hUO9LJEUExLiDh9aUvHX96w806knYiGir83wV5Om3GMZbqVJKVB9BKjZC2H7302/VYygU+txcuk1RQVVid63SrpG3ToqWxyyMbmIHKsIF38pngKMdA8OQBuxXDMvnPklWfiPGq7l5bpAZfoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Umtv4eSG; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilumO0+D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7523C4CEE2;
-	Wed, 23 Apr 2025 20:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745441451;
-	bh=QtGXRfFMS/QaPxnRDW/0E9DsynCEdAmHR+SsZfWDV1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ilumO0+DTjX1Py8AKdxCdlORL66qfTr57cM42sZpcWz7jDZN4tqa2lV0FwvYC+y1P
-	 6cdONllQCx5ARnUA7uuwjKCP38IB4lsPU7SbB0Tz9V1VjE4sqH28qIBXChNKJjY8tW
-	 D5fLXcsc2LkVXgSJmVkvdVH1YCfxjEkdO6piOQhyOeiP0pm9Q4kR+wfYCOGjf7J2YH
-	 IEkpDZkkg/B0G/MT6V9Nu6dBYztq4yPRB/2pH/TYBOEG7tQ0g5yh8X/RnA0BJk8tU0
-	 bDEDsC2TpT/p0Mh9DXe8jR1uFx34tseAVcPqwEQuxxs9we6Z4MoPeEWP+ZkiZ1GZ8O
-	 gk4xqcmf9liQQ==
-Date: Wed, 23 Apr 2025 17:50:48 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
-Message-ID: <aAlSqGN9Sx4x6_sI@x1>
-References: <20250326044001.3503432-1-namhyung@kernel.org>
- <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
- <aAkUyFjRFLkS170u@x1>
- <aAkmY0hLXarmCSIA@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Umtv4eSG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745441465; x=1776977465;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=VHbbMJuX7r40zHS6tBiWqdLTzFu3joUoRD0NBWIpb7M=;
+  b=Umtv4eSGxW82MIwtqOsnVcDznZHaOwthuEvdB3SH6F7TCNXLYewpNhgz
+   eyG5ukF5i0FDgwT4QyJaoLcb8H//KOihlZv1hh5R8YiPkHa+zWYRagZkc
+   EVii2f3xahfzYGvUYLLAnKQPsZy4SDlnlmc5mz/kQCyquvgmpq9yaLXBK
+   EaVoE67LlNIcGNDe4Kzp4t7ad6R0g0VCjPi2mIRA8ej3Cy31OUdg9ZlTo
+   CalpLjA9U8pMVYkitT66s2vu2bWLsqzObsucJ6wDWAsXBeIO9dmyE2/W5
+   ZdXrsPGVAadxNH8hEjKZ+MrFdyeUoVcSqPb/ha0MjAKfZnPIBkhd6PMrb
+   w==;
+X-CSE-ConnectionGUID: RWaBJpimQV+g73DwNPKr5g==
+X-CSE-MsgGUID: Ot5S2w15SAiCe81eqM43ng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="58425542"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="58425542"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:51:04 -0700
+X-CSE-ConnectionGUID: RneCpuWfQa6UZI6oCOn4Nw==
+X-CSE-MsgGUID: cYVhTSwBSCKy2d6MtIyFBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="132261423"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.208])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:51:01 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
+ Robert Richter <rrichter@amd.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
+ Robert Richter <rrichter@amd.com>
+Subject:
+ Re: [PATCH v4 12/14] cxl/region: Add a dev_err() on missing target list
+ entries
+Date: Wed, 23 Apr 2025 22:50:57 +0200
+Message-ID: <39842992.VHbPRQshPE@fdefranc-mobl3>
+In-Reply-To: <20250306164448.3354845-13-rrichter@amd.com>
+References:
+ <20250306164448.3354845-1-rrichter@amd.com>
+ <20250306164448.3354845-13-rrichter@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAkmY0hLXarmCSIA@google.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Apr 23, 2025 at 10:41:55AM -0700, Namhyung Kim wrote:
-> Hi Arnaldo,
-> 
-> On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
-> > > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > >      syscall            calls  errors  total       min       avg       max       stddev
-> > > >                                        (msec)    (msec)    (msec)    (msec)        (%)
-> > > >      --------------- --------  ------ -------- --------- --------- ---------     ------
-> > > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
-> > > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
-> > > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
-> > > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
-> > > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
-> > > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
-> > > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
-> > > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
-> > > >      ...
-> > 
-> > I added the following to align sched_[gs]etaffinity,
-> 
-> Thanks for processing the patch and updating this.  But I'm afraid there
-> are more syscalls with longer names and this is not the only place to
-> print the syscall names.  Also I think we need to update length of the
-> time fields.  So I prefer handling them in a separate patch later.
+On Thursday, March 6, 2025 5:44:46=E2=80=AFPM Central European Summer Time =
+Robert Richter wrote:
+> Broken target lists are hard to discover as the driver fails at a
+> later initialization stage. Add an error message for this.
+>=20
+> Example log messages:
+>=20
+>   cxl_mem mem1: failed to find endpoint6:0000:e0:01.3 in target list of d=
+ecoder1.1
+>   cxl_port endpoint6: failed to register decoder6.0: -6
+>   cxl_port endpoint6: probe: 0
+>=20
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Tested-by: Gregory Price <gourry@gourry.net>
+> ---
 
-Fair enough, I'm leaving the patch as-is.
+Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
 
-- Arnaldo
+
+
