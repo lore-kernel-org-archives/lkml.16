@@ -1,153 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C131291170;
-	Wed, 23 Apr 2025 15:27:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1528128E5EA;
+	Wed, 23 Apr 2025 15:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745422078; cv=none; b=j4aQo7lkfQnr9Cuz5yAuDMhj9jTpYGCW8HhpZ6Nf5i8tvkOUiIqjq4g0WkCaM3R8VCjB6kOk1MckivAzCoUYh6XeLMvYpOQKuS+Ao2oGkLN8T4P4F0lsEaAjaW6I22zdlk9PC9eSDaNT4bT+pc6ZSkKRs70vi0cEYls5hXustnM=
+	t=1745422090; cv=none; b=ByfZfenDzCDSXZiK/UYhVbvPqYyC8OZX4kJ84Gtdgw1gNaHrrByDQRIQmSgvSFThqdxG7zXx7po+o3OrGUB9FayPX02QY6+A1EmgVZWwMeP1xPmp+6gmY0KqpUrQz5Jtp73axToff1nmKrxWX88ziCd59OO+aMPAqHDH0isaMfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745422078; c=relaxed/simple;
-	bh=KY+tkNDWDQZc8s3Rmj/OQu/O+PqFkhqgtS5wh4QnnsE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QFAOdB11yIhB72q5YE4tn7bQfkGR42G4p0l/uwrA+VhKUZbRThEkDC0ZBjsD83jzcx1XITY3HwdjS86k9dlk9mJQwI0xfdFvggZDtG9eTJMjYP6B8Lgzl7XmVLYwRn1nYp9Ze7+RQX4IBz7LQ6akIQLBjhzIhR4NG/FK375k18k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3zXwlaU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745422090; c=relaxed/simple;
+	bh=ar5WCV/Xk2IvA/B5Jj/QEtesIzgZa8TMAbgOZNpp97A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=h+3d5D7lH1cUJ9Hr44ZUCBLE/hcCfraqOGaLOxOBHOGi1uN+iOCoAls2LCUMtEDw+lFSUd9uxHvCglrLOkzHcO9fQkCEYKEBDE78uh+NQi/RwI7l9vphU+Gj7TomRSWeL8QwVJrUogMmVWbYHx6osY1YQF38h1hQ7IxlMJucatM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PGJxbP7w; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3zXwlaU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECEF1C4CEE3;
-	Wed, 23 Apr 2025 15:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745422078;
-	bh=KY+tkNDWDQZc8s3Rmj/OQu/O+PqFkhqgtS5wh4QnnsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c3zXwlaUmJmzED06i0Arh6uR15KC4Rmlp9ZDHW51VPPjYu4t+4jwaqw65GFMq1BtN
-	 BGh/lYNWxPIwVKZkIVdetzumhA4yLoRoZrLI313fhOBDW6m8Mu5E37EUaGO8DrtLby
-	 Z5/mAiOQQgHeMv4lVH5dVD4oGs+oD9IOLalmou4l4DowFa7j9/n64SRzBInZdSHrKe
-	 upNppygtWOMY0hDpi3jEqYbmPIokkY8EavdFSMz7N/PO9IhPO7c223pEesJUxEnqJ3
-	 8mTBBAI66I/yIvFaNK39X5v2H+MpPolr1/9URVUI1SC/kceH8hCdJN9aW/X8OCeQrO
-	 VYhORklofkxtg==
-Date: Wed, 23 Apr 2025 16:27:53 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
-Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	Djordje Todorovic <djordje.todorovic@htecgroup.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Aleksandar Rikalo <arikalo@gmail.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: timer: mti,gcru
-Message-ID: <20250423-blazer-obtain-ef4a0cd0a23d@spud>
-References: <DU0PR09MB61968695A2A3146EE83B7708F6BA2@DU0PR09MB6196.eurprd09.prod.outlook.com>
- <DU0PR09MB619646561DF9B4F262F8B2B7F6BA2@DU0PR09MB6196.eurprd09.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PGJxbP7w"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6ef60e500d7so672047b3.0;
+        Wed, 23 Apr 2025 08:28:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745422088; x=1746026888; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fHVRbngq1O+ZmgUJJIDpKFCMr5eVrxZ3pEePFAGCAnc=;
+        b=PGJxbP7wL7Fa8PF9KzzG8+XI6tjtFIz3z1Y5DlH8G5lUr+OtdJhLdsUtyfD03ApU0L
+         a0Dx6vVXDav8qzsLy1RFEBjGpDben1C6KHVBu0ZVaC5AhXjc+redE42s0y1frZlhu/Jf
+         zfMrbf0R91CYkxgwvEnXiXUDzBxeZQmleg3hYK83/G4WeLBatRQtY2VEVwcG2nFrzs0O
+         ysU6+T4j+j62BnGEhK8vzYMV7mDmTQbCVsEEjeu27iLp/X1M3QawYRU37gLMXULwGm2i
+         kS9MJNxzgFXCEdtpxoZ/Ot1nb6k/MMLFzrW6Y3li+pq8qGWbKFdq006+yNh4P+V+7hyj
+         8Hxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745422088; x=1746026888;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fHVRbngq1O+ZmgUJJIDpKFCMr5eVrxZ3pEePFAGCAnc=;
+        b=DKvFmdKUIedp1U7VoFYUcUlqFqF6070r2o6ARM6dWi3bjmHg7p7RGFolmW23C6Wqy7
+         32s3t7Mz3VgAkZhwy/Be5+fzkz97/0swbhJvGqKQmvVxsLSmYnzzVVpCpjt8vp2Weoj1
+         tMvc8vQsJQ5K06gLY2ibFdliTe4eRN/hax1oLvcergHIRoyo5/r2tN2Iu2AhKHqBaYta
+         b5mtlJ64ai/iTK6QsjqJZ3pzdhhoKRlI+S1Yb2tDYVgoo38KSK6am8e+b/yxvQuAf88t
+         ejb7+oJQD0JBRo5lIyWyJrChFQHYaLdoltN02iDT38M6oNI5f/1PtvDrVYOG8o4TFpfB
+         5UFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoq6XTqMqVnk1+sKsTFgZuHaoY4HQz4hVvTANvKaI/BDQ7ucxvnhmCfpUcqnE+cOkKlN+DgJBWvEo3EsLq@vger.kernel.org, AJvYcCVFmsy0f76x8p2DFTIMmQEoVIKQZHTr2Ji+poyjsIUVhUrb67yauIuzIMbGFywCPTYNfOfzENVtPtV3m2BpTTU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxousQeOkeMEK6TIJzay4Bpmej33J55p4wag2iA20HF649FusMq
+	LGdoO2nVyLlKacS9UpJ/9sOBJ1UFC1+daIcbnqLKy9RTcyn973k9
+X-Gm-Gg: ASbGncuj8zzSGV/Z5EQdxNIPTdKqVk6rZW7ql/lyap+X0I9zqTfQCrSXvH2RTosejs8
+	GQudV8ZuPX8NX3hwMfGg3Qig0dwSSbBOkHX5TkzXw4IgXKh6MwStI7qhln8Obzl6XoI6QrbJG68
+	xHoR0zEGkTNTLXFJI1UJbtXjaDjLD0Wu8aAHrqq7SREmvDEcUCVkcOU9B5XsLc+kS/Puv/+mPIm
+	WMJ5uFAzskmfYUprDS+foJ9q9QLTDT3bKbYLDkLMwzjtk0jZ+fL/ZTXALnHYpzPTFvpeKeQqVBT
+	HNmy2HodoKmDcydWA3UmjK364qVIgsX/ZH/9ppAMwAllnzH52Q==
+X-Google-Smtp-Source: AGHT+IHISuZsHHkHKpHC5vi+J56ww4pcJQDqy9fckV8l4A2hgMFtaimgTTejY0prWaIIVPx/6Hrefg==
+X-Received: by 2002:a05:690c:9:b0:705:750d:c359 with SMTP id 00721157ae682-7083c0025d3mr1114097b3.32.1745422087718;
+        Wed, 23 Apr 2025 08:28:07 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:1::])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-706ca53be7dsm30065797b3.84.2025.04.23.08.28.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 08:28:07 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Rakie Kim <rakie.kim@sk.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Honggyu Kim <honggyu.kim@sk.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Gregory Price <gourry@gourry.net>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH next] mm/mempolicy: Fix error code in sysfs_wi_node_add()
+Date: Wed, 23 Apr 2025 08:27:33 -0700
+Message-ID: <20250423152805.3356081-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <aAij2oUCP1zmcoPv@stanley.mountain>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iO+1mqSGaor1E+bf"
-Content-Disposition: inline
-In-Reply-To: <DU0PR09MB619646561DF9B4F262F8B2B7F6BA2@DU0PR09MB6196.eurprd09.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
+On Wed, 23 Apr 2025 11:24:58 +0300 Dan Carpenter <dan.carpenter@linaro.org> wrote:
 
---iO+1mqSGaor1E+bf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Dan,
 
-On Wed, Apr 23, 2025 at 12:14:26PM +0000, Aleksa Paunovic wrote:
-> HTEC Public
->=20
-> Add dt-bindings for the GCR.U memory mapped timer device for RISC-V
-> platforms. The GCR.U memory region contains shadow copies of the RISC-V
-> mtime register and the hrtime Global Configuration Register.
->=20
-> Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
+This makes sense to me! I think that the only way the node can already exist
+is if an offlining node didn't properly clean up its sysfs entry, which is
+a bug, of course. With that said, I don't think the previous state would have
+caused any functional problems, since the same node offlining and onlining
+should share the same sysfs entry anyways (unless I'm overlooking something
+important...)
+
+This fix will help when the cleanup does fail though, and I think that will
+help us assess whether a failed cleanup does indeed cause other problems.
+
+Thank you for spotting this & fixing it! I hope you have a great day : -)
+
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+
+> Return -EEXIST if the node already exists.  Don't return success.
+> 
+> Fixes: 1bf270ac1b0a ("mm/mempolicy: support memory hotplug in weighted interleave")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > ---
->  .../devicetree/bindings/timer/mti,gcru.yaml   | 47 +++++++++++++++++++
->  1 file changed, 47 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/mti,gcru.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/timer/mti,gcru.yaml b/Docu=
-mentation/devicetree/bindings/timer/mti,gcru.yaml
-> new file mode 100644
-> index 000000000000..6555dbab402e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/mti,gcru.yaml
-> @@ -0,0 +1,47 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/mti,gcru.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: GCR.U timer device for RISC-V platforms
-> +
-> +maintainers:
-> +  - Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
-> +
-> +description:
-> +  The GCR.U memory region contains memory mapped shadow copies of
-> +  mtime and hrtime Global Configuration Registers,
-> +  which software can choose to make accessible from user mode.
-> +
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: mti,gcru
-> +
-> +  required:
-> +    - compatible
-
-Why is this select required?
-I don't see why it would be since there's not a fallback to a compatble
-=66rom some toher binding.
-
-> +
-> +properties:
-> +  compatible:
-> +    const: mti,gcru
-> +
-> +  reg:
-> +    items:
-> +      - description: Read-only shadow copy of the RISC-V mtime register.
-> +      - description: Read-only shadow copy of the high resolution timer =
-register.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    gcru: timer@1617F000 {
-
-Drop the "gcru" label from here, there are no users.
-
-> +        compatible =3D "mti,gcru";
-> +        reg =3D <0x1617F050 0x8>,
-> +              <0x1617F090 0x8>;
-> +    };
-> --
-> 2.34.1
-
---iO+1mqSGaor1E+bf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaAkG+QAKCRB4tDGHoIJi
-0m/WAQDYPIh35x33CEHzP0x5YIEB2rQl4h95pdgfeAO5nr4vpQEAlP+ccB+DDUpu
-svNC2aK4eMOyUOMWxmIQQH4KYNchcwE=
-=fPzU
------END PGP SIGNATURE-----
-
---iO+1mqSGaor1E+bf--
+> Potentially returning success was intentional?  This is from static
+> analysis and I can't be totally sure.
+> 
+>  mm/mempolicy.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+> index f43951668c41..0538a994440a 100644
+> --- a/mm/mempolicy.c
+> +++ b/mm/mempolicy.c
+> @@ -3539,7 +3539,7 @@ static const struct kobj_type wi_ktype = {
+>  
+>  static int sysfs_wi_node_add(int nid)
+>  {
+> -	int ret = 0;
+> +	int ret;
+>  	char *name;
+>  	struct iw_node_attr *new_attr;
+>  
+> @@ -3569,6 +3569,7 @@ static int sysfs_wi_node_add(int nid)
+>  	if (wi_group->nattrs[nid]) {
+>  		mutex_unlock(&wi_group->kobj_lock);
+>  		pr_info("node%d already exists\n", nid);
+> +		ret = -EEXIST;
+>  		goto out;
+>  	}
+>  
+> -- 
+> 2.47.2
