@@ -1,76 +1,45 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E76F52F88
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:12:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D33E35957;
+	Wed, 23 Apr 2025 13:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745413960; cv=none; b=uFdZSkzN51PuFoh3zJEGGWGrWbm4jcrvU7mMx4ve+3a07pyLoK2h1mdz8zP6KQlgDa7k4g6ogM3Pi7feUAg43YSeVhKlycpZD+n0EqofCXd8PbgFxbElkfZShDSzIV1K8FETAQ24/U15Fj2h6UhPp4DX27v9wMwpnjXpPESNGwI=
+	t=1745414007; cv=none; b=PQ899X4Udp618JQFv5eDPNh97L07g/1WuPmu97kt+wkr8PBnbIxGVTw/VF28QlNQN0ACqwBkJJOnHVsGdXM5uNbHeUCuWIMyP3n6uhggDO69u8BsJv7h4exPTVUVi4I1+/yulANKRWw5vIzzRLcYpGcjjH2pdEnRchygVkixCOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745413960; c=relaxed/simple;
-	bh=fIUyCjQtOjmd1WAoagxHXNlbCDt6PUnMgQToMDKJOYg=;
+	s=arc-20240116; t=1745414007; c=relaxed/simple;
+	bh=34VPvCiXiWeAT1uuiNzCekuKDNm2kl4hepgAiEd/YJo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X6ULwaX1g3iWYw347pX9He8NZbQtnLc+X5vdsB4LINXOgkyLLbCiFcJb4iCfdVxHLPfOzsltI35TN5elWWC01YovQwqFulw33w2pEbEeFNYH6ni8mW4CXd7CZ9ku5CQ5JnGYTvQwCxP6hKp/qHXDDfZ/zpv0xakn678Nz1pe81Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=km3pGIHW; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pj+5yiJeA+yQMOwLxYnDVzmm9qcloFmh67rtGu4zDOFDKscghof+Thg5kFkh016/4AVffpId1YY6k6mUJhnwejnLrofTGSQ7Wn9OIOUiOOlqlK+7sh7ahW6hPPK3uHHdle7nmmTfM+H6mPtShLxA5ajdXn40mBo/LRyYtXQu3b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSROSO6W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="km3pGIHW"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-391342fc0b5so5279160f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745413957; x=1746018757; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EnNh4nAQm+RPIaXKRaRvi+wY8Sx0Yyg+NpjwoekcfHY=;
-        b=km3pGIHW+rl0tcZCtsnXFg9iMq3QjFCep3q/69bY66WtRjEi46MBIEUcQGoHQ+D3YP
-         qKOc+N1ieFkZvcT5aBwOqAFWIGnHHj8r3Z34SS8z2VRcIwi47g/lVlft8QzYxUtJiMF1
-         VDbdSCKPAJhpkrG1Bb9ilULrcN24sAX9egmzmxTWbdyBxI5cIMCv1wToNLK7gVOXjja5
-         rAt7tfeunuiysHbcu7Lqbc0mMToFaQv2WPwQrv4QvFVgrCUeH2mJfwYEp5KdLwhl8SAo
-         iEwTP2pGE4ltXxEHk/gGbbau39bYMcqTYMXSjfLtRTIohyG5ayXJt1My8Hy9e6jb7P10
-         ccBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745413957; x=1746018757;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EnNh4nAQm+RPIaXKRaRvi+wY8Sx0Yyg+NpjwoekcfHY=;
-        b=em1js6p48MbZRA6q4DBLkrt0revY6lZq1RYYctXADgN5SMrNBbaa0KoEEW4GyAr/Zd
-         wMr6V6ZFJfSs2PgxI0YRhGNykCR9M3Nq7arIQgaILyshDO5hc0uL+G1bTdx0zyhIw2uw
-         cYIMzaiaEQ0tiiqBivfn8xwvXklHkk+ssExaLV3f2mBqf6GJmELtEzvx3w8fhV7Ig1uJ
-         kAODHFpQgXXqieReUmqrw9W8+fDfdwiRN8KevIBxp8sXQTEoSXJWBidnzE13qH3ljMy/
-         3dgH+sqNV8llRm6GPCZFNlVNltf7jRkhfxfsQLvRYQQ1aekPxiNsEmEpjSgOSTZEFC4p
-         xsXg==
-X-Gm-Message-State: AOJu0Yw7AKEZHFoF4YFyqBJ/VzppRhIFqroWivmY4KHCKY9jcWW68kq0
-	2vf2WxlE3jbpNbeOfk6krbEGM/NH9X8jvwPeI/CyltsL1twc4NGyrEYANoV9Tq4=
-X-Gm-Gg: ASbGnctHjPHyX2ciwDtIBUwRvIVXaGtiqvL46ki33OKCnTfqpumfyp85sJtIm3ygVGN
-	6aBy75YVe9wgUL9VLfdxk1T4qnwrZGoWeTQ22iXKWI+jpEzQ8hzlqKrPkHsQ87qmJEa4T/0yWk0
-	PUrHm1MAgWUIgGg3jxp0f+7BJpPGvnQywSUY8uXSgER9FEoZYOXyZeWqdfFieVjnvvSHdrq2FEF
-	JVKIXFde+hKWpPV0dabt/XBHm7kSa0xmdUw0mohcTvO5tEIYmsGFdtfYCtZj+qT9UUce+v4IWWE
-	pnssRfbVO2Uj/VCe15E6hThQ5/J4eC91gPre7X5hniWMEw==
-X-Google-Smtp-Source: AGHT+IFLiGEPtIUG41rtNhf8o9bC64yoKVgiB+tlF8MOvnBbCSYDUU6BGbHcm/6Whcb9nIfm+cjAgw==
-X-Received: by 2002:a5d:588c:0:b0:38d:d666:5457 with SMTP id ffacd0b85a97d-39efbadef97mr14579817f8f.42.1745413956864;
-        Wed, 23 Apr 2025 06:12:36 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa4207fcsm19078159f8f.19.2025.04.23.06.12.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 06:12:36 -0700 (PDT)
-Date: Wed, 23 Apr 2025 16:12:33 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Cc: linux-kernel@vger.kernel.org, linux-amarula@amarulasolutions.com,
-	Abel Vesa <abelvesa@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-	Stephen Boyd <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v11 12/18] clk: imx: add support for i.MX8MN anatop clock
- driver
-Message-ID: <09721eab-1adb-4001-880c-10ffa1961918@stanley.mountain>
-References: <20250423060241.95521-1-dario.binacchi@amarulasolutions.com>
- <20250423060241.95521-13-dario.binacchi@amarulasolutions.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSROSO6W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360CDC4CEE2;
+	Wed, 23 Apr 2025 13:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745414006;
+	bh=34VPvCiXiWeAT1uuiNzCekuKDNm2kl4hepgAiEd/YJo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uSROSO6WePDeZWNxvPyrx5qh80KicMYJb8Jn34Y/ckeuqfR3thGsI4m9mfVgR85r1
+	 aeDU37jrwRoBqNSDgRFdHQj68XxyiYzMOb7w+aSE5tCMxXf8llaruBkPDh1MZDmZ8D
+	 noIAj7QDIDBCU9vRjJlbpnS4/euv+AZBWw4J6sXRMhi3kWZKnvM/qzXCWSgaLmygMn
+	 j6MdCD0AUvi/2yLUZ1OgTDlC3EwGXpW6hZ16kVulC5lkjbQ+YNYytKprZ1RtP7uMYQ
+	 tQPvrOZDT5+wRdOl1AX1C2Rt2vPXZgYKncWgR83vLBaRDIMCO6+24jsN6C6BSX9/4T
+	 5Yb2j+rndTwrA==
+Date: Wed, 23 Apr 2025 18:43:23 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v6 5/6] dmaengine: sh: rz-dmac: Add RZ/V2H(P) support
+Message-ID: <aAjnc+AxmAn9fxSs@vaman>
+References: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
+ <20250422173937.3722875-6-fabrizio.castro.jz@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,23 +48,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423060241.95521-13-dario.binacchi@amarulasolutions.com>
+In-Reply-To: <20250422173937.3722875-6-fabrizio.castro.jz@renesas.com>
 
-On Wed, Apr 23, 2025 at 08:02:29AM +0200, Dario Binacchi wrote:
-> -	hws[IMX8MN_CLK_DUMMY] = imx_clk_hw_fixed("dummy", 0);
-> -	hws[IMX8MN_CLK_24M] = imx_get_clk_hw_by_name(np, "osc_24m");
-> -	hws[IMX8MN_CLK_32K] = imx_get_clk_hw_by_name(np, "osc_32k");
-> +	hws[IMX8MN_CLK_DUMMY] = imx_anatop_get_clk_hw(anp, IMX8MN_ANATOP_CLK_DUMMY);
-> +	hws[IMX8MN_CLK_24M] = imx_anatop_get_clk_hw(anp, IMX8MN_ANATOP_CLK_24M);
-> +	hws[IMX8MN_CLK_32K] = imx_anatop_get_clk_hw(anp, IMX8MN_ANATOP_CLK_32K);
+On 22-04-25, 18:39, Fabrizio Castro wrote:
+> The DMAC IP found on the Renesas RZ/V2H(P) family of SoCs is
+> similar to the version found on the Renesas RZ/G2L family of
+> SoCs, but there are some differences:
+> * It only uses one register area
+> * It only uses one clock
+> * It only uses one reset
+> * Instead of using MID/IRD it uses REQ No
+> * It is connected to the Interrupt Control Unit (ICU)
+> * On the RZ/G2L there is only 1 DMAC, on the RZ/V2H(P) there are 5
+> 
+> Add specific support for the Renesas RZ/V2H(P) family of SoC by
+> tackling the aforementioned differences.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v5->v6:
+> * Collected tags.
+> v4->v5:
+> * Reused RZ/G2L cell specification (with REQ No in place of MID/RID).
+> * Dropped ACK No.
+> * Removed mid_rid/req_no/ack_no union and reused mid_rid for REQ No.
+> * Other small improvements.
+> v3->v4:
+> * Fixed an issue with mid_rid/req_no/ack_no initialization
+> v2->v3:
+> * Dropped change to Kconfig.
+> * Replaced rz_dmac_type with has_icu flag.
+> * Put req_no and ack_no in an anonymous struct, nested under an
+>   anonymous union with mid_rid.
+> * Dropped data field of_rz_dmac_match[], and added logic to determine
+>   value of has_icu flag from DT parsing.
+> v1->v2:
+> * Switched to new macros for minimum values.
+> ---
+>  drivers/dma/sh/rz-dmac.c | 81 ++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 74 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/sh/rz-dmac.c b/drivers/dma/sh/rz-dmac.c
+> index d7a4ce28040b..1f687b08d6b8 100644
+> --- a/drivers/dma/sh/rz-dmac.c
+> +++ b/drivers/dma/sh/rz-dmac.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/dmaengine.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/irqchip/irq-renesas-rzv2h.h>
 
-I'm just CC'd on the v11 of this one patch and I really hate to nit-pick
-a v11 patch...  But I don't love that there are so many unrelated little
-cleanups mixed in with the functional changes.
+This does not exist for me or in the patches that was sent to me. I have
+dropped this series due to build failure after picking up dmaengine
+patches
 
-I also don't care strongly about something which is self contained in a
-vendor driver and I recognize that re-writing patches is a pain in the
-neck.
+drivers/dma/sh/rz-dmac.c:17:10: fatal error: linux/irqchip/irq-renesas-rzv2h.h: No such file or directory
 
-regards,
-dan carpenter
+-- 
+~Vinod
