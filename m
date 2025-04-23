@@ -1,177 +1,145 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685C81E1E1E
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D292676FC;
+	Wed, 23 Apr 2025 07:08:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392088; cv=none; b=RPMtweTejWrtV5ynSta506hqWpxdpWTcImShk9NUkgh4EDTBAT4J4XBeX/GuhZDsFonLqE7Cqf2aRW22lyyaMx9kyQUvYeX6P9KXP1m0Au6XgySJMOg0oOU84SoyCfayMNsvu/Fw3z/MoZSjet6c+lW1TUON5HRmUENSLp9M9NA=
+	t=1745392095; cv=none; b=AJJInJ/ORKTXVnN3zhh8F9HrERwug2zmrB7Oaps5fwwcgGi3jukDwdGmCRYKVw63BsmlnX54Vl9do8cK+OTNAiTHMHW7SykQBS/liFbl0uDZRT+KFaSB5epFYAuSgQkXQ6dJ6pb7j5OUizquV2Ad6yPcNXWwz1lZjc48VzKNfoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745392088; c=relaxed/simple;
-	bh=WAg9j14egnq/UsvlKZWeYxfZf8S5VtNSLNLTfzky/QA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=raXc2xZ5TTkn7ddpHTKeBdp5Nw8s1Jok/aWe3u/9Cg5wo/vqxtHfBUOuarTb4os+STAk0t8SEv8lua+GYGY0A3Fv4DJrpUnSpfeuIBkT4HnS46WxweErnQCCiUjCNnfRWpG+py4L4ggrMUNOkb4/e7aYe+oh4Xl2NRGYM9ZSiyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ga1LUKQH; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745392095; c=relaxed/simple;
+	bh=7mnMqfZJXmRF7AEubXC5Quz0rD3EwGLxnuaIQrs31aw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lGUuY5DKZgT2tGD3vQDnyxQgxKOnFraMjbQa5kKedVgn7Ud5Rin32RHc0i0UrKgi7kGhAfMawB+IvrGh1tVNEBE1muJbVCkB3ThOtGfTualdYJHe0oAybR4ynjGX6xy5/tpYHt9t2sp0AI8wudSk1IfTElpT3ToKKN+trf+SMjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=taM+nq0T; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ga1LUKQH"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30c416cdcc0so56405521fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745392084; x=1745996884; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tDVZZVmLWPVUyZUrEP5wnstWpu6T03XwnNTWfvpgsmc=;
-        b=Ga1LUKQH0XHBhHbe8Bic1/PHYMx1FFBB1VkLdmu6jdHAG3qFkATVG5bbGuU5aP2uoZ
-         5ub4tQqif+wUWtTCpWbgOMfanRGY/nTpOtJJFtr0Ab3MTqR7AGR8o86gh0/qHIreVWAy
-         XFRETXWAFb75yP/m8XCNirq8XboZZ8PmMfQmSSyQPKEdqeGtPUur6zCirPX1On2KQtnQ
-         o8mSIDHCNLdKqv4c0z0MrkiEKfwdMVt48JqOHv2qUPSDKmMrMbdObONwT0g+UG9HqcwN
-         1nRRBFiypaqK5/VC3WOOBOAGqDhKxfixKQu1m2Q3H+0nyZ8SAYTvFJt9cEIsVZaRykfF
-         vBvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745392084; x=1745996884;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tDVZZVmLWPVUyZUrEP5wnstWpu6T03XwnNTWfvpgsmc=;
-        b=lcLKK6MdzegYa35lOLbEEanYh8o4O4BRyKwKsqfcx82/EV7bMDen377m8hr95S5mNu
-         Lgas5r/SWFqdljZttoHtPkQl/92bTbF+a1RN7qEjXNNvX2XwA4MTDU/nDD5yUnLqvuUI
-         X46F519ePmmdzrhEXdPD3t/Dn5Rcsjll4xGP1aMrMMPjbHx8SyWG0OYBAkzrVPpBw1Dx
-         G3jYnQIrKDRYSXXL7JxVqHj94rK0G10Gp1wBRdyfYMLtYUAb/Ttw5RtCv4C6Luum2/Zc
-         9XlFx75479hIyVjk2YV4HIclC25VBhd8wirv3VhoSeoga+l95qbr4Om+X14Xmw0YQ9zj
-         P7vg==
-X-Forwarded-Encrypted: i=1; AJvYcCWGK0xBy1Be4AkwefSDV/+rYhhnodxW1WyfKV21VBtVGMlMyjuHCgZstP2/K69ryprPWwei3N38CC1ZmWE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFOerz8sSil3jvbdfP13EsunWlLJ63f5y4CYY0VA0p4WLR0M2T
-	J80frcdZBceOt6H4/a8K2XS2JR/01osr8WMWtqbQzRxx2PHHR2amzjoIuuUT/U+hjMQwOOTDdhW
-	Jdwzdq6Bi0FKEFJDG41k3Z5Zyv3aeuzJhBA0=
-X-Gm-Gg: ASbGncus4wB6AF7NSsARaHwdqD208WJuhpUIwmZfOXdsXXL2SWdngRw94sGrq0v9KaX
-	4xKQT8v37myxKB9XBVpWN479e0JVOV3BJ9PubPpDWJSncdamyZxBycxp4WeihHoEfPeMje6Yb6A
-	LNuuCqWdao+LEQ4QfFLDV0T+rmO+UcSGYX
-X-Google-Smtp-Source: AGHT+IH1P0mnXtz8esd9+KqnGwXccxh0aHTWyQCPU0QhX+GwULmkrPxirVAnyshtY25FyLkeNkMyJKJu698H7M/MDTc=
-X-Received: by 2002:a2e:ad86:0:b0:30b:d44d:e76a with SMTP id
- 38308e7fff4ca-31090553ed6mr68721551fa.25.1745392084031; Wed, 23 Apr 2025
- 00:08:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="taM+nq0T"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id DB3B91F984;
+	Wed, 23 Apr 2025 09:08:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1745392089;
+	bh=/0EQyW6sKhsHbEM0FiXvZEMPWbxrVBqoFMcw038Fo0o=; h=From:To:Subject;
+	b=taM+nq0Tp+9ii+S0WaDF9seZryAoqKrz/vlplFL9/ZBKvYNh75kCC715TxDFQa+7j
+	 C/sGGFpIK77WVU5hAsa96KvTgz0cbCtwlSeMWTZM1eSsgb80787R1TEDZ13sDDM7GW
+	 m9Z7zfRZZMUu6acYf0lAsIKp7oi/a6A+Q9yGEc/kyS63x9sEef5+xz2ESa0JVOJ5d3
+	 eOdQVUXumLYh6f12oLeAynDGKptfRtEJhUzCj7jMfFXKsVktMRWbgLkMojclU174EO
+	 /wrDlZW4ofcXxj2R+S0I3MGfFJcZRhDvsNVCxViB6AMQjgUiz1cFqeO5rPYDOfd35J
+	 /6AKlQjxqp/Kg==
+Date: Wed, 23 Apr 2025 09:08:07 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Frieder Schrempf <frieder.schrempf@kontron.de>
+Cc: Wojciech Dubowik <Wojciech.Dubowik@mt.com>,
+	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	Francesco Dolcini <francesco@dolcini.it>,
+	Philippe Schenker <philippe.schenker@impulsing.ch>,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] arm64: dts: imx8mm-verdin: Link reg_usdhc2_vqmmc to
+ usdhc2
+Message-ID: <20250423070807.GB4811@francesco-nb>
+References: <20250422124619.713235-1-Wojciech.Dubowik@mt.com>
+ <522decdf-faa0-433b-8b92-760f8fd04388@kontron.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <165d2a0b882050f3f6cc0315af66cd2d16e5925b.1744676674.git.jpoimboe@kernel.org>
- <aAeFYB7E2QiRNeoM@gmail.com> <CAFULd4bo0NGzZGLEs+pYoOJrDVLyKt2=Piug-LtU-WhFGwYTzQ@mail.gmail.com>
- <aAf2crZau98tHFSn@gmail.com>
-In-Reply-To: <aAf2crZau98tHFSn@gmail.com>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 23 Apr 2025 09:07:52 +0200
-X-Gm-Features: ATxdqUFR0l-Mc3_bvQj2u3F0H_j-iJW7DCOmA_78cTUrjEsf0ActbMekxNP6F_8
-Message-ID: <CAFULd4ZiaboD7zT5tfz4Bdjah68E3iuBRVzrBOW3qQMoaBT5+g@mail.gmail.com>
-Subject: Re: [PATCH v2] noinstr: Use asm_inline() in instrumentation_{begin,end}()
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org, 
-	Peter Zijlstra <peterz@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <522decdf-faa0-433b-8b92-760f8fd04388@kontron.de>
 
-On Tue, Apr 22, 2025 at 10:05=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wro=
-te:
->
->
-> * Uros Bizjak <ubizjak@gmail.com> wrote:
->
-> > > That still doesn't make it clear where the apparently ~10
-> > > instructions per inlining come from, right?
-> >
-> > The growth is actually from different inlining decisions, that cover
-> > not only inlining of small functions, but other code blocks (hot vs.
-> > cold, tail duplication, etc) too. The compiler uses certain
-> > thresholds to estimate inlining gain (thresholds are different for
-> > -Os and -O2). Artificially bloated functions that don't use
-> > asm_inline() fall under this threshold (IOW, the inlining would
-> > increase size too much), so they are not inlined; code blocks that
-> > enclose unfixed asm clauses are treated differently than when they
-> > use asm_inline() instead of asm(). When asm_inline() is introduced,
-> > the size of the function (and consequently inlining gain) is
-> > estimated more accurately, the estimated size is lower, so there is
-> > more inlining happening.
-> >
-> > I'd again remark that the code size is not the right metric when
-> > compiling with -O2.
->
-> Understood, but still we somehow have to be able to measure whether the
-> marking of these primitives with asm_inline() is beneficial in
-> isolation - even if on a real build the noise of GCC's overall inlining
-> decisions obscure the results - and may even reverse them.
->
-> Is there a way to coax GCC into a mode of build where such changes can
-> be measured in a better fashion?
+Hello Frieder,
 
-There are several debug options that report details of inliner
-decisions. You can add -fdump-ipa-inline or -fdump-ipa-inline-details
-[1] to generate a debug file for interprocedural inlining.
+On Wed, Apr 23, 2025 at 08:50:54AM +0200, Frieder Schrempf wrote:
+> Am 22.04.25 um 14:46 schrieb Wojciech Dubowik:
+> > [Sie erhalten nicht häufig E-Mails von wojciech.dubowik@mt.com. Weitere Informationen, warum dies wichtig ist, finden Sie unter https://aka.ms/LearnAboutSenderIdentification ]
+> > 
+> > Define vqmmc regulator-gpio for usdhc2 with vin-supply
+> > coming from LDO5.
+> > 
+> > Without this definition LDO5 will be powered down, disabling
+> > SD card after bootup. This has been introduced in commit
+> > f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5").
+> > 
+> > Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
+> > 
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
+> > ---
+> > v1 -> v2: https://lore.kernel.org/all/20250417112012.785420-1-Wojciech.Dubowik@mt.com/
+> >  - define gpio regulator for LDO5 vin controlled by vselect signal
+> > ---
+> >  .../boot/dts/freescale/imx8mm-verdin.dtsi     | 23 +++++++++++++++----
+> >  1 file changed, 19 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
+> > index 7251ad3a0017..9b56a36c5f77 100644
+> > --- a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
+> > +++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
+> > @@ -144,6 +144,19 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
+> >                 startup-delay-us = <20000>;
+> >         };
+> > 
+> > +       reg_usdhc2_vqmmc: regulator-usdhc2-vqmmc {
+> > +               compatible = "regulator-gpio";
+> > +               pinctrl-names = "default";
+> > +               pinctrl-0 = <&pinctrl_usdhc2_vsel>;
+> > +               gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
+> > +               regulator-max-microvolt = <3300000>;
+> > +               regulator-min-microvolt = <1800000>;
+> > +               states = <1800000 0x1>,
+> > +                        <3300000 0x0>;
+> > +               regulator-name = "PMIC_USDHC_VSELECT";
+> > +               vin-supply = <&reg_nvcc_sd>;
+> > +       };
+> 
+> Please do not describe the SD_VSEL of the PMIC as gpio-regulator. There
+> already is a regulator node reg_nvcc_sd for the LDO5 of the PMIC.
+> 
+> > +
+> >         reserved-memory {
+> >                 #address-cells = <2>;
+> >                 #size-cells = <2>;
+> > @@ -785,6 +798,7 @@ &usdhc2 {
+> >         pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_cd>;
+> >         pinctrl-3 = <&pinctrl_usdhc2_sleep>, <&pinctrl_usdhc2_cd_sleep>;
+> >         vmmc-supply = <&reg_usdhc2_vmmc>;
+> > +       vqmmc-supply = <&reg_usdhc2_vqmmc>;
+> 
+> You should reference the reg_nvcc_sd directly here and actually this
+> should be the only change you need to fix things, no?
 
-[1] https://gcc.gnu.org/onlinedocs/gcc/Developer-Options.html
+If you just do this change you end-up in the situation I described in
+the v1 version of this patch
+https://lore.kernel.org/all/20250417130342.GA18817@francesco-nb/
 
-> For example would setting -finline-limit=3D1000 or -finline-limit=3D10 (o=
-r
-> some other well-chosen inlining threshold value, or tweaking any of the
-> inliner parameters via --param values?), just for the sake of
-> measurement, give us more representative .text size change values?
+With the IO being driven by the SDHCI core, while the linux driver
+changes the voltage over i2c.
 
-I don't think so, because inliner uses pseudo instructions [2] where:
+I was not aware of this sd-vsel-gpios, that if I understand correctly
+should handle the concern I raised initially, having the PMIC driver
+aware of this GPIO, however I do not see why that solution should be
+better than this one.
 
-    _Note:_ pseudo instruction represents, in this particular context,
-    an abstract measurement of function's size.  In no way does it
-    represent a count of assembly instructions and as such its exact
-    meaning might change from one release to an another.
+BTW, is this solution safe from any kind of race condition? You have
+this IO driven by the SDHCI IP, and the I2C communication to the PMIC
+driven by the mmc driver, with the PMIC driver just reading this GPIO
+once when changing/reading the voltage.
 
-[2] https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-finline-=
-limit
+With this solution (that I proposed), the sdcard driver just use the
+GPIO to select the right voltage and that's it, simple, no un-needed i2c
+communication with the PMIC, and the DT clearly describe the way the HW
+is designed.
 
-OTOH, there are plenty of --param choices to play with the inliner
-besides -finline-limit=3D option. Please see [3]
+Francesco
 
-[3] https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-param
-
-In the dump mentioned above, you will  get e.g.:
-
-IPA function summary for pfmemalloc_match/5736 inlinable
-  global time:     8.200000
-  self size:       11
-  global size:     11
-  min size:       7
-  self stack:      0
-  global stack:    0
-    size:4.000000, time:4.000000
-    size:3.000000, time:2.000000,  executed if:(not inlined)
-    size:0.500000, time:0.500000,  executed if:(op0 not sra candidate)
-&& (not inlined)
-    size:0.500000, time:0.500000,  executed if:(op0 not sra candidate)
-...
-
-The estimator estimates size and execution time and decides how to
-(and if) inline the function.
-
-> Because, ideally, if we do these decisions correctly at the asm()
-> level, compilers will, eventually, after a few decades, catch up
-> and do the right thing as well. ;-)
-
-We (as in gcc developers) are eagerly waiting for better tuning
-parameters that would satisfy everyone's needs. Rest assured that many
-have tried to fine-tune the heuristics, with various levels of success
-;)
-
-Jokes aside, it is important to feed the estimator correct data, as
-precise as possible. There are limitations with asm(), because the
-compiler doesn't know what is inside the asm template. It estimates
-one instruction for every instruction delimiter, where the size of
-"one instruction" is estimated to 16 bytes. In case of __ASM_ANNOTATE,
-the estimator estimates 5 instructions and 80 bytes total vs. one
-instruction when asm_inline() is used. Based on this fact, I think
-that changing asm() to asm_inline() for insns with __ASM_ANNOTATE is
-beneficial.
-
-Thanks,
-Uros.
