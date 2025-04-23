@@ -1,253 +1,103 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.17])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0076F1F0991;
-	Wed, 23 Apr 2025 09:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5F52701B1;
+	Wed, 23 Apr 2025 09:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745401278; cv=none; b=JwgDYPF5I48RH9EcYfZ80kaTiAVJUVkZNrmKQETc91kfVkDXyuAelakYFRiex9VJFmqGOqoCW/MnzK1wFNPbOjUWc+IVo0XDWdC7F6XULW6igt8UQ+0XBRJu3TwagBrUaAu5cSh5gx3pF3rX+uguTtqHCczuCyOIUDR7MXy8P90=
+	t=1745401280; cv=none; b=of7fBg9/h5oSN/UOSCY9GlGuUo2q86HvQN3cBn9Ls5RSWexKQKfCn1o/8ig8nb95kNk/pZpTBXeg6vcFMBPXVap9PliinYZseB+PSxx7dGTN5R5Kumxi8n9vsfkZv+rfUSi11O74RDIp8pKa3oA2cnJZxSUppeEHjC4HWI6r3bo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745401278; c=relaxed/simple;
-	bh=oHlnbFyG9mqqg/nGHUoA0yQVFyX9osgvGnAa5HoU7Co=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BDuqGvvYDsUGQJB7wjDim99p4C75t6a5lnegTDfJWgOu+D/sPEatJ+I24rDozsgodL1G+IzWI3NiQVztlFPJ4/gR+mF5pkqBH1y+ICDYu3CnSDFhF3RkSTCSCgxouPEWVnzn5jgCV+L/b/U+qPXGw+znMUfrqXrSYthXiI4C+8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XjwMuKkW; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745401280; c=relaxed/simple;
+	bh=LVlgqXd3gvp4F7q18bWvwYeGJMUd5fToVGBXFyLMIe8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EduJ8RPFcwqEqW/V9RXpJebBNDP0YDkIqtOuF0nen1j4F95hHUhm/6WPphbjHOmoZyUe9/Y8gmfQgURivZsgDE2VmBcfYUHmeplMoD6r7qEDD8x+Sg8ANJDFmEUOBmAo9zaSXX7PKM1k+kRR8hR/C4XT72hTyRC7kqVMcu/SwVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=BZ3uRgbp; arc=none smtp.client-ip=1.95.21.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XjwMuKkW"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2255003f4c6so69437525ad.0;
-        Wed, 23 Apr 2025 02:41:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745401275; x=1746006075; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2SqgX5yk3G5zH8iNmgJsbxRbrXshnlNTIZZ5Y1GKN9Y=;
-        b=XjwMuKkWzvoqluNG0E3VIavAtXu0ZEZmKCNT0TM8n+Xm/jxAgSzLKcVHHHITeqoO3d
-         qxi6KkdobGbTIfW/UAqHecZ5LBYkZpzrlSwR2U9f4LO9qXaGYnnHV53j630cdpm+jiVK
-         E5u/xaVEOjZjfemq2NoFfFJlIDjH8EcZXN8hxteXK+7CmyCTL83IQokBdyvPtIdciGh5
-         8eYJGYMSuXlb6QMbgvfnThTlybYU02l9Y/7LxObkQNAjCjp6paetKyRR2hBC+AYAV4tH
-         Flr+uTfdng79xAQnyOexiEzu5xdIp4C/+gTXEYa6jJJWEiq3bCWNJhgw3bDWyFlIwB+x
-         b1lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745401275; x=1746006075;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2SqgX5yk3G5zH8iNmgJsbxRbrXshnlNTIZZ5Y1GKN9Y=;
-        b=Fka4vk9QQQamLM1RMVQuHDS93U/DibcigW+dXf1HmFq0+7bRDfp+UpghimPU+ifnqi
-         VspI4LcCXV/+64AIwPeTcMH8++ZL/WMcHaCp6ZEOIvFa/0EqbS6Ll24ruPZQ2OkgN1E5
-         JeyfMjfyVx8pFnT9C9mZG+VwJqTmc3Ow4+PVac01c4JpjfBycWq4Vc5JKZGasqy1MyVQ
-         XKlGOrmz6up+aGNBS0bt2ItSDMPiojreJw+Nauclu3OOrwBqx3SnlM9Y+hsiyhEZkfv3
-         eHl/7O/Ud4+JOYp6tjp66haqay8ai3QVnkqUKqPajRMC+QqI2fFe20+vnv7/gvaDSB+t
-         fahQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHuHRshLB5lQvxs4UHw3VkVP3z3bHSTtgScMJsyqfXxCzBVsugB0iG4uG5Jq9eDUV8nupO/RM6H7GHZ5U=@vger.kernel.org, AJvYcCUUcoHwLLJAWoLv/gSgDS/kczvfwiI7SqGVqJ/BUxntAJQDg/kPcu95Z9D8qb2GtPe11eqOZy2+h8OxDQ==@vger.kernel.org, AJvYcCV6hUCJeZyo5aiiSlbsLNKpu9XNHwu3GjP62DgFXmMqw0zHH2rbkIfry4NJp8PnavNmnUuXX1FS@vger.kernel.org, AJvYcCVMDF10tPTglxqqbLYti1q0KKKYEufsH0+h9ZF9C9tJv/r83wEEHb4EjV465g3AkEmNhy+/yrlFoPo=@vger.kernel.org, AJvYcCVsPyavgwAPG1Qi4WHRg+mqmPBwpCsLniTUh3wHNPeywZdXqG4UdFvUAc0TaUMpPQc+XKiTgu5CRL+a@vger.kernel.org, AJvYcCVva+cdZyT5cFvXbvGfheWu3GDE4Ff+klS4XssyePHK5Gnzhruy4nbi8aSamQjboe7DiIZDGvuYzrci@vger.kernel.org, AJvYcCWNX5QT2Ef+Fcjrq817eYjtZa6jtEDv1sFDoDBVDYYQRxj5sG7K8e29Q1q0gbXYAHQJh1WA4YGskStKG7aZjNk=@vger.kernel.org, AJvYcCXEOWZoxMRlSrblm80sS1NRpg4EWIK/a8lkyImWlCuDWEet/853nsILgubqcmEg5VcjSCpejN1aoqo7@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwRkYq2/a7nlji1qEUzKZZXXL/zADaMfkOowyhn+vwGY/p4b7E
-	bQIoDku1UNVgeZ6BMjkmfktfb+6Fb4E0sUjWykZA3S1vcJTJd1+wH+Qy4g==
-X-Gm-Gg: ASbGncspCQBph7J5S1muqEgqrykyxeJL77PP9LPD1eadXEfuaaOYcP2a/bGqZbsim9Y
-	lMCjaailbjRc67KFzmSoXDole4nV0PnM7dP/KGiJ+Vwq3697nvdTH1hAnRacjZIzJx7SKE5UzWE
-	j/9DYIPwiPLjsFwONija8XwSJKeVex1WCnXJVXuNFo3GqCb1jqeecbnNpyFqIAzEiaksLQe/GrY
-	FGzr+ighv/RN7a+/nvmAiPgcgSlM/OWm+7bcjkj0sH95gxK0Bjnbawhu06GQivpPE3xHABkJXFx
-	lu6pm9yt+vNxXmdJ4CR14qeEqxvmWUznMfdMSq1+tit8H/bMySy110xxBar0SP6TDWcQmh2B74y
-	+OuU=
-X-Google-Smtp-Source: AGHT+IHJ2b+wzuUgb1oWT0K06TkVwgGEp/EMqO2RVm3gEmPO3nfnZP0WPTbCe/sI27aWESFdCbxmdg==
-X-Received: by 2002:a17:902:ebc4:b0:223:5c77:7ef1 with SMTP id d9443c01a7336-22c53586639mr278890195ad.21.1745401274768;
-        Wed, 23 Apr 2025 02:41:14 -0700 (PDT)
-Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4b8esm99972775ad.124.2025.04.23.02.41.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 02:41:14 -0700 (PDT)
-From: a0282524688@gmail.com
-X-Google-Original-From: tmyu0@nuvoton.com
-To: lee@kernel.org,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	andi.shyti@kernel.org,
-	mkl@pengutronix.de,
-	mailhol.vincent@wanadoo.fr,
-	andrew+netdev@lunn.ch,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	wim@linux-watchdog.org,
-	linux@roeck-us.net,
-	jdelvare@suse.com,
-	alexandre.belloni@bootlin.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-rtc@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	Ming Yu <tmyu0@nuvoton.com>
-Subject: [PATCH v10 0/7] Add Nuvoton NCT6694 MFD drivers
-Date: Wed, 23 Apr 2025 17:40:51 +0800
-Message-Id: <20250423094058.1656204-1-tmyu0@nuvoton.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="BZ3uRgbp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=LS2O4ijWT/954gJ7Po+mrl2ivjfcfbbmblMAVvot+M4=;
+	b=BZ3uRgbp605ujwLLQBhqu5ElSw+xVo5n2y2B6jE+oPMPqM4aKIl7RHWKVjXPe1
+	W8gQlbfD6MkOSG2Z3l6F858HMS2S/ZaPp35goiWk7G3AxjyuKpHIeJDwjVzuxKV1
+	ghKBAcKzAnQtttY9ccm6lGt2iLY7YNZsdMGaG1vYGMW9E=
+Received: from dragon (unknown [])
+	by gzsmtp3 (Coremail) with SMTP id M88vCgDn84o_tQhofGK5Aw--.10993S3;
+	Wed, 23 Apr 2025 17:39:14 +0800 (CST)
+Date: Wed, 23 Apr 2025 17:39:11 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>, zhouyanjie@wanyeetech.com,
+	Conor Dooley <conor@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Steen Hegelund <Steen.Hegelund@microchip.com>,
+	Daniel Machon <daniel.machon@microchip.com>,
+	UNGLinuxDriver@microchip.com, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH 10/19] arm/arm64: dts: imx: Drop redundant CPU
+ "clock-latency"
+Message-ID: <aAi0tkNWlvwqIBxM@dragon>
+References: <20250403-dt-cpu-schema-v1-0-076be7171a85@kernel.org>
+ <20250403-dt-cpu-schema-v1-10-076be7171a85@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250403-dt-cpu-schema-v1-10-076be7171a85@kernel.org>
+X-CM-TRANSID:M88vCgDn84o_tQhofGK5Aw--.10993S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr1kXw4DWFy8WFWDCrW3KFg_yoW3Xrg_ZF
+	n7K348Ja1rCry7J3Z8trs5XwnxKryUWwn3Cr17XrWkG34aqr9rAFWDGFZ5Cr13XFWagry3
+	A3sxJFs2y3s0kjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjQeOPUUUUU==
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiARM4ZWgIqUAwhgAAsw
 
-From: Ming Yu <tmyu0@nuvoton.com>
+On Thu, Apr 03, 2025 at 09:59:31PM -0500, Rob Herring (Arm) wrote:
+> The "clock-latency" property is part of the deprecated opp-v1 binding
+> and is redundant if the opp-v2 table has equal or larger values in any
+> "clock-latency-ns". The OPP tables have values of 150000, so it can be
+> removed.
+> 
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>  arch/arm/boot/dts/nxp/imx/imx7s.dtsi      | 1 -
+>  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 4 ----
+>  arch/arm64/boot/dts/freescale/imx8mn.dtsi | 4 ----
+>  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 4 ----
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 4 ----
+>  5 files changed, 17 deletions(-)
 
-This patch series introduces support for Nuvoton NCT6694, a peripheral
-expander based on USB interface. It models the chip as an MFD driver
-(1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
-WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
+Applied as two patches, one for imx/dt branch and the other for imx/dt64.
 
-The MFD driver implements USB device functionality to issue
-custom-define USB bulk pipe packets for NCT6694. Each child device can
-use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
-a command. They can also request interrupt that will be called when the
-USB device receives its interrupt pipe.
-
-The following introduces the custom-define USB transactions:
-	nct6694_read_msg - Send bulk-out pipe to write request packet
-			   Receive bulk-in pipe to read response packet
-			   Receive bulk-in pipe to read data packet
-
-	nct6694_write_msg - Send bulk-out pipe to write request packet
-			    Send bulk-out pipe to write data packet
-			    Receive bulk-in pipe to read response packet
-			    Receive bulk-in pipe to read data packet
-
-Changes since version 9:
-- Add devm_add_action_or_reset() to dispose irq mapping
-- Add KernelDoc to exported functions in nct6694.c
-
-Changes since version 8:
-- Modify the signed-off-by with my work address
-- Rename all MFD cell names to "nct6694-xxx"
-- Add irq_dispose_mapping() in the error handling path and in the remove
-  function
-- Fix some comments in nct6694.c and in nct6694.h
-- Add module parameters to configure I2C's baudrate in i2c-nct6694.c
-- Rename all function names nct6694_can_xxx to nct6694_canfd_xxx in
-  nct6694_canfd.c
-- Fix nct6694_canfd_handle_state_change() in nct6694_canfd.c
-- Fix nct6694_canfd_start() to configure NBTP and DBTP in nct6694_canfd.c
-- Add can_set_static_ctrlmode() in nct6694_canfd.c
-
-Changes since version 7:
-- Add error handling for devm_mutex_init()
-- Modify the name of the child devices CAN1 and CAN2 to CAN0 and CAN1.
-- Fix multiline comments to net-dev style in nct6694_canfd.c
-
-Changes since version 6:
-- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
-- Fix warnings in nct6694_canfd.c
-- Move the nct6694_can_priv's bec to the end in nct6694_canfd.c
-- Fix warning in nct6694_wdt.c
-- Fix temp_hyst's data type to signed variable in nct6694-hwmon.c
-
-Changes since version 5:
-- Modify the module name and the driver name consistently
-- Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
-- Drop unnecessary macros in nct6694.c
-- Update private data and drop mutex in nct6694_canfd.c
-- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
-
-Changes since version 4:
-- Modify arguments in read/write function to a pointer to cmd_header
-- Modify all callers that call the read/write function
-- Move the nct6694_canfd.c to drivers/net/can/usb/
-- Fix the missing rx offload function in nct6694_canfd.c
-- Fix warngings in nct6694-hwmon.c
-
-Changes since version 3:
-- Modify array buffer to structure for each drivers
-- Fix defines and comments for each drivers
-- Add header <linux/bits.h> and use BIT macro in nct6694.c and
-  gpio-nct6694.c
-- Modify mutex_init() to devm_mutex_init()
-- Add rx-offload helper in nct6694_canfd.c
-- Drop watchdog_init_timeout() in nct6694_wdt.c
-- Modify the division method to DIV_ROUND_CLOSEST() in nct6694-hwmon.c
-- Drop private mutex and use rtc core lock in rtc-nct6694.c
-- Modify device_set_wakeup_capable() to device_init_wakeup() in
-  rtc-nct6694.c
-
-Changes since version 2:
-- Add MODULE_ALIAS() for each child driver
-- Modify gpio line names be a local variable in gpio-nct6694.c
-- Drop unnecessary platform_get_drvdata() in gpio-nct6694.c
-- Rename each command in nct6694_canfd.c
-- Modify each function name consistently in nct6694_canfd.c
-- Modify the pretimeout validation procedure in nct6694_wdt.c
-- Fix warnings in nct6694-hwmon.c
-
-Changes since version 1:
-- Implement IRQ domain to handle IRQ demux in nct6694.c
-- Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API in nct6694.c
-- Add each driver's command structure
-- Fix USB functions in nct6694.c
-- Fix platform driver registration in each child driver
-- Sort each driver's header files alphabetically
-- Drop unnecessary header in gpio-nct6694.c
-- Add gpio line names in gpio-nct6694.c
-- Fix errors and warnings in nct6694_canfd.c
-- Fix TX-flow control in nct6694_canfd.c
-- Fix warnings in nct6694_wdt.c
-- Drop unnecessary logs in nct6694_wdt.c
-- Modify start() function to setup device in nct6694_wdt.c
-- Add voltage sensors functionality in nct6694-hwmon.c
-- Add temperature sensors functionality in nct6694-hwmon.c
-- Fix overwrite error return values in nct6694-hwmon.c
-- Add write value limitation for each write() function in nct6694-hwmon.c
-- Drop unnecessary logs in rtc-nct6694.c
-- Fix overwrite error return values in rtc-nct6694.c
-- Modify to use dev_err_probe API in rtc-nct6694.c
-
-
-Ming Yu (7):
-  mfd: Add core driver for Nuvoton NCT6694
-  gpio: Add Nuvoton NCT6694 GPIO support
-  i2c: Add Nuvoton NCT6694 I2C support
-  can: Add Nuvoton NCT6694 CANFD support
-  watchdog: Add Nuvoton NCT6694 WDT support
-  hwmon: Add Nuvoton NCT6694 HWMON support
-  rtc: Add Nuvoton NCT6694 RTC support
-
- MAINTAINERS                         |  12 +
- drivers/gpio/Kconfig                |  12 +
- drivers/gpio/Makefile               |   1 +
- drivers/gpio/gpio-nct6694.c         | 480 ++++++++++++++
- drivers/hwmon/Kconfig               |  10 +
- drivers/hwmon/Makefile              |   1 +
- drivers/hwmon/nct6694-hwmon.c       | 949 ++++++++++++++++++++++++++++
- drivers/i2c/busses/Kconfig          |  10 +
- drivers/i2c/busses/Makefile         |   1 +
- drivers/i2c/busses/i2c-nct6694.c    | 184 ++++++
- drivers/mfd/Kconfig                 |  15 +
- drivers/mfd/Makefile                |   2 +
- drivers/mfd/nct6694.c               | 387 ++++++++++++
- drivers/net/can/usb/Kconfig         |  11 +
- drivers/net/can/usb/Makefile        |   1 +
- drivers/net/can/usb/nct6694_canfd.c | 814 ++++++++++++++++++++++++
- drivers/rtc/Kconfig                 |  10 +
- drivers/rtc/Makefile                |   1 +
- drivers/rtc/rtc-nct6694.c           | 298 +++++++++
- drivers/watchdog/Kconfig            |  11 +
- drivers/watchdog/Makefile           |   1 +
- drivers/watchdog/nct6694_wdt.c      | 298 +++++++++
- include/linux/mfd/nct6694.h         | 101 +++
- 23 files changed, 3610 insertions(+)
- create mode 100644 drivers/gpio/gpio-nct6694.c
- create mode 100644 drivers/hwmon/nct6694-hwmon.c
- create mode 100644 drivers/i2c/busses/i2c-nct6694.c
- create mode 100644 drivers/mfd/nct6694.c
- create mode 100644 drivers/net/can/usb/nct6694_canfd.c
- create mode 100644 drivers/rtc/rtc-nct6694.c
- create mode 100644 drivers/watchdog/nct6694_wdt.c
- create mode 100644 include/linux/mfd/nct6694.h
-
--- 
-2.34.1
+Shawn
 
