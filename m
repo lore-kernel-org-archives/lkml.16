@@ -1,65 +1,50 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC812522B9
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:48:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6070A280A32;
+	Wed, 23 Apr 2025 14:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745419738; cv=none; b=Lc82Kef4H9PfVs/D6YrKSYa3goEQKSNLzHI0BBl94gswLMHamy5Gj9vDPmHHQpL9l2cI8Dqg0vKhMJBvHv2XINPiUqT7nvnryoCH321emmqrwt7+e83RBVtqQbsrsjg5m3CHm6y3F36JLHVQUlBRMGXzjkW+7iRH7adtX2UP0oQ=
+	t=1745419749; cv=none; b=kVC0SS5i2/QHeTmS+TCaBVgCxq+eN9SMs60xSgD28gnprvH0UKW7sz7du55PTMsTqzykc4mFkwdXo1sGeJa8CB6iYmsQRiYAfjakXHId6KZtM3oMnLJXrR7TT3DJgbWvW+hpFR3jr6W5TUq0+YEfKuLGXD3CgaOZK18YJ23gyq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745419738; c=relaxed/simple;
-	bh=nIxaNcf672B7BSGcnupZqGaWJgpILObY6cKHqizWiH0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bbEk3uIN8Xo76EopF2gNl7MJ4FynwvKS5nTAquFTt936jEysadwZWRlF2Id2X62wc95reUemNoBwBnMIMp+g5rAW1IZI4K799RsS+gtmVdlna575Qst/vc7Qb0WJzyBEXFPwZDZI8jGDY9JASGg2X1swp6oHeswqYQoYINbzSSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D0iTAgQt; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745419749; c=relaxed/simple;
+	bh=GkJyG9CjxMhdK7gBRuo+c/ctvQ4KTph0Y3Pv46e8L9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=iEXXy9ggfmW2xT8GO0hdO2Y7LAfHmCckexH6/4Fd+gFxp0KPqh0KB8ErRM/xtTuls+MUME1BtPfpKkD+cNTf1WALXRHUZkdSB5VW9SPssCUN0FsJ6gSMdfU46xCNrvMJ2AGIiXr3p3ZTreoNVsNT6JDf73jjK8jfmFX+qBtjat0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=kIny4gBU; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0iTAgQt"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso70275825e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745419734; x=1746024534; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=U40sY2uDKd5zyA1HQw2VSyNbPCI1Z9a/feni+xQEoJo=;
-        b=D0iTAgQtwkhOpGkvnehrYuTYLMsn5sJGO93gdKFfXaaiwBb70KYDauXc7mn+sGGgHt
-         K3kKcAP3idB6FXk+iOiKLDEDr3Ije85y/UFuJduYA282rEidRGwRG7UhPf4UPGzzhVZZ
-         AhGPfgnq96ZrmMBwQac91b5kFgC5pyq6A29Z95ZghyoOpmV1YuCqemglPqeHDoyPZtcK
-         Z53O1gVEF/Y/lqpgk37Ccl8qx70BYFkEW8rquREs2Ymx7f/lh1v/iacUM/r+hp6BmI0U
-         gYzEpcHG5ufkM883d41L7vipCxrW0NXIKdLshaJnDtDiigNJZ4ecvX2C7VDyQfccZmTb
-         cdjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745419734; x=1746024534;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U40sY2uDKd5zyA1HQw2VSyNbPCI1Z9a/feni+xQEoJo=;
-        b=tPaPLt1akjpm1MraOJ2oqcvg9DWk3BQwdUP6NDGfRT6NmcRWelbI9lFNjiuZUinz8R
-         8u/4MOEiUxU96+GRqV0u2nXhbv348X6WAGdbx8PpvFIhBri0wGjwz7svHuG5DDB1+nbS
-         wR3Hq4mZGN9joKyFQR3XUKjDul6ZWStfRD3LgyVVP89RFq1IYjAbwL8gWI+tA6OeRezX
-         CnWttdB/j5UvpPftsQtimAFUEj7QhU+/1RE+PP6WRpes/BdODu7k5tJAniPP4HoCay7g
-         XPl9ArNK+siLzN/QisNWe1LObaXglJFWbrxFZd/iE61un3z2keL0wi/nya+S6ztCTD1P
-         j2EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8XJj8/V2C+RsjxkJY0p5bsQ6ln1h5wteuTh3SqIxSoOSkObYQYK/gTnr4ePsbTU7vi+IzO0oTF7dnguo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCYn9zH3qYCBtXMIVvTEwMCpH7UsTJbZxyh/C3gQ36qkbg3Epz
-	qMqDZI+qu8zUSpuwjz1UvZcV3RzaFZ4GjAnpfOr89M185MXPffgM
-X-Gm-Gg: ASbGncsnzeGISa4rgfAqI0Qv3PpqHppP97eQuUNS6vk0sS8IXZ+zVC9g/A5bSKQM1En
-	sguptNWxkw3vboMxduaHm4+nVy/OsvO0ZE0UtBOwLRujX4KnEF1xabSQi9J+OI9rIcsM7lp7cgU
-	Kr+p1FQXooX2AnEYMw2tNyxLZ2kuiKpmkO866qICYP2IteM4wZMqX/inATKNVvl0XA78dPgAX0N
-	Cmncj49RKGJtqzJoBTnzFEkiaga44DOxMi8cS8zfwklGUca12zpS2UC+Rer1clD71kCJulSuJF8
-	80wtkkxQnN9VZCxumEd56u5Jmkk3T8vZp+xkQ8kkSfuZsdsdrH0XSUGt28PL/0uH4p4YNUP/arC
-	yHvn80EF1QsFSv/0133Bqiw==
-X-Google-Smtp-Source: AGHT+IGD09CKrm4TLFkOE3DHOpjoorPdju1PSsQrQJIXZsv/BX5Okilz+aUMdimUZnYgR81Op3U6CA==
-X-Received: by 2002:a05:600c:11:b0:43c:f575:e305 with SMTP id 5b1f17b1804b1-4406d846ba6mr108270405e9.8.1745419733416;
-        Wed, 23 Apr 2025 07:48:53 -0700 (PDT)
-Received: from ?IPV6:2a01:4b00:bf28:2e00:ff96:2dac:a39:3e10? ([2a01:4b00:bf28:2e00:ff96:2dac:a39:3e10])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433191sm19319164f8f.31.2025.04.23.07.48.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 07:48:53 -0700 (PDT)
-Message-ID: <ccfc1eeb-8bd1-41f9-9146-c8752723ccad@gmail.com>
-Date: Wed, 23 Apr 2025 15:48:52 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="kIny4gBU"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAxx6M005349;
+	Wed, 23 Apr 2025 16:48:55 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	djp0SJrJVey+yNcfBy7xqDCy+IeZ994xZIZT+SAeRRQ=; b=kIny4gBUxbHewjMU
+	DLEl4Zx9N/sh8kOrwKyRoVD0G3WL3CA9Zq2uHSMnIeI7ycZjg16eLl+8a65UN49L
+	eng8HjFDrAxX1KHcAtRa8+C6k7R98oalJ2jvNk9Iaw3xNg202713MjE1Y0jKAFMx
+	zhyFOKwKaP7IITnR187Y6xUHp2QvPNUf5XcfQZqRZj0xqjfcjSMD1jpdFf5ZYjUS
+	M9MPa5R2tOBTZhRsAtOurbpuct3ERm0YNdweJXRsr+y7Z0MCQzvzL6hr4NiWo6l3
+	G8xvy8yIZpBSfUUtnkwo3cUBMnvqIFEtiw2iR7y/7eoR92O3L8SsJ6sHoCKTL/S2
+	0YHhgg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jk3bukp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 16:48:55 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C2B9A40054;
+	Wed, 23 Apr 2025 16:47:55 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 41FCFA400E8;
+	Wed, 23 Apr 2025 16:47:13 +0200 (CEST)
+Received: from [10.130.73.167] (10.130.73.167) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
+ 2025 16:47:12 +0200
+Message-ID: <68e1c909-d1ff-4ada-9072-ffa3ac8b5a47@foss.st.com>
+Date: Wed, 23 Apr 2025 16:47:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,41 +52,234 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] maccess: fix strncpy_from_user_nofault empty string
- handling
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- mhiramat@kernel.org, andrii@kernel.org, kernel-team@meta.com,
- linux-kernel@vger.kernel.org, Mykyta Yatsenko <yatsenko@meta.com>,
- Kees Cook <keescook@chromium.org>
-References: <20250422131449.57177-1-mykyta.yatsenko5@gmail.com>
- <20250422172011.feb243d2f7478c0e7109b74c@linux-foundation.org>
- <08e3ec4c-4401-403e-9d81-5ee0abebba5c@gmail.com>
- <20250423095941.1cab813f@gandalf.local.home>
+Subject: Re: [PATCH v5 1/2] media: dt-bindings: Add ST VD55G1 camera sensor
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC: Sylvain Petinot <sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab
+	<mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com>
+ <20250404-b4-vd55g1-v5-1-98f2f02eec59@foss.st.com>
+ <20250422131151.GA16823@pendragon.ideasonboard.com>
 Content-Language: en-US
-From: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-In-Reply-To: <20250423095941.1cab813f@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+In-Reply-To: <20250422131151.GA16823@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
 
-On 4/23/25 14:59, Steven Rostedt wrote:
-> On Wed, 23 Apr 2025 12:37:46 +0100
-> Mykyta Yatsenko <mykyta.yatsenko5@gmail.com> wrote:
->
->>> Does this fix any known runtime issue?  If so, please fully describe this?
->> Not that I'm aware of. The issue could be found when trying to copy empty
->> user space string in BPF program (and relying on return value).There are
->> some usage of
->> `strncpy_from_user_nofault` in tracing subsystem, but I'm not sure how to
->> hit those code paths.
->>>   
-> Although your patch found a bug in the tracing subsystem, this wasn't the
-> cause. It only cared if the read faulted or not. It was incorrectly
-> checking for zero as non fault when in reality, it needed to check >= 0.
->
-> With that fixed, it should work the same with or without this patch.
->
-> -- Steve
-Sure, I had in mind usages from trace_probe_kernel.h,
-namely fetch_store_string_user, fetch_store_string, having a second look,
-it appears these only used in trace_events_synth.c, and we are good there.
+Hi Laurent,
+
+Thank you for your review.
+
+On 4/22/25 15:11, Laurent Pinchart wrote:
+> Hi Benjamin,
+> 
+> Thank you for the patch.
+> 
+> On Fri, Apr 04, 2025 at 04:50:51PM +0200, Benjamin Mugnier wrote:
+>> Also update MAINTAINERS file accordingly.
+>>
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Signed-off-by: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>> ---
+>>  .../devicetree/bindings/media/i2c/st,vd55g1.yaml   | 132 +++++++++++++++++++++
+>>  MAINTAINERS                                        |   7 ++
+>>  2 files changed, 139 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml b/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..6b777f86790da4e5941ac1cad86dc1a5021f9f5b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
+>> @@ -0,0 +1,132 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +# Copyright (c) 2025 STMicroelectronics SA.
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/media/i2c/st,vd55g1.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: STMicroelectronics VD55G1 Global Shutter Image Sensor
+>> +
+>> +maintainers:
+>> +  - Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>> +  - Sylvain Petinot <sylvain.petinot@foss.st.com>
+>> +
+>> +description: |-
+>> + The STMicroelectronics VD55G1 is a global shutter image sensor with an active
+>> + array size of 804H x 704V. It is programmable through I2C interface. The I2C
+>> + address is fixed to 0x10.
+> 
+> If you intend for this block of text to be split in two paragraphs, it's
+> missing a blank line here. Otherwise, it should be reflowed as a single
+> paragraph.
+
+Thanks, I'll add a blank line.
+
+> 
+>> + Image data is sent through MIPI CSI-2, which is configured as only 1 data
+>> + lane. The sensor provides 4 GPIOS that can be used for external LED signal
+>> + (synchronized with sensor integration periods).
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/media/video-interface-devices.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: st,vd55g1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +
+>> +  vcore-supply:
+>> +    description: Digital core power supply (1.15V)
+>> +
+>> +  vddio-supply:
+>> +    description: Digital IO power supply (1.8V)
+>> +
+>> +  vana-supply:
+>> +    description: Analog power supply (2.8V)
+>> +
+>> +  reset-gpios:
+>> +    description: Sensor reset active low GPIO (XSHUTDOWN)
+>> +    maxItems: 1
+>> +
+>> +  st,leds:
+>> +    description:
+>> +      List sensor's GPIOs used to control strobe light sources during exposure
+>> +      time. The numbers identify the sensor pin on which the illumination
+>> +      system is connected. GPIOs are active-high.
+> 
+> If multiple GPIOs are specified, do they all serve the exact same
+> purpose, or is there a need to differentiate them ?
+
+The same purpose. All GPIOs mentioned in this list will be used for
+illumination and will strobe the same way regardless of their id.
+
+> 
+>> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +    minItems: 1
+>> +    maxItems: 4
+>> +    items:
+>> +      minimum: 0
+>> +      maximum: 3
+>> +
+>> +  port:
+>> +    $ref: /schemas/graph.yaml#/$defs/port-base
+>> +    additionalProperties: false
+>> +
+>> +    properties:
+>> +      endpoint:
+>> +        $ref: /schemas/media/video-interfaces.yaml#
+>> +        unevaluatedProperties: false
+>> +
+>> +        properties:
+>> +          data-lanes:
+>> +            items:
+>> +              - const: 1
+>> +
+>> +          link-frequencies:
+>> +            maxItems: 1
+>> +            items:
+>> +              minimum: 125000000
+>> +              maximum: 600000000
+>> +
+>> +          lane-polarities:
+>> +            minItems: 1
+>> +            maxItems: 2
+> 
+> Does the sensor support non-continuous D-PHY clock ?
+
+No it doesn't, continuous clock only.
+
+> 
+>> +
+>> +        required:
+>> +          - data-lanes
+>> +          - link-frequencies
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - clocks
+>> +  - vcore-supply
+>> +  - vddio-supply
+>> +  - vana-supply
+>> +  - reset-gpios
+>> +  - port
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +
+>> +    i2c {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        camera-sensor@10 {
+>> +            compatible = "st,vd55g1";
+>> +            reg = <0x10>;
+>> +
+>> +            clocks = <&camera_clk_12M>;
+>> +
+>> +            vcore-supply = <&camera_vcore_v1v15>;
+>> +            vddio-supply = <&camera_vddio_v1v8>;
+>> +            vana-supply = <&camera_vana_v2v8>;
+>> +
+>> +            reset-gpios = <&gpio 5 GPIO_ACTIVE_LOW>;
+>> +            st,leds = <2>;
+>> +
+>> +            orientation = <2>;
+>> +            rotation = <0>;
+>> +
+>> +            port {
+>> +                endpoint {
+>> +                    data-lanes = <1>;
+>> +                    link-frequencies = /bits/ 64 <600000000>;
+>> +                    remote-endpoint = <&csiphy0_ep>;
+>> +                };
+>> +            };
+>> +        };
+>> +    };
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 2286200b355bde3604607be916ef09aa88feed0e..4f5e9005063a157de69e81b10f8def9da9e6c04c 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -22410,6 +22410,13 @@ S:	Maintained
+>>  F:	Documentation/hwmon/stpddc60.rst
+>>  F:	drivers/hwmon/pmbus/stpddc60.c
+>>  
+>> +ST VD55G1 DRIVER
+>> +M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>> +M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
+>> +L:	linux-media@vger.kernel.org
+>> +S:	Maintained
+>> +F:	Documentation/devicetree/bindings/media/i2c/st,vd55g1.yaml
+>> +
+>>  ST VGXY61 DRIVER
+>>  M:	Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+>>  M:	Sylvain Petinot <sylvain.petinot@foss.st.com>
+> 
+
+-- 
+Regards,
+Benjamin
