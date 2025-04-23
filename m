@@ -1,75 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060BA28C5B2;
-	Wed, 23 Apr 2025 15:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3754F28BAA9;
+	Wed, 23 Apr 2025 15:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421862; cv=none; b=tAfjMmYZeCKSBP+DL713KvHSK6eXKURlNVgOoUU1tZfUFeEfM01u/IeVGmzDPulgzOSLCVnYg9Te4I/6sWjf31YfqBboI6pJc8L9nvJ2agKX3e2660emAQdxu5r6gF7HebYN1FcS4E49aLytPgmjXVlkOnCkmC0NLYDuDXhkTQI=
+	t=1745421881; cv=none; b=Qoc0UROV8jt7VWzdun7WZMfDpP+zi5msVMB2/1C7Pf6/dna4h2vE+qU+dw+Td5RJYL6IZUaJqxww9LDMDtBcyjKZ/fC6aYNQxRER/QGGJfzLLRSgrHxWVPKLnzYFWQE3gmNQ+gVqbZlzrAaWEMOqhzUS4X70Ol0pwZGmuBVtFus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421862; c=relaxed/simple;
-	bh=MGkSDAhmsttNEFpJt61N5qgZgDOhGEDQKGrmLoEGji8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IKyQroetbFLlqlCIfVo1Gl0zA7lEdqt+rwkYYanH11DcKa7YvPbCNxlboRJk+Y4qDOOpt1Aq5wa7LIPjGy0+DFqgkoHPvRMf9fS1uqScrZlCZ1z4o5oK8QlFjGuPesrWyCHoQqRt4ErLjPZYhixGyWWr+0ycF4x4ZJ7XwkMar7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2MfFQT3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745421881; c=relaxed/simple;
+	bh=nMhCwAOTSMRyVPdhT0XUroexVj2lZ57XR6Ezp9vic6I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LtWxzADva783RYCqN0pglLXrFYmrhJC+PxPyh7qqk7WNcMqW9TH6L8AgHPKViE6cZoLp7cb8+aXjQjnaEvqi40J6wt2XISDnQYnvvwMl5VgkJGXMPZo/GDe/fRSJf35K4mTAqMPLNyZ3JGXZKbFrC+z224jRZfizY83WFGW/LKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Cp0hA+Ip; arc=none smtp.client-ip=117.135.210.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2MfFQT3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06D5C4CEE2;
-	Wed, 23 Apr 2025 15:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745421861;
-	bh=MGkSDAhmsttNEFpJt61N5qgZgDOhGEDQKGrmLoEGji8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j2MfFQT34oLMAfbpJVPfDpvwGmvcGh/TuufkBrvtdvQ+wp63PV7M3qQKVsVOwYoKa
-	 X9n3Pn+LUi83ar1QffPqYBT946ICCF2dt1yhqP52ONfcaPmd6xQo75YxT5mtkIJNfy
-	 13JXoSeG/V7oytYAxNAlCp8vIAxHjcwYgNLYLWGyHnPDEtLDHgZzXX/ZTzM0JOP/9D
-	 QkbO4i/7WAycKSJKdmmO9N2WakwKAhP9PwU9lSWhWdKfg/R9Im/QyUptOLvZB/Hk+a
-	 sUkoSfCggUA/CKcHS42UfruWqzkTUBMHujQpKxM5qahvydJ57GzOWodhepSqm2Aa9j
-	 f24LBdQ7bHY3A==
-Date: Wed, 23 Apr 2025 10:24:20 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2] dt-bindings: interrupt-controller: via,vt8500-intc:
- Convert to YAML
-Message-ID: <174542185825.550926.14913949740445861454.robh@kernel.org>
-References: <20250418-via_intc_binding-v2-1-b649ce737f71@gmail.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Cp0hA+Ip"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=fLf6c6c5ft8eN46VJWzZEfTcLHZ/iFnsmavl08qDxwU=;
+	b=Cp0hA+IpCX8WlV1svNV2MyHKPXjl4LoFaXE7Xrw/Badl8BO+C+hHZwx+ElOkcQ
+	eqscdFuprmIXObh56TRVMM7UNOB9XYAOuXyt5vptI36gOtPLW2cXYqMpWSy29JsW
+	I9URNWxVX2J5ZPX6Bj4iY0vFHAtrO5y0QAwoayJE6hVwI=
+Received: from [192.168.71.89] (unknown [])
+	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnfGf9BQloLLNpCA--.43427S2;
+	Wed, 23 Apr 2025 23:23:42 +0800 (CST)
+Message-ID: <9212f2ee-9562-4409-a378-20e41fe30325@163.com>
+Date: Wed, 23 Apr 2025 23:23:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418-via_intc_binding-v2-1-b649ce737f71@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] PCI: dw-rockchip: Reorganize register and bitfield
+ definitions
+To: Niklas Cassel <cassel@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ jingoohan1@gmail.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20250423105415.305556-1-18255117159@163.com>
+ <20250423105415.305556-3-18255117159@163.com> <aAjufPQnBsR6ysAH@ryzen>
+ <352e40a0-65e2-499f-a7dd-904a4a7b19da@163.com> <aAkDRIqIOjLo7haw@ryzen>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aAkDRIqIOjLo7haw@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDnfGf9BQloLLNpCA--.43427S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7XF4ktF47Gw18Cr4UtrWUJwb_yoW3trgEqr
+	4UArsxCryqgF9xWa93Jr1jyFsIk3ykuw45urykXr4Iyw1agrs5Kr429rZ3JFy8Ja13GFs2
+	kw15Aa1ruryS9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjqjg3UUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWw44o2gJAM5KAgABso
 
 
-On Fri, 18 Apr 2025 17:57:25 +0400, Alexey Charkov wrote:
-> Rewrite the textual description for the VIA/WonderMedia interrupt
-> controller as YAML schema.
+
+On 2025/4/23 23:12, Niklas Cassel wrote:
+> On Wed, Apr 23, 2025 at 10:14:57PM +0800, Hans Zhang wrote:
+>>> I can see why you renamed PCIE_CLIENT_GENERAL_CONTROL to PCIE_CLIENT_GENERAL_CON
+>>> (to match PCIE_CLIENT_MSG_GEN_CON).
+>>>
+>>> But now we have PCIE_CLIENT_MSG_GEN_CON / PCIE_CLIENT_GENERAL_CON and
+>>> PCIE_CLIENT_HOT_RESET_CTRL.
+>>>
+>>> _CTRL seems like a more common shortening. How about renaming all three to
+>>> end with _CTRL ?
+>>
+>> I saw that TRM is named like this.
+>>
+>> PCIE_CLIENT_GENERAL_CON / PCIE_CLIENT_MSG_GEN_CON /
+>> PCIE_CLIENT_HOT_RESET_CTRL
+>>
+>> Shall we take TRM as the standard or your suggestion?
 > 
-> The original textual version did not contain information about the
-> usage of 'interrupts' to describe the connection of a chained
-> controller to its parent, add it here. A chained controller can
-> trigger up to 8 different interrupts (IRQ0~7) on its parent.
+> Aha, so the inconsistency is in the TRM... hahaha :)
 > 
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
-> Split the series from v1 into separate bindings patches so as not to
-> spam all the subsystems with unrelated changes, per Rob's suggestion
-> 
-> Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-2-f9af689cdfc2@gmail.com/
-> ---
->  .../interrupt-controller/via,vt8500-intc.txt       | 16 -----
->  .../interrupt-controller/via,vt8500-intc.yaml      | 76 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  3 files changed, 77 insertions(+), 16 deletions(-)
+> Probably best to keep it identical to the TRM.
 > 
 
-Applied, thanks!
+Hi Niklas,
+
+Thank you very much for your reply. Okay.
+
+Best regards,
+Hans
 
