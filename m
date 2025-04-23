@@ -1,147 +1,124 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C50253B75
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C84242AA1
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745370965; cv=none; b=SfVF2aJ+rQk41kFE+Jzsd2d6ZvL3ElH5CGxWh3NemxzA7SmIIWB6lAVIuYjRem5e480q0ueWcdWKDjf76n9NBCiYYgZe51Fncs0Ps6Z1D5g2CUcrpZOVowlO/5BsV1tJPLB4oscaZA2y4pp/U1HIyuuh5R0S3xFKysViylUZOvk=
+	t=1745371075; cv=none; b=AqNtWiFQ0KfKecyiAm+t8kOMP/CD2c5FP4wD2OVZjm1yPVJlAasK8FqHUkJk8DUFhqzQuZxXOM6mWELTMkz84+4QforWgJOGK1JTKRIEFahDBoCKPvyShgSJHHSvAPVxDqge3In2mQRRCPMVNrnjE+RzDEdaN1hCs2UfkdwK3bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745370965; c=relaxed/simple;
-	bh=BXEvwpncN5O7EkLN13AdUk98rvfh4Ju4eZYY2vVAM1I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=koOcSz8jU6jzvMOFB8lZj5avJtecDGBYbpLBAuOq3wgoHgWzAWtmDBF+VsC1NtX/ObUiGGPT98qteFk+t4Be2boMZc72ySAcW4N5Pi6nbNMNfiT1XRvzRr1aWF5Y2ENJKVqMYBSAggfbP6QSGopCHzAdOPnJRXlH5gdY+7W78HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KBhF7lv6; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745371075; c=relaxed/simple;
+	bh=Zylnpb2TEmbMQh5WC0vsdH2I+J9na/9RUwBuAp0YScE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMpxhv0Jdh5S4XkKfdSPORFVTvCYFwc1wUyEtdvS5nmSg7R69k4+NnwXi627h2Nuuse5pjTWUfx6w7u/P5vUOZGr/Q8Drw4zT0YRPa2b6DdZFBk0LT6b8fwujf4yQAti06zKDqPAwf5u1TjTEEgtbmABrabXd6MnEEGqiRQvLV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2/2xe3W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KBhF7lv6"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4769e30af66so114471cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745370963; x=1745975763; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zhRaiFa49yEjS7XMAEA0pqmJ6/VdWziZXZon8TG+B0I=;
-        b=KBhF7lv6PcVEJJE25TaDKoXU5nvQYnMgaWVOFsmGIj08jJiXsxN4gw1ITY2Uc3oNle
-         XriSIWM8lfnUInhOZgegHdrAhEQzVzroNB3IhvnOERy+pznEegsOYf/0dhnDdXXNTn0l
-         e9hBqNvJH5FcAf9tilSr555Go0J5zqBgz73qtwkS332++H9ya5ij+f6WcvJf8vAldg4R
-         11j5UzKMfiFAXMepwCW0qKHRbywt0MgJYwpsMMCLrBZ97Hvr1375zkRkblUPadfMCzNJ
-         8mCoRIepu8dKFiHaUTwqzsMe2inRjjEIdp334NRLWoYvuArvPLIWRPWSuYnNoV7aPaau
-         h0JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745370963; x=1745975763;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zhRaiFa49yEjS7XMAEA0pqmJ6/VdWziZXZon8TG+B0I=;
-        b=qnoBS+N+fbhB4kamCjy7G6pdlo0ZI4j9Qi6KJw4lGkmbnvs9RGON7XB8JsF9aQzxMJ
-         vWUNk6DiCIK6sZ7WBuElpebrX8Ur9k1OX9xQq5MWWEdr3NLIoQLywIXRXq6qtqL0W82l
-         6blfaR/aGCb12mdiF0r4MoQwknmG8fWsfV+0kYzIHm2LBKhwX5NNr3RmWYIYIQ+ltkIP
-         Rp45s1aKXDArW8T8I8pVZikq/R1NGmq0VyB9JN98rMjXZ62BLWYp71Fa8jaIh1+i5rSq
-         iZ8XSyM2mHO6mDlUiXRJgZOZoVPYizR/sov/itIMXGZtRG5K4jH74RBPZRqdIdFz1nui
-         EUbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPOOcMAxurx76GmYy8Iu+iGs/LeuaLcoymd0zibLJUECv0y0S/iu0+pWi5RTYjwtxG2YylJDrppJGLcpU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdTyIO4aPA5I3fwtCwb7svaV/2gKJbl+6pyezsprSUAVEwsiUo
-	lLrGakbXNmyCsOQ2c0ykvPMQAyRhYwibi427WOS8UBVzo1x3tRyf1UgADCXzBK3Qtlu2PZOjIRa
-	osF6xtDFPTOlBSLDYt/nb2NIwjVeQbOZzY6eV
-X-Gm-Gg: ASbGncuyyBQPRN/Tw9J8cGq3ZhAuuSx2l2Enx0ccGDiiwKH7wc3c3GMK4LXqlLJFwJJ
-	8frCNUQV3pUSeyqLmOQh4g2aLRfZ/jhv4FYA/S0xgZ4nBpP2lLZdjqG7sDUmlvw8isjFP6tpQ3U
-	L8r6M9ijO/AHGzbCixt0uHmcGftsMLXnewzro3POWTVFNaqzkqKAcKfhNtHVvXIGQ=
-X-Google-Smtp-Source: AGHT+IEUXBruOYK9xJLY5TxjTNRmIkg5ccc2dUsC7FO2joRBTQXoTvy35paTIjKrhKWBSAk6EgOGJ3DQQXksC84x6AE=
-X-Received: by 2002:a05:622a:2290:b0:476:d668:fd1c with SMTP id
- d75a77b69052e-47d11ce1d9bmr2253491cf.2.1745370962631; Tue, 22 Apr 2025
- 18:16:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2/2xe3W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D61C4CEE9;
+	Wed, 23 Apr 2025 01:17:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745371074;
+	bh=Zylnpb2TEmbMQh5WC0vsdH2I+J9na/9RUwBuAp0YScE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=a2/2xe3WFytGgxOnWjC+Er9KJ4V2acrQ/2OFwTsINq50VN/MkTk1ge6H6Fq0gaEtp
+	 302ejpCSGFofo//ErRRv0kAeH3xzjqcIv2Qnx6Jt1Iov8SegtAeq2sUNMln1AKKGTp
+	 UtlEa5L19MB2X0iXhtH/94Dm1Qv10bIftdxSIz5t3/wQ7UygZwUxNS8OjkbZRzD8w3
+	 Q95LYwjI8qk3TGQJ6hwNW1ATZrJ9/sjcrlM7jX3XTqqzoN10oHSwqt3LFTCGhbCGVl
+	 QJBOsR51TFoyUrOHsDDheKMZld6TQq1Uc2/sp4ET0RaGeeITM9IHU76uE1zi87kk3s
+	 rZlmc6Jt4oBoA==
+Date: Tue, 22 Apr 2025 18:17:52 -0700
+From: Dennis Zhou <dennis@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: gaoxu <gaoxu2@honor.com>, Tejun Heo <tj@kernel.org>,
+	Christoph Lameter <cl@linux.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"surenb@google.com" <surenb@google.com>,
+	yipengxiang <yipengxiang@honor.com>
+Subject: Re: mm: percpu: increase PERCPU_MODULE_RESERVE to avoid allocation
+ failure
+Message-ID: <aAg_wPQa_RJkmFDa@snowbird>
+References: <bcfb90b2cecf43d7a0760ebaddde10d8@honor.com>
+ <20250422170209.a8beaa8a3610d2e92421476f@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231206103702.3873743-1-surenb@google.com> <20231206103702.3873743-3-surenb@google.com>
- <8bcb7e5f-3c05-4d92-98f7-b62afa17e2fb@lucifer.local> <rns3bplwlxhdkueowpehtrej6avjbmh6mauwl33pfvr4qptmlg@swctg52xpyya>
- <CAJuCfpFjx2NB8X8zVSGyrcaOfwMApZRfGfuia3ERBKj0XaPgaw@mail.gmail.com>
- <CAJuCfpHpdAn6yNVq1HXqO0qspj6DLb4qa_QufT+Z9RLTTa-N9Q@mail.gmail.com> <cbppxyb7pe3yhmru226db5zt3v67sxsvfzjvg4jn62gzltutbl@vipuebrhjgpj>
-In-Reply-To: <cbppxyb7pe3yhmru226db5zt3v67sxsvfzjvg4jn62gzltutbl@vipuebrhjgpj>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 22 Apr 2025 18:15:51 -0700
-X-Gm-Features: ATxdqUF4NmV98WtGDJWZ4I3RN7_zTDrRsHxHJXV0LiqF1O2h8MZ7XjyQt8_P6zE
-Message-ID: <CAJuCfpHD1N+xn6ZMnvLM5g7NLBd6AHSDhnrDqdR+ceZRM+=qUg@mail.gmail.com>
-Subject: Re: [PATCH v6 2/5] userfaultfd: UFFDIO_MOVE uABI
-To: Alejandro Colomar <alx@kernel.org>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, aarcange@redhat.com, 
-	linux-man@vger.kernel.org, akpm@linux-foundation.org, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, shuah@kernel.org, lokeshgidra@google.com, 
-	peterx@redhat.com, david@redhat.com, ryan.roberts@arm.com, hughd@google.com, 
-	mhocko@suse.com, axelrasmussen@google.com, rppt@kernel.org, 
-	willy@infradead.org, Liam.Howlett@oracle.com, jannh@google.com, 
-	zhangpeng362@huawei.com, bgeffon@google.com, kaleshsingh@google.com, 
-	ngeoffray@google.com, jdduke@google.com, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422170209.a8beaa8a3610d2e92421476f@linux-foundation.org>
 
-On Tue, Apr 22, 2025 at 12:20=E2=80=AFAM Alejandro Colomar <alx@kernel.org>=
- wrote:
->
-> Hi Suren,
->
-> On Mon, Apr 21, 2025 at 08:58:22PM -0700, Suren Baghdasaryan wrote:
-> > > > Please re-send including linux-man@ in CC, as specified in
-> > > > <https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/tree/C=
-ONTRIBUTING>
-> > >
-> > > Thanks for the reference. Will post the documentation update later to=
-day.
+Hi Andrew,
+
+On Tue, Apr 22, 2025 at 05:02:09PM -0700, Andrew Morton wrote:
+> On Tue, 22 Apr 2025 11:39:30 +0000 gaoxu <gaoxu2@honor.com> wrote:
+> 
+> > In android16-6.12, enabling CONFIG_MEM_ALLOC_PROFILING causes some modules
+> > to fail to load during boot because of failed percpu memory allocation.
+> 
+> Which modules?  If they're in-tree modules then we should fix this
+> issue in -stable kernels also.
+> 
+> If they're out-of-tree modules then what argument is there for altering
+> the mainline kernel?
+> 
+> > [811:modprobe]percpu: allocation failed, size=5200 align=8 atomic=0, alloc
+> > from reserved chunk failed
+> > [811:modprobe]Call trace:
+> > [811:modprobe] dump_backtrace+0xfc/0x17c
+> > [811:modprobe] show_stack+0x18/0x28
+> > [811:modprobe] dump_stack_lvl+0x40/0xc0
+> > [811:modprobe] dump_stack+0x18/0x24
+> > [811:modprobe] pcpu_alloc_noprof+0x96c/0xb58
+> > [811:modprobe] percpu_modalloc+0x50/0xec
+> > [811:modprobe] load_module+0x1158/0x153c
+> > [811:modprobe] __arm64_sys_finit_module+0x23c/0x340
+> > [811:modprobe] invoke_syscall+0x58/0x10c
+> > [811:modprobe] el0_svc_common+0xa8/0xdc
+> > [811:modprobe] do_el0_svc+0x1c/0x28
+> > [811:modprobe] el0_svc+0x40/0x90
+> > [811:modprobe] el0t_64_sync_handler+0x70/0xbc
+> > [811:modprobe] el0t_64_sync+0x1a8/0x1ac
+> > [811:modprobe]ipam: Could not allocate 5200 bytes percpu data
+> > 
+> > Increase PERCPU_MODULE_RESERVE to resolve this issue.
+> > 
+> > ...
 > >
-> > Was planning to post today but I'm a bit rusty with the syntax.
-> > Will try to send it out tomorrow
->
-> No problem.
->
-> > after verifying the results.
->
-> For verifying, you might want to try diffman-git(1).  It's provided in
-> the man-pages repo.  If the version of the man-pages package provided by
-> your distro is >=3D6.10, you may already have it in your system, and if
-> not, you can find it as <src/bin/diffman-git> in the repo.
-> It's documented in a manual page in the same repo, of course.
->
-> I don't know if you know about the build system, which also checks a few
-> common issues in the pages.  You can check <CONTRIBUTING.d/lint>.
-> TL;DR:
->
->         $ make -R -j8 -k lint-man build-all check;
->
-> (You can ignore anything that's not about the page you're modifying.  At
->  the moment, I see a few issues that I'll need to investigate in a few
->  pages.  For seeing a clean list of what's failing, you can ignore
->  stderr; see below.)
->
->         $ make -R -j24 -k lint-man build-all check 2>/dev/null
->         TROFF           .tmp/man/man2/statx.2.cat.set
->         TROFF           .tmp/man/man2const/KEYCTL_SETPERM.2const.html.set
->         TROFF           .tmp/man/man2const/KEYCTL_SETPERM.2const.pdf.set
->         TROFF           .tmp/man/man2const/KEYCTL_SETPERM.2const.ps.set
->         GREP            .tmp/man/man2/pipe.2.check-catman.touch
->         GREP            .tmp/man/man3/ctime.3.check-catman.touch
->         GREP            .tmp/man/man7/landlock.7.check-catman.touch
->         GREP            .tmp/man/man7/rtnetlink.7.check-catman.touch
->
+> > --- a/include/linux/percpu.h
+> > +++ b/include/linux/percpu.h
+> > @@ -16,7 +16,7 @@
+> >  /* enough to cover all DEFINE_PER_CPUs in modules */
+> >  #ifdef CONFIG_MODULES
+> >  #ifdef CONFIG_MEM_ALLOC_PROFILING
+> > -#define PERCPU_MODULE_RESERVE		(8 << 13)
+> > +#define PERCPU_MODULE_RESERVE		(8 << 14)
+> >  #else
+> >  #define PERCPU_MODULE_RESERVE		(8 << 10)
+> >  #endif
+> 
+> PERCPU_MODULE_RESERVE is a pretty unpleasant thing.  It appears that it
+> gives us the choice between either wasting memory or failing module
+> loading.  But I expect that something more dynamic would be a ton of work.
 
-Thanks for the detailed instructions, Alex!
-Posted the patch at
-https://lore.kernel.org/all/20250423011203.2559210-1-surenb@google.com/
-and hopefully I did not miss something important.
-Cheers,
-Suren.
+From Tj's commit back in 2009... 6b19b0c24004
 
++/*
++ * On x86_64 symbols referenced from code should be reachable using
++ * 32bit relocations.  Reserve space for static percpu variables in
++ * modules so that they are always served from the first chunk which
++ * is located at the percpu segment base.  On x86_32, anything can
++ * address anywhere.  No need to reserve space in the first chunk.
++ */
 
->
-> Have a lovely day!
-> Alex
->
-> --
-> <https://www.alejandro-colomar.es/>
+I'm not too sure where our x86_64 32 bit support is. If that is no
+longer true then we can likely fold the reserved region back into the
+dynamic region.
+
+Given the above, there's not really an opportunity to do this after the
+system has booted hence why it's baked into the first chunk.
+
+Thanks,
+Dennis
