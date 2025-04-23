@@ -1,85 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AC52798E3;
-	Wed, 23 Apr 2025 17:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796671EFFBB
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427763; cv=none; b=VqJG4DNYjcUElHbt9J6QzaoxMv1Ub/tr2OEZdL/1QSJ4tMDtn1yfY5yrYoGmlGBrfnr4kDQifVDtilZ4cLKLZIVerHezgljOo4tkBlHpd8xdzAJxIEJxnl0Z7ECDLHVN2wFUzZhCrdBCoGK+fad8baTH6kKig0LTC3gUTZUPwwk=
+	t=1745427818; cv=none; b=lCuKFmNFfObM3yPAuYOfqCWAqjnp6ncyAJlsHZzx/gaSTOnk44VKPtLiop2LejyQsAMFTsUW12v9t/BHU0LxT4n4Pmt5FvjWK05o/31wddDs0xyPLsIdZLBAiJ0SJk2J93xOqO8UvB/39KIn+PUD/v/yKh30RhDDivDbI3/e7B8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427763; c=relaxed/simple;
-	bh=f+Y3X3YiUsLlyM25CR4YNDzXTSkXUg0kSn7T+IarnKU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ed/QMuY2LCLcZzK2IHNFPlZtGmksCApSpchTxz9cKuYp3RT29xELDaWGZZQoNRTqHcdvBs3J3P+YJAR+7OUUMsuJPIgxnAG8rNdloJqnq1w/upapFg3k+98aZftznzouGe0oZdN5+wS1WHr3pMwmCaD6nYyPbQzZCeOb50LNqQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9WGVSOL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745427818; c=relaxed/simple;
+	bh=0XVlTRBgn1AxRwlX5L5gSRRecvWpaBNYjygKefRRLLU=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=a8JhguUiq8fCC0+zSy1D7JGxqvu+CTo2JNWXfIHUM+FACLsTWiugGCPXTu4m/COYsr3PdVGXNucna5GEal50G271jOqZmnq0NsVVDVqqDtNXRmQFb8ECmQ7kwbL6GU4J69lgK2JtiUIO9QcTDlHvlXdUAIQqN1WQQVKF5QjmjCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cNIc9Q2I; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9WGVSOL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E73C4CEEC;
-	Wed, 23 Apr 2025 17:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745427763;
-	bh=f+Y3X3YiUsLlyM25CR4YNDzXTSkXUg0kSn7T+IarnKU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=p9WGVSOLMK2IllaBXAwJz0xviUDru67xnRfAFN3NVrlYNOHhmJOguw0EhAM+yrkaM
-	 L2yswzZRsPsf7PyeX0XYkveLk3Up8+3VIxMl3Beu9sU5BRfff99I5aDKfLDTxOtMYW
-	 3G8XYMu5o/iazQUNQSx75copPBEloQIoB9B4MDmh7Kg2sXHaJGinEnpPt6Zzde1VQP
-	 ebMSZnkvYkfnHh7nqG4AoncsSCp5po+bPqgAzuo1jQbq54AAf4H4CBin4GSd/Kqufm
-	 gPTRhk7+qQ9KO1XDMita+8TYvKeW7gt6nFPaHS0qCVvrr8gnazJvCmViCq4fDsYqWz
-	 3bzBnyaM8kyZA==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549967c72bcso6492e87.3;
-        Wed, 23 Apr 2025 10:02:42 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVSjDZIWiSxe+T3le2RgKz6P7q44EbxoT28mGKqYL5ytAa+nBpH7HRf2svK2dkN0pMz9k4JFLQciX0uVGJ3JVWUvRI=@vger.kernel.org, AJvYcCW30C8fxugnnZN93o27yTbc/iSoIT2zw5v+Iof6ky5boFOmnP6Q1FE+2p5FogQI0t4HMsgH0xKJgS8oWsZf@vger.kernel.org, AJvYcCX7dz6NPrzhgl9jazcQiLt964il4JDqA9+N7wUhm3xXo9ez+p6F13QyMy8SaDW6HgoskEKeUt8NSoA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzvf6dnU2Pt15S9arqszWo7VDyW/01YztJ0zZCQZB8brEfx9gaG
-	e/imkDXfQnrE4VSqES7PGw25T5w8L0+llT95JCpYOcJ3c3xPjp/g85o6FMoCa5yr1ONhhQp1lVv
-	JCUixHzLLYE/UcE24tVHchLjnuLg=
-X-Google-Smtp-Source: AGHT+IEq7CfO+E4wwVjeXjdovTnbd7lMFJ2vO364cYkkDGW0lhY//NHoPoHLFTLaawgvlDn/RwsjYOWKhta7ldtyrvA=
-X-Received: by 2002:a05:651c:1556:b0:30b:a20d:1c06 with SMTP id
- 38308e7fff4ca-310903c31b4mr66868041fa.0.1745427761263; Wed, 23 Apr 2025
- 10:02:41 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cNIc9Q2I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745427815;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+3+7SBYIT0EMoPG6wTKgHOcC2ipTqOMHgJd9hrWDUp8=;
+	b=cNIc9Q2IKqCImx36/GS0GOQjwrOr5Wq4ELk+DNh4SqmDk5K5d0tMTZTHhqN5nB6kuYBUkf
+	o3oIz8Obk8uUI6n7c2J5GLGnn7OciXhT+I5DLBEm/zaJaWmFQsRF4HsAdkCeQtWi7IcQVG
+	OF+jLKkk7R88awGAtpUmJAUEZOTs71Q=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-654-bpIfVjBuMaS9eZq6QJDLCA-1; Wed, 23 Apr 2025 13:03:34 -0400
+X-MC-Unique: bpIfVjBuMaS9eZq6QJDLCA-1
+X-Mimecast-MFC-AGG-ID: bpIfVjBuMaS9eZq6QJDLCA_1745427813
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f0e2d30ab4so1646936d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:03:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745427813; x=1746032613;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+3+7SBYIT0EMoPG6wTKgHOcC2ipTqOMHgJd9hrWDUp8=;
+        b=tJJRn55QHh7+Ju05UYrANi6gLeYnWcGR6Z9QvyJnAWisWcgVpZi5PcqQEyKU/Wsw8h
+         RWf/HwkBmydzZ3O6EuUZUY332ya+gjYEoIjG7FckPGhDqKv7DMwG3kbtBg7DfXJYaAlL
+         f0vRUhYnVGJd07Zhtbi/KhC7OQzJEzZ0wItiV32CpYrcwwyOH9MpBeGsqYFBZlhous1B
+         sMxkPCvn056l27/VO4BBDUZV1SKcM0Rk2aQzORWSNj19oMGGTKPn6daghlejt08HJnJ+
+         4m4q031QqiVFAwjoxMXpyYSiCsmxd57CLPoK0ToqtDHppwwhVJViytIA4LUV6qL+nMDc
+         lpqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVxBqHkNMGAAHGoj/qo88rYLxftRGRUDsH2FMv376Nk8JEWpYUXmoie4SvxErOaVgZz6u1UOj3hZyd4oqc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPbaLt8+I/1gUGiGTobKPzVW6ikzVoZzGcod/W4x/70B67gumU
+	7YzM3Fy8JvCaWSKWh3nuodk1xIYhz4NMz6dZrHnaaJw3/YVawL95n1jkVHlZOLn1r/RQrcgBcId
+	S89nUWclhYQ3Ci3ARhxRiu7zTYE/Ug9yAYshBPWHf7p1nIff60LN49pnRViuOtA==
+X-Gm-Gg: ASbGncvLeBD0GwsHt8ut+pbK8d3JXC9fXTamaZoFTlZGpWaRyPldst/obJW1BqOjzhF
+	/JLkSUU+RymSEop4+HTg54By21NemVKYT+dsSnIfYDjzhPLO/ySn49qu8H7X83THSO6gj//+CkO
+	RA1LNjdrqv8r9arARU/mEy7ffRbIgqxxg+qOLN+quwMtfUbB1QA5PHEw1GxXhSC4IH+uXq+auJR
+	9kuhMxnKX6rRhx4487fAfXTS2oIcYSNitGOE6M9TmjpfAmNYzRMlx6+bIAUEiTeGzaWqanIW9Ch
+	YiWwBRX8t1kVZhtbYZnfyx4Od4cK42VVQm4TJIipRgOCc0cFyErGK76gXg==
+X-Received: by 2002:a05:6214:5292:b0:6e8:fbb7:6764 with SMTP id 6a1803df08f44-6f2c46992f3mr343421186d6.45.1745427813505;
+        Wed, 23 Apr 2025 10:03:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE0Jady51wQ0Po3UBtRHbwZVYJnEaUhKMy5jHguua0DBLjtBhN5wZ/fJFmpmlLKNdXjaqxXqQ==
+X-Received: by 2002:a05:6214:5292:b0:6e8:fbb7:6764 with SMTP id 6a1803df08f44-6f2c46992f3mr343420656d6.45.1745427813160;
+        Wed, 23 Apr 2025 10:03:33 -0700 (PDT)
+Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2b33134sm72456966d6.54.2025.04.23.10.03.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 10:03:32 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <40e1ec0a-63a8-4c07-8b42-e31676453265@redhat.com>
+Date: Wed, 23 Apr 2025 13:03:31 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422210510.600354-2-ardb+git@google.com> <174539448176.31282.2929835259793717594.tip-bot2@tip-bot2>
- <odoambb32hnupncbqfisrlqih2b2ggthhebcrg42e5fg25uxol@xe5veqq52xif>
- <CAMj1kXFpE=P0_a3fTAnb7qQmXLt19dCtuEcd5U8xwYzAcO=ufQ@mail.gmail.com> <4dxg5dunoft5r5hd5kddqzap2stn2ytiwvgik7vvktifbhiyv4@2dxkkjlygnia>
-In-Reply-To: <4dxg5dunoft5r5hd5kddqzap2stn2ytiwvgik7vvktifbhiyv4@2dxkkjlygnia>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Wed, 23 Apr 2025 19:02:30 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXERamRZW6rmqa8dqQdx81Sc5bSJKijoQpVp76ZyFns3PA@mail.gmail.com>
-X-Gm-Features: ATxdqUE5Z9-T4w1qCH98mwuh4sMKz8HQW1HGvxwhBiUUro1F0vtBiYZJZ-iwEN0
-Message-ID: <CAMj1kXERamRZW6rmqa8dqQdx81Sc5bSJKijoQpVp76ZyFns3PA@mail.gmail.com>
-Subject: Re: [tip: x86/boot] x86/boot: Disable jump tables in PIC code
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: tip-bot2 for Ard Biesheuvel <tip-bot2@linutronix.de>, linux-tip-commits@vger.kernel.org, 
-	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-efi@vger.kernel.org, 
-	x86@kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/2] selftests: memcg: Allow low event with no
+ memory.low and memory_recursiveprot on
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+ Waiman Long <llong@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+References: <20250415210415.13414-1-longman@redhat.com>
+ <20250415210415.13414-2-longman@redhat.com>
+ <psbduszek3llnvsykbm3qld22crppq4z24hyhsp66ax3r2jji5@xhklroqn2254>
+ <0033f39f-ff47-4645-9b1e-f19ff39233e7@redhat.com>
+ <h64z4wl6mw3qxfwmqsvlddsie62ehkoag47lm2in3nda7dhloq@rjxpkggawqem>
+ <d32c626d-1c93-47ec-8b01-1c085b4bf2fa@redhat.com>
+ <d36jhvahtoqqtuw4y2k4rjzmxnu4ejbffvimrnffvcu3raby6l@asjm6h6r7w3k>
+Content-Language: en-US
+In-Reply-To: <d36jhvahtoqqtuw4y2k4rjzmxnu4ejbffvimrnffvcu3raby6l@asjm6h6r7w3k>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 23 Apr 2025 at 18:41, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
->
-> On Wed, Apr 23, 2025 at 05:01:42PM +0200, Ard Biesheuvel wrote:
-> > > > So let's not bother and disable jump tables for code built with -fPIC
-> > > > under arch/x86/boot/startup.
-> > >
-> > > Hm, does objtool even run on boot code?
-> > >
-> >
-> > This is about startup code, not boot code. This is code that is part
-> > of vmlinux, but runs from a different mapping of memory than the one
-> > the linker assumes, and so it needs to be built with -fPIC to
-> > discourage the compiler and linker from inserting symbol references
-> > via the kernel virtual mapping, which may not be up yet when this code
-> > runs.
->
-> Maybe objtool should ignore .head.text.  It doesn't need ORC, static
-> calls, uaccess validation, retpolines, etc.
->
 
-I am trying to get rid of .head.text.
+On 4/23/25 12:49 PM, Michal Koutný wrote:
+> On Tue, Apr 22, 2025 at 07:58:56PM -0400, Waiman Long <llong@redhat.com> wrote:
+>> Am I correct to assume that the purpose of 1d09069f5313f ("selftests:
+>> memcg: expect no low events in unprotected sibling") is to force a
+>> failure in the test_memcg_low test to force a change in the current
+>> behavior? Or was it the case that it didn't fail when you submit your
+>> patch?
+> Yes, the failure had been intended to mark unexpected mode of reclaim
+> (there's still a reproducer somewhere in the references). However, I
+> learnt that:
+>    a) it ain't easy to fix,
+>    b) the only occurence of the troublesome behavior was in the test and
+>       never reported by users in real life.
+>
+> I've started to prefer the variant where the particular check is
+> indefinite since that.
 
-But some of the startup code may still be in use later, so I don't
-think we should disable objtool validation entirely unless we really
-have to.
+OK, I will update the patch as you had suggested. I am fine doing that, 
+just that I did not understand why you wanted the result to be undefined 
+in the first place.
+
+Cheers,
+Longman
+
