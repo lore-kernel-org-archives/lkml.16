@@ -1,52 +1,41 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9E52820AF;
-	Wed, 23 Apr 2025 16:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EAB208CA
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427566; cv=none; b=Ufh2CyzAlNinMALQdObQdGOkblnHDSYy+eLmUBMPkRVDgxy+CbsV2VhtpYY02DbyyJpdsBrC95xr4b4EXgos8MPQrhuz/fxK2eBnx3wVW9oMBgd1HiHqlUr9o5YG7H96GMA6onwjvJNaoKsyPy9AQAIyBKxkTp1PwpvHes5Lh68=
+	t=1745427589; cv=none; b=oQX64un3ZWrCshmVMMuk4X8Hc3wNBC56AM1jt9VDbICD9ApoNDaATdPIih4K03U0ZSYmMKoDz6dtyCHvYhs9XyWf79iIsrkPVyx07g5FM5JyQ5a7YHePjitQMaOXEnKjLL3Eb3xDstVMolIw96xHNA/eEUuwsWY3v1P1LAeLavw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427566; c=relaxed/simple;
-	bh=sX77W58og4f7TVzBiVcSzr1pOUIuK6lzidg8w6JHimQ=;
+	s=arc-20240116; t=1745427589; c=relaxed/simple;
+	bh=1OuwfN7ccRF30E/+SBVUMx7F9WfrPXskf8z9CcCuT3g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e5ioafuIyU/qeHkCJEFusHx4N4IfehjPcudXLttrpFNYrmDiWTlaxUgUHSa+kem3gHCoZJBEa7D6L5uzcmgPxJj3xHtVlmkWlKTVqhnbK7K0uwMMsfkrEHeu0raMxgMK7r9JXoJo1kBZT7zpftneZopQESc8XMwWWxpvuzZAKjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=HTgGcYUY; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=mVlpmzRk96kW3GKsWvUcw2S+CugSzDThJrAeo1pARZEYNdNCcvRSBO6fbyHOJ6CmuxZd1gwlejMk/uPMlf/Ds6k3HWpYrWM4b3GH4b3uLVcbPglG7Fk5WYIGz6r6h9ucH8PT/jPN9WixmKwu65PbmvcW6eMBLRiweQWw0TbEF1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLG7GLLK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="HTgGcYUY"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=9eg5/u6HzX0Cp+nICWQL7K//s1nQYj6V4b9sPm0RHqc=; b=HTgGcYUYQrh/dviTjPqiP+NehA
-	j9fzKjHgaPNTBMwNKS+qS5WEXTole8ST55pYhA+OG/elfkf+SOkH46lYaUW1+ymoVsNRt7m+PCjN3
-	fFDnjgFQ9nuHL5oKa+aHDDUnP1XDpoJg565TXYNMX0onQw2zzfYR2KVgbvQ1V4jIQsJM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u7dRI-00AMTD-Pu; Wed, 23 Apr 2025 18:59:12 +0200
-Date: Wed, 23 Apr 2025 18:59:12 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andre Przywara <andre.przywara@arm.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 5/5] arm64: dts: allwinner: t527: add EMAC0 to Avaoto-A1
- board
-Message-ID: <de5ecf8c-2dcb-4228-8cb0-daea4767639f@lunn.ch>
-References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
- <20250423-01-sun55i-emac0-v1-5-46ee4c855e0a@gentoo.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLG7GLLK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 090D6C4CEE2;
+	Wed, 23 Apr 2025 16:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745427589;
+	bh=1OuwfN7ccRF30E/+SBVUMx7F9WfrPXskf8z9CcCuT3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KLG7GLLKII0UU4MclbTY7fR8BrQkyokLMUiEwZjRHVQm7EDG21rxryy9U4RcwKT10
+	 zjXCiFugvNtlPH93x1mP7yJIEGyJ+nXGqxAOKOESzjpRjDHRzuR5omi1d0aUD2u5Xm
+	 d7TqLwNh/qNKFclkk7Vl4RdsbYrlXzI7LcYpwgUpCGG3r1rQsNWu02UFZk6YGPdtk+
+	 ien7YhO+zlndkShgX+LjRFoXelKVMVk028CDA9p+JtzrXbdQ85PMtBW4sc12AihJ23
+	 dB1bk9Oi7LHjg1RaPObS9De1qWWLnwYMBiH+oSRl+avp8z7jSNded+NtmMo7suJyte
+	 cButmNDDyjVjQ==
+Date: Wed, 23 Apr 2025 06:59:47 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: linux-kernel@vger.kernel.org, mrpre@163.com, mkoutny@suse.com,
+	syzbot+01affb1491750534256d@syzkaller.appspotmail.com,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [PATCH v2] workqueue: Fix race condition in wq->stats
+ incrementation
+Message-ID: <aAkcgwmNBtetyS3_@slm.duckdns.org>
+References: <20250423161742.14429-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,15 +44,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423-01-sun55i-emac0-v1-5-46ee4c855e0a@gentoo.org>
+In-Reply-To: <20250423161742.14429-1-jiayuan.chen@linux.dev>
 
-> +&emac0 {
-> +	phy-mode = "rgmii";
-> +	phy-handle = <&ext_rgmii_phy>;
-> +
-> +	allwinner,tx-delay-ps = <100>;
-> +	allwinner,rx-delay-ps = <300>;
+On Thu, Apr 24, 2025 at 12:17:42AM +0800, Jiayuan Chen wrote:
+> Fixed a race condition in incrementing wq->stats[PWQ_STAT_COMPLETED] by
+> moving the operation under pool->lock.
+> 
+> Reported-by: syzbot+01affb1491750534256d@syzkaller.appspotmail.com
+> Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
 
-Same issue here.
+Applied to wq/for-6.16.
 
-     Andrew
+Thanks.
+
+-- 
+tejun
