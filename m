@@ -1,93 +1,64 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-m16.yeah.net (mail-m16.yeah.net [220.197.32.18])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D0C1DFF7;
-	Wed, 23 Apr 2025 08:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B3F1EDA08;
+	Wed, 23 Apr 2025 08:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.32.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745398611; cv=none; b=tTJAEnU8atKKevfvNT5/Qjq//QRnhUL8SGF/UqkI16yuWvKxDQBTcimxJPmOnH6TatSZGcp2yNHGeiw8wbQSV8PcZGvuZ2QGq9SEJpEWSL7szfw6Tql0BazdCDgI1A8jcN2NlLFtKrbnqxzXXoxoZaeXORxRCdkKYWuaoY2tGuA=
+	t=1745398668; cv=none; b=ll9GE36BhHEqq7Ki0KwBURTrgJBDGIR+vSZtoFZ/AgbdJV+hWY43NQHMDrsmP1N3fGJda3Hmf3pRyX0ehzJxoq0q7y8B49AXMYzrb/q38FttB2wjeH9TXb9fnkIayZSxQ4Ogao0yD3Zg6rM2fwjo3zrNag2sC1JosB1EGT1tndc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745398611; c=relaxed/simple;
-	bh=4qJtVCKaWisPWUvzA+09//BzeYzyDJDaUibejerPk7M=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=s+DGSy7Z2VvtURcSXx7LehLNgocxo2XteD0CmcplEMgu1ISgI8UozCF0U/FysllbjM61UzgKLOh4ugqzjhlTxWdd5/FlQu34svtBrVzfutxcaDqFGnn9vVGK+JAwdugkd3b0rq6HgzktjqOmwA0f/v7YnNMXzjY/TzgTPH8RGNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=Ejq2PBol; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1745398668; c=relaxed/simple;
+	bh=jAGffbxkS51Ffe25MdVdNd/UFKkSVXZh3QS+14qiZN0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qCra9Oldu9BBc6icC41JS7+0nmRcyteeOgKRnYEcPW+cMS4z7O0uwdpX+GW+wvX8rB5rGABdjVavtUPOvc9UEin+ZImVia7HKfKpm7dKLXfQ+eQnhEIb/HpN8tEJcQoHBPE0lYxdtcyaPR/dkW2DLgeJPtofDsmWUiJzS0W5KC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=RbPwiFs3; arc=none smtp.client-ip=220.197.32.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="Ejq2PBol"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1745398610; x=1776934610;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0AcJZvxph3F3OuxHELWSPKQQ8VK4R4EnD0VhPZ1HpEw=;
-  b=Ejq2PBolBAFj8xzWxBQu7LBZov3iwDzaqC/tjdI78YG10F06GdZEB40M
-   oTiJJRu+s/YAe0EEyNGNhdnnWewYabOvH04Jj/Lc+ZC9NcibgsTdNsFt5
-   R8Sd/BDgIU64NIr51d5gzYwnZZ5Kt43EIObQ/2kTxJFM60RhfKtXpI6J/
-   o=;
-X-IronPort-AV: E=Sophos;i="6.15,233,1739836800"; 
-   d="scan'208";a="43069670"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 08:56:47 +0000
-Received: from EX19MTAEUC002.ant.amazon.com [10.0.17.79:65379]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.7.9:2525] with esmtp (Farcaster)
- id 8c24f798-aa96-477e-a521-9623d36da87a; Wed, 23 Apr 2025 08:56:46 +0000 (UTC)
-X-Farcaster-Flow-ID: 8c24f798-aa96-477e-a521-9623d36da87a
-Received: from EX19D029EUC001.ant.amazon.com (10.252.61.252) by
- EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 23 Apr 2025 08:56:46 +0000
-Received: from dev-dsk-bsz-1b-e2c65f5d.eu-west-1.amazon.com (10.13.227.240) by
- EX19D029EUC001.ant.amazon.com (10.252.61.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 23 Apr 2025 08:56:44 +0000
-From: Bartosz Szczepanek <bsz@amazon.de>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
-CC: <nh-open-source@amazon.com>, Bartosz Szczepanek <bsz@amazon.de>,
-	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] drivers/acpi: Improve logging around acpi_initialize_tables
-Date: Wed, 23 Apr 2025 08:56:36 +0000
-Message-ID: <20250423085637.38658-1-bsz@amazon.de>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="RbPwiFs3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=CwxHeywLh4KrwQiqrLgmDoeWyxSu3XmmurwXVdnBOqA=;
+	b=RbPwiFs3tAdHcmyH8/ppEQR4Pj/h9KdEGPwF4+ifl6x6vOr408RanLq7UZSbc8
+	vMe4a3L4Pzj+iBDSpdcZixdaoOuYNWZ34R798NXWKoTD992mbC8FX7Po/VBoz53+
+	VM59dahKIwVQSLvnST5WHWuyT+UvJa9UAV1YFyYTKzzzk=
+Received: from dragon (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id Ms8vCgCXFNtMqwho8_nRAw--.33766S3;
+	Wed, 23 Apr 2025 16:56:46 +0800 (CST)
+Date: Wed, 23 Apr 2025 16:56:44 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Frank Li <Frank.Li@nxp.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] arm64: dts: imx8qm-mek: consolidate reserved-memory
+Message-ID: <aAirTH/lBetu9avM@dragon>
+References: <20250326215214.1706887-1-Frank.Li@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D039UWA001.ant.amazon.com (10.13.139.110) To
- EX19D029EUC001.ant.amazon.com (10.252.61.252)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250326215214.1706887-1-Frank.Li@nxp.com>
+X-CM-TRANSID:Ms8vCgCXFNtMqwho8_nRAw--.33766S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUIco7DUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiCwQ4ZWgIdsHOEAAAsb
 
-Emit warning that includes return code in a readable format. Example:
-  ACPI: Failed to initialize tables, status=0x5 (AE_NOT_FOUND)
+On Wed, Mar 26, 2025 at 05:52:14PM -0400, Frank Li wrote:
+> Move dsp_vdev* to under existed reserved-memory node to consolidate all
+> reserved-memory together.
+> 
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 
-This commit intends to make no other functional change.
-
-Signed-off-by: Bartosz Szczepanek <bsz@amazon.de>
----
- drivers/acpi/tables.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index 2295abbecd14..6a017cc92d4e 100644
---- a/drivers/acpi/tables.c
-+++ b/drivers/acpi/tables.c
-@@ -719,8 +719,12 @@ int __init acpi_locate_initial_tables(void)
- 	}
- 
- 	status = acpi_initialize_tables(initial_tables, ACPI_MAX_TABLES, 0);
--	if (ACPI_FAILURE(status))
-+	if (ACPI_FAILURE(status)) {
-+		const char *msg = acpi_format_exception(status);
-+
-+		pr_warn("Failed to initialize tables, status=0x%x (%s)", status, msg);
- 		return -EINVAL;
-+	}
- 
- 	return 0;
- }
--- 
-2.47.1
+Applied, thanks!
 
