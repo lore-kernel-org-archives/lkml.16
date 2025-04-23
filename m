@@ -1,90 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D39E41C69;
-	Wed, 23 Apr 2025 16:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA5D2820AC;
+	Wed, 23 Apr 2025 16:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426602; cv=none; b=YgIYewV99upz/sZALb1Lnsc9AZmaJBX1wYOd4fAbD0F2TIIDduHMdTnQwEahycNjBQ6V+Y0O2Caw3wM4RbvVs7R7cpkBkKks4uu9zXjvEQkC96fz5Kmc8Hz2c3LHffQD9CKn29XJpzIO/rd8VzWDQpkng13ATkC7z0wpvmJBMgw=
+	t=1745426628; cv=none; b=KD0izm7ElFq+P4hjQhmu61bzhlkwKNuxpr0efENCFgl1hKfDJSQr5MxKd4TpLUv3xy66W7wVqThCMSGZ63sFxfCqxGDdcP5nRAJJAftlGEG4GCaEyrj/bBDsohCrO5J24UhGajyNDmR4IVr/WJEm0jMUtDfGxQvr1hqJr0fAYsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426602; c=relaxed/simple;
-	bh=wXXLTEPyxftuq7Jgbipr9JXu2LJ10xEMjsTpIxgzqBE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lnx65lTFWhwt7Mgb/oW2qMFvHRmTKzDQkXll1NDIwMxc8zL4vyW3O9RMfEYuZqk5fBM9UJy9ja7/X9jp71qT0wsPfuSYnXRee2b1WUMxDCgA3RA+uWhDD9r4htJ3ROIshSyvBugYWbpdkEOJmDUm3GcG+IALj8Wyic/534XXjK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUi3lURS; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUi3lURS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B0BC4CEE2;
-	Wed, 23 Apr 2025 16:43:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745426602;
-	bh=wXXLTEPyxftuq7Jgbipr9JXu2LJ10xEMjsTpIxgzqBE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qUi3lURSZ4dlqMx+GrhtXEZ20GaWEdwicEKiEjOJeJS+jM7EAj2iL0rkBPdP0ZhLq
-	 PPaVg1KjTaqzrF4Af+S+Yo5kxpuSD/yCHepSW/X0mSWZe0eVnOuPVR4muX6EP23/q2
-	 oChMMergC9hKdwe0DW93SLkvFDgXwAUreaTz/Ovg2hbzauoBTBaAnQrnDu0dAuJkY9
-	 VCb0h9g15NIe1Tzj2Rfsjgu0Ol+rWY59OazZO9fRfrc8z5mqv7/Pf0aEGDzLND15Lw
-	 QzEmU6o6Pf2wzR4v3mu0Yc0JEU/0XBWzCnsJ5y3+GjVO5Hvg4kOFbCuBPUP6FcqJs+
-	 8VFp45h9sys/Q==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Magnus Damm <damm+renesas@opensource.se>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Vasant Hegde <vasant.hegde@amd.com>,
-	iommu@lists.linux.dev,
+	s=arc-20240116; t=1745426628; c=relaxed/simple;
+	bh=2zTwYcMG8ogoTuHfXKsMTzT7WR40ubEfn19/fvEvN6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MvRwR0TI2g/uzVqpQdC8jzIXLxM07hVBSxj+zRm2fgz2iTROviX4XiNzWYmaEn2opjpB+eYtAcD6MAWsMx0j3KQ0oeETdHMhg6bf8sH7Eo40GRnX5ms3vrdUO8O4AjRZLPowWdL0quUgLDELYSXUUZWp+CsLhXxeC1AhYFKMzw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-CSE-ConnectionGUID: R9QLMutORNKbTNz6IvWsAA==
+X-CSE-MsgGUID: 1oDmtaNlSC2pcYgHLxfXUQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47160718"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="47160718"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:43:46 -0700
+X-CSE-ConnectionGUID: s5cnf4AERSaFpT/2Uwc5/Q==
+X-CSE-MsgGUID: oay+8vSfQAa4aiFXkXdhCw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="155580835"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:43:43 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andy@kernel.org>)
+	id 1u7dCG-0000000F7Si-3R6f;
+	Wed, 23 Apr 2025 19:43:40 +0300
+Date: Wed, 23 Apr 2025 19:43:40 +0300
+From: Andy Shevchenko <andy@kernel.org>
+To: Haibo Chen <haibo.chen@nxp.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, linux-iio@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] iommu: ipmmu-vmsa: avoid Wformat-security warning
-Date: Wed, 23 Apr 2025 18:40:02 +0200
-Message-Id: <20250423164006.2661372-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+Subject: Re: [PATCH] iio: adc: imx93_adc: load calibrated values even
+ calibration failed
+Message-ID: <aAkYvE6VtoQItM5o@smile.fi.intel.com>
+References: <20250423-adcpatch-v1-1-b0e84c27ae98@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423-adcpatch-v1-1-b0e84c27ae98@nxp.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, Apr 23, 2025 at 04:02:48PM +0800, Haibo Chen wrote:
+> ADC calibration might fail because of the noise on reference voltage.
+> To avoid calibration fail, need to meet the following requirement:
+> ADC reference voltage Noise < 1.8V * 1/2^ENOB
+> 
+> For the case which the ADC reference voltage on board do not meet
+> the requirement, still load the calibrated values, so ADC can also
+> work but maybe not that accurate.
 
-iommu_device_sysfs_add() requires a constant format string, otherwise
-a W=1 build produces a warning:
+...
 
-drivers/iommu/ipmmu-vmsa.c:1093:62: error: format string is not a string literal (potentially insecure) [-Werror,-Wformat-security]
- 1093 |         ret = iommu_device_sysfs_add(&mmu->iommu, &pdev->dev, NULL, dev_name(&pdev->dev));
-      |                                                                     ^~~~~~~~~~~~~~~~~~~~
-drivers/iommu/ipmmu-vmsa.c:1093:62: note: treat the string as an argument to avoid this
- 1093 |         ret = iommu_device_sysfs_add(&mmu->iommu, &pdev->dev, NULL, dev_name(&pdev->dev));
-      |                                                                     ^
-      |                                                                     "%s",
+>  #define IMX93_ADC_PCDR6		0x118
+>  #define IMX93_ADC_PCDR7		0x11c
+>  #define IMX93_ADC_CALSTAT	0x39C
+> +#define IMX93_ADC_CALCFG0	0X3A0
 
-This was an old bug but I saw it now because the code was changed as part
-of commit d9d3cede4167 ("iommu/ipmmu-vmsa: Register in a sensible order").
+Please, keep one style of the hex values.
+If the small letters are less used, prepare a patch to convert them, otherwise
+do that for capital letters.
 
-Fixes: 7af9a5fdb9e0 ("iommu/ipmmu-vmsa: Use iommu_device_sysfs_add()/remove()")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/iommu/ipmmu-vmsa.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+...
 
-diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
-index e424b279a8cd..90341b24a811 100644
---- a/drivers/iommu/ipmmu-vmsa.c
-+++ b/drivers/iommu/ipmmu-vmsa.c
-@@ -1090,7 +1090,8 @@ static int ipmmu_probe(struct platform_device *pdev)
- 	if (mmu->features->has_cache_leaf_nodes && ipmmu_is_root(mmu))
- 		return 0;
- 
--	ret = iommu_device_sysfs_add(&mmu->iommu, &pdev->dev, NULL, dev_name(&pdev->dev));
-+	ret = iommu_device_sysfs_add(&mmu->iommu, &pdev->dev, NULL, "%s",
-+				     dev_name(&pdev->dev));
- 	if (ret)
- 		return ret;
- 
+> +	if (msr & IMX93_ADC_MSR_CALFAIL_MASK)
+
+Please keep {} as the body is quite long and it's easy to make a mistake in a
+long term.
+
+> +		/*
+> +		 * Only give warning here, this means the noise of the
+> +		 * reference voltage do not meet the requirement:
+> +		 *     ADC reference voltage Noise < 1.8V * 1/2^ENOB
+> +		 * And the reault of ADC is not that accurate.
+> +		 */
+>  		dev_warn(adc->dev, "ADC calibration failed!\n");
+> -		imx93_adc_power_down(adc);
+> -		return -EAGAIN;
+> -	}
+
 -- 
-2.39.5
+With Best Regards,
+Andy Shevchenko
+
 
