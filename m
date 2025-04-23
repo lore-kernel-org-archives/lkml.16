@@ -1,100 +1,108 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523F0283CBE;
-	Wed, 23 Apr 2025 16:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD6328468D;
+	Wed, 23 Apr 2025 16:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427141; cv=none; b=FdnOo+iV2HUi/tR8R19riM2Vd4WHchCDkj53LZ1B3J1nKb5GqTiQd5/iERQCORUddapvkZ09l/DbMC7Zl1y40okUo+IO2d49J/OViGXN0LjxwQgXltvOdpod7xAVjDAVLJRzLV7h7VxkhW03AYKsitfxxVTlLUVzoL1AU1NWNWM=
+	t=1745427181; cv=none; b=FwrHQhC0myZPr6lnjTuGkPR6l/nNNCZdurNG56J0dGph+SEpM4iZzK0BGVoJqlDJbxK3vzweK1z2smPYDB1c61sX5yT3tCU8yPRW1TpyKm4p3qA5RWLbLcAAc8M5VeI2PD9XHex0lSWn0S0HunI//jJqKJON7R/qbZ6Wd7iBlf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427141; c=relaxed/simple;
-	bh=U2YyWhUTicbwTOh8eX4yTkro+SROMld4NCwJfUFwNyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d4nxAvQpQLYK7h5M7Ggo8LyH3WReqvOysbe5Hv3j4/4fRYCotOhrQN5w7Ai4BMBoAxCb1LDjfMMfm3e3uKyjDIljk0VKbJgEBobQ+C1YMtp/PkwUQ5Wggfj0+z3LKiKeNcaYSQJ6wa/Oa9sgU5MtEslXrHaW2xFspSh7J78jV50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: x+83gatzQ6qr+9XvmobN6w==
-X-CSE-MsgGUID: bmRmHubcQF2eMg821Jx3QQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="49696226"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="49696226"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:52:20 -0700
-X-CSE-ConnectionGUID: 97kzSc65R/qtFRaVTufbeA==
-X-CSE-MsgGUID: 29xBDD7YSwmONmO2q6ANiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="137225871"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:52:17 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1u7dKX-0000000F7a8-36fm;
-	Wed, 23 Apr 2025 19:52:13 +0300
-Date: Wed, 23 Apr 2025 19:52:13 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: "Paller, Kim Seer" <KimSeer.Paller@analog.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	"Hennerich, Michael" <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>,
-	"Sa, Nuno" <Nuno.Sa@analog.com>,
-	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH v5 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-Message-ID: <aAkavQVd7Px3qPU0@smile.fi.intel.com>
-References: <20250421-togreg-v5-0-94341574240f@analog.com>
- <20250421-togreg-v5-3-94341574240f@analog.com>
- <20250421144800.0db0a84e@jic23-huawei>
- <PH0PR03MB7141E6D1A077B0E02368CBDDF9BA2@PH0PR03MB7141.namprd03.prod.outlook.com>
+	s=arc-20240116; t=1745427181; c=relaxed/simple;
+	bh=m1JW6JCpT5K62iypPeyrD5Xxw8L3gfy6sXHK50Nf0JI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JB7L9a98K2mQZKb036JLKu9QX0MsdZOMlPussG7ymedN1INZB3asmcg5j3a+hhS+RtMlcEq8hna/je8heYXo2PvsZt6LeS/eRog25O0qJ7IOlMUfU6oPbu9AD1jsAPQMJsO+oNP0SNTiT3K8ChYFRO3yJVhBTxHLGrCPoSJblAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=KvGH/8va; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="KvGH/8va"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so22269f8f.3;
+        Wed, 23 Apr 2025 09:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1745427178; x=1746031978; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Mp1u/sIDVPqsXQLkzZlVGoz0PRI6pxyHbfKJBelf6DE=;
+        b=KvGH/8vaoZZnZhO3Xy18rV/VQ9XTbSUtq+j7bmRUE0FqWtRe5RIyBxL79S+zIS2mSr
+         3f65XqcHP/7L7xZH9k2J/Q6yy3AOtoXQ2WYlAA2rt5zCflFMLAhS1+lOpg6r+1Z5rwi9
+         +Zph8IqbC1hlA0PKAtC8IOQ3B2L+oCrD7tOBmPycLhIx+8Zm4KjqeqXVGUJfMqHPW12V
+         mq21bggu1xd6fVala14bL8GD4wSdDoVTAnf4FsXg3X3zIapB+aoZRcfIMgVAd8/MU/6/
+         OL86v6hKCrpywtw/yXTG5ZpM52SjTSv+nGVN6S5iH/ILq1rhrPmiEtVYotFJwcRqUSxb
+         bIIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745427178; x=1746031978;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mp1u/sIDVPqsXQLkzZlVGoz0PRI6pxyHbfKJBelf6DE=;
+        b=ZJcLN/9UigaNQpvMJtYN2k+ufArCHxb67G27NeXC0+9Q+gr14jSF+HAlX89RcAiwSB
+         NZ8+4fSN9GklsG06yPdI0gTPAjIfUBpPM3Yy42rH+QcFzPnFO5akMS0mJFvvQE3iGmff
+         8dQAh3GXQHfpxpU9Q/nUNQJe0fo6YQpb2rS1g10ZoB4Z7OA1++HHOwOBQwxwDcNv1EaZ
+         A4KbjwxJ5PfxmylozqC53ayAIkZY27QXKGKl5cuiFpI7LyvQyy8FREVDNDuDJg4pPlZj
+         wfdjXeyKRiM/iH4/8V6UhAp01sKJ9N+aFe/HuuBp3W34SEnX7AsKt3qm+R2JYnYIl8Yl
+         9J0w==
+X-Forwarded-Encrypted: i=1; AJvYcCU/WEfJ2b9BinnIJv0eufcD62W5/dCI1HnMaY34YVhcfhNUGXn3gXmVF9+tAJ7fRFtuCB0RVQYku6ci//I=@vger.kernel.org, AJvYcCXG7WYT4QTDtI4r7NbbGFPROnQoATE++WGXyOpSMc824puI9oVmLJhwU9/XCjSiOgU2gcxBT5vY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt407PMhAfIbd03jAkl/IPiK6XhwpO46XNoBOAN3GZEQkXLNxB
+	j61/Ejdos5gXCqfklj5PO2i43kDX0TzEpLwOHzICKNA2Mbt5J5M=
+X-Gm-Gg: ASbGncs92NnCULCl76tONrCLDFAEMGoiKiPimPp8sRrO1RRyBddzVYRMAQ9ahjFYYLd
+	6TMHIeK+1T5hPreW5zMFhabUCeiZjq7a7VCz12AxYzRUpr3AectZHMZsf3mDGjfYmO676K8f4Yq
+	etg32DzK2hz8TrSeDbIis43vtDF96XAC96kC6LcbbXQGk6r4XhRL70H2budFzqX0nHajwVo4xk5
+	lQcQtiw64+7k5hykO4KCwOvs2TWKCBkNrF2aM9NOVJDHSHGXZfFSots235gOwg9EkQ1SnJr44ML
+	uXUU+xt6mi6JOImnQHohbiuaFVQsVg1junrpwmZvX3O67wl6eCL6T+blLDZ4lhd/1wKfd0V+tGt
+	fN5inX7ZUJXk6NYdnfw==
+X-Google-Smtp-Source: AGHT+IHLHgQwjBt14DC1pTfqWWanbV25/yLubDo519FkOCkJkmpwKCc8feIRKpjRKMsqiMdEH3ytRg==
+X-Received: by 2002:a5d:5f47:0:b0:391:22e2:cd21 with SMTP id ffacd0b85a97d-3a06c43fb78mr229330f8f.36.1745427177790;
+        Wed, 23 Apr 2025 09:52:57 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac758.dip0.t-ipconnect.de. [91.42.199.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa420837sm19598917f8f.10.2025.04.23.09.52.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 09:52:57 -0700 (PDT)
+Message-ID: <c799db97-19f7-426e-892e-7da3d36a98f5@googlemail.com>
+Date: Wed, 23 Apr 2025 18:52:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PH0PR03MB7141E6D1A077B0E02368CBDDF9BA2@PH0PR03MB7141.namprd03.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.1 000/291] 6.1.135-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250423142624.409452181@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250423142624.409452181@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 07:50:51AM +0000, Paller, Kim Seer wrote:
-> > From: Jonathan Cameron <jic23@kernel.org>
-> > Sent: Monday, April 21, 2025 9:48 PM
-> > To: Paller, Kim Seer <KimSeer.Paller@analog.com>
-> > On Mon, 21 Apr 2025 12:24:54 +0800
-> > Kim Seer Paller <kimseer.paller@analog.com> wrote:
+Am 23.04.2025 um 16:39 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.1.135 release.
+> There are 291 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-...
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-> > > +	mask = GENMASK(chan->address + 1, chan->address);
-> > 
-> > I think maybe we need a macro to get the mask from the channel number?
-> > Using address for this seems overkill given how simple that maths is.
-> > Ideally that macro could perhaps be used in the code below to avoid
-> > all the defines I suggested.
-> 
-> The motivation for using the chan->address field was to hide the calculation a bit.
-> However, would using a macro like 
-> #define AD3530R_OP_MODE_CHAN_MSK(chan)	GENMASK(2 * chan + 1, 2 * chan) 
-> be a good approach in this case? This drops the need for the address field and
-> can also be used to explicitly set the operating mode for the 4 fields of the register.
-> What do you think?
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-Please, note that doing GENMASK(foo + X, foo) is highly discouraged as it may
-give a very bad generated code (although I haven't checked recently if it's
-still the case). The preferred way is GENMASK(X, 0) << foo. Where X is a
-compile time constant.
+
+Beste Grüße,
+Peter Schneider
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
