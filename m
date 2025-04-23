@@ -1,251 +1,131 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9329528B517;
-	Wed, 23 Apr 2025 17:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD19265CC5
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745429457; cv=none; b=kiGRIguSssYMV5MlYjIRaGIGi/ASrSPyQBLM8Uj4ehIpHIsU+EofKGrwlEmBEXysVuY9h/7/OOdwt3cBaLSe+Xhks0Tr/Zw4ovA28TwQZwZs3uXiYNqHGLd4jt2BcOmvHpDZjH+UExp4ozM7FIcciQ2SbkN8UulGolagBkMHzW8=
+	t=1745429483; cv=none; b=qlvakCVKsxy/Iu8Ha1dx4VVE6FVqIq2ZD/ogwh1/pYB+ScszA1O0AFCr0y01YDwxOiaHEojzewWhlEe4vV7iZoA0eKDruKoCoMvSUuFbttOGnRERvwRtLUKOZGsBKeuEBVnGRKuk5DkRWJ36UbaeZZBhYlAP6VFloyOH/G5p1Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745429457; c=relaxed/simple;
-	bh=bmhVFhgSxioKeHLmxhgtiawMLd+NqGdIDGQBcqicbwU=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i1bbREC+RreiQ/zRjfdaLFIIDeAo9Il6E/XLY+/FMPfu6Lgpwz1loi4OBOWGsL+yJ7l9RqH4xEaFaS0pMAjyD0iTzaJt2lWUkSNqlO+vsvrTexH9TLh1HDQk0hMlib39JgyOCjHnjJLToKiOuTwK4ytJJHW+8xmctM5ZcULuyT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bUlLCeAS; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745429483; c=relaxed/simple;
+	bh=kgi4ELr8mCdAm9+XhEH6VRz6G3+ojfBNAMxT3w5HoSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F+DecuQ8JwGYjhcXeArkgjH7XfPfyL6L3++GsgawYKQuA3z1fcQGUDKQTEnQtfUtoFXbfRx/MoGDA5yfdwYZ0UCp0xURBpVe80kDzyhV3yoPT+FPig2nHjdP1zYfAovgH7VAbjk9/HJVy3XsV7dzUcU8Fs2NOZ7FPraWa6ALaiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hKnQ54A5; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUlLCeAS"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5e39d1e0eso8186085a.1;
-        Wed, 23 Apr 2025 10:30:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hKnQ54A5"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-225df540edcso14055475ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:31:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745429454; x=1746034254; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=R39yIZ1bSmu3ErC7i6kpiW+k4H62zePFVSNMlXK7ixU=;
-        b=bUlLCeASnTuGThw2X36PZixVWrj04kkb0Xi5eSq2t6UhfeVzecT7d2XCDGPLr3ZP+9
-         zFtJKJqQsEGysYOc7N8lN0AkqYTrJSpxeUoE/y1JvnGz7K9SuqKedgS++3Hb4sDuWZny
-         aNQsRTZSExsRVYGmeq98chNdzVk2xmWXfRtvDvOajFnkS3YTmP9b/EnUGqJpr4y8VFCO
-         dQX143zh70quKgoyfz7hafpl1xXG918IS1AVwvCx3pB0f+SrB8240lRLCwXU4m2Uqv21
-         2zCOnvZVMKHZbCOsEOMpCIQPV5Rhq4M5JjNDjK65pDryxCt2chCDM/zR3mIVgv/ogpSY
-         6lcA==
+        d=google.com; s=20230601; t=1745429481; x=1746034281; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GkDmVE1oQubncGA13yoyJE0TwJhGavatFFU357EXcEc=;
+        b=hKnQ54A54OH01v/NWH8UIDkJ38bvfjB2A/mwBI3uytCUu9Gxp2I7TdQ11SLHYWMJQG
+         zTl18GT6Bm3tRyxmQawp0/e4oohop1JRXMvTvJlj/962IgPlx8VzfY0xDonBwQp+Kb1z
+         +U7Q3Y87ys1QZ8+DPo7ORe7h7ccWuRHHRaijrl9IRKRiuX3Ok/l2j2caDetVylCL+t1A
+         yoieaOiQLdJg5qS0u2O5kqXmsHFXZnxRIsfNcdQsw4vtG5Pao/Xz5o/lD4AvE9we7lhi
+         D2wW8e7SUPwXbRzUmSpqNJ1sGNXPlb8dnIP6Z1rGQ+3YMINN/ZkXY6SROA5MF9jrMOfR
+         aBDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745429454; x=1746034254;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:feedback-id
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R39yIZ1bSmu3ErC7i6kpiW+k4H62zePFVSNMlXK7ixU=;
-        b=CCheBRM7Y1pDUx4ffLKNwqZgejQNvy9PycC7fG/qtSc9W4KgReRQqrFcb9PervB2Zc
-         7TqGSvjBsp+cphgh+o7U0AJONzS+F1Hhwk2oWRHG3enTVFhVUQdqvRWHEttNBjyk1tzA
-         PfVkzIYYJRXPx910GM6Q4sjKvYQgsMZ0HHR/77RYF9KEaZ2Mc3brARcpzMVA91rbPBYl
-         HR2hmGmX5aC0FSaJuYSjCXIgB//7QMmKIwOoOvYjnDMXqdT35snzrQ+ZK/1rtW7Jy7S2
-         nnXAa5Hk40nlgCAXeJ/oxAvZoG5R5qm8ZkMNWmyEARIRMN5c2ZMpwT/ST8JmgVk/12Jl
-         ga/w==
-X-Forwarded-Encrypted: i=1; AJvYcCVYmU+74F3XSKkcTE3OvcrS0UO4BVp3uEosSLqHzRsYHx/SrNQBlZqdmf3kioi6RxGgc/gFy+DMVR//feUBXG8=@vger.kernel.org, AJvYcCWvbKgxn1rqV38IqjBzljjt/sid0BFCvpo/Z/NPl6m/AM2kCEFN91pE/OCsO+yqkc4J7nhY4fp028AUvpE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQNMg7TSyjqtZ7KxBwt886i4XO0OJaL1UP143OLx0lRqNpi3mN
-	vSF1Ad1o+UYZRTG8q9Tl1oZDvKixYCSP/lD1kbq2Ew7BIgJgZzl8
-X-Gm-Gg: ASbGnct3nMQV+UyfQBPni4zLaT4+3CKkhugSpqGoDqc2qMUjqQu0JYeFtNPwxzfGVuL
-	W+wkhK2BMXniQveLJibPLLdxYWRI5kVIuW3AytcUm1tS78l7dKhy/6XZBi7bTTuslX0UpTmp28b
-	K060oO2plf+LSUkVPbn95sx5rZeEruM8A7vThnpwQye4LDBxdSknwHo0+YpKCh3Evf6IXWJdp5X
-	DIdma6FOPzh53JMj0gQx68XCJ2l4P5IUmqWEu1HIcArug/OnHaiTfokxWdh7dhnM4a274aGTfjO
-	sDO40cjKuQahgQOFG8jjozpWNxaCyuyP+X87HhaZXEHyG6GIkJ34Zjkrmxz1nxZhejBbMwd0omS
-	/YwW5LZWVPDhaOjoLIVrdLm5Y+X+UV7Zvlm9nKj5lRg==
-X-Google-Smtp-Source: AGHT+IEjLdDoRzzRsKY3pJrAiZUA7Nmq06oh+/0O8w7YixzG3zr8GAJYvcSuHq6uuD9rhqwTOmlQag==
-X-Received: by 2002:a05:620a:40ca:b0:7c5:50dd:5071 with SMTP id af79cd13be357-7c927f99fa0mr2814655985a.22.1745429454134;
-        Wed, 23 Apr 2025 10:30:54 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a8d2bfsm706767485a.28.2025.04.23.10.30.53
+        d=1e100.net; s=20230601; t=1745429481; x=1746034281;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GkDmVE1oQubncGA13yoyJE0TwJhGavatFFU357EXcEc=;
+        b=SxKWdMinbEU5X9N1TW/14BVIvoWHPyKEs3SCan6ppfcA3udpktUuGfZY2GnoZTAB8q
+         OWfpgoUV9vBouiRDsX0QnYQF+wJl7TIPrCJJTvRwpERtRG+ekeaQexuc47MRtgx1ZWiT
+         1X9ioIIIVuhtDvwmTAKA42uuz92GsASTGHH0VNt7btcTR+4BRo8R7igv/Tw1UIy7oFpz
+         MLAE8oCubt/LbPc8R2Oxn0G+llRWt6Dvb6NJN+6mIAHUlfjEetLQ2w0lfbpOgSU+AGNk
+         qcKqQ3mZVkbDXapAoLz4bfjCXein+y0ETQ6UoOu1wHsn1pfXgY1uaclXyZ2iiq9NduXj
+         3nQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUOEBeqClWFjjygXU8Tqz+TCNnfrkG+lE2bkX2ZCkWLJWeDNrdZqa+Y1KO6lfh4hFIvtRcAZH0JSJWwRlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuLlucm/4DFcgGpSZCGPRkzYu7OZeLvARcfCr/KqVxpexmaQkJ
+	5tiaqd+ra94DfIyI3f8BFUP2aI8MVu2U7AKJ2R9du80Yih8bMKNuCCajIkd44A==
+X-Gm-Gg: ASbGncuKQXQoXbs8kXis6W0IxG75G0za9D6nDBX4ki7SXTBHkCmxjfmhWs+cP+/AQND
+	E/aRPj+VyWjiu+xNMFjZJdlipnzNdoZ7b55Kccsl6MFz82UH8nqolmaoUixx93s0fAD+bmkcPMX
+	zRXD0JynvY4CN8jSBsb7yN7szZgbeMjsAa9NOHuqAK/Gigv1TRhugIagU+WDzZKrhUVRo5V+hpR
+	I/cM4WR8ECtHRJ+RJBAKEzAPXYygtYwYhgEAAMxp7Z+fCJuZhk9klr/lNcStMpL48oxR3wpufj+
+	l/GZ7JLoosw6zMJptH2IWHrQ2iN2rHsO9pcVsdv0H1s8cIt/HM8Itha+Q1aw9IZ6X5S2OzK5dNt
+	2Es5nBw==
+X-Google-Smtp-Source: AGHT+IHJNQTbOTf5T97irPUNv+QmXLRPjJqv5JLklJLGHSWfRRkbgYAKpGomh75s0qhLStfcG3G05g==
+X-Received: by 2002:a17:903:3bce:b0:223:3394:3a2e with SMTP id d9443c01a7336-22db2189d23mr394125ad.18.1745429480637;
+        Wed, 23 Apr 2025 10:31:20 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4292sm107648765ad.150.2025.04.23.10.31.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:30:53 -0700 (PDT)
-Message-ID: <680923cd.050a0220.2b2efe.cb68@mx.google.com>
-X-Google-Original-Message-ID: <aAkjy-5h2N8ukDFu@winterfell.>
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1CFF11200080;
-	Wed, 23 Apr 2025 13:30:53 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 23 Apr 2025 13:30:53 -0400
-X-ME-Sender: <xms:zSMJaJvnPnyaP7euCdTy8gaWGlWVP7tiraH6lFyyrFLVpbgi5ukohQ>
-    <xme:zSMJaCf7t5-u3q4Ca89Q4kJQYgVmtFqNXX7i0woEORnJLo1QjYiakNL7UoXwgeEMj
-    mKC1meRnLxN2uQvtQ>
-X-ME-Received: <xmr:zSMJaMxRT55mKME5hv2NA5AbmROBs6pHIWiKiexWRScKYDTDBmDY-rwNSQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeejvddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
-    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
-    hilhdrtghomheqnecuggftrfgrthhtvghrnhepvefghfeuveekudetgfevudeuudejfeel
-    tdfhgfehgeekkeeigfdukefhgfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
-    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
-    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduhedp
-    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohephihurhihrdhnohhrohhvsehgmhgrih
-    hlrdgtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhr
-    tghpthhtohepsghqvgesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhinhhugiesrh
-    grshhmuhhsvhhilhhlvghmohgvshdrughkpdhrtghpthhtohepvhhirhgvshhhrdhkuhhm
-    rghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghp
-    thhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpg
-    hghhesphhrohhtohhnmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:zSMJaAOINkBW9OxwHIK3PcRmaVXaV1z_CSCNBnZyflsjGReifU363w>
-    <xmx:zSMJaJ9fco4KomQL7oEnEZFSibmNeXQsnfIK_leaDOyqgOFPsLwbhQ>
-    <xmx:zSMJaAUtFvJlyeQjTdCxdkxOVlwdjZm0YqkN-urGp_ecJSAs8_Ewww>
-    <xmx:zSMJaKc6HUl4O9GEvkQLDPuDiGU3nknYD_bEJAIha2rbzLQ9zjdZmA>
-    <xmx:zSMJaPfPyFAcCnFBxr3PRuyS0tuRpiV9WSa7B8RrGF1ObtiEFMoua8yo>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 23 Apr 2025 13:30:52 -0400 (EDT)
-Date: Wed, 23 Apr 2025 10:30:51 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/5] rust: adds Bitmap API, ID pool and bindings
-References: <20250423134344.3888205-2-bqe@google.com>
- <aAkKoQQH0t9KtIxD@yury>
- <CAH5fLggFUM=eJR2u06QsLMxXP+cJwm881ip+rze_sM=tXpA9og@mail.gmail.com>
- <aAkVu8Uf3J8F25fY@Mac.home>
- <aAkfOe5ZDUgIawyU@yury>
+        Wed, 23 Apr 2025 10:31:20 -0700 (PDT)
+Date: Wed, 23 Apr 2025 10:31:16 -0700
+From: William McVicker <willmcvicker@google.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Robin Murphy <robin.murphy@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Hanjun Guo <guohanjun@huawei.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Stuart Yoder <stuyoder@gmail.com>,
+	Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Charan Teja Kalla <quic_charante@quicinc.com>
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+Message-ID: <aAkj5P1I-e9lylIU@google.com>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <aAa2Zx86yUfayPSG@google.com>
+ <20250422190036.GA1213339@ziepe.ca>
+ <aAgQUMbsf0ADRRNc@google.com>
+ <20250422234153.GD1213339@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAkfOe5ZDUgIawyU@yury>
+In-Reply-To: <20250422234153.GD1213339@ziepe.ca>
 
-On Wed, Apr 23, 2025 at 01:11:21PM -0400, Yury Norov wrote:
-> On Wed, Apr 23, 2025 at 09:30:51AM -0700, Boqun Feng wrote:
-> > On Wed, Apr 23, 2025 at 06:19:18PM +0200, Alice Ryhl wrote:
-> > > On Wed, Apr 23, 2025 at 5:43 PM Yury Norov <yury.norov@gmail.com> wrote:
-> > > >
-> > > > I received it twice - with timestamps 1:36 and 1:43. Assuming they are
-> > > > identical, and ignoring the former.
-> > > >
-> > > > On Wed, Apr 23, 2025 at 01:43:32PM +0000, Burak Emir wrote:
-> > > > > This series adds a Rust bitmap API for porting the approach from
-> > > > > commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
-> > > > > to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
-> > > > >
-> > > > > The Rust bitmap API provides a safe abstraction to underlying bitmap
-> > > > > and bitops operations. For now, only includes method necessary for
-> > > > > dbitmap.h, more can be added later. We perform bounds checks for
-> > > > > hardening, violations are programmer errors that result in panics.
-> > > > >
-> > > > > We include set_bit_atomic and clear_bit_atomic operations. One has
-> > > > > to avoid races with non-atomic operations, which is ensure by the
-> > > > > Rust type system: either callers have shared references &bitmap in
-> > > > > which case the mutations are atomic operations. Or there is a
-> > > > > exclusive reference &mut bitmap, in which case there is no concurrent
-> > > > > access.
-> > > >
-> > > > It's not about shared references only. One can take a mutable
-> > > > reference, and still may have a race:
-> > > >
-> > > > CPU1                            CPU2
-> > > >
-> > > > take mut ref
-> > > > bitmap.set() // non-atomic
-> > > > put mut ref
-> > > >                                 take mut ref
-> > > >                                 bitmap.test() // read as 0
-> > > > data propagated to memory
-> > > >                                 bitmap.test() // read as 1
-> > > >
-> > > > To make this scenario impossible, either put or take mut ref
-> > > > should imply global cache flush, because bitmap array is not
-> > > > an internal data for the Bitmap class (only the pointer is).
-> > > >
-> > > > I already asked you to point me to the specification that states that
-> > > > taking mutable reference implies flushing all the caches to the point
-> > > > of coherency, but you didn't share it. And I doubt that compiler does
-> > > > it, for the performance considerations.
-> > > 
-> > > The flushing of caches and so on *is* implied. It doesn't happen every
-> > > time you take a mutable reference, but for you to be able to take a
-> > > mut ref on CPU2 after releasing it on CPU1, there must be a flush
-> > > somewhere in between.
-> > > 
-> > 
-> > Yeah, and it's not just "flushing of caches", it's making CPU1's memory
-> > operations on the object pointed by "mut ref" observable to CPU2. If
-> > CPU1 and CPU2 sync with the a lock, then lock guarantees that, and if
-> > CPU1 and CPU2 sync with a store-release+load-acquire, the
-> > RELEASE-ACQUIRE ordering guarantees that as well.
+On 04/22/2025, Jason Gunthorpe wrote:
+> On Tue, Apr 22, 2025 at 02:55:28PM -0700, William McVicker wrote:
 > 
-> Not sure what you mean. Atomic set_bit() and clear() bit are often
-> implemented in asm, and there's no acquire-release semantic.
+> > On this note, I was looking through `of_dma_configure_id()` and am also
+> > wondering if we may hit other race conditions if the device is still being
+> > probed and the dma properties (like the coherent dma mask) haven't been fully
+> > populated? Just checking if the driver is bound, doesn't seem like enough to
+> > start configuring the DMA when async probing can happen.
 > 
+> I think the reasoning at work here is that the plugin path for a
+> struct device should synchronously setup the iommu.
+> 
+> There is enough locking there that the iommu code won't allow the
+> device plugin to continue until the iommu is fully setup under the
+> global lock.
+> 
+> The trick of using dev->driver is only a way to tell if this function
+> is being called from the driver plugin path just before starting the
+> driver, or from the iommu code just before configuring the iommu.
+> 
+> Given that explanation can you see issues with of_dma_configure_id() ?
+> 
+> Jason
 
-Well, that's because they are already atomic, therefore no need to
-synchronize. Plus if you were to use set_bit() and test_bit() in your
-example above, the test_bit() on CPU2 could reads 0, right? I.e. it's
-a total different scenario. That is, if you don't synchronize the
-operations between two CPUs, you don't get a guarantee of the
-observation ordering.
+I think the only concern is when a driver calls dma_set_mask_and_coherent() in
+it's probe function. If we can handle that case in an asynchrounous manner,
+then I think we are good.
 
-Back the the non-atomic version, taking a very simple example in C,
-considering you have:
-
-	struct foo {
-		spinlock_t lock;
-		long *bitmap;
-	}
-
-if you only use non-atomic version i.e. __set_bit() and
-__test_bit(), you will need to use lock to synchronize them:
-
-	CPU1			CPU2
-	====			====
-	spin_lock(&foo->lock);
-	__set_bit(foo->bitmap, ...);
-	spin_unlock(&foo->lock);
-				spin_lock(&foo->lock);
-				__test_bit(foo->bitmap, ...);
-				// ^ read as 1, because of the lock
-				// synchronizes these operations.
-				spin_unlock(&foo->lock);
-
-Now if we move to Rust, we will have:
-
-	type Foo = SpinLock<Bitmap>;
-
-and
-	CPU1			CPU2
-	====
-	let foo: &Foo = ...;
-
-	let bitmap: Guard<Bitmap> = foo.lock();
-
-	bitmap.set_bit(); // Guard impls DerefMut
-
-	// lock dropped
-				let foo: &Foo = ...;
-
-				let bitmap: Guard<Bitmap> = foo.lock();
-
-				bitmap.test_bit(); // read as 1, same
-						   // because of the
-						   // lock
-						   // synchronization.
-
-So there is nothing different between Rust and C code in this case,
-except because in the Rust API, we define that Bitmap::set_bit() and
-Bitmap::test_bit() have to take a mutable references, therefore the lock
-or some other synchronization has to exist to provide the `&mut Bitmap`,
-otherwise you cannot call these functions.
-
-Regards,
-Boqun
+Thanks,
+Will
