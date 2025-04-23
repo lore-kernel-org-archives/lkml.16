@@ -1,213 +1,91 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C86139566
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3571F584E;
+	Wed, 23 Apr 2025 22:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745448552; cv=none; b=JNoIegYx08HEOp5PK4gFeX2GPabRvmCVC8vEcGOldEtsAzOkqQZKruJ5Gp4eZmOzMX5y0yP3bpJXuUUHXxEW4xetW8lD1M1jKJVeYZEvC32ILf5Shsv+OhdTADRHfmLB2qaGmmWG9yzCZAgp01juEQliKd1HNWfe9iGUrHH1I/Q=
+	t=1745448607; cv=none; b=AbGK23Yb35hxhLVoC4xuKf2sgCcOloGKkD6hCh0zW0ej9+3qahHOzXhHfJuPhmYFcBh/JXlPTpSFKrHJHdyr2s4Xz/wb4biPGKWxO00etoQKQ0ZUR8gG+3ME2XP/gclBqQpsWFsXb5XZ6t1OuZAFs5aguERVBEU46jCQlobUQc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745448552; c=relaxed/simple;
-	bh=1Gi0O3bymMAhwOE7EO9gUhKQ5ASLF7SPZ8b+OzOFjI8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uKt2PdBbnwVBXEJTYq1KrqT6EslfxDAdozmw+tOvRziwKf2z4Xx0fzZe5FGkVdKNdu+Ec8sNvE2PsfiU2HaZeZFCnGGmcOtoVTcXoWAEJRL7LSQG4kYOC/kuck8YZ77CbBkwTCu3F+XwODtAAfjlZODqg1rv4AYug9XrDp02Fe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cnWMNJ/a; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745448607; c=relaxed/simple;
+	bh=gurGA5DvPR7ijUfbURSFtgXSMzhd2JubECzI5/j0278=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=KzHBzRnIEUbx0cRyAj0j/vC0dTK0coLr1oFfaYum7AUa6L+ex8lK1kbSi080XCNEqN8Jjp8hfAUQc5yedkO40mmw5yeevxbzk1jMJZ313It/SWFOfvTpyCfmpfbrcPT+Eb6/EzRTaDpvh+3O+G9jSTrA4SnNG9OSk811lb8Ra1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=dkEyF2Ls; arc=none smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cnWMNJ/a"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-acb615228a4so256376366b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:49:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745448549; x=1746053349; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eFqMsc9Cgrc/jOwHdKO+Q6o7jkhid+GmOd9W2mEHoHY=;
-        b=cnWMNJ/a9UDVqY1QAMgi68edJFwQ0x4rKWKnWZszqmk6Vq2bdWGIRI30zlP3eYheUH
-         wpHFf1TMsI6/8t5kk+gi//Ayv0S9OIH0Zn5kLEyqJMd0jG88bELti3yyWyaWR7z8BC/U
-         tZv7Z8TPLxF8/JMd85DseQQUu6siXYS6F17igEw6uookl+kqPReG5pvwy6sZUqPuqEcz
-         w2QenS40Zsdp/eltm55zG59cYfKXFiGOb+2kloyZ/2pAw/BinF/NNf+IUJx62m9lgnCG
-         rd3NK1oqWFukaN/JoqY7Hpp59+vRFTMm3Xm4FUwqzPRGPQw3+intc82l4gEedIfvuoxs
-         UBfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745448549; x=1746053349;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eFqMsc9Cgrc/jOwHdKO+Q6o7jkhid+GmOd9W2mEHoHY=;
-        b=vxQ4IOJElmeqDcymiLiecrtBMV6lq7dI78XFBOIqcGlCTWJ8t5aoH5PQnY/n3Zfxak
-         CaAaXq5w95vcjEADseR+DpJvwoTj7jwRzjr3oeUKEJbSRVUq6M3CWTUqrRtGo6oSyUqB
-         8P8MufBvtoEQxYbH2NgIKnOV8z+mYdzI7r9hUkFKAqc4WQkRMyjbJk+UOcz9SOcD8WUM
-         6D2KCfwxesFnefEVz8C/5fmkL0Shg+W3Y3nzecX6DoAXcHqa/lYlenAQZR2+gXYL6A9/
-         l+Ls+o2PiHTouCf3fpzrg/5LMct8L6m6MxeNFO2wzPLWVBfhdoNsVLE/lqrlMm+4gtFc
-         gZng==
-X-Gm-Message-State: AOJu0YzcZ63dGfnT8D2QqHbcM8pTmrpedksroaS3oZq//8f6FhF8PUm6
-	k+vn3LNEa4R91Yx+zqqyUQudZuBbRl3/mtrZL77YKMiZHYcsCVPiuKDggyMdMDxmPMcYAHBO66/
-	80y88Ba7mThZt33UvH36Z7qA/7jLwkVFkv1XL
-X-Gm-Gg: ASbGncuRD83tpCX+EA6o5WV03FvWQtEOCOO+kxPS+WrV5BBsSNG9SnDMGRTV4MDgAxt
-	jA9Ti2P6MkvdIx3srl25e1Y71glXymmSOWLzPDqj28D0yykLexu1tPdjxRpFJjJ4O8rKYtp+RSj
-	wpTTyW1VXr+WlFS91jTdi7+2UzyUa82nfcXj/ZZ5KAQC03D48=
-X-Google-Smtp-Source: AGHT+IF8vhtPElp2/qNIeSObRCOdb1stNKogQ7L4t9EfEQ/ciGeZ8TDp+qkyekR47NwH27EEaH1CJUxWIZvWrUjAuU0=
-X-Received: by 2002:a17:907:2d13:b0:ace:395c:124d with SMTP id
- a640c23a62f3a-ace5a40501bmr9619966b.25.1745448549160; Wed, 23 Apr 2025
- 15:49:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="dkEyF2Ls"
+Message-ID: <2d912187be794438cf6a9f6e7e0d694b@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1745448598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yqDLqDkzfCLD1y/XctMlv7d7M9f1SUafflmNfC4nFOA=;
+	b=dkEyF2Lsci/dhbHFGy4dWOMBdiFrKc9PedskRLUQLJi2b/Q2vug4emf2t1VJNax0kzDlvC
+	IFL0yZqs7OeB1MEPwwzXvLEfsyc1cMJVXp1OigwCnjnS6t5KBMXPzMPkGDT5sQEIRpEsm/
+	8GbfEg1A6VfuJb3Pn9BupnoKAg5RT5PPMODCpkZzSrf1N8+gwnndBplVOADvF5Q7v/LF2j
+	Tl7RMRyI8Y8Zvy/lkQkQQEDmgk97ivdkj5SOvOUIaKZafS4NSEVWU+aY6WVOkniQeqhf/m
+	v5H2gYdVtNpG9ZB2z3lMkyL5OkDRcrZiVHslzCRS0PmKHbkUaZBpFsw+IGCREQ==
+From: Paulo Alcantara <pc@manguebit.com>
+To: David Howells <dhowells@redhat.com>
+Cc: dhowells@redhat.com, Steve French <sfrench@samba.org>, Christian Brauner
+ <brauner@kernel.org>, netfs@lists.linux.dev, v9fs@lists.linux.dev,
+ linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] netfs: Fix undifferentiation of DIO reads from
+ unbuffered reads
+In-Reply-To: <3064919.1745444289@warthog.procyon.org.uk>
+References: <3064919.1745444289@warthog.procyon.org.uk>
+Date: Wed, 23 Apr 2025 19:49:49 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250327225651.642965-1-ctshao@google.com> <20250327225651.642965-4-ctshao@google.com>
- <CAP-5=fU37XBFa-kft5JYPO+BCWP5zGnfZCkCqvzYW-yozF8o0g@mail.gmail.com>
-In-Reply-To: <CAP-5=fU37XBFa-kft5JYPO+BCWP5zGnfZCkCqvzYW-yozF8o0g@mail.gmail.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Wed, 23 Apr 2025 15:48:57 -0700
-X-Gm-Features: ATxdqUGAMv_9OU25H2O9bUU4wBlTXm4ZUK_M0yXfJBA5sp3etcIw-e-NvW66MDk
-Message-ID: <CAJpZYjXZGXFC8CwKahCya9sB6J6OOOdsX7=X9mdPfyxQ7DAGGg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] perf test: Add stat uniquifying test
-To: Ian Rogers <irogers@google.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, ak@linux.intel.com, howardchu95@gmail.com, 
-	linux@treblig.org, yeoreum.yun@arm.com, james.clark@linaro.org, 
-	weilin.wang@intel.com, asmadeus@codewreck.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Thu, Apr 3, 2025 at 12:25=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Thu, Mar 27, 2025 at 4:01=E2=80=AFPM Chun-Tse Shao <ctshao@google.com>=
- wrote:
-> >
-> > The `stat+uniquify.sh` test retrieves all uniquified `clockticks` event=
-s
-> > from `perf list -v clockticks` and check if `perf stat -e clockticks -A=
-`
-> > contains all of them.
-> >
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > ---
-> >  .../tests/shell/stat+event_uniquifying.sh     | 69 +++++++++++++++++++
-> >  1 file changed, 69 insertions(+)
-> >  create mode 100755 tools/perf/tests/shell/stat+event_uniquifying.sh
-> >
-> > diff --git a/tools/perf/tests/shell/stat+event_uniquifying.sh b/tools/p=
-erf/tests/shell/stat+event_uniquifying.sh
-> > new file mode 100755
-> > index 000000000000..5ec35c52b7d9
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/stat+event_uniquifying.sh
-> > @@ -0,0 +1,69 @@
-> > +#!/bin/bash
-> > +# perf stat events uniquifying
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +set -e
-> > +
-> > +stat_output=3D$(mktemp /tmp/__perf_test.stat_output.XXXXX)
-> > +perf_tool=3Dperf
-> > +err=3D0
-> > +
-> > +test_event_uniquifying() {
-> > +  # We use `clockticks` to verify the uniquify behavior.
-> > +  event=3D"clockticks"
->
-> This event is generally only available on Intel, not AMD or ARM, so we
-> will need to skip if it isn't present.
->
-> > +  # If the `-A` option is added, the event should be uniquified.
-> > +  #
-> > +  # $perf list -v clockticks
-> > +  #
-> > +  # List of pre-defined events (to be used in -e or -M):
-> > +  #
-> > +  #   uncore_imc_0/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_1/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_2/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_3/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_4/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #   uncore_imc_5/clockticks/                           [Kernel PMU e=
-vent]
-> > +  #
-> > +  #   ...
-> > +  #
-> > +  # $perf stat -e clockticks -A -- true
-> > +  #
-> > +  #  Performance counter stats for 'system wide':
-> > +  #
-> > +  # CPU0            3,773,018      uncore_imc_0/clockticks/
-> > +  # CPU0            3,609,025      uncore_imc_1/clockticks/
-> > +  # CPU0                    0      uncore_imc_2/clockticks/
-> > +  # CPU0            3,230,009      uncore_imc_3/clockticks/
-> > +  # CPU0            3,049,897      uncore_imc_4/clockticks/
-> > +  # CPU0                    0      uncore_imc_5/clockticks/
-> > +  #
-> > +  #        0.002029828 seconds time elapsed
-> > +
-> > +  echo "stat event uniquifying test"
-> > +  uniquified_event_array=3D()
-> > +
-> > +  # Check how many uniquified events.
-> > +  while IFS=3D read -r line; do
-> > +    uniquified_event=3D$(echo "$line" | awk '{print $1}')
-> > +    uniquified_event_array+=3D("${uniquified_event}")
-> > +  done < <(${perf_tool} list -v ${event} | grep "\[Kernel PMU event\]"=
-)
->
-> Shouldn't the array contain every sysfs event that doesn't have a json
-> component? They may or may not be uniquified so I think the array name
-> is misleading.
->
-> > +  perf_command=3D"${perf_tool} stat -e $event -A -o ${stat_output} -- =
-true"
-> > +  $perf_command
-> > +
-> > +  # Check the output contains all uniquified events.
-> > +  for uniquified_event in "${uniquified_event_array[@]}"; do
-> > +    if ! cat "${stat_output}" | grep -q "${uniquified_event}"; then
->
-> Why not pass the file directly to grep?
-> Should some of the events not show in the stat output as you only
-> asked for the clockticks event? I'm not sure how this test can pass
-> currently.
->
-> Thanks,
-> Ian
->
-Thanks for your comment, Ian.
+David Howells <dhowells@redhat.com> writes:
 
-I tried to run `perf list -v clockticks` and grep for all events which
-have `[Kernel PMU event]` tag.
-Ideally, that should retrieve all uniquified clockticks events.
-Then I ran `perf stat -e clockticks` to check if all events from `perf
-list` are showing.
+> On cifs, "DIO reads" (specified by O_DIRECT) need to be differentiated from
+> "unbuffered reads" (specified by cache=none in the mount parameters).  The
+> difference is flagged in the protocol and the server may behave
+> differently: Windows Server will, for example, mandate that DIO reads are
+> block aligned.
+>
+> Fix this by adding a NETFS_UNBUFFERED_READ to differentiate this from
+> NETFS_DIO_READ, parallelling the write differentiation that already exists.
+>
+> A further patch will be required to make cifs do something different,
+> depending on the rreq->origin set.
+>
+> Fixes: 016dc8516aec ("netfs: Implement unbuffered/DIO read support")
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Paulo Alcantara <pc@manguebit.com>
+> cc: Steve French <sfrench@samba.org>
+> cc: netfs@lists.linux.dev
+> cc: v9fs@lists.linux.dev
+> cc: linux-afs@lists.infradead.org
+> cc: linux-cifs@vger.kernel.org
+> cc: ceph-devel@vger.kernel.org
+> cc: linux-nfs@vger.kernel.org
+> cc: linux-fsdevel@vger.kernel.org
+> ---
+>  fs/9p/vfs_addr.c             |    3 ++-
+>  fs/afs/write.c               |    1 +
+>  fs/ceph/addr.c               |    4 +++-
+>  fs/netfs/direct_read.c       |    3 ++-
+>  fs/netfs/main.c              |    1 +
+>  fs/netfs/misc.c              |    1 +
+>  fs/netfs/objects.c           |    1 +
+>  fs/netfs/read_collect.c      |    7 +++++--
+>  fs/nfs/fscache.c             |    1 +
+>  fs/smb/client/file.c         |    3 ++-
+>  include/linux/netfs.h        |    1 +
+>  include/trace/events/netfs.h |    1 +
+>  12 files changed, 21 insertions(+), 6 deletions(-)
 
-I randomly picked some machines from different arches and it seems
-work. Let me know if you have a better idea.
-
--CT
-
-> > +      echo "Event is not uniquified [Failed]"
-> > +      echo "${perf_command}"
-> > +      cat "${stat_output}"
-> > +      err=3D1
-> > +      break
-> > +    fi
-> > +  done
-> > +}
-> > +
-> > +test_event_uniquifying
-> > +rm -f "${stat_output}"
-> > +exit $err
-> > --
-> > 2.49.0.472.ge94155a9ec-goog
-> >
+Reviewed-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
