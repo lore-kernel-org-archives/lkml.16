@@ -1,185 +1,137 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A4771386DA;
-	Wed, 23 Apr 2025 16:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94E97081C;
+	Wed, 23 Apr 2025 16:16:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745424955; cv=none; b=tUvvmeFgz08ljgJdQIeIgHBH8ppUTYy9Ew99QYdyAGjOAKkAb9DSFvM58DeBWF+vbX+slqblKXBUJiRw0FBFJmSIjHX81reABuKafQv3sgamQdESJoqvlWZeY632QtOiwkbATYl1pWgXiKdLVpNXPreK+o1O3dT4J5ccQJWH8zU=
+	t=1745424973; cv=none; b=hZ2say73wx/7fYEWj88pPIrTi3645vz52A3vevsp92nS9aWxa7hSHHZwxgQEJAWMexSTE8JKT/RdrKyKnSB0R56DYhEnSkjZscJbdV9Nkw9Uy0dmnTcF3oWOuhX7Y+y9A3jMdAAIa54yO2DD5UEwIvx8p18Sd6TYkqpy+0KmZEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745424955; c=relaxed/simple;
-	bh=3O54AdMXyFJUsCTNzkxNemYyExj2+PNhpJrfpMB69CU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tnBstX2zKwy0CL4ywolUy5+H0M3k+7osu3aEopVItt0Nam51pI4xbL28x5lxKqsDCV1/EN7XsGrqdgcrJUkjtHkH7noGenvcOqTcXylJi9XYBXrRrMI3byn+cYdMWU3iGuz3dRCgypG3RhEESCoXIdF29liI9JUjycxxKhC6Lbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JVQxBQt5; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745424973; c=relaxed/simple;
+	bh=nfwTXpjDniJet8uRyJolK5Eq9zCVpA6j7omF0J8cUG8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OR3w1jMYIoFs5fEBnkE2PHUQBpKX/XNn/ota0CPBXy5AeRUZZBfSKLcLpfoBaU48i2OaXy9D+wnzYQOsRxc5PTFWhXMcIMBnjMYEXiP617cHd0E85f4MgJK3uEvGA1An9iwJPXq+pvbCoLaIVGjg+4bZHhYBBMwQ75DEzea4B2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rXjqOXtb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JVQxBQt5"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaecf50578eso6082666b.2;
-        Wed, 23 Apr 2025 09:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745424952; x=1746029752; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hkXQF6L07fq9JaRv1rocvcWtopuXJMouDQ2Qzy0VLAM=;
-        b=JVQxBQt5JjTXuV5LDHNNRfpU5JR0NLcNkAA4wXmRR8NYYmYzMD5YtYkBkdfE/DfjWH
-         b6LF09HULH5adh442KvMBpF5EUZguITuAGTsX6R4tG0o8TZ8LGM4H70A/Mv0sPBnDv50
-         UlGai9gO/snm+SQ0D24PQ3XRqomNvXRHpkWgjlLIHZqx0vmSy7ka7/f8CnNJXdnEqgjd
-         4bojNEZfj8+vq7WtMUc4BVnimKB4Nde7uxh0EPbDgtFMdQKWISyyhP/PdBdG5XeqNhIN
-         OZxSpyHqHI61ftUI+awNhdAte40o1BqB03lZEMRte/vOrkulHFA/R5X6BoW3knk3eTU9
-         xg+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745424952; x=1746029752;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hkXQF6L07fq9JaRv1rocvcWtopuXJMouDQ2Qzy0VLAM=;
-        b=Tt9fI2Pjm0nlK5a2MrDoiJt17zTDqebyc0GwRAKFUXY02fm/fpn3jX9jqFESfs8EnX
-         iaxEHOGCR1EBc9YrM+SiZsxQS2tBOYuQScGjnDX6U8eBLiNE5u92XH8o25B8RoE6HSyx
-         hNO/7i9oOXewWOQcFsLklTypNv64/1uY2sIEcEf5pss13HluLNEnpamUd6LOm70oBRoU
-         e2CBjZC06gvqhhYC9P2VIOfL+HNaDmURwPH88pERVJF3cNLkvoOXPKHusKfXJbZKTloq
-         2IBavmAlZyCD4P6A+rckz25QbOIDQl8SI++o/PF0flxbq9a9nCsE38YmHEEw0WMlDlOh
-         a/lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9Y6tbq6QTNrkgrTCAzAzqUTqjpp7FluDD41fvX4U8nubLz8ylbg+BHuVcl1M+FylwD10cXYAUfw==@vger.kernel.org, AJvYcCUNell9BidibWnfPWTGSFyhXYoOllXgqm4XuKced0Z0O7KD6uqf/4ycCoScHh45x64bRqHZD1xTdmhYiukU@vger.kernel.org, AJvYcCUZBXLFBE4rR3hoYLMN5IvWxZ4ICCnbfgWK20xJaBZY9WSNl3oZWCfI+6UID+WYD4+hucMz0Ee9c4BN1LwWZA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSZtbdotnQ+br9O/gOhjDlZU/oTcMzYounh38GbghiWpwkLzy8
-	THJtbujlyPavoCanGjOcp7K3fGD5low8SdYX2D1gmJZ8Yo5FawMt
-X-Gm-Gg: ASbGncvOnnhcv7CdbAdv2gHGhb1Le4/wA1WDN30BC4N1GaPgeI1xHCSc8JIOJEX4RBu
-	f5Psfh8CKnkblFB7K49ohvGCr6w84MuIe/OZYWy3p8mneSJI5GSdlgNEjAJC+6z7FlazhzID9W9
-	XpK799H8krVg87BI1kClEkonIlEz8SzqUH9Fy2JFozeY1XQfkdnU4dQUmWOqt0s4wdQUXPtWJiF
-	dWzR37CEdxH5KBXG/NDhnYiZdYAkd8lYDZjRKvtcj4y5Mxzxc9+5nBbBvbfqlMLAdr5E6d7zCbs
-	E4POpmXESBJROa1WMVNQBtJ+7Q+NYZZobJ1zUQ6SxYwHhZQ8yRk=
-X-Google-Smtp-Source: AGHT+IGfjA59Ii1TRUVdhru/QpbvQvwRewAB73t3x7AzZ7MY4Efy5K3RpjCp5vGmws3XKlb0bIOUGw==
-X-Received: by 2002:a17:906:abd3:b0:acb:b1be:4873 with SMTP id a640c23a62f3a-acbb1be490fmr773691766b.2.1745424952134;
-        Wed, 23 Apr 2025 09:15:52 -0700 (PDT)
-Received: from [192.168.8.100] ([148.252.133.217])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec92a36sm811629366b.81.2025.04.23.09.15.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 09:15:51 -0700 (PDT)
-Message-ID: <00c7d434-d923-4b91-8ad0-5f3c8e0c6465@gmail.com>
-Date: Wed, 23 Apr 2025 17:17:05 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rXjqOXtb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1ED7C4CEE2;
+	Wed, 23 Apr 2025 16:16:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745424973;
+	bh=nfwTXpjDniJet8uRyJolK5Eq9zCVpA6j7omF0J8cUG8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rXjqOXtbX0/7dQRCbYS2KUqZR5ipICV1dayWh3Qy0iTw8GnBa8YiVvKvTIRyyjsCg
+	 iCayn/B4TjY44D74JfVPc4Mxoub8FBAXru6EYVDvgQReO1JwsaEZZWW3DpwRJsOUKx
+	 blEufBkOLsu4EnXwdcb1L94Ar0NWMpox6M8FzNZn8fyyU4g83URhq/Z1OWO3TEX7cW
+	 m/I1pq8BkyA9yPoAyPQmpt26l3Yo7Ex2DKEV5HDWHNzMALy5rVnZmUUmxQpBywRc3r
+	 Fnk2fruUR0ONftOfn149sWIeNoh2NNyWTS+pwbyaAzvD5RzzrX3VI8gZiFZJzenAF1
+	 GLh4a9VXxr7dw==
+Date: Wed, 23 Apr 2025 17:16:08 +0100
+From: Simon Horman <horms@kernel.org>
+To: Justin Lai <justinlai0215@realtek.com>
+Cc: "kuba@kernel.org" <kuba@kernel.org>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	"edumazet@google.com" <edumazet@google.com>,
+	"pabeni@redhat.com" <pabeni@redhat.com>,
+	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	Larry Chiu <larry.chiu@realtek.com>, Andrew Lunn <andrew@lunn.ch>,
+	David Laight <david.laight.linux@gmail.com>
+Subject: Re: [PATCH net v3 3/3] rtase: Fix a type error in min_t
+Message-ID: <20250423161608.GB2843373@horms.kernel.org>
+References: <20250417085659.5740-1-justinlai0215@realtek.com>
+ <20250417085659.5740-4-justinlai0215@realtek.com>
+ <20250422132831.GH2843373@horms.kernel.org>
+ <040b019af779423f96752f10a697195b@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault
- scenarios
-To: Jens Axboe <axboe@kernel.dk>, =?UTF-8?B?5aec5pm65Lyf?=
- <qq282012236@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- akpm@linux-foundation.org, peterx@redhat.com, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
- <20250422162913.1242057-2-qq282012236@gmail.com>
- <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
- <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
- <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk>
- <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
- <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk>
- <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <040b019af779423f96752f10a697195b@realtek.com>
 
-On 4/23/25 16:55, Jens Axboe wrote:
-> Something like this, perhaps - it'll ensure that io-wq workers get a
-> chance to flush out pending work, which should prevent the looping. I've
-> attached a basic test case. It'll issue a write that will fault, and
-> then try and cancel that as a way to trigger the TIF_NOTIFY_SIGNAL based
-> looping.
+On Wed, Apr 23, 2025 at 10:53:53AM +0000, Justin Lai wrote:
+> > 
+> > + David Laight
+> > 
+> > On Thu, Apr 17, 2025 at 04:56:59PM +0800, Justin Lai wrote:
+> > > Fix a type error in min_t.
+> > >
+> > > Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this
+> > > module")
+> > > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+> > > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> > > ---
+> > >  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > > b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > > index 55b8d3666153..bc856fb3d6f3 100644
+> > > --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > > +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > > @@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32
+> > time_us)
+> > >       u8 msb, time_count, time_unit;
+> > >       u16 int_miti;
+> > >
+> > > -     time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
+> > > +     time_us = min_t(u32, time_us, RTASE_MITI_MAX_TIME);
+> > 
+> > Hi Justin, Andrew, David, all,
+> > 
+> > I may be on the wrong track here, but near the top of minmax.h I see:
+> > 
+> > /*
+> >  * min()/max()/clamp() macros must accomplish several things:
+> >  *
+> >  * - Avoid multiple evaluations of the arguments (so side-effects like
+> >  *   "x++" happen only once) when non-constant.
+> >  * - Perform signed v unsigned type-checking (to generate compile
+> >  *   errors instead of nasty runtime surprises).
+> >  * - Unsigned char/short are always promoted to signed int and can be
+> >  *   compared against signed or unsigned arguments.
+> >  * - Unsigned arguments can be compared against non-negative signed
+> > constants.
+> >  * - Comparison of a signed argument against an unsigned constant fails
+> >  *   even if the constant is below __INT_MAX__ and could be cast to int.
+> >  */
+> > 
+> > So, considering the 2nd last point, I think we can simply use min() both above
+> > and below. Which would avoid the possibility of casting to the wrong type again
+> > in future.
+> > 
+> > Also, aside from which call is correct. Please add some colour to the commit
+> > message describing why this is a bug if it is to be treated as a fix for net rather
+> > than a clean-up for net-next.
+> > 
+> > >
+> > >       if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
+> > >               msb = fls(time_us);
+> > > @@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16
+> > pkt_num)
+> > >       u8 msb, pkt_num_count, pkt_num_unit;
+> > >       u16 int_miti;
+> > >
+> > > -     pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+> > > +     pkt_num = min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
+> > >
+> > >       if (pkt_num > 60) {
+> > >               pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+> > > --
+> > > 2.34.1
+> > >
 > 
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index d80f94346199..e18926dbf20a 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -32,6 +32,7 @@
->   #include <linux/swapops.h>
->   #include <linux/miscdevice.h>
->   #include <linux/uio.h>
-> +#include <linux/io_uring.h>
->   
->   static int sysctl_unprivileged_userfaultfd __read_mostly;
->   
-> @@ -376,6 +377,8 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
->   	 */
->   	if (current->flags & (PF_EXITING|PF_DUMPCORE))
->   		goto out;
-> +	else if (current->flags & PF_IO_WORKER)
-> +		io_worker_fault();
->   
->   	assert_fault_locked(vmf);
->   
-> diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-> index 85fe4e6b275c..d93dd7402a28 100644
-> --- a/include/linux/io_uring.h
-> +++ b/include/linux/io_uring.h
-> @@ -28,6 +28,7 @@ static inline void io_uring_free(struct task_struct *tsk)
->   	if (tsk->io_uring)
->   		__io_uring_free(tsk);
->   }
-> +void io_worker_fault(void);
->   #else
->   static inline void io_uring_task_cancel(void)
->   {
-> @@ -46,6 +47,9 @@ static inline bool io_is_uring_fops(struct file *file)
->   {
->   	return false;
->   }
-> +static inline void io_worker_fault(void)
-> +{
-> +}
->   #endif
->   
->   #endif
-> diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
-> index d52069b1177b..f74bea028ec7 100644
-> --- a/io_uring/io-wq.c
-> +++ b/io_uring/io-wq.c
-> @@ -1438,3 +1438,13 @@ static __init int io_wq_init(void)
->   	return 0;
->   }
->   subsys_initcall(io_wq_init);
-> +
-> +void io_worker_fault(void)
-> +{
-> +	if (test_thread_flag(TIF_NOTIFY_SIGNAL))
-> +		clear_notify_signal();
-> +	if (test_thread_flag(TIF_NOTIFY_RESUME))
-> +		resume_user_mode_work(NULL);
-> +	if (task_work_pending(current))
-> +		task_work_run();
+> Hi Simon,
+> 
+> According to a more detailed clarification, this part is actually an
+> enhancement and does not cause any issues during operation, so it is
+> not a real bug. Therefore, I will post this patch in net-next.
 
-Looking at the stacktrace, that sounds dangerous
-
-iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_worker
-iou-wrk-44588  [kernel.kallsyms]  [k] io_worker_handle_work
-iou-wrk-44588  [kernel.kallsyms]  [k] io_wq_submit_work
-iou-wrk-44588  [kernel.kallsyms]  [k] io_issue_sqe
-iou-wrk-44588  [kernel.kallsyms]  [k] io_write
-iou-wrk-44588  [kernel.kallsyms]  [k] blkdev_write_iter
-iou-wrk-44588  [kernel.kallsyms]  [k] iomap_file_buffered_write
-iou-wrk-44588  [kernel.kallsyms]  [k] iomap_write_iter
-iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_iov_iter_readable
-iou-wrk-44588  [kernel.kallsyms]  [k] fault_in_readable
-iou-wrk-44588  [kernel.kallsyms]  [k] asm_exc_page_fault
-iou-wrk-44588  [kernel.kallsyms]  [k] exc_page_fault
-iou-wrk-44588  [kernel.kallsyms]  [k] do_user_addr_fault
-iou-wrk-44588  [kernel.kallsyms]  [k] handle_mm_fault
-iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_fault
-iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_no_page
-iou-wrk-44588  [kernel.kallsyms]  [k] hugetlb_handle_userfault
-iou-wrk-44588  [kernel.kallsyms]  [k] handle_userfault
-
-It might be holding a good bunch of locks, and then it's trapped
-in a page fault handler. Do normal / non-PF_IO_WORKER tasks run
-task_work from handle_userfault?
-
--- 
-Pavel Begunkov
-
+Thanks. Please do consider using min() instead of min_t() when you post the
+patch to net-next.
