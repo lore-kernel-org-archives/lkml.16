@@ -1,109 +1,138 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1102C262FEC
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05426238C1E;
+	Wed, 23 Apr 2025 09:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745399397; cv=none; b=Cgzoo4YQLxginsbj/Rq8l1Ks7meAzr7EqubkEz1UVFI0q73l6YWkjWzyFH28DXkdJ1Q1PwBp2X7Vr0USAOZjs7HIdmMU/L9oHcgDEzoCpVwdNrema7/LENkOb3rBW1phFc3SUsT4ORUIPP23kEZTKwhhIAB27hmteCGLDgQVlPs=
+	t=1745399445; cv=none; b=Jlg+nRvTkBZOpD4Dnrv9g2O137gIZtYZ6ziyNXKK6YYoidXUVbBZ6QAc2V6pEwwqFJh6jALJuFx5ExPdGcA4gk2yaA3sC2HwCEVoNcvlHnl9GGpqtxaWHZ018wMC5LMPYxiEqIOkIr7QiiboEwMfQ+vaIIGRHK4qaSCj7xsc6wU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745399397; c=relaxed/simple;
-	bh=D9zJsGGNBKvUtfUTrtoCvCv7NgLrgJG8N+UC8V4uJaY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Cin8XJtr30swtFtdAgkSoqfj4O5z6uvvVB3QUqSdSigLDhEe/ZS1zMAD+KxYhn0SB2XKM9amGLH7LeJCekfRqXPGtoCQQwOvdWsHAS7DHm3yuR4MbMVRFD8MfnMuWyvSMtslPh8F1P3gjzFI8sOxL83gNTywOyHo1+kEDmo586M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Pl9VrsOZ; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745399445; c=relaxed/simple;
+	bh=13R4HhhyYLACWE2+iL5wvrH6LRhdycd8zTDtIennd8o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kna99aqGAZOiMX/uKKko2dP1s+G+qXvko908DE94eGClsxzuoh24eMffjw8GCHXGLjedJtnpWyYp2hdY+2t65q77fSjZX/QFHf+R5dnYMpE4twQKE7CjXkWA3sKQ/QWQKim5lFNwlmua39tXtla+E8EGk9Gg6q4b8O3QGdgLFGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=tgrbK3kj; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pl9VrsOZ"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54993c68ba0so7075358e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:09:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="tgrbK3kj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745399394; x=1746004194; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WARUA/SEaM7gTnI/pqNkLOZLeUBM+XHsQtQUHb5intU=;
-        b=Pl9VrsOZekY5NXHTUQ3uqtaasg2AmAMWacA56aj4pmYr1Prs/8o1NTQfEBKQSR3MTG
-         x33yusnv4hNxBJjwGUA/R8qN4X6htQTjOP6XB+ebq+rSVft1iH/An3bquuLaoLAPv2XI
-         SG7p4ZNnMGBVeTrFpsup2WZD/0nMmD+Su9D0petDlET0G7G4UvsXDyXxoasXiuYtQUDm
-         OOjs1fsCxFnkFHjbNDEs5GmMyB8QxCQKAoWlb95KDGXZ1y5xn2uqppepECzBvM4qdYgt
-         JX9JW6v6ZPbRlJNs2uj0BJN2KMyTAlvNBolSh4MbtPJx2w9WDaBPKlEAn8xjICZMLmsw
-         5HLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745399394; x=1746004194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WARUA/SEaM7gTnI/pqNkLOZLeUBM+XHsQtQUHb5intU=;
-        b=hiC/bYfMlZFGBPuEZ1pTlKhCi9acPIRyN9oQ8OCnI72D9S5MA+SpTQn1bjE8PycjjV
-         nODj7JOvRHRAFicPZY+t8LbYDHUAwGQ1pdM5Cbp4r8EClEs3uDt4FZ4PXMt8DdSDUG9L
-         7Om/gN2+7PNn/p6+/7vLxCoevrQ158BYh3szL9ISmvSlNyghBA+5vX1q5sBELlUDVTOU
-         EwA2uDo4KeYVU2dB4uCml26sUyjFFGtKB3V3s1hoGVG3m+arwelSW3HSSjdt/tB79b98
-         nib/oNQpx+4tKAd6ssSGyvOVFISpeeB6K9LgRvK4MjDxg5fYxEEKsl1+1hLfuQ+1Z3S0
-         lbDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXjV239pNCVE7KzZHMbzF2O9wSWfD8qtAOU6hlSI80V+S8ZH60ZNIPe4toOfKoPGkUu4NoBZZ6Yf6yHLEE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaaXfWVGt0wykUU2Sp6wlL3kkjrXRNRs7c5YdB4MVMXOi9wvAz
-	Qq3qvC7QjR2swspScj5eD5g4QX9V7wNJrx1oUSmcQTo+u2UDXtIWU+5GJGgUsHHta0Kw7HQRrEI
-	RpHeU+ggY5ahz7sPukOqXVjvczMUI8+LN/hhkiA==
-X-Gm-Gg: ASbGnctRvaEHWFmzKfsCl0TzJH7SmW5R8deDjyqsPZ0ZIzFkqoIIwItogvJ2w5ZNtUx
-	nWQTukbSDJ7WzFY+Wpm3FVU50ets0feXNoqyGK1OD9GGDflszO+IRJsLP7QbGqLebLgpNSf+ks4
-	S0kY+ABRknet3eH9bdc9bsdUUfHwsv26fc
-X-Google-Smtp-Source: AGHT+IGGSWx/qXe0KQyY/MREsZlIV6fNVYZhSzegs3sVGQ2Vz/xafsGBBtwjdgGYFha2pmBwx3eFZ0eFO4ELEa/acV4=
-X-Received: by 2002:a05:6512:68d:b0:549:7394:2ce5 with SMTP id
- 2adb3069b0e04-54d6e663182mr5664661e87.41.1745399393941; Wed, 23 Apr 2025
- 02:09:53 -0700 (PDT)
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1745399444; x=1776935444;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=L4PoR1ud+jNJMhh5D7KbDC7ekzYs2jqet1AIShSE0mk=;
+  b=tgrbK3kjeLjafxFEuAaNR+XJA4LAhHcNTp6Z0dG2IOHQw6FF+bq5n2m9
+   4U95r440ctOcFKv681G9ThdyLFhtLIAvnDqNO1iboDVisRwU2xS7RmPjb
+   HdHevKskWT+INWWHNwDHkqtx4Xvzmji2qXebL8xoKfO1kMZxiGmeURlO0
+   o=;
+X-IronPort-AV: E=Sophos;i="6.15,233,1739836800"; 
+   d="scan'208";a="12842701"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:10:34 +0000
+Received: from EX19MTAEUB001.ant.amazon.com [10.0.10.100:26368]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.46.70:2525] with esmtp (Farcaster)
+ id fa0c195f-2dfb-4e4d-80bc-22273541f32d; Wed, 23 Apr 2025 09:10:33 +0000 (UTC)
+X-Farcaster-Flow-ID: fa0c195f-2dfb-4e4d-80bc-22273541f32d
+Received: from EX19D029EUC001.ant.amazon.com (10.252.61.252) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 23 Apr 2025 09:10:32 +0000
+Received: from dev-dsk-bsz-1b-e2c65f5d.eu-west-1.amazon.com (10.13.227.240) by
+ EX19D029EUC001.ant.amazon.com (10.252.61.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 23 Apr 2025 09:10:30 +0000
+From: Bartosz Szczepanek <bsz@amazon.de>
+To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
+CC: <nh-open-source@amazon.com>, Bartosz Szczepanek <bsz@amazon.de>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] fdt: Extend warnings on error paths
+Date: Wed, 23 Apr 2025 09:10:17 +0000
+Message-ID: <20250423091018.51831-1-bsz@amazon.de>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422162250.436169-1-uwu@icenowy.me> <20250422162250.436169-2-uwu@icenowy.me>
-In-Reply-To: <20250422162250.436169-2-uwu@icenowy.me>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 23 Apr 2025 11:09:42 +0200
-X-Gm-Features: ATxdqUGJI5EWHbFKNL1piYfBX7w6VEjwsS65rRDUL2ZIvKqVpjd39nGuBX00R-E
-Message-ID: <CACRpkdbGwPyQgVL18iMvUTAvh4XTjo6g3mGT4e_b2aNAjr2obg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: jh7110-sys: add force inputs
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
-	Hal Feng <hal.feng@starfivetech.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D036UWC004.ant.amazon.com (10.13.139.205) To
+ EX19D029EUC001.ant.amazon.com (10.252.61.252)
 
-Hi Icenowy,
+Print out adress and size if elfcorehdr is overlapped. Be more verbose
+about what went wrong in case early_init_dt_verify fails. Other than
+improving logging, no functional change is intended in this commit.
 
-thanks for your patch!
+Signed-off-by: Bartosz Szczepanek <bsz@amazon.de>
+---
+ drivers/of/fdt.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-On Tue, Apr 22, 2025 at 6:23=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me> wrot=
-e:
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index aedd0e2dcd89..c9b5e056b713 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -469,21 +469,22 @@ static u32 of_fdt_crc32;
+  * described in the device tree. This region contains all the
+  * information about primary kernel's core image and is used by a dump
+  * capture kernel to access the system memory on primary kernel.
+  */
+ static void __init fdt_reserve_elfcorehdr(void)
+ {
+ 	if (!IS_ENABLED(CONFIG_CRASH_DUMP) || !elfcorehdr_size)
+ 		return;
+ 
+ 	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
+-		pr_warn("elfcorehdr is overlapped\n");
++		pr_warn("elfcorehdr is overlapped (addr=0x%llx, size=%llu)\n",
++			elfcorehdr_addr, elfcorehdr_size);
+ 		return;
+ 	}
+ 
+ 	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+ 
+ 	pr_info("Reserving %llu KiB of memory at 0x%llx for elfcorehdr\n",
+ 		elfcorehdr_size >> 10, elfcorehdr_addr);
+ }
+ 
+ /**
+@@ -1128,26 +1129,33 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+ 	memblock_add(base, size);
+ }
+ 
+ static void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+ {
+ 	return memblock_alloc_or_panic(size, align);
+ }
+ 
+ bool __init early_init_dt_verify(void *dt_virt, phys_addr_t dt_phys)
+ {
+-	if (!dt_virt)
++	int rc;
++
++	if (!dt_virt) {
++		pr_warn("FDT wasn't correctly mapped");
+ 		return false;
++	}
+ 
+ 	/* check device tree validity */
+-	if (fdt_check_header(dt_virt))
++	rc = fdt_check_header(dt_virt);
++	if (rc) {
++		pr_warn("FDT header is invalid: status=%d", rc);
+ 		return false;
++	}
+ 
+ 	/* Setup flat device-tree pointer */
+ 	initial_boot_params = dt_virt;
+ 	initial_boot_params_pa = dt_phys;
+ 	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
+ 				fdt_totalsize(initial_boot_params));
+ 
+ 	/* Initialize {size,address}-cells info */
+ 	early_init_dt_scan_root();
+ 
+-- 
+2.47.1
 
-> +  starfive,force-low-inputs:
-> +    description:
-> +      The list of input signals forced to be low inside the SoC itself.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-
-I don't see why you need this hack.
-
-Use the existing per-pin output-low property (see
-Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml).
-
-> +  starfive,force-high-inputs:
-> +    description:
-> +      The list of input signals forced to be high inside the SoC itself.
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-
-Use the existing output-high property.
-
-Now I *know* these two properties are per-pin. That is more talkative
-but way easier for users to read.
-
-Then use pincontrol hogs to make sure these configs are set up
-at probe.
-
-Yours,
-Linus Walleij
