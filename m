@@ -1,116 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2AE27780B;
-	Wed, 23 Apr 2025 07:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A46274FE4;
+	Wed, 23 Apr 2025 07:57:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745395060; cv=none; b=ZC6RWzcNSOrH9yFRJWU6V05FQaARXPSs7Gc1Wj6YhyOKrQWMVRNOyLZm/CyaRJt1+hKNFmL2OsMeB5Bo0ZbL6J8GavByak5EqIjTRXsdOWJCXdPFUkslWJPEnqVAI56hTzpjztDzST8js8Tpz2YSLf5zT0ODapAyY/SCDpDULKM=
+	t=1745395080; cv=none; b=P3mbDAOpcN0XQDS/Ws/iu/DhGVrEeW/okRiHbXzkxylF+f0t5A22bqfcp2bRFMwzvHrpExowKsQlE0KbQ9PSyCkirp+Gr6T+pAapEO1awEVTN84+VN9hvMzFZypXSPg9EmV3d4E5x4iUlyndMMzolgisDpTNorsuhqLre3wfrZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745395060; c=relaxed/simple;
-	bh=yNmwVGrDgbCtRlFwMtWRCumYMQG64ApPT+3w1d4vZrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nyzCXRqGAtkdz6cJun1/GNzQfymxiOCtgwvsH3ARm93mRg0nxvdIR6ipiuTrgz43JV4knHqfYZba4V1kbaJOSUR6QBgIGh1pu6tweaFsOzE+0wpAdx6UUPr8/JWFCf7GP+54I8TK+vlg/GDmvVpFNY7yEUYZF3t1XWPGDE8dq5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stsLIYbz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745395080; c=relaxed/simple;
+	bh=xvCTwGtUFC858f1KgNGv7sZsYg3hjfjQ+nXetoTBO/Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QU07MGc3Z5CkXK1OMf1YHmwbPRnj2eL/wcLRTTmKtrjhZM5wEH4Mjf31KCg/W6UwqbMB7iJwHmdRkWEhYbjHkjVsHDDgRwoO4QqBQixNkE0gS2WDgTu3l3r+6NcaxA/dY63MUUdSNRvp7HK83IPjy6R3lYRhj8Gcyek82RckEjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Zb7IRtov; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stsLIYbz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FF6EC4CEE2;
-	Wed, 23 Apr 2025 07:57:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745395059;
-	bh=yNmwVGrDgbCtRlFwMtWRCumYMQG64ApPT+3w1d4vZrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=stsLIYbzqNWZwwaLBX20CHWv2vLU9ObmcgpySg69lUSemrfLfGiwXtytZWtTi/WUX
-	 NxT4pxjQIerCiwLSt9Uf8oBibxzDPd/U3XsRExW5Du4Wyw5E8X07biYxDZNyCsv9gc
-	 PLQDdNy+wuMkW0JX/kmBDLY6ktXaclvACPFMJx93KlpIbZbNvdqS2uL+2/kwaITiKI
-	 x9fMCdSwCGGydHR9iLqYws2JK+M5UtYEC4sqR4Ik9vucnxLDjTCfrCcxdjxobR3NpL
-	 zZAvXpqmAh7kZfENSANnf8ZqBz7DBivw6YyesAkEliBTVnfcdllAf9JVpecDRaT6zQ
-	 q804Nr0hxCFwA==
-Date: Wed, 23 Apr 2025 07:57:35 +0000
-From: Tzung-Bi Shih <tzungbi@kernel.org>
-To: Suleiman Souhlal <suleiman@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, Chao Gao <chao.gao@intel.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ssouhlal@freebsd.org
-Subject: Re: [PATCH v5 2/2] KVM: x86: Include host suspended time in steal
- time
-Message-ID: <aAidb496s6ke8RoO@google.com>
-References: <20250325041350.1728373-1-suleiman@google.com>
- <20250325041350.1728373-3-suleiman@google.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Zb7IRtov"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D2A2C439A4;
+	Wed, 23 Apr 2025 07:57:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745395075;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KtkZNQ17cKFFCTiKcAIQgpYD3/NobOf59bX2kwEJLCY=;
+	b=Zb7IRtovuxsd9JaOunFs3+ta/ADlC64BPVhepGERbl+eblnFne61AH7PiuZbRENtN+jioS
+	Mh2yu9MOtVm/hFqKMHQfasjiHBjtsPdBSYuHUaRy/XS3erfbrta+VVwR6n0t+a+ih97x3W
+	5XoRtuEY094Qx7qZBOkCuRpAEKeNRK5fNnWPMlbYH0L2vEbsJ11sfobhw1R/kWXebarBKD
+	hVyq/3LWFe4tfuf9EAHCKZyUcB4XNmULwB/ArTr0Qwd5lGEk+xOS+Y9B3gCtvJfJrYuVMV
+	1JZht6u0zFzoI91P1SZixMf8tO4GLMxKe5eZCFsMs703WAXPxzV47UcxVZEU1Q==
+Date: Wed, 23 Apr 2025 11:54:02 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Johannes Schneider <johannes.schneider@leica-geosystems.com>
+Cc: dmurphy@ti.com, andrew@lunn.ch, davem@davemloft.net,
+ f.fainelli@gmail.com, hkallweit1@gmail.com, kuba@kernel.org,
+ linux-kernel@vger.kernel.org, linux@armlinux.org.uk, michael@walle.cc,
+ netdev@vger.kernel.org, bsp-development.geo@leica-geosystems.com
+Subject: Re: [PATCH net v3] net: dp83822: Fix OF_MDIO config check
+Message-ID: <20250423115402.3adaab0c@device-40.home>
+In-Reply-To: <20250423044724.1284492-1-johannes.schneider@leica-geosystems.com>
+References: <20250423044724.1284492-1-johannes.schneider@leica-geosystems.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250325041350.1728373-3-suleiman@google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeitdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopeguvghvihgtvgdqgedtrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopehjohhhrghnnhgvshdrshgthhhnvghiuggvrheslhgvihgtrgdqghgvohhshihsthgvmhhsrdgtohhmpdhrtghpthhtohepughmuhhrphhhhiesthhirdgtohhmpdhrtghpthhtoheprghnu
+ ghrvgifsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopehfrdhfrghinhgvlhhlihesghhmrghilhdrtghomhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Tue, Mar 25, 2025 at 01:13:50PM +0900, Suleiman Souhlal wrote:
-> When the host resumes from a suspend, the guest thinks any task
-> that was running during the suspend ran for a long time, even though
-> the effective run time was much shorter, which can end up having
-> negative effects with scheduling.
+On Wed, 23 Apr 2025 06:47:24 +0200
+Johannes Schneider <johannes.schneider@leica-geosystems.com> wrote:
+
+> When CONFIG_OF_MDIO is set to be a module the code block is not
+> compiled. Use the IS_ENABLED macro that checks for both built in as
+> well as module.
 > 
-> [...]
-> 
-> Signed-off-by: Suleiman Souhlal <suleiman@google.com>
+> Fixes: 5dc39fd5ef35 ("net: phy: DP83822: Add ability to advertise Fiber connection")
+> Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
 
-Saw the corresponding host suspended time has been compensated in
-update_rq_clock_task():
-Tested-by: Tzung-Bi Shih <tzungbi@kernel.org>
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-With 1 minor comment:
-Reviewed-by: Tzung-Bi Shih <tzungbi@kernel.org>
-
-> @@ -917,8 +918,13 @@ struct kvm_vcpu_arch {
->  
->  	struct {
->  		u8 preempted;
-> +		bool host_suspended;
-
-Use it in bool manner.
-
-> +static void wait_for_resume(struct kvm_vcpu *vcpu)
-> +{
-> +	wait_event_interruptible(vcpu->arch.st.resume_waitq,
-> +	    vcpu->arch.st.host_suspended == 0);
-
-E.g.: !vcpu->arch.st.host_suspended.
-
-> @@ -6939,6 +6954,19 @@ static int kvm_arch_suspend_notifier(struct kvm *kvm)
->  
->  	mutex_lock(&kvm->lock);
->  	kvm_for_each_vcpu(i, vcpu, kvm) {
-> +		vcpu->arch.st.last_suspend = ktime_get_boottime_ns();
-> +		/*
-> +		 * Tasks get thawed before the resume notifier has been called
-> +		 * so we need to block vCPUs until the resume notifier has run.
-> +		 * Otherwise, suspend steal time might get applied too late,
-> +		 * and get accounted to the wrong guest task.
-> +		 * This also ensures that the guest paused bit set below
-> +		 * doesn't get checked and cleared before the host actually
-> +		 * suspends.
-> +		 */
-> +		vcpu->arch.st.host_suspended = 1;
-
-E.g.: true.
-
-> +static int kvm_arch_resume_notifier(struct kvm *kvm)
-> +{
-> +	struct kvm_vcpu *vcpu;
-> +	unsigned long i;
-> +
-> +	mutex_lock(&kvm->lock);
-> +	kvm_for_each_vcpu(i, vcpu, kvm) {
-> +		vcpu->arch.st.host_suspended = 0;
-
-E.g.: false.
+Maxime
