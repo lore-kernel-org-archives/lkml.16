@@ -1,69 +1,44 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38892280CDC;
-	Wed, 23 Apr 2025 17:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420AE280CDC;
+	Wed, 23 Apr 2025 17:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745429135; cv=none; b=Bo+09pFjfe1ns7GUUxJZMjs7BUKDwM+FedDVzPbG0kXAzu67OD/Auk06B3WEJ7+j0hfnXX0CWzdJIw7HuvlBrmvG9RqxPEZY4B/DmzPx3x8n6qaSmbia8lHXL7CaqYD1RUVG0wZ+uoBlm5a5dKTzijQAM3tEVLdeXrBb/rFhzaE=
+	t=1745429247; cv=none; b=uB54NR2tLhcc/a2PeODJTLMTsn6iwnEcvSFpp38hL/xMCXvcGUuB6YD5nGTXxlr2+3oUroJc3eCBm+F+omyyVF+Y4wVzlgQweXPdACSpI3vSCQVp5M+q1doCc/gCoASJqiFns7kg4JvV3Ow0RLijxd6tlrlXxBJaJx0etML8lIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745429135; c=relaxed/simple;
-	bh=VPDAEHukUbI+oi/4og11d+8ZLIVqGYmsWG4hYtjyuhI=;
+	s=arc-20240116; t=1745429247; c=relaxed/simple;
+	bh=7QocEmAKlPrtEbN8wqYhG0hUbtD5vXfeYPczPaaBrt0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r+ML2B4m27A9BM4M+dhdNYS1tMFtBJUeRAyTPDctYYtXwm1wpywD0cgJtf1fahibE0jqT43YKXch8QKW9cTfvO1dtzLFLBdG+tpWb3p9uqLnWmWbirf0f8XV4bntscj0/OPPU2fvSooUHtjYXF3+VBD9phkB+b2yTVkMSjTrcEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BBzOXkiD; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=dlistPyfyujczGvJUNJqHdjeTEZCSTSDlBNRrd+8JiEeakqldV6uKMAg2D0jJs49d1jm1UT6bXoeYzRPlepxgeZw/7UTDP1bgyir4VBefpVIRAUI9urKUIHrc/gQcxZoVa2Yu5RzlKVabI4iTc7F4HrvDN6IeDg/fcwQxG8I2GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHp0VWAR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BBzOXkiD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745429134; x=1776965134;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VPDAEHukUbI+oi/4og11d+8ZLIVqGYmsWG4hYtjyuhI=;
-  b=BBzOXkiDinigD5GjV7pxJfAJTUlocbUPiZZMLBEwrkbCt/18ntnyySCs
-   EhsVfiSk+vNx9XmRnt8Fzak1v8m7dJcsLN+1LWuK6MqAHo6G0uceYo9xO
-   V6fQtZG83C9IoqRdoC7BeDx5eLAKf2yBb+NfIBZvaw5aglH2ZiILiXpE2
-   nvqZ2xS1s1jGzNOlvpSKP/AY+4W0apFqp2eHQnZF0TrWt0pAgZkQyZ48T
-   1sVteVKWI5JPdVJ7xNMakg2ki/HxxZI/MWjHBpgcqOAL0Y+Aitbp9HXyX
-   5QRToy2zSL8rUDEwvufXrbEyRvUZy6apXP9zz/tVV5zWK0t8SG2yFqEBX
-   g==;
-X-CSE-ConnectionGUID: VBzGLQAETDS/Q9+HlvFXEQ==
-X-CSE-MsgGUID: +oSlkJEgQx29DHQi/wyMSw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="50863731"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="50863731"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:25:33 -0700
-X-CSE-ConnectionGUID: bMooqzDqQdeZnoEE66eaag==
-X-CSE-MsgGUID: CoVTSh/MTHqyaZCTwy5v8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132908758"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 23 Apr 2025 10:25:30 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u7dqh-0003Up-2m;
-	Wed, 23 Apr 2025 17:25:27 +0000
-Date: Thu, 24 Apr 2025 01:25:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Eugen Hristev <eugen.hristev@linaro.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: oe-kbuild-all@lists.linux.dev, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-Message-ID: <202504240112.hZy9LpvD-lkp@intel.com>
-References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHp0VWAR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD766C4CEE2;
+	Wed, 23 Apr 2025 17:27:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745429246;
+	bh=7QocEmAKlPrtEbN8wqYhG0hUbtD5vXfeYPczPaaBrt0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gHp0VWARx+HaSd5ich2I+OayDPZkAd5vANfCbNIcP+TT4CEpxFy0/L+ETcJ0s10qa
+	 3BgqQPBoZU+yiEzY5A+xHJ6W7p1gIp65ZMXQgSji3zISfyNZI39y9i4n6BYg///XeH
+	 AkV/58HRcTg1x5NQsJkUAcffCRXBEbLXXgul0Y+ov97A4HvFN1i5xlM3VwMrpW0WZi
+	 vRC591ALkJ9ndzPa+2yB0azrrFf7vNFlLVJpK2YOnu+xWUJRZuz7SpxF/5XlL5GXSn
+	 ONVMhMh9UL3o/DXfZTKtHKmXSaFWcEGjYW7HpDWvpj5fXG4YkwXxQbZdRSYt5ryUgB
+	 Ucx53JaTniX3A==
+Date: Wed, 23 Apr 2025 22:48:31 +0530
+From: Naveen N Rao <naveen@kernel.org>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: dave.hansen@linux.intel.com, x86@kernel.org, 
+	Kees Cook <kees@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Vishal Annapurve <vannapurve@google.com>, Kirill Shutemov <kirill.shutemov@linux.intel.com>, 
+	Nikolay Borisov <nik.borisov@suse.com>, stable@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] x86/devmem: Drop /dev/mem access for confidential
+ guests
+Message-ID: <y3c6mpt3w4pdx7xzaqdlsr3ci33cseuaxwdno4uh3jfb2ddvxp@kicc5stwtcto>
+References: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
+ <174500659632.1583227.11220240508166521765.stgit@dwillia2-xfh.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,73 +47,125 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+In-Reply-To: <174500659632.1583227.11220240508166521765.stgit@dwillia2-xfh.jf.intel.com>
 
-Hi David,
+On Fri, Apr 18, 2025 at 01:04:02PM -0700, Dan Williams wrote:
+> Nikolay reports [1] that accessing BIOS data (first 1MB of the physical
+> address space) via /dev/mem results in an SEPT violation.
+> 
+> The cause is ioremap() (via xlate_dev_mem_ptr()) establishes an
+> unencrypted mapping where the kernel had established an encrypted
+> mapping previously.
+> 
+> Linux traps read(2) access to the BIOS data area, and returns zero.
+> However, it turns out the kernel fails to enforce the same via mmap(2).
+> This is a hole, and unfortunately userspace has learned to exploit it
+> [2].
+> 
+> This means the kernel either needs a mechanism to ensure consistent
+> "encrypted" mappings of this /dev/mem mmap() hole, close the hole by
+> mapping the zero page in the mmap(2) path, block only BIOS data access
+> and let typical STRICT_DEVMEM protect the rest, or disable /dev/mem
+> altogether.
+> 
+> The simplest option for now is arrange for /dev/mem to always behave as
+> if lockdown is enabled for confidential guests. Require confidential
+> guest userspace to jettison legacy dependencies on /dev/mem similar to
+> how other legacy mechanisms are jettisoned for confidential operation.
+> Recall that modern methods for BIOS data access are available like
+> /sys/firmware/dmi/tables.
+> 
+> Cc: <x86@kernel.org>
+> Cc: Kees Cook <kees@kernel.org>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: "Naveen N Rao" <naveen@kernel.org>
+> Cc: Vishal Annapurve <vannapurve@google.com>
+> Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>
+> Link: https://sources.debian.org/src/libdebian-installer/0.125/src/system/subarch-x86-linux.c/?hl=113#L93 [2]
+> Reported-by: Nikolay Borisov <nik.borisov@suse.com>
+> Closes: http://lore.kernel.org/20250318113604.297726-1-nik.borisov@suse.com [1]
+> Fixes: 9aa6ea69852c ("x86/tdx: Make pages shared in ioremap()")
+> Cc: <stable@vger.kernel.org>
+> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+> Changes since v3
+> * Fix a 0day kbuild robot report about missing cc_platform.h include.
+> 
+>  arch/x86/Kconfig   |    4 ++++
+>  drivers/char/mem.c |   10 ++++++++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 4b9f378e05f6..bf4528d9fd0a 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -891,6 +891,8 @@ config INTEL_TDX_GUEST
+>  	depends on X86_X2APIC
+>  	depends on EFI_STUB
+>  	depends on PARAVIRT
+> +	depends on STRICT_DEVMEM
+> +	depends on IO_STRICT_DEVMEM
+>  	select ARCH_HAS_CC_PLATFORM
+>  	select X86_MEM_ENCRYPT
+>  	select X86_MCE
+> @@ -1510,6 +1512,8 @@ config AMD_MEM_ENCRYPT
 
-kernel test robot noticed the following build errors:
+As far as I know, AMD_MEM_ENCRYPT is for the host SME support. Since 
+this is for encrypted guests, should the below dependencies be added to 
+CONFIG_SEV_GUEST instead?
 
-[auto build test ERROR on aff301f37e220970c2f301b5c65a8bfedf52058e]
+Tom?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/iio-introduce-IIO_DECLARE_BUFFER_WITH_TS-macros/20250423-061049
-base:   aff301f37e220970c2f301b5c65a8bfedf52058e
-patch link:    https://lore.kernel.org/r/20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706%40baylibre.com
-patch subject: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-config: sh-randconfig-001-20250424 (https://download.01.org/0day-ci/archive/20250424/202504240112.hZy9LpvD-lkp@intel.com/config)
-compiler: sh4-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250424/202504240112.hZy9LpvD-lkp@intel.com/reproduce)
+>  	bool "AMD Secure Memory Encryption (SME) support"
+>  	depends on X86_64 && CPU_SUP_AMD
+>  	depends on EFI_STUB
+> +	depends on STRICT_DEVMEM
+> +	depends on IO_STRICT_DEVMEM
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504240112.hZy9LpvD-lkp@intel.com/
+Can we use 'select' for the dependency on IO_STRICT_DEVMEM, if not both 
+the above?
 
-All errors (new ones prefixed by >>):
+IO_STRICT_DEVMEM in particular is not enabled by default, so applying 
+this patch and doing a 'make olddefconfig' disabled AMD_MEM_ENCRYPT, 
+which is not so good. Given that IO_STRICT_DEVMEM only depends on 
+STRICT_DEVMEM, I think a 'select' is ok.
 
-   In file included from drivers/iio/industrialio-buffer.c:29:
->> include/linux/iio/iio.h:813:1: error: static assertion failed: "macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment"
-     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-         | ^~~~~~~~~~~~~~
+>  	select DMA_COHERENT_POOL
+>  	select ARCH_USE_MEMREMAP_PROT
+>  	select INSTRUCTION_DECODER
+> diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+> index 48839958b0b1..47729606b817 100644
+> --- a/drivers/char/mem.c
+> +++ b/drivers/char/mem.c
+> @@ -30,6 +30,7 @@
+>  #include <linux/uio.h>
+>  #include <linux/uaccess.h>
+>  #include <linux/security.h>
+> +#include <linux/cc_platform.h>
+>  
+>  #define DEVMEM_MINOR	1
+>  #define DEVPORT_MINOR	4
+> @@ -595,6 +596,15 @@ static int open_port(struct inode *inode, struct file *filp)
+>  	if (rc)
+>  		return rc;
+>  
+> +	/*
+> +	 * Enforce encrypted mapping consistency and avoid unaccepted
+> +	 * memory conflicts, "lockdown" /dev/mem for confidential
+> +	 * guests.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_STRICT_DEVMEM) &&
+> +	    cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+> +		return -EPERM;
+> +
+>  	if (iminor(inode) != DEVMEM_MINOR)
+>  		return 0;
+>  
+> 
+
+Otherwise, this looks good to me.
 
 
-vim +813 include/linux/iio/iio.h
+- Naveen
 
-   781	
-   782	#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-   783		type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) / sizeof(type)]
-   784	
-   785	/**
-   786	 * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
-   787	 * @type: element type of the buffer
-   788	 * @name: identifier name of the buffer
-   789	 * @count: number of elements in the buffer
-   790	 *
-   791	 * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts(). In
-   792	 * addition to allocating enough space for @count elements of @type, it also
-   793	 * allocates space for a s64 timestamp at the end of the buffer and ensures
-   794	 * proper alignment of the timestamp.
-   795	 */
-   796	#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-   797		_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
-   798	
-   799	/**
-   800	 * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
-   801	 * @type: element type of the buffer
-   802	 * @name: identifier name of the buffer
-   803	 * @count: number of elements in the buffer
-   804	 *
-   805	 * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
-   806	 * to ensure that the buffer doesn't share cachelines with anything that comes
-   807	 * before it in a struct. This should not be used for stack-allocated buffers
-   808	 * as stack memory cannot generally be used for DMA.
-   809	 */
-   810	#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
-   811		_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(IIO_DMA_MINALIGN)
-   812	
- > 813	_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-   814		"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment");
-   815	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
