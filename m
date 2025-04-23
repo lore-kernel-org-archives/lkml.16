@@ -1,253 +1,358 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD7C27D76A
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E0817555;
+	Wed, 23 Apr 2025 14:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418538; cv=none; b=AsKs6Muir+TG7eB/3gKo5ev3+FfVOkk2uM9PlSAzDhqbGZB0JaDlocjgy4nNrrOnRrLyZxLF9fDPMhSThygHUzmFEnDQS+sbExnGDosDm7EpnLIJ2r9uNsowh4EmiV4240LHK+iSBbexnwl+/cR0uEk7yNyjzRKamriF20qmNyE=
+	t=1745418596; cv=none; b=c91dsHs1IlQ/aXD8HHxXs8DfBI/T7VA46RhFo4wN0jXsIeobORC8pkXF0OqcNiz8xDurMzRo7rujMe8ECKiy3jql+IAue4ArO/CFDjAqnpsivaXDU+25adR8wMHaLeqQZ1QwVzpnbZ2z6DFL5C4WRrB+NjRUlY+BE9BDnsL00qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418538; c=relaxed/simple;
-	bh=3d4L/OpgIskPzmhWJd9Lo1MKK6TrrdQd5WCm5NOL5mk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D81D1/BCen0V48JojBu4nabdVNIwdOA4H6GvQFLw8MUhB29Xu7vADo8QAQjFRKz9V342lHzbzl8vLv9L7viFExfGld8vMDrivmSo+I2i8J9mw9uSRYU7w1DE8UfLrlMoGgiHcpSlHEAvcS7qk1o4aVarxEf1mkY9O60I+Q0lJp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VC/dQ1KM; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745418596; c=relaxed/simple;
+	bh=r8jAqmLZbNO01NxVCNrFgFdl7VRLWQxQUMhZ7S/MX0M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OSJSYDHRM6Kc90MXv+5JIhEBEuCR9Gi8z0/3ZuLD9qxPLEElFw6b2bl3/IjG9XcmZWm13XOEiXWJ7dfwfmeQYjA42HWbvK7QIW9JTHt8jWZz0RiPBU+kFLloM4sBjSh1SyOiPq36dm77e4gsPhcpm3CAitnX9FcolRyVvJrlsNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B6Ivnf/p; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VC/dQ1KM"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NALFnN014799
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:28:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	RI8p1FKSjrsTzbJbzVg5SpTQ5yttOOHdObui3LUhhiw=; b=VC/dQ1KM9IG/hSFW
-	JVTUndSPIoH/n85bst0pAkMR8wNSC1yQXRbdWtCpnImka1t/osZeHORUb2pzThuD
-	ln3w0E/ZZh12vZ0NBXqrI1F6IqbcbL21mVv5bvcClPdfUcYHR76VJxJ26G65PBvG
-	5brtROsprjWp/YwXB5gZD6rhiWHjN/LH0OB1+YH5nFqovdZVHIbqfhlFbY7wgsBr
-	+CSajBrns1f8kD25Ev2r+BXi8U6jGOlrrc6jdncP4mjHDcBkaQVqR6g0vpI2+vgh
-	/U12dos69D78rhJdGEtWDEUSAXBM63eAh6+HTC+8foBW0l7FTxCpZGvrAQJqWZxf
-	dZYKxg==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0jcyv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:28:54 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-225429696a9so84545535ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:28:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B6Ivnf/p"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2d0e86cd5b1so3639286fac.3;
+        Wed, 23 Apr 2025 07:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745418594; x=1746023394; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vAmiNRPfDylXI4p2I89n/el3RsJ4kbOsDdMQamDJ/lU=;
+        b=B6Ivnf/pisUqm/TkWt8aIRDvYnRwFl3bup5yNk+/x595+hj+3ukkTpC1JUAcBAMpyf
+         11Wl7XOabk/30Kq4sQemCywaI2BZl2fCKm/1mIGEoiNyfqH10IEAQMoz07uuQJEiERfp
+         hilQ/MfxVBDBP+wzt79HUL4d4vjH81g8XFuwHgE2/f975hJdlSqXUeD+7fGrEHPUcZyS
+         SjFt4G7h1ceWP82AGdKpCyyJrT0pLLAzqzYXszPGxri372skk+wkzKdOz9AIUDg0FCU2
+         gBU6YgaSKmmJ8dSkY4OETObDJ4SZSVaauchU9vSLTKKuTq+6jC1r3tK9xvjWRbyPuDDO
+         Sj5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745418533; x=1746023333;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RI8p1FKSjrsTzbJbzVg5SpTQ5yttOOHdObui3LUhhiw=;
-        b=TwbGnWFNBIb+BHZ1d0mNBQFqzN5m/RNcnH8Tm7DeCQH66Miq4u92LG+o1OE+hq++AY
-         eyQG1I+G9eemO5skov3h+EUWoznIkYemH+DD/PEHnCCuFoGr8HEDPc568b4zq7Wsae72
-         uNMFryzeFyfc2lpMKxrZvp9vkhtkSR3e1q8xB8xdYhZMjHRC/DPCAhTljRgoIHoZQ6VK
-         0TrUdeqhauBqM6q92LtUA/Qs/o5f/7cA4fpfGoF1ZFkXDCrXuglSGra2wBsYfa3FXPEM
-         DVGWtmaE+DfAWqsGchJDcC4LII3fLxaCsPsHWGro5UDdvdmmlTu/mC9YCVyx/O3hLLz7
-         hesw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwLnnDOMoTQT4lHt/8zxpJawRaAYgclQFt0Uen7CAOuqGQwPDfBPLT6zqMeC5McaWGGdMsR/Nk7x5uP/g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxugrwoARx8Y88hsFwW/J9u79fxoIrbhbPxExNhU7Bf4P2GgZUI
-	tdoccHxIIb+i0jYrIvFkKjZVr+WqRKOeajxnbyw+kDBK3gqViYusx2s3oiBHiFCFoIkzdi4ODzd
-	kqvWPg92uZJQmcGB2/bBZNADrNnxU18oco2ff6QoSMPQEUIb1PxP5KmsywiUDcCc=
-X-Gm-Gg: ASbGnctr1lYTv+nQSP0nf1jvN+1+YjowSLKPetNRFjrF6JcG8i6mk5fdzBd72Q/MFHw
-	cDndyU13+3PpDjYXnw8tJDMkgZ4nhC9gq80jm4lVHWvADXsIkARLjyVImTU1PzplqfmJOY6KO5j
-	eFuZxxMsAakE3Kkes8412vW9nnUZcIO3O+wq4AX7SOdAdx8pOxJZkFqVlgWLUxBxayDk3rtpbpO
-	tit4uBH8uumByllBWf1/0T7puHd6dbhvwTT0yVjAx7BWdbMrltmGBnC6ZCFfS/6gW2FJoB25IGw
-	nS2pM1HG1WEXgQok84hKRzq99Qh1yIt3nIXtaVrZFqdqpFSILpWBMC7UkaxdfswD5jI=
-X-Received: by 2002:a17:902:f14c:b0:220:e1e6:4472 with SMTP id d9443c01a7336-22c5357f2f4mr219639105ad.13.1745418532708;
-        Wed, 23 Apr 2025 07:28:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGCNu809EkQVsTIbQad9yh76IO7LGCSGm7PzVmwCgFbrK+zwOALKe/846lCKlRIrlk7DV74kA==
-X-Received: by 2002:a17:902:f14c:b0:220:e1e6:4472 with SMTP id d9443c01a7336-22c5357f2f4mr219638815ad.13.1745418532265;
-        Wed, 23 Apr 2025 07:28:52 -0700 (PDT)
-Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdb0e3sm105389555ad.21.2025.04.23.07.28.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 07:28:51 -0700 (PDT)
-Message-ID: <228546c4-a4b5-4f21-950d-2623a48f60a6@oss.qualcomm.com>
-Date: Wed, 23 Apr 2025 07:28:50 -0700
+        d=1e100.net; s=20230601; t=1745418594; x=1746023394;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vAmiNRPfDylXI4p2I89n/el3RsJ4kbOsDdMQamDJ/lU=;
+        b=g7595jDhQ1BJbYHjL6CVEqG7Fse95PdHpayqov7cpJyPwCow8CBg+xjhTUA/Ah563u
+         imNrnJmfTWv+l7gaeW83yy5AXuAx8laFgpOB7ZF6Fxg2IhxUmqqQp4unKwx+EyLT2EpY
+         /wrUOltJe1bWifwcLg9WpxKf9qltN+3Mj8fCTyXJYELXXxuapIyJjWb9+nDiWGX1fNzC
+         1KI5FV5n+TldaAokwLzulSMeEx2Bfurlojrf1cGLhKKRcD2aOjk9SPva+QcfaBiuAcwi
+         2uSwlAkrnicaz0DBYUljkvdXUPsuJfiOLHWasQixanxbWTFf79wQP9M+PhC2PtzCQFBw
+         1Dzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVjvuoc2GIMCT97nvl1uRWlsmZiLImd5Ofm1YQV1PUyV9bYqkhQmZ6AXMncigGQgvKmgH0q4ueNrjmqUdQYXw==@vger.kernel.org, AJvYcCXTZ4+l7GHaBZh+V8hAjqUgAKIbOBuNoN62PvYqn870m9IZr9jRxRU0HhQilvEhW/AqlKnMIZcYwg==@vger.kernel.org, AJvYcCXkexdDUcIPZ6K+3Ns/NPZxluL9gCvgkLlXCgpms1mkpbtRzooBU8b7esWuaBG2hwkqYAVYj8h5sgIycehD@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcVzdVIMFz5NpjrQRtifAbvVBVCDTFzUf8FZAaFIbj1oBU0L/d
+	voNXWCaDMizQBfgqg2WB97Npn7E7KVpdP4yCY3BsbQ7pVmLi3yJIF0mRwABSjhk96/+58Kkgxmz
+	38eQR2sB9b7mJXRnLBj46qAItu38=
+X-Gm-Gg: ASbGncssZ5qotGKvHeWsYnqbXPfQwjcLJB9Ab/Yy9Nn8/an6NGLqKga0ZyIgi9xQi84
+	rE5olfWMgBNWFQ0MAOzNTkc2G6Gsz0IrYV7oLmnJu/KxIDV6y5YNs1LRsfbtNo+T5CdQ2BszLua
+	YD7cKiJ2wffMj0fg1pSsnkiJk=
+X-Google-Smtp-Source: AGHT+IG/83Vm9P2qTMF2EymMFKDXet9s/AZitDACbuc3Nu8TMbhGwbGeWoz11uK69jP/+KGgtXg1R2c2Y0EWUlyBaZc=
+X-Received: by 2002:a05:6871:400b:b0:2d4:d9d6:c8cf with SMTP id
+ 586e51a60fabf-2d526973ecamr11685729fac.5.1745418593659; Wed, 23 Apr 2025
+ 07:29:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] wifi: ath11k: Fix memory reuse logic
-To: Baochen Qiang <quic_bqiang@quicinc.com>,
-        Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Jeff Johnson <jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Anilkumar Kolli <quic_akolli@quicinc.com>
-Cc: kernel@collabora.com, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250423065931.4017574-1-usama.anjum@collabora.com>
- <f98ed1af-e190-404f-a2d2-aa64a712e7c2@quicinc.com>
-From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
-Content-Language: en-US
-In-Reply-To: <f98ed1af-e190-404f-a2d2-aa64a712e7c2@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: ZY33K07T-afbrkso4z6inw2b-a_9wsVt
-X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=6808f926 cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=QX4gbG5DAAAA:8 a=I_dGSvPyyRiqSV0Bi5YA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=D0TqAXdIGyEA:10 a=xa8LZTUigIcA:10 a=GvdueXVYPmCkWapjIL-Q:22 a=AbAUZ8qAyYyZVLSsDulk:22
-X-Proofpoint-GUID: ZY33K07T-afbrkso4z6inw2b-a_9wsVt
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDEwMiBTYWx0ZWRfX6gqHowThvJF5 TC3n/wsCz2IHKtC0cH80RpT0zwI5gOhAMyIHPLOUljajFaMn7YNl+RVY3GmhySimLOU8M9RA+xH oQJy03kxlKcUqlYMmBwQv4ZKpjywxPI00h6Rm6Ibmt8zsSm6k50fJguEQs0EN8vrQJf8BegLZDZ
- y2qiwAxmFkg/wbmGyxH8RuKiRyLM6utiBBWiMMwCwTMbHydYdWngz736m3QpeBkMDzhkfJqozE+ BTRDLRdmUb4vIC94S146BVlLsIWSQlz6otUoaQ+Lh6whXXzVjaTVuT9kQ54OATi04F+kQ/N7Qpb 7SidBzFZiA2pRYmvx0Ur+AHhlehYQzcMNUjDdzD7jJP6Vnw+hyxi2VS4ligOmNlKgd7nQXA5KGs
- A2bW03dg+/lsxZxpwTzC1a/Xor2whPeLdHDcPagzgtZ/X9FlJT/hoTfzTEP5YhQQc/mC1DlG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230102
+References: <20250422162913.1242057-1-qq282012236@gmail.com>
+ <20250422162913.1242057-2-qq282012236@gmail.com> <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
+ <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
+ <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk> <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
+ <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk>
+In-Reply-To: <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk>
+From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
+Date: Wed, 23 Apr 2025 22:29:39 +0800
+X-Gm-Features: ATxdqUEhnCv--36VUKzk9XOpQWOK0vKQGChSsvOwX9Wb21JeSMSuWP0HeyDRE1U
+Message-ID: <CANHzP_ui_TEPvr6wkWr42j46Sk5qHzZ+p0oo06BrNny52dPK9Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault scenarios
+To: Jens Axboe <axboe@kernel.dk>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/23/2025 1:15 AM, Baochen Qiang wrote:
-> On 4/23/2025 2:59 PM, Muhammad Usama Anjum wrote:
+Jens Axboe <axboe@kernel.dk> =E4=BA=8E2025=E5=B9=B44=E6=9C=8823=E6=97=A5=E5=
+=91=A8=E4=B8=89 21:34=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On 4/22/25 8:49 PM, ??? wrote:
+> > On Wed, Apr 23, 2025 at 1:33?AM Jens Axboe <axboe@kernel.dk> wrote:
+> >>
+> >> On 4/22/25 11:04 AM, ??? wrote:
+> >>> On Wed, Apr 23, 2025 at 12:32?AM Jens Axboe <axboe@kernel.dk> wrote:
+> >>>>
+> >>>> On 4/22/25 10:29 AM, Zhiwei Jiang wrote:
+> >>>>> diff --git a/io_uring/io-wq.h b/io_uring/io-wq.h
+> >>>>> index d4fb2940e435..8567a9c819db 100644
+> >>>>> --- a/io_uring/io-wq.h
+> >>>>> +++ b/io_uring/io-wq.h
+> >>>>> @@ -70,8 +70,10 @@ enum io_wq_cancel io_wq_cancel_cb(struct io_wq *=
+wq, work_cancel_fn *cancel,
+> >>>>>                                       void *data, bool cancel_all);
+> >>>>>
+> >>>>>  #if defined(CONFIG_IO_WQ)
+> >>>>> -extern void io_wq_worker_sleeping(struct task_struct *);
+> >>>>> -extern void io_wq_worker_running(struct task_struct *);
+> >>>>> +extern void io_wq_worker_sleeping(struct task_struct *tsk);
+> >>>>> +extern void io_wq_worker_running(struct task_struct *tsk);
+> >>>>> +extern void set_userfault_flag_for_ioworker(void);
+> >>>>> +extern void clear_userfault_flag_for_ioworker(void);
+> >>>>>  #else
+> >>>>>  static inline void io_wq_worker_sleeping(struct task_struct *tsk)
+> >>>>>  {
+> >>>>> @@ -79,6 +81,12 @@ static inline void io_wq_worker_sleeping(struct =
+task_struct *tsk)
+> >>>>>  static inline void io_wq_worker_running(struct task_struct *tsk)
+> >>>>>  {
+> >>>>>  }
+> >>>>> +static inline void set_userfault_flag_for_ioworker(void)
+> >>>>> +{
+> >>>>> +}
+> >>>>> +static inline void clear_userfault_flag_for_ioworker(void)
+> >>>>> +{
+> >>>>> +}
+> >>>>>  #endif
+> >>>>>
+> >>>>>  static inline bool io_wq_current_is_worker(void)
+> >>>>
+> >>>> This should go in include/linux/io_uring.h and then userfaultfd woul=
+d
+> >>>> not have to include io_uring private headers.
+> >>>>
+> >>>> But that's beside the point, like I said we still need to get to the
+> >>>> bottom of what is going on here first, rather than try and paper aro=
+und
+> >>>> it. So please don't post more versions of this before we have that
+> >>>> understanding.
+> >>>>
+> >>>> See previous emails on 6.8 and other kernel versions.
+> >>>>
+> >>>> --
+> >>>> Jens Axboe
+> >>> The issue did not involve creating new worker processes. Instead, the
+> >>> existing IOU worker kernel threads (about a dozen) associated with th=
+e VM
+> >>> process were fully utilizing CPU without writing data, caused by a fa=
+ult
+> >>> while reading user data pages in the fault_in_iov_iter_readable funct=
+ion
+> >>> when pulling user memory into kernel space.
+> >>
+> >> OK that makes more sense, I can certainly reproduce a loop in this pat=
+h:
+> >>
+> >> iou-wrk-726     729    36.910071:       9737 cycles:P:
+> >>         ffff800080456c44 handle_userfault+0x47c
+> >>         ffff800080381fc0 hugetlb_fault+0xb68
+> >>         ffff80008031fee4 handle_mm_fault+0x2fc
+> >>         ffff8000812ada6c do_page_fault+0x1e4
+> >>         ffff8000812ae024 do_translation_fault+0x9c
+> >>         ffff800080049a9c do_mem_abort+0x44
+> >>         ffff80008129bd78 el1_abort+0x38
+> >>         ffff80008129ceb4 el1h_64_sync_handler+0xd4
+> >>         ffff8000800112b4 el1h_64_sync+0x6c
+> >>         ffff80008030984c fault_in_readable+0x74
+> >>         ffff800080476f3c iomap_file_buffered_write+0x14c
+> >>         ffff8000809b1230 blkdev_write_iter+0x1a8
+> >>         ffff800080a1f378 io_write+0x188
+> >>         ffff800080a14f30 io_issue_sqe+0x68
+> >>         ffff800080a155d0 io_wq_submit_work+0xa8
+> >>         ffff800080a32afc io_worker_handle_work+0x1f4
+> >>         ffff800080a332b8 io_wq_worker+0x110
+> >>         ffff80008002dd38 ret_from_fork+0x10
+> >>
+> >> which seems to be expected, we'd continually try and fault in the
+> >> ranges, if the userfaultfd handler isn't filling them.
+> >>
+> >> I guess this is where I'm still confused, because I don't see how this
+> >> is different from if you have a normal write(2) syscall doing the same
+> >> thing - you'd get the same looping.
+> >>
+> >> ??
+> >>
+> >>> This issue occurs like during VM snapshot loading (which uses
+> >>> userfaultfd for on-demand memory loading), while the task in the gues=
+t is
+> >>> writing data to disk.
+> >>>
+> >>> Normally, the VM first triggers a user fault to fill the page table.
+> >>> So in the IOU worker thread, the page tables are already filled,
+> >>> fault no chance happens when faulting in memory pages
+> >>> in fault_in_iov_iter_readable.
+> >>>
+> >>> I suspect that during snapshot loading, a memory access in the
+> >>> VM triggers an async page fault handled by the kernel thread,
+> >>> while the IOU worker's async kernel thread is also running.
+> >>> Maybe If the IOU worker's thread is scheduled first.
+> >>> I?m going to bed now.
+> >>
+> >> Ah ok, so what you're saying is that because we end up not sleeping
+> >> (because a signal is pending, it seems), then the fault will never get
+> >> filled and hence progress not made? And the signal is pending because
+> >> someone tried to create a net worker, and this work is not getting
+> >> processed.
+> >>
+> >> --
+> >> Jens Axboe
+> >         handle_userfault() {
+> >           hugetlb_vma_lock_read();
+> >           _raw_spin_lock_irq() {
+> >             __pv_queued_spin_lock_slowpath();
+> >           }
+> >           vma_mmu_pagesize() {
+> >             hugetlb_vm_op_pagesize();
+> >           }
+> >           huge_pte_offset();
+> >           hugetlb_vma_unlock_read();
+> >           up_read();
+> >           __wake_up() {
+> >             _raw_spin_lock_irqsave() {
+> >               __pv_queued_spin_lock_slowpath();
+> >             }
+> >             __wake_up_common();
+> >             _raw_spin_unlock_irqrestore();
+> >           }
+> >           schedule() {
+> >             io_wq_worker_sleeping() {
+> >               io_wq_dec_running();
+> >             }
+> >             rcu_note_context_switch();
+> >             raw_spin_rq_lock_nested() {
+> >               _raw_spin_lock();
+> >             }
+> >             update_rq_clock();
+> >             pick_next_task() {
+> >               pick_next_task_fair() {
+> >                 update_curr() {
+> >                   update_curr_se();
+> >                   __calc_delta.constprop.0();
+> >                   update_min_vruntime();
+> >                 }
+> >                 check_cfs_rq_runtime();
+> >                 pick_next_entity() {
+> >                   pick_eevdf();
+> >                 }
+> >                 update_curr() {
+> >                   update_curr_se();
+> >                   __calc_delta.constprop.0();
+> >                   update_min_vruntime();
+> >                 }
+> >                 check_cfs_rq_runtime();
+> >                 pick_next_entity() {
+> >                   pick_eevdf();
+> >                 }
+> >                 update_curr() {
+> >                   update_curr_se();
+> >                   update_min_vruntime();
+> >                   cpuacct_charge();
+> >                   __cgroup_account_cputime() {
+> >                     cgroup_rstat_updated();
+> >                   }
+> >                 }
+> >                 check_cfs_rq_runtime();
+> >                 pick_next_entity() {
+> >                   pick_eevdf();
+> >                 }
+> >               }
+> >             }
+> >             raw_spin_rq_unlock();
+> >             io_wq_worker_running();
+> >           }
+> >           _raw_spin_lock_irq() {
+> >             __pv_queued_spin_lock_slowpath();
+> >           }
+> >           userfaultfd_ctx_put();
+> >         }
+> >       }
+> > The execution flow above is the one that kept faulting
+> > repeatedly in the IOU worker during the issue. The entire fault path,
+> > including this final userfault handling code you're seeing, would be
+> > triggered in an infinite loop. That's why I traced and found that the
+> > io_wq_worker_running() function returns early, causing the flow to
+> > differ from a normal user fault, where it should be sleeping.
+>
+> io_wq_worker_running() is called when the task is scheduled back in.
+> There's no "returning early" here, it simply updates the accounting.
+> Which is part of why your patch makes very little sense to me, we
+> would've called both io_wq_worker_sleeping() and _running() from the
+> userfaultfd path. The latter doesn't really do much, it simply just
+> increments the running worker count, if the worker was previously marked
+> as sleeping.
+>
+> And I strongly suspect that the latter is the issue, not the marking of
+> running. The above loop is fine if we do go to sleep in schedule.
+> However, if there's task_work (either TWA_SIGNAL or TWA_NOTIFY_SIGNAL
+> based) pending, then schedule() will be a no-op and we're going to
+> repeatedly go through that loop. This is because the expectation here is
+> that the loop will be aborted if either of those is true, so that
+> task_work can get run (or a signal handled, whatever), and then the
+> operation retried.
+>
+> > However, your call stack appears to behave normally,
+> > which makes me curious about what's different about execution flow.
+> > Would you be able to share your test case code so I can study it
+> > and try to reproduce the behavior on my side?
+>
+> It behaves normally for the initial attempt - we end up sleeping in
+> schedule(). However, then a new worker gets created, or the ring
+> shutdown, in which case schedule() ends up being a no-op because
+> TWA_NOTIFY_SIGNAL is set, and then we just sit there in a loop running
+> the same code again and again to no avail. So I do think my test case
+> and your issue is the same, I just reproduce it by calling
+> io_uring_queue_exit(), but the exact same thing would happen if worker
+> creation is attempted while an io-wq worker is blocked
+> handle_userfault().
+>
+> This is why I want to fully understand the issue rather than paper
+> around it, as I don't think the fix is correct as-is. We really want to
+> abort the loop and allow the task to handle whatever signaling is
+> currently preventing proper sleeps.
+>
+> I'll dabble a bit more and send out the test case too, in case it'll
+> help on your end.
+>
+> --
+> Jens Axboe
+I=E2=80=99m really looking forward to your test case. Also, I=E2=80=99d lik=
+e to emphasize one
+more point: the handle_userfault graph path I sent you, including the sched=
+ule
+function, is complete and unmodified. You can see that the schedule functio=
+n
+is very, very short. I understand your point about signal handling, but in =
+this
+very brief function graph, I haven=E2=80=99t yet seen any functions related=
+ to signal
+handling. Additionally, there is no context switch here, nor is it the situ=
+ation
+where the thread is being scheduled back in. Perhaps the scenario you=E2=80=
+=99ve
+reproduced is still different from the one I=E2=80=99ve encountered in some=
+ subtle way?
 
-For starters, can we make the subject a bit more specific, i.e.
-Fix MHI target memory reuse logic
+void io_wq_worker_running(struct task_struct *tsk)
+{
+struct io_worker *worker =3D tsk->worker_private;
 
->> Firmware requests 2 segments at first. The first segment is of 6799360
->> whose allocation fails due to dma remapping not available. The success
-
-the memory allocation succeeds but the remapping fails? that seems like some
-specific information that actually isn't very useful. From the perspective of
-the driver all we really care about is that dma_alloc_coherent() fails, not
-why it fails.
-
->> is returned to firmware. Then firmware asks for 22 smaller segments
->> instead of 2 big ones. Those get allocated successfully. At suspend/
->> hibernation time, these segments aren't freed as they will be reused
->> by firmware after resuming.
->>
->> After resume the firmware asks for 2 segments again with first segment
->> of 6799360 and vaddr is not NULL. We compare the type and size with
-> 
-> suggest to rephrase as:
-> 
-> After resume the firmware asks for 2 segments again with first segment
-> of 6799360. Since chunk->vaddr is not NULL, we compare the type and size with
-> 
->> previous type and size to know if it can be reused or not.
->> Unfortunately, we detect that it cannot be reuses and this first smaller
-> 
-> s/reuses/reused/
-> 
->> segment is freed. Then we continue to allocate 6799360 size memory from
->> dma which fails and we call ath11k_qmi_free_target_mem_chunk() which
-> 
-> it is odd with 'from dma' ...
-> 
-> I think just say 'allocate 6799360 size memory' is good enough.
-> 
->> frees the second smaller segment as well. Later success is returned to
->> firmware which asks for 22 smaller segments again. But as we had freed 2
->> segments already, we'll allocate the first 2 new smaller segments again
->> and reuse the remaining 20. Hence we aren't reusing the all 22 small
->> segments, but only 20.
->>
->> This patch is correcting the skip logic when vaddr is set, but size/type
-
-see
-<https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes>
-
-Specifically:
-Describe your changes in imperative mood, e.g. “make xyzzy do frotz” instead
-of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to do frotz”, as
-if you are giving orders to the codebase to change its behaviour.
-
->> don't match. In this case, we should use the same skip and success logic
-
-who is "we"? the driver is performing the action. As part of changing the text
-to be in imperative mood this should go away.
-
->> as used when dma_alloc_coherent fails without freeing the memory area.
-
-add () to function references
-
->>
->> We had got reports that memory allocation in this function failed at
->> resume [1] which made us debug why the reuse logic is wrong. Those
-> 
-> The link is just v1 of this patch, it is not the report. If there is no public report,
-> just don't mention it.
-> 
->> failures weren't because of the bigger chunk allocation failure as they
->> are skipped. Rather these failures were because of smaller chunk
->> allocation failures. This issue is in the kernel side as because of
->> memory pressure or fragmentation, the dma memory allocation fails. This
->> patch fixes freeing and allocation of 2 smaller chunks.
-> 
-> I know you are describing why you start to debug this issue. But I don't think it is
-> needed in the commit message. No matter kernel allocation fails or succeeds, the issue is
-> there, and the description above is sufficient to make the issue clear.
-
-Concur with this.
-
-> 
->>
->> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
-> 
-> blank line needed.
-> 
->> [1] https://lore.kernel.org/all/b30bc7f6-845d-4f9d-967e-c04a2b5f13f5@collabora.com
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->> ---
->> Changes since v1:
->> - Update description
->>
->> Fixes: 5962f370ce41 ("ath11k: Reuse the available memory after firmware reload")
->> I think we should keep fixes tag as ^ claimed that its adding reuse
->> support. But it left a bug in reuse which we are fixing.
->>
->> Feel free to add it or leave it as it is.
-> 
-> Jeff, what do you think?
-
-I would drop the tag. As I understand it, the issue described is due to memory
-fragmentation/starvation, and not due to the fact that ath11k does not
-actually reuse the first two segments.
-
-> 
->> ---
->>  drivers/net/wireless/ath/ath11k/qmi.c | 10 +++++++++-
->>  1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
->> index 47b9d4126d3a9..3c26f4dcf5d29 100644
->> --- a/drivers/net/wireless/ath/ath11k/qmi.c
->> +++ b/drivers/net/wireless/ath/ath11k/qmi.c
->> @@ -1990,8 +1990,16 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
->>  		 */
->>  		if (chunk->vaddr) {
->>  			if (chunk->prev_type == chunk->type &&
->> -			    chunk->prev_size == chunk->size)
->> +			    chunk->prev_size == chunk->size) {
-
-please don't change this...
-
->>  				continue;
->> +			} else if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
-
-...instead just use if here. we normally don't use else after a statement that
-changes the code flow (return, goto, continue, etc.)
-
-
->> +				ath11k_dbg(ab, ATH11K_DBG_QMI,
->> +					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
->> +					    chunk->size, chunk->type,
->> +					    chunk->prev_size, chunk->prev_type);
->> +				ab->qmi.target_mem_delayed = true;
->> +				return 0;
->> +			}
->>  
->>  			/* cannot reuse the existing chunk */
->>  			dma_free_coherent(ab->dev, chunk->prev_size,
-> 
-> 
-
+if (!worker)
+return;
+if (!test_bit(IO_WORKER_F_FAULT, &worker->flags)) {
+if (!test_bit(IO_WORKER_F_UP, &worker->flags))
+return;
+if (test_bit(IO_WORKER_F_RUNNING, &worker->flags))
+return;
+set_bit(IO_WORKER_F_RUNNING, &worker->flags);
+io_wq_inc_running(worker);
+}
+}
+However, from my observation during the crash live memory analysis,
+when this happens in the IOU worker thread, the
+IO_WORKER_F_RUNNING flag is set. This is what I said "early return",
+rather than just a simple accounting function.I look forward to your
+deeper analysis and any corrections you may have.
