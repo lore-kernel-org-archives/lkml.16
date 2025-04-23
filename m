@@ -1,145 +1,170 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E99FFC08;
-	Wed, 23 Apr 2025 11:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CDCE2701B3;
+	Wed, 23 Apr 2025 11:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745409216; cv=none; b=HP6V+2V2JorT8WSVgD/oMVWyb02ohL/tBz36F8G/2ehLyNB7AC75K8zg2nkhueos/7BuRlrLJGP66E8FivwHt4ExSMwFGCPniZ9vXg2A1hHkO4D1t4z0w+oc8pyab3BSkIAwRCn+J5nwI7kwn2nOPyQ1+k/Vz0N//8ZR+GZU3yA=
+	t=1745409268; cv=none; b=h9zpPBevr2tIdJx5NJSuwEb1dw8mL1jvcOJGZSaRD5deasib9R8eOmRAGx0q3Z5bKqvhrl6PUdyz5qfIE/DXRKPeRscYpH/N8UFaYAEJXFQTV4lFfIjyQXr+3NX4ViF6/gEPF2jBK0+NMf4W9qhj5w7OJqR+2qcvGvt2WlwcGKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745409216; c=relaxed/simple;
-	bh=+kK7btHAHff0LuxX+LDGwowq2qltp/DMymR9Ft8jerQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=hnd07qD2rZJmIrDEnr2TSFsMOUc5SNo4D8udmf8THinwc06KLiJGjPQ9eL7cFDY9GFDPxNQ8568OVNM7y0sNpnoyWr4qFuRGI7d1dNkQv2sdGQPSgRf3c2X9qSi4/seZ4IGbWw4tgt54LUFSMQO5gZ3EDTCgN5UPF9SXb91o3rA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=UtZ38tZH; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1745409268; c=relaxed/simple;
+	bh=BYpJI7wi0dKwUy+fozNXlNxwk3dd5lqqJ9gdPwIJXJs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iJjEQhyhX4FCXYIaX0XMpogwXhC8FOUws4X3bkXytTWRRbea5Z9AvIFMeJMAEvx35oXl8LVvMR0BXSOTZlOk4KX+SdVsX3oHRQVL9s/wmshlJXksxfQh46Zm4gLcFfrvTGpb3wba8iPwof2mB+jK4tMtJV2+bmjKMHrGSOEhsJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dq+SAIlA; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="UtZ38tZH"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53NBrDdvD2525642, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1745409193; bh=+kK7btHAHff0LuxX+LDGwowq2qltp/DMymR9Ft8jerQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=UtZ38tZH7S+tyhObrJEy+IaQpbd9GdRVVk+kg5wV3smkgw4h1QcmKjms6Srb1idHT
-	 3RYJDf36XHDsJM0gx8YDIIoYhpXtqQ01mCRH96YXKaBVokb4wQrOt0PLFVQH2FbB45
-	 4wP7am+DSJTaB8u7tHuGeMV4Kbjzk2QmYW79ymoi07WmkGohrbuny5VwA3y/Qrzewl
-	 M0olqDmPQhws4JktOQ/mlo+1qlTDdXh7KKDPdXeYeaiZ4AB15eFIYU/J4VW9l6ojfo
-	 ryCXKSJdZDxfSgX3wkG3accbxITgmdTwOxR8H1btgiFqsHuQh/KFy1q7a5/ysp974E
-	 jGFnrQTbuod1A==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53NBrDdvD2525642
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 19:53:13 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 23 Apr 2025 19:53:13 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 23 Apr 2025 19:53:12 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Wed, 23 Apr 2025 19:53:12 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Simon Horman <horms@kernel.org>
-CC: "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Larry Chiu
-	<larry.chiu@realtek.com>,
-        kernel test robot <lkp@intel.com>
-Subject: RE: [PATCH net v3 2/3] rtase: Increase the size of ivec->name
-Thread-Topic: [PATCH net v3 2/3] rtase: Increase the size of ivec->name
-Thread-Index: AQHbr3bUaMxZGlGmW0m7GLJEQs9VprOvJrAAgAH/QwA=
-Date: Wed, 23 Apr 2025 11:53:12 +0000
-Message-ID: <01039f49e5104f31975999590e6c0a7e@realtek.com>
-References: <20250417085659.5740-1-justinlai0215@realtek.com>
- <20250417085659.5740-3-justinlai0215@realtek.com>
- <20250422125546.GF2843373@horms.kernel.org>
-In-Reply-To: <20250422125546.GF2843373@horms.kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dq+SAIlA"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ee623fe64so5481763f8f.1;
+        Wed, 23 Apr 2025 04:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745409265; x=1746014065; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RXiSx30w1hmWlM/Di4qv5E69sWeA1eC0NCdlxnJgn04=;
+        b=dq+SAIlABbg9P+VF828AZ9mGGAUfGPOW/LNDTQb70JjenO8FN8IsbR01tQtHLABQUW
+         iRYiKGxgAD9ULZazAG/k1ISK6MbqhKx/aeP7hm2qtrkF4gxMKfrhq3UPfQq+YY0o85cj
+         KIdBxqgyI2fnILQ3sakAyLA3GrxuECNth6l8WX9e6LspEn8/ujKUV8zdW5UQOA90W6Xh
+         QPObuDRKGJW0oaTvMRI70TrQSuCRQpPYX7MTqkLU1c8Zvut7NtfZ7mA7JMSu6sYpAYVI
+         Se6gYhEfwtBf0n1shTi/xbvWET3uDt7Khu/3iHKnXb7kb7+DBEDGOAOC/ukV1uHJG30w
+         ywZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745409265; x=1746014065;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RXiSx30w1hmWlM/Di4qv5E69sWeA1eC0NCdlxnJgn04=;
+        b=tnPmIFwI8NZnBNSMsI1jiAbP8I2W1U8GYqAtDm1QI/USSL9Da/ttuHagRqBuJQbmjA
+         vmIQUrbhph9pvStwn5+t0NQ66dBFLdX6g/DEXRnJSlQkmAbInWLl/tgEFcEHP+9Sdv3c
+         ZBKpkPI3YP5Wu3nsWtXXwLl9Jw4bD+11H4PQ0Wjfgco7hmBbMX5H1mg3yd7jWEdGzQyq
+         fPCa3hG3x0lG1hSA729bHHJuWtotpnMWJlzY8aboNnD6h2xVpkYmnEEzc+O/vS/Sm1ga
+         C4UzHtA926Q4EokBiW4il1gR5hxyDvZT3JU72sgobvpBtcJTSeTbBoFttwTcs6BIjQKN
+         skZg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3Y9Y4GtAf+QBNtk3WANyzZFcbBApu2yOohOL9HniQZH6ST/eqesXvUXtLnp1bohUI9qXOllD39xk1hDwXrweOZow=@vger.kernel.org, AJvYcCWrehslAPAeaxBxaTJNQTed4lx4WHiLMBHULfGyaUT1ZFT5o+Q9LJr9n9jalCcrKaLTL5IK8c1+un47Y7+a@vger.kernel.org, AJvYcCXOcuoNCo50kTUOnN4zxt5JlNbci+pWfdLqiW1iYjwT6FS+E5sadQldtFYxN7JM4j06BxbSUEIx3QUD@vger.kernel.org, AJvYcCXSE0W0aOj5AtGLoxVIiNzV6ZqbB6WHJdHkj/zqj0ycV90lWBEzTNmPT/FBD1baWSIXtwoMKoT3TZjn@vger.kernel.org
+X-Gm-Message-State: AOJu0YyF/LmyoSuxQXu2dBobMzPIC8VX+AkvElFk+oyXtl1tNLLf5CnS
+	Kp36haFi0+WTsBaVZwNae4Szu34mRxtmnfyaf1odUUwa4cpkrWGL06SfRcKMfDL8Bus0c+iAl1q
+	g7O2H/dkDcrPGteg57ZyQzgysRMw=
+X-Gm-Gg: ASbGncvzSEkl9LW67jJHXFCBbNSUW1kFPWNI095xrm5aaYjgG+jxaDbTo8e/jZY3rIt
+	U+o7RaxBk054FgpzPnw0riSsPcQcAldUNn3arRe3OQiFTLZZd2vMKrIMPfm/AgnYAt7ATcRQ5+P
+	cEbYfITeVAgUzAP3CcoRchl9A1ws5Gp+d7
+X-Google-Smtp-Source: AGHT+IFmLMHRjZ1XgjDcqyxjk7BtcPPGf+OCSTtdICXla1NMLROjvh3kKmkIO0184O1OWZlMMASHo5tS0W9iQ2Iv8xM=
+X-Received: by 2002:a05:6000:43cc:20b0:39f:fd4:aec7 with SMTP id
+ ffacd0b85a97d-39f0fd4aed9mr4142583f8f.7.1745409264608; Wed, 23 Apr 2025
+ 04:54:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250418184658.456398-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250418184658.456398-11-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWs7R9rtS7Ur6PP9e3m9ghkM1jc_Xn3QOWG4rvTtB2omA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWs7R9rtS7Ur6PP9e3m9ghkM1jc_Xn3QOWG4rvTtB2omA@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 23 Apr 2025 12:53:58 +0100
+X-Gm-Features: ATxdqUE-OgT80-E06tUi_do9bnwXEJELC81J36DTuicZR1BwPkK_CJ9Za-SJxBA
+Message-ID: <CA+V-a8tXpWf8-YL-qzWhqc+fDvV4Kzd-6gJqC5HWvE00QsNFAA@mail.gmail.com>
+Subject: Re: [PATCH v3 10/15] drm: renesas: rz-du: mipi_dsi: Use mHz for D-PHY
+ frequency calculations
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Magnus Damm <magnus.damm@gmail.com>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> On Thu, Apr 17, 2025 at 04:56:58PM +0800, Justin Lai wrote:
-> > Fix the following compile warning reported by the kernel test robot by
-> > increasing the size of ivec->name.
+Hi Geert,
+
+Thank you for the review.
+
+On Tue, Apr 22, 2025 at 8:41=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Fri, 18 Apr 2025 at 20:47, Prabhakar <prabhakar.csengg@gmail.com> wrot=
+e:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > >
-> > drivers/net/ethernet/realtek/rtase/rtase_main.c: In function 'rtase_ope=
-n':
-> > >> drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:52: warning:
-> > '%i' directive output may be truncated writing between 1 and 10 bytes
-> > into a region of size between 7 and 22 [-Wformat-truncation=3D]
-> >      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-> >                                                      ^~
-> >  drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:45: note:
-> >  directive argument in the range [0, 2147483647]
-> >      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-> >                                               ^~~~~~~~~~
-> >  drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:4: note:
-> >  'snprintf' output between 6 and 30 bytes into a destination of  size
-> > 26
-> >      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-> >      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >        tp->dev->name, i);
-> >        ~~~~~~~~~~~~~~~~~
->=20
-> Hi Justin,
->=20
-> Given that the type of i is u16, it's theoretical range of values is [0, =
-65536].
-> (I expect that in practice the range is significantly smaller.)
->=20
-> So the string representation of i should fit in the minumum of 7 bytes av=
-ailable
-> (only a maximum of 5 are needed).
->=20
-> And I do notice that newer compilers do not seem to warn about this.
->=20
-> So I don't really think this needs updating.
-> And if so, certainly not as a fix for 'net'.
->=20
-> Also, as an aside, as i is unsigned, the format specifier really ought to=
- be %u
-> instead of %i. Not that it seems to make any difference here given the ra=
-nge of
-> values discussed above.
->=20
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Closes:
-> > https://lore.kernel.org/oe-kbuild-all/202503182158.nkAlbJWX-lkp@intel.
-> > com/
-> > Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this
-> > module")
-> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
->=20
-> --
-> pw-bot: changes-requested
+> > Pass the HSFREQ in milli-Hz to the `dphy_init()` callback to improve
+> > precision, especially for the RZ/V2H(P) SoC, where PLL dividers require
+> > high accuracy.
+> >
+> > These changes prepare the driver for upcoming RZ/V2H(P) SoC support.
+> >
+> > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v2->v3:
+> > - Replaced `unsigned long long` with `u64`
+> > - Replaced *_mhz with *_millihz` in functions
+>
+> Thanks for the update!
+>
+> > @@ -203,8 +203,9 @@ static u32 rzg2l_mipi_dsi_link_read(struct rzg2l_mi=
+pi_dsi *dsi, u32 reg)
+> >   */
+> >
+> >  static int rzg2l_mipi_dsi_dphy_init(struct rzg2l_mipi_dsi *dsi,
+> > -                                   unsigned long hsfreq)
+> > +                                   u64 hsfreq_millihz)
+> >  {
+> > +       unsigned long hsfreq =3D DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, =
+KILO);
+>
+> MILLI (everywhere)
+>
+OK.
 
-Hi Simon,
+> It's a strange world where KILO =3D=3D MILLI ;-)
+>
+:-)
+>     include/linux/units.h:#define KILO      1000UL
+>     include/linux/units.h-#define MILLI     1000UL
+>
+> >         const struct rzg2l_mipi_dsi_timings *dphy_timings;
+> >         unsigned int i;
+> >         u32 dphyctrl0;
+> > @@ -277,6 +278,7 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi=
+_dsi *dsi,
+> >                                   const struct drm_display_mode *mode)
+> >  {
+> >         unsigned long hsfreq, vclk_rate;
+> > +       u64 hsfreq_millihz;
+> >         unsigned int bpp;
+> >         u32 txsetr;
+> >         u32 clstptsetr;
+> > @@ -305,9 +307,9 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi=
+_dsi *dsi,
+> >          */
+> >         bpp =3D mipi_dsi_pixel_format_to_bpp(dsi->format);
+> >         vclk_rate =3D clk_get_rate(dsi->vclk);
+> > -       hsfreq =3D DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp, dsi->lanes);
+> > +       hsfreq_millihz =3D DIV_ROUND_CLOSEST_ULL(vclk_rate * bpp * KILO=
+ * 1ULL, dsi->lanes);
+>
+> The "* 1ULL" only makes the last factor unsigned long long.
+> "vclk_rate * bpp" is still unsigned long, causing overflow on 32-bit.
+> As there is no rounding variant of mul_u64_u32_div(), you probably
+> want to use mul_u32_u32() instead.
+>
+Agreed, I will update it to,
+`DIV_ROUND_CLOSEST_ULL(mul_u32_u32(vclk_rate, bpp * KILO),
+dsi->lanes);`
 
-Thank you for your reply. I will modify the format specifier to %u.
-Since the warning from the kernel test robot is a false positive, I
-will not address this warning, meaning I will not increase the size
-of ivec->name. This patch will be posted to net-next.
-
-Thanks,
-Justin
+Cheers,
+Prabhakar
