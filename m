@@ -1,96 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38D8E27F725;
-	Wed, 23 Apr 2025 15:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060BA28C5B2;
+	Wed, 23 Apr 2025 15:24:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421861; cv=none; b=RrTmjJDcqIVurnOcIkrw8sx/IC66fggZtmWIyhtlh0MPs61IWLvZdqM7iCVwH2qzXLGucd5SkKrVmqioX+5dUvze+aWPEMp+v5wN7HmwfVOWsPPuDYZnCIVtt/fBMF3rLXjjlG2flAz51dCYZ+6axlhbjkB+CAfOFQfbJwZmQoY=
+	t=1745421862; cv=none; b=tAfjMmYZeCKSBP+DL713KvHSK6eXKURlNVgOoUU1tZfUFeEfM01u/IeVGmzDPulgzOSLCVnYg9Te4I/6sWjf31YfqBboI6pJc8L9nvJ2agKX3e2660emAQdxu5r6gF7HebYN1FcS4E49aLytPgmjXVlkOnCkmC0NLYDuDXhkTQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421861; c=relaxed/simple;
-	bh=ac4ddB3RxZV49HmUZrvFOKF+wXfLwg02IWWgGX0VzsM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Av28Tmt5lAdRzp//ufMWpyhihxXxU/N6mvenDpVSxugkxYLNjz04Bq854aNbahnha5/PmhRa8ZrKW7MsFW3NkxUwwiaIoyFYUJE8HH+qStEj+tBPa5QBYbW0wjaxOOfleCsJ9KDREBGb2XaxSW/3I0q9HoK9JmdH6srOo4ZhHzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TlVxKB1a; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745421862; c=relaxed/simple;
+	bh=MGkSDAhmsttNEFpJt61N5qgZgDOhGEDQKGrmLoEGji8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IKyQroetbFLlqlCIfVo1Gl0zA7lEdqt+rwkYYanH11DcKa7YvPbCNxlboRJk+Y4qDOOpt1Aq5wa7LIPjGy0+DFqgkoHPvRMf9fS1uqScrZlCZ1z4o5oK8QlFjGuPesrWyCHoQqRt4ErLjPZYhixGyWWr+0ycF4x4ZJ7XwkMar7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j2MfFQT3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TlVxKB1a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D816C4CEE3;
-	Wed, 23 Apr 2025 15:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745421860;
-	bh=ac4ddB3RxZV49HmUZrvFOKF+wXfLwg02IWWgGX0VzsM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TlVxKB1aW+gYmd2M1iRYSESSp1Nd1HHzfRKCD9kEdTUKu1SZzppjh4yWlFZFqHo6l
-	 2vKYybLYCu7Dsn4C0+sA0xZ+kB8LajfcPcjRdJnA/OAGA9MHoS9uNoXV5TTvBdmsO4
-	 2e2KRyYk/e/6iQQk9x+nq6qTu2loXNnL2EXZ+XIM=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Eric Auger <eric.auger@redhat.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 6.14 224/241] arm64/sysreg: Add register fields for HFGITR2_EL2
-Date: Wed, 23 Apr 2025 16:44:48 +0200
-Message-ID: <20250423142629.704582700@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250423142620.525425242@linuxfoundation.org>
-References: <20250423142620.525425242@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j2MfFQT3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06D5C4CEE2;
+	Wed, 23 Apr 2025 15:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745421861;
+	bh=MGkSDAhmsttNEFpJt61N5qgZgDOhGEDQKGrmLoEGji8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=j2MfFQT34oLMAfbpJVPfDpvwGmvcGh/TuufkBrvtdvQ+wp63PV7M3qQKVsVOwYoKa
+	 X9n3Pn+LUi83ar1QffPqYBT946ICCF2dt1yhqP52ONfcaPmd6xQo75YxT5mtkIJNfy
+	 13JXoSeG/V7oytYAxNAlCp8vIAxHjcwYgNLYLWGyHnPDEtLDHgZzXX/ZTzM0JOP/9D
+	 QkbO4i/7WAycKSJKdmmO9N2WakwKAhP9PwU9lSWhWdKfg/R9Im/QyUptOLvZB/Hk+a
+	 sUkoSfCggUA/CKcHS42UfruWqzkTUBMHujQpKxM5qahvydJ57GzOWodhepSqm2Aa9j
+	 f24LBdQ7bHY3A==
+Date: Wed, 23 Apr 2025 10:24:20 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2] dt-bindings: interrupt-controller: via,vt8500-intc:
+ Convert to YAML
+Message-ID: <174542185825.550926.14913949740445861454.robh@kernel.org>
+References: <20250418-via_intc_binding-v2-1-b649ce737f71@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418-via_intc_binding-v2-1-b649ce737f71@gmail.com>
 
-6.14-stable review patch.  If anyone has any objections, please let me know.
 
-------------------
+On Fri, 18 Apr 2025 17:57:25 +0400, Alexey Charkov wrote:
+> Rewrite the textual description for the VIA/WonderMedia interrupt
+> controller as YAML schema.
+> 
+> The original textual version did not contain information about the
+> usage of 'interrupts' to describe the connection of a chained
+> controller to its parent, add it here. A chained controller can
+> trigger up to 8 different interrupts (IRQ0~7) on its parent.
+> 
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+> Split the series from v1 into separate bindings patches so as not to
+> spam all the subsystems with unrelated changes, per Rob's suggestion
+> 
+> Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-2-f9af689cdfc2@gmail.com/
+> ---
+>  .../interrupt-controller/via,vt8500-intc.txt       | 16 -----
+>  .../interrupt-controller/via,vt8500-intc.yaml      | 76 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  3 files changed, 77 insertions(+), 16 deletions(-)
+> 
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-
-commit 9401476f17747586a8bfb29abfdf5ade7a8bceef upstream.
-
-This adds register fields for HFGITR2_EL2 as per the definitions based
-on DDI0601 2024-12.
-
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Link: https://lore.kernel.org/r/20250203050828.1049370-5-anshuman.khandual@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/tools/sysreg |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -2872,6 +2872,12 @@ Field	1	AMEVCNTR00_EL0
- Field	0	AMCNTEN0
- EndSysreg
- 
-+Sysreg	HFGITR2_EL2	3	4	3	1	7
-+Res0	63:2
-+Field	1	nDCCIVAPS
-+Field	0	TSBCSYNC
-+EndSysreg
-+
- Sysreg	ZCR_EL2	3	4	1	2	0
- Fields	ZCR_ELx
- EndSysreg
-
+Applied, thanks!
 
