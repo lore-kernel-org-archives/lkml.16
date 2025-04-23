@@ -1,123 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3B0BA50;
-	Wed, 23 Apr 2025 13:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A692FBA50;
+	Wed, 23 Apr 2025 13:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745413353; cv=none; b=fBWq67fkM6SPuzkNRiEuDqc+4Sp+yXvxsZds/yMy5avlQMPUh1EOVUPGk5GZcd5kh88FZSjuOOEo7Po50oNahcfjoZ7fEE4r6ncs1vJXpE3yS+F+y11VH9ZMU+aF87W/F2k35S/K43BQC9sij1U3C6bOOyfb4WZUDbtkxdEHdmk=
+	t=1745413365; cv=none; b=KoLmlo49X39e3BJTRaYZVqZz3b9LmduNOKzDG6PTAGmeqUHC0xP0wdLzWUzDxMUs9eeSf7ou1ICkqNNjbUc2bcl3DEj+h9+L3KrQ6fonvjcjiKUMJa2MGxPPV9256/uLnByfeI4yZbGOggM2dF2ZMch1Jgoj9/afApWJSTfRF7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745413353; c=relaxed/simple;
-	bh=PRh04SSEpvmrrEMEKu0f4KPtxIFVTGV6VTf/pzMW9PA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HlvidII7kXfjeWRF9Nh5I7jcZmoVq070N+BrMBUylvI7ZbmSneZg+y59fVhypZMWqyufqsXUle0yLSYnJazUUaJJn92v79zTXiLtd6rC0nDQuizGNgmaFZMsgp6ptoDL7h9i34N6lu+eEec2NCK6OKMup1kj9DPLWOZaqGRO4Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hiChBJcf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745413365; c=relaxed/simple;
+	bh=B8bMV3NwRcE1hzN4J3o3cRGIKHoOIzyacT+46rTZMrQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CWqiPNrCqeKIEkI2TFfnC+fOw9qDuxiHbPNxhExi8QIBBogAeNHwXn3+B9UqFuPIyJqiOghFKfC0jdXRUJ5LX+Gl1xWzDD4mrmCPPX/IwV7z1UW7xU12H97wY4g2eUanbNE7HNzgVfFMlWyussF2osAGJ4mTeu28eH6a/m3Dm50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cdEUE4gx; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hiChBJcf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF65C4CEEF;
-	Wed, 23 Apr 2025 13:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745413351;
-	bh=PRh04SSEpvmrrEMEKu0f4KPtxIFVTGV6VTf/pzMW9PA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=hiChBJcfIDyoFjpXxQdz1+1BR4jg6JOMZGSbKXW6TXNLPw2rYfwumxvuzKYG94mTb
-	 SI4L8WXEL/31FefubR4SpbWJnLxEr/Ifyluy5Qr9xR2dwOloKL3cjtCFYQQe5AahdQ
-	 S3i4GYq4FgbdFZ0p2MaSq4zsrvoxD8lIdwKdKiw6PSjhtZZZtjcAOCct3uQfQInJbx
-	 c8SIgJZpXJXA5H9qlA77V8tRA0gAiVjN7ZxRdkyDatShvZYY9GKlZAcqL52/B0nWfF
-	 jOdB3JEbAHJ1h4BtH2DRnmSwMdUUl8GM4wh0S5ehjSRHgPkMbaznUOyYpomKM9OWtY
-	 k6l7EYb2n/anA==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54b10956398so1176217e87.0;
-        Wed, 23 Apr 2025 06:02:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV1jPavYpdfF4pXOF0a0INYi9Nj8WU9FYcanDamHy3/eOnpKrL2Dol0uUllC7QTKFDuyY9F0YGsE0zfEdKl@vger.kernel.org, AJvYcCWwhAB/6MKkvXQHObGMjZNZ+GEcVGbFMULh3z5FgwWILqF4VGforMQrdRMGk0kRSkWmL4vflDfu3STvBhk=@vger.kernel.org, AJvYcCXASmTBXBIap7zTgOOxZut0qzJCzeliqByaK2jdIPDZQg9Uz6arFKqy6dzjJUHv8aSxqvm1edIemUGr@vger.kernel.org, AJvYcCXwYTPmYyBDonVGIYOWDSXhn7rfP7rgRarGgBdcNlI6C/HKZ4A4MtWzOcKOsTmjvkrbOdSWkwaQ9buw@vger.kernel.org
-X-Gm-Message-State: AOJu0YxC0JBRaTFecRBWQtHuI2okC7r8uzZRhicqTwzNfTsu3nEUxtfD
-	zEA5NTrDlgwXqpWTyqoetrmYjErXqzVNlKpUtVOuqMGUkTNmHM9aFfzC2GV4kWDpjPdlHyKdPsI
-	5A23eQq6ffgSeC3o4zIzl63oBsw==
-X-Google-Smtp-Source: AGHT+IFF61cNsysSViFU5Q1HGHd+IghJ6rm0yOqybKjpeUhaBtp/MtfvNvuL2E7bT+y7AYWOaIXE3wXMBX9+129E39Q=
-X-Received: by 2002:a05:6402:42c9:b0:5f4:c7b5:fd16 with SMTP id
- 4fb4d7f45d1cf-5f6cf41b4b2mr2527881a12.6.1745413338544; Wed, 23 Apr 2025
- 06:02:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cdEUE4gx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 056361FCE9;
+	Wed, 23 Apr 2025 13:02:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745413355;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=B8bMV3NwRcE1hzN4J3o3cRGIKHoOIzyacT+46rTZMrQ=;
+	b=cdEUE4gxp1nKhx3LhaZV5bNGMQw2LTagDxZwhXwlyigGUjuYZ+CzjtrJjdGn3hfT0V0ekp
+	L8pkeZKfiq1FS6//Jkt1UHLiFNZgmgDt/rJlKerX8KSTuXE7qLXq18Xo0pqM45dbcJMYYV
+	Xwo2xKsZ6a64WDQKgKtDQD++Ae/NvoehAJ0IGzbz0No1wMzV50MEOTerP1hfZKf6iCKOVH
+	EmJA3gHWC2LIZNKBG8l9yD2xTfTv8IOlvo0AzRdvEy1hoHd6uD/NVORXp3VbvzEZPQqGLr
+	DgRDWQIW6KN8j5wbv1vtIBA5ZAk9UaMPQbPKkJV8taEUFn5zp0KT/6LjgroO5g==
+Date: Wed, 23 Apr 2025 15:02:33 +0200
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Alexis =?UTF-8?B?TG90aG9yw6k=?= <alexis.lothore@bootlin.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Richard Cochran <richardcochran@gmail.com>,
+ Daniel Machon <daniel.machon@microchip.com>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "Russell King (Oracle)" <linux@armlinux.org.uk>
+Subject: Re: [PATCH net v2 2/2] net: stmmac: fix multiplication overflow
+ when reading timestamp
+Message-ID: <20250423150233.38fb5437@device-40.home>
+In-Reply-To: <20250423-stmmac_ts-v2-2-e2cf2bbd61b1@bootlin.com>
+References: <20250423-stmmac_ts-v2-0-e2cf2bbd61b1@bootlin.com>
+	<20250423-stmmac_ts-v2-2-e2cf2bbd61b1@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250404221559.552201-1-robh@kernel.org> <20250422171830.GA335614@bhelgaas>
-In-Reply-To: <20250422171830.GA335614@bhelgaas>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 23 Apr 2025 08:02:04 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLS8qfRRRQ-FEirqo6FGWD4ypU5_=uc1mVu_U_Voga1=w@mail.gmail.com>
-X-Gm-Features: ATxdqUGDmT6Oa9be3YThQJN1rEFFXXEIWZljvkTyKuzEsju7EEKCXD71GZrP2u8
-Message-ID: <CAL_JsqLS8qfRRRQ-FEirqo6FGWD4ypU5_=uc1mVu_U_Voga1=w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: PCI: Remove obsolete .txt docs
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, Frank Li <Frank.li@nxp.com>, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Jean-Philippe Brucker <jean-philippe@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeiieejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepuefhfefggfdthffghfdvhffhhfetuedtkeetgffhteevheehjeejgfduieduhedunecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopeguvghvihgtvgdqgedtrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdprhgtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepuggrvhgvmhesuggrv
+ hgvmhhlohhfthdrnhgvthdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgtohhquhgvlhhinhdrshhtmhefvdesghhmrghilhdrtghomhdprhgtphhtthhopegrlhgvgigrnhgurhgvrdhtohhrghhuvgesfhhoshhsrdhsthdrtghomh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Tue, Apr 22, 2025 at 12:18=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
->
-> [+cc Jean-Philippe for virtio dangling ref]
->
-> On Fri, Apr 04, 2025 at 05:15:57PM -0500, Rob Herring (Arm) wrote:
-> > The content in these files has been moved to the schemas in dtschema.
-> > pci.txt is covered by pci-bus-common.yaml and pci-host-bridge.yaml.
-> > pci-iommu.txt is covered by pci-iommu.yaml. pci-msi.txt is covered in
-> > msi-map property in pci-host-bridge.yaml.
->
-> I guess "dtschema" refers to
-> https://github.com/devicetree-org/dt-schema?
+On Wed, 23 Apr 2025 09:12:10 +0200
+Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com> wrote:
 
-Yes.
+> The current way of reading a timestamp snapshot in stmmac can lead to
+> integer overflow, as the computation is done on 32 bits. The issue has
+> been observed on a dwmac-socfpga platform returning chaotic timestamp
+> values due to this overflow. The corresponding multiplication is done
+> with a MUL instruction, which returns 32 bit values. Explicitly casting
+> the value to 64 bits replaced the MUL with a UMLAL, which computes and
+> returns the result on 64 bits, and so returns correctly the timestamps.
+>=20
+> Prevent this overflow by explicitly casting the intermediate value to
+> u64 to make sure that the whole computation is made on u64. While at it,
+> apply the same cast on the other dwmac variant (GMAC4) method for
+> snapshot retrieval.
+>=20
+> Fixes: 477c3e1f6363 ("net: stmmac: Introduce dwmac1000 timestamping opera=
+tions")
+> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
 
-> I kinda wish there was some direct link from the Linux kernel source
-> to dt-schema where all this information now lives (Requester ID
-> format, iommu-map, msi-map, linux,pci-domain, reg (and reference to
-> IEEE Std 1275-1994), interrupt mapping info, external-facing, etc).
-> Being a DT neophyte, I need all the help I can get ;)
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-Links to each property wouldn't really scale. Might as well copy all
-the common schemas into the kernel tree at that point.
+Thanks,
 
-I've thought about some tool to look-up the info. It would be easy
-enough to write. I'm just not sure what's useful to folks and what the
-interface should look like. It could be something like this:
-
-$ dt-info iommu-map
-schema file: path/to/schema.yaml
-type: uint32-matrix
-description:
- blah blah
-
-But maybe that needs to be "dt-info property <prop>" so we could also
-do "dt-info compatible <compat>".
-
->
-> There are a few dangling references to pci.txt:
->
->   Documentation/devicetree/bindings/pci/aardvark-pci.txt: - max-link-spee=
-d: see pci.txt
->   Documentation/devicetree/bindings/pci/aardvark-pci.txt: - reset-gpios: =
-see pci.txt
->   Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt:- bus-range: s=
-ee pci.txt
->   Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt:  1275-1994 (s=
-ee pci.txt) with the following restriction:
-
-If no one cares enough to convert these, then I don't think the link matter=
-s.
-
->   Documentation/devicetree/bindings/virtio/pci-iommu.yaml:      zero. See=
- Documentation/devicetree/bindings/pci/pci.txt
-
-That's fixed in my tree already.
-
-Rob
+Maxime
