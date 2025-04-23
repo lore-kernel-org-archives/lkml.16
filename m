@@ -1,118 +1,67 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9433A934
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C631EA7DD;
+	Wed, 23 Apr 2025 00:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745367488; cv=none; b=h3CT21TUFfqRJqHYzSXdMskbY1ZumsTxeVxlRqY7UXqJbp7bx+rZeZgY5+7u+eAH++6Hcn34CISWsgoe5vEIfX8o9nkExUFRI4CAajipBACGM76iNb2sabd8Tjk3uovEmIfwpEh3p08MbycA4PTZatKZ8UbOjMzN2Y3l+tbLhWQ=
+	t=1745367529; cv=none; b=qWElFDW7OkJpbLIMu1hsNjwWTVfHB9zyTV0Gpt/fLUyB+v23J6A2gB0VUSKsI5fBPXMrpBEmun1MDxx6SIhltJzUeq4so0l3NY9zHayGCw7HC3N3j+WhZq1XpRtFAEZEyAc8X47Yrs148Qo6UwO5eQhx2kqbpgnq7RpQ89BH5mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745367488; c=relaxed/simple;
-	bh=oCq3FEMp4oYWYDtLba7KpYl9dlOTixalU2uzeiDdgFQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TaVIyN1pnRS9yvlkn7KwPPl0vO+hpuxY49nJKa5TN3DidZyteQH85hlUV1mgT5zQtVGR/fZiw01SNYmhJeQaiinfjW0jA7yjLf/z4kMhzrWr+H1/qu6KL2r8cCZLXgdPznyAFJ/KmY7zmPDI2pp/9dvtYVfpQVrWfTM+GhLQ3uM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZXnPxwMI; arc=none smtp.client-ip=91.218.175.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745367529; c=relaxed/simple;
+	bh=ZNxOHaeGy5AnoXe7j6R1daES+ngPlMQqefaZFX2wrcE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SZFn6kthumuBLBPjYF85V5gfy4b5rx5NMv15mgLCGQFBa3WzKRHUh0eUsK8Y1MQHe0gndIxBvXPxjTI4QSWls8ljxOvK9SU5ZOKHb6VXaAX4FpNkBLZGLIrSW/RC2YK1NoUmw2l/BlM5RkoVA1o59mCj0xyeLmlrRTzfkpfT538=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fsH5BVhe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZXnPxwMI"
-Message-ID: <9d827020-ee6c-40c2-a83d-7eb9a00f8aa8@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745367484;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QxWWJwIhRG++LmaYSHq+CfihXUQKS791vet7ACFep64=;
-	b=ZXnPxwMIzj+wa71041mXF8qVCG8DMEdoDp5cKh6/OMUSbnHJsUOr8pPMBvEd3bQ/lHmxd/
-	261GdghcLYCbTAGewnTK4Ot6fNFDvrhR49od4TTjQzTj23cS2qBBQ4F8ovitKxuEcZ+fxm
-	Zux3jbOBlbr4jgIwtMYVJCM6Qj1SoZM=
-Date: Tue, 22 Apr 2025 17:17:56 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fsH5BVhe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DAFDC4CEE9;
+	Wed, 23 Apr 2025 00:18:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745367528;
+	bh=ZNxOHaeGy5AnoXe7j6R1daES+ngPlMQqefaZFX2wrcE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fsH5BVheu4QuBeLXL86opbP6Rz2lAnRJUPvFbZeYbhJ0JeAhXR83jNniM9gQTJIp7
+	 mOhwG/5xSgu/+9BdkJsPWn2yAEr8V1Moc6o9I0+xvd3nh/TuFRpUCJA/pv2yfD+6HF
+	 QONha8mDriVwdiZE0bnzsYB7FUb5A0zm5pergUz1ny+VLmGK4hl8nj7he1POpMq3qO
+	 WpBfc++/GPqiJAte7veyPM2PCsdCgW3DoxhtP07WYnaFGwJiMCvTvGI1VursA03N6G
+	 Ctg/gtP6Sf7IOfOgG2WK86GlbNDY8aYhI5zDFZ7UUsjjVi5naW3xWtZ/jF1bUFwrlU
+	 ANRxrdYSkMftQ==
+Date: Tue, 22 Apr 2025 17:18:46 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, longli@microsoft.com,
+ kotaranov@microsoft.com, horms@kernel.org, mhklinux@outlook.com,
+ pasha.tatashin@soleen.com, kent.overstreet@linux.dev,
+ brett.creeley@amd.com, schakrabarti@linux.microsoft.com,
+ shradhagupta@linux.microsoft.com, ssengar@linux.microsoft.com,
+ rosenp@gmail.com, paulros@microsoft.com, linux-hyperv@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] net: mana: Add sched HTB offload support
+Message-ID: <20250422171846.433d620d@kernel.org>
+In-Reply-To: <20250422194830.GA30207@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
+	<1745217220-11468-3-git-send-email-ernis@linux.microsoft.com>
+	<20250421170349.003861f2@kernel.org>
+	<20250422194830.GA30207@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 20/21] tools/perf: Pass the Counter constraint values
- in the pmu events
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>
-References: <20250327-counter_delegation-v5-0-1ee538468d1b@rivosinc.com>
- <20250327-counter_delegation-v5-20-1ee538468d1b@rivosinc.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Atish Patra <atish.patra@linux.dev>
-In-Reply-To: <20250327-counter_delegation-v5-20-1ee538468d1b@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 3/27/25 12:36 PM, Atish Patra wrote:
-> RISC-V doesn't have any standard event to counter mapping discovery
-> mechanism in the ISA. The ISA defines 29 programmable counters and
-> platforms can choose to implement any number of them and map any
-> events to any counters. Thus, the perf tool need to inform the driver
-> about the counter mapping of each events.
-> 
-> The current perf infrastructure only parses the 'Counter' constraints
-> in metrics. This patch extends that to pass in the pmu events so that
-> any driver can retrieve those values via perf attributes if defined
-> accordingly.
-> 
+On Tue, 22 Apr 2025 12:48:30 -0700 Erni Sri Satya Vennela wrote:
+> On Mon, Apr 21, 2025 at 05:03:49PM -0700, Jakub Kicinski wrote:
+> > On Sun, 20 Apr 2025 23:33:39 -0700 Erni Sri Satya Vennela wrote:  
+> > > This controller can offload only one HTB leaf.  
+> >   
+> We selected tc-htb for our current use case because we plan to support
+> multiple speed classes in the future.
 
-Hi Ian/Arnaldo/Namhyung,
-Any thoughts on this patch ? Please let me know if there are any other 
-better approaches to pass the counter constraints to the driver ?
+Which net-shapers also support.
 
-The RISC-V pmu driver maps the attr.config2 with counterid_mask value
-so that driver can parse the counter restrictions.
-
-
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
->   tools/perf/pmu-events/jevents.py | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index fdb7ddf093d2..f9f274678a32 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -274,6 +274,11 @@ class JsonEvent:
->           return fixed[name.lower()]
->         return event
->   
-> +    def counter_list_to_bitmask(counterlist):
-> +      counter_ids = list(map(int, counterlist.split(',')))
-> +      bitmask = sum(1 << pos for pos in counter_ids)
-> +      return bitmask
-> +
->       def unit_to_pmu(unit: str) -> Optional[str]:
->         """Convert a JSON Unit to Linux PMU name."""
->         if not unit or unit == "core":
-> @@ -427,6 +432,10 @@ class JsonEvent:
->         else:
->           raise argparse.ArgumentTypeError('Cannot find arch std event:', arch_std)
->   
-> +    if self.counters['list']:
-> +      bitmask = counter_list_to_bitmask(self.counters['list'])
-> +      event += f',counterid_mask={bitmask:#x}'
-> +
->       self.event = real_event(self.name, event)
->   
->     def __repr__(self) -> str:
-> 
-
+IIRC HTB offload requires that you dynamically allocate the Tx queues.
