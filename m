@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49057275853;
-	Wed, 23 Apr 2025 08:29:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79B93275853;
+	Wed, 23 Apr 2025 08:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396961; cv=none; b=WlhbNk/3ptYAGMT8sWDi2rA3GnjSX8IWPGaWjtimVMbl0yub1gxIStvJH3OJn6GDwieJCeTHoN6wkuzHBXOOZYFbsHOxhTz5USjqGjz05fqFF7IyzKP/4FCl5GBgr47RpIkS0qvgeAaAeiVadPPKUNTsAUzFcvlUux2ZKtpwC1w=
+	t=1745396965; cv=none; b=ECHM4PpmwNbP1mGvx/2uj86vrxSKBSq81ApWHfRyXATskLV9pMEauegcwwwZTzcGcKDGb8Ys9DgWasse2SGkoiUxpJ8aV3EVU55mXNNGM3BDx/yVsboVLxl5LLEV0NOxCILDcOq0BwNhJuiZFIw7gLMmtL7uHatUYWWbapHEjrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396961; c=relaxed/simple;
-	bh=dIsIfNWPh4pCz7BGWzAp5hEA101BvYn+yM42BX3fm/A=;
+	s=arc-20240116; t=1745396965; c=relaxed/simple;
+	bh=gpb1Vl3zMc7v2AN2uXCdpJ78JEE37uEZ4vxk3DO8D9A=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kZVpexzxd22F5jb736Kzoii1PYwNt6/tkIPSIDGNV/De+g2pZRP2Dv80boFqRB3XM1si5tq5KNDRy6Ygf04GqFVBKIK8CclMRUbgtx6nGHYtnTsff6HCrieRpoRjxdcPfTtdwyKlNuw2TKVZLwkehnIH2Gd1gWVHtM1pX9hNJBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUtMnaLh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fixdqm7auR/YsXvkNu1gPtlZt18xTpYl3fkqmY75eSPCgorAWfic451jfQfwc/77dITwkIqqsMQ8cud0uPk6do8z5KmuS0gUL4UIf2aG1B7epDvh2age9+BUJtVf1vRim50mcTmY4+5m1E0ik7Tr5WLq23/+BsCioqCHsLpvXxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbPDbZMY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUtMnaLh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34382C4CEEA;
-	Wed, 23 Apr 2025 08:29:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbPDbZMY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 519CDC4CEE2;
+	Wed, 23 Apr 2025 08:29:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745396959;
-	bh=dIsIfNWPh4pCz7BGWzAp5hEA101BvYn+yM42BX3fm/A=;
+	s=k20201202; t=1745396965;
+	bh=gpb1Vl3zMc7v2AN2uXCdpJ78JEE37uEZ4vxk3DO8D9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JUtMnaLhNzJcrNzjghx6mmWbAk396LVjPRzmYciufIkA87yaxMp9Hy4WZw4l34Efh
-	 YSdwCN3iIOcGlFngxPXRtHKv0WD/7fk29yzwEceFVqTa3kQAOJEM8rNpcUoCYOlpzN
-	 jmSI1W93fbYXRDltiouirmNzj+kQoE+w4hkIh53gPKwVloD1Gi34JjTRvVwE8uKDN5
-	 qUudTl7BGx3yuoG80dHhST7pFTbT26Szve6LC9W/OnDHoyAdnn7B8FbNK2jHcUNkg9
-	 NJv5vr9Y2voT5SzgxHqcM2gcAc++5XcdpRjYMOoyzi9aGuJw7Kck7ZVq6irRb1pgTV
-	 68R3QO8NVIGgg==
+	b=YbPDbZMY3vrbRVhtzbHYKnMhxhI1ufVfwxyFi0qtaNokLvFlsHa0O+1rjKvcZ18Pp
+	 rU0zGuLhEs+aZ02cmJAczE87huvVdJT62MIbeT0yjoMcOd38F04X+6nsfCsSFHcpji
+	 ACs3vXcDLbQN/3d/hC3fdmY3pY09pskBPGqswjKS8+E8hfPpUEP3Ap4BOLj5pugyn5
+	 4dAVjCNXd5u1nFfxCejo0+Xw8QCmV3NdmYSs5lLGJP6Vx3yZ/kRZf/u65pecj7Km5M
+	 zqm5O8LNIaZvrm9GhbQHBCjzDrzMaNYTs6SDhs1iXU2LCiFwLtcVKzjl+wbtv5haGl
+	 RlVw9I8Zj7IFg==
 From: Philipp Stanner <phasta@kernel.org>
 To: Cezary Rojewski <cezary.rojewski@intel.com>,
 	Liam Girdwood <liam.r.girdwood@linux.intel.com>,
@@ -45,9 +45,9 @@ To: Cezary Rojewski <cezary.rojewski@intel.com>,
 Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	sound-open-firmware@alsa-project.org
-Subject: [PATCH v2 1/4] ASoC: sof: Use pure devres PCI
-Date: Wed, 23 Apr 2025 10:28:56 +0200
-Message-ID: <20250423082858.49780-3-phasta@kernel.org>
+Subject: [PATCH v2 2/4] ASoC: intel/avs: Use pure devres PCI
+Date: Wed, 23 Apr 2025 10:28:57 +0200
+Message-ID: <20250423082858.49780-4-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250423082858.49780-2-phasta@kernel.org>
 References: <20250423082858.49780-2-phasta@kernel.org>
@@ -66,61 +66,45 @@ and should not be used anymore.
 Replace pci_request_regions() with the always-managed function
 pcim_request_all_regions().
 
-Remove surplus calls to PCI release functions, since pcim_ functions do
-cleanup automatically.
+Remove the goto jump to pci_release_regions(), since pcim_ functions
+clean up automatically.
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- sound/soc/sof/sof-pci-dev.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ sound/soc/intel/avs/core.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
-index 2fc14b9a33d4..c50249aadea9 100644
---- a/sound/soc/sof/sof-pci-dev.c
-+++ b/sound/soc/sof/sof-pci-dev.c
-@@ -216,7 +216,7 @@ int sof_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
- 	if (ret < 0)
+diff --git a/sound/soc/intel/avs/core.c b/sound/soc/intel/avs/core.c
+index 8fbf33e30dfc..dafe46973146 100644
+--- a/sound/soc/intel/avs/core.c
++++ b/sound/soc/intel/avs/core.c
+@@ -445,7 +445,7 @@ static int avs_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
  		return ret;
- 
--	ret = pci_request_regions(pci, "Audio DSP");
-+	ret = pcim_request_all_regions(pci, "Audio DSP");
- 	if (ret < 0)
- 		return ret;
- 
-@@ -240,8 +240,7 @@ int sof_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
- 		path_override->ipc_type = sof_pci_ipc_type;
- 	} else {
- 		dev_err(dev, "Invalid IPC type requested: %d\n", sof_pci_ipc_type);
--		ret = -EINVAL;
--		goto out;
-+		return -EINVAL;
  	}
  
- 	path_override->fw_path = fw_path;
-@@ -271,13 +270,7 @@ int sof_pci_probe(struct pci_dev *pci, const struct pci_device_id *pci_id)
- 	sof_pdata->sof_probe_complete = sof_pci_probe_complete;
+-	ret = pci_request_regions(pci, "AVS HDAudio");
++	ret = pcim_request_all_regions(pci, "AVS HDAudio");
+ 	if (ret < 0)
+ 		return ret;
  
- 	/* call sof helper for DSP hardware probe */
--	ret = snd_sof_device_probe(dev, sof_pdata);
--
--out:
--	if (ret)
--		pci_release_regions(pci);
--
--	return ret;
-+	return snd_sof_device_probe(dev, sof_pdata);
- }
- EXPORT_SYMBOL_NS(sof_pci_probe, "SND_SOC_SOF_PCI_DEV");
+@@ -454,8 +454,7 @@ static int avs_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
+ 	bus->remap_addr = pci_ioremap_bar(pci, 0);
+ 	if (!bus->remap_addr) {
+ 		dev_err(bus->dev, "ioremap error\n");
+-		ret = -ENXIO;
+-		goto err_remap_bar0;
++		return -ENXIO;
+ 	}
  
-@@ -290,9 +283,6 @@ void sof_pci_remove(struct pci_dev *pci)
- 	if (snd_sof_device_probe_completed(&pci->dev) &&
- 	    !(sof_pci_debug & SOF_PCI_DISABLE_PM_RUNTIME))
- 		pm_runtime_get_noresume(&pci->dev);
--
--	/* release pci regions and disable device */
+ 	adev->dsp_ba = pci_ioremap_bar(pci, 4);
+@@ -512,8 +511,6 @@ static int avs_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
+ 	iounmap(adev->dsp_ba);
+ err_remap_bar4:
+ 	iounmap(bus->remap_addr);
+-err_remap_bar0:
 -	pci_release_regions(pci);
+ 	return ret;
  }
- EXPORT_SYMBOL_NS(sof_pci_remove, "SND_SOC_SOF_PCI_DEV");
  
 -- 
 2.48.1
