@@ -1,106 +1,178 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F05826F444
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA8F26FA59
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745407495; cv=none; b=WQGT75yRH6C8EXsF/voMz5yCQkInEQ+hhyQL5xIOqQxTW2l5tfamgAx3c9hFV9EH6Gp32rkMH6wBTZ3o2aoMWp2xLRA3L3om9eYPZuC/Eoqx6UukxP3k15WM/EZ9fKwK5cjqOh7WqWtEVqm9IxOl5rAzGAAiMDVBTifkGfukq9w=
+	t=1745407537; cv=none; b=U640BL0lBDb/TQlQYIYdVvKnev6dtun4BVzKo/rLZ+8M70Izv8M2rNWbIcSlpCHYBL/sKWxJZZKAN+h3fnbdKk+q8VbZ0WvBEieAciPzY8wwMh27oOzdb6JU/yyVX9oNxosMLpZRCt29zmFgWryvET51ipq2UndiUuIg3MPHJV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745407495; c=relaxed/simple;
-	bh=ncxIYZozl3N3HdWJb2uKeAj2BG7Vhq1ZxeJg726Fiys=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mNL/Ht8et6ELKbIfLpKvzo3SsnG8nVSPlmOzvwOLxOq6t7dhcdPje0rqL9p9gJs6yX6tZGBfpvpki+J2QPX0oZZpugFqZHzhDjHy5ab3zVZ9gQhxzNlvaidMeu5ZbTwqSqeO4JCHpuj7SHa4wnnZIUvR28tQZpwVitb5NFkjcx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3VMzw4vT; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745407537; c=relaxed/simple;
+	bh=HD70lglHo/TfDa3Vk0n7O97xvVgFb9j6CD+Dg2TjOQ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o8X2vcfBUExj7783wXZZI4Juu7klq2zyO0xVjkvooVF5ss22Fsg3xloKO8iTD6idwa//vtb1VSLclZrJUiGKxngaG2U7DEFQ4NuUdo7MZTq9MhV/CNpSGXZwjO2L3iVD5gjf1y7/NgKbU/1+XSaT8FR5RV+DFU+M233lacYoaNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IVjC9sTr; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3VMzw4vT"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39d83782ef6so606941f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:24:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IVjC9sTr"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so890770666b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:25:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745407491; x=1746012291; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D9xEJcSBKi98pRIDlGVSCbCsSC4vSPyuZ//ZIroNx9Q=;
-        b=3VMzw4vTb1QfElPB8HBoN3Y/3jdiJjouJcHe8waRkQ2z4ErJLFBlppi3juYedILygk
-         7TMVcuAF5OFWSqZtCRrkt97Miux9qOzmBp+ksiYKOvgmjYMUE01zpoMDaC70qMO3qutn
-         4KTKyO47x6e0XnGkC/w4zug/Gl02QhX+TJeaeV2fWJ4p6LDQR7KyzFDBxsI2h6KnIFAp
-         WShU7akfhtEyXKB63mRYun1ytiBAyRUwx8uz7OgyYUdiP4ZbvW9Y4K0RHi+9Za71setX
-         evumo/AlEDPd2fob8bfRUu5q+y/6kYCRuSlY+t366ftoDq4Yg9a3CW2z3gZYBZIJRv7+
-         cXGg==
+        d=suse.com; s=google; t=1745407533; x=1746012333; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=aWGxSkVSh8s0WJx6DmPaKustScqNiBh/RPsp1KBtxsk=;
+        b=IVjC9sTrSDtXGuZism3utTK875aho9TCOE1tEshyg7IZburk9GnHmcgJHufBbuP2hh
+         fTsRfo+k9mVVhiOZywYXVncl+AmLnxgn4VHdMfmb6IvniprAsB1H9VVX3KwG20ftUcfC
+         DBDChI088eIaFj3DqMNF/aTl+JMII5KxZ+6wlsU3UcoqjcGN8vqeAmcxYSYe3vOX43aW
+         eARpOQbxKpYDGpbeTmkI45oLx1fiJF9iZ/Pv4wDoMDpcKwk2tUFZJpikMZh3CEthWkw4
+         OnfEkxJChTtmncnatRoYmucyzSYOXC0GC/1GH6941mratsn6N6NSpMsUEFXIUYjLATCH
+         Ntxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745407491; x=1746012291;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D9xEJcSBKi98pRIDlGVSCbCsSC4vSPyuZ//ZIroNx9Q=;
-        b=dQl0o+oqP4sgn/2qK8eQqZgFkT0W0+PRjfXd3u2U/D+J8AX+Cp40likAdyDy4ggrMW
-         ZKE9YF3if1TqN1MHqLDAzENWkbrvAEvzsxbdIdzLxLE56+BSmGRV+CHFM5nzeNmTByQg
-         2Mwwji1kW6aGSJnljkZ3/H45Q8v64VHSiS3zjyH+8i6rWaNQ6/2ih/Ev4r0+KufwWTZt
-         jaxsdw/u8ScS3S6UzNh1eJfmjKQUSHg/Fn+LCWH9deuVQPnxhAlRXG4ZYDkdIn+NPkJ/
-         lFLfvhnsKmLdVQ23z8LJZBrRz2rjEx1HfDEdqFsyFj0ez/aQJ/YmJx0tcKC78tA7m3fB
-         5ykA==
-X-Forwarded-Encrypted: i=1; AJvYcCXUYShCgSRAJHI+yQIgHtwPu0UH+Hcy3duwvqdRfLo4Q2TtOKF4j55hWvbzLzBGVy3H5Sa/eaQL/REKN9Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhGhRfkYKqkc7MeNsTognq0zp8Oyc7kXEXtEDspaxym+hT4Agz
-	tpt+4SGaNN/XZkD7sulAjLdjxVX6dfs7cEZjy1XoLSTB23szHSkdBhbyD/1AM5o=
-X-Gm-Gg: ASbGncvYEGDcgPGaAmgDkg1p6nDFwys0KYVx2mMB2n5oNcOLGpfESZXMgVmXHJZ01Q2
-	2elcGlXCHMQCkI6J5dHiEU8Tct3tIKUp1Dp7ZhpfjZCjnFBx2IXz3AQgUP6OwUPhq8WqHGcKMf8
-	ulqrA2LvAHRLSs0ulBGnJz+UKZH8uF5pkrIhmZx6+psVmadGmc6SkJyPMwRbavSk/Aq71YcnBJ1
-	hK6EixGrzaMzR0LzkkWvlGf/5V/Cka6IWIUt38JaylD6EHy/48DZ58oxW0qytUI1mdLDJxCE9yV
-	/jZKwGQ7tQx70un8mwItamq9hmcSLCP7jYKhwu2G
-X-Google-Smtp-Source: AGHT+IE/8aBMTgDMeNGhw38uYxbthi7915ysYEty/98iC2vU3Ts+4+07GiW/1NU/mZprn7jV6XzjaQ==
-X-Received: by 2002:a5d:59a8:0:b0:39c:1401:679e with SMTP id ffacd0b85a97d-3a067222757mr1949294f8f.5.1745407491320;
-        Wed, 23 Apr 2025 04:24:51 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:74b0:71bd:6dda:dcc1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433170sm18245595f8f.25.2025.04.23.04.24.50
+        d=1e100.net; s=20230601; t=1745407533; x=1746012333;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aWGxSkVSh8s0WJx6DmPaKustScqNiBh/RPsp1KBtxsk=;
+        b=VIo1mAAP6hPf4R0x3IYJbZXiMWl94lv7Ygvhvq0Br/uSqYHguz2n4bvGtBU6brVqHq
+         6REzoBTJIwGkD1wnzo8oA0Pq3tfbGeATKW8pf4TU5XJvhr/uIx3PnCeyaIsaBycGT3YI
+         d2fetyjh3clwK6OZn25RO2G7OZUrEd+LmZ3ZiGg8whmLyVS6hRdeAaLxxEkzFAau5wOr
+         GnaePasjaeb67OE6e/UyUZ3nJvELxIscE0m7jg0OEHMhaP66waHzXnetUPwaruN+xDKL
+         bdWiOeI5Saklz1nE4xGGNQbxR9TbPh1iYtrJ494sfYF55RJkWug+GQg83b3qe8Ro9L6N
+         y/VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXNNnuiMYZklID3o89njF2v8hL0+Q4a/wgtUlVVry/U6Y8Q9WV1glirGSY91O+xXngOt0+7qtTWdl3cX5Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvLgmLLGQXxaqdORoWa8boqV6x1W87xDqFpyW10PqraWAkosW/
+	wnGrE88qQ3RGET38daHQNU3VOu2EbPtOnWs0qaP+tBlbKzy2RS06HsctBLkz3lk=
+X-Gm-Gg: ASbGncsMmriQk27MKZMLzTwjD464cECQuPro0IEYFUK+3Gksudv6nS4XEvsnShi7NaY
+	5KihKkSEbNOLLZ6jBfyytDob45/LOCZ9ZExwOXr3nuOZbWk139k57btERUW7Cy7Bque+Hd94YML
+	HF9Vy9e4YybzkG1/yW6ottniMdRsdlL0T/4IAsGO5xT173lFefr6IKxQydZtK7gR2ibHDiqczRQ
+	yFTSVQEsIihP5pZi7nOw0m740mlXH09w+ceq4Uh9gnRLmxAqUeaZ8L4GoabVZZFhwQmlNAZ7YRB
+	fl3w1y9lGO20peMcIIa9x4b8RQDsyhA=
+X-Google-Smtp-Source: AGHT+IEYYEoiPeht3k6gfpywnrmcwc6m//t5flrh63sC9Rj8rnJcbGCa2vDM8kPATKJFgLfL5emxYA==
+X-Received: by 2002:a17:906:5496:b0:aca:d6f0:af0c with SMTP id a640c23a62f3a-acb74dde4c4mr1369691166b.59.1745407532929;
+        Wed, 23 Apr 2025 04:25:32 -0700 (PDT)
+Received: from localhost ([193.86.92.181])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-acb6ec0c64csm803973066b.13.2025.04.23.04.25.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 04:24:50 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Patrick Williams <patrick@stwcx.xyz>,
-	Potin Lai <potin.lai.pt@gmail.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Cosmo Chou <cosmo.chou@quantatw.com>,
-	Potin Lai <potin.lai@quantatw.com>
-Subject: Re: [PATCH v3] gpio: pca953x: Add support for level-triggered interrupts
-Date: Wed, 23 Apr 2025 13:24:47 +0200
-Message-ID: <174540748241.56202.13322099226080640371.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250409-gpio-pca953x-level-triggered-irq-v3-1-7f184d814934@gmail.com>
-References: <20250409-gpio-pca953x-level-triggered-irq-v3-1-7f184d814934@gmail.com>
+        Wed, 23 Apr 2025 04:25:32 -0700 (PDT)
+Date: Wed, 23 Apr 2025 13:25:31 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
+ allocation failure
+Message-ID: <aAjOK_f-GPFHIdWK@tiehlicka>
+References: <2024122837-CVE-2024-56705-049b@gregkh>
+ <aAicoAmxX0B_O3Ok@tiehlicka>
+ <2025042301-flammable-masculine-ec48@gregkh>
+ <aAiwaM5ru-FJG2fI@tiehlicka>
+ <2025042329-mystify-dramatic-dcb9@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025042329-mystify-dramatic-dcb9@gregkh>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Wed, 09 Apr 2025 23:37:30 +0800, Potin Lai wrote:
-> Adds support for level-triggered interrupts in the PCA953x GPIO
-> expander driver. Previously, the driver only supported edge-triggered
-> interrupts, which could lead to missed events in scenarios where an
-> interrupt condition persists until it is explicitly cleared.
+On Wed 23-04-25 12:20:47, Greg KH wrote:
+> On Wed, Apr 23, 2025 at 11:18:32AM +0200, Michal Hocko wrote:
+> > On Wed 23-04-25 10:21:04, Greg KH wrote:
+> > > On Wed, Apr 23, 2025 at 09:54:08AM +0200, Michal Hocko wrote:
+> > > > Hi,
+> > > > our internal tools which are working with vulns.git tree have noticed
+> > > > that this CVE entry has been altered after the announcement.
+> > > 
+> > > Good catch!
+> > > 
+> > > > There was an additional commit added to the CVE entry. The current state
+> > > > is
+> > > > $ cat cve/published/2024/CVE-2024-56705.sha1
+> > > > ed61c59139509f76d3592683c90dc3fdc6e23cd6
+> > > > 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
+> > > 
+> > > Yup!
+> > > 
+> > > > There seem to be handful of other cases like this one AFAICS.
+> > > 
+> > > Yes, we had to add support for this type of problem.
+> > > 
+> > > > I have 3 questions:
+> > > > 1) What is 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
+> > > >    relation to the original CVE which seems to be about a missing memory
+> > > >    allocation failure check?
+> > > 
+> > > Removing the driver entirely from the kernel "fixed" the vulnerability :)
+> > 
+> > What is _the_ vulnerability? While I do understand that _any_ potential
+> > vulnerability in the removed code is removed as well I still do not see
+> > how the driver removal is related to _this_ specific CVE.
 > 
-> By enabling level-triggered interrupts, the driver can now detect and
-> respond to sustained interrupt conditions more reliably.
+> "The" vulnerability is what is fixed in the last commit id, and is what
+> is documented in the text of the CVE, specifically:
 > 
-> [...]
+> 	In ia_css_3a_statistics_allocate(), there is no check on the allocation
+> 	result of the rgby_data memory. If rgby_data is not successfully
+> 	allocated, it may trigger the assert(host_stats->rgby_data) assertion in
+> 	ia_css_s3a_hmem_decode(). Adding a check to fix this potential issue.
 
-Applied, thanks!
+I do understand this statement.
 
-[1/1] gpio: pca953x: Add support for level-triggered interrupts
-      https://git.kernel.org/brgl/linux/c/417b0f8d08f878615de9481c6e8827fbc8b57ed2
+> That has not changed here at all.  It's just that the ranges of git
+> versions for when Linux was vulnerable to this issue has been "tightened
+> up" to only reflect when it was possible for this to be a problem (i.e.
+> we now do not count the range of releases where the driver was not
+> present at all in the kernel tree.)
 
-Best regards,
+But I fail to follow this. The commit itself says Fixes: a49d25364dfb
+("staging/atomisp: Add support for the Intel IPU v2") which makes it
+clear since when the issue has been introduced. If this tag was not
+present then there is CVE-$FOO.vulnerable which can specify the same
+thing. I do not understand how 51b8dc5163d2 is related as it has a
+different implementation of ia_css_3a_statistics_allocate that doesn't
+have any unchecked kernel allocations AFAICS.
+ 
+> > > > 2) What is the process when a CVE is altered? have I missed any email
+> > > >    notification?
+> > > 
+> > > We do not do email notifications when CVEs are altered.  You have to
+> > > watch the cve.org json feed for that.  Otherwise the email list would
+> > > just be too confusing.  Think about every new stable update that happens
+> > > which causes 10+ different CVEs to be updated showing where they are now
+> > > resolved.  That does not come across well in an email feed, but the json
+> > > feed shows it exactly.
+> > 
+> > I do understand you do not want to send notifications for that. Would it
+> > make sense to announce a new upstream commit added to the CVE, though? This
+> > would make it much easier to see that we might be missing a fix that is
+> > considered related to a particular CVE.
+> 
+> As this has only happened 2 times so far, it's a pretty rare occurance
+> given us allocating over 6000 CVEs.  And how exactly would that email
+> look like?
+
+We have identified that CVE-$FOO fix has been incomplete so far and
+extended list of fixes required for this CVE. Please make sure that
+those are appplied.
+
+Or something in those lines.
+
+> We are just changing the ranges here, we change ranges of where a kernel
+> is vulnerable all the time by adding new .vulnerable files to the tree
+> as people report them, and as fixes are backported to older stable
+> kernel trees.  That's much more important to you than this type of
+> change, right?
+
+Nope, being aware of what is actually the CVE fix is the most important
+information. Which kernels are affected specifcally is something that is
+downstream specific and stable tree ranges are only of a value to those
+who are using stable trees. Updates to vulnerable files is helpful
+during evaluation phase but once the assessment is done it acts mostly
+as a double check.
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Michal Hocko
+SUSE Labs
