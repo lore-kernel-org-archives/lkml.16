@@ -1,148 +1,121 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B691BC41;
-	Wed, 23 Apr 2025 13:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D102A1E4A4;
+	Wed, 23 Apr 2025 13:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416192; cv=none; b=EXtAnump7yrixdx4F0CuQJTKaCjtfo7ToOdSi/2JonZV/DmJ080stx21Bf5Ucqb0b4SjtvY480ng3jpR93YwIgG3WUDJyerWKbN0xKhJ4JJDni6EFmwdIJi2KoTwIZGPYhzc9gAUyhmi3Kn3mJWUokkirVBroxIFg6pWRzDS7Fk=
+	t=1745416293; cv=none; b=fGkMqiCYkwPAsAY9VhBCYd5Uk0NxJioSiUHjNYKsCNtpginZFe5hr3dOJgwG7r3oqMP6Ozi4zH7wNQQUo5QUtZDPcWYf7jqKf9tMtXqwOvU1OUmcdcLB8QvMDjyHY9go3nNqSkm7NUjPF7mYeTMt9IDtYdKcc3e4BLnX/tlhRo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416192; c=relaxed/simple;
-	bh=VmfpxIAfj19acRzrst9q+xyePs15pitvD/9hq5UqNU8=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=IKzZ8iuJeh11W5Gf0kYemS1b0J9PdSfj/UJ0oOp7Rp1d4VwI7fVmZi30ECI6zAY0jrzPkID/jA9H3oMLqpcKwtAfljIyg9kD9pw8vjcrdCniyD4TAHPXf6+Rx+xZesRoz+YbwiGJLTKB+kVw/P5KVt2ciOflhmb2yDS+Ha91Kfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=NDs1xlyY; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=F8O7fn8c; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745416293; c=relaxed/simple;
+	bh=V7UiGGeU3UPmto3LMdpllZkC0y8zXQCR/LJyE9FYYwA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N+P03Va2C56AqNDe+hJap60Gg8URawAwBYAgORt6AQydrjSOgIMMqQbWQrMU2jn3Onp1UMzAr2AYwiqjm2oBBT0NzQqRlswRmsjHL5b3yVwbG/lh7dWGtJFsW7kfl/2YCRISTjnzrTiUMtkYEOCEnB9ZJEMtwet5jF7R4390xnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nZ1Miqpt; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="NDs1xlyY";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F8O7fn8c"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 4F01011402D4;
-	Wed, 23 Apr 2025 09:49:48 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Wed, 23 Apr 2025 09:49:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745416188;
-	 x=1745502588; bh=VChUm3sRUsCqwnuWmJt8O1m8Q+AO86xNAt/YCvK6+So=; b=
-	NDs1xlyYyRJehS3fOwCtUCC1D1+2LSVtTp1FFfFHuWVNjm2Alq9XumBzy6iODHtC
-	5QaF97O/bQEeiR6s67H2HoaqkuR6QpBsSetZ1dgY0bDrW/Aw5j+8qCh/ApE1ahA9
-	R+iowUtks2Gg5CdIQHcxOTfw6pa8qPCA2FMTknPrO+C7UKl572GpRoQqAwZ0Gjmw
-	fA2huRjLTjkhYEQjY6oxxoicQWqUVL7nch0XWUq99NqoVJyRHEJ8PM30bwFEAQdA
-	e6sPACgwR56O5xGNDmyTAx4tZ4fleoM/mnhge2kFr9U0zQP/8PwLg6yB4T7PQC/A
-	h4ON6dtBWjUzFUBib4TidA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745416188; x=
-	1745502588; bh=VChUm3sRUsCqwnuWmJt8O1m8Q+AO86xNAt/YCvK6+So=; b=F
-	8O7fn8clYWCSO+0d+SSifxp2KQ5eLRMJMODl3GMxcETrhuKoUOmEWgOOZw+zh5Vh
-	QEL7G0KM1UBOOQAUJYRsUH/PZ/tU2lWEHhg5mBDi4b0eOaasTcBpWGlI5ihbFLRV
-	JuSOc0H+6DOjFdEnQSo3FqmPeEK524RO50G1LB9VUpo3gWFkG9nsEhpHeixtNVe+
-	NJWIZS5sI9hjn8sX2UxdJArl0MgM16UFgyRvAawU9rAc4Vw3ZCHboqPyLpOwrdHF
-	umPH1yYcwbQKFC0ILf4raC4cznVv/yjJlALoBwJNr46UvbdgVa17MlZ0vUmT5hDs
-	fyfrrzgl5wEs7Eu91qrfA==
-X-ME-Sender: <xms:--8IaKJ8uwi0oISUPlSCJH1YkeYhfm0zbx_nqMG3mcTsLdWaGj5S8g>
-    <xme:--8IaCK5G9PltrDsLnsGcnArlGIfGE8YyKpbwKI_H2EJINDVLhMZQA-2uq6PiHKw-
-    e0FhKpM6UDslClZIFM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeijeeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepgefgjedujedvieejgeelgfdthfduffeiteef
-    udeghfffkeejfeehtdejfeejteefnecuffhomhgrihhnpehgihhthhhusgdrtghomhenuc
-    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
-    rghrnhgusgdruggvpdhnsggprhgtphhtthhopeeipdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopehrohgsihhnrdhmuhhrphhhhiesrghrmhdrtghomhdprhgtphhtthhopegs
-    tgholhhlihhnsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhkohhulheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugihpphgtqdguvghvsehlihhsthhsrdho
-    iihlrggsshdrohhrghdprhgtphhtthhopegumhgrvghnghhinhgvsehvghgvrhdrkhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgv
-    rhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:--8IaKu32umSgzsK5FB2N-6mBhlHA0buQBz1IDRHdIUQmicKWocyrA>
-    <xmx:--8IaPZBq_MT58H9OuOzQ9XapDgXq7drt8WxZTBctKTEawhF-nEs_g>
-    <xmx:--8IaBbeOfyxuNJ9NnPOltD_db4EkqyxQZQ1GTTvVG6dAU_PNGnFkw>
-    <xmx:--8IaLDvWbNkTuGhdQhFUJmBfieS8MFKY-7tW9-axuJpfhilogo0KA>
-    <xmx:_O8IaJk8HIjtiqkGSqLBORdkagwKSQOpiccj2ax0fwtBuCni_Qf6SOuZ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id CDC932220073; Wed, 23 Apr 2025 09:49:47 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nZ1Miqpt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745416292; x=1776952292;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=V7UiGGeU3UPmto3LMdpllZkC0y8zXQCR/LJyE9FYYwA=;
+  b=nZ1Miqpt78j7eoPvQrkDf+exIyVmOfFPl86zshYq7112jonZlsTQQo5A
+   nhOhuuLkpokJg3qYIsmCdrEXv02L/E5C4NAHpAMqxMZMCMk4vTs5tDN6c
+   UovE61OmTZ1vxoBs3TIaRONZUtfgH+taJQ7UjwFIb4JPvaFYr3EkoznQZ
+   cAKeJBI7iQYk0fbQXlt30n8rFZU48X9bR8B6wPWCM4mKn3u5VDb0vzTnW
+   9UExSK5OStjpTyX9naBAhngy4d0e+VXytJ2yQYXHb2Mp1hPRpJfJDqEhE
+   ZMvXdJ8z7BP3iFhAe34BlDQSvdF8rMoOZ9F5dyCIH/Lb7NmIGHFy6/0vi
+   g==;
+X-CSE-ConnectionGUID: ++3BgU9qRPKLzSQ9476N9g==
+X-CSE-MsgGUID: /EUXqn/5QEuhaTMdTtl7OQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="57999483"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="57999483"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:51:31 -0700
+X-CSE-ConnectionGUID: VCaw58mPS+iNbJaE7gQT8w==
+X-CSE-MsgGUID: 6lYfMo74RqC3Cbso7kb5Xg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="132852538"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 06:51:31 -0700
+Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id F30FD20B5736;
+	Wed, 23 Apr 2025 06:51:16 -0700 (PDT)
+Message-ID: <7bafc0c9-0f72-44ba-a242-51918e32808a@linux.intel.com>
+Date: Wed, 23 Apr 2025 09:51:11 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T8f64d9338f7a15a8
-Date: Wed, 23 Apr 2025 15:49:16 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ben Collins" <bcollins@kernel.org>
-Cc: dmaengine@vger.kernel.org, "Vinod Koul" <vkoul@kernel.org>,
- linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
- "Robin Murphy" <robin.murphy@arm.com>
-Message-Id: <06765168-a36a-4229-b03b-6ea91157237a@app.fastmail.com>
-In-Reply-To: <2025042216-hungry-hound-77ecae@boujee-and-buff>
-References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
- <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
- <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
- <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
- <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
- <29bdb7e0-6db9-445e-986f-b29af8369c69@app.fastmail.com>
- <2025042216-hungry-hound-77ecae@boujee-and-buff>
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86: Fix open counting event error
+To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025, at 23:10, Ben Collins wrote:
-> On Tue, Apr 22, 2025 at 11:25:40AM -0500, Arnd Bergmann wrote:
->> On Tue, Apr 22, 2025, at 10:56, Ben Collins wrote:
->>
->> >> > I'll check on this, but I think it's a seperate issue. The main thing is
->> >> > just to configure the dma hw correctly.
->> >> 
->> >> I think it's still important to check this before changing the
->> >> driver: if the larger mask doesn't actually have any effect now
->> >> because the DT caps the DMA at 4GB, then it might break later
->> >> when someone adds the correct dma-ranges properties.
->> >
->> > I'm adding dma-ranges to my dt for testing.
->> 
->> Ok. The other thing you can try is to printk() the dev->bus_dma_limit
->> to see if it even tries to use >32bit addressing.
->
-> Did that. Every combination of IOMMU on/off and dma-ranges in my dt always
-> showed bus_dma_limit as 0x0.
 
-Strange, either something changed since I last looked at this code,
-or there is something on Freescale SoCs that avoids the
-default logic.
 
-There was originally a hack for powerpc that allowed DMA to be
-done in the absence of a dma-ranges property in the bus node, but
-limit it to 32-bit addressing for backwards compatibility, while
-all other architectures should require either an empty dma-ranges
-to allow full addressing or a specific translation if there is
-a bus specific limit and/or offset.
+On 2025-04-23 2:47 a.m., Luo Gengkun wrote:
+> Perf doesn't work at perf stat for hardware events:
+> 
+>  $perf stat -- sleep 1
+>  Performance counter stats for 'sleep 1':
+>              16.44 msec task-clock                       #    0.016 CPUs utilized
+>                  2      context-switches                 #  121.691 /sec
+>                  0      cpu-migrations                   #    0.000 /sec
+>                 54      page-faults                      #    3.286 K/sec
+>    <not supported>	cycles
+>    <not supported>	instructions
+>    <not supported>	branches
+>    <not supported>	branch-misses
+> 
+> The reason is that the check in x86_pmu_hw_config for sampling event is
+> unexpectedly applied to the counting event.
+> 
+> Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
+> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
 
-Looking at the current code I don't see that any more, so it's
-possible that now any DMA is allowed even if there is no
-dma-ranges property at all.
+Yes, it should only be applied for the sampling event. The
+event->attr.freq is always 0 in the counting mode.
 
-> As an aside, if you could give this a quick check, I can send the revised
-> patch. Appreciate the feedback.
->
-> https://github.com/benmcollins/linux/commit/2f2946b33294ebff2fdaae6d1eadc976147470d6
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
-This looks correct to me, but I would change two things:
+Thanks,
+Kan> ---
+>  arch/x86/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 6866cc5acb0b..3a4f031d2f44 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
+>  	if (event->attr.type == event->pmu->type)
+>  		event->hw.config |= x86_pmu_get_event_config(event);
+>  
+> -	if (!event->attr.freq && x86_pmu.limit_period) {
+> +	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
+>  		s64 left = event->attr.sample_period;
+>  		x86_pmu.limit_period(event, &left);
+>  		if (left > event->attr.sample_period)
 
- - remove the debug message, which you probably left by accident
- - instead of the explicit of_device_is_compatible(), change it
-   to use the .data field of the of_device_id table instead.
-
-       Arnd
