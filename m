@@ -1,115 +1,204 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8961B266B40;
-	Wed, 23 Apr 2025 07:42:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31471ACEC6
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394142; cv=none; b=f+ydcomMXbvp5XfWQLxQfmy0Tc3TQIovWfxhWK+Maa3XbPFAbP/Cmy5+fQq4yEdtrgd19gPvo1thhWDDOxe+5LnJdzWsJblv/geDddvFz40l2ylv+T5c3bkutWE5P/uonILSXuLh6XTO4Z59AFhLenLQtdUZhasfH4X5/YrIwrA=
+	t=1745394206; cv=none; b=KK5xqECReU/RPPk8qpowzZ6pa4LCeCDV3YRp9dGSCoJdGqSoiCl8xFn+0BjnyCghseQrftCpHreSvNc17kwyMpbmBZIfH0wHH72y8qKKkvDlzGLBGh0DjE9uhiFf5cC3syrFFwpBhPI79Dk2QKcz3XakkdsAhY+8i5r0so9lOeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394142; c=relaxed/simple;
-	bh=Xg0KnLB4URmkB602Xl9ajDC10CPLIyV/X6uVweDcuCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YKoIQt4kM9SVtdMkFPcHx3Teo7vY5PdftIkNFXNJbAYMiEzNTB+uxMxm6zM9n9PTRy0eeyhJQh7sea/HfnIRQKKKujReyQc19s/P3txXSDHYXKyx7ayn+lYtcNhPRtE0ALncDQOn+FL5yT2XiKDhuWC44uUguh+IQdNBbsRsGFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ht8Pg4C2; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745394206; c=relaxed/simple;
+	bh=RiIdC6a3QGEgQlu51y+WZOCye6VDJS7Vo5lTTOJSqlE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=FTIEutKaIj7r5uMIRYdesE6dRrA4rOs39d3zzYeDCgfje2N/QlsVRZpSKqnIuHcWCVRzha0rw14wU8sEU+4VEcQq+OvtLfTk5TQlMBqpth+rtVdxo9ldua1+Hn6Lwlf+Jj+Ezh3bUI255IhBiUtfH2RA81cOmKzQ5A+2fRAjYUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T4hh0Wsu; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ht8Pg4C2"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53N7efcj3105192
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 23 Apr 2025 00:41:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53N7efcj3105192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745394085;
-	bh=6GdmFpMZgynlN0+8/dR5L54gssO+r5xFLscuv7Zb+Vs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ht8Pg4C2x78BenMmhZHdlstOae3d80RJunxbx/Cvdsa9Ng1sweJyhq1qZe74uad8w
-	 dHIUkIaWpBwuEpEQXpNTzZstGa5HP1LuibQWsRATlidlNhOkvy0MIlrog/VWtzXAtz
-	 iLAft/hoYaZa+I3d3ZuooQk2COryT2hVxNfUJCgHWslPfgG0MkXcQL1z8/s+UH5PeL
-	 gb+2hbsIwrgPCaQZfJBxkbSwSmLHKEpQNdet6O8uEfcXydqh1elJk/5c7nEHD20WPV
-	 eqeeCqMeQgCc7w45x4no+uWwxrEjeXlIz4D82w4Q141GaNuvo9afJ+SLxKkWxA61fx
-	 KcYJYI7GY7/WQ==
-Message-ID: <9268e169-554d-43c8-a00c-f43c274f6116@zytor.com>
-Date: Wed, 23 Apr 2025 00:40:40 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T4hh0Wsu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745394203; x=1776930203;
+  h=date:from:to:cc:subject:message-id;
+  bh=RiIdC6a3QGEgQlu51y+WZOCye6VDJS7Vo5lTTOJSqlE=;
+  b=T4hh0Wsutyb8jAQgJYuSCCqYKEvBnT2ztNicshgmleG6rgrvSJKmQaKe
+   cVPOC12vH3fz+x7i6Q3Al2Rzhb3XW5LogDgvcG4eGiih/0OENxoFrrsdl
+   TxCwhJeUatjzTBnw6JwU3IQKN6JqII36Lj2pOF0y/J11/kDQwLnGorja1
+   YAd8QMglwOESGyKWPfL8DR37gf71eEdf6tRGCF6wMIhz/KPhJKau3F+eU
+   xZhy8grjKYImCCW7ZkF5gETnDUk7yL1LVbCismlnhtWhPnUhayuNdODX1
+   NA+x3+VeS/sm+zsC0Rhc7RTXwkB1aVr75A1ZOXeEg4qNZV6jKYzsmuw59
+   Q==;
+X-CSE-ConnectionGUID: 8MqNIzueSKaTe9u4iM0miA==
+X-CSE-MsgGUID: VVOeztGzTkqXRn0rNQV7vQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="46989061"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="46989061"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 00:43:14 -0700
+X-CSE-ConnectionGUID: fOfqFWriTR2CZPpcvurQ6g==
+X-CSE-MsgGUID: 8tGi1lFSRxWmCdU+aSz58A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="132230526"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 23 Apr 2025 00:42:56 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u7Ukw-0001h9-1f;
+	Wed, 23 Apr 2025 07:42:54 +0000
+Date: Wed, 23 Apr 2025 15:42:00 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:x86/microcode] BUILD SUCCESS
+ 4e2c719782a84702db7fc2dc07ced796f308fec7
+Message-ID: <202504231550.wbWZqdDl-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 06/34] x86/msr: Use the alternatives mechanism to
- read PMC
-To: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-7-xin@zytor.com>
- <fbb509e8-0bd6-480f-be32-fd0895255a21@suse.com>
- <a482b4df-f662-4d5d-8100-ade07afcdc24@zytor.com>
- <bfeba521-0a49-42d0-bf83-15d031dfc6da@suse.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <bfeba521-0a49-42d0-bf83-15d031dfc6da@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 4/22/2025 2:28 AM, Juergen Gross wrote:
-> 
-> I have worked rather hard to make it less intrusive, especially by removing
-> the paravirt specific code patching (now all done via alternative patching)
-> and by removing 32-bit Xen PV mode.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/microcode
+branch HEAD: 4e2c719782a84702db7fc2dc07ced796f308fec7  x86/cpu: Help users notice when running old Intel microcode
 
-I looked at the optimization, and it is a nice improvement.
+elapsed time: 1453m
+
+configs tested: 127
+configs skipped: 5
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-14.2.0
+arc                               allnoconfig    gcc-14.2.0
+arc                              allyesconfig    gcc-14.2.0
+arc                   randconfig-001-20250422    gcc-8.5.0
+arc                   randconfig-002-20250422    gcc-14.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                   randconfig-001-20250422    gcc-8.5.0
+arm                   randconfig-002-20250422    gcc-8.5.0
+arm                   randconfig-003-20250422    gcc-7.5.0
+arm                   randconfig-004-20250422    gcc-7.5.0
+arm64                            alldefconfig    gcc-14.2.0
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                 randconfig-001-20250422    gcc-6.5.0
+arm64                 randconfig-002-20250422    clang-21
+arm64                 randconfig-003-20250422    clang-18
+arm64                 randconfig-004-20250422    gcc-8.5.0
+csky                              allnoconfig    gcc-14.2.0
+csky                  randconfig-001-20250422    gcc-10.5.0
+csky                  randconfig-002-20250422    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon               randconfig-001-20250422    clang-21
+hexagon               randconfig-002-20250422    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250422    clang-20
+i386        buildonly-randconfig-002-20250422    clang-20
+i386        buildonly-randconfig-003-20250422    gcc-12
+i386        buildonly-randconfig-004-20250422    gcc-12
+i386        buildonly-randconfig-005-20250422    clang-20
+i386        buildonly-randconfig-006-20250422    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250422    gcc-14.2.0
+loongarch             randconfig-002-20250422    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                        m5307c3_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                       bmips_be_defconfig    gcc-14.2.0
+mips                           ip27_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250422    gcc-10.5.0
+nios2                 randconfig-002-20250422    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250422    gcc-7.5.0
+parisc                randconfig-002-20250422    gcc-11.5.0
+parisc64                         alldefconfig    gcc-14.1.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                       holly_defconfig    clang-21
+powerpc                 mpc8313_rdb_defconfig    gcc-14.2.0
+powerpc               randconfig-001-20250422    clang-21
+powerpc               randconfig-002-20250422    gcc-6.5.0
+powerpc               randconfig-003-20250422    clang-16
+powerpc                     tqm8540_defconfig    gcc-14.2.0
+powerpc                 xes_mpc85xx_defconfig    gcc-14.2.0
+powerpc64             randconfig-001-20250422    clang-21
+powerpc64             randconfig-002-20250422    gcc-6.5.0
+powerpc64             randconfig-003-20250422    gcc-6.5.0
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                               defconfig    clang-21
+riscv                 randconfig-001-20250422    clang-21
+riscv                 randconfig-002-20250422    gcc-14.2.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-14.2.0
+s390                                defconfig    clang-21
+s390                  randconfig-001-20250422    gcc-7.5.0
+s390                  randconfig-002-20250422    clang-21
+s390                       zfcpdump_defconfig    clang-21
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                                  defconfig    gcc-14.2.0
+sh                        dreamcast_defconfig    gcc-14.2.0
+sh                        edosk7705_defconfig    gcc-14.2.0
+sh                    randconfig-001-20250422    gcc-14.2.0
+sh                    randconfig-002-20250422    gcc-6.5.0
+sh                          rsk7201_defconfig    gcc-14.2.0
+sh                           se7619_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250422    gcc-10.3.0
+sparc                 randconfig-002-20250422    gcc-6.5.0
+sparc64                             defconfig    gcc-14.2.0
+sparc64               randconfig-001-20250422    gcc-7.5.0
+sparc64               randconfig-002-20250422    gcc-13.3.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                                  defconfig    clang-21
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250422    gcc-12
+um                    randconfig-002-20250422    gcc-12
+um                           x86_64_defconfig    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250422    gcc-12
+x86_64      buildonly-randconfig-002-20250422    clang-20
+x86_64      buildonly-randconfig-003-20250422    gcc-12
+x86_64      buildonly-randconfig-004-20250422    gcc-12
+x86_64      buildonly-randconfig-005-20250422    clang-20
+x86_64      buildonly-randconfig-006-20250422    clang-20
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                randconfig-001-20250422    gcc-14.2.0
+xtensa                randconfig-002-20250422    gcc-9.3.0
+
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
