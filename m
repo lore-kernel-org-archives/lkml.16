@@ -1,117 +1,115 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B52266B71
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:49:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B290226A092;
+	Wed, 23 Apr 2025 07:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394576; cv=none; b=EnPQc7GorD938MT2scIi6SOz5i9t041+UbMwTopJ+rJZSX2br0DJUvCNhz8vpiH0h59NR8wIELt8+6IAKznQw/vBOxCHrb1eeucvH+11mcSxUqkUKvLK+/j3cN32PnDJC95Pfv6RZbDWnOtFTRxVg0W/+y3OsF78HISGqvcJ+Dw=
+	t=1745394613; cv=none; b=e2YLN1b+nyeO4k1n61pMyz3P/vi7YdKnQucVKEg5VX+C6NmKZ3isIve0h/bYvKGZRhzba0gffdA7nwScBtvFkj+ZNVw7AuaavUMZKFkJ+Jn+UWOaJUUKt26UGyGHczyGd3b/fvs4ahbmBtl5lNnaxFVv32c2MMVC0tp0pYchzqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394576; c=relaxed/simple;
-	bh=l8ky2QhzN6LS0wt5qCaExxISA6kghgJvi/mLCOgJFqA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=NNvD9Zr01Yqr4GtrGXcCPd5ix4jK8jF27YaEMrIlTNwM7VGiQ2eeU9xspgCPzipzPu93r1rzxZrwt0gzXzaFYhyYZ8OIMYr/6H8FBoJozYFb/N0nQLQ1K7iX8yxa+MxAPsiUYvBQpNXpG1rotiy4/0sRXKAjWVwZ5zvw1n/KmcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3d8f1c1ce45so92209205ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:49:34 -0700 (PDT)
+	s=arc-20240116; t=1745394613; c=relaxed/simple;
+	bh=aeqdj/wdcz+x26fwzx/HX+zznG9Z+guBS6p9E5Hi9mM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=djE65v9pfRjyd+Y05uy5SHx03cS+u2bLQ11dMZBnZGKBWZw42ms4sIOyoYCiJ2J5ZuTQ/2aHrYVR0r13IMMxlZf3PgLGaD+JrM3hLvAnn2ohrBDCy0MULuXuy/La3OjdAo9+oP4azY4bhoikOF6djI1qv4ULSoCvbk5M5r+08DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DsotPfbB; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DsotPfbB"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2243803b776so94624955ad.0;
+        Wed, 23 Apr 2025 00:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745394611; x=1745999411; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3HKmvn7msuvgVm/2Zx8cHDv5Bn16on0KtIYGyc45jPg=;
+        b=DsotPfbBBQ+s+dCiEaBQ5Qrw5ZfA4GRrGUfDmqA7HgrikG0YrlP0taXvAon7vHfbAT
+         b7KUH0oURiUuWAEO9/LsXFa1/8tsWmiOreN0ryJCVVCpFzxBswTvnixxnrL6H2pqEGkg
+         xHIMAIPn7XzheJ4EeGue/+7QN6GYQBElzd5vZBWZd7/cJhbK74XA3cEpVheO0EnzsRQi
+         qqPLr0Hm3mGGsjMHOEaQXb4tMpvclRvlxYd3PpW1Y2avyWWn7jOinwRimv3WlzhcbInh
+         wLAdC84VOqLVj6udMFTdUVUJVhDTtmD00OqfKhS0v2A0ite19Wz6RpZ3Y8bezuvKx+Qg
+         23sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745394574; x=1745999374;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VSKtXzbeEK9AbIC3smKkMKPobrSVNoSlrl9FplPF804=;
-        b=hvgLpZ5bNzBEuUxR1dDT74CkIpUbgO5S2r+8JIkgtyRyyXnEKUWnzFKIV76djlR7nq
-         NzjuYSS7MpwTzThmlNG8TgQ1j40cJB/3K0GyoI4lLFdVWaV+lAmZgbfke6VoHg7YYFZI
-         TH0yUNQXS9/HgGKvdKstpucNFoG5xfv4ceuSJ7fqYUhKYDNFHRNeR87o5vKEydN1kXqx
-         CRkjmUy7eeqTfcCzjEXSnC0D69tBh3LUwV/FmfeUTnt8i1H8unH8a+zOFrZAWWoDKyrI
-         26mYwp8sffBmkYQ5/bjrrw7/hboZtBxhVRoNOuAYDdRs31XCdE3bGajYGU9QYDjXlqCd
-         Yw3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWE4HXvpsvW8OndWJwfyY0t79GnvuqwilqU0i8REQUmgTs0PgZfob7cDtb7M3nHmqqeqZ7EAlraIs7UHKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweW40o0cV+kQlB2JQkUU4dfs+YDdYJ3B3L/wUyjrPFopQXiB/J
-	39JzpdsqWos/12zXDUgwxaMrYeGC12RQ68D7Mys/zbXzkRmvHGZQE5yrXWBW+nl3J9F8cHC+qaJ
-	LT6eFuTcRn1mBlEDQ04E+c+hmku54dhjDfS2HMl2m2GvmjTp9uz31bSo=
-X-Google-Smtp-Source: AGHT+IHvkow66BMhG/TSSICfHddGnFKQ1S6/ST+RAgW16u672roFKspEn7cEMe8LQrIh1dVhqlBlBAWDDVJS8J+NLsZf6ebK+43H
+        d=1e100.net; s=20230601; t=1745394611; x=1745999411;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3HKmvn7msuvgVm/2Zx8cHDv5Bn16on0KtIYGyc45jPg=;
+        b=E5jiK6WykGFdxlEgkVTeAPnuzgtUXeHegQVqpZAm5Etl0NqulgzABR1Fz60uKVHfOB
+         k+u9B/avH1866K6KAd5yfpR7NCYgwEbhw0iZPhyyGJc+5SymIiNq09j1d7vsiHqxbUi0
+         pbu2ZlKONkLMiv5Z4B2qxwx4iqz48uikgF1GSUa6PGPeSq5V7f3CjN7192KG4S4uFdkU
+         N4Dp8ag+5lR0hj8m09xo8DdtgNjJxMvfZ0j98h2hWNLe/dMXw7gaSgqEgzJJFMSe7a7l
+         VNeuYy5hY6dmhCLsIFRU2o/LUcC15BdxpyX4QZfYZYqM7fPu4AFm5FLOQjAwR0gmIbeS
+         3gOA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/ujpHq065v2lbpccpmTW7xFDvysG684rD2Qc4B04DXJ32trSnwm1rR9FOaQKNzc+2JLVP8kI7wZ49VNI=@vger.kernel.org, AJvYcCUkNsmQISl3BeFvnTxjxZzkhC2LlKB7h47DQUxzU0YV5fmKZ56ggNscVvuZAUBWiVCaj2jfCJshHDmiOFl3PiRFZ8F8Gg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy76N5nc94vEMGOmk7OzGjYvNtHzUrj16ZWowX/l6uWqP0in9iA
+	IDm0GhuzVIaQvAjIrd62e9r4Z25+xyZLNt9sXKeUGeCdeHpWwSKQ
+X-Gm-Gg: ASbGncufuEcXKgWju4AlCNoklvK3OgmLzRugP/SMHSyoWwp7G47mTSa1pp/lejI4m0o
+	Qk2763unJWCuB+dRhqPUlXKuJy1+HNcK1qjNjdoEurg2TsKl4WvGHGe08H+mPrkkwwyQPCyhKhp
+	52qk74M0+2En1xuCWcMOkjyQ5OAN4GCWXGAt9MHFz5f1Z73hfZSLgPkKxnhmM9RQd/Y1xUJxcyi
+	+Dt/ijRSO4HIsA9qVcyFbQl5mCzW7q3QcSFzPyizw8DtOCNUiwhwTmq7T+QZY63ezvU5Y31432l
+	gQTWS6BZOELyYA4fNEKDC+yuVPS/rm1jV5MxJ5CI
+X-Google-Smtp-Source: AGHT+IEgc1OE2+8U7RLtGI8tI78OAo9nMPoPHH9CNp4kpr09rcULrR1pCdntxyPLEd6+n+N2+x9lXg==
+X-Received: by 2002:a17:902:c40f:b0:224:10a2:cad5 with SMTP id d9443c01a7336-22c5357a132mr286942995ad.10.1745394610802;
+        Wed, 23 Apr 2025 00:50:10 -0700 (PDT)
+Received: from [192.168.1.26] ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bdac67sm98240235ad.29.2025.04.23.00.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 00:50:10 -0700 (PDT)
+From: Kurt Borja <kuurtb@gmail.com>
+Subject: [PATCH 0/2] platform/x86: alienware-wmi-wmax: Add support for GPIO
+ methods
+Date: Wed, 23 Apr 2025 04:49:44 -0300
+Message-Id: <20250423-awcc-gpio-v1-0-160a11bc3f9a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1648:b0:3d6:d145:2ffb with SMTP id
- e9e14a558f8ab-3d89428c8f1mr216463595ab.21.1745394573985; Wed, 23 Apr 2025
- 00:49:33 -0700 (PDT)
-Date: Wed, 23 Apr 2025 00:49:33 -0700
-In-Reply-To: <675101f3.050a0220.17bd51.0081.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68089b8d.050a0220.36a438.000a.GAE@google.com>
-Subject: Re: [syzbot] [f2fs?] INFO: task hung in do_truncate (3)
-From: syzbot <syzbot+effe7da6578cd423f98f@syzkaller.appspotmail.com>
-To: brauner@kernel.org, chao@kernel.org, jack@suse.cz, jaegeuk@kernel.org, 
-	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJibCGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDE0Nj3cTy5GTd9ILMfF0jkyTDNNNkUxOzFCMloPqCotS0zAqwWdGxtbU
+ A7+OkbVsAAAA=
+X-Change-ID: 20250413-awcc-gpio-24b1f5c546d2
+To: Hans de Goede <hdegoede@redhat.com>, 
+ =?utf-8?q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+ Armin Wolf <W_Armin@gmx.de>
+Cc: Gabriel Marcano <gabemarcano@yahoo.com>, 
+ platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com, 
+ linux-kernel@vger.kernel.org, Kurt Borja <kuurtb@gmail.com>
+X-Mailer: b4 0.14.2
 
-syzbot has found a reproducer for the following issue on:
+Hi all,
 
-HEAD commit:    bc3372351d0c Merge tag 'for-6.15-rc3-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=138cdccc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3bbffc3b5b4301e1
-dashboard link: https://syzkaller.appspot.com/bug?extid=effe7da6578cd423f98f
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17c8ac70580000
+I found a great blog post [1], which described the reverse engineering
+process of the GPIO control methods present on this device.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/6c893a6bd7cc/disk-bc337235.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6c31d81cbcae/vmlinux-bc337235.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/acf5d144656b/bzImage-bc337235.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/53b1b110f131/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=16d4f204580000)
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/3185ba5a394f/mount_4.gz
-  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=14ebe7ac580000)
+In summary, these methods expose some debugging capabilities of the RGB
+lighting controller present on Dell gaming laptops. See [Patch 2] for
+more info.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+effe7da6578cd423f98f@syzkaller.appspotmail.com
+Exposing these methods to DebugFS is useful for developers exploring
+this RGB controllers (myself included).
 
-INFO: task syz.9.68:6713 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc3-syzkaller-00019-gbc3372351d0c #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.9.68        state:D stack:27592 pid:6713  tgid:6701  ppid:6519   task_flags:0x400140 flags:0x00004006
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x1b33/0x51f0 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x163/0x360 kernel/sched/core.c:6860
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
- rwsem_down_write_slowpath+0xedd/0x1420 kernel/locking/rwsem.c:1176
- __down_write_common kernel/locking/rwsem.c:1304 [inline]
- __down_write kernel/locking/rwsem.c:1313 [inline]
- down_write+0x1da/0x220 kernel/locking/rwsem.c:1578
- inode_lock include/linux/fs.h:867 [inline]
- do_truncate+0x20e/0x310 fs/open.c:63
- vfs_truncate+0x4a6/0x540 fs/open.c:115
- do_sys_truncate+0xd8/0x190 fs/open.c:138
- __do_sys_truncate fs/open.c:150 [inline]
- __se_sys_truncate fs/open.c:148 [inline]
- __x64_sys_truncate+0x5b/0x70 fs/open.c:148
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6c9918e169
-RSP: 002b:00007f6c983dd038 EFLAGS: 00000246 ORIG_RAX: 000000000000004c
-RAX: ffffffffffffffda RBX: 00007f6c993b6080 RCX: 00007f6c9918e169
-RDX: 0000000000000000 RSI: 0000000000008001 RDI: 00002000000000c0
-RBP: 00007f6c99210a68 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007f6c993b6080 R15: 00007ffc2675ba78
+Thanks for your feedback!
 
+[1] https://gabriel.marcanobrady.family/blog/2024/12/16/dell-g5-5505-se-acpi-or-figuring-out-how-to-reset-the-rgb-controller/
 
+Signed-off-by: Kurt Borja <kuurtb@gmail.com>
 ---
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Kurt Borja (2):
+      platform/x86: alienware-wmi-wmax: Expose GPIO debug methods
+      Documentation: wmi: alienware-wmi: Add GPIO control documentation
+
+ Documentation/wmi/devices/alienware-wmi.rst    |  85 +++++++++++++++++-
+ drivers/platform/x86/dell/alienware-wmi-wmax.c | 116 ++++++++++++++++++++++++-
+ 2 files changed, 196 insertions(+), 5 deletions(-)
+---
+base-commit: 981527828c301644bc4014faa9c523e8a5e32a32
+change-id: 20250413-awcc-gpio-24b1f5c546d2
+
+Best regards,
+-- 
+ ~ Kurt
+
