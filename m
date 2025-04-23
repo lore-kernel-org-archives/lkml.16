@@ -1,45 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED51D280A2C
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:12:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A9828E61A;
+	Wed, 23 Apr 2025 15:12:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421128; cv=none; b=FeAvb5kCptT9wtmDzvB/tEhekxYxAYxjOGqRQ+SWoocMWmue+2gAfczzO+cd2wfSOU0EsoSbG8nHQ9RX47/BnCTrKWfR3p4wSZFKHeinb2S1O81Mu2ef++ys+ydLrXl0sN2LFQNMrW8SLOeIPtex476/TsWhe7RFgpI1MxfHzvQ=
+	t=1745421130; cv=none; b=c9dGNqNhfAXAecUZHr5IRdC1nK8FCAjU+js8AlUEpmuVzsA9HqVi1N6h/pcETXFRfp57hZrs3E5+radUzd02KhfwUB2lrAQxDtb+by2v8Z5TWp3Qu1z5t+EO6y28TQaat1s+9Ja+6GK/Nvmjk5iv+LhsFfSPFc3tOJJHEp7FdHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421128; c=relaxed/simple;
-	bh=Q61qQez5UnHF9zfHJ4kGv5x076vnjHwkr5s2qepPiAc=;
+	s=arc-20240116; t=1745421130; c=relaxed/simple;
+	bh=rDayEnmW5wOjUNCI7vo/8BM3UfjynySd1YOsFEmc0Ns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SQGkk/m2JUot7aVuv+fNz2RjSMSlaAi01692C7RtPBPnpU2bbNv2okFlurtlMpmlLUJ83ru7SC+1koLDU9rg0UA/XgbHaXCDBr6RrVGIIweezUmqZQFOniUg5VZ3hztLNiLIMR/W1ZfdiLR/X8pxl5lrk1VctFyFDv2A/Foya7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R34x74x8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=klr+MnAxrzvARgPS2eRij68pMbW1ikRh0lPRvZ2qHwre5VLuzi752Xu5DvLZhw8wHwimRA3G5A7rc2sNredbl8Pth+0/QJlPYRPcKDsJjK6MV2kOE8HnetqWs7ca/HMEnOZaUqZk67rH2wgiHC9rZrC/9VsdC9nPLR6y1fE/WVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lmauy6Ji; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R34x74x8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F8CC4CEE2;
-	Wed, 23 Apr 2025 15:12:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lmauy6Ji"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF997C4CEE3;
+	Wed, 23 Apr 2025 15:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745421127;
-	bh=Q61qQez5UnHF9zfHJ4kGv5x076vnjHwkr5s2qepPiAc=;
+	s=k20201202; t=1745421129;
+	bh=rDayEnmW5wOjUNCI7vo/8BM3UfjynySd1YOsFEmc0Ns=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R34x74x8E/GSFGWZ5m+9EbzgrAfdYbTSE5a1mEAPpvDlHh7KA0cPK10twzml4AXox
-	 7CccmKY7KDDDm5SsgGpq7kW6Ubn2FQZO7xzsdqFJjxIcJnJ2UU04CNef7Wbp8bfbk8
-	 TBB3AmDS0WgAopfq7uXn+Ln7NvzDtLvn7qeU7HeykjX5kahaDHvkeEF1jGTDBR6bRO
-	 rhu4Do/epOw+gBOnFza6HEuiUDEQtFX9NB976SI/ZMy+SJSYiNYIFwDW/9QiyYVCIU
-	 hykLIbl33cSoZut46KWf209FF+RhYPKnhwZeEc24xCft+6DTLvcyN5yBI00ASMxOwF
-	 M3d++d7AV3B/g==
-Date: Wed, 23 Apr 2025 05:12:06 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Suren Baghdasaryan <surenb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, gaoxu <gaoxu2@honor.com>,
-	Dennis Zhou <dennis@kernel.org>, Christoph Lameter <cl@linux.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	yipengxiang <yipengxiang@honor.com>
-Subject: Re: mm: percpu: increase PERCPU_MODULE_RESERVE to avoid allocation
- failure
-Message-ID: <aAkDRg0Ajl3ByXMq@slm.duckdns.org>
-References: <bcfb90b2cecf43d7a0760ebaddde10d8@honor.com>
- <20250422170209.a8beaa8a3610d2e92421476f@linux-foundation.org>
- <CAJuCfpF4SbPWMgECD89e=QDcrCTNqnchYZ=dpod-cdRxfsCtjA@mail.gmail.com>
+	b=Lmauy6JiNq31WB8nrkpG+4X/sEHthcQJQm2py5Vba/EmUN9bzIRhSR0UvV3/zkITx
+	 dGqyTsFQ4MTM/5leecxr54xpAW57wuUiBTQ7h9eWklX+q/7l6y40/qDaDPpwJhG+Va
+	 xWZslDaKQkeSPAGLQGXwfO7zpv/OdzggwUNWaIbjX5YeTMUi03qR4caFTORBEIvjns
+	 z5stAHX+gU7cyJ1ASUYCytTFa7gtSzeScWqE3zI8TU5EOFN72logSZZanzybyfYVqF
+	 SHAiqUiWEdKGMuP2VBpdB5SWiUIbkx01wEx7PkG2Chytgur6o3doj7Pg1iazdD4y2R
+	 BylRBMaA3C1PA==
+Date: Wed, 23 Apr 2025 17:12:04 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+	heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	jingoohan1@gmail.com, shawn.lin@rock-chips.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 2/3] PCI: dw-rockchip: Reorganize register and
+ bitfield definitions
+Message-ID: <aAkDRIqIOjLo7haw@ryzen>
+References: <20250423105415.305556-1-18255117159@163.com>
+ <20250423105415.305556-3-18255117159@163.com>
+ <aAjufPQnBsR6ysAH@ryzen>
+ <352e40a0-65e2-499f-a7dd-904a4a7b19da@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,22 +50,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJuCfpF4SbPWMgECD89e=QDcrCTNqnchYZ=dpod-cdRxfsCtjA@mail.gmail.com>
+In-Reply-To: <352e40a0-65e2-499f-a7dd-904a4a7b19da@163.com>
 
-On Tue, Apr 22, 2025 at 05:19:31PM -0700, Suren Baghdasaryan wrote:
-...
-> Allocating this reserved area dynamically would be ideal. OTOH this
-> change increases the area size from 64kb to 128kb. Don't know how much
-> effort we should put into it.
+On Wed, Apr 23, 2025 at 10:14:57PM +0800, Hans Zhang wrote:
+> > I can see why you renamed PCIE_CLIENT_GENERAL_CONTROL to PCIE_CLIENT_GENERAL_CON
+> > (to match PCIE_CLIENT_MSG_GEN_CON).
+> > 
+> > But now we have PCIE_CLIENT_MSG_GEN_CON / PCIE_CLIENT_GENERAL_CON and
+> > PCIE_CLIENT_HOT_RESET_CTRL.
+> > 
+> > _CTRL seems like a more common shortening. How about renaming all three to
+> > end with _CTRL ?
+> 
+> I saw that TRM is named like this.
+> 
+> PCIE_CLIENT_GENERAL_CON / PCIE_CLIENT_MSG_GEN_CON /
+> PCIE_CLIENT_HOT_RESET_CTRL
+> 
+> Shall we take TRM as the standard or your suggestion?
 
-The easiest solution would be switching the modules to use alloc_percpu()
-instead of declaring per-cpu variables statically. I couldn't think of a
-better way to support static percpu variables in modules and still can't,
-but there aren't noticeable downsides to using dynamically allocated percpu
-variables, so if you have several bytes here and there, sure, declare them
-statically, but for anything chunky, please use dynamic allocations.
+Aha, so the inconsistency is in the TRM... hahaha :)
 
-Thanks.
+Probably best to keep it identical to the TRM.
 
--- 
-tejun
+
+Kind regards,
+Niklas
