@@ -1,124 +1,93 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster2-host3-snip4-6.eps.apple.com [57.103.64.237])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB64626F442
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.64.237
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2B327FD58;
+	Wed, 23 Apr 2025 14:41:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745419278; cv=none; b=Nphs9CN/W0xwYjs+kb3j2BGO5tYB8fFZnK9qk1TDY2VQdp1JzU9jNjcSDTMQ5ezxz99FCl9f85oLv6ng5uqXbCizznALbzcbOtpD5Y4wiqEh8ZN1C7AccYvF4cSeNhDm7pr5wjUPI07Mpq/Su5+K21y+fKPDs/jIknU+XoyczUg=
+	t=1745419281; cv=none; b=cVprkZZS0vnuqOPfPv8FlNQl7wVGbmVEHDMGe3y9npmvAvUqHhlPGYhdLjrtbTBJOq7QHXBZAqjkh9ukjs9zM7kaSopYBFsn4MkkEqZMlCa9QqZHQkYxijrFBw8QymPGHH2zN8RJ1qphmWIl9M2k/fdO6R2FwIP+7JdXU3cKhpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745419278; c=relaxed/simple;
-	bh=zErhtI3a0XzGBOiMo0E5nQ9ED7Ta0ruzPDfrjh7EFAw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Fp2fQJxFNWdyE7G4fAjj19P+Dr0IqtASG6bJ6yUzittJvU77SeTZI8zCZdFdVlkDMbX1xvP9q1uoHJgNdNapAuquPRJyiEAsuSqgvolqn9lZnQcKM+D9pmJeC1scpfDxqOIja5QkMjcPT7A8pZpkGwM2nfFxXaSNIwSJ0mqdTK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=EF/UBBn+; arc=none smtp.client-ip=57.103.64.237
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1745419281; c=relaxed/simple;
+	bh=LSv+72puYjw5bOpYmjZlT20L7XZXssOk3Xu53zcVZf0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fMOXxwt+X1A9yjMbxTjD5VlQDGKmN9JdYOh1vU1SRDHaX/AMaIzO8cRdmECwT+TsEJ6ZZrmMdXzL5n1dNwp8d6EQW9r0I0nULWX4g1i8qehJBR7/9ld9anQ8SIOKgj0BmZEDDWgZSTrLwnQF0ulGik8CWcJ1PF2KJtpPV1Zlkeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZebEuXkN; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="EF/UBBn+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=OFTUbeC1duWE3NcbJV6ltGL1mi1k8xQIxToGjB2DcOM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
-	b=EF/UBBn+Szp+r56Tgs60E4q5LFMtwNrOAqTFE+ysfJQmJFxE1kbIcIEs40UVhRn6x
-	 YNnHZ5uXdAmnObY+atZs8tgsQGaNmPUw9yTN0ECiZWZKtOLp58HOKmo38PL4yokeEG
-	 yI8secp6CjUqQwsK+uCNUKn1KS+oNkVP3cZ6sCBOviBK/5nFWq8YzjlDMgnrcFNiLX
-	 rkQCnSOhSqkjOEn7DFNCrUIDGTfD4KzCMTNiS34MHvE58yAfBnCSMCzjpz52HSDSEJ
-	 DLR0wJXEDw0asdF7T02r3UNVG3oNYhm5A0bjI5QgP/zMPOnUX+rOxeWCD+J7ZtabNy
-	 VeImS16qwlKoQ==
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id F070418003B9;
-	Wed, 23 Apr 2025 14:41:11 +0000 (UTC)
-From: Zijun Hu <zijun_hu@icloud.com>
-Date: Wed, 23 Apr 2025 22:40:56 +0800
-Subject: [PATCH] tty: Remove unused API tty_port_register_device_serdev()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZebEuXkN"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22d95f0dda4so37848145ad.2;
+        Wed, 23 Apr 2025 07:41:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745419278; x=1746024078; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LSv+72puYjw5bOpYmjZlT20L7XZXssOk3Xu53zcVZf0=;
+        b=ZebEuXkN/lWivO+94JjUqIOftBuP3cT1B0YAPX9WYUL1pKk5pffECBHY4Q6zyfVnaB
+         HCPFH4bBkGmd7PWZz95rFz3plClZPXW6B3B6GT8vTYKtmvssfV6ah1g+rb/4vuPIcdpu
+         prxGK9cZhdK+hUYyavFL1ZP/ZUDJJUrADHXZZcxsERYTUGb33idLeJj+dXDJ1LgP/vdK
+         NDPgGuuad3dEdDrIOhIsWFVBqzO5UhpgL9fMXAZwOVn6YUT7ZlDNnK9lL4nXBIZhN3J5
+         wo5kornvKs7IwEj/ZWlsh7nYjsW71NW+2hoBzpWSiZcZWuKp+YplpXPOaOtmj2zYR1zh
+         D7aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745419278; x=1746024078;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LSv+72puYjw5bOpYmjZlT20L7XZXssOk3Xu53zcVZf0=;
+        b=bGg1FDkWa7gAiguWGvs97JI4jbtGUEtnABH/bpi58BabV7c23hln6jOS1xDQckuxU/
+         Fl/aFcCz/cElHSdc3Q4wQSBSWXGOEbueWfUckh/q1ZhG1AjlkLTEvZ6w1xgxOsIx9/oB
+         VooOayvtnfg1Nj4O+gG6H8sbQzIyASDlPjgcdUMCPy6SAOYVpyNJBFWVoi17CMrKqGkm
+         tMvnOqVZXsamamdXYT/6GnDO5oXuIm4bCEgFe6VQW7oHm7heeMZQWq7iYeimhet4OY+p
+         HR1ueYSbq6Tqz3apN2nVPdlt0NM0VUxrpcRbpYEbmS94egyJPZV2diEn6MxOoKnKOnjb
+         ziTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIG/aebxF6MnWogT3Xk+Sa7Mw6yBYQUVMaaimhh3tOuacg13MMS2TjuAff+Z7girmspiZrIUCDwnzud9va@vger.kernel.org, AJvYcCWNCExMdGyA0EBqdoPA+ibZMcBtWUjf9MjmnyzC/4pJqeaLbAYUxVacNaiRCpKU3oFq8Jk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2ow7zPLJPoY55xBGcsvwj7EMRdxHK6uD9vfCSUf0s/+gTTpfw
+	SiMhL5HaLS3RextyM60PliWVdBKj+Xcseu3ewBtKAT5ONPtSf5w=
+X-Gm-Gg: ASbGncvgs2kansLy4+hDq6KuF+jZlYjGDtKwANkOgoSn7+kjlIl6rrUJ6XmupggGQk/
+	OFrCM5VtBnhRBjn47E3C+evzJSyfuEFQNtnXXPBqT8F8Hx11cgFztdL9pjHvvTi9bQP+E2EsUFg
+	MCU5BNNzE0utmYaEGWpaBa/YeN8jXKz3/0Mb4E/xaG9urPg6YxRyNjV42A6V+8F/w0WtgilSaAG
+	VttuKscCDDBskPPru+/c3YKBoSxxX/jtMz+zZ5Hcx8suITflbrxwlvrCteMKhglz4q+nQXQM3QW
+	3UfzYXS/2KHps2grac3mMRsaq6Mhl7T5S1HzxKLi
+X-Google-Smtp-Source: AGHT+IGDMJ7mVrs7MGpWDguaDL50Errcc6GUi2lzccVKv7XMdolZY/WHsJ2g0YXTG07aJRo3JnZyqA==
+X-Received: by 2002:a17:902:ced0:b0:224:1ec0:8a1a with SMTP id d9443c01a7336-22c536423c5mr268699125ad.51.1745419278341;
+        Wed, 23 Apr 2025 07:41:18 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22c50fe0859sm105266865ad.246.2025.04.23.07.41.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 07:41:17 -0700 (PDT)
+Date: Wed, 23 Apr 2025 07:41:17 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: netdev@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] xsk: respect the offsets when copying frags
+Message-ID: <aAj8DfHJ_XZxrDSJ@mini-arch>
+References: <20250423101047.31402-1-minhquangbui99@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-remove_api-v1-1-fac673d09feb@quicinc.com>
-X-B4-Tracking: v=1; b=H4sIAPf7CGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEyNj3aLU3Pyy1PjEgkxdI9OkZDMDC2MDC7NUJaCGgqLUtMwKsGHRsbW
- 1AAhQZ2dcAAAA
-X-Change-ID: 20250423-remove_api-25bc6083086e
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Jiri Slaby <jirislaby@kernel.org>
-Cc: Zijun Hu <zijun_hu@icloud.com>, linux-kernel@vger.kernel.org, 
- linux-serial@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Proofpoint-GUID: JyRHJ_qnXfICI58kySRXI_kuIX3VS6EP
-X-Proofpoint-ORIG-GUID: JyRHJ_qnXfICI58kySRXI_kuIX3VS6EP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0
- clxscore=1015 malwarescore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- suspectscore=0 phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.22.0-2503100000 definitions=main-2504230103
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250423101047.31402-1-minhquangbui99@gmail.com>
 
-From: Zijun Hu <quic_zijuhu@quicinc.com>
+On 04/23, Bui Quang Minh wrote:
+> Add the missing offsets when copying frags in xdp_copy_frags_from_zc().
 
-Remove API tty_port_register_device_serdev() which has no caller.
+Can you please share more about how you've hit this problem?
+I don't see the caller of this function (xdp_build_skb_from_zc)
+being used at all.
 
-Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
----
- drivers/tty/tty_port.c   | 20 --------------------
- include/linux/tty_port.h |  3 ---
- 2 files changed, 23 deletions(-)
-
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 14cca33d226930f56ecbcce0d8ad8e90df8eee4f..4af1fbf73f51ca6eb321e7bf507a1cde74442b89 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -199,26 +199,6 @@ struct device *tty_port_register_device_attr_serdev(struct tty_port *port,
- }
- EXPORT_SYMBOL_GPL(tty_port_register_device_attr_serdev);
- 
--/**
-- * tty_port_register_device_serdev - register tty or serdev device
-- * @port: tty_port of the device
-- * @driver: tty_driver for this device
-- * @index: index of the tty
-- * @host: serial port hardware controller device
-- * @parent: parent if exists, otherwise NULL
-- *
-- * Register a serdev or tty device depending on if the parent device has any
-- * defined serdev clients or not.
-- */
--struct device *tty_port_register_device_serdev(struct tty_port *port,
--		struct tty_driver *driver, unsigned index,
--		struct device *host, struct device *parent)
--{
--	return tty_port_register_device_attr_serdev(port, driver, index,
--			host, parent, NULL, NULL);
--}
--EXPORT_SYMBOL_GPL(tty_port_register_device_serdev);
--
- /**
-  * tty_port_unregister_device - deregister a tty or serdev device
-  * @port: tty_port of the device
-diff --git a/include/linux/tty_port.h b/include/linux/tty_port.h
-index 1b861f2100b69f120971c7dd503d6635db1fb468..08f89a59836621b2c8864c46c4ed8883b3f9045b 100644
---- a/include/linux/tty_port.h
-+++ b/include/linux/tty_port.h
-@@ -147,9 +147,6 @@ struct device *tty_port_register_device_attr(struct tty_port *port,
- 		struct tty_driver *driver, unsigned index,
- 		struct device *device, void *drvdata,
- 		const struct attribute_group **attr_grp);
--struct device *tty_port_register_device_serdev(struct tty_port *port,
--		struct tty_driver *driver, unsigned index,
--		struct device *host, struct device *parent);
- struct device *tty_port_register_device_attr_serdev(struct tty_port *port,
- 		struct tty_driver *driver, unsigned index,
- 		struct device *host, struct device *parent, void *drvdata,
-
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250423-remove_api-25bc6083086e
-
-Best regards,
--- 
-Zijun Hu <quic_zijuhu@quicinc.com>
-
+Alexander, do you have plans to use it? Or should we remove it for now?
