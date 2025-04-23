@@ -1,178 +1,171 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C586E1EFFBB;
-	Wed, 23 Apr 2025 17:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4C1DDAD
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:05:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427915; cv=none; b=LxAZXipolWjaIxdk4zdWyy0w4o7/43OeoEOPAoj3ZcCAizVG7FZW41Dlz6wEnqW1qtqn2odPLQPLBNa88NFNjfQNfQxYYgwXhuf0NMM0/Hgut8/TN39nrC3supdGgrelkyhvT+9W+CYCnVrWObtWMrBpFmJKju7BPiipFm4h8cc=
+	t=1745427955; cv=none; b=qMq/W48tnwpKZMDFbOjaPUVOWBhHE/DwVY5nTyUVikOXRxmDcXqHLevspxwctDaKrbx4C/728/fsUDA+QYTs7/I+qwRKww4x+5wNseYNiH3xFhP8+eP7cgTIuMwyjbK9ed4yUtqWE+YGupxod2IMzXkN7hpeRZwhLW3Pd5xYxdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427915; c=relaxed/simple;
-	bh=6zKpPS9+zRAIYHWO5bW9Y1SGeFtJzszIk1IQ9wX2yuU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SwWSzEj0q2cZu9x64OltwDYVqTW2erUtycrAqI/B9EYSMEd0Tv0ZGOxb0q1iX5nSBjKnozivaTwtugfyNwqm1c3IZQFAmikJZ5MidbzNaYQ9Wefv7P3fxWF8uuryJY4Au0AkEJwvusN1Fis9FMK6xrQpJ95fdzmH/VhrDgpG2QE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBl9SIb+; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745427955; c=relaxed/simple;
+	bh=+ieYwaDCw94dSTBEsxjc2oXkTMPtIySnWtLyPN0/FNY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EAGh6qKwfkV7WK1hFPCF+6jWo6XRHqO+wCMWR7TYx7u5G1EcHxEddPux784Iv7mPQNdl9uM1b1/K2D4fRrFxP7gUa5sB/UdSZKqsz8rqxupQLblJJpiAAaR55JOVFg76BGdtrPHHnHp1560yuw+xYLa0sE6UApkOzkMW/qwEs9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDruBmda; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBl9SIb+"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22928d629faso690575ad.3;
-        Wed, 23 Apr 2025 10:05:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745427913; x=1746032713; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6zKpPS9+zRAIYHWO5bW9Y1SGeFtJzszIk1IQ9wX2yuU=;
-        b=IBl9SIb+EIhbiykHnqaHS8wFZrzxK3u9PlE+0wI+wYskPPz6kw3z8DuzJSe253erdc
-         lXjpeFxIdhIIBBmLp+pZmFLF2DwbX7XYd07p6q6ZFXK/+Hc1J7VUJwD8eQDkaYh7E00x
-         /rVskkbhIoZFJnX0KO0SDj1NL5WIJJkODnrDr7J0v2+MwIN6SZNyaVAhIaghy1LeF6Kk
-         wVX981hEQxgGyfKUh13TVCcJWvRZew2ZN5sGc9xazN+wErwSapRtlMyuqHHKBdMish2S
-         ZQ4XFqWt5nWglIPEoG4d2ZmD6tyG7k9yKVKuK3y8gciCwtGxhSFahGizRD8uJs79KSnt
-         SOiA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDruBmda"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745427953;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jJbMTWCqncnPcN2b8Q1cWkuDPNiPsy4soPd5FpvRDOk=;
+	b=FDruBmdamgr2inrO7QAJJAZ+Se9RtuGBWKc5pZ+G8HeEUA3o2FKrErUTzWO0bWHs2AtorM
+	XoY/reXQn0xMXqcoR1TUPrQfkccRYPxewPIcnUBubkhnK/+huBTrBib0b64J6D4wlrP7gH
+	R+/BIXlK4UqlvDoe/RgpenZZIF/Cu1s=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-587-2WjquSTBM9K8Mmdp1BWBIA-1; Wed, 23 Apr 2025 13:05:51 -0400
+X-MC-Unique: 2WjquSTBM9K8Mmdp1BWBIA-1
+X-Mimecast-MFC-AGG-ID: 2WjquSTBM9K8Mmdp1BWBIA_1745427950
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac3e0c1336dso7015966b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:05:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745427913; x=1746032713;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6zKpPS9+zRAIYHWO5bW9Y1SGeFtJzszIk1IQ9wX2yuU=;
-        b=Cp0FfCH/I0/lTiRFhJAy9NwkBhhd4ltUWETtrubvSKcwwFTLtACK3WFv2y3G/X8qpL
-         cNfyMxbvBgLay7nVVhp8hAS5TEFh3/7eD0SNaO+1Zblt3S3K2WL3r9b+kjQaCcA4LUXY
-         Noyd+N7z8+QFvnwfY5YaYA+q4zB9p1xiu1EO2sEWS1p7dIQ9cW9hi1sCCLgaqFeZDuxt
-         +NZnZv+1NGVReroouowgeBiBfbpawEoakHU5YAQ02v4vafIfkkORmw5/6yuMpaxQcxYY
-         LUTvCIyr4r2nZNP2/gBHUiEeMnPegp/nKXK1LfEdtDvjkYFtRPR53mK+UV82eJbrL0aS
-         lAwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVliKPwMfRP8jR6j7bLjkyk+qWOiWgLppe/qeLwS0MYsU4RQZOFR6COAd/zTihkVdMjB69btDsLj0s2EuY+CU/18+Ey@vger.kernel.org, AJvYcCWbC9nKiEqXrMHG8egeixIZMQuBsd7Uu3raeOoqkGw/RQwkOww8r/LzGUEQ95sOxVGqcSM=@vger.kernel.org, AJvYcCWjiTa4k1NYU29sbGvgLq3MZZCamq0QTf+ErcFp2svJbbQsuOEBgyX/zesIQcy5Tf4qlsuW7TtTxx39N/kx@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEFimf267bjrowWFHPcyxWrpxrbuypJgfCu60XeuaaZlUsbqp3
-	c4PU88O8Ulfr23gp34IvEbnKurRm+Zqhw/+eVgteqm9H6aWS41p6NkgKHKBf6wjeLDT6C9pjgZS
-	b4HVAQSHn+NnOOF3Kt349V4/wciy/hA==
-X-Gm-Gg: ASbGncvp9gJLfZK/vYblTJ+npVx9y2yNGXZ8wGageqgHrTPbkrMmhWpMdbOHJcjova1
-	SM6ueS2faoDZRjgUBXlni8rwoodrvasqk8GHAVE7/eEOrJN90MFqLSTNICnd3uiEWsTGsrFUh0S
-	71AHR6Zf1lLEOPjUimTlQ0W2n2NF4a0rCHzFyhgg==
-X-Google-Smtp-Source: AGHT+IGMZQKwDubGKkLCAEJvDU99u5TZOFapB+c2J61U8leklrLSHzo/pkQaNbIOUkY2y9M+FjfNNc4gRUsis+yKnzI=
-X-Received: by 2002:a17:90a:d010:b0:2fe:7f40:420a with SMTP id
- 98e67ed59e1d1-3087bb69218mr31482113a91.17.1745427912929; Wed, 23 Apr 2025
- 10:05:12 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745427950; x=1746032750;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jJbMTWCqncnPcN2b8Q1cWkuDPNiPsy4soPd5FpvRDOk=;
+        b=iRReYfeh2JoV2bMzrWZeArd8bsE0DpH1AR3c8mh5tOhkvMxj0GMLH2eKBfVUB1l2L4
+         qYZtJS172LejPgGvQVxE8IHxhhdHB0y3duUQZQElKC+nmX9TsHAe8DfUGkgRCIW2TJxu
+         UZPKFtNA/gmRbH4D7nBXVz6OVmaJweB8S+4dAmGkc5khlawXFjimSxDS2WmgbDQoECIl
+         2+v2bmW9NB0c8H9sbT5w1t6hFZGIOEyoR176fhh9BSuvMVyV5cAnaGd0vHnaNKM8Nfca
+         4wmLGiE6Zo3qBse0hD7EQUwBqYDvV1GneFIb/NkOrxBRWlXb0bYYyCwaVYQa5Z0Mn5Al
+         dQGA==
+X-Forwarded-Encrypted: i=1; AJvYcCV2U6xe7WyY77GB/VxsgKgynTNd1edscdJY2/KIhHfAUflzjDMVLRVcr82sAeOLgSyekG1PGoZbM6NfTKY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu0H2zJVDMCXwpXPHTHJAolSPb+hTlcGJfsTCLMJG5Auha0BfA
+	lCvBFHEIkACbYZXRx1JLTIpqS3ewWlMarU/wR8llT3n6Sq9SAD4Gej0u5T0i4Lw4Ra4o9accHNq
+	gbhJ8mqIvoSM3fnLymbhPZMklCdhYMJuVyZhhXtpTOcg0T2fzwS3W066JD34gY3ZE0Mi0q65j
+X-Gm-Gg: ASbGncsvF4lKWYPaM8D5+F0ea8zyagrU01zaWPTlxMirkVEn86rJEgh+DIaXfPPppX2
+	7+z4+llIRfNoJmJYOYsa4YXuc8l4d427KBCEzHWcpEon6EaP1N8sKHOa7DWU6QWA7HOMp2k9k8T
+	rvS2lD4jiznKAMHMlgIbKnXNHxRla1cFKazz00l9AZeDpw8G7NxRWOlvZZYHBJAvqSkgmq4/5GP
+	iOCrA9/PtT3DKBXIFw9yuJD63h2sNjT1Ll0Asox5OGgw81K9fcam4erQf9Ozh74UsmtDFLgUeOm
+	ocm6sjUTVMc0r6jLQ0W2HaZVhFeTuSCJ934ulsq+jW4nP/TAlEgfViJOK0aAcBa7HtABFMUSnKF
+	exBWLxVQLXr6rQ0xw6SRKfnkOVK8VAQ4M9U0D+jspy6zZdZnYyr9mYDslLNzpzQ==
+X-Received: by 2002:a17:907:2d06:b0:ac8:1142:a9e5 with SMTP id a640c23a62f3a-acb74dd5490mr1382502166b.47.1745427949878;
+        Wed, 23 Apr 2025 10:05:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFGUfyLp7pQ4wJXXGTs2A/h6iN7pW1UaixQPCQ/wM5hvKHeCIIA+Ui+fcJHeyhgvS/98gQqCQ==
+X-Received: by 2002:a17:907:2d06:b0:ac8:1142:a9e5 with SMTP id a640c23a62f3a-acb74dd5490mr1382496266b.47.1745427949256;
+        Wed, 23 Apr 2025 10:05:49 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acbb945b434sm335158666b.184.2025.04.23.10.05.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 10:05:48 -0700 (PDT)
+Message-ID: <3ae149b5-a936-45b4-8887-eb7cde1ee4b0@redhat.com>
+Date: Wed, 23 Apr 2025 19:05:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410070258.276759-1-yangfeng59949@163.com>
- <CAEf4Bzai7NL-3=1SVi4-WWYWEY6Lzrb8GBfKnt6FG8sNm2OMRQ@mail.gmail.com> <CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=pzTEbQ@mail.gmail.com>
-In-Reply-To: <CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=pzTEbQ@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Apr 2025 10:05:00 -0700
-X-Gm-Features: ATxdqUGMzy3AYWGX5UwpIo9ghrB61M-1gmWsamJS27T0RdXOwdL9vKenW5sik14
-Message-ID: <CAEf4BzZtOUWyQego7Uj5GH48-bLM1stSyi-uZ=+JTtGzYojFAA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3] bpf: Remove redundant checks
-To: Zvi Effron <zeffron@riotgames.com>
-Cc: Feng Yang <yangfeng59949@163.com>, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, 
-	mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, bpf@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
+To: Kurt Borja <kuurtb@gmail.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Lyndon Sanche <lsanche@lyndeno.ca>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
+ <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
+ <2afb6e58-44cb-486e-8062-074ff397dc2c@linux.intel.com>
+ <1e8a6fe0-518d-4eac-9895-51179ca23f36@redhat.com>
+ <D9E5H5B9X448.12FJT48775C50@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <D9E5H5B9X448.12FJT48775C50@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 3:44=E2=80=AFPM Zvi Effron <zeffron@riotgames.com> =
-wrote:
->
-> On Wed, Apr 16, 2025 at 2:56=E2=80=AFPM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Thu, Apr 10, 2025 at 12:03=E2=80=AFAM Feng Yang <yangfeng59949@163.c=
-om> wrote:
-> > >
-> > > From: Feng Yang <yangfeng@kylinos.cn>
-> > >
-> > > Many conditional checks in switch-case are redundant
-> > > with bpf_base_func_proto and should be removed.
-> > >
-> > > Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-> > > Acked-by: Song Liu <song@kernel.org>
-> > > ---
-> > > Changes in v3:
-> > > - Only modify patch description information.
-> > > - Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yan=
-gfeng59949@163.com/
-> > >
-> > > Changes in v2:
-> > > - Only modify patch description information.
-> > > - Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yan=
-gfeng59949@163.com/
-> > > ---
-> > > kernel/trace/bpf_trace.c | 72 ---------------------------------------=
--
-> > > 1 file changed, 72 deletions(-)
-> > >
-> >
-> > All this looks good, I checked that those functions indeed are allowed
-> > in bpf_base_func_proto. The only (minor) differences are capabilities,
-> > bpf_base_func_proto() correctly guards some of the helpers with
-> > CAP_BPF and/or CAP_PERFMON checks, while bpf_tracing_func_proto()
-> > doesn't seem to bother (which is either a bug or any tracing prog
-> > implies CAP_BPF and CAP_PERFMON, I'm not sure, didn't check).
-> >
-> > But I think we can take it further and remove even more stuff from
-> > bpf_tracing_func_proto and/or add more stuff into bpf_base_func_proto
-> > (perhaps as a few patches in a series, so it's easier to review and
-> > validate).
-> >
-> > Basically, except for a few custom implementations that depend on
-> > tracing program type (like get_stack and others like that), if
-> > something is OK to call from a tracing program it should be ok to call
-> > from any program type. And as such it can (should?) be added to
-> > bpf_base_func_proto, IMO.
->
-> Is this true? Does it make sense? (See below.)
->
-> > P.S. I'd name the patch/series as "bpf: streamline allowed helpers
-> > between tracing and base sets" or something like that to make the
-> > purpose clearer
-> >
-> > [...]
-> >
-> > > case BPF_FUNC_get_current_uid_gid:
-> > > return &bpf_get_current_uid_gid_proto;
-> > > case BPF_FUNC_get_current_comm:
-> > > return &bpf_get_current_comm_proto;
-> >
-> > I'm surprised these two are not part of bpf_base_func_proto, tbh...
-> > maybe let's move them there while we are cleaning all this up?
->
-> Do these make sense in all BPF program types such that they belong in
-> bpf_base_func_proto? For example, XDP programs don't have a current uid a=
-nd
-> gid, do they?
+Hi Kurt,
 
-everything in the kernel, whether NMI handler, hardirq, softirq, or
-whatnot runs with *some* current task. So in that sense there is
-always pid/tgid and uid/gid. It might not be very relevant for XDP
-programs, but it's there, and so if we allow to get current pid/tgid,
-why not allow the current comm and uid/gid?
+On 23-Apr-25 6:14 PM, Kurt Borja wrote:
+> Hi all,
+> 
+> On Wed Apr 23, 2025 at 10:44 AM -03, Hans de Goede wrote:
+>> Hi Ilpo,
+>>
+>> On 23-Apr-25 3:27 PM, Ilpo Järvinen wrote:
+>>> On Fri, 11 Apr 2025, Kurt Borja wrote:
+>>>
+>>>> Use a faux device parent for registering the platform_profile instead of
+>>>> a "fake" platform device.
+>>>>
+>>>> The faux bus is a minimalistic, single driver bus designed for this
+>>>> purpose.
+>>>
+>>> Hi Kurt, Hans & Greg,
+>>>
+>>> I'm not sure about this change. So dell-pc not a platform device but
+>>> a "fake".
+>>
+>> Arguably the dell-pc driver does not need a struct device at all,
+>> since it just exports /sys/firmware/acpi/platform_profile sysfs
+>> interface by using the relevant Dell SMBIOS interfaces for this.
+>>
+>> As such maybe we should just completely get rid of the whole
+>> struct device here?
+>>
+>> If we do decide to keep the struct device, then since the struct device
+>> seems to just be there to tie the lifetime of the platform_profile
+>> handler to, I guess that calling it a faux device is fair.
+> 
+> I think it's important to mention that a parent device is required to
+> register a platform profile, see [1].
 
->
-> > pw-bot: cr
-> >
-> > > - case BPF_FUNC_trace_printk:
-> > > - return bpf_get_trace_printk_proto();
-> > > case BPF_FUNC_get_smp_processor_id:
-> > > return &bpf_get_smp_processor_id_proto;
-> >
-> > this one should be cleaned up as well and
-> > bpf_get_smp_processor_id_proto removed. All BPF programs either
-> > disable CPU preemption or CPU migration, so bpf_base_func_proto's
-> > implementation should work just fine (but please do it as a separate
-> > patch)
-> >
-> > > - case BPF_FUNC_get_numa_node_id:
-> > > - return &bpf_get_numa_node_id_proto;
-> > > case BPF_FUNC_perf_event_read:
-> > > return &bpf_perf_event_read_proto;
-> >
-> > [...]
-> >
+Ah ok, that is new, I guess that was changed with the new support
+for registering multiple platform-profile handlers.
+
+> I guess we could get away with removing the device altogether from here,
+> but that would require to find another suitable parent device. The
+> obvious choice would be the `dell-smbios` device, however that would
+> require exporting it in the first place.
+> 
+> For some reason, exporting devices doesn't seem right to me, so IMO a
+> faux device is a good choice here.
+
+Agreed.
+
+> Another solution that would make more sense, lifetime wise, is to turn
+> this into an aux driver and let `dell-smbios` create the matching aux
+> device. I could do this, but I think it's overly complicated.
+
+Yes that does seem overly complicated, lets just go with the faux
+device.
+
+Regards,
+
+Hans
+
+
+
+
+>>> Is it just because this driver only happens to call
+>>> dell_send_request(), etc., not contains that low-level access code within? 
+>>> Or is that dell-smbios "fake" too?
+> 
+> IMO `dell-smbios` is "fake" too? It is there only to expose either the
+> WMI or the SMM backend through a single sysfs interface.
+> 
+> I think a more natural design for `dell-smbios` would be an aux driver
+> that exposed it's interface through a class device. Maybe I'm wrong in
+> this regard though.
+> 
+> [1] https://elixir.bootlin.com/linux/v6.15-rc3/source/drivers/acpi/platform_profile.c#L556
+> 
+
