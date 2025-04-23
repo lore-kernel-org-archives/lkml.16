@@ -1,123 +1,126 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD5F2701BA
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 070DB1F2B88;
+	Wed, 23 Apr 2025 00:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745368853; cv=none; b=D0SyS8ilHkGCq/E95jdV2gjAiFWKqHEeVxh3UstdvYr+yPemdZ82qiTyxA6f7WGF6t8nAsp20a2mqU74GJfKbFQwYlq7wVxlS8mc37bZfPI/5XJcTSrPAPC/CuCzmVBIpIu0yBfEMC+QTn6Xk4inr1y81hYVa28cksIazXQ8D90=
+	t=1745368955; cv=none; b=sMcoq9WrdAaHOwEvwDH8bz0JBkNjftAwFaRzKpWAguSJWETXN0WsG70TmWM1jVczNv6HdBo1rev5z+Ly8To5rWF/x4gvJrg1mn/jOctpeOpdh/7ShgFEL+lpufPnBehEcIGXDPJgtPsKVlqqZ3y5DaakUz3LlbLm9S0H0Ilognw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745368853; c=relaxed/simple;
-	bh=Syva1iN/oMJBnZoP6XVS6eM+3t78OBSIKce4uOfivKY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AOON+drqlmN2NaFLsNQwvTj9wqrqX+10kN8NOeGp7xn2of3mRF1JeRs1MnXb79t2IuN1G6wrcC20+kzTj+zFthyxzGOkPkK11QhXLCUasuBV/F4awQpycYxYl1dv4eENygBWvR0PgT8EuOHu7S4VvHa6a3VudZimDJuFhrFzBIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=AePzWVs2; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1745368955; c=relaxed/simple;
+	bh=vRxj+FE88pNhlcEn8/W3fItUCEJa95sjbjD77bx46ug=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PGDzdW12/rfeczpunAPVASnSbRqemKJQM1s57mZZCI5NVIoco8TiSlEPjFqPVFnkvpZhWr4DmvhYX8X+F/Ay4LxGwFXfHj3E34TtVdLi1J4TS7CMgavTdmirBsAgDSgXMsbzTYc+WuYLs4BZwRfr/4At9D0EJE5G2Pb1uc0BQk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=FXQ+sjiY; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="AePzWVs2"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2264aefc3b5so7765375ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 17:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1745368851; x=1745973651; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jlaMJGQ/nAvElMgJHvPzYsN612vvvBWvX4nIclqUR4c=;
-        b=AePzWVs20YBCKT7CWxBBJQhWa3ScrT0XQqxjb8xWtyUtNsooKgO5YJDy0oaMdSlrVs
-         cJTcbI+RF0J8jcOXntKd4yFRWnsrebPu9DzD+DpcAmzRv30tT4rsgq4aQlKUgpkptT2k
-         N7QDI87BhMPR5x5tc1g9zO5+HSn/5M8xc2MMVYf+m47gFuE8m/JHuNwYJAQlbMTkJ8qF
-         wlAWvAh9hp662upz277WwCUOiXvTfF53TNXZpbXMmB+BP2TqaZiF7VBt88NrlaktPVCi
-         QxXk2Xf51vGTKODuvLqeqrIAg+bwyWI836R9MQr06wRuAq1dnvwGr8U64Xv7iJX+0YVO
-         ZoMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745368851; x=1745973651;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jlaMJGQ/nAvElMgJHvPzYsN612vvvBWvX4nIclqUR4c=;
-        b=YtR7zp0mtol14loPBndL2HQD7kFt84q0HnDSEaU8OYmSweSCQ6KtUjyNt+6wcIv4N1
-         jH1IEBfWGcYdZnHdsUnedroJD3erKHuPdTS2U8N4ylDTW9XGTMhbIsqMleDc4u5Nx4i0
-         r7oPvzG2Y5RqQYXN+I8G1sh8jva2eFt58jNj7KfbqoEqvnyHAGByv0KD4iVlh1AV5Iuu
-         PczKmz5drmQIeLQQmAEfh/uVN8dnlYEILdqzfP7G7esTgtEQiXmgA0b+EEM3SlQiNPfV
-         Cz8QTBDQezMRzPUpjjJTYSNiLaqw+PJGUDiZLfEe//SOJfi0yrmvoWsrKCjpHCklndEx
-         IgVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWPumYvdcZ6D1Db9PbIX6MIM/OrDyUiEGQ6Li2RnMx8YdLn2kKNcOqdqaMsHIlX+spLjo4p42uSYfaDpjU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVpGLdRZK7UcZBu3Gang0sfpFgbuDoWPB1hPTtqqGsbz/noLM/
-	NdYZhZW4SzeDuP+Q9LKulApbhnFJbjcJkFDjh50KQJYnxz8eP29VmZRHxmfQzSgkNwxtBmP1K6j
-	/I5v6PRND4e1Kb/mXfNB4ofpocVfZyjMzbeFtsh9BZL+U4eFt9go=
-X-Gm-Gg: ASbGncuXrbXumgMFXoH8MKRcjwEu91Dy5i9pCkdRSMzlneUmo8PI68wCbgBNYgq2nQR
-	YckcGxAoFjqe2WSyq/2aXFhRuqeWmoCv7E6BRRxQpCYGQP+RyPjaAMYwoD/0IIzv8fDgCCsn8gF
-	PchdvdupGB+8i058UGNYCp
-X-Google-Smtp-Source: AGHT+IGJSpy7epiqldES3L6c8QjtYlkI0pJaazs49izFIq2HBHFJpQh+40j+jHPXU9QQ5d4Hor2Nbp/iL+Lgxeoel38=
-X-Received: by 2002:a17:902:d4c3:b0:220:e1e6:446e with SMTP id
- d9443c01a7336-22da3011aa9mr5556345ad.1.1745368850975; Tue, 22 Apr 2025
- 17:40:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="FXQ+sjiY"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53MM18vd012804;
+	Wed, 23 Apr 2025 00:42:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=cBZqXQ
+	IkDyFQhlJgb6cQfanBQadUkMoKu5Qig70Km+I=; b=FXQ+sjiYPj1GIhcvTjn81L
+	9CcL9abYuOiBQhmgJtn9FHkSQlJfTLHPSAN83wlqNuDP8MNoib8Zvw4qVRJbiNWE
+	+dXvfLH9eZNb5p3otBaLWZFFlQ4I2ylLO4vRzSB2CcOBahuQ341cK7FBSRxm4net
+	fzsWNikQuHf4n/ApmogsOmH+uLNpusdDx2LWkM2aee0YQBGzBRiBPVIVCwhle7gi
+	/vhvIpYwe8l3h1oA9W+94MNsIMTjPcIZ2j4WFbW7oKT48mNrEqHVY+iOI8zLOgAQ
+	ZTwPgdcaSSHNCY78FlOn4PnNHpMIIidpaIUEt3p8IYbSsxEzaNUsisQPks3Y0njg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466jp3rmf0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 00:42:20 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53N0elKO010883;
+	Wed, 23 Apr 2025 00:42:19 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466jp3rmew-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 00:42:19 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53MKnFGC008670;
+	Wed, 23 Apr 2025 00:42:18 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfxgpxq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 00:42:18 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53N0gIK429623002
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 00:42:18 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 120965804B;
+	Wed, 23 Apr 2025 00:42:18 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 285545805B;
+	Wed, 23 Apr 2025 00:42:17 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.61.45.91])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 23 Apr 2025 00:42:17 +0000 (GMT)
+Message-ID: <dc9bd25b60c1185e28214293c015e2b3f30f76bf.camel@linux.ibm.com>
+Subject: Re: linux-next: duplicate patch in the integrity tree
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mimi Zohar
+	 <zohar@linux.vnet.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: Roberto Sassu <roberto.sassu@huawei.com>,
+        Linux Kernel Mailing List
+	 <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List
+	 <linux-next@vger.kernel.org>
+Date: Tue, 22 Apr 2025 20:42:16 -0400
+In-Reply-To: <20250423083952.7fae69b0@canb.auug.org.au>
+References: <20250423083952.7fae69b0@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416170154.3621609-1-csander@purestorage.com> <aABFAg563W1g_4QS@fedora>
-In-Reply-To: <aABFAg563W1g_4QS@fedora>
-From: Caleb Sander Mateos <csander@purestorage.com>
-Date: Tue, 22 Apr 2025 17:40:39 -0700
-X-Gm-Features: ATxdqUG4dCfLiInXhfwaydYJoA-6CGyEwQKolnRYogRcmd98YYBUl6gNWqb20Tk
-Message-ID: <CADUfDZr_HCXHnDUDf5bcOGkBqcfttzq+1qqmhFSMvyCqcF4TBQ@mail.gmail.com>
-Subject: Re: [PATCH] ublk: remove unnecessary ubq checks
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ming Lei <ming.lei@redhat.com>, Uday Shankar <ushankar@purestorage.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 3T4j1Ui_QBfVpgYd0g_qSpF2P8KTmJkI
+X-Proofpoint-ORIG-GUID: XzXFaTmQ6IsYmoCp8XYeaF-yV-TgOVCT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDAwMSBTYWx0ZWRfX2hm+G0g9BjvB IoWMF/wRabSt9P6ha4CaN6dW5ogjv1g0h5R68ukzZZZikpXe70NU5GdgkTlMQmQImNwSlaVpXzG 7+GTf5JtWt+3Wtj+yLKYBcEpRIRwmGMK+S8De+ByzzUhX8yL5tZIbzzFlihSX26pTGAF07CVdeF
+ bEMIKOqEEPXC6bdiMAakrMX1wtIY6YhhFutRF9U1oxsdzCmqchFtOjfAWGzO0p0HtgkZyRdJNN7 uLUs0ltvN6GUUiLDbDkjTGjIvT00Ec2tb7Z+x5jWKvLRLub/sJEGniVR9SblOOISDLHJXYZ422r FxStXafCYWpUFTGknZJxgSU21emlZ+3D2HV8QtANHAAQypxtUQvmtRn1BLQhUDZ0WuYmnHBTPam
+ uRs7bUrN7hdEq8oNnOjUiYmmhtCXrB3pSbyvPP4ehMKzYCC/BK/QIoY1lQvxanISE6Jy00Bw
+X-Authority-Analysis: v=2.4 cv=N9wpF39B c=1 sm=1 tr=0 ts=6808376c cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=4TkunlOkxh8sHfZMeKYA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-22_11,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 adultscore=0 bulkscore=0
+ impostorscore=0 phishscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230001
 
-Hi Jens,
-Would you mind queueing up this small patch for 6.16? Uday and Ming
-have reviewed it.
+Hi Stephen,
 
-Thanks,
-Caleb
+On Wed, 2025-04-23 at 08:39 +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> The following commit is also in Linus Torvalds' tree as a different commi=
+t
+> (but the same patch):
+>=20
+>   976e5b974fef ("ima: process_measurement() needlessly takes inode_lock()=
+ on MAY_READ")
+>=20
+> This is commit
+>=20
+>   30d68cb0c37e ("ima: process_measurement() needlessly takes inode_lock()=
+ on MAY_READ")
+>=20
+> in Linus' tree.
 
-On Wed, Apr 16, 2025 at 5:02=E2=80=AFPM Ming Lei <ming.lei@redhat.com> wrot=
-e:
->
-> On Wed, Apr 16, 2025 at 11:01:53AM -0600, Caleb Sander Mateos wrote:
-> > ublk_init_queues() ensures that all nr_hw_queues queues are initialized=
-,
-> > with each ublk_queue's q_id set to its index. And ublk_init_queues() is
-> > called before ublk_add_chdev(), which creates the cdev. Is is therefore
-> > impossible for the !ubq || ub_cmd->q_id !=3D ubq->q_id condition to hit=
- in
-> > __ublk_ch_uring_cmd(). Remove it to avoids some branches in the I/O pat=
-h.
-> >
-> > Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> > ---
-> >  drivers/block/ublk_drv.c | 3 ---
-> >  1 file changed, 3 deletions(-)
-> >
-> > diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-> > index cdb1543fa4a9..bc86231f5e27 100644
-> > --- a/drivers/block/ublk_drv.c
-> > +++ b/drivers/block/ublk_drv.c
-> > @@ -1947,13 +1947,10 @@ static int __ublk_ch_uring_cmd(struct io_uring_=
-cmd *cmd,
-> >
-> >       if (ub_cmd->q_id >=3D ub->dev_info.nr_hw_queues)
-> >               goto out;
-> >
-> >       ubq =3D ublk_get_queue(ub, ub_cmd->q_id);
-> > -     if (!ubq || ub_cmd->q_id !=3D ubq->q_id)
-> > -             goto out;
-> > -
->
-> Looks correct, ubq->q_id is always same with the index passed to
-> ublk_get_queue().
->
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
->
->
-> Thanks,
-> Ming
->
+Yes, I know.  Roberto unnecessarily rebased on -rc3 before sending the pull
+request.  As soon as -rc4 is out, I'll resync with Linus.
+
+Mimi
