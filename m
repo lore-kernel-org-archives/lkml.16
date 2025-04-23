@@ -1,99 +1,94 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18A31A0711
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CA3188CB1;
+	Wed, 23 Apr 2025 13:37:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415435; cv=none; b=RCF0qbckb3tCpgQ6/GjxcurZF2YUBQsuEm2WDwsa58iLBiP39AvHg/4gN/M8KfVe1aV1ndhqqk6G/V+uFsVCQcyCai/AvTC9O5NpZpUsIEpX1nuc5kbsL1l91dOuaOb29xJmLx1EwTPZX33lx8Oi1yy/4KIAfokHoUpGWREkhs8=
+	t=1745415460; cv=none; b=DA7CARRUSxzUbj2w+xgCyvh/JRzeIt2ULG+ZUsQjADpRvKt9gKIjQP+twLkK9O5hTcCR7RrqiauVE0lFjRQV+OippxexUTsvgZme869U/zPNL5zv5J+L/SQ6USHlr/ok3QrnRY8gQbINlqSLKrk2f4VNLabillT9zWo19SUy49E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415435; c=relaxed/simple;
-	bh=dXr0vdvJSE4CQmBa2fTuILJV/L6G5HpSxSHQ49PKVqY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PXpLq4EDHWqhEvcevBKFVRuTvClHoAcav68EWGHLWbcMb4f0t/qc6qXBl748FD4Lhuu08ZyHwmNPengRBJQPyq9I6yMjSOnZxl5JOBSZI7SHCRszKVIwY/ofAfLphETfZgxcg2FwdxkAzSESYE+KZhQjCOaKQJeauy4cwALIIcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nT0JZxbk; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745415460; c=relaxed/simple;
+	bh=KhlYkEqRWOy+NUA8qYmqopvVILH6QfgOFe66Bi46DeE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=dUq8/kwRsnoCZud7OQmZHK1xnipmEtPfNbCnrcDgf6n5wgPYFq8qQGh6I4fisVssGIFUFt/dmj1SZ5bRzN3ZGoS8m49zazCRYMpyBJZCAVIbmkf7ntzMpuvbqntCJ5fhqx39cgFz9kzPzbly7eGGR5Qn37Y57B7QzhFZdW6Q2Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhyAb8iG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nT0JZxbk"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30828f9af10so13580986a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745415433; x=1746020233; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
-        b=nT0JZxbkLOWuAaq4nDpqtJy0UU3fVSwyW/pnNNBGYtoYR/+veEUbsw1SW7uJkXUY9+
-         O8RFZ5mI3iZ/bhFeyS6mpQMMAXezkdZIzt5lXK/oKDFsuDimPPcn2I6rOaU8XnWilwy4
-         Qflh7jQ/97QLXGCjRrnvUz0MJpppmkyoylDcvcx1GHi73/C77pzsSBWavAJzDCuOl8Vu
-         Bx69HB/Nd+cusCL5TPzdZ2tLrS0aQKRNqjrAQAhL7fNktV8FmsgyGiJ37d7CE0puVmjy
-         sSKyhx/48E0CSccNslHjG8NDhKl65lvTaigTuvvrWJaiU24iVs3SZBs7noSsvJEIf+mE
-         70Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745415433; x=1746020233;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTV99TNe8c9V+BGz9HYw0E5RTZLdGwFx/9m2XgmuzHE=;
-        b=d+F8iZm9ChC3kBKpdfdZB9NTCKrCAhc/mEmFrpebS1lbIfpz8/WuspQeZ0L+D1Q99w
-         fiz7BCZyOLiVrWsyVeZ7lc5t2nEIXs6Kenpl5zHkyq9U25xA4Di3gh2DVmSzIT/D0HsC
-         E2+QOvRuMBAzlX2fGsxZxB8hdq+k67wnlY9gQoQ2PuOD5ZvN8t7cQExsWTczs2DzsjqA
-         EcB+DflRNNu8FAcD3hicDbMI2JgyDun4N5u+b4P/1LvN8UNQbxE27UU5wGTKeeurD2OV
-         l5MgQ70n2N7KFuMV3M4LVTQxSUcs7rnC9TFbUwkMLFdgdBocaQWEZDrON+zXLrh8WMK6
-         Om9g==
-X-Gm-Message-State: AOJu0YwFrHjwPuvChtxXSaiDeH/rFejGtPZrmEqB1zWHhF3WWWs70wPu
-	zsHtmjIlRMlTMZtByhvJhS4nEuRVtMhOsYtOdEBeZ1Rd2wdJBBIr7W/KDnl3AUsPnFtRZUn5TZQ
-	dxw==
-X-Google-Smtp-Source: AGHT+IEWS42km52dkYFlmcKZWmN1wttg5SPG3JN+o4kIB9LzXEDLrbHh1gdrPp7a64YZSw75FwPTF5N3xvo=
-X-Received: from pjur12.prod.google.com ([2002:a17:90a:d40c:b0:308:867e:1ced])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2650:b0:2ee:9b2c:3253
- with SMTP id 98e67ed59e1d1-3087bbc9333mr25668631a91.30.1745415432973; Wed, 23
- Apr 2025 06:37:12 -0700 (PDT)
-Date: Wed, 23 Apr 2025 06:37:11 -0700
-In-Reply-To: <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhyAb8iG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F384CC4CEE2;
+	Wed, 23 Apr 2025 13:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745415460;
+	bh=KhlYkEqRWOy+NUA8qYmqopvVILH6QfgOFe66Bi46DeE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=JhyAb8iG4C5NZlsDnjgyvBm9RfxuzisolYd5qChiFgNy83amnUcie66wIdpJCGLlK
+	 fET0xRvjHri7RkCPDSs2bZPs0cBvmYH8gJmWVUennym0MjSW+UbxqHG1k28jRNHdIa
+	 zo7R3dRCV4G8W8+eGzAv3zgkclx/N4linJyyF0xTz9yooRzsdXstxXsx8OAiCyuYiY
+	 q3A/yI1kbBIEmhW1Zv3skfAHcwzhp1r5W8uFJiHkmOzeWAV0aZ8xJd/vJeeH8H2g6O
+	 ZlAX+3/LYpD2KHyyykyHl6Bv+DnM/uj1Myx4Cb++9GOc1RQ+ejno2d91gZqVCp1nDs
+	 PHzV5qiQpxc0w==
+Date: Wed, 23 Apr 2025 08:37:38 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250422082216.1954310-1-xin@zytor.com> <20250422082216.1954310-11-xin@zytor.com>
- <aAexLqjhKncFyw2V@google.com> <7527f09c-7163-4276-b9a4-edac6c8217ae@zytor.com>
-Message-ID: <aAjtBxzvRgNt4Uzr@google.com>
-Subject: Re: [RFC PATCH v2 10/34] x86/msr: Convert __rdmsr() uses to
- native_rdmsrq() uses
-From: Sean Christopherson <seanjc@google.com>
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-pm@vger.kernel.org, 
-	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org, 
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org, 
-	jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com, 
-	bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com, 
-	pbonzini@redhat.com, vkuznets@redhat.com, luto@kernel.org, 
-	boris.ostrovsky@oracle.com, kys@microsoft.com, haiyangz@microsoft.com, 
-	decui@microsoft.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org, 
+ niyas.ahmed@samsung.com, linux-kernel@vger.kernel.org, g.naidu@samsung.com, 
+ devicetree@vger.kernel.org, krzk+dt@kernel.org, cs0617.lee@samsung.com, 
+ linux-samsung-soc@vger.kernel.org, alim.akhtar@samsung.com
+To: Yashwant Varur <yashwant.v@samsung.com>
+In-Reply-To: <20250423060034.973-1-yashwant.v@samsung.com>
+References: <CGME20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a@epcas5p2.samsung.com>
+ <20250423060034.973-1-yashwant.v@samsung.com>
+Message-Id: <174541475597.315167.13886111857775924354.robh@kernel.org>
+Subject: Re: [PATCH] arm64: dts: exynos: Added the ethernet pin
+ configuration
 
-On Wed, Apr 23, 2025, Xin Li wrote:
-> On 4/22/2025 8:09 AM, Sean Christopherson wrote:
-> > I strongly prefer that we find a way to not require such verbose APIs, especially
-> > if KVM ends up using native variants throughout.  Xen PV is supposed to be the
-> > odd one out, yet native code is what suffers.  Blech.
+
+On Wed, 23 Apr 2025 11:30:34 +0530, Yashwant Varur wrote:
+> This patch adds the ethernet pin configuration.
 > 
-> Will try to figure out how to name the APIs.
+> Signed-off-by: Yashwant Varur <yashwant.v@samsung.com>
+> Signed-off-by: Changsub Lee <cs0617.lee@samsung.com>
+> ---
+>  .../dts/exynos/exynosautov920-pinctrl.dtsi    | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
 > 
-> One reason I chose verbose names is that short names are in use and
-> renaming needs to touch a lot of files (and not fun at all).
 
-Yeah, I've looked at modifying rdmsrl() to "return" a value more than once, and
-ran away screaming every time.
 
-But since you're already doing a pile of renames, IMO this is the perfect time to
-do an aggressive cleanup.
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: tags/next-20250423 (exact match)
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/exynos/' for 20250423060034.973-1-yashwant.v@samsung.com:
+
+arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: pinctrl@10830000 (samsung,exynosautov920-pinctrl): 'eth0_pps_out0', 'eth0_pps_out1', 'eth_extpll_avb', 'eth_phy_reset' do not match any of the regexes: '^(initial|sleep)-state$', '^[a-z0-9-]+-pins$', '^[a-z]+[0-9]*-gpio-bank$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/pinctrl/samsung,pinctrl.yaml#
+arch/arm64/boot/dts/exynos/exynosautov920-sadk.dtb: pinctrl@16c10000 (samsung,exynosautov920-pinctrl): 'eth0_mdc_mdio', 'eth0_pps_out', 'eth0_rgmii' do not match any of the regexes: '^(initial|sleep)-state$', '^[a-z0-9-]+-pins$', '^[a-z]+[0-9]*-gpio-bank$', '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/pinctrl/samsung,pinctrl.yaml#
+
+
+
+
+
