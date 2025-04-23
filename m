@@ -1,152 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A367426FA41;
-	Wed, 23 Apr 2025 07:54:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6048A27055A
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394841; cv=none; b=Pni41TDVjuEWJ2JhvCSVgo1FVnFBZ4AYhDzxqMZoQPv88M0CluJYpwS0T5LrEZ2Rm/TnrLYkBkp19RmLSwyMsv6fpx71wWyEoLcii1zag4APfAH5fp+huLrMUYZ+poJn1V42dFvsnAdS1E2+cJJdGlielB8SMHHwUiFfiC6nG8o=
+	t=1745394844; cv=none; b=T1oJLjmVS0nsde6A5jEwsnlTmi5VRkxXYQvhR9TMsPjjMUc7tn4/umdt8iV7HrXG0PVIm0NazjI6a9OjO/7hoMxDG1xZYU+tB0+LVlJfjYF9AdZS0QCoCBJi1tOt7/04dfnfkgvpV6367frWqwqMHjSLgLcfuli3Xh2Rfoa520A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394841; c=relaxed/simple;
-	bh=v7rNe7nvrKZC9xeVLWg4sajLhvuKnW8g13iiuAlRy0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Laut9+tWuU1eL5jb+uZITKtn+ltnkGC/3qlW5ELd34Ye83uTxT2UE8MyaIeDyH9YwXkfMgzCRPZHN/Mg0l+V/j9irtrpJ/zws+WVStHYcSYs0q2ddrWOhwaknglh88ZwH48p8tu2gN/0dm40R8PJJJlJ6dcBl2huJCtKfRJOivY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gcoAG/Ea; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745394844; c=relaxed/simple;
+	bh=N0WwTN6cuFBMQtVPSuk+m8VXYpNYq64YYcC2HR1dSt4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ka+r5THyTyF+Xw/9MdZdjv8BOB8+aBp5lRGPds8cdPqQ0jMigzQXj9yCbuxhMxPaMRqBE0+YTVye62++I2p9kRJMWk573W1R/7uoRKvhndyMD0PTFey3XmeCpWVT6n65O0H9I962le9DgR9WyQCXGHw8aPFyny7X/rOYQHXIcgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MDqkO/p+; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gcoAG/Ea"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A5F5C4CEE2;
-	Wed, 23 Apr 2025 07:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745394841;
-	bh=v7rNe7nvrKZC9xeVLWg4sajLhvuKnW8g13iiuAlRy0Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=gcoAG/EakeRu4xIJsNGLcFvYpG6bri74lrJc4kE4urHhx5i2BgE+zpSj3EKJgoqfb
-	 9RLg+F7f+GbWG4KAR9CpIxTLZwc8b6Budo/7/Fh/7Sfq4FGzhZIEiQcAk+ujDno1H1
-	 rF2XXFwmOiwhFp7BdsjgLWWxi2DTit3a/+BUsJ+fAi5hjYUmDwh4KfaZDsDv3b/68N
-	 KMGdZSwS6bfMGHZHPpwa88qnl5e/Mo2etRphJmwUKRESJ+YBFALh3xDbzEIf1qT7jT
-	 n5UoFoZdrp6zwKyFRSsV5axpO/XVS/sQQ8WC9Qy5aL+F+OBs+aqlod9iNiUL/2u+uM
-	 AMKW87Knd3GrQ==
-From: Philipp Stanner <phasta@kernel.org>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Jaya Kumar <jayakumar.alsa@gmail.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Mark Brown <broonie@kernel.org>,
-	liujing <liujing@cmss.chinamobile.com>,
-	Andres Urian Florez <andres.emb.sys@gmail.com>,
-	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	David Rhodes <drhodes@opensource.cirrus.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/28] ALSA: Phase out hybrid PCI devres API
-Date: Wed, 23 Apr 2025 09:53:18 +0200
-Message-ID: <20250423075346.45907-1-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MDqkO/p+"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so4781965e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:54:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745394841; x=1745999641; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VPRTWsIFDattDg+pyjOf0c8PqdiKxpRrUpEN2x7oMCM=;
+        b=MDqkO/p+6l13y5VsiVuAr9E5roNMGqinuA8Ut5rE1rS7KHqa6zd02J2bvKsnDTLj4P
+         wthP4uR8sVTMX6pPY2hpfUkWD1IJ1a6gDQS67/6rtlADTy8f0sjRgq6Mq7qAbtLqMGql
+         WnZqKJJMPuoWC/YBhNQc998LGMgXazEjHwqSCaBET5but6j5sKIQ6MWyZHoSEgUL957u
+         qaIS9aUt1wsiyqjXPymlWkd5g56hsLMyQY0Z5QvajWsIRv6fFfcyrHe1tvG29AKtn7t6
+         7qc/SWtzuJM6Xi2MwrRwymDnzRb6qIB30smNqPWMPm4HswaC+wSSqOHN5S+NOlzYEDwZ
+         FLXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745394841; x=1745999641;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VPRTWsIFDattDg+pyjOf0c8PqdiKxpRrUpEN2x7oMCM=;
+        b=i5NgpLLh29fsU6uMV/tw+rYzmGYJQdNf4xp3pwiI2boSPKkmjj2nPnD9L4OiR3Zc9p
+         CJNQ0SB8fO18FaeP8XL7oKTfLXgkSwfr7IOGJcZWKyrgwGUDLAaL5GSj31tCIAxP11dq
+         IalGwCynxitDSeGYyxg/+hq1KBgH/lTyb4M6mq4zeTr5oPn5gRd+Udiy32FuK23kWzGu
+         PePeYkChsHKunFzFzA8o53OTBGjp//yhG921hlf4Cmc40g0FtA+9XkmmUBooXCZSLYYR
+         CZXAUBquspPCTzCvOTLrhtmGoLN01g4KVlWxtO6/HGW+ls6V/wBZiuZHK9yO4gXwjNjK
+         n0yw==
+X-Forwarded-Encrypted: i=1; AJvYcCXguxgR3wRZvljNO5+Z91M3lQBVZAmq7nT9GVoFLVNPQz3OdAGkcBwCp750mArp10hOlHvhoeKUVLsK7jI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqWXd6mhmbVoFeIBUFnIFcZJ3UjYMapjusTWcK86TtVn6lsZch
+	Z9UHrSJ0i3JVshv46bItMtWvR/KBc6ieoIDyxdZD1DmAPYzCsyQt6iI6gGttOqk=
+X-Gm-Gg: ASbGncuXN+cddAU3jGuT8lf2FQBSRVdOoGwk3/gg3jrpxvwK60DYb/S2Wg6mqD5Ceq3
+	zVPjeUyrPip6c+ybVlQBDhZqs7aRQ1HOt+o4C/eV5srrOv27VekzztBujXwy8hHQYhfo7zdwFUv
+	HQTUG3/j+M09GZyy1JGvRMjIX6y7DbonynhJ9/Ocx3xiIKTwvafN13iDxXvQDGgNDS67L38PFJH
+	NV4wv4j5mXZkUG3KgL0FRXdIsrQM38bNM2Z99iCmcBRUU2RBEDpwgfVkWmLwFhJm648+cRtlN9k
+	syO6ZiB32pw1zlvLQywJipuqGgrzBGsbng==
+X-Google-Smtp-Source: AGHT+IHI5oJcBEzU/+dqI9+s526iScFMzOCWLPWNYgVlJrgGNMkgt2vl8zY5oFysLDdkEPsKBo2JNg==
+X-Received: by 2002:a05:600c:1c98:b0:43c:f509:2bbf with SMTP id 5b1f17b1804b1-44091fddd38mr18823105e9.15.1745394840657;
+        Wed, 23 Apr 2025 00:54:00 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:74b0:71bd:6dda:dcc1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4330d8sm18266655f8f.33.2025.04.23.00.54.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 00:54:00 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 0/4] leds: use new GPIO setter callbacks
+Date: Wed, 23 Apr 2025 09:53:49 +0200
+Message-Id: <20250423-gpiochip-set-rv-leds-v1-0-2f42d8fbb525@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI6cCGgC/x3MSwqAMAxF0a1Ixga0/tCtiAOprxoQLY2IUNy7x
+ eEZ3BtJEQRKQxYp4BaV80go84zsNh8rWJZkMoVpitpUvHo57SaeFReHm3csys6gKVvXW8wdpdQ
+ HOHn+7Ti97wesVD2XZgAAAA==
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Riku Voipio <riku.voipio@iki.fi>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1126;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=N0WwTN6cuFBMQtVPSuk+m8VXYpNYq64YYcC2HR1dSt4=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoCJyT0+OlYThjZx+FJ1bQJdzMWTUnPIg5r6TIS
+ XEKMFC4+VKJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAickwAKCRARpy6gFHHX
+ cjt/D/wPBEC+V/mt3kFZcJSkkFnnWauvhCM+yNIUveQso7mRwm86BhNda9mFAFk3cHZoOPDScyc
+ o3T3/BU9SfQhnyvx0poAisMlg8Sd9ONLBy97qOfTBpt/5jmM/1ReopFmJJieQhtaHSV9j+NFyNP
+ kZLzEnuXAJiNhKsUYjAA77dvZ+L913ZvUbPCuyjehMrBG5gvOt2XEF0UvnH+EvRFqu3r2cYpSts
+ qUIyfoJ/5FBgx7zBsLDZr0TctfcpyJQ/31m7G7ApNCZr7p9jK+jQGmMYNJJISu6g5MCa8wcU5TJ
+ +C1rWHB5SFK9n5wN+4F3oAb8Ivs9geYfuG6GjNz/BC94KQb+axKWBiPXATLtf67jEWYGoSIrqUK
+ MrFv7kAmjwxrmmLQe9DtPMCG6AaElSjhbgQKaqx+sKsD4yW8POPXUsoj94zf+CeXxzQBgUlIB8n
+ /bBpXT4WAtqYjMiA1rUJzY6TEmTuCCJ4eugdleVBEtwOeXDJAEVCv2SNYuR3i43KdqpOk/5+Bza
+ 5TchKROmGc6E3P1pSJQC1FrxdHvhVIRpnql/A2j6OG7zYsRfIftAv8biQClezXW6T1c+teoDL/8
+ 2ctKakglr4OPG3MsBekAVlRelsbt9xvUDyYGQeFUq0H3Lsnp+RNhBJDfuIHp0qOorgC9luxsMBZ
+ IV3RS3CjYTlRSoA==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Changes in v2:
-  - Add RB from Andy
-  - Remove ASoC patches, branch out this series for Alsa. (Andy)
+Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+values") added new line setter callbacks to struct gpio_chip. They allow
+to indicate failures to callers. We're in the process of converting all
+GPIO controllers to using them before removing the old ones. This series
+converts all GPIO drivers under drivers/leds/.
 
-Hi,
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (4):
+      leds: lgm-sso: use new line value setter callbacks
+      leds: pca955x: use new line value setter callbacks
+      leds: pca9532: use new line value setter callbacks
+      leds: tca6507: use new line value setter callbacks
 
-a year ago we spent quite some work trying to get PCI into better shape.
-Some pci_ functions can be sometimes managed with devres, which is
-obviously bad. We want to provide an obvious API, where pci_ functions
-are never, and pcim_ functions are always managed.
+ drivers/leds/blink/leds-lgm-sso.c |  6 ++++--
+ drivers/leds/leds-pca9532.c       | 11 ++++++-----
+ drivers/leds/leds-pca955x.c       |  8 ++++----
+ drivers/leds/leds-tca6507.c       | 11 ++++++-----
+ 4 files changed, 20 insertions(+), 16 deletions(-)
+---
+base-commit: 2c9c612abeb38aab0e87d48496de6fd6daafb00b
+change-id: 20250423-gpiochip-set-rv-leds-f2e516f9cea7
 
-Thus, everyone enabling his device with pcim_enable_device() must be
-ported to pcim_ functions. Porting all users will later enable us to
-significantly simplify parts of the PCI subsystem. See here [1] for
-details.
-
-This patch series does that for sound.
-
-Feel free to squash the commits as you see fit.
-
-P.
-
-[1] https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/pci/devres.c#L18
-
-Philipp Stanner (28):
-  ALSA: sonicvibes: Use pure devres PCI
-  ALSA: rme96: Use pure devres PCI
-  ALSA: rme32: Use pure devres PCI
-  ALSA: ens1370: Use pure devres PCI
-  ALSA: cmipci: Use pure devres PCI
-  ALSA: via82: Use pure devres PCI
-  ALSA: sis7019: Use pure devres PCI
-  ALSA: intel8x: Use pure devres PCI
-  ALSA: fm801: Use pure devres PCI
-  ALSA: es19x8: Use pure devres PCI
-  ALSA: azt3328: Use pure devres PCI
-  ALSA: als: Use pure devres PCI
-  ALSA: oxygen: Use pure devres PCI
-  ALSA: lx6464es: Use pure devres PCI
-  ALSA: vx222: Use pure devres PCI
-  ALSA: trident: Use pure devres PCI
-  ALSA: rme9652: Use pure devres PCI
-  ALSA: ymfpci: Use pure devres PCI
-  ALSA: riptide: Use pure devres PCI
-  ALSA: nm256: Use pure devres PCI
-  ALSA: ice: Use pure devres PCI
-  ALSA: emu10k1: Use pure devres PCI
-  ALSA: echoaudio: Use pure devres PCI
-  ALSA: cs5535: Use pure devres PCI
-  ALSA: cs46xx: Use pure devres PCI
-  ALSA: ca0106: Use pure devres PCI
-  ALSA: ali5451: Use pure devres PCI
-  ALSA: maestro3: Use pure devres PCI
-
- sound/pci/ali5451/ali5451.c         | 2 +-
- sound/pci/als300.c                  | 2 +-
- sound/pci/als4000.c                 | 2 +-
- sound/pci/azt3328.c                 | 2 +-
- sound/pci/ca0106/ca0106_main.c      | 2 +-
- sound/pci/cmipci.c                  | 2 +-
- sound/pci/cs46xx/cs46xx_lib.c       | 2 +-
- sound/pci/cs5535audio/cs5535audio.c | 2 +-
- sound/pci/echoaudio/echoaudio.c     | 2 +-
- sound/pci/emu10k1/emu10k1_main.c    | 2 +-
- sound/pci/emu10k1/emu10k1x.c        | 2 +-
- sound/pci/ens1370.c                 | 2 +-
- sound/pci/es1938.c                  | 2 +-
- sound/pci/es1968.c                  | 2 +-
- sound/pci/fm801.c                   | 2 +-
- sound/pci/ice1712/ice1712.c         | 2 +-
- sound/pci/ice1712/ice1724.c         | 2 +-
- sound/pci/intel8x0.c                | 2 +-
- sound/pci/intel8x0m.c               | 2 +-
- sound/pci/lx6464es/lx6464es.c       | 2 +-
- sound/pci/maestro3.c                | 2 +-
- sound/pci/nm256/nm256.c             | 2 +-
- sound/pci/oxygen/oxygen_lib.c       | 2 +-
- sound/pci/riptide/riptide.c         | 2 +-
- sound/pci/rme32.c                   | 2 +-
- sound/pci/rme96.c                   | 2 +-
- sound/pci/rme9652/hdsp.c            | 2 +-
- sound/pci/rme9652/rme9652.c         | 2 +-
- sound/pci/sis7019.c                 | 2 +-
- sound/pci/sonicvibes.c              | 2 +-
- sound/pci/trident/trident_main.c    | 2 +-
- sound/pci/via82xx.c                 | 2 +-
- sound/pci/via82xx_modem.c           | 2 +-
- sound/pci/vx222/vx222.c             | 2 +-
- sound/pci/ymfpci/ymfpci_main.c      | 2 +-
- 35 files changed, 35 insertions(+), 35 deletions(-)
-
+Best regards,
 -- 
-2.48.1
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
