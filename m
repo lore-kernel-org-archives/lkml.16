@@ -1,171 +1,363 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4C1DDAD
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:05:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19270202961;
+	Wed, 23 Apr 2025 17:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427955; cv=none; b=qMq/W48tnwpKZMDFbOjaPUVOWBhHE/DwVY5nTyUVikOXRxmDcXqHLevspxwctDaKrbx4C/728/fsUDA+QYTs7/I+qwRKww4x+5wNseYNiH3xFhP8+eP7cgTIuMwyjbK9ed4yUtqWE+YGupxod2IMzXkN7hpeRZwhLW3Pd5xYxdI=
+	t=1745427982; cv=none; b=QR7JfdAtlZQt/eeWQr05rT0ZC5xJRiJy2iA8tIG2YqbDDlSNZaFVTWVqdl3A+k3dWyU23fmhlWzJASD60u98ecv8U2BqfM2qbQEwmNAHI2IdQF7NwqGHdvtAMWUtVhQIlkXYwq2LvbYUFslPzGOcSIj1Z2ej6KjG14n/6CH3MA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427955; c=relaxed/simple;
-	bh=+ieYwaDCw94dSTBEsxjc2oXkTMPtIySnWtLyPN0/FNY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EAGh6qKwfkV7WK1hFPCF+6jWo6XRHqO+wCMWR7TYx7u5G1EcHxEddPux784Iv7mPQNdl9uM1b1/K2D4fRrFxP7gUa5sB/UdSZKqsz8rqxupQLblJJpiAAaR55JOVFg76BGdtrPHHnHp1560yuw+xYLa0sE6UApkOzkMW/qwEs9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDruBmda; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745427982; c=relaxed/simple;
+	bh=n0hLIQMV4RgMq6A50D+8hjviVxHs848BOPaJqtM4q90=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tZhww1ddhy9W2PbbDk6tmVG0eQdww4OFUxEbGkgz9YiepUu2UvOiUCFTAyc0AgsHolDuxqbVTMz/p+vmeIYB+nWvaUiMgebXzcdlqTaPgbBO2VeGT8Oqn+qThfs2jnKdJEKLb356yj2lEmb6LTreLLoAwx00Zr7kxJgAdhjOHKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGTZSSJJ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDruBmda"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745427953;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jJbMTWCqncnPcN2b8Q1cWkuDPNiPsy4soPd5FpvRDOk=;
-	b=FDruBmdamgr2inrO7QAJJAZ+Se9RtuGBWKc5pZ+G8HeEUA3o2FKrErUTzWO0bWHs2AtorM
-	XoY/reXQn0xMXqcoR1TUPrQfkccRYPxewPIcnUBubkhnK/+huBTrBib0b64J6D4wlrP7gH
-	R+/BIXlK4UqlvDoe/RgpenZZIF/Cu1s=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-587-2WjquSTBM9K8Mmdp1BWBIA-1; Wed, 23 Apr 2025 13:05:51 -0400
-X-MC-Unique: 2WjquSTBM9K8Mmdp1BWBIA-1
-X-Mimecast-MFC-AGG-ID: 2WjquSTBM9K8Mmdp1BWBIA_1745427950
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac3e0c1336dso7015966b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:05:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGTZSSJJ"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2264aefc45dso1354405ad.0;
+        Wed, 23 Apr 2025 10:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745427980; x=1746032780; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zq5XdeL9ToAKwNn1O6D6mibDHxiyxNVwdZRqKOds+wk=;
+        b=RGTZSSJJAETTZi7uxGXZQLvoEBWZViVYwKBqo6WfFFlgyDlI48BQr9ozkJMdoXQ+j/
+         1hAEFlG7AlZEzCiULElEoljNcpnP9EaA3DCUyrcv4AuyjZzpWxnfa/Cs9yuGOpEIEmO1
+         3VVRUlmxH7VL9chPgwMDmWx3axAQjGIquJyPrxN/amGoxooqBHJcb4UZZHufIqN3JRBE
+         65RXS8X6jVsjcH5oftCQk6HeFbaLjqRxkkiK+6nWz7La1FbIF6xV4aGqTvuirD5c5Hgg
+         NFhmZVGKDnwBZLEt/323FEP5nMYYOhL+3gC6t+Uy3KcWekIYVMhGYN378iTIauOm11uP
+         dh5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745427950; x=1746032750;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jJbMTWCqncnPcN2b8Q1cWkuDPNiPsy4soPd5FpvRDOk=;
-        b=iRReYfeh2JoV2bMzrWZeArd8bsE0DpH1AR3c8mh5tOhkvMxj0GMLH2eKBfVUB1l2L4
-         qYZtJS172LejPgGvQVxE8IHxhhdHB0y3duUQZQElKC+nmX9TsHAe8DfUGkgRCIW2TJxu
-         UZPKFtNA/gmRbH4D7nBXVz6OVmaJweB8S+4dAmGkc5khlawXFjimSxDS2WmgbDQoECIl
-         2+v2bmW9NB0c8H9sbT5w1t6hFZGIOEyoR176fhh9BSuvMVyV5cAnaGd0vHnaNKM8Nfca
-         4wmLGiE6Zo3qBse0hD7EQUwBqYDvV1GneFIb/NkOrxBRWlXb0bYYyCwaVYQa5Z0Mn5Al
-         dQGA==
-X-Forwarded-Encrypted: i=1; AJvYcCV2U6xe7WyY77GB/VxsgKgynTNd1edscdJY2/KIhHfAUflzjDMVLRVcr82sAeOLgSyekG1PGoZbM6NfTKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxu0H2zJVDMCXwpXPHTHJAolSPb+hTlcGJfsTCLMJG5Auha0BfA
-	lCvBFHEIkACbYZXRx1JLTIpqS3ewWlMarU/wR8llT3n6Sq9SAD4Gej0u5T0i4Lw4Ra4o9accHNq
-	gbhJ8mqIvoSM3fnLymbhPZMklCdhYMJuVyZhhXtpTOcg0T2fzwS3W066JD34gY3ZE0Mi0q65j
-X-Gm-Gg: ASbGncsvF4lKWYPaM8D5+F0ea8zyagrU01zaWPTlxMirkVEn86rJEgh+DIaXfPPppX2
-	7+z4+llIRfNoJmJYOYsa4YXuc8l4d427KBCEzHWcpEon6EaP1N8sKHOa7DWU6QWA7HOMp2k9k8T
-	rvS2lD4jiznKAMHMlgIbKnXNHxRla1cFKazz00l9AZeDpw8G7NxRWOlvZZYHBJAvqSkgmq4/5GP
-	iOCrA9/PtT3DKBXIFw9yuJD63h2sNjT1Ll0Asox5OGgw81K9fcam4erQf9Ozh74UsmtDFLgUeOm
-	ocm6sjUTVMc0r6jLQ0W2HaZVhFeTuSCJ934ulsq+jW4nP/TAlEgfViJOK0aAcBa7HtABFMUSnKF
-	exBWLxVQLXr6rQ0xw6SRKfnkOVK8VAQ4M9U0D+jspy6zZdZnYyr9mYDslLNzpzQ==
-X-Received: by 2002:a17:907:2d06:b0:ac8:1142:a9e5 with SMTP id a640c23a62f3a-acb74dd5490mr1382502166b.47.1745427949878;
-        Wed, 23 Apr 2025 10:05:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFGUfyLp7pQ4wJXXGTs2A/h6iN7pW1UaixQPCQ/wM5hvKHeCIIA+Ui+fcJHeyhgvS/98gQqCQ==
-X-Received: by 2002:a17:907:2d06:b0:ac8:1142:a9e5 with SMTP id a640c23a62f3a-acb74dd5490mr1382496266b.47.1745427949256;
-        Wed, 23 Apr 2025 10:05:49 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acbb945b434sm335158666b.184.2025.04.23.10.05.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 10:05:48 -0700 (PDT)
-Message-ID: <3ae149b5-a936-45b4-8887-eb7cde1ee4b0@redhat.com>
-Date: Wed, 23 Apr 2025 19:05:47 +0200
+        d=1e100.net; s=20230601; t=1745427980; x=1746032780;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zq5XdeL9ToAKwNn1O6D6mibDHxiyxNVwdZRqKOds+wk=;
+        b=KX6AOL5lXHxs55YjiyYEPlwwXeuGXPpmub4mDyqUcXBsQB7FtD7B124mIpY1m2+LzI
+         pOfUEn9fdkEpNGqCFTyQGsU1EN2pe9XFsOg8PbxauGhVmQLMNxXSJLBaUZUwOU6ppIav
+         tnm4vB/+YW1PRsUJFfToUsdqiBX2EdPhpq7XveFObGgWDJUCVUc28SCVrHEX00+HWQAQ
+         Ln2/uLkDMD6Q3bDkMoh0jA9+dY3oD5Gy8M9J6xN6VrE9O08TQrqgXd7h9WlIsA/Sz+Le
+         mNTVftSCCNSZFUlB1AKfHE4XMzl5RYQ8w+ErC1nEXt1iF1fxyVdAhUJEBBnc8xRse5jX
+         ALQw==
+X-Forwarded-Encrypted: i=1; AJvYcCUy2fLWlEEZAvpqQ9/Xadex9zqthmRCVhWqaXxN6LUj8EAs2HC4vvBFx4pRF55hHbD+OTzM40vVD6V4WwZD@vger.kernel.org, AJvYcCVm37PvyRYw+UintLk/ubEL4+olSrSAsjx8M79tFEhlDYfLR395pjBlYRCA/4Bj+CaMadvpQ7rtONY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLMMcy10oN0cPJXG5dnEnYN25SKleOvLYUL+qN+55Vj/IuWBbL
+	Xtdq7clcQvAIpRgCiuxQLNRW9kaALSw3QxaEnEPtlCLB5zD267La
+X-Gm-Gg: ASbGncuqusQuciF9+mDDI1DtJT2S1QtLbhySg0OQ8g5RtHQyzcKLU7jinlIYlYbgNww
+	xllaa3l7UDcwUNTYoCgDDG9QGCXMAx/qDMRC+kdM8/3gDQeo6CZskKBkH7e0DOmYg/lUAfNiNMX
+	jXPrsUvb1G6wF2k2zzc9+KnHzZwdLrIt/H9f3MRpTCorzuys7yooR7a/UOaBl3PZWmXddVJRwi8
+	T6V/tspKxcUljuqZcOd8q5WfT+ktpW4t/4JGkWN0kqmV2RBpGaC1f/3m3a4dktIuxwoCymNMXct
+	ICKFY4ogZHVn75ceHu68HQPuK86V8znGb/jmXoVWASb8Es/VWRvzt7uivQ4=
+X-Google-Smtp-Source: AGHT+IEvexOcjSgNuSPlOz9TKyCXBOjUd5ptRfZhm3pBbIhNiVkRxQRrLtdhgoJbdiDeq9RqFeZxSA==
+X-Received: by 2002:a17:903:410a:b0:223:536d:f67b with SMTP id d9443c01a7336-22c53607c21mr266532495ad.38.1745427980450;
+        Wed, 23 Apr 2025 10:06:20 -0700 (PDT)
+Received: from delta4.semfio.usp.br ([143.107.45.1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdf3a6sm106943875ad.259.2025.04.23.10.06.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 10:06:20 -0700 (PDT)
+From: Andrew Ijano <andrew.ijano@gmail.com>
+X-Google-Original-From: Andrew Ijano <andrew.lopes@alumni.usp.br>
+To: jic23@kernel.org
+Cc: andrew.lopes@alumni.usp.br,
+	gustavobastos@usp.br,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org,
+	jstephan@baylibre.com,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: accel: sca3000: remove duplicated code in sca3000_read_data
+Date: Wed, 23 Apr 2025 14:05:26 -0300
+Message-ID: <20250423170526.15143-1-andrew.lopes@alumni.usp.br>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
-To: Kurt Borja <kuurtb@gmail.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Lyndon Sanche <lsanche@lyndeno.ca>,
- Mario Limonciello <mario.limonciello@amd.com>,
- platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
- <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
- <2afb6e58-44cb-486e-8062-074ff397dc2c@linux.intel.com>
- <1e8a6fe0-518d-4eac-9895-51179ca23f36@redhat.com>
- <D9E5H5B9X448.12FJT48775C50@gmail.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <D9E5H5B9X448.12FJT48775C50@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Kurt,
+Remove duplicated code between sca3000_read_data and
+sca3000_read_data_short functions.
 
-On 23-Apr-25 6:14 PM, Kurt Borja wrote:
-> Hi all,
-> 
-> On Wed Apr 23, 2025 at 10:44 AM -03, Hans de Goede wrote:
->> Hi Ilpo,
->>
->> On 23-Apr-25 3:27 PM, Ilpo Järvinen wrote:
->>> On Fri, 11 Apr 2025, Kurt Borja wrote:
->>>
->>>> Use a faux device parent for registering the platform_profile instead of
->>>> a "fake" platform device.
->>>>
->>>> The faux bus is a minimalistic, single driver bus designed for this
->>>> purpose.
->>>
->>> Hi Kurt, Hans & Greg,
->>>
->>> I'm not sure about this change. So dell-pc not a platform device but
->>> a "fake".
->>
->> Arguably the dell-pc driver does not need a struct device at all,
->> since it just exports /sys/firmware/acpi/platform_profile sysfs
->> interface by using the relevant Dell SMBIOS interfaces for this.
->>
->> As such maybe we should just completely get rid of the whole
->> struct device here?
->>
->> If we do decide to keep the struct device, then since the struct device
->> seems to just be there to tie the lifetime of the platform_profile
->> handler to, I guess that calling it a faux device is fair.
-> 
-> I think it's important to mention that a parent device is required to
-> register a platform profile, see [1].
+The common behavior is centralized in just one sca3000_read_data
+function and used for every case.
 
-Ah ok, that is new, I guess that was changed with the new support
-for registering multiple platform-profile handlers.
+Signed-off-by: Andrew Ijano <andrew.lopes@alumni.usp.br>
+Co-developed-by: Gustavo Bastos <gustavobastos@usp.br>
+Signed-off-by: Gustavo Bastos <gustavobastos@usp.br>
+---
+ drivers/iio/accel/sca3000.c | 85 ++++++++++++++-----------------------
+ 1 file changed, 33 insertions(+), 52 deletions(-)
 
-> I guess we could get away with removing the device altogether from here,
-> but that would require to find another suitable parent device. The
-> obvious choice would be the `dell-smbios` device, however that would
-> require exporting it in the first place.
-> 
-> For some reason, exporting devices doesn't seem right to me, so IMO a
-> faux device is a good choice here.
-
-Agreed.
-
-> Another solution that would make more sense, lifetime wise, is to turn
-> this into an aux driver and let `dell-smbios` create the matching aux
-> device. I could do this, but I think it's overly complicated.
-
-Yes that does seem overly complicated, lets just go with the faux
-device.
-
-Regards,
-
-Hans
-
-
-
-
->>> Is it just because this driver only happens to call
->>> dell_send_request(), etc., not contains that low-level access code within? 
->>> Or is that dell-smbios "fake" too?
-> 
-> IMO `dell-smbios` is "fake" too? It is there only to expose either the
-> WMI or the SMM backend through a single sysfs interface.
-> 
-> I think a more natural design for `dell-smbios` would be an aux driver
-> that exposed it's interface through a class device. Maybe I'm wrong in
-> this regard though.
-> 
-> [1] https://elixir.bootlin.com/linux/v6.15-rc3/source/drivers/acpi/platform_profile.c#L556
-> 
+diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
+index aabe4491efd7..cdede5df63d8 100644
+--- a/drivers/iio/accel/sca3000.c
++++ b/drivers/iio/accel/sca3000.c
+@@ -281,10 +281,11 @@ static int sca3000_write_reg(struct sca3000_state *st, u8 address, u8 val)
+ 	return spi_write(st->us, st->tx, 2);
+ }
+ 
+-static int sca3000_read_data_short(struct sca3000_state *st,
+-				   u8 reg_address_high,
+-				   int len)
++static int sca3000_read_data(struct sca3000_state *st,
++			     u8 reg_address_high,
++			     int len)
+ {
++	int ret;
+ 	struct spi_transfer xfer[2] = {
+ 		{
+ 			.len = 1,
+@@ -294,9 +295,15 @@ static int sca3000_read_data_short(struct sca3000_state *st,
+ 			.rx_buf = st->rx,
+ 		}
+ 	};
++
+ 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
++	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
++	if (ret) {
++		dev_err(&st->us->dev, "problem reading register\n");
++		return ret;
++	}
+ 
+-	return spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
++	return 0;
+ }
+ 
+ /**
+@@ -309,7 +316,7 @@ static int sca3000_reg_lock_on(struct sca3000_state *st)
+ {
+ 	int ret;
+ 
+-	ret = sca3000_read_data_short(st, SCA3000_REG_STATUS_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_STATUS_ADDR, 1);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -412,7 +419,7 @@ static int sca3000_read_ctrl_reg(struct sca3000_state *st,
+ 	ret = sca3000_write_reg(st, SCA3000_REG_CTRL_SEL_ADDR, ctrl_reg);
+ 	if (ret)
+ 		goto error_ret;
+-	ret = sca3000_read_data_short(st, SCA3000_REG_CTRL_DATA_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_CTRL_DATA_ADDR, 1);
+ 	if (ret)
+ 		goto error_ret;
+ 	return st->rx[0];
+@@ -432,7 +439,7 @@ static int sca3000_print_rev(struct iio_dev *indio_dev)
+ 	struct sca3000_state *st = iio_priv(indio_dev);
+ 
+ 	mutex_lock(&st->lock);
+-	ret = sca3000_read_data_short(st, SCA3000_REG_REVID_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_REVID_ADDR, 1);
+ 	if (ret < 0)
+ 		goto error_ret;
+ 	dev_info(&indio_dev->dev,
+@@ -575,7 +582,7 @@ static inline int __sca3000_get_base_freq(struct sca3000_state *st,
+ {
+ 	int ret;
+ 
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	if (ret)
+ 		goto error_ret;
+ 	switch (SCA3000_REG_MODE_MODE_MASK & st->rx[0]) {
+@@ -665,7 +672,7 @@ static int sca3000_read_3db_freq(struct sca3000_state *st, int *val)
+ {
+ 	int ret;
+ 
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -703,7 +710,7 @@ static int sca3000_write_3db_freq(struct sca3000_state *st, int val)
+ 		mode = SCA3000_REG_MODE_MEAS_MODE_OP_2;
+ 	else
+ 		return -EINVAL;
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -732,7 +739,7 @@ static int sca3000_read_raw(struct iio_dev *indio_dev,
+ 				return -EBUSY;
+ 			}
+ 			address = sca3000_addresses[chan->address][0];
+-			ret = sca3000_read_data_short(st, address, 2);
++			ret = sca3000_read_data(st, address, 2);
+ 			if (ret < 0) {
+ 				mutex_unlock(&st->lock);
+ 				return ret;
+@@ -742,7 +749,7 @@ static int sca3000_read_raw(struct iio_dev *indio_dev,
+ 					     chan->scan_type.realbits - 1);
+ 		} else {
+ 			/* get the temperature when available */
+-			ret = sca3000_read_data_short(st,
++			ret = sca3000_read_data(st,
+ 						      SCA3000_REG_TEMP_MSB_ADDR,
+ 						      2);
+ 			if (ret < 0) {
+@@ -830,7 +837,7 @@ static ssize_t sca3000_read_av_freq(struct device *dev,
+ 	int len = 0, ret, val;
+ 
+ 	mutex_lock(&st->lock);
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	val = st->rx[0];
+ 	mutex_unlock(&st->lock);
+ 	if (ret)
+@@ -969,32 +976,6 @@ static const struct attribute_group sca3000_attribute_group = {
+ 	.attrs = sca3000_attributes,
+ };
+ 
+-static int sca3000_read_data(struct sca3000_state *st,
+-			     u8 reg_address_high,
+-			     u8 *rx,
+-			     int len)
+-{
+-	int ret;
+-	struct spi_transfer xfer[2] = {
+-		{
+-			.len = 1,
+-			.tx_buf = st->tx,
+-		}, {
+-			.len = len,
+-			.rx_buf = rx,
+-		}
+-	};
+-
+-	st->tx[0] = SCA3000_READ_REG(reg_address_high);
+-	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+-	if (ret) {
+-		dev_err(&st->us->dev, "problem reading register\n");
+-		return ret;
+-	}
+-
+-	return 0;
+-}
+-
+ /**
+  * sca3000_ring_int_process() - ring specific interrupt handling.
+  * @val: Value of the interrupt status register.
+@@ -1008,7 +989,7 @@ static void sca3000_ring_int_process(u8 val, struct iio_dev *indio_dev)
+ 	mutex_lock(&st->lock);
+ 
+ 	if (val & SCA3000_REG_INT_STATUS_HALF) {
+-		ret = sca3000_read_data_short(st, SCA3000_REG_BUF_COUNT_ADDR,
++		ret = sca3000_read_data(st, SCA3000_REG_BUF_COUNT_ADDR,
+ 					      1);
+ 		if (ret)
+ 			goto error_ret;
+@@ -1017,7 +998,7 @@ static void sca3000_ring_int_process(u8 val, struct iio_dev *indio_dev)
+ 		 * num_available is the total number of samples available
+ 		 * i.e. number of time points * number of channels.
+ 		 */
+-		ret = sca3000_read_data(st, SCA3000_REG_RING_OUT_ADDR, st->rx,
++		ret = sca3000_read_data(st, SCA3000_REG_RING_OUT_ADDR,
+ 					num_available * 2);
+ 		if (ret)
+ 			goto error_ret;
+@@ -1060,7 +1041,7 @@ static irqreturn_t sca3000_event_handler(int irq, void *private)
+ 	 * but ensures no interrupt is missed.
+ 	 */
+ 	mutex_lock(&st->lock);
+-	ret = sca3000_read_data_short(st, SCA3000_REG_INT_STATUS_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_INT_STATUS_ADDR, 1);
+ 	val = st->rx[0];
+ 	mutex_unlock(&st->lock);
+ 	if (ret)
+@@ -1121,7 +1102,7 @@ static int sca3000_read_event_config(struct iio_dev *indio_dev,
+ 	/* read current value of mode register */
+ 	mutex_lock(&st->lock);
+ 
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	if (ret)
+ 		goto error_ret;
+ 
+@@ -1164,7 +1145,7 @@ static int sca3000_freefall_set_state(struct iio_dev *indio_dev, bool state)
+ 	int ret;
+ 
+ 	/* read current value of mode register */
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1214,7 +1195,7 @@ static int sca3000_motion_detect_set_state(struct iio_dev *indio_dev, int axis,
+ 	}
+ 
+ 	/* read current value of mode register */
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	if (ret)
+ 		return ret;
+ 	/* if off and should be on */
+@@ -1287,7 +1268,7 @@ int __sca3000_hw_ring_state_set(struct iio_dev *indio_dev, bool state)
+ 	int ret;
+ 
+ 	mutex_lock(&st->lock);
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	if (ret)
+ 		goto error_ret;
+ 	if (state) {
+@@ -1322,7 +1303,7 @@ static int sca3000_hw_ring_preenable(struct iio_dev *indio_dev)
+ 	mutex_lock(&st->lock);
+ 
+ 	/* Enable the 50% full interrupt */
+-	ret = sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_INT_MASK_ADDR, 1);
+ 	if (ret)
+ 		goto error_unlock;
+ 	ret = sca3000_write_reg(st,
+@@ -1353,7 +1334,7 @@ static int sca3000_hw_ring_postdisable(struct iio_dev *indio_dev)
+ 	/* Disable the 50% full interrupt */
+ 	mutex_lock(&st->lock);
+ 
+-	ret = sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_INT_MASK_ADDR, 1);
+ 	if (ret)
+ 		goto unlock;
+ 	ret = sca3000_write_reg(st,
+@@ -1383,7 +1364,7 @@ static int sca3000_clean_setup(struct sca3000_state *st)
+ 
+ 	mutex_lock(&st->lock);
+ 	/* Ensure all interrupts have been acknowledged */
+-	ret = sca3000_read_data_short(st, SCA3000_REG_INT_STATUS_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_INT_STATUS_ADDR, 1);
+ 	if (ret)
+ 		goto error_ret;
+ 
+@@ -1409,7 +1390,7 @@ static int sca3000_clean_setup(struct sca3000_state *st)
+ 	if (ret)
+ 		goto error_ret;
+ 	/* Enable interrupts, relevant to mode and set up as active low */
+-	ret = sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_INT_MASK_ADDR, 1);
+ 	if (ret)
+ 		goto error_ret;
+ 	ret = sca3000_write_reg(st,
+@@ -1423,7 +1404,7 @@ static int sca3000_clean_setup(struct sca3000_state *st)
+ 	 * Ring in 12 bit mode - it is fine to overwrite reserved bits 3,5
+ 	 * as that occurs in one of the example on the datasheet
+ 	 */
+-	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
+ 	if (ret)
+ 		goto error_ret;
+ 	ret = sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
+@@ -1510,7 +1491,7 @@ static int sca3000_stop_all_interrupts(struct sca3000_state *st)
+ 	int ret;
+ 
+ 	mutex_lock(&st->lock);
+-	ret = sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1);
++	ret = sca3000_read_data(st, SCA3000_REG_INT_MASK_ADDR, 1);
+ 	if (ret)
+ 		goto error_ret;
+ 	ret = sca3000_write_reg(st, SCA3000_REG_INT_MASK_ADDR,
+-- 
+2.49.0
 
