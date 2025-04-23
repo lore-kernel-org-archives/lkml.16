@@ -1,172 +1,131 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA619268FF6;
-	Wed, 23 Apr 2025 20:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5980B191F6D;
+	Wed, 23 Apr 2025 20:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745439793; cv=none; b=RkyxU2/mRJFAQTokbr1SmRCkXOOHQNkzzK1GLgsIPOjKAZj8/0TzrrTVeTs/TSZ47QuQGOx2RNhaK0qfrMbqxPC2vNF1JilQE5MY8hy45jh7cS/sHaH/iy8LrN2Q/qgDUpQiySzFeMdgZIZPyERhqTHsKKsTdLnngzTP5CpAbc0=
+	t=1745439810; cv=none; b=jFvxIBoBJ23DHamsYGDhAeq2yjwKoaHpZE5WZoOiPeUEAjTCEXddfEAUh8nJ1/wCD1OBzwYzjKO0Yi9BegfuKWiQqGrwS5yBkqZZN1GW/I4hOz3B5+wSZBs/paG12kEb0TK8v6sPPRmHcNQFj8H3t0AWX0U5KWvSb9eY5Jwp9vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745439793; c=relaxed/simple;
-	bh=9FXiIL8sGXQRZbcF0o7E4cI6TAMvfaP3y1StfzQkbXU=;
+	s=arc-20240116; t=1745439810; c=relaxed/simple;
+	bh=2xy5f8GYxsUlqbYSP/km4q6c6Yl2NXnT5erRgySRqZQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XzjyFmHnFlPPWgutBLHvGL/4Hwd2H7DbtExpUHqjEmxRZjFz2RRSlaEhgshgKPg7Ctg6D8DHzf45VqHCXci0fc7StqyhsrzzgV3Pb1cmhUkehvy3bvYVWP3Q6cTqUWPWRPsssTiWwiM5WCiEgbeAKPh81EsOLpxDE/0oq5XtkFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yn7/+6qi; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=BhoMnH4s0vg3n2CZLnLFiLhLO/1bQXcGfQTL6GSq48qHr/pqKfcsCivoZbgPNIuQRFVVih0/lA1QrJeOZiQ7dLLEFacQ8UjrLL3l+x15ye9mU6GMkF+7BGKr5qPttU5BlgPDX5pO4G7STDWVLoxO24BNdyM+Azpqfb1xp0wZE4c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NG0dgRVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yn7/+6qi"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3fea67e64caso170538b6e.2;
-        Wed, 23 Apr 2025 13:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745439791; x=1746044591; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=97lECeIymX5vGttM40ZC9LxwILKEadxdlNBvDo4t1iE=;
-        b=Yn7/+6qi3HsoQgfOj1vPtUL3AiF09BLevy+xjGkOesiDk+lqkbxusm/oefCd9BzOYJ
-         i1I8qCH9TIcZkXGorDlyj170XiinQE7/um4iInjgpY63Zj9GT3b/JQK0aRPjVhyNFSxI
-         +LF1gBaixlnqvIcTuPSGXSwqDp0YJoZ01zKfJ+qcB/wB6wzMtxhowQg+FwwDjJkAKlPK
-         A+mQheZtYXV3OOKxuNOxPGWL8W73R9WK+r+ggEFFTORXCOxsv2vlQ3iaMznvPLCPKq7b
-         zniPvazekWv0aW7IgbuVWySqyWHkN2Z+0FK9oLuBESmgQ8QLZ+9pxc2aKN/gUeKXZZ56
-         Yuuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745439791; x=1746044591;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=97lECeIymX5vGttM40ZC9LxwILKEadxdlNBvDo4t1iE=;
-        b=P0sPPffJ5JAqH3UTC7/+ExdB4CTCzHMtKeGZi890aIlvSBoq4x8UFuZ0YLX2OCsNOa
-         1W8szcOdYxu2+L8yKAxC1j2xuHTTJBUx8r4gOllu4/UC+miGUH036ulCEmyuQK2sm7L7
-         qa4ZhIhi8JZZEGt54KZREPNDabnhT0FvjKyiRRI9JIzdlJO+PpDeO7j78rqXWh0l4jbq
-         +z/a590mQEMOPqkJeU6thrSmwqPqtpBAmdmBH1nsRmjGAE5rJBwVYPZeKXmoYZnYA0OA
-         MUO7QDy6+bZlxzljB+2NTjX81dSEuXmUjMrgqLOLMPoMvZtLVTNox0XdqBw7av8vyaV9
-         jTqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUUOzv61KHrmWhbkDrdfUR2WKep1Gyp/iAo013/Uvofstlw45wzO0YjX8l0I3zyuWoox8siU4sUNKls8CgU@vger.kernel.org, AJvYcCVhEm0TiumLmIAwYmvFgt5zimidTxWIf+6SA9C85n3RUaAqSFjxZoaXWKuQ98HzU6BoL8XOtMnUloRY@vger.kernel.org, AJvYcCW1fvHxsZrFamFBWH3H0jbZV3almgRnSrJDa3VMTPDdZ2jeysJAG/lEWPFOBuQ7D4b7v+NBx3rwlcQ=@vger.kernel.org, AJvYcCWbQnuTZPytgqvX5ZlHtV+7qJCwyxdLpTRU+faSlc0Tti+8PaU+X/0j33ThvPZF6t1iIIFQO0hgFdCogqzeyg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyY7H4CStUG1/7GzqRL4YMm38REYxLpp1+tHCRl8/qj9Aa08ogN
-	XNmlfCvY3Mz97ino+YRDzZFzADWYYRcoI+CWkFYHum2GntdHOnpG
-X-Gm-Gg: ASbGncs0jyIpwH4t29MjPBf7FSxxpZJrmjxYzDrtA9Gt8Wu33pQoLbB6RYGoMGtLdTU
-	S/+kjSJb3qpVgmyymxUzTTJGH65jqINRH+gYM9sdnRUD8kVkq5VQYfZVmMLuZSi4cXXAo7DJK+q
-	bEZEFD+XcFH/wXzeuTqbMl7lpxoQh2vHVpeldn5tbokBvTAiFoMZAh01OxlNGmj5aTSjYjb3dm1
-	6icetdSPZfP/9Gw7wmneri+9XdanLwKDaVL6ZDScmYljh6VOY04OnRlxmcDnP+xRkGEtILw1yT2
-	s+Bxdemz9cc3vlO+yQ7V199oR8pZsLVj0NVD2yljaAlzdUN/HTf3qJCO7jAa
-X-Google-Smtp-Source: AGHT+IGEiSY1ULEDyb+dL3+puS1rpFXM4in/5b9Ry3B8H9erXdcwyUm6OyQs+f8oqghalhCsVGHxEQ==
-X-Received: by 2002:a05:6808:384a:b0:3f9:56ff:1468 with SMTP id 5614622812f47-401eb2570bamr216304b6e.24.1745439790720;
-        Wed, 23 Apr 2025 13:23:10 -0700 (PDT)
-Received: from Borg-550.local ([2603:8080:1500:3d89:44cc:5f45:d31b:d18f])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-401becc2294sm2790759b6e.0.2025.04.23.13.23.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 13:23:10 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Wed, 23 Apr 2025 15:23:07 -0500
-From: John Groves <John@groves.net>
-To: Joanne Koong <joannelkoong@gmail.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 10/19] famfs_fuse: Basic fuse kernel ABI enablement
- for famfs
-Message-ID: <qjwm7z3zr4njddcbnt4dqbl3zof4nck5ovfysdopeogcmizsn7@7fei7dldwe6x>
-References: <20250421013346.32530-1-john@groves.net>
- <20250421013346.32530-11-john@groves.net>
- <CAJnrk1aROUeJY2g8vHtTgVc=mb+1+7jhJE=B3R0qV_=o6jjNTA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NG0dgRVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A379FC4CEE2;
+	Wed, 23 Apr 2025 20:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745439807;
+	bh=2xy5f8GYxsUlqbYSP/km4q6c6Yl2NXnT5erRgySRqZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NG0dgRVLwlDgdHJMYZpT5sve3BVuSnGdZ85VR45mSFiIg7+MPHQBJJKLlPVvt/tle
+	 RWNKP76e8sRmFYVpzOk8exTQoXaZvIJI0tjacXp+ibZ/RXix433kTz5Z8gb+kDztVm
+	 iYhnNP55bqsw34wCDRZPHGwIYO9DTAuh7TGIWhI7uf+LdqWKmlYuSGCUty6pY8Ku6f
+	 kprr+efhThbotBlCyfcbGNWf8dMtt2uLMMvOQDCkR4qqJF7VXdtQKm0TX1n2FPwx2q
+	 zbTDjP8aq/Cq3tPVA3uanbQxpNvCRES0S5XHyejIiKMwXht8mSWzyrDdhu7Qr551nn
+	 aWhvna8rStb3A==
+Date: Wed, 23 Apr 2025 15:23:26 -0500
+From: Rob Herring <robh@kernel.org>
+To: Bartosz Szczepanek <bsz@amazon.de>
+Cc: Saravana Kannan <saravanak@google.com>, nh-open-source@amazon.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fdt: Extend warnings on error paths
+Message-ID: <20250423202326.GA1025526-robh@kernel.org>
+References: <20250423091018.51831-1-bsz@amazon.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJnrk1aROUeJY2g8vHtTgVc=mb+1+7jhJE=B3R0qV_=o6jjNTA@mail.gmail.com>
+In-Reply-To: <20250423091018.51831-1-bsz@amazon.de>
 
-On 25/04/22 06:36PM, Joanne Koong wrote:
-> On Sun, Apr 20, 2025 at 6:34 PM John Groves <John@groves.net> wrote:
-> >
-> > * FUSE_DAX_FMAP flag in INIT request/reply
-> >
-> > * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
-> >   famfs-enabled connection
-> >
-> > Signed-off-by: John Groves <john@groves.net>
-> > ---
-> >  fs/fuse/fuse_i.h          | 3 +++
-> >  fs/fuse/inode.c           | 5 +++++
-> >  include/uapi/linux/fuse.h | 2 ++
-> >  3 files changed, 10 insertions(+)
-> >
-> > diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> > index e04d160fa995..b2c563b1a1c8 100644
-> > --- a/fs/fuse/fuse_i.h
-> > +++ b/fs/fuse/fuse_i.h
-> > @@ -870,6 +870,9 @@ struct fuse_conn {
-> >         /* Use io_uring for communication */
-> >         unsigned int io_uring;
-> >
-> > +       /* dev_dax_iomap support for famfs */
-> > +       unsigned int famfs_iomap:1;
-> > +
-> >         /** Maximum stack depth for passthrough backing files */
-> >         int max_stack_depth;
-> >
-> > diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> > index 29147657a99f..5c6947b12503 100644
-> > --- a/fs/fuse/inode.c
-> > +++ b/fs/fuse/inode.c
-> > @@ -1392,6 +1392,9 @@ static void process_init_reply(struct fuse_mount *fm, struct fuse_args *args,
-> >                         }
-> >                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enabled())
-> >                                 fc->io_uring = 1;
-> > +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
-> > +                                      flags & FUSE_DAX_FMAP)
-> > +                               fc->famfs_iomap = 1;
-> >                 } else {
-> >                         ra_pages = fc->max_read / PAGE_SIZE;
-> >                         fc->no_lock = 1;
-> > @@ -1450,6 +1453,8 @@ void fuse_send_init(struct fuse_mount *fm)
-> >                 flags |= FUSE_SUBMOUNTS;
-> >         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
-> >                 flags |= FUSE_PASSTHROUGH;
-> > +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
-> > +               flags |= FUSE_DAX_FMAP;
-> >
-> >         /*
-> >          * This is just an information flag for fuse server. No need to check
-> > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> > index 5e0eb41d967e..f9e14180367a 100644
-> > --- a/include/uapi/linux/fuse.h
-> > +++ b/include/uapi/linux/fuse.h
-> > @@ -435,6 +435,7 @@ struct fuse_file_lock {
-> >   *                 of the request ID indicates resend requests
-> >   * FUSE_ALLOW_IDMAP: allow creation of idmapped mounts
-> >   * FUSE_OVER_IO_URING: Indicate that client supports io-uring
-> > + * FUSE_DAX_FMAP: kernel supports dev_dax_iomap (aka famfs) fmaps
-> >   */
-> >  #define FUSE_ASYNC_READ                (1 << 0)
-> >  #define FUSE_POSIX_LOCKS       (1 << 1)
-> > @@ -482,6 +483,7 @@ struct fuse_file_lock {
-> >  #define FUSE_DIRECT_IO_RELAX   FUSE_DIRECT_IO_ALLOW_MMAP
-> >  #define FUSE_ALLOW_IDMAP       (1ULL << 40)
-> >  #define FUSE_OVER_IO_URING     (1ULL << 41)
-> > +#define FUSE_DAX_FMAP          (1ULL << 42)
+On Wed, Apr 23, 2025 at 09:10:17AM +0000, Bartosz Szczepanek wrote:
+> Print out adress and size if elfcorehdr is overlapped. Be more verbose
+> about what went wrong in case early_init_dt_verify fails. Other than
+> improving logging, no functional change is intended in this commit.
 > 
-> There's also a protocol changelog at the top of this file that tracks
-> any updates made to the uapi. We should probably also update that to
-> include this?
+> Signed-off-by: Bartosz Szczepanek <bsz@amazon.de>
+> ---
+>  drivers/of/fdt.c | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index aedd0e2dcd89..c9b5e056b713 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -469,21 +469,22 @@ static u32 of_fdt_crc32;
+>   * described in the device tree. This region contains all the
+>   * information about primary kernel's core image and is used by a dump
+>   * capture kernel to access the system memory on primary kernel.
+>   */
+>  static void __init fdt_reserve_elfcorehdr(void)
+>  {
+>  	if (!IS_ENABLED(CONFIG_CRASH_DUMP) || !elfcorehdr_size)
+>  		return;
+>  
+>  	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
+> -		pr_warn("elfcorehdr is overlapped\n");
+> +		pr_warn("elfcorehdr is overlapped (addr=0x%llx, size=%llu)\n",
+> +			elfcorehdr_addr, elfcorehdr_size);
+>  		return;
+>  	}
+>  
+>  	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+>  
+>  	pr_info("Reserving %llu KiB of memory at 0x%llx for elfcorehdr\n",
+>  		elfcorehdr_size >> 10, elfcorehdr_addr);
+>  }
+>  
+>  /**
+> @@ -1128,26 +1129,33 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+>  	memblock_add(base, size);
+>  }
+>  
+>  static void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+>  {
+>  	return memblock_alloc_or_panic(size, align);
+>  }
+>  
+>  bool __init early_init_dt_verify(void *dt_virt, phys_addr_t dt_phys)
+>  {
+> -	if (!dt_virt)
+> +	int rc;
+> +
+> +	if (!dt_virt) {
+> +		pr_warn("FDT wasn't correctly mapped");
 
-Another good catch, thanks Joanne! Adding that in -next
+You need a '\n' here. Technically, it doesn't, but IIRC it won't get 
+flushed out immediately without. Of course, this runs too early to see 
+the message typically.
 
-John
+It's possible some arch has a fallback if this function fails and 
+doesn't want the warning, but we can apply and see.
 
+>  		return false;
+> +	}
+>  
+>  	/* check device tree validity */
+> -	if (fdt_check_header(dt_virt))
+> +	rc = fdt_check_header(dt_virt);
+> +	if (rc) {
+> +		pr_warn("FDT header is invalid: status=%d", rc);
+>  		return false;
+> +	}
+>  
+>  	/* Setup flat device-tree pointer */
+>  	initial_boot_params = dt_virt;
+>  	initial_boot_params_pa = dt_phys;
+>  	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
+>  				fdt_totalsize(initial_boot_params));
+>  
+>  	/* Initialize {size,address}-cells info */
+>  	early_init_dt_scan_root();
+
+Normal context is 3 lines. Please send patches that way.
+
+Rob
