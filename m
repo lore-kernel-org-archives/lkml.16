@@ -1,119 +1,72 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4632225EF8E;
-	Wed, 23 Apr 2025 15:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B67B298CB0;
+	Wed, 23 Apr 2025 15:23:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421774; cv=none; b=Qz3quZlCg/kywAOskGSVKINWXlc/CepEFXV4OlnfVFuv8dq/cSxyOaQo0b1uwBDWHc1L56m3xWQQ8Hig6RaLV0n2u49p/xSDsF61FJB0BK7tWQmaHhvcNqv2mrvxT+E5WgrIWuRb1MWswC1X5qX9PGfOf5EOSMKXRkbZDgOg/98=
+	t=1745421807; cv=none; b=fL/q7hCnKs8HTFOdg8RKXscYmXK9nuy5Oz/eaVT5/C6uP1o6Qs0Qv/S8Xt/lblqQ58vJkL/A5rlpAOx0DZEnGOUn6uxsVhi/7/X+gdOmBRfFIBucPWH/mmYKzITPfHX5As58c4gg78YjNBNCTbIhVO/o5OrYK87edsjDuuu9/lA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421774; c=relaxed/simple;
-	bh=EWILyffNhy9aVgftGdVYYD7RJoM4rq9jo3kOfc442Xg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CsqxwksXddCAT8wew6YaqcTMRFyb9jrqKoXd496qk0F9q3DNs6taBavH18TMvUGZ66zM+UkVTI19PhE1SJLe2lMl3mXEONLJXMw53oTzN8EcYs39UUDCvChrRP9rQu+xWtP30EtfixaMr/lx9UMTF1y3wE+KyG4X9yALxCbYmE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BzksKl4n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745421807; c=relaxed/simple;
+	bh=ttYFtyupJCMupeSXwyqSaNxnbRiKjhqkBV9hyVnYY30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A7dLB4nmy3LkG3ZMebUsb/0cCDJkKzTqqqw9BDvxIlOFb5uOcJH7t3kvtaCZE42BMOi/mg/KS5DjLu5Rk/fQUdm5TFbnzxO8qPmMrfJ2FPKU9mJ/kfGSaJaF6gATeyh24Osabd+S16nRMUxxJzhyd93Tlnf2e/yz9KzpGCKtrMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLQsHTSR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BzksKl4n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C09C4CEE2;
-	Wed, 23 Apr 2025 15:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745421773;
-	bh=EWILyffNhy9aVgftGdVYYD7RJoM4rq9jo3kOfc442Xg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BzksKl4nEz/107AeFayEC9HglEnbr+o36GkHLwKEKDlJRu4YrwAfp82BYGKuQO1aZ
-	 5xFQ845AQrWhkoEkPcNVaf/yGCKVnTjT6EvedMd3dbla89J1Zi82OT2HDYSKk4hwV5
-	 hqj2ehphVx0wwtRWSsSlqjU/WAqtjvFhHpn7eGzg=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Eric Auger <eric.auger@redhat.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 6.14 222/241] arm64/sysreg: Add register fields for HDFGRTR2_EL2
-Date: Wed, 23 Apr 2025 16:44:46 +0200
-Message-ID: <20250423142629.625029010@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250423142620.525425242@linuxfoundation.org>
-References: <20250423142620.525425242@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLQsHTSR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D98C4CEE2;
+	Wed, 23 Apr 2025 15:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745421806;
+	bh=ttYFtyupJCMupeSXwyqSaNxnbRiKjhqkBV9hyVnYY30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fLQsHTSROUAK6ThwkWXhF5VTQtSjbjK5MKQgPWBeAYm3OnQl3xo9vUW3c5NIrFpzg
+	 z+lp7GpBGY+WxxQMdQI0S5e9vR73KD0m+fgVfer7oIVylZ0pDaQSMvatCNmhoAYjJz
+	 WjC+opRME537JuHl44GZKOV0qEjjp92qrZ18eFetM0akxL79A+P90DDu+CKlRgaKUc
+	 +2oRVCZHEj7iQ802qNTm67K8mbY+93IrU7H5otIH+P13xmfpnzMl3ELoTX0YE+MNMi
+	 zDHktPncfG76nUvxqFwQANV/QL0RWZHJPaNKtMlkPxd2+oKXeWR5eToaz5f6GmRs6a
+	 qhWfSTuHn/N6Q==
+Date: Wed, 23 Apr 2025 10:23:25 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ze Huang <huangze@whut.edu.cn>
+Cc: linux-phy@lists.infradead.org, linux-riscv@lists.infradead.org,
+	Junzhong Pan <junzhong.pan@spacemit.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
+	devicetree@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	spacemit@lists.linux.dev
+Subject: Re: [PATCH v2 2/4] dt-bindings: phy: spacemit: add K1 PCIe/USB3
+ combo PHY
+Message-ID: <174542180456.549434.17717366396864684617.robh@kernel.org>
+References: <20250418-b4-k1-usb3-phy-v2-v2-0-b69e02da84eb@whut.edu.cn>
+ <20250418-b4-k1-usb3-phy-v2-v2-2-b69e02da84eb@whut.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418-b4-k1-usb3-phy-v2-v2-2-b69e02da84eb@whut.edu.cn>
 
-6.14-stable review patch.  If anyone has any objections, please let me know.
 
-------------------
+On Fri, 18 Apr 2025 21:19:51 +0800, Ze Huang wrote:
+> Introduce support for SpacemiT K1 PCIe/USB3 combo PHY controller.
+> 
+> PCIe portA and USB3 controller share this phy, only one of them can work
+> at any given application scenario.
+> 
+> Co-developed-by: Junzhong Pan <junzhong.pan@spacemit.com>
+> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+> ---
+>  .../bindings/phy/spacemit,k1-combphy.yaml          | 72 ++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+> 
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-
-commit 44844551670cff70a8aa5c1cde27ad1e0367e009 upstream.
-
-This adds register fields for HDFGRTR2_EL2 as per the definitions based
-on DDI0601 2024-12.
-
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Link: https://lore.kernel.org/r/20250203050828.1049370-3-anshuman.khandual@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm64/tools/sysreg |   29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -2643,6 +2643,35 @@ Field	0	E0HTRE
- EndSysreg
- 
- 
-+Sysreg HDFGRTR2_EL2	3	4	3	1	0
-+Res0	63:25
-+Field	24	nPMBMAR_EL1
-+Field	23	nMDSTEPOP_EL1
-+Field	22	nTRBMPAM_EL1
-+Res0	21
-+Field	20	nTRCITECR_EL1
-+Field	19	nPMSDSFR_EL1
-+Field	18	nSPMDEVAFF_EL1
-+Field	17	nSPMID
-+Field	16	nSPMSCR_EL1
-+Field	15	nSPMACCESSR_EL1
-+Field	14	nSPMCR_EL0
-+Field	13	nSPMOVS
-+Field	12	nSPMINTEN
-+Field	11	nSPMCNTEN
-+Field	10	nSPMSELR_EL0
-+Field	9	nSPMEVTYPERn_EL0
-+Field	8	nSPMEVCNTRn_EL0
-+Field	7	nPMSSCR_EL1
-+Field	6	nPMSSDATA
-+Field	5	nMDSELR_EL1
-+Field	4	nPMUACR_EL1
-+Field	3	nPMICFILTR_EL0
-+Field	2	nPMICNTR_EL0
-+Field	1	nPMIAR_EL1
-+Field	0	nPMECR_EL1
-+EndSysreg
-+
- Sysreg HDFGRTR_EL2	3	4	3	1	4
- Field	63	PMBIDR_EL1
- Field	62	nPMSNEVFR_EL1
-
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
