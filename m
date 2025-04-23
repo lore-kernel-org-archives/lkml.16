@@ -1,105 +1,148 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFD71F1534;
-	Wed, 23 Apr 2025 09:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866EA264A6D
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:59:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745402211; cv=none; b=U9pgdnQzthZrd79xHRU/Q1EJgC5WSXxiJ0HJ9lXRGiD8g5DZyUUmw0m8E+1/vXyOt4d4q6hRAi2hY35+VlPSEha6sP8JR7l6eAw/BzKOd+kupQfyrMSFy5FlbrxNK4lfrkakbEAH3Xs72i0i3RZf9zf0odCt/Ik8F+dzE/84ii8=
+	t=1745402353; cv=none; b=glLQlxnm0x+9KFb3Te2/f8DAsBhapVGghMwvkr1GwZ4f1P7c3HJU7PK39p1Ypn8LmHbBWhOdwKyIdTZ+2VsnBEpC2WMWkeCnEhmYN4EhsxFH7BrwbnZJTYy510OBemksrrTcF37ngUU9x3el5rDtWOLelM96duuD6Ehe4CuTj0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745402211; c=relaxed/simple;
-	bh=5yZBvNuVYmifPJSDr+HNB9Vckbn3EBGqIJPHXQ/LNEQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Viq8jcZsXIHJtQdxFlfbwUkOeQuDZ5BcKM2bojB+zujOhEt2gYTsxG5v611CFNc6pd3A42IEgAglH0IDx51EnzkIin4TwDtMoFZkBmNPP1l1RgzaBpb2D7eOY/U13Bin7I8NLtvl/A5TYaycB5uCb1sKFXvaKVMiGdwSvu4ABG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DZ0gOEqh; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745402353; c=relaxed/simple;
+	bh=0CiPL5WEXEIJw+kxPu0f6F4ItVvgMBwlxGUF85waX2A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rk3pWP4CIuiqN9ktlNkHP7COLI9ORMXPox5GU7fII0VReoRhUhvtt8KKQI1i5TTAjL2YajXZkyNT8UbyYmbR5LFoT/pnehQw5TPJBFQpc1FiniA2vSn3geg7hsCaiaKm43gMfypwklLeLb0p1a+1Hb8g2vDc9dFhEnwBFo9jVlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YJePJHWx; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZ0gOEqh"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ace333d5f7bso230640366b.3;
-        Wed, 23 Apr 2025 02:56:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YJePJHWx"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5e22e6ed2so10221753a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:59:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745402208; x=1746007008; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YwA18LRT0uq0phnjE2h0pHsa2q7k3j4dQrZL4VXB764=;
-        b=DZ0gOEqh2sv8fymphGg+oYyMPr6qXUKndIN01QZS0YJO0olIPPUWcQMiiKPzSFOZAu
-         rdZP0TrX6qleq35VlD5LVXU1u/ubXxkueTBv72pmT+8xXlvvS1hoIjcVE9xtd3VTGbEe
-         1Ohtp5remuDPW/TuPIeIoMGcJ+hp3slLnBzk1i1tolbjP51p0DPys0jY0tpnhzSM0x2X
-         AcC1a2RQp3hmC3m9ybD1UB3kze7XExrHsc+JSvIerRbTA/JrvTrd1V1KcKzg3Um1hcv6
-         TB4PHeMHQOQCZkztfD1+m6KbwEimUCQc1VBg9OtJvgRCw6bopy2yXIkeRud/BXkmVLSX
-         ju6A==
+        d=suse.com; s=google; t=1745402350; x=1746007150; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yUeZRj/zZ2ONVqjLiPNAcppJ2cQUlyShZe9TAmdB+wo=;
+        b=YJePJHWxuTcG8DSzmAF/zIGBCiEL4hGZ2IhD236oW3X64b9zkukZCaaprRcYLz5aU5
+         +EkLeejrXjauq+1h5gXUL/GvhoQOmt3WSM5LSHvRrnenEcJf9sOfef3ZMqUjd4U9Rxhw
+         D3MnSaKy2IKa9aYp4j7J43wAAlF4zSr6K4dUp8SE/xs8PK3TQl4qDy2PMqzWsBHtKqCr
+         PWFCMwHwZXSlgstUkt7PWEtlQ9EdIzvfMIWJPwYZHRmOrHkftWC50pukLvCZ5xx14Qhj
+         v/p/1TBTsoQkaF34aibkJHTcpVlRpcO8VmypsgcPznS2YzNEJSziafI/G0bP8tbtsOPv
+         0TxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745402208; x=1746007008;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YwA18LRT0uq0phnjE2h0pHsa2q7k3j4dQrZL4VXB764=;
-        b=TctyH2t2OMMrUvSR1ZBKO4NitDJRDLxx7h+/wPmRXE6ZAUNqKDTWaG6r/9hL7CTM3t
-         098mqFc9qSYUvoMTxjOfs1RgAAaAN8BBO1VmzhpjUzXoaGPWT2j3i6a4YIVoh5HUx7P7
-         vWhFP/dq0LNzmwdgAsprEAELsVKTkCeGFgaqvQx0QILGuxPHXHtFlIf9aRM2eTeBD80w
-         IGx1Hjc9SI5UPnTtNL/aLOV+n0PfylwakGTCHA052CvQzRpYnYscZo8f5h/j4qdRAK/s
-         89+AjwZUCBzAHn2EIbKwkR4pKhVfVfAZgh34u3GnY7inNhAIs/yobiDS1OLvybLSqeSz
-         ArqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUWslcR4rm0VN4kprXvyc/RCr7p2oIM3RUuSufCVUtHzvlaf/9R/wsLM6FNq2RKB0TzvFjdleEGJBMMRUOa@vger.kernel.org, AJvYcCUag+WowCHr5wN8ORy6UgrMQPcXcjSX7G34oNZufMAA/5dGEKuGw4NucXJlP5/azoo1TPcE/X9sjJLl@vger.kernel.org, AJvYcCXaA2aH1f9bXtmSfeSm2kgqfV7TayvRztwfwttgmrQuRVbeCfEHXNcclUioFKyQ2OzjkaF4kHF3zis=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuHGBcsssw/3w0SCeFFPrmiKoNQ6SlfvOWvVJEQci15CrqnXDY
-	y/96OwJzpIgIac8iLieNeoSh2dilNRLejFrYVGjiNkpKLqIqOjmT
-X-Gm-Gg: ASbGncsBm+ochraNGbYqPjqdykfF7Krm/mg/1sisBkCoUzsS9MaCiO7R1Z5WLpZ1PyD
-	acBjI6snzk8TzgRofa3RzQHSDf9PoMPKPcitO+9gqTXVvuEOsHEokkw2JoTrEjaApEHc9eTDyWn
-	K4grsOC1apbDncP4QOQSmQGA9WJwDU3zF4jgLBlA6vkE+HDHMMB1kutIIrGndInSyxNZRb+hKdu
-	56aTaLY60EOWura7uz3nRWlAvp20frvwVtWNcEnefFDguerGyvF2wRPjT9Kec6Gre2oZ3HtGtDq
-	wER8DrQBgHDFrY5wfa2V6SjML9q8qCwANCD3/Qmt4DITOQk0XsQfLhTkXjLxrCRFI7E=
-X-Google-Smtp-Source: AGHT+IEtOoJSaHh13UT19v8/zmlhQZa1pyS18v5YTBOq5/OCSUsJPtlqQbjbpBqmKCino8dWIpCXdA==
-X-Received: by 2002:a17:907:9407:b0:ac7:391b:e688 with SMTP id a640c23a62f3a-acb74e6f381mr1506718066b.58.1745402207508;
-        Wed, 23 Apr 2025 02:56:47 -0700 (PDT)
-Received: from A13PC04R.einet.ad.eivd.ch ([185.144.39.75])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefc782sm773431066b.87.2025.04.23.02.56.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 02:56:46 -0700 (PDT)
-From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-To: 
-Cc: rick.wertenbroek@heig-vd.ch,
-	dlemoal@kernel.org,
-	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-pci@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: Fix path for NVMe PCI endpoint target driver
-Date: Wed, 23 Apr 2025 11:56:43 +0200
-Message-Id: <20250423095643.490495-1-rick.wertenbroek@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1745402350; x=1746007150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yUeZRj/zZ2ONVqjLiPNAcppJ2cQUlyShZe9TAmdB+wo=;
+        b=qG/m3eRAHqWrHLk+n+yOEAYz189AvHD/QEwLY3IlSphmRGfzIgGbJb8/Ect4vEzJVm
+         4y4YvUU5P9UrmVEvOCWe7C21tTv4dlvBTzSOI7CS530HOze2wvtU7p1ZBnIvLTPnnm3s
+         kqri0aui6+/ef8nblt7CqsGsXVyU/JmFZ6+kvfQBFdVu5RoX1jBHuV+hpzREZ+S8fSp4
+         NEPHdv1NKVYi9NO2fG8S01uyc0jbZ7ko6iVjobvBtK0mXjFEYWDEwLhKC8NxySjoynix
+         tfPNP7VobQ0gpD6UCNqy6GnQ4GE89lxQcF9BFTxgVJQYKSGKVtWDwqDwWldVX0asHxhD
+         AeWw==
+X-Forwarded-Encrypted: i=1; AJvYcCW5ZYXKS5slk0DpSuJM0veZkp2w2IIfYAGsxrCLfAmYuRCS9Qj2si3gTk+CvLpmtXZggyUNpABUg+m/r9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhSDxrlvK4MBL6IVpUOBpptTctwWt9FjPsheBZFMPhHFxI6aBZ
+	75xT6SuMepN8PacYFkkTcYHdBdOM17CifK3SG0i3M0mEQ2e1TfTSMwz2+a70DzB7MV8nqsNzT2/
+	piMsse8giOKs5oqDUR73l66nNdyjeA0zv29N84Q==
+X-Gm-Gg: ASbGncvzVev/iS9MfaweKQ05jApG297OsCtY0MCx5F72vr5k7x8oWx8JCC5lOpDLH7h
+	QgQkh+8PVnCJBXiUTlB9U5YFzgzslSyQeDgjdCi9uAcO5NM4a9MGXinT2/2F7RLKKxhJIqiOa6e
+	tfFD8Cbpfj20qOWScqQ+4A
+X-Google-Smtp-Source: AGHT+IEfJIOq6PpViVZntMAYxqQT9hb8IZS/Kw+/z79+/jBSekGm/D61mLq5WCt9qsSzlLbCd68PyjgJrbOtsNTWh3E=
+X-Received: by 2002:a17:906:ef0e:b0:ac8:1798:c2e7 with SMTP id
+ a640c23a62f3a-acb74d8313amr1935478966b.41.1745402349786; Wed, 23 Apr 2025
+ 02:59:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250423080940.4025020-1-neelx@suse.com> <CAL3q7H7A_OnTQviZpCgzrGUFe1K=VfMiWXaba56E3ucPHnVkNg@mail.gmail.com>
+ <CAPjX3Fdor0TgkQtb2meJD4PFerOQV1Qcjs5HEyBCt5TNt8-vsA@mail.gmail.com> <CAL3q7H7g3xvs8TnSsYwaBP1n_EyRn1eC6SgeMP41G7BT=VZ2-A@mail.gmail.com>
+In-Reply-To: <CAL3q7H7g3xvs8TnSsYwaBP1n_EyRn1eC6SgeMP41G7BT=VZ2-A@mail.gmail.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Wed, 23 Apr 2025 11:58:57 +0200
+X-Gm-Features: ATxdqUFRj1_ZF5gUhGpIkRBitM3OA1UsB5IThJag95jwC9GGk-DxPyDzvsiVd3c
+Message-ID: <CAPjX3FcVq3FTBxmQkr3QZR3GL6AG7DkKH1SeZ5hQ1JXBN=fo=g@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: fiemap: make the assert more explicit after
+ handling the error cases
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The path for the driver points to an non-existant file.
-Update path with the correct file: drivers/nvme/target/pci-epf.c
+On Wed, 23 Apr 2025 at 11:55, Filipe Manana <fdmanana@kernel.org> wrote:
+>
+> On Wed, Apr 23, 2025 at 10:48=E2=80=AFAM Daniel Vacek <neelx@suse.com> wr=
+ote:
+> >
+> > On Wed, 23 Apr 2025 at 11:04, Filipe Manana <fdmanana@kernel.org> wrote=
+:
+> > >
+> > > On Wed, Apr 23, 2025 at 9:10=E2=80=AFAM Daniel Vacek <neelx@suse.com>=
+ wrote:
+> > > >
+> > > > Let's not assert the errors and clearly state the expected result o=
+nly
+> > > > after eventual error handling. It makes a bit more sense this way.
+> > >
+> > > It doesn't make more sense to me...
+> > > I prefer to assert expected results right after the function call.
+> >
+> > Oh well, if an error is expected then I get it. Is an error likely
+> > here?
+>
+> The assertion serves to state what is never expected, and not what is
+> likely or unlikely.
+> It's about stating that an exact match shouldn't happen, i.e. ret =3D=3D =
+0.
+>
+> We do this sort of asserts in many places, and I find it more clear this =
+way.
 
-Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
----
- Documentation/PCI/endpoint/pci-nvme-function.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I see. Forget it then.
 
-diff --git a/Documentation/PCI/endpoint/pci-nvme-function.rst b/Documentation/PCI/endpoint/pci-nvme-function.rst
-index df57b8e7d066..a68015317f7f 100644
---- a/Documentation/PCI/endpoint/pci-nvme-function.rst
-+++ b/Documentation/PCI/endpoint/pci-nvme-function.rst
-@@ -8,6 +8,6 @@ PCI NVMe Function
- 
- The PCI NVMe endpoint function implements a PCI NVMe controller using the NVMe
- subsystem target core code. The driver for this function resides with the NVMe
--subsystem as drivers/nvme/target/nvmet-pciep.c.
-+subsystem as drivers/nvme/target/pci-epf.c.
- 
- See Documentation/nvme/nvme-pci-endpoint-target.rst for more details.
--- 
-2.25.1
+Thanks.
 
+> > I understood the comment says there can't be a file extent item
+> > at offset (u64)-1 which implies a strict return value of 1 and not an
+> > error or something >1. So that's why. And it's still quite after the
+> > function call.
+> >
+> > But I'm happy to scratch it if you don't like it.
+> >
+> > > Thanks.
+> > >
+> > > >
+> > > > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > > > ---
+> > > >  fs/btrfs/fiemap.c | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/fs/btrfs/fiemap.c b/fs/btrfs/fiemap.c
+> > > > index b80c07ad8c5e7..034f832e10c1a 100644
+> > > > --- a/fs/btrfs/fiemap.c
+> > > > +++ b/fs/btrfs/fiemap.c
+> > > > @@ -568,10 +568,10 @@ static int fiemap_find_last_extent_offset(str=
+uct btrfs_inode *inode,
+> > > >          * there might be preallocation past i_size.
+> > > >          */
+> > > >         ret =3D btrfs_lookup_file_extent(NULL, root, path, ino, (u6=
+4)-1, 0);
+> > > > -       /* There can't be a file extent item at offset (u64)-1 */
+> > > > -       ASSERT(ret !=3D 0);
+> > > >         if (ret < 0)
+> > > >                 return ret;
+> > > > +       /* There can't be a file extent item at offset (u64)-1 */
+> > > > +       ASSERT(ret =3D=3D 1);
+> > > >
+> > > >         /*
+> > > >          * For a non-existing key, btrfs_search_slot() always leave=
+s us at a
+> > > > --
+> > > > 2.47.2
+> > > >
+> > > >
