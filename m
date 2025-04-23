@@ -1,130 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EABA1280CDC;
-	Wed, 23 Apr 2025 16:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931AF2820B2
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745425579; cv=none; b=ch6H/3y3S0al7KnV+BN/qRIinXpmzo2SzUX0dTdJd+U58S0hnSrYP6jxKeCaaZSnwp0JXMVTbxHLebng5Oc7g9MqgsFXGJPij6IepfNhfOwNlHjjgR04U3RwBq7NxByKN89F+39zn6gxYp+qh99x8jEZv8t7YFjLcyymHXnYEl4=
+	t=1745425587; cv=none; b=tnmW2+C7Vc0Ax62MpSe5eqIvIf03PkEMfbW7HWltB+NqNp1SkxSD+mrRtM+TH2em9QzYgl66+fSiNmq6WMs+jw48spXM7V3/xACqrzb81t0dSQEPTEy+C3M8kovRLryS0f3SmvCNhd5XLyaeT0OHU/OwCWUylD/ywINeFZkU3/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745425579; c=relaxed/simple;
-	bh=ogMKzGyxgNsRLI52o+wQUuU/FxCjNBZR167etGTl+Eg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NYKRkuNXlEz+XlAcEfxsNnd3YH5HyMfTEZY7NkSTnOmpxgH17jLFVeeo3tXk65E+KuvLtHzFxHSNj8xY1C/q8V/Tbh0xxyIpRByeHQreXa/mNAg5lQN7PJFTCTx6CCCXkz1uuuKf/fkMrYXSpb4Z2/QHmBiGEBOfNnB1+jYL228=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s0ZQsBGx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745425587; c=relaxed/simple;
+	bh=rTKVGqTcpcHzYg9VIXbq8Jn8TK8RnJF0NhYPERmSdbQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bkyzRUHwROjLozb3yPfsQAzILHBygcMonMQ17rQMwDyuYKRuKx0oTd1MwaC8V7hikg3ahX9/GiFCKJdjWC7bsDP/dCOyanidtQ/Oe9J132eV9+gij/cTCs0aQFVzuWLplv5Q/7QvsQwGA1LNwroOEAmevLFx/+5mtG+RSRZ9g04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=XqYH8PAR; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s0ZQsBGx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE821C4CEEA;
-	Wed, 23 Apr 2025 16:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745425578;
-	bh=ogMKzGyxgNsRLI52o+wQUuU/FxCjNBZR167etGTl+Eg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=s0ZQsBGxMLPVHZuPTsdOLlbDPlnzQruO2+xnEAnaSGhG0hXAl+/1GmhrtmJZqNLiF
-	 CVLwMyNfM08ZoQJinvdltnGc7pvzw4EH7tYWWqTuY+oy8NbMsOasEbgL727PLY0q1f
-	 uKA5jXBjRwpUhE9gmAE2hJ8/arLLsx4a+1YkCAQBlRlb5JUygY+b7iBCLHzT2gR5kl
-	 IjfaKapJbFENs/TfRHV9Ej8iRirSgo5ydnTH27DhqO9lPZ1/od+PAINDdY2YUEeSgV
-	 +zpqB2WoKwck15W65xIq7C9PMX+2uCnxtjBuxtKo2BnovxE/kodlcLspiRQQfI/68u
-	 FX98fKgpG/Zuw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Krishna Kurapati <quic_kriskura@quicinc.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: dwc3: qcom: use modern PM macros
-Date: Wed, 23 Apr 2025 18:26:09 +0200
-Message-Id: <20250423162613.2082417-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="XqYH8PAR"
+Message-ID: <62ea70bf-69e8-4bfa-84ca-f56530ebbed3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745425573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=k6EaVd4uzCBm+InA2v4DBeIfAzSjd2ey57rmT4495uo=;
+	b=XqYH8PARUmRPQtm7gNrZPWnpG4Wc3uxqdq45/YvcSer7UNwP7Az3XAmKbuYW1mRK7dpaGR
+	SF+VzAv1KV1uu+sLVRIWdnWekrqIaqi+U+G18fVoT+jlz7DL2ZO9pQ5PmeoNMblqdd2rKi
+	aQwFZZI7SzndOW/vTJuPLAgrsqIAir4=
+Date: Thu, 24 Apr 2025 00:26:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [RFC PATCH bpf-next] libbpf: remove sample_period init in
+ perf_buffer
+To: Jiri Olsa <olsajiri@gmail.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250422091558.2834622-1-chen.dylane@linux.dev>
+ <aAedDw7fWAF2ej1f@krava> <aAfok3ha8QQkP8VB@google.com>
+ <aAkMbBdzWX_iE1zM@krava>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Tao Chen <chen.dylane@linux.dev>
+In-Reply-To: <aAkMbBdzWX_iE1zM@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-From: Arnd Bergmann <arnd@arndb.de>
+在 2025/4/23 23:51, Jiri Olsa 写道:
+> On Tue, Apr 22, 2025 at 12:05:55PM -0700, Namhyung Kim wrote:
+>> Hello,
+>>
+>> On Tue, Apr 22, 2025 at 03:43:43PM +0200, Jiri Olsa wrote:
+>>> On Tue, Apr 22, 2025 at 05:15:58PM +0800, Tao Chen wrote:
+>>>> It seems that sample_period no used in perf buffer, actually only
+>>>> wakeup_events valid about events aggregation for wakeup. So remove
+>>>> it to avoid causing confusion.
+>>>
+>>> I don't see too much confusion in keeping it, but I think it
+>>> should be safe to remove it
+>>>
+>>> PERF_COUNT_SW_BPF_OUTPUT is "trigered" by bpf_perf_event_output,
+>>> AFAICS there's no path checking on sample_period for this event
+>>> used in context of perf_buffer__new, Namhyung, thoughts?
+>>
+>> It seems to be ok to call mmap(2) for non-sampling events.
+>>
+>> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Tao Chen,
+> could you please resend without rfc tag? plz keeps acks
+> 
 
-The use of the old SET_SYSTEM_SLEEP_PM_OPS/SET_RUNTIME_PM_OPS macros
-without __maybe_unused annotations causes warnings when build testing
-without CONFIG_PM:
+sure, will resend it, thanks.
 
-drivers/usb/dwc3/dwc3-qcom.c:421:12: error: unused function 'dwc3_qcom_suspend' [-Werror,-Wunused-function]
-  421 | static int dwc3_qcom_suspend(struct dwc3_qcom *qcom, bool wakeup)
-      |            ^~~~~~~~~~~~~~~~~
-drivers/usb/dwc3/dwc3-qcom.c:457:12: error: unused function 'dwc3_qcom_resume' [-Werror,-Wunused-function]
-  457 | static int dwc3_qcom_resume(struct dwc3_qcom *qcom, bool wakeup)
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> thanks,
+> jirka
+> 
+> 
+>>
+>> Thanks,
+>> Namhyung
+>>
+>>>
+>>>>
+>>>> Fixes: fb84b8224655 ("libbpf: add perf buffer API")
+>>>> Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+>>>> ---
+>>>>   tools/lib/bpf/libbpf.c | 1 -
+>>>>   1 file changed, 1 deletion(-)
+>>>>
+>>>> diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+>>>> index 194809da5172..1830e3c011a5 100644
+>>>> --- a/tools/lib/bpf/libbpf.c
+>>>> +++ b/tools/lib/bpf/libbpf.c
+>>>> @@ -13306,7 +13306,6 @@ struct perf_buffer *perf_buffer__new(int map_fd, size_t page_cnt,
+>>>>   	attr.config = PERF_COUNT_SW_BPF_OUTPUT;
+>>>>   	attr.type = PERF_TYPE_SOFTWARE;
+>>>>   	attr.sample_type = PERF_SAMPLE_RAW;
+>>>> -	attr.sample_period = sample_period;
+>>>>   	attr.wakeup_events = sample_period;
+>>>>   
+>>>>   	p.attr = &attr;
+>>>> -- 
+>>>> 2.43.0
+>>>>
 
-Change these to the modern SYSTEM_SLEEP_PM_OPS/RUNTIME_PM_OPS/pm_ptr
-macros, which avoids the warnings and improves readability at the same
-time.
 
-Fixes: 1881a32fe14d ("usb: dwc3: qcom: Transition to flattened model")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/usb/dwc3/dwc3-qcom.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index d512002e1e88..cbba11589cd0 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -832,7 +832,6 @@ static void dwc3_qcom_remove(struct platform_device *pdev)
- 	reset_control_assert(qcom->resets);
- }
- 
--#ifdef CONFIG_PM_SLEEP
- static int dwc3_qcom_pm_suspend(struct device *dev)
- {
- 	struct dwc3 *dwc = dev_get_drvdata(dev);
-@@ -886,12 +885,7 @@ static int dwc3_qcom_prepare(struct device *dev)
- 
- 	return dwc3_pm_prepare(dwc);
- }
--#else
--#define dwc3_qcom_complete NULL
--#define dwc3_qcom_prepare NULL
--#endif /* CONFIG_PM_SLEEP */
- 
--#ifdef CONFIG_PM
- static int dwc3_qcom_runtime_suspend(struct device *dev)
- {
- 	struct dwc3 *dwc = dev_get_drvdata(dev);
-@@ -922,14 +916,13 @@ static int dwc3_qcom_runtime_idle(struct device *dev)
- {
- 	return dwc3_runtime_idle(dev_get_drvdata(dev));
- }
--#endif /* CONFIG_PM */
- 
- static const struct dev_pm_ops dwc3_qcom_dev_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(dwc3_qcom_pm_suspend, dwc3_qcom_pm_resume)
--	SET_RUNTIME_PM_OPS(dwc3_qcom_runtime_suspend, dwc3_qcom_runtime_resume,
-+	SYSTEM_SLEEP_PM_OPS(dwc3_qcom_pm_suspend, dwc3_qcom_pm_resume)
-+	RUNTIME_PM_OPS(dwc3_qcom_runtime_suspend, dwc3_qcom_runtime_resume,
- 			   dwc3_qcom_runtime_idle)
--	.complete = dwc3_qcom_complete,
--	.prepare = dwc3_qcom_prepare,
-+	.complete = pm_sleep_ptr(dwc3_qcom_complete),
-+	.prepare = pm_sleep_ptr(dwc3_qcom_prepare),
- };
- 
- static const struct of_device_id dwc3_qcom_of_match[] = {
-@@ -943,7 +936,7 @@ static struct platform_driver dwc3_qcom_driver = {
- 	.remove		= dwc3_qcom_remove,
- 	.driver		= {
- 		.name	= "dwc3-qcom",
--		.pm	= &dwc3_qcom_dev_pm_ops,
-+		.pm	= pm_ptr(&dwc3_qcom_dev_pm_ops),
- 		.of_match_table	= dwc3_qcom_of_match,
- 	},
- };
 -- 
-2.39.5
-
+Best Regards
+Tao Chen
