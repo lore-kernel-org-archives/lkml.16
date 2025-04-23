@@ -1,368 +1,290 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2081.outbound.protection.outlook.com [40.107.236.81])
+Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011053.outbound.protection.outlook.com [40.107.74.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DCA27978C;
-	Wed, 23 Apr 2025 14:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD30F25228B;
+	Wed, 23 Apr 2025 14:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745417120; cv=fail; b=YZ9Udt22Tgw8wDvvYt9r+C59EV/uy0elpbjZjcQnjBuLx21Y12RcJaKJOPhmDfu5NlFC+kYuPE4Rr01FzLSNg345royVp/TaVhjnQvtzQcqKz9IqhBjujEuU2BdquSW3srnyX4YV4ra30fUQWsPfrYHFlfTTOQvOcHUUN4HMMQU=
+	t=1745417123; cv=fail; b=TfALpUia0zZdTL4cUvuG9gWABT+3a4xWI0MDo4IXrlowgDjEdda+5ORxOXA94zALnt3WDcWu71s9c7p+rJ0eZJ4JYK9bwFiDM9HOEi98pUTRVKsZPv1rkRvHklAaCJ5dMQtBjy0F4SJLzk6PHc4LM8lkzYPHL31fWzH7nqjKcKQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745417120; c=relaxed/simple;
-	bh=jmv/6aUBDHZk1BUCWdTG26lJT6/JhWJ0co9j7S9uDc4=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TjL41yb50bxH40M8lD8bGaW4cZajrWaZBX1L2aE2CGC2/n22JzmiJuL6rh5VIO0PZPHeEg6FnZM5+6HKhmWF/EUltpnI3Xij9zWSGAeRP+ol1u+WsY76qu1pVbR09vVX3WfFNxd5mNGzLPkFUKR7EiKChFmuNd1iWIYcLFBeghg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=kpoiAYY8; arc=fail smtp.client-ip=40.107.236.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	s=arc-20240116; t=1745417123; c=relaxed/simple;
+	bh=0xpmBh71Fh/79UPuTXgokTB6ZwjMlsmu8MbB4vmrNO0=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hxf7AEOzuGEk3yPz+6oo7pcXiYaraifTkzRZs5jZbkXdktRO75L4PSsawd6mq+07SITcJb9qMJIsR/NqkMASywc2WkgkinSrMHfiYcteP4dSqCWgWF3z0dszpa63qEpfEvKXnNRBRS7IS5WuFPj+2dZKIb1lbNwRnOxwH2TNO0g=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=E+vc7Mik; arc=fail smtp.client-ip=40.107.74.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="kpoiAYY8"
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="E+vc7Mik"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vvqFmzP5lFGBz4cLpyh/mPOiRrXUkAP694G/6GeJtVvdQ26VyUMMSXFiV0hSVVHO74B5WTP1zY/4XMg6v/Bsf1ysl6l2wpnBooDxB6Pf5iQ2a4hSVT7kMeP2F/QCBjuU/pkIlWI/aLOOGGNH3rKVRWX5VGhD8kmduXbRLhf+0jMSdhSxgUBNL5+M+U0T+dnX8pbEVM0CKQO5KyxKxjNrPq17CKHQ5wGXX37mmY9ht/wmAmfhPIvz8+DFrdpsHNnEIUpM3RdgOTbaLzwuCYcnPILT7vNU+GdA0Zv9y81bEvjD8wB2SvYR/7BbQr+8rZG0JAp8cc/LtKhLseXAGqoWtQ==
+ b=yQWPILp5PS5FQb6O+vkdMfeEb8W4vDp3xVl7yoD7/k0dDmwt0m+sUyIUZu3shgcydEhNW+Cjfsp63G4Ib98H5xkWepdeD10wnaCPvyRoQqDKrR7Pec8jjkpW7kMeo5+rnG4sHOZwEDjsdNlkjDOJPl06FZYGvySSIqklDcKQeCU1sUTwbW+hy1hCPTa5jP/s1ifw5PdV9uQkZiOVS/16sDC9HCZX/Jwj0ZBpV6XTd3L+ecUXikYlhLvxR3JlZGIdjlzZG9IbHA10q/zTsIKILN6fKuiEFQhYkV+wOd+Lh1q9Yv7YTPhNtoeNBBZhPUPRK8v80i9nGqJOm5k06Y6XPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AcdhKplhbjVOzYYBjCgfCOSr8lmB6VtVFDdkvusD+ZU=;
- b=FZBmdGwD+oTL2rWzwDQDctZPKzFnDbc+K1zVtfAoDZLb4MF2ewxjGzOeJWuDMxlj4GZOCyiZE8dp33jhNTWqvsa9PqZ8dE9fQYW/RKrX5/GlaThUv2yjyDXlyG58pZqBSEMblaudrPOQffrFodDYswNawjvyxPYO3pRBopCXX/MBqVIom6jR5mW/ByFn6PRW3R445AnuXyWDcaMY19Pp4nmQAGXyVzELV2AfzXYjzmNwQf+kX4ng4NrzuAVQ3gP2szcYMS+I5m7Qo6QyvJW/JUWD+1rgXc4R+TR78bK5mIbJssQqTsH/s/nHCmOacn7nccfWuvoZmlcL6hGAmuKFcw==
+ bh=3LEX7b5xg+HdfFmE6nPY035fvGmiPhg2vF1ySA6tzkw=;
+ b=r0UzmR253xcH6Pcfcz+wABddGAGxGaUM/n4VYp/VA/nAYBRRljJswpQGpqc3Dw5b8SuVQTDJgQhZaE7kwL6npitTJJiC51U+PE7wYtXHV4KP1+JZe8NB+ELsKTJptHf8t7zpNgcggxJl6ZcjmNvvt/hzgbyJqvWlL2RH/4Agnez16AJgxGoxTG7mjw/sK0ZoMs9X0kFOQdmOgj6YlHEHcGh6l7qJRFiaHnfpPo6hSqk94IEvtzj8C12lBW5kaFckI0eUx1YGnVUIyHbzSnAgUGIiOH5tcj2sgZGe8i45IcUx1dqPp47uX30VRpxvxItqDt9GJujGjooQ0MVkjjOuiA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AcdhKplhbjVOzYYBjCgfCOSr8lmB6VtVFDdkvusD+ZU=;
- b=kpoiAYY8dN/mp9OM6Cfgb1JeaY8JjXtGvqTrXtgBprKLKxywu9B2qWHKxcl8rUxsOXJU5o+bgGLn2/hVDYj+9UM+QCIPOU7gU+PTGe7+klWMAVhuZ+Qxp8CsOGBiTuD+ZYrV3xijIs6HKArod/1VAoV/BW6b4GJYlMS5i8Np9ho=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM3PR12MB9287.namprd12.prod.outlook.com (2603:10b6:8:1ac::18) with
+ bh=3LEX7b5xg+HdfFmE6nPY035fvGmiPhg2vF1ySA6tzkw=;
+ b=E+vc7MikVv8kKVVzekcuvbXzJtAgkKfs/fU0bAX+cyDjQVVptpaLRdZVxQ3znz5P7kQEp1bw5U7ToI5pKZQsY7TkwuaNzhJFqzOhtvkXjpzbcjZsNCTueQcwkU1z7mXbJzace6ZDbJsaWChn04uKMEnZ/QJEkn3EpF0knYTI6Tk=
+Received: from TYCSPRMB0009.jpnprd01.prod.outlook.com (2603:1096:400:18f::5)
+ by OSCPR01MB12497.jpnprd01.prod.outlook.com (2603:1096:604:329::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
- 2025 14:05:13 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::37ee:a763:6d04:81ca%4]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
- 14:05:13 +0000
-Message-ID: <0f784d8d-7141-4e35-9a61-e8875d0a8f11@amd.com>
-Date: Wed, 23 Apr 2025 09:05:11 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] cpufreq/amd-pstate: Add support for the "Requested
- CPU Min frequency" BIOS option
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, gautham.shenoy@amd.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250421080444.707538-1-dhananjay.ugwekar@amd.com>
- <20250421080444.707538-3-dhananjay.ugwekar@amd.com>
- <eedfe953-7468-4b4c-934c-4589de601fa2@amd.com>
- <5b4b11d7-197e-41ec-82b6-8279125a95bd@amd.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.33; Wed, 23 Apr
+ 2025 14:05:11 +0000
+Received: from TYCSPRMB0009.jpnprd01.prod.outlook.com
+ ([fe80::8f8f:14d6:a759:4c66]) by TYCSPRMB0009.jpnprd01.prod.outlook.com
+ ([fe80::8f8f:14d6:a759:4c66%6]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
+ 14:05:11 +0000
+From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Geert Uytterhoeven
+	<geert@linux-m68k.org>
+CC: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>, "dmaengine@vger.kernel.org"
+	<dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>, Conor Dooley
+	<conor.dooley@microchip.com>
+Subject: RE: [PATCH v6 2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)
+ family of SoCs
+Thread-Topic: [PATCH v6 2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)
+ family of SoCs
+Thread-Index: AQHbs62QelOf9EkojUWhlKcW69kenrOxIMSAgAAeErCAAAoW4A==
+Date: Wed, 23 Apr 2025 14:05:11 +0000
+Message-ID:
+ <TYCSPRMB000972FF9EEBCF75D03FF919C2BA2@TYCSPRMB0009.jpnprd01.prod.outlook.com>
+References: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com>
+ <20250422173937.3722875-3-fabrizio.castro.jz@renesas.com>
+ <CAMuHMdUKVDzLUfcr_0R_VQ0TzBtPWGVbwfX_pKbwOjzuaBLcEw@mail.gmail.com>
+ <TYCSPRMB0009EAE305A3BC54E74D4A5EC2BA2@TYCSPRMB0009.jpnprd01.prod.outlook.com>
+In-Reply-To:
+ <TYCSPRMB0009EAE305A3BC54E74D4A5EC2BA2@TYCSPRMB0009.jpnprd01.prod.outlook.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-From: Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <5b4b11d7-197e-41ec-82b6-8279125a95bd@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA0PR13CA0027.namprd13.prod.outlook.com
- (2603:10b6:806:130::32) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYCSPRMB0009:EE_|OSCPR01MB12497:EE_
+x-ms-office365-filtering-correlation-id: be340632-5340-4292-2a1e-08dd826fdcbf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?64z2RRp2UskFz2N5FHoi/EWBEwLeGT9ZjzFmVT+z9lHADZrt+FbYXhOklWh+?=
+ =?us-ascii?Q?doqJ3EPJVBBvBLN8/PGg/ligjy2mIMlp8uVhSY8vKXqg6Qf76wPhQ/UJiSDB?=
+ =?us-ascii?Q?eL07pcv3Ym+SSn8HzEmJBKknSa91lWfZhYE+zUU7UxlgFZnC57s6heRAdmdh?=
+ =?us-ascii?Q?RbWBZceS0lDYzXq/LfkwxwSg8dvPRYfINjlTDeHh65tLD0JuxVXygQa1bqjN?=
+ =?us-ascii?Q?N8M4W2aMaq5yJ5P/08mY0X0YlhqjSZ1WfxMejDGrOKHBNjo1ioGmW6m5kguk?=
+ =?us-ascii?Q?zChLJPKpXjPKI1XrKCirqCxYn5sfDCRH/BTEKTVMoJyTjci5q3bAak2IR2Fy?=
+ =?us-ascii?Q?6iGWXK8Iy/049RlIWb32d/aWBmYFY0ggVGjeD7e4n9L0PLc1hLB6+ELFL0Zx?=
+ =?us-ascii?Q?hLz6EnIm0HVRr/7QsW8oJ+FM7XmhCws0Cm162VYeM6OJzcn1gMCy/V9gKJ7H?=
+ =?us-ascii?Q?enyP2i6OSl4cRehXbHigTVlLYzpGTSbkdGCq0MUJAOg6Ry7qxu9e4qbkxppa?=
+ =?us-ascii?Q?dja3iF7ac+O7mCt2oPAGeUzOJHMhcnlWjjnl43LEJBvBLsVPgnwXpRJDsupb?=
+ =?us-ascii?Q?9xjdh5wHJOY/kYE6N7/O0nY9iIx/Ru9CQ1LmCdQAoDP2SfKRpMLGUnoOQxN5?=
+ =?us-ascii?Q?EJ0zQ/+HX2DY7cAyUxZHRNwee0Kspdskl9aW85qfbacpbyc4JW5V6Mm5wwyy?=
+ =?us-ascii?Q?/5S5A/O8UaNcjgUxoeBA8Htd3607TiJYXk7iPixuFZ2qgND+8YoxmIs5/aBC?=
+ =?us-ascii?Q?IjN9ef7YYJ4azy7bz7da7m+2tl1+IbTZkcshrlbYwz9Y2ywv9ZYq/A8cTImF?=
+ =?us-ascii?Q?fEGTBleNyEFJ/TBWuNmz+8PUS5PgOWpImi1dPZRelsV59HRRLoeBV0uIhd2y?=
+ =?us-ascii?Q?Tdk5tlrPmrNqUD6WYn/KYtTUjxIYGMxUg+2+xhRVon28VjmJdip0nUiM7B8v?=
+ =?us-ascii?Q?5qD5dG3cDNoUg/VLruzuK3tfLiG4R0iwAzj4BEQpdy/v0zrkhePR5Bq0Zz6C?=
+ =?us-ascii?Q?uki4ArJFEUEUSEbDqUwTCB/odZf/uhmotOHxrDgblnhEjNcBWCbGm5PB5bg8?=
+ =?us-ascii?Q?Dfa/V99H1pgdIYeYiXOz65erKXtZ0ePaJ6eu6t3AhjLonzsVnrBGjrOheUPX?=
+ =?us-ascii?Q?Yw4Iz1N9TDZo72IcJdD3g/bowsgwrqwqFWmPMBEz2ks3uPc3ihz/Ri410onY?=
+ =?us-ascii?Q?YBdxK8hYaQjwtckP/SgIsjGNINp0waRrp/mqrN/6JX8iE/lNUDOuOcyTcKQe?=
+ =?us-ascii?Q?oZ7pOX23ePjdqMwoUG8xJUve+PaqK+vp5Gc/Rp2AYlOUcm+X2AIh1yblAvzr?=
+ =?us-ascii?Q?Fw6vNT7fUvqaxUgjrluDcEbhkgtPfIQUwRZXtMpBRAi8ImEwrrB7XN5kiC3o?=
+ =?us-ascii?Q?QJLHij6Ho1nnPVcbXE1vdfExoiweWfszQ0vfgb+0Zb5IxcDEXCKbhkUzISov?=
+ =?us-ascii?Q?WG3sRSQ+saYljFVhQJcjdChjTawU/XGEBd3sVWwtszE1epod7UXhtg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCSPRMB0009.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?WrjCSMh+alqLkE5gu0wB0V1KolbFQtc9U4foNVGbdeHBoSmJxpX2qe10+Q6Z?=
+ =?us-ascii?Q?YytBiSYvGOqARf1rv/DvGUBbGcHB2GHNeRHUGyib9QhTaVR1Mi6dnrc0efP7?=
+ =?us-ascii?Q?bvN9FCSYPjdHBCFqDwm8jMDju6iwUAkpph/gVURfP0HS49cRhdtyi8y+ph+E?=
+ =?us-ascii?Q?oQEwiXx7vUYC7RpGD9o3nHFmMBeY4r6kd0fjB9Zg5zsieQRpJ3lrqNc0lH4P?=
+ =?us-ascii?Q?/Pylr8JQV8lw+nOhkkYVHY8ZDixNDU881Q6vn37iW6oDGhfxjyfBXv6Js6TM?=
+ =?us-ascii?Q?DrF6nZk3L14Uq8dG0RQiYEA/TnXVWsugXaCj9YVV43DeGsaEir9bjFf7ZLbJ?=
+ =?us-ascii?Q?9rrg+o2h9s2mnaGp0ADevQ+7cCxg7ZyoHgkjEsE6zlPNOWmOWyERcq8zu7VD?=
+ =?us-ascii?Q?05ejvPZ7LEV1b1cp48sRiNuXYEZ8d9Y/KQN6kcLiQn+Wg5vOBi9HCwYh5LFh?=
+ =?us-ascii?Q?nlQf9y23yQnzgw0t8Dpqf/eUKYYy5VOfywrI2AbQcz5dzc/6ki7m62qpcXYm?=
+ =?us-ascii?Q?lKO3PqR6UvR4BUjVVdgDk+4x7oVNh053MupzaeC6P5rDEnNX4cCxvhhcIpW3?=
+ =?us-ascii?Q?qtq8qla5I8Mwv2+in75JxU6GWmCxPjJik8BlNBccP1oVBcAYfA1bcOhX48KI?=
+ =?us-ascii?Q?pK10YOA8YVZdwR4qwIeEdpPIlZX18RvaViF72CRcmzEbWlrQqiQOFhE/K9rK?=
+ =?us-ascii?Q?voQV78eBlmUW1vtXDVn/FVZrKQ6akKr5vxfBcuXwJgxn7H0KUbo6EMPaaaCH?=
+ =?us-ascii?Q?LtVm1qFe7ht7sHAgCB0e2oYGR2t66c3PSj8nheggAImUeGzTNjO637nc4CR1?=
+ =?us-ascii?Q?QaMtamdlPxJ0FAfbS79KnSIP+f+h4+kwHYbUZF9epJ5eil4QokH4J8jn/44I?=
+ =?us-ascii?Q?ECIfX7x78PGZx/9M/lWUzOPkk3y6WeIt7aaUAVEpmViBM0M4W7f9bcJBSQUQ?=
+ =?us-ascii?Q?I4b+gN/w2GNuwtYehRbO/8m073AddiHSyXCavrJlRzaumgXZSDIOQgUImr6q?=
+ =?us-ascii?Q?8+f9DXExDyAt7fwKYD1CKl5cXgsJw+1T4TfuZ9US61tw0ncEtLTv+y+62Vze?=
+ =?us-ascii?Q?BWXJX8Q5np0CvFC+2q6X1xz3W67QlpB5XGJlcXJMkkZXD9E3YPdKtnlIgRsn?=
+ =?us-ascii?Q?m9Wa9CtDpfwdRV+DzNU2ZhYF7ZmVHYCJ3bIFLJL/RdIQG+UbhS5Q7eAQN/Hc?=
+ =?us-ascii?Q?NHkhIJ1heuxv5LdOpU7BwJ7FanguvLwXSzf9Ap2UKUgSMA4UYj+F90ivpjgo?=
+ =?us-ascii?Q?ELq9IQzn8QtbytcSCU4IwwUgs3dw5wthrlsvQ8wVNdM4E436Grpkuf68cQPv?=
+ =?us-ascii?Q?7IMubvi7SxRQ/ReLVN0Uuu78KUneZeObJlEWTwWxViWM1pze6Vn5plGBmrqy?=
+ =?us-ascii?Q?PDesmHJrJuRqeRt5NQBVMf5iHHnNZ+bDbsxxvebk7n24JZ85O4Nzaw+Mv1Dn?=
+ =?us-ascii?Q?HPwoRy8K+tX10m9/CdynT9rHqkkkmJQ6MPdE6cquYfhswUaQK+mz1TFWE6eP?=
+ =?us-ascii?Q?Vq19diefJ6oICf4s1oPNo9137b+zg1lSsIeNCOa1KHn+jNMbkmYGDT4cVMQ7?=
+ =?us-ascii?Q?qqOujjIUdk2n371xVlvkFFy66pL8tlIaVnxSpkEoG7Ov7R3f05ZNLpVnBGtP?=
+ =?us-ascii?Q?vw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|DM3PR12MB9287:EE_
-X-MS-Office365-Filtering-Correlation-Id: 71d0b191-2b0d-45f5-9fc4-08dd826fde13
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OENmYlVMcjRDMytHeUsxSmxrOEt6MW1NOGUrN29ibnBZSUZTY1F4empEM2tx?=
- =?utf-8?B?RTNCZDk1cHdsRzJLSmlhcWhVQzIxdThtcmpESm9RWUE2d3RQakgxYmU4QWRm?=
- =?utf-8?B?SGF3cHV0blo5eXhhY3djOElSZlYvcVNTbUVaV05TWUVzRnVvMUpRM3UvNmRs?=
- =?utf-8?B?c3I0dWxKQmNDMmdZcm1MTVVUM0hKd3ZmM1hpNlNsaVhHTUtMVi9HMGR2eHVP?=
- =?utf-8?B?aVU1ZjF5ODlGL2J6ZGx3R0p3RXdkTVYvaWpoNVNlSzRyTldQd3dpMyt2TlZ3?=
- =?utf-8?B?bjFEeTFSS2FFSlRFbkRsSFVSV1huSWRsakxnQlFjTEFDZDBrUWdYNmwrcWR2?=
- =?utf-8?B?ZmZIci9KOWEyZGVjZ3V1Zy8vNDY5dXZsQ0ZlR0ZzQXVXemd1a0pDcWg0ZEpE?=
- =?utf-8?B?M3VaQ08rbmxrSGlTWGhheDU5RUk3QjZPbHVDQ281V0hUT04wN01iaDRaZ1ho?=
- =?utf-8?B?YTZZME03L253OXB2ellrVE5senEvSU1ER2NpaGpoL1NJMzNIcktJVkZtdzBi?=
- =?utf-8?B?cFBnaDVheDJOTEFzOEx2dkJlSXVGOGV4Uld3Q0dqWFcwZzZVcjJvcjJOekV5?=
- =?utf-8?B?L0VyTERTajExVHVZNFN3am54YnkveXZBQUlTK1lzUTVlNDBvYWZqZm9YWity?=
- =?utf-8?B?VHVzYXRFSFdEM1RON0FsUnIrZXQ4RllYN0lQb3gyekZOcXFrRC9CWmwwYzVK?=
- =?utf-8?B?eXNBVXFlSDc2cHJsREVaSFJmelBoSW14MEdQd01GeHlIQlVCcE9vMWJJSFhl?=
- =?utf-8?B?c1dVV01mRlBwbmNZU2JXa3JiWHlVdU1JQzhPZFhrMzRvajE1dEszOGFlQlNO?=
- =?utf-8?B?NnZZbmU1eFUzbFpSOXI1UVJvdGNDU0cweW5TSlUvdW5LTWYxeHR3bW9YUmZP?=
- =?utf-8?B?MFh5NFlFZE9LYm51M2cxSjNKSUY4MVViTk9ocmJ4UFUvd3ZlaWZ1SmV5WHRq?=
- =?utf-8?B?M2NUNTN6Nk5IRUlZcEFlYkduUEs2MUJ0SW15KzdLOWZ1ME1sZDR1amk1d00r?=
- =?utf-8?B?Zk9ZT01hVkVxVHgvdzR3OWZ0c0VkbG1XVWZoU1E3NHhmWlRlNDdPaEZHVlRC?=
- =?utf-8?B?SGhzZkoxdkFUN3lYMmRKb0UxQ01QZGZkRlN0SnJJSEtLakVNcVB6bUl6Nlo4?=
- =?utf-8?B?WUl3dVV5L1BaUE5scmlKc0RGcGs3bm42bUhxZjdmK2xSVEN4ajlUZXMzN0RD?=
- =?utf-8?B?eG5nZzlzYmh2aWhDcUlDeGt4MDBvYTJrcktXQmxudWxMOVI2N2hZQ0VmM3Fo?=
- =?utf-8?B?dndMS05KYnoyTVJhUkY2L3orOWJtUnFoSkJrSHpxYjZlbHJ6M2ZsbTBTOWgy?=
- =?utf-8?B?dTdhbHJMTjZXcEpNT3VYRTRoR1B1aUFoTmJYZGF3aStwbnJPVTJWZ2cvYXox?=
- =?utf-8?B?aGg5Qml6WlFOZ2h6TXp0ZVUyUjlHSlFIeEFKaWpkY3NoUTlKNy94ZG0zajhp?=
- =?utf-8?B?VXVRbWdhTDl5Nlp2bmRVWlNaT2l0UlJ0Q1NQWjAxZDNWR2YvR2pscjhwU1dw?=
- =?utf-8?B?dFdFSTNOc3NTOExBUElhVjBCRUJ6aHdIcEdmSTV4eDJLdVROcEVuR3BoSGdo?=
- =?utf-8?B?U1pKZ2JReFR5WFdUcThvbjA0ZnZ1VTkvQmd2L25RSWJtaEF3NUxadmhUWGJU?=
- =?utf-8?B?bFNQWlM1QmhYM2RGQ242ZklNcnYwM29MSmdpR3FRWmI5MDRsTC8xSlhyTjFj?=
- =?utf-8?B?ci9yZnhUTEtidmdKVzhWYUhOV0FzVDcrRkR4QksrZCsyWU9telRHU0oyS2xF?=
- =?utf-8?B?Q09OOHZpdHhMSFdHWFZkOXNXOFk1Q09rK0pXNWQ5ZHEyWVcvQzdock8yNW15?=
- =?utf-8?B?ald0TlkwRDh4YU94RlA2RjRTMUpUazdob1JHVUpyUS8vS2xnTDZjWXUvbWJS?=
- =?utf-8?B?NVlyK1p2U0h5OEFCZk8rVXhDd1E4V3puMkpaeHNoRnJmUkVRQXJTSHhsd2NV?=
- =?utf-8?Q?hkH+SqgaW/Y=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UzR4eTlSemdsMzN1NVdOTlV0ZVRDMkYzOW9qbFNiQjRoV0dDakY1Y3JBTGpo?=
- =?utf-8?B?dU5pSmU3azdJNzhNT3pEeHVtU1ZzSGdtM3UrWCtSWUZmeFVYQUwrMFpVZmJM?=
- =?utf-8?B?OUxCeUNDVC9CYW9MeWRqL0VoQjdHbGZhREFNUEJDWW9YWDFRMGVjaUorYVNl?=
- =?utf-8?B?dXZINjRZTzJPaklBT3ZDNmUvaUJIalV0RnpPbjRaUmdZYmQxSzhZaGJwVnBj?=
- =?utf-8?B?WU05TFpGRFdQRmF4alB2eEpxRmtpU0lUNG5PcmExd0Z4aUFickVzVDdIN01G?=
- =?utf-8?B?a2dQQUwvcDV2clY5ODM3RVRKcUQ3UFRnNC9jSTVEK0hMNDhmQzBUZXBWM1Ix?=
- =?utf-8?B?TURZQmtXUjZHRlBsUTNIaGRvamR3d3BFZkdJUzVUWTdBZDYvVjFCRjduOGJ4?=
- =?utf-8?B?QnJiQWpIODZVZTZoTU4vL1NSK1U4azY1ZmpmYlY0eGxvTER2bWw4RzJ0Y1BF?=
- =?utf-8?B?SU5xSmxNMkd4VTZhOFlZWWhTbFNId3JCVGNsWVdVVVk0Y1RyL1BsZ2d1Y3hh?=
- =?utf-8?B?bStIbzJWWnpGd3cxTWJnMlRQdmltbGNRcDQraXAvZ3ZXT0JLYTY2cnd1L1Js?=
- =?utf-8?B?cU0yWXRQRENDenZUa0ZPckdrajFUNTZBbVYvRTJZTy8zcUdzL3ZDNldRV0dp?=
- =?utf-8?B?T09DQ2E2SU1WZXlTMXdZQjRxY1R1TTBUSDljdVNjV2ZMcnZOQkpiTzl0UVBF?=
- =?utf-8?B?L2Z3YkYxMkVhRTllNHdlMERWMmU3WmZTK0NPZVROUXlZTG5CenBmOW5mUTVl?=
- =?utf-8?B?Z2xadUxKK0hwT05YSlQyMHZjcitiKzE2VHBIQnNnYnNzUDF5QW5JdjAzbkJm?=
- =?utf-8?B?TElZWDBqWUk4dW5xdkwrU0tURkc2a3FoanFBWGVzS0dLTnlGRUNLNzM0enVR?=
- =?utf-8?B?NnMxZ0EwSmRXRzZzaTBGaDFWelV6L3NrTi8waXRyV2NOa1BMTGlIbFRrSndP?=
- =?utf-8?B?U3d2dVU3bXJOTXVkcnZpNzBtdkV1bzBTdjNPTlpWdlFZV244QjRMZUZPVkxL?=
- =?utf-8?B?R2hnV08rZTcraFNXNmhOL1N5bmVsdWV4MzdVRUkxTGorQmlFdTczbUppU1lH?=
- =?utf-8?B?L1NNU1pwbnZFMGN1ZU85UlRCQ1BtU3cyNjhHenRkaUNiZktidEVXeml4RDlO?=
- =?utf-8?B?SEZEMFYrZUx1T1VTZjNhRUpSU1FHb3huaGVsaUh6L3pNYThGRHNJQ0R1c3d1?=
- =?utf-8?B?NE5rUG9VdEloOVQyMXZHdnEveE4xdjU2RGovSGgvdU5kY25ueldZZmptUXBs?=
- =?utf-8?B?cnYrR1FIckllMUE0UnVjTUppUmZpbm5nL0Jhb01GRytVWG5qaUxqREo4S09k?=
- =?utf-8?B?anBSZFFlVk9WZlBjR0hqVWVleE5GdXFPUXNlcmw0Ymlxbm5WUXliRGliS1FZ?=
- =?utf-8?B?NDE3VTZrL3VnYytHVTV1Q0k1Mk10aW1lK0pLdnBqTDFPdk15L2ZoQVVHNnpB?=
- =?utf-8?B?ZkdJUjRGZzJCRmJIQnBPaStHZVpiZFFtSllhWmhVVGpKbGRnZms4VDI1Wm9C?=
- =?utf-8?B?anVyci9ZL2l4QzF6T3pxbG5QN0RRUFFZSitxRGNaajVFZXVIOEdFcG9BYnFZ?=
- =?utf-8?B?c2JpRGZORjJkTlRBbEc3OTdaUzRrYnZmOTFnUjdRcE03UTdUV01BN21iZ2FP?=
- =?utf-8?B?ck5YQkdhZzgvVjNPcHh0QTZQWWswSFdtTjVqZ09DeFIzbFgxN0lBSzhWbGg1?=
- =?utf-8?B?WlNOQk9EMjljdW1lUitwTEs2Ui8wK0taSXJuVm9iYnhWdkRoOTNjeXNoR2dZ?=
- =?utf-8?B?WGpob1ZkNFVmU3FyYTZYRzJzbkhMUjltSFFBSS9ua3hrUUdNU3BWZSt0T1Jm?=
- =?utf-8?B?ZG9kdW9seExjcGhHektOL0RPaHVZZlNpQWtrb3RYelNGVVlpZEU1ZXAwekZB?=
- =?utf-8?B?dVB3akE3VUptNGhwcjlMVDhJVXNNZk9GSktvbCtEMEVwckhUZm9URm9vSnQ0?=
- =?utf-8?B?UjlsOVZsR2dPQnBzcHdyaXlpSjQrUlJjWC9YRVdCYkZMRjJNOGhXeTlsTUpL?=
- =?utf-8?B?Q2JyaVNWTWR3N1R5ajRTTG8zKzB3YkZkc2Z2Y2dlZFRzcURSNzZ5WGtWTU5J?=
- =?utf-8?B?cDFDUjFWT2loMlhodjRJUnpLMGt2RlB6OXdNZE1oR285WlcvTHRCeEJkbGtu?=
- =?utf-8?Q?F3at8DwdfbY5vgimCYK//2KRU?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71d0b191-2b0d-45f5-9fc4-08dd826fde13
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 14:05:13.7085
+X-MS-Exchange-CrossTenant-AuthSource: TYCSPRMB0009.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: be340632-5340-4292-2a1e-08dd826fdcbf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2025 14:05:11.2688
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0mzDsLsVmEnbPMrOEy4K2BFSvDD2NL4X0nzvXSYLhiSmkxUUpcxtsv6eT2/jBK+l95YZ6xssieCFTcpw+LeY6g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9287
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 75PU5xi0m1xS/eoL3mwX+RykVD162PezvkWj+5i5vQQKz8FkRJApbmEiVQ0f7NT60kgy9O44Dd4B8BX4ovXfJ1m0dcqLvW5w1BnF/vlPSgA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB12497
 
-On 4/21/2025 11:02 PM, Dhananjay Ugwekar wrote:
-> 
-> 
-> On 4/21/2025 10:23 PM, Mario Limonciello wrote:
->> On 4/21/2025 3:04 AM, Dhananjay Ugwekar wrote:
->>> Initialize lower frequency limit to the "Requested CPU Min frequency"
->>> BIOS option (if it is set) value as part of the driver->init()
->>> callback. The BIOS specified value is passed by the PMFW as min_perf in
->>> CPPC_REQ MSR.
->>>
->>> To ensure that we don't mistake a stale min_perf value in CPPC_REQ
->>> value as the "Requested CPU Min frequency" during a kexec wakeup, reset
->>> the CPPC_REQ.min_perf value back to the BIOS specified one in the offline,
->>> exit and suspend callbacks. amd_pstate_target() and
->>> amd_pstate_epp_update_limit() which are invoked as part of the resume()
->>> and online() callbacks will take care of restoring the CPPC_REQ back to
->>> the latest sane values.
->>>
->>> Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
->>> ---
->>> Changes in v2:
->>> * Modify the condition in msr_init_perf to initialize perf.bios_min_perf
->>>     to 0 by default
->>> * Use READ_ONCE to read cpudata->perf in exit, suspend and offline
->>>     callbacks
->>> ---
->>>    drivers/cpufreq/amd-pstate.c | 67 +++++++++++++++++++++++++++++-------
->>>    drivers/cpufreq/amd-pstate.h |  2 ++
->>>    2 files changed, 56 insertions(+), 13 deletions(-)
->>>
->>> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
->>> index 02de51001eba..407fdd31fb0b 100644
->>> --- a/drivers/cpufreq/amd-pstate.c
->>> +++ b/drivers/cpufreq/amd-pstate.c
->>> @@ -389,7 +389,8 @@ static inline int amd_pstate_cppc_enable(struct cpufreq_policy *policy)
->>>    static int msr_init_perf(struct amd_cpudata *cpudata)
->>>    {
->>>        union perf_cached perf = READ_ONCE(cpudata->perf);
->>> -    u64 cap1, numerator;
->>> +    u64 cap1, numerator, cppc_req;
->>> +    u8 min_perf;
->>>          int ret = rdmsrl_safe_on_cpu(cpudata->cpu, MSR_AMD_CPPC_CAP1,
->>>                         &cap1);
->>> @@ -400,6 +401,22 @@ static int msr_init_perf(struct amd_cpudata *cpudata)
->>>        if (ret)
->>>            return ret;
->>>    +    ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &cppc_req);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    WRITE_ONCE(cpudata->cppc_req_cached, cppc_req);
->>> +    min_perf = FIELD_GET(AMD_CPPC_MIN_PERF_MASK, cppc_req);
->>> +
->>> +    /*
->>> +     * Clear out the min_perf part to check if the rest of the MSR is 0, if yes, this is an
->>> +     * indication that the min_perf value is the one specified through the BIOS option
->>> +     */
->>> +    cppc_req &= ~(AMD_CPPC_MIN_PERF_MASK);
->>> +
->>> +    if (!cppc_req)
->>> +        perf.bios_min_perf = min_perf;
->>> +
->>>        perf.highest_perf = numerator;
->>>        perf.max_limit_perf = numerator;
->>>        perf.min_limit_perf = FIELD_GET(AMD_CPPC_LOWEST_PERF_MASK, cap1);
->>> @@ -580,20 +597,26 @@ static int amd_pstate_verify(struct cpufreq_policy_data *policy_data)
->>>    {
->>>        /*
->>>         * Initialize lower frequency limit (i.e.policy->min) with
->>> -     * lowest_nonlinear_frequency which is the most energy efficient
->>> -     * frequency. Override the initial value set by cpufreq core and
->>> -     * amd-pstate qos_requests.
->>> +     * lowest_nonlinear_frequency or the min frequency (if) specified in BIOS,
->>> +     * Override the initial value set by cpufreq core and amd-pstate qos_requests.
->>>         */
->>>        if (policy_data->min == FREQ_QOS_MIN_DEFAULT_VALUE) {
->>>            struct cpufreq_policy *policy __free(put_cpufreq_policy) =
->>>                              cpufreq_cpu_get(policy_data->cpu);
->>>            struct amd_cpudata *cpudata;
->>> +        union perf_cached perf;
->>>              if (!policy)
->>>                return -EINVAL;
->>>              cpudata = policy->driver_data;
->>> -        policy_data->min = cpudata->lowest_nonlinear_freq;
->>> +        perf = READ_ONCE(cpudata->perf);
->>> +
->>> +        if (perf.bios_min_perf)
->>> +            policy_data->min = perf_to_freq(perf, cpudata->nominal_freq,
->>> +                            perf.bios_min_perf);
->>> +        else
->>> +            policy_data->min = cpudata->lowest_nonlinear_freq;
->>>        }
->>>          cpufreq_verify_within_cpu_limits(policy_data);
->>> @@ -1040,6 +1063,10 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->>>    static void amd_pstate_cpu_exit(struct cpufreq_policy *policy)
->>>    {
->>>        struct amd_cpudata *cpudata = policy->driver_data;
->>> +    union perf_cached perf = READ_ONCE(cpudata->perf);
->>> +
->>> +    /* Reset CPPC_REQ MSR to the BIOS value */
->>> +    amd_pstate_update_perf(policy, perf.bios_min_perf, 0U, 0U, 0U, false);
->>>          freq_qos_remove_request(&cpudata->req[1]);
->>>        freq_qos_remove_request(&cpudata->req[0]);
->>> @@ -1428,7 +1455,6 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->>>        struct amd_cpudata *cpudata;
->>>        union perf_cached perf;
->>>        struct device *dev;
->>> -    u64 value;
->>>        int ret;
->>>          /*
->>> @@ -1493,12 +1519,6 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->>>            cpudata->epp_default = AMD_CPPC_EPP_BALANCE_PERFORMANCE;
->>>        }
->>>    -    if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
->>> -        ret = rdmsrl_on_cpu(cpudata->cpu, MSR_AMD_CPPC_REQ, &value);
->>> -        if (ret)
->>> -            return ret;
->>> -        WRITE_ONCE(cpudata->cppc_req_cached, value);
->>> -    }
->>>        ret = amd_pstate_set_epp(policy, cpudata->epp_default);
->>>        if (ret)
->>>            return ret;
->>> @@ -1518,6 +1538,11 @@ static void amd_pstate_epp_cpu_exit(struct cpufreq_policy *policy)
->>>        struct amd_cpudata *cpudata = policy->driver_data;
->>>          if (cpudata) {
->>> +        union perf_cached perf = READ_ONCE(cpudata->perf);
->>> +
->>> +        /* Reset CPPC_REQ MSR to the BIOS value */
->>> +        amd_pstate_update_perf(policy, perf.bios_min_perf, 0U, 0U, 0U, false);
->>> +
->>>            kfree(cpudata);
->>>            policy->driver_data = NULL;
->>>        }
->>> @@ -1575,12 +1600,28 @@ static int amd_pstate_cpu_online(struct cpufreq_policy *policy)
->>>      static int amd_pstate_cpu_offline(struct cpufreq_policy *policy)
->>>    {
->>> -    return 0;
->>> +    struct amd_cpudata *cpudata = policy->driver_data;
->>> +    union perf_cached perf = READ_ONCE(cpudata->perf);
->>> +
->>> +    /*
->>> +     * Reset CPPC_REQ MSR to the BIOS value, this will allow us to retain the BIOS specified
->>> +     * min_perf value across kexec reboots. If this CPU is just onlined normally after this, the
->>> +     * limits, epp and desired perf will get reset to the cached values in cpudata struct
->>> +     */
->>> +    return amd_pstate_update_perf(policy, perf.bios_min_perf, 0U, 0U, 0U, false);
->>>    }
->>>      static int amd_pstate_suspend(struct cpufreq_policy *policy)
->>>    {
->>>        struct amd_cpudata *cpudata = policy->driver_data;
->>> +    union perf_cached perf = READ_ONCE(cpudata->perf);
->>> +
->>> +    /*
->>> +     * Reset CPPC_REQ MSR to the BIOS value, this will allow us to retain the BIOS specified
->>> +     * min_perf value across kexec reboots. If this CPU is just resumed back without kexec,
->>> +     * the limits, epp and desired perf will get reset to the cached values in cpudata struct
->>> +     */
->>> +    amd_pstate_update_perf(policy, perf.bios_min_perf, 0U, 0U, 0U, false);
->>
->> In EPP mode this appears it would be OK because the perf value should get reset in the resume for amd_pstate_epp_update_limit() but in passive mode won't this never get reset on resume from suspend?
-> 
-> In passive mode, on resume, amd_pstate_target gets invoked through the code flow mentioned below,
-> 
-> Cpufreq_resume()->cpufreq_start_governor->(cpufreq_driver->start()&&cpufreq_driver->limits())->amd_pstate_target() [this is for _target() based governors]
-> For schedutil, start_governor will register the update_util hook and it will be called at every util change, which eventually calls adjust_perf()
-> 
-> I tested these scenarios using "sudo rtcwake -m mem -s 10" (suspend to mem for 10 seconds) on a server system, within 1-2 mins of the wakeup the CPPC_REQ MSR
-> values of all CPUs get updated to sane ones. It would be helpful if you could test for such scenarios on the client systems as well.
-> 
-> That said, there might be a small window between the resume and governor trigger, where the value in CPPC_REQ MSR would be invalid. Are we okay with that ?
+Hi Geert,
 
-For server systems it's probably not much of a big deal since servers 
-aren't frequently suspended, bu this window of time seems untenable for 
-a client machine.  As a user that would mean effectively they have wrong 
-limits programmed after wakeup for 1-2 minutes and could potentially 
-have performance gimped as a result.
+> From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Sent: 23 April 2025 14:27
+> Subject: RE: [PATCH v6 2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)=
+ family of SoCs
+>=20
+> Hi Geert,
+>=20
+> Thanks for your feedback!
+>=20
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Sent: 23 April 2025 12:37
+> > Subject: Re: [PATCH v6 2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(=
+P) family of SoCs
+> >
+> > Hi Fabrizio,
+> >
+> > On Tue, 22 Apr 2025 at 19:40, Fabrizio Castro
+> > <fabrizio.castro.jz@renesas.com> wrote:
+> > > Document the Renesas RZ/V2H(P) family of SoCs DMAC block.
+> > > The Renesas RZ/V2H(P) DMAC is very similar to the one found on the
+> > > Renesas RZ/G2L family of SoCs, but there are some differences:
+> > > * It only uses one register area
+> > > * It only uses one clock
+> > > * It only uses one reset
+> > > * Instead of using MID/IRD it uses REQ No
+> > > * It is connected to the Interrupt Control Unit (ICU)
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > > Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> > > Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > ---
+> > > v5->v6:
+> > > * Reworked the description of `#dma-cells`.
+> > > * Reworked `renesas,icu` related descriptions.
+> > > * Added `reg:`->`minItems: 2` for `renesas,r7s72100-dmac`.
+> > > * Since the structure of the document remains the same, I have kept
+> > >   the tags I have received. Please let me know if that's not okay.
+> >
+> > Thanks for the update!
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >
+> > > --- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> > > +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> > > @@ -80,12 +85,26 @@ properties:
+> > >      items:
+> > >        - description: Reset for DMA ARESETN reset terminal
+> > >        - description: Reset for DMA RST_ASYNC reset terminal
+> > > +    minItems: 1
+> > >
+> > >    reset-names:
+> > >      items:
+> > >        - const: arst
+> > >        - const: rst_async
+> > >
+> > > +  renesas,icu:
+> > > +    description:
+> > > +      It must contain the phandle to the ICU, and the index of the D=
+MAC as seen
+> > > +      from the ICU (e.g. parameter k from register ICU_DMkSELy).
+> >
+> > Doesn't really hurt, but this description is identical to the formal
+> > description of the items below.
+>=20
+> Okay, I'll drop this description, and I'll keep the description for the i=
+tem below.
 
-I'd say let's just flush the right value immediately after resume and 
-then the write 1-2 minutes later becomes a no-op.  With the checks we 
-have in the driver now I expect that they don't even turn into MSR writes.
+Actually, I cannot take this out:
 
-> 
->>
->>>          /* invalidate to ensure it's rewritten during resume */
->>>        cpudata->cppc_req_cached = 0;
->>> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
->>> index fbe1c08d3f06..2f7ae364d331 100644
->>> --- a/drivers/cpufreq/amd-pstate.h
->>> +++ b/drivers/cpufreq/amd-pstate.h
->>> @@ -30,6 +30,7 @@
->>>     * @lowest_perf: the absolute lowest performance level of the processor
->>>     * @min_limit_perf: Cached value of the performance corresponding to policy->min
->>>     * @max_limit_perf: Cached value of the performance corresponding to policy->max
->>> + * @bios_min_perf: Cached perf value corresponding to the "Requested CPU Min Frequency" BIOS option
->>>     */
->>>    union perf_cached {
->>>        struct {
->>> @@ -39,6 +40,7 @@ union perf_cached {
->>>            u8    lowest_perf;
->>>            u8    min_limit_perf;
->>>            u8    max_limit_perf;
->>> +        u8    bios_min_perf;
->>>        };
->>>        u64    val;
->>>    };
->>
-> 
+	'description' is a dependency of '$ref'
+	'/schemas/types.yaml#/definitions/phandle-array' does not match '^#/(defin=
+itions|\\$defs)/'
+		hint: A vendor property can have a $ref to a a $defs schema
+	hint: Vendor specific properties must have a type and description unless t=
+hey have a defined, common suffix.
 
+I'll rephrase the description to:
+It must contain the phandle to the ICU and the DMAC index as seen from the =
+ICU.
+
+Thanks!
+
+Cheers,
+Fab
+
+>=20
+> >
+> > > +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> > > +    items:
+> > > +      - items:
+> > > +          - description: phandle to the ICU node.
+> >
+> > Phandle
+>=20
+> And I'll amend accordingly.
+>=20
+> I'll send a new version shortly.
+>=20
+> Thanks!
+>=20
+> Cheers,
+> Fab
+>=20
+> >
+> > > +          - description:
+> > > +              The number of the DMAC as seen from the ICU, i.e. para=
+meter k from
+> > > +              register ICU_DMkSELy. This may differ from the actual =
+DMAC instance
+> > > +              number.
+> > > +
+> > >  required:
+> > >    - compatible
+> > >    - reg
+> >
+> > Gr{oetje,eeting}s,
+> >
+> >                         Geert
+> >
+> > --
+> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+> >
+> > In personal conversations with technical people, I call myself a hacker=
+. But
+> > when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+> >                                 -- Linus Torvalds
