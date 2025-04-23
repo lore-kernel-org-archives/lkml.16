@@ -1,135 +1,132 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B88C27C87C
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB73528B4EC
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428758; cv=none; b=g1aRXQ6uHmlK9FyIbBuHo4+raPITOZYs506nx2wWIEvedAr5LlB/y9p57aBebsWlKq2zNui0Bsa7JpMbA1kc80jk90W+aJ11/vUP+75VC+CZ0JZI0784d0LoAEzCRDtnBEOyedbhiOwFuUQ1k5HWMXYxbgihu6Bz7lVpf1YZKdE=
+	t=1745428842; cv=none; b=qYlF/riXG4YpbZ1PwlZVElRYoLGCR1xKCDQx2uWnQdB8Zbv2Yh5RJsAGv2Vj0LADCcYk12a8uMq17uNA+PWh4ltzD7OS1hA023IGdrVkv57+NTVPVI6WUPu7qByJNLO4MOoCF8owONWiVmjH1pRgnjYLY7tNaxTPHBgmcEBZzOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428758; c=relaxed/simple;
-	bh=rgZFysdk5LmUyO73ZnnoheqiOjpTCHaMicgS32wqjrU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ucjdYPyhqRjJl663u20raKEg+w51nw7SewmybiRjDu5i2n6H5M1ItKLU2CrVboy6NSSvphIQjH+NMFqBramS7xL0yZrv5aiXonL/O1wgpyTmy0ndwydcKoWnfP/0wKbPbNUScojC66QELNfR0AHeKVi52w8j6ufFLKwlG6q+BEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LbsbPK9Q; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745428842; c=relaxed/simple;
+	bh=wMlOFTd70RMJCXwC9bQyxic8c20g9i+LxAT9YJ/SitA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LFgJfY8SvKgePGQKywtTDEWzCBa/I8wkkezkCHrdDTHt19UWeStr2lBHmxOaIvXRQG1Dy1YFCBMkVS0AGTuctraNK+C+BUQVKnTPaYfCO5DmgAtxOpNO/wUXCrg3hkL92I9XipNXTyrk+eGGSYhDHrI644La2A+8fk2AamQSmkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com; spf=pass smtp.mailfrom=raspberrypi.com; dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b=c8L33zSM; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=raspberrypi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=raspberrypi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LbsbPK9Q"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NApUK9014055
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:19:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=v9wH8EHVA6LVjlvvVtjgsb3t
-	nmFIETCL1aHoZSy3M2Q=; b=LbsbPK9QvehrWUBZgBjDZUrBzdkFbFpsxxVum3z7
-	BKdawnQthAVJcR4qIZJHn/msKhRnEElT+3YCh6JwYLP0nm8qIzOIObQ8Ap8bDq9o
-	c+fb6nXxfgxTHdoiIGB9v68nWkC0OvVHQEubi6D3m29lZ/u9JYs4NvYGy3EG8Ntn
-	EvHJTS3wrs8+XSnRhSUMwM96Yz/sINB30n5X+WpnBUNd1XcCAXJNRYJHyIjZGzW5
-	WvUKRMWk9OM414DcH/q0gXIwBn1YkSPHXO3rrk9Nfmvt9wmQfn6NtLvqDolfJJ/k
-	Mq7gd3gdwwLX8OZ9H+ZaOrqMu5g/HdoFhfG8eImpXvIl1w==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3avrk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:19:16 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5d608e703so11409985a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:19:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=raspberrypi.com header.i=@raspberrypi.com header.b="c8L33zSM"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so600935e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:20:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google; t=1745428839; x=1746033639; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4rqGU6lspHQHS3YtpHeS52QHTuXwrfXzLgazS3+iqpY=;
+        b=c8L33zSMO7eBTCkikx0lf1XRNoJbXj03CtzDDctCMwcHc3gjFSli27MkySsPCTwO/G
+         GdDN5t8RFhw7R2mT8qbZHB+Rm7q/1d9/3+zMSLd7Ty8907C2ceGVEQAR3JUKhZzRBXR1
+         EoLsrgd27v6OWh4MOI/aY7PFpxDFdZmRsbA3IVhMoRlFDdPbaPvBd0qQCX2zEAn7m/7j
+         xDzCPmVU+liM3qrOuNIpyndGW3Cz7VaL4LzgFyCYPuQMs+Rw7w3ixTm4Z8rRP+RO2xH+
+         tdwtQuDU3u3Cp3a3eRtjH114oisIiOqGUG7FmZ89dT743bwSlA/iUSI7KOEaAcxCX+Ae
+         b/bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745428755; x=1746033555;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v9wH8EHVA6LVjlvvVtjgsb3tnmFIETCL1aHoZSy3M2Q=;
-        b=oDyJrdnEhGT0LJVmAgVEBUKuInCK9COfcRZ5XIKKvya1qQaKhW7a8FNXyVh9UugIDi
-         4Q2CVJR3WqNzmeb+doVepz+vMJAa9306Jz9aqSzXgatczpVcYtMK6+MMQlUuwc8mQ2cy
-         OogGUd0RtRY7WIQjvjrp16Z8TH/PcS5fuMLrAe34sqr7bj7xOG08+I7L16CyFvl2ySdc
-         121GrSb+OG5N1LOJiUNb0RFEkR9ZQgMJyjp/TR1nKYZIxu34e/s2LkET5W7HJciD9ons
-         j7+boZS6R8Uz6rTUtTuz7mGXsIgB9vAZ3wftSLWCju5TUG6fhfRurpB67RNib4FrlbUP
-         gUHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTIjl5n3WEQB39ErweHMCmCJEMPPTEqgdFzggukwo0L4Qtekslwkhcz+qkhBwr0AW4klrgpTMJ4YK+Uto=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo4VSu5/9YwmcVmHjFTojOngNcLGAUDye4AYYELjCdAaR7fz+T
-	QsDiVmT4mev2gzTLrePONJ+jkvDJg9TnFSV7Jxsth/OGNT/xobQ68vZT6UCG54vC83sMyuhk2E3
-	wkdxFH+9QYNBtcihUAgDII04lPhCWbWoAroc3njJgmugYbTItyhDLLHxqU63xBZM=
-X-Gm-Gg: ASbGncvhTpRIJKk2AzE4WSyU4jwz5kIt1r+n8WIBJv1BjnTOxrw32Iazt2lLWYK2FHw
-	4H44XcYSKBnubxOCy9ZxHMdFg3LNCUl6V0jBkctYNHVHsBkkp4/bO073JP+Sp0/CpTpjWxW1esR
-	TQIXgHidut+qDASp9FH/1U8ZWs87SCGGZWQVLOUtjqRPIZq8kDOi84dFZ6rM6Yf42HqyR/HWG4u
-	3vnKoybM2FRF0WZ0akdqSgshD2hfEOb93+Vnp0gTG8J9G9+aa8jbmUGeKx6JPemp+ThZlt4uTIu
-	pPyLWhAN9ABv2HEx+HCZ+9/0yP75HqvlNOZnena/ucbqthkoiGi8A3jDM4ZVsbwIni3eSTH7AAA
-	=
-X-Received: by 2002:a05:620a:4626:b0:7c5:b90a:54a6 with SMTP id af79cd13be357-7c927f92454mr3558193585a.13.1745428754604;
-        Wed, 23 Apr 2025 10:19:14 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGVswqy1ybTqryfuU4lsmS6U3oHGTuYaamZGD3V21r6W1eTAM4iafXiw5YygTNGYAOdB9TvOA==
-X-Received: by 2002:a05:620a:4626:b0:7c5:b90a:54a6 with SMTP id af79cd13be357-7c927f92454mr3558189385a.13.1745428754176;
-        Wed, 23 Apr 2025 10:19:14 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5e518fsm1569937e87.188.2025.04.23.10.19.13
+        d=1e100.net; s=20230601; t=1745428839; x=1746033639;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4rqGU6lspHQHS3YtpHeS52QHTuXwrfXzLgazS3+iqpY=;
+        b=ZuQ7tgOPpUq0yUQ6lDfIka9yMAOFDmzANQ7ftsnx5cWP2LD0iTJAT2hQwsoUr7psfe
+         00nUCCE5x1MXI8pwLnyi6J8UbrI+TxVRzkMlmJ1VjSHNRlPQWiKBao7BOJasajsB9Pyh
+         qiAHg+C+0y1CAgmpObhQjomo9ZiYQz7ev8zRE8Hre7yzW0FSAQOo6/8p3xlhcmvHvMW9
+         Qu5EdiC2sEjWjsDQUQ+sAxoiYQsXuHeImRrgnNsSCEHtsbc5UCM5vOSF1ktgNtPahmoW
+         g3pFkiVbZwBbL4KoYLHyOBMirzS9fg0aBFckoGoU/P6gUwUJuE1d3WB4jXf/n8w4iRwJ
+         C7mw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPj3y4fjKAJsgH5W6+Vu8jGumS8YB2e1yWgIkO+nSEKi83NLP+6J9vjeghEZw8WIE4gDr0bUoGV7CuiPM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnrNAfsx0FA/PLzBoaD3JKdc6fKPNUBdEK7XwIaJTNpjo5a6PC
+	u5HoYzsdpc5KV48hbeiP3pcsfGN6xvcblKpImTWCLNpQc8SqYXla33ANCg2I8ys=
+X-Gm-Gg: ASbGncvY/7wKQk4pjc1M+a4Mey9KXa7DWbpqY2NzrA9b8CMjTmksBWqBHhp2NwSEEjy
+	qg8XyVhOxHHN+CxPtJkIdlQ7bK/GB0/odDyWuNd4Kynq1DM8FgdGtMoBwPIX9vqgP5xkdoQlib3
+	Kq7bIIWj2qqE0gxL+cfinQ7bNYwUBrGhqQBOqRpJ6Pa1dEWfxYGrSs44mfhHr4i1NYlfGUlre/k
+	nZn03uXrhdGcTa4OUJZjmDSx6sWkPoMFfe1qM95j4g/kox+wX6c1u6XaLjWQGh4vGRkqslQ7ZqK
+	SAOU9VfQV4zC5ZlfXGbDwoyW9l1ntiP4
+X-Google-Smtp-Source: AGHT+IGrixIUdFwDqxJsP0Mh+PleUdGsoK+ZibZSwUPFmb7HHGdjv1z9p7Q1wXmc1rZnucAiLmqGBA==
+X-Received: by 2002:a05:600c:34c6:b0:43d:209:21fd with SMTP id 5b1f17b1804b1-4409a1c4da7mr3750025e9.30.1745428839115;
+        Wed, 23 Apr 2025 10:20:39 -0700 (PDT)
+Received: from [127.0.1.1] ([2a00:1098:3142:e::8])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-44092d18433sm32940945e9.1.2025.04.23.10.20.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:19:13 -0700 (PDT)
-Date: Wed, 23 Apr 2025 20:19:11 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jessica Zhang <quic_jesszhan@quicinc.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: panel: himax-hx8279: avoid using an uninitialized
- variable
-Message-ID: <lds4bnrjsnqxjjcskq2quzqqlkmwwmxwatbfhyjc622pjrjxw2@eqcw5bdwd5xk>
-References: <20250423163214.2276114-1-arnd@kernel.org>
+        Wed, 23 Apr 2025 10:20:38 -0700 (PDT)
+From: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Date: Wed, 23 Apr 2025 18:20:19 +0100
+Subject: [PATCH v3 2/5] media: ioctl: Add pixel formats NV12MT_COL128 and
+ NV12MT_10_COL128
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423163214.2276114-1-arnd@kernel.org>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDEyMSBTYWx0ZWRfXxuEjm1kd1eKM ynkLeNSKo0I53GF50LQfjekaaYVewZKo1btpoGxIrIaQtW+Tdo7/OedovqFxL11QmNbQ4n+GAkO QDPgqsAt/aKZarNhErb3FvcQyWK0FEI3Y8rAMhgkcqua4eH1Im1czIP1nAEZfOunnWneGWw8NOu
- gLevDJVGSFOjLD++NlapPWu7ycJfo/2LcL1Hu8IazH5/IWlAgpx2eLy7y2IwL5jgYjdBff/BrRi sa+MODqldLYGgq+I6oUR652trzHOKaCUS8BoM/TaMzqXgslvWGmC5pcvwwpV64vjoYG9ZnVbnD6 0pM/hqI9csNyfzwa9Dzn8Ez9iDMWk/PN0DnvlDcO2uRmOTMyrwW/CO8LKhCnC5Wj8/vuNOYOxXH
- xhGRuhZVmcsc+JNVT7NNmpM0kqIiAZqoZLpf6UeTqNIfteYOTjQom34+0eFmfYnbgG4EWuPM
-X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=68092114 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=QetOEnqPXbbGsKDQW84A:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
-X-Proofpoint-ORIG-GUID: _VJn4FnvuRRY6-j0aDm54JA1Us9LepZc
-X-Proofpoint-GUID: _VJn4FnvuRRY6-j0aDm54JA1Us9LepZc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_10,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=911 mlxscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230121
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250423-media-rpi-hevc-dec-v3-2-8fd3fad1d6fb@raspberrypi.com>
+References: <20250423-media-rpi-hevc-dec-v3-0-8fd3fad1d6fb@raspberrypi.com>
+In-Reply-To: <20250423-media-rpi-hevc-dec-v3-0-8fd3fad1d6fb@raspberrypi.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Florian Fainelli <florian.fainelli@broadcom.com>, 
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+ John Cox <john.cox@raspberrypi.com>, Dom Cobley <dom@raspberrypi.com>, 
+ review list <kernel-list@raspberrypi.com>, 
+ Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: John Cox <jc@kynesim.co.uk>, linux-media@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+X-Mailer: b4 0.14.1
 
-On Wed, Apr 23, 2025 at 06:32:07PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> goa_even_valid is only initialized in one branch but not the other:
-> 
-> drivers/gpu/drm/panel/panel-himax-hx8279.c:838:6: error: variable 'goa_even_valid' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->   838 |         if (num_zero == ARRAY_SIZE(desc->goa_even_timing))
->       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/gpu/drm/panel/panel-himax-hx8279.c:842:23: note: uninitialized use occurs here
->   842 |         if (goa_odd_valid != goa_even_valid)
->       |                              ^~~~~~~~~~~~~~
-> 
-> Change the initialization to set it to the value of the condition instead.
-> 
-> Fixes: 38d42c261389 ("drm: panel: Add driver for Himax HX8279 DDIC panels")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpu/drm/panel/panel-himax-hx8279.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
+Add V4L2_PIXFMT_NV12MT_COL128 and V4L2_PIXFMT_NV12MT_10_COL128
+to describe the Raspberry Pi HEVC decoder NV12 multiplanar formats.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> 
+Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+---
+ drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
+ include/uapi/linux/videodev2.h       | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index a16fb44c7246..9405e1391617 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1379,7 +1379,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_PIX_FMT_NV16M:	descr = "Y/UV 4:2:2 (N-C)"; break;
+ 	case V4L2_PIX_FMT_NV61M:	descr = "Y/VU 4:2:2 (N-C)"; break;
+ 	case V4L2_PIX_FMT_NV12MT:	descr = "Y/UV 4:2:0 (64x32 MB, N-C)"; break;
++	case V4L2_PIX_FMT_NV12MT_COL128: descr = "Y/CbCr 4:2:0 (128b cols)"; break;
+ 	case V4L2_PIX_FMT_NV12MT_16X16:	descr = "Y/UV 4:2:0 (16x16 MB, N-C)"; break;
++	case V4L2_PIX_FMT_NV12MT_10_COL128: descr = "10-bit Y/CbCr 4:2:0 (128b cols)"; break;
+ 	case V4L2_PIX_FMT_P012M:	descr = "12-bit Y/UV 4:2:0 (N-C)"; break;
+ 	case V4L2_PIX_FMT_YUV420M:	descr = "Planar YUV 4:2:0 (N-C)"; break;
+ 	case V4L2_PIX_FMT_YVU420M:	descr = "Planar YVU 4:2:0 (N-C)"; break;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index c8cb2796130f..fbccb471e3cb 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -687,6 +687,10 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_NV12MT_16X16 v4l2_fourcc('V', 'M', '1', '2') /* 12  Y/CbCr 4:2:0 16x16 tiles */
+ #define V4L2_PIX_FMT_NV12M_8L128      v4l2_fourcc('N', 'A', '1', '2') /* Y/CbCr 4:2:0 8x128 tiles */
+ #define V4L2_PIX_FMT_NV12M_10BE_8L128 v4l2_fourcc_be('N', 'T', '1', '2') /* Y/CbCr 4:2:0 10-bit 8x128 tiles */
++#define V4L2_PIX_FMT_NV12MT_COL128 v4l2_fourcc('N', 'c', '1', '2') /* 12  Y/CbCr 4:2:0 128 pixel wide column */
++#define V4L2_PIX_FMT_NV12MT_10_COL128 v4l2_fourcc('N', 'c', '3', '0')
++			/* Y/CbCr 4:2:0 10bpc, 3x10 packed as 4 bytes in a 128 bytes / 96 pixel wide column */
++
+ 
+ /* Bayer formats - see http://www.siliconimaging.com/RGB%20Bayer.htm */
+ #define V4L2_PIX_FMT_SBGGR8  v4l2_fourcc('B', 'A', '8', '1') /*  8  BGBG.. GRGR.. */
 
 -- 
-With best wishes
-Dmitry
+2.34.1
+
