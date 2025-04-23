@@ -1,187 +1,189 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFE41A0BC9;
-	Wed, 23 Apr 2025 08:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF941E9915
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:53:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745398402; cv=none; b=CEyrCPfkT/OsavHSGGMhALd7RUkBzIYpYMfFoZl2GASg9MlRMpVjP6Zhs/ObVlJLCUck5GTL3FDh3jKhLNnQk1/cb+zt3iTYCvngvgIy9pAfQNn2Fv4MG+S4b10CrMneftIfix2LTDwirRolPH+WLeIykHS4dbsmZrC1RT/5jGc=
+	t=1745398403; cv=none; b=B1g7xNOeIZkVThHfRkGM4vdrBirgYyvOyzdOSp3Ofv9vbHVzcIN2rSFe7UaFGoHbd4jBGdJ+/v9BCaidBYOpvMH+BUHO8JwLtFbuZbYuQxHGk+D2KzxSeYsPcTci3o8yyF7Ky05isJY0BhLPfJIOr2UUMT4jFUnMXvQzP8TeyJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745398402; c=relaxed/simple;
-	bh=KD9Cl3NthrDkg28+cyb3nHO/tjJn3qP+nuv9lHaS+YE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=a2LbLIadL27sZnW+q7HXyJP26gFQyRzQdKGLzFQK0TgmDHuAKTeH30XSlpkOLz95rRHe8mlfDlb5taMiq1CsQPWH9xvRGQAkM2XU7DUWbrAQOhNqy6/mY0GzlBVDcxdePI1JiJyQb3bJ40iVSeahswV2JyJ5uc+r7flU3+5S7RY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Z6ssTRoy; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745398403; c=relaxed/simple;
+	bh=plbpc31rVrOD0KMkWiMy9DSCysG2bPp4EWpOgbNVk+g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=O7ZrPRB5Uqkfd/Cs0WDe3jChrEXvP4Vc6UkM+f6LV3OfUUks8auEj9I3XIT+5YglkIkDp/rTUawxMVqBi1GFisLin1bszcqHyiG68CFduCQ0hkJ/W4fvMa6LDMW99Ww9chL3pBELHa6sUfxM+6FN0TNnns1sMbXRdEdaGiF3gLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=ewCvSt2H; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Z6ssTRoy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745398396;
-	bh=KD9Cl3NthrDkg28+cyb3nHO/tjJn3qP+nuv9lHaS+YE=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Z6ssTRoySSu3OVlfvIDl9j04yp9RSXUNLJboOF/eMsbAibPM1LQuA+fDT+Q2V4Zod
-	 q4M5sddll854+FuVbxLoj+Xv+PtOPQ3uC6cUCy830q33HFbAHCZixzdCsaHryibEo6
-	 sPeokSI/13wnOJjcHrbeuGy6DUPnM+lPre68C+/JZLSywXE3Nfm6Yh09hIkadQeMqe
-	 Y9ZviPcZKlAQ3aPinwbetw1GLwEaXhNnti433ayGTCP5L0yjyDfxARkoMHP2s2WVVp
-	 FHlLHoxznnt/c/rnAJWKsEIZVM++uc8udHSVL6fn19/R/VuzyT3nnuQhXaMLaQ+Vif
-	 U75JlmtAGZX6A==
-Received: from apertis-1.home (2a01cb0892F2D600c8f85cf092d4Af51.ipv6.abo.wanadoo.fr [IPv6:2a01:cb08:92f2:d600:c8f8:5cf0:92d4:af51])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jmassot)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 905DC17E0CAB;
-	Wed, 23 Apr 2025 10:53:15 +0200 (CEST)
-From: Julien Massot <julien.massot@collabora.com>
-Date: Wed, 23 Apr 2025 10:53:13 +0200
-Subject: [PATCH v2] arm64: dts: mediatek: mt8395-nio-12l: Enable Audio DSP
- and sound card
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ewCvSt2H"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-30155bbbed9so4672669a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1745398401; x=1746003201; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l3iCEA8tjYiThU7Rin4dKsTFv6XsSOzMIb0/FuGpw2E=;
+        b=ewCvSt2HvDIyS5lDVc6vzN9u34M+s2cPVvmhImjb67c1Qs8YQneLmsIe2P7QI+W7k/
+         Dtt+LoSJtn8u2CZAn9rDzt1/d1SH3kwUz2EmNjsLrv0fKLSe1uQtnjcvOKBsaAT9qJD5
+         pgoEKq/yYaBBSQc8WxgAZl4Lt1XJakJ1ZT8SLxI2/K14Lg1B2VkqSrTLrm048wvSI2m3
+         1VnXOaUDRjg7mnaAsZMoFLrEz7iQpAnCZ+k/8igg7iwgoX9pIMtFK6Jy4Mx5T1lvmr2n
+         SwyCMH84po+WVX+k4p8Z0DTQcRvkj3byQxFqp15rugz2UYpsy5bk1IuCqn0qMTWvzTsE
+         xcng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745398401; x=1746003201;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l3iCEA8tjYiThU7Rin4dKsTFv6XsSOzMIb0/FuGpw2E=;
+        b=HxNZOJEUnCOqfv4gRaydazc1FoJKH45EtJllzJP3T+SOuuq7+eSU6HpTKY8RYDcVeg
+         UyODJl768ZzCp3HdrXalbO9p6icXbOivFV7FP+nCCRhpU1oDmH6Zk/ArUjOpC91Fr11c
+         Bhfn0RdlKl291vEfCGLgEEjpQ/TFuT4EmDccWXLd3SO/6gIlvxWOidDw3c5Tu4Gc/qW4
+         FCuhKiJeei93Zc9gu7B4Dt355njQcLqB71Znw5eSSIHv/GCLzQp+F9PBe4TRY+TBC+DW
+         DWU/8DRnqK60sxLozHN4hQVPt/7OHBWnsNJjCYQopD5BizjwUJ+SoaI6JLTfL7lpYuCE
+         GlNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJIVNYDoqTlmbzyqPDFbkE9GSB0jEk9CSoDGbY5tzimx6o8rCLjEdCf/V3SqfgQnYG/MlpCvWtC00M5to=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyui0lJzQdmm825tIm7hLwdrIXg8FHTaEo8bZusQbmvCyzcLpuO
+	rmwzNP4jgkt0HV3bq4a3NE1urw+EeFOdz4BbpbMnP64A7FpmBQMsezouIdRpA70=
+X-Gm-Gg: ASbGncvR5hrK9nxjVgImdKYmBD7BBg7tB0KQ0+32vFVGKt304SSe5kTixCycQTRdLDe
+	NMjDP4NGsp5qJbrjR1TIJTOgMijt4UsLuLaR94/U6UR7VMayZ5/0M2TZ7tuzHRuYSpNVjOxKMka
+	CK1w5yFDMNHxevMRspU28ogOARtESmo2irhluaviEJBTAKhv2x1wBDxAFqafju/JeuMT0elksao
+	UvKfyS9c348K9RxyyaOd46itGYBb7NLkyApLHptky2uVozuL6WgxDmLhgujR+FYXcEHmlOTmyWy
+	xgGcMhp2eXYyKmD9OjQ+yNAeu/ZVADylLu5PvloQvOGYAL0V6WPw4eIcQEonsvF5UiiPX93Hdov
+	n0w==
+X-Google-Smtp-Source: AGHT+IHEKV/m10IrzT141uXdAo2R7TQilKbWToWRUKyb71DvBqH66dHmnRA2NqFUmClDybjkDOEreA==
+X-Received: by 2002:a17:90b:1cc5:b0:2fe:85f0:e115 with SMTP id 98e67ed59e1d1-3087bb9f463mr21064712a91.26.1745398400742;
+        Wed, 23 Apr 2025 01:53:20 -0700 (PDT)
+Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309dfa5f880sm1047611a91.38.2025.04.23.01.53.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 01:53:20 -0700 (PDT)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Nylon Chen <nylon.chen@sifive.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Vincent Chen <vincent.chen@sifive.com>
+Subject: [PATCH v13 1/5] riscv: dts: sifive: unleashed/unmatched: Remove PWM controlled LED's active-low properties
+Date: Wed, 23 Apr 2025 17:04:42 +0800
+Message-Id: <20250423090446.294846-2-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250423090446.294846-1-nylon.chen@sifive.com>
+References: <20250423090446.294846-1-nylon.chen@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-mt8395-audio-sof-v2-1-5e6dc7fba0fc@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAHiqCGgC/32NTQ6CMBBGr0Jm7ZhSKKAr72FYlP7IJMCYFomG9
- O5WDuDyveR73w7RBXIRrsUOwW0UiZcM8lSAGfXycEg2M0ghlajLFue1qy4K9csSY2SPg9bSNLI
- TlfWQZ8/gPL2P5L3PPFJcOXyOh6382T+xrUSBlVBdW8vGKWtvhqdJDxz02fAMfUrpC+w9lgG0A
- AAA
-X-Change-ID: 20250417-mt8395-audio-sof-baa2c62803df
-To: kernel@collabora.com, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Julien Massot <julien.massot@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Add memory regions for the Audio DSP (ADSP) and Audio Front-End (AFE),
-and enable both components in the device tree.
+This removes the active-low properties of the PWM-controlled LEDs in
+the HiFive Unmatched device tree.
 
-Also, define the required pin configuration and add a sound card node
-configured to use the ADSP. This enables audio output through the 3.5mm
-headphone jack available on the board.
+The reference is hifive-unleashed-a00.pdf[0] and hifive-unmatched-schematics-v3.pdf[1].
 
-Signed-off-by: Julien Massot <julien.massot@collabora.com>
+Link: https://sifive.cdn.prismic.io/sifive/c52a8e32-05ce-4aaf-95c8-7bf8453f8698_hifive-unleashed-a00-schematics-1.pdf [0]
+Link: https://sifive.cdn.prismic.io/sifive/6a06d6c0-6e66-49b5-8e9e-e68ce76f4192_hifive-unmatched-schematics-v3.pdf [1]
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
 ---
-This patch series adds support for audio playback on the MT8395-based Radxa NIO 12L platform, which uses the integrated MT6359 codec via internal DAI links.
+ arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts | 12 ++++--------
+ arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts | 12 ++++--------
+ 2 files changed, 8 insertions(+), 16 deletions(-)
 
-Key additions:
-- Support for a new `mediatek,mt8195_mt6359` card configuration that does not rely on external codecs like rt5682.
-- Proper memory region declarations and pinctrl setup for the audio front-end (AFE) and audio DSP (ADSP).
-- A device tree sound node for headphone audio routing using `DL_SRC_BE` and `AIF1`.
-- Enhancements to the DT bindings to document the new compatible string, missing link-name, and additional audio routes (Headphone L/R).
----
-Changes in v2:
-- The first five commits have already been merged into linux-next; only one remains pending.
-- Improved the commit description of the former patch 6/6, now labeled as 1/1.
-- Link to v1: https://lore.kernel.org/r/20250417-mt8395-audio-sof-v1-0-30587426e5dd@collabora.com
----
- .../boot/dts/mediatek/mt8395-radxa-nio-12l.dts     | 58 +++++++++++++++++++++-
- 1 file changed, 56 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-index f2eb1b683eb76f783f5a13f28a78f6e33238b5f0..329c60cc6a6be0b4be8c0b8bb033b32d35302804 100644
---- a/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-+++ b/arch/arm64/boot/dts/mediatek/mt8395-radxa-nio-12l.dts
-@@ -139,9 +139,21 @@ bl31_secmon_mem: memory@54600000 {
- 			no-map;
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 900a50526d77..06731b8c7bc3 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -49,32 +49,28 @@ led-controller {
+ 		compatible = "pwm-leds";
+ 
+ 		led-d1 {
+-			pwms = <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
+-			active-low;
++			pwms = <&pwm0 0 7812500 0>;
+ 			color = <LED_COLOR_ID_GREEN>;
+ 			max-brightness = <255>;
+ 			label = "d1";
  		};
  
--		afe_mem: memory@60000000 {
-+		adsp_mem: memory@60000000 {
- 			compatible = "shared-dma-pool";
--			reg = <0 0x60000000 0 0x1100000>;
-+			reg = <0 0x60000000 0 0xf00000>;
-+			no-map;
-+		};
-+
-+		afe_dma_mem: memory@60f00000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x60f00000 0 0x100000>;
-+			no-map;
-+		};
-+
-+		adsp_dma_mem: memory@61000000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0 0x61000000 0 0x100000>;
- 			no-map;
+ 		led-d2 {
+-			pwms = <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
+-			active-low;
++			pwms = <&pwm0 1 7812500 0>;
+ 			color = <LED_COLOR_ID_GREEN>;
+ 			max-brightness = <255>;
+ 			label = "d2";
  		};
  
-@@ -152,6 +164,16 @@ apu_mem: memory@62000000 {
- 	};
- };
+ 		led-d3 {
+-			pwms = <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
+-			active-low;
++			pwms = <&pwm0 2 7812500 0>;
+ 			color = <LED_COLOR_ID_GREEN>;
+ 			max-brightness = <255>;
+ 			label = "d3";
+ 		};
  
-+&adsp {
-+	memory-region = <&adsp_dma_mem>, <&adsp_mem>;
-+	status = "okay";
-+};
-+
-+&afe {
-+	memory-region = <&afe_dma_mem>;
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu-supply = <&mt6359_vcore_buck_reg>;
- };
-@@ -514,6 +536,18 @@ &mt6359_vsram_others_ldo_reg {
- &pio {
- 	mediatek,rsel-resistance-in-si-unit;
+ 		led-d4 {
+-			pwms = <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
+-			active-low;
++			pwms = <&pwm0 3 7812500 0>;
+ 			color = <LED_COLOR_ID_GREEN>;
+ 			max-brightness = <255>;
+ 			label = "d4";
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+index 72b87b08ab44..03ce2cee4e97 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unmatched-a00.dts
+@@ -51,8 +51,7 @@ led-controller-1 {
+ 		compatible = "pwm-leds";
  
-+	audio_default_pins: audio-default-pins {
-+		pins-cmd-dat {
-+			pinmux = <PINMUX_GPIO70__FUNC_AUD_SYNC_MOSI>,
-+				 <PINMUX_GPIO69__FUNC_AUD_CLK_MOSI>,
-+				 <PINMUX_GPIO71__FUNC_AUD_DAT_MOSI0>,
-+				 <PINMUX_GPIO72__FUNC_AUD_DAT_MOSI1>,
-+				 <PINMUX_GPIO73__FUNC_AUD_DAT_MISO0>,
-+				 <PINMUX_GPIO74__FUNC_AUD_DAT_MISO1>,
-+				 <PINMUX_GPIO75__FUNC_AUD_DAT_MISO2>;
-+		};
-+	};
-+
- 	dsi0_backlight_pins: dsi0-backlight-pins {
- 		pins-backlight-en {
- 			pinmux = <PINMUX_GPIO107__FUNC_GPIO107>;
-@@ -854,6 +888,26 @@ &scp {
- 	status = "okay";
- };
+ 		led-d12 {
+-			pwms = <&pwm0 0 7812500 PWM_POLARITY_INVERTED>;
+-			active-low;
++			pwms = <&pwm0 0 7812500 0>;
+ 			color = <LED_COLOR_ID_GREEN>;
+ 			max-brightness = <255>;
+ 			label = "d12";
+@@ -68,20 +67,17 @@ multi-led {
+ 			label = "d2";
  
-+&sound {
-+	compatible = "mediatek,mt8195_mt6359";
-+	model = "mt8395-evk";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&audio_default_pins>;
-+	audio-routing =
-+		"Headphone", "Headphone L",
-+		"Headphone", "Headphone R";
-+	mediatek,adsp = <&adsp>;
-+	status = "okay";
-+
-+	headphone-dai-link {
-+		link-name = "DL_SRC_BE";
-+
-+		codec {
-+			sound-dai = <&pmic 0>;
-+		};
-+	};
-+};
-+
- &spi1 {
- 	/* Exposed at 40 pin connector */
- 	pinctrl-0 = <&spi1_pins>;
-
----
-base-commit: bc8aa6cdadcc00862f2b5720e5de2e17f696a081
-change-id: 20250417-mt8395-audio-sof-baa2c62803df
-
-Best regards,
+ 			led-red {
+-				pwms = <&pwm0 2 7812500 PWM_POLARITY_INVERTED>;
+-				active-low;
++				pwms = <&pwm0 2 7812500 0>;
+ 				color = <LED_COLOR_ID_RED>;
+ 			};
+ 
+ 			led-green {
+-				pwms = <&pwm0 1 7812500 PWM_POLARITY_INVERTED>;
+-				active-low;
++				pwms = <&pwm0 1 7812500 0>;
+ 				color = <LED_COLOR_ID_GREEN>;
+ 			};
+ 
+ 			led-blue {
+-				pwms = <&pwm0 3 7812500 PWM_POLARITY_INVERTED>;
+-				active-low;
++				pwms = <&pwm0 3 7812500 0>;
+ 				color = <LED_COLOR_ID_BLUE>;
+ 			};
+ 		};
 -- 
-Julien Massot <julien.massot@collabora.com>
+2.34.1
 
