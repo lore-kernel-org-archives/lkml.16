@@ -1,106 +1,125 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A87E17D346
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E03262FDC;
+	Wed, 23 Apr 2025 10:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745402761; cv=none; b=FxrpmoBhug3l43fYXpqo+iwTbtHyYrTi0wms9hPzroeahG1j0pcgew1jp9GPIHd4H8vRz1emuPOLDskYP8XAvIbWUakaHcbBbjZGnI35Ar4e3KudnHLMcDMrBlKjjLmYdbvXKP7sDoyGwHR3rb7LVLXPTJkkkMpooIN7FPkSgS4=
+	t=1745402813; cv=none; b=Tm6wwGR0iSga68IsGh1dKdH93AvghSjHALdtiY0j6xIQgRm5BOnVF6qAHTVYNonKjEf88a/8xSZH4a871jg7ROAxXMk+zlRt4OfSPUJudfWCscwOKz89zymctqfxISwg/91t+SYrIKICFKgQg8jniJqMJQGPeHekiol6SMar1v0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745402761; c=relaxed/simple;
-	bh=kw3oA6g0L/J+SJt52KtP3qj/6ZRBvYA/Jj7aRmbJo2E=;
+	s=arc-20240116; t=1745402813; c=relaxed/simple;
+	bh=p1aeHbezR6P+B0RDIv5XMNvfkOFMi7yR6BnbDSgQIIs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OGFiyNCekBR6p7LmSWo8QyT7qu62kizEXgMExhantvpWWmAA6GIhRQ8uhX8LVzHmAvFNM0ECGBx/MBRUA/vdEQ2YfKiloRjQ2e3wMonfGNzEHUYfNugcMG8xUfv+9ghfgNEBkKGEmyGOpq3ld3VNFTqviifaC65X/usy2eiM2Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZZaUwGUI; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=UpV5CSKPOA8i8IF0olkZrILDBvcVdzXtgFFCvaAqEmtNQ9iai6PVeLe0ymxKwJ97/CeaIs3xNcQ6LTsZBDDv/Qb1epD5V6JPcE7dfnCDDHBiGtZ0E8fkp2fHxRzf4iPFRZYgXJs9xnHTeqhvOQT5cKkWxeByc6kmsgg1mDYC1Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WXuB20eY; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZZaUwGUI"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso5260835e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:05:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXuB20eY"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf257158fso40384765e9.2;
+        Wed, 23 Apr 2025 03:06:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745402757; x=1746007557; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OUbJaI9VUAIMhFIIcaT0OkYeQfgO+gViGfE+fCTNZxE=;
-        b=ZZaUwGUIG0lRs1GV/UbImRtSvwp/uFdK7NO3fZYZ0z+6H+c9MyhLXH8+IKLfniBS+V
-         A9HWCIxeGh9rWikmPYY3Ve5DlZNn5Irpg+mq30lP/SLRsWn2Y5U8VCRTna5j1uEZpiLi
-         VcDUcXv8rRG3hXTN03WJbmXK554J6TYjxUZKLUsFiUDmviB6c6iBA7vG/iN1UIA6ZRo7
-         u7wZh14U3H3wP35O+4vAUcWxxHS4DMWNE46FZu4d9pFEEWrEftL6XGgupMG+FifOg67P
-         QAl60cj0Ifx9fV82ndMHkVvG71VZ/KxeSJN5E5KQHkOBXxFl6d/m7/ja3TsoeE6aqG6d
-         Dfhg==
+        d=gmail.com; s=20230601; t=1745402810; x=1746007610; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yLF36sbTYK0KIWRbMmjLucJkeA+0T4TK0wNGl/x6x44=;
+        b=WXuB20eYcF7y7bk/FutWfqCk6ikpxra8t5KT350eCGeS79nQivTMrTZdzZqldACbcr
+         IWpahBelEfksxSKrmRx7MDUgxvS2yCNiv182NRlmwAXKSCzQq8kQLFJXG6vtdXB+hNwb
+         0tFcoxrtXTSPsSgiyPGc28zatyFU37ZnPFuqgZ7jLx/RcDkuhpc8l9MkHP5eddfoiMqO
+         J81zxyV4fdZOB8o5t4QALhexaJR4Htb+6XX7o/cqukym4Go7SiWrcxAKla51PJnU7NK0
+         JzdGg8CpK6O6E5dPPiwR6crkxaHEVcOZ2COIe1I6x6V6VTmPl47H3fgzq57guqFGXX7/
+         6NVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745402757; x=1746007557;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OUbJaI9VUAIMhFIIcaT0OkYeQfgO+gViGfE+fCTNZxE=;
-        b=d2A99laG9Rz/5bJ6pjk/NOX5IgH3fL3c7ZmsXmsg/H95pNjr3VF6gPqHkhz/mR/aq1
-         MDTbEOI0d7phKSXm7radAgNzxRfRp0Sz+s4pgzIfbWGx6nNvp8J2hq8d9wIiAJCIfrhG
-         cRpR52q/VtfN0gQIr/j+7oz1gV9+t5nzZKUnw/5egJ5MPBN0JlGgDReE1Dje54iX8fon
-         T+ulBVqhM8jztPgHFnqb8QPX7zh7pOy9I3nM6tbNa6r7AVirk1vLrXc/a0UNE8MKHpLO
-         aCZdPTZg9m0yfZhocd9HmbJSkYSRG7YlWni9hpI1PlTLeZNuta67YIxGBZrHCtTsscKT
-         JR9A==
-X-Forwarded-Encrypted: i=1; AJvYcCU8TXLbR4l+amsAlaZG0Xa9yXP3LyxiMuj3hNYScWvGgN364bGwE9i4CKw6gfnToLpyRvzfupk6b4+jDpM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXesFeLhK/QZyGiJ42bHAkNupGzSscCXXVM2ra3wfDCb3i4Z81
-	Lh39o7oe/nZhVvohR4Sk4cQf1Dc7Xa3ZUdOuUCvnqWrMiYJDwjgs/0qcufmijrk=
-X-Gm-Gg: ASbGncsWgJbtwGbKFyaLEYA/AZMMl10LdfhXPoc7V5Tq8sTPP3qXEKS/M4ligDm60jI
-	4JCz0rPR1XZ0V+F5uDkrxcJc98qqaQMNE6yL0JEMScjz9b5d/AX7J+PjsV3zvTEPe1/7IMkWTsO
-	7QRWtwF7adUBi5MomVJWu3ZEhCYHVuvtF9nl0cRjPXkmlEiLAyC8IwI2j0S/RU7RHuLl0L7G4kT
-	RiXlecji7gXkprhCkktg28TP+MYw7lrXkWELOZ90tDKFOCPK8OY+RVHnVwPwrxHV8jwd+EK31LN
-	urkdUxT2vbeL/0O+qOlNVJu5Q0mai9+gQvbK9P/lG3J36g==
-X-Google-Smtp-Source: AGHT+IFPFttObT8wggvieeFV9lBPKhqslxXbFCmW0/ya4RhTdPNGx6jYRFvipkYVNlPNySJfBOYuEA==
-X-Received: by 2002:a05:600c:3b24:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-4409386c438mr17536985e9.11.1745402757553;
-        Wed, 23 Apr 2025 03:05:57 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-44092dbfac7sm20079765e9.37.2025.04.23.03.05.56
+        d=1e100.net; s=20230601; t=1745402810; x=1746007610;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yLF36sbTYK0KIWRbMmjLucJkeA+0T4TK0wNGl/x6x44=;
+        b=fmrpvrItW8qDgUPU1mdsyRebGvVGuArghY8JyT16bOgqnr9TyaniTPRI7d6dFh6FtG
+         Em3aN/bju05k/gBquhRvUoYcU18BduVhN/b2FU0WRYIC/MKIkmFe9Qo5thDKTAnzYoiw
+         OZVl2Zx1ccTAZoQ1+u+aobL16JmAIrsoIApgG4OxWxvmBXQqZRrYNsl7oS2HhTf7QmpS
+         gDXb2WDJhsLIcyUIvZZ1pJXAd/ewbu+CmeQ1VlbQAQDM/DMGEDlGjEH6QyLHRebQ8HZO
+         czlTuI1v0pcOy1Xl9cWbdsTw7IPP1xhOQFSSIBzJYM8/IGvQiUBTqYJfM1wWxmC/k3Ry
+         quLg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7j1bfyoBwpdpDDHoEVE5Ef/Y8loWDNYIJC87SuFW+pP/EkeorWQ5/rov8DsPtjfqwA8SMGQfx9dsDhoA=@vger.kernel.org, AJvYcCWCWLhv0CL3HMzWhSQ1dcxQWj7rz5+WEsWxXwUgqCCD4ewxwx8Vk3tmVll9HsZK2tTBK21EOwlr@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywt1VizWY8UsY5KsMzU/shZBoFvuhkUS/QGFWhOJ+iU/dnZNfsg
+	vuilGKSJ0JP0PMAJaNP4uml48mFxIrJuskHfHNRu8qXLhCzxxty1
+X-Gm-Gg: ASbGnctmpSa/zY2KYOkKzQEmc2f19b6h59i9Nwi3m/Yb/ocZHuauPYBAeiKydSmwsSp
+	PsbB9vYAISjDNgXwU5raT9s4Tski41SQ0S2RtHtQlE7QAm/tpkFDqEP5VA0bwf/2omr7WfTLz6s
+	WV3+xYEK3qNX4jJBsNPwa4UEfr7YJ3bpdBCpsZTTRtc2X4vIsLXnIUTSdU8Kae6FUGRFY9xCXXg
+	7r1wIdy3Wqfp84RQUePEOzyKQKlaa802yPsYXC/7wu9chyskZ6Izrfj7SrIhuMxkAHBx4d9QESW
+	Uk6wYzm5L0HLjkVSslJ9cfOmgOkSwdREXkCuDVHTTg==
+X-Google-Smtp-Source: AGHT+IHWK0WshXlOs5OraQgDN/FsgzhL7hkkmTvNLw7hrCUa5cxOfc9S10EHvHC0RFX+JdX2CVNVXQ==
+X-Received: by 2002:a05:600c:3c91:b0:43c:f00b:d581 with SMTP id 5b1f17b1804b1-4406ac0fc21mr156671605e9.29.1745402809826;
+        Wed, 23 Apr 2025 03:06:49 -0700 (PDT)
+Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-39efa43bef1sm17924994f8f.49.2025.04.23.03.06.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 03:05:57 -0700 (PDT)
-Date: Wed, 23 Apr 2025 13:05:53 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH next] driver core: auxiliary bus: Fix IS_ERR() vs NULL
- check in __devm_auxiliary_device_create()
-Message-ID: <0354481c-c6a3-4573-a138-56449b55034c@stanley.mountain>
-References: <aAiiLzqVulfGDPsl@stanley.mountain>
- <1jzfg7nrzn.fsf@starbuckisacylon.baylibre.com>
+        Wed, 23 Apr 2025 03:06:49 -0700 (PDT)
+Date: Wed, 23 Apr 2025 12:06:46 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, Yixun Lan <dlan@gentoo.org>,
+	Maxime Ripard <mripard@kernel.org>, netdev@vger.kernel.org,
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH net-next] net: stmmac: sun8i: drop unneeded default
+ syscon value
+Message-ID: <aAi7tq-otdhJRpTy@Red>
+References: <20250423095222.1517507-1-andre.przywara@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1jzfg7nrzn.fsf@starbuckisacylon.baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250423095222.1517507-1-andre.przywara@arm.com>
 
-On Wed, Apr 23, 2025 at 11:31:56AM +0200, Jerome Brunet wrote:
-> On Wed 23 Apr 2025 at 11:17, Dan Carpenter <dan.carpenter@linaro.org> wrote:
+Le Wed, Apr 23, 2025 at 10:52:22AM +0100, Andre Przywara a écrit :
+> For some odd reason we are very picky about the value of the EMAC clock
+> register from the syscon block, insisting on a certain reset value and
+> only doing read-modify-write operations on that register, even though we
+> pretty much know the register layout.
+> This already led to a basically redundant variant entry for the H6, which
+> only differs by that value. We will have the same situation with the new
+> A523 SoC, which again is compatible to the A64, but has a different syscon
+> reset value.
 > 
-> > The auxiliary_device_create() function returns NULL.  It doesn't return
-> > error pointers.  Update the checking to match.
-> >
-> > Fixes: eaa0d30216c1 ("driver core: auxiliary bus: add device creation helpers")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Drop any assumptions about that value, and set or clear the bits that we
+> want to program, from scratch (starting with a value of 0). For the
+> remove() implementation, we just turn on the POWERDOWN bit, and deselect
+> the internal PHY, which mimics the existing code.
 > 
-> Thanks for catching this mistake Dan.
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+> Hi,
 > 
-> The thing was initially setup to return error code. Greg asked to
-> simply return NULL on error and I forgot to re-align the devm variant.
+> if anyone can shed some light on why we had this value and its handling
+> in the first place, I would be grateful. I don't really get its purpose,
+> and especially the warning message about the reset value seems odd.
+> I briefly tested this on A523, H3, H6, but would be glad to see more
+> testing on this.
 > 
-> So I think the fix should be to check for NULL as you did but return
-> NULL too so it is aligned with non-devm variant.
-> 
-> If you wish, I can handle a v2.
 
-Of course, it's hard to resist an offer like that but I can send a v2.
+Hello
 
-regards,
-dan carpenter
+The origin is me, when doing initial sun8i-emac I feared to miss something and so added some strict tests on its value.
+Another goal was to detect half init from firmware/bootloader.
 
+But I agree it is now useless.
+
+I will send this patch on all my CI boards, so you will have extra test.
+
+Acked-by: Corentin LABBE <clabbe.montjoie@gmail.com>
+
+Thanks
+Regards
