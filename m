@@ -1,76 +1,147 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C768242D69;
-	Wed, 23 Apr 2025 10:24:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E118F262FFB
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745403848; cv=none; b=nIdPgDWi/XzRVUvERfTJ0906W7TdIeKav1V6AyG0/SWOkWOGeX9qR6Ml7/z9FNMN6cJ8XW2JXI1HC7pH1UxtyAqvzrOB0I+WOLpNJaB5NkiEZbmHskc70uow0czNRewkHY9d49kjuf1KEQyBGYRRVWS5R68CedowT5wFaGhfEQw=
+	t=1745403906; cv=none; b=HSfNd34kHGwHwcUEWDZ95LbuOXecOykwEfUQk8DUD8tkj0K3Fd80jtXXaLov6BVn2O/d9RfWiYDh7dqbO0Ca+TXzfSdXAzVPucMQlIVl/83asV6EMjUnrGWV56b4zgS6vFLeuxDUbkZUodkFGf2ty/ICKcJ5qPO6Wcw04x+BJng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745403848; c=relaxed/simple;
-	bh=8BC5r9nCxmn/POTYq7cf5uAoU24Ba73dr0Z/8M4qJlE=;
+	s=arc-20240116; t=1745403906; c=relaxed/simple;
+	bh=qyMkWK+sPdMVIOXMfZpFO4LD2Aq4i2GdL0fwi+BqaLg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k7a8ke1HvCbUNRcw9qlW7tbW202ZtFEKN+/SnLC0CsdpxOkI7UV4DqexY0s4HuTyoqyc1BSi2ZlIlO+mJLp4lEwueElpMRMo1BsUwDXDHV4AtMBFDDzaZsBGEJEW5AZe2EqoBwJ4M3jJ/IIdLdbR9e2JWiscmrxsOhDDh71z3eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y+jRbLBQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BU3+R4iM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=bxpK4OiQ2QTcw3Z0ZhaBtO/5M5iqWKVASFtXc8azV+DY6ewWjwbevAqSXmGlC3s8DvpBKh1zVR72ikeUI+xh06oE364GSfaN2nMHrDnZu3v06i0T4LxAXfRInMxA50jUfoBpITRGxNWj91rc7UpUAQ71EAY6NdGfVh18hJXQJlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0lUV5j0E; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5NIdPMkN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0lUV5j0E; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5NIdPMkN; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y+jRbLBQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BU3+R4iM"
-Date: Wed, 23 Apr 2025 12:24:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745403844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0lUV5j0E";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5NIdPMkN";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0lUV5j0E";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5NIdPMkN"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 202D4211B3;
+	Wed, 23 Apr 2025 10:25:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745403903;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TPRw+axkJFcjhHDTuYr2A1761jrA3Q28pCtIdm4HXwk=;
-	b=Y+jRbLBQs2+InjYCQ4Z++bBUG9MV0g0zxRFd9ZCp46H+PaxA0ZsGIAfZlY9v2eFUBbhQx8
-	i8a0r6+d0gujrN9/7tp1XBSZ2AULSIoISAPdqqEZMK58YyykGkl9W/JnCvj2fVvYFpLEzW
-	ekQQF0XzSxjmvAzaq4BsIgcXz+QTBdzZtpCsFReLqx4PY317oSKFCFGLDvBE5B0XDH9HY6
-	2msUwNiqyC9YZ7ITP2h9QwDcwzR3b+s7qpbA0JMBTphusnnmwOeKFXiir9Pj5XPqPDzHIm
-	JprZJnuH9fnQ192Lv0sOz3FUAJxMNsQ7MYO2gB3T3RXRoj3euNAwOr8GhWn9Vg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745403844;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
+	bh=OqRWoiMXyjVCtLafUlamSnRS5uDHbLML3XPsSi6pyMg=;
+	b=0lUV5j0E4kugl029GZcRPb/uKvtddCntdFy+9cUNjZ9QAcGQ9otFJzSK3522y3KslznDZ8
+	Iw+FoJuETyRt96f3JruaEIi/pacN3ybZIjGj++8G/9oodY3sq/eiRnHLi0LvemVqQHHVDw
+	M1ijwwHmCoS4TwCQgLq0+UG+lfyqWcU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745403903;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=TPRw+axkJFcjhHDTuYr2A1761jrA3Q28pCtIdm4HXwk=;
-	b=BU3+R4iMWPq9T0tBiL9gRULUwfm5F3Eyioai5no9cNVZphwrC76xgcxzWrjZpm2dIf3hg/
-	cbDQYxlg2XG2vqBg==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Dawid Osuchowski <dawid.osuchowski@linux.intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Saeed Mahameed <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, 
-	Tariq Toukan <tariqt@nvidia.com>, intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org, 
-	Aleksandr Loktionov <aleksandr.loktionov@intel.com>
-Subject: Re: [Intel-wired-lan] [PATCH net-next v2 0/2] net: Don't use %pK
- through printk
-Message-ID: <20250423122301-64a5773d-a3cf-4e21-9f24-04294ca4eeb0@linutronix.de>
-References: <20250417-restricted-pointers-net-v2-0-94cf7ef8e6ae@linutronix.de>
- <4918f292-46b5-491f-a8da-5d42432bde56@linux.intel.com>
+	bh=OqRWoiMXyjVCtLafUlamSnRS5uDHbLML3XPsSi6pyMg=;
+	b=5NIdPMkN1kIhYaUfaMiv+Nv06zHVPDr5Sa5Pv6WKKbQCkNDZGMZ8fsic6EE1bl9LPiVkoP
+	jd9+Prz4+16svTDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745403903;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OqRWoiMXyjVCtLafUlamSnRS5uDHbLML3XPsSi6pyMg=;
+	b=0lUV5j0E4kugl029GZcRPb/uKvtddCntdFy+9cUNjZ9QAcGQ9otFJzSK3522y3KslznDZ8
+	Iw+FoJuETyRt96f3JruaEIi/pacN3ybZIjGj++8G/9oodY3sq/eiRnHLi0LvemVqQHHVDw
+	M1ijwwHmCoS4TwCQgLq0+UG+lfyqWcU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745403903;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OqRWoiMXyjVCtLafUlamSnRS5uDHbLML3XPsSi6pyMg=;
+	b=5NIdPMkN1kIhYaUfaMiv+Nv06zHVPDr5Sa5Pv6WKKbQCkNDZGMZ8fsic6EE1bl9LPiVkoP
+	jd9+Prz4+16svTDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0538613691;
+	Wed, 23 Apr 2025 10:25:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0xYTAf+/CGiWHgAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 23 Apr 2025 10:25:03 +0000
+Date: Wed, 23 Apr 2025 12:24:46 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: harden parsing of compress mount option
+Message-ID: <20250423102446.GF3659@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250423073329.4021878-1-neelx@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4918f292-46b5-491f-a8da-5d42432bde56@linux.intel.com>
+In-Reply-To: <20250423073329.4021878-1-neelx@suse.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Thu, Apr 17, 2025 at 03:39:13PM +0200, Dawid Osuchowski wrote:
-> On 2025-04-17 3:24 PM, Thomas Weißschuh wrote:
-> > acquire sleeping looks in atomic contexts.
+On Wed, Apr 23, 2025 at 09:33:28AM +0200, Daniel Vacek wrote:
+> Btrfs happily but incorrectly accepts the `-o compress=zlib+foo` and similar
+> options with any random suffix. Let's handle that correctly.
 > 
-> typo? s/sleeping looks/sleeping locks/
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
+> ---
+>  fs/btrfs/super.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
 > 
-> present in patch descriptions as well
+> diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+> index 40709e2a44fce..f7e064b8c6d88 100644
+> --- a/fs/btrfs/super.c
+> +++ b/fs/btrfs/super.c
+> @@ -354,7 +354,10 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+>  			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+>  			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+>  			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+> -		} else if (strncmp(param->string, "zlib", 4) == 0) {
+> +		} else if (strncmp(param->string, "zlib", 4) == 0 &&
+> +				(param->string[4] == ':' ||
+> +				 param->string[4] == ',' ||
 
-Thanks for noticing. I fixed it up in my template now.
+Can there be ',' in the string? The option parser splits the options at
+exactly that so it won't be part of the string, so just ':' or 0.
+
+> +				 param->string[4] == '\0')) {
+>  			ctx->compress_type = BTRFS_COMPRESS_ZLIB;
+>  			ctx->compress_level =
+>  				btrfs_compress_str2level(BTRFS_COMPRESS_ZLIB,
