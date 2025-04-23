@@ -1,121 +1,89 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D245D268FEB;
-	Wed, 23 Apr 2025 10:12:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83051223DD9
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745403131; cv=none; b=ph9rJvHrgy6ToeKe2X+HXebebhxzUUREiQpRxahOAsiU5oji6c6fDPnZPmTFczBj5lSndGVnZmkEb4LYG91WtGzfQ17Z+RwN/QCpbB/m0ZGVzz2/laSVJ/stIxf+lQw4w8afp0MNneo8ovQnuqD1cQwjZ3SvSP9ONDBqMVCh0Ms=
+	t=1745403205; cv=none; b=AlPCFZ7D3/CMZrnSRppx/IKE2Qh9hwLsQn2IN6ywUAwHxP9cUhSuqYb87aSc1/ZCSSfyXzB6t0a6oHMalx/VZ+24DbaFLvSrfXXsOZCTLvtbQOc70dZ0NWNYy9bTMRjNoE2a7KOk0a64fdLnGzxxkhdE03NB3SPsLLj4kBjPlCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745403131; c=relaxed/simple;
-	bh=0tPJ8mi/IaknU+odJztdVn7rnmNajNaShzpp0+/yzUI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QAUar7QN/BN0ioPgV+fv7w3Ivl3zakiRETfi6I5qWEZIJ9e+AMKthoOUovCZgm/OfcH3asGOJhdsr/7SLT9DcewODcAXujWW0J3D16QE5SrjkGC1LpevgnLs4/X80gi1LNoRD/ERoWH7bIE7hOaqOGOKMX3rm39hzNxm1cRPQEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LDYTcBCs; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745403205; c=relaxed/simple;
+	bh=HQBDsgYZhBPh59w6ihf5bVFm3ivJjOfhgpGq8Icqh9Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Dr8DCAPAqfgOW7sPSmohF2jrzdWJQjW9xYsnfJu08CAyPD0iWeD4clKtolyrMJ4br8qSBj7DaN4AwJmFQNqDKL4sU5SVuf7hbEPpwFGHTnuJeZqopHHnThd/RdiUOBLi0f2BLXiR6pgXLCm9tatI9tKIRuRWR2LV35iiQkI8Ht8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=goA6K/Cr; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LDYTcBCs"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7376dd56f60so4435646b3a.3;
-        Wed, 23 Apr 2025 03:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745403128; x=1746007928; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+5GhlYau1vYRJo6luDQW5bI32zszXHjJmD7lMKKoHpA=;
-        b=LDYTcBCs29mewevTAtAF56zHeKUOstoRye0W+MDmrZRDiH80BXs0eNVY2cec3i5KXK
-         7u2m6+yHTTAgHQ0lAFDi/MbKgPSrWNwiABxbDgqk91QkxA7yIXpKKbZa6HaPOrRHAfFy
-         uA2j5Ojf0aOHC+H5SJTo5PJCUGXkcB4zq92ZO8JaGGZX/Zdz5TRFsyBpkzU+GHs198/Q
-         5k8Q2FCbbq0YO+OGHgqUd4KZ01udfs/uo8F37T3GGw9qq0cjlXbJiQCCtD3Mpj3LHvdW
-         Fq97m4PD2aX2sam+DWShILUqJ6ao0vrlHn6TQPa2EsBSieARV5z9lXSc/cV7OuvwYQSK
-         0kBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745403128; x=1746007928;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+5GhlYau1vYRJo6luDQW5bI32zszXHjJmD7lMKKoHpA=;
-        b=tVoG0jgcpdzjaLHZf5ID8oUAzFAPWRxQ4ClcnM9c6biFDp1tzKNOjt5FeknOKkZumb
-         V8M3/g8HcgijeJ8BOBMTjqpqNTJoQKzyMA9pSJkfK5phc7zYAgwHCnIITVKrAO/QWpNe
-         teCVor+yD4GExlC+mcwaycDzxkIeJ5lMG5TYDllD4aJHz1G38wnm+5OCNZTv3MOyJq6N
-         Va3IZ50c+pONZt5uY1r3jQUlPix3dfWnQSpIIoh+KCoLM64iE0i8giuv+9kCmQ55pEga
-         gqA+dUmXC4dzk29Z0tcJz2POZhWfRNf4uTsNP5hqoiVDcND/zSBI0Uv/F/W+GMSIoqFl
-         8H6w==
-X-Forwarded-Encrypted: i=1; AJvYcCWiQSCM1nKljprRne0bwOy8FC31nPawwOnGYNDK6zhK1TkfgY398BMVDOHlZchteE+I7k8CNvrb1ARwm0UR@vger.kernel.org, AJvYcCWqZQyqIFT1A9MZ3t/Ftk8FSYdM5fNcdfNx3kzVBZ82gkyz4Cy6p4niwShkJ1f53iQWhYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzjSvQdP/bZFYfNpwqRxyxd+fRanh5SbmkILfnDpgaQsM9Mi+/
-	2rq8y371p/C9vl6oSt9E5L8IFCSCfomZd0H3VUV4cQbgVZ2QJ8/puEP6F3SV
-X-Gm-Gg: ASbGncvHYB2XVSY31cKyyENpNGoMnhs1DctzkmsrCQKiEeLcZjLtQ7Wkgx6kmA+GZYv
-	5bNsaaecGxRkkfdde8vgAa9XJ/E89VBnTywrdI52j9Ww1zm9eiJXW7loLyaclxMdkgAgdIE5L1B
-	wDk1DVfrI1rUz1P+SQGSzd2VJW22gmN4NTNovlvlydPx5KNwkk9v5sktQ+0ByyR1SCTajBYf7Ox
-	o7ZjNdjhs3vyiKOhhvzuLB/wktujfU2AgJXkS1uchls/ChN8bqFX8XfjFJMTG1WhYmoUZ/t+KGS
-	DNhAkc5mcCTY+eJInTDxHVtmvMuKY6Opb+ArGn+sEztqfkDxVnG7tA==
-X-Google-Smtp-Source: AGHT+IFYnhOBn5pS9shSq5SLZtSLmusdGP2QV0V8marPCcCYHjxdzclWwlwxEVaAinCSJFTwfmlfew==
-X-Received: by 2002:a05:6a20:9f4f:b0:1f5:520d:fb93 with SMTP id adf61e73a8af0-203cbc72b3emr26471767637.24.1745403128068;
-        Wed, 23 Apr 2025 03:12:08 -0700 (PDT)
-Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:933:3ee4:f75:4ee9])
-        by smtp.googlemail.com with ESMTPSA id 41be03b00d2f7-b0db157ed7fsm8740970a12.75.2025.04.23.03.12.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 03:12:07 -0700 (PDT)
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-To: netdev@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bui Quang Minh <minhquangbui99@gmail.com>
-Subject: [PATCH net] xsk: respect the offsets when copying frags
-Date: Wed, 23 Apr 2025 17:10:47 +0700
-Message-ID: <20250423101047.31402-1-minhquangbui99@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="goA6K/Cr"
+Message-ID: <d3e40052-0d23-4f9e-87b1-4b71164cfa13@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745403199;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Djwsr22QmQbVxK6LfymSVfTiOD/EcmVyLiPImXUyaz0=;
+	b=goA6K/Cr5Q+5ioR3MqXCSe9KFZmoTIvV9AlPnUyxwUowIU+3TGwF+UbKQBrzuFLcBmKk6V
+	9Jf9OPR2/Cxmp8oEcewb5XDcvNs+KHmGHjJAbPqAlAMN/BPS8GbDNp5a6WrlusCbu1WyFp
+	yPgN0Cxn33yMCmuGafEMWuGYpeIFPHU=
+Date: Wed, 23 Apr 2025 11:13:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/6] gve: Add Rx HW timestamping support
+To: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, jeroendb@google.com, andrew+netdev@lunn.ch,
+ willemb@google.com, ziweixiao@google.com, pkaligineedi@google.com,
+ yyd@google.com, joshwash@google.com, shailend@google.com, linux@treblig.org,
+ thostet@google.com, jfraker@google.com, horms@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250418221254.112433-1-hramamurthy@google.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250418221254.112433-1-hramamurthy@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Add the missing offsets when copying frags in xdp_copy_frags_from_zc().
+On 18/04/2025 23:12, Harshitha Ramamurthy wrote:
+> From: Ziwei Xiao <ziweixiao@google.com>
+> 
+> This patch series add the support of Rx HW timestamping, which sends
+> adminq commands periodically to the device for clock synchronization with
+> the nic.
 
-Fixes: 560d958c6c68 ("xsk: add generic XSk &xdp_buff -> skb conversion")
-Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
----
- net/core/xdp.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+It looks more like other PHC devices, but no PTP clock is exported. Do
+you plan to implement TX HW timestamps for this device later?
+Is it possible to use timecounter to provide proper PTP device on top of
+GVE?
 
-diff --git a/net/core/xdp.c b/net/core/xdp.c
-index f86eedad586a..a723dc301f94 100644
---- a/net/core/xdp.c
-+++ b/net/core/xdp.c
-@@ -697,7 +697,8 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
- 	nr_frags = xinfo->nr_frags;
- 
- 	for (u32 i = 0; i < nr_frags; i++) {
--		u32 len = skb_frag_size(&xinfo->frags[i]);
-+		const skb_frag_t *frag = &xinfo->frags[i];
-+		u32 len = skb_frag_size(frag);
- 		u32 offset, truesize = len;
- 		netmem_ref netmem;
- 
-@@ -707,8 +708,8 @@ static noinline bool xdp_copy_frags_from_zc(struct sk_buff *skb,
- 			return false;
- 		}
- 
--		memcpy(__netmem_address(netmem),
--		       __netmem_address(xinfo->frags[i].netmem),
-+		memcpy(__netmem_address(netmem) + offset,
-+		       __netmem_address(frag->netmem) + skb_frag_off(frag),
- 		       LARGEST_ALIGN(len));
- 		__skb_fill_netmem_desc_noacc(sinfo, i, netmem, offset, len);
- 
--- 
-2.43.0
+> 
+> John Fraker (5):
+>    gve: Add device option for nic clock synchronization
+>    gve: Add adminq command to report nic timestamp.
+>    gve: Add rx hardware timestamp expansion
+>    gve: Add support for SIOC[GS]HWTSTAMP IOCTLs
+>    gve: Advertise support for rx hardware timestamping
+> 
+> Kevin Yang (1):
+>    gve: Add initial gve_clock
+> 
+>   drivers/net/ethernet/google/gve/Makefile      |   2 +-
+>   drivers/net/ethernet/google/gve/gve.h         |  14 +++
+>   drivers/net/ethernet/google/gve/gve_adminq.c  |  51 ++++++++-
+>   drivers/net/ethernet/google/gve/gve_adminq.h  |  26 +++++
+>   drivers/net/ethernet/google/gve/gve_clock.c   | 103 ++++++++++++++++++
+>   .../net/ethernet/google/gve/gve_desc_dqo.h    |   3 +-
+>   drivers/net/ethernet/google/gve/gve_ethtool.c |  23 +++-
+>   drivers/net/ethernet/google/gve/gve_main.c    |  47 ++++++++
+>   drivers/net/ethernet/google/gve/gve_rx_dqo.c  |  26 +++++
+>   9 files changed, 290 insertions(+), 5 deletions(-)
+>   create mode 100644 drivers/net/ethernet/google/gve/gve_clock.c
+> 
 
