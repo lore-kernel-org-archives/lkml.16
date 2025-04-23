@@ -1,41 +1,50 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6629B1F470E
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:32:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073C413C3F6;
+	Wed, 23 Apr 2025 06:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745389969; cv=none; b=O2m6upXDuaVNQUNR+aCQsQXtFoqy1sfVOCTrw3+/oMdDn4uwYWj0DeKVPDDODDtjAxTWXY0z+3sAbsmCGjwoSNiaVEuyWtKzROV4pDgzkxnlqVKlPsqXbBZQTO4e/tNriO4aoo9blO1MTiw/9IEkPZEYB8dPsg+Wav1eU/Yj3FE=
+	t=1745390072; cv=none; b=gBbeBhIjYfMRGTl/9ZGbSTb2QteWCQ9fB4y1EFZf3XnukSNsaNaS1zWTkCtmmgezwa71OCxP0lOkD+pprZ6wgvF4vto4F7vPb6fWYXpDf7tldG9UQAAhqH6VtxeYtr/fUaomoPplqnkkaASgL6PJsnp0I7aB1eyGeIAivyFY8TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745389969; c=relaxed/simple;
-	bh=DxrSWnpFckiMld3vwlw418/zVtmUdHv6wc55mEnh0wE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I90WYdMNcBp9JcwUWesZzXUWcIlC9hijMEIc2ibm0R4YgCL6z7T2PTLXh9Pd3D60bhCGSzWzeCyIRwUl1v2vi6t0TeLo7L4nm8fEFmzUqZCCv0dLpoAxEjMZuKnHivl/KyLiaruaJkgJP8ZvVDksuEhSzhxUqpqtvX/U+XHH5UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xP4ATp71; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xP4ATp71"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745389963;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mAos8/aQyj6DBdVLSFmwtAA6vwhiiZEJ9ulPWYZBsOI=;
-	b=xP4ATp71YUw+Mp8qNQg3kR+bZhcxLoBrXFKHs0hgLDS39Y1n6YSMUkOYK3phpcmCI3Im4Y
-	U1PEunLVcyFXOcKoA2O5O5MfZbt3IJFmbdrT1vbh4YZ/5iSrmZ5YDkHOo0tLwCZX9LrNMh
-	ZYoUVAAgCLZvzGrdE4+PAMqew4XV5DY=
-From: Youling Tang <youling.tang@linux.dev>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>,
-	loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	youling.tang@linux.dev,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH] LoongArch: Enable HAVE_ARCH_STACKLEAK
-Date: Wed, 23 Apr 2025 14:31:47 +0800
-Message-Id: <20250423063147.69178-1-youling.tang@linux.dev>
+	s=arc-20240116; t=1745390072; c=relaxed/simple;
+	bh=Qlt8fOU7S3qN3z2CYEB2iLHJtb0RRgm0RQ9Hv1XYFIs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OOzGgsSpvuloulz2VwGDlld4LReFktBZWv6PPjmyPYqfUUkm9VHx2kec0YqY7RjRCtWVEurs6ns+MHAZDp0LS3KYVhASWKEeFbpuaMPyjxaaetLiNjGovJ+gIqoI/LOBEm/gOlEwkJR3hMutokkYPxjK4TuST5ikATXWCtpwbJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zj8T45MPnz4f3lCm;
+	Wed, 23 Apr 2025 14:34:00 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 3BD031A06DC;
+	Wed, 23 Apr 2025 14:34:26 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgCnCl_wiQhoEV49KQ--.26381S4;
+	Wed, 23 Apr 2025 14:34:25 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	ravi.bangoria@amd.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/x86: Fix open counting event error
+Date: Wed, 23 Apr 2025 06:47:24 +0000
+Message-Id: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,140 +52,60 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-CM-TRANSID:gCh0CgCnCl_wiQhoEV49KQ--.26381S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7tr1xGF1rZr45JryrCFyfWFg_yoW8Gr15p3
+	47Crn3KFyIgrn8Wwn8JF4Iya1UZF4ktr9rJ3WfWr45A345WwnxXFWxKFs8Wa15Ar1fJ34f
+	tanagF9rurWkA3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAa
+	w2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a
+	6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	xUIa0PDUUUU
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-From: Youling Tang <tangyouling@kylinos.cn>
+Perf doesn't work at perf stat for hardware events:
 
-Add support for the stackleak feature. It initialize the stack with the
-poison value before returning from system calls which improves the kernel
-security.
+ $perf stat -- sleep 1
+ Performance counter stats for 'sleep 1':
+             16.44 msec task-clock                       #    0.016 CPUs utilized
+                 2      context-switches                 #  121.691 /sec
+                 0      cpu-migrations                   #    0.000 /sec
+                54      page-faults                      #    3.286 K/sec
+   <not supported>	cycles
+   <not supported>	instructions
+   <not supported>	branches
+   <not supported>	branch-misses
 
-At the same time, disables the plugin in EFI stub code because EFI stub
-is out of scope for the protection.
+The reason is that the check in x86_pmu_hw_config for sampling event is
+unexpectedly applied to the counting event.
 
-Tested on 3A5000 (enable CONFIG_GCC_PLUGIN_STACKLEAK and CONFIG_LKDTM):
- # echo STACKLEAK_ERASING > /sys/kernel/debug/provoke-crash/DIRECT
- # dmesg
-   lkdtm: Performing direct entry STACKLEAK_ERASING
-   lkdtm: stackleak stack usage:
-      high offset: 320 bytes
-      current:     448 bytes
-      lowest:      1264 bytes
-      tracked:     1264 bytes
-      untracked:   208 bytes
-      poisoned:    14528 bytes
-      low offset:  64 bytes
-   lkdtm: OK: the rest of the thread stack is properly erased
-
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
+Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
+Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
 ---
- arch/loongarch/Kconfig                    | 1 +
- arch/loongarch/include/asm/entry-common.h | 8 +-------
- arch/loongarch/include/asm/stacktrace.h   | 5 +++++
- arch/loongarch/kernel/entry.S             | 9 +++++++++
- drivers/firmware/efi/libstub/Makefile     | 2 +-
- 5 files changed, 17 insertions(+), 8 deletions(-)
+ arch/x86/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 067c0b994648..3a6bfcab2dde 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -122,6 +122,7 @@ config LOONGARCH
- 	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
- 	select HAVE_ARCH_SECCOMP
- 	select HAVE_ARCH_SECCOMP_FILTER
-+	select HAVE_ARCH_STACKLEAK
- 	select HAVE_ARCH_TRACEHOOK
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
- 	select HAVE_ARCH_USERFAULTFD_MINOR if USERFAULTFD
-diff --git a/arch/loongarch/include/asm/entry-common.h b/arch/loongarch/include/asm/entry-common.h
-index 0fe2a098ded9..a7a6af490f86 100644
---- a/arch/loongarch/include/asm/entry-common.h
-+++ b/arch/loongarch/include/asm/entry-common.h
-@@ -2,12 +2,6 @@
- #ifndef ARCH_LOONGARCH_ENTRY_COMMON_H
- #define ARCH_LOONGARCH_ENTRY_COMMON_H
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 6866cc5acb0b..3a4f031d2f44 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
+ 	if (event->attr.type == event->pmu->type)
+ 		event->hw.config |= x86_pmu_get_event_config(event);
  
--#include <linux/sched.h>
--#include <linux/processor.h>
--
--static inline bool on_thread_stack(void)
--{
--	return !(((unsigned long)(current->stack) ^ current_stack_pointer) & ~(THREAD_SIZE - 1));
--}
-+#include <asm/stacktrace.h>
- 
- #endif
-diff --git a/arch/loongarch/include/asm/stacktrace.h b/arch/loongarch/include/asm/stacktrace.h
-index fc8b64773794..3861beb96002 100644
---- a/arch/loongarch/include/asm/stacktrace.h
-+++ b/arch/loongarch/include/asm/stacktrace.h
-@@ -31,6 +31,11 @@ bool in_irq_stack(unsigned long stack, struct stack_info *info);
- bool in_task_stack(unsigned long stack, struct task_struct *task, struct stack_info *info);
- int get_stack_info(unsigned long stack, struct task_struct *task, struct stack_info *info);
- 
-+static inline bool on_thread_stack(void)
-+{
-+	return !(((unsigned long)(current->stack) ^ current_stack_pointer) & ~(THREAD_SIZE - 1));
-+}
-+
- #define STR_LONG_L    __stringify(LONG_L)
- #define STR_LONG_S    __stringify(LONG_S)
- #define STR_LONGSIZE  __stringify(LONGSIZE)
-diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-index 48e7e34e355e..27dcb3a66b2b 100644
---- a/arch/loongarch/kernel/entry.S
-+++ b/arch/loongarch/kernel/entry.S
-@@ -16,6 +16,12 @@
- #include <asm/thread_info.h>
- #include <asm/unwind_hints.h>
- 
-+	.macro STACKLEAK_ERASE
-+#ifdef CONFIG_GCC_PLUGIN_STACKLEAK
-+	bl		stackleak_erase_on_task_stack
-+#endif
-+	.endm
-+
- 	.text
- 	.cfi_sections	.debug_frame
- 	.align	5
-@@ -73,6 +79,7 @@ SYM_CODE_START(handle_syscall)
- 	move		a0, sp
- 	bl		do_syscall
- 
-+	STACKLEAK_ERASE
- 	RESTORE_ALL_AND_RET
- SYM_CODE_END(handle_syscall)
- _ASM_NOKPROBE(handle_syscall)
-@@ -82,6 +89,7 @@ SYM_CODE_START(ret_from_fork)
- 	bl		schedule_tail		# a0 = struct task_struct *prev
- 	move		a0, sp
- 	bl 		syscall_exit_to_user_mode
-+	STACKLEAK_ERASE
- 	RESTORE_STATIC
- 	RESTORE_SOME
- 	RESTORE_SP_AND_RET
-@@ -94,6 +102,7 @@ SYM_CODE_START(ret_from_kernel_thread)
- 	jirl		ra, s0, 0
- 	move		a0, sp
- 	bl		syscall_exit_to_user_mode
-+	STACKLEAK_ERASE
- 	RESTORE_STATIC
- 	RESTORE_SOME
- 	RESTORE_SP_AND_RET
-diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-index d23a1b9fed75..b97981d63d2f 100644
---- a/drivers/firmware/efi/libstub/Makefile
-+++ b/drivers/firmware/efi/libstub/Makefile
-@@ -31,7 +31,7 @@ cflags-$(CONFIG_ARM)		+= -DEFI_HAVE_STRLEN -DEFI_HAVE_STRNLEN \
- 				   $(DISABLE_STACKLEAK_PLUGIN)
- cflags-$(CONFIG_RISCV)		+= -fpic -DNO_ALTERNATIVE -mno-relax \
- 				   $(DISABLE_STACKLEAK_PLUGIN)
--cflags-$(CONFIG_LOONGARCH)	+= -fpie
-+cflags-$(CONFIG_LOONGARCH)	+= -fpie $(DISABLE_STACKLEAK_PLUGIN)
- 
- cflags-$(CONFIG_EFI_PARAMS_FROM_FDT)	+= -I$(srctree)/scripts/dtc/libfdt
- 
+-	if (!event->attr.freq && x86_pmu.limit_period) {
++	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
+ 		s64 left = event->attr.sample_period;
+ 		x86_pmu.limit_period(event, &left);
+ 		if (left > event->attr.sample_period)
 -- 
-2.38.1
+2.34.1
 
