@@ -1,82 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73FAD28A1DB;
-	Wed, 23 Apr 2025 15:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D7A28A1DB;
+	Wed, 23 Apr 2025 15:38:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745422695; cv=none; b=OJednE2wUBZx9a/27uDu1vs4C63y2swrKQSXfWrW4mfRUsL9PQxSEaQv3qctIT/eHEtqrPM8bQ1eAH+CSB37x+PWqhE4LU2dL2rkC+AS4YClQJbxAlAulkP3oGUHb3bSQ4ojDREDClfwtQDvdMxOiMlf1rfYRGM/RYOOv50qu2k=
+	t=1745422703; cv=none; b=s+BHgmS/iGw6pFi8//D2ygWqhEvwCeZpI7iL7ZzjwpMa4J+h2BRzhSc7XhZJK3iJFtQwVzzdK8z8BixhLnr+UxywOHLYJK60ZYNT+VFmfTAexCQs4xQn760Rt0Ad1fWIrpVM6z9xTuVJrJHyyNzlqYU2wr/sdsiY9pfKs2P9zv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745422695; c=relaxed/simple;
-	bh=IaaWKmBkn5xlCdfV5Tc/lHW54iBmhXUi5MviWMueOo0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ipm5vX45SDktW1ZtLrgNZqfb5bQkwrpSgjb1qiv8ZOqa0L/EzUKVsAsDZ3J6rDsuUw5DpMAcy/fXnTjeO5uSuUF77NXWbLkN61mG5PE7RL3Lc4ZBwDec7dZe7LRWyCAbZdqJKs09DqZKZ3+EJLRNOXSfQ3vx+bDXecRyUDWTRb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T01Ahhfn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745422703; c=relaxed/simple;
+	bh=Abk3WUggpCh+pV9/jGehaWPhGHzsr5iDxN7IoX5cqEk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=EuPAQzh4QFDodIhDPBSJSI7AOnnLOMHO7A5xlkTFN/qlKZLZc5z/RkNuAqCMDz9tXcMQlLf78bfpq6o1MJfb5drL8lmA3RweaJJLMgttBMsyR97b+12vP+NAKH4fMgrsXAozvK3YCeXYi6qtECCmTyn1M+NEmvMooTZt9DyA0vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RI7Tw1As; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T01Ahhfn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E47EC4CEE2;
-	Wed, 23 Apr 2025 15:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745422695;
-	bh=IaaWKmBkn5xlCdfV5Tc/lHW54iBmhXUi5MviWMueOo0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T01Ahhfn32j66N81kHE9Doy0oHXEWbktmsfLpFjf0g8br7wl8u/uOvsaF0mRueV1X
-	 I/UXtyC/A3ZUqAkMCJhRbFpqRaGXvQEPfXdZwUGqA1sWn/+AMlh2+fJwDAw2V0MPeG
-	 MbarfDODtoomYQ/bgLi2wFxZfeaoQL/dpzSlZtwNAcJAWkcXtdJfDshpDhesq8bXqj
-	 0maEsfIIaPbJrttTYSEMbiKFJ7NEnYOeDbL8mosiviPh8oN+FKnuEtdaXfYtT5IU84
-	 8SVKlJ7CHBnoO9TZHa6e9Jidvv9FRj62pnFB0h1sRbLthBTF5+BBc0t3omXq0ktcDd
-	 OEX+ZTYJnzFkw==
-Date: Wed, 23 Apr 2025 10:38:13 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: quic_vbadigan@quicinc.com, Bjorn Helgaas <bhelgaas@google.com>,
-	cros-qcom-dts-watchers@chromium.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	devicetree@vger.kernel.org, quic_mrana@quicinc.com,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
- gpio's to root port
-Message-ID: <174542269294.567149.8123466089628259520.robh@kernel.org>
-References: <20250419-perst-v3-0-1afec3c4ea62@oss.qualcomm.com>
- <20250419-perst-v3-1-1afec3c4ea62@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RI7Tw1As"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1449D43201;
+	Wed, 23 Apr 2025 15:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745422694;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Abk3WUggpCh+pV9/jGehaWPhGHzsr5iDxN7IoX5cqEk=;
+	b=RI7Tw1As9wOTHmRLRlOtw+97DusGjkgz5iMRLKZN4zcskq36CRb9ussT2NX7gXEdh90q7r
+	POeVrueShYUjYRyn65z8VBjfO7iTqa/ZspwQMggtDMw3E7uMMC48R6WZou47bJ0oCgze/d
+	xb5vD9tIm0T9icAfYRLJuQE1aslLweYHBA0hMYlsY/FV97+ZuevI1AS2ZMiBYPewPNmzHP
+	vroE13/rb7Gl2LXV09Id2Du0mc/S0jjLsyK+HNJgSCKUPB9FLTgL3SLZiwDSQ71MgYofaA
+	OsbniHoJmQ711I/9rNmlgjJpQ10ueCniBFkZSq8VBczxUgBqcTzGumXVtj+Zww==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250419-perst-v3-1-1afec3c4ea62@oss.qualcomm.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 23 Apr 2025 17:38:09 +0200
+Message-Id: <D9E4PE3RTE37.2LU30RI1ZS6XL@bootlin.com>
+Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
+ <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
+ "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
+ <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
+ <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
+ <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
+ <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
+ <puranjay@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
+ Deacon" <will@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
+ <shuah@kernel.org>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
+ "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Florent Revest"
+ <revest@chromium.org>, "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
+ <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kselftest@vger.kernel.org>,
+ <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
+ func model
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+To: "Xu Kuohai" <xukuohai@huaweicloud.com>, "Andrii Nakryiko"
+ <andrii.nakryiko@gmail.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
+ <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
+ <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+ <9da88811-cce0-41df-8069-2e8b67541c39@huaweicloud.com>
+ <D9BLCJSCHE9A.1IKHK3XBPF8MU@bootlin.com>
+ <8b800c09-eade-4dcf-90f6-2f5a78170bc4@huaweicloud.com>
+In-Reply-To: <8b800c09-eade-4dcf-90f6-2f5a78170bc4@huaweicloud.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeileejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefuhffvofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelkeehiefhfeehvefhtdegueelkeehffffffeuvdekkeekuddvueeguefgieeukeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedtpdhrtghpthhtohepgihukhhuohhhrghisehhuhgrfigvihgtlhhouhgurdgtohhmpdhrtghpthhtoheprghnughrihhirdhnrghkrhihihhkohesghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhn
+ hdrfhgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomh
+X-GND-Sasl: alexis.lothore@bootlin.com
+
+On Mon Apr 21, 2025 at 4:14 AM CEST, Xu Kuohai wrote:
+> On 4/21/2025 12:02 AM, Alexis Lothor=C3=A9 wrote:
+>> Hi Xu,
+>>=20
+>> On Thu Apr 17, 2025 at 4:10 PM CEST, Xu Kuohai wrote:
+>>> On 4/17/2025 3:14 PM, Alexis Lothor=C3=A9 wrote:
+>>>> Hi Andrii,
+>>>>
+>>>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
+>>>>> On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Fou=
+ndation)
+>>>>> <alexis.lothore@bootlin.com> wrote:
+
+[...]
+
+>> Ah, thanks for those clear examples, I completely overlooked this
+>> possibility. And now that you mention it, I feel a bit dumb because I no=
+w
+>> remember that you mentioned this in Puranjay's series...
+>>=20
+>> I took a quick look at the x86 JIT compiler for reference, and saw no co=
+de
+>> related to this specific case neither. So I searched in the kernel for
+>> actual functions taking struct arguments by value AND being declared wit=
+h some
+>> packed or aligned attribute. I only found a handful of those, and none
+>> seems to take enough arguments to have the corresponding struct passed o=
+n the
+>> stack. So rather than supporting this very specific case, I am tempted
+>> to just return an error for now during trampoline creation if we detect =
+such
+>> structure (and then the JIT compiler can keep using data size to compute
+>> alignment, now that it is sure not to receive custom alignments). Or am =
+I
+>> missing some actual cases involving those very specific alignments ?
+>>=20
+>
+> How can we reliably 'detect' the case? If a function has such a parameter
+> but we fail to detect it, the BPF trampoline will pass an incorrect value
+> to the function, which is also unacceptable.
+
+That's a question I still have to answer :) I imagined being able to detect
+it thanks to some info somewhere in BTF, but I have to dig further to find
+how.
 
 
-On Sat, 19 Apr 2025 10:49:24 +0530, Krishna Chaitanya Chundru wrote:
-> Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
-> the bridge node, as agreed upon in multiple places one instance is[1].
-> 
-> Update the qcom,pcie-common.yaml to include the phy, phy-names, and
-> wake-gpios properties in the root port node. There is already reset-gpios
-> defined for PERST# in pci-bus-common.yaml, start using that property
-> instead of perst-gpio.
-> 
-> For backward compatibility, do not remove any existing properties in the
-> bridge node.
-> 
-> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
-> 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-common.yaml  | 36 ++++++++++++++++++++--
->  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  | 16 +++++++---
->  2 files changed, 46 insertions(+), 6 deletions(-)
-> 
+Alexis
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+--=20
+Alexis Lothor=C3=A9, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
