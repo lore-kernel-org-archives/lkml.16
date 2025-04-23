@@ -1,187 +1,124 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FF81F150F
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925D82701B6
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745409848; cv=none; b=Ks6V50zaLmXgwEbOJYN64oMgco9Vtf9NyW7Ta58Jb9tRG8uAumGFinkYvFB33frZbyjfe9lDzgjmab7Tdc2q7vaOld5rvOaqM0pXUaOcqAF0s0g168a5igk33Jj/K/l46AHlN3eYOXsgeNdhYlvR/1tIe/gfeMKsxK0E7uv4UDw=
+	t=1745409866; cv=none; b=iOiikhgoChTJHNKCKeEDhdwLc1/thk/2WWWF9j0z+zgZVWlhCAyPSM8lsbrBhIA6CLiiYLchYqTUVZ/b4MX+xSfr+YhxpTo92UIluB/OPqgm8cIGhkTDpS+08AmJgy58trzXOHRMxtXqjMPV5UiFneYtFxGLilrsqPn0jUKdvvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745409848; c=relaxed/simple;
-	bh=nO6Rg8RoPt3fGEMckf1bI8pF/9LXP6clHDAG+/ggTdA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X8AkmYadWF855tMuCaO4IqpcywV2tvtTuU3pc2sVTFCM8xt2C/GeG+LBqEEbBd513NrSCATcBBemcTB2xTpwEaCnN1R3PW9rSG+n8qno/pPZGuPZVVdIhyonN9K2tKVBFkVBkO0IJkKWoSX2l+rYZq1qpqCucNCgsh6SO6qlKZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SG9Tmj7y; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745409866; c=relaxed/simple;
+	bh=cCFAcmGHFdZkxm2uqfupFCuZkBUXpbCaHkYbQIAY3PM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JxEKXrilz7VQX+qhcIuLX0BQGGy6fELmHH+5BGfPehAvLk3APZAz49r5zAIkpyoD0WcV/fVCzEDq7+VMDSX6uNlLn3rz3k2/FGnXEzWsusTnoXQWcWceAkVHj3kaQkSCGxdlMy+44UT/uAQyqKFN49Y7jyNixQGvs2XEHyNg8Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yRU4jF8i; arc=none smtp.client-ip=209.85.161.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SG9Tmj7y"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf7c2c351so4759255e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 05:04:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yRU4jF8i"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-6021e3daeabso3004831eaf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 05:04:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745409844; x=1746014644; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=nO6Rg8RoPt3fGEMckf1bI8pF/9LXP6clHDAG+/ggTdA=;
-        b=SG9Tmj7yVHO80wQItgxm9Y5e+gR+cmIMI6DdQnA9l3Ukm+K2Z7PJcYy1hWUPNQ0h9B
-         HrypxPLziXhDMgfkBiBQTq5k5h0O6SjP1wW8qJ1xawkdQJoERI/mj0e6XPwPaBcL9aKD
-         rNa14hoUHZs7wu8dGfQFiseBp35SVlYTRupr0wHCoHFsMN4fce+C0HkCBefNdXucmq2Z
-         7Ak4wVd059DaVedVezhtJPRwhOVzWJQAbQP/jVjbNo/VcWPtZrXwe8NETK2uL2w3bf6M
-         Gt2BbzSzkl+aTTuWy1x1uyQODNHS//KxC1ZsWKiJ1ydUzbBLTXMJZsmMEips+tm51WxO
-         3NDA==
+        d=google.com; s=20230601; t=1745409863; x=1746014663; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cCFAcmGHFdZkxm2uqfupFCuZkBUXpbCaHkYbQIAY3PM=;
+        b=yRU4jF8idCm22UvFcnJ7WzGLlFz8diuMU8tJK0za+7ZZMojJcstgExir0RZpROcbCT
+         aKvEg8hk42H/RZX+lhCe8U7Vt/mK5gMXsiLmTwhYBV9Fiuo/JeX0oMHEADXRQGNO1YkG
+         mMrIJDGAESes0UqcjpphLHDgNJz3KSrI7mof5N55a7EaK7TIdFmiML+TAYyHoDsCuSPb
+         A4z4edqxamg5DbNfUeCt4EkKabcMZh371lUJrSgj+MbA1Hc1xA3kWpSmwjompTPcTX0i
+         Ta8AhzLDRhNTreoe/2WTwUut0pigX/XujV/ie3o1qKwHnmPezjAegRvaWuFzlIy1YgfD
+         jzEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745409844; x=1746014644;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nO6Rg8RoPt3fGEMckf1bI8pF/9LXP6clHDAG+/ggTdA=;
-        b=IEqm4KWzF3+qTskbbXvztcSpJCUwidw3e4oTdNZWVqPSsPFhE9AyasA9f1B3Qgu/AJ
-         BSCSaM/rMm/kW8hTYQ7okVvnYPP3mUGl7046wcxY3DprISZ62zchWsBEAe3say8W6Puo
-         jekghSOuW8h2vhUCsvgngz/T9cTyAxSV9U5RdobFT8UaWKvvtV3YmZOlUoJggkrU/jaO
-         Lx1ELDBj5DG5xwss5wzP5BS41W8gd0Ae2FLZEQrUApHGxaU17KfAKYvuAKBpHpEyauTr
-         FwkGSfCDD49dk4Y2vUscD8ncNAdNvJZOt7Y0o/z/sW/ktH+ZaO+CkjhcAJ6wUMwVhvyt
-         9jvw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4FkT+eajQPopbqjfcVhMOhkyo/cnEn3NSSY6pwLR4O94c5DApZLpc6rq9B+xVMR87rVk+5k8oaNkwWwE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEDIddtpzH8kAqvBgkyhMLw8ESZmtrdDAULKAKgqueXIc/VAWm
-	MEht7roY1CvuVSiX4QAomvRo4T1vWSL0rrcNvghgf86CSRxIiEVHOQB8f3zOv9Y=
-X-Gm-Gg: ASbGncsjP75jl1/njnKsaHwcKrnXMWr0NIpV4Fd9yNpOVfQOXEd+TTGqCrDe/0cDfrO
-	GW4jKuEOzDaOzW0zoGqNIusvQFiydBG1g83BO9Xa2P/WqarVYolDQ7SM6ARdAWNZ8zStrqBoA1c
-	U9TDxE70CS10Sso5izFaCaUE/MvTRXdznvbHgl6NQeOwxIS2rJuTbtXCG/wGCrRWsZsVwzuY9Xg
-	wGXLDbK+nZVVYsEsL92yjLntfN94itJS0T6HNIHr0hwopaJQWapzMLens9m3uEAmCgRix+8es6M
-	MAAXvH1nNxfABiYLfwTyCmylV3oHHOHf3MrS36G1ZYQMQOYf1NgAH82BuXM=
-X-Google-Smtp-Source: AGHT+IHBmQn5KrPTQJfeGklq9iOK8t35CZPk8g0XpKG9bcIRUP76LQys6TvjZPdcNOM3Gg/IO+LciQ==
-X-Received: by 2002:a05:600c:1c12:b0:439:9a1f:d73d with SMTP id 5b1f17b1804b1-4406aca6d18mr64398105e9.8.1745409844268;
-        Wed, 23 Apr 2025 05:04:04 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433141sm18723340f8f.35.2025.04.23.05.03.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 05:04:03 -0700 (PDT)
-Message-ID: <6166e76f-286a-4c59-be78-e188e5847ea9@linaro.org>
-Date: Wed, 23 Apr 2025 14:03:57 +0200
+        d=1e100.net; s=20230601; t=1745409863; x=1746014663;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cCFAcmGHFdZkxm2uqfupFCuZkBUXpbCaHkYbQIAY3PM=;
+        b=wsgqkUtcF4yJ7VdnfjlofOArZTigWuAykSrWzEJJghEMlDLXZ/yk/85DoRQNbLt8wL
+         ncnSx93H2ea3nNjD4Q4THnImZNC4FQSpQxaONDpKvPr7s52VVkJ5Bi2BvzuQztZvoDwT
+         2M+LdNyuJj9kNRGtOucF+djHVXcGbCog7pkOWHOt/IV1TFhSc9kGtxMnKu35OogtkGyY
+         8WpdJe8+n3G21ZQR6vBDae0sRg4Kp2eZga8W0kJ6VqT/txB8b8AJgVM/eCDxDMMw4Rxh
+         gKb4px0X2b+0OY1VmyipNU/s5l0uT0MI6MipJvYhD4KMgIo7+oVCdy9LB2JoTE34HCQ5
+         +OvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVaqKdEZo5B1+xOtJVSaL9FnCj5VjVv69am4lWBrhM8DY1d2jpwB2VoqSnmYf08LxrpaDmtQcAvfx4qMvo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxq7L4XWBJG1kbc4fBUxOUgLfSINHSNi3YOwxuEdWr7Zo8AbE5N
+	i8xxZsVCrIK3NiUDvOLiw3pslPBSreuPE/aStrdUTC0iMQI/aUwc9/Q8FLsWeCnxQ8md6ye/tPn
+	xgYxyBzvCuHZ9VEuxl5SpPkUbDgTX72MAVjrV
+X-Gm-Gg: ASbGncscW2VP+/mNIw17BlWTe6fFpbLZXbkP7isAVh1Dlt9aln1gEehhBLRnOSOsX7m
+	Io2FkJzBNEOrrBxzpLEdEldVq2ST+QYX2+DKntnUEiwtGcnZHzASGg3uQ7OVQ9KZnd+qp2PpQaD
+	AIp7mtsgnp/qAuGLoeRqW4/pq3GrV8A3gwruumECW4TWeGo+QakuOZ
+X-Google-Smtp-Source: AGHT+IHtAoPhdSQyG9FSnh3fdkHKJbNMU3JAx95nsaw3V9H68oVSKmPKKX05xSqdcM+Dul4VdI4hLYaUr1yMLlmi0bQ=
+X-Received: by 2002:a05:6820:3083:b0:604:ae66:1e9b with SMTP id
+ 006d021491bc7-606005de025mr9834346eaf.8.1745409863451; Wed, 23 Apr 2025
+ 05:04:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/33] Add support for Qualcomm Snapdragon SM7150 SoC and
- Google Pixel 4a
-To: Danila Tikhonov <danila@jiaxyga.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck
- <linux@roeck-us.net>, Rajendra Nayak <quic_rjendra@quicinc.com>,
- Jassi Brar <jassisinghbrar@gmail.com>, Bjorn Andersson
- <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- Amit Kucheria <amitk@kernel.org>, Thara Gopinath <thara.gopinath@gmail.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, Thomas Gleixner <tglx@linutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Wesley Cheng <quic_wcheng@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>,
- Souradeep Chowdhury <quic_schowdhu@quicinc.com>, Lee Jones <lee@kernel.org>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alex Elder <elder@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Avri Altman <avri.altman@wdc.com>, Bart Van Assche <bvanassche@acm.org>,
- Andy Gross <agross@kernel.org>, Srinivas Kandagatla <srini@kernel.org>,
- Herbert Xu <herbert@gondor.apana.org.au>, Georgi Djakov <djakov@kernel.org>,
- Loic Poulain <loic.poulain@oss.qualcomm.com>, Robert Foss
- <rfoss@kernel.org>, Andi Shyti <andi.shyti@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Taniya Das <quic_tdas@quicinc.com>,
- Sibi Sankar <quic_sibis@quicinc.com>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
- Imran Shaik <quic_imrashai@quicinc.com>,
- Mathieu Poirier <mathieu.poirier@linaro.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>,
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
- David Wronek <david@mainlining.org>, Jens Reidel <adrian@mainlining.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-mmc@vger.kernel.org,
- netdev@vger.kernel.org, linux-scsi@vger.kernel.org,
- dmaengine@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-remoteproc@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-hardening@vger.kernel.org, linux@mainlining.org,
- ~postmarketos/upstreaming@lists.sr.ht, Connor Mitchell <c.dog29@hotmail.com>
-References: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20250422-sm7150-upstream-v1-0-bf9a9081631d@jiaxyga.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250321111535.3740332-1-bqe@google.com> <20250321111535.3740332-4-bqe@google.com>
+ <Z92N8dyIE42ROW2t@thinkpad> <CANiq72kYzx7JTVqrJuP0Wo9=1qtaN7s7fqkD5DDcjA59SgMizQ@mail.gmail.com>
+ <CABVgOSkjYFwHhQfbmY83iK7crq9ZN9+93Xe514ndhAm6Me3UwQ@mail.gmail.com> <CANiq72=rbA-Tie7JPY8rj5c5iHBqV0oYZvx5AX7UAJvp1ER7MA@mail.gmail.com>
+In-Reply-To: <CANiq72=rbA-Tie7JPY8rj5c5iHBqV0oYZvx5AX7UAJvp1ER7MA@mail.gmail.com>
+From: Burak Emir <bqe@google.com>
+Date: Wed, 23 Apr 2025 14:04:12 +0200
+X-Gm-Features: ATxdqUHI-fzn5sRTzTTyDLim6VykOTU57SzlUcMdhSxru0WJHZX0TBkE_1fICFk
+Message-ID: <CACQBu=U9S8jhyK_j9JkbvWrgxOL0D=X+6JCT6GMTMFnHMFR79A@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] rust: add bitmap API.
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: David Gow <davidgow@google.com>, Yury Norov <yury.norov@gmail.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 22/04/2025 22:17, Danila Tikhonov wrote:
-> This patch series adds support for the Qualcomm Snapdragon 730/730G/732G
-> (SM7150) platform along with the Google Pixel 4a (sunfish) device. Since
-> the most critical drivers were submitted and applied in separate patch
-> series, this series is largely composed of DT bindings and device‑trees.
+On Fri, Mar 28, 2025 at 10:06=E2=80=AFAM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> On Fri, Mar 28, 2025 at 9:51=E2=80=AFAM David Gow <davidgow@google.com> w=
+rote:
+> >
+> > KUnit. That being said, I suspect that supporting the "just build this
+> > one test module against your existing kernel" case is going to be a
+> > bit more of a pain here anyway, as it might end up depending on having
+> > exactly the same toolchain/config/etc due to Rust's ABI not being
+> > stable. (Am I missing anything here, Miguel?) And, of course, Rust's
+> > built-in tests here would get automatically compiled down to KUnit
+> > tests if enabled.
+>
+> The ABI is not stable indeed, and modules need to be built with the
+> same toolchain.
+>
+> > So, what I suspect you're looking for here is a separate module /
+> > crate which benchmarks the bitmap type. With the way Rust crates are
+> > laid out, I suspect this would need to live in a separate directory
+> > and look something like samples/rust/rust_minimal.rs?
+>
+> Yeah, the module Yury mentioned seems like a normal one that calls
+> `ktime_get()` etc., so doing something like that in Rust should be
+> fine too.
+>
+> But, yeah, I was thinking more in terms of having a proper framework
+> for those, rather than doing a custom thing per module and even having
+> those `ktime_get()` calls manually placed for every test etc.
+>
 
-Targeting 20 or 30 different maintainers in one patchset is not the way
-to go. The minimum is to split/group by few patches (e.g. you have few
-remoteprocs, so separate).
+With Alice's help, I was able to add a find_bit_benchmark_rust module.
+This was surprisingly straighforward. I will send out a version that
+adds it right next to the find_bit_benchmark.c one, with a separate
+config.
 
-Best regards,
-Krzysztof
+A framework may eventually be good, but the C code also does not use one.
+It seems one could wait until there are a few such (micro-)benchmark module=
+s.
+
+Thanks,
+Burak
