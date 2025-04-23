@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD4627057A
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA45D26D4F3
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745406650; cv=none; b=OYbH9xYvSojX6FIT5E874vPhoOZ73FHtCc5q9In2HSfwoNqSWGzEgJJS7UDPN7GLeWbgefS548rKvXzixAxPKoc058axcUbUv6Nxd19PUWMWOQtlwSYUJBxbvEtfbtgJTG2rPHEVyFNACf/V7reZGGLaCGzlK9gK/kZrzHQKYCc=
+	t=1745406652; cv=none; b=j+Xhm4YvW8e3BOBLyQY/6PK0EqTgTPoKcd0NvYRr7Mi5kv2qss3PHe7sZrWcQ6zIH/F25MsDN7LH0F6unAcaS4KPeN0QoVb3xkWxpkhLTDkbtx4o961tlcTb1AKRDtN1SZYi+IRZri1cuXOdGmoAxhpB1VaERjVNVwBqAKYmgBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745406650; c=relaxed/simple;
-	bh=UKVuMNXgWDMwNKunagylIuuLfdoGqqCt/psLzOz4s9w=;
+	s=arc-20240116; t=1745406652; c=relaxed/simple;
+	bh=WiElLAcWG7Yok/aR7PkCV8+EXk5A56tbQMYc7mBZbEk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PiTRHOf9bEQS7fW4+8pu7axxdIisDT/6jkszqiTj9oQMtpYmq0pT54Yuu4IQ1b+iDDjzIE9ZkDlVtz5wBysc2PpPn/9v78p4ZKO6+IYr7OH373KtlXHMcMM/1EuYRvcipsTn18jYZYaZbipqrW5iWs1WIb768A0R8sJtofssSuw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W2qm9zxK; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=KLNCD+CiDmXAfqEMiMwRF+qyF9uPDRuwtrP4SDp7YyA3XI/PqyzC1YL6z2GvdwOSv9jkjZoMdH8UmdKcSTUhrEuGwSpz2y+9xYyHCfdOSoZfuBgkRXHGOESj2QHAWv/z/TD7skcKf44Sltjhhl2Ka06eIY/KAlTNSY/zHZ1jtWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EbB5q3qz; arc=none smtp.client-ip=209.85.128.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W2qm9zxK"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-440667e7f92so28879735e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:10:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EbB5q3qz"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d08915f61so34198295e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745406647; x=1746011447; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1745406649; x=1746011449; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6JWp+ZT6BrY4Sz4JeRmWQuSD5qSLIPDKmpbbDhaooKI=;
-        b=W2qm9zxKNp0VcsZMVrgpGUH3CK6jD0Q/8gThrqnDWCc8GndEA4jj8mp5F89BcK9e/C
-         pYO3ct/wLaFTXMwVgwqDhgcaJPC0aq7BiHShlk6efqESgic5TrLix8q0PxgsWsk1OZbG
-         7LVnnzKnOZ/7OP/8pmKdHlC64eQ/0iG9dpa1OFtfhOvzroHhmmWFGo1iu4DoEsaVXskt
-         lXLERHdyN8Xs5BwwIo1Pt3yXkThg5W3gFLCZVgsyOwYqp3LN9X881BlLvDaNAAgnVi2Z
-         dkkr/NAsGSL9Kj0HGueIeGfFvvzrBKmHG6oa/waom64hDUCanBxEBV2QrtouwZfd0KfN
-         WzXg==
+        bh=5Zcjkai0mBWP8Xx+OqiAgnAgZ8TAN8uUF5bmFIuXhSo=;
+        b=EbB5q3qzJ1/T++/3fldtvAQxvM+krelSwqfzruSdBDhamN1iPqcsxiWOG+mAGL/dKt
+         ItqnlhFznG8T09qtykZHkQ5bmx/lQI5dzDCfmFLabHfBFeaJ6x54X3I1+a7kjjLkJ/ph
+         wD6qfNm3NWEewQwZw0dQqshQzxMHGFeaIja+ZK9XsG7iQsf9wBmsYpmiXD5RWjZDe6zB
+         +TlcI1HegK6Y9ts9wyxNl+m24h5EXhFffDSxZYkRegMQmiM8nNBayWs8JtftmOynzvGO
+         m7PIb8z3HnnRIC8+rYKzGu9mXEnFC9M2ecfcHWBT1GAlielPQ18XKnYIgn5CEYK0W1b4
+         J+Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745406647; x=1746011447;
+        d=1e100.net; s=20230601; t=1745406649; x=1746011449;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6JWp+ZT6BrY4Sz4JeRmWQuSD5qSLIPDKmpbbDhaooKI=;
-        b=En4wp8HavHRYkstJueCgc0MaAqGpr81WaXkFjMULHuPHLDh5X3syB0hspv8KXw7+HT
-         UEEm+enB/865913UsUdz04ZTpUSCJBobqIrhbz6SjDfgtWvX2NDGiRv5zvULctgTa5u5
-         PZGkf89yXgBFYcz3ia6J2OyFsTLMQFIJwAN1VbVNx0LiVFwzPV5xgmk/fsj/5CZMCqrK
-         OtG05DCs+guIb/0M0feviUMJ8Aps7iPYH7uxxNCgEMF1wItNBWsVgTUnCzByVCTQGPOn
-         1wOUJxefHH+j3hw7dAU+9oiL4lEahaOnZdfAxpWuXVY7kNixq7KxWjTJ9sZTnEJzAyRj
-         UAUQ==
-X-Gm-Message-State: AOJu0YyqynNS3GWdP051lrrtsOHPSI96+tIi2GgLWQFfXycKi57FktJH
-	Tl+gKW5XJrIHt+tJSpT4i+NRf3OHAyrxeefcdcKFIk4FOTcZf/RxFThIuqCkb25WeWYGXi5CbqW
-	7GzLQm7e/6PJXHfkbkl1meTWUJvjiDV4WZIEOBKuEUEt2KkpfPuITS7JLmzP5OyzYy0I1dhk5jj
-	QMrvDG7SvBlOkX9PD2AXz65cT7uOGglQ==
-X-Google-Smtp-Source: AGHT+IEKdlz2Ty8mtbipgYfwruOiiGEmbg5G9d3KFT4V3uLCjVMBhsDFx+6/0indt8OGnyIS9TBe4Qlt
-X-Received: from wmbfl24.prod.google.com ([2002:a05:600c:b98:b0:43b:c336:7b29])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1c12:b0:43e:ee80:c233
- with SMTP id 5b1f17b1804b1-4406ac20146mr153023665e9.32.1745406647367; Wed, 23
- Apr 2025 04:10:47 -0700 (PDT)
-Date: Wed, 23 Apr 2025 13:09:55 +0200
+        bh=5Zcjkai0mBWP8Xx+OqiAgnAgZ8TAN8uUF5bmFIuXhSo=;
+        b=qA3V6S4Ik29BAstsiE26VEuTwyi0aZuMEfcg0radjYRhnR++RHeBEqfdQQkYJWhCGY
+         e2RkX5VKeWiR4jnj1VaEpEVwRdJ8GvOxhrYa+D8h3w9QH3CUBW01SlwiU6MD1xs6MuPX
+         T0B25+hb8QqCuVxZaEobO3iYdLZMB9jyzE/YzywHkpoZhbu47gZ55R2iJ4fLRks68dU+
+         UoAN/LLfyFuYUwVirWtu2p58ODNPYhWve1PVCtXXD3dBdLrGeknbxkji+AL2vqOB/WqN
+         c/FkHDrDXgFiMT7McuOjl7gaiJHICa4aavtB/m26b8eA3OFacmUe2j7sp0zHb/nicCNp
+         hkHg==
+X-Gm-Message-State: AOJu0YxyabUyDNhNVAdl4Yw2sg3Kbk4E0I3fY6K8U1TXM+qmdctdxN8V
+	B3a3F2IH4nGYVTIbvJbtwkPZDIdIbzohUGcGt9eZypcukcc1n8d3XQXi0RoAgHgRJi+uiFHQIF9
+	8c6x3BxuAT3FrGpdGn4RBbT15F5FVF58EdLIC3POHJRSYGWGvSPol7MISHUF4EHxowEv7V7TTOV
+	jJTu6qbmGio43MePf3P3N06rWwb6ELgg==
+X-Google-Smtp-Source: AGHT+IF/BrPBwefAZAF+nPxA4LKULExZ+5b87PotOGvn8JR8KwxYqyA6g4kDf2MukF+hhkIvJJDwIr0S
+X-Received: from wmbep21.prod.google.com ([2002:a05:600c:8415:b0:43d:1873:dbaf])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:3555:b0:43c:fa3f:8e5d
+ with SMTP id 5b1f17b1804b1-4406ab7efd0mr181899565e9.2.1745406649377; Wed, 23
+ Apr 2025 04:10:49 -0700 (PDT)
+Date: Wed, 23 Apr 2025 13:09:56 +0200
 In-Reply-To: <20250423110948.1103030-13-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,15 +59,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250423110948.1103030-13-ardb+git@google.com>
 X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4594; i=ardb@kernel.org;
- h=from:subject; bh=2E7YpnyQuBr+mAfDSoAVpwsc4EPphYHtbpgVaCqHdtw=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYPj1OR/vxadkU/0nj3Psv3+vyLPb/GsS7Orc3jSv7J/k
- hZUUz/VUcrCIMbBICumyCIw+++7nacnStU6z5KFmcPKBDKEgYtTACbyay4jw31mvoLFUTqvmr0u
- 8+Wwmi7MDb++irmveo2MuegkkbdXtjL8D7hw69aPN2X8R2cKRz3xbZmasfLqbUumpTYZ35I2SXC V8AEA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2384; i=ardb@kernel.org;
+ h=from:subject; bh=MKwZOwyHZp2LktNRJNcNIldmDczuXL1yEG/m0Ieip+s=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYPj1NSewwzX18rNm8twa/eBX8KXM8/Hbp73ufOwzKu/e
+ X71rJs1O0pZGMQ4GGTFFFkEZv99t/P0RKla51myMHNYmUCGMHBxCsBETiYx/Heynu76UyhKzr7z
+ x/qotmjf3ZktISIzxfSPlDNtVZm45CXDX5mdJl8nhF1IiucW1Iy6XFqpfOth9/WV3UX54nyy17/ 95wEA
 X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250423110948.1103030-19-ardb+git@google.com>
-Subject: [RFC PATCH PoC 06/11] x86/boot: Created a confined code area for
- startup code
+Message-ID: <20250423110948.1103030-20-ardb+git@google.com>
+Subject: [RFC PATCH PoC 07/11] HACK: work around sev-startup.c being omitted
+ for now
 From: Ard Biesheuvel <ardb+git@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, mingo@kernel.org, Ard Biesheuvel <ardb@kernel.org>
@@ -75,136 +75,58 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Ard Biesheuvel <ardb@kernel.org>
 
-In order to be able to have tight control over which code may execute
-from the early 1:1 mapping of memory, but still link vmlinux as a single
-executable, prefix all symbol references in startup code with __pi_, and
-invoke it from outside using the __pi_ prefix.
-
-HACK: omit sev-status.c for the time being - disentangling that is
-rather challenging, and not necessary for a proof of concept
-implementation.
+Add some PI aliases that shouldn't be needed once sev-startup.c is also
+built with __pi_ aliases.
 
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/boot/startup/Makefile | 18 ++++++++++++++++--
- arch/x86/include/asm/setup.h   |  1 +
- arch/x86/kernel/head64.c       |  2 +-
- arch/x86/kernel/head_64.S      |  6 +++---
- arch/x86/mm/mem_encrypt_boot.S |  6 +++---
- 5 files changed, 24 insertions(+), 9 deletions(-)
+ arch/x86/boot/startup/sev-startup.c | 3 +++
+ arch/x86/include/asm/sev.h          | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/startup/Makefile b/arch/x86/boot/startup/Makefile
-index b514f7e81332..4062582144f6 100644
---- a/arch/x86/boot/startup/Makefile
-+++ b/arch/x86/boot/startup/Makefile
-@@ -17,8 +17,9 @@ KMSAN_SANITIZE	:= n
- UBSAN_SANITIZE	:= n
- KCOV_INSTRUMENT	:= n
- 
--obj-$(CONFIG_X86_64)		+= gdt_idt.o map_kernel.o
--obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= sme.o sev-startup.o
-+pi-obj-$(CONFIG_X86_64)		+= gdt_idt.o map_kernel.o
-+pi-obj-$(CONFIG_AMD_MEM_ENCRYPT) += sme.o #sev-startup.o
-+obj-$(CONFIG_AMD_MEM_ENCRYPT)	+= sev-startup.o
- 
- lib-$(CONFIG_X86_64)		+= la57toggle.o
- lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
-@@ -28,3 +29,16 @@ lib-$(CONFIG_EFI_MIXED)		+= efi-mixed.o
- # to be linked into the decompressor or the EFI stub but not vmlinux
- #
- $(patsubst %.o,$(obj)/%.o,$(lib-y)): OBJECT_FILES_NON_STANDARD := y
-+
-+#
-+# Confine the startup code by prefixing all symbols with __pi_ (for position
-+# independent). This ensures that startup code can only call other startup
-+# code, or code that has explicitly been made accessible to it via a symbol
-+# alias.
-+#
-+$(obj)/%.pi.o: OBJCOPYFLAGS := --prefix-symbols=__pi_
-+$(obj)/%.pi.o: $(obj)/%.o FORCE
-+	$(call if_changed,objcopy)
-+
-+extra-y		:= $(pi-obj-y)
-+obj-y		+= $(patsubst %.o,%.pi.o,$(pi-obj-y))
-diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
-index 6324f4c6c545..895d09faaf83 100644
---- a/arch/x86/include/asm/setup.h
-+++ b/arch/x86/include/asm/setup.h
-@@ -53,6 +53,7 @@ extern void i386_reserve_resources(void);
- extern unsigned long __startup_64(unsigned long p2v_offset, struct boot_params *bp);
- extern void startup_64_setup_gdt_idt(void);
- extern void startup_64_load_idt(void *vc_handler);
-+extern void __pi_startup_64_load_idt(void *vc_handler);
- extern void early_setup_idt(void);
- extern void __init do_early_exception(struct pt_regs *regs, int trapnr);
- 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index b251186a819e..8107cd68bc41 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -320,5 +320,5 @@ void early_setup_idt(void)
- 		handler = vc_boot_ghcb;
- 	}
- 
--	startup_64_load_idt(handler);
-+	__pi_startup_64_load_idt(handler);
+diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
+index 36a75c5096b0..7b9de4479c0c 100644
+--- a/arch/x86/boot/startup/sev-startup.c
++++ b/arch/x86/boot/startup/sev-startup.c
+@@ -562,6 +562,7 @@ void __head early_snp_set_memory_shared(unsigned long vaddr, unsigned long paddr
+ 	 /* Ask hypervisor to mark the memory pages shared in the RMP table. */
+ 	early_set_pages_state(vaddr, paddr, npages, SNP_PAGE_STATE_SHARED);
  }
-diff --git a/arch/x86/kernel/head_64.S b/arch/x86/kernel/head_64.S
-index 0c0d38ebf70b..e448279a0f87 100644
---- a/arch/x86/kernel/head_64.S
-+++ b/arch/x86/kernel/head_64.S
-@@ -71,7 +71,7 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	xorl	%edx, %edx
- 	wrmsr
++SYM_PI_ALIAS(early_snp_set_memory_shared);
  
--	call	startup_64_setup_gdt_idt
-+	call	__pi_startup_64_setup_gdt_idt
+ /* Writes to the SVSM CAA MSR are ignored */
+ static enum es_result __vc_handle_msr_caa(struct pt_regs *regs, bool write)
+@@ -1383,8 +1384,10 @@ bool __head snp_init(struct boot_params *bp)
  
- 	/* Now switch to __KERNEL_CS so IRET works reliably */
- 	pushq	$__KERNEL_CS
-@@ -91,7 +91,7 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	 * subsequent code. Pass the boot_params pointer as the first argument.
- 	 */
- 	movq	%r15, %rdi
--	call	sme_enable
-+	call	__pi_sme_enable
- #endif
+ 	return true;
+ }
++SYM_PI_ALIAS(snp_init);
  
- 	/* Sanitize CPU configuration */
-@@ -111,7 +111,7 @@ SYM_CODE_START_NOALIGN(startup_64)
- 	 * programmed into CR3.
- 	 */
- 	movq	%r15, %rsi
--	call	__startup_64
-+	call	__pi___startup_64
- 
- 	/* Form the CR3 value being sure to include the CR3 modifier */
- 	leaq	early_top_pgt(%rip), %rcx
-diff --git a/arch/x86/mm/mem_encrypt_boot.S b/arch/x86/mm/mem_encrypt_boot.S
-index f8a33b25ae86..edbf9c998848 100644
---- a/arch/x86/mm/mem_encrypt_boot.S
-+++ b/arch/x86/mm/mem_encrypt_boot.S
-@@ -16,7 +16,7 @@
- 
- 	.text
- 	.code64
--SYM_FUNC_START(sme_encrypt_execute)
-+SYM_FUNC_START(__pi_sme_encrypt_execute)
- 
- 	/*
- 	 * Entry parameters:
-@@ -69,9 +69,9 @@ SYM_FUNC_START(sme_encrypt_execute)
- 	ANNOTATE_UNRET_SAFE
- 	ret
- 	int3
--SYM_FUNC_END(sme_encrypt_execute)
-+SYM_FUNC_END(__pi_sme_encrypt_execute)
- 
--SYM_FUNC_START(__enc_copy)
-+SYM_FUNC_START_LOCAL(__enc_copy)
- 	ANNOTATE_NOENDBR
- /*
-  * Routine used to encrypt memory in place.
+ void __head __noreturn snp_abort(void)
+ {
+ 	sev_es_terminate(SEV_TERM_SET_GEN, GHCB_SNP_UNSUPPORTED);
+ }
++SYM_PI_ALIAS(snp_abort);
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index a8661dfc9a9a..9ba1f30eb03e 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -494,6 +494,7 @@ void snp_set_memory_private(unsigned long vaddr, unsigned long npages);
+ void snp_set_wakeup_secondary_cpu(void);
+ bool snp_init(struct boot_params *bp);
+ void __noreturn snp_abort(void);
++void __noreturn __pi_snp_abort(void);
+ void snp_dmi_setup(void);
+ int snp_issue_svsm_attest_req(u64 call_id, struct svsm_call *call, struct svsm_attest_call *input);
+ void snp_accept_memory(phys_addr_t start, phys_addr_t end);
+@@ -541,7 +542,6 @@ static inline void snp_set_memory_shared(unsigned long vaddr, unsigned long npag
+ static inline void snp_set_memory_private(unsigned long vaddr, unsigned long npages) { }
+ static inline void snp_set_wakeup_secondary_cpu(void) { }
+ static inline bool snp_init(struct boot_params *bp) { return false; }
+-static inline void snp_abort(void) { }
+ static inline void snp_dmi_setup(void) { }
+ static inline int snp_issue_svsm_attest_req(u64 call_id, struct svsm_call *call, struct svsm_attest_call *input)
+ {
 -- 
 2.49.0.805.g082f7c87e0-goog
 
