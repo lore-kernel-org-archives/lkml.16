@@ -1,120 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E9271EFFBB
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AC52798E3;
+	Wed, 23 Apr 2025 17:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427764; cv=none; b=lOc8VrHbWDLwHtN/atktTbtQKBl36EToD9I91sdLO7VJgHxyLUqB3+aC4E+aYgOI/D/hP6cxhRIvxZNK94hiudzpNjgIVu1Eeqr3yc0m5nlV8niMFtJktU24OQSbrnUAh7t/RsWRpiEnMJB4KxyM4xy4A4hZDa17ATL1DUbzpYc=
+	t=1745427763; cv=none; b=VqJG4DNYjcUElHbt9J6QzaoxMv1Ub/tr2OEZdL/1QSJ4tMDtn1yfY5yrYoGmlGBrfnr4kDQifVDtilZ4cLKLZIVerHezgljOo4tkBlHpd8xdzAJxIEJxnl0Z7ECDLHVN2wFUzZhCrdBCoGK+fad8baTH6kKig0LTC3gUTZUPwwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427764; c=relaxed/simple;
-	bh=jnhX8vAIa9TceWzwRkr/EyM2QB8Y09yqhl5U1I5KLTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ak5R3uQA2QNkLPH4YffnXQcErj6y8uD3UQuZJAXidpDPtmCbn6IH5agLrrjyOIlfoTaypPTfEscwI2DCgsgIIJ0MhKES3quF/epC8l4g4BR5TSweCssRUKv9pER+bcavGQhi5g4FMq6Qt4BGsAtCr//JKkU24GqZzLNcmFA2JcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E46921063;
-	Wed, 23 Apr 2025 10:02:35 -0700 (PDT)
-Received: from [10.57.74.63] (unknown [10.57.74.63])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50AC23F66E;
-	Wed, 23 Apr 2025 10:02:38 -0700 (PDT)
-Message-ID: <4af7c59e-bb1b-4b9e-a61d-90d911df430b@arm.com>
-Date: Wed, 23 Apr 2025 18:02:36 +0100
+	s=arc-20240116; t=1745427763; c=relaxed/simple;
+	bh=f+Y3X3YiUsLlyM25CR4YNDzXTSkXUg0kSn7T+IarnKU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ed/QMuY2LCLcZzK2IHNFPlZtGmksCApSpchTxz9cKuYp3RT29xELDaWGZZQoNRTqHcdvBs3J3P+YJAR+7OUUMsuJPIgxnAG8rNdloJqnq1w/upapFg3k+98aZftznzouGe0oZdN5+wS1WHr3pMwmCaD6nYyPbQzZCeOb50LNqQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9WGVSOL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9WGVSOL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00E73C4CEEC;
+	Wed, 23 Apr 2025 17:02:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745427763;
+	bh=f+Y3X3YiUsLlyM25CR4YNDzXTSkXUg0kSn7T+IarnKU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=p9WGVSOLMK2IllaBXAwJz0xviUDru67xnRfAFN3NVrlYNOHhmJOguw0EhAM+yrkaM
+	 L2yswzZRsPsf7PyeX0XYkveLk3Up8+3VIxMl3Beu9sU5BRfff99I5aDKfLDTxOtMYW
+	 3G8XYMu5o/iazQUNQSx75copPBEloQIoB9B4MDmh7Kg2sXHaJGinEnpPt6Zzde1VQP
+	 ebMSZnkvYkfnHh7nqG4AoncsSCp5po+bPqgAzuo1jQbq54AAf4H4CBin4GSd/Kqufm
+	 gPTRhk7+qQ9KO1XDMita+8TYvKeW7gt6nFPaHS0qCVvrr8gnazJvCmViCq4fDsYqWz
+	 3bzBnyaM8kyZA==
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-549967c72bcso6492e87.3;
+        Wed, 23 Apr 2025 10:02:42 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVSjDZIWiSxe+T3le2RgKz6P7q44EbxoT28mGKqYL5ytAa+nBpH7HRf2svK2dkN0pMz9k4JFLQciX0uVGJ3JVWUvRI=@vger.kernel.org, AJvYcCW30C8fxugnnZN93o27yTbc/iSoIT2zw5v+Iof6ky5boFOmnP6Q1FE+2p5FogQI0t4HMsgH0xKJgS8oWsZf@vger.kernel.org, AJvYcCX7dz6NPrzhgl9jazcQiLt964il4JDqA9+N7wUhm3xXo9ez+p6F13QyMy8SaDW6HgoskEKeUt8NSoA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzvf6dnU2Pt15S9arqszWo7VDyW/01YztJ0zZCQZB8brEfx9gaG
+	e/imkDXfQnrE4VSqES7PGw25T5w8L0+llT95JCpYOcJ3c3xPjp/g85o6FMoCa5yr1ONhhQp1lVv
+	JCUixHzLLYE/UcE24tVHchLjnuLg=
+X-Google-Smtp-Source: AGHT+IEq7CfO+E4wwVjeXjdovTnbd7lMFJ2vO364cYkkDGW0lhY//NHoPoHLFTLaawgvlDn/RwsjYOWKhta7ldtyrvA=
+X-Received: by 2002:a05:651c:1556:b0:30b:a20d:1c06 with SMTP id
+ 38308e7fff4ca-310903c31b4mr66868041fa.0.1745427761263; Wed, 23 Apr 2025
+ 10:02:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] [v2] iommu/io-pgtable-arm: dynamically allocate selftest
- device struct
-To: Arnd Bergmann <arnd@kernel.org>, Will Deacon <will@kernel.org>,
- Joerg Roedel <joro@8bytes.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mostafa Saleh <smostafa@google.com>,
- Jason Gunthorpe <jgg@ziepe.ca>, Lu Baolu <baolu.lu@linux.intel.com>,
- Rob Clark <robdclark@chromium.org>, Kunkun Jiang <jiangkunkun@huawei.com>,
- Ashish Mhetre <amhetre@nvidia.com>,
- Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
- linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20250423164826.2931382-1-arnd@kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20250423164826.2931382-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250422210510.600354-2-ardb+git@google.com> <174539448176.31282.2929835259793717594.tip-bot2@tip-bot2>
+ <odoambb32hnupncbqfisrlqih2b2ggthhebcrg42e5fg25uxol@xe5veqq52xif>
+ <CAMj1kXFpE=P0_a3fTAnb7qQmXLt19dCtuEcd5U8xwYzAcO=ufQ@mail.gmail.com> <4dxg5dunoft5r5hd5kddqzap2stn2ytiwvgik7vvktifbhiyv4@2dxkkjlygnia>
+In-Reply-To: <4dxg5dunoft5r5hd5kddqzap2stn2ytiwvgik7vvktifbhiyv4@2dxkkjlygnia>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 23 Apr 2025 19:02:30 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXERamRZW6rmqa8dqQdx81Sc5bSJKijoQpVp76ZyFns3PA@mail.gmail.com>
+X-Gm-Features: ATxdqUE5Z9-T4w1qCH98mwuh4sMKz8HQW1HGvxwhBiUUro1F0vtBiYZJZ-iwEN0
+Message-ID: <CAMj1kXERamRZW6rmqa8dqQdx81Sc5bSJKijoQpVp76ZyFns3PA@mail.gmail.com>
+Subject: Re: [tip: x86/boot] x86/boot: Disable jump tables in PIC code
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: tip-bot2 for Ard Biesheuvel <tip-bot2@linutronix.de>, linux-tip-commits@vger.kernel.org, 
+	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-efi@vger.kernel.org, 
+	x86@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 2025-04-23 5:48 pm, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> In general a 'struct device' is way too large to be put on the kernel
-> stack. Apparently something just caused it to grow a slightly larger,
-> which pushed the arm_lpae_do_selftests() function over the warning
-> limit in some configurations:
-> 
-> drivers/iommu/io-pgtable-arm.c:1423:19: error: stack frame size (1032) exceeds limit (1024) in 'arm_lpae_do_selftests' [-Werror,-Wframe-larger-than]
->   1423 | static int __init arm_lpae_do_selftests(void)
->        |                   ^
-> 
-> Change the function to use a dynamically allocated faux_device
-> instead of the on-stack device structure.
+On Wed, 23 Apr 2025 at 18:41, Josh Poimboeuf <jpoimboe@kernel.org> wrote:
+>
+> On Wed, Apr 23, 2025 at 05:01:42PM +0200, Ard Biesheuvel wrote:
+> > > > So let's not bother and disable jump tables for code built with -fPIC
+> > > > under arch/x86/boot/startup.
+> > >
+> > > Hm, does objtool even run on boot code?
+> > >
+> >
+> > This is about startup code, not boot code. This is code that is part
+> > of vmlinux, but runs from a different mapping of memory than the one
+> > the linker assumes, and so it needs to be built with -fPIC to
+> > discourage the compiler and linker from inserting symbol references
+> > via the kernel virtual mapping, which may not be up yet when this code
+> > runs.
+>
+> Maybe objtool should ignore .head.text.  It doesn't need ORC, static
+> calls, uaccess validation, retpolines, etc.
+>
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+I am trying to get rid of .head.text.
 
-> Fixes: ca25ec247aad ("iommu/io-pgtable-arm: Remove iommu_dev==NULL special case")
-> Link: https://lore.kernel.org/all/ab75a444-22a1-47f5-b3c0-253660395b5a@arm.com/
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v2: use faux device instead of platform_device, as Robin suggested.
->      The faux device is more appropriate here since the is no actual physical
->      device, though on the other hand the v1 patch had the advantage of not
->      actually needing to register the device.
-> ---
->   drivers/iommu/io-pgtable-arm.c | 13 +++++++++----
->   1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index 545229cf62d2..bbd42323c029 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -13,6 +13,7 @@
->   #include <linux/bitops.h>
->   #include <linux/io-pgtable.h>
->   #include <linux/kernel.h>
-> +#include <linux/device/faux.h>
->   #include <linux/sizes.h>
->   #include <linux/slab.h>
->   #include <linux/types.h>
-> @@ -1437,15 +1438,17 @@ static int __init arm_lpae_do_selftests(void)
->   	};
->   
->   	int i, j, k, pass = 0, fail = 0;
-> -	struct device dev;
-> +	struct faux_device *dev;
->   	struct io_pgtable_cfg cfg = {
->   		.tlb = &dummy_tlb_ops,
->   		.coherent_walk = true,
-> -		.iommu_dev = &dev,
->   	};
->   
-> -	/* __arm_lpae_alloc_pages() merely needs dev_to_node() to work */
-> -	set_dev_node(&dev, NUMA_NO_NODE);
-> +	dev = faux_device_create("io-pgtable-test", NULL, 0);
-> +	if (!dev)
-> +		return -ENOMEM;
-> +
-> +	cfg.iommu_dev = &dev->dev;
->   
->   	for (i = 0; i < ARRAY_SIZE(pgsize); ++i) {
->   		for (j = 0; j < ARRAY_SIZE(address_size); ++j) {
-> @@ -1465,6 +1468,8 @@ static int __init arm_lpae_do_selftests(void)
->   	}
->   
->   	pr_info("selftest: completed with %d PASS %d FAIL\n", pass, fail);
-> +	faux_device_destroy(dev);
-> +
->   	return fail ? -EFAULT : 0;
->   }
->   subsys_initcall(arm_lpae_do_selftests);
-
+But some of the startup code may still be in use later, so I don't
+think we should disable objtool validation entirely unless we really
+have to.
