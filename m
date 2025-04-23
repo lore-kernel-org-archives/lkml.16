@@ -1,164 +1,379 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DDC266F1E;
-	Wed, 23 Apr 2025 16:05:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39DF19DFA7
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745424324; cv=none; b=Ja7aOSXoTnZHnHLjEqKGQK05MJWXeYILI5miQZI0XxPFT3detcaWKz8UuF7goKRBVXwuXWCjnAZwsrzOxbAzygalLZ4GYxe0Y0bAm6Y5UE6sws6hMilDqResY1/Tt9/6vm2aF1/HD42Y58DE/qrvP5k3h8Oq0tT9gzF+yZjHdbQ=
+	t=1745424327; cv=none; b=cYrZXGWYTnDEaOmAuqmhF8mIGDJ52x+nl+T7kl7JCWzalJdgKxYmHjfXQqfuQhlfoEhQxJhgw2/EQu/UALQh2AX01Mf1686+nLqrbWRqM8lWJ4mW5aSg/h4TQeIi2m7amRN4kiJ+CORwgxpbZlhoKDgH9oArE8l9LQkCyG5cSwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745424324; c=relaxed/simple;
-	bh=3dzRklZ7ar/Z+lU1ajuWagKEaicvxwAoj0zZhUgFqyg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i6VcO2S2Z+H+aUKMDlgsZ7GziGlB/Ljq1MKTP3JKquBFPxQWHBuuuJyPJ36DsXHQMMNctvSTHlJROQGykCWUdFzubT48Yx+ejVB72zY/0WuUb1IT0KxByjOz5zFmgb4Ru8dhVTe+EYuMgKxUPPIEFHfdSON0wKUM0ZtZkdNVrGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OV/ltiR1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745424327; c=relaxed/simple;
+	bh=kQkZKKUoLjzT2xrPRr6XCtcs79ipi8g7W+BTVNWHk/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O98iAy2K77AU4w1GB2wrsn7vOQZTTd3f6IFxfaNBoHZ5OegZdXrEYHCEi9IrCGH+Gwej8daIHcXHnZwcqUAdpJ9DpEk9LsV+A3g0/2v1wI+6rLQ5rSiz2OP5fZAI8oWqTiG2yaq6UvsXG/tv0btKIKeflEocK3nU9QO4vFnWCeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EjLC2RYZ; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OV/ltiR1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DBC2C4CEE2;
-	Wed, 23 Apr 2025 16:05:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745424324;
-	bh=3dzRklZ7ar/Z+lU1ajuWagKEaicvxwAoj0zZhUgFqyg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OV/ltiR1ERJ/AQvFsoBmHQRfj7XCg7hAlEvlNF+59sBqJtvlYuFUiigte5E6B310i
-	 o4y//LjXvcvN6iyvVHJ560aT5DzeFfqb2ZuODIgFyvfDdKdgGoT+fPwROz/Fij6oAt
-	 zp6zYc9DHjLE8t69TyUcLM13PqSj2md1K8cvrs1k=
-Date: Wed, 23 Apr 2025 16:50:48 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	linux-cve-announce@vger.kernel.org
-Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
- allocation failure
-Message-ID: <2025042355-hypnotize-relight-789f@gregkh>
-References: <2024122837-CVE-2024-56705-049b@gregkh>
- <aAicoAmxX0B_O3Ok@tiehlicka>
- <2025042301-flammable-masculine-ec48@gregkh>
- <aAiwaM5ru-FJG2fI@tiehlicka>
- <2025042329-mystify-dramatic-dcb9@gregkh>
- <aAjOK_f-GPFHIdWK@tiehlicka>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EjLC2RYZ"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-acb5ec407b1so5873966b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:05:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745424322; x=1746029122; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kQkZKKUoLjzT2xrPRr6XCtcs79ipi8g7W+BTVNWHk/0=;
+        b=EjLC2RYZ17u9GqafUwaGO/rIBWpBFLbZIeotGhPwx6M43C63DYKPT8tKrzvqBB1GLt
+         CKpQxQRgiygV3y+s4iE9g2CselP1SjzDE5Z/tmG84Wooo4N2B++RMJ+J9k1SjbOI+6d4
+         WHglqQFIHOL0jlqe+xTObmoYFRXTYLzvm2CTXj84qPaA+GC5LrdHLWM95ByvgXn97W0A
+         mI7aBt0CGXTk2B77BYC8xSMDA4cjcKNIqtSWPfTB8gEE9PtlpmiqjCPUuu1p6VrdnQP+
+         i5ksDJDy3hfeEx1JpCSaGUaCx0iNN0CgrjnYWFQ+Dsw/9P96Akq50e4hrN74vm7oytLv
+         BTCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745424322; x=1746029122;
+        h=in-reply-to:autocrypt:from:content-language:references:cc:to
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kQkZKKUoLjzT2xrPRr6XCtcs79ipi8g7W+BTVNWHk/0=;
+        b=Mz59eulTRX9uSnULpPfG/VhthnTl0vgHriUDIJv47GHgpQ9RvjAEZWLIPhtpOyraZb
+         mX43B1sguhiS7o+sy/+4LELFqwsw0IVr3Dra7qJQNXdsIX6FOEjxXU9sjGugeEAQ462k
+         bpBvDxN974H0uZCUiV8HrdCcW5FCrsRt0M5jyd+qNGBz+uEbkdzNtvyA/IpIH3k0k4YP
+         GGAFdY8q6aT4MXQH4XzAb4O95fUIPhGuzXmd/wLkhcKmdjHiW2R+N68CXOdpbWrxkKmz
+         oy9CzKdJyv2/dOW4Wytul0Nivxtf+APwq/IwShzxPD61eG6LJk0jwJbopPhFnkE4AEeR
+         TzdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMSh/GVIeMCTtRsdXhiR183m6dWy5m0uuWVSXz4jxsgg4Se6Dpn2/SR28rqQQBHvQ0IQvV0H0iD/hi1DA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPGk+gC9ALDO9HDWp3JhSHgQ8Dr37DCrdMiTtfjATF54M9GvBl
+	IbqTTeCT1ZpTE5dgKlydO88d/G2cG0I1fHBaDP1g2PM4fqaXt4nxtjxBCei+78wpgYwwo73L4YT
+	MN3o=
+X-Gm-Gg: ASbGncvP8v4YH89IjABr9WzI5nNqlCnT7avHtTsZN/73d4iGmsUc763iy3WRI/PZ5N0
+	JUyfosn7ZzJmg9m9NSYH00P49TLA3ydmx8aU9sVGdf7npXx/cr65zdj0dMXEObR9n8jYs/o+z5X
+	O27Nkx0wzN3FhiyZ0wq+UB+l5yydCq6emubBSBq3CUifMkmHroJqsFZEkg8mHy7FuR9ZATagUKv
+	9JMk0KFnTezI4/2T20Zh27jzaIoee9mtcFILBWUyOXvJsgsj00md9h5AJrqQq93GC8Y5h9YeG7A
+	2h+jWimw1oYXwFQV15COIr5HdP6W+hyFm8fsjuv5JFZeQA8MACNBqGmOG5pLNW9cXnir+HOunUJ
+	ymUFJgvQl2kdNkCi49BjmLUoPCszQ9oZDP9X1RQoEI8w0ROkFZwZ5J+9pT84fm4xLZCl1gQmuNU
+	GB
+X-Google-Smtp-Source: AGHT+IEo0PNu11JzN98XoSJk9AR1wF50xyco8ZxIf2P6MaamPRtmGrdjToXBNtChaO7f9hobNby3vQ==
+X-Received: by 2002:a17:907:9815:b0:abf:6ebf:5500 with SMTP id a640c23a62f3a-acb74b18d6dmr1757155266b.16.1745424321705;
+        Wed, 23 Apr 2025 09:05:21 -0700 (PDT)
+Received: from ?IPV6:2003:e5:870f:e000:6c64:75fd:2c51:3fef? (p200300e5870fe0006c6475fd2c513fef.dip0.t-ipconnect.de. [2003:e5:870f:e000:6c64:75fd:2c51:3fef])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef45784sm802312966b.129.2025.04.23.09.05.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 09:05:21 -0700 (PDT)
+Message-ID: <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
+Date: Wed, 23 Apr 2025 18:05:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAjOK_f-GPFHIdWK@tiehlicka>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
+ to write MSR
+To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-22-xin@zytor.com>
+ <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+ <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------398yZoWCv7yp9PXp1RKEeUfd"
 
-On Wed, Apr 23, 2025 at 01:25:31PM +0200, Michal Hocko wrote:
-> On Wed 23-04-25 12:20:47, Greg KH wrote:
-> > On Wed, Apr 23, 2025 at 11:18:32AM +0200, Michal Hocko wrote:
-> > > On Wed 23-04-25 10:21:04, Greg KH wrote:
-> > > > On Wed, Apr 23, 2025 at 09:54:08AM +0200, Michal Hocko wrote:
-> > > > > Hi,
-> > > > > our internal tools which are working with vulns.git tree have noticed
-> > > > > that this CVE entry has been altered after the announcement.
-> > > > 
-> > > > Good catch!
-> > > > 
-> > > > > There was an additional commit added to the CVE entry. The current state
-> > > > > is
-> > > > > $ cat cve/published/2024/CVE-2024-56705.sha1
-> > > > > ed61c59139509f76d3592683c90dc3fdc6e23cd6
-> > > > > 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
-> > > > 
-> > > > Yup!
-> > > > 
-> > > > > There seem to be handful of other cases like this one AFAICS.
-> > > > 
-> > > > Yes, we had to add support for this type of problem.
-> > > > 
-> > > > > I have 3 questions:
-> > > > > 1) What is 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
-> > > > >    relation to the original CVE which seems to be about a missing memory
-> > > > >    allocation failure check?
-> > > > 
-> > > > Removing the driver entirely from the kernel "fixed" the vulnerability :)
-> > > 
-> > > What is _the_ vulnerability? While I do understand that _any_ potential
-> > > vulnerability in the removed code is removed as well I still do not see
-> > > how the driver removal is related to _this_ specific CVE.
-> > 
-> > "The" vulnerability is what is fixed in the last commit id, and is what
-> > is documented in the text of the CVE, specifically:
-> > 
-> > 	In ia_css_3a_statistics_allocate(), there is no check on the allocation
-> > 	result of the rgby_data memory. If rgby_data is not successfully
-> > 	allocated, it may trigger the assert(host_stats->rgby_data) assertion in
-> > 	ia_css_s3a_hmem_decode(). Adding a check to fix this potential issue.
-> 
-> I do understand this statement.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------398yZoWCv7yp9PXp1RKEeUfd
+Content-Type: multipart/mixed; boundary="------------FLAnSz0SzY3c5JmVJHJBKSu5";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+ wei.liu@kernel.org, ajay.kaher@broadcom.com,
+ bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+ pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+ luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+ haiyangz@microsoft.com, decui@microsoft.com
+Message-ID: <37c88ea3-dd24-4607-9ee1-0f19025aaef3@suse.com>
+Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
+ to write MSR
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-22-xin@zytor.com>
+ <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
+ <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
+In-Reply-To: <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
 
-That is the commit information, and as such we deemed it a
-vulnerability.
+--------------FLAnSz0SzY3c5JmVJHJBKSu5
+Content-Type: multipart/mixed; boundary="------------0DTyIjBeblppipV7B0zRSAr0"
 
-> 
-> > That has not changed here at all.  It's just that the ranges of git
-> > versions for when Linux was vulnerable to this issue has been "tightened
-> > up" to only reflect when it was possible for this to be a problem (i.e.
-> > we now do not count the range of releases where the driver was not
-> > present at all in the kernel tree.)
-> 
-> But I fail to follow this. The commit itself says Fixes: a49d25364dfb
-> ("staging/atomisp: Add support for the Intel IPU v2") which makes it
-> clear since when the issue has been introduced. If this tag was not
-> present then there is CVE-$FOO.vulnerable which can specify the same
-> thing. I do not understand how 51b8dc5163d2 is related as it has a
-> different implementation of ia_css_3a_statistics_allocate that doesn't
-> have any unchecked kernel allocations AFAICS.
+--------------0DTyIjBeblppipV7B0zRSAr0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Ah, ok, that changes things.  The person who said that we should count
-the previous version of the driver said it was vulnerable at that point
-when it was in the kernel tree.  If this isn't the case, we will be glad
-to change this CVE to reflect that.
+T24gMjMuMDQuMjUgMTA6NTEsIFhpbiBMaSB3cm90ZToNCj4gT24gNC8yMi8yMDI1IDI6NTcg
+QU0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+PiBPbiAyMi4wNC4yNSAxMDoyMiwgWGluIExp
+IChJbnRlbCkgd3JvdGU6DQo+Pj4gVGhlIHN0b3J5IHN0YXJ0ZWQgZnJvbSB0Z2x4J3MgcmVw
+bHkgaW4gWzFdOg0KPj4+DQo+Pj4gwqDCoCBGb3IgYWN0dWFsIHBlcmZvcm1hbmNlIHJlbGV2
+YW50IGNvZGUgdGhlIGN1cnJlbnQgUFYgb3BzIG1lY2hhbmljcw0KPj4+IMKgwqAgYXJlIGEg
+aG9ycm9yc2hvdyB3aGVuIHRoZSBvcCBkZWZhdWx0cyB0byB0aGUgbmF0aXZlIGluc3RydWN0
+aW9uLg0KPj4+DQo+Pj4gwqDCoCBsb29rIGF0IHdybXNybCgpOg0KPj4+DQo+Pj4gwqDCoCB3
+cm1zcmwobXNyLCB2YWwNCj4+PiDCoMKgwqAgd3Jtc3IobXNyLCAodTMyKXZhbCwgKHUzMil2
+YWwgPj4gMzIpKQ0KPj4+IMKgwqDCoMKgIHBhcmF2aXJ0X3dyaXRlX21zcihtc3IsIGxvdywg
+aGlnaCkNCj4+PiDCoMKgwqDCoMKgwqAgUFZPUF9WQ0FMTDMoY3B1LndyaXRlX21zciwgbXNy
+LCBsb3csIGhpZ2gpDQo+Pj4NCj4+PiDCoMKgIFdoaWNoIHJlc3VsdHMgaW4NCj4+Pg0KPj4+
+IMKgwqDCoMKgbW92wqDCoMKgICRtc3IsICVlZGkNCj4+PiDCoMKgwqDCoG1vdsKgwqDCoCAk
+dmFsLCAlcmR4DQo+Pj4gwqDCoMKgwqBtb3bCoMKgwqAgJWVkeCwgJWVzaQ0KPj4+IMKgwqDC
+oMKgc2hywqDCoMKgICQweDIwLCAlcmR4DQo+Pj4gwqDCoMKgwqBjYWxswqDCoMKgIG5hdGl2
+ZV93cml0ZV9tc3INCj4+Pg0KPj4+IMKgwqAgYW5kIG5hdGl2ZV93cml0ZV9tc3IoKSBkb2Vz
+IGF0IG1pbmltdW06DQo+Pj4NCj4+PiDCoMKgwqDCoG1vdsKgwqDCoCAlZWRpLCVlY3gNCj4+
+PiDCoMKgwqDCoG1vdsKgwqDCoCAlZXNpLCVlYXgNCj4+PiDCoMKgwqDCoHdybXNyDQo+Pj4g
+wqDCoMKgwqByZXQNCj4+Pg0KPj4+IMKgwqAgSW4gdGhlIHdvcnN0IGNhc2UgJ3JldCcgaXMg
+Z29pbmcgdGhyb3VnaCB0aGUgcmV0dXJuIHRodW5rLiBOb3QgdG8NCj4+PiDCoMKgIHRhbGsg
+YWJvdXQgZnVuY3Rpb24gcHJvbG9ndWVzIGFuZCB3aGF0ZXZlci4NCj4+Pg0KPj4+IMKgwqAg
+VGhpcyBiZWNvbWVzIGV2ZW4gbW9yZSBzaWxseSBmb3IgdHJpdmlhbCBpbnN0cnVjdGlvbnMg
+bGlrZSBTVEkvQ0xJDQo+Pj4gwqDCoCBvciBpbiB0aGUgd29yc3QgY2FzZSBwYXJhdmlydF9u
+b3AoKS4NCj4+DQo+PiBUaGlzIGlzIG5vbnNlbnNlLg0KPj4NCj4+IEluIHRoZSBub24tWGVu
+IGNhc2UgdGhlIGluaXRpYWwgaW5kaXJlY3QgY2FsbCBpcyBkaXJlY3RseSByZXBsYWNlZCB3
+aXRoDQo+PiBTVEkvQ0xJIHZpYSBhbHRlcm5hdGl2ZSBwYXRjaGluZywgd2hpbGUgZm9yIFhl
+biBpdCBpcyByZXBsYWNlZCBieSBhIGRpcmVjdA0KPj4gY2FsbC4NCj4+DQo+PiBUaGUgcGFy
+YXZpcnRfbm9wKCkgY2FzZSBpcyBoYW5kbGVkIGluIGFsdF9yZXBsYWNlX2NhbGwoKSBieSBy
+ZXBsYWNpbmcgdGhlDQo+PiBpbmRpcmVjdCBjYWxsIHdpdGggYSBub3AgaW4gY2FzZSB0aGUg
+dGFyZ2V0IG9mIHRoZSBjYWxsIHdhcyBwYXJhdmlydF9ub3AoKQ0KPj4gKHdoaWNoIGlzIGlu
+IGZhY3Qgbm9fZnVuYygpKS4NCj4+DQo+Pj4NCj4+PiDCoMKgIFRoZSBjYWxsIG1ha2VzIG9u
+bHkgc2Vuc2UsIHdoZW4gdGhlIG5hdGl2ZSBkZWZhdWx0IGlzIGFuIGFjdHVhbA0KPj4+IMKg
+wqAgZnVuY3Rpb24sIGJ1dCBmb3IgdGhlIHRyaXZpYWwgY2FzZXMgaXQncyBhIGJsYXRhbnQg
+ZW5naW5lZXJpbmcNCj4+PiDCoMKgIHRyYWlud3JlY2suDQo+Pg0KPj4gVGhlIHRyaXZpYWwg
+Y2FzZXMgYXJlIGFsbCBoYW5kbGVkIGFzIHN0YXRlZCBhYm92ZTogYSBkaXJlY3QgcmVwbGFj
+ZW1lbnQNCj4+IGluc3RydWN0aW9uIGlzIHBsYWNlZCBhdCB0aGUgaW5kaXJlY3QgY2FsbCBw
+b3NpdGlvbi4NCj4gDQo+IFRoZSBhYm92ZSBjb21tZW50IHdhcyBnaXZlbiBpbiAyMDIzIElJ
+UkMsIGFuZCB5b3UgaGF2ZSBhZGRyZXNzZWQgaXQuDQo+IA0KPj4NCj4+PiBMYXRlciBhIGNv
+bnNlbnN1cyB3YXMgcmVhY2hlZCB0byB1dGlsaXplIHRoZSBhbHRlcm5hdGl2ZXMgbWVjaGFu
+aXNtIHRvDQo+Pj4gZWxpbWluYXRlIHRoZSBpbmRpcmVjdCBjYWxsIG92ZXJoZWFkIGludHJv
+ZHVjZWQgYnkgdGhlIHB2X29wcyBBUElzOg0KPj4+DQo+Pj4gwqDCoMKgwqAgMSkgV2hlbiBi
+dWlsdCB3aXRoICFDT05GSUdfWEVOX1BWLCBYODZfRkVBVFVSRV9YRU5QViBiZWNvbWVzIGEN
+Cj4+PiDCoMKgwqDCoMKgwqDCoCBkaXNhYmxlZCBmZWF0dXJlLCBwcmV2ZW50aW5nIHRoZSBY
+ZW4gY29kZSBmcm9tIGJlaW5nIGJ1aWx0DQo+Pj4gwqDCoMKgwqDCoMKgwqAgYW5kIGVuc3Vy
+aW5nIHRoZSBuYXRpdmUgY29kZSBpcyBleGVjdXRlZCB1bmNvbmRpdGlvbmFsbHkuDQo+Pg0K
+Pj4gVGhpcyBpcyB0aGUgY2FzZSB0b2RheSBhbHJlYWR5LiBUaGVyZSBpcyBubyBuZWVkIGZv
+ciBhbnkgY2hhbmdlIHRvIGhhdmUNCj4+IHRoaXMgaW4gcGxhY2UuDQo+Pg0KPj4+DQo+Pj4g
+wqDCoMKgwqAgMikgV2hlbiBidWlsdCB3aXRoIENPTkZJR19YRU5fUFY6DQo+Pj4NCj4+PiDC
+oMKgwqDCoMKgwqDCoCAyLjEpIElmIG5vdCBydW5uaW5nIG9uIHRoZSBYZW4gaHlwZXJ2aXNv
+ciAoIVg4Nl9GRUFUVVJFX1hFTlBWKSwNCj4+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+dGhlIGtlcm5lbCBydW50aW1lIGJpbmFyeSBpcyBwYXRjaGVkIHRvIHVuY29uZGl0aW9uYWxs
+eQ0KPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBqdW1wIHRvIHRoZSBuYXRpdmUgTVNS
+IHdyaXRlIGNvZGUuDQo+Pj4NCj4+PiDCoMKgwqDCoMKgwqDCoCAyLjIpIElmIHJ1bm5pbmcg
+b24gdGhlIFhlbiBoeXBlcnZpc29yIChYODZfRkVBVFVSRV9YRU5QViksIHRoZQ0KPj4+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBrZXJuZWwgcnVudGltZSBiaW5hcnkgaXMgcGF0Y2hl
+ZCB0byB1bmNvbmRpdGlvbmFsbHkganVtcA0KPj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCB0byB0aGUgWGVuIE1TUiB3cml0ZSBjb2RlLg0KPj4NCj4+IEkgY2FuJ3Qgc2VlIHdoYXQg
+aXMgZGlmZmVyZW50IGhlcmUgY29tcGFyZWQgdG8gdG9kYXkncyBzdGF0ZS4NCj4+DQo+Pj4N
+Cj4+PiBUaGUgYWx0ZXJuYXRpdmVzIG1lY2hhbmlzbSBpcyBhbHNvIHVzZWQgdG8gY2hvb3Nl
+IHRoZSBuZXcgaW1tZWRpYXRlDQo+Pj4gZm9ybSBNU1Igd3JpdGUgaW5zdHJ1Y3Rpb24gd2hl
+biBpdCdzIGF2YWlsYWJsZS4NCj4+DQo+PiBZZXMsIHRoaXMgbmVlZHMgdG8gYmUgYWRkZWQu
+DQo+Pg0KPj4+IENvbnNlcXVlbnRseSwgcmVtb3ZlIHRoZSBwdl9vcHMgTVNSIHdyaXRlIEFQ
+SXMgYW5kIHRoZSBYZW4gY2FsbGJhY2tzLg0KPj4NCj4+IEkgc3RpbGwgZG9uJ3Qgc2VlIGEg
+bWFqb3IgZGlmZmVyZW5jZSB0byB0b2RheSdzIHNvbHV0aW9uLg0KPiANCj4gVGhlIGV4aXN0
+aW5nIGNvZGUgZ2VuZXJhdGVzOg0KPiANCj4gIMKgwqDCoCAuLi4NCj4gIMKgwqDCoCBiZiBl
+MCAwNiAwMCAwMMKgwqDCoMKgwqDCoMKgwqDCoCBtb3bCoMKgwqAgJDB4NmUwLCVlZGkNCj4g
+IMKgwqDCoCA4OSBkNsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtb3bC
+oMKgwqAgJWVkeCwlZXNpDQo+ICDCoMKgwqAgNDggYzEgZWEgMjDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgc2hywqDCoMKgICQweDIwLCVyZHgNCj4gIMKgwqDCoCBmZiAxNSAwNyA0OCA4
+YyAwMcKgwqDCoMKgwqDCoCBjYWxswqDCoCAqMHgxOGM0ODA3KCVyaXApwqAgIyA8cHZfb3Bz
+KzB4Yjg+DQo+ICDCoMKgwqAgMzEgYzDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgeG9ywqDCoMKgICVlYXgsJWVheA0KPiAgwqDCoMKgIC4uLg0KPiANCj4gQW5kIG9u
+IG5hdGl2ZSwgdGhlIGluZGlyZWN0IGNhbGwgaW5zdHJ1Y3Rpb24gaXMgcGF0Y2hlZCB0byBh
+IGRpcmVjdCBjYWxsDQo+IGFzIHlvdSBtZW50aW9uZWQ6DQo+IA0KPiAgwqDCoMKgIC4uLg0K
+PiAgwqDCoMKgIGJmIGUwIDA2IDAwIDAwwqDCoMKgwqDCoMKgwqDCoMKgIG1vdsKgwqDCoCAk
+MHg2ZTAsJWVkaQ0KPiAgwqDCoMKgIDg5IGQ2wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgIG1vdsKgwqDCoCAlZWR4LCVlc2kNCj4gIMKgwqDCoCA0OCBjMSBlYSAyMMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBzaHLCoMKgwqAgJDB4MjAsJXJkeA0KPiAgwqDCoMKg
+IGU4IDYwIDNlIDAxIDAwwqDCoMKgwqDCoMKgwqDCoMKgIGNhbGzCoMKgIDx7bmF0aXZlLHhl
+bn1fd3JpdGVfbXNyPiAjIGRpcmVjdA0KPiAgwqDCoMKgIDkwwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG5vcA0KPiAgwqDCoMKgIDMxIGMwwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHhvcsKgwqDCoCAlZWF4LCVlYXgNCj4gIMKg
+wqDCoCAuLi4NCj4gDQo+IA0KPiBUaGlzIHBhdGNoIHNldCBnZW5lcmF0ZXMgYXNzZW1ibHkg
+dy9vIENBTEwgb24gbmF0aXZlOg0KPiANCj4gIMKgwqDCoCAuLi4NCj4gIMKgwqDCoCBlOSBl
+NiAyMiBjNiAwMcKgwqDCoMKgwqDCoMKgwqDCoCBqbXDCoMKgwqAgMWbCoMKgICMgb24gbmF0
+aXZlIG9yIG5vcCBvbiBYZW4NCj4gIMKgwqDCoCBiOSBlMCAwNiAwMCAwMMKgwqDCoMKgwqDC
+oMKgwqDCoCBtb3bCoMKgwqAgJDB4NmUwLCVlY3gNCj4gIMKgwqDCoCBlOCA5MSBkNCBmYSBm
+ZsKgwqDCoMKgwqDCoMKgwqDCoCBjYWxswqDCoCBmZmZmZmZmZjgxMzRlZTgwIDxhc21feGVu
+X3dyaXRlX21zcj4NCj4gIMKgwqDCoCBlOSBhNCA5ZiBlYiAwMMKgwqDCoMKgwqDCoMKgwqDC
+oCBqbXDCoMKgwqAgZmZmZmZmZmY4MjI1YjlhMCA8X194ODZfcmV0dXJuX3RodW5rPg0KPiAg
+wqDCoMKgwqDCoMKgwqAgLi4uDQo+IDE6wqAgYjkgZTAgMDYgMDAgMDDCoMKgwqDCoMKgwqDC
+oMKgwqAgbW92wqDCoMKgICQweDZlMCwlZWN4wqDCoCAjIGltbWVkaWF0ZSBmb3JtIGhlcmUN
+Cj4gIMKgwqDCoCA0OCA4OSBjMsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBtb3bC
+oMKgwqAgJXJheCwlcmR4DQo+ICDCoMKgwqAgNDggYzEgZWEgMjDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgc2hywqDCoMKgICQweDIwLCVyZHgNCj4gIMKgwqDCoCAzZSAwZiAzMMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkcyB3cm1zcg0KPiAgwqDCoMKgIC4uLg0KPiAN
+Cj4gSXQncyBub3QgYSBtYWpvciBjaGFuZ2UsIGJ1dCB3aGVuIGl0IGlzIHBhdGNoZWQgdG8g
+dXNlIHRoZSBpbW1lZGlhdGUgZm9ybSBNU1IgDQo+IHdyaXRlIGluc3RydWN0aW9uLCBpdCdz
+IHN0cmFpZ2h0Zm9yd2FyZGx5IHN0cmVhbWxpbmVkLg0KDQpJdCBzaG91bGQgYmUgcmF0aGVy
+IGVhc3kgdG8gc3dpdGNoIHRoZSBjdXJyZW50IHdybXNyL3JkbXNyIHBhcmF2aXJ0IHBhdGNo
+aW5nDQpsb2NhdGlvbnMgdG8gdXNlIHRoZSByZG1zci93cm1zciBpbnN0cnVjdGlvbnMgaW5z
+dGVhZCBvZiBkb2luZyBhIGNhbGwgdG8NCm5hdGl2ZV8qbXNyKCkuDQoNClRoZSBjYXNlIG9m
+IHRoZSBuZXcgaW1tZWRpYXRlIGZvcm0gY291bGQgYmUgaGFuZGxlZCB0aGUgc2FtZSB3YXku
+DQoNCj4gDQo+Pg0KPj4gT25seSB0aGUgInBhcmF2aXJ0IiB0ZXJtIGhhcyBiZWVuIGVsaW1p
+bmF0ZWQuDQo+IA0KPiBZZXMuDQo+IA0KPiBCdXQgYSBQViBndWVzdCBkb2Vzbid0IG9wZXJh
+dGUgYXQgdGhlIGhpZ2hlc3QgcHJpdmlsZWdlIGxldmVsLCB3aGljaA0KPiBtZWFucyBNU1Ig
+aW5zdHJ1Y3Rpb25zIHR5cGljYWxseSByZXN1bHQgaW4gYSAjR1AgZmF1bHQuwqAgSSBhY3R1
+YWxseSB0aGluayB0aGUgDQo+IHB2X29wcyBNU1IgQVBJcyBhcmUgdW5uZWNlc3NhcnkgYmVj
+YXVzZSBvZiB0aGlzIGluaGVyZW50DQo+IGxpbWl0YXRpb24uDQo+IA0KPiBMb29raW5nIGF0
+IHRoZSBYZW4gTVNSIGNvZGUsIGV4Y2VwdCBQTVUgYW5kIGp1c3QgYSBmZXcgTVNScywgaXQg
+ZmFsbHMNCj4gYmFjayB0byBleGVjdXRlcyBuYXRpdmUgTVNSIGluc3RydWN0aW9ucy7CoCBB
+cyBNU1IgaW5zdHJ1Y3Rpb25zIHRyaWdnZXINCj4gI0dQLCBYZW4gdGFrZXMgY29udHJvbCBh
+bmQgaGFuZGxlcyB0aGVtIGluIDIgd2F5czoNCj4gDQo+ICDCoCAxKSBlbXVsYXRlIChvciBp
+Z25vcmUpIGEgTVNSIG9wZXJhdGlvbiBhbmQgc2tpcCB0aGUgZ3Vlc3QgaW5zdHJ1Y3Rpb24u
+DQo+IA0KPiAgwqAgMikgaW5qZWN0IHRoZSAjR1AgYmFjayB0byBndWVzdCBPUyBhbmQgbGV0
+IGl0cyAjR1AgaGFuZGxlciBoYW5kbGUgaXQuDQo+ICDCoMKgwqDCoCBCdXQgTGludXggTVNS
+IGV4Y2VwdGlvbiBoYW5kbGVyIGp1c3QgaWdub3JlcyB0aGUgTVNSIGluc3RydWN0aW9uDQo+
+ICDCoMKgwqDCoCAoTUNFIE1TUiBleGNlcHRpb24gd2lsbCBwYW5pYykuDQo+IA0KPiBTbyB3
+aHkgbm90IGxldCBYZW4gaGFuZGxlIGFsbCB0aGUgZGV0YWlscyB3aGljaCBpdCBhbHJlYWR5
+IHRyaWVzIHRvIGRvPw0KDQpTb21lIE1TUnMgYXJlIG5vdCBoYW5kbGVkIHRoYXQgd2F5LCBi
+dXQgdmlhIGEga2VybmVsIGludGVybmFsIGVtdWxhdGlvbi4NCkFuZCB0aG9zZSBhcmUgaGFu
+ZGxlZCB0aGF0IHdheSBtb3N0bHkgZHVlIHRvIHBlcmZvcm1hbmNlIHJlYXNvbnMuIEFuZCBz
+b21lDQpuZWVkIHNwZWNpYWwgdHJlYXRtZW50Lg0KDQo+IChMaW51eCB3LyBzdWNoIGEgY2hh
+bmdlIG1heSBub3QgYmUgYWJsZSB0byBydW4gb24gb2xkIFhlbiBoeXBlcnZpc29ycy4pDQoN
+ClllcywgYW5kIHRoaXMgaXMgc29tZXRoaW5nIHRvIGF2b2lkLg0KDQpBbmQgcmVtZW1iZXIg
+dGhhdCBMaW51eCBpc24ndCB0aGUgb25seSBQVi1tb2RlIGd1ZXN0IGV4aXN0aW5nLg0KDQo+
+IEJUVywgaWYgcGVyZm9ybWFuY2UgaXMgYSBjb25jZXJuLCB3cml0ZXMgdG8gTVNSX0tFUk5F
+TF9HU19CQVNFIGFuZA0KPiBNU1JfR1NfQkFTRSBhbnl3YXkgYXJlIGhweWVyY2FsbHMgaW50
+byBYZW4uDQoNClllcywgYW5kIHNvbWUgb3RoZXIgTVNSIHdyaXRlcyBhcmUganVzdCBOT1Bz
+IHdpdGggWGVuLVBWLg0KDQoNCkp1ZXJnZW4NCg==
+--------------0DTyIjBeblppipV7B0zRSAr0
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-> > > > > 2) What is the process when a CVE is altered? have I missed any email
-> > > > >    notification?
-> > > > 
-> > > > We do not do email notifications when CVEs are altered.  You have to
-> > > > watch the cve.org json feed for that.  Otherwise the email list would
-> > > > just be too confusing.  Think about every new stable update that happens
-> > > > which causes 10+ different CVEs to be updated showing where they are now
-> > > > resolved.  That does not come across well in an email feed, but the json
-> > > > feed shows it exactly.
-> > > 
-> > > I do understand you do not want to send notifications for that. Would it
-> > > make sense to announce a new upstream commit added to the CVE, though? This
-> > > would make it much easier to see that we might be missing a fix that is
-> > > considered related to a particular CVE.
-> > 
-> > As this has only happened 2 times so far, it's a pretty rare occurance
-> > given us allocating over 6000 CVEs.  And how exactly would that email
-> > look like?
-> 
-> We have identified that CVE-$FOO fix has been incomplete so far and
-> extended list of fixes required for this CVE. Please make sure that
-> those are appplied.
-> 
-> Or something in those lines.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-Again, that would happen every stable release, and every -rc release,
-could you really keep up with such an email flow in a way that wouldn't
-just mirror watching the json feed instead?
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
-> > We are just changing the ranges here, we change ranges of where a kernel
-> > is vulnerable all the time by adding new .vulnerable files to the tree
-> > as people report them, and as fixes are backported to older stable
-> > kernel trees.  That's much more important to you than this type of
-> > change, right?
-> 
-> Nope, being aware of what is actually the CVE fix is the most important
-> information. Which kernels are affected specifcally is something that is
-> downstream specific and stable tree ranges are only of a value to those
-> who are using stable trees. Updates to vulnerable files is helpful
-> during evaluation phase but once the assessment is done it acts mostly
-> as a double check.
+--------------0DTyIjBeblppipV7B0zRSAr0--
 
-.vulnerable files get added all the time, so hopefully you are catching
-those updates :)
+--------------FLAnSz0SzY3c5JmVJHJBKSu5--
 
-thanks,
+--------------398yZoWCv7yp9PXp1RKEeUfd
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-greg k-h
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgJD8AFAwAAAAAACgkQsN6d1ii/Ey8y
+6Qf+J/9aBCAtkvUKlIHFrXLzuNq1p6I3Y1PLOrAvj55laq4pjmVC/ErEafqyCtitWRcEw9XU260I
+55Cv2AWrv2pHnsepuTfAOfENQX7k6B1UT7IxYgtnRFXlL2Ue0amb0bKtdPX26M4N/5E9Z62mbfW6
+l8N/70GzVKp7LwMs7tRNjfXDdUj1KEznRKMJs89Q2BLnLq8m0XwyOW9VhrhODQABXTePrLFPVip1
+5FaEfn5Yk8GCAma/60ZVMUnFaPpC+pcpn/y/hVW4gmTuDzyHsgnM7mCjPuRyokY/WkrrL/CFgbEO
+3bT8iJg5C7gPtZVVpbSkW+NbdzYKF7v0vD78ZSBCwA==
+=p2ZE
+-----END PGP SIGNATURE-----
+
+--------------398yZoWCv7yp9PXp1RKEeUfd--
