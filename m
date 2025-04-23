@@ -1,128 +1,133 @@
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D20269B12;
-	Wed, 23 Apr 2025 11:11:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFED26D4F7
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745406702; cv=none; b=OuzRowpMccle8RAo2iEgkOJQ4BGerHQ6cr0VpzzJYGkcUWEftz12PVJYqs/NwQXfz6KxEIHRjeIvPk5PY+2l2V7xvveQs2ADWvbP6cfRgZL9/kg0JI7y63AenkdrZMgf8m9JK9S+TIIOR9kkl5BgrLdozu2DMSSPx0Y/OFXVrMs=
+	t=1745406716; cv=none; b=N6Ivxi6nnBWV9ts1CVYa7Jx0+R8sjDMObdRa1j5fcHnhEbZKLL4GHdZ3p+1lAp673IhS8YaPkPFOh1yNPw2S0C/9MSxKaisrINGrk/uh9ovHIUTOrHyqhCPZps4jDoLp6nKXKGg6mgPTov5lAHhQBEsM3yYr0HlZai+9pnNK+jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745406702; c=relaxed/simple;
-	bh=dcSj6/dYPAwWyrIQVz0Tr6uehjb1hHrkbiJpXO1OUYY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZbXEeU1MF68YljbkgCm1TFTeGbefRPQr+yr4lbiHwQM/W6QVaWmzyAlD+yMBlZx56gBqkc1nzIeflOFB7zUuweqSqBd7VLEUR1cWbvRWbOKgrNZVv2AHx6g/Gcvv1+zyFU5jNDwNILH7TzmR15nCkCxSof9IfEnvlx3152nfR7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso2373344241.2;
-        Wed, 23 Apr 2025 04:11:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745406699; x=1746011499;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LwFnQLNd2ElqoHSqs6HidAKq6gQZiy66/qPTuUWPN1I=;
-        b=eip+q+gqhVNtp9nzmWKbo0sXM2Qa7bX0YYsGhA2zLdHpTg02XFCU1M31+KBZXgXubv
-         FYmQfXKb95ezdCzG+el/yQu6LQmurNzADWo0jLx/CQWzGeorKgikSdLn5NphzeGIfdFb
-         A1BCqo5fF6nJtBWebkxLcnzzi74lELVp/8ustDL6go0jEKtCIS4dik3B95oCDFIlPDbT
-         Ax6P0gHaxvGEKZE+licJaIF+ZpBFLFJEr7eeBDoYtDAke044P+g9AL18xzNXM3ki9apD
-         tqhr9uByS4PWhsmDxyY0TAUlXdjOFwUXpeQxLtagiVxAiSe+VPZgcIl1lvfiCWSPERZ2
-         ELLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4nTgt4x8BCBH7swNHhL8BGna6exII18r+3MWe6r6lmq2HIld10bAqdPHLp7AvfVLGvKL0TkB0p4BXKnbO@vger.kernel.org, AJvYcCWLqvP686d6ZmbC8FyytLAxlbrKIV+dOBMsgC4zMTwx0+eIfk7VD2KsRp+bmpyK6hOffksRVlGBe0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEY19FB4JWv3ORS24pc8gXmPHM0CYI63gDlrt0lhpRU+IK4n9a
-	P2YxtkDyBW25DByRstSlM6YOEyBarwXSZ0aeXE93I8oRPXoEmfQgnY+mJN1Twhc=
-X-Gm-Gg: ASbGncuq288BHtnJXNEknVQT3yJUvpMevOen7utGdTToFpRaoj2USpxv3ZY02vPIWZI
-	vQUDgR+mT60sBP+L0Wz0FStblMyB7gVMJTAjpc4n6yrHYxdARRp59nIxUp9JQFntcGBb6QUumk/
-	PQ0ACxppH13Um4/X6Qu6ST60N/Hf4qoJ+T0rnavMjyf4qierrSta6RBMbudeabj2bS3okvF4NIU
-	WwSc0pOYxyLxa0yPWMnO8OY9djg56hN5lujQcRyER+j2CLDt7gWOWWQAIGki7vagf7TPwwIVO/k
-	WNyoq2OvPlU+fGFyOhsQTntrFiXBlsP7la1w9bVukdPeZm41PM5Bz77WCoERNuL96jqGhxpcTBD
-	uMCMy+Ws=
-X-Google-Smtp-Source: AGHT+IHFVFJHJ9SDuv/BVOPt7Ka59KPLvJYLCUpZudsYLLMWa5XNzDq+m2rvktzPlTFlfkRBHU28AA==
-X-Received: by 2002:a05:6102:4586:b0:4c4:e414:b4eb with SMTP id ada2fe7eead31-4cb8012ef4dmr11584098137.12.1745406699065;
-        Wed, 23 Apr 2025 04:11:39 -0700 (PDT)
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com. [209.85.221.175])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4cb7da0e87esm2619162137.0.2025.04.23.04.11.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 04:11:38 -0700 (PDT)
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-523de538206so2431093e0c.2;
-        Wed, 23 Apr 2025 04:11:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJslNicjUlB456m5v1XTvvsH1M1xh6C/twnpWjewGk7DZJYRBaaGMJqAlDUnvjqvYODugqPoFAho+5HgQ9@vger.kernel.org, AJvYcCV+FQQJucXoe3Nk+S4mOMcihqSCTU4t0zHpXLrSH0hdIovxI70vYB2wElW1jVs3YMzPwnizBmmSFAA=@vger.kernel.org
-X-Received: by 2002:a05:6122:2a13:b0:520:60c2:3fd with SMTP id
- 71dfb90a1353d-529253df487mr15940732e0c.3.1745406698686; Wed, 23 Apr 2025
- 04:11:38 -0700 (PDT)
+	s=arc-20240116; t=1745406716; c=relaxed/simple;
+	bh=7JF7P2qS4SB6DrZAGOl+9+UQooOUX8XT2naGwe0eouI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JuBqaWB0PQrlrDF5YxPV1GXWbFEeYdri2Vz/cvE2+CMR68fvow4eY+KQhSYjSCq/5kCqunGSvqyqpFTU8anbdUxNi4BOaJgc1u8AWrHj6KsaNa80XlWbFRQuOtGSCsLUlvfgdu5/6QvpTB2gp7invdgXZYmMHZjDJTSTunzmHu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NxTlcq56; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NxTlcq56"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EACEFC4CEE2;
+	Wed, 23 Apr 2025 11:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745406715;
+	bh=7JF7P2qS4SB6DrZAGOl+9+UQooOUX8XT2naGwe0eouI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NxTlcq561futisD+LRi+fsEdtwocQ4KhTRWJWnnBSsh1LHwiTKkmT3KBKo0AX09ia
+	 ooXxJil4w12RGrbJQr4/jfwpAKi48wbPhs8inj8Yzz1YD5/nABsoBSYEMA/Mn6dvrM
+	 DDmfDfo7m9thdECwKNCorxyHVLI8s4/n+N3Sf7a37r28ebV3BE9wS7+Zdkfr/VObnN
+	 qC82fIHCKgQcSXM2oIx/odVp3YUVVQW2gr/WYiQint/oU1+NB7wHVw/6EJukdw1tFl
+	 DeUnWLbqHPsJyzeuR/tR5wnTVeQ9b2lwVEfcb69av6nmM+8/Q7k8CLQyV0W+0N7F/H
+	 MgjHDQMOMOsOg==
+Date: Wed, 23 Apr 2025 14:11:45 +0300
+From: Mike Rapoport <rppt@kernel.org>
+To: David Woodhouse <dwmw2@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Sauerwein, David" <dssauerw@amazon.de>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>, Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+	kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Ruihan Li <lrh2000@pku.edu.cn>
+Subject: Re: [PATCH v3 3/7] mm: Implement for_each_valid_pfn() for
+ CONFIG_SPARSEMEM
+Message-ID: <aAjK8Yq3OJH5hP12@kernel.org>
+References: <20250423081828.608422-1-dwmw2@infradead.org>
+ <20250423081828.608422-4-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <50dbaf4ce962fa7ed0208150ca987e3083da39ec.1745345400.git.geert+renesas@glider.be>
- <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
-In-Reply-To: <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 23 Apr 2025 13:11:27 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
-X-Gm-Features: ATxdqUG3O_R-h3xFZ-VbZPzuOVx8S7u3rM-8ANr4EcMPwyY_6h0-oOYf4tSgGPw
-Message-ID: <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
-Subject: Re: [PATCH] dmaengine: ARM_DMA350 should depend on ARM/ARM64
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, dmaengine@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423081828.608422-4-dwmw2@infradead.org>
 
-Hi Robin,
+On Wed, Apr 23, 2025 at 08:52:45AM +0100, David Woodhouse wrote:
+> From: David Woodhouse <dwmw@amazon.co.uk>
+> 
+> Implement for_each_valid_pfn() based on two helper functions.
+> 
+> The first_valid_pfn() function largely mirrors pfn_valid(), calling into
+> a pfn_section_first_valid() helper which is trivial for the !VMEMMAP case,
+> and in the VMEMMAP case will skip to the next subsection as needed.
+> 
+> Since next_valid_pfn() knows that its argument *is* a valid PFN, it
+> doesn't need to do any checking at all while iterating over the low bits
+> within a (sub)section mask; the whole (sub)section is either present or
+> not.
+> 
+> Note that the VMEMMAP version of pfn_section_first_valid() may return a
+> value *higher* than end_pfn when skipping to the next subsection, and
+> first_valid_pfn() happily returns that higher value. This is fine.
+> 
+> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+> Previous-revision-reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> ---
+>  include/asm-generic/memory_model.h | 26 ++++++++--
+>  include/linux/mmzone.h             | 78 ++++++++++++++++++++++++++++++
+>  2 files changed, 99 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/asm-generic/memory_model.h b/include/asm-generic/memory_model.h
+> index 74d0077cc5fa..044536da3390 100644
+> --- a/include/asm-generic/memory_model.h
+> +++ b/include/asm-generic/memory_model.h
+> @@ -31,12 +31,28 @@ static inline int pfn_valid(unsigned long pfn)
+>  }
+>  #define pfn_valid pfn_valid
+>  
+> +static inline bool first_valid_pfn(unsigned long *pfn)
+> +{
+> +	/* avoid <linux/mm.h> include hell */
+> +	extern unsigned long max_mapnr;
+> +	unsigned long pfn_offset = ARCH_PFN_OFFSET;
+> +
+> +	if (*pfn < pfn_offset) {
+> +		*pfn = pfn_offset;
+> +		return true;
+> +	}
+> +
+> +	if ((*pfn - pfn_offset) < max_mapnr)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
 
-On Wed, 23 Apr 2025 at 12:59, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 2025-04-22 7:11 pm, Geert Uytterhoeven wrote:
-> > The Arm DMA-350 controller is only present on Arm-based SoCs.
->
-> Do you know that for sure? I certainly don't. This is a licensable,
-> self-contained DMA controller IP with no relationship whatsoever to any
-> particular CPU ISA - our other system IP products have turned up in the
-> wild paired with non-Arm CPUs, so I don't see any reason that DMA-350
-> wouldn't either.
+Looks like it's a leftover from one of the previous versions.
 
-The dependency can always be relaxed later, when the need arises.
-Note that currently there are no users at all...
+>  #ifndef for_each_valid_pfn
+> -#define for_each_valid_pfn(pfn, start_pfn, end_pfn)			 \
+> -	for ((pfn) = max_t(unsigned long, (start_pfn), ARCH_PFN_OFFSET); \
+> -	     (pfn) < min_t(unsigned long, (end_pfn),			 \
+> -			   ARCH_PFN_OFFSET + max_mapnr);		 \
+> -	     (pfn)++)
+> +#define for_each_valid_pfn(pfn, start_pfn, end_pfn)			       \
+> +	for (pfn = max_t(unsigned long, start_pfn, ARCH_PFN_OFFSET);	\
+> +	     pfn < min_t(unsigned long, end_pfn, ARCH_PFN_OFFSET + max_mapnr); \
+> +			 pfn++)
 
-Unlike drivers for other AMBA devices, this driver is a plain platform
-driver, not an amba driver, so it does not depend on ARM_AMBA.
+And this one is probably a rebase artifact? 
 
-> Would you propose making all the DesignWare drivers depend on ARC
-> because those happen to come from the same company too? ;)
+With FLATMEM changes dropped
+This-revision-also-reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-No, I am fully aware they may appear anywhere.
-
-> >  Hence add
-> > dependencies on ARM and ARM64, to prevent asking the user about this
-> > driver when configuring a kernel for a non-Arm architecture.
-> >
-> > Fixes: 5d099706449d54b4 ("dmaengine: Add Arm DMA-350 driver")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >   drivers/dma/Kconfig | 1 +
-> >   1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> > index 8109f73baf10fc3b..db87dd2a07f7606e 100644
-> > --- a/drivers/dma/Kconfig
-> > +++ b/drivers/dma/Kconfig
-> > @@ -95,6 +95,7 @@ config APPLE_ADMAC
-> >
-> >   config ARM_DMA350
-> >       tristate "Arm DMA-350 support"
-> > +     depends on ARM || ARM64 || COMPILE_TEST
-> >       select DMA_ENGINE
-> >       select DMA_VIRTUAL_CHANNELS
-> >       help
-
-Gr{oetje,eeting}s,
-
-                        Geert
+>  #endif /* for_each_valid_pfn */
+>  #endif /* valid_pfn */
+>  
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Sincerely yours,
+Mike.
