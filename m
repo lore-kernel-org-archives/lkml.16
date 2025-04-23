@@ -1,248 +1,122 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2079.outbound.protection.outlook.com [40.107.92.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404A722F746
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:30:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745400630; cv=fail; b=W9qJ0oClcWb382IHFsZhzLwRnpuKUFmmkYhYcYX2ey08U5o28UTk8N5IyQlYBXNHRVAvRqG06QlKvmZTKL7vuJSL5o6Xn5vfZrasm9KyJNZs1MhoNjuJMzCF4TY3p8b24w8Y0L09l8wTqEyyrgV44eEdrYL/8awsPu8S4W6elxM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745400630; c=relaxed/simple;
-	bh=sjcn3vyA7kQkpn3SRzlUaoykNUc1wrz1nMNfJ2g/x7I=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IocDn8kveLVZnTgRKKnky35NWkMTXltfW4+ahnAxbjpWWHZgFIaO94NWxWy1nOljZ1VyxyqmrPYPeJeG0wHUGx2pabK5/6hkbVdUtT0z6PuOWsgoKJaC9AAspJ4Ym9Y38yESgnqPm35xr8Vbwr9F6Y2ZGFdByI+f0w1aCMW3v40=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=i9u8r6nD; arc=fail smtp.client-ip=40.107.92.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A89925C81E;
+	Wed, 23 Apr 2025 09:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745400655; cv=none; b=QfGB/2E5wioFFxY7Io5Q/7me6ifSqWoPVVyJw/F91lp2ZRIvbNfFKZILC3UEqD76SLPnHk00dvI8vJRAQB9bHJU70ZQEiNzbKPtD+tepKMZkSQ7Cy7UrBGBCTbjDMtpTXKR3/Nfnfy28PP4XGT1qxYsPZmbg6k/J8kt1QJb3d7o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745400655; c=relaxed/simple;
+	bh=dETYs6PNtbqc+HtknRC8dknf43oYws7PKuhbwZxPIoo=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=gtc0lh1cci+ZRIaHzeDlANvaJvDEe1i5X8foDNu89ksT56jZ8hvr79DUSg06wyrLHTD0mnhQnRY/tPg9yko704lfiPq1XpOZrNk0cFRkpa2VYHc330MbJn6lQl0Ki5Lj607bzBckz3fbqqoifHD7fWV08EiS1e7wgr7sqBQPjmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l8ygT4bg; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="i9u8r6nD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RwU0nmXa0B0KsCM9Hl9J3Qq4IlvzGJq2Otr3c13eL4q4pV/RCTXSpYbO03px1i1SvKBc9tmIr2W2yeeM9oadE3xLU5qPAhMzJqLBaqPmQplEGjOJ8g0LECGCoE8z9K/436LlVFl3pjhcy7Yg+HpadkJTdCVZlf2NvvJUMRw2cwBZoaKU0Cn85viu2Uea8Acp2ILVbqhmleFyCQaar3ZuUeWxHQHY29OzCwzcK63PhPhXx6/gwKq28zKV/5KWaPoHVJJomqSopoznxsXXoQowj9z17wT84D/esuPgcmEyEcEdbL1QZo2lteODx6aBbIH6y0hMBC4zzASYHOLFGVlAbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bjju/C8CEa03yvnHuFmlizC2rucoeg4rYD82OQikc88=;
- b=C3k5CKcBxtpPTtB794cM4QobMUwxA0bMFg8k2/cT0mZi9wAcs3TLsW6bVXYTSDRgLEikCpy46QWPkELsekwCQTdNyQ68OE/SAVb+1iXEzyp/KooiylCgBg6ijGpwnG1kZyvhlCTLQ93knzaIC8CoAPZBp6nioxzbRqPHjk/lXUY5K8qxpnbxj+oMeVMBJV0daQEw7zGuV5hLAe6tQKQeRD7dqdElgXcWUucvo7AQ2UR/cL5piPnvS5/BG9MDVdK4WHHgNewlAM2FWDAn30H+njU7WSJXciRESKqmTe3+Of3QMdMIaVazCRYDR4liXhl6IBXD0YYx6jS088zuzM6Ikw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bjju/C8CEa03yvnHuFmlizC2rucoeg4rYD82OQikc88=;
- b=i9u8r6nDNtGjYFngJ7Corwxi4dB7TIKdPYzmbUyY5y3xzuZUobriUFAU/OWqxnVcM6d9Gglue9E+a+ty1Ks9+2NG40Jw5q0KdZVYW8BcDJ4zIeMqwKF8M2W0HhjXAUSLu8N4QTCDmpLUUBSbF52v/UG+VwxcyvuOHrCxhMdBAJI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6434.namprd12.prod.outlook.com (2603:10b6:208:3ae::10)
- by CY8PR12MB7514.namprd12.prod.outlook.com (2603:10b6:930:92::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.24; Wed, 23 Apr
- 2025 09:30:24 +0000
-Received: from IA1PR12MB6434.namprd12.prod.outlook.com
- ([fe80::dbf7:e40c:4ae9:8134]) by IA1PR12MB6434.namprd12.prod.outlook.com
- ([fe80::dbf7:e40c:4ae9:8134%3]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
- 09:30:24 +0000
-Message-ID: <83cf7fc7-23e0-46f5-916b-5341a0ab9599@amd.com>
-Date: Wed, 23 Apr 2025 15:00:17 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: AMD GPU driver load hitting BUG_ON in sync_global_pgds_l5()
-To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org,
- peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- x86@kernel.org, hpa@zytor.com, nikunj@amd.com,
- Balbir Singh <balbirs@nvidia.com>, kees@kernel.org, alexander.deucher@amd.com
-References: <bae920c0-a0ff-4d85-a37a-6b8518c0ac41@amd.com>
- <19353ca2-11f3-4718-b602-d898ff05ba87@intel.com>
-Content-Language: en-US
-From: Bharata B Rao <bharata@amd.com>
-In-Reply-To: <19353ca2-11f3-4718-b602-d898ff05ba87@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BM1PR01CA0159.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::29) To IA1PR12MB6434.namprd12.prod.outlook.com
- (2603:10b6:208:3ae::10)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l8ygT4bg"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2279915e06eso64075595ad.1;
+        Wed, 23 Apr 2025 02:30:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745400653; x=1746005453; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=muxam2SUiy8I7jXTK3ORRV5V0hJy9KAAZUT8IGI2dzg=;
+        b=l8ygT4bgyOH/Pbkq7haLSXy/uY31VS2VyQ7yW/zjfDn6fiddXG+gO1w0dUDis599jf
+         VZEUyTmCXEmtQU00XmN5OWlGv96dqvlKQbASSoIk0bBeBvw2khDw+pk15UT8VJYqfmID
+         /7Zm5QEaVdgrmtSRBEYLtRHkAiZVZaskbxhI0dBS9csCnASWvUozhfhewp+VJTliAxV4
+         v7IEVeFri0aDOmpst/UyZuizBUaqoMKys9e+L/OV/bF7xmX4iEq6iiOorrzAOkiT6fl8
+         r2aB9DNIhRdB8kNzuKXsyjm5hHcEupkD/esq7sD9AUfHBFG+RCBV3Fg/Fw3BQzv9o3ux
+         16lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745400653; x=1746005453;
+        h=content-transfer-encoding:in-reply-to:from:content-language:subject
+         :references:cc:to:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=muxam2SUiy8I7jXTK3ORRV5V0hJy9KAAZUT8IGI2dzg=;
+        b=XvbZqk0+Oj8KJalRZKkwnVPvRnHzw+nX7pj4X47qCwUKhi5LeoS6Fq6Y6oGQencI0Z
+         V/L1M5Y0wBVv1sR/npjYi0nddgf9bKDgEE8EbwAOsYIkz7OOTwwp2ZdAkvr9hL0C/l88
+         Q5XjdVYjUv31rovg14Nb3q25uLJ4JOxZrDSdlUtTKSuLVo2xjbMmIzH8UcYNBks0A8BA
+         5h7FCDigSrzLZJav+vsxbZ7XAEOZRMjVFxqHM6leQ/hhxawy8UliC1cbuyq//jbGcpEY
+         UUDY1EakhgRdeHw/IHxVwALhLYbA63hu+VbEEtklUVtgjHU/VR7n0uwuCBuvJQjssuKT
+         Lftw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQu2BdOdZiozwvRe4AkPYmtPeTEAKHA9Rb0YhkTu0scnwpRPYPzbQ5FClYaIpj7XQdBeSfjoNYERQ=@vger.kernel.org, AJvYcCWT9JxuNLEd1MxCZHtx0w6GYsKOFFuloKsVBqec6E65ACG/h4biMxJ3K0HJt3XvqL0xj1Uj25ccTQg8XPd/@vger.kernel.org, AJvYcCX5bHMFeR/+lH+SGlUzXP/IA/EFBS6aEXxspGbzGvnU0zUIi3HcZ7/B3TtdeX11sC8Y7FIs5Lwa8Y1JX7Z3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY+RvOMgcnofJlqF+Vix84cIVroMYi8MEvLQ38alRmhYc53uyS
+	gh3LRCiAvQ/9mr9//4x5OpH+iZreZQToI1WKgJ/BvEMN3AU9dNUw
+X-Gm-Gg: ASbGncu6fKngRrWGx6izUqZtMVlck36/8nJ6T2FgNjIyDd05CN6DHCh/tQtLg5WJHLx
+	Qqka0EmlWFlsypzkYdnlZ1NTqSg5UA/bij8I8qm0qvfz8pcKgSz8bNSkiclsTFE3/xsyqC0/qxs
+	lI6196JOoHB7Mi4Y4nNQokP0Wb5dzmIuCwZZ6nvD5RoHXqhXNk5ZFglQ/3URBh3HMDiNgrC07/b
+	XZBDFggFHYlCefl1HdPrKr+ajD6f+GA4COK55/vvvoq28tjaZlPaKVQB/xmYG8emLhR6qdOI8B+
+	3zPtzUsATaWAJpcOqz55+4uvz0SmQyPcmkAbcOTEjhIgiOoD0hK94/aqWHQ+JME52LfTeqrwpgX
+	uy8oZMeXk9fM=
+X-Google-Smtp-Source: AGHT+IG88n4B+Zz7jvsF/amnEc51F/XmSyRSZhLIy5SSMySrK3N+aaQMKVm7LW4VWbvpbZndJX7ocw==
+X-Received: by 2002:a17:903:98c:b0:224:1780:c1ec with SMTP id d9443c01a7336-22c5360dc12mr325231335ad.35.1745400653408;
+        Wed, 23 Apr 2025 02:30:53 -0700 (PDT)
+Received: from [10.0.2.15] (KD106167137155.ppp-bb.dion.ne.jp. [106.167.137.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb64fbsm99667675ad.158.2025.04.23.02.30.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 02:30:52 -0700 (PDT)
+Message-ID: <5cc4d9dd-496e-4512-a683-272b1b84d98b@gmail.com>
+Date: Wed, 23 Apr 2025 18:30:48 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6434:EE_|CY8PR12MB7514:EE_
-X-MS-Office365-Filtering-Correlation-Id: ff40f705-a69d-42ed-e839-08dd82497969
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dWd4ajB1bXhSZGsrT0F1UXdHTW9aOFdzaGFQZlhjTkdITlJ4eW9aeFJSQjBB?=
- =?utf-8?B?M3V0SlE3MDFUd3NVRnI2bVdlSC9lM2k5eWNpNUN1dXhVbDNFZUtZaWV5bys2?=
- =?utf-8?B?QVNrQURXcVg5aktKN1NFOExUQ2pZOXZxWjVYVWE0b3ovbXhTa0pVaEREVHQv?=
- =?utf-8?B?QzZpTkRlS2lxS3E0MkkxU2lKMy8xTU9TdEk3RWNoSXlka24vYXJSbEhaTTgx?=
- =?utf-8?B?cWVSUjBwRzl1THJUaHFZc1lGdkx3WXVJbVlIelZTL0FIYk5wL2JIRXhzSldn?=
- =?utf-8?B?ekd3THNCV1BpS0hkczlBYTJXY29NNmVWb28rMFNiYWNjb0xxZ0wyejMzaHZ5?=
- =?utf-8?B?a3lDSlNTYjkvUEkvYkduQm9idkx1dmZycUtXY2xreHcybXN4SmlmWGtMRUs1?=
- =?utf-8?B?dGg4Zm5MRVpseGI3K05wWTJSMWdGTGdJSkdZNFFXR1VlRnZSWTV1djNuZkNn?=
- =?utf-8?B?NW9Wb05jNGxyYWZhRHBpWHBOOUhEZmF6dG9ldzlEckRBandISFFjcnJaQmFx?=
- =?utf-8?B?K2dHT3RFQkUwbWpQcEE2Z3lxczV4SnU4ZHg0ZnRIdHBvZjVDemIva1pWK1R6?=
- =?utf-8?B?dGF2TkJSOUNEaUtENXVtMUNIV2FrcmRmUUpwMVhUa3BkTEZrUzBIcCtSenRy?=
- =?utf-8?B?MzgwUlpkUU1VRnVoRk1MSml1VXVQL2lHbWtMY09vWHhqREFLN2EvREUrMUt1?=
- =?utf-8?B?NnNPNlhaSi9pZG9UazR1V1d6MUlpRHVaN3RxSkQ4dTcwQ0xtcHFBZ09LSG1S?=
- =?utf-8?B?d0d0SVRXaFRLdWlQaDI4c1h4dEpxMS9BMXRCSE90aGFQM1B2c0k0NHV6NVJN?=
- =?utf-8?B?dEtsTDhmM3Fucm0xZDBsVkQrT3o3NGZreWpxYm5aSzN2OW9IcmhBTlZxTnN6?=
- =?utf-8?B?Wld4M0hZaXBRS0tvMyt1clNQZEVTU2lQUEVxaDhiSVlWbjRicEdxRE43RjlV?=
- =?utf-8?B?RnZxK2tCQjZuYnUxODB4NWlHOGZYSGh6RmNsNVlObUxPVVkxTW0rODlIaXEw?=
- =?utf-8?B?NmV2cDl1WGtXbTc3VlBXQzFDYVVJMkRFRFc1eldSYkJpMzZLYTdEZVpiVDVF?=
- =?utf-8?B?eHNERmswZVdueXZaN1NrbUt5ZDlYbENvVUlxWk1TaXlBTTdqdTdJMkluYlYr?=
- =?utf-8?B?UzFGTGcvVmVEcUNvZjZsRmc0Risva3JuWEZ3a2tXNnMyRXhYMFc2U2FFcTNp?=
- =?utf-8?B?U1BmN0x4Q2l0NVlLZEZjQ3VsbzhiUlhlM2FLYStsWHFoeWMrdzVmNHJQdUI1?=
- =?utf-8?B?d1c2VGw1QkNBZU5waGNRZHJtRVZRYmhzZFI5SW82RWh1TmE3WEExeXFYSVdk?=
- =?utf-8?B?V3FkOWVUMUJnUVVYU09wVkMzVUpIUVN3ZUpMQVFSZ2EvdWkyVmlyaWVnRFhT?=
- =?utf-8?B?NUQ1ekpPNHd5MWwydjJQZ2hTeTZJbFo5dmFSUzBZWWM5TVBCbVQvOWpMWllI?=
- =?utf-8?B?R0ZOenpDUWFPSFFsalo5OWFtV0dab2E5WldaQkVYdVFRVDlPK0JLaGp2ZlEv?=
- =?utf-8?B?Sy9JSnhzOTJySmI5dWNoWjM1cit1UkhiSWNSbUlNLzM1akhCQkF6MW1IaEEx?=
- =?utf-8?B?T0JLQjJmckxBeGNIbEE5ajNkMXFtaE4wbzRheUN4SW9SNkI4VkhEdi9mVzVI?=
- =?utf-8?B?Tm9CNTU0Nzc1U2tpcnlhM01wMzk5QlhYUzhiUlNOYUxva3lWZmkxNnVnQU9r?=
- =?utf-8?B?dmFEMGZDdUsxdWZkOW5uQXIreHhGSEpOVVEyRjlvUHFpZ1VLZFFzcWdiL2g5?=
- =?utf-8?B?R2I4SzhYSjlqZUM4Q2lwZ09EaWJveXp2UlowcENLcStvT3plZ1dFVW5VL0NC?=
- =?utf-8?B?U09wMU9XRXQvSGh4UnRLT2h3R2wyeXo0UWRXK3hjRG5IZjN1RXdJNFZPZS9u?=
- =?utf-8?B?cnJ3MkZZQWpiYmhVUUpmdlF2SDMvSTFrT1dUV0hucmNEaGlVMTNNaUhhWjkv?=
- =?utf-8?Q?+fTQXQuj2Rc=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6434.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bXNNUmxMRktVNG5PUlRST3M4ZTczWlpXa1h3bVpiYlZiL0t5Y2x6anRLL2t6?=
- =?utf-8?B?S0ZLWnUxaFdWMkZrbVlpa1hjNllaa1EzZ0JQdWI2VDdmbmU2aC9HWXQ2R3V0?=
- =?utf-8?B?NCthMmx0YjdqdHN3Vm5Ua0FqQlJoZmRiSXE0R0ZoMVJQamU5VUpqbjJna2Iz?=
- =?utf-8?B?emlrRGlkVHNicC9CejREYnNORTdhaGhjaENUSUNuTmhkdlR2N0kxZG96dkI1?=
- =?utf-8?B?RFg0NWQvWUx6dFBRSzk1L0hObHltMWRFek1WMzhLYmJDTExFWUl4R2VIOVVX?=
- =?utf-8?B?RDBPSFA3a0RqczdScFRvQ3JZQ2M3cTBWelk2QUtERmQvbGpmN1dBVWRzcXgw?=
- =?utf-8?B?MkFsUVU4RGNrKzlKcUNBNXdlWWVPSVBWT1p5Sm9SbHpNd0w3aG1lMHl1QUt3?=
- =?utf-8?B?OVlNM0VncHZsT1Racm5zS01JTFpmODNTUmJvTUVQaHpiYmh2dVo3ckN1OVhL?=
- =?utf-8?B?aTRpY0FFM1pPbStJYmNUc0hyUDZ2dFhXVVBQQ3VRaTZiM01WQ082em9vbUlp?=
- =?utf-8?B?TkpHc2xwUlJmK041emVmUFRjQkVaTEViam5VTzd4c0YvSnUyemJKNGl2eWgz?=
- =?utf-8?B?VTJoVG83RDh6bFYyelVlcDZjMVN6Z1BwZnRHZkZMZVUxZ3JqTTRuTEJjclhN?=
- =?utf-8?B?V05qbVNCVXlVcjJkZVZ2b2F6dm10c1QrWG9qdjlGc0RoRHJLQUJON2RHeE1V?=
- =?utf-8?B?NGR2SGdpMlJGWUxWSCtOYjlNNFpNQStrYnhVRmFrZXBDU1B0Um0yaEJHc0xu?=
- =?utf-8?B?K1YzdlcwL3VaU1RnU3ZjWXh0SjEzb3VkYy85TThwSHZvTGFkQ0pXWDIzTEg1?=
- =?utf-8?B?OWhhSS9OOXhkUGxLNVJGU1lvN2ZRdGFhRCtGcndHbzNWRVAxSmx4cS80d0tu?=
- =?utf-8?B?NTR6Y2ZHTDg2NGpLc3J4M3dlUFR2STg0RjkzWnIwMXBmOWhNUkdZSHdhVGFH?=
- =?utf-8?B?SGtBMEpRZjN3cC9IWW1acW9Yd0FNaFpDWElsTEsyeUk2bTBWc2c5MG9ZQWhp?=
- =?utf-8?B?L3hSbGUzampkd0VldTBDVERaWVZMWUd4S2RLK1dXMWRkeTk2bCtwM0xSNTZh?=
- =?utf-8?B?bjR3dWdXWExURzdNeW1zTDhSa0hoMGcvMkg0VUh0QjBaK0dtbjR1NUJIQ3Ex?=
- =?utf-8?B?VGpRQ1lmcXhLSlFzNUxaZERCYUJ6OTVBaVdiWGZPR0xuRzFGODh3Q1ZvSU5F?=
- =?utf-8?B?OENDVzh3WnNhY1FpRUpwQithcDNrZFVmUzNFNHlFcC93UXBwUTFLUmRLOU1z?=
- =?utf-8?B?QjRISC85Q0pMUEZSRVczajJ3N2FCV1VDVHlDN3h3bmFjdytaMnZNNWordGZ0?=
- =?utf-8?B?YkMzYXpWMXBhem9iakRsNTBxamU4M254aGcrU05uRER0Nmx1azE4bWg0M21q?=
- =?utf-8?B?OW5sKzdCNUZVMHB1ZDVXWFRmWTFLUW1XU0gwOGxzbVdsLytVVXl4QUxFd1hF?=
- =?utf-8?B?bXgwUEhhRVpVWXF2OGk4OVcvRmVqdXE1M2hLWmpRek1NTUE5dU8yNnhOYkZl?=
- =?utf-8?B?dS9EbktEOU53VWJ4ekt6NTBkcnpJYkhDSW9hNDRmTm9JdGgwVHAvUElQRExj?=
- =?utf-8?B?S3FzRloyNUhrd2tEMTB5RlhwODYwby9UaGxVU25oU0hzdmZBWUNkSFJvK2FX?=
- =?utf-8?B?N05UeUs1S2hlRFdWOEZoQ0ZlODdLZUx6dkgzZW5idWZsWlFDMjZWM1NySE51?=
- =?utf-8?B?M1l3dHg3WUIrM1JGTGhMVXk2ckRpbmZiVEVnNk9LNWlVNGVuTXZnd0d3bTlj?=
- =?utf-8?B?bllzRlJjV0FHNzNVdDdpdTV0SDk3RDZzVll5VFZ1VHJWSUJLU2hMYmw5ZXhy?=
- =?utf-8?B?UzVDZTc1bW5Fa05OaU5CTWwxdzNLUkFTRnR3bExxdnMwSWg4alZZaUFlVCtv?=
- =?utf-8?B?bURsQ0IxbVJXUklseVUzczRYcno5YkpyS2FPbjdjd2tpUEp2SW52NVhwVmZF?=
- =?utf-8?B?RlZqZ040blFXQzkrUW9jWUFRUFg4bEt3NG5EU241MVA2dlNzcWxpTDZGZFR0?=
- =?utf-8?B?dW83ZlpuOTZJOU85V0VPQU1BR0JoZmJEUFh6bTVYRVhxeS82bEROTHFmeHBG?=
- =?utf-8?B?SXdBbHJBY0pjMHdaaXorZmg2MDJjZXNONHQyTGxBdktKU3FBVGRyUk1tUERB?=
- =?utf-8?Q?pmHM9/9Lxm84re5Jqnf1BcBen?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff40f705-a69d-42ed-e839-08dd82497969
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6434.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 09:30:24.0592
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iV6PMvIy67WipRWxvslF9ctXit5p3ZYkUxztCAXSg4SAPhfCK8clA2wXjmzzzaC+n0otSZ4JPBnaGFVPyPXYvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7514
+User-Agent: Mozilla Thunderbird
+To: andriy.shevchenko@intel.com
+Cc: airlied@gmail.com, corbet@lwn.net, dmitry.baryshkov@oss.qualcomm.com,
+ dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+ jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+ linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org,
+ linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+ masahiroy@kernel.org, mchehab+huawei@kernel.org, mripard@kernel.org,
+ nathan@kernel.org, nicolas.schier@linux.dev, rodrigo.vivi@intel.com,
+ simona@ffwll.ch, tursulin@ursulin.net, tzimmermann@suse.de
+References: <aAdL7aEcbulV9lsA@smile.fi.intel.com>
+Subject: Re: [PATCH v3 0/2] Don't create Python bytecode when building the
+ kernel
+Content-Language: en-US
+From: Akira Yokosawa <akiyks@gmail.com>
+In-Reply-To: <aAdL7aEcbulV9lsA@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 22-Apr-25 8:43 PM, Dave Hansen wrote:
-> On 4/21/25 23:34, Bharata B Rao wrote:
->> At the outset, it appears that the selection of vmemmap_base doesn't
->> seem to consider if there is going to be enough room of accommodating
->> future hot plugged pages.
+Hi Andy,
+
+On Tue, 22 Apr 2025 10:57:33 +0300, Andy Shevchenko wrote:
+> On Mon, Apr 21, 2025 at 10:35:29AM -0600, Jonathan Corbet wrote:
+>> Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> writes:
+[...]
+
+>> > Would it be possible to properly support O= and create pyc / pycache
+>> > inside the object/output dir?
+>> 
+>> I have to confess, I've been wondering if we should be treating the .pyc
+>> files like we treat .o files or other intermediate products.  Rather
+>> than trying to avoid their creation entirely, perhaps we should just be
+>> sure they end up in the right place and are properly cleaned up...?
+>> 
+>> To answer Dmitry's question, it seems that setting PYTHONPYCACHEPREFIX
+>> should do the trick?
 > 
-> Is this future hotplug area in the memory map at boot?
+> It's not so easy. The Python is written in a way that it thinks it will never
+> runs object files separately from the source. Hence that variable sets only
+> the folder per script as _home_ for the cache. It's completely unusable. They
+> took it wrong. It still can be _painfully_ used, but it will make Makefiles
+> uglier.
 
-The KVM guest isn't using any -m maxmem option if that's what you are 
-hinting at.
+But, PYTHONPYCACHEPREFIX can be set as an environment variable.
 
-BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
-BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
-BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
-BIOS-e820: [mem 0x0000000000100000-0x000000007ffdafff] usable
-BIOS-e820: [mem 0x000000007ffdb000-0x000000007fffffff] reserved
-BIOS-e820: [mem 0x00000000b0000000-0x00000000bfffffff] reserved
-BIOS-e820: [mem 0x00000000fed1c000-0x00000000fed1ffff] reserved
-BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
-BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
-BIOS-e820: [mem 0x0000000100000000-0x000000f4a3ffffff] usable
-BIOS-e820: [mem 0x000000fd00000000-0x000000ffffffffff] reserved
+For example, try:
 
-kaslr_region: base[0] ff4552df80000000 size_tb 1000
-kaslr_region: end[0] fffffffffffff
-kaslr_region: base[1] ff69c69640000000 size_tb 3200
-kaslr_region: base[2] ffd3140680000000 size_tb 40
+    export PYTHONPYCACHEPREFIX="$HOME/.cache/__pycache__"
 
-So vmemmap_base is 0xffd3140680000000
-
-Also the last and max_arch pfns are reported like this:
-last_pfn = 0x7ffdb max_arch_pfn = 0x10000000000
-
-Here is some data for the hotplug that happens for the 8 GPUs.
-
-Driver is passing the following values for pgmap->range.start, 
-pgmap->range.end and pgmap->type in dev_memremap_pages():
-
-amdgpu: kgd2kfd_init_zone_device: start fffc010000000 end fffffffffffff 
-type 1
-amdgpu: kgd2kfd_init_zone_device: start fff8020000000 end fffc00fffffff 
-type 1
-amdgpu: kgd2kfd_init_zone_device: start fff4030000000 end fff801fffffff 
-type 1
-amdgpu: kgd2kfd_init_zone_device: start fff0040000000 end fff402fffffff 
-type 1
-amdgpu: kgd2kfd_init_zone_device: start ffec050000000 end fff003fffffff 
-type 1
-amdgpu: kgd2kfd_init_zone_device: start ffe8060000000 end ffec04fffffff 
-type 1
-amdgpu: kgd2kfd_init_zone_device: start ffe4070000000 end ffe805fffffff 
-type 1
-amdgpu: kgd2kfd_init_zone_device: start ffe0080000000 end ffe406fffffff 
-type 1
-
-The pfn and the number of pages being added in response to the above:
-__add_pages pfn fffc010000 nr_pages 67043328 nid 0
-__add_pages pfn fff8020000 nr_pages 67043328 nid 0
-__add_pages pfn fff4030000 nr_pages 67043328 nid 0
-__add_pages pfn fff0040000 nr_pages 67043328 nid 0
-__add_pages pfn ffec050000 nr_pages 67043328 nid 0
-__add_pages pfn ffe8060000 nr_pages 67043328 nid 0
-__add_pages pfn ffe4070000 nr_pages 67043328 nid 0
-__add_pages pfn ffe0080000 nr_pages 67043328 nid 0
-
-
-For the above vmemmap_base, the (first) addresses seen in
-sync_global_pgds_l5() for the above 8 hotplug cases are like this:
-start ffd3540580400000, end = ffd35405805fffff
-start ffd3540480800000, end = ffd35404809fffff
-start ffd3540380c00000, end = ffd3540380dfffff
-start ffd3540281000000, end = ffd35402811fffff
-start ffd3540181400000, end = ffd35401815fffff
-start ffd3540081800000, end = ffd35400819fffff
-start ffd353ff81c00000, end = ffd353ff81dfffff
-start ffd353fe82000000, end = ffd353fe821fffff
-
-This is for the case that succeeds while I have shown the same data for 
-the case that fails in the first mail thread.
-
-When randomization results in bad vmemmap_base address, the hotplug of 
-1st page for the 1st GPU results in BUG_ON.
+Wouldn't it be good enough for you?
 
 Regards,
-Bharata.
-
+Akira
 
