@@ -1,270 +1,383 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2072.outbound.protection.outlook.com [40.107.100.72])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD6D1F5435;
-	Wed, 23 Apr 2025 14:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.72
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418596; cv=fail; b=CrmjbjJmH1t3dHT0Y7TVxL4v230vvmddVDeJJe/MfDqMgZBSWY9K+yPXThPd6BNHKKAYEy/0eH8quSyVddZdl8/D1NphIYzpUf0WLuTxAPEW3epPsADwW4Zu53yJwfesISLP1P+YsI10MyO6a/iOl7VOsnO9+UP5GVNa/JehQMA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418596; c=relaxed/simple;
-	bh=prjUpcx5kJmaINVDGqsji8exmCGr5Th2qSHqpSjyamU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=D+1kC5oKQSc0adlsgBpdR2PS40Pwow4M9gkf6RIfxrTLGxGYLYKIiKaCi6qC3MBeQhsjZWmvmqY9wGUNqIBz7/MDIi4LJXKfD1mUvggDcL0CaDN0Ld7pivN97B9FtDHa8aTy7XDU78VyBNBi4rkCvcYp598VoXCIsOya18EgXXw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Rn7jg2Rr; arc=fail smtp.client-ip=40.107.100.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1B0175BF;
+	Wed, 23 Apr 2025 14:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745418666; cv=none; b=gCbX6TYl7uefIPu6zo74tg7EsHR055m6Mq1Ht97OzgQkYmGH3mIYiZYSL/KzY9ebWv+K+/yOHHhBrth8OhfIcDxmvPSfPNvLtDxSB3RsMxdFY4lZh8ftVFyOMt6vxcVOd8KLxTcvJwDQIykLnb2t9WUVUlNBQm7Irah1MzQIyCI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745418666; c=relaxed/simple;
+	bh=EMTcoPJ4KKHUhw77UcqSQH2voBPLlL3XUDnHizCg8zM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SNXk2nQIynHOf05zukTGgxN2rXooLh1qQCKMVYkSXqRSGLBGKOK8tRx5LGMJCsuw37bjnnQUkqbEWIlxZ++Rigvu+r3pLpKTXDQiCk5bBeA/9VApkqIEpXtlmAwcL1lLGOjoG36pljB8IO8chEMK7I3Kf2P7agHL9WpbCBXtD2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=cojLxdhd; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Rn7jg2Rr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PIDThVvvEZK++HeALIsFQFlnyEIf+ZHibc4PcxpDsiPyzKFjH76D1bFsHJbWXeqW7XurnPBXVwJ5foUROcVmvHc2dM7nM+JlSlSKAgSR23+1cptbRT6trjL+Edgu7SMCoNKU7PcqZiI+UbrnAB1B1aaBmpdK1TBkOrMc6QlVLycX0+zljaHIJITpw8/hx3YfW119qfgEvj0wBCdkP/+5pjoBPLF3ZF7yzOJdR4s2hcdHusPMjq1EcXvgQ3/MNROuoASsQAUGStO/VqqZN6a/fFDmUjfF4Q3zzsO40C3anl5+TwCB5v99cnLWtuJcUA6rE3Vk3HFxO2/0wbV1XMt0Kw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AYYofm8dCZlEH5b/dSY18LZEwy5AIhGhj+xqREc6Aps=;
- b=qIMSDkAcsxY5MqRFDYQkKd7s/4WZEPNMxTnZHDoabywMjvfVnHTNmu+NOHTXdGtRqPJ3EgnNCQpQe6z4wdItZkCv2lg+WcVW977thNlI/WoQTBScaOpLBBAZWJCH2a4EqzecHYzzPgz2vXnZYjBPHyajKfc+C3v0nV90aTDjEJMcA3Ykw1HBksXagBYoDZYEnay67BXY4buH0GkNnaET/QXPrl4myVIhOZjN8sUNsklGToB1aIt4dIsc/A+uwzUmG7zNkTtYD43XXRXSvtikYu7ZTebN2VTWfES/4vXdaxRazX7lZTNaUReAGcjKfjDONAFSibqrrrF9Cw8rJDXL6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AYYofm8dCZlEH5b/dSY18LZEwy5AIhGhj+xqREc6Aps=;
- b=Rn7jg2RrA11O0Qa3GKPoTMch0pEV8brfQvnYze0qKFMytj1/iRxsnCMrMr/c5aTezwMk45DNaJ/SNDme3X6BSZPUkEZCKY+tVHODrTfV0ANZIpT5k7zLTI9Q5HStmbdQajUts7aOUnKVAIg0+OOec+oHnxRJha38ZkUR1+aGjIk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
- by MN2PR12MB4205.namprd12.prod.outlook.com (2603:10b6:208:198::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
- 2025 14:29:51 +0000
-Received: from PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
- ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8678.021; Wed, 23 Apr 2025
- 14:29:50 +0000
-Message-ID: <9e4700f6-df58-4685-b4fe-6b53fc1c5222@amd.com>
-Date: Wed, 23 Apr 2025 16:29:46 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/amdgpu: check a user-provided number of BOs in
- list
-To: "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: Denis Arefev <arefev@swemel.ru>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
- Chunming Zhou <david1.zhou@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20250418083129.9739-1-arefev@swemel.ru>
- <PH7PR12MB56852EECD78C11BD15157AF383BB2@PH7PR12MB5685.namprd12.prod.outlook.com>
- <CADnq5_NLEUZget2naQm9bYH1EsrvbhJCGd7yPN+=9Z_kKmUOCw@mail.gmail.com>
- <BL1PR12MB5144467CB7C017E030A4C3E3F7BB2@BL1PR12MB5144.namprd12.prod.outlook.com>
-Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-In-Reply-To: <BL1PR12MB5144467CB7C017E030A4C3E3F7BB2@BL1PR12MB5144.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR2P281CA0014.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::24) To PH7PR12MB5685.namprd12.prod.outlook.com
- (2603:10b6:510:13c::22)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cojLxdhd"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53NEUhR82211100
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 09:30:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745418643;
+	bh=kzvI+64xp0+YpNCHVAKkt1Zg5G/MQq9Y8KtAURYCRQc=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=cojLxdhdniu8xIUpZYOYDEhywZtPOUGBUTAJwK3NlMnNU92vpFt24WNS2IRnQ87U1
+	 ljPP0pRExkYMFLtHcURMjionfSg8jMgBc7NIzDzvCKbNYzk+ftqtZPiJqkxj/TqoYO
+	 x6k/Wr4OOxvlPOToqQDF9tGe182Vfkwj9ZHeVbi8=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53NEUhSs031792
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 23 Apr 2025 09:30:43 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 23
+ Apr 2025 09:30:42 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 23 Apr 2025 09:30:42 -0500
+Received: from [10.249.42.149] ([10.249.42.149])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53NEUffe124428;
+	Wed, 23 Apr 2025 09:30:42 -0500
+Message-ID: <a96e184b-f245-4de2-b84a-a4b4380db2ce@ti.com>
+Date: Wed, 23 Apr 2025 09:30:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|MN2PR12MB4205:EE_
-X-MS-Office365-Filtering-Correlation-Id: f0f662bd-36ec-42ea-113c-08dd82734e7d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a1F3aVZPNmhVZG9xa0FEdzJaSGNIOVZWY29XbzRuck9qMUtIWTRRbXU3cDBW?=
- =?utf-8?B?VWpzL1p5VkMzc2VzM2VyL2xnWjNoaHlXa2xnTUlSaHkxaE5YL2ZRVC9xUE94?=
- =?utf-8?B?a2JISVVCODZxcWFxd1Jwc09vQ01sVXkxaUJ2WXhLMlVpbGJOZ2gxb2xDejZB?=
- =?utf-8?B?aDZXMlpXS2hBdkRwUlJmWWJUVDA0OU1nSjF2dExiTGI3bVhNUjhxZzEyS1Bo?=
- =?utf-8?B?UzNLQjdhNkJDSXd3aEp5MFF4UUhnZkVZQ25kVk9SemFQM0RmdVFGQ2J3ZnBx?=
- =?utf-8?B?aTcxall6RC82RFk2M2VqZzlmeG9sQTZPNHprZTR6ZTlHb0JPUmVQSklmVS95?=
- =?utf-8?B?QkZtNTNueDFaSlh6d3JkNXl3b3RYb0FhRjg2RGtUQlVrMmZCNUV4TzFGdHNh?=
- =?utf-8?B?NHU0dENzY3hKUmZlY0J2NkJXYStOclBEUjA2Tk5SYnhIOG5RWW41cVZBdnNo?=
- =?utf-8?B?NTZGNlNEcENkWjBRRmNkYlJjNFZkZmp3bXRjL2JOUlpRN2ZKTmtCL3BNL0Vr?=
- =?utf-8?B?UzVvOVV6MmJlN1lpYkFnL3NWVkNRcTFuaEZrWlpRRGxoUWFvSFFKS1FENFVa?=
- =?utf-8?B?eWYwWWZBcmxFeG9hc1krd0pjMUtCRjJVYmZaMzZDKzBReW1BRjYzcnZ6WXZk?=
- =?utf-8?B?czc2c1FONHpmUHYwaFB2WWZGVWEydFlBa092a0E5QVMxVDRtZ0VDNVR0TmVB?=
- =?utf-8?B?UXNmVlcwQWNpUTdjb0l3SzVuc3FPd2Qra1hBd1I5MFZXWm5xN0lCbjJJUGx2?=
- =?utf-8?B?TUFwcjlNQUFMcUpvN1cvWHh1djBickhkc3ZyZ3ppNFYrQyswZU5NMXExUHkx?=
- =?utf-8?B?SU1wMEtNSlpscEViNVl6cDlqN1Y1WERIU0RzY09yOVd0SytOT3pBaDlydWgv?=
- =?utf-8?B?M1MrT0pDSUtIcmh0dHNrYVhxYjc1RS9PNDdwQk9qbnUyakNwVHJhYjNoR3BL?=
- =?utf-8?B?c2NtMW9QVSt5bThKMlBqT05JM0I5SnNSZE4vbDUyTjRKL2wxS014cTE0bFhB?=
- =?utf-8?B?TGF0WHhydTlNRDViKzVOcVAxa016RjI5UC9uNVhXeG5YLzM5K2pCRWRHUERn?=
- =?utf-8?B?N0ZFcFZxbVlPQ1RTdlBhOGh6Q3o2Y3V0eDJRR1NSZmlOWTUzU2hzK3VuL3Ay?=
- =?utf-8?B?dDczT2UyZmdQbm9XWGJsR2dkcE44SHlKL2w5d1JoWllRTEJXeFFHVUFwMW9M?=
- =?utf-8?B?NnJkRFhxRjZtOURNaUFWQ0EvZlFtV1dZdEhya0lEcER2NnpWcm1RdHBBQlBn?=
- =?utf-8?B?YnB4Qi9Ya1hJOXdpNEZrcm1UUUxrTDhHOU52OXhkdEd0ZzFCNG9qN3E4RHd3?=
- =?utf-8?B?RktzbFk1K2w0UjlzaDZ5RkNYT3ZTS1FTa2RSRnYvYWxFU1FJeGd0dXVWTks4?=
- =?utf-8?B?U0d2UWFkczVleVVEV1RON2xHNjNFMmRvN09kNG1jamVsK3graGF5eHR4OXV1?=
- =?utf-8?B?bTB2Z0xIcmVseEVhVDNSY0NDZkpGMEFzTDIzL0RYT1dBWDlLeSt3OTNsWVRV?=
- =?utf-8?B?aXR0WWZHeVRtODJEUGFhN3NZSWNMUThWYVVmOE1Hd0g2MGxmaTgyTXZGWTBu?=
- =?utf-8?B?a1plbTlYZ3VXdmx0M2xFeGM2Q0t6VHYwMThDTWVObnorS3k5Z0sycGNMTjVC?=
- =?utf-8?B?clh6WC8zdlNNN2ZOb1c4TmQ2TDFCSlpHVWRZVkVKV2FXN2t0eHhLeUZLWGQr?=
- =?utf-8?B?ODd4dlUzM0hCZklQajIybWtWQi9xdFJiK2NSbHQrSktuWGg5UWU5SkU1TFQx?=
- =?utf-8?B?aWk3TFA1VGw4eTVCSnpyZTdwMlQrWDN0a2l0SWhFT1JtQmJkdGlTZHNsM3B1?=
- =?utf-8?B?eUVnNEk0eklpdE1ONXYvaHJGN0xocjFWMllXekZkY3pzQXZqdzhYeVBQWVJG?=
- =?utf-8?B?djN3eUtyNHR1dUQ4SUVjdHBlWVRDY2NuYmo2c3dJWEMrZjhiWlZUOWFXaDhD?=
- =?utf-8?Q?jbqP3RkuYPA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Z2l1TWJraXBvRS9hZStMd0RCMXFTREZYSUZWMHF5TndFNWdCc3Vqamg3MDVm?=
- =?utf-8?B?S0pxckRUSmRnNXhsb0hCYWhNdm9GMVlhcjIwcWZsNTNiS1VlcS96M3plRW1O?=
- =?utf-8?B?cHZvL1BsVnVpU1Rib1RVSnE1R0duY3NkWmNtREdJaFpadldxdnJsNE5EQndl?=
- =?utf-8?B?QWlRM1Y4U21HTzdxbVFuZ0NrdlcrUDRaK2Rsd3RzU205NzVia1hvdlNRbi85?=
- =?utf-8?B?QkZiWHNpUVhPZ1doaGZYTXpSdnpmOVRVRGJMK3BKK0dzQ1k3M2RFS0U1cnFJ?=
- =?utf-8?B?YnVQK0NOYXV5MVFmNWJVK2k1bis1RmNONDcvYWxqNXQxZWxLM0RCU3F6T1M2?=
- =?utf-8?B?NDZ2QjRpMUlydWprQk5wOXhrclVRM2ZaR3pUZDBOemRNZnFqZnF3U241Qkw2?=
- =?utf-8?B?dytsdUZKMG5wOXZyZHBZME5meFV3NDNkQjF6OVVhVFByalVwd1JEeHBaUFVz?=
- =?utf-8?B?SDl6dU05K1JxY1RmQUVwd29CSld1RzRhQzloMklwVnY5MU9Sa0Z4VmZ6dnVL?=
- =?utf-8?B?NlE1eVcrcGVaT0Q2ZlA1cjhCSmNZQTQ5QmY2UFNCL2xkTkNrcktvb1B1TGhn?=
- =?utf-8?B?S0tKbU1WMGtZd1M2Um9ZdGRNK3M2WTBUbk1sQnpxcktHNVV2TDdjMzREekVw?=
- =?utf-8?B?ZW8rVjU0RGNPelVsQzFzaVc3bTJLbGhuaWdGSmNQeStKNmNIQWJnaTJtcEhO?=
- =?utf-8?B?azdaeUdVcC9vUVpQYmQ0TXZqTmxZdE1FQUcvSkJLU2tsallhazVtOHVtUlov?=
- =?utf-8?B?d1JFSlFqbEMycjVPOCtmdjVNZURNU3BuT2dSamNzNmErbzBTOXZOYjJqbEYv?=
- =?utf-8?B?aVEzL2cxeFg1V01lZ05VMHh3d0ZTd2owbjdwN3dwZFMrS2VXdXZaMkU3VFBi?=
- =?utf-8?B?bVI0R2NzdUVVOXY0bnNQZUNVd3JlYkpoNFUxSW9VMm5QRVhCai9tV0FxZkRh?=
- =?utf-8?B?MGgvZXQwdStoams1WTJYQ01FTmVXR25CaTZrSVlSZmVJMVNqMXVlNzdjNkNW?=
- =?utf-8?B?Q2JYU3I0ZGtOVG92TC9vUThBSWNTK3BJbHlIOWJua1lFRGRoNVEvYnFOTlNH?=
- =?utf-8?B?RnRZVFJQZ0RJTlFGck9yQk91M2lkaHAvd0c3TkhnYmxPQkFZbXFsMER5M1d3?=
- =?utf-8?B?TkZYWGhjNXFiamxJTDhFOWNYVlp5SGUvV01tYm8rWnRlbmQ0NEJUT09JeHFn?=
- =?utf-8?B?QkMyRVJEQVl1TngvRnAzSHRlYzdjR3BNNzVyZXpEL3A4ODJGQUNpb1BCS1Vr?=
- =?utf-8?B?SkFtUHY2MkY3VTRVS1hkS2FYaXVnc09adkVsT2NwelgveGY0UnM3Qld0YzYr?=
- =?utf-8?B?VHVtajFZbjNBQ0VLVGRBa0RoNTlBU2o2MmxMaVpueDhlS295Y0x6TzBmMzZ1?=
- =?utf-8?B?VmlqQXpaMUxtMit1TGNmSjF3cWZaSDYrbTlYbUs2NkdRM2FNUzhHZlJ1dmdM?=
- =?utf-8?B?T1ZMa0s3dDVPYzdOaVA5ZjNFTnd1aXJIeW85aVgyMWY5ek92dzZDU25rS0hG?=
- =?utf-8?B?SmN6eXNNNGgxeFp0ZlFDYXpRRUF1anR4MWlvcmN0ajFBSHRxMDZVY04zR2hw?=
- =?utf-8?B?UEl1UXg4OXo5SWFLbDJtNng3TWN5K0NaUG92MW5uTXpXTEhWL082QnlGa2VK?=
- =?utf-8?B?bHd0WFlVS25UeFJLMTdXWGtzRlMvTEZvMUFyZm5GTjV6VDRhWHVPUElsZXQy?=
- =?utf-8?B?dTlTV1pVU2VSZkxLSmNZTXEwZ1lNaCtadHlOcXFRNjJqWHhpMFFxTEtJcmUw?=
- =?utf-8?B?RGdIb2xRWExQdVF4Sk81MHo0VUErbUFtUlhvaUtONVlqcjArcDIxaCtMc3VV?=
- =?utf-8?B?QXNDMTE0YjdOSXpSZmdkelY0WTkwYTAwbnI2c2ZWOHpuVzRXT0xhRVhIV2pS?=
- =?utf-8?B?elppRjU3MS9nMVNqeHV1SWxlWVNTV2tCb0ZNenJ6WE8yOHJPOUV1d2hKWERC?=
- =?utf-8?B?bWRJNkVqSURtUmxUeEtaNkUvNTMvVzMwVVNzdWlkQ244bmo4K2lsVTB6aWRS?=
- =?utf-8?B?RTRwV09VU2p5Sjc4VFF3K0szTjdSbG9TY2F6UnVSSER2aVN1Y1hmaWJZSFNy?=
- =?utf-8?B?UUc0RmhKOGs4c1dXZXRxb3B5VkdULzNFeGNoWDcxUXhWeVNFbDdlQ1R2S0cy?=
- =?utf-8?Q?pzUkAZjL9p3roc8UbOqgM0YB7?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0f662bd-36ec-42ea-113c-08dd82734e7d
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 14:29:50.7933
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sikwRIhxFpzGDoUExU92gRMZKZp1oXoVbQruNZj0Z7OcdRZjyXn8L/qfOocEg0U2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4205
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: syscon: Add ti,am62-ddr-pmctrl
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Markus
+ Schneider-Pargmann <msp@baylibre.com>
+CC: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Siddharth
+ Vadapalli <s-vadapalli@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>
+References: <20250122-topic-am62-dt-syscon-v6-13-v1-0-515d56edc35e@baylibre.com>
+ <20250122-topic-am62-dt-syscon-v6-13-v1-2-515d56edc35e@baylibre.com>
+ <20250124-heavy-jaybird-of-vitality-4cbe24@krzk-bin>
+ <20250124-able-beagle-of-prowess-f5eb7a@krzk-bin>
+ <mocfnpebc67xegcis6tx3ekhsjcsqnvhwtipufycrtq2be4nbh@pmxhir5gmkos>
+ <639b4e3a-3f68-4fba-aa33-c46dcb6fc88f@linaro.org>
+ <d6252b73-0bcc-4724-8144-d6a98c8980f8@ti.com>
+ <74ee6d9b-fd78-4d8a-a94f-b2c4dc794b60@linaro.org>
+ <ebsbaaxyatrcikoem75t2blkhhceuidq3wnj3r2hbezfcmtc3u@ptffexrigbff>
+ <f9a2247e-e0eb-4e22-8626-80e87afa9386@linaro.org>
+ <qjwlppsq4eorzepvjsgjjyyaddouo5w2rjguu5c2mqesd6luwp@f426xeghy2ht>
+ <2130b439-74d0-475d-8429-1a1b4d9738aa@linaro.org>
+ <b7f6570f-3b80-4fc1-8201-d44f5692867f@ti.com>
+ <07bf9f93-deb8-48a1-aae9-a8a053680cc9@linaro.org>
+ <6241ff00-27e6-45ab-808e-f04e39854753@ti.com>
+ <ac0ae8cd-451b-49dd-840e-5fc0cce1605d@linaro.org>
+Content-Language: en-US
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <ac0ae8cd-451b-49dd-840e-5fc0cce1605d@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 4/22/25 18:26, Deucher, Alexander wrote:
-> [Public]
-> 
->> -----Original Message-----
->> From: Alex Deucher <alexdeucher@gmail.com>
->> Sent: Tuesday, April 22, 2025 9:46 AM
->> To: Koenig, Christian <Christian.Koenig@amd.com>
->> Cc: Denis Arefev <arefev@swemel.ru>; Deucher, Alexander
->> <Alexander.Deucher@amd.com>; David Airlie <airlied@gmail.com>; Simona Vetter
->> <simona@ffwll.ch>; Andrey Grodzovsky <andrey.grodzovsky@amd.com>;
->> Chunming Zhou <david1.zhou@amd.com>; amd-gfx@lists.freedesktop.org; dri-
->> devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; lvc-
->> project@linuxtesting.org; stable@vger.kernel.org
->> Subject: Re: [PATCH v2] drm/amdgpu: check a user-provided number of BOs in list
+On 4/23/25 7:07 AM, Krzysztof Kozlowski wrote:
+> On 21/04/2025 19:03, Andrew Davis wrote:
+>> On 4/15/25 12:17 AM, Krzysztof Kozlowski wrote:
+>>> On 09/04/2025 19:39, Andrew Davis wrote:
+>>>> On 2/12/25 1:35 PM, Krzysztof Kozlowski wrote:
+>>>>> On 10/02/2025 11:35, Markus Schneider-Pargmann wrote:
+>>>>>> On Sun, Feb 09, 2025 at 01:21:27PM +0100, Krzysztof Kozlowski wrote:
+>>>>>>> On 07/02/2025 15:40, Markus Schneider-Pargmann wrote:
+>>>>>>>> Hi Krzysztof,
+>>>>>>>>
+>>>>>>>> On Mon, Jan 27, 2025 at 01:09:49PM +0100, Krzysztof Kozlowski wrote:
+>>>>>>>>> On 24/01/2025 23:35, Andrew Davis wrote:
+>>>>>>>>>> On 1/24/25 10:48 AM, Krzysztof Kozlowski wrote:
+>>>>>>>>>>> On 24/01/2025 17:05, Markus Schneider-Pargmann wrote:
+>>>>>>>>>>>> Hi Krzysztof,
+>>>>>>>>>>>>
+>>>>>>>>>>>> On Fri, Jan 24, 2025 at 09:22:54AM +0100, Krzysztof Kozlowski wrote:
+>>>>>>>>>>>>> On Fri, Jan 24, 2025 at 09:19:49AM +0100, Krzysztof Kozlowski wrote:
+>>>>>>>>>>>>>> On Wed, Jan 22, 2025 at 11:24:33AM +0100, Markus Schneider-Pargmann wrote:
+>>>>>>>>>>>>>>> Add compatible for ti,am62-ddr-pmctrl to the list. There is a DDR pmctrl
+>>>>>>>>>>>>>>> register in the wkup-conf register space of am62a and am62p. This
+>>>>>>>>>>>>>>> register controls DDR power management.
+>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+>>>>>>>>>>>>>>> ---
+>>>>>>>>>>>>>>>      Documentation/devicetree/bindings/mfd/syscon.yaml | 2 ++
+>>>>>>>>>>>>>>>      1 file changed, 2 insertions(+)
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Un-acked, I missed the point that you really speak in commit msg about
+>>>>>>>>>>>>> register and you really treat one register is a device. I assumed you
+>>>>>>>>>>>>> only need that register from this device, but no. That obviously is not
+>>>>>>>>>>>>> what this device is. Device is not a single register among 10000 others.
+>>>>>>>>>>>>> IOW, You do not have 10000 devices there.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Do I understand you correctly that the whole register range of the
+>>>>>>>>>>>> wkup_conf node as seen in arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
+>>>>>>>>>>>> should be considered a single syscon device?
+>>>>>>>>>>>
+>>>>>>>>>>> I don't have the datasheets (and not my task to actually check this),
+>>>>>>>>>>> but you should probably follow datasheet. I assume it describes what is
+>>>>>>>>>>> the device, more or less.
+>>>>>>>>>>>
+>>>>>>>>>>> I assume entire wkup_conf is considered a device.
+>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Unfortunately wkup_conf is modeled as a simple-bus with currently 5
+>>>>>>>>>>>> subnodes defined of which 4 of them consist of a single register. Most
+>>>>>>>>>>>> of them are syscon as well. So I think I can't change the simple-bus
+>>>>>>>>>>>> back to syscon.
+>>>>>>>>>>>
+>>>>>>>>>>> Huh... Maybe TI folks will help us understand why such design was chosen.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> Many of the devices inside the wkup_conf are already modeled as such.
+>>>>>>>>>> Clocks and muxes for instance already have drivers and bindings, this
+>>>>>>>>>> is nothing new to TI.
+>>>>>>>>>>
+>>>>>>>>>> If we just use a blank "syscon" over the entire region we would end up
+>>>>>>>>>> with drivers that use phandles to the top level wkup_conf node and
+>>>>>>>>>> poke directly the registers they need from that space.
+>>>>>>>>>>
+>>>>>>>>>> Would you rather have
+>>>>>>>>>>
+>>>>>>>>>> some-device {
+>>>>>>>>>> 	ti,epwm_tbclk = <&wkup_conf>;
+>>>>>>>>>> }
+>>>>>>>>>>
+>>>>>>>>>> or
+>>>>>>>>>>
+>>>>>>>>>> some-device {
+>>>>>>>>>> 	clocks = <&epwm_tbclk 0>;
+>>>>>>>>>> }
+>>>>>>>>>
+>>>>>>>>> How is this comparable? These are clocks. You would have clocks property
+>>>>>>>>> in both cases.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> with that epwm_tbclk being a proper clock node inside wkup_conf?
+>>>>>>>>>> I would much prefer the second, even though the clock node
+>>>>>>>>>> only uses a single register. And in the first case, we would need
+>>>>>>>>>> to have the offset into the wkup_conf space hard-coded in the
+>>>>>>>>>> driver for each new SoC. Eventually all that data would need to be
+>>>>>>>>>> put in tables and we end up back to machine board files..
+>>>>>>>>>>
+>>>>>>>>>> I'm not saying every magic number in all drivers should
+>>>>>>>>>> be offloaded into DT, but there is a line somewhere between
+>>>>>>>>>> that and having the DT simply contain the SoC's name compatible
+>>>>>>>>>
+>>>>>>>>> That's not the question here.
+>>>>>>>>>
+>>>>>>>>>> and all other data going into the kernel. That line might be a
+>>>>>>>>>> personal preference, so my question back is: what is wrong
+>>>>>>>>>> if we do want "1000 new syscons per each register" for our
+>>>>>>>>>> SoCs DT?
+>>>>>>>>>
+>>>>>>>>> Because it is false representation of hardware. You do not have 1000
+>>>>>>>>> devices. You have only one device.
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> (and the number is not 1000, scanning the kernel I can see
+>>>>>>>>>> the largest wkup_conf region node we have today has a grand
+>>>>>>>>>> total number sub-nodes of 6)
+>>>>>>>>>
+>>>>>>>>> But what is being added here is device per each register, not per feature.
+>>>>>>>>
+>>>>>>>> The register layout is like this:
+>>>>>>>
+>>>>>>> The register layout of what? How is the device called? Is datasheet
+>>>>>>> available anywhere?
+>>>>>>
+>>>>>> Yes, it is available here: https://www.ti.com/de/lit/pdf/spruj16
+>>>>>>
+>>>>>> 14 Registers
+>>>>>> 14.2 Device Configuration Registers
+>>>>>> 14.2.1 CTRL_MMR Registers
+>>>>>> 14.2.1.1 General Purpose Control Registers
+>>>>>> 14.2.1.1.3 WKUP_CTRL_MMR0 Registers
+>>>>>>
+>>>>>> Each domain has their own set of general purpose control registers,
+>>>>>> CTRL_MMR for the main domain, MCU_CTRL_MMR0 for the MCU domain,
+>>>>>> WKUP_CTRL_MMR0 for the wakeup domain.
+>>>>>
+>>>>>
+>>>>> So according to the doc you have only one device - CTRL_MMR. All other
+>>>>> splits are superficial.
+>>>>>
+>>>>
+>>>> It is not one device, it is a collection of devices under one labeled
+>>>> bus range. Some items here are full normal devices, already modeled by DT
+>>>> as stand-alone devices, for instance our chipid, efuse, clock controller,
+>>>> etc. even our pinmux is part of this bus range.
+>>>>
+>>>> They are grouped as we have one set for each domain (MAIN, WKUP, MCU).
+>>>>
+>>>> All other splits are not superficial, if we go down that path then
+>>>> the whole SoC is one "device". We could simply have the whole address
+>>>> bus be one node and have Linux hard-code offsets in the drivers, we
+>>>> end up back at board files..
+>>>>
+>>>> DT should break things into logically distinct and reusable units
+>>>> so we don't have to store that in the kernel. That is what we do
+>>>> here, even if some units end up being very small.
+>>>>
+>>>>>>
+>>>>>> So I understand this to just be a collection of general purpose control
+>>>>>> registers. If you go by feature, then many of the registers can be
+>>>>>> grouped into units with a specific purpose or controlling a specific
+>>>>>> device which are also grouped by the offsets they represent. I assume
+>>>>>
+>>>>> It could work if you have distinctive groups, but here:
+>>>>> 1. You do not have this grouped, you just judge by yourself "oh, that's
+>>>>> group A, that's B".
+>>>>> 2. Group per one register is not that.
+>>>>>
+>>>>> For me this is one big block and even CLKSEL is spread all over so
+>>>>> cannot be really made distinctive.
+>>>>>
+>>>>>> this is why the other nodes in this wkup_conf node were created. Also in
+>>>>>
+>>>>> The other nodes represent some sort of fake or totally arbitrary
+>>>>> grouping. That's abuse of the syscon.
+>>>>>
+>>>>
+>>>> They are grouped by function.
+>>>
+>>> Not really - other DTS sent just few days ago created each entry per one
+>>> register.
+>>>
+>>>>
+>>>>>> my opinion this makes the relation between the original device and this
+>>>>>> general purpose control registers better understandable.
+>>>>>>
+>>>>>> For this patch the ddr-pmctrl regsiter is just a single register, but it
+>>>>>> has the purpose of controlling the DDR device power management.
+>>>>>
+>>>>> Sure, but that is NOT syscon. One register of entire block is not system
+>>>>> controller. The entire block is system controller.
+>>>>>
+>>>>
+>>>> The whole block cannot be a system controller as there are regular
+>>>> devices inside this range. If we made the whole region a syscon and
+>>>
+>>> That's still system controller. It's nothing special here.
+>>>
+>>>> also left the device nodes inside, then we would have overlapping
+>>>> register owners, one register would be controlled by two or more
+>>>
+>>> No, owner is the parent device always.
 >>
->> Applied.  Thanks!
+>> Which parent device? That is my point, if the top level node for the
+>> whole CTRL_MMR region is made into one big syscon, then a big regmap
+>> is made that covers the whole region. All the child devices also make
 > 
-> This change beaks the following IGT tests:
+> Children take the parent regmap or you do not have even the children.
+
+The parent is a "simple-bus", there is no parent regmap. And before
+you say make the parent a "syscon", I've explained why we cannot do
+that.
+
+> Actually the second point is what we talk here: you created fake devices
+> per each register and these are supposed to be squashed into the parent.
+> I am repeating this 3rd time or more.
 > 
-> igt@amdgpu/amd_vcn@vcn-decoder-create-decode-destroy@vcn-decoder-create
-> igt@amdgpu/amd_vcn@vcn-decoder-create-decode-destroy@vcn-decoder-decode
-> igt@amdgpu/amd_vcn@vcn-decoder-create-decode-destroy@vcn-decoder-destroy
-> igt@amdgpu/amd_jpeg_dec@amdgpu_cs_jpeg_decode
-> igt@amdgpu/amd_cs_nop@cs-nops-with-nop-compute0@cs-nop-with-nop-compute0
-> igt@amdgpu/amd_cs_nop@cs-nops-with-sync-compute0@cs-nop-with-sync-compute0
-> igt@amdgpu/amd_cs_nop@cs-nops-with-fork-compute0@cs-nop-with-fork-compute0
-> igt@amdgpu/amd_cs_nop@cs-nops-with-sync-fork-compute0@cs-nop-with-sync-fork-compute0
-> igt@amdgpu/amd_basic@userptr-with-ip-dma@userptr
-> igt@amdgpu/amd_basic@cs-compute-with-ip-compute@cs-compute
-> igt@amdgpu/amd_basic@cs-sdma-with-ip-dma@cs-sdma
-> igt@amdgpu/amd_basic@eviction-test-with-ip-dma@eviction_test
-> igt@amdgpu/amd_cp_dma_misc@gtt_to_vram-amdgpu_hw_ip_compute0
-> igt@amdgpu/amd_cp_dma_misc@vram_to_gtt-amdgpu_hw_ip_compute0
-> igt@amdgpu/amd_cp_dma_misc@vram_to_vram-amdgpu_hw_ip_compute0
-
-
-Could it be that we used BO list with zero entries for those?
-
-Christian.
-
 > 
-> Alex
-> 
+>> regmaps covering their device range. Now these registers under the child
+>> device belong to two different regmaps. No synchronization is done as
+>> these are not the same regmap, regmap only handles this for multiple
+>> access to registers within the same regmap.
 >>
->> On Tue, Apr 22, 2025 at 5:13 AM Koenig, Christian <Christian.Koenig@amd.com>
->> wrote:
->>>
->>> [AMD Official Use Only - AMD Internal Distribution Only]
->>>
->>> Reviewed-by: Christian König <christian.koenig@amd.com>
->>>
->>> ________________________________________
->>> Von: Denis Arefev <arefev@swemel.ru>
->>> Gesendet: Freitag, 18. April 2025 10:31
->>> An: Deucher, Alexander
->>> Cc: Koenig, Christian; David Airlie; Simona Vetter; Andrey Grodzovsky;
->>> Chunming Zhou; amd-gfx@lists.freedesktop.org;
->>> dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org;
->>> lvc-project@linuxtesting.org; stable@vger.kernel.org
->>> Betreff: [PATCH v2] drm/amdgpu: check a user-provided number of BOs in
->>> list
->>>
->>> The user can set any value to the variable ‘bo_number’, via the ioctl
->>> command DRM_IOCTL_AMDGPU_BO_LIST. This will affect the arithmetic
->>> expression ‘in->bo_number * in->bo_info_size’, which is prone to
->>> overflow. Add a valid value check.
->>>
->>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->>>
->>> Fixes: 964d0fbf6301 ("drm/amdgpu: Allow to create BO lists in CS ioctl
->>> v3")
->>> Cc: stable@vger.kernel.org
->>> Signed-off-by: Denis Arefev <arefev@swemel.ru>
->>> ---
->>> V1 -> V2:
->>> Set a reasonable limit 'USHRT_MAX' for 'bo_number' it as Christian
->>> König <christian.koenig@amd.com> suggested
->>>
->>>  drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
->>> b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
->>> index 702f6610d024..85f7ee1e085d 100644
->>> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
->>> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
->>> @@ -189,6 +189,9 @@ int amdgpu_bo_create_list_entry_array(struct
->> drm_amdgpu_bo_list_in *in,
->>>         struct drm_amdgpu_bo_list_entry *info;
->>>         int r;
->>>
->>> +       if (!in->bo_number || in->bo_number > USHRT_MAX)
->>> +               return -EINVAL;
->>> +
->>>         info = kvmalloc_array(in->bo_number, info_size, GFP_KERNEL);
->>>         if (!info)
->>>                 return -ENOMEM;
->>> --
->>> 2.43.0
->>>
+>> Let's take a real example, here is part of AM62A CTRL_MMR node.
+>>
+>> main_conf: bus@100000 {
+>> 	compatible = "simple-bus";
+>> 	#address-cells = <1>;
+>> 	#size-cells = <1>;
+>> 	ranges = <0x00 0x00 0x00100000 0x20000>;
+>>
+>> 	phy_gmii_sel: phy@4044 {
+>> 		compatible = "ti,am654-phy-gmii-sel";
+>> 		reg = <0x4044 0x8>;
+>> 		#phy-cells = <1>;
+>> 	};
+>>
+>> 	...
+>> };
+>>
+>> If we turn "main_conf" into a syscon, then who "owns" 0x4044?
+>> Both the top level syscon and phy_gmii_sel nodes would build
+>> a different regmap instance that contains those same registers.
+> 
+> Two registers is hardly a separate device.
+> 
 
+Sure it is, plenty of devices have only a couple registers. There
+are already examples all over from all kinds of devices, clocks,
+muxes, GPIO extenders, ADCs, DACs, etc. that are real and separate
+devices that function perfectly fine while only having one or two
+programmable registers.
+
+>>
+>> Bit of back story, this is actually how I got involved in sorting
+>> out this "syscon" stuff for our devices. I built a checker into
+>> the regmap framework core that would detect when multiple regmaps
+>> are created that contain overlapping registers.
+>>
+>> I found several bugs this way and want to push the check upstream at
+>> some point. But first I wanted to fix the biggest cause of warnings,
+>> which was from syscon being used as described above.
+>>
+>>>
+>>>> drivers. How would we synchronize mappings, access, updates, etc.
+>>>> Any one register should belong to exactly one device.
+>>>
+>>> regmap synchronizes everything. There is no problem here, at all.
+>>>
+>>>>
+>>>> Is your issue the name "system controller", as yes I agree some of
+>>>> these regions are not "system controllers".
+>>>>
+>>>> Would it work better if we didn't call this "ti,am62-ddr-pmctrl"
+>>>> node a "syscon"? That can be done, we just would add a normal
+>>>> binding doc for it, instead of trying to reuse the generic
+>>>> bindings/mfd/syscon.yaml file.
+>>>
+>>> You still do not have multiple subnodes, one per each register or even
+>>> few registers.
+>>
+>> If this ddr-pmctrl device is not modeled as a syscon device, then who
+>> says it has to be more than a few (3?) registers in size? This seems like
+>> a rather arbitrary rule, and completely unfeasible for several whole
+>> classes of devices that only have/need a few registers to work them.
+> 
+> What does the syscon description say? Collection of registers, a set of
+> miscellaneous registers. Registers in plural. Do not use syscon for
+> other purposes.
+> 
+> It is not arbitrary. It is written in binding description.
+> 
+
+Re-read the first sentence: "If this ddr-pmctrl device is *not* modeled
+as a syscon device". My comment is that ddr-pmctrl is not a syscon,
+and so if we don't include any claim it is a "syscon" in the binding,
+why do we have to follow the rules in the unrelated syscon binding
+description.
+
+Andrew
+
+> Best regards,
+> Krzysztof
