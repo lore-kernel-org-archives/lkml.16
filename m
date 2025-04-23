@@ -1,174 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428AC1F4C8C;
-	Wed, 23 Apr 2025 10:18:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8524430;
+	Wed, 23 Apr 2025 10:19:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745403505; cv=none; b=m3xYc97qm5uzRQzjkJeCDy+Dv9ro9dIZglQAreNzEW9mb727+5jp1ZSq6QF2fKE3EX78u/7IKeh5rowCRoG7HSSU+EBcLK+OSjRuKMrmCyhYmtQoodegenEB0AiJTU7ledZpMnFNYTru6DgSAfD+p/LGpHoBKLBOdm4oC2i9TlU=
+	t=1745403571; cv=none; b=lk+lbWilTb+5DvfbHVLaSqzmJuJmM3EN8AlnMTyHsRbNwNWBDpgA9GAdrd4kP7yYpdKxtZeil5DeYnDTtizS+EsorjLdi1goMdgwP+ME/fmUJuIDHY3/NPFg0gy1Bg6psidY2QS7yF3A1R/KnGBPvnkL1dl+KSSR0joJE2OD8Q0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745403505; c=relaxed/simple;
-	bh=yNOd3U+49t8lqUpUY0h8t4lLvgZ7zTt+Q2t+fwKR9ew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZMrNMSj9A3pJ4DiMfmvjgTeSYpvYtqRCGDjArNO+GZUmiHd+WT14XhIfEWkjdi0N7cnc1sVwYB6Stb4vf9f+6hDcGOZzFbRQWi5JVtG84uPf8Re0AG4oGu2I/ICNiXxfC/G+XVZuewzkqq8FZrz+2OTaYtygmWU0CUbI/eJxpMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mqhp07Ph; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745403571; c=relaxed/simple;
+	bh=EErdEvkJZMomWj346FuTips4HSCS6BxlmBws21IXYso=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nLsPBIjYYfREHJmqWSAcGdbe9zg+tUIr6j6v78cLMqBBUPDdccjpNxps+nfJXjFF48YA63mb1E2rftKWdPUwTPmCETAwMVXwITClkd6rC5+D0Iqi5izChFQOvVKun+6KjQ1kCBfIDaWcoDG1wls8Zp9rNY1bXo6IOYid/mspQbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=SZg4ekLb; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mqhp07Ph"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745403503; x=1776939503;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yNOd3U+49t8lqUpUY0h8t4lLvgZ7zTt+Q2t+fwKR9ew=;
-  b=mqhp07Phy46BEFtvQqqQJTxgS1nsS92//Ww4A5u5Gs3qJvnIi40MwW9v
-   3BXKxIunwasAguPb/YKeqOtjMcJv/vzeFHVq7okf2PD0kvA+6slbAoZol
-   JQ7altwWYi56ra79Z8mol3I0nNA/eHz28zLr0r6cdv9JmIDy8aKoRqZE6
-   4rI7Atn8NiuMpFzbuJ3Srhb+VJqZ2BOfVp4nkrBdOI9SRw3fbxSTknShU
-   iMouR6KDTjQo31HBeKfIDZD/nG733nQrGe9Cx2C6As6TZnDmoryI9ljdR
-   jjPj8+JYyPfV8bf7VBCo7XB3hSWSxXnFMH4rmezX1PSXYEIUjWWNpg1Wy
-   A==;
-X-CSE-ConnectionGUID: HfWMRZjNT2ilk3wV9XrSVA==
-X-CSE-MsgGUID: JWuohtBAT+GFRc5gpvCi5Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="69478674"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="69478674"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 03:18:20 -0700
-X-CSE-ConnectionGUID: StqWFCi3QuWFEaGrfg+wAg==
-X-CSE-MsgGUID: bUTllSDtT1mP0ZsC2ae3MQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132118956"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 03:18:17 -0700
-Date: Wed, 23 Apr 2025 12:17:56 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Chris Mi <cmi@nvidia.com>,
-	Roi Dayan <roid@nvidia.com>, Maor Gottlieb <maorg@nvidia.com>
-Subject: Re: [PATCH net 5/5] net/mlx5: E-switch, Fix error handling for
- enabling roce
-Message-ID: <aAi+VAcQEYOhQSnF@mev-dev.igk.intel.com>
-References: <20250423083611.324567-1-mbloch@nvidia.com>
- <20250423083611.324567-6-mbloch@nvidia.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="SZg4ekLb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745403567;
+	bh=EErdEvkJZMomWj346FuTips4HSCS6BxlmBws21IXYso=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=SZg4ekLb9WzZnjsZFcLoTYV7rwAq3ALY3FMkS9R1RbijO8AqgtNq7raPnsv+bgkAN
+	 GrCSO8Aiqqu52TYlhkzF9Icz5vv98EW0ER4EdXfUiG8gJBFcZFXEXcVeYV41tfRuIV
+	 XHZ63x7jm1E5fQO4TdkjSGc1zUpdQHrQDT45Av4juFw2XZRRMMHf1CQujJKx7DQXCl
+	 g8Zj+mlB+WUKDCH6y5MtVd/bHm6+ypsczbuFxnn30o3YkYzuSEwvyeYt9DW79+GyQq
+	 zzG8SnDUR5olrdoXXf5ERp3PX7ljipA+PKlCUBvJ/GiS4T8nHyOQy9vqKDcalMMXhx
+	 Ok+IrPwSoUqFA==
+Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id C8BD017E0B56;
+	Wed, 23 Apr 2025 12:19:26 +0200 (CEST)
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+To: kernel@collabora.com, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ Julien Massot <julien.massot@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+In-Reply-To: <20250423-mt8395-audio-sof-v2-1-5e6dc7fba0fc@collabora.com>
+References: <20250423-mt8395-audio-sof-v2-1-5e6dc7fba0fc@collabora.com>
+Subject: Re: [PATCH v2] arm64: dts: mediatek: mt8395-nio-12l: Enable Audio
+ DSP and sound card
+Message-Id: <174540356673.70458.18087445471288730073.b4-ty@collabora.com>
+Date: Wed, 23 Apr 2025 12:19:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423083611.324567-6-mbloch@nvidia.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On Wed, Apr 23, 2025 at 11:36:11AM +0300, Mark Bloch wrote:
-> From: Chris Mi <cmi@nvidia.com>
+On Wed, 23 Apr 2025 10:53:13 +0200, Julien Massot wrote:
+> Add memory regions for the Audio DSP (ADSP) and Audio Front-End (AFE),
+> and enable both components in the device tree.
 > 
-> The cited commit assumes enabling roce always succeeds. But it is
-> not true. Add error handling for it.
+> Also, define the required pin configuration and add a sound card node
+> configured to use the ADSP. This enables audio output through the 3.5mm
+> headphone jack available on the board.
 > 
-> Fixes: 80f09dfc237f ("net/mlx5: Eswitch, enable RoCE loopback traffic")
-> Signed-off-by: Chris Mi <cmi@nvidia.com>
-> Reviewed-by: Roi Dayan <roid@nvidia.com>
-> Reviewed-by: Maor Gottlieb <maorg@nvidia.com>
-> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
-> ---
->  .../net/ethernet/mellanox/mlx5/core/eswitch_offloads.c   | 5 ++++-
->  drivers/net/ethernet/mellanox/mlx5/core/rdma.c           | 9 +++++----
->  drivers/net/ethernet/mellanox/mlx5/core/rdma.h           | 4 ++--
->  3 files changed, 11 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-> index a6a8eea5980c..0e3a977d5332 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads.c
-> @@ -3533,7 +3533,9 @@ int esw_offloads_enable(struct mlx5_eswitch *esw)
->  	int err;
->  
->  	mutex_init(&esw->offloads.termtbl_mutex);
-> -	mlx5_rdma_enable_roce(esw->dev);
-> +	err = mlx5_rdma_enable_roce(esw->dev);
-> +	if (err)
-> +		goto err_roce;
->  
->  	err = mlx5_esw_host_number_init(esw);
->  	if (err)
-> @@ -3594,6 +3596,7 @@ int esw_offloads_enable(struct mlx5_eswitch *esw)
->  	esw_offloads_metadata_uninit(esw);
->  err_metadata:
->  	mlx5_rdma_disable_roce(esw->dev);
-> +err_roce:
->  	mutex_destroy(&esw->offloads.termtbl_mutex);
->  	return err;
->  }
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/rdma.c b/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
-> index f585ef5a3424..5c552b71e371 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
-> @@ -140,17 +140,17 @@ void mlx5_rdma_disable_roce(struct mlx5_core_dev *dev)
->  	mlx5_nic_vport_disable_roce(dev);
->  }
->  
-> -void mlx5_rdma_enable_roce(struct mlx5_core_dev *dev)
-> +int mlx5_rdma_enable_roce(struct mlx5_core_dev *dev)
->  {
->  	int err;
->  
->  	if (!MLX5_CAP_GEN(dev, roce))
-> -		return;
-> +		return 0;
->  
->  	err = mlx5_nic_vport_enable_roce(dev);
->  	if (err) {
->  		mlx5_core_err(dev, "Failed to enable RoCE: %d\n", err);
-> -		return;
-> +		return err;
->  	}
->  
->  	err = mlx5_rdma_add_roce_addr(dev);
-> @@ -165,10 +165,11 @@ void mlx5_rdma_enable_roce(struct mlx5_core_dev *dev)
->  		goto del_roce_addr;
->  	}
->  
-> -	return;
-> +	return err;
->  
->  del_roce_addr:
->  	mlx5_rdma_del_roce_addr(dev);
->  disable_roce:
->  	mlx5_nic_vport_disable_roce(dev);
-> +	return err;
->  }
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/rdma.h b/drivers/net/ethernet/mellanox/mlx5/core/rdma.h
-> index 750cff2a71a4..3d9e76c3d42f 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/rdma.h
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/rdma.h
-> @@ -8,12 +8,12 @@
->  
->  #ifdef CONFIG_MLX5_ESWITCH
->  
-> -void mlx5_rdma_enable_roce(struct mlx5_core_dev *dev);
-> +int mlx5_rdma_enable_roce(struct mlx5_core_dev *dev);
->  void mlx5_rdma_disable_roce(struct mlx5_core_dev *dev);
->  
->  #else /* CONFIG_MLX5_ESWITCH */
->  
-> -static inline void mlx5_rdma_enable_roce(struct mlx5_core_dev *dev) {}
-> +static inline int mlx5_rdma_enable_roce(struct mlx5_core_dev *dev) { return 0; }
->  static inline void mlx5_rdma_disable_roce(struct mlx5_core_dev *dev) {}
->  
->  #endif /* CONFIG_MLX5_ESWITCH */
+> [...]
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Applied to v6.15-next/dts64, thanks!
 
-> -- 
-> 2.34.1
+[1/1] arm64: dts: mediatek: mt8395-nio-12l: Enable Audio DSP and sound card
+      commit: 2521f47606eaffb2e477ea0b2985d2d8e31aa563
+
+Cheers,
+Angelo
+
+
