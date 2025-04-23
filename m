@@ -1,240 +1,215 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2055.outbound.protection.outlook.com [40.107.212.55])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4108126D4D7;
-	Wed, 23 Apr 2025 11:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745407267; cv=fail; b=rxPXxLBF8c/AyQMqSD7A6J/pGS8Gs2SGDMXwZngwZGZKtnp/k9xHaRJeR9EBRbhfjighkBprSABH8AzABu/7QrVeefuvUN25h9IVo0ES4LsvtSaqtUk93TLWQHcTva3QpqN+fCOMs3idnheRdjWD3eyD2Ys7PyWci7/vTX46SN0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745407267; c=relaxed/simple;
-	bh=0xGExUS6WbLy/k51gEFMNpsz1Gom8xehnQo3Ko4OWuY=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UNwBgE4oV7BkFnV1OrhKCGR9ansUd1f3Deq52n9wNRyCF6DaUA//7D1EukKwqqXgp2B2XzvAgaOGMrvaiD/P18VOPHAuc1Tl9IZdtXwRIGcL9J79KLsU2WR7ofXjC0/a+Xklfv7My3fAhvn3QXdfg5Dt2jFP/8onhJBf6tQSN5k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EWyQXFfr; arc=fail smtp.client-ip=40.107.212.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0181AA1D9
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:22:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745407326; cv=none; b=Pq/YkPXf6o2Dj2VPsaXJb/5UXtuovphTk8mds52O/mlc5zy70vJx4NdzxHQY9uZZLR4cHT27chPLdvfEEz/FnpVWAJboy6StTYmjRHTnUDz5mGePeavVDIh6fM0g6cHMKSYFZucQmAcML/6N8ySjYHREd2NLu2p3HtAdnnsZLRQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745407326; c=relaxed/simple;
+	bh=A6Nv64R4J37upv3XPP09SN6JfR2CajcENYQ5shp7dVU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=lYifgK4m8CVN68zCjGacqoEuhkBaWNX5nuEU+pmM5tUK66O2bsMbATaK59l+wWB3hx89yE9FlNarrsSgRwLsxiejhASPS5ATgmqOOY39oTCr3NecdCIEAt3EYsQWLulHaaejQ/IcjKE9fJDNuyMFlHnhPv710zvqSN5vdztj7IA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VmR7sYdt; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EWyQXFfr"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b5GLg5KdMAD6ix4pxVrcMbfceUD0mcK0+631IdUtsHbTYk9DODHQ8htFzN/ck6KwBwEQma5aGqVlcj+O4W7Q+anw28laT+SSydM3G9hdlrs4jJ0NeXL8TlgmJ4kqYHZ8qa3QXgXp7Xn3NarbPd73D5YT4ED0pXttblATcnQixVnZjNPlhZiQy95qySTUUBeEwv7e2zN5aw2ADq/hK7eELYIVyx4b0YBvlr7pDWQoakCNPExqt9xCQ1gEtn7yIt7B7GSY6bJZkuluQeA4Kc7qK5OLuM8MwzttfMJwHWSf3HRmTznFj4U43JdH9IlFjlKxtROtzGFidI1MEB1fmX+rjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RH08CzEXx225chYmEywmRw8+zuRfUQhFD7yR2UdOaiw=;
- b=zJ8DfGurJkeolaIlXipnEoGXZZ6SaRa4IzlwbJVakw8ioSAq5H2t/GJ6hWHW2G+RMSwBaVD/bD3B0nxgn9xfyYKfo75CqL2lK1A0+JtbyH6bQsiwcnPOIKaWG6shWA8aS37yyUMcEUpqa5ICN/mXDh3k6AvDYJ7wzfmx83pxb7fj6YrbQVuB7kQ9d6ytWmQ+gHzV42mOVt5m1P8ULBLUEPOIW6kzPb7IHPzbu62Wvy/kAD5hWFVUgrOtyx3MN27+3b7O05SdaRq38Luc8sEh5eE1ponbNOxIO55DrYnrJ2BsIjbTBmaoVyf2J8+E/nKTLvKhFVyMQeZGBYBwXZN18A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RH08CzEXx225chYmEywmRw8+zuRfUQhFD7yR2UdOaiw=;
- b=EWyQXFfreoUHsneoKYMKfRBdfUW+8Pnqrcdoow2lrdqIIS0Hs4a0HkiPrJoXZxS9ZmVDw+yi2KypbgQtZfo8tzc/2UuhCQA272wOYWR0Vs+HMVCaa4OsaRAyJOi8zexa9dwzIFJugQyS5FF26mCRyDATNQE9/OxvHd3SL9FI+BIiVOf0RGHiIFZ3z6oqVF551ao5Qibn1qhSho/7Zc7Yg+fxsUzlfDCxSBLqnGry18R+8bK6xWarQF+BYwSRZpbJAvYnJIp/HwH55VObhD40klS8QhE5dtsJjNjBGOos59fZbaDXq5mgGbCy3nbpI9MZI5rZGijdR2yok/vaxDlPgg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB7548.namprd12.prod.outlook.com (2603:10b6:610:144::12)
- by DS0PR12MB8019.namprd12.prod.outlook.com (2603:10b6:8:14e::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Wed, 23 Apr
- 2025 11:21:01 +0000
-Received: from CH3PR12MB7548.namprd12.prod.outlook.com
- ([fe80::e8c:e992:7287:cb06]) by CH3PR12MB7548.namprd12.prod.outlook.com
- ([fe80::e8c:e992:7287:cb06%4]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
- 11:21:01 +0000
-Message-ID: <77df78bb-8bcf-42e8-b307-cc8bbe97254c@nvidia.com>
-Date: Wed, 23 Apr 2025 14:20:56 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 2/5] net/mlx5: E-Switch, Initialize MAC Address for
- Default GID
-To: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Saeed Mahameed <saeedm@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>,
- Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
- Maor Gottlieb <maorg@nvidia.com>
-References: <20250423083611.324567-1-mbloch@nvidia.com>
- <20250423083611.324567-3-mbloch@nvidia.com>
- <aAjBk5gX27FtnE3f@mev-dev.igk.intel.com>
-Content-Language: en-US
-From: Mark Bloch <mbloch@nvidia.com>
-In-Reply-To: <aAjBk5gX27FtnE3f@mev-dev.igk.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: TL2P290CA0009.ISRP290.PROD.OUTLOOK.COM
- (2603:1096:950:2::10) To CH3PR12MB7548.namprd12.prod.outlook.com
- (2603:10b6:610:144::12)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VmR7sYdt"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0i85Z011382
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:22:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	MBmXqa3SqlfHGu6HskzaGqDayNYdwR8418JrZVuGd1Q=; b=VmR7sYdtNY9sPQrD
+	o5/hBpQ3whiCmYDAGqlFyXL1PZ37epsHRQd2ARf0znrzHPXJk7xmpsJ9BwYR3Lgp
+	PC+guBZ2pr+XfmVry6HiEcJ96Si35YlSCdwGFjAlsx0fLNJivjAD3D9sEncByEF0
+	JYYINkRFRbuUFTJTW4dGr/neApAfZOGURdzbHuQssG2hCDUVZ2n8kULLROX7Sdw+
+	ILPUEJqxf7byQyGHIJOvMPB2lmUuGTW1NCrL+C41KSlwkKlyLEguh19Uj9LgoYCA
+	Eq0xo0aLnfKdx0AUK+YXlkDI4vHQ9XkaPDu98C7sv0OMh8FO32ERhAL7KtxcXM3K
+	PNbw0Q==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1hxt7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:22:03 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c53d5f85c9so132930285a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:22:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745407321; x=1746012121;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MBmXqa3SqlfHGu6HskzaGqDayNYdwR8418JrZVuGd1Q=;
+        b=pO27qUuIJbbIPtaE3aUDqQJ8ED3t1jdoP5bFoUbvSsQBjs+SeUxUUZBW6amQVAyb03
+         5ycf2MsHdlvtzP4GmnlUvgIZCc/dLQx7BPNknMV3NjtU1qGmrvDYsDsNvSXDtdwdSpZa
+         D5QSzWkRUonUdcD7RZUW8oIhjCc1RGXPjF73olnVrHO0L/0uPHLNBADN1lZ7ebO1zkk0
+         d2mo67eEV5Qbu2QIM0wtsnPoAsmUlkSBMtTbGd7PATLZ3TflSmX3/p6YbH53gc+eT8VA
+         deoXxpCPUXPfqo2ReNV3ushH/dsQm8SPnlUfuNPqLP0LfZyrqFDm6TVGjEfEXzrdGG9E
+         5TFg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2pF1tWKtHe/guAbfUtDhhOJjpIX73/KlA4XrRRaUlY2wbR3J4qxNTiTTinvsMoVHjZJaTFiMjxr1gbME=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrR57wRL9VlI0XVBOyNhvETFtCli9gzcGt5STeotPFYFT5HO0b
+	xhOiW6Gig0dAJQfdS3KURSCJEiBfGNcjCpP/T9TRTScnh0nxaDkLHmjdnqVFhraN6smlilMzJWo
+	otTt6h9X9M18jsDTcqT79wgXM9wKG5vsS1jrOYyZqpefP9ndeJt58GKRd+BWhU6s=
+X-Gm-Gg: ASbGncuFYyx0aAAUn492l1GvXKQYgd2da3TWVdKp7GgKn785BTXvO/p0XQ3eePpB0Sq
+	Ev7QDAV/20NrpuCd75BrVaM8s4YWV1ENh1BYlaSGV1ieRFpydzt4pRghj1DF5y1ep/4BzYLZaBr
+	O4hklzHc7bAMAiecLucKCjCHbDhkmV6x4k8yoLYfUEVEh7GsbzWWtIXf/eJebmvvtqPGWt9XB1n
+	mVZibHNl4dXERFwvpwTwPlDlFaM+g0G4da3UeJifJaG69mX0L7cG6TXCWI9sB8PUVD4CG9wJnTU
+	xV3O9NTUHw7fiSMByMQQbnTXS5jFUnaU91yi/2CwU2Y4mZfRh4uyZ7ZU7eQ5u8j5AE0=
+X-Received: by 2002:a05:620a:17a1:b0:7c5:8f37:5eb8 with SMTP id af79cd13be357-7c94d2cdeb6mr159763085a.12.1745407320905;
+        Wed, 23 Apr 2025 04:22:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHmyvrF5d9qIzFP/diTkGdauGMkGsqby79Vk6CQ3T9WYIeciMXk/85jv8urHP/tvgBFaRm55w==
+X-Received: by 2002:a05:620a:17a1:b0:7c5:8f37:5eb8 with SMTP id af79cd13be357-7c94d2cdeb6mr159761585a.12.1745407320483;
+        Wed, 23 Apr 2025 04:22:00 -0700 (PDT)
+Received: from [192.168.65.183] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f6258342e5sm7324599a12.60.2025.04.23.04.21.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 04:22:00 -0700 (PDT)
+Message-ID: <7a0eb7bf-d6d9-4e8e-829b-2df726651725@oss.qualcomm.com>
+Date: Wed, 23 Apr 2025 13:21:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB7548:EE_|DS0PR12MB8019:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ff94353-852c-48d5-d84b-08dd8258edac
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|7416014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ejdMeFdaZ2FpS3pURmp3c0NpRnoxTmxkUjhvWW1IOHNHbW8wTzFyZHRRUHFj?=
- =?utf-8?B?SkU2aEhPVTg3czRoaWJEbTI5MlFOQ1hEdG0xbGJlYWYwRzNzTnRtZ0owTEdv?=
- =?utf-8?B?blNhZWh1Umo0V0dmcTdubGphcFdUNVZGdGtnbHNrT3Fxc1JaeTNkZStCclhs?=
- =?utf-8?B?dDhMM1IxNDEzRGlpUG1QeTV4YWl2RGdibElwVnJPNlRyaEtDckdiTis0SDYr?=
- =?utf-8?B?NGpQUkp2UXBzWWtUUllwL0xkY2JkdmVzd1M3R1hObUZIZlNMbldmQW9CL1Jl?=
- =?utf-8?B?ekZXUHJLRUdFbkxJcWNBRG9Wb0tuUmY1S3VjcnMzTnBjc3VFM2pKWXJnS09H?=
- =?utf-8?B?cENpTmtLTTBxRUFvc3c4a1RtRm9Bd2ZvTnhQcjZSeW5NRFNCcFJsc2x3VkVi?=
- =?utf-8?B?WHhINktqc3A1dVJRc0JneG1OaEs2eCtPT1hWOXJKT21jMTlVVURsYnV5ajBn?=
- =?utf-8?B?Rm1FaXByUDlNdHQ2S3hGRFB0VjNuZTNPYWovOTF0Ri9XdDJXVVpVNGpCSDIz?=
- =?utf-8?B?cTZKYkdsWjYxRG82aHJBcU82N1UrU1pJN1gxUmNLbzJSejBtVTl1WWczczVG?=
- =?utf-8?B?aWIzb3N2NXlOOXdpWk1BWXhPUEZYV3dHdk1GY0pqUE8rbyttTXlkVmdGWERu?=
- =?utf-8?B?b1BldGhGMEdMaWRFa0NqOGVQZkpGUkc0VHZDVjNzOGJqZTUxanpSbnVLNTk1?=
- =?utf-8?B?cFl4SCtiblYzT0dYQTI2OEJWQTZFK3ZoZ056MllqV1lEbW1KTGIzeDJ5bk9N?=
- =?utf-8?B?TVhwRFg1U2VzbnhXQjhYQ3p1YzJaZDl5TkczQ3U5TGZqdERwWkFXT2FRVnlk?=
- =?utf-8?B?TjR0R05TcWlKQnpzOWQyNVpQQ2Fyc2FvSlVRQ0ZkYVpMNHJRMnpTbEcrK2lR?=
- =?utf-8?B?Nzg4aGE1OUZQaU8wR1F4L29OU3J4TlNHeVRUMzY5TFRITHJIb0NtYWE1aCs3?=
- =?utf-8?B?MFhYUVU5RE5rNkdXM0xQRjVLQktwZ0RHWkhHZlgxZysxN2JTSWhtZzZQVmVi?=
- =?utf-8?B?R0MvczNDOC9JeHBBSDVyWjhOckovNkJzWjJxQkNab2hOU2ZWeFdrTmREWHVV?=
- =?utf-8?B?bkJIc1o3QTEzR1NTaDVzY3ZaWC9ERXBxNjczMlhGc2p5dTZkUEorc0NXZVdl?=
- =?utf-8?B?UlYyMXR2SERvU2R6SkY5QnQyUnI3U3dWMmtjc1FaQ3U5azhlUzRxSXk4MlV2?=
- =?utf-8?B?Y241dHJSa3dJWHBUNU1LS2VzWjlyTG9jbk9UY0xzUEc1cHZiL3luZ2I5OFhV?=
- =?utf-8?B?anhuRTF0aU1vQ0hvN3lFVy92NTUxRVRydi84UnV2S2RDKy94NTVaTlYvZU15?=
- =?utf-8?B?cEpnZWhmOUF0SnNuYlhyQ2FpQzduV1N0NGtiVTFrTkhNUkV0UTJ0WnFkZHpH?=
- =?utf-8?B?V1V4TWRmY3l6U1lqek9qU1VIMUErWjFnK2phRkhqRGNHSGhwVmkxTUV2a0ZV?=
- =?utf-8?B?SWtabjJXQ3NLZUsxdEt4SjhHcVlraHhibzZJVUd3SHBYMjh3d0xlVHQ3YWdY?=
- =?utf-8?B?czB3VjgyeHBxL2JkSW5nUEpsbzBiRitpbzVndG9VL3d6SUZ5S0xtYmYwLzZJ?=
- =?utf-8?B?N0pCcXpmOTJ6eVlPcjg4WEowNEk3Rkh0TnRybWhJVVEwUHFLS3JjZnZLQ1NC?=
- =?utf-8?B?MGtHOGxVai9mT256b1g5SWw3dDkvQldJRTh0WVFrTWRJSTloUDE1bjhpTXM4?=
- =?utf-8?B?MzJuaDNJTVlQbU9wR0VaM1B0UFovLzFjaWRFb1pZVEc2Qkhvc3lSS3l1TW9s?=
- =?utf-8?B?UU9tV2J6ZXM3OXAvVGxkRldGemI5Z3VxL2l5Y215eGR2dVRSWWpJdFpyTVdG?=
- =?utf-8?B?WTR0eVN0aUkwZkE5MXNPV1ZqZ0dnUmMyaWdNYzFKNlh3U25PSFJQVXptM3Iz?=
- =?utf-8?B?UGN6c3grMHI1R2MzaXl6Yzc2eUlaVEl3ZS9EY1dFZVczYmszMmU1TUZLU1Jw?=
- =?utf-8?Q?ua44CuEzEUU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7548.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bCtoZ2QyTExrNmltRlRablA2Ukx5ay95OS9CejEzMlNqL3ZTWGRleWRXcGND?=
- =?utf-8?B?d0xlc1k4SmdLT1IyZGNnZnFidUV3bk8xUityRXppT21rcENBd2c5VEZBY3VD?=
- =?utf-8?B?MGVCVER4U0NlOVcwNjE0aTNoZm1OOXk4NnZQVFFrRHR3cDlUem92UVNxZTds?=
- =?utf-8?B?YXZuUlZLNlhBYnRaR3hJUWdESGd5TEg4d0FQVmJJaDVmU0YzamdMazRXYmVv?=
- =?utf-8?B?UTRCVHN6QUIxK2xTN3hlTUhuN2lmd2w2N0l3dVczamREendqZy9aam9pcGlj?=
- =?utf-8?B?d0dJMEtscm40U2lHR3ZDRTB0R0E5dXBXbHU2VTIwWTh2SmIySVU1UndTSCtK?=
- =?utf-8?B?L3NVSlowNzA0bk5nOEN4cWJueGFGakVnS2JWQ1liUU9icjBuck5uNmhEbW5v?=
- =?utf-8?B?VVp1NFdHbFBrSE5LOFlKWXoxMWNsV3A3UDd5NEVjUEVabHduT29kSjhSemhM?=
- =?utf-8?B?TE5YZFEzbUVNOTdhT0J5QVA2Y1haakw2N0RVcFlmcXUxTXRWVXRpRDJ0NlVH?=
- =?utf-8?B?RFc3a3ZYWmU1TlF6K2JiVFNmREIxYlRGcWFneHZpemNtMlJiKzVlNDU1Z3dm?=
- =?utf-8?B?QmxGalVRNWRFK201eFR1YS82OHpkWDdXcXcyOGh4Z0dpTXN6U0N6dVBhV3FB?=
- =?utf-8?B?RFBhV0ZWMzdPSGJIWHpxV1JCT2F6TFFTTUJZWXZRWXRqQ05JZkZ2UVcwSEh1?=
- =?utf-8?B?SVFlRG5tcnlQL2tYNVBXWjZWakhQd2xNbTFxS1gxY0tEd24xLzdSS2hqOHhP?=
- =?utf-8?B?UGRNNG9qcHo0TXQ2dFA2cm5uL0lwNldCSiszMU52TENuWjlscURMM0RjZ2dn?=
- =?utf-8?B?SUlRV2FBKzlRVVk1VWJuM0I5R2pBNWVCV3RCbU9pdGZ0cCtkS1pBVFdPVTJ4?=
- =?utf-8?B?WDkzTFFvWlBjVVdZZ3NqWnA5VE90K1I1VG5Pd1kvbmZLcDgzclduWm1rT3hu?=
- =?utf-8?B?SFJudXdubjlSaEV0cTYvM2tBeHBhYTdCa1JEZGEwN1BZNVkyUnd4T0dYd2dh?=
- =?utf-8?B?MkNBbmhETFVZNmJKT1NWeVUyL05xcjdodGdod21zSkI4Z2pDMCsxUk5FVFNV?=
- =?utf-8?B?czUrSkRqK1VhdHRkdXlDTXFTMmpWdDczZVA4dXF6Wm9oakgxZGN6NTZjY0Fm?=
- =?utf-8?B?RWREblNNREF2dXEydm1SRFVidERJaitBOHdRYTdQVThXMzVBMFg0dnJYZ05D?=
- =?utf-8?B?MWxLb25NQ2JUa09FWlEzRW1nbndQb0MzeURaK0U0cVBwZjJqY1lpVDBtUjNm?=
- =?utf-8?B?QzFVSXc0ZHJKY3dpWWdra0JRdy84ekowanhiL2dTNWNYc3R0eG1mSTQ4SFFE?=
- =?utf-8?B?aGJPSlNMaHVpOWpUcGNjUE5MRTJoODEwejJzQnNJd2cxRGYyb1hWaHkxVWRK?=
- =?utf-8?B?NXNWTVNSc005aWpaelVIQ0h0eEszOVpsSm04d1dRa0djME00eUNnTTFoNEE4?=
- =?utf-8?B?b1lCWWhpdEZtaHNqM3E0WHM4SG5VS2NZaUZDazNuZTZycERNNzdzRy9GLzJ3?=
- =?utf-8?B?TFl0Z29pU0k5R1pQRTdvZWF4Y2puTXVETFBadEMwRjNwRUFZYkZjVUFMbkxH?=
- =?utf-8?B?VS9ycmJ3cUwreGpFYkh4K3hIRGJFZEYvcFRiZVVzMk5KTzRJQmVIM0ppOVBr?=
- =?utf-8?B?RjhkWGF5WEdJVHlHM0lQcDY3YVI4MlRIbTVVRkVEQTJUVHJSOGNwZFVuYkQx?=
- =?utf-8?B?RmdhYndFOWk2YjZLZGlhZ1g3dnlNNm9HV0xhRDJIeTR3bnVUVEcyRElmV0F3?=
- =?utf-8?B?MG1vdzI4R3NzNE9iaXkydjdQdjFDa1d0T3hLcGlnYmxWa04rQjZESURJZnND?=
- =?utf-8?B?THBGNTlBQmxsWG16TkRTVmJVMHZZdUVrVldLdFZ2RU9HNm8xakpFQmcrUlhY?=
- =?utf-8?B?U2hHYVYwR25NRUhXNWdUTWJzN2ExSWRvRDcybENabkpQNE05VklWajFkb2lB?=
- =?utf-8?B?b3RHSlBtTWJ4M2FaUThuazM5NzFidENCVnNEOTc5UGx4L3ErcllYOXliZ0Jz?=
- =?utf-8?B?ckoxdG1LeEJiMnRGNG9DRnF6YkdWeHNIVk4vWVVGRjRJRFhlcDhQQTRqdnpp?=
- =?utf-8?B?T3YweDV4WmgwdkxNY2ZleEtxTjJwT1lOSlBoQWo3WGVJWmwyY0lSeUN4Sk84?=
- =?utf-8?Q?dtYsJ9OWp623if9SEkbdGl0zB?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ff94353-852c-48d5-d84b-08dd8258edac
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7548.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 11:21:01.5639
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bltIMlc6rT/jaFqloW40kiOk8e+DPYFNT7b+3FuPVtw4KMBZM+7WyZsMh0VWWzLqLZxabLQsU7SRIdVgkp7SrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8019
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 4/9] phy: qcom-qmp-ufs: Refactor UFS PHY reset
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+To: Nitin Rawat <quic_nitirawa@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
+        James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+        bvanassche@acm.org, bjorande@quicinc.com, neil.armstrong@linaro.org,
+        quic_rdwivedi@quicinc.com, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
+ <20250410090102.20781-5-quic_nitirawa@quicinc.com>
+ <pur4y63xhfmqlyymg4pehk37ry4gg22h24zceoqjbsxp3hj4yf@4kptase3c4qp>
+ <317faeaa-3130-4e28-8c5d-441a76aa79b4@quicinc.com>
+ <CAO9ioeXnnbNzriVOYPUeBiWdrPfYUcMk+pVWYv0vZpJbFeByoQ@mail.gmail.com>
+ <2820908b-4548-4e0a-94b2-6065cb5ff1f3@quicinc.com>
+ <c2ec6b7c-421d-43c3-8c0a-de4f7bdd867c@oss.qualcomm.com>
+ <a24ff510-2afd-4aa7-a026-199fb6d87287@quicinc.com>
+ <CAO9ioeUDzYLMvqmsOQ-VfgLQLavHqn=QVYxyHzetjSfmhjKFjw@mail.gmail.com>
+ <1a623099-40bb-4884-8d93-132138a4150b@quicinc.com>
+ <b7027077-e9a3-462b-92a8-684a42d23604@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <b7027077-e9a3-462b-92a8-684a42d23604@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: opviYRDgThPHcItAFJFpuEUKLGnOVAEW
+X-Proofpoint-ORIG-GUID: opviYRDgThPHcItAFJFpuEUKLGnOVAEW
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA3OCBTYWx0ZWRfX3k1pNujXlBDM pDwVD9RAgWpR72L+Bo8ZYt9oFHYySaBvrH6aNL7FLE1kGmOGMUcl7iTLx/uLY8wGoN5o2CRCEr2 9DRnJvokdrUOlo++9XrhB562zyBwZD+lVXFO/zx1NBzlKYEsxfD5E789x67vQZB/rvZGqDA0Kcc
+ oAomG3IDP3KR9ljGz1ZmCg1NtgFeWMpoaqb8pjOfj+BYQhs3BpdtlsHztycuN9Z9hcebWdf6xxp UlW3MaL49VPZuGdE3fXLdmdKkd1qGguHZ8b5u/pN7H0HUGq6Dof8v6e+B2gY+PFqyhTTJvY8HtD AWyVc+lo6ZyUfr2A2TbtvpMGaL7aN+HBxgUNpTbjThOz0YQ6QP7lMVpko3n0cLxXyyjb0Jr4Yj0
+ uCPNdCY03HEh0aPrFkfYZOvkVZeHbNNqgXe5qOy0BYk22/Fn29QhzY7zzpuFtKniwC0KjHPW
+X-Authority-Analysis: v=2.4 cv=ZpjtK87G c=1 sm=1 tr=0 ts=6808cd5b cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=S3RF1rwLzzbCZMsKAAoA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_07,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 clxscore=1015
+ bulkscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230078
 
-
-
-On 23/04/2025 13:31, Michal Swiatkowski wrote:
-> On Wed, Apr 23, 2025 at 11:36:08AM +0300, Mark Bloch wrote:
->> From: Maor Gottlieb <maorg@nvidia.com>
+On 4/23/25 1:09 PM, Konrad Dybcio wrote:
+> On 4/16/25 2:26 PM, Nitin Rawat wrote:
 >>
->> Initialize the source MAC address when creating the default GID entry.
->> Since this entry is used only for loopback traffic, it only needs to
->> be a unicast address. A zeroed-out MAC address is sufficient for this
->> purpose.
->> Without this fix, random bits would be assigned as the source address.
->> If these bits formed a multicast address, the firmware would return an
->> error, preventing the user from switching to switchdev mode:
 >>
->> Error: mlx5_core: Failed setting eswitch to offloads.
->> kernel answers: Invalid argument
+>> On 4/16/2025 5:43 PM, Dmitry Baryshkov wrote:
+>>> On Wed, 16 Apr 2025 at 12:08, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 4/15/2025 2:59 PM, Dmitry Baryshkov wrote:
+>>>>> On 14/04/2025 23:34, Nitin Rawat wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 4/11/2025 4:38 PM, Dmitry Baryshkov wrote:
+>>>>>>> On Fri, 11 Apr 2025 at 13:50, Nitin Rawat <quic_nitirawa@quicinc.com>
+>>>>>>> wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> On 4/11/2025 1:38 AM, Dmitry Baryshkov wrote:
+>>>>>>>>> On Thu, Apr 10, 2025 at 02:30:57PM +0530, Nitin Rawat wrote:
+>>>>>>>>>> Refactor the UFS PHY reset handling to parse the reset logic only
+>>>>>>>>>> once
+>>>>>>>>>> during probe, instead of every resume.
+>>>>>>>>>>
+>>>>>>>>>> Move the UFS PHY reset parsing logic from qmp_phy_power_on to
+>>>>>>>>>> qmp_ufs_probe to avoid unnecessary parsing during resume.
+>>>>>>>>>
+>>>>>>>>> How did you solve the circular dependency issue being noted below?
+>>>>>>>>
+>>>>>>>> Hi Dmitry,
+>>>>>>>> As part of my patch, I moved the parsing logic from qmp_phy_power_on to
+>>>>>>>> qmp_ufs_probe to avoid unnecessary parsing during resume. I'm uncertain
+>>>>>>>> about the circular dependency issue and whether if it still exists.
+>>>>>>>
+>>>>>>> It surely does. The reset controller is registered in the beginning of
+>>>>>>> ufs_qcom_init() and the PHY is acquired only a few lines below. It
+>>>>>>> creates a very small window for PHY driver to probe.
+>>>>>>> Which means, NAK, this patch doesn't look acceptable.
+>>>>>>
+>>>>>> Hi Dmitry,
+>>>>>>
+>>>>>> Thanks for pointing this out. I agree that it leaves very little time
+>>>>>> for the PHY to probe, which may cause issues with targets where
+>>>>>> no_pcs_sw_reset is set to true.
+>>>>>>
+>>>>>> As an experiment, I kept no_pcs_sw_reset set to true for the SM8750,
+>>>>>> and it caused bootup probe issues in some of the iterations I ran.
+>>>>>>
+>>>>>> To address this, I propose updating the patch to move the
+>>>>>> qmp_ufs_get_phy_reset call to phy_calibrate, just before the
+>>>>>> reset_control_assert call.
+>>>>>
+>>>>> Will it cause an issue if we move it to phy_init() instead of
+>>>>> phy_calibrate()?
+>>>>
+>>>> Hi Dmitry,
+>>>>
+>>>> Thanks for suggestion.
+>>>> Phy_init is invoked before phy_set_mode_ext and ufs_qcom_phy_power_on,
+>>>> whereas calibrate is called after ufs_qcom_phy_power_on. Keeping the UFS
+>>>> PHY reset in phy_calibrate introduces relatively more delay, providing
+>>>> more buffer time for the PHY driver probe, ensuring the UFS PHY reset is
+>>>> handled correctly the first time.
+>>>
+>>> We are requesting the PHY anyway, so the PHY driver should have probed
+>>> well before phy_init() call. I don't get this comment.
+>>>
+>>>>
+>>>> Moving the calibration to phy_init shouldn't cause any issues. However,
+>>>> since we currently don't have an initialization operations registered
+>>>> for init, we would need to add a new PHY initialization ops if we decide
+>>>> to move it to phy_init.
+>>>
+>>> Yes. I don't see it as a problem. Is there any kind of an issue there?
 >>
->> Fixes: 80f09dfc237f ("net/mlx5: Eswitch, enable RoCE loopback traffic")
->> Signed-off-by: Maor Gottlieb <maorg@nvidia.com>
->> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
->> ---
->>  drivers/net/ethernet/mellanox/mlx5/core/rdma.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/rdma.c b/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
->> index a42f6cd99b74..f585ef5a3424 100644
->> --- a/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
->> +++ b/drivers/net/ethernet/mellanox/mlx5/core/rdma.c
->> @@ -118,8 +118,8 @@ static void mlx5_rdma_make_default_gid(struct mlx5_core_dev *dev, union ib_gid *
->>  
->>  static int mlx5_rdma_add_roce_addr(struct mlx5_core_dev *dev)
->>  {
->> +	u8 mac[ETH_ALEN] = {};
+>> No issues. In my next patchset, I would add a new init ops registered for qcom phy and move get ufs phy reset handler to it.
 > 
-> Won't it be helpful to add comment that it needs to be unicast and 0 is
-> a valid MAC?
-
-That's why the commit message has: "it only needs to
-be a unicast address. A zeroed-out MAC address is sufficient for this
-purpose."
-
-I feel this is good enough.
-
+> I don't really like this circular dependency.
 > 
-> Anyway,
-> Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-
-Thanks!
-
+> So I took a peek at the docs and IIUC, they say that the reset coming
+> from the UFS controller effectively does the same thing as QPHY_SW_RESET.
 > 
-> hw_id in mlx5_rdma_make_default_gid() is also used without assigining.
-> Is it fine to have random bits there?
-
-We pass hw_id to mlx5_query_mac_address() which fills it.
-However, there's a separate issue where mlx5_query_mac_address()
-might fail, this is unlikely, but still possible.
-We'll address that in a follow-up patch.
-
-Thanks for the review! 
-
-Mark
-
+> Moreover, the docs mention the controller-side reset should not be used
+> anymore (as of at least X1E & SM8550). Docs for MSM8996 (one of the
+> oldest platforms that this driver supports) also don't really mention a
+> hard dependency on it.
 > 
-> Thanks
-> 
->>  	union ib_gid gid;
->> -	u8 mac[ETH_ALEN];
->>  
->>  	mlx5_rdma_make_default_gid(dev, &gid);
->>  	return mlx5_core_roce_gid_set(dev, 0,
->> -- 
->> 2.34.1
+> So we can get rid of this mess entirely, without affecting backwards
+> compatibility even, as this is all contained within the PHYs register
+> space and driver.
 
+Well hmm, certain platforms (with no_pcs_sw_reset) don't agree.. some
+have GCC-sourced resets, but I'm not 100% sure how they affect the CSR
+state
+
+Konrad
