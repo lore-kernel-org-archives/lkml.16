@@ -1,176 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9604C262801;
-	Wed, 23 Apr 2025 14:15:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A463149E17;
+	Wed, 23 Apr 2025 14:15:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745417711; cv=none; b=huqvml/ebFkO/kzofaENYa5o9whPbxwHBNYg1u5gy+0giF1Ztp+WN5EreHpVWqYDSlcEvzX3cCCI9GAVs3pcBVD4i+o2j7ACwjnzF5X7k4f+vrbpuENhpZMMag+J6uidVWJPWsaZ7lH4D6rL7Tm7aqS6VKNdZdJLxrek8lPH7Y0=
+	t=1745417748; cv=none; b=YeiofIzVpSEX/sCo+cW7+q0k1MVR16o8SQP7+houhvkcZvjnwFu66g8J5Cj2Qdhdfav4vgqFrOkVLZuMP4MU6FXo4Jw0WbKrR5ZKtc1MAGMoErtKonwLWEmEYLnizD2KLX3VX3owlM5ZvnJn3lcdYjq7bHJYsaB3XQAQFvV0uT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745417711; c=relaxed/simple;
-	bh=lZLc+0iQ0egQpFZzpGN61kWRDoQqmUE5Dgwzx88gqNE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dIoGro7eYMKIosRSRQkFWwyrzweKzDWX1ehZ//pw1yXcwcs3ZmYIieUQp5vqwCsyk2uPD8IO0V50ClybZE1WDc2ObS6e/PoqYPxiqAGukQkW+Zca40RWa0mmH9ib8qENeIv4mnjRRE3OoOACwQEfsv2D6/O5tB4VT83fC07XnKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbKle2jl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745417748; c=relaxed/simple;
+	bh=/DMHVsEnD/BzUR8poZu4/uOWVkwpTFT3gHjSxGkCoR0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IVkUdHsmxivs8qgeye/YNwqhE5sAOS96J/JZuanR0w3j/tocxKnKf36HkaoXSSGwA3KaI35ya4YbubVhzUS+VKIXsWuwV4120Rd3Z6HO/d+gBaReei6lbJFG1OhYD1fqYw8lB1pMk4jcINHLJbTqjtkcXEGN5yToEe9GvDGYKyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OhudICsc; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbKle2jl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3454C4CEEB;
-	Wed, 23 Apr 2025 14:15:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745417710;
-	bh=lZLc+0iQ0egQpFZzpGN61kWRDoQqmUE5Dgwzx88gqNE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fbKle2jl0QErU8ghTbj3sYn7CPDYSzV7RWs0s1cNIP9d5Q0EtDg2ooaFWjGzVL84t
-	 jnQQJEztSxO5Is0L8uAMdKwBmnQq8BId7lazA1Z3plJM45E29XftxtDGERqrDr/ZTZ
-	 I7kJSea7R1h+Q6db7wlqZlWg+yaHnW8E9TOShNxrjIhrsdJ2/UOCQZfa13ykIq2ZIF
-	 48L0aBklhq4gMXZ4bCrMsehMZvY2rGUZfbc464bbZFyGIxwSoq1xXriOwXeKvZT/eS
-	 8AnvML/cCKW1XcVCVQMJprXIweoiWSf2ORWa+pYxYW66DAgm2gCSGRoOPdH6IIEwfG
-	 kj2+kpEm+2eDQ==
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-2c2dc6c30c2so1741769fac.2;
-        Wed, 23 Apr 2025 07:15:09 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV456AS0enbezTXD/MlTVUeViMfT3+jrg2AL1Qcg6FKxVII1dYJuSc/9vwObuR81pkA9cD03HuHDM8=@vger.kernel.org, AJvYcCWBDxaWP07qgAzq1q5MwWlRQ/NX4+r2avl/OHDKqcqzbcgWcQ9QK4y8lkdGDJ62seHsrv67z0m/X0UEw8c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywa8oiSLiifX1uWBtMLvVDPzI20Mf8dq5UK4QdMrww4AZYjGbJ+
-	vCiHfULRI19IRpk8ztDOFZxOKmWdjiE+5eeiT5SAmMu+v4rRWZuKuXOWMIRwwaqugr8XjWABvKG
-	suZ2yIT+86NqoNiJ0hQs66+JZNsc=
-X-Google-Smtp-Source: AGHT+IFttgT2cMzJ7Q/jyjhyBdMlJ6r4LNKEGwvkEg1MSYOwmaGGPnBPqqiXRNbn1Ybe+h0ttBpAz7iPzOrDBOQ3SUM=
-X-Received: by 2002:a05:6870:451:b0:29e:433f:aa4f with SMTP id
- 586e51a60fabf-2d526d6952bmr11393439fac.30.1745417709199; Wed, 23 Apr 2025
- 07:15:09 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OhudICsc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=6xbZYXykMjgKMSpp52ywZEBlzjIEow9Ok6NjY0siqUc=;
+	b=OhudICscJ21Kt98vX6rUiv4cDB7SwN1mK2jKC53EgKi7bz9iuBd6o/OE+zMLPn
+	h22rs/khVJeHuPHZ0OA+edvEA6E1n/cPPN9+Y3cU6bJa/Yn28bnAYQPf0J8DGPQe
+	Q3WkU7dElgsQe6x4t39U2vpOY5z5mL0muVjmEway1Grho=
+Received: from [192.168.71.89] (unknown [])
+	by gzsmtp2 (Coremail) with SMTP id PSgvCgDHnCTi9QhoY7rzBQ--.27617S2;
+	Wed, 23 Apr 2025 22:14:59 +0800 (CST)
+Message-ID: <352e40a0-65e2-499f-a7dd-904a4a7b19da@163.com>
+Date: Wed, 23 Apr 2025 22:14:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745315548.git.viresh.kumar@linaro.org> <7ce4ffb166beef83cf1bd703a41bf91622011585.1745315548.git.viresh.kumar@linaro.org>
-In-Reply-To: <7ce4ffb166beef83cf1bd703a41bf91622011585.1745315548.git.viresh.kumar@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 23 Apr 2025 16:14:56 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iCrQeKs=4S-x83Fgf-W4u=2JYLA5VmgKPaLCvYAkNpig@mail.gmail.com>
-X-Gm-Features: ATxdqUFjSCZMsgE0COHebVl5-LQCwtzGxnUc_24h28YU6lomS4arrllqkqRn0Wk
-Message-ID: <CAJZ5v0iCrQeKs=4S-x83Fgf-W4u=2JYLA5VmgKPaLCvYAkNpig@mail.gmail.com>
-Subject: Re: [PATCH 1/6] cpufreq: acpi: Don't enable boost on policy exit
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Lifeng Zheng <zhenglifeng1@huawei.com>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Nicholas Chin <nic.c3.14@gmail.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] PCI: dw-rockchip: Reorganize register and bitfield
+ definitions
+To: Niklas Cassel <cassel@kernel.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
+ jingoohan1@gmail.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org
+References: <20250423105415.305556-1-18255117159@163.com>
+ <20250423105415.305556-3-18255117159@163.com> <aAjufPQnBsR6ysAH@ryzen>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <aAjufPQnBsR6ysAH@ryzen>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:PSgvCgDHnCTi9QhoY7rzBQ--.27617S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Wr1xGry5KryDKF4ktr1xAFb_yoWxur1fp3
+	4DAFyIyr45tay7Z3s5uFs8XFWIqrnxKFWUWrsagrWUZ3WkAw48Gw1j9FyrWFy3Jr4kCrWf
+	uwn8C34SgFWakrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UBq2_UUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxg4o2gI7X36cgAAs0
 
-On Tue, Apr 22, 2025 at 11:54=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.=
-org> wrote:
->
-> The boost-related code in cpufreq has undergone several changes over the
-> years, but this particular piece remained unchanged and is now outdated.
->
-> The cpufreq core currently manages boost settings during initialization,
-> and only when necessary. As such, there's no longer a need to enable
-> boost explicitly when entering system suspend.
->
-> Previously, this wasn=E2=80=99t causing issues because boost settings wer=
-e
-> force-updated during policy initialization. However, commit 2b16c631832d
-> ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()") changed
-> that behavior=E2=80=94correctly=E2=80=94by avoiding unnecessary updates.
->
-> As a result of this change, if boost was disabled prior to suspend, it
-> remains disabled on resume as expected. But due to the current code
-> forcibly enabling boost at suspend time, the system ends up with boost
-> frequencies enabled after resume, even if the global boost flag was
-> disabled. This contradicts the intended behavior.
->
-> Don't enable boost on policy exit.
 
-Even after commit 2b16c631832d, the code removed by this patch does a
-useful thing.  Namely, it clears the boost-disable bit in the MSR so
-that the offline CPU doesn't prevent online CPUs from getting the
-boost (in case the boost settings change after it has been taken
-offline).  It doesn't actually touch policy->boost_enabled etc, just
-that particular bit in the MSR.
 
-I'm not sure how this useful thing will be done after the $subject patch.
+On 2025/4/23 21:43, Niklas Cassel wrote:
+> On Wed, Apr 23, 2025 at 06:54:14PM +0800, Hans Zhang wrote:
+>> Register definitions were scattered with ambiguous names (e.g.,
+>> PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
+>> hierarchical grouping. Magic values for bit operations reduced code
+>> clarity.
+>>
+>> Group registers and their associated bitfields logically. This improves
+>> maintainability and aligns the code with hardware documentation.
+>>
+>> Signed-off-by: Hans Zhang <18255117159@163.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-dw-rockchip.c | 71 ++++++++++++-------
+>>   1 file changed, 45 insertions(+), 26 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> index fd5827bbfae3..6cf75160fb1c 100644
+>> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+>> @@ -34,30 +34,49 @@
+>>   
+>>   #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
+>>   
+>> -#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
+>> -#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+>> -#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+>> -#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+>> -#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
+>> -#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+>> -#define PCIE_CLIENT_INTR_MASK_MISC	0x24
+>> -#define PCIE_CLIENT_POWER		0x2c
+>> -#define PCIE_CLIENT_MSG_GEN		0x34
+>> -#define PME_READY_ENTER_L23		BIT(3)
+>> -#define PME_TURN_OFF			(BIT(4) | BIT(20))
+>> -#define PME_TO_ACK			(BIT(9) | BIT(25))
+>> -#define PCIE_SMLH_LINKUP		BIT(16)
+>> -#define PCIE_RDLH_LINKUP		BIT(17)
+>> -#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+>> -#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
+>> -#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
+>> -#define PCIE_CLIENT_GENERAL_CONTROL	0x0
+>> +/* General Control Register */
+>> +#define PCIE_CLIENT_GENERAL_CON		0x0
+>> +#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
+>> +#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
+>> +#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
+>> +#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
+>> +
+>> +/* Interrupt Status Register Related to Message Reception */
+>> +#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x4
+>> +
+>> +/* Interrupt Status Register Related to Legacy Interrupt */
+>>   #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
+>> +
+>> +/*  Interrupt Status Register Related to Miscellaneous Operation */
+> 
+> double spaces, other comments just have one space.
+> 
 
-Moreover, without the $subject patch, the change made by the next one
-will cause the boost setting in the MSR to get back in sync with
-policy->boost_enabled during online AFAICS, so why exactly is the
-$subject patch needed?
+Hi Niklas,
 
-> Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu=
-_init()")
-> Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220013
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> This was sent separately earlier. No changes from that.
->
->  drivers/cpufreq/acpi-cpufreq.c | 23 +++--------------------
->  1 file changed, 3 insertions(+), 20 deletions(-)
->
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufre=
-q.c
-> index 924314cdeebc..7002e8de8098 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -89,8 +89,9 @@ static bool boost_state(unsigned int cpu)
->         return false;
->  }
->
-> -static int boost_set_msr(bool enable)
-> +static void boost_set_msr_each(void *p_en)
->  {
-> +       bool enable =3D (bool)p_en;
->         u32 msr_addr;
->         u64 msr_mask, val;
->
-> @@ -107,7 +108,7 @@ static int boost_set_msr(bool enable)
->                 msr_mask =3D MSR_K7_HWCR_CPB_DIS;
->                 break;
->         default:
-> -               return -EINVAL;
-> +               return;
->         }
->
->         rdmsrl(msr_addr, val);
-> @@ -118,14 +119,6 @@ static int boost_set_msr(bool enable)
->                 val |=3D msr_mask;
->
->         wrmsrl(msr_addr, val);
-> -       return 0;
-> -}
-> -
-> -static void boost_set_msr_each(void *p_en)
-> -{
-> -       bool enable =3D (bool) p_en;
-> -
-> -       boost_set_msr(enable);
->  }
->
->  static int set_boost(struct cpufreq_policy *policy, int val)
-> @@ -532,15 +525,6 @@ static void free_acpi_perf_data(void)
->         free_percpu(acpi_perf_data);
->  }
->
-> -static int cpufreq_boost_down_prep(unsigned int cpu)
-> -{
-> -       /*
-> -        * Clear the boost-disable bit on the CPU_DOWN path so that
-> -        * this cpu cannot block the remaining ones from boosting.
-> -        */
-> -       return boost_set_msr(1);
-> -}
-> -
->  /*
->   * acpi_cpufreq_early_init - initialize ACPI P-States library
->   *
-> @@ -931,7 +915,6 @@ static void acpi_cpufreq_cpu_exit(struct cpufreq_poli=
-cy *policy)
->
->         pr_debug("%s\n", __func__);
->
-> -       cpufreq_boost_down_prep(policy->cpu);
->         policy->fast_switch_possible =3D false;
->         policy->driver_data =3D NULL;
->         acpi_processor_unregister_performance(data->acpi_perf_cpu);
-> --
-> 2.31.1.272.g89b43f80a514
->
+Thank you very much for your reply. Will change.
+
+> 
+>> +#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
+>> +#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
+>> +#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
+>> +
+>> +/* Interrupt Mask Register Related to Legacy Interrupt */
+>>   #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
+>> +
+>> +/* Interrupt Mask Register Related to Miscellaneous Operation */
+>> +#define PCIE_CLIENT_INTR_MASK_MISC	0x24
+>> +
+>> +/* Power Management Control Register */
+>> +#define PCIE_CLIENT_POWER_CON		0x2c
+>> +#define  PME_READY_ENTER_L23		BIT(3)
+>> +
+>> +/*  Message Generation Control Register */
+> 
+> double spaces, other comments just have one space.
+> 
+
+Will change.
+
+> 
+>> +#define PCIE_CLIENT_MSG_GEN_CON		0x34
+>> +#define  PME_TURN_OFF			HIWORD_UPDATE_BIT(BIT(4))
+>> +#define  PME_TO_ACK			HIWORD_UPDATE_BIT(BIT(9))
+>> +
+>> +/* Hot Reset Control Register */
+>>   #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
+>> +#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+>> +
+>> +/* LTSSM Status Register */
+>>   #define PCIE_CLIENT_LTSSM_STATUS	0x300
+>> -#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
+>> -#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
+>> +#define  PCIE_SMLH_LINKUP		BIT(16)
+>> +#define  PCIE_RDLH_LINKUP		BIT(17)
+>> +#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
+>> +#define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
+>>   
+>>   struct rockchip_pcie {
+>>   	struct dw_pcie pci;
+>> @@ -176,13 +195,13 @@ static u32 rockchip_pcie_get_pure_ltssm(struct dw_pcie *pci)
+>>   static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
+>>   {
+>>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
+>> -				 PCIE_CLIENT_GENERAL_CONTROL);
+>> +				 PCIE_CLIENT_GENERAL_CON);
+>>   }
+>>   
+>>   static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
+>>   {
+>>   	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_DISABLE_LTSSM,
+>> -				 PCIE_CLIENT_GENERAL_CONTROL);
+>> +				 PCIE_CLIENT_GENERAL_CON);
+>>   }
+>>   
+>>   static int rockchip_pcie_link_up(struct dw_pcie *pci)
+>> @@ -274,8 +293,8 @@ static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
+>>   	u32 status;
+>>   
+>>   	/* 1. Broadcast PME_Turn_Off Message, bit 4 self-clear once done */
+>> -	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN);
+>> -	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN,
+>> +	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN_CON);
+>> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN_CON,
+>>   				 status, !(status & BIT(4)), PCIE_PME_TO_L2_TIMEOUT_US / 10,
+>>   				 PCIE_PME_TO_L2_TIMEOUT_US);
+>>   	if (ret) {
+>> @@ -294,7 +313,7 @@ static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
+>>   
+>>   	/* 3. Clear PME_TO_Ack and Wait for ready to enter L23 message */
+>>   	rockchip_pcie_writel_apb(rockchip, PME_TO_ACK, PCIE_CLIENT_INTR_STATUS_MSG_RX);
+>> -	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER,
+>> +	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER_CON,
+>>   				 status, status & PME_READY_ENTER_L23,
+>>   				 PCIE_PME_TO_L2_TIMEOUT_US / 10,
+>>   				 PCIE_PME_TO_L2_TIMEOUT_US);
+>> @@ -552,7 +571,7 @@ static void rockchip_pcie_ltssm_enable_control_mode(struct rockchip_pcie *rockch
+>>   	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
+>>   	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+>>   
+>> -	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CONTROL);
+>> +	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CON);
+> 
+> I can see why you renamed PCIE_CLIENT_GENERAL_CONTROL to PCIE_CLIENT_GENERAL_CON
+> (to match PCIE_CLIENT_MSG_GEN_CON).
+> 
+> But now we have PCIE_CLIENT_MSG_GEN_CON / PCIE_CLIENT_GENERAL_CON and
+> PCIE_CLIENT_HOT_RESET_CTRL.
+> 
+> _CTRL seems like a more common shortening. How about renaming all three to
+> end with _CTRL ?
+
+I saw that TRM is named like this.
+
+PCIE_CLIENT_GENERAL_CON / PCIE_CLIENT_MSG_GEN_CON / 
+PCIE_CLIENT_HOT_RESET_CTRL
+
+Shall we take TRM as the standard or your suggestion?
+
+Best regards,
+Hans
+
+
+
