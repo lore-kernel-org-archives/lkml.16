@@ -1,169 +1,153 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADB328E5E5
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18704263F54;
+	Wed, 23 Apr 2025 18:28:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432831; cv=none; b=olyHrW5iPU1zmeQlDaK+aZFVer5hB/xzK0oOcidzBMiEtBcAMdk0pePkMyYi1CBVsoO8/Ile9VAQCfXzM1tkcsGwredgc0IyDugn3+F+w3ZBYeXONleTj9widfbugKpBwF0BAF/jMbHlME+dAq7cuoq1tajNSNZgxybwpuIPvN4=
+	t=1745432886; cv=none; b=EYSSCvQgNlXwMKpxMHK1VA7QojPb6eLfQv2JmUFqhRbsEhxk012rLzrkhcoMJUJfr/F6KbilzcjM7+uE5gfAB2JTZGMkEKeFcuydPFPa5juKtSq/RJkr6nVDnMPJIKAk7JGUoUkditNlFnZ3LUGzdcwgaJnHKzjwukforbunXJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432831; c=relaxed/simple;
-	bh=zL5sHdCz+7jA44O4hfuhtBQLvE34dKh9l74abBoAdBk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLdWhDeIBhhKdqrlBilVhhocmhjpF0hQpoqGbT3fhwKVum9sxz8U7Hk/sRZkHKHEm303S1QzlDRTAYPGTPrVJDeaRAhFaF0W4t4b2jIYH5x/wrDNnn8WMzai0ky8JqjxJv3XPU2arZrj0JgJoK603J5Bftz7hCbbR/suLRt5COk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jcjTmWUo; arc=none smtp.client-ip=209.85.210.182
+	s=arc-20240116; t=1745432886; c=relaxed/simple;
+	bh=i7eHnOq25ulKjA9Oo8JHto2f6z++0PCfbt9HfXtPDQU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BXFlkWjrKDmS59mbSlvc5OVgAT/20qDsXlLRCy4X9uul5deWh+Z+AVHC4BM4cv5cwRvfIw43QDXnxHoBDpA4oATuoFEuTwFfGxmENbq2+YS7C/rLsSatiqNjyDEB72c8KryQ2n4Lnmrh1Ru9ktPebuKCoC37a1ua94AwssM3tKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m8jALydd; arc=none smtp.client-ip=209.85.210.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcjTmWUo"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736c277331eso1352527b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:27:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m8jALydd"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so1194720b3a.0;
+        Wed, 23 Apr 2025 11:28:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745432829; x=1746037629; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3g25cudfdER1fultAc6guoG7d90Bj2J+6OCH21hX/70=;
-        b=jcjTmWUoCdNNt83Pxxb/JbjRk6k/zaO5blqQbOPiunD/olHaxDsQJmlqRPHqG2I6u1
-         Y5pexx5+98MPXbni2UCTLBd+wGOumy0JmvdzPMAo69O8m84un1gGXGQTCmz0aqpmVQXd
-         OmThiWJjfwDGf/pbyyhsq5gkjuonPAItcsJQzO79vg351w/TBNeYiVJv+qFk2wfzFbBM
-         PBbw58Jpovug5Pgx8VnxRkAIGItPEC0hHKGDpD88TAweFjBb1qqchOqWDsrC5iZvvI3s
-         ZzNjKJ772c2fTGDSerJFu4mmCLQP+13hrUl/4SaPSzKR7DOYCi3SCFScMjS4LPFuqmvh
-         ouqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745432829; x=1746037629;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745432884; x=1746037684; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3g25cudfdER1fultAc6guoG7d90Bj2J+6OCH21hX/70=;
-        b=pfdv3VJefYsHRb7HPTKK0WkDTfMXEkstNBKE+VtOzEeetKLfyEiOTsyIe+hTgPp7Xw
-         Yz7iSZq2onu6lcpdIBEEl0DKW8P3+5pPZO13er910dGyTWpwO4RcyhIDsfhENAOZXiI0
-         /GxIuFUFCX0fFfHc1OdSGYG9EQXf91q6lu/2ppxHkbpe7rM8oGVWGdFM0jZLa4/9PM5K
-         8UBX8+9+SVS1ZxkpRxCmT/bsAe/Cm7vCxH0JyQw4vq5l0fWN0wAJVnatxdnyruqTDWbb
-         2TYPWDhCr2Oh56oVRP6VSt6GoG7wZTmNOZdY7YAQqg6jNyZx3KtJ/UEjdrqS+y6n4GTx
-         uUBg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8egOnOu8utqhh6Sv+KUdIUUmFSEyVyuHo+je8q75LsoyuLRv5lg6zQbk2oJv7PSqfQ157W1cL55BC6gQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKCEujpDVujTzV7mCtRAwnJW9z40cCfPIolII0epF3+wD/+6Jj
-	uKOSS7gNZdGQm1I3vwpY4Bx8ZfiO4wikrpXp82nzBdEBz1DWceE+
-X-Gm-Gg: ASbGncta0TsyGz9ErwFTF5JIJCbKIhmYpf+1E6qdd/vtRSirKl/9Y0F4Brx2skkUhFN
-	2nmE3i/yZI3hC1PXtkaxzgkCZT1QMKvotpdwLzSgITUpsHx7AG3uuTGXQXZrdp24XhunNnlSPOa
-	82d35KSnWWEbpzfT+FvsZOpUnt7NAqHBMSYDzBJG7A1TxTvgSLLCuqN3ai06hNgcIoHRDrhhNIB
-	v2t2j8PvlXJEbzGaKXiza1DB85mhoho125jFQTvlAxM8PYpyIGwSgtQ/KziA5kruVdGCZp43sNR
-	LxxEqo+CeD0XsOISZFeFb1KJK8XUtidi08mx6Xg0bjYFgFFfaSo=
-X-Google-Smtp-Source: AGHT+IGHyaRCja82Jp63ca6tDfY0vscU4gtWT0BCYYEH2SbVC6BGq3lUVFXS6KtlFAXf+XFDnn7bog==
-X-Received: by 2002:a05:6a21:9105:b0:1f0:e2d0:fb65 with SMTP id adf61e73a8af0-20442d54a7fmr200581637.2.1745432828582;
-        Wed, 23 Apr 2025 11:27:08 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa5d084sm11268524b3a.103.2025.04.23.11.27.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 11:27:07 -0700 (PDT)
-Date: Wed, 23 Apr 2025 14:27:06 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Marc Zyngier <maz@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
-	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com,
-	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
-	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
-Subject: Re: [PATCH v3 4/6] arm64: nvhe: Convert the opencoded field modify
-Message-ID: <aAkw-tFctkk3xyS8@yury>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
- <20250417-field_modify-v3-4-6f7992aafcb7@quicinc.com>
- <86r01rjald.wl-maz@kernel.org>
- <aAJsaNdznnz-1qap@yury>
- <aAkn8lvzoa1grdkt@shell.armlinux.org.uk>
+        bh=W2SR0uKGM0vhthncIe5Y/+JuVpZCEkOEOOgsDc6OPSY=;
+        b=m8jALyddW1jhfnYdSjjUYbWQf2cZu5lE2vEgHsKKovatzcuhqygcq05EvmVI1DIBVo
+         9ZvD0AzbZM8gTganA1+VibTkwlyrtanRyqRzeJ+QSQ9cS0LQpbAtNeqfOrqXAyXoaJ2D
+         AAZ674H0r7ECEbk9tKuxBIlueiQpyVXXJ7tqjw3qmWfRsjEHBVFokHEmBE11VE565IS8
+         6OL5tuMa/ZTbwEpC3c/Id745xs7YFRWTFfRH9RGCUyyM0OvWnFLhpCvFvn79bwCNXwWG
+         y3Fkcjf4CQCxrZoKJeSH9nMPZjlgsLsxHrxayI+KmIWWMjBy0xRSfHHx2uetJSnLBn/m
+         W6Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745432884; x=1746037684;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W2SR0uKGM0vhthncIe5Y/+JuVpZCEkOEOOgsDc6OPSY=;
+        b=DWILsNyCGf9IkkIO3T9G6KImpwD7dnHrR/LiYr2VThcFMRMenlX+3LxYx33WMT4gZl
+         +RxunCFTEnoSFA8C7erSTnkiGRNDYJrwWp0AGF69F79R9KSQj8+uRYKmoFYKT+/kD7qR
+         i+DeLTOGt3jOmfHuHaxeIdhQYPEVKuFYeESKLeFUOHsEogg9wF5MGZ3lb0MSsa8qoY+C
+         0RAfAu+tnVmY+JCJ0fzRL8eJ0JneRhAVNu0VPCGGf3Ozm1v9aDHFM7HiaGR60OewpLgJ
+         je85AOVSDuVLmMraXSwSm7a0I28uZ1oy/M0PhoqS5QGcHjTS2Tq2NPSRdOhsxFEaji85
+         AnjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHkW5l7Cgp7S44Q2WF9BfE6GzM+PFCO6rbEP39Tek20AQefzU7oqKnCJID5/6JNAc6JUGtVuHRY6zy/gCc@vger.kernel.org, AJvYcCVPYMZc2VTq6lCujUR8Uth/4D3Ajln+eIvNfkajgNO7J0IQbcq5YYalZ6sEcxwABTdb/hDidvYJ9lAYfThd520n@vger.kernel.org, AJvYcCVU/MKqLMtVpJT8W4uK8ds2bVBnlGamI6vYdvXOXcIFrj83nB5seVUV6K24M0+DDNF9pLfcmsvg@vger.kernel.org, AJvYcCVxmuvg0k3lZ8uCO9kCW6zFBJqanrfH/MGuaB/o6KY/Wk3xjREdoaVThsOX0IuptWNJSrQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDBC7jhNPJQJ4A/06UFJjHilVlzzf2CDpwFoYVmiJiKfE5EWsW
+	Kx1jGSqLrwHUvhs6kijNvRXd53hNUnY1Qh6BYYgLdZzUpTA0/Ew3HRuHZf1L/YtvW+zuWW+kopS
+	26DrO7fgcQmdSpQuGJcGnv0iYY8w=
+X-Gm-Gg: ASbGncvjEujjIqs2/6S8pbEFvvIGY/+Im3vKbDjbpg3xg8+DVsipXFpxVfV1rNEYfsg
+	eZ1tICsHzt16VUyKxYRX+/NcyF0rwATacJhcOsKTtKK3BcOd6apZ/qO0hLiBQkK4JMwyUaAO/D/
+	7Jj/ilEQIuwkE+kLcB6VmUtbQswjPI1oYZvSYPwQ==
+X-Google-Smtp-Source: AGHT+IHjIZbdBZmeAwLPdKD6FDavuuiRxmwzDpsEsNPjz/QHrVA/etMXlAiTyFnC/5fOB2UDc4R555MT5LHsZ8I/s0A=
+X-Received: by 2002:a05:6a21:6d93:b0:1f3:3864:bbe0 with SMTP id
+ adf61e73a8af0-20442da897amr173428637.8.1745432884380; Wed, 23 Apr 2025
+ 11:28:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAkn8lvzoa1grdkt@shell.armlinux.org.uk>
+References: <20250423121329.3163461-1-mannkafai@gmail.com> <20250423121329.3163461-2-mannkafai@gmail.com>
+In-Reply-To: <20250423121329.3163461-2-mannkafai@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 23 Apr 2025 11:27:52 -0700
+X-Gm-Features: ATxdqUG1OQGWGxprkuBY8mLRZZsqeZGEzZTpl5Cqi_Yfb8QsDm03VOkq41zrZm8
+Message-ID: <CAEf4BzYn0xRf6SwKHLbbqsDTueC-r_UxYOAX3+o-jswq7=a8sA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 1/2] bpf: Allow access to const void pointer
+ arguments in tracing programs
+To: KaFai Wan <mannkafai@gmail.com>
+Cc: alexei.starovoitov@gmail.com, martin.lau@linux.dev, ast@kernel.org, 
+	daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, song@kernel.org, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	mykolal@fb.com, shuah@kernel.org, memxor@gmail.com, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, leon.hwang@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 06:48:34PM +0100, Russell King (Oracle) wrote:
-> On Fri, Apr 18, 2025 at 11:14:48AM -0400, Yury Norov wrote:
-> > On Thu, Apr 17, 2025 at 12:23:10PM +0100, Marc Zyngier wrote:
-> > > On Thu, 17 Apr 2025 11:47:11 +0100,
-> > > Luo Jie <quic_luoj@quicinc.com> wrote:
-> > > > 
-> > > > Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-> > > > - reg &= ~MASK;
-> > > > - reg |= FIELD_PREP(MASK, val);
-> > > > The semantic patch that makes this change is available
-> > > > in scripts/coccinelle/misc/field_modify.cocci.
-> > > > 
-> > > > More information about semantic patching is available at
-> > > > https://coccinelle.gitlabpages.inria.fr/website
-> > > > 
-> > > > Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> > > > ---
-> > > >  arch/arm64/kvm/hyp/include/nvhe/memory.h | 3 +--
-> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > > index 34233d586060..b2af748964d0 100644
-> > > > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > > @@ -30,8 +30,7 @@ enum pkvm_page_state {
-> > > >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
-> > > >  						 enum pkvm_page_state state)
-> > > >  {
-> > > > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
-> > > > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
-> > > > +	FIELD_MODIFY(PKVM_PAGE_STATE_PROT_MASK, &prot, state);
-> > > >  	return prot;
-> > > >  }
-> > > 
-> > > Following up on my suggestion to *not* add anything new, this patch
-> > > could be written as:
-> > > 
-> > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > index 34233d5860607..08cb6ba0e0716 100644
-> > > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > @@ -30,9 +30,8 @@ enum pkvm_page_state {
-> > >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
-> > >  						 enum pkvm_page_state state)
-> > >  {
-> > > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
-> > > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
-> > > -	return prot;
-> > > +	u64 p = prot;
-> > > +	return u64_replace_bits(p, state, PKVM_PAGE_STATE_PROT_MASK);
-> > >  }
-> > 
-> > This is a great example where u64_replace_bit() should NOT be used. 
-> 
-> Why not? Explain it. Don't leave people in the dark, because right
-> now it looks like it's purely a religous fanaticism about what
-> should and should not be used. Where's the technical reasoning?
+On Wed, Apr 23, 2025 at 5:14=E2=80=AFAM KaFai Wan <mannkafai@gmail.com> wro=
+te:
+>
+> Adding support to access arguments with const void pointer arguments
+> in tracing programs.
+>
+> Currently we allow tracing programs to access void pointers. If we try to
+> access argument which is pointer to const void like 2nd argument in kfree=
+,
+> verifier will fail to load the program with;
+>
+> 0: R1=3Dctx() R10=3Dfp0
+> ; asm volatile ("r2 =3D *(u64 *)(r1 + 8); ");
+> 0: (79) r2 =3D *(u64 *)(r1 +8)
+> func 'kfree' arg1 type UNKNOWN is not a struct
+>
+> Changing the is_int_ptr to void and generic integer check and renaming
+> it to is_void_or_int_ptr.
+>
+> Cc: Leon Hwang <leon.hwang@linux.dev>
+> Signed-off-by: KaFai Wan <mannkafai@gmail.com>
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  kernel/bpf/btf.c | 13 +++----------
+>  1 file changed, 3 insertions(+), 10 deletions(-)
+>
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index 16ba36f34dfa..14cdefc15f0e 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -6383,12 +6383,12 @@ struct btf *bpf_prog_get_target_btf(const struct =
+bpf_prog *prog)
+>                 return prog->aux->attach_btf;
+>  }
+>
+> -static bool is_int_ptr(struct btf *btf, const struct btf_type *t)
+> +static bool is_void_or_int_ptr(struct btf *btf, const struct btf_type *t=
+)
+>  {
+>         /* skip modifiers */
+>         t =3D btf_type_skip_modifiers(btf, t->type, NULL);
+>
+> -       return btf_type_is_int(t);
+> +       return btf_type_is_void(t) || btf_type_is_int(t);
+>  }
+>
+>  static u32 get_ctx_arg_idx(struct btf *btf, const struct btf_type *func_=
+proto,
+> @@ -6776,14 +6776,7 @@ bool btf_ctx_access(int off, int size, enum bpf_ac=
+cess_type type,
+>                 }
+>         }
+>
+> -       if (t->type =3D=3D 0)
+> -               /* This is a pointer to void.
+> -                * It is the same as scalar from the verifier safety pov.
+> -                * No further pointer walking is allowed.
 
-Because enum is an integer, i.e. 32-bit type. Now, the snippet above
-typecasts it to 64-bit fixed size type, passes to 64-bit fixed-type
-function, and the returned value is typecasted back to 32-bit int.
+I preserved this comment (with slight rewording to make sense in a
+combined check context). Applied to bpf-next, thanks.
 
-Doesn't sound the most efficient solution, right? On 32-bit arch it
-may double the function size, I guess.
-
-But the most important is that if we adopt this practice and spread it
-around, it will be really easy to overflow the 32-bit storage. The
-compiler will keep silence about that.
-
-Fixed types are very useful in their specific areas - cross-ABI data
-transfer, etc. But mixing them with native types like int may hurt
-badly. 
-
-Hope that helps.
-
-Thanks,
-Yury
+> -                */
+> -               return true;
+> -
+> -       if (is_int_ptr(btf, t))
+> +       if (is_void_or_int_ptr(btf, t))
+>                 return true;
+>
+>         /* this is a pointer to another type */
+> --
+> 2.43.0
+>
