@@ -1,114 +1,101 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2D81B0F17;
-	Wed, 23 Apr 2025 06:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCD61426C;
+	Wed, 23 Apr 2025 06:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745390734; cv=none; b=pnE2zzFLflehPGbQZ27o4shU8H89zPXZiFZjNXxXA+dVaMNFKlobg8CuyAdM0RuIAqgc+WrAnvS6cfGgvfhWEgSTm4GTe4E32mH7J9S9fBGVINOnR6H4HpWDn9H3YQwmAJ8BUlT2T4AeDrP2pRWPEWD5HJyUo2ZBCFM/Y8koKpA=
+	t=1745390870; cv=none; b=kSQukl2nWXQ/A6OMe8x7lmLMzQU5cUb5PGtRrLIZShT2ImaKWjcfGaQEJfnlbja6TWaTghgKCpv3CBHUYsVuei1Kilv/b2i5962Fpm3l9jFuRqzNCAFifYCSFmYN9+4+52aflSwr7uhV4w7JN/kew4fXfUq62tuq3bLfIlD8/vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745390734; c=relaxed/simple;
-	bh=eAZQohfiqTNuhy/qRZvsfQDG7jIiwf3DkhHIBHMlOMA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DgtaU4BtsIjEIfL6mV7ouHTNeKSZtaz7PRgpxdiTxrHG+CuTmw1Mc5JO21nh3YiqqfFVfxkvsGTFB4Gu1QV3WxEnjY0wlgXEBAtiZnrAnhIxU11tAvio1Y1AVLKNZZkmUcYYsz5gXdFQr1v96/eNGD64DKEZjyJz1ybHH/Q/y5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rJWD1RGx; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rJWD1RGx"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6fkI6011228;
-	Wed, 23 Apr 2025 06:45:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=HrLUjjBTROjldbtZdwwxXWZ8X9N0FO
-	yBH2g5cq+SOnw=; b=rJWD1RGxkR/Njk1KZtnJFUBI8ksIN2gzvFSTs0G53V8tC2
-	2PYQkHMMCOoVM2IyIJ69ItKxssfmf3eXOvxrLiPqzWPy/thmLNNsfAlJct+xPsgv
-	+OmMIb779ybfbaITgzx90xt6WVmI/rAStiZnmROS39n1TDC1vib2t/weNBBwxUnt
-	7QR5xqVjz8xa1hcaNXH07fiTU6/KDd6vGMMM55x+hg6R53Pkkrat5JFbCdhmW9HI
-	h3Vn66vvcYtgkUhfCog43Lnwg3AmZP1KJbIC5n363HWcPU8b2YExs5e1qjjCugPV
-	frqPvfZTmJNQHmQtg1rZBCL55OA1ThT6yUvcUMCw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466jpe1wv5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 06:45:22 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6QJEf005884;
-	Wed, 23 Apr 2025 06:45:21 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfx9st4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 06:45:21 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53N6jJEZ52560210
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 06:45:19 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A232220043;
-	Wed, 23 Apr 2025 06:45:19 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4EABC20040;
-	Wed, 23 Apr 2025 06:45:19 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.60])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 23 Apr 2025 06:45:19 +0000 (GMT)
-Date: Wed, 23 Apr 2025 08:45:17 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
-        brauner@kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Shin'ichiro Kawasaki" <shinichiro.kawasaki@wdc.com>,
-        Xiao Ni <xni@redhat.com>
-Subject: Re: [PATCH] devtmpfs: don't use vfs_getattr_nosec to query i_mode
-Message-ID: <20250423064517.8056Aa2-hca@linux.ibm.com>
-References: <20250423045941.1667425-1-hch@lst.de>
+	s=arc-20240116; t=1745390870; c=relaxed/simple;
+	bh=s/1X5YNyN+CdDurbJV7J7vZqXcyMtwS7lCt/LK+S5Gw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ze2Kuo24vrbG89nTV7aM8rccLxB0qnVcOfjIRkvIofOKiVG76bMSeVOQICdPz3YTc8ip7SZnVj4Kc3M854N67Ts1PWSXmYTvWYMqNMBHctw2jQHww/k7ckg8cKH8jpjG/DfYfS+nGYi+3eEYCfAGpuYyTbY8wYfrQgCmQZABXsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-523dc190f95so2635903e0c.1;
+        Tue, 22 Apr 2025 23:47:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745390867; x=1745995667;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NNOx3PXNDnzinyO2ItTDl2s1Y3UOOcEz8gmDtrKSNt8=;
+        b=QbmTpDaqFgDbNRWOW/gKYFcX7WT1BNnBTxCZf5xx89Vw+aaGgd6ZQc4W8GH359+6Np
+         BUyUOA7C5KlfUX62Ld3UN2Hru30hK5+JwXahac46DUsxb/o1fHBESpKN4T7zxYDjX91c
+         MwTl4uC8wDNNiWm3tL96ulmD3lh8XPCo5Bt5Abcf6ff6k4HQ6fYDl+GDn0yu4apWvL6m
+         1dOhUXbOCZdLGDj0SOuqkS/ZTivrB2W7tnoi6wYeJvT58n2MGH7uGd7E/3LW3E/qg6BU
+         eqUSO3QK/JJRpPNj7PwZaiTgIlGr7W+BF31l/dBsCVa2+uwkqc/zV98g+iDi3Sktgltj
+         UQWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUAihJukWuo4P72m+qokUfyklxSGskIO90uOPZGVSKzf9uuqr3XS9ClvyZFK8QcGgteRXGxVslb2+QyfKc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfPrIC+Cdcrn8reKEs5PAZl2V3P45I9Qo1KekCAFhr83DVzMRL
+	gJeLCLhkr1Jh0+Q/0PZKYp2QlBF7vQ4nxuIctd3ekJ3SC3XeZ+B29QvnWt5f
+X-Gm-Gg: ASbGncsaKkbzZ8XcL4gL1aIglXLwfAtz4n/fgeY6rql8ptH8oIz2m90fGjnjS/DlLr8
+	yxyPZZpit4psRkXM9nXm8fV5HeIS/2aTAdA7ikuO1ydrSsZ18KhmclWIU0E0ivK+gCfWafUbeVf
+	23nz8EeaEGx9muskVIKW9OAY4PP7IDOjwJPTay3nRFm9KxANQJhQ56Fp5/QgZ1o5vCWk6IFK9FV
+	p9FQ1qWsZ/xBBfQeaRXsHDOEXp3kCZYMJOsz3npzyneBPJ/Y6vVGDjaqD5fbIisFWjyMF0l5Tx3
+	PpIAZ9NKgEaw/JFDO17W2pFv2Fb9tJaYmC/yDqqevdWoxLbv2Kf+UBCO5DUrn/5iH48xmegrQEo
+	a73w=
+X-Google-Smtp-Source: AGHT+IEIfwWSy3c6E6D6wo9aLLH4Ef+bsTbWC4uD9egJerATZDSzG5Mo78EY/hTZk/l/sNDfEznblg==
+X-Received: by 2002:a05:6102:21a4:b0:4b2:adfb:4f91 with SMTP id ada2fe7eead31-4cb80233fa9mr10924892137.21.1745390866878;
+        Tue, 22 Apr 2025 23:47:46 -0700 (PDT)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4cb7dd7bf14sm2568687137.2.2025.04.22.23.47.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Apr 2025 23:47:46 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-873ac8037ecso2159063241.3;
+        Tue, 22 Apr 2025 23:47:46 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVXweBVMg+totZCPKw7JDoZcHJtAm1zv4MIOsiVsLpMzZamuhxFdaAchGQknMFJ/zc8HLAWaWgTlRZPljY=@vger.kernel.org
+X-Received: by 2002:a05:6102:55c8:b0:4c1:801e:deb2 with SMTP id
+ ada2fe7eead31-4cb8011dfacmr9907626137.7.1745390866356; Tue, 22 Apr 2025
+ 23:47:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423045941.1667425-1-hch@lst.de>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: NvDXFq_rB7Cz4R7e4tulo_55oTKQWLw3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA0MyBTYWx0ZWRfXx74tVdqayq8f dGD/J1er7+3LXgD4pM5NqYWxFs/gDs73jslGZ8y1XodDF6ZS0cUNFW4XpJi4woRY8VjndN0Z1JZ lpG9axfLyRbd1qqWG8wTZoJJ4p1042i+uPXOEO+XdfhpZo3MuIpS/szBD53cxb/JFKncL8xQLRk
- HtgSaBGAOVrHuAOVfOrXMeuhLnb40kJ0qOlsL7QI8jKJkMcvnAw+kJGrhhStdEMktEqPLf4fl4l I0XdF7wN9dRzOd8Ncky27jkKj3tPIvoIDBBacNIPpa8pwFnASyewommYKJrNHlyRBCAoAPxCc8+ c2B8e356Ki1RPydhQVZ+zHOqogMi2QxmAKA/Ltvr8TdaQq1hkp3YwrZ8UaW6648WraCjxJ6ZRZZ
- Xz+pq9kct10jkBK5WmZvzp6DN30YF+CsEQ/JCI5ZWTND67BISf4tuMjfL2RENcn6MJWpGBD8
-X-Proofpoint-GUID: NvDXFq_rB7Cz4R7e4tulo_55oTKQWLw3
-X-Authority-Analysis: v=2.4 cv=IdWHWXqa c=1 sm=1 tr=0 ts=68088c82 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=JF9118EUAAAA:8 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=IDZ0-sv6maarBuPMgTYA:9
- a=CjuIK1q_8ugA:10 a=xVlTc564ipvMDusKsbsT:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=10 mlxscore=10
- lowpriorityscore=0 malwarescore=0 phishscore=0 impostorscore=0 bulkscore=0
- spamscore=10 priorityscore=1501 suspectscore=0 adultscore=0 mlxlogscore=94
- clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230043
+References: <20250419161543.139344-1-ebiggers@kernel.org> <20250419161543.139344-2-ebiggers@kernel.org>
+In-Reply-To: <20250419161543.139344-2-ebiggers@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 23 Apr 2025 08:47:34 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU6coLggkFt-CKsaLJ7fCcc+8q51QFYUp6_6QgWtGfmrQ@mail.gmail.com>
+X-Gm-Features: ATxdqUEAjYzB4VDfBMC5OibqqaiFWBcBJ1xMq81c3OoazPmPD4fLzYADLc586G8
+Message-ID: <CAMuHMdU6coLggkFt-CKsaLJ7fCcc+8q51QFYUp6_6QgWtGfmrQ@mail.gmail.com>
+Subject: Re: [PATCH 1/9] crypto: tcrypt - remove CRYPTO_TEST from defconfigs
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 23, 2025 at 06:59:41AM +0200, Christoph Hellwig wrote:
-> The recent move of the bdev_statx call to the low-level vfs_getattr_nosec
-> helper caused it being used by devtmpfs, which leads to deadlocks in
-> md teardown due to the block device lookup and put interfering with the
-> unusual lifetime rules in md.
-> 
-> But as handle_remove only works on inodes created and owned by devtmpfs
-> itself there is no need to use vfs_getattr_nosec vs simply reading the
-> mode from the inode directly.  Switch to that to avoid the bdev lookup
-> or any other unintentional side effect.
-> 
-> Reported-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-> Reported-by: Xiao Ni <xni@redhat.com>
-> Fixes: 777d0961ff95 ("fs: move the bdex_statx call to vfs_getattr_nosec")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Tested-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-> Tested-by: Xiao Ni <xni@redhat.com>
-> ---
->  drivers/base/devtmpfs.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
+Hi Eric,
 
-Tested-by: Heiko Carstens <hca@linux.ibm.com>
+On Sat, 19 Apr 2025 at 18:18, Eric Biggers <ebiggers@kernel.org> wrote:
+> From: Eric Biggers <ebiggers@google.com>
+>
+> CONFIG_CRYPTO_TEST enables a benchmarking module that is only really
+> useful for developers working on the crypto subsystem.  It is in a bunch
+> of defconfigs.  But as with most of the other crypto options that tend
+> to be randomly set in defconfigs, it is unlikely that much thought was
+> put into these, especially when placed in "production" defconfigs.
+> Clear it out of the defconfigs for now.
+>
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+
+Thanks for your patch!
+
+All of these are modular, so I don't think it's a big issue, even on
+"production" defconfigs. It just means the test is available when
+someone feels the urge to run it.
+Hence I try to make all tests available as modules in m68k defconfigs.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
