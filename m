@@ -1,143 +1,162 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB75C4086A;
-	Wed, 23 Apr 2025 01:04:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CCD79D0
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:05:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745370256; cv=none; b=Yk1MMOUJQd1nARZWoAhawTxlo2iCXGcQxkQf4TTCfhUR6zsOAXYx3FuF+XmMIDgT9ZlDl1q0TorqZq9Y6OLisWhOusCcNr4BijEAze8G4MYZ7fWpWAec9+km/iCdbewHli+cStzMifzBmlnEwu1dgonTpIabTgpQ/zRLujwMmOA=
+	t=1745370319; cv=none; b=hypsT1dKpCaDpaiGZb/POJfEPJ3rJXJMjxv9vIzQzQoVVDJjsd8wTHePLWuvDP7nbj1KaroxnDoDSWqDWwmdinrR0cmH1b0YM8ALpIeKyFMdpUN5k2XXotCVCrNLcwCazDzsF1SoTqejzt2FdrqZCaXWP418zmd/SoPedb7bRfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745370256; c=relaxed/simple;
-	bh=W3DxN2VaTw1K8QlTyBS2uB6WKXda3G3BaJSemLmTAy8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cli3WUPMvI2y5TK2wF716zRSPvpRw1S66Lu1qJQrtxD/9ItzjqW7tfHKX1+DzSU+JFqAh75Z999FUuzAZ4cB3cggjVvHPCvR6XESbSpE7IO45MCVwstwBzlA2ZdO59eqZTp7yglz4EDbtRVwiOo5U71i2FNmeFSHQWULHX9W02Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [111.207.111.194])
-	by gateway (Coremail) with SMTP id _____8Axz3OHPAhoI1nEAA--.62416S3;
-	Wed, 23 Apr 2025 09:04:07 +0800 (CST)
-Received: from ubuntu.. (unknown [111.207.111.194])
-	by front1 (Coremail) with SMTP id qMiowMDxvhuCPAhoP92QAA--.46847S2;
-	Wed, 23 Apr 2025 09:04:02 +0800 (CST)
-From: Ming Wang <wangming01@loongson.cn>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Oscar Salvador <osalvador@suse.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naoya Horiguchi <nao.horiguchi@gmail.com>,
-	Michal Hocko <mhocko@suse.cz>,
-	David Rientjes <rientjes@google.com>,
-	Joern Engel <joern@logfs.org>,
-	Hugh Dickins <hughd@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: Huacai Chen <chenhuacai@kernel.org>,
-	lixuefeng@loongson.cn,
-	Hongchen Zhang <zhanghongchen@loongson.cn>
-Subject: [PATCH] smaps: Fix crash in smaps_hugetlb_range for non-present hugetlb entries
-Date: Wed, 23 Apr 2025 09:03:59 +0800
-Message-ID: <20250423010359.2030576-1-wangming01@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1745370319; c=relaxed/simple;
+	bh=S3VynQkL+J30C91IMEY8VWWuKTtlTQTO3qXoF4phIjo=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=UDz3r43vkolz0XQ6np/9tzBYeO11cdBMbbjrLGzqX6L4mH2c59wBFMAj9Gd7oyF0Heevo0XrIzIdYUceMnGtj0qnAmsLHR1Hzjg5Q8tEjZXt+rm2vhvjljAVL5N489tRCcS6gGv9AN5mzMmGf9UDzJe8xEeNKvvIm7Y942r5qMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=AioVbg1e; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AioVbg1e"
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250423010514epoutp016a25e4c4af8d547302b03d153c2a703c~4zQ2-9bCM2192821928epoutp01B
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:05:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250423010514epoutp016a25e4c4af8d547302b03d153c2a703c~4zQ2-9bCM2192821928epoutp01B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1745370314;
+	bh=pP+IFx7ncq0fcK/ShQu839YBHEsPNXLC3iMltP1GXV4=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=AioVbg1e2l/lYwDwIwuEkC1G413Ju9wZisMPf1goRUTEDXD+mjQP8X/K52eYDeUAf
+	 vPPDK8FAa3DOk5McWfIafPYyXLlpjKA21/aHZ1Hl/Lr/qtCfo7XIkcaFoJoM+owoXb
+	 xDecayfFbg9t0B0O1+aE6K0T44Kz7Ze5DamlLk0M=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPS id
+	20250423010514epcas2p4b2e31b25ce7e072e855c025729968f57~4zQ2oiYEO0926009260epcas2p44;
+	Wed, 23 Apr 2025 01:05:14 +0000 (GMT)
+Received: from epcas2p1.samsung.com (unknown [182.195.36.88]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4Zj19j5NMjz3hhTJ; Wed, 23 Apr
+	2025 01:05:13 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
+	20250423010513epcas2p4a58363956c1dab356dc2004471232d46~4zQ1nc1qf1202112021epcas2p4D;
+	Wed, 23 Apr 2025 01:05:13 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250423010513epsmtrp15a682a7fd5d5c8ce826e278baa2c388c~4zQ1mEXdE2717927179epsmtrp1X;
+	Wed, 23 Apr 2025 01:05:13 +0000 (GMT)
+X-AuditID: b6c32a29-55afd7000000223e-49-68083cc81705
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	8A.82.08766.8CC38086; Wed, 23 Apr 2025 10:05:12 +0900 (KST)
+Received: from KORCO115296 (unknown [12.36.150.221]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250423010512epsmtip1f394b0c85d0f7460339f546da0bb6f4c~4zQ1UwOTK1433614336epsmtip1H;
+	Wed, 23 Apr 2025 01:05:12 +0000 (GMT)
+From: =?UTF-8?B?7IaQ7Iug?= <shin.son@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzk@kernel.org>, "'Sylwester Nawrocki'"
+	<s.nawrocki@samsung.com>, "'Chanwoo Choi'" <cw00.choi@samsung.com>, "'Alim
+ Akhtar'" <alim.akhtar@samsung.com>, "'Michael Turquette'"
+	<mturquette@baylibre.com>, "'Stephen Boyd'" <sboyd@kernel.org>, "'Rob
+ Herring'" <robh@kernel.org>, "'Conor Dooley'" <conor+dt@kernel.org>,
+	"'Sunyeal Hong'" <sunyeal.hong@samsung.com>
+Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>
+In-Reply-To: <bc7a33de-9c8c-4377-a813-562da18ab314@kernel.org>
+Subject: RE: [PATCH 3/3] arm64: dts: exynosautov920: add cpucl0 clock DT
+ nodes
+Date: Wed, 23 Apr 2025 10:05:12 +0900
+Message-ID: <003801dbb3eb$c435aca0$4ca105e0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMDxvhuCPAhoP92QAA--.46847S2
-X-CM-SenderInfo: 5zdqwzxlqjiio6or00hjvr0hdfq/1tbiAQEBEmgIG+UBeQAAs1
-X-Coremail-Antispam: 1Uk129KBj93XoWxCw4fCF48tF1kAF18Xr4kZrc_yoWrGrW3pF
-	9akw4rXr18G34kGws7Jw4jq345Zws3WFW8GFs8Gr4Fk3sxJr9F9FyFgw4aqFy8A3s5G3y2
-	9F4jq3sFk3WYy3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUP529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6F4UJVW0owAaw2AFwI0_Jw0_GFylnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij2
-	8IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14
-	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkG
-	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
-	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jfTmhUUU
-	UU=
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQGPEGrsijGqefHqKZlvX6MGGm+h1AGVZY6SAqxO1r0BaffYMbQcWNlQ
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsWy7bCSnO4JG44Mg/mTzSwezNvGZrFm7zkm
+	i+tfnrNazD9yjtXi/PkN7BabHl9jtfjYc4/V4vKuOWwWM87vY7K4eMrV4v+eHewWh9+0s1r8
+	u7aRxaJp2XomBz6P9zda2T02repk89i8pN6jb8sqRo/Pm+QCWKO4bFJSczLLUov07RK4Mg40
+	3WAsuMVfcX97D2sDYydvFyMnh4SAicSzdwvZuxi5OIQEdjNKbGjYwA6RkJA4PGMCI4QtLHG/
+	5QgrRNFzRonLT6ezgSTYBAwlVv3YzgSSEBGYyCxx6cMFFhCHWWATo8S53TfZIFreM0qs7rwP
+	NpdTwE7i2JcdzCC2sICfRE/3BxYQm0VAVeL+kXlA+zg4eAUsJX7fBgvzCghKnJz5BMxmFtCW
+	6H3Yyghhy0tsfzuHGeI8BYndn46ygtgiAm4SvR//sEHUiEjM7mxjnsAoPAvJqFlIRs1CMmoW
+	kpYFjCyrGCVTC4pz03OLDQsM81LL9YoTc4tL89L1kvNzNzGCo1JLcwfj9lUf9A4xMnEwHmKU
+	4GBWEuH95caeIcSbklhZlVqUH19UmpNafIhRmoNFSZxX/EVvipBAemJJanZqakFqEUyWiYNT
+	qoGpf765d2irwcNvHw89luU+IyzpasTkNDnceF+h2NmFVz+9M9bRTgjaPuX1RVtfxwv82/xs
+	Z8hvbnz49t9snsTf0n8kzzpfOSstvdIlI7/hr/r2ErMDBVEcve+WqG6sU6xQjpvGInfbTNRc
+	4rLDxrlnrBtiv9XOL21SsTBkvPr3p++1Egvra7+n9yXPfZLqsXPz7WXzhTYrGKjzpcb9P7o8
+	j2Gdpuv/S7mpfSK7r6XejX334wCz077Z84pFZJbOz5FrTZ0s+G/CbcHsE57uRV29lyT3sRov
+	+9H742DVyz4+59Q184t7LTQYykymxVtIlx54bTRb5I3fkqAJp5X//n55x81J6sijB0L1/nmr
+	VwYrsRRnJBpqMRcVJwIAb2U1azkDAAA=
+X-CMS-MailID: 20250423010513epcas2p4a58363956c1dab356dc2004471232d46
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+cpgsPolicy: CPGSC10-234,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250418061515epcas2p4b57102967b07d665051a6297ab451a3c
+References: <20250418061500.1629200-1-shin.son@samsung.com>
+	<CGME20250418061515epcas2p4b57102967b07d665051a6297ab451a3c@epcas2p4.samsung.com>
+	<20250418061500.1629200-4-shin.son@samsung.com>
+	<bc7a33de-9c8c-4377-a813-562da18ab314@kernel.org>
 
-When reading /proc/pid/smaps for a process that has mapped a hugetlbfs
-file with MAP_PRIVATE, the kernel might crash inside pfn_swap_entry_to_page.
-This occurs on LoongArch under specific conditions.
+Hello Krzysztof Kozlowski,
 
-The root cause involves several steps:
-1. When the hugetlbfs file is mapped (MAP_PRIVATE), the initial PMD
-   (or relevant level) entry is often populated by the kernel during mmap()
-   with a non-present entry pointing to the architecture's invalid_pte_table
-   On the affected LoongArch system, this address was observed to
-   be 0x90000000031e4000.
-2. The smaps walker (walk_hugetlb_range -> smaps_hugetlb_range) reads
-   this entry.
-3. The generic is_swap_pte() macro checks `!pte_present() && !pte_none()`.
-   The entry (invalid_pte_table address) is not present. Crucially,
-   the generic pte_none() check (`!(pte_val(pte) & ~_PAGE_GLOBAL)`)
-   returns false because the invalid_pte_table address is non-zero.
-   Therefore, is_swap_pte() incorrectly returns true.
-4. The code enters the `else if (is_swap_pte(...))` block.
-5. Inside this block, it checks `is_pfn_swap_entry()`. Due to a bit
-   pattern coincidence in the invalid_pte_table address on LoongArch,
-   the embedded generic `is_migration_entry()` check happens to return
-   true (misinterpreting parts of the address as a migration type).
-6. This leads to a call to pfn_swap_entry_to_page() with the bogus
-   swap entry derived from the invalid table address.
-7. pfn_swap_entry_to_page() extracts a meaningless PFN, finds an
-   unrelated struct page, checks its lock status (unlocked), and hits
-   the `BUG_ON(is_migration_entry(entry) && !PageLocked(p))` assertion.
+> -----Original Message-----
+> From: Krzysztof Kozlowski [mailto:krzk@kernel.org]
+> Sent: Tuesday, April 22, 2025 5:00 PM
+> To: Shin Son <shin.son@samsung.com>; Sylwester Nawrocki
+> <s.nawrocki@samsung.com>; Chanwoo Choi <cw00.choi@samsung.com>; Alim
+> Akhtar <alim.akhtar@samsung.com>; Michael Turquette
+> <mturquette@baylibre.com>; Stephen Boyd <sboyd@kernel.org>; Rob Herring
+> <robh@kernel.org>; Conor Dooley <conor+dt@kernel.org>; Sunyeal Hong
+> <sunyeal.hong@samsung.com>
+> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH 3/3] arm64: dts: exynosautov920: add cpucl0 clock DT
+> nodes
+> 
+> On 18/04/2025 08:15, Shin Son wrote:
+> > Add cmu_cpucl0 clocks for switch, cluster, and dbg domains respectively.
+> >
+> > Signed-off-by: Shin Son <shin.son@samsung.com>
+> > ---
+> >  arch/arm64/boot/dts/exynos/exynosautov920.dtsi | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> > index fc6ac531d597..d1528633adfe 100644
+> > --- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> > +++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+> > @@ -582,6 +582,21 @@ pinctrl_aud: pinctrl@1a460000 {
+> >  			compatible = "samsung,exynosautov920-pinctrl";
+> >  			reg = <0x1a460000 0x10000>;
+> >  		};
+> > +
+> > +		cmu_cpucl0: clock-controller@1ec00000 {
+> > +			compatible = "samsung,exynosautov920-cmu-cpucl0";
+> > +			reg = <0x1EC00000 0x8000>;
+> 
+> Lowercase hex.
+> > +			#clock-cells = <1>;
+> > +
+> > +			clocks = <&xtcxo>,
+> > +				<&cmu_top DOUT_CLKCMU_CPUCL0_SWITCH>,
+> 
+> This looks misaligned.
+> 
+> 
+> Best regards,
+> Krzysztof
 
-The original code's intent in the `else if` block seems aimed at handling
-potential migration entries, as indicated by the inner `is_pfn_swap_entry()`
-check. The issue arises because the outer `is_swap_pte()` check incorrectly
-includes the invalid table pointer case on LoongArch.
+Thanks for the quick response.
+I'll revise everything you pointed out and send an  updated patch shortly.
 
-This patch fixes the issue by changing the condition in
-smaps_hugetlb_range() from the broad `is_swap_pte()` to the specific
-`is_hugetlb_entry_migration()`.
-
-The `is_hugetlb_entry_migration()` helper function correctly handles this
-by first checking `huge_pte_none()`. Architectures like LoongArch can
-provide an override for `huge_pte_none()` that specifically recognizes
-the `invalid_pte_table` address as a "none" state for HugeTLB entries.
-This ensures `is_hugetlb_entry_migration()` returns false for the invalid
-entry, preventing the code from entering the faulty block.
-
-This change makes the code reflect the likely original intent (handling
-migration) more accurately and leverages architecture-specific helpers
-(`huge_pte_none`) to correctly interpret special PTE/PMD values in the
-HugeTLB context, fixing the crash on LoongArch without altering the
-generic is_swap_pte() behavior.
-
-Fixes: 25ee01a2fca0 ("mm: hugetlb: proc: add hugetlb-related fields to /proc/PID/smaps")
-Co-developed-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-Signed-off-by: Hongchen Zhang <zhanghongchen@loongson.cn>
-Signed-off-by: Ming Wang <wangming01@loongson.cn>
----
- fs/proc/task_mmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 994cde10e3f4..95a0093ae87c 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -1027,7 +1027,7 @@ static int smaps_hugetlb_range(pte_t *pte, unsigned long hmask,
- 	if (pte_present(ptent)) {
- 		folio = page_folio(pte_page(ptent));
- 		present = true;
--	} else if (is_swap_pte(ptent)) {
-+	} else if (is_hugetlb_entry_migration(ptent)) {
- 		swp_entry_t swpent = pte_to_swp_entry(ptent);
- 
- 		if (is_pfn_swap_entry(swpent))
--- 
-2.43.0
+Best regards,
+Shin Son
 
