@@ -1,154 +1,105 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446501DFE8;
-	Wed, 23 Apr 2025 21:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE8F82D98
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745442352; cv=none; b=G7vP8TLMA3xw5US2JvpjV0c5nFSYkDpUoWg6HFToNpKb1qSoOdIk/18q7aEFWe6roQh45SkctnH3TShXqPih8+7EiqBAMHPHeCw36Y7lwZK35/LJMVAF5dRYMeDy8uwvn9tcB/i5HyJPUbabGIL7SBLeP/cMW613knBEPhss4Pw=
+	t=1745442395; cv=none; b=FzBQZBaJyQ+WGlloOSZR4YnzFifamOXOW4sfflAcOTh5oV93//z+dOxn+2wWbbi/TFE9TrYojlKd4tvknlhwC4RLiHvgOFadnsgKMposqqUDN9+/wKkZJOON46CWZ9PqYoJilckRqxDMkoHa6A7WUAekB8wxPdUaUo8QY6SscSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745442352; c=relaxed/simple;
-	bh=6GgomoTqcxsuEbINY7I6CWSn0GXbkD5Th2M/o+l0ZGo=;
-	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c2YxrI5TH3a1rw3eMS017QnnVfpEnvdiytTP7ROKRpenxVEDjzlSnAyHQN/ldZlUJSgan93qfg4E0Q0fItW5xmYoJUpH9Y3N6BSndY7gjL0DY+SPjxOeKI0OOqNZ6wu2ydRlCJ9/D8ztUvK5CMoC90WwdxfK2B89PfgAXr61BJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Is+4U9Ce; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745442395; c=relaxed/simple;
+	bh=qgnmbrs5R1omCctiVkoCevVxRfXdNIRKhT9uiNX8N8Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nyha/fk3o1pP9FF1AVx4Ms1giqbDrnbwWxUfSn8YDFRUjhLD+wufoGrhlHlZjw7TlSDv4fK8dmeahErZ0ZOzX71yo2qdwb/pn8IT2ECc1WjoW91oDaiFut7CavXFN2IQHb98wUfXN/GQ9LF1tqHv3NdgYkSA3B1Z8Bg9OfAuZuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Hm3nApL2; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Is+4U9Ce"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c1efc4577so186908f8f.0;
-        Wed, 23 Apr 2025 14:05:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745442348; x=1746047148; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6GgomoTqcxsuEbINY7I6CWSn0GXbkD5Th2M/o+l0ZGo=;
-        b=Is+4U9Cefzi4DxbIXz7aG59KKgCFSjC213lGNilxctMGpnsUr8UWsMsrJ7CTOq0Nw5
-         wBh08X3ZX1ngmVaS8C8ADq9BzY/kCSaST438NAyTOV4sQs/ge24gvLUd9VwBjVsXikFo
-         1U076JWhHhu6wdQwTLWxiieg9ySovP4WXENIsM3TJJVNKRzPMrrrzzjdYYNNbP305hLJ
-         b8sMqhKv11cITIbqnSvxBKa23Isgxk6uFWTgqY0xhVaqLM4HxZeYr7SaJ+rI/cBsIsv8
-         lRZep7c9xZL8iJ5ryHwjF7zuNYGJU72fNmxNuhd38W5rlGyEpE2pn1wRBcCLXLsmpHVc
-         VG4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745442348; x=1746047148;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=6GgomoTqcxsuEbINY7I6CWSn0GXbkD5Th2M/o+l0ZGo=;
-        b=ChHgXYMqnaVC8BuKvBUk3Ypix2D8X7m9Fs9NkJ4j69i7LAR6H/jHZEOlRNKLh34Cji
-         FoDFS/MYk/Yr75ozRdxkMWyrSpkA8UNJJIwQYDHwwfB/k1wPk/phSRIincdkzHzC2+tH
-         4Me1INNj7v0zXJNHe1bYJCB8Czj+d6Jhxjzp2IZn9AjL/zWs+HkR9wbEF6WWHwr9FQzT
-         5JkWTa+sirOoqGAbG101hIQUhlfR3FWxQDliiPTopc1BG0VtMZPHhGiMLUghy8BYH0uN
-         /7pImD6tGzYAGEdUsiHGJBH3e0D+13tuffETGm7tE2fyzcTy9qYU0lgyQUOQOzVfUUGv
-         4Gfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUarKGrKttqIT6CLatPUr+cQaEmP0L8KwryzqVOGsZwR+ghDdwPJhWnzfL+rlZM3E++du36NRQ/n9x1ZW877w==@vger.kernel.org, AJvYcCVd3x8KHIznn7pq8AQ35Ofvc4j0Zl1mOLCR0cwUntoInHqBrWiQTtEjYyyyKGfeeQio15eHzceOTCcRD0dqBQ==@vger.kernel.org, AJvYcCVtS9S2T26I9aDEjo8IFpi+5nlwTLpJbDxt7VtrYcce2RxXxC4lBAMknGXvaBMaSi6p4c+p5EVf/l0twMi9@vger.kernel.org
-X-Gm-Message-State: AOJu0YxURqKig6nzIiqbEnbk7q7amiORIPc+e1IUqPnRov16cyf/lH7K
-	fOb5ZvzHhWjeYrpcZZl1PNdZQPt/AJp99g1Hr4djJHpqklhZdSdtptpDGVHc9NWzRe3ljxTmuV6
-	Xx67/8TDAsgfVpwhAN7wjv6PEhkQ=
-X-Gm-Gg: ASbGnctaDSR2vygRetbNHVCi0+p4pYDwNUJvrPDT/cYeRD9iGKLuSmQ81bZGPowfSSi
-	tFB4T18Ggmfw8kDMH2sYLi1eQOMTDESGs+c8+oD7yO2WPoZW3xyftvpXateBbdah7mXk6Av+1jg
-	8jpYS5HB3ujEVeM/D+Bwk+KR2O5PM4oF7z+A==
-X-Google-Smtp-Source: AGHT+IGUsLBPox/uWJmjVyGdZUaWrYeefwPGm1ePwVrDhg+0usyKnEvHQaxBIhl8yqvVIW79wshIanldFENL4YTbVZ8=
-X-Received: by 2002:a5d:64a4:0:b0:39f:e37:1733 with SMTP id
- ffacd0b85a97d-3a06cf52369mr13252f8f.2.1745442348296; Wed, 23 Apr 2025
- 14:05:48 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 23 Apr 2025 14:05:47 -0700
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 23 Apr 2025 14:05:47 -0700
-From: Kane York <kanepyork@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <68089b8d.050a0220.36a438.000a.GAE@google.com>
-References: <68089b8d.050a0220.36a438.000a.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Hm3nApL2"
+Message-ID: <99b52c22-c797-4291-92ad-39eaf041ae8c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745442389;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=74tQ57PHLi6ZOj350BhyOhfjL3E4tvKmSozsLI7eDxo=;
+	b=Hm3nApL2VyCOk1R8A1HZ9E99C91Zy63aYzPbt7jJv3V9l3XGw97qwhTzZ7tj6eN7tshG5Z
+	zmKjm9EiOmybaMAsdLdtwnVXyFwnp5Tk17ytSPkkl+wW1hXDcliD7PYbcAO1gcfLRp7ln1
+	UTH5caPBySOO30o2LNJSQ3vaF0VMn/Y=
+Date: Wed, 23 Apr 2025 22:06:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 23 Apr 2025 14:05:47 -0700
-X-Gm-Features: ATxdqUFZthFAklAVbjNKhw0GESMNNwLIui2BC5RgpHNS2pvWQzLydo6IzsEC7Q4
-Message-ID: <CABeNrKXCcXxviXQPdCk2R+o-M0VmOsowtWkTddQ5+Tua9eCrQg@mail.gmail.com>
-Subject: Re: [syzbot] [f2fs?] INFO: task hung in do_truncate (3)
-To: syzbot+effe7da6578cd423f98f@syzkaller.appspotmail.com
-Cc: brauner@kernel.org, chao@kernel.org, jack@suse.cz, jaegeuk@kernel.org, 
-	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH net-next 0/6] gve: Add Rx HW timestamping support
+To: Ziwei Xiao <ziweixiao@google.com>
+Cc: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, jeroendb@google.com, andrew+netdev@lunn.ch,
+ willemb@google.com, pkaligineedi@google.com, yyd@google.com,
+ joshwash@google.com, shailend@google.com, linux@treblig.org,
+ thostet@google.com, jfraker@google.com, horms@kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250418221254.112433-1-hramamurthy@google.com>
+ <d3e40052-0d23-4f9e-87b1-4b71164cfa13@linux.dev>
+ <CAG-FcCN-a_v33_d_+qLSqVy+heACB5JcXtiBXP63Q1DyZU+5vw@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <CAG-FcCN-a_v33_d_+qLSqVy+heACB5JcXtiBXP63Q1DyZU+5vw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-This crash appears to entirely ignore the provided filesystem images and ju=
-st
-does tricky fallocate calls followed by a truncate, so it should be easier =
-than
-normal to diagnose.
+On 23/04/2025 21:46, Ziwei Xiao wrote:
+> On Wed, Apr 23, 2025 at 3:13 AM Vadim Fedorenko
+> <vadim.fedorenko@linux.dev> wrote:
+>>
+>> On 18/04/2025 23:12, Harshitha Ramamurthy wrote:
+>>> From: Ziwei Xiao <ziweixiao@google.com>
+>>>
+>>> This patch series add the support of Rx HW timestamping, which sends
+>>> adminq commands periodically to the device for clock synchronization with
+>>> the nic.
+>>
+>> It looks more like other PHC devices, but no PTP clock is exported. Do
+>> you plan to implement TX HW timestamps for this device later?
+>> Is it possible to use timecounter to provide proper PTP device on top of
+>> GVE?
+> Yes, the TX HW timestamps and PTP device work is undergoing. Those
+> would be sent out in separate patch series when they are ready.
 
-The cwd is opened with O_DIRECT. (or this is EFAULT because path is nullptr=
-?)
+It looks like it's better to have PTP device ready firts as it
+definitely needs some worker to keep time counting. And it should be
+done with ptp::aux_work and replace the work you introduced in patch 3
+of this series.
 
-The victim file is created with O_NONBLOCK and O_SYNC; that fd is discarded=
-.
+>>
+>>>
+>>> John Fraker (5):
+>>>     gve: Add device option for nic clock synchronization
+>>>     gve: Add adminq command to report nic timestamp.
+>>>     gve: Add rx hardware timestamp expansion
+>>>     gve: Add support for SIOC[GS]HWTSTAMP IOCTLs
+>>>     gve: Advertise support for rx hardware timestamping
+>>>
+>>> Kevin Yang (1):
+>>>     gve: Add initial gve_clock
+>>>
+>>>    drivers/net/ethernet/google/gve/Makefile      |   2 +-
+>>>    drivers/net/ethernet/google/gve/gve.h         |  14 +++
+>>>    drivers/net/ethernet/google/gve/gve_adminq.c  |  51 ++++++++-
+>>>    drivers/net/ethernet/google/gve/gve_adminq.h  |  26 +++++
+>>>    drivers/net/ethernet/google/gve/gve_clock.c   | 103 ++++++++++++++++++
+>>>    .../net/ethernet/google/gve/gve_desc_dqo.h    |   3 +-
+>>>    drivers/net/ethernet/google/gve/gve_ethtool.c |  23 +++-
+>>>    drivers/net/ethernet/google/gve/gve_main.c    |  47 ++++++++
+>>>    drivers/net/ethernet/google/gve/gve_rx_dqo.c  |  26 +++++
+>>>    9 files changed, 290 insertions(+), 5 deletions(-)
+>>>    create mode 100644 drivers/net/ethernet/google/gve/gve_clock.c
+>>>
+>>
 
-The victim file is opened again with O_SYNC and FALLOC_FL_ZERO_RANGE is cal=
-led
-with a gargantuan size.
-
-The victim file is opened again with O_APPEND (!) and FALLOC_FL_INSERT_RANG=
-E is
-called with a modest size.
-
-Truncate is called midway through the just-inserted range.
-
-Annotated calls below.
-
-# https://syzkaller.appspot.com/bug?id=3D7d29d6d7a773d4f608a33cf6a7593faadb=
-1b5803
-# See https://goo.gl/kgGztJ for information about syzkaller reproducers.
-#{"threaded":true,"repeat":true,"procs":5,"slowdown":1,"sandbox":"none","sa=
-ndbox_arg":0,"tun":true,"netdev":true,"resetnet":true,"cgroups":true,"binfm=
-t_misc":true,"close_fds":true,"usb":true,"vhci":true,"wifi":true,"ieee80215=
-4":true,"sysctl":true,"swap":true,"tmpdir":true,"segv":true}
-# mount file2
-syz_mount_image$f2fs(&(0x7f0000000040),
-&(0x7f00000000c0)=3D'./file2\x00', 0x0,
-&(0x7f0000000300)=3D{[{@noinline_xattr}, {@noinline_dentry},
-{@prjjquota=3D{'prjjquota', 0x3d, 'active_logs=3D4'}}, {@jqfmt_vfsv1},
-{@noinline_data}, {@noheap}, {@checkpoint_diasble}, {@fastboot},
-{@fsync_mode_strict}, {@discard_unit_section}]}, 0x21, 0x552d,
-&(0x7f000000abc0)=3D"$[removed]")
-# EBADF
-pread64(0xffffffffffffffff, 0x0, 0x0, 0xfff)
-# EBADF
-openat$cgroup_freezer_state(0xffffffffffffffff, &(0x7f0000000080), 0x2, 0x0=
-)
-# openat(AT_FDCWD, nullptr, O_DIRECT, 0)
-# EFAULT?
-openat$nullb(0xffffffffffffff9c, 0x0, 0x4000, 0x0)
-# mount 'bus'
-syz_mount_image$ext4(&(0x7f0000000080)=3D'ext4\x00',
-&(0x7f00000000c0)=3D'./bus\x00', 0x20081e,
-&(0x7f0000000040)=3D{[{@nodelalloc}, {@orlov}, {@auto_da_alloc}]}, 0x1,
-0x4ef, &(0x7f00000003c0)=3D"$[removed]")
-# open file1
-# O_RDWR | O_CREAT | O_NOCTTY | O_NONBLOCK | FASYNC | O_LARGEFILE | O_SYNC
-# perm 0500
-open(&(0x7f0000000080)=3D'./file1\x00', 0x10b942, 0x140)
-# open file1
-# O_RDWR | O_CREAT | O_LARGEFILE | O_SYNC
-# perm 0210
-r0 =3D open(&(0x7f0000000100)=3D'./file1\x00', 0x109042, 0x88)
-# fallocate FALLOC_FL_ZERO_RANGE, offset 0, size 0x7000000
-fallocate(r0, 0x10, 0x0, 0x7000000)
-# openat(AT_FDCWD) file1
-# O_WRONLY | O_CREAT | O_APPEND
-# perm 0512
-r1 =3D openat(0xffffffffffffff9c, &(0x7f0000000080)=3D'./file1\x00', 0x441,=
- 0x14a)
-# fallocate file1 FALLOC_FL_INSERT_RANGE, offset x4000, size x8000
-# EPERM?
-fallocate(r1, 0x20, 0x4000, 0x8000)
-# truncate file1 size x8001
-truncate(&(0x7f00000000c0)=3D'./file1\x00', 0x8001)
