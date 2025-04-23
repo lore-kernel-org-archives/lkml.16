@@ -1,98 +1,91 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80FB2797B8;
-	Wed, 23 Apr 2025 14:04:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA1E279792;
+	Wed, 23 Apr 2025 14:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745417050; cv=none; b=t9iOEktozQmKnB0HoY2nvAH4QRXkr83scSkHnUmv6ritAGyG2/DMG/tIbbvCvmaOtFmhZrBDFNyDpoiXWR1/Y0weviYGMeeM1UKySQ77SMbPISpB4pBOyTQH+H8Dw9nU9de/qu4uf9Q5kC37sS2ZSobvxXMnRV99BWHBVPH5+TY=
+	t=1745417058; cv=none; b=CeQfhpvams37cQ5Rpoye1rH/1i+IUKPnZUiMLX1x3GJSlVsIUHaOJIfDwWkcrDL2nN+Btk0nmiihSJwWZZgx+5liPNYajY0t/gnoXQODlNyDegPA0kMNuyaTo+JriZ06JbQeUUGcss5EsIFyAlRxghQW2nTZJ/8hgBDRZMgm7eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745417050; c=relaxed/simple;
-	bh=IE9+QhGjstZ+dXjDylZNdtZWhXj8gUk7kwoxYglND5A=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=A/8P0afwX0BdJRrknzu7/5q98GAOYKkMAqab3BP16nxiF1tQFVvLqLKfx66LBmDBdq5R40aeg1qUTOlhwUsU5v9gqoVkGeGyt5QYVd85JyueafwBAW+OBy/Bg2yq15HLChySSzkyc7Cj2PPQeqIIXJuhZgk16ZP2rBIEZaqqnR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=NErA9wOa; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="NErA9wOa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=oaGiHzShZ+7Se81JoQaFP8hejDedRsEVccoTeyzc4dw=;
-	t=1745417049; x=1746626649; b=NErA9wOauBzLnyJ1h7Ns/jH0B6mcuYXQnm/MjDb7+KkTK5N
-	W7YnpftsMJvRXEVwEGvZWHzdNAPx+vn2dPqDsMyqu70sTRQ7uh/HtJIuFeXwF/DZ+E8Hk6Copl7Zp
-	hjJeaZ1+koGDwAC2fPR+uqLvZZHOjw/HcdJEfXczFlhcL+2EvbsHaoFTlZJ1C3FX+5N2X17fEkrrR
-	9fUBChg7JxhKOP2IN5wRFNuEClEUDqNHWdn38isSb9AjmCnRsK5jwljR1i/PXNsNVwzYvtEQcmaE4
-	UbeshGkJ+XwjRsJQybjcWyvrH79tcpabm3PNzzE6+5Q/6LmIsT3wYc9Ak4wz/7vw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1u7ahp-0000000Ej6j-2iEm;
-	Wed, 23 Apr 2025 16:04:05 +0200
-Message-ID: <ff63580712b8f20b4be7b38a31bc3bb9d69a4820.camel@sipsolutions.net>
-Subject: Re: [PATCH] wifi: mac80211_hwsim: Prevent tsf from setting if
- beacon is disabled
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	netdev@vger.kernel.org,
- syzbot+064815c6cd721082a52a@syzkaller.appspotmail.com, 
-	syzkaller-bugs@googlegroups.com
-Date: Wed, 23 Apr 2025 16:04:04 +0200
-In-Reply-To: <tencent_6FF36BC379E97AE3ADC450776CD77EA6C405@qq.com>
-References: 
-	<b30cc04676a031db8c36df243160992094b3848d.camel@sipsolutions.net>
-	 <tencent_6FF36BC379E97AE3ADC450776CD77EA6C405@qq.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1745417058; c=relaxed/simple;
+	bh=lKyymF7Hpjd26M8XcjHpoVGsP92kwq3xGudaxC8q40M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TGUZ9aQHONWv6yY2Gf40OQ/UnPd7SUM8lA58WyOB/NG3PVrcnO6r9njKa4mJLYQVRxZO9BGMuH1Rw+w/rbjjJm93sdTFZOwsDsUptXrQWET/XmXaUOCZNWIozaVcywp2XkhD3iATjCrS/1/+bnGklmXmqfnFlDegItjRFTGLr/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.18.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id 4D5DC3430AC;
+	Wed, 23 Apr 2025 14:04:10 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Date: Wed, 23 Apr 2025 22:03:23 +0800
+Subject: [PATCH 2/5] dt-bindings: arm: sunxi: Add A523 EMAC0 compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250423-01-sun55i-emac0-v1-2-46ee4c855e0a@gentoo.org>
+References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
+In-Reply-To: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Andre Przywara <andre.przywara@arm.com>, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=954; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=lKyymF7Hpjd26M8XcjHpoVGsP92kwq3xGudaxC8q40M=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoCPM/BF4N7i/TYB6b3RNTlrp4EIT9sg8KqYeMb
+ gv6OH1IHvOJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaAjzP18UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277XUmEACZ800KPPzNvd5qzG
+ dq77Xn4pkeobCVGqmHVzjTxaG8jl6AqbrT+hPCyYVIysejlUeys+viVgGx6RvEZaUJM2BdhsmoQ
+ hQ4u7z2XMeqFaUntVWbRDUsQnZNCITcWMAm9BaG68IYCfRCKteFo6xJ2+VOymprkW4HvTDOKXnV
+ wZcpRU1q3q8I/OtkgcIhbZLP9xbZA1drlyOJ+CLwQ/kjXJn6UZQhDzSx4I8d8iveb6/67WmCUlC
+ g9lNCSDGfrDvs9lmW4yff8cFC0twTdBx2JyvJ61nu+fEwAUgrpc9y58QAPSZN6mglDsdye8E5wH
+ diV08zakE9J/fL63Sq01dzetXf2EeAVj/5qvHCkMMriTKNAg2dyKRyfBHCLAoI/2Sszo+sFoR0I
+ s70uY4X8Xw9w7jpQM6Z1EwZjni5NoUisdb6U1RW282qfvTnxbYmcKIAqns3paow0Qs1ZS11Qha0
+ JgNR7VkgsH4DyxPRR0mO2/SjSfT69hLdqTjtBC5YyygX5TSU1s5zMc+zDVZdKakWInM7CCvqN+r
+ Nbj/WmuG+cxzTJ9EZ3Y4qeomWqagv2v35dp6PsF2Qq1jaFMVjb2r03J9Xtg1s4OKN1d3KdBSdsC
+ mceosQP+8eVz4Nd8jeSMC70lknR5kQUeVEq6udQ1dP0HeefUDlqxJhFa+2Pbt6fAEaQQ==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On Wed, 2025-04-23 at 21:56 +0800, Edward Adam Davis wrote:
-> On Wed, 23 Apr 2025 14:53:53 +0200, Johannes Berg wrote:
-> > > --- a/drivers/net/wireless/virtual/mac80211_hwsim.c
-> > > +++ b/drivers/net/wireless/virtual/mac80211_hwsim.c
-> > > @@ -1226,6 +1226,11 @@ static void mac80211_hwsim_set_tsf(struct ieee=
-80211_hw *hw,
-> > >  {
-> > >  	struct mac80211_hwsim_data *data =3D hw->priv;
-> > >  	u64 now =3D mac80211_hwsim_get_tsf(hw, vif);
-> > > +	struct ieee80211_bss_conf *conf =3D link_conf_dereference_protected=
-(vif,
-> > > +			data->link_data[0].link_id);
-> > > +
-> > > +	if (conf && !conf->enable_beacon)
-> > > +		return;
-> > >  	/* MLD not supported here */
-> > >  	u32 bcn_int =3D data->link_data[0].beacon_int;
-> > >  	u64 delta =3D abs(tsf - now);
-> >=20
-> > Please keep kernel coding style - the line break there is awful (but
-> > with "conf =3D ..." on a line by itself it can be just one line), and y=
-ou
-> > shouldn't have code before variable declarations.
-> like this?
+Allwinner A523 SoC variant (A527/T527) contains an "EMAC0" Ethernet
+MAC compatible to the A64 version.
 
-Looks good I guess, not sure you wanted bcn_int/delta to be calculated
-before or after.
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+ Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > The comment should probably also move because it's relevant for your ne=
-w
-> > [0] as well.
-> I don't understand what you mean.
+diff --git a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+index 7fe0352dff0f8d74a08f3f6aac5450ad685e6a08..7b6a2fde8175353621367c8d8f7a956e4aac7177 100644
+--- a/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
++++ b/Documentation/devicetree/bindings/net/allwinner,sun8i-a83t-emac.yaml
+@@ -23,6 +23,7 @@ properties:
+               - allwinner,sun20i-d1-emac
+               - allwinner,sun50i-h6-emac
+               - allwinner,sun50i-h616-emac0
++              - allwinner,sun55i-a523-emac0
+           - const: allwinner,sun50i-a64-emac
+ 
+   reg:
 
-The "/* MLD not supported here */" comment refers to the [0] - it
-explains why the [0] (rather than link id) is OK. So it also applies to
-your [0], if you're going to put it before the comment then IMHO it
-makes sense to move the comment. With what you did now the comment is
-still earlier though, of course.
+-- 
+2.49.0
 
-johannes
