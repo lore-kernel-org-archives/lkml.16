@@ -1,204 +1,84 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B387D269AFA
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:49:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBE1253921;
+	Wed, 23 Apr 2025 20:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745441383; cv=none; b=KLMyKhVOiAmL4rDJ5MLU0GLUOy6VjiaNbFFzlYe6SrRJbzr1CoVcxWQjfospR4twj2JCvnazLXLMue1A/dZVel/0oq+LPPRcygLDBdOuuMVtidHmYi6TjG47QRKNYT7dH1RgFCYMLmtRH9/72NG+lepv9lgJfX0tbjYkrXwKetE=
+	t=1745441451; cv=none; b=u9B3oDJLEA0wSFjr0A0+HRV9YyZC13M1LTfEfiAdAj//CsHqu/WgAWkszmhH3POUzSlNi1tiTuSIGPQW1WVjdC/tapguIepN5pmQJ/S+O0iNDGc8Y6eVAVhhEfvO0QQvzkXyoZQxUOmm7C7G4zK8Mg+egk9VoYG3kRx7gcM/osY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745441383; c=relaxed/simple;
-	bh=KCpUHCyh4WTX+8nH73ERBVg00vbmAwZ3SP/sw6+aJfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VS9vX1D9IhOFjCFP31FA9i7BV/DIhzUr2o/BCFKVJur/9ycyP4L/qcbIgx+qY5CK0g38BE2VBITP50Q/bnkU498aWtOk7KtlBxnqecESarAQfozYXQhcLJ350aaHBcSXsREYXiHVr4qC7DD7Nxkgvhagn8mh8t/kTB3pLHVmYUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebUOZiLR; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745441451; c=relaxed/simple;
+	bh=QtGXRfFMS/QaPxnRDW/0E9DsynCEdAmHR+SsZfWDV1A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p4xKqJXPHEZtqcWImdyWxubzjOuCiA/U0aRuILuKP0aFMp1u86EjHG1YTQvBjxzxcus8uNkkBm5Lewa7QBlhTs2oOXlYHPTnncmfXhDFr37LSawCIU2fNtyEaWX3PfKC3DgAYlobYkcOuAGnJEby9wG3B+5W1/zvnORRbygJWPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ilumO0+D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebUOZiLR"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso242441b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:49:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745441381; x=1746046181; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fFkkPBXFFdFSrV74lL2RXijCFkxgTbW7EfheadDhMlM=;
-        b=ebUOZiLRl7NtMlUT6/XdWOo2Kx0AtoSTrcr8QXx9U+nLgQu7ZrKI9otRNUP18xQNoR
-         xOri4/3K2ooKjyaKu+irVIfJ76rm2RpMXeT7RxO7ITCPEZ9v4GnLOkZgbbtl44LaYowg
-         Aq5iLMF4rVktjA5HP7cWnLZav4rnGFcnr4DPm5a3V0lYvecgwk6C689YEPQbZnWKDz0C
-         R/NNsYkEsfjAuTGPQPW5yVIVdhCBIL1q5pRWY8nGIMChww0ELMg5l6Wk2vGabRx+CJag
-         bDtkJrYUxd05qH6O8iZKBbwvp9BNAmXwAvWadVj1okuqm5eXZcIAQV+VbL16K5pT2bex
-         SIGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745441381; x=1746046181;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fFkkPBXFFdFSrV74lL2RXijCFkxgTbW7EfheadDhMlM=;
-        b=SwRQAxPL4n6rXzWdXK+4mm6dEL5DRXFxQLkzLAgH5df8tNm0VF3/jNJABU8Kf/NPDM
-         IguquisSaTWyAn/IpSHZ9jvb5G3DUwABQMueaTn1pFN3VqTiYx5Fuo4h/ntYE9TbWEHI
-         6eeLEDnNIjL4pmKqBfTj3qjQipFpxT/08C70c6ZEKmcpGSSlsKGhjYf7iDxrTZ/L+Zpw
-         8wHPIkHWqCZY6iVApTFNj29NpN/KhSfFSofqW95tHwQwlzyxSHpbK9NfOC6dh54NB4FF
-         KubxzMu2MzR4TATdcVcQ8LFJJM/tkpK8YKa8/lsmQLSdB9ecWNTcUjT5igFFtIseyZFa
-         Zaiw==
-X-Gm-Message-State: AOJu0YzVlwvAn+bi9vkmx+3fXpG5e87oPcv4wfQK78X3LlnpC12NvGqL
-	JPKPw2E2KwfZtoWfbVOLCUnSDxHG+qFNVRSdhJKC2f90QbC0UfRe17Samg==
-X-Gm-Gg: ASbGncuPmcl0IbMLXH6xywh+iL6qK/0LWaTljosqAjMFQ1rWqhQzrGk7x+lDCPIAPxd
-	CJGd82EVh67JGP++aemVzYwLnn/KSl3FNNHRa0BSKO8ARaSZqSxQqKFiMzeUEWlrEMGtS8/0ANe
-	mhxZI1lKWxMZK40yFs3rhEdQIdwOfu3HNQKIf8wmLzb/aNmT+G6fsJuyC0/2XY8TaGjmDiVuMm3
-	evp0ToupWv3IBpKHlgRm2mJV4QrtgNeDp1gv8HweFDhKmLIeROxP9bywlwsgPEkeYF1nVYADQbb
-	I7gT+MxrPruXY6bKGgU1AGPuY5ip7bsn4oMnC/XUNilJ2tbCnJtqrTq1KCKqRflHhVwDfFw8Hjo
-	e3ArVX9rvymk2zgr0B3vUnMGglgbtTulj
-X-Google-Smtp-Source: AGHT+IFwjUzOpbdI9GzZmAWxW0GeyrpeovFKMtz9ez3tSWXCTpH3YxHA3i6KQYceOr19FwuIGctLFw==
-X-Received: by 2002:a05:6a00:3406:b0:732:5276:4ac9 with SMTP id d2e1a72fcca58-73e24606fedmr251754b3a.9.1745441380729;
-        Wed, 23 Apr 2025 13:49:40 -0700 (PDT)
-Received: from daehojeong-desktop.mtv.corp.google.com ([2a00:79e0:2e14:7:7dbc:3d73:1245:bd40])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25acaba0sm825b3a.169.2025.04.23.13.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 13:49:40 -0700 (PDT)
-From: Daeho Jeong <daeho43@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	kernel-team@android.com
-Cc: Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH v2] f2fs: handle error cases of memory donation
-Date: Wed, 23 Apr 2025 13:49:34 -0700
-Message-ID: <20250423204935.2335000-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ilumO0+D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7523C4CEE2;
+	Wed, 23 Apr 2025 20:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745441451;
+	bh=QtGXRfFMS/QaPxnRDW/0E9DsynCEdAmHR+SsZfWDV1A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ilumO0+DTjX1Py8AKdxCdlORL66qfTr57cM42sZpcWz7jDZN4tqa2lV0FwvYC+y1P
+	 6cdONllQCx5ARnUA7uuwjKCP38IB4lsPU7SbB0Tz9V1VjE4sqH28qIBXChNKJjY8tW
+	 D5fLXcsc2LkVXgSJmVkvdVH1YCfxjEkdO6piOQhyOeiP0pm9Q4kR+wfYCOGjf7J2YH
+	 IEkpDZkkg/B0G/MT6V9Nu6dBYztq4yPRB/2pH/TYBOEG7tQ0g5yh8X/RnA0BJk8tU0
+	 bDEDsC2TpT/p0Mh9DXe8jR1uFx34tseAVcPqwEQuxxs9we6Z4MoPeEWP+ZkiZ1GZ8O
+	 gk4xqcmf9liQQ==
+Date: Wed, 23 Apr 2025 17:50:48 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Howard Chu <howardchu95@gmail.com>, Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
+Message-ID: <aAlSqGN9Sx4x6_sI@x1>
+References: <20250326044001.3503432-1-namhyung@kernel.org>
+ <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
+ <aAkUyFjRFLkS170u@x1>
+ <aAkmY0hLXarmCSIA@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAkmY0hLXarmCSIA@google.com>
 
-From: Daeho Jeong <daehojeong@google.com>
+On Wed, Apr 23, 2025 at 10:41:55AM -0700, Namhyung Kim wrote:
+> Hi Arnaldo,
+> 
+> On Wed, Apr 23, 2025 at 01:26:48PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
+> > > On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >      syscall            calls  errors  total       min       avg       max       stddev
+> > > >                                        (msec)    (msec)    (msec)    (msec)        (%)
+> > > >      --------------- --------  ------ -------- --------- --------- ---------     ------
+> > > >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
+> > > >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
+> > > >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
+> > > >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
+> > > >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
+> > > >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
+> > > >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
+> > > >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
+> > > >      ...
+> > 
+> > I added the following to align sched_[gs]etaffinity,
+> 
+> Thanks for processing the patch and updating this.  But I'm afraid there
+> are more syscalls with longer names and this is not the only place to
+> print the syscall names.  Also I think we need to update length of the
+> time fields.  So I prefer handling them in a separate patch later.
 
-In cases of removing memory donation, we need to handle some error cases
-like ENOENT and EACCES (indicating the range already has been donated).
+Fair enough, I'm leaving the patch as-is.
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
-v2: use proper error code
-    rename FI_DONATE_FINISHED and use it to fix race conditions
----
- fs/f2fs/f2fs.h     |  1 +
- fs/f2fs/file.c     | 23 ++++++++++++++++-------
- fs/f2fs/shrinker.c | 13 ++++++++++---
- 3 files changed, 27 insertions(+), 10 deletions(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f1576dc6ec67..01ee8bbb5c84 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -821,6 +821,7 @@ enum {
- 	FI_ATOMIC_DIRTIED,	/* indicate atomic file is dirtied */
- 	FI_ATOMIC_REPLACE,	/* indicate atomic replace */
- 	FI_OPENED_FILE,		/* indicate file has been opened */
-+	FI_DONATE_FINISHED,	/* indicate page donation of file has been finished */
- 	FI_MAX,			/* max flag, never be used */
- };
- 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index abbcbb5865a3..61b88431fd43 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2464,19 +2464,20 @@ static int f2fs_ioc_shutdown(struct file *filp, unsigned long arg)
- 	return ret;
- }
- 
--static void f2fs_keep_noreuse_range(struct inode *inode,
-+static int f2fs_keep_noreuse_range(struct inode *inode,
- 				loff_t offset, loff_t len)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	u64 max_bytes = F2FS_BLK_TO_BYTES(max_file_blocks(inode));
- 	u64 start, end;
-+	int ret = 0;
- 
- 	if (!S_ISREG(inode->i_mode))
--		return;
-+		return 0;
- 
- 	if (offset >= max_bytes || len > max_bytes ||
- 	    (offset + len) > max_bytes)
--		return;
-+		return 0;
- 
- 	start = offset >> PAGE_SHIFT;
- 	end = DIV_ROUND_UP(offset + len, PAGE_SIZE);
-@@ -2484,7 +2485,7 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
- 	inode_lock(inode);
- 	if (f2fs_is_atomic_file(inode)) {
- 		inode_unlock(inode);
--		return;
-+		return 0;
- 	}
- 
- 	spin_lock(&sbi->inode_lock[DONATE_INODE]);
-@@ -2493,7 +2494,12 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
- 		if (!list_empty(&F2FS_I(inode)->gdonate_list)) {
- 			list_del_init(&F2FS_I(inode)->gdonate_list);
- 			sbi->donate_files--;
--		}
-+			if (is_inode_flag_set(inode, FI_DONATE_FINISHED))
-+				ret = -EALREADY;
-+			else
-+				set_inode_flag(inode, FI_DONATE_FINISHED);
-+		} else
-+			ret = -ENOENT;
- 	} else {
- 		if (list_empty(&F2FS_I(inode)->gdonate_list)) {
- 			list_add_tail(&F2FS_I(inode)->gdonate_list,
-@@ -2505,9 +2511,12 @@ static void f2fs_keep_noreuse_range(struct inode *inode,
- 		}
- 		F2FS_I(inode)->donate_start = start;
- 		F2FS_I(inode)->donate_end = end - 1;
-+		clear_inode_flag(inode, FI_DONATE_FINISHED);
- 	}
- 	spin_unlock(&sbi->inode_lock[DONATE_INODE]);
- 	inode_unlock(inode);
-+
-+	return ret;
- }
- 
- static int f2fs_ioc_fitrim(struct file *filp, unsigned long arg)
-@@ -5236,8 +5245,8 @@ static int f2fs_file_fadvise(struct file *filp, loff_t offset, loff_t len,
- 	     f2fs_compressed_file(inode)))
- 		f2fs_invalidate_compress_pages(F2FS_I_SB(inode), inode->i_ino);
- 	else if (advice == POSIX_FADV_NOREUSE)
--		f2fs_keep_noreuse_range(inode, offset, len);
--	return 0;
-+		err = f2fs_keep_noreuse_range(inode, offset, len);
-+	return err;
- }
- 
- #ifdef CONFIG_COMPAT
-diff --git a/fs/f2fs/shrinker.c b/fs/f2fs/shrinker.c
-index 9c8d3aee89af..b88babcf6ab4 100644
---- a/fs/f2fs/shrinker.c
-+++ b/fs/f2fs/shrinker.c
-@@ -184,10 +184,17 @@ static unsigned int do_reclaim_caches(struct f2fs_sb_info *sbi,
- 		if (!inode)
- 			continue;
- 
--		len = fi->donate_end - fi->donate_start + 1;
--		npages = npages < len ? 0 : npages - len;
--		invalidate_inode_pages2_range(inode->i_mapping,
-+		inode_lock(inode);
-+		if (!is_inode_flag_set(inode, FI_DONATE_FINISHED)) {
-+			len = fi->donate_end - fi->donate_start + 1;
-+			npages = npages < len ? 0 : npages - len;
-+
-+			invalidate_inode_pages2_range(inode->i_mapping,
- 					fi->donate_start, fi->donate_end);
-+			set_inode_flag(inode, FI_DONATE_FINISHED);
-+		}
-+		inode_unlock(inode);
-+
- 		iput(inode);
- 		cond_resched();
- 	}
--- 
-2.49.0.805.g082f7c87e0-goog
-
+- Arnaldo
