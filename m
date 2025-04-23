@@ -1,143 +1,175 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7EA2701BC
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502DA2701BC
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745439691; cv=none; b=X8934s6F75lKEoFvnzz7YSdCFYTuKc8/VlWoxBHKqpp85IG+3F2k1C3r7xPXd6MxiIPSeUibmFy4HQw/Np7I07Nd4VEQtPK+q24SZKL5jX0XULI6JSbM6hq4eIlmKujXojzTCjTVpIq+HPJVH1SYB1bsaACCMqayaRChahOAyKw=
+	t=1745439724; cv=none; b=r0hG/PAQxqD89h4eLHI3YU/pfvlOF3eYFWp3NgEcr/IEb+tfRjVnn1dPJ8u44vupZO91/gB1GjHHWp4zYGzl7+v8ELbYOPIMpRbqSKGeHOTA1Wz4FsSdj9SqK77JUkWm/2lBr5kruj0GE++whEkGPfpr9Q4wSJMhMVEMkoHdKbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745439691; c=relaxed/simple;
-	bh=0doTzVKA4fJEPSKoKrcntZtcds7wpAFtkRgqCefpD9Y=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kFrq54c6a/GmHOum7ZvK2LymtvzHq9O10nq+uOpccSYO9lb75tmmE7hqioJ0vaoZj0yHZXMv+iZRLOVGKALJE9tYIYi+SF1QwrSBQ2YF9RldpNrZTqH9ralq4hSLAY1eikmXrhGjbNBYKknJImAUiji6ciccnVo3H9HGhMzwRBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-861d6e340e2so35756139f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:21:29 -0700 (PDT)
+	s=arc-20240116; t=1745439724; c=relaxed/simple;
+	bh=IZnu6wdyPtClzTpUQpTWkf4YSITWNNs3ibqRNmz2PFA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kTzDeqnm8ALCUNlknyCRxfIOLi/VV8x2OJEJyZGOdLXR2kUXPcjArBPpmqtYYCc1E8R/LSgtsi3p8+Cf5gXBr+45w0ypkPwRXrT8TX3sJKh9m5Vk1rhRmq00JmNpmEnaLVBGFg3T/4N0EYo9XH+cuKLnk4FKI70nsyRGoDBYfdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hHQqEXr9; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hHQqEXr9"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736c7df9b6cso221424b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:22:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745439722; x=1746044522; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=lb5Hj4079cmmz08gkncfU6HRHYwb2cTW68BpAu1pjpA=;
+        b=hHQqEXr9+PCQ4471VW3+obysjcFBHCpHjIV3G5mc7ikxmkVFgjbFw0kd6heprsAb5E
+         4SpRiAMULhDilLQdu5wJZpoGZrGz14err+IAB+Cg+9YjHzAQWuh9TEBAKM6ScOiGhQiV
+         xyfd123JGEHSExNY+Zc4dNGUwQOlQ/AvV+mkiP0r1CP7Nolv+ugWrJsSmMaN2Zz/mRlt
+         LbN6JuQ9354SJozUlEo3yqvZLR80idSITei1f0wBs3JlL0WOerfdZc1PKIMJrthWDXPY
+         2NY6sRGVQRD9cHHYt2YbAv0vc8qS9wFxAdsZZXsglKMujjAAF9Q2RNrl/UMvPSaTRs0M
+         TvDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745439688; x=1746044488;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jWLt3+c9Id7NuEwBmCm4dt6E6YWWdnbWt/aRMNsT/Fk=;
-        b=Ap/p4wqPpDNvv8RkKD9N6R6LKpi+MB9BLOSnaql+CR8mh7LnEqJRy6Lrl07snzy2fx
-         7+EFzc3SSU6sUZdHSiA1+cm1BtirjWcj1Gnb83agLFSnhBBIrC/pl7uiz1UhISuv0eHR
-         IhIiJtumjo2KXBSibcMgcd+tXtIpzLQoktQHTXAuvIuhgiH1Feo3ZumtwNkpP+OAaHyA
-         xVZ1UlOc5TMsjZ7srdqEAQK8j3pj3issIBofjImiJy5LLvBL5SJ0vuv2civ6GdnhXJjb
-         ZKazwZl3omxtSP5HGhfj+NuoZJ4+9ENnTR5qJm4+dsEmZTQWt+ZdD302VOuG7YhTN3un
-         iy7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVURFjfN5ipFuZpBH/PBvgg10fk5MAyjazVo9Dd7tcMG6iI1KN0k8i/tS11q13WJ7yxnwa1OsYcrjm+GI4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyonFp1JFFjBb81Bf82EDfgT1qpYQHrGqcjRfMs+qMV0Ersz3KX
-	9U3vaspdFf17DzBLzNB6cP+h40IyTYNwLblp5KOoQh+rK/BpFesE0sOakg550Ii/WXUkxFiZVmp
-	F0qL+emNNMHocih5BrSFLbTGoibYBtswNdtnM7ZC41gDRFViZ1uB/nEc=
-X-Google-Smtp-Source: AGHT+IFB6xBCNGVCnL/PaqFG14ZPz0iwioOHmRo4t/exUqiObkV4Tointrv18ym408c0pgw5lwlEVAR2nfsHxkQeg2Wuzp+mQst9
+        d=1e100.net; s=20230601; t=1745439722; x=1746044522;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lb5Hj4079cmmz08gkncfU6HRHYwb2cTW68BpAu1pjpA=;
+        b=APEs6wRGKoqW2UwisMm5zOY+/blCqQUtaY5XtGNqBikjsZQPlOXY2JbLmlmvsQeNpq
+         5dD9xvh1eBSdEwGnhS3sJNyR/soVh2O5B/ddP6cQTNsjmu+AIpNEAdAZzTlzxpbz98XO
+         ydgfTmT96XR1hxP+tkH3XAvRhy7YOqQrf2O3nUC6tUokiiM60BmpT4tXoJaKxQbJxKoO
+         G0X96tIMku4AD4UeO65+XI7c2WA0okDfdmVfCjc1JqAJierfJqeHbm1YDcSxEWwVXfLc
+         6ylUDAS4QY21ybhpb6EZPnStA2/LcgCNj+KcyBR3i/62WxLM59s+ZAr1fJC1J2bptMpg
+         /0Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3ZsH15+B88lAIJm0IYSbgOtuvtdhWT83wJTdNzyY9ljJ97b570qDGT5PzSds0evsAPfsposJsx6m8Idg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR68fTCJhiYSnmWQyJHDtl2uTQ5CkZEL0/Z50yWLzcTcncnoHZ
+	AfFhaOr77aNDTrQSYVan16WfprBIweiisY13JZoNQ7UlusQfe/CYHC/VPuue7xnrn9MH/uqo6li
+	e55uGh6D/2/6gGk2acyG/bg==
+X-Google-Smtp-Source: AGHT+IEZQzaRzavelSAVxJna7z3rzv2eWOXWrhC8lNuigMph7H21lihWm3EaY9BgIQuvCBgTk8eHqn8ZKABOoog4TQ==
+X-Received: from pglc21.prod.google.com ([2002:a63:d15:0:b0:b14:9718:f939])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:ce48:b0:1f5:709d:e0c6 with SMTP id adf61e73a8af0-203cbd418efmr30504920637.42.1745439722591;
+ Wed, 23 Apr 2025 13:22:02 -0700 (PDT)
+Date: Wed, 23 Apr 2025 13:22:00 -0700
+In-Reply-To: <Z+y2nU7KDmRpuISM@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12ea:b0:3d8:1d34:4ee6 with SMTP id
- e9e14a558f8ab-3d93041e2f4mr138595ab.17.1745439688738; Wed, 23 Apr 2025
- 13:21:28 -0700 (PDT)
-Date: Wed, 23 Apr 2025 13:21:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68094bc8.050a0220.2c0118.0ac0.GAE@google.com>
-Subject: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in dbAllocAG
-From: syzbot <syzbot+cffd18309153948f3c3e@syzkaller.appspotmail.com>
-To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+Mime-Version: 1.0
+References: <cover.1726009989.git.ackerleytng@google.com> <d1940d466fc69472c8b6dda95df2e0522b2d8744.1726009989.git.ackerleytng@google.com>
+ <Z+y2nU7KDmRpuISM@yzhao56-desk.sh.intel.com>
+Message-ID: <diqzselyzl07.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 13/39] KVM: guest_memfd: Make guest mem use guest mem
+ inodes instead of anonymous inodes
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: tabba@google.com, quic_eberman@quicinc.com, roypat@amazon.co.uk, 
+	jgg@nvidia.com, peterx@redhat.com, david@redhat.com, rientjes@google.com, 
+	fvdl@google.com, jthoughton@google.com, seanjc@google.com, 
+	pbonzini@redhat.com, zhiquan1.li@intel.com, fan.du@intel.com, 
+	jun.miao@intel.com, isaku.yamahata@intel.com, muchun.song@linux.dev, 
+	mike.kravetz@oracle.com, erdemaktas@google.com, vannapurve@google.com, 
+	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
+	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
+	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
+	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
+	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
+	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-fsdevel@kvack.org
 Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
-syzbot found the following issue on:
+> Hi Ackerley,
+>
+> Not sure if below nits have been resolved in your latest code.
+> I came across them and felt it's better to report them anyway.
+>
+> Apologies for any redundancy if you've already addressed them.
 
-HEAD commit:    8560697b23dc Merge tag '6.15-rc2-smb3-client-fixes' of git..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=133fbbac580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2a31f7155996562
-dashboard link: https://syzkaller.appspot.com/bug?extid=cffd18309153948f3c3e
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14708c70580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115dd204580000
+No worries, thank you so much for your reviews!
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-8560697b.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2acea3e6b668/vmlinux-8560697b.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d2542a0d2bcd/bzImage-8560697b.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/2b4250dbd0ba/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=10708c70580000)
+>
+> On Tue, Sep 10, 2024 at 11:43:44PM +0000, Ackerley Tng wrote:
+>> +static void kvm_gmem_init_mount(void)                                         
+>> +{                                                                             
+>> +     kvm_gmem_mnt = kern_mount(&kvm_gmem_fs);                                 
+>> +     BUG_ON(IS_ERR(kvm_gmem_mnt));                                            
+>> +                                                                              
+>> +     /* For giggles. Userspace can never map this anyways. */                 
+>> +     kvm_gmem_mnt->mnt_flags |= MNT_NOEXEC;                                   
+>> +}                                                                             
+>> +                                                                              
+>>  static struct file_operations kvm_gmem_fops = {                               
+>>       .open           = generic_file_open,                                     
+>>       .release        = kvm_gmem_release,                                      
+>> @@ -311,6 +348,8 @@ static struct file_operations kvm_gmem_fops = {            
+>>  void kvm_gmem_init(struct module *module)                                     
+>>  {                                                                             
+>>       kvm_gmem_fops.owner = module;                                            
+>> +                                                                              
+>> +     kvm_gmem_init_mount();                                                   
+>>  } 
+> When KVM is compiled as a module, looks "kern_unmount(kvm_gmem_mnt)" is
+> missing in the kvm_exit() path.
+>
+> This may lead to kernel oops when executing "sync" after KVM is unloaded or
+> reloaded.
+>
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+cffd18309153948f3c3e@syzkaller.appspotmail.com
+Thanks, Fuad will be addressing this in a revision of [1].
 
-loop0: detected capacity change from 0 to 32768
-------------[ cut here ]------------
-UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dmap.c:1397:14
-index 65877 is out of range for type 's8[1365]' (aka 'signed char[1365]')
-CPU: 0 UID: 0 PID: 5308 Comm: syz-executor181 Not tainted 6.15.0-rc2-syzkaller-00404-g8560697b23dc #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- ubsan_epilogue lib/ubsan.c:231 [inline]
- __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:453
- dbAllocAG+0x704/0x1130 fs/jfs/jfs_dmap.c:1397
- dbAlloc+0x65c/0xcb0 fs/jfs/jfs_dmap.c:873
- xtSplitUp+0x554/0x21c0 fs/jfs/jfs_xtree.c:745
- xtInsert+0x5ba/0x11a0 fs/jfs/jfs_xtree.c:593
- extAlloc+0xae7/0x10a0 fs/jfs/jfs_extent.c:150
- jfs_get_block+0x41d/0xe60 fs/jfs/inode.c:248
- get_more_blocks fs/direct-io.c:648 [inline]
- do_direct_IO fs/direct-io.c:936 [inline]
- __blockdev_direct_IO+0x1add/0x4540 fs/direct-io.c:1243
- blockdev_direct_IO include/linux/fs.h:3422 [inline]
- jfs_direct_IO+0xf7/0x1e0 fs/jfs/inode.c:331
- generic_file_direct_write+0x1e8/0x400 mm/filemap.c:4037
- __generic_file_write_iter+0x126/0x230 mm/filemap.c:4206
- generic_file_write_iter+0x10e/0x5e0 mm/filemap.c:4246
- new_sync_write fs/read_write.c:591 [inline]
- vfs_write+0x70f/0xd10 fs/read_write.c:684
- ksys_write+0x19d/0x2d0 fs/read_write.c:736
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f2346650b59
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fffd3c588a8 EFLAGS: 00000206 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0073746e6576652e RCX: 00007f2346650b59
-RDX: 00000000fffffdaf RSI: 0000200000000000 RDI: 0000000000000005
-RBP: 652e79726f6d656d R08: 00005555682c24c0 R09: 00005555682c24c0
-R10: 00005555682c24c0 R11: 0000000000000206 R12: 00007fffd3c588d0
-R13: 00007fffd3c58af8 R14: 431bde82d7b634db R15: 00007f234669903b
- </TASK>
----[ end trace ]---
+> BTW, there're lots of symbols not exported under mm.
+>
 
+Thanks again, is there a good way to do a build test for symbols not
+being exported?  What CONFIG flags do you use?
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+>> +static struct file *kvm_gmem_inode_create_getfile(void *priv, loff_t size,
+>> +						  u64 flags)
+>> +{
+>> +	static const char *name = "[kvm-gmem]";
+>> +	struct inode *inode;
+>> +	struct file *file;
+>> +
+>> +	if (kvm_gmem_fops.owner && !try_module_get(kvm_gmem_fops.owner))
+>> +		return ERR_PTR(-ENOENT);
+>> +
+>> +	inode = kvm_gmem_inode_make_secure_inode(name, size, flags);
+>> +	if (IS_ERR(inode))
+> Missing module_put() here. i.e.,
+>
+> -       if (IS_ERR(inode))
+> +       if (IS_ERR(inode)) {
+> +               if (kvm_gmem_fops.owner)
+> +                       module_put(kvm_gmem_fops.owner);
+> +
+>                 return ERR_CAST(inode);
+> +       }
+>
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Thanks, Fuad will be addressing this in a revision of [1].
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+>> +		return ERR_CAST(inode);
+>> +
+>> +	file = alloc_file_pseudo(inode, kvm_gmem_mnt, name, O_RDWR,
+>> +				 &kvm_gmem_fops);
+>> +	if (IS_ERR(file)) {
+>> +		iput(inode);
+>> +		return file;
+>> +	}
+>> +
+>> +	file->f_mapping = inode->i_mapping;
+>> +	file->f_flags |= O_LARGEFILE;
+>> +	file->private_data = priv;
+>> +
+>> +	return file;
+>> +}
+>> +
+>
+> Thanks
+> Yan
 
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+[1] https://lore.kernel.org/all/20250328153133.3504118-2-tabba@google.com/
