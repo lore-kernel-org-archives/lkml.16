@@ -1,224 +1,242 @@
-Received: from CH4PR04CU002.outbound.protection.outlook.com (mail-northcentralusazon11023074.outbound.protection.outlook.com [40.107.201.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD162857C3;
-	Wed, 23 Apr 2025 18:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.201.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745433024; cv=fail; b=hy85S0fUpZko9JqffAPXBxKcN3QH9doYqaEwFAJkJ8er+PNb52oNz0rJeMFySSG9Fya5xCrm7ptqlO3oDXLQcv972mKIJioQBB2LyZYjZa+Vb+4NrYMluGdiRPJZEAmwfdMAYm9nbG8LjgHibab9XvNMvxaNzUIdJoFQQR5MZCk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745433024; c=relaxed/simple;
-	bh=ivXAajD+gStera4eGtPza/IkfEtwP/w+wnYKZcGk/v4=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=gYDXCQanQDBi01tS7nlRExbsXgRI2D09GO9ueVrN26iG02ZJf+W0Tv9UfTEENR3/e9HdA9JftfwQR2FFaxQB8VM7VueAdaczCIFJixCblkBxe6k9x2YO3HQKByvVumG+n3X+/2P86SjaYd6HfGL1csT2DGeJdON7sveAPw9GzXk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=bgn52V6e; arc=fail smtp.client-ip=40.107.201.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC1B14900B;
+	Wed, 23 Apr 2025 18:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745433085; cv=none; b=qpHLbWiuyATxcpG83f2C3sweGU2Dtakw+rGIHcjicO3G1LyRObNUDR2FQt1QVZnoiIV9BPzE2I5wGmR0U8E3yEza9l2GmdygXxykTOjJa4Lo66dLiNviK2cNyn7I7HeMO7nxJ4PDOsE4Hu7u92lldPfddWIGwge6eatoqRpee98=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745433085; c=relaxed/simple;
+	bh=tJBn0sbdCDEFGfNg120jO88woAsVmT552TfvpbvWXyo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ZUI/gFNLwHxXBHDK0SGl5Pw2r6AEu2K6J6fvgh1ZpUJzoiXL77Ty3inrtrrmSjtx1yJmzI9N1BZKYCk7O/MGlaL+C5GOTP3rGHobm0vnGgQ3OWBvBAnH3ZKOzciHoNrM3nQExOib/xyG6ZGfCSx/kdjgUm2zqAh8HoOSaWcGKgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bcgI1gCg; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="bgn52V6e"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W7sxAcfH2mq9JfPdPmj/wz7yW9/poB1y1lnMVrfd7rmvG/Kh0fmoo7fv+GQ81y0H3t5ddH4O5zi2HsmP1qipE9BVhFXiLZD2xcMIPJH1J1W0/CjdAs36gqhXxkbJCE1vp044IfewWSeDnCzrFF6BBJN/XToIJH9EOoFGkS9kCZ0dqRhCW3wnuYdzbsCCunSKw50t//BcTWoiSvLaOaHbKf8sdXVF+70eupLlE1QPSc7yxtNGOtdtm49krk73XHL4UNNfx6zAzRt5utPpBiTb0MtfrGCTUjq5q1qXQI9nSeGZ7DkDSEETfeWbEiyWximNpEJFcrM2l8M5Q9NuTZlw+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YzTYj7nIzzCaRic8M9hIasq5ZDCnP+0XKginy/9g7CE=;
- b=km5ceyzneMwHvMr3BLLmRqe8Go1HVaK5/XqAMubCEYt9hlfXZF9nCQpAfwCUk7vOACwR/B6OKzU0yLnxtADHSBn5LQ6vm6FP3+jlGomlrqXpNSutEX1KLK0BBPxvqNUsaOG+KcQ/hVe/6UsKBmJt/vm7k9jZ2aZQQBf6LTF1ZGgVa9XOBICZJ1BWzcowWmfOZOScoUgGPVvGQWcRadiK2Y0BhS6f/Tr7aQX9mKvPMyL2qrq37SRxLQAEVSD0gf5kkZwOOd/nDnN3yp4PRoTa/VYlHbora/fyiWcj+LbxHoiPdHPv6WelKhS+chFcd9crsAXdo3c7ivnVPtb48ony3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YzTYj7nIzzCaRic8M9hIasq5ZDCnP+0XKginy/9g7CE=;
- b=bgn52V6e3x65FQJTIlYA7yfQD+2SaslvZxKMkR2zINk/VZonk3wfzQH/ufcmCE657jTGojVh1dPRQ9OIhq8/Vn3kIRbsuUJE73v+PWt8NJvMFuLVWQEYm+PwuwAwSWcrlXEpp3XIIxs5SZxHBdVwlZZkzhj1NDCNoGa87RoqSVc=
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
- by PH0PR21MB4483.namprd21.prod.outlook.com (2603:10b6:510:330::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.4; Wed, 23 Apr
- 2025 18:30:18 +0000
-Received: from SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
- ([fe80::5c62:d7c6:4531:3aff%6]) with mapi id 15.20.8678.021; Wed, 23 Apr 2025
- 18:30:18 +0000
-From: Long Li <longli@microsoft.com>
-To: Michael Kelley <mhklinux@outlook.com>, "longli@linuxonhyperv.com"
-	<longli@linuxonhyperv.com>, KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
-	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
-	<decui@microsoft.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 0/2] Fix uio_hv_generic on 64k page systems
-Thread-Topic: [PATCH 0/2] Fix uio_hv_generic on 64k page systems
-Thread-Index: AQHbsk/vev7CYGApCUm330WfjNHG7LOxlrPQ
-Date: Wed, 23 Apr 2025 18:30:18 +0000
-Message-ID:
- <SA6PR21MB4231AFA71519914D77F8EC07CEBA2@SA6PR21MB4231.namprd21.prod.outlook.com>
-References: <1744936997-7844-1-git-send-email-longli@linuxonhyperv.com>
- <BN7PR02MB4148A6C1A29019D9B016D1FCD4B92@BN7PR02MB4148.namprd02.prod.outlook.com>
-In-Reply-To:
- <BN7PR02MB4148A6C1A29019D9B016D1FCD4B92@BN7PR02MB4148.namprd02.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1f80a537-034c-4232-b2b1-21fd6e71ca99;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-04-23T18:29:34Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
- 3, 0, 1;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|PH0PR21MB4483:EE_
-x-ms-office365-filtering-correlation-id: e9d03dd6-75cd-4741-fe06-08dd8294e625
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|366016|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?1k+THsK87jdEpZh6g3BWFpx5DX1HYhA33YZDictcK9c3TfhPrwnD3OrUF+nq?=
- =?us-ascii?Q?hpkHCEIvXGV5TkrYQV5Jzdb1SCNn6swwrw8wLjiVVoGBlqPUESoIiMwJntn9?=
- =?us-ascii?Q?FuwV2Hm+AVAIraBTsdOF3UZe2qrpjhi0NxiRwF59PKrxIJynm92WT5aN4oh0?=
- =?us-ascii?Q?nDWNvvroOmie9Ji7H2AF10UsoeTGrMuUwV5gVUyoiO2Fi+tWPK2yElKKTMe/?=
- =?us-ascii?Q?CaydH96H144kTg5aIYieJWvv08n2ZTLCp/ApxOMfVZAzGv0Jg7wwMzD5thod?=
- =?us-ascii?Q?oMgAsnp6zLLMPq2o4vP6Gow7meUWBMeg/qC8wLS4FVAiypivamilBN2mXP3b?=
- =?us-ascii?Q?dV6UfpK7gDQ8ZimKzL2gCkeT8N0shIHTRqBR8uLI1yTia+hjpZXlwN0Adht8?=
- =?us-ascii?Q?OotaAfV5Mazv/ByOL4K/O4yj11dn9HmuTOD0nyKfJyafuaV2VrycJR9XZ5hc?=
- =?us-ascii?Q?hO2ALLfhXifdi9pQ9ZHsdBYgKsjkfCZ+CYNtLkayUUJ7UYqD/P2ZUz/2x1Fk?=
- =?us-ascii?Q?XmYJ4iEaHK/y5OfcfyMQsRs93MJnxg8H3/BF+Ty1iho/HRd+PhP2U5YZspyl?=
- =?us-ascii?Q?aulc8plwJAJ0NiW/UbqUjeyONUbulBHLdV71GKIHOKGpBfxSc76O0b3np+m7?=
- =?us-ascii?Q?K7SRONir60VYYhVqkMBNSBP0XJ7jRHqDrcb98pGgT6bla0PMb/MUVSbXVB4o?=
- =?us-ascii?Q?Ya5z01s7XfvT/3FtA/4MeYjf9+Z1iaXElIZlGxosTQXpjx52oz8I5FqTyh2n?=
- =?us-ascii?Q?262lnbfina596a/6IzpIoKw7LNj8VHqp6QKPrPLioUxaAz5dNAFkZ3oJu6Qr?=
- =?us-ascii?Q?SRZmKVV7Y0iv+jtX/2ykaLURObbOMBwu22LWiret4DHfAWEpRIdbBjZYy0K6?=
- =?us-ascii?Q?MT3JbvEoHYfs8/ynGVPKqlczN3c2/SYBFYncpcYUJzDGG5HqUfh97sqB8E63?=
- =?us-ascii?Q?AYarKiuIZHC0x/amGvsHcgBFjMdN3FS4z+ggWTWeUkmj3zCPy+ksZo5IRIgQ?=
- =?us-ascii?Q?+n2/L2UYWj97XbZ+0xgJL5WHpqLel9YT6lnUFyhTGWh069MSJJiqXEFINWka?=
- =?us-ascii?Q?Cj2R5P1gWDNNO8Qb0C/7ir5SABHwm3eO6G+6v2dfjEQ05FrVGCJG1IBideQ8?=
- =?us-ascii?Q?OEo104H14gZKd/GQyhU5vbFbBCOES439nCSXR/ctCNtoAvsA2tFoUEP7s4gS?=
- =?us-ascii?Q?V1QAEkGDHZZjqhVsu/viRNiFvVj10i2KewM93ti9OpZGzsw8bFLwCG05h9jn?=
- =?us-ascii?Q?rEoZYDhpD3A6FH1iVzTggmWL6t4aVJF5yx6hI5BxqThWortTTudTX2fVMYrf?=
- =?us-ascii?Q?pPxsJCk0OLSdSV/5N96Nj/4+xLNzzUM4KJYlFRRQ+SSik4ms6ri7mr0io2IG?=
- =?us-ascii?Q?ACVg2aCOWABoHxh8WCjX6wrCyJz5K7W1n1Zo+rmvrd2p+eYVufLrCCgBCvWI?=
- =?us-ascii?Q?pSHIQUWTVW5wj38PluTHWz8w+PViz7teqNNF7k1dXy8aoY2t+IBgra6lSOih?=
- =?us-ascii?Q?WcMIwJii2GzywtA=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(38070700018);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?ajfwhT9lN6nYF6kkkuLlgiVJripB3zBkqPoVdAhSt2cHTQcYQtlCVpiR0UN8?=
- =?us-ascii?Q?7EXnmOQfY1HuHT537xABDuuCE+kwkq4EsPqR9Vu7kiHcruTdqORLvPs4RGt9?=
- =?us-ascii?Q?4ruF731LN0ehez/Ia42iofsALQ9UXQt1wPzifcjrhKg5KxxCdGAmH12xZOmG?=
- =?us-ascii?Q?xePt9lcoKyGxDKyQzd74F8sPLrki8ajzxhJpNpjNMbhLYW/UugjhJQYUbEn7?=
- =?us-ascii?Q?ygS51nyC4xOIUy4fy0In0YzrA/z3k/1It8zdy07R/Nx9rPuvhXD5UuSgIOvl?=
- =?us-ascii?Q?reJuiuH8k4Vk5V50ayOVsTpr72lMQSL+bfVDR8fScJ5GP5LOvrbyJD98+MVN?=
- =?us-ascii?Q?Ha5SZ2eBvzV8TPun7+CGx1FkkYCzfky2LCcCt8Mkzo1VMPABcp6+csptoG4t?=
- =?us-ascii?Q?hDPGvm1zTYJ8Qec/oOF6zEpxep99gpSXa3ABMeUFakmLEGX1qp75cLc3TBZa?=
- =?us-ascii?Q?H8y4jMlVqN0EF48ig+W4nVvgnRY4AJ/YCtCKt3cWA1IlQopywTMoeLhNHsJA?=
- =?us-ascii?Q?hs75TAoK5/TO0Li8bQlqhIHl21CojAhzS5C+7CrKjYNmInwbyCHJbVdn3Ri3?=
- =?us-ascii?Q?PrydQEdWoRMhsbc2guR1GW0Az0TH3OqiOYGtG5G0feMnIpiZ+B9qGhPmFNcu?=
- =?us-ascii?Q?CvU3BYZostfPEbJyotUSAKOyLbTUp0myZm7le7iUZZaCpdtnwQnJT600UzQK?=
- =?us-ascii?Q?emc45Emiw0L9qmkqMypXwP8sLZxJd+ankap0VM4BU2CgK+7qLFerK6aPRllQ?=
- =?us-ascii?Q?EkG+3Wq7U0f41GO/tNF2pNt7rb9QZV4cRzvGBnm5fs1f59sU/A2Owe7d5rsc?=
- =?us-ascii?Q?D6uBo4lma2a7Eq9QqcEDL2C8lBgD3lWEByZqk1qrYt+YDhFvBsW5V8GXtOt0?=
- =?us-ascii?Q?DJlkInXuiRFwttUU5DuZEyCb3l1/yRot7J6PxwaOitiJgaw4oDdS6jfD6vCv?=
- =?us-ascii?Q?HzKPq/nluCjwd7DcaYHE2OGauzO4sm1zh50eWiNEqVlF3ErzKz1wVjRMH5B6?=
- =?us-ascii?Q?PLlu9lSLH9S9ppad7xTFqffnpK4nFioZ3BrUQioTcmlc4L/svQrOdn8tVoHn?=
- =?us-ascii?Q?CGA+GnjQOvQwbBcSvCVvgpRCL1zIxpEiMgnl5t0Ahi13oc21+Cnb1WIZByDA?=
- =?us-ascii?Q?0WOtwupeucu1SjH/F9eL4EOG4w9OSLKLcKIi+u6/sNClR8Q99HL1g+v9oLJQ?=
- =?us-ascii?Q?03bFD75jMCyvtW2NRNr49a2iy9ovh/jljJz0WXz8a5FHWd6R2+ZtxmsO+R/+?=
- =?us-ascii?Q?XAiIzh6/BOR10OA1pcIuw6FyYhVB9NK7A/xZD3tic3WGl8r781yAo1XvNeX1?=
- =?us-ascii?Q?Wr7+w4Zy1Xa/M2rmD8UpsnM3H9LbpL5RgaHqlq3VJ6WjfsRXH084J7DtpfUx?=
- =?us-ascii?Q?ozQ1epXMDxY7RfZhXzjm8fdJtWySmtg78V87zQj8r4YNXrHdgLkfIqX6R8gi?=
- =?us-ascii?Q?aNoEyQt5fWbLbIXToxARWZnQa6gNAnDH0kGMx4VPsaaIuEWhC+uLaWpfbcFP?=
- =?us-ascii?Q?l3LoMmk82gtY3S7akw5FWEYiKeDfCRI5KZcQKlwiVyTUXspRs3JixiyfFcIH?=
- =?us-ascii?Q?0FaHyejTVvS9pFSLOYfJ9vXtg7MFFrB9fQ6e8OxQ?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bcgI1gCg"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so1329542a91.1;
+        Wed, 23 Apr 2025 11:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745433083; x=1746037883; darn=vger.kernel.org;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cOpQeKb3vixx81nI9GHXsTk9qiiQQKOXE/nG8kKovQA=;
+        b=bcgI1gCgRpEsoG/X2cNMAmoOd6LX9CC7i1NNGugvhJ5d/WyqhZmFJpJ7j50yGv/2UW
+         ZOrkthQZXIvgWZBUJt0q3WJTioWXLPUE1ZASz0D+goo9xFGSmZ7d3Ogf3IFnd6VrTwYD
+         abcNDTS4If7DugBTFie2yvddfb5DKeiKIsmUYdAYB67JXLFPaYigaQbXBgBukAsVHioZ
+         5rjsyJbH2mIXq3l52EwgC2GpVBAzzQI2iO9BqA5mVS1Kd/UWg7ph6e+IqQB9fRruv4ow
+         Bp/m6CH0Fo9oKQSY7lktY1MRJPjRQWfJLxo36Wvh/yfWmzif09s63J1jtcakAiuF35vd
+         3YlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745433083; x=1746037883;
+        h=in-reply-to:references:cc:to:from:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cOpQeKb3vixx81nI9GHXsTk9qiiQQKOXE/nG8kKovQA=;
+        b=SFbVjwWjb5BhTEkAWw5xt+Fgxy2XKMAfT9o1nzryjRzghOLlfGc26fuIrO8sZ/jlDc
+         ByegdsQhbM/HVwVupRTcCnDcz28QyrIuc4GET9aw9D+hcs4MpdzbgkOo7n6jz3WNKRTb
+         BxG2LgBG3H/4cwLD2fJeMEQIImyFv0fXHgI+yszNPW2nnVxCrAcW125QcPRXScmK2Q3r
+         tLobjM06gzmDdaOhSmLadIvb3FI9L5icb1kbeUeVM5IFeIXPCavHMYMvqnmAAYCIXFmw
+         9G/2WZipsq/Z0WQTbguzTf3c+0Ib7LCixFKtWDSoRRyhXnOjKw4FckOac0mB1zSqq9D4
+         C7XQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUQWO47ZtJHFByJNyICNqPDKMJYw/4A4OiY0x7zJADfcgm+ZfOaAu9utTpdKJ2nwz8c2xdV0Ji8f8nvpLQ=@vger.kernel.org, AJvYcCV2NPwgNfsN4tJKaa0pjptK5ZiioiOyZVCUSFQq1rhN4G+HBtsoiMCqTGLF7dJiijXJ9vVqMxidW/Iql48=@vger.kernel.org, AJvYcCWFcbvXnR7BfOAUxcj9WK63fzt3K/exnQ6FKWTP6q5lVPCF6yjW0tcBHuX7uKYqLUam/+Q+5F7XUA3ryNQcxfpBoirHbw==@vger.kernel.org, AJvYcCWU6RCNqr6Kh6CuOO14CkSrijPo9g2AqCqoaJu7UJo8YdlJAw9lGiupLsoz5QAEO4D75lYVNV2kRxqK@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNnUer6kmvyqV4XFf7hgcwg6QYFht/x5XkIn1Je+DF8BDYbyVr
+	jufMbwzagJHmvTRskJONBi6NU3o0y9ZX2xEmnLenHbBYns4d1ghi
+X-Gm-Gg: ASbGncuPbUAPL5F+kQJThMpHXAaAKVM4OOBnBwZ4junpqW0opgvD2LFp9NmW9zmLI8S
+	CQfPuVJAgtq58aSXxqZKpLtTIT65jZJ3zL8E4wmL43yc16qxTxoQ1+DzlZhK683iQqd1hwUHxRk
+	uBgXJ2eySGBwIGv/twERJgXWxqrQAWhZ3BjqHXCmRl8Z+U6YLkxPLX5TPbOCXzBmbYrjlU0mh08
+	QNHpRssmxJBv6Ot+sj4eiCayFOHSE5DyyWEiZMQLj7fFWIG/msufIRzLFJ+YyKvtRcomBqnDt6n
+	vL9woy/9Itx3/hqhawoogG5mYDzNRa+C37c7AV9z6Wqz
+X-Google-Smtp-Source: AGHT+IEHrNiRnTXjVPBRN3km9ezXq9nftJR+dFDQktX4gOLxCfeSk1aB3DWtqmO/wcVrpprP5KJBrA==
+X-Received: by 2002:a17:90b:58ed:b0:2fa:2133:bc87 with SMTP id 98e67ed59e1d1-309ec5e69fdmr363341a91.6.1745433083197;
+        Wed, 23 Apr 2025 11:31:23 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309e0d06b13sm1984557a91.43.2025.04.23.11.31.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 11:31:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9d03dd6-75cd-4741-fe06-08dd8294e625
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2025 18:30:18.4403
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HBGynvnPveTuFX1a7KZKxyefuQdgiTYkMXZbUkfT1uhoSy5V7ubIEM7wqzCeoLqgS9+MritMMEw4qsdgUi4VvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB4483
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 23 Apr 2025 15:31:17 -0300
+Message-Id: <D9E8DY5E0CTO.2O6K5NWUGKA6Z@gmail.com>
+Subject: Re: [PATCH 6/7] platform/x86/dell: alienware-wmi: update sysfs
+ visibility macros
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "David E. Box" <david.e.box@linux.intel.com>, <corbet@lwn.net>,
+ <bhelgaas@google.com>, <hdegoede@redhat.com>,
+ <ilpo.jarvinen@linux.intel.com>, <vkoul@kernel.org>,
+ <yung-chuan.liao@linux.intel.com>, <pierre-louis.bossart@linux.dev>,
+ <sanyog.r.kale@intel.com>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <dakr@kernel.org>, <dan.j.williams@intel.com>,
+ <andriy.shevchenko@linux.intel.com>
+Cc: <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
+ <Dell.Client.Kernel@dell.com>, <linux-sound@vger.kernel.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250423175040.784680-1-david.e.box@linux.intel.com>
+ <20250423175040.784680-7-david.e.box@linux.intel.com>
+In-Reply-To: <20250423175040.784680-7-david.e.box@linux.intel.com>
 
-
-
-> -----Original Message-----
-> From: Michael Kelley <mhklinux@outlook.com>
-> Sent: Sunday, April 20, 2025 4:57 PM
-> To: longli@linuxonhyperv.com; KY Srinivasan <kys@microsoft.com>; Haiyang
-> Zhang <haiyangz@microsoft.com>; Wei Liu <wei.liu@kernel.org>; Dexuan Cui
-> <decui@microsoft.com>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>;
-> linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
-> Cc: Long Li <longli@microsoft.com>
-> Subject: [EXTERNAL] RE: [PATCH 0/2] Fix uio_hv_generic on 64k page system=
-s
->=20
-> From: longli@linuxonhyperv.com <longli@linuxonhyperv.com>
-> >
->=20
-> The Subject line of this cover letter is a bit too narrow in scope. The s=
-cope should
-> be any page size larger than 4K. For example, the arm64 architecture perm=
-its a
-> page size of 16K, and Linux kernels built that way work just fine on Hype=
-r-V arm64
-> hosts. Perhaps:
->=20
->     Fix uio_hv_generic for guests with page size > 4 KiB
->=20
-> > UIO framework requires the device memory aligned to page boundary.
-> > Hyper-V may allocate some memory that is Hyper-V page aligned (4k) but
-> > not system page aligned.
-> >
-> > Fix this by having Hyper-V always allocate those pages on system page
-> > boundary and expose them to user-mode.
->=20
-> Also within the scope of making uio_hv_generic work with page size > 4KiB=
-,
-> there's an issue with the ring size. When hv_dev_ring_size() returns 0,
-> hv_uio_probe() uses 2 MiB as the ring size. That works OK with the larger=
- page
-> sizes. But when hv_dev_ring_size() returns a specific value, it might not=
- work. The
-> fcopy device returns 16 KiB, which will fail. hv_uio_probe() needs to use=
- the
-> VMBUS_RING_SIZE() macro to increase the ring size if necessary to handle =
+On Wed Apr 23, 2025 at 2:50 PM -03, David E. Box wrote:
+> Replace deprecated visibility macros and align group naming with new API.
+>
+> In alienware-wmi-base.c, use NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(rgb_zone=
+s)
+> to define the rgb_zones attribute group concisely. To preserve the existi=
+ng
+> userspace ABI, rename zone_attr_visible and rgb_zones_attr_visible to
+> zone_group_visible and rgb_zones_group_visible, respectively, to reflect =
 the
-> larger ring header that results if the page size is > 4 KiB.  You might w=
-ant to
-> include such a patch in this series.
+> 'rgb_zones' group.
+>
+> In alienware-wmi-wmax.c, replace DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() with
+> the renamed DEFINE_SYSFS_GROUP_VISIBILITY() macro for the hdmi, amplifier=
+,
+> and deepsleep attributes to match the updated API.
+>
+> While here, add missing sysfs.h include and sort headers alphabetically. =
+No
+> functional changes are intended.
+>
+> Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 
-Sure, will use VMBUS_RING_SIZE() to increase ring size if necessary.
+Thanks! I like these new macros.
 
-Long
+Reviewed-by: Kurt Borja <kuurtb@gmail.com>
 
->=20
-> Separately, tools/hv/vmbus_bufring.c needs work to operate correctly on
-> arm64 and with page sizes > 4 KiB. But that's probably a different patch =
-series.
->=20
-> Michael
->=20
-> >
-> > Long Li (2):
-> >   Drivers: hv: Allocate interrupt and monitor pages aligned to system
-> >     page boundary
-> >   uio_hv_generic: Use correct size for interrupt and monitor pages
-> >
-> >  drivers/hv/hv_common.c       | 29 +++++++----------------------
-> >  drivers/uio/uio_hv_generic.c |  4 ++--
-> >  2 files changed, 9 insertions(+), 24 deletions(-)
-> >
-> > --
-> > 2.34.1
-> >
+Small comment bellow.
+
+> ---
+>  .../platform/x86/dell/alienware-wmi-base.c    | 23 ++++++++-----------
+>  .../platform/x86/dell/alienware-wmi-wmax.c    |  7 +++---
+>  2 files changed, 13 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-base.c b/drivers/pla=
+tform/x86/dell/alienware-wmi-base.c
+> index 64562b92314f..ee41892e562c 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-base.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-base.c
+> @@ -10,10 +10,11 @@
+> =20
+>  #include <linux/acpi.h>
+>  #include <linux/cleanup.h>
+> -#include <linux/module.h>
+> -#include <linux/platform_device.h>
+>  #include <linux/dmi.h>
+>  #include <linux/leds.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/sysfs.h>
+>  #include "alienware-wmi.h"
+> =20
+>  MODULE_AUTHOR("Mario Limonciello <mario.limonciello@outlook.com>");
+> @@ -326,8 +327,8 @@ static ssize_t lighting_control_state_store(struct de=
+vice *dev,
+> =20
+>  static DEVICE_ATTR_RW(lighting_control_state);
+> =20
+> -static umode_t zone_attr_visible(struct kobject *kobj,
+> -				 struct attribute *attr, int n)
+> +static umode_t rgb_zones_attr_visible(struct kobject *kobj,
+> +				      struct attribute *attr, int n)
+>  {
+>  	if (n < alienfx->num_zones + 1)
+>  		return attr->mode;
+> @@ -335,13 +336,12 @@ static umode_t zone_attr_visible(struct kobject *ko=
+bj,
+>  	return 0;
+>  }
+> =20
+> -static bool zone_group_visible(struct kobject *kobj)
+> +static bool rgb_zones_group_visible(struct kobject *kobj)
+>  {
+>  	return alienfx->num_zones > 0;
+>  }
+> -DEFINE_SYSFS_GROUP_VISIBLE(zone);
+> =20
+> -static struct attribute *zone_attrs[] =3D {
+> +static struct attribute *rgb_zones_attrs[] =3D {
+>  	&dev_attr_lighting_control_state.attr,
+>  	&dev_attr_zone00.attr,
+>  	&dev_attr_zone01.attr,
+> @@ -349,12 +349,7 @@ static struct attribute *zone_attrs[] =3D {
+>  	&dev_attr_zone03.attr,
+>  	NULL
+>  };
+> -
+> -static struct attribute_group zone_attribute_group =3D {
+> -	.name =3D "rgb_zones",
+> -	.is_visible =3D SYSFS_GROUP_VISIBLE(zone),
+> -	.attrs =3D zone_attrs,
+> -};
+> +NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(rgb_zones);
+> =20
+>  /*
+>   * LED Brightness (Global)
+> @@ -410,7 +405,7 @@ static int alienfx_probe(struct platform_device *pdev=
+)
+>  }
+> =20
+>  static const struct attribute_group *alienfx_groups[] =3D {
+> -	&zone_attribute_group,
+> +	&rgb_zones_group,
+>  	WMAX_DEV_GROUPS
+>  	NULL
+>  };
+> diff --git a/drivers/platform/x86/dell/alienware-wmi-wmax.c b/drivers/pla=
+tform/x86/dell/alienware-wmi-wmax.c
+> index 0c3be03385f8..559415849bcc 100644
+> --- a/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> +++ b/drivers/platform/x86/dell/alienware-wmi-wmax.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/dmi.h>
+>  #include <linux/moduleparam.h>
+>  #include <linux/platform_profile.h>
+> +#include <linux/sysfs.h>
+
+JFYI, this line conflicts with linux-next.
+
+--=20
+ ~ Kurt
+
+>  #include <linux/wmi.h>
+>  #include "alienware-wmi.h"
+> =20
+> @@ -356,7 +357,7 @@ static bool hdmi_group_visible(struct kobject *kobj)
+>  {
+>  	return alienware_interface =3D=3D WMAX && alienfx->hdmi_mux;
+>  }
+> -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(hdmi);
+> +DEFINE_SYSFS_GROUP_VISIBILITY(hdmi);
+> =20
+>  static struct attribute *hdmi_attrs[] =3D {
+>  	&dev_attr_cable.attr,
+> @@ -404,7 +405,7 @@ static bool amplifier_group_visible(struct kobject *k=
+obj)
+>  {
+>  	return alienware_interface =3D=3D WMAX && alienfx->amplifier;
+>  }
+> -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(amplifier);
+> +DEFINE_SYSFS_GROUP_VISIBILITY(amplifier);
+> =20
+>  static struct attribute *amplifier_attrs[] =3D {
+>  	&dev_attr_status.attr,
+> @@ -475,7 +476,7 @@ static bool deepsleep_group_visible(struct kobject *k=
+obj)
+>  {
+>  	return alienware_interface =3D=3D WMAX && alienfx->deepslp;
+>  }
+> -DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(deepsleep);
+> +DEFINE_SYSFS_GROUP_VISIBILITY(deepsleep);
+> =20
+>  static struct attribute *deepsleep_attrs[] =3D {
+>  	&dev_attr_deepsleep.attr,
+
