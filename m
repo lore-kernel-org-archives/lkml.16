@@ -1,72 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC27229B79F;
-	Wed, 23 Apr 2025 15:26:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7EAE2957DA;
+	Wed, 23 Apr 2025 15:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421999; cv=none; b=k3FRZRkPaV3BvxO5vrpDQNWDaLXHah/wsneoyEkW1zReGo9pCiAc2ow7jyipSRE2ilcm6HBOWlhqm/535pj2/kOwTF3ZoQzKSA1u2bv7caSLKUQeP4jG4YNbvsM2NpeBZRRY/svovJjyllpgRIPTmY2ifUSAZOd7/j0e+EPzea4=
+	t=1745422010; cv=none; b=AH2KQ41XIp6CF4dBOhgZ1/PC8XVeTxBJsIfIjNZa5WD98ihtlaWiK6331pzlBqLXjYTlXzxkAqYnA0Pqi48QmGbq2lE4LIvX59AMaxx9Yzt8lGTl3Du+82qRaX3sUip934obrwXfcyUan+fSKc7w7yccrT9pnUHhT7anPprDEpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421999; c=relaxed/simple;
-	bh=byjfADMw7B0iAHcVOEL7w5089D7lAVY4aSDEd/Ylyp0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lApVGv4BugCoiOGHVNaxTD7ApjxHwilRRX52HjzCUTTS8XnntZxr4peRrVBNoaiTwL9fnbXRgx/kzL69/GSqkpR9doAuLJjPet2ki7dGklaov/KNuSCxoC7ET/usdFp8wgzJyyIIw0vvKLjRzcZZgAtSxcIHgKfPKnZcGTTzafk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T+W1EKXq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745422010; c=relaxed/simple;
+	bh=+kPnZjhBBB1Rt9Nq0FKcQiPKW0BdYWzvUk4a9LrGmAM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=mmQgf4q5zT2oso9Z+LvcOhci0EmO6eWplzWC4BqYD+L3d+dBDCLyX/ISrPMD4KAfyr3rySQ5ZVoJRFpCS9bhcBzDiohs35nK5NEndm0XOir9sn+XoGgNQFgWrA7Pt6b8Wp+y++fMx/hhhv1QZBlrA+CHZLMOnEerud45JKvbYPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=ya1aihqx; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T+W1EKXq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26523C4CEE2;
-	Wed, 23 Apr 2025 15:26:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745421998;
-	bh=byjfADMw7B0iAHcVOEL7w5089D7lAVY4aSDEd/Ylyp0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T+W1EKXqnhCHF1cMXIpgvpu7WEIPHWqZcKd3G5U64jxQc1jkX9B3Ek6iemKhWyaNU
-	 flrC+9VLPkCtk3tm8RZHpWqN/udRUf4E4peak68etxvfs1/l5v7/KRgtX3M7C8XtWb
-	 8+KIDk4Uqf8sj/U561yolbKjqOVZbxwsDzFKQovubEJbRljsw6qQ37GwbzY8mpfCmy
-	 shByIRfT8dNQyqcSDwJLXp4ZrZ0rkP3H2YcXeplLPwcq7NX3U+XZ2OS1QNkaFPjG77
-	 FhCAV+Gh6vbEfSWoGvlAK6XjiPKopDKA9JHzwc4Gh0erdTMOkFEpdLD3E0OltqywmY
-	 Oc7FmZRhL88AQ==
-Date: Wed, 23 Apr 2025 10:26:36 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: pwm: vt8500-pwm: Convert to YAML
-Message-ID: <174542199611.553877.7404234278333094382.robh@kernel.org>
-References: <20250418-via_pwm_binding-v2-1-17545f4d719e@gmail.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="ya1aihqx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=6NAKdQJVuUOHz5Vip7qDSn/LDlbtFntB9GC/kqf4AAc=;
+	t=1745422009; x=1746631609; b=ya1aihqxTx3n24Vrax7S0kwBCc03zjb4rCBJxQXm4JBDb/2
+	1Eg28VBaN2BLcmlJoeFiPxB2+uruCo60wiUbZk+mPPxgcW4x2xab2PCchENduEMsmeq4hggnR056T
+	qPtvx+ziSMuq6l98kHd59fWjM4OmGlrP2o5XPAOGoO8YPmLMaxAq4Wf2r9ByvnEjpE1PusgYVh7kN
+	JLeMtq+XbOarwQRSxsUF7NNBHqFEyRWjoyRrt/fmzIW4lt7FvxidQtEeK/5CIXXhhnO9TxKN47+uq
+	B8843QXKnanky5TRtTQUe59kWlzioBL7Gtbs2qCJuKL0IUzgw/Bpz+gi32JhHKnA==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1u7bzo-0000000En4C-3POE;
+	Wed, 23 Apr 2025 17:26:44 +0200
+Message-ID: <4ed3cfbc1a5b80bb3577f73b8c2b19ce830eeff5.camel@sipsolutions.net>
+Subject: Re: [PATCH v2] wifi: mac80211: Prevent disconnect reports when no
+ AP is associated
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	miriam.rachel.korenblit@intel.com
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+5a7b40bcb34dea5ca959@syzkaller.appspotmail.com
+Date: Wed, 23 Apr 2025 17:26:44 +0200
+In-Reply-To: <20250314120614.4032434-1-quic_zhonhan@quicinc.com>
+References: <20250314120614.4032434-1-quic_zhonhan@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418-via_pwm_binding-v2-1-17545f4d719e@gmail.com>
+X-malware-bazaar: not-scanned
 
+On Fri, 2025-03-14 at 20:06 +0800, Zhongqiu Han wrote:
+>=20
+> +++ b/net/mac80211/mlme.c
+> @@ -4433,6 +4433,10 @@ static void ieee80211_report_disconnect(struct iee=
+e80211_sub_if_data *sdata,
+>  		.u.mlme.data =3D tx ? DEAUTH_TX_EVENT : DEAUTH_RX_EVENT,
+>  		.u.mlme.reason =3D reason,
+>  	};
+> +	struct sta_info *ap_sta =3D sta_info_get(sdata, sdata->vif.cfg.ap_addr)=
+;
+> +
+> +	if (WARN_ON(!ap_sta))
+> +		return;
 
-On Fri, 18 Apr 2025 18:55:07 +0400, Alexey Charkov wrote:
-> Rewrite the textual description for the WonderMedia PWM controller
-> as YAML schema, and switch the filename to follow the compatible
-> string.
-> 
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
-> Split the series from v1 into separate bindings patches so as not to
-> spam all the subsystems with unrelated changes, per Rob's suggestion
-> 
-> Changes in v2:
-> - reordered nodes in the example same as in properties (thanks Rob)
-> 
-> Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-5-f9af689cdfc2@gmail.com/
-> ---
->  .../devicetree/bindings/pwm/via,vt8500-pwm.yaml    | 43 ++++++++++++++++++++++
->  .../devicetree/bindings/pwm/vt8500-pwm.txt         | 18 ---------
->  MAINTAINERS                                        |  1 +
->  3 files changed, 44 insertions(+), 18 deletions(-)
-> 
+You're adding a WARN_ON() that's now guaranteed to trigger, no?
+Shouldn't the caller (also) be fixed?
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> @@ -8090,7 +8094,7 @@ static void ieee80211_sta_timer(struct timer_list *=
+t)
+>  void ieee80211_sta_connection_lost(struct ieee80211_sub_if_data *sdata,
+>  				   u8 reason, bool tx)
+>  {
+> -	u8 frame_buf[IEEE80211_DEAUTH_FRAME_LEN];
+> +	u8 frame_buf[IEEE80211_DEAUTH_FRAME_LEN] =3D {0};
+>=20
 
+And that's not needed then? And perhaps should be {} if it is.
+
+johannes
