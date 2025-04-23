@@ -1,92 +1,173 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4B91CBA02
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBA9C8DC
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745406060; cv=none; b=SXCM2FCDHLGYVfmnN8S8lyYtd/0qCtlzUiPRTjLRWrR3gNc4sPrufJs/H7T3NL9EyTv7BsPPBWsI91RmS2NZHSeeBflzNGpifNViR01m/neL7V51HWzfKvXCUuRINJutuBS9w0xlS0alSxHJQ93wnLbhKM62kzrKD1Kz0mZPOyA=
+	t=1745406111; cv=none; b=jP6c7IyV/2kYZeb5hK/eZa6HB/5T6V5TFu4pf2azN+TaaGtx5pthpsHJyBqeaYg0ZSBiqxGr1Y0xWaC/5od311lNjDTdeMJsfGpJHRQ3VmgWwSk/qFIdTQ+fK9VcvZAwzPEfYiKPyskhTzEwmBAOawRHtXNfs54Q6VpKm4ELhpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745406060; c=relaxed/simple;
-	bh=YnfzKMEwLBYoy9n3/p/PzVFMeRhxGAjnJtCfLo3CK04=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ApVAPUyAPpe1BKcKzoJ6vBOGMAzhhbUpgr0eToAojT4C7MfDu1YUeEutqigCDBLlyrVLz9oBOUZV9Nz+2At4Hlhc5T5aptws+ahryLxXNPGjZ2JoO3wW5MdnwgAqSyVaSns6QokmT3CH3nb1bdvvn8ucnWiVusZe1TMjlpDhpnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HhV/ai/G; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745406111; c=relaxed/simple;
+	bh=2MgQnj1y3iiWLI3R49UjyHxN+tqxj29veEer+sdBfIE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=iIT/W94qAnrWcYAUhHpfLkbHxiIk2SkhZhuBmKTC6pn/DXr+z/ElnkI+BfMUFQjzbM7kb+xqiXjQamXptB4F8zSK3qZow64efkAA1Piki5bB1zWCkza1UH8utVB5VwoKLYc1fF1QHcYbiqIFN0EdwmmY2Y99mgH9Z6xoAuvwt+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Ox8SHhMD; arc=none smtp.client-ip=212.227.15.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HhV/ai/G"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5499659e669so6804657e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:00:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745406056; x=1746010856; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YnfzKMEwLBYoy9n3/p/PzVFMeRhxGAjnJtCfLo3CK04=;
-        b=HhV/ai/GZNfP0KshxWTOSpygdXV6n5HU1KBbQM/2ffGVjmDgv2W9aUbLM4Jc/B+slk
-         ELFFg6+XRwmkqZFdTFBakZ4g4COw1EbC0OfEcxcQikk9RtTXLn0VioLfOcqX0t3W1psN
-         /XLiqfnbv+jqJ7LsGoOqvqGWeADMezDebdsjemufxzy+Nwd5x1RJeG6WgQTcUiVcX3HL
-         fZXf2XlJHyPqdysgEgay18H/l8zq+xYffJcPbHP5txcYbeY7VSjMXIdtfZa4VoOUJQF6
-         VK5I30/rl5QK7E7UQ3eXJ1uMb+QXiv0LOhQmC+XswAvHOkm8d8Rg7FV7B8TUUl0KrUaV
-         rmsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745406056; x=1746010856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YnfzKMEwLBYoy9n3/p/PzVFMeRhxGAjnJtCfLo3CK04=;
-        b=sYwrlvJg2tKMupYcfZxky/WF35Hv3b5q6MeQWtgblySkJnNYJLWvAPEvHdBdkSBv9G
-         0zXg6lKO4ODKVxpdiZcysB8fpWHBBGWEuA+QvKPk8HelLYClwC6HYDdyeDvPLvrowUKa
-         JtClmoNZW9etDlShmNGzBeXgb4DHBg7dpt7SjMRsF9gRYEEJdeignU2QJQ2uFX4ftY0d
-         /yhvY9F0bfqZWNNiIoA5et1YtxuAU5g9eO3900iL5ybeqixGGA+ADszW2L+wcTXhGGWe
-         wFtQMpdRWL6vCwdC1sCBZrSnUj53YxOo0YS6D1yBWZNxwGurxDaKoK8gNiHDUUYH2AkB
-         P7Cg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ2mwDdLGUieaIGA38TplVDre95JLGjZSuFZWNrDv0OT6Nob7ZpjeCieVu0xARcnCo7qIj8Cw6FzfD9w8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9Q4wtpwPW2f5hl77fDO5D8XXLxIk2QanszzhdF91z5VoRRxzJ
-	dZfSkzfNshT2y8CNfDj/c7PqDhQhwpzm3vw6MuZi6sN4wSdh0Hj7eD72/POlPxqhEbaCS7WsPIO
-	ctiPO9aLOD+qzFpZtd7O1q0KoiTDDAtvxxwSvfg==
-X-Gm-Gg: ASbGnctsSVe/6G9Lar6nplCOZR41vT1Lkubjcd1GhmB0KDm9Sq6Wjxg064GEtGbCL0H
-	hM1kAqlV95I9zIzPi4WVMNb5tfbaT/beaXmOy4aa4JZM0ixsR9gAFsLd6ddk9Ea67iiSDDnzhDw
-	U2NCE5sB0QLTf8vL0mtOirgw==
-X-Google-Smtp-Source: AGHT+IHMCySz3z6SljYbbcEsFOxE9JkbCutC0ziw5S/nYiq5XuUyK8ef365iq8jZ7YlaLZiMtkJdFLKp9/dUsZ/eF3c=
-X-Received: by 2002:a05:6512:31d0:b0:54a:cc03:693d with SMTP id
- 2adb3069b0e04-54d6e61dd6bmr5088730e87.9.1745406056469; Wed, 23 Apr 2025
- 04:00:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Ox8SHhMD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1745406071; x=1746010871; i=markus.elfring@web.de;
+	bh=bJBRZaSgchliWw4wWLkLEWuwp3nk6zi0pApkA4ydaQA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:Cc:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=Ox8SHhMDynRZ4UWq5g+NDy3WLxAgbWwiPuGIaqRjAdTgEARXgKvENusKre6qfQlx
+	 qIYRkjFbHC8jeWQ8gTOnyCaj65GQLj2KZ/2KI9qO3hNf/s6tG1PzygUsqN7OFX70g
+	 dAReE3UrzgvWkWQukjV12AjX088iZ1rhv4qMLNqw7MUEcbj/JKmcpFD6lGhQ9ViTR
+	 UrYYv9nTjx8hQU+X+oTBAzp8eYna21c4icmgUiPW4z/RJh9PqwPc7iiB8s+cbOKw3
+	 CZEps0aLh8Bgx2KU1hea2cAPXrAae5vtI82IJGoPLyKhwJOZbd5x9OhyNqgq5TjjJ
+	 ZO5rWeNK9WKkse9V2w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.29] ([94.31.70.6]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1M3V6E-1u86571ArC-00AzGR; Wed, 23
+ Apr 2025 13:01:11 +0200
+Message-ID: <a1be0efc-a4c9-461d-a01a-8fb830b2c68d@web.de>
+Date: Wed, 23 Apr 2025 13:01:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423-gpiochip-set-rv-hid-v1-0-2e6762b582f6@linaro.org>
-In-Reply-To: <20250423-gpiochip-set-rv-hid-v1-0-2e6762b582f6@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 23 Apr 2025 13:00:44 +0200
-X-Gm-Features: ATxdqUE_gVFsHXxkj74AZEmclfvOPWvTaJ08Tt0ls6iGN_ulCw8C7P0a0FJrIas
-Message-ID: <CACRpkdYdDPL_L-q2bofv+6wv53xSCsvOugt7+xE3oxX2=PtMew@mail.gmail.com>
-Subject: Re: [PATCH 0/6] hid: use new GPIO setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, Rishi Gupta <gupt21@gmail.com>, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [cocci] [PATCH v3 2/6] coccinelle: misc: Add field_modify script
+To: Luo Jie <quic_luoj@quicinc.com>, cocci@inria.fr,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ Catalin Marinas <catalin.marinas@arm.com>, Joey Gouly <joey.gouly@arm.com>,
+ Julia Lawall <Julia.Lawall@inria.fr>, Marc Zyngier <maz@kernel.org>,
+ Nicolas Palix <nicolas.palix@imag.fr>, Oliver Upton
+ <oliver.upton@linux.dev>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Suzuki Poulouse <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>,
+ Yury Norov <yury.norov@gmail.com>, Zenghui Yu <yuzenghui@huawei.com>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <20250417-field_modify-v3-2-6f7992aafcb7@quicinc.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ "Kiran Kumar C.S.K" <quic_kkumarcs@quicinc.com>,
+ Lei Wei <quic_leiwei@quicinc.com>, Pavithra R <quic_pavir@quicinc.com>,
+ Suruchi Agarwal <quic_suruchia@quicinc.com>, quic_linchen@quicinc.com
+In-Reply-To: <20250417-field_modify-v3-2-6f7992aafcb7@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xvSCXljCCknARbi0JItnFFXBwAmUxRh0fA0gwWeuOfRq7wj6wGN
+ 5xNQ4dFTKJ2Fik8upyc69y7miHX9kOfh+vGTMYy6HHyjPhT7DMe33NDvGjIXRDXV1+Lybhg
+ xg/HO1UvOIMIsomFkLK5/x0PuSkg8yWK9747nUmSNjX+m2rb9sOTFxEfqbdXrdfKUBrSOP4
+ EZopg77LmU3bOl4uwW6IQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qNz1C3ar5JU=;rjaWDewSnTi3p/HCEWxAJ+B18ak
+ 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
 
-On Wed, Apr 23, 2025 at 10:55=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+> This script finds and suggests conversions of opencoded field
+> modify patterns with the wrapper FIELD_MODIFY() API defined in
+> include/linux/bitfield.h for better readability.
 
-> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-> values") added new line setter callbacks to struct gpio_chip. They allow
-> to indicate failures to callers. We're in the process of converting all
-> GPIO controllers to using them before removing the old ones. This series
-> converts all GPIO drivers under drivers/hid/.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+See also:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/process/submitting-patches.rst?h=3Dv6.15-rc3#n94
 
-The series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Yours,
-Linus Walleij
+=E2=80=A6
+> +++ b/scripts/coccinelle/misc/field_modify.cocci
+> @@ -0,0 +1,24 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+
+I suggest to omit a blank comment line here.
+
+
+> +/// Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
+
+Replace?
+
+
+=E2=80=A6
+> +// Copyright (C) 2025 Qualcomm Innovation Center, Inc.
+
+Copyright: ?
+
+
+> +// URL: https://coccinelle.gitlabpages.inria.fr/website
+
+I suggest to omit such information here.
+
+
+=E2=80=A6
+> +virtual patch
+
+How do you think about to support additional operation modes?
+
+
+=E2=80=A6
+> +- reg &=3D ~mask;
+> +- reg |=3D FIELD_PREP(mask, val);
+> ++ FIELD_MODIFY(mask, &reg, val);
+
+Would you like to integrate the following SmPL code variant?
+
+-reg &=3D ~mask;
+-reg |=3D FIELD_PREP
++       FIELD_MODIFY
+                  (mask,
++                  &reg,
+                   val
+                  );
+
+
+Regards,
+Markus
