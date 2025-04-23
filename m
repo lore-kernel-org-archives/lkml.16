@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C345728CF51;
-	Wed, 23 Apr 2025 17:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F7228D830;
+	Wed, 23 Apr 2025 17:50:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430654; cv=none; b=fK3c9YnM2XHvbeeL/+dek2ur+LAcS9kX29JFMtCiqNR9M1EJ6k4XcpBoeq6QYKKuentRlUptC0NCS6eB3uWJliOHDTdbi7RbvJCVyINRVc7FTSZLV4ZOODvOJZ/Ms8EpBFYcQio5cxusG+q2dTOqr2fepq3F5X176k4m7ri9sTs=
+	t=1745430655; cv=none; b=hY3P2Bj+UZgTYpa5EjHA9s7wc8rsCsbVCDVqq9sVTQJDDANy6FD4707BJS0F+M10KMT2Pt44IVLAUmUWs8vSZryiGKqcehDrbcNWsf+zQ02n4pRCGLdpMltXIOYiuJ7bWhM+eVIS+dtn5jbiLyTqOqIHHgq/AQshpgkdJhYwsTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430654; c=relaxed/simple;
-	bh=bSyyGAF7NDhuTcHIZRedFHdRfL4/pg8/D3ANmwJWapg=;
+	s=arc-20240116; t=1745430655; c=relaxed/simple;
+	bh=4u53bdRqrxzWq/iPTyUJM9eZJs7UD/VsGD1bWIkiQ6w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hPmL2D8++yOKpH0shW9RNHqo7ZPrKgLra/KYuUHFRNESJ1LzkP7tcGiAtqAMA+DunTNAZ/ghm8N6g0WMvplZolhdQ6wZsExV7m//543qhVSVUmChqp4Dmt9QnnLWvjdVlsEhdcInTEX9yJiv03k5O9y3NCHraxWnQBwOAUWfYZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PU5s3wPF; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=jDZQrXyMzAOQDmKCo3XRzn3fYxJVLKU9E/1arHjiQ1+j3/ODY6qvijGKxcN0t5vff8B5KATAnS9AabDB2OZeeOD9fchTuyH3miYq+2xQkBuheoA5nbw/dXVYOLS/XxMXOzGVaH0B/QhjEfE+CiSzCK5XgZLj58JszQKa379FR0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J5Eq98EZ; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PU5s3wPF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J5Eq98EZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745430653; x=1776966653;
+  t=1745430654; x=1776966654;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=bSyyGAF7NDhuTcHIZRedFHdRfL4/pg8/D3ANmwJWapg=;
-  b=PU5s3wPF+XXiNzcSFPEfQRrfjIFir47k0H1hoy0LJlToxb/Ax6YXyktq
-   QDAJFfmZo+gNVC39DKvafyXKNxNK22lU12Ij2s4IMI4go4Wc6APgR0RmA
-   FKRHlkw9ZqaigYdymVQdWuZpTnbCw8TCJOFqxx8GECuRGZcPexPx4GPzc
-   hkjGeTY95lyqsufVCOdov9469vthB/Is6Gm18h0i3P7abpCG+nmHwPQEB
-   QlPucEeTYQFl6aw4vbgS84HsbTlnxezNgmnXm+Pi8cQ7vKoLGxzE44rmF
-   hK5kt/QQhFovlFJIdDU+UWsP6lw2qI98YbBHJZ6sf9rBo+yQhLBktiKdj
+  bh=4u53bdRqrxzWq/iPTyUJM9eZJs7UD/VsGD1bWIkiQ6w=;
+  b=J5Eq98EZKXw1PvBTMgstAYioQpwvw3efkdIT2Ia+WAZaAEaSEVJxHj/T
+   OoP5GY7WS3YMZEBvMAuz77eyAt6B5pvJ+4r82BBw9DeXuMZPxcA2/tgTp
+   uNVF1yQ468OklQ/YJS2IClj9CI6hvDKgwmbteRQySk9HNJOqxJffMbZ9h
+   sJDAomrXR4V7NA5tg5VLH0SXItuxPMV6kFEhRoOS2a1tYG2/Jx1ISeIQm
+   lH4n2L6wrtj8z1zEJJqKA5JS1l1/ooE686KncM07BheIX7ze5U6800lVD
+   0z0+IIbjX7pw4cjw5IOhFcozvz+7m1thuo6yhbm0uRcqYJU1MVm4MmlSo
    w==;
-X-CSE-ConnectionGUID: yJznvKtrS0ynKq0XdnReeA==
-X-CSE-MsgGUID: yuf9R3s4Ruu6yl3CA+dfkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47168325"
+X-CSE-ConnectionGUID: F+gemsb8QAqykPBAsvE0sg==
+X-CSE-MsgGUID: SvS+rZkyTZqkznpZtq6ZvA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47168343"
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="47168325"
+   d="scan'208";a="47168343"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
   by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:51 -0700
-X-CSE-ConnectionGUID: 3Zp1D5lvQ9yIKNRtoWBFlw==
-X-CSE-MsgGUID: vBnpBvT/RDyuCY+UgFwLvQ==
+X-CSE-ConnectionGUID: UtMSOq5hRtKpzaJUR3IMWg==
+X-CSE-MsgGUID: 1nSsHHFLTvSVb510yhqoOw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="163350462"
+   d="scan'208";a="163350469"
 Received: from ldmartin-desk2.corp.intel.com (HELO debox1-desk4.lan) ([10.125.111.241])
   by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:51 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
@@ -65,9 +65,9 @@ Cc: linux-doc@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	Dell.Client.Kernel@dell.com,
 	linux-sound@vger.kernel.org
-Subject: [PATCH 2/7] sysfs: Introduce macros to simplify creation of visible attribute groups
-Date: Wed, 23 Apr 2025 10:50:32 -0700
-Message-ID: <20250423175040.784680-3-david.e.box@linux.intel.com>
+Subject: [PATCH 4/7] pci: doe: Replace sysfs visibility macro
+Date: Wed, 23 Apr 2025 10:50:34 -0700
+Message-ID: <20250423175040.784680-5-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250423175040.784680-1-david.e.box@linux.intel.com>
 References: <20250423175040.784680-1-david.e.box@linux.intel.com>
@@ -79,53 +79,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Introduce macros to reduce boilerplate in attribute group definitions.
-Combine DEFINE_SYSFS_ATTRIBUTE_GROUP_[COMBO]_VISIBILITY() with attribute
-definitions in order to simplify group declarations involving visibility
-logic.
+Replace deprecated DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE() call with the new
+DEFINE_SYSFS_GROUP_VISIBILITY() helper for the pci_doe_features_sysfs group
+in drivers/pci/doe.c.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/sysfs.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/pci/doe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
-index 00dc88776f21..0804bffd6013 100644
---- a/include/linux/sysfs.h
-+++ b/include/linux/sysfs.h
-@@ -303,6 +303,30 @@ static const struct attribute_group _name##_group =3D =
-{		\
- };								\
- __ATTRIBUTE_GROUPS(_name)
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index aae9a8a00406..18b355506dc1 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -119,7 +119,7 @@ static bool pci_doe_features_sysfs_group_visible(struct=
+ kobject *kobj)
 =20
-+#define NAMED_ATTRIBUTE_GROUP_VISIBLE(_name)		\
-+DEFINE_SYSFS_GROUP_VISIBILITY(_name);			\
-+static const struct attribute_group _name##_group =3D {	\
-+	.name =3D __stringify(_name),			\
-+	.attrs =3D _name##_attrs,				\
-+	.is_visible =3D SYSFS_GROUP_VISIBLE(_name),	\
-+}
-+
-+#define NAMED_ATTRIBUTE_GROUPS_VISIBLE(_name)	\
-+NAMED_ATTRIBUTE_GROUP_VISIBLE(_name);		\
-+__ATTRIBUTE_GROUPS(_name)
-+
-+#define NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(_name)	\
-+DEFINE_SYSFS_GROUP_COMBO_VISIBILITY(_name);		\
-+static const struct attribute_group _name##_group =3D {	\
-+	.name =3D __stringify(_name),			\
-+	.attrs =3D _name##_attrs,				\
-+	.is_visible =3D SYSFS_GROUP_VISIBLE(_name),	\
-+}
-+
-+#define NAMED_ATTRIBUTE_GROUPS_COMBO_VISIBLE(_name)	\
-+NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(_name);		\
-+__ATTRIBUTE_GROUPS(_name)
-+
- struct file;
- struct vm_area_struct;
- struct address_space;
+ 	return !xa_empty(&pdev->doe_mbs);
+ }
+-DEFINE_SIMPLE_SYSFS_GROUP_VISIBLE(pci_doe_features_sysfs)
++DEFINE_SYSFS_GROUP_VISIBILITY(pci_doe_features_sysfs)
+=20
+ const struct attribute_group pci_doe_sysfs_group =3D {
+ 	.name	    =3D "doe_features",
 --=20
 2.43.0
 
