@@ -1,215 +1,143 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AAA62676D5;
-	Wed, 23 Apr 2025 20:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7EA2701BC
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745439567; cv=none; b=i7pCujXjhu/HYCj+C9IYybaAUJ7yOXbUJTd9pu8NeNiyeL1QzzyHl60l3QUxjccA8Kw7la72xjVDrLPFLquZEWotTIpDqZKlUVVoptSxv8Vq5N6bePXxP6FoZDFS90YWmY8ZS7LJSim9pzjovjT/M6nZSDmGrm7dgp0y3YaqofA=
+	t=1745439691; cv=none; b=X8934s6F75lKEoFvnzz7YSdCFYTuKc8/VlWoxBHKqpp85IG+3F2k1C3r7xPXd6MxiIPSeUibmFy4HQw/Np7I07Nd4VEQtPK+q24SZKL5jX0XULI6JSbM6hq4eIlmKujXojzTCjTVpIq+HPJVH1SYB1bsaACCMqayaRChahOAyKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745439567; c=relaxed/simple;
-	bh=ypATHgxe9OKMMT4ueyZaXJY+x4E9WbNaG82oxo9s5uQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kOe9sKNh4HwuBPpjXZMrwspruEAbbjI7/YuLiCZepBIkfdC+0Ibs02d9PG4w/7nS05jG/d1POrBkwYe0Z8q6obpL3E9vIxKtAd/2fWZe+jvePfLK6LagwOsAaUkqL5zSrGIm35Hu/ZWQo8JIvE+23HOVrrxSJAVvb7F4buaD/tA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cfPHpIuD; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cfPHpIuD"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-301d6cbbd5bso292966a91.3;
-        Wed, 23 Apr 2025 13:19:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745439565; x=1746044365; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jfULKrr/5lq04eW6UVhSPrwpZEUbOVGhJ57dD7II/gs=;
-        b=cfPHpIuDQNA3+uhad/mL1JTq3BhEX1yiK3YwvSXxEjq3ZEflPksZ50A7nwRGYQbHum
-         frxDfKpv93lpvBwhM3/6Pvnsp0P4uocrLIKTqvEvy4NAo0T7b+d9LhZdr2Ow54xnDoPW
-         UEdFx4HKh4irchO828pM2sE9yC40jABTGXkZysuDlPTqF0asE1wmcxQhBbU+cdlIa0BQ
-         fi1KbQ7EKvjf/k2oB4GND/jr9Qlnxub/dc+tyyE2xUhvz53y3/StOrf8NQ+EFsJmy9rZ
-         iOLnKsCpr3XVQlMkbx+j2ONc+wrDsFtZbtMiygsjywNMQ87L+9G0aX40TvjJ9o7Uc12a
-         lIdA==
+	s=arc-20240116; t=1745439691; c=relaxed/simple;
+	bh=0doTzVKA4fJEPSKoKrcntZtcds7wpAFtkRgqCefpD9Y=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=kFrq54c6a/GmHOum7ZvK2LymtvzHq9O10nq+uOpccSYO9lb75tmmE7hqioJ0vaoZj0yHZXMv+iZRLOVGKALJE9tYIYi+SF1QwrSBQ2YF9RldpNrZTqH9ralq4hSLAY1eikmXrhGjbNBYKknJImAUiji6ciccnVo3H9HGhMzwRBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-861d6e340e2so35756139f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:21:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745439565; x=1746044365;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jfULKrr/5lq04eW6UVhSPrwpZEUbOVGhJ57dD7II/gs=;
-        b=aZgb7WdRBawOuI24nfFUD5XA2KOMVDSa0cBUZatjGvBxmtmX1E6ysNFl3Ym0HxUr4n
-         G01ji1xeJaYWEThDUK6cRSBIr8mXsJD4iIGX2hMjltqDHnDhzxe8V2ayTT5VTq0qcPgU
-         ir+XcESVc/hMW4AsadcN6YJ/clC/bvJq2r60zu6fyJC008U9ky6RWYoWUCVTIHHDIPZv
-         NZv1bYdBpQf5V6CsWeDigb1LStw3admHw2CYcv3Ql9lb128e6/Y168HAtQF55mt/lAMy
-         Bu89wb9aELzzLMpDdF7NNGPeL1kKelP7fwLrauZ3RY5sYPjSF07t5beml+0aK/fYhUrW
-         ZEgA==
-X-Forwarded-Encrypted: i=1; AJvYcCXq6/kW1BWpWDE5xUbVJxHzrJ8sSF8YF+lR7D9VHcjz0dGkE7boLsmBrflyLAxbdURmKKa5xlETLPAMsSs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWWyyWPssSUEBQuhSLuJOCTSNgACtUJJUs5mGuICUm50hsu10t
-	L8aqBzaaEkK2MXhl0sM5IWASxOqhoAMOxGgxIuJpqAuwvk+ayP0T0p7R0KWl
-X-Gm-Gg: ASbGncuBVaiLl9+2CVB+ZxEGdeg8f52s9UD+2PZ+383zSdscJlv0sHWyiGfclk/yhyg
-	UUpGEMcq8Jr0bM34j8Xde4UD0FyOJEHiJpVHwqsBcAhbzpgcC2uRNJl/9CPaw9NKZ9z6k86YGDE
-	OPQ/Wsk/GCm819B0BAO4TX6t6zclV1pWK/nM2ScJJXWoWguAred0GQd1RTgZ00TQuLzjtEBaqLf
-	ZDUOIhL0i0YHJFRLLSY9xaZlnIOIzBOnNBF6FtQGR9VAv79nIzu1QrFl9zDRAzYREFW8GBy87gH
-	MBcbKHK2E01qI4UgC+k2Qy6ReaI+JcZATUzF+6mXEoDdRkuM8HEN6NSnyv3wjZ8Rig==
-X-Google-Smtp-Source: AGHT+IHOpwScgngCcl2LpJpGPdxM/kMXRM3zuPqm/nt9/Fh8wPU6B5okiHMJ8CY4mrNOYD0kZWs+4g==
-X-Received: by 2002:a17:90a:d60c:b0:2ff:6aa6:47a3 with SMTP id 98e67ed59e1d1-309ed31b6d3mr195116a91.25.1745439564720;
-        Wed, 23 Apr 2025 13:19:24 -0700 (PDT)
-Received: from tx3000mach.io (static.220.238.itcsa.net. [190.15.220.238])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309e0d06a91sm2087633a91.46.2025.04.23.13.19.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 13:19:24 -0700 (PDT)
-From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-To: linux-wireless@vger.kernel.org
-Cc: Jes Sorensen <Jes.Sorensen@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
-Date: Wed, 23 Apr 2025 17:18:25 -0300
-Message-ID: <20250423201826.1054254-1-yakoyoku@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1745439688; x=1746044488;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jWLt3+c9Id7NuEwBmCm4dt6E6YWWdnbWt/aRMNsT/Fk=;
+        b=Ap/p4wqPpDNvv8RkKD9N6R6LKpi+MB9BLOSnaql+CR8mh7LnEqJRy6Lrl07snzy2fx
+         7+EFzc3SSU6sUZdHSiA1+cm1BtirjWcj1Gnb83agLFSnhBBIrC/pl7uiz1UhISuv0eHR
+         IhIiJtumjo2KXBSibcMgcd+tXtIpzLQoktQHTXAuvIuhgiH1Feo3ZumtwNkpP+OAaHyA
+         xVZ1UlOc5TMsjZ7srdqEAQK8j3pj3issIBofjImiJy5LLvBL5SJ0vuv2civ6GdnhXJjb
+         ZKazwZl3omxtSP5HGhfj+NuoZJ4+9ENnTR5qJm4+dsEmZTQWt+ZdD302VOuG7YhTN3un
+         iy7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVURFjfN5ipFuZpBH/PBvgg10fk5MAyjazVo9Dd7tcMG6iI1KN0k8i/tS11q13WJ7yxnwa1OsYcrjm+GI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyonFp1JFFjBb81Bf82EDfgT1qpYQHrGqcjRfMs+qMV0Ersz3KX
+	9U3vaspdFf17DzBLzNB6cP+h40IyTYNwLblp5KOoQh+rK/BpFesE0sOakg550Ii/WXUkxFiZVmp
+	F0qL+emNNMHocih5BrSFLbTGoibYBtswNdtnM7ZC41gDRFViZ1uB/nEc=
+X-Google-Smtp-Source: AGHT+IFB6xBCNGVCnL/PaqFG14ZPz0iwioOHmRo4t/exUqiObkV4Tointrv18ym408c0pgw5lwlEVAR2nfsHxkQeg2Wuzp+mQst9
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:12ea:b0:3d8:1d34:4ee6 with SMTP id
+ e9e14a558f8ab-3d93041e2f4mr138595ab.17.1745439688738; Wed, 23 Apr 2025
+ 13:21:28 -0700 (PDT)
+Date: Wed, 23 Apr 2025 13:21:28 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68094bc8.050a0220.2c0118.0ac0.GAE@google.com>
+Subject: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in dbAllocAG
+From: syzbot <syzbot+cffd18309153948f3c3e@syzkaller.appspotmail.com>
+To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-This is an RFC to see if rtl8xxxu can be made to support P2P.
+Hello,
 
-Theoretically this should be handled by mac80211 but it seems that
-drivers may have to take some extra steps depending on which device we
-are talking about. I know that this patch is so basic that it might be
-missing some H2C commands or similar for this to work on Realtek chips
-but I don't have the required knowledge for me to implement it, so if
-you know a place to read about I'll be glad to hear.
+syzbot found the following issue on:
 
-As of now only rtl8192ex devices will have their P2P_CLIENT, P2P_GO
-and P2P_DEVICE wiphy interface modes set because those are the only
-ones I can test on my rtl8192eu card.
+HEAD commit:    8560697b23dc Merge tag '6.15-rc2-smb3-client-fixes' of git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=133fbbac580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2a31f7155996562
+dashboard link: https://syzkaller.appspot.com/bug?extid=cffd18309153948f3c3e
+compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14708c70580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=115dd204580000
 
-Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-8560697b.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/2acea3e6b668/vmlinux-8560697b.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d2542a0d2bcd/bzImage-8560697b.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/2b4250dbd0ba/mount_0.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=10708c70580000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cffd18309153948f3c3e@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 32768
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dmap.c:1397:14
+index 65877 is out of range for type 's8[1365]' (aka 'signed char[1365]')
+CPU: 0 UID: 0 PID: 5308 Comm: syz-executor181 Not tainted 6.15.0-rc2-syzkaller-00404-g8560697b23dc #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:453
+ dbAllocAG+0x704/0x1130 fs/jfs/jfs_dmap.c:1397
+ dbAlloc+0x65c/0xcb0 fs/jfs/jfs_dmap.c:873
+ xtSplitUp+0x554/0x21c0 fs/jfs/jfs_xtree.c:745
+ xtInsert+0x5ba/0x11a0 fs/jfs/jfs_xtree.c:593
+ extAlloc+0xae7/0x10a0 fs/jfs/jfs_extent.c:150
+ jfs_get_block+0x41d/0xe60 fs/jfs/inode.c:248
+ get_more_blocks fs/direct-io.c:648 [inline]
+ do_direct_IO fs/direct-io.c:936 [inline]
+ __blockdev_direct_IO+0x1add/0x4540 fs/direct-io.c:1243
+ blockdev_direct_IO include/linux/fs.h:3422 [inline]
+ jfs_direct_IO+0xf7/0x1e0 fs/jfs/inode.c:331
+ generic_file_direct_write+0x1e8/0x400 mm/filemap.c:4037
+ __generic_file_write_iter+0x126/0x230 mm/filemap.c:4206
+ generic_file_write_iter+0x10e/0x5e0 mm/filemap.c:4246
+ new_sync_write fs/read_write.c:591 [inline]
+ vfs_write+0x70f/0xd10 fs/read_write.c:684
+ ksys_write+0x19d/0x2d0 fs/read_write.c:736
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f2346650b59
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fffd3c588a8 EFLAGS: 00000206 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0073746e6576652e RCX: 00007f2346650b59
+RDX: 00000000fffffdaf RSI: 0000200000000000 RDI: 0000000000000005
+RBP: 652e79726f6d656d R08: 00005555682c24c0 R09: 00005555682c24c0
+R10: 00005555682c24c0 R11: 0000000000000206 R12: 00007fffd3c588d0
+R13: 00007fffd3c58af8 R14: 431bde82d7b634db R15: 00007f234669903b
+ </TASK>
+---[ end trace ]---
+
+
 ---
- drivers/net/wireless/realtek/rtl8xxxu/8192e.c |  3 ++
- drivers/net/wireless/realtek/rtl8xxxu/core.c  | 34 ++++++++++++++++++-
- .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  |  3 ++
- 3 files changed, 39 insertions(+), 1 deletion(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8192e.c b/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
-index 8e123bbfc665..3e78c5b73726 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
-@@ -1752,6 +1752,9 @@ struct rtl8xxxu_fileops rtl8192eu_fops = {
- 	.gen2_thermal_meter = 1,
- 	.needs_full_init = 1,
- 	.supports_ap = 1,
-+	.supports_p2p_client = 1,
-+	.supports_p2p_go = 1,
-+	.supports_p2p_device = 1,
- 	.max_macid_num = 128,
- 	.max_sec_cam_num = 64,
- 	.adda_1t_init = 0x0fc01616,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/core.c b/drivers/net/wireless/realtek/rtl8xxxu/core.c
-index 569856ca677f..a86c4a9083b2 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/core.c
-@@ -1600,9 +1600,11 @@ static void rtl8xxxu_set_linktype(struct rtl8xxxu_priv *priv,
- 	case NL80211_IFTYPE_ADHOC:
- 		type = MSR_LINKTYPE_ADHOC;
- 		break;
-+	case NL80211_IFTYPE_P2P_CLIENT:
- 	case NL80211_IFTYPE_STATION:
- 		type = MSR_LINKTYPE_STATION;
- 		break;
-+	case NL80211_IFTYPE_P2P_GO:
- 	case NL80211_IFTYPE_AP:
- 		type = MSR_LINKTYPE_AP;
- 		break;
-@@ -6780,6 +6782,8 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
- 		return -EOPNOTSUPP;
- 
- 	switch (vif->type) {
-+	case NL80211_IFTYPE_P2P_CLIENT:
-+		fallthrough;
- 	case NL80211_IFTYPE_STATION:
- 		if (port_num == 0) {
- 			rtl8xxxu_stop_tx_beacon(priv);
-@@ -6790,6 +6794,8 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
- 			rtl8xxxu_write8(priv, REG_BEACON_CTRL, val8);
- 		}
- 		break;
-+	case NL80211_IFTYPE_P2P_GO:
-+		fallthrough;
- 	case NL80211_IFTYPE_AP:
- 		if (port_num == 1) {
- 			rtl8xxxu_switch_ports(priv);
-@@ -6839,6 +6845,23 @@ static void rtl8xxxu_remove_interface(struct ieee80211_hw *hw,
- 	priv->vifs[rtlvif->port_num] = NULL;
- }
- 
-+static int rtl8xxxu_change_interface(struct ieee80211_hw *hw,
-+				     struct ieee80211_vif *vif,
-+				     enum nl80211_iftype new_type, bool p2p)
-+{
-+	struct rtl8xxxu_priv *priv = hw->priv;
-+	int ret;
-+
-+	dev_dbg(&priv->udev->dev, "%s: p2p %x\n", __func__, p2p);
-+
-+	rtl8xxxu_remove_interface(hw, vif);
-+	vif->type = new_type;
-+	vif->p2p = p2p;
-+	ret = rtl8xxxu_add_interface(hw, vif);
-+
-+	return ret;
-+}
-+
- static int rtl8xxxu_config(struct ieee80211_hw *hw, u32 changed)
- {
- 	struct rtl8xxxu_priv *priv = hw->priv;
-@@ -7623,6 +7646,7 @@ static const struct ieee80211_ops rtl8xxxu_ops = {
- 	.tx = rtl8xxxu_tx,
- 	.wake_tx_queue = ieee80211_handle_wake_tx_queue,
- 	.add_interface = rtl8xxxu_add_interface,
-+	.change_interface = rtl8xxxu_change_interface,
- 	.remove_interface = rtl8xxxu_remove_interface,
- 	.config = rtl8xxxu_config,
- 	.conf_tx = rtl8xxxu_conf_tx,
-@@ -7755,7 +7779,9 @@ static void rtl8xxxu_deinit_led(struct rtl8xxxu_priv *priv)
- 
- static const struct ieee80211_iface_limit rtl8xxxu_limits[] = {
- 	{ .max = 2, .types = BIT(NL80211_IFTYPE_STATION), },
--	{ .max = 1, .types = BIT(NL80211_IFTYPE_AP), },
-+	{ .max = 1, .types = BIT(NL80211_IFTYPE_AP) |
-+			     BIT(NL80211_IFTYPE_P2P_CLIENT) |
-+			     BIT(NL80211_IFTYPE_P2P_GO), },
- };
- 
- static const struct ieee80211_iface_combination rtl8xxxu_combinations[] = {
-@@ -7912,6 +7938,12 @@ static int rtl8xxxu_probe(struct usb_interface *interface,
- 	hw->wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION);
- 	if (priv->fops->supports_ap)
- 		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_AP);
-+	if (priv->fops->supports_p2p_client)
-+		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_P2P_CLIENT);
-+	if (priv->fops->supports_p2p_go)
-+		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_P2P_GO);
-+	if (priv->fops->supports_p2p_device)
-+		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_P2P_DEVICE);
- 	hw->queues = 4;
- 
- 	hw->wiphy->flags |= WIPHY_FLAG_HAS_CHANNEL_SWITCH;
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-index f42463e595cc..954f3fc24ce8 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-@@ -2013,6 +2013,9 @@ struct rtl8xxxu_fileops {
- 	u8 ustime_tsf_edca;
- 	u16 max_aggr_num;
- 	u8 supports_ap:1;
-+	u8 supports_p2p_client:1;
-+	u8 supports_p2p_go:1;
-+	u8 supports_p2p_device:1;
- 	u16 max_macid_num;
- 	u16 max_sec_cam_num;
- 	u32 adda_1t_init;
--- 
-2.49.0
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
