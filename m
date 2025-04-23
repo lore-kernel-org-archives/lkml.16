@@ -1,261 +1,169 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C969F266EE2
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6981E0DE3;
+	Wed, 23 Apr 2025 09:38:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745401026; cv=none; b=AgFTZDADXfkstO98Lm7ua9JtYNIOfW/2GGE4oa6Eg8JXoyyAO7mQav2AUrKXRtxeROkJECQp+pS4aT2FJzMorBgmUUjGutye7iFgmdanjtLn3SuVtuMBqE31cbHR9hXoO5RquogMPCmy9n0B/MbIkVFl7JI7joNXdyZGjHw26KI=
+	t=1745401138; cv=none; b=EnCMF8s3nOkIkcax7UOSn8ESBOC95pZaf3lv0jATAwFLR7UMAVYqnCSjIfx2cVnXcLZAkwPS9/qvJ+JzN+NblGxK8hpk/8nvjB/bBlM7u4eDlgJVBeu56TneGRnMtEQNopwDToov+PChXNL0lYTjpbDtIro7+j1n6bKacMcV8nQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745401026; c=relaxed/simple;
-	bh=dc8PR/VKmB9BxmFgu1NuW03MZkmuDs+GL3hwxFvsZcE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jPLoXX9YHbdDHmGpICjiDk977VpgMjm7+7D9COOo9PveI45MDCIFRmvaBr8YNwzHP348T/v8gcuAR1kLkXyFo6vcg2xJRyPSy66N5iyzqCQgYfr7kYkd9Wk+TaDiea9dOSiZmLGt5/REXDKSw90S1hQY2cSqIMg9PjI39XMacg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=RY3Cjy8+; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="RY3Cjy8+"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af590aea813so753451a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1745401023; x=1746005823; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xlwv3tgoeUy6P2c2ThKyW3Vg1sKyoas8gJ12eZIqlpo=;
-        b=RY3Cjy8+VXVcnOH22IX3Q6td0beoxy0RwhOiEo5qlwuyoeaK+Ql1R3FcPWyhism9Xt
-         4VFvJbcYNR9HvY0QQR7EV+vhjnu1pY7yllg6w5O/H6qNNsiOS1DGt6ccmnPWbBR9Wq6E
-         uvsDXMqPQdpmbjSzreoewW5FJppSGHidBISXMsU3ukTBHj5xsd7QuhNQx6ImWLmj1t0I
-         tyvcYzAnlgH8wIeT4v2k6ONWN3+3AfnJknC30XxcBlk1TzOFlRdN0z8zHd48Mstj276M
-         MopjG2oDXhnFQe2RYTWifJ5hafo7UzyF6NsQWJWhayQwWh0MyKm4cAZns3xn6inmZ/Fa
-         3LFg==
+	s=arc-20240116; t=1745401138; c=relaxed/simple;
+	bh=tCMZfNnj8/b35DIr6nTU2gj4eYGVOGguexOayzdVvPU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o4x+HH5nIE3cw8YDNrk2xDnKIf34ysGNMfocMKumlwYB9Zn0gyGsbLUKMWs0utsVmiWU+6T8F3SBrzMWFeDMKRdDZqQU42GyaExr2NU7RV3dpngBy1wOarnmL4LzqTDxl8ZY3fMap2KS4KKgHvPzmWneERkV/qktB/Rb9iVOsJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-524038ba657so906734e0c.0;
+        Wed, 23 Apr 2025 02:38:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745401023; x=1746005823;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745401134; x=1746005934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xlwv3tgoeUy6P2c2ThKyW3Vg1sKyoas8gJ12eZIqlpo=;
-        b=nQBBUtkPL1h1Vurysxu6Z7gHgrT4BN3hbYKtbysIc21UfZ9EN8Vz4xUTlYlvTznZP1
-         YdYtb4mzXxl20IevmWNURAcHr6JwSPxPPD7m3TY2ZoZXdNwhMFjkpaAuuCoLr/CD86ER
-         yOCg3IL6wOTfmah/H6KP8bbdy2ZHkfhnY/QMP8Y1ftxqrvoxursOS25ggSjHUgUzN+Wv
-         fHNWuLs5bzlI7UX1VT6opJSwsHPJnVopuSGsvM6K8ulvvBadzoNWsg0k/m8UWY92C+l/
-         dpP3XbCmegEX/UJc7fJhwAA/i0nBdoRdBwT4M7EPwNXHTCIgInu8Kuawtk8bOZOt+4b0
-         L7OQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUisK54tWvtryKsKQoTH5tixSdbQJhLnomkc3J83NMDq/iLMF8lt3RaY82lPrsVPuW2Zd07+4Ur2bE0PQo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLOWkzh6NOW3+eosFCuk3UcoRKsIDfeQAJ7l64zuQRDpL8/kcq
-	KEg4H2MsAFRteVXbHG4G7l2Plc+c4ZIycYWZoLX6ERmopNBsRG/ey+jKJRxp2F4=
-X-Gm-Gg: ASbGncs3v9nmOaunf9Mt0AorTMC0PmPcCdTB4QLKPM6LNt4vbj9e+C0hYtd5k+bpLfA
-	rBzWZlHczFEzoj+tVtzyMFnBYmTSsO49Y1GuR8ce60MbGFDmq+Nz3n5axWb3El52K4CR1i6KhO0
-	wTlJjwhp2sYOWBtCveV6Z0AegcYxbZuTmN/65lOQ0MXRXzsLlGN96/9JftWEtBZ87PdANffX7i7
-	hIQVHU8tieFzogBqTAE+xQRp1gyTwqLx2LAxWi//LWI17puCFjkpjXnLhdDgQfdNjdtQt+b9YRf
-	RKKnpmFHdnVwlqhYs3ljlBETPAtIT5EtW/pjY0IuJCDrGNKZR+1lsNGd0RZYVX/h/WSrmzIKYas
-	=
-X-Google-Smtp-Source: AGHT+IGQ8xlsW4d+eBJ+oGBBq5d/ZFuItOWl7SCRrXOODg2nfq78c93h7SZdNc8Yj5tHMPnuXvvGnw==
-X-Received: by 2002:a17:902:dac7:b0:21f:98fc:8414 with SMTP id d9443c01a7336-22da3387b8dmr31122275ad.26.1745401022942;
-        Wed, 23 Apr 2025 02:37:02 -0700 (PDT)
-Received: from zjn.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50ecec54sm99557885ad.168.2025.04.23.02.36.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 02:37:02 -0700 (PDT)
-From: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
-To: sam@ravnborg.org,
-	neil.armstrong@linaro.org,
-	daniel@ffwll.ch,
-	dianders@google.com,
-	hsinyi@google.com,
-	angelogioacchino.delregno@collabora.com,
-	matthias.bgg@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	knoxchiou@google.com
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
-Subject: [PATCH v10 2/2] arm64: dts: mediatek: Add MT8186 Ponyta Chromebooks
-Date: Wed, 23 Apr 2025 17:36:47 +0800
-Message-Id: <20250423093647.4074135-3-cengjianeng@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250423093647.4074135-1-cengjianeng@huaqin.corp-partner.google.com>
-References: <20250423093647.4074135-1-cengjianeng@huaqin.corp-partner.google.com>
+        bh=/l1/Z/GDToMdcTKnifTgVrARzg4LIJ5t8Cqie4h54Ws=;
+        b=AL46a82AIffkQxxJBs08Iz5t5b+ctGJtsFXNQb/Em/3jjyzWWlkAcHEa1RJIEgrTzf
+         2R87Y0eIb1c/RwEWjgIi9BbyXpT2fRbH+ugdTNR/+XY9gxiwJcDytA2VMH8FacL8jag7
+         ksTMDw1M7G18eR9jkq5+jglgXRA99ISlAAXkyIvn12iuyffiimDsG5vF4Hqeh3TkQqEH
+         w2iieFEyCvEbh8qaRq9IPNChkCRqbtWIcvM5aGV/V1i/tY/VKzysnvtjE10w7z9xNP9X
+         rkwylUv53apLguV3jICd7JiaC4cQ4iL8brnfpic9idpLCMjV9q/trXPtBGwixfKQ/Qmz
+         k0sg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7ZaI1aUb8X67eARwqD9zV9REztnB+64rzCXk2HDNsIqGLRTZY9Tm4QzFmNQvLioYwtXBffrHbC20G@vger.kernel.org, AJvYcCUcYiFvtTGTNdUU364ttjtHtKEsykd93UqFQ993bLm4wvQxafyTbuAsZaMx5PEstArZphNKpHQPFqfm@vger.kernel.org, AJvYcCVWkGsr18u6dYmzUXrsbsd7Jq5/+/YuqhtHK36IXK/uM7E+uWtdjZgAQk0koDPh6qA3uhws52ZurtNxLv84M+5/Pyw=@vger.kernel.org, AJvYcCVZujcr4AbYRE1Lsnv+EU3FNv1FkDIEwxVChj5F9iVqwa7GudDm1mq26nx0G9nXf6y+MSVcHG/R6BHXeIds@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOEBepm/EIc/98vazjRNqs4aXJZ/oCfRnO2TMJAl4HsAATl1jF
+	PPkmvQHZQrdJzL2HfBl4syA8RybqndjtsA/PAqj0fsw/fMNOsEy9VR1isRpN8u0=
+X-Gm-Gg: ASbGncvbXDXXZYzC1SbJnQ+wtpd8icCzPZ8BW/gGAplK8UWpNrpMVolQZr8/uK/YVlt
+	arukAfIME49pap+//4baT4x3ao0kETN6K7CpK0pmswVScmWaZFpryVjcSbs3T3ca80Q+J+iWVvu
+	i59b0xthPyM0G3KzSLILoNYJ6x9E3S9z6vjC3R0iVcDDfle4zBsaK2vrzGC7PKl+8Rx6vMlGTbA
+	ZHUqN0cYTw2oqovAr7xVEyQGlB9efCCxbxLMtI95K/ZktgnyWhlv6npx+LqtRrUIx2TWOk9XOgQ
+	lk/iiJKNt478O+d5JA5MiDohq9CLis9sJekaApLaU7OgW7Cji+cFOik3jSbOQePVCzqo9WY+1FD
+	Lva82rew=
+X-Google-Smtp-Source: AGHT+IHI1TO/KMy5hKP1AZ+fI1da26z+jbXV6rIAkT5M+Z6xjpDJ1xfuDjb8Zvlpo9PkASGGqTgUzw==
+X-Received: by 2002:a05:6122:2205:b0:51f:a02b:45d4 with SMTP id 71dfb90a1353d-52a6a0343abmr1224356e0c.1.1745401134385;
+        Wed, 23 Apr 2025 02:38:54 -0700 (PDT)
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52922dc587dsm2271396e0c.48.2025.04.23.02.38.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 02:38:54 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5240a432462so791171e0c.1;
+        Wed, 23 Apr 2025 02:38:54 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV2xUvrRnNfuG2YkFhU0KoMsCboPevG94+nRwIe50dwLku/DC9h16HmDpNlYRwo6KfgqyyWlbm56mWB++Hc@vger.kernel.org, AJvYcCXNwqjNkyRZMzHeJlzfDrpy2JLrL8kQgSJpLPXT+k1KnolYyBfPd71KkOJM950c/4+lEDPVmVOM9fuO@vger.kernel.org, AJvYcCXSo16ZKAQKzRiWAUL2QxiH239eeTqUXbZqNOMBisWzGDf0GdKzQ5vEZjKgyTwJtymoGl2yXTnLq/+xd0QN9jWQn4Q=@vger.kernel.org, AJvYcCXm7YevtdbycO+NfhXqUrCcMtvNXlPn7B0UsNfKJY1D99aVTNdMEhRqPQvBMVbWhWbTCeNx4pXCUcn5@vger.kernel.org
+X-Received: by 2002:a05:6122:2029:b0:50d:39aa:7881 with SMTP id
+ 71dfb90a1353d-52a69ee4ed3mr1464819e0c.0.1745401133893; Wed, 23 Apr 2025
+ 02:38:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250406144822.21784-1-marek.vasut+renesas@mailbox.org>
+ <20250406144822.21784-2-marek.vasut+renesas@mailbox.org> <20250410204845.GA1027003-robh@kernel.org>
+ <40c400ab-8770-4595-9a4c-004e6157c348@mailbox.org>
+In-Reply-To: <40c400ab-8770-4595-9a4c-004e6157c348@mailbox.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 23 Apr 2025 11:38:42 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU0U8RjJwgMs1gqaKUXj+aP=gMZRgO6Ni5gPHr3yFa_Hg@mail.gmail.com>
+X-Gm-Features: ATxdqUEdpJzlYJJPC9uQQHl7BMlq_ah4RVyU1yK01V61iQt1LxPiUJbnjP-RWIo
+Message-ID: <CAMuHMdU0U8RjJwgMs1gqaKUXj+aP=gMZRgO6Ni5gPHr3yFa_Hg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: PCI: rcar-gen4-pci-host: Document
+ optional aux clock
+To: Marek Vasut <marek.vasut@mailbox.org>
+Cc: Rob Herring <robh@kernel.org>, Marek Vasut <marek.vasut+renesas@mailbox.org>, 
+	linux-arm-kernel@lists.infradead.org, 
+	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Aradhya Bhatia <a-bhatia1@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>, 
+	Kever Yang <kever.yang@rock-chips.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-MT8186 ponyta, known as huaqin custom label, is a
-MT8186 based laptop. It is based on the "corsola" design.
-It includes LTE, touchpad combinations.
+Hi Marek,
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Signed-off-by: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
----
-Changes in v10:
-- No change.
+On Sun, 13 Apr 2025 at 11:29, Marek Vasut <marek.vasut@mailbox.org> wrote:
+> On 4/10/25 10:48 PM, Rob Herring wrote:
+> > On Sun, Apr 06, 2025 at 04:45:21PM +0200, Marek Vasut wrote:
+> >> Document 'aux' clock which are used to supply the PCIe bus. This
+> >> is useful in case of a hardware setup, where the PCIe controller
+> >> input clock and the PCIe bus clock are supplied from the same
+> >> clock synthesiser, but from different differential clock outputs:
+> >>
+> >>   ____________                    _____________
+> >> | R-Car PCIe |                  | PCIe device |
+> >> |            |                  |             |
+> >> |    PCIe RX<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|>=
+PCIe TX     |
+> >> |    PCIe TX<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D|>=
+PCIe RX     |
+> >> |            |                  |             |
+> >> |   PCIe CLK<|=3D=3D=3D=3D=3D=3D..  ..=3D=3D=3D=3D=3D=3D|>PCIe CLK    =
+|
+> >> '------------'      ||  ||      '-------------'
+> >>                      ||  ||
+> >>   ____________       ||  ||
+> >> |  9FGV0441  |      ||  ||
+> >> |            |      ||  ||
+> >> |   CLK DIF0<|=3D=3D=3D=3D=3D=3D''  ||
+> >> |   CLK DIF1<|=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D''
+> >> |   CLK DIF2<|
+> >> |   CLK DIF3<|
+> >> '------------'
+> >>
+> >> The clock are named 'aux' because those are one of the clock listed in
+> >> Documentation/devicetree/bindings/pci/snps,dw-pcie-common.yaml which
+> >> fit closest to the PCIe bus clock. According to that binding document,
+> >> the 'aux' clock describe clock which supply the PMC domain, which is
+> >> likely PCIe Mezzanine Card domain.
+> >
+> > Pretty sure that PMC is "power management controller" given it talks
+> > about low power states.
+> >
+> >
+> >>
+> >> Tested-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.s=
+e>
+> >> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
+> >> ---
+> >> NOTE: Shall we patch Documentation/devicetree/bindings/pci/snps,dw-pci=
+e-common.yaml
+> >>        instead and add 'bus' clock outright ?
+> >
+> > Based on the diagram, this has nothing to do with the specific
+> > controller. It should also probably a root port property, not host
+> > bridge.
+> How would you suggest I describe the clock which supply the PCIe bus
+> clock lane (CLK DIF1 in the diagram) , which have to be enabled together
+> with clock which supply the PCIe controller input clock lane (CLK DIF0) ?
 
-Changes in v9:
-- PATCH 2/2: Add sound model to fix the warning.
-- Link to v8:https://lore.kernel.org/all/20240914063122.1622196-3-cengjianeng@huaqin.corp-partner.google.com/
+I think Rob wants you to add clocks/clock-names for this to
+dtschema/schemas/pci/pci-bus-common.yaml.  Then you can have pcie@M,N
+subnode(s) with num-lanes, clock, and clock-names describing the PCIe
+endpoint(s)?
 
-Changes in v8:
-- PATCH 2/2: Change the commit about ponyta.
-- Link to v7:https://lore.kernel.org/all/20240913031505.372868-3-cengjianeng@huaqin.corp-partner.google.com/
+git grep "pcie*@[0-9],[0-9]" -- $(git grep -l num-lanes -- Documentation/ )
 
-Changes in v7:
-- PATCH 2/2: Remove prototype sku.
-- PATCH 2/2: Disable the other trackpad to enable one of them.
-- Link to v5:https://lore.kernel.org/all/20240909023148.1677936-3-cengjianeng@huaqin.corp-partner.google.com/
+Does that make sense?
+Thanks!
 
-Changes in v6:
-- No change.
+Gr{oetje,eeting}s,
 
-Changes in v5:
-- PATCH 2/2: Remove sku2147483647.
-- Link to v4:https://lore.kernel.org/all/20240906085739.1322676-3-cengjianeng@huaqin.corp-partner.google.com/
+                        Geert
 
-Chage since v3:
-- No change.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-Changes in v2:
-- PATCH 2/2: Modify the dtb name without rev2.
-- Link to v1:https://lore.kernel.org/all/20240902125502.1844374-1-cengjianeng@huaqin.corp-partner.google.com/
-
----
- arch/arm64/boot/dts/mediatek/Makefile         |  2 +
- .../mediatek/mt8186-corsola-ponyta-sku0.dts   | 18 +++++++
- .../mediatek/mt8186-corsola-ponyta-sku1.dts   | 22 +++++++++
- .../dts/mediatek/mt8186-corsola-ponyta.dtsi   | 49 +++++++++++++++++++
- 4 files changed, 91 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi
-
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 58484e830063..3aa06476c6c0 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -64,6 +64,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-chinchou-sku16.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-magneton-sku393216.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-magneton-sku393217.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-magneton-sku393218.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-ponyta-sku0.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-ponyta-sku1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-rusty-sku196608.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-starmie-sku0.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8186-corsola-starmie-sku1.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts
-new file mode 100644
-index 000000000000..986498af4c70
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts
-@@ -0,0 +1,18 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2023 Google LLC
-+ */
-+
-+/dts-v1/;
-+#include "mt8186-corsola-ponyta.dtsi"
-+
-+/ {
-+	model = "Google Ponyta sku0 board";
-+	compatible = "google,ponyta-sku0", "google,ponyta", "mediatek,mt8186";
-+};
-+
-+&i2c2 {
-+	trackpad@15 {
-+		status = "disabled";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts
-new file mode 100644
-index 000000000000..ff5eea0ddeb4
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts
-@@ -0,0 +1,22 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2023 Google LLC
-+ */
-+
-+/dts-v1/;
-+#include "mt8186-corsola-ponyta.dtsi"
-+
-+/ {
-+	model = "Google Ponyta sku1 board";
-+	compatible = "google,ponyta-sku1", "google,ponyta", "mediatek,mt8186";
-+};
-+
-+&i2c2 {
-+	trackpad@2c {
-+		status = "disabled";
-+	};
-+};
-+
-+&usb_c1 {
-+	status = "disabled";
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi
-new file mode 100644
-index 000000000000..0abf69077089
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2023 Google LLC
-+ */
-+
-+/dts-v1/;
-+#include "mt8186-corsola-steelix.dtsi"
-+
-+&keyboard_controller {
-+	function-row-physmap = <
-+		MATRIX_KEY(0x00, 0x02, 0)	/* T1 */
-+		MATRIX_KEY(0x03, 0x02, 0)	/* T2 */
-+		MATRIX_KEY(0x02, 0x02, 0)	/* T3 */
-+		MATRIX_KEY(0x01, 0x02, 0)	/* T4 */
-+		MATRIX_KEY(0x03, 0x04, 0)	/* T5 */
-+		MATRIX_KEY(0x02, 0x04, 0)	/* T6 */
-+		MATRIX_KEY(0x01, 0x04, 0)	/* T7 */
-+		MATRIX_KEY(0x00, 0x04, 0)	/* T8 */
-+		MATRIX_KEY(0x00, 0x01, 0)	/* T9 */
-+		MATRIX_KEY(0x02, 0x09, 0)	/* T10 */
-+		MATRIX_KEY(0x01, 0x09, 0)	/* T11 */
-+		MATRIX_KEY(0x01, 0x05, 0)	/* T12 */
-+	>;
-+
-+	linux,keymap = <
-+		CROS_STD_MAIN_KEYMAP
-+		MATRIX_KEY(0x00, 0x02, KEY_BACK)
-+		MATRIX_KEY(0x03, 0x02, KEY_REFRESH)
-+		MATRIX_KEY(0x02, 0x02, KEY_ZOOM)
-+		MATRIX_KEY(0x01, 0x02, KEY_SCALE)
-+		MATRIX_KEY(0x03, 0x04, KEY_SYSRQ)
-+		MATRIX_KEY(0x02, 0x04, KEY_BRIGHTNESSDOWN)
-+		MATRIX_KEY(0x01, 0x04, KEY_BRIGHTNESSUP)
-+		MATRIX_KEY(0x00, 0x04, KEY_PLAYPAUSE)
-+		MATRIX_KEY(0x00, 0x01, KEY_MICMUTE)
-+		MATRIX_KEY(0x02, 0x09, KEY_MUTE)
-+		MATRIX_KEY(0x01, 0x09, KEY_VOLUMEDOWN)
-+		MATRIX_KEY(0x01, 0x05, KEY_VOLUMEUP)
-+	>;
-+};
-+
-+&mt6366codec {
-+	mediatek,dmic-mode = <1>; /* one-wire */
-+};
-+
-+&sound {
-+	model = "mt8186_rt1019_rt5682s";
-+};
-+
--- 
-2.34.1
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
