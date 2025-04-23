@@ -1,367 +1,280 @@
-Received: from mail-wr1-f74.google.com (mail-wr1-f74.google.com [209.85.221.74])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9161EFF93
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187B027A12D;
+	Wed, 23 Apr 2025 17:52:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430696; cv=none; b=VPuw6IVp7l4iu6Vtqk0eVXeOaKETLuZRS/peJqt65F/yxM+8/DyS8JwYRM0zJAVjJY2XMPIsB7ZQ5IZ47Anot9j0nZ4eSUrOEjTGq5obtb4npCOIkSaFx1hmv++ClMlOynu7I1WON/NZZ3Z7v6MHWwsYaHob38rfIxIZeFFiBRw=
+	t=1745430744; cv=none; b=OPivnuNWbcUsi2Uxe5bfylUYXXFNvJ3nkfqRDtFWgmbp30/JRhsX8OpKrL8n+BwzJiHgpSmFTM0KKDQiqjAMPmbXsjgh/LSDRxJIFnbLwOw3N2F46DItgIbEAVVayxX1ZFVGu/toYaSrPoIQ8Te9MGRWIwXKIQBRxG8sBDVQftk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430696; c=relaxed/simple;
-	bh=AOgjsIHXPLrOHEcQI2LTFaRuySJRRgZnxO0qvdQh5OQ=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=jGGHoO6T4kWtLakOBvoIFbN2dFmaSjTj2+Ws4CRRR2bNJTqbW0Qfq6xbl/FLoUDf/PygWYZDyH5AU+9PmQFmGa851951aT4HOWndJu0GamIa3BAKK47ImHaIOO8WA6St14IH50c0WdFZKVKew+iMMqdLhfhqp2uSPyLiRxatAws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YtCAHyty; arc=none smtp.client-ip=209.85.221.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1745430744; c=relaxed/simple;
+	bh=xbll+9ikj2n6Nx3upiow4uZFZ5p/VmN7j6Z8js8Wgt4=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qOLwVyEdmdD9frr6/YYfi5zIM1KtBf+PF+Xh1/CwtuOjTxn/6fy3Xf2AjV6lqEt07FjCBPmEgw/bDWooyCjV9v36jDpUV5hP4/w8poX7XxJlW49EtKBgNvF2o1izmeD1TsjNNL3mZVMG+RRPdDBLfqoACcRKovXPmt7OP8CAeXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=REOlSjtm; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YtCAHyty"
-Received: by mail-wr1-f74.google.com with SMTP id ffacd0b85a97d-39131f2bbe5so26942f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:51:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REOlSjtm"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7c59e7039eeso12491085a.2;
+        Wed, 23 Apr 2025 10:52:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745430693; x=1746035493; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=xdke2Rc+NSDoHPSyzigpiMiAwGhZ+MBxFSb+5HE6Ve0=;
-        b=YtCAHytyeV+rFNDoxafmUkg4DuPEHkyV51i8KrEtaNRci6J6ZOIU9+wlQ6tkMeCB5B
-         Pzyf4JQpvWW5likuFyuN7tPgyJ9Lk12tKflK02aIG5pwnyrL5ppToSEW0gj9WK6UXSib
-         MHKG/PrvhadI3vqmoQpJKbPtF8uHeBk5HbNJfxOoAziFrMImRplw6zZRMuneWe2+P5wB
-         F02qkrmcadDNp5rv+YFccVcEgdP7XKVlzKhjuLl966nJJLEdYLnmWSyqvsckxrlQ5B3G
-         X+w9ROWt+0SJXJe41Qey0sygjckNY3EJhnRPSSJWAR/ZLs6BXcieGVtzfr8IjeRWv6f2
-         e/Mg==
+        d=gmail.com; s=20230601; t=1745430742; x=1746035542; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=TV85JPDdHEvRPgffuJlIv/4wMZd4CBgWNookmXPkIpU=;
+        b=REOlSjtmT36Th6/7puIzReIgY4ra4i7/kCiP6jhkdEggyDT/GS957ZRqT+A93LL7CT
+         m2ma//k4FpZHhfVK9ugSNWYI3YrDEjS6no2QLvrhN2h358DewVf5U7iMkrDl5eNMhQX8
+         vEJyhD6OnL712Up789cYP8M1ClXoa2tYpzTHyNwu6mlL5qu+/l2vwzgNzM+25ex032pB
+         pmnUR+6qcmfDePkEjbCKwjw3dnIC/jPz0f7Gv/KGhpFN11as5/H6cY13hg/J6SQrz1TD
+         30XksmHDDoFRr1hDekY/rulEd1NitHtDYeIYCc4TaUfEyzoGnpJ+K3s/zz0wYWsIQaqm
+         hr+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745430693; x=1746035493;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xdke2Rc+NSDoHPSyzigpiMiAwGhZ+MBxFSb+5HE6Ve0=;
-        b=mCafHelbO+qqglBOfw6PSikU/pEhfi4f0ELvS5qB0gjcMlc29QiTWIklNQB34lCZDf
-         6LIuLA0wyHbvKj8P70/mgkma2gPQw2412xMXfNpkhy9lxG3H1ueebyscbx6tzezYRfuQ
-         vP+9RaT2requLs/dT4j7hAWCJgT5tCf4TpeCb+m+Lfcl7tZbyhSbaANkJ4mOqalk2L5k
-         5HPLNJtwVbjOcvAahQm3GeJPPoNDPOeBsxtFaejFbwMpJekPRHeWurrQeF0IAge/r1aW
-         GfTqTNGouw1PuPKkLtqKtatFC0x2JOdRZo8WRCxaSps52gu8PwZa8xvrYE3Yove+OBc3
-         ShLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqPPpe2NR98CoISrcmI7jh+QxiDxRR83ntyIiGoaiWtlG55dOMKG19eaPOPBzAmYj1Oa+B+eLvp3KIJKM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrthV/kjkjmqEAtQctwUym83U8ACDsz3IRmM/F2Jv9BOyuGj90
-	ssBfiyidQYjYlyWvRaPOrrPQ+0wyaGbsh/1wFx7OqgGvQxRzVxvCTUWNy0Ypsi0wtvb40PubMVQ
-	GyCs2SlMDvzbPQQ==
-X-Google-Smtp-Source: AGHT+IHMMsrlcxZQqJXpxaGb4QS1P9SljBrIs5Q9vSAwwrERKWAkl5QGXgjV8oyVQaYnhqCbEFTsxNryMpDppv4=
-X-Received: from wmsd10.prod.google.com ([2002:a05:600c:3aca:b0:43c:fcfd:1ce5])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:2510:b0:391:2306:5131 with SMTP id ffacd0b85a97d-39efbace660mr16392459f8f.45.1745430693232;
- Wed, 23 Apr 2025 10:51:33 -0700 (PDT)
-Date: Wed, 23 Apr 2025 17:51:27 +0000
+        d=1e100.net; s=20230601; t=1745430742; x=1746035542;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:feedback-id
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TV85JPDdHEvRPgffuJlIv/4wMZd4CBgWNookmXPkIpU=;
+        b=beUoGMQbYJGQZvd9f2QH2TtSX+MiTaq35fyvxh2hDcPVqOaVnJWGrV7WhfSAoBEHfy
+         6qWOaiOcgnFUHXdlEwcWDpq+bCMjIs/WM7XoCoW09/QUhnyRvfwdhRSVjqh3vfDPeXqK
+         PBOyRrBp3w68vrzGYo+sz2vSD030SWEmZ/zhs+YARtiFjndHCoA6fiPm6I60IDzAFeGf
+         YlCnKeB0/qAy1xLWwuaSfXN/GGe0DvaY04a5uXh+a4sRYC2vmxTc680Rv7mNIJws/+Hl
+         xBfnNDCVH+mFyvEv2s2OFAuP2rREKbXquq41D7r6WPaWvDMWyXjj+Fr6+gEXJVRRARy2
+         WYYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKl8t2PAqcIuT7xGdJkv1e/pxKaSxSvsVGlYM+S/ZMfW+Js45j7xw02Udb4TahabW3Xb+uLXdfCMjgvDU=@vger.kernel.org, AJvYcCV8JJp7Z44aFNtIBGDq6YA5XAAkJxXDJrEJOZiwCvtEyS0Ip/j8fpSDB4FuC5DAa27hdbw1hw6N4dFTvYsWef8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb0eG7ZvGBWUkkj8/yCKJPvfyrLMH6g+M6QkZXp/nM3NYEy8tv
+	CjmyICcjwSOIe/5jy/5WUzJ8VapQqpjEIEpAbuZnzb50WRj8Iw4p
+X-Gm-Gg: ASbGnculS5AXVGxh8FnPcLGAwvIBQSxNwxhrQnfBZz9vKl7738ngzvTcoIzufoGK9+i
+	0yihHtilrkrmgpHa7Bw7uSU5qCLCr6f9YcHiLnmF2/7FEr5Eis6gVuhD5E1qDFM8n9berqOYt6X
+	JZLPM0kUYhnZ3QHG69oVAWyBfCELNN9/fJdGlX0scSfz7V/3ZYG4QCTH2r0tZQRraKGAe6eCJ3p
+	Qd5UfBoi0ZirOvXgGa4F1OE8HtMidcafzRwrUcxObhfjB57TpwTy3X7z8U26Mg2xWV7zZ0YmAcx
+	cDe0pJoQMg/chudr5+iHTvLyjP2gDg63BdKKyoB2Jj8YqqG74iDuqceRNiLc6lvAXMtxJxUig8+
+	UeQR+EAzIgJRrZ9O8pRQsqDHXUuxT6Wg=
+X-Google-Smtp-Source: AGHT+IEsReRCqCS3ZkNpXOVq54x+3dmltUu98rE5NXKfHKX8ub+u6Wh2IJ5JREYn3pT56+lWBSNN8Q==
+X-Received: by 2002:a05:620a:4721:b0:7c5:6dc7:7e7c with SMTP id af79cd13be357-7c927fb19d9mr3402336785a.26.1745430741627;
+        Wed, 23 Apr 2025 10:52:21 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4dd48sm706882685a.89.2025.04.23.10.52.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 10:52:21 -0700 (PDT)
+Message-ID: <680928d5.050a0220.2b8494.c4d2@mx.google.com>
+X-Google-Original-Message-ID: <aAko03K-TyGLMcsq@winterfell.>
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfauth.phl.internal (Postfix) with ESMTP id CAF241200043;
+	Wed, 23 Apr 2025 13:52:20 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Wed, 23 Apr 2025 13:52:20 -0400
+X-ME-Sender: <xms:1CgJaN_F9Gj-p_fbMObCk7rDkByxIxahrq4d8MQvVZovIMvEGBNR3g>
+    <xme:1CgJaBu2iK2uoKxD86GPMEc43H8UMRy1ypvpcSLBOEwTokz-p3C0kezCiyTmlpnm0
+    UpHQKF2UoIlIucXbA>
+X-ME-Received: <xmr:1CgJaLAjFvnXE6zup-2_UVh9Mzd1ERcYuZhG4P3P59-JVEgEZdfHhplT8dyM_Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeejvdegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tdejnecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
+    hilhdrtghomheqnecuggftrfgrthhtvghrnhepvefghfeuveekudetgfevudeuudejfeel
+    tdfhgfehgeekkeeigfdukefhgfegleefnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
+    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduhedp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtohephihurhihrdhnohhrohhvsehgmhgrih
+    hlrdgtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhr
+    tghpthhtohepsghqvgesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhinhhugiesrh
+    grshhmuhhsvhhilhhlvghmohgvshdrughkpdhrtghpthhtohepvhhirhgvshhhrdhkuhhm
+    rghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdroh
+    hrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghp
+    thhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpg
+    hghhesphhrohhtohhnmhgrihhlrdgtohhm
+X-ME-Proxy: <xmx:1CgJaBe-oL2apwudnuJMs6dOjLVDPoJNiaMHepPD7W47dnOtIBSPJA>
+    <xmx:1CgJaCNesZOZ6kF3MFiTgtnoJwU7xXHSpy3rIOXGfB5ibaiwY2OONQ>
+    <xmx:1CgJaDkjQ-CGvL6WzzERfgtqmez5Ho_XjdPSE3qKIHX7cL-jANWHbA>
+    <xmx:1CgJaMvGZCclF8BwExkeTMaxFdG3MxlWy5n06ivcM62BpOf2wdQ7YA>
+    <xmx:1CgJaEvTV6YsLjznjcO5NBlrjb2vwADxoN4r6BkUwxrBb0D2MGQbkw2W>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 23 Apr 2025 13:52:20 -0400 (EDT)
+Date: Wed, 23 Apr 2025 10:52:19 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/5] rust: adds Bitmap API, ID pool and bindings
+References: <20250423134344.3888205-2-bqe@google.com>
+ <aAkKoQQH0t9KtIxD@yury>
+ <CAH5fLggFUM=eJR2u06QsLMxXP+cJwm881ip+rze_sM=tXpA9og@mail.gmail.com>
+ <aAkVu8Uf3J8F25fY@Mac.home>
+ <aAkfOe5ZDUgIawyU@yury>
+ <aAkkngAzL5Roh_3p@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAJ4oCWgC/x3MQQrCQAxG4auUrA3U6Ch4FXEh5q8NSkeTjraU3
- t3B5bd4b6GAG4JOzUKOj4XloWK7aejWX4c72LSapJXU7mXHihg9z/zN/ngXFHD3LNGzqCSF4pg OiWr9cnQ2/c/ny7r+ANqkcsppAAAA
-X-Change-Id: 20250423-destroy-workqueue-flush-2d25dede7565
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11185; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=AOgjsIHXPLrOHEcQI2LTFaRuySJRRgZnxO0qvdQh5OQ=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoCSij7hBPsgv6uxw5cmwz3PrGtBL3Aici220P7
- RJSEwUgbmeJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaAkoowAKCRAEWL7uWMY5
- RodXD/91Qo7vss5ujGdc1GbgjcPOLeI1b+3ETJQE6sEAl7n72ZManxtxrEmos7e7thwf1nNPbP7
- 73ZyMaz45ygLidQZZNWIXnlytdoyHxtOHO6BABU+fTGMuEghxe4yzdV03+bfptP0gE02nunZKS8
- RkvyWGZYJjyFlkY7NJD0owpVs0dB4hNAk9RDNrF2t6DHqyujnyzEllLZ73xFFI6wSXZy3/asmme
- RVcSFvvSMqErUCqjmkfDd1f51VWlKqiClOCo6nunaGQuoP52rVdFbo61mAF/WejA6i+zf67Y55V
- GewmbnP5NHgcMGIXqg/dAGox7dfDDymwcF7bKV5EZfrqT2NC6moVgNq7ziEHAt5IvhK9Bojw7ac
- qc1S0cAGvAVkobYW3OWu3rMD6TFmPdwbyc7V3rmnSbMqVQ3zwRyRntHeQKtgWAwNm/fwNAftOiz
- yLIbD87oa6Bicj7Pndi4N1tdApyyLas49p5xdufySCmNXq6sZCnz9hOQgp/OsM9vMQ0sZEA8JhW
- 6OvnkmoeWSA+LtmHQHdoWt/QgbvbGsEV/oG/MqxrKoEvzm46m+t5fFRkqtaDxCsQ+7vtq1w6eZL
- tfj0ius2Djvh/t6tFQkBgTENEFxzqIQg8G2btzdSyoMKzNU8e+1FU/WT6oGOUHCsIKeVn1ciYMI aTCB7QWOOYAU5jw==
-X-Mailer: b4 0.14.2
-Message-ID: <20250423-destroy-workqueue-flush-v1-1-3d74820780a5@google.com>
-Subject: [PATCH] workqueue: flush all pending jobs in destroy_workqueue()
-From: Alice Ryhl <aliceryhl@google.com>
-To: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>, Philipp Stanner <phasta@mailbox.org>, 
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
-	Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aAkkngAzL5Roh_3p@yury>
 
-Normally, destroy_workqueue() will wait for queued work to exit, but if
-destroy_workqueue() is called while it contains any pending (delayed or
-rcu) work, then it fails to wait for the work. When those work items are
-eventually queued in the timer/rcu callback, it may result in a UAF when
-the callback tries to use a workqueue that has already been freed. (In
-fact, they must be queued before we set __WQ_DESTROYING to avoid
-triggering a WARN.)
+On Wed, Apr 23, 2025 at 01:34:22PM -0400, Yury Norov wrote:
+> On Wed, Apr 23, 2025 at 01:11:24PM -0400, Yury Norov wrote:
+> > On Wed, Apr 23, 2025 at 09:30:51AM -0700, Boqun Feng wrote:
+> > > On Wed, Apr 23, 2025 at 06:19:18PM +0200, Alice Ryhl wrote:
+> > > > On Wed, Apr 23, 2025 at 5:43 PM Yury Norov <yury.norov@gmail.com> wrote:
+> > > > >
+> > > > > I received it twice - with timestamps 1:36 and 1:43. Assuming they are
+> > > > > identical, and ignoring the former.
+> > > > >
+> > > > > On Wed, Apr 23, 2025 at 01:43:32PM +0000, Burak Emir wrote:
+> > > > > > This series adds a Rust bitmap API for porting the approach from
+> > > > > > commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
+> > > > > > to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
+> > > > > >
+> > > > > > The Rust bitmap API provides a safe abstraction to underlying bitmap
+> > > > > > and bitops operations. For now, only includes method necessary for
+> > > > > > dbitmap.h, more can be added later. We perform bounds checks for
+> > > > > > hardening, violations are programmer errors that result in panics.
+> > > > > >
+> > > > > > We include set_bit_atomic and clear_bit_atomic operations. One has
+> > > > > > to avoid races with non-atomic operations, which is ensure by the
+> > > > > > Rust type system: either callers have shared references &bitmap in
+> > > > > > which case the mutations are atomic operations. Or there is a
+> > > > > > exclusive reference &mut bitmap, in which case there is no concurrent
+> > > > > > access.
+> > > > >
+> > > > > It's not about shared references only. One can take a mutable
+> > > > > reference, and still may have a race:
+> > > > >
+> > > > > CPU1                            CPU2
+> > > > >
+> > > > > take mut ref
+> > > > > bitmap.set() // non-atomic
+> > > > > put mut ref
+> > > > >                                 take mut ref
+> > > > >                                 bitmap.test() // read as 0
+> > > > > data propagated to memory
+> > > > >                                 bitmap.test() // read as 1
+> > > > >
+> > > > > To make this scenario impossible, either put or take mut ref
+> > > > > should imply global cache flush, because bitmap array is not
+> > > > > an internal data for the Bitmap class (only the pointer is).
+> > > > >
+> > > > > I already asked you to point me to the specification that states that
+> > > > > taking mutable reference implies flushing all the caches to the point
+> > > > > of coherency, but you didn't share it. And I doubt that compiler does
+> > > > > it, for the performance considerations.
+> > > > 
+> > > > The flushing of caches and so on *is* implied. It doesn't happen every
+> > > > time you take a mutable reference, but for you to be able to take a
+> > > > mut ref on CPU2 after releasing it on CPU1, there must be a flush
+> > > > somewhere in between.
+> > > > 
+> > > 
+> > > Yeah, and it's not just "flushing of caches", it's making CPU1's memory
+> > > operations on the object pointed by "mut ref" observable to CPU2. If
+> > > CPU1 and CPU2 sync with the a lock, then lock guarantees that, and if
+> > > CPU1 and CPU2 sync with a store-release+load-acquire, the
+> > > RELEASE-ACQUIRE ordering guarantees that as well.
+> > 
+> > Not sure what you mean. Atomic set_bit() and clear() bit are often
+> > implemented in asm, and there's no acquire-release semantic.
+> 
+> Sorry, hit 'send' preliminary.
+> 
+> > > Yeah, and it's not just "flushing of caches", it's making CPU1's memory
+> > > operations on the object pointed by "mut ref" observable to CPU2. If
+> > > CPU1 and CPU2 sync with the a lock, then lock guarantees that, 
+> 
+> The problem here is that the object pointed by the 'mut ref' is the
+> rust class Bitmap. The class itself allocates an array, which is used
+> as an actual storage. The Rust class and C array will likely not share
+> cache lines.
+> 
+> The pointer is returned from a C call bitmap_zalloc(), so I don't
+> think it's possible for Rust compiler to realize that the number
+> stored in Bitmap is a pointer to data of certain size, and that it
+> should be flushed at "mut ref" put... That's why I guessed a global
+> flush.
+> 
 
-To fix this, we introduce a new list of delayed work items so that
-destroy_workqueue() can flush all delayed work items before waiting for
-queued jobs. We also call rcu_barrier() to wait for rcu jobs to queue
-themselves.
+You don't do the flush in the C code either, right? You would rely on
+some existing synchronization between threads to make sure CPU2 observes
+the memory effect of CPU1 (if that's what you want).
 
-Flush or cancel work?
-=====================
+> Yeah, would be great to understand how this all works.
+> 
+> As a side question: in regular C spinlocks, can you point me to the
+> place where the caches get flushed when a lock moves from CPU1 to
+> CPU2? I spent some time looking at the code, but found nothing myself.
+> Or this implemented in a different way?
 
-This patch proposes that we flush delayed work items rather than
-cancelling them. This has the consequence that delayed work items may
-executed sooner than the timer placed on them, which is somewhat
-unfortunate. However, this is better than cancellation as this has
-issues with cleanup - for example self-freeing work items would not get
-freed if we cancel them. See the linked discussion for more on this.
+Oh I see, the simple answer would be "the fact that cache flushing is
+done is implied", now let's take a simple example:
 
-Another option could be to wait for the timers to elapse so that the
-work items are not executed "too early". This would work, but is deemed
-to be too excessive because the timers could be very long. Thus, if the
-user doesn't want their delayed work items to run early, they have to
-cancel them before calling destroy_workqueue(). (Which is no different
-from what is required prior to this patch.)
+	CPU 1			CPU 2
+	=====			=====
+	spin_lock();
+	x = 1;
+	spin_unlock();
 
-The same strategy is not used for rcu work items because such work items
-are very likely to do something incorrect if an rcu grace period has not
-passed when they run. But we still need to wait for them. Thus, this
-patch introduces a call to rcu_barrier() in destroy_workqueue().
+				spin_lock();
+				r1 = x;		// r1 == 1
+				spin_unlock();
 
-Dual use of the list_head
-=========================
+that is, if CPU 2 gets the lock later than CPU 1, r1 is guaranteed to be
+1, right? Now let's open the box, with a trivial spinlock implementation:
 
-This patch reuses the list_head inside work_struct for the delayed_list
-list. This could be dangerous if there is any code out there that is
-using the list_head for various other purposes.
+	CPU 1			CPU 2
+	=====			=====
+	spin_lock();
+	x = 1;
+	spin_unlock():
+	  smp_store_release(lock, 0);
 
-To avoid such issues, we ensure that if a work item is queued in
-delayed_list, then it *must* be the case that the pending bit is owned
-by the timer or by a *currently running* function in kernel/workqueue.c
-such as __queue_delayed_work(), delayed_work_timer_fn(),
-try_to_grab_pending(), or flush_delayed_work(). Note that this implies
-that such functions *must* remove the work item from delayed_list (or
-schedule the timer) before they give up ownership of the pending bit.
+				spin_lock():
+				  while (cmpxchg_acquire(lock, 0, 1) != 0) { }
+				  
+				r1 = x;		// r1 == 1
+				spin_unlock();
 
-The above ensures that no existing code assumes it can use the list_head
-for its own purposes - if such code exists, it has a bug today because
-the list_head could get scheduled by __queue_work() at any time, which
-WARNs in such cases.
+now, for CPU2 to acquire the lock, the cmpxchg_acquire() has to succeed,
+that means a few things:
 
-Link: https://lore.kernel.org/r/aAFnEBv50t11Rjt0@slm.duckdns.org
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
-Based on top of
-https://lore.kernel.org/all/20250404101543.74262-2-phasta@kernel.org/
----
- kernel/workqueue.c | 138 ++++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 125 insertions(+), 13 deletions(-)
+1. 	CPU2 observes the lock value to be 0, i.e CPU2 observes the
+	store of CPU1 on the lock.
 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 2cb8276a27a99c951883d09ed2dbd5f488bda8e2..5b795d8c7ca5a16006fea6c4996acc60230e3984 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -367,6 +367,8 @@ struct workqueue_struct {
- 	struct lockdep_map	__lockdep_map;
- 	struct lockdep_map	*lockdep_map;
- #endif
-+	raw_spinlock_t		delayed_lock;	/* protects pending_list */
-+	struct list_head	delayed_list;	/* list of pending delayed jobs */
- 	char			name[WQ_NAME_LEN]; /* I: workqueue name */
- 
- 	/*
-@@ -2061,8 +2063,20 @@ static int try_to_grab_pending(struct work_struct *work, u32 cflags,
- 		 * guaranteed that the timer is not queued anywhere and not
- 		 * running on the local CPU.
- 		 */
--		if (likely(timer_delete(&dwork->timer)))
-+		if (likely(timer_delete(&dwork->timer))) {
-+			/*
-+			 * We took ownership of the pending bit from the timer,
-+			 * so dwork->wq must be a valid workqueue and
-+			 * work->entry must be in delayed_list of that wq. Note
-+			 * that dwork->wq can't be freed here because
-+			 * destroy_workqueue() spins until we delete the work
-+			 * item from delayed_list.
-+			 */
-+			raw_spin_lock(&dwork->wq->delayed_lock);
-+			list_del_init(&work->entry);
-+			raw_spin_unlock(&dwork->wq->delayed_lock);
- 			return 1;
-+		}
- 	}
- 
- 	/* try to claim PENDING the normal way */
-@@ -2479,12 +2493,33 @@ bool queue_work_node(int node, struct workqueue_struct *wq,
- }
- EXPORT_SYMBOL_GPL(queue_work_node);
- 
-+/*
-+ * Should be used instead of __queue_work() right after removing a struct
-+ * delayed_work from the timer (either by completion or timer_delete). Not
-+ * needed if it was never added to the timer in the first place.
-+ */
-+static void __queue_delayed_work_now(struct delayed_work *dwork)
-+{
-+	struct workqueue_struct *wq = dwork->wq;
-+
-+	/*
-+	 * The __queue_work() call must happen inside the lock, because
-+	 * otherwise destroy_flush_all_delayed() might see the list being empty
-+	 * before we call __queue_work(), which would be illegal.
-+	 */
-+
-+	raw_spin_lock(&wq->delayed_lock);
-+	list_del_init(&dwork->work.entry);
-+	__queue_work(dwork->cpu, wq, &dwork->work);
-+	raw_spin_unlock(&wq->delayed_lock);
-+}
-+
- void delayed_work_timer_fn(struct timer_list *t)
- {
- 	struct delayed_work *dwork = from_timer(dwork, t, timer);
- 
- 	/* should have been called from irqsafe timer with irq already off */
--	__queue_work(dwork->cpu, dwork->wq, &dwork->work);
-+	__queue_delayed_work_now(dwork);
- }
- EXPORT_SYMBOL(delayed_work_timer_fn);
- 
-@@ -2515,6 +2550,10 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
- 	dwork->cpu = cpu;
- 	timer->expires = jiffies + delay;
- 
-+	raw_spin_lock(&wq->delayed_lock);
-+	list_add_tail(&work->entry, &wq->delayed_list);
-+	raw_spin_unlock(&wq->delayed_lock);
-+
- 	if (housekeeping_enabled(HK_TYPE_TIMER)) {
- 		/* If the current cpu is a housekeeping cpu, use it. */
- 		cpu = smp_processor_id();
-@@ -4282,7 +4321,7 @@ bool flush_delayed_work(struct delayed_work *dwork)
- {
- 	local_irq_disable();
- 	if (timer_delete_sync(&dwork->timer))
--		__queue_work(dwork->cpu, dwork->wq, &dwork->work);
-+		__queue_delayed_work_now(dwork);
- 	local_irq_enable();
- 	return flush_work(&dwork->work);
- }
-@@ -5720,6 +5759,9 @@ static struct workqueue_struct *__alloc_workqueue(const char *fmt,
- 	INIT_LIST_HEAD(&wq->flusher_overflow);
- 	INIT_LIST_HEAD(&wq->maydays);
- 
-+	INIT_LIST_HEAD(&wq->delayed_list);
-+	raw_spin_lock_init(&wq->delayed_lock);
-+
- 	INIT_LIST_HEAD(&wq->list);
- 
- 	if (flags & WQ_UNBOUND) {
-@@ -5832,22 +5874,86 @@ static bool pwq_busy(struct pool_workqueue *pwq)
- 	return false;
- }
- 
-+/*
-+ * Helper function for destroy_workqueue() which ensures that all delayed work
-+ * items are queued to the workqueue. This means that once the workqueue drains
-+ * all jobs, it's guaranteed that no new jobs will be added.
-+ *
-+ * The user must not call any variant of queue_work_on() during the call to
-+ * destroy_workqueue(). It's a user bug if that happens. As for the methods
-+ * cancel_delayed_work() and flush_delayed_work(), those are okay to call.
-+ */
-+static void destroy_flush_all_delayed(struct workqueue_struct *wq)
-+{
-+	struct delayed_work *dwork;
-+	/*
-+	 * List of pending delayed work items where the pending bit is not
-+	 * owned by the timer, but some other function. We need to wait for
-+	 * them to remove themselves from this list.
-+	 *
-+	 * Protected by wq->delayed_lock.
-+	 */
-+	LIST_HEAD(running_timers);
-+
-+	raw_spin_lock_irq(&wq->delayed_lock);
-+	while ((dwork = list_first_entry_or_null(&wq->delayed_list,
-+				struct delayed_work, work.entry))) {
-+		if (likely(timer_delete(&dwork->timer))) {
-+			WARN_ON(wq != dwork->wq);
-+			list_del_init(&dwork->work.entry);
-+			__queue_work(dwork->cpu, wq, &dwork->work);
-+		} else {
-+			/*
-+			 * The timer is in delayed_list, but the timer could
-+			 * not be deleted. This means that the pending bit is
-+			 * currently owned by another running function. In this
-+			 * case we just need to wait for that other function to
-+			 * finish running.
-+			 */
-+			list_move(&dwork->work.entry, &running_timers);
-+		}
-+
-+		/* Give others a chance to use the lock. */
-+		raw_spin_unlock_irq(&wq->delayed_lock);
-+		raw_spin_lock_irq(&wq->delayed_lock);
-+	}
-+	raw_spin_unlock_irq(&wq->delayed_lock);
-+
-+	/*
-+	 * We also need to ensure that all rcu_work items are queued. The
-+	 * easiest way to do this is to wait for the rcu callbacks to finish,
-+	 * so we call rcu_barrier(). The call to rcu_barrier() could happen
-+	 * anywhere in this function, but right now we need to wait for timer
-+	 * callbacks to remove themselves from running_timers and we have no
-+	 * good way of waiting for that other than spinning, so this seems like
-+	 * a good time to call rcu_barrier().
-+	 */
-+	rcu_barrier();
-+
-+	raw_spin_lock_irq(&wq->delayed_lock);
-+	while (!list_empty(&running_timers)) {
-+		raw_spin_unlock_irq(&wq->delayed_lock);
-+		/*
-+		 * The timers are irqsafe, so waiting for them by spinning
-+		 * should be okay.
-+		 */
-+		cpu_relax();
-+		raw_spin_lock_irq(&wq->delayed_lock);
-+	}
-+	raw_spin_unlock_irq(&wq->delayed_lock);
-+}
-+
- /**
-  * destroy_workqueue - safely terminate a workqueue
-  * @wq: target workqueue
-  *
-  * Safely destroy a workqueue. All work currently pending will be done first.
-  *
-- * This function does NOT guarantee that non-pending work that has been
-- * submitted with queue_delayed_work() and similar functions will be done
-- * before destroying the workqueue. The fundamental problem is that, currently,
-- * the workqueue has no way of accessing non-pending delayed_work. delayed_work
-- * is only linked on the timer-side. All delayed_work must, therefore, be
-- * canceled before calling this function.
-- *
-- * TODO: It would be better if the problem described above wouldn't exist and
-- * destroy_workqueue() would cleanly cancel all pending and non-pending
-- * delayed_work.
-+ * Note that delayed work is executed *without* waiting for the delay. This
-+ * means that delayed work may execute sooner than expected. This doesn't apply
-+ * to rcu work, which is still guaranteed to execute a grace period after being
-+ * scheduled. Therefore, calling destroy_workqueue() may involve waiting for a
-+ * rcu_barrier().
-  */
- void destroy_workqueue(struct workqueue_struct *wq)
- {
-@@ -5860,6 +5966,12 @@ void destroy_workqueue(struct workqueue_struct *wq)
- 	 */
- 	workqueue_sysfs_unregister(wq);
- 
-+	/*
-+	 * Ensure that all delayed work items are queued properly so that
-+	 * drain_workqueue() will not miss any pending jobs.
-+	 */
-+	destroy_flush_all_delayed(wq);
-+
- 	/* mark the workqueue destruction is in progress */
- 	mutex_lock(&wq->mutex);
- 	wq->flags |= __WQ_DESTROYING;
+2.	Since the smp_store_release() on CPU1, and the cmpxchg_acquire()
+	on CPU2, it's guaranteed that CPU2 has observed the memory
+	effect before the smp_store_release() on CPU1. And this is the
+	"implied" part. In the real hardware cache protocal, what the
+	smp_store_release() does is basically "flush/invalidate the
+	cache and issue the store", therefore since CPU2 observes the
+	store part of the smp_store_release(), it's implied that the
+	cache flush/invalidate is observed by CPU2 already. Of course
+	the actual hardware cache protocal is more complicated, but this
+	is the gist of it.
 
----
-base-commit: 2762750ac5c6395dfa69b2cf1e3208fe6ae45cd5
-change-id: 20250423-destroy-workqueue-flush-2d25dede7565
+Based on 1 & 2, normally a programer won't need to reason about where
+the cache flush is actually issued, but rather the synchronization built
+vi the shared variables (in this case, it's the "lock").
 
-Best regards,
--- 
-Alice Ryhl <aliceryhl@google.com>
+Hope this could help.
 
+Regards,
+Boqun
+
+
+> 
+> Thanks,
+> Yury
