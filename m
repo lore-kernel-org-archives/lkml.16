@@ -1,116 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AAD242D64;
-	Wed, 23 Apr 2025 16:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449177081C
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745425023; cv=none; b=ppcHA3rGo07rcR3CsJwOyUc4vG96d2uhmnrhAz3CjMLdjal9bz5SNwlrqdPP8+GQQQEsDsBf0hjD59ctz/PjXNnqnDdShhsJTsvokeW+72dbWodSyfDA+BK1NOsWAYPHdHoph6NagPgIxGRx6qjGccv1bX0dlr/gjvUWK3/nAKY=
+	t=1745425091; cv=none; b=aiumf0K/S1ZvNHd+LJ4ChBeF2nrln0PFH2Pn7q9mSurkNobxZFEb+aLv3Xo4v9rrRliAjW3yGDPv5oC4ZiX7zfu+ZUWIzWygqXDeeMAf6VaR6f9OYYJT8U3PpFYdaz0ub1mumRq0rnsJvr9xx4OPvcTd9eGbn4Q+TKAhvZBw8ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745425023; c=relaxed/simple;
-	bh=wKluyXSVCGMs1uHzOLDesIs6Jy0lLRWqIZf87RypGqk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=azHffgL3mzoLzdPBefUOwCIpbpihHkkurEm2teKPSNFTaL4WesKBFkBYtXD/ZG8rgbyDLsE8Sm7hK49HjU5uMIAS1nJl6ZYJ7EtKzGMue9NYgLJxICkzapPrNIfV838j0UpC+IAUJVTJeHEL+tArofa044vP9oDhqPdhrZYytoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOL0aXFz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745425091; c=relaxed/simple;
+	bh=U5PIkbIUgk+3S2S3bUd4x7nzK/6HrvucHZmzTrBDzdA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PWA3vF9GPoWcj9bVQ5/gYOfeW9Mq8oDeC9Nv/kveBOGXWcaoeAWCkxp4K2JiFb7mkGxWZ3hZVJqgrll6URQdh0Yw2JBjUOAJAXcjj1jc7vM0/u5wfvUz6Ry01D+C7FYQhqLj09Q0UK43+ieO8MQY/uzniS2go8S/Ai7Pc+38smI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=aRTe8A2S; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOL0aXFz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8860C4CEE2;
-	Wed, 23 Apr 2025 16:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745425022;
-	bh=wKluyXSVCGMs1uHzOLDesIs6Jy0lLRWqIZf87RypGqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jOL0aXFzmP5sU0oV3s7pagYBfN4DZ5R+8+TKmpnEPCTFYX7zsrGJVit7dXr7HQ4lu
-	 U+Y3UZpLbf3MY6LalWrr5UrUgpF/+wyGYB/5AKPQmG7/kYpxh3xFrA+Y8zV/YirOUI
-	 xlkkmgLY5eEk5gQzIM9xO9Yj9vzHYtmYZssjtlzQZqpLlRZDiRi7QrKdhydRAXEGmG
-	 u23b2p6rVTSHCt3AJccBYe/SnczCICTW07jtHnZYvu4egdTtHy9/2Z71quouikZuaB
-	 s1VNVGq4pc6hmOixwTBaqO6gNhMLJwnEp6D+6Pme20K/QxJN9T4y1R8BSTswt9mN97
-	 ydJITMmZF1uGQ==
-Date: Wed, 23 Apr 2025 17:16:58 +0100
-From: Simon Horman <horms@kernel.org>
-To: Justin Lai <justinlai0215@realtek.com>
-Cc: "kuba@kernel.org" <kuba@kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	Ping-Ke Shih <pkshih@realtek.com>,
-	Larry Chiu <larry.chiu@realtek.com>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH net v3 2/3] rtase: Increase the size of ivec->name
-Message-ID: <20250423161658.GC2843373@horms.kernel.org>
-References: <20250417085659.5740-1-justinlai0215@realtek.com>
- <20250417085659.5740-3-justinlai0215@realtek.com>
- <20250422125546.GF2843373@horms.kernel.org>
- <01039f49e5104f31975999590e6c0a7e@realtek.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="aRTe8A2S"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745425087;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=tqPlhOz8s3x2etCvhSBLZAFjymyAa3oUMh8P0cikEdQ=;
+	b=aRTe8A2SLmXsOIsv6ILpTkribAvqSADgBmpTeP+ycuTQo9kzrtVF92RXjpNUzxjSR0RnAo
+	q94bf6IwcolZqovQo3JQIF8qVqKQF7K5PqXngaxbrkUjfR0gkvEzKoDxwxkgjp3dOx28OX
+	2pX5mo3+cR0qOBf9YDjuBpDQ+lLM8Yg=
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+To: linux-kernel@vger.kernel.org
+Cc: mrpre@163.com,
+	mkoutny@suse.com,
+	Jiayuan Chen <jiayuan.chen@linux.dev>,
+	syzbot+01affb1491750534256d@syzkaller.appspotmail.com,
+	Tejun Heo <tj@kernel.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: [PATCH v2] workqueue: Fix race condition in wq->stats incrementation
+Date: Thu, 24 Apr 2025 00:17:42 +0800
+Message-ID: <20250423161742.14429-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <01039f49e5104f31975999590e6c0a7e@realtek.com>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 23, 2025 at 11:53:12AM +0000, Justin Lai wrote:
-> > On Thu, Apr 17, 2025 at 04:56:58PM +0800, Justin Lai wrote:
-> > > Fix the following compile warning reported by the kernel test robot by
-> > > increasing the size of ivec->name.
-> > >
-> > > drivers/net/ethernet/realtek/rtase/rtase_main.c: In function 'rtase_open':
-> > > >> drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:52: warning:
-> > > '%i' directive output may be truncated writing between 1 and 10 bytes
-> > > into a region of size between 7 and 22 [-Wformat-truncation=]
-> > >      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-> > >                                                      ^~
-> > >  drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:45: note:
-> > >  directive argument in the range [0, 2147483647]
-> > >      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-> > >                                               ^~~~~~~~~~
-> > >  drivers/net/ethernet/realtek/rtase/rtase_main.c:1117:4: note:
-> > >  'snprintf' output between 6 and 30 bytes into a destination of  size
-> > > 26
-> > >      snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
-> > >      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >        tp->dev->name, i);
-> > >        ~~~~~~~~~~~~~~~~~
-> > 
-> > Hi Justin,
-> > 
-> > Given that the type of i is u16, it's theoretical range of values is [0, 65536].
-> > (I expect that in practice the range is significantly smaller.)
-> > 
-> > So the string representation of i should fit in the minumum of 7 bytes available
-> > (only a maximum of 5 are needed).
-> > 
-> > And I do notice that newer compilers do not seem to warn about this.
-> > 
-> > So I don't really think this needs updating.
-> > And if so, certainly not as a fix for 'net'.
-> > 
-> > Also, as an aside, as i is unsigned, the format specifier really ought to be %u
-> > instead of %i. Not that it seems to make any difference here given the range of
-> > values discussed above.
-> > 
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes:
-> > > https://lore.kernel.org/oe-kbuild-all/202503182158.nkAlbJWX-lkp@intel.
-> > > com/
-> > > Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this
-> > > module")
-> > > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> > 
-> > --
-> > pw-bot: changes-requested
-> 
-> Hi Simon,
-> 
-> Thank you for your reply. I will modify the format specifier to %u.
-> Since the warning from the kernel test robot is a false positive, I
-> will not address this warning, meaning I will not increase the size
-> of ivec->name. This patch will be posted to net-next.
+Fixed a race condition in incrementing wq->stats[PWQ_STAT_COMPLETED] by
+moving the operation under pool->lock.
 
-Thanks, sounds good to me.
+Reported-by: syzbot+01affb1491750534256d@syzkaller.appspotmail.com
+Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+---
+ kernel/workqueue.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index cf6203282737..1ea62b8c76b3 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -3241,7 +3241,7 @@ __acquires(&pool->lock)
+ 	 * point will only record its address.
+ 	 */
+ 	trace_workqueue_execute_end(work, worker->current_func);
+-	pwq->stats[PWQ_STAT_COMPLETED]++;
++
+ 	lock_map_release(&lockdep_map);
+ 	if (!bh_draining)
+ 		lock_map_release(pwq->wq->lockdep_map);
+@@ -3272,6 +3272,8 @@ __acquires(&pool->lock)
+ 
+ 	raw_spin_lock_irq(&pool->lock);
+ 
++	pwq->stats[PWQ_STAT_COMPLETED]++;
++
+ 	/*
+ 	 * In addition to %WQ_CPU_INTENSIVE, @worker may also have been marked
+ 	 * CPU intensive by wq_worker_tick() if @work hogged CPU longer than
+-- 
+2.47.1
+
