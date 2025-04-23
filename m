@@ -1,263 +1,120 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5691F2BAB;
-	Wed, 23 Apr 2025 08:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF2C21638D
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745398406; cv=none; b=kXatubg/QDNCoEKJV2cDeimGGLnrUlkNid4qNRCsBYloxCirg3knqgaN4wj5hx/hnN6hBoz67Xtird627sAasHZl+nITvGDakxc1nh+ygtcmh2qi5u4Lv2FJ4OtAZlEouENhGUG8PpVG9VrhPU19MO0uNiIdSxffTNQSfoSpC8c=
+	t=1745398411; cv=none; b=JkOBBd39HEY5ROuwMFPDOPMcaDcVnzH3RC1lW6zMEPSupuXPFJgWaiIHQ9bmQkA+y8GXj13FWgE37/4TGNqvHGjix1xW4FLi0b+FJIaVya0DK94G30MiXK6GpUL4iGHwp6p9QcercTn1czFR4arl24hvbkniaEPK74rn+Ed49Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745398406; c=relaxed/simple;
-	bh=auPKMW+q1+Qqn2QTB5GXMprPrUP+dPOtU3JF8GSfRa0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ndeoyMDsTWU9n0hDDJNI5xWEd7V1cZaqD2nqn3tyEPNwJZYVZAnZPxfjAB5x6lA4DLM9w+4WJUFyvnF4XCd9Z9YEYadQ4DKMMXSFM/H/DFOp7HbiJEYY5U2p17Kf+l5UitundvEY35t/CcUlKHCpIf3WWJFs40NDqwgmGoSfa8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=dl3P7bXF; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745398411; c=relaxed/simple;
+	bh=glrL9frKUynd0eooWslKXIli7Wwl1Of8mWNqeP69AkU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GKAkmUKsxma2YJhr16rsu+2FxOLNfbu76EgwvBm9aAxAEltmP0hAHXsasc32o85I/5CqzT5xyKd26aV221l/1QXgfaNdy+FtpAE4x+gRDzCyr9A5iwBNsgAMV6dSILKan3YnA7dvYWY0/GyumcoDQun1ucziwieentpLsfYhLAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Je3+X2RF; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="dl3P7bXF"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53N8pdPU3180274
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 23 Apr 2025 01:51:39 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53N8pdPU3180274
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745398303;
-	bh=6kmN/+GrZw4rC3Ys6pLoNaD/Wf1DQKhvLOyIykqio94=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dl3P7bXFsCov3PgD20ymOIC1FG1eSAGxGe1DQbY2LG6O/NrMHMVBlGAk+JDp60Fgf
-	 +Pnv70fyGnLeBBbiUkB5NfR80TUqf9PoUmAU9iHHDMoRGzCfwBcwkKjONfEfh6RU3y
-	 Xd+yt6SiKMOPKs7smA0LIwhSCJBbmEF2pgXMq1hR7ce2lmLZxa2oozrZU5Xx64YBSy
-	 em5fezjfad3PGQcOwdbxM11bSPQVT17+MM/RZhPGMfA5z1Fo8GISFAxn0dAWTxVqKs
-	 NapT16DwTl3Gg6ZXI0V3IlW3sqxII7MOJohN3YgP4fSuVYSwWgYi1N7Og/gNcKFK4d
-	 023Wanxii0hkw==
-Message-ID: <f7198308-e8f8-4cc5-b884-24bc5f408a2a@zytor.com>
-Date: Wed, 23 Apr 2025 01:51:38 -0700
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Je3+X2RF"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2241053582dso85701775ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:53:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1745398409; x=1746003209; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/Cqj4QIom4PNiBzVEbYX0WUBXZ7DUraiDzK4MrzGYzY=;
+        b=Je3+X2RFbmoetOeWaMTvz91B0bPTc1ji5n+8tY4MLRPm4zjuyj3+SUpMGZMszWvGrm
+         BhaW6Npt3zDL0FoQkUqh3edl5tQ1CMuLx6YE9MrTyjFIfLC0teAd57ozhSPvKQKdjzlb
+         lePqj8nbtySvaok/kAaE/jwKjmjP1+X975uR5So71dwRi/w8OGof6zrkcwG+9n8RFnWz
+         4gtMSRCXG1Hg5LvU6AWo1EF6x43YxFhggtPHGnz9NCdHY3ag9kDI0av5S17vBfcVSitf
+         j2vigeY14qTkdw9eydn2u/74VdQRdj6UAogRg2N6TTtkKb71nnbSi4Kj07VCi1OlkY7L
+         AzxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745398409; x=1746003209;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/Cqj4QIom4PNiBzVEbYX0WUBXZ7DUraiDzK4MrzGYzY=;
+        b=QGKlsXsqOmM88BT0Co1fpka9fH1NqFhmLaSq4oqslmraZSh0lNKs65/zAhIm2b9+2j
+         YAm385EdO9CkcBmr41jRITpS2H8RmdueL1ZRp0uBvQs3E4fsplgvTgbJXwY3xLnWNNIb
+         lxrgGxdAMN0QNx2z50NcOappsWgFyIimS3RTN5Inr0CzL9VfriVgiuDb4s4MhVLsvguY
+         ztX+z6usgFeONb0DOercWZlTFrJSP4ZZPtTU0nUPkTH4JE3g2KEqq4GrJBPYrkY5UBCZ
+         Dd7eM8IJ/NwdspT3ijpsjfnBulrripahrPE74g1pieEGiJTsZq8uNkIDdQ00sDOyK86U
+         H9hg==
+X-Forwarded-Encrypted: i=1; AJvYcCXT2K9ILd23VsGzw9DWEVs0eMjE6zGMARHCDfMBdPmnDnMu5IQ91SIfXztoJeuyXHzm3CdjYzVFMh3nijI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIo+DVfi5jgjeg82ZkRzOgpnUWZda7ZDbpR2+xsGcbBsoKjzQL
+	wyPBYmxYzustirx41xgeWvcL/hG/bsVbCzejVMyrxB8y7E2ZSPuU9z+N/S6RFks=
+X-Gm-Gg: ASbGncsC7QLTKKrWgLm9zG5xk8JMtER7e2DQemU1TIYFVTUkXv7XkIfS84FZTyCMJFD
+	GT1J6updrhjj6Zwhue3EYGWIhv/34frqwCp0D3gLxfFqIgIwTCXG12ZsVhi10q/FgpwrnUi4xdN
+	NabIKIAjN99c4qwIOpyERnOFpxgpdJtOPOapENcYYlIwCns664yR5vpv6w/Y/3DocH5zihG99vK
+	3v++KI/5ehmPBcJxzoVIHn6FG3ZUedU4zbdvzWtthFLG2aR8unex/P1lHz/MYmAHM1IMNEV6fwO
+	IbM1hsnY76IvXdw9i/fBoL40m2OQWEsZuXkQm8AZKWqQJVjx4/sXn3EVMX8z8MzaBaScVPpBAPO
+	GKtRtnwpSKcBX
+X-Google-Smtp-Source: AGHT+IEAalrda38aOkj4B5+H1noGQ2OTP7JrL0DoyWnhW03mGn+cIvqfLp/tgOSUaOiNbvMPyvUE2Q==
+X-Received: by 2002:a17:90b:380f:b0:2ee:9d49:3ae6 with SMTP id 98e67ed59e1d1-3087bb5336cmr28685643a91.10.1745398408957;
+        Wed, 23 Apr 2025 01:53:28 -0700 (PDT)
+Received: from hsinchu36-syssw02.internal.sifive.com ([210.176.154.34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309dfa5f880sm1047611a91.38.2025.04.23.01.53.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 01:53:28 -0700 (PDT)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Nylon Chen <nylon.chen@sifive.com>,
+	Zong Li <zong.li@sifive.com>
+Subject: [PATCH v13 3/5] pwm: sifive: Fix the error in the idempotent test within the pwm_apply_state_debug function
+Date: Wed, 23 Apr 2025 17:04:44 +0800
+Message-Id: <20250423090446.294846-4-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250423090446.294846-1-nylon.chen@sifive.com>
+References: <20250423090446.294846-1-nylon.chen@sifive.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 21/34] x86/msr: Utilize the alternatives mechanism
- to write MSR
-To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-22-xin@zytor.com>
- <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <b2624e84-6fab-44a3-affc-ce0847cd3da4@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/22/2025 2:57 AM, Jürgen Groß wrote:
-> On 22.04.25 10:22, Xin Li (Intel) wrote:
->> The story started from tglx's reply in [1]:
->>
->>    For actual performance relevant code the current PV ops mechanics
->>    are a horrorshow when the op defaults to the native instruction.
->>
->>    look at wrmsrl():
->>
->>    wrmsrl(msr, val
->>     wrmsr(msr, (u32)val, (u32)val >> 32))
->>      paravirt_write_msr(msr, low, high)
->>        PVOP_VCALL3(cpu.write_msr, msr, low, high)
->>
->>    Which results in
->>
->>     mov    $msr, %edi
->>     mov    $val, %rdx
->>     mov    %edx, %esi
->>     shr    $0x20, %rdx
->>     call    native_write_msr
->>
->>    and native_write_msr() does at minimum:
->>
->>     mov    %edi,%ecx
->>     mov    %esi,%eax
->>     wrmsr
->>     ret
->>
->>    In the worst case 'ret' is going through the return thunk. Not to
->>    talk about function prologues and whatever.
->>
->>    This becomes even more silly for trivial instructions like STI/CLI
->>    or in the worst case paravirt_nop().
-> 
-> This is nonsense.
-> 
-> In the non-Xen case the initial indirect call is directly replaced with
-> STI/CLI via alternative patching, while for Xen it is replaced by a direct
-> call.
-> 
-> The paravirt_nop() case is handled in alt_replace_call() by replacing the
-> indirect call with a nop in case the target of the call was paravirt_nop()
-> (which is in fact no_func()).
-> 
->>
->>    The call makes only sense, when the native default is an actual
->>    function, but for the trivial cases it's a blatant engineering
->>    trainwreck.
-> 
-> The trivial cases are all handled as stated above: a direct replacement
-> instruction is placed at the indirect call position.
+Round the result to the nearest whole number. This ensures that real_period
+is always a reasonable integer that is not lower than the actual value.
 
-The above comment was given in 2023 IIRC, and you have addressed it.
+e.g.
+$ echo 110 > /sys/devices/platform/led-controller-1/leds/d12/brightness
+$ .apply is not idempotent (ena=1 pol=0 1739692/4032985) -> (ena=1 pol=0
+1739630/4032985)
 
-> 
->> Later a consensus was reached to utilize the alternatives mechanism to
->> eliminate the indirect call overhead introduced by the pv_ops APIs:
->>
->>      1) When built with !CONFIG_XEN_PV, X86_FEATURE_XENPV becomes a
->>         disabled feature, preventing the Xen code from being built
->>         and ensuring the native code is executed unconditionally.
-> 
-> This is the case today already. There is no need for any change to have
-> this in place.
-> 
->>
->>      2) When built with CONFIG_XEN_PV:
->>
->>         2.1) If not running on the Xen hypervisor (!X86_FEATURE_XENPV),
->>              the kernel runtime binary is patched to unconditionally
->>              jump to the native MSR write code.
->>
->>         2.2) If running on the Xen hypervisor (X86_FEATURE_XENPV), the
->>              kernel runtime binary is patched to unconditionally jump
->>              to the Xen MSR write code.
-> 
-> I can't see what is different here compared to today's state.
-> 
->>
->> The alternatives mechanism is also used to choose the new immediate
->> form MSR write instruction when it's available.
-> 
-> Yes, this needs to be added.
-> 
->> Consequently, remove the pv_ops MSR write APIs and the Xen callbacks.
-> 
-> I still don't see a major difference to today's solution.
+Co-developed-by: Zong Li <zong.li@sifive.com>
+Signed-off-by: Zong Li <zong.li@sifive.com>
+Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+---
+ drivers/pwm/pwm-sifive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The existing code generates:
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index bb9146267bc5..6259f8500f71 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -101,7 +101,7 @@ static void pwm_sifive_update_clock(struct pwm_sifive_ddata *ddata,
+ 
+ 	/* As scale <= 15 the shift operation cannot overflow. */
+ 	num = (unsigned long long)NSEC_PER_SEC << (PWM_SIFIVE_CMPWIDTH + scale);
+-	ddata->real_period = div64_ul(num, rate);
++	ddata->real_period = DIV_ROUND_UP_ULL(num, rate);
+ 	dev_dbg(ddata->parent,
+ 		"New real_period = %u ns\n", ddata->real_period);
+ }
+-- 
+2.34.1
 
-     ...
-     bf e0 06 00 00          mov    $0x6e0,%edi
-     89 d6                   mov    %edx,%esi
-     48 c1 ea 20             shr    $0x20,%rdx
-     ff 15 07 48 8c 01       call   *0x18c4807(%rip)  # <pv_ops+0xb8>
-     31 c0                   xor    %eax,%eax
-     ...
-
-And on native, the indirect call instruction is patched to a direct call
-as you mentioned:
-
-     ...
-     bf e0 06 00 00          mov    $0x6e0,%edi
-     89 d6                   mov    %edx,%esi
-     48 c1 ea 20             shr    $0x20,%rdx
-     e8 60 3e 01 00          call   <{native,xen}_write_msr> # direct
-     90                      nop
-     31 c0                   xor    %eax,%eax
-     ...
-
-
-This patch set generates assembly w/o CALL on native:
-
-     ...
-     e9 e6 22 c6 01          jmp    1f   # on native or nop on Xen
-     b9 e0 06 00 00          mov    $0x6e0,%ecx
-     e8 91 d4 fa ff          call   ffffffff8134ee80 <asm_xen_write_msr>
-     e9 a4 9f eb 00          jmp    ffffffff8225b9a0 <__x86_return_thunk>
-         ...
-1:  b9 e0 06 00 00          mov    $0x6e0,%ecx   # immediate form here
-     48 89 c2                mov    %rax,%rdx
-     48 c1 ea 20             shr    $0x20,%rdx
-     3e 0f 30                ds wrmsr
-     ...
-
-It's not a major change, but when it is patched to use the immediate 
-form MSR write instruction, it's straightforwardly streamlined.
-
-> 
-> Only the "paravirt" term has been eliminated.
-
-Yes.
-
-But a PV guest doesn't operate at the highest privilege level, which
-means MSR instructions typically result in a #GP fault.  I actually 
-think the pv_ops MSR APIs are unnecessary because of this inherent
-limitation.
-
-Looking at the Xen MSR code, except PMU and just a few MSRs, it falls
-back to executes native MSR instructions.  As MSR instructions trigger
-#GP, Xen takes control and handles them in 2 ways:
-
-   1) emulate (or ignore) a MSR operation and skip the guest instruction.
-
-   2) inject the #GP back to guest OS and let its #GP handler handle it.
-      But Linux MSR exception handler just ignores the MSR instruction
-      (MCE MSR exception will panic).
-
-So why not let Xen handle all the details which it already tries to do?
-(Linux w/ such a change may not be able to run on old Xen hypervisors.)
-
-BTW, if performance is a concern, writes to MSR_KERNEL_GS_BASE and
-MSR_GS_BASE anyway are hpyercalls into Xen.
-
-Thanks!
-     Xin
