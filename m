@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE7DA28469B;
-	Wed, 23 Apr 2025 15:01:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD72C289359;
+	Wed, 23 Apr 2025 15:01:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420508; cv=none; b=lYw49MPbIwiNhfynNMM23cfBpQuGbhb1z2KZp6xpDbiLTURIOhq+bnBi3B+GPdtXBXvpHjGLY/gPSMtbXPavaURna7NqkaYtk8yNASKcfCRU01izyaOkkaeZqhTlJQnb1W4LS77S9yOwl+rywa3XJnc1wqtNUcNMPc8pNzA0SvM=
+	t=1745420507; cv=none; b=cCeIravX1Tato2Wbavgc8hXpfhKqGLaRattUEMROmw9dErmMeqixenQ6JgJ0OFmp8Dn/rloMsi6oXbpWwp8ST6SEkat8uKS71E9k5BVLPKNL7B3hCPNjxcpVhdCEfrqdtrLrT3iXLIfg3Dn23b5OYTPHzpFyb4TmCXDROLqcqv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420508; c=relaxed/simple;
-	bh=vxoT92of/rlazXwaV9YXlg1WYXN/+U03gMMmCD+41y8=;
+	s=arc-20240116; t=1745420507; c=relaxed/simple;
+	bh=AYXbn4NX9XeIVkNZl12qqF/W5pwE5oN1B2T0jDTP9Hw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=C64vwQ1TIk8v+MOYqH2qUjacqrwa8uTthZSTDZjbMu4QjClqcawh/46WD06oOg4j1xmuNG/LeNgm94Eh6L1pjt962Zxa42F6UWkgc3sI0W3qArFKyTDMsFqu+AvbuKlGEWvPaYy1Y8ovtlDHzGajwsXdZOharLzGJpz5Nd4JHm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f9VTdJx9; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aPiHloiK; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=oMaa7dHalAAgdtRAXc4xwvlXyi12CopoFg8totRBaCfnvXMiOu3yXJNlr0AAv5DTa3sXO0CwaHtf/IOEsv6QP+wgDrEXb8buzwV7fqgPPyocdg6eKQ3SujDOOdw52L1ulL9fPuEkAUtdCuC4mHGOoCiPl4MUhp7wd231L4TdEZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oaTU8fkf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J+J0MAUb; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f9VTdJx9";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aPiHloiK"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oaTU8fkf";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J+J0MAUb"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745420505;
+	s=2020; t=1745420504;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZKJi5obWY5ETMlVCxwTzt0WlZX9v+939EY9af8zla/8=;
-	b=f9VTdJx9wewfT1biawm7CSSNtiIXwWVlKbF3na10U54NbCBV+u8kI+Rmny2iwA3Kdl0uWP
-	5cMfIzxUx9jNkUFOAUFcWP9tEXGjeW8qfaUm0BdsHXpKhLx0W4Aju4VmvsnSf/cDShdUU+
-	fYwnGzNQAiyppNkuuaLjOJG3JL2cIRPNchBeoVlF6vIjtmwdkyKna+7iUJc4XXi3wkGduL
-	IG5t+RP6IqqJHoQgmz+v4gFhBI+0xM9HKkwLY8z9s12hfQdBN08adHOHKY1hCQCPZQNiB1
-	RsqPoCeh+KX2aedqbsohmqy4XNzjKeGCTX+skNF4XxE4cODU97XqmCAWm9lv4A==
+	bh=eQbT0qvKJrdNXKvpl0h1tlyZlalWotnaZqnnxZBEhvw=;
+	b=oaTU8fkfdKvQeCRwt4/T3DajDImT697wENohpSawCYAuNOOA5OCaxmHA0thRRA0pyBFZWR
+	ueTrPPesd5c1wrB4pumFfkc3sgaqV5HLdKk1sSpylm+SlEQ8/jdyxF9hR8jBymJEv/XVWx
+	hpMp72rspqbXZc1oSDJa7iJaFObz/ZncjLbKzHvDXPfScM5K9Oeke/oZkVfq93dtKataNr
+	WtfWq4Exi1809BMJZ3N7p/+/F51yuCfkXxRKfZCGvra2hOMhcOM+Es7CC9LNKjsOsgKlVE
+	6+AudiH+IwoCXn825Xx6xjYjN8rqAY1E0X4ouFaqvZAlBfOcCnqJjCREe5+UYw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745420505;
+	s=2020e; t=1745420504;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZKJi5obWY5ETMlVCxwTzt0WlZX9v+939EY9af8zla/8=;
-	b=aPiHloiKog+oNTX5cL0sR44zKc7UgtstArQr8TJgYBhfAgzVbU0lpmvwn9y83TfuIBc/MF
-	x0rABOUTWaNxp/CA==
-Date: Wed, 23 Apr 2025 17:01:41 +0200
-Subject: [PATCH 11/15] tools/nolibc: add difftime()
+	bh=eQbT0qvKJrdNXKvpl0h1tlyZlalWotnaZqnnxZBEhvw=;
+	b=J+J0MAUbRh3We3LoQxXrAxXM3chzxK/U9ueSNtFqSVglRkdKnLx9AHyb2zHzkf5U8KhvEj
+	htPPNpkHPBiLmLCg==
+Date: Wed, 23 Apr 2025 17:01:39 +0200
+Subject: [PATCH 09/15] tools/nolibc: add timer functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250423-nolibc-misc-v1-11-a925bf40297b@linutronix.de>
+Message-Id: <20250423-nolibc-misc-v1-9-a925bf40297b@linutronix.de>
 References: <20250423-nolibc-misc-v1-0-a925bf40297b@linutronix.de>
 In-Reply-To: <20250423-nolibc-misc-v1-0-a925bf40297b@linutronix.de>
 To: Willy Tarreau <w@1wt.eu>, 
@@ -57,11 +57,11 @@ To: Willy Tarreau <w@1wt.eu>,
  Shuah Khan <shuah@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745420497; l=1567;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745420497; l=6398;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=vxoT92of/rlazXwaV9YXlg1WYXN/+U03gMMmCD+41y8=;
- b=0JCWS5hFZRx4Av49TwqS3Jo6OqH6tDeA4kYh2G+y46p1j2JB3a1TNbKQgh20tVRfYF+yLAVV8
- S/S/CDpfMx2Da3xrBIQq+JQ7ZILMdWXGysklEkDP2wl7IY1eQdIV9lC
+ bh=AYXbn4NX9XeIVkNZl12qqF/W5pwE5oN1B2T0jDTP9Hw=;
+ b=PWbTs4g65BX5Wbuv4a9vLyGN51Op/RIxrC3fQ+K9BjoGnpHjaHZmue/VpAaxGWCDFQkzPc0Bc
+ ls1fvkcZv90CFVsPLZCt9VDAplCsnYjvqpv3CUg+s8KCM6nrxdGNnd0
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
@@ -70,40 +70,196 @@ those with nolibc.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 ---
- tools/include/nolibc/time.h                  | 7 +++++++
- tools/testing/selftests/nolibc/nolibc-test.c | 1 +
- 2 files changed, 8 insertions(+)
+ tools/include/nolibc/time.h                  | 86 ++++++++++++++++++++++++++++
+ tools/include/nolibc/types.h                 |  1 +
+ tools/testing/selftests/nolibc/nolibc-test.c | 51 +++++++++++++++++
+ 3 files changed, 138 insertions(+)
 
 diff --git a/tools/include/nolibc/time.h b/tools/include/nolibc/time.h
-index 28a1549adb14e2087fa8fbdb7e9c35e1c3f22c2a..760133c574ece97165e3bba5616a387deaf07aff 100644
+index fb330628a59ad8a8b2b01c027b861472888ddee4..28a1549adb14e2087fa8fbdb7e9c35e1c3f22c2a 100644
 --- a/tools/include/nolibc/time.h
 +++ b/tools/include/nolibc/time.h
-@@ -105,6 +105,13 @@ int clock_settime(clockid_t clockid, struct timespec *tp)
+@@ -12,6 +12,7 @@
+ #include "types.h"
+ #include "sys.h"
+ 
++#include <linux/signal.h>
+ #include <linux/time.h>
+ 
+ static __inline__
+@@ -117,6 +118,91 @@ time_t time(time_t *tptr)
+ 	return tv.tv_sec;
  }
  
- 
-+static __inline__
-+double difftime(time_t time1, time_t time2)
++
++/*
++ * int timer_create(clockid_t clockid, struct sigevent *evp, timer_t *timerid);
++ * int timer_gettime(timer_t timerid, struct itimerspec *curr_value);
++ * int timer_settime(timer_t timerid, int flags, const struct itimerspec *new_value, struct itimerspec *old_value);
++ */
++
++static __attribute__((unused))
++int sys_timer_create(clockid_t clockid, struct sigevent *evp, timer_t *timerid)
 +{
-+	return time1 - time2;
++	return my_syscall3(__NR_timer_create, clockid, evp, timerid);
 +}
 +
++static __attribute__((unused))
++int timer_create(clockid_t clockid, struct sigevent *evp, timer_t *timerid)
++{
++	return __sysret(sys_timer_create(clockid, evp, timerid));
++}
 +
- static __attribute__((unused))
- time_t time(time_t *tptr)
- {
++static __attribute__((unused))
++int sys_timer_delete(timer_t timerid)
++{
++	return my_syscall1(__NR_timer_delete, timerid);
++}
++
++static __attribute__((unused))
++int timer_delete(timer_t timerid)
++{
++	return __sysret(sys_timer_delete(timerid));
++}
++
++static __attribute__((unused))
++int sys_timer_gettime(timer_t timerid, struct itimerspec *curr_value)
++{
++#if defined(__NR_timer_gettime)
++	return my_syscall2(__NR_timer_gettime, timerid, curr_value);
++#elif defined(__NR_timer_gettime64)
++	struct __kernel_itimerspec kcurr_value;
++	int ret;
++
++	ret = my_syscall2(__NR_timer_gettime64, timerid, &kcurr_value);
++	__nolibc_timespec_kernel_to_user(&kcurr_value.it_interval, &curr_value->it_interval);
++	__nolibc_timespec_kernel_to_user(&kcurr_value.it_value, &curr_value->it_value);
++	return ret;
++#else
++	return __nolibc_enosys(__func__, timerid, curr_value);
++#endif
++}
++
++static __attribute__((unused))
++int timer_gettime(timer_t timerid, struct itimerspec *curr_value)
++{
++	return __sysret(sys_timer_gettime(timerid, curr_value));
++}
++
++static __attribute__((unused))
++int sys_timer_settime(timer_t timerid, int flags,
++		      const struct itimerspec *new_value, struct itimerspec *old_value)
++{
++#if defined(__NR_timer_settime)
++	return my_syscall4(__NR_timer_settime, timerid, flags, new_value, old_value);
++#elif defined(__NR_timer_settime64)
++	struct __kernel_itimerspec knew_value, kold_value;
++	int ret;
++
++	__nolibc_timespec_user_to_kernel(&new_value->it_value, &knew_value.it_value);
++	__nolibc_timespec_user_to_kernel(&new_value->it_interval, &knew_value.it_interval);
++	ret = my_syscall4(__NR_timer_settime64, timerid, flags, &knew_value, &kold_value);
++	if (old_value) {
++		__nolibc_timespec_kernel_to_user(&kold_value.it_interval, &old_value->it_interval);
++		__nolibc_timespec_kernel_to_user(&kold_value.it_value, &old_value->it_value);
++	}
++	return ret;
++#else
++	return __nolibc_enosys(__func__, timerid, flags, new_value, old_value);
++#endif
++}
++
++static __attribute__((unused))
++int timer_settime(timer_t timerid, int flags,
++		  const struct itimerspec *new_value, struct itimerspec *old_value)
++{
++	return __sysret(sys_timer_settime(timerid, flags, new_value, old_value));
++}
++
+ /* make sure to include all global symbols */
+ #include "nolibc.h"
+ 
+diff --git a/tools/include/nolibc/types.h b/tools/include/nolibc/types.h
+index 08c9fdd1c7991656aabca5dd4dd363da45e00dd8..3528782670bca23fc9eb0323eb5af3100a037855 100644
+--- a/tools/include/nolibc/types.h
++++ b/tools/include/nolibc/types.h
+@@ -199,6 +199,7 @@ struct stat {
+ };
+ 
+ typedef __kernel_clockid_t clockid_t;
++typedef int timer_t;
+ 
+ /* WARNING, it only deals with the 4096 first majors and 256 first minors */
+ #define makedev(major, minor) ((dev_t)((((major) & 0xfff) << 8) | ((minor) & 0xff)))
 diff --git a/tools/testing/selftests/nolibc/nolibc-test.c b/tools/testing/selftests/nolibc/nolibc-test.c
-index aed71de4b4f3dd1f183c7fc25e5a5cee466600ed..fd8bab42e75157967658690005bc9142360fc135 100644
+index 7eb69971667a196cb0855d156e3e18085851de7d..6af55a04e3c6bcea4e09c941778ffd1f3b186690 100644
 --- a/tools/testing/selftests/nolibc/nolibc-test.c
 +++ b/tools/testing/selftests/nolibc/nolibc-test.c
-@@ -1423,6 +1423,7 @@ int run_stdlib(int min, int max)
- 		CASE_TEST(toupper_noop);            EXPECT_EQ(1, toupper('A'), 'A'); break;
- 		CASE_TEST(abs);                     EXPECT_EQ(1, abs(-10), 10); break;
- 		CASE_TEST(abs_noop);                EXPECT_EQ(1, abs(10), 10); break;
-+		CASE_TEST(difftime);                EXPECT_EQ(1, difftime(200., 100.), 100.); break;
+@@ -902,6 +902,56 @@ int test_stat_timestamps(void)
+ 	return 0;
+ }
  
- 		case __LINE__:
- 			return ret; /* must be last */
++int test_timer(void)
++{
++	struct itimerspec timerspec;
++	struct sigevent evp;
++	timer_t timer;
++	int ret;
++
++	evp.sigev_notify = SIGEV_NONE;
++
++	ret = timer_create(CLOCK_MONOTONIC, &evp, &timer);
++	if (ret)
++		return ret;
++
++	timerspec = (struct itimerspec) {
++		.it_value.tv_sec = 1000000,
++	};
++	ret = timer_settime(timer, 0, &timerspec, NULL);
++	if (ret)
++		goto err;
++
++	timerspec = (struct itimerspec) {
++		.it_value.tv_sec = -1,
++		.it_value.tv_nsec = -1,
++		.it_interval.tv_sec = -1,
++		.it_interval.tv_nsec = -1,
++	};
++	ret = timer_gettime(timer, &timerspec);
++	if (ret)
++		goto err;
++
++	errno = EINVAL;
++	ret = -1;
++
++	if (timerspec.it_interval.tv_sec || timerspec.it_interval.tv_nsec)
++		goto err;
++
++	if (timerspec.it_value.tv_sec > 1000000)
++		goto err;
++
++	ret = timer_delete(timer);
++	if (ret)
++		return ret;
++
++	return 0;
++
++err:
++	timer_delete(timer);
++	return ret;
++}
++
+ int test_uname(void)
+ {
+ 	struct utsname buf;
+@@ -1183,6 +1233,7 @@ int run_syscall(int min, int max)
+ 		CASE_TEST(stat_fault);        EXPECT_SYSER(1, stat(NULL, &stat_buf), -1, EFAULT); break;
+ 		CASE_TEST(stat_timestamps);   EXPECT_SYSZR(1, test_stat_timestamps()); break;
+ 		CASE_TEST(symlink_root);      EXPECT_SYSER(1, symlink("/", "/"), -1, EEXIST); break;
++		CASE_TEST(timer);             EXPECT_SYSZR(1, test_timer()); break;
+ 		CASE_TEST(uname);             EXPECT_SYSZR(proc, test_uname()); break;
+ 		CASE_TEST(uname_fault);       EXPECT_SYSER(1, uname(NULL), -1, EFAULT); break;
+ 		CASE_TEST(unlink_root);       EXPECT_SYSER(1, unlink("/"), -1, EISDIR); break;
 
 -- 
 2.49.0
