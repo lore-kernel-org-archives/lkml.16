@@ -1,173 +1,169 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF7E263F54
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADB328E5E5
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432788; cv=none; b=dd5oZk2EVS9cJwuoAV2GRELlVCOIv0lsCPTSwHlp0s6pSma6HmjZeMiOMXjXhNIzWMYb9ltS63drkHkb0N72pszI6WF4pLGnVYpjYSxx+fj4KAoL/SswLAplRD6LGh5Ih5Av87tKTgfPFt8qK1cHsgZp766wmwfQiECLw2HRPjQ=
+	t=1745432831; cv=none; b=olyHrW5iPU1zmeQlDaK+aZFVer5hB/xzK0oOcidzBMiEtBcAMdk0pePkMyYi1CBVsoO8/Ile9VAQCfXzM1tkcsGwredgc0IyDugn3+F+w3ZBYeXONleTj9widfbugKpBwF0BAF/jMbHlME+dAq7cuoq1tajNSNZgxybwpuIPvN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432788; c=relaxed/simple;
-	bh=PH84kld/sKE+RhISrTjG1cjFnL0yLAXB9xK4PwFZaMY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KeahUSapy1w+NXH4usTlsQKi/f/vyz6a6dsing7Xd3JD6OO5w9YVCy7zwsgj3zKDLzgxTjmvvDmcU/d6R0gWYddAqLkCsTcA5D6OL5CeZeFKhCj/Df3W3YmGOBKFtz307/KZNdCpWSHrCBzI73KSFyFzwuo9t0hyFabp3ZRUkOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2gq+VKrr; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745432831; c=relaxed/simple;
+	bh=zL5sHdCz+7jA44O4hfuhtBQLvE34dKh9l74abBoAdBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HLdWhDeIBhhKdqrlBilVhhocmhjpF0hQpoqGbT3fhwKVum9sxz8U7Hk/sRZkHKHEm303S1QzlDRTAYPGTPrVJDeaRAhFaF0W4t4b2jIYH5x/wrDNnn8WMzai0ky8JqjxJv3XPU2arZrj0JgJoK603J5Bftz7hCbbR/suLRt5COk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jcjTmWUo; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2gq+VKrr"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2264c9d0295so35545ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:26:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jcjTmWUo"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736c277331eso1352527b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:27:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745432786; x=1746037586; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l0kIM1GyroCk3zmwGLYPwDaNY7xBbvOnwGmlKqF+IzQ=;
-        b=2gq+VKrrvYaucHZKTwwnsDTcguRUJEnVD9Vc+V+V+MMaMRFvued3L8zrmZcBRrQhmM
-         3AQIXkghMRWBlDpmF3Y442RrEa/yOvEGpOXH7jvF2ImyjOhm7ldwlQpVsBBVnrbMBR32
-         oxkxBsygVehWGacZv3UxJmwvCv8bQOs6VYYwjIT31stc15bCYMBoYmLXxFC4CJxX6ijX
-         un5EOHJeYtHksDBCZLviXLlVLbxF+jjTZIB70cLEkBjcWWDUtXCQHSne9rRrpLVlVfXm
-         TvbupkYn09GYXohrSzKoO8ejUQwj+0XW+4JQzbpUFtXTG2WA2y4toln7Vk5BwsR+pHxz
-         m5TQ==
+        d=gmail.com; s=20230601; t=1745432829; x=1746037629; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3g25cudfdER1fultAc6guoG7d90Bj2J+6OCH21hX/70=;
+        b=jcjTmWUoCdNNt83Pxxb/JbjRk6k/zaO5blqQbOPiunD/olHaxDsQJmlqRPHqG2I6u1
+         Y5pexx5+98MPXbni2UCTLBd+wGOumy0JmvdzPMAo69O8m84un1gGXGQTCmz0aqpmVQXd
+         OmThiWJjfwDGf/pbyyhsq5gkjuonPAItcsJQzO79vg351w/TBNeYiVJv+qFk2wfzFbBM
+         PBbw58Jpovug5Pgx8VnxRkAIGItPEC0hHKGDpD88TAweFjBb1qqchOqWDsrC5iZvvI3s
+         ZzNjKJ772c2fTGDSerJFu4mmCLQP+13hrUl/4SaPSzKR7DOYCi3SCFScMjS4LPFuqmvh
+         ouqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745432786; x=1746037586;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l0kIM1GyroCk3zmwGLYPwDaNY7xBbvOnwGmlKqF+IzQ=;
-        b=nuQCqU0KC2Y4oKolqOFMfQt+sj99cV4ofi52sMXvpxRtmLOj5PO8YSeiBKl064Jdy/
-         /Xm/nt66MeVcN24xzh/VS/uWRs9f8w6DHP3dA57+xaYBLCKxP82WHwNsCeHvmL76ggZl
-         YbtP+9EWSo+Qy8pn+k0rcdorkoWrodEIUxdmyMIBU/j6ApSBvaLQt6WnbhiwL7HFGm7g
-         DVWROmCeD+vKu//MnTkzx3yZBfkhJVgviaTQW73JvRQeDznI0AMEL3y5fXnKSRn0JVg7
-         ObtWk/rbFpOHrwr+0krpEaBGVznsGXLKq6g+lcOnCdVDssQNEXi3BHB4Q2O3GR7XU6QH
-         KxSA==
-X-Forwarded-Encrypted: i=1; AJvYcCUjgVBlsT6zcXj9lz2SY2co+Mli8u/xmcDxQ+kCB8nSdDFYAySWUb8+ZcglqTpuCDSP1cMAKuvbOKBS/4I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytVcO5hppa/ysG1CgHKOy8Fa0KwyhwR+peZRINZ9XhziO/cK5q
-	aMn2oqlqDJ0REk5to29/ppyyeun2XpiimhU2hDTrFetk1ZiFhbPZw9JL0B+urKP7FR171uJy2bn
-	rQKyRVhgEGCNSqVds/vzk3P51c07ekXjSwPZRfHhJPeKAbCJEqO50zpJwug==
-X-Gm-Gg: ASbGncsYH1nzr1QyPF1dgTK9v8LIlcwkAhlfrA/TNWDVZV57p2BImE0Iz1ykVI9KgiY
-	wwOff9P+Mb5eYnr8xqC0KSRjn+7KNDJNo10SRtJB6m26GBvw7Dy+8Y4th64Xg/p7qGLq8ntQt8y
-	qn/U1JbanmPymGi0eadI8yzFdr0WLNAcXmy+wIWAkXaQI0Vo0bxO/IeFc=
-X-Google-Smtp-Source: AGHT+IFz1R1LxqWEGYRLYWO5W96XWnv2bqJz15jEINPSBmb87YsKZWzWOfr6fveduQ8KQij52ltnpYxHcWerkniTavs=
-X-Received: by 2002:a17:903:3bce:b0:215:8232:5596 with SMTP id
- d9443c01a7336-22db218a627mr293845ad.16.1745432785574; Wed, 23 Apr 2025
- 11:26:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745432829; x=1746037629;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3g25cudfdER1fultAc6guoG7d90Bj2J+6OCH21hX/70=;
+        b=pfdv3VJefYsHRb7HPTKK0WkDTfMXEkstNBKE+VtOzEeetKLfyEiOTsyIe+hTgPp7Xw
+         Yz7iSZq2onu6lcpdIBEEl0DKW8P3+5pPZO13er910dGyTWpwO4RcyhIDsfhENAOZXiI0
+         /GxIuFUFCX0fFfHc1OdSGYG9EQXf91q6lu/2ppxHkbpe7rM8oGVWGdFM0jZLa4/9PM5K
+         8UBX8+9+SVS1ZxkpRxCmT/bsAe/Cm7vCxH0JyQw4vq5l0fWN0wAJVnatxdnyruqTDWbb
+         2TYPWDhCr2Oh56oVRP6VSt6GoG7wZTmNOZdY7YAQqg6jNyZx3KtJ/UEjdrqS+y6n4GTx
+         uUBg==
+X-Forwarded-Encrypted: i=1; AJvYcCX8egOnOu8utqhh6Sv+KUdIUUmFSEyVyuHo+je8q75LsoyuLRv5lg6zQbk2oJv7PSqfQ157W1cL55BC6gQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKCEujpDVujTzV7mCtRAwnJW9z40cCfPIolII0epF3+wD/+6Jj
+	uKOSS7gNZdGQm1I3vwpY4Bx8ZfiO4wikrpXp82nzBdEBz1DWceE+
+X-Gm-Gg: ASbGncta0TsyGz9ErwFTF5JIJCbKIhmYpf+1E6qdd/vtRSirKl/9Y0F4Brx2skkUhFN
+	2nmE3i/yZI3hC1PXtkaxzgkCZT1QMKvotpdwLzSgITUpsHx7AG3uuTGXQXZrdp24XhunNnlSPOa
+	82d35KSnWWEbpzfT+FvsZOpUnt7NAqHBMSYDzBJG7A1TxTvgSLLCuqN3ai06hNgcIoHRDrhhNIB
+	v2t2j8PvlXJEbzGaKXiza1DB85mhoho125jFQTvlAxM8PYpyIGwSgtQ/KziA5kruVdGCZp43sNR
+	LxxEqo+CeD0XsOISZFeFb1KJK8XUtidi08mx6Xg0bjYFgFFfaSo=
+X-Google-Smtp-Source: AGHT+IGHyaRCja82Jp63ca6tDfY0vscU4gtWT0BCYYEH2SbVC6BGq3lUVFXS6KtlFAXf+XFDnn7bog==
+X-Received: by 2002:a05:6a21:9105:b0:1f0:e2d0:fb65 with SMTP id adf61e73a8af0-20442d54a7fmr200581637.2.1745432828582;
+        Wed, 23 Apr 2025 11:27:08 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa5d084sm11268524b3a.103.2025.04.23.11.27.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 11:27:07 -0700 (PDT)
+Date: Wed, 23 Apr 2025 14:27:06 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: Marc Zyngier <maz@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+Subject: Re: [PATCH v3 4/6] arm64: nvhe: Convert the opencoded field modify
+Message-ID: <aAkw-tFctkk3xyS8@yury>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <20250417-field_modify-v3-4-6f7992aafcb7@quicinc.com>
+ <86r01rjald.wl-maz@kernel.org>
+ <aAJsaNdznnz-1qap@yury>
+ <aAkn8lvzoa1grdkt@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423031117.907681-1-almasrymina@google.com> <20250423031117.907681-8-almasrymina@google.com>
-In-Reply-To: <20250423031117.907681-8-almasrymina@google.com>
-From: Harshitha Ramamurthy <hramamurthy@google.com>
-Date: Wed, 23 Apr 2025 11:26:14 -0700
-X-Gm-Features: ATxdqUHnKDzCBYG80n4IAQ6Tqlf6P8u3mDu-47naFBmrHiwPtX2MRzVq-LrB7oQ
-Message-ID: <CAEAWyHdYEzHLbW1Z=nS1yGdnbFA2HU7wb4nFZ1TmqGaUZoq9Tg@mail.gmail.com>
-Subject: Re: [PATCH net-next v10 7/9] gve: add netmem TX support to GVE
- DQO-RDA mode
-To: Mina Almasry <almasrymina@google.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
-	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Donald Hunter <donald.hunter@gmail.com>, 
-	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
-	Jeroen de Borst <jeroendb@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, dw@davidwei.uk, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
-	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAkn8lvzoa1grdkt@shell.armlinux.org.uk>
 
-On Tue, Apr 22, 2025 at 8:11=E2=80=AFPM Mina Almasry <almasrymina@google.co=
-m> wrote:
->
-> Use netmem_dma_*() helpers in gve_tx_dqo.c DQO-RDA paths to
-> enable netmem TX support in that mode.
->
-> Declare support for netmem TX in GVE DQO-RDA mode.
->
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
->
-> ---
->
-> v10:
-> - Move setting dev->netmem_tx to right after priv is initialized
->   (Harshitha)
->
-> v4:
-> - New patch
-> ---
->  drivers/net/ethernet/google/gve/gve_main.c   | 4 ++++
->  drivers/net/ethernet/google/gve/gve_tx_dqo.c | 8 +++++---
->  2 files changed, 9 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/net/ethernet/google/gve/gve_main.c b/drivers/net/eth=
-ernet/google/gve/gve_main.c
-> index 8aaac91013777..b49c74620799e 100644
-> --- a/drivers/net/ethernet/google/gve/gve_main.c
-> +++ b/drivers/net/ethernet/google/gve/gve_main.c
-> @@ -2659,12 +2659,16 @@ static int gve_probe(struct pci_dev *pdev, const =
-struct pci_device_id *ent)
->         if (err)
->                 goto abort_with_wq;
->
-> +       if (!gve_is_gqi(priv) && !gve_is_qpl(priv))
-> +               dev->netmem_tx =3D true;
-> +
->         err =3D register_netdev(dev);
->         if (err)
->                 goto abort_with_gve_init;
->
->         dev_info(&pdev->dev, "GVE version %s\n", gve_version_str);
->         dev_info(&pdev->dev, "GVE queue format %d\n", (int)priv->queue_fo=
-rmat);
-> +
-nit: accidental extra empty line, but
+On Wed, Apr 23, 2025 at 06:48:34PM +0100, Russell King (Oracle) wrote:
+> On Fri, Apr 18, 2025 at 11:14:48AM -0400, Yury Norov wrote:
+> > On Thu, Apr 17, 2025 at 12:23:10PM +0100, Marc Zyngier wrote:
+> > > On Thu, 17 Apr 2025 11:47:11 +0100,
+> > > Luo Jie <quic_luoj@quicinc.com> wrote:
+> > > > 
+> > > > Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
+> > > > - reg &= ~MASK;
+> > > > - reg |= FIELD_PREP(MASK, val);
+> > > > The semantic patch that makes this change is available
+> > > > in scripts/coccinelle/misc/field_modify.cocci.
+> > > > 
+> > > > More information about semantic patching is available at
+> > > > https://coccinelle.gitlabpages.inria.fr/website
+> > > > 
+> > > > Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> > > > ---
+> > > >  arch/arm64/kvm/hyp/include/nvhe/memory.h | 3 +--
+> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > > 
+> > > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > index 34233d586060..b2af748964d0 100644
+> > > > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > > @@ -30,8 +30,7 @@ enum pkvm_page_state {
+> > > >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
+> > > >  						 enum pkvm_page_state state)
+> > > >  {
+> > > > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
+> > > > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
+> > > > +	FIELD_MODIFY(PKVM_PAGE_STATE_PROT_MASK, &prot, state);
+> > > >  	return prot;
+> > > >  }
+> > > 
+> > > Following up on my suggestion to *not* add anything new, this patch
+> > > could be written as:
+> > > 
+> > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > index 34233d5860607..08cb6ba0e0716 100644
+> > > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > @@ -30,9 +30,8 @@ enum pkvm_page_state {
+> > >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
+> > >  						 enum pkvm_page_state state)
+> > >  {
+> > > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
+> > > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
+> > > -	return prot;
+> > > +	u64 p = prot;
+> > > +	return u64_replace_bits(p, state, PKVM_PAGE_STATE_PROT_MASK);
+> > >  }
+> > 
+> > This is a great example where u64_replace_bit() should NOT be used. 
+> 
+> Why not? Explain it. Don't leave people in the dark, because right
+> now it looks like it's purely a religous fanaticism about what
+> should and should not be used. Where's the technical reasoning?
 
-Acked-by: Harshitha Ramamurthy <hramamurthy@google.com>
+Because enum is an integer, i.e. 32-bit type. Now, the snippet above
+typecasts it to 64-bit fixed size type, passes to 64-bit fixed-type
+function, and the returned value is typecasted back to 32-bit int.
 
->         gve_clear_probe_in_progress(priv);
->         queue_work(priv->gve_wq, &priv->service_task);
->         return 0;
-> diff --git a/drivers/net/ethernet/google/gve/gve_tx_dqo.c b/drivers/net/e=
-thernet/google/gve/gve_tx_dqo.c
-> index 2eba868d80370..a27f1574a7337 100644
-> --- a/drivers/net/ethernet/google/gve/gve_tx_dqo.c
-> +++ b/drivers/net/ethernet/google/gve/gve_tx_dqo.c
-> @@ -660,7 +660,8 @@ static int gve_tx_add_skb_no_copy_dqo(struct gve_tx_r=
-ing *tx,
->                         goto err;
->
->                 dma_unmap_len_set(pkt, len[pkt->num_bufs], len);
-> -               dma_unmap_addr_set(pkt, dma[pkt->num_bufs], addr);
-> +               netmem_dma_unmap_addr_set(skb_frag_netmem(frag), pkt,
-> +                                         dma[pkt->num_bufs], addr);
->                 ++pkt->num_bufs;
->
->                 gve_tx_fill_pkt_desc_dqo(tx, desc_idx, skb, len, addr,
-> @@ -1038,8 +1039,9 @@ static void gve_unmap_packet(struct device *dev,
->         dma_unmap_single(dev, dma_unmap_addr(pkt, dma[0]),
->                          dma_unmap_len(pkt, len[0]), DMA_TO_DEVICE);
->         for (i =3D 1; i < pkt->num_bufs; i++) {
-> -               dma_unmap_page(dev, dma_unmap_addr(pkt, dma[i]),
-> -                              dma_unmap_len(pkt, len[i]), DMA_TO_DEVICE)=
-;
-> +               netmem_dma_unmap_page_attrs(dev, dma_unmap_addr(pkt, dma[=
-i]),
-> +                                           dma_unmap_len(pkt, len[i]),
-> +                                           DMA_TO_DEVICE, 0);
->         }
->         pkt->num_bufs =3D 0;
->  }
-> --
-> 2.49.0.805.g082f7c87e0-goog
->
+Doesn't sound the most efficient solution, right? On 32-bit arch it
+may double the function size, I guess.
+
+But the most important is that if we adopt this practice and spread it
+around, it will be really easy to overflow the 32-bit storage. The
+compiler will keep silence about that.
+
+Fixed types are very useful in their specific areas - cross-ABI data
+transfer, etc. But mixing them with native types like int may hurt
+badly. 
+
+Hope that helps.
+
+Thanks,
+Yury
