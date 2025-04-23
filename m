@@ -1,96 +1,100 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE89AC8EB
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:16:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBA527F4D9;
+	Wed, 23 Apr 2025 15:16:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421382; cv=none; b=IP3GAUF+sc/Rs3KCTwFFJdS3IYCKT6ix8cxQsuwRsHES+2Hd2ghQ3LIP2DVNACm7+fvnLUyzhUeYwv3JfKuNLrKfIlmUX/4LEyfR1uxqORAV+FK0AyrfPZP2IuVUL779QKjrON9AOX8KoiIdjT8jzoc6FLK3dKjNbwYvPY8eGCI=
+	t=1745421399; cv=none; b=fjLGImTuNUNzcGhpF07THl7dp8a5798VoG/B7Vgdb3IL8qmnrXoDEtJ4+adNK0AKFzmqojijMoZt22ELQshjNv1zHXp0emfAx9u0kz5oBp49N54PV9WsI7wK3VsG6hHN7WhWJBiLOdgqzyAyQpVhyGO5SMOZwzBW1/r3eetnEls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421382; c=relaxed/simple;
-	bh=qlpNju/NMeRKY1xUkgP16/sPqOPjSqfdYSpiJoQx0FQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u7siutzuV7MjPjIW+2uooyUZ6Aoj2eNgiL6ndOUkiEEnvOwz4lwyaLmcRq+Ox2VFSNZtnM5rSNHoub2Rr8EQQX1oQGDW19CRFYppxR9qOAGTXkLSBTFxQKPE+06YEDMhBZ6kX6UZUfscy6cCBMOQw7G+j55TY9BB+x9BmKSR7zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=KtkrAzVb; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745421399; c=relaxed/simple;
+	bh=h6jFwir1+BY5QpSiHUHq+V3ew0/c4upu4QIUqWo/SE0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fz7wMdPhV1mYDnhtxgUVd1p0k1qjj6nYFlt5fvFBTno/JjiTPHO69YLJNF8EAqMTLQLzHzcrZiHCazDta3k4Np4ze7D9RpXwDehZgvmNIrSlZrkoSAnmEUu1SFE5LJ45yJAAm5uVKolauc44M1ZNuvLIGtNCnxMeZR8SV2DcBXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Qt1poLkj; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="KtkrAzVb"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-310447fe59aso293661fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:16:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745421379; x=1746026179; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qlpNju/NMeRKY1xUkgP16/sPqOPjSqfdYSpiJoQx0FQ=;
-        b=KtkrAzVbWnC0LPvAgOLoPN2A+61TYNZpdpMS8HMqiDPDU5u3rPwaINq3AkTeJqRuhO
-         hq/7XSFcSSJ8RBQkjwlRg/0tfGFAyxTbf7yrMMkC3+J1zyxTTsf4oTeBaSG3D7oPYd3U
-         jsRbOv8HNp5PtThDLiqEklscXZHuMMzg7nHZvv6h1xzh6B+KEtFCQokO5Npqwr33vG91
-         LCsPvHcyiSq6ATiJvBIdLZ9AnIbVhZgWa+G+rduSj+TLtpJh99T+BdsHCuv6Vp5goNug
-         /H1wT/HUr4LA2fVMTsuXyjvi729MuoVz6U5Qvhmp0iYkLGTaYjuTRQOMY1zqMzjK2s/0
-         nXCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745421379; x=1746026179;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qlpNju/NMeRKY1xUkgP16/sPqOPjSqfdYSpiJoQx0FQ=;
-        b=sk8lCgBW+Etr3GgeCJGDgaikKyDhz96e1w4r6YM6QlcKpmvhI1ohiPkAhOS+yBpdEn
-         M91BxvDxOFiz/2WvPbpxF+SL9DaS3b3gq+o+0AubaW9ewyXXWxNK6G7OhC+s4pGJVjRj
-         DiISoaxqok+nqGPQythHcieXA9jz4cd+gURo742j72URUws/Ej6uYOxLnxx4h5LyYBRm
-         ko6+B2G81Unhbv0dliLuku4hM6gXldNjNOr5pgAjenUyCQXqB8bhIbNGqjX8Ks95tBB3
-         af/jeO0wrykMjNySSGgfNd+a7+4dLCE9Wv49uNDWfagcnCOqr37Ap7W61V5oSdiXIUtj
-         7HoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXna76QPV5W3AK8Jcy+nn2mSAt8++zWbS6+mB1eX4KhiwJcKQ7Hrz2qI12IOglCHpGq7ZWciWC2qEPvJq4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCcyte/yC6OU432VHkRD6reODdK5kqKA+AngU3a/Yu62/lC3Sk
-	LaUAmKFlukTyCKjfiT7YGcMEuRJjpLKAdNI/PusyTuHCfMDzlGdsUVQPa6WUOSlZvEFCHnDq46n
-	ArmD+4FULtJ6qKtiEmWWwBFqdS0uDYnQelWVS1Q==
-X-Gm-Gg: ASbGncu51Gm6/qoYeWhgDPvCMH3KEPOTXrRBQcdc2eogG/1gynZAdRFE9VqljU/s38Y
-	YMCBUQckz0Es3fviz3BhB55geiqjizen+TPJFEYVp/wg9pQ1xtO/zBeU2X/9zLzJDUQBgnCFQAM
-	9aigUp1t7T5164WW4qzOBgqTz+30FhpWR/kIyLAyonV/eho1doVnLOyg==
-X-Google-Smtp-Source: AGHT+IHI6FEFDrMfYDdXhYkYNDpHXaIiAxn1bvrzybfafv+pPojsem41Q9McPU1leKadb1ETRCZkCLPRYGg+JPXxqGI=
-X-Received: by 2002:a05:651c:210b:b0:308:f860:7c1 with SMTP id
- 38308e7fff4ca-31090556ab0mr67855181fa.30.1745421378812; Wed, 23 Apr 2025
- 08:16:18 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qt1poLkj"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53NFGHuX1596406
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 10:16:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745421377;
+	bh=8nMTuVmbBgWriHBNOl7VHKOPtN40UiBF8UiV+4nGdFg=;
+	h=From:To:CC:Subject:Date;
+	b=Qt1poLkjHGkgp2MmkrXKhMJ47nD9EN6Sqp9HYM+sPGjtgkthHLWc6Rd7jO3yz3EZp
+	 WAQuaKNihZDDQ2nPJeNGrpVixv0KS8gv3LKiSevYVRlSx0kRL1Z1KvEA3TfidteDcd
+	 weQbHDP1L0CYVMrXFYDjxwQ/9cK8Cwlv/iY56NUc=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53NFGH6N030028
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 23 Apr 2025 10:16:17 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 23
+ Apr 2025 10:16:16 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 23 Apr 2025 10:16:16 -0500
+Received: from uda0492258.dhcp.ti.com (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53NFGClF054303;
+	Wed, 23 Apr 2025 10:16:13 -0500
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>
+CC: <stable@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, <s-vadapalli@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-j784s4-j742s2-main-common: fix length of serdes_ln_ctrl
+Date: Wed, 23 Apr 2025 20:46:12 +0530
+Message-ID: <20250423151612.48848-1-s-vadapalli@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409211243.20105-1-kabel@kernel.org>
-In-Reply-To: <20250409211243.20105-1-kabel@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 23 Apr 2025 17:16:07 +0200
-X-Gm-Features: ATxdqUEu30-v4vZ_QcfqEo1SABrb4VJLmGibSpys6kuYcnJ0aykhfiWBeGUNa70
-Message-ID: <CAMRc=MdAdfohV1Xa-2WAyKVr1sqQeE-=G7V8LkzFhMZZ-5-L+g@mail.gmail.com>
-Subject: Re: [PATCH v2] platform: cznic: use new GPIO line value setter callbacks
-To: =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Apr 9, 2025 at 11:12=E2=80=AFPM Marek Beh=C3=BAn <kabel@kernel.org>=
- wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Marek Beh=C3=BAn <kabel@kernel.org>
-> ---
-> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-> values") added new line setter callbacks to struct gpio_chip. They allow
-> to indicate failures to callers. We're in the process of converting all
-> GPIO controllers to using them before removing the old ones.
-> ---
+Commit under Fixes corrected the "mux-reg-masks" property but did not
+update the "length" field of the "reg" property to account for the newly
+added register offsets which extend the region. Fix this.
 
-Can this be picked up into linux-next?
+Fixes: 38e7f9092efb ("arm64: dts: ti: k3-j784s4-j742s2-main-common: Fix serdes_ln_ctrl reg-masks")
+Cc: stable@vger.kernel.org
+Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+---
 
-Bartosz
+Hello,
+
+This patch is based on commit
+bc3372351d0c Merge tag 'for-6.15-rc3-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+of Mainline Linux.
+
+Regards,
+Siddharth.
+
+ arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+index 1944616ab357..1fc0a11c5ab4 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-j742s2-main-common.dtsi
+@@ -77,7 +77,7 @@ pcie1_ctrl: pcie1-ctrl@4074 {
+ 
+ 		serdes_ln_ctrl: mux-controller@4080 {
+ 			compatible = "reg-mux";
+-			reg = <0x00004080 0x30>;
++			reg = <0x00004080 0x50>;
+ 			#mux-control-cells = <1>;
+ 			mux-reg-masks = <0x0 0x3>, <0x4 0x3>, /* SERDES0 lane0/1 select */
+ 					<0x8 0x3>, <0xc 0x3>, /* SERDES0 lane2/3 select */
+-- 
+2.34.1
+
