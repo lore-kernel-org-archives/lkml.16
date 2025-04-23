@@ -1,45 +1,45 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A51701DFE20;
-	Wed, 23 Apr 2025 06:32:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD53A266F1C;
+	Wed, 23 Apr 2025 06:32:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745389928; cv=none; b=ROZS7tF3LCg7ZBNionNgNuc3ItA+dPydEowd6VP/DHNIY8ftuL8TJi9oDUw7CgNPYrJMxwai7a6MAnq3xd1Qnyj1qqM/jyMQVT/FOHn90xLDAcrvYDQpUr99SVxa9W9vTDr27CgWO9bc1sMmWkC3FdJziRff5HlV11oDOJCCwWA=
+	t=1745389930; cv=none; b=jdIZw6XOQzSsCJfJGHbxUvetD26B/hwKO0Y7aZ4U4+5moMf6SqOM2Yu/8wurHG4jKxREPTXAd+eOC/rLT2zxXR68kUiuDV89ibIOv5e4whICtPckm4dykRwW7TCs4dqaIJ9dVI/Tddt9RhP+YoV72QyjFILtIZ899BUmbe9wZac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745389928; c=relaxed/simple;
-	bh=2k7OBYmTWtbftUYVNQuC4efbkcmCSxi7NmAymPqdF8o=;
+	s=arc-20240116; t=1745389930; c=relaxed/simple;
+	bh=u8a5giyGA1swn4cRRMe2CGNTN8BdJmFKMaWe38WMQ+4=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g+MULXy9w+lykz4z7wV0tTdOkAvkoe0kwdX5nqRyBoFCZAbpHTNqSDtbSK5eYEBcmOsi+hNTS7hZGkFqLYhNCor+a6C1bW7ePp0SFh8b4RqlbUoeATE7GyvHuMUgAd6FNKmQTMCELMOBBYl6jzkPBbUv5/QE+LyXLGSDQLSqpo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LTw7wWp+; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=bjTMwA4RxdR0AI7Y/futgUOUd7chKPnpAkK8y2g71R8tNL6C0+keZl7quHzX9CP7rCEDEEidhwnJIzUF3hJlNJtgcTYLb5JfMh+211rDU9kaJkROQ/f3gv6+XZn8njwr1aAiDOf/PElMPrzNGRW++fY/d4Gs2SwkScUzIF/zkGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nR15LCMS; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LTw7wWp+"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0i7cY016800;
-	Wed, 23 Apr 2025 06:31:49 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nR15LCMS"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0i71C015927;
+	Wed, 23 Apr 2025 06:31:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=V7S70dp14c15cpZzwHjjn8rD
-	l7ku/WQWo7T9YgP2qnA=; b=LTw7wWp+EHnV/gDgLbd2O6jrYn4AwXvFJ1cTFLtG
-	mXGYZ8Np7lXnzsDaMql4t/MnskLlZRf3rhPUPbZt5O+5OdzHWaMg77eUBlIKXude
-	t3x01lzzLL/ARB4juMBRRP51h0M2FvapLGkNQw6KSGKAYqglAXUwavEoOXJ7y99K
-	f//Ztcl8DlQoA6N0qR1Ua9VwHfhuSewUMOR/0q0gpWSnfCh/gh6HPWYK+NsicB7J
-	qF+VlAgNokbEv1T7ghWpiOPrDMc/x0mT12tfrv3zrcuYENrNwpiC/IfYvYftjx3v
-	tfbohadZ7+E06Ca2vR4WS43xQkI1wvNBEKmbi1XLBp5pJQ==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh013xf-1
+	:references:subject:to; s=qcppdkim1; bh=oylRHHtW+Az94eOZU++5RzHt
+	7/PAm0TCTs+TUy8XbY0=; b=nR15LCMSvrLDdX/dQqBIugG0pFI/WF8HdB0sM++K
+	ERTgEUjMwZtPOKWpCq1TxZqaml0dsTMjIMAmzwTvZcwjp0PFc9LUcYDLnK6dUXfr
+	bYtf6V4mcO7bDuClke7JOSXv4EU1QYnde7+Vg2LvQXDpPM0UjotM8+Wg2Ms64Jxl
+	Cuxb/Q2jwe66ziMGGKDRR0akB74hHzKRL6wShz90hqawpTdLYpy65r7wUs4C+zF1
+	ozpWdUYt8orwciYBNpWpf+qelt1ht819iLonKKfCKtSUjvppcmf6xMiCgFONvky2
+	0VMLmPHDiiyKWH70pQjaFSzrPZogH48rf7Si18VwQpEQ7g==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh093xp-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 06:31:49 +0000 (GMT)
+	Wed, 23 Apr 2025 06:31:59 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53N6VmfO025615
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53N6Vwxx007493
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 06:31:48 GMT
+	Wed, 23 Apr 2025 06:31:58 GMT
 Received: from hu-kaushalk-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 22 Apr 2025 23:31:43 -0700
+ 15.2.1544.9; Tue, 22 Apr 2025 23:31:53 -0700
 From: Kaushal Kumar <quic_kaushalk@quicinc.com>
 To: <vkoul@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
         <conor+dt@kernel.org>, <manivannan.sadhasivam@linaro.org>,
@@ -49,9 +49,9 @@ CC: <linux-arm-msm@vger.kernel.org>, <dmaengine@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mtd@lists.infradead.org>,
         Kaushal Kumar <quic_kaushalk@quicinc.com>
-Subject: [PATCH v3 2/5] dt-bindings: dma: qcom,bam: Document dma-coherent property
-Date: Wed, 23 Apr 2025 12:00:51 +0530
-Message-ID: <20250423063054.28795-3-quic_kaushalk@quicinc.com>
+Subject: [PATCH v3 4/5] arm64: dts: qcom: sdx75: Add QPIC NAND support
+Date: Wed, 23 Apr 2025 12:00:53 +0530
+Message-ID: <20250423063054.28795-5-quic_kaushalk@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20250423063054.28795-1-quic_kaushalk@quicinc.com>
 References: <20250423063054.28795-1-quic_kaushalk@quicinc.com>
@@ -66,45 +66,62 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA0MyBTYWx0ZWRfX1SU7JBSrp9JS A4dAJLYytlGkrvr4FnD1qMvU2fafqlP+Kn8zaKfSA3eKAiU3AWfHwSD8mq0vfG0Bhf28SU56jqH DIzu1ylb06xVVP06Utm/wAVULkOjcM0E/aXMLP+1SIJVwLuAS02AFjYICRdHJ4S+/UBC/OO/cIS
- NfbdO3JFAtkW2AOomVr+jBvq3KNUVJOy/Eze4i329fPbznZihgsm/vF6MUchOlqCHVn//HcS5De if0H0g7lpeZvQgA/Qnhm7Xu39UozvuRSoo2APlDfg5AxbArxhYkf4/6icD+TMrzPrar4v1ridhm fpK3sTwgB4t/ykX0rWefOeOTyf8BikYGxOVqytm1zhopj0WNGRNDpO8p5OY+c88rWt1NXWH7rLb
- dTaJKO7noUnuDDjYwcUEOp8r+AIcC3ZRJlhOBk5QuzURVOqOz8Vzhj6WHgyOcHCVllq/EBIi
-X-Proofpoint-GUID: Kp8AEuM4oq0ahRF5JW7Vefvbetu96Im_
-X-Authority-Analysis: v=2.4 cv=ZuTtK87G c=1 sm=1 tr=0 ts=68088955 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=s6VSgM3AptX_uwP4r18A:9
+X-Proofpoint-GUID: ZAoodv5_g4zQIC2OLMvk78ar6DMSbeUS
+X-Proofpoint-ORIG-GUID: ZAoodv5_g4zQIC2OLMvk78ar6DMSbeUS
+X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=6808895f cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=EhM7gG_zESjhUU7MHiYA:9
  a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: Kp8AEuM4oq0ahRF5JW7Vefvbetu96Im_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA0MiBTYWx0ZWRfX7t+NlugXQbQR kgTu2p7NqnteG0Ik8PfIBZ+UKJ8+29UKn8vj6I5cDERax8VRlkBFOwG8aRY3uvNkPQwWIyi8763 TGyK8ENTl/evV0jHdknQd9xzcsksUBNjzlf3ddMC+YoIjZxsH7HOvsGIXax5pBVLjkPWf1jcQTp
+ /pzn/32nYYjnpLY9IDW9VP3EdJGiGq0Dj23mPpAC+VJiEYgUwS1FbzKlzSEJGjbOYFzxLbUs1Al Xyl0zJxLXFoRWMaAkCWIJ+QNLM4v487zt7rbGPUaKZwdIUIE6R3PFMziyXUaFQOU5N2CWgr4Hxd 6yY/H5aFgywowILdLWbBhrRs93a4rupt+CogRSct+qhwTHmSFrqIWBuOCJjvv0t0vDy5X6ZSXKN
+ 2gtPXkOQkAsSnop65pZDfV6U2JDanzAFPJU0ayB1A7KdspGi+U56xO8YcGgGE95D0FdSgeBz
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=860 priorityscore=1501 malwarescore=0 suspectscore=0
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=927 priorityscore=1501 suspectscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
  adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230043
+ definitions=main-2504230042
 
-Qualcomm BAM DMA controller has DMA-coherent support so define it in the
-properties section.
+Add devicetree node to enable support for QPIC NAND controller on Qualcomm
+SDX75 platform.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 Signed-off-by: Kaushal Kumar <quic_kaushalk@quicinc.com>
 ---
- Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/sdx75.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-index 3ad0d9b1fbc5..f2f87f0f545b 100644
---- a/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-+++ b/Documentation/devicetree/bindings/dma/qcom,bam-dma.yaml
-@@ -42,6 +42,8 @@ properties:
-   interrupts:
-     maxItems: 1
+diff --git a/arch/arm64/boot/dts/qcom/sdx75.dtsi b/arch/arm64/boot/dts/qcom/sdx75.dtsi
+index 638e07b00733..3e86b1d67130 100644
+--- a/arch/arm64/boot/dts/qcom/sdx75.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdx75.dtsi
+@@ -894,6 +894,25 @@
+ 			status = "disabled";
+ 		};
  
-+  dma-coherent: true
++		qpic_nand: nand-controller@1cc8000 {
++			compatible = "qcom,sdx75-nand", "qcom,sdx55-nand";
++			reg = <0x0 0x01cc8000 0x0 0x10000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			clocks = <&rpmhcc RPMH_QPIC_CLK>,
++				 <&sleep_clk>;
++			clock-names = "core",
++				      "aon";
++			dmas = <&qpic_bam 0>,
++			       <&qpic_bam 1>,
++			       <&qpic_bam 2>;
++			dma-names = "tx",
++				    "rx",
++				    "cmd";
++			iommus = <&apps_smmu 0x100 0x3>;
++			status = "disabled";
++		};
 +
-   iommus:
-     minItems: 1
-     maxItems: 6
+ 		tcsr_mutex: hwlock@1f40000 {
+ 			compatible = "qcom,tcsr-mutex";
+ 			reg = <0x0 0x01f40000 0x0 0x40000>;
 -- 
 2.17.1
 
