@@ -1,136 +1,321 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966921E5B66
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:07:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF8FE149C7D;
+	Wed, 23 Apr 2025 22:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745446030; cv=none; b=lkJ5OUc3JShrrK9Zn6bSMsAUEGrDOZb52g+j0Lhas4gw9sa9lHkXB4WHLcTwUPAyBq+yzkEQPQ9pW4V2vFhahrRJTyctu27E5JupugmWnCJs3wIksQZwQiBa0qOvc3XIkD1zw28snM5sH7nL5wvfvW82mgbFQj0oFjORJbOFOJE=
+	t=1745446147; cv=none; b=WMIMqRJI5aNgbEzZ76c0LfInFmzNCk4Vfk31XLSwVnmcpRUtu6eOsGVYALWVlSDhHwOopl4kGWrDHYVqLp475vfKnzMRYiTpqRNs9SnctRqZSxLAKjKAwr5j0ear5avqhjhhqzMwuKFgyiJNNryvDr97zufynb4Uvgq+2xGy9kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745446030; c=relaxed/simple;
-	bh=bp28noHFXI39rusqUs8gwSpotivluw23XX7A5HKSIyY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=otyrIxIAIeksNcGrsLFLo9VJ1R7M8puUhuKg/oHzNqUwkX9wNy4qVN8/nIOW0RSjZykkl/+KZwfoBZRwGQCHri6WyL0Pv4IWiCPdfHroZBRQu+Y6Gh0ZEQ90uEjyHizq7OmDOar9Y+jEPfE7G5xfYRvnvpXHTqQdbV+zcscRVR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j7gins0y; arc=none smtp.client-ip=209.85.210.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1745446147; c=relaxed/simple;
+	bh=ohhYu4UYAh0YVI79+KkdWnPut/t0XXzFgF78DiXppZo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=RSJrsDGXgJdZ8aCIw77KC+9leGLTdhXk85a4kJG9irVXbYQE/mdjqUZUncwIoCABXcQr6BQVcpg+iU2rlx/joAPZTBfYoCUNfGsjkv9hHS7w6FGKMUmZBxpWGIlVg2ZsCMw5WkLITGdj04ReQ7uSfWLHV7obHuYaNg7pUswQyVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UtynJzZc; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j7gins0y"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-72f3b4c0305so292942b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:07:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745446028; x=1746050828; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=utY/3ZiZMMWfdAOVaunsuvsNTPOFiHttGwR5vylAKHw=;
-        b=j7gins0yjzcNXk2k7aYPdxq5dLq+fcHbYDtm944oh6TIvVs4R5h7S+4qj0XOde7EKx
-         9YqoUoQbUjtp3oc27Lsd0UKN0/WD3hiauZ6GqblzkPZ37dH+jI785SVuAJko0NxyBwSk
-         nU6pG4bPxxZuatrKWE8LLww11QQZpS4jCuYYQ6I32eBafBVQ0Z32jf85Isk6LWbOMOf/
-         BT/jdgH77gxvyJKF6TFv2F6g8MKEzfT2+X2GOOye568qXeUUBGEHOXocpwf1IQmry5I4
-         u4sSrq85/NqcuLCOVDPoegVkeACP1HN1LXVXslqbS5fZ6hghVX/VZiAfM+TsIKA3WS9h
-         VJEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745446028; x=1746050828;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=utY/3ZiZMMWfdAOVaunsuvsNTPOFiHttGwR5vylAKHw=;
-        b=GKDPhTAsnvUOEutHfZctYtChGb1odMUqXXfvrq5Bu9RNmnBfm40tMI/ki6JYMhXR5d
-         y/qa945z8YZqmRFMZ6j/lLxiF83x58OQjpEdFCikkDO736NuumuynMJwubs650015Jqv
-         gdNalK1m+agKRCYZlhAWfOpzQN6eOEI5eCKmTYwvi+C0Xjv6+knazwvwk9J5i4mH0ODu
-         PjdOkFM/KaOPeXYH48+yzoxuhfBWCwgSwC69WC7DxiRO0V/Xam1ld8DD5N/gA+24E8kb
-         Mu/cukhwJ6iE1ZRy0RI0zGpy/NdIMLh9X0beOGwT04DCrgdTQZccpnvRO54O7MLqNu0U
-         U76g==
-X-Forwarded-Encrypted: i=1; AJvYcCVvz1rOZ96DO71+HOgIzA2WRckMxzbbAks5SyTH5ZiR45Z9t5P9uoyjMt/b39TqDvSKPXjM65sGqmQi93M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHJK1wYxyO/GOV8VIFlVL0vX31N4d/G4XHPkLOUF8eWW/3fKjU
-	VhYjCSC/M8Trl08YgwJh/WULMAeu7e1Xo3JfsNvvZ26x2SyEVZ6Pvj+sivubLZANtnWcW9IupSQ
-	lLYaZSKNsZjc3HI+BgERWqQ==
-X-Google-Smtp-Source: AGHT+IGY+pnHq2DQX/HQySosr6MoIfIEbH4ov9YBubqcg0pcHfTCmXDOga+QBFHTjyVSBCstaBHNJFn3Q1wqnKPotg==
-X-Received: from pfx55.prod.google.com ([2002:a05:6a00:a477:b0:736:4ad6:1803])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:3018:b0:736:4e02:c543 with SMTP id d2e1a72fcca58-73e245e3bc0mr500238b3a.9.1745446027829;
- Wed, 23 Apr 2025 15:07:07 -0700 (PDT)
-Date: Wed, 23 Apr 2025 15:07:06 -0700
-In-Reply-To: <Z74p8-l6BhOmR1B_@x1.local>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UtynJzZc"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NBEs4D014367;
+	Wed, 23 Apr 2025 22:08:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	OEQlUKkfnmUt4jlpeo3Vq8q4aEwqjke9KagT4WfFbyg=; b=UtynJzZcWe14mAB9
+	yfAiipGIAjCTTWoCF6h28UX0vOEqvUyrbQd6HR3qs1JWGaDzwYjnhhx5gY70FhLZ
+	/5F+rCZCk2s6XixFAeNSgsseipzMax0di3MPx3KulG5nLsluQC0cAHGhtCu0yxUc
+	AeyLOuLkGZCTpagubASrPgF3sBYrD9S3m7gTMKpXR1cwpumvGiWdLb9Sbax8Pjjc
+	gn7VMOD2RpMx2HRPzR1cwo2uXIrj1DN175a4gYcp4J5UJj63H7X0Q7AcQKLT5ZCu
+	yv9kY/RUmUEe6wWRYAsxOyAvcCxQH1l/MJeXAA6fTocU03uZoiBGiaKjJLoSHNAO
+	nMGJdw==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3bgub-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 22:08:55 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53NM8sI5025595
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 22:08:54 GMT
+Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
+ 2025 15:08:54 -0700
+Message-ID: <a6eb0f12-6941-47a2-a86d-3a6e2feeba29@quicinc.com>
+Date: Wed, 23 Apr 2025 15:08:53 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1726009989.git.ackerleytng@google.com> <bd163de3118b626d1005aa88e71ef2fb72f0be0f.1726009989.git.ackerleytng@google.com>
- <Z74p8-l6BhOmR1B_@x1.local>
-Message-ID: <diqzecxizg51.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 26/39] KVM: guest_memfd: Track faultability within a
- struct kvm_gmem_private
-From: Ackerley Tng <ackerleytng@google.com>
-To: Peter Xu <peterx@redhat.com>
-Cc: tabba@google.com, quic_eberman@quicinc.com, roypat@amazon.co.uk, 
-	jgg@nvidia.com, david@redhat.com, rientjes@google.com, fvdl@google.com, 
-	jthoughton@google.com, seanjc@google.com, pbonzini@redhat.com, 
-	zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
-	isaku.yamahata@intel.com, muchun.song@linux.dev, erdemaktas@google.com, 
-	vannapurve@google.com, qperret@google.com, jhubbard@nvidia.com, 
-	willy@infradead.org, shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
-	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
-	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
-	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
-	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6] drm/msm/dpu: allow sharing SSPP between planes
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona
+ Vetter <simona@ffwll.ch>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250227-dpu-share-sspp-v6-1-4d469910f399@linaro.org>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250227-dpu-share-sspp-v6-1-4d469910f399@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0NiBTYWx0ZWRfX9XGOF9HsDmCB FkKlRn14g+ehHhxfFWGzu0MTpcXipC0PgQiwzHi+3KzMzeIt9ZsB/sJMFNNTiHEa+oJN8IPhK+K hGWI3xf5qwkaFGLQVXmYThf0EEjMXhbNlBjGhdxf63BaMHjgNDiQ9yNlRv+FiNHSLK56a2b9eKw
+ 65PkKELucEKbBEBBEbLiQ9GuvOgxJvXE4jvPBc+J0BzcsX+lFHY6uOekKMVKnlnSykkJycmsdo5 ZkPCDoUjDfUB6cdApjVv55ps2IZqhrvCbWzDenRt0LLx44GKDggKglxPEoWDLEtmPl7a05m7hUD Mb5nUPXyQhlgFxLXe+hKBQghRpN2Hc/bV2P1Xx7VzL8q2aomSxFrSXyLKY3B1JlP0sofSJi7qbS
+ KWVEYd6O9A5CDj8i2AEmgpfvN7gZMqNxp0l1uNh3clMgHFXWJ9izAeX7SOxteC1uUX2VF28s
+X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=680964f7 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
+ a=UZlzyAkw_FUpu7lwVMsA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 6o0Qak2Q2a_jlSP4fRMnY1ZRIZwoOFlV
+X-Proofpoint-GUID: 6o0Qak2Q2a_jlSP4fRMnY1ZRIZwoOFlV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_12,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230146
 
-Peter Xu <peterx@redhat.com> writes:
 
-> On Tue, Sep 10, 2024 at 11:43:57PM +0000, Ackerley Tng wrote:
->> @@ -1079,12 +1152,20 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>  	if (err)
->>  		goto out;
->>  
->> +	err = -ENOMEM;
->> +	private = kzalloc(sizeof(*private), GFP_KERNEL);
->> +	if (!private)
->> +		goto out;
->> +
->>  	if (flags & KVM_GUEST_MEMFD_HUGETLB) {
->> -		err = kvm_gmem_hugetlb_setup(inode, size, flags);
->> +		err = kvm_gmem_hugetlb_setup(inode, private, size, flags);
->>  		if (err)
->> -			goto out;
->> +			goto free_private;
->>  	}
->>  
->> +	xa_init(&private->faultability);
->> +	inode->i_mapping->i_private_data = private;
->> +
->>  	inode->i_private = (void *)(unsigned long)flags;
->
-> Looks like inode->i_private isn't used before this series; the flags was
-> always zero before anyway.  Maybe it could keep kvm_gmem_inode_private
-> instead? Then make the flags be part of the struct.
->
-> It avoids two separate places (inode->i_mapping->i_private_data,
-> inode->i_private) to store gmem private info.
->
 
-Weakly-held opinion: I think the advantage of re-using inode->i_private
-to store flags is that in some cases, e.g. non-hugetlb, we might be able
-to avoid an allocation (of kvm_gmem_inode_private).
+On 2/26/2025 6:31 PM, Dmitry Baryshkov wrote:
+> Since SmartDMA planes provide two rectangles, it is possible to use them
+> to drive two different DRM planes, first plane getting the rect_0,
+> another one using rect_1 of the same SSPP. The sharing algorithm is
+> pretty simple, it requires that each of the planes can be driven by the
+> single rectangle and only consecutive planes are considered.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+> This patch has been deferred from v4 of virtual wide patchset to
+> simplify the merging path. Now as the wide planes have been merged, pick
+> up the patch that allows sharing of the SSPPs between two planes.
+> ---
+> Changes in v6:
+> - Fixed typo (consecutive) in the commit message (Abhinav)
+> - Renamed prev_plane_state to prev_adjancent_plane_state (Abhinav)
+> - Renamed prev_pstate to prev_adjancent_pstate as a followup to the
+>    previous change
+> - Link to v5: https://lore.kernel.org/r/20241215-dpu-share-sspp-v5-1-665d266183f9@linaro.org
+> 
+> Changes in v5:
+> - Rebased on top of the current msm-next-lumag
+> - Renamed dpu_plane_try_multirect() to dpu_plane_try_multirect_shared()
+>    (Abhinav)
+> - Link to v4: https://lore.kernel.org/dri-devel/20240314000216.392549-11-dmitry.baryshkov@linaro.org/
+> ---
+>   drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 156 +++++++++++++++++++++++++-----
+>   1 file changed, 130 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> index af3e541f60c303eb5212524e877129359b5ca98c..11c4d5dfd9703b27b7ffde34e9b4f92ec956c3c0 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+> @@ -887,10 +887,9 @@ static int dpu_plane_atomic_check_nosspp(struct drm_plane *plane,
+>   	return 0;
+>   }
+>   
 
-Does anyone else have any thoughts on this?
+<snip>
 
->>  	inode->i_op = &kvm_gmem_iops;
->>  	inode->i_mapping->a_ops = &kvm_gmem_aops;
->> @@ -1097,6 +1178,8 @@ static struct inode *kvm_gmem_inode_make_secure_inode(const char *name,
->>  
->>  	return inode;
->>  
->> +free_private:
->> +	kfree(private);
->>  out:
->>  	iput(inode);
->>  
->> -- 
->> 2.46.0.598.g6f2099f65c-goog
->> 
->
-> -- 
-> Peter Xu
+>   
+> +static int dpu_plane_try_multirect_shared(struct dpu_plane_state *pstate,
+> +					  struct dpu_plane_state *prev_adjancent_pstate,
+
+pls fix typo
+
+prev_adjancent_pstate ---> prev_adjacent_pstate in this entire function
+
+With that fixed,
+
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+
+> +					  const struct msm_format *fmt,
+> +					  uint32_t max_linewidth)
+> +{
+> +	struct dpu_sw_pipe *pipe = &pstate->pipe;
+> +	struct dpu_sw_pipe *r_pipe = &pstate->r_pipe;
+> +	struct dpu_sw_pipe_cfg *pipe_cfg = &pstate->pipe_cfg;
+> +	struct dpu_sw_pipe *prev_pipe = &prev_adjancent_pstate->pipe;
+> +	struct dpu_sw_pipe_cfg *prev_pipe_cfg = &prev_adjancent_pstate->pipe_cfg;
+> +	const struct msm_format *prev_fmt = msm_framebuffer_format(prev_adjancent_pstate->base.fb);
+> +	u16 max_tile_height = 1;
+> +
+> +	if (prev_adjancent_pstate->r_pipe.sspp != NULL ||
+> +	    prev_pipe->multirect_mode != DPU_SSPP_MULTIRECT_NONE)
+> +		return false;
+> +
+> +	if (!dpu_plane_is_multirect_capable(pipe->sspp, pipe_cfg, fmt) ||
+> +	    !dpu_plane_is_multirect_capable(prev_pipe->sspp, prev_pipe_cfg, prev_fmt))
+> +		return false;
+> +
+> +	if (MSM_FORMAT_IS_UBWC(fmt))
+> +		max_tile_height = max(max_tile_height, fmt->tile_height);
+> +
+> +	if (MSM_FORMAT_IS_UBWC(prev_fmt))
+> +		max_tile_height = max(max_tile_height, prev_fmt->tile_height);
+> +
+> +	r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +	r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +
+> +	r_pipe->sspp = NULL;
+> +
+> +	if (dpu_plane_is_parallel_capable(pipe_cfg, fmt, max_linewidth) &&
+> +	    dpu_plane_is_parallel_capable(prev_pipe_cfg, prev_fmt, max_linewidth) &&
+> +	    (pipe_cfg->dst_rect.x1 >= prev_pipe_cfg->dst_rect.x2 ||
+> +	     prev_pipe_cfg->dst_rect.x1 >= pipe_cfg->dst_rect.x2)) {
+> +		pipe->sspp = prev_pipe->sspp;
+> +
+> +		pipe->multirect_index = DPU_SSPP_RECT_1;
+> +		pipe->multirect_mode = DPU_SSPP_MULTIRECT_PARALLEL;
+> +
+> +		prev_pipe->multirect_index = DPU_SSPP_RECT_0;
+> +		prev_pipe->multirect_mode = DPU_SSPP_MULTIRECT_PARALLEL;
+> +
+> +		return true;
+> +	}
+> +
+> +	if (pipe_cfg->dst_rect.y1 >= prev_pipe_cfg->dst_rect.y2 + 2 * max_tile_height ||
+> +	    prev_pipe_cfg->dst_rect.y1 >= pipe_cfg->dst_rect.y2 + 2 * max_tile_height) {
+> +		pipe->sspp = prev_pipe->sspp;
+> +
+> +		pipe->multirect_index = DPU_SSPP_RECT_1;
+> +		pipe->multirect_mode = DPU_SSPP_MULTIRECT_TIME_MX;
+> +
+> +		prev_pipe->multirect_index = DPU_SSPP_RECT_0;
+> +		prev_pipe->multirect_mode = DPU_SSPP_MULTIRECT_TIME_MX;
+> +
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>   static int dpu_plane_atomic_check(struct drm_plane *plane,
+>   				  struct drm_atomic_state *state)
+>   {
+> @@ -1098,13 +1177,14 @@ static int dpu_plane_virtual_atomic_check(struct drm_plane *plane,
+>   static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>   					      struct dpu_global_state *global_state,
+>   					      struct drm_atomic_state *state,
+> -					      struct drm_plane_state *plane_state)
+> +					      struct drm_plane_state *plane_state,
+> +					      struct drm_plane_state *prev_adjancent_plane_state)
+>   {
+>   	const struct drm_crtc_state *crtc_state = NULL;
+>   	struct drm_plane *plane = plane_state->plane;
+>   	struct dpu_kms *dpu_kms = _dpu_plane_get_kms(plane);
+>   	struct dpu_rm_sspp_requirements reqs;
+> -	struct dpu_plane_state *pstate;
+> +	struct dpu_plane_state *pstate, *prev_adjancent_pstate;
+>   	struct dpu_sw_pipe *pipe;
+>   	struct dpu_sw_pipe *r_pipe;
+>   	struct dpu_sw_pipe_cfg *pipe_cfg;
+> @@ -1116,6 +1196,8 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>   							   plane_state->crtc);
+>   
+>   	pstate = to_dpu_plane_state(plane_state);
+> +	prev_adjancent_pstate = prev_adjancent_plane_state ?
+> +		to_dpu_plane_state(prev_adjancent_plane_state) : NULL;
+>   	pipe = &pstate->pipe;
+>   	r_pipe = &pstate->r_pipe;
+>   	pipe_cfg = &pstate->pipe_cfg;
+> @@ -1134,24 +1216,42 @@ static int dpu_plane_virtual_assign_resources(struct drm_crtc *crtc,
+>   
+>   	reqs.rot90 = drm_rotation_90_or_270(plane_state->rotation);
+>   
+> -	pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> -	if (!pipe->sspp)
+> -		return -ENODEV;
+> +	if (drm_rect_width(&r_pipe_cfg->src_rect) == 0) {
+> +		if (!prev_adjancent_pstate ||
+> +		    !dpu_plane_try_multirect_shared(pstate, prev_adjancent_pstate, fmt,
+> +						    dpu_kms->catalog->caps->max_linewidth)) {
+> +			pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> +			if (!pipe->sspp)
+> +				return -ENODEV;
+>   
+> -	if (!dpu_plane_try_multirect_parallel(pipe, pipe_cfg, r_pipe, r_pipe_cfg,
+> -					      pipe->sspp,
+> -					      msm_framebuffer_format(plane_state->fb),
+> -					      dpu_kms->catalog->caps->max_linewidth)) {
+> -		/* multirect is not possible, use two SSPP blocks */
+> -		r_pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> -		if (!r_pipe->sspp)
+> +			r_pipe->sspp = NULL;
+> +
+> +			pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +
+> +			r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +		}
+> +	} else {
+> +		pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> +		if (!pipe->sspp)
+>   			return -ENODEV;
+>   
+> -		pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -		pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +		if (!dpu_plane_try_multirect_parallel(pipe, pipe_cfg, r_pipe, r_pipe_cfg,
+> +						      pipe->sspp,
+> +						      msm_framebuffer_format(plane_state->fb),
+> +						      dpu_kms->catalog->caps->max_linewidth)) {
+> +			/* multirect is not possible, use two SSPP blocks */
+> +			r_pipe->sspp = dpu_rm_reserve_sspp(&dpu_kms->rm, global_state, crtc, &reqs);
+> +			if (!r_pipe->sspp)
+> +				return -ENODEV;
+>   
+> -		r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> -		r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +			pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +
+> +			r_pipe->multirect_index = DPU_SSPP_RECT_SOLO;
+> +			r_pipe->multirect_mode = DPU_SSPP_MULTIRECT_NONE;
+> +		}
+>   	}
+>   
+>   	return dpu_plane_atomic_check_sspp(plane, state, crtc_state);
+> @@ -1164,6 +1264,7 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+>   			       unsigned int num_planes)
+>   {
+>   	unsigned int i;
+> +	struct drm_plane_state *prev_adjancent_plane_state = NULL;
+>   
+>   	for (i = 0; i < num_planes; i++) {
+>   		struct drm_plane_state *plane_state = states[i];
+> @@ -1173,9 +1274,12 @@ int dpu_assign_plane_resources(struct dpu_global_state *global_state,
+>   			continue;
+>   
+>   		int ret = dpu_plane_virtual_assign_resources(crtc, global_state,
+> -							 state, plane_state);
+> +							     state, plane_state,
+> +							     prev_adjancent_plane_state);
+>   		if (ret)
+> -			return ret;
+> +			break;
+> +
+> +		prev_adjancent_plane_state = plane_state;
+>   	}
+>   
+>   	return 0;
+> 
+> ---
+> base-commit: 89839e69f6154feecd79bd01171375225b0296e9
+> change-id: 20241215-dpu-share-sspp-75a566eec185
+> 
+> Best regards,
+
