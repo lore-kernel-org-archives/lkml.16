@@ -1,123 +1,119 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6BA29B22B
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1625B29B231
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421815; cv=none; b=q1rubwOtlmFvij5Zu2vF7iZcHNcnhEDQT2w3drx+YafMKL/NtI0xoLZlzoLEJq2jkEpND6/QBa3Awpgqngn/7eM+xDQdLdNSB2/sa/JhrLwqvjzO4LnrMNHy+ZrH85puySvMJ9DHuhuBaj1yA7iZitqkg3N6KQ8mJsdF9AFbnsw=
+	t=1745421818; cv=none; b=JozhAs5oXOiVRHfjYzmH0nl7VsX3rIw1C5+Ok8dvjGWyAQhlScMHh5PhvmMFNOj+DLKWck0xw4A7MJQbfeweHnFAo5UsUnoJ695BvAs3KPAWqW0gzByutqhBLpaZNusKa4TEfk5vFWIV7wnvkloa3+xoiXxRUpc6Pzf958Z8A+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421815; c=relaxed/simple;
-	bh=vhcyUo6KAslWblrUDCqe77mhvYixtNpjDAllsEwMg2A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r9MO8sEoRpETyC/zRssMS7DIwY3v8bzP8C8KwzGpvoKqkQ9yv5fNi28/NyU7Whv9Yxoog4ZJhVT/V+GI5fucEcUf6CzEI387LEMUoWIjTb+ILNJ38uXj/9wk7b1Odk0zJxfsjql6ElHBFGEtyT9rgFYLD1wdL0riqUARZkgzTKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IezQSZXV; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745421818; c=relaxed/simple;
+	bh=XsdU11yHiO5T03ZGuaxMmJco+HmDrgq2hJ7R7DMxsrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Jf1a8JJHId44gsWEdygc1Lf/2J+dl29KirqX+gMP9+WzXrzAE5WdKCkoVYcUmxB6ZdGrdn6DD6kxN2odv1nqBDDjoO9Q4CCmd4xRGlJ4Nch7RiqOD9eltJIPOGDUGmJiItGiPnrXjcL+6I/TVbdW5M6Vm3CKAPSfS1HGFVwvnO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Xuw0024R; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IezQSZXV"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so9971793a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745421812; x=1746026612; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sBJXxI+VnkOvdG03h/gTU2mlJ2vsoYyyCCSIoMLfBQ4=;
-        b=IezQSZXVaHdBTpHTOxflFZFt5kGWQIQY7hxXIQlYSqnYn5Wn/NH5iaQgSs9u7a3vej
-         XGCMrX8yogeqRmwiOHqUL5eFIdiG854Ylq6F5r7PddKFg2OWJyIRQhAlaaPWwTbpftPB
-         pfiD53sNMjZPsWzvqIRc5eyXfO1t8UBGhlaOhwfVvyc/LGrpBA+vEXEXPoLZGtZ+4fK1
-         KVZi0sTY/PyBvMcI2PtfdkGbDxDXNLVBkfe3LuY44+bOEcMQRhRg5JrKe1vxryvx2nYd
-         Y6f9LcikDyMqfLLpVc/AHiRVH2myWuTJFVMlaCc0+bR+6uWwESPhBSWDa1URs7pO08nv
-         d7Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745421812; x=1746026612;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sBJXxI+VnkOvdG03h/gTU2mlJ2vsoYyyCCSIoMLfBQ4=;
-        b=K4WONzx3rIA5i56nssDfy8SGncmq64dHmRLro7Mq752HjT38HtRRYYN1dlPYN+Qw6i
-         KFsXeyG5xE87lwv7dW3mLxAV/1eodSFN8Sy4/7UuHoVLDAFWvNHjb/et9GAlTDS3PaoY
-         oAS3+nbqqd3YdV88ao7n8TGyao0KCR+giud6KN5Qtzp3/bNbOyhKum68O+MqKfSI+FIy
-         fVAvbwYo4W7j+QVSPb+MPWf/poD75R9wJHaOGF5HwfovluRnM/JnRrKMzIp/uYPVVsOB
-         Wk75YZcjtwwKxBETPglCuURVfIhxGeasuiccxzToBSUTIxEnAZ8L7t2EBHssxcw2d3x4
-         TeKA==
-X-Forwarded-Encrypted: i=1; AJvYcCW8qZBrGyBPp9NAk/8w8MYTPLLT/zzEIhdSDWUGPPyLLCrbelhqq0JoXaLkekaGTldNWZq76lbBPbKAVZs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzfy3W4vlhbDCpvmqlintcrnPb2+78N6DbeEl8S3SdpzX+ysVS4
-	HDCfa6rh6tp2UBMAtalvPS9MoWkFYYRsdx45q3Ua7rc/oLlo1jSUYxFTwhACFxH5UZ1wjpGAq7k
-	w6DYFJlO6bUEIruFL7Tfq+mkecahymVw49fLdaA==
-X-Gm-Gg: ASbGncsrbN53KdeyY4rHs1/rDxp7wGXZt/cG2cyqxjqqHVbN0qmvDCIlS/LI6I9iKFf
-	obA8eiurmlcHyakpw7kPHhSF1ZXRRkVyQgbNYkcoyTRWX5JWJtSqPJFJQlds63Y0kjgYlzvSDEy
-	sQL3qpuOIAXCkb7AjOa2rM9E8=
-X-Google-Smtp-Source: AGHT+IGPu59FaDGH5BEkXJJ7svic3UgDeQqapGND2AunCs9qXYZnqI4o1kWAywADMLlCU4WGGSFlE+fbrGMmBQWyplk=
-X-Received: by 2002:a05:6402:524e:b0:5e5:d9e5:c4d7 with SMTP id
- 4fb4d7f45d1cf-5f62860fdcdmr16126430a12.28.1745421811890; Wed, 23 Apr 2025
- 08:23:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Xuw0024R"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53NFN5Fn2338674
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 10:23:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745421785;
+	bh=Ih2ce5Z0GGSSdmgbjeP4Hq/VrwWqi3AxBYu8iHAwmac=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=Xuw0024RJ6ZKugtUegTeW9kcQK0QAykUipGgY/++v3U9pXpM2NQ1xLHtOVYZWfvFE
+	 bom6wAfrhl4O50IigZst5cn/RXpuhL0W3s1Dy5uHck5WCYAiIlly/fs/xzQDdYIEiT
+	 tG5kdgtTRrgFrZ9XFLHVUZijSzTejhkOUEgD7H5U=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53NFN5mm045971
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 23 Apr 2025 10:23:05 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 23
+ Apr 2025 10:23:04 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 23 Apr 2025 10:23:04 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53NFN4xD062058;
+	Wed, 23 Apr 2025 10:23:04 -0500
+Message-ID: <ac10eeeb-ab9e-4eaf-bf7c-7810c7ba64a5@ti.com>
+Date: Wed, 23 Apr 2025 10:23:04 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422191939.555963-1-jkangas@redhat.com>
-In-Reply-To: <20250422191939.555963-1-jkangas@redhat.com>
-From: Sumit Semwal <sumit.semwal@linaro.org>
-Date: Wed, 23 Apr 2025 20:53:20 +0530
-X-Gm-Features: ATxdqUESCavL9HzimYlvlWteFP-krmBUrVLSD6RMVwG58YA294DJfz9zHgN2yXY
-Message-ID: <CAO_48GELW3ax5Q3h9=qpWBJJa0Uy3eJwFkEcbaz4ZT56Gq513A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] dma-buf: heaps: Use constant name for CMA heap
-To: Jared Kangas <jkangas@redhat.com>
-Cc: benjamin.gaignard@collabora.com, Brian.Starkey@arm.com, jstultz@google.com, 
-	tjmercier@google.com, christian.koenig@amd.com, mripard@kernel.org, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] arm64: defconfig: Add CDNS_DSI and CDNS_PHY config
+To: Jayesh Choudhary <j-choudhary@ti.com>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <nm@ti.com>, <linux-kernel@vger.kernel.org>
+CC: <bjorn.andersson@oss.qualcomm.com>, <krzysztof.kozlowski@linaro.org>,
+        <geert+renesas@glider.be>, <lumag@kernel.org>,
+        <nfraprado@collabora.com>, <quic_tdas@quicinc.com>,
+        <elinor.montmasson@savoirfairelinux.com>, <ebiggers@google.com>,
+        <ross.burton@arm.com>, <linux-arm-kernel@lists.infradead.org>
+References: <20250416182930.32132-1-j-choudhary@ti.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20250416182930.32132-1-j-choudhary@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello Jared,
+Hi Jayesh,
 
-On Wed, 23 Apr 2025 at 00:49, Jared Kangas <jkangas@redhat.com> wrote:
->
-> Hi all,
->
-> This patch series is based on a previous discussion around CMA heap
-> naming. [1] The heap's name depends on the device name, which is
-> generally "reserved", "linux,cma", or "default-pool", but could be any
-> arbitrary name given to the default CMA area in the devicetree. For a
-> consistent userspace interface, the series introduces a constant name
-> for the CMA heap, and for backwards compatibility, an additional Kconfig
-> that controls the creation of a legacy-named heap with the same CMA
-> backing.
->
-> The ideas to handle backwards compatibility in [1] are to either use a
-> symlink or add a heap node with a duplicate minor. However, I assume
-> that we don't want to create symlinks in /dev from module initcalls, and
-> attempting to duplicate minors would cause device_create() to fail.
-> Because of these drawbacks, after brainstorming with Maxime Ripard, I
-> went with creating a new node in devtmpfs with its own minor. This
-> admittedly makes it a little unclear that the old and new nodes are
-> backed by the same heap when both are present. The only approach that I
-> think would provide total clarity on this in userspace is symlinking,
-> which seemed like a fairly involved solution for devtmpfs, but if I'm
-> wrong on this, please let me know.
+On 4/16/25 1:29 PM, Jayesh Choudhary wrote:
+> Enable configs for cdns-dsi and cdns-dphy drivers required for DSI
+> display on the following TI platforms:
+> J721E-EVM, J721E-BeagleBone-AI64, J721S2-EVM, AM68-SK, J722S-EVM,
+> BeagleY-AI, AM62P5-SK, J784S4-EVM and J742S2-EVM
+> 
+> The dsi wrapper driver used by all the above mentioned platforms,
+> cdns-dsi-j721e is enabled by default if cdns-dsi config is enabled.
+> 
+> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
 
-Thanks indeed for this patch; just one minor nit: the link referred to
-as [1] here seems to be missing. Could you please add it? This would
-make it easier to follow the chain of discussion in posterity.
->
-> Changelog:
->     v2: Use tabs instead of spaces for large vertical alignment.
->
-> Jared Kangas (2):
->   dma-buf: heaps: Parameterize heap name in __add_cma_heap()
->   dma-buf: heaps: Give default CMA heap a fixed name
->
->  Documentation/userspace-api/dma-buf-heaps.rst | 11 ++++---
->  drivers/dma-buf/heaps/Kconfig                 | 10 +++++++
->  drivers/dma-buf/heaps/cma_heap.c              | 30 ++++++++++++++-----
->  3 files changed, 40 insertions(+), 11 deletions(-)
->
-> --
-> 2.49.0
->
+LGTM, thanks for adding AM62P5-SK to patch description.
 
-Best,
-Sumit
+Reviewed-by: Judith Mendez <jm@ti.com>
+
+> ---
+> 
+> Changelog v1->v2:
+> - Change commit message to add the platforms that needs cadence dsi
+>    and dphy driver enabled.
+> 
+> Link to v1 patch:
+> <https://lore.kernel.org/linux-arm-kernel/20250411095043.272488-1-j-choudhary@ti.com/>
+> 
+>   arch/arm64/configs/defconfig | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 5c85e5da152f..4c0eb2711bbe 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -938,6 +938,7 @@ CONFIG_DRM_TI_SN65DSI86=m
+>   CONFIG_DRM_ANALOGIX_ANX7625=m
+>   CONFIG_DRM_I2C_ADV7511=m
+>   CONFIG_DRM_I2C_ADV7511_AUDIO=y
+> +CONFIG_DRM_CDNS_DSI=m
+>   CONFIG_DRM_CDNS_MHDP8546=m
+>   CONFIG_DRM_IMX8MP_DW_HDMI_BRIDGE=m
+>   CONFIG_DRM_DW_HDMI_AHB_AUDIO=m
+> @@ -1579,6 +1580,7 @@ CONFIG_PHY_CAN_TRANSCEIVER=m
+>   CONFIG_PHY_NXP_PTN3222=m
+>   CONFIG_PHY_SUN4I_USB=y
+>   CONFIG_PHY_CADENCE_TORRENT=m
+> +CONFIG_PHY_CADENCE_DPHY=m
+>   CONFIG_PHY_CADENCE_DPHY_RX=m
+>   CONFIG_PHY_CADENCE_SIERRA=m
+>   CONFIG_PHY_CADENCE_SALVO=m
+
