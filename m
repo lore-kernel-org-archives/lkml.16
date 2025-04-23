@@ -1,49 +1,44 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83A4527935C;
-	Wed, 23 Apr 2025 21:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653FC82D98;
+	Wed, 23 Apr 2025 21:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745442399; cv=none; b=Ojw2vJSB0/4o2p4hrR1x5Ct63pQ3q6PRA+7QSSbux56NDfM/FpnEvDI2xJgOIH8ebTtjpS55z6y5VCTsx4T+4xbwyyq/EvDJCNRB+YMi9Rsn9+x9lLcOzoF42IQUxxiAyG9N4hhgQY/sSGt9/pO39JlGIwANVGyIy0uhWQNgcrI=
+	t=1745442422; cv=none; b=cFuEQtoOBiT2woL83zhTJrJLaNPBieH7r3QHlB+3bk2HBpEH3Z+A97qimilHRgjFCV2g3Vg1kHHXJggNjAqLcSk+6v1e9+cSoCivhBoOqdWQUtKS7qTHYxzuedRm2/Qr0jsH5Osb9PJ505t8g0j/56mDYKDZbEPHdvaQdn3ofl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745442399; c=relaxed/simple;
-	bh=MrFjFwFEBYSnwokagwFI4FsVi1NjjLSkYj9T++yRFvA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=muNNmXv/9PKzdUQKKxgnaHsBLLQezyfY3S6WIU/vigUgM4vUgGMqFVqducZYs+0eWhEYSTLSuuOTWa7zRUyIvdpO6/kEqUJs2KtXS2WK3SyF2jy9cLH1PHkPjrsH9d//L+mSg1CIwvXAPjIga6q/+S5CMgf0aVhaJrXJAzaPHd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=odrFpynn; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745442422; c=relaxed/simple;
+	bh=zjf+eXgupeic2NaH/eGimc8iMxf81f1qq6U1j6+oTT8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TsDpEHzJmTI8YtmLHxiY7z1bYaXKugXj2yc5HWthfvMUoY9PzJNgbw1WtVSDcMPrBtFjA1cuDXz5mQpzHj3v2aj6KmGY8Y3ZTo+Pw6DM2E9HCO/sNNVfpzsFpJAoyikjahRQwD5hQRg22L2xeR6kAk6b0nQ+CEANu1+JsJB+2QA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=GNOR0nNI; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="odrFpynn"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53NL6Rai2420278
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 16:06:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745442387;
-	bh=smSHb3c2DIMga+K2xQVRxKRjJEwwRaYZ9IFnguMMFmo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=odrFpynnYLgeSq9deChT3YMZT1kISdqImSmHwfH7Auhgotl2XzopFuQD1xJtnvZxI
-	 BE+GxdV2G3xvumQocB/Q78ZZoKfohWf6bAEc36d70KZq6UCifaTYURdVtEp9YbzVew
-	 cmBTLhOdnwC/tQ7t/9XLtGZzxu3TME8yjZqIXZL8=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53NL6QAp091711
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 23 Apr 2025 16:06:27 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 23
- Apr 2025 16:06:26 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 23 Apr 2025 16:06:26 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53NL6QVS058072;
-	Wed, 23 Apr 2025 16:06:26 -0500
-Message-ID: <f18c954c-f4b6-46b5-a619-60ba23922e27@ti.com>
-Date: Wed, 23 Apr 2025 16:06:26 -0500
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="GNOR0nNI"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1u7hIm-007XIA-I3; Wed, 23 Apr 2025 23:06:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
+	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
+	bh=phjtsSuA7wXOgFfhHsYA1FEf7UdFgY655or67qmY9Pc=; b=GNOR0nNIQ2FiqFC/eDoT+vExNp
+	FsA5Grmx2TCUGJL8W5swIWk3n+rQcFlHyUj+jRkGnPvFlG8SRGUrVWDH7hhmQoSawrRMQUd072214
+	3zXaGoAQLjhFwQPl2Yi09ZjgWRFJ8F3N/FiCeudMXnL8j2xg0ryh0ygxH1BFtXAzLXq33hfAZwvC/
+	Jy6uEwHGYXzHSFZEmeeu2cCjqofuDA/9x755HtfqjaePb8ROXUuNfbf1rvgZUj/3QMJ16cE8sHx//
+	yi5jSHeB9GKveUUATGbvSqrrR+aQnPNiXQ1SIYx6NxBXLZcSS5Af3YMFa6GzVbQhyBu4srwIV9b2y
+	HG/ZA6CQ==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1u7hIl-0006FL-Eq; Wed, 23 Apr 2025 23:06:39 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1u7hIh-000BZQ-4r; Wed, 23 Apr 2025 23:06:35 +0200
+Message-ID: <ee09df9b-9804-49de-b43b-99ccd4cbe742@rbox.co>
+Date: Wed, 23 Apr 2025 23:06:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,47 +46,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 00/33] Refactor TI K3 R5, DSP and M4 Remoteproc
- Drivers
-To: Beleswar Padhi <b-padhi@ti.com>, <andersson@kernel.org>,
-        <mathieu.poirier@linaro.org>
-CC: <afd@ti.com>, <hnagalla@ti.com>, <u-kumar1@ti.com>,
-        <jan.kiszka@siemens.com>, <christophe.jaillet@wanadoo.fr>,
-        <jkangas@redhat.com>, <eballetbo@redhat.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250417182001.3903905-1-b-padhi@ti.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <20250417182001.3903905-1-b-padhi@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Michal Luczaj <mhal@rbox.co>
+Subject: Re: [PATCH net-next v2 1/3] vsock: Linger on unsent data
+To: Stefano Garzarella <sgarzare@redhat.com>,
+ Luigi Leonardi <leonardi@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20250421-vsock-linger-v2-0-fe9febd64668@rbox.co>
+ <20250421-vsock-linger-v2-1-fe9febd64668@rbox.co>
+ <km2nad6hkdi3ngtho2xexyhhosh4aq37scir2hgxkcfiwes2wd@5dyliiq7cpuh>
+ <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
+Content-Language: pl-PL, en-GB
+In-Reply-To: <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi Beleswar,
-
-On 4/17/25 1:19 PM, Beleswar Padhi wrote:
-> This series refactors a lot of functions & callbacks from
-> ti_k3_dsp_remoteproc.c, ti_k3_r5_remoteproc.c and ti_k3_m4_remoteproc.c
-> drivers. This is a consolidated and final series as part of the
-> refactoring of K3 remoteproc drivers. Below is the breakdown:
-> 1. PATCHES #1-#3 fixes important bugs in R5 and DSP drivers before refactoring
-> them into a common driver.
-> 2. PATCHES #4-#10 does the pre-cleanup and aligns R5, DSP, M4 data structures.
-> 3. PATCHES #11-#33 does the actual refactoring R5, DSP and M4 drivers into
-> ti_k3_common.c driver.
+On 4/23/25 18:34, Stefano Garzarella wrote:
+> On Wed, Apr 23, 2025 at 05:53:12PM +0200, Luigi Leonardi wrote:
+>> Hi Michal,
+>>
+>> On Mon, Apr 21, 2025 at 11:50:41PM +0200, Michal Luczaj wrote:
+>>> Currently vsock's lingering effectively boils down to waiting (or timing
+>>> out) until packets are consumed or dropped by the peer; be it by receiving
+>>> the data, closing or shutting down the connection.
+>>>
+>>> To align with the semantics described in the SO_LINGER section of man
+>>> socket(7) and to mimic AF_INET's behaviour more closely, change the logic
+>>> of a lingering close(): instead of waiting for all data to be handled,
+>>> block until data is considered sent from the vsock's transport point of
+>>> view. That is until worker picks the packets for processing and decrements
+>>> virtio_vsock_sock::bytes_unsent down to 0.
+>>>
+>>> Note that such lingering is limited to transports that actually implement
+>>> vsock_transport::unsent_bytes() callback. This excludes Hyper-V and VMCI,
+>>> under which no lingering would be observed.
+>>>
+>>> The implementation does not adhere strictly to man page's interpretation of
+>>> SO_LINGER: shutdown() will not trigger the lingering. This follows AF_INET.
+>>>
+>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>>> ---
+>>> net/vmw_vsock/virtio_transport_common.c | 13 +++++++++++--
+>>> 1 file changed, 11 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+>>> index 7f7de6d8809655fe522749fbbc9025df71f071bd..aeb7f3794f7cfc251dde878cb44fdcc54814c89c 100644
+>>> --- a/net/vmw_vsock/virtio_transport_common.c
+>>> +++ b/net/vmw_vsock/virtio_transport_common.c
+>>> @@ -1196,12 +1196,21 @@ static void virtio_transport_wait_close(struct sock *sk, long timeout)
+>>> {
+>>> 	if (timeout) {
+>>> 		DEFINE_WAIT_FUNC(wait, woken_wake_function);
+>>> +		ssize_t (*unsent)(struct vsock_sock *vsk);
+>>> +		struct vsock_sock *vsk = vsock_sk(sk);
+>>> +
+>>> +		/* Some transports (Hyper-V, VMCI) do not implement
+>>> +		 * unsent_bytes. For those, no lingering on close().
+>>> +		 */
+>>> +		unsent = vsk->transport->unsent_bytes;
+>>> +		if (!unsent)
+>>> +			return;
+>>
+>> IIUC if `unsent_bytes` is not implemented, virtio_transport_wait_close 
+>> basically does nothing. My concern is that we are breaking the 
+>> userspace due to a change in the behavior: Before this patch, with a 
+>> vmci/hyper-v transport, this function would wait for SOCK_DONE to be 
+>> set, but not anymore.
 > 
+> Wait, we are in virtio_transport_common.c, why we are talking about 
+> Hyper-V and VMCI?
+> 
+> I asked to check `vsk->transport->unsent_bytes` in the v1, because this 
+> code was part of af_vsock.c, but now we are back to virtio code, so I'm 
+> confused...
 
-I noticed that for am62ax DSP, local reset is not enabled, which is an
-issue, but I see that it was not enabled before your patches so it could
-be a follow-up patch once these patches are merged.
+Might your confusion be because of similar names?
+vsock_transport::unsent_bytes != virtio_vsock_sock::bytes_unsent
 
-Also, I have tested basic functionality on am64x EVM: 
-https://gist.github.com/jmenti/9e7fb3cbb7a34fc1800092e8fa6cce87
+I agree with Luigi, it is a breaking change for userspace depending on a
+non-standard behaviour. What's the protocol here; do it anyway, then see if
+anyone complains?
 
-so for the series,
-
-Tested-by: Judith Mendez <jm@ti.com>
-
-
-
-
+As for Hyper-V and VMCI losing the "lingering", do we care? And if we do,
+take Hyper-V, is it possible to test any changes without access to
+proprietary host/hypervisor?
