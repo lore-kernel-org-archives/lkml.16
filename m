@@ -1,37 +1,37 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A0518FC91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51371A0BFD
 	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415512; cv=none; b=uNkyxj/LjGGgjwUnYbx/rQg/4+6bcoWbiMV56eeT29ktJhNztWoXTzgK7i+oCwe34XEilBH4/MgTGGp3I9t37TCd+ZmL1AvDreaq7qClxRZ/ItHvfF1aiN0HdQFUf88KfFycDfToDQ8brQ5D+UyGLmT068HcIgT+fYG3cvSB/X0=
+	t=1745415513; cv=none; b=ZXbdnVsMS+Kx6cnzkYlgy5S8Uc5pBTNJTAaaytUlMS2xRZcsWUcqOceM0D5JHMFSvuRVPvgk4GMNt4oDXL6UWSqTe67e+CFCrBlVz03KI68LJYSp7jNYWxtoquyC4c0R1xJFZtQ4TaNnFcm2oCnVEnOl98cyOD9bdhafWQIWcbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415512; c=relaxed/simple;
-	bh=aJSyZUbvYgHKXNphFjQQ6yb4qY9ldldBA5b5a4XSOsE=;
+	s=arc-20240116; t=1745415513; c=relaxed/simple;
+	bh=EdpzRbGYPaQq7CSxSZt7PPoOnmEOzdvFx9cKEIgBmkQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XsZEyDPoq7lCSF+S2xDOpcGUB3/VZPMj7rnKvyAc4SP1zJLdI/A9OzfaY7Psx4aKGntufm8e2hPTdOd70sT9lk8dT54kcKAZ2n2vmjBBB/g1As+X5WabFUrPQjRCgObsBad+QSwr1qinc7a0L7YkszUZU78CwOXhlvmtsAmbxKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uW58jtRq; arc=none smtp.client-ip=90.155.50.34
+	 MIME-Version; b=EV7jZrRLJUnB3f3AT/5ldElWbYNGSHG7pwdRqHHyJn4tb5VzVsFAk8uRFXy1GV+3K5IrNHjGaAEcoZ+FBB2uAQj2VjFoIwovPIT4xAEdcfZvJuJjs01fH0GDfSOOAEnvvja09iQOmTnrbBwJ5rSP7FwaCarCiOAn5n+ZJmmpf4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ELHyTWTw; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uW58jtRq"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ELHyTWTw"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
 	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
 	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=X8ymBgUSA5ZN0KXL1mRdo7aKval8NgY94GI7dvST/r4=; b=uW58jtRqb9rat/jy8XkoWXi6AM
-	P5hBl1WxKrp7wIkxwfz+6u7NU8jvldTnxq3MoRWuRVIVRPipDpYnUz1mDzIfq3i1QBvampsw2aEwQ
-	I4OxrPjEOuWNCXGVF0jZCkg2UAGOmQSnAvL2XphfzHq2X4K8aOlqPUyyl1hfVjtBX7cVs/aumXtvy
-	jqqPrhjkixIsOz0u2SoFC5F2wMqoSA2j4wbk+EGow/2lwBctZL1ltQRDAhN7sGTYmsUGzkX0a9kmM
-	OIx/37DsAK4P8S1w4p/VCW8r9vTVozBgxF8Z+i4gIBXgypuwJ7hU+0nl5ALm2zd7AOit6GcvxTcPR
-	YbBLCf+A==;
+	bh=Q9DrO1JHwLaIt6bW4FlCMne9odphYqzBVZA9TwC5d4I=; b=ELHyTWTwfHf+2TH6xRVBmTjUpF
+	mtsx52hyXN1IeETj3AyY/nShlOo1qhFnu/mGq5rz8FXCP1FTrDpVnMW0CihtnzP6YGYn3MCI7iTZj
+	nyhgKEiqfyDYNFPdJ7fDe+YfhXTspEDcIybAXPRMvZEN9EudYqyXh154H81CKUWxBe1Cy0Evh9xcN
+	43r/+6rW763eJORToBRl6knbLz5hz1SRBKuIfoNtycSHpzd0dWAl/I5G/mfirqHK/qXtv7H20IK1D
+	MLwOGVkGUt/0olVUWbm3C0+Ej7GbXA7TtCtQ17QK9Svjw4Pr+lfWazarAyNc5YwRAr35vizU8X7d6
+	ZFFzWSFw==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7aIx-000000097Jf-1dtS;
+	id 1u7aIx-000000097Jh-2A4h;
 	Wed, 23 Apr 2025 13:38:23 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u7aIx-00000003JOg-0b7h;
+	id 1u7aIx-00000003JOw-1HUC;
 	Wed, 23 Apr 2025 14:38:23 +0100
 From: David Woodhouse <dwmw2@infradead.org>
 To: Mike Rapoport <rppt@kernel.org>
@@ -49,9 +49,9 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Ruihan Li <lrh2000@pku.edu.cn>
-Subject: [PATCH v4 2/7] mm: Implement for_each_valid_pfn() for CONFIG_FLATMEM
-Date: Wed, 23 Apr 2025 14:33:38 +0100
-Message-ID: <20250423133821.789413-3-dwmw2@infradead.org>
+Subject: [PATCH v4 6/7] mm: Use for_each_valid_pfn() in memory_hotplug
+Date: Wed, 23 Apr 2025 14:33:42 +0100
+Message-ID: <20250423133821.789413-7-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250423133821.789413-1-dwmw2@infradead.org>
 References: <20250423133821.789413-1-dwmw2@infradead.org>
@@ -67,38 +67,42 @@ X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.
 
 From: David Woodhouse <dwmw@amazon.co.uk>
 
-In the FLATMEM case, the default pfn_valid() just checks that the PFN is
-within the range [ ARCH_PFN_OFFSET .. ARCH_PFN_OFFSET + max_mapnr ).
-
-The for_each_valid_pfn() function can therefore be a simple for() loop
-using those as min/max respectively.
-
 Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Reviewed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- include/asm-generic/memory_model.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ mm/memory_hotplug.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/include/asm-generic/memory_model.h b/include/asm-generic/memory_model.h
-index a3b5029aebbd..74d0077cc5fa 100644
---- a/include/asm-generic/memory_model.h
-+++ b/include/asm-generic/memory_model.h
-@@ -30,7 +30,15 @@ static inline int pfn_valid(unsigned long pfn)
- 	return pfn >= pfn_offset && (pfn - pfn_offset) < max_mapnr;
- }
- #define pfn_valid pfn_valid
--#endif
-+
-+#ifndef for_each_valid_pfn
-+#define for_each_valid_pfn(pfn, start_pfn, end_pfn)			 \
-+	for ((pfn) = max_t(unsigned long, (start_pfn), ARCH_PFN_OFFSET); \
-+	     (pfn) < min_t(unsigned long, (end_pfn),			 \
-+			   ARCH_PFN_OFFSET + max_mapnr);		 \
-+	     (pfn)++)
-+#endif /* for_each_valid_pfn */
-+#endif /* valid_pfn */
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 8305483de38b..8f74c55137bf 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1756,12 +1756,10 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
+ {
+ 	unsigned long pfn;
  
- #elif defined(CONFIG_SPARSEMEM_VMEMMAP)
+-	for (pfn = start; pfn < end; pfn++) {
++	for_each_valid_pfn (pfn, start, end) {
+ 		struct page *page;
+ 		struct folio *folio;
+ 
+-		if (!pfn_valid(pfn))
+-			continue;
+ 		page = pfn_to_page(pfn);
+ 		if (PageLRU(page))
+ 			goto found;
+@@ -1805,11 +1803,9 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
+ 	static DEFINE_RATELIMIT_STATE(migrate_rs, DEFAULT_RATELIMIT_INTERVAL,
+ 				      DEFAULT_RATELIMIT_BURST);
+ 
+-	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
++	for_each_valid_pfn (pfn, start_pfn, end_pfn) {
+ 		struct page *page;
+ 
+-		if (!pfn_valid(pfn))
+-			continue;
+ 		page = pfn_to_page(pfn);
+ 		folio = page_folio(page);
  
 -- 
 2.49.0
