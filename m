@@ -1,296 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8600B281363;
-	Wed, 23 Apr 2025 17:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956D741C69
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430930; cv=none; b=k42STR9It0q/S5QvfjCsFnWJoEygf4ANvjsKb6oBheXW3h8HvKkV5cG/rNay6WrJbr+6OGru9/CRRX+YR0O8Rsft4S86fr+F2yqAwxXMWi2IefcJT4uFEO7W42xSEY23jpJ25SGNwHSoEMjdNOdtnbrqcktEwZk22nf9nITXhaY=
+	t=1745431035; cv=none; b=KRmy4UGbmrjnEglupCInFUWREktR7fC84NC+865MCriEmavC03Nzz0hPmwKeHHnRc5bLrPC73yCB+6ngZBzVZCLydrCLBSMbegN5hTG7Sm9XHvmtxu/x2bd3FhKWhyNonOH5VBFrnQkzihyxMZO4IAocWM+v2rM0dH7uJdyv84c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430930; c=relaxed/simple;
-	bh=LqTlMOTyKG90SxBm+2LsZ2iBreijTKs5MFtLinl8fsU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XHNaJKUCWHj0rbeYUH4xNwpFe9GawF5lrvw72AJMUuTW/CkRUmQJ953MN+PKzsTRtdvLH84cWT8Nl3vkjD3niHgzi/JiRrKD2mfZ+UeGYSBlXzlEBYl/Jj/dn7teAgRjwxuamKDKIfQjri9gwfK/VwY2OL8lC2oYuFAtcBjBkXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNvGBCsb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745431035; c=relaxed/simple;
+	bh=bjdltNmlFLEI8HZPhOlOSEjUjufZxqhoWRX8J02eMg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lbBcw7I6QDHe/2XkMdXcQB8nGAWh6q1sT3z6243HMdRrdSruDpMXJhOeJGkk5x7XzZvJ2YssNqxhCiX74XqYMfWm7fRO73YrMNiC+vXmZInWJZLT1whYpCCcyBkZxj2+2pkUjC80CvrznyRUcQw5/u0Kt/Dnnn584do/q3QwXqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TxMP1xYF; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNvGBCsb"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1BB20C4CEEF;
-	Wed, 23 Apr 2025 17:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745430930;
-	bh=LqTlMOTyKG90SxBm+2LsZ2iBreijTKs5MFtLinl8fsU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=kNvGBCsbdqjOAF544rxoGi05ba6IN4WQJTp17lFw5UzH/NVUwtiJWNrOS9czjB+VP
-	 vAEM3sfCx9tTVWYT6vj75enijhdyVy15wXh5DCRHv9h12isKyLtO7b/ajoc0zOwZ7B
-	 1o8dn+hkR+BeW23r2+64LK58eH3Lpz1EijX4M5kHhxhqbMPngS1w5kiN6f1S8OUOM8
-	 v5Lop9Xzu2CZOI2hZmP5zkpO+CK0p1KzhIHsp4edaiWEfj05JWUsK4Z/1VQTpNYoh5
-	 gGCUa+YgikIiVQUu8B8KWOZ9lbhQLihpmPOGsHGnvrhUHuusdGv3ZtvC5e2om6St3u
-	 unrVOURvPh0ww==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F709C369D9;
-	Wed, 23 Apr 2025 17:55:30 +0000 (UTC)
-From: Sasha Finkelstein via B4 Relay <devnull+fnkl.kernel.gmail.com@kernel.org>
-Date: Wed, 23 Apr 2025 19:55:15 +0200
-Subject: [PATCH v3 3/3] arm64: dts: apple: Add PMIC NVMEM
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TxMP1xYF"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-73712952e1cso72178b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745431033; x=1746035833; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j1BdEQv1vdl7T9oYKU0EylrvVFVYx8fAUdWQcXrcTcI=;
+        b=TxMP1xYFHEkzBby/hYtGGkWVhT7XIyyFBzYsA540A6jshEg77D1juicw89gQ5cm9W6
+         QOZCPTCCCbGrmLkMpZSP39FT6dCrXYdEHDptoqgYhXuzXpfpMmwN7Fcj+X8/KQI0pq7N
+         orp3apvL6KZLWumUAHISfeJzMH+gLoodwlj6b55lMUJnM53w0Xelhi5+bpwrhixtjf7t
+         t874pxd7qEMfm5nFbgICqffcWLlr/FwWcl6hEcWOj+xQ7frOyVGBzVZAU4HclN1hDsp0
+         Q1SQ8mBRi4X+9qyNUbKVTMa2GA+ACGXIPnNZj0wmnE+NLQUTIvxgTQqNkuT+prGsK0wt
+         qN+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745431033; x=1746035833;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j1BdEQv1vdl7T9oYKU0EylrvVFVYx8fAUdWQcXrcTcI=;
+        b=S5wnZcmM7NLNzCpKcXs4ev1YDZNTTIpLzL+BiVSoTd85uvpV3XwYeScDUoKUlCMTLR
+         wcPCKafzr/L6VOg0YZcLHrgCj52cg7sbGjy/GMwVAoI/szebvM0cXqkDB/M0o5BbEfEm
+         tRsKb7EHD0xW22CdavOiGR5J4OQ/xNGDiwmFqGUsICeT6a52egyFVy830kfLUaHvw0+f
+         xFKK/h+ZjCptpx3W1CCGNLbMxad1e+Kms4hQ09WmOcWsCkuXzFYTRAJ2/L77NWHV1WbP
+         pdkqswU5+TJbMOf+LxWfnGhs2sdKXNQdtAaTJPNfYuCcRlqSW/f237z2oHC1qTN1fQtO
+         hOTA==
+X-Forwarded-Encrypted: i=1; AJvYcCV266AhNCPjufFACiHuqCDlz09NrNnAG4hBeEW1ZUh9TgQJLquVXmLM/0w+0GRHQfOYb7/go4GlPVLrACs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8vgyyjpUu45OV2a7EdSkiM1GyDDqFro/GFPEBHIoIfXZ+N5AR
+	cI4zP1hjXXiOKDNzlinqtEN3acRMzasnGfDPHqF+zbpkJo3nu1+lm+Lm8z9+SA==
+X-Gm-Gg: ASbGnct7C+hXd9UVGSmx0twsCrYETwfk2mWDMO3bd3ZwmpA6kJ83rNEUlXMFqBnN1ma
+	WjOvtV3xHVFNs1tQ9Ot1GlndDRbzk8DCT5jRz97gXDdMDy3UxTW2F5lLdwuRk5Fs2E2iva9WH+C
+	+asqDa1KStf1mBLl3uY3e2dkF98PDMLlYonbDpojkvxqQsNOLsBjz89bbRUOEXVZJTh2P5VYaGo
+	aiaQVIFGOh5tk/PMnDssqzUIi0ifK94gKwFJXXjr3jYVciznve4icQdOFsuDpVPnTv4vFv18gWh
+	6cRNC9zF97cdorIMBcEOHjOwVjy5uzAU1NdYFDpqI8WKW5lZ6TU=
+X-Google-Smtp-Source: AGHT+IGrh2Cgm+iBVSRE2C97fqzoIaOwZNhd46QOiq5ZCKspweWWHR9ruYah5noD7/eE9vCwrtWuzg==
+X-Received: by 2002:a05:6a00:1410:b0:736:5f75:4a44 with SMTP id d2e1a72fcca58-73dc1616619mr22287454b3a.22.1745431032859;
+        Wed, 23 Apr 2025 10:57:12 -0700 (PDT)
+Received: from thinkpad ([120.60.139.78])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaab922sm11178588b3a.133.2025.04.23.10.57.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 10:57:12 -0700 (PDT)
+Date: Wed, 23 Apr 2025 23:27:06 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	Brian Norris <briannorris@google.com>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] PCI/pwrctrl: Cancel outstanding rescan work when
+ unregistering
+Message-ID: <lvod2nhpzanaiz6o3ysmsgt66gxcdi5p4yxxbm7uknaif2l334@jmo43oc4ps77>
+References: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-spmi-nvmem-v3-3-2985aa722ddc@gmail.com>
-References: <20250423-spmi-nvmem-v3-0-2985aa722ddc@gmail.com>
-In-Reply-To: <20250423-spmi-nvmem-v3-0-2985aa722ddc@gmail.com>
-To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sasha Finkelstein <fnkl.kernel@gmail.com>, Hector Martin <marcan@marcan.st>, 
- Nick Chan <towinchenmi@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745430928; l=6241;
- i=fnkl.kernel@gmail.com; s=20241124; h=from:subject:message-id;
- bh=DeM6S5yU1Q9D23iuqXSnII2ozGmlxUQVX++5KZ42rPY=;
- b=Ai7Nln+DzzV3GQSsmZ+tI5PCZmUQAQ4amLuRHrvvziuYtd41qu5TH5212WbhtJhuxcbbTd2w+
- F+Y+V3vr6+BBScoWU/r6wjWSvU8GpOYw3oktJIod+SQhSLjTZXgSDsV
-X-Developer-Key: i=fnkl.kernel@gmail.com; a=ed25519;
- pk=aSkp1PdZ+eF4jpMO6oLvz/YfT5XkBUneWwyhQrOgmsU=
-X-Endpoint-Received: by B4 Relay for fnkl.kernel@gmail.com/20241124 with
- auth_id=283
-X-Original-From: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Reply-To: fnkl.kernel@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
 
-From: Hector Martin <marcan@marcan.st>
+On Wed, Apr 09, 2025 at 11:53:13AM -0700, Brian Norris wrote:
+> From: Brian Norris <briannorris@google.com>
+> 
+> It's possible to trigger use-after-free here by:
+> (a) forcing rescan_work_func() to take a long time and
+> (b) utilizing a pwrctrl driver that may be unloaded for some reason.
+> 
+> I'm unlucky to trigger both of these in development. It's likely much
+> more difficult to hit this in practice.
+> 
 
-Add device tree entries for NVMEM cells present on the PMIC
+I never envisioned this situation :) But yeah, better be safe than sorry.
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Reviewed-by: Nick Chan <towinchenmi@gmail.com>
-Reviewed-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-Co-developed-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
-Signed-off-by: Sasha Finkelstein <fnkl.kernel@gmail.com>
----
- arch/arm64/boot/dts/apple/t6001.dtsi      |  1 +
- arch/arm64/boot/dts/apple/t6002.dtsi      |  1 +
- arch/arm64/boot/dts/apple/t600x-die0.dtsi | 50 +++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/apple/t8103.dtsi      | 50 +++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/apple/t8112.dtsi      | 50 +++++++++++++++++++++++++++++++
- 5 files changed, 152 insertions(+)
+> Anyway, we should ensure our work is finished before we allow our data
+> structures to be cleaned up.
+> 
+> Fixes: 8f62819aaace ("PCI/pwrctl: Rescan bus on a separate thread")
+> Cc: Konrad Dybcio <konradybcio@kernel.org>
+> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Brian Norris <briannorris@google.com>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
 
-diff --git a/arch/arm64/boot/dts/apple/t6001.dtsi b/arch/arm64/boot/dts/apple/t6001.dtsi
-index 620b17e4031f069874aaabadbf06b7b29ec4031e..d2cf81926f284ccf7627701cc82edff31d4d72d6 100644
---- a/arch/arm64/boot/dts/apple/t6001.dtsi
-+++ b/arch/arm64/boot/dts/apple/t6001.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/apple-aic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/apple.h>
-+#include <dt-bindings/spmi/spmi.h>
- 
- #include "multi-die-cpp.h"
- 
-diff --git a/arch/arm64/boot/dts/apple/t6002.dtsi b/arch/arm64/boot/dts/apple/t6002.dtsi
-index a963a5011799a0480f88688fb4372a31f0bbf806..e36f422d257d8fe3a62bfa6e0f0e0dc6c34608a4 100644
---- a/arch/arm64/boot/dts/apple/t6002.dtsi
-+++ b/arch/arm64/boot/dts/apple/t6002.dtsi
-@@ -11,6 +11,7 @@
- #include <dt-bindings/interrupt-controller/apple-aic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/pinctrl/apple.h>
-+#include <dt-bindings/spmi/spmi.h>
- 
- #include "multi-die-cpp.h"
- 
-diff --git a/arch/arm64/boot/dts/apple/t600x-die0.dtsi b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-index 4c224e686ffe5602329f7f394d3354559c4130ab..110bc6719512e334e04b496fb157cb4368679957 100644
---- a/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-+++ b/arch/arm64/boot/dts/apple/t600x-die0.dtsi
-@@ -50,6 +50,56 @@ nub_spmi0: spmi@2920a1300 {
- 		reg = <0x2 0x920a1300 0x0 0x100>;
- 		#address-cells = <2>;
- 		#size-cells = <0>;
-+
-+		pmic1: pmic@f {
-+			compatible = "apple,maverick-pmic", "apple,spmi-nvmem";
-+			reg = <0xf SPMI_USID>;
-+
-+			nvmem-layout {
-+				compatible = "fixed-layout";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				pm_setting: pm-setting@1405 {
-+					reg = <0x1405 0x1>;
-+				};
-+
-+				rtc_offset: rtc-offset@1411 {
-+					reg = <0x1411 0x6>;
-+				};
-+
-+				boot_stage: boot-stage@6001 {
-+					reg = <0x6001 0x1>;
-+				};
-+
-+				boot_error_count: boot-error-count@6002 {
-+					reg = <0x6002 0x1>;
-+					bits = <0 4>;
-+				};
-+
-+				panic_count: panic-count@6002 {
-+					reg = <0x6002 0x1>;
-+					bits = <4 4>;
-+				};
-+
-+				boot_error_stage: boot-error-stage@6003 {
-+					reg = <0x6003 0x1>;
-+				};
-+
-+				shutdown_flag: shutdown-flag@600f {
-+					reg = <0x600f 0x1>;
-+					bits = <3 1>;
-+				};
-+
-+				fault_shadow: fault-shadow@867b {
-+					reg = <0x867b 0x10>;
-+				};
-+
-+				socd: socd@8b00 {
-+					reg = <0x8b00 0x400>;
-+				};
-+			};
-+		};
- 	};
- 
- 	wdt: watchdog@2922b0000 {
-diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi b/arch/arm64/boot/dts/apple/t8103.dtsi
-index bdb1cb9e406a441e458b1c735359b0148146e91b..20faf0c0d80927b2e18dd966a61b5507b322c72f 100644
---- a/arch/arm64/boot/dts/apple/t8103.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-@@ -747,6 +747,56 @@ nub_spmi: spmi@23d0d9300 {
- 			reg = <0x2 0x3d0d9300 0x0 0x100>;
- 			#address-cells = <2>;
- 			#size-cells = <0>;
-+
-+			pmic1: pmic@f {
-+				compatible = "apple,sera-pmic", "apple,spmi-nvmem";
-+				reg = <0xf SPMI_USID>;
-+
-+				nvmem-layout {
-+					compatible = "fixed-layout";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					boot_stage: boot-stage@9f01 {
-+						reg = <0x9f01 0x1>;
-+					};
-+
-+					boot_error_count: boot-error-count@9f02 {
-+						reg = <0x9f02 0x1>;
-+						bits = <0 4>;
-+					};
-+
-+					panic_count: panic-count@9f02 {
-+						reg = <0x9f02 0x1>;
-+						bits = <4 4>;
-+					};
-+
-+					boot_error_stage: boot-error-stage@9f03 {
-+						reg = <0x9f03 0x1>;
-+					};
-+
-+					shutdown_flag: shutdown-flag@9f0f {
-+						reg = <0x9f0f 0x1>;
-+						bits = <3 1>;
-+					};
-+
-+					fault_shadow: fault-shadow@a67b {
-+						reg = <0xa67b 0x10>;
-+					};
-+
-+					socd: socd@ab00 {
-+						reg = <0xab00 0x400>;
-+					};
-+
-+					pm_setting: pm-setting@d001 {
-+						reg = <0xd001 0x1>;
-+					};
-+
-+					rtc_offset: rtc-offset@d100 {
-+						reg = <0xd100 0x6>;
-+					};
-+				};
-+			};
- 		};
- 
- 		pinctrl_nub: pinctrl@23d1f0000 {
-diff --git a/arch/arm64/boot/dts/apple/t8112.dtsi b/arch/arm64/boot/dts/apple/t8112.dtsi
-index 950d1f906ba3023c1d118179207a2099345aae94..e95711d8337f6cea898e88a3d564caf2c4f94404 100644
---- a/arch/arm64/boot/dts/apple/t8112.dtsi
-+++ b/arch/arm64/boot/dts/apple/t8112.dtsi
-@@ -787,6 +787,56 @@ nub_spmi: spmi@23d714000 {
- 			reg = <0x2 0x3d714000 0x0 0x100>;
- 			#address-cells = <2>;
- 			#size-cells = <0>;
-+
-+			pmic1: pmic@e {
-+				compatible = "apple,stowe-pmic", "apple,spmi-nvmem";
-+				reg = <0xe SPMI_USID>;
-+
-+				nvmem-layout {
-+					compatible = "fixed-layout";
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					fault_shadow: fault-shadow@867b {
-+						reg = <0x867b 0x10>;
-+					};
-+
-+					socd: socd@8b00 {
-+						reg = <0x8b00 0x400>;
-+					};
-+
-+					boot_stage: boot-stage@f701 {
-+						reg = <0xf701 0x1>;
-+					};
-+
-+					boot_error_count: boot-error-count@f702 {
-+						reg = <0xf702 0x1>;
-+						bits = <0 4>;
-+					};
-+
-+					panic_count: panic-count@f702 {
-+						reg = <0xf702 0x1>;
-+						bits = <4 4>;
-+					};
-+
-+					boot_error_stage: boot-error-stage@f703 {
-+						reg = <0xf703 0x1>;
-+					};
-+
-+					shutdown_flag: shutdown-flag@f70f {
-+						reg = <0xf70f 0x1>;
-+						bits = <3 1>;
-+					};
-+
-+					pm_setting: pm-setting@f801 {
-+						reg = <0xf801 0x1>;
-+					};
-+
-+					rtc_offset: rtc-offset@f900 {
-+						reg = <0xf900 0x6>;
-+					};
-+				};
-+			};
- 		};
- 
- 		pinctrl_smc: pinctrl@23e820000 {
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+> 
+>  drivers/pci/pwrctrl/core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+> index 9cc7e2b7f2b5..6bdbfed584d6 100644
+> --- a/drivers/pci/pwrctrl/core.c
+> +++ b/drivers/pci/pwrctrl/core.c
+> @@ -101,6 +101,8 @@ EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
+>   */
+>  void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
+>  {
+> +	cancel_work_sync(&pwrctrl->work);
+> +
+>  	/*
+>  	 * We don't have to delete the link here. Typically, this function
+>  	 * is only called when the power control device is being detached. If
+> -- 
+> 2.49.0.604.gff1f9ca942-goog
+> 
 
 -- 
-2.49.0
-
-
+மணிவண்ணன் சதாசிவம்
