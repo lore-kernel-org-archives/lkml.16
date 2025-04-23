@@ -1,86 +1,55 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E118F262FFB
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:25:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAE82CCC9
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745403906; cv=none; b=HSfNd34kHGwHwcUEWDZ95LbuOXecOykwEfUQk8DUD8tkj0K3Fd80jtXXaLov6BVn2O/d9RfWiYDh7dqbO0Ca+TXzfSdXAzVPucMQlIVl/83asV6EMjUnrGWV56b4zgS6vFLeuxDUbkZUodkFGf2ty/ICKcJ5qPO6Wcw04x+BJng=
+	t=1745404010; cv=none; b=CkfeOiLrhG2TyqT72skr4CtJOISAlUAJXNNcJ4yw5lESt6d4IkEZ9iux5C1y83SchDdYNqqbIsbahaAQaLkUy3bRmeeLj53yTuonSuleQmm4RaQw50Z0EIcWUG0Q71DNzJi9GjzNKK3Jgn+J+BXSOPeX+xvwkoLk6PgnZy+M4Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745403906; c=relaxed/simple;
-	bh=qyMkWK+sPdMVIOXMfZpFO4LD2Aq4i2GdL0fwi+BqaLg=;
+	s=arc-20240116; t=1745404010; c=relaxed/simple;
+	bh=ntTT//J2B8pcFKYLfru/QnidU17YFxtnzYOlBfMeaLg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bxpK4OiQ2QTcw3Z0ZhaBtO/5M5iqWKVASFtXc8azV+DY6ewWjwbevAqSXmGlC3s8DvpBKh1zVR72ikeUI+xh06oE364GSfaN2nMHrDnZu3v06i0T4LxAXfRInMxA50jUfoBpITRGxNWj91rc7UpUAQ71EAY6NdGfVh18hJXQJlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0lUV5j0E; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5NIdPMkN; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=0lUV5j0E; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=5NIdPMkN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=t6lNiRsq88YViz5MVcam3GFktDcK5zUzLgRmLsPEDNjBqKAPZSoLlOLZWaOS3K0eGS9ssyhw48U62xaRgM/cKFho4lsG6J3zoObYy/orrB5Eh14J09qetQZVt/z2I8wHbYtgCUhR9TFPBQTPa0rsf2j8tTfbujlhA1fwUevzK7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIVL03PD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0lUV5j0E";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5NIdPMkN";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="0lUV5j0E";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="5NIdPMkN"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 202D4211B3;
-	Wed, 23 Apr 2025 10:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745403903;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OqRWoiMXyjVCtLafUlamSnRS5uDHbLML3XPsSi6pyMg=;
-	b=0lUV5j0E4kugl029GZcRPb/uKvtddCntdFy+9cUNjZ9QAcGQ9otFJzSK3522y3KslznDZ8
-	Iw+FoJuETyRt96f3JruaEIi/pacN3ybZIjGj++8G/9oodY3sq/eiRnHLi0LvemVqQHHVDw
-	M1ijwwHmCoS4TwCQgLq0+UG+lfyqWcU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745403903;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OqRWoiMXyjVCtLafUlamSnRS5uDHbLML3XPsSi6pyMg=;
-	b=5NIdPMkN1kIhYaUfaMiv+Nv06zHVPDr5Sa5Pv6WKKbQCkNDZGMZ8fsic6EE1bl9LPiVkoP
-	jd9+Prz4+16svTDg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745403903;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OqRWoiMXyjVCtLafUlamSnRS5uDHbLML3XPsSi6pyMg=;
-	b=0lUV5j0E4kugl029GZcRPb/uKvtddCntdFy+9cUNjZ9QAcGQ9otFJzSK3522y3KslznDZ8
-	Iw+FoJuETyRt96f3JruaEIi/pacN3ybZIjGj++8G/9oodY3sq/eiRnHLi0LvemVqQHHVDw
-	M1ijwwHmCoS4TwCQgLq0+UG+lfyqWcU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745403903;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OqRWoiMXyjVCtLafUlamSnRS5uDHbLML3XPsSi6pyMg=;
-	b=5NIdPMkN1kIhYaUfaMiv+Nv06zHVPDr5Sa5Pv6WKKbQCkNDZGMZ8fsic6EE1bl9LPiVkoP
-	jd9+Prz4+16svTDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0538613691;
-	Wed, 23 Apr 2025 10:25:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 0xYTAf+/CGiWHgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 23 Apr 2025 10:25:03 +0000
-Date: Wed, 23 Apr 2025 12:24:46 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: harden parsing of compress mount option
-Message-ID: <20250423102446.GF3659@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250423073329.4021878-1-neelx@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIVL03PD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65F98C4CEE2;
+	Wed, 23 Apr 2025 10:26:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745404010;
+	bh=ntTT//J2B8pcFKYLfru/QnidU17YFxtnzYOlBfMeaLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PIVL03PD2Re97acHs7r+J1qgTccfAsRgtr4NedPLtOaZ/f1HiQDEy2ivUkf5/W740
+	 zpJ8nWbPcOM9EjusEIH/33HvMFZe9R8DJNZPqqVDni5kzAbrPtzn+zcbqx8vI7cP1s
+	 aqOUrfM+fEVPlG6FWKEQrsKsyZItUu/n98ezZzEs1rvDxuupkV6rqCskMzNDkYQxc8
+	 pF33v8M6enghp4WsJFK14grgzWNXGzYnV1oFAzi4Gx7VT9CgswbxndCRgGlJaA4Llx
+	 RiGs6U+wj67GFRASuFwN8yZuvj1gKgGxaeWypYHql5hCJqcYz2Gy9LLDlBs6g6LWRO
+	 wbPUGKYmSl+WA==
+Date: Wed, 23 Apr 2025 12:26:44 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
+Cc: phasta@kernel.org, Lyude Paul <lyude@redhat.com>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
+Message-ID: <aAjAZH7m96oz4ohC@pollux>
+References: <aAd54jUwBwgc-_g2@cassiopeiae>
+ <d3c0f721-2d19-4a1c-a086-33e8d6bd7be6@igalia.com>
+ <aAeMVtdkrAoMrmVk@cassiopeiae>
+ <52574769-2120-41a1-b5dc-50a42da5dca6@igalia.com>
+ <aAeiwZ2j2PhEwhVh@cassiopeiae>
+ <f0ae2d411c21e799491244fe49880a4acca32918.camel@mailbox.org>
+ <aAetRm3Sbp9vzamg@cassiopeiae>
+ <88f892f9-e99a-4813-830f-b3d30496ba3c@igalia.com>
+ <aAipUTTQuv9MXoTA@pollux>
+ <893b1d5e-7940-4abb-97bb-57f9ee2916cc@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,59 +58,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423073329.4021878-1-neelx@suse.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Score: -4.00
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
-X-Spam-Flag: NO
-X-Spam-Level: 
+In-Reply-To: <893b1d5e-7940-4abb-97bb-57f9ee2916cc@igalia.com>
 
-On Wed, Apr 23, 2025 at 09:33:28AM +0200, Daniel Vacek wrote:
-> Btrfs happily but incorrectly accepts the `-o compress=zlib+foo` and similar
-> options with any random suffix. Let's handle that correctly.
+On Wed, Apr 23, 2025 at 11:10:51AM +0100, Tvrtko Ursulin wrote:
 > 
-> Signed-off-by: Daniel Vacek <neelx@suse.com>
-> ---
->  fs/btrfs/super.c | 21 +++++++++++++++++----
->  1 file changed, 17 insertions(+), 4 deletions(-)
+> On 23/04/2025 09:48, Danilo Krummrich wrote:
+> > On Wed, Apr 23, 2025 at 08:34:08AM +0100, Tvrtko Ursulin wrote:
+> > > 
+> > > IMO it is better to leave it. Regardless of whether it was added because
+> > > some driver is actually operating like that, it does describe a _currently_
+> > > workable option to avoid memory leaks. Once a better method is there, ie.
+> > > FIXME is addressed, then it can be removed or replaced.
+> > 
+> > I'm not willing to sign off on encouraging drivers to rely on scheduler
+> > internals -- also not in this case, sorry.
+> > 
+> > Our primary goal with the scheduler is to *remove* such broken contracts where
+> > drivers rely on scheduler internal implementation details, mess with scheduler
+> > internal data structures etc. This is clearly a step back.
+> > 
+> > And AFAICT, as by now drivers either do a) or simply nothing (with the exception
+> > of the mock scheduler). Drivers can do a) in the meantime, there's no reason at
+> > all to additionally offer b).
 > 
-> diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-> index 40709e2a44fce..f7e064b8c6d88 100644
-> --- a/fs/btrfs/super.c
-> +++ b/fs/btrfs/super.c
-> @@ -354,7 +354,10 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
->  			btrfs_set_opt(ctx->mount_opt, COMPRESS);
->  			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
->  			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
-> -		} else if (strncmp(param->string, "zlib", 4) == 0) {
-> +		} else if (strncmp(param->string, "zlib", 4) == 0 &&
-> +				(param->string[4] == ':' ||
-> +				 param->string[4] == ',' ||
+> What mechanism do we currently have to enable using a), and which you would
+> not consider needing knowledge of scheduler internals?
 
-Can there be ',' in the string? The option parser splits the options at
-exactly that so it won't be part of the string, so just ':' or 0.
+The rule is that drivers must not call drm_sched_fini() before all jobs are
+processed.
 
-> +				 param->string[4] == '\0')) {
->  			ctx->compress_type = BTRFS_COMPRESS_ZLIB;
->  			ctx->compress_level =
->  				btrfs_compress_str2level(BTRFS_COMPRESS_ZLIB,
+For this, drivers may reference count their scheduler "subclass" for each job
+in flight and only call drm_sched_fini() once the reference count becomes zero,
+or keep their own list of jobs in flight and just wait for the list to become
+empty.
+
+This is possible with the regular API and none of this requires relying on
+scheduler internals or messing with scheduler internal data structures.
+
+The problem is limited to the aspect that the GPU scheduler does not provide an
+API for drivers to solve this problem.
