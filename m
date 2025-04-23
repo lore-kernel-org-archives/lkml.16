@@ -1,157 +1,90 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F22F32;
-	Wed, 23 Apr 2025 19:24:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11272F32
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 19:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745436282; cv=none; b=sudxMfw0imd13WvpIXiCZnIpQKIIOEmRQVt5oeZ3EsxR6nlGHx3uB86DaY3huY5CgfpQ4VC4BxYhMsEU+E3Iu9pfANHXUAqQMrHjhf2WTJm4u0HEsupq7bOlahoGOnCtXAPcLZdHT3pUWbuE8cAn8v6QkxforsvH29qKndp0+Ak=
+	t=1745436290; cv=none; b=YbxiPAB+E0yT55Oi1YaObyvJynYTqbJ3sssKKkHZZivifnDO4hDaFJFIHbiS6+AjqlvSNmxUr/BfZXy2K2XwUi4dQN0dKixiOs3O20E5t00VZE4i0d1MvUWWEr6XaqvLf5cT0Fs1698Y1WpivkEsoNK5ubD7KtP+OVgBshZWang=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745436282; c=relaxed/simple;
-	bh=VuA5ArutcR/+rBv4LmxZZq5llGuXWDGBdcaQnWcGg3Y=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=ixCa3Y55QzE94dM1thx62xtq2dduLq5np5nXYf4UaXjzfCxVU9tvYMtHXrOwvTQDyKlQNCpZiWALJoacp1EDwft9Sh+dU9krjAZIQe8OJFjhOvRRiDvqCbB8b2NK+vW8zR5TQ8PYiEAjxpUga8HM1iv1qKC70gzXr+uVxAsL1qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JyMP61V2; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745436290; c=relaxed/simple;
+	bh=sO/fddAjQh8ky/IPnJjZ5D1ehEpUxpDQXc2ApM15lXE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FJYN1stf68SdVEbdolToLC2ld6tC3JQaYDHxqI6JitnhoTGU69RX6DRjp6n7q8hLFY0dRtglN1efvgtzdjCmLGi2MbQ+5zuo5BhWNfvMCIEKM6khqDj8mCQtXjxlNZQWKEAxhiNk1117f0NEddFtt9SbXYyUGsGrEsxoNT/Hpfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KrCRg5Aw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JyMP61V2"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 57DE443D43;
-	Wed, 23 Apr 2025 19:24:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745436276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j2tDrkkBQe3JKRslIUmoWfOqe7k2mOTW95nGkd+giIA=;
-	b=JyMP61V2AwXdhFa/MfRsPknQuX+9zLoQUYtqvFgqLxqliWXnPJH34GipEY9qLDu8f7SOwF
-	L8jxLNkDlXpvpCTUahNBDq64T+h8dShffNbUpErWHn1x/hthcTZ5Vhfb+11gcMowNWfteN
-	lMtxy7eNihMWGR1cfiyeiBMHdFAh6/Qkp740gcZF/k3F/n5r2A+L97u2Wp7fBZWy0zuMo+
-	PYecer6KKZ/ZgNu1gqyVkTs47GKuuYwTdT3yWzZ9AXC833zqNXwOSMWk8F7fOivfSBFC1Q
-	gdPEfuqHmDoodf8h5KichaaTG/S7VwJ99WpomEnNl9DoF7NAvN0SmDDj5OvjeA==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KrCRg5Aw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30763C4CEE2;
+	Wed, 23 Apr 2025 19:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745436290;
+	bh=sO/fddAjQh8ky/IPnJjZ5D1ehEpUxpDQXc2ApM15lXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KrCRg5Awj+fq2MbwfLC/5JTN+b1v+aLzO7EXQ76AiULwCaTV2fj2v4IkhdPuemLkR
+	 RYxiJQENJAx3Z6LE3vWCDl4t3MT9lD4ASt4VcdAlQxxNzZr3DUJL4p6MjzUEzfZLYn
+	 XCmuqu+D2sFrDbOwiYEaAG7OBl9OWtQLYEYAtifZdVYjGTwcm4A4gH48k7kSOG5gsD
+	 HKbIXkMjYOmVzZ5m4Adb4591Eyit7ZKbZrLomhAAkY2EBg9r9gfs8Q8vej/IR2GgW/
+	 UVby5PJfK4NWn3yyQvo2m6lpRUt72DmzZLKFsEukM1k5L4mEJgCr4x4qHuzNg1EyJZ
+	 Mx6JFgDmfZ0rg==
+Date: Wed, 23 Apr 2025 12:24:46 -0700
+From: Kees Cook <kees@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Alejandro Colomar <alx@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] eisa: address link failure
+Message-ID: <202504231224.1A2A116@keescook>
+References: <20250423162755.2174698-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 23 Apr 2025 21:24:34 +0200
-Message-Id: <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: "Andrii Nakryiko" <andrii.nakryiko@gmail.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
- <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
- <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
- <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
- <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
- <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Catalin
- Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
- "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan" <shuah@kernel.org>, "Maxime
- Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
- <alexandre.torgue@foss.st.com>, "Florent Revest" <revest@chromium.org>,
- "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
- func model
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
- <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
- <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
-In-Reply-To: <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeejgeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkhffvvefuofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehveevkeelvdejhffhudfhtdevvddvfffgiedtveejiefgveeljeduveetuddtveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekhedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopegrnhgurhhiihdrnhgrkhhrhihikhhosehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlsehiohhgvggrrhgsohigrdhnvghtpdhrtghpthhtohepjhhohhhnr
- dhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrthhinhdrlhgruheslhhinhhugidruggvvhdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrgh
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423162755.2174698-1-arnd@kernel.org>
 
-Hi Andrii,
+On Wed, Apr 23, 2025 at 06:27:50PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> The devlist.h file is generated at build time but is not an object file,
+> so linking fails, at least in some configurations:
+> 
+> ld.lld-21: error: vmlinux.a(drivers/eisa/devlist.h): not an ELF file
+> 
+> Make this an extra-y instead of obj-y target in Kbuild.
+> 
+> Fixes: dd09eb0e2cc4 ("EISA: Increase length of device names")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-On Wed Apr 23, 2025 at 7:15 PM CEST, Andrii Nakryiko wrote:
-> On Thu, Apr 17, 2025 at 12:14=E2=80=AFAM Alexis Lothor=C3=A9
-> <alexis.lothore@bootlin.com> wrote:
->>
->> Hi Andrii,
->>
->> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
->> > On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Foun=
-dation)
->> > <alexis.lothore@bootlin.com> wrote:
+Thanks! I already sent this one:
 
-[...]
+https://lore.kernel.org/all/20250423023743.work.350-kees@kernel.org/
 
->> Indeed I initially checked whether I could return directly some alignmen=
-t
->> info from btf, but it then involves the alignment computation in the btf
->> module. Since there could be minor differences between architectures abo=
-ut
->> alignment requirements, I though it would be better to in fact keep alig=
-nment
->> computation out of the btf module. For example, I see that 128 bits valu=
-es
->> are aligned on 16 bytes on ARM64, while being aligned on 8 bytes on S390=
-.
->>
->> And since for ARM64, all needed alignments are somehow derived from size
->> (it is either directly size for fundamental types, or alignment of the
->> largest member for structs, which is then size of largest member),
->> returning the size seems to be enough to allow the JIT side to compute
->> alignments.
->
-> If you mean the size of "primitive" field and/or array element
-> (applied recursively for all embedded structs/unions) then yes, that's
-> close enough. But saying just "largest struct member" is wrong,
-> because for
->
-> struct blah {
->     struct {
->         int whatever[128];
->     } heya;
-> };
->
->
-> blah.heya has a large size, but alignment is still just 4 bytes.
+-Kees
 
-Indeed, that's another case making my proposal fail :)
+> ---
+>  drivers/eisa/Makefile | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/eisa/Makefile b/drivers/eisa/Makefile
+> index f0d6cf7d1f32..562d8797e3b4 100644
+> --- a/drivers/eisa/Makefile
+> +++ b/drivers/eisa/Makefile
+> @@ -1,7 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Makefile for the Linux device tree
+>  
+> -obj-$(CONFIG_EISA)	        += devlist.h eisa-bus.o
+> +obj-$(CONFIG_EISA)	        += eisa-bus.o
+> +extra-$(CONFIG_EISA)		+= devlist.h
+>  obj-${CONFIG_EISA_PCI_EISA}     += pci_eisa.o
+>  
+>  # virtual_root.o should be the last EISA root device to initialize,
+> -- 
+> 2.39.5
+> 
 
-> I'd suggest looking at btf__align_of() in libbpf (tools/lib/bpf/btf.c)
-> to see how we calculate alignment there. It seems to work decently
-> enough. It won't cover any arch-specific extra rules like double
-> needing 16-byte alignment (I vaguely remember something like that for
-> some architectures, but I might be misremembering), or anything
-> similar. It also won't detect (I don't think it's possible without
-> DWARF) artificially increased alignment with attribute((aligned(N))).
-
-Thanks for the pointer, I'll take a look at it. The more we discuss this
-series, the less member size sounds relevant for what I'm trying to achieve
-here.
-
-Following Xu's comments, I have been thinking about how I could detect the
-custom alignments and packing on structures, and I was wondering if I could
-somehow benefit from __attribute__ encoding in BTF info ([1]). But
-following your hint, I also see some btf_is_struct_packed() in
-tools/lib/bpf/btf_dump.c that could help. I'll dig this further and see if
-I can manage to make something work with all of this.
-
-Thanks,
-
-Alexis
-
-[1] https://lore.kernel.org/bpf/20250130201239.1429648-1-ihor.solodrai@linu=
-x.dev/
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+-- 
+Kees Cook
