@@ -1,54 +1,65 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B84A2641F8;
-	Wed, 23 Apr 2025 09:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C1B266EF7;
+	Wed, 23 Apr 2025 09:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745399134; cv=none; b=FFNIB+qYlaTr/2TjAw6/YmBmfR2GZPwtXVtJ50lehlgXy9aGHx94ohhtOhMqtWNgd/l+QHIA9wIivbRda4T03EcWtVeJ9mnlUu5UfSabBivuzsQZo01raCuSGg2sld2q4q36zdSkXTxTn4zHtKKfipAUCJiEygdp3QNpmlrdBaA=
+	t=1745399146; cv=none; b=tLKUiA/xCaY+l+m3vBfibxLNxXDwwd7fU5QiH9Z+WdoqAtTdp1QUBQWs4d9/eluhbwKebBfDpUxeVOV9Ior0Q7G3gAYNT75+uq3/qM4Q+8i6Kwc/AIzXIVzNR3zZRmG4H/dcFH+aQUJb4cVgUv7tCVbPwkI7EP/rMvSV723b8Hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745399134; c=relaxed/simple;
-	bh=5LRmniywZxMxDlI5Oxe49VfAgh8CxFPg1n4DHapt+9k=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mmjsEVGMh6Dvewu0hPnF7RewXbl67ZJ4MRyvF0KLlGXegnkK/tZSjQ8IlM3+BpKzrmOGzg0yRMPpZtbtKWKVA5DvHwmE5qGO3YROIabGIGn2FIYEa+SpeYdoeqovNhibkQkEMfbvQg3knlH5w2p4NvT5wRmYlwFe4ciBKTh73xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=mACXAwmz; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1745399146; c=relaxed/simple;
+	bh=Afr2XNZYO2y/DV4KL3zXWFGDJkE6nBzrVvYEeUZ6r5w=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lPzJidUxqUl9ahXFza+llmXXp2gLiAvo4rhwN/UBvPtZUWha4tcZ3XdCIJRASZCPKpodJ0qXoEmY0vGmhy2BhXHOGajfqoTgL/y4oKCOqCF8qUm5/ZMswblPCM1y2FruTry/DOLii3xOK/zEvmjMHw93a05PnoWDfxJCaXyXWEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=MPSm59KW; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="mACXAwmz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1745399133; x=1776935133;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FXlYnAZ24E+gP3h3vZ2maJPRoNj+Qo4OgFh+v0oTL4I=;
-  b=mACXAwmzEBH62QT+7z1HtAKbTm4ra2yq33Mo0i9kqETCCSafu2IOjg3a
-   qgXUN6WJfxXD6XpVdN3UkoxM9ybCQvUyhXFzOG8J11nyuHRp50wQO+S7y
-   uC98lIpmZIcd4X9F3lY+qTA88lsKJNdsY90HtNVreQyvUP04QDZtTZuPx
-   c=;
-X-IronPort-AV: E=Sophos;i="6.15,233,1739836800"; 
-   d="scan'208";a="818324122"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:05:27 +0000
-Received: from EX19MTAEUB001.ant.amazon.com [10.0.43.254:2286]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.11.178:2525] with esmtp (Farcaster)
- id e508e646-c623-42bd-acdb-51aeea751e1c; Wed, 23 Apr 2025 09:05:26 +0000 (UTC)
-X-Farcaster-Flow-ID: e508e646-c623-42bd-acdb-51aeea751e1c
-Received: from EX19D029EUC001.ant.amazon.com (10.252.61.252) by
- EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 23 Apr 2025 09:05:25 +0000
-Received: from dev-dsk-bsz-1b-e2c65f5d.eu-west-1.amazon.com (10.13.227.240) by
- EX19D029EUC001.ant.amazon.com (10.252.61.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 23 Apr 2025 09:05:23 +0000
-From: Bartosz Szczepanek <bsz@amazon.de>
-To: Ard Biesheuvel <ardb@kernel.org>
-CC: <nh-open-source@amazon.com>, Bartosz Szczepanek <bsz@amazon.de>,
-	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] efi: Improve logging around memmap init
-Date: Wed, 23 Apr 2025 09:05:16 +0000
-Message-ID: <20250423090517.47049-1-bsz@amazon.de>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="MPSm59KW"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6IEdP017933;
+	Wed, 23 Apr 2025 11:05:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	Oxqz3gPKLjUeq3RC+gzdPgb15H4SWpt1bnaDWPNbrFk=; b=MPSm59KW4zzz6HuU
+	DlOyzt8+2pomX/kwXsyKC8DNpEWYVGGnZGQQIVO75dgplVZ83XV2RKahSfKvz74C
+	ArILnvK0lrCmfY3TnEVnoNiIOXn4gAFX4oxCuh5UMqIuErU2YRrD+COabW8duNZE
+	zcfEZGwy2YTWqHp9qRM+267TRX2P86NrUUDC6fF3VFzSx3ENvFLoJfL5MGk/AzGl
+	J1sRIjMZB7nLRkDBdy1qvHmG3byBVjFnTXR+5nylFTKZMg8pRvUpj/jnZ12CKQnP
+	XHydzjj453ZZQVVbkvqIca03AcYEbY4VdnGc0V1woV7SpVk0B3VZK4ubFw4eoWl4
+	xh6uyw==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jk2aapb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 11:05:16 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9A0674004A;
+	Wed, 23 Apr 2025 11:03:46 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DBF619208D4;
+	Wed, 23 Apr 2025 11:02:28 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
+ 2025 11:02:28 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 6/9] arm64: dts: st: add PCIe pinctrl entries in stm32mp25-pinctrl.dtsi
+Date: Wed, 23 Apr 2025 11:01:16 +0200
+Message-ID: <20250423090119.4003700-7-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250423090119.4003700-1-christian.bruel@foss.st.com>
+References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,56 +68,55 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
- EX19D029EUC001.ant.amazon.com (10.252.61.252)
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-23_06,2025-04-22_01,2024-11-22_01
 
-Be more informative if memremap fails, and print out physical address
-together with size. This change intends to make investigations of such
-early failures slightly easier.
+Add PCIe pinctrl entries in stm32mp25-pinctrl.dtsi
+init: forces GPIO to low while probing so CLKREQ is low for
+phy_init
+default: restore the AFMUX after controller probe
 
-Signed-off-by: Bartosz Szczepanek <bsz@amazon.de>
+Add Analog pins of PCIe to perform power cycle
+
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 ---
- drivers/firmware/efi/memmap.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-index 34109fd86c55..f1c04d7cfd71 100644
---- a/drivers/firmware/efi/memmap.c
-+++ b/drivers/firmware/efi/memmap.c
-@@ -31,31 +31,32 @@
-  * Returns: zero on success, a negative error code on failure.
-  */
- int __init __efi_memmap_init(struct efi_memory_map_data *data)
- {
- 	struct efi_memory_map map;
- 	phys_addr_t phys_map;
+diff --git a/arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi b/arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi
+index 8fdd5f020425..f0d814bc7c60 100644
+--- a/arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp25-pinctrl.dtsi
+@@ -82,6 +82,26 @@ pins {
+ 		};
+ 	};
  
- 	phys_map = data->phys_map;
- 
- 	if (data->flags & EFI_MEMMAP_LATE)
- 		map.map = memremap(phys_map, data->size, MEMREMAP_WB);
- 	else
- 		map.map = early_memremap(phys_map, data->size);
- 
- 	if (!map.map) {
--		pr_err("Could not map the memory map!\n");
-+		pr_err("Could not map the memory map! phys_map=%pa, size=0x%lx\n",
-+			&phys_map, data->size);
- 		return -ENOMEM;
- 	}
- 
- 	map.phys_map = data->phys_map;
- 	map.nr_map = data->size / data->desc_size;
- 	map.map_end = map.map + data->size;
- 
- 	map.desc_version = data->desc_version;
- 	map.desc_size = data->desc_size;
- 	map.flags = data->flags;
- 
- 	set_bit(EFI_MEMMAP, &efi.flags);
- 
- 	efi.memmap = map;
- 
++	pcie_pins_a: pcie-0 {
++		pins {
++			pinmux = <STM32_PINMUX('J', 0, AF4)>;
++			bias-disable;
++		};
++	};
++
++	pcie_init_pins_a: pcie-init-0 {
++		pins {
++			pinmux = <STM32_PINMUX('J', 0, GPIO)>;
++			output-low;
++		};
++	};
++
++	pcie_sleep_pins_a: pcie-sleep-0 {
++		pins {
++			pinmux = <STM32_PINMUX('J', 0, ANALOG)>;
++		};
++	};
++
+ 	sdmmc1_b4_pins_a: sdmmc1-b4-0 {
+ 		pins1 {
+ 			pinmux = <STM32_PINMUX('E', 4, AF10)>, /* SDMMC1_D0 */
 -- 
-2.47.1
+2.34.1
 
