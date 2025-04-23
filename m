@@ -1,122 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outbound.pv.icloud.com (p-west1-cluster6-host2-snip4-3.eps.apple.com [57.103.67.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574AE1EB36;
-	Wed, 23 Apr 2025 14:27:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B80721A239D
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.67.36
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418432; cv=none; b=hQep/EtOfZtK1or31WsWiAB49oGrT8ecgr3xJOchpfhwFFX4zQ4aAWaE42qf5BFVCTxLcjvrB9KX70rVn/Rmsj1Lj67KuWe6gIyk4/be2cYAMK+J5UP7gwy9a3XkX49YlxXLNFh8rokjVTB6NPUTYT8NaNLy9UY0ux9p+hNYWgM=
+	t=1745418452; cv=none; b=dQ1kwAEy+N8prR6Lo0IyFOOLJ/zZfepluGFN5CcPh5fGwmbjmQ7lg72stjuxnR2AMY/s7t+JFCNZcZ71nDob0IBkywnsizD5jrTRBWXM7kjaJgnRD3dKFyjO3i+R/eTW5RpRYhDfskRlnP7b+RS2NY/hqg+bXw98KQKbSn45jkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418432; c=relaxed/simple;
-	bh=uMHXSwcg72zCvhbyW76m/LnxmFsNay0uZwkdWYLLm7o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o0/ilcq6zKenA36VdBt6hjd2QTQ4W+oxI1trQXJVJ4oPsjxJ0GGto4SLf9k2WYpbVDz8g7gUA75i+sg7RK5mjeisVT/MmaDhyqwMTkW20zyjrzVVVROUJpTu1kA+/x9UEK+QEsYgoITVWfOEXceOJIEtdPkw8SPoXzFZn5pUPW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D710C4CEE2;
-	Wed, 23 Apr 2025 14:27:11 +0000 (UTC)
-Date: Wed, 23 Apr 2025 10:29:03 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Libo Chen <libo.chen@oracle.com>, Andrew Morton
- <akpm@linux-foundation.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: runtime warning after merge of the mm-unstable tree
-Message-ID: <20250423102903.37f9d07c@gandalf.local.home>
-In-Reply-To: <20250422192816.03eaac09@batman.local.home>
-References: <20250422205740.02c4893a@canb.auug.org.au>
-	<5628676b-e1ff-4570-a1ee-c87742e5363c@oracle.com>
-	<20250423091656.6068c090@canb.auug.org.au>
-	<20250422192816.03eaac09@batman.local.home>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1745418452; c=relaxed/simple;
+	bh=nXM6AtnLN1ZYma1X8iT5aCvbm82H6Km8UHls5cOvQwU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sXSKjyULA3W4LXtHt3Lzm02ZXaFC+KG/uHsdnr8O8C87WV04bIghagH++iZuHNV3s+F0g6K9XvCUOD6xyJm6E+AXvOE2t+spBYI3hTVDs7qX5Lp5ix4LRNgt+sUqVnFOgCsf3WuPyWZ35ZoIrgGPrNFtatcHIlq1kiHH5DyZiJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=l90t+uL5; arc=none smtp.client-ip=57.103.67.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="l90t+uL5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
+	s=1a1hai; bh=8kCbBm/AY2YEx86pOWpcj7Bacq0Dl+t7vQBYVAMNewo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:x-icloud-hme;
+	b=l90t+uL5t0JUhuluYM4CfGZzd/4ElHfi0EpGncKalxCRRawtXnktgfNfn6aPTMOgf
+	 UHAMiuN4iN3o9ZozX2tWBIWgkoUp2I2OsavtPS+q2naTIJ21+jrRM4WiCQ7j3cXZZC
+	 eWHuRSSNxFO1sIW8+nETrEwLINreG0XOQ80T7jDZo6TntxQOX+ELZ+8SjSa0Kf9Ni+
+	 3UGH6cVoB1DUDik50MwICZUpgKqjMFsgdmvJHAfmJIyjIo9cCL6HgZkbWk7F6N97ls
+	 SUcYQtJBYmtghdTi0BFPnGtlGFAm80qV/VFYZEUyeXqnqI8a8+9qAaUBLKN6LMb8oJ
+	 hZabAm7bOmVrQ==
+Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
+	by outbound.pv.icloud.com (Postfix) with ESMTPSA id D409C18019D2;
+	Wed, 23 Apr 2025 14:27:27 +0000 (UTC)
+From: Zijun Hu <zijun_hu@icloud.com>
+Date: Wed, 23 Apr 2025 22:27:00 +0800
+Subject: [PATCH] serdev: Get serdev controller's name by dev_name()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250423-fix_serdev-v1-1-26ca3403fd33@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIALP4CGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEyMj3bTMinignpTUMl3LlESQkKWBhWGSElBDQVEqUBZsWHRsbS0A3pq
+ 2tlwAAAA=
+X-Change-ID: 20250422-fix_serdev-9da04229081b
+To: Rob Herring <robh@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Jiri Slaby <jirislaby@kernel.org>
+Cc: Zijun Hu <zijun_hu@icloud.com>, linux-serial@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Zijun Hu <quic_zijuhu@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Proofpoint-ORIG-GUID: q-hAJCDiicWJMw6D8RkcY1pff6e-Kkve
+X-Proofpoint-GUID: q-hAJCDiicWJMw6D8RkcY1pff6e-Kkve
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
+ mlxscore=0 bulkscore=0 adultscore=0 clxscore=1015 spamscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=890 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.22.0-2503100000 definitions=main-2504230102
 
-On Tue, 22 Apr 2025 19:28:16 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Zijun Hu <quic_zijuhu@quicinc.com>
 
-> On Wed, 23 Apr 2025 09:16:56 +1000
-> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> 
-> > On Tue, 22 Apr 2025 11:05:10 -0700 Libo Chen <libo.chen@oracle.com> wrote:  
-> > > 
-> > > Just to verify, does the build have commit 'tracing: Verify event
-> > > formats that have "%*p.."'[1] or not? I do see linux-next/master has
-> > > it but just want to first confirm that.     
-> > 
-> > Yes, it does have that commit (since it has been in Linus' tree since
-> > April 4).  
-> 
-> Looks like we need to teach the verifier about nodemask_pr_args() :-/
-> 
+serdev_controller_add() uses hardcoded serdev controller's name, and that
+may be wrong once user changes the name after serdev_controller_alloc().
 
-No, actually, the verifier found a bug!
+Fix by using dev_name() instead of hardcoded name.
 
-The event is:
+Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
+---
+ drivers/tty/serdev/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> TRACE_EVENT(sched_skip_cpuset_numa,
-> 
-> 	TP_PROTO(struct task_struct *tsk, nodemask_t *mem_allowed_ptr),
-> 
-> 	TP_ARGS(tsk, mem_allowed_ptr),
-> 
-> 	TP_STRUCT__entry(
-> 		__array( char,		comm,		TASK_COMM_LEN	)
-> 		__field( pid_t,		pid				)
-> 		__field( pid_t,		tgid				)
-> 		__field( pid_t,		ngid				)
-> 		__field( nodemask_t *,	mem_allowed_ptr			)
-> 	),
-> 
-> 	TP_fast_assign(
-> 		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
-> 		__entry->pid		 = task_pid_nr(tsk);
-> 		__entry->tgid		 = task_tgid_nr(tsk);
-> 		__entry->ngid		 = task_numa_group_id(tsk);
-> 		__entry->mem_allowed_ptr = mem_allowed_ptr;
+diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+index eb2a2e58fe78fbbdb5839232936a994bda86d0b4..971651b8e18dcbb5b7983cdfa19e7d60d4cd292b 100644
+--- a/drivers/tty/serdev/core.c
++++ b/drivers/tty/serdev/core.c
+@@ -783,8 +783,8 @@ int serdev_controller_add(struct serdev_controller *ctrl)
+ 		goto err_rpm_disable;
+ 	}
+ 
+-	dev_dbg(&ctrl->dev, "serdev%d registered: dev:%p\n",
+-		ctrl->nr, &ctrl->dev);
++	dev_dbg(&ctrl->dev, "%s registered: dev:%p\n",
++		dev_name(&ctrl->dev), &ctrl->dev);
+ 	return 0;
+ 
+ err_rpm_disable:
 
-Here, we copy the address of mem_allowed_ptr into the ring buffer. The
-address is copied, not the mask itself.
+---
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+change-id: 20250422-fix_serdev-9da04229081b
 
-> 	),
-> 
-> 	TP_printk("comm=%s pid=%d tgid=%d ngid=%d mem_nodes_allowed=%*pbl",
-> 		  __entry->comm,
-> 		  __entry->pid,
-> 		  __entry->tgid,
-> 		  __entry->ngid,
-> 		  nodemask_pr_args(__entry->mem_allowed_ptr))
-> );
+Best regards,
+-- 
+Zijun Hu <quic_zijuhu@quicinc.com>
 
-The above nodemask_ptr_args() is defined as:
-
-> #define nodemask_pr_args(maskp)	__nodemask_pr_numnodes(maskp), \
-> 				__nodemask_pr_bits(maskp)
-> static __always_inline unsigned int __nodemask_pr_numnodes(const nodemask_t *m)
-> {
-> 	return m ? MAX_NUMNODES : 0;
-> }
-> static __always_inline const unsigned long *__nodemask_pr_bits(const nodemask_t *m)
-> {
-> 	return m ? m->bits : NULL;
-> }
-
-Here we see it dereferences the pointer to get bits.
-
-The TP_fast_assign() can happen seconds, minutes, days, months and possibly
-years! before the TP_printk() is executed.
-
-There's no guarantee that the mem_allowed_ptr will still be around when
-printed and can cause a kernel crash! This is exactly what the verifier is
-looking for.
-
-The real fix is not to dereference the pointer and do the conversion in the
-TP_fast_assign().
-
--- Steve
