@@ -1,89 +1,141 @@
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC151C863D;
-	Wed, 23 Apr 2025 07:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4EF1A704B
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:15:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392521; cv=none; b=jK3i9/6J+dJKkHFxXtlXzLrUjmY1kyJXEAT0xu18Vr9f+YH4VkgWKY02ds03Fg2mO8/ujXxh6ZeRcLpD5N8tgg5pUOTUk78BUHDeLxjHXZyvKt7DdHJrHJOksEdEWM0mx4SS2AaVm5DplN3xpRls2s4tr2xHjZiTD3PhVY+T6ck=
+	t=1745392521; cv=none; b=PaIZchRQdX260sS79d1Y2nN14jfczlsp8nj21PwIiS3JkFodVa7iK7r1hW+aKS0CTaUTT5DSDNQm8toTAlDbk1DdfRwdtpDXH3EcgrvkWRQ6H+48p4m8fm+0XBWDpS9HdZ2M2xAxOiZao3YmzuC8r4L89glKDMVNocb1pHEj2wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745392521; c=relaxed/simple;
-	bh=7BeiM33tIFbOTRutD30UoZt7L8uwqjMGY6dC3PxiqfE=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=GOLp+2FJz0yiqWrsuP09iGErvzC1CZl5pn6uaBo9nK0Hd2erJNTQgwc0+GVV5LZHhGtaLeYFZJmF1+HA//3dJ/BpGHB8MMvveCnv4xq/hH6Iv84cqxkfuGGzW5EA6u/MrDzkKo4XDKLnj1r8cYkDd1Pmd9RAJAyVV9v3Q8QXLfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id CDA28298562;
-	Wed, 23 Apr 2025 09:15:10 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id DZHaED16jdEb; Wed, 23 Apr 2025 09:15:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 71C9B298566;
-	Wed, 23 Apr 2025 09:15:09 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id BBTVQAOqKOEG; Wed, 23 Apr 2025 09:15:09 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 43B6C298562;
-	Wed, 23 Apr 2025 09:15:09 +0200 (CEST)
-Date: Wed, 23 Apr 2025 09:15:08 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, 
-	chengzhihao1 <chengzhihao1@huawei.com>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	Matthew Wilcox <willy@infradead.org>, 
-	regressions <regressions@lists.linux.dev>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Message-ID: <1915007212.329812247.1745392508953.JavaMail.zimbra@nod.at>
-In-Reply-To: <20250423065432.GA4811@francesco-nb>
-References: <20250408082018.GA23886@francesco-nb> <20250422175409.GA877874@francesco-nb> <aAhAylotNK_zHl0C@gondor.apana.org.au> <20250423065432.GA4811@francesco-nb>
-Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
+	bh=P8T6A2RfhQi9cs8jlDhrwJia7IeYiHPIj6iHNUhHRRs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=r34qtX0xFqiXkNOpVMsO4OZBmm7ScrpjBa3P/aqrAf1n6FkzDU9ZekOiUEp5W0vnqaytpMEPmiEtFCqV30XJZjBYxn9mRodkFM3j9+iPnPlKQHy+OV/fzJUMeaOyXV+4GQFYKN/PHaF1j7K1GzpfMzQLaP6pMnV+jECRkWyuiZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DvYU/P5b; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DvYU/P5b"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so42678305e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745392516; x=1745997316; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kfQbp+syyXkO/RHw4GNJukoFm6a9w8JqJKtPVgxdN5o=;
+        b=DvYU/P5b2BI1gSao6BNYuea7FrQZ8ZUrFejJsRnXByxIVMs2CNzx0tdLfK//Dzewjo
+         NO7pDUSmQGvRf40zYv86hvfdMZkwa3u+VL39iqdcMGzBOMtQbcfUdXaZY971ReECFur9
+         JKF69M7UtxnLRYt4l0+nk+HJmGccrNcpnWCKhqZ3AkKP7gGM6UY+arJUDzPRa9rJXT+p
+         blX5LX7Sr+NPNGavWigN5Cf/h8UI0Ve+ijeAQFGa2S+TpfYa94tOgiX0UKdRAOJBcpil
+         kehBN8pUoTLxY9YinY2FeB2Lyz1PAHDp8KH+vlewCutVIym0g/qszwAkvxrQuhCXwCDI
+         o7tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745392516; x=1745997316;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kfQbp+syyXkO/RHw4GNJukoFm6a9w8JqJKtPVgxdN5o=;
+        b=Er6bx42dKddmM9rbFnMTc9UJvQcJiKSaYG36MnTBkZE5YFlf4oleqHXzCtdgqpaoiP
+         BBFrKEYq2mAhq76ZkSYLzAxH0M/xw8oGv2K8gcHbodLnkMgLDEqN648YlSgBnnE5V7HK
+         8JpQS9pPjFsbi2dvR6KL3rMHlM+coGKG/Ta+7tw2gKL+BSWgBuGI1oXhKZPadj7GKb4s
+         kvX/EwZ4n5wQCj4wUZzsCaf6ttwL1rNiDjBkPEcLs6UoP1XxAWsEKnVg8jFEnVtY4JUA
+         2ueHVWMMZprFV0dQVKJ4ExuXZlmADgeeXl70s/Lb/WIrvfeygOHiGvjLqFfR6Y8Kv4/B
+         58EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXACRUcsV924bQEbRwgKbRJ2ODOA+kJhy0INJRbboRsgOkjgsiLI1wr17KuE9gditvFrPCrwuNoDIZlEWY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9xhOQSuqNKCLm5m0ByCzym3OJ46IW7UL0G6mU4hV47dLarkbj
+	D8zUmRpilcsUjlHk9OBtHi4nnJsxRHikEZo4DxQ37vf2cRL1oZfQGbBMKFAxz78=
+X-Gm-Gg: ASbGncsQpMbu6MDrDnbeHeZ77Cqlofq7ndWt3SVJbEml7O2ke5jHkEhRJU4c30wPmPn
+	zSPljfkxBrLr/cN0i+w+EgfIUHDJRxMUUkiLgR0vVLW3YpGVLGan9OAOgi/PFvPxZistnXUOiw7
+	r1U2gduj/nsGVZZjKGXbe2yslNDTiB1lrPnU3fOgms4g/yahWxdEN8R1bzcyQTTWNDyNOvPA8Yi
+	sF74hnUkAprp63+HGPyvqHkNmQUTyRcd/f9Jou1dbVRsSDj4NL3LwCObc6cXH0TfiRfXVc/ygGi
+	TUe0NIFPiK9zuyHw7Ymzucoo+GEyZcx2W2BjFM5IpDCa
+X-Google-Smtp-Source: AGHT+IG+tJxvr2pB5uojdqPwlJlUoCOQYCF7lDXIVNF2nVM1sZvKoDsybtSZIIss18Pryk/S0Ef3fA==
+X-Received: by 2002:a5d:588b:0:b0:391:45e9:face with SMTP id ffacd0b85a97d-39efbb0252emr14722584f8f.54.1745392516313;
+        Wed, 23 Apr 2025 00:15:16 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:74b0:71bd:6dda:dcc1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493446sm17696935f8f.74.2025.04.23.00.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 00:15:15 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/12] gpio: convert more GPIO chips to using new value
+ setters - part 2 for v6.16
+Date: Wed, 23 Apr 2025 09:15:02 +0200
+Message-Id: <20250423-gpiochip-set-rv-gpio-part2-v1-0-b22245cde81a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF136 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Linux 6.15-rc1 regression, folio/ubifs Oops
-Thread-Index: aSEnPblkZA1AkRc1OuHeR6xBDkS3zw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHaTCGgC/x3MPQqAMAwG0KtIZgM1+H8VcRD7qVm0pCKCeHeL4
+ 1veQxGmiNRnDxkujXrsCUWe0bxN+wpWn0zipHKlCK9Bj3nTwBEn2/Wbw2SncAPxtUNX+xaUgmB
+ Y9P7zYXzfDxJIbI9sAAAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Lixu Zhang <lixu.zhang@intel.com>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc: linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1756;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=P8T6A2RfhQi9cs8jlDhrwJia7IeYiHPIj6iHNUhHRRs=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoCJN9PtDzo6pQhpJrIbuv3TgdhcsxmnoGxcbPW
+ lRtYYU14zeJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAiTfQAKCRARpy6gFHHX
+ creZD/4wB84rig0XgfTyX7mc6x1ZYJw3YX7GCsmp8eACazubUCcNQBQO4dD9X2QWoeyiZr9sNj0
+ kG9snhzeXa0Tvzh5T2gedGUErStlmEEtNkjAjWsaq9hswKDrmsuc/mKcA5qWrkhvkLhcc/Pbj12
+ cpxHdFxDAASelR4triAIaQu18P1ZQp2Vj8paAhxBlPEaCPy8hUL0e4FYVMB1Fv6j4lrnLuw73xB
+ Mokir5p0P2mOSlg7jZ1KDABtZMRJ3CPkcRtQNnaeOTtbw+iMAeR5G1DDptYOQFchClFJcz/xL3c
+ GPMzwOimJLewFHGUaLNPOD++aD3pgcAdTPjwEFrbnawGcOeo9aVVaHTLh6A6y/5IzUup2dND530
+ zgLyZAtdQ1aYqwT43bhc5q8GGZbwkhi44RrPiO6wbxV+nySlux9Qeik/KNe/sCId8qpryzVd1ZS
+ eWLn8FftriS0QGv8+xltz/TLVnEDjrxdGBl/xTpUgFPtY9cEsdvhi/cOJu+CgO1aX6HcCbfRbOo
+ DMzzTyiMPndixsvtLUQBW71OgMqChX+LF/Ti24nk6z4tzcBW1oeIArw4ew5oJv7DacVyy+DdDTi
+ z2Oe6DeVscjg4pu7aChY2RpA1zzxwUS7QhJ3BDJZGw7UjNPoDfYoRHSX/kMd+8zwZFidXAVhwUI
+ bR7t8EKz9jVunow==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Francesco Dolcini" <francesco@dolcini.it>
-> An: "Herbert Xu" <herbert@gondor.apana.org.au>
-> CC: "Francesco Dolcini" <francesco@dolcini.it>, "chengzhihao1" <chengzhih=
-ao1@huawei.com>, "richard" <richard@nod.at>,
-> "linux-mtd" <linux-mtd@lists.infradead.org>, "Matthew Wilcox" <willy@infr=
-adead.org>, "regressions"
-> <regressions@lists.linux.dev>, "linux-kernel" <linux-kernel@vger.kernel.o=
-rg>, "Linux Crypto Mailing List"
-> <linux-crypto@vger.kernel.org>
-> Gesendet: Mittwoch, 23. April 2025 08:54:46
-> Betreff: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
+struct gpio_chip now has callbacks for setting line values that return
+an integer, allowing to indicate failures. We're in the process of
+converting all GPIO drivers to using the new API. This series converts
+another round of GPIO controllers.
 
-> On Wed, Apr 23, 2025 at 09:22:18AM +0800, Herbert Xu wrote:
->> On Tue, Apr 22, 2025 at 07:54:09PM +0200, Francesco Dolcini wrote:
->> >=20
->> > On Tue, Apr 08, 2025 at 10:20:18AM +0200, Francesco Dolcini wrote:
->> > > I do have the following regression on single core system using UBIFS=
-,
->> > > dual core seems not affected, any idea?
->>=20
->> Please try this patch which will go in today:
->>=20
->> https://patchwork.kernel.org/project/linux-crypto/patch/aAW8E9NrKWq1Xk2w=
-@gondor.apana.org.au/
->=20
-> Yes, I fixes the issue, thanks.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (12):
+      gpio: imx-scu: don't check the GPIO range
+      gpio: imx-scu: use lock guards
+      gpio: imx-scu: destroy the mutex in detach path
+      gpio: imx-scu: use new line value setter callbacks
+      gpio: it87: use new line value setter callbacks
+      gpio: janz-ttl: use new line value setter callbacks
+      gpio: kempld: use new line value setter callbacks
+      gpio: ljca: use new line value setter callbacks
+      gpio: logicvc: use new line value setter callbacks
+      gpio: loongson-64bit: use new line value setter callbacks
+      gpio: loongson: use new line value setter callbacks
+      gpio: lp3943: use new line value setter callbacks
 
-Thanks for testing this!
+ drivers/gpio/gpio-imx-scu.c        | 47 +++++++++++++++++---------------------
+ drivers/gpio/gpio-it87.c           | 11 +++++----
+ drivers/gpio/gpio-janz-ttl.c       |  6 +++--
+ drivers/gpio/gpio-kempld.c         |  7 ++++--
+ drivers/gpio/gpio-ljca.c           | 13 +++++++----
+ drivers/gpio/gpio-logicvc.c        | 11 ++++-----
+ drivers/gpio/gpio-loongson-64bit.c |  6 +++--
+ drivers/gpio/gpio-loongson.c       |  8 ++++---
+ drivers/gpio/gpio-lp3943.c         | 13 +++++++----
+ 9 files changed, 69 insertions(+), 53 deletions(-)
+---
+base-commit: 2c9c612abeb38aab0e87d48496de6fd6daafb00b
+change-id: 20250422-gpiochip-set-rv-gpio-part2-7e2d60e96d8e
 
-Thanks,
-//richard
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
