@@ -1,329 +1,74 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0C22820AF
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94CF2820AF;
+	Wed, 23 Apr 2025 16:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427527; cv=none; b=Y015EQLswQKxQpPEHERk8goJfWw+fGwWi7E2QtAyV2za0iTRySxbgYU91wwq34IJ3fhaFvKo+UiEIcs/GGkJgveibQ/pbc2XQM/fPdp9PV/HB2CC96Pp58UyM+Im9WB3RztChdmgFTQAp4vg0ISG/SSdwfVGHASAW0o8w6yq93s=
+	t=1745427554; cv=none; b=IpYBQWEZKLdiAfMu/M3OnHPPY80wA03KGpufJyS7Y8NEsJdn19vPmzeLo7B9f7xeLJn/MusXdgo5WkhWY2bGtQxH44W26dBox0d6CuBJSLLq6lvyRJi+UZkZOELHTs+gE5QozTH/oRbuRS5PEluNMj7feRcghd4SHf9F8zLXTQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427527; c=relaxed/simple;
-	bh=81v9NdTFixy301S3lpAbW0sKDdNO8NNpegDcH8sp4rg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J5BNOFNt+xbQKjuEx6wkrw2vfHCYWOxQojMWkcpnyig6YERUVBfpE0Sm9nCfyHXJlZXQP7tqB5d4H2BytOk8RtGxA1gyTlBu81ZS8fiFT6zCom8iRzU5VTk31Tsvnr8RxNHW82ykXjiA1V0S0xgC3sVdCTGq5LPY8klmfExOTbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KSJd5po8; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1745427554; c=relaxed/simple;
+	bh=ZBYjCWap5snCq+ls10DvvCuKnV6nwylAsutQrwPX7Gw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Dq2teiRiM2x2eio9dPmMI0miKgtMbW7oSXJ5xbq0sogQrD5PO4Y5IqOpR5MIIXmXXBfPk9h1JUVYDGAMSEaSGIi0xzvl6EMwU/zmX/t69vaYhMWjfN8yvyLU8zOuS256FVEQRZJqJZ8g0uJmmYQ2oO0RK533rI1gjHLPxFJdNlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=n989T3S3; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KSJd5po8"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e702cffe590so5986276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1745427524; x=1746032324; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8xyVYntpziDPuT495Th/tPbpsBEW5ISFzMKRIqu221U=;
-        b=KSJd5po8fU5yaEL3WbGwZMH5gqrgfU35poSiQtQyFvzvehYTgrM+LTloxLwgNJNx+U
-         0l36azN9WObr2CmY/+nwnUwaFUQg61Y7uCSA/T2a9vmTV6UEpRc0LAT4RjaocvkFoGWs
-         rfkcY6oTKCxwe/zxG9XEA1d2nGxmrIKUdcD5M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745427524; x=1746032324;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8xyVYntpziDPuT495Th/tPbpsBEW5ISFzMKRIqu221U=;
-        b=TuEDzm8mTX5wIWtm+NB2xfe7GLUKrQ3sSEkLhxwR5Y/ZmFENYxdLAI7LINxsGi6Jie
-         cq2rLBqRcc9fpAboxQj4pt5212I+WSXDLwmrg9Fa6dfyjboVOBM8N/iAe96FlGufiTQQ
-         vPSZu3T/uO2coq2iVgD7d4JsmjleGi1YuSjhB3qoCsuAwxjuTcxhAOgXK4mXf+UEEKB/
-         2cvsNkATIlDI+rjrW9+1l9o02PjvPqXpIXS84rHm78g/bx6BGhloNPd1fS4dP993JdRf
-         2Gcg87ZJDIQn0j5zWE7Hfj9wgtCVLQzRaktUsiAIj8X/WMglVosETvJCQ54BD4fm0gKk
-         gZiA==
-X-Forwarded-Encrypted: i=1; AJvYcCUo9tx7VCFpSeQqb7l+fD5sNiFBsBXM8K84JqxsK41DfuGg63MUeYDlQHnevCVHRaqc7U4Vkx+zI819vH0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy3PSv6dqJMBe5iqwihcYQaxDXGLd04+Sc+Zfz1U9BDxPM0hc4O
-	J57QaQbRf7DBI5lvDUW9tGP6LkNEoin0iX1lnqwuWmgFHYhzwNEMXd952VjOT6aU8jHTqaKWEnM
-	r0SCi91+PIcCGIfDEJMNx6f0QXLXVRwjFRV5b
-X-Gm-Gg: ASbGnctPUzOuQAac2EuhGlY4Po3sXPwrE/L8zc8mYuAk/gE/p96HboU68Bxj7z7D59u
-	glAcZBNQep24GNu4V6QbEQVfIbwEQ0+DI23sP6Jh3ls37ZFoelXqVWXY6BFarHllK1yWUqkv5PH
-	Zgk2dEwK3VFUFP7UReqksIW1w=
-X-Google-Smtp-Source: AGHT+IFZQyxjqYrUesRt8QUNMGHcWI9NzYMj3bs8zwAjQkhD5HAZhlgsNyXFxQ0aKndetcIyLanDkuaC36kyR2JtHyA=
-X-Received: by 2002:a05:690c:968c:b0:6f9:7b99:8a29 with SMTP id
- 00721157ae682-706cdbbc6eamr252873387b3.34.1745427524473; Wed, 23 Apr 2025
- 09:58:44 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="n989T3S3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=+pGhfX/4H3scf/HydnEYjfq1z6zKounijmYTLMLhC5E=; b=n989T3S3GDIXGm1qZvGBeYMZus
+	FFbkrtH8uTUC5JEGWWDg1gzaXJKpIm6WJL4xNXmsGG607YJy9Sp2XJvWYbYSJ+eTA6KLJDm+L9UsP
+	YP9DGWt/OIbhPtQv9sfilbwMU7bSjlKGpijJY28Qhe1jNNoKo/3GIi2LLSDCk7AQOo0M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u7dQj-00AMSb-42; Wed, 23 Apr 2025 18:58:37 +0200
+Date: Wed, 23 Apr 2025 18:58:37 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Maxime Ripard <mripard@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andre Przywara <andre.przywara@arm.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
+ board
+Message-ID: <aa38baed-f528-4650-9e06-e7a76c25ec89@lunn.ch>
+References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
+ <20250423-01-sun55i-emac0-v1-4-46ee4c855e0a@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422161304.579394-1-zack.rusin@broadcom.com>
- <20250422161304.579394-5-zack.rusin@broadcom.com> <a803c925-b682-490f-8cd9-ca8d4cc599aa@zytor.com>
- <CABQX2QMznYZiVm40Ligq+pFKmEkVpScW+zcKYbPpGgm0=S2Xkg@mail.gmail.com>
- <aAjrOgsooR4RYIJr@google.com> <CABQX2QNDmXizUDP_sckvfaM9OBTxHSr0ESgJ_=Z_5RiODfOGsg@mail.gmail.com>
- <aAkNN029DIxYay-j@google.com>
-In-Reply-To: <aAkNN029DIxYay-j@google.com>
-From: Zack Rusin <zack.rusin@broadcom.com>
-Date: Wed, 23 Apr 2025 12:58:32 -0400
-X-Gm-Features: ATxdqUGPIdiMBMGwq_SanvxlI7YJq-9AUJAWEGcxqONPSX-FHzSK8-WHCUeDg8A
-Message-ID: <CABQX2QPUsKfkKYKnXG01A-jEu_7dbY7qBnEHyhYJnsSXD-jqng@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] KVM: x86: Add support for legacy VMware backdoors
- in nested setups
-To: Sean Christopherson <seanjc@google.com>
-Cc: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org, 
-	Doug Covelli <doug.covelli@broadcom.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000009a9c4e063375039d"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423-01-sun55i-emac0-v1-4-46ee4c855e0a@gentoo.org>
 
---0000000000009a9c4e063375039d
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> +&emac0 {
+> +	phy-mode = "rgmii";
 
-On Wed, Apr 23, 2025 at 11:54=E2=80=AFAM Sean Christopherson <seanjc@google=
-.com> wrote:
->
-> On Wed, Apr 23, 2025, Zack Rusin wrote:
-> > On Wed, Apr 23, 2025 at 9:31=E2=80=AFAM Sean Christopherson <seanjc@goo=
-gle.com> wrote:
-> > > Heh, KVM_CAP_EXIT_ON_EMULATION_FAILURE is the odd one out.  Even if t=
-hat weren't
-> > > the case, this is one of the situations where diverging from the exis=
-ting code is
-> > > desirable, because the existing code is garbage.
-> > >
-> > > arch/x86/kvm/x86.c:             if (cap->args[0] & ~kvm_caps.supporte=
-d_quirks)
-> > > arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_X2APIC_API_VA=
-LID_FLAGS)
-> > > arch/x86/kvm/x86.c:             if (cap->args[0] & ~kvm_get_allowed_d=
-isable_exits())
-> > > arch/x86/kvm/x86.c:                 (cap->args[0] & ~KVM_X86_DISABLE_=
-EXITS_PAUSE))
-> > > arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_MSR_EXIT_REAS=
-ON_VALID_MASK)
-> > > arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_BUS_LOCK_DETE=
-CTION_VALID_MODE)
-> > > arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_EXIT_HYPERCAL=
-L_VALID_MASK) {
-> > > arch/x86/kvm/x86.c:             if (cap->args[0] & ~1)
-> > > arch/x86/kvm/x86.c:             if (!enable_pmu || (cap->args[0] & ~K=
-VM_CAP_PMU_VALID_MASK))
-> > > arch/x86/kvm/x86.c:             if ((u32)cap->args[0] & ~KVM_X86_NOTI=
-FY_VMEXIT_VALID_BITS)
-> > > virt/kvm/kvm_main.c:            if (cap->flags || (cap->args[0] & ~al=
-lowed_options))
-> >
-> > That's because none of those other options are boolean, right? I
-> > assumed that the options that have valid masks use defines but
-> > booleans use ~1 because (val & ~1) makes it obvious to the reader that
-> > the option is in fact a boolean in a way that (val &
-> > ~KVM_SOME_VALID_BITS) can not.
->
-> The entire reason when KVM checks and enforces cap->args[0] is so that KV=
-M can
-> expand the capability's functionality in the future.  Whether or not a ca=
-pability
-> is *currently* a boolean, i.e. only has one supported flag, is completely=
- irrelevant.
->
-> KVM has burned itself many times over by not performing checks, e.g. is h=
-ow we
-> ended up with things like KVM_CAP_DISABLE_QUIRKS2.
->
-> > > > Or are you saying that since I'm already there you'd like to see a
-> > > > completely separate patch that defines some kind of IS_ZERO_OR_ONE
-> > > > macro for KVM, use it for KVM_CAP_EXIT_ON_EMULATION_FAILURE and, on=
-ce
-> > > > that lands then I can make use of it in this series?
-> > >
-> > > Xin is suggesting that you add a macro in arch/x86/include/uapi/asm/k=
-vm.h to
-> > > #define which bits are valid and which bits are reserved.
-> > >
-> > > At a glance, you can kill multiple birds with one stone.  Rather than=
- add three
-> > > separate capabilities, add one capability and then a variety of flags=
-.  E.g.
-> > >
-> > > #define KVM_X86_VMWARE_HYPERCALL        _BITUL(0)
-> > > #define KVM_X86_VMWARE_BACKDOOR         _BITUL(1)
-> > > #define KVM_X86_VMWARE_NESTED_BACKDOOR  _BITUL(2)
-> > > #define KVM_X86_VMWARE_VALID_FLAGS      (KVM_X86_VMWARE_HYPERCALL |
-> > >                                          KVM_X86_VMWARE_BACKDOOR |
-> > >                                          KVM_X86_VMWARE_NESTED_BACKDO=
-OR)
-> > >
-> > >         case KVM_CAP_X86_VMWARE_EMULATION:
-> > >                 r =3D -EINVAL;
-> > >                 if (cap->args[0] & ~KVM_X86_VMWARE_VALID_FLAGS)
-> > >                         break;
-> > >
-> > >                 mutex_lock(&kvm->lock);
-> > >                 if (!kvm->created_vcpus) {
-> > >                         if (cap->args[0] & KVM_X86_VMWARE_HYPERCALL)
-> > >                                 kvm->arch.vmware.hypercall_enabled =
-=3D true;
-> > >                         if (cap->args[0] & KVM_X86_VMWARE_BACKDOOR)
-> > >                                 kvm->arch.vmware.backdoor_enabled;
-> > >                         if (cap->args[0] & KVM_X86_VMWARE_NESTED_BACK=
-DOOR)
-> > >                                 kvm->arch.vmware.nested_backdoor_enab=
-led =3D true;
-> > >                         r =3D 0;
-> > >                 }
-> > >                 mutex_unlock(&kvm->lock);
-> > >                 break;
-> > >
-> > > That approach wouldn't let userspace disable previously enabled VMwar=
-e capabilities,
-> > > but unless there's a use case for doing so, that should be a non-issu=
-e.
-> >
-> > I'd say that if we desperately want to use a single cap for all of
-> > these then I'd probably prefer a different approach because this would
-> > make vmware_backdoor_enabled behavior really wacky.
->
-> How so?  If kvm.enable_vmware_backdoor is true, then the backdoor is enab=
-led
-> for all VMs, else it's disabled by default but can be enabled on a per-VM=
- basis
-> by the new capability.
+Does the PCB have extra long clock lines in order to provide the
+needed 2ns delay? I guess not, so this should be rgmii-id.
 
-Like you said if  kvm.enable_vmware_backdoor is true, then it's
-enabled for all VMs, so it'd make sense to allow disabling it on a
-per-vm basis on those systems.
-Just like when the kvm.enable_vmware_backdoor is false, the cap can be
-used to enable it on a per-vm basis.
+> +	phy-handle = <&ext_rgmii_phy>;
+> +
+> +	allwinner,tx-delay-ps = <300>;
+> +	allwinner,rx-delay-ps = <400>;
 
-> > It's the one that currently can only be set via kernel boot flags, so h=
-aving
-> > systems where the boot flag is on and disabling it on a per-vm basis ma=
-kes
-> > sense and breaks with this.
->
-> We could go this route, e.g. KVM does something similar for PMU virtualiz=
-ation.
-> But the key difference is that enable_pmu is enabled by default, whereas
-> enable_vmware_backdoor is disabled by default.  I.e. it makes far more se=
-nse for
-> the capability to let userspace opt-in, as opposed to opt-out.
->
-> > I'd probably still write the code to be able to disable/enable all of t=
-hem
-> > because it makes sense for vmware_backdoor_enabled.
->
-> Again, that's not KVM's default, and it will never be KVM's default.
+These are rather low delays, since the standard requires 2ns. Anyway,
+once you change phy-mode, you probably don't need these.
 
-All I'm saying is that you can enable it on a whole system via the
-boot flags and on the systems on which it has been turned on it'd make
-sense to allow disabling it on a per-vm basis. Anyway, I'm sure I can
-make it work correctly under any constraints, so let me try to
-understand the issue because I'm not sure what we're solving here. Is
-the problem the fact that we have three caps and instead want to
-squeeze all of the functionality under one cap?
-
-z
-
---0000000000009a9c4e063375039d
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-6U6qgI8F5eiKsQyE0HgYrQJx/sDs9LLVZlaNiA3U8M8CgEnb8VhuH3BN/yXphhEQdJXb1TyaJA60
-SmHcZdEQZbl4EjwUcs3UIowmI/Mhi7ADQB7VNsO/BaOVBEQk53xH+4djY/cg7jvqTTeliY05j2Yx
-uwwXcDC4mWjGzxAT5DVqC8fKQvon1uc2heorHb555+sLdwYxAgMBAAGjggHYMIIB1DAOBgNVHQ8B
-Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
-b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
-dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
-BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
-Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
-oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
-A1UdEQQbMBmBF3phY2sucnVzaW5AYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
-A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQNDn2m/OLuDx9YjEqPLCDB
-s/VKNTANBgkqhkiG9w0BAQsFAAOCAgEAF463syOLTQkWZmEyyR60W1sM3J1cbnMRrBFUBt3S2NTY
-SJ2NAvkTAxbPoOhK6IQdaTyrWi8xdg2tftr5FC1bOSUdxudY6dipq2txe7mEoUE6VlpJid/56Mo4
-QJRb6YiykQeIfoJiYMKsyuXWsTB1rhQxlxfnaFxi8Xy3+xKAeX68DcsHG3ZU0h1beBURA44tXcz6
-fFDNPQ2k6rWDFz+XNN2YOPqfse2wEm3DXpqNT79ycU7Uva7e51b8XdbmJ6XVzUFmWzhjXy5hvV8z
-iF+DvP+KT1/bjO6aNL2/3PWiy1u6xjnWvobHuAYVrXxQ5wzk8aPOnED9Q8pt2nqk/UIzw2f67Cn9
-3CxrVqXUKm93J+rupyKVTGgKO9T1ODVPo665aIbM72RxSI9Wsofatm2fo8DWOkrfs29pYfy6eECl
-91qfFMl+IzIVfDgIrEX6gSngJ2ZLaG6L+/iNrUxHxxsaUmyDwBbTfjYwr10H6NKES3JaxVRslnpF
-06HTTciJNx2wowbYF1c+BFY4r/19LHygijIVa+hZEgNuMrVLyAamaAKZ1AWxTdv8Q/eeNN3Myq61
-b1ykTSPCXjBq/03CMF/wT1wly16jYjLDXZ6II/HYyJt34QeqnBENU9zXTc9RopqcuHD2g+ROT7lI
-VLi5ffzC8rVliltTltbYPc7F0lAvGKAxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
-VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
-QSAyMDIzAgxhPxw+eieHWB40hPkwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIM3+
-B6y9H07cql6H2MO/+8zIstEbCeb6doynR2O1+dfAMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
-HAYJKoZIhvcNAQkFMQ8XDTI1MDQyMzE2NTg0NFowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
-ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
-YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAJI2IbdGvdut20sP8kf1taobvEKIFoqcKfXG5AFB
-iP22g5WGY+ZGP/YVYSnGeSw2ZxoGOYjQ0iEgAtf/7XNRRyk4sdtQx1mQynuGiFJpg+GNUBwpaIfD
-ONXQ/8UVEQnTwudt9j/fVQqlacmRHmj/zTmgKoPgAgrNTpYsY9FiaYnxVewcQRBcjmMNXqlFh3x/
-Ztcpkj8uF8xGtaLnTKP4D+UVOKRYTH+a48zQ6TMj9O0BGvaTq/jBMeJXLGALmDrernABBVyFG2i7
-dfa+s8pPTORQgupt3v1k/h14yXnoZt66KYIV+3L6oN3WEYLLNLLKZhB/InjXmXfyHGQ+IYSnawc=
---0000000000009a9c4e063375039d--
+     Andrew
