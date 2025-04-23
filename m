@@ -1,166 +1,145 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B952202C4E
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A460214238;
+	Wed, 23 Apr 2025 12:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745410184; cv=none; b=uQvK748Kc8YFCF7ZqyyWFIce72fyFb5zVlGD1Lgkf2rgK/PxicWsK3aVxQrydSPM90BgoMB9Shd+JPeItriSaIUd5VgIk7ml8teuqvZYQO4oEGZATuPcZQg9et/JWbNkik5l3arkFcSmItqrfuH58z7r2+XmP+qt7rnC9ihWetE=
+	t=1745410294; cv=none; b=llFNTFFFxB+rCEjG7eU03FDUcLfenujYoWN2VgK9vTv9YRay/xiSsFZ7+Ansjx38y0olOEsrnu6C4m3cXIUKgF1YOHP2OlPhRMTDICbRdorfQy+6yV4o0j1ZDMkNFWSbhw2mKrqAMJz42+P3Ki/UnqWLFdrEXlMoGdAySuRr2Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745410184; c=relaxed/simple;
-	bh=7KM4xGp4HlmfivR3OmdYM85IdsrIUugdEnzXveqN3NU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rO5cfzoYLO6wJZeqE6d1eh9+Yn/rHqBfAB0qz9dIuMuBJ6kSVYBjkxjcH3fJMZSDZhE6w+r8Ihfjj3jhLorbXMW6jTjqLyOkjg0zqUcsPDkYLiYlM9Rqf7qhr2D8P0BtgEi6uIccVEW6bkE+fMWgfgjv3riS4sLm+onCXsrj3AQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=TjN39GP2; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+	s=arc-20240116; t=1745410294; c=relaxed/simple;
+	bh=yQ1UlwAJJHcI/OsM/WOjpj6zZr5R1RBZAV3ItX0DC38=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:References:
+	 MIME-Version:Content-Type; b=N+E4GB91T/PomlOsrtzww4SOOq7Zh+32cIITrX7auNyPgx3VWMQd6GYhf88pk66DC7O6KQL2f3BgDMlwtgiWg+iGR/CkcLJouaI3KU0Yr4hwWR7dgUMLUPLAuhJjFwxsn8p8O9KXQx42mCInMnJpPxWF1x1e31l0xGWspatb6CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RA/IakGU; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="TjN39GP2"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4ZjHwL4HJmz9tRC;
-	Wed, 23 Apr 2025 14:09:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1745410178; h=from:from:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=C0jC58EfDbgWI0/tDSxSeNIT9SElMZbwhS6KdJFqF6U=;
-	b=TjN39GP24kDOqITpSTyTXHWv2/OYcMYUl7gsDGsanyFD7iHHFhcDZ8imo0znrROtKm+ZDr
-	xdTA7lKtsCw6dsaInzG9l/2BMdaTYDqSL6ZreCITNucF1xbsOyCXt2AGIo2o02wpU00Czi
-	NIzVsB+fG0dQQKNE+K3YZHRIaufSXrZyJMfEP5S1Yt6LbMfJuA3w5xgrQRLzNxqoZ9dHN6
-	x2FXpG2XC82+InNRNX+YOgIDgHtEwcFSdQHDdRmthtpBdaSfXg2Ba3gn9j7rEaPhDMZIGK
-	jXvKdDHyZr6nlQbeqDGrBtscsLgONGX5uNm/w2ClKTimYKDx+WqARJx38vbLJQ==
-Message-ID: <f7c67d6cb24e94b9fd053b144f616d71354f114e.camel@mailbox.org>
-Subject: Re: [PATCH v2] vdpa/octeon_ep: Control PCI dev enabling manually
-From: Philipp Stanner <phasta@mailbox.org>
-Reply-To: phasta@kernel.org
-To: Philipp Stanner <phasta@kernel.org>, schalla@marvell.com, 
- vattunuru@marvell.com, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
- <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio
- =?ISO-8859-1?Q?P=E9rez?= <eperezma@redhat.com>, Shijith Thotton
- <sthotton@marvell.com>, Dan Carpenter <dan.carpenter@linaro.org>, Satha Rao
- <skoteshwar@marvell.com>
-Cc: virtualization@lists.linux.dev, linux-kernel@vger.kernel.org
-Date: Wed, 23 Apr 2025 14:09:34 +0200
-In-Reply-To: <20250423103909.59063-2-phasta@kernel.org>
-References: <20250423103909.59063-2-phasta@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RA/IakGU"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so4518732f8f.3;
+        Wed, 23 Apr 2025 05:11:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745410291; x=1746015091; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X3ENo7G6TW6MBK7yQ4g9B813KgFySi5deAa4vwegzbo=;
+        b=RA/IakGUAE314HKgCxzSRavMmLjLVqVOywIwiiM6mYBNWaips1FG7WGC4DmitIqk6X
+         +BmqpAeMPYNFpmxVMBalFTt2Ozli1SavYqeyDEuElNPxrkXU5pEXedbD5xZk8yKs5VZw
+         rYUKkc/OA04td/Ok9a/0WapdC98OQkXlRM39KdI3Q+41k1LFCIQPmJNPutQD80WPI/Dw
+         MeQPrRTHh5hbcOWmuGp+ENR0xiq2uQqHiMWVL1Lf0Y67JgXUJU4S/fS1Yr/BQcZ6Vrb3
+         boB+Lia+UztsUdY9kpe/16SWLPk2f9LHD43qNtWko5o3IAoEVzHXjEXr+77RA/LhFnOG
+         /Yug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745410291; x=1746015091;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X3ENo7G6TW6MBK7yQ4g9B813KgFySi5deAa4vwegzbo=;
+        b=i95qrxRgoro0W0QeSGXiFeecNWLObRKTRG0N9wL5fVmRQZafPHD5ke/o3/jRDmFUNU
+         t9+Q/ce3DpclvVedzhL7Y8MHwTWFmZ5jLSnjbyEZKBBO+T/vi6taybTwc+jZZKNJvS/k
+         vXcF7ZuPKPjXeK0t1WjXU9xo6eTHsmGfZdOnTdOLW5zR31U5PKYfcNFT5Zp4JMSWY237
+         VE6XvXDQLIir3YDj1jc4PjADOopvmdNrAw7efJSei6llViQRu/wkbyIK1/e8Aasf4loh
+         tDcWKJaXMmxzfSqo5jBG464clnV8ujfAa7tgScc4ra7ynZntiS2MLc0wK3Da/NMt8v/4
+         1P5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUE340jGHA5GeRGg2oc0Zk281QF4cfMEy8mJn4ngPSH9iW5bpyelbbM8eUR7FJIs1SHRpyW9yY/mt6VSc8vk6gk@vger.kernel.org, AJvYcCVhuygUCvyYhYt/IfW+CFJYhyGEJVftx7feUiqtqdB06kjyDPGTNkTEIIKPYZyeQe5siKXQ45h1Bc5iGWTA@vger.kernel.org, AJvYcCW2fMJOPO3fE+RyxLSpTpgJNylKfsGWbJdWl/sg86ML5gyRkxxFBRZnddLjklpFQ2ipxQSB@vger.kernel.org, AJvYcCXsPhFy+CwsWSs1veMVV5EXOn3CFu34ykI9kMm+DVl7sYMJtb42ZooyTOuGCRPV3nuDl+O/KD2rzw8p@vger.kernel.org, AJvYcCXu9dzhluoAmOl+jAwrRC9w3QBnUbR1J/yMZ6dBh7yVjMdrl47N3N/xKqG6y+sY5jpdC9vDMU9b8A==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1FUndCMvTWT3jAV3mB00v6KyV5sZcL2kG6FkdqcH0501HafHs
+	ooNVW4Ogw3xuaEupW1BacGN187BmufxDj1LBUbF9uHlnqYen1eJC
+X-Gm-Gg: ASbGncswlP4cMEFKAtNyGi4PAp5ecOLypw2x7vwYaOUAW/VsXHr1O2N30HiDI2TUfBQ
+	+mDLE56i6QTBdAdmh2WbFZCyR6/6JnuwGGiExTZj0ji6sFa3NWdTQ11zuw4MutVgk9ksfpAJwLI
+	2iOfeWlzwvK0BORsuITkZ+EZbJKqX9FniT91Pxn+hoAnVkFambsrI2eJ4SFLv7B3cYAf5huFcOM
+	pAFwBNqUAXKjXMMq3SViE+JabCmA26FESnNtZF94EPLs2NnxMwcU/STNebdp9EgVgogoGeFYt2k
+	tPaxrLLbFdUN+jh9ENVlFLTsUairbsxHDyauiOm2EDbzTFJKaCfZHU0v3w==
+X-Google-Smtp-Source: AGHT+IFZ8D9fn99GBdz1k+wnK9Zxq4FNrQ2P/nZKAH6ZFy9CpCQ91xB95fWpKA6Gc9C9vj8lWI9UZw==
+X-Received: by 2002:a5d:6da6:0:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-39efba2619bmr16139209f8f.9.1745410290643;
+        Wed, 23 Apr 2025 05:11:30 -0700 (PDT)
+Received: from imac ([2a02:8010:60a0:0:80e4:de9:c3ea:a346])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4207c5sm18334945f8f.6.2025.04.23.05.11.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 05:11:30 -0700 (PDT)
+From: Donald Hunter <donald.hunter@gmail.com>
+To: Mina Almasry <almasrymina@google.com>
+Cc: netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  linux-doc@vger.kernel.org,  io-uring@vger.kernel.org,
+  virtualization@lists.linux.dev,  kvm@vger.kernel.org,
+  linux-kselftest@vger.kernel.org,  Jakub Kicinski <kuba@kernel.org>,
+  "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
+ <edumazet@google.com>,  Paolo Abeni <pabeni@redhat.com>,  Simon Horman
+ <horms@kernel.org>,  Jonathan Corbet <corbet@lwn.net>,  Andrew Lunn
+ <andrew+netdev@lunn.ch>,  Jeroen de Borst <jeroendb@google.com>,
+  Harshitha Ramamurthy <hramamurthy@google.com>,  Kuniyuki Iwashima
+ <kuniyu@amazon.com>,  Willem de Bruijn <willemb@google.com>,  Jens Axboe
+ <axboe@kernel.dk>,  Pavel Begunkov <asml.silence@gmail.com>,  David Ahern
+ <dsahern@kernel.org>,  Neal Cardwell <ncardwell@google.com>,  Stefan
+ Hajnoczi <stefanha@redhat.com>,  Stefano Garzarella <sgarzare@redhat.com>,
+  "Michael S. Tsirkin" <mst@redhat.com>,  Jason Wang <jasowang@redhat.com>,
+  Xuan Zhuo <xuanzhuo@linux.alibaba.com>,  =?utf-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>,  Shuah Khan <shuah@kernel.org>,  sdf@fomichev.me,
+  dw@davidwei.uk,  Jamal Hadi Salim <jhs@mojatatu.com>,  Victor Nogueira
+ <victor@mojatatu.com>,  Pedro Tammela <pctammela@mojatatu.com>,  Samiullah
+ Khawaja <skhawaja@google.com>
+Subject: Re: [PATCH net-next v10 3/9] net: devmem: TCP tx netlink api
+In-Reply-To: <20250423031117.907681-4-almasrymina@google.com> (Mina Almasry's
+	message of "Wed, 23 Apr 2025 03:11:10 +0000")
+Date: Wed, 23 Apr 2025 10:55:53 +0100
+Message-ID: <m2y0vrtd5i.fsf@gmail.com>
+References: <20250423031117.907681-1-almasrymina@google.com>
+	<20250423031117.907681-4-almasrymina@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MBO-RS-ID: 96cd80a0a5606745c10
-X-MBO-RS-META: 5wrhks35ng1jssaf3jb64kukjh6p3gsx
+Content-Type: text/plain
 
-On Wed, 2025-04-23 at 12:39 +0200, Philipp Stanner wrote:
-> PCI region request functions such as pci_request_region() currently
-> have
-> the problem of becoming sometimes managed functions, if
-> pcim_enable_device() instead of pci_enable_device() was called. The
-> PCI
-> subsystem wants to remove this deprecated behavior from its
-> interfaces.
->=20
-> octeopn_ep enables its device with pcim_enable_device(), but does so
-> only to get automatic disablement. The driver wants to manage its PCI
-> resources manually, without devres.
->=20
-> The easiest way not to use automatic resource management at all is by
-> also handling device enable- and disablement manually.
->=20
-> Replace pcim_enable_device() with pci_enable_device(). Add the
-> necessary
-> calls to pci_disable_device().	struct
-> list_head		pending_list;
->=20
-> Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Mina Almasry <almasrymina@google.com> writes:
+
+> From: Stanislav Fomichev <sdf@fomichev.me>
+>
+> Add bind-tx netlink call to attach dmabuf for TX; queue is not
+> required, only ifindex and dmabuf fd for attachment.
+>
+> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+>
 > ---
-> Was formerly called "Use non-hybrid PCI devres API"
->=20
-> Changes in v2:
-> =C2=A0 - Don't replace the request functions. Enable / disable manually
-> =C2=A0=C2=A0=C2=A0 instead. (Vamsi)
+>
+> v3:
+> - Fix ynl-regen.sh error (Simon).
+>
 > ---
-> =C2=A0drivers/vdpa/octeon_ep/octep_vdpa_main.c | 16 +++++++++++-----
-> =C2=A01 file changed, 11 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-> b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-> index f3d4dda4e04c..0a282f9186f4 100644
-> --- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-> +++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-> @@ -492,6 +492,8 @@ static void octep_vdpa_remove(struct pci_dev
-> *pdev)
-> =C2=A0		octep_vdpa_remove_vf(pdev);
-> =C2=A0	else
-> =C2=A0		octep_vdpa_remove_pf(pdev);
-> +
-> +	pci_disable_device(pdev);
+>  Documentation/netlink/specs/netdev.yaml | 12 ++++++++++++
+>  include/uapi/linux/netdev.h             |  1 +
+>  net/core/netdev-genl-gen.c              | 13 +++++++++++++
+>  net/core/netdev-genl-gen.h              |  1 +
+>  net/core/netdev-genl.c                  |  6 ++++++
+>  tools/include/uapi/linux/netdev.h       |  1 +
+>  6 files changed, 34 insertions(+)
+>
+> diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
+> index f5e0750ab71db..c0ef6d0d77865 100644
+> --- a/Documentation/netlink/specs/netdev.yaml
+> +++ b/Documentation/netlink/specs/netdev.yaml
+> @@ -743,6 +743,18 @@ operations:
+>              - defer-hard-irqs
+>              - gro-flush-timeout
+>              - irq-suspend-timeout
+> +    -
+> +      name: bind-tx
+> +      doc: Bind dmabuf to netdev for TX
 
-Taking a second glance, we probably want to do this only for PF, don't
-we?
+nit: maybe add "for RX" to the bind-rx doc.
 
-So VF would use pcim_enable_device(), but none of the request
-functions, and PF would replace its pcim_enable_device(), and to
-compensate for that only the PF remove / deactivate path would actively
-call pci_disable_device. Right?
+> +      attribute-set: dmabuf
 
-P.
+The bind-rx op has "flags: [ admin-perm ]", should bind-tx also?
 
-> =C2=A0}
-> =C2=A0
-> =C2=A0static int octep_vdpa_dev_add(struct vdpa_mgmt_dev *mdev, const cha=
-r
-> *name,
-> @@ -825,7 +827,7 @@ static int octep_vdpa_probe_pf(struct pci_dev
-> *pdev)
-> =C2=A0	struct octep_pf *octpf;
-> =C2=A0	int ret;
-> =C2=A0
-> -	ret =3D pcim_enable_device(pdev);
-> +	ret =3D pci_enable_device(pdev);
-> =C2=A0	if (ret) {
-> =C2=A0		dev_err(dev, "Failed to enable device\n");
-> =C2=A0		return ret;
-> @@ -834,15 +836,17 @@ static int octep_vdpa_probe_pf(struct pci_dev
-> *pdev)
-> =C2=A0	ret =3D dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
-> =C2=A0	if (ret) {
-> =C2=A0		dev_err(dev, "No usable DMA configuration\n");
-> -		return ret;
-> +		goto disable_pci;
-> =C2=A0	}
-> =C2=A0	octpf =3D devm_kzalloc(dev, sizeof(*octpf), GFP_KERNEL);
-> -	if (!octpf)
-> -		return -ENOMEM;
-> +	if (!octpf) {
-> +		ret =3D -ENOMEM;
-> +		goto disable_pci;
-> +	}
-> =C2=A0
-> =C2=A0	ret =3D octep_iomap_region(pdev, octpf->base,
-> OCTEP_HW_MBOX_BAR);
-> =C2=A0	if (ret)
-> -		return ret;
-> +		goto disable_pci;
-> =C2=A0
-> =C2=A0	pci_set_master(pdev);
-> =C2=A0	pci_set_drvdata(pdev, octpf);
-> @@ -856,6 +860,8 @@ static int octep_vdpa_probe_pf(struct pci_dev
-> *pdev)
-> =C2=A0
-> =C2=A0unmap_region:
-> =C2=A0	octep_iounmap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
-> +disable_pci:
-> +	pci_disable_device(pdev);
-> =C2=A0	return ret;
-> =C2=A0}
-> =C2=A0
-
+> +      do:
+> +        request:
+> +          attributes:
+> +            - ifindex
+> +            - fd
+> +        reply:
+> +          attributes:
+> +            - id
