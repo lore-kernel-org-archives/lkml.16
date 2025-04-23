@@ -1,73 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AAD20126A
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A90524466A
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745443572; cv=none; b=ZG+JHzumAqJrOGCkvdj7lwqgPsvcttTtuYxZ2FkJkEEJShthOy2/HQ06muRoy6bw1IU8eQLirlzqrbIqROnwuMc6/UWoEhJt4MuYcSePBO2ZTEOcajIExLJOS3jJaYfZn9cT6parcCUC7de8SBQEdpiFlsUgMZDRqhvTYhm1WvE=
+	t=1745443678; cv=none; b=U2p8IbmdsjyHm+qJzxOGAXXo2+76WodzDMS7UEqXRpqT0aOtKVUIp/q6Mdhd/STY1xdb7EsypZvcZ/KNBCzqt4ObQrxEFcutg+Eul40sY7+AfPA6jGxm+hx45tYiNvk08WkPEXkeHfhKYXm5j+ucmY+g26O6ahOIwMaL3SLO9Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745443572; c=relaxed/simple;
-	bh=JIAataaF3MAC5dfiIOHAE9jhxPO9qEIVVLyurNzbufk=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=pldhJPU0wJowbP/az4qgRDRYye35eMNQioVLqf/Cb7QAcKWhJAkpPZ8Ao+qy9cQ6Wit/YJwqDky/4PfRgNHI1WkiD5Mz1PjHOi5KT9qckB3ZUGvLaeL0F9CjY4Qsxg2vqjklzYcnJo9aaJfndgRHuGJgSyGNGEMTcADFtHBySJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F9s9UYiR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745443678; c=relaxed/simple;
+	bh=UoXx4tGES9OMPPM7oZI7K3CxI/4ypR1vyn2KvyB5orQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h/bo108G0ppy90i1lUvOFEoTAg8UszYW2B3+Dk/ezDDaVLb9NloPy99T5vcwk91LveHKpwAEAce9VMMZGiDgy/jD8A55jHUCFNQR9RuRF17aHDmFBMi/TMAW0ZzyRlAfKHJNLVD7BGpaV0EUyMTPNpXS2ErZtvATdRDFrXCLD4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XLR4irnJ; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F9s9UYiR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745443569;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aU4NFciLR4UCyMwqNbOWtp1Qy37FjSg/5JGcNCTMQtY=;
-	b=F9s9UYiRbOLfhW9Kwhsv76TeWe4A1+TefuoYoWQCqO6tLFqSBhVDTa3g0xjKleGMvXd9zf
-	e7w5Ay0iqhWnVTt7l9Ymho0FbV3i80kJ38+MiXyoSx2LPPlYi2dyNu+sLrj6JPMJxV+swM
-	+y/D/humE9oLPRbKUIVG6nnFphkY3S8=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-179-g7cRWE4yNcm9v8ESLFA_6g-1; Wed, 23 Apr 2025 17:26:08 -0400
-X-MC-Unique: g7cRWE4yNcm9v8ESLFA_6g-1
-X-Mimecast-MFC-AGG-ID: g7cRWE4yNcm9v8ESLFA_6g_1745443568
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5750ca8b2so46375185a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:26:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XLR4irnJ"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so2285215e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:27:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745443675; x=1746048475; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aNVqL+OZswouyUq3SbRuMHrYu0xbf+/3y1/IN5N3DtQ=;
+        b=XLR4irnJGnxyNuZJ6qrJIHxW9ByjG7kEGsip2cYdSXNLY0bXFDqhrI4MuyNbs5zx0z
+         mGebB66qlTp3hbnLAnc7vTXRRJQraZ2WVouJ1ZnAHEcXIZpMcMWeLSC4WSWOEZwTzdWu
+         HiungUpCZQeqT1kf2uKx57pHtX8GHgu9ZpWpR4cthVo9sfWANysDKCpZsfBqh2A6jsy1
+         w+U93jdT9XL4IxBs0eOE57A1OqzaZjI8t7g2vptWdR3Q8Cd1eySulhKwksIq2VGIb+0Y
+         v3BqZBoI/i65YLZQy06t2wa+kBT65uzU8ufl2IAEr8Ch9y62rmKK8N57eJEVg6MSUhVr
+         LR0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745443567; x=1746048367;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
+        d=1e100.net; s=20230601; t=1745443675; x=1746048475;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aU4NFciLR4UCyMwqNbOWtp1Qy37FjSg/5JGcNCTMQtY=;
-        b=OUhevJcnEJE5I4CUHiTJb01yMQB2ZtQN70jXh/9EnbbNx/KafJUzVVY0cSU4eYlLse
-         gaIz/Wg4m6pdrqYWj3EsPR1CStZ72Fhi+rSz9A/lXXnU6EwG8qWOw508GW3bbGbslfou
-         gwMkgRhiWCad0hzGIRrUC1dXP3ARJISRrAfD52KrgAlaSrJ5cgYDdc/mLiO7G4iPexex
-         MNhy57WHIn4iXBynZnUlI5MtF2sPMlQY6aWbIdtX7992/X3tkEtxU2TcUuQv25kZ42ux
-         +hFGZRtFiSLeqhogAnv2pQ8qQbcZ3gN04MxphUGf/VGUd6+4cGYplQp1RXA0Z7TH3FKl
-         I4rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8yFKKihGR/Q4rRYgX7no9kOaHTCCCIeZe6vkE3479m9VVNMMFJyZyPPTzD8kxligh9AEMCsfuMBczJr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxALiqEGiuGmC1fktMsnvim0XD5B/k6w5eHaW4DQxJT9H9Qbqwg
-	qE4qiyxlq4DDWd4U0dxFYYaKbN67YzuEerbfTKZimtzotWuh7iCuVyr2eqdKThKCkgEKINtAFuW
-	ZYPVuUcAkV2LFMugHpHIBdQMN0sKx/NEQRZN+kgLWI96v80WYQQscbiBRjrCjNUaCGBawmg==
-X-Gm-Gg: ASbGncvEmFobEnbfBKwUKzefv8Q0kiujzIPfQciihZevrhhOn35D2T8TCwQP5eKLcj0
-	+MeK7giQlgdvnGuY1s4sh0QftYtNtsU4MtQKhan4nif1wLEhn4oEfCnekDWFAKlxqAJzjQ+9x/l
-	MQVz0BkR9IBPhsJPfgkpnPir8wh32jwELsru0vv3yKV2shfeNudLMlqY3jXqQ7tMAEtzXHAX6Um
-	IUK4nyzjUT+uLxV3C/TFrlu2IB7NF4ixrfTzH6VoCC666Wsk35afj+Xt2ky67NYML1SmSHeSabZ
-	53pn9FfOlJBxHulv0W/vZI/6NK/1d6vF3BCJGFdaFlIo6ndFlyARiFNsKQ==
-X-Received: by 2002:a05:620a:199f:b0:7c5:46e4:480b with SMTP id af79cd13be357-7c956eda80amr54939385a.22.1745443567265;
-        Wed, 23 Apr 2025 14:26:07 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG8haqQUDBHoe6I7z1HOjPMMGHldKnDbmOSgGYPeTOaPgqtmaNKn/a8LPm4WITMwLxPdPWBbw==
-X-Received: by 2002:a05:620a:199f:b0:7c5:46e4:480b with SMTP id af79cd13be357-7c956eda80amr54937985a.22.1745443567003;
-        Wed, 23 Apr 2025 14:26:07 -0700 (PDT)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a70768sm731509485a.23.2025.04.23.14.26.06
+        bh=aNVqL+OZswouyUq3SbRuMHrYu0xbf+/3y1/IN5N3DtQ=;
+        b=UN5zMTLtwfuPzsOzGi8krnlJ9mngwkPfbmL3PNi36WqR4ZY4SYie2h8sQUO32L7vCg
+         sJPNwvQqns+rBbz9Tphs101GBSVtG5TKKHXuQzoTZ09wQuw9scUWX6hxX5DbCYLiGebf
+         /tQcxKqMIw51nMq2msRKFCryuGxidPXCQ5nGeNJxXB3gefbQTHGaNLDmGI+ioxaz1VEn
+         jqBLYd2eMmEP2FsDG/aH4IrNE7qb/Q7LkfODGgO4zZNsmtYqVXp1SYRYI+Ozn59jjJ6D
+         OLR3dtbKl7FSOri2/ykuBzcTb+TcwdALIcryguoNkmrUYFYGp3MUCMDiXhDWiIo+CxHw
+         eI2w==
+X-Forwarded-Encrypted: i=1; AJvYcCXp6S/8y6HTz7fsj4ldt+cvVpr6JYfLPMWQVQjiyU0KEWoQyJyq/UJ+c9lHkCai9PKzeyTjBxaRavKfePI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5uHFAa59ifLeKNibxItJ25o/iGjLssFrGaGIG3KlO8VN0d/dE
+	GZN5vJ9O2C9Diqzj9+wgGrdbCN5RNnvL9OtRdc9DmCkTXFagKUh9MAbfWzbNOWk=
+X-Gm-Gg: ASbGncvVTMHQJ3h/XqlynwTSagj6a5R7RZml8lmYbwSTECMZcrd3ltBhmYi/rHh4z2o
+	VXCBHFH0+6URcQ43ytsxkI0JE0OPz79NJIKFkzZdAa8n8kq3AoBA14UMaMKpWYdFlyAHGyCcCiG
+	5tONPLgrqGI/cCZJN0KHtnowsQU4llYna8CByMbDHDirgGiIP6UJ0orD0QUM3ym+0Q0sZOf96Df
+	xRgKKZ4xnxLvReIE6hPqjH+zrqKmBSQ5d/bhbIgJiufMzzRAtdPv7gDU5vPgK06jHXJuB5dZ1x7
+	c9wxcpH3NA/VUIZ3AJI8hKXdHYLIy0Si1GETgh7AhO2O/ipliQ5pyj51IMwuGo6PaY2L8k2pccx
+	anG5zh0GgCcuuj8pf
+X-Google-Smtp-Source: AGHT+IHqb57GnB8kDuXYgg2wy9NjvC9CrGI7gkJ4N6LcFpbnWl0SOhTR/Fqxf+gYXyCBGmhSP7sFMw==
+X-Received: by 2002:a05:600c:4ec8:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-4409bd051e3mr1119865e9.6.1745443675342;
+        Wed, 23 Apr 2025 14:27:55 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493377sm20389750f8f.62.2025.04.23.14.27.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 14:26:06 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <a5eac08e-bdb4-4aa2-bb46-aa89b6eb1871@redhat.com>
-Date: Wed, 23 Apr 2025 17:26:04 -0400
+        Wed, 23 Apr 2025 14:27:54 -0700 (PDT)
+Message-ID: <198b6f8a-8502-4b57-a1ba-77bb585aae65@linaro.org>
+Date: Wed, 23 Apr 2025 22:27:51 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,46 +67,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: cgroup null pointer dereference
-To: Kamaljit Singh <Kamaljit.Singh1@wdc.com>,
- "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>
-Cc: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <BY5PR04MB68495E9E8A46CA9614D62669BCBB2@BY5PR04MB6849.namprd04.prod.outlook.com>
+Subject: Re: [PATCH v4 2/5] media: iris: fix the order of compat strings
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250424-qcs8300_iris-v4-0-6e66ed4f6b71@quicinc.com>
+ <20250424-qcs8300_iris-v4-2-6e66ed4f6b71@quicinc.com>
 Content-Language: en-US
-In-Reply-To: <BY5PR04MB68495E9E8A46CA9614D62669BCBB2@BY5PR04MB6849.namprd04.prod.outlook.com>
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250424-qcs8300_iris-v4-2-6e66ed4f6b71@quicinc.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-On 4/23/25 1:30 PM, Kamaljit Singh wrote:
-> Hello,
->
-> While running IOs to an nvme fabrics target we're hitting this null pointer which causes
-> CPU hard lockups and NMI. Before the lockups, the Medusa IOs ran successfully for ~23 hours.
->
-> I did not find any panics listing nvme or block driver calls.
->
-> RIP: 0010:cgroup_rstat_flush+0x1d0/0x750
-> points to rstat.c, cgroup_rstat_push_children(), line 162 under second while() to the following code.
->
-> 160                 /* updated_next is parent cgroup terminated */
-> 161                 while (child != parent) {
-> 162                         child->rstat_flush_next = head;
-> 163                         head = child;
-> 164                         crstatc = cgroup_rstat_cpu(child, cpu);
-> 165                         grandchild = crstatc->updated_children;
->
-> In my test env I've added a null check to 'child' and re-running the long-term test.
-> I'm wondering if this patch is sufficient to address any underlying issue or is just a band-aid.
-> Please share any known patches or suggestions.
->               -          while (child != parent) {
->               +         while (child && child != parent) {
-
-Child can become NULL only if the updated_next list isn't parent 
-terminated. This should not happen. A warning is needed if it really 
-happens. I will take a further look to see if there is a bug somewhere.
-
-Cheers,
-Longman
-
+On 23/04/2025 20:33, Vikash Garodia wrote:
+> Fix the order of compatible strings to make it in alpha numeric order.
+> 
+> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/iris/iris_probe.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> index 7cd8650fbe9c09598670530103e3d5edf32953e7..fa3b9c9b1493e4165f8c6d9c1cc0b76d3dfa9b7b 100644
+> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> @@ -335,16 +335,16 @@ static const struct dev_pm_ops iris_pm_ops = {
+>   };
+>   
+>   static const struct of_device_id iris_dt_match[] = {
+> +#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
+> +	{
+> +		.compatible = "qcom,sm8250-venus",
+> +		.data = &sm8250_data,
+> +	},
+> +#endif
+>   	{
+>   		.compatible = "qcom,sm8550-iris",
+>   		.data = &sm8550_data,
+>   	},
+> -#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
+> -		{
+> -			.compatible = "qcom,sm8250-venus",
+> -			.data = &sm8250_data,
+> -		},
+> -#endif
+>   	{
+>   		.compatible = "qcom,sm8650-iris",
+>   		.data = &sm8650_data,
+> 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
