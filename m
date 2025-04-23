@@ -1,204 +1,312 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8555519DF4C
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745419891; cv=none; b=DwswoUV98zkOZif/GgdFiPkjNclMi7scNsohtNvpnzKiWkIusfT+kDNvr6cEGpDhQVyLIO6ZA/3m0ANFNKOh1ZTXKarLa9icKYBNoaz0/tRx09MCUpXkSX1H+sY604+cilgf4PbzWCX19rzPVzvCfplDEFGwOF3ue82V7/bU+rw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745419891; c=relaxed/simple;
-	bh=8BPdvxvbsK0vZmPrPm8yRAj5fOOZelwn9qPF1WNyEuo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eCEZ/Jvq3l0EQtO1hRI1bu+wx5DMKSQ7VLK4y9jOucjRXlQCmExM/6EQ8PH0mxpphFAJfVv62wdH8IvZ93Wz9XHk3naabYB9qLHR8da7xynO7sGGyTlOzMgrG08zmXbJw/aCCSgo7PnXsHmU2FqwLD/TmwEF//c9L6sL6owmfPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=qJhwYU9V; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DC027A12D;
+	Wed, 23 Apr 2025 14:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745419975; cv=fail; b=Oy7tJjlVySMZL6RXFksOQSWlWwlJYzHmXt/Vu8hhahGzSPR61p9TCecN/WB+lj9RARGqCoiAPThs/zxVwVHaqhPE9zOhGh/sKkEaT/npRY1WPr1qc8EiJcYnKd3OOMtDLwS37i0506rPfqCwCS9I8tKXX+Lyj6az3GwI9L/SVew=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745419975; c=relaxed/simple;
+	bh=7MHcxjijxOSSR2/BauT74cRwKjM6zcl9Xcyfjn7fawI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=LUcn2iaJXu9GHCeDsBwnJNh54NGDE+eXMYJooL+sBMXajcHkmLOXeVgjt0EwaWvo/WpWfYYfKkpBT0IOTR4aV0F5eZN//VhtzsHUxxwsQAUTnjsHZym81uv23BiJXnGeGZYtRSfzU90WyF8FY+FIPGt0lmBNYeKfCaDGtoRS6sY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=LY1hdON/; arc=fail smtp.client-ip=40.107.93.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="qJhwYU9V"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3f6ab1b8fc1so4201842b6e.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:51:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745419887; x=1746024687; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wvwv047VfCd6UZH9Jh21KmwpSxODx1nElqK+UFecJ5w=;
-        b=qJhwYU9VQlPjIZUEbZHRpFGb0ZxsUqPXvCv3ejzCXF5hCw4/57VY879vrUVE5gVROw
-         ZS9Eo2sHEp3tcc24JHjZ5Oq+FPEX8MQOa47rZas+nM3pTT7FFgRYdWgebuTmgMUB5Rds
-         cAfPcDqpTznQBqqjdOMwfqGDw5urwqlHGPMzxW1kaV1kfUtvo9lqELuEMEQidQ7L9PKr
-         K0rcStqkxB8fqUsS45EFW0fFR2C2T/1GRfw5BOJKXqBS6VEiq+xX1mdCiTxSS1bcviAP
-         vIpCaQPJF+CQxLIddAIPJ4f21esVl8SxqXMDk7unyH1xzzhAFyi1qzidEbmkcBD9WQ9g
-         ODGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745419887; x=1746024687;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wvwv047VfCd6UZH9Jh21KmwpSxODx1nElqK+UFecJ5w=;
-        b=E8xlp/uAE7NGdv7hynR5w4gzmnxtll8bk/BhTLKqgbRvVL/h+WUSvceGCxksdrDINC
-         of/xUE5WsiixBiDefCv0NfdimER8gfkEYdzIyY055b7aC7fr0HvHCqa+9DUe6x6CGbJg
-         cyZZfhgBZCJF58cBlVnbMb5t1hxHXp6xm1T+H3oaQ7fuXr+ROrdRaWuzfYJHkp5BrOvF
-         NIRSQft32WGI6J7jBDu9UUpgHRzpiv6QOuT6cGAtm53WI5R1QVmdBMb6yLi6Bp0LSqhS
-         l4F4xMGfTjMQGyqDBfdPgcGXqo+emr5bgDGA7IwK1prXlB2y2Ysag16jarXY/89Bid2G
-         O8TA==
-X-Forwarded-Encrypted: i=1; AJvYcCVP7yXfVomi6OqPgazS8UGx3u8lou48L+7hb2LGoksqUB4xfFCOPWxRFHCjILk5nEryeT/zPhIgqrvk/I4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvEx8HnxnEz0b0yB84XnGd2HqkfpbiXi6XMIyf2VpjnFEFHPri
-	pu0bD5A/37UHrTS7S/f2iZYn+4yP9Izi9yctoce3vwSc15kNgEPHQQXfoQggD8s=
-X-Gm-Gg: ASbGncuZa+OoNVtsYu/wLzQ9nJsongG/5vDleLjA01FljnpjM0mrb27LZLGdYBBLGB1
-	Y+CHXJCqNUxGMYQp3qMd7xtHlLnFdm0uvrc3n7N29Bzct+WTz0pV/JTJPhD2TG8J282TT5MekUs
-	yGwSIwCAb6gv1J+IykdOp05GrAy2cNIeQbrRWv7uiEBmFwDomYnB5h5xtkgo8WuZYIUecDE6DHh
-	Hj9ZXZdDK+f5WWPmqt2LNSwa28OkGLvdbkTwvFJQdQL1cZg5YaGDUIIc27V7M7htAJXVsT9qvTW
-	q+nDOflYUgeoCr4ClZ6kMav4qcvRdUzpzAlNKEF60EQoLA/n35XBV/13oHOO9lmg4VE7Zd8zpou
-	ungSxRNZ+8VidTus=
-X-Google-Smtp-Source: AGHT+IEBGwoz+Ahwpfgm/4AVjbIfHM/ADajlJxdstdyq4SXFSdYnpTORxWm+CfhjvRe0zr/nrusBmw==
-X-Received: by 2002:a05:6808:2f17:b0:3f8:c486:9b27 with SMTP id 5614622812f47-401c0a8cc72mr14379361b6e.22.1745419887508;
-        Wed, 23 Apr 2025 07:51:27 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:581:f155:b9de:68de? ([2600:8803:e7e4:1d00:581:f155:b9de:68de])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-401beed73e9sm2630018b6e.12.2025.04.23.07.51.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 07:51:27 -0700 (PDT)
-Message-ID: <b4218efe-3785-4065-a3f7-57824e882f09@baylibre.com>
-Date: Wed, 23 Apr 2025 09:51:25 -0500
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="LY1hdON/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=L99TWSGyRMB5urs+zHFnz4VZHJmABxPGohg+jt4Arw59uCwZTcWpP/0AypDb6wUcx7TB4CU7ZIlIzuLo/J69oZHyTuPyNS8x6b1+AN3yJwQTMcyFjU9KMgAA3mCb8y2AQ6kLUVfw018bvYlFADLEI2TwViLW+L10/ehPvdmr06xG4ILy+X8bRDrPxEutgyrHju7xIvHc1Jn5JQ5iqrvnAEh3c9w3G5O6RVLMR4kIpzosx9B18dXY6V5n76q4yDl2r65sOFHuS22WbuggosK6ylVFDgWqC0+If/WiYcf9U5KBGdyn9LZMjDUvw0zNFbhXqU6q/ozdaF0IwyLmgwsUiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rmwQgkIJAzWGiNOOc0XQUWD0i0GAyawlLTVWDHSsHzM=;
+ b=yfHaGX47H4JmIIr1eTLtGa2kFVjBAH/PD20Rl3/58CDS6gMZOMuLys4Gm2eAASWlevkODqk76x7b5/FhFr1+LiR9EOeNT4UB5k67XCSLgmmBs3jvALGqGiF6EG7iungnYgsd3I0ihBqe1b5pk3/Dg6JJ593A1rZKluWH4El86y8ZM/oKYR93tc7BuOYSNYmFVYiIzlFhZRYcOTRzC/3hHXXbCOFtEQZDH+TfDaR5MpM3zTGdjnpUO1WJN6hFrih/0vOi7gMRABJR2sb6FC94UUueki/VoSiOgRSyjOHgQlj8o2dHYfd7UHoRsxGjUtuSLGEpOi0PbsEGBjAlaNsPiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rmwQgkIJAzWGiNOOc0XQUWD0i0GAyawlLTVWDHSsHzM=;
+ b=LY1hdON/xWHgnT+sDXKm0+WpD8O8tIjifCdGS5ZNSsclN+w0qt6TkRGOpUjwurh1SV/uVIyd/D/HNuZ8hEuACaCfWMmKfcMXW4NTF4ptdomgRoum+OHhAKZLQseJRG5ZsZj+iuKmyKBQ55erN+1atmlYNh5sM3pzRVmzLyWR2kwYJJa07fBd3m1Y2xQ/YmYze5ogHG7sIMFXvVFnjwmDDHp5vffeMRVk0S2KfMVDTdyFw1Euiau9VCq5fZhCnPUfAih7z6kXMCUEKLzs1GLkGFjY+uzp4N4wQ452/ElGYG5kI49e4goNs4e4fF+N2aZ35I1QRGnkK0/v8xIr1nccOQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by SJ1PR12MB6290.namprd12.prod.outlook.com (2603:10b6:a03:457::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
+ 2025 14:52:47 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%6]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
+ 14:52:47 +0000
+Message-ID: <88937e2b-6950-4c9d-8f02-50f9b12c7376@nvidia.com>
+Date: Wed, 23 Apr 2025 10:52:42 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 13/16] gpu: nova-core: Add support for VBIOS ucode
+ extraction for boot
+To: Danilo Krummrich <dakr@kernel.org>,
+ Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Jonathan Corbet <corbet@lwn.net>, John Hubbard <jhubbard@nvidia.com>,
+ Ben Skeggs <bskeggs@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
+ Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
+ <20250420-nova-frts-v1-13-ecd1cca23963@nvidia.com> <aAjz2CYTsAhidiEU@pollux>
+Content-Language: en-US
+From: Joel Fernandes <joelagnelf@nvidia.com>
+In-Reply-To: <aAjz2CYTsAhidiEU@pollux>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH7P222CA0003.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:510:33a::18) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
- Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- Eugen Hristev <eugen.hristev@linaro.org>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
- <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
- <701bfc6a715046044dbc789f1c11c7f85395c7a8.camel@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <701bfc6a715046044dbc789f1c11c7f85395c7a8.camel@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|SJ1PR12MB6290:EE_
+X-MS-Office365-Filtering-Correlation-Id: f3413d0a-860c-498b-a7ae-08dd8276830d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dVpnNzVQMlVEUE1FaHU4VGxBVUZOcER4TFdiZTNiM3FuMm9jbkR4SmNEMTVp?=
+ =?utf-8?B?bnkzU0xiMlhKdDlteFd5SEhYMTZWbmlpOVlIQlFqR2FKNlZjYTJWNllMSUdC?=
+ =?utf-8?B?bE53NHlUdlJodlBwcmJCeGRzU3EzQ21GK05sS2NNU3pwUEdYQ1JHMjJ2MUh5?=
+ =?utf-8?B?ZEkzY2UzOUZiUjJ3WGQxQklUVk9KaG54di9qYTVrbkFaTDZqcjJDWkNmTmsr?=
+ =?utf-8?B?Uld3YVhHdlpMZ2xrU0dYa0phMGg1ckdTOFlwUzJ4bDgxem5tMXYrNDc1OW4y?=
+ =?utf-8?B?RUZmb2RZQ0Y3ODlrVTdSTHRwc0ZtQjVsUHVsdnJaMXZETzZEN1BybnJwc0NT?=
+ =?utf-8?B?eUROWDJLNVgvRzRKL1Zkclkvb2NFamR5ZFhiMW9abDBWUXArN3FCUGpVUTlj?=
+ =?utf-8?B?aU90Ylp0MG0wZGVNKzd0WFMwd2YwTHNYaFYrRDNVbFJUMk5ZbnE5bnlHVHlS?=
+ =?utf-8?B?d3Z4OFJOZmVQS2ZoRmhqcEg1Q2RtaHluOEk5L3JGbVBRNS9EMnM2R1p3OEtH?=
+ =?utf-8?B?UkM4Q25GNjRBQkxlb2R2M1NHcEowZk5JTEVIQkpJMWczWjhUUmpmQlNrd0VH?=
+ =?utf-8?B?NjNzOXdUdWxueXJVQk5uV2tsVmNMK2lxd2hWL3hmbU5jT3I5TXFud1pHQ0RX?=
+ =?utf-8?B?V1g0Z0NJQ3NSNUZFNldLd1ZrM2ltSWxmd0NQU3M0bEZUOFlFbldyaWt6UG9B?=
+ =?utf-8?B?eHcvaWI5WGhwRFhBbTNxNXFHbVlJNFMxTEdaT2U5SlJLS2F0QzVkTkY1NkpK?=
+ =?utf-8?B?TlBhdS9qcUpPRWJnL0JFL0RVcktYUTU2YmNOZTQrbkYwL1F4N1l1T0h6dHh3?=
+ =?utf-8?B?OFB3cTkyeGp3cGY1Q241ZldGcVgyT0VneU0ydjNVSFpadGhzT0xPRDJHQUdt?=
+ =?utf-8?B?Y3RBVDdhMkNjQ0VFVWZYYmdNMEpMSmJJTG9hbTVVc1VhSTJpdklFNmtLNG5z?=
+ =?utf-8?B?bDgzejZya0JFQ2pYMnp6Q1hBUjJuS2d4b0NMYUp3aEpmczNoUWFWRElydFFM?=
+ =?utf-8?B?V2xGbVR1OFBPRFRxZnpYWGROc1ptUGppQ251VmF4SGllRitWZzJ2MDhseXQ1?=
+ =?utf-8?B?TmpHZEJpQ0hMenBNTnFXRVRHMFN0T2lselJ4OEIyOWJTQktub2tKMEdBekYw?=
+ =?utf-8?B?a2JPU2hpZzNORkdVSStMQW9aUGVKY3ZvSnRpNS9JakJZbnJWbnlZOW96WXdC?=
+ =?utf-8?B?NTVvaTJvQVpjWkM4WHcxdndBZEpiT2FvNFZ0ci9LbE5hK3VBMDBpK0hJdUJX?=
+ =?utf-8?B?cHRtellFOUNjOTd2ZVhxK2t1cGYyYjcyZmN0VERtNXVLNENkbXEzVEFKMlR5?=
+ =?utf-8?B?UFNHelhPS2RTaFBDMk1tYnlnY3BHT0NQOWMwVUNLL2xIY0R5ODRrTS9oRTJq?=
+ =?utf-8?B?WW0wZW0vV2VuZGZxWlVBYTQ3U3dYZVZSa3ZnbE90ZXNITWRGU0Z6R1dzdjJB?=
+ =?utf-8?B?cHQvU2ZPZzFSODc1Z21YTGRFZzVwaHJqY0VuZHFRRzJEUktSOEpxQnd3Y0Mz?=
+ =?utf-8?B?WDFTZTFMWEp0dmt2dStSNjFpYlpUQjh4WWhuL05UNGgwQmY4UzRQQmd4dXRL?=
+ =?utf-8?B?SmNoNWxtT2ZQTDVLRkNxYzNmeWVSVXRkWm5MK0VIYTVvb0VGNzJ6ZXpvbllq?=
+ =?utf-8?B?Nm1vUEFvRDM0QmNqaTV5VnV6UE80a0t5d1ljMTVwRUIyVWlQc0ZQbDZEUnRE?=
+ =?utf-8?B?Q0ZnVlZpdHZLSFZWV3VhTjB2Z0pUbUwrSHVlMXpKV0xnNlFhYUJ5b2FUbEFW?=
+ =?utf-8?B?VmZXeGF6akxINXZNdURIcFlwTW9LZWpNMUlwbzhPeTRDV2ZrU1oycTRpdkVj?=
+ =?utf-8?B?dGlEQkhHSWFWQ2lMcmdNK0p0dGZCWlN6WWV3VmVzRStTaE1GYUxxaWs2dE05?=
+ =?utf-8?B?NWFUZFJJQnFUYmVOT3dZT0VUQ1JNd1pTNVptd0Fmd2F6ZnErMk1pcmpRYXox?=
+ =?utf-8?Q?CSsnn6P4xnY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Q1hocE1oTDM3Qk1KWFN6bmY1RHZINk1DNXhvR2srZktMNW1aV3d0VlZ1bVJP?=
+ =?utf-8?B?QkZIQnhpQktGS0U2TitCemM5RHErQnFpMkI2RlQ4aVlzWGZCNC9kTVMwOWIx?=
+ =?utf-8?B?a0pyQksvVk9oMzVHNmNTMWdVYkZNdUF1cTNINEpKeGlsN0FpM0UyQWxRaEh4?=
+ =?utf-8?B?dEhhZjc5N2Y5NCtwTEJySGYwd2xQU09EVFp3U1o5WHllcEFYbmVGMC9ueXN2?=
+ =?utf-8?B?L3BodU5MdXRlZVpaeXpUNmZSS0hWMFlqS0lDLyttVE1rS2JhZGJ0elpWMGRT?=
+ =?utf-8?B?eHhFc2w0VE9YUWEwVCsyQXYvZzFwQ0RlZFJnck9QS3R6OVJjNnBNT0FUTEN4?=
+ =?utf-8?B?M2RyZUtRT2JXZGdpVEZvaytKRllqQ0xIRXg0cWVkcTk4YVMxQWdrQ3p1WXJY?=
+ =?utf-8?B?UTU3LzFrUlJXTjFVNTdPanBXZ3Q1WkkvUHpGYXNpWnI4aVJ2UnpBNVI0VEhK?=
+ =?utf-8?B?ZmhVOHRVZkRTaFpRYkJlTG1OVWtLK09zbEJiODNEYnR6NmpOQWF1QVFXQytW?=
+ =?utf-8?B?SnhYL2J1MEdVQnFuam1oV29MRVJKTzFmWG1vYUNBOHB5MGVsUlpFMnNhVFpq?=
+ =?utf-8?B?MDhUTnZHYTlrdDhHRllzWGxHa2lZV09WbCtoYkFpT1JQRlF1VVlKZS9tbTNr?=
+ =?utf-8?B?TkxEZjVlVmgrVkZNUDJLdWl5WkcwcmxGNUpiWUJjVjBiQTljeU15d2x4UzM1?=
+ =?utf-8?B?NHM1Ym5ZeVlENkRtRVQvZDlGNUhHUUtRWDI4K05ibzJKdFJpdFBJUXJSN3d4?=
+ =?utf-8?B?cm92dGJpU0hvMURpcktidzZabTFNSVV4b3kwY0liUjNOdXA4YVIvQXJQZTgz?=
+ =?utf-8?B?VmQzL2pBVSt3L05xb0ZCRjB1V1FWM2ZIZmwvTVh0QWxrQm12TWZuWkd1QTBq?=
+ =?utf-8?B?U2VhUlh6MnU4UkhFQ0RYOGtDc3FpRHkwMEdQOUJBZFJHRE5tYUVpVkpzaXor?=
+ =?utf-8?B?clRiR2N6SlYrbjBhUnQyNHBtbVBkSjJFaDVuYnpSajVWVi94N1ZwZ3pwS1Zy?=
+ =?utf-8?B?aGU5empuYktFZndyTkN6a3NIT2dxRDU3Q29BdXBmWFJ5dDNnVzMvSC9Fd3ln?=
+ =?utf-8?B?bDY4UkJTVi9nSGw4NGY3ZEVIVUFIdTJDNE54UGV2N3U3UThCelorakJLYS9x?=
+ =?utf-8?B?bUlMdUc2RDFCRDZTUHpsLzNncTRzS21rYXFCZ1R3ZUFhd2dtSHdGS2ltYWdK?=
+ =?utf-8?B?NUNPaDNxakd0TDdTWWk2NDVxd1RDbHVtdXlDSFFib0JFTEhzaHhUclZhRXR3?=
+ =?utf-8?B?MURqNVIyUHNwbk1WNW9pV1l2NzM2S0tIcXFQY3dIemZEQ1JhQTJNb0psTnk0?=
+ =?utf-8?B?aU5UT3dIamZGMXI0SERMcFlQNXhkM0pTclBKcEZiWlk0WWhtVXRwcElKL2FL?=
+ =?utf-8?B?MGtDOTkwOTFvWTIrWU95eWNKN2NDZlhHR0w3ODJCT281a3djQWh2bG5BQnNI?=
+ =?utf-8?B?NXJtYkhFcHRtMFQ0cldjWTdENjc2ZWxxQUJwUnVEbk91NzcvTjU0ZEloN2pE?=
+ =?utf-8?B?MHM2bDcrQ0Y5SWtoK0Z1QTlEdDZyNlg2dFIwc1FWdGhoYjlMMFR2OHZqbnBP?=
+ =?utf-8?B?RFRoaFJpR09PU1JYbGpHRklrK2FZVFBxakJxVnZEOXY2SVpoWng5R3BnTG9T?=
+ =?utf-8?B?bWs1eTEyM2VpUTdtWEVMNit5clBoYVY0c1pPMzZxRURTUExhdmZZY1JZZE43?=
+ =?utf-8?B?YlJUQmdIdmYwVUFDUUlGdXV2T1Z6MndvZEFRS1hEbmtJTHFUTmVJUlp6ZjZi?=
+ =?utf-8?B?d25tNDlpSzBGdm5aUFc0ZE9ISDZiSXI0aDF6bXEvK0RqWEVvTTJtSSs2U1d4?=
+ =?utf-8?B?Tzk1eFVnSUNmME96ZUdYOHRZK2JEQXdsUGxBbjFMNXBCQ3pyK2JNbXJUMzI1?=
+ =?utf-8?B?K2txSnZFZVpGVWk1ZHVkK1k1VHR6Sm1xbjJzenJRZkJwUUVDMlF2WElFaGRR?=
+ =?utf-8?B?OGRrMmJNZG01eTg3K0FuUThjcU9VcXpjdzVDY3dQaFFFdXVNMndUQm12RGdO?=
+ =?utf-8?B?ZDUzVzZrUHJYMWpQeHM0cW4vaGhhTy80Q0JTb2tpR1VvK3RnbjZpQlN0TUMw?=
+ =?utf-8?B?dEpJQVkwMzFUUkR2VHUwczBtRUNyLzhmbldRUUdLV0Z3YTdTblpwVkdNZFRi?=
+ =?utf-8?B?MzNMREtOQ3FoTE9vUStIRTdkMUNQYmV5Znd6c2VLU1d6elpJKzVBb0YzaXJR?=
+ =?utf-8?B?b1E9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3413d0a-860c-498b-a7ae-08dd8276830d
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 14:52:47.6326
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /oGWGNPdZjwqs4EB0JqhqshXCyow0xRpfOqfD6At00/FkyxIj+zwcBSK5+5eEK2HlQkV/lRjtaRF8r1bhU+phA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR12MB6290
 
-On 4/23/25 4:18 AM, Nuno Sá wrote:
-> Hi David,
-> 
-> Nice patch, I really think these will be very helpful... Just one comment bellow
-> 
-> On Tue, 2025-04-22 at 17:07 -0500, David Lechner wrote:
->> Add new macros to help with the common case of declaring a buffer that
->> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
->> to do correctly because of the alignment requirements of the timestamp.
->> This will make it easier for both authors and reviewers.
+Hello, Danilo,
+Thanks for all the feedback. Due to the volume of feedback, I will respond
+incrementally in multiple emails so we can discuss as we go - hope that's Ok but
+let me know if that is annoying.
+
+On 4/23/2025 10:06 AM, Danilo Krummrich wrote:
+> On Sun, Apr 20, 2025 at 09:19:45PM +0900, Alexandre Courbot wrote:
+>> From: Joel Fernandes <joelagnelf@nvidia.com>
 >>
->> To avoid double __align() attributes in cases where we also need DMA
->> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS.
->>
->> Signed-off-by: David Lechner <dlechner@baylibre.com>
->> ---
->>  include/linux/iio/iio.h | 36 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>
->> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
->> index
->> 638cf2420fbd85cf2924d09d061df601d1d4bb2a..4dd811e3530e228a6fadbd80cfb2f5068c3d
->> 6a9a 100644
->> --- a/include/linux/iio/iio.h
->> +++ b/include/linux/iio/iio.h
->> @@ -7,6 +7,7 @@
->>  #ifndef _INDUSTRIAL_IO_H_
->>  #define _INDUSTRIAL_IO_H_
->>  
->> +#include <linux/align.h>
->>  #include <linux/device.h>
->>  #include <linux/cdev.h>
->>  #include <linux/compiler_types.h>
->> @@ -777,6 +778,41 @@ static inline void *iio_device_get_drvdata(const struct
->> iio_dev *indio_dev)
->>   * them safe for use with non-coherent DMA.
->>   */
->>  #define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
+>> Add support for navigating and setting up vBIOS ucode data required for
+[...]
+>> diff --git a/drivers/gpu/nova-core/vbios.rs b/drivers/gpu/nova-core/vbios.rs
+>> new file mode 100644
+>> index 0000000000000000000000000000000000000000..534107b708cab0eb8d0accf7daa5718edf030358
+>> --- /dev/null
+>> +++ b/drivers/gpu/nova-core/vbios.rs
+>> @@ -0,0 +1,1103 @@
+>> +// SPDX-License-Identifier: GPL-2.0
 >> +
->> +#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
->> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) /
->> sizeof(type)]
->> +
->> +/**
->> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
->> + * @type: element type of the buffer
->> + * @name: identifier name of the buffer
->> + * @count: number of elements in the buffer
->> + *
->> + * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts().
->> In
->> + * addition to allocating enough space for @count elements of @type, it also
->> + * allocates space for a s64 timestamp at the end of the buffer and ensures
->> + * proper alignment of the timestamp.
->> + */
->> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
->> +	_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
->> +
->> +/**
->> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with
->> timestamp
->> + * @type: element type of the buffer
->> + * @name: identifier name of the buffer
->> + * @count: number of elements in the buffer
->> + *
->> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses
->> __aligned(IIO_DMA_MINALIGN)
->> + * to ensure that the buffer doesn't share cachelines with anything that
->> comes
->> + * before it in a struct. This should not be used for stack-allocated buffers
->> + * as stack memory cannot generally be used for DMA.
->> + */
->> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
->> +	_IIO_DECLARE_BUFFER_WITH_TS(type, name, count)
->> __aligned(IIO_DMA_MINALIGN)
->> +
->> +_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
->> +	"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp
->> alignment");
->>
+>> +// To be removed when all code is used.
+>> +#![allow(dead_code)]
 > 
-> I wonder about the usefulness of the above assert... AFAICT, the default
-
-Jonathan seemed minorly concerned that a strange new architecture might have
-IIO_DMA_MINALIGN is < 8 some day, so I threw it in there. But agree, it seems
-highly unlikely to actually happen.
-
-> alignment is 8 bytes and I could not find any arch defining ARCH_DMA_MINALIGN
-> smaller than that (would be very odd to have a cacheline smaller than that these
-> days). For bigger values, nowadays they are all power of 2 and I would be
-> surprised otherwise. But the more important question to me is what if the above
-> assert fails? Will we not allow IIO or some drivers to be used in that
-> architecture? It can become a very "painful" situation (assuming these macros
-> get widely used). So, IMHO, either we assume the above can happen and rework the
-> macros to make it work for that hypotetical case or we assume the above is
-> always true and drop the assert. TBH, I think it would be a fair assumption...
+> Please not, use 'expect' and and only where needed. If it would be too much,
+> it's probably a good indicator that we want to reduce the size of the patch for
+> now.
 > 
-> On top of that the assertion is wrong:
-> 
-> sizeof(IIO_DMA_MINALIGN) != IIO_DMA_MINALIGN :)
 
-Doh!
+Sure, I will switch to expect. The addition of a bit of dead code is intentional
+as we want to keep unused bits for future extension and lesser reader ambiguity.
+
+Note that I've already been conservative with not adding too much more code than
+we need (otherwise this patch could have been 2X the size), however VBIOS is a
+complicated thing and I think we want to keep a little more than we need for
+future extension for GPU families and proper documentation.
+
+>> +
+>> +//! VBIOS extraction and parsing.
+>> +
+>> +use crate::driver::Bar0;
+>> +use crate::firmware::FalconUCodeDescV3;
+>> +use core::convert::TryFrom;
+>> +use kernel::devres::Devres;
+>> +use kernel::error::Result;
+>> +use kernel::prelude::*;
+>> +
+>> +/// The offset of the VBIOS ROM in the BAR0 space.
+>> +const ROM_OFFSET: usize = 0x300000;
+>> +/// The maximum length of the VBIOS ROM to scan into.
+>> +const BIOS_MAX_SCAN_LEN: usize = 0x100000;
+>> +/// The size to read ahead when parsing initial BIOS image headers.
+>> +const BIOS_READ_AHEAD_SIZE: usize = 1024;
+>> +
+>> +// PMU lookup table entry types. Used to locate PMU table entries
+>> +// in the Fwsec image, corresponding to falcon ucodes.
+>> +#[allow(dead_code)]
+>> +const FALCON_UCODE_ENTRY_APPID_FIRMWARE_SEC_LIC: u8 = 0x05;
+>> +#[allow(dead_code)]
+>> +const FALCON_UCODE_ENTRY_APPID_FWSEC_DBG: u8 = 0x45;
+>> +const FALCON_UCODE_ENTRY_APPID_FWSEC_PROD: u8 = 0x85;
+>> +
+>> +pub(crate) struct Vbios {
+>> +    pub fwsec_image: Option<FwSecBiosImage>,
+>> +}
+>> +
+>> +impl Vbios {
+>> +    /// Read bytes from the ROM at the current end of the data vector
+>> +    fn read_more(bar0: &Devres<Bar0>, data: &mut KVec<u8>, len: usize) -> Result {
+>> +        let current_len = data.len();
+>> +        let start = ROM_OFFSET + current_len;
+>> +
+>> +        // Ensure length is a multiple of 4 for 32-bit reads
+>> +        if len % core::mem::size_of::<u32>() != 0 {
+>> +            pr_err!("VBIOS read length {} is not a multiple of 4\n", len);
+> 
+> Please don't use any of the pr_*() print macros within a driver, use the dev_*()
+> ones instead.
+
+Ok I'll switch to this. One slight complication is I've to retrieve the 'dev'
+from the Bar0 and pass that along, but that should be doable.
 
 > 
-> On the other hand, as I mentioned in V1, I think that an assertion or
-> BUILD_BUG_ON_MSG for making sure 'count' is a compile time constant expression
-> would be helpful. Sure, we'll get -Wvla but some developers might still ignore
-> the warning and send patches with these arrays. So, it would be neater if we
-> fail to build and force them to fix their code.
+>> +            return Err(EINVAL);
+>> +        }
+>> +
+>> +        // Allocate and zero-initialize the required memory
+> 
+> That's obvious from the code, if you feel this needs a comment, better explain
+> what we need it for, why zero-initialize, etc.
 
-BUILD_BUG_ON_MSG() won't work because it expands to a do/while loop which won't
-work in static struct declarations. But I can try to see if we can come up with
-something that works.
+Sure, actually the extends_with() is a performance optimization as we want to do
+only a single allocation and then fill in the allocated data. It has nothing to
+do with 0-initializing per-se. I will adjust the comment, but:
+
+This code...
+
+>> +        data.extend_with(len, 0, GFP_KERNEL)?;
+>> +        with_bar!(?bar0, |bar0_ref| {
+>> +            let dst = &mut data[current_len..current_len + len];
+>> +            for (idx, chunk) in dst
+>> +                .chunks_exact_mut(core::mem::size_of::<u32>())
+>> +                .enumerate()
+>> +            {
+>> +                let addr = start + (idx * core::mem::size_of::<u32>());
+>> +                // Convert the u32 to a 4 byte array. We use the .to_ne_bytes()
+>> +                // method out of convenience to convert the 32-bit integer as it
+>> +                // is in memory into a byte array without any endianness
+>> +                // conversion or byte-swapping.
+>> +                chunk.copy_from_slice(&bar0_ref.try_read32(addr)?.to_ne_bytes());
+>> +            }
+>> +            Ok(())
+>> +        })?;
+>> +
+>> +        Ok(())
+>> +    }
+..actually initially was:
+
++        with_bar!(self.bar0, |bar0| {
++            // Get current length
++            let current_len = self.data.len();
++
++            // Read ROM data bytes push directly to vector
++            for i in 0..bytes as usize {
++                // Read byte from the VBIOS ROM and push it to the data vector
++                let rom_addr = ROM_OFFSET + current_len + i;
++                let byte = bar0.try_readb(rom_addr)?;
++                self.data.push(byte, GFP_KERNEL)?;
+
+Where this bit could result in a lot of allocation.
+
+There was an unsafe() way of not having to do this but we settled with
+extends_with().
+
+Thoughts?
+
+Thanks.
+
+
 
