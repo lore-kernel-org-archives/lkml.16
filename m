@@ -1,72 +1,50 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C4625229E;
-	Wed, 23 Apr 2025 14:17:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A456927CCD4;
+	Wed, 23 Apr 2025 14:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745417870; cv=none; b=LJhRaebppA46Wmu0B/X86vv5ymLB07Ct+8LOqkhddfH/nmKVg3CbOd6Z/+CK2DQ5gyk9SQ99jbOHy8bvYUfRhuhweWPn44hi8GumWM63eLH7EAt0SBhfay+4WdY7aAKIhpN2mZRjZUm5U3K4aoDpn9gKXAY06/NpHjLmEStbI6g=
+	t=1745417897; cv=none; b=GeCbEQDeYjieFehu6Qj3tnAxf7gHNGKFcHXOIsOosjIY/Ng4sGBZ5LaVSVDMy419msjrBpOuTUB7RSUeFr5B1/2GBpczyrseLP7vUQSNX64zoTcnqHiANAKhXZyIirMAI/5k4DYSa23TCy5jEObfXB6fX3LxPI76KepyIgRJGHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745417870; c=relaxed/simple;
-	bh=NMi06tZIY8kOcMe403pZub/Dhw8wXAxs4qe/vlXY7ps=;
+	s=arc-20240116; t=1745417897; c=relaxed/simple;
+	bh=7aKM+auJAcCA4EwMJlrxXFyhWFOU+ZvyqtXYQRJElw8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jrMCuxJD/ddtTmD+xsRaJdrKOPKYfvNMA6PEWeSVmtfpk67Kvw2cmR5dpakzudNVwBUohfvXCKo+0Hx5GntUNP9Ays864xXGi/Lr0MZOqyIIreABhRWjSIeRDuxYCQz2V8qO/atzh+AnxVRhuiHJsu6+JmJJ3CSm9lFBDeQtPiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CuvMWPWM; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=RlL7sQl+ICKQB0WLRLkaNIq/XPBAZzZ3KdBdzkEr2vNN4h4kpGzp8L8dTgblhvn7GbSPhel9d8xftMIERiJn9veYfPHLGCv/NHTSFkEafby4Kh048kF/3c2KD0kT1ITZt91kiGNbNrdp9oyrDoe4d2OA23OiJcr1D/oKGG6oJF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUPBRZga; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuvMWPWM"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-736a7e126c7so5612761b3a.3;
-        Wed, 23 Apr 2025 07:17:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745417868; x=1746022668; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Rs7Eu4wOFQGf+O/6DQr/n7FrHchHOgegVEhLmOO2hwk=;
-        b=CuvMWPWMAGnWZLaCfxqUVkB0CkeEUTWkIwUZuwgMobmoeDFzrFnuODlrL15lPa5sCO
-         EY6lKxbvrf5Y8jVRbMbhM1bjXZm62tIrKZ2017H1OgBvsRRhnHHZ2sFHJ9kz89iETogs
-         Q12R8bmG9UHw5fOwKTX14NVCfnUp5FRWYZX9jsdLGHmMYbJNHMJZjYXGItwKRtlHjDNh
-         R0KNCcMoxEsNnJNWk4sUqlDM3shd6mnyfzaalFGMVeoC0v6PtAIm0dWQEJ+RU+J8K9Uw
-         2LqnjluqnWbHFH7gwpeF3NAMXxI+V1BCnu+waGyLivx9hLrg6/1TJDognikQz5tusgVF
-         0xbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745417868; x=1746022668;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Rs7Eu4wOFQGf+O/6DQr/n7FrHchHOgegVEhLmOO2hwk=;
-        b=E7h1CMGbZHca+ePAvhVh4rHRx86aGhsTk7ersPukwEvdG366vELT5Y3oywCR/REHsA
-         TlfF0xlvcn7u+oAOuzcpcqLI0KzwOLSgAcVdq5uKOiV8Z17ahJvwa7s0EPWCpOMhZ2a+
-         GJSE+eBOauu8oQpntnDfRUzYV8MzqLEmyojEl0QSNFB57gRMpBz/Zw1uszIsWoXp3ZoM
-         pvG0b0NsRN9jxvC+BRK/CkZ2CBbhXv+sS492NQXZL8D3MYhNsWBfjzuV5zJAFfvLdSTe
-         ZcotbINl75IsXzQaZZLwJ0WD+hP9XiTliGBUemctLn4udd+ChcQlLCgr8vyn12LpO+40
-         XGeg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaevbD9p9VkVy6T0a+4+j4loNW2qYRQ5i4IE65A0AYCboMud+g0P9DonOXg5ZTVMggwvjGFSNwAInDBw==@vger.kernel.org, AJvYcCVmnL8KPd/eLJ3AqiAt7QAq+tg4HQs13+Z1Sy3JKGY5FBTWp/3mTY6XXERmVXO7Adh/weUVpm73HD0t3YGI@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiRGfk6SshMWEBXqC2z/jr4MxW6SA+c2ujopZde2elzz0F1Zw1
-	DBLgWn4EsPK97MIfMODcAIt24aO9hzRTtq5ETVmPv2s+5LDFzsp4
-X-Gm-Gg: ASbGncu1l97qWCp9e90nhrHW1fcs8iJ12ulzoiYaRmltzxkJTYvQd8TWchDhHZKqw7A
-	ve4l6SY5TL8ZTa9azmKTDIEVKRW8rOP5WZcg1F8vvqEMaKzKU1JFB+gZcqkZGQ2Fp+hJvFb5kwt
-	W2IuEfW3DLVAZK5VOKELabee76sZgMTZTXtgaDkwtTd2maMcyIQUsgQiuhE6XEkkEYmqvNdNaN0
-	ej4msGtexc7aKc+H15120UqujakFT/XuorRkxwhl9G67KXblgUobQGpXFGcMf0NZfj1ZAxr6C8V
-	ba94IBfCi5n82NFzh3LHSw1k10OME+Kya6giMrLBs5/ZVDFh0FDX+g==
-X-Google-Smtp-Source: AGHT+IG2R0twJF5LarGHTv8fk8RdiFyXQEq28DGW/Ocevqi/3oYoP4j0obyEr34CZRG6SBbmIBr9qA==
-X-Received: by 2002:a05:6a00:130e:b0:736:b402:533a with SMTP id d2e1a72fcca58-73dc14453bcmr24423166b3a.1.1745417867956;
-        Wed, 23 Apr 2025 07:17:47 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaab922sm10885254b3a.133.2025.04.23.07.17.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 07:17:47 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 23 Apr 2025 07:17:46 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Peter Korsgaard <peter@korsgaard.com>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] hwmon: (tmp102): add vcc regulator support
-Message-ID: <a41b3348-4680-45be-8484-0da41216f67e@roeck-us.net>
-References: <20250417180426.3872314-1-peter@korsgaard.com>
- <20250417180426.3872314-2-peter@korsgaard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUPBRZga"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16D5EC4CEE2;
+	Wed, 23 Apr 2025 14:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745417895;
+	bh=7aKM+auJAcCA4EwMJlrxXFyhWFOU+ZvyqtXYQRJElw8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=VUPBRZgaVTUVw8N8jw2czHw2ITJ1jsFrSgFh29oJQLY0SBp4sqPV5HzaieeT/OI0j
+	 uZ69O1JXRZBjvDeFuGDYgVuK7Mxc9BLSN47aW6tE7mHLeK4rVSgQU9f3njrlPMtH5E
+	 rJVWMHYlx8Lip3HhTFwE8ZRmWwwCu26xBB/2hrysMZgGfM9hFmOW31GB79eEXe/kTF
+	 +QRn9Bwu/zbMGI3TMErtar0I+I/rnCIWu7swRUeLUdQRF0+p0ddcLPc4l/joIiBdtC
+	 050OQeeq+XXzBVdjWWy9pHeyMG9LWQxmihMStG6MWGwO2m6QL3dbagf22r9YEpD9qo
+	 9kEc0ZNrruMbQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A8080CE0B75; Wed, 23 Apr 2025 07:18:14 -0700 (PDT)
+Date: Wed, 23 Apr 2025 07:18:14 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: "Aithal, Srikanth" <sraithal@amd.com>
+Cc: Bert Karwatzki <spasswolf@web.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
+Message-ID: <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250423115409.3425-1-spasswolf@web.de>
+ <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,14 +53,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250417180426.3872314-2-peter@korsgaard.com>
+In-Reply-To: <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
 
-On Thu, Apr 17, 2025 at 08:04:26PM +0200, Peter Korsgaard wrote:
-> Make it optional for backwards compatibility.
+On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
+> On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
+> > Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
+> > debian sid. When booting kernel message appear on screen but no messages from
+> > init (systemd). There are also no logs written even thought emergency sync
+> > via magic sysrq works (a message is printed on screen), presumably because
+> > / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
+> > commit dd4cf8c9e1f4 as the first bad commit.
+> > Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
 > 
-> Signed-off-by: Peter Korsgaard <peter@korsgaard.com>
+> 
+> Hello,
+> 
+> On AMD platform as well boot failed starting next-20250422, bisecting the
+> issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
+> logs.
 
-Applied.
+Thank you all for the bisection and the report!
 
-Thanks,
-Guenter
+Please check out the predecessor of commit dd4cf8c9e1f4 ("ratelimit:
+Force re-initialization when rate-limiting re-enabled"):
+
+13fa70e052dd ("ratelimit: Allow zero ->burst to disable ratelimiting")
+
+Then please apply the patch shown below, and let me know what happens?
+(Yes, I should have split that commit up...)
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+index 04f16b8e24575..13ed636642270 100644
+--- a/lib/ratelimit.c
++++ b/lib/ratelimit.c
+@@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+ 	unsigned long flags;
+ 	int ret;
+ 
+-	if (!interval || !burst)
++	if (interval <= 0 || burst <= 0)
+ 		return 1;
+ 
+ 	/*
