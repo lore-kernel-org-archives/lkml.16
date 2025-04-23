@@ -1,179 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD95FC08;
-	Wed, 23 Apr 2025 11:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FE5FC08;
+	Wed, 23 Apr 2025 11:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745408238; cv=none; b=A9plolTa6fCJiKJ5ckqnoWlvCvRHDfPGhUww+YH+ycxC2XAlxDTM3JBa6TbOnQNszgwh7u/I4LO2UHvDdT6H/6JBNdjE4yZmcSj/BXby7HzhGtav9IQcL5MCcp+gDHQbGNn4BbMJAMJp0E25UfeL3P34cVClDTohqL0hHZQTcwg=
+	t=1745408249; cv=none; b=nYjFosT4XeANYXU71+rAAjS6GtA5JPvJ2GL1F5F1yE2w7ek/OiMbYagICl/gLlqCzLv8YvKJ7rgoJ4QmX+bjfZ66tuuqgvtQeUYj2dkGgoNiFJj4kRzLpLIddus6zqsiwmg/LgEXhbFmZaFjfylJe/Lxd8g41bG+wNrcD4UPhIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745408238; c=relaxed/simple;
-	bh=3pJoG+d0HhWoOv/Vb4FGPIm7v1quxhGiCBygqX42Q1k=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f/azfOTjpIx0zkd1Ym3h6AmbH6O6JQuOTvW8woPumXEuVvi+y5Zj/dUPPuYjfzd3B656o6+lr0YFOq67E2mygGJNxmIz/dfres2kjrB1ob9O5HLMBHeqRJ/KmU2WoEAqnHEHUuBVNTGEvhdUpAuEZI3Dk2/rZ2o500OVJSf5Zw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KefzT5YJ; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745408249; c=relaxed/simple;
+	bh=ZOYMbzEXP8RLe+8yWrKjk75zGEZAVkvv3WQseXJv0cQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YUIAh0xzBT0Ib9VYPo0XyJgDp3sAIGckBla2XNkuGgoMIuCpSd/eK3rMbfAHajRw3AtNKsmUp9wTQz/HdP4T8nu0Lv9wqcIIUk/rhaGbixOY5G/+pM6H++qZJm7hQkGbFiULA22eoJhUlR29+SorKRtaykAqPW47pRqq2uu8oKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFRKD46K; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KefzT5YJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745408237; x=1776944237;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=3pJoG+d0HhWoOv/Vb4FGPIm7v1quxhGiCBygqX42Q1k=;
-  b=KefzT5YJy8F4rWfLKDanbcVPj4h1IneKlwGRLy04NptCHUDzR+F+0+Fw
-   L91MALsuB4b/ghwEZdMRBxJnJ+RI42DJKmz86pLLGq2h9z7WbadWT419b
-   +0fX+m0bqwZXq9PYIik7dHNRxLQ8qm1KB1k7O+D8paPrQzRAmNKomRBjv
-   hKRCwAg1w/ipoB9JDyk8nDwvfPz2IwohTgdyxJAbpr5ig+HVFlzPSa2fu
-   qAaDW0J3kp2p39SIorNSKEOiRYYWz4c9LkKwWEx1MWleuXquKM8Wweato
-   xN9tyIaVq0+LX9d5CddpctPnDEkzSVw72qdvlnzZdmMY++ZG6dwG2UMex
-   w==;
-X-CSE-ConnectionGUID: HqROGo77T8CnmpAZBP5QGA==
-X-CSE-MsgGUID: ukiphQd7SC+pJ4ckwfHAQw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="58368794"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="58368794"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 04:37:16 -0700
-X-CSE-ConnectionGUID: noNNdf+cRe+BGXl5d2u+xA==
-X-CSE-MsgGUID: Pb5RVM01SwqE7BmDKL6/+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132828354"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 04:37:14 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 23 Apr 2025 14:37:11 +0300 (EEST)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN
- flag
-In-Reply-To: <aAi734h55l7g6eXH@wunner.de>
-Message-ID: <87631533-312f-fee9-384e-20a2cc69caf0@linux.intel.com>
-References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com> <aAi734h55l7g6eXH@wunner.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFRKD46K"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39ee57c0b8cso6121145f8f.0;
+        Wed, 23 Apr 2025 04:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745408246; x=1746013046; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sOaslwO/iDwgRO6fHWCqrlxeNb4sZEAWfunB5Ekm3Yw=;
+        b=CFRKD46KAxCSY0GnRw3hpSW2CTnMcs+t5+zUcvTICIm595UnYv+fNvGC1IaEWX2VGj
+         G8Yerid3y+63qAbNBjy5Z91GmvWrdZaFzsz7iXIKQo8UInPK+QIxyUX3BZN6LouKsZ6x
+         hR2/zdMHFzkhz4UMykPFcwPAFF6EOwjs3AM7YU1NVLs0shtnkNmiWaJ907yPuKrsGD41
+         bnhN0CSgvJtG25s533hJ3HfDRh87ZOZzt1EYdjgbHI//bSZn1DXHi+Cqni1sz7+R5qsD
+         2qYxxaNnRHHMID4Ppbw1f7UyUu+V85p8bILHVUxHxj+R5tdktrDpMm25oApGpF9RqMeU
+         ag3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745408246; x=1746013046;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sOaslwO/iDwgRO6fHWCqrlxeNb4sZEAWfunB5Ekm3Yw=;
+        b=ACYaAK8cWKihFAcJvUKTR2pwhutWHqm2J7YMTIoSEVs6dPScAoToHtdf2Rsy7AQnbx
+         eqrTM5s7SYlgz0zkmMOQBNK1IC+ANgw2VRPojCfISGA4qMuOgSuBFuYiSHzzW0o4c9zQ
+         +ebTMubYIGYeypQiEE+hFCAPvrJwS5gY2RJjHMC2uX1hlcsi0LM3HAnoWZ2vBGSq1IGx
+         hq815QSHqzBlBowR3BNdL7VecHPkRjcULaYHWwItSiIkWtFaHv8BRtY95FW3I2iO4hDS
+         CUVppMFi4YTNUSu6UAn083mZsAH2ciEWgn2Bvx6idIQrSkVRn6T4QkcbNCQF12aih6UE
+         UKmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ+w8ahaAOeaWCjBxujFKzv7z9xHuhBeLR1T/tF1LHngzybhGrpvizLQULxGL5YUrEK7qwB/MIBAMHbFM=@vger.kernel.org, AJvYcCVpbCVTde6MIACnQ/zLCt6aOsAKtfSVcavgfCIZ9VzHJZ5Nb0Gihg7ExleBTuw07cHjGvNN8XMr@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/3sZFMVp1LwJMFx6fiST35JO4Rtx0U1+7dQLPLU/TZYu/rUT+
+	G1aWvU6pCykERHSyJNr6QcZ5rFvVqWXK7StdMhNGAvD/1xQpP7jp
+X-Gm-Gg: ASbGncv6Gmqr9CjhmDZziqNX9kuuhBwtRCDXtOA0908q1/f7guph0yvnmbdqNKSPr2S
+	LEMJsMgWtNo/Wb4Fy93eeIjTYe/zeA/aqYTsVb2441PcHBiakezqC0OQ2F3nml63W0odOE9rYYC
+	v3mZ5eaQ84k2FjCqgTZKR/gnuXlu2u3K6sMSohh0QMh7sdthJtmXgeH5GMad8SEaha+Yaqd/NBa
+	M/U62SwxS64DnNi1bS1kvzbyztrK3+3EJ49gL2vJgMEUB/X9/7jpAWlCL1CFTsRTXq5ztH1ejcC
+	KCAq2g+oWe8FcqejddhYanuYi2MUImLGlRsRxm14aA==
+X-Google-Smtp-Source: AGHT+IHSoaSXaAgj53jWAGtI7Z7mMkdXhhLo9jTahymT0NfSoVyVjCueixP+i4S5vMsc6dh5pNJwhw==
+X-Received: by 2002:a5d:6d88:0:b0:399:737f:4e02 with SMTP id ffacd0b85a97d-39efbad2f10mr16252645f8f.39.1745408245796;
+        Wed, 23 Apr 2025 04:37:25 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa43d22esm18699323f8f.52.2025.04.23.04.37.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 04:37:25 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	netdev@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net: ip_gre: Fix spelling mistake "demultiplexor" -> "demultiplexer"
+Date: Wed, 23 Apr 2025 12:37:19 +0100
+Message-ID: <20250423113719.173539-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1399898896-1745408231=:1158"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+There is a spelling mistake in a pr_info message. Fix it.
 
---8323328-1399898896-1745408231=:1158
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ net/ipv4/gre_demux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wed, 23 Apr 2025, Lukas Wunner wrote:
+diff --git a/net/ipv4/gre_demux.c b/net/ipv4/gre_demux.c
+index 6701a98d9a9f..dafd68f3436a 100644
+--- a/net/ipv4/gre_demux.c
++++ b/net/ipv4/gre_demux.c
+@@ -199,7 +199,7 @@ static const struct net_protocol net_gre_protocol = {
+ 
+ static int __init gre_init(void)
+ {
+-	pr_info("GRE over IPv4 demultiplexor driver\n");
++	pr_info("GRE over IPv4 demultiplexer driver\n");
+ 
+ 	if (inet_add_protocol(&net_gre_protocol, IPPROTO_GRE) < 0) {
+ 		pr_err("can't add protocol\n");
+-- 
+2.49.0
 
-> [cc +=3D Maciej, start of thread is here:
-> https://lore.kernel.org/r/20250422115548.1483-1-ilpo.jarvinen@linux.intel=
-=2Ecom/
-> ]
->=20
-> On Tue, Apr 22, 2025 at 02:55:47PM +0300, Ilpo J=E4rvinen wrote:
-> > +void pcie_reset_lbms(struct pci_dev *port)
-> >  {
-> > -=09struct pcie_bwctrl_data *data;
-> > -
-> > -=09guard(rwsem_read)(&pcie_bwctrl_lbms_rwsem);
-> > -=09data =3D port->link_bwctrl;
-> > -=09if (data)
-> > -=09=09atomic_set(&data->lbms_count, 0);
-> > -=09else
-> > -=09=09pcie_capability_write_word(port, PCI_EXP_LNKSTA,
-> > -=09=09=09=09=09   PCI_EXP_LNKSTA_LBMS);
-> > +=09clear_bit(PCI_LINK_LBMS_SEEN, &port->priv_flags);
-> > +=09pcie_capability_write_word(port, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA_LBM=
-S);
-> >  }
->=20
-> Hm, previously the LBMS bit was only cleared in the Link Status register
-> if the bandwith controller hadn't probed yet.  Now it's cleared
-> unconditionally.  I'm wondering if this changes the logic somehow?
-
-Hmm, that's a good question and I hadn't thought all the implications.
-I suppose leaving if (!port->link_bwctrl) there would retain the existing=
-=20
-behavior better allowing bwctrl to pick the link speed changes more=20
-reliably.
-
-However, I'm not entirely sure if the old code was a good idea either as=20
-it assumed the irq handler had read LBMS by the time lbms_count is reset.
-Solving that would seemingly require locking to not race with remove,=20
-which just got removed (LOL) :-(.
-
-Given this flag is only for the purposes of the quirk, it seems very much=
-=20
-out of proportions. The quirk seeing extra LBMS doesn't seem to have a big=
-=20
-practical impact. At worst case, the link speed becomes gen1 if the quirk=
-=20
-fails to restore the original link speed for some reason (which, IIRC, it=
-=20
-didn't yet attempt do when the original LBMS reset code was added).
-
-So I'd prefer going with the if (!port->link_bwctrl) solution.
-
-> >  static bool pcie_lbms_seen(struct pci_dev *dev, u16 lnksta)
-> >  {
-> > -=09unsigned long count;
-> > -=09int ret;
-> > -
-> > -=09ret =3D pcie_lbms_count(dev, &count);
-> > -=09if (ret < 0)
-> > -=09=09return lnksta & PCI_EXP_LNKSTA_LBMS;
-> > +=09if (test_bit(PCI_LINK_LBMS_SEEN, &dev->priv_flags))
-> > +=09=09return true;
-> > =20
-> > -=09return count > 0;
-> > +=09return lnksta & PCI_EXP_LNKSTA_LBMS;
-> >  }
->=20
-> Another small logic change here:  Previously pcie_lbms_count()
-> returned a negative value if the bandwidth controller hadn't
-> probed yet or wasn't compiled into the kernel.
-
-One cannot disable bwctrl, it always comes on with PCIe.
-
-> Only in those two cases was the LBMS flag in the lnksta variable=20
-> returned.
->=20
-> Now the LBMS flag is also returned if the bandwidth controller
-> is compiled into the kernel and has probed, but its irq handler
-> hasn't recorded a seen LBMS bit yet.
->=20
-> I'm guessing this can happen if the quirk races with the irq
-> handler and wins the race, so this safety net is needed?
-
-The main reason why this check is here is for the boot when bwctrl is not=
-=20
-yet probed when the quirk runs. But the check just seems harmless, or=20
-even somewhat useful, in the case when bwctrl has already probed. LBMS=20
-being asserted should result in PCI_LINK_LBMS_SEEN even if the irq=20
-handler has not yet done its job to transfer it into priv_flags.
-
-> This is quite subtle so I thought I'd ask.
-
-It's good that you asked! :-)
-
-> The patch otherwise
-> LGTM, so assuming the two subtle logic changes above are intentional
-> and can be explained, this is
->=20
-> Reviewed-by: Lukas Wunner <lukas@wunner.de>
->=20
-> Thanks,
->=20
-> Lukas
->=20
-
---=20
- i.
-
---8323328-1399898896-1745408231=:1158--
