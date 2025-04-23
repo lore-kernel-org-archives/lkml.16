@@ -1,182 +1,314 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1CF1EDA36;
-	Wed, 23 Apr 2025 02:37:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECC02620E7
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:37:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745375833; cv=none; b=lyY/TKZ91wyldApvhpaxQkQJE+ZiieFFk4bfO89LV2aIicUw33d69BS/H2KIx6L48m0BTa+FfFelwS2yvsfgK7GCJeej07FqaaBQU2nzXOgzQ0MagnUHc1luQNPUNlqMOS+x6MblIefrswNPJ91C7ln/o51ZhfodIMEjyX7IXr8=
+	t=1745375858; cv=none; b=iV+bbUEXAvx+bF88Upp06MLNbs524SUXEjZD9CFTKay83b1bVFa4kWLC5UckYsgURGW+Bqsj1ghWlUsdqQZr3aqr907gaZYKXaMHNDJYH507VoOBBhTSOSU5/oxkxwiM9LG970aMO1V6ovqCRw/YSDzbKSbI6s6nqVNGxkjqnwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745375833; c=relaxed/simple;
-	bh=fbNJO/O8ZLr6gQ8KnxRAu8G94Pvwxa4PHtk3nXXv9JA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cEXJBJEetpBD1Omj+iPewCcNEWWBFAHjq1iTG/NVgQC+kLy+zPBysMtMIlWpFwaGqqQ6J/oU3WEmaZbvP8zlrMybGmHkkejbs39cMdAiRfexk+EwZnuH7GEjDkE7Krvgo/90Q0yIDSgRcxigp3Q9iofsUwpD0dGc4WMndiGhcLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S6oOOMTT; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745375858; c=relaxed/simple;
+	bh=D9lEisyhf1Jeo4cwBTYizw2974eKj7vbdo+IZSDFXEA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LVnUZweAJpBO/5t0cQvyWrW7QehsK8edx4ST4eR3BTr6CNM1+Uh1xNDXfhpFbb6bgD2KY0XREyMoSCp0c84jvECD6VsxrBJdYaAfF6xUFyXw5252syy1fjAJEpCvv65lDhyVTrBlGqq98dx3e3hFxEXnXM2uHZKoKSs1lYXSPzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lzYAGK2f; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6oOOMTT"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227cf12df27so4983525ad.0;
-        Tue, 22 Apr 2025 19:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745375829; x=1745980629; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q0covPsBk60C+c98aMqlqjUhpT0cBbCDGGXnljyb2rE=;
-        b=S6oOOMTTX3Q9FFY7IMh5oAx9TYGSJin3mdpfdaKP6Bc33dZ0X5qw4wdjxmjHiZU7tL
-         4BkJOXXB5myd/DRUHyidext2WBx/EiSXhQOIrLJH1C5s1ni8OVQqwwNLKsKqTIVRrNj+
-         7GQYVqt9/k8kC7B8wGt8DlDgKdn+O6F+t5xbQ/grkFTgRbi0L+vc/5GBvtCWfbh2ASxq
-         HuUvHS68zQGrfbiSLA6U0ZPK4RKus0KXD5kTLQBcZbH00Fo7I/r1Gagt+lc/kLyz5Cth
-         G646tQZF3tlvLaeenigi1tPNKgZKN10YPtqvlC9CUVUcl/jfBTSYCBUSrauRig9ViXwl
-         M39g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745375829; x=1745980629;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q0covPsBk60C+c98aMqlqjUhpT0cBbCDGGXnljyb2rE=;
-        b=QfXsI9y/EA66Dq+u/NeXFXsxvR7/okbuuhPDJvlIELIfegf3NhG79zWSvPnAhX12Zp
-         X8iG/L7DcsETAZvlkcf/u5l8kKXy9NEW331bCNkYPG+CQRyByghVt97vtulswrBFlQwQ
-         WCB5gzmGXmVV8BVdCHC3HVsEKIZ7A+TEHqsYFQTt6tF2jCinQYPsugsa3UvtpUhaScJt
-         0Rsj2yFdl5UpaydlVf8irfx4/DIgWLIdaCwtJxuk/dsFGutMqA0CaiR6aErlarqGe/L1
-         iTc0SOKmNAb61vC3ZihSf/ZOsCuk5i3pCeL9hGLDGGzr2nK5o4j5ApicvvEewN0rrqgP
-         iIzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJvGgfj32vkKMtif9d6a02Z4pyNNYjQRv0gkj+FanUuSXgpyTmJtQw1UTixtYTZh57o6nHI4UGnh7nyKEW@vger.kernel.org, AJvYcCXhe8E1+6nZwymwzveg5GZqAvNESOhEyicsreGhU+Y+yY9/j7cRT5P8+DWWsOVd8qH6ilYDu6mcJ8fcgnV8@vger.kernel.org
-X-Gm-Message-State: AOJu0YygytPMyX7vUqhwFTQNhzKcIXXxXyGq5kuuyUXuDxNGvR6DHDOb
-	O3uYhWy9+IzzZOPnQupVZ+SYlbW5Ym5hbnDPTosZ+rOcCeNRD4qn
-X-Gm-Gg: ASbGncvIcjE+OspuI48M5gKmXwmw3HcnQdD7GT0BFdSdy0cUVETAXTecFghnzlCFyEn
-	MjZCmkbb6rsmof24Te/G0eUwHoWG+MdsL/1S3tMJ7NKXb8mhOouekoHTN7hVUwf0LkYcQYKZLTV
-	KW/DnK1lPklKNVUymhXyTyOrA78UaWxUgZz2JMhSDO+JBrBFBnTyt0bs7FRVdGP9RNlbMx9ZsvP
-	GeBzq8KaiyOcPYgBqLacxEHDwYSRF0tqywCSO6kNRK2Jkp345R0BzjbceYPTwph27WsOa165Ryc
-	RQrYcKNZKPMOA8FOuccG7iikkcLNmjr05Hff1UzYWPyWt6SaLHGGBp+0adREv7U2QtKE1mk=
-X-Google-Smtp-Source: AGHT+IGsvGP5RH8UNJyAmbvgKpNx3TEl7JMeLI+5MkobhhMwpUTlsPDqtk9r7R8FG/hRcWDmkSJmCw==
-X-Received: by 2002:a17:903:1b6f:b0:215:9eac:1857 with SMTP id d9443c01a7336-22da317abf2mr19665905ad.5.1745375829230;
-        Tue, 22 Apr 2025 19:37:09 -0700 (PDT)
-Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:c11b:5090:296c:1c32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fe0679sm92646925ad.249.2025.04.22.19.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 19:37:08 -0700 (PDT)
-From: I Hsin Cheng <richard120310@gmail.com>
-To: syzbot+de1498ff3a934ac5e8b4@syzkaller.appspotmail.com,
-	viro@zeniv.linux.org.uk,
-	brauner@kernel.org
-Cc: jack@suse.cz,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	jfs-discussion@lists.sourceforge.net,
-	shaggy@kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	I Hsin Cheng <richard120310@gmail.com>
-Subject: [RFC PATCH] fs/buffer: Handle non folio buffer case for drop_buffer()
-Date: Wed, 23 Apr 2025 10:37:03 +0800
-Message-ID: <20250423023703.632613-1-richard120310@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <66fcb7f9.050a0220.f28ec.04e8.GAE@google.com>
-References: <66fcb7f9.050a0220.f28ec.04e8.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lzYAGK2f"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745375856; x=1776911856;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=D9lEisyhf1Jeo4cwBTYizw2974eKj7vbdo+IZSDFXEA=;
+  b=lzYAGK2f/iBJV7E33TRXejTSRD8VxDGfl08EiK0046suCo3bYTkeizQh
+   hmy5ja/515Q/tsaCzBJ3NP7PIsRmKu1kL92iLepSwHJbBHuBeSaHBnz0u
+   8em7lCFrfhZd/B9cbEUGlONcx6ZF2xTSVuVz4oWSdH1B+yJzuaPZGGA4T
+   VS8b6uDgY9weVdi99q2siZPg/VmTXVKwE1kRX9ZiKqNh8pGq3pn6i/seb
+   lc6DaVqptycvtnTIEB/d9bpb7ZeOhgAJBm8q+YdTXVRj2YKNphD6EiH/S
+   jUcufbYZIdmIxalz6onS28yOAukyw2Ffbigyq/L6Xdn2RBqjpCSfcMdAU
+   g==;
+X-CSE-ConnectionGUID: kWeTka6QQI+Qb36MmnCpAA==
+X-CSE-MsgGUID: /Tdya+jSSAmGcMPTdJ4rlw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57611633"
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="57611633"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 19:37:35 -0700
+X-CSE-ConnectionGUID: wTiubxkXSyyO4yakYWfzCQ==
+X-CSE-MsgGUID: uS353M3ZToO5V8pe2fJCIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="132722172"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 22 Apr 2025 19:37:33 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u7PzP-0001Xg-1u;
+	Wed, 23 Apr 2025 02:37:31 +0000
+Date: Wed, 23 Apr 2025 10:36:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Akshata Jahagirdar <akshata.jahagirdar@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Matt Roper <matthew.d.roper@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>
+Subject: drivers/gpu/drm/xe/xe_migrate.c:304:52: error: result of comparison
+ of constant 274877906944 with expression of type 'resource_size_t' (aka
+ 'unsigned int') is always true
+Message-ID: <202504231025.G7B2ddED-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-When the folio doesn't have any buffers, "folio_buffers(folio)" will
-return NULL, causing "buffer_busy(bh)" to dereference a null pointer.
-Handle the case and jump to detach the folio if there's no buffer within
-it.
+Hi Akshata,
 
-Reported-by: syzbot+de1498ff3a934ac5e8b4@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=de1498ff3a934ac5e8b4
-Fixes: 6439476311a64 ("fs: Convert drop_buffers() to use a folio")
-Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
----
-syzbot reported a null pointer dereference issue. [1]
+FYI, the error/warning still remains.
 
-If the folio be sent into "drop_buffer()" doesn't have any buffers,
-assigning "bh = head" will make "bh" to NULL, and the following
-operation of cleaning the buffer will encounter null pointer
-dereference.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   bc3372351d0c8b2726b7d4229b878342e3e6b0e8
+commit: 8d79acd567db183e675cccc6cc737d2959e2a2d9 drm/xe/migrate: Add helper function to program identity map
+date:   9 months ago
+config: i386-randconfig-052-20250423 (https://download.01.org/0day-ci/archive/20250423/202504231025.G7B2ddED-lkp@intel.com/config)
+compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250423/202504231025.G7B2ddED-lkp@intel.com/reproduce)
 
-I checked other use cases of "folio_buffers()", e.g. the one used in
-"buffer_check_dirty_writeback()" [2]. They generally use the same
-approach to check whether a folio_buffers() return NULL.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504231025.G7B2ddED-lkp@intel.com/
 
-I'm not sure whether it's normal for a non-buffer folio to reach inside
-"drop_buffers()", if it's not maybe we have to dig more into the problem
-and find out where did the buffers of folio get freed or corrupted, let
-me know if that's needed and what can I test to help. I'm new to fs
-correct me if I'm wrong I'll be happy to learn, and know more about
-what's the expected behavior or correct behavior for a folio, thanks !
+All errors (new ones prefixed by >>):
 
-[1]:
-BUG: KASAN: null-ptr-deref in instrument_atomic_read include/linux/instrumented.h:68 [inline]
-BUG: KASAN: null-ptr-deref in atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
-BUG: KASAN: null-ptr-deref in buffer_busy fs/buffer.c:2881 [inline]
-BUG: KASAN: null-ptr-deref in drop_buffers+0x6f/0x710 fs/buffer.c:2893
-Read of size 4 at addr 0000000000000060 by task kswapd0/74
+   In file included from drivers/gpu/drm/xe/xe_migrate.c:12:
+   In file included from include/drm/ttm/ttm_tt.h:30:
+   In file included from include/linux/pagemap.h:8:
+   In file included from include/linux/mm.h:2253:
+   include/linux/vmstat.h:514:36: error: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Werror,-Wenum-enum-conversion]
+     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
+         |                               ~~~~~~~~~~~ ^ ~~~
+>> drivers/gpu/drm/xe/xe_migrate.c:304:52: error: result of comparison of constant 274877906944 with expression of type 'resource_size_t' (aka 'unsigned int') is always true [-Werror,-Wtautological-constant-out-of-range-compare]
+     304 |                 xe_assert(xe, (xe->mem.vram.actual_physical_size <= SZ_256G));
+         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+   drivers/gpu/drm/xe/xe_assert.h:108:54: note: expanded from macro 'xe_assert'
+     108 | #define xe_assert(xe, condition) xe_assert_msg((xe), condition, "")
+         |                                  ~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+   drivers/gpu/drm/xe/xe_assert.h:111:24: note: expanded from macro 'xe_assert_msg'
+     111 |         __xe_assert_msg(__xe, condition,                                                        \
+         |         ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     112 |                         "platform: %s subplatform: %d\n"                                        \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     113 |                         "graphics: %s %u.%02u step %s\n"                                        \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     114 |                         "media: %s %u.%02u step %s\n"                                           \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     115 |                         msg,                                                                    \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     116 |                         __xe->info.platform_name, __xe->info.subplatform,                       \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     117 |                         __xe->info.graphics_name,                                               \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     118 |                         __xe->info.graphics_verx100 / 100,                                      \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     119 |                         __xe->info.graphics_verx100 % 100,                                      \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     120 |                         xe_step_name(__xe->info.step.graphics),                                 \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     121 |                         __xe->info.media_name,                                                  \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     122 |                         __xe->info.media_verx100 / 100,                                         \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     123 |                         __xe->info.media_verx100 % 100,                                         \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     124 |                         xe_step_name(__xe->info.step.media),                                    \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     125 |                         ## arg);                                                                \
+         |                         ~~~~~~~
+   drivers/gpu/drm/xe/xe_assert.h:84:31: note: expanded from macro '__xe_assert_msg'
+      84 |         (void)drm_WARN(&(xe)->drm, !(condition), "[" DRM_NAME "] Assertion `%s` failed!\n" msg, \
+         |               ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      85 |                        __stringify(condition), ## arg);                                         \
+         |                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/drm/drm_print.h:635:7: note: expanded from macro 'drm_WARN'
+     635 |         WARN(condition, "%s %s: [drm] " format,                         \
+         |         ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     636 |                         dev_driver_string((drm)->dev),                  \
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     637 |                         dev_name((drm)->dev), ## arg)
+         |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/bug.h:132:25: note: expanded from macro 'WARN'
+     132 |         int __ret_warn_on = !!(condition);                              \
+         |                                ^~~~~~~~~
+   2 errors generated.
 
-CPU: 0 UID: 0 PID: 74 Comm: kswapd0 Not tainted 6.12.0-rc1-syzkaller-00031-ge32cde8d2bd7 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- print_report+0xe8/0x550 mm/kasan/report.c:491
- kasan_report+0x143/0x180 mm/kasan/report.c:601
- kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
- instrument_atomic_read include/linux/instrumented.h:68 [inline]
- atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
- buffer_busy fs/buffer.c:2881 [inline]
- drop_buffers+0x6f/0x710 fs/buffer.c:2893
- try_to_free_buffers+0x295/0x5f0 fs/buffer.c:2947
- shrink_folio_list+0x240c/0x8cc0 mm/vmscan.c:1432
- evict_folios+0x549b/0x7b50 mm/vmscan.c:4583
- try_to_shrink_lruvec+0x9ab/0xbb0 mm/vmscan.c:4778
- shrink_one+0x3b9/0x850 mm/vmscan.c:4816
- shrink_many mm/vmscan.c:4879 [inline]
- lru_gen_shrink_node mm/vmscan.c:4957 [inline]
- shrink_node+0x3799/0x3de0 mm/vmscan.c:5937
- kswapd_shrink_node mm/vmscan.c:6765 [inline]
- balance_pgdat mm/vmscan.c:6957 [inline]
- kswapd+0x1ca3/0x3700 mm/vmscan.c:7226
- kthread+0x2f0/0x390 kernel/kthread.c:389
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
- </TASK>
 
-[2]:https://elixir.bootlin.com/linux/v6.14.3/source/fs/buffer.c#L97
+vim +304 drivers/gpu/drm/xe/xe_migrate.c
 
-Best regards,
-I Hsin Cheng
----
- fs/buffer.c | 3 +++
- 1 file changed, 3 insertions(+)
+   177	
+   178	static int xe_migrate_prepare_vm(struct xe_tile *tile, struct xe_migrate *m,
+   179					 struct xe_vm *vm)
+   180	{
+   181		struct xe_device *xe = tile_to_xe(tile);
+   182		u16 pat_index = xe->pat.idx[XE_CACHE_WB];
+   183		u8 id = tile->id;
+   184		u32 num_entries = NUM_PT_SLOTS, num_level = vm->pt_root[id]->level,
+   185		    num_setup = num_level + 1;
+   186		u32 map_ofs, level, i;
+   187		struct xe_bo *bo, *batch = tile->mem.kernel_bb_pool->bo;
+   188		u64 entry, pt30_ofs;
+   189	
+   190		/* Can't bump NUM_PT_SLOTS too high */
+   191		BUILD_BUG_ON(NUM_PT_SLOTS > SZ_2M/XE_PAGE_SIZE);
+   192		/* Must be a multiple of 64K to support all platforms */
+   193		BUILD_BUG_ON(NUM_PT_SLOTS * XE_PAGE_SIZE % SZ_64K);
+   194		/* And one slot reserved for the 4KiB page table updates */
+   195		BUILD_BUG_ON(!(NUM_KERNEL_PDE & 1));
+   196	
+   197		/* Need to be sure everything fits in the first PT, or create more */
+   198		xe_tile_assert(tile, m->batch_base_ofs + batch->size < SZ_2M);
+   199	
+   200		bo = xe_bo_create_pin_map(vm->xe, tile, vm,
+   201					  num_entries * XE_PAGE_SIZE,
+   202					  ttm_bo_type_kernel,
+   203					  XE_BO_FLAG_VRAM_IF_DGFX(tile) |
+   204					  XE_BO_FLAG_PINNED);
+   205		if (IS_ERR(bo))
+   206			return PTR_ERR(bo);
+   207	
+   208		/* PT31 reserved for 2M identity map */
+   209		pt30_ofs = bo->size - 2 * XE_PAGE_SIZE;
+   210		entry = vm->pt_ops->pde_encode_bo(bo, pt30_ofs, pat_index);
+   211		xe_pt_write(xe, &vm->pt_root[id]->bo->vmap, 0, entry);
+   212	
+   213		map_ofs = (num_entries - num_setup) * XE_PAGE_SIZE;
+   214	
+   215		/* Map the entire BO in our level 0 pt */
+   216		for (i = 0, level = 0; i < num_entries; level++) {
+   217			entry = vm->pt_ops->pte_encode_bo(bo, i * XE_PAGE_SIZE,
+   218							  pat_index, 0);
+   219	
+   220			xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64, entry);
+   221	
+   222			if (vm->flags & XE_VM_FLAG_64K)
+   223				i += 16;
+   224			else
+   225				i += 1;
+   226		}
+   227	
+   228		if (!IS_DGFX(xe)) {
+   229			/* Write out batch too */
+   230			m->batch_base_ofs = NUM_PT_SLOTS * XE_PAGE_SIZE;
+   231			for (i = 0; i < batch->size;
+   232			     i += vm->flags & XE_VM_FLAG_64K ? XE_64K_PAGE_SIZE :
+   233			     XE_PAGE_SIZE) {
+   234				entry = vm->pt_ops->pte_encode_bo(batch, i,
+   235								  pat_index, 0);
+   236	
+   237				xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64,
+   238					  entry);
+   239				level++;
+   240			}
+   241			if (xe->info.has_usm) {
+   242				xe_tile_assert(tile, batch->size == SZ_1M);
+   243	
+   244				batch = tile->primary_gt->usm.bb_pool->bo;
+   245				m->usm_batch_base_ofs = m->batch_base_ofs + SZ_1M;
+   246				xe_tile_assert(tile, batch->size == SZ_512K);
+   247	
+   248				for (i = 0; i < batch->size;
+   249				     i += vm->flags & XE_VM_FLAG_64K ? XE_64K_PAGE_SIZE :
+   250				     XE_PAGE_SIZE) {
+   251					entry = vm->pt_ops->pte_encode_bo(batch, i,
+   252									  pat_index, 0);
+   253	
+   254					xe_map_wr(xe, &bo->vmap, map_ofs + level * 8, u64,
+   255						  entry);
+   256					level++;
+   257				}
+   258			}
+   259		} else {
+   260			u64 batch_addr = xe_bo_addr(batch, 0, XE_PAGE_SIZE);
+   261	
+   262			m->batch_base_ofs = xe_migrate_vram_ofs(xe, batch_addr);
+   263	
+   264			if (xe->info.has_usm) {
+   265				batch = tile->primary_gt->usm.bb_pool->bo;
+   266				batch_addr = xe_bo_addr(batch, 0, XE_PAGE_SIZE);
+   267				m->usm_batch_base_ofs = xe_migrate_vram_ofs(xe, batch_addr);
+   268			}
+   269		}
+   270	
+   271		for (level = 1; level < num_level; level++) {
+   272			u32 flags = 0;
+   273	
+   274			if (vm->flags & XE_VM_FLAG_64K && level == 1)
+   275				flags = XE_PDE_64K;
+   276	
+   277			entry = vm->pt_ops->pde_encode_bo(bo, map_ofs + (u64)(level - 1) *
+   278							  XE_PAGE_SIZE, pat_index);
+   279			xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE * level, u64,
+   280				  entry | flags);
+   281		}
+   282	
+   283		/* Write PDE's that point to our BO. */
+   284		for (i = 0; i < map_ofs / PAGE_SIZE; i++) {
+   285			entry = vm->pt_ops->pde_encode_bo(bo, (u64)i * XE_PAGE_SIZE,
+   286							  pat_index);
+   287	
+   288			xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE +
+   289				  (i + 1) * 8, u64, entry);
+   290		}
+   291	
+   292		/* Set up a 1GiB NULL mapping at 255GiB offset. */
+   293		level = 2;
+   294		xe_map_wr(xe, &bo->vmap, map_ofs + XE_PAGE_SIZE * level + 255 * 8, u64,
+   295			  vm->pt_ops->pte_encode_addr(xe, 0, pat_index, level, IS_DGFX(xe), 0)
+   296			  | XE_PTE_NULL);
+   297		m->cleared_mem_ofs = (255ULL << xe_pt_shift(level));
+   298	
+   299		/* Identity map the entire vram at 256GiB offset */
+   300		if (IS_DGFX(xe)) {
+   301			u64 pt31_ofs = bo->size - XE_PAGE_SIZE;
+   302	
+   303			xe_migrate_program_identity(xe, vm, bo, map_ofs, 256, pat_index, pt31_ofs);
+ > 304			xe_assert(xe, (xe->mem.vram.actual_physical_size <= SZ_256G));
+   305		}
+   306	
+   307		/*
+   308		 * Example layout created above, with root level = 3:
+   309		 * [PT0...PT7]: kernel PT's for copy/clear; 64 or 4KiB PTE's
+   310		 * [PT8]: Kernel PT for VM_BIND, 4 KiB PTE's
+   311		 * [PT9...PT27]: Userspace PT's for VM_BIND, 4 KiB PTE's
+   312		 * [PT28 = PDE 0] [PT29 = PDE 1] [PT30 = PDE 2] [PT31 = 2M vram identity map]
+   313		 *
+   314		 * This makes the lowest part of the VM point to the pagetables.
+   315		 * Hence the lowest 2M in the vm should point to itself, with a few writes
+   316		 * and flushes, other parts of the VM can be used either for copying and
+   317		 * clearing.
+   318		 *
+   319		 * For performance, the kernel reserves PDE's, so about 20 are left
+   320		 * for async VM updates.
+   321		 *
+   322		 * To make it easier to work, each scratch PT is put in slot (1 + PT #)
+   323		 * everywhere, this allows lockless updates to scratch pages by using
+   324		 * the different addresses in VM.
+   325		 */
+   326	#define NUM_VMUSA_UNIT_PER_PAGE	32
+   327	#define VM_SA_UPDATE_UNIT_SIZE		(XE_PAGE_SIZE / NUM_VMUSA_UNIT_PER_PAGE)
+   328	#define NUM_VMUSA_WRITES_PER_UNIT	(VM_SA_UPDATE_UNIT_SIZE / sizeof(u64))
+   329		drm_suballoc_manager_init(&m->vm_update_sa,
+   330					  (size_t)(map_ofs / XE_PAGE_SIZE - NUM_KERNEL_PDE) *
+   331					  NUM_VMUSA_UNIT_PER_PAGE, 0);
+   332	
+   333		m->pt_bo = bo;
+   334		return 0;
+   335	}
+   336	
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index cc8452f60251..29fd17f78265 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -2883,6 +2883,8 @@ drop_buffers(struct folio *folio, struct buffer_head **buffers_to_free)
- 	struct buffer_head *head = folio_buffers(folio);
- 	struct buffer_head *bh;
- 
-+	if (!head)
-+		goto detach_folio;
- 	bh = head;
- 	do {
- 		if (buffer_busy(bh))
-@@ -2897,6 +2899,7 @@ drop_buffers(struct folio *folio, struct buffer_head **buffers_to_free)
- 			__remove_assoc_queue(bh);
- 		bh = next;
- 	} while (bh != head);
-+detach_folio:
- 	*buffers_to_free = head;
- 	folio_detach_private(folio);
- 	return true;
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
