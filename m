@@ -1,152 +1,90 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A5726771F
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A943F26FA4C;
+	Wed, 23 Apr 2025 08:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745397392; cv=none; b=n/3W2EhF1oN+We4iLJ4z+vWCWW5knZEHS77YGSZkrOMbMvgenhsx6AnpL41kHleVznmZMZGS+ZPi4dVDJX29sGpe9nnZKvNb8HDG7yic9920QCPplc0sk8P69WeMQUpbPmvhGGxIXackfGBFBpoMo1+Osl/elRLDOPvU8+xJzvs=
+	t=1745397396; cv=none; b=Hz3MxzgNeficRSB1e7RKspeEvvtZtt8bAI+jc8tGu2iUc9l+Ptn6MxG0KGLgrPoWOvlm/b5LPwCkvIfdSZnEQvO1bQGKp1VriFPP9rWAHVoxdLtr1UxivZSmZhjeOCsk9aJKe86BOaEuQCIBtJzzYGUjXW0gP1tHB8NAXHiCXMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745397392; c=relaxed/simple;
-	bh=CMgueHlFXZUotyZU8ge0rGS/3vwqIXsNLIe3dmF84Jo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LQpgtKwBjtu6CEoi2d7O4el1/xehb0bz3O6nj0LBTGKDVuZkwxh9w9sm2+1xVG8ktsDx8G1GMhlxqDDn8Hbw7X2iqZDYxVWJjP1rppYuLBg06lpGrsmdhSInJaF4mubVaiVEiHl8U5fOCWTqvJz+RavO/3qGoVEvANdOJ97gyd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=NKA1Mh7T; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745397396; c=relaxed/simple;
+	bh=8NyeEl5sGV5OeARNT+FJtFkxcpDYsjMyBUmmpLZFRO8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=p6BbJg3ND4gtL97iZaya5+QO5WOeHRqxTViBqkHzi7raB6wegmDt/vQKuvMQLRn5BE2/ziEbDEt7rrU1wpUn9NinUvGawTWrO+Sl0e0E3NaC+Ki+5ZwOHfM0FSSQWXo3dw6sgyfRGkcVo6llrpaALct1MX+y9EbPoDhDuo9Z2pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dtt5CYBt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="NKA1Mh7T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745397388;
-	bh=CMgueHlFXZUotyZU8ge0rGS/3vwqIXsNLIe3dmF84Jo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NKA1Mh7TOAuUKbCkFN8QWi/M6JVhYLKcd1bas8iS7V6CX0kldmId9tCqrktVo8YSc
-	 YpVHcf4Gklognd+mBjfqhIt+hmHDPcShgS09xIwpOvtRyiuQAe/WG8JRudaAMewEu3
-	 LIskSJ+gNxWssehUQ6q5GtpnhTUHIuZBKZmdaZL3CS00+bbplQeRhby9nSa3fd3n/q
-	 LSAAk84KyOERbUkjTrsk/Wq6+5WGHVcTlhZSoUti/nVT7aExX6rxp8c1E9CsnxAeMW
-	 uHCfm9XofeRXlOZLanF9J5jdb3D1pUVpPgGEUonTtJAYS+zqxPSlQF0DJP1LwsaK+T
-	 30vixbFDICojw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0EDBD17E0C96;
-	Wed, 23 Apr 2025 10:36:28 +0200 (CEST)
-Date: Wed, 23 Apr 2025 10:36:24 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- kernel@collabora.com
-Subject: Re: [PATCH v10 0/4] Panthor BO tagging and GEMS debug display
-Message-ID: <20250423103624.22d55b6f@collabora.com>
-In-Reply-To: <20250423021238.1639175-1-adrian.larumbe@collabora.com>
-References: <20250423021238.1639175-1-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dtt5CYBt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC1EFC4CEE2;
+	Wed, 23 Apr 2025 08:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745397396;
+	bh=8NyeEl5sGV5OeARNT+FJtFkxcpDYsjMyBUmmpLZFRO8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Dtt5CYBteqwwFc8n/QuUf9IsXI6dx68XhigRzYmiOYv1r5rDkCQh0OucM2MmgUiVn
+	 u58Z30vwSinXZnDU2OMP/WxTbHjLYzpCjT6+lsA1Vqo515vTMkBJr2VMv1p8rh5skN
+	 MHCKL1rzR9pOkwh/ePaC+g9/Jjd9C1ADC/YLjTGHDilBEVjDFDRWoECqnnOpxcL2jg
+	 qrG6q9pPa6c6fb12wb7e0LptKx8ON25gay8l+iMRNHzUnykv7RGrFdVzcOKM3Yq/Z6
+	 1f7m/y4vpZBZC+jgQa2NWFHQsxZRKid4uFUduye8ELSR7tqZUsVbkrAtOW+c0Sbox1
+	 lnhlz0svhPvzQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: Lyude Paul <lyude@redhat.com>
+Cc: rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,  Boqun
+ Feng <boqun.feng@gmail.com>,  FUJITA Tomonori <fujita.tomonori@gmail.com>,
+  Frederic Weisbecker <frederic@kernel.org>,  Thomas Gleixner
+ <tglx@linutronix.de>,  Anna-Maria Behnsen <anna-maria@linutronix.de>,
+  John Stultz <jstultz@google.com>,  Stephen Boyd <sboyd@kernel.org>,
+  Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
+  Gary Guo <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,
+  Benno Lossin <benno.lossin@proton.me>,  Alice Ryhl
+ <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,  Danilo
+ Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH v2 1/8] rust: hrtimer: Document the return value for
+ HrTimerHandle::cancel()
+In-Reply-To: <20250415195020.413478-2-lyude@redhat.com> (Lyude Paul's message
+	of "Tue, 15 Apr 2025 15:48:22 -0400")
+References: <20250415195020.413478-1-lyude@redhat.com>
+	<20250415195020.413478-2-lyude@redhat.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Wed, 23 Apr 2025 10:36:14 +0200
+Message-ID: <87r01jmg01.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Wed, 23 Apr 2025 03:12:30 +0100
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+Lyude Paul <lyude@redhat.com> writes:
 
-> This patch series is aimed at providing UM with detailed memory profiling
-> information in debug builds. It is achieved through a device-wide list of
-> DRM GEM objects, and also implementing the ability to label BO's from UM
-> through a new IOCTL.
->=20
-> The new debugfs file shows a list of driver DRM GEM objects in tabular mo=
-de.
-> To visualise it, cat sudo cat /sys/kernel/debug/dri/*.gpu/gems.
-> To test this functionality from UM, please refer to this Mesa patch serie=
-s:
-> https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34224
->=20
-> Discussion of previous revision of this patch series can be found at:
-> https://lore.kernel.org/dri-devel/20250418022710.74749-1-adrian.larumbe@c=
-ollabora.com/
->=20
-> Changelog:
-> v10:
->  - Simplified printing of GEM state and usage flags: now they're printed =
-numericaly,
->    and their meanings given in the DebugFS file prelude
->  - Some minor formating changes
->  - Fixed all checkpatch issues with --strict
->=20
-> v9:
->  - Added padding field to uAPI BO label ioctl struct
->  - Simplified copying and bounds checking of label in ioctl function
->=20
-> v8:
->  - Renamed NULL to NUL in comments describing NUL-terminated strings
->  - Removed 'size' parameter from labelling ioctl() as max length can be
->    handled by the kernel itself
->  - Made sure to use kfree_const() everywhere labels are freed
->  - Replaced maximum label size with numerical constant rather than page s=
-ize
->  - Added some warnings and checks in kernel BO labelling function
->=20
-> v7:
->  - Improved formating of DebugFS GEM's status and usage flags
->  - Deleted some spurious white spaces
->  - Renamed usage flags setting function
->=20
-> v6:
->  - Replaced some mutex calls with scoped guards
->  - Documented data size limits in the label ioctl
->  - Simplified GEMS status flags treatment (Panthor doesn't use madvise)
->  - Fixed some array size and string bugs
->  - Improved the naming of GEM status and usage flags to reflect their mea=
-ning
->  - Improved the formatting of the output table
->=20
-> v5:
->  - Kept case and naming of kernel BO's consistent
->  - Increased the driver minor after new ioctl
->  - Now adds BO to debugfs GEMs list at GEM object creation time
->  - No longer try to hide BO creator's name when it's a workqueue or modpr=
-obe
->  - Reworked the procedure for printing GEM state and kernel BO flags
->  - Turned kernel BO flags and GEM state flags into bit enums
->  - Wait until BO state is marked as initialied for debugfs display
->=20
-> v4:
->  - Labelled all kernel BO's, not just heap chunks.
->  - Refactored DebugGFs GEMs list handling functions
->  - Added debugfs GEMS node mask to tell different kinds of BO's
->=20
->=20
-> Adri=C3=A1n Larumbe (4):
->   drm/panthor: Introduce BO labeling
->   drm/panthor: Add driver IOCTL for setting BO labels
->   drm/panthor: Label all kernel BO's
->   drm/panthor: show device-wide list of DRM GEM objects over DebugFS
+> Just a drive-by fix I noticed: we don't actually document what the return
+> value from cancel() does, so do that.
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> ---
+>  rust/kernel/time/hrtimer.rs | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
+> index 27243eaaf8ed7..bfe0e25f5abd0 100644
+> --- a/rust/kernel/time/hrtimer.rs
+> +++ b/rust/kernel/time/hrtimer.rs
+> @@ -304,6 +304,8 @@ pub unsafe trait HrTimerHandle {
+>      /// Note that the timer might be started by a concurrent start operation. If
+>      /// so, the timer might not be in the **stopped** state when this function
+>      /// returns.
+> +    ///
+> +    /// Returns whether or not the timer was running.
 
-Queued to drm-misc-next.
+How about:
 
-Thanks,
+  Returns true if the timer was running.
 
-Boris
+?
 
->=20
->  drivers/gpu/drm/panthor/panthor_device.c |   5 +
->  drivers/gpu/drm/panthor/panthor_device.h |  11 ++
->  drivers/gpu/drm/panthor/panthor_drv.c    |  69 +++++++-
->  drivers/gpu/drm/panthor/panthor_fw.c     |   8 +-
->  drivers/gpu/drm/panthor/panthor_gem.c    | 207 ++++++++++++++++++++++-
->  drivers/gpu/drm/panthor/panthor_gem.h    |  86 +++++++++-
->  drivers/gpu/drm/panthor/panthor_heap.c   |   6 +-
->  drivers/gpu/drm/panthor/panthor_sched.c  |   9 +-
->  include/uapi/drm/panthor_drm.h           |  23 +++
->  9 files changed, 413 insertions(+), 11 deletions(-)
->=20
-> --
-> 2.48.1
+
+Best regards,
+Andreas Hindborg
+
 
