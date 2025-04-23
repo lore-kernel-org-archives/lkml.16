@@ -1,51 +1,65 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8CB215771;
-	Wed, 23 Apr 2025 07:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 338DC26A0DD
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745393614; cv=none; b=CiHxXXAi3kbHcLs8aJU729tB0GBovso5k7pI+UjdWsFmjMRVvT4NSuLgLyg2IBxcA0/OS+KXt7O6uvHpAg6PgjIwWk92HDcIymcOYKbDIP8xT9VaxvHFxB22cWHiK4K2kkTy/hB1Ha4hffG2572ucOXUKi46LnUIifsoSCaru3E=
+	t=1745393627; cv=none; b=EzVE4avrNW/HeFQsjkBLG8lbBXHWSn1VbmwA0P3/E9K0koNYnqRJJthvK4oQnmjKZWWZ0KV+xWDzKDDgkAUuUeK/Sj02mzBA4aVR0mj5VbIJvZcB8zCqjf+TH3yeUxeoX0h0zvBY7jko4PPQxO3xBgEOWWqGzP/z4brXKHB6yZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745393614; c=relaxed/simple;
-	bh=Dvyz6DITaxkdGp0a835ONmkSb8MvYzExGjAgvoMRHRs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Lj6AA9utY7TkSaDe4TIK8tIitdcXQYdd+53LZSSFLxvctnH/4I6abPfsgV2kyyjOBLNwRm9uZRvgME1oOxHMpD9eBxZbWnbun20dyaO9m1lrCcvHzMhvcrKdaAY0CO0gXljSjkiRqWJBvlFtTUhTACd/5owyjyzG0g5jpmXyxHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=TtIE0T5T; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745393627; c=relaxed/simple;
+	bh=Augew+xurSegCFml6VSK21zefqwYHpB7BhwgmBRz01Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qXclFoSMgCYd3vz53BrLfpciFLoTwJMQdS/lPkIPnma/35Sa4IFedfRbQiq8gA9iFiLAMRykgLZ9oekSszEo9cMzwzdbaSGLi8PighnuB7PX2vYPMxMPqbB9+Bg+OCGqaqxN65niJYlJvNFqQ+I0DfXoRGa7htGDCNZG/ur56Ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=q/ICmLTV; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=rCZbeK0J; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="TtIE0T5T"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=MSxQX
-	vQax8p9c+hmvlHTDibnsDBQVDBYA+HPPCGtZ74=; b=TtIE0T5TyFciWIB6aKQRs
-	8VMYjsvHplMURfiVMt12Kyvo24xUzp313aQVI6VQIOF/zj13jx+S2MmtNpMfm5aD
-	w6EbQdY4rXFRvL5IN9+ODR5TAuagWUcadQGcTZ/UAQLPVd5OxnVoCWOAHaIjppz1
-	rA6m0OVvdAOfv4ENuMixUQ=
-Received: from localhost.localdomain (unknown [])
-	by gzsmtp3 (Coremail) with SMTP id PigvCgDHqhNulwhohX4qAg--.21421S2;
-	Wed, 23 Apr 2025 15:32:00 +0800 (CST)
-From: Feng Yang <yangfeng59949@163.com>
-To: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v4] bpf: streamline allowed helpers between tracing and base sets
-Date: Wed, 23 Apr 2025 15:31:51 +0800
-Message-Id: <20250423073151.297103-1-yangfeng59949@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="q/ICmLTV";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="rCZbeK0J"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 6028C2119D;
+	Wed, 23 Apr 2025 07:33:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745393623; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nQh3sVk6hHuf+1A7cSdshesABfGZol2XdId2OmOhvfI=;
+	b=q/ICmLTVwesUnmdUyrVzK7lT8csXzlyQgpK5V7YT3ZGiny+CHIcycD2g/hKUYgZuAKAMiK
+	MPOGiZ0yFE6rSnSu0Oux//gfSNCncj/m7WytZOFMClAC+hUnSO69Hj7en43EbVt2pyALAX
+	jlHRQtfgJlaTok+n6PWH73oBrj5QWL0=
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=rCZbeK0J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745393622; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=nQh3sVk6hHuf+1A7cSdshesABfGZol2XdId2OmOhvfI=;
+	b=rCZbeK0JDHFdKPxnBI38Y7a0LZYweshOm9r+fqg4s3qli7FvW77R9VhuUOaqgYdR1d3+pe
+	i+g7wH50d114Rb7cc2dbrsjxHDcPZ/PjLVMhLlHNH98LYPygyqZANpXLfVYFoDcoOZGbFS
+	4/F1Kz3BiuOHtmjEBC0vJdt/72oxlBs=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 44F4E13A3D;
+	Wed, 23 Apr 2025 07:33:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id nLg9ENaXCGhfZwAAD6G6ig
+	(envelope-from <neelx@suse.com>); Wed, 23 Apr 2025 07:33:42 +0000
+From: Daniel Vacek <neelx@suse.com>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	Nick Terrell <terrelln@fb.com>
+Cc: Daniel Vacek <neelx@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: harden parsing of compress mount option
+Date: Wed, 23 Apr 2025 09:33:28 +0200
+Message-ID: <20250423073329.4021878-1-neelx@suse.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,201 +67,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:PigvCgDHqhNulwhohX4qAg--.21421S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxtF4fJry3WFyUtFyrAF17Awb_yoW3Xw1rpF
-	sxtrW3Crs7tw4aqFy7Jr1fZa4Fk3srX3yUWa95Gw18ur4jvr47tF129F42gF1rAr98W347
-	u3yvvFZ0kFy293JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07ja4E_UUUUU=
-X-CM-SenderInfo: p1dqww5hqjkmqzuzqiywtou0bp/1tbiThQ4eGgIPm4qYQABsg
+X-Rspamd-Queue-Id: 6028C2119D
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,suse.com:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-From: Feng Yang <yangfeng@kylinos.cn>
+Btrfs happily but incorrectly accepts the `-o compress=zlib+foo` and similar
+options with any random suffix. Let's handle that correctly.
 
-Many conditional checks in switch-case are redundant
-with bpf_base_func_proto and should be removed.
-
-Regarding the permission checks bpf_base_func_proto:
-The permission checks in bpf_prog_load (as outlined below)
-ensure that the trace has both CAP_BPF and CAP_PERFMON capabilities,
-thus enabling the use of corresponding prototypes
-in bpf_base_func_proto without adverse effects.
-bpf_prog_load
-	......
-	bpf_cap = bpf_token_capable(token, CAP_BPF);
-	......
-	if (type != BPF_PROG_TYPE_SOCKET_FILTER &&
-	    type != BPF_PROG_TYPE_CGROUP_SKB &&
-	    !bpf_cap)
-		goto put_token;
-	......
-	if (is_perfmon_prog_type(type) && !bpf_token_capable(token, CAP_PERFMON))
-		goto put_token;
-	......
-
-Signed-off-by: Feng Yang <yangfeng@kylinos.cn>
-Acked-by: Song Liu <song@kernel.org>
+Signed-off-by: Daniel Vacek <neelx@suse.com>
 ---
-Changes in v4:
-- Only modify patch description information.
-- At present, bpf_tracing_func_proto still has the following ID:
-- BPF_FUNC_get_current_uid_gid
-- BPF_FUNC_get_current_comm
-- BPF_FUNC_get_smp_processor_id
-- BPF_FUNC_perf_event_read
-- BPF_FUNC_probe_read
-- BPF_FUNC_probe_read_str
-- BPF_FUNC_current_task_under_cgroup
-- BPF_FUNC_send_signal
-- BPF_FUNC_send_signal_thread
-- BPF_FUNC_get_task_stack
-- BPF_FUNC_copy_from_user
-- BPF_FUNC_copy_from_user_task
-- BPF_FUNC_task_storage_get
-- BPF_FUNC_task_storage_delete
-- BPF_FUNC_get_func_ip
-- BPF_FUNC_get_branch_snapshot
-- BPF_FUNC_find_vma
-- BPF_FUNC_probe_write_user
-- I'm not sure which ones can be used by all programs, as Zvi Effron said(https://lore.kernel.org/all/CAC1LvL2SOKojrXPx92J46fFEi3T9TAWb3mC1XKtYzwU=pzTEbQ@mail.gmail.com/)
-- get_smp_processor_id also be retained(https://lore.kernel.org/all/CAADnVQ+WYLfoR1W6AsCJF6fNKEUgfxANXP01EQCJh1=99ZpoNw@mail.gmail.com/)
+ fs/btrfs/super.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-- Link to v3: https://lore.kernel.org/all/20250410070258.276759-1-yangfeng59949@163.com/
-
-Changes in v3:
-- Only modify patch description information.
-- Link to v2: https://lore.kernel.org/all/20250408071151.229329-1-yangfeng59949@163.com/
-
-Changes in v2:
-- Only modify patch description information.
-- Link to v1: https://lore.kernel.org/all/20250320032258.116156-1-yangfeng59949@163.com/
----
- kernel/trace/bpf_trace.c | 72 ----------------------------------------
- 1 file changed, 72 deletions(-)
-
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 0f5906f43d7c..52c432a44aeb 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1430,56 +1430,14 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	const struct bpf_func_proto *func_proto;
- 
- 	switch (func_id) {
--	case BPF_FUNC_map_lookup_elem:
--		return &bpf_map_lookup_elem_proto;
--	case BPF_FUNC_map_update_elem:
--		return &bpf_map_update_elem_proto;
--	case BPF_FUNC_map_delete_elem:
--		return &bpf_map_delete_elem_proto;
--	case BPF_FUNC_map_push_elem:
--		return &bpf_map_push_elem_proto;
--	case BPF_FUNC_map_pop_elem:
--		return &bpf_map_pop_elem_proto;
--	case BPF_FUNC_map_peek_elem:
--		return &bpf_map_peek_elem_proto;
--	case BPF_FUNC_map_lookup_percpu_elem:
--		return &bpf_map_lookup_percpu_elem_proto;
--	case BPF_FUNC_ktime_get_ns:
--		return &bpf_ktime_get_ns_proto;
--	case BPF_FUNC_ktime_get_boot_ns:
--		return &bpf_ktime_get_boot_ns_proto;
--	case BPF_FUNC_tail_call:
--		return &bpf_tail_call_proto;
--	case BPF_FUNC_get_current_task:
--		return &bpf_get_current_task_proto;
--	case BPF_FUNC_get_current_task_btf:
--		return &bpf_get_current_task_btf_proto;
--	case BPF_FUNC_task_pt_regs:
--		return &bpf_task_pt_regs_proto;
- 	case BPF_FUNC_get_current_uid_gid:
- 		return &bpf_get_current_uid_gid_proto;
- 	case BPF_FUNC_get_current_comm:
- 		return &bpf_get_current_comm_proto;
--	case BPF_FUNC_trace_printk:
--		return bpf_get_trace_printk_proto();
- 	case BPF_FUNC_get_smp_processor_id:
- 		return &bpf_get_smp_processor_id_proto;
--	case BPF_FUNC_get_numa_node_id:
--		return &bpf_get_numa_node_id_proto;
- 	case BPF_FUNC_perf_event_read:
- 		return &bpf_perf_event_read_proto;
--	case BPF_FUNC_get_prandom_u32:
--		return &bpf_get_prandom_u32_proto;
--	case BPF_FUNC_probe_read_user:
--		return &bpf_probe_read_user_proto;
--	case BPF_FUNC_probe_read_kernel:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_proto;
--	case BPF_FUNC_probe_read_user_str:
--		return &bpf_probe_read_user_str_proto;
--	case BPF_FUNC_probe_read_kernel_str:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_str_proto;
- #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	case BPF_FUNC_probe_read:
- 		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
-@@ -1489,10 +1447,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		       NULL : &bpf_probe_read_compat_str_proto;
- #endif
- #ifdef CONFIG_CGROUPS
--	case BPF_FUNC_cgrp_storage_get:
--		return &bpf_cgrp_storage_get_proto;
--	case BPF_FUNC_cgrp_storage_delete:
--		return &bpf_cgrp_storage_delete_proto;
- 	case BPF_FUNC_current_task_under_cgroup:
- 		return &bpf_current_task_under_cgroup_proto;
- #endif
-@@ -1500,20 +1454,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_send_signal_proto;
- 	case BPF_FUNC_send_signal_thread:
- 		return &bpf_send_signal_thread_proto;
--	case BPF_FUNC_perf_event_read_value:
--		return &bpf_perf_event_read_value_proto;
--	case BPF_FUNC_ringbuf_output:
--		return &bpf_ringbuf_output_proto;
--	case BPF_FUNC_ringbuf_reserve:
--		return &bpf_ringbuf_reserve_proto;
--	case BPF_FUNC_ringbuf_submit:
--		return &bpf_ringbuf_submit_proto;
--	case BPF_FUNC_ringbuf_discard:
--		return &bpf_ringbuf_discard_proto;
--	case BPF_FUNC_ringbuf_query:
--		return &bpf_ringbuf_query_proto;
--	case BPF_FUNC_jiffies64:
--		return &bpf_jiffies64_proto;
- 	case BPF_FUNC_get_task_stack:
- 		return prog->sleepable ? &bpf_get_task_stack_sleepable_proto
- 				       : &bpf_get_task_stack_proto;
-@@ -1521,12 +1461,6 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_copy_from_user_proto;
- 	case BPF_FUNC_copy_from_user_task:
- 		return &bpf_copy_from_user_task_proto;
--	case BPF_FUNC_snprintf_btf:
--		return &bpf_snprintf_btf_proto;
--	case BPF_FUNC_per_cpu_ptr:
--		return &bpf_per_cpu_ptr_proto;
--	case BPF_FUNC_this_cpu_ptr:
--		return &bpf_this_cpu_ptr_proto;
- 	case BPF_FUNC_task_storage_get:
- 		if (bpf_prog_check_recur(prog))
- 			return &bpf_task_storage_get_recur_proto;
-@@ -1535,18 +1469,12 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		if (bpf_prog_check_recur(prog))
- 			return &bpf_task_storage_delete_recur_proto;
- 		return &bpf_task_storage_delete_proto;
--	case BPF_FUNC_for_each_map_elem:
--		return &bpf_for_each_map_elem_proto;
--	case BPF_FUNC_snprintf:
--		return &bpf_snprintf_proto;
- 	case BPF_FUNC_get_func_ip:
- 		return &bpf_get_func_ip_proto_tracing;
- 	case BPF_FUNC_get_branch_snapshot:
- 		return &bpf_get_branch_snapshot_proto;
- 	case BPF_FUNC_find_vma:
- 		return &bpf_find_vma_proto;
--	case BPF_FUNC_trace_vprintk:
--		return bpf_get_trace_vprintk_proto();
- 	default:
- 		break;
- 	}
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 40709e2a44fce..f7e064b8c6d88 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -354,7 +354,10 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+-		} else if (strncmp(param->string, "zlib", 4) == 0) {
++		} else if (strncmp(param->string, "zlib", 4) == 0 &&
++				(param->string[4] == ':' ||
++				 param->string[4] == ',' ||
++				 param->string[4] == '\0')) {
+ 			ctx->compress_type = BTRFS_COMPRESS_ZLIB;
+ 			ctx->compress_level =
+ 				btrfs_compress_str2level(BTRFS_COMPRESS_ZLIB,
+@@ -362,13 +365,18 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+-		} else if (strncmp(param->string, "lzo", 3) == 0) {
++		} else if (strncmp(param->string, "lzo", 3) == 0 &&
++				(param->string[3] == ',' ||
++				 param->string[3] == '\0')) {
+ 			ctx->compress_type = BTRFS_COMPRESS_LZO;
+ 			ctx->compress_level = 0;
+ 			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+-		} else if (strncmp(param->string, "zstd", 4) == 0) {
++		} else if (strncmp(param->string, "zstd", 4) == 0 &&
++				(param->string[4] == ':' ||
++				 param->string[4] == ',' ||
++				 param->string[4] == '\0')) {
+ 			ctx->compress_type = BTRFS_COMPRESS_ZSTD;
+ 			ctx->compress_level =
+ 				btrfs_compress_str2level(BTRFS_COMPRESS_ZSTD,
+@@ -376,7 +384,12 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+ 			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+-		} else if (strncmp(param->string, "no", 2) == 0) {
++		} else if ((strncmp(param->string, "no", 2) == 0 &&
++				(param->string[2] == ',' ||
++				 param->string[2] == '\0')) ||
++			   (strncmp(param->string, "none", 4) == 0 &&
++				(param->string[4] == ',' ||
++				 param->string[4] == '\0'))) {
+ 			ctx->compress_level = 0;
+ 			ctx->compress_type = 0;
+ 			btrfs_clear_opt(ctx->mount_opt, COMPRESS);
 -- 
-2.43.0
+2.47.2
 
