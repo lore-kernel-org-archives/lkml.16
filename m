@@ -1,79 +1,207 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB24819DFA7;
-	Wed, 23 Apr 2025 15:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EEA1A23B0
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423628; cv=none; b=A8gCuaXPGpGEmQ2Ic5tKHzWIyZPtt7niZy+REUiUBXhlPj1a2jOgz59SCNOPzcmMkK0ya5Wn4xZczKsIPBJmtYwXO23dHgpYjTKRLmcrh+z33PB6P48KAIpnuMDUoAwpgcWywwM3DFClAvbtO8pySVRAOU2hy3mlqzKpPpLagEo=
+	t=1745423675; cv=none; b=kyuhBskrV6rwTuADAQQHNpytTWzOrf3Aq9qdjpEVOB6WGetOZYEJtwPh6yzJMZYEIWWXxnm5qfRkMju0rNzaHQQCZoW2deZbZ9oJlLiyar7x6swTtu7wraoKgaSeiTt69pbIw8d84oL639B5fLy6W2Pt5X1eQjNDY4/CwaG88rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423628; c=relaxed/simple;
-	bh=kAkYGXhLqXgPzrZy4lBSQyt77vQUpcthss2TcC8H8GA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cg9ai/EAbv0qE60CsWoNJFB37C0VeWtZBgVoH60ftiw4dKhM5xRIhTQXz6Qynr7iuzqD4eV7EC9YUd86CqrNPFFqQPBaSQ5tqygV4z0kTy8+trBmtn49EdzsTNZZt1GFuAuHK9LSuCQLRR8s1S1frgyJBHuwlsyJUO+rLzjtuu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 8676768BFE; Wed, 23 Apr 2025 17:53:40 +0200 (CEST)
-Date: Wed, 23 Apr 2025 17:53:40 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: "Darrick J. Wong" <djwong@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>, John Garry <john.g.garry@oracle.com>,
-	brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
-	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v8 11/15] xfs: commit CoW-based atomic writes atomically
-Message-ID: <20250423155340.GA32225@lst.de>
-References: <20250422122739.2230121-1-john.g.garry@oracle.com> <20250422122739.2230121-12-john.g.garry@oracle.com> <20250423082307.GA29539@lst.de> <20250423145850.GA25675@frogsfrogsfrogs>
+	s=arc-20240116; t=1745423675; c=relaxed/simple;
+	bh=f+VP0NPD5jNHuEDDOfpUYceTIOhV/Rt5Z0A8AQ2izAo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=IABPOaqaDhgyaxLL+sLSfEdTA573Kw5b8BokjdUHWFfDezp7VK6e/oNVjR7inrC84bSDqtSPNUknaAkjMC2r/bKruqNi+YkOszNtjZyOo63ghpx7BRtO+tFMs5HUS2/bqXMR8TcZNzh/0ONB3vu1xacXL++2Dg7dErwpcUKjycc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tcgbARPV; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tcgbARPV"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736c0306242so7870195b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745423673; x=1746028473; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+mc9z1PuhiHedW9jAFmuOWVP2itkaushPzad2KkMGss=;
+        b=tcgbARPV4iIx1laSSqByM2aBqqgD7tGIFwsCtV5uoSThPqy/beP5J98Lc7exPc9bZR
+         eS2YIYL4VaIPZiROGcm9X46QR7jqLu22MbBF9Av34WZGoN+rjxd3qGi5BXYG6dQ1+ida
+         YcJ9ZPYfyj+sE0fEtjutAiitkw4J+BBlFS524bQ8W+6QmL6SY3/nep944rKHIehkb+M4
+         YQjXpqZpxVWccTwKkRTGxIqI7TtlJPpLxkHiJg71gF40eZRZTlMnfgC1nYPXKCAspvpB
+         FqG0DPPRaWsq/GdAhUGGxYHc5SENVK+KZB7xekra+afp0hx/O0t2TMPM12DRQSACQ1B+
+         FzEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745423673; x=1746028473;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+mc9z1PuhiHedW9jAFmuOWVP2itkaushPzad2KkMGss=;
+        b=pjQwSwiLfAfLpTuCGIJXxnXe4q+qiAKxNKQ+/ABPmKkifS/4tRnJCRTE76zBnDv97c
+         rYDwmtFMP41RFNKOoNXGNIDjGWwWGBPk2g6Xtkr2XKvYrNGzgKn2avf1lc1uShc0XlBJ
+         QB4oITuzfvj7XodMYCAAqzAoOJ0lQ87tvN/ibASyVwp96Zv3OoWSwIDzrYyvSWVofhxB
+         pUw3s05U6hY/VY5/aK8rNPHOnBZWyajkNHy0fLdM965t7NSA+gLobwAq7jpHRaoj+dkl
+         wi6q43Rnwr7+7yT3G6SIilry72SzaxR+TS6Dh6bSxgGCnLDDWfttoeG+fQASlMfIAbvZ
+         vUsw==
+X-Forwarded-Encrypted: i=1; AJvYcCU+6NrrR2NQMATGOB/U+8rLE0yunQQqAKZhtTIFfLJkGC4cRbluCzQ8UTzN4RBaqr42vWNTXEqLD+j0j4c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY3DeTkS1Ac0t5WLB6kUN378sisSJwXBnR/Gr5GzbmM7Bv6w6Z
+	E8D9ScZzgVAhUOfLyi9zdtFt8KEV0JnXHesEhNjKkAN0Jz/xYJCCPl75q/uhOyV/qX/ztSYficz
+	7+A==
+X-Google-Smtp-Source: AGHT+IHgTggejAFEgcZTd/pUvQPX6XzW17AT6knE+s0SYYVGMUts32i/fFAkytyUefVrtBWGMlB9ZWVuG7o=
+X-Received: from pfbem8.prod.google.com ([2002:a05:6a00:3748:b0:739:9e9:feea])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:a81:b0:736:5545:5b84
+ with SMTP id d2e1a72fcca58-73dc14536b9mr27349625b3a.3.1745423673477; Wed, 23
+ Apr 2025 08:54:33 -0700 (PDT)
+Date: Wed, 23 Apr 2025 08:54:31 -0700
+In-Reply-To: <CABQX2QNDmXizUDP_sckvfaM9OBTxHSr0ESgJ_=Z_5RiODfOGsg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423145850.GA25675@frogsfrogsfrogs>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Mime-Version: 1.0
+References: <20250422161304.579394-1-zack.rusin@broadcom.com>
+ <20250422161304.579394-5-zack.rusin@broadcom.com> <a803c925-b682-490f-8cd9-ca8d4cc599aa@zytor.com>
+ <CABQX2QMznYZiVm40Ligq+pFKmEkVpScW+zcKYbPpGgm0=S2Xkg@mail.gmail.com>
+ <aAjrOgsooR4RYIJr@google.com> <CABQX2QNDmXizUDP_sckvfaM9OBTxHSr0ESgJ_=Z_5RiODfOGsg@mail.gmail.com>
+Message-ID: <aAkNN029DIxYay-j@google.com>
+Subject: Re: [PATCH v2 4/5] KVM: x86: Add support for legacy VMware backdoors
+ in nested setups
+From: Sean Christopherson <seanjc@google.com>
+To: Zack Rusin <zack.rusin@broadcom.com>
+Cc: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org, 
+	Doug Covelli <doug.covelli@broadcom.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 07:58:50AM -0700, Darrick J. Wong wrote:
-> > > +xfs_calc_default_atomic_ioend_reservation(
-> > > +	struct xfs_mount	*mp,
-> > > +	struct xfs_trans_resv	*resp)
-> > > +{
-> > > +	if (xfs_has_reflink(mp))
-> > > +		resp->tr_atomic_ioend = resp->tr_itruncate;
-> > > +	else
-> > > +		memset(&resp->tr_atomic_ioend, 0,
-> > > +				sizeof(resp->tr_atomic_ioend));
-> > > +}
-> > 
-> > What is the point of zeroing out the structure for the non-reflink
-> > case?  Just as a poision for not using it when not supported as no
-> > code should be doing that?  Just thinking of this because it is a
-> > potentially nasty landmine for the zoned atomic support.
-> 
-> Yes.  I thought about adding a really stupid helper:
+On Wed, Apr 23, 2025, Zack Rusin wrote:
+> On Wed, Apr 23, 2025 at 9:31=E2=80=AFAM Sean Christopherson <seanjc@googl=
+e.com> wrote:
+> > Heh, KVM_CAP_EXIT_ON_EMULATION_FAILURE is the odd one out.  Even if tha=
+t weren't
+> > the case, this is one of the situations where diverging from the existi=
+ng code is
+> > desirable, because the existing code is garbage.
+> >
+> > arch/x86/kvm/x86.c:             if (cap->args[0] & ~kvm_caps.supported_=
+quirks)
+> > arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_X2APIC_API_VALI=
+D_FLAGS)
+> > arch/x86/kvm/x86.c:             if (cap->args[0] & ~kvm_get_allowed_dis=
+able_exits())
+> > arch/x86/kvm/x86.c:                 (cap->args[0] & ~KVM_X86_DISABLE_EX=
+ITS_PAUSE))
+> > arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_MSR_EXIT_REASON=
+_VALID_MASK)
+> > arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_BUS_LOCK_DETECT=
+ION_VALID_MODE)
+> > arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_EXIT_HYPERCALL_=
+VALID_MASK) {
+> > arch/x86/kvm/x86.c:             if (cap->args[0] & ~1)
+> > arch/x86/kvm/x86.c:             if (!enable_pmu || (cap->args[0] & ~KVM=
+_CAP_PMU_VALID_MASK))
+> > arch/x86/kvm/x86.c:             if ((u32)cap->args[0] & ~KVM_X86_NOTIFY=
+_VMEXIT_VALID_BITS)
+> > virt/kvm/kvm_main.c:            if (cap->flags || (cap->args[0] & ~allo=
+wed_options))
+>=20
+> That's because none of those other options are boolean, right? I
+> assumed that the options that have valid masks use defines but
+> booleans use ~1 because (val & ~1) makes it obvious to the reader that
+> the option is in fact a boolean in a way that (val &
+> ~KVM_SOME_VALID_BITS) can not.
 
-Why don't we just always set up the xfs_trans_resv structure?  We
-do that for all kinds of other transactions not supported as well,
-don't we?
+The entire reason when KVM checks and enforces cap->args[0] is so that KVM =
+can
+expand the capability's functionality in the future.  Whether or not a capa=
+bility
+is *currently* a boolean, i.e. only has one supported flag, is completely i=
+rrelevant.
 
-> static inline bool xfs_has_sw_atomic_write(struct xfs_mount *mp)
-> {
-> 	return xfs_has_reflink(mp);
-> }
-> 
-> But that seemed too stupid so I left it out.  Maybe it wasn't so dumb,
-> since that would be where you'd enable ZNS support by changing that to:
-> 
-> 	return xfs_has_reflink(mp) || xfs_has_zoned(mp);
+KVM has burned itself many times over by not performing checks, e.g. is how=
+ we
+ended up with things like KVM_CAP_DISABLE_QUIRKS2.
 
-But that helper might actually be useful in various places, so
-independent of the above I'm in favor of it.
+> > > Or are you saying that since I'm already there you'd like to see a
+> > > completely separate patch that defines some kind of IS_ZERO_OR_ONE
+> > > macro for KVM, use it for KVM_CAP_EXIT_ON_EMULATION_FAILURE and, once
+> > > that lands then I can make use of it in this series?
+> >
+> > Xin is suggesting that you add a macro in arch/x86/include/uapi/asm/kvm=
+.h to
+> > #define which bits are valid and which bits are reserved.
+> >
+> > At a glance, you can kill multiple birds with one stone.  Rather than a=
+dd three
+> > separate capabilities, add one capability and then a variety of flags. =
+ E.g.
+> >
+> > #define KVM_X86_VMWARE_HYPERCALL        _BITUL(0)
+> > #define KVM_X86_VMWARE_BACKDOOR         _BITUL(1)
+> > #define KVM_X86_VMWARE_NESTED_BACKDOOR  _BITUL(2)
+> > #define KVM_X86_VMWARE_VALID_FLAGS      (KVM_X86_VMWARE_HYPERCALL |
+> >                                          KVM_X86_VMWARE_BACKDOOR |
+> >                                          KVM_X86_VMWARE_NESTED_BACKDOOR=
+)
+> >
+> >         case KVM_CAP_X86_VMWARE_EMULATION:
+> >                 r =3D -EINVAL;
+> >                 if (cap->args[0] & ~KVM_X86_VMWARE_VALID_FLAGS)
+> >                         break;
+> >
+> >                 mutex_lock(&kvm->lock);
+> >                 if (!kvm->created_vcpus) {
+> >                         if (cap->args[0] & KVM_X86_VMWARE_HYPERCALL)
+> >                                 kvm->arch.vmware.hypercall_enabled =3D =
+true;
+> >                         if (cap->args[0] & KVM_X86_VMWARE_BACKDOOR)
+> >                                 kvm->arch.vmware.backdoor_enabled;
+> >                         if (cap->args[0] & KVM_X86_VMWARE_NESTED_BACKDO=
+OR)
+> >                                 kvm->arch.vmware.nested_backdoor_enable=
+d =3D true;
+> >                         r =3D 0;
+> >                 }
+> >                 mutex_unlock(&kvm->lock);
+> >                 break;
+> >
+> > That approach wouldn't let userspace disable previously enabled VMware =
+capabilities,
+> > but unless there's a use case for doing so, that should be a non-issue.
+>=20
+> I'd say that if we desperately want to use a single cap for all of
+> these then I'd probably prefer a different approach because this would
+> make vmware_backdoor_enabled behavior really wacky.
 
+How so?  If kvm.enable_vmware_backdoor is true, then the backdoor is enable=
+d
+for all VMs, else it's disabled by default but can be enabled on a per-VM b=
+asis
+by the new capability.
+
+> It's the one that currently can only be set via kernel boot flags, so hav=
+ing
+> systems where the boot flag is on and disabling it on a per-vm basis make=
+s
+> sense and breaks with this.
+
+We could go this route, e.g. KVM does something similar for PMU virtualizat=
+ion.
+But the key difference is that enable_pmu is enabled by default, whereas
+enable_vmware_backdoor is disabled by default.  I.e. it makes far more sens=
+e for
+the capability to let userspace opt-in, as opposed to opt-out.
+
+> I'd probably still write the code to be able to disable/enable all of the=
+m
+> because it makes sense for vmware_backdoor_enabled.
+
+Again, that's not KVM's default, and it will never be KVM's default.  Unles=
+s there
+is a concrete use case for disabling features after *userspace* has opted-i=
+n,
+just make them one-way 0=3D>1 transitions so as to keep KVM's implementatio=
+n as
+simple as possible.
