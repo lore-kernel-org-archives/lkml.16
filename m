@@ -1,258 +1,246 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011005.outbound.protection.outlook.com [40.107.130.5])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D269A217664;
-	Wed, 23 Apr 2025 12:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB28F1EB5E6
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:31:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745411375; cv=fail; b=l30L9WQ9AszdeBHcWsOizD1NOwhMOiPDighEY7QoaWltbPoAq/eVR6zlvFaD5yR2DyhpWxGyFGxcQglcNV7UGRSDTw+SFFPC3S+cmx1GIFb0wyYgdxWMGnf7+apPGOF7sV1nbUk9iX3e9QTfET+VUoDKBh5B3CyqRt0Mw2Jy2sg=
+	t=1745411470; cv=fail; b=YvWWhYmfXGIxPKDxJARgQW+M0yfY+ZBqmfVGbC+wJyLoVu3naduxs8D7Zn7yAN4WNpvkdghFUUkpyEv00xcwmjXAClRdOBnzSrGR8aJauZLgM2oLjfVHgzR2tXU4BgFVZXNtasL13QtoGJCHmZT4lf6duU+UJmXOH66rn2qttMQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745411375; c=relaxed/simple;
-	bh=+z1LwHYpFRym19t7IdtkYtKTJhuf1QB/nDdSxyqsAyI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=B6ZLS8/5VC1RTiBmmceorSvZav++x1OMBgDArVQQVc2kaQTaAn3nxwGHO9VdNIzfKJUcPsewLNG8emWRqahepk+OEK1/NMmia9nmTLPYa3Rtzkht1oD4fbOcdTRTFo2gnt4fTFjnPdQnJ4eIANBLDayXv2OL8GI0RRXWP1p9wNM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=YapRCC1s; arc=fail smtp.client-ip=40.107.130.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
+	s=arc-20240116; t=1745411470; c=relaxed/simple;
+	bh=CZXrHnVTsxpqvFPRwwUJZR5DNX7Ri4LFlPmSGIx6Q8I=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=KDGAbFk2jnoni5CNPG5/7Te/vNOrEWE+eltasQhZmO/N3BU1lI4Dkohs9841T+eWs5tZOL5ih/Jb4LIxqmp3BC9xWfXCeruBjxBkxEX2fdoZOoascZWfnqQwA7U4WB3GQzwuNJd2/mWJrKGFz0ko+n6Nrgdng4xMtM7JFKEFtqI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=dCeWP3zm; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=g0wVqqBU; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="YapRCC1s"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dCeWP3zm";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="g0wVqqBU"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N8fl8Z031452;
+	Wed, 23 Apr 2025 12:30:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=corp-2023-11-20; bh=LLgdXTaNF+70ugdN
+	3RvjhGR/UWCrtYmYyM8gBPSRWl8=; b=dCeWP3zmcG1slPZ3x0mzs0ju4/fB54+K
+	kepADzm72GEe4SZZY8MADcxOujn3dP/NqBb4v8UWd6JEutjoVgaRkTFoitq6L4Nj
+	Cjppvg181PgZcDpqlp1g1B/4GEDxQApwPkV9PxCltpgnvauztLPzCWpSPCBfHRtc
+	od26RfgA4pGMMd1NFrgrpv3SVvSxHwakiUJYr/t4J+UpVqpc5VdzGq/zc7vcOeDg
+	9m3OonBig7jj/dP5wAn7KPVA7J9jTIDxZ+Hi0MlFKO4gAM4LeAPuC8uIkQHjtB1W
+	O/fMMIaFmCvWDCNtG5nT+0+UE4ZyQHOFQmBitD9yNMpJpIbCWc0sEA==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 466jha148m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 12:30:53 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53NBsVfg013879;
+	Wed, 23 Apr 2025 12:30:52 GMT
+Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazlp17012050.outbound.protection.outlook.com [40.93.20.50])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 466jxns6g6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 12:30:52 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=QBObEg52TW0GvuHncBOKqmMuc71yNPPFjdZvo1V+b1l/2tdZUsFCCqITF55tcMEWCIr1r84og/ZYiTTVrWAjCBajJP6EISHhHx2LFtfpN9Uva4uXKTNHsQzDWwzegwYrtAe5G0tuC9pjHU74jpZJIU3KYoGti45P/BqwXhbyuxsj3aH0UTB+f9lb+k6iCkNcijSfBNPEbTn5qLWkpp1WLURLdhQnXcJyaNmLnQlUAtRcV6Y1Xoj5Qa2eFKIV/2mJAOx/CzuGiwiSch73MwY8yyJ6BuFTltwfWyB0Pfx6BdSpvZzfi2O/LX5X7Y7IndhGuWmsq7ANjxME81OjLRipyQ==
+ b=aQY4XDIHGIrgqp7QSVKArQMA2haosOduhFHSWesL25m7Tw4H1nZNyu2wE0iBWnMrpKAYkmyOzJICAoBqx2+dVh8qgE2l5AWLx5s8yFgpi4DBv8F0lI9OqwJQncT3/6EnJhDqbA9qmSBQIo5DcdxvjPKrlnRRNesRvM5fiq4EawtioSR+mb7PGCR35YPrCYYtjLK7WZmM+qGNCxfhgBscu0exJBRWEtVmn9z7dw5sm4Nf//PQVwHS1vUgW1N36i/kpyu8Z0RdMJbkq0G3yYfb9BsS0OCpemGbA9YB8YJ/Sx/5/Yg2L+twVOXRldHleclBkHrpYg2jP7gQW6A2fRoC/Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UlyP0vXpzWPXZF2U34GQj7l5E9qZvltMBmUm+8p+iG0=;
- b=jEhNPO6kJUh+S58cIZOHV1Esb8Q5thMgOlPKdVjCVdBr/NRT3BV4S39DMa2E/Jx66dUEDTA1X0IVHoB6hNc1ZAmD09dJU7g5hagYbQ3agAHVg9LUDjm/mUb+e1vaUNLcqBGwLOYsY9FDwwt4eYrnaQ48Z9Sxz89q4WWqxxorVGQwQa9JJBGiP8fWcDQdg61kHtk5pcQXP+b2b11YyNixwUb8cYO3oKZamFSVyYQZTWBN7gf4IYmdvQrZucZhY0xIFFuNosj3XJjAuYdEaMcdSFQ1gKyIhe3MkMYsdAqIv1XY2hYI3yTDllBHHQIoyXv5NNvdEljGmEhDHwguez/09g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.205) smtp.rcpttodomain=buenzli.dev smtp.mailfrom=de.bosch.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
- s=selector2;
+ bh=LLgdXTaNF+70ugdN3RvjhGR/UWCrtYmYyM8gBPSRWl8=;
+ b=Zteiq+bLbPxocVz5PhW3vM1haoCgobRHswyJvFlMsd8WqhiBF/GXxrVQsQjPqKbCHBN9o9GYImy1BRt43Ep6qdYdGGKVof7n+UahO/sJ8HbES1dS2Dnjy0FBp0bQ4NATc6PFmtHE7UtadOlmQSZupGQ+pIbGUsLjhPKKCRcHwXtTpCPCEAXexraGfiEY5iNR8N3d9xnS7bQs/f5PoIhRLIOjTQoFXWSNoRzf8iPpoxl6pBGXo5IfYdjntXeLdKAW60xYFHhGN1TzVWVCW4IVwK1/ER4ARejOtgCIcSR64qyJhxUYHqZVuyxvmhjL2wzhwZn1OIVbdJY5symEzQelbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UlyP0vXpzWPXZF2U34GQj7l5E9qZvltMBmUm+8p+iG0=;
- b=YapRCC1sTwIbh7orvLtx18WL6yLhlyVynXXfDgAb3qbPVBOvcpvTigaac1m9C+Loa/KONTSjARrgXGqqIEbDN2Mu+ivuPNSPBJfxwKs2dRtX/8XFz0j7TqRh3xMvjKnDdx4EpAFf11ZBJLI7Dmb5GcBe72DMksL6xdoY2ZVWX2Spva1dKHn5nz+Z4Dh/79WZ5kkpRyluAqYobDg7b3YIXSGlP8MsMGdsBgNVNKn1t3l5hWHXvWGhWfgu07HtFJ8dYUk9SGEpkK4XzxtCXYJFpSI23pJQ+0uVkw4gOGrbp996hRXnTBDjOaYXlu7NaA1jk1Yokf7y8M4H30efy4uzBw==
-Received: from AS4P250CA0019.EURP250.PROD.OUTLOOK.COM (2603:10a6:20b:5e3::10)
- by VI1PR10MB3695.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:800:137::20) with
+ bh=LLgdXTaNF+70ugdN3RvjhGR/UWCrtYmYyM8gBPSRWl8=;
+ b=g0wVqqBU8C15jEY8CeSR4cT+TiE7XpKO7Cf5Bs0oK9KUwVWAsEz6kBZp7Dtd8ca+Mk+WDLdQaIOeHjmPlCGsoA5NSMcnv89RDJCsxFX+VbExtOM7Z/kt/GgzJvrGG1y1H6U0UKqhXfOZYdPNNHE2qm+1UNKyyzU190DiJGqga68=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by BN0PR10MB4998.namprd10.prod.outlook.com (2603:10b6:408:120::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Wed, 23 Apr
- 2025 12:29:27 +0000
-Received: from AMS0EPF000001A4.eurprd05.prod.outlook.com
- (2603:10a6:20b:5e3:cafe::ae) by AS4P250CA0019.outlook.office365.com
- (2603:10a6:20b:5e3::10) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.35 via Frontend Transport; Wed,
- 23 Apr 2025 12:29:27 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.205)
- smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=de.bosch.com;
-Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.205 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.205; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.205) by
- AMS0EPF000001A4.mail.protection.outlook.com (10.167.16.229) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Wed, 23 Apr 2025 12:29:27 +0000
-Received: from SI-EXCAS2001.de.bosch.com (10.139.217.202) by eop.bosch-org.com
- (139.15.153.205) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 23 Apr
- 2025 14:29:19 +0200
-Received: from [10.34.219.93] (10.139.217.196) by SI-EXCAS2001.de.bosch.com
- (10.139.217.202) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.43; Wed, 23 Apr
- 2025 14:29:18 +0200
-Message-ID: <d179848e-63e1-4921-891e-455834f3733e@de.bosch.com>
-Date: Wed, 23 Apr 2025 14:29:11 +0200
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
+ 2025 12:30:49 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%5]) with mapi id 15.20.8655.031; Wed, 23 Apr 2025
+ 12:30:49 +0000
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>,
+        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: add core mm section
+Date: Wed, 23 Apr 2025 13:30:42 +0100
+Message-ID: <20250423123042.59082-1-lorenzo.stoakes@oracle.com>
+X-Mailer: git-send-email 2.49.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P302CA0001.GBRP302.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c2::6) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
-To: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	"Alex Gaynor" <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
-	<bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Trevor
- Gross" <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<rust-for-linux@vger.kernel.org>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250414152630.1691179-1-remo@buenzli.dev>
- <20250414152630.1691179-3-remo@buenzli.dev>
-Content-Language: en-GB
-From: Dirk Behme <dirk.behme@de.bosch.com>
-In-Reply-To: <20250414152630.1691179-3-remo@buenzli.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001A4:EE_|VI1PR10MB3695:EE_
-X-MS-Office365-Filtering-Correlation-Id: fba39a1b-27c4-4fdb-7dea-08dd82627d53
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|BN0PR10MB4998:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e1f1100-4755-47f3-6b30-08dd8262ae12
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|1800799024|36860700013|82310400026|921020|13003099007|7053199007;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OGxXT0NaN1k2cFFmdVg0UTJ0R3AyU0h5dHlYYzQ4SWwwRjdBVHU0NXpSZzNi?=
- =?utf-8?B?dmpqRUxic1p0T29lZWpHaEFTYmF4RjlPejhtVjF5djZYT1lVdkp5ZUdDcGFX?=
- =?utf-8?B?dEErUzFCOFZGQ3QzQU9uc2dJOHU0aFIrZHF5eFdscUZCbUhIdDRTblhkcFFk?=
- =?utf-8?B?Vzl6UDJxQlRsQ0ZJRzlDRUd5aFZudjNlUUlOMHpSQVpUdGtaN2VQR2E3NGxs?=
- =?utf-8?B?NUdxemRrMjIwMEhBaFpMNi9KdXBPZ2xDdmFYbkVUdzRDdTZIU25SNUhLSUEz?=
- =?utf-8?B?OTV2WTFpZEQxUTBzbWlFSkVxM1hsUHd1VDFDR0xYeVR3VEFTZlRkSm5rRTRj?=
- =?utf-8?B?MHRNZ1MvMk9IRFFCblB4T0dmZTV6T0t5RjUwQndQTEg4VkZQSlBkcWFJS1RY?=
- =?utf-8?B?QUFOVExUUVBOMTBjT3gzaGdNRG90R0ZkRmZ3WHBES3FsTit1TWQwZUYwVmg2?=
- =?utf-8?B?cXYxWHFxMGV0ZTZ4K0hVVGtrK2N2QUdmOTcvVjB2Vk1aNlRDZWczUUhmTU51?=
- =?utf-8?B?ZE5QZmNFNVFObkRsR2x3T3lUY01JOGJkZ1ZnSVJ5YlNVZVlBaG1hODkvbWZR?=
- =?utf-8?B?SGlpOUFIdSs3eDlQNWd0TmZ1WGYwR21uanZBaU9NUUl5S0NuNnJNNG55SmdM?=
- =?utf-8?B?T2thNzRhSFNPeEVuRnZPZTJ3d3U5TWxVcllDLyt6SmtsaUNvQzhWMnVVOFND?=
- =?utf-8?B?S041a05IZ3VLc21QZWhLSEVnTFM0dGhvMGhKTFhaQVFCQzA5VmJDTWZRRGkw?=
- =?utf-8?B?WkhZRVFqN0tNVXFITTB6aGhBRS9PdnA0blZkdjRyT1NOMmNTS0FILzhTZTZC?=
- =?utf-8?B?biszZllaOFFBVVZMT29FaVI1ZjJpTS9LWXFtRUpTOExxWXpXNGRVbmsrVndm?=
- =?utf-8?B?Z2JGaVpRd3duZ1lJNXdHQnkzekRZSUxEL2lrVXN0YWRFK1JkTWdnd1hiTmNl?=
- =?utf-8?B?TXFMWjNQUmZMMDY1eGxxaW1mYmkzOHZTa0RNaUU0c1RUQzNoK2NpYmJyMVpR?=
- =?utf-8?B?enc4QUhBQVZZZ21BdXVEcEJFTnQwV0tVNkR2UzZxbDFDdEZlYjhsdm5EcDFW?=
- =?utf-8?B?UFA0NUg5RzB1c01tQXNTeGwvb1cwSDBkeG5FVTBpZjhzYzJQbXBlUkNsdU9T?=
- =?utf-8?B?enVzb1dwb1RPQnkydS9zbGtjc2FNY05yVlArOUUxZ1JzdHFDTitDWW9nQjhw?=
- =?utf-8?B?bWZWT2VWdDZDMmNKTkdhMUJEYjdMRXB2OTRKZGlhSlp0RkIzanJqVGRLdm9V?=
- =?utf-8?B?UkpRVDR6RmtaSzVGOSttUmNvckZra1dlanQ2cnc3VzZqdnE5TEtVcXh1a1cw?=
- =?utf-8?B?ejNEMnNYM0FQRVp1VElsaHovalhGWmtIM2djYThXcG0vcEtuc0h5TWlGLzU4?=
- =?utf-8?B?VGk0UlpBREFFTVV1WGVHSVVXYUMvZlpONzZLTW9nTmNTNHJrZEdKa3pjWk9y?=
- =?utf-8?B?SGdSK0VEaUhuQ2VjeWZDRHEwYXVITHE4eS9ZdUFIQ2RxdzV0Mm9kRE9ocFlt?=
- =?utf-8?B?WERBNEQrdGNpUTkyOThkTWJVMUlDV1Ewa2pMWDRYLzQ0Q0lnUzRvUzVDemYy?=
- =?utf-8?B?cHRncHBmbzBTUk5NL3lGZkd6b0M5VmY3aWd3bzdGRDlVTlBUeFh3Ty9tUzgy?=
- =?utf-8?B?MUlxRDBZSHFpdjhCbzZlMHB0Y0FzSXJ6ZlcrSThObGx2eGY0VHhuWG95NlU0?=
- =?utf-8?B?R1dmNW8zVHpDTWZOcmNlZlJ6YlJIQUdpbjdRUXBlUEhKbWpYRzlFbURKMkJy?=
- =?utf-8?B?cW1jVUIwcHQrNmNiVHJYbnlWZktFKzhkQlhnSFBudGIwUTBuYmJkNDNTSnVQ?=
- =?utf-8?B?OXp0M0UyZ2hTREVjVm5GblM0VjdrS1FwRmhlblp2MFNESGtRcVVMZUVDcmlp?=
- =?utf-8?B?bndVUlpVRXcyYjYxUEIzRUc5Tmk5eEpwdkk0V21sc1h6MU1vSEVTeDc3a0xq?=
- =?utf-8?B?M2dUVk1zSm5sWWlqRUJsSmFiQ2pSSDJFbmxTT2R6NkNDblVyZjN5czgxRmcw?=
- =?utf-8?B?aU16YjRTelhSNEJUMzAxZlowaHhRT29KeGkrbDZ5bjdCVjFudlBkMHM0NE56?=
- =?utf-8?B?Zk0zNFhhbnRQczl0M21ST29FZUE4QTdtbXBydz09?=
+	=?us-ascii?Q?N3Ylg1uTFtzvD52ZEQXh4OQHoQnzkYmI1EmCbSUFheT9Yc26Mky2ll0YrR4X?=
+ =?us-ascii?Q?iAaM5RjqGyzdcJd/j8J6EMAO7yjG0bLzwb+1n0Dfd7SUr83Rl23pwjb5bvW0?=
+ =?us-ascii?Q?hVuHamqJRralyePpvmybFFj+cMe57P/s4zDJx/IMHDSlTvTk8nNNcPY62XvR?=
+ =?us-ascii?Q?ILbZ7My+gPsTl7pDGAeEkVdZWk7WnhM9U786knCh/v3zCWX9eq4w7GNS7CL3?=
+ =?us-ascii?Q?7EMT820xaSqFJihFVuc3ZD2SQSHRyvseKmaZ4PAc4nFYXHu7XCJgLpC5e1vD?=
+ =?us-ascii?Q?IqYBjkEDw5KR8JEa74GwvtabP1HAbgrkVxFODZbRhapi9hOobbzJdOBwZdfQ?=
+ =?us-ascii?Q?XHQ4W9sYPVq4lzrCahOa3EoJfbyoGzUBz+lGUXsTGb6Jg7zdwN8dZMsiA4v/?=
+ =?us-ascii?Q?J+hnxGtkGKHiqzy90khLKwykthfgjLUcxegKaiqUWbFYTCtEN4HOHmRCHaSE?=
+ =?us-ascii?Q?vAsCNcZUU659IH/+yZK1SB0MZ2PLi1hQTkazXFYv7xIll626VZ8fJkhmEQRz?=
+ =?us-ascii?Q?6QsM4G3bT872hxDYffYFtaPbwSl7+gPwOhOEUUhcuUiBpx4AfWhk7nU3safV?=
+ =?us-ascii?Q?D7202J2WUzkZk8IPh8fignUWUgZnWVCmWEvCsjIuWQADzvDYqHcNr70Fb4+C?=
+ =?us-ascii?Q?BtdfApXpZp9sEsbOhANNNxR0hbHDOGwn8Uqpdn5y+6DJclDLA2v1tOaSQZBc?=
+ =?us-ascii?Q?soDcnt07R7+q8IGtGptDWUGCBzNETXGOVYFitk/JI9Yecn1XwcNLGWrt9Yea?=
+ =?us-ascii?Q?1uSHgluHRcSMHgvKj6gr3rqjIVm3pstmcxf9roU44l4XMrGkF1/Rlbo0+C/7?=
+ =?us-ascii?Q?uDBBnnGWjwLfDJA644k5CrBzFfwBbfRYSUyTQw0fSczbiByv3PXNIbOfG3GK?=
+ =?us-ascii?Q?pxcx6JxpJS1gqEqlPnmC7aJwzJxFKylYfuhUSf1zl9ShOHA8WKexjz5+8o9m?=
+ =?us-ascii?Q?k3XTwxElCB5favxmSszcRgFMfED965JdaC2PD9Sfu7T+BP9qCW2UBdf6iFGi?=
+ =?us-ascii?Q?CJaCK5tGNtYnP15geYk13Gc8DK8U9bk5AF1Jv4+RIuitThBqg96P1YKqmWaK?=
+ =?us-ascii?Q?JkEaTT1FPoYfvdbb2cgmehZPZGUNKfli4aeTMD5XhzwFK2uOioyKVBBZro+t?=
+ =?us-ascii?Q?a3oNyIoHHRMcqQQTHecRSG4H2yWz8uLT6lcSLtpyzejfm0a3InM1AqILC6vM?=
+ =?us-ascii?Q?tPk0p94/rDWwFkwttCIMnmqxWIpKMCJy3FqvWSU6yGoak9a6S5etwuDy/a0E?=
+ =?us-ascii?Q?e6mYthrqOV5vjs8SQkzsdW7CO5+Fn8u5qNcJ4lB1W8XkjilVLtGdm+saPUBv?=
+ =?us-ascii?Q?mUM88CWzjf0PMDmoI+jR7qtsvzXc1fjRAUkXOAPGd6M3H0820gZHRe2+v89y?=
+ =?us-ascii?Q?JvJ+x4c=3D?=
 X-Forefront-Antispam-Report:
-	CIP:139.15.153.205;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(36860700013)(82310400026)(921020)(13003099007)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 12:29:27.6726
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zSovi7Gr/d4woMGOxXtYxM+7oMrxIYM0b999OS888dnQfX4GSqCDTZ7wXWDF?=
+ =?us-ascii?Q?YPGG1X0OHsf7lmlzlJ5xPUkTPLw3j1q+sdQ3+AeQPW0l995PixR65OxN5SQj?=
+ =?us-ascii?Q?HvEUOJnz9bJIWUfdp1Q0fH6QlSy1QNV++L7UT9mfqLMx0cJ8Mq8Rw1phUiFM?=
+ =?us-ascii?Q?3ewB1CGqmEaf21c5cqgCB1PcLswx5pmupi+/ubVkcErayTq8JGh9KGEJJd8A?=
+ =?us-ascii?Q?iazMHRk4xVnmiN31o0vGWOBhXuM6lqrjwik2bdTOtN30c7uBXHAzGHwWBPV3?=
+ =?us-ascii?Q?NvMucvAWbPnKJEBFJxsvL6LekPNykCozq1n3kzo5Ik1I+qbb4daGKUzCxuGD?=
+ =?us-ascii?Q?HcP64cYf/YnIERr0ghM4M/pQ2u/CMiUh3M/OcBtgeowNibbQBx1e6FpU4WOR?=
+ =?us-ascii?Q?BLw2EHZdgIF4JK/XCw9NaIerbpxDhTy0SJLXks+fwc6d3KcsR69QPrxAhCTG?=
+ =?us-ascii?Q?sQ+mvZi2oxq6GZtxc1p59wyxmuIHeNdvuvv47TeL+Of65ubccuGCmBt9Yjjl?=
+ =?us-ascii?Q?bXwS4Vg9aOEeZ0wSBO057SFPf5duAsTzZbOPrNVeGypQQchjuseQw+DQH7zh?=
+ =?us-ascii?Q?Xt4xGlA9f1Nfl3Sq4X67ZHPXTrMRF76ZpJIYIuV88JZ6W1GNOVkRQZS4+gZ5?=
+ =?us-ascii?Q?zcoDit/Uh/mTahABdKHPRhZgK2VM0PH7axflNEkdK7Q5+kbmNbdEAgSmB178?=
+ =?us-ascii?Q?hzbRUIiWSpx/YW5c4QMPMXQHa24ti3pBa3ORu65ykLk3lMYav23M+ptctRH0?=
+ =?us-ascii?Q?4K0dnk9/yQHqu5FN8qIhJ3/j7H0sdoAPVHnT4inR+LSXGWFJhTP3fojI7vtt?=
+ =?us-ascii?Q?yu1wITNWVRSIVJQWc3a9rGx5kKmyky3X82Nw7j1UCJRbJ7g2ICgacLUSs3G6?=
+ =?us-ascii?Q?qMvZqqpwSJjXtizwNCYN2X+oUKWKn6pFUiVdAHaicIXUluu1L87nNchEvyyr?=
+ =?us-ascii?Q?n45o+RmbJ3hgaF7EVfx8wXzVLah4B3XALa12Z4fdc14gidltEYQGX5FZ4xU7?=
+ =?us-ascii?Q?0rQfN34YBMm4wYsM4xKuALD0/Zs1Og1PMIQzEu3avx6L6FY5NL12AEFqm+Ti?=
+ =?us-ascii?Q?df+fs6i94F+GHbQ3U+m60YEPdrv7vZXPJgJJMr0HFgs5VqTEGCFKIDjAh8di?=
+ =?us-ascii?Q?0RyyGbcQwKb0WEjnSq9wtx+qqzaQw2iZbGbSrajUQW3R1eopFA9MJCPgkgM+?=
+ =?us-ascii?Q?Y+0q1FSjNoeyQhDLYrQs1BzZm+mEPGsEiFz7SkOxJr/P5Oiwam4upjz4whAn?=
+ =?us-ascii?Q?LeFm+gMELPjCO/HukF28FgWtJC31cwXLWaSTkIUbH06iRm4NMOk081kmKBiT?=
+ =?us-ascii?Q?NbYRXjFt7CNXrVhTxO2p5qcuJtepQOxykkgQePyro9owHWIS3Yir0TMinyam?=
+ =?us-ascii?Q?oooRpq27ahH1MIRsPi4hcelkUlahb/tyFh6eK7CUJu+R+G4uOhY2sA6rzRsQ?=
+ =?us-ascii?Q?hRKosBmnrbW1QYoHm0WRgISKxMu4lQTYw1oUKMAdVoPYjEdrPY50rNYQc7jq?=
+ =?us-ascii?Q?rDkITuVgXYV8tVcD+oyKASllJyqQ5lkodMwGY6JLrqGc21ZCieJ7xNBT6Nwn?=
+ =?us-ascii?Q?l/6sAM4eQojnX2hJuojAUKK0foA6XhWLZ4I8QzUDAipfGFAmt7o94RnQY0TN?=
+ =?us-ascii?Q?OQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	9x0OKSi9NnJmu4EksAHDmAHzjpr++VJKaCZBr0OnMIddH2ADhyzGkvMkDPlgcrDr+8nQDwfbbI2PheLZjdRVpr2iwboVQrIIsbv5A9aTPEA9zQxeJHnSbyBOn00aKiSv7IkJaMQaLX/R5JDt+Er0fj2DcxUApeOKN/Q0K4r/0XsmqRZmy92tPC4oZgLA2oBrzJ49xnW3sB4M4hBueYtOESonWYZE2ddIpxICPZ75XTlThmc8TT7RJUVvWjenWpbNWmLYPAFRVgTK7+UPZeUVtKFbecvryGv2VRInRQc45iuIuS9n+gUDTg+Y2VfxJrq2zi4ErflP9taBVAaIAeNmhA8iFEmQqflTmLsmN/+7zmOPkMTC5hGCBTn7WyypQ2A04RnQqutGPbs2cPHuudmbj5Bk1GYlqHvwUdYAbAxBJTgFsD4CkF12UqEqldDP/q2vecz//IoYM/zzz/MeN1bxf2zs7P/FMITYgM2ljGJw98RyfmX3hvPI+khYFReYbHaKed3j04e2oVxgHOcPYlokreo9r/gpZ9jMx8t0csvTlQ1h/Uzg9UxG2M4Pg4MlB06iWRSFlJJv3A/P27siVZ6DvMCjZhHpgpeMcLdgkj31pgo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e1f1100-4755-47f3-6b30-08dd8262ae12
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 12:30:49.6568
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fba39a1b-27c4-4fdb-7dea-08dd82627d53
-X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.205];Helo=[eop.bosch-org.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001A4.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB3695
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TSNnX4Mb0R7MJEW8hBlwcOi6WIH8DD5exaXh/8CRWFXUHI0XBouYLTo+F2aZqpFUtnfm0+YuOgQOcNIWPXl7L3+W4OBLS/q2kwKKogSt4C0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB4998
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_07,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2504230085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA4NiBTYWx0ZWRfX2Fb9aga2F4NO 7wRca3+ZXoL7rrgU3JdmN+t7PDhsXQ97LNBMF6jO3QK5tTE4Z5DqeUyBd/R0/2Ceb5m42MQBFLy UyovUtOR/fUcI3OHJKsfSiAMYVZSM4WJHgsdmAI4KJDijbda2LkMGW5Syus/WBvR4W1RIUSRLtP
+ XMDcaeiw86k5hBIUBirIWztabb4119+0Q4rE9DAWCGy22Rv1gq/+UuDOJ8f6C4pQl65nFS1ivBY d1WLXg3g1bWc2K6NAC5MEFSj7euqH/u/HxmE6zDzv6hhK4Q7I/HVIuRGIJMvFPh114iAAMF/IU4 +1wd49OxxTfRJMjhKRs0ohciMocjeb829qitVeYRwUnE+0P329/E/PaDkneuZGp6ywXWVKDGmWf ZjawEqvx
+X-Proofpoint-GUID: Mqf2cvlXNoK7EjgxoH0Hi6U4O5ZljX_o
+X-Proofpoint-ORIG-GUID: Mqf2cvlXNoK7EjgxoH0Hi6U4O5ZljX_o
 
-Hi Remo,
+In furtherance of ongoing efforts to ensure people are aware of who
+de-facto maintains/has an interest in specific parts of mm, as well trying
+to avoid get_maintainers.pl listing only Andrew and the mailing list for mm
+files - establish a 'core' memory management section establishing David as
+co-maintainer alongside Andrew (thanks David for volunteering!) along with
+a number of relevant reviewers.
 
-On 14/04/2025 17:26, Remo Senekowitsch wrote:
-> The device property API is a firmware agnostic API for reading
-> properties from firmware (DT/ACPI) devices nodes and swnodes.
-> 
-> While the C API takes a pointer to a caller allocated variable/buffer,
-> the rust API is designed to return a value and can be used in struct
-> initialization. Rust generics are also utilized to support different
-> types of properties where appropriate.
-> 
-> The PropertyGuard is a way to force users to specify whether a property
-> is supposed to be required or not. This allows us to move error
-> logging of missing required properties into core, preventing a lot of
-> boilerplate in drivers.
-> 
-> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
-> ---
->  rust/kernel/property.rs | 385 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 383 insertions(+), 2 deletions(-)
-> 
-> diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
-> index f6e6c980d..0d4ea3168 100644
-> --- a/rust/kernel/property.rs
-> +++ b/rust/kernel/property.rs
-...
-> +    /// helper used to display name or path of a fwnode
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must provide a valid format string for a fwnode.
-> +    unsafe fn fmt(&self, f: &mut core::fmt::Formatter<'_>, fmt_str: &CStr) -> core::fmt::Result {
-> +        let mut buf = [0; 256];
-> +        // SAFETY: `buf` is valid and `buf.len()` is its length. `self.as_raw()` is
-> +        // valid because `self` is valid.
-> +        let written = unsafe {
-> +            bindings::scnprintf(buf.as_mut_ptr(), buf.len(), fmt_str.as_ptr(), self.as_raw())
-> +        };
-> +        // SAFETY: `written` is smaller or equal to `buf.len()`.
-> +        let b: &[u8] = unsafe { core::slice::from_raw_parts(buf.as_ptr(), written as usize) };
-> +        write!(f, "{}", BStr::from_bytes(b))
-> +    }
-> +
-> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
-> +    /// printing the name of a node.
-> +    pub fn display_name(&self) -> impl core::fmt::Display + use<'_> {
+We try to keep things as fine-grained as possible, so we place only
+obviously 'general' mm things here. For files which are specific to a
+particular part of mm, we prefer new entries.
 
+Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+---
+ MAINTAINERS | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-I don't know about the details but with rustc 1.81 [1] I'm getting [2].
-Just doing what is proposed seems to "fix" it:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4015227645cc..632f2860f1cc 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15492,14 +15492,11 @@ F:	Documentation/mm/
+ F:	include/linux/gfp.h
+ F:	include/linux/gfp_types.h
+ F:	include/linux/memfd.h
+-F:	include/linux/memory.h
+ F:	include/linux/memory_hotplug.h
+ F:	include/linux/memory-tiers.h
+ F:	include/linux/mempolicy.h
+ F:	include/linux/mempool.h
+ F:	include/linux/memremap.h
+-F:	include/linux/mm.h
+-F:	include/linux/mm_*.h
+ F:	include/linux/mmzone.h
+ F:	include/linux/mmu_notifier.h
+ F:	include/linux/pagewalk.h
+@@ -15509,6 +15506,31 @@ F:	tools/mm/
+ F:	tools/testing/selftests/mm/
+ N:	include/linux/page[-_]*
 
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 3b1af034e902e..eadf7501d499b 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -26,6 +26,7 @@
- #![feature(const_mut_refs)]
- #![feature(const_ptr_write)]
- #![feature(const_refs_to_cell)]
-+#![feature(precise_capturing)]
-
- // Ensure conditional compilation based on the kernel configuration works;
- // otherwise we may silently break things like initcall handling.
-
-Just want to mention it because I think the minimal rustc version we
-have to support is 1.78.
-
-Best regards
-
-Dirk
-
-P.S.: Many thanks for working on this! :)
-
-[1]
-
-$ rustc --version
-rustc 1.81.0 (eeb90cda1 2024-09-04)
-
-[2]
-
-error[E0658]: precise captures on `impl Trait` are experimental
-   --> rust/kernel/property.rs:256:61
-    |
-256 |     pub fn display_name(&self) -> impl core::fmt::Display + use<'_> {
-    |                                                             ^^^
-    |
-    = note: see issue #123432
-<https://github.com/rust-lang/rust/issues/123432> for more information
-    = help: add `#![feature(precise_capturing)]` to the crate attributes
-to enable
-    = note: this compiler was built on 2024-09-04; consider upgrading it
-if it is out of date
-
-error[E0658]: precise captures on `impl Trait` are experimental
-   --> rust/kernel/property.rs:271:61
-    |
-271 |     pub fn display_path(&self) -> impl core::fmt::Display + use<'_> {
-    |                                                             ^^^
-    |
-    = note: see issue #123432
-<https://github.com/rust-lang/rust/issues/123432> for more information
-    = help: add `#![feature(precise_capturing)]` to the crate attributes
-to enable
-    = note: this compiler was built on 2024-09-04; consider upgrading it
-if it is out of date
-
-error: aborting due to 2 previous errors
++MEMORY MANAGEMENT - CORE
++M:	Andrew Morton <akpm@linux-foundation.org>
++M:	David Hildenbrand <david@redhat.com>
++R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
++R:	Liam R. Howlett <Liam.Howlett@oracle.com>
++R:	Vlastimil Babka <vbabka@suse.cz>
++R:	Mike Rapoport <rppt@kernel.org>
++R:	Suren Baghdasaryan <surenb@google.com>
++R:	Michal Hocko <mhocko@suse.com>
++L:	linux-mm@kvack.org
++S:	Maintained
++W:	http://www.linux-mm.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
++F:	include/linux/memory.h
++F:	include/linux/mm.h
++F:	include/linux/mm_*.h
++F:	include/linux/mmdebug.h
++F:	include/linux/pagewalk.h
++F:	mm/Kconfig
++F:	mm/debug.c
++F:	mm/init-mm.c
++F:	mm/memory.c
++F:	mm/pagewalk.c
++F:	mm/util.c
++
+ MEMORY MANAGEMENT - EXECMEM
+ M:	Andrew Morton <akpm@linux-foundation.org>
+ M:	Mike Rapoport <rppt@kernel.org>
+--
+2.49.0
