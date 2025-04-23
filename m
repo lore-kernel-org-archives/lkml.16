@@ -1,251 +1,129 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54085280A21;
-	Wed, 23 Apr 2025 18:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132C022F747;
+	Wed, 23 Apr 2025 18:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432132; cv=none; b=rfvhz/A0oZRskpF61v5Fh5mIUW7xK2N/e4PkR3ubg5rxNvPwqId2iSYLe37FiGte7CUJIMc/U3N/a5hxVY8pPHds9i8nmVL30JdOFQgBeVDYm0+5L07gVbj6n7/fzbtAPQopVrujVCHqu8UUJVoopQgDWvf/AoGweu/oT0GFMTo=
+	t=1745432185; cv=none; b=I+4FwiqAhBZMPSQn5F0/MS8WUoHUbmBCa8nNzeNP/xabxQkIKL0s2ZEBeS1wEQMqYM69wMwcwVN639cDmQk8QkTTxAWymbDwleMP+YeRuNRMGG1wLA0RnXfJ4qxrPeK2smzmjAkh+LwBk9/JI5ZxURr1rHU71m1Uf6fwm8F3lWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432132; c=relaxed/simple;
-	bh=bahC4EZGyLZ5JcodwBxNGpmpVQpi+ynBeIQYEPfwdfY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fecgTTyCIxBk8QXHlnu8dlwOTMel9IGEGUKwq1Lek0VN6AGL9HD5eVz5KIkpGG6YtTKC4S5TL4Czi5Jmam744zCJE5eZL5icU5PAAZtwXsdiHlpaydev10V6Khp0igi6TXijOSkxY/mphDhJBpZ55rFoEK48rwsrDSHvMLb/u0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VdMPgVIx; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745432185; c=relaxed/simple;
+	bh=zT6WmWKq89q1ikbAI7gacqu8XDLXrdwAY8cZBziJHYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q9fuUajc0Yfwqx3y5+f3P0OYQ8Ityuta8c5qn0Jyw4DkLG9Fmqk/UUi1DWQ646ni/Khx11NtpQ7QABUsbiYU8mVXHKkTGPlGzPyDA+bGgECwbUoR9PZmcMIBVFa8xR6HBHR6jJxdtUBW6ZYyhuI/xRtupslip3T7+LFkneG0EDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bo6+o6B7; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdMPgVIx"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54998f865b8so82172e87.3;
-        Wed, 23 Apr 2025 11:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745432127; x=1746036927; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=60ooqHv4lubF04MISs1yun2dS0JF24QIl5RyblgguIU=;
-        b=VdMPgVIxt/RtNU31RooXe4QjQ2d3c3IkX6kpvjteLUsLNirqR6scw5AyszlsfXSAg4
-         w/sS28MYmVQOsFZQiwzNKI47XZVWrqFsSKBgAnikDwENbyZqDfXKVTM5jWjmO/pWaEGJ
-         brbUkDDPcFbcKOIoy8MMjNUV7rAd2Pt6PiM92+6zPswEYb0W4wj0EGzxWl6bMMQkB+LP
-         S6Y7xwejaMrk/6p8EgMfRoimDCRsony2gwIyviYWR0hVBcE+hMHoqutJrvVlZK8Zm07x
-         kQR6XuNaxAtd8lRgTRo/4UYYU7U1ronHtYB2AffwdSokDveuZTNuixOeUA3CTow9juKm
-         x0gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745432127; x=1746036927;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=60ooqHv4lubF04MISs1yun2dS0JF24QIl5RyblgguIU=;
-        b=QH+rCt/vUUSVfe4VoacLxd27rQqeCvBp4omzjPpTKnd3UZOT/9wk/nHJQOhLJY8bHU
-         8TfoI3Ytk+FZcx22py71b5VXTTuiD9O2k0eJgbunqKv9HGAP2O401hYRq9UOfYzev6v3
-         dqb4CiaXEbCfVAhf2NsBdo8kwSg2Lf+Oob0eMUIGNATmTGRnjSwzvUmsBM56nelM6aMP
-         G/74e5QzOTWflFzBLXZVLcxdoWLVyiadVmdK3R10duzzhDCH2EnInv9VdhNYqwDn8vSx
-         8h0qoEuqR2n/6kzxO7jiNjszxQQNq8S3FFd4khf+DuYDx25KUra6CXzBnOlVj+gjV4xj
-         ej1w==
-X-Forwarded-Encrypted: i=1; AJvYcCU0NQhl0NNLfklU2zU+6JQPp3+ox4vpf8UKLQV8LYwmztUGVi9UOvtrSYN9x+/gqTmWSrIIPWnl@vger.kernel.org, AJvYcCVxwfHzln4UMWqNC0/ZrYOQxZ0Q8Q2UsXQOMePtq21fcxS5RR9Dx8qkPr69sNFW4HekgyoZ23al@vger.kernel.org, AJvYcCX9pn6pqoxoiB8TUh8PW6AwVE7kjbSn1X4LJ3PPL3lQ3F+tWsxUDqmPgUtXJZt4ZsBGF0axP23mU0xsoV0DqAtM@vger.kernel.org, AJvYcCXvQPvURcf3rsGLtIlIEZsTRO+rR2WOLg+JSw4NNZq9wfJRewZBkPweLfA48Kr2CsAIHL1PQ5aNjIG5gwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxad2leXoZox9FJsgaGM9LaC/yOVM9nyatAI6aBOcS2Vl7mfp1G
-	/Zj8nPDeWbGpjl/DmZWBHSQSLwLGtZ7lfV67mxpAFe1/gtwHDxuq
-X-Gm-Gg: ASbGncu4NhEuOM0wejGB8iy5vRj/unZq9uowOxjZ3D+7wm6wM7a8PIqhKltIFJOJkGv
-	n1kb3kwkCplHSVuU0Xjil7O1A+16yMNeGaIBUIaKosYtWPcp62pt18gFRp2nIEaopaRhkIFYV0R
-	hVNSi9HM0VlVu8tyTUV51MvYYo1Bf+KJkPvX89/R0YR1lDfVki7MJ/9/RDewjZqNXqne1QuEO1E
-	pm/KUMWeY8XCkY9R55KaEIPfPrqOidQOXqPXA7CGwV9TVKPih0UjLopARBY3RnMh6iLc7xo4fao
-	IUJu13a8tmAYnBfvcKNPud5yk2yjhxqxuiRCXaUOHqDA2cmC4ADgX6M=
-X-Google-Smtp-Source: AGHT+IFG0X8R3+9zVQjwFuLKdnVhwPWdDHjtGIJi+PAV1z4CfmJthxydm3SWJC3j0gwdpys72wiu6w==
-X-Received: by 2002:a05:6512:224b:b0:545:60b:f394 with SMTP id 2adb3069b0e04-54e7b5ba31cmr217791e87.4.1745432127102;
-        Wed, 23 Apr 2025 11:15:27 -0700 (PDT)
-Received: from localhost.localdomain ([87.249.25.136])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5d0146sm1603134e87.128.2025.04.23.11.15.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 11:15:25 -0700 (PDT)
-From: Evgeny Pimenov <pimenoveu12@gmail.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org,
-	Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Evgeny Pimenov <pimenoveu12@gmail.com>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Taehee Yoo <ap420073@gmail.com>,
-	netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Fedor Pchelkin <pchelkin@ispras.ru>,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>
-Subject: [PATCH 5.10/5.15/6.1] netfilter: ipt_CLUSTERIP: change mutex location
-Date: Wed, 23 Apr 2025 21:12:46 +0300
-Message-Id: <20250423181245.14794-1-pimenoveu12@gmail.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bo6+o6B7"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0A3B41AE2;
+	Wed, 23 Apr 2025 20:16:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745432181;
+	bh=zT6WmWKq89q1ikbAI7gacqu8XDLXrdwAY8cZBziJHYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bo6+o6B7qpomUzgb6VyAyvahU/9AFhwyFixGWgT1xW/ydmBFGmedoD6yjc6K2QPDU
+	 wWuSusjt7vFT24Hrx7BOZGlXgsd3yc8QNCU52gf4+o6tfKLFhf7omsKlkf1WcHmlZK
+	 m4QE4XDAh6R9tYNSYMk7WNMwuCEPFtYuaqZkZNdo=
+Date: Wed, 23 Apr 2025 21:16:20 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mathis Foerst <mathis.foerst@mt.com>
+Cc: linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	manuel.traut@mt.com, mathis.foerst@zuehlke.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v4 5/6] media: mt9m114: Fix deadlock in
+ get_frame_interval/set_frame_interval
+Message-ID: <20250423181620.GD2675@pendragon.ideasonboard.com>
+References: <20250307093140.370061-1-mathis.foerst@mt.com>
+ <20250307093140.370061-6-mathis.foerst@mt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250307093140.370061-6-mathis.foerst@mt.com>
 
-No upstream commit exists for this patch.
+Hi Mathis,
 
-The file ipt_CLUSTERIP.c was deleted in commit 9db5d918e2c0
-("netfilter: ip_tables: remove clusterip target"), but races still exist
-in stable branches.
+Thank you for the patch.
 
-Thread A in clusterip_config_entry_put() decrements refcount and removes
-config from the list but doesn't call proc_remove(). Thread B searches
-the config, doesn't find it, re-adds it to the list, and calls
-proc_create_data() with an IP that still exists in the tree.
+On Fri, Mar 07, 2025 at 10:31:39AM +0100, Mathis Foerst wrote:
+> Getting / Setting the frame interval using the V4L2 subdev pad ops
+> get_frame_interval/set_frame_interval causes a deadlock, as the
+> subdev state is locked in the [1] but also in the driver itself.
+> 
+> In [2] it's described that the caller is responsible to acquire and
+> release the lock in this case. Therefore, acquiring the lock in the
+> driver is wrong.
+> 
+> Remove the lock acquisitions/releases from mt9m114_ifp_get_frame_interval()
+> and mt9m114_ifp_set_frame_interval().
+> 
+> [1] drivers/media/v4l2-core/v4l2-subdev.c - line 1129
+> [2] Documentation/driver-api/media/v4l2-subdev.rst
+> 
+> Fixes: 24d756e914fc ("media: i2c: Add driver for onsemi MT9M114 camera sensor")
+> Cc: stable@vger.kernel.org
+> 
 
-|A| refcount_dec_and_lock()
-|A| list_del_rcu()
-=== Must be here
-|A| proc_remove()
-===
-|B| __clusterip_config_find()
-|B| list_add_rcu()
-|B| proc_create_data()
-|B| WARN()
+You can delete this blank line.
 
-As a fix, also cover with mutex the places of interaction with the list of
-configs before proc_remove() and proc_create_data() functions.
+> Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
 
-------------[ cut here ]------------
-proc_dir_entry 'ipt_CLUSTERIP/100.1.1.2' already registered
-WARNING: CPU: 0 PID: 2597 at fs/proc/generic.c:381 proc_register+0x517/0x6e0 fs/proc/generic.c:381
-[...]
-Call Trace:
- proc_create_data+0x130/0x1a0 fs/proc/generic.c:583
- clusterip_config_init net/ipv4/netfilter/ipt_CLUSTERIP.c:281 [inline]
- clusterip_tg_check+0xb8d/0x1380 net/ipv4/netfilter/ipt_CLUSTERIP.c:502
- xt_check_target+0x27c/0xa00 net/netfilter/x_tables.c:1018
- check_target net/ipv4/netfilter/ip_tables.c:511 [inline]
- find_check_entry.constprop.0+0x7b0/0x9b0 net/ipv4/netfilter/ip_tables.c:553
- translate_table+0xc6a/0x16a0 net/ipv4/netfilter/ip_tables.c:717
- do_replace net/ipv4/netfilter/ip_tables.c:1138 [inline]
- do_ipt_set_ctl+0x54e/0xb00 net/ipv4/netfilter/ip_tables.c:1636
- nf_setsockopt+0x88/0xf0 net/netfilter/nf_sockopt.c:101
- ip_setsockopt+0xe4d/0x3d10 net/ipv4/ip_sockglue.c:1442
- sctp_setsockopt+0x135/0xa390 net/sctp/socket.c:4475
- __sys_setsockopt+0x234/0x5a0 net/socket.c:2145
- __do_sys_setsockopt net/socket.c:2156 [inline]
- __se_sys_setsockopt net/socket.c:2153 [inline]
- __x64_sys_setsockopt+0xb9/0x150 net/socket.c:2153
- do_syscall_64+0x30/0x40 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x67/0xd1
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
+> ---
+>  drivers/media/i2c/mt9m114.c | 8 --------
+>  1 file changed, 8 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/mt9m114.c b/drivers/media/i2c/mt9m114.c
+> index 65b9124e464f..79c97ab19be9 100644
+> --- a/drivers/media/i2c/mt9m114.c
+> +++ b/drivers/media/i2c/mt9m114.c
+> @@ -1644,13 +1644,9 @@ static int mt9m114_ifp_get_frame_interval(struct v4l2_subdev *sd,
+>  	if (interval->which != V4L2_SUBDEV_FORMAT_ACTIVE)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(sensor->ifp.hdl.lock);
+> -
+>  	ival->numerator = 1;
+>  	ival->denominator = sensor->ifp.frame_rate;
+>  
+> -	mutex_unlock(sensor->ifp.hdl.lock);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1669,8 +1665,6 @@ static int mt9m114_ifp_set_frame_interval(struct v4l2_subdev *sd,
+>  	if (interval->which != V4L2_SUBDEV_FORMAT_ACTIVE)
+>  		return -EINVAL;
+>  
+> -	mutex_lock(sensor->ifp.hdl.lock);
+> -
+>  	if (ival->numerator != 0 && ival->denominator != 0)
+>  		sensor->ifp.frame_rate = min_t(unsigned int,
+>  					       ival->denominator / ival->numerator,
+> @@ -1684,8 +1678,6 @@ static int mt9m114_ifp_set_frame_interval(struct v4l2_subdev *sd,
+>  	if (sensor->streaming)
+>  		ret = mt9m114_set_frame_rate(sensor);
+>  
+> -	mutex_unlock(sensor->ifp.hdl.lock);
+> -
+>  	return ret;
+>  }
+>  
 
-Fixes: 2a61d8b883bb ("netfilter: ipt_CLUSTERIP: fix sleep-in-atomic bug in clusterip_config_entry_put()")
-Cc: stable@vger.kernel.org # v5.4+
-Suggested-by: Fedor Pchelkin <pchelkin@ispras.ru>
-Suggested-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
-Signed-off-by: Evgeny Pimenov <pimenoveu12@gmail.com>
----
- net/ipv4/netfilter/ipt_CLUSTERIP.c | 30 ++++++++++++++++++++++++------
- 1 file changed, 24 insertions(+), 6 deletions(-)
-
-diff --git a/net/ipv4/netfilter/ipt_CLUSTERIP.c b/net/ipv4/netfilter/ipt_CLUSTERIP.c
-index 77e3b67e8790..61ccfd97841f 100644
---- a/net/ipv4/netfilter/ipt_CLUSTERIP.c
-+++ b/net/ipv4/netfilter/ipt_CLUSTERIP.c
-@@ -79,6 +79,22 @@ static inline struct clusterip_net *clusterip_pernet(struct net *net)
- 	return net_generic(net, clusterip_net_id);
- }
- 
-+static inline void
-+clusterip_net_lock(struct clusterip_net *cn)
-+{
-+#ifdef CONFIG_PROC_FS
-+	mutex_lock(&cn->mutex);
-+#endif
-+};
-+
-+static inline void
-+clusterip_net_unlock(struct clusterip_net *cn)
-+{
-+#ifdef CONFIG_PROC_FS
-+	mutex_unlock(&cn->mutex);
-+#endif
-+};
-+
- static inline void
- clusterip_config_get(struct clusterip_config *c)
- {
-@@ -114,6 +130,7 @@ clusterip_config_entry_put(struct clusterip_config *c)
- {
- 	struct clusterip_net *cn = clusterip_pernet(c->net);
- 
-+	clusterip_net_lock(cn);
- 	local_bh_disable();
- 	if (refcount_dec_and_lock(&c->entries, &cn->lock)) {
- 		list_del_rcu(&c->list);
-@@ -123,14 +140,14 @@ clusterip_config_entry_put(struct clusterip_config *c)
- 		 * functions are also incrementing the refcount on their own,
- 		 * so it's safe to remove the entry even if it's in use. */
- #ifdef CONFIG_PROC_FS
--		mutex_lock(&cn->mutex);
- 		if (cn->procdir)
- 			proc_remove(c->pde);
--		mutex_unlock(&cn->mutex);
- #endif
-+		clusterip_net_unlock(cn);
- 		return;
- 	}
- 	local_bh_enable();
-+	clusterip_net_unlock(cn);
- }
- 
- static struct clusterip_config *
-@@ -262,6 +279,7 @@ clusterip_config_init(struct net *net, const struct ipt_clusterip_tgt_info *i,
- 	c->net = net;
- 	refcount_set(&c->refcount, 1);
- 
-+	clusterip_net_lock(cn);
- 	spin_lock_bh(&cn->lock);
- 	if (__clusterip_config_find(net, ip)) {
- 		err = -EBUSY;
-@@ -277,11 +295,9 @@ clusterip_config_init(struct net *net, const struct ipt_clusterip_tgt_info *i,
- 
- 		/* create proc dir entry */
- 		sprintf(buffer, "%pI4", &ip);
--		mutex_lock(&cn->mutex);
- 		c->pde = proc_create_data(buffer, 0600,
- 					  cn->procdir,
- 					  &clusterip_proc_ops, c);
--		mutex_unlock(&cn->mutex);
- 		if (!c->pde) {
- 			err = -ENOMEM;
- 			goto err;
-@@ -290,6 +306,7 @@ clusterip_config_init(struct net *net, const struct ipt_clusterip_tgt_info *i,
- #endif
- 
- 	refcount_set(&c->entries, 1);
-+	clusterip_net_unlock(cn);
- 	return c;
- 
- #ifdef CONFIG_PROC_FS
-@@ -300,6 +317,7 @@ clusterip_config_init(struct net *net, const struct ipt_clusterip_tgt_info *i,
- out_config_put:
- 	spin_unlock_bh(&cn->lock);
- 	clusterip_config_put(c);
-+	clusterip_net_unlock(cn);
- 	return ERR_PTR(err);
- }
- 
-@@ -848,10 +866,10 @@ static void clusterip_net_exit(struct net *net)
- #ifdef CONFIG_PROC_FS
- 	struct clusterip_net *cn = clusterip_pernet(net);
- 
--	mutex_lock(&cn->mutex);
-+	clusterip_net_lock(cn);
- 	proc_remove(cn->procdir);
- 	cn->procdir = NULL;
--	mutex_unlock(&cn->mutex);
-+	clusterip_net_unlock(cn);
- #endif
- 	nf_unregister_net_hook(net, &cip_arp_ops);
- }
 -- 
-2.39.5
+Regards,
+
+Laurent Pinchart
