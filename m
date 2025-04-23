@@ -1,181 +1,128 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB10228B504
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:16:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0E82857C3;
+	Wed, 23 Apr 2025 17:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428587; cv=none; b=NtUDKZvOXYBr61Jgq9wfJt2iEW+0GwBEwh3lrUAGv9hO4TX9GNry8IAXXPgY+LWd5raxkwjfQHgcMrvOFCouwd8UbPvLZGkxyfcVye43LTcWFStNi9PA5VhNf579rEGsI4xU8mRGeIcYckrlToVlavkqdviLqK3DLL5BMHWDoj0=
+	t=1745428637; cv=none; b=GsA/7WTDPFttdKDdwYihZMOEhqtEUQi0ymiqYyclh1+Or0M+pZNS/hol7QiFgKs2any+DgT6di908PyyZ2TNMXM6y4WGMz7LUWICfVPxBAijpqHRYWlfQJ8omAjgEcIVFG6WE9CUANB44JnlNreWdO/Ex+rJXocnynBrTBbeSQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428587; c=relaxed/simple;
-	bh=2eoCz5Vwboja1E0z+hmUtfdlcsIyszZWzQdnLz4ilZg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sEt6dHxQt41hIx2I89iGqg+ar7awWUwT7uTK1T+Ix9c+JfFJrzJ32qx9xH8JRpr5gIlgs7Q/D4Rl+wEWU4CTEjxbDMDImkS5eAaHCePpbcNFdhoSJGWTm3lrVvfr1uLnmkH2BwP080n3rEUstxLGiRVnVznGt//r5Cy9/VJ6MaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eZJlo2pY; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745428637; c=relaxed/simple;
+	bh=5zuLKKZD6t7o07tEGhpoSHITV1456s45wx0bf1ltqFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Bu003cpWzRvLO6FmuyfPVYMrkfuIrCJFCifcauCDpqzNmFy7UQHAozKosDK67AuMfFmToNjxfjBEpaP53sP4iCgGFMh/oRGDQQFjKUwgsIPKQ0HtR9UZ9e3W/1Qnh/6/kjC431Uo/2wJvu8pdTYl559y5KR3Zbj0q7QmLVEY2N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxPnZ76B; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eZJlo2pY"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ef83a6bfaso2865e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:16:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745428584; x=1746033384; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gIH2Y/xRBv399bxbyyQpx3txjQN3EIidmYTSRd0t7U0=;
-        b=eZJlo2pYPL/9WLTjRexz5JPX2jypY8IDST+Z8PTWFXwgflI7tfUXq+nFAlFK+mlu9L
-         KffhDq6X+lh4YvXM5Unj7JRZ/64AUqWaAgYVUfNcja4mpfTBFIucFeqtlRiYrW5bpC77
-         sal5HUvQCSJ0cQL8orft/Xs5va8wYng4KKuwV9ovtkJ6z0TvNZ2sh2BcrY+/n6ZSspyM
-         ORwVCBbMEKp9zV3kWGPEpfatxfC9XewXyprTPbFFEyPJB4ruJVCZiMwukV0W6nD5nbNg
-         EMujRYastkvCsnmujyJmfLIMukyTcJ3hh/+fV0761/2C3GkWMGo5C5Vy7pBmmJ5T0NAG
-         ny7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745428584; x=1746033384;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gIH2Y/xRBv399bxbyyQpx3txjQN3EIidmYTSRd0t7U0=;
-        b=pH0PG0/SFuGyNEm2yRuGQy+B7Uvcf56dleQuaBnQk0UqbdYOGRVAqZMq7IcZy6F1Ct
-         mEZO/IEzuLpLpwi/R9hrF5FDQ9o1Lw8b+dE2uZMkrm5vnqrCq0iBXHDslcdp0DkXjv35
-         WLjnD3XcHrIM4ZuT4Sq8oCnPfRfXJw0PbN3GT4C3dTTIbt7U9O40fDgeNgDbYdfGMxk3
-         CmXb+FtX/MZb2cvfAYpUolnmlNSDjmsA7+OTyf04ngYdpo77dGB689VM4z/eEBuZNWXe
-         9NvyIfvpOXsRH6bi8Wwvnlu9itqWeBBD+UU9iOwN5O4w9k98ctIu8AIXqJyvTlTPFAeA
-         ZTcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZ13YEdkYYW+Xb3co+t2mOQJyQQBEehXmynfKv7iLCEiw7S+j5iGv6t8aATJlLjdMeK41W6XhZr+xH5fs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyu2L6YPGJPmSg1pwDCZlUcSIpR2n3OGIIHVYrdSq4bdafGWgmH
-	YnaRaYmHmkMQQoq/wdROC7Hzn4eylwnSCjjF82d1TsJIZC3owPA8zJX31gQcqx0Pcc2GBxo/FKK
-	1iAgsNvUBETkbE4OlyWecp4s4iZpCrPh/CJ8Q
-X-Gm-Gg: ASbGnctZ5zOAD/I2IvsHd9mdJij5v8IzaBDsmf8NdLGl5sbXY9ln1RkK6Y4G7NEJx/V
-	GqvP6+1K+BTMNcNcAFa+KmUWFihvbfUWz3lRCotDP+PihQbapicSXY3y7dlE+rqhNHV37V/rP0h
-	wF3T0QJy/F7exHckhKAqETWu3N2rfc+tLuDZ9/ho1VRHqlpCt/Kl7t
-X-Google-Smtp-Source: AGHT+IEel/YT/gnh0VEYAVLvUZfUcOlX9vT6+bEdhBmfMWss5izqapNDBKSe0DOopFndovC2banc6XkwLECVQbHq0Kw=
-X-Received: by 2002:a05:600c:1c85:b0:43d:169e:4d75 with SMTP id
- 5b1f17b1804b1-44092d44519mr1219535e9.1.1745428583917; Wed, 23 Apr 2025
- 10:16:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxPnZ76B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12F3C4CEE2;
+	Wed, 23 Apr 2025 17:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745428637;
+	bh=5zuLKKZD6t7o07tEGhpoSHITV1456s45wx0bf1ltqFY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=QxPnZ76Bip0N0EzbDxLFq45byCvtqYqWbORH1JnPdt3SM0Q1yn8SRPrsr5JwCT8MX
+	 yzG2x3Rsg/5ZMowmZAiXcEetxAaDmRRD+DqMmN7eawirBaL12ETTQLq6Hdr6GjOZWu
+	 XT3sSvEVKKOZ6YSqP6isJEKsRO0lMWp+pqng57bRI6x4KQ4eUFw2KPW/avjtGqGGWa
+	 36JN6n2NcmrT3LqSvKXMEkN7mWsj+yFq4oIphytGaAfAsqbaz2WMXldmidYKxBCvzQ
+	 mP1Zy7n8BGLdGsCmJEeWjbs1NEEW6QaVH2ehHmz2fGmdx4ZGeFKMPRJJdrB55eaO+I
+	 fm6TIGtoIPbCA==
+Date: Wed, 23 Apr 2025 12:17:15 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, quic_mrana@quicinc.com,
+	quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+	quic_vpernami@quicinc.com,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rjw@rjwysocki.net>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, Niklas Cassel <cassel@kernel.org>
+Subject: Re: [PATCH] PCI: qcom: Implement shutdown() callback
+Message-ID: <20250423171715.GA430351@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414225227.3642618-1-tjmercier@google.com>
- <20250414225227.3642618-3-tjmercier@google.com> <CAPhsuW54g5YCmLVX=cc3m2nfQTZrMH+6ZMBgouEMMfqcccOtww@mail.gmail.com>
- <CABdmKX1OqLLsY5+LSMU-c=DDUxTFaivNcyXG3ntD8D0ty1Pwig@mail.gmail.com>
- <CAADnVQ+0PXgm_VuSJDKwr9iomxFLuG-=Chi2Ya3k0YPnKaex_w@mail.gmail.com>
- <CABdmKX1aMuyPTNXD72wXyXAfOi6f58DfcaBDh6uDo0EQ7pKChw@mail.gmail.com> <CAADnVQ+AesNdq_LB+MWxLnHbU08Zrn-8VgwY4+0PKuk7PmRd+w@mail.gmail.com>
-In-Reply-To: <CAADnVQ+AesNdq_LB+MWxLnHbU08Zrn-8VgwY4+0PKuk7PmRd+w@mail.gmail.com>
-From: "T.J. Mercier" <tjmercier@google.com>
-Date: Wed, 23 Apr 2025 10:16:12 -0700
-X-Gm-Features: ATxdqUGSlAvQmLyJTaMr0DEawjdns0rX87YnkYfV8wWxaP1lEb4mrCvXcX0Kneg
-Message-ID: <CABdmKX26VGYxjUh1Gc4TBD71-vGr2MLZdhik36cKStpbG5t7=A@mail.gmail.com>
-Subject: Re: [PATCH 2/4] bpf: Add dmabuf iterator
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Song Liu <song@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Shuah Khan <skhan@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linaro-mm-sig@lists.linaro.org, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, android-mm@google.com, simona@ffwll.ch, 
-	Jonathan Corbet <corbet@lwn.net>, Eduard <eddyz87@gmail.com>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Jiri Olsa <jolsa@kernel.org>, 
-	Mykola Lysenko <mykolal@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250401-shutdown-v1-1-f699859403ae@oss.qualcomm.com>
 
-On Tue, Apr 22, 2025 at 4:01=E2=80=AFPM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Tue, Apr 22, 2025 at 12:57=E2=80=AFPM T.J. Mercier <tjmercier@google.c=
-om> wrote:
-> >
-> > On Mon, Apr 21, 2025 at 4:39=E2=80=AFPM Alexei Starovoitov
-> > <alexei.starovoitov@gmail.com> wrote:
-> > >
-> > > On Mon, Apr 21, 2025 at 1:40=E2=80=AFPM T.J. Mercier <tjmercier@googl=
-e.com> wrote:
-> > > >
-> > > > > > new file mode 100644
-> > > > > > index 000000000000..b4b8be1d6aa4
-> > > > > > --- /dev/null
-> > > > > > +++ b/kernel/bpf/dmabuf_iter.c
-> > > > >
-> > > > > Maybe we should add this file to drivers/dma-buf. I would like to
-> > > > > hear other folks thoughts on this.
-> > > >
-> > > > This is fine with me, and would save us the extra
-> > > > CONFIG_DMA_SHARED_BUFFER check that's currently needed in
-> > > > kernel/bpf/Makefile but would require checking CONFIG_BPF instead.
-> > > > Sumit / Christian any objections to moving the dmabuf bpf iterator
-> > > > implementation into drivers/dma-buf?
-> > >
-> > > The driver directory would need to 'depends on BPF_SYSCALL'.
-> > > Are you sure you want this?
-> > > imo kernel/bpf/ is fine for this.
-> >
-> > I don't have a strong preference so either way is fine with me. The
-> > main difference I see is maintainership.
-> >
-> > > You also probably want
-> > > .feature                =3D BPF_ITER_RESCHED
-> > > in bpf_dmabuf_reg_info.
-> >
-> > Thank you, this looks like a good idea.
-> >
-> > > Also have you considered open coded iterator for dmabufs?
-> > > Would it help with the interface to user space?
-> >
-> > I read through the open coded iterator patches, and it looks like they
-> > would be slightly more efficient by avoiding seq_file overhead. As far
-> > as the interface to userspace, for the purpose of replacing what's
-> > currently exposed by CONFIG_DMABUF_SYSFS_STATS I don't think there is
-> > a difference. However it looks like if I were to try to replace all of
-> > our userspace analysis of dmabufs with a single bpf program then an
-> > open coded iterator would make that much easier. I had not considered
-> > attempting that.
-> >
-> > One problem I see with open coded iterators is that support is much
-> > more recent (2023 vs 2020). We support longterm stable kernels (back
-> > to 5.4 currently but probably 5.10 by the time this would be used), so
-> > it seems like it would be harder to backport the kernel support for an
-> > open-coded iterator that far since it only goes back as far as 6.6
-> > now. Actually it doesn't look like it is possible while also
-> > maintaining the stable ABI we provide to device vendors. Which means
-> > we couldn't get rid of the dmabuf sysfs stats userspace dependency
-> > until 6.1 EOL in Dec. 2027. :\ So I'm in favor of a traditional bpf
-> > iterator here for now.
->
-> Fair enough, but please implement both and backport only
-> the old style pinned iterator.
+[+cc Greg, Rafael, Danilo for driver model .shutdown() question]
+[+cc Heiner et al for related conversation at
+https://lore.kernel.org/r/20250415095335.506266-2-cassel@kernel.org]
 
-Ok, will do.
+On Tue, Apr 01, 2025 at 04:51:37PM +0530, Krishna Chaitanya Chundru wrote:
+> From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> PCIe host controller drivers are supposed to properly remove the
+> endpoint drivers and release the resources during host shutdown/reboot
+> to avoid issues like smmu errors, NOC errors, etc.
 
-> The code will be mostly shared between them.
-> bpf_iter_dmabuf_new/_next will be more flexible with more
-> options to return data to user space. Like android can invent
-> their own binary format. Pack into it in a bpf prog, send to
-> bpf ringbuf and unmarshal efficiently in user space.
-> Instead of being limited to text output that pinned iterators
-> are supposed to do usually.
+The effect of this patch is:
 
-Also a neat idea!
+    .shutdown()
+  +   qcom_pcie_shutdown
+  +     dw_pcie_host_deinit
+  +       pci_stop_root_bus     # release all drivers of downstream pci_devs
+  +       pci_remove_root_bus   # remove all downstream pci_devs
 
-> You can do binary with bpf_seq_write() too, but it's rare.
->
-> Also please provide full bpf prog that you'll use in production
-> in a selftest instead of trivial:
-> +SEC("iter/dmabuf")
-> +int dmabuf_collector(struct bpf_iter__dmabuf *ctx)
->
-> just to make sure it's tested end to end and future changes
-> won't break it.
+I'm not sure about removing all these drivers in the .shutdown() path.
+The generic .shutdown() doc is "quiesce the device" [1], and my
+current interpretation for PCI is that it should disable DMA and
+interrupts from the device [2].
 
-The final bpf program should be something pretty close to that, but
-I'll start working on the AOSP side as well so I can put up patches.
+If PCI host controller drivers are supposed to remove all downstream
+drivers and devices in .shutdown(), they're all broken because that's
+currently only done in .remove() (and not even all of those).
 
->
-> pw-bot: cr
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/device/driver.h?id=v6.14#n73
+[2] https://lore.kernel.org/all/61f70fd6-52fd-da07-ce73-303f95132131@codeaurora.org/
+
+> So, stop and remove the root bus and its associated devices and release
+> its resources during system shutdown to ensure a clean shutdown/reboot.
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index e4d3366ead1f9198693e6f9da4ae1dc40a3a0519..926811a0e63eb3663c1f41dc598659993546d832 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1754,6 +1754,16 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> +static void qcom_pcie_shutdown(struct platform_device *pdev)
+> +{
+> +	struct qcom_pcie *pcie = platform_get_drvdata(pdev);
+> +
+> +	dw_pcie_host_deinit(&pcie->pci->pp);
+> +	phy_exit(pcie->phy);
+> +	pm_runtime_put(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +}
+> +
+>  static int qcom_pcie_suspend_noirq(struct device *dev)
+>  {
+>  	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> @@ -1890,5 +1900,6 @@ static struct platform_driver qcom_pcie_driver = {
+>  		.pm = &qcom_pcie_pm_ops,
+>  		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+>  	},
+> +	.shutdown = qcom_pcie_shutdown,
+>  };
+>  builtin_platform_driver(qcom_pcie_driver);
