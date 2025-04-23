@@ -1,93 +1,104 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A419D1F4171
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E32228F1;
+	Wed, 23 Apr 2025 07:12:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392343; cv=none; b=Jd9zDE6S36w/o6/QURcQf/gnO4kiMs7NXPCgMI0x/EJme/Ehhw0m2FML/1hv1SVrhDWPFh5YyX71A4XQQtJNG4u/X0gFXHx7l+w8tHemeFo8uSTDFc5AsN+ClGmTA2H8bsvJJ9pppBdjLBNI5LbjndybXEeEgPZwO8IYgAHr/a8=
+	t=1745392344; cv=none; b=cfHe9hutao6XIFqOFQUQIb9nUw709d55zoa9LZjtL98MNc5yJRKyDgZAZJ3CsWIMJ3hemiK9Hf+gpDIyTuEMUJlRCIsTUAw+Tg0crjLzVn01jIADQ1GVVlUjdDAC89OQNaL1tPcpp2QssMNLt2d7p85wQ15r/B121Ar5RISXAhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745392343; c=relaxed/simple;
-	bh=pKHNu+OJ8VesxkajHV+/DwJVpFI6q/1viDc2UaycMPU=;
-	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=VQUk2wXJsslOiynvD0VhvuC1W1/ElcbnvNQaaKALJL/AQ8yuGs2xJndVxVEDSlde/Bjq0KLCl1BxohuYYacOS53nqAVdQvjDi0irqhM2s5ZgjAxvykTg5OesHErfrur+oPo7dRjfUs+TvQEcprQ8zhFfcTAyXpX4e+Bxe6VnZ40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=P4cgoiyF; arc=none smtp.client-ip=188.165.51.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1745392344; c=relaxed/simple;
+	bh=jkrACJE2d+d8mv+ZcK+lLYOcnpIzrRL386CdU37AKoM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=siagvEn9k3VwSuTwLjkIJN34/DNEqXLcO6cnyuIQZH3l9l9EwYiAKJCpod4t8pN2W3h2Csljk8ltdBDKfoy+YBkUbDKPo9WoPs6zwDA7F3ZrW6Gg9BYRyPjKmiQEN4G12Bz/pexNUpQ6GBwCXpFN5b3vRe2Vx1EdKJLRq2XRqxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MpXO5NI0; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="P4cgoiyF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1745392330; x=1745651530;
-	bh=pKHNu+OJ8VesxkajHV+/DwJVpFI6q/1viDc2UaycMPU=;
-	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
-	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
-	 List-Unsubscribe:List-Unsubscribe-Post;
-	b=P4cgoiyFb8mGiLIFA3QinUQ+vjiZzv1ED2t8p45Vrt6aQr9KsIaSEJmif6K3zHBqJ
-	 2+HguaOxd7p35ml1o9l6JeeCVGgKL1klNRPxc5oorOJnWGUe3Q9RBh4DJGmeR7c/hp
-	 2sYC1W3BTPeQWx/TSj/2R2XDmq/8pv8Jjnr7A6bGN6hfHz8lDsYJVaVqjfQ8Afwwfy
-	 X+CEMQuiAByLXGj/CbJm4l9gxGEtEMoencGpHZ/RvLrvC+LDh/DIrv87EoWSG8oVda
-	 uhYT7E28zVagMCcAZY1YVQuplVVNm4L3GCiS2FLnLfo6yif0Z872K+X+9XAITgi4op
-	 y+gzwknUGTMbg==
-Date: Wed, 23 Apr 2025 07:12:05 +0000
-To: "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>
-From: Abanoub Sameh <abanoubsameh@protonmail.com>
-Cc: "mripard@kernel.org" <mripard@kernel.org>, "tzimmermann@suse.de" <tzimmermann@suse.de>, "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch" <simona@ffwll.ch>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Patch to replace strcpy() with strscpy() in drm_fb_helper.c
-Message-ID: <m6fDuYqgCI0Sg6QMnrYRG8MnGc1yujAoq2vOkZiGDI4OwsQXSRKwLf_i3Ekb71lKsIKS3IUhzLsQM6gwn9X_bpChsnApJp2TggjbHdXctdw=@protonmail.com>
-Feedback-ID: 23391015:user:proton
-X-Pm-Message-ID: e96aede9142539d25ce00ea7990f2d54ee1d3fd3
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MpXO5NI0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5CDFF43A36;
+	Wed, 23 Apr 2025 07:12:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745392339;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zkjBpj7wvMxsVfxHzks1lri0zffcvGGh+bHSb8/6KeA=;
+	b=MpXO5NI0S0uqAIOfOq71TlNJIo/ygPFDHO68GFpxyoc+MkBSWP1roW4BBVRB5QMozRNtUA
+	tNC14wqLbfYp9xTUPJuOjj+D66+tRFwKDk1K1rBDmrWThhWIYIU+ZMauyR2tMOIgbDGlkr
+	kJaq+33VxEAiW+KUdP8ofRE/TGBs3oO7rWkdVbGyo+/q8ECIZMVjdgHz/+sJiAitHXY87u
+	+ZQnwDRwDTb53AiplHwtX4Sva+gEWY4ZGZ+Tj1FDmJTfheYZcu1SURL5rASsw0e1SaHM3W
+	82mjxbVNmpNKEFQGzBhFlVmqioeSuevcwPp5u5YL4BsF5xQVudZeBSk9kke/Pw==
+From: Alexis Lothore <alexis.lothore@bootlin.com>
+Date: Wed, 23 Apr 2025 09:12:09 +0200
+Subject: [PATCH net v2 1/2] net: stmmac: fix dwmac1000 ptp timestamp status
+ offset
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250423-stmmac_ts-v2-1-e2cf2bbd61b1@bootlin.com>
+References: <20250423-stmmac_ts-v2-0-e2cf2bbd61b1@bootlin.com>
+In-Reply-To: <20250423-stmmac_ts-v2-0-e2cf2bbd61b1@bootlin.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Daniel Machon <daniel.machon@microchip.com>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ "Russell King (Oracle)" <linux@armlinux.org.uk>, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeehleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhgvuceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefhheefudfhgeegtdekvdeujedugefhhffhfedtgfetffevveekfeelveejfffhjeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvudgnpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedujedprhgtphhtthhopehmtghoqhhuvghlihhnrdhsthhmfedvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrnhhivghlrdhmrggthhhonhesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhug
+ iesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrghnughrvgdrthhorhhguhgvsehfohhsshdrshhtrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-From e45e4d9016262ace19db01e69d266d6218789ccd Mon Sep 17 00:00:00 2001
-From: Abanoub Sameh <abanoubsameh@protonmail.com>
-Date: Thu, 17 Apr 2025 23:37:21 +0200
-Subject: [PATCH] Use strscpy() instead of strcpy() in
- drivers/gpu/drm/drm_fb_helper.c
+When a PTP interrupt occurs, the driver accesses the wrong offset to
+learn about the number of available snapshots in the FIFO for dwmac1000:
+it should be accessing bits 29..25, while it is currently reading bits
+19..16 (those are bits about the auxiliary triggers which have generated
+the timestamps). As a consequence, it does not compute correctly the
+number of available snapshots, and so possibly do not generate the
+corresponding clock events if the bogus value ends up being 0.
 
-Use strscpy() instead of strcpy() since it is safer, and compliant with che=
-ckpatch.pl
+Fix clock events generation by reading the correct bits in the timestamp
+register for dwmac1000.
 
-It is an easy fix, since the size of fb_helper->fb->comm is a constant defi=
-ned at linux/sched.h
-
-strcpy() does not check for destination size and should not be used, see:
-https://github.com/KSPP/linux/issues/88
-
-Signed-off-by: Abanoub Sameh <abanoubsameh@protonmail.com>
+Fixes: 477c3e1f6363 ("net: stmmac: Introduce dwmac1000 timestamping operations")
+Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
+Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- drivers/gpu/drm/drm_fb_helper.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helpe=
-r.c
-index 937c3939e..4392aba01 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -33,6 +33,7 @@
- #include <linux/pci.h>
- #include <linux/sysrq.h>
- #include <linux/vga_switcheroo.h>
-+#include <linux/sched.h>
-=20
- #include <drm/drm_atomic.h>
- #include <drm/drm_drv.h>
-@@ -1650,7 +1651,7 @@ static int drm_fb_helper_single_fb_probe(struct drm_f=
-b_helper *fb_helper)
- =09if (ret < 0)
- =09=09return ret;
-=20
--=09strcpy(fb_helper->fb->comm, "[fbcon]");
-+=09strscpy(fb_helper->fb->comm, "[fbcon]", TASK_COMM_LEN);
-=20
- =09info =3D fb_helper->info;
-=20
---=20
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h b/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
+index 967a16212faf008bc7b5e43031e2d85800c5c467..0c011a47d5a3e98280a98d25b8ef3614684ae78c 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000.h
+@@ -320,8 +320,8 @@ enum rtc_control {
+ 
+ /* PTP and timestamping registers */
+ 
+-#define GMAC3_X_ATSNS       GENMASK(19, 16)
+-#define GMAC3_X_ATSNS_SHIFT 16
++#define GMAC3_X_ATSNS       GENMASK(29, 25)
++#define GMAC3_X_ATSNS_SHIFT 25
+ 
+ #define GMAC_PTP_TCR_ATSFC	BIT(24)
+ #define GMAC_PTP_TCR_ATSEN0	BIT(25)
+
+-- 
 2.49.0
-
 
