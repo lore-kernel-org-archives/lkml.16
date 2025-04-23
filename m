@@ -1,103 +1,222 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2005924469C;
-	Wed, 23 Apr 2025 06:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FD9223DFB;
+	Wed, 23 Apr 2025 06:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745390979; cv=none; b=XfyVeYYS+FOfIJBPuVyEAqgh0r9sRiJurhpnexs9WMgvK6R8uopHPp4JeNPEX1SSYLHmS9MciYq2qW7wBpmxvvN+klMwoG/Z84PYcxCcYbXVlyioWhTviDxObqIOUq6wg4CA2GiT81MNNzCXw7BODchY9dUC/au6bkfdaGrR8xY=
+	t=1745390979; cv=none; b=XHZB4jdAhzanslUF368wKPKyG9ZXNTUBWWozfJYdhKsJYjczL0kp/7BUSvAp2DvOBonrd7Wj+Kl/DjWrGEoO6uO9PRM6dajGEgGeC+zjbEhDq5rDvQ0X6BqhktdC2Up5Wizx/EIyo+KhbeEYCzrQZMn8NA6Pcjkk++/+9yrEMlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745390979; c=relaxed/simple;
-	bh=Ehl+NZ5t+pJ2LNM/Rfo49VgfOcUOeoweEA2Yw0BSsa4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oCW87now6n8rG/fDFJKFeNL9mK52Y377w5NIuut7wCb0VHPP9GFaE1OYQivfxgBVDxyy0LvPsBxs+YCcWwq59l7pMtOCBc/6Jh3P31T0Q/+NNe2BWgrNvL0AerA/kZdYMPlHHqG1LQ9xfoKJeaA6NYlh8ISemJCqgr1YwIv0QEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86ba07fe7a4so5073304241.2;
-        Tue, 22 Apr 2025 23:49:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745390976; x=1745995776;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8hSW0k6Kn+DUsfXSh67UZRXiF1tiHa2nJAbebOAWkBg=;
-        b=d0cff2w7o5LwIpPGL989YmPKb+rKBYj3I9vjp3xp5L5l6lQeOuqKozqRAFhawyd7b1
-         z7BNppcekQFksF6Tna2jo5k0SotD+IPi0R57fnK3fvKYe8h1Lgxv/jnRY7mHPOkyHsks
-         06KM6lrmqFZxbfvnrrHxXLbCMTjMxp0Hh3TjDmjBslBaGgl5PjbvqTHz1ukZ+0fZQ1wK
-         hpdJZFm2RxdIms7fUjn9pUIowfTt/hqwLbjTQU84J3oJyQ/zeYaVmXSxREFHdL1F4Pnb
-         X5xlCo+7yCNROgdVeFyGposlPH9AHqYRi7zdyff01fiNNR4d+KyGrHr0wTJfzmd0gkzF
-         WB/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUedTC2ACK0OWPGCuajbdq5+1hQiD6QgBJMhOyKX8yfo1vVRZzYGiuIBfOb3klietHUfpLfLylWgGKeo/Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdZEL5bUgZfGg2OHWv9yji01UpzNWTJ9ItKU9zxd4ENQnKhDkS
-	D8049t2DBV3kWvwRhoc1/RiBiCGIve6Wk0gRl2zME3q7Z49qWsNsH5trza3C
-X-Gm-Gg: ASbGncshhRZOEeiIy9+/QRp30r1NyUnkEvjQV1SetLZ9PMNVdziByWSW/gdJVlq6iDU
-	SMwj336oTJvcM4P+e12B8MW2Su8Cn1UeYtFegbPSdHWGI8SVCeUtN5O/eR0/h3F0kL24toRMpGC
-	1FDEB32UF3fWtUH2FXZS2ATDjZyIvIRpZcThmDyd3ao3tNNayyRv0hER5rOlbovLOw2KqgTEjRk
-	Uhb2DvsKiuE4gSVJ9EsZ2DfDfWY4E5vO3m27Mj29wNOkCwrz6VPvO8DZUZoH4UShVNj2bIvobcY
-	QclcwOhx320QGoFsPmnEIJaDkoVMgwNytlTwu36mum3iuGmR1LG3w25EEEJf/39E6IRAECV8WgR
-	eU5kI8JIjJpZwKhvepg==
-X-Google-Smtp-Source: AGHT+IGjkOfAP80YpT1m7QM2cmRT0iKbVwjUvE44/jQWygz8By67h2dGRjrqnvVu6f73IAQqeX/CEg==
-X-Received: by 2002:a05:6102:5617:b0:4c1:a15c:ab5c with SMTP id ada2fe7eead31-4cb801f650dmr10630970137.20.1745390976600;
-        Tue, 22 Apr 2025 23:49:36 -0700 (PDT)
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com. [209.85.221.178])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4cb7dde0c01sm2428670137.15.2025.04.22.23.49.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 23:49:36 -0700 (PDT)
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-524125f6cadso5565303e0c.2;
-        Tue, 22 Apr 2025 23:49:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV3Jg2CwWUIQZNUX79u1yhR9lNxj3DqmhnALqUuckdRE0GriCjASioQoFi0exxeo5oh9/8qDI2ZWEq2ePc=@vger.kernel.org
-X-Received: by 2002:a05:6122:1da3:b0:526:2356:f3fb with SMTP id
- 71dfb90a1353d-5292553a2ccmr15460813e0c.11.1745390976260; Tue, 22 Apr 2025
- 23:49:36 -0700 (PDT)
+	bh=lUuKd3ibErYYayL//vzQvPhmAbfz1EX03LJr3UQb6yU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UwuBaihxp87aEG3inT6hia6uanKUc2bk8XrodeIE8W5uioh+RjhtiHJXqs1pThvi7Jvn2FTrspoW4ePYwZYxynr98hKhSNnHueW5Z7GsMglLdde244PIMhsc2D3HkcOwSY6GhsN/o8blxIVXdZkyObbMZpLU+CJi1W5JSLNJl2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=szjf+beS; arc=none smtp.client-ip=115.124.30.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="szjf+beS"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745390967; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=JGm9lYL8xvhbTj7FN+hg66vA+WW9yw+RDmjxEEjhhuQ=;
+	b=szjf+beSqHvZ4+g3t4cv+4oZdDBgNPLWxKUB8YHjKzNnALpNIxRsLbkC6Ch1yMee9MD03ClrtYkS4/yzAP/kJfofzEwtXeCPbXTePp4ql5pxoZIBXB7d46QmerHCRvPPxdpLUngYTkABtFF/xPdm/2iwCpNZB+dKiE/hXRS+mds=
+Received: from 30.74.144.121(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXtRz4h_1745390641 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 23 Apr 2025 14:44:02 +0800
+Message-ID: <a881ed65-351a-469f-b625-a3066d0f1d5c@linux.alibaba.com>
+Date: Wed, 23 Apr 2025 14:44:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422152151.3691-1-ebiggers@kernel.org> <20250422152151.3691-2-ebiggers@kernel.org>
-In-Reply-To: <20250422152151.3691-2-ebiggers@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 23 Apr 2025 08:49:24 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdX5XKmeVABxeDv4shrUy2yt6WrMV2hxVPZ5OUe0uWUY6w@mail.gmail.com>
-X-Gm-Features: ATxdqUEFJjPY_GH_V1Wtm4vTwomP9pH6In_aOmU8a_vCcnhN_8V_tOs01nzly4A
-Message-ID: <CAMuHMdX5XKmeVABxeDv4shrUy2yt6WrMV2hxVPZ5OUe0uWUY6w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] crypto: tcrypt - remove CRYPTO_TEST from defconfigs
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 01/12] introduce khugepaged_collapse_single_pmd to
+ unify khugepaged and madvise_collapse
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
+ peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250417000238.74567-1-npache@redhat.com>
+ <20250417000238.74567-2-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250417000238.74567-2-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Eric,
 
-(replaying my response to v1, which I wrote before I noticed there was a v2)
 
-On Tue, 22 Apr 2025 at 17:23, Eric Biggers <ebiggers@kernel.org> wrote:
-> From: Eric Biggers <ebiggers@google.com>
->
-> CONFIG_CRYPTO_TEST enables a benchmarking module that is only really
-> useful for developers working on the crypto subsystem.  It is in a bunch
-> of defconfigs.  But as with most of the other crypto options that tend
-> to be randomly set in defconfigs, it is unlikely that much thought was
-> put into these, especially when placed in "production" defconfigs.
-> Clear it out of the defconfigs for now.
->
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+On 2025/4/17 08:02, Nico Pache wrote:
+> The khugepaged daemon and madvise_collapse have two different
+> implementations that do almost the same thing.
+> 
+> Create khugepaged_collapse_single_pmd to increase code
+> reuse and create an entry point for future khugepaged changes.
+> 
+> Refactor madvise_collapse and khugepaged_scan_mm_slot to use
+> the new khugepaged_collapse_single_pmd function.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
 
-Thanks for your patch!
+Can you add a prefix 'khugepaged:' for the subject line?
 
-All of these are modular, so I don't think it's a big issue, even on
-"production" defconfigs. It just means the test is available when
-someone feels the urge to run it.
-Hence I try to make all tests available as modules in m68k defconfigs.
+> ---
+>   mm/khugepaged.c | 92 ++++++++++++++++++++++++-------------------------
+>   1 file changed, 46 insertions(+), 46 deletions(-)
+> 
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index b8838ba8207a..cecadc4239e7 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -2363,6 +2363,48 @@ static int hpage_collapse_scan_file(struct mm_struct *mm, unsigned long addr,
+>   }
+>   #endif
+>   
+> +/*
+> + * Try to collapse a single PMD starting at a PMD aligned addr, and return
+> + * the results.
+> + */
+> +static int khugepaged_collapse_single_pmd(unsigned long addr,
+> +				   struct vm_area_struct *vma, bool *mmap_locked,
+> +				   struct collapse_control *cc)
+> +{
+> +	int result = SCAN_FAIL;
+> +	struct mm_struct *mm = vma->vm_mm;
+> +	unsigned long tva_flags = cc->is_khugepaged ? TVA_ENFORCE_SYSFS : 0;
+> +
+> +	if (thp_vma_allowable_order(vma, vma->vm_flags,
+> +					tva_flags, PMD_ORDER)) {
 
-Gr{oetje,eeting}s,
+We've already checked the thp_vma_allowable_order() before calling this 
+function, why check again?
 
-                        Geert
+> +		if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
+> +			struct file *file = get_file(vma->vm_file);
+> +			pgoff_t pgoff = linear_page_index(vma, addr);
+> +
+> +			mmap_read_unlock(mm);
+> +			*mmap_locked = false;
+> +			result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+> +							  cc);
+> +			fput(file);
+> +			if (result == SCAN_PTE_MAPPED_HUGEPAGE) {
+> +				mmap_read_lock(mm);
+> +				if (hpage_collapse_test_exit_or_disable(mm))
+> +					goto end;
+> +				result = collapse_pte_mapped_thp(mm, addr,
+> +								 !cc->is_khugepaged);
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+why drop the following check?
+if (*result == SCAN_PMD_MAPPED)
+	*result = SCAN_SUCCEED;
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> +				mmap_read_unlock(mm);
+> +			}
+> +		} else {
+> +			result = hpage_collapse_scan_pmd(mm, vma, addr,
+> +							 mmap_locked, cc);
+> +		}
+> +		if (cc->is_khugepaged && result == SCAN_SUCCEED)
+> +			++khugepaged_pages_collapsed;
+> +	}
+> +end:
+> +	return result;
+> +}
+> +
+>   static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+>   					    struct collapse_control *cc)
+>   	__releases(&khugepaged_mm_lock)
+> @@ -2437,33 +2479,9 @@ static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *result,
+>   			VM_BUG_ON(khugepaged_scan.address < hstart ||
+>   				  khugepaged_scan.address + HPAGE_PMD_SIZE >
+>   				  hend);
+> -			if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
+> -				struct file *file = get_file(vma->vm_file);
+> -				pgoff_t pgoff = linear_page_index(vma,
+> -						khugepaged_scan.address);
+>   
+> -				mmap_read_unlock(mm);
+> -				mmap_locked = false;
+> -				*result = hpage_collapse_scan_file(mm,
+> -					khugepaged_scan.address, file, pgoff, cc);
+> -				fput(file);
+> -				if (*result == SCAN_PTE_MAPPED_HUGEPAGE) {
+> -					mmap_read_lock(mm);
+> -					if (hpage_collapse_test_exit_or_disable(mm))
+> -						goto breakouterloop;
+> -					*result = collapse_pte_mapped_thp(mm,
+> -						khugepaged_scan.address, false);
+> -					if (*result == SCAN_PMD_MAPPED)
+> -						*result = SCAN_SUCCEED;
+> -					mmap_read_unlock(mm);
+> -				}
+> -			} else {
+> -				*result = hpage_collapse_scan_pmd(mm, vma,
+> -					khugepaged_scan.address, &mmap_locked, cc);
+> -			}
+> -
+> -			if (*result == SCAN_SUCCEED)
+> -				++khugepaged_pages_collapsed;
+> +			*result = khugepaged_collapse_single_pmd(khugepaged_scan.address,
+> +						vma, &mmap_locked, cc);
+
+If the khugepaged_collapse_single_pmd() returns a failure caused by 
+hpage_collapse_test_exit_or_disable(), we should break out of the loop 
+according to the original logic. But you've changed the action in this 
+patch, is this intentional?
+
+>   
+>   			/* move to next address */
+>   			khugepaged_scan.address += HPAGE_PMD_SIZE;
+> @@ -2783,36 +2801,18 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+>   		mmap_assert_locked(mm);
+>   		memset(cc->node_load, 0, sizeof(cc->node_load));
+>   		nodes_clear(cc->alloc_nmask);
+> -		if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
+> -			struct file *file = get_file(vma->vm_file);
+> -			pgoff_t pgoff = linear_page_index(vma, addr);
+>   
+> -			mmap_read_unlock(mm);
+> -			mmap_locked = false;
+> -			result = hpage_collapse_scan_file(mm, addr, file, pgoff,
+> -							  cc);
+> -			fput(file);
+> -		} else {
+> -			result = hpage_collapse_scan_pmd(mm, vma, addr,
+> -							 &mmap_locked, cc);
+> -		}
+> +		result = khugepaged_collapse_single_pmd(addr, vma, &mmap_locked, cc);
+> +
+>   		if (!mmap_locked)
+>   			*prev = NULL;  /* Tell caller we dropped mmap_lock */
+>   
+> -handle_result:
+>   		switch (result) {
+>   		case SCAN_SUCCEED:
+>   		case SCAN_PMD_MAPPED:
+>   			++thps;
+>   			break;
+>   		case SCAN_PTE_MAPPED_HUGEPAGE:
+> -			BUG_ON(mmap_locked);
+> -			BUG_ON(*prev);
+> -			mmap_read_lock(mm);
+> -			result = collapse_pte_mapped_thp(mm, addr, true);
+> -			mmap_read_unlock(mm);
+> -			goto handle_result;
+> -		/* Whitelisted set of results where continuing OK */
+>   		case SCAN_PMD_NULL:
+>   		case SCAN_PTE_NON_PRESENT:
+>   		case SCAN_PTE_UFFD_WP:
