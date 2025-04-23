@@ -1,173 +1,181 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4D228EC;
-	Wed, 23 Apr 2025 01:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190501EFFBE;
+	Wed, 23 Apr 2025 01:41:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745372181; cv=none; b=YG53BQsR/82lzNgaDsQy/Aa+L/48hGAbdGFyAB6wqdaXjbZsaBJT/VzNUkua+kGliCpUSKKL4lJaGRyywZsXTIepuNw+AILGppYSj0DZn24A20bAxklThHJXEXYeD6JUg+qs9A7mXPiQUEgh8YMoYrAD4tE52o/6u6AQlVGjf+4=
+	t=1745372514; cv=none; b=OqnfqEAL63iHZfjsAfO3YD3CnAlm3YwTM6Pd79LmibBi2HfbEN2Uk5DRl4SaSJ5mR1fT2yqo6Pej9LnblaUCY66DGFf3Lj59aBAum8ANpk9ekziMG1z+0qwDg+7csoDdsmZSZXuES8Cj9kFeHOVTbNG6Nc40dIOQfWENAix//NQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745372181; c=relaxed/simple;
-	bh=UNUzIQyqmwpZ9sBm60WtCTjqwiWikkrXeZHbhkw7c8w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MGDBYVVFdQ2sNr0kbZKMsYF/byIlpMql0r8qGLmWBUhLSItoONibN4g8x5/W+jR7T6xgKgqdWcsl/GWwrWiklR8DX3ZtArHezB31zzJL4tC3mY4soaUQ/K1B5oi7y7htdprt6+1K9BPeug5eAJM8nnjLlGeZFYIpMYquIiCLynw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MglYp341; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745372514; c=relaxed/simple;
+	bh=x20Xqy3N6oQmptfey0Z2+QB1DWZUT41kOcINg+dlCvo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Q0OoalEBBRglP/heOvVDQqKB1amZBTQBqaqG5/8oh3yfhsTVZLpWflIlAMuc9uLYCFpRD/yn5DdHkBLeVIuG9Maw47aA1kNMy69YFDfzISwroI1PWPgphxOME6Q+zsZ8F3FqBJVf2UE1JQjtvTsBHENeAM/7VHfpISZ8jYcMIeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nUz+CU3V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MglYp341"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-47ae894e9b7so96680291cf.3;
-        Tue, 22 Apr 2025 18:36:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745372179; x=1745976979; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YDT0JiTKLEu56zROMSHzh4vPHYYpIB515ncCYLjb8lQ=;
-        b=MglYp3412YP1PUHQAaYmbLnsujuoiDGO8Gak6afbc3glJbMxAmv5mXh2vb1PbMU05f
-         jHa0F9DzxyUfywlCsXVqU2JWqYcaL5ud88jRzDse38diurM5lCNNpN5/uaHG3kBtqqEa
-         /Ey4Fpu7GJnTeP1uWCiUei49kBFW4MBNdpbxns9QPb1YtlYXtate4OeQHsYVj8+K9mj5
-         Hcl6P9z4uI4jrh83A4SKru2cY8RsM+UOZGqA/etzLwL4L8foSXwebIkCpNTPXaBx+iD2
-         R+Cr3jJXKhV9w9fC2m5Bgt0F2c+HEHSOR1aUt9kg9XqnJTPw7jei1XPnMaKZvStOLZmQ
-         dE+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745372179; x=1745976979;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YDT0JiTKLEu56zROMSHzh4vPHYYpIB515ncCYLjb8lQ=;
-        b=twersfGzXwny4QvM2wJW2LxkVsL25glXuJasWA0WmI9ezDy6E7MMV0L3ROl5hVB+Fx
-         6B72opRU4gpLufCWKIMGtMbm22KLaDZH6x4g/+sc0eqUX6BvrU31agkbgHA36oQNcleC
-         PAynUjVS90gjf6b+f6+p3yPKWl3pOXwfA9jtFFn8s3ZMEzA8n9ZZndJpM+jAMIyL3PFj
-         gbUpF3Q4SuDX8DCKKy/datQW59NvTRbAKm8NCQVJykd5uxGbav9XCFdASuScGYxamw6h
-         pbOlD+gYAaQkEu6Fr+Auowg+XD8XPb1ruuVBLS5d0UWVC5bq2m2OOoTvqFeW3yWWiOSP
-         rUJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDVG2PT0gvCUV4aEZakQ7jRGVeEL4/aFnvTsLchNc8YP3juWVBQVQYfG1dNVMnxXfXH14X1a3WN853VoT2@vger.kernel.org, AJvYcCWdNgo7LCMcWFWj14URy9kgMdy9Es/nDEXge2v5Cxoj05cRQNpQLVM7gmIB6zRdA1sh34d2BUeeu6E=@vger.kernel.org, AJvYcCWpPDjVu4JGR/hjythYzW8uOMtvWc/NKH7+r3wPdifK4Wd0XXypL41k1aY4xfSf+bZX6jjepRRkpGMr@vger.kernel.org, AJvYcCXQNOCo/JrFMD/LaWcGUFIuVx5ZXntqxS59U3iDCzX5/GrSXDiamXohOwxwtcYW5TUJKFv2bDZRzityMUZfng==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQiMtdfh8VT5u4yiXIO+3DsnX2XX05P3mzK1NVAPiZFsuFff3h
-	kNkUdojUkf01fXtYPP9sIO0bEE8ES4BhoAmZQI4P0wLMxAkTGUrKgrVBtvzvBA74Biw1M7NBZaP
-	MjAQwPwpjbup4e9chV6WMLH/LGIc=
-X-Gm-Gg: ASbGnctTmuYZfXcowV/KuT+UvKzTFPecQryLM90A4eHoSLc3jnY+O7pvjTlt03OWGoE
-	cxcuYDXOKdcmxeRwyivldOhdZGGq/2+IoZhqfPJcFjSGYfpvho6PR8KpGbuGlHsO7iY9fiY0zZQ
-	rZzVAi/nZ3U/FG93KFLgKfZWD+gsl5zB/GcLLDT9cpuIqbWRR9
-X-Google-Smtp-Source: AGHT+IHlzbvrCevbApD7jzszD6VGDVewMdGYPbCuvZGd+5reLhfdOJmEbpvrMu7I8oAOdE1MkMv/KOclzr8B5UZ2tug=
-X-Received: by 2002:a05:622a:2c1:b0:476:8a1d:f18e with SMTP id
- d75a77b69052e-47aec49fef3mr297955681cf.36.1745372179161; Tue, 22 Apr 2025
- 18:36:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nUz+CU3V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFC3C4CEE9;
+	Wed, 23 Apr 2025 01:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745372513;
+	bh=x20Xqy3N6oQmptfey0Z2+QB1DWZUT41kOcINg+dlCvo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=nUz+CU3V3ZYW8R389v8ud02QPJjMXKfHgq/Vc/tTpIOzO5md27YOQLdR9fv5vQmmG
+	 v2Q4ZgGqcc/eWgdL+B4DqY6PKnYh8/oGLkKd6gV1U0Kgs7uCSmigJE9HDsFhZRHqWC
+	 4cdDPTR8Dz3ycCCmCZkI77Qh8fwfQlfJQUHaB2j3irOH70C1RJfcsfAUfOHl4XqLHs
+	 DKelC0B3tQrrq3sPm67xHDVteWAUHLdQ+rFU4yFBZDJnJZphSjpaSVL8xmud6rG8eB
+	 Di0jRsOu98XW66wm7LwfomwBBhKmrG4SkH2dV5lFCYiP8g2y/fg51CfBbcaF8UI+WB
+	 X0+M+21Hc1xtg==
+Date: Tue, 22 Apr 2025 18:41:51 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: virtualization@lists.linux.dev, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer
+ <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Eugenio
+ =?UTF-8?B?UMOpcmV6?= <eperezma@redhat.com>, "David S. Miller"
+ <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v4 4/4] selftests: net: add a virtio_net deadlock
+ selftest
+Message-ID: <20250422184151.2fb4fffe@kernel.org>
+In-Reply-To: <20250417072806.18660-5-minhquangbui99@gmail.com>
+References: <20250417072806.18660-1-minhquangbui99@gmail.com>
+	<20250417072806.18660-5-minhquangbui99@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421013346.32530-1-john@groves.net> <20250421013346.32530-11-john@groves.net>
-In-Reply-To: <20250421013346.32530-11-john@groves.net>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Tue, 22 Apr 2025 18:36:08 -0700
-X-Gm-Features: ATxdqUG7M4Ilbi4JBAoLnTSvKlGK4nbtG_HG8a5cZaDG6t4Rd0KpBRJjL7Ttc8I
-Message-ID: <CAJnrk1aROUeJY2g8vHtTgVc=mb+1+7jhJE=B3R0qV_=o6jjNTA@mail.gmail.com>
-Subject: Re: [RFC PATCH 10/19] famfs_fuse: Basic fuse kernel ABI enablement
- for famfs
-To: John Groves <John@groves.net>
-Cc: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi <miklos@szeredb.hu>, 
-	Bernd Schubert <bschubert@ddn.com>, John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, 
-	Brian Foster <bfoster@redhat.com>, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Josef Bacik <josef@toxicpanda.com>, 
-	Aravind Ramesh <arramesh@micron.com>, Ajay Joshi <ajayjoshi@micron.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Apr 20, 2025 at 6:34=E2=80=AFPM John Groves <John@groves.net> wrote=
-:
->
-> * FUSE_DAX_FMAP flag in INIT request/reply
->
-> * fuse_conn->famfs_iomap (enable famfs-mapped files) to denote a
->   famfs-enabled connection
->
-> Signed-off-by: John Groves <john@groves.net>
+On Thu, 17 Apr 2025 14:28:06 +0700 Bui Quang Minh wrote:
+> The selftest reproduces the deadlock scenario when binding/unbinding XDP
+> program, XDP socket, rx ring resize on virtio_net interface.
+> 
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
 > ---
->  fs/fuse/fuse_i.h          | 3 +++
->  fs/fuse/inode.c           | 5 +++++
->  include/uapi/linux/fuse.h | 2 ++
->  3 files changed, 10 insertions(+)
->
-> diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-> index e04d160fa995..b2c563b1a1c8 100644
-> --- a/fs/fuse/fuse_i.h
-> +++ b/fs/fuse/fuse_i.h
-> @@ -870,6 +870,9 @@ struct fuse_conn {
->         /* Use io_uring for communication */
->         unsigned int io_uring;
->
-> +       /* dev_dax_iomap support for famfs */
-> +       unsigned int famfs_iomap:1;
+>  .../testing/selftests/drivers/net/hw/Makefile |  1 +
+>  .../selftests/drivers/net/hw/virtio_net.py    | 65 +++++++++++++++++++
+>  2 files changed, 66 insertions(+)
+>  create mode 100755 tools/testing/selftests/drivers/net/hw/virtio_net.py
+> 
+> diff --git a/tools/testing/selftests/drivers/net/hw/Makefile b/tools/testing/selftests/drivers/net/hw/Makefile
+> index 07cddb19ba35..b5af7c1412bf 100644
+> --- a/tools/testing/selftests/drivers/net/hw/Makefile
+> +++ b/tools/testing/selftests/drivers/net/hw/Makefile
+> @@ -21,6 +21,7 @@ TEST_PROGS = \
+>  	rss_ctx.py \
+>  	rss_input_xfrm.py \
+>  	tso.py \
+> +	virtio_net.py \
+
+Maybe xsk_reconfig.py ? Other drivers will benefit from this test, too,
+and that's a more descriptive name.
+
+>  	#
+>  
+>  TEST_FILES := \
+> diff --git a/tools/testing/selftests/drivers/net/hw/virtio_net.py b/tools/testing/selftests/drivers/net/hw/virtio_net.py
+> new file mode 100755
+> index 000000000000..7cad7ab98635
+> --- /dev/null
+> +++ b/tools/testing/selftests/drivers/net/hw/virtio_net.py
+> @@ -0,0 +1,65 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0
 > +
->         /** Maximum stack depth for passthrough backing files */
->         int max_stack_depth;
->
-> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-> index 29147657a99f..5c6947b12503 100644
-> --- a/fs/fuse/inode.c
-> +++ b/fs/fuse/inode.c
-> @@ -1392,6 +1392,9 @@ static void process_init_reply(struct fuse_mount *f=
-m, struct fuse_args *args,
->                         }
->                         if (flags & FUSE_OVER_IO_URING && fuse_uring_enab=
-led())
->                                 fc->io_uring =3D 1;
-> +                       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX) &&
-> +                                      flags & FUSE_DAX_FMAP)
-> +                               fc->famfs_iomap =3D 1;
->                 } else {
->                         ra_pages =3D fc->max_read / PAGE_SIZE;
->                         fc->no_lock =3D 1;
-> @@ -1450,6 +1453,8 @@ void fuse_send_init(struct fuse_mount *fm)
->                 flags |=3D FUSE_SUBMOUNTS;
->         if (IS_ENABLED(CONFIG_FUSE_PASSTHROUGH))
->                 flags |=3D FUSE_PASSTHROUGH;
-> +       if (IS_ENABLED(CONFIG_FUSE_FAMFS_DAX))
-> +               flags |=3D FUSE_DAX_FMAP;
->
->         /*
->          * This is just an information flag for fuse server. No need to c=
-heck
-> diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-> index 5e0eb41d967e..f9e14180367a 100644
-> --- a/include/uapi/linux/fuse.h
-> +++ b/include/uapi/linux/fuse.h
-> @@ -435,6 +435,7 @@ struct fuse_file_lock {
->   *                 of the request ID indicates resend requests
->   * FUSE_ALLOW_IDMAP: allow creation of idmapped mounts
->   * FUSE_OVER_IO_URING: Indicate that client supports io-uring
-> + * FUSE_DAX_FMAP: kernel supports dev_dax_iomap (aka famfs) fmaps
->   */
->  #define FUSE_ASYNC_READ                (1 << 0)
->  #define FUSE_POSIX_LOCKS       (1 << 1)
-> @@ -482,6 +483,7 @@ struct fuse_file_lock {
->  #define FUSE_DIRECT_IO_RELAX   FUSE_DIRECT_IO_ALLOW_MMAP
->  #define FUSE_ALLOW_IDMAP       (1ULL << 40)
->  #define FUSE_OVER_IO_URING     (1ULL << 41)
-> +#define FUSE_DAX_FMAP          (1ULL << 42)
+> +# This is intended to be run on a virtio-net guest interface.
+> +# The test binds the XDP socket to the interface without setting
+> +# the fill ring to trigger delayed refill_work. This helps to
+> +# make it easier to reproduce the deadlock when XDP program,
+> +# XDP socket bind/unbind, rx ring resize race with refill_work on
+> +# the buggy kernel.
+> +#
+> +# The Qemu command to setup virtio-net
+> +# -netdev tap,id=hostnet1,vhost=on,script=no,downscript=no
+> +# -device virtio-net-pci,netdev=hostnet1,iommu_platform=on,disable-legacy=on
+> +
+> +from lib.py import ksft_exit, ksft_run
+> +from lib.py import KsftSkipEx, KsftFailEx
+> +from lib.py import NetDrvEnv
+> +from lib.py import bkg, ip, cmd, ethtool
+> +import re
+> +
+> +def _get_rx_ring_entries(cfg):
+> +    output = ethtool(f"-g {cfg.ifname}").stdout
+> +    values = re.findall(r'RX:\s+(\d+)', output)
 
-There's also a protocol changelog at the top of this file that tracks
-any updates made to the uapi. We should probably also update that to
-include this?
+no need for the regexps, ethtool -g supports json formatting:
 
+	output = ethtool(f"-g {cfg.ifname}", json=True)[0]
+	return output["rx"]
 
-Thanks,
-Joanne
->
->  /**
->   * CUSE INIT request/reply flags
-> --
-> 2.49.0
->
+?
+
+> +    return int(values[1])
+> +
+> +def setup_xsk(cfg, xdp_queue_id = 0) -> bkg:
+> +    # Probe for support
+> +    xdp = cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=False)
+> +    if xdp.ret == 255:
+> +        raise KsftSkipEx('AF_XDP unsupported')
+> +    elif xdp.ret > 0:
+> +        raise KsftFailEx('unable to create AF_XDP socket')
+> +
+> +    try:
+> +        xsk_bkg = bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} ' \
+> +                      '{xdp_queue_id} -z', ksft_wait=3)
+
+This process will time out after 3 seconds but the test really
+shouldn't leave things running after it exits. Don't worry about
+the couple of seconds of execution time. Wrap each test in
+
+	with bkg(f"... the exec info ... "):
+		# test code here
+
+The bkg() class has an __exit__() handle once the test finishes
+and leaves the with block it will terminate.
+
+> +        return xsk_bkg
+> +    except:
+> +        raise KsftSkipEx('Failed to bind XDP socket in zerocopy. ' \
+> +                         'Please consider adding iommu_platform=on ' \
+> +                         'when setting up virtio-net-pci')
+> +
+> +def check_xdp_bind(cfg):
+> +    ip(f"link set dev %s xdp obj %s sec xdp" %
+> +       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
+> +    ip(f"link set dev %s xdp off" % cfg.ifname)
+> +
+> +def check_rx_resize(cfg, queue_size = 128):
+> +    rx_ring = _get_rx_ring_entries(cfg)
+> +    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
+> +    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
+
+Why guess the ring size? What if it's already 128? I usually do:
+
+	rx_ring = _get_rx_ring_entries(cfg)
+	ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring / 2))
+	ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
+
+IOW flip between half or double and current.
+
+> +def main():
+> +    with NetDrvEnv(__file__, nsim_test=False) as cfg:
+> +        try:
+> +            xsk_bkg = setup_xsk(cfg)
+> +        except KsftSkipEx as e:
+> +            print(f"WARN: xsk pool is not set up, err: {e}")
+> +
+> +        ksft_run([check_xdp_bind, check_rx_resize],
+> +                 args=(cfg, ))
+> +    ksft_exit()
+> +
+> +if __name__ == "__main__":
+> +    main()
+
