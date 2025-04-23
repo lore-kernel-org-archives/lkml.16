@@ -1,121 +1,153 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 637D11A2389
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:47:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B90861A2389
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745441223; cv=none; b=bRxVW4LovCSBHb7Pqed/UdLeuy2CrHmfMZwtrM4aFPtYtWvOIGqFwrshrKo5gaxs/cnShm3k937u+EsrCy9Kc82Ia7d6hy+a1enXRQ5LbzypOtyMLTXRvwNbAZoWLDlVTQpIWE0bimo/KAn9RMtkazyckVmtmGPQ/7ZJCsfB41E=
+	t=1745441244; cv=none; b=PIt6+1TFGI7jGi3noKWqi3ZPyzz448wycFBtlnKbU0X3QYf1HdH/4u8CdMKPdUVfq/PAyTJnhqeXeVvPBBUJZSsxvnhl6IfciAoytQoR4lx3DcmAyXyTDj+lt37dtEbTRMBiR1oGslvwR0kf4lv1HTMaV9UzQaRXuJRvDgRLeeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745441223; c=relaxed/simple;
-	bh=snhV2XiNpG4U8XzST8X2IiBFztNuEg7ofnejtq0sGFA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MttVntIkIzAZ5GgWDiC6KNChMMbOVxPbKq0nx9C8r6XSunVTB3Ks7hmr9wWiHv0e32kuBBoEZAuB0zarv4g0vJSL+dCgNdhpVcVlz4x/vHOkywNJRkMDhMHKk7zcoDuMFe9ZOCR2mzeeDX0D4Wmc5A0waKQazAKF7MpheQy5AD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QTdCQmA6; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745441244; c=relaxed/simple;
+	bh=9o+fog/E8/Y/Ep3sI6pTRlp7waYxHqWZlzLlUSvxIbo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BA2AXTp//6dFIiuCnP30TPqw1sf8Dk20QtLuUKSb4qixJP1euODhthUWgAU4vYZlVDmbA4biAX0MJZqmBCZWx8qsG66hjR3fT0jCJJboVQ+dRFwxFT3S1tmkqus8ANG2bG5cG2xEMpjMPAhipztRZbMNTsgz7ED9FGxYOJIr+ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=K0BKg295; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QTdCQmA6"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43ef83a6bfaso6095e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:47:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="K0BKg295"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-aee773df955so1274301a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:47:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745441219; x=1746046019; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EFkS/yyfa25uyiibdv8tLizNMHglHTEPA9b7aVCxr88=;
-        b=QTdCQmA6gPv5PbQRZk8hIpPeRjR+gv7Vehhb125d+mrcOFBbYNW/NuP9Wp9dxvoFha
-         ctw72j0tY0kKcCFwVKQifwYaksLGmg47KogCgClsk/1DfZxEnaLKRghFzgMsQc9oesAb
-         2fnDm6JOu6gettKrb+JADv7EropPNYoX4mg6HFCPPdZ70Dz73edWHKKV12s7fPe9ss2C
-         xahWfoc/mSuekrdLRQ45uZFkMFecGfo+EOQG8XdlLP1yRtZ3mRdd2MS2rInThXQm4NEU
-         X+NoV1ajjYetfK63/9LDvlUAhdQgzrElD5uEW9tL2ajk+G2JooHEGSYBsOGuDWsXKXdE
-         UIQw==
+        d=fastly.com; s=google; t=1745441242; x=1746046042; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qadNYoaJhFPVnikI7MqGvzeOQWIRrwJCqdY+2xJb3Ik=;
+        b=K0BKg2958DiU4hWdg/ztCOoAJvYPW3CMDZWb+ZwOdV6Vl9Pv5dXsC/jmzEMVjtPXBB
+         gHX+Xdkfw0E6jHzenQLnmmZkOTn8LG6zIg3qudIRXqOpWNqOQgUBOQJrAf9UIBrL5OLf
+         LZeEWySKA3ix1BiFJxTB28jx3On+Wq0TN+eXE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745441219; x=1746046019;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EFkS/yyfa25uyiibdv8tLizNMHglHTEPA9b7aVCxr88=;
-        b=try3WktPzF9nziUA+XlSQZkFB3+Je8Gpwt80zu5ixzlu3V66Kd+x4CHtgLdJYORHSn
-         eDOmrKS0dBlcrqj/4y17ErISorXXBp9XBVhVZsVhZA/Ef5XZMjXj2dHdTezbowaqxij9
-         /qIHf9tFMvz6QZg9wNgXuqi3a8KJCts4lBmSDUTaP8nsUZhmBS0N85oGvR3JR8PldybQ
-         yz1qz0rCzDVnUmFXqRloPNPkFbVPwr5g6W0J0eEEpuk/66YP0/TXA7ucLDaxiB5RxK/0
-         RSW+aX6n35thu0RWXRdvUCNP5BvxkGvZZX5ggWx0GEfXa0B5fUgb/8yP+DIDojGbzmmf
-         zmig==
-X-Forwarded-Encrypted: i=1; AJvYcCUWO2hoz7tPIgY4ji2ZQeh1GqC0MjXwHrC5k/9+Jg4agFHAkBCY66zgfplkXgrhhFDJ09Gt3b5+Yv8wpgU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxwh02mQoymFmcw0IuGpc8FfRALVSk6Be+/QTYNB/lQmH20sM9d
-	OlahpW0vggxw85eHN0chkp7/c/VwP+zf4kEISYfl3dUZ+pbCIe10lazC4NJQkEsNUpntnXsp6vQ
-	uqJRCFh0xmCoAJNouuiD4zfBIGYfs4AXX0FOn
-X-Gm-Gg: ASbGncv2aDt6A/S3MAHcerZv0eDQ72VXYVXsVfyJaadaRsPTL416BkNbv5oP9PJsAke
-	tL4/lSobbbLDJUECUw+CZMAwd1X5V8kIIhF1mwPJgZNYzW+UKpdrHVL9yc+7eb90gJwl0ZKarjO
-	RbEVc5w4ywQOi4wk8vWeOzYG5f2mtMXQhaa1R1h7PQ8ZVcahAFnpOI
-X-Google-Smtp-Source: AGHT+IGEAejb+q0eYprUhrjih1DfSbXp5RpbqXJTJQJ5gPUdM0VLt77TTPHPCf9I9+WeRUkPGH/szPwHF5TaK/eZhZ0=
-X-Received: by 2002:a05:600c:1c29:b0:43d:169e:4d75 with SMTP id
- 5b1f17b1804b1-4409bca45afmr122455e9.1.1745441219476; Wed, 23 Apr 2025
- 13:46:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745441242; x=1746046042;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qadNYoaJhFPVnikI7MqGvzeOQWIRrwJCqdY+2xJb3Ik=;
+        b=w27Zss6fCv5cB/biDgjPLfJrFalHEDOz6hgiUBVlp6zjs0YsFmLoumt5jWKO+6Y7qi
+         spa4qf4NtSrv+I8OFljv6zEQiXTgx/TjjUwz2k72bmhIyaMcYlm0Dmz2ImQ+UQxw7xSW
+         6vb4zepLZbsGXSQ9dNNC/WW2IDMq7F+E3W43e1lCJA/+ZrK3XA0+O6q0AgrYu8EJpqyI
+         wKwqaNkgpPp3ihFwP9mMdqF1zcz1lHdvQEvJ23pcCCNn2wrsUUe2JGvCgoZUgyt7MZOO
+         qN6i67NdTwwTX2r/TdDR3E7REHxpeINEWDmNpSRaIf+1J8Gm13jpxLry+LAwHLXsbLlr
+         za7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX6eFNFKif4Av6YjOn3iA+wb7yJCw0TRx0LcZsRJzBqdulYOilRT2ankcfq/7yPXnDxBhyaWrBS7i4joho=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6b6t2qaOlf4hx8a67kr17bSpKksMzFyh/bNSM+Eue58bk3dT+
+	gILcocXPQUgjk/JmI3+1RN4tnjG/8meDFChASTLGKKS/WRZ7d31U1P6AyS5QDwg=
+X-Gm-Gg: ASbGncstJ5miiQ0OgKAtvzzU2m+7haBCWx/TfzoFpIw0R4gwcsnDJE0wN4hiUumewhT
+	Z/ewmI+a7AOAiXJNf837W/IX32MTBT93RYzwU+iKkyfJemYPU59ZFYbNRGmvIvBaqmaKUDQ+tDx
+	eku2oDWbX9fOPshOgLX2/6qnsGzOOnNbam38riSOlbjtFzhzaFgriqmcQn/60VbbL5mQeofz/Uy
+	drdkoSt0EvkkJgPtRUXTUQyDrTgDBy8GPLJtGvOsg9GqH5K80rcIsjhqRQ64acElF+6XLRUSJJj
+	cN+4W0B3agrxTBKtsGZSPHwA7oKTp5yqBE7kZaynSGVpm1iMoGLfPxQBAWU=
+X-Google-Smtp-Source: AGHT+IF5+OdbC6uuNEBaPHTOjQ76F8Y9VNe3wZx/cneGiXQy2TYO2E3fpZtgPx1i/wPR7pX74IsDUw==
+X-Received: by 2002:a17:90b:2801:b0:2f1:2e10:8160 with SMTP id 98e67ed59e1d1-309edab1bd7mr1408a91.11.1745441241864;
+        Wed, 23 Apr 2025 13:47:21 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309e0d09cacsm2120908a91.49.2025.04.23.13.47.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 13:47:21 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: kuba@kernel.org,
+	donald.hunter@gmail.com,
+	Joe Damato <jdamato@fastly.com>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Hao Luo <haoluo@google.com>,
+	Tejun Heo <tj@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] tools/Makefile: Add ynl target
+Date: Wed, 23 Apr 2025 20:46:44 +0000
+Message-ID: <20250423204647.190784-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418221254.112433-1-hramamurthy@google.com> <d3e40052-0d23-4f9e-87b1-4b71164cfa13@linux.dev>
-In-Reply-To: <d3e40052-0d23-4f9e-87b1-4b71164cfa13@linux.dev>
-From: Ziwei Xiao <ziweixiao@google.com>
-Date: Wed, 23 Apr 2025 13:46:47 -0700
-X-Gm-Features: ATxdqUF7GLWp2UyqWvifI0Ek-kzWh0WRuL_TLzs86Rr0wZt9m6nYIFIt3D6I-pI
-Message-ID: <CAG-FcCN-a_v33_d_+qLSqVy+heACB5JcXtiBXP63Q1DyZU+5vw@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/6] gve: Add Rx HW timestamping support
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: Harshitha Ramamurthy <hramamurthy@google.com>, netdev@vger.kernel.org, davem@davemloft.net, 
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com, 
-	andrew+netdev@lunn.ch, willemb@google.com, pkaligineedi@google.com, 
-	yyd@google.com, joshwash@google.com, shailend@google.com, linux@treblig.org, 
-	thostet@google.com, jfraker@google.com, horms@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 3:13=E2=80=AFAM Vadim Fedorenko
-<vadim.fedorenko@linux.dev> wrote:
->
-> On 18/04/2025 23:12, Harshitha Ramamurthy wrote:
-> > From: Ziwei Xiao <ziweixiao@google.com>
-> >
-> > This patch series add the support of Rx HW timestamping, which sends
-> > adminq commands periodically to the device for clock synchronization wi=
-th
-> > the nic.
->
-> It looks more like other PHC devices, but no PTP clock is exported. Do
-> you plan to implement TX HW timestamps for this device later?
-> Is it possible to use timecounter to provide proper PTP device on top of
-> GVE?
-Yes, the TX HW timestamps and PTP device work is undergoing. Those
-would be sent out in separate patch series when they are ready.
->
-> >
-> > John Fraker (5):
-> >    gve: Add device option for nic clock synchronization
-> >    gve: Add adminq command to report nic timestamp.
-> >    gve: Add rx hardware timestamp expansion
-> >    gve: Add support for SIOC[GS]HWTSTAMP IOCTLs
-> >    gve: Advertise support for rx hardware timestamping
-> >
-> > Kevin Yang (1):
-> >    gve: Add initial gve_clock
-> >
-> >   drivers/net/ethernet/google/gve/Makefile      |   2 +-
-> >   drivers/net/ethernet/google/gve/gve.h         |  14 +++
-> >   drivers/net/ethernet/google/gve/gve_adminq.c  |  51 ++++++++-
-> >   drivers/net/ethernet/google/gve/gve_adminq.h  |  26 +++++
-> >   drivers/net/ethernet/google/gve/gve_clock.c   | 103 +++++++++++++++++=
+Add targets to build, clean, and install ynl headers, libynl.a, and
+python tooling.
+
+Signed-off-by: Joe Damato <jdamato@fastly.com>
+---
+ tools/Makefile | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/tools/Makefile b/tools/Makefile
+index 5e1254eb66de..c31cbbd12c45 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -41,6 +41,7 @@ help:
+ 	@echo '  mm                     - misc mm tools'
+ 	@echo '  wmi			- WMI interface examples'
+ 	@echo '  x86_energy_perf_policy - Intel energy policy tool'
++	@echo '  ynl			- ynl headers, library, and python tool'
+ 	@echo ''
+ 	@echo 'You can do:'
+ 	@echo ' $$ make -C tools/ <tool>_install'
+@@ -118,11 +119,14 @@ freefall: FORCE
+ kvm_stat: FORCE
+ 	$(call descend,kvm/$@)
+ 
++ynl: FORCE
++	$(call descend,net/ynl)
 +
-> >   .../net/ethernet/google/gve/gve_desc_dqo.h    |   3 +-
-> >   drivers/net/ethernet/google/gve/gve_ethtool.c |  23 +++-
-> >   drivers/net/ethernet/google/gve/gve_main.c    |  47 ++++++++
-> >   drivers/net/ethernet/google/gve/gve_rx_dqo.c  |  26 +++++
-> >   9 files changed, 290 insertions(+), 5 deletions(-)
-> >   create mode 100644 drivers/net/ethernet/google/gve/gve_clock.c
-> >
->
+ all: acpi counter cpupower gpio hv firewire \
+ 		perf selftests bootconfig spi turbostat usb \
+ 		virtio mm bpf x86_energy_perf_policy \
+ 		tmon freefall iio objtool kvm_stat wmi \
+-		debugging tracing thermal thermometer thermal-engine
++		debugging tracing thermal thermometer thermal-engine ynl
+ 
+ acpi_install:
+ 	$(call descend,power/$(@:_install=),install)
+@@ -157,13 +161,16 @@ freefall_install:
+ kvm_stat_install:
+ 	$(call descend,kvm/$(@:_install=),install)
+ 
++ynl_install:
++	$(call descend,net/$(@:_install=),install)
++
+ install: acpi_install counter_install cpupower_install gpio_install \
+ 		hv_install firewire_install iio_install \
+ 		perf_install selftests_install turbostat_install usb_install \
+ 		virtio_install mm_install bpf_install x86_energy_perf_policy_install \
+ 		tmon_install freefall_install objtool_install kvm_stat_install \
+ 		wmi_install debugging_install intel-speed-select_install \
+-		tracing_install thermometer_install thermal-engine_install
++		tracing_install thermometer_install thermal-engine_install ynl_install
+ 
+ acpi_clean:
+ 	$(call descend,power/acpi,clean)
+@@ -214,12 +221,15 @@ freefall_clean:
+ build_clean:
+ 	$(call descend,build,clean)
+ 
++ynl_clean:
++	$(call descend,net/$(@:_clean=),clean)
++
+ clean: acpi_clean counter_clean cpupower_clean hv_clean firewire_clean \
+ 		perf_clean selftests_clean turbostat_clean bootconfig_clean spi_clean usb_clean virtio_clean \
+ 		mm_clean bpf_clean iio_clean x86_energy_perf_policy_clean tmon_clean \
+ 		freefall_clean build_clean libbpf_clean libsubcmd_clean \
+ 		gpio_clean objtool_clean leds_clean wmi_clean firmware_clean debugging_clean \
+ 		intel-speed-select_clean tracing_clean thermal_clean thermometer_clean thermal-engine_clean \
+-		sched_ext_clean
++		sched_ext_clean ynl_clean
+ 
+ .PHONY: FORCE
+
+base-commit: 45bd443bfd8697a7da308c16c3e75e2bb353b3d1
+-- 
+2.43.0
+
