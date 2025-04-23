@@ -1,65 +1,56 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBE726F442;
-	Wed, 23 Apr 2025 07:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A9026FA4C;
+	Wed, 23 Apr 2025 07:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394883; cv=none; b=tObzsw0kEnh0iRNIoxDHu6i0vwrp68XNMn8YPtxwla3rhX4b/p9jBGHEzpwPfXoka0FrfmV6kENbbUUNA+T+cdN7xzZxW8q0MYG9GDidxUG9rdu+54b1o1iEWjlIBfYwlgzSG19GA1BPqMZ6Pg0UWGSDqZWKwBlHKTyWj1aBQEk=
+	t=1745394887; cv=none; b=FY66NqMzXDX+fz+EX4EBp4poH9TzCqfXEwILgIF0uAh2WJFJusLioGBk4hSvxBcCJakeIJt0gVlFDZNuttjOlnUsBkSp9BMTlpBbrVq6BXIbyt2WPmKjh4+wyX+PYq97JYP27dPTIIrWZW5F3KUJRLJs5ftWhUd2UaM87t4SKz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394883; c=relaxed/simple;
-	bh=b1/kNqRIuvR1m8OSVu3YgE6eyHtE9gkn1sTrKQ/ghak=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u+AHNKbCY/ZCOVDK5ERqsl49BDXrvMb8nabjsZHTCY9fapHbDcPQANNRAym+dAF+NKvY+gha9qHHQImFz69B6qmcz9lVZjmme9UBM8+JHJHNYJ3P39D0t9CmU/zmX5x71xPG3s3IpGGho1/psfKI+T3b+XAvAPDSAvhad2Lhmws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=xuC5r1lB; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1745394887; c=relaxed/simple;
+	bh=dh8pO19QIEXWKzKoDuFgHcqwku73Ixk3mwAOAY6eB5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=a2k4a7hoF47zvqGnVMMgeDBoyFAzK4G9qg3aJIWMZC6ZvY9AqurQSxJcl0JaR+kmcctVD7tnGVZ0ZvlJJknJW0dQ3hd6kzzdEUlDtw54CFHCWBtGOlhwOe+CWHfiuKeJMrDqNACK35QgLBcpAJnCrh863dozvxnluUCmKkqOE20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uvPjGJGl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="xuC5r1lB"
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6OI9V010478;
-	Wed, 23 Apr 2025 09:54:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	BhzZoqwrvR64ETOj53JDdB4rMHRwaAeRpBGYOhjW/hk=; b=xuC5r1lB5miyV23p
-	jnLHqYYaQ3IFsvQVrTulSV5e35eGcgq/PhQ9bTJv5uVt5cYX/uLKG12bo3/1WwYf
-	A9ZH+bUlka17GI/wHxexczd37ywtb4wZloiDltg/PCyJ8Lf6s6ujKhNL5YpWPIRa
-	rUoGvu9rnW0+56vTd29HeqZHrL+hYaIWyIEE2FbGVj4Dik3bAgJkePZ1VpPH5kE+
-	6MOxc28m7T/QmucfeHzdVoWb6a4NFHoqGn1DKh3bsBvJMZHiGj0o0TY0IcUogZqy
-	1rF78NKWJEzSplvJy2tMMu38y2SPnwYrYVWOunSG55m9Hvjt7q2wZ1xPT19vm8ZN
-	bqQ60Q==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jk39xjq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 09:54:07 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2C5804002D;
-	Wed, 23 Apr 2025 09:52:27 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B6943A01C85;
-	Wed, 23 Apr 2025 09:51:09 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
- 2025 09:51:09 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
-        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
-        <cassel@kernel.org>, <johan+linaro@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 7/9] arm64: dts: st: Add PCIe Root Complex mode on stm32mp251
-Date: Wed, 23 Apr 2025 09:49:38 +0200
-Message-ID: <20250423074940.3849091-8-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250423074940.3849091-1-christian.bruel@foss.st.com>
-References: <20250423074940.3849091-1-christian.bruel@foss.st.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uvPjGJGl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 186EBC4CEEA;
+	Wed, 23 Apr 2025 07:54:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745394887;
+	bh=dh8pO19QIEXWKzKoDuFgHcqwku73Ixk3mwAOAY6eB5I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uvPjGJGlVUhfPSreiwB9AKpjezUZHZ+r1AEw72nbsdDbIHe/VYALeuVm+x4sbquT/
+	 NMw5qjFaVVW4ed4Eu4YM81E+XYmhO0kA3gVM/6tegpOl1RLd5IBz/hUpsjWh1Z9V2S
+	 lUcrt1vE+3pfX2t0M7ofV+FyrWt/YGy+oiOFXCPP+Kb07p+G5HNyyQa8GKJUgAzvYz
+	 A41dSQmAc65AWzRJ03OFITLbuAVfhQNBxa8wlZHC+qBsF6R29DK2DtcKlH8S6YVr/P
+	 JOmZMkcUdGWhYcX0yDyR72HQknDu5WJxQvX98T0Ib3g7Kl1v2z+T1SnBHrcJuBu3lo
+	 ohHcrMMS5mt0w==
+From: Philipp Stanner <phasta@kernel.org>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Jaya Kumar <jayakumar.alsa@gmail.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
+	liujing <liujing@cmss.chinamobile.com>,
+	Andres Urian Florez <andres.emb.sys@gmail.com>,
+	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	David Rhodes <drhodes@opensource.cirrus.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 08/28] ALSA: intel8x: Use pure devres PCI
+Date: Wed, 23 Apr 2025 09:53:26 +0200
+Message-ID: <20250423075346.45907-9-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
+References: <20250423075346.45907-1-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,85 +58,47 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
 
-Add pcie_rc node to support STM32 MP25 PCIe driver based on the
-DesignWare PCIe core configured as Root Complex mode
+pci_request_regions() is a hybrid function which becomes managed if
+pcim_enable_device() was called before. This hybrid nature is deprecated
+and should not be used anymore.
 
-Supports Gen1/Gen2, single lane, MSI interrupts using the ARM GICv2m
+Replace pci_request_regions() with the always-managed function
+pcim_request_all_regions().
 
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/arm64/boot/dts/st/stm32mp251.dtsi | 44 ++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ sound/pci/intel8x0.c  | 2 +-
+ sound/pci/intel8x0m.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-index 87110f91e489..5a5c177036cb 100644
---- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
-+++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
-@@ -122,6 +122,15 @@ intc: interrupt-controller@4ac00000 {
- 		      <0x0 0x4ac20000 0x0 0x20000>,
- 		      <0x0 0x4ac40000 0x0 0x20000>,
- 		      <0x0 0x4ac60000 0x0 0x20000>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		v2m0: v2m@48090000 {
-+			compatible = "arm,gic-v2m-frame";
-+			reg = <0x0 0x48090000 0x0 0x1000>;
-+			msi-controller;
-+		};
- 	};
+diff --git a/sound/pci/intel8x0.c b/sound/pci/intel8x0.c
+index e4bb99f71c2c..51e7f1f1a48e 100644
+--- a/sound/pci/intel8x0.c
++++ b/sound/pci/intel8x0.c
+@@ -2926,7 +2926,7 @@ static int snd_intel8x0_init(struct snd_card *card,
+ 	    pci->device == PCI_DEVICE_ID_INTEL_440MX)
+ 		chip->fix_nocache = 1; /* enable workaround */
  
- 	psci {
-@@ -899,6 +908,41 @@ stmmac_axi_config_1: stmmac-axi-config {
- 					snps,wr_osr_lmt = <0x7>;
- 				};
- 			};
-+
-+			pcie_rc: pcie@48400000 {
-+				compatible = "st,stm32mp25-pcie-rc";
-+				device_type = "pci";
-+				reg = <0x48400000 0x400000>,
-+				      <0x10000000 0x10000>;
-+				reg-names = "dbi", "config";
-+				#interrupt-cells = <1>;
-+				interrupt-map-mask = <0 0 0 7>;
-+				interrupt-map = <0 0 0 1 &intc 0 0 GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
-+						<0 0 0 2 &intc 0 0 GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
-+						<0 0 0 3 &intc 0 0 GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
-+						<0 0 0 4 &intc 0 0 GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				ranges = <0x01000000 0x0 0x00000000 0x10010000 0x0 0x10000>,
-+					 <0x02000000 0x0 0x10020000 0x10020000 0x0 0x7fe0000>,
-+					 <0x42000000 0x0 0x18000000 0x18000000 0x0 0x8000000>;
-+				dma-ranges = <0x42000000 0x0 0x80000000 0x80000000 0x0 0x80000000>;
-+				clocks = <&rcc CK_BUS_PCIE>;
-+				resets = <&rcc PCIE_R>;
-+				msi-parent = <&v2m0>;
-+				access-controllers = <&rifsc 68>;
-+				power-domains = <&CLUSTER_PD>;
-+				status = "disabled";
-+
-+				pcie@0,0 {
-+					device_type = "pci";
-+					reg = <0x0 0x0 0x0 0x0 0x0>;
-+					phys = <&combophy PHY_TYPE_PCIE>;
-+					#address-cells = <3>;
-+					#size-cells = <2>;
-+					ranges;
-+				};
-+			};
- 		};
+-	err = pci_request_regions(pci, card->shortname);
++	err = pcim_request_all_regions(pci, card->shortname);
+ 	if (err < 0)
+ 		return err;
  
- 		bsec: efuse@44000000 {
+diff --git a/sound/pci/intel8x0m.c b/sound/pci/intel8x0m.c
+index 38f8de51d641..1ce775fe8a70 100644
+--- a/sound/pci/intel8x0m.c
++++ b/sound/pci/intel8x0m.c
+@@ -1060,7 +1060,7 @@ static int snd_intel8x0m_init(struct snd_card *card,
+ 	chip->pci = pci;
+ 	chip->irq = -1;
+ 
+-	err = pci_request_regions(pci, card->shortname);
++	err = pcim_request_all_regions(pci, card->shortname);
+ 	if (err < 0)
+ 		return err;
+ 
 -- 
-2.34.1
+2.48.1
 
