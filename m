@@ -1,47 +1,47 @@
 Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2040.outbound.protection.outlook.com [40.107.243.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD26242D9C;
-	Wed, 23 Apr 2025 22:54:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3ECC242D78;
+	Wed, 23 Apr 2025 22:54:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745448881; cv=fail; b=Oy7PVthEF3dxw0EcTe9hrcbeDvLRVDrZSxsQKFGQGCXoVP9LZxfxXfuMAoASERWyyecwmDNhViPhZQ5miFm6xU5kDL3Ad1jsKcFlkH/v1bKMtM5IUyO3Tp8RPreX7zK49PoZMYMcxiYOABwIcA3qAoJ7k64zuuzdzXykgZIZPDc=
+	t=1745448878; cv=fail; b=DUXk5evydrYvssKobxLGmJG/U0MPDuYKMg/BaX04Mb/CbIJYHTaza4NKrb4vroSQygKfdAhIOAOX9mbk/vjV+xg2bIq5RasDpfDkm9d0x4hrZL3NKVPFT1yIH5pOXZrQ31Um0SoGQuiRU+SW+jArS/qq4k/22ec7rtFxERcGW8U=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745448881; c=relaxed/simple;
-	bh=n62gR1nRADQcKVJ4APaMv36d/9aWLPqUkw/CPMpKSZQ=;
+	s=arc-20240116; t=1745448878; c=relaxed/simple;
+	bh=pLxxzIiCly4RUxxBNsOHokQHhQTuDMW5GibcK2GBcv0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ADynVgSVCl6capxdDYDGXUIJ0REZzBTKuc8ksV+q5jpi+dGvJHAd4ZV2dtxnga2QPoFyHB54jjzo8YY3HJMRJa9flSvJg4xOVnxEXXFubwUsztXElytYUZfY3dZMDBlRD5bfgLMosxHXqX7eLzBQyWIfhUOIVI+ClJiEBy9yP6I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=EpgvRhDv; arc=fail smtp.client-ip=40.107.243.40
+	 Content-Type:MIME-Version; b=GLJsXBO9WSnFqyoDc/Dh+xryiL0J5C8jszEVgw84xc34X58cxxF6dyhayRobM7O16WHiIzn7evcIWZvozpIIZlHi23b0sD5xzbC/b72546K2ClhE8sSnCzWkNHbvkNXpEWBL2U8sF+o9NLzCnH8JQJZoi+6sujZiAnjBCtFRrak=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=S/PQ6YET; arc=fail smtp.client-ip=40.107.243.40
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="EpgvRhDv"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="S/PQ6YET"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KNfDIhGFNzjRex1Ut0pu3OEhckbGehId9rqixenhVuv0W0x3CWccmRjwc77Fx/s63nTty6kDc+oi6YiGmOettCK9lYHM2ZgSpJoJh4+jLrI2obNoJAvfRK3+OBxAsZqVcPjR4ZWRrPyYRHYctdTFqqMfstXCTX7WqyLsBwThCHxASZv7Seep4UGt9bUiIe84AXzexU4VdrmU9ausVgjJ/uefRpY05BbIIK0cG8ACi8aI2reYijw9IMjiWYslPEYzpOfjVK3RKTSn122izDw1kNI9RHSVW0TfzYO3XPJXmNbjOF9f4gBVvtNicNVXNVOhsP5+3Kf+0CQ1rIi1hnQKKQ==
+ b=SwEjuFtd86C1cRANHrrQKjUmB3mf0Rx19zn5WknBwKj5xhyjwDzftb784G0Yez3y8T/OmMDiL60ccsoElqy7Zi6faQJiGxzziRqlykamvd1HwMOZUZLfLZut8iM8iISXVUGn0yvXHsqfIhpBDzurrUPVTs0q9W4Bdlph3I7UZhk2VHe/O48bkJOGmQeQ10TrSui+LpVIWHm1+Sbt0GbnFa/bjbvY3uOLMkhjR26UKU2NSETrrQZS3i7+dbBgW7TYPXK60sdqRsBbO74mLoaC7qvKqWE8+uzKwn3Wwf8l0oqHxniGJMHCZPZRaI4wkSz48XzUDHAvD8phaL8Yewlhrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r++cWG9pp8ABxTb6b2QgXcZwBXN//JCueqoLtOdgkq8=;
- b=YX852MPnDU3sEWMrQAUHna4feSS6H6YJfEXqJ3DH/vMChAiTfNFUwxg/tf97JTrpY5Y8m9byufXTBAbfauDQjUX8E00ZoPmqtVfexUkIFbhwNx5KgvQzFt+PbQHUBWJVPumDaHlbjsNriOW4ehZCBQHkHuMyONw1ir/Z9G3M3Tn/RkQeAdtAKtLhMAfehuFHJlLz8nBWugxKqyJ6NANB+4EIzZfWs49x6DMHzifYZdT9q6VfBP2FseOuvYILuZxAGcCqZSLUSojf96iIGUO3k/KXDhdPwAshaM06IcPrFjfehX1Lb4szhxV9H3/RvjF9X2If1uvpqLv60vu9ZMGTvQ==
+ bh=Du5IHCP3h1SeKWBFAGevlPV8wkdfq6KQ3lU3PEJL1bg=;
+ b=kEc92SZhd0HtlLmbGZ0RDb7yKMwzbX6kOCZBinY0Q2AxQ+KKGqz+QxZturfHB+6EYCVzbZCSy+jK3rTnIy040h8AaXOjhzQ1LnTboTa66c4470iiPZqjasfonNKi1kRf1G5Do+pfmkGeIKtRC7nLs32jn+fRes1uxKkPqMfGcYcIqmVtpWHI0Ym+oamSc/9rnOaYJZ6wXgvExpIhOfjfSlnk+5LvRl8Xpd+NF+9xMKiaJJm45sBlKzlPooaPKoHN8YWr6KRhs2Q81Nn1/HEpiuyHBVNiB1fV/Cy1fteb9ZNGKAF3Yee6or5VuBoSFp1gun9FyklYSQ64KYFX0cjo9w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r++cWG9pp8ABxTb6b2QgXcZwBXN//JCueqoLtOdgkq8=;
- b=EpgvRhDvfEzYLipGCbmHkXoOKI/cI4XyzCAcgtK1/mQtV42yopER1oDORBXo0a2N+BInEZwAeQGO1AbGY+M6hbCVpHYy/GgRDxQas7r1eEf5Je8znz9rnlV/9p2ygHpPsGVqcVdF5BE4l8/pGeCtvR/Mz0q6AqctIhHHAumHpzaAah306gRofDt2HiX6lHA7dLWnMPeL+qLvupmfHPTYq1deCiQ6nSCqiDLt+KSEBH1FpwoH9AAausaxLeuyFuIflZVOreHY90BhQmK96c2sTBH6yUL6An9Wz6lzP1i7UoGMCPoM+pS39QVEx02RMh8EfLAtJOSiLzxMEBHE/49Ipg==
+ bh=Du5IHCP3h1SeKWBFAGevlPV8wkdfq6KQ3lU3PEJL1bg=;
+ b=S/PQ6YETfu+13D/iA5JhJM67/vnpYWSb49Ao4fEkg3U7U1rPRX/b3MLx43bIhH5Q+PJkVEkaHZgopzHfyZ4o0Cde3pFMRPnNVphAObTJs7U+AuCvSFXuHDwxNTDJI5Ys7OypHnHxl/uGeYCJoGoeFgcjYlynoqWJrGe3fFuQ2I6lLLD3ILc9ZSQGvgRef1wz889BhnyDdcVFY5RRVWtWB2iUpUwr/pMkjxc99JSpfqhMhOnf6sq7PrCtSrlNiS8nQCcht4v97D79w0U0A5WS30n1RA5fa8pEX6dtRqGWLV3K1yuEAepW8WEOfYnO1hNlsE7S8fmBT6A9Qo70MowQ1A==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
  by PH7PR12MB7841.namprd12.prod.outlook.com (2603:10b6:510:273::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.24; Wed, 23 Apr
- 2025 22:54:31 +0000
+ 2025 22:54:26 +0000
 Received: from SN7PR12MB8059.namprd12.prod.outlook.com
  ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
  ([fe80::4ee2:654e:1fe8:4b91%6]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
- 22:54:31 +0000
+ 22:54:26 +0000
 From: Joel Fernandes <joelagnelf@nvidia.com>
 To: linux-kernel@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>,
@@ -61,16 +61,16 @@ Cc: nouveau@lists.freedesktop.org,
 	Ben Skeggs <bskeggs@nvidia.com>,
 	Joel Fernandes <joelagnelf@nvidia.com>,
 	linux-doc@vger.kernel.org
-Subject: [PATCH 6/6] nova-core: docs: Document devinit process
-Date: Wed, 23 Apr 2025 18:54:02 -0400
-Message-ID: <20250423225405.139613-7-joelagnelf@nvidia.com>
+Subject: [PATCH 4/6] nova-core: docs: Document fwsec operation and layout
+Date: Wed, 23 Apr 2025 18:54:00 -0400
+Message-ID: <20250423225405.139613-5-joelagnelf@nvidia.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250423225405.139613-1-joelagnelf@nvidia.com>
 References: <20250423225405.139613-1-joelagnelf@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0246.namprd03.prod.outlook.com
- (2603:10b6:408:ff::11) To SN7PR12MB8059.namprd12.prod.outlook.com
+X-ClientProxiedBy: MN2PR02CA0009.namprd02.prod.outlook.com
+ (2603:10b6:208:fc::22) To SN7PR12MB8059.namprd12.prod.outlook.com
  (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -80,162 +80,310 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|PH7PR12MB7841:EE_
-X-MS-Office365-Filtering-Correlation-Id: c64193cc-1adc-44bb-eaa3-08dd82b9ceed
+X-MS-Office365-Filtering-Correlation-Id: 69784aab-5b45-4cba-74cd-08dd82b9cc36
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7416014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?/Yp0L/1hz4SNjobuLFv5Ageh5wIyD3jL+8YBXjIBXTcFzZ55n0dIc4CfgbuG?=
- =?us-ascii?Q?loccYyI3PKY2n9BcVYulp6e72yRhKOJOgQlCvdqFsuNxJOacHqcxRULJHw5A?=
- =?us-ascii?Q?DmOFW42Gz8nRP2PHWfjqMzcht0INk5M8gKtDdJv3MN2HTZJ53B0PrhGKUqbB?=
- =?us-ascii?Q?M7dLoVplZg9N7qXTzS9EsLs2Qu0OgPZogKmtddsT57NtqxseoxxkuqOKI1an?=
- =?us-ascii?Q?tRDzrwOHMR8hx5Xw2CytoLOrQsYPLNiDAMpe1QQoDVkUD2WeXcmJRar0wuII?=
- =?us-ascii?Q?Fj5E7fL/noWBbZ0/izS7uBPrecppVNk655Nur9AoTzR/4tqLDyLgLura6dvW?=
- =?us-ascii?Q?qP4zeZo5YydrzzO+45xDCw1RU0dKKnBQOhVhQHYOzJv51bCMn0sc19vOyQGl?=
- =?us-ascii?Q?NWbp9kVal/TbJW21u4D4+wHnp+1+/oDwhIv+S+brkzJEz+py5TsCkPWx9P/U?=
- =?us-ascii?Q?HdWEN5hWopovCIls5O30NbGOLctdlKdvtyg21BLQNLatNnXnWQUfquXKA753?=
- =?us-ascii?Q?O2xXTy9HpAS8Z3UWZYJIV2oMX9z4wHn5CP9u5LlDrOc5YifjXoIXmSaoP+IV?=
- =?us-ascii?Q?aqgF/EE18tvGgV/cwYfOkYmqDPrciA7jxXhtPTlS9iauC+J+mFbCPZU1QNz9?=
- =?us-ascii?Q?bFr/kHuM1H6vmjrRcj6Vve33CYZFHuwbmEWqnZ8WNAH8ZCVjpUESViLDVah5?=
- =?us-ascii?Q?isAt0z4ivxWx287Wovr6GZx7Lz743qbgr8d6y5onY+k5+upAKbmx+djwJcXA?=
- =?us-ascii?Q?1fbfFOt+rWmxB4Sm+H4xUawMH9aSO+ZeiLq7y5ktFuiPj4H9nGAybnB5Wf9m?=
- =?us-ascii?Q?0WKiuF41SAfile/7Ur2WC1yLLv5XIOorKzR7E9baPhjaN6CGzrcw0Myj7Ex7?=
- =?us-ascii?Q?Jq5UfcLnLFNZczlAmkx+vL9VyO2KM2HUUOZPa8+ST58qinU9f1btkiyntPIn?=
- =?us-ascii?Q?nP4YR2vxeKqQ02/PjVgMIcqXhNutAyvltQTWt2eLiCPI/O6zxskRTEN7de3B?=
- =?us-ascii?Q?mq4ybnhHvhHjx4Rw/uuUiGcauIQQ6w4+o82SkSgB++sSxdTZFhBGuoiCC/DY?=
- =?us-ascii?Q?di5rkq8ujQ/sQqRwncvNnVimJL/cfCZdYZXim4KwAzD+cl4gsKh+mfl1KpdS?=
- =?us-ascii?Q?P2Op0ZyRivn39duO+U0hz1y+JXq6osMfGD/Ng2oNd4AY1RSdIh+fHU+2CIx7?=
- =?us-ascii?Q?2GnMqpwQQegFZd6964y+JSmnwEe+FT2XamtIVYjzIQJsvzTwLH07Al4XcaGd?=
- =?us-ascii?Q?EQ4tzSJRAnkmYTOVIeKzRoC5DcgT/VvNQn8UsVc5rLZzoLe/Uz09ZBCb92rf?=
- =?us-ascii?Q?c8XYPdId8D7MocjOZ1r1IJ+neRhTm5BKZJo7ApZtiM94Bb4XeVqHSqvgLuOY?=
- =?us-ascii?Q?hzllr7vySx/djWFPnUaGSWDXXaiS7COquW3XQrx4d28G9wTz5hKZdv4KnKju?=
- =?us-ascii?Q?BwGk4ddd60E=3D?=
+	=?utf-8?B?dlFucWF3cDRsSEg4blgrQ0U1S0pPNnh4a21RVU5wV1RXZFJRV2kyeGlOVlVE?=
+ =?utf-8?B?SXp0V1hHRk1ELy94SGpMeFYrU3UzcXpVTDZVbDJHNGpOUU14bW1lcVNYR1JG?=
+ =?utf-8?B?UzhMNGVwRUkwd0xNcVV5Znk3RE9kL0s5Z0xJOFRIQVBncU5FMHJyRUdOZ3FI?=
+ =?utf-8?B?b3NpYTJFNExTMFZEam9oV1BWNTNwWC9mZWFqUkR1UkJQTGdwRk95WDJ3VERQ?=
+ =?utf-8?B?eGwxcnN1cnpnNGV3WUFXR0FUSlF1S2JCNVZTak05eEIwdm1MZ0x4b2VyYVhp?=
+ =?utf-8?B?akVpNmY5eS9tUFEwOVl6L2pVNW1kZFVhalJyNDRCbTVqVkU2WGNTOENlQzBD?=
+ =?utf-8?B?TTk3c3M2Z3MxMllFUCtidUVURlNXTUg3ZzNka2E0TCtZVFZkLzRDRXBGNm9u?=
+ =?utf-8?B?eWNuandjSjg4dVZWMFlYYXNzT2V4TWVpbzVtNGVXWDR0dUh6UUJRZ3NXSFk2?=
+ =?utf-8?B?U0JNQnk3MGdsdm9veUE0bzdNUHlNUDBSYkpVVjQ2aUJ5SVQ4YWxvbVJ3WFpH?=
+ =?utf-8?B?MGJBamZkN25pSkhPclEvZVo5cmFkODh4Vlp4TUNKSUMxN2FGTUtIZ2NaUDI1?=
+ =?utf-8?B?eWZaeGIwNHlabW9Ib0hsTWV1WDI4MUQyOWs1eVlZK2VtVUorN09WY1l6NmdI?=
+ =?utf-8?B?cTh4MGJONUdvTGtKSTVOTGg0ZkZHbFFkL2hYa0x5blVndmlaOTB5UmJDNC9p?=
+ =?utf-8?B?QWc4d2VkSlNDNGRTdFd4cUhpdElja3NBNnBXZ0sxZEtlUzNONTdUZ3laaXBo?=
+ =?utf-8?B?UURRY1kxVk5NWW52T3RiTlR6aVpidUVEem5JbmUxa080RTJDQlNJRXBjWDhX?=
+ =?utf-8?B?NkFaU1JZV3Q5enVSK0RqMkFWejh0NUtRZjFXN014QnR0S2lTSzZEOFlDaW5a?=
+ =?utf-8?B?WUZsRFNpRkN4K0V1OVhZY2NQUm5Xa0pIRHBCQ1NQYnFmQTJQUG5pdnFXdlZD?=
+ =?utf-8?B?NWhHazN2OElQaGIydGFCaTR6OVBsUk96TzhtY3gyN0NWVDZ1TTFWV0J4bEIr?=
+ =?utf-8?B?UnJrQ3VYclBrMDl5T1RpYkdzTlF5VnY3dEF3YXlaYjltQUc0eHRhVklad1dN?=
+ =?utf-8?B?VldjRVpYWHBFd2xjbjJKUDVWMnY4NTdsMDcrWHhXbXhiYWpmSHhHd1paZzVl?=
+ =?utf-8?B?cjk1TFBpZGpHdi8xUzlKTGFobnMwYkgrVW9JYzlSVitlZ0l2MEl3Sm93Z1J5?=
+ =?utf-8?B?ajVVcXNzcUl4T0lIMjNZeE5DRkJPRTVBNEVYYlluY2pIUnh1WmhwLzEvOGRo?=
+ =?utf-8?B?UXpWRVZxMGN6ajl1dUUzbHFVOXViZC92SlFrazRQWk9Lc0ZRKzk3Y0h6eGxT?=
+ =?utf-8?B?WjJOZ0RadlZTbEttSVZjTWdKMGpTaVh6R3ZQZWQrWjVDZ2RGNlBiTXJ2akdV?=
+ =?utf-8?B?TkE5dTNic1ZKdTNTZTVTMksxUjR2WE5uMzlpdEx0djRQbmZrUHU5cFZhZXU0?=
+ =?utf-8?B?TUFhNjArZy9zSVZCQnhJbi9QWEl1Z3g0T0U3TWtsQzBMMytqeHFtbXVkdnYr?=
+ =?utf-8?B?eUJWdzFOK3FwbzNlVkc4a2pLM2NIN21zTGlIcWRPSnZZR3pqdlhzcHFhV0RI?=
+ =?utf-8?B?Y1RiRUpNMytDM1JhcjZwY3lCU3hRNFJjTDZsQkt4REEvWmhvZnFmbG9mUkdT?=
+ =?utf-8?B?bVRUOHJHTmx6YStrRVBwOUdaRG9tbWp3b3FwRHRGaWprS2dSeGl2UjJHaDMy?=
+ =?utf-8?B?c3NSZnYxdDIxcWV4b1piR0YweGJEWnkrR3hDWDNoRkgxanpOMDhPMW00YTh1?=
+ =?utf-8?B?RXZ5WkRGcVN6aGxoak81Y0JNQ09GWjdqamxtRlhuRXNzYWNDY3JWTEVMalFN?=
+ =?utf-8?B?NnIrR3AzQlNmK2VZUWYwTFo0ejVBN3U2eVh2b0Q4bkhXWHkzMkU2ZFZiU1Y2?=
+ =?utf-8?B?czk3Z0JLM1FxZVVrTGtkcTBDQ1p3TG9qMnJ1V0JBNkJIQi9DbUFOMzhtQWE2?=
+ =?utf-8?Q?qL4nR+NaCs0=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fEn2NBTDR86jSl0CWM1Iuhq/gGIsrBmwYsPxk7YzdbNT+QVqY4yyDQDYPe21?=
- =?us-ascii?Q?JjWxRxrXixw/oLA0zkt0J636CW8CebiT0QL/GWokRI22K/+gyD80a7slfomc?=
- =?us-ascii?Q?0+SgsZfS7YY8Wuq4XqgTVx8nm8eWQJmbdu9rJqCpJgzfa9DO8uSRl301YGxh?=
- =?us-ascii?Q?UTO48onmvWA7Rzzf/BPKE6WAsJk3EcQ0wAXzIXxq4JV/0LFBXQtJ3wHrjHhk?=
- =?us-ascii?Q?c7VqitAbCSntHeqWfqNhjj4MrWsCcXC/c5vt8Kp6j8LulgNIp43FIm/S1Oev?=
- =?us-ascii?Q?/EdkinARyfqdK4s+rgNdKgyP3yool6XqrzQfZ11oalnFuoxFVTKdlQnPW+D1?=
- =?us-ascii?Q?ecGJSl8Ki7EtEC4l+RtTWXeYF6dBHXUDa84DEtrhYYMAZ3WUM8Ff5i6PxTkJ?=
- =?us-ascii?Q?fcdCyCYYf5HIeNAKrBmsZq+8eo3mzJPTxEp4e2ZEH6tq1Jhz1E7ZChk2bAzw?=
- =?us-ascii?Q?LVUAB54mGmCt9sGuLFJKXxFL0E8Pni1NMxwh4qxd2Eo8aS4WfPj/H40GyrQE?=
- =?us-ascii?Q?oZP2hYQRlB7KbQGx6XbQ0IQhBSUROYGnl2IIHWPY9ywCC1+SLHB4RmSLuxDe?=
- =?us-ascii?Q?0TQUtiVcA2ZC16shJ737wd1Qg5XDYefEXD2QltHNIV8OSc7JEixu0R9eMu7t?=
- =?us-ascii?Q?70xJCXs0WcqWkUsQ2y1i7CWr9En8WuPvvVlQn1RK0hWThRnmexQV0CZVHdKs?=
- =?us-ascii?Q?RgCKQjCkPQhGtugjMhkloHyhJqW48ueuTup4a7DiROZrP3Q7iRl41lH0hg7+?=
- =?us-ascii?Q?aQD+mBC3kbHvrvxhi3H5fzzz3ehWM3eGjkJCH1FcGSKCWqfa/Kb7T/cz8QUX?=
- =?us-ascii?Q?KPUzQ7uMB3m13ALt3w36dWP8OPzgztl0wW0aEve+EsX0I/qimSGuFyQKE4Da?=
- =?us-ascii?Q?HuVDRvtmgp6E8c20rTvFH30tXIIfCS8kzgc8EhZkD3OMnTM3vAmoxEMkIzdd?=
- =?us-ascii?Q?R6rmQbh7rdwWXBehHk7ZXPwwfiDEHG7WkXYeDsTSFSVxe6BpCNJj0wP3OaAW?=
- =?us-ascii?Q?Nn18/5AXiHItsC8DbhI1SSGQXhQkGt2jhCe4+7iSLjOJrxlWizecMKTu/07+?=
- =?us-ascii?Q?D9jKXUBwFti+SE+hNa4go7M8kw0w6Rwr7ljDXtXypjhb2JOrW39EeWVRtxcV?=
- =?us-ascii?Q?sUftUA8uJQSCeKm9WE8smgZEz4PV3Rdcb7LBE8udVn/ShFpcGBKASsQefRHm?=
- =?us-ascii?Q?yzBcZW7+PgAuuATP9gP+/djt7DmdN/itdGMBhmKXysAlbw6mSlXOliN2HB8y?=
- =?us-ascii?Q?/wajIhcqwq09ONUubPuRQP6MSZVPJPRP/pBvjrd2SpagG4Y5TFqoLYEKcJz4?=
- =?us-ascii?Q?67xN6ZPaa/5yhR0dkIWUwuLYyuG7JyDhJifC3JPaHiBClHA5epYU2UHu+TXK?=
- =?us-ascii?Q?xj9jwwNRw7CnLSAOw5jNSfPPRgeNORfe46Z3QAI0yXoxPDk7x0gxr3MSm3Ry?=
- =?us-ascii?Q?Ifaq0t+lt9BHwdhf829b2M7dWW/pg9aAnEKCgamdFA6klTxy096iZldC4T7p?=
- =?us-ascii?Q?YmU1QpA/sYmt2X/iVHurpIYp+x6lXnOUoaSDYc3PAGtgvlXOAX4Qb9BmU2QW?=
- =?us-ascii?Q?ZlOL+ZpgtJ6nnIIfEPEdNM80A9nD9L9cvegC6cgX?=
+	=?utf-8?B?YU0wVktaVVZMSCtrVnBRZG1ieUdwRkdZakt3dWRLQzdnQ0owVFppc2JuK21X?=
+ =?utf-8?B?cU5MNEJoV0FobmZwVzVSMUptMzJkYjVpZFJxelRQZDN3ZWQvSnMyUjlmandX?=
+ =?utf-8?B?Vk1nQzRiRHdYYXVPY1pSNG5yY3gzSVJKZmJBV090ZVJFd1kzT0R2a1VSUTY5?=
+ =?utf-8?B?eDdmSXJ3OGR4d1dqQnI4a1B3eVNFa29UR2F1WVJyZ0lZYXdKdlVCS2ZFRUlR?=
+ =?utf-8?B?NWRDczVXLzdySWx2S2phRWl2bWFraURqMU5iT1ZQUWJnbFJkRld5YVB4cDBv?=
+ =?utf-8?B?SEEzR1M0STQrRzVwTmRka2NMTXpUT055cHRaOTR1ZHVIQjNxVUJqVzRQTzRj?=
+ =?utf-8?B?ZEV4OHI5YlJpTXVZM3B3b05OUGVrVkEzbnI4YWtvUDlkTldJTGhtZnFnL3pW?=
+ =?utf-8?B?c0RwSEFrTElVWWw3bGV4THRwazRqbXI0UlVHKzRPWnlhUUFoMklqZlB6OGxP?=
+ =?utf-8?B?M0YwYW5pcHVvcEg2aC9idXhMRXNDOVorTHRnVVpuYmF0enkvVlIycFlSNjNB?=
+ =?utf-8?B?b3pFMEdFRGs4R3NNUVFYdWhBelg4RjBYUE5Cd3RYSUZ4R3ZpbzNuYUZiYUZ1?=
+ =?utf-8?B?aDh5bXgxSkROZ1Eyb2lUcTJMQ2hVMUNrcXdhWU1RK1FYRDhQT0JadFpmVDV5?=
+ =?utf-8?B?aE1EK0ExYUpvWjI0SzRwL2FGNU0zUS94TmZhekMwdUM5WTY1Y2J4SkR3TDJ5?=
+ =?utf-8?B?dlZzNmc4Q09aSU5NV0lSOFVjb1hQUFBhTDZrbitWeXFjTFJtdTJLbEhwendj?=
+ =?utf-8?B?TlNaU3k0QnhQTUduMkdleDRna2w1blErektQMTV6cnVnU0ZrYWlTbkdmSEdT?=
+ =?utf-8?B?RnF5a1pqK1dlcHhXbjRLL3RlNU1GQUExUGNRbUZ0MmRpUTZlenpXRTYxN1hZ?=
+ =?utf-8?B?MjRIU0pQY3BuK21mUllvUTN1SWx0NVhLeGFuNi9PQTFBaWtCKytWcjRRT1VN?=
+ =?utf-8?B?UjVaNXp6b2pzaDdvYm8rT1hRd01mZzVNTWZMeVJ4NHVZTk5BbXRVTkhuV2dh?=
+ =?utf-8?B?UnlaMzVyZmhZSmFMMW8rTFVnL1BnVmJyY1NNREtMcXJwcWxXUXd4RWVaODlB?=
+ =?utf-8?B?c2xIRWJxakRyQ2tWYXZCWFdGZTVxLzlvK0gxL0JOaTRBaWlNTUxiMmpvaEFk?=
+ =?utf-8?B?cjZCaWl0RXpVbG04c0twOGVwdzJFUGdQLzdKU3FUbjZXbHpDaWh2a0VEaXo4?=
+ =?utf-8?B?bUQ1ODBZUHJkWk45NUFhOEJaN3JtdFBLYlJCK0NGdEdVeURUYU53VlRnZCtL?=
+ =?utf-8?B?KzlFNkk5bThTWGx4bXNYUUFsVjVndXc3TFo3Y21mTEV4YUpvdEk0UFpzcnZI?=
+ =?utf-8?B?MHhGT2ZDQ1BEYlBzb2NzVll5RzE3WUo1NUgvV2NIOUM5VzlzWDhpVE9lWjB2?=
+ =?utf-8?B?WVlDaFNDWHBqREFBOGtzSnlYdG12YVMyeEdaK0pUODArMFZzdXpMZ3pFRDRP?=
+ =?utf-8?B?T2g3WHpzTnZnbG4zc2NwQ3h0VmU2bFFUbkx4azFrbnJBV0NpMStpeEdTZWd0?=
+ =?utf-8?B?UnVRdzF1QVpSYmtXL1VBQUcxa3hVckVhcnFPVzVNSmlLVTM3aDVDRnNDdlp3?=
+ =?utf-8?B?MEkzU2Vkczk2VTlrWGVPUkc3Y1ZMNFpndFMxYzdDOHhHUjZ5eWcyNUtKWmpE?=
+ =?utf-8?B?aGRnWWNYZjF5T3Q3OUk1by9TVE1TVGtNUUR2WUVFQWVnaGQwL1ExZmtKUCtE?=
+ =?utf-8?B?eFlTc01hOEM4TTc0VW9WUWdtdGp1TFg0Ly9BQjN2ZFpyRjFGbGhmMXl0djBr?=
+ =?utf-8?B?dVowSHQ3N21JVTJpcGJCdFcveFpyTC9XUmp5VzZPUnNBMkM2dW8vdDJBM2lW?=
+ =?utf-8?B?YkFEclgvTjFzNUdKVy93bnpwQ3FOUERDSndxMTBMWDBCSTdOZ2xTaFp1M3Fz?=
+ =?utf-8?B?MjlpdkxQVkxqNzBPZ0hwQkxwdXpsdTNpZTVLbHFtd281aHdqY2p0OXdHVDhi?=
+ =?utf-8?B?TWQ3aUdYVlZDQVduemxKQk9lSTB0Vyswb0o1Q1g2UnFSclY2dWZSODNpRUF1?=
+ =?utf-8?B?aGpxWFFZWVB0U0FpaFZQWHZHNGNKNW1XU2RwaW12eVZnamY5RTJVUi9BSEF5?=
+ =?utf-8?B?VHVFbm1qOERjcGRyUGhibzg5eG9aUTdRaC9BYzQxeTBnM0poWjg5RnJqemQy?=
+ =?utf-8?Q?641wFj/jF7MJ13abG2MemHiRV?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c64193cc-1adc-44bb-eaa3-08dd82b9ceed
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69784aab-5b45-4cba-74cd-08dd82b9cc36
 X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 22:54:31.0168
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 22:54:26.5059
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EDn/RfWJR3Ke7TSXsm5jlr2E8d1p/AZGjaF8YTjH+dKZT+/z7XNfUTJtCel5LOIPh1cQyCsYLrd+8ORr0ggFZQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ucxNLL7yLe15+/kMTH/4sRIoJAP5fRmMREVUB0yjFZT0zaREft32cP+pxcJ/NMfOCvK+YULK0wnwtVpUmpMhSA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7841
 
-devinit is mentioned in the code. This patch explains it so it is clear
-what it does. devinit is not only essential at boot-time, but also at
-runtime due to suspend-resume and things like re-clocking.
+Add explanation of fwsec with diagrams. This helps clarify how the
+nova-core falcon boot works.
 
 Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
 ---
- Documentation/gpu/nova/core/devinit.rst | 54 +++++++++++++++++++++++++
- Documentation/gpu/nova/index.rst        |  2 +
- 2 files changed, 56 insertions(+)
- create mode 100644 Documentation/gpu/nova/core/devinit.rst
+ Documentation/gpu/nova/core/fwsec.rst | 173 ++++++++++++++++++++++++++
+ Documentation/gpu/nova/core/vbios.rst |   3 +-
+ Documentation/gpu/nova/index.rst      |   1 +
+ 3 files changed, 176 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/gpu/nova/core/fwsec.rst
 
-diff --git a/Documentation/gpu/nova/core/devinit.rst b/Documentation/gpu/nova/core/devinit.rst
+diff --git a/Documentation/gpu/nova/core/fwsec.rst b/Documentation/gpu/nova/core/fwsec.rst
 new file mode 100644
-index 000000000000..e504ed3efe15
+index 000000000000..03d1f0d67414
 --- /dev/null
-+++ b/Documentation/gpu/nova/core/devinit.rst
-@@ -0,0 +1,54 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+==================================
-+Device Initialization (devinit)
-+==================================
++++ b/Documentation/gpu/nova/core/fwsec.rst
+@@ -0,0 +1,173 @@
++.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++=========================
++FWSEC (Firmware Security)
++=========================
 +
-+Overview
-+--------
-+Device initialization (devinit) is a crucial sequence of register read/write operations 
-+that occur after a GPU reset. The devinit sequence is essential for properly configuring 
-+the GPU hardware before it can be used.
++The role of FWSEC to provide firmware verification and perform secure operations
++such as carving out the WPR2 region (Write protected region). It is critical to
++the boot sequence of the GPU.
 +
-+The devinit is an interpreter program that typically runs on the PMU (Power Management
-+Unit) microcontroller of the GPU. This interpreter executes a "script" of initialization
-+commands. The devinit interpreter itself is part of the FWSEC (Firmware Security) 
-+component provided by the GPU firmware in the VBIOS ROM (see fwsec.rst and vbios.rst).
++The FWSEC image is located in the VBIOS ROM. For how it is extracted, see vbios.rst
++and the vbios.rs source code.
 +
-+Key Functions of devinit
-+------------------------
-+devinit performs several critical tasks:
++The Falcon data in the FWSEC image is a combination of headers, data sections
++(DMEM) and instruction code sections (IMEM).
 +
-+1. Programming VRAM memory controller timings
-+2. Power sequencing
-+3. Clock and PLL (Phase-Locked Loop) configuration
-+4. Thermal management
-+5. VRAM memory scrubbing (ECC initialization)
-+   - On some GPUs, it scrubs only part of memory and then initiates 'async scrubbing'
++FWSEC itself is a central location for all microcodes in the VBIOS that run on
++various microcontrollers (PMU, SEC, GSP etc) some of which (such as devinit) are
++executed after GPU power-on before the nova-core driver is even loaded.
 +
-+Firmware Initialization Flow
-+---------------------------
-+Upon reset, several microcontrollers on the GPU (such as PMU, SEC2, GSP, etc.) run GPU 
-+firmware (gfw) code to set up core parameters. Most of the GPU is considered unusable 
-+until this initialization process completes.
++For the purposes of nova-core driver, the FWSEC contains microcode called
++DMEMMAPPER which executes the "FWSEC-FRTS" command (among other commands it is
++capable of executing) that is executed on the GSP to carve out the WPR2 region
++(Write protected region).
 +
-+The GPU firmware components are:
-+1. Located in the VBIOS ROM
-+2. Executed in sequence on different microcontrollers:
-+   - The devinit sequence runs on the PMU
-+   - The FWSEC runs on the GSP (Graphics System Processor) in high secure mode
++FWSEC Memory Layout
++-------------------
 +
-+Before the driver can proceed with further initialization, it must wait for a signal 
-+indicating that core initialization is complete (known as GFW_BOOT). This signal is
-+set up by the FWSEC running on the GSP in high secure mode.
++The memory layout of the FWSEC image is as follows (this is using an GA-102
++Ampere GPU as an example and could vary for future GPUs):
 +
-+Runtime Considerations
-+---------------------
-+It's important to note that the devinit sequence also needs to run during suspend/resume 
-+operations at runtime, not just during initial boot.
++┌───────────────────────────────────────────────────────────────┐
++│                         FWSEC image (type 0xE0)               │
++│                                                               │
++│  ┌─────────────────────────────────┐                          │
++│  │     PMU Falcon Ucode Table      │                          │
++│  │     (PmuLookupTable)            │                          │
++│  │  ┌─────────────────────────┐    │                          │
++│  │  │ Table Header            │    │                          │
++│  │  │ - version: 0x01         │    │                          │
++│  │  │ - header_size: 6        │    │                          │
++│  │  │ - entry_size: 6         │    │                          │
++│  │  │ - entry_count: N        │    │                          │
++│  │  │ - desc_version:3(unused)│    │                          │
++│  │  └─────────────────────────┘    │                          │
++│  │         ...                     │                          │
++│  │  ┌─────────────────────────┐    │                          │
++│  │  │ Entry for FWSEC (0x85)  │    │                          │
++│  │  │ (PmuLookupTableEntry)   │    │                          │
++│  │  │ - app_id: 0x85 (FWSEC)  │ ───┼────┐                     │
++│  │  │ - target_id: 0x01 (PMU) │    │    │                     │
++│  │  │ - data: offset ─────────┼────┼────┼───┐                 │
++│  │  └─────────────────────────┘    │    │   │                 │
++│  └─────────────────────────────────┘    │   │                 │
++│                                         │   │                 │
++│                                         │   │                 │
++│  ┌─────────────────────────────────┐    │   │                 │
++│  │     FWSEC Ucode Component       │<───┘   │                 │
++│  │     (aka Falcon data)           │        │                 │
++│  │  ┌─────────────────────────┐    │        │                 │
++│  │  │ FalconUCodeDescV3       │<───┼────────┘                 │
++│  │  │ - hdr                   │    │                          │
++│  │  │ - stored_size           │    │                          │
++│  │  │ - pkc_data_offset       │    │                          │
++│  │  │ - interface_offset ─────┼────┼────────────────┐         │
++│  │  │ - imem_phys_base        │    │                │         │
++│  │  │ - imem_load_size        │    │                │         │
++│  │  │ - imem_virt_base        │    │                │         │
++│  │  │ - dmem_phys_base        │    │                │         │
++│  │  │ - dmem_load_size        │    │                │         │
++│  │  │ - engine_id_mask        │    │                │         │
++│  │  │ - ucode_id              │    │                │         │
++│  │  │ - signature_count       │    │    look up sig │         │
++│  │  │ - signature_versions ───┼────┼─────┐using hal │         │
++│  │  └─────────────────────────┘    │     │          │         │
++│  │         (no gap)                │     │          │         │
++│  │  ┌─────────────────────────┐    │     │          │         │
++│  │  │ Signatures Section      │<───┼─────┘          │         │
++│  │  │ (384 bytes per sig)     │    │                │         │
++│  │  │ - RSA-3K Signature 1    │    │                │         │
++│  │  │ - RSA-3K Signature 2    │    │                │         │
++│  │  │   ...                   │    │                │         │
++│  │  └─────────────────────────┘    │                │         │
++│  │                                 │                │         │
++│  │  ┌─────────────────────────┐    │                │         │
++│  │  │ IMEM Section (Code)     │    │                │         │
++│  │  │                         │    │                │         │
++│  │  │ Contains devinit, fwsec │    │                │         │
++│  │  │ instruction code etc.   │    │                │         │
++│  │  └─────────────────────────┘    │                │         │
++│  │                                 │                │         │
++│  │  ┌─────────────────────────┐    │                │         │
++│  │  │ DMEM Section (Data)     │    │                │         │
++│  │  │                         │    │                │         │
++│  │  │ ┌─────────────────────┐ │    │                │         │
++│  │  │ │ Application         │ │<───┼────────────────┘         │
++│  │  │ │ Interface Table     │ │    │                          │
++│  │  │ │ (FalconAppifHdrV1)  │ │    │                          │
++│  │  │ │ Header:             │ │    │                          │
++│  │  │ │ - version: 0x01     │ │    │                          │
++│  │  │ │ - header_size: 4    │ │    │                          │
++│  │  │ │ - entry_size: 8     │ │    │                          │
++│  │  │ │ - entry_count: N    │ │    │                          │
++│  │  │ │                     │ │    │                          │
++│  │  │ │ Entries:            │ │    │                          │
++│  │  │ │ ┌─────────────────┐ │ │    │                          │
++│  │  │ │ │ DEVINIT (ID 1)  │ │ │    │                          │
++│  │  │ │ │ - id: 0x01      │ │ │    │                          │
++│  │  │ │ │ - dmemOffset X ─┼─┼─┼────┐                          │
++│  │  │ │ └─────────────────┘ │ │    │                          │
++│  │  │ │ ┌─────────────────┐ │ │    │                          │
++│  │  │ │ │ DMEMMAPPER(ID 4)│ │ │    │                          │
++│  │  │ │ │ - id: 0x04      │ │ │    │                          │
++|  |  | | |  (NVFW_FALCON_  | | |    |                          |
++|  |  | | |   APPIF_ID_DMEMMAPPER)   |                          |
++│  │  │ │ │ - dmemOffset Y ─┼─┼─┼────┼─────┐                    │
++│  │  │ │ └─────────────────┘ │ │    │     │                    │
++│  │  │ │ ┌─────────────────┐ │ │    │     │                    │
++│  │  │ │ │ MULTI_FALCON (5)│ │ │    │     │                    │
++│  │  │ │ │ - id: 0x05      │ │ │    │     │    (See note [1])  │
++│  │  │ │ │ - dmemOffset Z ─┼─┼─┼────┼─────┼────────────────┐   │
++│  │  │ │ └─────────────────┘ │ │    │     │                │   │
++│  │  │ └─────────────────────┘ │    │     │                │   │
++│  │  │                         │    │     │                │   │
++│  │  │ ┌─────────────────────┐ │    │     │                │   │
++│  │  │ │ DEVINIT Engine      │<┼────┘     │                │   │
++│  │  │ │ Interface           │ │    │     │                │   │
++│  │  │ └─────────────────────┘ │    │     │                │   │
++│  │  │                         │    │     │                │   │
++│  │  │ ┌─────────────────────┐ │    │     │                │   │
++│  │  │ │ DMEM Mapper (ID 4)  │<┼────+─────┘                │   │
++│  │  │ │ (FalconAppifDmemmapperV3)  |                      |   |
++│  │  │ │ - signature: "DMAP" │ │    │                      |   |
++│  │  │ │ - version: 0x0003   │ │    │                      |   |
++│  │  │ │ - Size: 64 bytes    │ │    │                      |   |
++│  │  │ │ - cmd_in_buffer_off │ │────┼────────────┐         |   |
++│  │  │ │ - cmd_in_buffer_size│ │    │            │         |   |
++│  │  │ │ - cmd_out_buffer_off│ │────┼────────────┼─────┐   |   |
++│  │  │ │ - cmd_out_buffer_sz │ │    │            │     │   |   |
++│  │  │ │ - init_cmd          │ │    │            │     │   |   |
++│  │  │ │ - features          │ │    │            │     │   |   |
++│  │  │ │ - cmd_mask0/1       │ │    │            │     │   V   |
++│  │  │ │ - multiTgtTbl-------┼─┼────+────────────+─────+────┐  │
++│  │  │ └─────────────────────┘ │    │            │     │    │  │
++│  │  │                         │    │            │     │    │  │
++│  │  │ ┌─────────────────────┐ │    │            │     │    │  │
++│  │  │ │ MULTI_FALCON        │<┼────+────────────+─────+────┘  │
++│  │  │ │ - version           │ │    │            │     │       |
++│  │  │ │ - targetId (PMU/SEC)│ │    │            │     │       |
++│  │  │ │ - loadType          │ │    │            │     │       |
++│  │  │ │ - initStack         │ │    │            │     │       |
++│  │  │ └─────────────────────┘ │    │            │     │       |
++│  │  │                         │    │            │     │       |
++│  │  │ ┌─────────────────────┐ │    │            │     │       |
++│  │  │ │ Command Input Buffer│<┼────┼────────────┘     │       |
++│  │  │ │ - Command data      │ │    │                  │       |
++│  │  │ │ - Arguments         │ │    │                  │       |
++│  │  │ └─────────────────────┘ │    │                  │       |
++│  │  │                         │    │                  │       |
++│  │  │ ┌─────────────────────┐ │    │                  │       |
++│  │  │ │ Command Output      │<┼────┼──────────────────┘       |
++│  │  │ │ Buffer              │ │    │                          |
++│  │  │ │ - Results           │ │    │                          |
++│  │  │ │ - Status            │ │    │                          |
++│  │  │ └─────────────────────┘ │    │                          |
++│  │  └─────────────────────────┘    │                          |
++│  └─────────────────────────────────┘                          |
++│                                                               │
++└───────────────────────────────────────────────────────────────┘
 +
-+Security and Access Control
-+--------------------------
-+The initialization process involves careful privilege management. For example, before 
-+accessing certain completion status registers, the driver must check privilege level 
-+masks. Some registers are only accessible after secure firmware (FWSEC) lowers the 
-+privilege level to allow CPU (LS/low-secure) access. 
++Note:
++[1] MULTI_FALCON section in DMEM can either be looked up by
++    MULTI_FALCON App Interface, or from multi_tgt_table entry
++    in DMEM_MAPPER's App Interface.
 \ No newline at end of file
+diff --git a/Documentation/gpu/nova/core/vbios.rst b/Documentation/gpu/nova/core/vbios.rst
+index 17411f21b410..da759b56fb2d 100644
+--- a/Documentation/gpu/nova/core/vbios.rst
++++ b/Documentation/gpu/nova/core/vbios.rst
+@@ -44,7 +44,8 @@ VBIOS ROM Layout
+ 
+ The VBIOS layout is roughly a series of concatenated images as follows:
+ (For more explanations of acronyms, see the detailed descriptions in vbios.rs).
+-
++Note: this diagram is using an GA-102 Ampere GPU as an example and could vary
++      for future GPUs.
+ ┌────────────────────────────────────────────────────────────────────────┐
+ │ VBIOS (Starting at ROM_OFFSET: 0x300000)                               │
+ ├────────────────────────────────────────────────────────────────────────┤
 diff --git a/Documentation/gpu/nova/index.rst b/Documentation/gpu/nova/index.rst
-index c01dcc5657e2..301435c5cf67 100644
+index 2701b3f4af35..c01dcc5657e2 100644
 --- a/Documentation/gpu/nova/index.rst
 +++ b/Documentation/gpu/nova/index.rst
-@@ -27,5 +27,7 @@ vGPU manager VFIO driver and the nova-drm driver.
+@@ -27,4 +27,5 @@ vGPU manager VFIO driver and the nova-drm driver.
     :titlesonly:
  
     core/guidelines
-+   core/vbios
-    core/fwsec
-+   core/devinit
++   core/fwsec
     core/todo
 -- 
 2.43.0
