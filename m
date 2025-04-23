@@ -1,103 +1,153 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FE5FC08;
-	Wed, 23 Apr 2025 11:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620A5FC08;
+	Wed, 23 Apr 2025 11:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745408249; cv=none; b=nYjFosT4XeANYXU71+rAAjS6GtA5JPvJ2GL1F5F1yE2w7ek/OiMbYagICl/gLlqCzLv8YvKJ7rgoJ4QmX+bjfZ66tuuqgvtQeUYj2dkGgoNiFJj4kRzLpLIddus6zqsiwmg/LgEXhbFmZaFjfylJe/Lxd8g41bG+wNrcD4UPhIw=
+	t=1745408254; cv=none; b=FHVbqB7I2gdss7OGJeceCZc0XaC37/tabiuNvZ1OsjJyPgEQwkCKrxfc305OUbJkSSNNqHOchyxPWYM+NPzzIUFyK6ahn1ZO2eIahHYninJ/tAQQjEP8vOZsz76xlj23qIj6eAXSP68omWWtmNZDZ0naHQ2kWiUOVHl7JF2XvbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745408249; c=relaxed/simple;
-	bh=ZOYMbzEXP8RLe+8yWrKjk75zGEZAVkvv3WQseXJv0cQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YUIAh0xzBT0Ib9VYPo0XyJgDp3sAIGckBla2XNkuGgoMIuCpSd/eK3rMbfAHajRw3AtNKsmUp9wTQz/HdP4T8nu0Lv9wqcIIUk/rhaGbixOY5G/+pM6H++qZJm7hQkGbFiULA22eoJhUlR29+SorKRtaykAqPW47pRqq2uu8oKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CFRKD46K; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1745408254; c=relaxed/simple;
+	bh=6OQ2IkiNk4wkMhSgShhUXpqGsET/HqmzKTydByHvaQY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qxzMOnvjG4o0C+Wt+8gx+R6TXNEslMnBzyruBKwb8Mw0qCCYaK+F7+UA9YLlxZ0X9hO9DzgAimSZ+Aply4CYuxlgHIFsGROLa9KA4CqyA+rnAtH/IvB/Iv4HwL/5wpP4/mgYPzI1OdRsbw81dIFXXy2Up7Zy+hYzWlcecupJAYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CFRKD46K"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39ee57c0b8cso6121145f8f.0;
-        Wed, 23 Apr 2025 04:37:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745408246; x=1746013046; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sOaslwO/iDwgRO6fHWCqrlxeNb4sZEAWfunB5Ekm3Yw=;
-        b=CFRKD46KAxCSY0GnRw3hpSW2CTnMcs+t5+zUcvTICIm595UnYv+fNvGC1IaEWX2VGj
-         G8Yerid3y+63qAbNBjy5Z91GmvWrdZaFzsz7iXIKQo8UInPK+QIxyUX3BZN6LouKsZ6x
-         hR2/zdMHFzkhz4UMykPFcwPAFF6EOwjs3AM7YU1NVLs0shtnkNmiWaJ907yPuKrsGD41
-         bnhN0CSgvJtG25s533hJ3HfDRh87ZOZzt1EYdjgbHI//bSZn1DXHi+Cqni1sz7+R5qsD
-         2qYxxaNnRHHMID4Ppbw1f7UyUu+V85p8bILHVUxHxj+R5tdktrDpMm25oApGpF9RqMeU
-         ag3w==
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-86d3805a551so2659217241.3;
+        Wed, 23 Apr 2025 04:37:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745408246; x=1746013046;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1745408249; x=1746013049;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sOaslwO/iDwgRO6fHWCqrlxeNb4sZEAWfunB5Ekm3Yw=;
-        b=ACYaAK8cWKihFAcJvUKTR2pwhutWHqm2J7YMTIoSEVs6dPScAoToHtdf2Rsy7AQnbx
-         eqrTM5s7SYlgz0zkmMOQBNK1IC+ANgw2VRPojCfISGA4qMuOgSuBFuYiSHzzW0o4c9zQ
-         +ebTMubYIGYeypQiEE+hFCAPvrJwS5gY2RJjHMC2uX1hlcsi0LM3HAnoWZ2vBGSq1IGx
-         hq815QSHqzBlBowR3BNdL7VecHPkRjcULaYHWwItSiIkWtFaHv8BRtY95FW3I2iO4hDS
-         CUVppMFi4YTNUSu6UAn083mZsAH2ciEWgn2Bvx6idIQrSkVRn6T4QkcbNCQF12aih6UE
-         UKmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ+w8ahaAOeaWCjBxujFKzv7z9xHuhBeLR1T/tF1LHngzybhGrpvizLQULxGL5YUrEK7qwB/MIBAMHbFM=@vger.kernel.org, AJvYcCVpbCVTde6MIACnQ/zLCt6aOsAKtfSVcavgfCIZ9VzHJZ5Nb0Gihg7ExleBTuw07cHjGvNN8XMr@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/3sZFMVp1LwJMFx6fiST35JO4Rtx0U1+7dQLPLU/TZYu/rUT+
-	G1aWvU6pCykERHSyJNr6QcZ5rFvVqWXK7StdMhNGAvD/1xQpP7jp
-X-Gm-Gg: ASbGncv6Gmqr9CjhmDZziqNX9kuuhBwtRCDXtOA0908q1/f7guph0yvnmbdqNKSPr2S
-	LEMJsMgWtNo/Wb4Fy93eeIjTYe/zeA/aqYTsVb2441PcHBiakezqC0OQ2F3nml63W0odOE9rYYC
-	v3mZ5eaQ84k2FjCqgTZKR/gnuXlu2u3K6sMSohh0QMh7sdthJtmXgeH5GMad8SEaha+Yaqd/NBa
-	M/U62SwxS64DnNi1bS1kvzbyztrK3+3EJ49gL2vJgMEUB/X9/7jpAWlCL1CFTsRTXq5ztH1ejcC
-	KCAq2g+oWe8FcqejddhYanuYi2MUImLGlRsRxm14aA==
-X-Google-Smtp-Source: AGHT+IHSoaSXaAgj53jWAGtI7Z7mMkdXhhLo9jTahymT0NfSoVyVjCueixP+i4S5vMsc6dh5pNJwhw==
-X-Received: by 2002:a5d:6d88:0:b0:399:737f:4e02 with SMTP id ffacd0b85a97d-39efbad2f10mr16252645f8f.39.1745408245796;
-        Wed, 23 Apr 2025 04:37:25 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa43d22esm18699323f8f.52.2025.04.23.04.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 04:37:25 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net: ip_gre: Fix spelling mistake "demultiplexor" -> "demultiplexer"
-Date: Wed, 23 Apr 2025 12:37:19 +0100
-Message-ID: <20250423113719.173539-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+        bh=aDuaTM9ibNIGOgABq8eZY4S2tIlVdKvchipAQzhVOaM=;
+        b=le6f/7Df904/SroYxS3IuE4ZGyVBwgdaJKT+WVpcUORwNV/ky8WVh8hryHLElAOt27
+         tRpWZPd7+W/W3mjHAKec/CTTkFvmRtXMiIS6M5XFUBicbWamP5baUiSiBXNaVVReoXM7
+         EqKWZ3JaA0ZVMg4ORoUirhSAT1LsZUJo0T2PQZHdYeVTnb/fkauKWp47mOBXBjib12na
+         o7aQo5oKx/o86gRwDTzIImmsGsHa35cjNxGfC50LWUsvG43ve32GiqdqqVAHJTES04l9
+         TcQqFPE6It351oWPWNACC83nxJKc/UXbXkqAabOuNB3/dXQKHsuws/lF/KT2HTszdtl3
+         7n4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDl27DJcHKDrJFbbtjrk2eI6egDJpj9QZLBf50rufUeWO4AhXgdxzN4GxNziEzQm9eFtm5nHHLNkAP6WqaHwjPZ5o=@vger.kernel.org, AJvYcCV8i+S5XPoOG9TWqFAm+RPZpLmobbdnqWv+aj6maBeh3Yf6mt6IIVZYH3YnlqvYqf3TJfvke/X2G4d6MLQk@vger.kernel.org, AJvYcCVfOAOK6JQzHfxB/nxuYypoTKLPhDaj4CV1gbDAH2LFYvn5UOuIs5EvkiheAXewBhELUCf8SMq7zggW@vger.kernel.org, AJvYcCX1KDFh5AV0QfEEVouUAHioCm43t0dIBJRX6fUbE31YwaP2kj6otPavWLI5U524dDgzFp3DPspLg/KN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzjr9woYuq/mXKa4a5n9Uzlth9cihmNpCZcqQaxuI8abts2EBI0
+	jZtUKnhTg663+y0mZrPFufTwCvrqcE7UTFaV+cnmk6vQcpI+c0GSNidEUaUKkfE=
+X-Gm-Gg: ASbGncuHjZI1pBpM9x/URackJBoz8CFbzUvHU5LRLFy+1DE8ZBhtVGSdFPfvVSgZlDE
+	8Z9E8chYMIoEmBjVZSYJBur9H6z2IK7y5ePYfaly39hBR7Jixph4e5pUxyT4sEFj0vB3X4LDOUp
+	L1UTU3hD2/DDyyI61k/RNqLg99ImKYWTxZEHuFBLsWYCqSR52/9szLWCeX7MB7SsbD3hrDaLQdM
+	zdoZY0yqFivzM7fRCpoFSMabbyJVSpKMKiJDEMzXbWNZpA6mSmPcfbgMhmUTSgqSTI6i2VTJP4b
+	QlUbAswuqFyAIi1KUTg3qoqDg69P9EoW5ZTkndoORy8974A+zD/zMs0Kse3ZB1S6QjWvKKoppg7
+	latI=
+X-Google-Smtp-Source: AGHT+IHhfmifE9P37+rg1v5BsnaKS0MXrAvHKGQ27idYcFRc26FFY+/pKYWYsIFHaI1HBYucH6GDpA==
+X-Received: by 2002:a05:6102:2259:b0:4c3:64be:5983 with SMTP id ada2fe7eead31-4cb8023ef61mr12389892137.25.1745408249183;
+        Wed, 23 Apr 2025 04:37:29 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-877647776b6sm2718858241.26.2025.04.23.04.37.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 04:37:28 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86fbc8717fcso2382967241.2;
+        Wed, 23 Apr 2025 04:37:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUHT+BqWU0un8QmQ1x2ICMyoJKW5dWOU6sMy6StSHicNZPd67wb4F2z1otCnS437N561BahYrmEphrP@vger.kernel.org, AJvYcCUf5/e45t9sRUROWltZ48q5pMbiXPxvzUsXC6TGJsdaJ19dqpjzToCe77/6YXK2mMTmlJAVO/jVe3J+@vger.kernel.org, AJvYcCWPM+N3qe7G169BwBzsixI3+L4e0q5DKpXjtAZc1aawsfpSgQiRTDYkCKsuQn0ex+jhDnZRpYq4q/sIyXb6@vger.kernel.org, AJvYcCX0nzmgX8h//ahmFfx1RJURlVzU2VSAJS6RUnSLq0KivDnrgJyltuW36dW0qyPqlnKpYtoFM2uS1+PB3DDyelznBpU=@vger.kernel.org
+X-Received: by 2002:a05:6102:27ca:b0:4bb:9b46:3f8a with SMTP id
+ ada2fe7eead31-4cb800c1a61mr11696598137.2.1745408248312; Wed, 23 Apr 2025
+ 04:37:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20250422173937.3722875-1-fabrizio.castro.jz@renesas.com> <20250422173937.3722875-3-fabrizio.castro.jz@renesas.com>
+In-Reply-To: <20250422173937.3722875-3-fabrizio.castro.jz@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 23 Apr 2025 13:37:15 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUKVDzLUfcr_0R_VQ0TzBtPWGVbwfX_pKbwOjzuaBLcEw@mail.gmail.com>
+X-Gm-Features: ATxdqUH9su4W4mn8i54UlLb_HgPMtRPSv1JRSwXDunzWGUFbnDSkwnpEps3CkW0
+Message-ID: <CAMuHMdUKVDzLUfcr_0R_VQ0TzBtPWGVbwfX_pKbwOjzuaBLcEw@mail.gmail.com>
+Subject: Re: [PATCH v6 2/6] dt-bindings: dma: rz-dmac: Document RZ/V2H(P)
+ family of SoCs
+To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, dmaengine@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
 
-There is a spelling mistake in a pr_info message. Fix it.
+Hi Fabrizio,
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- net/ipv4/gre_demux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, 22 Apr 2025 at 19:40, Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
+> Document the Renesas RZ/V2H(P) family of SoCs DMAC block.
+> The Renesas RZ/V2H(P) DMAC is very similar to the one found on the
+> Renesas RZ/G2L family of SoCs, but there are some differences:
+> * It only uses one register area
+> * It only uses one clock
+> * It only uses one reset
+> * Instead of using MID/IRD it uses REQ No
+> * It is connected to the Interrupt Control Unit (ICU)
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+> Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+> v5->v6:
+> * Reworked the description of `#dma-cells`.
+> * Reworked `renesas,icu` related descriptions.
+> * Added `reg:`->`minItems: 2` for `renesas,r7s72100-dmac`.
+> * Since the structure of the document remains the same, I have kept
+>   the tags I have received. Please let me know if that's not okay.
 
-diff --git a/net/ipv4/gre_demux.c b/net/ipv4/gre_demux.c
-index 6701a98d9a9f..dafd68f3436a 100644
---- a/net/ipv4/gre_demux.c
-+++ b/net/ipv4/gre_demux.c
-@@ -199,7 +199,7 @@ static const struct net_protocol net_gre_protocol = {
- 
- static int __init gre_init(void)
- {
--	pr_info("GRE over IPv4 demultiplexor driver\n");
-+	pr_info("GRE over IPv4 demultiplexer driver\n");
- 
- 	if (inet_add_protocol(&net_gre_protocol, IPPROTO_GRE) < 0) {
- 		pr_err("can't add protocol\n");
+Thanks for the update!
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> --- a/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> +++ b/Documentation/devicetree/bindings/dma/renesas,rz-dmac.yaml
+> @@ -80,12 +85,26 @@ properties:
+>      items:
+>        - description: Reset for DMA ARESETN reset terminal
+>        - description: Reset for DMA RST_ASYNC reset terminal
+> +    minItems: 1
+>
+>    reset-names:
+>      items:
+>        - const: arst
+>        - const: rst_async
+>
+> +  renesas,icu:
+> +    description:
+> +      It must contain the phandle to the ICU, and the index of the DMAC as seen
+> +      from the ICU (e.g. parameter k from register ICU_DMkSELy).
+
+Doesn't really hurt, but this description is identical to the formal
+description of the items below.
+
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      - items:
+> +          - description: phandle to the ICU node.
+
+Phandle
+
+> +          - description:
+> +              The number of the DMAC as seen from the ICU, i.e. parameter k from
+> +              register ICU_DMkSELy. This may differ from the actual DMAC instance
+> +              number.
+> +
+>  required:
+>    - compatible
+>    - reg
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.49.0
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
