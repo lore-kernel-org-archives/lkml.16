@@ -1,80 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D84280CFF
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E575C28152D
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745425769; cv=none; b=hl8hBBStCEah5rYnp4IFpc1m/8wO6Trd2Yi5Mt36hrU9KBwDTKL9R37t7JcP1PhjxEFMimq4XqZF76SCMmN0riiyOycaPFljcDVWmOu21nOEYuYHerKaEMDP2PZhS20cUVlQ/haNBJ6TLXp0J8Z7iIIdUQF5oFzG88qBtBSFRCE=
+	t=1745425772; cv=none; b=CgNN7iLRPjaIppAUEcv/0FyBnEoHgnAtXKGtPSIfRwES5w8Uw3wwCsOkYeqUaNm52usOkCm1ShrkRWQP2ozSWZ64ablCKilXY2sn2i6SbF/LiADD8ymnn1SbHvio8IMTN7eUhbOE79AVV/l3JTxOMByWIyLdnkIhz4GHc2gQ45s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745425769; c=relaxed/simple;
-	bh=6SjkVadR1Xoah30CU+7wRwLOERvrXoUDiWriqrgG2zY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ROWeY2+CuJ1Vh8BpHuIkrcP2/2sUoHNpTN8Cns3DwdQ4ODeXCa5Vp31nkUwWVVMqrS8NZDk3rQyLV3SfrHqahwMA1epto7Y+aQgqOti8i9WIv2rnZLPGbAfb28w7UerDFQbZ779VD9Y0lyZVcUlMTqRnSJ81cCUuy/+z6SptO7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPGj9QND; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPGj9QND"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 036B5C4CEE2;
-	Wed, 23 Apr 2025 16:29:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745425768;
-	bh=6SjkVadR1Xoah30CU+7wRwLOERvrXoUDiWriqrgG2zY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jPGj9QNDr5ybFkYoW7fMOhBtD+p+FoNHs8tpAiUU5G6GZ3cMJkC9pbhC7qgxgO5tg
-	 +KIo3zlrtQvpY6LUPSy2fC/GpIMerXa+br2FG2bdnWXOH4t9s+A/mKpUFEqJ7xwAZX
-	 oYLZzDvcNo5HV0gvJODBO60mqNs/OnFZfQnBxnd7QzSoJmwemKnhxgQ+DPFSXu8sPG
-	 neicloKN61h7SApchx7Am4uBso5obtL+92rVb++/psG+8iFlfHfCRCjDxhd+lcNQHW
-	 /z4bC2Z9DRZz9oRNxvZBH440N++o8M04pPrGlSyaLr2GHhLtGRLAgynN7xPCX/9wJx
-	 Qyar3LvpaE0ow==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Alexander Graf <graf@amazon.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Baoquan He <bhe@redhat.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] kexec: include asm/early_ioremap.h
+	s=arc-20240116; t=1745425772; c=relaxed/simple;
+	bh=KxcHnZYYoBmp7BD7P4s3CikLglkzwdJOyyb/R9wQQUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XjE1AoToAyNTU34TFkxfd+1yWHbsTX7DDCY1tFc6bEF0p3SskEisakOLMOMNYtRE4muGc/32mwDW1MD9WqsMoZ5eBc2nl967Ar8bmSXp3aWCb9nb5HFIgOAu4Iw/IkwZy6l97gGKbeeAr4W8PD/Yt2g3GKVp+xl9jDBPOqpQpk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1u7cyN-0002kv-71; Wed, 23 Apr 2025 18:29:19 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1u7cyM-001kOA-2j;
+	Wed, 23 Apr 2025 18:29:18 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1u7cyM-00H6e4-2N;
+	Wed, 23 Apr 2025 18:29:18 +0200
 Date: Wed, 23 Apr 2025 18:29:18 +0200
-Message-Id: <20250423162924.2213664-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v2 1/3] soc: imx8m: Cleanup with adding
+ imx8m_soc_[un]prepare
+Message-ID: <20250423162918.en4zmphifvot43dt@pengutronix.de>
+References: <20250423-uid-128-v2-0-327c30fe59a9@nxp.com>
+ <20250423-uid-128-v2-1-327c30fe59a9@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423-uid-128-v2-1-327c30fe59a9@nxp.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On 25-04-23, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> There is a common flow to i.MX8M family, map OCOTP register base and
+> enable ocotp clk first before read Unique ID from OCOTP.
+> 
+> So introduce imx8m_soc_prepare to do ioremap and enable the ocotp clk,
+> and introduce imx8m_soc_unprepare to disable the clk and do iounmap.
 
-The early_memremap() function is decleared in a header that is only indirectly
-included here:
+Wouldn't have gone that far, but the changes lgtm.
 
-kernel/kexec_handover.c:1116:8: error: call to undeclared function 'early_memremap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
- 1116 |         fdt = early_memremap(fdt_phys, fdt_len);
-      |               ^
+> With this patch, no need to spread the ioremap and clk handling in
+> each soc_revision hook.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Fixes: 4bfe738ce89a ("kexec: add KHO support to kexec file loads")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- kernel/kexec_handover.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index 4bbc6f5ef723..3e8a0118e182 100644
---- a/kernel/kexec_handover.c
-+++ b/kernel/kexec_handover.c
-@@ -18,6 +18,9 @@
- #include <linux/memblock.h>
- #include <linux/notifier.h>
- #include <linux/page-isolation.h>
-+
-+#include <asm/early_ioremap.h>
-+
- /*
-  * KHO is tightly coupled with mm init and needs access to some of mm
-  * internal APIs.
--- 
-2.39.5
-
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de>
