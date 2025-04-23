@@ -1,478 +1,233 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638C72F32;
-	Wed, 23 Apr 2025 21:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745442531; cv=fail; b=gLq224WobND9AWPSfwi/RNbJRQGW+4StrOBqTNRh3p5ZdJWL58VWx4tKhHIfKQRz0fz8UnRCSNZC3Bb3juP2yD+DumfuQ7lQnY2wU7Zt1cuavL73FQtUDm8DIQL960wehZF4n08AuAOgEzOpNOy3oFnqTuS/sti0zvy9g1UQWRU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745442531; c=relaxed/simple;
-	bh=Yb37NOALkdEZ/tijP4/iCgKU5JDg+bbkKKZlzFevk6A=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=KY7nMOZmmbPcUxICAgeH2Du7Jwd3Xm8DAW/pENvy47m+b+5lUgA6JDVMlrGLg42mgR1wCb0/lA/Oyx3d1r858pTzNGOFJMZkVMJ8/ge/6+cho1npdCinL+pIHPxphfaSYnLHXkeeXaeQ4yZzvj+/G2VuGD76MAyQg0uFvP1AZf8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=gyK04edq; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=JqOmUKvX; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD952561A3
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745442613; cv=none; b=r2T9YHtfDmA5PFn2e8XwG1/MActNcNfIcUFsXHOf1SsFCqQ9cdnGd8xr2PjDDcG666k8cWZHCEZCtDnD4xyoIg3YpxI++9JbcBJMbvdnGCe4//9sPRBAQ8QP6gk/GuO07lc97IcE2y37trEBj/s8p63ZPAi7tVXnoD8BKNuRpdM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745442613; c=relaxed/simple;
+	bh=jeV2CdgCXKP9mX1CiT3h3t3hCkQmPqAG4j55H1iiq88=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kh1MW1ouyMh0ZVpW4MvYIPvHdKK0WLr6ha2tUTy3oFJrjZSzX0k22Tu3DwLcVFerTOyJiceNoy8WKNGXFr/xLRYFxfq+lKlu9RwyCwT7pmwL3vqfT4AiBNOohkTgaBxz7aFCX5JG5UqG7zCD/22yVNpGG6jnvpKF35pNYyMd0+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cuqlrtKY; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gyK04edq";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="JqOmUKvX"
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NKBsGa004669;
-	Wed, 23 Apr 2025 21:08:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=Il7z9nBtuxhg0NgKa9SaIbJ/KhH9oO+vBGvBScW6hXA=; b=
-	gyK04edqM2YbE6oH8b0t49JPvtOtyBkXsZHgWa1EjlK+uchRc5oyKpfThmumyd5L
-	HNpIt2MAnb8XSnkD5PdM/yObMHXMXgA2zKNB7WLx0N1ST2sydnHnkUbjexnv02P5
-	JYs4BJt5MHZmPrQZ4GtgTOi461AMMX6DAYPz1QXQ7rdkptqxJABlgn4YxY52bc+5
-	OtOOigDednQJLTT5diRw8ToFcrnJvefYtl88ZTaphZNgSmGRB4ImQBWgaT3P29qL
-	YxJNn6fzKj2S70kdg9xOP/gE8n4LUA1h0hzjKPicPM84ojxHK+HJjd3vwGlj2xb/
-	3PXluR3hgsSgJPBfzYcnoQ==
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 466jha2bn9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 21:08:08 +0000 (GMT)
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53NJhCUO017326;
-	Wed, 23 Apr 2025 21:08:07 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2173.outbound.protection.outlook.com [104.47.56.173])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 466jvfnxc3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 21:08:07 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HhH6wrG3FOD6USGxgOxtR5HodiXfPz11uUgU2FkuOhKrYeBfT+rnL1turobIgZvQJ3UgNk7Whl5EPZVaz8HOIW4b/cFE/xUVX4sCnjP2qtsSHeCULMpIJnOKhnrzE2s/ItE1E6vB8Zd6s5Q4z8tafextepykka7ziRotC662CHiebFiLluS2nJXpX08X7maMfFgo5p/HQ8xi1a5E71jqnkzU+rHPXsuMY1/zTYAW76TcBlYnJQ5YS3+xDY8t6FfMcK7fzys32WVWN+TNGgbgJGCxvm2Zzp4w9qJEc06vyh8n6XBjzwQWQn+Xa0HU91sl68UuHPGDMXCfYy9WAWnKWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Il7z9nBtuxhg0NgKa9SaIbJ/KhH9oO+vBGvBScW6hXA=;
- b=UG9PalBUT7G0wnLChMB5RGwzwPqEIqgkkt7b/0f8JPTlroUg74DV9QuWRifvDKhRO55YUE+UnpYXnSR55WDoZHqJvsIU4101VzoENIdqo8/e3kM6VSnXgpzikcZCTasvsHJZy+MM3wTZSDeQO/Net8AdNuMfPQmwtlB61lC4qBxDtlYdsBpx0AcBHlhkbYK8CFg9NiINrkH99u+ZYn6qZf+iq6e2w9yPAGTkEk0f+vmhVifMy2Pmo6VMIsnDWFrdjYjy+YE0vNsJo3wNGu4g0hjQ2ZFUw0N9xSYb7SKRDvbZkdUjqw0KyclsyRsGX0PZdi4Y13+XR+9CKqb2OYrDQQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Il7z9nBtuxhg0NgKa9SaIbJ/KhH9oO+vBGvBScW6hXA=;
- b=JqOmUKvXgD2qkDSKxhefsou2PejPca4xuIq5bvdTPm9xWECJBYnbGJWU5l5ZgxaJsrUjaLgu/T0N3N1v6pIgtRW3Z13YzKCFopyWLv6BFM0tD93E2lB0dHNAFv7VNvsOrZqOTL3pkIAmiMXNSQHhQyOon97DVh/gMnCw2rbcPAE=
-Received: from DS0PR10MB7224.namprd10.prod.outlook.com (2603:10b6:8:f5::14) by
- SA1PR10MB6662.namprd10.prod.outlook.com (2603:10b6:806:2b6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Wed, 23 Apr
- 2025 21:08:02 +0000
-Received: from DS0PR10MB7224.namprd10.prod.outlook.com
- ([fe80::c57:383f:cfb2:47f8]) by DS0PR10MB7224.namprd10.prod.outlook.com
- ([fe80::c57:383f:cfb2:47f8%5]) with mapi id 15.20.8678.021; Wed, 23 Apr 2025
- 21:08:02 +0000
-Message-ID: <06d3a0ee-9f27-4f57-bd5e-5c493a9caa46@oracle.com>
-Date: Wed, 23 Apr 2025 14:07:58 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 09/19] x86: Secure Launch kernel early boot stub
-To: ALOK TIWARI <alok.a.tiwari@oracle.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-integrity@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
-        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-        iommu@lists.linux.dev
-Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-        ardb@kernel.org, mjg59@srcf.ucam.org,
-        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
-        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
-        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
-        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
-        dwmw2@infradead.org, baolu.lu@linux.intel.com,
-        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
-        trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-10-ross.philipson@oracle.com>
- <d1f86aa1-2e37-4cfc-b62d-7529ac58c8ba@oracle.com>
-Content-Language: en-US
-From: ross.philipson@oracle.com
-In-Reply-To: <d1f86aa1-2e37-4cfc-b62d-7529ac58c8ba@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PH0PR07CA0095.namprd07.prod.outlook.com
- (2603:10b6:510:4::10) To DS0PR10MB7224.namprd10.prod.outlook.com
- (2603:10b6:8:f5::14)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cuqlrtKY"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAOVWv004247
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=Gaa4TeturWzyIFwu8cwVqF
+	43gCRMKyHks46p68aqEw4=; b=cuqlrtKYH/23nh7T5GFBBLqsmjkCFRcHDPY+ou
+	DbBYYb8UNSI61ec6qhe3SEa+XPPUxAXGB5YGvbJKLdq+NVd5oMYUGnu3EBNPnMUB
+	Ft82kq7KZ4GXfASALFUoo4RYPD8GgvHMDaDZLarKtRt1yvl0aGKEzjDOHskR0DFT
+	RlLpUYGfXSl2mPkS/i+8W2LUZ8zqQ/pU2+Onkxbj3AjAf1t6xY9W/T6sd9UHdaCy
+	CFEjiBUbmcUXU6rWDIjDJLCywivdQVNNnZvlSCrXHoWni+Bhbm/E3AECOzPIb4lH
+	CnxOsiRji2GC/gKK2u+xJo8BeVyeMm9UniCbQWtvAiKNbLKQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jgy3dfw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:10 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e916df0d5dso4973206d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:10:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745442609; x=1746047409;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Gaa4TeturWzyIFwu8cwVqF43gCRMKyHks46p68aqEw4=;
+        b=ti8MyxLm3xJ03KP7IxStsw+e33HkCeUkxdE07qKiCRpc1hK7JHkQOnhNVoh6HrKIy7
+         pUzVy1TTodxOh/64aLfDIpmYrPTMaNgEncDKL8g3EAWHBRV9umtyhcu1z+vnBTvOg53B
+         nkU9MUvM5KBISuZzqgK6UFttUqYquj1ICpGE8wySQGcykMyJu3stE0HhsP9foxPlk5Vs
+         gVxTpYRTrcx1+0tuVrTOehKNCVvbFzVhqZRplULiRYSE6jCLjrw/pdE4Q2pDiPPD28si
+         Qnob6UXp+aIt+lYmw0xL1RbjdCAaRxPurC56g+rsatip/rYLZXGrb3FTPHu0PD1JvVxk
+         654w==
+X-Forwarded-Encrypted: i=1; AJvYcCUt9NnXudX8Y9zJ0ZzkoXFDhZme5HMkWbQdrUGhmqBRts/4ByCX7bifQtVap/RbbzvwC10ipFgPcdCBZI4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv++KukGe7Uoa9tGilWTWwdPBxEBkTzWK3PZNj2DIgw63ctj6G
+	PsHDfOZuHai687itmjt0Jyd6virZEvfBX4g2shW1xSTWcBNHShytCjSfCsI0uR9Rb28iy6ZIhYE
+	h0UCYHOVfbF5PLg40FvmHyw2hecXexmJRm3OcHBsdQm2zzKRcPg2c3i7KDUuesIk=
+X-Gm-Gg: ASbGncueWTl9+plVNph7G2jTbl/NldF20c5PFS/68NjEyItuinLGzFFto0XveSyC31B
+	7BQrmS9Pt2VQnvqrpqMa44SM+VnfZoRsruFIuZ0Pmmbz4fKGgTIKSXjDTBhH/3oOS19U5sfrVMT
+	mqD9gay32bdTxmd944TP7oFHQ2wxlTtcoT3CTYFwMvO9lEWiN0/ZqqIFmGa2xTAcCpnyqZQmbtk
+	WQtBk7Y83yDGnPkmblomowyFjPQAF86GSPBl8Xnlr2azAxLMZsPh0bDri19JzG8/knmWHNubU8X
+	GeyjpxQKaNvYZpfWeNYp6ADrKOTFR3zxZrzk/SdLuSZ95tlkI/L8ZmPyjp/G/GqVrd0nGPZxbIA
+	A5ECd/sMevvkOD7bZ90eULgKd
+X-Received: by 2002:ad4:596f:0:b0:6e8:e828:820d with SMTP id 6a1803df08f44-6f4bfc739aamr4372166d6.36.1745442609359;
+        Wed, 23 Apr 2025 14:10:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGE7Bn4p+WATg0q+ICMoXucgKsyTUfj4NHoRs66BP16GFpVxFmXOgfq2cYmjSrspq1UUkzsmA==
+X-Received: by 2002:ad4:596f:0:b0:6e8:e828:820d with SMTP id 6a1803df08f44-6f4bfc739aamr4371446d6.36.1745442608764;
+        Wed, 23 Apr 2025 14:10:08 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb3987csm3852e87.59.2025.04.23.14.10.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 14:10:07 -0700 (PDT)
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Subject: [PATCH v2 00/33] drm/msm/dpu: rework HW block feature handling
+Date: Thu, 24 Apr 2025 00:09:56 +0300
+Message-Id: <20250424-dpu-drop-features-v2-0-0a9a66a7b3a2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB7224:EE_|SA1PR10MB6662:EE_
-X-MS-Office365-Filtering-Correlation-Id: e44a8957-9b54-4e50-24d6-08dd82aaef15
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZnVkdDFqK2hjSXRqaXB4d2lVNC9rMzNNaW5FcWRPcHgrdnZWd1VuRmc2aDFq?=
- =?utf-8?B?NmxKWW1aR3pyVklXK1pBMG1CcFZldGo4RzlZVEpGd3dLQldYUGZQTGJBWHZo?=
- =?utf-8?B?TGhlOHZBYUx3LzI5ZkFZdjJkYml0emhHUWs5WjAvRm11bU9BdWdoWS91ZDB0?=
- =?utf-8?B?Q1BlVmtNQ0w2SjgzRnM3WGxTVVN0Q0xwek1oTGtLTU1pZXY2Vk5PMUFiVk1x?=
- =?utf-8?B?MXFEaXE3YzdId09hWjNKNlhUR2tYTVJXcUI3U0l0MGwrcFkrTG5yNkhjbTZ1?=
- =?utf-8?B?SG5jZzNFaE1zbWIrS3M3OWdoZnlQNk5DdSt1cWdWZU1hcDBZSjEwWWFEWGVl?=
- =?utf-8?B?Q01GcmhrN1J0aEp0Nk9wN1djenk1YnRRKzVpNnRPNmNJd1Y5Mk9Vc3FQTytY?=
- =?utf-8?B?ZjRFSkdIQXNXRzk3anovajNrWGVaOEZlb3NydFJSR2U2WjhhWllpUDF5R1hs?=
- =?utf-8?B?LzB1Z3ppbVFCOXBuM05VL3NFMHBCaW1QaGY5bWZOOVV4cHhHaUR2VFVoeXM1?=
- =?utf-8?B?OWRYMmU2eFpQRXdDelV3WWlYTm9nOEFLTFQ2ZUFTMFNyV0JRODh6NEYzY3kv?=
- =?utf-8?B?RkxvTlluMndMamQ4UTVjQ1NHemN4cUhFZ3c0ME1EOVcycDNRcjIwOHFRd0k5?=
- =?utf-8?B?VkV4OS9LeWNkaCtmaEgzVnBwSmpBdkZJWDgxM3owM3JNVnBxUXhnbStRVDJU?=
- =?utf-8?B?dkxpWGcyTkJPQWtpMStmKzJVdzVqWkQyMW9haHdYZEtpTjRzTXpvYkFGSnZr?=
- =?utf-8?B?UEhnYXFGakZjMFhpamxobzRpRGZiZ2ljTEJKeVYvQXdPakxVSHBYY1NDQ0t2?=
- =?utf-8?B?R09MMk5HaXRlb2pHc0ZBZ1NrcDkxR1BNcW1QTHM5RWsrdkJpSFdIblhPRzNt?=
- =?utf-8?B?Q2lDd1RhMlZmRUl6Q3pTUFpkQm5VSlY5bFZkKzMzQTBJYnVxWWUvQmlRb0JB?=
- =?utf-8?B?UHYvdzMzNzFORlh3djFVNjc2ZjJNT1VNM0tFTXlGNm02YzJqSHFtWklNdHpE?=
- =?utf-8?B?SktpbjRKWWUvSWpDalNZTWs0OU4zMDl4Z3hOYVN1bm9Yd2UzMEdYRVJ0VnFq?=
- =?utf-8?B?bFZYVVowMnl6SEpQZWFsczBjaVl4M25XWEZZOXFnbzRzSnJhcGFMMmVQQXJU?=
- =?utf-8?B?b3B1Sy9FOUZNSFdPVUx0NWozdVRIdjE3a3lpZENPc3lSTXYwbnNVWkxOUU00?=
- =?utf-8?B?ZW81ZlhoRGNabVlldW5SdnlBaXo5dmJqblE4Q3RsbXBhWFExeVM2cFJ1bFBM?=
- =?utf-8?B?R1NML3Q0dWIxU284Z1VpN1NaZGZrdDQrUDdLVmp3aDdiRnpKcm9oekVSTkpr?=
- =?utf-8?B?eVl4aHNIZ1RTSUlVVjZGNUI3T1c1czVwdjlUOS9tUU4wSjdQem9HNWpWck5j?=
- =?utf-8?B?YlR5UkV5RjJhY2tnTHJWNnI3VUo4TzlteCtyZnN1Wk1rc1dBTTJsSTZObnhV?=
- =?utf-8?B?Vmx5ZGdiZkh1ajVHRWprNW1hNEx2QXkzU1YvUlRLQ09ZeFh4Q0NiZVh1MW1r?=
- =?utf-8?B?L2JQV1g0SUd1RlBKZkdSdmptUjJFVkc3S2NQSmhDa0ZpaFAwMEpQU3VxRWxp?=
- =?utf-8?B?N01YZXZycXVyenkwRURiMHd0bTF5VHNmS2tzcTBsSGlqb0tEWTFHS0s3UGIw?=
- =?utf-8?B?bXBoeDZkVGJ4MzNYRWQrWFoyUWF1Q2RyS1ZmSnQrNmdsM3ErTnJzdzJqU1My?=
- =?utf-8?B?Y2lwclZaMkRpUkxVaUN0bnJ2dmhCWDdsWmZsbmJUb0d0S1J4MktKSGhtNFBz?=
- =?utf-8?B?bmdpdnR4b2FiZWZnNXcrWWNVK0NKKzV2NmVtM2s1RmxPN2FKT2ozNkVwS0Z5?=
- =?utf-8?B?YWpGRHY3T2JrcDR5UUxEMEc4V09XWmNibzhTKy9PQVRiQ2JSbDd6TndiWWF0?=
- =?utf-8?B?ZGQxQTFwd0dpM3ZTWm1VMjdSVTY5dk5SWng5aDVmbUFWV0RZL1FuelA0aDBu?=
- =?utf-8?Q?H81JQaKkYns=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB7224.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NmQrY1RCRGtmN0VwTmdSa21RY2QxK0x3WjAyNlFscWhpWTk2NHNDVmx0M2V5?=
- =?utf-8?B?UXBuSkxLTExPcFhPYWkvTkhjM2ZVb0MvajkyVTZaTG1pKytyZGkyUTVjTXdL?=
- =?utf-8?B?ZkVxOGNLbTk2N0kzRzV1MHdiNjNxQlFyQUpHN2tRSjFzVTJ2UC9SeThWdEUw?=
- =?utf-8?B?WVhUMDNIUTgxczM0b0FFaGVWQUlJQm1BSi9BMit3MURxTjZHZVFSZVhYck9l?=
- =?utf-8?B?WGM4SHNwRWRtVGU4akgzQjhEdG5DdlRnZmdXMEg3WW5tS2JLQWUrTjZtZ0Jh?=
- =?utf-8?B?VTJXc1NFTUFjUVFCRnBPazIvTEdqN2RXRW52bU16RnhLNUorWHJrdFVMOWZE?=
- =?utf-8?B?UE9aeTJFcUM3LzZKbVVHSlZVNWpudXpRYzdGM3lUR2dnaFRQVlZVWDlCR2Zx?=
- =?utf-8?B?ZG01Z2ZoLzdmY1M5MDF3c2pqT1RCUjZoRGtLY0NocTFzakVxVTQ1L1NyMSt1?=
- =?utf-8?B?d1FPT0hPYjdLZ0tsOUV3cy9kK3U5SW1GSEhDaElVc1VxdzI5aE5XZ0N1Y0V0?=
- =?utf-8?B?Q21HRWlHM3M2UHpmUnhmT2Jsd0FzVnVRUWMwMFRSOTQwQUFBWlR5S3JSSnNM?=
- =?utf-8?B?aUkxcHdHcjN3aGl2TFhRVDhkay8rYVdPZXR4SFVWcVhZNnoxUXlDRGd1b3A4?=
- =?utf-8?B?L3lPVTZtZXl2K2wzbS8xdk5qdWZBTFNqMXdkemlqekpLUDUwT2xta1MrTTNa?=
- =?utf-8?B?SDQrMDRndnJLT1BEM05EdGQ3QXNXNnR5SjQ0OUVYMTRDVkszQXYwNGJWem9o?=
- =?utf-8?B?NDl1THozL0EzRHlwU0plUnN2bFNJelhicVlCWXA1OFM1TUNCaStSa3AyTTdn?=
- =?utf-8?B?a1FuVEZTallaeUhTU01pd0NaZUF6ZWdnbDl5SUhZcGNyb292QnhRYVhPMVdw?=
- =?utf-8?B?V2NwandwZ3d2Q2U4d2Zqa3YxVmFUMHd2WE1kM0Nyck1MTHlPd0xvVjEzbVg1?=
- =?utf-8?B?d2tQd2hKM24xZnNkR1hkU0Vhb1pORktMQ0Jqd0ZaM3c4dDJzSUd0dEx2S29D?=
- =?utf-8?B?V0t5alhyQXFMN3I0UC9pdWxRODZBTWRVYlB3T0FwbkVwVVJlcTYvaEFac1J5?=
- =?utf-8?B?MThWVlFhNGpTU3NwcDBGRUFKU3NDTzVjQy9MbzgwQ2xLdlhaaGZDa0RIMGVT?=
- =?utf-8?B?VEhidUJzQ1JTWkltMGRJaGxyNmZtOERMUFRQMmp1aHo3VXhBTVZTc2NTdTNN?=
- =?utf-8?B?QVNadERYOW9mTDBJYW1lMkZIa200TXdvSHB5Ulp2TUlEWmNUb3hWeWlLQnVa?=
- =?utf-8?B?Z21NZHBiNnpGZVVFZXlNN0dML1VOTHFpUFhRalFNTVBWZFRvQit3Y2YvR1lG?=
- =?utf-8?B?a0FRMUlzU0ZTS0JldmxoZmRVUjQwS2grSFpnZmlIcTBTSU5DYzUwWU94Vk5P?=
- =?utf-8?B?VHVKQ0NXajYvOUxyMGhOUEJ1MTIzNGRkL2Q1YjZSdTZuaFBKbVN1a1hhT1hj?=
- =?utf-8?B?Z3NudVdvZ29iR2R0RDNUTHU1TW5UUGhCMENlNitqL1k5RUppUmFxdWVVZ3Uv?=
- =?utf-8?B?RE5seGRua2Ryb0JhbHJHaWZtamVVRU9Hd3VpZHlEZ3BDVzJSMnMyYWpiWVl6?=
- =?utf-8?B?Q0twWlZKT3BLYmtENSt3NkNVemhMbUEwbHlSV1pnMmk0S2RndDR3M3h1RXpJ?=
- =?utf-8?B?cHJDNDl4d3plM1JkRVVwMWhlZG8veWJKQ0VkU2srUnI4T01GS0RmUG15M0xN?=
- =?utf-8?B?NTNtRCtta2VWUDMybzJ1L2ZNQ2EyMWtsa09aTC9YUUdmeTFWVXJxYzcwSUdD?=
- =?utf-8?B?MHVPMFZoUmZTeFhKalFIWmdmVERLK1cvN1ZjVjErd29Ed1RpYTVWU1RQUDZR?=
- =?utf-8?B?c0YvZGVqMENLZy8yT0dvUGJ3K2FXak1DV0VVdmNSK1NxKzRYVjYrY3dlbFJs?=
- =?utf-8?B?RU9NUndoS2dUM2daeWdVcnZZaWVFRnlTN2dFQUpFSnJDTFVuT3M0aElQSmZ2?=
- =?utf-8?B?eG50V29QNkNFbWYvVGxBejMvUElJUkQ1TFVkWGp4MVFsTjFlclRjYlBCTGQ4?=
- =?utf-8?B?R0hGS282ZnJhY3RGTmdDVzZ1VjFjRHBtYVhpekMrQ1k4d293WWZMV09JSzFS?=
- =?utf-8?B?SEVSSU5jRUh3QjR2OU5qaEU4SEFFdURYN3hJNnhxWlNXWllObmJYTFkrK1Ny?=
- =?utf-8?B?VHAra0xoMTl2Qno1Rk9zNHltQTljSFVjYjZIbjE5anJJby9yWHl2c3Z1Vk12?=
- =?utf-8?B?Z2c9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	vP3gbrHPhN3vB87hp5/aMvj9/+YiDPSyJkm+qsmAOuU2ubRFS2MMpo44Q7lAoaQmO8VZiN+M/g3twVNg37scjHgpZyA01uRxAIaH0ry8+nOseS3UYw4JRTSqlh8gyFAERp/pf3iHwne7NTk22je1FGX6uhYFEXF+5S2w+QEfey1IaRjUQs3YaePZq/sikAM3IFY4eMiKM75JdQf/Oqf18CkhqfyuE5XGKcX3hFR2vEfuL0tULsWYFmBBVH0cN54evaB6qRNhQddADBIrr7xQy3WVnqKNNhgwHKKXkPRM0UDOpTyQlVqoZuF9pk4WArL7l6ndXr3fU4CLreVDedcSfanBZZK8WNmirnrf2LJvIWZwdgB5fnbOmAJ//xWLEyjtpW7+X0PxWlr7OG7PdUMxuS589IsEkGKLN3MHuY0gq3v+gVkzmPVt2mhBCm5LjqNjxoVg/oMHNv/UBVPbPo41DuGfwwd9L0g+csvsiHjQDzFo+4rKgM8Sg8ND6RzCiYgYPIDcrv6HrjpMHd8nlwhB/0RnwuywPDvO1UkEhxeEidI5leMewf1tl/sDfmeUr6jFw0Y1lVsldED4sORSqk+xUT30T+tb66RaZoON8t2meuY=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e44a8957-9b54-4e50-24d6-08dd82aaef15
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB7224.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 21:08:02.6421
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SyhUmeqSSiYrnn3NxqoCObJWMU9WL6RpVBHsBGW9PqPqkKP93H0WxeOCz4XuhRZj2OCmfML/D9Mnb9M59flteVJwM/zZCe3o8YYAvEzKNSU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6662
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACVXCWgC/22NywqDMBBFf0Vm3SlJFB9d+R/FhU0mOlCMTFRax
+ H9vKnTX5Tlwz90hkjBFuGU7CG0cOUwJzCUDO/bTQMguMRhlCm10jm5e0UmY0VO/rEIRq1LlzuZ
+ Eum4g7WYhz6+zee8SjxyXIO/zYtNf+6sVf2qbRoVNXXtVlsY+KmqfPPUSrkEG6I7j+AD4UEQQs
+ wAAAA==
+X-Change-ID: 20241213-dpu-drop-features-7603dc3ee189
+To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Vinod Koul <vkoul@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5988;
+ i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
+ bh=jeV2CdgCXKP9mX1CiT3h3t3hCkQmPqAG4j55H1iiq88=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCVcpQVMxF5tzqEX4RsauRdDfAlBXbQKCMrT++
+ r+hXfeMEmeJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAlXKQAKCRCLPIo+Aiko
+ 1WJUCACUoaX9jE40MmdEgcQfFQS6lB0hE8tvm13PGuQaKaHwc3Uubm3h9/q/WUOyOtc606kngbC
+ sS9pkDjrDMINtt2uKgVSWYuxqXKP2Q379LOKbWFtz3mhtJ3uZSTj91TTVDsZTWZv1wIY5wFyzS+
+ cGc09rOw67JL6AzO6iEa6h3uX28yFmXCjh/t3heXaiqv5aZjIRioS297XyJ8iStAZdEP3qfGoss
+ j7xQJuupJurtH6CG5KgkuTPVNUS3S2jEwf5mz8hp7AHVCMujkiuyg6nPBXtLzPczzLQdo0zNwJg
+ j8z9csh6A7fNSnQudHx1RsEINFF2qXJsT7IXzA22W1hqIlnU
+X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
+ fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0MyBTYWx0ZWRfX5cFbetpUbzMY 58I76HdxliL3tWzDZ64AYmh3iXSIkY5SOonOuE5c/DmP7N9Vdjo8EHpyHMbxEVW2aKdaLCvmCLR xU5+rDefm/qiu+w4oIMY4F3e0JUebgYhMUl2lJHDXhi/FYNKRooxirxfGWrQ4I4rK0zbsKDNpCC
+ BLNOgHgJ1q3TMnbyeeyTIdxRiwcTr/Uk8ZZVm9O/KBScN+O0CICqWFlecGzTHLPIJdcrevC+VhQ YFCDIiwPPKiJyVYLBMtJ8ILK3rJBB/srgjLciIvDYhe/o80j2kp3sU0Fvkw/1g0yON60VMtvK2d ny+UnhmltPAtqyJh840AQAR0olAZ53Pvs4poQ6U8cnPALa8MN98Uf0Wu0uldSyWVHfPGb1X5GQI
+ kaxm+tlTZFhRRIyBya5dLSK421i+EfzIs28gsDIEwx0WdGF/xZCzdiMFiHW2W63XheNGnLro
+X-Proofpoint-GUID: syruBUxFpkLrPpCnbjeWRVkrDkp9ajfQ
+X-Proofpoint-ORIG-GUID: syruBUxFpkLrPpCnbjeWRVkrDkp9ajfQ
+X-Authority-Analysis: v=2.4 cv=M5VNKzws c=1 sm=1 tr=0 ts=68095732 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=dC62eGL372UhZDOq83QA:9 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-23_11,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2504070000 definitions=main-2504230143
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0MyBTYWx0ZWRfX3AkSSXUf//fW HTcJ2W/xhkfGiqicBZ9pqQC3xXnNihikTj6rGct78gytg0biqQe/z4dDbDzSTjdxNetwDXKnyrA Rl5XpkaQCPctxKgy8yL5Ryk0QIShe4SE8OBEOZMVyjrsMqgBFGtZaEzudytJI6zasLWu98fj8Vh
- pvlc6ju0g6XES1MAksh/XMvAAVug32lW0Z05gTqUbjCMeXvuZfgbyf6z0M8BFeVHPPVdriXjBqZ XpxlPQF5B4hDMrxZpO7iStpunLcE96ai8P/y+0g0mTABJT0Nz8YgSq4jWTak0OxnDanggKehy9v uAdcXLNfPcWwkHpBAnjaysV0GvrricIkLaVqKn3S1svEfgh+mvrLIY8aw5DjqOcXFup5Ti/bbcw v1+LUN33
-X-Proofpoint-GUID: B34uLyDRhi5aoT88NKEsnoa_6h5uEnzn
-X-Proofpoint-ORIG-GUID: B34uLyDRhi5aoT88NKEsnoa_6h5uEnzn
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=999 malwarescore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230143
 
-On 4/23/25 1:38 PM, ALOK TIWARI wrote:
-> 
-> 
-> On 21-04-2025 21:57, Ross Philipson wrote:
->> The Secure Launch (SL) stub provides the entry point for Intel TXT to
->> jump to during the dynamic launch. The symbol sl_stub_entry is that entry
->> point and its offset into the kernel is conveyed to the launching code 
->> using
->> the Measured Launch Environment (MLE) header in the structure named 
->> mle_header.
->> The offset of the MLE header is set in the kernel_info.
->>
->> The routine sl_stub contains the very early dynamic launch setup code
->> responsible for setting up the basic operating environment to allow 
->> the normal
->> kernel startup_32 code to proceed. It is also responsible for properly 
->> waking
->> and handling the APs on Intel platforms.
->>
->> The routine sl_main which runs after entering 64b mode in the setup 
->> kernel. It
->> is responsible for measuring configuration and module information before
->> it is used. An example of entities measured on Intel x86 are the boot 
->> params,
->> the kernel command line, the TXT heap, any external initramfs, etc. In 
->> addition
->> this routine does some early setup and validation of the environment like
->> locating the TPM event log and validating the location of various 
->> buffers to
->> ensure they are protected and not overlapping.
->>
->> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->> ---
->>   Documentation/arch/x86/boot.rst       |  21 +
->>   arch/x86/boot/compressed/Makefile     |   3 +-
->>   arch/x86/boot/compressed/head_64.S    |  29 +
->>   arch/x86/boot/compressed/sl_main.c    | 597 +++++++++++++++++++++
->>   arch/x86/boot/compressed/sl_stub.S    | 731 ++++++++++++++++++++++++++
->>   arch/x86/include/uapi/asm/bootparam.h |   1 +
->>   arch/x86/kernel/asm-offsets.c         |  20 +
->>   7 files changed, 1401 insertions(+), 1 deletion(-)
->>   create mode 100644 arch/x86/boot/compressed/sl_main.c
->>   create mode 100644 arch/x86/boot/compressed/sl_stub.S
->>
-> [clip]
->> index 000000000000..5e0fd0d7bd72
->> --- /dev/null
->> +++ b/arch/x86/boot/compressed/sl_main.c
->> @@ -0,0 +1,597 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Secure Launch early measurement and validation routines.
->> + *
->> + * Copyright (c) 2025, Oracle and/or its affiliates.
->> + */
->> +
->> +#include <linux/init.h>
->> +#include <linux/string.h>
->> +#include <linux/linkage.h>
->> +#include <asm/segment.h>
->> +#include <asm/boot.h>
->> +#include <asm/msr.h>
->> +#include <asm/mtrr.h>
->> +#include <asm/processor-flags.h>
->> +#include <asm/asm-offsets.h>
->> +#include <asm/bootparam.h>
->> +#include <asm/bootparam_utils.h>
->> +#include <linux/slr_table.h>
->> +#include <linux/slaunch.h>
->> +#include <crypto/sha1.h>
->> +#include <crypto/sha2.h>
-> 
-> consider header reordering For clarity and consistency
+Some time ago we started the process of converting HW blocks to use
+revision-based checks instead of having feature bits (which are easy to
+miss or to set incorrectly). Then the process of such a conversion was
+postponed. (Mostly) finish the conversion. The only blocks which still
+have feature bits are SSPP, WB and VBIF. In the rare cases where
+behaviour actually differs from platform to platform (or from block to
+block) use unsigned long bitfields, they have simpler syntax to be
+checked and don't involve test_bit() invocation.
 
-I don't mean this in a sarcastic way but what needs to be re-ordered? It 
-looks pretty well ordered to me already. Can you give me an example of 
-what you mean? Same for the other comment like this below.
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+Changes in v2:
+- Rebased on top of the current msm-next
+- Link to v1: https://lore.kernel.org/r/20241214-dpu-drop-features-v1-0-988f0662cb7e@linaro.org
 
-As for the other things here, we will fix them.
+---
+Dmitry Baryshkov (33):
+      drm/msm/dpu: stop passing mdss_ver to setup_timing_gen()
+      drm/msm/dpu: drop INTF_SC7280_MASK
+      drm/msm/dpu: inline _setup_ctl_ops()
+      drm/msm/dpu: inline _setup_dsc_ops()
+      drm/msm/dpu: inline _setup_dspp_ops()
+      drm/msm/dpu: inline _setup_mixer_ops()
+      drm/msm/dpu: remove DSPP_SC7180_MASK
+      drm/msm/dpu: get rid of DPU_CTL_HAS_LAYER_EXT4
+      drm/msm/dpu: get rid of DPU_CTL_ACTIVE_CFG
+      drm/msm/dpu: get rid of DPU_CTL_FETCH_ACTIVE
+      drm/msm/dpu: get rid of DPU_CTL_DSPP_SUB_BLOCK_FLUSH
+      drm/msm/dpu: get rid of DPU_CTL_VM_CFG
+      drm/msm/dpu: get rid of DPU_DATA_HCTL_EN
+      drm/msm/dpu: get rid of DPU_INTF_STATUS_SUPPORTED
+      drm/msm/dpu: get rid of DPU_INTF_INPUT_CTRL
+      drm/msm/dpu: get rid of DPU_PINGPONG_DSC
+      drm/msm/dpu: get rid of DPU_PINGPONG_DITHER
+      drm/msm/dpu: get rid of DPU_MDP_VSYNC_SEL
+      drm/msm/dpu: get rid of DPU_MDP_PERIPH_0_REMOVED
+      drm/msm/dpu: get rid of DPU_MDP_AUDIO_SELECT
+      drm/msm/dpu: get rid of DPU_MIXER_COMBINED_ALPHA
+      drm/msm/dpu: get rid of DPU_DIM_LAYER
+      drm/msm/dpu: get rid of DPU_DSC_HW_REV_1_2
+      drm/msm/dpu: get rid of DPU_DSC_OUTPUT_CTRL
+      drm/msm/dpu: get rid of DPU_WB_INPUT_CTRL
+      drm/msm/dpu: get rid of DPU_SSPP_QOS_8LVL
+      drm/msm/dpu: drop unused MDP TOP features
+      drm/msm/dpu: drop ununused PINGPONG features
+      drm/msm/dpu: drop ununused MIXER features
+      drm/msm/dpu: get rid of DPU_MIXER_SOURCESPLIT
+      drm/msm/dpu: get rid of DPU_DSC_NATIVE_42x_EN
+      drm/msm/dpu: get rid of DPU_CTL_SPLIT_DISPLAY
+      drm/msm/dpu: move features out of the DPU_HW_BLK_INFO
 
-Thanks
+ .../drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h    |  53 +++-----
+ .../drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h   |   4 -
+ .../drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h   |   3 -
+ .../drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h   |   4 -
+ .../drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h    |  15 +--
+ .../drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h    |  19 +--
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h |  19 +--
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h |  12 +-
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h |  21 +---
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h |  11 +-
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h |  43 ++-----
+ .../drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h    |  45 ++-----
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h |  31 ++---
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h |  19 +--
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h |  16 +--
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h |  42 ++-----
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h |  14 +--
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h |   5 -
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h |  16 +--
+ .../drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h    |   5 -
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h |   6 -
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h |  44 ++-----
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h |  22 +---
+ .../drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h   |  50 ++------
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h |  47 ++------
+ .../drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h    |  53 ++------
+ .../gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h |  47 ++------
+ .../drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h   |  52 ++------
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c   |   2 +-
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   |   3 +-
+ .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |   7 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  51 +-------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     | 134 ++-------------------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         | 108 ++++++++---------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |   4 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c         |  21 ++--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.h         |   3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c     |   7 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c        |  10 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        |  14 +--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h        |   5 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          |  28 ++---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h          |   3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c     |   5 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c    |   4 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c        |   5 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h        |   2 +
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c         |  11 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c          |   2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   4 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c             |  17 ++-
+ 51 files changed, 304 insertions(+), 864 deletions(-)
+---
+base-commit: 6ac908f24cd7ddae52c496bbc888e97ee7b033ac
+change-id: 20241213-dpu-drop-features-7603dc3ee189
 
-> 
->> +
->> +#define CAPS_VARIABLE_MTRR_COUNT_MASK    0xff
->> +
->> +#define SL_TPM_LOG        1
->> +#define SL_TPM2_LOG        2
->> +
-> 
->> +static u64 sl_txt_read(u32 reg)
->> +{
->> +    return readq((void *)(u64)(TXT_PRIV_CONFIG_REGS_BASE + reg));
->> +}
->> +
-> [clip]
->> +/*
->> + * Process all EFI config entries and extend the measurements to the 
->> evtlog
->> + */
->> +static void sl_process_extend_uefi_config(struct slr_table *slrt)
->> +{
->> +    struct slr_entry_uefi_config *uefi_config;
->> +    u16 i;
->> +
->> +    uefi_config = slr_next_entry_by_tag(slrt, NULL, 
->> SLR_ENTRY_UEFI_CONFIG);
->> +
->> +    /* Optionally here depending on how SL kernel was booted */
->> +    if (!uefi_config)
->> +        return;
->> +
->> +    for (i = 0; i < uefi_config->nr_entries; i++) {
->> +        sl_tpm_extend_evtlog(uefi_config->uefi_cfg_entries[i].pcr, 
->> TXT_EVTYPE_SLAUNCH,
->> +                     (void *)uefi_config->uefi_cfg_entries[i].cfg,
->> +                     uefi_config->uefi_cfg_entries[i].size,
->> +                     uefi_config->uefi_cfg_entries[i].evt_info);
->> +    }
->> +}
->> +
->> +asmlinkage __visible void sl_check_region(void *base, u32 size)
->> +{
->> +    sl_check_pmr_coverage(base, size, false);
->> +}
->> +
->> +asmlinkage __visible void sl_main(void *bootparams)
->> +{
->> +    struct boot_params *bp  = (struct boot_params *)bootparams;
-> 
-> remove extra ' ' before =
-> 
->> +    struct txt_os_mle_data *os_mle_data;
->> +    struct slr_table *slrt;
->> +    void *txt_heap;
->> +
->> +    /*
->> +     * Ensure loadflags do not indicate a secure launch was done
->> +     * unless it really was.
->> +     */
->> +    bp->hdr.loadflags &= ~SLAUNCH_FLAG;
->> +
->> +    /*
->> +     * Currently only Intel TXT is supported for Secure Launch. Testing
->> +     * this value also indicates that the kernel was booted successfully
->> +     * through the Secure Launch entry point and is in SMX mode.
->> +     */
->> +    if (!(sl_cpu_type & SL_CPU_INTEL))
->> +        return;
->> +
->> +    slrt = sl_locate_and_validate_slrt();
->> +
->> +    /* Locate the TPM event log. */
->> +    sl_find_drtm_event_log(slrt);
->> +
->> +    /* Validate the location of the event log buffer before using it */
->> +    sl_validate_event_log_buffer();
->> +
->> +    /*
->> +     * Find the TPM hash algorithms used by the ACM and recorded in the
->> +     * event log.
->> +     */
->> +    if (tpm_log_ver == SL_TPM2_LOG)
->> +        sl_find_event_log_algorithms();
->> +
->> +    /*
->> +     * Sanitize them before measuring. Set the SLAUNCH_FLAG early 
->> since if
->> +     * anything fails, the system will reset anyway.
->> +     */
->> +    sanitize_boot_params(bp);
->> +    bp->hdr.loadflags |= SLAUNCH_FLAG;
->> +
->> +    sl_check_pmr_coverage(bootparams, PAGE_SIZE, false);
->> +
->> +    /* Place event log SL specific tags before and after measurements */
->> +    sl_tpm_extend_evtlog(17, TXT_EVTYPE_SLAUNCH_START, NULL, 0, "");
->> +
->> +    sl_process_extend_policy(slrt);
->> +
->> +    sl_process_extend_uefi_config(slrt);
->> +
->> +    sl_tpm_extend_evtlog(17, TXT_EVTYPE_SLAUNCH_END, NULL, 0, "");
->> +
->> +    /* No PMR check is needed, the TXT heap is covered by the DPR */
->> +    txt_heap = (void *)sl_txt_read(TXT_CR_HEAP_BASE);
->> +    os_mle_data = txt_os_mle_data_start(txt_heap);
->> +
->> +    /*
->> +     * Now that the OS-MLE data is measured, ensure the MTRR and
->> +     * misc enable MSRs are what we expect.
->> +     */
->> +    sl_txt_validate_msrs(os_mle_data);
->> +}
->> diff --git a/arch/x86/boot/compressed/sl_stub.S b/arch/x86/boot/ 
->> compressed/sl_stub.S
->> new file mode 100644
->> index 000000000000..6c0f0b2a062d
->> --- /dev/null
->> +++ b/arch/x86/boot/compressed/sl_stub.S
->> @@ -0,0 +1,731 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +
->> +/*
->> + * Secure Launch protected mode entry point.
->> + *
->> + * Copyright (c) 2025, Oracle and/or its affiliates.
->> + */
->> +    .code32
->> +    .text
->> +#include <linux/linkage.h>
->> +#include <asm/segment.h>
->> +#include <asm/msr.h>
->> +#include <asm/apicdef.h>
->> +#include <asm/trapnr.h>
->> +#include <asm/processor-flags.h>
->> +#include <asm/asm-offsets.h>
->> +#include <asm/bootparam.h>
->> +#include <asm/page_types.h>
->> +#include <asm/irq_vectors.h>
->> +#include <linux/slr_table.h>
->> +#include <linux/slaunch.h>
-> 
-> consider header reordering For clarity and consistency
-> 
->> +
->> +/* CPUID: leaf 1, ECX, SMX feature bit */
->> +#define X86_FEATURE_BIT_SMX    (1 << 6)
->> +
->> +#define IDT_VECTOR_LO_BITS    0
->> +#define IDT_VECTOR_HI_BITS    6
->> +
-> [clip]
->> +    jz    .Lwake_getsec
->> +
->> +    /* Wake using MWAIT MONITOR */
->> +    movl    $1, (%edi)
->> +    jmp    .Laps_awake
->> +
->> +.Lwake_getsec:
->> +    /* Wake using GETSEC(WAKEUP) */
->> +    GETSEC    $(SMX_X86_GETSEC_WAKEUP)
->> +
->> +.Laps_awake:
->> +    /*
->> +     * All of the APs are woken up and rendesvous in the relocated wake
-> 
-> typo rendesvous -> rendezvous
-> 
->> +     * block starting at sl_txt_ap_wake_begin. Wait for all of them to
->> +     * halt.
->> +     */
->> +    pause
->> +    cmpl    rva(sl_txt_cpu_count)(%ebx), %edx
->> +    jne    .Laps_awake
->> +
->> +    popl    %esi
->> +    ret
->> +SYM_FUNC_END(sl_txt_wake_aps)
->> +
->> +/* This is the beginning of the relocated AP wake code block */
->> +    .global sl_txt_ap_wake_begin
->> +sl_txt_ap_wake_begin:
-> 
-> 
-> Thanks,
-> Alok
+Best regards,
+-- 
+Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
