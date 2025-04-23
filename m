@@ -1,201 +1,208 @@
-Received: from dediextern.your-server.de (dediextern.your-server.de [85.10.215.232])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2055.outbound.protection.outlook.com [40.107.105.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE8B27CCD7;
-	Wed, 23 Apr 2025 14:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.215.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745419002; cv=none; b=MfRf/77F2Qv4QD/6eM2F3cerNWBr7FnSYXJ23JhT6dVtwx6Ksmsj9fGHv4Aovp4mcc3bGcpTWkmNin1v4+2GvTOqQYTRagKLJp3gMgSWH2Hf3vJ+rtxybnsQmgUDMaRtqMSC5x4RvOZoWWBA/ioVGpUq0Atjmrs++vGNnl7YJxk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745419002; c=relaxed/simple;
-	bh=jXWH4gWpIEVt9GSvwo7tXrMiNKO8lNf34sBHJdv6D40=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:From:Subject:
-	 In-Reply-To:Content-Type; b=gwoQGPyPIEbfrDWamOsYAXX2dInhOLMUe8IbdbxK+8Kr4NFxDyOqBRfM9sPAJ0du/ugASnWFhDbcA7XZEYaNBe9JTwWqqYhib7RAEMxF5RSriOtSPnq0/iP/Kgya+9fefgDpLtidlAQn4YDYVwvj+PfIoFVJlZgEDKxAcRArLAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de; spf=pass smtp.mailfrom=hetzner-cloud.de; arc=none smtp.client-ip=85.10.215.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hetzner-cloud.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hetzner-cloud.de
-Received: from sslproxy04.your-server.de ([78.46.152.42])
-	by dediextern.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1u7axS-000G3T-Eh; Wed, 23 Apr 2025 16:20:14 +0200
-Received: from [2a0d:3344:1523:1f10:f118:b2d4:edbb:54af]
-	by sslproxy04.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <marcus.wichelmann@hetzner-cloud.de>)
-	id 1u7axS-000BTG-1f;
-	Wed, 23 Apr 2025 16:20:14 +0200
-Message-ID: <b06ede77-541b-453f-9e7a-79f3e5591f66@hetzner-cloud.de>
-Date: Wed, 23 Apr 2025 16:20:07 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02179149E17
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.55
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745419116; cv=fail; b=bA7LMVgp1zRlT1GWMu9bFls+vzE8nSK8d49eA/1m1vbw5RieRvKD/WJkNob+P7uc27x25yhgNik2F9ASoEvzD3G2puHu0vVJB7NhliNlX+DY4nA/QDWAHKk6xZaN47iBkkbqEWn2geDbURIVoeImIl2PJYlMTCfd2QvTugw/Dvo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745419116; c=relaxed/simple;
+	bh=ZM6dqcQ6B0iOxNm/Um3fz5GceOQuobCdyZjImYSNCF4=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=k0oc4jy3CEb1R68pWSPixArpgDHpeHbYMtrSWTeFls19XPzMKHKlooTb7BSHuR7HhS3IUp0r0cHwc7wBXoaE3SsL0jdMbYCrSY+8wVT/VZeI1MJey09LiWobxXq9M56O9QbPQxJ2sYoZ3DTSFKwdSnbw4nANkSKNgG5Dpp8uA0Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=vE+QctjT; arc=fail smtp.client-ip=40.107.105.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="vE+QctjT"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=NXqyJPb69m2U1iNXd9wyrvrQmI+J2VffIYOrDcj5IMZSTSlS+wIZwxyO+AjNJ+gSwAu8Jb9fHgTmfYtToTYq9OibV89SpVHLgObR1wzzB64qYv5rKbC0bobHkcIGkfzA1muNmiiR2FRzdJcrPggt0UJxY/2qfpoT/CabrYQfczjNlZ3hOIhNNggVeSKn5EsdczXx1xj9xxCWdMtSqC9IEwPJQ8Nedj4MhsC0qFgA1LXnF7gDFQyfezC1XSCZBQl5ZSaznvrd7u9b3xdwku+L9FG6p+lQm+C9OdAEWtVrUa67W0ksZd/nd4pSngPdD4GTXc/sqJMCgoKDpJHX3XxZnQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gpANIKjkX7IPQWPtgMnXaSLoSAMps8E3YXqUo0Rw52Q=;
+ b=yRexNFPJ8XBtG1BZJViAU0BRZL3Lj58PE6Z5PiMZqx50KyXX7OS5SCt2uZ6SOZGxbGFEE2TmHK14fBqXLmhQUwGbzrd93HK+t9sDd3oq6+PPmkKV8+V2fiF/6NCtT0Mp7Acxkp+xbLt5YrOUoEXEG1VQAl+jg3g/RyorCi8/kTgaGORHrrLadC00sQl34v9RHugmyYVqsv4I0pFxV0HXMWrDI6tus7aI57TdUx07I3irha84WtDU8LAn4UTsXhBCw3wq7BToKnUBJESHI0bwGyB7aARjkMEFGAhEtVGgTuhAiK1ZpjE9vKrgV3sq/p7q7J0jgjhQXBw9WVjigTYcWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gpANIKjkX7IPQWPtgMnXaSLoSAMps8E3YXqUo0Rw52Q=;
+ b=vE+QctjTJbTuAWNso1fJ5yB8U6SKxo3bgzM/evDanLd4khNTdq9GLQRbnFIZ96tzBir/44SdiUv8TEB5oLXmkqo8Jv+5vss3JcvkVh+g7q2Lv2KRqQQeELR56dfkMfDVuvc5yCkivlEjF0GfeXIvyI9LslI8Yvhz6R9iZIX9STSNO4iI1QLfM2zUeIuVHG73ovN/GA15EKgxWmpPqWJ6gV464sSXZneLRg661BUq/6lgeh+60NTQ81qe+J5bTxvjkSjajgoyz0bzww1PsTY6au+JVMq88Wk0i7EHjuGVFWEqZc50tMepX8I8kp5ks/R/FhQ3xI3iraELFcRZ7F7dWw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by PA1PR04MB10844.eurprd04.prod.outlook.com (2603:10a6:102:493::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Wed, 23 Apr
+ 2025 14:38:31 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
+ 14:38:31 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH v2 0/3] soc: imx8m: Dump higher 64bits UID
+Date: Wed, 23 Apr 2025 22:37:03 +0800
+Message-Id: <20250423-uid-128-v2-0-327c30fe59a9@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA/7CGgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyjHQUlJIzE
+ vPSU3UzU4B8JSMDI1MDEyND3dLMFF1DIwvdRIM0y8QUUyMLE2NzJaDqgqLUtMwKsEnRsbW1AFI
+ kpRRZAAAA
+X-Change-ID: 20250421-uid-128-a0f9ad528437
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Marco Felsch <m.felsch@pengutronix.de>
+Cc: imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745419041; l=1094;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=ZM6dqcQ6B0iOxNm/Um3fz5GceOQuobCdyZjImYSNCF4=;
+ b=e4sfhnbWlsUkmgf27vtE8daUsiv20wUHmvNxxdKypZUf0XH6qDhexkz7o/ML5qcnJD4NR04iE
+ XGuPcOglbjEDUOOX7cnmOaNZquHO45nCxO+nvLW1N38ClaOyDDK3zGa
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SI1PR02CA0051.apcprd02.prod.outlook.com
+ (2603:1096:4:1f5::6) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Michal Kubiak <michal.kubiak@intel.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>, Jay Vosburgh
- <jv@jvosburgh.net>, Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, intel-wired-lan@lists.osuosl.org,
- netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- sdn@hetzner-cloud.de
-References: <d33f0ab4-4dc4-49cd-bbd0-055f58dd6758@hetzner-cloud.de>
- <Z/fWHYETBYQuCno5@localhost.localdomain>
- <ff7ca6ea-a122-4d7d-9ef2-d091cbdd96d2@hetzner-cloud.de>
- <Z/jPgceDT4gRu9/R@localhost.localdomain> <aAEUcXIRnWolGWnA@boxer>
-Content-Language: en-US
-From: Marcus Wichelmann <marcus.wichelmann@hetzner-cloud.de>
-Autocrypt: addr=marcus.wichelmann@hetzner-cloud.de; keydata=
- xsFNBGJGrHIBEADXeHfBzzMvCfipCSW1oRhksIillcss321wYAvXrQ03a9VN2XJAzwDB/7Sa
- N2Oqs6JJv4u5uOhaNp1Sx8JlhN6Oippc6MecXuQu5uOmN+DHmSLObKVQNC9I8PqEF2fq87zO
- DCDViJ7VbYod/X9zUHQrGd35SB0PcDkXE5QaPX3dpz77mXFFWs/TvP6IvM6XVKZce3gitJ98
- JO4pQ1gZniqaX4OSmgpHzHmaLCWZ2iU+Kn2M0KD1+/ozr/2bFhRkOwXSMYIdhmOXx96zjqFV
- vIHa1vBguEt/Ax8+Pi7D83gdMCpyRCQ5AsKVyxVjVml0e/FcocrSb9j8hfrMFplv+Y43DIKu
- kPVbE6pjHS+rqHf4vnxKBi8yQrfIpQqhgB/fgomBpIJAflu0Phj1nin/QIqKfQatoz5sRJb0
- khSnRz8bxVM6Dr/T9i+7Y3suQGNXZQlxmRJmw4CYI/4zPVcjWkZyydq+wKqm39SOo4T512Nw
- fuHmT6SV9DBD6WWevt2VYKMYSmAXLMcCp7I2EM7aYBEBvn5WbdqkamgZ36tISHBDhJl/k7pz
- OlXOT+AOh12GCBiuPomnPkyyIGOf6wP/DW+vX6v5416MWiJaUmyH9h8UlhlehkWpEYqw1iCA
- Wn6TcTXSILx+Nh5smWIel6scvxho84qSZplpCSzZGaidHZRytwARAQABzTZNYXJjdXMgV2lj
- aGVsbWFubiA8bWFyY3VzLndpY2hlbG1hbm5AaGV0em5lci1jbG91ZC5kZT7CwZgEEwEIAEIW
- IQQVqNeGYUnoSODnU2dJ0we/n6xHDgUCYkascgIbAwUJEswDAAULCQgHAgMiAgEGFQoJCAsC
- BBYCAwECHgcCF4AACgkQSdMHv5+sRw4BNxAAlfufPZnHm+WKbvxcPVn6CJyexfuE7E2UkJQl
- s/JXI+OGRhyqtguFGbQS6j7I06dJs/whj9fOhOBAHxFfMG2UkraqgAOlRUk/YjA98Wm9FvcQ
- RGZe5DhAekI5Q9I9fBuhxdoAmhhKc/g7E5y/TcS1s2Cs6gnBR5lEKKVcIb0nFzB9bc+oMzfV
- caStg+PejetxR/lMmcuBYi3s51laUQVCXV52bhnv0ROk0fdSwGwmoi2BDXljGBZl5i5n9wuQ
- eHMp9hc5FoDF0PHNgr+1y9RsLRJ7sKGabDY6VRGp0MxQP0EDPNWlM5RwuErJThu+i9kU6D0e
- HAPyJ6i4K7PsjGVE2ZcvOpzEr5e46bhIMKyfWzyMXwRVFuwE7erxvvNrSoM3SzbCUmgwC3P3
- Wy30X7NS5xGOCa36p2AtqcY64ZwwoGKlNZX8wM0khaVjPttsynMlwpLcmOulqABwaUpdluUg
- soqKCqyijBOXCeRSCZ/KAbA1FOvs3NnC9nVqeyCHtkKfuNDzqGY3uiAoD67EM/R9N4QM5w0X
- HpxgyDk7EC1sCqdnd0N07BBQrnGZACOmz8pAQC2D2coje/nlnZm1xVK1tk18n6fkpYfR5Dnj
- QvZYxO8MxP6wXamq2H5TRIzfLN1C2ddRsPv4wr9AqmbC9nIvfIQSvPMBx661kznCacANAP/O
- wU0EYkascgEQAK15Hd7arsIkP7knH885NNcqmeNnhckmu0MoVd11KIO+SSCBXGFfGJ2/a/8M
- y86SM4iL2774YYMWePscqtGNMPqa8Uk0NU76ojMbWG58gow2dLIyajXj20sQYd9RbNDiQqWp
- RNmnp0o8K8lof3XgrqjwlSAJbo6JjgdZkun9ZQBQFDkeJtffIv6LFGap9UV7Y3OhU+4ZTWDM
- XH76ne9u2ipTDu1pm9WeejgJIl6A7Z/7rRVpp6Qlq4Nm39C/ReNvXQIMT2l302wm0xaFQMfK
- jAhXV/2/8VAAgDzlqxuRGdA8eGfWujAq68hWTP4FzRvk97L4cTu5Tq8WIBMpkjznRahyTzk8
- 7oev+W5xBhGe03hfvog+pA9rsQIWF5R1meNZgtxR+GBj9bhHV+CUD6Fp+M0ffaevmI5Untyl
- AqXYdwfuOORcD9wHxw+XX7T/Slxq/Z0CKhfYJ4YlHV2UnjIvEI7EhV2fPhE4WZf0uiFOWw8X
- XcvPA8u0P1al3EbgeHMBhWLBjh8+Y3/pm0hSOZksKRdNR6PpCksa52ioD+8Z/giTIDuFDCHo
- p4QMLrv05kA490cNAkwkI/yRjrKL3eGg26FCBh2tQKoUw2H5pJ0TW67/Mn2mXNXjen9hDhAG
- 7gU40lS90ehhnpJxZC/73j2HjIxSiUkRpkCVKru2pPXx+zDzABEBAAHCwXwEGAEIACYWIQQV
- qNeGYUnoSODnU2dJ0we/n6xHDgUCYkascgIbDAUJEswDAAAKCRBJ0we/n6xHDsmpD/9/4+pV
- IsnYMClwfnDXNIU+x6VXTT/8HKiRiotIRFDIeI2skfWAaNgGBWU7iK7FkF/58ys8jKM3EykO
- D5lvLbGfI/jrTcJVIm9bXX0F1pTiu3SyzOy7EdJur8Cp6CpCrkD+GwkWppNHP51u7da2zah9
- CQx6E1NDGM0gSLlCJTciDi6doAkJ14aIX58O7dVeMqmabRAv6Ut45eWqOLvgjzBvdn1SArZm
- 7AQtxT7KZCz1yYLUgA6TG39bhwkXjtcfT0J4967LuXTgyoKCc969TzmwAT+pX3luMmbXOBl3
- mAkwjD782F9sP8D/9h8tQmTAKzi/ON+DXBHjjqGrb8+rCocx2mdWLenDK9sNNsvyLb9oKJoE
- DdXuCrEQpa3U79RGc7wjXT9h/8VsXmA48LSxhRKn2uOmkf0nCr9W4YmrP+g0RGeCKo3yvFxS
- +2r2hEb/H7ZTP5PWyJM8We/4ttx32S5ues5+qjlqGhWSzmCcPrwKviErSiBCr4PtcioTBZcW
- VUssNEOhjUERfkdnHNeuNBWfiABIb1Yn7QC2BUmwOvN2DsqsChyfyuknCbiyQGjAmj8mvfi/
- 18FxnhXRoPx3wr7PqGVWgTJD1pscTrbKnoI1jI1/pBCMun+q9v6E7JCgWY181WjxgKSnen0n
- wySmewx3h/yfMh0aFxHhvLPxrO2IEQ==
-Subject: Re: [BUG] ixgbe: Detected Tx Unit Hang (XDP)
-In-Reply-To: <aAEUcXIRnWolGWnA@boxer>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: marcus.wichelmann@hetzner-cloud.de
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27617/Wed Apr 23 10:38:53 2025)
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|PA1PR04MB10844:EE_
+X-MS-Office365-Filtering-Correlation-Id: 341e4014-2316-4bfe-920e-08dd8274848c
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dXNYME44a3hqNkhJYWxzVXRjcnliYkFLSHhqRUloVmRuSXJlZnhMbmx0ckhB?=
+ =?utf-8?B?UUNDa1MyMXo1RWxncEdMalVXTUQyV3h4blVIOWlUU1ByaVNVc0NtdXIyUWd5?=
+ =?utf-8?B?WmUvNHRSSXEwenQ0aUg1d1dsUThXUVlJS3dvekhFRHZyaHVSN3VCVkt0cXlV?=
+ =?utf-8?B?V2M1NE9KOXk1UFo2cXdYK0JKY1AxbjU1N1hwczRMSzR3RFZ4ZGNSTVh6MTUr?=
+ =?utf-8?B?cDRDaXdpWE1wcGN0ZzF0VFhRQnBXSDlaaE5yU2xDOGVaSDdzRDJuSVczNkxQ?=
+ =?utf-8?B?Ryt6OHZidGtwbzlld2tRVCtWby91U1NFY0JGaFR4VWFZLzBXb2tyZTBlaGg2?=
+ =?utf-8?B?SllwTnZ4V0tnb0d1akJ0MDFIWHU0STBWYTlxdTBzbTFsQy8zbTVad2xEbndj?=
+ =?utf-8?B?anRZY1VDVFcrU1hFbkJScWJDRU10OFpjaExnTmtobTVnb3JIYXZFR05BUU93?=
+ =?utf-8?B?Zms4ajEzbDRZRXd5SnY1S2FjaTg1QWlDZUppQWRnVSsvaFFkUzlTeHdDaHpC?=
+ =?utf-8?B?emtLeHVKZWhsNkllSDJ4MitocU9KUnpxSWN2VHNBSTcramljNDVETmxEMDcx?=
+ =?utf-8?B?aXhTeDNNWmc1VjVMdFpMb2o5eUVWdERiaXhvZ2pRRkRidlJJdkh5alhYVjl2?=
+ =?utf-8?B?Yjc0bjBGNVgvNkxWY0FTWFRFVkVvN203R0dVai8vTHBpdmcyRytZK2FHc3Vx?=
+ =?utf-8?B?MjM5dU1CZExiak85UURaMjlmTkFmV3hxbHcxYUNEclpsdDBoUnViRnE1a1BX?=
+ =?utf-8?B?TktLOWRzTkQ0YnFNQy8zNEpEOU42UWRvQjFFU3h0Q0g2NlNjZTdZN1Z1Z29n?=
+ =?utf-8?B?TUVLQVlPbTRrL2ZBMGQ3OTJpZW5GTjlyYWZldGxrRXJhSmJneGVLR1ZBY3Z2?=
+ =?utf-8?B?MGZJTEJ4cEhNZ1dNSVhWN3dqU2RGUHplRSt5encrOGcyV2Ntc293SlNJMHJj?=
+ =?utf-8?B?N0JkZVZaWFZNVDVVeFlWc1FTdzdqeHpHaHU5a2tjaVprRmhHUVRia1hsQmRh?=
+ =?utf-8?B?VXh3ZnNOT3RvRjJHL1JyK013Zzl3UklFbWN2aUFCTTRhejViQ250S1F1TFB1?=
+ =?utf-8?B?ZmFXUFVQL2wwZ0FPb3pkaEl5aE1UUlVOMW00R0dFcmp2Uys3b1h0U2gzbzZC?=
+ =?utf-8?B?NEVqdmZpT3NuSUVWSG50TkhqaURRVTd6ekxoQk9jS3lLdTBoLzdHbmkvQW9I?=
+ =?utf-8?B?N0VBYkJKSi81VGpjZjhPL01xSlhUMVdtVzZNZXN3TGpxRVZwVmRwN1FZT0tj?=
+ =?utf-8?B?dzRqeFpSdENnaVJ5QWU3eld3SURsVzdzMGRKblhiMjlzVGdTTVBjalNUWXh5?=
+ =?utf-8?B?Q0k2b05CK01vbUc3a21HdGdOcm9XUDg5K3FuelVQajlQRHRCcVBzdnRudkJp?=
+ =?utf-8?B?Rk81VFR6ZFdFdU9sR0llVmFyQythYnB1V1Rrc1FYTGJpRXNvOEZhcG9oTFFr?=
+ =?utf-8?B?OE9pckdxZXpuMmREcnpTSmhXZHVqdU5ieGFSRUlTd0U4c0FLWmlNSmh1V3B5?=
+ =?utf-8?B?Ti9pdFZ0TjczUTlmS0pvNmRMeXg1Ymk2QzUvbjBUcEFadjFDV3Z5RTNCUVdt?=
+ =?utf-8?B?L0JBM2hJbkZEaEpFTTVGaXVGc0pOMTF0MmYxNzU4aWl6NXhHQVRWZkdGV0Ry?=
+ =?utf-8?B?N0ExVXBYeXUrU1NuU3k2bUl6cjNOU1NMdGE4WDlOVVJiU1VubFZMay9JaUU0?=
+ =?utf-8?B?bktvVXhlb1FUMjhIREZ6VWhOZVpacmZMWHo3Z3BSc0IrZS9SVGdTZ1lYMnpK?=
+ =?utf-8?B?VHpndmZGbFNpc2tJcElEYkVjM0YrMHJML1o1UXBsNHk0VUxUUXBCd2NZdlJv?=
+ =?utf-8?B?MDhyeXlxemtXeTYzSlRCN1A4OGI1Tlp5VUduQ2NkdHNFblFHQ2k2SExDYnJm?=
+ =?utf-8?B?V1ZES0h4bGFtZXVRTFpWYS9CTlNjWUVmUDRSTUlHOWtQYVBmT1JibkdtL1oy?=
+ =?utf-8?B?VFhuREpsV0N5VlFvOHAyL0c4SzVoczBBL0dWTmZ2ZUhWUldGUkJhZEdIVVZr?=
+ =?utf-8?Q?jb+pnUlbeXi37p8gUjUvHZ6d8BpgmE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VkUyL0RHSjRIaXhRZkZoM1EzNGdFZ3RFZGQwazNsVTVCbXlYZkdvbHZ2WEwx?=
+ =?utf-8?B?K2tOWUhxNzBncHNwTldVZWhoODkrM3UwUUdNQ3ZHemlrSXorUnJ1VkNKZzJ6?=
+ =?utf-8?B?WG1yeUlSeEdGajE1eFc4SS96MGV2L2xyRm81V1hwNjVmN3V0cDgvQnNUbWhG?=
+ =?utf-8?B?MENJY2V3c2R3S0FZNGxwOUZEbGdPV3BGSU5EdWJQb1FVeE80V3VpRWJ2MVU0?=
+ =?utf-8?B?NXU4U3YweUJWK1RGdDBwQWJ6cXJLMzdWQUNQTFcwV3RieDNpNThrMU84eTlZ?=
+ =?utf-8?B?VHVycmxFV0w5WC9hbWtMR2R2MDBJR3JnQlBDNm12TU9kWGFFTUh5SWFLNTF1?=
+ =?utf-8?B?MXo0dUxmVjU2blc4Y0VwN0hwZ3BGRXZEMFRNbFdTM0xITHF0dndZTCsvSURx?=
+ =?utf-8?B?YXlvUFVOQ010U3RNbWh4amdtdGZiVzRPY1VCaEE3SGg3RHI2QnUwZEI3SWFO?=
+ =?utf-8?B?ZTg1Qm9ieVIycU1mTzdmSmVySUxJQTBZWmkvL2FuNHhUelZsenVNZjNzRDRY?=
+ =?utf-8?B?WExsWnoyWTZvWjFjTTVLV2hsTU1PeFV1Sjk1SmhCamdwcUU5M3BTOU1QSlVE?=
+ =?utf-8?B?MmRGR2pLM05NalVKOGI0d1RjV0NpbEk1d0V5NlI2cWsvNGp1d3NiVGRHTjlF?=
+ =?utf-8?B?WnpwQnhKaVFrVS9vUHM4UmRJVmE3UTlCUVphSnFGM2tnZjFLajdRck1na0xJ?=
+ =?utf-8?B?SnBndWFZeFJtakplb0RheWFoZjNURjJ0YTdWZkp6bmhmVWpsT09hMzJydWl6?=
+ =?utf-8?B?T1FxbkVmNEVqODhlbDhvN1g1MVNTUWFsalhUWlBFTmZTTlcraStrNWN0TE0z?=
+ =?utf-8?B?SVNDeW9YT25IU3BUd1JpTTZRaHJsdmo2M3Vjb0pMZExqRnZMdFF3T1VNcVVY?=
+ =?utf-8?B?MXpZWlRJdDQ0MHJBd3lzN1VrUHV6MXhnazRlc04xL04wRzdGZ0FHdGdPVFFa?=
+ =?utf-8?B?bXVjRC9SSGFtZHNJWmw0Qm1EK1ltSWhXdUpWVWJ0UUFQdXJNYTVIRldBbWZo?=
+ =?utf-8?B?a25VL214Wk54STlkeUhyY2d0RE5DSkF5dmpjQ1BLZ1BDb1BGL3dDKzVoWWxU?=
+ =?utf-8?B?c0hqTGJjQW04MUkycUJkSHBlSXh0cWlydHVhVWw0VUVtNVBPdldFN0xJakxu?=
+ =?utf-8?B?cUVyUXd1V21GVGZQMmtOckVuZ2xMZG9xbVN0NC8xakh0blU5Zll0bStSOVVO?=
+ =?utf-8?B?Zll0OW1BYUR0SkVpeVJIRHl6L3RSOFJ3dTZvclhoZTBROFVLNk9kM2g4TUZQ?=
+ =?utf-8?B?eXhOY01mNmdPNVp1OXFNVjZJYzJ5Rjc4MThXTkVNcFNnZFRJZjk2MHpDcHlH?=
+ =?utf-8?B?QURtKzFDcTJqaUowS3lzUjNDTy9zZ25ZR0Y3eHlFQUh5aGpsSWRmS2JlSnFz?=
+ =?utf-8?B?aWxXSWFoaGxsclZRTDFhQzRKdXRWOU5naEh2d1d4UVk5QXg1N0xVVHoyQlN5?=
+ =?utf-8?B?cFlDellGTE8xSHJiQjFVQTJaK1lRa1FvcmlLRTJlR2V1cTZibEtrdnNpUGI1?=
+ =?utf-8?B?MkdMQ0J5SnBiNm0zTHV5djlJM0tDWXFPelRCQjl3SU9HZzNYam1ZT3pUbXpB?=
+ =?utf-8?B?YjBUSk16dk5rYWNkbEd5WkNIYXJXVDdXdFQvR0twZUtFU0hWUjBTM2VmY0NI?=
+ =?utf-8?B?dTBRSERSTTlNaU41WUtGY2R6dEc1WUpnR0xEV3JWRWpIZE1YYVo4c1VqTzZU?=
+ =?utf-8?B?dkdkdGxOUE9tSUo5a3JlZ3ZHakRkdnArY0dLNURYSFRnTlJDU2xma3pUK3Va?=
+ =?utf-8?B?Q1YwVjZkTnU3bHZJYVFqM21kTUljdkZid2dQZzdscGQ2bGZOZnlraUZiaHM4?=
+ =?utf-8?B?QTlPbHoxVFAxWUdZNTN4R2FmNWZxZElUVUVzWmtXZ2hWZHJYcm5lbCtwaDA5?=
+ =?utf-8?B?SExCU2gwbDJTOTZDNk9nN1lhaXlUNUdCOVFPRmx2T2NlL2xUMlp5N0JGTHhP?=
+ =?utf-8?B?ZmFQcldFQ2xBUk41MjN5Y2NVdGIvRFRDSEJLUFV0TG5GVHZvbm4wZ0Z5bWxV?=
+ =?utf-8?B?ZUJxNEtRM2FKYlNLd3llS2I0WnFnWnlGWXk4Z2d5dmd4b25ucVlLaXM4cW5F?=
+ =?utf-8?B?VnFhYy9sZXYwYkttcllmVTdCVk5TYVpSQTBqZ3lleHh2VDBFby80NDhnYm1o?=
+ =?utf-8?Q?B+4I7SSv/jIrtz3SGFxNP+ZAR?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 341e4014-2316-4bfe-920e-08dd8274848c
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 14:38:30.9764
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jKxrrIxoUTv892XQil6r4oCMk/eE36PI95zr/zxmjj9Qpv/8lxklcwzFCEj9EkjJMNgcSo3BUEnv9SHPpeW0Fw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10844
 
-Am 17.04.25 um 16:47 schrieb Maciej Fijalkowski:
-> On Fri, Apr 11, 2025 at 10:14:57AM +0200, Michal Kubiak wrote:
->> On Thu, Apr 10, 2025 at 04:54:35PM +0200, Marcus Wichelmann wrote:
->>> Am 10.04.25 um 16:30 schrieb Michal Kubiak:
->>>> On Wed, Apr 09, 2025 at 05:17:49PM +0200, Marcus Wichelmann wrote:
->>>>> Hi,
->>>>>
->>>>> in a setup where I use native XDP to redirect packets to a bonding interface
->>>>> that's backed by two ixgbe slaves, I noticed that the ixgbe driver constantly
->>>>> resets the NIC with the following kernel output:
->>>>>
->>>>>   ixgbe 0000:01:00.1 ixgbe-x520-2: Detected Tx Unit Hang (XDP)
->>>>>     Tx Queue             <4>
->>>>>     TDH, TDT             <17e>, <17e>
->>>>>     next_to_use          <181>
->>>>>     next_to_clean        <17e>
->>>>>   tx_buffer_info[next_to_clean]
->>>>>     time_stamp           <0>
->>>>>     jiffies              <10025c380>
->>>>>   ixgbe 0000:01:00.1 ixgbe-x520-2: tx hang 19 detected on queue 4, resetting adapter
->>>>>   ixgbe 0000:01:00.1 ixgbe-x520-2: initiating reset due to tx timeout
->>>>>   ixgbe 0000:01:00.1 ixgbe-x520-2: Reset adapter
->>>>>
->>>>> This only occurs in combination with a bonding interface and XDP, so I don't
->>>>> know if this is an issue with ixgbe or the bonding driver.
->>>>> I first discovered this with Linux 6.8.0-57, but kernel 6.14.0 and 6.15.0-rc1
->>>>> show the same issue.
->>>>>
->>>>>
->>>>> I managed to reproduce this bug in a lab environment. Here are some details
->>>>> about my setup and the steps to reproduce the bug:
->>>>>
->>>>> [...]
->>>>>
->>>>> Do you have any ideas what may be causing this issue or what I can do to
->>>>> diagnose this further?
->>>>>
->>>>> Please let me know when I should provide any more information.
->>>>>
->>>>>
->>>>> Thanks!
->>>>> Marcus
->>>>>
->>>>
->> [...]
->>
->> Hi Marcus,
->>
->>> thank you for looking into it. And not even 24 hours after my report, I'm
->>> very impressed! ;)
->>
->> Thanks! :-)
->>
->>> Interesting. I just tried again but had no luck yet with reproducing it
->>> without a bonding interface. May I ask how your setup looks like?
->>
->> For now, I've just grabbed the first available system with the HW
->> controlled by the "ixgbe" driver. In my case it was:
->>
->>   Ethernet controller: Intel Corporation Ethernet Controller X550
->>
->> Also, for my first attempt, I didn't use the upstream kernel - I just tried
->> the kernel installed on that system. It was the Fedora kernel:
->>
->>   6.12.8-200.fc41.x86_64
->>
->>
->> I think that may be the "beauty" of timing issues - sometimes you can change
->> just one piece in your system and get a completely different replication ratio.
->> Anyway, the higher the repro probability, the easier it is to debug
->> the timing problem. :-)
-> 
-> Hi Marcus, to break the silence could you try to apply the diff below on
-> your side?
+i.MX8MP UID is actually 128bits and partitioned into two parts.
+The 1st 64bits are at 0x410 and 0x420, and 2nd 64bits are at 0xE00
+and 0xE10.
 
-Hi, thank you for the patch. We've tried it and with your changes we can no
-longer trigger the error and the NIC is no longer being reset.
+patch 1, 2 is for code cleanup.
+patch 3 is for i.MX8MP 128bits support
 
-> We see several issues around XDP queues in ixgbe, but before we
-> proceed let's this small change on your side.
+Marco comments on v1[1] to introduce soc_uid hook.
+To do it further, introduce imx8m_soc_prepare/unprepare.
 
-How confident are you that this patch is sufficient to make things stable enough
-for production use? Was it just the Tx hang detection that was misbehaving for
-the XDP case, or is there an underlying issue with the XDP queues that is not
-solved by disabling the detection for it?
+[1]https://lore.kernel.org/all/20250317094518.yf2hbq5sjl7lgfwb@pengutronix.de/
 
-With our current setup we cannot verify accurately, that we have no packet loss 
-or stuck queues. We can do additional tests to verify that. 
- 
-> Additional question, do you have enabled pause frames on your setup?
+Tested on i.MX8MP/M-EVK
 
-Pause frames were enabled, but we can also reproduce it after disabling them,
-without your patch.
+V2:
+ Introduce soc_uid hook
+ Introduce imx8m_soc_prepare/unprepare
 
-Thanks!
-Marcus
+V1: https://lore.kernel.org/all/20250314065225.442717-1-peng.fan@oss.nxp.com/
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+Peng Fan (3):
+      soc: imx8m: Cleanup with adding imx8m_soc_[un]prepare
+      soc: imx8m: Introduce soc_uid hook
+      soc: imx8m: Dump higher 64bits UID
+
+ drivers/soc/imx/soc-imx8m.c | 177 +++++++++++++++++++++++++++-----------------
+ 1 file changed, 108 insertions(+), 69 deletions(-)
+---
+base-commit: bc8aa6cdadcc00862f2b5720e5de2e17f696a081
+change-id: 20250421-uid-128-a0f9ad528437
+
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
+
