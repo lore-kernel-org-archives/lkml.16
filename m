@@ -1,194 +1,117 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0321B2580E7;
-	Wed, 23 Apr 2025 02:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEB22701B0;
+	Wed, 23 Apr 2025 02:24:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745374916; cv=none; b=tUR/sgjy0UJQHzF2ZbQEBHF9Bn89MZFgAUkI2dp6LOo7dZi7E8eKQbBgXYK/41W4+9JqRNI1rqXj/9t9DFPezWhmDbTzSEme2NiDEK04UiTbg8VXRNnRIXCpIqOzHZHok9gs4V3Tou45vN6xKEiJBB9Dgi9ILdLRBPPhekquwR8=
+	t=1745375054; cv=none; b=TV+rj8glUndq6HeqWzH8aL/twvKuBnZnQnGAbnsrbBsgHvkfImFIjW9qm55ACpPH+OWkg1/CylgFTI15mWpO/KzRcA1yAD23D3y6egmx/BYJvt8csbKRIbr+3C26ssawJItM0t25p/2M+DErxrPaODNw3Q3b8R0Y2C/FmN+ucog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745374916; c=relaxed/simple;
-	bh=qK1B6jvfJpjhNVBbGzIkwIUA4t2Sc/jOmyAV02x6m9w=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=B2p7pYgOYE3kz1kDF90HjnKGfLijr58qg5erOXdk9Xu7BC0IHXI2ooRKIArMXZXS6RehZfcQ78JQovoyU8ZSlwKWXQiSwy0o8o7wxoFWOpV6O4rIqp+drTh6qjRPpU0tddKr3pTCOmWXVNMyxMDnQ8kqCY2M0p8eqZ9CnMyPDbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LjwjNV18; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745375054; c=relaxed/simple;
+	bh=g2eBraSmadc79i0Y/megN+wsZJtXKstGJ8cKh0tqAAw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=aXBMlkcXxBDN7r0QdNuB9c/Ug4vOj1ZamxvpMFB9yHa4lMxFylql31U0MbltvGbszcCYHjS7MSHd7qpxqQPptPaoA8LpGHZX+O61vPgiSat4pnqbArLvN7KEdcO2iyoKI1wgP/sPT0aN/6evxkJaqCV99q82GANoY0NYuhUI93k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gcEsVa04; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LjwjNV18"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gcEsVa04"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0iOFC024199;
+	Wed, 23 Apr 2025 02:23:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	A3p0shn+EadAgS37YRBKT47mpjkqtQBb46wYknXcv7A=; b=gcEsVa04yMM/LiEo
+	biMv9NF5VP2uzwEC5vulbuTJT7OwSiWpOVkYa1HKbnFnDrUTH2RSFtEzgF6cSbpA
+	o2CaeQFj3HrrV2RH7EYbpUJuouZ0V91V6023chl4/8e7qdP2NOh9bFGe6RibjLuC
+	XIwC8/3aUhsEl8pmXMwg3GY1f1yJRohs+Y5UvESX8SiUgwHFPVBd9/g+V5E22lnB
+	YahZRH3UW5j75zasBQHTENqVk8InRbFeSP06+qNfe48QDFaZ8o9X5s5A5Kgb9COO
+	D7o1PAyr9eYtg53/t6Aaj1SQQgnyHGen7rGUasFhbgwc0yDReOVv4GC9kVSaeHlt
+	f6/liA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh38k15-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 02:23:53 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53N2NqTm011450
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 02:23:52 GMT
+Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
+ 2025 19:23:51 -0700
+Message-ID: <079bdb90-2dae-4feb-a32e-7a7ce8a3a972@quicinc.com>
+Date: Tue, 22 Apr 2025 19:23:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745374899;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NQ0Kggt3gIz3TlRpiFCQVgKvnBoDfQL2jMrv9qB9Iz8=;
-	b=LjwjNV18VzAy7rjmHeaQ/CMcof1vElFdxNyStaN879ELat4cJzDrGvlOokj8RTLUwkij65
-	NGbYcQc2uCyzpa84E3X2brrHTehsLfONlPpTlaaI0LslBHRJWNlebbl+KA+eieSQ8/L88q
-	Gx7RBeG1HCod+06ojg0R7a7Oo7ot8vA=
-Date: Wed, 23 Apr 2025 02:21:37 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <cbb82d78518c251000e8b52e3f3799b0df438210@linux.dev>
-TLS-Required: No
-Subject: Re: [PATCH bpf-next v1 1/2] bpf: Create cgroup storage if needed
- when updating link
-To: "Martin KaFai Lau" <martin.lau@linux.dev>
-Cc: andrii@kernel.org, alexis.lothore@bootlin.com, mrpre@163.com,
- syzbot+e6e8f6618a2d4b35e4e0@syzkaller.appspotmail.com, "Alexei
- Starovoitov" <ast@kernel.org>, "Daniel Borkmann" <daniel@iogearbox.net>,
- "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>, "John Fastabend"
- <john.fastabend@gmail.com>, "KP Singh" <kpsingh@kernel.org>, "Stanislav
- Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>, "Jiri Olsa"
- <jolsa@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
- <shuah@kernel.org>, "Alan Maguire" <alan.maguire@oracle.com>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org
-In-Reply-To: <c6a9b230-f163-4c03-b834-ddcc71c47204@linux.dev>
-References: <20250417044041.252874-1-jiayuan.chen@linux.dev>
- <20250417044041.252874-2-jiayuan.chen@linux.dev>
- <c6a9b230-f163-4c03-b834-ddcc71c47204@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] dt-bindings: display: msm: dp-controller: document
+ pixel clock stream
+To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Clark <robdclark@gmail.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Kuogee Hsieh <quic_khsieh@quicinc.com>,
+        Mahadevan <quic_mahap@quicinc.com>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20241202-dp_mst_bindings-v1-0-9a9a43b0624a@quicinc.com>
+ <20241202-dp_mst_bindings-v1-1-9a9a43b0624a@quicinc.com>
+ <e8f2e17c-13c1-4485-8e9a-d67705e461d6@kernel.org>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <e8f2e17c-13c1-4485-8e9a-d67705e461d6@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: XNhPFzHgSVf8tZ7uxJJbchvi4jvQGUkl
+X-Proofpoint-GUID: XNhPFzHgSVf8tZ7uxJJbchvi4jvQGUkl
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDAxMiBTYWx0ZWRfX9hDdm3ug2qfK HoTCYPSVU+rvUSU/PtDeRevJkQz9ko8+1GI51wFXfuH+JhA8oBMO4ivYbIwb2S1NdFubtuFOuN6 bmVWIX4Pzoq3Nq0YGlFZs2W3cn2W6Bdi2lWvyt2h2tJTlnHOh5SWEfyCu5ec5sn9CeaSPFyZIe7
+ B43rNIM1FhEUnF8RIqRr05n5FbaNT/QTfEenZmaupjziBu1ZK8FffCQqLh+c30n5oOZBe52OSaC /hx43O6bOwwC7UsQRYobfTbALhOoXG6yQaqqGflzmsKOi7zpu3E0PsZyUn2F5AkWNAH9fUyqSeu Ka6f1Oz+/os/fCTbyBJ0OWb6CFkFzwYx3yirpaQ5m7P+KqeUImRS3Y6KGr+gFdqj1/94Ei6rWdb
+ QsvOV6HxtCk/b6Q2+4rCdD0Bt4smUgqELJ6n1WeDSsB9QXGL/pxuMD2y+Z+ttuySdpkb/rt7
+X-Authority-Analysis: v=2.4 cv=Mepsu4/f c=1 sm=1 tr=0 ts=68084f39 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=wkMkCz1etwRys_XeWVAA:9 a=QEXdDO2ut3YA:10 a=QYH75iMubAgA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-23_01,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=964 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230012
 
-April 23, 2025 at 08:13, "Martin KaFai Lau" <martin.lau@linux.dev> wrote:
+Hi Krzysztof
 
->=20
->=20On 4/16/25 9:40 PM, Jiayuan Chen wrote:
->=20
->=20>=20
->=20> when we attach a prog without cgroup_storage map being used,
-> >=20
->=20>  cgroup_storage in struct bpf_prog_array_item is empty. Then, if we=
- use
-> >=20
->=20>  BPF_LINK_UPDATE to replace old prog with a new one that uses the
-> >=20
->=20>  cgroup_storage map, we miss cgroup_storage being initiated.
-> >=20
->=20>  This cause a painc when accessing stroage in bpf_get_local_storage=
-.
-> >=20
->=20>  Reported-by: syzbot+e6e8f6618a2d4b35e4e0@syzkaller.appspotmail.com
-> >=20
->=20>  Closes: https://lore.kernel.org/all/67fc867e.050a0220.2970f9.03b8.=
-GAE@google.com/T/
-> >=20
->=20>  Fixes: 0c991ebc8c69 ("bpf: Implement bpf_prog replacement for an a=
-ctive bpf_cgroup_link")
-> >=20
->=20>  Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-> >=20
->=20>  ---
-> >=20
->=20>  kernel/bpf/cgroup.c | 24 +++++++++++++++++++-----
-> >=20
->=20>  1 file changed, 19 insertions(+), 5 deletions(-)
-> >=20
->=20>  diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-> >=20
->=20>  index 84f58f3d028a..cdf0211ddc79 100644
-> >=20
->=20>  --- a/kernel/bpf/cgroup.c
-> >=20
->=20>  +++ b/kernel/bpf/cgroup.c
-> >=20
->=20>  @@ -770,12 +770,14 @@ static int cgroup_bpf_attach(struct cgroup *=
-cgrp,
-> >=20
->=20>  }
-> >=20
->=20>  > /* Swap updated BPF program for given link in effective program =
-arrays across
-> >=20
->=20>  - * all descendant cgroups. This function is guaranteed to succeed=
-.
-> >=20
->=20>  + * all descendant cgroups.
-> >=20
->=20>  */
-> >=20
->=20>  -static void replace_effective_prog(struct cgroup *cgrp,
-> >=20
->=20>  - enum cgroup_bpf_attach_type atype,
-> >=20
->=20>  - struct bpf_cgroup_link *link)
-> >=20
->=20>  +static int replace_effective_prog(struct cgroup *cgrp,
-> >=20
->=20>  + enum cgroup_bpf_attach_type atype,
-> >=20
->=20>  + struct bpf_cgroup_link *link)
-> >=20
->=20>  {
-> >=20
->=20>  + struct bpf_cgroup_storage *new_storage[MAX_BPF_CGROUP_STORAGE_TY=
-PE] =3D {};
-> >=20
->=20>  + struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] =
-=3D {};
-> >=20
->=20>  struct bpf_prog_array_item *item;
-> >=20
->=20>  struct cgroup_subsys_state *css;
-> >=20
->=20>  struct bpf_prog_array *progs;
-> >=20
->=20>  @@ -784,6 +786,10 @@ static void replace_effective_prog(struct cgr=
-oup *cgrp,
-> >=20
->=20>  struct cgroup *cg;
-> >=20
->=20>  int pos;
-> >=20
->=20>  > + if (bpf_cgroup_storages_alloc(storage, new_storage, link->type=
-,
-> >=20
->=20>  + link->link.prog, cgrp))
-> >=20
->=20>  + return -ENOMEM;
-> >=20
->=20>  +
-> >=20
->=20>  css_for_each_descendant_pre(css, &cgrp->self) {
-> >=20
->=20>  struct cgroup *desc =3D container_of(css, struct cgroup, self);
-> >=20
->=20>  > @@ -810,8 +816,11 @@ static void replace_effective_prog(struct c=
-group *cgrp,
-> >=20
->=20>  desc->bpf.effective[atype],
-> >=20
->=20>  lockdep_is_held(&cgroup_mutex));
-> >=20
->=20>  item =3D &progs->items[pos];
-> >=20
->=20>  + bpf_cgroup_storages_assign(item->cgroup_storage, storage);
-> >=20
->=20
-> I am still recalling my memory on this older cgroup storage, so I think=
- it will be faster to ask questions.
->=20
->=20What is in the pl->storage (still NULL?), and will the future compute=
-_effective_progs() work?
->=20
+Sorry for the delayed response.
 
-For=20non-link path:
-cgroup_bpf_attach
-	bpf_cgroup_storages_assign(pl->storage, storage); // allocate and set
-	update_effective_progs
-		compute_effective_progs
-			bpf_cgroup_storages_assign(item->cgroup_storage, pl->storage);
+On 12/3/2024 12:01 AM, Krzysztof Kozlowski wrote:
+> On 03/12/2024 04:31, Abhinav Kumar wrote:
+>> Display port controller on some MSM chipsets are capable of supporting
+>> multiple streams. In order to distinguish the streams better, describe
+>> the current pixel clock better to emphasize that it drives the stream 0.
+>>
+> This should be squashed with patch adding stream 1.
+> 
 
+Sure, I can squash this with patch 3.
 
-pl->storage is just as a temporary holder, never freed, and its value wil=
-l
-eventually be assigned to `item->cgroup_storage`.
+> Best regards,
+> Krzysztof
+
