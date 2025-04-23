@@ -1,189 +1,177 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2050.outbound.protection.outlook.com [40.107.102.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880541E04AC
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 19:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745434875; cv=fail; b=UEOglmzQGZ8CHIwjXT0J4z3hmOCB3VYYKChnMVad3K5vI7FkQU7HGwqyxI/KqtMLWVz4dMyMPBH+tjg5bYGYhAmZYfl5Z7aW35XT3gjhTilnc2VDbjmLRW9LLzgOSj2Tbo+JA+iTTkP3U6P792ntkjBS3pPVd2F30nwhYnaxyqI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745434875; c=relaxed/simple;
-	bh=TaHKzbb8SieM7HIjUyWP/ovLyjhp+FooLtuh6Pg7fLE=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=uvSsQtkU3oh89IVF5B7gAdvPWvq7oTL+TikVRTLdmSD1ObF4GqVeybEu4/MUr40xsmUMWgFYXDFyuXpDsJSZGiabf0g8U5Xy+ybxQsmLY70dISelkr0LqywObOex8qWpmEzv/rreSzSWcLPIByFws4pbNQlpWoSiMnbahLAOpQY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=WzykStuD; arc=fail smtp.client-ip=40.107.102.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1881E04AC;
+	Wed, 23 Apr 2025 19:03:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745435028; cv=none; b=cVR+1n4MAMX0Df8z5PLTjbys8XklHIvsF/TdAcY3q7IS2KIhE0YWJDSooY1csUyPU3falXZljyH0Kt2phWcmXlW/hA+XfN009gt7hdpkswDVTVjMGzXahqQc9QPTil/0xfPJkq+T80vwLIac4DavHHibN5g9HeK6DAFcTHh6Hkc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745435028; c=relaxed/simple;
+	bh=wDlRwR+Zr8jVD3tfOS2Otjt+TATgoKLMCXzeY/ZwPw8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CR8FbdoJcEv3bLTQwE6A/Va3bL5dLQ4vfwI0rGB4l9ixpVD8OYDkjAKaQBrq4kWrYKXqjnX21tW6+hsNqvfprgPbCRtX0zDj6/4f4MMHSlMvcdC+q4nKtTxc8vkuvjJLQoacencBiUaL688NFzywkryVQ4I1iKj5EgDWtjXwopI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ODiudV0D; arc=none smtp.client-ip=209.85.167.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="WzykStuD"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qNMtAE7ZVoYGpozAvJEpXV5j32YL5K+bvJ5qL+GfDddLytOCh4Qa0NDQ95fPpv/7lk2ESZUT+vvki2yiAzXHAAKKnx7pZnbvyn3uw3i4ZJzf9F2dyp6x/lIt2JHx25uuZviSo/7+Vy0aOvavi+JgFfOkIK8MRmjwR5LPGLhmRDx0H5QCQr060Iqy4kJ/BOEoJslGPoXfrv8IAo1QFafC8NeHB6iPnRugmmgjRCeofq1YJQL7503A70Z5cymD2w8T6PYzfzy/CtqHebN+ZsNRzx3t2TcpaPSshzkAmtdTOxPIYMmoTtPCIR4jxckpg9ByphoLB1KKIKNqSSS5xwRdzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6fKIAdH9lP+RDLRiAIgc9CI8kSOhPyvX7WIIlWxFZl4=;
- b=TVSWxRfNXugEZXJVNHlUSmKp4hycMulOoVCt4+V5quCmSwTQLCeSK1h178wDYGXm8HXtFpQwhQuunuX7pNoxt+Z6r8HXmOIJf5m8aPLM0oAlVVpwo1pZiS4VO5ps0VjMpTirnvDW4tc7FJHW8AD7AXSOJAsDqhK9Rmo1mi6KDrUNSHJZN1xPFDsThYqgUADW+jf6suyR3GCXEXxZr/5d46Ja7UESrF7Jh0bnA/3dWvWfKtIZiaKDt6jnVclpb21ewoHeOFWv9kQF/TbOUFmkmW7OT+JdOcCPNpb4XUd+7JcwQBa870DVZcYx+KZR2EJG/mwGLtGP2E2O6qMth69Zjw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6fKIAdH9lP+RDLRiAIgc9CI8kSOhPyvX7WIIlWxFZl4=;
- b=WzykStuDgEyhQOy1idrCd4HvWjT89i4GDJsMvIKkI8RhO00wJ+IA4nkArelQcwvrI6kWfIK1Vci3GmyOGzCe2vt/YgAX7z++IqPufjnxUeLCDGwoLlhtmDggg5lBa/PKhHw4TF9jeE4K1q+cdL0Jj6FXwhq3I27JZEKyDeerWWh8BtD4myg9+WvGtnTxaRhY4aksvguRt6K9t6bSif0etBrD1cl3dFOn/XfMVSFRkmJquob0Kg2cOfuq0f8CaURzQ26YnB2PVhX2S1j9iDHQU43E19PF7lReLNf8PF7XS3XuV1bSuAvtqnbPcQxV30aXTHfWMG+qq+6TDw1xYFtVHA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by MN2PR12MB4375.namprd12.prod.outlook.com (2603:10b6:208:24f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
- 2025 19:01:09 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8678.021; Wed, 23 Apr 2025
- 19:01:09 +0000
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: Jake Hillion <jake@hillion.co.uk>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] sched_ext: Clarify CPU context for running/stopping callbacks
-Date: Wed, 23 Apr 2025 21:00:59 +0200
-Message-ID: <20250423190059.270236-1-arighi@nvidia.com>
-X-Mailer: git-send-email 2.49.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR0P278CA0177.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:45::11) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ODiudV0D"
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-54b10594812so158890e87.1;
+        Wed, 23 Apr 2025 12:03:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745435024; x=1746039824; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=en/iBfwqsTMhKUTpB6sf23cFVGEzkH0eP0mb15QhBmM=;
+        b=ODiudV0DoLgAc3VqdEMnN8QNGF8AXqeL3lFIweU0sfWoR0IXNidoRbMTfWpTIVD0xh
+         PgAkGiLEUQfJoW5uKnuYFi1aNyZiDpxLmmqB2qg9U/AVbJgVivbsXv2WZrwS7RvW277+
+         M2cjnZ5RRBbchPySP7C6Zy+3Vs4NP743nFdk4Q2f21fZvdd1flgeUB5Op+Yq+WnRHj+X
+         n/OJJ5tG9HTLoGJ/yqgja0DxtyPEQj6ini/oytffzxS2Y7gyyTrp6GCTf6i/eNVEeDR4
+         U5bjKgj5sBzClVp5SZJTUI1SWzAPUuQNuunT+WNguFk1+fWD+ZkHY94m0TXY2zyeiG4y
+         6aMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745435024; x=1746039824;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=en/iBfwqsTMhKUTpB6sf23cFVGEzkH0eP0mb15QhBmM=;
+        b=S4iojpSz+J1dJbW2mvxOuCK01GmpdKOo4MbbtXCfyDiKnQLpC6lJDnSMYhxR3FlLbp
+         lbXke32USC0+Zuybvsj8mCIrbj7X8lvU6PE0OC9I4Aqev4nJY7Htc3/SlZr7n007eo3q
+         5nU7PhD1r7dDpzHylPkYFPVZM4RaZTWVI0mxeM+XlbTB1DN8G02mpEqy6qIs9dtsHRnY
+         egEM70g/VdNlowsataYauLV7E+buM7lqn4K8DYYxNmy1xHmK7KhztJfNcNig7R23fPSm
+         AsSNQlCrBGjQQKDqmda9wIgCmOy8g/DduJsst1dbKkg9bGb469oXVrwGvgu1KALNr4Ot
+         oTFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU/bVLjpuHxOCMwzlef0YseNKxgogQ73vv8wQkHFIigCP6nsSVoKUS5fE9jBiJoDJMnJTitlQvdEpPCg1GK@vger.kernel.org, AJvYcCVuKhrwPsnqbo8olatGFP8RX/OjFDarrIDpn9uQvh3zDf+KovOSz+ZgeZE90U+Sgxct8RBhKocD2FYe@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIzDt1g30Tcd3t6HX99jZxcp4dWx/DL3+JCJSaIT1xRuC6l/Nb
+	rGoPOtDONLowPAUZTn9IsQNMSpzJtvIvkYDZeKhv+Kuhhr7dgdCH
+X-Gm-Gg: ASbGncsCsFE6+sySSbAviLg9YGDvJ5zGJCuY9SuZLKX5R1uu6nc7vYyNUFaRymzf2I4
+	YSxbq4hDCehepZZuXYbZdoHs1MWDpAXWzfN+20MlVq6io/emu0DHJbkq/njMIMbI+dN70buWlnS
+	e8cYhCqAsaXEJzHXZ1jRQnTgqNT+UUt3oaOXs6j21i5XLV/qNTvpm9SRN99LneSOscxgYijvjJm
+	dm/JReMXzQs1I5yIxOvgiHsNSkcybZmH94mixuylWUSWKZkOeH1NTKWB0dx10o2biVfMBKxOiH1
+	Qu78KcjG9zpPHpkxAK45GdGAu71EwC/Z5a9wfaaPK0o6ELBhnxAaYdPbLwrZFx4lZkTWSYr+bMG
+	FKnk70A+f
+X-Google-Smtp-Source: AGHT+IHGsy4ep0gTADiRvsgTHa/MWPL+04X0Wk7QfSrqXoiPZZeHYrCbDgj3uF2zm3zBGOeFS2X74Q==
+X-Received: by 2002:a05:6512:3b85:b0:545:c33:40a7 with SMTP id 2adb3069b0e04-54e7c429f0emr12937e87.26.1745435023893;
+        Wed, 23 Apr 2025 12:03:43 -0700 (PDT)
+Received: from [192.168.1.11] (83-233-6-197.cust.bredband2.com. [83.233.6.197])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3109084d9d0sm19475141fa.97.2025.04.23.12.03.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 12:03:43 -0700 (PDT)
+From: Marcus Folkesson <marcus.folkesson@gmail.com>
+Subject: [PATCH v6 0/3] Add support for Sitronix ST7571 LCD controller
+Date: Wed, 23 Apr 2025 21:03:19 +0200
+Message-Id: <20250423-st7571-v6-0-e9519e3c4ec4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|MN2PR12MB4375:EE_
-X-MS-Office365-Filtering-Correlation-Id: 211b8f57-9849-4f6f-adc2-08dd8299353b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?r1aO2m/Cu7Nlipc3mzD0Yi9u1e/uwlpo2Lzyn1CbEEnuMzhQhRFGKMqKPBmd?=
- =?us-ascii?Q?M9I8/CVolMxNf8IQFulr/XiCMVfS6QOzIsPc+HP74sS54SDQneRy4gZoxe/7?=
- =?us-ascii?Q?mliZ3tE1geIXsq1C6NMRL/MXEShw49aO02eabcDyDKUSoCQlRsbWdL4mMDe1?=
- =?us-ascii?Q?1zZWGnfcUssXS24AEGMFKDO5d83SDrPbH0Fg0scM5Q9Yhi8L+xuiQAl5wxm7?=
- =?us-ascii?Q?Jq/WmIiBaMZQgetCnKZ47XykD1HkxgnRTq2q1DcymsVJz2A0KbR9YWB05gHh?=
- =?us-ascii?Q?VD3Iiy56jeyRKtm1XkA75YHK+zuzKrbWpe+dez3AzJXkifG3GAPad7AiWt2G?=
- =?us-ascii?Q?6Tr41aaIxwVtsegvhzOPVuOGB2wA+xQxWUj+THfQhbna32wvACMSWo29o+oK?=
- =?us-ascii?Q?09PqsFxXdRig95VdrL7/qN/GozpMI6jVV7RobEgNAZBY2jNVqCa2cX/5TPxN?=
- =?us-ascii?Q?xkecvtczbg0ww9yCl+d/iFfcyJo96zD4UL0psWyjOmcN/aqCBjVmlOWC7d2j?=
- =?us-ascii?Q?hRFEpbqOSzuEwoqH9dh2mOt4AMBhi0ynpymb6JPt7E249tcn5hM8SiitDax4?=
- =?us-ascii?Q?stkmf0gmHiJRhnWvFe74ntDmmZ9de534Y59ceazSNYwA4Ke8uEylqiRE5Nry?=
- =?us-ascii?Q?Lhlz7mb5p5mDLqmDoxVRw0mzDaXXZSCyQ+P+HOdqX9mmn3/TL+08qH9dFnUS?=
- =?us-ascii?Q?GdtBJcQUA2M9khS4MpZyp+TNDKaG+NY40M428ZccDdHx3vsm5jArLVhdPchw?=
- =?us-ascii?Q?MhORqARBrRXN8D1dDgKpMROTRHeWFJzogzSN/TWesNOEEmLa42JqAHqrW1nc?=
- =?us-ascii?Q?w4kmddThjjovXObOEeFnvlS+stYmM77jxW2RB2vX9JoaQ6af7M3f3Fkkk/N5?=
- =?us-ascii?Q?AURNk1X6OlCWn7QkipHcOQzQgXW+ARYlMRNw+1kZeWpujyE9ztuhcXQkS0hs?=
- =?us-ascii?Q?TgKAs3+EQ8L75iK+k22ywPVH1ydcH7Q1wzIfZn/uuTUuiVNLaom9JOuKMLJU?=
- =?us-ascii?Q?WNXSKo/c1MyIxQVx2I+DLBOPtQntZzosPdJNYjewWGGHBeJ0Rl8n2gdlx9Yp?=
- =?us-ascii?Q?z0GYb4gzCUlY4Si0J554xV7IQufvYfIrYHB0VbZTqKHh9EYTU5PXuuyCbc64?=
- =?us-ascii?Q?Mi/cxddEjr4FLwuZ8TQt1ZKP36aYolyOixc/ATr0l8Uv3YOWMiBlbSvYPX9f?=
- =?us-ascii?Q?TcespL2454rBSvjs5I3V2qjJyOpf7QYQncn3679oyqGZSRTgbsTwo3obt1BX?=
- =?us-ascii?Q?dQ3zL/a6LR1DvZafQFt36V916PC6HZhAceSNSgmllRM857EMMP8giXKekTKP?=
- =?us-ascii?Q?mzkilE+FUqtu/WquI+35gKQhwc/Gqm6CGq7x7977u6hPBz/zp6FlsRcciloz?=
- =?us-ascii?Q?EbnalHFdJLUdIDxiB6iIxpEXXBzyeT23airgkqjbnxwh1jLxVKhhwI3BkZPj?=
- =?us-ascii?Q?x2Jv1ClAYpY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?923TnbSqsycUM/qNHsHrGY2D+6W/11eSzaBm3fw5m1s4DTCWO+cSQs8T6ZEj?=
- =?us-ascii?Q?CxGAx/PbtcfIBHyX2h3lH7ZHWrQ/9FOdFOv6z33XvTS6ydTR+AK9XAhIVoW6?=
- =?us-ascii?Q?OYLDbw4yJBunHICsUDTItMiQV9KvQILDs+x8kP1kpbcIE+gKiXJQVjetVbE+?=
- =?us-ascii?Q?o7e+3L22lJS+T+90MzVbtWIjjSIdnJmOKbNhRy8CATV1XMIJAkOMTpx4vlWM?=
- =?us-ascii?Q?qubTMrChxTM9n+4utF+C6ceyxsR9zwkJom18XWTfgaIfA3MFfVyShnIZ7HCd?=
- =?us-ascii?Q?lskSygWXCV5FVojVzOgfS2HMgM2zN4R/8wq5Rx7kpk21pEFpBmrM0GMDJKZX?=
- =?us-ascii?Q?pmqnYDtwlrADcuBQCJGaFuOmYw6Gej5Eez56NFSwV+rc+EzdNZSHwd6AOdyd?=
- =?us-ascii?Q?wciB8RueNDVeXOyOlBCTyKhWhALoAdUTcMdxshLacBoKS7WMFZOhmakLgOgH?=
- =?us-ascii?Q?XIymTsAz6z+/nmNsIb6aRfr6Wa95XM3RvH9mfnarEZL3OzBQtvfhToWevycf?=
- =?us-ascii?Q?GScIiP4HEXsEUR3Wlgj3PIy8whZaI5YY9uN/WY5KYtRmv5pjdvvNqIV+gJP7?=
- =?us-ascii?Q?b+d0nt4g0gqRmmLr20EOEVvrY5AxZ2BeS2lPWiqOHnPDWt47NjwBJ7ZhAzg0?=
- =?us-ascii?Q?+SCccP2yDpi7gB8JzJNCIRzlYib+4nZlw8X0vJaUuJCxfMu1TJD4OgegHnlw?=
- =?us-ascii?Q?KMCuSu+8AUexR8jwIGt415WASw0cBMUf9EUNZ5KCVRXu8iP8qi7PiO5pYxnj?=
- =?us-ascii?Q?WcB1qpWKDHljFQoo108YZ7ZMk0+qXnobxLdQIZYFqiZ6rcf1NC/KLwCvyZSg?=
- =?us-ascii?Q?uFZNOKJ5U8rJE9SzjAsAmjJJvp3OOTuMYqo8mZN13mYsOLQ8/BX0Oa5OB1Gv?=
- =?us-ascii?Q?4ukm8qsvZI6/RO1mKyQfanxl+yZ1HgeA/baUmjjtBvgJMgUq71iWiKzpNWXx?=
- =?us-ascii?Q?YOkb7VIa3Fn/VzpnfGfuKUb9H578R4Ja+5zpfLeKnibTL/PTKrt5RioHqJK1?=
- =?us-ascii?Q?ZYFKzERhQR7UO05finiWVe3fmqd7B8gXseZskzlB3YA0XIl3jh6QEg8e58wJ?=
- =?us-ascii?Q?PrelIIrxxtTUn8rGY42wMNrgPdPMQ+TBNe20+HsFo+GKn7l3HbxDrdYrZDqF?=
- =?us-ascii?Q?p1Z9l293dMFlmeb4viQInWM/5TP7AhfrGI9ALrEiOaEM72RTc/jHXrAG9SSm?=
- =?us-ascii?Q?Z1095o198Kax3CDG6aO/uzMLVO/BR+nzBBJtU41mVr0VpZO8Nj5P7XLUIR63?=
- =?us-ascii?Q?JCsSHnu4kesXBRK//GljMtyWMZPm0tFPQ9NxGZvKd6BR+a62CKRsr4hnxEk2?=
- =?us-ascii?Q?POTBKDpxL0kHw2P/S7WLX8rrybwPCX87F/oM1bU9tUC9riou5Bi2PRpIoqTn?=
- =?us-ascii?Q?1duvwTLIFRnbu97px+qHc1qGKxNmrXRR8C3yIRtTQS9+m125sdbzH8LHtF8A?=
- =?us-ascii?Q?IDHvzVRM6WxFOAJSNrQyU+6TQ411gpQV+XaFPSFPLTmnbc6hXINQ1UrPLByA?=
- =?us-ascii?Q?MDxKovaWN+5Rg0eAT4unqpGv1v+xtmFBQtDeqc2urwZwL4z6WOinHNQHsJX3?=
- =?us-ascii?Q?zqv6qgUSVPaVfliy/8GV4xLKPotuXa1KdfKJRyU3?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 211b8f57-9849-4f6f-adc2-08dd8299353b
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 19:01:09.2837
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dEAQ5BBRA5XQAoZLTD+XmA325GVqcYSeIb6sZd6EEdFLJXRAtJ3mVKXLHuG3a8O35/bQwTpHQfZBs7Uy3TvKbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4375
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHc5CWgC/2XOwY7CIBDG8VcxnGUDA1NgT76H2QPQqZKo3RTTa
+ EzffUcTG7Ievwm/f3iISlOhKr43DzHRXGoZLzy67UbkY7wcSJaetwAFqKzSsl4dOi2D8ZBCHrI
+ yg+DHvxMN5fYK7X94H0u9jtP91Z318/pOwDsxa6mkQd13KRAlG3eHcyynrzyexTMxQ8vsyoCZz
+ c7HyB/o8YOZlvmVGWagVBcMDZTR/We2YRpXZpn5hDkk8inSB8OGgVkZMovgTXIIsTehZcuy/AF
+ uVDjSeAEAAA==
+X-Change-ID: 20250401-st7571-9382b9cfc03f
+To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Marcus Folkesson <marcus.folkesson@gmail.com>, 
+ Conor Dooley <conor.dooley@microchip.com>, 
+ Javier Martinez Canillas <javierm@redhat.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Thomas Zimmermann <tzimmrmann@suse.de>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2888;
+ i=marcus.folkesson@gmail.com; h=from:subject:message-id;
+ bh=wDlRwR+Zr8jVD3tfOS2Otjt+TATgoKLMCXzeY/ZwPw8=;
+ b=owEBbQKS/ZANAwAIAYiATm9ZXVIyAcsmYgBoCTl6+QXOcdrUB35k2619Mf1h1GPsTrmhrSqxq
+ 671/I5Nmw6JAjMEAAEIAB0WIQQFUaLotmy1TWTBLGWIgE5vWV1SMgUCaAk5egAKCRCIgE5vWV1S
+ MgZ7D/4lvE1b1Ds+IWa+uRuXqlqGEHuAyml5i6axE9ie+xEIZgRHpIwZHTpWKy4ZNteUqrpJvYc
+ RzptWInvlrDCH9jcX2XOQtZRJbFCpoBZyMWVNCHNpjOrrXqyyaP70FwTzbV3OZVzU1Ftso9NWgr
+ RFFPRFbBA86wgVSn76en7ws7osPby480Qahc5pjFS+enl96w/YIGY9MNHkLg7qcMjMYy06L7OKS
+ +ffhqPYJd+AX4u/XXSoSlI84AhnTgCdD6/Mr7RSoWLuOcyTz5tFNaxQCf0aY0YSwDle2eSAqWBu
+ BXZj4Xu27Vqi/XIYkOcNvR0c+/9lXWM/+mrTUAnnLTvjPf36AIPL5jpI94BbI2FrpeGyLsZ8Og0
+ F69Wn4PI+Cu6Q3I165EEod8y1Gsqrp9E3rGdOuCowq5Wn4JDCcK5oC16cEeq/CyKTFt7iKouLSt
+ tXTEKOXUKsyaynphpbjXZvf61sG0it4uQ7A+kvTyECRcNQJ/o7/g/Dd8XP5Kj6sOddAyJupG8VE
+ ss5XlHcASR0pEpXoekZRqKpK1wx9fMEUcZypjSs6DxqcO/b+FV0Y+8dJFaBoRxAIre+MeQASZ/H
+ OjV5WIxamuGVwGnoVss0K2NoIJaXdNur34gzZgYW3YQMN7mip0h3S6tHa6YRaZp0wbuoxwBbvIB
+ uaKJrqHLwHjNBGA==
+X-Developer-Key: i=marcus.folkesson@gmail.com; a=openpgp;
+ fpr=AB91D46C7E0F6E6FB2AB640EC0FE25D598F6C127
 
-The ops.running() and ops.stopping() callbacks can be invoked from a CPU
-other than the one the task is assigned to, particularly during affinity
-changes, as both scx_next_task_scx() and dequeue_task_scx() may run on
-CPUs different from the task's target CPU.
+This series add support for the ST7571 LCD Controller.
+It is a 4 gray scale dot matrix LCD controller that supports several
+interfaces such as SPI, I2C and a 8bit parallell port.
+The controlelr supports both monochrome and grayscale displays.
 
-This behavior can lead to confusion or incorrect assumptions if not
-properly clarified, potentially resulting in bugs (see [1]).
+This driver only supports the I2C interface, but all common parts could
+easily be put into a common file to be used with other interfaces.
+I only have I2C to test with.
 
-Therefore, update the documentation to clarify this aspect and advise
-users to use scx_bpf_task_cpu() to determine the actual CPU the task
-will run on or was running on.
+The device is a little defiant, it tends to NAK some commands, but all
+commands takes effect, hence the I2C_M_IGNORE_NAK flag.
 
-[1] https://github.com/sched-ext/scx/pull/1728
-
-Cc: Jake Hillion <jake@hillion.co.uk>
-Cc: Changwoo Min <changwoo@igalia.com>
-Signed-off-by: Andrea Righi <arighi@nvidia.com>
+Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 ---
- kernel/sched/ext.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v6:
+- Rebase on drm-misc/drm-next
+- Silent checkpatch --strict warnings
+- Link to v5: https://lore.kernel.org/r/20250423-st7571-v5-0-a283b752ad39@gmail.com
 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index a2380a6bba210..f146e678cc261 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -373,6 +373,10 @@ struct sched_ext_ops {
- 	 * @running: A task is starting to run on its associated CPU
- 	 * @p: task starting to run
- 	 *
-+	 * Note that this callback may be called from a CPU other than the
-+	 * one the task is going to run on. Use scx_bpf_task_cpu(@p) to
-+	 * determine the target CPU the task is going to use.
-+	 *
- 	 * See ->runnable() for explanation on the task state notifiers.
- 	 */
- 	void (*running)(struct task_struct *p);
-@@ -382,6 +386,10 @@ struct sched_ext_ops {
- 	 * @p: task stopping to run
- 	 * @runnable: is task @p still runnable?
- 	 *
-+	 * Note that this callback may be called from a CPU other than the
-+	 * one the task was running on. Use scx_bpf_task_cpu(@p) to
-+	 * retrieve the CPU used by the task.
-+	 *
- 	 * See ->runnable() for explanation on the task state notifiers. If
- 	 * !@runnable, ->quiescent() will be invoked after this operation
- 	 * returns.
+Changes in v5:
+- Use bitfield macros where appropriate
+- Add comments where needed
+- Link to v4: https://lore.kernel.org/r/20250415-st7571-v4-0-8b5c9be8bae7@gmail.com
+
+Changes in v4:
+- (dt-binding) Add sitronix,grayscale property
+- Describe why ignore_nack may be needed
+- Make drm_to_st7571 an inline function
+- Add support to clear screen
+- Change from C2 to R2
+- Add support for XRGB8888
+- Use dev_err_probe() where appropriate
+- Make Kconfig config depend on MMU
+- Introduce device data to prepare for support for other chips
+- Add support for drm_encoder_helper_funcs.atomic_en(dis)able
+- Link to v3: https://lore.kernel.org/r/20250408-st7571-v3-0-200693efec57@gmail.com
+
+Changes in v3:
+- (dt-binding) Use 'Controller' rather than 'Panel' in texts
+- (dt-binding) Constrain the reg property
+- (dt-binding) Remove panel-timing description
+- (dt-binding) Change description
+- Mostly cosmetic changes in the driver code
+- Don't call drm_atomic_helper_shutdown() in remove()
+- Link to v2: https://lore.kernel.org/r/20250404-st7571-v2-0-4c78aab9cd5a@gmail.com
+
+Changes in v2:
+- Reworked pretty much the whole driver to not use obsolete code.
+- Use panel and timing bindings to specify resolution and panel size
+- Link to v1: https://lore.kernel.org/r/20250402-st7571-v1-0-351d6b9eeb4a@gmail.com
+
+---
+Marcus Folkesson (3):
+      dt-bindings: display: Add Sitronix ST7571 LCD Controller
+      drm/st7571-i2c: add support for Sitronix ST7571 LCD controller
+      MAINTAINERS: add entry for Sitronix ST7571 LCD Controller
+
+ .../bindings/display/sitronix,st7571.yaml          |   73 ++
+ MAINTAINERS                                        |    6 +
+ drivers/gpu/drm/tiny/Kconfig                       |   11 +
+ drivers/gpu/drm/tiny/Makefile                      |    1 +
+ drivers/gpu/drm/tiny/st7571-i2c.c                  | 1002 ++++++++++++++++++++
+ 5 files changed, 1093 insertions(+)
+---
+base-commit: e270b3665f8321c45ad3e9ba4e3d0fbaf8c9c720
+change-id: 20250401-st7571-9382b9cfc03f
+
+Best regards,
 -- 
-2.49.0
+Marcus Folkesson <marcus.folkesson@gmail.com>
 
