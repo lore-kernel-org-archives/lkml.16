@@ -1,124 +1,151 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BBC28A3F2
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D28A28BA92
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428557; cv=none; b=PSNLOvxSpD3wVe+moHOz3raqZpG6fB7OS+ThUvc3sby0GgBRNcu6vGrM4JvJ1CnadrwmooQitOaK5udRseuoMshJKVchu0B52CzTZxImWfdMQJV2wwDI5vj8lYMSwg7xns7L0vAsj+s3B8ep+0MINn6W6A2EDkxQYYf61UBgDGQ=
+	t=1745428570; cv=none; b=PSyiXiDrG7qV7GgtfdAk/l5LfPRvlK12RehRiHxCjPhhgC7WLouGqkmRts6xaLP/ywnEDRh1rkfoP0Zdp39IIrNfxWfJO9uaZXiKYSU0Dj1S34tCe55vLTMMM1xKNMaakQxgz0L0FFtbS/YeUeA4v4KDtO17IEnuskKCmJSNitg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428557; c=relaxed/simple;
-	bh=vMXucndq2S6GHUftC4QAjKIvCRBxtQ3mQadyEEn05iE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=on30cp1LYW3RdJXvGBsQTHiVuxJLM1z6yzIHGVA4tkBjMcaNQSe0BhvW49oDaDAH/COBJHD2oRaYGCekLTxtavjOhgJZxLjRmZJKcpNSlfU8XvCRWF1Psf0LBO4cp97eUY5MFqTKXUWj9LCNkMNhYoXoC6MQcpqcincKjf/TOm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=igc8GuoA; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1745428570; c=relaxed/simple;
+	bh=s8DhHlPJWvIsgbsoToLAZ45tVx7yVHr17rRzAAX9TR0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ly1RTpihOqRUuCC9iDTg9KrQMhAdsec6H+wmcbKecQj8AyXoUpU1z4310s1HxLVpVZj2RF/f9zAhql/doyiQpF4FmCjXR/HaWUab/5k8gTCPCmunkWri6SBpX9RM/rX2Klz5k6klbw/1pkm0CWqNPEA6Ousbm8tt2iAn3S4aags=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JyBLkBSc; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="igc8GuoA"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c58974ed57so4742985a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:15:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JyBLkBSc"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff53a4754aso128061a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:16:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745428555; x=1746033355; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K5HpTnu16aeUYpErbp5yUwht+j3Mgf+r7FFUrUseQ0w=;
-        b=igc8GuoAzkxq23x3zTwtP5oibqkeQg53VG0Iq7gad/MlX8rlFoaVwdhQ0apeqpKH2h
-         U63IQo5nrNVr/aYRLNtMYNdCv4gydkVivRxSKp9R7pa6wsgSApmCtQMmO9kL+FNLuCYl
-         X/+CooWu7xCeo0ATpiDWk+fOrcm0n3wgS7PLKA/bTH1rXQkbm6fbMji0uJQNUxm58yoB
-         Rqu6j7oRTifpHPPn+9M3hN6fwsO7KeVdJS2pUvi/LGbn6oETIDds/1hWRCeug9xrcImW
-         WzY6PYLDgjbbO+z5bnOFm9GEuBEpX2dZ4T7e+CqVXT1fnIfwTIv3FZayq4iQBioe8nnf
-         CfWA==
+        d=google.com; s=20230601; t=1745428568; x=1746033368; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hrqmrLz7e0CPs0ksITZKUWYoX57wzVXLqGxivpIF80E=;
+        b=JyBLkBSchR4xLHbeRgBEugPxLKnCtmkw5CjaOsRdl96jefVgOcVoOTuAyyeNvPhztp
+         EXtR9UiRbago5Ze9La5oW5y+e/QWC8msbtUXA/dRxlAPN6pOqrt3hcHpCq9ucYdxyN0W
+         dIQLBlsemqJ+wPUdAC4ECvJt43HVn8FXpuEh78BJ6aNeIdh/8nc/9FIKIN83h3ucu+wA
+         3NDDuHRBrf6dr+JOQ8XmRYihW5l5N59aCoPCKKN6IcSvHDUIVMYDdmu2Pgd8CBITkj9A
+         xINB6457sT6YVfifLUvkKcst2EE0V0x+bKQTd5hWnAhMIZ3OSQf49WEZyOeGJnDkcxxV
+         Z01g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745428555; x=1746033355;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K5HpTnu16aeUYpErbp5yUwht+j3Mgf+r7FFUrUseQ0w=;
-        b=RY/XIjA8qCSRsR0sy8PrtmUD7rmyN8zSqxi3WCwT3ZhHTavA1PKeD+uELOPjIMNJjN
-         +4weAihbBNh0kJFBUjS98AEAteFKUDGERPjgEsBNvBU6heC0ti3VDwWdKJASeufKDpE1
-         tXDqZcIQbI/yHqzTogQJ7Kn1z/8M/jZvsR+B9vRE8H76pGRE2117JzDE/lm23OAa6Vf0
-         Hw/CoXThQBqh/rPehlP0/9S5HRE2MgBYjCsoDcEKR72AqPQ577AukfiNclg2Y6WrYNbz
-         Q4D8CERas2WfFsGj9aXqYYI6kLxIMHvsVyhX5fzrJCLe95nP5kDrn2HuQGbHLnnQGMmh
-         Us6A==
-X-Forwarded-Encrypted: i=1; AJvYcCXppbHY4A4MAjkoZ0sWgFB1RNHDrXdtkBbUF8DPgmgQDjWA5/veIVPISIwZFG/EpZ3KQ5Zqimyi1Pvz2F8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDpE6xtPkblegVFTwl2f/2zLKZf8/jVnNRc3uiVNRhEv8sRk8+
-	xGjQS7PwNpxetcPch3CNOvPEBdH9OkCQItpzYxlAaF16KpQVek0ER9CXTrn0AOM=
-X-Gm-Gg: ASbGncsGi/EvDwnk9uZvXaj7qE7tqrAP40P1gBpyQ6VQtLS6rjl5ZTND0q/53TjkjxP
-	3bHsyfFz8nXc6pjhcUJ3xdBEtOimgF+0pRQviYbXf0plBVp7i41ktbKrfckGBWXxhUK/YB7VMsQ
-	Wymvxvt3ReurVATjTYZPiN2T9kKzWBzIIGlr4LShXsTJjQTmSN/62cWjnlGkUxTG/LHpeI0Sr5s
-	rhWVRkGdcLCMEjjupIYwMRiaAFZB5+GSrinqscinZ9436rdUJ4CoLKTclq+gn2uncB/zexD/z18
-	d5qFv7s3iJXgHnIkPDqyv9aNdHwpFqiP6GY72tsEpaNTLMh2ytyEjfE+EzbZnKN5RLVsQac4o85
-	cQ2S3lAHEuwx2Q3Pj8G0=
-X-Google-Smtp-Source: AGHT+IHusnUQ6QwwVsDnvg+0qYOM6lcQLPltCEX7WmRgNJP3vwJodfip7PxZnn5pgy7BG5cQ6pnE/Q==
-X-Received: by 2002:a05:620a:4456:b0:7c7:a5e1:f204 with SMTP id af79cd13be357-7c955e14768mr54555485a.56.1745428554903;
-        Wed, 23 Apr 2025 10:15:54 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4e93asm705867885a.70.2025.04.23.10.15.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:15:54 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7dhR-00000007LQy-3kud;
-	Wed, 23 Apr 2025 14:15:53 -0300
-Date: Wed, 23 Apr 2025 14:15:53 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 04/24] iommu: add kernel-doc for iommu_unmap_fast
-Message-ID: <20250423171553.GK1213339@ziepe.ca>
-References: <cover.1745394536.git.leon@kernel.org>
- <9becc0989ed0a6770e4e320580d1152b716acd0d.1745394536.git.leon@kernel.org>
+        d=1e100.net; s=20230601; t=1745428568; x=1746033368;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hrqmrLz7e0CPs0ksITZKUWYoX57wzVXLqGxivpIF80E=;
+        b=GnrdGJbxwVJF18LkauZSS66Q+hwsw3i2/pnf943lCzaLnZvECHXFXS/I75/MbXQdtD
+         2Mdmoi+Qn6L11lq9Lhzue4OK/KmzppkWyeFBWAuhZUeA3ATFwS29VLTukQJ85YfNDbnz
+         f9azIu0wtNqRxHuItUGeTvK2SEh7F0Sk6uNb9Jr2RVKdrs9KP81mLcIQh+I0b/7Oq4Dr
+         NcSbtFyfLxxwCoNvx1EWlEMNrvlrLhdO6zW9paQbsPHceLeW0Nhm7HmadG+OifHu8GGN
+         2STVFNFnBlpUYVTYzikhQZX2xMZXIKovHFwkhyiOkdeoVoEQWaLfUhtrzZBFXo1wKBbE
+         Q/Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUYHzrhU3Y/IpkTjru/qvAMAD+n5Q9Bc/eX3LlxvUilTS9+7Js/TeD8QO0HoBY+Kw9bet+tYUrdKuNAcI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuaeZa5lcJNXPMSGV5b/xw1cc4z+WuT7xSK9o4hpevmmFWgcOe
+	cScW+ntI5tv0vfrs3A7xJ1rS+UuayOYpVsiD3ps2rnsCKs/VCLu/nCJsycsaSWqgmn54A3dCZjS
+	UPw==
+X-Google-Smtp-Source: AGHT+IHLl6jkGiLQ4wjyLG3esw4ZiRer7DcAc6NZDcDEWXrrD9hY5sUS0R/HiYWJa9E59RXMPwv8rRlRphU=
+X-Received: from pji5.prod.google.com ([2002:a17:90b:3fc5:b0:2ff:4ba2:f3a5])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5690:b0:2ff:52b8:2767
+ with SMTP id 98e67ed59e1d1-3087bb69163mr27347605a91.19.1745428568576; Wed, 23
+ Apr 2025 10:16:08 -0700 (PDT)
+Date: Wed, 23 Apr 2025 10:16:07 -0700
+In-Reply-To: <CABQX2QPUsKfkKYKnXG01A-jEu_7dbY7qBnEHyhYJnsSXD-jqng@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9becc0989ed0a6770e4e320580d1152b716acd0d.1745394536.git.leon@kernel.org>
+Mime-Version: 1.0
+References: <20250422161304.579394-1-zack.rusin@broadcom.com>
+ <20250422161304.579394-5-zack.rusin@broadcom.com> <a803c925-b682-490f-8cd9-ca8d4cc599aa@zytor.com>
+ <CABQX2QMznYZiVm40Ligq+pFKmEkVpScW+zcKYbPpGgm0=S2Xkg@mail.gmail.com>
+ <aAjrOgsooR4RYIJr@google.com> <CABQX2QNDmXizUDP_sckvfaM9OBTxHSr0ESgJ_=Z_5RiODfOGsg@mail.gmail.com>
+ <aAkNN029DIxYay-j@google.com> <CABQX2QPUsKfkKYKnXG01A-jEu_7dbY7qBnEHyhYJnsSXD-jqng@mail.gmail.com>
+Message-ID: <aAkgV3ja9NbDsrju@google.com>
+Subject: Re: [PATCH v2 4/5] KVM: x86: Add support for legacy VMware backdoors
+ in nested setups
+From: Sean Christopherson <seanjc@google.com>
+To: Zack Rusin <zack.rusin@broadcom.com>
+Cc: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org, 
+	Doug Covelli <doug.covelli@broadcom.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 11:12:55AM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
-> 
-> Add kernel-doc section for iommu_unmap_fast to document existing
-> limitation of underlying functions which can't split individual ranges.
-> 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Acked-by: Will Deacon <will@kernel.org>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Tested-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  drivers/iommu/iommu.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+On Wed, Apr 23, 2025, Zack Rusin wrote:
+> On Wed, Apr 23, 2025 at 11:54=E2=80=AFAM Sean Christopherson <seanjc@goog=
+le.com> wrote:
+> > > I'd say that if we desperately want to use a single cap for all of
+> > > these then I'd probably prefer a different approach because this woul=
+d
+> > > make vmware_backdoor_enabled behavior really wacky.
+> >
+> > How so?  If kvm.enable_vmware_backdoor is true, then the backdoor is en=
+abled
+> > for all VMs, else it's disabled by default but can be enabled on a per-=
+VM basis
+> > by the new capability.
+>=20
+> Like you said if  kvm.enable_vmware_backdoor is true, then it's
+> enabled for all VMs, so it'd make sense to allow disabling it on a
+> per-vm basis on those systems.
+> Just like when the kvm.enable_vmware_backdoor is false, the cap can be
+> used to enable it on a per-vm basis.
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Why?  What use case does that serve?
 
-Jason
+> > > It's the one that currently can only be set via kernel boot flags, so=
+ having
+> > > systems where the boot flag is on and disabling it on a per-vm basis =
+makes
+> > > sense and breaks with this.
+> >
+> > We could go this route, e.g. KVM does something similar for PMU virtual=
+ization.
+> > But the key difference is that enable_pmu is enabled by default, wherea=
+s
+> > enable_vmware_backdoor is disabled by default.  I.e. it makes far more =
+sense for
+> > the capability to let userspace opt-in, as opposed to opt-out.
+> >
+> > > I'd probably still write the code to be able to disable/enable all of=
+ them
+> > > because it makes sense for vmware_backdoor_enabled.
+> >
+> > Again, that's not KVM's default, and it will never be KVM's default.
+>=20
+> All I'm saying is that you can enable it on a whole system via the
+> boot flags and on the systems on which it has been turned on it'd make
+> sense to allow disabling it on a per-vm basis.
+
+Again, why would anyone do that?  If you *know* you're going to run some VM=
+s
+with VMware emulation and some without, the sane approach is to not touch t=
+he
+module param and rely entirely on the capability.  Otherwise the VMM must b=
+e
+able to opt-out, which means that running an older userspace that doesn't k=
+now
+about the new capability *can't* opt-out.
+
+The only reason to even keep the module param is to not break existing user=
+s,
+e.g. to be able to run VMs that want VMware functionality using an existing=
+ VMM.
+
+> Anyway, I'm sure I can make it work correctly under any constraints, so l=
+et
+> me try to understand the issue because I'm not sure what we're solving he=
+re.
+> Is the problem the fact that we have three caps and instead want to squee=
+ze
+> all of the functionality under one cap?
+
+The "problem" is that I don't want to add complexity and create ABI for a u=
+se
+case that doesn't exist.
