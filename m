@@ -1,104 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07139269AF9;
-	Wed, 23 Apr 2025 20:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219B8269AF9;
+	Wed, 23 Apr 2025 20:49:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745441369; cv=none; b=UlnyWAWayJqCWmFTNK1jXKFOb1mSKtXbOvD5g/R8IL4gDEoR7H7br2QXxaUlyP1zONJ5L/1yb0/Kf3UdMG4VZgyiz6muzpPG32WiCEs5CAUA0NIkLKDJp2lykMN4fqkaLG1KOTdLgbr5Gp9SPsy1M71qCkp5S++mqdclhHdUAck=
+	t=1745441383; cv=none; b=EA6bJ3QrIlT78QKMPUilQneDSBgBbs0dDPtWyUFV6ZexwrIygSIosw+SJwlx9N7qHE8o1d3bXoQJOtMvwJvtspUh+cbIHczrXaqcp3VUvmkEN/0LBtcjAjAFx20jzgZ5CR1hku7r0AuQzG0OgY3YFA5slh2jJe1Qoce61oo19Ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745441369; c=relaxed/simple;
-	bh=d1k9gomSqLICNqAukAmQAOjJWV3hq4GG2jes7N+MC6E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XtTJmncbWx+2KI6dWJJcX84jFeeXTWVKk2VUBvl9oR1EIo1VSEKDHNZcLspsntPJxT1+ho1PeCjlc6ahfATIdgHVD3pMI2ShWS9a88/+YQYZMIo4nzUwvfSStt2fnUTTSEjg9VkIkYjHiRF0Fol5u7mUmbt6XpDBV5Eh6d2tIFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RRUKawQV; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745441383; c=relaxed/simple;
+	bh=SlsceTeKP169Z7bWXvcuJYpEFN+vi9NMqlHYsr8sBog=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=V4ahRMjxPg7BSzm6ueQvmSxF2P9gi6UpyiXHXY2uVuSd54goeq0FW/uepf36nPREmSGsYzbUW+TiJustITQ3sW9Z+XX3sLkN0ECoWHg8Hfzs0ae91B2hqws5vlXOAE7HT4ZQz4aIDW5079SqrNkVG0Ov0Frtlz+xTBec5npO6r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ejv8ieMM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RRUKawQV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745441368; x=1776977368;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=d1k9gomSqLICNqAukAmQAOjJWV3hq4GG2jes7N+MC6E=;
-  b=RRUKawQVRewPbBHjdqP/W24JDy4TCSARjsL/QmtAT2UKbkyLoa3v31IA
-   nM680TRM9e+TxivJdhC08L+I+LaqStA6vzwceHgAnpg69t7IIJ1SR1tyk
-   WL3BrlaYlxWLLjFSpkKPOfpX8fX5otmTMWEQ8FQnv58bUoHPbPVD9nVY0
-   2kpyr/Nm9Qa5dTKQq/pB3V4sB1NafvWfPIB9JZZBeE9VBvdyuabgFjgAF
-   EvCXlf7n1iTgQv5XefId/OIA1jtTOviSmwu1tShXtHoaod8nAkUK8seo8
-   xbWqzDUMFEQrId1hWg0FKQ+JZVcB3YmCmjRYjgiZfmomsA4ZqVADhNoA+
-   Q==;
-X-CSE-ConnectionGUID: GsL+Iz32TkKhhV7BGe0wsA==
-X-CSE-MsgGUID: zTfHkPYdSia539RZIr7caQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="57694274"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="57694274"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:49:27 -0700
-X-CSE-ConnectionGUID: vrIxLQdeQ0a956p9P0Dd6g==
-X-CSE-MsgGUID: ffoZS7vqRqWWBNtQ0JACBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="137501881"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.208])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:49:24 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>, Davidlohr Bueso <dave@stgolabs.net>,
- Robert Richter <rrichter@amd.com>
-Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gregory Price <gourry@gourry.net>, Terry Bowman <terry.bowman@amd.com>,
- Robert Richter <rrichter@amd.com>
-Subject:
- Re: [PATCH v4 11/14] cxl/region: Add a dev_warn() on registration failure
-Date: Wed, 23 Apr 2025 22:49:20 +0200
-Message-ID: <2827426.aRXLXkqSa3@fdefranc-mobl3>
-In-Reply-To: <20250306164448.3354845-12-rrichter@amd.com>
-References:
- <20250306164448.3354845-1-rrichter@amd.com>
- <20250306164448.3354845-12-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ejv8ieMM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7516DC4CEE2;
+	Wed, 23 Apr 2025 20:49:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745441382;
+	bh=SlsceTeKP169Z7bWXvcuJYpEFN+vi9NMqlHYsr8sBog=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ejv8ieMMXqPy3DuEiYockJL/nXxShmy1tIoeFGvOaLBQ8LYZIHw+NQoJbNsmmIEpn
+	 Is4ruOoxfY0jIrxQlLoOZF7JURbl6/60wnikIfco8uYFAAnCURANE0zAKs1ZR2jhIT
+	 98LbyiPVr09Bj58dsoIdW8oCzBo4pmOoO10Bj+WRpvQ4bgg2DkHcUQq7K1qvfbNtgp
+	 FJfRosLIeghcRC4b5s5umS5oHjxWxvs6zpljxAtSwLE+PHa0SPH4Wv0mS88xV2qc5I
+	 PtEtRzH4YzIFOcF22nzyRLkDYiG5U1Xl6byrAG6xm3DK3Wx4OZMT98HQ11TPgU+2cY
+	 /5JsOSrL3SCzg==
+Date: Wed, 23 Apr 2025 15:49:41 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Brian Norris <briannorris@google.com>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] PCI/pwrctrl: Cancel outstanding rescan work when
+ unregistering
+Message-ID: <20250423204941.GA454025@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
 
-On Thursday, March 6, 2025 5:44:45=E2=80=AFPM Central European Summer Time =
-Robert Richter wrote:
-> Esp. in complex system configurations with multiple endpoints and
-> interleaving setups it is hard to detect region setup failures as its
-> registration may silently fail. Add messages to show registration
-> failures.
->=20
-> Example log message:
->=20
->   cxl region5: region sort successful
->   cxl region5: mem0:endpoint5 decoder5.0 add: mem0:decoder5.0 @ 0 next: n=
-one nr_eps: 1 nr_targets: 1
->   cxl_port endpoint5: decoder5.0: range: 0x22350000000-0x2634fffffff iw: =
-1 ig: 256
->   cxl region5: pci0000:e0:port1 decoder1.2 add: mem0:decoder5.0 @ 0 next:=
- mem0 nr_eps: 1 nr_targets: 1
->   cxl region5: pci0000:e0:port1 iw: 1 ig: 256
->   cxl region5: pci0000:e0:port1: decoder1.2 expected 0000:e0:01.2 at 0
->   cxl endpoint5: failed to attach decoder5.0 to region5: -6
->   cxl_port endpoint5: probe: 0
->=20
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Tested-by: Gregory Price <gourry@gourry.net>
+On Wed, Apr 09, 2025 at 11:53:13AM -0700, Brian Norris wrote:
+> From: Brian Norris <briannorris@google.com>
+> 
+> It's possible to trigger use-after-free here by:
+> (a) forcing rescan_work_func() to take a long time and
+> (b) utilizing a pwrctrl driver that may be unloaded for some reason.
+> 
+> I'm unlucky to trigger both of these in development. It's likely much
+> more difficult to hit this in practice.
+> 
+> Anyway, we should ensure our work is finished before we allow our data
+> structures to be cleaned up.
+> 
+> Fixes: 8f62819aaace ("PCI/pwrctl: Rescan bus on a separate thread")
+> Cc: Konrad Dybcio <konradybcio@kernel.org>
+> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Signed-off-by: Brian Norris <briannorris@google.com>
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+
+Applied to pci/pwrctrl for v6.16, thanks!
+
 > ---
-
-Reviewed-by: Fabio M. De Francesco <fabio.m.de.francesco@linux.intel.com>
-
-
-
+> 
+>  drivers/pci/pwrctrl/core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
+> index 9cc7e2b7f2b5..6bdbfed584d6 100644
+> --- a/drivers/pci/pwrctrl/core.c
+> +++ b/drivers/pci/pwrctrl/core.c
+> @@ -101,6 +101,8 @@ EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
+>   */
+>  void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
+>  {
+> +	cancel_work_sync(&pwrctrl->work);
+> +
+>  	/*
+>  	 * We don't have to delete the link here. Typically, this function
+>  	 * is only called when the power control device is being detached. If
+> -- 
+> 2.49.0.604.gff1f9ca942-goog
+> 
