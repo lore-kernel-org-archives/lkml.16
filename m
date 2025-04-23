@@ -1,196 +1,127 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB7F280CDC
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B523928A1E8;
+	Wed, 23 Apr 2025 17:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745429284; cv=none; b=fQau4eXmFA1WPbdtdNqYQQCotwFkr7OpJoEangXAFPQTW57jqYuAct8csmBMN5TGtVnuvFCng/NqldhrkE7MReUqxjfz+Ir+8MKIkkpTmVnEuH3nH7uZYCtpzCEKoDSjZwodBPKMIMIhrJfqaqn/1C8NNvUGFyxZ+gQiGL8UfGk=
+	t=1745429297; cv=none; b=Bpur7RCzya8T7vlBNPFl4lULzlb3K3q4LaehlImk3DyxCxP9mBG8JJRG+xQtwHhm3e3KVn2MOM+G6hgUMVP853ytdNLKcl/LOvpq2//s9UluYm2upR+kZymui9EqnjUckP9ky43cM69dNp7JaHrhaO0AxDqgMlsAREKVerWyik4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745429284; c=relaxed/simple;
-	bh=To5+mXKVqJ4D8W9A86Idf9GAwp67sMMUFZetXoeXhNQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ukXWrriPvZSqPSEGVszpujnTIBjsg1ean5FY5lV4StauFvyVquhwwIJsp7qUZIgEViLkMM1bnZKNTiNii07Fs7SNdIUG0t9ANY8Pxno699VtnDPrvolXDlLwxueE5vIPPGoqP0800C7XWa0CfLB/Gf2f0DCo2Jr8dkgc9/ZAe3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kwptRyiN; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745429297; c=relaxed/simple;
+	bh=Wa2nKVy62V+d/qbDEyNIn13+ePN0sTeeuwvCl+4mMK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q1n8LgToSEjBW1RUf4KePU/OXUB5veqoo2RT+2Av52CU7IdgSvl7peRGfZ/FCvcSo7DSIZ8YUJ3xaEt7W7R8q3jhd1kJSonCUrG2OkIVZtLIZPkqBycoxYl49bBZ0CAFBgh97yX8AyhVT2croyGXh8iMK+7ero09RIKR4KMk4xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=FYHpQRl8; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kwptRyiN"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2260c91576aso592785ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:28:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745429282; x=1746034082; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZpN3s3qmY26UBKN47K4OXTIlbbWZaDEQfwBQfiV1DYQ=;
-        b=kwptRyiNCqvGFx3+PD7w7R4QKX4gHQ+pl8yv9mEO2J8SrWhAi21JpGuYcLSM8wMHGE
-         ifw25qSB4pR+IYmmzG3TtVSmZxe9ngqSd1eOIkE4uvxmdGAFHY3Ji+Nn0zLEHpnQRKO6
-         t6O0nbPGwMpyJ6e/q09r++UcdFllVRG3gafZINDPDK+yGwXc9hW0TPebyabqxSh8gTj2
-         /R0alS72ta1gDZoxdxzuUgv6eURI9OQK/GRnjfgZJBRYEdBPrycAvQF8+5mDE26EYxNy
-         vjqHlHnn9fF4125j5oC3V3VMcERB1yapMngeH2vfKIIQbdAykUEf7tuvV07uV+4K/9Ac
-         a9EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745429282; x=1746034082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZpN3s3qmY26UBKN47K4OXTIlbbWZaDEQfwBQfiV1DYQ=;
-        b=rLCHyHw/Pn7/UacnY/G8gSrr7sOtQNLTbXBUKvNaflfw8yKE7/Cl3lFQWOq/4oBnKp
-         7FJZEgm4kebv2lhnJCEBLI6S7al/+aIpkayX6y0pvRM4Woy+YNbRIF5c8V4e81gY9HMj
-         bLsZrPbaidttSI11Z8EjI6GVQqomEcaVE2wLWK+L2MOAItTcHLfp+LBP9yKPW1cYWOo1
-         G4LVfoLwIulmVE1oxXR3CE+zTSVfkM+GupTg4N0cy4yHKemYy7NCiDH6s9aaI3InXNN5
-         tmIdLOi2PV0mKKKNEMowCNW6Qx7+0rEeGeLmfxPQXOvoRF6UIxD5VRFPL2NkZeUd1eti
-         k7cQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbtvFQQaiw6T3FDhIeC5prFQzedSTEHgVyKoWLBVwCXCrLKIEazOwZNMSPOnJKoY0+Udff6i0mPSlE3KA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCTcTbgeTU34bGZzUnFy8NBcAcoX0wPumGcKgsOL23DVuzaBsR
-	7V3ikBgHSK484de3Qmx7GD47V+zrLQvH3MzGF+ObiC2LK8Dpr0gessUu1MZHKw==
-X-Gm-Gg: ASbGncuFAftJyQWgulxbaAW3bj1sATsIe1mYaz1eIQq2pcpE1tGiQ8ASgG06zFQouun
-	gYRYwvKnUgoN6WeFXDFRJjPS3I1h/+t8vd6sGAXkzS5ZbN8eH3Sqh0yKaGQrK1FivBA7t91WIH2
-	vXpEI+inbfnTNVkTt0n+VIEsOGoKABVtPXIOKbl4oC/H242WwQi+qsXu8YYiPmt3FW7IddsIFZF
-	NjBAl7XwfaJL95AIRvOXJmjQzjvzto0QfXa1Hnuy9nrDUkIONmsmRBgSWDvdtDASDEQ91aUsUp/
-	noY4xrRFH8+h3IOTR/vR83j6lJjN4vTprOCwrsuXM65u+UZBz/dj4chCdBLLcutV60K6zvyGMwi
-	h/w2YLg==
-X-Google-Smtp-Source: AGHT+IHa77CexBJ8kZ0MMVz4lBWN5XuYsJm19QW6W7Xn3LZrvzkSypYq7z6BTcnhDO0elSznGaYPdA==
-X-Received: by 2002:a17:902:e5c5:b0:224:c7c:7146 with SMTP id d9443c01a7336-22c53573e54mr225103025ad.6.1745429281505;
-        Wed, 23 Apr 2025 10:28:01 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eced45sm107077345ad.175.2025.04.23.10.28.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:28:00 -0700 (PDT)
-Date: Wed, 23 Apr 2025 10:27:56 -0700
-From: William McVicker <willmcvicker@google.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Joerg Roedel <jroedel@suse.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	iommu@lists.linux.dev, Saravana Kannan <saravanak@google.com>,
-	kernel-team@android.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] platform: Fix race condition during DMA configure at
- IOMMU probe time
-Message-ID: <aAkjHMCQ82v5Ea0n@google.com>
-References: <20250423150823.GA422889@bhelgaas>
- <4129dca9-07fa-4b9d-a7d8-de7561d509e7@arm.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FYHpQRl8"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53NHRSwP3822273
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 23 Apr 2025 10:27:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53NHRSwP3822273
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745429251;
+	bh=3DNEiH9ClADNNdC4s2AFGq03za4/i0hRtsw7HdWhX8Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FYHpQRl8w+nTjaGGRqdQx9A21dGh6eRp5/7vZcoeVQfJ9FBrAtuE4a8nbQdhPJpY7
+	 C5nTvzzz33F1edToPwWHSeJXgoh6SwIuUPr91pgD6ORF2jN+/5fZh9Ofi3nO2wDCgX
+	 NyB6TneZbcSNhKwI3FWPkvGtSRtfl8YKXephFBr2m8UWFGjBObYHKKsepz0L/aTUGo
+	 jFGXQZIyrJ70pWBdnFXn75qaBkvkid3XPvRU6MU8TH8CRJxSKjrb4b2UYHO+wGQ51t
+	 Z5W8BeQoRoZzPHd5lWutYI7E+jcqOoxDsMyaxvuPKWJE7ftMpslNO0VeQ/i0ZeFCUN
+	 zwJslGTaEkwWw==
+Message-ID: <0e5cf01a-2cc1-46a2-89c1-3bcc502229c8@zytor.com>
+Date: Wed, 23 Apr 2025 10:27:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4129dca9-07fa-4b9d-a7d8-de7561d509e7@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 08/34] x86/msr: Convert a native_wrmsr() use to
+ native_wrmsrq()
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-9-xin@zytor.com>
+ <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 04/23/2025, Robin Murphy wrote:
-> On 2025-04-23 4:08 pm, Bjorn Helgaas wrote:
-> > On Tue, Apr 22, 2025 at 04:26:49PM -0700, Will McVicker wrote:
-> > > If devices are probed asynchronously, then there is a chance that during
-> > > the IOMMU probe the driver is bound to the device in parallel. If this
-> > > happens after getting the platform_driver pointer while in the function
-> > > `platform_dma_configure()`, then the invalid `drv` pointer
-> > > (drv==0xf...ffd8) will be de-referenced since `dev->driver != NULL`.
-> > 
-> > I need a little more hand-holding to make sense out of this.
-
-Sorry for not making it super clear :/ I was trying to find the right balance
-between being too verbose and not clear enough. I guess a threaded call flow
-might help visually demonstrate the race condition.
-
-> > 
-> > After digging out
-> > https://lore.kernel.org/all/aAa2Zx86yUfayPSG@google.com/, I see that
-> > drv==0xf...ffd8 must be a result of applying to_platform_driver() to a
-> > NULL pointer.  This patch still applies to_platform_driver(NULL), but
-> > avoids using the result by testing drv for NULL later, which seems
-> > prone to error.
-> > 
-> > I think this would all be clearer if we tested for the NULL pointer
-> > explicitly before applying to_platform_driver().  I don't like setting
-> > a pointer to an invalid value.  I think it's better if the pointer is
-> > either valid or uninitialized because the compiler can help find uses
-> > of uninitialized pointers.
+On 4/23/2025 8:51 AM, Dave Hansen wrote:
+> On 4/22/25 01:21, Xin Li (Intel) wrote:
+>>   static __always_inline void sev_es_wr_ghcb_msr(u64 val)
+>>   {
+>> -	u32 low, high;
+>> -
+>> -	low  = (u32)(val);
+>> -	high = (u32)(val >> 32);
+>> -
+>> -	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
+>> +	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
+>>   }
 > 
-> Yeah, I was also in the middle of looking at this after managing to hit it
-> playing with driver_async_probe at the end of last week. I guess when I
-> originally wrote this pattern I was maybe thinking the compiler would defer
-> the to_x_driver() computation to the point it's eventually dereferenced, but
-> I suppose it can't since dev is passed to an external function in program
-> order in between.
+> A note on ordering: Had this been a native_wrmsr()=>__wrmsr()
+> conversion, it could be sucked into the tree easily before the big
+> __wrmsr()=>native_wrmsrq() conversion.
+> 
+> Yeah, you'd have to base the big rename on top of this. But with a
+> series this big, I'd prioritize whatever gets it trimmed down.
 
-Glad to hear I'm not the only one hitting this. I agree we should test for the
-NULL pointer first before trying to get the platform driver. I'll send a v2 for
-this.
-
-> 
-> Indeed in my half-written version of this patch I was leaning towards
-> removing the drv variable altogether (just doing
-> to_x_driver(dev->driver)->driver_managed_dma inline), or at least doing the
-> same as Will's previous diff. I figure the one-liner replacing
-> "!dev->driver" with "!&drv->driver" would be too disgustingly non-obvious
-> for anyone else's tastes...
-> 
-> For consistency we should really fix all the buses the same way - sorry for
-> the bother (I can write up the other patches if you'd like). FWIW this part
-
-Yes please. Thanks!
-
-> really was the most temporary stopgap, as my planned next step is to propose
-> moving driver_managed_dma and the use_default_domain() call up into the
-> driver core and so removing all this bus-level code anyway, hence trying to
-> minimise the effort spent churning it. Oh well.
-> 
-> > > To avoid a kernel panic and eliminate the race condition, we should
-> > > guard the usage of `dev->driver` by only reading it once at the
-> > > beginning of the function.
-> > > 
-> > > Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
-> > > Signed-off-by: Will McVicker <willmcvicker@google.com>
-> > > ---
-> > >   drivers/base/platform.c | 7 ++++---
-> > >   1 file changed, 4 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > > index 1813cfd0c4bd..b948c6e8e939 100644
-> > > --- a/drivers/base/platform.c
-> > > +++ b/drivers/base/platform.c
-> > > @@ -1440,7 +1440,8 @@ static void platform_shutdown(struct device *_dev)
-> > >   static int platform_dma_configure(struct device *dev)
-> > >   {
-> > > -	struct platform_driver *drv = to_platform_driver(dev->driver);
-> > > +	struct device_driver *drv = READ_ONCE(dev->driver);
-> 
-> Beware this might annoy a different set of people as it's not paired with a
-> WRITE_ONCE(), but for now I guess using it is still arguably better than
-> not. Really we should be under device_lock at this point and so have no race
-> at all, but we can't do that without keeping track of which devices are
-> IOMMUs themselves to avoid deadlock, and that's not something I fancy
-> throwing out as an -rc fix in a hurry...
-> 
-> Thanks,
-> Robin.
-
-Thanks again!
---Will
-
-> 
-> > > +	struct platform_driver *pdrv = to_platform_driver(drv);
-> > >   	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> > >   	enum dev_dma_attr attr;
-> > >   	int ret = 0;
-> > > @@ -1451,8 +1452,8 @@ static int platform_dma_configure(struct device *dev)
-> > >   		attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
-> > >   		ret = acpi_dma_configure(dev, attr);
-> > >   	}
-> > > -	/* @drv may not be valid when we're called from the IOMMU layer */
-> > > -	if (ret || !dev->driver || drv->driver_managed_dma)
-> > > +	/* @dev->driver may not be valid when we're called from the IOMMU layer */
-> > > +	if (ret || !drv || pdrv->driver_managed_dma)
-> > >   		return ret;
-> > >   	ret = iommu_device_use_default_domain(dev);
-> > > -- 
-> > > 2.49.0.805.g082f7c87e0-goog
-> > > 
-> 
+Okay, I will focus on cleanup first.
