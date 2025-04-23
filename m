@@ -1,76 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060B5268FC9;
-	Wed, 23 Apr 2025 08:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E60C275840;
+	Wed, 23 Apr 2025 08:14:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396058; cv=none; b=LkbPIGoDdDYkwY45Hv/sB/9o1jz1H6SFFg7UgKm6S+yDQOEVVtxCofKVUtFAlt3N1BLbkK2z0iLlT4mn0WXlfmtUi7ryl30FH1dv8TLGINvQIjQUPPL9GZ/SmYgSgLIQjJ/hLdOacLcAX1VO3Lma6uHNDZTyTxAsrodvxcqwMw4=
+	t=1745396060; cv=none; b=HJtpKfWZHAPaBPPvbjYBPmn/MRDNcrhlP5HAyZJluTdjlsr8AbMWWTyK19BtFCMPwbWW/eGyZGsY5wxvS6dqghQcxr0JMdPSHKdJFBJFRdpdJpLfU9MyxPSexsSlDolAqHVX1KiZFimwiVUjF4NjVsXUoih3EZJ8U56SQZsa/V8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396058; c=relaxed/simple;
-	bh=sRUAUa2FfsysV34AMHv+Y5ryWrHjFOp/80CXFLLJ59o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EKB7E4k+5a33sANksJV9fA45M28eJQKmNKe5BROdPL5V07Js02M4gyjv+il+nfB7G/zef5nJmj7w7tnIOHq1Sw7vtDy5hPQZnDmq1k6Ojqr6RqBHgPfh+1YwE43t224EZN7rFyAzLBvn6zcoOwR/j/2yjZxjK0FjePy4/kbAUBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hP6N1Vhy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745396060; c=relaxed/simple;
+	bh=b1/kNqRIuvR1m8OSVu3YgE6eyHtE9gkn1sTrKQ/ghak=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Iakt3bC5r4SBmMadAOHHwpU6ZCqigZtlc8yXV+Sjw/smtIXNX5F/sD6NTaiJORIohk8y8MOD7lqiF/4uZH44dYuhEYnuHm599OuudahXE0cvlIpoMgcLEagKwwwBbL0DOH5x5DRP6thLGkpq5qynlBKj6/RZbOnkmxq/WWAyHUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=cFnjFUEK; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hP6N1Vhy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 455BAC4CEEC;
-	Wed, 23 Apr 2025 08:14:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745396054;
-	bh=sRUAUa2FfsysV34AMHv+Y5ryWrHjFOp/80CXFLLJ59o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hP6N1Vhyd1ah35bzidBTakhVw6zm6GUH0WtuMqFq6WQiqV5ZhLmBpfTdWlSZTuacn
-	 nYqeakbMEQ8lHXQeYvjADrxrKC3Cj0GzKzZ2TD/3nYQnu4F5Y+DGZu0WcFluCmQTgh
-	 lz3785fzm2fh9sOq2k1STupzDBiuIJY/f/S7+WECacUUQh7pcYqhaQ4FS04qvPfNQi
-	 Lu7lLrFLb6Wo5yHNfnYr4Z3e6iAYtra0r7x2Nnk5ECOE7j+bnuAkOyRdHALT7zjx6v
-	 fqFRx+tMaPS4b4vl06ryR2JfTAgyIELxslbrwTOldYQDgs3EE8a/as6VvK7W2qVCFc
-	 eJ0uVlnoN4wCw==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>,
-	Jason Gunthorpe <jgg@nvidia.com>
-Subject: [PATCH v9 04/24] iommu: add kernel-doc for iommu_unmap_fast
-Date: Wed, 23 Apr 2025 11:12:55 +0300
-Message-ID: <9becc0989ed0a6770e4e320580d1152b716acd0d.1745394536.git.leon@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1745394536.git.leon@kernel.org>
-References: <cover.1745394536.git.leon@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="cFnjFUEK"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6r8su016950;
+	Wed, 23 Apr 2025 10:13:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	BhzZoqwrvR64ETOj53JDdB4rMHRwaAeRpBGYOhjW/hk=; b=cFnjFUEKCx+BpFOK
+	GDs0IS5zVkMlhZ8uhjAurChjw5y36jPyZrFPIKqaQr3u0a11nMBypUhzUvu8FbvS
+	XsEp9Tv3Cy/ffU+Xpy+HjI/ZdKIGFmJKBhumk3OAeHxw5bm/Mkj7HI7KU2DTqtdn
+	pPsUB80I+qCW8gLVU9zqeC2I8Wcshzi6Nl7O19NywCyNkX8nrKItuL2wyNcXijMT
+	wt4JbLdIrr++w4QrSG8sowKGyVEUGTDTCPMVk9ACtjVJDtpU+MHeWhF58mKgfEbv
+	JYzWtJgYXHnkxHAQxhJ3k2Qme2AwSKgTTsKS0lM6v11rsbfVDBv0ePG2praHrSuG
+	KNWPMA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jjxa0vk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 10:13:50 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5591140060;
+	Wed, 23 Apr 2025 10:12:16 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B2B81A1A152;
+	Wed, 23 Apr 2025 10:12:00 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
+ 2025 10:12:00 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 7/9] arm64: dts: st: Add PCIe Root Complex mode on stm32mp251
+Date: Wed, 23 Apr 2025 10:10:49 +0200
+Message-ID: <20250423081051.3907930-8-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250423081051.3907930-1-christian.bruel@foss.st.com>
+References: <20250423081051.3907930-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,51 +67,85 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-23_06,2025-04-22_01,2024-11-22_01
 
-From: Leon Romanovsky <leonro@nvidia.com>
+Add pcie_rc node to support STM32 MP25 PCIe driver based on the
+DesignWare PCIe core configured as Root Complex mode
 
-Add kernel-doc section for iommu_unmap_fast to document existing
-limitation of underlying functions which can't split individual ranges.
+Supports Gen1/Gen2, single lane, MSI interrupts using the ARM GICv2m
 
-Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-Acked-by: Will Deacon <will@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 ---
- drivers/iommu/iommu.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 44 ++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 3dc47f62d9ff..66b0bf6418ef 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -2618,6 +2618,25 @@ size_t iommu_unmap(struct iommu_domain *domain,
- }
- EXPORT_SYMBOL_GPL(iommu_unmap);
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index 87110f91e489..5a5c177036cb 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -122,6 +122,15 @@ intc: interrupt-controller@4ac00000 {
+ 		      <0x0 0x4ac20000 0x0 0x20000>,
+ 		      <0x0 0x4ac40000 0x0 0x20000>,
+ 		      <0x0 0x4ac60000 0x0 0x20000>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		v2m0: v2m@48090000 {
++			compatible = "arm,gic-v2m-frame";
++			reg = <0x0 0x48090000 0x0 0x1000>;
++			msi-controller;
++		};
+ 	};
  
-+/**
-+ * iommu_unmap_fast() - Remove mappings from a range of IOVA without IOTLB sync
-+ * @domain: Domain to manipulate
-+ * @iova: IO virtual address to start
-+ * @size: Length of the range starting from @iova
-+ * @iotlb_gather: range information for a pending IOTLB flush
-+ *
-+ * iommu_unmap_fast() will remove a translation created by iommu_map().
-+ * It can't subdivide a mapping created by iommu_map(), so it should be
-+ * called with IOVA ranges that match what was passed to iommu_map(). The
-+ * range can aggregate contiguous iommu_map() calls so long as no individual
-+ * range is split.
-+ *
-+ * Basically iommu_unmap_fast() is the same as iommu_unmap() but for callers
-+ * which manage the IOTLB flushing externally to perform a batched sync.
-+ *
-+ * Returns: Number of bytes of IOVA unmapped. iova + res will be the point
-+ * unmapping stopped.
-+ */
- size_t iommu_unmap_fast(struct iommu_domain *domain,
- 			unsigned long iova, size_t size,
- 			struct iommu_iotlb_gather *iotlb_gather)
+ 	psci {
+@@ -899,6 +908,41 @@ stmmac_axi_config_1: stmmac-axi-config {
+ 					snps,wr_osr_lmt = <0x7>;
+ 				};
+ 			};
++
++			pcie_rc: pcie@48400000 {
++				compatible = "st,stm32mp25-pcie-rc";
++				device_type = "pci";
++				reg = <0x48400000 0x400000>,
++				      <0x10000000 0x10000>;
++				reg-names = "dbi", "config";
++				#interrupt-cells = <1>;
++				interrupt-map-mask = <0 0 0 7>;
++				interrupt-map = <0 0 0 1 &intc 0 0 GIC_SPI 264 IRQ_TYPE_LEVEL_HIGH>,
++						<0 0 0 2 &intc 0 0 GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
++						<0 0 0 3 &intc 0 0 GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
++						<0 0 0 4 &intc 0 0 GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>;
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges = <0x01000000 0x0 0x00000000 0x10010000 0x0 0x10000>,
++					 <0x02000000 0x0 0x10020000 0x10020000 0x0 0x7fe0000>,
++					 <0x42000000 0x0 0x18000000 0x18000000 0x0 0x8000000>;
++				dma-ranges = <0x42000000 0x0 0x80000000 0x80000000 0x0 0x80000000>;
++				clocks = <&rcc CK_BUS_PCIE>;
++				resets = <&rcc PCIE_R>;
++				msi-parent = <&v2m0>;
++				access-controllers = <&rifsc 68>;
++				power-domains = <&CLUSTER_PD>;
++				status = "disabled";
++
++				pcie@0,0 {
++					device_type = "pci";
++					reg = <0x0 0x0 0x0 0x0 0x0>;
++					phys = <&combophy PHY_TYPE_PCIE>;
++					#address-cells = <3>;
++					#size-cells = <2>;
++					ranges;
++				};
++			};
+ 		};
+ 
+ 		bsec: efuse@44000000 {
 -- 
-2.49.0
+2.34.1
 
