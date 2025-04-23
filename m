@@ -1,87 +1,142 @@
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1617D1FC10E
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.171.160.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E638426A0B1
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745440076; cv=none; b=D+1LX6gXqof7qCyS61ahn3nnS57D0WsRK5T5VkPriIhWFsHH3bIRvZqYe+RQ2/YUQQUg4UKTjRWT0fp/1NgAh2HomyilPjQbkw4bNBtHpqiR/v9jxplEiEkJfbWilUzhyhjjsqA84tw3lGrH/wphrs0nEpTkXAkkjuvUGOJG18Q=
+	t=1745440110; cv=none; b=m5iOgbKKaj35qTww8odj2n+VN1+T8aP+Etu83zLsPoiXNyim8QIlh56s8yMdbALMaOyk4I4OfLauQVLp3A0ZLy5E5D7v/OXEy7Kn2n4UYpQ8mEW58W5Je6FPqGSeVFGjifq3b8gRGEzh78FVxujW0A7T7XO5eOm0DqQfVsl4J4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745440076; c=relaxed/simple;
-	bh=guGqrLyF/UfkIOG7hzSkbW1E0cva2VFPvrXecL0SQt8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PWOsyfk+T8yg4RmO5tcWYpTBT4KujWyWdI/2uUhryTOP0qm8e3Xmo72p+jR83xdW/UsScJcjiH5g+NY8mrPyKNiBoXJt8/1v82NS/Le3YCbkojNCuTRXm40PCVHjfnprthpmI5DowAkZa4GBxFosqXqd+984DrTzfKQzlmch8Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp; spf=pass smtp.mailfrom=parknet.co.jp; dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=y6cC8Mwn; dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b=picldoR9; arc=none smtp.client-ip=210.171.160.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mail.parknet.co.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=parknet.co.jp
+	s=arc-20240116; t=1745440110; c=relaxed/simple;
+	bh=2RjA3K+20hOlo+w2EtMfB5HnfDnpGVGbjQV0yf7+ROI=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=roYhW2M52KId03gxyO1kbmEjZ/CzHFkwSpo/5Ya9V0mv4JOTv9WCY4She4gDB4Y+6H3Uv0mgtxSZEhDh7kmSNMdl4JVGdl4A2blw0UDMZcmLwdIIj/VxdflBSxbbRYQ2jp8X37cAn+ozeCj2k3qAWW2V5LpCFDPPtEKSQIFSlKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BxISFlk9; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="y6cC8Mwn";
-	dkim=permerror (0-bit key) header.d=parknet.co.jp header.i=@parknet.co.jp header.b="picldoR9"
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-	by mail.parknet.co.jp (Postfix) with ESMTPSA id A6D19209655C;
-	Thu, 24 Apr 2025 05:20:20 +0900 (JST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114; t=1745439620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HV8lXwcdIJI2t6jVsYzsmLu181G/eR1BqpBO9hmuwFg=;
-	b=y6cC8MwnLEMlYxKn2xb1//B1skbOcjfCUcizUY8Mm103UimeTQwfnIIbvTkv3H8g5mkjW8
-	92ZxY5OYKuVlVCVuyfzoGDmg3StQy72SPSIlQb71/l3zWO5q1iTxSOrE0KP6Vt0a8pMMu7
-	q+6NXZWcDMIB/pEwI7/0pNGatdyw2YyogLYch2XxkBXWmgsQrb1DDOhZat1b5x4sbZVIVI
-	RHzy7YfbQX2Wy568r/xWpm6CDImu9UBjv7v9Ox3HjsWASDSWzYKve8qGKsZmuE7u+17P2P
-	7XKcQKqodqNt0HGAfIpHI0l1XH3mGxYDIV+8ncKsSM7X3StNH0qTtzjLag93dw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=parknet.co.jp;
-	s=20250114-ed25519; t=1745439620;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HV8lXwcdIJI2t6jVsYzsmLu181G/eR1BqpBO9hmuwFg=;
-	b=picldoR9oqAr/UqMgs28TfAybJnkNFe9k+hoin+j6DqspqtpwXy2Ztagnsf4/0ASrKgRtw
-	Mq9AaFPxpHIRtTCg==
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-	by ibmpc.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 53NKKJFj149017
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 05:20:20 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-	by devron.myhome.or.jp (8.18.1/8.18.1/Debian-6) with ESMTPS id 53NKKJsl347945
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 05:20:19 +0900
-Received: (from hirofumi@localhost)
-	by devron.myhome.or.jp (8.18.1/8.18.1/Submit) id 53NKKJLD347944;
-	Thu, 24 Apr 2025 05:20:19 +0900
-From: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To: "now4yreal" <now4yreal@foxmail.com>
-Cc: "linux-kernel" <linux-kernel@vger.kernel.org>
-Subject: Re: [Bug Report] warning in FAT filesystem
-In-Reply-To: <tencent_C03A9DA8102E348E06CBA9C15201F369BB06@qq.com>
-References: <tencent_C03A9DA8102E348E06CBA9C15201F369BB06@qq.com>
-Date: Thu, 24 Apr 2025 05:20:19 +0900
-Message-ID: <87y0vqhbp8.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BxISFlk9"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-309e8dc1e21so430701a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745440108; x=1746044908; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ah6zkuRCc/Z7s5oeCTOt9XwXTfn1W/VtyormqwMBFB4=;
+        b=BxISFlk998XDIFbFaLcYNxmAuoEIeYq3Z8AVHzfM6nq6bJwV7qcWrzDUMzB67F1vTP
+         u8tzA4/42VgDnbJ/Fc1zQx/zcggdRM+0sLt8K6myJU33xE3V79RBgRE5rjlpy0aTaK3G
+         Nu0wcXI7MDdWsOeXMYxKdA7ZZqApPiJZgUVhYsnBhRWdcsJDfdhaeU9oBgNKiDYamPvi
+         E5PciGTzDRUQp/KUPg/n84EU8hDSQItfNwTKwXycFihatIFIL7r7YTyDWZvAilwVVs8p
+         a9Ep8IZmUsiReLuvEZlR7UUCGS+DvS/+pTjpvf9S3HtDe6PlyF9NltxkpAol/hanJYZA
+         qG7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745440108; x=1746044908;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ah6zkuRCc/Z7s5oeCTOt9XwXTfn1W/VtyormqwMBFB4=;
+        b=Lv0ECFJtlHeyu+bALTPmfC+ExtWuQnfxDlJMLLofSKyBy/bWrwTi4ImIZ13GI7Gci1
+         GKL3CJW6KKqzH4uC1tU0hHN7Pfp6KPXm/zhhRAWqNIZJXCDejxv9u36y5LTef8t0q5Ek
+         GNOexlg5JyhHQJ7KBZftoi7P0pVUtbldZ3j+q/yAhx9kW6W9nUNEHCssXa0Uz15yAjB1
+         Pl+SAM9x9+KwZfbbrqBMeSEfkUF/4cgWqbPDEcHuV93tmEgsPBmOcwT0FUv/vLS9X6I3
+         CtHVagE9e7kWGqkTcswQ7nyBUj+lP67KeJl7S4S5puUcxvykynhQzdhY60dNh7z3NuS9
+         knyg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0heil0rrOGxYiLNM5J7oiyx5bSbWg498b1hWrXIy8e8G0QHPPunE8oZEB1RDT7KO87UdsVI95ETZwgdQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrogcsuxOIZ76xsYwddHYpkIXE+6gZePVFJR/mFMqidZ8MRhLP
+	gFba2rL7NKq/J5LdbexzRA+TjZoLm1UkN6KDmdMGPNgqB5ngnKcpxHotimJoQDRRIdMLkNfWC+q
+	Ki2098o0Sej8BEZz193FCiw==
+X-Google-Smtp-Source: AGHT+IFiQVdxeBhTsiJOg9dL2jv2xFuiQooZC1rWX975oVPQU0mYN3lKF6SuxLR/yO5H1PbpNGLjnT3cV40FkFG7uQ==
+X-Received: from pftb21.prod.google.com ([2002:a05:6a00:2d5:b0:730:7b0c:592c])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:6d8e:b0:201:8a06:6e3b with SMTP id adf61e73a8af0-204447b1cb0mr161140637.9.1745440107858;
+ Wed, 23 Apr 2025 13:28:27 -0700 (PDT)
+Date: Wed, 23 Apr 2025 13:28:26 -0700
+In-Reply-To: <Z+y4E3tcOCOJxCiS@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-2022-jp
+Mime-Version: 1.0
+References: <cover.1726009989.git.ackerleytng@google.com> <5a05eb947cf7aa21f00b94171ca818cc3d5bdfee.1726009989.git.ackerleytng@google.com>
+ <Z+y4E3tcOCOJxCiS@yzhao56-desk.sh.intel.com>
+Message-ID: <diqzmsc6zkph.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 27/39] KVM: guest_memfd: Allow mmapping guest_memfd files
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: tabba@google.com, quic_eberman@quicinc.com, roypat@amazon.co.uk, 
+	jgg@nvidia.com, peterx@redhat.com, david@redhat.com, rientjes@google.com, 
+	fvdl@google.com, jthoughton@google.com, seanjc@google.com, 
+	pbonzini@redhat.com, zhiquan1.li@intel.com, fan.du@intel.com, 
+	jun.miao@intel.com, isaku.yamahata@intel.com, muchun.song@linux.dev, 
+	erdemaktas@google.com, vannapurve@google.com, qperret@google.com, 
+	jhubbard@nvidia.com, willy@infradead.org, shuah@kernel.org, 
+	brauner@kernel.org, bfoster@redhat.com, kent.overstreet@linux.dev, 
+	pvorel@suse.cz, rppt@kernel.org, richard.weiyang@gmail.com, 
+	anup@brainfault.org, haibo1.xu@intel.com, ajones@ventanamicro.com, 
+	vkuznets@redhat.com, maciej.wieczor-retman@intel.com, pgonda@google.com, 
+	oliver.upton@linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	rick.p.edgecombe@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-"now4yreal" <now4yreal@foxmail.com> writes:
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
-> Although I understand that errors caused by maliciously crafted file
-> systems may not be within your scope of consideration, please consider
-> whether such validation might indeed lead to any other chain
-> reactions? Please feel free to reach out if you need any clarification
-> or would like additional information.
+> On Tue, Sep 10, 2024 at 11:43:58PM +0000, Ackerley Tng wrote:
+>> guest_memfd files can always be mmap()ed to userspace, but
+>> faultability is controlled by an attribute on the inode.
+>> 
+>> Co-developed-by: Fuad Tabba <tabba@google.com>
+>> Signed-off-by: Fuad Tabba <tabba@google.com>
+>> Co-developed-by: Ackerley Tng <ackerleytng@google.com>
+>> Signed-off-by: Ackerley Tng <ackerleytng@google.com>
+>> 
+>> ---
+>>  virt/kvm/guest_memfd.c | 46 ++++++++++++++++++++++++++++++++++++++++--
+>>  1 file changed, 44 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+>> index b603518f7b62..fc2483e35876 100644
+>> --- a/virt/kvm/guest_memfd.c
+>> +++ b/virt/kvm/guest_memfd.c
+>> @@ -781,7 +781,8 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+>>  {
+> Hi Ackerley,
 >
-> I’ve attached the POC (written in C) for your convenience ― it can be
-> compiled directly with `gcc`.
+> If userspace mmaps a guest_memfd to a VA when a GFN range is shared, it looks
+> that even after the GFN range has been successfully converted to private,
+> userspace can still call madvise(mem, size, MADV_REMOVE) on the userspace VA.
+> This action triggers kvm_gmem_punch_hole() and kvm_gmem_invalidate_begin(),
+> which can zap the private GFNs in the EPT.
+>
+> Is this behavior intended for in-place conversion, and could it potentially lead
+> to private GFN ranges being accidentally zapped from the EPT?
+>
+> Apologies if I missed any related discussions on this topic.
 
-Yes, corrupted image can be the cause of fatal error. Can you real
-reproducible program instead of stress test?  If it can be prevented
-easily, we would be able to add the check.
+No worries and thank you for your review! The next revision will not be
+requiring userspace to do madvise(MADV_REMOVE), because memory could be
+mapped in multiple processes, so unmapping from the kernel saves the
+trouble of coordination in userspace between multiple processes.
 
-Thanks.
--- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+>
+> Thanks
+> Yan
+>
+>>  	struct list_head *gmem_list = &inode->i_mapping->i_private_list;
+>>  	pgoff_t start = offset >> PAGE_SHIFT;
+>> -	pgoff_t end = (offset + len) >> PAGE_SHIFT;
+>> +	pgoff_t nr = len >> PAGE_SHIFT;
+>> +	pgoff_t end = start + nr;
+>>  	struct kvm_gmem *gmem;
+>>  
+>>  	/*
+>> @@ -790,6 +791,9 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+>>  	 */
+>>  	filemap_invalidate_lock(inode->i_mapping);
+>>  
+>> +	/* TODO: Check if even_cows should be 0 or 1 */
+>> +	unmap_mapping_range(inode->i_mapping, start, len, 0);
+>> +
+>>  	list_for_each_entry(gmem, gmem_list, entry)
+>>  		kvm_gmem_invalidate_begin(gmem, start, end);
+>>  
