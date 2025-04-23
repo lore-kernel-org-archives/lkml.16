@@ -1,120 +1,127 @@
-Received: from fhigh-a7-smtp.messagingengine.com (fhigh-a7-smtp.messagingengine.com [103.168.172.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F70627C87C
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD0B143736;
+	Wed, 23 Apr 2025 14:26:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418379; cv=none; b=cm630R6jazVyhYK/wDFWAguqQIyJ+DrhU4DD3fcU5+YFUjLNqNBLmvNCRl3+NGkqKxtgYYIA+HxMtKGeIHtYqhFEtDEmKdYZY4F4H1jtWCS2KlUwSjctILm1xIx/+ejM8Yc9W5UpsxkY2cr8db0LAFm1XBUfV1in5+rVMjkbd1c=
+	t=1745418411; cv=none; b=qEy4LNuQq4dXEIhgq5xRPU3kijjeKF0ifkVFt8rrcEvn5LfHbi573tB5pVaw6IyN336DLQzzR0GfllDSKtDYRVG9g1o7Bj5Oy2oWzPN+/KMktgaO0t2OkucFesLuRs04QuiZAnGB+40Fr/xY+xiw+RvzPlGXT9ZIusDvOOGHhpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418379; c=relaxed/simple;
-	bh=2PnMWJoU9CfQIN5xfqfk8HzXGyVnk1rUgJBtPJB/9Bk=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:Subject:Content-Type; b=Vcz+uUk7ADz+xgNvx7M3aH6Qd1jPaD5ivgx9zGyTA7ahuKlDgV/WfM7Q5lvcETO9LwEYgN7xzbSfLlRzeLL6G6lRCzTazxV9P48M4sm/Y+iCiTESNviVLWGXm6mnEn2F6YvHozJGE1n6sZu53o6D8SjsaGGtFkFB03G+3rEfu9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=qvPF+39H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=MhYKBDkO; arc=none smtp.client-ip=103.168.172.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745418411; c=relaxed/simple;
+	bh=YQYhn8HZx7ubPYTlNSiK99ntMYepg0AMRX7OXqpob3w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eqBA5RbjzZEyrKeL3Q/GwUxGjT46AIOIIIJtURmHaNaEsSCHMOQjAv7B7cgga9jiDMTMYkpfRCICMBklcCWYe34aCu3NWDRiVBNjsks1cYkoU10HzrTG5iNXv/I1eZSyNN89CZlPO72Og5UEJjj37KYxK1nwH77VNs7YFkV8Peo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oI4RAf3j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="qvPF+39H";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MhYKBDkO"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 50FC31140241;
-	Wed, 23 Apr 2025 10:26:15 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Wed, 23 Apr 2025 10:26:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:message-id:mime-version:reply-to
-	:subject:subject:to:to; s=fm2; t=1745418375; x=1745504775; bh=RQ
-	HuFyRBEdBA6ZXvRnun39XQy6tPOiyfd7cH9yIyuFc=; b=qvPF+39Hmqo0aihsUN
-	jmC8u+OJzaWwCsFbUTmCNs5Wq3QrCFX0Ax2xMFth1HVUVmFd+KRWQKF8Oo4sC9x9
-	+oLlX6MBQZtXaqB9jpAPc9zNuAb+Pn3zsQ06in7H6VguCT1T+o6nyZjlwBOBCgJu
-	t7pGqUt6RE8EUALgOUMBKGwqqjzKu2LwMBN83fEULLfx3SQdcBgHrb+ptKXHvj7e
-	0WgS32HaFKTuZebvu2EpNvnQCeuyDqmbsiUfYe+QJGJB7uOarHt0ujyfcQNMIBv+
-	pPAM3E22MfR6ewXA1K0y6H2mKR++9pGxnuE7+fxwP7iv/UBn0ZTzUumcIBGKm4VA
-	ZRaw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm2; t=1745418375; x=1745504775; bh=RQHuFyRBEdBA6ZXvRnun39XQy6tP
-	Oiyfd7cH9yIyuFc=; b=MhYKBDkOVa/DYl8lu5+EL1jWwAbk8T/VeXHbvVSkL+n5
-	I0CsxKgKv3GsjWCbNJfVEFFVNnCKvQTu6HmvdbkA4nE80Nb9NEaD9+RjkFGSk5v0
-	Ko3fiJJns1t9qLkXs/SewqNATdLIVP9MEvjgm11V3DqR9zgC9vqUP2rRXH76dB/c
-	QBR15AN9QZogzogcc+i9abKUk81zEl4TdF8VcOL0eGHyL799iRbH1RfkllbyOEvk
-	zxsXg2VDitWrRq2shenWRyqqIuRugwLEm5CfodHpJHehKaBNf/MiJePuHdlraZcS
-	5k1w5g1Ns6v93KUZC5Goi0lID73RZ4qKZuDhmW6PjA==
-X-ME-Sender: <xms:h_gIaBupqtuONzLiTkl1P95dy1UBUj0TbK_RCUrMmkdfArckdfHX2g>
-    <xme:h_gIaKdecnKeCZ1mbETBZqalHFe-dhomIObaG7JqssaDLmLpTqvbzskVF47hT1WuM
-    ZIla3p-koPpfcWANxg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeikeefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkffutgfgsehtjeertdertddt
-    necuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrd
-    guvgeqnecuggftrfgrthhtvghrnhepfefhkeefgfejleduveevleduhedvueelheekuefh
-    geduheejvedujefgffffveelnecuffhomhgrihhnpehllhhvmhdrohhrghdpphgrshhtvg
-    gsihhnrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepgedpmhhouggvpe
-    hsmhhtphhouhhtpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhg
-    pdhrtghpthhtohepjhhpohhimhgsohgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhope
-    hnrghthhgrnheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhn
-    vghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:h_gIaEyvEIe65oaPgG7qwE-H3vh2jSULZUJhw9_K_qm1IQ91wY_A5A>
-    <xmx:h_gIaINXjEbsP_hhIePeXyXwpvpyyf_L5nn7YiGqY1tYDpjv5Ls9Kg>
-    <xmx:h_gIaB-5aKPHk7WDHT2dYjzBmxlcfd8De8c4ap4k-QwetJfiDwRD6A>
-    <xmx:h_gIaIVIY7V7R2Bpw_MrXeA2BjLJwMPv-HM8yEPqyEfAjayXBb16rA>
-    <xmx:h_gIaA3REe5Fc6DAIlNjEANwOMPXsvrUOKRKxhlN128JYe62bPiJkrkt>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 016D22220074; Wed, 23 Apr 2025 10:26:14 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oI4RAf3j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7652C4CEE3;
+	Wed, 23 Apr 2025 14:26:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745418410;
+	bh=YQYhn8HZx7ubPYTlNSiK99ntMYepg0AMRX7OXqpob3w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=oI4RAf3j4M1r2VV6NRgs1xBOJEm2flOIoypXVAMl1a1YvNUbGNE84IEzxCTuVm6GU
+	 pW+qYfhxnSaHqbWYoPkJrnTod7niNrZtYOcDI5DauZVoXHqrvGintx4D9IPYZaXj8G
+	 OP4amihUP6Q21gQMpm2qrKvzwPYHAzII5oWrvNL5ygDMED+N8owCNRs/Vj0/PS0oBW
+	 j45EJfKEzEuvL0kQcipUPF3FrbQKU6DkiQ33rQFPaKpB7zQuEtX5FjSt/RJYx6wwAv
+	 2hYXwW5Tb1aj3rKPirsgIpgoMnqaX5GnhFUPV2Uce62CwkiIjyCNCSXkwuY8BlcgU+
+	 6bZriRBFBABJw==
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f6a92f234dso4069163b6e.3;
+        Wed, 23 Apr 2025 07:26:50 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVVHT6NKQngTyRf+MS+TjRgMKzP0Z5hrWWPaghlasHX3WPdmbliJW40WCWhNIUwHDretu+7Oa3V9paLX8E=@vger.kernel.org, AJvYcCVr2A60j0M7y/7s/DfO/sWT0HE6kbwk7RtikCxj78I5WB5IM6Ms+OLFJw7+l3ZgubpnN1RfD90PoOE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2wNduIhZYHVvtvWLW2AKxcPWXtPiNv6CITUXJ27jUuMujewAH
+	Ih08+W1AdMzzojiUplGfFLAugD895Os6HlfEff2Ugk9uFbnUbdWUxEBquylZbKgreOIfRNUy9sh
+	nF/LgjYsTAf0cyYHQ0paxxjkO8wo=
+X-Google-Smtp-Source: AGHT+IF86QSYcG4iBnR8KfUoSgrDuxUjBg1Hhrec5DRZmfTgDqFoRXL12KcMeRoA1Yl8dkNcre81jhSzAziC3JcdFNc=
+X-Received: by 2002:a05:6871:741d:b0:2d4:e101:13dd with SMTP id
+ 586e51a60fabf-2d526979cc4mr12643088fac.1.1745418410039; Wed, 23 Apr 2025
+ 07:26:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T3e40cc2738116353
-Date: Wed, 23 Apr 2025 16:25:54 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Josh Poimboeuf" <jpoimboe@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, "Nathan Chancellor" <nathan@kernel.org>
-Message-Id: <ed3bdbc7-63d0-4d9f-be2f-22fcdb52d32c@app.fastmail.com>
-Subject: objtool errors and warnings with clang-21
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <cover.1745315548.git.viresh.kumar@linaro.org> <d8651db6d8687a0e37d527267ebfec05f209b1b7.1745315548.git.viresh.kumar@linaro.org>
+In-Reply-To: <d8651db6d8687a0e37d527267ebfec05f209b1b7.1745315548.git.viresh.kumar@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 23 Apr 2025 16:26:38 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hWUdRdbPL2=qybaEsNfPzAqdxW+xBrjwy4HaBXnTwD0g@mail.gmail.com>
+X-Gm-Features: ATxdqUGtzCcRuzs8_RMtDyNBoI0AmDx05VZ1ZJDD6JW5HMnWEgCwZuUfEuq10rY
+Message-ID: <CAJZ5v0hWUdRdbPL2=qybaEsNfPzAqdxW+xBrjwy4HaBXnTwD0g@mail.gmail.com>
+Subject: Re: [PATCH 2/6] cpufreq: acpi: Re-sync CPU boost state on system resume
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Lifeng Zheng <zhenglifeng1@huawei.com>, linux-pm@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Nicholas Chin <nic.c3.14@gmail.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Here is a list of issues I currently see with linux-next and llvm-21 from
-https://apt.llvm.org/bookworm, along with the .config files:
+On Tue, Apr 22, 2025 at 11:54=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.=
+org> wrote:
+>
+> During suspend/resume cycles, platform firmware may alter the CPU boost
+> state.
+>
+> If boost is disabled before suspend, it correctly remains off after
+> resume. However, if firmware re-enables boost during suspend, the system
+> may resume with boost frequencies enabled=E2=80=94even when the boost fla=
+g was
+> originally disabled. This violates expected behavior.
+>
+> Ensure the boost state is re-synchronized with the kernel policy during
+> system resume to maintain consistency.
+>
+> Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu=
+_init()")
+> Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220013
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/cpufreq/acpi-cpufreq.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufre=
+q.c
+> index 7002e8de8098..0ffabf740ff5 100644
+> --- a/drivers/cpufreq/acpi-cpufreq.c
+> +++ b/drivers/cpufreq/acpi-cpufreq.c
+> @@ -893,8 +893,19 @@ static int acpi_cpufreq_cpu_init(struct cpufreq_poli=
+cy *policy)
+>         if (perf->states[0].core_frequency * 1000 !=3D freq_table[0].freq=
+uency)
+>                 pr_warn(FW_WARN "P-state 0 is not max freq\n");
+>
+> -       if (acpi_cpufreq_driver.set_boost)
+> -               policy->boost_supported =3D true;
+> +       if (acpi_cpufreq_driver.set_boost) {
+> +               if (policy->boost_supported) {
+> +                       /*
+> +                        * The firmware may have altered boost state whil=
+e the
+> +                        * CPU was offline (for example during a suspend-=
+resume
+> +                        * cycle).
+> +                        */
+> +                       if (policy->boost_enabled !=3D boost_state(cpu))
+> +                               set_boost(policy, policy->boost_enabled);
+> +               } else {
+> +                       policy->boost_supported =3D true;
 
-https://pastebin.com/mRxkgudJ 
-drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: warning: objtool: vmw_host_printf+0xe: unknown CFA base reg 0
-make[8]: *** [/home/arnd/arm-soc/scripts/Makefile.build:195: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o] Error 255
+IIUC policy->boost_enabled is false at this point, so say that
+boost_state(cpu) returns true and say cpufreq_boost_enabled() returns
+false.
 
-https://pastebin.com/7XEcstHP
-drivers/input/misc/uinput.o: warning: objtool: uinput_str_to_user+0x17f: undefined stack state
-drivers/input/misc/uinput.o: warning: objtool: uinput_str_to_user+0x17c: unknown CFA base reg -1
-make[7]: *** [/home/arnd/arm-soc/scripts/Makefile.build:195: drivers/input/misc/uinput.o] Error 255
+cpufreq_online() will see policy->boost_enabled =3D=3D
+cpufreq_boost_enabled(), so it won't do anything regarding boost, and
+say that this happens for all online CPUs.
 
-https://pastebin.com/6wAzkUL5
-vmlinux.o: warning: objtool: ___bpf_prog_run+0x208: sibling call from callable instruction with modified stack frame
-vmlinux.o: warning: objtool: __ubsan_handle_type_mismatch+0xdb: call to __msan_memset() with UACCESS enabled
-vmlinux.o: warning: objtool: __ubsan_handle_type_mismatch_v1+0xf8: call to __msan_memset() with UACCESS enabled
+cpufreq_boost_enabled() will be false, policy->boost_enabled will be
+false for every policy, but boost will be effectively enabled AFAICS.
 
-https://pastebin.com/PQZDZV18
-fs/fat/dir.o: warning: objtool: fat_ioctl_filldir+0x717: stack state mismatch: cfa1=4+168 cfa2=4+160
-
-https://pastebin.com/StQRVCfQ
-sound/soc/codecs/snd-soc-wcd9335.o: warning: objtool: wcd9335_slimbus_irq() falls through to next function __cfi_wcd9335_set_channel_map()
-
-and a bunch more fallthrough warnings that are likely all related to that one:
-
-drivers/gpu/drm/amd/amdgpu/../display/dc/basics/fixpt31_32.o: warning: objtool: dc_fixpt_recip() falls through to next function __cfi_dc_fixpt_sinc()
-drivers/gpu/drm/msm/msm.o: warning: objtool: msm_dp_catalog_ctrl_config_msa() falls through to next function msm_dp_catalog_ctrl_set_pattern_state_bit()
-drivers/iio/imu/bmi160/bmi160_core.o: warning: objtool: bmi160_setup_irq() falls through to next function bmi160_data_rdy_trigger_set_state()
-drivers/media/i2c/ccs/ccs-core.o: warning: objtool: ccs_set_selection() falls through to next function ccs_propagate()
-sound/soc/codecs/aw88399.o: warning: objtool: aw_dev_dsp_update_cfg() falls through to next function aw_dev_get_int_status()
-
-     Arnd
+> +               }
+> +       }
+>
+>         return result;
+>
+> --
