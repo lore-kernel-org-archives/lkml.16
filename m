@@ -1,183 +1,201 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2053.outbound.protection.outlook.com [40.107.237.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C884276024;
-	Wed, 23 Apr 2025 07:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745395005; cv=none; b=PUE6goAafDs4OqSLroAX9/q+Eaqoxvc/HVO1q0QvwWGcPYfTpHPeq0vALR6Y61kX/6RYdCEH1hkRIuItfW2/8MmEJERIwoHywPxjyKHKlEAGQ6V4Uji3txLDzQec5gw9xhOys0AyFeStHW1Bfkm70JdypOAcN8c6UKVnwO90Hs4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745395005; c=relaxed/simple;
-	bh=3ROjFLRtDQpKqU5sUZYxIcu+y5AbhHrnpWcsJ/Zgjas=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jGm6Qc66pNb5Tvy4qVvw/HS8LbEXv8JYv7bWbYpinPZEuiC0xAd5qbkhkCLlGauhh9Er8cxi0z4jx1kMAMrakVDopsogfm7XnL/sflyTnzWYkHW7bpZ4kHe30JpNAjfMqnra8crtAv0DD9K6djUU59jcKWDXTdpWyQFuxokxIP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=aE3LBD+s; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1791266EE0;
+	Wed, 23 Apr 2025 07:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745395049; cv=fail; b=gSPKZnxNGQhbeE+CNQ2MLW86HN2dnooytum/R3huOdcFbKeVp/LD6JjFxahD+kvBWRgHhQv4IpD+IDrLJXlCp2/Uey3+0YBanGy6xzdJNyF9YXtx7JFS8bjgzMv0nKDeWtSr0jLqwfXUQRmjqoGNoWPAIa32rnJZMYQj1WJoRns=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745395049; c=relaxed/simple;
+	bh=/4qFVT6SOq7txxmgb7gL1ThC+C8hd4aSfkbNBMQF57s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=useQu18mL3H/SM8AmH7OGhomCzv3PUJxroVXZC7FK7yoMIrUAqAzwknyFj+tdipbBdVq11ndm+C4QT2oVOvTgK2aHavI9HExIHyRDR8ftP2prxCJJb1P8b1SNmeNR0ZdHiz87ufw9rSXc46ApZ0Whs+7EutjgFGwtSIzU1sy2yo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mVPmi945; arc=fail smtp.client-ip=40.107.237.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aE3LBD+s"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53N7uBoV3119852
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 23 Apr 2025 00:56:12 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53N7uBoV3119852
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745394975;
-	bh=LV4/6zX3QPMww5e/UsTXLMcNjFZYEA1V4I6Dl3psGlk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aE3LBD+sbGzJoCaP0U4TSgem2sj9X5F2EUjTr9I41Yn00qAtH+J43Qh1li+dchB7q
-	 +1Gj8OUZdCMIx6ynsU/QF45WHYqmrbHvAlr+QYSM+zEio3U+MvSQf4AXJtQZyF/3li
-	 ExwCskjw2SfD+458eyhstGvCJSlwO9val7w3JhzR2n0qqPM9Luc8RomhbFnXjsrTYJ
-	 J8urbqSA1MNRKs+D3yko6hS6jjvd//z1nBk63OOw0B34E94M2nqGeMOIbdXUMiHbUo
-	 jyfr7leDcp8LIG3Lr0t1IeA8uRBK2qVubqVoGiv5YeQINNCwu29B7dJxXvRgOLG9Q7
-	 wZbbF8Pn/L0nw==
-Message-ID: <a803c925-b682-490f-8cd9-ca8d4cc599aa@zytor.com>
-Date: Wed, 23 Apr 2025 00:56:10 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mVPmi945"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=c4muzoSmCXqVc2RQiqadz8PFqERQKS4iZ/7RkqPV7LAxWZXmdsZXHgLoMKGoCrti9GUUzfMVqpoBYN7ZDtO4vRFvr3bYJY8iPm54PdIu6WNo7Z1V+MAzdrZobNBwKFDtpkryk5Z2SwTQUwQlgeDrAulzfmPiFpeZzQ3Nt34nfmIbnASgpf6rPq1qijwHmGJRFSAk6VOKsYg/J/Cae9cr8rMJ7BR1BKYZK9ky6FaG8vb+Gb3PWaOJhG4EAiOYlsImET6KXkwqSGjKaX33QmsmXOYrxRj3eaep4eWUSh7yiRlamKj9sSU4pA9b7lN29GGggkrae2+LJ95I5LBaqAQ3bg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/SSgOF4/HcsFA7S0W4f8J37OBneLgUbvjrl9YC++P1M=;
+ b=dL3W9URdHx/xrHmQWGtQwLDi3zy2w+Y20+p6NsSOeAN86oLCUZdPpUZQVZdjUz/XqDdYU5aoaeep0eMQU/N2x9khK9xLQx4nShJBaRdJL6YwFPQJf0VC3geqobB/KvQICHYX+I2YZ5PYYepe9NJLth4Bb8ZxiXMjXtsVjEN4E85Ndsy+yKqzY1RJbR/YiPizw+dvI3HLv4Q9sipWVhKp4uZNEzXFa9JB3azVPAs7RTcjq2KnOP0FUN5x46k3KgCeIk5bTPNLAGUAZktMlT6jL5oA/q4V7tZoM5vZjNzBguC25qU6i84rEL7oGNTOoAuiE2Xx40u/hLSsfCDGwEXRHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/SSgOF4/HcsFA7S0W4f8J37OBneLgUbvjrl9YC++P1M=;
+ b=mVPmi945UaUBY/mCJI4QF3OViv3CKhPAiTuIHeyy85BXFBC0rpXSofYQRsn6pgu2rZELab9mfs5rWmyAE06s5YViBPAEn6ZbIrOtR2JsxsPA4OpyPGXKuAPXCpZQRnhW4L3rdjGWtxJxjitwSPbJ1WaamzMb0X8UhVjjKXge/CQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB7523.namprd12.prod.outlook.com (2603:10b6:610:148::13)
+ by SJ2PR12MB8979.namprd12.prod.outlook.com (2603:10b6:a03:548::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
+ 2025 07:57:24 +0000
+Received: from CH3PR12MB7523.namprd12.prod.outlook.com
+ ([fe80::f722:9f71:3c1a:f216]) by CH3PR12MB7523.namprd12.prod.outlook.com
+ ([fe80::f722:9f71:3c1a:f216%6]) with mapi id 15.20.8678.021; Wed, 23 Apr 2025
+ 07:57:24 +0000
+Message-ID: <c1d1ce25-8b5f-4638-bcd3-0d96c3139fd7@amd.com>
+Date: Wed, 23 Apr 2025 13:27:16 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net V2] amd-xgbe: Fix to ensure dependent features are
+ toggled with RX checksum offload
+To: Jacob Keller <jacob.e.keller@intel.com>, Shyam-sundar.S-k@amd.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, Thomas.Lendacky@amd.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org, vishal.badole@amd.com, Raju.Rangoju@amd.com
+References: <20250421140438.2751080-1-Vishal.Badole@amd.com>
+ <d0902829-c588-4fba-93c0-9c0dfcc221f6@intel.com>
+Content-Language: en-US
+From: "Badole, Vishal" <vishal.badole@amd.com>
+In-Reply-To: <d0902829-c588-4fba-93c0-9c0dfcc221f6@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0099.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:2ac::9) To CH3PR12MB7523.namprd12.prod.outlook.com
+ (2603:10b6:610:148::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] KVM: x86: Add support for legacy VMware backdoors
- in nested setups
-To: Zack Rusin <zack.rusin@broadcom.com>, linux-kernel@vger.kernel.org
-Cc: Doug Covelli <doug.covelli@broadcom.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <seanjc@google.com>,
-        Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20250422161304.579394-1-zack.rusin@broadcom.com>
- <20250422161304.579394-5-zack.rusin@broadcom.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20250422161304.579394-5-zack.rusin@broadcom.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB7523:EE_|SJ2PR12MB8979:EE_
+X-MS-Office365-Filtering-Correlation-Id: e29dd1c5-ea3e-4b77-7ce6-08dd823c7b1f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dGJuS3FQTkluZ0NWM0l3c1dTd0pnVjlZVVJEZW5nSTVPd0szRm1vL0NTMmdW?=
+ =?utf-8?B?T0c0QzNZQWFjV1dwRlN6QzhqSmRWbklnTU50eDZ6MDdiRjlNRHZweVVYUHhN?=
+ =?utf-8?B?cjFzdVVEUjhPaWdCN0svM05UOXBISEUvVTlEYUNuL2FmUTBzejhDWVJDZzEz?=
+ =?utf-8?B?ZXVkV0swMVJDWWFZNytVcWFVZkJqdXJobXU1aHpwdXpaa3hBb3pZR01pTi9O?=
+ =?utf-8?B?M0JzcForcGNNaXhZSnBRazdmNWxmR1hkWlJRSVBhYWtvQkk4dmtTN0NLU0pk?=
+ =?utf-8?B?ck03V0hvK0dvV09PMFlTVTJaZ2FVdklOSy9MOUI0eW5LL2xhV2o2cmhRMHVZ?=
+ =?utf-8?B?ZjZROGdSaHJvN2F2NVozWWg3RmRCMlBBRkF3aW1EWFJoL0RENjJLM2p0NytY?=
+ =?utf-8?B?SjlMaHErY1NxbDlYWUdNUVdFRVJ4WERVblZqd00wR2VxRVluUVF3bFhRK3dO?=
+ =?utf-8?B?dVBFWDBQVEtoSCtabVlQNFAwc2tRd2ZlcUJqZTQ2NlgwYUxDUWE3RTdtdms0?=
+ =?utf-8?B?N3RKTVdkVGZicGVicVlSMDFlWW1samErd095SWFJaDQvc3VXKzcvSWE1SFgy?=
+ =?utf-8?B?eXFiYWRmOVA5R3BtZGJweDhNSVZ6dGRvUm9SRGlTNVRTRi9TVjk0NlNKU0RF?=
+ =?utf-8?B?TWdhcTNEYjZqVDJFWHJOTlFWd1RaS2NUanlVcTB5aGNDV055VEhSRHdSaVJq?=
+ =?utf-8?B?clBQU3JxaFV0YSsxbjMrOW1vQXl2VHZsQ1o4b2VSUnRrOEFPWGhCSEdTVHlo?=
+ =?utf-8?B?cUI2L2VjbVd4UEdzT0ptMDVDK1dFU3g1SjZGZTFhZm9pMW14Wnc5UFU1Vndw?=
+ =?utf-8?B?SW5MRElNSkxwMXlwSkkrQzlRMjNPMklkYTd6aFFQejJzTEhlc1BFeG9pSFh5?=
+ =?utf-8?B?Wm5zRmpUaWQ1R21QTGhFL2tXNGJCKysvaGwwSFRYM0E3Z2xybkcxM0dhN0Ez?=
+ =?utf-8?B?RlU4ZUwzbWpjdWVhSnFKbDBBdDVBUS9ybWRFWWpkbmNzSjZUK3JwZjhMR01t?=
+ =?utf-8?B?RDZSVmsxS21pR1A1c1U5QWhJRFhUd3h4aThHWGQ2U25RcUlLS2NqdGUwVjVs?=
+ =?utf-8?B?V1UzRUQydC9MTDdyQzl5V2c2OU5DZFltRkVIME1wdllqNzNsN3BGUytXVUsy?=
+ =?utf-8?B?eXdNWUVHQTlWU3RFUCtoTnVpdkdGTWFDQzJoUkZJREdXSVg1OUh4d24xcTd4?=
+ =?utf-8?B?T1k3L24wYkZ1UXRvS0tIMXcrRk9sMzhUbk1XaVI3aFpZSHo4emJJcS9WT2JZ?=
+ =?utf-8?B?Q3czRjJmejRNaDBoZ01iRzJ2b2N1RTcyUlNaRDVVZ3F5eWZuYTNNWXQzYnRS?=
+ =?utf-8?B?dVhzNXJHMENHSWt4eXMrR3ZOZW5OK1hoZ0IyUDNUYS9wZVpZa2VxdFNnL2hp?=
+ =?utf-8?B?SkwyTGR0R3FoMWRFNWs2czczY05aWlprNHVMNlBXbUdxdC9VU1E3Z09FQVRE?=
+ =?utf-8?B?U25XTytYQ21TU1N4VDErQnNuNHl6bmtDcFlmbFZHSFlTS2crNUpIVFEwZzFL?=
+ =?utf-8?B?VTFzZ2V5MnlJd0hlWStBV3ZMQXIzL2o5YU5RbXFNMWNNcWQ2dlorOVdLMjFH?=
+ =?utf-8?B?MSt5aXBBZTloQXFEZ1lMN0h4dCsyQkxCYTJZaWNjVk9Jd3Y4NHlSMjRsMFZT?=
+ =?utf-8?B?M003VVJNejFVMmdXSVpucitvY2RGWmlrenAvckhyaENBSVNUdkZMR1g2ZW1l?=
+ =?utf-8?B?c1VKZDMwa3dQV1A4ZUNETUx0R0RTckFkbWxuYWRnSCt4cUJDSFBWdTdJS2Zw?=
+ =?utf-8?B?YmlkNEdPYWczRGxlZEF1SW9lL3ljWnRYczZzRFFZbGcvRHdicG1ZVzJyMnM3?=
+ =?utf-8?B?RlhHNTRPVXRXVXVSOXUvMmxPVDc0NGc2S2JQZ21FY2d3bFBPbGpHTmFRM3pk?=
+ =?utf-8?B?ekczOFIrTTVsTVovRllzSEdoeW5ZaVpNd2d2cUt0VGNrQ0RSTGdrVGhOSFdh?=
+ =?utf-8?B?WHV2LzcvWWQ1RGV4bmdxZzZZWnJkdzVwd3JqelYyU2x5aUc0MXVwK1hHNXo2?=
+ =?utf-8?B?cHdGd1NGQ25nPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB7523.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N1VWbnExRE1UOTIxVUxUVmZ0WFRETDMzaXlGWHVnQ0M0WnI2T29IZ3VYcjQz?=
+ =?utf-8?B?YSs0QVpzWnQ5OWR0Nit4Z1VrTkM2Y1RLZTl1SDM5c1NZT0krdXZFVXlLMzdI?=
+ =?utf-8?B?QnFTZzR3bjMzeng0c0NKZy9pVVN6ZEhPaWs1b3pvS2FMeThsbm54Sk9xMlFS?=
+ =?utf-8?B?M2lTSVZGdXo4d3NHd0hCVFltd0RjY2RIdG1nNjBIa0hsczU0eVJDL256Q29P?=
+ =?utf-8?B?bDhJR05NSHRGUWY5ZlFRbXJGcWpnUU5ONnFSdGF4emM0WlJvdWFLMFBIY2hC?=
+ =?utf-8?B?T0ZYajZkRXUzd051NlJ4UmNVOWNQdHhPRDdXMkdjVVhwRWplTTh1VnNrYThL?=
+ =?utf-8?B?UWpzekZaaFdVa0cwbklySnMrbndLN2VRUzJNNXRYUlYwLzcyclhWNFJMa2k2?=
+ =?utf-8?B?cEZwUVJiTWRMSk40REVYWEcza0xkUkwxc0JBNEhtVmJGc3R0eHdEVjNORGdl?=
+ =?utf-8?B?ak85a0M0dGZIUWxzMHo1OXlKSG5LTWI4blEyQ2Y5eHVEVWlIT0h2SVlDQzBG?=
+ =?utf-8?B?cWRwSVVsQ0pCMlJDSkgwV1NnQ3RQeXc0U25VK1BzRmxWSStqOStTTG9ZRjFm?=
+ =?utf-8?B?bGVGUWE1R3p4Q3orMUZYZ1FtL3lJTFJDL1hKbFlwQ0treE82T1hrbDBOUU0y?=
+ =?utf-8?B?MEhPNHltTzEvdmRFQi9kR1BCVVdRc2lwZURIWDB2ZS9KVUFIa3pMUE42MW41?=
+ =?utf-8?B?US9uR0dUY2J0UlJkd0t5NzV0UytIT0ExS3NySXgxRFpqaU85aDhDMEppdDlj?=
+ =?utf-8?B?VmFieXpUWktTM1c4L3BtQy9CY2YxQTNQMWVCZENwV1MwWThHTHI0elE4NjFq?=
+ =?utf-8?B?KzRibHc2bHNhcWlDU1NYUkVNeHpueEVSM2lQWWNZUnZDUDdvTGlRSmhwOUwv?=
+ =?utf-8?B?V0ZVMFErMzhlZXhOeFFhN0c3c04va3REVnpIVmpRTkUxc3ViYkYyeWdaZFBV?=
+ =?utf-8?B?aWNMbm5VK3lwUHlqOVpKM3FBVGdJU080Q29HeUxGdFNWS3M4YnNsbjYwQTFC?=
+ =?utf-8?B?QVdTZGZlcVJHVEQrWCtsZDdXaFh3dlQ4dHVBV0Y0aVR1K0wwVlFDT1VkSVd1?=
+ =?utf-8?B?dlhHSnJucVQxTXhDMW9ZT200VmQ0bkV4MFhBN2NESXo0YTN6U2djUzRacnJs?=
+ =?utf-8?B?QnhjZzRGZFduRFJsV21WaHQ5VWNxcU9sTHRncWVrdUtsSnFFR3huSVZlbWtz?=
+ =?utf-8?B?ajNxZGNjQk54YzVJenJLaXRFU2czVXF0Ti90aENPdXo1anplVHVCeE15VGdN?=
+ =?utf-8?B?U3BsL3crVHlXQnIxc29XR3BiOXJ5KzFFQklMRjBwMW5wTE9BNW1BaHI3bHRj?=
+ =?utf-8?B?dGx3b1JEYXd1Qmg2VFpvaGtYS0tNSUNNdmtVOHdFTVEzS1hZSFgyY2daTWEz?=
+ =?utf-8?B?YU5UMVEvL29FUHZoaU9LS04vU3krcXJxb21WdHY2R2Z5em40YjZWK0ZVb0lV?=
+ =?utf-8?B?Y2FLODRpUGVvV2t4UUpJZU9CQktKa2NhVWt6MGRlWmYxb3FiS2cyWE1Id1hT?=
+ =?utf-8?B?eE1DYnZIRnFLWU1TcUtXSnVPVGRtNU9ZU0FIMExxVUU2TzdRSVAvVjcyZkhh?=
+ =?utf-8?B?Um8vZDBBVTdLeWZ3UCtsdEdjWnBhSXRhZ1BtV3k0bElDNWNNT2xwc2ExQm1T?=
+ =?utf-8?B?cjlBaWFCbzNKeUlNZlE5eDZ6Q2pwTmd2SktYdkZUbWxCVm1nZGJSbTdqMnpR?=
+ =?utf-8?B?RGU1WUh2TmJDM3pDU3I5SDA5bTVVek1RTFpzY2ZnOGhVSDB4Tm1xRE1FS29K?=
+ =?utf-8?B?S0FyeTY4bWNHbzhNQy96V1BlckJlbXdiaWNVY1hDWVhVMW5DcEVQRUdyMkg3?=
+ =?utf-8?B?UGNvMEVWNDhiMWRKL0t6ZDlYRXVxWFhPRHdpL1BHRmowN1VMcHJISG4rWmNq?=
+ =?utf-8?B?bzNOSURVQjB5TDM3MTZYV1hVYkZvaWRveXBhY2JMUEZJS1dia3pBdDUxY0xZ?=
+ =?utf-8?B?VlhodUoxUVZMSjlqT2xWVzZCdC90NUh1ZVJ3cVF0UVNEbW1uemhkVnhiQXBE?=
+ =?utf-8?B?UGVlOERoMHdaMHF3SHJOWU1QVVRTQm54WG5FTGVoL2xVeW1Kenl6OVo4SDNC?=
+ =?utf-8?B?U1dtaTZvWFFVcTdJdVk0TDdxOWg2UENoMGliaXZNNEpMYlg1YUhORXYwNkxu?=
+ =?utf-8?Q?Q7tCwcGEPXR5kQ4OzkAlw5fFl?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e29dd1c5-ea3e-4b77-7ce6-08dd823c7b1f
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB7523.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 07:57:23.7579
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SclxATTl8EXU7OxP63Uf11LAEvpnvVgUf6mXJdtV0L/7YlcP54FGp4T7nsGR/YDdN+bStJNO+9xYLGmtb9ZOQQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8979
 
-On 4/22/2025 9:12 AM, Zack Rusin wrote:
-> Allow handling VMware backdoors by the L0 monitor. This is required on
-> setups running Windows VBS, where the L1 will be running Hyper-V which
-> can't handle VMware backdoors. Thus on Windows VBS legacy VMware backdoor
-> calls issued by the userspace will end up in Hyper-V (L1) and endup
-> throwing an error.
-> Add a KVM cap that, in nested setups, allows the legacy VMware backdoor
-> to be handled by the L0 monitor. Thanks to this we can make sure that
-> VMware backdoor is always handled by the correct monitor.
+
+
+On 4/23/2025 3:50 AM, Jacob Keller wrote:
 > 
-> Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
-> Cc: Doug Covelli <doug.covelli@broadcom.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Sean Christopherson <seanjc@google.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Zack Rusin <zack.rusin@broadcom.com>
-> Cc: kvm@vger.kernel.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->   Documentation/virt/kvm/api.rst  | 14 +++++++++++
->   arch/x86/include/asm/kvm_host.h |  1 +
->   arch/x86/kvm/Kconfig            |  1 +
->   arch/x86/kvm/kvm_vmware.h       | 42 +++++++++++++++++++++++++++++++++
->   arch/x86/kvm/svm/nested.c       |  6 +++++
->   arch/x86/kvm/svm/svm.c          |  3 ++-
->   arch/x86/kvm/vmx/nested.c       |  6 +++++
->   arch/x86/kvm/x86.c              |  8 +++++++
->   include/uapi/linux/kvm.h        |  1 +
->   9 files changed, 81 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 6d3d2a509848..55bd464ebf95 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -8322,6 +8322,20 @@ userspace handling of hypercalls is discouraged. To implement
->   such functionality, use KVM_EXIT_IO (x86) or KVM_EXIT_MMIO
->   (all except s390).
->   
-> +7.39 KVM_CAP_X86_VMWARE_NESTED_BACKDOOR_L0
-> +------------------------------------------
-> +
-> +:Architectures: x86
-> +:Parameters: args[0] whether the feature should be enabled or not
-> +:Returns: 0 on success.
-> +
-> +Capability allows VMware backdoors to be handled by L0 when running
-> +on nested configurations. This is required when, for example
-> +running Windows guest with Hyper-V VBS enabled - in that configuration
-> +the VMware backdoor calls issued by VMware tools would endup in Hyper-V
-> +(L1) which doesn't handle VMware backdoor. Enable this option to have
-> +VMware backdoor sent to L0 monitor.
-> +
->   8. Other capabilities.
->   ======================
->   
+> On 4/21/2025 7:04 AM, Vishal Badole wrote:
+>> According to the XGMAC specification, enabling features such as Layer 3
+>> and Layer 4 Packet Filtering, Split Header, Receive Side Scaling (RSS),
+>> and Virtualized Network support automatically selects the IPC Full
+>> Checksum Offload Engine on the receive side.
+>>
+>> When RX checksum offload is disabled, these dependent features must also
+>> be disabled to prevent abnormal behavior caused by mismatched feature
+>> dependencies.
+>>
+>> Ensure that toggling RX checksum offload (disabling or enabling) properly
+>> disables or enables all dependent features, maintaining consistent and
+>> expected behavior in the network device.
+>>
+> 
+> My understanding based on previous changes I've made to Intel drivers,
+> the netdev community opinion here is that the driver shouldn't
+> automatically change user configuration like this. Instead, it should
+> reject requests to disable a feature if that isn't possible due to the
+> other requirements.
+> 
+> In this case, that means checking and rejecting disable of Rx checksum
+> offload whenever the features which depend on it are enabled, and reject
+> requests to enable the features when Rx checksum is disabled.
 
-You're not basing the patch set on v6.15-rcX?
+Thank you for sharing your perspective and experience with Intel 
+drivers. From my understanding, the fix_features() callback in ethtool 
+handles enabling and disabling the dependent features required for the 
+requested feature to function correctly. It also ensures that the 
+correct status is reflected in ethtool and notifies the user.
 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 300cef9a37e2..5dc57bc57851 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -4653,6 +4653,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->   #ifdef CONFIG_KVM_VMWARE
->   	case KVM_CAP_X86_VMWARE_BACKDOOR:
->   	case KVM_CAP_X86_VMWARE_HYPERCALL:
-> +	case KVM_CAP_X86_VMWARE_NESTED_BACKDOOR_L0:
->   #endif
->   		r = 1;
->   		break;
-> @@ -6754,6 +6755,13 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->   		kvm->arch.vmware.hypercall_enabled = cap->args[0];
->   		r = 0;
->   		break;
-> +	case KVM_CAP_X86_VMWARE_NESTED_BACKDOOR_L0:
-> +		r = -EINVAL;
-> +		if (cap->args[0] & ~1)
+However, if the user wishes to enable or disable those dependent 
+features again, they can do so using the appropriate ethtool settings.
 
-Replace ~1 with a macro for better readability please.
