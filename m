@@ -1,152 +1,157 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A3928D823;
-	Wed, 23 Apr 2025 19:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6F22F32;
+	Wed, 23 Apr 2025 19:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745436123; cv=none; b=JG+jCus7MOO4aRqf9qEi2WzTDfSSEi6RjAY74EjUzUZg8BU1SplNmOLphbw6dl7g5QFEt1F1o7Xj5s3t6/StEj8chzvbUUhfUX9NNxRfBfPx9SeBo6RbLdP77lGY/xGjWmDpr7mLHM6YnaJQDM4qhpraMpLgTZo+nDQfBZqnHUM=
+	t=1745436282; cv=none; b=sudxMfw0imd13WvpIXiCZnIpQKIIOEmRQVt5oeZ3EsxR6nlGHx3uB86DaY3huY5CgfpQ4VC4BxYhMsEU+E3Iu9pfANHXUAqQMrHjhf2WTJm4u0HEsupq7bOlahoGOnCtXAPcLZdHT3pUWbuE8cAn8v6QkxforsvH29qKndp0+Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745436123; c=relaxed/simple;
-	bh=yZ36DcIUYOAwIVulLyUU2OqhGHYT7zDOk4WXuA2qzpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y5PleM/ZbnFhBouStldWalrb6CTThHWn76wC3KK5u2oPu92qDehHj89h87V/w1Qt9Lg6RufIUjr2prhA+U/6IuMDgriCWYQPXqweMnZxWrOceB7tII25QfdQeMux6I6SbphdojBFY6jd6ddGOmt7lmppJr5nDd/ToV8YY0hpYxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q6S0A/rU; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745436282; c=relaxed/simple;
+	bh=VuA5ArutcR/+rBv4LmxZZq5llGuXWDGBdcaQnWcGg3Y=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
+	 References:In-Reply-To; b=ixCa3Y55QzE94dM1thx62xtq2dduLq5np5nXYf4UaXjzfCxVU9tvYMtHXrOwvTQDyKlQNCpZiWALJoacp1EDwft9Sh+dU9krjAZIQe8OJFjhOvRRiDvqCbB8b2NK+vW8zR5TQ8PYiEAjxpUga8HM1iv1qKC70gzXr+uVxAsL1qM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=JyMP61V2; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q6S0A/rU"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736b98acaadso145426b3a.1;
-        Wed, 23 Apr 2025 12:22:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745436121; x=1746040921; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lnq/BqqXjA7ALdZiVAuLt5golqfm+gt94XkCsxvqdSk=;
-        b=Q6S0A/rUjEWvj4ou7QwswIjNbWlwHDJhT292nOgDjzY+Yrz7pwUFotaOanLH0TepW/
-         cWD57R2Aec2g9HHjWidd1leVbbQLGQKkJqXUJUYTRGvtXAC572uhhAYlPmXSjO+KS2pe
-         bSfCjVkcRDcMcx9ltellbZJvRDgy2jlYFW2bEg0O8dWKZg8Eu42Fg8y7mWXQddMbHokD
-         /FZ1sVx1M1eL599/jVcnbRtnIkZ9Zx27eiiWpU5pCaqxQ913z4nawqnvZhodiOAcEI+2
-         8zeSmCK8kvYpd2YYDrjaRFmQpHAUwZtY6wM07jenUL7HmAMh1gK7FOSBe12+X30xrRXQ
-         GM6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745436121; x=1746040921;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lnq/BqqXjA7ALdZiVAuLt5golqfm+gt94XkCsxvqdSk=;
-        b=pTPyZDbCUXY3MXjG2HsexEq/E1hki14LW3s0Sh7s2N+WNQYGqewWnIZMYo74Zse3a+
-         9lxnZ3N2iA+WtptkjV9KUVbCMVpnJG6mJxbMuaOWvG6mvkRo3FaWkVyr8Ub8isd98RmR
-         bnww7YgGKCE7kmYEhsJOarnBWFGlPjVgFgk+XnOP1EOs4T23taY5jztN4dgkK0cqu6hg
-         dcbGinsBcDwg0hA5Btn2zajdIT9/Y10OCvoZ2AJKkdy+GT7yaEkkEfmwW6FsPBLkc8UX
-         dECGjnHhOoMUhbub7AB1ckW3E4Ht1gMizZevDJEtOm747qZmDJPLi+qbuXBrF2oXXIV3
-         +cxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/rNqAh0zJJh700MML2ijye/kVS9pxTdcy/eumSZ1JFhAVg7b6UD15lUA3/BIbdpQeRYitYy/sOOnlXvI=@vger.kernel.org, AJvYcCVR1BHrB7URXI9lbXLS1t/95pmppkByphxW8kbngjisVeGz4mF+z95AN/+FPXaSiXtOxfNdJLmZBpj3eEz0sCAzwA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCDAV/tRXC3xP1i7t0OJ/JotsR3+ir74/lMrP6EBbNca26Ily5
-	tz6PbplqSn3ygQxXSedmqz9/pgi0ZVBEESOQJYqfX2TH1UgdHG4m
-X-Gm-Gg: ASbGnct3YN4CghpduncVADiN8NjpbZ9JLs72BdqtrMX7K582sK7+Yo7BLUPq7+4sYHY
-	1I7s/WDPm9UZmWLk24LkSEAbEEDuoMAScayi2yyhDqJqOepApXp2ny+vRR6vzcZ+3jro3rmatQX
-	jZRwAKCeVpVh/0rcGMvbTqE0Tpg2GkmDHuApz+K853QSHNg5OjhiUPfxAPiQ3veWV3shhIHMdAd
-	vSBf8sXTYLn/bb7D13k1yNHVvSof+uq2SrR5j0mLL34Qmt/H7/B0OPEnhPL1sQuh5LHBgxnz7OJ
-	roxOul7kKa4DijnzyU3UJAzxVP36JQgVKz6NdgU=
-X-Google-Smtp-Source: AGHT+IGC8Nug6p+sMb1GfXDXRxrkzVBgxlxPN8V+pT09fkQHcV/gyhAXznUpN3ozAU58YHARfCLCSw==
-X-Received: by 2002:a05:6a20:c6c6:b0:1f5:64a4:aeac with SMTP id adf61e73a8af0-2044116a1a7mr886917637.33.1745436121299;
-        Wed, 23 Apr 2025 12:22:01 -0700 (PDT)
-Received: from hiago-nb ([67.159.246.222])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db139eecdsm9391156a12.22.2025.04.23.12.21.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 12:22:00 -0700 (PDT)
-Date: Wed, 23 Apr 2025 16:21:56 -0300
-From: Hiago De Franco <hiagofranco@gmail.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: daniel.baluta@nxp.com, iuliana.prodan@oss.nxp.com,
-	linux-remoteproc@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [PATCH] remoteproc: imx_rproc: replace devm_clk_get() with
- devm_clk_get_optional()
-Message-ID: <20250423192156.b44wobzcgwgojzk3@hiago-nb>
-References: <20250423155131.101473-1-hiagofranco@gmail.com>
- <aAkf6bxBLjgFjvIZ@p14s>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="JyMP61V2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 57DE443D43;
+	Wed, 23 Apr 2025 19:24:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745436276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j2tDrkkBQe3JKRslIUmoWfOqe7k2mOTW95nGkd+giIA=;
+	b=JyMP61V2AwXdhFa/MfRsPknQuX+9zLoQUYtqvFgqLxqliWXnPJH34GipEY9qLDu8f7SOwF
+	L8jxLNkDlXpvpCTUahNBDq64T+h8dShffNbUpErWHn1x/hthcTZ5Vhfb+11gcMowNWfteN
+	lMtxy7eNihMWGR1cfiyeiBMHdFAh6/Qkp740gcZF/k3F/n5r2A+L97u2Wp7fBZWy0zuMo+
+	PYecer6KKZ/ZgNu1gqyVkTs47GKuuYwTdT3yWzZ9AXC833zqNXwOSMWk8F7fOivfSBFC1Q
+	gdPEfuqHmDoodf8h5KichaaTG/S7VwJ99WpomEnNl9DoF7NAvN0SmDDj5OvjeA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAkf6bxBLjgFjvIZ@p14s>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 23 Apr 2025 21:24:34 +0200
+Message-Id: <D9E9IQQ3QKXM.3UJ17G9CBS1FH@bootlin.com>
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+To: "Andrii Nakryiko" <andrii.nakryiko@gmail.com>
+Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
+ <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
+ "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
+ <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
+ <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
+ <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
+ <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
+ <puranjay@kernel.org>, "Xu Kuohai" <xukuohai@huaweicloud.com>, "Catalin
+ Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>,
+ "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan" <shuah@kernel.org>, "Maxime
+ Coquelin" <mcoquelin.stm32@gmail.com>, "Alexandre Torgue"
+ <alexandre.torgue@foss.st.com>, "Florent Revest" <revest@chromium.org>,
+ "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
+ <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+ <linux-kselftest@vger.kernel.org>,
+ <linux-stm32@st-md-mailman.stormreply.com>
+Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
+ func model
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
+ <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
+ <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
+ <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
+ <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
+In-Reply-To: <CAEf4BzZHMYyGDZ4c4eNXG7Fm=ecxCCbKhKbQTbCjvWmKtdwvBw@mail.gmail.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeejgeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkhffvvefuofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeehveevkeelvdejhffhudfhtdevvddvfffgiedtveejiefgveeljeduveetuddtveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemkeegvdekmehfleegtgemvgdttdemmehfkeehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeekgedvkeemfhelgegtmegvtddtmeemfhekhedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeftddprhgtphhtthhopegrnhgurhhiihdrnhgrkhhrhihikhhosehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghstheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlsehiohhgvggrrhgsohigrdhnvghtpdhrtghpthhtohepjhhohhhnr
+ dhfrghsthgrsggvnhgusehgmhgrihhlrdgtohhmpdhrtghpthhtoheprghnughrihhisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrthhinhdrlhgruheslhhinhhugidruggvvhdprhgtphhtthhopegvugguhiiikeejsehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhonhhgsehkvghrnhgvlhdrohhrgh
+X-GND-Sasl: alexis.lothore@bootlin.com
 
-Hi Mathieu,
+Hi Andrii,
 
-On Wed, Apr 23, 2025 at 11:14:17AM -0600, Mathieu Poirier wrote:
-> Good morning,
-> 
-> On Wed, Apr 23, 2025 at 12:51:31PM -0300, Hiago De Franco wrote:
-> > From: Hiago De Franco <hiago.franco@toradex.com>
-> > 
-> > The "clocks" device tree property is not mandatory, and if not provided
-> > Linux will shut down the remote processor power domain during boot if it
-> > is not present, even if it is running (e.g. it was started by U-Boot's
-> > bootaux command).
-> 
-> If a clock is not present imx_rproc_probe() will fail, the clock will remain
-> unused and Linux will switch it off.  I think that is description of what is
-> happening.
-> 
-> > 
-> > Use the optional devm_clk_get instead.
-> > 
-> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> > ---
-> >  drivers/remoteproc/imx_rproc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> > index 74299af1d7f1..45b5b23980ec 100644
-> > --- a/drivers/remoteproc/imx_rproc.c
-> > +++ b/drivers/remoteproc/imx_rproc.c
-> > @@ -1033,7 +1033,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
-> >  	if (dcfg->method == IMX_RPROC_NONE)
-> >  		return 0;
-> >  
-> > -	priv->clk = devm_clk_get(dev, NULL);
-> > +	priv->clk = devm_clk_get_optional(dev, NULL);
-> 
-> If my understanding of the problem is correct (see above), I think the real fix
-> for this is to make the "clocks" property mandatory in the bindings.
+On Wed Apr 23, 2025 at 7:15 PM CEST, Andrii Nakryiko wrote:
+> On Thu, Apr 17, 2025 at 12:14=E2=80=AFAM Alexis Lothor=C3=A9
+> <alexis.lothore@bootlin.com> wrote:
+>>
+>> Hi Andrii,
+>>
+>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
+>> > On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Foun=
+dation)
+>> > <alexis.lothore@bootlin.com> wrote:
 
-Thanks for the information, from my understanding this was coming from
-the power domain, I had a small discussion about this with Peng [1],
-where I was able to bisect the issue into a scu-pd commit. But I see
-your point for this commit, I can update the commit description.
+[...]
 
-About the change itself, I was not able to find a defined clock to use
-into the device tree node for the i.MX8QXP/DX, maybe I am missing
-something? I saw some downstream device trees from NXP using a dummy
-clock, which I tested and it works, however this would not be the
-correct solution.
+>> Indeed I initially checked whether I could return directly some alignmen=
+t
+>> info from btf, but it then involves the alignment computation in the btf
+>> module. Since there could be minor differences between architectures abo=
+ut
+>> alignment requirements, I though it would be better to in fact keep alig=
+nment
+>> computation out of the btf module. For example, I see that 128 bits valu=
+es
+>> are aligned on 16 bytes on ARM64, while being aligned on 8 bytes on S390=
+.
+>>
+>> And since for ARM64, all needed alignments are somehow derived from size
+>> (it is either directly size for fundamental types, or alignment of the
+>> largest member for structs, which is then size of largest member),
+>> returning the size seems to be enough to allow the JIT side to compute
+>> alignments.
+>
+> If you mean the size of "primitive" field and/or array element
+> (applied recursively for all embedded structs/unions) then yes, that's
+> close enough. But saying just "largest struct member" is wrong,
+> because for
+>
+> struct blah {
+>     struct {
+>         int whatever[128];
+>     } heya;
+> };
+>
+>
+> blah.heya has a large size, but alignment is still just 4 bytes.
 
-[1] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
+Indeed, that's another case making my proposal fail :)
 
-Cheers,
-Hiago.
+> I'd suggest looking at btf__align_of() in libbpf (tools/lib/bpf/btf.c)
+> to see how we calculate alignment there. It seems to work decently
+> enough. It won't cover any arch-specific extra rules like double
+> needing 16-byte alignment (I vaguely remember something like that for
+> some architectures, but I might be misremembering), or anything
+> similar. It also won't detect (I don't think it's possible without
+> DWARF) artificially increased alignment with attribute((aligned(N))).
 
-> 
-> Daniel and Iuliana, I'd like to have your opinions on this.
-> 
-> Thanks,
-> Mathieu
-> 
-> >  	if (IS_ERR(priv->clk)) {
-> >  		dev_err(dev, "Failed to get clock\n");
-> >  		return PTR_ERR(priv->clk);
-> > -- 
-> > 2.39.5
-> > 
+Thanks for the pointer, I'll take a look at it. The more we discuss this
+series, the less member size sounds relevant for what I'm trying to achieve
+here.
+
+Following Xu's comments, I have been thinking about how I could detect the
+custom alignments and packing on structures, and I was wondering if I could
+somehow benefit from __attribute__ encoding in BTF info ([1]). But
+following your hint, I also see some btf_is_struct_packed() in
+tools/lib/bpf/btf_dump.c that could help. I'll dig this further and see if
+I can manage to make something work with all of this.
+
+Thanks,
+
+Alexis
+
+[1] https://lore.kernel.org/bpf/20250130201239.1429648-1-ihor.solodrai@linu=
+x.dev/
+
+--=20
+Alexis Lothor=C3=A9, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
