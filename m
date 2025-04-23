@@ -1,138 +1,191 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653FC82D98;
-	Wed, 23 Apr 2025 21:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DE71F237A;
+	Wed, 23 Apr 2025 21:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745442422; cv=none; b=cFuEQtoOBiT2woL83zhTJrJLaNPBieH7r3QHlB+3bk2HBpEH3Z+A97qimilHRgjFCV2g3Vg1kHHXJggNjAqLcSk+6v1e9+cSoCivhBoOqdWQUtKS7qTHYxzuedRm2/Qr0jsH5Osb9PJ505t8g0j/56mDYKDZbEPHdvaQdn3ofl4=
+	t=1745442488; cv=none; b=K6PhZuRtO8K07241vYFEdfhejJZKutMajz7Pp2jZqGLjWZEQN8rpzh0Mh7oHXl+q3jRoZoskmC+PXy4qZZrZ5jeNjYxXfjbd2Se8esvzVcPiIV586umgXi6YUHiMu7xmxxbHBdfzmbCtP4BnA62ilnLEWNyIBw0uPbUtCqZIABA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745442422; c=relaxed/simple;
-	bh=zjf+eXgupeic2NaH/eGimc8iMxf81f1qq6U1j6+oTT8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=TsDpEHzJmTI8YtmLHxiY7z1bYaXKugXj2yc5HWthfvMUoY9PzJNgbw1WtVSDcMPrBtFjA1cuDXz5mQpzHj3v2aj6KmGY8Y3ZTo+Pw6DM2E9HCO/sNNVfpzsFpJAoyikjahRQwD5hQRg22L2xeR6kAk6b0nQ+CEANu1+JsJB+2QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=GNOR0nNI; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1745442488; c=relaxed/simple;
+	bh=XxCvCSGFcEdexELGVW8mhB3qx8vE8Ea2qXrgRkY4gSs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tR7Jl9sMLqDPBSZJsOElbD5PXFJVs5QNqLAXgzd/FK9Dn+qNtRziSldIHpfGPLpsgeVmlWck5sWhzjG4MMsgGmYe5UyCgIcjCFWjvVZlZu6xPUE1qcr9nLPIVEyQN77G2wnCnq/vG1Ryf68fwqUr5bvO7zoufRzh9dtrNsR2d54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PaWAQeun; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="GNOR0nNI"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1u7hIm-007XIA-I3; Wed, 23 Apr 2025 23:06:40 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:References:
-	Cc:To:Subject:From:MIME-Version:Date:Message-ID;
-	bh=phjtsSuA7wXOgFfhHsYA1FEf7UdFgY655or67qmY9Pc=; b=GNOR0nNIQ2FiqFC/eDoT+vExNp
-	FsA5Grmx2TCUGJL8W5swIWk3n+rQcFlHyUj+jRkGnPvFlG8SRGUrVWDH7hhmQoSawrRMQUd072214
-	3zXaGoAQLjhFwQPl2Yi09ZjgWRFJ8F3N/FiCeudMXnL8j2xg0ryh0ygxH1BFtXAzLXq33hfAZwvC/
-	Jy6uEwHGYXzHSFZEmeeu2cCjqofuDA/9x755HtfqjaePb8ROXUuNfbf1rvgZUj/3QMJ16cE8sHx//
-	yi5jSHeB9GKveUUATGbvSqrrR+aQnPNiXQ1SIYx6NxBXLZcSS5Af3YMFa6GzVbQhyBu4srwIV9b2y
-	HG/ZA6CQ==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1u7hIl-0006FL-Eq; Wed, 23 Apr 2025 23:06:39 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1u7hIh-000BZQ-4r; Wed, 23 Apr 2025 23:06:35 +0200
-Message-ID: <ee09df9b-9804-49de-b43b-99ccd4cbe742@rbox.co>
-Date: Wed, 23 Apr 2025 23:06:33 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PaWAQeun"
+Message-ID: <057ad3a8-585f-402b-9150-b1b4b930376c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745442483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Bjt0MCusdjN1plu9XqSKj6jgzlNQD91/w0/f0lrqbwY=;
+	b=PaWAQeunS4p8HrZBWiqQ0EnLqu3loTpbsdp0zjP+10NZfqGCzj3gJMP7VH5TrwtRwtVEKb
+	W5symTunh6PcXGuHpbMvKKY5mJUdo1KdX62hgYC8gs9VhQcSN2FCs8TfKgl74OcZVScheX
+	kSzUfG6oVt7k/G+XpUQWFNj5ZZFNQvk=
+Date: Wed, 23 Apr 2025 14:07:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Michal Luczaj <mhal@rbox.co>
-Subject: Re: [PATCH net-next v2 1/3] vsock: Linger on unsent data
-To: Stefano Garzarella <sgarzare@redhat.com>,
- Luigi Leonardi <leonardi@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
- <eperezma@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20250421-vsock-linger-v2-0-fe9febd64668@rbox.co>
- <20250421-vsock-linger-v2-1-fe9febd64668@rbox.co>
- <km2nad6hkdi3ngtho2xexyhhosh4aq37scir2hgxkcfiwes2wd@5dyliiq7cpuh>
- <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
-Content-Language: pl-PL, en-GB
-In-Reply-To: <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH bpf-next v1 1/2] bpf: Create cgroup storage if needed when
+ updating link
+To: Jiayuan Chen <jiayuan.chen@linux.dev>
+Cc: andrii@kernel.org, alexis.lothore@bootlin.com, mrpre@163.com,
+ syzbot+e6e8f6618a2d4b35e4e0@syzkaller.appspotmail.com,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, Alan Maguire <alan.maguire@oracle.com>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org
+References: <20250417044041.252874-1-jiayuan.chen@linux.dev>
+ <20250417044041.252874-2-jiayuan.chen@linux.dev>
+ <c6a9b230-f163-4c03-b834-ddcc71c47204@linux.dev>
+ <cbb82d78518c251000e8b52e3f3799b0df438210@linux.dev>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <cbb82d78518c251000e8b52e3f3799b0df438210@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 4/23/25 18:34, Stefano Garzarella wrote:
-> On Wed, Apr 23, 2025 at 05:53:12PM +0200, Luigi Leonardi wrote:
->> Hi Michal,
->>
->> On Mon, Apr 21, 2025 at 11:50:41PM +0200, Michal Luczaj wrote:
->>> Currently vsock's lingering effectively boils down to waiting (or timing
->>> out) until packets are consumed or dropped by the peer; be it by receiving
->>> the data, closing or shutting down the connection.
->>>
->>> To align with the semantics described in the SO_LINGER section of man
->>> socket(7) and to mimic AF_INET's behaviour more closely, change the logic
->>> of a lingering close(): instead of waiting for all data to be handled,
->>> block until data is considered sent from the vsock's transport point of
->>> view. That is until worker picks the packets for processing and decrements
->>> virtio_vsock_sock::bytes_unsent down to 0.
->>>
->>> Note that such lingering is limited to transports that actually implement
->>> vsock_transport::unsent_bytes() callback. This excludes Hyper-V and VMCI,
->>> under which no lingering would be observed.
->>>
->>> The implementation does not adhere strictly to man page's interpretation of
->>> SO_LINGER: shutdown() will not trigger the lingering. This follows AF_INET.
->>>
->>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
->>> ---
->>> net/vmw_vsock/virtio_transport_common.c | 13 +++++++++++--
->>> 1 file changed, 11 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
->>> index 7f7de6d8809655fe522749fbbc9025df71f071bd..aeb7f3794f7cfc251dde878cb44fdcc54814c89c 100644
->>> --- a/net/vmw_vsock/virtio_transport_common.c
->>> +++ b/net/vmw_vsock/virtio_transport_common.c
->>> @@ -1196,12 +1196,21 @@ static void virtio_transport_wait_close(struct sock *sk, long timeout)
->>> {
->>> 	if (timeout) {
->>> 		DEFINE_WAIT_FUNC(wait, woken_wake_function);
->>> +		ssize_t (*unsent)(struct vsock_sock *vsk);
->>> +		struct vsock_sock *vsk = vsock_sk(sk);
->>> +
->>> +		/* Some transports (Hyper-V, VMCI) do not implement
->>> +		 * unsent_bytes. For those, no lingering on close().
->>> +		 */
->>> +		unsent = vsk->transport->unsent_bytes;
->>> +		if (!unsent)
->>> +			return;
->>
->> IIUC if `unsent_bytes` is not implemented, virtio_transport_wait_close 
->> basically does nothing. My concern is that we are breaking the 
->> userspace due to a change in the behavior: Before this patch, with a 
->> vmci/hyper-v transport, this function would wait for SOCK_DONE to be 
->> set, but not anymore.
+On 4/22/25 7:21 PM, Jiayuan Chen wrote:
+> April 23, 2025 at 08:13, "Martin KaFai Lau" <martin.lau@linux.dev> wrote:
 > 
-> Wait, we are in virtio_transport_common.c, why we are talking about 
-> Hyper-V and VMCI?
+>>
+>> On 4/16/25 9:40 PM, Jiayuan Chen wrote:
+>>
+>>>
+>>> when we attach a prog without cgroup_storage map being used,
+>>>
+>>>   cgroup_storage in struct bpf_prog_array_item is empty. Then, if we use
+>>>
+>>>   BPF_LINK_UPDATE to replace old prog with a new one that uses the
+>>>
+>>>   cgroup_storage map, we miss cgroup_storage being initiated.
+>>>
+>>>   This cause a painc when accessing stroage in bpf_get_local_storage.
+>>>
+>>>   Reported-by: syzbot+e6e8f6618a2d4b35e4e0@syzkaller.appspotmail.com
+>>>
+>>>   Closes: https://lore.kernel.org/all/67fc867e.050a0220.2970f9.03b8.GAE@google.com/T/
+>>>
+>>>   Fixes: 0c991ebc8c69 ("bpf: Implement bpf_prog replacement for an active bpf_cgroup_link")
+>>>
+>>>   Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
+>>>
+>>>   ---
+>>>
+>>>   kernel/bpf/cgroup.c | 24 +++++++++++++++++++-----
+>>>
+>>>   1 file changed, 19 insertions(+), 5 deletions(-)
+>>>
+>>>   diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+>>>
+>>>   index 84f58f3d028a..cdf0211ddc79 100644
+>>>
+>>>   --- a/kernel/bpf/cgroup.c
+>>>
+>>>   +++ b/kernel/bpf/cgroup.c
+>>>
+>>>   @@ -770,12 +770,14 @@ static int cgroup_bpf_attach(struct cgroup *cgrp,
+>>>
+>>>   }
+>>>
+>>>   > /* Swap updated BPF program for given link in effective program arrays across
+>>>
+>>>   - * all descendant cgroups. This function is guaranteed to succeed.
+>>>
+>>>   + * all descendant cgroups.
+>>>
+>>>   */
+>>>
+>>>   -static void replace_effective_prog(struct cgroup *cgrp,
+>>>
+>>>   - enum cgroup_bpf_attach_type atype,
+>>>
+>>>   - struct bpf_cgroup_link *link)
+>>>
+>>>   +static int replace_effective_prog(struct cgroup *cgrp,
+>>>
+>>>   + enum cgroup_bpf_attach_type atype,
+>>>
+>>>   + struct bpf_cgroup_link *link)
+>>>
+>>>   {
+>>>
+>>>   + struct bpf_cgroup_storage *new_storage[MAX_BPF_CGROUP_STORAGE_TYPE] = {};
+>>>
+>>>   + struct bpf_cgroup_storage *storage[MAX_BPF_CGROUP_STORAGE_TYPE] = {};
+>>>
+>>>   struct bpf_prog_array_item *item;
+>>>
+>>>   struct cgroup_subsys_state *css;
+>>>
+>>>   struct bpf_prog_array *progs;
+>>>
+>>>   @@ -784,6 +786,10 @@ static void replace_effective_prog(struct cgroup *cgrp,
+>>>
+>>>   struct cgroup *cg;
+>>>
+>>>   int pos;
+>>>
+>>>   > + if (bpf_cgroup_storages_alloc(storage, new_storage, link->type,
+>>>
+>>>   + link->link.prog, cgrp))
+>>>
+>>>   + return -ENOMEM;
+>>>
+>>>   +
+>>>
+>>>   css_for_each_descendant_pre(css, &cgrp->self) {
+>>>
+>>>   struct cgroup *desc = container_of(css, struct cgroup, self);
+>>>
+>>>   > @@ -810,8 +816,11 @@ static void replace_effective_prog(struct cgroup *cgrp,
+>>>
+>>>   desc->bpf.effective[atype],
+>>>
+>>>   lockdep_is_held(&cgroup_mutex));
+>>>
+>>>   item = &progs->items[pos];
+>>>
+>>>   + bpf_cgroup_storages_assign(item->cgroup_storage, storage);
+>>>
+>>
+>> I am still recalling my memory on this older cgroup storage, so I think it will be faster to ask questions.
+>>
+>> What is in the pl->storage (still NULL?), and will the future compute_effective_progs() work?
+>>
 > 
-> I asked to check `vsk->transport->unsent_bytes` in the v1, because this 
-> code was part of af_vsock.c, but now we are back to virtio code, so I'm 
-> confused...
+> For non-link path:
+> cgroup_bpf_attach
 
-Might your confusion be because of similar names?
-vsock_transport::unsent_bytes != virtio_vsock_sock::bytes_unsent
+fwiw, I don't think this details matter here, but it is not only for non-link 
+path. cgroup_bpf_link_attach also calls cgroup_bpf_attach.
 
-I agree with Luigi, it is a breaking change for userspace depending on a
-non-standard behaviour. What's the protocol here; do it anyway, then see if
-anyone complains?
+> 	bpf_cgroup_storages_assign(pl->storage, storage); // allocate and set
+> 	update_effective_progs
+> 		compute_effective_progs
+> 			bpf_cgroup_storages_assign(item->cgroup_storage, pl->storage);
 
-As for Hyper-V and VMCI losing the "lingering", do we care? And if we do,
-take Hyper-V, is it possible to test any changes without access to
-proprietary host/hypervisor?
+The pl, that the __cgroup_bpf_replace is xchg()-ing its pl->link->link.prog with 
+new_prog, still has a NULL in pl->storage. When another "different" bpf prog is 
+added and attached to the same cgroup "later", compute_effective_progs will be 
+called and it will have the same bug, no?
+
+> 
+> 
+> pl->storage is just as a temporary holder, never freed, and its value will
+> eventually be assigned to `item->cgroup_storage`.
