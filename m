@@ -1,38 +1,72 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE4D2268FC9
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C393E26F47F
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396221; cv=none; b=nbHZV/8PYuowyHvEUf4e7/jvwbiNfxMZJ2rKbUa4P3sD9EOUimxCBpxaB6pGD5vWQ9GaMyf7SkLSlxWwO5g9Bnh+tf4c2UUBuKkC9AMVfdMPKipoHacNdsz5M90e4I9i3snoSoABp63BPoSxmvILGRASITiXXoe469kXwfF2lqc=
+	t=1745396278; cv=none; b=C0577VPqs630Vjq5ahQCeFeu4klaixB/kMwb3AXYt+jb2scK8B5/BQQOCOqoUnMdQtqFkAOlgLzWc+5JJOsYj5JJUYp8mJJ7WedzMG74+JiUhsHmNrt6TpbXwfomUucWoGKCubuzMy0EH/hEBFj/yokonFJXR0sR8hDnSLOtYJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396221; c=relaxed/simple;
-	bh=bSpjW+9ufbA0t43BiX6OwdyJEkKiQ0NPu/mvXSXhZe8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ug8xw+bjhD5LAjgoIwoa26/6nuqDir0u+NQ9UGPUwfeReNJ13asjRMe0uxdZ4YMdsWCoLcS4r4rK5x83cv/3fDZQu2Us1l8L1V2WJXiQlzg796JNVDSE6UVPaOTB/3MnSazxHZ10C4R/CrB0IpOVY7F3mKwKTceOHOEpFQ3GB8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 270001063;
-	Wed, 23 Apr 2025 01:16:48 -0700 (PDT)
-Received: from localhost (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 545BC3F59E;
-	Wed, 23 Apr 2025 01:16:52 -0700 (PDT)
-Date: Wed, 23 Apr 2025 09:16:48 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: Yabin Cui <yabinc@google.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Jie Gan <quic_jiegan@quicinc.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] coresight: catu: Introduce refcount and spinlock
- for enabling/disabling
-Message-ID: <20250423081648.GJ28953@e132581.arm.com>
-References: <20250415184649.356683-1-yabinc@google.com>
- <20250415184649.356683-2-yabinc@google.com>
+	s=arc-20240116; t=1745396278; c=relaxed/simple;
+	bh=oj5Razb0evj7qw4mlQSndhKoTaML66NQzQjFs2IHgj0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hEIzZcphdKfIEAKNlobfP/9lTe8RbcLoZ634bSc2B4T/0lKsKGU1TqLh7RSuXsL08sl5kM7l3Opap0p06Im8nf3i7Pna5tUHXOMm9fDAuXbRCIgw3wLqNOa4ADJW8BPml/BMXzUywUF7YvQPwA19rrNyobxXoP+UsvDsoPycZpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nbNcV99f; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbNcV99f"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso5075087f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745396275; x=1746001075; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eJlsow9pFCETuSY99miJym+mwybzmiktgCsSrbNRcQE=;
+        b=nbNcV99f3Ge2+RvsUzIS+KXozOhDCyHgqrm4E0UY94qA3WuYLz2Q/f0v1sd2+FuMYe
+         Px3UQxcVCOyl2VNRaXMyjMgZ72CDecXBDkzmAJRsdrcbFGJEKy9AAxh/U8pVbfxT3LL7
+         e2MS8TuChfC8UTgMVl/cjGsYX6VXv8AkzhxtrqzWT0zyoEEskVITY4QAylOVC/LzQ+K2
+         0SX2ukAr6f/vmdcYGCRv37h8UD4FyZ+G2IWQH4bcdMliRJKANS2vdcQ+z8MOxPFbJUsl
+         /KiKzOR4W2Gdrl8+lNWMQBweHNdtCoEetjWyzoO4XSZuypi9M+Ap68L6uN+k02n7vCgw
+         eAWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745396275; x=1746001075;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eJlsow9pFCETuSY99miJym+mwybzmiktgCsSrbNRcQE=;
+        b=WH0jU62LSYCYkbuzfUYc0ujEXv7aB44CFHs/2QK2/Ckr8ztK6Czp2mvGIcX0fagM7A
+         HBTwl03AGrQZGG9ZfegBiaFn0V18X02z36N9xiidnZwtRKM0MQTRyyz3jkHwvpbwknas
+         yltdSglUoS/rgCOKTmYribF75ghjR6UX9nquEOaDNPKPQsfW9I+je/14FLSCFJQhsY9D
+         2j6WOQrWrdGfii71k94gHY05xdhkJM8ah8r4Fs6BHvwXtGwqYT00PZm3ej4IrRWsxD1U
+         u9kSErvyltwss2NVxedcuh791Hu1ommGDcaemSX3l5rU7/NLad7ogLh5KymD4Vd4btJf
+         +MDg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/6zSq4N25PZvt6+VbVsz9JCRI2iGjH0le9k6NYvhIDsLHp3Z3RhcaPLeoZwb7ETnc6Y51Qd6TBx7KQ98=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJZlbtNQRP9ASJgu30cOIjJ2lE1kyV1g1RbVa8Thu+EjYpZJOA
+	kS96Cem7KqcEs82q25iDL/ne4UEXM8B1OYxOjHXjv7/eHooDXb7NV2iU7IhGvv8=
+X-Gm-Gg: ASbGncvvbS+VAEJYFaU1tI0XpoAnHTACtdGIxQ+cXqTqWn1Yiw62QXcq+2wbolTXz0w
+	WqDQHlOHhOSIAEYOvXZf0kqxpSXVhLDpzSGDZmwwFXtaEq6s3jHvj3+azOf6q1R/Cl1KnQQgR6h
+	8jzZS0kRD4KJDzxkmEASh+mPMIoG9jmDoFokBzpg4pEklq+Cmg1F00N3hvGo3G4oAz6ysuDJ558
+	89L8mB6e4njrfAFgxzCR9HKhpCpbgtVX50o1PPiBMPwq5DUA+TNmohW2lmgua+TLDzZbmJ1fvob
+	YoGMeesSyyWsTZuypGfI+pAIZpC+TtYppYa7DcimuKv/Yw==
+X-Google-Smtp-Source: AGHT+IGFDsGRWEWEl41iqXxk8aBjeIQESD7eXixSYt8kxgOh7t6MkCbRrpyXFS7pLyu3bxpPdPkSyg==
+X-Received: by 2002:a5d:584e:0:b0:391:41c9:7a87 with SMTP id ffacd0b85a97d-39efbaf5562mr15384290f8f.51.1745396275079;
+        Wed, 23 Apr 2025 01:17:55 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa433170sm17690531f8f.25.2025.04.23.01.17.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 01:17:54 -0700 (PDT)
+Date: Wed, 23 Apr 2025 11:17:51 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] driver core: auxiliary bus: Fix IS_ERR() vs NULL check
+ in __devm_auxiliary_device_create()
+Message-ID: <aAiiLzqVulfGDPsl@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,114 +75,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250415184649.356683-2-yabinc@google.com>
+X-Mailer: git-send-email haha only kidding
 
-Hi Yabin,
+The auxiliary_device_create() function returns NULL.  It doesn't return
+error pointers.  Update the checking to match.
 
-Sorry for late reply as I was on vacation for the past two weeks.
+Fixes: eaa0d30216c1 ("driver core: auxiliary bus: add device creation helpers")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/base/auxiliary.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On Tue, Apr 15, 2025 at 11:46:48AM -0700, Yabin Cui wrote:
-> When tracing ETM data on multiple CPUs concurrently via the
-> perf interface, the CATU device is shared across different CPU
-> paths. This can lead to race conditions when multiple CPUs attempt
-> to enable or disable the CATU device simultaneously.
-> 
-> To address these race conditions, this patch introduces the
-> following changes:
-> 
-> 1. The enable and disable operations for the CATU device are not
->    reentrant. Therefore, a spinlock is added to ensure that only
->    one CPU can enable or disable a given CATU device at any point
->    in time.
-> 
-> 2. A reference counter is used to manage the enable/disable state
->    of the CATU device. The device is enabled when the first CPU
->    requires it and is only disabled when the last CPU finishes
->    using it. This ensures the device remains active as long as at
->    least one CPU needs it.
-> 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
+diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
+index 810b6105a75d..61b876d90b7f 100644
+--- a/drivers/base/auxiliary.c
++++ b/drivers/base/auxiliary.c
+@@ -491,8 +491,8 @@ struct auxiliary_device *__devm_auxiliary_device_create(struct device *dev,
+ 	int ret;
+ 
+ 	auxdev = auxiliary_device_create(dev, modname, devname, platform_data, id);
+-	if (IS_ERR(auxdev))
+-		return auxdev;
++	if (!auxdev)
++		return ERR_PTR(-ENOMEM);
+ 
+ 	ret = devm_add_action_or_reset(dev, auxiliary_device_destroy,
+ 				       auxdev);
+-- 
+2.47.2
 
-LGTM:
-
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-
-As Jie reminded, please add James' review tag in next spin.
-
-Thanks,
-Leo
-
-> ---
->  drivers/hwtracing/coresight/coresight-catu.c | 25 +++++++++++++-------
->  drivers/hwtracing/coresight/coresight-catu.h |  1 +
->  2 files changed, 18 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-> index fa170c966bc3..3909b562b077 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.c
-> +++ b/drivers/hwtracing/coresight/coresight-catu.c
-> @@ -458,12 +458,17 @@ static int catu_enable_hw(struct catu_drvdata *drvdata, enum cs_mode cs_mode,
->  static int catu_enable(struct coresight_device *csdev, enum cs_mode mode,
->  		       void *data)
->  {
-> -	int rc;
-> +	int rc = 0;
->  	struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
->  
-> -	CS_UNLOCK(catu_drvdata->base);
-> -	rc = catu_enable_hw(catu_drvdata, mode, data);
-> -	CS_LOCK(catu_drvdata->base);
-> +	guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
-> +	if (csdev->refcnt == 0) {
-> +		CS_UNLOCK(catu_drvdata->base);
-> +		rc = catu_enable_hw(catu_drvdata, mode, data);
-> +		CS_LOCK(catu_drvdata->base);
-> +	}
-> +	if (!rc)
-> +		csdev->refcnt++;
->  	return rc;
->  }
->  
-> @@ -486,12 +491,15 @@ static int catu_disable_hw(struct catu_drvdata *drvdata)
->  
->  static int catu_disable(struct coresight_device *csdev, void *__unused)
->  {
-> -	int rc;
-> +	int rc = 0;
->  	struct catu_drvdata *catu_drvdata = csdev_to_catu_drvdata(csdev);
->  
-> -	CS_UNLOCK(catu_drvdata->base);
-> -	rc = catu_disable_hw(catu_drvdata);
-> -	CS_LOCK(catu_drvdata->base);
-> +	guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
-> +	if (--csdev->refcnt == 0) {
-> +		CS_UNLOCK(catu_drvdata->base);
-> +		rc = catu_disable_hw(catu_drvdata);
-> +		CS_LOCK(catu_drvdata->base);
-> +	}
->  	return rc;
->  }
->  
-> @@ -550,6 +558,7 @@ static int __catu_probe(struct device *dev, struct resource *res)
->  	dev->platform_data = pdata;
->  
->  	drvdata->base = base;
-> +	raw_spin_lock_init(&drvdata->spinlock);
->  	catu_desc.access = CSDEV_ACCESS_IOMEM(base);
->  	catu_desc.pdata = pdata;
->  	catu_desc.dev = dev;
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
-> index 141feac1c14b..755776cd19c5 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.h
-> +++ b/drivers/hwtracing/coresight/coresight-catu.h
-> @@ -65,6 +65,7 @@ struct catu_drvdata {
->  	void __iomem *base;
->  	struct coresight_device *csdev;
->  	int irq;
-> +	raw_spinlock_t spinlock;
->  };
->  
->  #define CATU_REG32(name, offset)					\
-> -- 
-> 2.49.0.604.gff1f9ca942-goog
-> 
