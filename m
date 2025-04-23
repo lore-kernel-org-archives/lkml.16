@@ -1,231 +1,72 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E44D29CB3B
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:55:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5458D28A40F;
+	Wed, 23 Apr 2025 15:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423709; cv=none; b=Rdo06Qe3WqT+0LdlcS0SzdEKjidlw1Zuvb4O3rHlhv3oopqDoFPXfdEBD1mcMba/d49GeCcRecdQSmItjJpbZ3fisQwrCXCvFt9YLkjj35maesvGxdpq5Wh2GYSeV2WLRk8Kp0yYLkOXzGmScfpBhWNDpiUis9GJHCaceXBvZL0=
+	t=1745423719; cv=none; b=eI5V6q4vg04j5ejMDFY1RVpdK6ib25hq/kVoueb+y9ETMQwnowpnwYtvgjcpDuuwjZn/aq4mJfp7G4s/Wa/zgyVZXTfKJ7Ld6PVrbPw1WK9Oq2h1ZamnCx/ff5HA3zznj3uURKzCVVh1CPOfhtzLI3WWzaulbh0s38rlmj9QNCM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423709; c=relaxed/simple;
-	bh=6bxam3x3p1jkVVS+mqQyKWW0nqRcxA/31AUdC8hZTIM=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:From:To:Cc:
-	 References:In-Reply-To; b=MggWd8TR5dxGphp+00V4t8RfUlKWKhHkICmCr242dMszfSC5SBFhCh27I3xbulphCHjQjLynvG/bSFtv3pdFjHvsbKhvwknctFDKQ1jF+o6SHfyhCcx+1afZHR8JS1OmBuLXsQUOuLmL9gEGRo7PhM4iywC5cgOM3CJHKYeLplo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=R8RZ99kq; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745423719; c=relaxed/simple;
+	bh=A/JbmNFtiekFMU17Tr7eADwSvSKXMsVykZ17Vq2oUnU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W8GRyCclOsAgGRyhH7/Nqe2N+Zhl7Wzl+40wL7HUXuyWGVGY1Q4jDNwVM1v/Eg50FHVBsc5gKeCiE0Dl2TT9OCYW1SssKxNfcD1k77YvbDjqaPD2lgjejomgMQIV9UUP4iTDM5I6uwYCIkhLyx9XtXQvSiuBWxvGJ/B32YnjW14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQll1ySt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="R8RZ99kq"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-8613f456960so1920639f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:55:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745423706; x=1746028506; darn=vger.kernel.org;
-        h=in-reply-to:content-language:references:cc:to:from:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZtSbdG0Ykh7QLewJcbTObDa0V9VkFDhfWB0FOIHbABA=;
-        b=R8RZ99kqBIWyCy9HfY+GvlRzqkQSo7X0gYfBK+2ov1Z5FLdDkhuMFn2p92+PtRw7ZY
-         Mhcy2zREFbuDKIvMIkDASqZSOnInank5gZL1rYNkUHzckndwpjMBA30VCGWlQuwx2iY8
-         6TJjE96TcqYjq3pdDGrHjmkMNtA31yIyIIiRmA8ejXqHCsehfxyFVRiMd+yapZLRirSv
-         39es4b4GEGNAtyeZRaVXrcN+83LmaBzk3MER6xToxs7PkUAITznK8jzwy6WdPQ9ZbMCW
-         /Jq4DGVbWez2qiD49efB0vZUQV6M8nHydh9oNYschU710HKQCcAQi6QSf3gEXb3F+6N2
-         Pggg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745423706; x=1746028506;
-        h=in-reply-to:content-language:references:cc:to:from:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZtSbdG0Ykh7QLewJcbTObDa0V9VkFDhfWB0FOIHbABA=;
-        b=JiHVF9s22f/A16PPm+cI641QkctRVyMhgsX9JPMKaDjj2WuiUEv4Lj4qaT5PHP5c4E
-         Fcv6DByMnGCYCbs3n5vjBGr1agfHGsFTZP5Lr2y28M0mnWvyQQ31GOITIKBcB1oXCwEa
-         zOaVh6XjG5Ft6t0j5WFMeQYzQFoYw/Yj+NqL37jjEFSch8iWim2GQVSnzVciuUfrGmgm
-         2+P7ROvY7BkwN82ByBuRWlI8hIw8hXXNOdHDlFNuou7X0YQWNg9N2MKjiabY8vFTE8PH
-         NoAwsVRyFLu26qBCmMwTx8XMfPbEsyorUevqm7etaQx8zG1W3Q1SdJAdWIoP4cS3KZYn
-         ty+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXYRIvfFh6UGgyxMG3t8sgRrh8XLh1SrQBxv9a+7pJ3LPnx+Tu24lDAgehtbjwEo+Z+KeFwzl7AjBvy3fU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRZmthyheowAWkgYYtzbuo+BS+JLKSFj0Bs7kywI/2lRlNW63D
-	PAkodb9zJN4qGRuMyNVlcqa/3TzCbJghpfj/JMAI1cPP0l/SdC3svTiD3jLlTPk=
-X-Gm-Gg: ASbGnctwp8fR5YE4BevBWRi8zB27o553zT+Pwof6YpyRa96uUUsc56Bhao8UMTDCwVi
-	VRoDiaZX8nNw73yKWWSR8Ko9lRAj9UQyg6faf2PF0DUpG/hgGcHdp9QpCNYOkeu7KzTJnA1Zwn1
-	wy9tesMYYCg0ENqcfA1/U5CXZpaf/y7GAB6e3kwj/o/10GuKRzY1uc5nHUJI2cG+By1PBIpyJMf
-	N+7gE+/EqDYBCUKscOi/Bb19m8A0dmsJuLv8PLV/loWetSWKuaz/r2SrvXUlJc5Ob94i24Km5y6
-	eFKgwT3F1TOJeK0CEeyNniGYZq9kJ0fnd/V1
-X-Google-Smtp-Source: AGHT+IHqWBSyOZ3W+taQCgreEn0bCABTE56K1B+4Rd2BDzJ88iYkPnEO6/sAZqffRC7L5Ka+dipuJA==
-X-Received: by 2002:a05:6e02:2586:b0:3d3:fbf9:194b with SMTP id e9e14a558f8ab-3d889047e24mr175224285ab.0.1745423706226;
-        Wed, 23 Apr 2025 08:55:06 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d927695877sm4059385ab.53.2025.04.23.08.55.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 08:55:05 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------q5NDZdvobEhcchbgiQ1tLFB4"
-Message-ID: <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
-Date: Wed, 23 Apr 2025 09:55:04 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQll1ySt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4F3C4CEE2;
+	Wed, 23 Apr 2025 15:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745423717;
+	bh=A/JbmNFtiekFMU17Tr7eADwSvSKXMsVykZ17Vq2oUnU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tQll1yStHKhTaR4zdvp1Egn9CiTLoyK0QwNCsg+lODX9vRHTlby75pgxQ7RYZnmBz
+	 Ia+4p8llQPRG8162UsYv1YuHogzK8mdLPltMsszNlDtNVfuYckw9sb6xsOsdGqtVaN
+	 maFCB9opni+OJctVEsMTktj9LS15CoS7TCmybasjoCo+F76Dgn183Pj4840gKRWCZ2
+	 0wAPQ1cLgfGSm9gvArRJbtmPqUqfRufgAG6tybfMFZT9I7xF84xH0nf+d8i+zkD468
+	 n8HrrtWN5HTpu/aazWKW1DM3VXABQiDizV/as14RZd4zO8eyB8WYxJNdIVeaBzh08a
+	 JLNQsQRJhni3w==
+Date: Wed, 23 Apr 2025 10:55:16 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: linux-mmc@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: mmc: vt8500-sdmmc: Convert to YAML
+Message-ID: <174542371550.599081.5723331661512709392.robh@kernel.org>
+References: <20250423-vt8500-sdmmc-binding-v2-1-ea4f17fd0638@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault
- scenarios
-From: Jens Axboe <axboe@kernel.dk>
-To: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
- <20250422162913.1242057-2-qq282012236@gmail.com>
- <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
- <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
- <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk>
- <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
- <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423-vt8500-sdmmc-binding-v2-1-ea4f17fd0638@gmail.com>
 
-This is a multi-part message in MIME format.
---------------q5NDZdvobEhcchbgiQ1tLFB4
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Something like this, perhaps - it'll ensure that io-wq workers get a
-chance to flush out pending work, which should prevent the looping. I've
-attached a basic test case. It'll issue a write that will fault, and
-then try and cancel that as a way to trigger the TIF_NOTIFY_SIGNAL based
-looping.
+On Wed, 23 Apr 2025 14:53:29 +0400, Alexey Charkov wrote:
+> Rewrite the textual description for the WonderMedia SDMMC controller
+> as YAML schema, and switch the filename to follow the compatible
+> string.
+> 
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+> Split the series from v1 into separate bindings patches so as not to
+> spam all the subsystems with unrelated changes, per Rob's suggestion
+> 
+> Changes in v2:
+> - described the sdon-inverted property in greater detail (thanks Rob)
+> - dropped the hunk that updates MAINTAINERS for easier merging - will
+>   be updated later in a single pass to cover all VT8500 related files
+> 
+> Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-3-f9af689cdfc2@gmail.com/
+> ---
+>  .../devicetree/bindings/mmc/vt8500-sdmmc.txt       | 23 --------
+>  .../devicetree/bindings/mmc/wm,wm8505-sdhc.yaml    | 66 ++++++++++++++++++++++
+>  2 files changed, 66 insertions(+), 23 deletions(-)
+> 
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index d80f94346199..e18926dbf20a 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -32,6 +32,7 @@
- #include <linux/swapops.h>
- #include <linux/miscdevice.h>
- #include <linux/uio.h>
-+#include <linux/io_uring.h>
- 
- static int sysctl_unprivileged_userfaultfd __read_mostly;
- 
-@@ -376,6 +377,8 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	 */
- 	if (current->flags & (PF_EXITING|PF_DUMPCORE))
- 		goto out;
-+	else if (current->flags & PF_IO_WORKER)
-+		io_worker_fault();
- 
- 	assert_fault_locked(vmf);
- 
-diff --git a/include/linux/io_uring.h b/include/linux/io_uring.h
-index 85fe4e6b275c..d93dd7402a28 100644
---- a/include/linux/io_uring.h
-+++ b/include/linux/io_uring.h
-@@ -28,6 +28,7 @@ static inline void io_uring_free(struct task_struct *tsk)
- 	if (tsk->io_uring)
- 		__io_uring_free(tsk);
- }
-+void io_worker_fault(void);
- #else
- static inline void io_uring_task_cancel(void)
- {
-@@ -46,6 +47,9 @@ static inline bool io_is_uring_fops(struct file *file)
- {
- 	return false;
- }
-+static inline void io_worker_fault(void)
-+{
-+}
- #endif
- 
- #endif
-diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
-index d52069b1177b..f74bea028ec7 100644
---- a/io_uring/io-wq.c
-+++ b/io_uring/io-wq.c
-@@ -1438,3 +1438,13 @@ static __init int io_wq_init(void)
- 	return 0;
- }
- subsys_initcall(io_wq_init);
-+
-+void io_worker_fault(void)
-+{
-+	if (test_thread_flag(TIF_NOTIFY_SIGNAL))
-+		clear_notify_signal();
-+	if (test_thread_flag(TIF_NOTIFY_RESUME))
-+		resume_user_mode_work(NULL);
-+	if (task_work_pending(current))
-+		task_work_run();
-+}
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
--- 
-Jens Axboe
---------------q5NDZdvobEhcchbgiQ1tLFB4
-Content-Type: text/x-csrc; charset=UTF-8; name="ufd.c"
-Content-Disposition: attachment; filename="ufd.c"
-Content-Transfer-Encoding: base64
-
-I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdGRsaWIuaD4KI2luY2x1ZGUgPHVuaXN0
-ZC5oPgojaW5jbHVkZSA8c3RyaW5nLmg+CiNpbmNsdWRlIDxwb2xsLmg+CiNpbmNsdWRlIDxz
-eXMvbW1hbi5oPgojaW5jbHVkZSA8c3lzL2lvY3RsLmg+CiNpbmNsdWRlIDxsaW51eC9tbWFu
-Lmg+CiNpbmNsdWRlIDxzeXMvdWlvLmg+CiNpbmNsdWRlIDxsaWJ1cmluZy5oPgojaW5jbHVk
-ZSA8cHRocmVhZC5oPgojaW5jbHVkZSA8bGludXgvdXNlcmZhdWx0ZmQuaD4KCiNkZWZpbmUg
-SFBfU0laRQkJKDIgKiAxMDI0ICogMTAyNFVMTCkKI2RlZmluZSBOUl9IVUdFUEFHRVMJKDMw
-MDApCgojaWZuZGVmIE5SX3VzZXJmYXVsdGZkCiNkZWZpbmUgTlJfdXNlcmZhdWx0ZmQJMjgy
-CiNlbmRpZgoKc3RydWN0IHRocmVhZF9kYXRhIHsKCXB0aHJlYWRfdCB0aHJlYWQ7CglwdGhy
-ZWFkX2JhcnJpZXJfdCBiYXJyaWVyOwoJaW50IHVmZmQ7Cn07CgpzdGF0aWMgdm9pZCAqZmF1
-bHRfaGFuZGxlcih2b2lkICpkYXRhKQp7CglzdHJ1Y3QgdGhyZWFkX2RhdGEgKnRkID0gZGF0
-YTsKCXN0cnVjdCB1ZmZkX21zZyBtc2c7CglzdHJ1Y3QgcG9sbGZkIHBmZDsKCWludCByZXQs
-IG5yZWFkeTsKCglwdGhyZWFkX2JhcnJpZXJfd2FpdCgmdGQtPmJhcnJpZXIpOwoKCWRvIHsK
-CQlwZmQuZmQgPSB0ZC0+dWZmZDsKCQlwZmQuZXZlbnRzID0gUE9MTElOOwoJCW5yZWFkeSA9
-IHBvbGwoJnBmZCwgMSwgLTEpOwoJCWlmIChucmVhZHkgPCAwKSB7CgkJCXBlcnJvcigicG9s
-bCIpOwoJCQlleGl0KDEpOwoJCX0KCgkJcmV0ID0gcmVhZCh0ZC0+dWZmZCwgJm1zZywgc2l6
-ZW9mKG1zZykpOwoJCWlmIChyZXQgPCAwKSB7CgkJCWlmIChlcnJubyA9PSBFQUdBSU4pCgkJ
-CQljb250aW51ZTsKCQkJcGVycm9yKCJyZWFkIik7CgkJCWV4aXQoMSk7CgkJfQoKCQlpZiAo
-bXNnLmV2ZW50ICE9IFVGRkRfRVZFTlRfUEFHRUZBVUxUKSB7CgkJCXByaW50ZigidW5zcGVj
-dGVkIGV2ZW50OiAleFxuIiwgbXNnLmV2ZW50KTsKCQkJZXhpdCgxKTsKCQl9CgoJCXByaW50
-ZigiUGFnZSBmYXVsdFxuIik7CgkJcHJpbnRmKCJmbGFncyA9ICVseDsgIiwgKGxvbmcpIG1z
-Zy5hcmcucGFnZWZhdWx0LmZsYWdzKTsKCQlwcmludGYoImFkZHJlc3MgPSAlbHhcbiIsIChs
-b25nKW1zZy5hcmcucGFnZWZhdWx0LmFkZHJlc3MpOwoJfSB3aGlsZSAoMSk7CgoJcmV0dXJu
-IE5VTEw7Cn0KCnN0YXRpYyB2b2lkIGRvX2lvKHN0cnVjdCBpb191cmluZyAqcmluZywgdm9p
-ZCAqYnVmLCBzaXplX3QgbGVuKQp7CglzdHJ1Y3QgaW9fdXJpbmdfc3FlICpzcWU7CglzdHJ1
-Y3QgaW9fdXJpbmdfY3FlICpjcWU7CglpbnQgZmQsIHJldCwgaTsKCglmZCA9IG9wZW4oIi9k
-ZXYvbnZtZTBuMSIsIE9fUkRXUik7CglpZiAoZmQgPCAwKSB7CgkJcGVycm9yKCJvcGVuIGNy
-ZWF0ZSIpOwoJCXJldHVybjsKCX0KCgkvKiBpc3N1ZSBmYXVsdGluZyB3cml0ZSAqLwoJc3Fl
-ID0gaW9fdXJpbmdfZ2V0X3NxZShyaW5nKTsKCWlvX3VyaW5nX3ByZXBfd3JpdGUoc3FlLCBm
-ZCwgYnVmLCBsZW4sIDApOwoJc3FlLT51c2VyX2RhdGEgPSAxOwoJaW9fdXJpbmdfc3VibWl0
-KHJpbmcpOwoKCXByaW50ZigiYmxvY2tpbmcgaXNzdWVkXG4iKTsKCXNsZWVwKDEpOwoKCS8q
-IGNhbmNlbCBhYm92ZSB3cml0ZSAqLwoJc3FlID0gaW9fdXJpbmdfZ2V0X3NxZShyaW5nKTsK
-CWlvX3VyaW5nX3ByZXBfY2FuY2VsNjQoc3FlLCAxLCBJT1JJTkdfQVNZTkNfQ0FOQ0VMX1VT
-RVJEQVRBKTsKCXNxZS0+dXNlcl9kYXRhID0gMjsKCWlvX3VyaW5nX3N1Ym1pdChyaW5nKTsK
-CglwcmludGYoImNhbmNlbCBpc3N1ZWRcbiIpOwoJc2xlZXAoMSk7CgoJZm9yIChpID0gMDsg
-aSA8IDI7IGkrKykgewphZ2FpbjoKCQlyZXQgPSBpb191cmluZ193YWl0X2NxZShyaW5nLCAm
-Y3FlKTsKCQlpZiAocmV0IDwgMCkgewoJCQlwcmludGYoIndhaXQ6ICVkXG4iLCByZXQpOwoJ
-CQlpZiAocmV0ID09IC1FSU5UUikKCQkJCWdvdG8gYWdhaW47CgkJCWJyZWFrOwoJCX0KCQlw
-cmludGYoImdvdCByZXMgJWQsICVsZFxuIiwgY3FlLT5yZXMsIChsb25nKSBjcWUtPnVzZXJf
-ZGF0YSk7CgkJaW9fdXJpbmdfY3FlX3NlZW4ocmluZywgY3FlKTsKCX0KfQoKc3RhdGljIHZv
-aWQgc2lnX3VzcjEoaW50IHNpZykKewoJcHJpbnRmKCJnb3QgVVNSMVxuIik7Cn0KCnN0YXRp
-YyBpbnQgdGVzdCh2b2lkKQp7CglzdHJ1Y3QgdWZmZGlvX2FwaSBhcGkgPSB7IH07CglzdHJ1
-Y3QgdWZmZGlvX3JlZ2lzdGVyIHJlZyA9IHsgfTsKCXN0cnVjdCBpb191cmluZyByaW5nOwoJ
-c3RydWN0IHNpZ2FjdGlvbiBhY3QgPSB7IH07CglzdHJ1Y3QgdGhyZWFkX2RhdGEgdGQgPSB7
-IH07Cgl2b2lkICpidWY7CgoJYWN0LnNhX2hhbmRsZXIgPSBzaWdfdXNyMTsKCXNpZ2FjdGlv
-bihTSUdVU1IxLCAmYWN0LCBOVUxMKTsKCglpb191cmluZ19xdWV1ZV9pbml0KDQsICZyaW5n
-LCAwKTsKCglidWYgPSBtbWFwKE5VTEwsIEhQX1NJWkUsIFBST1RfUkVBRHxQUk9UX1dSSVRF
-LAoJCQlNQVBfUFJJVkFURSB8IE1BUF9IVUdFVExCIHwgTUFQX0hVR0VfMk1CIHwgTUFQX0FO
-T05ZTU9VUywKCQkJLTEsIDApOwoJaWYgKGJ1ZiA9PSBNQVBfRkFJTEVEKSB7CgkJcGVycm9y
-KCJtbWFwIik7CgkJcmV0dXJuIDE7Cgl9CglwcmludGYoImdvdCBidWYgJXBcbiIsIGJ1Zik7
-CgoJdGQudWZmZCA9IHN5c2NhbGwoTlJfdXNlcmZhdWx0ZmQsIE9fQ0xPRVhFQyB8IE9fTk9O
-QkxPQ0spOwoJaWYgKHRkLnVmZmQgPCAwKSB7CgkJcGVycm9yKCJ1c2VyZmF1bHRmZCIpOwoJ
-CXJldHVybiAxOwoJfQoKCWFwaS5hcGkgPSBVRkZEX0FQSTsKCWlmIChpb2N0bCh0ZC51ZmZk
-LCBVRkZESU9fQVBJLCAmYXBpKSA8IDApIHsKCQlwZXJyb3IoImlvY3RsIFVGRkRJT19BUEki
-KTsKCQlyZXR1cm4gMTsKCX0KCglyZWcucmFuZ2Uuc3RhcnQgPSAodW5zaWduZWQgbG9uZykg
-YnVmOwoJcmVnLnJhbmdlLmxlbiA9IEhQX1NJWkU7CglyZWcubW9kZSA9IFVGRkRJT19SRUdJ
-U1RFUl9NT0RFX01JU1NJTkc7CglpZiAoaW9jdGwodGQudWZmZCwgVUZGRElPX1JFR0lTVEVS
-LCAmcmVnKSA8IDApIHsKCQlwZXJyb3IoImlvY3RsIFVGRkRJT19SRUdJU1RFUiIpOwoJCXJl
-dHVybiAxOwoJfQoKCXB0aHJlYWRfYmFycmllcl9pbml0KCZ0ZC5iYXJyaWVyLCBOVUxMLCAy
-KTsKCXB0aHJlYWRfY3JlYXRlKCZ0ZC50aHJlYWQsIE5VTEwsIGZhdWx0X2hhbmRsZXIsICZ0
-ZCk7CgoJcHRocmVhZF9iYXJyaWVyX3dhaXQoJnRkLmJhcnJpZXIpOwoKCWRvX2lvKCZyaW5n
-LCBidWYsIEhQX1NJWkUpOwoJcmV0dXJuIDA7Cn0KCmludCBtYWluKGludCBhcmdjLCBjaGFy
-ICphcmd2W10pCnsKCXJldHVybiB0ZXN0KCk7Cn0K
-
---------------q5NDZdvobEhcchbgiQ1tLFB4--
