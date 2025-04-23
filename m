@@ -1,69 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D85FC08;
-	Wed, 23 Apr 2025 11:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00BA20E00C
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745408903; cv=none; b=TrJMCdp5avxCdKGQYDIl3ykJ9+a07/5Gw330hV5ZWqOI64tdPd8RZwvR0RDpn0I4lpfW3QNVERpO8OIdyIlq34vNnB5FAnsQ6EVc39cE2SuDCewEV2490G0mfktYl7V2mtW4ullRhS/7e6Xl67Qe37Z6dftpe6VDjIOVjcpHg6M=
+	t=1745408909; cv=none; b=iB7RYV1OI0wGPi+KSI1yL3BhsCCPreW+r4bEFc4XE8KptiRnTg+p060kh5q6aqYIZeYNRLbKLnXRS+hGlUfZHJsbQbNiz46Z3xErNJpavHrJjieRqYIlP0oXxseRMmLNiPp59tc4meZFcgnkZK2VMDp2k7sKQ5oFo1TAmX51Z68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745408903; c=relaxed/simple;
-	bh=VUjQSnbpe34n4H4pjsG/e0RneYGeJ6IEAMI0EPffIbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NgAw1k2CNof9wRiMb5gqdNYS6MPKrqxwNAGNWpfmWgcqVGkSrhj5NYojlqexD0GjUZZWPxGjtydewrconXCwNVtnYADPWqMjRIDF0SkbqK5V7XAj1ISsEWI3wmqUCUa8DFt3E/qEcv8rGq1bkoD6/VzihiqljgK9KgOuiLemw0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jvq0XRxN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745408909; c=relaxed/simple;
+	bh=yD35uR97vBk7xWcCBm15oQRNSiMnQl1zX9rUghgEyp4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MNymjuleWVGtF8TUWRsxWvdG4KePVpk4LNNnr4pVJtjfD2NUYVUBq6Oii34AMfpGvOwtqHqv7x4UESHniT0JJnjl0/1y29oWnyEXAdaMJE88kCeiT3E4JlYmpEjCq4Q73td3sxoS/Kuqrl8vyvFtuE5090dk3xrqw445Zlp5X/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GwVm5guX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e1oT5lrY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GwVm5guX; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=e1oT5lrY; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jvq0XRxN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CF1C4CEE2;
-	Wed, 23 Apr 2025 11:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745408903;
-	bh=VUjQSnbpe34n4H4pjsG/e0RneYGeJ6IEAMI0EPffIbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jvq0XRxNhZoppgh9qzCZg1srPngC2jUPOMRakVSq2EoT7uduMeaby5L0NsSFTWXjh
-	 T5EOWw0+GZGGdk/8ODO1S8mnRehBulTYEveU1NMgbv5I3gU1oJ29AaQRQak4c0laDa
-	 C+iU/HwHxE7hHF8Ag3QYOOMzjiqnFhwuvJgVdnj874lxUj50fFXPH0jn4eFBJrm3HH
-	 Cx/aYWyGZ3apZJ77pkOLCLJGWwG/duC31tlj5MxyC76I6+MW7KTGntLz0WuwEqJwJ/
-	 H5VSo3Ay1JB0kIoE6DhWucSDtaalvlCpA3M1lR2gcyJYbOPJ98xko8GevrUPc258yt
-	 1VwgdxFTHNiZQ==
-Date: Wed, 23 Apr 2025 17:18:19 +0530
-From: Vinod Koul <vkoul@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Robin Murphy <robin.murphy@arm.com>, dmaengine@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dmaengine: ARM_DMA350 should depend on ARM/ARM64
-Message-ID: <aAjTg8dgvxqLQOwQ@vaman>
-References: <50dbaf4ce962fa7ed0208150ca987e3083da39ec.1745345400.git.geert+renesas@glider.be>
- <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
- <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GwVm5guX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e1oT5lrY";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GwVm5guX";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="e1oT5lrY"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 13BA61F38D;
+	Wed, 23 Apr 2025 11:48:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745408905; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1wz3PTQnLCthgEyehHEykcK3kjIg/rWBspJNGsd6ek8=;
+	b=GwVm5guXUh0jXvluZgFmoBJq5IdhAdLN1ceH+5ps0IRfvb7P1O8ly4K+/up5a6Ihp+ju3z
+	Ah4+UbrkAplC7sOYOLRS4/PcLvX5xdBQazh3f6MwOcOn3ABWPqV4OF6ZAqpTk8OLuW1RMQ
+	rcoB9LETTbj4KBU3Fe9zWjH/yTUHAsE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745408905;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1wz3PTQnLCthgEyehHEykcK3kjIg/rWBspJNGsd6ek8=;
+	b=e1oT5lrY/LMKOvMJsUIGhLRC6wPA4j4yr38pV4qXvFGiHS86F0ZWblEeWMvrOVPwvSpySC
+	ODXACYg+axvxQADw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745408905; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1wz3PTQnLCthgEyehHEykcK3kjIg/rWBspJNGsd6ek8=;
+	b=GwVm5guXUh0jXvluZgFmoBJq5IdhAdLN1ceH+5ps0IRfvb7P1O8ly4K+/up5a6Ihp+ju3z
+	Ah4+UbrkAplC7sOYOLRS4/PcLvX5xdBQazh3f6MwOcOn3ABWPqV4OF6ZAqpTk8OLuW1RMQ
+	rcoB9LETTbj4KBU3Fe9zWjH/yTUHAsE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745408905;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1wz3PTQnLCthgEyehHEykcK3kjIg/rWBspJNGsd6ek8=;
+	b=e1oT5lrY/LMKOvMJsUIGhLRC6wPA4j4yr38pV4qXvFGiHS86F0ZWblEeWMvrOVPwvSpySC
+	ODXACYg+axvxQADw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D4D6C13691;
+	Wed, 23 Apr 2025 11:48:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id hXlxM4jTCGgaOQAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 23 Apr 2025 11:48:24 +0000
+Date: Wed, 23 Apr 2025 13:48:16 +0200
+Message-ID: <87ldrr3xq7.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc: <perex@perex.cz>,
+	<tiwai@suse.com>,
+	<peter.ujfalusi@linux.intel.com>,
+	<yung-chuan.liao@linux.intel.com>,
+	<pierre-louis.bossart@linux.dev>,
+	<maxtram95@gmail.com>,
+	<hkallweit1@gmail.com>,
+	<ranjani.sridharan@linux.intel.com>,
+	<skend@chromium.org>,
+	<lumag@kernel.org>,
+	<chaitanya.kumar.borah@intel.com>,
+	<kai.vehmanen@linux.intel.com>,
+	<linux-sound@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>,
+	<CobeChen@zhaoxin.com>,
+	<TimGuo@zhaoxin.com>,
+	<LeoLiu-oc@zhaoxin.com>,
+	<JoanneBao@glenfly.com>
+Subject: Re: [PATCH] ALSA: HDA: Add Zhaoxin HDMI Controller and Codec support
+In-Reply-To: <20250423102851.57997-1-TonyWWang-oc@zhaoxin.com>
+References: <20250423102851.57997-1-TonyWWang-oc@zhaoxin.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[perex.cz,suse.com,linux.intel.com,linux.dev,gmail.com,chromium.org,kernel.org,intel.com,vger.kernel.org,zhaoxin.com,glenfly.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid]
+X-Spam-Score: -3.30
+X-Spam-Flag: NO
 
-On 23-04-25, 13:11, Geert Uytterhoeven wrote:
-> Hi Robin,
+On Wed, 23 Apr 2025 12:28:51 +0200,
+Tony W Wang-oc wrote:
 > 
-> On Wed, 23 Apr 2025 at 12:59, Robin Murphy <robin.murphy@arm.com> wrote:
-> > On 2025-04-22 7:11 pm, Geert Uytterhoeven wrote:
-> > > The Arm DMA-350 controller is only present on Arm-based SoCs.
-> >
-> > Do you know that for sure? I certainly don't. This is a licensable,
-> > self-contained DMA controller IP with no relationship whatsoever to any
-> > particular CPU ISA - our other system IP products have turned up in the
-> > wild paired with non-Arm CPUs, so I don't see any reason that DMA-350
-> > wouldn't either.
+> Add newer Zhaoxin HD Audio PCI IDs, and HDMI codec vendor IDs.
 > 
-> The dependency can always be relaxed later, when the need arises.
-> Note that currently there are no users at all...
+> Because Zhaoxin hardware limitation, set BDL position to 128 to
+> increase interrupt interval.
+> 
+> To fix response write request not synced to memory when handle
+> HDAC interrupt, set bus->polling_mode = 1.
+> 
+> Signed-off-by: Joanne Bao <JoanneBao@glenfly.com>
+> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
 
-True, but do we have any warnings generated as a result, if there are no
-dependency should we still limit a driver to an arch?
+Applied to for-next branch.  Thanks.
 
--- 
-~Vinod
+
+Takashi
