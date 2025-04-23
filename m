@@ -1,82 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61641290BC9
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A6D269B07;
+	Wed, 23 Apr 2025 15:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420701; cv=none; b=uwh2oTWvbNQsV3W3o18ub4fqD8xdbi7wPV8xgmiWYxD3e8+40L3zit6eQ6rgJxEYKwfMu1I8Qh+NQ97q0pnKPUY1Rq4mR0sHYClDX/B5z7jbbjY+CtjOZbTOqvGVL6LGrOAjJ1RTaJuNyvEvaWbpAE25VcL7RHTVTy+N2oxki/E=
+	t=1745420753; cv=none; b=ELJSRVoqs6mUrxRLtJbYjie9Bkw29bgmOCNV8i/T7VJD8xe345Y1iOhGwmdrN04csahAlWGd+mpnozo2Qwr3Pdm9hIQAp6dRnx+2Zy2YQ5JT07OlPnKUt+OIA+gYrSqkRyVKh9KJ6N6Y7p4E8WKBP8CdYXR5xJeAlh8s1L0yJ50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420701; c=relaxed/simple;
-	bh=4R6lj0hZ4/p7O8oGQyGh1YZI8vXp8HHuwSAXkKuPK68=;
+	s=arc-20240116; t=1745420753; c=relaxed/simple;
+	bh=+pgwEq/v7P8f/AIzuDnfFPRQJNNWeIXj7j55MF1ARFk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NtwZQU3a6t7UVe5/JOx0n/k5LoSfW6ig+qjjrLlCJrqTMIzyuaFh3wmMl/JqnJXIfHIW7qcL+HTHaYxJYsL0T9IZpve24IbCfV9ldJx9yNKyaIPLcnLvQ2N5neV+ANYbLIscfa0JelLMuoXz3kn+UdZWyDeZnfhsuMWqp6eom2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WFtoAY8L; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sYKsmoLF1IX2WZMtgUJKcxDPYHH85sedbtne76t45j1KEuqAombzUP1SIpuOIBCf8Xn4FRmG0r2eKT8SdgP4Tz3FTs5+/qhtmbNxtmHdKikJKGbOc3oZvbzNs6gREJdiMtYwx7qwyMKPlPnZ8xi7e/eAoui4mXpPEYcNxhJ1ZjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFJx/822; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WFtoAY8L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745420697;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=y/XwtWlQK2gWEuKfXA1Y/H+Qql53usM87hFbg/riAys=;
-	b=WFtoAY8Lj2t99q07djc4fZbSh/u9mQLVx59IeGlR1crR/Vne+/4bBitSWxlI6hnQOaXrRj
-	GU4qyhBnqXc+SBe1ArZQeavYYvMwqA1A3AHNK7LngMnqI/fezNq0fTbpb4dRXiK5U5JPs6
-	LN+KcTf6K3cQ6eB3xJoJ5Uao58RkOtA=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-177-xbJQFwRBPvqtcoarsaYuBg-1; Wed, 23 Apr 2025 11:04:55 -0400
-X-MC-Unique: xbJQFwRBPvqtcoarsaYuBg-1
-X-Mimecast-MFC-AGG-ID: xbJQFwRBPvqtcoarsaYuBg_1745420691
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8feffbe08so156960866d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:04:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745420691; x=1746025491;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y/XwtWlQK2gWEuKfXA1Y/H+Qql53usM87hFbg/riAys=;
-        b=r6GrkTJZ3AfcKZMYaY8NX39292llydJAjpCkGDV2Hu9DuwgekATYmpO9fU55uKvULX
-         R89fRUnf84XEb3Bza8UNdwmcTzx/bu5IgJjtTnjpFdir1SWC6xLwSyIgxZfujWbhSqJH
-         9StYX84O0YA/k+HwEW28MUbz5640J/v31SUzit1D4WHN4uf5xbzz6wyDnoUs3ZVzij/m
-         AuDV8CABeihwE4sQPHFgFYPFfi/G4J40WclU5bSO+6GpqV8BayGmI9/hQakWu2mPemP4
-         HB/gCa0wK6phIiEzlfOIG0bGtsuOoMSjocO2V0WK9m3CCpZ/VaGcHZHvKFVaQLhjkltQ
-         JYJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUW2sY7eE7QuapYOX/PntjIbRCiVEXqpNPGb9AEOVIM/UecnnEiTYyPhtcqh3YRnqc25MwOeLR/lyuplqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyi4qgyAcyzxg7q4Fz6Cf5poWRZ6XNMBVUzTsYxSriy7Zw0KOum
-	NATEwi6u8NvIoL3IGN2aj+NbFCQ2iyGq0i3oz+i/1hcs4zvtaifMIL/Mv6F2HTsZFu5c/iSXZop
-	1Dp3oHz3+qNZOR8AoupxHe75vqjWIZQqUUB+lsobl09De+lIuBBM3pMlg60lPWA==
-X-Gm-Gg: ASbGncsgJHus35zAJyi9Ehw9Asz6GyH8YntmdRhSEjJdKxhQ07g0L/84zgc93U0/q/w
-	GlKWUQUSUo1UX9Lm6tHEt6ZfKIuoNwGbkwmcIBCnviitkidVmsAQAupbviOgv3TC4qs6fTWvb8n
-	e0Qz5JzoK8SwnZ+V60U/Z5Y803E1xNBT9DLi454HoEMyAFzMyfoLrLGiWJulw1NDENSc0+kRMAM
-	mFO/pFlUgS99FIr7nu525QYgqw7XlVCmxm/vm1YrSuHkSkb3ffx9keDQZXvD039HAYLPxMbwR4u
-	J6r3enSc7VNR0a//KHa+DZz7my8Ds9NbrxQCf5K71kPCkHXaG/ce1Dc=
-X-Received: by 2002:a05:6214:5085:b0:6eb:28e4:8519 with SMTP id 6a1803df08f44-6f2c4562ff4mr349522316d6.21.1745420691115;
-        Wed, 23 Apr 2025 08:04:51 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHIAe6YgRzYFI//AuYLkGgT9bMQm2RTQxu8bUNb2e6etKdith1hNCEE0IZQWqDOiU1oDePTvw==
-X-Received: by 2002:a05:6214:5085:b0:6eb:28e4:8519 with SMTP id 6a1803df08f44-6f2c4562ff4mr349521466d6.21.1745420690350;
-        Wed, 23 Apr 2025 08:04:50 -0700 (PDT)
-Received: from localhost (pool-100-17-21-114.bstnma.fios.verizon.net. [100.17.21.114])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2af5b28sm71585546d6.10.2025.04.23.08.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 08:04:49 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:04:48 -0400
-From: Eric Chanudet <echanude@redhat.com>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Clark Williams <clrkwllms@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Ian Kent <ikent@redhat.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev, 
-	Alexander Larsson <alexl@redhat.com>, Lucas Karpinski <lkarpins@redhat.com>
-Subject: Re: [PATCH v4] fs/namespace: defer RCU sync for MNT_DETACH umount
-Message-ID: <ubimdwyutm47mlmtn43mbobtnwaxkmuse3vpgosbsh4yd7f73t@bbt7az62ybbb>
-References: <20250408210350.749901-12-echanude@redhat.com>
- <20250420055406.GS2023217@ZenIV>
- <fzqxqmlhild55m7lfrcdjikkuapi3hzulyt66d6xqdfhz3gjft@cimjdcqdc62n>
- <20250423021547.GD2023217@ZenIV>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFJx/822"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 901EFC4CEE3;
+	Wed, 23 Apr 2025 15:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745420752;
+	bh=+pgwEq/v7P8f/AIzuDnfFPRQJNNWeIXj7j55MF1ARFk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dFJx/822j4GTOfsd2flNm5Ey/TaUnXvZT5qb1IFKN8MDVYAFjFrSYj2QuqzBXOI34
+	 cCL2AjpTOhK3gqFdVzm60QZZvEA+ZIjYjEMhAIT2Om4kk9CpVlY+UMwZFizRz2A4FV
+	 x2Kc0vTLaMJFho4pwEjsYBGAdyZMrqxDedEJqMD9wYE2ukoG/n7seIhucFhuW31zDW
+	 UmvL8uviiKFbeGy65gClBxfYw6dpkBtsqH4du4EF8WICj2EuxnuXGLSAWwcwRzUmrc
+	 x84yDhW8Ij5YIQpP/JKhV3PMooMVAUA5y9/B5QkJayW+yclq7f2CrbG5CDNIkG4bD0
+	 7IzL5VKJcHazg==
+Date: Wed, 23 Apr 2025 09:05:48 -0600
+From: Keith Busch <kbusch@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Leon Romanovsky <leon@kernel.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Nitesh Shetty <nj.shetty@samsung.com>,
+	Leon Romanovsky <leonro@nvidia.com>
+Subject: Re: [PATCH v9 23/24] nvme-pci: convert to blk_rq_dma_map
+Message-ID: <aAkBzDgjiWkbeP8P@kbusch-mbp.dhcp.thefacebook.com>
+References: <cover.1745394536.git.leon@kernel.org>
+ <7c5c5267cba2c03f6650444d4879ba0d13004584.1745394536.git.leon@kernel.org>
+ <20250423092437.GA1895@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,29 +70,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423021547.GD2023217@ZenIV>
+In-Reply-To: <20250423092437.GA1895@lst.de>
 
-On Wed, Apr 23, 2025 at 03:15:47AM +0100, Al Viro wrote:
-> On Tue, Apr 22, 2025 at 03:53:43PM -0400, Eric Chanudet wrote:
-> 
-> > I'm not quite following. With umount -l, I thought there is no guaranty
-> > that the file-system is shutdown. Doesn't "shutdown -r now" already
-> > risks loses without any of these changes today?
-> 
-> Busy filesystems might stay around after umount -l, for as long as they
-> are busy.  I.e. if there's a process with cwd on one of the affected
-> filesystems, it will remain active until that process chdirs away or
-> gets killed, etc.  Assuming that your userland kills all processes before
-> rebooting the kernel, everything ought to be shut down, TYVM...
-> 
-> If not for that, the damn thing would be impossible to use safely...
-> 
+On Wed, Apr 23, 2025 at 11:24:37AM +0200, Christoph Hellwig wrote:
+> Right now I don't have a test setup for metasgl, though.  Keith,
+> do you have a good qemu config for that?  Or anyone else?
 
-Right, that ties up with Christian's earlier reply and was also stated
-in 9ea459e110df ("delayed mntput") description.
+QEMU does support it, and reports support for it by default (you may
+need to upgrade qemu if yours is more than a year old). You just need to
+format your namespace with metadata then you can send commands with
+either SGL or MPTR.
 
-Thanks for your patience and explanations.
+QEMU supports 0, 8, 16, and 64 metadata bytes on either 512b or 4k block
+sizes.
 
--- 
-Eric Chanudet
+If you want 8 bytes for metadata on start up, attach parameter "ms=8" to
+the '-device nvme-ns' qemu setup.
 
+Alternatively, you can use the 'nvme format' command after booting to
+change it whenever you want.
