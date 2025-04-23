@@ -1,185 +1,251 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8BD28D846;
-	Wed, 23 Apr 2025 18:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54085280A21;
+	Wed, 23 Apr 2025 18:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432083; cv=none; b=dODeAI6aShJr+YKNGUuXCnVWOctpMdZjKrqNyi2v9V08MfwrzP1aKVgKyVAvzUwVIgZzRVM0LHf7rle46XMYtR6cCqt9HA2LiAbEV+O+CLJRWrVFcQbxTNxandzQ7OMNW7xYmZjNw/d46sTgS7m9Ql8wN0ZNJdgbs3oqlM0worU=
+	t=1745432132; cv=none; b=rfvhz/A0oZRskpF61v5Fh5mIUW7xK2N/e4PkR3ubg5rxNvPwqId2iSYLe37FiGte7CUJIMc/U3N/a5hxVY8pPHds9i8nmVL30JdOFQgBeVDYm0+5L07gVbj6n7/fzbtAPQopVrujVCHqu8UUJVoopQgDWvf/AoGweu/oT0GFMTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432083; c=relaxed/simple;
-	bh=tsWUiI/pJWVNER6fjpf9OzcFhaS6tefvjd8Xc3CN6ps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BeTlj+GSbo3jCtMs/mLhwzIEbyjLzlkd/cnwN7ywM+kdSgN7uGhK0PHb9SfulNCMpoqvX+cDyRylehtn4Vp8sLK+7ygKKKFU2+9AIriUHR+sZKu0iRHAFLcd1SupcH/8SlL0a/nVsr40ydyRpTdnLvmz9Fc/oOuFky0Gead3Yc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=GaEWD2JM; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1745432132; c=relaxed/simple;
+	bh=bahC4EZGyLZ5JcodwBxNGpmpVQpi+ynBeIQYEPfwdfY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fecgTTyCIxBk8QXHlnu8dlwOTMel9IGEGUKwq1Lek0VN6AGL9HD5eVz5KIkpGG6YtTKC4S5TL4Czi5Jmam744zCJE5eZL5icU5PAAZtwXsdiHlpaydev10V6Khp0igi6TXijOSkxY/mphDhJBpZ55rFoEK48rwsrDSHvMLb/u0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VdMPgVIx; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="GaEWD2JM"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1DD631AE2;
-	Wed, 23 Apr 2025 20:14:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745432078;
-	bh=tsWUiI/pJWVNER6fjpf9OzcFhaS6tefvjd8Xc3CN6ps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GaEWD2JMy/jzjEq8eypSr4sbfUKydHYaJq3EBf4fyS2I5gvNhTobJlDCeHMbsotCW
-	 dZXvjXW0iM7SeTUVWX9TrSdaqElNVe1Dbobq/BEJtdpcwxgXYvTK2V28zk1cwH891U
-	 ZVZGYn2HxrKWZn6L99x8SGpHPACD4kIwcXtcTHWg=
-Date: Wed, 23 Apr 2025 21:14:37 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Mathis Foerst <mathis.foerst@mt.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	manuel.traut@mt.com, mathis.foerst@zuehlke.com
-Subject: Re: [PATCH v4 3/6] media: mt9m114: Factor out mt9m114_configure_pa
-Message-ID: <20250423181437.GC2675@pendragon.ideasonboard.com>
-References: <20250307093140.370061-1-mathis.foerst@mt.com>
- <20250307093140.370061-4-mathis.foerst@mt.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VdMPgVIx"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54998f865b8so82172e87.3;
+        Wed, 23 Apr 2025 11:15:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745432127; x=1746036927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=60ooqHv4lubF04MISs1yun2dS0JF24QIl5RyblgguIU=;
+        b=VdMPgVIxt/RtNU31RooXe4QjQ2d3c3IkX6kpvjteLUsLNirqR6scw5AyszlsfXSAg4
+         w/sS28MYmVQOsFZQiwzNKI47XZVWrqFsSKBgAnikDwENbyZqDfXKVTM5jWjmO/pWaEGJ
+         brbUkDDPcFbcKOIoy8MMjNUV7rAd2Pt6PiM92+6zPswEYb0W4wj0EGzxWl6bMMQkB+LP
+         S6Y7xwejaMrk/6p8EgMfRoimDCRsony2gwIyviYWR0hVBcE+hMHoqutJrvVlZK8Zm07x
+         kQR6XuNaxAtd8lRgTRo/4UYYU7U1ronHtYB2AffwdSokDveuZTNuixOeUA3CTow9juKm
+         x0gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745432127; x=1746036927;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=60ooqHv4lubF04MISs1yun2dS0JF24QIl5RyblgguIU=;
+        b=QH+rCt/vUUSVfe4VoacLxd27rQqeCvBp4omzjPpTKnd3UZOT/9wk/nHJQOhLJY8bHU
+         8TfoI3Ytk+FZcx22py71b5VXTTuiD9O2k0eJgbunqKv9HGAP2O401hYRq9UOfYzev6v3
+         dqb4CiaXEbCfVAhf2NsBdo8kwSg2Lf+Oob0eMUIGNATmTGRnjSwzvUmsBM56nelM6aMP
+         G/74e5QzOTWflFzBLXZVLcxdoWLVyiadVmdK3R10duzzhDCH2EnInv9VdhNYqwDn8vSx
+         8h0qoEuqR2n/6kzxO7jiNjszxQQNq8S3FFd4khf+DuYDx25KUra6CXzBnOlVj+gjV4xj
+         ej1w==
+X-Forwarded-Encrypted: i=1; AJvYcCU0NQhl0NNLfklU2zU+6JQPp3+ox4vpf8UKLQV8LYwmztUGVi9UOvtrSYN9x+/gqTmWSrIIPWnl@vger.kernel.org, AJvYcCVxwfHzln4UMWqNC0/ZrYOQxZ0Q8Q2UsXQOMePtq21fcxS5RR9Dx8qkPr69sNFW4HekgyoZ23al@vger.kernel.org, AJvYcCX9pn6pqoxoiB8TUh8PW6AwVE7kjbSn1X4LJ3PPL3lQ3F+tWsxUDqmPgUtXJZt4ZsBGF0axP23mU0xsoV0DqAtM@vger.kernel.org, AJvYcCXvQPvURcf3rsGLtIlIEZsTRO+rR2WOLg+JSw4NNZq9wfJRewZBkPweLfA48Kr2CsAIHL1PQ5aNjIG5gwo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxad2leXoZox9FJsgaGM9LaC/yOVM9nyatAI6aBOcS2Vl7mfp1G
+	/Zj8nPDeWbGpjl/DmZWBHSQSLwLGtZ7lfV67mxpAFe1/gtwHDxuq
+X-Gm-Gg: ASbGncu4NhEuOM0wejGB8iy5vRj/unZq9uowOxjZ3D+7wm6wM7a8PIqhKltIFJOJkGv
+	n1kb3kwkCplHSVuU0Xjil7O1A+16yMNeGaIBUIaKosYtWPcp62pt18gFRp2nIEaopaRhkIFYV0R
+	hVNSi9HM0VlVu8tyTUV51MvYYo1Bf+KJkPvX89/R0YR1lDfVki7MJ/9/RDewjZqNXqne1QuEO1E
+	pm/KUMWeY8XCkY9R55KaEIPfPrqOidQOXqPXA7CGwV9TVKPih0UjLopARBY3RnMh6iLc7xo4fao
+	IUJu13a8tmAYnBfvcKNPud5yk2yjhxqxuiRCXaUOHqDA2cmC4ADgX6M=
+X-Google-Smtp-Source: AGHT+IFG0X8R3+9zVQjwFuLKdnVhwPWdDHjtGIJi+PAV1z4CfmJthxydm3SWJC3j0gwdpys72wiu6w==
+X-Received: by 2002:a05:6512:224b:b0:545:60b:f394 with SMTP id 2adb3069b0e04-54e7b5ba31cmr217791e87.4.1745432127102;
+        Wed, 23 Apr 2025 11:15:27 -0700 (PDT)
+Received: from localhost.localdomain ([87.249.25.136])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5d0146sm1603134e87.128.2025.04.23.11.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 11:15:25 -0700 (PDT)
+From: Evgeny Pimenov <pimenoveu12@gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	stable@vger.kernel.org,
+	Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Evgeny Pimenov <pimenoveu12@gmail.com>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+	David Ahern <dsahern@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Taehee Yoo <ap420073@gmail.com>,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Fedor Pchelkin <pchelkin@ispras.ru>,
+	Alexey Khoroshilov <khoroshilov@ispras.ru>
+Subject: [PATCH 5.10/5.15/6.1] netfilter: ipt_CLUSTERIP: change mutex location
+Date: Wed, 23 Apr 2025 21:12:46 +0300
+Message-Id: <20250423181245.14794-1-pimenoveu12@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250307093140.370061-4-mathis.foerst@mt.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Mathis,
+No upstream commit exists for this patch.
 
-Thank you for the patch.
+The file ipt_CLUSTERIP.c was deleted in commit 9db5d918e2c0
+("netfilter: ip_tables: remove clusterip target"), but races still exist
+in stable branches.
 
-On Fri, Mar 07, 2025 at 10:31:37AM +0100, Mathis Foerst wrote:
-> The function mt9m114_configure writes the configuration registers of both,
-> the pixel array (pa) and the image flow processor (ifp).
-> This is undesirable if only the config of the pa should be changed without
-> affecting the ifp.
+Thread A in clusterip_config_entry_put() decrements refcount and removes
+config from the list but doesn't call proc_remove(). Thread B searches
+the config, doesn't find it, re-adds it to the list, and calls
+proc_create_data() with an IP that still exists in the tree.
 
-I assume I'll see in a later patch why this is needed.
+|A| refcount_dec_and_lock()
+|A| list_del_rcu()
+=== Must be here
+|A| proc_remove()
+===
+|B| __clusterip_config_find()
+|B| list_add_rcu()
+|B| proc_create_data()
+|B| WARN()
 
-> Factor out the function mt9m114_configure_pa() that just writes the
-> pa-configuration.
-> 
-> Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
-> ---
->  drivers/media/i2c/mt9m114.c | 49 +++++++++++++++++++++++--------------
->  1 file changed, 30 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/mt9m114.c b/drivers/media/i2c/mt9m114.c
-> index b06003b69f6f..9a49dab65180 100644
-> --- a/drivers/media/i2c/mt9m114.c
-> +++ b/drivers/media/i2c/mt9m114.c
-> @@ -789,39 +789,22 @@ static int mt9m114_initialize(struct mt9m114 *sensor)
->  	return 0;
->  }
->  
-> -static int mt9m114_configure(struct mt9m114 *sensor,
-> -			     struct v4l2_subdev_state *pa_state,
-> -			     struct v4l2_subdev_state *ifp_state)
-> +static int mt9m114_configure_pa(struct mt9m114 *sensor, struct v4l2_subdev_state *pa_state)
+As a fix, also cover with mutex the places of interaction with the list of
+configs before proc_remove() and proc_create_data() functions.
 
-You can name the variable 'state' now that there's a single one.
+------------[ cut here ]------------
+proc_dir_entry 'ipt_CLUSTERIP/100.1.1.2' already registered
+WARNING: CPU: 0 PID: 2597 at fs/proc/generic.c:381 proc_register+0x517/0x6e0 fs/proc/generic.c:381
+[...]
+Call Trace:
+ proc_create_data+0x130/0x1a0 fs/proc/generic.c:583
+ clusterip_config_init net/ipv4/netfilter/ipt_CLUSTERIP.c:281 [inline]
+ clusterip_tg_check+0xb8d/0x1380 net/ipv4/netfilter/ipt_CLUSTERIP.c:502
+ xt_check_target+0x27c/0xa00 net/netfilter/x_tables.c:1018
+ check_target net/ipv4/netfilter/ip_tables.c:511 [inline]
+ find_check_entry.constprop.0+0x7b0/0x9b0 net/ipv4/netfilter/ip_tables.c:553
+ translate_table+0xc6a/0x16a0 net/ipv4/netfilter/ip_tables.c:717
+ do_replace net/ipv4/netfilter/ip_tables.c:1138 [inline]
+ do_ipt_set_ctl+0x54e/0xb00 net/ipv4/netfilter/ip_tables.c:1636
+ nf_setsockopt+0x88/0xf0 net/netfilter/nf_sockopt.c:101
+ ip_setsockopt+0xe4d/0x3d10 net/ipv4/ip_sockglue.c:1442
+ sctp_setsockopt+0x135/0xa390 net/sctp/socket.c:4475
+ __sys_setsockopt+0x234/0x5a0 net/socket.c:2145
+ __do_sys_setsockopt net/socket.c:2156 [inline]
+ __se_sys_setsockopt net/socket.c:2153 [inline]
+ __x64_sys_setsockopt+0xb9/0x150 net/socket.c:2153
+ do_syscall_64+0x30/0x40 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x67/0xd1
 
-static int mt9m114_configure_pa(struct mt9m114 *sensor,
-				struct v4l2_subdev_state *state)
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
->  {
->  	const struct v4l2_mbus_framefmt *pa_format;
->  	const struct v4l2_rect *pa_crop;
+Fixes: 2a61d8b883bb ("netfilter: ipt_CLUSTERIP: fix sleep-in-atomic bug in clusterip_config_entry_put()")
+Cc: stable@vger.kernel.org # v5.4+
+Suggested-by: Fedor Pchelkin <pchelkin@ispras.ru>
+Suggested-by: Alexey Khoroshilov <khoroshilov@ispras.ru>
+Signed-off-by: Evgeny Pimenov <pimenoveu12@gmail.com>
+---
+ net/ipv4/netfilter/ipt_CLUSTERIP.c | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
 
-Similarly, these can be renamed to format and crop.
-
-> -	const struct mt9m114_format_info *ifp_info;
-> -	const struct v4l2_mbus_framefmt *ifp_format;
-> -	const struct v4l2_rect *ifp_crop;
-> -	const struct v4l2_rect *ifp_compose;
-> -	unsigned int hratio, vratio;
-> -	u64 output_format;
->  	u64 read_mode;
-> +	unsigned int hratio, vratio;
-
-You can keep the order of the variables unchanged.
-
->  	int ret = 0;
->  
->  	pa_format = v4l2_subdev_state_get_format(pa_state, 0);
->  	pa_crop = v4l2_subdev_state_get_crop(pa_state, 0);
->  
-> -	ifp_format = v4l2_subdev_state_get_format(ifp_state, 1);
-> -	ifp_info = mt9m114_format_info(sensor, 1, ifp_format->code);
-> -	ifp_crop = v4l2_subdev_state_get_crop(ifp_state, 0);
-> -	ifp_compose = v4l2_subdev_state_get_compose(ifp_state, 0);
-> -
->  	ret = cci_read(sensor->regmap, MT9M114_CAM_SENSOR_CONTROL_READ_MODE,
->  		       &read_mode, NULL);
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = cci_read(sensor->regmap, MT9M114_CAM_OUTPUT_FORMAT,
-> -		       &output_format, NULL);
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	hratio = pa_crop->width / pa_format->width;
->  	vratio = pa_crop->height / pa_format->height;
->  
-> @@ -853,6 +836,34 @@ static int mt9m114_configure(struct mt9m114 *sensor,
->  	cci_write(sensor->regmap, MT9M114_CAM_SENSOR_CONTROL_READ_MODE,
->  		  read_mode, &ret);
->  
-> +	return ret;
-> +}
-> +
-> +static int mt9m114_configure(struct mt9m114 *sensor,
-> +			     struct v4l2_subdev_state *pa_state,
-> +			     struct v4l2_subdev_state *ifp_state)
-> +{
-> +	const struct mt9m114_format_info *ifp_info;
-> +	const struct v4l2_mbus_framefmt *ifp_format;
-> +	const struct v4l2_rect *ifp_crop;
-> +	const struct v4l2_rect *ifp_compose;
-
-And here you can also drop the ifp_ prefix.
-
-> +	u64 output_format;
-> +	int ret = 0;
-
-No need to initialize ret to 0.
-
-> +
-> +	ifp_format = v4l2_subdev_state_get_format(ifp_state, 1);
-> +	ifp_info = mt9m114_format_info(sensor, 1, ifp_format->code);
-> +	ifp_crop = v4l2_subdev_state_get_crop(ifp_state, 0);
-> +	ifp_compose = v4l2_subdev_state_get_compose(ifp_state, 0);
-> +
-> +	ret = cci_read(sensor->regmap, MT9M114_CAM_OUTPUT_FORMAT,
-> +		       &output_format, NULL);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = mt9m114_configure_pa(sensor, pa_state);
-> +	if (ret < 0)
-> +		return ret;
-> +
->  	/*
->  	 * Color pipeline (IFP) cropping and scaling. Subtract 4 from the left
->  	 * and top coordinates to compensate for the lines and columns removed
-
-For symmetry, could you call this mt9m114_configure_ifp() and move the
-call to mt9m114_configure_pa() to mt9m114_start_streaming() ?
-
-With those issues addressed, and assuming that the rationale for this
-patch is good,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+diff --git a/net/ipv4/netfilter/ipt_CLUSTERIP.c b/net/ipv4/netfilter/ipt_CLUSTERIP.c
+index 77e3b67e8790..61ccfd97841f 100644
+--- a/net/ipv4/netfilter/ipt_CLUSTERIP.c
++++ b/net/ipv4/netfilter/ipt_CLUSTERIP.c
+@@ -79,6 +79,22 @@ static inline struct clusterip_net *clusterip_pernet(struct net *net)
+ 	return net_generic(net, clusterip_net_id);
+ }
+ 
++static inline void
++clusterip_net_lock(struct clusterip_net *cn)
++{
++#ifdef CONFIG_PROC_FS
++	mutex_lock(&cn->mutex);
++#endif
++};
++
++static inline void
++clusterip_net_unlock(struct clusterip_net *cn)
++{
++#ifdef CONFIG_PROC_FS
++	mutex_unlock(&cn->mutex);
++#endif
++};
++
+ static inline void
+ clusterip_config_get(struct clusterip_config *c)
+ {
+@@ -114,6 +130,7 @@ clusterip_config_entry_put(struct clusterip_config *c)
+ {
+ 	struct clusterip_net *cn = clusterip_pernet(c->net);
+ 
++	clusterip_net_lock(cn);
+ 	local_bh_disable();
+ 	if (refcount_dec_and_lock(&c->entries, &cn->lock)) {
+ 		list_del_rcu(&c->list);
+@@ -123,14 +140,14 @@ clusterip_config_entry_put(struct clusterip_config *c)
+ 		 * functions are also incrementing the refcount on their own,
+ 		 * so it's safe to remove the entry even if it's in use. */
+ #ifdef CONFIG_PROC_FS
+-		mutex_lock(&cn->mutex);
+ 		if (cn->procdir)
+ 			proc_remove(c->pde);
+-		mutex_unlock(&cn->mutex);
+ #endif
++		clusterip_net_unlock(cn);
+ 		return;
+ 	}
+ 	local_bh_enable();
++	clusterip_net_unlock(cn);
+ }
+ 
+ static struct clusterip_config *
+@@ -262,6 +279,7 @@ clusterip_config_init(struct net *net, const struct ipt_clusterip_tgt_info *i,
+ 	c->net = net;
+ 	refcount_set(&c->refcount, 1);
+ 
++	clusterip_net_lock(cn);
+ 	spin_lock_bh(&cn->lock);
+ 	if (__clusterip_config_find(net, ip)) {
+ 		err = -EBUSY;
+@@ -277,11 +295,9 @@ clusterip_config_init(struct net *net, const struct ipt_clusterip_tgt_info *i,
+ 
+ 		/* create proc dir entry */
+ 		sprintf(buffer, "%pI4", &ip);
+-		mutex_lock(&cn->mutex);
+ 		c->pde = proc_create_data(buffer, 0600,
+ 					  cn->procdir,
+ 					  &clusterip_proc_ops, c);
+-		mutex_unlock(&cn->mutex);
+ 		if (!c->pde) {
+ 			err = -ENOMEM;
+ 			goto err;
+@@ -290,6 +306,7 @@ clusterip_config_init(struct net *net, const struct ipt_clusterip_tgt_info *i,
+ #endif
+ 
+ 	refcount_set(&c->entries, 1);
++	clusterip_net_unlock(cn);
+ 	return c;
+ 
+ #ifdef CONFIG_PROC_FS
+@@ -300,6 +317,7 @@ clusterip_config_init(struct net *net, const struct ipt_clusterip_tgt_info *i,
+ out_config_put:
+ 	spin_unlock_bh(&cn->lock);
+ 	clusterip_config_put(c);
++	clusterip_net_unlock(cn);
+ 	return ERR_PTR(err);
+ }
+ 
+@@ -848,10 +866,10 @@ static void clusterip_net_exit(struct net *net)
+ #ifdef CONFIG_PROC_FS
+ 	struct clusterip_net *cn = clusterip_pernet(net);
+ 
+-	mutex_lock(&cn->mutex);
++	clusterip_net_lock(cn);
+ 	proc_remove(cn->procdir);
+ 	cn->procdir = NULL;
+-	mutex_unlock(&cn->mutex);
++	clusterip_net_unlock(cn);
+ #endif
+ 	nf_unregister_net_hook(net, &cip_arp_ops);
+ }
 -- 
-Regards,
-
-Laurent Pinchart
+2.39.5
