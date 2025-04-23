@@ -1,77 +1,100 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4674828B4EA
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADAF28A1D2
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:15:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428462; cv=none; b=H9X8+KMQg/sonCpmYiww0vBo18rCXRa2/T3R0TVXfX6BUSR+JV4dfobOCYPbxxm00tzG9NsXYs6qzYO05BBVwqyc3YW9pNOgB5peYTsw+nYy3bjZhr855K48P0roi1SiSboknB1yL65u7VdSFqEFjHJe7pI8Fwmr6fT6ITBQmKI=
+	t=1745428541; cv=none; b=dwAOgbIDxJhTmPwEAWudfI56hVlEHUpHcLlVTz3Z1vxJxPh5kQvNgyyiMuNhPT8Gkpf0EkbfnAHaw3A33D+XPRh8P1+vH7IkRyu6GZciaP4+1+TumfcM9vUPH1tGCEXTvocaREGiR4lUAToU/OTvN0Vv7PEImjWPsHj2Q3IuIeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428462; c=relaxed/simple;
-	bh=ILiHc9/+BLsPr+gKDiQnsPeVsRDiCp2pGP2GK0KliFw=;
+	s=arc-20240116; t=1745428541; c=relaxed/simple;
+	bh=ZSWmIXnoHeqHpg22is4DCb+FQUxyjWQhdchI0xl2uAo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IqDzbzbbL0gd4soZDNsI6Xqze0iCTOrY1NHD2LqHj6HsA5yDlTlvt98nJUpPvJVNc6IcosJwjRI1ixdxC+kQWes1okhOwuq+8XD8jQufuz/uRPd4djjnIE8NFPRNjZZeXWg6BPta8dXYMBy43W/BM6HzY3oPgi0jsRKpu7b5uOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xdkzd5pB; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tqf00ac7tqg6A1JztbHOCyp8DYkyFcIxGe0Bpb5+jVNEj6PGih1SE85TBOR++lRxYTAGowYWa3EYano2c+VpYs2qjSGKTx7P9qGvEeCXqZs2Hda6AXrwbmxvNQknBPbf/ryXp7bAs4ttwpeLtCMDc599Qv3/BB2pUR3beMascLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=f3RJOF+9; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xdkzd5pB"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so16098b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:14:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="f3RJOF+9"
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-86cce5dac90so71142241.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:15:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745428460; x=1746033260; darn=vger.kernel.org;
+        d=ziepe.ca; s=google; t=1745428539; x=1746033339; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QLeLRBd3ajsa68hrbyTw6z9ffqfpFHy6lvXZYFIJp+Q=;
-        b=Xdkzd5pBg/zwCNPN9mH+v2Zd4qVwIFA36pze/vlwim35OSRXnHSpFNodtajpfKy/tR
-         xDfptLiayUlXEJYpu5e4lwr86rnfuBp6VYbpgjxKR3mRrIjStvlTaI9xok7jftUW086Y
-         B22GTPCV3YaNonFhjQFBClvCvKHf1UAhZNBeJAQbcwNfiOp89XD2gejo7foJOW00Iqvw
-         tQbjJk0D5/cQVvZep15Z3LU9t9YblwHxFXSQm3WR+0BU6i9swOQzOGDnT2eWRCkRRd5o
-         NSI/ozVxZCQn47t+gCBRGE6A7sUIwqVuCJFFcUFSm3dJN+9jSqSdaVE6ZtYt4jB/WY8w
-         7rjw==
+        bh=sAA3ahIS+2Nb+9ARKVTXCSjk2uwR/TOFzjA5DEQnqxg=;
+        b=f3RJOF+9I5aUeLfKwhY41cyNNsV/7gzE8mnt0B7y7vbeRVxS8lsyPkRNroBYBI3tAJ
+         LoOcUnWESA/cjHCPlWjRHA3M+53oDTrejya0NpMfeL6ljH+lfqQ/w5WsXx5ptqIdwRDv
+         nsp4EdSeE1qB0xl7OhzzYJKM36aE0m+MI2XLpfk6xpvXrCfNBJoewKHE7+njIVYSVVE9
+         uh237S2zCPLxHmND8hCSoBynFpTclSrt0aPYz/VfLhJATgS9agmNsggyOtAJAI5FOQCt
+         Odf2Xxn7vp+XAbxZin8Yl6xswoHmQ5A7Db9GS23ti5naaSYjMpciujFTq8n0nXWju1+8
+         8EaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745428460; x=1746033260;
+        d=1e100.net; s=20230601; t=1745428539; x=1746033339;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QLeLRBd3ajsa68hrbyTw6z9ffqfpFHy6lvXZYFIJp+Q=;
-        b=DfZHYQQphvWkWid7y6PdZrE+aLIoxSrg3pldO33QhFecKwAngfuLoR3f4BFfrmBsEh
-         dpg9j4GJGx3IouiWlzNVJezUrhINTaSeJLvLlCEopjAJoMn0HMnqP1nRWthu+lHliEmh
-         w1VY+e5zjrQq+RZCMnR/lYQ1ile7WVRfJdF1rZv1pO4HkEz3VOM25SHCA3qZORgDDtyO
-         GzMZIER/y33qfHQ95JJpEa+k0DJqlLq+0oXduZe1JWRvx0KATW9qn7M6O4Tjmvw97iGR
-         6ML0YA0tFp6boAG/sJhO7yZLyxWeGZKfqw3u9BuzU2K90HwxTu6yS9UcUiKn0sNWcC2c
-         NeJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXTkjQvsGYWCFs10DfYML1oc9Gm0nwRlJ1veVvi0yfOq8Le1n+hg8jA/ClnpaislDyWJDl++X5YI2wAJzs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwP2Ym6ojsAnsN63VfHRAmDtub2p8dvoyhJ7oTWFoJe690CvkeU
-	4IlnSlVj1FbiexRUfafz7Kyfh+A7C2t8NjqgwSUlykaBCMsd2PiQSQiaUiTIHiQ=
-X-Gm-Gg: ASbGncvKBd9varzEF5W2vTLg38X8WayZ++0CRk7IyRxWSe2hsmaUkoGsBtWju6GERQp
-	y01jk9xFci2OwRfA1P3SSGAjARwz0SMdSSyfL7vmptSOc2iusR73RYDaChdrHmJhFgt27zGosza
-	59cH2K3617GKACl13pZUBGWKMe/phBfgCTsZ8tSGEDFb+/3cLWwB5r4Vkp40IHDXipB3BO/Y6QJ
-	B0legoyccymObxOP6vlxNxFu6ytuyiq89c1GQ/ZPhHdRyE+qLHjzabo/66qdQDYy7XqF6n3D0gg
-	EjMi3WkZLlJRD6F3ea5AO8/B7Sj3JBlZUkzC5Qu6194=
-X-Google-Smtp-Source: AGHT+IFAdKiHZtT60k9AyVm2AcUDq81Ye1OBOZptRf8Zz0DnworMkFqtL7ZoS2eCNp44RT+dD3uaJA==
-X-Received: by 2002:a17:90b:3a0c:b0:2ef:31a9:95c6 with SMTP id 98e67ed59e1d1-3087bb56439mr32154912a91.14.1745428460444;
-        Wed, 23 Apr 2025 10:14:20 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:11cc:1a38:e0c:9482])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309dfa0a9dasm1908698a91.16.2025.04.23.10.14.18
+        bh=sAA3ahIS+2Nb+9ARKVTXCSjk2uwR/TOFzjA5DEQnqxg=;
+        b=NWZUYF/cDfFo+2dRNy88ZtsEU68azNn48MOWGWpoQpN0rqC3thqtPVbW/DeLtPh/EW
+         ltEk38IvY4CgB+6UGnt4G/kcisa7Xecw7UVfbhxTCr6bNaU4ivajmGdEnjQtw1XcAwZs
+         pkMrqPaAMk9SFHutssjYD3zBkLoxPnd5iH2IWtHCdnV++bU4tsfSsXQ3II7z6kPXMwdk
+         tdeF6yOyYnq7W5vuM40otnLWd2Ykc/f5LjZpvTKZp0sb/LwaFc2DzVinM7xlKwT7znQl
+         7StrHaDqhIO9O4iXwwZmLhwaTY6ufgYY5AbEDNenl1BRGThUS1uStSkC4RVj6/8ZW1tr
+         Kzjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXlLmLaZoxg8LAVFoFMuNcUDxWDLINqKN1NVACVxIYAdEtyLOY7Rl9i1jWLSir8gcvSVLk296t8rmDXzuo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNEmhGZSpAuov+eC2oBZyMngZweRE6hH2XFgkMHSGNIskaPBss
+	Dam1lq3xBMbLG6mp1gjltNxVd1MEl4L8rGY2FU8s5kk0gXGiGx4BQMSAW+QyPIU=
+X-Gm-Gg: ASbGnctr37EXbnVOHFIwWx1iQdicn+pklsecVwVbvA0s0xBuuioDDyOHy4JRsKWp3fm
+	vNk0ujJA9UpYEdfXjQ+qqdnK/ZPlBQWFM72AtrkFtInrJFxhuHqhm7Gwi8Eeh3I7pbmGXXCDI0s
+	ztqwTh1o+MhZ0vVyMCO7ZCCAPCF19ymN89NHCBv90xi6YATekUcKZGUqVVzyud2mZJmEkcqrygE
+	08unyO63x0TnPoraKjExcfn8DSZ5lKbN/Az/YAYI1Fv6DtesJDBsFxgRlLX7hn9ch7Fg9pYWiro
+	nFzjiiD5Nt0VHGPvwJr/r78mt8RpecadLeMGJOXUv8dAtmHl+ZQVZiBNjW4Rmw8t/V8jlDcFLtS
+	siruecPMmH990K/F3OvRCIODqKGd+sg==
+X-Google-Smtp-Source: AGHT+IG91ka296h4XrJ4QPDo73jdYlZoOj1Zkc9PInMILwbVuqXEZMd5w4C/WgEttaatAxBubBvu3Q==
+X-Received: by 2002:a05:6122:3c54:b0:529:24f8:dbdd with SMTP id 71dfb90a1353d-529253da601mr17813854e0c.4.1745428538734;
+        Wed, 23 Apr 2025 10:15:38 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52a74d3a2d0sm79186e0c.40.2025.04.23.10.15.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:14:19 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:14:17 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Hiago De Franco <hiagofranco@gmail.com>, daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com
-Cc: linux-remoteproc@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [PATCH] remoteproc: imx_rproc: replace devm_clk_get() with
- devm_clk_get_optional()
-Message-ID: <aAkf6bxBLjgFjvIZ@p14s>
-References: <20250423155131.101473-1-hiagofranco@gmail.com>
+        Wed, 23 Apr 2025 10:15:38 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1u7dhB-00000007LQW-2UhV;
+	Wed, 23 Apr 2025 14:15:37 -0300
+Date: Wed, 23 Apr 2025 14:15:37 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Leon Romanovsky <leon@kernel.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Leon Romanovsky <leonro@nvidia.com>
+Subject: Re: [PATCH v9 03/24] iommu: generalize the batched sync after map
+ interface
+Message-ID: <20250423171537.GJ1213339@ziepe.ca>
+References: <cover.1745394536.git.leon@kernel.org>
+ <2ce6a74ddf5e13a7fdb731984aa781a15f17749d.1745394536.git.leon@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,52 +103,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423155131.101473-1-hiagofranco@gmail.com>
+In-Reply-To: <2ce6a74ddf5e13a7fdb731984aa781a15f17749d.1745394536.git.leon@kernel.org>
 
-Good morning,
-
-On Wed, Apr 23, 2025 at 12:51:31PM -0300, Hiago De Franco wrote:
-> From: Hiago De Franco <hiago.franco@toradex.com>
+On Wed, Apr 23, 2025 at 11:12:54AM +0300, Leon Romanovsky wrote:
+> From: Christoph Hellwig <hch@lst.de>
 > 
-> The "clocks" device tree property is not mandatory, and if not provided
-> Linux will shut down the remote processor power domain during boot if it
-> is not present, even if it is running (e.g. it was started by U-Boot's
-> bootaux command).
+> For the upcoming IOVA-based DMA API we want to use the interface batch the
+> sync after mapping multiple entries from dma-iommu without having a
+> scatterlist.
 
-If a clock is not present imx_rproc_probe() will fail, the clock will remain
-unused and Linux will switch it off.  I think that is description of what is
-happening.
+Grammer:
 
-> 
-> Use the optional devm_clk_get instead.
-> 
-> Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
-> ---
->  drivers/remoteproc/imx_rproc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-> index 74299af1d7f1..45b5b23980ec 100644
-> --- a/drivers/remoteproc/imx_rproc.c
-> +++ b/drivers/remoteproc/imx_rproc.c
-> @@ -1033,7 +1033,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
->  	if (dcfg->method == IMX_RPROC_NONE)
->  		return 0;
->  
-> -	priv->clk = devm_clk_get(dev, NULL);
-> +	priv->clk = devm_clk_get_optional(dev, NULL);
+ For the upcoming IOVA-based DMA API we want to batch the
+ ops->iotlb_sync_map() call after mapping multiple IOVAs from
+ dma-iommu without having a scatterlist. Improve the API.
 
-If my understanding of the problem is correct (see above), I think the real fix
-for this is to make the "clocks" property mandatory in the bindings.
+ Add a wrapper for the map_sync as iommu_sync_map() so that callers don't
+ need to poke into the methods directly.
 
-Daniel and Iuliana, I'd like to have your opinions on this.
+ Formalize __iommu_map() into iommu_map_nosync() which requires the
+ caller to call iommu_sync_map() after all maps are completed.
 
-Thanks,
-Mathieu
+ Refactor the existing sanity checks from all the different layers
+ into iommu_map_nosync().
 
->  	if (IS_ERR(priv->clk)) {
->  		dev_err(dev, "Failed to get clock\n");
->  		return PTR_ERR(priv->clk);
-> -- 
-> 2.39.5
-> 
+>  drivers/iommu/iommu.c | 65 +++++++++++++++++++------------------------
+>  include/linux/iommu.h |  4 +++
+>  2 files changed, 33 insertions(+), 36 deletions(-)
+
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+
+> +	/* Discourage passing strange GFP flags */
+> +	if (WARN_ON_ONCE(gfp & (__GFP_COMP | __GFP_DMA | __GFP_DMA32 |
+> +				__GFP_HIGHMEM)))
+> +		return -EINVAL;
+
+There is some kind of overlap with the new iommu_alloc_pages_node()
+here that does a similar check, nothing that can be addressed in this
+series but maybe a TBD for later..
+
+Jason
