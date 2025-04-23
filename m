@@ -1,154 +1,90 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE974275843
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:54:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEAC279903;
+	Wed, 23 Apr 2025 07:54:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394849; cv=none; b=ceEdohks9mshf4gG/MpCHkhihszfNDI/SfMny4O9LVaQO/TXjDaQrri6rMmvhzBbb8aJ/EPBE4OKxvlsm8NXXp4enqOIzVYPJ+jgdocWCFwgCUW+lI74BeDUY6OlHL7N8wmCIvORlM/OP+xjCdvtbWSWKQDFeCZX+J2B7KJZQS4=
+	t=1745394854; cv=none; b=ZxGrhk/Eh+Ujrq3LYEvL/oAw5sKXFQk9Y83Xs/wZRPCahLhf/aCJSsb9VZ5XuimIuGecBjdxChaEGXL+IJ8ks2eVd+W4bPZ2VL4jb3ycoExmkV46JIhHoNvK8bKK9zAaErUqQzErQeEhSnUxE8nS5x1YooxuSg15TUiYNgSH728=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394849; c=relaxed/simple;
-	bh=VqGDq+aiJzH+1k4/p5pVXAekbmppDm03yyolVhT8cKU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K4QVKr0uwPGPP7CFaj2tYOKFiCePr7pWu9/Nx+bXxwqoXy3bfdPQGrsJxaHWNU/1ZXksYk7Xf7lHydObhgrFB8yf9P6skTTjr6dilRPkfKZ3UY1Py98vOt+hjTCW89gSlDdG8OR8cGpVlliCzSwCQjQX2LKtvUIb1HWQY5/n/mI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yJ+9L7cy; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745394854; c=relaxed/simple;
+	bh=xXQeYeGUi7EMnzuv6jOxYup1O/yXM1hMBHtCQk0Bwn4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DAudjlb2dC905K5DH8+CNVQwssF9Ju5iqLu8PV/JlxkpqVPkHQAXhKGnpIMNk5DDGTD7NMhAWOL1oJ1gKptpVxCsHm5fZIGRl6qfb3uWZO7BhJ+RoEOL/4ZPL0d5hC3FJ1YNK8s3msXskg3B+rtIVgI1JHllqP/TpSu9fmeIPQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7WCDgEW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yJ+9L7cy"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so48437155e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745394845; x=1745999645; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GTFfJZb1P5uU8ezKo9spOiDP3fTS97bBPzPp1VNuiFE=;
-        b=yJ+9L7cy5xIO1QVUjmi9YeiPTmQ7PuD63tm5UuRxkJBYFgRZN0FSYTHOVGN9FFFMFW
-         CgtGeE2PoYmae2C7F1v+wqFFfoT6XF0nGtH2vgbVqbhlAJJEZDpoN81O9Ac/xfbOVe8T
-         QVPcMFWvaU9TuWiuM3gugil2F5FYaxupnwGn38DJ4nbooyukMN+dDn+OcjEZqn66HTrK
-         Ms9/ggo2XVvJwtw+Awx8smTUnzESrhIP6kak81WLJP/AyTM9arr/itEdk+hlIVskcDn6
-         Qf7F/xN0TBjh6KdjZb0wit3WzBYtGLUXFh2f+jh85WRox2z6j+ZmdvnFRR8efh8pXjCS
-         GVZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745394845; x=1745999645;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GTFfJZb1P5uU8ezKo9spOiDP3fTS97bBPzPp1VNuiFE=;
-        b=LDVzsL7bp8BEV8sMFGbo2ZCiYIi5A+Hbyzg3IIAsWf8s+ynfUPqzbu8e5Mh0MyUmlD
-         mS8EMGBsEWzJgd1p9xfwfZM0uJwdmF/koFd4y6Us7drUfX4yXL41UfSR39uMWkwQCAkr
-         GjCA5+5xMrkR/joo2EP0c6godwesqfV/KWX2c8LbtcLu5+qUqKPmOO73/f+lgkQn4qXn
-         FIqr/TtH/j8VfSQSSh23TsJe7OiVrwpdvEydc5iPf0rqG1B9EoeSvGP43GaAOITGOwXJ
-         pxWZAfW3cn7ntTVIOIK+66GXOawK5A/PDaGq6zh7ZsS7G6NlMBCxiWr/VoSCGRV60Wh8
-         31vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJVAzLVtBbB8dA+ou7bVKAAP4bJyj0SIUzF7gXXzGockfNKCxsqmTWh/cpmo2EjFaVwSQoTHLSyUCMH2o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxA2CfFD1IENjDbFOMZzfA+5jTUWYz257Px2B7k7WFYL888D2W6
-	Cqo+8EA/fwrss/3h8vqtpEvG/uPEE/HDelUbOqFhcl+bcKE/qSvdj7I/60zJbj4=
-X-Gm-Gg: ASbGnctiWAi/DfteHpgMbkkEn2N1xW1qdNYVeRi15WXIhZRArWSZCmjo9aK7VbupfDk
-	pAWGEIo8pMoUFMhep1fX6x5iqpSD2+pXNEWwUDmzYQvwjdlyQKeRscMWDRBJFgyC6yQW7B+IHc3
-	Jb/6UekLJqBHQzG/Vc/XlxamLycxP2KLxZSrui0aC1Tp+bqDlzrRmuCyT8N9fJTXzrLaQ6O11Ei
-	YGW4pWHE+bFahsAI+lfAKomBkt6hsLeOckQKRfziV16+NURfLfQ2/gpCwBCQTgE1AhQQYt0QTeA
-	2uxOGcDCN/lv0/pOsDA+k0ioNpmsk2zo9IjpJSbxuRhk
-X-Google-Smtp-Source: AGHT+IGTjzRevoWNUsBJdpmO0+4XcLcpnz8hcwqfrYaEOvZnTxWcAwwm6v+Zm7rMHLQ3zUTTTB4kuA==
-X-Received: by 2002:a05:600c:1548:b0:43d:300f:fa3d with SMTP id 5b1f17b1804b1-4406ab7f661mr150504825e9.5.1745394845053;
-        Wed, 23 Apr 2025 00:54:05 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:74b0:71bd:6dda:dcc1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4330d8sm18266655f8f.33.2025.04.23.00.54.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 00:54:04 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 23 Apr 2025 09:53:53 +0200
-Subject: [PATCH 4/4] leds: tca6507: use new line value setter callbacks
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7WCDgEW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F422EC4CEEA;
+	Wed, 23 Apr 2025 07:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745394853;
+	bh=xXQeYeGUi7EMnzuv6jOxYup1O/yXM1hMBHtCQk0Bwn4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=a7WCDgEWh8wBBIRNVZzkhSCNgmgsYnOFxH4LDK/FixEnj1MDzlAMC9H5I+5n5Hg+l
+	 PhwfUiiLwlziftrIjt7VvqVGNGJXvJ+lXaipoAF8yi50LWVtF6CDpCjDOGYeipGdgH
+	 tYmxuCxNfyU/J+vrQIV36QDivZLWE1orRNeh+zYAId1uMy5CahoOIC5oBYOIee5atb
+	 UWvVKBfjODoVUEFUrcoYZ6DkhKpkEgGJor2E61YUJm8pTqmEUkI7IAUchScYwfMIgv
+	 /90HM/RBn6fa60TgHWNudkfoIiGAmM5r37s4NayhXCUg0RyaewEbTY7wxzfXZwhD6R
+	 CmDB7Iy7+hbmg==
+From: Philipp Stanner <phasta@kernel.org>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Jaya Kumar <jayakumar.alsa@gmail.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
+	liujing <liujing@cmss.chinamobile.com>,
+	Andres Urian Florez <andres.emb.sys@gmail.com>,
+	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	David Rhodes <drhodes@opensource.cirrus.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 02/28] ALSA: rme96: Use pure devres PCI
+Date: Wed, 23 Apr 2025 09:53:20 +0200
+Message-ID: <20250423075346.45907-3-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
+References: <20250423075346.45907-1-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-gpiochip-set-rv-leds-v1-4-2f42d8fbb525@linaro.org>
-References: <20250423-gpiochip-set-rv-leds-v1-0-2f42d8fbb525@linaro.org>
-In-Reply-To: <20250423-gpiochip-set-rv-leds-v1-0-2f42d8fbb525@linaro.org>
-To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Riku Voipio <riku.voipio@iki.fi>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1758;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=j50twcusbXfbWf3YimG8kilK3UrQntg92BiiLpapoiE=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoCJyXXWKiAH3snFZHuRbLDBqkRUlZiVNabT/vi
- W2Az4GKo/aJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaAiclwAKCRARpy6gFHHX
- csOmD/4z8pV0ShS8Bn+cluVeSrGpphqnovNsAHA6+L3NqKstpdKCMPStq21vJwK4g0mxS0hWlcS
- W/xwr4ddv3T9CvuZwJXyS7Qsh0WGkIrfEB6jWJn8zwbVmsNCnhvq+2geTenkaVPKnom/4ctM5j4
- JgsfG9W9EsKZmGRPe0IlnNhYGnrgwwKhPfh0FEzyqylBMBT3LDWTQ80EfwgIUjP2RsJz8laoB50
- ddVugrvsnNWDihdOrIbIo+zST06DfSO5zbXNSywQ/eAZ+/PLO4SpYiNOQRkbpwQkQ+9EzIcCOFn
- cXVbzHvISKu+pMczH2P959jlGJTH8z/bWQoQI8jQRqfHQSG1ty/je2WdbzcwPEhxmvIQMptJw8j
- cphEyFKe6MMttqhABUYsYNSBFfHYdZMDtGEfth03zput/5fK950xdoMp3rIdIUtPoLfbTeNv6GO
- hQfx7dRubXy1YAi/UYOKd5DXqD/NjH94DTTiI1jmVAClq6lQrdBg0jEvJYCSe+x1Dtulx2A7DMy
- XoRGElSeAKl6Xl0dphxCCmFmCdeqggex2mMrB2WtNCC8dvRYFOPV9mGqU3ScI5IliD6RvVjisvh
- SbVb4siNzfRdTGn/30tY7d5lK031ZpAZm55H710vzt14UeGyNepkLazvm3OW+IpHgdMCcJ4VT6X
- svAfxJVCje8xDhg==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+pci_request_regions() is a hybrid function which becomes managed if
+pcim_enable_device() was called before. This hybrid nature is deprecated
+and should not be used anymore.
 
-struct gpio_chip now has callbacks for setting line values that return
-an integer, allowing to indicate failures. Convert the driver to using
-them.
+Replace pci_request_regions() with the always-managed function
+pcim_request_all_regions().
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/leds/leds-tca6507.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ sound/pci/rme96.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
-index acbd8169723c..89c165c8ee9c 100644
---- a/drivers/leds/leds-tca6507.c
-+++ b/drivers/leds/leds-tca6507.c
-@@ -588,8 +588,8 @@ static int tca6507_blink_set(struct led_classdev *led_cdev,
- }
+diff --git a/sound/pci/rme96.c b/sound/pci/rme96.c
+index 1265a7efac60..01029843d7f3 100644
+--- a/sound/pci/rme96.c
++++ b/sound/pci/rme96.c
+@@ -1575,7 +1575,7 @@ snd_rme96_create(struct rme96 *rme96)
+ 	if (err < 0)
+ 		return err;
  
- #ifdef CONFIG_GPIOLIB
--static void tca6507_gpio_set_value(struct gpio_chip *gc,
--				   unsigned offset, int val)
-+static int tca6507_gpio_set_value(struct gpio_chip *gc, unsigned int offset,
-+				  int val)
- {
- 	struct tca6507_chip *tca = gpiochip_get_data(gc);
- 	unsigned long flags;
-@@ -604,13 +604,14 @@ static void tca6507_gpio_set_value(struct gpio_chip *gc,
- 	spin_unlock_irqrestore(&tca->lock, flags);
- 	if (tca->reg_set)
- 		schedule_work(&tca->work);
-+
-+	return 0;
- }
- 
- static int tca6507_gpio_direction_output(struct gpio_chip *gc,
- 					  unsigned offset, int val)
- {
--	tca6507_gpio_set_value(gc, offset, val);
--	return 0;
-+	return tca6507_gpio_set_value(gc, offset, val);
- }
- 
- static int tca6507_probe_gpios(struct device *dev,
-@@ -636,7 +637,7 @@ static int tca6507_probe_gpios(struct device *dev,
- 	tca->gpio.base = -1;
- 	tca->gpio.owner = THIS_MODULE;
- 	tca->gpio.direction_output = tca6507_gpio_direction_output;
--	tca->gpio.set = tca6507_gpio_set_value;
-+	tca->gpio.set_rv = tca6507_gpio_set_value;
- 	tca->gpio.parent = dev;
- 	err = devm_gpiochip_add_data(dev, &tca->gpio, tca);
- 	if (err) {
-
+-	err = pci_request_regions(pci, "RME96");
++	err = pcim_request_all_regions(pci, "RME96");
+ 	if (err < 0)
+ 		return err;
+ 	rme96->port = pci_resource_start(rme96->pci, 0);
 -- 
-2.45.2
+2.48.1
 
