@@ -1,474 +1,131 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48081B040B;
-	Wed, 23 Apr 2025 13:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476C01A9B3D
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745416487; cv=none; b=c0T3qMhMXxXk2VDwvOWjrqGuPceo37X3UociIp5OkiJFoTlGn0DcB62J1Zjh1QOsvn7Xux9lYxeAbcMHCs2Nf7FNv+bgisCBSOx1wplT/0+YDyWrJzlWY2YfvcAASILsJyFaSpdPc0Jw7HW+Vl/EOVvP0P3fx2rZfs+FnwXrWVY=
+	t=1745416503; cv=none; b=M6KlJUnnTVkTTRBSQuVnUa3S/8fVwxZ9/fW8AJTaZsptrNFgp3mHUWF/FrFl17V7ab4JbpOwAjstaZ1l+5KvnsD4BrYnP4iEMAX6AqeG00PUP9/BtbREDJ7Ohv7bxyBXcV4ATyg/CDeEcKNHo8drtmY+DFbcuSQ99hQqUtEOySw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745416487; c=relaxed/simple;
-	bh=jlRN/tTw7Zp0eIq9osGcJ+spoV2f70e/V57vy6It0uw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jzw+AxwsSyZVnC5uLQdRBumij07zNQ+Qb7+DsUuH8Pi3myJp21rxxOS/s7gc3mFDxne4vJs/yimJA16HsadSE4IP07XA7YK5bHH8IDpoizU+avud5T9t8yhoA6cx6H7gVrMJjsJWCwN5X4nuNo4+iUwSX0r/P/l8J/LP2zroXds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AGkerWM4; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745416503; c=relaxed/simple;
+	bh=k62o+ay2M0IbQRNfbp10YC+dWMBh5vmDDp0amjZHXxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WN6EMiZzFbFIY5SR1GB1Jz1mAdwanx4UO6Lgoyx3OVNZBdayW+jDcYpT5w1y3Tmr7PskOAoAiwtWVcjCqYIx9ttaCBYpEjepyQYx/kdghQW5CJ+aTaMmbjpiA7P1Xoc1zgb6iec84Pxd9LZ3nr+W+Jpgqkz5T+hIFKO+zX8zxFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Mhe/JN8p; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGkerWM4"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47691d82bfbso121821671cf.0;
-        Wed, 23 Apr 2025 06:54:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745416483; x=1746021283; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MEvzGSgrG49q0bEAP8Rox67ehlzYDpSBzxCxazKaPJQ=;
-        b=AGkerWM442lpijwXtWCkWnx0viCxXl6+fk/K/mQVPGp26MhHYg67pNw6mi6/o1nmfb
-         QbMBa2s2Uo2Ws3xYR50YgnvEK/EF+sSwpooAYSMdxEREguSiAxNUlE/b6Hod40lUjiXt
-         NeUzQRVXdAkgfVhTybWzbhgNcEQ2gsXTbaFfAR7nnym7wbFx50muQxSgsM4NvMDmwl3K
-         fE6SlD3tVMyARC2FeNnjmErDUWEsdSJPBKWmKJy0evsBQPZj4vUDmfcBMiu+ZIkW5cN7
-         YpGoBvP6bZXP7xiCsiap7wOIN0Ty2OTK9liOZNEsYvY7J04Z7pTMnKH5+PPMvDAh1LIA
-         7u7g==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Mhe/JN8p"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NALFkQ014799
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:55:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Ch6JIJp6fDzsw1vuIJ2eZ7S5
+	WCWU4GzfWZUvcdjbWkA=; b=Mhe/JN8pCtR+E92A8mMd4EhXFKMkh2kZiPy+dN0q
+	Mt0QhakfGp0lFBe5ucWHN9RoxBj7DMIYf2b9je+98CsBB7qHlVV8+GCtTX5TPivh
+	25f9FZ6nTPnG5fGN1gjA7fugN1lsoo/LZe61BL3aUyckyq5zeuZ4afmCO11lgeIT
+	wQpKADPDvbsWamqduJw0k41OZdiXrFVtMZJZr8Gk5E1kJdiQLRpfPT5Sdbh6w6dW
+	EHrQNryfSL6ukFxcGoNw97aNpQSlMK3LVTxpUfFrqHU52WvrzcMqlJSR56q+Kkv2
+	hCT7Gyvu6nSAJ6FBlyr7eKNBj5LHMzSU+njlPslSKdomrw==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0ja5n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:55:00 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c0b0cf53f3so959598385a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:54:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745416483; x=1746021283;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MEvzGSgrG49q0bEAP8Rox67ehlzYDpSBzxCxazKaPJQ=;
-        b=fNjXH4EJPwh6+srKAAEegvF5ZbORoivbPc7SRnMt61W8sD5waHjDZWl5XXiKUICGVn
-         5s4MW2vWLWYfEhDDESbJMrBcY7Dy9HcsLayGq1dBjyen6BSCJ7AVULZNaaJTXlez5IaI
-         oe34jYF4R8KZbzK40OcJAs0AUvNI6Mboti122Qj/22GDW+cC9NrcF0XhAj2q8rLj8D7s
-         L8Tck3h48/xGDkrUq6cuEtvPeLo2VYKeAtf/b3wGOwxZwVbCqMoFtOUkeFD55HXq0I5r
-         xfJtPhQKWqWnor3iES4hWYeipvXqihYFiGzJX+p7+0q/YPjic2YAlEwZhkGIh6AW+tQi
-         BBzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfby6n3cbjaebCSVp54zGfdu3zW4pcukln1aF7cbj5DVe47i7oZddY677YJwPbaptbdVVWfJ42L4iX@vger.kernel.org, AJvYcCWcFB0QLKbd6gqYzZaPCKh5gyFpZ/UUv1sfUlbxLIXSPSu2Gx2k63Kb6yQCrsTSuJj+UtRSWCwBWaXbXW5/pJo=@vger.kernel.org, AJvYcCWwITy6hDqydIX9wbJJMSRzHTLAM1nf7kGIXTNWWoiVd3XEH4tdFACqxIU/OyiF0/Y3UwGkItOzgCh+hco6@vger.kernel.org, AJvYcCXxdFJNxbjRdZ2etARU8PHOntvSYW0Y7Kchg3s1cjxGDI5GXi6K4xY3dHHr0jRQ/VIPCr6jYhE1bvDxw/nR@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLTqAyho2jpPpQ5ZgvDkav7HfGeD7WswzGNft7lqDpdtGKNUCV
-	5OSrMv359iTR9g5MfRQPLcSpsKnuDgNYoFcnlnNiC2MVLy1wS4PJWyTWCxXXtHQ=
-X-Gm-Gg: ASbGncv/FAwyJgQGE5aELXxCbpuC3w3BoU4UdcPLrwHoiHQGpIYik4bidMui4sLm+O3
-	4vK+mKlEWg8NVfJ/dJDJK+v1vX5IvEOx/fvpeE7c5id/RKuprAC52qTaWHJhSqrhhBjH1eIOQoJ
-	07O9hdFH2Xsdxd2DV4yanwrYHFzJCWNhNxCv1nDew+i4JEMsOXr502PG/SyMqyAFFwsu7oGmDAh
-	vPpuRIvDzneacitQ9XFtotTIfqeR8rXy2Dhx2Aa12N6uByomQsuEy0X8CV89FbOGvQr0/rsJSqC
-	i4t1hdwu+j1JUBoT4q0x4/kiJaBcJ2/sW6Dkg2P2Ruch0rew7/GaBwq2N/2zViwzaL2LJtxmrXC
-	obvgsj4h/67bBgh93twp1LrP22w+ifZYqVqTNkIiICAhn8cBLww==
-X-Google-Smtp-Source: AGHT+IGlo13KlW/fEd4g5vPuYiTrdtt3LqipoGa/r/MhFsBhq+5EbrRbxxmfpvgrkzFV8RU2tB9Hsg==
-X-Received: by 2002:ac8:57ce:0:b0:477:64dd:5765 with SMTP id d75a77b69052e-47aec4c359amr374309841cf.44.1745416483440;
-        Wed, 23 Apr 2025 06:54:43 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([2620:10d:c091:600::1:e2b6])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9cf9f7dsm68135461cf.74.2025.04.23.06.54.41
+        d=1e100.net; s=20230601; t=1745416499; x=1746021299;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ch6JIJp6fDzsw1vuIJ2eZ7S5WCWU4GzfWZUvcdjbWkA=;
+        b=b5XONqv2qLp17SczDc9ufn8f/ccFes90ggoVhKRiP2fxGobULo1LimG6qT1y5IHMe6
+         trak+eSaOTGWQrlx0QI2CG9xBnJrbaQE4e5KOK6au3bQwc5iarZqoP2Wz3yaFuZzxZ/V
+         vN+LcByGs4OSxX5ehoCLXdKJAZ/l/bCcPFF5u7tQ1G0gWi8lHnZuXcUTRGCKZwCSm8tV
+         xOBh1O1VZiAumrCl/xFS7RGKYVyLLL9gIuTdHCrAEOkDOJzksdNnSAAERgMy1gDoqGAa
+         x49hDStZvqLsnlWxNLjVwMrsnAK+XONoDR/wN+cFCVt+1+05fSeBdh5epJTPtNzqCdY2
+         pTKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUZaUg8KJZTaOdNRDkCU9160kOTTnghyPF8FTqLeq/FOtX+jzUZooPBFqwMLml5j1rav5d3MnqQZiW45Fw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhhprxQ6nXX/New7vQdfqJ/8Y+y04mJu5m70yqo518/dbW7xT6
+	HqHyb2RuNWuqavC0qYZFkHNiwNx8z8hBZNmCEzrMLTtdPCRtGQexMXJ/8cy4RjTsfpawelzrBn9
+	iQvDyMiT1ZVqcp2JDrXrgZuMOetS3ZrGO3K8b7JDL8sZrEUae8I1m6r6Uqdlz7sU=
+X-Gm-Gg: ASbGncumj+PvwS6wskk9imgmBFSFDqAXM5woUtifbETvv0jZorsdrl6Y9dAG5Z+cSgV
+	y7elv4L2TU/+oOwEdUAGn/RU+9shwgoAK7DTSu9zl3/KJEuEjZh21JNFvhZx9QmmuOgdY1QtXnB
+	15fdmHL49rYP327WimuG+3uZNprnGnIKHPtVn/MdQ/ZY54bdSU7R7Tic5zOViyLTz0CozdOIWpl
+	tHRZIoCGAbvU6/yrEjKbKU/rMmj33L3/aWdXeU7iuzC8v8jFDMQKHsSQVebxDWEtixBpPtCPgBA
+	nB91NnktyVy6K6UM7MIwcfMa8SkWTSlIkPvUQazY9QItErhf6mA/Qia0GIFruTOvh4LdooLRWns
+	=
+X-Received: by 2002:a05:620a:1a1f:b0:7c5:642f:b22c with SMTP id af79cd13be357-7c927f99563mr2964406485a.20.1745416499211;
+        Wed, 23 Apr 2025 06:54:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCYGAKdZu53by47MDLIJhd7FQhQZJw0CY/lsfFM4Rh7noGH96BnMs9HrnTEVjA/8jZt7RYLA==
+X-Received: by 2002:a05:620a:1a1f:b0:7c5:642f:b22c with SMTP id af79cd13be357-7c927f99563mr2964401385a.20.1745416498738;
+        Wed, 23 Apr 2025 06:54:58 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-310907844f3sm18420431fa.38.2025.04.23.06.54.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 06:54:42 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 23 Apr 2025 09:54:38 -0400
-Subject: [PATCH v19 2/3] rust: xarray: Add an abstraction for XArray
+        Wed, 23 Apr 2025 06:54:58 -0700 (PDT)
+Date: Wed, 23 Apr 2025 16:54:56 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik <quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] clk: qcom: camcc-sc8180x: Add SC8180X camera clock
+ controller driver
+Message-ID: <xlueboano26kjqkukhdmealdkzdpxdde57w6v5r4rjegydce35@i3e77s54t6yt>
+References: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
+ <20250422-sc8180x-camcc-support-v1-2-691614d13f06@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250423-rust-xarray-bindings-v19-2-83cdcf11c114@gmail.com>
-References: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
-In-Reply-To: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Tamir Duberstein <tamird@gmail.com>, 
- FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>
-Cc: =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org
-X-Mailer: b4 0.15-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422-sc8180x-camcc-support-v1-2-691614d13f06@quicinc.com>
+X-Proofpoint-ORIG-GUID: QwkZQh206aNiWbJ0ThywVHzomXlPsDn7
+X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=6808f134 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=TIlaLBFy8nvcEV5Zc5gA:9 a=CjuIK1q_8ugA:10
+ a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: QwkZQh206aNiWbJ0ThywVHzomXlPsDn7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA5NyBTYWx0ZWRfX4qUU1JfwZH0M CmMj8mq+X8RZPf6WLxWOgvEAJ+vpZ7DeI8vmZSJh2ynMFvr1Y2TfZnBv6eWyCRrBihpmk3ZuZUX doiscQe7Z9QkUQqVpJFosWZ/l+3WL09aTcPY7OSnLUblAnwww7db3DHJUkEFZCZDEQ/eyLCp5J/
+ m4Te3TfJXmnWvbIk9CQ9TaKQfZag6xNHQezHTpUjx7a8uDXorZiYPm4LostlDdBjfjQ6h9W7cK3 Sp54zc34l4QG7V5lg+ZUd8YR5R5A8EWyb0jgqei90mcHg6vdNe2Q4K2UYWZn9aIXuhYso/yUEqp 7BhuxmOA3B34cnXJhiMKoyToLbVc5DTeECOgJRb5O6AfxPfQw5HRoqMIsd5JENpbKEcXC8IDn7g
+ 1BxSotU/3kgzNNpd1RxG7GCd3ir30DvxyfHWHrPykKfd/UYMMlUOonv4zyTgbSmkh0bleTXz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=869 lowpriorityscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230097
 
-`XArray` is an efficient sparse array of pointers. Add a Rust
-abstraction for this type.
+On Tue, Apr 22, 2025 at 11:12:11AM +0530, Satya Priya Kakitapalli wrote:
+> Add support for the camera clock controller for camera clients to
+> be able to request for camcc clocks on SC8180X platform.
+> 
+> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+> ---
+>  drivers/clk/qcom/Kconfig         |   10 +
+>  drivers/clk/qcom/Makefile        |    1 +
+>  drivers/clk/qcom/camcc-sc8180x.c | 2896 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 2907 insertions(+)
+> 
 
-This implementation bounds the element type on `ForeignOwnable` and
-requires explicit locking for all operations. Future work may leverage
-RCU to enable lockless operation.
-
-Inspired-by: Maíra Canal <mcanal@igalia.com>
-Inspired-by: Asahi Lina <lina@asahilina.net>
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- rust/bindings/bindings_helper.h |   6 +
- rust/helpers/helpers.c          |   1 +
- rust/helpers/xarray.c           |  28 ++++
- rust/kernel/lib.rs              |   1 +
- rust/kernel/xarray.rs           | 275 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 311 insertions(+)
-
-diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
-index ab37e1d35c70..e0bcd130b494 100644
---- a/rust/bindings/bindings_helper.h
-+++ b/rust/bindings/bindings_helper.h
-@@ -37,6 +37,7 @@
- #include <linux/tracepoint.h>
- #include <linux/wait.h>
- #include <linux/workqueue.h>
-+#include <linux/xarray.h>
- #include <trace/events/rust_sample.h>
- 
- #if defined(CONFIG_DRM_PANIC_SCREEN_QR_CODE)
-@@ -55,3 +56,8 @@ const gfp_t RUST_CONST_HELPER___GFP_ZERO = __GFP_ZERO;
- const gfp_t RUST_CONST_HELPER___GFP_HIGHMEM = ___GFP_HIGHMEM;
- const gfp_t RUST_CONST_HELPER___GFP_NOWARN = ___GFP_NOWARN;
- const blk_features_t RUST_CONST_HELPER_BLK_FEAT_ROTATIONAL = BLK_FEAT_ROTATIONAL;
-+
-+const xa_mark_t RUST_CONST_HELPER_XA_PRESENT = XA_PRESENT;
-+
-+const gfp_t RUST_CONST_HELPER_XA_FLAGS_ALLOC = XA_FLAGS_ALLOC;
-+const gfp_t RUST_CONST_HELPER_XA_FLAGS_ALLOC1 = XA_FLAGS_ALLOC1;
-diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
-index 1e7c84df7252..80785b1e7a63 100644
---- a/rust/helpers/helpers.c
-+++ b/rust/helpers/helpers.c
-@@ -38,3 +38,4 @@
- #include "vmalloc.c"
- #include "wait.c"
- #include "workqueue.c"
-+#include "xarray.c"
-diff --git a/rust/helpers/xarray.c b/rust/helpers/xarray.c
-new file mode 100644
-index 000000000000..60b299f11451
---- /dev/null
-+++ b/rust/helpers/xarray.c
-@@ -0,0 +1,28 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/xarray.h>
-+
-+int rust_helper_xa_err(void *entry)
-+{
-+	return xa_err(entry);
-+}
-+
-+void rust_helper_xa_init_flags(struct xarray *xa, gfp_t flags)
-+{
-+	return xa_init_flags(xa, flags);
-+}
-+
-+int rust_helper_xa_trylock(struct xarray *xa)
-+{
-+	return xa_trylock(xa);
-+}
-+
-+void rust_helper_xa_lock(struct xarray *xa)
-+{
-+	return xa_lock(xa);
-+}
-+
-+void rust_helper_xa_unlock(struct xarray *xa)
-+{
-+	return xa_unlock(xa);
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index de07aadd1ff5..715fab6b1345 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -88,6 +88,7 @@
- pub mod types;
- pub mod uaccess;
- pub mod workqueue;
-+pub mod xarray;
- 
- #[doc(hidden)]
- pub use bindings;
-diff --git a/rust/kernel/xarray.rs b/rust/kernel/xarray.rs
-new file mode 100644
-index 000000000000..75719e7bb491
---- /dev/null
-+++ b/rust/kernel/xarray.rs
-@@ -0,0 +1,275 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! XArray abstraction.
-+//!
-+//! C header: [`include/linux/xarray.h`](srctree/include/linux/xarray.h)
-+
-+use crate::{
-+    alloc, bindings, build_assert,
-+    error::{Error, Result},
-+    types::{ForeignOwnable, NotThreadSafe, Opaque},
-+};
-+use core::{iter, marker::PhantomData, mem, pin::Pin, ptr::NonNull};
-+use pin_init::{pin_data, pin_init, pinned_drop, PinInit};
-+
-+/// An array which efficiently maps sparse integer indices to owned objects.
-+///
-+/// This is similar to a [`crate::alloc::kvec::Vec<Option<T>>`], but more efficient when there are
-+/// holes in the index space, and can be efficiently grown.
-+///
-+/// # Invariants
-+///
-+/// `self.xa` is always an initialized and valid [`bindings::xarray`] whose entries are either
-+/// `XA_ZERO_ENTRY` or came from `T::into_foreign`.
-+///
-+/// # Examples
-+///
-+/// ```rust
-+/// use kernel::alloc::KBox;
-+/// use kernel::xarray::{AllocKind, XArray};
-+///
-+/// let xa = KBox::pin_init(XArray::new(AllocKind::Alloc1), GFP_KERNEL)?;
-+///
-+/// let dead = KBox::new(0xdead, GFP_KERNEL)?;
-+/// let beef = KBox::new(0xbeef, GFP_KERNEL)?;
-+///
-+/// let mut guard = xa.lock();
-+///
-+/// assert_eq!(guard.get(0), None);
-+///
-+/// assert_eq!(guard.store(0, dead, GFP_KERNEL)?.as_deref(), None);
-+/// assert_eq!(guard.get(0).copied(), Some(0xdead));
-+///
-+/// *guard.get_mut(0).unwrap() = 0xffff;
-+/// assert_eq!(guard.get(0).copied(), Some(0xffff));
-+///
-+/// assert_eq!(guard.store(0, beef, GFP_KERNEL)?.as_deref().copied(), Some(0xffff));
-+/// assert_eq!(guard.get(0).copied(), Some(0xbeef));
-+///
-+/// guard.remove(0);
-+/// assert_eq!(guard.get(0), None);
-+///
-+/// # Ok::<(), Error>(())
-+/// ```
-+#[pin_data(PinnedDrop)]
-+pub struct XArray<T: ForeignOwnable> {
-+    #[pin]
-+    xa: Opaque<bindings::xarray>,
-+    _p: PhantomData<T>,
-+}
-+
-+#[pinned_drop]
-+impl<T: ForeignOwnable> PinnedDrop for XArray<T> {
-+    fn drop(self: Pin<&mut Self>) {
-+        self.iter().for_each(|ptr| {
-+            let ptr = ptr.as_ptr();
-+            // SAFETY: `ptr` came from `T::into_foreign`.
-+            //
-+            // INVARIANT: we own the only reference to the array which is being dropped so the
-+            // broken invariant is not observable on function exit.
-+            drop(unsafe { T::from_foreign(ptr) })
-+        });
-+
-+        // SAFETY: `self.xa` is always valid by the type invariant.
-+        unsafe { bindings::xa_destroy(self.xa.get()) };
-+    }
-+}
-+
-+/// Flags passed to [`XArray::new`] to configure the array's allocation tracking behavior.
-+pub enum AllocKind {
-+    /// Consider the first element to be at index 0.
-+    Alloc,
-+    /// Consider the first element to be at index 1.
-+    Alloc1,
-+}
-+
-+impl<T: ForeignOwnable> XArray<T> {
-+    /// Creates a new initializer for this type.
-+    pub fn new(kind: AllocKind) -> impl PinInit<Self> {
-+        let flags = match kind {
-+            AllocKind::Alloc => bindings::XA_FLAGS_ALLOC,
-+            AllocKind::Alloc1 => bindings::XA_FLAGS_ALLOC1,
-+        };
-+        pin_init!(Self {
-+            // SAFETY: `xa` is valid while the closure is called.
-+            //
-+            // INVARIANT: `xa` is initialized here to an empty, valid [`bindings::xarray`].
-+            xa <- Opaque::ffi_init(|xa| unsafe {
-+                bindings::xa_init_flags(xa, flags)
-+            }),
-+            _p: PhantomData,
-+        })
-+    }
-+
-+    fn iter(&self) -> impl Iterator<Item = NonNull<T::PointedTo>> + '_ {
-+        let mut index = 0;
-+
-+        // SAFETY: `self.xa` is always valid by the type invariant.
-+        iter::once(unsafe {
-+            bindings::xa_find(self.xa.get(), &mut index, usize::MAX, bindings::XA_PRESENT)
-+        })
-+        .chain(iter::from_fn(move || {
-+            // SAFETY: `self.xa` is always valid by the type invariant.
-+            Some(unsafe {
-+                bindings::xa_find_after(self.xa.get(), &mut index, usize::MAX, bindings::XA_PRESENT)
-+            })
-+        }))
-+        .map_while(|ptr| NonNull::new(ptr.cast()))
-+    }
-+
-+    /// Attempts to lock the [`XArray`] for exclusive access.
-+    pub fn try_lock(&self) -> Option<Guard<'_, T>> {
-+        // SAFETY: `self.xa` is always valid by the type invariant.
-+        if (unsafe { bindings::xa_trylock(self.xa.get()) } != 0) {
-+            Some(Guard {
-+                xa: self,
-+                _not_send: NotThreadSafe,
-+            })
-+        } else {
-+            None
-+        }
-+    }
-+
-+    /// Locks the [`XArray`] for exclusive access.
-+    pub fn lock(&self) -> Guard<'_, T> {
-+        // SAFETY: `self.xa` is always valid by the type invariant.
-+        unsafe { bindings::xa_lock(self.xa.get()) };
-+
-+        Guard {
-+            xa: self,
-+            _not_send: NotThreadSafe,
-+        }
-+    }
-+}
-+
-+/// A lock guard.
-+///
-+/// The lock is unlocked when the guard goes out of scope.
-+#[must_use = "the lock unlocks immediately when the guard is unused"]
-+pub struct Guard<'a, T: ForeignOwnable> {
-+    xa: &'a XArray<T>,
-+    _not_send: NotThreadSafe,
-+}
-+
-+impl<T: ForeignOwnable> Drop for Guard<'_, T> {
-+    fn drop(&mut self) {
-+        // SAFETY:
-+        // - `self.xa.xa` is always valid by the type invariant.
-+        // - The caller holds the lock, so it is safe to unlock it.
-+        unsafe { bindings::xa_unlock(self.xa.xa.get()) };
-+    }
-+}
-+
-+/// The error returned by [`store`](Guard::store).
-+///
-+/// Contains the underlying error and the value that was not stored.
-+pub struct StoreError<T> {
-+    /// The error that occurred.
-+    pub error: Error,
-+    /// The value that was not stored.
-+    pub value: T,
-+}
-+
-+impl<T> From<StoreError<T>> for Error {
-+    fn from(value: StoreError<T>) -> Self {
-+        value.error
-+    }
-+}
-+
-+impl<'a, T: ForeignOwnable> Guard<'a, T> {
-+    fn load<F, U>(&self, index: usize, f: F) -> Option<U>
-+    where
-+        F: FnOnce(NonNull<T::PointedTo>) -> U,
-+    {
-+        // SAFETY: `self.xa.xa` is always valid by the type invariant.
-+        let ptr = unsafe { bindings::xa_load(self.xa.xa.get(), index) };
-+        let ptr = NonNull::new(ptr.cast())?;
-+        Some(f(ptr))
-+    }
-+
-+    /// Provides a reference to the element at the given index.
-+    pub fn get(&self, index: usize) -> Option<T::Borrowed<'_>> {
-+        self.load(index, |ptr| {
-+            // SAFETY: `ptr` came from `T::into_foreign`.
-+            unsafe { T::borrow(ptr.as_ptr()) }
-+        })
-+    }
-+
-+    /// Provides a mutable reference to the element at the given index.
-+    pub fn get_mut(&mut self, index: usize) -> Option<T::BorrowedMut<'_>> {
-+        self.load(index, |ptr| {
-+            // SAFETY: `ptr` came from `T::into_foreign`.
-+            unsafe { T::borrow_mut(ptr.as_ptr()) }
-+        })
-+    }
-+
-+    /// Removes and returns the element at the given index.
-+    pub fn remove(&mut self, index: usize) -> Option<T> {
-+        // SAFETY:
-+        // - `self.xa.xa` is always valid by the type invariant.
-+        // - The caller holds the lock.
-+        let ptr = unsafe { bindings::__xa_erase(self.xa.xa.get(), index) }.cast();
-+        // SAFETY:
-+        // - `ptr` is either NULL or came from `T::into_foreign`.
-+        // - `&mut self` guarantees that the lifetimes of [`T::Borrowed`] and [`T::BorrowedMut`]
-+        // borrowed from `self` have ended.
-+        unsafe { T::try_from_foreign(ptr) }
-+    }
-+
-+    /// Stores an element at the given index.
-+    ///
-+    /// May drop the lock if needed to allocate memory, and then reacquire it afterwards.
-+    ///
-+    /// On success, returns the element which was previously at the given index.
-+    ///
-+    /// On failure, returns the element which was attempted to be stored.
-+    pub fn store(
-+        &mut self,
-+        index: usize,
-+        value: T,
-+        gfp: alloc::Flags,
-+    ) -> Result<Option<T>, StoreError<T>> {
-+        build_assert!(
-+            mem::align_of::<T::PointedTo>() >= 4,
-+            "pointers stored in XArray must be 4-byte aligned"
-+        );
-+        let new = value.into_foreign();
-+
-+        let old = {
-+            let new = new.cast();
-+            // SAFETY:
-+            // - `self.xa.xa` is always valid by the type invariant.
-+            // - The caller holds the lock.
-+            //
-+            // INVARIANT: `new` came from `T::into_foreign`.
-+            unsafe { bindings::__xa_store(self.xa.xa.get(), index, new, gfp.as_raw()) }
-+        };
-+
-+        // SAFETY: `__xa_store` returns the old entry at this index on success or `xa_err` if an
-+        // error happened.
-+        let errno = unsafe { bindings::xa_err(old) };
-+        if errno != 0 {
-+            // SAFETY: `new` came from `T::into_foreign` and `__xa_store` does not take
-+            // ownership of the value on error.
-+            let value = unsafe { T::from_foreign(new) };
-+            Err(StoreError {
-+                value,
-+                error: Error::from_errno(errno),
-+            })
-+        } else {
-+            let old = old.cast();
-+            // SAFETY: `ptr` is either NULL or came from `T::into_foreign`.
-+            //
-+            // NB: `XA_ZERO_ENTRY` is never returned by functions belonging to the Normal XArray
-+            // API; such entries present as `NULL`.
-+            Ok(unsafe { T::try_from_foreign(old) })
-+        }
-+    }
-+}
-+
-+// SAFETY: `XArray<T>` has no shared mutable state so it is `Send` iff `T` is `Send`.
-+unsafe impl<T: ForeignOwnable + Send> Send for XArray<T> {}
-+
-+// SAFETY: `XArray<T>` serialises the interior mutability it provides so it is `Sync` iff `T` is
-+// `Send`.
-+unsafe impl<T: ForeignOwnable + Send> Sync for XArray<T> {}
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> 
 
 -- 
-2.49.0
-
+With best wishes
+Dmitry
