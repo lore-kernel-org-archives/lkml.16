@@ -1,164 +1,71 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC16A267F57
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BB2265CAD;
+	Wed, 23 Apr 2025 06:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745391137; cv=none; b=PzqsQMOZKrAyiyba8onVCEA/rz3Dq8OWXR8ML39YhNJzDqC/2rUDaWSwH20BUEYc+0bBCf0w7tuLVvIXdlmmQljWgxgq56WJclIbbnpPm3lp0178edK4zpCLvzMhmKIt5Z0ttXHBBPUHw/rb7uy706vAfjjKN/lPBYCw65dqOGA=
+	t=1745391296; cv=none; b=a0FfEHbF1vfDTHHupLlly6MVicocIL787kd930m8wStYkZX6JVpqDwoNApcXB+si7QECnQahEiOtVs0B/sraZHUBHhaHR2rINkyLXl2wQgmd0KamnK4eNsdnn0NGkkdrxGYiZWjeAuBjsq+gnb9bWGpr5GfbcyUxkAL+m5e1DK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745391137; c=relaxed/simple;
-	bh=bL+LtkMfOsvBWlXbFClLhSCh0I7SAFPogrm5vzCCgBQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=n4sLZm+dj6GLhdfOU0B6vukBus/IDiuG/bdXLOADhTDZ2KaKmIrtRl1pxNvxRgxvOWCjqtgqSCsGkqwS8mDq7T/oQf8MvoWd6dKDphKUKT6YCSneitRVMv+3bw1gsEdczQ5OGUPyFSGBZ/B48YOJznoYLcOunk+MbBM1Tp8sl7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cxS8GEU+; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1745391296; c=relaxed/simple;
+	bh=Kdmr+UsMCRAF6KPgXs7wiHhE7aN4ZNREetQtJcf94/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kMOb1uiqm6vVDg0+E3kwdpgJXvtWZJHkOw/fBaDDC4Jte+Qgo/wVYR0ctu7AjwYYIydlWqQZ567X0BRKLlOkqFHQINWaKJhEJJbu62FWPxq4OZ7/DbUiOFCUkXpH9HGkelalqinrnTRx1nWeSbATEXaogsDLU1aZXxAnSx1XTJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=idSSLvGd; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cxS8GEU+"
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250423065212epoutp0476a7d6e17b173542cbc678c78b802afd~43-zak8Ub2044420444epoutp04Z
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:52:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250423065212epoutp0476a7d6e17b173542cbc678c78b802afd~43-zak8Ub2044420444epoutp04Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1745391132;
-	bh=sCMKVaP+cy0u4Wt+s96a/0ZTfWOMeEFbK8aMXkMagXQ=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=cxS8GEU+7Ab2SOkAiApnW7D7k+yUo7151cykyy7EqqffQgBs9F/mRf3QCOTHx8pDP
-	 LmMszPKfRiEp29K/1uvR/sLZIqsJhns/UO5dkzsyrKKee0d6TNhRIo+XoBA4+NLSOB
-	 qTvjhBODGlI5P0Z6go66T15RzgBeYCfUsSRH3uZE=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250423065212epcas5p2e537f7634a3d93d9f54c4aea48399cca~43-y5S0v71817318173epcas5p2l;
-	Wed, 23 Apr 2025 06:52:12 +0000 (GMT)
-Received: from epcas5p1.samsung.com (unknown [182.195.38.178]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4Zj8t25dc1z6B9mB; Wed, 23 Apr
-	2025 06:52:10 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a~43S1K6yxW1700517005epcas5p2o;
-	Wed, 23 Apr 2025 06:00:42 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250423060042epsmtrp2ffea677e8c78fe8fe5d99ded8a24997a~43S1JwWvn2017920179epsmtrp2h;
-	Wed, 23 Apr 2025 06:00:42 +0000 (GMT)
-X-AuditID: b6c32a29-55afd7000000223e-4a-6808820af8c7
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	17.34.08766.A0288086; Wed, 23 Apr 2025 15:00:42 +0900 (KST)
-Received: from INBRO002053.samsungds.net (unknown [107.122.2.234]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250423060040epsmtip2463b8b5e2df2ed814f7deaae604d3280~43Szb_efD1997919979epsmtip2y;
-	Wed, 23 Apr 2025 06:00:40 +0000 (GMT)
-From: Yashwant Varur <yashwant.v@samsung.com>
-To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	alim.akhtar@samsung.com, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: cs0617.lee@samsung.com, g.naidu@samsung.com, niyas.ahmed@samsung.com,
-	yashwant.v@samsung.com
-Subject: [PATCH] arm64: dts: exynos: Added the ethernet pin configuration
-Date: Wed, 23 Apr 2025 11:30:34 +0530
-Message-Id: <20250423060034.973-1-yashwant.v@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="idSSLvGd"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 071531F92A;
+	Wed, 23 Apr 2025 08:54:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1745391290;
+	bh=nvJn++qEslCDu+975uUp2+ZELhS1lD4myoKNsUrA9d8=; h=From:To:Subject;
+	b=idSSLvGdfADvbTQf6zMXetjeLjNwH1dUdt1AllEMOtJ/TCs7/T+UqiZEKMVx4nXgL
+	 U5mnHLdf8LRGIMBgf7uyET/eathXepq5PfGreHp/Ds463HlJMgRHs8aQHnv9Z1imv+
+	 JG4tqCL8zB5UuxA9Opi+omJEMumttf/VrwIforViTnkxxSBv/57rIt8V+VKljbWEDU
+	 4Li8cvhJDU+wFdb0OsfbSCG6r/htxiKbpm/bSmaUHJpX5G2uo8NmEqG6ax6Ayz0YpH
+	 GBYY6SOVJuivXOY+G88tR8JiOMKy6ztnJC+WkqcZFrFE0+DHGlMKRdJjturJqQPoqD
+	 FgeoqVhqZWNdQ==
+Date: Wed, 23 Apr 2025 08:54:46 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Zhihao Cheng <chengzhihao1@huawei.com>,
+	Richard Weinberger <richard@nod.at>,
+	linux-mtd <linux-mtd@lists.infradead.org>,
+	Matthew Wilcox <willy@infradead.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
+Message-ID: <20250423065432.GA4811@francesco-nb>
+References: <20250408082018.GA23886@francesco-nb>
+ <20250422175409.GA877874@francesco-nb>
+ <aAhAylotNK_zHl0C@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrILMWRmVeSWpSXmKPExsWy7bCSvC5XE0eGweud7BYP5m1js1iz9xyT
-	xap3vBbzj5xjtdgy8zKzxctZ99gsNj2+xmpxedccNosZ5/cxWTyZ8ojV4v+eHewWqyY+YnPg
-	8di0qpPNY/OSeo++LasYPT5vkgtgieKySUnNySxLLdK3S+DK+HD4FnvBbf6KzlOHmRsYJ/N2
-	MXJySAiYSOxcfZupi5GLQ0hgN6PEjVNNbF2MHEAJKYmGN+EQNcISK/89Z4eo+coo8ezCb0aQ
-	BJuArsS+L0cZQRIiAs8YJZa2LmUBSTALpEn8fdsJViQs4Clx7lcLE4jNIqAqMe/ZdzCbV8BS
-	YvvbR0wQG+Ql9h88ywwRF5Q4OfMJ1Bx5ieats5knMPLNQpKahSS1gJFpFaNkakFxbnpusWGB
-	YV5quV5xYm5xaV66XnJ+7iZGcChrae5g3L7qg94hRiYOxkOMEhzMSiK8v9zYM4R4UxIrq1KL
-	8uOLSnNSiw8xSnOwKInzir/oTRESSE8sSc1OTS1ILYLJMnFwSjUwbRRf+kinNHiFor/O2VfJ
-	eReDA/cdZ1q5mPvpOt/GTEkTSVGz1sPhs+P/eUhIHfFUvnWjfmPoriqXlvf+S2OnaMXdzeB9
-	bbwoUfP26ojVnw60f7zTxpSiH6e3aGn045/cVbcSj56tv1rpFtFSHx/BYr9qjemSmx9M2XXy
-	s3RP3kmofeWlOHVx1N6DEbb1IgxPJdRmH7sTM9/23t0i1iNTs6rbDx534Ak5ZdF8zfqGooHC
-	g6wXBz8wiu8T+OJmavBpHZPOipXW0t+rHu248EDJzV2HR4XXp6Gk7mq1kpWFUmBysbjRBLOj
-	Yt0xyx3/X3n4xH1FwK/Tr1b+iktmzm+7lDAjdsrheculOFsa2kWUWIozEg21mIuKEwHD0cEp
-	1AIAAA==
-X-CMS-MailID: 20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-543,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a
-References: <CGME20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a@epcas5p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAhAylotNK_zHl0C@gondor.apana.org.au>
 
-This patch adds the ethernet pin configuration.
+On Wed, Apr 23, 2025 at 09:22:18AM +0800, Herbert Xu wrote:
+> On Tue, Apr 22, 2025 at 07:54:09PM +0200, Francesco Dolcini wrote:
+> > 
+> > On Tue, Apr 08, 2025 at 10:20:18AM +0200, Francesco Dolcini wrote:
+> > > I do have the following regression on single core system using UBIFS,
+> > > dual core seems not affected, any idea?
+> 
+> Please try this patch which will go in today:
+> 
+> https://patchwork.kernel.org/project/linux-crypto/patch/aAW8E9NrKWq1Xk2w@gondor.apana.org.au/
 
-Signed-off-by: Yashwant Varur <yashwant.v@samsung.com>
-Signed-off-by: Changsub Lee <cs0617.lee@samsung.com>
----
- .../dts/exynos/exynosautov920-pinctrl.dtsi    | 41 +++++++++++++++++++
- 1 file changed, 41 insertions(+)
+Yes, I fixes the issue, thanks.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-index 663e8265cbf5..778584d339d5 100644
---- a/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-@@ -166,6 +166,24 @@ gph6: gph6-gpio-bank {
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
- 	};
-+
-+	eth0_pps_out: eth0_pps_out {
-+		samsung,pins = "gph3-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+
-+	eth0_rgmii: eth0_rgmii {
-+		samsung,pins = "gph3-1", "gph3-2", "gph3-3", "gph3-4",
-+				"gph3-5", "gph3-6", "gph3-7", "gph4-0",
-+				"gph4-1", "gph4-2", "gph4-3", "gph4-4";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-+	};
-+
-+	eth0_mdc_mdio: eth0_mdc_mdio {
-+		samsung,pins = "gph4-5", "gph4-6";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-+	};
- };
- 
- &pinctrl_hsi2ufs {
-@@ -750,6 +768,29 @@ i3c3_bus: i3c3-bus-pins {
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
- 		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
- 	};
-+
-+	eth_extpll_avb: eth_extpll_avb {
-+		samsung,pins = "gpg3-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV3>;
-+	};
-+
-+	eth0_pps_out0: eth0_pps_out0 {
-+		samsung,pins = "gpg0-0";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-+	};
-+
-+	eth0_pps_out1: eth0_pps_out1 {
-+		samsung,pins = "gpg0-1";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-+	};
-+
-+	eth_phy_reset: eth_phy_reset {
-+		samsung,pins = "gpg3-1";
-+		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
-+	};
-+
- };
- 
- &pinctrl_peric1 {
--- 
-2.34.1
+Francesco
+
 
