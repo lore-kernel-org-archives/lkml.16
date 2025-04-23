@@ -1,121 +1,42 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDD4C46447;
-	Wed, 23 Apr 2025 16:03:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DDC266F1E;
+	Wed, 23 Apr 2025 16:05:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745424226; cv=none; b=aCDYU9X9aahyPbXF40Bzvmgg4ZWzl+VWXBeZA0OWkaRqoTnr6hYlLFsuHe5gVvlj0JS1HEjhXLzJ9CQDStB/kkwShr/aNqcAT1CVMpBfHy0ysbbpKbL3Lz3XZ9fYmbZ37APlGktzwxTVYFawvLSY41l+PqAMmoA19vVBwaeQvLs=
+	t=1745424324; cv=none; b=Ja7aOSXoTnZHnHLjEqKGQK05MJWXeYILI5miQZI0XxPFT3detcaWKz8UuF7goKRBVXwuXWCjnAZwsrzOxbAzygalLZ4GYxe0Y0bAm6Y5UE6sws6hMilDqResY1/Tt9/6vm2aF1/HD42Y58DE/qrvP5k3h8Oq0tT9gzF+yZjHdbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745424226; c=relaxed/simple;
-	bh=emZpf282GDN9V7HwCDFKCQDujOfucgjK50DPJwK5gw4=;
+	s=arc-20240116; t=1745424324; c=relaxed/simple;
+	bh=3dzRklZ7ar/Z+lU1ajuWagKEaicvxwAoj0zZhUgFqyg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kqli9otLNZOwBGJ8oFwQ71g3+Ou6c2IltajEXkEkzdKRHrwsQoYKLqjioz68xhikeznlWUitpV3rETiJJP60LujKhHSump0hOOChHn1SkLA+vKfenAdefrNhwg/XToVyOE62ZG089hQ2VPYpK/vs7gqZrvYRcHLgRYytvp2q1C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ifZoWAMD; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=i6VcO2S2Z+H+aUKMDlgsZ7GziGlB/Ljq1MKTP3JKquBFPxQWHBuuuJyPJ36DsXHQMMNctvSTHlJROQGykCWUdFzubT48Yx+ejVB72zY/0WuUb1IT0KxByjOz5zFmgb4Ru8dhVTe+EYuMgKxUPPIEFHfdSON0wKUM0ZtZkdNVrGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OV/ltiR1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifZoWAMD"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-4769f3e19a9so135121cf.0;
-        Wed, 23 Apr 2025 09:03:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745424223; x=1746029023; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N292pc2aKroHpAxtVVv0Ioq/dhp05vkoFF2mjeItEJ8=;
-        b=ifZoWAMD8PBT9JsZwUkM3AZFBEkNMpbxVRwjWDuHgVDlY4p+9Z2KakMiCU83CcOMIf
-         +SCivYDYy7zJNUry6qpfpilsfqGRV4FV9/twlSv8dBOtH3/InKpBXfo0qC6Ztw80Q6kx
-         pS87hFNmubB2u1KvWwEeaLyR8XnIvEedZPAGCASwHv5sFEtXeNvZfP/pcaDoeH4GjOy5
-         bVaUFZ5LG5wwfTJ39faFDCYftO8IOHL6NPmesZabyhzb5gyoLXZHZ5Cfwws3LOZruQ1H
-         +A9uK4ZI5fNP8W0wXxtljmdQ4/k4+aUDzKWDnLYhubX10783C1Vo7PzcyiHJk+sgcOr8
-         y+9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745424223; x=1746029023;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=N292pc2aKroHpAxtVVv0Ioq/dhp05vkoFF2mjeItEJ8=;
-        b=sMdyuS1etHChizindPU/JVgxbenUhmH9IsNKRW7nnjJyrxONRo60Kh6kS7BY9eRELw
-         6+v+5yzOKCWzihK2X6wzg85bQAd2Z0Bg6Q0ztE1kBLH0MInq24tBO8Vk7Tzq+CecMrXY
-         xuR4qIXseWi8N+5EkL0rgcT7hANzRIA3ANa8y+KoDrM6DOvgf3O/yA9hkzd4hDNnq5mK
-         LpVvHuzOStcVZD9WKfzVcuKv8R5J0MpohG+G7SEs2WKDvLkH3swHfQMaKfaTDg8o3BYW
-         EM/OHLOXFszj493ICATIsmj6jCL6iP6rd4gG97CxbcnRm4Y+7lZMyVLSd35vkWfxtLe2
-         oVPw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCAemMxPGriKc+t2FFgR69cd5RMwIGO02O9Z7JSEf5uBqAqzptCbeNPTjsq3tzMz2fRyQ9WuSATAhRRiw=@vger.kernel.org, AJvYcCWP6uz7+GtqcmwTjpM3TJAmkGgTcKNL/x9IDZND6hFFVoNSNHHsHROJkf+XkzRgY5LtX2QpDwyevlfw1xpfWgw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzLvd6k53MbNEbfLnbRkMI8ZxXLCjyHbaP9YfXHwY9pZlu3cns
-	RgwOuFnSsjEIIJpU4XYItq+vM5bORT2GBMBbJZ1oQTnKw23/nk/9
-X-Gm-Gg: ASbGnctx1gB3tQTrwVyeVg3BFi6FRKPvfns12vFZNuI8luEhluP94YKRW0YnsVgMHq8
-	sPAtRs3MQQSK9WkioI9FSiRwth/TlQclj6QGWmMBJ9WcNeFtiaFRvT7kHHo4+WG/2TKKnF+yjp2
-	idJe7ZKIREW8oIF8SzAM7SSRgEtdhtD8oiK3XjvEW8wq0rtZaLjvJI/U6LDzM6QFbgeDyl7IwQH
-	moQS0LBQn8rAUE20g/NrARNEj3NUJTm1zOkgBx2hPi9V+2MdDnlh3lFwTwAZV9TSsonQ9+RcnDa
-	ydIvwsXa/D/um1Wcq+ckryRyY9yhpzgYLqratWcPnU7YiC65y5x9cLJofWcmnzPAKAFV7EQpowG
-	VNAe6oy/kEfOKnFjX2ZCOrfzP89tFO3Y=
-X-Google-Smtp-Source: AGHT+IE5ThNiw6qXd0uen05uQ/iz9D3cPLNb+F9HVh+Gr1cTKXa02Hk1+4kBxo3wxDkrc0YAFHs4wQ==
-X-Received: by 2002:ac8:7c50:0:b0:476:c666:d003 with SMTP id d75a77b69052e-47aec4d9b83mr291195041cf.43.1745424223350;
-        Wed, 23 Apr 2025 09:03:43 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47d8963d112sm7761661cf.34.2025.04.23.09.03.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 09:03:42 -0700 (PDT)
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 54BA11200043;
-	Wed, 23 Apr 2025 12:03:42 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-05.internal (MEProxy); Wed, 23 Apr 2025 12:03:42 -0400
-X-ME-Sender: <xms:Xg8JaKsNHcP8u2m4KyzglZ2XZhELHqbERfehRI6WI11BNbEgcbTLVg>
-    <xme:Xg8JaPePQFlfPn9S_FpCmfxJsMYdDfch8IyPyPyQVuZe3iSEi020Gbzt5GOXL9hYu
-    L-T6VLGrsnpaJXldg>
-X-ME-Received: <xmr:Xg8JaFyO6eJRZoIievUsTSrigZfhwyqBBTosAiyvhxdCNgJAFDULKOIP>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeejtdefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtrodttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeeitdefvefhteeklefgtefhgeelkeefffel
-    vdevhfehueektdevhfettddvteevvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudehpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopegrtghouhhrsghothesnhhvihguihgrrd
-    gtohhmpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghp
-    thhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgt
-    ohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsg
-    hjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsggvnhhn
-    ohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgusghorh
-    hgsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:Xg8JaFOxC7283e0ssbVS7aKr81gaTZUEaDsbCukQFznHKjwKc_YJUQ>
-    <xmx:Xg8JaK_WEq5YpOin9Bs_1bsqy7xGb0t50YwnR-E5MovO7RHr-DECJA>
-    <xmx:Xg8JaNU-ITf3RN6-Cp6jdVolW3vdeQt15ro4s1yT8y1RWZlwRXpZRA>
-    <xmx:Xg8JaDewlGx44Cu5eCUTzscrdd4CejzZbbdMSrxaa5kJSi_iDLk3xw>
-    <xmx:Xg8JaEc-Bf8vE4f3dAArIMg-A98wGRMVfKSqKvmzhn_7jZFuGjHWXldf>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 23 Apr 2025 12:03:41 -0400 (EDT)
-Date: Wed, 23 Apr 2025 09:03:40 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] rust: alloc: implement `extend` for `Vec`
-Message-ID: <aAkPXBHNDugnXrhc@Mac.home>
-References: <20250406-vec_extend-v3-1-ec5c5c0acf2a@nvidia.com>
- <Z_OwmEKHgsZlt2cs@pollux>
- <D91AOKOTDXWC.7R5K5DI87QU4@nvidia.com>
- <D9C61DDI99JX.31T59XPQGYBB1@nvidia.com>
- <aAfL-e6qA9oBce5t@cassiopeiae>
- <D9DM3AR3FUAF.6JSNSB9WAJ4T@nvidia.com>
- <aAiqCXB9sJe_v6Yc@google.com>
- <D9DX39CF2RB7.IM219BZLVMCY@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OV/ltiR1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DBC2C4CEE2;
+	Wed, 23 Apr 2025 16:05:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745424324;
+	bh=3dzRklZ7ar/Z+lU1ajuWagKEaicvxwAoj0zZhUgFqyg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OV/ltiR1ERJ/AQvFsoBmHQRfj7XCg7hAlEvlNF+59sBqJtvlYuFUiigte5E6B310i
+	 o4y//LjXvcvN6iyvVHJ560aT5DzeFfqb2ZuODIgFyvfDdKdgGoT+fPwROz/Fij6oAt
+	 zp6zYc9DHjLE8t69TyUcLM13PqSj2md1K8cvrs1k=
+Date: Wed, 23 Apr 2025 16:50:48 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
+ allocation failure
+Message-ID: <2025042355-hypnotize-relight-789f@gregkh>
+References: <2024122837-CVE-2024-56705-049b@gregkh>
+ <aAicoAmxX0B_O3Ok@tiehlicka>
+ <2025042301-flammable-masculine-ec48@gregkh>
+ <aAiwaM5ru-FJG2fI@tiehlicka>
+ <2025042329-mystify-dramatic-dcb9@gregkh>
+ <aAjOK_f-GPFHIdWK@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -124,59 +45,120 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D9DX39CF2RB7.IM219BZLVMCY@nvidia.com>
+In-Reply-To: <aAjOK_f-GPFHIdWK@tiehlicka>
 
-On Wed, Apr 23, 2025 at 06:40:07PM +0900, Alexandre Courbot wrote:
-> On Wed Apr 23, 2025 at 5:51 PM JST, Alice Ryhl wrote:
-> > On Wed, Apr 23, 2025 at 10:02:58AM +0900, Alexandre Courbot wrote:
-> >> The problem I see is that if you try and do something like:
-> >> 
-> >>   vec.extend((0..10).into_iter().skip(2));
-> >> 
-> >> with the standard library, then the use of `skip` will remove the
-> >> `TrustedLen` implementation from the resulting iterator and
-> >> `extend_desugared` will be called instead of `extend_trusted`, which
-> >> could add some unwanted (and unexpected) overhead.
-> >> 
-> >> If we want an implementation of `extend` as simple as "confidently
-> >> increase the length of the vector and copy the new items into it, once",
-> >> then we need a trait that can be implemented on both shrinking and
-> >> extending adapters. Anything else and we might trick the caller into a
-> >> code path less efficient than expected (i.e. my original version, which
-> >> generates more core even for the obvious cases that are `extend_with`
-> >> and `extend_from_slice`). Or if we rely on `TrustedLen` solely in the
-> >> kernel, then `extend` could not be called at all with this particular
-> >> iterator.
-> >> 
-> >> There is also the fact that `TrustedLen` is behind a nightly feature,
-> >> which I guess is another obstacle for using it.
-> >
-> > The stdlib alloc crate relies on specialization to speed up methods
-> > related to iterators. We can't use specialization, so losing these
-> > optimizations is simply a cost of not using the upstream alloc library
-> > that we have to accept.
+On Wed, Apr 23, 2025 at 01:25:31PM +0200, Michal Hocko wrote:
+> On Wed 23-04-25 12:20:47, Greg KH wrote:
+> > On Wed, Apr 23, 2025 at 11:18:32AM +0200, Michal Hocko wrote:
+> > > On Wed 23-04-25 10:21:04, Greg KH wrote:
+> > > > On Wed, Apr 23, 2025 at 09:54:08AM +0200, Michal Hocko wrote:
+> > > > > Hi,
+> > > > > our internal tools which are working with vulns.git tree have noticed
+> > > > > that this CVE entry has been altered after the announcement.
+> > > > 
+> > > > Good catch!
+> > > > 
+> > > > > There was an additional commit added to the CVE entry. The current state
+> > > > > is
+> > > > > $ cat cve/published/2024/CVE-2024-56705.sha1
+> > > > > ed61c59139509f76d3592683c90dc3fdc6e23cd6
+> > > > > 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
+> > > > 
+> > > > Yup!
+> > > > 
+> > > > > There seem to be handful of other cases like this one AFAICS.
+> > > > 
+> > > > Yes, we had to add support for this type of problem.
+> > > > 
+> > > > > I have 3 questions:
+> > > > > 1) What is 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
+> > > > >    relation to the original CVE which seems to be about a missing memory
+> > > > >    allocation failure check?
+> > > > 
+> > > > Removing the driver entirely from the kernel "fixed" the vulnerability :)
+> > > 
+> > > What is _the_ vulnerability? While I do understand that _any_ potential
+> > > vulnerability in the removed code is removed as well I still do not see
+> > > how the driver removal is related to _this_ specific CVE.
+> > 
+> > "The" vulnerability is what is fixed in the last commit id, and is what
+> > is documented in the text of the CVE, specifically:
+> > 
+> > 	In ia_css_3a_statistics_allocate(), there is no check on the allocation
+> > 	result of the rgby_data memory. If rgby_data is not successfully
+> > 	allocated, it may trigger the assert(host_stats->rgby_data) assertion in
+> > 	ia_css_s3a_hmem_decode(). Adding a check to fix this potential issue.
 > 
-> Yeah I was surprised to see
-> 
->   impl<T, I, A: Allocator> SpecExtend<T, I> for Vec<T, A>
->   where
->       I: Iterator<Item = T>
-> 
-> and
-> 
->   impl<T, I, A: Allocator> SpecExtend<T, I> for Vec<T, A>
->   where
->       I: TrustedLen<Item = T>
-> 
-> in the standard library, which clearly looks like an overlap. Didn't
-> know it was relying on a non-standard feature.
-> 
-> That's going to limit what we can do in the kernel, but nonetheless if
-> we can support only the cases that can be optimized I think we would
-> have our bases covered.
+> I do understand this statement.
 
-I think if it's a critical path and we really need the performance, we
-can use a non-standard/non-stable feature or get that stabilized.
+That is the commit information, and as such we deemed it a
+vulnerability.
 
-Regards,
-Boqun
+> 
+> > That has not changed here at all.  It's just that the ranges of git
+> > versions for when Linux was vulnerable to this issue has been "tightened
+> > up" to only reflect when it was possible for this to be a problem (i.e.
+> > we now do not count the range of releases where the driver was not
+> > present at all in the kernel tree.)
+> 
+> But I fail to follow this. The commit itself says Fixes: a49d25364dfb
+> ("staging/atomisp: Add support for the Intel IPU v2") which makes it
+> clear since when the issue has been introduced. If this tag was not
+> present then there is CVE-$FOO.vulnerable which can specify the same
+> thing. I do not understand how 51b8dc5163d2 is related as it has a
+> different implementation of ia_css_3a_statistics_allocate that doesn't
+> have any unchecked kernel allocations AFAICS.
+
+Ah, ok, that changes things.  The person who said that we should count
+the previous version of the driver said it was vulnerable at that point
+when it was in the kernel tree.  If this isn't the case, we will be glad
+to change this CVE to reflect that.
+
+> > > > > 2) What is the process when a CVE is altered? have I missed any email
+> > > > >    notification?
+> > > > 
+> > > > We do not do email notifications when CVEs are altered.  You have to
+> > > > watch the cve.org json feed for that.  Otherwise the email list would
+> > > > just be too confusing.  Think about every new stable update that happens
+> > > > which causes 10+ different CVEs to be updated showing where they are now
+> > > > resolved.  That does not come across well in an email feed, but the json
+> > > > feed shows it exactly.
+> > > 
+> > > I do understand you do not want to send notifications for that. Would it
+> > > make sense to announce a new upstream commit added to the CVE, though? This
+> > > would make it much easier to see that we might be missing a fix that is
+> > > considered related to a particular CVE.
+> > 
+> > As this has only happened 2 times so far, it's a pretty rare occurance
+> > given us allocating over 6000 CVEs.  And how exactly would that email
+> > look like?
+> 
+> We have identified that CVE-$FOO fix has been incomplete so far and
+> extended list of fixes required for this CVE. Please make sure that
+> those are appplied.
+> 
+> Or something in those lines.
+
+Again, that would happen every stable release, and every -rc release,
+could you really keep up with such an email flow in a way that wouldn't
+just mirror watching the json feed instead?
+
+> > We are just changing the ranges here, we change ranges of where a kernel
+> > is vulnerable all the time by adding new .vulnerable files to the tree
+> > as people report them, and as fixes are backported to older stable
+> > kernel trees.  That's much more important to you than this type of
+> > change, right?
+> 
+> Nope, being aware of what is actually the CVE fix is the most important
+> information. Which kernels are affected specifcally is something that is
+> downstream specific and stable tree ranges are only of a value to those
+> who are using stable trees. Updates to vulnerable files is helpful
+> during evaluation phase but once the assessment is done it acts mostly
+> as a double check.
+
+.vulnerable files get added all the time, so hopefully you are catching
+those updates :)
+
+thanks,
+
+greg k-h
