@@ -1,164 +1,182 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11013047.outbound.protection.outlook.com [52.101.127.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BDF2741C8;
-	Wed, 23 Apr 2025 12:14:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745410478; cv=none; b=bTouzpJwukleO1D5qT/tVEYac+YQkzKTbAFgkwCC/wK7dE1sqUFhbbTdwsAhEhD6qkN8N55kBgM4UtQZX3lMtwphF+FNaw2p1Ud7SwIp3NVPyZlRKBNJoWtRNtU4HFve4fVL4wnHspWw5MtEgzLuxvwrLM+ClZ+ZuFI51nRsJA4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745410478; c=relaxed/simple;
-	bh=iI+zOFiPdKwPbL1x/XV2O6KQJB7HnqFPdwL8xUTkTGE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fKcoBWIXw9KKBb8vPQ20J6EgPdz9DtB+puccoPBrtNdUIdpNeQROTUYvJyw+y305ALW8jKdxMvOio7mHF5xZfSJDGPnUir3DuhJL0/kGTsLSVnU03lmVnTTcpKhqCeVm/7YKGeL+6SywiIRX9SfpZF79r3n/omeeSDAe76NP6oU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K+msE829; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EE4214813;
+	Wed, 23 Apr 2025 12:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745410486; cv=fail; b=mNUtiZnSVuhmeY1eFA784ehur6sN8IXseSfKbVOhQLbIQwtjQmPhYmLin2eIhPCRXtuMouv2p85CiOqbsfwcgIhbDLlo2y0I9lHccGpPVurVeXOB6MzGtfrZAXxmmTmdyqHX/LGbxu6QZLCLHhBuCFbaG1V5cTSOAY4LeRHIA2c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745410486; c=relaxed/simple;
+	bh=jvUKdNk1VdEkasjHIUcE8/+LvWpIuCyHVeOMKeDtE68=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=tR2ubSo5bWampsRRMXHqYgurMlQob2pa7kRLb70GQsyLborylnnvAu+9wgFsnd4pIcp7sogY+k+5QUjqCoofchdnN9zu2EQHfOQlEx/BcdTOHGn77/LUiyNxwSs1ceHOt85JFow8nMFcgKqEqvgLhA9wS8KPbN84C/ZSi/FjuHM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=Y3NCPOKa; arc=fail smtp.client-ip=52.101.127.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K+msE829"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2295d78b433so74063275ad.2;
-        Wed, 23 Apr 2025 05:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745410476; x=1746015276; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6G/y3HQErml1NMZQNrayd+/BsrgNwWrmomSiPVW0Nsc=;
-        b=K+msE829fzeroKjiXRKf9NS3zVzUUkKOoMMAF9p20Rq7zI3UpFWs/wjPbA1RNLVrOQ
-         vVfAdLWwA9vuVb6mCOospRpxAjWd/UZuJcED8twGKhxdCBd0yVg/D+VMs/TS14NDIvMO
-         lLRsgO6f6j7rOltvdgwFQ2a3ndNnP2+wUebwEjRiSUOMxkGc71ZPSLkhcx+26ivKpVbB
-         cv6CoJPRA8kaZI/fueIeiHRDBavWrKshCJ18Jfc0jQBpfx+RQo+iQtTraMX/MVPJupHf
-         +yJTCc4Ffcu6f1Ke19e/hxFVhMvYphTXdrrKZ+jtnNxc5cjjEd+oanDRajP0fLbMd+Dl
-         gDoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745410476; x=1746015276;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6G/y3HQErml1NMZQNrayd+/BsrgNwWrmomSiPVW0Nsc=;
-        b=nqMkNQeFPvYpqYfzKzqQSX5pRPRjcbZtNJLP1R+/NjAhORUT3jaiaJUsiX5xD1Jb0e
-         nztEZ6YqmMassfoAdfWaf7ki4TB7hAc5V42umgQbNZjoOdNCLry5geHpwmehqVY4GMhV
-         61lucRpRB5LdaNJZ5W4nYOl3TxXAVMTUKya7KUu0aQjcioWOQm+kRLDAxHo4QGbScOmY
-         29tU5X6aQHKzYlk3XkIuCukHAJOxSnhiFBxBs0NjONZJBCQCjl4QFNzGU5wH9KKEwo0z
-         Olu5Quyv0+SiGnVTRriQNHxf03P8I8esLIyI/kKqMR7PG2otKr3spLZVvb14Jj2BbdH7
-         yXaw==
-X-Forwarded-Encrypted: i=1; AJvYcCWBpbA0viVYCT5tmO/CL1M+aTLtyCOr5RepQQ0VvVFOgjYt/5CA/oK+sB9sYmIqUjOlHhMkq/+Tdds8kyw=@vger.kernel.org, AJvYcCWZvOQRiwMOvsXx9CMbAgBwAWx77WlIarNAgdSQTRx0G6RRgTax7fAD9HBGRy0wsVKojI+07+Bz@vger.kernel.org, AJvYcCX7OJgNXnk9u4GHlOkNgwPBuAwgNtGQvGzmie/HY3+LMip/bNEGdcaJWL8mFR04JTJ8FjOhes7JhLasnzzgAYdM@vger.kernel.org
-X-Gm-Message-State: AOJu0YylA7FJTMB22WvdqsUWjt+R9CIY/AVqLbnH2R9Hvo9M0X7nsWYf
-	7IoeRFgiFkGhYpwh0fArEZltD9C2wKRJc6ODmIq70kTWPAAuRkga
-X-Gm-Gg: ASbGnctFG7JQpjWXfL6Vha7WxW5jNi/G0GCz0+LQNWp5xTyF+oblHBXiDStYiBq8sqr
-	1BCCFTB2vM0k4Zsk8cq0ZAYLxvCnmej49bTgg/fHKJFH8ocmZDQR07yLzk0S5wyoJahegY+7vnO
-	UUBaQ/TjlMyXYhnn0KCS30rJ7N8rBh/+4HCOGyaIvnauPSdq1WvRt4CLvbuPgsEpHeLrarVImpg
-	9yXDS5jm//kJgaQORPBEInyLNz3DLOzOXVO+hlz0ZZ5mDVzzJ6Ekw/ouQ7p9sRIt1zWR+GOVyTb
-	9cn+QMNO/GD8dtDIae27jVd1PEsUSymkBXkZ2a4l/lI=
-X-Google-Smtp-Source: AGHT+IF+oB26vPds+B4kBrr2c9xPwwreiL7sTMFTRFvzhefCWoyDXGQln9OtTCMvRnNeQwmY27e4aw==
-X-Received: by 2002:a17:903:234e:b0:215:8d49:e2a7 with SMTP id d9443c01a7336-22c53620bb5mr256277845ad.50.1745410475779;
-        Wed, 23 Apr 2025 05:14:35 -0700 (PDT)
-Received: from ubuntu2404.. ([122.231.145.226])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50bf5528sm102647295ad.100.2025.04.23.05.14.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 05:14:34 -0700 (PDT)
-From: KaFai Wan <mannkafai@gmail.com>
-To: alexei.starovoitov@gmail.com,
-	martin.lau@linux.dev,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@fomichev.me,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	mykolal@fb.com,
-	shuah@kernel.org,
-	memxor@gmail.com
-Cc: bpf@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="Y3NCPOKa"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kXhibnIGir8zRxo1GX1nzeAOrgI/OV8URtTc5oIkkDL5D5U2VG8qlnwvOdEoE41QIeTgm1e1yTbyUhexqDQx/4c+yBX+CGTm83/ezJKUdPSLMsYlEup2UeFIPGP1+6yK9VOMtpzznDAtHTfA31M3Jq/Y9suRBcFRpbrVCSyORPEHOAp/X2vA9TZdizP9Qm49zyZIRmq3UBR5E2YjI3eV9aJrvC1ybQG26CDed3+tOvh+9jKexzq5864tXi7h8GgjCj4cdMkvZ/y5EKG12EqSk7CHIg1kq120Y9ugnDsyIoVhWt6wnaMyB0Iy20Y7xQJD1077r01MZMUOET1FaJ6zyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FHT/dLBDjhH2+I3USSPCFiIKuyFyc0QhsJQ3p3WWSes=;
+ b=dnrgqRIVljeTo3ZWqp8aZrzquwDs3bsTvjAG3bxgDEPBEpE3fr4eHpvMEW0El46fAMD5Emn91/onRf07f6SS62XfzRkB+zij6TRTMMg74QXuJuM3bijUBGuPN5ecb728r61nljZtxinaaEzvJe9CXYbc6ew2nv5Oeo5E0AI4wrBaIOTltHKcMyM5l04daDnrUWGEdVXb6i+evqL3vdhPWMkA03QbLXPkd8OhVHbTdlmPUTQ6tEp2fxSg8jAle6rDbFxxEU8EFxkH15993kx9NORbp1+5v3T7WXT83uQjKKTF8eZOkQK1KboKifr+nGysGkhkRc9/zqHmuFw9egL+3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FHT/dLBDjhH2+I3USSPCFiIKuyFyc0QhsJQ3p3WWSes=;
+ b=Y3NCPOKaKwRSUPPb+oYzzL0uRRnD5SMoHfT9Ao9iLsahFs1BYAJcA3BesACgtDhQnulF3jOQrTzkrtGj9ZxGnvhgdh2uBOUJaiP1OrrCI3GXxnBs2vYe4yzH1wjOuSdMPOO/BVodv3NQbihR312dyaYWJEF8Rz10iZsaYGj+vRmVHUQdw2WKNlWgELT1PvQMlquOXn1tFmJpyu/bu1++MutDVG5tgsta96VcYvbqOpulYrxHlkfA2r/7urLgbFH8IH+gD6da/SLJuf8wtrhmlhMb04nCSnxAWfjmTLtfeHMw/ycbdOpbMNNw2OwBt93+0aR+opYNyClFByJwJuxhJQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by KL1PR06MB6257.apcprd06.prod.outlook.com (2603:1096:820:d1::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
+ 2025 12:14:36 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::8c74:6703:81f7:9535%6]) with mapi id 15.20.8655.031; Wed, 23 Apr 2025
+ 12:14:34 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: slava@dubeyko.com,
+	Slava.Dubeyko@ibm.com,
+	glaubitz@physik.fu-berlin.de,
+	brauner@kernel.org,
+	linux-fsdevel@vger.kernel.org
+Cc: dsterba@suse.cz,
+	torvalds@linux-foundation.org,
+	willy@infradead.org,
+	jack@suse.com,
+	viro@zeniv.linux.org.uk,
+	josef@toxicpanda.com,
+	sandeen@redhat.com,
 	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	leon.hwang@linux.dev,
-	KaFai Wan <mannkafai@gmail.com>
-Subject: [PATCH bpf-next v4 2/2] selftests/bpf: Add test to access const void pointer argument in tracing program
-Date: Wed, 23 Apr 2025 20:13:29 +0800
-Message-ID: <20250423121329.3163461-3-mannkafai@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250423121329.3163461-1-mannkafai@gmail.com>
-References: <20250423121329.3163461-1-mannkafai@gmail.com>
+	djwong@kernel.org,
+	Yangtao Li <frank.li@vivo.com>
+Subject: [PATCH] MAINTAINERS: hfs/hfsplus: add myself as maintainer
+Date: Wed, 23 Apr 2025 06:34:22 -0600
+Message-Id: <20250423123423.2062619-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TY2PR0101CA0008.apcprd01.prod.exchangelabs.com
+ (2603:1096:404:92::20) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|KL1PR06MB6257:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2323aed2-0ec1-47b2-db23-08dd82606861
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|7416014|376014|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ZjlgFu0v/t6FmBUen9fNWjR/XBivSBzx95KGja0hCQQ7OBbBZVQt2iAhOM8n?=
+ =?us-ascii?Q?bBzrQkLMmExNDzrNOOTj7lJH2l88QuLjL0bSsdTiJoHtxY4+UKSg68vIB9lK?=
+ =?us-ascii?Q?DoEsfzR66odHgwdJmIECjC97eQsUaB5w5OopBKQlTie8KquhPAHSlzmA2Wjs?=
+ =?us-ascii?Q?IAsxOqjn8zkisFXaZoVYLfUgC9fLv6JytOZe4CLQG93I3vs6JF2qAALSSZgq?=
+ =?us-ascii?Q?N/MLAyn8LB8BdeyiwpzKxT0CHJajT2If6gx0I0U7vLoMDQsqRi7LVUSSf7/m?=
+ =?us-ascii?Q?WPmPCWGkO+MKHxjC+cKnOCRQJ2rWx3YElS9I/A2In7lVZXrjF/53FBGRdrvg?=
+ =?us-ascii?Q?GLSKlefDDZSY1auQGqk01MLCaV5VpCASQkcBX8jrOK/GZDSAdFVxAiKo6VDQ?=
+ =?us-ascii?Q?5lX6W0aEZz/wgOsTMsfNWqYZlcXBtxt1g9/JDGIrL5VBH5JaprPlbWoPiFL7?=
+ =?us-ascii?Q?pfN8jKrWtF5PFPIsuuuSzwwmBagOpBYEcrxuu1DhKt0rNOZCQ5/L5XY6nSaD?=
+ =?us-ascii?Q?uF2OcfVUA3LxE7MBvKFRorkcSzjDPoUOkaXzgbLq/0YDpdvTyoxgSIUulW0E?=
+ =?us-ascii?Q?5QbWrtaVjWuETxSL15H3ExSfauvVjj1q13MWxZ+xWOUt4MYYzsQxf9In/xDm?=
+ =?us-ascii?Q?Zebj91G+MSdHHgJ+YszalfdvD125YRNSzt4apXm49Q/4yW8vNZbBJ0OfJd0z?=
+ =?us-ascii?Q?eLo1EYHLDMaFA9S0trcfgw4hPShLi9uSbN8YgCMR0X478TbHsMXRB0r289oA?=
+ =?us-ascii?Q?w8JcwAwt9y/jQ3IZ4aj+QojvPH6ncrQKWV3pmx7CdUj3ZZPMgk438n8sn50s?=
+ =?us-ascii?Q?00vJ1BMSfyfP+B+ATJk5W4Ea31tt3od7tvAdmZBoy42GO3vYe1KwxNF5hnpx?=
+ =?us-ascii?Q?vThLu6wbTwi3ZnElzRgZEZYRYpg7Ant/v5D8Qj1WaTVWhg6p0kzfpAKFyeoH?=
+ =?us-ascii?Q?dosny6Joopg6Cua2wlMSljn507K3lsv78Lq+jx/gNXCWrS06tC+FY2BhIA76?=
+ =?us-ascii?Q?dLY/X+IbIpeTK+0EwE/ULjbXiBQuvuqYw3IOhuLECIXau0JL1ylPbjOVKrza?=
+ =?us-ascii?Q?stAUTg+ti6YIVU/dN4t3Zs3Bom8BTOWvj6W3kGHGgpQQrEotkxQKbu7hkX6v?=
+ =?us-ascii?Q?qzFfm2/tlxJ4LMhmXd22Lj4/JLxiLyRTWHRhfulQzfhTOgm+IXUW3wbA0JqD?=
+ =?us-ascii?Q?JvxUTgd5lTXd7iYKJFBh+fbpTraVvaJqMjCqXaDnJtjGXvMnao+lF7hdN2U5?=
+ =?us-ascii?Q?oJZ2Q01VYe0LFTN+qr/RHBJ+4hXkE6ziEN9FKHHwi+BCdTSJpDXN3/St6rH9?=
+ =?us-ascii?Q?haCV/rwF2dR+RwHR0hvCb/LfFU2hetT3Zl4EBdbL+SMMJB4Tus4a5NRp4W/T?=
+ =?us-ascii?Q?7JVpSJ3kr0BNAGVsHeEbD0WUO7HihtiAA/9p5SLdOh1JfWPnnYVzxnuHQwDo?=
+ =?us-ascii?Q?8cFWtNz4O9UEwMuJ639pz5mchkWY27iShoiaSKQIQkcPjqE1EyXC0Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(7416014)(376014)(38350700014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?7w3opZDj26cdzFfm6OKc6SxP3udIBZbOnoLq8Vem85FUFEm+kbN4/L7K+5uH?=
+ =?us-ascii?Q?hNL9Fd1mI5apKYFa59wLCaAMjDF31qHLeOzrQK2RO8spoVdZcj7BgKXv2BgZ?=
+ =?us-ascii?Q?gElhE5KFBIAGNCDzN+YPzybyucatNDwb0vpbvhUaZHwGNusXGJFNhWjprhvU?=
+ =?us-ascii?Q?APx388XwDQMTTFKkrT9YBcH1TMGSSzjuRJXPoqHApE0U3zu4plxSabqffbh5?=
+ =?us-ascii?Q?kIOXm0utwPsk8iRJSU6iruhzaSGGZMuNAvINnG7CTeWU8BWOMLh8A3VuOvZK?=
+ =?us-ascii?Q?IqDETjkNlwUsJFbtVDC1ZeV92eSGeI9EBZpJLCml3OFihzXg2a4KUfHXGmC6?=
+ =?us-ascii?Q?GSo+iK2svqi6m4OOT4tFFnoqGLME66BTUSBAYRmpi0Q6DInCl4GmR5IJ1TjR?=
+ =?us-ascii?Q?nWgSZ+dptC+qYB+x+bXWQMv2pwBanGMIY64hEOJUFZZVWFJLClUnQVsNqljx?=
+ =?us-ascii?Q?lkM/sF8yLHDH/Jmtvh3ChezIaKQl1iAv0cYzDMAzRCKNssVU5Y3k1hkKUu8X?=
+ =?us-ascii?Q?Ri/DigxIPBrkElAbOP6zUFUr1Wc9clm6yheRl4Ug1Fvc/1faJssb/MZNkWQr?=
+ =?us-ascii?Q?VYJQ9ugnCCG6uEUGJgNbo0+KENb8pfmivcgdfT5Z07yX0iMY24J4SMc1B51Z?=
+ =?us-ascii?Q?R1133vIkp3wAWfv9h+lyw+Qk5VQ5Zu0YbAPMw3GNYAMEuDo4cgyodF5j83DS?=
+ =?us-ascii?Q?vEqPJsThBhAZkALVcAPy1qzcheX3gJ7xYPni5rsgOwnV7zVfsp/XPGQAQcWA?=
+ =?us-ascii?Q?Ob4CWgCjkKAZ7EnQsr9kLRvoH8vNHRVZ1jqqHw+Szj5xIA+Zacf0CsYhYSxI?=
+ =?us-ascii?Q?P+hAJLRWPL3C4/LNo5rxIPLcK0kCvqrfWQw1INl5nxG5PO87wNlPwK55GgwH?=
+ =?us-ascii?Q?ipTKgdAnuROJuFrs4q9POQ4+D0wbXTxXssZesj6qqnnbRNHiNH5q/gHFRdZz?=
+ =?us-ascii?Q?BOY2xb5ZqHn48C5Y28C0tdIAgxuKBYyxRHW/4c0S8p3qLJELgpvyc5NHpwsj?=
+ =?us-ascii?Q?8cprxP5UXO+h2HdlD8fDvkVzKDVCzyEWbsfEzSKe3MwhlB+B8u6KV7Bkn8MR?=
+ =?us-ascii?Q?lrtKGCBsAB1l8ToCfJFYqGise956LPFk2YWjR8bJYRTrSprm8VgdbABERdR9?=
+ =?us-ascii?Q?YsCdCHYpP4zF83BFKP3AcMq3YzNcumUcxQLBy24S67zZ22mbgaYrD0UTKT+5?=
+ =?us-ascii?Q?0zEocTIGn64B4ca3F918AVUtvrOSLNctQU9nrsI2uGaCVlBoWs3/HO5fJXBY?=
+ =?us-ascii?Q?DYImBm40BG0cYNpD6urNsfgLrHdbaMFC7eCBFSjOYw6GHfvHZwsr37FQm2c4?=
+ =?us-ascii?Q?MmAxCh+RgurOOI5rXKPp39InV1vy98WpP9t8hCSrTIQLxrRn0tnuaTfY/kG3?=
+ =?us-ascii?Q?BnBOtLYpp9yLny3vHrH684I8Myou4/EgwvaUhtmRC7cl7DPWAvY3wGFHgnmj?=
+ =?us-ascii?Q?SHQm9uX9Z9J70eIEOfGg3NJnnJgo5/UCkX2wH5m06nLCEUVm7qHvObTGrECZ?=
+ =?us-ascii?Q?UleRLn/mLXwJhHVtja8Tto2i8e8+FNNWPZvVJh+pTWRGTv0VPxKVcMjOSAks?=
+ =?us-ascii?Q?PQA9RFh763jpnXJxDUUGGPYpIf35s2UZYxXixi0X?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2323aed2-0ec1-47b2-db23-08dd82606861
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 12:14:34.0834
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eOLS7SoD8j1OBSfneLfKFHN5vbWf3eg85zQTpVghwnBkiPEc9p8nEXVXaHvWxreZS4NPsM9u/5iKncOhmKddUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR06MB6257
 
-Adding verifier test for accessing const void pointer argument in
-tracing programs.
+I used to maintain Allwinner SoC cpufreq and thermal drivers and
+have some work experience in the F2FS file system.
 
-The test program loads 1st argument of bpf_fentry_test10 function
-which is const void pointer and checks that verifier allows that.
+I volunteered to maintain the code together with Slava and Adrian.
 
-Signed-off-by: KaFai Wan <mannkafai@gmail.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
 ---
- net/bpf/test_run.c                                   |  8 +++++++-
- .../selftests/bpf/progs/verifier_btf_ctx_access.c    | 12 ++++++++++++
- 2 files changed, 19 insertions(+), 1 deletion(-)
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index 7cb192cbd65f..aaf13a7d58ed 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -569,6 +569,11 @@ __bpf_kfunc u32 bpf_fentry_test9(u32 *a)
- 	return *a;
- }
- 
-+int noinline bpf_fentry_test10(const void *a)
-+{
-+	return (long)a;
-+}
-+
- void noinline bpf_fentry_test_sinfo(struct skb_shared_info *sinfo)
- {
- }
-@@ -699,7 +704,8 @@ int bpf_prog_test_run_tracing(struct bpf_prog *prog,
- 		    bpf_fentry_test6(16, (void *)17, 18, 19, (void *)20, 21) != 111 ||
- 		    bpf_fentry_test7((struct bpf_fentry_test_t *)0) != 0 ||
- 		    bpf_fentry_test8(&arg) != 0 ||
--		    bpf_fentry_test9(&retval) != 0)
-+		    bpf_fentry_test9(&retval) != 0 ||
-+		    bpf_fentry_test10((void *)0) != 0)
- 			goto out;
- 		break;
- 	case BPF_MODIFY_RETURN:
-diff --git a/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c b/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-index 28b939572cda..03942cec07e5 100644
---- a/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_btf_ctx_access.c
-@@ -65,4 +65,16 @@ __naked void ctx_access_u32_pointer_reject_8(void)
- "	::: __clobber_all);
- }
- 
-+SEC("fentry/bpf_fentry_test10")
-+__description("btf_ctx_access const void pointer accept")
-+__success __retval(0)
-+__naked void ctx_access_const_void_pointer_accept(void)
-+{
-+	asm volatile ("					\
-+	r2 = *(u64 *)(r1 + 0);		/* load 1st argument value (const void pointer) */\
-+	r0 = 0;						\
-+	exit;						\
-+"	::: __clobber_all);
-+}
-+
- char _license[] SEC("license") = "GPL";
+diff --git a/MAINTAINERS b/MAINTAINERS
+index b8d1e41c27f6..c3116274cec3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10459,6 +10459,7 @@ F:	drivers/infiniband/hw/hfi1
+ HFS FILESYSTEM
+ M:	Viacheslav Dubeyko <slava@dubeyko.com>
+ M:	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
++M:	Yangtao Li <frank.li@vivo.com>
+ L:	linux-fsdevel@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/filesystems/hfs.rst
+@@ -10467,6 +10468,7 @@ F:	fs/hfs/
+ HFSPLUS FILESYSTEM
+ M:	Viacheslav Dubeyko <slava@dubeyko.com>
+ M:	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
++M:	Yangtao Li <frank.li@vivo.com>
+ L:	linux-fsdevel@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/filesystems/hfsplus.rst
 -- 
-2.43.0
+2.39.0
 
