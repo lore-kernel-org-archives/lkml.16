@@ -1,142 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3BC228935F;
-	Wed, 23 Apr 2025 15:51:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D89428DEEB;
+	Wed, 23 Apr 2025 15:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423513; cv=none; b=t8w325yyMTEnD/xoWJh1K3//LaXHIa61/KH3afok9Me/nq8Z8fPe2GIxuXW/KwQZW2gbnzN0CHV29UTQ5LIjkdd7bKvzCUL6EnQbpafZFrEoGPRKuftmVt8ruQvsVN4TWaz8m0bEizhQqjhRFl64YSG+QiIUiKWQZH//LwbEByM=
+	t=1745423528; cv=none; b=SAYsRKTYNlJVZpLOtWUgxLIMiDg4uQ/E65myzqktK4GtNCXx7JDwXawlSWwlX5VlugPgCyZyNeXWFgzCJzQWy8XFxcvMYAvB8ZnwKxjGkimgwjlcIH3i2MzeWqDHOqiXPFZokgXp5F9sLr9yyc31QiROQb14KaIYdGg275eH55k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423513; c=relaxed/simple;
-	bh=+Vs1gbKb9PXsqFgKfHEk/GoqZdyjHR87hYimAakyT2k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D9twN7O9l4OoTXz6MqBUl2GB9aixuGufJRvWsPRnH8D97P+FePCA9UcMgzUWLOYuIIOhTMLrV7DgglOIq9CEN7+2VFcBrsbEoSzQgLttFNtDDm0W+uykcFyeoaBAFGEkA4yOsW5xLGxHzxFLNyVMTBM82XUSH+O+TqWAAJq504s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ln3aThXU; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745423528; c=relaxed/simple;
+	bh=xyjs0rLrd34P5DK/m9PmTC/jCEqBM3B50Jzi+NTDjBM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZXeVdXQQte9yYxT5p9mA7qGWoenUbLtBMinY09L1ftPVvWJj1nmQ3YdOT915btd/4tn4i8xxQ+rIla7SwYax1bj3lkwsnIAD2vSjG027siY3Y2suC9iox1ZBKiUkxHTAMDMs1rmrV4mBcyxjEe6NN/WljS/9MideIeT4jYnrVXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cR5mNZxJ; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ln3aThXU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745423512; x=1776959512;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+Vs1gbKb9PXsqFgKfHEk/GoqZdyjHR87hYimAakyT2k=;
-  b=Ln3aThXUPv7efrE2YTUUlJAOtT2zmPULSRzcGdvuMd1pEJtOUyAhmm8h
-   SYS3Zj7ndGfwrHjLaLiYLVWZxkVmhYPkT0KIirxmdsu9mRbz0oXEFaE9B
-   RJwy6WNYkyrVuuLlOolkrkk16N1gzNbtx68Hg8+BtjwxIPRmXjZ5OGF27
-   IH86XY81j550MqB28YqOyRK72M9VIPKHblx0+ndx+2nCNvP3OMm6K+TNd
-   mm+qL/642Xi9pImzxTpScNBoxmw9fURVSr4XarGV29eIBmNpnLLdNPyZB
-   0H0MizFmP5Ak2GAXNdKfmReGQfHKLOFWBaOcNaH94Itg9chQStEmAb5KN
-   w==;
-X-CSE-ConnectionGUID: VkEhFynnTOKGh+IkCC1lcg==
-X-CSE-MsgGUID: 6rSuu8R7TRWNyEfCLIwmBQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47207974"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="47207974"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 08:51:49 -0700
-X-CSE-ConnectionGUID: Ex8PVZ5NQH2Gb0DRTatbBA==
-X-CSE-MsgGUID: ItnS2ooiSY2V5FCleHnyyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="137140944"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.124.221.81]) ([10.124.221.81])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 08:51:47 -0700
-Message-ID: <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
-Date: Wed, 23 Apr 2025 08:51:45 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cR5mNZxJ"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af6a315b491so5827774a12.1;
+        Wed, 23 Apr 2025 08:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745423525; x=1746028325; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zSN8LA1qXE8sSMrIXXGWvP/A1XS/xD/J162Xg5jQH2M=;
+        b=cR5mNZxJVs+4hEauiKYGnHCKfyrTgvxBfDOWsYJ09GGncQsGXIKWKDbMmQRV4eC6xO
+         v+DujIKSWN5IADKgfEkcOlq+IBzMQDMhcs5kuuQqkR0Zlr1LZygCLGCIWgxKck20E2dJ
+         JhsrznWPTbOXUTZMXkWaY3hyDA/6z0NULE+npcx8Jfr04HsVW/6dgNZIo9MSNYhgLwOv
+         MoXm2NaS/hUyVv/BmyTGUTU8/puE21M+1a8pFpTA/RNShrKIUJfE55Z8N3auJ9N/gfKg
+         IX7MU3yFeQlFHG4mCgEXFtvJrIfXQbbtTkSOZHM+LXmaB8HTfwFjFYR8Qom0FOnqto6/
+         QDpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745423525; x=1746028325;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zSN8LA1qXE8sSMrIXXGWvP/A1XS/xD/J162Xg5jQH2M=;
+        b=pmbRytLk8HTFMqSah1TcFA0rzwziuvXSQ2QRm4bNym2KNKf61lahQNJfKqiwCveIHf
+         UHlcWylg6sAjFkFxxBaWU4TOssaNWDdIjfxZDq/UqLT3FPN3976zglS+AZ22+q1l2nRk
+         G6UyG1Kbk2K138sE72GqE5D6XvQDVSo+owDAUZPTCFZPMenGhyRrkDcn0AKVfzasQbiE
+         tMOxakGQBwUbzyv4KxE1gP+B53r727B69xMfah7jfuw6qS2uDDm+vaKuKeKf0qjSv4ls
+         T7I782X5uj8Rykat1/DoSZRqhH3LNYSO2jAa4EKJe9Q8tMN+XNl8ZlZ/qfYk9uDSC6vb
+         Dt4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXLMUqRKjJ5QkfeWvCz6W3j1FWYN1oGwR9z1gCSKOOc7Hd+cCwfyQuAyT65haF3TDEa4rpAzPxva0Udr+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLK5Wx4bfFvgtjqgOwfVoLg+jD2m8U4R4qxjOtmFzBSvJWm/NA
+	B5CqJ7w9q6q82GRzYPopowmVhTkJIrQQCaEc0XdMWR1sMxYYzZ+SjL0dkgUTNPE=
+X-Gm-Gg: ASbGncvNCXcajbPWxsHKo5ClAy7Ss+7ET7Gd4fcuBvfeHoZdHh0Ox+64nZHG7J81o6i
+	0m8qqTkmzsGpff7kOnGO08GZXh5bbv8rs+Ki6/QpR2MtIzcXranUuEcb2+tAqGHsWa00FzChQG5
+	njlNvBs4/dDlUorknl33mIBtMhDw1DumeMOEuZEuHZ8Lf91Ma5mP8lLgVnd9SEtQipVTb6OgnsJ
+	Mm6vgiAW5SspdVy4/ZaTUwaAi038qh3kb15KTwAIHwxj4iwl4Cbjvvf6pPHXzSdCqhl65JdIUf6
+	AzouA2bzV4drS8JdJu3bhAnCsQ2bxjO7Pzcszp9VNaqdjzmOOBoc66o7urffyx8=
+X-Google-Smtp-Source: AGHT+IH9NXu1Zh4il4mX+tmqFO/fGM0azr6O1PCj5OfemeTOeltYbazHILrLFl2ZpdVQAwyq5Vkrfg==
+X-Received: by 2002:a05:6a20:12cd:b0:1f5:92ac:d6b7 with SMTP id adf61e73a8af0-203cbc05557mr29541583637.4.1745423525288;
+        Wed, 23 Apr 2025 08:52:05 -0700 (PDT)
+Received: from hiagof-nb.corp.toradex.com ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c0228sm10598640b3a.25.2025.04.23.08.52.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 08:52:04 -0700 (PDT)
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: linux-remoteproc@vger.kernel.org
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Hiago De Franco <hiago.franco@toradex.com>
+Subject: [PATCH] remoteproc: imx_rproc: replace devm_clk_get() with devm_clk_get_optional()
+Date: Wed, 23 Apr 2025 12:51:31 -0300
+Message-Id: <20250423155131.101473-1-hiagofranco@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 08/34] x86/msr: Convert a native_wrmsr() use to
- native_wrmsrq()
-To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
- ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
- tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
- seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
- kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-9-xin@zytor.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250422082216.1954310-9-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/22/25 01:21, Xin Li (Intel) wrote:
->  static __always_inline void sev_es_wr_ghcb_msr(u64 val)
->  {
-> -	u32 low, high;
-> -
-> -	low  = (u32)(val);
-> -	high = (u32)(val >> 32);
-> -
-> -	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
-> +	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
->  }
+From: Hiago De Franco <hiago.franco@toradex.com>
 
-A note on ordering: Had this been a native_wrmsr()=>__wrmsr()
-conversion, it could be sucked into the tree easily before the big
-__wrmsr()=>native_wrmsrq() conversion.
+The "clocks" device tree property is not mandatory, and if not provided
+Linux will shut down the remote processor power domain during boot if it
+is not present, even if it is running (e.g. it was started by U-Boot's
+bootaux command).
 
-Yeah, you'd have to base the big rename on top of this. But with a
-series this big, I'd prioritize whatever gets it trimmed down.
+Use the optional devm_clk_get instead.
+
+Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+---
+ drivers/remoteproc/imx_rproc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+index 74299af1d7f1..45b5b23980ec 100644
+--- a/drivers/remoteproc/imx_rproc.c
++++ b/drivers/remoteproc/imx_rproc.c
+@@ -1033,7 +1033,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
+ 	if (dcfg->method == IMX_RPROC_NONE)
+ 		return 0;
+ 
+-	priv->clk = devm_clk_get(dev, NULL);
++	priv->clk = devm_clk_get_optional(dev, NULL);
+ 	if (IS_ERR(priv->clk)) {
+ 		dev_err(dev, "Failed to get clock\n");
+ 		return PTR_ERR(priv->clk);
+-- 
+2.39.5
+
