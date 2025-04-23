@@ -1,129 +1,160 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132C022F747;
-	Wed, 23 Apr 2025 18:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2122018DF86;
+	Wed, 23 Apr 2025 18:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432185; cv=none; b=I+4FwiqAhBZMPSQn5F0/MS8WUoHUbmBCa8nNzeNP/xabxQkIKL0s2ZEBeS1wEQMqYM69wMwcwVN639cDmQk8QkTTxAWymbDwleMP+YeRuNRMGG1wLA0RnXfJ4qxrPeK2smzmjAkh+LwBk9/JI5ZxURr1rHU71m1Uf6fwm8F3lWo=
+	t=1745432211; cv=none; b=DBaYY3DTaYamvZia1L+W4GYyCfLxOsKzXfkWKW+dh1p7NVKq7svH05a3326LHNK2VnJVFqCwSAPn33OfaDcaDQuCWDTaCIzHAfrB7unjhzrZlRlsgPLEyZASPWURnB9QRyJzUiLftKuv1AJ0acIYcmUKeT/vVsyJpTT33OeguGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432185; c=relaxed/simple;
-	bh=zT6WmWKq89q1ikbAI7gacqu8XDLXrdwAY8cZBziJHYE=;
+	s=arc-20240116; t=1745432211; c=relaxed/simple;
+	bh=UCMgqoUk/35E+0AbklcegPwWnbbccv3El9DIubtxTbA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q9fuUajc0Yfwqx3y5+f3P0OYQ8Ityuta8c5qn0Jyw4DkLG9Fmqk/UUi1DWQ646ni/Khx11NtpQ7QABUsbiYU8mVXHKkTGPlGzPyDA+bGgECwbUoR9PZmcMIBVFa8xR6HBHR6jJxdtUBW6ZYyhuI/xRtupslip3T7+LFkneG0EDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=bo6+o6B7; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=sjSSV1CVeFii86prIFZZCq0FZx173dplr9KlqOxk7Dq6pCV1JNr0c0HUg+dlMzlziBo1cSiZh7xbBAMZWpJTT377vlAHimPcknA8zEuTVa5vIdcc7QhtnTpHE4KT4JW8YO7G8/2t2LVHmTWpU3COzEqI+ZgHmmxU+4/B6UKaSXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kbVgA2W7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bo6+o6B7"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 0A3B41AE2;
-	Wed, 23 Apr 2025 20:16:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745432181;
-	bh=zT6WmWKq89q1ikbAI7gacqu8XDLXrdwAY8cZBziJHYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bo6+o6B7qpomUzgb6VyAyvahU/9AFhwyFixGWgT1xW/ydmBFGmedoD6yjc6K2QPDU
-	 wWuSusjt7vFT24Hrx7BOZGlXgsd3yc8QNCU52gf4+o6tfKLFhf7omsKlkf1WcHmlZK
-	 m4QE4XDAh6R9tYNSYMk7WNMwuCEPFtYuaqZkZNdo=
-Date: Wed, 23 Apr 2025 21:16:20 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Mathis Foerst <mathis.foerst@mt.com>
-Cc: linux-kernel@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-	manuel.traut@mt.com, mathis.foerst@zuehlke.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v4 5/6] media: mt9m114: Fix deadlock in
- get_frame_interval/set_frame_interval
-Message-ID: <20250423181620.GD2675@pendragon.ideasonboard.com>
-References: <20250307093140.370061-1-mathis.foerst@mt.com>
- <20250307093140.370061-6-mathis.foerst@mt.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kbVgA2W7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CC3CC4CEE2;
+	Wed, 23 Apr 2025 18:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745432210;
+	bh=UCMgqoUk/35E+0AbklcegPwWnbbccv3El9DIubtxTbA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=kbVgA2W7BzGd24i9NZuPM5D1kKlokI9fRXpflISX/6YJ1QJEoqxHGs2S2/7a/htw8
+	 GwkgO2DlW6rqb3KavlQWXeOfABadxRNzO8cQj4sjug1tLbpV3DokH6q1XF/4sVrrGN
+	 uiTytMLFteY9fhzTR4XWbJQE6uA8AVNgVH/TtVMSAr80LTNEOZOJiyR6vEdYZaAziV
+	 leJVlJWfHrLQsV9kivxEVHa4uP9Z9iGJXRw9KkPIJQ0yjIUi9lsyq/+kiT6fB2v+gX
+	 ispA8YeqtUs3xbQ1GwCWFMPt5Z+hxZ0t0FPf5nMzyQJhfe4GgeKlF1rKHP6VVRNB99
+	 QP0sDdHG9CA/g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 3E58DCE0B75; Wed, 23 Apr 2025 11:16:49 -0700 (PDT)
+Date: Wed, 23 Apr 2025 11:16:49 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Benjamin Berg <benjamin@sipsolutions.net>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+	johannes@sipsolutions.net, Daniel Gomez <da.gomez@samsung.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 15/28] module: Use RCU in all users of
+ __module_text_address().
+Message-ID: <4446525f-4e89-41bb-91a0-89c72dd0e8f8@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250108090457.512198-1-bigeasy@linutronix.de>
+ <20250108090457.512198-16-bigeasy@linutronix.de>
+ <db0f8ec385762e6edb3edf5054a76ea189135e6e.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250307093140.370061-6-mathis.foerst@mt.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <db0f8ec385762e6edb3edf5054a76ea189135e6e.camel@sipsolutions.net>
 
-Hi Mathis,
-
-Thank you for the patch.
-
-On Fri, Mar 07, 2025 at 10:31:39AM +0100, Mathis Foerst wrote:
-> Getting / Setting the frame interval using the V4L2 subdev pad ops
-> get_frame_interval/set_frame_interval causes a deadlock, as the
-> subdev state is locked in the [1] but also in the driver itself.
+On Wed, Apr 23, 2025 at 05:17:31PM +0200, Benjamin Berg wrote:
+> Hi,
 > 
-> In [2] it's described that the caller is responsible to acquire and
-> release the lock in this case. Therefore, acquiring the lock in the
-> driver is wrong.
+> On Wed, 2025-01-08 at 10:04 +0100, Sebastian Andrzej Siewior wrote:
+> > __module_text_address() can be invoked within a RCU section, there is no
+> > requirement to have preemption disabled.
+> > 
+> > Replace the preempt_disable() section around __module_text_address()
+> > with RCU.
 > 
-> Remove the lock acquisitions/releases from mt9m114_ifp_get_frame_interval()
-> and mt9m114_ifp_set_frame_interval().
+> Unfortunately, this patch causes a performance regression for us. The
+> trouble is that we enable kmemleak and run trace-cmd so a lot of stack
+> traces need to be collected. Obviously, we also have lockdep enabled.
 > 
-> [1] drivers/media/v4l2-core/v4l2-subdev.c - line 1129
-> [2] Documentation/driver-api/media/v4l2-subdev.rst
+> Now, combine this with the UML stack dumping code calling into
+> __kernel_text_address a lot[1] and it really has a relevant performance
+> impact. I saw the kernel spending 40% of its own CPU time just on the
+> lock in is_module_text_address.
 > 
-> Fixes: 24d756e914fc ("media: i2c: Add driver for onsemi MT9M114 camera sensor")
-> Cc: stable@vger.kernel.org
+> Maybe kernel_text_address should leave the RCU handling to the caller
+> and assume that the RCU read lock is already taken?
 > 
-
-You can delete this blank line.
-
-> Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  drivers/media/i2c/mt9m114.c | 8 --------
->  1 file changed, 8 deletions(-)
+> Benjamin
 > 
-> diff --git a/drivers/media/i2c/mt9m114.c b/drivers/media/i2c/mt9m114.c
-> index 65b9124e464f..79c97ab19be9 100644
-> --- a/drivers/media/i2c/mt9m114.c
-> +++ b/drivers/media/i2c/mt9m114.c
-> @@ -1644,13 +1644,9 @@ static int mt9m114_ifp_get_frame_interval(struct v4l2_subdev *sd,
->  	if (interval->which != V4L2_SUBDEV_FORMAT_ACTIVE)
->  		return -EINVAL;
->  
-> -	mutex_lock(sensor->ifp.hdl.lock);
-> -
->  	ival->numerator = 1;
->  	ival->denominator = sensor->ifp.frame_rate;
->  
-> -	mutex_unlock(sensor->ifp.hdl.lock);
-> -
->  	return 0;
->  }
->  
-> @@ -1669,8 +1665,6 @@ static int mt9m114_ifp_set_frame_interval(struct v4l2_subdev *sd,
->  	if (interval->which != V4L2_SUBDEV_FORMAT_ACTIVE)
->  		return -EINVAL;
->  
-> -	mutex_lock(sensor->ifp.hdl.lock);
-> -
->  	if (ival->numerator != 0 && ival->denominator != 0)
->  		sensor->ifp.frame_rate = min_t(unsigned int,
->  					       ival->denominator / ival->numerator,
-> @@ -1684,8 +1678,6 @@ static int mt9m114_ifp_set_frame_interval(struct v4l2_subdev *sd,
->  	if (sensor->streaming)
->  		ret = mt9m114_set_frame_rate(sensor);
->  
-> -	mutex_unlock(sensor->ifp.hdl.lock);
-> -
->  	return ret;
->  }
->  
+> [1] The UM arch dump_stack function reads every "unsigned long" on the
+> stack and tests it using __kernel_text_address.
 
--- 
-Regards,
+Use of a single guard(rcu)() is regressing performance?  Interesting and
+quite unexpected.  That said, tiven the amount of debug you have enabled,
+I am not so sure that people are going to be all that excited about a
+further performance regression.
 
-Laurent Pinchart
+But is this regression due to the cleanup hook that guard(rcu)()
+registers?  If so, please feel free to try using rcu_read_lock()
+and rcu_read_unlock() instead.  I would be surprised if this makes a
+difference, but then again, your initial regression report also comes
+as a surprise, so...
+
+Another way to reduce guard(rcu)() overhead is to build your kernel
+with CONFIG_PREEMPT_NONE=y.  Not so good for real-time response, but
+then again, neither are your debug options.
+
+							Thanx, Paul
+
+> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > ---
+> >  kernel/module/main.c | 16 +++++-----------
+> >  1 file changed, 5 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/kernel/module/main.c b/kernel/module/main.c
+> > index 80877741ac7e5..6a99076146cbc 100644
+> > --- a/kernel/module/main.c
+> > +++ b/kernel/module/main.c
+> > @@ -823,13 +823,12 @@ void symbol_put_addr(void *addr)
+> >  
+> >  	/*
+> >  	 * Even though we hold a reference on the module; we still
+> > need to
+> > -	 * disable preemption in order to safely traverse the data
+> > structure.
+> > +	 * RCU read section in order to safely traverse the data
+> > structure.
+> >  	 */
+> > -	preempt_disable();
+> > +	guard(rcu)();
+> >  	modaddr = __module_text_address(a);
+> >  	BUG_ON(!modaddr);
+> >  	module_put(modaddr);
+> > -	preempt_enable();
+> >  }
+> >  EXPORT_SYMBOL_GPL(symbol_put_addr);
+> >  
+> > @@ -3694,20 +3693,15 @@ struct module *__module_address(unsigned long
+> > addr)
+> >   */
+> >  bool is_module_text_address(unsigned long addr)
+> >  {
+> > -	bool ret;
+> > -
+> > -	preempt_disable();
+> > -	ret = __module_text_address(addr) != NULL;
+> > -	preempt_enable();
+> > -
+> > -	return ret;
+> > +	guard(rcu)();
+> > +	return __module_text_address(addr) != NULL;
+> >  }
+> >  
+> >  /**
+> >   * __module_text_address() - get the module whose code contains an
+> > address.
+> >   * @addr: the address.
+> >   *
+> > - * Must be called with preempt disabled or module mutex held so that
+> > + * Must be called within RCU read section or module mutex held so
+> > that
+> >   * module doesn't get freed during this.
+> >   */
+> >  struct module *__module_text_address(unsigned long addr)
+> 
