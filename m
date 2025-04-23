@@ -1,516 +1,157 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045FD28F1;
-	Wed, 23 Apr 2025 07:01:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18DCE1AF4D5
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:02:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745391719; cv=none; b=AX2uYj3x7BM/JPIU7Md32XyDt4o9vra4GVwxGT2/JKvfQ2h8MaAtJF7QavkUF1eiprAELlrF5HVG+GIPtLW5a5sl3+ZntyPcngHuelVtm7tVDAjmeVuRc/0TsuAsI0Zb7ajrhUnC3fOUUJIlEOH2Vzwn8yucn84ca1QOItlM9VE=
+	t=1745391747; cv=none; b=C8NRjUHDrT0VXEV1TAoKGbNPgQrGz3jWeKNmZpQd/Bvu2DlDWF1islAD5wfSzZyYM9YmBnpKgGYFN7GM/YDaeNEsCar1Do+jegyTlvgJHEOEG28fbri79IIBVvA/zvG/J8qh++4oq1gJOLPJTPF16cEC0+QonoYQoW82EbZh+5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745391719; c=relaxed/simple;
-	bh=fxfjIVU+ZhirxND5ra6vazmGa+OoPozdqLaVl+mbqC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WBXYN9GZEs9VWArnbYPFGo/qDas9rOGEDdbBYc4CE7PraxFt9Y8YhBKYQFK8U4vedeN1ZblKiBt7w2FdeTMB7N0CGUNyYi/KPlzmmumyBk2o1gwQ9OmDDey8nrtfSXAkZz9Fpr0aflHihOJ/OIx7NEbnQdY9c5kzvakRrBAIvPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=BoJPgxZm; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="BoJPgxZm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745391714;
-	bh=fxfjIVU+ZhirxND5ra6vazmGa+OoPozdqLaVl+mbqC0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BoJPgxZmuy5/Mr7Hjz8cmKl9RitRo+zaUWgYLM/n+pRO0HkZThYKg+7PrODtwfcKj
-	 vJ3vWCXs+9mPR/TRcSEEEZXDDTyvnJcxo2G4rQmFb8kM7SQGdXNJiSkJm6Z9v5kVUU
-	 WEERjX5TkApodHm/nav3xae9hRMzzp9MLA9RTKiLOvgL443NH5UC+mpJJx4IbOWuNT
-	 lInb3G7HJI3MddwjcQzsDAPfJgOjNg3tbY4VLv2on3bILSvHLnSrsBx/HtPuOhExvz
-	 a0GQRbipfosghR2WtoPaPzxqDcq/X1sRNhjsEF48YtuSbWDAjtkTRFfYSGiU0CxH7d
-	 0ZgxgEvRNnACw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 57FFA17E0702;
-	Wed, 23 Apr 2025 09:01:54 +0200 (CEST)
-Date: Wed, 23 Apr 2025 09:01:49 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
- kernel@collabora.com, Liviu Dudau <liviu.dudau@arm.com>, Steven Price
- <steven.price@arm.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
- Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
- linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH v10 4/4] drm/panthor: show device-wide list of DRM GEM
- objects over DebugFS
-Message-ID: <20250423090149.2748ef62@collabora.com>
-In-Reply-To: <20250423021238.1639175-5-adrian.larumbe@collabora.com>
-References: <20250423021238.1639175-1-adrian.larumbe@collabora.com>
-	<20250423021238.1639175-5-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1745391747; c=relaxed/simple;
+	bh=gbkMNfwgfYdmOKAVYlr5A18p5tXwK5iqmUnvdxbkPn8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AAmYYsqdzYbPiLDQ0l7JfKH75nQAuhlBjzq1RzD3j+YGkgBG3h4YFfDDdoYGVD23zXyx1VWcXB6SSkfQQj3uHtvk8qHkC8LXwGrc5AWoxy40Q+1pgoSITbR9KBiN4JfBTUO4qgT6Q01tBPuOj+mG/ueiANBXJe/kTiRmrYRbXsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-86feb84877aso2181363241.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:02:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745391744; x=1745996544;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oLLT648Qo0bBu3L/szjjcPVs5CsDim4LfUXjSbqVkUo=;
+        b=P5WD3f5qkOO9dPYCQf4b87FU8Fzq63oG/2rHVEH6gi7/v0juvI/SKeqB7rsNbgkjU3
+         mCM8jMU5HmgQbWJIPRAuhLzAAE8Q0KMriA36fqIKVGfKKg/g8XsiM5nHnsKTLZeV0xPk
+         bTFrJ6G1N9tDoNCVqYHMSmsv30SHk9CJNNQx5b2Cf7KWIHrjPEtJp0fIT7VW1yppZrYL
+         UMT7xxSUTmUSB1fN1mhAuw8AIijPgoCpm3fTOuhP0X2t9q3laeZTxtbh4ZEYqN44ira3
+         dkt3bVAVdoQCptuh5yIjUHJCJdFFzxrXC0r7DCNI7uuyRQgs2+sp3iMmVGzdNFRgm6Cr
+         xRkA==
+X-Forwarded-Encrypted: i=1; AJvYcCWKPibRj3SqsQL3mNhoRqH2pBSFUaeSgFW5E0FHNxg1yir0ED4R/Gbmpm1WFvbtJv9tXFhUVMW/7k4+Syg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC9Bz8BM2Yxb824osqKDgOPw2LgSuOmxtpCeOkxzxK6249aame
+	pP9r8aAdV7tWPSAyr+BPix8jH5zZl/zZy0ok5KZ7sKc+LsG4KPqregm+3vFI
+X-Gm-Gg: ASbGnct/LNJr75IJ4k6SWv+OVrzg/QreTmgtk5nHxdo0OXejj9Fwq41Y+vVeHrVCc6g
+	cRy2pELR4c8kJAIaGxdYPRShkwb4XU7tGsQFAcFZVdSgTasBp7UwoS9BddM0l9g2Rel6SmWszFa
+	YosCC3D+A3L+pnUdnpFaslzSsHngIyIFJGyoML6Ws+4Z+66CBPmM6lEKWxML8yoABWhckXmIBsW
+	s0Bg3CFHqvITExz+5O4n5puIXNknyZ0GhGcXrE/kkW0EfgsV8crN6TlCi+Y4ILE8MBRT4pGnziH
+	I5Cc/pptTTXrmcX+wt6wr0tqiTq2XRmvZhJugUr2DA2+A7WKlOWRFcXDttpVZoYLM0xEVYLYPmn
+	S/4paG2lPSHTgAg==
+X-Google-Smtp-Source: AGHT+IFkILUsBm2GyibPNm4vB292lZNkKvagSFN7FDisBItAtD1QvlWtCV3/ltNscTsJ46YSO83qKw==
+X-Received: by 2002:a05:6102:22cc:b0:4c1:8e95:24f3 with SMTP id ada2fe7eead31-4cb80207f8amr11107152137.24.1745391743973;
+        Wed, 23 Apr 2025 00:02:23 -0700 (PDT)
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com. [209.85.222.42])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4cb7dde4507sm2437392137.17.2025.04.23.00.02.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 00:02:22 -0700 (PDT)
+Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86715793b1fso2151038241.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:02:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXa1NfAA1QRFf/37xGpo16FV7EDzw1aUPZdbwcO54pNEyiIEBtfPB3SoryXsQVZ2LTW6ywg4Mj1707JwL0=@vger.kernel.org
+X-Received: by 2002:a05:6102:115b:b0:4b9:bd00:454b with SMTP id
+ ada2fe7eead31-4cb8011c0aemr10746966137.13.1745391742137; Wed, 23 Apr 2025
+ 00:02:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20250419115157.567249-1-cem@kernel.org> <81d49efc-1b81-48e1-b9ca-c3665d0cf73c@roeck-us.net>
+ <2bf6d797-d974-49bb-a234-a20378f5dda5@roeck-us.net>
+In-Reply-To: <2bf6d797-d974-49bb-a234-a20378f5dda5@roeck-us.net>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 23 Apr 2025 09:02:10 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdU5F1nEpF9+jJSP0oap6GdP9mQSPp0c3zSmXeOPrCzA9A@mail.gmail.com>
+X-Gm-Features: ATxdqUGRbZuOINkFuxvCUmORu2B9D7f0xtqPILeeZNQ196gJiQhds1EEJ0BoHQA
+Message-ID: <CAMuHMdU5F1nEpF9+jJSP0oap6GdP9mQSPp0c3zSmXeOPrCzA9A@mail.gmail.com>
+Subject: Re: [RFC PATCH] math.h: Account for 64-bit division on i386
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: cem@kernel.org, linux-kernel@vger.kernel.org, Hans.Holmberg@wdc.com, 
+	oe-kbuild-all@lists.linux.dev, hch@lst.de, lukas@wunner.de, 
+	angelogioacchino.delregno@collabora.com, Jonathan.Cameron@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 23 Apr 2025 03:12:34 +0100
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+On Sun, 20 Apr 2025 at 19:42, Guenter Roeck <linux@roeck-us.net> wrote:
+> On Sun, Apr 20, 2025 at 08:40:27AM -0700, Guenter Roeck wrote:
+> > On Sat, Apr 19, 2025 at 01:51:46PM +0200, cem@kernel.org wrote:
+> > > From: Carlos Maiolino <cem@kernel.org>
+> > >
+> > > Building linux on i386 might fail if a 64bit type is passed to
+> >
+> > i386 actually builds. Its compiler is probably able to convert
+> > the offending mult_frac() without helpers since the divisor is
+> > a constant. I see the problem with openrisc and parisc, with
+> > gcc 13.3.0.
+> >
+> > > mult_fract(). To prevent the failure, use do_div() for the division
+> > > calculation instead of hardcoding a / b.
+> > >
+> > > Signed-off-by: Carlos Maiolino <cmaiolino@redhat.com>
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Closes: https://lore.kernel.org/oe-kbuild-all/202504181233.F7D9Atra-lkp@intel.com/
+> > > ---
+> > >
+> > > I'm sending it as a RFC because I didn't to extensive testing on this
+> > > patch, also I'm not sure if mult_frac() was intended to work on 32-bit
+> > > only types. If that's the case, perhaps, a new mult_frac64() might be a
+> > > better idea?!
+> > >
+> > >  include/linux/math.h | 19 ++++++++++---------
+> > >  1 file changed, 10 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/include/linux/math.h b/include/linux/math.h
+> > > index 0198c92cbe3e..05ea853b75b4 100644
+> > > --- a/include/linux/math.h
+> > > +++ b/include/linux/math.h
+> > > @@ -133,15 +133,16 @@ __STRUCT_FRACT(u32)
+> > >  #undef __STRUCT_FRACT
+> > >
+> > >  /* Calculate "x * n / d" without unnecessary overflow or loss of precision. */
+> > > -#define mult_frac(x, n, d) \
+> > > -({                         \
+> > > -   typeof(x) x_ = (x);     \
+> > > -   typeof(n) n_ = (n);     \
+> > > -   typeof(d) d_ = (d);     \
+> > > -                           \
+> > > -   typeof(x_) q = x_ / d_; \
+> > > -   typeof(x_) r = x_ % d_; \
+> > > -   q * n_ + r * n_ / d_;   \
+> > > +#define mult_frac(x, n, d)         \
+> > > +({                                 \
+> > > +   typeof(x) x_ = (x);             \
+> > > +   typeof(n) n_ = (n);             \
+> > > +   typeof(d) d_ = (d);             \
+> > > +                                   \
+> > > +   typeof(x_) r = do_div(x_, d_);  \
+> > > +   r *= n_;                        \
+> > > +   do_div(r, d_);                  \
+> > > +   x_ * n_ + r;                    \
+> > >  })
+> > >
+> >
+> > Unfortunately that doesn't work. I get build errors on parisc.
+> >
+>
+> Turns out the first parameter of do_div needs to be u64, not s64,
+> at least on parisc.
 
-> Add a device DebugFS file that displays a complete list of all the DRM
-> GEM objects that are exposed to UM through a DRM handle.
->=20
-> Since leaking object identifiers that might belong to a different NS is
-> inadmissible, this functionality is only made available in debug builds
-> with DEBUGFS support enabled.
->=20
-> File format is that of a table, with each entry displaying a variety of
-> fields with information about each GEM object.
->=20
-> Each GEM object entry in the file displays the following information
-> fields: Client PID, BO's global name, reference count, BO virtual size,
-> BO resize size, VM address in its DRM-managed range, BO label and a GEM
-> state flags.
->=20
-> There's also a usage flags field for the type of BO, which tells us
-> whether it's a kernel BO and/or mapped onto the FW's address space.
->=20
-> GEM state and usage flag meanings are printed in the file prelude, so
-> that UM parsing tools can interpret the numerical values in the table.
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-> Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-> Reviewed-by: Steven Price <steven.price@arm.com>
-> ---
->  drivers/gpu/drm/panthor/panthor_device.c |   5 +
->  drivers/gpu/drm/panthor/panthor_device.h |  11 ++
->  drivers/gpu/drm/panthor/panthor_drv.c    |  25 ++++
->  drivers/gpu/drm/panthor/panthor_gem.c    | 156 +++++++++++++++++++++++
->  drivers/gpu/drm/panthor/panthor_gem.h    |  65 ++++++++++
->  5 files changed, 262 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/panthor/panthor_device.c b/drivers/gpu/drm/p=
-anthor/panthor_device.c
-> index a9da1d1eeb70..b776e1a2e4f3 100644
-> --- a/drivers/gpu/drm/panthor/panthor_device.c
-> +++ b/drivers/gpu/drm/panthor/panthor_device.c
-> @@ -184,6 +184,11 @@ int panthor_device_init(struct panthor_device *ptdev)
->  	if (ret)
->  		return ret;
-> =20
-> +#ifdef CONFIG_DEBUG_FS
-> +	drmm_mutex_init(&ptdev->base, &ptdev->gems.lock);
-> +	INIT_LIST_HEAD(&ptdev->gems.node);
-> +#endif
-> +
->  	atomic_set(&ptdev->pm.state, PANTHOR_DEVICE_PM_STATE_SUSPENDED);
->  	p =3D alloc_page(GFP_KERNEL | __GFP_ZERO);
->  	if (!p)
-> diff --git a/drivers/gpu/drm/panthor/panthor_device.h b/drivers/gpu/drm/p=
-anthor/panthor_device.h
-> index da6574021664..86206a961b38 100644
-> --- a/drivers/gpu/drm/panthor/panthor_device.h
-> +++ b/drivers/gpu/drm/panthor/panthor_device.h
-> @@ -205,6 +205,17 @@ struct panthor_device {
-> =20
->  	/** @fast_rate: Maximum device clock frequency. Set by DVFS */
->  	unsigned long fast_rate;
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	/** @gems: Device-wide list of GEM objects owned by at least one file. =
-*/
-> +	struct {
-> +		/** @gems.lock: Protects the device-wide list of GEM objects. */
-> +		struct mutex lock;
-> +
-> +		/** @node: Used to keep track of all the device's DRM objects */
-> +		struct list_head node;
-> +	} gems;
-> +#endif
->  };
-> =20
->  struct panthor_gpu_usage {
-> diff --git a/drivers/gpu/drm/panthor/panthor_drv.c b/drivers/gpu/drm/pant=
-hor/panthor_drv.c
-> index 7308fad02c9e..dfe2e89942a0 100644
-> --- a/drivers/gpu/drm/panthor/panthor_drv.c
-> +++ b/drivers/gpu/drm/panthor/panthor_drv.c
-> @@ -1537,9 +1537,34 @@ static const struct file_operations panthor_drm_dr=
-iver_fops =3D {
->  };
-> =20
->  #ifdef CONFIG_DEBUG_FS
-> +static int panthor_gems_show(struct seq_file *m, void *data)
-> +{
-> +	struct drm_info_node *node =3D m->private;
-> +	struct drm_device *dev =3D node->minor->dev;
-> +	struct panthor_device *ptdev =3D container_of(dev, struct panthor_devic=
-e, base);
-> +
-> +	panthor_gem_debugfs_print_bos(ptdev, m);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct drm_info_list panthor_debugfs_list[] =3D {
-> +	{"gems", panthor_gems_show, 0, NULL},
-> +};
-> +
-> +static int panthor_gems_debugfs_init(struct drm_minor *minor)
-> +{
-> +	drm_debugfs_create_files(panthor_debugfs_list,
-> +				 ARRAY_SIZE(panthor_debugfs_list),
-> +				 minor->debugfs_root, minor);
-> +
-> +	return 0;
-> +}
-> +
->  static void panthor_debugfs_init(struct drm_minor *minor)
->  {
->  	panthor_mmu_debugfs_init(minor);
-> +	panthor_gems_debugfs_init(minor);
->  }
->  #endif
-> =20
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/pant=
-hor/panthor_gem.c
-> index 3f4ab5a2f2ae..fedb9697fe57 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.c
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
-> @@ -11,14 +11,51 @@
->  #include <drm/panthor_drm.h>
-> =20
->  #include "panthor_device.h"
-> +#include "panthor_fw.h"
->  #include "panthor_gem.h"
->  #include "panthor_mmu.h"
-> =20
-> +#ifdef CONFIG_DEBUG_FS
-> +static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
-> +				       struct panthor_gem_object *bo)
-> +{
-> +	INIT_LIST_HEAD(&bo->debugfs.node);
-> +
-> +	bo->debugfs.creator.tgid =3D current->group_leader->pid;
-> +	get_task_comm(bo->debugfs.creator.process_name, current->group_leader);
-> +
-> +	mutex_lock(&ptdev->gems.lock);
-> +	list_add_tail(&bo->debugfs.node, &ptdev->gems.node);
-> +	mutex_unlock(&ptdev->gems.lock);
-> +}
-> +
-> +static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)
-> +{
-> +	struct panthor_device *ptdev =3D container_of(bo->base.base.dev,
-> +						    struct panthor_device, base);
-> +
-> +	if (list_empty(&bo->debugfs.node))
-> +		return;
-> +
-> +	mutex_lock(&ptdev->gems.lock);
-> +	list_del_init(&bo->debugfs.node);
-> +	mutex_unlock(&ptdev->gems.lock);
-> +}
-> +
-> +#else
-> +static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
-> +				       struct panthor_gem_object *bo)
-> +{}
-> +static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo) {}
-> +#endif
-> +
->  static void panthor_gem_free_object(struct drm_gem_object *obj)
->  {
->  	struct panthor_gem_object *bo =3D to_panthor_bo(obj);
->  	struct drm_gem_object *vm_root_gem =3D bo->exclusive_vm_root_gem;
-> =20
-> +	panthor_gem_debugfs_bo_rm(bo);
-> +
->  	/*
->  	 * Label might have been allocated with kstrdup_const(),
->  	 * we need to take that into account when freeing the memory
-> @@ -88,6 +125,7 @@ panthor_kernel_bo_create(struct panthor_device *ptdev,=
- struct panthor_vm *vm,
->  	struct drm_gem_shmem_object *obj;
->  	struct panthor_kernel_bo *kbo;
->  	struct panthor_gem_object *bo;
-> +	u32 debug_flags =3D PANTHOR_DEBUGFS_GEM_USAGE_FLAG_KERNEL;
->  	int ret;
-> =20
->  	if (drm_WARN_ON(&ptdev->base, !vm))
-> @@ -107,7 +145,11 @@ panthor_kernel_bo_create(struct panthor_device *ptde=
-v, struct panthor_vm *vm,
->  	kbo->obj =3D &obj->base;
->  	bo->flags =3D bo_flags;
-> =20
-> +	if (vm =3D=3D panthor_fw_vm(ptdev))
-> +		debug_flags |=3D PANTHOR_DEBUGFS_GEM_USAGE_FLAG_FW_MAPPED;
-> +
->  	panthor_gem_kernel_bo_set_label(kbo, name);
-> +	panthor_gem_debugfs_set_usage_flags(to_panthor_bo(kbo->obj), debug_flag=
-s);
-> =20
->  	/* The system and GPU MMU page size might differ, which becomes a
->  	 * problem for FW sections that need to be mapped at explicit address
-> @@ -210,6 +252,8 @@ struct drm_gem_object *panthor_gem_create_object(stru=
-ct drm_device *ddev, size_t
->  	drm_gem_gpuva_set_lock(&obj->base.base, &obj->gpuva_list_lock);
->  	mutex_init(&obj->label.lock);
-> =20
-> +	panthor_gem_debugfs_bo_add(ptdev, obj);
-> +
->  	return &obj->base.base;
->  }
-> =20
-> @@ -258,6 +302,12 @@ panthor_gem_create_with_handle(struct drm_file *file,
->  	/* drop reference from allocate - handle holds it now. */
->  	drm_gem_object_put(&shmem->base);
-> =20
-> +	/*
-> +	 * No explicit flags are needed in the call below, since the
-> +	 * function internally sets the INITIALIZED bit for us.
-> +	 */
-> +	panthor_gem_debugfs_set_usage_flags(bo, 0);
-> +
->  	return ret;
->  }
-> =20
-> @@ -296,3 +346,109 @@ panthor_gem_kernel_bo_set_label(struct panthor_kern=
-el_bo *bo, const char *label)
-> =20
->  	panthor_gem_bo_set_label(bo->obj, str);
->  }
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +struct gem_size_totals {
-> +	size_t size;
-> +	size_t resident;
-> +	size_t reclaimable;
-> +};
-> +
-> +static void panthor_gem_debugfs_print_flag_names(struct seq_file *m)
-> +{
-> +	int len;
-> +	int i;
-> +
-> +	static const char * const gem_state_flags_names[] =3D {
-> +		[PANTHOR_DEBUGFS_GEM_STATE_IMPORTED_BIT] =3D "imported",
-> +		[PANTHOR_DEBUGFS_GEM_STATE_EXPORTED_BIT] =3D "exported",
-> +	};
-> +
-> +	static const char * const gem_usage_flags_names[] =3D {
-> +		[PANTHOR_DEBUGFS_GEM_USAGE_KERNEL_BIT] =3D "kernel",
-> +		[PANTHOR_DEBUGFS_GEM_USAGE_FW_MAPPED_BIT] =3D "fw-mapped",
-> +	};
-> +
-> +	seq_puts(m, "GEM state flags: ");
-> +	for (i =3D 0, len =3D ARRAY_SIZE(gem_state_flags_names); i < len; i++) {
-> +		if (!gem_state_flags_names[i])
-> +			continue;
-> +		seq_printf(m, "%s (0x%x)%s", gem_state_flags_names[i],
-> +			   (u32)BIT(i), (i < len - 1) ? ", " : "\n");
-> +	}
-> +
-> +	seq_puts(m, "GEM usage flags: ");
-> +	for (i =3D 0, len =3D ARRAY_SIZE(gem_usage_flags_names); i < len; i++) {
-> +		if (!gem_usage_flags_names[i])
-> +			continue;
-> +		seq_printf(m, "%s (0x%x)%s", gem_usage_flags_names[i],
-> +			   (u32)BIT(i), (i < len - 1) ? ", " : "\n\n");
-> +	}
-> +}
-> +
-> +static void panthor_gem_debugfs_bo_print(struct panthor_gem_object *bo,
-> +					 struct seq_file *m,
-> +					 struct gem_size_totals *totals)
-> +{
-> +	unsigned int refcount =3D kref_read(&bo->base.base.refcount);
-> +	char creator_info[32] =3D {};
-> +	size_t resident_size;
-> +	u32 gem_usage_flags =3D bo->debugfs.flags & (u32)~PANTHOR_DEBUGFS_GEM_U=
-SAGE_FLAG_INITIALIZED;
-> +	u32 gem_state_flags =3D 0;
-> +
-> +	/* Skip BOs being destroyed. */
-> +	if (!refcount)
-> +		return;
-> +
-> +	resident_size =3D bo->base.pages ? bo->base.base.size : 0;
-> +
-> +	snprintf(creator_info, sizeof(creator_info),
-> +		 "%s/%d", bo->debugfs.creator.process_name, bo->debugfs.creator.tgid);
-> +	seq_printf(m, "%-32s%-16d%-16d%-16zd%-16zd0x%-16lx",
-> +		   creator_info,
-> +		   bo->base.base.name,
-> +		   refcount,
-> +		   bo->base.base.size,
-> +		   resident_size,
-> +		   drm_vma_node_start(&bo->base.base.vma_node));
-> +
-> +	if (bo->base.base.import_attach)
-> +		gem_state_flags |=3D PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED;
-> +	if (bo->base.base.dma_buf)
-> +		gem_state_flags |=3D PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED;
-> +
-> +	seq_printf(m, "0x%-8x 0x%-10x", gem_state_flags, gem_usage_flags);
-> +
-> +	scoped_guard(mutex, &bo->label.lock) {
-> +		seq_printf(m, "%s\n", bo->label.str ? : "");
-> +	}
-> +
-> +	totals->size +=3D bo->base.base.size;
-> +	totals->resident +=3D resident_size;
-> +	if (bo->base.madv > 0)
-> +		totals->reclaimable +=3D resident_size;
-> +}
-> +
-> +void panthor_gem_debugfs_print_bos(struct panthor_device *ptdev,
-> +				   struct seq_file *m)
-> +{
-> +	struct gem_size_totals totals =3D {0};
-> +	struct panthor_gem_object *bo;
-> +
-> +	panthor_gem_debugfs_print_flag_names(m);
-> +
-> +	seq_puts(m, "created-by                      global-name     refcount  =
-      size            resident-size   file-offset       state      usage   =
-    label\n");
-> +	seq_puts(m, "----------------------------------------------------------=
----------------------------------------------------------------------------=
----------\n");
-> +
-> +	scoped_guard(mutex, &ptdev->gems.lock) {
-> +		list_for_each_entry(bo, &ptdev->gems.node, debugfs.node) {
-> +			if (bo->debugfs.flags & PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED)
-> +				panthor_gem_debugfs_bo_print(bo, m, &totals);
-> +		}
-> +	}
-> +
-> +	seq_puts(m, "=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D\n");
-> +	seq_printf(m, "Total size: %zd, Total resident: %zd, Total reclaimable:=
- %zd\n",
-> +		   totals.size, totals.resident, totals.reclaimable);
-> +}
-> +#endif
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/pant=
-hor/panthor_gem.h
-> index 3c09af568e47..4641994ddd7f 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.h
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
-> @@ -15,6 +15,54 @@ struct panthor_vm;
-> =20
->  #define PANTHOR_BO_LABEL_MAXLEN	4096
-> =20
-> +enum panthor_debugfs_gem_state_flags {
-> +	PANTHOR_DEBUGFS_GEM_STATE_IMPORTED_BIT =3D 0,
-> +	PANTHOR_DEBUGFS_GEM_STATE_EXPORTED_BIT =3D 1,
-> +
-> +	/** @PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED: GEM BO is PRIME imported.=
- */
-> +	PANTHOR_DEBUGFS_GEM_STATE_FLAG_IMPORTED =3D BIT(PANTHOR_DEBUGFS_GEM_STA=
-TE_IMPORTED_BIT),
-> +
-> +	/** @PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED: GEM BO is PRIME exported.=
- */
-> +	PANTHOR_DEBUGFS_GEM_STATE_FLAG_EXPORTED =3D BIT(PANTHOR_DEBUGFS_GEM_STA=
-TE_EXPORTED_BIT),
-> +};
-> +
-> +enum panthor_debugfs_gem_usage_flags {
-> +	PANTHOR_DEBUGFS_GEM_USAGE_KERNEL_BIT =3D 0,
-> +	PANTHOR_DEBUGFS_GEM_USAGE_FW_MAPPED_BIT =3D 1,
+That is correct: the first parameter must be u64, the second must be u32:
+https://elixir.bootlin.com/linux/v6.14.3/source/include/asm-generic/div64.h
 
-Now that you print the flags as raw hex values, you don't need those
-_BIT definitions.
+As you must never use open-coded 64-bit divisions in the kernel,
+simple helpers like mult_frac() can only be used for 32-bit values.
+For anything involving 64-bit divisions, you must use the helpers from
+<linux/math64.h>, e.g. mul_u64_u32_div().
+https://elixir.bootlin.com/linux/v6.14.3/source/include/linux/math64.h#L257
 
-> +
-> +	/** @PANTHOR_DEBUGFS_GEM_USAGE_FLAG_KERNEL: BO is for kernel use only. =
-*/
-> +	PANTHOR_DEBUGFS_GEM_USAGE_FLAG_KERNEL =3D BIT(PANTHOR_DEBUGFS_GEM_USAGE=
-_KERNEL_BIT),
-> +
-> +	/** @PANTHOR_DEBUGFS_GEM_USAGE_FLAG_FW_MAPPED: BO is mapped on the FW V=
-M. */
-> +	PANTHOR_DEBUGFS_GEM_USAGE_FLAG_FW_MAPPED =3D BIT(PANTHOR_DEBUGFS_GEM_US=
-AGE_FW_MAPPED_BIT),
-> +
-> +	/** @PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED: BO is ready for DebugF=
-S display. */
-> +	PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED =3D BIT(31),
-> +};
-> +
-> +/**
-> + * struct panthor_gem_debugfs - GEM object's DebugFS list information
-> + */
-> +struct panthor_gem_debugfs {
-> +	/**
-> +	 * @node: Node used to insert the object in the device-wide list of
-> +	 * GEM objects, to display information about it through a DebugFS file.
-> +	 */
-> +	struct list_head node;
-> +
-> +	/** @creator: Information about the UM process which created the GEM. */
-> +	struct {
-> +		/** @creator.process_name: Group leader name in owning thread's proces=
-s */
-> +		char process_name[TASK_COMM_LEN];
-> +
-> +		/** @creator.tgid: PID of the thread's group leader within its process=
- */
-> +		pid_t tgid;
-> +	} creator;
-> +
-> +	/** @flags: Combination of panthor_debugfs_gem_usage_flags flags */
-> +	u32 flags;
-> +};
-> +
->  /**
->   * struct panthor_gem_object - Driver specific GEM object.
->   */
-> @@ -62,6 +110,10 @@ struct panthor_gem_object {
->  		/** @lock.str: Protects access to the @label.str field. */
->  		struct mutex lock;
->  	} label;
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +	struct panthor_gem_debugfs debugfs;
-> +#endif
->  };
-> =20
->  /**
-> @@ -157,4 +209,17 @@ panthor_kernel_bo_create(struct panthor_device *ptde=
-v, struct panthor_vm *vm,
-> =20
->  void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
-> =20
-> +#ifdef CONFIG_DEBUG_FS
-> +void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
-> +				   struct seq_file *m);
-> +static inline void
-> +panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 u=
-sage_flags)
-> +{
-> +	bo->debugfs.flags =3D usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INIT=
-IALIZED;
-> +}
-> +
-> +#else
-> +void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, =
-u32 usage_flags) {};
-> +#endif
-> +
->  #endif /* __PANTHOR_GEM_H__ */
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
