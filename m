@@ -1,82 +1,113 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6CA280A3C;
-	Wed, 23 Apr 2025 15:08:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A01288CAF;
+	Wed, 23 Apr 2025 15:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420904; cv=none; b=EDEu9cuOw5HjGQW/B+mpq04xCVQcCTZANVShALPZWjWuTIyICDneszivcY3xrU3WVGFmLGgsNy5Nf7s54TkB459bxU4pWfQn26gUOv9QQq+juSsdpv/0mcNPU87dR3YLXuCmrHX/kPfzO39eRIEPf5t7GqsRZ+cF5AmVAEAEJOo=
+	t=1745420906; cv=none; b=s4yTZa9cxF7sJ3R7CWf0fdtwsM+r9w5qPHiB1dUXvSgghxJuO3M0fZDM/tr7tFeYaOJ6a/cGtnaU0fmvpbfhxhbRoXrPRgleN9NS7xVAQXTFjL7v9/Skbum6aqC5z29cLE8yAR1bibQzPHOEcB0znjvljf2aUrGljWXDpBvcLtE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420904; c=relaxed/simple;
-	bh=sU7HrxlC9X3SIigWg3LaSJnHeY4oUGBQMCo+9Mv3unk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aI8sZYv/Wz4Mx0JrPZLviYmZGH07nwkxOBXRdbf1QTLz68dhCrs6WYNiUvO+PuHe1BsrlGLVOhw7toVkUfJfs/CgCkNMAcKoyCRk/bVRakPj5N8WPSSUn6fZEvJtVtPK1zoC87/33Ut3/0V9fjjQVH0qStPMDqmWRtnpG664N/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=VQi8B4Fh; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1745420906; c=relaxed/simple;
+	bh=YC2qgnmmCkhuux3qHYJ3SWVnmxx4OSbWLFxwEpHWl5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jFje9Hl/OpyjFuWFjvA9IWASabQxNwefiQUwaWqX6x1piJ+2nWLPCyHk/Z3ewthPYumoUhxEiLYJqMZpvii9okShJ8gcQwvdsEyHr/qtfqtHLjL5QZrTFx8R1WB+yiZK28oQB93AVKx5gOmmBd1wV8MIo3gBRKtp/M3PkjdN+g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dojNHCKV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="VQi8B4Fh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
-	Resent-Message-ID:In-Reply-To:References;
-	bh=BzRbmbdVH64WkPtUMsoKFbvdXYbRjm6+e5C6pk5/ync=; t=1745420902; x=1746630502; 
-	b=VQi8B4FhqpWwxmKjmGUglBkhYli2Ffktkwg7iwzvrF1sPb54T7kjC8kPH3cbLM9q/ujwXLjIT2k
-	4XVMxiO2EP/yXauRQhUzOWfPJ0gW8Px09YZ1fM9Zru+0+Xe5W0upysBK8Kze+ZBiSAHos5Bx8FwhO
-	ER/6AYSJKt/bbC3YOGSZhAvDpnb4qsn8i3UiHdQhnigsovpze7UDOrTDbjM/+mHomdeLeGf51IumK
-	fSmBlFT/SwyRBj+pjiR00ucYaE+k6VZcQnGviMtPYhSyfIyuLCZePJ8AThwxdfHAMI4q1KJSC7QSG
-	MhTHtu3wp+BE+KszcnppakGPjHTROmYh8kYw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1u7bhz-0000000Em2o-10Yf;
-	Wed, 23 Apr 2025 17:08:19 +0200
-From: Johannes Berg <johannes@sipsolutions.net>
-To: netdev@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dojNHCKV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 503B3C4CEE3;
+	Wed, 23 Apr 2025 15:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745420905;
+	bh=YC2qgnmmCkhuux3qHYJ3SWVnmxx4OSbWLFxwEpHWl5c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=dojNHCKV9SAysXUyhOXQcSdlbKFRWDQAbFKG2q14euhfJUoIaQ293q8VSpqlYvam3
+	 fcVY77noSJwlPuDOLfLnoxXMR+95ShTfAm7HtcEajZWwdjbt+AHV4ct6rvwNweS2rO
+	 tFl4Q0b9hrFAvP7iqOA26aIgFLt1ZsTjDWULjIKemKJ22pim3V2838Px8u6TSj3uFz
+	 mQFWOILhu90F440Fx2JldGtBxD7SDPDOflqE1Lum+VBvBpw8ivotcNdLgd49XyPbqR
+	 B+VCm7WZKalAzhq2B/2+5llP//KtUyvQh6H7Mes2Rh1i1KCvsCwp/AjdtZxHs8mjEE
+	 nUDzBDsnqAwCw==
+Date: Wed, 23 Apr 2025 10:08:23 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Will McVicker <willmcvicker@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+	"Rob Herring (Arm)" <robh@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <jroedel@suse.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, iommu@lists.linux.dev,
+	Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
 	linux-kernel@vger.kernel.org
-Cc: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH net-next] net: ethernet: mtk_wed: annotate RCU release in attach()
-Date: Wed, 23 Apr 2025 17:08:08 +0200
-Message-ID: <20250423150811.456205-2-johannes@sipsolutions.net>
-X-Mailer: git-send-email 2.49.0
+Subject: Re: [PATCH v1] platform: Fix race condition during DMA configure at
+ IOMMU probe time
+Message-ID: <20250423150823.GA422889@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422232650.2737369-1-willmcvicker@google.com>
 
-From: Johannes Berg <johannes.berg@intel.com>
+On Tue, Apr 22, 2025 at 04:26:49PM -0700, Will McVicker wrote:
+> If devices are probed asynchronously, then there is a chance that during
+> the IOMMU probe the driver is bound to the device in parallel. If this
+> happens after getting the platform_driver pointer while in the function
+> `platform_dma_configure()`, then the invalid `drv` pointer
+> (drv==0xf...ffd8) will be de-referenced since `dev->driver != NULL`.
 
-There are some sparse warnings in wifi, and it seems that
-it's actually possible to annotate a function pointer with
-__releases(), making the sparse warnings go away. In a way
-that also serves as documentation that rcu_read_unlock()
-must be called in the attach method, so add that annotation.
+I need a little more hand-holding to make sense out of this.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
- include/linux/soc/mediatek/mtk_wed.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+After digging out
+https://lore.kernel.org/all/aAa2Zx86yUfayPSG@google.com/, I see that
+drv==0xf...ffd8 must be a result of applying to_platform_driver() to a
+NULL pointer.  This patch still applies to_platform_driver(NULL), but
+avoids using the result by testing drv for NULL later, which seems
+prone to error.
 
-diff --git a/include/linux/soc/mediatek/mtk_wed.h b/include/linux/soc/mediatek/mtk_wed.h
-index a476648858a6..d8949a4ed0dc 100644
---- a/include/linux/soc/mediatek/mtk_wed.h
-+++ b/include/linux/soc/mediatek/mtk_wed.h
-@@ -192,7 +192,7 @@ struct mtk_wed_device {
- };
- 
- struct mtk_wed_ops {
--	int (*attach)(struct mtk_wed_device *dev);
-+	int (*attach)(struct mtk_wed_device *dev) __releases(RCU);
- 	int (*tx_ring_setup)(struct mtk_wed_device *dev, int ring,
- 			     void __iomem *regs, bool reset);
- 	int (*rx_ring_setup)(struct mtk_wed_device *dev, int ring,
--- 
-2.49.0
+I think this would all be clearer if we tested for the NULL pointer
+explicitly before applying to_platform_driver().  I don't like setting
+a pointer to an invalid value.  I think it's better if the pointer is
+either valid or uninitialized because the compiler can help find uses
+of uninitialized pointers.
 
+> To avoid a kernel panic and eliminate the race condition, we should
+> guard the usage of `dev->driver` by only reading it once at the
+> beginning of the function.
+> 
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+> Signed-off-by: Will McVicker <willmcvicker@google.com>
+> ---
+>  drivers/base/platform.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 1813cfd0c4bd..b948c6e8e939 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -1440,7 +1440,8 @@ static void platform_shutdown(struct device *_dev)
+>  
+>  static int platform_dma_configure(struct device *dev)
+>  {
+> -	struct platform_driver *drv = to_platform_driver(dev->driver);
+> +	struct device_driver *drv = READ_ONCE(dev->driver);
+> +	struct platform_driver *pdrv = to_platform_driver(drv);
+>  	struct fwnode_handle *fwnode = dev_fwnode(dev);
+>  	enum dev_dma_attr attr;
+>  	int ret = 0;
+> @@ -1451,8 +1452,8 @@ static int platform_dma_configure(struct device *dev)
+>  		attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
+>  		ret = acpi_dma_configure(dev, attr);
+>  	}
+> -	/* @drv may not be valid when we're called from the IOMMU layer */
+> -	if (ret || !dev->driver || drv->driver_managed_dma)
+> +	/* @dev->driver may not be valid when we're called from the IOMMU layer */
+> +	if (ret || !drv || pdrv->driver_managed_dma)
+>  		return ret;
+>  
+>  	ret = iommu_device_use_default_domain(dev);
+> -- 
+> 2.49.0.805.g082f7c87e0-goog
+> 
