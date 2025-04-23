@@ -1,70 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDC341C69;
-	Wed, 23 Apr 2025 17:47:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028DD41C69
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430457; cv=none; b=KVzO8gLr3dFIgRLQ67YqlgX7tiZtu4q7636auq+C+Kzlbar91QioaPDTn9F3e/lC84d4I2gI3uVoGhIf7kQQCNMOSvSqUWPkbqsVS0F2wb4ybWEUiqQTKzTXZfFCUPGyfMsMH9kO6NBMK9+9Clp7ucmOdJLy2semlZPtm4aoJow=
+	t=1745430527; cv=none; b=u0dklD9zJstkVWgeAnLbzAgFtOEAM0sHYklZkb0Bh4MXBfxZCrEkDoyU6qDIUuaWl3n3qj14fhUq8n7a5dUgqOmi+ifK09wbvEi+GU5iONiOX7RonX4588NZ6o7K2c0dXPVXM32vboPjZatCZlyuiZDlSVJunfIMQK0c0KBvtgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430457; c=relaxed/simple;
-	bh=VsBgMm6ql9X21OmCeVGgqkwDam+RgQHacHaxh9tzAfE=;
+	s=arc-20240116; t=1745430527; c=relaxed/simple;
+	bh=3FNguulO/qyzIGlULRCSXYiQu5VPk19bxekq9naZME0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aouqsNYannFClJ/tz9wYpwPHACjchW3tDyuI8M/Mvkr60sy8z1UPJVV1jK/Xa2mWl3DEn/iR0DlotuIsczW/YleCCo7TwE/DTpJMqJUMTRftVtPdvgR8EIiJPiEtri8TJfAPJVe4SSyWeRzYtQGOKNyH0K8pSNRY60N7fkFLJPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZyEosRz/; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=W7IVLl/8WyxltCDnVoeXVzWe2TelJSu0hDRmGsb/sXfkzl8noZDh1/8kkC+zR0WbH788r9Hn1u2CFU5f/ujBq4NhDREsgwJnJBP8uHTghNr1UfVig2ecKKz4o0iuPbj7mBiPw3D4+xGdEZsyVvdbiPbczUM+DzuUmGmmZUVZt7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=flczgPhJ; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZyEosRz/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745430456; x=1776966456;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VsBgMm6ql9X21OmCeVGgqkwDam+RgQHacHaxh9tzAfE=;
-  b=ZyEosRz/H+lFDgyvyUru3ropDaZ/kFqoEH/PNfZzDqITYV8HEV7qCQKs
-   nHrposnzADtsQBs2t01I/EszMVZV8lMhkKrT/p2aZtYyIRNbZhKGxr9Z5
-   4pWjCb+TpzhtJhdHv3psmQ1i4v+xiPWLV2bVYj/DCA2wUn5kx6ZbejTBv
-   Wq0ppMoORN8AUK4sr2SyLPa2I7FF1rvCdEVIfxMrUQ0+70lGmaQOGbLcc
-   3hNcBWbKPQuIadIN/jd52kaKWsFL1wKjoiXs6KIm+kl9GdLMqepc/a806
-   bhgf9QzoIsjMgSzQlfssvq9rTBij47hCklmzgo4w8NwXgj3+Df67Eh2Im
-   g==;
-X-CSE-ConnectionGUID: B3nYhO4fT7GrPBv4W+Fz8w==
-X-CSE-MsgGUID: QJbRYxvAT0aa4vae8f3bCQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47168750"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="47168750"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:47:35 -0700
-X-CSE-ConnectionGUID: ASiuKRo8Syau7sjtBnrOLw==
-X-CSE-MsgGUID: mYd/xEnCTYCPxLKRG3eVuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="137173333"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 23 Apr 2025 10:47:31 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u7eC1-0003Vv-1W;
-	Wed, 23 Apr 2025 17:47:29 +0000
-Date: Thu, 24 Apr 2025 01:46:30 +0800
-From: kernel test robot <lkp@intel.com>
-To: David Lechner <dlechner@baylibre.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Eugen Hristev <eugen.hristev@linaro.org>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-Message-ID: <202504240137.4mJaj0GN-lkp@intel.com>
-References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="flczgPhJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=pQtVtfjcISAXVaI5AkP35trRWt3Y1MNmZDafxANLqh0=; b=flczgPhJv9872LkI9et9T6x2/0
+	OPgsl+sGZke1RUeQyscDdDs4GZCWisrK1xr6Ywv1u5BG1MsOWYrM/LuT78pfbIJI9AschGQVFUq7Z
+	rSBUNfbbyK/d8iZ6ZCflpEVTa7EVx4o1ogXzL77WBvUmdrj7ec4xaE7CVlOfYSKVv/zoJ2kLeXPVy
+	IoK9Dz+c0hfOYoCs2+EwPsP7b0N1AbrfT0pRgIw+5nZsvvTFrIGWO7adzV9Kpb0GEEY3vXMJp1PFi
+	oDQfH42qZeCPYQ5kBE4HEG+MhocFyF0AoXaVwVpnKRLEb4yHiGQSE839LjU+Hmr+JZdHzyddsp+vw
+	9gb86kKQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45988)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u7eD6-0006Kz-0U;
+	Wed, 23 Apr 2025 18:48:36 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u7eD4-0000Dl-0q;
+	Wed, 23 Apr 2025 18:48:34 +0100
+Date: Wed, 23 Apr 2025 18:48:34 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Marc Zyngier <maz@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+Subject: Re: [PATCH v3 4/6] arm64: nvhe: Convert the opencoded field modify
+Message-ID: <aAkn8lvzoa1grdkt@shell.armlinux.org.uk>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <20250417-field_modify-v3-4-6f7992aafcb7@quicinc.com>
+ <86r01rjald.wl-maz@kernel.org>
+ <aAJsaNdznnz-1qap@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,264 +69,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+In-Reply-To: <aAJsaNdznnz-1qap@yury>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-Hi David,
+On Fri, Apr 18, 2025 at 11:14:48AM -0400, Yury Norov wrote:
+> On Thu, Apr 17, 2025 at 12:23:10PM +0100, Marc Zyngier wrote:
+> > On Thu, 17 Apr 2025 11:47:11 +0100,
+> > Luo Jie <quic_luoj@quicinc.com> wrote:
+> > > 
+> > > Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
+> > > - reg &= ~MASK;
+> > > - reg |= FIELD_PREP(MASK, val);
+> > > The semantic patch that makes this change is available
+> > > in scripts/coccinelle/misc/field_modify.cocci.
+> > > 
+> > > More information about semantic patching is available at
+> > > https://coccinelle.gitlabpages.inria.fr/website
+> > > 
+> > > Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
+> > > ---
+> > >  arch/arm64/kvm/hyp/include/nvhe/memory.h | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > 
+> > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > index 34233d586060..b2af748964d0 100644
+> > > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > > @@ -30,8 +30,7 @@ enum pkvm_page_state {
+> > >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
+> > >  						 enum pkvm_page_state state)
+> > >  {
+> > > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
+> > > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
+> > > +	FIELD_MODIFY(PKVM_PAGE_STATE_PROT_MASK, &prot, state);
+> > >  	return prot;
+> > >  }
+> > 
+> > Following up on my suggestion to *not* add anything new, this patch
+> > could be written as:
+> > 
+> > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > index 34233d5860607..08cb6ba0e0716 100644
+> > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
+> > @@ -30,9 +30,8 @@ enum pkvm_page_state {
+> >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
+> >  						 enum pkvm_page_state state)
+> >  {
+> > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
+> > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
+> > -	return prot;
+> > +	u64 p = prot;
+> > +	return u64_replace_bits(p, state, PKVM_PAGE_STATE_PROT_MASK);
+> >  }
+> 
+> This is a great example where u64_replace_bit() should NOT be used. 
 
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on aff301f37e220970c2f301b5c65a8bfedf52058e]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/iio-introduce-IIO_DECLARE_BUFFER_WITH_TS-macros/20250423-061049
-base:   aff301f37e220970c2f301b5c65a8bfedf52058e
-patch link:    https://lore.kernel.org/r/20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706%40baylibre.com
-patch subject: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
-config: riscv-randconfig-002-20250424 (https://download.01.org/0day-ci/archive/20250424/202504240137.4mJaj0GN-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250424/202504240137.4mJaj0GN-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504240137.4mJaj0GN-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/iio/industrialio-buffer.c:18:
-   In file included from include/linux/dma-buf.h:16:
-   In file included from include/linux/iosys-map.h:10:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:804:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     804 |         insb(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:104:53: note: expanded from macro 'insb'
-     104 | #define insb(addr, buffer, count) __insb(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-buffer.c:18:
-   In file included from include/linux/dma-buf.h:16:
-   In file included from include/linux/iosys-map.h:10:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:812:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     812 |         insw(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:105:53: note: expanded from macro 'insw'
-     105 | #define insw(addr, buffer, count) __insw(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-buffer.c:18:
-   In file included from include/linux/dma-buf.h:16:
-   In file included from include/linux/iosys-map.h:10:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:820:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     820 |         insl(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:106:53: note: expanded from macro 'insl'
-     106 | #define insl(addr, buffer, count) __insl(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-buffer.c:18:
-   In file included from include/linux/dma-buf.h:16:
-   In file included from include/linux/iosys-map.h:10:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:829:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     829 |         outsb(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:118:55: note: expanded from macro 'outsb'
-     118 | #define outsb(addr, buffer, count) __outsb(PCI_IOBASE + (addr), buffer, count)
-         |                                            ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-buffer.c:18:
-   In file included from include/linux/dma-buf.h:16:
-   In file included from include/linux/iosys-map.h:10:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:838:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     838 |         outsw(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:119:55: note: expanded from macro 'outsw'
-     119 | #define outsw(addr, buffer, count) __outsw(PCI_IOBASE + (addr), buffer, count)
-         |                                            ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-buffer.c:18:
-   In file included from include/linux/dma-buf.h:16:
-   In file included from include/linux/iosys-map.h:10:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:847:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     847 |         outsl(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:120:55: note: expanded from macro 'outsl'
-     120 | #define outsl(addr, buffer, count) __outsl(PCI_IOBASE + (addr), buffer, count)
-         |                                            ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-buffer.c:18:
-   In file included from include/linux/dma-buf.h:16:
-   In file included from include/linux/iosys-map.h:10:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:1175:55: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-    1175 |         return (port > MMIO_UPPER_LIMIT) ? NULL : PCI_IOBASE + port;
-         |                                                   ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-buffer.c:29:
->> include/linux/iio/iio.h:813:16: error: static assertion failed due to requirement 'sizeof (__alignof(unsigned long long)) % sizeof(long long) == 0': macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment
-     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/iio/iio.h:813:55: note: expression evaluates to '4 == 0'
-     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-   7 warnings and 1 error generated.
---
-   In file included from drivers/iio/industrialio-sw-device.c:14:
-   In file included from include/linux/iio/sw_device.h:13:
->> include/linux/iio/iio.h:813:16: error: static assertion failed due to requirement 'sizeof (__alignof(unsigned long long)) % sizeof(long long) == 0': macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment
-     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/iio/iio.h:813:55: note: expression evaluates to '4 == 0'
-     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-   1 error generated.
---
-   In file included from drivers/iio/industrialio-triggered-event.c:9:
->> include/linux/iio/iio.h:813:16: error: static assertion failed due to requirement 'sizeof (__alignof(unsigned long long)) % sizeof(long long) == 0': macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment
-     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/iio/iio.h:813:55: note: expression evaluates to '4 == 0'
-     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-   In file included from drivers/iio/industrialio-triggered-event.c:10:
-   In file included from include/linux/iio/triggered_event.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:804:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     804 |         insb(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:104:53: note: expanded from macro 'insb'
-     104 | #define insb(addr, buffer, count) __insb(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-triggered-event.c:10:
-   In file included from include/linux/iio/triggered_event.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:812:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     812 |         insw(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:105:53: note: expanded from macro 'insw'
-     105 | #define insw(addr, buffer, count) __insw(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-triggered-event.c:10:
-   In file included from include/linux/iio/triggered_event.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:820:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     820 |         insl(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:106:53: note: expanded from macro 'insl'
-     106 | #define insl(addr, buffer, count) __insl(PCI_IOBASE + (addr), buffer, count)
-         |                                          ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-triggered-event.c:10:
-   In file included from include/linux/iio/triggered_event.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:829:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     829 |         outsb(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:118:55: note: expanded from macro 'outsb'
-     118 | #define outsb(addr, buffer, count) __outsb(PCI_IOBASE + (addr), buffer, count)
-         |                                            ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-triggered-event.c:10:
-   In file included from include/linux/iio/triggered_event.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:838:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     838 |         outsw(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:119:55: note: expanded from macro 'outsw'
-     119 | #define outsw(addr, buffer, count) __outsw(PCI_IOBASE + (addr), buffer, count)
-         |                                            ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-triggered-event.c:10:
-   In file included from include/linux/iio/triggered_event.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:12:
-   In file included from arch/riscv/include/asm/io.h:136:
-   include/asm-generic/io.h:847:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     847 |         outsl(addr, buffer, count);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/riscv/include/asm/io.h:120:55: note: expanded from macro 'outsl'
-     120 | #define outsl(addr, buffer, count) __outsl(PCI_IOBASE + (addr), buffer, count)
-         |                                            ~~~~~~~~~~ ^
-   In file included from drivers/iio/industrialio-triggered-event.c:10:
-   In file included from include/linux/iio/triggered_event.h:5:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
-
-
-vim +813 include/linux/iio/iio.h
-
-   781	
-   782	#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-   783		type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) / sizeof(type)]
-   784	
-   785	/**
-   786	 * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
-   787	 * @type: element type of the buffer
-   788	 * @name: identifier name of the buffer
-   789	 * @count: number of elements in the buffer
-   790	 *
-   791	 * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts(). In
-   792	 * addition to allocating enough space for @count elements of @type, it also
-   793	 * allocates space for a s64 timestamp at the end of the buffer and ensures
-   794	 * proper alignment of the timestamp.
-   795	 */
-   796	#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
-   797		_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
-   798	
-   799	/**
-   800	 * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
-   801	 * @type: element type of the buffer
-   802	 * @name: identifier name of the buffer
-   803	 * @count: number of elements in the buffer
-   804	 *
-   805	 * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
-   806	 * to ensure that the buffer doesn't share cachelines with anything that comes
-   807	 * before it in a struct. This should not be used for stack-allocated buffers
-   808	 * as stack memory cannot generally be used for DMA.
-   809	 */
-   810	#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
-   811		_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(IIO_DMA_MINALIGN)
-   812	
- > 813	_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
-   814		"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment");
-   815	
+Why not? Explain it. Don't leave people in the dark, because right
+now it looks like it's purely a religous fanaticism about what
+should and should not be used. Where's the technical reasoning?
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
