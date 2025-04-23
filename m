@@ -1,86 +1,362 @@
-Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D79628A1F7
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA11293B56
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423223; cv=none; b=S9jWBg9jjuLNHDJT99zSgetJk6caPqfdqAvT3pJs1ddOZYZSME/sfWlofQxGw+97wP9gf+nmW21EKXZIUKXdKyJqp+Qb4QulCfHVW9z4XuqIPWK594CNfpfLe5wSb+a7Zvk4zT/yZ15ni7IAqe68NLOIUogw+u9DVtDEgrCClaQ=
+	t=1745423224; cv=none; b=rpd2skviNKRJ3J+v5c1hWJP0SFN5UXpjtmAEa4oqml+G7PL9Oo9uKXuxrTFUpN4VkonkqBB1nMcdrpYGbU5DgOa0ioSNcotngJZk3mwLUk1SE2dRmDFygmmWAMCm4sT51/JcN08ckSZF4aYdwRJG71enDo5S2jJGdF+mV3rRFHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423223; c=relaxed/simple;
-	bh=Dlxtg6HfRMV30lx7TpyBWf0ABYivxrUw+hEbZcVQ55I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oz1WoeMZH6vcYluxamJKU5kLhBF6so1/nd6ynxgew08Cfj/kIIJE3drnF22UZo69akSjxfNVYwV+AsB1Tz7K0k5bLwhX0jY3l65YlOxMlJcnJLlqBRMUjhK8fuDHGNmxdKhwswQJMq1hkI/Otiu2mKui+aDpFSmQYII5mljhcZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=g0He3GFF; arc=none smtp.client-ip=91.218.175.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
+	s=arc-20240116; t=1745423224; c=relaxed/simple;
+	bh=FtiD49evKkopHgyw79yvN2VUvaXY9BdMZt1P9TMHan0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AD/E3nOlEawZwPByzHnHPj84GjvyoyukVjIDMnbndQGwujiPQmvRLX02FMAocqP30Srd51o44o5DBB0q+DLZVv6nLupsVE5KqScEXklZkn7cDivrPUbdM0YogBCb6qYGCi3FAMELrloBDlYNLrPodGniS1eWKVIiMtAEPBvZY8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qvwcrzs3; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="g0He3GFF"
-Date: Wed, 23 Apr 2025 11:46:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
-	s=key1; t=1745423209;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0uTQ6p+V1jTDw30/bAcPN/7+p5TBcCgK8gHCjb8Oz0Q=;
-	b=g0He3GFFtIeA0y+TZSb8ZM5l4SKbGuwYGKGOYwdpzty/lxLNEiXCOv5K3IiaArEH3gZOvC
-	OUvGYNJpg0LXfJ2XzYkLKJon6mmOe1XmPjKBaULtWsbZsRORyC2xET6NZT8ygT4vr88qAa
-	XaBvJ9NiJK5TMMpTlEEhA1szOHKYyBWBZaRHg1MxwQ4RAzncmwmaGy31MtV4ZdlRi5WqtO
-	wuz+lTHuyiOOFi0dwmcpXei6JAzKQHxAJ2Ismpak5mxi5Z1Rb7YuFCAd9LRZPEvjsyW4W1
-	Vncv3A1dF010GrnpFagFy6liYg3iWr5UB4K8ypp6HLgTRZrK51KOvKVl75q/mQ==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
-To: Rob Herring <robh@kernel.org>
-Cc: Nick Chan <towinchenmi@gmail.com>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>,
-	Neal Gompa <neal@gompa.dev>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: spmi: Add generic SPMI NVMEM
-Message-ID: <aAkLY3TYIPG7ojwx@blossom>
-References: <20250417-spmi-nvmem-v2-0-b88851e34afb@gmail.com>
- <20250417-spmi-nvmem-v2-1-b88851e34afb@gmail.com>
- <20250422133619.GA1095169-robh@kernel.org>
- <CAMT+MTTwY=z1-_94ws+Oi+wvE2PA_s57dPmpMABC26q=MPw1Mg@mail.gmail.com>
- <e4159c2b-4081-4a4b-9a53-d6d559a3196c@gmail.com>
- <CAL_JsqKwASbUtpO=wU-16v=y8S_wLyBxnFUmQqsE8GkzCz0hDg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qvwcrzs3"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so9280415e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745423220; x=1746028020; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RBSNViqkuRI/TRt0mXtEOajIQeER8Kt922Qarfmg8nI=;
+        b=Qvwcrzs3C/DxvzoXW53FbxpIy91iWwKzS2RMUOTrgvFVmtud7fUGDl0NcSP27Yobyr
+         ZosGeB9hRtWK+fFFpfn3P9Ky+9YSZwcMrfL6ge7egBkafTGYQvRSXKqc+avWIj/+TJ+o
+         GteuiDcXQDh+/aGXfG0x/bdMRb//ti1MSl4dSrhWMGqpzIO9WFdKlRJjHaT2watJGFrb
+         tjkjYp9XqQGiTzIbzkbc1L5a/HZiJfmunLfOZNRqiSuWrO8Lmx+8Sw9XX15irDlKxpLK
+         aUzNH3+ONO7Wf1lqTNidFl4oCNNK0XOX5gLYgHH1ggp6xF/cvQN1jQT8RFtWerkbyya9
+         wFvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745423220; x=1746028020;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RBSNViqkuRI/TRt0mXtEOajIQeER8Kt922Qarfmg8nI=;
+        b=r/uRJsUnU8YkK2GR/pWvu3D+63rh2P5lJs5FSY4h4Sn5/jn4xIKFyZIQ3FB2dyDcBl
+         ZG8B6mBtgzvbo+WPC7tNsbI+g/p6OJo/PzkhVx2RKOthff3hY6hiTNvCXy117sRDVZEO
+         XmHLypwm/HMLLAMPAvs3j+XpUKsfNoR6R9SbR0/Dc1D8HbDDLvzMiyrMn762bUbk1jV1
+         ylbU0hevidU6z9Y3lYvp33Fu6atkshoyqX8Gyq3BNfl3/gAUfct6s51wtEox9Sx3P9//
+         KUHrYBlYXf7XM2V6hpS2LBzMg15AMHYdlsKUgLGtzDrukXzI1HHea3H+tFxmQzzA9HoJ
+         IoTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXGUZ1JzOWSUhdYUnNeJB2iYiHtUIsjvGQxDZ6oaYWvhWuWObtM3TmtP1SQFE7AdeXG3CjsJL3F2A+z9BQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJNisKaEieejNkppj8EDsaBHtlqLpInAyXKhRvUETgNxOYqoBn
+	JQIHa0+I+6a+SgAFKPbSVIay/SI3VwZcgMPnvX/PQsKgG2PN8xrlLd5WjKhWSbA=
+X-Gm-Gg: ASbGnctnp5VA+QKsMHSJ2f4T0FPKH802+urW4dL3nkJJq+i2awB3++n8ZtmICWhyFWD
+	P5LqRnxFN1fD5AJCmDPKzf03VS1tcE2XJ+oU3YlhpUpj/SuCVazaqk7SgmARgM6IekGdTQBm2gT
+	r1fwQD2UPH+WweWJVindtzKVf3eFe9jyk2D3hKbMNLk/BiFpuEOhOblzBTBpg/nOAHug4eWCAPH
+	kzADt1PmdDE4lbwB7jop1OAdQ+ncbtZlQTq9dqG1Sq3WZPpGjU9M0Qxbt3IzEPQ8XFEuuoW+SsA
+	apm8xNLeVjR+T6SalJlPurEcglkNT5yD3UqZoRQDsTmiPUNZVIl0nacWi84OwrTk35OFWTqoMCf
+	tDsPdAg==
+X-Google-Smtp-Source: AGHT+IGRqlscROTF97YUT2JPZD4gVqvUUJgeFoJfDaqI0Nb77xbcn8oHZZ3WiZAALXwanMaTLSpX2A==
+X-Received: by 2002:a5d:584e:0:b0:39c:266b:feec with SMTP id ffacd0b85a97d-3a06723be72mr3609275f8f.7.1745423220282;
+        Wed, 23 Apr 2025 08:47:00 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa43d006sm19443328f8f.56.2025.04.23.08.46.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 08:46:59 -0700 (PDT)
+Message-ID: <43f08fc9-6287-4df0-8d09-6572241621e8@linaro.org>
+Date: Wed, 23 Apr 2025 16:46:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKwASbUtpO=wU-16v=y8S_wLyBxnFUmQqsE8GkzCz0hDg@mail.gmail.com>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/4] media: iris: add qcs8300 platform data
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250423-qcs8300_iris-v3-0-d7e90606e458@quicinc.com>
+ <20250423-qcs8300_iris-v3-2-d7e90606e458@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250423-qcs8300_iris-v3-2-d7e90606e458@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> > >> What makes this generic?
-> > >>
-> > >> A generic driver is great, but "generic" or "simple" bindings are
-> > >> generally a mistake.
-> > > There is nothing apple-specific in that driver, just re-exporting
-> > > several registers as cells. If you think that it is a mistake, I can
-> > > rename it to apple-pmic, or something similar.
+On 23/04/2025 16:39, Vikash Garodia wrote:
+> Add platform data for QCS8300, which has different capabilities compared
+> to SM8550. Introduce a QCS8300 header that defines these capabilities
+> and fix the order of compat strings.
 > 
-> Like I said, a generic *driver* is great! I'm all for them. We should
-> have more of them! Generic bindings on the other hand are generally a
-> mistake. The problem is whether a generic driver works for you or not
-> can evolve in either direction. You add more things like described
-> below and then a generic driver doesn't work.
+> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> ---
+>   .../platform/qcom/iris/iris_platform_common.h      |   1 +
+>   .../media/platform/qcom/iris/iris_platform_gen2.c  |  57 ++++++++++
+>   .../platform/qcom/iris/iris_platform_qcs8300.h     | 124 +++++++++++++++++++++
+>   drivers/media/platform/qcom/iris/iris_probe.c      |  16 ++-
+>   4 files changed, 192 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> index 6bc3a7975b04d612f6c89206eae95dac678695fc..3191a910653ce4bd71de9a0b4465fd583602adf6 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> @@ -36,6 +36,7 @@ enum pipe_type {
+>   extern struct iris_platform_data sm8250_data;
+>   extern struct iris_platform_data sm8550_data;
+>   extern struct iris_platform_data sm8650_data;
+> +extern struct iris_platform_data qcs8300_data;
+>   
+>   enum platform_clk_type {
+>   	IRIS_AXI_CLK,
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_gen2.c b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> index 5ff82296ee8ea5ad3954bd2254594048adcb8404..723e9f4cef42408168aca22b34ccd0a674a4fd25 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> @@ -11,6 +11,7 @@
+>   #include "iris_vpu_common.h"
+>   
+>   #include "iris_platform_sm8650.h"
+> +#include "iris_platform_qcs8300.h"
 
-It sounds like the path of least resistance here is then:
+This is out of order, reviewing the header I don't believe there's any 
+dependency in qcs8300.h on sm8650.h that justifies.
 
-1. rename the bindings to be apple m1+ (at least for now)
-2. keep the driver as-is (no mfd, etc - at least for now)
-3. land just that (at least for now)
+qcs8300.h
+sm8650.h
 
-Evolving the driver to share with not-Apple, or evolving the
-bindings+driver to share with pre-M1, can happen in future series
-if/when somebody wants to do that work.
 
-Is this a fair understanding of the situation?
+>   
+>   #define VIDEO_ARCH_LX 1
+>   
+> @@ -326,3 +327,59 @@ struct iris_platform_data sm8650_data = {
+>   	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+>   	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+>   };
+> +
+> +/*
+> + * Shares most of SM8550 data except:
+> + * - inst_caps to platform_inst_cap_qcs8300
+> + * - inst_fw_caps to inst_fw_cap_qcs8300
+> + */
+> +struct iris_platform_data qcs8300_data = {
+> +	.get_instance = iris_hfi_gen2_get_instance,
+> +	.init_hfi_command_ops = iris_hfi_gen2_command_ops_init,
+> +	.init_hfi_response_ops = iris_hfi_gen2_response_ops_init,
+> +	.vpu_ops = &iris_vpu3_ops,
+> +	.set_preset_registers = iris_set_sm8550_preset_registers,
+> +	.icc_tbl = sm8550_icc_table,
+> +	.icc_tbl_size = ARRAY_SIZE(sm8550_icc_table),
+> +	.clk_rst_tbl = sm8550_clk_reset_table,
+> +	.clk_rst_tbl_size = ARRAY_SIZE(sm8550_clk_reset_table),
+> +	.bw_tbl_dec = sm8550_bw_table_dec,
+> +	.bw_tbl_dec_size = ARRAY_SIZE(sm8550_bw_table_dec),
+> +	.pmdomain_tbl = sm8550_pmdomain_table,
+> +	.pmdomain_tbl_size = ARRAY_SIZE(sm8550_pmdomain_table),
+> +	.opp_pd_tbl = sm8550_opp_pd_table,
+> +	.opp_pd_tbl_size = ARRAY_SIZE(sm8550_opp_pd_table),
+> +	.clk_tbl = sm8550_clk_table,
+> +	.clk_tbl_size = ARRAY_SIZE(sm8550_clk_table),
+> +	/* Upper bound of DMA address range */
+> +	.dma_mask = 0xe0000000 - 1,
+> +	.fwname = "qcom/vpu/vpu30_p4_s6.mbn",
+> +	.pas_id = IRIS_PAS_ID,
+> +	.inst_caps = &platform_inst_cap_qcs8300,
+> +	.inst_fw_caps = inst_fw_cap_qcs8300,
+> +	.inst_fw_caps_size = ARRAY_SIZE(inst_fw_cap_qcs8300),
+> +	.tz_cp_config_data = &tz_cp_config_sm8550,
+> +	.core_arch = VIDEO_ARCH_LX,
+> +	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
+> +	.ubwc_config = &ubwc_config_sm8550,
+> +	.num_vpp_pipe = 2,
+> +	.max_session_count = 16,
+> +	.max_core_mbpf = ((4096 * 2176) / 256) * 4,
+> +	.input_config_params =
+> +		sm8550_vdec_input_config_params,
+> +	.input_config_params_size =
+> +		ARRAY_SIZE(sm8550_vdec_input_config_params),
+> +	.output_config_params =
+> +		sm8550_vdec_output_config_params,
+> +	.output_config_params_size =
+> +		ARRAY_SIZE(sm8550_vdec_output_config_params),
+> +	.dec_input_prop = sm8550_vdec_subscribe_input_properties,
+> +	.dec_input_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_input_properties),
+> +	.dec_output_prop = sm8550_vdec_subscribe_output_properties,
+> +	.dec_output_prop_size = ARRAY_SIZE(sm8550_vdec_subscribe_output_properties),
+> +
+> +	.dec_ip_int_buf_tbl = sm8550_dec_ip_int_buf_tbl,
+> +	.dec_ip_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_ip_int_buf_tbl),
+> +	.dec_op_int_buf_tbl = sm8550_dec_op_int_buf_tbl,
+> +	.dec_op_int_buf_tbl_size = ARRAY_SIZE(sm8550_dec_op_int_buf_tbl),
+> +};
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_qcs8300.h b/drivers/media/platform/qcom/iris/iris_platform_qcs8300.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..f82355d72fcffe7e361bd30877cccb83fe9b549f
+> --- /dev/null
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_qcs8300.h
+> @@ -0,0 +1,124 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2022-2025 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +static struct platform_inst_fw_cap inst_fw_cap_qcs8300[] = {
+> +	{
+> +		.cap_id = PROFILE,
+> +		.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
+> +		.max = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH,
+> +		.step_or_mask = BIT(V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_HIGH) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_MAIN) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_HIGH),
+> +		.value = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+> +		.hfi_id = HFI_PROP_PROFILE,
+> +		.flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
+> +		.set = iris_set_u32_enum,
+> +	},
+> +	{
+> +		.cap_id = LEVEL,
+> +		.min = V4L2_MPEG_VIDEO_H264_LEVEL_1_0,
+> +		.max = V4L2_MPEG_VIDEO_H264_LEVEL_6_2,
+> +		.step_or_mask = BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_0) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1B)  |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_1) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_2) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_1_3) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_2_0) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_2_1) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_2_2) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_3_0) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_3_1) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_3_2) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_4_0) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_4_1) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_4_2) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_5_0) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_5_1) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_5_2) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_6_0) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_6_1) |
+> +			BIT(V4L2_MPEG_VIDEO_H264_LEVEL_6_2),
+> +		.value = V4L2_MPEG_VIDEO_H264_LEVEL_6_1,
+> +		.hfi_id = HFI_PROP_LEVEL,
+> +		.flags = CAP_FLAG_OUTPUT_PORT | CAP_FLAG_MENU,
+> +		.set = iris_set_u32_enum,
+> +	},
+> +	{
+> +		.cap_id = INPUT_BUF_HOST_MAX_COUNT,
+> +		.min = DEFAULT_MAX_HOST_BUF_COUNT,
+> +		.max = DEFAULT_MAX_HOST_BURST_BUF_COUNT,
+> +		.step_or_mask = 1,
+> +		.value = DEFAULT_MAX_HOST_BUF_COUNT,
+> +		.hfi_id = HFI_PROP_BUFFER_HOST_MAX_COUNT,
+> +		.flags = CAP_FLAG_INPUT_PORT,
+> +		.set = iris_set_u32,
+> +	},
+> +	{
+> +		.cap_id = STAGE,
+> +		.min = STAGE_1,
+> +		.max = STAGE_2,
+> +		.step_or_mask = 1,
+> +		.value = STAGE_2,
+> +		.hfi_id = HFI_PROP_STAGE,
+> +		.set = iris_set_stage,
+> +	},
+> +	{
+> +		.cap_id = PIPE,
+> +		.min = PIPE_1,
+> +		.max = PIPE_2,
+> +		.step_or_mask = 1,
+> +		.value = PIPE_2,
+> +		.hfi_id = HFI_PROP_PIPE,
+> +		.set = iris_set_pipe,
+> +	},
+> +	{
+> +		.cap_id = POC,
+> +		.min = 0,
+> +		.max = 2,
+> +		.step_or_mask = 1,
+> +		.value = 1,
+> +		.hfi_id = HFI_PROP_PIC_ORDER_CNT_TYPE,
+> +	},
+> +	{
+> +		.cap_id = CODED_FRAMES,
+> +		.min = CODED_FRAMES_PROGRESSIVE,
+> +		.max = CODED_FRAMES_PROGRESSIVE,
+> +		.step_or_mask = 0,
+> +		.value = CODED_FRAMES_PROGRESSIVE,
+> +		.hfi_id = HFI_PROP_CODED_FRAMES,
+> +	},
+> +	{
+> +		.cap_id = BIT_DEPTH,
+> +		.min = BIT_DEPTH_8,
+> +		.max = BIT_DEPTH_8,
+> +		.step_or_mask = 1,
+> +		.value = BIT_DEPTH_8,
+> +		.hfi_id = HFI_PROP_LUMA_CHROMA_BIT_DEPTH,
+> +	},
+> +	{
+> +		.cap_id = RAP_FRAME,
+> +		.min = 0,
+> +		.max = 1,
+> +		.step_or_mask = 1,
+> +		.value = 1,
+> +		.hfi_id = HFI_PROP_DEC_START_FROM_RAP_FRAME,
+> +		.flags = CAP_FLAG_INPUT_PORT,
+> +		.set = iris_set_u32,
+> +	},
+> +};
+> +
+> +static struct platform_inst_caps platform_inst_cap_qcs8300 = {
+> +	.min_frame_width = 96,
+> +	.max_frame_width = 4096,
+> +	.min_frame_height = 96,
+> +	.max_frame_height = 4096,
+> +	.max_mbpf = (4096 * 2176) / 256,
+> +	.mb_cycles_vpp = 200,
+> +	.mb_cycles_fw = 326389,
+> +	.mb_cycles_fw_vpp = 44156,
+> +	.num_comv = 0,
+> +};
+> diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+> index 7cd8650fbe9c09598670530103e3d5edf32953e7..6bc072c573e85b6d348e7d31509e8551ee0d1f16 100644
+> --- a/drivers/media/platform/qcom/iris/iris_probe.c
+> +++ b/drivers/media/platform/qcom/iris/iris_probe.c
+> @@ -335,16 +335,20 @@ static const struct dev_pm_ops iris_pm_ops = {
+>   };
+>   
+>   static const struct of_device_id iris_dt_match[] = {
+> +#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
+> +	{
+> +		.compatible = "qcom,sm8250-venus",
+> +		.data = &sm8250_data,
+> +	},
+> +#endif
+> +	{
+> +		.compatible = "qcom,qcs8300-iris",
+> +		.data = &qcs8300_data,
+> +	},
+
+same comment q should come before s in our ordered lists.
+
+>   	{
+>   		.compatible = "qcom,sm8550-iris",
+>   		.data = &sm8550_data,
+>   	},
+> -#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
+> -		{
+> -			.compatible = "qcom,sm8250-venus",
+> -			.data = &sm8250_data,
+> -		},
+> -#endif
+
+This part is right but should probably be a separate patch fixing the 
+existing ordering.
+
+>   	{
+>   		.compatible = "qcom,sm8650-iris",
+>   		.data = &sm8650_data,
+> 
+---bod
