@@ -1,89 +1,90 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3754F28BAA9;
-	Wed, 23 Apr 2025 15:24:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8C328CF76;
+	Wed, 23 Apr 2025 15:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421881; cv=none; b=Qoc0UROV8jt7VWzdun7WZMfDpP+zi5msVMB2/1C7Pf6/dna4h2vE+qU+dw+Td5RJYL6IZUaJqxww9LDMDtBcyjKZ/fC6aYNQxRER/QGGJfzLLRSgrHxWVPKLnzYFWQE3gmNQ+gVqbZlzrAaWEMOqhzUS4X70Ol0pwZGmuBVtFus=
+	t=1745421885; cv=none; b=pR1Gk2HEnyFSyFsQHvd+jteMpFFGgR22l77QRNSdMlsYG7QiTtBMYsFjv3/i2iD6TPARHuSPs02xEXgx6TpXF6CRWceyKW1qqCBHwQM9MXH4WCMTTBLcQHE9kZh0uoudsrQBGLaipUQ/C1RClFp08tpA6kIRojWTO91G2kWsxMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421881; c=relaxed/simple;
-	bh=nMhCwAOTSMRyVPdhT0XUroexVj2lZ57XR6Ezp9vic6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LtWxzADva783RYCqN0pglLXrFYmrhJC+PxPyh7qqk7WNcMqW9TH6L8AgHPKViE6cZoLp7cb8+aXjQjnaEvqi40J6wt2XISDnQYnvvwMl5VgkJGXMPZo/GDe/fRSJf35K4mTAqMPLNyZ3JGXZKbFrC+z224jRZfizY83WFGW/LKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Cp0hA+Ip; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745421885; c=relaxed/simple;
+	bh=3GqdD9EsYekxTXVnDEaqYUNg6+oGL8a/ncx/IINGhz0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uGmWjqnr2JXXJXwHsL6CrPJLmXl3qzlra4yQs8WogEpaJ1ubCVp8HVK0tFbdmZAFu3JSjpCgoBUMLJSvL0ssDfhZK/uZt4F1Z2VXIuvN4BqTp5AtKyXzim09CBz+28A1TCTHFjiWmO11ZBn+3mNBwpauugJiUoSixn1m9da/XUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lTHh/ZVh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Cp0hA+Ip"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=fLf6c6c5ft8eN46VJWzZEfTcLHZ/iFnsmavl08qDxwU=;
-	b=Cp0hA+IpCX8WlV1svNV2MyHKPXjl4LoFaXE7Xrw/Badl8BO+C+hHZwx+ElOkcQ
-	eqscdFuprmIXObh56TRVMM7UNOB9XYAOuXyt5vptI36gOtPLW2cXYqMpWSy29JsW
-	I9URNWxVX2J5ZPX6Bj4iY0vFHAtrO5y0QAwoayJE6hVwI=
-Received: from [192.168.71.89] (unknown [])
-	by gzga-smtp-mtada-g0-1 (Coremail) with SMTP id _____wDnfGf9BQloLLNpCA--.43427S2;
-	Wed, 23 Apr 2025 23:23:42 +0800 (CST)
-Message-ID: <9212f2ee-9562-4409-a378-20e41fe30325@163.com>
-Date: Wed, 23 Apr 2025 23:23:41 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lTHh/ZVh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCA26C4CEE2;
+	Wed, 23 Apr 2025 15:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745421885;
+	bh=3GqdD9EsYekxTXVnDEaqYUNg6+oGL8a/ncx/IINGhz0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lTHh/ZVhwKtm3WTFvXhFHAc4u2dMYSa9kc/5UANUuEMhBzI1z5q9twt0ELKCRgK+z
+	 HePHwlB3IOsO9Y/Qshg/Q8NVvkUNrzWSPLlXGvHVPJIjCIygM/3YnZo0Tb154ddD6R
+	 fucKRN4vDR+ZCdFI9SwPNssuj2WRlpuCQcguTESu2mbxW2pJmkdR+NyUdHHBwixpMM
+	 s9UiyBtLLy2pLhJ9o2eFfXHWFyGm4eo50VtfNiBEdhQzgCA6sjbc2olmg37x6dAiKh
+	 ZNsvfB/eWMe+iFkDLmjWkktTrmRPDHs+rcjSQMKt79GNQ2NftO1bap9z5X0GeXjhH+
+	 N6/0F+xHlMp7A==
+Date: Wed, 23 Apr 2025 10:24:43 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Quentin Schulz <foss+kernel@0leil.net>
+Cc: devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	=?utf-8?Q?=C5=81ukasz?= Czechowski <lukasz.czechowski@thaumatec.com>,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Quentin Schulz <quentin.schulz@cherry.de>
+Subject: Re: [PATCH v2] dt-bindings: usb: usb-device: relax compatible
+ pattern to a contains
+Message-ID: <174542188274.551504.11808715673086067536.robh@kernel.org>
+References: <20250418-dt-binding-usb-device-compatibles-v2-1-b3029f14e800@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] PCI: dw-rockchip: Reorganize register and bitfield
- definitions
-To: Niklas Cassel <cassel@kernel.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
- heiko@sntech.de, manivannan.sadhasivam@linaro.org, robh@kernel.org,
- jingoohan1@gmail.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org
-References: <20250423105415.305556-1-18255117159@163.com>
- <20250423105415.305556-3-18255117159@163.com> <aAjufPQnBsR6ysAH@ryzen>
- <352e40a0-65e2-499f-a7dd-904a4a7b19da@163.com> <aAkDRIqIOjLo7haw@ryzen>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <aAkDRIqIOjLo7haw@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDnfGf9BQloLLNpCA--.43427S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7XF4ktF47Gw18Cr4UtrWUJwb_yoW3trgEqr
-	4UArsxCryqgF9xWa93Jr1jyFsIk3ykuw45urykXr4Iyw1agrs5Kr429rZ3JFy8Ja13GFs2
-	kw15Aa1ruryS9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjqjg3UUUUU==
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWw44o2gJAM5KAgABso
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418-dt-binding-usb-device-compatibles-v2-1-b3029f14e800@cherry.de>
 
 
-
-On 2025/4/23 23:12, Niklas Cassel wrote:
-> On Wed, Apr 23, 2025 at 10:14:57PM +0800, Hans Zhang wrote:
->>> I can see why you renamed PCIE_CLIENT_GENERAL_CONTROL to PCIE_CLIENT_GENERAL_CON
->>> (to match PCIE_CLIENT_MSG_GEN_CON).
->>>
->>> But now we have PCIE_CLIENT_MSG_GEN_CON / PCIE_CLIENT_GENERAL_CON and
->>> PCIE_CLIENT_HOT_RESET_CTRL.
->>>
->>> _CTRL seems like a more common shortening. How about renaming all three to
->>> end with _CTRL ?
->>
->> I saw that TRM is named like this.
->>
->> PCIE_CLIENT_GENERAL_CON / PCIE_CLIENT_MSG_GEN_CON /
->> PCIE_CLIENT_HOT_RESET_CTRL
->>
->> Shall we take TRM as the standard or your suggestion?
+On Fri, 18 Apr 2025 16:08:20 +0200, Quentin Schulz wrote:
+> From: Quentin Schulz <quentin.schulz@cherry.de>
 > 
-> Aha, so the inconsistency is in the TRM... hahaha :)
+> The dt-core typically allows multiple compatibles[1] but usb-device
+> currently forces a single compatible.
 > 
-> Probably best to keep it identical to the TRM.
+> This is an issue when multiple devices with slightly different productID
+> all behave the same. This would require the driver to keep updating its
+> compatible matching table to include this new productID instead of doing
+> what is usually done: have two compatibles, the leftmost which matches
+> exactly the HW device definition, and the rightmost one as a fallback
+> which is assumed to be 100% compatible with the device at hand. If this
+> assumption turns out to be wrong, it is easy to work around this without
+> having to modify the device tree by handling the leftmost compatible in the driver.
+> 
+> [1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/dt-core.yaml#L21-L25
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
+> ---
+> This came up while working on fixing USB on an RK3399 Puma which has an
+> onboard USB hub whose productID isn't in any driver compatible list
+> but which can be supported by a driver with a slightly different
+> productID matching another variant of the same IC, from the same
+> datasheet.
+> 
+> See https://lore.kernel.org/linux-rockchip/20250326-onboard_usb_dev-v1-0-a4b0a5d1b32c@thaumatec.com/
+> ---
+> Changes in v2:
+> - use contains: instead of pattern: to relax the check, similarly to
+>   what's done for PCI (suggested by Rob),
+> - Link to v1: https://lore.kernel.org/r/20250415-dt-binding-usb-device-compatibles-v1-1-90f3cff32aa0@cherry.de
+> ---
+>  Documentation/devicetree/bindings/usb/usb-device.yaml | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 
-Hi Niklas,
-
-Thank you very much for your reply. Okay.
-
-Best regards,
-Hans
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
