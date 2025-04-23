@@ -1,88 +1,234 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3D313D2B2;
-	Wed, 23 Apr 2025 13:06:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B58678F36
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:07:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745413590; cv=none; b=sdg7bt7EEqv3M/Mx3aq/eRcK3S8wvg5LVX5+6c7QB+HE0RZkHErKF+u8LVjP1EoJDEzSRn2EQSFhesSwvhK+bQsMixCkODGwW+OYrrahRe718aq3RzgC2wAcdawHWMqBlKbV8PthHU1KZ9ZlH95K47IuX/BxPnNMSIjtDpt8nn0=
+	t=1745413623; cv=none; b=DIiPJuH7oS92dIryH/npLP4YSgQ1EkCnqge8NbQVg2dMVdv1ChMpvrm+8w6Kx0T7zQ1siafHAA578XyhPmV+GwJyrICS5rMNX1Tr1H4LKaBP1qja7rYgZbH4E3sdMkmGfXpbK64OSyo7nhl3YbgZa7Z1TVM4jMGvJ/E6rC+citk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745413590; c=relaxed/simple;
-	bh=BrhyAB4ReiVrpejcu0KXpfQsiCt5Tj56hdvoK6ZO0X4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jREfc38MR+/8zonw2Jgeg3RxONJV0VUkATujT2Y4hWuKDub20UEyw8E8L3VfDzRj3sWOdFa7WYe+7mK9F56yd/LdsoTzdvmVqonmYYs3eAScEPRCepyiaR1W2pmh1fe9nHU9AJ+bgK3BiSVVOPXUzQdjmL+u+elmGus0SoRFq6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XpdZbQPe; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745413623; c=relaxed/simple;
+	bh=JvQsrhmSRnDGQ8NfR2/+/N0BJWT7+gNw4O/f+A/cJlY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dd6uaLyTfBpsJ5RHsTXB5RGiO9wuvxIlr4zUVg38Z9k9jdaoXkQD5kL+KVNEiNe1nHZ9u3YFp4FwBfmnNosAomifYwSO1sfUSi6j6x7WfHhkocBcqedNHV1sRN9IVeo/1NqRH5qQty81cB97DYgyRe0DBhCLZv8YvKz68FQkS50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dn1S+BWW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wibj3zQE; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=dn1S+BWW; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Wibj3zQE; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XpdZbQPe"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2B96542D43;
-	Wed, 23 Apr 2025 13:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745413581;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dn1S+BWW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wibj3zQE";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="dn1S+BWW";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Wibj3zQE"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 53466211B5;
+	Wed, 23 Apr 2025 13:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745413618; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kdx4+KCNsL/RbOnsh0AKTMlxt7jQBwIor7Q9H0NjOdQ=;
-	b=XpdZbQPeHsBqctCfHtAfTBSipxel27X6oyylrtMCUFgKEADfLXejKcQOzOyemJW6wNoS17
-	qzsKc2V66Cd7k7UIp0Gk0sfVz9qftUV4zifQCFoYJ2rLe4bTlRR6t5L2wjc4nTyDA6yoUv
-	fvhCEVhWla8k3WZHpp04l6B30K9aHOioCuND94Zkamrs8Q/igACHfSF6md96Ru9dHkuafS
-	5s51XWiWUdd8tVLp7bAD6qlK8/G2XGXRrsjVb5FesFGSWCy/vFJtRFY4f59mWh2MYRiMKi
-	xOnDgL73ln/C5hmLCEx8lY5ZEhfKm3VrOb6Cirew6QRzXps5/Dr16t9putZG6A==
-Date: Wed, 23 Apr 2025 15:06:18 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Russell King
- <linux@armlinux.org.uk>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, Simon Horman <horms@kernel.org>, Alexis
- =?UTF-8?B?TG90aG9yw6k=?= <alexis.lothore@bootlin.com>
-Subject: Re: [PATCH net v2 0/3] net: stmmac: socfpga: 1000BaseX support and
- cleanups
-Message-ID: <20250423150618.75ca8a4f@device-40.home>
-In-Reply-To: <20250423104646.189648-1-maxime.chevallier@bootlin.com>
-References: <20250423104646.189648-1-maxime.chevallier@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	bh=uCXSygqQaZz2sFZKWsGVR3zoYdmBl8B48kUOxgpdrUg=;
+	b=dn1S+BWWUHqHnOLJgdxIex+yaeauBaeWK3AXgOVEkVRYuTBAChK4qRykLyhnbS0NH6IRel
+	KoHroteBuQ16vx/9IoQIXMmI/8b63pIaMG/OcLkQZ21RgDa39PWvnd4FJsySaRvgUItJ2Y
+	DAUHq+a/DrcvB9hfojQRKeXBu8jLtYg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745413618;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uCXSygqQaZz2sFZKWsGVR3zoYdmBl8B48kUOxgpdrUg=;
+	b=Wibj3zQEytrlFQ/z24z/yrWEV/f26wdOcO0pnUDY8UDLFvCkmSak/ctLnmGEM4sYBkRHpa
+	4381HrRDnLu5oVBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745413618; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uCXSygqQaZz2sFZKWsGVR3zoYdmBl8B48kUOxgpdrUg=;
+	b=dn1S+BWWUHqHnOLJgdxIex+yaeauBaeWK3AXgOVEkVRYuTBAChK4qRykLyhnbS0NH6IRel
+	KoHroteBuQ16vx/9IoQIXMmI/8b63pIaMG/OcLkQZ21RgDa39PWvnd4FJsySaRvgUItJ2Y
+	DAUHq+a/DrcvB9hfojQRKeXBu8jLtYg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745413618;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uCXSygqQaZz2sFZKWsGVR3zoYdmBl8B48kUOxgpdrUg=;
+	b=Wibj3zQEytrlFQ/z24z/yrWEV/f26wdOcO0pnUDY8UDLFvCkmSak/ctLnmGEM4sYBkRHpa
+	4381HrRDnLu5oVBQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3C88913A3D;
+	Wed, 23 Apr 2025 13:06:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5XRmDvLlCGhCUwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 23 Apr 2025 13:06:58 +0000
+Message-ID: <7c4fe3af-a38b-4d40-9824-2935b46e1ecd@suse.cz>
+Date: Wed, 23 Apr 2025 15:06:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC v3 4/8] slab: sheaf prefilling for guaranteed
+ allocations
+Content-Language: en-US
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Christoph Lameter <cl@linux.com>, David Rientjes <rientjes@google.com>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Harry Yoo <harry.yoo@oracle.com>,
+ Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ maple-tree@lists.infradead.org
+References: <20250317-slub-percpu-caches-v3-0-9d9884d8b643@suse.cz>
+ <20250317-slub-percpu-caches-v3-4-9d9884d8b643@suse.cz>
+ <CAJuCfpEg8bXVy2F61VNfn2AGW-SJBovGf69SEhK9oJeijjVpJA@mail.gmail.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <CAJuCfpEg8bXVy2F61VNfn2AGW-SJBovGf69SEhK9oJeijjVpJA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeiieekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopeguvghvihgtvgdqgedtrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduuddprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdpr
- hgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-0.991];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_CC(0.00)[oracle.com,linux.com,google.com,linux.dev,gmail.com,kvack.org,vger.kernel.org,lists.infradead.org];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, 23 Apr 2025 12:46:42 +0200
-Maxime Chevallier <maxime.chevallier@bootlin.com> wrote:
-
-Hi,
-
-> Hello everyone,
+On 4/10/25 22:47, Suren Baghdasaryan wrote:
+>> +/*
+>> + * refill a sheaf previously returned by kmem_cache_prefill_sheaf to at least
+>> + * the given size
+>> + *
+>> + * the sheaf might be replaced by a new one when requesting more than
+>> + * s->sheaf_capacity objects if such replacement is necessary, but the refill
+>> + * fails (returning -ENOMEM), the existing sheaf is left intact
+>> + *
+>> + * In practice we always refill to full sheaf's capacity.
+>> + */
+>> +int kmem_cache_refill_sheaf(struct kmem_cache *s, gfp_t gfp,
+>> +                           struct slab_sheaf **sheafp, unsigned int size)
 > 
-> This small series sorts-out 1000BaseX support and does a bit of cleanup
-> for the Lynx conversion.
-> 
-> Patch 1 makes sure that we set the right phy_mode when working in
-> 1000BaseX mode, so that the internal GMII is configured correctly.
-> 
-> Patch 2 removes a check for phy_device upon calling fix_mac_speed(). As
-> the SGMII adapter may be chained to a Lynx PCS, checking for a
-> phy_device to be attached to the netdev before enabling the SGMII
-> adapter doesn't make sense, as we won't have a downstream PHY when using
-> 1000BaseX.
-> 
-> Patch 3 cleans an unused field from the PCS conversion.
+> nit: Would returning a refilled sheaf be a slightly better API than
+> passing pointer to a pointer?
 
-I mixed-up my command while generating this series, it targets net-next
-and not net...
+I'm not sure it would be simpler to use, since we need to be able to
+indicate -ENOMEM which would presumably become NULL, so the user would have
+to store the existing sheaf pointer and not just blindly do "sheaf =
+refill(sheaf)". Or the semantics would have to be that in case of failure
+the existing sheaf is returned and caller is left with nothing. Liam, what
+do you think?
 
-I'll respin tomorrow with the proper destination tree, sorry about that.
+>> +{
+>> +       struct slab_sheaf *sheaf;
+>> +
+>> +       /*
+>> +        * TODO: do we want to support *sheaf == NULL to be equivalent of
+>> +        * kmem_cache_prefill_sheaf() ?
+>> +        */
+>> +       if (!sheafp || !(*sheafp))
+>> +               return -EINVAL;
+>> +
+>> +       sheaf = *sheafp;
+>> +       if (sheaf->size >= size)
+>> +               return 0;
+>> +
+>> +       if (likely(sheaf->capacity >= size)) {
+>> +               if (likely(sheaf->capacity == s->sheaf_capacity))
+>> +                       return refill_sheaf(s, sheaf, gfp);
+>> +
+>> +               if (!__kmem_cache_alloc_bulk(s, gfp, sheaf->capacity - sheaf->size,
+>> +                                            &sheaf->objects[sheaf->size])) {
+>> +                       return -ENOMEM;
+>> +               }
+>> +               sheaf->size = sheaf->capacity;
+>> +
+>> +               return 0;
+>> +       }
+>> +
+>> +       /*
+>> +        * We had a regular sized sheaf and need an oversize one, or we had an
+>> +        * oversize one already but need a larger one now.
+>> +        * This should be a very rare path so let's not complicate it.
+>> +        */
+>> +       sheaf = kmem_cache_prefill_sheaf(s, gfp, size);
+>> +       if (!sheaf)
+>> +               return -ENOMEM;
+>> +
+>> +       kmem_cache_return_sheaf(s, gfp, *sheafp);
+>> +       *sheafp = sheaf;
+>> +       return 0;
+>> +}
+>> +
+>> +/*
+>> + * Allocate from a sheaf obtained by kmem_cache_prefill_sheaf()
+>> + *
+>> + * Guaranteed not to fail as many allocations as was the requested size.
+>> + * After the sheaf is emptied, it fails - no fallback to the slab cache itself.
+>> + *
+>> + * The gfp parameter is meant only to specify __GFP_ZERO or __GFP_ACCOUNT
+>> + * memcg charging is forced over limit if necessary, to avoid failure.
+>> + */
+>> +void *
+>> +kmem_cache_alloc_from_sheaf_noprof(struct kmem_cache *s, gfp_t gfp,
+>> +                                  struct slab_sheaf *sheaf)
+>> +{
+>> +       void *ret = NULL;
+>> +       bool init;
+>> +
+>> +       if (sheaf->size == 0)
+>> +               goto out;
+>> +
+>> +       ret = sheaf->objects[--sheaf->size];
+>> +
+>> +       init = slab_want_init_on_alloc(gfp, s);
+>> +
+>> +       /* add __GFP_NOFAIL to force successful memcg charging */
+>> +       slab_post_alloc_hook(s, NULL, gfp | __GFP_NOFAIL, 1, &ret, init, s->object_size);
+>> +out:
+>> +       trace_kmem_cache_alloc(_RET_IP_, ret, s, gfp, NUMA_NO_NODE);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +unsigned int kmem_cache_sheaf_size(struct slab_sheaf *sheaf)
+>> +{
+>> +       return sheaf->size;
+>> +}
+>>  /*
+>>   * To avoid unnecessary overhead, we pass through large allocation requests
+>>   * directly to the page allocator. We use __GFP_COMP, because we will need to
+>>
+>> --
+>> 2.48.1
+>>
 
-Maxime
