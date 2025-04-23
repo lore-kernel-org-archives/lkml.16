@@ -1,74 +1,74 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341E22957AD
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A005D296150
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745442652; cv=none; b=AfTPDycebK6IvFt0XizjVwZ3h5iAoGNRbEgw6YhW0zu5M62bEfnciUOjhs4AJgbOUrsp5OPYubgUT01dJfCIZw+5+qTFtajJjAIy0O8bE4rYAPsv8gqNOO/OT6g+ai6TDacCDb/qo3/gw4fROm0WN9ViI0ZI8oTmPHn647FtfWY=
+	t=1745442653; cv=none; b=eatF0/qvFuGIa6FSRSpa9UI0gDcQHfRFF9YOrZEIsxrvP9/+ZzQxLL0yGIO+t+uPLCX9gi2S2CqLmhDcblFaHCWNNT4RxCD3eHKyJN5wfxrwE/xSVRzr9Y82Ut0m9qpn/HO4lhbZobzua+jRBrlldSwv0NF//h9tyw0Z6c1h/Xg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745442652; c=relaxed/simple;
-	bh=vizMfI6yMLhuvHHaci9bTW5mWKS1fnvi3Y8sn9SxswY=;
+	s=arc-20240116; t=1745442653; c=relaxed/simple;
+	bh=nQvIDUA8s7WC1RABFZD3MRm8N5nGExBfy2uPdoQpetI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QrDx/IsHk1LKGU4FM6VGaxcFhVklHPajQswlJ4VJcWkG+cqe1YbCt3nUmCnI4UicKV1iV6efAMkL1t2RcB51ngES/f498ioqRKQDW0x9kBK8idpJx7UMVK4dpcsrSTIVn9zdvzZma9sHrdf9YiVDf+dAhrK9hYr3eaDSzG+Pb+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JiQLKLD5; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=XVo2FwfAZyPGo7OhBB8qGIBYbaYEO94D5ZmEoFD71kdLjy9hPA+kiWaXWWIS3p5xGPDFfQdr6NtMz6f/rTQr2qtoIcqpz/812bjv8pmxJQRUm8CUir09T5fopxbwWFBktSUKFYwoLNRl9sl2tfNypP3wQfyGx42VsRKMF+fay6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DobGb7vn; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JiQLKLD5"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NANlaq014532
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:48 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DobGb7vn"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAq8X4003734
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8CK0oIxLXlNXLe2M+og8oCajclsmxhm+HTivn4MwCF4=; b=JiQLKLD54AV8fGbE
-	JgrgQbTq9hzIDbGebkfNqWaip20T/olSK9thn3t4Reg+qPNd2D6s6ovNAkLi3Bua
-	VT7EMvC62fwpgrW/0LR68r744tUv+DeCYNbMakd2UP5hmUSCEGXo+13+1qFPWGzk
-	2lw8Ca+ydUhVXs1dv6L699KundDYVs0oBxuirS2ZtAEmCkDey/InXIV1orLGzRfw
-	4U+uLEW1ro3ZfZUpUYlCyZRPq7D3F/bUWyrYauWR2O/6BQBJzRLsJA3DF3pyT2yL
-	b3GAyx8O2lHjTZ6wc/9bTPsK31cgOqa840Mj+r3RZLvtBIUOgW7e/iWVYjiHla6c
-	niMB2A==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0kcx7-1
+	ger9HZb5YssomX2ccM8ujcxYFQhM3swDMg2juQ5fOn4=; b=DobGb7vnP5IFWkdW
+	JjrUcagp6js6sWSOSZh64YSX8frm6UhjOWFQISmIHmHfbGvurBf67QekCrUiJDgD
+	ajQeXIOmpphILk3R/hC7nbjFBxXKOn1hmN5pIHO/C8mVBAhN5ZUUYJiklllU3OUX
+	OjFsBSp9PBw08ZblDYbCZsL/54gBMPWjkiNVckA7lyITznCKMLU0UAtJ5rNe+dwA
+	q1Iox7ZS13kgg9YCn728+xWunAK2bD8TI86wswfieMEtcs+eCoE6rIhft21GaUq1
+	QLXPgMzrcSK6bYGXcJW8dU5esqhZcMRQHmlF0fYkdThJ/tlVIWVAuP6nyTxfWLNp
+	VK21eg==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jgy3dhr-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:48 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5d9d8890fso270872085a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:10:47 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:10:49 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e913e1cf4aso7954406d6.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:10:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745442644; x=1746047444;
+        d=1e100.net; s=20230601; t=1745442648; x=1746047448;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8CK0oIxLXlNXLe2M+og8oCajclsmxhm+HTivn4MwCF4=;
-        b=rF93vq2W+WCtJ42baEcssS0C7YvkSSb31wx26JgqCoSvZRa0x1RzeNJq/5KHQnU6rh
-         5euD/9ie0glqVqBMS0URqjx2gkYKg1FTGLGO/W1q1nXsiemUt26lbHQffa3U8nQNg0JF
-         uE4YRLspLbmecG+fsOrr+kW2g5AOJrAgYdSvyUN16lDwW3YkCwPiYuxESZP/7OcIHdr7
-         hxS9klYQUCCXd9yEcyew3YdHUMvlIqpScVyqNlIObnzaPOioApdKHSyUTxzWWOJPMqy9
-         MtW0BVvLbEtPAMmceMv4gXR882RhlPb+CDfeI0PQH8hoT5CX+QprRFm0KuAWELphbpbz
-         sZmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXNS9gMOWOXWT7VtGV8aAsdME6rX057vnK7aBczayj3bCfAXm2RrbeZSCNXRU4TGT6wwTN2GDwG0ym0tfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yykg2ic+QM8mno/NA2lLxc3S1YbBx1IhkQadv0+3KV3uEhUkObO
-	FdxNet654ZtY3EQm7mki6fAO+4JHT/4GxtC6MUVDQ7LG3cTREz7eiDXsXnyIe1nBE7hESSFEssU
-	Zv5QsynT6dqPJQDNwMt6dXVQEibJdLoJNPy6skndOftTvrT9vOMIjkj8RlQOLpCk=
-X-Gm-Gg: ASbGnct2oj6wCGuL/bkdgMH/u6JK/Y34YsYs0gvLo4tJuJKnjgxAukm5WOwSCdvB4DS
-	y+3icO6wSGyjE0MGCesZ+0CcvxOo8xWhe0e5LqPjVwmiBkbq6w6UBwag9iMCuZ5u2GYdkQLFbP2
-	1fZPnIX7FStJyGlziSRyJ5QZwuYRm1znon/rM1VukS4D83ZajhCTBQeOrEySDKfOL3lt6rWFhTg
-	oMFCE/qGMzMSg7Aw9FY9lsuvBbrjX1hkyRWuTUsdEMApDEuF+3q2AmfgV28okWdtOLKDZlG4ztv
-	uwEi2/Y9a6C1yceH8xrCC8N6qUdvvopP4/GOtrWwY/UZky0zGFB3Iu4MYbddtLPnwv0T53Ekb0O
-	hrLQzrODsDv5wk7PclPSux2o5
-X-Received: by 2002:a05:620a:199e:b0:7c7:c1f8:34eb with SMTP id af79cd13be357-7c9578ca099mr10270685a.23.1745442644449;
-        Wed, 23 Apr 2025 14:10:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhnp+Q/B8Q7VW/ZDiLoOBWrIE7Og1xrlQbSxL3cMCa4YPv8VVuYmFRVbG1Ux6b/tgKba9J8Q==
-X-Received: by 2002:a05:620a:199e:b0:7c7:c1f8:34eb with SMTP id af79cd13be357-7c9578ca099mr10267285a.23.1745442644131;
-        Wed, 23 Apr 2025 14:10:44 -0700 (PDT)
+        bh=ger9HZb5YssomX2ccM8ujcxYFQhM3swDMg2juQ5fOn4=;
+        b=aFLd8dEq7EMZekoPEZPXz+nzJG2ybD47O9HSY87/2lX+JhOQYux47SKcGKtVwx6Yqn
+         yyAAbY3fnXC6OAfnS5mYI/w5HhzS1XONeBZzBLakUwQYRTHvU7A/B0r9rQ07+aPubOzS
+         Z/lMgHBJ8577wkKpGQdGJQKak3QBIJw0dQ6J28tZ2eXj/wNPvdgXthvaU6P0qfaI4DGT
+         oTJRMdFNm1vOo/OAQL5yeozofgX8K0dvZQAH2RaZwirZHABSOnaw3bjAXOsCwWSpa6yZ
+         HqHMmC+chpMucfCXwiQC/mO6Chfrxdc/2u3yZdIhfLvBsC2x9d9FwKvW5PL8UKTzJU0h
+         fxmw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIFZYu2xgkwc04YJePqfAHXy5Iv3C4NCMvNMUa2RTMY5MW9Xp0T/tOPgHTQJ4huVjAtELp/DTYGhugf60=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoMpxwZjOzMhIBr5xMAp8MkQmgBlnZre1Jk+OIvmXto8lHeOPN
+	ARHxXM1PpXwurT2Mg3ysR5zQoM+DRx4SVawasZyX98gf3WZLmI91qGZMRS0KaXuRbiOrF9lhpEb
+	PrxQYKOFQhUjo/IhpjfUvOgRbi9vTsYGXkd/x7bmRjpQxBJAuaUBNRwV3NGl7Mpo=
+X-Gm-Gg: ASbGncvf2IECo5GYLC6VH2ttfc+gkNgmOT/6IQBRSpqinJBXlqLJBzx5rp1+SB10rXn
+	LsLhzX2bmereWiW9sa41De3FKQqP2HoxBJFSGuLpjTiMMgJpC9r99DJRyM7nD1B1OLO8tzyTRGm
+	Mcerz2a4XIxsP2m34n1cSdszLjZwvc1deFnmLPUZE7LLpX1bysXFwagyy83QFy3mHLAJM7x5CEZ
+	TdYhO4gCI7y4ACELph6zELrPOXaIqSDHdfNKFrf+Z7Hq+9Dm9iVjYqQMQvUezVJZmmlMJBBSeJ7
+	mo9YOOvAK96MEW2bR/Tr6p1cv1wd4hZwomYPY2D87am+zQ3eTXrH+MmYFq2pZfaDopdreEKrL+T
+	nsHMG91jxAgnYJMQ8wk4pNT28
+X-Received: by 2002:a05:6214:d62:b0:6f2:c88a:50c5 with SMTP id 6a1803df08f44-6f4bfc6d049mr4370256d6.32.1745442648466;
+        Wed, 23 Apr 2025 14:10:48 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFDen0vCqajbJuoXqp9q+jzjoErpaetpajjeSga/fCWifSqSKIaSoaW1H2T2QTCLrpt68JR6Q==
+X-Received: by 2002:a05:6214:d62:b0:6f2:c88a:50c5 with SMTP id 6a1803df08f44-6f4bfc6d049mr4369656d6.32.1745442647924;
+        Wed, 23 Apr 2025 14:10:47 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb3987csm3852e87.59.2025.04.23.14.10.40
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb3987csm3852e87.59.2025.04.23.14.10.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 14:10:42 -0700 (PDT)
+        Wed, 23 Apr 2025 14:10:47 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Thu, 24 Apr 2025 00:10:10 +0300
-Subject: [PATCH v2 14/33] drm/msm/dpu: get rid of DPU_INTF_STATUS_SUPPORTED
+Date: Thu, 24 Apr 2025 00:10:12 +0300
+Subject: [PATCH v2 16/33] drm/msm/dpu: get rid of DPU_PINGPONG_DSC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-dpu-drop-features-v2-14-0a9a66a7b3a2@oss.qualcomm.com>
+Message-Id: <20250424-dpu-drop-features-v2-16-0a9a66a7b3a2@oss.qualcomm.com>
 References: <20250424-dpu-drop-features-v2-0-0a9a66a7b3a2@oss.qualcomm.com>
 In-Reply-To: <20250424-dpu-drop-features-v2-0-0a9a66a7b3a2@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
@@ -90,94 +90,196 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Dmitry Baryshkov <lumag@kernel.org>,
         Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2459;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7378;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=Nt4QhnpHTNYrhzhqV0xbi5+n74LJmsNMY4VbVunyJu8=;
- b=owGbwMvMwMXYbdNlx6SpcZXxtFoSQwZnuM5sSy3+wGZ1dgufq0aaqlIenCe4exYlfm2sY1jcu
- PD6xF2djMYsDIxcDLJiiiw+BS1TYzYlh33YMbUeZhArE8gUBi5OAZjI3Sj2//GWFbzcOTrLHh8w
- r3p2saX1ZvzLDJl3flNNprQm/JzWzv52u7tPYf0+5cDd50oclhsn+70rb5K38fF2L/WKlPmxvfP
- Zt+sX4ia9kdp37uHSNx8SOqNa+IqD9qcYRHNH18y5eafinpLPwd0WWxsj+Bcb9EvwZd6LKPG0UL
- 0WOMGkbO0WzWMWMt73dec9X5nHLvNBeXKe3Ynk4J4dmy529G9+L3tj3rNdQjq/tzaFJdRPZvKRd
- zr00fivhgyHzWMXffmNxinb7qye8lvu6RXVi2ETudcZLvg0aUp0/cJNX12NNu25YfR1kVwQ94zj
- zAqhTOl6ck05Trz2rA/f2/wyDMg2aS/vqMmcM0HLes9tAA==
+ bh=zZbpETW7aMiyCYpHLuzre/GCxsgOdCyoBUUKB/kjzjU=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCVcs/IDhhuBBdGIFVcQqmzXlr78xxWAfXKuHS
+ oBgWDlbJkuJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAlXLAAKCRCLPIo+Aiko
+ 1Tb/B/4zRmLp22xbdxBAV4jyvgcwbaBC8q5kxBKtdL97EqIXCpmaouAWT7G9XLcP7d6qjRAsuLF
+ 6PrH0dGs8hXuo8O9yk/sKeZ/dxSqWu6T2iXpeaRqgeN2jEwGdUJlqvOGvPxCUtWx4TaUjSs7uWh
+ gXKifjTjMPBEewGc3427Tc8mK4kZn/skDI9W64YY2FOYHDvwomYhgfZPkmpGqP+0lGO2V9G3tkB
+ bAGCK31ACnlY99SLou1I2Vhy5b2lkw0QqsRh+sNzFhMU8f2evTAF22QtBtP8tMQ6BptLD5rmeBy
+ GZmOaqqzSFfH+vhHgODtEFhkpqhTaJbzXAMLMQjDCJytDXIp
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-ORIG-GUID: eq3VSwPY6HlAJOU0nwerJdbJELsx9xtm
-X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=68095758 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=z6iiZyybfqEMMI01lysA:9 a=QEXdDO2ut3YA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: eq3VSwPY6HlAJOU0nwerJdbJELsx9xtm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0NCBTYWx0ZWRfXxRBY9n77GRZ7 /pOHQhljdGGEQ98WMV7kpOdAA34waBVloK9ndoJ4BDWXcoRBHhd6E1wFQfGGEotAYzOH/V9muWF qk5J1A+bFbdyiSAmqZ7vn4J67b9EiDBhjlG/Ezqi6JUJwnfMMIMJoCFszDk4S1zRZQnGRi5zPFO
- Oc9UU45BCghQiDKM/Nsd1JfcpE0NRyJbMxFXLjftOyMtTsMMXtvdR7F8pJqi54ukAzqd1VTugkK MUjgBrpoSZA6syX2sXN1457xB5g35iM/FD2LJaLK1kNx8Pig5cssxULjCXbRXYDtwwjtdhYFN3m Tpk0xsMxCt1qLrQOFy8g6e7Ol8y0IaXvWCzTbBGVo/jzw0ydQ5gmByNHiW3gBq4eXsYUKqv2+F/
- qwFg0/RkWW1R3WUJfMpzGacaEjrMcfttSv4lbe7uor9kqLLdIK2Vgyy0Mj0XEJCQ8mOpHMyd
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0NCBTYWx0ZWRfX+zTCIdxmsrJr lihd9D4D09hwy3vCjRdh92zc1QkQSi2WolNjD+nkFqIfERTQKmfrtFTLMSyq8za6ZuqtC+kHvB2 6Hvv7ZR9+JZILcfTOWt5HBJGI6aKgIzvZx6NJttNKHzt6pPfkylszol5ql0ZN0q65vETmfkxSf4
+ 2YjRDzXyXqMCkOk45R92weAEvZ01EU7urkh4/hFQYrW7UF8WKwp0RbINpVQkTRu0mW+ZQ9dejYB goXd3vFetEyS+DJwPtRWxZ55W2EkgNV4GM6DZW47dU8N6PUtjwfOiKSXpc5TyFNBoWseh+zR6CO TzCoRhUkFv+2awtYldWiJhpT2s3WOxSMNE5Pm27+hBkVptiQHaIWg11P8SQ8IBGV/wsqbzI8QzE
+ tmP3GhOCtgQuDZtdL23+3HZ274fM5bk445ydoa0xij1EwJbpb95DYs9Z7bnit7dX/FW0vp3a
+X-Proofpoint-GUID: U1t5df4M0IJ5G65Mn3f0cp6O2PDlFOCh
+X-Proofpoint-ORIG-GUID: U1t5df4M0IJ5G65Mn3f0cp6O2PDlFOCh
+X-Authority-Analysis: v=2.4 cv=M5VNKzws c=1 sm=1 tr=0 ts=68095759 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=TBtKe9T1WDpDz7RobDkA:9 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22 a=cvBusfyB2V15izCimMoJ:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-23_11,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=999 malwarescore=0 impostorscore=0 clxscore=1015
+ suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504230144
 
 From: Dmitry Baryshkov <lumag@kernel.org>
 
 Continue migration to the MDSS-revision based checks and replace
-DPU_INTF_STATUS_SUPPORTED feature bit with the core_major_ver >= 5
-check.
+DPU_PINGPONG_DSC feature bit with the core_major_ver < 7 check.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 3 +--
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h | 2 --
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c    | 3 +--
- 3 files changed, 2 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h |  2 --
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h |  1 -
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h |  2 --
+ drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h  |  6 ++----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c           | 10 ++--------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h           |  2 --
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c          |  2 +-
+ 7 files changed, 5 insertions(+), 20 deletions(-)
 
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
+index 78ade3e977108fe98dc63ed93535ae3d947d871b..c0b4db94777c42efd941fdd52993b854ab54c694 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h
+@@ -100,14 +100,12 @@ static const struct dpu_pingpong_cfg msm8937_pp[] = {
+ 	{
+ 		.name = "pingpong_0", .id = PINGPONG_0,
+ 		.base = 0x70000, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_MASK,
+ 		.sblk = &msm8996_pp_sblk,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
+ 	}, {
+ 		.name = "pingpong_1", .id = PINGPONG_1,
+ 		.base = 0x70800, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_MASK,
+ 		.sblk = &msm8996_pp_sblk,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 9),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 13),
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
+index 63dd5afdb60b051f6d531257b2844920cc09ed80..d3e4c48be306a04b457cc002910eb018a3f13154 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h
+@@ -93,7 +93,6 @@ static const struct dpu_pingpong_cfg msm8917_pp[] = {
+ 	{
+ 		.name = "pingpong_0", .id = PINGPONG_0,
+ 		.base = 0x70000, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_MASK,
+ 		.sblk = &msm8996_pp_sblk,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
+index 4f09d483fbde29c74e3fd9bd0ba7a1a9c2638183..c488b88332d0e69cfb23bcf4e41a2e4f4be6844d 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h
+@@ -100,14 +100,12 @@ static const struct dpu_pingpong_cfg msm8953_pp[] = {
+ 	{
+ 		.name = "pingpong_0", .id = PINGPONG_0,
+ 		.base = 0x70000, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_MASK,
+ 		.sblk = &msm8996_pp_sblk,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
+ 	}, {
+ 		.name = "pingpong_1", .id = PINGPONG_1,
+ 		.base = 0x70800, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_MASK,
+ 		.sblk = &msm8996_pp_sblk,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 9),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 13),
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
+index 54477e300c273182172a78b81dd0274242689895..ac0d872ac06be7376b7b4111e1ac5f4057b5fb76 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
+@@ -181,28 +181,26 @@ static const struct dpu_pingpong_cfg msm8996_pp[] = {
+ 	{
+ 		.name = "pingpong_0", .id = PINGPONG_0,
+ 		.base = 0x70000, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_TE2_MASK,
++		.features = BIT(DPU_PINGPONG_TE2),
+ 		.sblk = &msm8996_pp_sblk_te,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
+ 	}, {
+ 		.name = "pingpong_1", .id = PINGPONG_1,
+ 		.base = 0x70800, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_TE2_MASK,
++		.features = BIT(DPU_PINGPONG_TE2),
+ 		.sblk = &msm8996_pp_sblk_te,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 9),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 13),
+ 	}, {
+ 		.name = "pingpong_2", .id = PINGPONG_2,
+ 		.base = 0x71000, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_MASK,
+ 		.sblk = &msm8996_pp_sblk,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 10),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 14),
+ 	}, {
+ 		.name = "pingpong_3", .id = PINGPONG_3,
+ 		.base = 0x71800, .len = 0xd4,
+-		.features = PINGPONG_MSM8996_MASK,
+ 		.sblk = &msm8996_pp_sblk,
+ 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 11),
+ 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 15),
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 20f4700ef9969003cfa4728049b9737cb9eb6229..8808be27593b303a2a199a740827c92ea5339b0d 100644
+index 5e0123557a44fda1d250130e09e4968535927088..5dd486dd9bc77184d5e9cf5ca2922bb3d1671ea2 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -111,8 +111,7 @@
- 	(BIT(DPU_PINGPONG_DITHER) | BIT(DPU_PINGPONG_DSC))
+@@ -95,20 +95,14 @@
+ #define MIXER_QCM2290_MASK \
+ 	(BIT(DPU_DIM_LAYER) | BIT(DPU_MIXER_COMBINED_ALPHA))
  
- #define INTF_SC7180_MASK \
--	(BIT(DPU_INTF_INPUT_CTRL) | \
--	 BIT(DPU_INTF_STATUS_SUPPORTED))
-+	(BIT(DPU_INTF_INPUT_CTRL))
+-#define PINGPONG_MSM8996_MASK \
+-	(BIT(DPU_PINGPONG_DSC))
+-
+-#define PINGPONG_MSM8996_TE2_MASK \
+-	(PINGPONG_MSM8996_MASK | BIT(DPU_PINGPONG_TE2))
+-
+ #define PINGPONG_SDM845_MASK \
+-	(BIT(DPU_PINGPONG_DITHER) | BIT(DPU_PINGPONG_DSC))
++	(BIT(DPU_PINGPONG_DITHER))
+ 
+ #define PINGPONG_SDM845_TE2_MASK \
+ 	(PINGPONG_SDM845_MASK | BIT(DPU_PINGPONG_TE2))
+ 
+ #define PINGPONG_SM8150_MASK \
+-	(BIT(DPU_PINGPONG_DITHER) | BIT(DPU_PINGPONG_DSC))
++	(BIT(DPU_PINGPONG_DITHER))
  
  #define WB_SDM845_MASK (BIT(DPU_WB_LINE_MODE) | \
  			 BIT(DPU_WB_UBWC) | \
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 36100e21135fba09fcafdd5d36ac919cd17f63c0..858fd73e0ac3a92fe402001d4796eb86945f61b0 100644
+index 33506e3bba9fc51f9e99446cb7df6aa51d81a3b1..3300897aebc9d6b38bcf4a0e0d51095bcbb6fa9d 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -145,12 +145,10 @@ enum {
-  * INTF sub-blocks
-  * @DPU_INTF_INPUT_CTRL             Supports the setting of pp block from which
-  *                                  pixel data arrives to this INTF
-- * @DPU_INTF_STATUS_SUPPORTED       INTF block has INTF_STATUS register
-  * @DPU_INTF_MAX
+@@ -119,7 +119,6 @@ enum {
+  * @DPU_PINGPONG_SPLIT      PP block supports split fifo
+  * @DPU_PINGPONG_SLAVE      PP block is a suitable slave for split fifo
+  * @DPU_PINGPONG_DITHER     Dither blocks
+- * @DPU_PINGPONG_DSC        PP block supports DSC
+  * @DPU_PINGPONG_MAX
   */
  enum {
- 	DPU_INTF_INPUT_CTRL = 0x1,
--	DPU_INTF_STATUS_SUPPORTED,
- 	DPU_INTF_MAX
+@@ -127,7 +126,6 @@ enum {
+ 	DPU_PINGPONG_SPLIT,
+ 	DPU_PINGPONG_SLAVE,
+ 	DPU_PINGPONG_DITHER,
+-	DPU_PINGPONG_DSC,
+ 	DPU_PINGPONG_MAX
  };
  
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-index 8f9733aad2dec3a9b5464d55b00f350348842911..54c2e984ef0ce604e3eda49595d2816ea41bd7fd 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
-@@ -308,9 +308,8 @@ static void dpu_hw_intf_get_status(
- 		struct dpu_hw_intf_status *s)
- {
- 	struct dpu_hw_blk_reg_map *c = &intf->hw;
--	unsigned long cap = intf->cap->features;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+index 36c0ec775b92036eaab26e1fa5331579651ac27c..49e03ecee9e8b567a3f809b977deb83731006ac0 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c
+@@ -319,7 +319,7 @@ struct dpu_hw_pingpong *dpu_hw_pingpong_init(struct drm_device *dev,
+ 		c->ops.disable_autorefresh = dpu_hw_pp_disable_autorefresh;
+ 	}
  
--	if (cap & BIT(DPU_INTF_STATUS_SUPPORTED))
-+	if (intf->mdss_ver->core_major_ver >= 5)
- 		s->is_en = DPU_REG_READ(c, INTF_STATUS) & BIT(0);
- 	else
- 		s->is_en = DPU_REG_READ(c, INTF_TIMING_ENGINE_EN);
+-	if (test_bit(DPU_PINGPONG_DSC, &cfg->features)) {
++	if (mdss_rev->core_major_ver < 7) {
+ 		c->ops.setup_dsc = dpu_hw_pp_setup_dsc;
+ 		c->ops.enable_dsc = dpu_hw_pp_dsc_enable;
+ 		c->ops.disable_dsc = dpu_hw_pp_dsc_disable;
 
 -- 
 2.39.5
