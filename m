@@ -1,101 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD612268C50;
-	Wed, 23 Apr 2025 20:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C562676E6;
+	Wed, 23 Apr 2025 20:39:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745440636; cv=fail; b=CuSuo16uhEV17cwBr9y4tOqSG92ylKX7LFhixBQyUGf1lhluEGTR2YbDsJcdOVppGp3iOsOtLTghTVuIfkcT/9q5FhEpOZKGzDKopJrgGXpBzv1eaY2FThZSXhNyhZvD2zyhg32ykbi94WCBUikvLsj8XkMoF9PaF36N/uBfXdU=
+	t=1745440757; cv=fail; b=nl+FP1m9+/MI94jru+dpgA7JW4C5dLlr9+pWjCFzXKDyHsvjS3wdkIiQphXzT0mviJbWKWXglgYrjgaIdK0reOPp3OYXt8EskxNm74+8jQ/cA+FoFr9aqwxAi/QXsANj/ZOTbG0HBw+VyuYEcgqFOm/JruckSy4KbWQWl5Z6yqY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745440636; c=relaxed/simple;
-	bh=izKcU2VxjMPYiqGhZUXwlZHZVyuFPa4GnFno7NUzSX0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qafo5Uu3CSm7tRQkcT/zoJo7QepVY0G3Rg0h3Mwkjy0EllsvqJxmhY7812A2g9HsNGqMMVqAS5A0iktKzJYRKN+YrRH4b7IWhI9JneHSPQB0fySbQP6Hx0wpa/MTQd46mPwDisWPzA8NmEZemUXfVt7LJdOrhrizEC1THUeqQ/A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Do9Ul/Dz; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745440757; c=relaxed/simple;
+	bh=Vv21bd4I9AXKogDrINZ9cRiHNZaLBq3uFOSygW/JV7U=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=L5Rs8PDunY7+IRwdyrC0AiomGMAoeXPU3+pBCFIUSvP9TFNOsllbOM8FPjji8sX+kLr1Syt2sA70upe34IfZC953sPGTA0IM4D49Z7c37PUhWqevEVlugakDOYSgmRMHGEOadFTSGP0ahgchwuepwd0WhouskwMZpgDSXPukvt0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Pefc2ul6; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=UqsC/qOR; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Do9Ul/Dz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745440634; x=1776976634;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=izKcU2VxjMPYiqGhZUXwlZHZVyuFPa4GnFno7NUzSX0=;
-  b=Do9Ul/Dza57fcZ96Ls9G0XiJguZCMwZLpJtbuXxy6AW0ZRHMJQXq/Uh0
-   9YdhArUJwXhuD+1hZwfT1PSlTyIvV+D0tjWwMmx3F0hHjTfLnpVd+XCs4
-   zjXuA+qiZC5YSBUIkr8QuK4Tbwft6JeogdmYsO+rqkRhGxR/ZH8kR16aK
-   l0JlNzx0K0xlfhJtjkQfxFeq1d3vTiDySbucHpSwweD2ubLs68h5YOLFq
-   kCLqyRVC2zuf4EBAyr/eGogoUot/4JghIPcysaO3tiluT99KBSiWT9tSB
-   QKuGXdp948vPaBvJ0IaCWXsCZuEbSWdOmiDol+Xye0F5bhN8DqDJ142sK
-   Q==;
-X-CSE-ConnectionGUID: 63uvUvqlSvC82zn2cRKOCA==
-X-CSE-MsgGUID: Oiqj3n3lSoCfIXWD8vmr2w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="46934172"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="46934172"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:37:13 -0700
-X-CSE-ConnectionGUID: ZHLTqiTVSb2W+jJ53HkPnQ==
-X-CSE-MsgGUID: N+YESpDNTOi4pnRXemj2EQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132303005"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:37:10 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 23 Apr 2025 13:37:09 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 23 Apr 2025 13:37:09 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.45) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 23 Apr 2025 13:37:08 -0700
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Pefc2ul6";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="UqsC/qOR"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NKBtio028552;
+	Wed, 23 Apr 2025 20:38:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=8KyaGIQYfZvHM3X6ksc+8DkNBXmRTR9g0vr22jYCnXc=; b=
+	Pefc2ul6RsMbvv7u0y9xH9/rKIchyDvVUPnSNqbmqm3o7db2TH8N/CN5j1Zsai+b
+	eMyLakI4WThURnfjK5Mwoy9KcPxVCzOMcP4w0apRVLY6c0RabiXfzavxuERO/DXi
+	8KoklkhMIFpIIWQbpPVG/XClnm7rXwgYobb8vQL+2OUA8FO3PUuN5lXAU203oWOw
+	DEXr1qt00l2cdvTt4bYtyp7N78RZ0PqhXMrRAKu1gaq3FRlMyhgRBmFpIKSvsFiC
+	AICHU2kpMRh690scGaTtMGv24Ay4WuiX59Nhzq0URd1jbRE6ivmpzN61iybGzstb
+	UEjcmWCefIxllBYSWGLFrQ==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 466jha2bbq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 20:38:36 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53NJgHYC031012;
+	Wed, 23 Apr 2025 20:38:35 GMT
+Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazlp17012013.outbound.protection.outlook.com [40.93.14.13])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 466k06cywj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 20:38:35 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=It0KSw+gsOPW2e+a6w8U83MMyEsPx0PZhWA2xJfIrGzmXYKYklAcSdQEsfcPLoKsYcbQ1l2lUu4Hp8ozibg1pu5RJm91WXEhZIzvBFyVU1o69hU9bO8+xmplP/LvTS57JPeQoQ0ts7fcMOfVHUAhWxf2/DIYmCkbHbmY2u80Dc4KoDCCnUkgDrHwXBBAtxueniF42qPlvYP5Vi0T8904eVMWN7IvZY1qXp1czgP8KSjWQl2ujRiZIsBu8emn7YeWXMkUsNh1vi8HMEI+mMXUdQIXVIDLHiZoOhRRkxx93MYzUdRvQgpCkbQCGud9UvHFnbAG/7F19wGcA5JRa5wz4A==
+ b=nGA8jVa9FlH6C04ZT73v4w7tSOT3IWVPha13HkzqybbrckUAUg44VcNLcRSNi2ufZuDoDf5S4LkX0FgknzZyc6VSuIrvlhB09tkiyxuKZYbnhOMYe7U34DmJlpJ61Bq+/hzAkQg0yiSblyMv8eLWtM9anesdsXpmhFVxlGl8p4kbzn6RoLogD7k9J2OR5VaM42P0yzjeDFKTspdg8H/5oHsz218wJekw2jAlOsPpWa+88w4kQY3iuwKwMYEo8n4xAnRm4o2DNR5aIMSQibPks8tYNaL1FXCcDsWd2aW3TIZ2xIqCWdITd2YuJwDkMd1unwh9cvcMrfv0vpOvGKS2AQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hPTx3U4e9IwGDwkcPBDNpWX1LVJPufp403lbQlsreXI=;
- b=HDmoYtY9GwKCIqwZRxhgt+mW6sZ50ZBzakhi7sJFL+rmEriIj8Re7+aDav5T0cDFwWj7Pa4j8srAMX7v5VtgcCFiFYS26A6UZufSj2Pp7aZIBI6sCoteMZ4/517TSdTcNkvIEdlHeM1YCS/H3WYHc1AOgBZcM74wUQ2yHG6I2Vs61v8dYtmMq6IhpEEXBzOSUgvufuZsVdc6YkoNQqFMTvwe/AUaeBAQ//amREPOEVHFBTUCeMJCpDbGK1JSWHKmo54Dgu9eg0bnKexWKu3LtJqWKqPyQsJ/2sxqH2fXVepKyyhwQRNrOyG/NLF438CgrcSNQ4XrdVZ4z6lo+T/EQg==
+ bh=8KyaGIQYfZvHM3X6ksc+8DkNBXmRTR9g0vr22jYCnXc=;
+ b=IkCUEOUz7t8o745c0ve7ajvZKMqB/V1jKPdkTI2i1lTLl9X5vlzwaFNL3/igx+CZTXs/XnzmOSdTleT0kHT5c400U+r8dZON46Fp6aCXVrhVzapNRIxI5slZnb1LMEXyhPXoIDM18vVvmiL1PubO/xIC1ziPNatSpkPvoB+yGzgpW98ifzShXd7WssCLGLHjW+7fTtP0RcAjDBO82wzDn8RqxoCkLw0SizXehqwLm9AIMQlarDS29I3zxi7YG0FiPSkw6nIGgvQ5fR+7N9xzg/JQ0PfS/nR4m2cti6q0krNYQBrcMZa60yYe56AoJJGeF8imdlHQNz+tZhuOoVPbbA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by PH7PR11MB6330.namprd11.prod.outlook.com (2603:10b6:510:1fe::12) with
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8KyaGIQYfZvHM3X6ksc+8DkNBXmRTR9g0vr22jYCnXc=;
+ b=UqsC/qOR2VPN780qQzZEP3OYPnZ3p9TEfM41bUnKBsiVWxYhqJbt9ZmRgSshXoPlZbDCbb+tYHaadFiaVJPBPHwPF9uwHuLD3s2KJ0XgDXwCyTujR7Iy16t4dKsYMrB/dbsE/iwLM9q0Ei2sHdqsRG7ykQ/3UOLbF9tX7Sqr3hA=
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com (2603:10b6:5:3a6::12)
+ by SA2PR10MB4601.namprd10.prod.outlook.com (2603:10b6:806:f9::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Wed, 23 Apr
- 2025 20:36:37 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8655.031; Wed, 23 Apr 2025
- 20:36:37 +0000
-Date: Wed, 23 Apr 2025 13:36:33 -0700
-From: Dan Williams <dan.j.williams@intel.com>
-To: Naveen N Rao <naveen@kernel.org>, Dan Williams <dan.j.williams@intel.com>
-CC: <dave.hansen@linux.intel.com>, <x86@kernel.org>, Kees Cook
-	<kees@kernel.org>, Ingo Molnar <mingo@kernel.org>, Vishal Annapurve
-	<vannapurve@google.com>, Kirill Shutemov <kirill.shutemov@linux.intel.com>,
-	Nikolay Borisov <nik.borisov@suse.com>, <stable@vger.kernel.org>,
-	<linux-coco@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 2/2] x86/devmem: Drop /dev/mem access for confidential
- guests
-Message-ID: <68094f51a7b01_71fe294c6@dwillia2-xfh.jf.intel.com.notmuch>
-References: <174491712829.1395340.5054725417641299524.stgit@dwillia2-xfh.jf.intel.com>
- <174500659632.1583227.11220240508166521765.stgit@dwillia2-xfh.jf.intel.com>
- <y3c6mpt3w4pdx7xzaqdlsr3ci33cseuaxwdno4uh3jfb2ddvxp@kicc5stwtcto>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <y3c6mpt3w4pdx7xzaqdlsr3ci33cseuaxwdno4uh3jfb2ddvxp@kicc5stwtcto>
-X-ClientProxiedBy: MW4PR04CA0345.namprd04.prod.outlook.com
- (2603:10b6:303:8a::20) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ 2025 20:38:33 +0000
+Received: from DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c]) by DS7PR10MB5328.namprd10.prod.outlook.com
+ ([fe80::ea13:c6c1:9956:b29c%2]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
+ 20:38:33 +0000
+Message-ID: <d1f86aa1-2e37-4cfc-b62d-7529ac58c8ba@oracle.com>
+Date: Thu, 24 Apr 2025 02:08:20 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 09/19] x86: Secure Launch kernel early boot stub
+To: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-integrity@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-crypto@vger.kernel.org,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        iommu@lists.linux.dev
+Cc: dpsmith@apertussolutions.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+        ardb@kernel.org, mjg59@srcf.ucam.org,
+        James.Bottomley@hansenpartnership.com, peterhuewe@gmx.de,
+        jarkko@kernel.org, jgg@ziepe.ca, luto@amacapital.net,
+        nivedita@alum.mit.edu, herbert@gondor.apana.org.au,
+        davem@davemloft.net, corbet@lwn.net, ebiederm@xmission.com,
+        dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
+        trenchboot-devel@googlegroups.com
+References: <20250421162712.77452-1-ross.philipson@oracle.com>
+ <20250421162712.77452-10-ross.philipson@oracle.com>
+Content-Language: en-US
+From: ALOK TIWARI <alok.a.tiwari@oracle.com>
+In-Reply-To: <20250421162712.77452-10-ross.philipson@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TY4P286CA0017.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:2b0::19) To DS7PR10MB5328.namprd10.prod.outlook.com
+ (2603:10b6:5:3a6::12)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -103,202 +101,353 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH7PR11MB6330:EE_
-X-MS-Office365-Filtering-Correlation-Id: 540ddb7d-38fc-4291-9aea-08dd82a68b6b
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: DS7PR10MB5328:EE_|SA2PR10MB4601:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b22f2d6-b016-4386-ef84-08dd82a6d03d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?pN700NZa28pmx0GwXhLBukQEp9duE71K2Wz7cGoSEQRiYTSwywuBFfZ63J12?=
- =?us-ascii?Q?x917o1wSIgqRL8SmS+EFk2c1r1i8dfHJnD6CmmEc9Y7fx6+b1j8FHVzAvSEQ?=
- =?us-ascii?Q?pSyqOzYUu8BHSDdOmDtjqvrEzgWWf5iB1PdHn289aDsSkWPVkN1cQx/L9YDM?=
- =?us-ascii?Q?NsKgY/eGgEDHx9rSDA9eatRjCUAaL5B11wakZsEc6tCBeA3MGeVqYuy/UJ1B?=
- =?us-ascii?Q?STWLJA5JxyqMt8aRh90roXDbTU+DZgMIXhw8LNPV2CNZw+Zt3fQ3MSlsz0kk?=
- =?us-ascii?Q?XJRuOlM/litFcnUHXQqPMogPgnvpirFo9p4hcOkVCELYCaySbnj5/MDBImrW?=
- =?us-ascii?Q?MIYEmPf4cD2OVUtGb4z23Cg8E7hDj04zkcSz0LKvCBftSDTMV6/l0HVMg+IV?=
- =?us-ascii?Q?rORv667e0V1P9SInmz1lR9HZKVRDXYcgdo2fMj/yHZYAUwYcxooA0F9SYVEl?=
- =?us-ascii?Q?byXzRaud/d9w1e0y908K0WUfKS7ncF7vmpVYt74atf1N9jNXWYRP9xHm+CR7?=
- =?us-ascii?Q?sT1eibEQ075vbiEHn5jWy1p13boR5Ar60zwRYthgztNcMTix6txWraLOPlGY?=
- =?us-ascii?Q?OeGyvfGj6M0beFQXrlGxsXjnu4vx2JddLTfLjSHukgwLBzswWOcv5kU4WrFa?=
- =?us-ascii?Q?SDtFqu+2Zw4Nhn418tSc6LbhATfmjxN/rpk695NjkTHoKAVZYLHMYZ259Gtg?=
- =?us-ascii?Q?pG7x+tQQpMTgVj4W6BI9q47QifM7jRG6qXDCYN5yJ+4vMElbpxXtDRW056m7?=
- =?us-ascii?Q?q8t8KCnZHLcyVvL7pgfqJcwaT95P3/LXUeriqA68KJggzmMNrnwEiemkOOCD?=
- =?us-ascii?Q?GoYvmpaSizBhYCuqWVeXRUtLq8Pdx+kQQPfZrXCMwwa9U64WO8rGp8gbbOU2?=
- =?us-ascii?Q?Ab92hjfpIgTnmwNLN1H3hOtbIKCYW9ezBnFJZHSqyOR6ORb3VJsWDEM8C9Y0?=
- =?us-ascii?Q?yCWo+XnMz7qsoYdds0Lny495F32QnxcQk5OCgkA3MTUb6e0YYgDT34v5XaYr?=
- =?us-ascii?Q?d71bJliPBSjaqTDKSOvnRMS6pwaM97qJRvS7wd5dQcwEGBflJOa97EvoR2HS?=
- =?us-ascii?Q?W0HPu9ulK9dAXgtRBpnZBCXepDcNo67bfruWYWsfxxYyZLwe82KYhLtQHvWG?=
- =?us-ascii?Q?0rVJF6wYkAyex2UuzeENnYuxUEKp/1hKYs7qyJnI1gzqcjW3gQ/3NZGgN2FP?=
- =?us-ascii?Q?onEWvA/D+ZZ5dH7x3k6W4HPutnpeqSwRmSKvCaCjz1nIedn9LE04UHZr52l7?=
- =?us-ascii?Q?5p/f28lVy2rK7UADf4k8bplvq2iY7WrqSPpdFPrFdMb97gLyTy2F2hl0Ll9y?=
- =?us-ascii?Q?EGGAPpwi4gzakCR8E9e+Ege77pVKH+FY35fRFLUwfh7/YnZzfzDab6rvmB10?=
- =?us-ascii?Q?UdRlBMv/zKeD5Wn+L8Usz+nrSdt6?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UG1oZnlRVHIwQnl5NmMvdVp4bkZ3VWdHZitheFpuK1lmQ1JnVG5Rb1VNRi8w?=
+ =?utf-8?B?SlpaM1ppNTBUektzMGl4RkJ1Skg3NDhYRW83RnUzOStQRXQ0RGk0SEsrb2J5?=
+ =?utf-8?B?R0V4SDRZVHFZQk5EMExVQ0R5Z2RmMmJIUnZOdjBGTjBoUHNWV3NLczhJZ1ZM?=
+ =?utf-8?B?RlVvaTE5eE9hUUR4bW5YWWttQ2drUjU4c0RtdlF1UGc1TnphSTl1cE5qMzJ0?=
+ =?utf-8?B?ekVBSEN4blpmSWNXSWFxL3hMUjNlc1JCUC9xNFNwczI2NlZXdG9lcnBnbHBT?=
+ =?utf-8?B?b2E0aHZ4TUVOaE8reWRpZzI1RVlGcVRMSDlVWEpUVnVZOVp2TDlXWE8vNUVJ?=
+ =?utf-8?B?d2N3THVqN2F5MmYzaUttTkc0c2ZIS3RpajkxNkEyd0ErS1VtKzFIQ0QrdjRM?=
+ =?utf-8?B?NEJUUHF2dWFZa2pWRm8rTVl4SVJIYTJyb1J2eFh1N1dXVGFyQzJ2TitqMmJX?=
+ =?utf-8?B?YVlmVE5hVFNTZ1J3U2ovRlJqQXh3Zjd3RlF2dE5PSlRheWViei94Ry9aaStw?=
+ =?utf-8?B?ZDQ3ci9sZVlBcHRhRlZLbE5QWkVsdDBlMHc3aURKcmJNWEM1RW9VTEdQRXE0?=
+ =?utf-8?B?dkZGUmc2WUViS3d3UGRuUndEMGhhd3RwUGlHNUVmUEY2L1M3NitjTlhGRU8x?=
+ =?utf-8?B?VE15eGZYaE1jTkwvcHNSb1NNc0JVRWhTUkpPdWY0T2d6NWNPQzdqeGEzcTY2?=
+ =?utf-8?B?bDBQTmNqSU9KQnk3NzVzWVMranhITlcrV2xvbnhrOGJkYnFKa1hCajltWXBY?=
+ =?utf-8?B?d3Z6dmo3MkR6ekVDUTQ1K3V6WlFBSHdoYk96UjFPQnNRZU9kYmVDRk8rQnhX?=
+ =?utf-8?B?MU5Fc1RQemU4ZVVuOEt3TzBUd0I3M3ZEeGx0RURTMVEyRGxxNzI3TmtrQnVM?=
+ =?utf-8?B?UzF3UEpTL25oZWR4eURHeXJDMUN5cnlPVXdVMTdlOHFDb3N5bU41U3VuQWRN?=
+ =?utf-8?B?SzRDajd6QmtWWjZCSytXejdDK055bldYdS84VFcycUdJQ0xMYTNOYktGMFhk?=
+ =?utf-8?B?bEhSK0lPYkJiMmlrQTgzSkFFSXBQZ092OGI3dlVZZ2tPMTk2Uzk1Wk5wNlNh?=
+ =?utf-8?B?czU0a3Q1dWhRWXNuelJkMVpnQXlsc1ZyWTBaRDQzbWlKTmZKNEhvSFNPOUVC?=
+ =?utf-8?B?T1pvSURBZk9PbUFiSDd1T0NPd25GaE82bFBjTkVud1FrNlVDRDRFdXlSMHV5?=
+ =?utf-8?B?NVZSaVN2QldXeW9DSkh6bTlUOW1NWTM0d0JqeHpEYUxPbFlPSUQ2UHllRllZ?=
+ =?utf-8?B?eHhFM0ZudmJlaWRjYkVSUWFhbGJScWZrZEtZa0ZreEh6QTM5VWJFandiMFBh?=
+ =?utf-8?B?MFBxK0pDSk9JcThsb1V6ZWtqd2VuRFQwcmNoZHVEWVpKcWlFMElUK2IvTGtq?=
+ =?utf-8?B?ZGNRVDBXY2hzOGtHanE3dThleVVTVld6U2p2aS90a2lUaUdjWUNrV1o3NkJC?=
+ =?utf-8?B?ZkJaa2paTFVMN0loc1pTZm1ZUEgzQU9senRMd01aOTVpd3FEYzdlbUhTckEr?=
+ =?utf-8?B?SURFUUYzVm4zdmt0VXRvV2pwWjZrell2aENZT0Frd2JkUlRGOUsvZTVlREI0?=
+ =?utf-8?B?RlkxTHM2UFBoaVQ4Y3BUQmQrNDh6aTk4c1lUQlRIa3diV1pnVWpLY3ZJalNw?=
+ =?utf-8?B?N1hndi9lRDFkbjRSYldHZ0lCbDZPOHZ3bXB2RGRudjJLWHRiMTlYNWtYUTh0?=
+ =?utf-8?B?dE02UW5jSWhZNjBUZUdvYjdldFZMdjV0K2pUWXhqdm83TE1rMDU2S2hCZDBM?=
+ =?utf-8?B?eGpWWWh1ZFY2RWE2NXNwWFlMMlNhaDFGRkYzZVJNSjU3SHorVlJNRWhRcTZV?=
+ =?utf-8?B?L0x3SVV4QzZCMUhJbFk4ekJUejhtRTdGMGpPZ3Ixdy9CWW1XckhxWmtVQTlo?=
+ =?utf-8?B?bzNDMlZJNXFQRXZmN0xvb1N3UlZGZ2pDdFZzN1FkMFVMQUtPWGJjNlVwZTB0?=
+ =?utf-8?Q?nZ3XZN8eQxI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5328.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9xjslUIWESxKAu5ojVQnwWTFhhbiWuDGnEaxpGeZ0l/rJo4qnY3AwNsXdw5K?=
- =?us-ascii?Q?Mb0Uxe4OFFKXP4Mz0TqU56UE2dCsq/k5E1vMQUce608nHUVpTstXjeZpBrcK?=
- =?us-ascii?Q?DiQK6LoXEluOLFv++GfucI0PZtpI8ewqGq4oSXi7zorKvw6KnPA00atX35iu?=
- =?us-ascii?Q?nWs2wk6vnH0DS79SASR/ZnGtD03dEGaz2kLCJLaoPct+KpPqIMMGdGH1x7tX?=
- =?us-ascii?Q?GAUVitShvaXgStzADskS8yc2DO4g7XUv07mq9IxmDHbYRYnvpG5UHq43Rqt5?=
- =?us-ascii?Q?0Dr68hqOHDQJRFM4+3SsI4KsfwwXPD3Wu0zEHII3q2AYkOnee1MA3yRTvpwe?=
- =?us-ascii?Q?K68kh+QY8GNSWdFMErMfsu0vPdxUaK/wta1gATVazBKEYPqSKzcBJYDbp8lH?=
- =?us-ascii?Q?2KQT5/KmXIODCcCK6Jbj7kKcnVgn8r/KAp/SF+JFz7aiy/DIUBbwOZ9curS9?=
- =?us-ascii?Q?zdgSrazrIS/aLXIKzfFsZinDmETQ4oGhx7cn94xK8lm5jB0fkqBXTi7eFEFy?=
- =?us-ascii?Q?XpptMU2a+7iD14KAFi7hp0jkqvHW8pXrbeiV55Od4xSvhBQrZM5mAZh4tp8T?=
- =?us-ascii?Q?wtztSAX3yACIngFskIMklWu2W9CByAEKi1xgr54RDz2+nt7+vL+LLnoKqErc?=
- =?us-ascii?Q?u2BHqZlGRxylNED78RhikW7jeHFjBEecVOucuilNgOmWS2jiLNwmoytSL36Q?=
- =?us-ascii?Q?ZBJUCGpA08YKSQyEFPvAzoS89sDNMyByZLBpkQn71H6AB2/pA39BSyE/hKbo?=
- =?us-ascii?Q?ip63/+YAR0EYqcHBbXQ6N1jeFSzLCNXnINnG3e+Xce8SA6duhIb2V4FHLwuU?=
- =?us-ascii?Q?UHTQXebO8y+CUHbwme5AofAUkX0cgkKGjFXhRMS3O/+PQi38LXAqc9SZkV5U?=
- =?us-ascii?Q?Eej2PhR065gpbajlRO9tbdhgOh3dfsDBR8O6f8U8DPWWM30Nj2pdcLIqxLM9?=
- =?us-ascii?Q?zoGVLi4Twn9m4nOCiG6ozeNWxa00vkQ6nS6Lafm3DTQtVkSPCzJVt4ol7McE?=
- =?us-ascii?Q?k2NYumwcW/u4Fy7OmMkGU63YyWpVbU5pBygw9Zf9C7YXHixoCwGGbEF5ycGj?=
- =?us-ascii?Q?ktFwOMlDKpRP39xIE7R12vwj57968fqte2/ifpkVrBeZAgQ1gkFGIcXwkjSs?=
- =?us-ascii?Q?MQmSARLh91VaG4EIYqyWPf7230fzvpJSV6crGp+mGMENiYWmpkCtMEHTkYEx?=
- =?us-ascii?Q?9CB4UIGd/FsmSD19rqmDMylaUMzLDs7VfT9esvGqSZhFqN+8RmAaWemNMCy1?=
- =?us-ascii?Q?/LG94KAn1Zyq8KUuIjHFIRuGKCZp+rYvwwjHLut4zQ3ROzsO1CUYBMdz0PYq?=
- =?us-ascii?Q?6GC1fIDSlhXdlv79ca9yS8aGEIH23l6syJvgtkeFLy+CtKVvHmFvdaEHeNIF?=
- =?us-ascii?Q?9f7UDze3x1qWenn9U7MWU6mf5IqKwrmJ38wVx3YB09zxjcdzODOZ6bHBO/MP?=
- =?us-ascii?Q?hN6DeNwBPFh4oOGW6oxN66ksd3Sog8EriSAnw/S84CFJV2w3qR6056oL6kQm?=
- =?us-ascii?Q?JZWZzxP9Rv61EtMpyYJNSRZyroXg8uCfZDNSiaDKYWP7aJ7pMwaAUwSQ86MO?=
- =?us-ascii?Q?YdIQHAk4U0HpNqcCeKPg+VPmBwLVjtyZ6cWdx8a+K419OABedf0+SImw+mHU?=
- =?us-ascii?Q?Eg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 540ddb7d-38fc-4291-9aea-08dd82a68b6b
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SXpxeEZDQUVTT1hvS2oyUnBPQ2pZditacmlBRXZSOE5lam1RS2hWMldZeG1w?=
+ =?utf-8?B?RFVraTJ4Y0hNSVdpbXd0K2c3cWVTR0tFOVAwTkJvSDYwQ2xyL0pLYVd5MGVi?=
+ =?utf-8?B?S3p1MlNYTVQzd2VJRE9FUndZdmJtcy90VXBCWDJrcXdWbE9JWlZWMlYwRGw5?=
+ =?utf-8?B?a3BtMzhDT2ZSdE9tY0xCeW05dFFNUndRTWFkbHBYV2o1a0FMZkdUWVV0U081?=
+ =?utf-8?B?YzhhSlZBRmttbU8wVWp0RGYxaXd4cU53WVZOcFk5dkxoREFnWkZvRTl3Yi9h?=
+ =?utf-8?B?Qy81ZHczUk1CbXlhMVJMcEFpeUxPaWU4QW5UaU8zdkdBZXdtNjlINTRVNisv?=
+ =?utf-8?B?Y0FqR1hsb05laHRyN2ZpNWNDdkJOcG1kQzhzN0huYUJSR2ZiQzBVeFBrLzd4?=
+ =?utf-8?B?akVPakovemVPZHBTM2p6WGhTMmkxbjlUYUNjeUZBVE0zVUM0bkoySnp1bytW?=
+ =?utf-8?B?VC9UT3lsWUJpTzRuNWtVTTN6S0o4UEtRK3FSUEo3bkR0YTZOaGMxaGVUN0ZK?=
+ =?utf-8?B?UzVBS1lWU0RZd1BzN2pNMzhlVlFYN1dmNCtsVEhVWjJ1NHExUWF5L1o2NDlS?=
+ =?utf-8?B?eVhZSDJqVDBScTlRYm01VGFFYkZidWJZWkxBeW04MWRON3hJNWc2cTJLU1cz?=
+ =?utf-8?B?QmlyWHNYcXJMOGNmNmx5K21JVkdteExFZ2p3U3hMdkJOWE1LVXQzSVlsTmYr?=
+ =?utf-8?B?OStPV3lLMFptemxac1llcXFIMExiekRTM2Jyd3AycXNEWDhTWENFcWVJVG93?=
+ =?utf-8?B?SXdFNS9wVnZyNnZDWkFkalltbzg1MW9BZkExb0JwN05FSWxzbTh2WGdGT2l3?=
+ =?utf-8?B?VDdqSkw3WGxwZDdrYWVhZzZQbkVUcDg2eFV0SWdCRkdCLzFYZ2hMSDUvYTZn?=
+ =?utf-8?B?NXgvOGRFVHllNStGTHVWMXdJbmFZNFFQNld5R2c1ZWh5d3lKVzA5ZlJFVUpx?=
+ =?utf-8?B?QUxFR0JqcGNiOVk3YjMzc1g5bGpvaDRXUlBseTJ4NGllYmxvQ3V1cWxTYUd4?=
+ =?utf-8?B?WVV2dEVaeForUVNoMWFoMHZBcHFhSnVZMVZGRUR1NDZ3VkJHMXF2TFlSV0xZ?=
+ =?utf-8?B?M1hKUjZnQncyNTR5Qm1kUkNqMVFZbUlhVEQ3aWUvT1NXSS82ZXpBMDFkWml3?=
+ =?utf-8?B?a2tmS1pmbDRLSzRXZFVyckgxd3FFZW5SOWt4S2w0NGl2UTZ6UUxmeFQzWDAr?=
+ =?utf-8?B?Rm5hZk0yVGhFcVpGdktMbUZzVFpTelZoRWFLaDBBZnBDUWxjVmR6YmwwWFlx?=
+ =?utf-8?B?ejhwMlZ4WEZBS2hYS210VDNNdTIxcUkxMHNsZTgyamhOaXhERlkyM3FjcFZE?=
+ =?utf-8?B?VTU2UXZWUm0xOWMrek9CcnpHRWc5MVFKMjgvWWc3YnI4QWluTXM2TWUzQWJT?=
+ =?utf-8?B?eDJ1Q2h2NjQxNUlqTFltSnZrbzh2SjMyL2lrbUMzVExmckUzMEZxWGw1bDAr?=
+ =?utf-8?B?QVFyK0lreThzQ1NBU2tTSkIwak0vajd3V1hHejNsblhhTzBMQzhEb2dmWkto?=
+ =?utf-8?B?V3lITTkzZzRjamdqS05yMW9iT2ZVTFRuanMwaCtmWEFEbm1hZ0tFa00ybHhV?=
+ =?utf-8?B?NEdNNHV6TVoxdUdRcWRTTDRGbjE4dVhwSXR1amlzdTM5NVBNN0hFbEk4SDQ3?=
+ =?utf-8?B?ODhJNDVERURPSFFKd3RyRW9KNzFNWWlmOEVhVndBTUNYYlQ4THh4MjNCSDh0?=
+ =?utf-8?B?Q3IvODN2UU52dnJ5dVhIQVZ4aFpNcm0vTG1rWS9IK2kxWmtGT1V4aUFZRFRp?=
+ =?utf-8?B?ZDBYSTFIcW5GaHkweXFTSFFId29HMWJWNVVyWG5LTUd2QlpHcWw5THE4azY1?=
+ =?utf-8?B?TWZCSXZJT1QvSzNJWHZZNjVqV0h1WHBFTXRMTjBIYlNjZDNjYStITVlTZ3lM?=
+ =?utf-8?B?SU4xVUswdnpKcXNsd1BTTlZXVnRVSnpkN1NCSkNUbEZVeitWRGdJdDVFcUIx?=
+ =?utf-8?B?c3hNQUhCek5KWEpYQmJ4WU9EYVpkT2J6b1IwMjF1aEdyZmY1STRRYXFmZFdl?=
+ =?utf-8?B?WnRpYU1WZFRDc2srNWw0RFJUR0pJMU9LeXc2Z1YwZDRaVDVGVlRlS0l0WWsy?=
+ =?utf-8?B?M25qN2MyVWpnQm9adnRheVloSVpZaHloVTEvbmdRZ204aHFVWDg3TFNBZlBQ?=
+ =?utf-8?B?N0lPMStVZVhSQXZvTXBKbngwRE9oOTFaeStwclpHbnpvUDh6Y1dJemhOSXdz?=
+ =?utf-8?B?ZlE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	DeRzKyoUf56wrSWAacJzzwTlvaV+YaJOI8/qmIvDxPWKKfradtFkbxTMkN6pNUKKzsnSWKGBfDiZtP5aKFb0TCGYU0kLwvgAcOZ4zmFY//iOYZZsWcYtgNmntDwQrgW8aeXJpy4mihx61s+6tuXCD/VWiX23lxnI9cpMO7F92yb2d22UU2Gm7CaOEyj1CSMaIiRi8YaJc3fwkZkZlHKg7vrY+8nY96vTZutPtZ2a6Gb16Kmbec0Wg/w5MkXYlrkyg3fufBoGIGrrD+cUAQwewCuNSCXTUvO8z4xMCilSR1sWfhOn1U1jUMvnc7bnrPXT1DsodIgIgyenbS2og31uOMSbOTtqjB/dOKPCXdXbPlEKrvsVk34M4v3qdrT0+OWE6GJIr6i2K/GWDvmCYjKyiwW33T5Pnb/n2IrS79VPzCOAB4oy80lrINzzJxe00UKH69AmhGUnNjTFL3S6H/8gQlOso3cKs+6aXQoEcpmMbLcGX4Sy7LcZpwIZsTxkWl3gyUvtigEcWyS/k404sLHIQ7VFxon5hdmq2Xy8lUpiwYfFfFov2jL/yBNzbfPPROemWpub2YvLr0GU5O431+UjB1hj+yF67N+gdPeStwrHUvo=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b22f2d6-b016-4386-ef84-08dd82a6d03d
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5328.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 20:36:37.4041
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 20:38:32.9111
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2J4/hX6ssfnKAKapedk7ThchLJOC6FI9wxXZcIdNdWnCQcqrtn46D6Z5DuNwCPRAFjRbYMGumSCArPKXBbwUMCd+wVj/RfVP1T2bQQYeO+Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB6330
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3m5NkCzOkovgQ8rSa9yV+CPt8jIOABkAA5gNRC8ETCaKw0DhM3dnsUNLgljscsuZdcFuj1ppkXRAAf7Cys1OvibqYG/+9LSxhKW8Y9QOii8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4601
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_11,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 mlxscore=0
+ spamscore=0 malwarescore=0 mlxlogscore=999 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2504230142
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0MiBTYWx0ZWRfX4BzKNhsY4IyJ E7NSypb85rVk96gp4DNChZ3lg8m0z08BlfdXs0y92Lhawm9MMFkGpSgxoCRpFgQnEkeXtwVOTq2 G0Vh21x8dYW3yqphnuOmeCs+eiYQ0Sox6d1kuiwKbVOEo94TC0ASkbnpYan67zF4hnRoAxE+/uK
+ cI5B33qbqjcs1n4YfCO05eZxFKp6TwAUL4NZRqJntbCEIBxye4XlDhqVQgRkybWOkh8t2Y6RaLp d5rR9rcBQ+FvBWBmDFStB6kYSbI5TvwHBm28z7jgvJML/tyd2C660mPbFPdbjxMI8h6Kk5sI0z5 5hpKkP59q3L5kz6nVKdbLlvFqAcqIU39Far/vuG6XTs0PCCgfmP3qjsyur9H2LE9q7kQzGnLRSe fvcbYCzy
+X-Proofpoint-GUID: 0D-5UTGMlUZf7v4Aq2PM2bcZD1qB8FK_
+X-Proofpoint-ORIG-GUID: 0D-5UTGMlUZf7v4Aq2PM2bcZD1qB8FK_
 
-Naveen N Rao wrote:
-> On Fri, Apr 18, 2025 at 01:04:02PM -0700, Dan Williams wrote:
-> > Nikolay reports [1] that accessing BIOS data (first 1MB of the physical
-> > address space) via /dev/mem results in an SEPT violation.
-> > 
-> > The cause is ioremap() (via xlate_dev_mem_ptr()) establishes an
-> > unencrypted mapping where the kernel had established an encrypted
-> > mapping previously.
-> > 
-> > Linux traps read(2) access to the BIOS data area, and returns zero.
-> > However, it turns out the kernel fails to enforce the same via mmap(2).
-> > This is a hole, and unfortunately userspace has learned to exploit it
-> > [2].
-> > 
-> > This means the kernel either needs a mechanism to ensure consistent
-> > "encrypted" mappings of this /dev/mem mmap() hole, close the hole by
-> > mapping the zero page in the mmap(2) path, block only BIOS data access
-> > and let typical STRICT_DEVMEM protect the rest, or disable /dev/mem
-> > altogether.
-> > 
-> > The simplest option for now is arrange for /dev/mem to always behave as
-> > if lockdown is enabled for confidential guests. Require confidential
-> > guest userspace to jettison legacy dependencies on /dev/mem similar to
-> > how other legacy mechanisms are jettisoned for confidential operation.
-> > Recall that modern methods for BIOS data access are available like
-> > /sys/firmware/dmi/tables.
-> > 
-> > Cc: <x86@kernel.org>
-> > Cc: Kees Cook <kees@kernel.org>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: "Naveen N Rao" <naveen@kernel.org>
-> > Cc: Vishal Annapurve <vannapurve@google.com>
-> > Cc: Kirill Shutemov <kirill.shutemov@linux.intel.com>
-> > Link: https://sources.debian.org/src/libdebian-installer/0.125/src/system/subarch-x86-linux.c/?hl=113#L93 [2]
-> > Reported-by: Nikolay Borisov <nik.borisov@suse.com>
-> > Closes: http://lore.kernel.org/20250318113604.297726-1-nik.borisov@suse.com [1]
-> > Fixes: 9aa6ea69852c ("x86/tdx: Make pages shared in ioremap()")
-> > Cc: <stable@vger.kernel.org>
-> > Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> > Changes since v3
-> > * Fix a 0day kbuild robot report about missing cc_platform.h include.
-> > 
-> >  arch/x86/Kconfig   |    4 ++++
-> >  drivers/char/mem.c |   10 ++++++++++
-> >  2 files changed, 14 insertions(+)
-> > 
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index 4b9f378e05f6..bf4528d9fd0a 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -891,6 +891,8 @@ config INTEL_TDX_GUEST
-> >  	depends on X86_X2APIC
-> >  	depends on EFI_STUB
-> >  	depends on PARAVIRT
-> > +	depends on STRICT_DEVMEM
-> > +	depends on IO_STRICT_DEVMEM
-> >  	select ARCH_HAS_CC_PLATFORM
-> >  	select X86_MEM_ENCRYPT
-> >  	select X86_MCE
-> > @@ -1510,6 +1512,8 @@ config AMD_MEM_ENCRYPT
-> 
-> As far as I know, AMD_MEM_ENCRYPT is for the host SME support. Since 
-> this is for encrypted guests, should the below dependencies be added to 
-> CONFIG_SEV_GUEST instead?
-> 
-> Tom?
 
-The placement rationale here was to have the DEVMEM restrictions next to
-the ARCH_HAS_CC_PLATFORM 'select' statement which is INTEL_TDX_GUEST
-and AMD_MEM_ENCRYPT with SEV_GUEST depending on AMD_MEM_ENCRYPT.
 
-> >  	bool "AMD Secure Memory Encryption (SME) support"
-> >  	depends on X86_64 && CPU_SUP_AMD
-> >  	depends on EFI_STUB
-> > +	depends on STRICT_DEVMEM
-> > +	depends on IO_STRICT_DEVMEM
+On 21-04-2025 21:57, Ross Philipson wrote:
+> The Secure Launch (SL) stub provides the entry point for Intel TXT to
+> jump to during the dynamic launch. The symbol sl_stub_entry is that entry
+> point and its offset into the kernel is conveyed to the launching code using
+> the Measured Launch Environment (MLE) header in the structure named mle_header.
+> The offset of the MLE header is set in the kernel_info.
 > 
-> Can we use 'select' for the dependency on IO_STRICT_DEVMEM, if not both 
-> the above?
+> The routine sl_stub contains the very early dynamic launch setup code
+> responsible for setting up the basic operating environment to allow the normal
+> kernel startup_32 code to proceed. It is also responsible for properly waking
+> and handling the APs on Intel platforms.
 > 
-> IO_STRICT_DEVMEM in particular is not enabled by default, so applying 
-> this patch and doing a 'make olddefconfig' disabled AMD_MEM_ENCRYPT, 
-> which is not so good. Given that IO_STRICT_DEVMEM only depends on 
-> STRICT_DEVMEM, I think a 'select' is ok.
+> The routine sl_main which runs after entering 64b mode in the setup kernel. It
+> is responsible for measuring configuration and module information before
+> it is used. An example of entities measured on Intel x86 are the boot params,
+> the kernel command line, the TXT heap, any external initramfs, etc. In addition
+> this routine does some early setup and validation of the environment like
+> locating the TPM event log and validating the location of various buffers to
+> ensure they are protected and not overlapping.
+> 
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+> ---
+>   Documentation/arch/x86/boot.rst       |  21 +
+>   arch/x86/boot/compressed/Makefile     |   3 +-
+>   arch/x86/boot/compressed/head_64.S    |  29 +
+>   arch/x86/boot/compressed/sl_main.c    | 597 +++++++++++++++++++++
+>   arch/x86/boot/compressed/sl_stub.S    | 731 ++++++++++++++++++++++++++
+>   arch/x86/include/uapi/asm/bootparam.h |   1 +
+>   arch/x86/kernel/asm-offsets.c         |  20 +
+>   7 files changed, 1401 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/x86/boot/compressed/sl_main.c
+>   create mode 100644 arch/x86/boot/compressed/sl_stub.S
+> 
+[clip]
+> index 000000000000..5e0fd0d7bd72
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/sl_main.c
+> @@ -0,0 +1,597 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Secure Launch early measurement and validation routines.
+> + *
+> + * Copyright (c) 2025, Oracle and/or its affiliates.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/string.h>
+> +#include <linux/linkage.h>
+> +#include <asm/segment.h>
+> +#include <asm/boot.h>
+> +#include <asm/msr.h>
+> +#include <asm/mtrr.h>
+> +#include <asm/processor-flags.h>
+> +#include <asm/asm-offsets.h>
+> +#include <asm/bootparam.h>
+> +#include <asm/bootparam_utils.h>
+> +#include <linux/slr_table.h>
+> +#include <linux/slaunch.h>
+> +#include <crypto/sha1.h>
+> +#include <crypto/sha2.h>
 
-Agree, that makes sense, and I do not think it will lead to any select
-dependency problems given STRICT_DEVMEM is "default y" for x86.
+consider header reordering For clarity and consistency
 
-> 
-> >  	select DMA_COHERENT_POOL
-> >  	select ARCH_USE_MEMREMAP_PROT
-> >  	select INSTRUCTION_DECODER
-> > diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-> > index 48839958b0b1..47729606b817 100644
-> > --- a/drivers/char/mem.c
-> > +++ b/drivers/char/mem.c
-> > @@ -30,6 +30,7 @@
-> >  #include <linux/uio.h>
-> >  #include <linux/uaccess.h>
-> >  #include <linux/security.h>
-> > +#include <linux/cc_platform.h>
-> >  
-> >  #define DEVMEM_MINOR	1
-> >  #define DEVPORT_MINOR	4
-> > @@ -595,6 +596,15 @@ static int open_port(struct inode *inode, struct file *filp)
-> >  	if (rc)
-> >  		return rc;
-> >  
-> > +	/*
-> > +	 * Enforce encrypted mapping consistency and avoid unaccepted
-> > +	 * memory conflicts, "lockdown" /dev/mem for confidential
-> > +	 * guests.
-> > +	 */
-> > +	if (IS_ENABLED(CONFIG_STRICT_DEVMEM) &&
-> > +	    cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
-> > +		return -EPERM;
-> > +
-> >  	if (iminor(inode) != DEVMEM_MINOR)
-> >  		return 0;
-> >  
-> > 
-> 
-> Otherwise, this looks good to me.
+> +
+> +#define CAPS_VARIABLE_MTRR_COUNT_MASK	0xff
+> +
+> +#define SL_TPM_LOG		1
+> +#define SL_TPM2_LOG		2
+> +
 
-Thanks Naveen, can I take that as an Acked-by?
+> +static u64 sl_txt_read(u32 reg)
+> +{
+> +	return readq((void *)(u64)(TXT_PRIV_CONFIG_REGS_BASE + reg));
+> +}
+> +
+[clip]
+> +/*
+> + * Process all EFI config entries and extend the measurements to the evtlog
+> + */
+> +static void sl_process_extend_uefi_config(struct slr_table *slrt)
+> +{
+> +	struct slr_entry_uefi_config *uefi_config;
+> +	u16 i;
+> +
+> +	uefi_config = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_UEFI_CONFIG);
+> +
+> +	/* Optionally here depending on how SL kernel was booted */
+> +	if (!uefi_config)
+> +		return;
+> +
+> +	for (i = 0; i < uefi_config->nr_entries; i++) {
+> +		sl_tpm_extend_evtlog(uefi_config->uefi_cfg_entries[i].pcr, TXT_EVTYPE_SLAUNCH,
+> +				     (void *)uefi_config->uefi_cfg_entries[i].cfg,
+> +				     uefi_config->uefi_cfg_entries[i].size,
+> +				     uefi_config->uefi_cfg_entries[i].evt_info);
+> +	}
+> +}
+> +
+> +asmlinkage __visible void sl_check_region(void *base, u32 size)
+> +{
+> +	sl_check_pmr_coverage(base, size, false);
+> +}
+> +
+> +asmlinkage __visible void sl_main(void *bootparams)
+> +{
+> +	struct boot_params *bp  = (struct boot_params *)bootparams;
+
+remove extra ' ' before =
+
+> +	struct txt_os_mle_data *os_mle_data;
+> +	struct slr_table *slrt;
+> +	void *txt_heap;
+> +
+> +	/*
+> +	 * Ensure loadflags do not indicate a secure launch was done
+> +	 * unless it really was.
+> +	 */
+> +	bp->hdr.loadflags &= ~SLAUNCH_FLAG;
+> +
+> +	/*
+> +	 * Currently only Intel TXT is supported for Secure Launch. Testing
+> +	 * this value also indicates that the kernel was booted successfully
+> +	 * through the Secure Launch entry point and is in SMX mode.
+> +	 */
+> +	if (!(sl_cpu_type & SL_CPU_INTEL))
+> +		return;
+> +
+> +	slrt = sl_locate_and_validate_slrt();
+> +
+> +	/* Locate the TPM event log. */
+> +	sl_find_drtm_event_log(slrt);
+> +
+> +	/* Validate the location of the event log buffer before using it */
+> +	sl_validate_event_log_buffer();
+> +
+> +	/*
+> +	 * Find the TPM hash algorithms used by the ACM and recorded in the
+> +	 * event log.
+> +	 */
+> +	if (tpm_log_ver == SL_TPM2_LOG)
+> +		sl_find_event_log_algorithms();
+> +
+> +	/*
+> +	 * Sanitize them before measuring. Set the SLAUNCH_FLAG early since if
+> +	 * anything fails, the system will reset anyway.
+> +	 */
+> +	sanitize_boot_params(bp);
+> +	bp->hdr.loadflags |= SLAUNCH_FLAG;
+> +
+> +	sl_check_pmr_coverage(bootparams, PAGE_SIZE, false);
+> +
+> +	/* Place event log SL specific tags before and after measurements */
+> +	sl_tpm_extend_evtlog(17, TXT_EVTYPE_SLAUNCH_START, NULL, 0, "");
+> +
+> +	sl_process_extend_policy(slrt);
+> +
+> +	sl_process_extend_uefi_config(slrt);
+> +
+> +	sl_tpm_extend_evtlog(17, TXT_EVTYPE_SLAUNCH_END, NULL, 0, "");
+> +
+> +	/* No PMR check is needed, the TXT heap is covered by the DPR */
+> +	txt_heap = (void *)sl_txt_read(TXT_CR_HEAP_BASE);
+> +	os_mle_data = txt_os_mle_data_start(txt_heap);
+> +
+> +	/*
+> +	 * Now that the OS-MLE data is measured, ensure the MTRR and
+> +	 * misc enable MSRs are what we expect.
+> +	 */
+> +	sl_txt_validate_msrs(os_mle_data);
+> +}
+> diff --git a/arch/x86/boot/compressed/sl_stub.S b/arch/x86/boot/compressed/sl_stub.S
+> new file mode 100644
+> index 000000000000..6c0f0b2a062d
+> --- /dev/null
+> +++ b/arch/x86/boot/compressed/sl_stub.S
+> @@ -0,0 +1,731 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Secure Launch protected mode entry point.
+> + *
+> + * Copyright (c) 2025, Oracle and/or its affiliates.
+> + */
+> +	.code32
+> +	.text
+> +#include <linux/linkage.h>
+> +#include <asm/segment.h>
+> +#include <asm/msr.h>
+> +#include <asm/apicdef.h>
+> +#include <asm/trapnr.h>
+> +#include <asm/processor-flags.h>
+> +#include <asm/asm-offsets.h>
+> +#include <asm/bootparam.h>
+> +#include <asm/page_types.h>
+> +#include <asm/irq_vectors.h>
+> +#include <linux/slr_table.h>
+> +#include <linux/slaunch.h>
+
+consider header reordering For clarity and consistency
+
+> +
+> +/* CPUID: leaf 1, ECX, SMX feature bit */
+> +#define X86_FEATURE_BIT_SMX	(1 << 6)
+> +
+> +#define IDT_VECTOR_LO_BITS	0
+> +#define IDT_VECTOR_HI_BITS	6
+> +
+[clip]
+> +	jz	.Lwake_getsec
+> +
+> +	/* Wake using MWAIT MONITOR */
+> +	movl	$1, (%edi)
+> +	jmp	.Laps_awake
+> +
+> +.Lwake_getsec:
+> +	/* Wake using GETSEC(WAKEUP) */
+> +	GETSEC	$(SMX_X86_GETSEC_WAKEUP)
+> +
+> +.Laps_awake:
+> +	/*
+> +	 * All of the APs are woken up and rendesvous in the relocated wake
+
+typo rendesvous -> rendezvous
+
+> +	 * block starting at sl_txt_ap_wake_begin. Wait for all of them to
+> +	 * halt.
+> +	 */
+> +	pause
+> +	cmpl	rva(sl_txt_cpu_count)(%ebx), %edx
+> +	jne	.Laps_awake
+> +
+> +	popl	%esi
+> +	ret
+> +SYM_FUNC_END(sl_txt_wake_aps)
+> +
+> +/* This is the beginning of the relocated AP wake code block */
+> +	.global sl_txt_ap_wake_begin
+> +sl_txt_ap_wake_begin:
+
+
+Thanks,
+Alok
