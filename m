@@ -1,223 +1,319 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06A1D2C374D
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B0827FD74
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745422526; cv=none; b=JYG9Gs6XSYsd+1IVWp+LKU+joGdkG8NKRGU/V+JHMAQ1oeGPzDtXn0Xqg7dT7Ig7TN+1x1cZ4nodM3dQR4rnVGh2PYecQTr2gAtpg0hL/EbkL2Cx3QYx2fbrCW6PkQuZer/CWYfpFRcyMRJFg4/cnpxSNmGWKAgySiR4LHIyayk=
+	t=1745422625; cv=none; b=cgGhLERAMhwjyKyuW8maQYupKRfvAbpX+ZkmgZasIbbURB9g3UcFFwgqDk+I+kGtPZeQSRgO3MEP6OtseunzeY1ydILEEuAokhs1EtYOYumZyhweZdtuN6G3l8HYvCHew0/1t90DOqebRXNxjVgVfDVy79eFDQeU6xUh3yy8ugU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745422526; c=relaxed/simple;
-	bh=i8MtGRpXKkmHJ8RkFNjpUc1nm+6EtljWpCcqkyZibXE=;
+	s=arc-20240116; t=1745422625; c=relaxed/simple;
+	bh=ZNEVnoAF03YQqL43TzKb58rLEjJfR7zvPHinDgSDKtg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fc9L8prZ/miraHV9fX8qX/nQqWLc/mhzbkyOTBLDJtBeuzRapVtTEOkMgWuH6m65xB2cP4c9RXjHC9g4W8pwKxomEcWRPXeXAPETagY1jfgfy/AfUS6U+Iq7eIUgU2pAdwABe6HoPuq7pHAo4CXNVa7pWTDaaHYsCjUnasOdE/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UA2koL8p; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=MY/tpRpJFXG5GFAXkOnCN0WCk8tJcUZN7afXT66oJb3b1rkUIJkTSpaMEEJeKuXXAVot0j7+9YUroJ6kpD+4kG+4dDryXKGB1WyKM+9hi+pE3VwYAMEENvNHTB7+5TCZUMJXbrKbI+1BLBa7IGO2mmfI05+P5JldIokMpxJb7Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=MoOPJvoU; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UA2koL8p"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47666573242so537241cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:35:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="MoOPJvoU"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e461015fbd4so5496600276.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745422524; x=1746027324; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h+jyAAC0t/JStHxcoSH+ZIpFBol3lCP0Cb116iznOcU=;
-        b=UA2koL8pkvxBqV5v9sxef4+sVPTSfY8m+VnlpZnZCsRvNhhDW+s2FFM0Fo2/kpkfQi
-         2Mt1sinfa/+Okmh8GQXXpPdKnE7VwAR/Sthwz3jHhjBs4PRweMbPaFi39rSiMgS/6OMK
-         q3k8EiOerYyLMPlG9vQ/0pG7lczCyo0FYkoWyzUck6ShMvoUcbPS32iEv1rS4cV11B8d
-         bwh3P52Vt2DlYmJtDqEzlSeY6wLJupp/M5iZaI4Ic2HZ//bLou06sLn6GMRPdn18wgGx
-         Y6BP0gUA68bczKR6R6sr65Ok/N3IkN/+L+IWPjyZasW1ItDTG3fYf8tcBd3tUrtgRXG/
-         AsAA==
+        d=broadcom.com; s=google; t=1745422623; x=1746027423; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tYcFdl/ErgCv5zIEE/haTW3Fdf65gxtWZa9r+6Ilptc=;
+        b=MoOPJvoUd2z3kmL/m9NZMOz4DKbdH74mLA6YcO8NvgA6C+DH3Jsh1dETeqbymY9g/5
+         fkCLCeQEU6KpJnIkSsBVCDt2SbGX8GzFYiJuPIyqS+tDWen0mh6W9KqWJa33Bkih5cUc
+         KUMCmurZvU5qIQwq6rGv+KxjG/P+7BkRVckPE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745422524; x=1746027324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h+jyAAC0t/JStHxcoSH+ZIpFBol3lCP0Cb116iznOcU=;
-        b=hr+HKTV7HGaI7SLwRuOXIhO5s6G0uYE09kJsSt6kRYLQ9sluuoKYlj5PvCkvdJoEu0
-         B4+dL+5C7NiuNUEWYXEKjrenM4+PHoPqX3+oEQDs55UUy5FhCZj4szXlZoN8TdMuLVMf
-         amFAU/9eSIneCBK9xsHLIIRxte0M21fKaSkjCheRygL7s4Ex0480dODJo2oa0BqFN1dG
-         LYkpzE/j2UEfiQLlTEii3EKcdhcXA0/DKy68RnUqtvzbNvkkxRxDSpSeCST443xj+9hr
-         ZYzcI99+IsZZxKFWXmiYJTZdiT+CD5J4JMIABj9yT/BJ+3bZZvLtP49XDVAKHNYpbb/o
-         f++w==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ1YfaCgiQCbsxU3leReuynrDuCnhTACByayQ7O6hm41CBetZsZ1zTeXse3cj7Nt3BdvF8u1L/TMbv35g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx82GXCnMEJmMcJ34tCJHGBTFIXYRJbn5KMKLmGhtg3OFeY6PqU
-	gwDer3gyxOYujIr3tPDdjzLXLiWJfhmrWxDX8G4UGXtoJT3R+z1o6lFS2AWD/xYtmK6Qaxjknbt
-	U7kphSVZ8HFrf36bQxoIqgvrlkX/BD+X+6wwM
-X-Gm-Gg: ASbGncuhf4R0GggfFOco/BZdH0jh5LsWAEMGhpqMyMgtf36CyiNo8n9ubY0vtvMrthJ
-	6qmNlybpfcmqT+uhlv1mpBbClwh5XM/DzOJZ0sbe76Zcw/hQlkziHRhIKKnmS6tteJMV0TggT+C
-	bwnQJ2LZ1aQwfxQJHdC8Bn
-X-Google-Smtp-Source: AGHT+IExSWvIcGM87Yoi6Vq5pwwOc0D9jRXmsMz/YeACIxtJ+JJu8ohw9anNP3Y3bwIZtGW3Ieq9Vl5FqpnunleAUDE=
-X-Received: by 2002:a05:622a:22a6:b0:477:8577:1532 with SMTP id
- d75a77b69052e-47d13ae4751mr4998901cf.28.1745422523428; Wed, 23 Apr 2025
- 08:35:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745422623; x=1746027423;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tYcFdl/ErgCv5zIEE/haTW3Fdf65gxtWZa9r+6Ilptc=;
+        b=LN8ugGNi6uuJZuOfUpluFVudBJ4AClCdFinwTpla4pegg9dAf3KQ04EOWjtzI/0ilA
+         4tqza1s+pabGPpEwI/Asfsr2bM9aKzkeCMQtg4etQmatCAuQEGXdmPmfNe0d/ijYDb9y
+         czXpnloAznD73QcadrDFDOPHW49UMY9dd2vLWNXWcJQbTCVNrq3xqqE+xlTjck/NB63J
+         QTJ3jT8dcQuMWIxhqiC7g0m54MN94Uh4baQbQeQF3Vu2tmeVaUHQx1B718jaSEPvMc9V
+         j8lwNTGRkSE0xhgnnymwhLmT4tg1BLk8fXn65xO1kPuzx833jkNTQ/sYAPbw1OnAAwGh
+         xAEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXs6MSrGnnRiKBPotaRK+ee4sx7Lb42Fy09lUjfmsVfayhy/PWRn/2TJfwTGQrBNgUIE+oaUHnoRg/gBU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxELrWpRy/MbeQ0uVZvqy6wg6m1lp1SwTGybKqWkg8Cb9bqeeUl
+	oI5v/2zu69/echD4dp/OxDNpBFREYnSx3ZM81CzUyDT0YfW10E9rcS52TQAA73R3VBEUYdjQKMY
+	3z/zsEfpfDlcr7ADqkpNiJcP5njXvKmBwuuLi
+X-Gm-Gg: ASbGnct48GNBqKCfLam/zB2CVsIW9WMqSWiomtyIKA0IPhzGsohuZg796eulw2Ak6et
+	HO9RHfpNz/0i7QLplLgwBoOfQPikMu5XpVnwtWn0MO6aGRJ36CHl0TI0Pk7fGpOSGLBfsCBhVfI
+	tRQpjNdZeHOdsr4U7g+sgjSAU=
+X-Google-Smtp-Source: AGHT+IEV+HN17f59I2f5hBIqYl91lZVgctaUiirq9fPyVNZDNrIDArnpML/YFxpdbA3RrixDKH4riq3NZ7smC+yGHtA=
+X-Received: by 2002:a05:6902:4804:b0:e6e:710:3427 with SMTP id
+ 3f1490d57ef6-e7297d9cfe6mr26174139276.8.1745422622769; Wed, 23 Apr 2025
+ 08:37:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416082405.20988-1-zhangtianyang@loongson.cn>
- <aAYXP4f417_bx6Is@harry> <CAJuCfpGEm04Eebt7FK=keu3ZF_34GTTmxMWVCiA1q3RQAVwAOA@mail.gmail.com>
- <f7f831bc-8887-4974-a869-f5f473d3040c@loongson.cn>
-In-Reply-To: <f7f831bc-8887-4974-a869-f5f473d3040c@loongson.cn>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 23 Apr 2025 08:35:11 -0700
-X-Gm-Features: ATxdqUF14ylfywPy9oQmaC1VNJDZ3efVx9inPJcex-IU_JLBZJBblY01bJwKl4E
-Message-ID: <CAJuCfpHBB+0HG_2ZJ4h683TYJEz__c+L3Z6RZUbzX+7R1_VSNg@mail.gmail.com>
-Subject: Re: [PATCH] mm/page_alloc.c: Avoid infinite retries caused by cpuset race
-To: Tianyang Zhang <zhangtianyang@loongson.cn>
-Cc: Harry Yoo <harry.yoo@oracle.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>, 
-	Michal Hocko <mhocko@suse.com>, Brendan Jackman <jackmanb@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>
+References: <20250422161304.579394-1-zack.rusin@broadcom.com>
+ <20250422161304.579394-5-zack.rusin@broadcom.com> <a803c925-b682-490f-8cd9-ca8d4cc599aa@zytor.com>
+ <CABQX2QMznYZiVm40Ligq+pFKmEkVpScW+zcKYbPpGgm0=S2Xkg@mail.gmail.com> <aAjrOgsooR4RYIJr@google.com>
+In-Reply-To: <aAjrOgsooR4RYIJr@google.com>
+From: Zack Rusin <zack.rusin@broadcom.com>
+Date: Wed, 23 Apr 2025 11:36:51 -0400
+X-Gm-Features: ATxdqUFcLy0a7EiUcBCsXjdA0ggMYiiKyGOA84kPdE1qaS7HRB6HS5eEDbrdMCs
+Message-ID: <CABQX2QNDmXizUDP_sckvfaM9OBTxHSr0ESgJ_=Z_5RiODfOGsg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] KVM: x86: Add support for legacy VMware backdoors
+ in nested setups
+To: Sean Christopherson <seanjc@google.com>
+Cc: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org, 
+	Doug Covelli <doug.covelli@broadcom.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000006eff69063373dfed"
+
+--0000000000006eff69063373dfed
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 7:39=E2=80=AFPM Tianyang Zhang
-<zhangtianyang@loongson.cn> wrote:
+On Wed, Apr 23, 2025 at 9:31=E2=80=AFAM Sean Christopherson <seanjc@google.=
+com> wrote:
 >
-> Hi, Suren
+> On Wed, Apr 23, 2025, Zack Rusin wrote:
+> > On Wed, Apr 23, 2025 at 3:56=E2=80=AFAM Xin Li <xin@zytor.com> wrote:
+> > > > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > > > index 300cef9a37e2..5dc57bc57851 100644
+> > > > --- a/arch/x86/kvm/x86.c
+> > > > +++ b/arch/x86/kvm/x86.c
+> > > > @@ -4653,6 +4653,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *=
+kvm, long ext)
+> > > >   #ifdef CONFIG_KVM_VMWARE
+> > > >       case KVM_CAP_X86_VMWARE_BACKDOOR:
+> > > >       case KVM_CAP_X86_VMWARE_HYPERCALL:
+> > > > +     case KVM_CAP_X86_VMWARE_NESTED_BACKDOOR_L0:
 >
-> =E5=9C=A8 2025/4/22 =E4=B8=8A=E5=8D=884:28, Suren Baghdasaryan =E5=86=99=
-=E9=81=93:
-> > On Mon, Apr 21, 2025 at 3:00=E2=80=AFAM Harry Yoo <harry.yoo@oracle.com=
-> wrote:
-> >> On Wed, Apr 16, 2025 at 04:24:05PM +0800, Tianyang Zhang wrote:
-> >>> __alloc_pages_slowpath has no change detection for ac->nodemask
-> >>> in the part of retry path, while cpuset can modify it in parallel.
-> >>> For some processes that set mempolicy as MPOL_BIND, this results
-> >>> ac->nodemask changes, and then the should_reclaim_retry will
-> >>> judge based on the latest nodemask and jump to retry, while the
-> >>> get_page_from_freelist only traverses the zonelist from
-> >>> ac->preferred_zoneref, which selected by a expired nodemask
-> >>> and may cause infinite retries in some cases
-> >>>
-> >>> cpu 64:
-> >>> __alloc_pages_slowpath {
-> >>>          /* ..... */
-> >>> retry:
-> >>>          /* ac->nodemask =3D 0x1, ac->preferred->zone->nid =3D 1 */
-> >>>          if (alloc_flags & ALLOC_KSWAPD)
-> >>>                  wake_all_kswapds(order, gfp_mask, ac);
-> >>>          /* cpu 1:
-> >>>          cpuset_write_resmask
-> >>>              update_nodemask
-> >>>                  update_nodemasks_hier
-> >>>                      update_tasks_nodemask
-> >>>                          mpol_rebind_task
-> >>>                           mpol_rebind_policy
-> >>>                            mpol_rebind_nodemask
-> >>>                // mempolicy->nodes has been modified,
-> >>>                // which ac->nodemask point to
-> >>>
-> >>>          */
-> >>>          /* ac->nodemask =3D 0x3, ac->preferred->zone->nid =3D 1 */
-> >>>          if (should_reclaim_retry(gfp_mask, order, ac, alloc_flags,
-> >>>                                   did_some_progress > 0, &no_progress=
-_loops))
-> >>>                  goto retry;
-> >>> }
-> >>>
-> >>> Simultaneously starting multiple cpuset01 from LTP can quickly
-> >>> reproduce this issue on a multi node server when the maximum
-> >>> memory pressure is reached and the swap is enabled
-> >>>
-> >>> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
-> >>> ---
-> >> What commit does it fix and should it be backported to -stable?
-> > I think it fixes 902b62810a57 ("mm, page_alloc: fix more premature OOM
-> > due to race with cpuset update").
->
-> I think this issue is unlikely to have been introduced by Patch
-> 902b62810a57 ,
->
-> as the infinite-reties section from
->
-> https://elixir.bootlin.com/linux/v6.15-rc3/source/mm/page_alloc.c#L4568
-> to
-> https://elixir.bootlin.com/linux/v6.15-rc3/source/mm/page_alloc.c#L4628
->
-> where the cpuset race condition occurs remains unmodified in the logic
-> of Patch 902b62810a57.
+> I would probably omit the L0, because KVM could be running as L1.
 
-Yeah, you are right. After looking into it some more, 902b62810a57 is
-a wrong patch to blame for this infinite loop.
+Yea, that sounds good to me.
 
->
-> >> There's a new 'MEMORY MANAGEMENT - PAGE ALLOCATOR' entry (only in
-> >> Andrew's mm.git repository now).
-> >>
-> >> Let's Cc the page allocator folks here!
-> >>
-> >> --
-> >> Cheers,
-> >> Harry / Hyeonggon
-> >>
-> >>>   mm/page_alloc.c | 8 ++++++++
-> >>>   1 file changed, 8 insertions(+)
-> >>>
-> >>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> >>> index fd6b865cb1ab..1e82f5214a42 100644
-> >>> --- a/mm/page_alloc.c
-> >>> +++ b/mm/page_alloc.c
-> >>> @@ -4530,6 +4530,14 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigne=
-d int order,
-> >>>        }
-> >>>
-> >>>   retry:
-> >>> +     /*
-> >>> +      * Deal with possible cpuset update races or zonelist updates t=
-o avoid
-> >>> +      * infinite retries.
-> >>> +      */
-> >>> +     if (check_retry_cpuset(cpuset_mems_cookie, ac) ||
-> >>> +         check_retry_zonelist(zonelist_iter_cookie))
-> >>> +             goto restart;
-> >>> +
-> > We have this check later in this block:
-> > https://elixir.bootlin.com/linux/v6.15-rc3/source/mm/page_alloc.c#L4652=
-,
-> > so IIUC you effectively are moving it to be called before
-> > should_reclaim_retry(). If so, I think you should remove the old one
-> > (the one I linked earlier) as it seems to be unnecessary duplication
-> > at this point.
-> In my understanding, the code in
->
-> https://elixir.bootlin.com/linux/v6.15-rc3/source/mm/page_alloc.c#L4652
->
-> was introduced to prevent unnecessary OOM (Out-of-Memory) conditions
-> in__alloc_pages_may_oom.
->
-> If old code is removed, the newly added code (on retry loop entry)
-> cannot guarantee that the cpuset
->
-> remains valid when the flow reaches in__alloc_pages_may_oom, especially
-> if scheduling occurs during this section.
-
-Well, rescheduling can happen even between
-https://elixir.bootlin.com/linux/v6.15-rc3/source/mm/page_alloc.c#L4652
-and https://elixir.bootlin.com/linux/v6.15-rc3/source/mm/page_alloc.c#L4657
-but I see your point. Also should_reclaim_retry() does not include
-zonelist change detection, so keeping the checks at
-https://elixir.bootlin.com/linux/v6.15-rc3/source/mm/page_alloc.c#L4652
-sounds like a good idea.
-
->
-> Therefore, I think retaining the original code logic is necessary to
-> ensure correctness under concurrency.
->
+> > > >   #endif
+> > > >               r =3D 1;
+> > > >               break;
+> > > > @@ -6754,6 +6755,13 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+> > > >               kvm->arch.vmware.hypercall_enabled =3D cap->args[0];
+> > > >               r =3D 0;
+> > > >               break;
+> > > > +     case KVM_CAP_X86_VMWARE_NESTED_BACKDOOR_L0:
+> > > > +             r =3D -EINVAL;
+> > > > +             if (cap->args[0] & ~1)
+> > >
+> > > Replace ~1 with a macro for better readability please.
 > >
-> >
-> >>>        /* Ensure kswapd doesn't accidentally go to sleep as long as w=
-e loop */
-> >>>        if (alloc_flags & ALLOC_KSWAPD)
-> >>>                wake_all_kswapds(order, gfp_mask, ac);
-> >>> --
-> >>> 2.20.1
-> >>>
-> >>>
-> Thanks
+> > Are you sure about that? This code is already used elsewhere in the
+> > file  (for KVM_CAP_EXIT_ON_EMULATION_FAILURE) so, ignoring the fact
+> > that it's arguable whether IS_ZERO_OR_ONE is more readable than & ~1,
+> > if we use a macro for the vmware caps and not for
+> > KVM_CAP_EXIT_ON_EMULATION_FAILURE then the code would be inconsistent
+> > and that decreases the readability.
 >
+> Heh, KVM_CAP_EXIT_ON_EMULATION_FAILURE is the odd one out.  Even if that =
+weren't
+> the case, this is one of the situations where diverging from the existing=
+ code is
+> desirable, because the existing code is garbage.
+>
+> arch/x86/kvm/x86.c:             if (cap->args[0] & ~kvm_caps.supported_qu=
+irks)
+> arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_X2APIC_API_VALID_=
+FLAGS)
+> arch/x86/kvm/x86.c:             if (cap->args[0] & ~kvm_get_allowed_disab=
+le_exits())
+> arch/x86/kvm/x86.c:                 (cap->args[0] & ~KVM_X86_DISABLE_EXIT=
+S_PAUSE))
+> arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_MSR_EXIT_REASON_V=
+ALID_MASK)
+> arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_BUS_LOCK_DETECTIO=
+N_VALID_MODE)
+> arch/x86/kvm/x86.c:             if (cap->args[0] & ~KVM_EXIT_HYPERCALL_VA=
+LID_MASK) {
+> arch/x86/kvm/x86.c:             if (cap->args[0] & ~1)
+> arch/x86/kvm/x86.c:             if (!enable_pmu || (cap->args[0] & ~KVM_C=
+AP_PMU_VALID_MASK))
+> arch/x86/kvm/x86.c:             if ((u32)cap->args[0] & ~KVM_X86_NOTIFY_V=
+MEXIT_VALID_BITS)
+> virt/kvm/kvm_main.c:            if (cap->flags || (cap->args[0] & ~allowe=
+d_options))
+
+That's because none of those other options are boolean, right? I
+assumed that the options that have valid masks use defines but
+booleans use ~1 because (val & ~1) makes it obvious to the reader that
+the option is in fact a boolean in a way that (val &
+~KVM_SOME_VALID_BITS) can not.
+
+I don't want to be defending the code in there, especially to its
+maintainers :) I'm very happy to change it in any way you feel is more
+readable to you, but I don't think it's crap :)
+
+> > Or are you saying that since I'm already there you'd like to see a
+> > completely separate patch that defines some kind of IS_ZERO_OR_ONE
+> > macro for KVM, use it for KVM_CAP_EXIT_ON_EMULATION_FAILURE and, once
+> > that lands then I can make use of it in this series?
+>
+> Xin is suggesting that you add a macro in arch/x86/include/uapi/asm/kvm.h=
+ to
+> #define which bits are valid and which bits are reserved.
+>
+> At a glance, you can kill multiple birds with one stone.  Rather than add=
+ three
+> separate capabilities, add one capability and then a variety of flags.  E=
+.g.
+>
+> #define KVM_X86_VMWARE_HYPERCALL        _BITUL(0)
+> #define KVM_X86_VMWARE_BACKDOOR         _BITUL(1)
+> #define KVM_X86_VMWARE_NESTED_BACKDOOR  _BITUL(2)
+> #define KVM_X86_VMWARE_VALID_FLAGS      (KVM_X86_VMWARE_HYPERCALL |
+>                                          KVM_X86_VMWARE_BACKDOOR |
+>                                          KVM_X86_VMWARE_NESTED_BACKDOOR)
+>
+>         case KVM_CAP_X86_VMWARE_EMULATION:
+>                 r =3D -EINVAL;
+>                 if (cap->args[0] & ~KVM_X86_VMWARE_VALID_FLAGS)
+>                         break;
+>
+>                 mutex_lock(&kvm->lock);
+>                 if (!kvm->created_vcpus) {
+>                         if (cap->args[0] & KVM_X86_VMWARE_HYPERCALL)
+>                                 kvm->arch.vmware.hypercall_enabled =3D tr=
+ue;
+>                         if (cap->args[0] & KVM_X86_VMWARE_BACKDOOR)
+>                                 kvm->arch.vmware.backdoor_enabled;
+>                         if (cap->args[0] & KVM_X86_VMWARE_NESTED_BACKDOOR=
+)
+>                                 kvm->arch.vmware.nested_backdoor_enabled =
+=3D true;
+>                         r =3D 0;
+>                 }
+>                 mutex_unlock(&kvm->lock);
+>                 break;
+>
+> That approach wouldn't let userspace disable previously enabled VMware ca=
+pabilities,
+> but unless there's a use case for doing so, that should be a non-issue.
+
+I'd say that if we desperately want to use a single cap for all of
+these then I'd probably prefer a different approach because this would
+make vmware_backdoor_enabled behavior really wacky. It's the one that
+currently can only be set via kernel boot flags, so having systems
+where the boot flag is on and disabling it on a per-vm basis makes
+sense and breaks with this. I'd probably still write the code to be
+able to disable/enable all of them because it makes sense for
+vmware_backdoor_enabled. Of course, we want it on all the time, so I
+also don't necessarily want to be arguing about being able to disable
+those options ;)
+
+z
+
+--0000000000006eff69063373dfed
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+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
+6U6qgI8F5eiKsQyE0HgYrQJx/sDs9LLVZlaNiA3U8M8CgEnb8VhuH3BN/yXphhEQdJXb1TyaJA60
+SmHcZdEQZbl4EjwUcs3UIowmI/Mhi7ADQB7VNsO/BaOVBEQk53xH+4djY/cg7jvqTTeliY05j2Yx
+uwwXcDC4mWjGzxAT5DVqC8fKQvon1uc2heorHb555+sLdwYxAgMBAAGjggHYMIIB1DAOBgNVHQ8B
+Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
+b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
+dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
+BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
+Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
+oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
+A1UdEQQbMBmBF3phY2sucnVzaW5AYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
+A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQNDn2m/OLuDx9YjEqPLCDB
+s/VKNTANBgkqhkiG9w0BAQsFAAOCAgEAF463syOLTQkWZmEyyR60W1sM3J1cbnMRrBFUBt3S2NTY
+SJ2NAvkTAxbPoOhK6IQdaTyrWi8xdg2tftr5FC1bOSUdxudY6dipq2txe7mEoUE6VlpJid/56Mo4
+QJRb6YiykQeIfoJiYMKsyuXWsTB1rhQxlxfnaFxi8Xy3+xKAeX68DcsHG3ZU0h1beBURA44tXcz6
+fFDNPQ2k6rWDFz+XNN2YOPqfse2wEm3DXpqNT79ycU7Uva7e51b8XdbmJ6XVzUFmWzhjXy5hvV8z
+iF+DvP+KT1/bjO6aNL2/3PWiy1u6xjnWvobHuAYVrXxQ5wzk8aPOnED9Q8pt2nqk/UIzw2f67Cn9
+3CxrVqXUKm93J+rupyKVTGgKO9T1ODVPo665aIbM72RxSI9Wsofatm2fo8DWOkrfs29pYfy6eECl
+91qfFMl+IzIVfDgIrEX6gSngJ2ZLaG6L+/iNrUxHxxsaUmyDwBbTfjYwr10H6NKES3JaxVRslnpF
+06HTTciJNx2wowbYF1c+BFY4r/19LHygijIVa+hZEgNuMrVLyAamaAKZ1AWxTdv8Q/eeNN3Myq61
+b1ykTSPCXjBq/03CMF/wT1wly16jYjLDXZ6II/HYyJt34QeqnBENU9zXTc9RopqcuHD2g+ROT7lI
+VLi5ffzC8rVliltTltbYPc7F0lAvGKAxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
+VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
+QSAyMDIzAgxhPxw+eieHWB40hPkwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIJjT
+MftN+gGJ/9KhN0MtUWSWnJRpOJtxiwoXYvwmRdbkMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
+HAYJKoZIhvcNAQkFMQ8XDTI1MDQyMzE1MzcwM1owXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
+ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
+YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAG9zOGZs1eXhHM+sGo7jRWOUv0XMmYpoF0JNhcko
+RjrKI9UAGPMxx5LVkMnJYpJoTxDxThRXUbG4wxIekv7HIXWPn59WBGD7tcughxle/XpQYvaqFQTP
+Xaj7C/wdyFLjWN0dst/+XVFDVKZgZjLsUEYBXNQcI+Lf+p+SQCLLf6SHGLXimzSwPTsNbqBkJYFZ
+Sv4xBZn7u/k5s8XNuhk/Zb1kBLqOf6z8NmtloJ1LjO0SVSCSk2q3YWcTTLNSQ58HNM3zDESdpd1Y
+JlOnbCYiRp/Z3W5lIFgnrKXzf1CdtE3n1tt9xJHMr+tHdreG7wBFAoZcJkwUh0df/YzQW0es+Y8=
+--0000000000006eff69063373dfed--
