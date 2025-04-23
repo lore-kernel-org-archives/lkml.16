@@ -1,130 +1,144 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650D1263C8A
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:50:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C304A06;
+	Wed, 23 Apr 2025 02:52:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745376638; cv=none; b=bGK2gXzqqT4E97aPuV1N+CJUBb/WxcFycxrsh2UGNZiIgfoV6YahoO1oXcAuFe1L4/Axhe+2mPotaHKuwi+WaiISIDVCACaHznSUjtYdHGb0TtlMIH7Giq4vQmuPD8x5A/JVwRxvhSusYb7M5zTDAxVMlnzelxOE1390B3tTAA4=
+	t=1745376782; cv=none; b=VylIg/sG07+YiBYpKD8q4ioQLwrupwVIfQpvCowEdqIyvG79w8RxWcfQvNXTY1zfYVEqJtWCSHyRolW5abZ5ycwbSQKUH1GChE0Ju+0XANbgTg4U1ifDRDwpC1JDizfocUll3UMZdfVm//jUi68tM3xyJSeD5ZigI4eLE0XAZoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745376638; c=relaxed/simple;
-	bh=pvLBDDsYBas19wUJSHN+4qLHbj0kQt2zzQgLxxn1VJw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oa7sNg1Hgpv5qtMP6wOSEdkhw4rHJD5hOepq8JRZFvkSYSQ1EkGOz3zoUCxg2DlR8MUPD0TEqZrC3FQogvak6Y05YrTcSzzE1zHNhK8WFCiFESRFg5JJz4lS5IoTLXa3hHOrH3SKMPJvMkmN6tpF8iGxet6dBDxy9FQ7LYoHcGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h+m0yruc; arc=none smtp.client-ip=209.85.219.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745376782; c=relaxed/simple;
+	bh=ZGwgRxU7TgHz4loAywBrbTaxHRYU8e2cK+DDh/0YWvg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qOFR0x/NDapMqfHCgQBBdyDz4OH8zbo4KYW75r33RqVPKwStpen6INDOuMjyERv6liYh6HQQozfcGvAFEZJgU9OMw+wCWMWXUiObGynNYJSHSdni+UsRWOL7sPYzRkllsnGYYytrPKXtcdv2VZcL6cdyyq7S+E7eCSMy4aL/DaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h9t6xX4A; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h+m0yruc"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e6df1419f94so4506991276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745376635; x=1745981435; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pvLBDDsYBas19wUJSHN+4qLHbj0kQt2zzQgLxxn1VJw=;
-        b=h+m0yrucOX5HIpsRlq7lN321h5ppvDnWIK/JC1wvEWRjWg+E2MaG51nmfjGBqEvT9B
-         aV/y8G/ZHmCMuOx3O/uWrkilShB3xHPlUpW+ivkIvfMc4jBk+vNKv3zhTNzhaQ14nukg
-         TrnH2ze9cRQ5NNiPGeJ/APrZAO4zf/nds2YWJRi72/eNL6sPrNICdyp2A2Wsvy6XJ04/
-         /U8knONifkjMlYGs4hkteCekqRM28nmG45SQ5VjvAZj7mwKcDK7+sh7RJlgMpWoPjNj8
-         tGo5wSfVB6MbjrxRc+FNy46QFwP4QaHkzNdZ07+uZvA1QsrcDwL9wdFuAxW+yfWdTGFM
-         wvXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745376635; x=1745981435;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pvLBDDsYBas19wUJSHN+4qLHbj0kQt2zzQgLxxn1VJw=;
-        b=feY1u8XXU4fAFaW5zru0xCk96f8LGMCEy7pmSQWluz43Nsm9n/D3mp88tjRZcJrJcp
-         4ttA7sFUVy5Ts/XWGq3yy5PexXF9MDQc5155UzalXc9FrPC7nvenBXS3UPjQ2cIfi+tJ
-         EVxVlKlwEeqlEj7r+PQA0CTDrpnqMeiyzRt6zCWSGJr7mU8DwAjHcG/FvOsigmY7hPH8
-         MWlyCTCKWIWSugjHy6gqCOR0WN0cb9C2Cvp8rknEKeRBv6hMnkvyFSCei3lyGZzYATiH
-         Bdae2pBE4Y8r1raHndRy8akp74nQaYqAcNCjWigHOxX6HSCDqhWpejLoaLs32D6/SZc1
-         flxA==
-X-Forwarded-Encrypted: i=1; AJvYcCXXlTeiSIOA8cPdjufVxob9Z7fr9cL2+tN+gJO9ny3i+/0xpEU9A9/PqJqZYCpUQZeyKGS2rWHd/NvbKMA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7dBzzRFAOvBTWmUWPVlaXaNkSV6U+ftHSIP3Lw8Al7SOvdDxD
-	HvAv5MlXNjSR2FSSEt1CQXOXVs20xtAc2Wa6tGhNf6j+n50dqiUaROuRwOoH13+zV0A0ZFuiIZP
-	LE3hg2UCSmQQMefvZuyKXk7NXsL4qPjqcNH3Ljg==
-X-Gm-Gg: ASbGnctVBk6+9bREn8b+sBwDRxavk4VqtwZvaCLOgXBAkDwxTmT54AvmOsHnhmKXlQB
-	nH44yK6Th2Qwv57mpuaPRvxinkO0cZbcTzgdhT2PioNlrEJl/kGvdIuA+MhDd1Vp3zk0YpbyACu
-	2xlT092rX9OMia7rgYooqsVA==
-X-Google-Smtp-Source: AGHT+IFS7GMJaX0GM076iPvZ4Mqv8sbSOQ2aAa8tFq8e5VIVWaIK11j6XpLBL5g1xrPI44TmKCq1OKq9pAfO+Q9jung=
-X-Received: by 2002:a05:6902:1381:b0:e69:371d:67ef with SMTP id
- 3f1490d57ef6-e7297e9ab9amr24210024276.33.1745376635244; Tue, 22 Apr 2025
- 19:50:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h9t6xX4A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745376780; x=1776912780;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ZGwgRxU7TgHz4loAywBrbTaxHRYU8e2cK+DDh/0YWvg=;
+  b=h9t6xX4AhxL+THUT6iLpYZWURgI5yx8zpZWcrfggjOSFGS9XmY24keZh
+   oxPTQJuq0/IkW2ih4MRUGvAQyXZOz3yrZ4Gy5lRQLyajL1QYqOnXy/dX7
+   i/58P7TO7IquXqC6jwgHcu/0GZuPZa4miI0C+n4TSpkV410vvJ49o0hTE
+   IQUv/CTldjxMGYhtTLQU/K+EcMoEM/CXx61tZq552Ipipd7hcnKiaOig5
+   S78TEDFtat1IfUWy9WloHhGBYFE9Ixj4emhxFifVNSYc0hCtEmz1gOAmn
+   Z4cAbNmvirAvIBozhiq15tHoVE+oCyzIunKuXidjoCvg91Bmay7gBSOjK
+   Q==;
+X-CSE-ConnectionGUID: TyGueeMDT4qZJJmtyoi2Rg==
+X-CSE-MsgGUID: SWUV/e3fSda+hMw3daxOmQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="34569048"
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="34569048"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 19:52:59 -0700
+X-CSE-ConnectionGUID: AyTCTGscTnS+ojz6PZaJzA==
+X-CSE-MsgGUID: wYxfaAbqRTOCeXemxmQDDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,232,1739865600"; 
+   d="scan'208";a="155394831"
+Received: from inaky-mobl1.amr.corp.intel.com (HELO [10.125.111.199]) ([10.125.111.199])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2025 19:52:58 -0700
+Message-ID: <80e1ce33-70d6-4e82-b823-e96069278cb8@intel.com>
+Date: Tue, 22 Apr 2025 19:52:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303-sm8650-v6-14-hmd-deckard-mdss-quad-upstream-oldbootwrapper-36-prep-v8-0-eb5df105c807@linaro.org>
- <20250418183236.209236-1-mitltlatltl@gmail.com>
-In-Reply-To: <20250418183236.209236-1-mitltlatltl@gmail.com>
-From: Jun Nie <jun.nie@linaro.org>
-Date: Wed, 23 Apr 2025 10:50:23 +0800
-X-Gm-Features: ATxdqUHPz54vm6pZFuzIqsgbIcK5d4qHYfWOJGGxPj-jtXf6WoRf3GOGq6HIB5k
-Message-ID: <CABymUCNL2FQax13vie8kqX_FpNOTZBPwKbxvKzmXHaXr2OjbAw@mail.gmail.com>
-Subject: Re: [PATCH v8 00/15] drm/msm/dpu: Support quad pipe with dual-DSI
-To: Pengyu Luo <mitltlatltl@gmail.com>
-Cc: airlied@gmail.com, dmitry.baryshkov@linaro.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	marijn.suijten@somainline.org, quic_abhinavk@quicinc.com, 
-	quic_jesszhan@quicinc.com, robdclark@gmail.com, sean@poorly.run, 
-	simona@ffwll.ch
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/1] iommu: Allow attaching static domains in
+ iommu_attach_device_pasid()
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Kevin Tian <kevin.tian@intel.com>, Jason Gunthorpe <jgg@nvidia.com>,
+ shangsong2@lenovo.com
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250423021839.2189204-1-baolu.lu@linux.intel.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20250423021839.2189204-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Pengyu Luo <mitltlatltl@gmail.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=8819=E6=97=
-=A5=E5=91=A8=E5=85=AD 02:34=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Mon, 03 Mar 2025 23:14:29 +0800 Jun Nie <jun.nie@linaro.org> wrote:
-> > 2 or more SSPPs and dual-DSI interface are need for super wide panel.
-> > And 4 DSC are preferred for power optimal in this case due to width
-> > limitation of SSPP and MDP clock rate constrain. This patch set
-> > extends number of pipes to 4 and revise related mixer blending logic
-> > to support quad pipe. All these changes depends on the virtual plane
-> > feature to split a super wide drm plane horizontally into 2 or more sub
-> > clip. Thus DMA of multiple SSPPs can share the effort of fetching the
-> > whole drm plane.
-> >
-> > The first pipe pair co-work with the first mixer pair to cover the left
-> > half of screen and 2nd pair of pipes and mixers are for the right half
-> > of screen. If a plane is only for the right half of screen, only one
-> > or two of pipes in the 2nd pipe pair are valid, and no SSPP or mixer is
-> > assinged for invalid pipe.
-> >
-> > For those panel that does not require quad-pipe, only 1 or 2 pipes in
-> > the 1st pipe pair will be used. There is no concept of right half of
-> > screen.
-> >
-> > For legacy non virtual plane mode, the first 1 or 2 pipes are used for
-> > the single SSPP and its multi-rect mode.
-> >
-> > To test bonded DSI on SM8650, the 5 patches for active-CTL improvement
-> > are needed:
-> > https://gitlab.freedesktop.org/lumag/msm/-/commits/dpu-4k?ref_type=3Dhe=
-ads
-> >
->
-> [...]
->
-> > base-commit: b44251a8c179381b9f3ed3aa49be04fe1d516903
->
-> Hi, Jun. The display of my sm8650 device requires 4:4:2(lm, dsc, intf)
-> topology, I want to test this series, these patches can't be applied to
-> the latest linux-next tree, and I can't find the commit id in linux-next
-> or msm-next. Where can I fetch the tree?
->
-> Best wishes,
-> Pengyu
 
-This is staging patch set. Code clean and formatting is still needed.
 
-https://gitlab.com/jun.nie/linux/-/tree/sm8650/v6.15-quadpipe-staging?ref_t=
-ype=3Dheads
+On 4/22/25 7:18 PM, Lu Baolu wrote:
+> The idxd driver attaches the default domain to a PASID of the device to
+> perform kernel DMA using that PASID. The domain is attached to the
+> device's PASID through iommu_attach_device_pasid(), which checks if the
+> domain->owner matches the iommu_ops retrieved from the device. If they
+> do not match, it returns a failure.
+> 
+>         if (ops != domain->owner || pasid == IOMMU_NO_PASID)
+>                 return -EINVAL;
+> 
+> The static identity domain implemented by the intel iommu driver doesn't
+> specify the domain owner. Therefore, kernel DMA with PASID doesn't work
+> for the idxd driver if the device translation mode is set to passthrough.
+> 
+> Generally the owner field of static domains are not set because they are
+> already part of iommu ops. Add a helper domain_iommu_ops_compatible()
+> that checks if a domain is compatible with the device's iommu ops. This
+> helper explicitly allows the static blocked and identity domains associated
+> with the device's iommu_ops to be considered compatible.
+> 
+> Fixes: 2031c469f816 ("iommu/vt-d: Add support for static identity domain")
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220031
+> Cc: stable@vger.kernel.org
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Link: https://lore.kernel.org/linux-iommu/20250422191554.GC1213339@ziepe.ca/
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-Regards,
-Jun
+> ---
+>  drivers/iommu/iommu.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+> 
+> Change log:
+> -v2:
+>  - Make the solution generic for all static domains as suggested by
+>    Jason.
+> -v1: https://lore.kernel.org/linux-iommu/20250422075422.2084548-1-baolu.lu@linux.intel.com/
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 4f91a740c15f..abda40ec377a 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -3402,6 +3402,19 @@ static void __iommu_remove_group_pasid(struct iommu_group *group,
+>  		iommu_remove_dev_pasid(device->dev, pasid, domain);
+>  }
+>  
+> +static bool domain_iommu_ops_compatible(const struct iommu_ops *ops,
+> +					struct iommu_domain *domain)
+> +{
+> +	if (domain->owner == ops)
+> +		return true;
+> +
+> +	/* For static domains, owner isn't set. */
+> +	if (domain == ops->blocked_domain || domain == ops->identity_domain)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  /*
+>   * iommu_attach_device_pasid() - Attach a domain to pasid of device
+>   * @domain: the iommu domain.
+> @@ -3435,7 +3448,8 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
+>  	    !ops->blocked_domain->ops->set_dev_pasid)
+>  		return -EOPNOTSUPP;
+>  
+> -	if (ops != domain->owner || pasid == IOMMU_NO_PASID)
+> +	if (!domain_iommu_ops_compatible(ops, domain) ||
+> +	    pasid == IOMMU_NO_PASID)
+>  		return -EINVAL;
+>  
+>  	mutex_lock(&group->mutex);
+
