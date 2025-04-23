@@ -1,162 +1,97 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECB926982F
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1036926982F;
+	Wed, 23 Apr 2025 18:09:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745431785; cv=none; b=FoBxuOKmhLFFQqnONIf0ofCC+oLcVMdCXweHaZwAeAxhHqIvzbBqgZamGB39Aa8ix8mmBO3kgEDGgdj11Bl0685Ysklui42hWsXdLnccYuKKwi0HLctoJgkK6EP8Qg1kgoPLWPf4XhsZA+lEFvofcAW7mpSEHP8Tahow58u/BWA=
+	t=1745431790; cv=none; b=iySZk73tkD4+BwNiKtTlybT/3AONnR8Vld/m8NTuEPvocPvOduYQivoemrxCoMBd5TuC0W77We6pCIzGBtAVmL4GDJYImJqV96rTNkD3ZS4C8A2/TgLiCHC2hpBe40krjJbsMH8JhZ2dwAvdcsCI6tOmu28W4sKt9GK6ilDH/vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745431785; c=relaxed/simple;
-	bh=hE07WPwFRXEpanF4skjNKxYCQC8//IXfbbfB/nEbHRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mjounn5JJCpOYU+Ls4JhSJOj55aH/L6hwSOoxUXe6erc524kebK2xHyvpI1XbCPe4TdpWLDgh13PzgY0MKLXgcLMmcdCGN2HFq8TLOtP9v9jFT4fzK2W1Kh8Wx2TUazpE+1p15/RaX3Ls/aOqEPR6jfWmJLtJyVCL7syUKuuMSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=IVrkYr9O; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1745431790; c=relaxed/simple;
+	bh=U9F+PeVnBpGsSyekbAgYUh9ERhGGMV7iRfE7ZeUqWsQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=P2pr7QU7ipo0RJ1IABl5AOCCO36rWcJ7VHuB+QLL8Gmm6wnPSdFb6VxMpKLNi1OSLm3n5R7u6MYf7wbNP5ybm9FpTDTgGdvBdj/EEw5RYHXA9BTdycVus+5dTEwPpVoi8WCCngWnZpcg+MKpCPJkiGLvcX2DIFcTdTQsUwkuYdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=daQVXA9p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="IVrkYr9O"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4772f48f516so14213601cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745431782; x=1746036582; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kL2C8z2XNRWzrThEWzS/MGHmoZb+Ha7gcgLYUEwZduo=;
-        b=IVrkYr9OWNFexnkzChtFbEeJ82sJdRjet10LDQZBoVKG/IqUWpRq7BzTKdasu8AI3J
-         PCSeri9UkzzpJ1+LI1Y6kiRnEa1Ek/NB4Ich7FJ0mzXyt9CgBmJOGLAl5ioBtCS5Clyf
-         yuMsHogkkJho8M0KmLH905m8setMGfwL9k3O/WfTu1YHpiFaCTRKRQxMOOTW5+CMTkYC
-         XWnm/KSOpBFMryUh/g/HQiMIQ4TgQvuAQArd2c0VAzkfTSW+ViG3deDi6NI2SXwUAIbN
-         zOU5F+V9WDTzr2nW5uS7HPiWohhJAl3lLqjJkpJNcs1n+QHXyW0UXhRTHKzPPjrpcgOc
-         Wkow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745431782; x=1746036582;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kL2C8z2XNRWzrThEWzS/MGHmoZb+Ha7gcgLYUEwZduo=;
-        b=ddodx4wDjWOfiU64IdcYI0dBWR/kq6lU+va+RkeFW3MqqZwfE/jb1A7wcTv0rl7Ujz
-         aVKiKaxwMFYJPvCc9KPeHv2W2m66rc7XSdbpmLZc/P6tOyeU5gdggjH60OdbfELJWPHJ
-         hElVl5GxM0N+gjijzln/bDl40yt4wpNNoFpm0Ow2e0paAM0UaDCyBScor/0qRVSmBOVp
-         JCKTPgZfu6755TcVOYdQ0WKejbhctS2D0GHZst+Hy0WLJ+o0+YlXLne67OwckoNZXA+T
-         CjxEia+SduoFWjwmUUe0w8qyoQym+BZzslrAclnGac8MvEWXhYA7yQdHPDXf/Vzqjvrc
-         hGfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMLvdsmf8JXkjDMiCsgKusBvJQZqL2TfWl0EHblDJtWk0ntPC6zcEpjLKEkcYRMnjzUk/V4hg7V/Ht0NQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwupzF3KiC1dHqwKO0MpQxG3nY0LjwXJysxum1vNtKMQ49hOMNR
-	lWogbroHzTL6Uyt+80GjMeoC6kODrEaydhb9DGxUqZdlRmV9hgn5kkT7zz3clPo=
-X-Gm-Gg: ASbGncsCFNOrqfvLNsGXhczKvKiCNqRc3JN/z1I380YcpqGxVIQMzP+ddsgEr3hkg9Z
-	oDDovtAeuAypLeTrDXtFUCMa7xv95OSdJr/Jp5xIHmhaq4tnx++Q3ttv21450/avo/+iZYc3EFI
-	NKvWbmy0GqUUxE9Mp34oeY4gXrhVXsQjNiHJ9/niUo96nw4LlmOz1s3SY1CQmIMos+N5psfJbCa
-	yi9bturPgzkkidGli0O3OFvQ5vayBUGi2FgXy0LRhAV77YX9rcgwPdZfwwgq8kk3NA7yYEE8n+e
-	b1MOkWRkR9ha+vF1uhOhUk8vVAeuJtTxV+zGdDnmYNK8cKxXsTADebTpXyPTriTZ7l3wpoED59i
-	Bmr2XzQcgWQwEL2Bx4sw=
-X-Google-Smtp-Source: AGHT+IH4xfxeCQIatfvhUgdAx8fM2pKJgYvLzginEQw7PV9Sr3aShEQ97+Q+stgMKvhEecV5S0qx4w==
-X-Received: by 2002:a05:622a:248d:b0:477:84f5:a0b with SMTP id d75a77b69052e-47e780b3d65mr2842901cf.2.1745431782337;
-        Wed, 23 Apr 2025 11:09:42 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9c3b485sm71764181cf.27.2025.04.23.11.09.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 11:09:41 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7eXV-00000007LuW-1WeA;
-	Wed, 23 Apr 2025 15:09:41 -0300
-Date: Wed, 23 Apr 2025 15:09:41 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Leon Romanovsky <leon@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 17/24] vfio/mlx5: Enable the DMA link API
-Message-ID: <20250423180941.GS1213339@ziepe.ca>
-References: <cover.1745394536.git.leon@kernel.org>
- <b7a11f0e93a4b244523e07b82475a7616ba739c9.1745394536.git.leon@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="daQVXA9p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B918C4CEE2;
+	Wed, 23 Apr 2025 18:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745431789;
+	bh=U9F+PeVnBpGsSyekbAgYUh9ERhGGMV7iRfE7ZeUqWsQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=daQVXA9p8n9Fh2VwDQ/9hhp9N7zLF5WAXuy+o4TGyaNSTUAKR4JdlQxjNI2kMvlth
+	 +nPyQbvIv28S+WxkfBWMy7pXNx1fhL8oMMrqH4ViMR17+TUoXRIg04YCI+eFGIl0T4
+	 VCPfg/a59P0rPYZhSWsHSf7CwGiuJD4dUoNarCP8vWyMZsOyG+JRaZI62aGdA9NCHB
+	 Zq0CNSI9/v2AGSIoPUpBHgMDlIzTFhrHZPNkNJAP6ttE1fCi5vy3qJMHkw/cnvNAUU
+	 zdC8fpVlp2EaNfpsHb75e8qju7W089Kci3//gIp30LVORZExRyod4j2xvAoxsdnrIl
+	 kxORYu9o2e0rQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33EF6380CED9;
+	Wed, 23 Apr 2025 18:10:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7a11f0e93a4b244523e07b82475a7616ba739c9.1745394536.git.leon@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v4] bpf: streamline allowed helpers between tracing
+ and base sets
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174543182801.2725891.7635648941344459709.git-patchwork-notify@kernel.org>
+Date: Wed, 23 Apr 2025 18:10:28 +0000
+References: <20250423073151.297103-1-yangfeng59949@163.com>
+In-Reply-To: <20250423073151.297103-1-yangfeng59949@163.com>
+To: Feng Yang <yangfeng59949@163.com>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 
-On Wed, Apr 23, 2025 at 11:13:08AM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
+Hello:
+
+This patch was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
+
+On Wed, 23 Apr 2025 15:31:51 +0800 you wrote:
+> From: Feng Yang <yangfeng@kylinos.cn>
 > 
-> Remove intermediate scatter-gather table completely and
-> enable new DMA link API.
+> Many conditional checks in switch-case are redundant
+> with bpf_base_func_proto and should be removed.
 > 
-> Tested-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> ---
->  drivers/vfio/pci/mlx5/cmd.c  | 298 ++++++++++++++++-------------------
->  drivers/vfio/pci/mlx5/cmd.h  |  21 ++-
->  drivers/vfio/pci/mlx5/main.c |  31 ----
->  3 files changed, 147 insertions(+), 203 deletions(-)
+> Regarding the permission checks bpf_base_func_proto:
+> The permission checks in bpf_prog_load (as outlined below)
+> ensure that the trace has both CAP_BPF and CAP_PERFMON capabilities,
+> thus enabling the use of corresponding prototypes
+> in bpf_base_func_proto without adverse effects.
+> bpf_prog_load
+> 	......
+> 	bpf_cap = bpf_token_capable(token, CAP_BPF);
+> 	......
+> 	if (type != BPF_PROG_TYPE_SOCKET_FILTER &&
+> 	    type != BPF_PROG_TYPE_CGROUP_SKB &&
+> 	    !bpf_cap)
+> 		goto put_token;
+> 	......
+> 	if (is_perfmon_prog_type(type) && !bpf_token_capable(token, CAP_PERFMON))
+> 		goto put_token;
+> 	......
+> 
+> [...]
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Here is the summary with links:
+  - [bpf-next,v4] bpf: streamline allowed helpers between tracing and base sets
+    https://git.kernel.org/bpf/bpf-next/c/6aca583f90b0
 
-> +static int register_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
-> +			      struct page **page_list, u32 *mkey_in,
-> +			      struct dma_iova_state *state,
-> +			      enum dma_data_direction dir)
-> +{
-> +	dma_addr_t addr;
-> +	size_t mapped = 0;
-> +	__be64 *mtt;
-> +	int i, err;
->  
-> -	return mlx5_core_create_mkey(mdev, mkey, mkey_in, inlen);
-> +	WARN_ON_ONCE(dir == DMA_NONE);
-> +
-> +	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
-> +
-> +	if (dma_iova_try_alloc(mdev->device, state, 0, npages * PAGE_SIZE)) {
-> +		addr = state->addr;
-> +		for (i = 0; i < npages; i++) {
-> +			err = dma_iova_link(mdev->device, state,
-> +					    page_to_phys(page_list[i]), mapped,
-> +					    PAGE_SIZE, dir, 0);
-> +			if (err)
-> +				goto error;
-> +			*mtt++ = cpu_to_be64(addr);
-> +			addr += PAGE_SIZE;
-> +			mapped += PAGE_SIZE;
-> +		}
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-This is an area I'd like to see improvement on as a follow up.
 
-Given we know we are allocating contiguous IOVA we should be able to
-request a certain alignment so we can know that it can be put into the
-mkey as single mtt. That would eliminate the double translation cost in
-the HW.
-
-The RDMA mkey builder is able to do this from the scatterlist but the
-logic to do that was too complex to copy into vfio. This is close to
-being simple enough, just the alignment is the only problem.
-
-Jason
