@@ -1,252 +1,117 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE052561DD
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:43:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A62265602;
+	Wed, 23 Apr 2025 09:44:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745401430; cv=none; b=qCPpQnLjf7xMnmj+3iTovq9vm8P/uneCiMAdpuEa0O6TWvZUQj+OOJLisJ5ugczFzdimvbO+eL79A6soRRzJzjLDHHcRwJ+zCS34lBA+4KTKNUvSGjRZE1ah5ujjpV8j+dfKjuvsZ/iId2MNIdZ0E4g/mb+7pRzHTNE+dmIAcuE=
+	t=1745401453; cv=none; b=pfjChZYLmX0iDEIyQCa84/ynLsa3YzDheQu/L8levO16jyuRixeTqitAgRUr5ihduzByZ3aEZdI/La2UpRqRIhYXz6C5kKrb/jZHjh0UYVdItE+/aT1pi8oQTPI0VFfG+SFj4EuD5ZLpMfhgrIHeqh3CTU3UmRZEePXGQrRP5CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745401430; c=relaxed/simple;
-	bh=LGd8c2i2R3A+A+Yn0lGqRI8G9mafyreF2vZchMwgTOg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=O27SE9VrZlzsznA+B2nekSLfC3pqL52p6lREM2Ky6CIsc10FtWGfZOA1D8rPEfa2a2hqgVJ7+GdynUZEGNXWPMonhjPvTMOBX8z+INEh9QcVbUWDQ29lvPV8+lOfR/qoTIySyp1Z3hJOA8lMYDd0A8RMpM946EO54SNPhTl/u5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u7Wde-0002qo-Gv; Wed, 23 Apr 2025 11:43:30 +0200
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u7Wdd-001h9v-2B;
-	Wed, 23 Apr 2025 11:43:29 +0200
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1u7Wdd-000TPY-1v;
-	Wed, 23 Apr 2025 11:43:29 +0200
-Message-ID: <15c2be97e1b58e7be182299d27e17996b47e8414.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] reset: canaan: add reset driver for Kendryte K230
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Junhui Liu <junhui.liu@pigmoral.tech>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski
-	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org
-Date: Wed, 23 Apr 2025 11:43:29 +0200
-In-Reply-To: <20250420-k230-reset-v2-2-f1b4a016e438@pigmoral.tech>
-References: <20250420-k230-reset-v2-0-f1b4a016e438@pigmoral.tech>
-	 <20250420-k230-reset-v2-2-f1b4a016e438@pigmoral.tech>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1745401453; c=relaxed/simple;
+	bh=cFMJZxv4aZ/WbWfMI2okSUAOfjkTdQ1dpXVPk6eLkuE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kZxBohaDri4OvDF0VbOWz54OYfMl3ebUxJZ6XCQLiCslqZ+Tk/y8bMlkjWf9bX3lCfKZpHvteeDAnzHU3ETdDftjgDGSXdeyPNOEgaCfE8oZOSq7kYDG8tJFnAOep4YDlTDHhsJ9Kk2ZJSl70MK4kKqYmI2mQcjtXZLjw5wyMxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86c29c0acdfso2298210241.3;
+        Wed, 23 Apr 2025 02:44:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745401450; x=1746006250;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nF++/aev6jNhzegBy5atlaShBegS0AcHCyK/R4zdaVU=;
+        b=bn1wcvQ52C7lVbQoY70spLv+YWUCkZ29+SEsfxe6yAYLoE/Rmm3nD8BgSlObKIWW0k
+         3vsMOc8bvgIy2ostzNdNe0o/iwEx485EzkFqaWRidAXQOmTnjxRcGTG9tIdUfIQyoRkn
+         THOOoADovRlqpyPzvxlGxixZsasVoSWtdX++HecazFDx/2vWwbLxLPzRbGGNRfcC2V8o
+         PzwFGU1BikcnugTiJT+Zzmm5gbGJW7ANJ8LcupUQQY8nVxys/z2B0OwMy/R4oiNwVxDS
+         afc62XGJ8GHA9kE9YANo2wxVXpoF7v7oT42YTLlwPKxNpdRG3/QHAFV77IGqVsWnr7nS
+         dZuw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0sEXUaXKyXiuH/bv/6Hxwq0IwMV7k+foApywD/gESJJT5+qOGthEhMsHsj+xMEZP7ZDwCWZHa4S96y2/6mqGsBzI=@vger.kernel.org, AJvYcCVukUXOt5Qpo5DdCiXerxaXisLhQPN9Q3nu7KSUrBu0A6ZDPMuE4iIOqwJXSYpp0J0O/QKjwufO9Za6@vger.kernel.org, AJvYcCWSPxYShzWKUT1DtuvlmXfyFyUgKH9m/YnKVXE4rB4bEpDuTVozPuU07VjVXrUEfv5mozgfkeH0bKdgbT9/@vger.kernel.org, AJvYcCWwr4FH+7r03N4HC4lXpWIUfhgwA0iUcqoAV7EQ99WwIZ7W9u2oCsR+I//D4gmGIguVfOOr9ahaDy0n@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI6VWMYQelHNsNTNRyHj/HnvsiLYh+BEoo71YlqZCIcZiYx/IR
+	cyRG1FBr2qNWm3HhlVkGWVLsl9jSFnxKLenVpNfKKqfVqAAxr4jssEU7acwk3nQ=
+X-Gm-Gg: ASbGnctW2rQvMt/sEjuzi3BBRP5W2gEcFGMp7Gms420U8uWWJDVvc/djo3WZmOuqz4V
+	K+x+O7NGft2sjlBywMgi2J0P+C1BqPuv14+USftwBvun+6Awp8KQTvu0odNY7LB8C+oXalDeYCJ
+	wpBV3zvaIgWKwBMdqkQy1n4TXZxxkqoevPYHsyLL8EbNaQtOs3z6Jk7e4ImUWT5POzx5an8v0+o
+	NH1SkwDbnCTGQak9c+97FBw5M9wRawt2HT/m3H7LOCcO8KFeHST09U79N5aMWM2lF4Q8hzD6/50
+	DAwzHHo0wJ/iAvdZGEsOrrJJqdLcqUpA7W0HeRENb6ptnYWfSExzlrknyLI+PmoV3/mKbUZnh/k
+	gX6M=
+X-Google-Smtp-Source: AGHT+IEQMvlUiJ7/nhn5poWJ+TSemZLI9cygCFLSkYMhVptxulrHk5h4nyXm1b0BhqFJYIY8R09w5A==
+X-Received: by 2002:a05:6102:5e92:b0:4c6:d008:7349 with SMTP id ada2fe7eead31-4cb80233c52mr10801468137.21.1745401450350;
+        Wed, 23 Apr 2025 02:44:10 -0700 (PDT)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87764776d89sm2663804241.22.2025.04.23.02.44.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 02:44:10 -0700 (PDT)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-86dddba7e0eso2416237241.1;
+        Wed, 23 Apr 2025 02:44:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVY6q6xrztxw3+Ct+yQbPRbTIbvegLyK3y7MG/5eCi76Z/jxVf8aQ28eZmWBp8UDnL7vSdP2iQwKjat@vger.kernel.org, AJvYcCWlxZ50kBivFpkt/BLJSAbDd7b99pPqB0x0hMEZlu6Vn4WvUhDbnWp3UhzShJJgRfD6mMhBSig8FeUnvVM4@vger.kernel.org, AJvYcCWyQg2CIIGV0EaWgYrFcgdT3bl8sJPu9+2lz7RJZmtWkKP/letGBvjAqQnyJJ1/ha6gcMjPXkXqn12L@vger.kernel.org, AJvYcCXvqdyqnetMgxr/VtdklULYmx4TqBc2tDWM5OOqYnMqoxPfXH5F6lBhriK0hXzZdwIId/Hd2/LF9QNTjiAQ1PuRSyM=@vger.kernel.org
+X-Received: by 2002:a67:f093:0:b0:4c3:64bc:7d16 with SMTP id
+ ada2fe7eead31-4cb801fe2d8mr9882874137.16.1745401449838; Wed, 23 Apr 2025
+ 02:44:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20250420173829.200553-1-marek.vasut+renesas@mailbox.org> <20250420173829.200553-4-marek.vasut+renesas@mailbox.org>
+In-Reply-To: <20250420173829.200553-4-marek.vasut+renesas@mailbox.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 23 Apr 2025 11:43:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUf6ZRWv39f3qdyJFUwvgVMJRRc0TsfKiPUNca4JRvM=Q@mail.gmail.com>
+X-Gm-Features: ATxdqUEcXQMXrldJVinPbdvd-wgbRX507q25YIFyRIZweCQdoMNB4nEDdseAvv8
+Message-ID: <CAMuHMdUf6ZRWv39f3qdyJFUwvgVMJRRc0TsfKiPUNca4JRvM=Q@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] arm64: dts: renesas: r8a779g3: Add Retronix R-Car
+ V4H Sparrow Hawk board support
+To: Marek Vasut <marek.vasut+renesas@mailbox.org>
+Cc: linux-arm-kernel@lists.infradead.org, 
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	=?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Aradhya Bhatia <a-bhatia1@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Junhao Xie <bigfoot@classfun.cn>, 
+	Kever Yang <kever.yang@rock-chips.com>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On So, 2025-04-20 at 01:09 +0800, Junhui Liu wrote:
-> Add support for the resets on Canaan Kendryte K230 SoC. The driver
-> support CPU0, CPU1, L2 cache flush, hardware auto clear and software
-> clear resets.
->=20
-> Signed-off-by: Junhui Liu <junhui.liu@pigmoral.tech>
->=20
-> ---
-> The reset management module in the K230 SoC also provides reset time
-> control registers. For RST_TYPE_CPU0, RST_TYPE_CPU1 and RST_TYPE_SW_DONE,
-> the time period when reset is applyed/removed but the clock is stopped
-> can be set up to 15*0.25 =3D 3.75 us. For some RST_TYPE_HW_DONE cases, th=
-e
-> time period can be set up to 255*0.25 =3D 63.75 us. For RST_TYPE_FLUSH,
-> the reset bit will automatically cleared by hardware when flush done.
->=20
-> Although the current reset driver does not support configuration of
-> reset time registers, delay has been added to the assert, deassert and
-> reset functions to accommodate the longest reset time.
->=20
-> Besides, although some reset types have done bits, the reference manual
-> does not explicitly indicate whether the hardware removes reset or the
-> clock stop time period has passed when done bits toggle. Therefore, I
-> think it is a safer way to keep delay for reset types with done bits.
->=20
-> link: https://kendryte-download.canaan-creative.com/developer/k230/HDK/K2=
-30%E7%A1%AC%E4%BB%B6%E6%96%87%E6%A1%A3/K230_Technical_Reference_Manual_V0.3=
-.1_20241118.pdf
-> ---
->  drivers/reset/Kconfig      |   9 ++
->  drivers/reset/Makefile     |   1 +
->  drivers/reset/reset-k230.c | 355 +++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 365 insertions(+)
->=20
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 99f6f9784e6865faddf8621ccfca095778c4dc47..248138ffba3bfbf859c74ba1a=
-ed7ba2f72819f7a 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -140,6 +140,15 @@ config RESET_K210
->  	  Say Y if you want to control reset signals provided by this
->  	  controller.
-> =20
-> +config RESET_K230
-> +	tristate "Reset controller driver for Canaan Kendryte K230 SoC"
-> +	depends on ARCH_CANAAN || COMPILE_TEST
-> +	depends on OF
-> +	help
-> +	  Support for the Canaan Kendryte K230 RISC-V SoC reset controller.
-> +	  Say Y if you want to control reset signals provided by this
-> +	  controller.
-> +
->  config RESET_LANTIQ
->  	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
->  	default SOC_TYPE_XWAY
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 31f9904d13f9c3a107fc1ee1ec9f9baba016d101..13fe94531bea1eb91268b1804=
-e1321b167815a4b 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -20,6 +20,7 @@ obj-$(CONFIG_RESET_IMX7) +=3D reset-imx7.o
->  obj-$(CONFIG_RESET_IMX8MP_AUDIOMIX) +=3D reset-imx8mp-audiomix.o
->  obj-$(CONFIG_RESET_INTEL_GW) +=3D reset-intel-gw.o
->  obj-$(CONFIG_RESET_K210) +=3D reset-k210.o
-> +obj-$(CONFIG_RESET_K230) +=3D reset-k230.o
->  obj-$(CONFIG_RESET_LANTIQ) +=3D reset-lantiq.o
->  obj-$(CONFIG_RESET_LPC18XX) +=3D reset-lpc18xx.o
->  obj-$(CONFIG_RESET_MCHP_SPARX5) +=3D reset-microchip-sparx5.o
-> diff --git a/drivers/reset/reset-k230.c b/drivers/reset/reset-k230.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..492d2274893675b0ff1967426=
-c8fa9e75aed1791
-> --- /dev/null
-> +++ b/drivers/reset/reset-k230.c
-> @@ -0,0 +1,355 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (C) 2016-2017 Linaro Ltd.
-> + * Copyright (C) 2022-2024 Canaan Bright Sight Co., Ltd
-> + * Copyright (C) 2024-2025 Junhui Liu <junhui.liu@pigmoral.tech>
-> + */
-> +
-> +#include <linux/cleanup.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/spinlock.h>
-> +
-> +#include <dt-bindings/reset/canaan,k230-rst.h>
-> +
-> +/**
-> + * enum k230_rst_type - K230 reset types
-> + * @RST_TYPE_CPU0: Reset type for CPU0
-> + *	Automatically clears, has write enable and done bit, active high
-> + * @RST_TYPE_CPU1: Reset type for CPU1
-> + *	Manually clears, has write enable and done bit, active high
-> + * @RST_TYPE_FLUSH: Reset type for CPU L2 cache flush
-> + *	Automatically clears, has write enable, no done bit, active high
-> + * @RST_TYPE_HW_DONE: Reset type for hardware auto clear
-> + *	Automatically clears, no write enable, has done bit, active high
-> + * @RST_TYPE_SW_DONE: Reset type for software manual clear
-> + *	Manually clears, no write enable and done bit,
-> + *	active high if ID is RST_SPI2AXI, otherwise active low
-> + */
-> +enum k230_rst_type {
-> +	RST_TYPE_CPU0,
-> +	RST_TYPE_CPU1,
-> +	RST_TYPE_FLUSH,
-> +	RST_TYPE_HW_DONE,
-> +	RST_TYPE_SW_DONE,
-> +};
-> +
-> +struct k230_rst_map {
-> +	u32			offset;
-> +	enum k230_rst_type	type;
-> +	u32			done;
-> +	u32			reset;
-> +};
-> +
-> +struct k230_rst {
-> +	struct reset_controller_dev	rcdev;
-> +	struct device			*dev;
-> +	void __iomem			*base;
-> +	spinlock_t			lock;
+On Sun, 20 Apr 2025 at 19:39, Marek Vasut
+<marek.vasut+renesas@mailbox.org> wrote:
+> Add Retronix R-Car V4H Sparrow Hawk board based on Renesas R-Car V4H ES3.=
+0
+> (R8A779G3) SoC. This is a single-board computer with single gigabit ether=
+net,
+> DSI-to-eDP bridge, DSI and two CSI2 interfaces, audio codec, two CANFD po=
+rts,
+> micro SD card slot, USB PD supply, USB 3.0 ports, M.2 Key-M slot for NVMe=
+ SSD,
+> debug UART and JTAG.
+>
+> Tested-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> Tested-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@mailbox.org>
 
-Add a comment, this locks register read-modify-write.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.16.
 
-> +};
-> +
-> +static const struct k230_rst_map k230_resets[] =3D {
-> +	[RST_CPU0]		=3D { 0x4,  RST_TYPE_CPU0,    BIT(12), BIT(0) },
-> +	[RST_CPU1]		=3D { 0xc,  RST_TYPE_CPU1,    BIT(12), BIT(0) },
-> +	[RST_CPU0_FLUSH]	=3D { 0x4,  RST_TYPE_FLUSH,   0,       BIT(4) },
-> +	[RST_CPU1_FLUSH]	=3D { 0xc,  RST_TYPE_FLUSH,   0,       BIT(4) },
-> +	[RST_AI]		=3D { 0x14, RST_TYPE_HW_DONE, BIT(31), BIT(0) },
-> +	[RST_VPU]		=3D { 0x1c, RST_TYPE_HW_DONE, BIT(31), BIT(0) },
-> +	[RST_HS]		=3D { 0x2c, RST_TYPE_HW_DONE, BIT(4),  BIT(0) },
-> +	[RST_HS_AHB]		=3D { 0x2c, RST_TYPE_HW_DONE, BIT(5),  BIT(1) },
+Gr{oetje,eeting}s,
 
-The TRM calls these HISYS. Is this shortened to HS on purpose?
+                        Geert
 
-[...]
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-> +static int k230_rst_reset(struct reset_controller_dev *rcdev, unsigned l=
-ong id)
-> +{
-> +	struct k230_rst *rstc =3D to_k230_rst(rcdev);
-> +	const struct k230_rst_map *rmap =3D &k230_resets[id];
-> +	u32 reg;
-> +	int ret =3D 0;
-> +
-> +	switch (rmap->type) {
-> +	case RST_TYPE_CPU0:
-> +		k230_rst_clear_done(rstc, id, true);
-> +		k230_rst_update(rstc, id, true, true, false);
-> +		ret =3D k230_rst_wait_and_clear_done(rstc, id, true);
-> +
-> +		/*
-> +		 * The time period when reset is applied and removed but the
-> +		 * clock is stopped for RST_TYPE_CPU0 can be set up to 7.5us.
-> +		 * Delay 10us to ensure proper reset timing.
-> +		 */
-> +		udelay(10);
-> +
-> +		break;
-> +	case RST_TYPE_FLUSH:
-> +		k230_rst_update(rstc, id, true, true, false);
-> +
-> +		/* Wait flush request bit auto cleared by hardware */
-> +		ret =3D readl_poll_timeout(rstc->base + rmap->offset, reg,
-> +					!(reg & rmap->reset), 10, 1000);
-> +		if (ret)
-> +			dev_err(rstc->dev, "Wait for flush done timeout\n");
-> +
-> +		break;
-> +	case RST_TYPE_HW_DONE:
-> +		k230_rst_clear_done(rstc, id, false);
-> +		k230_rst_update(rstc, id, true, false, false);
-> +		ret =3D k230_rst_wait_and_clear_done(rstc, id, false);
-> +
-> +		/*
-> +		 * The time period when reset is applied and removed but the
-> +		 * clock is stopped for RST_TYPE_HW_DONE can be set up to
-> +		 * 127.5us. Delay 200us to ensure proper reset timing.
-> +		 */
-> +		udelay(200);
-
-Consider using usleep_range(), or fsleep().
-
-regards
-Philipp
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
