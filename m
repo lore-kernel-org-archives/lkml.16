@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2BA270570;
-	Wed, 23 Apr 2025 07:55:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC5A270570;
+	Wed, 23 Apr 2025 07:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394910; cv=none; b=cm3DDLBXjvz4R32nhgz04RolymR3ek+P7wtfi1qMiD0sPUPk5SR/+O/ROYVxd6mav2QW4UYy87LkQgikJzQx+tit6PjkI+39WieiCFQ4E4+Ys7TgUG9FrFlE0kvlKfZeE9ZrAzeZ1O4y38EE05mmu7X2D90MUEMXVYs+0YUMf2I=
+	t=1745394915; cv=none; b=fZnfNq6fHTTIImJ1zR+J5z8Uh0iMD44MToE1rLqe6TK7sx0pddXnG75IaAhIqjkolCLeLwH079eSIUzXlndgC8u7kYSskqXVnmnVn0adNmJzQfee4Qg9nQRUPUNwMLmUiaS318pVrY29DXh3MZGAj+AjOliE7d/xL1yvFAUW/TI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394910; c=relaxed/simple;
-	bh=hpsl3GfCNgR6vusE1HtvWnkX8X5I671B1NgKWynmTdc=;
+	s=arc-20240116; t=1745394915; c=relaxed/simple;
+	bh=8yKUlLXHUWppgyCklU9qzK3udYjt0wg2dXiGw914pMM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NUBrEExtKvAjVLbvbuz+eAToCzlog/53oF3PMEncbvavHOM8ds6CTxEKpYQ8dU8huIe3UHcWjFWO3VkC+FcR21Yy9cMTGblH1GiBDWODBmHTRFYRDKQCeb15yLH6kQv3FkuTG40Uee3n3E6kSa6G1iEF0mpDdbAZgHO8Jh9UClI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ND6QBbxE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ma0wPXZ+gGNRV8buc4gwGjIc3Lnxu6xDsOLw9wqTM3OetKqFs5RCfPaWNyl8an012Vi6R51AQ/lly1z9mqYYPn9P7DavubIJ3L02UJUwL3vsE1vI8oNu1UFtN7OGRaj8Zyve2Y2OoWm5XB9t/K3t1myWgQfEa2ArQC00ZhWjHFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=drx3pnH6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ND6QBbxE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A8FC4CEEC;
-	Wed, 23 Apr 2025 07:55:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="drx3pnH6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EDC0C4CEE2;
+	Wed, 23 Apr 2025 07:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745394909;
-	bh=hpsl3GfCNgR6vusE1HtvWnkX8X5I671B1NgKWynmTdc=;
+	s=k20201202; t=1745394915;
+	bh=8yKUlLXHUWppgyCklU9qzK3udYjt0wg2dXiGw914pMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ND6QBbxEdLXyHNB6VwFjJ3O4Prg2BAbBWmezB9com7jpPe2Lzdz+1wNxsrgjnkYAD
-	 SBOZ589RtnejUrUehjqY3wlWaPte0Kj/D2fErd+i0oF0JKj7dnwLCd6FhfJQSpjR9g
-	 a9+j9KT8iDcuT1d4Gj+PAoLd90y0F0RliUTNy3cAPf5fcbOca2E+wTjlFB57KxyNvH
-	 PNIT54zM1pif3VIi/iYfNR7tcPrd2wXib1ZovGp+Nj2nbDJZnQ44l5/OqIdSkdjc0I
-	 2uNaxlpte7CVYd18tDrcad/8siKmjLJ7p4DIMsd6f73m+d5PuJWXKq6hTPqTs1bfbY
-	 mqmPAvKJ2bIrg==
+	b=drx3pnH6sIWyK3T7zitSvvXyHaczorg+VwR3OupJ15N4X4sEMnm1vsNhoxV2VRNhe
+	 hwabNkjYzFl3CndygTmihg5TKn1zz5FoweWpt3cjOXJc/zUdrS66qc7p3fEIfmTAlL
+	 nn/vXzIAfUvdtux8tWKGo86IJsxcqtF5qPDIdjNpJzQ4pW2Scfb15pTqwfmtv0mbcP
+	 4X71IZPA+cboHyVmivfaXEZGvCl1qCqP0r4yLW/R2tihZj+kG4NatJu8/N1WRbgTcp
+	 eH5sWMJwDKLdv8hzs6P6aRsoukUjirrQAcjgHNixlF5zFqGzSz+p8gYcJFon5PXM9J
+	 9yshdWYMVPyPw==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
@@ -45,9 +45,9 @@ To: Jaroslav Kysela <perex@perex.cz>,
 	Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 12/28] ALSA: als: Use pure devres PCI
-Date: Wed, 23 Apr 2025 09:53:30 +0200
-Message-ID: <20250423075346.45907-13-phasta@kernel.org>
+Subject: [PATCH v2 13/28] ALSA: oxygen: Use pure devres PCI
+Date: Wed, 23 Apr 2025 09:53:31 +0200
+Message-ID: <20250423075346.45907-14-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
 References: <20250423075346.45907-1-phasta@kernel.org>
@@ -69,36 +69,22 @@ pcim_request_all_regions().
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- sound/pci/als300.c  | 2 +-
- sound/pci/als4000.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/oxygen/oxygen_lib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/als300.c b/sound/pci/als300.c
-index c7c481203ef8..43f98719e61b 100644
---- a/sound/pci/als300.c
-+++ b/sound/pci/als300.c
-@@ -617,7 +617,7 @@ static int snd_als300_create(struct snd_card *card,
- 	chip->chip_type = chip_type;
- 	spin_lock_init(&chip->reg_lock);
- 
--	err = pci_request_regions(pci, "ALS300");
-+	err = pcim_request_all_regions(pci, "ALS300");
+diff --git a/sound/pci/oxygen/oxygen_lib.c b/sound/pci/oxygen/oxygen_lib.c
+index 9340d3c9ffd6..39b8ccf37cdd 100644
+--- a/sound/pci/oxygen/oxygen_lib.c
++++ b/sound/pci/oxygen/oxygen_lib.c
+@@ -609,7 +609,7 @@ static int __oxygen_pci_probe(struct pci_dev *pci, int index, char *id,
  	if (err < 0)
  		return err;
  
-diff --git a/sound/pci/als4000.c b/sound/pci/als4000.c
-index 022473594c73..3f4f3037f71f 100644
---- a/sound/pci/als4000.c
-+++ b/sound/pci/als4000.c
-@@ -836,7 +836,7 @@ static int __snd_card_als4000_probe(struct pci_dev *pci,
- 		return -ENXIO;
- 	}
- 
--	err = pci_request_regions(pci, "ALS4000");
-+	err = pcim_request_all_regions(pci, "ALS4000");
- 	if (err < 0)
+-	err = pci_request_regions(pci, DRIVER);
++	err = pcim_request_all_regions(pci, DRIVER);
+ 	if (err < 0) {
+ 		dev_err(card->dev, "cannot reserve PCI resources\n");
  		return err;
- 	iobase = pci_resource_start(pci, 0);
 -- 
 2.48.1
 
