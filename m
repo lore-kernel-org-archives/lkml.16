@@ -1,178 +1,144 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA8F26FA59
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CB726FA41
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745407537; cv=none; b=U640BL0lBDb/TQlQYIYdVvKnev6dtun4BVzKo/rLZ+8M70Izv8M2rNWbIcSlpCHYBL/sKWxJZZKAN+h3fnbdKk+q8VbZ0WvBEieAciPzY8wwMh27oOzdb6JU/yyVX9oNxosMLpZRCt29zmFgWryvET51ipq2UndiUuIg3MPHJV0=
+	t=1745407543; cv=none; b=UCqZQjRNTPWYObE1fRZ61a5Mfotz+3yvpeuhoqz/ChAinRi0buTlixUZDFswhOq6xo8SmkbuHHT9NUjKKQvC3oFfWr0n7mPYf0/rAGqNp3kdSqvnMTGeuylqRpoGvnonTAot4E5cxW+DkRBqyqGxCgoZ4QdHkHk2TdIKVatkE4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745407537; c=relaxed/simple;
-	bh=HD70lglHo/TfDa3Vk0n7O97xvVgFb9j6CD+Dg2TjOQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o8X2vcfBUExj7783wXZZI4Juu7klq2zyO0xVjkvooVF5ss22Fsg3xloKO8iTD6idwa//vtb1VSLclZrJUiGKxngaG2U7DEFQ4NuUdo7MZTq9MhV/CNpSGXZwjO2L3iVD5gjf1y7/NgKbU/1+XSaT8FR5RV+DFU+M233lacYoaNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=IVjC9sTr; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745407543; c=relaxed/simple;
+	bh=wKXWbzh2ht/X2vUMhpUIeXx1GFXHSCn0jvg1bKsrJvc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mwh9IkDp4+ciaJv9r4EqGt1T3Jr782ZxFeQE7Vc0Kr6AGVEvbsekn4475ud78cmVcp6UxSDBqfRduUQWdYnIUWjDaNlMd2XgWc3wIKMw+tu5jtVK4X3Eh9ZhyfW6YLNMIItVOGTR6TwCwsx79yaC9dfdMrvfIdCk6/Hw+HaH6dw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=LIqiqGsF; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="IVjC9sTr"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so890770666b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:25:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745407533; x=1746012333; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=aWGxSkVSh8s0WJx6DmPaKustScqNiBh/RPsp1KBtxsk=;
-        b=IVjC9sTrSDtXGuZism3utTK875aho9TCOE1tEshyg7IZburk9GnHmcgJHufBbuP2hh
-         fTsRfo+k9mVVhiOZywYXVncl+AmLnxgn4VHdMfmb6IvniprAsB1H9VVX3KwG20ftUcfC
-         DBDChI088eIaFj3DqMNF/aTl+JMII5KxZ+6wlsU3UcoqjcGN8vqeAmcxYSYe3vOX43aW
-         eARpOQbxKpYDGpbeTmkI45oLx1fiJF9iZ/Pv4wDoMDpcKwk2tUFZJpikMZh3CEthWkw4
-         OnfEkxJChTtmncnatRoYmucyzSYOXC0GC/1GH6941mratsn6N6NSpMsUEFXIUYjLATCH
-         Ntxw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="LIqiqGsF"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NApNj4016813
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:25:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	+SJfWTk5aO0uHSIAPpOEUP1TaRsZh3xbLp7te7De5FI=; b=LIqiqGsFYbXbWF+X
+	ZWDgw+eB8a3gdcqzTD0qr2Qtf2nRxBuKzDi+/SUTMaxy8q0TZQXLWOhsrUySx+fF
+	3hc+qpuJys66S3Yv3wlo9lAKd4Mu4RfyIHYQHdcTNdGw03fP/ICzoLtkfJDtA9DQ
+	aPQkEAeIfXbPuxHkyZbql9Ya0ByPh303SFsjlaDBB7vi51qpKPKMglA053f2/Aq0
+	TDL3wUTs2P//7aRaR9gOsyPZ997GPPx+mEhZR5qRNt1RawovzsiYBihkaPSlYxMm
+	kWgtWsRjqI/Q/3C7Y7QcTwX4R/+nOivD5sQ7oG5FfiahI+d+wYKQc/xqWr52QYQb
+	9v/aKQ==
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh09xvx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:25:40 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c552802e9fso119928685a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:25:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745407533; x=1746012333;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aWGxSkVSh8s0WJx6DmPaKustScqNiBh/RPsp1KBtxsk=;
-        b=VIo1mAAP6hPf4R0x3IYJbZXiMWl94lv7Ygvhvq0Br/uSqYHguz2n4bvGtBU6brVqHq
-         6REzoBTJIwGkD1wnzo8oA0Pq3tfbGeATKW8pf4TU5XJvhr/uIx3PnCeyaIsaBycGT3YI
-         d2fetyjh3clwK6OZn25RO2G7OZUrEd+LmZ3ZiGg8whmLyVS6hRdeAaLxxEkzFAau5wOr
-         GnaePasjaeb67OE6e/UyUZ3nJvELxIscE0m7jg0OEHMhaP66waHzXnetUPwaruN+xDKL
-         bdWiOeI5Saklz1nE4xGGNQbxR9TbPh1iYtrJ494sfYF55RJkWug+GQg83b3qe8Ro9L6N
-         y/VQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXNNnuiMYZklID3o89njF2v8hL0+Q4a/wgtUlVVry/U6Y8Q9WV1glirGSY91O+xXngOt0+7qtTWdl3cX5Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvLgmLLGQXxaqdORoWa8boqV6x1W87xDqFpyW10PqraWAkosW/
-	wnGrE88qQ3RGET38daHQNU3VOu2EbPtOnWs0qaP+tBlbKzy2RS06HsctBLkz3lk=
-X-Gm-Gg: ASbGncsMmriQk27MKZMLzTwjD464cECQuPro0IEYFUK+3Gksudv6nS4XEvsnShi7NaY
-	5KihKkSEbNOLLZ6jBfyytDob45/LOCZ9ZExwOXr3nuOZbWk139k57btERUW7Cy7Bque+Hd94YML
-	HF9Vy9e4YybzkG1/yW6ottniMdRsdlL0T/4IAsGO5xT173lFefr6IKxQydZtK7gR2ibHDiqczRQ
-	yFTSVQEsIihP5pZi7nOw0m740mlXH09w+ceq4Uh9gnRLmxAqUeaZ8L4GoabVZZFhwQmlNAZ7YRB
-	fl3w1y9lGO20peMcIIa9x4b8RQDsyhA=
-X-Google-Smtp-Source: AGHT+IEYYEoiPeht3k6gfpywnrmcwc6m//t5flrh63sC9Rj8rnJcbGCa2vDM8kPATKJFgLfL5emxYA==
-X-Received: by 2002:a17:906:5496:b0:aca:d6f0:af0c with SMTP id a640c23a62f3a-acb74dde4c4mr1369691166b.59.1745407532929;
-        Wed, 23 Apr 2025 04:25:32 -0700 (PDT)
-Received: from localhost ([193.86.92.181])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-acb6ec0c64csm803973066b.13.2025.04.23.04.25.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 04:25:32 -0700 (PDT)
-Date: Wed, 23 Apr 2025 13:25:31 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	linux-cve-announce@vger.kernel.org
-Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
- allocation failure
-Message-ID: <aAjOK_f-GPFHIdWK@tiehlicka>
-References: <2024122837-CVE-2024-56705-049b@gregkh>
- <aAicoAmxX0B_O3Ok@tiehlicka>
- <2025042301-flammable-masculine-ec48@gregkh>
- <aAiwaM5ru-FJG2fI@tiehlicka>
- <2025042329-mystify-dramatic-dcb9@gregkh>
+        d=1e100.net; s=20230601; t=1745407539; x=1746012339;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+SJfWTk5aO0uHSIAPpOEUP1TaRsZh3xbLp7te7De5FI=;
+        b=jU6MX9OKdtm8BxHzRr5s1IHgmxiWglK4QUqUsgkLHwETnlCP753FIBQz8VoLkGdShy
+         93KoEnSlnNfr/+7breeODQqR9hu6+qZEgnyMSMN4uoHm6hzz+adgbGKTT7jDsT9gh57y
+         FEdULOz3Vy2G30pmMfi8wyieekJXyNM44sqOFm547ACsRa3/yTuX9U83f2MvDKkMPCne
+         zpizjQuDxwOCQ/x+nF6pX5Z7Ohq7U+kfNdVKJkOyiHQRWx0yRmWqt7VMD1zOggwodUsy
+         WeYgPfy1Xeu4yAoEeFrvQ9Iq1G7RWU1Mv+KJ5LSiMEfI724ZTMglt5E9UrxtYuV0I9sj
+         Lhrw==
+X-Gm-Message-State: AOJu0YwPmROOBehqfsYjYDVmkGF0eD6lxb/i3SfCIDT+3t3C6386KpKF
+	0pu2p6x9OnCzYUlHs5oODyu/M+4JLJMKcKzWTnQv5b4Fn6jPRCHt9OpyhVKvkMKdICKoSNuW6Mb
+	rqzaCwHCH9cm9LeGCmI/myNLAElA8PbGbKSczMAXKouf6jecMrmLoCSIDCh6blrw=
+X-Gm-Gg: ASbGncst5ixxWYnXkTPBmHJWLYtNAufX8dAyyuIbNnGnXnkR169MC5ENRdaASYM7Vav
+	+lHubhAaNNcv8UWH7UdtcpE8u+esDj+6gbq5sml8Fo+fQL3XZVRj8+A9qqwL6vxeFnk7kvwyqam
+	DondQEAN5VM4QZltmReb5GqyXB3ca27rt+jFvMwDsfOBRoWWxjhQdgrGkPwPpvJNrc18wCqOYPj
+	BYsKKfuV/Ok5vJmhcz/zT1OsMaBDJIBFb+hPjYtwsfzLHi18AYpBH0lb3rs8Oog6wpOVaJrgJW0
+	87twlNdLv5nCQavUMTs/W9pdRk82v9//US6NWSq8w5+M9c2/Yh3jGvQszBHXoZHRjS0=
+X-Received: by 2002:a05:620a:19a7:b0:7c7:ae26:9bb3 with SMTP id af79cd13be357-7c94d25a6b0mr185332285a.5.1745407539438;
+        Wed, 23 Apr 2025 04:25:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFAKueAMYdW8vImOAi5a60M+gwJ663bWKU2mlGWA17qqnLufSL3bclAp8Ot3R4t4SQ07ODnkw==
+X-Received: by 2002:a05:620a:19a7:b0:7c7:ae26:9bb3 with SMTP id af79cd13be357-7c94d25a6b0mr185330285a.5.1745407538941;
+        Wed, 23 Apr 2025 04:25:38 -0700 (PDT)
+Received: from [192.168.65.183] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec0b6fbsm806483166b.19.2025.04.23.04.25.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 04:25:38 -0700 (PDT)
+Message-ID: <a9a5680f-de4c-49ac-8ae6-d2e0452d8258@oss.qualcomm.com>
+Date: Wed, 23 Apr 2025 13:25:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025042329-mystify-dramatic-dcb9@gregkh>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] phy: qcom: qmp-pcie: Update PHY settings for SA8775P
+To: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        krishna.chundru@oss.qualcomm.com, quic_vbadigan@quicinc.com,
+        quic_nayiluri@quicinc.com, quic_ramkri@quicinc.com,
+        quic_nitegupt@quicinc.com
+References: <20250423-update_phy-v1-0-30eb51703bb8@oss.qualcomm.com>
+ <20250423-update_phy-v1-1-30eb51703bb8@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250423-update_phy-v1-1-30eb51703bb8@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: k-4JVoJL8jIPYMjrpG95-Ugz9EGlGZzI
+X-Proofpoint-ORIG-GUID: k-4JVoJL8jIPYMjrpG95-Ugz9EGlGZzI
+X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=6808ce34 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=4ZBdfkmogR933_44ZQYA:9 a=QEXdDO2ut3YA:10
+ a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA3OSBTYWx0ZWRfX1u/TCse/Pv/m EWIhy7prXXjF11huZLaS0QTi1qePiZoC3neKsBQhjOv/0QZE1WOGBGcSUga0tOeWmgA11FJG3tz P3Fx/WDEu7WeuWO5KY38a5nyKpOKuQXYKKK1QmBrqCgm/BVST8/wbUBXLWU32Trk2BpicqtWRMe
+ bXRccvwqrH9gc09u2yRq7pT1r3iSw035iO2V2/U80rbKnbsnz/RzLBF/fvB0wXdG5Hi52eQS4fF laqOGcGCU6HJdO4QN107n5tA81zmk1i5dij2rK4Y2Gb8CeZSuFD4Db0wMcNRlTbtkzHHWgBDeh6 2Hm/Ba9+hDl2fLYS1PlnikIAPcD93xssRT3Ys0eqwavigZfoLumkNn6WHwCg+D0hai8PzS83e9s
+ cYI+her0kDilMwswRAi3MVEdlUyNISK7Vm/g+JzYexwRbTuoP1GK6Dbw9/ZKwNUGMhhRKXOJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_07,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230079
 
-On Wed 23-04-25 12:20:47, Greg KH wrote:
-> On Wed, Apr 23, 2025 at 11:18:32AM +0200, Michal Hocko wrote:
-> > On Wed 23-04-25 10:21:04, Greg KH wrote:
-> > > On Wed, Apr 23, 2025 at 09:54:08AM +0200, Michal Hocko wrote:
-> > > > Hi,
-> > > > our internal tools which are working with vulns.git tree have noticed
-> > > > that this CVE entry has been altered after the announcement.
-> > > 
-> > > Good catch!
-> > > 
-> > > > There was an additional commit added to the CVE entry. The current state
-> > > > is
-> > > > $ cat cve/published/2024/CVE-2024-56705.sha1
-> > > > ed61c59139509f76d3592683c90dc3fdc6e23cd6
-> > > > 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
-> > > 
-> > > Yup!
-> > > 
-> > > > There seem to be handful of other cases like this one AFAICS.
-> > > 
-> > > Yes, we had to add support for this type of problem.
-> > > 
-> > > > I have 3 questions:
-> > > > 1) What is 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
-> > > >    relation to the original CVE which seems to be about a missing memory
-> > > >    allocation failure check?
-> > > 
-> > > Removing the driver entirely from the kernel "fixed" the vulnerability :)
-> > 
-> > What is _the_ vulnerability? While I do understand that _any_ potential
-> > vulnerability in the removed code is removed as well I still do not see
-> > how the driver removal is related to _this_ specific CVE.
+On 4/23/25 1:15 PM, Mrinmay Sarkar wrote:
+> This change updates the PHY settings to align with the latest
+> PCIe PHY Hardware Programming Guide for both PCIe controllers
+> on the SA8775P platform.
 > 
-> "The" vulnerability is what is fixed in the last commit id, and is what
-> is documented in the text of the CVE, specifically:
-> 
-> 	In ia_css_3a_statistics_allocate(), there is no check on the allocation
-> 	result of the rgby_data memory. If rgby_data is not successfully
-> 	allocated, it may trigger the assert(host_stats->rgby_data) assertion in
-> 	ia_css_s3a_hmem_decode(). Adding a check to fix this potential issue.
+> Signed-off-by: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+> ---
 
-I do understand this statement.
+Please also mention that these updates happen to solve the stability
+issues seen with Gen4 speeds
 
-> That has not changed here at all.  It's just that the ranges of git
-> versions for when Linux was vulnerable to this issue has been "tightened
-> up" to only reflect when it was possible for this to be a problem (i.e.
-> we now do not count the range of releases where the driver was not
-> present at all in the kernel tree.)
+[...]
 
-But I fail to follow this. The commit itself says Fixes: a49d25364dfb
-("staging/atomisp: Add support for the Intel IPU v2") which makes it
-clear since when the issue has been introduced. If this tag was not
-present then there is CVE-$FOO.vulnerable which can specify the same
-thing. I do not understand how 51b8dc5163d2 is related as it has a
-different implementation of ia_css_3a_statistics_allocate that doesn't
-have any unchecked kernel allocations AFAICS.
- 
-> > > > 2) What is the process when a CVE is altered? have I missed any email
-> > > >    notification?
-> > > 
-> > > We do not do email notifications when CVEs are altered.  You have to
-> > > watch the cve.org json feed for that.  Otherwise the email list would
-> > > just be too confusing.  Think about every new stable update that happens
-> > > which causes 10+ different CVEs to be updated showing where they are now
-> > > resolved.  That does not come across well in an email feed, but the json
-> > > feed shows it exactly.
-> > 
-> > I do understand you do not want to send notifications for that. Would it
-> > make sense to announce a new upstream commit added to the CVE, though? This
-> > would make it much easier to see that we might be missing a fix that is
-> > considered related to a particular CVE.
-> 
-> As this has only happened 2 times so far, it's a pretty rare occurance
-> given us allocating over 6000 CVEs.  And how exactly would that email
-> look like?
+>  static const struct qmp_pcie_offsets qmp_pcie_offsets_v5_30 = {
+> @@ -3398,8 +3402,8 @@ static const struct qmp_phy_cfg qcs8300_qmp_gen4x2_pciephy_cfg = {
+>  		.tx_num		= ARRAY_SIZE(sa8775p_qmp_gen4_pcie_tx_tbl),
+>  		.rx		= qcs8300_qmp_gen4x2_pcie_rx_alt_tbl,
+>  		.rx_num		= ARRAY_SIZE(qcs8300_qmp_gen4x2_pcie_rx_alt_tbl),
+> -		.pcs		= sa8775p_qmp_gen4x2_pcie_pcs_alt_tbl,
+> -		.pcs_num		= ARRAY_SIZE(sa8775p_qmp_gen4x2_pcie_pcs_alt_tbl),
+> +		.pcs		= sa8775p_qmp_gen4_pcie_pcs_alt_tbl,
+> +		.pcs_num	= ARRAY_SIZE(sa8775p_qmp_gen4_pcie_pcs_alt_tbl),
+>  		.pcs_misc		= sa8775p_qmp_gen4_pcie_pcs_misc_tbl,
+>  		.pcs_misc_num	= ARRAY_SIZE(sa8775p_qmp_gen4_pcie_pcs_misc_tbl),
+>  	},
 
-We have identified that CVE-$FOO fix has been incomplete so far and
-extended list of fixes required for this CVE. Please make sure that
-those are appplied.
+So QCS8300 and SA8775 are closely related - since you're making updates
+for both, please also mention this in the commit message and describe
+the impact it has (e.g. that it fixes electrical settings for both platforms
+that largely re-use an IP block)
 
-Or something in those lines.
-
-> We are just changing the ranges here, we change ranges of where a kernel
-> is vulnerable all the time by adding new .vulnerable files to the tree
-> as people report them, and as fixes are backported to older stable
-> kernel trees.  That's much more important to you than this type of
-> change, right?
-
-Nope, being aware of what is actually the CVE fix is the most important
-information. Which kernels are affected specifcally is something that is
-downstream specific and stable tree ranges are only of a value to those
-who are using stable trees. Updates to vulnerable files is helpful
-during evaluation phase but once the assessment is done it acts mostly
-as a double check.
--- 
-Michal Hocko
-SUSE Labs
+Konrad
