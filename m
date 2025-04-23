@@ -1,152 +1,108 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEFB828F930
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 19:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BD325C834;
+	Wed, 23 Apr 2025 19:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745436935; cv=none; b=T1jKaU81DSMHKFBjJLontBE8gukP9Dy3BrzR9li8o4hIY9PjG4NRVmNGTqWxtKup9/vb9yqzpSMgH09Y2HmGe0zkPzdN7SA5v/uPEUpTx+NR4eqg9/uPIMzGI6MSed9OoNO+BeK1AnH6KtI122BO0lyUnoUk5Ko+cVyARXXNPxY=
+	t=1745436992; cv=none; b=CXvODuqa9O8794QvNz8zENIco2LbA83y932OQ4JjPDVIFNIQvIIyOGY8wL86iX4QWjJSkjQziRTp5krYvxhwthWsl2omfzQzBrN58IJ35ciWSM1CLPsxDgPOpm75gngkNZ4FCk/zJnVxcD7/sGHfYDQQewaUr7WGMmKkq6Ozo40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745436935; c=relaxed/simple;
-	bh=MUZFYYt03FT+VpNLoBtNnK5YADixP5iwgRhQLqAvFzk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=YcyucWocPDCQFVI+MvGEyrer//TLeXvBDapuMVbEutF2qne1x2bpzpI4HikN+0o8UWrvVmKdytF3/d8rvRxPYmCOCx1svRZjqx49LnD+1WUMV69GH5tVYonlDi7cT5+UFswZ9tUIvHZBcjV21nK1j/a0nrZaL6HXiMCJXLwGID0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RkAFCpue; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745436992; c=relaxed/simple;
+	bh=F8Lms9WWcqbi9UKLZVM3A4yA8hdTJR3kmzCK+DkmcwM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pJT71R8vCV3aozqLgrQ+4sSRXN5H8c/EiFBwChHDkR3pLQPROOJeRxthDL2cTgqlOLdQhgskMITo0KH5vXTLzkHIDzuI4+E7kymW2PESSrCSQDMh1DjPQ4xs12Y+J239ZXHT2+H+VBK95UG2i3+lvrZGV83SdP5fFI+yPXZcrBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=V3QU37Tz; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RkAFCpue"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745436932;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mHwM84CGYO+3jNCMTmmYeka00nVSY0LWa8c5ny3yQ7I=;
-	b=RkAFCpue/37DAtODKeya5SjWEsLU3Ei+CxaByI48Jg+Se/l26B2FMTiHXmyeciC5CbnVrR
-	d44gWBgi0IT/Fr4TAcJ1piQoGBd8H57UTj+yq6UB4VBqMAMatCP9bcFrGrwSZbYewtweGC
-	xscZ0Md+tYLNFlLqt5CkOnx/PmOMiq0=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-130-C5Lct9J3P12705nv8FFkQQ-1; Wed, 23 Apr 2025 15:35:31 -0400
-X-MC-Unique: C5Lct9J3P12705nv8FFkQQ-1
-X-Mimecast-MFC-AGG-ID: C5Lct9J3P12705nv8FFkQQ_1745436930
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43947a0919aso1241015e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:35:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="V3QU37Tz"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso1488485e9.1;
+        Wed, 23 Apr 2025 12:36:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1745436989; x=1746041789; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=J13/1f/4bpG2OkBxc41bbyLlaHxbEughKpa7FrPZ83o=;
+        b=V3QU37TzhticWADYrKgkY1nsiFJqQatyjyNptKiTiNmqbaOGZ+B9jM9sGvz2eG8nvc
+         3NtGGfn9U9noTSSX6wfZzslF4ad9mS5Un+BSkb/XmyYJMxcSIytFLT4fesEafyRysJNk
+         QzXVl/9m+izTYha2Hn6OKVuxs8Y30Hmhl0QuHLit+S7RfR0OwiVSgRtzSpyrqy4pWeFQ
+         BE5heJyXEfJlxVbSrWBkF6elH6cMikRazdLf6RYJ+qr/mS/LPyw3av9Wu+T8fOu7SnaR
+         R0qOhla84wDzAeZDFzXCUjj3iPhg6a/QM2nyFDV4EY9xLONDj105DUcIHWxw3HJhS0/Z
+         s6CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745436930; x=1746041730;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mHwM84CGYO+3jNCMTmmYeka00nVSY0LWa8c5ny3yQ7I=;
-        b=eGASuXr0Zn1VTYrqiFwmVXfgRuOGk1i/qbL/aq1Z2U7iVdKgbX99uQDKIhZ09qO7Kn
-         kd394zA2alBkbJblYWvGg+gnQly7gg9mxvJzmjiSGGUyix9tOSt9ZAmYjylj5i3cuHm8
-         DOYre7ftsp1No2WlgB7ggRElS4e+urMgc0oh7XPtZlHo8kcyvxOVjJUK75vo4DNxhJeT
-         OjuX8YNtLUDV9RODQvYjyGmFOacYZ94VQerUSZqslYh+nlWOXkUvTkxtcxmK34KSusJs
-         izg5PX61+lVaZ97FPj/pQH0fVae6v6jUHpciXzIcQO3A+SFh7ZpbuLgfoCsFMOb1dEmh
-         u5VA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcKay789qL8fv3g/CUGH+wyYxqcDvTGTZ6NIH/CQiLiF42v6gcKpt5CCFB3LrzYcNSzkjtnYAZYjZO8iw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoqeAQZsHyW0P3U0/nH8WDpSq2wBO+EVWhGJZG9I40oRHj2eXu
-	63ubkEjOyEymGySC4mdKBOtLJoHaa0K4dT4o9Py/rPz1K2PlacDBL63RlYEIFFXeE86nUb2X9eP
-	6mglAgM2y8TiUMyB/de4o8HyAMH20240uMI0qP3j2lB5CleJcpaiIc4GQRtJfOA==
-X-Gm-Gg: ASbGnctHQAuoW3ITvUrLEGqfBQMnk34vPUKSSrZtWmT/HduvqoydROBESJfyvzc0qzd
-	M9/MOvTDDpOdhLPSKfNpPX6bJoF/K0GvXJAEl4Ug+jYUmHzz1HybQkM/l1U+ZamcnjSeANtkO74
-	yalvGsFWhDdfxwWLLn8T5tb6gbKYFLVsFCu23AO2Wb8SKV2cmKHMX5GlKFOKMyJowOJ4zyWNOjr
-	EalObOBiLBsskJOQe5tMPuf40Pkk2rVnL+M0ecg97vkW2CUtLMoaWKabavSPHYhtlXfA/oUlast
-	B1AUNAf7UFK0SWxPKNBacFQY7Ndm7IVIi80uHhGAjX/YKoNhSQRbpTFPGOR5Rdtn0ISQMA==
-X-Received: by 2002:a05:600c:384b:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-4406aa872edmr213880955e9.0.1745436930111;
-        Wed, 23 Apr 2025 12:35:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3o9b9voFidMYGql7TPjF6NJBpEq4Fi6/itjQOx6j+R+KZEPRTl/Eo2lQx2cIZP+I8qEWd0Q==
-X-Received: by 2002:a05:600c:384b:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-4406aa872edmr213880635e9.0.1745436929653;
-        Wed, 23 Apr 2025 12:35:29 -0700 (PDT)
-Received: from localhost (62-151-111-63.jazzfree.ya.com. [62.151.111.63])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433191sm20045996f8f.31.2025.04.23.12.35.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 12:35:29 -0700 (PDT)
-From: Javier Martinez Canillas <javierm@redhat.com>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Marcus Folkesson
- <marcus.folkesson@gmail.com>, Thomas Zimmermann <tzimmrmann@suse.de>
-Subject: Re: [PATCH v6 2/3] drm/st7571-i2c: add support for Sitronix ST7571
- LCD controller
-In-Reply-To: <20250423-st7571-v6-2-e9519e3c4ec4@gmail.com>
-References: <20250423-st7571-v6-0-e9519e3c4ec4@gmail.com>
- <20250423-st7571-v6-2-e9519e3c4ec4@gmail.com>
-Date: Wed, 23 Apr 2025 21:35:28 +0200
-Message-ID: <87y0vqacxr.fsf@minerva.mail-host-address-is-not-set>
+        d=1e100.net; s=20230601; t=1745436989; x=1746041789;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J13/1f/4bpG2OkBxc41bbyLlaHxbEughKpa7FrPZ83o=;
+        b=pQd3FiL8iDCPB+zfxAzH65OLRl14K33IAZVFMcs6SEjRfMSXxZZNhneDQspiWLSCim
+         Flxhz/+Oh0F2dJfLNF2HBEJlcZBW/LLEpcUOjEJ5CH6AJHLADsDT3wc6ZrcWgEhnLj7w
+         /oVRCY6iXPypRra5GrKDtfvb9Owi1JyJc3O0G1s2V7u7u4wCBD3ZskWMIIoMJ3sOqJ7h
+         Ibos9BKgJBJ5amuwJUAxzr5C4h8Onox1O32eJhAm9RpWAtV/hLNWUOVAWiaBd7yUcwGs
+         c/NVky7u5jP06xXYWER5GPHMqhhCpHjTohLCVjY1yB8wCoeVZpi9ohWbBKMenrNr22JI
+         6KXA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/MTOwprAbjDmDlBDmTu0uH95pqmIlxQcXw3nNRoE+Wmk44AtQGAp3lqKX7ioJEiZmWkJxTuRq@vger.kernel.org, AJvYcCVzkyI8d85XADqfFpHCtz/7up0XwEi2bl9jn3fyrQbdiucmCLD6MXCpZAMsHa+vOdA24v+h00TzZZOU13s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwX5BOAFAU1nFSo3pz0uEZikFgjMz5P/vvOFeMjgj50WuauA5OL
+	dOzPbY0M59im1td+ZoTr9qw0qq5jHDX8lXuoHOhKwC+vhlytWSE=
+X-Gm-Gg: ASbGncs7bQln4UPKdPVSWIjEximhP9aHYC2UtdWyKUI+ZPIsoiSUxkFwCNtpS+HOyRd
+	oiWlaWgomKSF+72KFJf/6xr1AvoXWA9VFEo40n7aNuIEHVkFhfgdZN2O8Ce3IJG1CEu8nAdvCym
+	Esz6vc1FqDjGCSughewazlYag36rjjOfcqntsubhi7nfq9Xd1vFHJyCzIBXsFFlSNQRi6fywQvh
+	rte4YCV1YwZaA4ZDD5iPfgQTCIiXhVHk3LtaaefZgJNyr2dntkguQZd0x6+SqfiCzcxyAgOef+t
+	p2UJkYq5dmg5cXzCP7fDAa5+VyGhBZbPeEETqo6iF38w2IMMIwS+RNgidyXNBT5B1bP6xymXPxd
+	ocArnNKZSaqBhPp87SA==
+X-Google-Smtp-Source: AGHT+IHXrAT5Ym8Wfi9Mv5P7WsaXUZaJTk3APhWCaUhtxOeEgA1taGsSqysoypMvC/sD45jNiPBpgQ==
+X-Received: by 2002:a05:600c:4e8f:b0:43d:47e:3205 with SMTP id 5b1f17b1804b1-4406ab99521mr172733875e9.11.1745436989205;
+        Wed, 23 Apr 2025 12:36:29 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2ac758.dip0.t-ipconnect.de. [91.42.199.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d369f1sm35725315e9.29.2025.04.23.12.36.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 12:36:28 -0700 (PDT)
+Message-ID: <0f058a7b-72ac-49b5-8121-92a189e7b82b@googlemail.com>
+Date: Wed, 23 Apr 2025 21:36:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.12 000/223] 6.12.25-rc1 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250423142617.120834124@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250423142617.120834124@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Marcus Folkesson <marcus.folkesson@gmail.com> writes:
+Am 23.04.2025 um 16:41 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.12.25 release.
+> There are 223 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Hello Marcus,
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
 
-> Sitronix ST7571 is a 4bit gray scale dot matrix LCD controller.
-> The controller has a SPI, I2C and 8bit parallel interface, this
-> driver is for the I2C interface only.
->
-> Reviewed-by: Thomas Zimmermann <tzimmrmann@suse.de>
-> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
-> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
-> ---
-
-[...]
-
-> +
-> +static void st7571_reset(struct st7571_device *st7571)
-> +{
-> +	gpiod_set_value_cansleep(st7571->reset, 1);
-> +	fdelay(20);
-
-There's no fdelay() and this leads to a build failure now:
-
-make -j16 M=3Ddrivers/gpu/drm/tiny/
-...
-  CC [M]  st7571-i2c.o
-st7571-i2c.c: In function =E2=80=98st7571_reset=E2=80=99:
-st7571-i2c.c:815:9: error: implicit declaration of function =E2=80=98fdelay=
-=E2=80=99; did you mean =E2=80=98ndelay=E2=80=99? [-Wimplicit-function-decl=
-aration]
-  815 |         fdelay(20);
-      |         ^~~~~~
-      |         ndelay
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
 
-but I think you meant fsleep() here (which makes sense to me), so I will ap=
-ply
-the following fixup to this patch before pushing it:
+Beste Grüße,
+Peter Schneider
 
-diff --git a/drivers/gpu/drm/tiny/st7571-i2c.c b/drivers/gpu/drm/tiny/st757=
-1-i2c.c
-index ba089a7e2b61..dc410ec41baf 100644
---- a/drivers/gpu/drm/tiny/st7571-i2c.c
-+++ b/drivers/gpu/drm/tiny/st7571-i2c.c
-@@ -812,7 +812,7 @@ static int st7571_parse_dt(struct st7571_device *st7571)
- static void st7571_reset(struct st7571_device *st7571)
- {
-        gpiod_set_value_cansleep(st7571->reset, 1);
--       fdelay(20);
-+       fsleep(20);
-        gpiod_set_value_cansleep(st7571->reset, 0);
- }
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
---=20
-Best regards,
-
-Javier Martinez Canillas
-Core Platforms
-Red Hat
-
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
