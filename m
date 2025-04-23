@@ -1,116 +1,160 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDC118D63A;
-	Wed, 23 Apr 2025 07:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823771804A;
+	Wed, 23 Apr 2025 07:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392759; cv=none; b=KoGHOF5Q/Ma0bCgq/86X8+997u1VXSIrHF4uql1Ci1e0PA+S+xPBL4FROX1YETcgANHG8CbQzaf0+5hjPmo5DU0yPHGVCCYDIUQwUKn4KeR3ikOOhNtEGfCqS6t3nBDuJ2jlrnI3zrti1pI0VYuS3qqid5QpRfPugMZ5+U9M3HQ=
+	t=1745392799; cv=none; b=EXCQAeM49nC0O5NCAOhsp8Zk2Q8j1wS2E1FeSfuo8SUbpUhKMIie0LgIQsP4iK432SKOA3CzaB5Y4SVckxmT/w4nIXVnQhDBi7uSccHNF4OQitDZ2HZSc2twUS8fM0RXhkx8gZFNlXspQvHggo3wmqWRTjd2fQdvt0rojgPGcr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745392759; c=relaxed/simple;
-	bh=OelUuagaoJNGvmq4zulFutE63UpEPJUFjETU5gHmmRU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=C+hlnMM8UvvShkOs+vC4FSce/y/NI+Mrs3N4THulGviujqWWrGiZTzIAGuuYfwjahEqZMvR8ye2Xpys6Hc3DbyYfd9vuBRTZA1FAlyga/h33mQVDclU9r0nEFbz2HY29l0IibqxkjAVgd/U5HFHk3aKRW1RZDiWk4JOdWq4ENR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5ed43460d6bso9101415a12.0;
-        Wed, 23 Apr 2025 00:19:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745392754; x=1745997554;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NVmtrUo1YbYw/X4g84zkSdEwr7vBSfOVDVsuajCd9Rg=;
-        b=OQmc6vDkip9IEDHkdoeskpcRda8miBdQPmEfl0sLI1AduDtKw47F3SJOT33zdZFSCH
-         6msPkayLOPkoTJ8XlObhdmMVlin4H0LbSF5aZ2ugckQTcaT4tSTvVynzYI82m+40AzcG
-         s1qaIL0rphBspZqIwuS3hjk7QINdu+xMPAlNfImvGYUBHufYF4b7gOfgcb0YBIkfe92e
-         QIU7V4xgXVZfHwZ+99gCWFYT8EI7+8a8HABOhlHwSDR8/jt8KhbObLIspG8Q7R5WqTW6
-         reBG7LljdgGZY+0ienhhScx1QSmYKN32V5Dtre6K92rOJZEk4xRD1NFATFFKxQYNfqK0
-         KIRA==
-X-Forwarded-Encrypted: i=1; AJvYcCU2S0J8NBMhfhwCrNSRpClufxmpQH81kyKAr5d2YKzjqCEJjosbnEqz7V4CsGPzrAoHeKSSfxOlFbs=@vger.kernel.org, AJvYcCV+FiossHQlt/8g2KFEmQge2D7k0IrZ2jwjARcMLwAM0ILBksd0nxwUl1PeCCLU3gwpEdZPK0yVZssnigHgB1MsA9Y=@vger.kernel.org, AJvYcCVw0Vn78FT1kOnvmu6S/foua06NTukEDUhqYBkgDD4wCmyj71d6blJVrwCp74IWCdj3g0by+OUlgC/O9Yl7@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3HhmuX0STitvgCsV59B5Uqx1fAl1oX/y5zJOMFIH8SuaH7p/E
-	Ma76WFehYJDrMzs94lZmH50HyioQSf2s96HjL5hT1TdHJLbXRuVAgScpOUepG4o=
-X-Gm-Gg: ASbGncv5ucOuUl5j40cF7P7on0K3xRxXGpsRSnao9kCNiGvDGoLJnXRcNVAihfRnzNk
-	gcYAcgsfMlamD6Zfli6WJvsmm0Z13k5rlk3/lueUIKKFQT0AMV5IsKuZNklYcn/dWqb62xM9Kvb
-	5HNfyuRAG67lrYUDik4PiBJ4XjUa4wlILSSZ5i/i/iR6pN7zR0lq/yr2TBTF4mrvBRLWZAMTYo3
-	HdKC6/4ntdB4485XST4arlR5QTe6+wd+t2PvWzQjlmvQ2h9HHyzCo+w7+D78gcvejaJN2yLs5l2
-	YgVF6a3qd/seg9SodGdC9EOCN8L04Q+Vo6jV0aiEVD3NAaf6t7bMSKZBKPC3vMrLqdQXvJlVwm0
-	KR9o=
-X-Google-Smtp-Source: AGHT+IE/0Y2NIRV8KG4Gr+qUXlRMfGPzfBaObygtzvunOWGq2sXZ22/uADoRMSPJasXsp/i45raY1Q==
-X-Received: by 2002:a17:907:1c90:b0:aca:96a7:d373 with SMTP id a640c23a62f3a-acb74ddd2f4mr1453407066b.57.1745392754178;
-        Wed, 23 Apr 2025 00:19:14 -0700 (PDT)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefcf16sm768563066b.105.2025.04.23.00.19.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 00:19:13 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac25d2b2354so859139866b.1;
-        Wed, 23 Apr 2025 00:19:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWqmcTzGUzBfrClcOx/R9fIHetA6D7LJq0Iata0oUrRqR6Hut5FwFDCDBBTQCLXqwvaMZZ1EZ3cBUdWdZekDFLD7Pc=@vger.kernel.org, AJvYcCXOTvpPZAcTrcJmh9MOzhtFfzkHgQcgXO5OkcSnBwSm8wZt10u/hYxq1y6IDWVkf8CattIJIIO8Tns=@vger.kernel.org, AJvYcCXirlgRPibLsmHWPLGDUI7KeKYYywWPhxWZiIF8WaRrM1RPPAvLJHrxH7CvbFCWV/wXdpIh+pmwTW6AVd0S@vger.kernel.org
-X-Received: by 2002:a17:906:dc93:b0:ac1:ea29:4e63 with SMTP id
- a640c23a62f3a-acb74b4f63fmr1755632266b.26.1745392753452; Wed, 23 Apr 2025
- 00:19:13 -0700 (PDT)
+	s=arc-20240116; t=1745392799; c=relaxed/simple;
+	bh=ZqKb4KfZdHLqN8QcKD/n4J4k5vR2V9otqeu0Vg3KTbY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fNcSyaeAwbsNSzuRNCUifeOXY/hIatZPH5M+Fme/ODosmzs23imL6rnOUe9gmmqeun6450x4bZ594SzSUbX2vT8GiiIBL6QnP50ChA6JfbMEFMzPMUuJUsn1DGVFjgQQk5VlrHcnT3jqGgFZ0gF+aBKk7v/tAweaRrgOGBAU+QQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=NQ8+cnkG; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="NQ8+cnkG"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9285540E01F6;
+	Wed, 23 Apr 2025 07:19:47 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id cHymMcxZwE16; Wed, 23 Apr 2025 07:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745392782; bh=ftPP4S08awu8zTTxtnw7w5uCGyDy/BG+0Tm6c4TrMFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NQ8+cnkGkVthrltApFRLpqFTwWHXryWzaqt19jJgWuWJwEkW5aUeGTlM2pJ2vcMmE
+	 8nn7LQnVAuR/+XdNKrYRKXFyEAzKmHleVb4QhQHRYFKwBUWSEpHJ8zPreqb7KqQ5Vb
+	 358tc/7hJTrKtAkv5rGqIybklmU77y/hNzyHv6OWjYzYDNgubM0fV3xgDgmb7YGTFp
+	 mZOovIIHYymKopahGdDVMMPyQkulQ9qfHZtbqODBt9iMCBAVtM/TdxFIf/KY8Q0LgV
+	 6SHIZFLHGV3GDUYiOh6XNtqPvbjfpjPZfa6Ix3CNQ1s6DBFV5Sqri+CCc5nxKZNFe0
+	 4u5YvXFi2Hx/0yAHVlcgxbLNoa2Mz18UA/kmHvS9b6D8+dkQIHwY5Nq0DCQMsiUNDR
+	 q3zF3eII5seRUoy4+MHu0jjg9DsK0b4QZd1etBl4XMeHgxDkuDYOdPVxIRt/jygCxq
+	 ivK3rYJfmCZzVuzWwatkFO6V3qZ34wEAqtwuY9OVGRKjfg72wOHS8SNoHv7hnZEQdH
+	 xZfktkmoLZa69BVhvhkNVm78QqBa4MXb1t5zGQeqVe24TNvWxsVmKDF1dpQl6IxXG0
+	 oXkch8Vet7YREH+VgT2qVMg3a5tiNpmtXfE8PhmTj5iZAN4wDfALUitnuFRu9cmb3/
+	 KNn9wxuQAGJ9uZT/Z7x4oeA4=
+Received: from rn.tnic (unknown [IPv6:2a02:3037:313:bdc3:3c28:7053:13ff:2420])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id C1F5540E01FE;
+	Wed, 23 Apr 2025 07:19:22 +0000 (UTC)
+Date: Wed, 23 Apr 2025 09:20:17 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
+	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
+	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6]
+ x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when
+ running in a virtual machine)
+Message-ID: <20250423072017.GAaAiUsYzDOdt7cmp2@renoirsky.local>
+References: <20250331143710.1686600-1-sashal@kernel.org>
+ <20250331143710.1686600-2-sashal@kernel.org>
+ <aAKDyGpzNOCdGmN2@duo.ucw.cz>
+ <aAKJkrQxp5on46nC@google.com>
+ <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
+ <aAKaf1liTsIA81r_@google.com>
+ <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
+ <aAfQbiqp_yIV3OOC@google.com>
+ <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
+ <aAfynEK3wcfQa1qQ@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250403212919.1137670-1-thierry.bultel.yh@bp.renesas.com>
- <20250403212919.1137670-7-thierry.bultel.yh@bp.renesas.com>
- <CAMuHMdVpiZ+F0TMbLm000M_Scwozj2-SHPrUwTHqFKckVcmufQ@mail.gmail.com> <TYCPR01MB11492BCF416760E978541AFE18ABF2@TYCPR01MB11492.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYCPR01MB11492BCF416760E978541AFE18ABF2@TYCPR01MB11492.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 23 Apr 2025 09:18:59 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVQPbP0Fi5SDN8uOJ23S=_8pqHRVR2QFS8vHNfohzae2g@mail.gmail.com>
-X-Gm-Features: ATxdqUGnPcr5nw2bU8kZXewmcWmaBnKwPIbVqw74OHQUy0h-V5sZQcUv4L5lrRM
-Message-ID: <CAMuHMdVQPbP0Fi5SDN8uOJ23S=_8pqHRVR2QFS8vHNfohzae2g@mail.gmail.com>
-Subject: Re: [PATCH v7 06/13] clk: renesas: Add support for R9A09G077 SoC
-To: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
-Cc: "thierry.bultel@linatsea.fr" <thierry.bultel@linatsea.fr>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	Paul Barker <paul.barker.ct@bp.renesas.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aAfynEK3wcfQa1qQ@google.com>
 
-Hi Thierry,
+On Tue, Apr 22, 2025 at 12:48:44PM -0700, Sean Christopherson wrote:
+> I did a quick pass.
 
-On Fri, 18 Apr 2025 at 23:22, Thierry Bultel
-<thierry.bultel.yh@bp.renesas.com> wrote:
- > +};
-> > > +
-> > > +static const struct mssr_mod_clk r9a09g077_mod_clks[] __initconst =
-=3D {
-> > > +       DEF_MOD("sci0", 108, R9A09G077_PCLKM),
-> >
-> > Shouldn't that be 8 instead of 108?
-> > Using R9A09G077_PCLKM as the parent is a temporary simplification, righ=
-t?
->
-> I am probably missing something, isn=E2=80=99t PCKML actually the parent =
-clock ?
+You couldn't resist, I know. Doing something else for a change is
+always cool.
 
-According to Figure 7.1 ("Block diagram of clock generation circuit"),
-it is PCLKSCI0, which can be switched to PCLKM.  I guess that is the
-default, hence my "temporary simplification" question.
+:-P
 
-As the actual switching is controlled through the SCI's CCR3 register,
-the SCI block should have two clock inputs in DT (PCLKM and PCLKSCIn),
-and thus the DT bindings should be amended.  See also Figure 33.1
-("SCI block diagram").
+> Most of the usage is "fine".  E.g. explicit PV code, cases
+> where checking for HYPERVISOR is the least awful option, etc.
+> 
+> Looks sketchy, might be worth investigating?
 
-Gr{oetje,eeting}s,
+Oh, I will, it is on my
+do-this-while-waiting-for-compile/test-to-finish. ;-P
 
-                        Geert
+> --------------------------------------------
+>   arch/x86/kernel/cpu/amd.c:              if (!cpu_has(c, X86_FEATURE_HYPERVISOR) &&
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+So that first one is to set CC_ATTR_HOST_SEV_SNP when we really are
+a SNP host. I'll go through the rest slowly.
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+>   arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_IBPB_BRTYPE)) {
+>   arch/x86/kernel/cpu/amd.c:      if (c->x86_model < 0x14 && cpu_has(c, X86_FEATURE_LAHF_LM) && !cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+>   arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+>   arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+>   arch/x86/kernel/cpu/amd.c:      if (cpu_has(c, X86_FEATURE_HYPERVISOR))
+>   arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR)) {
+>   arch/x86/kernel/cpu/amd.c:      if (!cpu_has(c, X86_FEATURE_HYPERVISOR))
+>   arch/x86/kernel/cpu/topology_amd.c:             if (!boot_cpu_has(X86_FEATURE_HYPERVISOR) && tscan->c->x86_model <= 0x3) {
+>   arch/x86/mm/init_64.c:  if (!boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+>   arch/x86/mm/pat/set_memory.c:   return !cpu_feature_enabled(X86_FEATURE_HYPERVISOR);
+>   drivers/platform/x86/intel/pmc/pltdrv.c:        if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !xen_initial_domain())
+>   drivers/platform/x86/intel/uncore-frequency/uncore-frequency.c: if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR))
+> --------------------------------------
+> 
+> 
+> Could do with some love, but not horrible.
+> ------------------------------------------
+> Eww.  Optimization to lessen the pain of DR7 interception.  It'd be nice to clean
+> this up at some point, especially with things like SEV-ES with DebugSwap, where
+> DR7 is never intercepted.
+>   arch/x86/include/asm/debugreg.h:        if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+>   arch/x86/kernel/hw_breakpoint.c:                 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
+
+Patch adding it says "Because DRn access is 'difficult' with virt;..."
+so yeah. I guess we need to agree how to do debug exceptions in guests.
+Probably start documenting it and then have guest and host adhere to
+that. I'm talking completely without having looked at what the code does
+but the "handshake" agreement should be something like this and then we
+can start simplifying code...
+
+> This usage should be restricted to just the FMS matching, but unfortunately
+> needs to be kept for that check.
+>   arch/x86/kernel/cpu/bus_lock.c: if (boot_cpu_has(X86_FEATURE_HYPERVISOR))
+
+I have no idea why that was added - perhaps to avoid split-lock related
+#ACs on guests...
+
+/does more git archeology...
+
+Aha, I see it: 6650cdd9a8ccf
+
+Although this doesn't explicitly comment on the guest aspect...
+
+Anyway, thanks for the initial run-thru - I'll keep coming back to this
+as time provides and we can talk.
+
+Others reading are ofc more than welcome to do patches...
+
+;-)
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
