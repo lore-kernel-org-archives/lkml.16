@@ -1,194 +1,132 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 130BF26D4E5;
-	Wed, 23 Apr 2025 10:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C36326D4CF
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:55:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745405715; cv=none; b=KsCiI7iioDhFfg3PCmRoQmRlhqda5JEVBo1RXEE0KD7cziYHZYf8tjNgl4qcaPrCK1bTE/DER+3LgCQsUA2mGBfpjgUwZPqO4NAMUR3QpNoSgr1KZuF3A8tANQm1qA06ctpxpGbUxNfr5K5IR2Z8ozSBPut4RSaE2BXI8YC/buo=
+	t=1745405734; cv=none; b=aQ1jfzgOs8yN3ff5WUTeKlSwykqieTbXXdvWJzvkp2xRIduFZ4pablR5+9wHSy1c79FG+uHYMkcd4TH4YFBPiYSm/Aoer0xhHG1XV+3+EmS4oJgRQAySBVXB194u+kT0sDiHdVcA6jMDCOyd3wU10N6in6NTDiKSYcWWNrEL3xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745405715; c=relaxed/simple;
-	bh=wSWOEWuoGl4+ZAitPoBLcWPtEVzrYX0j9/qXxhOGsPc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=r37L+cb4Kw9mdZKLC75JmxK4EvtIt58NTL4nkryd+zXJSER8ptgWZEgDyTPslozXtjdxa42N0GsqklUzxHOiTl1PvceVPj6Y4WkWMpy6Ggc2EkwU+BzNn5lTZnxJN5skKurBq20wrJdPMdxDh37RY1yA9/lRyvyP0t1dCxX03MU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=FAUMcOeQ; arc=none smtp.client-ip=220.197.31.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1745405734; c=relaxed/simple;
+	bh=SKjFk3ffMxkD+dpYkzedNGkdOncbZzOJkyC9yRRgP4o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZSSjTuPBim1AXHttqxJ4YvAZ22RaDBukORW5hW3m/UY3ZUOJB+WeVUz5iL0sgDJBjn/vmyez88GNbo4tT8YMm+kziPika8PMACYrp4IE70jidKcGogm1iSavASKaDu8dXVuejuJf7SlTdK/q08MYOSrxaCd0YGWG9E9apeALUs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qVuQPSwL; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FAUMcOeQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=PPQOB
-	H7/gKlgthck1rxpJW2qtf0NUOJEEwS0jt+8xHI=; b=FAUMcOeQsm05XMmcZSIPL
-	IZ6p6zKprhAbCb8EwxHjXLOEeG3jbadkZxpBBnmIKONK7cNABzOxdra3J5WvNH+C
-	kbrcwpoB8idmUwiZX5P3G2eKYa7DsafJc62TZLLAWsmrU7a12hImyDfOUJhXLThp
-	e1QbJYEytQVM9wrrdU0Lko=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAnRTjYxghozJctBw--.58909S4;
-	Wed, 23 Apr 2025 18:54:20 +0800 (CST)
-From: Hans Zhang <18255117159@163.com>
-To: lpieralisi@kernel.org,
-	kw@linux.com,
-	bhelgaas@google.com,
-	heiko@sntech.de
-Cc: manivannan.sadhasivam@linaro.org,
-	robh@kernel.org,
-	jingoohan1@gmail.com,
-	shawn.lin@rock-chips.com,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	Hans Zhang <18255117159@163.com>
-Subject: [PATCH v2 2/3] PCI: dw-rockchip: Reorganize register and bitfield definitions
-Date: Wed, 23 Apr 2025 18:54:14 +0800
-Message-Id: <20250423105415.305556-3-18255117159@163.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250423105415.305556-1-18255117159@163.com>
-References: <20250423105415.305556-1-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qVuQPSwL"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-548409cd2a8so8093868e87.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:55:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745405730; x=1746010530; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=izklXv4BZeIiwFrKYnOhuYZikqixEWPdKCdY/Q0QGIw=;
+        b=qVuQPSwLwgkX3QNhRQpYTK/PvXRDY6DjmASI1/oqILesDlz7NAet+z8NQOp086efis
+         brb2hSV3iZv7EOlcj/44dPta3cLI25UruAo+iQ7H6hWBLZIwMnCV1ybfDEK+qzdql1Yu
+         YlzaQgZjDknt0+JaEYhQ2GpuEh+As01MJeV4p6GnBWMo6FXzwQFFgT/PcM4y3XEgnMDi
+         ifYOIH/D9faqE5V7q9b/lfivnZLiH21XxybncxeRe3WylaoWLqMpkX+IbCPNYt0te80L
+         QnU09eGtV268Jia/l6vQVU1IiFmIGtP2ByAmhyfYN6sQnZVo9qgx6AT/w9aKy7nvodk5
+         kPqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745405730; x=1746010530;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=izklXv4BZeIiwFrKYnOhuYZikqixEWPdKCdY/Q0QGIw=;
+        b=bVs90Bt38WWj3R/2RI1u5ipxNHHUdnRnMB1WoHQ2q+CWli1ixEW3Zp5IjE9KXLhlvN
+         SzLC3/XrPiDizXmC9KafgVCVAJcNqKSLW8j63RKKf2aL90moIAGG6v0Jeq4exq9vbYRS
+         SU7Vfa7U0e8AZ9f6Sgbx0HjCGq93+sNNz38LTYU1wcdJuui3xMmJcR0hxeu99zqcAW5I
+         HrbtfkfwalGV7Cw8Nw5+xAeRRyMmS7J5cIoTgn+T33uYbppPs6mV1WujcAgnKgAgRVf5
+         HwdAVm1AgOcZlanwdonyZsOLndUQjwqBmegIvhd3dAgVbDesNi5CyD/QbISkKEMIzoiH
+         z5Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVqPVHJ8wBO9TsViqQbYROzTjNsN8Io2DlcGin0K71c7d+9QPv8cUxg9a4Mnx+HbPmB+eU0fc+We3OnszU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoYXjjsshdQqClpKRD2MMbmaeZN4nY9YbBYFGYsp9tcBsj2lQj
+	YJU2G3Aryx1q/1wXStPrSTFTXIkdyT4+qJjlmP7N+wVzOE6Sxc0RdY+OkscXUPe9++3juCvZv1t
+	wVyOsgbN+6UDZkGpBW5KJxcCRnjhewi0mboUcWg==
+X-Gm-Gg: ASbGnctXAwp0AkekakN4yIIki87+u4B9zjyMRatCd9asqrA1l4pwoiHX9sbRmE3OF+n
+	24QoMiN1pPqB4RdKP2I5seF2MuDsVpWxUMuTNmLVW+yYBBBqkvq9Txa5KDagdFywmMq6c8Cjq7u
+	MiBiKSMXKSzKEWiF9v8BrF3g==
+X-Google-Smtp-Source: AGHT+IH+wCC5kClOVa4KPQf9TkYFzC5VIZsHRFGsDXyoHjryg0sqITG6UMuWyQQrZUY+WCXhYGb106JflCU2vKSyjt8=
+X-Received: by 2002:a05:6512:2315:b0:54a:cbfb:b62e with SMTP id
+ 2adb3069b0e04-54d6e657553mr6996509e87.35.1745405730442; Wed, 23 Apr 2025
+ 03:55:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wAnRTjYxghozJctBw--.58909S4
-X-Coremail-Antispam: 1Uf129KBjvJXoW3Ar48Cr4Duw1kAFy5Kr13twb_yoW7tF47p3
-	yDAFyakr45ta17u3s5CFZ8ZFWIqrnxKFWUGrsag3yUu3Z5A3y8Kw1UWF95Wry7Gr4kuFy3
-	uwn8C342gFWakrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRrR67UUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx84o2gIwxtvPAABs1
+References: <20250422162250.436169-1-uwu@icenowy.me> <20250422162250.436169-2-uwu@icenowy.me>
+ <CACRpkdbGwPyQgVL18iMvUTAvh4XTjo6g3mGT4e_b2aNAjr2obg@mail.gmail.com> <B4C8B369-E345-4133-A106-7C5E71513329@icenowy.me>
+In-Reply-To: <B4C8B369-E345-4133-A106-7C5E71513329@icenowy.me>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 23 Apr 2025 12:55:19 +0200
+X-Gm-Features: ATxdqUFXqKFRF-URPzhUFDAqkzV6vbnyL8yKyfMNTaK_xdGbJBDYNfkObBbEMA0
+Message-ID: <CACRpkdYgkDpC1iJ-KaZj2GZ3A3_V=3-KQef_nCRhMDrUK=FHXg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: jh7110-sys: add force inputs
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Register definitions were scattered with ambiguous names (e.g.,
-PCIE_RDLH_LINK_UP_CHGED in PCIE_CLIENT_INTR_STATUS_MISC) and lacked
-hierarchical grouping. Magic values for bit operations reduced code
-clarity.
+On Wed, Apr 23, 2025 at 11:41=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> wro=
+te:
+> =E4=BA=8E 2025=E5=B9=B44=E6=9C=8823=E6=97=A5 GMT+08:00 17:09:42=EF=BC=8CL=
+inus Walleij <linus.walleij@linaro.org> =E5=86=99=E9=81=93=EF=BC=9A
+> >Hi Icenowy,
+> >
+> >thanks for your patch!
+> >
+> >On Tue, Apr 22, 2025 at 6:23=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me> w=
+rote:
+> >
+> >> +  starfive,force-low-inputs:
+> >> +    description:
+> >> +      The list of input signals forced to be low inside the SoC itsel=
+f.
+> >> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> >
+> >I don't see why you need this hack.
+>
+> Unfortunately these properties are not for pins, but internal signals tha=
+t isn't
+> bound to external pins.
 
-Group registers and their associated bitfields logically. This improves
-maintainability and aligns the code with hardware documentation.
+We don't really care if pins are external or not, we are an operating syste=
+m
+not a philosophy department ;)
 
-Signed-off-by: Hans Zhang <18255117159@163.com>
----
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 71 ++++++++++++-------
- 1 file changed, 45 insertions(+), 26 deletions(-)
+You calculate the offset and shift like this and write into a base+offset:
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index fd5827bbfae3..6cf75160fb1c 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -34,30 +34,49 @@
- 
- #define to_rockchip_pcie(x) dev_get_drvdata((x)->dev)
- 
--#define PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
--#define PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
--#define PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
--#define PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
--#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x04
--#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
--#define PCIE_CLIENT_INTR_MASK_MISC	0x24
--#define PCIE_CLIENT_POWER		0x2c
--#define PCIE_CLIENT_MSG_GEN		0x34
--#define PME_READY_ENTER_L23		BIT(3)
--#define PME_TURN_OFF			(BIT(4) | BIT(20))
--#define PME_TO_ACK			(BIT(9) | BIT(25))
--#define PCIE_SMLH_LINKUP		BIT(16)
--#define PCIE_RDLH_LINKUP		BIT(17)
--#define PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
--#define PCIE_RDLH_LINK_UP_CHGED		BIT(1)
--#define PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
--#define PCIE_CLIENT_GENERAL_CONTROL	0x0
-+/* General Control Register */
-+#define PCIE_CLIENT_GENERAL_CON		0x0
-+#define  PCIE_CLIENT_RC_MODE		HIWORD_UPDATE_BIT(0x40)
-+#define  PCIE_CLIENT_EP_MODE		HIWORD_UPDATE(0xf0, 0x0)
-+#define  PCIE_CLIENT_ENABLE_LTSSM	HIWORD_UPDATE_BIT(0xc)
-+#define  PCIE_CLIENT_DISABLE_LTSSM	HIWORD_UPDATE(0x0c, 0x8)
++                       offset =3D 4 * (pin / 4);
++                       shift  =3D 8 * (pin % 4);
 +
-+/* Interrupt Status Register Related to Message Reception */
-+#define PCIE_CLIENT_INTR_STATUS_MSG_RX	0x4
-+
-+/* Interrupt Status Register Related to Legacy Interrupt */
- #define PCIE_CLIENT_INTR_STATUS_LEGACY	0x8
-+
-+/*  Interrupt Status Register Related to Miscellaneous Operation */
-+#define PCIE_CLIENT_INTR_STATUS_MISC	0x10
-+#define  PCIE_RDLH_LINK_UP_CHGED	BIT(1)
-+#define  PCIE_LINK_REQ_RST_NOT_INT	BIT(2)
-+
-+/* Interrupt Mask Register Related to Legacy Interrupt */
- #define PCIE_CLIENT_INTR_MASK_LEGACY	0x1c
-+
-+/* Interrupt Mask Register Related to Miscellaneous Operation */
-+#define PCIE_CLIENT_INTR_MASK_MISC	0x24
-+
-+/* Power Management Control Register */
-+#define PCIE_CLIENT_POWER_CON		0x2c
-+#define  PME_READY_ENTER_L23		BIT(3)
-+
-+/*  Message Generation Control Register */
-+#define PCIE_CLIENT_MSG_GEN_CON		0x34
-+#define  PME_TURN_OFF			HIWORD_UPDATE_BIT(BIT(4))
-+#define  PME_TO_ACK			HIWORD_UPDATE_BIT(BIT(9))
-+
-+/* Hot Reset Control Register */
- #define PCIE_CLIENT_HOT_RESET_CTRL	0x180
-+#define  PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
-+
-+/* LTSSM Status Register */
- #define PCIE_CLIENT_LTSSM_STATUS	0x300
--#define PCIE_LTSSM_ENABLE_ENHANCE	BIT(4)
--#define PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
-+#define  PCIE_SMLH_LINKUP		BIT(16)
-+#define  PCIE_RDLH_LINKUP		BIT(17)
-+#define  PCIE_LINKUP			(PCIE_SMLH_LINKUP | PCIE_RDLH_LINKUP)
-+#define  PCIE_LTSSM_STATUS_MASK		GENMASK(5, 0)
- 
- struct rockchip_pcie {
- 	struct dw_pcie pci;
-@@ -176,13 +195,13 @@ static u32 rockchip_pcie_get_pure_ltssm(struct dw_pcie *pci)
- static void rockchip_pcie_enable_ltssm(struct rockchip_pcie *rockchip)
- {
- 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_ENABLE_LTSSM,
--				 PCIE_CLIENT_GENERAL_CONTROL);
-+				 PCIE_CLIENT_GENERAL_CON);
- }
- 
- static void rockchip_pcie_disable_ltssm(struct rockchip_pcie *rockchip)
- {
- 	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_DISABLE_LTSSM,
--				 PCIE_CLIENT_GENERAL_CONTROL);
-+				 PCIE_CLIENT_GENERAL_CON);
- }
- 
- static int rockchip_pcie_link_up(struct dw_pcie *pci)
-@@ -274,8 +293,8 @@ static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
- 	u32 status;
- 
- 	/* 1. Broadcast PME_Turn_Off Message, bit 4 self-clear once done */
--	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN);
--	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN,
-+	rockchip_pcie_writel_apb(rockchip, PME_TURN_OFF, PCIE_CLIENT_MSG_GEN_CON);
-+	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_MSG_GEN_CON,
- 				 status, !(status & BIT(4)), PCIE_PME_TO_L2_TIMEOUT_US / 10,
- 				 PCIE_PME_TO_L2_TIMEOUT_US);
- 	if (ret) {
-@@ -294,7 +313,7 @@ static void rockchip_pcie_pme_turn_off(struct dw_pcie_rp *pp)
- 
- 	/* 3. Clear PME_TO_Ack and Wait for ready to enter L23 message */
- 	rockchip_pcie_writel_apb(rockchip, PME_TO_ACK, PCIE_CLIENT_INTR_STATUS_MSG_RX);
--	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER,
-+	ret = readl_poll_timeout(rockchip->apb_base + PCIE_CLIENT_POWER_CON,
- 				 status, status & PME_READY_ENTER_L23,
- 				 PCIE_PME_TO_L2_TIMEOUT_US / 10,
- 				 PCIE_PME_TO_L2_TIMEOUT_US);
-@@ -552,7 +571,7 @@ static void rockchip_pcie_ltssm_enable_control_mode(struct rockchip_pcie *rockch
- 	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
- 	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
- 
--	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CONTROL);
-+	rockchip_pcie_writel_apb(rockchip, mode, PCIE_CLIENT_GENERAL_CON);
- }
- 
- static void rockchip_pcie_unmask_dll_indicator(struct rockchip_pcie *rockchip)
--- 
-2.25.1
++                       val =3D readl_relaxed(sfp->base +
++                                           info->gpi_reg_base + offset);
 
+Compare to jh7110_pin_dbg_show():
+
+               unsigned int offset =3D 4 * (pin / 4);
+                unsigned int shift  =3D 8 * (pin % 4);
+                u32 dout =3D readl_relaxed(sfp->base +
+info->dout_reg_base + offset);
+                u32 doen =3D readl_relaxed(sfp->base +
+info->doen_reg_base + offset);
+
+So clearly the entities that you affect are in the same numberspace,
+and that is all we care about. They are not enumerated in any way
+orthogonal to any other pins AFAICT.
+
+Both pin control and GPIO handle chip-internal lines that are not
+routed outside sometimes, that's fine. Just deal with them as any other
+"pins".
+
+Yours,
+Linus Walleij
