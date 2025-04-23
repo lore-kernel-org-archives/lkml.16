@@ -1,121 +1,84 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60BA26D4CF
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:37:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D731E2701C0;
+	Wed, 23 Apr 2025 11:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745408271; cv=none; b=TClcNkwH7DX9YUpNAH4Kii4Yb/pf4yZiq5+4JvTMW8u/UlKKkUHmcVSukS6Mc0cH5keZycqhfci+uKFirLFUEwFHAHKhL/zv89O4pXhRQu7DDVezl7zTZ50DNwIyY4mpfqn+v28I9W6fbZ/RUxZqNix2zE/vYZAmIQE28AsjTgo=
+	t=1745408304; cv=none; b=qyx+FJw+UNWADfiHIM0ZrO99demqSNigjmcIo3foJp2X05bMrtbRV67QQddujoUHNuShXGhzDdDN/kRJOgCoNROz82aOn1hm2hnaNtBOsGb4mMOLyuRsM4EytQsaq2vbbQXJ1oz4zjSo/s6IKOiPCsuZfGmqObQXTGWUL0obJo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745408271; c=relaxed/simple;
-	bh=FQQQ/K5rW6vlX9BcB6bydAxidGDB2slgR5PpP4BqqSo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SGaM6vZw7h8LxKy4lVM+0K1Du7LsPFtjsk8LHQBOUuEHtcc6swicVQFQMGt+ZPcAoWF83qnnEKVN16wtsSRVlLBMjPufC1FA5rwElIczBfumCN2EzaUqmoCgN2pLU/jyLiX8fomfs3o9ziIKu+JYph37ZHmoJqIeAOPlQi/O/38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q9qYYqJB; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745408304; c=relaxed/simple;
+	bh=HPuxEiF5M5bY4EryFjaiCEM7BuwNSI/Nj8h4k9tL/rs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=YZKPQjSkAe6Bw1DydpuRgPcfQGHfucGGBLKZ2X4mS1XIj6VjhoUE2LetU7VXFC7pf4cJn81F1n1A/7DlJxiOAYbHrzgAC3efJ11iUf/9u7HWQ83Ojdm/Mp7mdZDeigNFmA/4pYo8uEXFaWUTCtXMvHC7bCcIgQFrktU3HVphNwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PuA/1w+C; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9qYYqJB"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so50650045e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:37:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745408268; x=1746013068; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mhExEbzgWbHRdVPDka5irWi7FH/fa2wSUUhM4mfor5I=;
-        b=Q9qYYqJB46Y3xtT8+KddP5vuXsJms74pxWkiCHc3ylvVECG9k2kt24vlEr6Rs4jQYH
-         7LZPpbfSpHazWPc5jzbrldwAnyORohmEEeh5Dsh8wMtv0bvR5AS74+ZL9Oecjsru0YeA
-         0HfJmywstO5ijnASyHHvmpIDQXXVorlQt4gmvct76HmhVr7AvIZaDNqPLz4Qbt6l2zJN
-         1NHhF4qwf1doH/xfiLBUWk1Te8AKAYGVq1ixgltKiF5/oJESwE9AY3VQDAtaXPKinSas
-         1gKJ54GqxsELHEFnpfP7i5sBLumxWYFccV3TZR/lNOb0pesNBetJC3hzBf9M9nqPFtX/
-         Cs4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745408268; x=1746013068;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mhExEbzgWbHRdVPDka5irWi7FH/fa2wSUUhM4mfor5I=;
-        b=tOZ2ZvHzBpbWhRxm8PL9fMFAnQB9T6DYIZ2W8L7YDC29Q+Atz7GzMdw4hVY4aq4l8s
-         ufcMpbvjdhyy6BWApvUHETsmJCVpV/Xgdyp72wb6UbrCZI3Kg6NSSwfggU7rG4dWNiWN
-         /L46EH0sNTrl0NFYU9chJDjxb8E4cecaz22mgveES6EhpCr6PepDcWWnjf2P/qUoVUcN
-         h5CB5VZPDKTMDa0cZojJsXpp82KRxjL2Ox6DUH7ndUsubrx8buJ6pwoMBUbLWRYiJo22
-         ShFApZz/P5g2fHGwYFUQeNEsAJUhOmsHCrbB+ocBQf5hs2Q5BPQS2RywxtLn7Y7cFIqe
-         CP+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXc4kdL+c6azb4k/POp+yXTtwY/NABGuJRnyzrtcgqvnQE9Cd1kep5v7G5aSNI8H7Ass1dbHiOPHrAQgVU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsQTO5wFCxgSN+Vd9Ol0zAdE5zCDg39exyzp5i2MxbKykR5OAA
-	9FsMp/j36sdEoKfFdJtjUtOYYyWm7nf5F8Vm/DDx/1G8PY64a7lWwDYA/Q==
-X-Gm-Gg: ASbGnctRoS8P97viECTpPJU/yS0rC2FyLoGekqauuDFQ1xWFu9Um7kyJ3tUwEo45IDX
-	gFQoZ54Sp9jZXWSHi3nUbAkKhnCrBywu+2pbg5kXorZFzqF/cIWXgYP0HiuhNV+HM2bX/GJY7GD
-	fjujMBe62zXgWxTjjtBVcElz38STyjR1Dxg4XMQJ6XHY8m/F3BsaihzIVyiepDgEWCiy1hzfMzj
-	eDvL8D4LZr7qEAW0U/zpI/tvj/24mot8dh80ThOI4XdC/+IRz6nTuvVoNh5jmQMEgduF/bUOzMN
-	ujgoBYXsLgNTg3nA23ovHJoqQ3bmdIVB399dO1TiJZBBvUC5XRcoGT6xIsB/aPUhS9eBF1jzOjh
-	CdCx46YndNK0jKrAR59x0XHjesuqqmUW0
-X-Google-Smtp-Source: AGHT+IGYez2ECW8B1kEuSylophgfv1+Bkfs2ZDLT9gQj6bh2P/nNq51jUvWpsxpfSvT8b90/rY8rxg==
-X-Received: by 2002:a05:600c:cc8:b0:43d:54a:221c with SMTP id 5b1f17b1804b1-44074f18848mr156108385e9.18.1745408267809;
-        Wed, 23 Apr 2025 04:37:47 -0700 (PDT)
-Received: from ?IPV6:2a01:4b00:bf28:2e00:ff96:2dac:a39:3e10? ([2a01:4b00:bf28:2e00:ff96:2dac:a39:3e10])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d3ed88sm22899445e9.35.2025.04.23.04.37.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 04:37:47 -0700 (PDT)
-Message-ID: <08e3ec4c-4401-403e-9d81-5ee0abebba5c@gmail.com>
-Date: Wed, 23 Apr 2025 12:37:46 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PuA/1w+C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745408303; x=1776944303;
+  h=from:to:cc:in-reply-to:references:subject:message-id:
+   date:mime-version:content-transfer-encoding;
+  bh=HPuxEiF5M5bY4EryFjaiCEM7BuwNSI/Nj8h4k9tL/rs=;
+  b=PuA/1w+CuEBKG4bJ6arNtEB2V8iKPbW7CgpapFN79Q4eE0uPJWrWSRPa
+   3m+RtaaTVqSZduyixEt9SmuiwjJ4sy6zZxznPgemwM9dbaSlBKZ8HeXo8
+   MK9ZfMcPBd4+vnDVPoXMBLWKHhsDw7gDH44kgfSC9Mh1HvpwbP5/8288E
+   DFP0win6Z4T3wuo5giMBK1vHL/QQ+btJaIGXuiCjGyt47XcHz/AVXxqFk
+   cM/ty64a9ub/ahivZP8gtPuqeirPEa08MoZglVKqhE/jCLrF7J1F7fbzw
+   WRSobZHHnt3237tr5hlXqpE7b1xOE10bNWtHrJPjlmO+C8KgzGRlMk8yY
+   A==;
+X-CSE-ConnectionGUID: azx2rx/YS3+cKdvrKt6x6Q==
+X-CSE-MsgGUID: 12aFDKAbRYCRe//Yibqqww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57652669"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="57652669"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 04:38:21 -0700
+X-CSE-ConnectionGUID: tcJUEN4YSGir2J3YInvAeA==
+X-CSE-MsgGUID: a/p46cv2RqmVnSziGNfdjA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="132212762"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.36])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 04:38:19 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: hdegoede@redhat.com, platform-driver-x86@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Saranya Gopal <saranya.gopal@intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20250421041332.830136-1-saranya.gopal@intel.com>
+References: <20250421041332.830136-1-saranya.gopal@intel.com>
+Subject: Re: [PATCH] platform/x86/intel: hid: Add Pantherlake support
+Message-Id: <174540829413.2601.11077448810283609556.b4-ty@linux.intel.com>
+Date: Wed, 23 Apr 2025 14:38:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] maccess: fix strncpy_from_user_nofault empty string
- handling
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, rostedt@goodmis.org, mhiramat@kernel.org,
- andrii@kernel.org, kernel-team@meta.com, linux-kernel@vger.kernel.org,
- Mykyta Yatsenko <yatsenko@meta.com>, Kees Cook <keescook@chromium.org>
-References: <20250422131449.57177-1-mykyta.yatsenko5@gmail.com>
- <20250422172011.feb243d2f7478c0e7109b74c@linux-foundation.org>
-Content-Language: en-US
-From: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-In-Reply-To: <20250422172011.feb243d2f7478c0e7109b74c@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On 4/23/25 01:20, Andrew Morton wrote:
-> On Tue, 22 Apr 2025 14:14:49 +0100 Mykyta Yatsenko <mykyta.yatsenko5@gmail.com> wrote:
->
->> From: Mykyta Yatsenko <yatsenko@meta.com>
->>
->> strncpy_from_user_nofault should return the length of the copied string
->> including the trailing NUL, but if the argument unsafe_addr points to
->> an empty string ({'\0'}), the return value is 0.
->>
->> This happens as strncpy_from_user copies terminal symbol into dst
->> and returns 0 (as expected), but strncpy_from_user_nofault does not
->> modify ret as it is not equal to count and not greater than 0, so 0 is
->> returned, which contradicts the contract.
->>
->> ...
->>
-> Thanks.
->
-> Does this fix any known runtime issue?  If so, please fully describe this?
-Not that I'm aware of. The issue could be found when trying to copy empty
-user space string in BPF program (and relying on return value).There are 
-some usage of
-`strncpy_from_user_nofault` in tracing subsystem, but I'm not sure how to
-hit those code paths.
->
->> --- a/mm/maccess.c
->> +++ b/mm/maccess.c
->> @@ -196,7 +196,7 @@ long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
->>   	if (ret >= count) {
->>   		ret = count;
->>   		dst[ret - 1] = '\0';
->> -	} else if (ret > 0) {
->> +	} else if (ret >= 0) {
->>   		ret++;
->>   	}
->>   
+On Mon, 21 Apr 2025 09:43:32 +0530, Saranya Gopal wrote:
 
+> Add Pantherlake ACPI device ID to the Intel HID driver.
+> While there, clean up the device ID table to remove the ", 0" parts.
+> 
+> 
+
+
+Thank you for your contribution, it has been applied to my local
+review-ilpo-fixes branch. Note it will show up in the public
+platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
+local branch there, which might take a while.
+
+The list of commits applied:
+[1/1] platform/x86/intel: hid: Add Pantherlake support
+      commit: 12df9ec3e1955aed6a0c839f2375cd8e5d5150cf
+
+--
+ i.
 
