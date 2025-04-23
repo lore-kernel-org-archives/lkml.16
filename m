@@ -1,300 +1,271 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11020134.outbound.protection.outlook.com [52.101.46.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41A71A315C
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745433545; cv=none; b=GgGlXSZSlCdG5RTqkHNYRzLOL7jQ0+QGmVyg5JhsojX7JqipUZ+wjU1Wg9md6Pt6tcvZ50DPQgHdnDp7q+K666th7y5+s/0/jn8iUxr6p+tY6Jn1mBmFLgmjWxjfhVcvsIhPSOIx+Z0Pm78eEPVDzsOwGbQQp924Ij7IqbFFy3g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745433545; c=relaxed/simple;
-	bh=M//ZUs/ibHUHY7cyDKQGx7w4QJgtYY8elpIk58ZopPk=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=KkpCuXOUbIj1V2jfM9GHbNYNMjH+nax2yFEKnM89AolJ9C4c1QNwWM9Al38DMsi/J9VJlIbRh5dIOyRYgWSKL3KugcdlNqlfrB7FcDEabBHYwwNb0tp3hJR1Ve4XjB5vxytqTzEeTXlAY5ajhlDwWqsKO2Tp9aDLfTBRLlamKac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d90a7e86f7so4092555ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:39:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745433543; x=1746038343;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v6RC2wJYLSD3Erp7rCDbjabfU1XRJGenYQKl673HI6Y=;
-        b=nPUTwVB3wZ9rIzhAnVfxW59eegvQVzyZcs2DMlC3AhSl3KTyxvL3jWuuAfLdyi9H3h
-         Y1DGVInuchW8p+cFpqwG7XXG8mkod5Kvz6jBbm3yzKRsaxN16bY9hxA31Wq8h4GQHCbT
-         2XikcY17nnAMInkMPh8YPnN6eoA+lMfJxgjN1N6V96SUt9GjzymvUDRyGxmt+MexYpch
-         oFjKEDAsgAlhEkdafKw1iMGJKs4/qwif2BZQAnlwPVG97IiXalU0Tsef+2tdgb4e+sMo
-         izy1aRqxaCyOILZFVFicYSpDsRKMzS5tagNyKuCv5huBHXnxJJvBnZIa93AuHm5HBn5p
-         mGog==
-X-Forwarded-Encrypted: i=1; AJvYcCUH9t5/XxOSY9gW4eLbXXXd8Sjj82Y8qvnPKy1vw06VKCwayyd018VcHxtGLAxvD1M4m2BsuS9AxR1djVs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDYVEYXY3DlEVoSIsHfcpy93fKUj+GPWHJs4uz4FSDf7/i8g3t
-	V4mIgGy5ySun+IF4jZdQOpMG0tymibeyAjIvZduejUhJ6mzK0AHGVEvC2hEtzjiPA+PP8ruCBO1
-	FXq1rOOq8lQDonQrW2cznYLlpb8o+7cZWWlre1xf0zebQQHw9bfd+Suk=
-X-Google-Smtp-Source: AGHT+IEecm0zz0yio5jlwATgg8/y7rndH+LRnv1+hh0C7bCpbq+jUHEbepQPCb5roOUApICjH4ZLri3fCdor4oxmdmcimPiC2bfR
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35B428CF61;
+	Wed, 23 Apr 2025 18:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.134
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745433592; cv=fail; b=XgC0sAMhgKBs4IQQYThe1c3Uv/8twGCst07EL/2txeE6nA/fNv7nmFdSssWGjKpARpe3snk1Zll2TsxVGTBO0pw7w1jmzX1zf1+NkUmwXTfhrpVFy8sJePM+l0VvYRvQJO+m3F09dWXIk4385lsyIwzTn0ca3DNtnYV8XwSg2CU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745433592; c=relaxed/simple;
+	bh=W+nMUIybesYaN2kONgACqpb6c2c/3sqyOEdYsl8xt4s=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=uBBEfO7pTcyqnOhbZ1jc7j+VzonbggWI5N2AaYLR0VP/SF9qcRn+Z+NpqB28toK94sxZ4qEhuUGnie0efdACHCQLJcp7yWFEFgolcGlQ9v2yr7E14Ofx07Dx8zRjy58Pg/DihbQ+bqyd8LlCJ1CaDv87WKAKlSgl7jj36DEr74w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com; spf=pass smtp.mailfrom=microsoft.com; dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b=GAuvZlHY; arc=fail smtp.client-ip=52.101.46.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="GAuvZlHY"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HYyHwSlek5BGq5DEYfax8nk+v7b7HEPE2Vai40IfH6Px3AoExBdrretPddUN2ykpxYZGsjzKP/3S5xRhXhy9xsCrcpU2hHeC8gk6j5+4bKYl3bm3JP6QEnps3Qy97j2QyG254OI3eeVIJAZ2T4oLRCu2Ua0DwwkSoQZiSZYjJU1xqsyPah3z9gYt+ewacvoegzgvq0wXkW1K6mppTqjAuIFE90wxQ/BsFhpppVv3RYDZPpN0DRsecZ5xIiPbJqu/PBv9H0+ASea1TaNTiaWFu7Dn3lo/EXhbjDZk/2Z1XGAAZJJ9yDpufxcNF056jLBeenkF3v037NR2KqP1U5T68A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dWPyDTwjD0XihZEJvRk833d2xM9zfQHudJhZz+xsG6E=;
+ b=yHlIdWj8eJh+PMZ4al71vDAvLSxDt7mD6lAfZRjTlupSzU3SxZSm0rrB1UCg8LWEogkCIWocgIlueSEllCf9AHqUmduuVdQV5bjde0GVIeOLA9KrCHqCf8Ue6DsN4szmo6lsHz9sQgub6hn0PScB5fk/OO5gQdXpMTtsuBdH/kU/wfvlm1Vj9eA8qx0IdR5uIPKQs7p7JHSHjGqzsYMdKPTwZE/v5SaFqU8163xiEAHmYpox09JdjQ7HO5ux3qMD/nQIu2qmHN01jb125T+z7vI15verCFwnceqvKVijtZh0ye5TvUDsNh1X89EGVgP+Jq69OY9ffpc+mZgLfFKdXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dWPyDTwjD0XihZEJvRk833d2xM9zfQHudJhZz+xsG6E=;
+ b=GAuvZlHYjRVSug/rloPoeC0utVhns/LuNOF5sNqQdWrfYdThmPtEVxbVJ7Ar0Q1q/WxAM6i7mgZwKkgSH+7dMgkSn8/spVj6X19Attfjyz49a/n0c8pYsAIAw9LgkU6x1oVw+OIwHFRsCHJWZVqGpspiaraE1+aI0qqP6x3gv4k=
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com (2603:10b6:806:412::20)
+ by SA3PR21MB3865.namprd21.prod.outlook.com (2603:10b6:806:2fa::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.14; Wed, 23 Apr
+ 2025 18:39:44 +0000
+Received: from SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff]) by SA6PR21MB4231.namprd21.prod.outlook.com
+ ([fe80::5c62:d7c6:4531:3aff%6]) with mapi id 15.20.8678.021; Wed, 23 Apr 2025
+ 18:39:44 +0000
+From: Long Li <longli@microsoft.com>
+To: Michael Kelley <mhklinux@outlook.com>, "longli@linuxonhyperv.com"
+	<longli@linuxonhyperv.com>, KY Srinivasan <kys@microsoft.com>, Haiyang Zhang
+	<haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui
+	<decui@microsoft.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 1/2] Drivers: hv: Allocate interrupt and monitor pages
+ aligned to system page boundary
+Thread-Topic: [PATCH 1/2] Drivers: hv: Allocate interrupt and monitor pages
+ aligned to system page boundary
+Thread-Index: AQHbslAN1SqaOO3nYkicekgCdOGZeLOxmB3Q
+Date: Wed, 23 Apr 2025 18:39:44 +0000
+Message-ID:
+ <SA6PR21MB4231F82E3042311244A8A101CEBA2@SA6PR21MB4231.namprd21.prod.outlook.com>
+References: <1744936997-7844-1-git-send-email-longli@linuxonhyperv.com>
+ <1744936997-7844-2-git-send-email-longli@linuxonhyperv.com>
+ <BN7PR02MB414817742F4B15AB928450E6D4B92@BN7PR02MB4148.namprd02.prod.outlook.com>
+In-Reply-To:
+ <BN7PR02MB414817742F4B15AB928450E6D4B92@BN7PR02MB4148.namprd02.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2bfdd413-4300-4f6d-a850-8a697434bd94;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2025-04-23T18:34:38Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA6PR21MB4231:EE_|SA3PR21MB3865:EE_
+x-ms-office365-filtering-correlation-id: ef2a88b8-aa7a-4e37-550e-08dd82963752
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?LUYtOp8DG9lSc/iqYVwuVyqKnJSJCghAiRygQZOCbiM3srqc7/u59cZXs5mc?=
+ =?us-ascii?Q?e9VMKmZ9strx6TwUZYKg1v7uyKt/GdKZHGbciXJ3RAzJBe+aICf/AwT51ucH?=
+ =?us-ascii?Q?RJv8X7L1aK/X9QvGYcPCAKlit3S0Ic6oKZ68yC7wNUZ0GQpfY3bZtNziU2aJ?=
+ =?us-ascii?Q?xGB6IefEjSnaEGi8WGAQh7CkEYqI+iXbOG26QOMnBJf7zHHTsZM8mExvCr/r?=
+ =?us-ascii?Q?kYBKj5O81vL+tC0uLBopxdckEPjs2sZGy+Mt5ZO/Z9kAkwM3q80Df8kJSz4z?=
+ =?us-ascii?Q?JuNCMEXwnGS8pdA4vD4e3TV0ZRvZLaVho/Iv0DXIqxnFLFzxLxkCV9ipm17y?=
+ =?us-ascii?Q?fu8s8UAy+9DHHGjtJ8Y07/lDgJFKY+PDztHJcuTO+Qx4srSpunw0Z0mCxwMS?=
+ =?us-ascii?Q?ZYW3GnYwOj2G4So5kLpan/zlSQew/L6WgzZ7HhM4KtUQTbrYJXQFczrpB6Yw?=
+ =?us-ascii?Q?RbYojY60S2Bel/rMCIm8nai2MALIozhVA+CndSbV+8Kftjh0H3VB+loDcLGk?=
+ =?us-ascii?Q?VWHteielOhtoGZEbgunweSL560/w7+SehFhIT2GtHb6qUa6vu7pmFKvr9BBJ?=
+ =?us-ascii?Q?8nNbHCzQuKf+LPQj5htTk/scRVFWvvcgHozk3/xIIRAU85a5Uh7mbthvmamK?=
+ =?us-ascii?Q?rlX9+KII09nw+MDDC9+5Budar+uw68cZ1VoYzLnfG8tB6kxmSMlFqrblFZLs?=
+ =?us-ascii?Q?H/lTToGRNqdVXif25apbWKrtPvso/lmhHQHcznogUEYpc123OZmWCNk8PnZ/?=
+ =?us-ascii?Q?CsCdWAOLGwBwDQsearNXdzFrAspu3/PssoE1DY183rvP+rruHloj5/6vVPpL?=
+ =?us-ascii?Q?5xPJ/xYEW10m7/V42ZOurmDX93ixdSuUujCd7ets2F+TswCiqI6ZHlD9Aeon?=
+ =?us-ascii?Q?ZlhvKafTbDHGHnFgJX8cEwbBI34qC8rivmXCGAvaYIGFTNe1o56ycqvDfMwG?=
+ =?us-ascii?Q?uKZ+E2wgSQOYHGJY79F9sVDxZhWISPR6q/C6AvQDybcJY/fdTObJOrsqYKw7?=
+ =?us-ascii?Q?nYQSfQWd040WagagGH5ixqI8CXepG8lWWz2TTD0EBSGA7gPKd0H1ezI48oWL?=
+ =?us-ascii?Q?2h90VLdZfd/T/8MRcZnRc/HFmCs7YYEOnriJMgPQugWYfwt9wV9UOqnW7/GV?=
+ =?us-ascii?Q?D2c2DDjwXydMHx8PUCo9+aa1FzdC8xlvVv615pJ6QyQakdQHXqTWgogrJcfI?=
+ =?us-ascii?Q?OwX50Zg/u1C3LUPswOMo0pBJTBA6HpcO+5Ae/qdLwUpPJ/3XVPi9ydegQMOt?=
+ =?us-ascii?Q?AkYEV4x0eGRz9JYCDGwrsjisVB4cST37ZznHBd0jMQZcudpEeBFsnx9sL0tt?=
+ =?us-ascii?Q?q24CasHubBAIQYZqp9lFMRMOkIeDDd3+N51bOrTDpufN2qUjYr5HpM4kkkcs?=
+ =?us-ascii?Q?WiZGiTdtuV5d1OohVhDOl7Z6adnA19jH6vLVXtlfI527pzc++WA9D8+8P7MK?=
+ =?us-ascii?Q?Fll6Bi1LV8PCF0gcwDBti64W1pt/7DIAie2rHRU38ooHzrRprcU+xReJ9mpO?=
+ =?us-ascii?Q?D6YHX2asgROFjx4=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA6PR21MB4231.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?fibusq1uaow+otUQ+ZwDIGR4wKfU9icKX2FakAch2oQCwT+X0yKFyvL21qpu?=
+ =?us-ascii?Q?8WMZDpq1HoIRv0cnbs1c0loqCbx9NCliBMk3WN1OgsAh6oA/HLJXpA5gPIwS?=
+ =?us-ascii?Q?jx1kki2G8wwHWkA1FI5sMmJlb0J8UI0t3qwj3EgMyVj7TsCDMjVJDK6wlmPs?=
+ =?us-ascii?Q?8PCPg9avY92je8o8eVautBOcaWSuG/MUws7MPn4DOXdcdMoRSxTkbsTZL87G?=
+ =?us-ascii?Q?im6NIdLuU2h75lVTCfc1Zms3yksmksRU42l5Isb1gSLODys9mXmpbht+QhMT?=
+ =?us-ascii?Q?Q7gUjBjL0boX1wf+YZeB6ZDfBUIEdh0RqMvuaflnt5QqpFVzwvynLcuRZpS+?=
+ =?us-ascii?Q?YoUQ9mWwEkOOSRXSb74spmkgGvML4Yzaqc/yHDkJrRFrKopbsX30j4RsZF2h?=
+ =?us-ascii?Q?3/prVvf2U5421F36I7dCxWcRE6I+05K3KSDJWXNBk7ysQROBJPd3TE7mtHXY?=
+ =?us-ascii?Q?yJtEmW5ip0uV/IkFKVig8Tsl60dOn1duZ89AAXGEHOoUunnfzZPWFUy4KQ7+?=
+ =?us-ascii?Q?sWqSKZlL1cetttEvvGp59b6XtJdxG8fUAs2S4tKOQQ8eGWoAJS/IykH2Rmwv?=
+ =?us-ascii?Q?W2Zs+dmXAEWkQzv1p3uyuyW/fwDaLVVYk2nWzBZe73nqGTQZVr1eF4Ucd+Kq?=
+ =?us-ascii?Q?mP5wGisSsrnPkWyI2snPhLAdi0xeBasfn8xLSOTvm4KWRolBK4YFtfprrmmT?=
+ =?us-ascii?Q?XGC0ZnUZLWsIhocsmRBqMz+ecsmZR7Ekq3/XE0lLpqQfMnzSCurHjfDRnULV?=
+ =?us-ascii?Q?JZ/eoD193PPAspQXoTcQEizh5BPe/DB/GdWmbv3YSqO07b8AKcG5E4CuAJOB?=
+ =?us-ascii?Q?db4yZHfMlF2skJbAqh/gqg0cvCcj2PElZzpTRgG8H3RgnXLypndLc1B97cn+?=
+ =?us-ascii?Q?nAlsL3E7bGZmgN/wSEUHmqOajHTIiu/fmkviVAryxp/9rVDHTNtbMFr/E1ko?=
+ =?us-ascii?Q?qgyDd3R59/f87cl05E5QHlSjuuRdJ/JhKkC5STpUXySZMmDifzmVjjFqKRE2?=
+ =?us-ascii?Q?iCIn1xJ/l2Uo9WAmuqJGe7O0PpygFVxf69iPAC+sppDq7CM/OiUqPgaCvYLr?=
+ =?us-ascii?Q?EjLt+XzVOC/7q482UljwnwfgKnOh8Lx1hWweLDvTi4SZM5qt97c8bzXSrt8S?=
+ =?us-ascii?Q?J2uf88C80yeDLa2+l5VT08gpx1VsJiDYjQcIhrkXo5lASSqTPOqWtmiRzae4?=
+ =?us-ascii?Q?flqeOlbHsZn+lq76d7AWq2SnYs+slIyVPA53MuUOiEQIEi8OQ0Vcpu+kMAaE?=
+ =?us-ascii?Q?SGH3G0q9XPB2tfj/0vTPl1QoabQCSVLTxII3j+56Gw0wv2EprICvbrTNO1hO?=
+ =?us-ascii?Q?aFMbfgUByVxlGBDdirQJqrYkNZCKKiMhP7SCyRgnhl4PMa2QL+cEZJCtc/7j?=
+ =?us-ascii?Q?sJJz0t+688Q32CdoX9ieMLt+F74oOaewZVx5RA47DX22NvGXEIk5W+lnzvyV?=
+ =?us-ascii?Q?Qm9MGqd35qlk0UPus3WgpouYrEp7riNZ+AAWhmhQVbhxAGjMvoC/QmF0DL7Z?=
+ =?us-ascii?Q?JPj628DElggY1poEwE9zVhEzixGPMVj3oCh4VWbhZ2SQTevVh1cOeN4FVMRr?=
+ =?us-ascii?Q?EKPZv/LMusnCxa8gtnrqqIMfZ91bHYw+oU1KXxmV?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2707:b0:3d8:1cba:1854 with SMTP id
- e9e14a558f8ab-3d88ed6e8efmr199805655ab.1.1745433542837; Wed, 23 Apr 2025
- 11:39:02 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:39:02 -0700
-In-Reply-To: <20250423110503.4262-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <680933c6.050a0220.2c0118.0abd.GAE@google.com>
-Subject: Re: [syzbot] [fs?] INFO: task hung in vfs_rename (2)
-From: syzbot <syzbot+321477fad98ea6dd35b7@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA6PR21MB4231.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef2a88b8-aa7a-4e37-550e-08dd82963752
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2025 18:39:44.1126
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: LvFE8yKq34WW48bVzaDeoAsqlTSkj1YTsKkFbfwtYGAHX2v3Ig0gv4QRqdXzjubabvAzLAwVnne6jBvVQVHiNw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR21MB3865
 
-Hello,
+> Subject: [EXTERNAL] RE: [PATCH 1/2] Drivers: hv: Allocate interrupt and m=
+onitor
+> pages aligned to system page boundary
+>=20
+> From: longli@linuxonhyperv.com <longli@linuxonhyperv.com> Sent: Thursday,
+> April 17, 2025 5:43 PM
+> >
+> > There are use cases that interrupt and monitor pages are mapped to
+> > user-mode through UIO, they need to be system page aligned. Some
+> > Hyper-V allocation APIs introduced earlier broke those requirements.
+> >
+> > Fix those APIs by always allocating Hyper-V page at system page boundar=
+ies.
+>=20
+> I'd suggest doing away with the hv_alloc/free_*() functions entirely sinc=
+e they are
+> now reduced to just being a wrapper around __get_free_pages(), which does=
+n't
+> add any value. Once all the arm64 support and CoCo VM code settled out, i=
+t
+> turned out that these functions to allocate Hyper-V size pages had dwindl=
+ing
+> usage.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-INFO: task hung in vfs_rename
+There is a BUILD_BUG_ON(PAGE_SIZE < HV_HYP_PAGE_SIZE) in those functions, b=
+ut it probably doesn't do anything.
 
-INFO: task syz.0.16:6726 blocked for more than 143 seconds.
-      Not tainted 6.15.0-rc3-syzkaller-00032-ga79be02bba5c-dirty #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz.0.16        state:D stack:24200 pid:6726  tgid:6725  ppid:6628   task_flags:0x400140 flags:0x00004004
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x1b33/0x51f0 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x163/0x360 kernel/sched/core.c:6860
- schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6917
- rwsem_down_write_slowpath+0xedd/0x1420 kernel/locking/rwsem.c:1176
- __down_write_common kernel/locking/rwsem.c:1304 [inline]
- __down_write kernel/locking/rwsem.c:1313 [inline]
- down_write+0x1da/0x220 kernel/locking/rwsem.c:1578
- inode_lock include/linux/fs.h:867 [inline]
- vfs_rename+0x6ba/0xf10 fs/namei.c:5088
- do_renameat2+0xdbc/0x1410 fs/namei.c:5272
- __do_sys_renameat2 fs/namei.c:5306 [inline]
- __se_sys_renameat2 fs/namei.c:5303 [inline]
- __x64_sys_renameat2+0xce/0xe0 fs/namei.c:5303
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f2a8618e169
-RSP: 002b:00007f2a86fb8038 EFLAGS: 00000246 ORIG_RAX: 000000000000013c
-RAX: ffffffffffffffda RBX: 00007f2a863b5fa0 RCX: 00007f2a8618e169
-RDX: 0000000000000004 RSI: 0000200000000240 RDI: 0000000000000004
-RBP: 00007f2a86210a68 R08: 0000000000000000 R09: 0000000000000000
-R10: 00002000000001c0 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f2a863b5fa0 R15: 00007ffe0a55d7f8
- </TASK>
+If there is no objection, I can remove these functions.
 
-Showing all locks held in the system:
-1 lock held by khungtaskd/31:
- #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:331 [inline]
- #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:841 [inline]
- #0: ffffffff8ed3df20 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x30/0x180 kernel/locking/lockdep.c:6764
-2 locks held by klogd/5191:
- #0: ffff8880b8739998 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x2a/0x140 kernel/sched/core.c:605
- #1: ffffffff8ee55700 (mmu_notifier_invalidate_range_start){+.+.}-{0:0}, at: local_lock_acquire include/linux/local_lock_internal.h:38 [inline]
- #1: ffffffff8ee55700 (mmu_notifier_invalidate_range_start){+.+.}-{0:0}, at: put_cpu_partial+0x72/0x250 mm/slub.c:3246
-2 locks held by getty/5581:
- #0: ffff888035d420a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:243
- #1: ffffc9000332e2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0x5bb/0x1700 drivers/tty/n_tty.c:2222
-6 locks held by syz.0.16/6726:
- #0: ffff88802578e420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff88802578e730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff88802578e730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff888074f88910 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff888074f88910 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff888074ed15f0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff888074ed15f0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff888074ed02a0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff888074ed02a0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff888074ed15f0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff888074ed15f0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-6 locks held by syz.1.17/6779:
- #0: ffff88807cc5e420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff88807cc5e730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff88807cc5e730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff888074f895f0 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff888074f895f0 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff888074f8afb0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff888074f8afb0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff888074f89c60 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff888074f89c60 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff888074f8afb0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff888074f8afb0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-6 locks held by syz.2.18/6796:
- #0: ffff88802fa2e420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff88802fa2e730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff88802fa2e730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff888074f8b620 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff888074f8b620 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff888074f8cfe0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff888074f8cfe0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff888074f8bc90 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff888074f8bc90 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff888074f8cfe0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff888074f8cfe0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-6 locks held by syz.3.19/6813:
- #0: ffff888012f68420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff888012f68730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff888012f68730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff888074ed2940 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff888074ed2940 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff888074ed4300 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff888074ed4300 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff888074ed2fb0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff888074ed2fb0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff888074ed4300 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff888074ed4300 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-6 locks held by syz.4.20/6837:
- #0: ffff88807df2c420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff88807df2c730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff88807df2c730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff888074ed4970 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff888074ed4970 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff888074f8f010 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff888074f8f010 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff888074f8dcc0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff888074f8dcc0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff888074f8f010 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff888074f8f010 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-6 locks held by syz.5.21/6860:
- #0: ffff88805d98a420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff88805d98a730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff88805d98a730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff888074ed5650 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff888074ed5650 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff88805b0b0f80 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff88805b0b0f80 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff888074f8f680 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff888074f8f680 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff88805b0b0f80 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff88805b0b0f80 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-6 locks held by syz.6.22/6883:
- #0: 
-ffff8880133c0420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff8880133c0730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff8880133c0730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff888074ed6330 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff888074ed6330 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff88805b0682a0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff88805b0682a0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff888074ed69a0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff888074ed69a0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff88805b0682a0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff88805b0682a0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-6 locks held by syz.7.23/6912:
- #0: ffff888079842420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff888079842730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff888079842730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff88805b0b1c60 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff88805b0b1c60 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff88805b0695f0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff88805b0695f0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff88805b0b22d0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff88805b0b22d0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff88805b0695f0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff88805b0695f0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-6 locks held by syz.8.24/6938:
- #0: ffff88814d47a420 (sb_writers#12){.+.+}-{0:0}, at: mnt_want_write+0x3f/0x90 fs/namespace.c:556
- #1: ffff88814d47a730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: lock_rename fs/namei.c:3269 [inline]
- #1: ffff88814d47a730 (&type->s_vfs_rename_key){+.+.}-{4:4}, at: do_renameat2+0x5f6/0x1410 fs/namei.c:5218
- #2: ffff88805b069c60 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #2: ffff88805b069c60 (&sb->s_type->i_mutex_key#19/1){+.+.}-{4:4}, at: lock_two_directories+0x1a8/0x220 fs/namei.c:3245
- #3: ffff88805b06afb0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #3: ffff88805b06afb0 (&sb->s_type->i_mutex_key#19/5){+.+.}-{4:4}, at: lock_two_directories+0x1d1/0x220 fs/namei.c:3246
- #4: ffff88805b0b2fb0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: inode_lock_nested include/linux/fs.h:902 [inline]
- #4: ffff88805b0b2fb0 (&sb->s_type->i_mutex_key#19/2){+.+.}-{4:4}, at: vfs_rename+0x644/0xf10 fs/namei.c:5086
- #5: ffff88805b06afb0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: inode_lock include/linux/fs.h:867 [inline]
- #5: ffff88805b06afb0 (&sb->s_type->i_mutex_key#19){++++}-{4:4}, at: vfs_rename+0x6ba/0xf10 fs/namei.c:5088
-4 locks held by syz-executor/6941:
+Long
 
-=============================================
-
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 31 Comm: khungtaskd Not tainted 6.15.0-rc3-syzkaller-00032-ga79be02bba5c-dirty #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
- nmi_cpu_backtrace+0x4ab/0x4e0 lib/nmi_backtrace.c:113
- nmi_trigger_cpumask_backtrace+0x198/0x320 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:158 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:274 [inline]
- watchdog+0x1058/0x10a0 kernel/hung_task.c:437
- kthread+0x7b7/0x940 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Sending NMI from CPU 0 to CPUs 1:
-NMI backtrace for cpu 1
-CPU: 1 UID: 0 PID: 6941 Comm: syz-executor Not tainted 6.15.0-rc3-syzkaller-00032-ga79be02bba5c-dirty #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:io_serial_in+0x76/0xb0 drivers/tty/serial/8250/8250_port.c:409
-Code: c0 f6 33 fc 89 e9 41 d3 e6 48 83 c3 40 48 89 d8 48 c1 e8 03 42 80 3c 38 00 74 08 48 89 df e8 81 9f 9b fc 44 03 33 44 89 f2 ec <0f> b6 c0 5b 41 5e 41 5f 5d c3 cc cc cc cc 89 e9 80 e1 07 38 c1 7c
-RSP: 0018:ffffc90003e9e998 EFLAGS: 00000006
-RAX: 1ffffffff3548f05 RBX: ffffffff9aa47960 RCX: 0000000000000000
-RDX: 00000000000003f9 RSI: 0000000000000000 RDI: 0000000000000020
-RBP: 0000000000000000 R08: ffffffff858ec596 R09: fffff520007d3d14
-R10: dffffc0000000000 R11: ffffffff858ec550 R12: 0000000000000000
-R13: dffffc0000000000 R14: 00000000000003f9 R15: dffffc0000000000
-FS:  0000555587553500(0000) GS:ffff8881250cf000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fe8470e7d60 CR3: 0000000034592000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- serial_port_in include/linux/serial_core.h:791 [inline]
- serial8250_console_write+0x4c0/0x1e00 drivers/tty/serial/8250/8250_port.c:3420
- console_emit_next_record kernel/printk/printk.c:3138 [inline]
- console_flush_all+0x86b/0xec0 kernel/printk/printk.c:3226
- __console_flush_and_unlock kernel/printk/printk.c:3285 [inline]
- console_unlock+0x151/0x3b0 kernel/printk/printk.c:3325
- vprintk_emit+0x761/0xa40 kernel/printk/printk.c:2450
- _printk+0xd5/0x120 kernel/printk/printk.c:2475
- caif_netlink_parms net/caif/chnl_net.c:424 [inline]
- ipcaif_newlink+0x201/0x4f0 net/caif/chnl_net.c:450
- rtnl_newlink_create+0x39b/0xcb0 net/core/rtnetlink.c:3833
- __rtnl_newlink net/core/rtnetlink.c:3950 [inline]
- rtnl_newlink+0x18b0/0x1fe0 net/core/rtnetlink.c:4065
- rtnetlink_rcv_msg+0x80f/0xd70 net/core/rtnetlink.c:6955
- netlink_rcv_skb+0x208/0x480 net/netlink/af_netlink.c:2534
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x7f8/0x9a0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x8c3/0xcd0 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x221/0x270 net/socket.c:727
- __sys_sendto+0x365/0x4c0 net/socket.c:2180
- __do_sys_sendto net/socket.c:2187 [inline]
- __se_sys_sendto net/socket.c:2183 [inline]
- __x64_sys_sendto+0xde/0x100 net/socket.c:2183
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf3/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fe84638fffc
-Code: 2a 5f 02 00 44 8b 4c 24 2c 4c 8b 44 24 20 89 c5 44 8b 54 24 28 48 8b 54 24 18 b8 2c 00 00 00 48 8b 74 24 10 8b 7c 24 08 0f 05 <48> 3d 00 f0 ff ff 77 34 89 ef 48 89 44 24 08 e8 70 5f 02 00 48 8b
-RSP: 002b:00007ffd204ef3a0 EFLAGS: 00000293 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00007fe8470e4620 RCX: 00007fe84638fffc
-RDX: 0000000000000038 RSI: 00007fe8470e4670 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 00007ffd204ef3f4 R09: 000000000000000c
-R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000003
-R13: 0000000000000000 R14: 00007fe8470e4670 R15: 0000000000000000
- </TASK>
-
-
-Tested on:
-
-commit:         a79be02b Fix mis-uses of 'cc-option' for warning disab..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1057ba6f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3bbffc3b5b4301e1
-dashboard link: https://syzkaller.appspot.com/bug?extid=321477fad98ea6dd35b7
-compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=166c9f54580000
+>=20
+> Allocation of the interrupt and monitor pages can use __get_free_pages() =
+directly,
+> and that properly captures the need for those allocations to be a full pa=
+ge. Just
+> add a comment that this wastes space when PAGE_SIZE
+> > HV_HYP_PAGE_SIZE, but is necessary because the page may be mapped
+> into user space by uio_hv_generic.
+>=20
+> The only other use is in hv_kmsg_dump_register(), and it can do
+> kzalloc(HV_HYP_PAGE_SIZE), since that case really is tied to the Hyper-V =
+page
+> size, not PAGE_SIZE. There's no need to waste space by allocating a full =
+page.
+>=20
+> Michael
+>=20
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: ca48739e59df ("Drivers: hv: vmbus: Move Hyper-V page allocator
+> > to arch neutral
+> > code")
+> > Signed-off-by: Long Li <longli@microsoft.com>
+> > ---
+> >  drivers/hv/hv_common.c | 29 +++++++----------------------
+> >  1 file changed, 7 insertions(+), 22 deletions(-)
+> >
+> > diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c index
+> > a7d7494feaca..f426aaa9b8f9 100644
+> > --- a/drivers/hv/hv_common.c
+> > +++ b/drivers/hv/hv_common.c
+> > @@ -106,41 +106,26 @@ void __init hv_common_free(void)  }
+> >
+> >  /*
+> > - * Functions for allocating and freeing memory with size and
+> > - * alignment HV_HYP_PAGE_SIZE. These functions are needed because
+> > - * the guest page size may not be the same as the Hyper-V page
+> > - * size. We depend upon kmalloc() aligning power-of-two size
+> > - * allocations to the allocation size boundary, so that the
+> > - * allocated memory appears to Hyper-V as a page of the size
+> > - * it expects.
+> > + * A Hyper-V page can be used by UIO for mapping to user-space, it
+> > + should
+> > + * always be allocated on system page boundaries.
+> >   */
+> > -
+> >  void *hv_alloc_hyperv_page(void)
+> >  {
+> > -	BUILD_BUG_ON(PAGE_SIZE <  HV_HYP_PAGE_SIZE);
+> > -
+> > -	if (PAGE_SIZE =3D=3D HV_HYP_PAGE_SIZE)
+> > -		return (void *)__get_free_page(GFP_KERNEL);
+> > -	else
+> > -		return kmalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+> > +	BUILD_BUG_ON(PAGE_SIZE < HV_HYP_PAGE_SIZE);
+> > +	return (void *)__get_free_page(GFP_KERNEL);
+> >  }
+> >  EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
+> >
+> >  void *hv_alloc_hyperv_zeroed_page(void)
+> >  {
+> > -	if (PAGE_SIZE =3D=3D HV_HYP_PAGE_SIZE)
+> > -		return (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
+> > -	else
+> > -		return kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
+> > +	BUILD_BUG_ON(PAGE_SIZE < HV_HYP_PAGE_SIZE);
+> > +	return (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
+> >  }
+> >  EXPORT_SYMBOL_GPL(hv_alloc_hyperv_zeroed_page);
+> >
+> >  void hv_free_hyperv_page(void *addr)
+> >  {
+> > -	if (PAGE_SIZE =3D=3D HV_HYP_PAGE_SIZE)
+> > -		free_page((unsigned long)addr);
+> > -	else
+> > -		kfree(addr);
+> > +	free_page((unsigned long)addr);
+> >  }
+> >  EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
+> >
+> > --
+> > 2.34.1
+> >
 
