@@ -1,132 +1,144 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0A9202961
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D002857C4;
+	Wed, 23 Apr 2025 17:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745428075; cv=none; b=riAkpxg+97LddRK2PK0XU4Eosl8eMHkodM3FhRtGUh8I/C7tfjEIYqF19bZY5lrzavM/3A8yrvZpnMJITsAzwrk4lirdlQ9b4NcF4RqTtUoblLo6QvRwO49CXtzgaKPyHZdDgSJugCz9z8RPD5sJ39h5rhx0jC7cO6mrokCzPOc=
+	t=1745428085; cv=none; b=jQS9G29qvI07BtbNSBv79cUdASsn6f1w3IU4iPuKcBifb4GTLD9pvOzRXHj7fooaG4ERVjmuo7oMVu2BIQtsE+2VmoJT0lWHba7sAqe6zj4SIAquUdGSkXILISkQ4KmZ/oHYcKfQIE5tnpRT/c+HeRo8qbtB1vNH0w0x67sdDUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745428075; c=relaxed/simple;
-	bh=wL+0xUq+Wpv5CUzn5J0WCeIN7d1hdB4e5BLKw+HRd64=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=mSAyL0VM5B1qoBjuQizT3WutSIt5y1x+chkPTJgETallQzxGUu87htJbEY1rF8LP9IIAeHb0upaxkCb2lMUbubGcugUJEXu5s3MP5Iz1XZOmEeZjAiYZgNdH0iCXBd1Bvpohqja9lgNWVogRzp0GUQQyTunh2N6xFeADHrmsr24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SaZKBnES; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745428085; c=relaxed/simple;
+	bh=faNWnwKoeLaA2ABcfsygKSEnvEwF7jphC7igym4tapw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e2hPg5Gfn992iGbvlIGnV+OR9SZvzVD9jcl0mvogUl3k3NCMCWsB7oHgS4XJ6ntMTOCH1EIaP8mElUlOUSwVdXqFOzJFoVRMY10ODGdAeV0CXHVdCVEk1gsBwhXjtK3efZDE5r/HDBJlq8sawJV/6DnEjpCxLQxZotjkXjudNWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSSkHA89; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SaZKBnES"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3055f2e1486so153140a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:07:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSSkHA89"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-30155bbbed9so108148a91.1;
+        Wed, 23 Apr 2025 10:08:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745428073; x=1746032873; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XlnAkp8cVn0zj/PVrvUqNTjNSTp79edpiLwavMDguXI=;
-        b=SaZKBnESdrd3EhZEvvzI89/cr66r07D7SrbsPu5Pfzbdz1T69hV9PjtryDP/4kM8MM
-         mtY6q66mjKuGsZ/P4uTOZJnXH8CTALCkdmiRq6GwHJfhVanmnGyBei9xBBGkn81sEZ0r
-         z26P0y1G8XZhpheyEdKtpEO8KGFgsYVt2QxnB8bmgAEmxA4LB0QTqBbr8+MfY0MkYP5L
-         xZPih8hpMfsdon5jz6gTp0R0ghVCLGhq2zu5a/pAcatmvPUKT7KG3D1XnBZ5wWXgCsLB
-         Ws+7ssO9ZOHrY5Kf7ENLRwRyDnEQWxf91MDW005wgZ1PETpPgrA7qTEJnp/n4vh59RTW
-         QhVg==
+        d=gmail.com; s=20230601; t=1745428083; x=1746032883; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xZvTiXawzSgHj7FI2kLZHKNyxWg1hv6pUgC8nbUE2kI=;
+        b=KSSkHA89JPIgh56assoCAa5KHGiHkyJOm5maFIfLaxYu+LOWBgSgUtG4mBXgL4l+Lx
+         AWO8Fv/kjcPJn1NqLS3AgzdwirMOfZmTPUdDTHje06ir65fuYm44FPiJgKd1BYAAzenu
+         4Dq4Xb8QYOh4ti2j4VbfH+8sBVVESZFnhL4iRoalqwZhFaloTyyNrZpE2DcywCzUR2tp
+         vUiOeapczYTjYH/FsMsv8VUfZh0wE+b3UjKmFL196VxADlhbraGb2at5r9LZoFqbus2m
+         D0YkXmRj3S26yRgZ7ebQO1BnN9C02oNX0Jy8bG+J7sQcsk2MsejMI2DK+IKTlslABEwV
+         6laQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745428073; x=1746032873;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XlnAkp8cVn0zj/PVrvUqNTjNSTp79edpiLwavMDguXI=;
-        b=wgqpt/ENxCJvSxHFP+woyFwbeFil4fX4HnAQyuERl5n1bB0FhQmUSvfjVgVrTrnD8N
-         Lcu/JewMwm1ycNaFwusGpBzHEvKkjzV1s1LbP1PHdSOUS05j8gYYN2t33ln4N86WNxH/
-         Kc7SSO93uMTpZ4VDnXkbLoiy7xbD2t+/PzPzxjCUiNxdnvElSEv7Nta24JApn6d5KYbi
-         bGtMbpjDzxCufeh0zpbxIvqzsf+zfpS/crzhEpync9SXLPlCucrgYYmUagOSqeuIQZqE
-         n00jrgSFghadxk4aZ4DDDYuzZahe5efImdfKYBE7VzscIgbT+Dzyqbuv5c0VCQLTNnon
-         3chw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXVV74DE/SQ+4PWYwpSEcl5/s+WezgSEtTrjheskurQ/YIj9ZWog4zktOeycVOA3AgAWWn14FCK9DThYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFdD1S7GKC1tW/WOX/j5fRMSLwiELYrQ13ETqyvfz3XJcPVHnR
-	SjboU1rwuAMjIFv8uqH2aMHRGBdQpzuh/oovM64blLAarzXOfRk4VYfZFxpRHde2+sUyt0vhQnU
-	OUw==
-X-Google-Smtp-Source: AGHT+IGhg62gnwDuvC+PxXSi6CDz4jilJV6tGssP+7fXEQAB/a9SlpJoSZ0TQDPRqFrYifSq2QDRbxu9Uco=
-X-Received: from pjbst14.prod.google.com ([2002:a17:90b:1fce:b0:2ff:852c:ceb8])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:380f:b0:2ee:9d49:3ae6
- with SMTP id 98e67ed59e1d1-3087bb5336cmr30977016a91.10.1745428072873; Wed, 23
- Apr 2025 10:07:52 -0700 (PDT)
-Date: Wed, 23 Apr 2025 10:07:51 -0700
-In-Reply-To: <8a58261a0cc5f7927177178d65b0f0b3fa1f173c.camel@intel.com>
+        d=1e100.net; s=20230601; t=1745428083; x=1746032883;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xZvTiXawzSgHj7FI2kLZHKNyxWg1hv6pUgC8nbUE2kI=;
+        b=va3bxxpTonTfpnm661Tx4wNH11Ws3h5/YJ4tLAIN2iIEuANLF6OjhOXQ4u1Ycjmeta
+         h6m9S08eYPVk8mDnsdJnQirYfZlgDtm8P4OxksY2/NBBHBvkIlQm9SKRQkVenhATiWdu
+         dJACOrbr3L8hPOx8ze4lsFeyi0m/Lm7lY6zOU85K1Sa9UbXoxdDKll3/pnQqi3mFJAVW
+         wC+qECb2b4NOHOkMIl5Ik9tSnxDSMu2Uof9z+Fk60Ih90uO+YOJerg/HEn6EV4inl4mU
+         pu6sntmNo6Fh4y7IUZ23hci4n5ZEHvL+ysm08xvpDs1DmLDzEyhmgptegOtTvRQWNc5s
+         Lm9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVPfLxKEymFd7Zj5F0iJq+eQaQJPmgbIVoKrGbnPANBqPg7gjOR0OMQfGEFapNb4r3Eni8QElGlaU3Hq9PzguA=@vger.kernel.org, AJvYcCX7B3s8pF/earPDK30NtI9buG1Ys3af4JxYPr8sJLYBoBLr9RmGgkjI7hyrLRRYK0FJSeRfjGbTIDvCTi8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUTvhDSGPJEvtFQcHVoSigO3U784A8HD1K0fH4xDcf9vV4WiLX
+	yrq0+9BEI/Y5iS2sAtghvVH5C+Vg/YQrhMFI9+csrI1vvIWLuywP
+X-Gm-Gg: ASbGncu6rCM4Eb4qFwLzAPYUUEMPCa20MnFG81Zhynz3TvzBWdmhlJbKzdyty3j7bbH
+	8ai8Q18r95JHa5rq5h8YGTcottpSehHo6t2z/eoY7l/QEXcKV4hKg6JGE9I3u4ALNBsAUYOlWGa
+	zKQ/NsN5vjFC1XIW8gpSLiMxvTDXr94rWQKFKOB9nqJ1wbzok1PEibKuccHTgivTxIfEznOd0R3
+	I5A5CCM5J5PwyZV46IyCVHlbG2qpxnhSsAKxe2Sdwn9p0Owc4HST988NP7QlH5caLrITsWZsZ86
+	bfnFzvRKT3PudPTzTqnNZNVGKH+9qDANbsWPHGcm
+X-Google-Smtp-Source: AGHT+IE9XANxAuRr5sxcraq4Cd8R9CtQ6OvmmnZ6j88xJckJY1fCT3SVw1prM7YKA3TgyacJlTMnog==
+X-Received: by 2002:a17:90b:1cc5:b0:2fe:85f0:e115 with SMTP id 98e67ed59e1d1-3087bb9f463mr22874428a91.26.1745428082747;
+        Wed, 23 Apr 2025 10:08:02 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309dfa0ac5esm1898902a91.19.2025.04.23.10.08.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 10:08:02 -0700 (PDT)
+Date: Wed, 23 Apr 2025 13:08:00 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Burak Emir <bqe@google.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/5] rust: adds Bitmap API, ID pool and bindings
+Message-ID: <aAkecEetYCFsq9XJ@yury>
+References: <20250423134344.3888205-2-bqe@google.com>
+ <aAkKoQQH0t9KtIxD@yury>
+ <CAH5fLggFUM=eJR2u06QsLMxXP+cJwm881ip+rze_sM=tXpA9og@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250401155714.838398-1-seanjc@google.com> <20250401155714.838398-3-seanjc@google.com>
- <20250416182437.GA963080.vipinsh@google.com> <20250416190630.GA1037529.vipinsh@google.com>
- <aAALoMbz0IZcKZk4@google.com> <8a58261a0cc5f7927177178d65b0f0b3fa1f173c.camel@intel.com>
-Message-ID: <aAkeZ5-TCx8q6T6y@google.com>
-Subject: Re: [PATCH v2 2/3] KVM: x86: Allocate kvm_vmx/kvm_svm structures
- using kzalloc()
-From: Sean Christopherson <seanjc@google.com>
-To: Kai Huang <kai.huang@intel.com>
-Cc: "vipinsh@google.com" <vipinsh@google.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAH5fLggFUM=eJR2u06QsLMxXP+cJwm881ip+rze_sM=tXpA9og@mail.gmail.com>
 
-On Tue, Apr 22, 2025, Kai Huang wrote:
-> On Wed, 2025-04-16 at 12:57 -0700, Sean Christopherson wrote:
-> > On Wed, Apr 16, 2025, Vipin Sharma wrote:
-> > > Checked via pahole, sizes of struct have reduced but still not under 4k.
-> > > After applying the patch:
-> > > 
-> > > struct kvm{} - 4104
-> > > struct kvm_svm{} - 4320
-> > > struct kvm_vmx{} - 4128
-> > > 
-> > > Also, this BUILD_BUG_ON() might not be reliable unless all of the ifdefs
-> > > under kvm_[vmx|svm] and its children are enabled. Won't that be an
-> > > issue?
-> > 
-> > That's what build bots (and to a lesser extent, maintainers) are for.  An individual
-> > developer might miss a particular config, but the build bots that run allyesconfig
-> > will very quickly detect the issue, and then we fix it.
-> > 
-> > I also build what is effectively an "allkvmconfig" before officially applying
-> > anything, so in general things like this shouldn't even make it to the bots.
-> > 
+On Wed, Apr 23, 2025 at 06:19:18PM +0200, Alice Ryhl wrote:
+> On Wed, Apr 23, 2025 at 5:43 PM Yury Norov <yury.norov@gmail.com> wrote:
+> >
+> > I received it twice - with timestamps 1:36 and 1:43. Assuming they are
+> > identical, and ignoring the former.
+> >
+> > On Wed, Apr 23, 2025 at 01:43:32PM +0000, Burak Emir wrote:
+> > > This series adds a Rust bitmap API for porting the approach from
+> > > commit 15d9da3f818c ("binder: use bitmap for faster descriptor lookup")
+> > > to Rust. The functionality in dbitmap.h makes use of bitmap and bitops.
+> > >
+> > > The Rust bitmap API provides a safe abstraction to underlying bitmap
+> > > and bitops operations. For now, only includes method necessary for
+> > > dbitmap.h, more can be added later. We perform bounds checks for
+> > > hardening, violations are programmer errors that result in panics.
+> > >
+> > > We include set_bit_atomic and clear_bit_atomic operations. One has
+> > > to avoid races with non-atomic operations, which is ensure by the
+> > > Rust type system: either callers have shared references &bitmap in
+> > > which case the mutations are atomic operations. Or there is a
+> > > exclusive reference &mut bitmap, in which case there is no concurrent
+> > > access.
+> >
+> > It's not about shared references only. One can take a mutable
+> > reference, and still may have a race:
+> >
+> > CPU1                            CPU2
+> >
+> > take mut ref
+> > bitmap.set() // non-atomic
+> > put mut ref
+> >                                 take mut ref
+> >                                 bitmap.test() // read as 0
+> > data propagated to memory
+> >                                 bitmap.test() // read as 1
+> >
+> > To make this scenario impossible, either put or take mut ref
+> > should imply global cache flush, because bitmap array is not
+> > an internal data for the Bitmap class (only the pointer is).
+> >
+> > I already asked you to point me to the specification that states that
+> > taking mutable reference implies flushing all the caches to the point
+> > of coherency, but you didn't share it. And I doubt that compiler does
+> > it, for the performance considerations.
 > 
-> Just want to understand the intention here:
-> 
-> What if someday a developer really needs to add some new field(s) to, lets say
-> 'struct kvm_vmx', and that makes the size exceed 4K?
+> The flushing of caches and so on *is* implied. It doesn't happen every
+> time you take a mutable reference, but for you to be able to take a
+> mut ref on CPU2 after releasing it on CPU1, there must be a flush
+> somewhere in between.
 
-If it helps, here's the changelog I plan on posting for v3:
-    
-    Allocate VM structs via kvzalloc(), i.e. try to use a contiguous physical
-    allocation before falling back to __vmalloc(), to avoid the overhead of
-    establishing the virtual mappings.  The SVM and VMX (and TDX) structures
-    are now just above 4096 bytes, i.e. are order-1 allocations, and will
-    likely remain that way for quite some time.
-    
-    Add compile-time assertions in vendor code to ensure the size is an
-    order-0 or order-1 allocation, i.e. to prevent unknowingly letting the
-    size balloon in the future.  There's nothing fundamentally wrong with a
-    larger kvm_{svm,vmx,tdx} size, but given that the size is barely above
-    4096 after 18+ years of existence, exceeding exceed 8192 bytes would be
-    quite notable.
+OK, that makes sense.
+ 
+> I can try to find docs for it ...
 
-
-> What should the developer do?  Is it a hard requirement that the size should
-> never go beyond 4K?  Or, should the assert of order 0 allocation be changed to
-> the assert of order 1 allocation?
-
-It depends.  Now that Vipin has corrected my math, the assertion will be that the
-VM struct is order-1 or smaller, i.e. <= 8KiB.  That gives us a _lot_ of room to
-grow.  E.g. KVM has existed for ~18 years and is barely about 4KiB, so for organic
-growth (small additions here and there), I don't expect to hit the 8KiB limit in
-the next decade (famous last words).  And the memory landscape will likely be
-quite different 10+ years from now, i.e. the assertion may be completely unnecessary
-by the time it fires.
-
-What I'm most interested in detecting and prevent is things like mmu_page_hash,
-where a massive field is embedded in struct kvm for an *optional* feature.  I.e.
-if a new feature adds a massive field, then it should probably be placed in a
-separate, dynamically allocated structure.  And for those, it should be quite
-obvious that a separate allocation is the way to go.
+Yes please, that would help a lot.
