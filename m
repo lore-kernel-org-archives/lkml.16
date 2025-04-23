@@ -1,134 +1,83 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028DD41C69
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B99288C9A
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:50:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430527; cv=none; b=u0dklD9zJstkVWgeAnLbzAgFtOEAM0sHYklZkb0Bh4MXBfxZCrEkDoyU6qDIUuaWl3n3qj14fhUq8n7a5dUgqOmi+ifK09wbvEi+GU5iONiOX7RonX4588NZ6o7K2c0dXPVXM32vboPjZatCZlyuiZDlSVJunfIMQK0c0KBvtgE=
+	t=1745430619; cv=none; b=sYdf2Fx277AHpeC1u9+yepSvDp8jSKHge7PoWKEi6uKz/gAIO9KEXxJ/GvqGx/RZ0Go6o7Z/tyQmMWMmO1gSmGGRsGlfQ5MgNdEjvrfu1qKcw6gOpjL59EmRROnaVrJ3xd7FYUj0SjW0EQpTunSiKse0disNA0o91VHMoEhwdVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430527; c=relaxed/simple;
-	bh=3FNguulO/qyzIGlULRCSXYiQu5VPk19bxekq9naZME0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W7IVLl/8WyxltCDnVoeXVzWe2TelJSu0hDRmGsb/sXfkzl8noZDh1/8kkC+zR0WbH788r9Hn1u2CFU5f/ujBq4NhDREsgwJnJBP8uHTghNr1UfVig2ecKKz4o0iuPbj7mBiPw3D4+xGdEZsyVvdbiPbczUM+DzuUmGmmZUVZt7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=flczgPhJ; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1745430619; c=relaxed/simple;
+	bh=QKLzY5f3t4EqQuvNvZUJMhe8wGcsETDFaBVHKn2S1ZE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mvg9xUcgGJfcMbWzA9H+sVcXjZ6UA3SQqbgZQ16+eyH1/zbsq8bUzQMS4O6nBF5ZrxscnC4ewu2cH5EQYxXMYlsr3I13skOE0874INGSxAlCSt0xZ0PBVjbkMzrQW7pno8ZETt9SF1qpO7hucf69oWQAXfM9jovvLueLx8AeQ7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qJRcWaEY; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="flczgPhJ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=pQtVtfjcISAXVaI5AkP35trRWt3Y1MNmZDafxANLqh0=; b=flczgPhJv9872LkI9et9T6x2/0
-	OPgsl+sGZke1RUeQyscDdDs4GZCWisrK1xr6Ywv1u5BG1MsOWYrM/LuT78pfbIJI9AschGQVFUq7Z
-	rSBUNfbbyK/d8iZ6ZCflpEVTa7EVx4o1ogXzL77WBvUmdrj7ec4xaE7CVlOfYSKVv/zoJ2kLeXPVy
-	IoK9Dz+c0hfOYoCs2+EwPsP7b0N1AbrfT0pRgIw+5nZsvvTFrIGWO7adzV9Kpb0GEEY3vXMJp1PFi
-	oDQfH42qZeCPYQ5kBE4HEG+MhocFyF0AoXaVwVpnKRLEb4yHiGQSE839LjU+Hmr+JZdHzyddsp+vw
-	9gb86kKQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:45988)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u7eD6-0006Kz-0U;
-	Wed, 23 Apr 2025 18:48:36 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u7eD4-0000Dl-0q;
-	Wed, 23 Apr 2025 18:48:34 +0100
-Date: Wed, 23 Apr 2025 18:48:34 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Marc Zyngier <maz@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Julia Lawall <Julia.Lawall@inria.fr>,
-	Nicolas Palix <nicolas.palix@imag.fr>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
-	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, andrew@lunn.ch, quic_kkumarcs@quicinc.com,
-	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
-	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
-Subject: Re: [PATCH v3 4/6] arm64: nvhe: Convert the opencoded field modify
-Message-ID: <aAkn8lvzoa1grdkt@shell.armlinux.org.uk>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
- <20250417-field_modify-v3-4-6f7992aafcb7@quicinc.com>
- <86r01rjald.wl-maz@kernel.org>
- <aAJsaNdznnz-1qap@yury>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qJRcWaEY"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so576145e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:50:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745430616; x=1746035416; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VkyJVJvayedppw3sWI0GPM8RDyFc8O66hqcaSSD9G1g=;
+        b=qJRcWaEYBikXP19+uYElvGZq6TzXtAKOvh+Z8knRkVw7pYvoNy7GCvE9gDi0FTxn8a
+         zt/ai7O2d448J+Zl03Xaxj5LgwJaJAda/qi95APCI9VpUnJH/L54wavzRTyot1WGWZJN
+         GqApr1uuuAVxBOXX8FWaaSnB+YwZxsnidF3NTb1/OP3vVr4tGcCTIwySuqxi/avbMM8H
+         UkicHH0Cj08LBjgxZW8Tsw5Ep7e61caW6Ua6CTzO5RXIkb8O88G5vB6l0LKkX3MEe6fm
+         lAklLTNpCd2exi2Bk+YTXP6NOBew+6OlYon6MkuNkbWONg7US7PpsGhDQ4SBOccDqbkZ
+         z4Wg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745430616; x=1746035416;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VkyJVJvayedppw3sWI0GPM8RDyFc8O66hqcaSSD9G1g=;
+        b=wC6YRpcRXNIkZ9b44ICMpaGhlhIk/SM2vBEuahq9obrtnnTeGy+Vo5omzNe9CxsoHf
+         KCronTzEPHArRnVDonPlb5rZzkpKiydZTA+YcOOSeL35ldOGDXPonulR3FkYv4sArHbz
+         VEhNmVsgdgqJVqEySv996JAGGc1+TRGkDGxyxhgdhmdF+KRrMuISq0JrVXt6INUHZQwJ
+         KIA98InLcfBmIZA5YFwi01PjjhuNCggCkHi7rKLmz8flct+hMNU2zlUEmvQPec7pU+5f
+         OgazpaTTaR/gkaSAnFS5vxAbec5ysowyGVLnj3v5I2Hnbb5DPJFl7KjQ5v/1oa0QXYL4
+         dx3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUkUqd5nsfcfMp8Kd1ynq7wrvEATZHMrxzDQ2WOBpNpvBnotZccQwphcKbirLKSS8C0X2RGo9pecHosJe8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9vzLrAwGfQJatHR+dr4C/S2+ZJ0ZFV5XQzov2sjkhXdbC2yOy
+	i1GhCx5K8bCdlxQLozQtfyTDgR+SBdB3KbzF2wWXdiO/Jyj5QUtPTqPAe6JK/VKRmOi5DJbkdtb
+	aINdePSihB4eFAA==
+X-Google-Smtp-Source: AGHT+IGG7oMigeybpqlDwQJK15daVwyXJWLa97UKCcbNBzHZq/BAg+CdNCG/eCJ9V70GXVK9Jn1nxqxkOah8wwQ=
+X-Received: from wmhu12.prod.google.com ([2002:a05:600c:a36c:b0:43c:ef7b:ffac])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3107:b0:43c:f64c:447f with SMTP id 5b1f17b1804b1-4406ac163bemr144465395e9.29.1745430615921;
+ Wed, 23 Apr 2025 10:50:15 -0700 (PDT)
+Date: Wed, 23 Apr 2025 17:50:13 +0000
+In-Reply-To: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAJsaNdznnz-1qap@yury>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Mime-Version: 1.0
+References: <20250423-list-no-offset-v3-0-9d0c2b89340e@gmail.com>
+Message-ID: <aAkoVfiZDAXdYxrr@google.com>
+Subject: Re: [PATCH v3 0/6] rust: list: remove HasListLinks::OFFSET
+From: Alice Ryhl <aliceryhl@google.com>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Apr 18, 2025 at 11:14:48AM -0400, Yury Norov wrote:
-> On Thu, Apr 17, 2025 at 12:23:10PM +0100, Marc Zyngier wrote:
-> > On Thu, 17 Apr 2025 11:47:11 +0100,
-> > Luo Jie <quic_luoj@quicinc.com> wrote:
-> > > 
-> > > Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-> > > - reg &= ~MASK;
-> > > - reg |= FIELD_PREP(MASK, val);
-> > > The semantic patch that makes this change is available
-> > > in scripts/coccinelle/misc/field_modify.cocci.
-> > > 
-> > > More information about semantic patching is available at
-> > > https://coccinelle.gitlabpages.inria.fr/website
-> > > 
-> > > Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> > > ---
-> > >  arch/arm64/kvm/hyp/include/nvhe/memory.h | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > > 
-> > > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > index 34233d586060..b2af748964d0 100644
-> > > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > > @@ -30,8 +30,7 @@ enum pkvm_page_state {
-> > >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
-> > >  						 enum pkvm_page_state state)
-> > >  {
-> > > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
-> > > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
-> > > +	FIELD_MODIFY(PKVM_PAGE_STATE_PROT_MASK, &prot, state);
-> > >  	return prot;
-> > >  }
-> > 
-> > Following up on my suggestion to *not* add anything new, this patch
-> > could be written as:
-> > 
-> > diff --git a/arch/arm64/kvm/hyp/include/nvhe/memory.h b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > index 34233d5860607..08cb6ba0e0716 100644
-> > --- a/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > +++ b/arch/arm64/kvm/hyp/include/nvhe/memory.h
-> > @@ -30,9 +30,8 @@ enum pkvm_page_state {
-> >  static inline enum kvm_pgtable_prot pkvm_mkstate(enum kvm_pgtable_prot prot,
-> >  						 enum pkvm_page_state state)
-> >  {
-> > -	prot &= ~PKVM_PAGE_STATE_PROT_MASK;
-> > -	prot |= FIELD_PREP(PKVM_PAGE_STATE_PROT_MASK, state);
-> > -	return prot;
-> > +	u64 p = prot;
-> > +	return u64_replace_bits(p, state, PKVM_PAGE_STATE_PROT_MASK);
-> >  }
+On Wed, Apr 23, 2025 at 12:30:01PM -0400, Tamir Duberstein wrote:
+> The bulk of this change occurs in the last commit, please its commit
+> messages for details.
 > 
-> This is a great example where u64_replace_bit() should NOT be used. 
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-Why not? Explain it. Don't leave people in the dark, because right
-now it looks like it's purely a religous fanaticism about what
-should and should not be used. Where's the technical reasoning?
+This works with Rust Binder and Ashmem.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Tested-by: Alice Ryhl <aliceryhl@google.com>
