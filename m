@@ -1,160 +1,227 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0025321FF5E
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BFFD269CE6
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:37:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745404673; cv=none; b=nRmiPIVeCMKTRcnL4P5UNF07oms9UUAzEVNZD5263ft456WYQ9p5eqgrNAUgJPDawKWKh+PUOJ0jzMF8YD7sheTRyk6Heo6cGjkZtp7R6fHA0U7tRdy2KuxwzRTM4AMX2vKP8AZ4+3HbNnM/OEXr3kHtHAHBScy9i0ogbJIkgp0=
+	t=1745404682; cv=none; b=PxTzfHHbOxQXiP4//kEudFMt7zu7Pqjrj+t4c0AW2qT7VsZ6VDtmA/bI35V1TocI6R0rx5MoO+t4ErCP6E6vPRoJfYqywWpL18AZU9KWdcGLcTaQz3h6G73mzzB/0QVJdzO1+P+j73w+k9fHplqb4O1kOvxqHtwzIvMScGkBkTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745404673; c=relaxed/simple;
-	bh=PFbMd7N+mUz97HkKIHV8eWiCX0S3NZOGV4ovk8dMMBU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GBiJiYJo9vYbr7t5v/+AFAQKukyN3wDgfzLaFIK/z/bwNV1WHfwq9OsYM4X2V5ntKLVm4AhMH2ZKClFA77+CQGeCZTy9yap0G3lEfA+6px2s6Xyt0PZh/wn6Dqy3N4tGjo67qIdwW3heMUFK7/RfbGku2HxLDeeEK5zOnm7chdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WQ0UvvRK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745404682; c=relaxed/simple;
+	bh=h6tqKHhc3Je7T1b3Rb2w1OZEqE3uwrpoTC3DYoDW3l8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rocgFsuz2YOdGG2oe5SNfy/A4ZisqUvzR/VA2BrsX0O1Pbtgoy25mcRbhkIHf7jqy1h9sThel158HIPfjK27d3+R8l3hoqtHEsvWil5xOQaNveGw5AttI5clhHTPdp3Tofv4uz9UKBKcrpLj+di8HiwrhXP4XRAlLyzw4MQdce8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HU8AajVl; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WQ0UvvRK"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0i9s7022454
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:37:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=T+V97obDzLk5rmrB6ECsIKW4/Kobtop+u5V
-	Lb/vFfd8=; b=WQ0UvvRKkvZ+rSC9FtufDviRgnIFXldkFqttyfIKVg+MI3jkab6
-	N/MpU1m/Ey0dHx8UsNifTCkdVqg9bjp8mjZTBWMwvKsmc384VX1zG4DHyYMFZ+M/
-	zXpougMZpctqSSg1aNk9qNfy1oBCQpPSKRPQpbmXpNVXuX9FWWw31YDgTlrvrKLS
-	skYn9JpMuFjQPXxt2iGlfMI4GHMhlHXU7dgf7W1lZzxExX0ieuKmvbjNpA0AIXly
-	BP++hDfxlsSOXKhtfxElfMmHciTOC/rJHtO3eNkrV1HdhlcPyDVuuHq7BRMd0exC
-	ADhAJwbMZh/CyP6aVpWc6aNoxKDsMSQ3FTA==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh29tbw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:37:50 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-af972dd0cd6so3686802a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:37:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HU8AajVl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745404678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=htvOdbbPBWJbiuZ26CDOd+VnDrAoFDfKKaGFmsTk4b8=;
+	b=HU8AajVlnerVWLHTXnydP+JFYr5b2Ph7sRPIyrb+hVwbSCV4SgSixUI6DnpO+TpLtXVZR3
+	L20X/bmifIGizQUhP7QU/vW8aBwsHlFIqe+hii0Lqzc1UcmHmbNdfrb6Sjqisml1Fm+YWR
+	Y7ZS0HgmZ2c+ho0GY1uZ9t4haN9m1i4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-78--iM_1oUsNGmhiAwRVQYb9w-1; Wed, 23 Apr 2025 06:37:57 -0400
+X-MC-Unique: -iM_1oUsNGmhiAwRVQYb9w-1
+X-Mimecast-MFC-AGG-ID: -iM_1oUsNGmhiAwRVQYb9w_1745404676
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39ef89b862dso2862176f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:37:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745404670; x=1746009470;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T+V97obDzLk5rmrB6ECsIKW4/Kobtop+u5VLb/vFfd8=;
-        b=UorAOO9g0bk10mKEtw2Fhlr6TWZzLacl4jJ74G5EWwbFw1gsnLBsM+1I29rniQX3z1
-         3txxL0ySZy8EdQCYebE8GWCqnVIHzlU3SJmZfQFYOFgrqUUPVy5luLKu7UNmGhkSEeku
-         j5zj0bV0zR3kuuKkg4yK3eOI03AK6vDpEhGGn6Ot2QbPbdqB64JWvu784wRvk7UPHzWp
-         DGqLYu7ycPT7Q3MTFsVIjmvhRAPj7giQgmpQnf1zoJZDjwaqfEExVqtdzrftb0+IGWop
-         1MxgpNXIymjjIaMoFVL0CMxOsqY693leDonFO2fLbYBNQg++fjyydppR6OkK8ppnJSVE
-         CULw==
-X-Forwarded-Encrypted: i=1; AJvYcCXnuJxTHdleWoCYOQ50/ojj/wgsyZ97tW/H+4DK2m8HadqHPuXgZRvx1lZDZIudk9GsoZFl0g6dxHqytig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvgQRg5ijQpJ06F2OhXykk39QN41Csj/0xswFdZeZjOib/Rm9N
-	hBnNlRS9M7BMrenkhp4KZzlolXclkDe8c64EKqfk0noj7NKVwSXPnOPekZsvQ3Xax/HYiXQfWoR
-	9JjRHhofTr5pK5dGpJ67w082UdoD0yawKIxm3KoXlrqbxYx+JVLvyrydNDjPxIpM=
-X-Gm-Gg: ASbGncvn+o7Gg+t0+W13JSsfDGHgt5Fl7fzQw5jFD4K4swGCRQK+vybWUZSxzXo7uXp
-	UQCgsaEOairjBsTVb63bTOmAY4f08mmIMgvKfoQ3HP+REXV7XUx23pZYrNkW+PHVNaxG7E4Qt7b
-	E1IaVipw4RoQ25DbB8pRePcweCnXZd3pQhoT+ZA4k05PE4yOhStpZUiMQUmZa0d6la0VPXJpygy
-	Fu6iOC5iG+RCImq9HmUJjpu6J7qYDbiQmk++J0Q/x3o5lNxs1nD28wP+S3rZmgJ1DAmtpkXX2D3
-	w9JpKMQiDtmJ8eO+uXAOpvTPtWrfw+1+PPemsMNzaLAH/gly4Rl4U8jhHf4hGwPlrNY=
-X-Received: by 2002:a17:903:fad:b0:211:e812:3948 with SMTP id d9443c01a7336-22c530b58acmr285107805ad.0.1745404669978;
-        Wed, 23 Apr 2025 03:37:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWEGkGqqQxiqBDc642jLnAvl/Kfh5eMLvvocivyBH/SIGLIeIYmnBvd/W4FMF0zn3I3okHCA==
-X-Received: by 2002:a17:903:fad:b0:211:e812:3948 with SMTP id d9443c01a7336-22c530b58acmr285107455ad.0.1745404669586;
-        Wed, 23 Apr 2025 03:37:49 -0700 (PDT)
-Received: from jiegan.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com. [103.229.16.4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fda402sm100452395ad.232.2025.04.23.03.37.46
+        d=1e100.net; s=20230601; t=1745404676; x=1746009476;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=htvOdbbPBWJbiuZ26CDOd+VnDrAoFDfKKaGFmsTk4b8=;
+        b=lLVvRbtpKGWvbgjUiAZhN2+zXI32+3hVHrC3Db8sUXPKOMTTbRX3PFNBi1G+xAeFu9
+         6bXBEyjTfUSUjBdsR6G7/eMAY2uXsSjzbAywfcz4xBlEnDg6hwlMDsUlXHxqxOZ6vFUG
+         ztaVQG7PdVh96lpGZ3zI/57nEMXAxWXfD3nTF0+CcUPCdmJyDCHHjOWCLaaLsA2wjEdX
+         +RrLhExrUmNsqFIu0MQ9QkhYWLE6IMZT7RFyYNYrYvHQ8rSsR6oXhU2ZT7ohfQ6vaWOA
+         vOdwwYsldV9bSP7m4FFyB7wOIuhZlQcp8j3iK1ReOZ7o7bhjIinBDvzff8xwiLiXQ3ZZ
+         3wOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiiQcAcBbLavT+D/n/Rb0pzQXIZv7H6OLSM20/S4wyreCicxr+AwQXQrj/DxCTHyGOHjOI6i49gHd6Wjo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5THUu1oDqR7pikLyJf64N8tAqwXPxvUjrRC2XSy5SMEZGuIX1
+	j373R6YnmzSAmFSrJ6FPdmCcD214TsvbcJu+T2f4oidz6lPfSlZRo8k7byAgEf3xgG0ZiLmFSsT
+	IzP9MmbKTfsKRF8AG5VSaam0BOl4ZcoixrzIarYC4Hi8jyb0c39ATThD3VXLl2pjde6Q0bH20
+X-Gm-Gg: ASbGnctdtSfM8yhBwQgT2VQyjuL0ubWqoZOmpsjX2YpDhLWp7va6Gr4kYsb+XCnWxud
+	rbkD+W+54/3TnL5fXpDP7jpQTTb9LKCg37fK8xzwz2uUlJn+rkhpRWtFKBl3SkPB4YDxM4t5dYV
+	ShRT2BKhaF258Hsnt5BqfuRW4pAJ0RFuVxqJFEcSqdIAAqe5Ss+CUq8TXyY1VajpnoIIv/GvO2T
+	q4GCVzowwjCvRGVRHMOO5Pgd2zxuMg7KVo5h0Ygl0QuXHw24HLu0XmZIzKb5vLiWQAn1gPOqMIM
+	uwIQw/pt/fz+mzj0U6SnKUWF65XdZey4KsC7Aw==
+X-Received: by 2002:a5d:64c2:0:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-39f175ba69fmr6143802f8f.11.1745404675787;
+        Wed, 23 Apr 2025 03:37:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGCW39oL+DTOq34k/J8w9aq68eyfD5vKWVHY8SgLjQZi5WLtsz5YNU1V68pZbV8+BR4U4+dxw==
+X-Received: by 2002:a5d:64c2:0:b0:39f:175b:a68d with SMTP id ffacd0b85a97d-39f175ba69fmr6143780f8f.11.1745404675397;
+        Wed, 23 Apr 2025 03:37:55 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa433141sm18478248f8f.35.2025.04.23.03.37.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 03:37:48 -0700 (PDT)
-From: Jie Gan <jie.gan@oss.qualcomm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Yabin Cui <yabinc@google.com>
-Cc: Tingwei Zhang <quic_tingweiz@quicinc.com>, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Subject: [PATCH] coresight: tmc: fix failure to disable/enable ETF after reading
-Date: Wed, 23 Apr 2025 18:37:44 +0800
-Message-Id: <20250423103744.475-1-jie.gan@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 23 Apr 2025 03:37:54 -0700 (PDT)
+Message-ID: <02f047788f369cd0387d2934fa99fe3e8e1913c2.camel@redhat.com>
+Subject: Re: [PATCH v4 19/22] rv: Add rtapp_pagefault monitor
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Nam Cao <namcao@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: john.ogness@linutronix.de
+Date: Wed, 23 Apr 2025 12:37:53 +0200
+In-Reply-To: <2eff7190ba245eb157f95ae461fef54183d07665.1745390829.git.namcao@linutronix.de>
+References: <cover.1745390829.git.namcao@linutronix.de>
+	 <2eff7190ba245eb157f95ae461fef54183d07665.1745390829.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: IoMulNhMTGO9jiKGxhU6Y7eUKx3BMd2W
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA3MyBTYWx0ZWRfX2A/W/8QU4lZ0 3L43k1XEzq8En+PjQScusU8RaPql0vl69JLr6MjtMH3QoPYYNDjoZv/j8YZ3b4t5DxpNL/rkyzf VKRbuWZn67iRrhMzUpJausF/e8hif5rVDXwZmJ5GBTp8tQ4KVC7ZglImR+4Y2tr7FQoXsdb49X1
- Ie4wB4Aci9pRbRlzdSXlbXdilGCEJNOfcjX39GkJjpg2pFmGPFkKFhYUAomJoGYbychK3d8NlZ4 ajwwgMFQ/zOg771WI/a+kQ6Sd9vhBwXdu8wbbMVWlUlE2Vzsv7JMXltShtFicbvLLGyqeOxqft+ S8DM2PuQwW/8Srps+Hp1dg9XhvBAn9xIO362rhA4ByJhMhyOkszuwgj6qqRX9V/9UeBzepQ8LpX
- p++SBehX2LQOuOGVHDqkOFpmg7dtjeWrxTRzmprqcpSwxVYJnvW8C7uf5T26bhDEFmAaJXde
-X-Authority-Analysis: v=2.4 cv=Tu/mhCXh c=1 sm=1 tr=0 ts=6808c2fe cx=c_pps a=rz3CxIlbcmazkYymdCej/Q==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=RFblPUowwLJ5Nc-cMjAA:9 a=bFCP_H2QrGi7Okbo017w:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: IoMulNhMTGO9jiKGxhU6Y7eUKx3BMd2W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-23_07,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=659 bulkscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230073
 
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
 
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
+On Wed, 2025-04-23 at 08:50 +0200, Nam Cao wrote:
+> Userspace real-time applications may have design flaws that they
+> raise
+> page faults in real-time threads, and thus have unexpected latencies.
+>=20
+> Add an linear temporal logic monitor to detect this scenario.
+>=20
+> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> ---
+> =C2=A0kernel/trace/rv/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0kernel/trace/rv/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 |=C2=A0 1 +
+> =C2=A0kernel/trace/rv/monitors/pagefault/Kconfig=C2=A0=C2=A0=C2=A0 | 11 +=
+++
+> =C2=A0.../trace/rv/monitors/pagefault/pagefault.c=C2=A0=C2=A0 | 82
+> +++++++++++++++++++
+> =C2=A0.../trace/rv/monitors/pagefault/pagefault.h=C2=A0=C2=A0 | 57 ++++++=
++++++++
+> =C2=A0.../rv/monitors/pagefault/pagefault_trace.h=C2=A0=C2=A0 | 14 ++++
+> =C2=A0kernel/trace/rv/rv_trace.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+ |=C2=A0 1 +
+> =C2=A0tools/verification/models/rtapp/pagefault.ltl |=C2=A0 1 +
+> =C2=A08 files changed, 168 insertions(+)
+> =C2=A0create mode 100644 kernel/trace/rv/monitors/pagefault/Kconfig
+> =C2=A0create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.c
+> =C2=A0create mode 100644 kernel/trace/rv/monitors/pagefault/pagefault.h
+> =C2=A0create mode 100644
+> kernel/trace/rv/monitors/pagefault/pagefault_trace.h
+> =C2=A0create mode 100644 tools/verification/models/rtapp/pagefault.ltl
+>=20
+> diff --git a/kernel/trace/rv/Kconfig b/kernel/trace/rv/Kconfig
+> index 5c407d291661..6f86d8501e87 100644
+> --- a/kernel/trace/rv/Kconfig
+> +++ b/kernel/trace/rv/Kconfig
+> @@ -42,6 +42,7 @@ source "kernel/trace/rv/monitors/scpd/Kconfig"
+> =C2=A0source "kernel/trace/rv/monitors/snep/Kconfig"
+> =C2=A0source "kernel/trace/rv/monitors/sncid/Kconfig"
+> =C2=A0source "kernel/trace/rv/monitors/rtapp/Kconfig"
+> +source "kernel/trace/rv/monitors/pagefault/Kconfig"
+> =C2=A0# Add new monitors here
+> =C2=A0
+> =C2=A0config RV_REACTORS
+> diff --git a/kernel/trace/rv/Makefile b/kernel/trace/rv/Makefile
+> index 9b28c2419995..353ecf939d0e 100644
+> --- a/kernel/trace/rv/Makefile
+> +++ b/kernel/trace/rv/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_RV_MON_SCPD) +=3D monitors/scpd/scpd.o
+> =C2=A0obj-$(CONFIG_RV_MON_SNEP) +=3D monitors/snep/snep.o
+> =C2=A0obj-$(CONFIG_RV_MON_SNCID) +=3D monitors/sncid/sncid.o
+> =C2=A0obj-$(CONFIG_RV_MON_RTAPP) +=3D monitors/rtapp/rtapp.o
+> +obj-$(CONFIG_RV_MON_PAGEFAULT) +=3D monitors/pagefault/pagefault.o
+> =C2=A0# Add new monitors here
+> =C2=A0obj-$(CONFIG_RV_REACTORS) +=3D rv_reactors.o
+> =C2=A0obj-$(CONFIG_RV_REACT_PRINTK) +=3D reactor_printk.o
+> diff --git a/kernel/trace/rv/monitors/pagefault/Kconfig
+> b/kernel/trace/rv/monitors/pagefault/Kconfig
+> new file mode 100644
+> index 000000000000..b31dee208459
+> --- /dev/null
+> +++ b/kernel/trace/rv/monitors/pagefault/Kconfig
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +config RV_MON_PAGEFAULT
+> +	depends on RV
+> +	select RV_LTL_MONITOR
+> +	depends on RV_MON_RTAPP
+> +	default y
+> +	select LTL_MON_EVENTS_ID
+> +	bool "pagefault monitor"
+> +	help
+> +	=C2=A0 Monitor that real-time tasks do not raise page faults
+> diff --git a/kernel/trace/rv/monitors/pagefault/pagefault.c
+> b/kernel/trace/rv/monitors/pagefault/pagefault.c
+> new file mode 100644
+> index 000000000000..ff7df49871b2
+> --- /dev/null
+> +++ b/kernel/trace/rv/monitors/pagefault/pagefault.c
+> @@ -0,0 +1,82 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/ftrace.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/rv.h>
+> +#include <linux/sched/deadline.h>
+> +#include <linux/sched/rt.h>
+> +#include <linux/tracepoint.h>
+> +#include <rv/instrumentation.h>
+> +
+> +#define MODULE_NAME "pagefault"
+> +
+> +#include <rv_trace.h>
+> +#include <trace/events/exceptions.h>
+> +#include <monitors/rtapp/rtapp.h>
+> +
+> +#include "pagefault.h"
+> +#include <rv/ltl_monitor.h>
+> +
+> +static void ltl_atoms_fetch(struct task_struct *task, struct
+> ltl_monitor *mon)
+> +{
+> +	ltl_atom_set(mon, LTL_RT, rt_or_dl_task(task));
+> +}
 
-ETF may fail to re-enable after reading, and driver->reading will
-not be set to false, this will cause failure to enable/disable to ETF.
-This change set driver->reading to false even if re-enabling fail.
+Mmh, you probably already considered that, so ignore my comment in that cas=
+e.
 
-Fixes: 669c4614236a7 ("coresight: tmc: Don't enable TMC when it's not ready.")
-Co-developed-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Signed-off-by: Yuanfang Zhang <quic_yuanfang@quicinc.com>
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
-Signed-off-by: Jie Gan <jie.gan@oss.qualcomm.com>
----
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+I just realised this function would tell you a PI boosted task is an RT tas=
+k,
+is that acceptable in your model?
+It's probably a configuration mistake on its own if an RT task following th=
+ose
+rules shares resources with non-RT tasks not following them, but if that's
+something allowed, you may see this atom change more often than you'd like,=
+ not
+sure if that can be something worth noting.
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index d858740001c2..8c9f14e36bc2 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -87,6 +87,12 @@ static void __tmc_etb_disable_hw(struct tmc_drvdata *drvdata)
- {
- 	CS_UNLOCK(drvdata->base);
- 
-+	/* Check if the etf already disabled*/
-+	if (!(readl_relaxed(drvdata->base + TMC_CTL) & TMC_CTL_CAPT_EN)) {
-+		CS_LOCK(drvdata->base);
-+		return;
-+	}
-+
- 	tmc_flush_and_stop(drvdata);
- 	/*
- 	 * When operating in sysFS mode the content of the buffer needs to be
-@@ -747,7 +753,6 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
- 	char *buf = NULL;
- 	enum tmc_mode mode;
- 	unsigned long flags;
--	int rc = 0;
- 
- 	/* config types are set a boot time and never change */
- 	if (WARN_ON_ONCE(drvdata->config_type != TMC_CONFIG_TYPE_ETB &&
-@@ -773,11 +778,7 @@ int tmc_read_unprepare_etb(struct tmc_drvdata *drvdata)
- 		 * can't be NULL.
- 		 */
- 		memset(drvdata->buf, 0, drvdata->size);
--		rc = __tmc_etb_enable_hw(drvdata);
--		if (rc) {
--			raw_spin_unlock_irqrestore(&drvdata->spinlock, flags);
--			return rc;
--		}
-+		__tmc_etb_enable_hw(drvdata);
- 	} else {
- 		/*
- 		 * The ETB/ETF is not tracing and the buffer was just read.
--- 
-2.34.1
+Perhaps you could add a comment saying that this is not a problem and why (=
+e.g.
+instead of using rt_or_dl_task_policy for the job).
+
+What do you think?
+
+Besides this detail, the monitor looks good to me
+Reviewed-by: Gabriele Monaco <gmonaco@redhat.com>
+
+Thanks,
+Gabriele
 
