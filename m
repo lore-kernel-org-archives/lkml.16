@@ -1,129 +1,336 @@
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F8926772C;
-	Wed, 23 Apr 2025 17:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDC341C69;
+	Wed, 23 Apr 2025 17:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430419; cv=none; b=gAub/Jl08UKgNBmG0QOClgXighApO8GLDEFRrCkykSY/toF01sOvfylFgQyXz5G7eHvJf0APUy91U9+bUfT7inwZ59WF8ru7Km83/wTUSBrYQOJ4KUDw4TioRP+mbUd7l1rqa41GnCxl554cYjPMtcXfeGzVN8ZrffL6xIhw7oE=
+	t=1745430457; cv=none; b=KVzO8gLr3dFIgRLQ67YqlgX7tiZtu4q7636auq+C+Kzlbar91QioaPDTn9F3e/lC84d4I2gI3uVoGhIf7kQQCNMOSvSqUWPkbqsVS0F2wb4ybWEUiqQTKzTXZfFCUPGyfMsMH9kO6NBMK9+9Clp7ucmOdJLy2semlZPtm4aoJow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430419; c=relaxed/simple;
-	bh=mUzTTN/4NXsdcyMh1iWWXDct71g5yfltXc88uy92cmI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I34bsEBDf+hh1+w7SZRTxOUaGBvJP1OT8pjhRzwXc3MHxs9qGBcYyFe8c/EYh483ONzAWRd4X83P1HU/f0bKvjw493fEGjF9OuXI/UcYx4HqrZcoouj8OSccxkd+2Gix7nvlI0Xz4Jdtgsx+j2RMSsptL+UQK0pR+GkB+dVJiVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-873ac8037ecso60586241.3;
-        Wed, 23 Apr 2025 10:46:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745430415; x=1746035215;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wLqipjscszx2Mp0FY64qeFZMiD5TTEV8hZP6rO4hjpA=;
-        b=TyLVeEkWhQLYwu5MoSI0oFjMp5B+FTPWyNz4nHIWpMUQ6M3O4uvTCXC2vBj3h6DtaF
-         9ImT+gfVKc76fPxVcimeD64zJdtJIFETuItUB071U9d0Ah5rRq2qnFAZ0E+kz7zvh8fm
-         uLrFvBCfHse/MSD2cu75rm7ffxzRfRR9Q+78wvs7x5p6UkjTGreuYUQGR5LvvHjKz37b
-         5w2StymfYc17xWhCm+NRHX+eVhxU3MYAXg8KNY0SKlLuPUqTlUf5mgjCKHasnbXzj7I4
-         IZxgvUq625W4DeU95IhQ7cf4XZtH2gsM81LvVSm9LhYlwbVsOTkT1fq+G4JJ6W3NrPn2
-         NPWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUtqtwB737LFfEQQcuZGpxH48VN1MfRB3gjcPtAGwgnxt2d7EPoOKVgmikWjfDTLQx1N975/utw@vger.kernel.org, AJvYcCVLswJjEv6p5mfd8nwPmBEFuUcZvVEZnft4cY4V0gEu/T0wKxkfCWP64R7Q4rvYZaDR/THJxDGcWHDtSpoP@vger.kernel.org, AJvYcCWsl3XHT+9KlvUgfZVAa2J9jfvXb/cxS1NCv1tUdj9L7Clklua/kRx2mrI9+30w26R9Qc16sWAp7TI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YywJ28/iEHafffddCedwvisGv+6fV3HLAjYDqnMl0G/1rn8fbVw
-	8rnrQz3A0esQbhbH0RV1Wm8jYyOABLRGIQPw0tadi2ljyoizLaCkGkaTx2wKHl0=
-X-Gm-Gg: ASbGncuEC7QgXRonJWM3sZc6zBvninXyv+E3aK1e5BMFexm9j0lmwdg1vqgXZ2ZzIGh
-	TFsIzX73FHUXadhxBFpJPEPKGn6fc3Mnwvt96+ohPq8ipEDS7TzWTOIgyT/uXLapeGyAm/FARxM
-	e6mAwVeoEgm7pf8Um5pdsTzi+TMKHB3WVgiftD8WifL3A5LwN4YgyoGKJUaGRBXIXWERQdox0Sb
-	X3hI2MSvp0Yc3LXL7Gzqou06oe2jIDO7kNuBJ1vB7080f/fAhjH4HLUl5PZii9aC3Fv8KJgxLod
-	Armd0no5ldBfnFa6RDiGz0o9qJjrpEWRqZxt0aZm+l4oRTapqmNWVlBUiB9StKXmKgSYjIcgG1y
-	QwHLuB/A=
-X-Google-Smtp-Source: AGHT+IE+gjuwIY1FsGyjscWq7LtFgQq7O+yKZ8X9hbDn0qAWEGwtA48+ObWTnEd63Ov1+kbdpwE6Ww==
-X-Received: by 2002:a05:6102:15a2:b0:4c1:801e:deb2 with SMTP id ada2fe7eead31-4d37bed5052mr213141137.7.1745430414838;
-        Wed, 23 Apr 2025 10:46:54 -0700 (PDT)
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com. [209.85.221.172])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-87764777674sm2894884241.24.2025.04.23.10.46.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 10:46:52 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-525da75d902so53099e0c.3;
-        Wed, 23 Apr 2025 10:46:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUJUlHc5yj/t8cOmysbqLaTGSyJl64xCd2DlinA0G9VxHHpusY/QAIjT2dGO8Z2AngqQAf8hjxlZ2k=@vger.kernel.org, AJvYcCVi7xK4z60PdOc+vV897S2k6p4YdOtvuMr9AZk9wBUMYtNc1XcZyadxsAbOu7O0WK5EiYX00UQ0@vger.kernel.org, AJvYcCWzsZSMeRkCNdJLHx7to7hlCZ+PEGaRdwC5SnHQ0JGye28uRgGXEXDg5AJjOjEI4FF6WlKuizts7Rf+We52@vger.kernel.org
-X-Received: by 2002:a05:6122:2a02:b0:529:f50:7904 with SMTP id
- 71dfb90a1353d-52a76b54183mr283580e0c.9.1745430411699; Wed, 23 Apr 2025
- 10:46:51 -0700 (PDT)
+	s=arc-20240116; t=1745430457; c=relaxed/simple;
+	bh=VsBgMm6ql9X21OmCeVGgqkwDam+RgQHacHaxh9tzAfE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aouqsNYannFClJ/tz9wYpwPHACjchW3tDyuI8M/Mvkr60sy8z1UPJVV1jK/Xa2mWl3DEn/iR0DlotuIsczW/YleCCo7TwE/DTpJMqJUMTRftVtPdvgR8EIiJPiEtri8TJfAPJVe4SSyWeRzYtQGOKNyH0K8pSNRY60N7fkFLJPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZyEosRz/; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZyEosRz/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745430456; x=1776966456;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VsBgMm6ql9X21OmCeVGgqkwDam+RgQHacHaxh9tzAfE=;
+  b=ZyEosRz/H+lFDgyvyUru3ropDaZ/kFqoEH/PNfZzDqITYV8HEV7qCQKs
+   nHrposnzADtsQBs2t01I/EszMVZV8lMhkKrT/p2aZtYyIRNbZhKGxr9Z5
+   4pWjCb+TpzhtJhdHv3psmQ1i4v+xiPWLV2bVYj/DCA2wUn5kx6ZbejTBv
+   Wq0ppMoORN8AUK4sr2SyLPa2I7FF1rvCdEVIfxMrUQ0+70lGmaQOGbLcc
+   3hNcBWbKPQuIadIN/jd52kaKWsFL1wKjoiXs6KIm+kl9GdLMqepc/a806
+   bhgf9QzoIsjMgSzQlfssvq9rTBij47hCklmzgo4w8NwXgj3+Df67Eh2Im
+   g==;
+X-CSE-ConnectionGUID: B3nYhO4fT7GrPBv4W+Fz8w==
+X-CSE-MsgGUID: QJbRYxvAT0aa4vae8f3bCQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47168750"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="47168750"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:47:35 -0700
+X-CSE-ConnectionGUID: ASiuKRo8Syau7sjtBnrOLw==
+X-CSE-MsgGUID: mYd/xEnCTYCPxLKRG3eVuw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="137173333"
+Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 23 Apr 2025 10:47:31 -0700
+Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1u7eC1-0003Vv-1W;
+	Wed, 23 Apr 2025 17:47:29 +0000
+Date: Thu, 24 Apr 2025 01:46:30 +0800
+From: kernel test robot <lkp@intel.com>
+To: David Lechner <dlechner@baylibre.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Eugen Hristev <eugen.hristev@linaro.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+Message-ID: <202504240137.4mJaj0GN-lkp@intel.com>
+References: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <PN3PR01MB9597382EFDE3452410A866AEB8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <PN3PR01MB9597B01823415CB7FCD3BC27B8B52@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <CAMuHMdV9tX=TG7E_CrSF=2PY206tXf+_yYRuacG48EWEtJLo-Q@mail.gmail.com>
- <PN3PR01MB9597B3AE75E009857AA12D4DB8BB2@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
- <CAMuHMdWpqHLest0oqiB+hG47t=G7OScLmHz5zr2u0ZgED_+Obg@mail.gmail.com>
- <aAjthvTuIeUIO4CT@pathway.suse.cz> <CAMuHMdXuawN0eC0yO40-zrz70TH-3_Y-CFSy6=hHCCMLAPvU5w@mail.gmail.com>
- <aAkVcaRrMmqXRSFz@smile.fi.intel.com>
-In-Reply-To: <aAkVcaRrMmqXRSFz@smile.fi.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 23 Apr 2025 19:46:39 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUUkhJm++zitVRQdSHJUo9McjYGeVz4Frv2sct_Can+aw@mail.gmail.com>
-X-Gm-Features: ATxdqUEiZpgKy-OUmSil13Kt3gOTH1qjKd6FZI95GjTyFDCgENU6kR4WqaMubEM
-Message-ID: <CAMuHMdUUkhJm++zitVRQdSHJUo9McjYGeVz4Frv2sct_Can+aw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] lib/vsprintf: Add support for generic FourCCs by
- extending %p4cc
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>, Aditya Garg <gargaditya08@live.com>, 
-	Hector Martin <marcan@marcan.st>, alyssa@rosenzweig.io, Sven Peter <sven@svenpeter.dev>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Aun-Ali Zaidi <admin@kodeit.net>, 
-	Maxime Ripard <mripard@kernel.org>, airlied@redhat.com, Simona Vetter <simona@ffwll.ch>, 
-	Steven Rostedt <rostedt@goodmis.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Morton <akpm@linux-foundation.org>, apw@canonical.com, joe@perches.com, 
-	dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com, Kees Cook <kees@kernel.org>, 
-	tamird@gmail.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
-	Asahi Linux Mailing List <asahi@lists.linux.dev>, netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
 
-Hi Andy,
+Hi David,
 
-On Wed, 23 Apr 2025 at 18:30, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Wed, Apr 23, 2025 at 04:50:02PM +0200, Geert Uytterhoeven wrote:
-> > On Wed, 23 Apr 2025 at 15:39, Petr Mladek <pmladek@suse.com> wrote:
-> > > On Tue 2025-04-22 10:43:59, Geert Uytterhoeven wrote:
->
-> ...
->
-> > > The problem is that the semantic is not the same. The modifiers affect
-> > > the output ordering of IPv4 addresses while they affect the reading order
-> > > in case of FourCC code.
-> >
-> > Note that for IPv4 addresses we have %pI4, which BTW also takes [hnbl]
-> > modifiers.
->
-> Ouch, now I think I understand your complain. You mean that the behaviour of
-> h/n here is different to what it is for IPv4 case?
+kernel test robot noticed the following build errors:
 
-Indeed. "%pI4n" byte-swaps on little-endian, but not on big-endian
-(remember, network byte-order _is_ big-endian), while "%p4cn" swaps
-everywhere.
+[auto build test ERROR on aff301f37e220970c2f301b5c65a8bfedf52058e]
 
-> > > Avoid the confusion by replacing the "n" modifier with "hR", aka
-> > > reverse host ordering.
->
-> Not ideal, but better than 'h'ost / 'r'everse pair. Not giving a tag and not
-> objecting either if there is a consensus.
+url:    https://github.com/intel-lab-lkp/linux/commits/David-Lechner/iio-introduce-IIO_DECLARE_BUFFER_WITH_TS-macros/20250423-061049
+base:   aff301f37e220970c2f301b5c65a8bfedf52058e
+patch link:    https://lore.kernel.org/r/20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706%40baylibre.com
+patch subject: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+config: riscv-randconfig-002-20250424 (https://download.01.org/0day-ci/archive/20250424/202504240137.4mJaj0GN-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250424/202504240137.4mJaj0GN-lkp@intel.com/reproduce)
 
-That is worth as much as my LGTM ;-)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202504240137.4mJaj0GN-lkp@intel.com/
 
-Gr{oetje,eeting}s,
+All errors (new ones prefixed by >>):
 
-                        Geert
+   In file included from drivers/iio/industrialio-buffer.c:18:
+   In file included from include/linux/dma-buf.h:16:
+   In file included from include/linux/iosys-map.h:10:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:804:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     804 |         insb(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:104:53: note: expanded from macro 'insb'
+     104 | #define insb(addr, buffer, count) __insb(PCI_IOBASE + (addr), buffer, count)
+         |                                          ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-buffer.c:18:
+   In file included from include/linux/dma-buf.h:16:
+   In file included from include/linux/iosys-map.h:10:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:812:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     812 |         insw(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:105:53: note: expanded from macro 'insw'
+     105 | #define insw(addr, buffer, count) __insw(PCI_IOBASE + (addr), buffer, count)
+         |                                          ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-buffer.c:18:
+   In file included from include/linux/dma-buf.h:16:
+   In file included from include/linux/iosys-map.h:10:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:820:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     820 |         insl(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:106:53: note: expanded from macro 'insl'
+     106 | #define insl(addr, buffer, count) __insl(PCI_IOBASE + (addr), buffer, count)
+         |                                          ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-buffer.c:18:
+   In file included from include/linux/dma-buf.h:16:
+   In file included from include/linux/iosys-map.h:10:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:829:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     829 |         outsb(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:118:55: note: expanded from macro 'outsb'
+     118 | #define outsb(addr, buffer, count) __outsb(PCI_IOBASE + (addr), buffer, count)
+         |                                            ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-buffer.c:18:
+   In file included from include/linux/dma-buf.h:16:
+   In file included from include/linux/iosys-map.h:10:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:838:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     838 |         outsw(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:119:55: note: expanded from macro 'outsw'
+     119 | #define outsw(addr, buffer, count) __outsw(PCI_IOBASE + (addr), buffer, count)
+         |                                            ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-buffer.c:18:
+   In file included from include/linux/dma-buf.h:16:
+   In file included from include/linux/iosys-map.h:10:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:847:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     847 |         outsl(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:120:55: note: expanded from macro 'outsl'
+     120 | #define outsl(addr, buffer, count) __outsl(PCI_IOBASE + (addr), buffer, count)
+         |                                            ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-buffer.c:18:
+   In file included from include/linux/dma-buf.h:16:
+   In file included from include/linux/iosys-map.h:10:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:1175:55: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+    1175 |         return (port > MMIO_UPPER_LIMIT) ? NULL : PCI_IOBASE + port;
+         |                                                   ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-buffer.c:29:
+>> include/linux/iio/iio.h:813:16: error: static assertion failed due to requirement 'sizeof (__alignof(unsigned long long)) % sizeof(long long) == 0': macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment
+     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/iio/iio.h:813:55: note: expression evaluates to '4 == 0'
+     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+   7 warnings and 1 error generated.
+--
+   In file included from drivers/iio/industrialio-sw-device.c:14:
+   In file included from include/linux/iio/sw_device.h:13:
+>> include/linux/iio/iio.h:813:16: error: static assertion failed due to requirement 'sizeof (__alignof(unsigned long long)) % sizeof(long long) == 0': macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment
+     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/iio/iio.h:813:55: note: expression evaluates to '4 == 0'
+     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+   1 error generated.
+--
+   In file included from drivers/iio/industrialio-triggered-event.c:9:
+>> include/linux/iio/iio.h:813:16: error: static assertion failed due to requirement 'sizeof (__alignof(unsigned long long)) % sizeof(long long) == 0': macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment
+     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+         |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/iio/iio.h:813:55: note: expression evaluates to '4 == 0'
+     813 | _Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+         |                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+   In file included from drivers/iio/industrialio-triggered-event.c:10:
+   In file included from include/linux/iio/triggered_event.h:5:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:804:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     804 |         insb(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:104:53: note: expanded from macro 'insb'
+     104 | #define insb(addr, buffer, count) __insb(PCI_IOBASE + (addr), buffer, count)
+         |                                          ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-triggered-event.c:10:
+   In file included from include/linux/iio/triggered_event.h:5:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:812:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     812 |         insw(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:105:53: note: expanded from macro 'insw'
+     105 | #define insw(addr, buffer, count) __insw(PCI_IOBASE + (addr), buffer, count)
+         |                                          ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-triggered-event.c:10:
+   In file included from include/linux/iio/triggered_event.h:5:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:820:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     820 |         insl(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:106:53: note: expanded from macro 'insl'
+     106 | #define insl(addr, buffer, count) __insl(PCI_IOBASE + (addr), buffer, count)
+         |                                          ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-triggered-event.c:10:
+   In file included from include/linux/iio/triggered_event.h:5:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:829:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     829 |         outsb(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:118:55: note: expanded from macro 'outsb'
+     118 | #define outsb(addr, buffer, count) __outsb(PCI_IOBASE + (addr), buffer, count)
+         |                                            ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-triggered-event.c:10:
+   In file included from include/linux/iio/triggered_event.h:5:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:838:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     838 |         outsw(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:119:55: note: expanded from macro 'outsw'
+     119 | #define outsw(addr, buffer, count) __outsw(PCI_IOBASE + (addr), buffer, count)
+         |                                            ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-triggered-event.c:10:
+   In file included from include/linux/iio/triggered_event.h:5:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+   In file included from include/asm-generic/hardirq.h:17:
+   In file included from include/linux/irq.h:20:
+   In file included from include/linux/io.h:12:
+   In file included from arch/riscv/include/asm/io.h:136:
+   include/asm-generic/io.h:847:2: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+     847 |         outsl(addr, buffer, count);
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/riscv/include/asm/io.h:120:55: note: expanded from macro 'outsl'
+     120 | #define outsl(addr, buffer, count) __outsl(PCI_IOBASE + (addr), buffer, count)
+         |                                            ~~~~~~~~~~ ^
+   In file included from drivers/iio/industrialio-triggered-event.c:10:
+   In file included from include/linux/iio/triggered_event.h:5:
+   In file included from include/linux/interrupt.h:11:
+   In file included from include/linux/hardirq.h:11:
+   In file included from ./arch/riscv/include/generated/asm/hardirq.h:1:
+
+
+vim +813 include/linux/iio/iio.h
+
+   781	
+   782	#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+   783		type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) / sizeof(type)]
+   784	
+   785	/**
+   786	 * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
+   787	 * @type: element type of the buffer
+   788	 * @name: identifier name of the buffer
+   789	 * @count: number of elements in the buffer
+   790	 *
+   791	 * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts(). In
+   792	 * addition to allocating enough space for @count elements of @type, it also
+   793	 * allocates space for a s64 timestamp at the end of the buffer and ensures
+   794	 * proper alignment of the timestamp.
+   795	 */
+   796	#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+   797		_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
+   798	
+   799	/**
+   800	 * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with timestamp
+   801	 * @type: element type of the buffer
+   802	 * @name: identifier name of the buffer
+   803	 * @count: number of elements in the buffer
+   804	 *
+   805	 * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses __aligned(IIO_DMA_MINALIGN)
+   806	 * to ensure that the buffer doesn't share cachelines with anything that comes
+   807	 * before it in a struct. This should not be used for stack-allocated buffers
+   808	 * as stack memory cannot generally be used for DMA.
+   809	 */
+   810	#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
+   811		_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(IIO_DMA_MINALIGN)
+   812	
+ > 813	_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) == 0,
+   814		"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp alignment");
+   815	
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
