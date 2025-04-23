@@ -1,55 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0871A1F4171;
-	Wed, 23 Apr 2025 07:07:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 109441ACEC6
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392038; cv=none; b=QXrHVrLm+TjfyBhcd5zek9t63NEpRzpDtU0bCGje4dXQt8OUhTnT0P2y++Rvn5A24mBu7OHxFMPbwG+5jDGvfcEKkJ+CVkMSWb5nU9hcRWZNBcOudPJytb3RYh9fQYKBAz5oOg+WHXZSQw275KhdRSNvkImpVjCE5tp+huNO8v8=
+	t=1745392063; cv=none; b=LPK7wqG2NvvSTjEwgULLl/CsyFr35RscentdAkSkd2TMKtjv0HWhLarueuidu/YevksLY7moIEWJHjMjFks7X6+jMNdO0pk3n9x5v7QuUVMhgGV13tUtDUAm8WrtaozviwQ3algToaH6korUvGCCPUZvPipH05rKzQ+SZCsrYek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745392038; c=relaxed/simple;
-	bh=Y64F0U7KWuYK1kXpeIHLmfq4guhCfutwjSgFxWVl6vY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jlG/aGhMy//w47v62HMG1nYqbCbjOu5n+0erzDe8hHMO2egmZqDVbLtGhOP+16Y+wuTgZdYJcC0klL7Zx9nvuR3vouPBCDlCmCjIVM2/u/45tf5Qv4coilve+QFCqwqCfHiwl51uG4bF7Lla6/nvShAvVRN46PfZ1ituqnOmNc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=pkccJikV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745392063; c=relaxed/simple;
+	bh=XPPxI1EePJ4jyAPmTekOSjxtM9GFxM850aU6g30qXUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OJmuDbknimmwaRTO/vCIwiGXGkI+ZUvpsTEpGukXE6AZELCrezIbxDes6h9XTPucyRU3V9BMzFCu5yPDhjyUZcqpknM1XwnXByikmR2exSDbnKcyqQNY0JKO1tuAT51D7z8Jrwj3DPMA1i1ZOV3zPiPznpWj/6fG8iDZ8hSiDD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ex9FfhoB; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="pkccJikV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2561DC4CEE2;
-	Wed, 23 Apr 2025 07:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745392037;
-	bh=Y64F0U7KWuYK1kXpeIHLmfq4guhCfutwjSgFxWVl6vY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pkccJikVMi2RsiAGy1rym3L4tXkApasnsR4BG3MvdEr0NYMe1o08KWWEsYApKXgUe
-	 4LQ0YDNExvcY5eqb/+FQ2WMf1cRkFXZ8uuo+V2FpNS2T3bzSu7iZxhAYTu6T1rYnrK
-	 FbBdN0qJjqbo3R1814bLHZhjgN/FXeLyibds/6Us=
-Date: Wed, 23 Apr 2025 09:05:38 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Nadav Tasher <tashernadav@gmail.com>
-Cc: cve@kernel.org, linux-cve-announce@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: CVE-2025-22032: wifi: mt76: mt7921: fix kernel panic due to null
- pointer dereference
-Message-ID: <2025042316-silk-brunette-213b@gregkh>
-References: <2025041657-CVE-2025-22032-1c05@gregkh>
- <20250422221047.406011-1-tashernadav@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ex9FfhoB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745392060;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=bSQuFpFcF+zoT6TtvXA/st2f5GKi8OfxXR7q5g/A83o=;
+	b=Ex9FfhoBYAL+u1qgGQTZAzH2OXLL2xL4uvWQt2N2/5y/6ylGznI7OA6LRMgyBdrbuwG3BT
+	tuSDba3k0MGLhoegZJuk1qDPsGfPMjiZikEsXGxDcmhSwG4ZfslD8ht3KldLnISl8uQhRo
+	tXoED99IMfDWepyYkpkbIM1ypUIp59E=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-661-aNh9AGqnNVWmIrnqkkb3xw-1; Wed, 23 Apr 2025 03:07:39 -0400
+X-MC-Unique: aNh9AGqnNVWmIrnqkkb3xw-1
+X-Mimecast-MFC-AGG-ID: aNh9AGqnNVWmIrnqkkb3xw_1745392058
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43f251dc364so37590185e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:07:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745392058; x=1745996858;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bSQuFpFcF+zoT6TtvXA/st2f5GKi8OfxXR7q5g/A83o=;
+        b=E0ADpHmRjbwL64C663q0pcYJJWVoZYRE7fM3Tn6sBfBvijVJ6ffNShiJ+N9Rz3JnpA
+         6uSrfpJxML2Sm7LjFJ4jDqIeer4qRTH+iqWjJ9N3z31oR3pxKvm0jo4XzwfCCDYipAhP
+         qXoF5Blc2u0NdtzHf5mgX1U0t+Lo4MRQmsjMuc+QxjNt9Y7cZrZ+Yfyri/hf0MF7fj7o
+         tgwkJ8eRRb1snVwgL0o42J+RMsBiVJL42g54yyxIo67HQzxt3sm1JeMX84vrSxlBb8o6
+         /ZVhs7WebXgd7nKGBZ4bnUlWIL66ONk2+il1waC6jNnk9InLLm6Gx+hiq95ePpWSfTf9
+         gQRg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+xWXV4RKr1E4RycikaYWwzXB2QjFnsT/Q9TkNRK8PUPLi9rwcn3YDvI7s9LRimJgmAUeEafxVZAgGBWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVyGhtcZ9U7nrLeYtxomkPfHU8HfWJAHMckIu/SDZclZ+RRpFi
+	ldPou2tIhboYH234ZIB8aD7wyj3ehmuE8SMn6iv1jc9VcNKenUMpIw85iuhlqnmxodJ2WNwMzkF
+	2/PGRHdlN6Mi9l18hHD/i2ZWOa/CJjvRCk0E+uupVEyk7wsIt/nBFpoKMgfYbZA==
+X-Gm-Gg: ASbGncsc+840zMddQV1lI6KLMNyboepB9CQHzO2O6DSwBWp3rEYVEQaYZD9tgOpaCYY
+	SDMUA9Ohh67wGkSFzmMbZxUh8t3La9l103xv8cIDdgZ2fuXLRFv0aRed2QAF1JV09WIUVxTbDFx
+	ne8BUf/NozzbNjtxZJm7f2ZeVgkfm33PO7N2zVtZNvRj9/K9akqKZB1Hbrt6Hc0XOewxf3c9lys
+	y1NVodHwmIsIgzxQ+9HnCzP7UmTbpRXPObcOpD2KD43Ehz2hi3EEqVzyKVpwRKxf2pwGT9ZnH8A
+	BsXWdMSkdwuaHR3d8i2wlVG824t3Sag9FpANJoHTPQO2y8koe1a8FO4UBl4lFKFuQHV/cZJwGM+
+	xogvR1xxL4w2uKshP6xqTb3QOM3+VKA575EUhP0k=
+X-Received: by 2002:a05:600c:1e0a:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-4406abfba46mr151994865e9.20.1745392058235;
+        Wed, 23 Apr 2025 00:07:38 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE0EPZTLlGttK0N2o8iNNcN0hsdGNP9+NvPegWHPoUw3XLmkd9/3/Wm2sbUUOuSp9r9Fx8Cqg==
+X-Received: by 2002:a05:600c:1e0a:b0:43c:eeee:b713 with SMTP id 5b1f17b1804b1-4406abfba46mr151994555e9.20.1745392057893;
+        Wed, 23 Apr 2025 00:07:37 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c740:2c00:d977:12ba:dad2:a87f? (p200300cbc7402c00d97712badad2a87f.dip0.t-ipconnect.de. [2003:cb:c740:2c00:d977:12ba:dad2:a87f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d37332sm14653105e9.30.2025.04.23.00.07.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 00:07:37 -0700 (PDT)
+Message-ID: <b64aea02-cc44-433a-8214-854feda2c06d@redhat.com>
+Date: Wed, 23 Apr 2025 09:07:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422221047.406011-1-tashernadav@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] smaps: Fix crash in smaps_hugetlb_range for non-present
+ hugetlb entries
+To: Ming Wang <wangming01@loongson.cn>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, Oscar Salvador <osalvador@suse.de>,
+ Andrii Nakryiko <andrii@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>,
+ Naoya Horiguchi <nao.horiguchi@gmail.com>, Michal Hocko <mhocko@suse.cz>,
+ David Rientjes <rientjes@google.com>, Joern Engel <joern@logfs.org>,
+ Hugh Dickins <hughd@google.com>, linux-kernel@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org
+Cc: Huacai Chen <chenhuacai@kernel.org>, lixuefeng@loongson.cn,
+ Hongchen Zhang <zhanghongchen@loongson.cn>
+References: <20250423010359.2030576-1-wangming01@loongson.cn>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250423010359.2030576-1-wangming01@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 01:10:47AM +0300, Nadav Tasher wrote:
-> I believe this issue also affects older versions of Linux,
-> as can be observed in the following GitHub issue:
-> https://github.com/openwrt/mt76/issues/966
+On 23.04.25 03:03, Ming Wang wrote:
+> When reading /proc/pid/smaps for a process that has mapped a hugetlbfs
+> file with MAP_PRIVATE, the kernel might crash inside pfn_swap_entry_to_page.
+> This occurs on LoongArch under specific conditions.
+> 
+> The root cause involves several steps:
+> 1. When the hugetlbfs file is mapped (MAP_PRIVATE), the initial PMD
+>     (or relevant level) entry is often populated by the kernel during mmap()
+>     with a non-present entry pointing to the architecture's invalid_pte_table
+>     On the affected LoongArch system, this address was observed to
+>     be 0x90000000031e4000.
+> 2. The smaps walker (walk_hugetlb_range -> smaps_hugetlb_range) reads
+>     this entry.
+> 3. The generic is_swap_pte() macro checks `!pte_present() && !pte_none()`.
+>     The entry (invalid_pte_table address) is not present. Crucially,
+>     the generic pte_none() check (`!(pte_val(pte) & ~_PAGE_GLOBAL)`)
+>     returns false because the invalid_pte_table address is non-zero.
+>     Therefore, is_swap_pte() incorrectly returns true.
+> 4. The code enters the `else if (is_swap_pte(...))` block.
+> 5. Inside this block, it checks `is_pfn_swap_entry()`. Due to a bit
+>     pattern coincidence in the invalid_pte_table address on LoongArch,
+>     the embedded generic `is_migration_entry()` check happens to return
+>     true (misinterpreting parts of the address as a migration type).
+> 6. This leads to a call to pfn_swap_entry_to_page() with the bogus
+>     swap entry derived from the invalid table address.
+> 7. pfn_swap_entry_to_page() extracts a meaningless PFN, finds an
+>     unrelated struct page, checks its lock status (unlocked), and hits
+>     the `BUG_ON(is_migration_entry(entry) && !PageLocked(p))` assertion.
+> 
+> The original code's intent in the `else if` block seems aimed at handling
+> potential migration entries, as indicated by the inner `is_pfn_swap_entry()`
+> check. The issue arises because the outer `is_swap_pte()` check incorrectly
+> includes the invalid table pointer case on LoongArch.
 
-So what commit id caused the problem that was fixed here?
+This has a big loongarch smell to it.
 
-thanks,
+If we end up passing !pte_present() && !pte_none(), then loongarch must 
+be fixed to filter out these weird non-present entries.
 
-greg k-h
+is_swap_pte() must not succeed on something that is not an actual swap pte.
+
+-- 
+Cheers,
+
+David / dhildenb
+
