@@ -1,85 +1,99 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1C6267AF8
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB232798E3;
+	Wed, 23 Apr 2025 15:58:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423759; cv=none; b=crqof3RdjdYO191uJlNG06qjtPl/3+ApPkIKzCsWs03OcTJR5y0RQwg9ss/xYDx9igO6tatUCE6zMsioQ+hw1wbQlroY1kkYvTI/NAJmBp/Pn05poz6iwiUT69awF+fxIE2J3qvVcm1gt0donxENNrFO4n1TYWOQHqUjc81Tl80=
+	t=1745423932; cv=none; b=A4UtRWa4KjPuzOEr+0+DXv9s+rbsfYhvzqEb2fdRyP27usSQAojqQmtWwxkXPpoHcewKhYpj62ttaDy7Mi+s9rq11XyVsLjHJokfruotuo9cjqAv04bY4/XbVPWpxmW163YFNXAzOVeUYd9PxVaMxPFqSUhAgqMom+qYXW97l0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423759; c=relaxed/simple;
-	bh=+2Q0TqTUlO+XxdYqin3kJ59kqtlT8h5Kw4yFiitoAu4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Rpygm/Bl2Bn/9L+6gECa72paeWoXzD5vh4aNWXqgT8vezLlKRAIyZjv386OPiAl+t8zQYo7bglh6yb8vNM3AW+3wrOljENVrpYHyKHPa2O8th8BHyQbc0T2HtBKblz7Zl7c9ahyNSS/uKAwR8Fxj1o7dH4QhoERRX+XEuNJO7u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4OVJxLgq; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1745423932; c=relaxed/simple;
+	bh=PpFC8zZMZXSzlNypRJqafF0wtsr0ftAXYGxb5xxbR54=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qE9EigLzOgLaiGK0esc3igNAQxFxcn7F6zdK1aQ9JZSIt1g3jxeAWcJR2rFqeaq2DGiOSVgeGcCTvwKZ196KX34atVW2d6+IVTN7IqVzX8WA1me9N0To3S2I4ejUe8RYFhv7YY5XX3XyNskS/ogCJe7ovZB/fVAAIYp8pnHwoeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sl88vdl4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4OVJxLgq"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6aaa18e8so19791a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:55:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745423758; x=1746028558; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jmJGVTNM68EN1Na+PFsjzt6zkvxFPDOKXQFGaHd/MNo=;
-        b=4OVJxLgq7yQkXec/gpLkz9iv5/PLWU420CoYpKP8880ek60gBNTCC0WFREfJp5KC4Z
-         SaXDyam9s72dD5F5N0+6m7DHBUlZgtvea/DvRDjDISL2bziWggyAF/CQTsQ9B00ihEq7
-         ufw7MTg2fTrpGrAlpz30CLk5U+2T16iMINDFXwFxvoUY0So2pjLYQuLouKpA6ENTFTiK
-         cvczy//hU74hhep9XwQnQCiqGsruOeHIsKrlIhV6ca3t/mHRdS0gqj9wVndmzmcSU/VY
-         lya36nqLTPxKD2sA3bC1cAsK+xFJdbAIvdOQ7Uc26drvjYDDwfhj1XXKCu5PlVDW8feO
-         DCRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745423758; x=1746028558;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jmJGVTNM68EN1Na+PFsjzt6zkvxFPDOKXQFGaHd/MNo=;
-        b=St+evLYKkjEvXkR2WzF4I29cYaoXLnIkzsSR2MBmsHtXC33GybkX+4rysFX4hGMQgp
-         /tWeAI4u1QJWUdxDTmxLHGA+BOusn0IhFMwjd0V7y5PHBE9jyUS31HFpo1KadFf9JODW
-         CyTfHqBYYCZw4uowcmm3dUeI8NGNyE9hQ2934X02C+s3NyNhSiTcPU+thp1h3PsBw6Hu
-         Jofu1kkv0cxregxZtFm9aJ/tfHO26i5xDrNh2VDneMxLeFuiphxVFx/uqeh8eBtz6+D5
-         WBiPsosUaiGh/LFd4PGoRWc3OmUiZPpWhglLhdG5500fFm5cH6DWzlwivr2UD+CSYDVz
-         eNtg==
-X-Forwarded-Encrypted: i=1; AJvYcCWNv1dEAM8/9g8uFH6+4I4WzjeDZSzJQcmie41VOUiQDuKUk168Wgtqw+92hjwoiXuezkhRHOaFN5rp1OQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztsNr/xn1wOhIrNk+78cG32T8hrgc1Yvua3Vug+MwW6zWhUISK
-	jLkS3GenrkAEtVgKsFhC4qcegXjLcOovx+bpsxuQF+si6guRinIrB7lNr/vL3JxRatIIL41HRAv
-	yfQ==
-X-Google-Smtp-Source: AGHT+IHnOGraDXWHVwtcHF/KJZows5bTw5g1o0e7YCWv5QZQLWNkV6iHhA0+G3682VIduWV5Xwdn6KbTATw=
-X-Received: from pjyp14.prod.google.com ([2002:a17:90a:e70e:b0:2fa:15aa:4d1e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2404:b0:309:eb44:2a58
- with SMTP id 98e67ed59e1d1-309eb442db3mr417907a91.22.1745423757994; Wed, 23
- Apr 2025 08:55:57 -0700 (PDT)
-Date: Wed, 23 Apr 2025 08:55:56 -0700
-In-Reply-To: <15e24c455fb9fca05b5af504251019b905b1bd77.camel@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sl88vdl4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9EFC4CEE2;
+	Wed, 23 Apr 2025 15:58:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745423932;
+	bh=PpFC8zZMZXSzlNypRJqafF0wtsr0ftAXYGxb5xxbR54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sl88vdl4dmVc242WZOqWBaMjdg+yskYnEhkxQPq6ttrbldVbB7kFfCbEQfiXsuEbp
+	 6vvML156AwB6aM5ZaOuJB+/ncxGTstLXImQx/6JqoihyrebII6CPjISjSl566D704P
+	 wCu0VzyjgksQ6/OtneULglbNfWFpVEY/M4cdPA89pvwlHHcowkFND5iWljwaDI3Zcn
+	 sqiu39JSffJBD8h+K2EqA0NnQc4WUY03c6Kd1Zx/A/UkOqGRqHFAuSiGQTRksuSJp2
+	 GHrFS1f1LU/5kq/C4QRWhNEaR/1aU99+CJLqz3rx5aJ/UmV6WPhcoSmHl9Wfym5aKJ
+	 pa6wMtPNPmYJg==
+Date: Wed, 23 Apr 2025 08:58:51 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v8 11/15] xfs: commit CoW-based atomic writes atomically
+Message-ID: <20250423155851.GL25700@frogsfrogsfrogs>
+References: <20250422122739.2230121-1-john.g.garry@oracle.com>
+ <20250422122739.2230121-12-john.g.garry@oracle.com>
+ <20250423082307.GA29539@lst.de>
+ <20250423145850.GA25675@frogsfrogsfrogs>
+ <20250423155340.GA32225@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250404193923.1413163-32-seanjc@google.com> <15e24c455fb9fca05b5af504251019b905b1bd77.camel@gmail.com>
-Message-ID: <aAkNjKIleB97r2fe@google.com>
-Subject: Re: [PATCH 31/67] KVM: SVM: Extract SVM specific code out of get_pi_vcpu_info()
-From: Sean Christopherson <seanjc@google.com>
-To: Francesco Lavra <francescolavra.fl@gmail.com>
-Cc: baolu.lu@linux.intel.com, dmatlack@google.com, dwmw2@infradead.org, 
-	iommu@lists.linux.dev, joao.m.martins@oracle.com, joro@8bytes.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mlevitsk@redhat.com, 
-	pbonzini@redhat.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423155340.GA32225@lst.de>
 
-On Wed, Apr 23, 2025, Francesco Lavra wrote:
-> On 2025-04-04 at 19:38, Sean Christopherson wrote:
-> > @@ -876,20 +874,21 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd
-> > *irqfd, struct kvm *kvm,
-> >  	 * 3. APIC virtualization is disabled for the vcpu.
-> >  	 * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
-> >  	 */
-> > -	if (new && new->type == KVM_IRQ_ROUTING_MSI &&
-> > -	    !get_pi_vcpu_info(kvm, new, &vcpu_info, &svm) &&
-> > -	    kvm_vcpu_apicv_active(&svm->vcpu)) {
-> > +	if (new && new && new->type == KVM_IRQ_ROUTING_MSI &&
+On Wed, Apr 23, 2025 at 05:53:40PM +0200, Christoph Hellwig wrote:
+> On Wed, Apr 23, 2025 at 07:58:50AM -0700, Darrick J. Wong wrote:
+> > > > +xfs_calc_default_atomic_ioend_reservation(
+> > > > +	struct xfs_mount	*mp,
+> > > > +	struct xfs_trans_resv	*resp)
+> > > > +{
+> > > > +	if (xfs_has_reflink(mp))
+> > > > +		resp->tr_atomic_ioend = resp->tr_itruncate;
+> > > > +	else
+> > > > +		memset(&resp->tr_atomic_ioend, 0,
+> > > > +				sizeof(resp->tr_atomic_ioend));
+> > > > +}
+> > > 
+> > > What is the point of zeroing out the structure for the non-reflink
+> > > case?  Just as a poision for not using it when not supported as no
+> > > code should be doing that?  Just thinking of this because it is a
+> > > potentially nasty landmine for the zoned atomic support.
+> > 
+> > Yes.  I thought about adding a really stupid helper:
 > 
-> The `&& new` part is redundant.
+> Why don't we just always set up the xfs_trans_resv structure?  We
+> do that for all kinds of other transactions not supported as well,
+> don't we?
 
-Ha, good job me.  Better safe than sorry?  :-)
+Works for me.  There's really no harm in it mirroring tr_itruncate since
+it won't affect the log size calculation.
+
+> > static inline bool xfs_has_sw_atomic_write(struct xfs_mount *mp)
+> > {
+> > 	return xfs_has_reflink(mp);
+> > }
+> > 
+> > But that seemed too stupid so I left it out.  Maybe it wasn't so dumb,
+> > since that would be where you'd enable ZNS support by changing that to:
+> > 
+> > 	return xfs_has_reflink(mp) || xfs_has_zoned(mp);
+> 
+> But that helper might actually be useful in various places, so
+> independent of the above I'm in favor of it.
+
+<nod> John, who should work on the next round, you or me?
+
+--D
