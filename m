@@ -1,291 +1,215 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE1926F444
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623921B0F31;
+	Wed, 23 Apr 2025 11:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745408632; cv=none; b=aohxFaJbeb1Fuj4lBUPQQaSNfCa1nhP5Db96bZ7OQ4ZGZ396OGbdhYI9vKKQFbvS+h40RbGiMVHFOUwUkOYUjAPeAW1LLtygPAAACQyhhgqw148KhL6ur1wJ8uZ/2jfSo+Ez9rmrxBWW1igPLo2PPssB0dCdgOLBGrAvNB5Jnfs=
+	t=1745408642; cv=none; b=dZbpQ0+5zRof/NJ3irpTsLp2fIPnjlMheZNTPJQ6M73+vou/tSIwW5VW4Wo2lWNNTNEDUVjjyFhTkQVnYTdNOgSEAhdR6GJ1qJGWDtpkifoQJXgjxWs7Sr+74cRhorZwv7Pctk7v+0Q9AmyYK9kFje354F4zyowKHiBhhoVgcJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745408632; c=relaxed/simple;
-	bh=c7bygEiYVYZrqrXs04o9QxTpx6H27O30IB3DbnrIyeM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QPtN7Qk0FgJOyik23qfoBWUKM1QqYl43WR454b0OpY8EFbFEBt4TAaG5+HWWjIh54RYui6pxVBg0SY3t/6Y7bjE1X+GIsf44D96TGfAuTSMs8bgxcWu+Rb0nkJTX9N5lSPU7tkTL0OepTjLOWiDnK6gvrvVksuD7vwouc/KgErw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=TvPMtoa4; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1745408642; c=relaxed/simple;
+	bh=JIjwVKXtAeB4GqTeChK7VSPESKKk4P+F60P8EOVY2+8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OS1+xLUm29mYvUuZdHifveufGhkUtJspoC7yr/+mJRp21fXoF68uVynnBU8vSpbUV0v3e4U+SnXiQ1IUa5Ii5pYdwpWloXJEKRqE+Vs47/pNfSp1ojK4GymI6eo6IF9lq6+uTUOfsRV9bDT68vQNehXS9FKt5QreOBdzIOC8Mcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=X4SBt5lq; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TvPMtoa4"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-702599fa7c5so6580367b3.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1745408629; x=1746013429; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EK1GBdVS+fFD4RHnIkXFWlvegHxNlfMGB9WZ0Wzz2uQ=;
-        b=TvPMtoa4+lNgaxbZBPm/womLO2+Q94N1Y8Y1bVx6aKMiGuJTOVcb2wC1nOWLxcBJCq
-         m2hMtmuEloX9UJQEYuAKcQqjEo8a3QP+cqzK5FVHEEolXnbhZZbcv/IbnUkRoWXrerL5
-         8gxp+NuaMKKeXLIz8wp+KmKSZ/O+lTq4Twa8U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745408629; x=1746013429;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EK1GBdVS+fFD4RHnIkXFWlvegHxNlfMGB9WZ0Wzz2uQ=;
-        b=d5F5u0rCm+CPXkI5jBkiaVkzoid4z7lTgkwV6acZR82p5nP3BKMsaV3/RhehKsZbN8
-         KclrOvbNI1eK1SfcoYw7oaKhUgSxKeoY8TqtpWJBLLsZULGCp638PVQewS3MzZFqb2m9
-         93r437N/wisqRJ+wTa0/Y0UN/gZMfslsy/uQgODZht0Q6toYN/936LaxZ7xWZEBBMrHx
-         dpJUm/8OURvXeODFHlpfBixK4EBniEZKajlBsoNAVG2cGNylLNwVpofiP4KWy4inhymt
-         scRwbslVpQx+4Dqk9MVSyKlYf79bABWh3GSa9dgeT/w3saQgyOhW7hxqx2gyCVORPt6r
-         xHSA==
-X-Gm-Message-State: AOJu0Yz+/dijk6DLC67iaE3i3ibtB6Ieeuf6LjRwG9mjib9n7pEAT6z3
-	UJy3m4oHXAax4Ye8laSm+rDu50YZj787Y6aim1jySGiao7eDo4Lp1gxE3cH1sNuXrEITk4BIrCb
-	DLZ+exKYY973DXYbl2KcsNeI/jgZq/Oxuw9Zv
-X-Gm-Gg: ASbGncsnrs8Mb8ykltjIi85eYXV8VAtwirD25w6J4WOWClEKhkAOx3/+5TyWV85Qbj2
-	rWCutJvZyVwrEjmmJQ1d+ZTJj0yomWHzKy7pLtc1hSg5ygrjr3uBP0PkEWDfHGrYEB/Xp9jzeG/
-	FxU+fr1i1pP1h8fgSy9+3V5K6ePtTOqnhAkg==
-X-Google-Smtp-Source: AGHT+IHYYQIJDBLxM+xrIQQFlLdWbn/W1y6jVyaniIuu6etcEXgr2BDONC/8d70bN3XsrHwevCfS+LNWBYX5gRSA3QY=
-X-Received: by 2002:a05:690c:b87:b0:705:6afe:4580 with SMTP id
- 00721157ae682-70823f245f4mr30995067b3.19.1745408629559; Wed, 23 Apr 2025
- 04:43:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="X4SBt5lq"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NApPoD023624;
+	Wed, 23 Apr 2025 11:43:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cTJDhj6eqMoV//Notj+3amni4JS+GXeRT+hpB9+jKIY=; b=X4SBt5lq1093olXm
+	HMkv+NV/FRHqvUPcB6EiWokGCRhQqe+NMncaIYa5LAci8PCclba+lLXTbDLPfiGg
+	MGNA3sL3oV1WfdUqmzdZTGERe/r6O3jC9c6wU1rJaii94R4ncsIwcvCFHSxOlIxq
+	9gbAKw5qTxKolJCQnosCjKZYAZp5LRHZGbJ39KOoC1zMSpWU9z2aY1TKujZ/nI3j
+	NpPRzAIA3e2DkXzsL+QZrilbQ/+E0O5xPDnHA5ORxs9E38wUxlfO41UDWzVA1+bO
+	np/f5WmqmZ6bg6K0TR+dIINbcg64p7181NjSJGviGlfbuKQazLUga9VKO+RIbVN3
+	yTs28Q==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2a0a2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 11:43:39 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53NBhcnb012881
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 11:43:38 GMT
+Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
+ 2025 04:43:33 -0700
+Message-ID: <200007be-fe80-43b6-9ce2-4e4695265599@quicinc.com>
+Date: Wed, 23 Apr 2025 17:13:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422161304.579394-1-zack.rusin@broadcom.com>
- <20250422161304.579394-5-zack.rusin@broadcom.com> <a803c925-b682-490f-8cd9-ca8d4cc599aa@zytor.com>
-In-Reply-To: <a803c925-b682-490f-8cd9-ca8d4cc599aa@zytor.com>
-From: Zack Rusin <zack.rusin@broadcom.com>
-Date: Wed, 23 Apr 2025 07:43:38 -0400
-X-Gm-Features: ATxdqUGoL409v7JXApk5wQQc2m0USD_kCTvkOpwzs01ZCx-WGqGP3vfxWdC_H-M
-Message-ID: <CABQX2QMznYZiVm40Ligq+pFKmEkVpScW+zcKYbPpGgm0=S2Xkg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] KVM: x86: Add support for legacy VMware backdoors
- in nested setups
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, Doug Covelli <doug.covelli@broadcom.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Sean Christopherson <seanjc@google.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, kvm@vger.kernel.org, linux-doc@vger.kernel.org
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000005ef7f30633709d5f"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 4/9] phy: qcom-qmp-ufs: Refactor UFS PHY reset
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: <vkoul@kernel.org>, <kishon@kernel.org>,
+        <manivannan.sadhasivam@linaro.org>,
+        <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
+        <bvanassche@acm.org>, <bjorande@quicinc.com>,
+        <neil.armstrong@linaro.org>, <quic_rdwivedi@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>
+References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
+ <20250410090102.20781-5-quic_nitirawa@quicinc.com>
+ <pur4y63xhfmqlyymg4pehk37ry4gg22h24zceoqjbsxp3hj4yf@4kptase3c4qp>
+ <317faeaa-3130-4e28-8c5d-441a76aa79b4@quicinc.com>
+ <CAO9ioeXnnbNzriVOYPUeBiWdrPfYUcMk+pVWYv0vZpJbFeByoQ@mail.gmail.com>
+ <2820908b-4548-4e0a-94b2-6065cb5ff1f3@quicinc.com>
+ <c2ec6b7c-421d-43c3-8c0a-de4f7bdd867c@oss.qualcomm.com>
+ <a24ff510-2afd-4aa7-a026-199fb6d87287@quicinc.com>
+ <CAO9ioeUDzYLMvqmsOQ-VfgLQLavHqn=QVYxyHzetjSfmhjKFjw@mail.gmail.com>
+ <1a623099-40bb-4884-8d93-132138a4150b@quicinc.com>
+ <b7027077-e9a3-462b-92a8-684a42d23604@oss.qualcomm.com>
+ <7a0eb7bf-d6d9-4e8e-829b-2df726651725@oss.qualcomm.com>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <7a0eb7bf-d6d9-4e8e-829b-2df726651725@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: IuJ8B3mIAby0BkYVCTLiNaxImH6OLJWS
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA4MSBTYWx0ZWRfXzsU/pbRPi/w2 MdNdeXDa2N0tSfe8q9hS1CWANMq5KMtQ1GGaqNzTNcTTlinqhnIU8nDxWipjm02l82dFH4O601A 4EbNzkMQrWpYdqgWy/N4aEtA2E4vK0AQh4R/f590Q20teb8Fre6htN7du7MKu1Ck65A46uz6Azm
+ Sxh1odAZLTZbUysShiFcuWzgNt0ObVaBFrx5QguGOHTSe2zP2hpfIT/1+GQ7TIu8sPKtF2gfk/e hg2PBudFe8p5xgCm1TQx6pTcoyXUbqqG7bpG1MWO0HIXL+l81PemadnJ2jEFSa52+ikH+Z+c+bX 2zE4S9kFloeCB7OCHk+D3VZFB9uombihez8r1bdZHkxOgbMQv+agCSm7Jj3ZOaZOISroQjvtXd2
+ rHd26+URXVK+20beD6tfy6t3RUIyZWz5MKGCW8I3k50k78wrjFL4G7wpP7BHsuNus+G1I8g8
+X-Authority-Analysis: v=2.4 cv=Tu/mhCXh c=1 sm=1 tr=0 ts=6808d26b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=I0qkcEgCn53fLrtcp2gA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: IuJ8B3mIAby0BkYVCTLiNaxImH6OLJWS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_07,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=999 bulkscore=0
+ mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230081
 
---0000000000005ef7f30633709d5f
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 3:56=E2=80=AFAM Xin Li <xin@zytor.com> wrote:
->
-> On 4/22/2025 9:12 AM, Zack Rusin wrote:
-> > Allow handling VMware backdoors by the L0 monitor. This is required on
-> > setups running Windows VBS, where the L1 will be running Hyper-V which
-> > can't handle VMware backdoors. Thus on Windows VBS legacy VMware backdo=
-or
-> > calls issued by the userspace will end up in Hyper-V (L1) and endup
-> > throwing an error.
-> > Add a KVM cap that, in nested setups, allows the legacy VMware backdoor
-> > to be handled by the L0 monitor. Thanks to this we can make sure that
-> > VMware backdoor is always handled by the correct monitor.
-> >
-> > Signed-off-by: Zack Rusin <zack.rusin@broadcom.com>
-> > Cc: Doug Covelli <doug.covelli@broadcom.com>
-> > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Cc: Sean Christopherson <seanjc@google.com>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Borislav Petkov <bp@alien8.de>
-> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> > Cc: x86@kernel.org
-> > Cc: "H. Peter Anvin" <hpa@zytor.com>
-> > Cc: Zack Rusin <zack.rusin@broadcom.com>
-> > Cc: kvm@vger.kernel.org
-> > Cc: linux-doc@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >   Documentation/virt/kvm/api.rst  | 14 +++++++++++
-> >   arch/x86/include/asm/kvm_host.h |  1 +
-> >   arch/x86/kvm/Kconfig            |  1 +
-> >   arch/x86/kvm/kvm_vmware.h       | 42 ++++++++++++++++++++++++++++++++=
-+
-> >   arch/x86/kvm/svm/nested.c       |  6 +++++
-> >   arch/x86/kvm/svm/svm.c          |  3 ++-
-> >   arch/x86/kvm/vmx/nested.c       |  6 +++++
-> >   arch/x86/kvm/x86.c              |  8 +++++++
-> >   include/uapi/linux/kvm.h        |  1 +
-> >   9 files changed, 81 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/ap=
-i.rst
-> > index 6d3d2a509848..55bd464ebf95 100644
-> > --- a/Documentation/virt/kvm/api.rst
-> > +++ b/Documentation/virt/kvm/api.rst
-> > @@ -8322,6 +8322,20 @@ userspace handling of hypercalls is discouraged.=
- To implement
-> >   such functionality, use KVM_EXIT_IO (x86) or KVM_EXIT_MMIO
-> >   (all except s390).
-> >
-> > +7.39 KVM_CAP_X86_VMWARE_NESTED_BACKDOOR_L0
-> > +------------------------------------------
-> > +
-> > +:Architectures: x86
-> > +:Parameters: args[0] whether the feature should be enabled or not
-> > +:Returns: 0 on success.
-> > +
-> > +Capability allows VMware backdoors to be handled by L0 when running
-> > +on nested configurations. This is required when, for example
-> > +running Windows guest with Hyper-V VBS enabled - in that configuration
-> > +the VMware backdoor calls issued by VMware tools would endup in Hyper-=
-V
-> > +(L1) which doesn't handle VMware backdoor. Enable this option to have
-> > +VMware backdoor sent to L0 monitor.
-> > +
-> >   8. Other capabilities.
-> >   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
->
-> You're not basing the patch set on v6.15-rcX?
 
-It was rebased on top of v6.14.
+On 4/23/2025 4:51 PM, Konrad Dybcio wrote:
+> On 4/23/25 1:09 PM, Konrad Dybcio wrote:
+>> On 4/16/25 2:26 PM, Nitin Rawat wrote:
+>>>
+>>>
+>>> On 4/16/2025 5:43 PM, Dmitry Baryshkov wrote:
+>>>> On Wed, 16 Apr 2025 at 12:08, Nitin Rawat <quic_nitirawa@quicinc.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 4/15/2025 2:59 PM, Dmitry Baryshkov wrote:
+>>>>>> On 14/04/2025 23:34, Nitin Rawat wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> On 4/11/2025 4:38 PM, Dmitry Baryshkov wrote:
+>>>>>>>> On Fri, 11 Apr 2025 at 13:50, Nitin Rawat <quic_nitirawa@quicinc.com>
+>>>>>>>> wrote:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> On 4/11/2025 1:38 AM, Dmitry Baryshkov wrote:
+>>>>>>>>>> On Thu, Apr 10, 2025 at 02:30:57PM +0530, Nitin Rawat wrote:
+>>>>>>>>>>> Refactor the UFS PHY reset handling to parse the reset logic only
+>>>>>>>>>>> once
+>>>>>>>>>>> during probe, instead of every resume.
+>>>>>>>>>>>
+>>>>>>>>>>> Move the UFS PHY reset parsing logic from qmp_phy_power_on to
+>>>>>>>>>>> qmp_ufs_probe to avoid unnecessary parsing during resume.
+>>>>>>>>>>
+>>>>>>>>>> How did you solve the circular dependency issue being noted below?
+>>>>>>>>>
+>>>>>>>>> Hi Dmitry,
+>>>>>>>>> As part of my patch, I moved the parsing logic from qmp_phy_power_on to
+>>>>>>>>> qmp_ufs_probe to avoid unnecessary parsing during resume. I'm uncertain
+>>>>>>>>> about the circular dependency issue and whether if it still exists.
+>>>>>>>>
+>>>>>>>> It surely does. The reset controller is registered in the beginning of
+>>>>>>>> ufs_qcom_init() and the PHY is acquired only a few lines below. It
+>>>>>>>> creates a very small window for PHY driver to probe.
+>>>>>>>> Which means, NAK, this patch doesn't look acceptable.
+>>>>>>>
+>>>>>>> Hi Dmitry,
+>>>>>>>
+>>>>>>> Thanks for pointing this out. I agree that it leaves very little time
+>>>>>>> for the PHY to probe, which may cause issues with targets where
+>>>>>>> no_pcs_sw_reset is set to true.
+>>>>>>>
+>>>>>>> As an experiment, I kept no_pcs_sw_reset set to true for the SM8750,
+>>>>>>> and it caused bootup probe issues in some of the iterations I ran.
+>>>>>>>
+>>>>>>> To address this, I propose updating the patch to move the
+>>>>>>> qmp_ufs_get_phy_reset call to phy_calibrate, just before the
+>>>>>>> reset_control_assert call.
+>>>>>>
+>>>>>> Will it cause an issue if we move it to phy_init() instead of
+>>>>>> phy_calibrate()?
+>>>>>
+>>>>> Hi Dmitry,
+>>>>>
+>>>>> Thanks for suggestion.
+>>>>> Phy_init is invoked before phy_set_mode_ext and ufs_qcom_phy_power_on,
+>>>>> whereas calibrate is called after ufs_qcom_phy_power_on. Keeping the UFS
+>>>>> PHY reset in phy_calibrate introduces relatively more delay, providing
+>>>>> more buffer time for the PHY driver probe, ensuring the UFS PHY reset is
+>>>>> handled correctly the first time.
+>>>>
+>>>> We are requesting the PHY anyway, so the PHY driver should have probed
+>>>> well before phy_init() call. I don't get this comment.
+>>>>
+>>>>>
+>>>>> Moving the calibration to phy_init shouldn't cause any issues. However,
+>>>>> since we currently don't have an initialization operations registered
+>>>>> for init, we would need to add a new PHY initialization ops if we decide
+>>>>> to move it to phy_init.
+>>>>
+>>>> Yes. I don't see it as a problem. Is there any kind of an issue there?
+>>>
+>>> No issues. In my next patchset, I would add a new init ops registered for qcom phy and move get ufs phy reset handler to it.
+>>
+>> I don't really like this circular dependency.
+>>
+>> So I took a peek at the docs and IIUC, they say that the reset coming
+>> from the UFS controller effectively does the same thing as QPHY_SW_RESET.
+>>
+>> Moreover, the docs mention the controller-side reset should not be used
+>> anymore (as of at least X1E & SM8550). Docs for MSM8996 (one of the
+>> oldest platforms that this driver supports) also don't really mention a
+>> hard dependency on it.
+>>
+>> So we can get rid of this mess entirely, without affecting backwards
+>> compatibility even, as this is all contained within the PHYs register
+>> space and driver.
+> 
+> Well hmm, certain platforms (with no_pcs_sw_reset) don't agree.. some
+> have GCC-sourced resets, but I'm not 100% sure how they affect the CSR
+> state
 
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index 300cef9a37e2..5dc57bc57851 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -4653,6 +4653,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm,=
- long ext)
-> >   #ifdef CONFIG_KVM_VMWARE
-> >       case KVM_CAP_X86_VMWARE_BACKDOOR:
-> >       case KVM_CAP_X86_VMWARE_HYPERCALL:
-> > +     case KVM_CAP_X86_VMWARE_NESTED_BACKDOOR_L0:
-> >   #endif
-> >               r =3D 1;
-> >               break;
-> > @@ -6754,6 +6755,13 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
-> >               kvm->arch.vmware.hypercall_enabled =3D cap->args[0];
-> >               r =3D 0;
-> >               break;
-> > +     case KVM_CAP_X86_VMWARE_NESTED_BACKDOOR_L0:
-> > +             r =3D -EINVAL;
-> > +             if (cap->args[0] & ~1)
->
-> Replace ~1 with a macro for better readability please.
+Hi Konrad,
 
-Are you sure about that? This code is already used elsewhere in the
-file  (for KVM_CAP_EXIT_ON_EMULATION_FAILURE) so, ignoring the fact
-that it's arguable whether IS_ZERO_OR_ONE is more readable than & ~1,
-if we use a macro for the vmware caps and not for
-KVM_CAP_EXIT_ON_EMULATION_FAILURE then the code would be inconsistent
-and that decreases the readability.
+I agree with you, but there are still some targets (Sdm845, SM7150, 
+SM6125, and MSM8996) that have upstream support and require a 
+controller-side GCC reset. Therefore to align with HPG we can't remove
+gcc reset for these targets.
+Please let me know your opinions.
 
-Or are you saying that since I'm already there you'd like to see a
-completely separate patch that defines some kind of IS_ZERO_OR_ONE
-macro for KVM, use it for KVM_CAP_EXIT_ON_EMULATION_FAILURE and, once
-that lands then I can make use of it in this series?
+Regards,
+nitin
 
-z
 
---0000000000005ef7f30633709d5f
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+> 
+> Konrad
 
-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
-6U6qgI8F5eiKsQyE0HgYrQJx/sDs9LLVZlaNiA3U8M8CgEnb8VhuH3BN/yXphhEQdJXb1TyaJA60
-SmHcZdEQZbl4EjwUcs3UIowmI/Mhi7ADQB7VNsO/BaOVBEQk53xH+4djY/cg7jvqTTeliY05j2Yx
-uwwXcDC4mWjGzxAT5DVqC8fKQvon1uc2heorHb555+sLdwYxAgMBAAGjggHYMIIB1DAOBgNVHQ8B
-Af8EBAMCBaAwgZMGCCsGAQUFBwEBBIGGMIGDMEYGCCsGAQUFBzAChjpodHRwOi8vc2VjdXJlLmds
-b2JhbHNpZ24uY29tL2NhY2VydC9nc2djY3I2c21pbWVjYTIwMjMuY3J0MDkGCCsGAQUFBzABhi1o
-dHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMwZQYDVR0gBF4wXDAJ
-BgdngQwBBQMBMAsGCSsGAQQBoDIBKDBCBgorBgEEAaAyCgMCMDQwMgYIKwYBBQUHAgEWJmh0dHBz
-Oi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwQQYDVR0fBDowODA2
-oDSgMoYwaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3I2c21pbWVjYTIwMjMuY3JsMCIG
-A1UdEQQbMBmBF3phY2sucnVzaW5AYnJvYWRjb20uY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMEMB8G
-A1UdIwQYMBaAFAApNp5ceroPry1QLdugI4UYsKCSMB0GA1UdDgQWBBQNDn2m/OLuDx9YjEqPLCDB
-s/VKNTANBgkqhkiG9w0BAQsFAAOCAgEAF463syOLTQkWZmEyyR60W1sM3J1cbnMRrBFUBt3S2NTY
-SJ2NAvkTAxbPoOhK6IQdaTyrWi8xdg2tftr5FC1bOSUdxudY6dipq2txe7mEoUE6VlpJid/56Mo4
-QJRb6YiykQeIfoJiYMKsyuXWsTB1rhQxlxfnaFxi8Xy3+xKAeX68DcsHG3ZU0h1beBURA44tXcz6
-fFDNPQ2k6rWDFz+XNN2YOPqfse2wEm3DXpqNT79ycU7Uva7e51b8XdbmJ6XVzUFmWzhjXy5hvV8z
-iF+DvP+KT1/bjO6aNL2/3PWiy1u6xjnWvobHuAYVrXxQ5wzk8aPOnED9Q8pt2nqk/UIzw2f67Cn9
-3CxrVqXUKm93J+rupyKVTGgKO9T1ODVPo665aIbM72RxSI9Wsofatm2fo8DWOkrfs29pYfy6eECl
-91qfFMl+IzIVfDgIrEX6gSngJ2ZLaG6L+/iNrUxHxxsaUmyDwBbTfjYwr10H6NKES3JaxVRslnpF
-06HTTciJNx2wowbYF1c+BFY4r/19LHygijIVa+hZEgNuMrVLyAamaAKZ1AWxTdv8Q/eeNN3Myq61
-b1ykTSPCXjBq/03CMF/wT1wly16jYjLDXZ6II/HYyJt34QeqnBENU9zXTc9RopqcuHD2g+ROT7lI
-VLi5ffzC8rVliltTltbYPc7F0lAvGKAxggJXMIICUwIBATBiMFIxCzAJBgNVBAYTAkJFMRkwFwYD
-VQQKExBHbG9iYWxTaWduIG52LXNhMSgwJgYDVQQDEx9HbG9iYWxTaWduIEdDQyBSNiBTTUlNRSBD
-QSAyMDIzAgxhPxw+eieHWB40hPkwDQYJYIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIK/l
-Ix4b9HecLXaeyIHa8rLy3yA4U30g0x2wzjO2hAciMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEw
-HAYJKoZIhvcNAQkFMQ8XDTI1MDQyMzExNDM0OVowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQME
-ASowCwYJYIZIAWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJ
-YIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUABIIBAEunuJNhOTmg8l8DR2yQvJf8ASf7hECdTxIUOu+h
-IXwIoRiMSE3zrCxi9la0SxeX1mBtvZ0yxX2QoIXbGzRRe1/FDcyLv48KY6epWmojdWo/tdSf3KAY
-tTlvXClGLLND9piyu+RZMl97w9rqcRvvCHeSnoQmFSO28RNcq7QAkJNRT44nmDT3nTgWfcLIQyO/
-PltgEGJdADg0hyVF7nKyHidTYmEPhmAPEChR1U/Ked8MPwWrEBihMLgdagmUTh3g3Ks0brC4imOW
-b5ltRrzfsBjiYLUIwVG8UJJwUUchgsE6L+GpfhSRrlTRY7bCYcSRYLwkyux21pOYTgbpYte4REk=
---0000000000005ef7f30633709d5f--
