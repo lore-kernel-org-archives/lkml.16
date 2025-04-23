@@ -1,91 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E521514E4
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2D81B0F17;
+	Wed, 23 Apr 2025 06:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745390717; cv=none; b=RAzTKudy9syMS/6UfaozHqJq/sCvlEesNQANoDfy+uZBwrUxZbykNDSeP0qLeoJSkjdcjAi+pFJy4LrpXCj5Er+AkoAK5qRj04GBSAsLXSvmxfBjJwyXUE657LdOxsUnH9Yf0RYevRFSFj1W3ad3dPeAAFwZC8i3XAznUF8nfC8=
+	t=1745390734; cv=none; b=pnE2zzFLflehPGbQZ27o4shU8H89zPXZiFZjNXxXA+dVaMNFKlobg8CuyAdM0RuIAqgc+WrAnvS6cfGgvfhWEgSTm4GTe4E32mH7J9S9fBGVINOnR6H4HpWDn9H3YQwmAJ8BUlT2T4AeDrP2pRWPEWD5HJyUo2ZBCFM/Y8koKpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745390717; c=relaxed/simple;
-	bh=h3D+v7S/DE8v4VXSLO4J78ijDrD37ur1IijJWbA1kPc=;
+	s=arc-20240116; t=1745390734; c=relaxed/simple;
+	bh=eAZQohfiqTNuhy/qRZvsfQDG7jIiwf3DkhHIBHMlOMA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jezYbP9Y06PdtT+QBYsOuiBbbS7CwQmHymM9Hzt7oFLEa+4VDF6yvhYWuMXyS3il8acJevvj+hIyFabuEzU1M0rSE3bgO5gYB1sHod3KcVKesOd6osQLKEZx6ZcGTdy4TdaDiMe31Ew4QivE56Rdru2F3973V/ACdJ1TSNLwyfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q3h7bnKm; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DgtaU4BtsIjEIfL6mV7ouHTNeKSZtaz7PRgpxdiTxrHG+CuTmw1Mc5JO21nh3YiqqfFVfxkvsGTFB4Gu1QV3WxEnjY0wlgXEBAtiZnrAnhIxU11tAvio1Y1AVLKNZZkmUcYYsz5gXdFQr1v96/eNGD64DKEZjyJz1ybHH/Q/y5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rJWD1RGx; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q3h7bnKm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745390715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FJQr5daKI6/1i+nwgHlDoYSZzm+JP1wEk08aCiKUf8w=;
-	b=Q3h7bnKmngwiwDGhGcvcuCrj9oeQ8wf9e19z4HIngNfOMsITGqb03rV6rjzFGGqIhyoz45
-	+EQG+peZ4D7qYySnweXAmMyi1/oVbI4mjvmpd0Dx5Uiu+UPsJ1P44BGe/7Rvxk7Y6eN2Cs
-	nE2i8JNY/Ma/iJE1FBTwAZ9dn3u/Xww=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-142-7m5xpZt4PuOLp3i3eWG0Zw-1; Wed, 23 Apr 2025 02:45:13 -0400
-X-MC-Unique: 7m5xpZt4PuOLp3i3eWG0Zw-1
-X-Mimecast-MFC-AGG-ID: 7m5xpZt4PuOLp3i3eWG0Zw_1745390712
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso43028715e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:45:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745390712; x=1745995512;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FJQr5daKI6/1i+nwgHlDoYSZzm+JP1wEk08aCiKUf8w=;
-        b=fP4Zm+roQT5wCosRD+ehcNr/WtBwMQNcXP40Eb1Rs7jE2zTnqFuDoTs7BOLIOUwRKo
-         GW8UNLCJQz8ptBIUtVpGYQ49msztIAatTmG+mxTax58Ti7ipeehz0vhj79JcqCVInLSw
-         bRy4cXxVuMHRlXufeDEVGQD55QMBp+O+gCeMlhlpGUvAEhP8yuighWnTnp8yQiosipGX
-         0b5HbQm2aZSxGED3Xe7Paroktd2OgszBa00eP2+zPVsjctFsoZ6AVvCYOoIfS+pQPAEH
-         Wujhu38lYRUV5rNmx1kBhqE5RTRJ5K3nb3l1Rakea24Frqzz/eB0nUEP7pba4ZNDEOso
-         H+GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUwDRVAereYLqjheno3QdB55/FYpuVWJwhM82sckRMf9ud53tFfKW8LcLtBfAoVaagz90QCJGxQD+mvyuc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXue+efBqtpPQhL9nHhAekUZtMALBMvHyENXTPRHJkfnDVlQav
-	cp43cbRNu9CpZO7By9PVXg7/ykdcnwQKXy2UL2jvudfkYbWfz+p1AWiszSCNd1upr3YDBGhBJc9
-	U4lK3DWjnNCrYojrTVOhaBrFWBWyx4r4sA6O6TtPyAZR8qfvEAijqzMxdQ8clfg==
-X-Gm-Gg: ASbGncuMDZBCk1f4iZ/pcdjHq1lye+ewz/d1UWZJNgx+AUS5kSS08MYwP/94qHHqQSQ
-	juZKKMjXv7GyjNuzFEqUQBTewMqGmS6VhYjq4Qwe2fMsM8O7wSQC78HLaaixEpvL9NI7y5XXRQD
-	fjBiht+fDNUdBe7bQFgq+LNnpF0SE5I40KMZpe6OCeq1ST98TgiUoNYvHgx485/fhLy51gO+rpt
-	b7oTazIhXwIBkAbzO4tVKA6EdhPNURgXW0WB2V7TaGIaGVAVh6aOH+HWnQX7rOzLxKB4uHfjIq/
-	jVbQnw==
-X-Received: by 2002:a05:600c:3487:b0:43e:a7c9:8d2b with SMTP id 5b1f17b1804b1-4406abfab7dmr152587645e9.24.1745390712285;
-        Tue, 22 Apr 2025 23:45:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IESPeBSydPIH0zVAjW7EqTg1hmkncqgVOAhXdcSWQ91oQ3uYj81WGlTIQYk3qbwlXLCw+komw==
-X-Received: by 2002:a05:600c:3487:b0:43e:a7c9:8d2b with SMTP id 5b1f17b1804b1-4406abfab7dmr152587385e9.24.1745390711947;
-        Tue, 22 Apr 2025 23:45:11 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d4707csm14014875e9.40.2025.04.22.23.45.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 23:45:11 -0700 (PDT)
-Date: Wed, 23 Apr 2025 02:45:08 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Eric Auger <eric.auger@redhat.com>
-Cc: Gerd Hoffmann <kraxel@redhat.com>, linux-kernel@vger.kernel.org,
-	Eric Auger <eauger@redhat.com>,
-	Jocelyn Falempe <jfalempe@redhat.com>,
-	David Airlie <airlied@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Simona Vetter <simona@ffwll.ch>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH v2] virtgpu: don't reset on shutdown
-Message-ID: <20250423023922-mutt-send-email-mst@kernel.org>
-References: <8490dbeb6f79ed039e6c11d121002618972538a3.1744293540.git.mst@redhat.com>
- <ge6675q3ahypfncrwbiodtcjnoftuza6ele5fhre3jmdeifsez@yy53fbwoulgo>
- <20250415095922-mutt-send-email-mst@kernel.org>
- <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
- <5aede4c4-5dfd-4ec1-9fd8-a5d6700678bd@redhat.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rJWD1RGx"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6fkI6011228;
+	Wed, 23 Apr 2025 06:45:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=HrLUjjBTROjldbtZdwwxXWZ8X9N0FO
+	yBH2g5cq+SOnw=; b=rJWD1RGxkR/Njk1KZtnJFUBI8ksIN2gzvFSTs0G53V8tC2
+	2PYQkHMMCOoVM2IyIJ69ItKxssfmf3eXOvxrLiPqzWPy/thmLNNsfAlJct+xPsgv
+	+OmMIb779ybfbaITgzx90xt6WVmI/rAStiZnmROS39n1TDC1vib2t/weNBBwxUnt
+	7QR5xqVjz8xa1hcaNXH07fiTU6/KDd6vGMMM55x+hg6R53Pkkrat5JFbCdhmW9HI
+	h3Vn66vvcYtgkUhfCog43Lnwg3AmZP1KJbIC5n363HWcPU8b2YExs5e1qjjCugPV
+	frqPvfZTmJNQHmQtg1rZBCL55OA1ThT6yUvcUMCw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466jpe1wv5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 06:45:22 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6QJEf005884;
+	Wed, 23 Apr 2025 06:45:21 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfx9st4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 06:45:21 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53N6jJEZ52560210
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 06:45:19 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A232220043;
+	Wed, 23 Apr 2025 06:45:19 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4EABC20040;
+	Wed, 23 Apr 2025 06:45:19 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.60])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 23 Apr 2025 06:45:19 +0000 (GMT)
+Date: Wed, 23 Apr 2025 08:45:17 +0200
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, dakr@kernel.org,
+        brauner@kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        "Shin'ichiro Kawasaki" <shinichiro.kawasaki@wdc.com>,
+        Xiao Ni <xni@redhat.com>
+Subject: Re: [PATCH] devtmpfs: don't use vfs_getattr_nosec to query i_mode
+Message-ID: <20250423064517.8056Aa2-hca@linux.ibm.com>
+References: <20250423045941.1667425-1-hch@lst.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -94,85 +71,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5aede4c4-5dfd-4ec1-9fd8-a5d6700678bd@redhat.com>
+In-Reply-To: <20250423045941.1667425-1-hch@lst.de>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: NvDXFq_rB7Cz4R7e4tulo_55oTKQWLw3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA0MyBTYWx0ZWRfXx74tVdqayq8f dGD/J1er7+3LXgD4pM5NqYWxFs/gDs73jslGZ8y1XodDF6ZS0cUNFW4XpJi4woRY8VjndN0Z1JZ lpG9axfLyRbd1qqWG8wTZoJJ4p1042i+uPXOEO+XdfhpZo3MuIpS/szBD53cxb/JFKncL8xQLRk
+ HtgSaBGAOVrHuAOVfOrXMeuhLnb40kJ0qOlsL7QI8jKJkMcvnAw+kJGrhhStdEMktEqPLf4fl4l I0XdF7wN9dRzOd8Ncky27jkKj3tPIvoIDBBacNIPpa8pwFnASyewommYKJrNHlyRBCAoAPxCc8+ c2B8e356Ki1RPydhQVZ+zHOqogMi2QxmAKA/Ltvr8TdaQq1hkp3YwrZ8UaW6648WraCjxJ6ZRZZ
+ Xz+pq9kct10jkBK5WmZvzp6DN30YF+CsEQ/JCI5ZWTND67BISf4tuMjfL2RENcn6MJWpGBD8
+X-Proofpoint-GUID: NvDXFq_rB7Cz4R7e4tulo_55oTKQWLw3
+X-Authority-Analysis: v=2.4 cv=IdWHWXqa c=1 sm=1 tr=0 ts=68088c82 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=JF9118EUAAAA:8 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=IDZ0-sv6maarBuPMgTYA:9
+ a=CjuIK1q_8ugA:10 a=xVlTc564ipvMDusKsbsT:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=10 mlxscore=10
+ lowpriorityscore=0 malwarescore=0 phishscore=0 impostorscore=0 bulkscore=0
+ spamscore=10 priorityscore=1501 suspectscore=0 adultscore=0 mlxlogscore=94
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230043
 
-On Tue, Apr 22, 2025 at 06:49:04PM +0200, Eric Auger wrote:
-> Hi Gerd, Michael,
+On Wed, Apr 23, 2025 at 06:59:41AM +0200, Christoph Hellwig wrote:
+> The recent move of the bdev_statx call to the low-level vfs_getattr_nosec
+> helper caused it being used by devtmpfs, which leads to deadlocks in
+> md teardown due to the block device lookup and put interfering with the
+> unusual lifetime rules in md.
 > 
-> On 4/16/25 3:57 PM, Gerd Hoffmann wrote:
-> > On Tue, Apr 15, 2025 at 10:00:48AM -0400, Michael S. Tsirkin wrote:
-> >> On Tue, Apr 15, 2025 at 01:16:32PM +0200, Gerd Hoffmann wrote:
-> >>>   Hi,
-> >>>
-> >>>> +static void virtio_gpu_shutdown(struct virtio_device *vdev)
-> >>>> +{
-> >>>> +	/*
-> >>>> +	 * drm does its own synchronization on shutdown.
-> >>>> +	 * Do nothing here, opt out of device reset.
-> >>>> +	 */
-> >>> I think a call to 'drm_dev_unplug()' is what you need here.
-> >>>
-> >>> take care,
-> >>>   Gerd
-> >> My patch reverts the behaviour back to what it was, so pls go
-> >> ahead and send a patch on top? I won't be able to explain
-> >> what it does and why it's needed.
-> > See below.  Untested.
-> >
-> > Eric, can you give this a spin?
-> >
-> > thanks,
-> >   Gerd
-> >
-> > ----------------------- cut here -------------------------------
-> > From f3051dd52cb2004232941e6d2cbc0c694e290534 Mon Sep 17 00:00:00 2001
-> > From: Gerd Hoffmann <kraxel@redhat.com>
-> > Date: Wed, 16 Apr 2025 15:53:04 +0200
-> > Subject: [PATCH] drm/virtio: implement virtio_gpu_shutdown
-> >
-> > Calling drm_dev_unplug() is the drm way to say the device
-> > is gone and can not be accessed any more.
-> >
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> > ---
-> >  drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > index e32e680c7197..71c6ccad4b99 100644
-> > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> > @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
-> >  
-> >  static void virtio_gpu_shutdown(struct virtio_device *vdev)
-> >  {
-> > -	/*
-> > -	 * drm does its own synchronization on shutdown.
-> > -	 * Do nothing here, opt out of device reset.
-> > -	 */
-> > +	struct drm_device *dev = vdev->priv;
-> > +
-> > +	/* stop talking to the device */
-> > +	drm_dev_unplug(dev);
-> I have tested this patch on top of Michael's v2 and I don't see any
-> splat on guest.
+> But as handle_remove only works on inodes created and owned by devtmpfs
+> itself there is no need to use vfs_getattr_nosec vs simply reading the
+> mode from the inode directly.  Switch to that to avoid the bdev lookup
+> or any other unintentional side effect.
 > 
-> Feel free to add my
-> 
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> Tested-by: Eric Auger <eric.auger@redhat.com>
-> 
-> Thanks
-> 
-> Eric
+> Reported-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> Reported-by: Xiao Ni <xni@redhat.com>
+> Fixes: 777d0961ff95 ("fs: move the bdex_statx call to vfs_getattr_nosec")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Tested-by: Shin'ichiro Kawasaki <shinichiro.kawasaki@wdc.com>
+> Tested-by: Xiao Ni <xni@redhat.com>
+> ---
+>  drivers/base/devtmpfs.c | 20 ++++++++------------
+>  1 file changed, 8 insertions(+), 12 deletions(-)
 
-Thanks, Eric!
-Gerd, do you want to post a patch officially?
-I just sent the dependency to Linus, maybe mention this for the
-maintainers.
-
-
-> >  }
-> >  
-> >  static void virtio_gpu_config_changed(struct virtio_device *vdev)
-
+Tested-by: Heiko Carstens <hca@linux.ibm.com>
