@@ -1,32 +1,32 @@
 Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A17A26A0E0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1E526A0E2;
 	Wed, 23 Apr 2025 07:29:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745393392; cv=none; b=DxoBxOq5+BaOiKgp/n49Diu1zjornUerEtjhibIXl48Xo5Y+nou7u2M3SVVpi3L8KkfNcyPvlXUBhnBsKpaOLO/RlLqaww7EEnIkv3DoSpxzv0QBFsM20tM0c1o5/LeXOESJMYIR58Ttkiq/JYJ2ml42stMUWqltkrvqdl4SzJI=
+	t=1745393393; cv=none; b=ZD8YxWcOzwqPgnz43eV++Odl2/YU5Ik8ncFoC5ycTiTMHn9TfHL8lfQRslvxEAUmifN+flOT+bj6n2cMpdZq0FKOJwIv1mHiQUnP2ndn/JdlcCr8bw/bbS7tqVKZSWFTQlVoIYD83d+l/vkQ/jaoi7KgLsZJZYXrTRc4LdxgmTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745393392; c=relaxed/simple;
-	bh=I83GxZDzcFuI33mtv7+ZFbBGKbZoP+td5F4juz3ryy0=;
+	s=arc-20240116; t=1745393393; c=relaxed/simple;
+	bh=+cnP4ca1FQ0tHxozULNiP7jBpOLaFhTWqxNNSQt6XeE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rpYOB8SkyoCiBY3HrbgybJXjXH+FTSjcw0UBTO8WEAnACYz65/H5PuaOM+jK6zviHkHhIcKgO3Syv8dixu7GCwtIKNTpn5GoJnSFAbQVuw9szCxlQ13aW+qpS5oofXJO2UnQ80Sebaxyn/Ty2uM9mNZVh+Xw6rILLxWFXJulMOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=PDLXlzMH; arc=none smtp.client-ip=89.58.32.78
+	 MIME-Version; b=gHvGWQKVqUDQkdqwZuCp4cKcmADqDrlA0iS8BFJZZwp5wia/Mv690spGSbeIcYdEJHAPK4ECD5ADhcOWI5IkdkCBk5bwJtbGVl34QKnywf0tdrQfaF0RomDyW7z+htzl86aSeajTgLnEw4nSGM8f78w3o7Mr4ndURV1Sg+hvgFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=gcBDMTPT; arc=none smtp.client-ip=89.58.32.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="PDLXlzMH"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 567E6102A8CBE;
-	Wed, 23 Apr 2025 09:29:47 +0200 (CEST)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="gcBDMTPT"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id AC7D2102A8CA3;
+	Wed, 23 Apr 2025 09:29:41 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1745393388; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1745393383; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=bhsgfhrOV51CF8CHf8FVR4/zGx8w+Pf/0ncp6vUStt4=;
-	b=PDLXlzMHNLfIrSZfd04ox1q+jdD4QnYFne1Q8iTWLNw1LeSBasUG0lwdu1yX3j1W36WxbT
-	ygZduwCZB9OLTLigP3AXRxaG7NoaaBQSN2GhC9VBOuaC8jOdRH3S9LoJwSkoL0qg05FDzg
-	H1uCBUU0PlwqOjUlgR1pBElez8kvMnLOSjx/+Px02goBR5TDn/Qwkn+fOAmTylEwus9uGe
-	5wFkYVWwYVg+BsrrqEQfSLLmAKcPv0hhhaSrESqSmHHV3eg7lypbMOccQxgN20Lu0NOXnL
-	wOpO1k4yb4mvB3wkO5VqRSSedW9a9ODdLfE+ZECzH9MfjoDNI/rJMmcnhpfN2w==
+	bh=M9en1AQ1xkOKdk7vgibZMZfU8KHPwXFBLopN+2g+czg=;
+	b=gcBDMTPTFvqMMxgEXNvlyKk+f29uj+4XJF9v/YoOMo6pnFPB1bCGSEk7Z2SyuNA6e7xsa/
+	ijZvl4EBZ+KE21I82ORff+e4KONH4WiP29EmQamUDUkXk4zsnky0GHtojxytQlJeAlkmA7
+	Z9LivWaKaiGh0ZOfRFxq6VWZgqcdH+jkBGJ92/LJCXAMFqDuFl0rZihPLCi1Sf6XRFxvkh
+	df8FFhOE6BCMxAJJ4rO0Ng4xBxKmygxXL3tN+zaNQ88BwHmnzdLajJ1qRdoD87g1XFTFjN
+	wQb3nJb6W7LBMs0fGdHcbRgTlRR4vO9kFmiBMMqMNDtDjyLh7Xvs0wEzGzE2Bg==
 From: Lukasz Majewski <lukma@denx.de>
 To: Andrew Lunn <andrew+netdev@lunn.ch>,
 	davem@davemloft.net,
@@ -48,10 +48,11 @@ Cc: Sascha Hauer <s.hauer@pengutronix.de>,
 	linux-arm-kernel@lists.infradead.org,
 	Stefan Wahren <wahrenst@gmx.net>,
 	Simon Horman <horms@kernel.org>,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next v7 5/7] ARM: mxs_defconfig: Enable CONFIG_NFS_FSCACHE
-Date: Wed, 23 Apr 2025 09:29:09 +0200
-Message-Id: <20250423072911.3513073-6-lukma@denx.de>
+	Lukasz Majewski <lukma@denx.de>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: [net-next v7 2/7] ARM: dts: nxp: mxs: Adjust the imx28.dtsi L2 switch description
+Date: Wed, 23 Apr 2025 09:29:06 +0200
+Message-Id: <20250423072911.3513073-3-lukma@denx.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250423072911.3513073-1-lukma@denx.de>
 References: <20250423072911.3513073-1-lukma@denx.de>
@@ -64,47 +65,61 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-It is not possible to enable by user the CONFIG_NETFS_SUPPORT anymore and
-hence it depends on CONFIG_NFS_FSCACHE being enabled.
+The current range of 'reg' property is too small to allow full control
+of the L2 switch on imx287.
 
-This patch fixes potential performance regression for NFS on the mxs
-devices.
+As this IP block also uses ENET-MAC blocks for its operation, the address
+range for it must be included as well.
+
+Moreover, some SoC common properties (like compatible, clocks, interrupts
+numbers) have been moved to this node.
 
 Signed-off-by: Lukasz Majewski <lukma@denx.de>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Reviewed-by: Stefan Wahren <wahrenst@gmx.net>
-Suggested-by: Stefan Wahren <wahrenst@gmx.net>
 
 ---
+Changes for v2:
+- adding extra properties (like compatible, clocks, interupts)
+
+Changes for v3:
+- None
+
+Changes for v4:
+- Rename imx287 with imx28 (as the former is not used in kernel anymore)
+
+Changes for v5:
+- None
+
 Changes for v6:
-- New patch
+- Add interrupt-names property
 
 Changes for v7:
-- None
+- Change switch interrupt name from 'mtipl2sw' to 'enet_switch'
 ---
- arch/arm/configs/mxs_defconfig | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/boot/dts/nxp/mxs/imx28.dtsi | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/configs/mxs_defconfig b/arch/arm/configs/mxs_defconfig
-index c76d66135abb..22f7639f61fe 100644
---- a/arch/arm/configs/mxs_defconfig
-+++ b/arch/arm/configs/mxs_defconfig
-@@ -138,8 +138,6 @@ CONFIG_PWM_MXS=y
- CONFIG_NVMEM_MXS_OCOTP=y
- CONFIG_EXT4_FS=y
- # CONFIG_DNOTIFY is not set
--CONFIG_NETFS_SUPPORT=m
--CONFIG_FSCACHE=y
- CONFIG_FSCACHE_STATS=y
- CONFIG_CACHEFILES=m
- CONFIG_VFAT_FS=y
-@@ -155,6 +153,7 @@ CONFIG_NFS_FS=y
- CONFIG_NFS_V3_ACL=y
- CONFIG_NFS_V4=y
- CONFIG_ROOT_NFS=y
-+CONFIG_NFS_FSCACHE=y
- CONFIG_NLS_CODEPAGE_437=y
- CONFIG_NLS_CODEPAGE_850=y
- CONFIG_NLS_ISO8859_1=y
+diff --git a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi b/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
+index bbea8b77386f..8aff2e87980e 100644
+--- a/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
++++ b/arch/arm/boot/dts/nxp/mxs/imx28.dtsi
+@@ -1321,8 +1321,13 @@ mac1: ethernet@800f4000 {
+ 			status = "disabled";
+ 		};
+ 
+-		eth_switch: switch@800f8000 {
+-			reg = <0x800f8000 0x8000>;
++		eth_switch: switch@800f0000 {
++			compatible = "nxp,imx28-mtip-switch";
++			reg = <0x800f0000 0x20000>;
++			interrupts = <100>, <101>, <102>;
++			interrupt-names = "enet_switch", "enet0", "enet1";
++			clocks = <&clks 57>, <&clks 57>, <&clks 64>, <&clks 35>;
++			clock-names = "ipg", "ahb", "enet_out", "ptp";
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
 2.39.5
 
