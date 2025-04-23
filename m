@@ -1,49 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C72E27FD71;
-	Wed, 23 Apr 2025 16:43:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE96727FD71
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:44:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426640; cv=none; b=o6BdYyoch/Q7yKVacyCe+2kXoD+g3PxdxSQgjLP3/S3ZQxTgG0AZBiDM/6kANzuMFc7c2CSvr6FLP5hE3kq9wbBdYVDdo3GH1XDuU395t2K9HsNMRa46s9o/xAbmNZNJN4Gkm7KPHJ3vcJvki03sA3lJfCYhc9kBCjbalPEmVxM=
+	t=1745426669; cv=none; b=Nyg23ve1C2HL8kulqyw9XgaMbkjCgc3vMcH/B0/MZck6tNx6SmVS2ISqw3W/htvmE+RWbyWmuliGwC4dhBl4UtebHfUn1LtUEUWmEMVyboKzbe91qjc9H6Ewe7yjb9I4vflNQsaeO1SN+E/5XhhsI1jXcSJxRMbU0KrHttV8NuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426640; c=relaxed/simple;
-	bh=TmsFT/k12epNq9WbCUQlZuVOv21gEQBz/+cdNiERNiI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Vm2MprSue0OtOfNpMMgzr9NJFwI2hxctYy9wI6j8BI/WSgj9ZSdpisRp+VBHsiny9Kpu1ZxJNkimQ1xMf1iqFVl/RS6BXalEZY2Fov+8LdUwKpC4ruYPxXIC0R5xZPGzq9MnrnweBMQpUI3ZGX5reGvhjcNKmGtFf5YEo5E4iZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0NkUkM1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745426669; c=relaxed/simple;
+	bh=FX/Vo6MgthKdRTi+CWkqnrzMpTD/YHg19LlWfAknldU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gfuLhRQPUQT0dQApOc7Cr4so8dZSrMGbf/dwp8f8LGMpBDgofitw8rhRwdzq1HdIyuLihmvxGFHoQEgbnv4oTmOUwlQ5yYEdrwZsEWjX4WpjTMYYSGSVImhZUjHGU3uldlwO0IMKG7XczPiCra3cP6xnX31xqCOLXBroi5tUrz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLIO7yB9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0NkUkM1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C83C4CEE2;
-	Wed, 23 Apr 2025 16:43:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLIO7yB9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E43FC4CEE2;
+	Wed, 23 Apr 2025 16:44:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745426639;
-	bh=TmsFT/k12epNq9WbCUQlZuVOv21gEQBz/+cdNiERNiI=;
+	s=k20201202; t=1745426669;
+	bh=FX/Vo6MgthKdRTi+CWkqnrzMpTD/YHg19LlWfAknldU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=Z0NkUkM1gS05G7ZhhzLOynJtCcpxr1SUirwv5yFZ7WT3+MXuhtT9zBzxL2n/DgF/A
-	 h70A1xojccbukVxLejEoR1ovHnh5A9nWRYSPQGt2Rv0tPBKFeGrxmk2cU/9uu/US5X
-	 ydx25KmOJdURwmv726dCeInBVLuX9ml2RRwT7KvICwMowis+/fXZz3b/K5uEAt1bHH
-	 qsL7FfEIR3KcEFNKZDlmMOHEKK4gkCuEo5mnsL+6jyUcCK8xKzQ9nEFjnnnws0iBHD
-	 Cjwjav15sZu4fLYeIvKZQiHT/rgZf14D8rR1LTHp7DJb0AAFdMBAJVQtxjVZSAlvFj
-	 e9gUeFfeGtDlg==
+	b=TLIO7yB9lKAb3xtqbawTI9uuH7U0buTQA287nqui8dXH5EcJZs9zQXzSUbb8PzWsy
+	 RNWcexpB7kcsIemNT+mZa97uo1GZoNa2eSlZ2NWj7v4fwrY36cwTuRpIT4Sjj1X3wP
+	 3HReIrVK6ck+ajc+V5gaae3eGR3NaAvgowNSm+upyMYOAyBfr2bchU8L3G9JXwFXZ6
+	 bK/Sq1HnGegVngE9Vt7g9vVxQpKsyBo3Uv/3hLahw2M1asmtUDdHtP35QZf1rglrQb
+	 5Qr9PrQSF/fZz87dmlYQwcYyUv1Wl/6vHDHO7nAzbLQfgLQ1X7HwSmx0r6AQyj/0p+
+	 LBc9aJbWay+Gw==
 From: Arnd Bergmann <arnd@kernel.org>
-To: "Theodore Ts'o" <tytso@mit.edu>,
-	Andreas Dilger <adilger.kernel@dilger.ca>
+To: Sandy Huang <hjc@rock-chips.com>,
+	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	Damon Ding <damon.ding@rock-chips.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	Jan Kara <jack@suse.cz>,
-	Zhang Yi <yi.zhang@huawei.com>,
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	"Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-	Shida Zhang <zhangshida@kylinos.cn>,
-	Baokun Li <libaokun1@huawei.com>,
-	Jann Horn <jannh@google.com>,
-	Brian Foster <bfoster@redhat.com>,
-	linux-ext4@vger.kernel.org,
+	Heiko Stuebner <heiko.stuebner@cherry.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: avoid -Wformat-security warning
-Date: Wed, 23 Apr 2025 18:43:49 +0200
-Message-Id: <20250423164354.2780635-1-arnd@kernel.org>
+Subject: [PATCH] drm/rockchip: add CONFIG_OF dependency
+Date: Wed, 23 Apr 2025 18:44:16 +0200
+Message-Id: <20250423164422.2793634-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -55,32 +59,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-check_igot_inode() prints a variable string, which causes a harmless
-warning with 'make W=1':
+DRM_DISPLAY_DP_AUX_BUS cannot be selected when CONFIG_OF is disabled:
 
-fs/ext4/inode.c:4763:45: error: format string is not a string literal (potentially insecure) [-Werror,-Wformat-security]
- 4763 |         ext4_error_inode(inode, function, line, 0, err_str);
+WARNING: unmet direct dependencies detected for DRM_DISPLAY_DP_AUX_BUS
+  Depends on [n]: HAS_IOMEM [=y] && DRM [=y] && OF [=n]
+  Selected by [y]:
+  - DRM_ROCKCHIP [=y] && HAS_IOMEM [=y] && DRM [=y] && ROCKCHIP_IOMMU [=y] && ROCKCHIP_ANALOGIX_DP [=y]
 
-Use a trivial "%s" format string instead.
+Rockchip platforms all depend on OF anyway, so add the dependency here
+for compile testing.
 
+Fixes: d7b4936b2bc0 ("drm/rockchip: analogix_dp: Add support to get panel from the DP AUX bus")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- fs/ext4/inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/rockchip/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 94c7d2d828a6..3cfb1b670ea4 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -4760,7 +4760,7 @@ static int check_igot_inode(struct inode *inode, ext4_iget_flags flags,
- 	return 0;
- 
- error:
--	ext4_error_inode(inode, function, line, 0, err_str);
-+	ext4_error_inode(inode, function, line, 0, "%s", err_str);
- 	return -EFSCORRUPTED;
- }
- 
+diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
+index caa251f91dd8..6b9f43c05148 100644
+--- a/drivers/gpu/drm/rockchip/Kconfig
++++ b/drivers/gpu/drm/rockchip/Kconfig
+@@ -2,6 +2,7 @@
+ config DRM_ROCKCHIP
+ 	tristate "DRM Support for Rockchip"
+ 	depends on DRM && ROCKCHIP_IOMMU
++	depends on OF
+ 	select DRM_CLIENT_SELECTION
+ 	select DRM_GEM_DMA_HELPER
+ 	select DRM_KMS_HELPER
 -- 
 2.39.5
 
