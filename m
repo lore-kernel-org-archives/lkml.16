@@ -1,113 +1,142 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B0854670
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA7B31AB531;
+	Wed, 23 Apr 2025 01:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745372660; cv=none; b=qyBC959HMhvXr8awO7uJbT7QPin81m76F1mBN61jqYQ0xQ/fPQfFapvTUm1i/ZWDzs26eT6WgAJp/UHiiR9tVky9gYLD0HkxvOsAgrYhBclW/jN3GTiFidxyr8gTaozfVys3BNYa7bOd1aD7Ktgw13o5Jjqqje8iI2JEM1bYZYY=
+	t=1745372817; cv=none; b=dbkLgRioJzJd+46e8skW1hwKn0bqbavhKR4szFwDUD1ZC/TXS59jx2+rfPyuplZpckWF8J2XwiBTXwcMfDeVQsfRTBxTwOgnTFs+ErY5+QiUZ1kIoDRdvqLf2aZCgTA0JKneNWoe+t3xX8cOGMsaXy5MvaM5eV9FTw2OAD2WyNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745372660; c=relaxed/simple;
-	bh=k7xhLka69j7sTzhJDUUiZMNXk9ru9y9Wyn49mdryqfQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nhtZHTrQlsKo4pz4of+2HW2Cv5bqdlR/VVm4wR7fjgASpbXQJ1mJA7EN1Wfz9i5lL0k7RXFJij5njG8XxfmxNmG1g9j2rV3PIYdK5gDI3V6hdPhqlZJYXG+32iDkYN8WgmzMeQyuZpg8lsWbigFAUBqFBwAT7zvPWOu0ct1y/mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=PLbjG1Ev; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1745372817; c=relaxed/simple;
+	bh=XK3FxcfPRrVzroQ7c0AV9eMTMdqfJkImOgwNNMVGqQc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H5+B4oDLU232ImAn5SGE3E/AUcshxDbkhdMv/Y7HA+qVUgk6MvGtGznSyRycqFpo8cadvr1W0OyP65eXpwGMMVBpqeEfiseavH1SLiu816UGtADj0/4vfzybv3KIj1RJF5iq/Qh8Ox+iN+HpNRj5iB2KZG+pzoDUOy9X8q/fpwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tevmzr8o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="PLbjG1Ev"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7399838db7fso561968b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1745372658; x=1745977458; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kbEA40JiWe2vQnJH+i6oSJcxA4t53eWL9N2doPzGsO4=;
-        b=PLbjG1EvSqSgQEeKktpHkHjWqhhvtaHSIVU6ido9rZttrIJUyWQmr5JTQf+YK1dR9/
-         aatYZaphJnzeDAeSKphzoAe1fxoOmWzEMgZDAjyatvO33EJiRk4ee6kPwvEKdQFD1Rgu
-         5ZDKDupSSPRmrNS18yHIC+ue6UchQECRbWK5c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745372658; x=1745977458;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbEA40JiWe2vQnJH+i6oSJcxA4t53eWL9N2doPzGsO4=;
-        b=r63GjdyVfjjQvHEnupSwFDSpIit8/VjMGod5jm7VE6I3YACn0LV0D0kd8VgkYnaUpZ
-         /AVGrbWgQr2FKqO7QBHg3AK6zQE7fPQ/J1AC5kx/0Y4KMyEXghG1Jnk8Ul0jfWeFvqfL
-         OlfWP5hWyBWqa+7yFfToU87debr4v+UMZmJwEbRIE9AaWafCbs9wZTYap1/Fy9wBM9pr
-         ofz0EBQ0Xk960fsxZ5F7f0hy+oJRM+EyRtknq3RiRPFUpapOIuwBGWHV2BJcrgU6VLOI
-         LIQpQ1TKLZxGHBN1QTBOyel5i/+wc0k7EITUHayHt5eB+gpFY0IeWT1IAqCKMi4oVwpd
-         x2nQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUje3FeylWQS4s/eXdljgPrfPs4JAv0+sRF2Yg+Iifif4Q/2Xme7/nV3yJyeR80fB7mcrUfL5Zp5Sd25x8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDFF4i2AW8aedma/R7bAicOskONIXy3ktwm304AKWkDuXMw+IM
-	vNJfE05RugSvDX6Ngxl73haPpFgt1JhUEDjgRfSYLDo8MWSOFdhIFdJ06BL6+/E=
-X-Gm-Gg: ASbGncsYh3trbUqksvIELnQbtlW+8Z/tpm4brYy7EYITCBtvD/+MJlYltkgr5O+tJof
-	ikC4qCvQLHE0ex09fHYYRm42/Vj4tDH5CX2h7maHOXM1sfMHHAnC85+tqJrb1vJdDepEFj3Q4Gy
-	eLUfsHrZCQduWRuimfbSKI88vxpOBhpZv6s45NFlt2Ep/e3kqGH5+gHCNpMolxmtqqzLlYh2dqx
-	wdcaz/BlmkL863GvXMHNU0oi9wXNzlyl2Nqj/KeR27BOnPmQ+mVcQNsleUaxkx7pLzbX0KlEIEx
-	UO91XHJqdbC+7x8Fz0nVEVGTA0y0tqxIxh6+gbESPLHJKYaZXlJNLJQ1PyQa/fPyhC1R3z3QYVx
-	IMh48pWk=
-X-Google-Smtp-Source: AGHT+IFva546HHvH4CG42JDJiYADC+hOqNU2QGJEhgjEEKXmiz8fBGmZo6uhAfd4IeYT66Mzc5QfLQ==
-X-Received: by 2002:a05:6a00:244e:b0:736:5969:2b6f with SMTP id d2e1a72fcca58-73e135a5f1fmr1603978b3a.6.1745372658539;
-        Tue, 22 Apr 2025 18:44:18 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfaaf4c2sm9322873b3a.152.2025.04.22.18.44.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 18:44:18 -0700 (PDT)
-Date: Tue, 22 Apr 2025 18:44:14 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Harshitha Ramamurthy <hramamurthy@google.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
-	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com,
-	pkaligineedi@google.com, yyd@google.com, joshwash@google.com,
-	shailend@google.com, linux@treblig.org, thostet@google.com,
-	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org,
-	Jeff Rogers <jefrogers@google.com>
-Subject: Re: [PATCH net-next 2/6] gve: Add adminq command to report nic
- timestamp
-Message-ID: <aAhF7tvKPwvcZ5h1@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
-	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com,
-	pkaligineedi@google.com, yyd@google.com, joshwash@google.com,
-	shailend@google.com, linux@treblig.org, thostet@google.com,
-	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org,
-	Jeff Rogers <jefrogers@google.com>
-References: <20250418221254.112433-1-hramamurthy@google.com>
- <20250418221254.112433-3-hramamurthy@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tevmzr8o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71275C4CEE9;
+	Wed, 23 Apr 2025 01:46:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745372817;
+	bh=XK3FxcfPRrVzroQ7c0AV9eMTMdqfJkImOgwNNMVGqQc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tevmzr8okz3O0u6F/0nkeIbleh5PVcswU4rW00i9LcdC02aScSmReCGg/6Yq9JuFo
+	 xpi1Lzu/765KvIyN+GIFhtrjiVjBjMrKztROHpKZsaSo/Sjj4JQMciZnPzGQsoR4KO
+	 c9ZcSPoAncVuNCDZQyzeoZRxBPWdQ2R7oNqzX4dodrv00N6U4vpbIFT418lJi9hJ5X
+	 4qVF/vK8f8F8M9Cb/tGHlF3BxMfOlqOClYEUiI94F16bOTLdWfU4B2uYAvyfISi5FU
+	 vjy1FQXX4LpiSyDaJAPmPwXO3H5Ql964Q1PPJ1Zh7kyPgLLUSwyk5GOBoQ/O0Z4vET
+	 fkGMsy6ISiQFQ==
+From: Mario Limonciello <superm1@kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <perry.yuan@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Huang Rui <ray.huang@amd.com>,
+	"Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	platform-driver-x86@vger.kernel.org (open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER),
+	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-pm@vger.kernel.org (open list:AMD PSTATE DRIVER)
+Subject: [PATCH v9 00/13] Add support for AMD hardware feedback interface
+Date: Tue, 22 Apr 2025 20:46:18 -0500
+Message-ID: <20250423014631.3224338-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418221254.112433-3-hramamurthy@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 10:12:50PM +0000, Harshitha Ramamurthy wrote:
-> From: John Fraker <jfraker@google.com>
-> 
-> This patch adds an adminq command to read NIC's hardware clock. The
-> driver allocates dma memory and passes that dma memory address to the
-> device. The device then writes the clock to the given address.
-> 
-> Co-developed-by: Jeff Rogers <jefrogers@google.com>
-> Signed-off-by: Jeff Rogers <jefrogers@google.com>
-> Co-developed-by: Ziwei Xiao <ziweixiao@google.com>
-> Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
-> Reviewed-by: Willem de Bruijn <willemb@google.com>
-> Signed-off-by: John Fraker <jfraker@google.com>
-> Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
-> ---
->  drivers/net/ethernet/google/gve/gve.h         |  1 +
->  drivers/net/ethernet/google/gve/gve_adminq.c  | 20 +++++++++++++++++++
->  drivers/net/ethernet/google/gve/gve_adminq.h  | 17 ++++++++++++++++
->  drivers/net/ethernet/google/gve/gve_ethtool.c |  3 ++-
->  4 files changed, 40 insertions(+), 1 deletion(-)
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-Reviewed-by: Joe Damato <jdamato@fastly.com>
+The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+provide behavioral classification of tasks.
+
+Threads are classified during runtime into enumerated classes.
+Currently, the driver supports 3 classes (0 through 2). These classes
+represent thread performance/power characteristics that may benefit from
+special scheduling behaviors. The real-time thread classification is
+consumed by the operating system and is used to inform the scheduler of
+where the thread should be placed for optimal performance or energy efficiency.
+
+The thread classification can be used to helps to select CPU from a ranking table
+that describes an efficiency and performance ranking for each classification from
+two dimensions.
+
+The ranking data provided by the ranking table are numbers ranging from 0 to 255,
+where a higher performance value indicates higher performance capability and a higher
+efficiency value indicates greater efficiency. All the CPU cores are ranked into
+different class IDs. Within each class ranking, the cores may have different ranking
+values. Therefore, picking from each classification ID will later allow the scheduler
+to select the best core while threads are classified into the specified workload class.
+
+This series was originally submitted by Perry Yuan [1] but he is now doing a different
+role and he asked me to take over.
+
+Link: https://lore.kernel.org/all/cover.1724748733.git.perry.yuan@amd.com/
+
+On applicable hardware this series has between a 2% and 5% improvement across various
+benchmarks.
+
+There is however a cost associated with clearing history on the process context switch.
+On average it increases the delay by 119ns, and also has a wider range in delays
+(the standard deviation is 25% greater).
+
+---
+v9
+ * Fix a logic error with mapping APIC entries
+ * Adopt all feedback from v8
+ * Rebase on latest tip/master
+
+Mario Limonciello (5):
+  MAINTAINERS: Add maintainer entry for AMD Hardware Feedback Driver
+  cpufreq/amd-pstate: Disable preferred cores on designs with workload
+    classification
+  platform/x86/amd: hfi: Set ITMT priority from ranking data
+  platform/x86/amd: hfi: Add debugfs support
+  x86/itmt: Add debugfs file to show core priorities
+
+Perry Yuan (8):
+  Documentation: x86: Add AMD Hardware Feedback Interface documentation
+  x86/msr-index: define AMD heterogeneous CPU related MSR
+  platform/x86: hfi: Introduce AMD Hardware Feedback Interface Driver
+  platform/x86: hfi: parse CPU core ranking data from shared memory
+  platform/x86: hfi: init per-cpu scores for each class
+  platform/x86: hfi: add online and offline callback support
+  platform/x86: hfi: add power management callback
+  x86/process: Clear hardware feedback history for AMD processors
+
+ Documentation/arch/x86/amd-hfi.rst    | 133 +++++++
+ Documentation/arch/x86/index.rst      |   1 +
+ MAINTAINERS                           |   9 +
+ arch/x86/include/asm/msr-index.h      |   5 +
+ arch/x86/kernel/itmt.c                |  23 ++
+ arch/x86/kernel/process_64.c          |   4 +
+ drivers/cpufreq/amd-pstate.c          |   6 +
+ drivers/platform/x86/amd/Kconfig      |   1 +
+ drivers/platform/x86/amd/Makefile     |   1 +
+ drivers/platform/x86/amd/hfi/Kconfig  |  18 +
+ drivers/platform/x86/amd/hfi/Makefile |   7 +
+ drivers/platform/x86/amd/hfi/hfi.c    | 550 ++++++++++++++++++++++++++
+ 12 files changed, 758 insertions(+)
+ create mode 100644 Documentation/arch/x86/amd-hfi.rst
+ create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
+ create mode 100644 drivers/platform/x86/amd/hfi/Makefile
+ create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
+
+
+base-commit: 7ab869c799fc0fb22f9b4c2f36aaa603d9c7cc9d
+-- 
+2.43.0
+
