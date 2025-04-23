@@ -1,129 +1,186 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2084.outbound.protection.outlook.com [40.107.237.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29CB42701CE
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:07:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745449629; cv=none; b=auS7ZJRsc24Sh6F14hqdaDb7eNa89cwAYeMxwSIDzxIJl193qnizdXxiPXsxQuEl6certYsUNZ3JNlaH5ym4Im2I1oVppqBKFjcma3t0ZknOCC3/5EZ5anAYQOL6e3vLFWe5dfDluFPDrubFKWXKEcIyH6SbQb1RbI1tJJtFyJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745449629; c=relaxed/simple;
-	bh=HOcjMyRW+ttJKykS0xuSJXQwkTBinIEEm+ZjVGYLmY8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pn/ShH+fnXhtL+OyiP8IX7Y74yy5CFcLF4QZUJI4girnkJFx+KZjyzTaj47Zz/r8iC+CNdvud8KDpwEMachBfPxHsAT1a/i1ooIK0Kzc9RobjQ5MDeuNm3b83fT8uODlBxKseA4spp4A0l7jdUuMhS3602S3GFXtaCcmuUGNi7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ne00WX/i; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFAE12701CE;
+	Wed, 23 Apr 2025 23:13:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745449983; cv=fail; b=j4MgizVSvSQlaBCFO3rI4RtRxD6dROU3BQQ5RYT8771mh2vZgbEgMJ1Urcf5PS0fUAj8vUtAMrFK5t0OzHiGZpWwmvmQDZYG+CzdFPpqZJcZ/Tu2w1UhqO10TAbX+SM+VqNlxjFjINYX1ujjlWfLkwMJE8sEPp6fk1rE8ucxzBs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745449983; c=relaxed/simple;
+	bh=BikrxaEaylT5FryCxqx82QJ/04Ozf09g3e4zaeVqjMo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hRhI/IDaa9PD09+ZRDiqP5kJd7qDhs/pDhK4iBVqoUQL6xScRoOkn7xG32coiqB1hqKlxdJB0hTlwPqzgv4O3yA1TRA88TH3G5OjaPHVDkO4xa+ZsFnm16weHkMITdgW//7BLPt9sdZAwYK73GSkG4I6nyF9cmAwO9IC+3L1cJQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nk7p8HHG; arc=fail smtp.client-ip=40.107.237.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ne00WX/i"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=HMWebVVEii5jXG6Lg7V3GPvW0gCFfg76xymPy6OYNmw=; b=ne00WX/iz9q6PFFtMMzEh/efTx
-	Iitp1EUitinOJbeoFvAlrSk+AGGqrECa+Nl239UaQ+/M3rCcjunPuoC3F6z0kCjy1M2wxgHs4SCKw
-	3YLExG972uFvT5O6NQPFuJjykg7by3s45ABWKtTldkyY8nE/A/ICA5dv5+MTXok/1PqXPMT88iBO4
-	Ujz9CoFWYWFFFoRAZa1w/42KkCON9XnuLuNwvpHO/bzTOCHVn02WRNXcdNj3jMtnISBRmIl+SDBTM
-	f8ZFLYl7qLKdb7HmNvyswSkqPcygDqzPH5R18M4RWGA5xOaG3/r77qg1XLn+Ed7YeXv4HDbZxRJko
-	Pn56PAeg==;
-Received: from [58.29.143.236] (helo=[192.168.1.6])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u7jB7-007Yzr-Vz; Thu, 24 Apr 2025 01:06:54 +0200
-Message-ID: <a7ea9c40-77d8-41dc-aed8-9df66dc8c110@igalia.com>
-Date: Thu, 24 Apr 2025 08:06:47 +0900
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nk7p8HHG"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gku2vWALbEPmmyYyiGgsPrsgjcgokQUDCIm9voeaANv9GfsdqlS3iJ1znifj2zskwAUwZd6d0BizQhaVEblM7dobtBZrgfS6Oisls720sfWk5m3wjiWQA29j5yJ7izSQCbiq6+MzLWeAS0LoDkOoFdGv0lKD7/FHxNF/H+IohwlW7Xqr0aG21Bq+Q7vyKVBHPSh09H/w19UKEQSTo+wuKKvDhkQGO9uEb464R5UQviLVwvf2l6WRiKBh9uKejpiupmSmLprcKQzMbbMGOm/Z0kIW1bKq2y3CyBP2GS/xMNwBfWzNaDW2uFbQCreRJUTTfHNZ6/fetloHL+eWI8wpYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BikrxaEaylT5FryCxqx82QJ/04Ozf09g3e4zaeVqjMo=;
+ b=Cp8XbQDf5ANjOvPOZosvLxrniP/8lwRUngHSQnXbrC30Hzs1cTwoJq1/6xZCZGjRuEDf6b67gvxew6Gm2B6TlZLhg6maBg/pOdcTF5D8SPIhliG8H+lBdD5i2hJsnNEIXNt4cfV2hNFNlvqz4kKaRf1TAVvuF3l6TlKp3hBXFSO1yzCNgdMVUtSgad9IPvUmQsWkuV6+fmOtTcD+BO77YnFZw2nRonmTwLejg3qYFgR9IpH4zAEkmlGaLhvjr9t/D8yWoNXGD/4EG2zSy51Ylwbab8s0/cHdD4TZJ0ZTWP9aYPtP1oB8OAgFbm5LuiBOGi82BQitvk/WHEaQRQVjHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BikrxaEaylT5FryCxqx82QJ/04Ozf09g3e4zaeVqjMo=;
+ b=nk7p8HHG2TsO4UmAPGzxpkefjrdjwQIoUnsWH3xNwK6P7BLqFW6xQqVI/4RcdYrh+Mi3BSTDunvBzF6RTHUHncX2rVcoBqUG+gSLrc23n+kfj7rYzPeSFgTdhymUn8g8h++TdBeOSGSqPLX0RWJ0EjfGxWmU5sH+uc+tUtF/ORQ4fMusiNgXqx3bWv7EV7T8vAEPd9Jg7eI+Its3OTgBtMx3IxpD2SCv4k/uqhM+dVG0ONTZoZ6mrEwTkfFPNze/vVBTfKJ4btdTTcJcIUEbi4N1+yu9ipoGBFKUBColgOCghsmm13sHiUtFCpWGd061xPnARLIpIceU5CeQJ1GOaQ==
+Received: from CY5PR12MB6526.namprd12.prod.outlook.com (2603:10b6:930:31::20)
+ by SA3PR12MB8811.namprd12.prod.outlook.com (2603:10b6:806:312::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.22; Wed, 23 Apr
+ 2025 23:12:57 +0000
+Received: from CY5PR12MB6526.namprd12.prod.outlook.com
+ ([fe80::e420:4e37:166:9c56]) by CY5PR12MB6526.namprd12.prod.outlook.com
+ ([fe80::e420:4e37:166:9c56%5]) with mapi id 15.20.8632.035; Wed, 23 Apr 2025
+ 23:12:57 +0000
+From: Timur Tabi <ttabi@nvidia.com>
+To: "corbet@lwn.net" <corbet@lwn.net>, "tzimmermann@suse.de"
+	<tzimmermann@suse.de>, "simona@ffwll.ch" <simona@ffwll.ch>,
+	"airlied@gmail.com" <airlied@gmail.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "dakr@kernel.org" <dakr@kernel.org>, Joel
+ Fernandes <joelagnelf@nvidia.com>, "maarten.lankhorst@linux.intel.com"
+	<maarten.lankhorst@linux.intel.com>, "mripard@kernel.org"
+	<mripard@kernel.org>
+CC: Shirish Baskaran <sbaskaran@nvidia.com>, Alistair Popple
+	<apopple@nvidia.com>, John Hubbard <jhubbard@nvidia.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Ben Skeggs
+	<bskeggs@nvidia.com>, Alexandre Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH 3/6] nova-core: docs: Document vbios layout
+Thread-Topic: [PATCH 3/6] nova-core: docs: Document vbios layout
+Thread-Index: AQHbtKKtWJQKj3l2t0erMF7//1LC77Ox4TqA
+Date: Wed, 23 Apr 2025 23:12:57 +0000
+Message-ID: <74c540b50d9c9fa70689ef0f4451a126265d1715.camel@nvidia.com>
+References: <20250423225405.139613-1-joelagnelf@nvidia.com>
+	 <20250423225405.139613-4-joelagnelf@nvidia.com>
+In-Reply-To: <20250423225405.139613-4-joelagnelf@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.52.3-0ubuntu1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CY5PR12MB6526:EE_|SA3PR12MB8811:EE_
+x-ms-office365-filtering-correlation-id: da33ed78-5895-4009-b35d-08dd82bc62b6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?blgwZHE3NEVoeU9kSHRZNWtkNmhaZ2dSRUF0Q3VFM3FtM0dISURpL24yWTAx?=
+ =?utf-8?B?YXc4bk56clZHaWkyN2EwZFhIMTFVTzhkYmhsQWJaMWtBQkRRWi9zaG5iWWww?=
+ =?utf-8?B?QTV6UkdFZGlnUXp1d2dIWVlvRVRkbHlxMndTK3pORUlvUm90ZmpzbHBXUDk0?=
+ =?utf-8?B?RDVYOFlxV0kzWDVmMytNVFplSXdhOENRcFNJS0M3UmgwWFh6U21xUTFDcGhi?=
+ =?utf-8?B?WDlZTCt2dkkyb3gwVzBmRDl6Ky9qNzRYZnRYL1ZtUEtLU0RJZWVnMG1MYm5u?=
+ =?utf-8?B?NGUyMUxnSGkxbDJ5QlRkWGU1eUNLTC9rTmZTbUZQWlMwdEJKaXg4eG5hM0Uy?=
+ =?utf-8?B?OWxBamVMb3lMUi8vN2FKOEZwKzJJSVMrRGxxdHE4Z1lIRDBNckNOVHJzOEMr?=
+ =?utf-8?B?cDYwWWMydUJQNktwWHJ1bzkveUxhSjMzdWJLeEFYbndnOEJyZDFQOXVRVzRh?=
+ =?utf-8?B?c1Y4dmQvRHdLZC9oK1ZjNFg5V0Zlb2ZJM0JwR3pKZWdSNnl6VzhERDk1blZQ?=
+ =?utf-8?B?VGZMUHFzbnlmNzZZYm9JekZYTE1NQkY0SzU0dFZNdjdscnovOTQxZ01saWp4?=
+ =?utf-8?B?UEMxSEo3Umwyc2pEa2tCMHZsZnZJa0tRTXJjeFVBUzNuMXR5VWF4c1JlNHRM?=
+ =?utf-8?B?V1VxOVRwUVR1a0hNNlU3ZzVadDFoVWttZWN6UlpQNm5OQytTWnZ5akw1cy9R?=
+ =?utf-8?B?T0l3a3R4NUl4YzBMTW0rbUZER0h2SllFQ2ZSTkkyZ2RZakQ1NXhyWGx4WkhU?=
+ =?utf-8?B?VXJ0VkJlZzhRdG96K1BLbThiM2NIOFE1cElma2hnRjVrZ1JJajJjMVFwYVNO?=
+ =?utf-8?B?aG5NQUN2ZzBkUXRtY0xCczlQMXdrZStVRnVzS2Y4ZWw5bWpFSG5iMWZEako4?=
+ =?utf-8?B?ZFI4NUNJN3VvVG40WHVVMjZSeFdhOEtnME43ZUhMNEhqdGFxV3gxZlBnMVRt?=
+ =?utf-8?B?T2x0WFNyMDBhQTN5MkVqTkhnKzhrSDNQRk1reVJ3aXNuQkRscCtyR0lkemdr?=
+ =?utf-8?B?bHAvYlJyYVhpRnJuSlJURzMweW5TNDBBYlJUeVBPWTEvRWhJNVVYR0tBMzI1?=
+ =?utf-8?B?d1B1QThCRWdtNk9vZFpPd2VvNjh1UzNJbUZnS2poamY1YlZIdVpNRXIxRU9T?=
+ =?utf-8?B?aXlnWVpzWDgvVUpRNFl5TnlEN1NFUGs5ZHBNN3UyVlFuYmRBQ3pkMW5YeGNi?=
+ =?utf-8?B?QklDelY2WVJZRUNrOGhtYW1KSlBxSm5Zb3padkJFSm1IUmUvMkliQkVkZVBH?=
+ =?utf-8?B?V3VKakNncjZWQnE5WUpTTGdFZFA0OTJqWEdiV0x5b0VHZkNDdGcrdG0rR01u?=
+ =?utf-8?B?MDZIT0svOFVHUnhuUy9uNllrY2VHNjNnWXBBTWV3SnByczFSZTRTVnRXbFNV?=
+ =?utf-8?B?THo3cFlITWtDcHdPSTg3Q1QzZ1M0dGJ3U1VPOTZ3a085S1ZDRVQxTHhnUnN5?=
+ =?utf-8?B?cXdWcGlvcjliQk55RDdiUWk1aWE3QnNHdGdCS1VwazJKeFJyVlFSSHdENWRT?=
+ =?utf-8?B?ZEtTZlZxeDhBWUM2OTI1WVpxMThLbnlBYlBxNy9KQWRoL1AwMWtxN0MzYXFN?=
+ =?utf-8?B?cC84d09pMlJXNXhnanVmbHZxL1dicDcyc2ZrK2JkZkJ1TUNvbUNLNThXdHlo?=
+ =?utf-8?B?blJFa3dhMFh3WnZMSUJQK1VRZk1yWDlzUHduYlhmSTJNanVLbEg0TzIyay9r?=
+ =?utf-8?B?UWNWcFhqdGxKcERjODlja2prMVVxbDZPQWZmWUZNOEd4MXdxUFlUSjFhQlZw?=
+ =?utf-8?B?NmFRdWdBbjZsUjR2NElDVVZOb2xiUC9LMktUdElQVkFxNVVWUkZnWUEweUFO?=
+ =?utf-8?B?eS9MVVI2S2FFVmF0VWhGcmttUTBidXhYYW1JaS91RkhBUHZITXc2UnhkVnBK?=
+ =?utf-8?B?QUxsMWVHcUtXTG5PaHUzdjlxSmxsY1phSnFJaVU4VjJCUTEvQVZnRFJRS2pV?=
+ =?utf-8?B?NFEvOVp5QjNGeUx3bkdtRnpMTExyVHBDSS8xZHlSRm1rNEJ0cnJ5MWZlalJT?=
+ =?utf-8?Q?W1jGmxqCX7KlDqt5UeO0Q+qFY/YJC8=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6526.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?eVhuTk95RVlRMzNJcG5Ja2M5blppNk52R1pBdUdMWHhNWDhSbEhxbXVFcWxk?=
+ =?utf-8?B?S2ltT05DS2RuQWdYVXo4enpneUlTL1huaGdZMHZueXJqYzlFYm5wdm5NTlJ3?=
+ =?utf-8?B?b2lGZXFJQ2h3UTFjK1MrUk5iYXZlYUREdUE5amNMNnVyZm8xcENkQ1JqTWVR?=
+ =?utf-8?B?MDFlSVVsZjlIUVM5TzNSMnlVSmlwWUpFK1AzNG5xelczMyt0c0xPazQwS2lF?=
+ =?utf-8?B?U05BWDBuc2RSZWRiaTdHcENPM0g0K3M5OWdrY2s4SGEzOCtwZjZSZldOSUtJ?=
+ =?utf-8?B?OGVFYmVQaEkrdzN3Y0dORTVZRTFyK1Y5WnYzWExMaWJOMEtGVHFUQngwMldQ?=
+ =?utf-8?B?akU5cjFlRzV5ZWI0S09scnAvS3FDYnpGVlJLbHJvem04RnliTnNNY05YaDFK?=
+ =?utf-8?B?ci95QjJhRTY5VXJnT05yOWtOSGQwNVVkMHdtSkN5WVR4Zkg4VnBEb0JhdmtV?=
+ =?utf-8?B?bko5MWNSRmlaZzBWaDdVL2U5cnpISHFVVG1GdkcwTDZjWVlhcGJudklTRWdz?=
+ =?utf-8?B?alNHWG8xUWdaQUVqZWZUbEhwcVRMTnpBV1JqWGM1N2I4aG1VSTh5Qk5MSDgw?=
+ =?utf-8?B?Snd5VURkTW5Ldi9QaEdWcGczUktsdUNOQjlMN05kRWN2cE82NU9pcEZkeEdS?=
+ =?utf-8?B?ZjRPdFBwcXdpcUxKeWNmanplcWNnM2RGcVcrQkxqYmxna2lQWVkwRGhsNmFF?=
+ =?utf-8?B?b0J2TlBkQUxHeW9Ua3UwRjlWWGtKRDM4VG1KL2NTbGR5YnJkRVVBcThtUW1R?=
+ =?utf-8?B?VWpjL2tBV1QvdG8zQkcvdE95VFJnaFBTZC9rb2FHamZwa0FuQ1ZsYXcrRU1L?=
+ =?utf-8?B?RjZDeUllTDJIYU9lYVJ0Mi8xVFRLZWpIQlZ6dG02U08vY0czZlRJTFpiN2Vw?=
+ =?utf-8?B?OU5yOFdQK1VaaWhqWndLZ01jaVZnOVgwNCtySEhsSVc2MkV0ZzJZMUEzMmZU?=
+ =?utf-8?B?RW1yZDZHNEpiaExBZVBhYUlTZUsxRlllUDA2RXZYSEZ5eFJKOHhJYkJwVXY4?=
+ =?utf-8?B?RTNzQmk0aGVNckVsc1Y1QzNER3I3YTRFSFJVL0pURXQ2SUs5UnR1aGVNNkVT?=
+ =?utf-8?B?S2RvME85OHpGcFdndTN6S2hBaFYxYmRod0REdzFmUUlmUXRxUHhqRlJlTHVF?=
+ =?utf-8?B?ZHJrYnNnY20yN0g3OWx5eWk2TUY2WkMvbDYwNUt5M3JhNnM3VHFMc3J5SlNP?=
+ =?utf-8?B?OEdjS3VwYnAzcE85Q0dsMkZBcVJBVkZQUDdqbnBDdjAvR3h6TU1yY0lzWHIx?=
+ =?utf-8?B?Tm84S09vWkJmTGcvRmNEQ2ZuUTd0Mk8zVTFZVFBYSmVxZExud2ZEbm81c1Yr?=
+ =?utf-8?B?VnR2cFY5SGp1T2l0aHUyZmhKWEdPeDJuVUxrTVJBOUZZOUc0SU41bU41VUUr?=
+ =?utf-8?B?S0orL2E5Rlh2MG5SalhKYTZlMlhGQ05qRFhoUm1yTjdxempJWGdtN0JuUVF4?=
+ =?utf-8?B?VXV6dE95em9iQ004dHlFMnd5dG0zL1U3MTcreC9JVDY2Qk1RMFRPSWtrSUlx?=
+ =?utf-8?B?dWhFTDQzbnd3YUtMei9LdWd1dCtReElkZEZBcVRaMzVXNUxkTkRsMkhuaDFl?=
+ =?utf-8?B?UUhHTzMvR04vanlxMk0yQTVoS1ZqOWd3ZndMT3FUM0kzcDB1cGIwV1BUSG9N?=
+ =?utf-8?B?MnFKL0ZHUG9iOTR0eFNPMXRsemd2dDFza3kzL3FwejBmLzZPYng0aGFmWmd2?=
+ =?utf-8?B?U05JeHRZQWkrMC8wZGE0cFJmcmhCdE5CTTg4Q2t0N0F2K2lRL2xTcEFBMFlL?=
+ =?utf-8?B?ZVdnWmtOVjUvU3dPNjNKL3A2WnBWZ3Q4cjZJYVAwTmpYOFBZeWk1cDJyQVo0?=
+ =?utf-8?B?cklqWnFiMzNOTFlLME42TVpRd2VBVDdoaS8vMk9FOENac2p4YTNTN3JJQ0xX?=
+ =?utf-8?B?L2xHd25hNU9hU1QxQ016OENEZzJhc2MvNFZVUzlqb0dUT3p0WmZkRXdXRHF5?=
+ =?utf-8?B?MW9XRzd6NjBsZUhLRVd4OUxucmtIZzlXTE9FN0lkaHEwdUhONFl6WWc0RC81?=
+ =?utf-8?B?RnhtYUNVUnBOcDdBUnhXU2ZEdVF6ZXZOeUZWQ1pyaHFsMmhRVW5XQk01NWtP?=
+ =?utf-8?B?LzJ5bUpWbit4ejNLUHh1WUthRmQ0QjNRZ3lIOUdsQnYxc3pyTXFubEMzTnNm?=
+ =?utf-8?Q?q9L7X6hBIxXM7Xo9E+7wMmPng?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <11A4AACDF5934644BF2E4314E040765E@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] sched_ext: Clarify CPU context for running/stopping
- callbacks
-To: Andrea Righi <arighi@nvidia.com>, Tejun Heo <tj@kernel.org>,
- David Vernet <void@manifault.com>
-Cc: Jake Hillion <jake@hillion.co.uk>, linux-kernel@vger.kernel.org
-References: <20250423210205.281689-1-arighi@nvidia.com>
-From: Changwoo Min <changwoo@igalia.com>
-Content-Language: en-US, ko-KR, en-US-large, ko
-In-Reply-To: <20250423210205.281689-1-arighi@nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6526.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da33ed78-5895-4009-b35d-08dd82bc62b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2025 23:12:57.7707
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /rofM0+DEaGWVmSb4z6aj/4/eIQQ/huL/oI6SajyZ+vEZyqyG0hUtvdWXptaJf83A8hFs9t7SmVAz59UBcBJEg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB8811
 
-Hi Andrea,
-
-On 4/24/25 06:02, Andrea Righi wrote:
-> The ops.running() and ops.stopping() callbacks can be invoked from a CPU
-> other than the one the task is assigned to, particularly when a task
-> property is changed, as both scx_next_task_scx() and dequeue_task_scx() may
-> run on CPUs different from the task's target CPU.
-
-The same goes to ops.quiescent() too since ops.quiescent() is also
-called from dequeue_task_scx().
-
-Reviewed-by: Changwoo Min <changwoo@igalia.com>
-
-Regards,
-Changwoo Min
-
-> 
-> This behavior can lead to confusion or incorrect assumptions if not
-> properly clarified, potentially resulting in bugs (see [1]).
-> 
-> Therefore, update the documentation to clarify this aspect and advise
-> users to use scx_bpf_task_cpu() to determine the actual CPU the task
-> will run on or was running on.
-> 
-> [1] https://github.com/sched-ext/scx/pull/1728
-> 
-> Cc: Jake Hillion <jake@hillion.co.uk>
-> Cc: Changwoo Min <changwoo@igalia.com>
-> Signed-off-by: Andrea Righi <arighi@nvidia.com>
-> ---
->   kernel/sched/ext.c | 18 ++++++++++++++++++
->   1 file changed, 18 insertions(+)
-> 
-> Changes in v2:
->   - clarify the scenario a bit more in the code comments
->   - link to v1: https://lore.kernel.org/all/20250423190059.270236-1-arighi@nvidia.com/
-> 
-> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> index ac79067dc87e6..a83232a032aa4 100644
-> --- a/kernel/sched/ext.c
-> +++ b/kernel/sched/ext.c
-> @@ -368,6 +368,15 @@ struct sched_ext_ops {
->   	 * @running: A task is starting to run on its associated CPU
->   	 * @p: task starting to run
->   	 *
-> +	 * Note that this callback may be called from a CPU other than the
-> +	 * one the task is going to run on. This can happen when a task
-> +	 * property is changed (i.e., affinity), since scx_next_task_scx(),
-> +	 * which triggers this callback, may run on a CPU different from
-> +	 * the task's assigned CPU.
-> +	 *
-> +	 * Therefore, always use scx_bpf_task_cpu(@p) to determine the
-> +	 * target CPU the task is going to use.
-> +	 *
->   	 * See ->runnable() for explanation on the task state notifiers.
->   	 */
->   	void (*running)(struct task_struct *p);
-> @@ -377,6 +386,15 @@ struct sched_ext_ops {
->   	 * @p: task stopping to run
->   	 * @runnable: is task @p still runnable?
->   	 *
-> +	 * Note that this callback may be called from a CPU other than the
-> +	 * one the task was running on. This can happen when a task
-> +	 * property is changed (i.e., affinity), since dequeue_task_scx(),
-> +	 * which triggers this callback, may run on a CPU different from
-> +	 * the task's assigned CPU.
-> +	 *
-> +	 * Therefore, always use scx_bpf_task_cpu(@p) to retrieve the CPU
-> +	 * the task was running on.
-> +	 *
->   	 * See ->runnable() for explanation on the task state notifiers. If
->   	 * !@runnable, ->quiescent() will be invoked after this operation
->   	 * returns.
-
+T24gV2VkLCAyMDI1LTA0LTIzIGF0IDE4OjUzIC0wNDAwLCBKb2VsIEZlcm5hbmRlcyB3cm90ZToN
+Cj4gK1RoaXMgZG9jdW1lbnQgZGVzY3JpYmVzIHRoZSBsYXlvdXQgb2YgdGhlIFZCSU9TIGltYWdl
+IHdoaWNoIGlzIGEgc2VyaWVzIG9mIGNvbmNhdGVuYXRlZA0KPiAraW1hZ2VzIGluIHRoZSBST00g
+b2YgdGhlIEdQVS4gVGhlIFZCSU9TIGlzIG1pcnJvcmVkIG9udG8gdGhlIEJBUiAwIHNwYWNlIGFu
+ZCBpcyByZWFkDQo+ICtieSBib3RoIEJvb3QgUk9NIGZpcm13YXJlIChhbHNvIGtub3duIGFzIElG
+UiBvciBpbml0LWZyb20tcm9tIGZpcm13YXJlKSBvbiB0aGUgR1BVIHRvDQo+ICtib290IHN0cmFw
+IHZhcmlvdXMgbWljcm9jb250cm9sbGVycyAoUE1VLCBTRUMsIEdTUCkgd2l0aCBjcml0aWNhbCBp
+bml0aWFsaXphdGlvbiBiZWZvcmUNCj4gK3RoZSBkcml2ZXIgbG9hZHMsIGFzIHdlbGwgYXMgYnkg
+dGhlIG5vdmEtY29yZSBkcml2ZXIgaW4gdGhlIGtlcm5lbCB0byBib290IHRoZSBHU1AuDQoNCllv
+dSBtaWdodCB3YW50IHRvIGFkZCBhIGxpbmsgdG8gdGhpcyBwYWdlOg0KDQpodHRwczovL2Rvd25s
+b2FkLm52aWRpYS5jb20vb3Blbi1ncHUtZG9jL0JJT1MtSW5mb3JtYXRpb24tVGFibGUvMS9CSU9T
+LUluZm9ybWF0aW9uLVRhYmxlLmh0bWwNCg==
