@@ -1,270 +1,151 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D781A5BB7
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6EB1AB6D4
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415587; cv=none; b=iw2nvnTBpkNGReNa/nlu4KpRwP1bEPXicIVrSe55MdnSWTBbSq1P1n0FdHALsxaXYr50QV7xzwZQFyHMIbjJHCkKPPtlLLnYPE0a5BRG6isborKgNHyUNnssi6BmZ8+zBpmlApFgGW4XXkVH5RshZTiHEiVKWw9dMlfaSTqQr/0=
+	t=1745415607; cv=none; b=megWBqAQIV5UN0qd5r74ujRlieF3a45o6aOeAGI2kfVvfFEogQIO14Nx8Ns/J0okoXEYOztkJHkCVJT5tf7TUJrocW/9fiPukgkrwEEyo9/HXlXsEtByfkq6wUoV6H6PDR6nKFAAV43q14NXOKh6wSoea8rgl1uKOFTpj7uTbfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415587; c=relaxed/simple;
-	bh=uJBVdZvqBOEUMTWrnXpjWUMjhvUeVxx4u3ef8ehhyYw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=H/Ks4ahxfQzlEXSLHVrealbLl7tDH7uz7W/zMI00MyvqxWs48dGBsNQPo/ZOzt8VJd6nk7/Cxj2kjmFtRPTcGOUG0l0f3+Ygd5uI/bL3cL8BalLPDPLnRFTo0Fw1gEVIvcxVWTYrX/fcPutgzWxpG9HuZIY5z0U5KifnqLCXfHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=Qtdk1/ux; arc=none smtp.client-ip=52.95.49.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
+	s=arc-20240116; t=1745415607; c=relaxed/simple;
+	bh=rJwd76XakKbW6cxRp8U5C3y66nF4fzEk7nsIfRq8GqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GQQVpmoMOoP79av23XbDgEoKjP6rRapvkj2iExMq+20nL2ew0/vErDGGVx34QxlOZfRJp1gqOnuqta7TStmFUYPkwqgvQsrcqiU7ZSs6j9Afvp24dSvPwfzmeZq+mJqAQr4ou789K3guqeq/pPXXvFGGp6gdnHuSu/i0KMxpWaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=d3/qI/lp; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="Qtdk1/ux"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1745415583; x=1776951583;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DoX1mLsF5BZf8Dfmzq+q3ULu4XnvR8sckoyZnXWuhbo=;
-  b=Qtdk1/uxZxB10+b7aG/58yox1x7W91NuWp3mRcGoltZjyrh3de8JCES3
-   3Udg/S8eqSaSxdgEdYiHv06kMfI8cTagiuwyQhMcPcxo5uWdGxkN9ew+F
-   ZbkbdVPNM9FgZ22flKk6psWwi0AjsCAPGsA8pH8gHWwiPGk8PUKJPGYPI
-   4=;
-X-IronPort-AV: E=Sophos;i="6.15,233,1739836800"; 
-   d="scan'208";a="491901288"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 13:39:39 +0000
-Received: from EX19MTAEUA002.ant.amazon.com [10.0.17.79:47330]
- by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.46.127:2525] with esmtp (Farcaster)
- id b3015d5d-5400-4018-90ac-1dbab7b74be4; Wed, 23 Apr 2025 13:39:24 +0000 (UTC)
-X-Farcaster-Flow-ID: b3015d5d-5400-4018-90ac-1dbab7b74be4
-Received: from EX19D029EUC001.ant.amazon.com (10.252.61.252) by
- EX19MTAEUA002.ant.amazon.com (10.252.50.124) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 23 Apr 2025 13:39:24 +0000
-Received: from dev-dsk-bsz-1b-e2c65f5d.eu-west-1.amazon.com (10.13.227.240) by
- EX19D029EUC001.ant.amazon.com (10.252.61.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Wed, 23 Apr 2025 13:39:22 +0000
-From: Bartosz Szczepanek <bsz@amazon.de>
-To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-CC: <nh-open-source@amazon.com>, Bartosz Szczepanek <bsz@amazon.de>, Alexander
- Graf <graf@amazon.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [RFC PATCH] arm64: Emit debug bootcodes for early kernel boot
-Date: Wed, 23 Apr 2025 13:39:07 +0000
-Message-ID: <20250423133910.909-1-bsz@amazon.de>
-X-Mailer: git-send-email 2.47.1
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="d3/qI/lp"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NB5FIA014200
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:40:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=MzGZGH78O/v7VDsO0hbF+sd8
+	L3WE1LofXSiV/zXbbD4=; b=d3/qI/lpCL5OMx0yWudKghR5Ka1Om5c0Zomxf3dU
+	V615Uvp11b6aR0VNPvCfbVGDyrzoj2VGeg6LlCg1/Tj4JWxpgjdxwxNZR2iyQPCF
+	4KWsRP1VyGNDDvU+knRPnTmDm235qSfanwbC+C89naB2pizHreeEsm1/sfecsm4/
+	JeO+cK8W7kvuplzdnDLxCRKCfwq+A0FQZV2o5sb/gqa4WqUP5Dn7HwJBYs6G2Y9C
+	9kdf9iRn59ls8JDeC1w/ilmyrOsAeW761JLPs38rd+3otMYucsAjxNNXvgrJxzss
+	B58J6sk4sm5HBsCkfyvhFG5XjaYp4I0ukHWipHXkwmHb3w==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3a8rb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:40:04 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c572339444so984398485a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:40:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745415603; x=1746020403;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MzGZGH78O/v7VDsO0hbF+sd8L3WE1LofXSiV/zXbbD4=;
+        b=HCLWmz7ib7v33nRyZ7eesIIDIkFbR+DeP0388IVJ8y+GR2Uo4358x1/qyEsZUcl223
+         h5ioY9v6iMgaVKrg8r8/Qmuip+magKyPm3aIY904hgklTZLgUMxbbXXrxcVAhF3s1QO5
+         Knoh7Xn8GAFrLmwQmuCX8CsxZCdWOJrKdfG2+UKiiGFRXpCtOcUvgb1CVYWKHMbJMANB
+         H6eDLCyKT2CvBzUoZgINnXBpUbYgqSeH/gfPc7DkadSS9X5eWZGqA+2X7mhibHJm6azI
+         3bFZa1jw+pqRGMZJqYMlbIFdJAf7mlDLfYQ66WP8zKQKVXeweJ6jQuqkQkdYjK95bIzd
+         TL/A==
+X-Forwarded-Encrypted: i=1; AJvYcCUoWqNd2nsCrnUGb1tAUfMP6TVpIk6xfnWbew59D+C+MTiCeMPZCSWDi/zb43NTXLE4h05vMWYi5xhT03M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmMh3PTX/Z/lS0JwfffWutWd5k9c7FIUQCONxD54D7/fV550XR
+	T8YQ4qEsaFrfOxlslIeSs533rU3smPABoSFs2ANbbdB+EdCDLsxSoHq5Z9mIowjGguHz2s+bUm/
+	mwVePIMQTP6cfCU40oo96SclF/7I1MSrvydnP/+F2XbrBdsSMZ2smt+s3qxPmr9A=
+X-Gm-Gg: ASbGnctK0O9nDfRzRVMW7vj2Tl2422Z0m3Sqg41t5d4HXoaHw/kwii3P/7AJtR8mTUe
+	L0hxkzfFTtMbDsxQQ7oHAs3V1H8WyWVE7ZqJIWfyiCBqMyELALvrfLVmVsnOek3zqpakJzFOWWY
+	J+jdcbx/VKU9s9slQxhdIT1w7jliUXBpYbILluDoRhK+kbwLPWb6WF9sKvgT1Ros28rV5uJsc4K
+	W6hhmyOUGZTze0/1AVUIoi1vozU274fM7SeiSSAhkuhkY7mskNnVKKsFUrZG1hY9g89YJcwAPVs
+	532TIhoceCRZrqN893EjmIY5250VeyqE4PfY7ZDa6A1r4IUIiFz24hXAblz2v4XyJtbvuWI3/n4
+	=
+X-Received: by 2002:a05:620a:4001:b0:7c5:3d60:7f8f with SMTP id af79cd13be357-7c927f87cc8mr3328124385a.18.1745415603142;
+        Wed, 23 Apr 2025 06:40:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXVhG8h0EHaKSHuLFmXYtc89YmYuzioiRWb4XkNp4qE+H/B1Jd7+nH84J5Bky5hsij5Y6aHQ==
+X-Received: by 2002:a05:620a:4001:b0:7c5:3d60:7f8f with SMTP id af79cd13be357-7c927f87cc8mr3328121585a.18.1745415602827;
+        Wed, 23 Apr 2025 06:40:02 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-310908270a7sm18290281fa.66.2025.04.23.06.40.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 06:40:01 -0700 (PDT)
+Date: Wed, 23 Apr 2025 16:40:00 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Lijuan Gao <quic_lijuang@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, kernel@quicinc.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] arm64: dts: qcom: qcs615-ride: enable remoteprocs
+Message-ID: <n3o4a7jokelces4jioccoub26ikwpeyzuc4ac5uzvumqkilha6@gc7w3qpb23q4>
+References: <20250423-add_qcs615_remoteproc_support-v1-0-a94fe8799f14@quicinc.com>
+ <20250423-add_qcs615_remoteproc_support-v1-6-a94fe8799f14@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EX19D042UWB004.ant.amazon.com (10.13.139.150) To
- EX19D029EUC001.ant.amazon.com (10.252.61.252)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423-add_qcs615_remoteproc_support-v1-6-a94fe8799f14@quicinc.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA5NSBTYWx0ZWRfXxxZ06MFpn4d7 evpUkk4rShzOYyIX5XgTCuQh21O3fO+Qhtb8AZrBlLSjnpW5oZqYYAD5ltIRSgOa+01xLlX9G5t e4gt4oDoQRquI1VtKrzj0g2zneXODB4VyuOYrcUiLC+XK61uL2viowhLIJfbLSQNQhMsGycB8np
+ 2M+2HsHG9KgOaHbWSsKiBQtU5ARK9kMLtWkuXGStLCof4+npXPn8p6al2d8qslWv2Cb3J8WHOdK rfcUQ0UhDJa8EhJR6OCPWDZysstuSj2U0Bz+KKPW9mW1JE3GCKQ+Psij2S6nYzTtVXXrw/T9hZi mVjsT9qFVov5ODYZ5ipkp6SpQKn1hegadpWTFM5Ff4wOH7k6lhdCXIW/1u38kSIYfIs8U2PetN1
+ VC/zQx4dOdC0TPIXEwd1+GKwTCydYcynYNZik82J5A+7OQoUxM78yjXuqu8CvHznWt9Mq0/4
+X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=6808edb4 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=2fRsUtMu-athF6_tqjIA:9 a=CjuIK1q_8ugA:10 a=PEH46H7Ffwr30OY-TuGO:22
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: dWyGWBUUimX1h1upBpjTZl9xttsFeXQy
+X-Proofpoint-GUID: dWyGWBUUimX1h1upBpjTZl9xttsFeXQy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=844 mlxscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230095
 
-Hi all,
+On Wed, Apr 23, 2025 at 05:17:42PM +0800, Lijuan Gao wrote:
+> Enable all remoteproc nodes on the qcs615-ride board and point to the
+> appropriate firmware files to allow proper functioning of the remote
+> processors.
+> 
+> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs615-ride.dts | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs615-ride.dts b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> index 2b5aa3c66867..b0db2c3ad409 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs615-ride.dts
+> @@ -240,6 +240,16 @@ &qupv3_id_0 {
+>  	status = "okay";
+>  };
+>  
+> +&remoteproc_adsp {
+> +	firmware-name = "qcom/qcs615/adsp.mbn";
+> +	status = "okay";
 
-I'm looking for your comments on the following change, that came out
-of our investigations of rare crashes in the very early phase of kernel
-boot while still in the assembly code. The change we came up with relies
-on contextidr_el2 which is used to record checkpoints (bootcodes), to be
-used later for narrowing down on the point of failure. To do so, one needs
-modified firmware or another tool capable of dumping contextidr_el2 after
-failure happens.
+Empty line before status properties.
 
-The usage of contextidr_el2 register comes from the fact that it's not
-used for any purpose within the kernel (contrary to contextidr_el1), and
-contents of it are unlikely to change even if any other code would be
-executed after the failure.
+> +};
+> +
+> +&remoteproc_cdsp {
+> +	firmware-name = "qcom/qcs615/cdsp.mbn";
+> +	status = "okay";
+> +};
+> +
+>  &rpmhcc {
+>  	clocks = <&xo_board_clk>;
+>  };
+> 
+> -- 
+> 2.46.0
+> 
 
-Primary alternative solution – debugging by printing – hardly applies to
-such early code, as page table mappings are not yet established and
-stable virtual address of console can't be relied upon.
-
-On the other hand, bisecting through the code is not always feasible,
-especially if the failure rates are very low. Bootcodes help that case.
-
-What I'd like to get your input on:
-- Is there an alternative solution for post-mortem analysis of rare
-  crashes in very early kernel boot that we missed?
-- Would the introduction of bootcodes be welcome upstream, in this or
-  any other shape? If so, how could we make it suitable for inclusion?
-
-Kind regards
-Bartosz
-
--------------------------------------------------
-arm64: Emit debug bootcodes for early kernel boot
-
-Reuse contextidr_el2 register which is unused in the early boot phase
-for the purpose of tracking bootcodes. This allows to identify point of
-failure in early boot code and helps investigations.
-
-To make the change safe on targets without contextidr_el2, we're
-checking dfr0_el1 debug version bits. If it tells us we're below
-ARMV8.1, we bail out without writing to contextidr_el2.
-
-To make use of the change, modified firmware or another tool capable of
-periodically dumping contextidr_el2 is necessary.
-
-Signed-off-by: Bartosz Szczepanek <bsz@amazon.de>
----
- arch/arm64/Kconfig.debug   |  6 ++++++
- arch/arm64/kernel/Makefile |  5 +++++
- arch/arm64/kernel/head.S   | 40 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 51 insertions(+)
-
-diff --git a/arch/arm64/Kconfig.debug b/arch/arm64/Kconfig.debug
-index 265c4461031f..668bda096773 100644
---- a/arch/arm64/Kconfig.debug
-+++ b/arch/arm64/Kconfig.debug
-@@ -20,4 +20,10 @@ config ARM64_RELOC_TEST
- 	depends on m
- 	tristate "Relocation testing module"
- 
-+config DEBUG_EARLY_BOOT
-+	bool "Early boot debugging"
-+	help
-+	  Enable this option to use contextidr_el2 register for storing
-+	  bootcodes from the early assembly code.
-+
- source "drivers/hwtracing/coresight/Kconfig"
-diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-index 71c29a2a2f19..72b38e8314d4 100644
---- a/arch/arm64/kernel/Makefile
-+++ b/arch/arm64/kernel/Makefile
-@@ -84,5 +84,10 @@ ifeq ($(CONFIG_DEBUG_EFI),y)
- AFLAGS_head.o += -DVMLINUX_PATH="\"$(realpath $(objtree)/vmlinux)\""
- endif
- 
-+ifeq ($(CONFIG_DEBUG_EARLY_BOOT),y)
-+AFLAGS_head.o += -march=armv8.1-a
-+CFLAGS_setup.o += -march=armv8.1-a
-+endif
-+
- # for cleaning
- subdir- += vdso vdso32
-diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
-index 2ce73525de2c..f15db7e83b6e 100644
---- a/arch/arm64/kernel/head.S
-+++ b/arch/arm64/kernel/head.S
-@@ -42,6 +42,34 @@
- #error PAGE_OFFSET must be at least 2MB aligned
- #endif
- 
-+#ifdef CONFIG_DEBUG_EARLY_BOOT
-+/*
-+ * This debugging enhancement makes use of contextidr_el2 for the purpose
-+ * of storing bootcodes.
-+ */
-+.macro _emit_bootcode val, t1
-+	/* Check if in EL2 */
-+	mrs	\t1, CurrentEL
-+	ubfx    \t1, \t1, #2, #2
-+	cmp	\t1, #2
-+	b.ne	1f
-+
-+	/* Check if we're at least ARMv8.1 */
-+	mrs	\t1, ID_AA64DFR0_EL1
-+	ubfx	\t1, \t1, #0, #4
-+	cmp	\t1, #7
-+	b.lt	1f
-+
-+	mov	\t1, #\val
-+	msr	contextidr_el2, \t1
-+1:
-+	/* Quit */
-+.endm
-+#define emit_bootcode(reg) _emit_bootcode __LINE__, reg
-+#else
-+#define emit_bootcode(reg)
-+#endif
-+
- /*
-  * Kernel startup entry point.
-  * ---------------------------
-@@ -86,6 +114,7 @@ SYM_CODE_START(primary_entry)
- 	bl	record_mmu_state
- 	bl	preserve_boot_args
- 
-+	emit_bootcode(x22)
- 	adrp	x1, early_init_stack
- 	mov	sp, x1
- 	mov	x29, xzr
-@@ -101,6 +130,7 @@ SYM_CODE_START(primary_entry)
- 	cbnz	x19, 0f
- 	dmb     sy
- 	mov	x1, x0				// end of used region
-+	emit_bootcode(x22)
- 	adrp    x0, init_idmap_pg_dir
- 	adr_l	x2, dcache_inval_poc
- 	blr	x2
-@@ -126,7 +156,9 @@ SYM_CODE_START(primary_entry)
- 	 * On return, the CPU will be ready for the MMU to be turned on and
- 	 * the TCR will have been set.
- 	 */
-+	emit_bootcode(x22)
- 	bl	__cpu_setup			// initialise processor
-+	emit_bootcode(x22)
- 	b	__primary_switch
- SYM_CODE_END(primary_entry)
- 
-@@ -220,10 +252,12 @@ SYM_CODE_END(preserve_boot_args)
- SYM_FUNC_START_LOCAL(__primary_switched)
- 	adr_l	x4, init_task
- 	init_cpu_task x4, x5, x6
-+	emit_bootcode(x22)
- 
- 	adr_l	x8, vectors			// load VBAR_EL1 with virtual
- 	msr	vbar_el1, x8			// vector table address
- 	isb
-+	emit_bootcode(x22)
- 
- 	stp	x29, x30, [sp, #-16]!
- 	mov	x29, sp
-@@ -236,6 +270,7 @@ SYM_FUNC_START_LOCAL(__primary_switched)
- 
- 	mov	x0, x20
- 	bl	set_cpu_boot_mode_flag
-+	emit_bootcode(x22)
- 
- #if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KASAN_SW_TAGS)
- 	bl	kasan_early_init
-@@ -243,6 +278,7 @@ SYM_FUNC_START_LOCAL(__primary_switched)
- 	mov	x0, x20
- 	bl	finalise_el2			// Prefer VHE if possible
- 	ldp	x29, x30, [sp], #16
-+	emit_bootcode(x22)
- 	bl	start_kernel
- 	ASM_BUG()
- SYM_FUNC_END(__primary_switched)
-@@ -464,6 +500,7 @@ SYM_FUNC_START(__enable_mmu)
- 	cmp     x3, #ID_AA64MMFR0_EL1_TGRAN_SUPPORTED_MAX
- 	b.gt    __no_granule_support
- 	phys_to_ttbr x2, x2
-+	emit_bootcode(x22)
- 	msr	ttbr0_el1, x2			// load TTBR0
- 	load_ttbr1 x1, x1, x3
- 
-@@ -506,16 +543,19 @@ SYM_FUNC_START_LOCAL(__no_granule_support)
- SYM_FUNC_END(__no_granule_support)
- 
- SYM_FUNC_START_LOCAL(__primary_switch)
-+	emit_bootcode(x22)
- 	adrp	x1, reserved_pg_dir
- 	adrp	x2, init_idmap_pg_dir
- 	bl	__enable_mmu
- 
-+	emit_bootcode(x22)
- 	adrp	x1, early_init_stack
- 	mov	sp, x1
- 	mov	x29, xzr
- 	mov	x0, x20				// pass the full boot status
- 	mov	x1, x21				// pass the FDT
- 	bl	__pi_early_map_kernel		// Map and relocate the kernel
-+	emit_bootcode(x22)
- 
- 	ldr	x8, =__primary_switched
- 	adrp	x0, KERNEL_START		// __pa(KERNEL_START)
 -- 
-2.47.1
-
+With best wishes
+Dmitry
