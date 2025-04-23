@@ -1,302 +1,145 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+Received: from mail-qk1-f202.google.com (mail-qk1-f202.google.com [209.85.222.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31453DF58;
-	Wed, 23 Apr 2025 17:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0472228CF62
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430403; cv=none; b=mXIZepleFdPmwRZqBXJlQ7c+DNWAtQm9NngKuOcro+TUH7H9RHL+MKhymbei+1EkpfPj1x+uFY3dRI9ujYTxdEgxeJNDomjSKoxBBqhDUSy+xdu7pZKS5xq7JUXB7vaud7qy3F4qXwHoWZZzQ7ArYdDB9Gj0l4ThIMZS+uaXeVI=
+	t=1745430406; cv=none; b=jCP4ApcaFxEqMYfBTij+0AjmzNyFvZk74DloyFTyBfCTbGCEVYEhOYf4/vh+YxIKCkYTKqUqXOIn2mFcto1dmytxvfWGThmx6h2YHMGldHp1jUg0ZHvsU2rWVhxiI14w21zKg46yLNDQ99BYHkIhi+xZGD8Ct3TmO7F552zvpWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430403; c=relaxed/simple;
-	bh=biO9qF+r2/A2MlZYQbH8x4xNl8bGQc1c6ERagk4XPzw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kAKZ0DKt0Gn0kyfdbVlyw0g3nA4nJY9wc8XOa2kvp2DqZCF2oyL5E3otrVVXblPCQnHb3sPefUB3lMMpecWyyKg+HZqSzbjF2CE/ZWb9dt5qo/SKwwQdZZo5DKgBMIPd+RJa4G61xRo2A4HUChA1Y2R+BUr4H1x9wuvMBkZFPuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fNo9Yx+V; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745430406; c=relaxed/simple;
+	bh=2jPly3FVpCxyxtRqF2P47uA2Q0rD0u7EVgELLpZR3f0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=vA84hCeEmHkK8RTztcaAtWtsLLZ6SGAyPjbYDBGlKJUCwnG4foakeXdnVSo+miQiQp2iyuMmJwUOdRcfGBIsnkKOTNC3lT2GrUBUFc8It8FNsJsAz+91cPRKC+3AxAF1iGiWwcL3ttwqnqwo9xpqOdIKjH6+NyhJViCBHqa/AKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edumazet.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GTdmQNG4; arc=none smtp.client-ip=209.85.222.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edumazet.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNo9Yx+V"
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso82671a12.3;
-        Wed, 23 Apr 2025 10:46:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GTdmQNG4"
+Received: by mail-qk1-f202.google.com with SMTP id af79cd13be357-7c5b9333642so11040485a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:46:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745430399; x=1746035199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sXZQn8kvassAzt0nM7Nxq/3bf8QmpImuUiv4Do+uubk=;
-        b=fNo9Yx+VHn0nXuhyZWtSourePGMpALME2vKzyIfeRbDbx3Vydh4v+vSMZh4MRYMy1U
-         s8thpB9O9Pp70ODCr57z6jfjU9gb7yJDkDTp292I6U4+s7PWFZsnLK/ldly2icpvbR+8
-         jKqbg0/Z2T7OQvAK1OWGM4SiI230aVD0jVmm3KqAdMHlO9vcqWNbflKDHBGbPnIV5gS0
-         9MlgF/7ePEjtXQQzV4rZmOJHK2fC0Yk6HGTKUz8BGLTqEbdL9Sge0WytkD0oEBB6OisY
-         1ZgUE+izXWKMWjzEPL0I09XyzBzABgTPVnFmv5rHz2HMcSPIN8FtKHnV7S/ydnr2tCnU
-         iI6w==
+        d=google.com; s=20230601; t=1745430404; x=1746035204; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XnD+wEIsxowSWmDfKsckRsLLvdHSiUVLDRMPitX8isg=;
+        b=GTdmQNG4yPdPolA6EzZmqlTtA+QsMTHsmIljs3AVEgQTjXLsp4HldKP08MYGDa96nj
+         iCnFmmN3VVqrg2yr9lMCGgk5lnJ76V3UfJXFVjtLhDsAelPqhl1eZzkBKmEpKVccsccQ
+         1Iv4Qr1x2Bvecnfw+UdEObxRbwe+OFmZuFnxZ7gvAkoJy1m98cNQ/Z3XL+IHyWvCYXOV
+         3E4Rejdvg+9qphsTkFiQ7g6BY2ENEuM7SAxvyxTd5yikzpA3bhoXyIeMrNPnnUrPCOrn
+         hZw5riAPGqnPBCgFH4C9HudyvhpJUdwqKbTMgZTGG0iQ4GupnVwoweBr3P2upEWnT6D/
+         +w2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745430399; x=1746035199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sXZQn8kvassAzt0nM7Nxq/3bf8QmpImuUiv4Do+uubk=;
-        b=d+6oQdK/E1KhvUot0iPnRKTpFkDHVfaA4vQpeF02aJu8zvBMWiX/yKvwOH9nKw1+Uj
-         S2TkWdOZhVrYzT09/K7+ImIzyCPNhlXaxiJyM5RuUvJX/mwnxhU8WZfc5Te0gQprrDOQ
-         csQ4dh3nGpsFsbT76vBY6CIZFmg7VhWQEPxSUEVovilPXXOgBJm8+tCQy2kbS3TskYsr
-         OlbKSR6CZTGHf14iR7Yc/p0b6l9DyF9vbz5amRi42NLC9bwFwhrJ+reasGrZKucD8W7L
-         Jo52I3mrshRbf5s7kpZkUQY1TUYnD08ZNO04sJWHNM0dXwapi2Kht/LT0WIBSdy9V7i1
-         +kTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVKBc0Q74sdpIqy04hQjJb6kgJuRibvem2eJfMiJraUnoYW04HwpYmg4IbWWDNXLHvNx7I=@vger.kernel.org, AJvYcCVY1HKx8g5MyOQQOWs18yAJ6ESdzDb6E3S9MI8VAMySlHAVu9lPbIuVvqlHfXiaDwK4K5UbykVwTAPSg4P/@vger.kernel.org, AJvYcCXCwovlxuYIOC14QF2JK7fTaWi1TuILrOitgjga8iYjMrVfSU3nIDr5ZiOgHq1igLRAjySB1CZHq0widVNXmJpzuK4E@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8V32aHiK9DqO92WxXtgEWwGbVlYYfP551XFSwrQZV4lrUk2HN
-	qHDvxXNsnBEI7XLPIwkq5scXe3eL4Xg0rBi7MKzpPOT0kz6AT5aaed3OYTZVcCQTVZkIpI/vhQ2
-	AEj5t/Ea9z606VsUc9L6q1vudml8=
-X-Gm-Gg: ASbGncs2a7cw4JRiUAm/GX0Ls1y6rJhFl33RwJ5pFP9kkNIcIY+gXUXZALc49rI8asG
-	Fg7Aa0SYW4ZioEqejuhL/agqc2U01f4634aKgRB3Lfutn5g1fDjYnTaNQ8KJpMFtJ9nY+np0JxX
-	ADdGmAMciOAQ8RFpTBygO0qDXcyZp7+Y/NlzLlfg==
-X-Google-Smtp-Source: AGHT+IFlDdIotzZmdGUhuohyhf84/GoWd15MMTbUB7VohF0qWVhNtJbadVXCr5RNeA1/OjEhELyOiYrhVKgH5hVT6dM=
-X-Received: by 2002:a17:907:6e9e:b0:ace:3af9:4294 with SMTP id
- a640c23a62f3a-ace54e6c8cbmr2350066b.12.1745430399311; Wed, 23 Apr 2025
- 10:46:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745430404; x=1746035204;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XnD+wEIsxowSWmDfKsckRsLLvdHSiUVLDRMPitX8isg=;
+        b=eZqw/O3cgKx/VFTDsNnTLYTd2lKf60F/lYfFru0jjc4QjOwCRPwB65CBG1EpmJB2Rp
+         RJpSVUgVaG1gT5bkaCInL0M1fcER/LOnq+bN7MFFem8sEpSR1ax3AXzhh4RFnVBRLJNM
+         RcMDvsLUZQwGcdqNhws81ZZXq0pjjF+MMzEzWvX1PUMsCC6eXFd6Ykmi74Ewtcg0Dj+N
+         VqGa8R2C2HgYMs64m3Yn7NtMsT5ANFMi6+5UJm+LRFdaWY1BbYh77KryXgbpGCT2uBuE
+         mCrYeMoJNMFeyaVbEMrIJA2hNK/FPXmiaSe8nSIiqgUav8QVm9124H7g16nqF2xwK0U4
+         b8kA==
+X-Gm-Message-State: AOJu0YzJ/Io1cJrVE+elDq1Irp82QPOqblzK6j7cECgbUuhTStXGqnTg
+	qpIh+18wgNNz7atOMm8kYIkcroZC0daTA1stxl6kgpjr3Ecsq8PGxKLDBD1ogDw4hUxdTcVXJVc
+	5FjO3nV/fng==
+X-Google-Smtp-Source: AGHT+IEQNx5dOhAQFf0Q4E4wZiVpSwF2UVefMvGwf8ol5Um3XfRmP9E1bK0OGNw4nheOclNWsSRZY/gX9wIqsw==
+X-Received: from qknpz18.prod.google.com ([2002:a05:620a:6412:b0:7c5:4c67:599f])
+ (user=edumazet job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:620a:4544:b0:7c5:e2a0:4e64 with SMTP id af79cd13be357-7c9280494fdmr3380162685a.51.1745430403710;
+ Wed, 23 Apr 2025 10:46:43 -0700 (PDT)
+Date: Wed, 23 Apr 2025 17:46:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-19-jolsa@kernel.org>
-In-Reply-To: <20250421214423.393661-19-jolsa@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Apr 2025 10:46:24 -0700
-X-Gm-Features: ATxdqUEi4MHhQHNUnV8CW4TsFrqv9Z3ZPlsGZG8pOa83e1POIp2T2kHGr4gt2l8
-Message-ID: <CAEf4BzZu0T5DLROi6oisneB3PyGDKZrME9+5qvw4aHeyOyNiYQ@mail.gmail.com>
-Subject: Re: [PATCH perf/core 18/22] selftests/bpf: Add uprobe_regs_equal test
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250423174634.3009657-1-edumazet@google.com>
+Subject: [PATCH] sched/fair: reduce false sharing on sched_balance_running
+From: Eric Dumazet <edumazet@google.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Eric Dumazet <eric.dumazet@gmail.com>, 
+	Eric Dumazet <edumazet@google.com>, Yafang Shao <laoar.shao@gmail.com>, 
+	Sean Christopherson <seanjc@google.com>, Josh Don <joshdon@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 2:48=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> wrote:
->
-> Changing uretprobe_regs_trigger to allow the test for both
-> uprobe and uretprobe and renaming it to uprobe_regs_equal.
->
-> We check that both uprobe and uretprobe probes (bpf programs)
-> see expected registers with few exceptions.
->
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  .../selftests/bpf/prog_tests/uprobe_syscall.c | 58 ++++++++++++++-----
->  .../selftests/bpf/progs/uprobe_syscall.c      |  4 +-
->  2 files changed, 45 insertions(+), 17 deletions(-)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/to=
-ols/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> index f001986981ab..6d88c5b0f6aa 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-> @@ -18,15 +18,17 @@
->
->  #pragma GCC diagnostic ignored "-Wattributes"
->
-> -__naked unsigned long uretprobe_regs_trigger(void)
-> +__attribute__((aligned(16)))
-> +__nocf_check __weak __naked unsigned long uprobe_regs_trigger(void)
->  {
->         asm volatile (
-> -               "movq $0xdeadbeef, %rax\n"
-> +               ".byte 0x0f, 0x1f, 0x44, 0x00, 0x00     \n"
+rebalance_domains() can attempt to change sched_balance_running
+more than 350,000 times per second on our servers.
 
-Is it me not being hardcore enough... But is anyone supposed to know
-that this is nop5? ;) maybe add /* nop5 */ comment on the side?
+If sched_clock_irqtime and sched_balance_running share the
+same cache line, we see a very high cost on hosts with 480 threads
+dealing with many interrupts.
 
-> +               "movq $0xdeadbeef, %rax                 \n"
+This patch only acquires sched_balance_running when sd->last_balance
+is old enough.
 
-ret\n doesn't align newline, and uprobe_regs below don't either. So
-maybe don't align them at all here?
+It also moves sched_balance_running into a dedicated cache line on SMP.
 
->                 "ret\n"
->         );
->  }
->
-> -__naked void uretprobe_regs(struct pt_regs *before, struct pt_regs *afte=
-r)
-> +__naked void uprobe_regs(struct pt_regs *before, struct pt_regs *after)
->  {
->         asm volatile (
->                 "movq %r15,   0(%rdi)\n"
-> @@ -47,15 +49,17 @@ __naked void uretprobe_regs(struct pt_regs *before, s=
-truct pt_regs *after)
->                 "movq   $0, 120(%rdi)\n" /* orig_rax */
->                 "movq   $0, 128(%rdi)\n" /* rip      */
->                 "movq   $0, 136(%rdi)\n" /* cs       */
-> +               "pushq %rax\n"
->                 "pushf\n"
->                 "pop %rax\n"
->                 "movq %rax, 144(%rdi)\n" /* eflags   */
-> +               "pop %rax\n"
->                 "movq %rsp, 152(%rdi)\n" /* rsp      */
->                 "movq   $0, 160(%rdi)\n" /* ss       */
->
->                 /* save 2nd argument */
->                 "pushq %rsi\n"
-> -               "call uretprobe_regs_trigger\n"
-> +               "call uprobe_regs_trigger\n"
->
->                 /* save  return value and load 2nd argument pointer to ra=
-x */
->                 "pushq %rax\n"
-> @@ -95,25 +99,37 @@ __naked void uretprobe_regs(struct pt_regs *before, s=
-truct pt_regs *after)
->  );
->  }
->
-> -static void test_uretprobe_regs_equal(void)
-> +static void test_uprobe_regs_equal(bool retprobe)
->  {
-> +       LIBBPF_OPTS(bpf_uprobe_opts, opts,
-> +               .retprobe =3D retprobe,
-> +       );
->         struct uprobe_syscall *skel =3D NULL;
->         struct pt_regs before =3D {}, after =3D {};
->         unsigned long *pb =3D (unsigned long *) &before;
->         unsigned long *pa =3D (unsigned long *) &after;
->         unsigned long *pp;
-> +       unsigned long offset;
->         unsigned int i, cnt;
-> -       int err;
-> +
-> +       offset =3D get_uprobe_offset(&uprobe_regs_trigger);
-> +       if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-> +               return;
->
->         skel =3D uprobe_syscall__open_and_load();
->         if (!ASSERT_OK_PTR(skel, "uprobe_syscall__open_and_load"))
->                 goto cleanup;
->
-> -       err =3D uprobe_syscall__attach(skel);
-> -       if (!ASSERT_OK(err, "uprobe_syscall__attach"))
-> +       skel->links.probe =3D bpf_program__attach_uprobe_opts(skel->progs=
-.probe,
-> +                               0, "/proc/self/exe", offset, &opts);
-> +       if (!ASSERT_OK_PTR(skel->links.probe, "bpf_program__attach_uprobe=
-_opts"))
->                 goto cleanup;
->
-> -       uretprobe_regs(&before, &after);
-> +       /* make sure uprobe gets optimized */
-> +       if (!retprobe)
-> +               uprobe_regs_trigger();
-> +
-> +       uprobe_regs(&before, &after);
->
->         pp =3D (unsigned long *) &skel->bss->regs;
->         cnt =3D sizeof(before)/sizeof(*pb);
-> @@ -122,7 +138,7 @@ static void test_uretprobe_regs_equal(void)
->                 unsigned int offset =3D i * sizeof(unsigned long);
->
->                 /*
-> -                * Check register before and after uretprobe_regs_trigger=
- call
-> +                * Check register before and after uprobe_regs_trigger ca=
-ll
->                  * that triggers the uretprobe.
->                  */
->                 switch (offset) {
-> @@ -136,7 +152,7 @@ static void test_uretprobe_regs_equal(void)
->
->                 /*
->                  * Check register seen from bpf program and register afte=
-r
-> -                * uretprobe_regs_trigger call
-> +                * uprobe_regs_trigger call (with rax exception, check be=
-low).
->                  */
->                 switch (offset) {
->                 /*
-> @@ -149,6 +165,15 @@ static void test_uretprobe_regs_equal(void)
->                 case offsetof(struct pt_regs, rsp):
->                 case offsetof(struct pt_regs, ss):
->                         break;
-> +               /*
-> +                * uprobe does not see return value in rax, it needs to s=
-ee the
-> +                * original (before) rax value
-> +                */
-> +               case offsetof(struct pt_regs, rax):
-> +                       if (!retprobe) {
-> +                               ASSERT_EQ(pp[i], pb[i], "uprobe rax prog-=
-before value check");
-> +                               break;
-> +                       }
->                 default:
->                         if (!ASSERT_EQ(pp[i], pa[i], "register prog-after=
- value check"))
->                                 fprintf(stdout, "failed register offset %=
-u\n", offset);
-> @@ -186,13 +211,13 @@ static void test_uretprobe_regs_change(void)
->         unsigned long cnt =3D sizeof(before)/sizeof(*pb);
->         unsigned int i, err, offset;
->
-> -       offset =3D get_uprobe_offset(uretprobe_regs_trigger);
-> +       offset =3D get_uprobe_offset(uprobe_regs_trigger);
->
->         err =3D write_bpf_testmod_uprobe(offset);
->         if (!ASSERT_OK(err, "register_uprobe"))
->                 return;
->
-> -       uretprobe_regs(&before, &after);
-> +       uprobe_regs(&before, &after);
->
->         err =3D write_bpf_testmod_uprobe(0);
->         if (!ASSERT_OK(err, "unregister_uprobe"))
-> @@ -605,7 +630,8 @@ static void test_uretprobe_shadow_stack(void)
->         /* Run all the tests with shadow stack in place. */
->         shstk_is_enabled =3D true;
->
-> -       test_uretprobe_regs_equal();
-> +       test_uprobe_regs_equal(false);
-> +       test_uprobe_regs_equal(true);
->         test_uretprobe_regs_change();
->         test_uretprobe_syscall_call();
->
-> @@ -728,7 +754,7 @@ static void test_uprobe_sigill(void)
->  static void __test_uprobe_syscall(void)
->  {
->         if (test__start_subtest("uretprobe_regs_equal"))
-> -               test_uretprobe_regs_equal();
-> +               test_uprobe_regs_equal(true);
->         if (test__start_subtest("uretprobe_regs_change"))
->                 test_uretprobe_regs_change();
->         if (test__start_subtest("uretprobe_syscall_call"))
-> @@ -747,6 +773,8 @@ static void __test_uprobe_syscall(void)
->                 test_uprobe_race();
->         if (test__start_subtest("uprobe_sigill"))
->                 test_uprobe_sigill();
-> +       if (test__start_subtest("uprobe_regs_equal"))
-> +               test_uprobe_regs_equal(false);
->  }
->  #else
->  static void __test_uprobe_syscall(void)
-> diff --git a/tools/testing/selftests/bpf/progs/uprobe_syscall.c b/tools/t=
-esting/selftests/bpf/progs/uprobe_syscall.c
-> index 8a4fa6c7ef59..e08c31669e5a 100644
-> --- a/tools/testing/selftests/bpf/progs/uprobe_syscall.c
-> +++ b/tools/testing/selftests/bpf/progs/uprobe_syscall.c
-> @@ -7,8 +7,8 @@ struct pt_regs regs;
->
->  char _license[] SEC("license") =3D "GPL";
->
-> -SEC("uretprobe//proc/self/exe:uretprobe_regs_trigger")
-> -int uretprobe(struct pt_regs *ctx)
-> +SEC("uprobe")
-> +int probe(struct pt_regs *ctx)
->  {
->         __builtin_memcpy(&regs, ctx, sizeof(regs));
->         return 0;
-> --
-> 2.49.0
->
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Yafang Shao <laoar.shao@gmail.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Cc: Josh Don <joshdon@google.com>
+---
+ kernel/sched/fair.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index e43993a4e5807eaffcacaf761c289e8adb354cfd..460008d0dc459b3ca60209565e89c419ea32a4e2 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -12144,7 +12144,7 @@ static int active_load_balance_cpu_stop(void *data)
+  *   execution, as non-SD_SERIALIZE domains will still be
+  *   load-balanced in parallel.
+  */
+-static atomic_t sched_balance_running = ATOMIC_INIT(0);
++static __cacheline_aligned_in_smp atomic_t sched_balance_running = ATOMIC_INIT(0);
+ 
+ /*
+  * Scale the max sched_balance_rq interval with the number of CPUs in the system.
+@@ -12220,25 +12220,25 @@ static void sched_balance_domains(struct rq *rq, enum cpu_idle_type idle)
+ 
+ 		interval = get_sd_balance_interval(sd, busy);
+ 
++		if (!time_after_eq(jiffies, sd->last_balance + interval))
++			goto out;
++
+ 		need_serialize = sd->flags & SD_SERIALIZE;
+ 		if (need_serialize) {
+ 			if (atomic_cmpxchg_acquire(&sched_balance_running, 0, 1))
+ 				goto out;
+ 		}
+-
+-		if (time_after_eq(jiffies, sd->last_balance + interval)) {
+-			if (sched_balance_rq(cpu, rq, sd, idle, &continue_balancing)) {
+-				/*
+-				 * The LBF_DST_PINNED logic could have changed
+-				 * env->dst_cpu, so we can't know our idle
+-				 * state even if we migrated tasks. Update it.
+-				 */
+-				idle = idle_cpu(cpu);
+-				busy = !idle && !sched_idle_cpu(cpu);
+-			}
+-			sd->last_balance = jiffies;
+-			interval = get_sd_balance_interval(sd, busy);
++		if (sched_balance_rq(cpu, rq, sd, idle, &continue_balancing)) {
++			/*
++			 * The LBF_DST_PINNED logic could have changed
++			 * env->dst_cpu, so we can't know our idle
++			 * state even if we migrated tasks. Update it.
++			 */
++			idle = idle_cpu(cpu);
++			busy = !idle && !sched_idle_cpu(cpu);
+ 		}
++		sd->last_balance = jiffies;
++		interval = get_sd_balance_interval(sd, busy);
+ 		if (need_serialize)
+ 			atomic_set_release(&sched_balance_running, 0);
+ out:
+-- 
+2.49.0.805.g082f7c87e0-goog
+
