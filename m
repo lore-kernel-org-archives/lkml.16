@@ -1,127 +1,122 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD0B143736;
-	Wed, 23 Apr 2025 14:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574AE1EB36;
+	Wed, 23 Apr 2025 14:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418411; cv=none; b=qEy4LNuQq4dXEIhgq5xRPU3kijjeKF0ifkVFt8rrcEvn5LfHbi573tB5pVaw6IyN336DLQzzR0GfllDSKtDYRVG9g1o7Bj5Oy2oWzPN+/KMktgaO0t2OkucFesLuRs04QuiZAnGB+40Fr/xY+xiw+RvzPlGXT9ZIusDvOOGHhpA=
+	t=1745418432; cv=none; b=hQep/EtOfZtK1or31WsWiAB49oGrT8ecgr3xJOchpfhwFFX4zQ4aAWaE42qf5BFVCTxLcjvrB9KX70rVn/Rmsj1Lj67KuWe6gIyk4/be2cYAMK+J5UP7gwy9a3XkX49YlxXLNFh8rokjVTB6NPUTYT8NaNLy9UY0ux9p+hNYWgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418411; c=relaxed/simple;
-	bh=YQYhn8HZx7ubPYTlNSiK99ntMYepg0AMRX7OXqpob3w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eqBA5RbjzZEyrKeL3Q/GwUxGjT46AIOIIIJtURmHaNaEsSCHMOQjAv7B7cgga9jiDMTMYkpfRCICMBklcCWYe34aCu3NWDRiVBNjsks1cYkoU10HzrTG5iNXv/I1eZSyNN89CZlPO72Og5UEJjj37KYxK1nwH77VNs7YFkV8Peo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oI4RAf3j; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oI4RAf3j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7652C4CEE3;
-	Wed, 23 Apr 2025 14:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745418410;
-	bh=YQYhn8HZx7ubPYTlNSiK99ntMYepg0AMRX7OXqpob3w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oI4RAf3j4M1r2VV6NRgs1xBOJEm2flOIoypXVAMl1a1YvNUbGNE84IEzxCTuVm6GU
-	 pW+qYfhxnSaHqbWYoPkJrnTod7niNrZtYOcDI5DauZVoXHqrvGintx4D9IPYZaXj8G
-	 OP4amihUP6Q21gQMpm2qrKvzwPYHAzII5oWrvNL5ygDMED+N8owCNRs/Vj0/PS0oBW
-	 j45EJfKEzEuvL0kQcipUPF3FrbQKU6DkiQ33rQFPaKpB7zQuEtX5FjSt/RJYx6wwAv
-	 2hYXwW5Tb1aj3rKPirsgIpgoMnqaX5GnhFUPV2Uce62CwkiIjyCNCSXkwuY8BlcgU+
-	 6bZriRBFBABJw==
-Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3f6a92f234dso4069163b6e.3;
-        Wed, 23 Apr 2025 07:26:50 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVVHT6NKQngTyRf+MS+TjRgMKzP0Z5hrWWPaghlasHX3WPdmbliJW40WCWhNIUwHDretu+7Oa3V9paLX8E=@vger.kernel.org, AJvYcCVr2A60j0M7y/7s/DfO/sWT0HE6kbwk7RtikCxj78I5WB5IM6Ms+OLFJw7+l3ZgubpnN1RfD90PoOE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2wNduIhZYHVvtvWLW2AKxcPWXtPiNv6CITUXJ27jUuMujewAH
-	Ih08+W1AdMzzojiUplGfFLAugD895Os6HlfEff2Ugk9uFbnUbdWUxEBquylZbKgreOIfRNUy9sh
-	nF/LgjYsTAf0cyYHQ0paxxjkO8wo=
-X-Google-Smtp-Source: AGHT+IF86QSYcG4iBnR8KfUoSgrDuxUjBg1Hhrec5DRZmfTgDqFoRXL12KcMeRoA1Yl8dkNcre81jhSzAziC3JcdFNc=
-X-Received: by 2002:a05:6871:741d:b0:2d4:e101:13dd with SMTP id
- 586e51a60fabf-2d526979cc4mr12643088fac.1.1745418410039; Wed, 23 Apr 2025
- 07:26:50 -0700 (PDT)
+	s=arc-20240116; t=1745418432; c=relaxed/simple;
+	bh=uMHXSwcg72zCvhbyW76m/LnxmFsNay0uZwkdWYLLm7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=o0/ilcq6zKenA36VdBt6hjd2QTQ4W+oxI1trQXJVJ4oPsjxJ0GGto4SLf9k2WYpbVDz8g7gUA75i+sg7RK5mjeisVT/MmaDhyqwMTkW20zyjrzVVVROUJpTu1kA+/x9UEK+QEsYgoITVWfOEXceOJIEtdPkw8SPoXzFZn5pUPW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D710C4CEE2;
+	Wed, 23 Apr 2025 14:27:11 +0000 (UTC)
+Date: Wed, 23 Apr 2025 10:29:03 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Libo Chen <libo.chen@oracle.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: runtime warning after merge of the mm-unstable tree
+Message-ID: <20250423102903.37f9d07c@gandalf.local.home>
+In-Reply-To: <20250422192816.03eaac09@batman.local.home>
+References: <20250422205740.02c4893a@canb.auug.org.au>
+	<5628676b-e1ff-4570-a1ee-c87742e5363c@oracle.com>
+	<20250423091656.6068c090@canb.auug.org.au>
+	<20250422192816.03eaac09@batman.local.home>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745315548.git.viresh.kumar@linaro.org> <d8651db6d8687a0e37d527267ebfec05f209b1b7.1745315548.git.viresh.kumar@linaro.org>
-In-Reply-To: <d8651db6d8687a0e37d527267ebfec05f209b1b7.1745315548.git.viresh.kumar@linaro.org>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 23 Apr 2025 16:26:38 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hWUdRdbPL2=qybaEsNfPzAqdxW+xBrjwy4HaBXnTwD0g@mail.gmail.com>
-X-Gm-Features: ATxdqUGtzCcRuzs8_RMtDyNBoI0AmDx05VZ1ZJDD6JW5HMnWEgCwZuUfEuq10rY
-Message-ID: <CAJZ5v0hWUdRdbPL2=qybaEsNfPzAqdxW+xBrjwy4HaBXnTwD0g@mail.gmail.com>
-Subject: Re: [PATCH 2/6] cpufreq: acpi: Re-sync CPU boost state on system resume
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Lifeng Zheng <zhenglifeng1@huawei.com>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Nicholas Chin <nic.c3.14@gmail.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 11:54=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.=
-org> wrote:
->
-> During suspend/resume cycles, platform firmware may alter the CPU boost
-> state.
->
-> If boost is disabled before suspend, it correctly remains off after
-> resume. However, if firmware re-enables boost during suspend, the system
-> may resume with boost frequencies enabled=E2=80=94even when the boost fla=
-g was
-> originally disabled. This violates expected behavior.
->
-> Ensure the boost state is re-synchronized with the kernel policy during
-> system resume to maintain consistency.
->
-> Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu=
-_init()")
-> Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220013
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/acpi-cpufreq.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufre=
-q.c
-> index 7002e8de8098..0ffabf740ff5 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -893,8 +893,19 @@ static int acpi_cpufreq_cpu_init(struct cpufreq_poli=
-cy *policy)
->         if (perf->states[0].core_frequency * 1000 !=3D freq_table[0].freq=
-uency)
->                 pr_warn(FW_WARN "P-state 0 is not max freq\n");
->
-> -       if (acpi_cpufreq_driver.set_boost)
-> -               policy->boost_supported =3D true;
-> +       if (acpi_cpufreq_driver.set_boost) {
-> +               if (policy->boost_supported) {
-> +                       /*
-> +                        * The firmware may have altered boost state whil=
-e the
-> +                        * CPU was offline (for example during a suspend-=
-resume
-> +                        * cycle).
-> +                        */
-> +                       if (policy->boost_enabled !=3D boost_state(cpu))
-> +                               set_boost(policy, policy->boost_enabled);
-> +               } else {
-> +                       policy->boost_supported =3D true;
+On Tue, 22 Apr 2025 19:28:16 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-IIUC policy->boost_enabled is false at this point, so say that
-boost_state(cpu) returns true and say cpufreq_boost_enabled() returns
-false.
+> On Wed, 23 Apr 2025 09:16:56 +1000
+> Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> 
+> > On Tue, 22 Apr 2025 11:05:10 -0700 Libo Chen <libo.chen@oracle.com> wrote:  
+> > > 
+> > > Just to verify, does the build have commit 'tracing: Verify event
+> > > formats that have "%*p.."'[1] or not? I do see linux-next/master has
+> > > it but just want to first confirm that.     
+> > 
+> > Yes, it does have that commit (since it has been in Linus' tree since
+> > April 4).  
+> 
+> Looks like we need to teach the verifier about nodemask_pr_args() :-/
+> 
 
-cpufreq_online() will see policy->boost_enabled =3D=3D
-cpufreq_boost_enabled(), so it won't do anything regarding boost, and
-say that this happens for all online CPUs.
+No, actually, the verifier found a bug!
 
-cpufreq_boost_enabled() will be false, policy->boost_enabled will be
-false for every policy, but boost will be effectively enabled AFAICS.
+The event is:
 
-> +               }
-> +       }
->
->         return result;
->
-> --
+> TRACE_EVENT(sched_skip_cpuset_numa,
+> 
+> 	TP_PROTO(struct task_struct *tsk, nodemask_t *mem_allowed_ptr),
+> 
+> 	TP_ARGS(tsk, mem_allowed_ptr),
+> 
+> 	TP_STRUCT__entry(
+> 		__array( char,		comm,		TASK_COMM_LEN	)
+> 		__field( pid_t,		pid				)
+> 		__field( pid_t,		tgid				)
+> 		__field( pid_t,		ngid				)
+> 		__field( nodemask_t *,	mem_allowed_ptr			)
+> 	),
+> 
+> 	TP_fast_assign(
+> 		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
+> 		__entry->pid		 = task_pid_nr(tsk);
+> 		__entry->tgid		 = task_tgid_nr(tsk);
+> 		__entry->ngid		 = task_numa_group_id(tsk);
+> 		__entry->mem_allowed_ptr = mem_allowed_ptr;
+
+Here, we copy the address of mem_allowed_ptr into the ring buffer. The
+address is copied, not the mask itself.
+
+> 	),
+> 
+> 	TP_printk("comm=%s pid=%d tgid=%d ngid=%d mem_nodes_allowed=%*pbl",
+> 		  __entry->comm,
+> 		  __entry->pid,
+> 		  __entry->tgid,
+> 		  __entry->ngid,
+> 		  nodemask_pr_args(__entry->mem_allowed_ptr))
+> );
+
+The above nodemask_ptr_args() is defined as:
+
+> #define nodemask_pr_args(maskp)	__nodemask_pr_numnodes(maskp), \
+> 				__nodemask_pr_bits(maskp)
+> static __always_inline unsigned int __nodemask_pr_numnodes(const nodemask_t *m)
+> {
+> 	return m ? MAX_NUMNODES : 0;
+> }
+> static __always_inline const unsigned long *__nodemask_pr_bits(const nodemask_t *m)
+> {
+> 	return m ? m->bits : NULL;
+> }
+
+Here we see it dereferences the pointer to get bits.
+
+The TP_fast_assign() can happen seconds, minutes, days, months and possibly
+years! before the TP_printk() is executed.
+
+There's no guarantee that the mem_allowed_ptr will still be around when
+printed and can cause a kernel crash! This is exactly what the verifier is
+looking for.
+
+The real fix is not to dereference the pointer and do the conversion in the
+TP_fast_assign().
+
+-- Steve
