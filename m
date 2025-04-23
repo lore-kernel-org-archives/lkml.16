@@ -1,303 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AE8E269AFA;
-	Wed, 23 Apr 2025 21:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446501DFE8;
+	Wed, 23 Apr 2025 21:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745442296; cv=none; b=qXKaRkiTGMyB6tD2Wpcrn0ZetXsl4kI+FUpqkEQXD6r6H061/m0a7LgU9tmnA7osKPPy7mSZh9Z71AoIqOsLTtHJiQWPV6622W+N4FeS7dFt9OglhB+uGZkG+1/wRU94lRCU5foSSZhur05pBLnSFr0jr/tzxe04uHUdDi/xM0k=
+	t=1745442352; cv=none; b=G7vP8TLMA3xw5US2JvpjV0c5nFSYkDpUoWg6HFToNpKb1qSoOdIk/18q7aEFWe6roQh45SkctnH3TShXqPih8+7EiqBAMHPHeCw36Y7lwZK35/LJMVAF5dRYMeDy8uwvn9tcB/i5HyJPUbabGIL7SBLeP/cMW613knBEPhss4Pw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745442296; c=relaxed/simple;
-	bh=aXqT5XtitnkldrsxEDaBFSlooYja5bwOiS4GDTCcI/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=A61wHB2pVkHcUEx579UMMVU9TxseZEsy+QZ5apu4W3On3hyPoX8Y86V0Hd5KDWJWH6uMtroV/cRzPqxr68kjwdRjg/bp1djHFlu/BhFv0ITtrv9LC4rChcrNzrbRUWXXoGIZsE8c5QCAfPbp5l0pyjOQylM4PovHDfPno0JF/us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nj1KmQko; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745442352; c=relaxed/simple;
+	bh=6GgomoTqcxsuEbINY7I6CWSn0GXbkD5Th2M/o+l0ZGo=;
+	h=From:In-Reply-To:References:MIME-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c2YxrI5TH3a1rw3eMS017QnnVfpEnvdiytTP7ROKRpenxVEDjzlSnAyHQN/ldZlUJSgan93qfg4E0Q0fItW5xmYoJUpH9Y3N6BSndY7gjL0DY+SPjxOeKI0OOqNZ6wu2ydRlCJ9/D8ztUvK5CMoC90WwdxfK2B89PfgAXr61BJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Is+4U9Ce; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nj1KmQko"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B22DC4CEEA;
-	Wed, 23 Apr 2025 21:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745442295;
-	bh=aXqT5XtitnkldrsxEDaBFSlooYja5bwOiS4GDTCcI/8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Nj1KmQkoMgx1HAbgBaidts15bsLXG72LDiXdT9T4D/0U3ALD99qH7TZoZlrZvqYdc
-	 akkgJhegUxbAu1MnaWo9OmkeaqzDPTbWluxBLbhrl0XE8yDOTeIjhPRrCYQy3NXFxc
-	 6HCTaBm4Z3ORL3ijoDIa8Eemh5FCCQ5OBC8NCX4g7Eu63UvD3KDXsMlvZD7jm52Hml
-	 vDGlKZ1/aDTSjjxY0VxAAX95k+kxfxA9LS0vmRD0gsV2OnAS6C5ooKgK/Z5QQOQXKX
-	 w8P7cO8DrvLmKJT0d77zcUFPzmRau+bWPSFhP4LUvk6OMazQ0nqZzlrFxnQs7MK3UH
-	 BMt7MYRC6pSAQ==
-Date: Wed, 23 Apr 2025 16:04:54 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with
- PCI_LINK_LBMS_SEEN flag
-Message-ID: <20250423210454.GA455057@bhelgaas>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Is+4U9Ce"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c1efc4577so186908f8f.0;
+        Wed, 23 Apr 2025 14:05:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745442348; x=1746047148; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6GgomoTqcxsuEbINY7I6CWSn0GXbkD5Th2M/o+l0ZGo=;
+        b=Is+4U9Cefzi4DxbIXz7aG59KKgCFSjC213lGNilxctMGpnsUr8UWsMsrJ7CTOq0Nw5
+         wBh08X3ZX1ngmVaS8C8ADq9BzY/kCSaST438NAyTOV4sQs/ge24gvLUd9VwBjVsXikFo
+         1U076JWhHhu6wdQwTLWxiieg9ySovP4WXENIsM3TJJVNKRzPMrrrzzjdYYNNbP305hLJ
+         b8sMqhKv11cITIbqnSvxBKa23Isgxk6uFWTgqY0xhVaqLM4HxZeYr7SaJ+rI/cBsIsv8
+         lRZep7c9xZL8iJ5ryHwjF7zuNYGJU72fNmxNuhd38W5rlGyEpE2pn1wRBcCLXLsmpHVc
+         VG4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745442348; x=1746047148;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6GgomoTqcxsuEbINY7I6CWSn0GXbkD5Th2M/o+l0ZGo=;
+        b=ChHgXYMqnaVC8BuKvBUk3Ypix2D8X7m9Fs9NkJ4j69i7LAR6H/jHZEOlRNKLh34Cji
+         FoDFS/MYk/Yr75ozRdxkMWyrSpkA8UNJJIwQYDHwwfB/k1wPk/phSRIincdkzHzC2+tH
+         4Me1INNj7v0zXJNHe1bYJCB8Czj+d6Jhxjzp2IZn9AjL/zWs+HkR9wbEF6WWHwr9FQzT
+         5JkWTa+sirOoqGAbG101hIQUhlfR3FWxQDliiPTopc1BG0VtMZPHhGiMLUghy8BYH0uN
+         /7pImD6tGzYAGEdUsiHGJBH3e0D+13tuffETGm7tE2fyzcTy9qYU0lgyQUOQOzVfUUGv
+         4Gfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUarKGrKttqIT6CLatPUr+cQaEmP0L8KwryzqVOGsZwR+ghDdwPJhWnzfL+rlZM3E++du36NRQ/n9x1ZW877w==@vger.kernel.org, AJvYcCVd3x8KHIznn7pq8AQ35Ofvc4j0Zl1mOLCR0cwUntoInHqBrWiQTtEjYyyyKGfeeQio15eHzceOTCcRD0dqBQ==@vger.kernel.org, AJvYcCVtS9S2T26I9aDEjo8IFpi+5nlwTLpJbDxt7VtrYcce2RxXxC4lBAMknGXvaBMaSi6p4c+p5EVf/l0twMi9@vger.kernel.org
+X-Gm-Message-State: AOJu0YxURqKig6nzIiqbEnbk7q7amiORIPc+e1IUqPnRov16cyf/lH7K
+	fOb5ZvzHhWjeYrpcZZl1PNdZQPt/AJp99g1Hr4djJHpqklhZdSdtptpDGVHc9NWzRe3ljxTmuV6
+	Xx67/8TDAsgfVpwhAN7wjv6PEhkQ=
+X-Gm-Gg: ASbGnctaDSR2vygRetbNHVCi0+p4pYDwNUJvrPDT/cYeRD9iGKLuSmQ81bZGPowfSSi
+	tFB4T18Ggmfw8kDMH2sYLi1eQOMTDESGs+c8+oD7yO2WPoZW3xyftvpXateBbdah7mXk6Av+1jg
+	8jpYS5HB3ujEVeM/D+Bwk+KR2O5PM4oF7z+A==
+X-Google-Smtp-Source: AGHT+IGUsLBPox/uWJmjVyGdZUaWrYeefwPGm1ePwVrDhg+0usyKnEvHQaxBIhl8yqvVIW79wshIanldFENL4YTbVZ8=
+X-Received: by 2002:a5d:64a4:0:b0:39f:e37:1733 with SMTP id
+ ffacd0b85a97d-3a06cf52369mr13252f8f.2.1745442348296; Wed, 23 Apr 2025
+ 14:05:48 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 23 Apr 2025 14:05:47 -0700
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 23 Apr 2025 14:05:47 -0700
+From: Kane York <kanepyork@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <68089b8d.050a0220.36a438.000a.GAE@google.com>
+References: <68089b8d.050a0220.36a438.000a.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com>
+Date: Wed, 23 Apr 2025 14:05:47 -0700
+X-Gm-Features: ATxdqUFZthFAklAVbjNKhw0GESMNNwLIui2BC5RgpHNS2pvWQzLydo6IzsEC7Q4
+Message-ID: <CABeNrKXCcXxviXQPdCk2R+o-M0VmOsowtWkTddQ5+Tua9eCrQg@mail.gmail.com>
+Subject: Re: [syzbot] [f2fs?] INFO: task hung in do_truncate (3)
+To: syzbot+effe7da6578cd423f98f@syzkaller.appspotmail.com
+Cc: brauner@kernel.org, chao@kernel.org, jack@suse.cz, jaegeuk@kernel.org, 
+	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
+	linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 02:55:47PM +0300, Ilpo Järvinen wrote:
-> PCIe BW controller counts LBMS assertions for the purposes of the
-> Target Speed quirk. It was also a plan to expose the LBMS count through
-> sysfs to allow better diagnosing link related issues. Lukas Wunner
-> suggested, however, that adding a trace event would be better for
-> diagnostics purposes. Leaving only Target Speed quirk as an user of the
-> lbms_count.
-> 
-> The logic in the Target Speed quirk does not require keeping count of
-> LBMS assertions but a simple flag is enough which can be placed into
-> pci_dev's priv_flags. The reduced complexity allows removing
-> pcie_bwctrl_lbms_rwsem.
-> 
-> As bwctrl is not yet probed when the Target Speed quirk runs during
-> boot, the LBMS in Link Status register has to still be checked by
-> the quirk.
-> 
-> The priv_flags numbering is not continuous because hotplug code added
-> a few flags to fill numbers 4-5 (hotplug and bwctrl changes are routed
-> through in different branches).
-> 
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> ---
-> 
-> This will conflict with the new flags Lukas added due to the hp fixes
-> but it should be simple to deal with that conflict while merging the
-> topic branches.
-> 
-> v2:
-> - Change flag value to 6 to make merging with the newly added HP flags easier
-> - Renamed flag to PCI_LINK_LBMS_SEEN to match the naming of the new HP flags
-> 
->  drivers/pci/hotplug/pciehp_ctrl.c |  2 +-
->  drivers/pci/pci.c                 |  2 +-
->  drivers/pci/pci.h                 | 10 ++---
->  drivers/pci/pcie/bwctrl.c         | 63 +++++++++----------------------
->  drivers/pci/quirks.c              | 10 ++---
->  5 files changed, 25 insertions(+), 62 deletions(-)
+This crash appears to entirely ignore the provided filesystem images and ju=
+st
+does tricky fallocate calls followed by a truncate, so it should be easier =
+than
+normal to diagnose.
 
-Applied to pci/bwctrl for v6.16, on the assumption that everybody's
-happy with this.  Thanks!
+The cwd is opened with O_DIRECT. (or this is EFAULT because path is nullptr=
+?)
 
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index d603a7aa7483..bcc938d4420f 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -131,7 +131,7 @@ static void remove_board(struct controller *ctrl, bool safe_removal)
->  			      INDICATOR_NOOP);
->  
->  	/* Don't carry LBMS indications across */
-> -	pcie_reset_lbms_count(ctrl->pcie->port);
-> +	pcie_reset_lbms(ctrl->pcie->port);
->  }
->  
->  static int pciehp_enable_slot(struct controller *ctrl);
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 4d7c9f64ea24..3d94cf33c1b6 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4757,7 +4757,7 @@ int pcie_retrain_link(struct pci_dev *pdev, bool use_lt)
->  	 * to track link speed or width changes made by hardware itself
->  	 * in attempt to correct unreliable link operation.
->  	 */
-> -	pcie_reset_lbms_count(pdev);
-> +	pcie_reset_lbms(pdev);
->  	return rc;
->  }
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index b81e99cd4b62..887811fbe722 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -557,6 +557,7 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
->  #define PCI_DPC_RECOVERED 1
->  #define PCI_DPC_RECOVERING 2
->  #define PCI_DEV_REMOVED 3
-> +#define PCI_LINK_LBMS_SEEN	6
->  
->  static inline void pci_dev_assign_added(struct pci_dev *dev)
->  {
-> @@ -824,14 +825,9 @@ static inline void pcie_ecrc_get_policy(char *str) { }
->  #endif
->  
->  #ifdef CONFIG_PCIEPORTBUS
-> -void pcie_reset_lbms_count(struct pci_dev *port);
-> -int pcie_lbms_count(struct pci_dev *port, unsigned long *val);
-> +void pcie_reset_lbms(struct pci_dev *port);
->  #else
-> -static inline void pcie_reset_lbms_count(struct pci_dev *port) {}
-> -static inline int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
-> -{
-> -	return -EOPNOTSUPP;
-> -}
-> +static inline void pcie_reset_lbms(struct pci_dev *port) {}
->  #endif
->  
->  struct pci_dev_reset_methods {
-> diff --git a/drivers/pci/pcie/bwctrl.c b/drivers/pci/pcie/bwctrl.c
-> index d8d2aa85a229..ab0387ff2de2 100644
-> --- a/drivers/pci/pcie/bwctrl.c
-> +++ b/drivers/pci/pcie/bwctrl.c
-> @@ -38,12 +38,10 @@
->  /**
->   * struct pcie_bwctrl_data - PCIe bandwidth controller
->   * @set_speed_mutex:	Serializes link speed changes
-> - * @lbms_count:		Count for LBMS (since last reset)
->   * @cdev:		Thermal cooling device associated with the port
->   */
->  struct pcie_bwctrl_data {
->  	struct mutex set_speed_mutex;
-> -	atomic_t lbms_count;
->  	struct thermal_cooling_device *cdev;
->  };
->  
-> @@ -202,15 +200,14 @@ int pcie_set_target_speed(struct pci_dev *port, enum pci_bus_speed speed_req,
->  
->  static void pcie_bwnotif_enable(struct pcie_device *srv)
->  {
-> -	struct pcie_bwctrl_data *data = srv->port->link_bwctrl;
->  	struct pci_dev *port = srv->port;
->  	u16 link_status;
->  	int ret;
->  
-> -	/* Count LBMS seen so far as one */
-> +	/* Note down if LBMS has been seen so far */
->  	ret = pcie_capability_read_word(port, PCI_EXP_LNKSTA, &link_status);
->  	if (ret == PCIBIOS_SUCCESSFUL && link_status & PCI_EXP_LNKSTA_LBMS)
-> -		atomic_inc(&data->lbms_count);
-> +		set_bit(PCI_LINK_LBMS_SEEN, &port->priv_flags);
->  
->  	pcie_capability_set_word(port, PCI_EXP_LNKCTL,
->  				 PCI_EXP_LNKCTL_LBMIE | PCI_EXP_LNKCTL_LABIE);
-> @@ -233,7 +230,6 @@ static void pcie_bwnotif_disable(struct pci_dev *port)
->  static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
->  {
->  	struct pcie_device *srv = context;
-> -	struct pcie_bwctrl_data *data = srv->port->link_bwctrl;
->  	struct pci_dev *port = srv->port;
->  	u16 link_status, events;
->  	int ret;
-> @@ -247,7 +243,7 @@ static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
->  		return IRQ_NONE;
->  
->  	if (events & PCI_EXP_LNKSTA_LBMS)
-> -		atomic_inc(&data->lbms_count);
-> +		set_bit(PCI_LINK_LBMS_SEEN, &port->priv_flags);
->  
->  	pcie_capability_write_word(port, PCI_EXP_LNKSTA, events);
->  
-> @@ -262,31 +258,10 @@ static irqreturn_t pcie_bwnotif_irq(int irq, void *context)
->  	return IRQ_HANDLED;
->  }
->  
-> -void pcie_reset_lbms_count(struct pci_dev *port)
-> +void pcie_reset_lbms(struct pci_dev *port)
->  {
-> -	struct pcie_bwctrl_data *data;
-> -
-> -	guard(rwsem_read)(&pcie_bwctrl_lbms_rwsem);
-> -	data = port->link_bwctrl;
-> -	if (data)
-> -		atomic_set(&data->lbms_count, 0);
-> -	else
-> -		pcie_capability_write_word(port, PCI_EXP_LNKSTA,
-> -					   PCI_EXP_LNKSTA_LBMS);
-> -}
-> -
-> -int pcie_lbms_count(struct pci_dev *port, unsigned long *val)
-> -{
-> -	struct pcie_bwctrl_data *data;
-> -
-> -	guard(rwsem_read)(&pcie_bwctrl_lbms_rwsem);
-> -	data = port->link_bwctrl;
-> -	if (!data)
-> -		return -ENOTTY;
-> -
-> -	*val = atomic_read(&data->lbms_count);
-> -
-> -	return 0;
-> +	clear_bit(PCI_LINK_LBMS_SEEN, &port->priv_flags);
-> +	pcie_capability_write_word(port, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA_LBMS);
->  }
->  
->  static int pcie_bwnotif_probe(struct pcie_device *srv)
-> @@ -308,18 +283,16 @@ static int pcie_bwnotif_probe(struct pcie_device *srv)
->  		return ret;
->  
->  	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem) {
-> -		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
-> -			port->link_bwctrl = data;
-> +		port->link_bwctrl = data;
->  
-> -			ret = request_irq(srv->irq, pcie_bwnotif_irq,
-> -					  IRQF_SHARED, "PCIe bwctrl", srv);
-> -			if (ret) {
-> -				port->link_bwctrl = NULL;
-> -				return ret;
-> -			}
-> -
-> -			pcie_bwnotif_enable(srv);
-> +		ret = request_irq(srv->irq, pcie_bwnotif_irq,
-> +				  IRQF_SHARED, "PCIe bwctrl", srv);
-> +		if (ret) {
-> +			port->link_bwctrl = NULL;
-> +			return ret;
->  		}
-> +
-> +		pcie_bwnotif_enable(srv);
->  	}
->  
->  	pci_dbg(port, "enabled with IRQ %d\n", srv->irq);
-> @@ -339,13 +312,11 @@ static void pcie_bwnotif_remove(struct pcie_device *srv)
->  	pcie_cooling_device_unregister(data->cdev);
->  
->  	scoped_guard(rwsem_write, &pcie_bwctrl_setspeed_rwsem) {
-> -		scoped_guard(rwsem_write, &pcie_bwctrl_lbms_rwsem) {
-> -			pcie_bwnotif_disable(srv->port);
-> +		pcie_bwnotif_disable(srv->port);
->  
-> -			free_irq(srv->irq, srv);
-> +		free_irq(srv->irq, srv);
->  
-> -			srv->port->link_bwctrl = NULL;
-> -		}
-> +		srv->port->link_bwctrl = NULL;
->  	}
->  }
->  
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index 8d610c17e0f2..64ac1ee944d3 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -38,14 +38,10 @@
->  
->  static bool pcie_lbms_seen(struct pci_dev *dev, u16 lnksta)
->  {
-> -	unsigned long count;
-> -	int ret;
-> -
-> -	ret = pcie_lbms_count(dev, &count);
-> -	if (ret < 0)
-> -		return lnksta & PCI_EXP_LNKSTA_LBMS;
-> +	if (test_bit(PCI_LINK_LBMS_SEEN, &dev->priv_flags))
-> +		return true;
->  
-> -	return count > 0;
-> +	return lnksta & PCI_EXP_LNKSTA_LBMS;
->  }
->  
->  /*
-> 
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> -- 
-> 2.39.5
-> 
+The victim file is created with O_NONBLOCK and O_SYNC; that fd is discarded=
+.
+
+The victim file is opened again with O_SYNC and FALLOC_FL_ZERO_RANGE is cal=
+led
+with a gargantuan size.
+
+The victim file is opened again with O_APPEND (!) and FALLOC_FL_INSERT_RANG=
+E is
+called with a modest size.
+
+Truncate is called midway through the just-inserted range.
+
+Annotated calls below.
+
+# https://syzkaller.appspot.com/bug?id=3D7d29d6d7a773d4f608a33cf6a7593faadb=
+1b5803
+# See https://goo.gl/kgGztJ for information about syzkaller reproducers.
+#{"threaded":true,"repeat":true,"procs":5,"slowdown":1,"sandbox":"none","sa=
+ndbox_arg":0,"tun":true,"netdev":true,"resetnet":true,"cgroups":true,"binfm=
+t_misc":true,"close_fds":true,"usb":true,"vhci":true,"wifi":true,"ieee80215=
+4":true,"sysctl":true,"swap":true,"tmpdir":true,"segv":true}
+# mount file2
+syz_mount_image$f2fs(&(0x7f0000000040),
+&(0x7f00000000c0)=3D'./file2\x00', 0x0,
+&(0x7f0000000300)=3D{[{@noinline_xattr}, {@noinline_dentry},
+{@prjjquota=3D{'prjjquota', 0x3d, 'active_logs=3D4'}}, {@jqfmt_vfsv1},
+{@noinline_data}, {@noheap}, {@checkpoint_diasble}, {@fastboot},
+{@fsync_mode_strict}, {@discard_unit_section}]}, 0x21, 0x552d,
+&(0x7f000000abc0)=3D"$[removed]")
+# EBADF
+pread64(0xffffffffffffffff, 0x0, 0x0, 0xfff)
+# EBADF
+openat$cgroup_freezer_state(0xffffffffffffffff, &(0x7f0000000080), 0x2, 0x0=
+)
+# openat(AT_FDCWD, nullptr, O_DIRECT, 0)
+# EFAULT?
+openat$nullb(0xffffffffffffff9c, 0x0, 0x4000, 0x0)
+# mount 'bus'
+syz_mount_image$ext4(&(0x7f0000000080)=3D'ext4\x00',
+&(0x7f00000000c0)=3D'./bus\x00', 0x20081e,
+&(0x7f0000000040)=3D{[{@nodelalloc}, {@orlov}, {@auto_da_alloc}]}, 0x1,
+0x4ef, &(0x7f00000003c0)=3D"$[removed]")
+# open file1
+# O_RDWR | O_CREAT | O_NOCTTY | O_NONBLOCK | FASYNC | O_LARGEFILE | O_SYNC
+# perm 0500
+open(&(0x7f0000000080)=3D'./file1\x00', 0x10b942, 0x140)
+# open file1
+# O_RDWR | O_CREAT | O_LARGEFILE | O_SYNC
+# perm 0210
+r0 =3D open(&(0x7f0000000100)=3D'./file1\x00', 0x109042, 0x88)
+# fallocate FALLOC_FL_ZERO_RANGE, offset 0, size 0x7000000
+fallocate(r0, 0x10, 0x0, 0x7000000)
+# openat(AT_FDCWD) file1
+# O_WRONLY | O_CREAT | O_APPEND
+# perm 0512
+r1 =3D openat(0xffffffffffffff9c, &(0x7f0000000080)=3D'./file1\x00', 0x441,=
+ 0x14a)
+# fallocate file1 FALLOC_FL_INSERT_RANGE, offset x4000, size x8000
+# EPERM?
+fallocate(r1, 0x20, 0x4000, 0x8000)
+# truncate file1 size x8001
+truncate(&(0x7f00000000c0)=3D'./file1\x00', 0x8001)
