@@ -1,108 +1,221 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18AE28CF77;
-	Wed, 23 Apr 2025 18:08:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75EFE266572;
+	Wed, 23 Apr 2025 18:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745431737; cv=none; b=HIV6RWCJiNDUACuhjOGUn213zngQn8WhzX3S23YX4aANy5itPuOcmbCxl9b7ekZ3Dfe9E8eldpa5mi/fU268DcBCwdJdq695SBe8CNYO+N0pJxny7+TkynCw7GCml19/Bt/CY0ifICVjsYMhVwHhmHbhFI0HDQz8UCrLbPsqOpA=
+	t=1745431784; cv=none; b=FwPlxZtWmPphTRUg94/lF7f4DP+LK0stL0b6mpF5M9jKd2ooUw25IgRuWiN9gUYwDxLzK4b2Gk4JIOBJHcNHg8bxrRi/xQiERnLNs7dS/DFTO1na7RVZdgUjVBUa2MPUuIsM19xtAO1Gk6GKTLpF4W4dMgqSY/ZrOnH9wU6qj6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745431737; c=relaxed/simple;
-	bh=/a6rlE6WF6SC5/BC0SPA4vfety/OfUOdkiUb0LxSejs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nHL909+gyqQUeTmV9IOlkh+6yhVY3aWastvtnVkCqE/bfmFe26pwoCrvfyG/3R4fhv84HBqH4AUu0itwWPAN040AnMJiryATry/sqbNG7wXRCtrcOjPGS5T2hefESZXpIHkYNZLtuZbiriW++PQgK9IyOWqe/og6Sqfbcj9HD+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=f4foq/8A; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
+	s=arc-20240116; t=1745431784; c=relaxed/simple;
+	bh=g2dikYIG1Egz8ZzBx+R2k1XUYQW/Cj9DIGZWGk+L8U8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NBZq0dW0wpCXSsNcQgwqj8qs1DKzhTWQAfUpV2JsQJ9hdy+L749aH/OB8bTZrfKf96KVLgx3LVTY3HawKflz86Db/c3M8/VlZ+XpXiuxsSr/oEACF/ApHpRKJZsBgm20AR74ZKpSbgTogwyITYMAjn5tim8AK38Ca/ALqbrXbsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=XnE3TI2m; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="f4foq/8A"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0782d787so908945e9.0;
-        Wed, 23 Apr 2025 11:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1745431734; x=1746036534; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/5xauHxSZRZBjL1s6uQdVTJHCQeRvkb+4xCubFVd7n4=;
-        b=f4foq/8A0PvfZhhEk/kaNMcMbETbyKqQWbkhKN9WJa8AKa30iQh1z42vqmnokPqX9T
-         D3fpQh8b8DpfsfTZJL2oxcjbV2YVJgwGzAv8Ds4jo5kM1s1FhIpAeR9FiTVyeZL7sGfC
-         fdA2ePEOnq3uHy2ZV4TGzYtyZsBRHdevFtLEYfnD0gIxEdSS8YMtBb/pMhck2O8o4Eik
-         gUc//xmTKb5tx9omHt+8Ls3K3YBQBXdxgT6A6YOmpmo8GeWlZGmiDrNjtHx4E/cGP+g/
-         vZ6xPo1qzMu27uRI1sXC6W7GA4hjXkcrAk+B9S881exnNXbKJvwbJ/W7XO5/meTfG0e5
-         jaUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745431734; x=1746036534;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/5xauHxSZRZBjL1s6uQdVTJHCQeRvkb+4xCubFVd7n4=;
-        b=TKyiEAVgXq3fH8HrncRNHvm+tlMCiYasFbs6tvIxIi9fO6ASGA4BE4e3Wr5ZaQWhnt
-         xwyzxxO6FBvxTO2uxVcBghrrlmhbJp2dU+BkWVuo1VkOGjwkLZjpzOtwV1S+YlKEni8v
-         b301mEfJX6rkqH8YD1M+060sQqdihZ10Pblq7JIJtQVJOWx7ud97nQLwZ2CQ27dNfGE4
-         R7q6+mu9RnpIl7UQ6LGiWjQBOmEn717uyOtN0gNXR6uEAn9lyFnocbzunuBmNMqUkwrI
-         VIc2u9BkxxcwuKpddgBdCIymkhnJ44wsG4zwsJqiVUoqBq9MzxPNUKaGpltnuIw4ZGD0
-         SGZg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmIAexi5nrXDoRLWSZXYKx/Dc2DVxiWK5aQevk3XARjGGLJRlqSoPOHVFooIssMO77ejgXFjla@vger.kernel.org, AJvYcCXUm4xvZNzQaG1FcESUh+enrVy9DS67neFbZolENc556v2GgUPQerZXJa1GDUsh90kyv04pemUQe3Z9s7M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlEQKSGcZcQNZQDkVFNP6/d9+NDqt2PYbwiGIqlsyjaG+k4vTb
-	qSHpF7XWsTb273hcE4HuNRtuS7EnOOtACkBdaWhvUMfIcRSmWRo=
-X-Gm-Gg: ASbGncv7693zo+CQ6WIpJn/g8lqYjKmJU9+Bxs3AOHT2NsolvlSYcaUwgRozpNQng2S
-	54pyaU1fGA0bweSnx6Ap7SUPMYk090fgVW7Wx0l4BtcaqjzA1wAx4DISOqV+Hu3uV2rSKDIMyVN
-	8nGIlZkEreIshrtic4sJkwqRZoOIAGwXfBJm9uAGqBi6YkYtABnXro118fNUeCCv0heL9MaViBx
-	Ou4E/O0LIh6W3L4oj+oxL78BoUOULtxOFk4qkk6tF5a1fLLT9oYaRJq09PFamOOJQQZcYhIFUY1
-	3gSQHyCuKBM6EFqi/3maC+ZNFj0V4ABDQJsJhmGpYNowRCiVQtTpP9W+1wu29VMaHX8SaJZUCiR
-	IiHunSvRdB+WteRwyJg==
-X-Google-Smtp-Source: AGHT+IENifynQvLMfyjbaFmHerjupvosjrvvoV00BFoAAhIPUsf6sZjXUl/Wm/EfEtV8y/3bKy3dfg==
-X-Received: by 2002:a05:6000:18a8:b0:391:1218:d5f7 with SMTP id ffacd0b85a97d-39efbad7d6amr16420654f8f.40.1745431733961;
-        Wed, 23 Apr 2025 11:08:53 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2ac758.dip0.t-ipconnect.de. [91.42.199.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a4cd0sm20036747f8f.90.2025.04.23.11.08.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 11:08:53 -0700 (PDT)
-Message-ID: <14fbae74-0620-4e9c-aebc-5f4337e14089@googlemail.com>
-Date: Wed, 23 Apr 2025 20:08:52 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="XnE3TI2m"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 010CE1AE2;
+	Wed, 23 Apr 2025 20:09:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745431778;
+	bh=g2dikYIG1Egz8ZzBx+R2k1XUYQW/Cj9DIGZWGk+L8U8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XnE3TI2mG2rKV0+Eo7MfS7/PL++MrN7lopmj5xV28t75XkaIDKwyi+gFjfnTJXjt4
+	 eK+WJlN4Emip1+NAT4Swqa70AZhwbAozslNyCr0RMcO9zQpsiVSFis1khWhu/pfOXm
+	 TTatGxo7fO9wNH+lvKCZzF8xlSudxiDtOeAqIjBY=
+Date: Wed, 23 Apr 2025 21:09:37 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Mathis Foerst <mathis.foerst@mt.com>
+Cc: linux-kernel@vger.kernel.org,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	manuel.traut@mt.com, mathis.foerst@zuehlke.com
+Subject: Re: [PATCH v4 2/6] media: mt9m114: Bypass PLL if required
+Message-ID: <20250423180937.GB2675@pendragon.ideasonboard.com>
+References: <20250307093140.370061-1-mathis.foerst@mt.com>
+ <20250307093140.370061-3-mathis.foerst@mt.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.6 000/393] 6.6.88-rc1 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250423142643.246005366@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250423142643.246005366@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250307093140.370061-3-mathis.foerst@mt.com>
 
-Am 23.04.2025 um 16:38 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.6.88 release.
-> There are 393 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hi Mathis,
 
-Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
-oddities or regressions found.
+Thank you for the patch.
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+On Fri, Mar 07, 2025 at 10:31:36AM +0100, Mathis Foerst wrote:
+> The MT9M114 sensor has an internal PLL that generates the required SYSCLK
+> from EXTCLK. It also has the option to bypass the PLL and use EXTCLK
+> directly as SYSCLK.
+> The current driver implementation uses a hardcoded PLL configuration that
+> requires a specific EXTCLK frequency. Depending on the available clocks,
+> it can be desirable to use a different PLL configuration or to bypass it.
+> 
+> The link-frequency of the output bus (Parallel or MIPI-CSI) is configured
+> in the device tree.
+> 
+> Check if EXTCLK can be used as SYSCLK to achieve this link-frequency. If
+> yes, bypass the PLL.
+> Otherwise, (as before) check if EXTCLK and the default PLL configuration
+> provide the required SYSCLK to achieve the link-frequency. If yes, use the
+> PLL. If no, throw an error.
+> 
+> Signed-off-by: Mathis Foerst <mathis.foerst@mt.com>
+> ---
+>  drivers/media/i2c/mt9m114.c | 62 ++++++++++++++++++++++++++-----------
+>  1 file changed, 44 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/mt9m114.c b/drivers/media/i2c/mt9m114.c
+> index 5f0b0ad8f885..b06003b69f6f 100644
+> --- a/drivers/media/i2c/mt9m114.c
+> +++ b/drivers/media/i2c/mt9m114.c
+> @@ -261,6 +261,7 @@
+>  #define MT9M114_CAM_PGA_PGA_CONTROL			CCI_REG16(0xc95e)
+>  #define MT9M114_CAM_SYSCTL_PLL_ENABLE			CCI_REG8(0xc97e)
+>  #define MT9M114_CAM_SYSCTL_PLL_ENABLE_VALUE			BIT(0)
+> +#define MT9M114_CAM_SYSCTL_PLL_DISABLE_VALUE			0x00
+>  #define MT9M114_CAM_SYSCTL_PLL_DIVIDER_M_N		CCI_REG16(0xc980)
+>  #define MT9M114_CAM_SYSCTL_PLL_DIVIDER_VALUE(m, n)		(((n) << 8) | (m))
+>  #define MT9M114_CAM_SYSCTL_PLL_DIVIDER_P		CCI_REG16(0xc982)
+> @@ -377,6 +378,7 @@ struct mt9m114 {
+>  	struct gpio_desc *reset;
+>  	struct regulator_bulk_data supplies[3];
+>  	struct v4l2_fwnode_endpoint bus_cfg;
+> +	bool bypass_pll;
+>  
+>  	struct {
+>  		unsigned int m;
+> @@ -743,14 +745,20 @@ static int mt9m114_initialize(struct mt9m114 *sensor)
+>  	}
+>  
+>  	/* Configure the PLL. */
+> -	cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_ENABLE,
+> -		  MT9M114_CAM_SYSCTL_PLL_ENABLE_VALUE, &ret);
+> -	cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_DIVIDER_M_N,
+> -		  MT9M114_CAM_SYSCTL_PLL_DIVIDER_VALUE(sensor->pll.m,
+> -						       sensor->pll.n),
+> -		  &ret);
+> -	cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_DIVIDER_P,
+> -		  MT9M114_CAM_SYSCTL_PLL_DIVIDER_P_VALUE(sensor->pll.p), &ret);
+> +	if (sensor->bypass_pll) {
+> +		cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_ENABLE,
+> +			  MT9M114_CAM_SYSCTL_PLL_DISABLE_VALUE, &ret);
+> +	} else {
+> +		cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_ENABLE,
+> +			  MT9M114_CAM_SYSCTL_PLL_ENABLE_VALUE, &ret);
+> +		cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_DIVIDER_M_N,
+> +			  MT9M114_CAM_SYSCTL_PLL_DIVIDER_VALUE(sensor->pll.m,
+> +							       sensor->pll.n),
+> +			  &ret);
+> +		cci_write(sensor->regmap, MT9M114_CAM_SYSCTL_PLL_DIVIDER_P,
+> +			  MT9M114_CAM_SYSCTL_PLL_DIVIDER_P_VALUE(sensor->pll.p),
+> +			  &ret);
+> +	}
 
+You can add a blank line here.
 
-Beste Grüße,
-Peter Schneider
+>  	cci_write(sensor->regmap, MT9M114_CAM_SENSOR_CFG_PIXCLK,
+>  		  sensor->pixrate, &ret);
+>  
+> @@ -2235,9 +2243,19 @@ static const struct dev_pm_ops mt9m114_pm_ops = {
+>   * Probe & Remove
+>   */
+>  
+> +static int mt9m114_verify_link_frequency(struct mt9m114 *sensor)
+> +{
+> +	unsigned int link_freq = sensor->bus_cfg.bus_type == V4L2_MBUS_CSI2_DPHY
+> +				? sensor->pixrate * 8 : sensor->pixrate * 2;
+
+			       ? sensor->pixrate * 8 : sensor->pixrate * 2;
+
+And missing blank line.
+
+> +	if (sensor->bus_cfg.nr_of_link_frequencies != 1 ||
+> +	    sensor->bus_cfg.link_frequencies[0] != link_freq)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+>  static int mt9m114_clk_init(struct mt9m114 *sensor)
+>  {
+> -	unsigned int link_freq;
+>  
+>  	/* Hardcode the PLL multiplier and dividers to default settings. */
+>  	sensor->pll.m = 32;
+> @@ -2249,19 +2267,27 @@ static int mt9m114_clk_init(struct mt9m114 *sensor)
+>  	 * for 16-bit per pixel, transmitted in DDR over a single lane. For
+>  	 * parallel mode, the sensor ouputs one pixel in two PIXCLK cycles.
+>  	 */
+> -	sensor->pixrate = clk_get_rate(sensor->clk) * sensor->pll.m
+> -			/ ((sensor->pll.n + 1) * (sensor->pll.p + 1));
+>  
+> -	link_freq = sensor->bus_cfg.bus_type == V4L2_MBUS_CSI2_DPHY
+> -		  ? sensor->pixrate * 8 : sensor->pixrate * 2;
+> +	/*
+> +	 * Check if EXTCLK fits the configured link frequency. Bypass the PLL
+> +	 * in this case.
+> +	 */
+> +	sensor->pixrate = clk_get_rate(sensor->clk) / 2;
+> +	if (mt9m114_verify_link_frequency(sensor) == 0) {
+
+I would be cleaner to pass the pixel rate as a parameter to the
+function:
+
+	unsigned int pixrate;
+
+	...
+
+	pixrate = clk_get_rate(sensor->clk) / 2;
+	if (mt9m114_verify_link_frequency(sensor, pixrate) == 0) {
+		sensor->pixrate = pixrate;
+		sensor->bypass_pll = true;
+		return 0;
+	}
+
+> +		sensor->bypass_pll = true;
+> +		return 0;
+> +	}
+>  
+> -	if (sensor->bus_cfg.nr_of_link_frequencies != 1 ||
+> -	    sensor->bus_cfg.link_frequencies[0] != link_freq) {
+> -		dev_err(&sensor->client->dev, "Unsupported DT link-frequencies\n");
+> -		return -EINVAL;
+> +	/* Check if the PLL configuration fits the configured link frequency */
+
+s/frequency/frequency./
+
+With those small issues addressed,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +	sensor->pixrate = clk_get_rate(sensor->clk) * sensor->pll.m
+> +			/ ((sensor->pll.n + 1) * (sensor->pll.p + 1));
+> +	if (mt9m114_verify_link_frequency(sensor) == 0) {
+> +		sensor->bypass_pll = false;
+> +		return 0;
+>  	}
+>  
+> -	return 0;
+> +	dev_err(&sensor->client->dev, "Unsupported DT link-frequencies\n");
+> +	return -EINVAL;
+>  }
+>  
+>  static int mt9m114_identify(struct mt9m114 *sensor)
 
 -- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+Regards,
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+Laurent Pinchart
