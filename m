@@ -1,87 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A092135D0;
-	Wed, 23 Apr 2025 15:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9362028A3EF;
+	Wed, 23 Apr 2025 15:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423145; cv=none; b=Ke8c0kmO+axNV5w/OC5U4kMOlItiqvriTFToYQHLmn3mQj01DRipfUE/FswH4ya9HxQJJzt4q5wHn6gcQz59Ez43c+H1mdyh2YKRKgIM6J7sQbVYs72Z4zawsWZ9XlIgXZMDbBneV8hpQzJRi+YMTtXK3ojqzTk+deBJPjvOCrU=
+	t=1745423151; cv=none; b=WNwJsywg2rW8SkACKXa54DGUXE2nuWpiSY5ErNTdqtcHyx4kmcERHGFskVjQPzfGvXyrb1qYQtpDCcB9zUD8BQGNICvdnLvF+eF9T9GYzzyPkJzLmBKK0oNRVu9h4YdMupTwvLMzionvf2lvbYmkXiFLV+lZCJKI2Pe9lQrvaOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423145; c=relaxed/simple;
-	bh=uXGY1VAD0ezdy/ybNS4JN/GqOzUTWI23//dv6QmQUdA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FCwtNAtPOrg2q3f61In6tpOOGPWSJfb/8NkpJiMq2tW2B8xC+Q60L4zusnFTDF0O1Izj6gETnuu74d/9lHnZLKniuB4dnPxtIuDHZPCb5NC6vPXUcWsVusuUWAcKvIBswoDZzjxJOVRps3Ec2tgQ2+4dtzZFHG4rZLZkVSECzUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0f0eh/2; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0f0eh/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3897C4CEE2;
-	Wed, 23 Apr 2025 15:45:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745423144;
-	bh=uXGY1VAD0ezdy/ybNS4JN/GqOzUTWI23//dv6QmQUdA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R0f0eh/2LvsfL4iutKlrnN7chSnjyw9pMqdFl73WtrDzgT2ZydtvcA8ApMRrfVIYy
-	 0CZgrRPJS++EmO8LsVSliQHDPcJ4RjdLHd80VCSoQOqGK2G/sxQPoZ0XojLkat0gbl
-	 X9euuD1yjltFR9FrI4sj7wt/r4snbcmpPCPgsfGpPE6QkuX0XI/6o5kEQETPqu2/NC
-	 34NzBeNuKsBs5HwcJNh7E93sOIpOuLw5h5wZ4lGRL6HeCBSSF4EK6B1Vxc96zgxjOV
-	 XwqUIMgq4hiEEAgxXOvGPFodHikCT0z4VCIUYX0Ma0thcWjIropdyYMZw+iZRxy4cb
-	 R0dclULDW9zZA==
-Date: Wed, 23 Apr 2025 10:45:42 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: linux-mediatek@lists.infradead.org, linux-input@vger.kernel.org,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>
-Subject: Re: [PATCH v2 1/8] dt-bindings: HID: i2c-hid: elan: Introduce Elan
- eKTH8D18
-Message-ID: <174542314188.576994.12974029497689302557.robh@kernel.org>
-References: <20250421101248.426929-1-wenst@chromium.org>
- <20250421101248.426929-2-wenst@chromium.org>
+	s=arc-20240116; t=1745423151; c=relaxed/simple;
+	bh=NIYBVH9kpFEZnQu4Yjso/RzDo5cDJB1ShWTh2eQv9WE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=CwyZiSdvh65iMxNq1H31TowFls2UwkCRTjUPX/9bPe5dCp+ST1UaNQ5dkQ7cab9NiKElfggXYwNY/jWOzekeQRfp8tMH2bDw8WYYp4tfjeVJN8fJTl55BSFKM6psrUxfZiAOGnKzQ+ZM9yGLR/RQ2QPVzebbp3HkdK93/Paz1ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
+Received: from arnaudlcm-X570-UD.. (unknown [IPv6:2a01:e0a:3e8:c0d0:d851:318b:70da:57a7])
+	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 5B9973B5463;
+	Wed, 23 Apr 2025 15:45:38 +0000 (UTC)
+Authentication-Results: Plesk;
+	spf=pass (sender IP is 2a01:e0a:3e8:c0d0:d851:318b:70da:57a7) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=arnaudlcm-X570-UD..
+Received-SPF: pass (Plesk: connection is authenticated)
+From: Arnaud Lecomte <contact@arnaud-lcm.com>
+To: syzbot+843981bb836d699c07d1@syzkaller.appspotmail.com
+Cc: kent.overstreet@linux.dev,
+	linux-bcachefs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Sub volumes handling in bch2_fsck_update_backpointers
+Date: Wed, 23 Apr 2025 17:45:31 +0200
+Message-ID: <20250423154531.376838-1-contact@arnaud-lcm.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <6806d857.050a0220.f25bb.07a8.GAE@google.com>
+References: <6806d857.050a0220.f25bb.07a8.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421101248.426929-2-wenst@chromium.org>
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: <174542313871.6255.12048170017684785252@Plesk>
+X-PPP-Vhost: arnaud-lcm.com
 
+Hey everyone, in fsck.c, we have:
+/*
+ * Prefer to delete the first one, since that will be the one at the wrong
+ * offset:
+ * return value: 0 -> delete k1, 1 -> delete k2
+ */
+int bch2_fsck_update_backpointers(struct btree_trans *trans,
+				  struct snapshots_seen *s,
+				  const struct bch_hash_desc desc,
+				  struct bch_hash_info *hash_info,
+				  struct bkey_i *new)
+{
+	if (new->k.type != KEY_TYPE_dirent)
+		return 0;
 
-On Mon, 21 Apr 2025 18:12:39 +0800, Chen-Yu Tsai wrote:
-> The Elan eKTH8D18 touchscreen controller is an I2C HID device with a
-> longer boot-up time. Power sequence timing wise it is compatible with
-> the eKTH6A12NAY, with a power-on delay of at least 5ms, 20ms
-> out-of-reset for I2C ack response, and 150ms out-of-reset for I2C HID
-> enumeration, both shorter than what the eKTH6A12NAY requires.
-> Enumeration and subsequent operation follows the I2C HID standard.
-> 
-> Add a compatible string for it with the ekth6a12nay one as a fallback.
-> No enum was used as it is rare to actually add new entries. These
-> chips are commonly completely backward compatible, and unless the
-> power sequencing delays change, there is no real effort being made to
-> keep track of new parts, which come out constantly.
-> 
-> Also drop the constraints on the I2C address since it's not really
-> part of the binding.
-> 
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-> ---
-> Changes since v1:
-> - Reworded commit message
-> - Dropped the enum for the new compatible string entry
-> - Dropped constraint on I2C address completely
-> ---
->  .../devicetree/bindings/input/elan,ekth6915.yaml     | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
+	struct bkey_i_dirent *d = bkey_i_to_dirent(new);
+	struct inode_walker target = inode_walker_init();
+	int ret = 0;
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+	if (d->v.d_type == DT_SUBVOL) {
+		BUG();
+	} else {
+		ret = get_visible_inodes(trans, &target, s, le64_to_cpu(d->v.d_inum));
+		if (ret)
+			goto err;
 
+		darray_for_each(target.inodes, i) {
+			i->inode.bi_dir_offset = d->k.p.offset;
+			ret = __bch2_fsck_write_inode(trans, &i->inode);
+			if (ret)
+				goto err;
+		}
+	}
+err:
+	inode_walker_exit(&target);
+	return ret;
+}
+
+What is the current state for handling subvolumes ? In someone already working on or it is something we don't want to implement
+for some reasons ?
+
+Regards,
+Arnaud
