@@ -1,41 +1,48 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFBA9C8DC
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48016C8DC;
+	Wed, 23 Apr 2025 11:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745406111; cv=none; b=jP6c7IyV/2kYZeb5hK/eZa6HB/5T6V5TFu4pf2azN+TaaGtx5pthpsHJyBqeaYg0ZSBiqxGr1Y0xWaC/5od311lNjDTdeMJsfGpJHRQ3VmgWwSk/qFIdTQ+fK9VcvZAwzPEfYiKPyskhTzEwmBAOawRHtXNfs54Q6VpKm4ELhpQ=
+	t=1745406118; cv=none; b=I1lqIS+0h8ALanPugbMxL6/N5M/NWP7pEuTI7oUgFyi2Rw/3pGwzJ3tvw590GABxLpYJD/pM/q/iBBDro5u/5Atx5yRVzPMU5nwbJPPxX8ekGUpPgjMslStOxP1Dp+suKkmDFTs6JaXCOPS9HtWfKEcqhZPjmfn+u18XNa0+9yA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745406111; c=relaxed/simple;
-	bh=2MgQnj1y3iiWLI3R49UjyHxN+tqxj29veEer+sdBfIE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=iIT/W94qAnrWcYAUhHpfLkbHxiIk2SkhZhuBmKTC6pn/DXr+z/ElnkI+BfMUFQjzbM7kb+xqiXjQamXptB4F8zSK3qZow64efkAA1Piki5bB1zWCkza1UH8utVB5VwoKLYc1fF1QHcYbiqIFN0EdwmmY2Y99mgH9Z6xoAuvwt+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=Ox8SHhMD; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1745406118; c=relaxed/simple;
+	bh=JYlrtdPkn/dvF6hlr6tukfBn7HmNVmOGZEnDppujC3g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TOSqL/l18Y27IFSeO6DGDaREvK8bBDpnlyiOdcZJb4z8ydFgnyY3qJ4nxIt/nkltavJiqAsJ7KJIgKzT2g3SwC1TFNRs3Z2Afk4d8oe1M0sKk+/Ju/LO52hqkBXf1sj708fiEdqm3p9IGQomPMZcZrzwFVeI76vF/ywObmrlCaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=hw5xqQQ9; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="Ox8SHhMD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1745406071; x=1746010871; i=markus.elfring@web.de;
-	bh=bJBRZaSgchliWw4wWLkLEWuwp3nk6zi0pApkA4ydaQA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
-	 References:From:Cc:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=Ox8SHhMDynRZ4UWq5g+NDy3WLxAgbWwiPuGIaqRjAdTgEARXgKvENusKre6qfQlx
-	 qIYRkjFbHC8jeWQ8gTOnyCaj65GQLj2KZ/2KI9qO3hNf/s6tG1PzygUsqN7OFX70g
-	 dAReE3UrzgvWkWQukjV12AjX088iZ1rhv4qMLNqw7MUEcbj/JKmcpFD6lGhQ9ViTR
-	 UrYYv9nTjx8hQU+X+oTBAzp8eYna21c4icmgUiPW4z/RJh9PqwPc7iiB8s+cbOKw3
-	 CZEps0aLh8Bgx2KU1hea2cAPXrAae5vtI82IJGoPLyKhwJOZbd5x9OhyNqgq5TjjJ
-	 ZO5rWeNK9WKkse9V2w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.6]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M3V6E-1u86571ArC-00AzGR; Wed, 23
- Apr 2025 13:01:11 +0200
-Message-ID: <a1be0efc-a4c9-461d-a01a-8fb830b2c68d@web.de>
-Date: Wed, 23 Apr 2025 13:01:03 +0200
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="hw5xqQQ9"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAlafx016858;
+	Wed, 23 Apr 2025 11:01:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zVJ+/vVepkGmQcMwQNA4ogt+cMKPxrjlVD7qz32ZD8M=; b=hw5xqQQ9sGk6XbAm
+	wjujz0ybA0MbZnNkgycifoKLoTvauLB52KXhpmRgXPtF+ZrFqWiBDWJIrUrLU4do
+	x2sEYAR/fWQ0u3W/j0ZJ1iWc6gs3BUdpHpvjP/GXBkEVCSvVjXk9aqm89HsnsE3x
+	Kp3GfSo8aFjLmjEEgMEybTa56RHKlMp9k91Z91d8prgAx8XyIDDrazTLzFfXX83S
+	sK3ifn5deeJxyJ8AJvtdS44uom5afeKGJ4SpLQape4FlbBsbaqBfkwRRAFBjj08b
+	y6Wvb5/Bmagx4gFsEGe+EevDgfjU4s3NOM3ULC8fYhu6EBEOZbCOa7AlSXG5v68r
+	Q2tUUw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh01vq4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 11:01:33 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53NB1FsA027322
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 11:01:15 GMT
+Received: from [10.218.7.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
+ 2025 04:01:10 -0700
+Message-ID: <fb4394e2-991f-4aba-9ddc-ce6cfb7c695d@quicinc.com>
+Date: Wed, 23 Apr 2025 16:31:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,131 +50,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [cocci] [PATCH v3 2/6] coccinelle: misc: Add field_modify script
-To: Luo Jie <quic_luoj@quicinc.com>, cocci@inria.fr,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- Catalin Marinas <catalin.marinas@arm.com>, Joey Gouly <joey.gouly@arm.com>,
- Julia Lawall <Julia.Lawall@inria.fr>, Marc Zyngier <maz@kernel.org>,
- Nicolas Palix <nicolas.palix@imag.fr>, Oliver Upton
- <oliver.upton@linux.dev>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Suzuki Poulouse <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>,
- Yury Norov <yury.norov@gmail.com>, Zenghui Yu <yuzenghui@huawei.com>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
- <20250417-field_modify-v3-2-6f7992aafcb7@quicinc.com>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
- "Kiran Kumar C.S.K" <quic_kkumarcs@quicinc.com>,
- Lei Wei <quic_leiwei@quicinc.com>, Pavithra R <quic_pavir@quicinc.com>,
- Suruchi Agarwal <quic_suruchia@quicinc.com>, quic_linchen@quicinc.com
-In-Reply-To: <20250417-field_modify-v3-2-6f7992aafcb7@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:xvSCXljCCknARbi0JItnFFXBwAmUxRh0fA0gwWeuOfRq7wj6wGN
- 5xNQ4dFTKJ2Fik8upyc69y7miHX9kOfh+vGTMYy6HHyjPhT7DMe33NDvGjIXRDXV1+Lybhg
- xg/HO1UvOIMIsomFkLK5/x0PuSkg8yWK9747nUmSNjX+m2rb9sOTFxEfqbdXrdfKUBrSOP4
- EZopg77LmU3bOl4uwW6IQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:qNz1C3ar5JU=;rjaWDewSnTi3p/HCEWxAJ+B18ak
- 6nu7icz17i78Tj3U4QaKtFDQduxIUd/2hcoBottX8voMyXZMbffEPmpZ8XBQM/RDEJ9g1MRIa
- iZZq8lHLKvx2FclzlKMs9ZR8oBAZN0E0iSruheiePd+lWf6UvUu7KVGHewhSNQCDQ8zwEVqCE
- i2JmS48nriiVd30U7ejkEmMhEzdLk8DCEN107LKkro9elWhdARB/nUgXCSJL/DKmLKdFjUtXk
- iGZN0Oog3mOCtsb4/I+bxhT8aYhWKE0l4E4isyUexqbiBqMXr8hcV4BdUGfiz3ss/5z4oQ6zm
- jfi8q9TCIWQg/F6ds6AwdYHBpUJaYqwpJLdc3a6QUUTmnKtmzfpxEzNa5YAqP8ZNKCEIySqGJ
- GNrwUdfLx1rdGFPQWLWM+Wu6bZSmpaLPzXgV6lsWmsGql8aDoMwrSon7ZQBaVu8ZtwM8JrSGG
- MW0eIo4etYoX/jka/81PyOcqaUTRkqOB54piIblhokpipWWubRw2jk3jYxIFEqLCuF8h9qKAs
- Q9DUpM07OGw44Vnf92ue7krtxJYKuzgtKTCLrzstfE8I3SU/mLhK4IbDeVCtiujRIgseHVMy8
- nXoiIkqImmn/5srHSkl+zNHExktes8YlIhtMfrKKvu58leQ2WSg0A2S7P2G1Np9kZYwVbXT0/
- wgOYXvHl1+8p/ZgykmBRnxUAUwDHLkZhWOXityn6Ow1lwS7SqtW6mHf+zmFXqg+1a0mYMoa8Q
- xIPDpfhAitbicNrwCnC6qfolWKn+TlkPmZVvt79h1lVZ5sJGPmSwEc3g6+YZxQe89NVqi7/et
- aBMcm6/HKKv7cn9dQP3uynqGwtp7O+UpsOoOVc9prSzk6CQZlxxh8S9s3onsLOaZ0g3ClnPk+
- +G5qH59blShh9jMVMrC17mkKaxtZY8iDyh9bGARVvKOKJ4HfZDZoBO4/lFRD2MuEDY4C9GjuT
- 8h9pBnY4k+RFulkN2S2ezqYs9pXx+Tw9pfOmPTqpbI+n5mdSfClVvlLYF+B0dgnSTXlu4Wg+/
- kiIUuXRd7awTD2EDrWyT4RKpc4DDnFgDSEDAubQ5Xll35HoHwnzHTSqHMSGDKgkmXEFmtsVUb
- LgsshiJxUl6fpWyzulCNUvvYEsxl0SIsWIi2txKeshdt+YF6Hcetl7hj3EAhDSTOMHHgl/vfA
- Ek4dnFFpPX24cL7BMXaV1QDLD5+QdUiKJcsKU4CQ4LiukE+jaeD1ycS14w0CZIS23kRAdFOB+
- QUadogocEhUzEJlt8w1rr1BQC+f3v4VsfjFwz2s1zfLCcgGo4cwpyivu759bOy3ISp3rcAHHf
- t9tEwKPRF2wakKBkdUtYxvdhJ+YcC5CapKj9ONI2teByR67R69p6IhoxdEsEp4pwfm2RjePft
- d4QvBinvWHyXcPFeUNiBiSuUOWaUEsO16qDdJ/y5lLq/v/YB6Z/VOCftnJjhOJJMIzmk0IQ/7
- 7McMNRdCUNyD6j0bmuSMT/U2piL65OF0uUwgo5LrztG0tCEhTvBqSMrepoYF5KFaw28qOSosJ
- I52y2fbPGpZvI13PJPjtdYafTLJvGUhc/ODDCbXpbiambMO7mX4y0958KOV4PRxPgU7sBhcal
- 9nSencIfhRa4rFN3sPAkuiyIbpsrKC1xDxT+zNx2bSH64ZJW5vn7b2yuahaWAYHcjIKVirHXm
- jMp6FdAVXRBtffrrT7Bd1WLRukcmMOaED+486PDI69bR1TrgTyeqlwPZ7KjJ5d/MuVS1m27kM
- 3Af/U/vzUlC9kuVcaif1e/WW7cM3tZgTt1V21aBAR+d4IQSTsmz+bfgxvePcsO5z6v7FyIb4N
- gjX7tOAvVp+HfS3Ix57ZlL5rWlLOLceMuqbxG3zjNv5wbqIgKZkejWf6Sxu0/l+SqC3iB7+HB
- C5zEON+WgGYkvrF//wVuHSpBWqpSWAF+iEV8UePmOTryvIndMF/A0x+dGSKE9d00tBq4T3sI1
- LWZeYl+zCIX+1s+x8+ciRJQ29wYQMP07azXe5ZrFMbnD5k7mY0oRrOPT3m5yg0SMnmZH1jUfY
- Ukb+2Nug7OmUq7Gwg8/0eUEHWazYHIL5M92Yr3YLlndb0u1iE8+Z8dkMV/jLsSwKB9rhNl6jX
- 6f7uAIsz99gp0/CtSkN0+vHUPeuJk8foPHHmuYfbkYQD9F8dTbOFJGb2adZTHPml19lHmZR/L
- TEvUzwt4RKCcnCoap03PQ1/092dFOm5Xw05Sw3LdTE0tUTkhuIiskyxszOq4a9R93gSWMVQrP
- 6G7cFPZOl+vqJQxH4VB3Z/K+E7A76bnsHvFPZdnvK71N18BLCO5+8hbCIufHE/5egBG4tgghH
- LRKOo0msbS+95fRyopi1uQ10zf0xky81pQSntx11vRS1XfeAL9vZ+1THexfCMisMTyuOUFWbW
- 6i+xk1iNkaFniHiWdAK1h2Hr4qAv5HMAN38T8Vb4tTQ3oE+OfJ3npK18GbcbkzppFJfwaF2J2
- WlXI02b7JuHDNRfCY2zkOPMFtqIPHZ10+vRQcAf5+kzpAvxnGlyBci+PQTuSGJjM++ntKvZvm
- D7hyDqnYncOzKQ8pxZ5/zFRIYkyLAssHtLv76nTPM8s64mHRH/MOml2U47aY3odgA7OUnkZ6T
- 57cqnVsXaPLrG5Ddd4MTKyEEohc0dJDD4Wnup9wD+xZqjLCzuS32s1Skkzr2XAGHFVEKVu2ns
- gfsH8t2QZ3V3j0zxvuwGosP0LfYWnK4rpsg4YnW81SIS9rtXY4XoPq7DpFBB2UnazU0QhAgq9
- Uoun64jrRIs32b26IEgXY43MXUAb9fiG6YWgPQjR+wB0r825hk1bvcquTMMVs7kL8Wlx7akaK
- oTlm20aV2bCeY8QDANf/eWuRwrsZ5rsEhyQl98eQp3GK/DUX8BgXEyBP+d3eb4HdaiT8+21S8
- ZX/cYDOhs3MtntHFf2UCjLOXWM2yyK9RlC+V+TlGy64cPPsZM3yPTCuVnk2WgDU3jV79jBle8
- rWIwnu2RYxz6zMkiz2WmettBsur8tZz8xMZupzNbPImx4RRUyCVawVkrK1vYohm4MjoIujwKV
- Mi/Fv0A8aHrvxoi/hoWSFcPNfLLZuGgcJgZOZjZFsGJ
-
-> This script finds and suggests conversions of opencoded field
-> modify patterns with the wrapper FIELD_MODIFY() API defined in
-> include/linux/bitfield.h for better readability.
-
-See also:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.15-rc3#n94
+Subject: Re: [PATCH V3 1/9] scsi: ufs: qcom: add a new phy calibrate API call
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <manivannan.sadhasivam@linaro.org>,
+        <James.Bottomley@HansenPartnership.com>, <martin.petersen@oracle.com>,
+        <bvanassche@acm.org>, <bjorande@quicinc.com>,
+        <neil.armstrong@linaro.org>
+CC: <quic_rdwivedi@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-phy@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>
+References: <20250410090102.20781-1-quic_nitirawa@quicinc.com>
+ <20250410090102.20781-2-quic_nitirawa@quicinc.com>
+ <3735f288-5ba2-4582-afbe-8b3f5d0f280c@oss.qualcomm.com>
+Content-Language: en-US
+From: Nitin Rawat <quic_nitirawa@quicinc.com>
+In-Reply-To: <3735f288-5ba2-4582-afbe-8b3f5d0f280c@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA3NiBTYWx0ZWRfXxQdhnEa3a5Bh zKXvCem6WoDUvwXSPHTeOqJm1N1gwUz71oNKBg5UHO7PHlrRF19A3ocpVqV1d8LALGSrHkV8KGF ECq7tEajbAuOOwOf2t1DGN+iahr2Zp8t/eFlZc+p/G4g4GmMJYXS8jbX+YXXo3ArBRcLYKRQU8c
+ C4fUl+FBxjcysKm9xIW6mIbSMPkPBIyJUIrIcpZwXX4LhxKoQ3b5lR8W/kIF5SLMH2l48Yh9vjz xesmXdMCHspku1ecy7pGY74sEKmMi+Y6RtO/GmOdLQMelychyz6Kqa8R3NW1YLvL+mLgZboe4wa 4Nb/KNe4jGVJmUlq8ZgNtmIbC3gKI6VIaJcwotsFutC/tT2l5exoD5+evl/BlP3ASNOJeyeTuJu
+ +XqJLFEHsIbh/6YPIX+fWB4zR08Hn4L/D53/SQeCg9jPSCltv/sCcYEqye2jxcbpN4hdAO9d
+X-Proofpoint-GUID: OHlltBr3yQZ-e07YpU48PUXMyoym35pf
+X-Authority-Analysis: v=2.4 cv=ZuTtK87G c=1 sm=1 tr=0 ts=6808c88d cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=oORsJjWy4k12e7USA60A:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: OHlltBr3yQZ-e07YpU48PUXMyoym35pf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_07,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=999 priorityscore=1501 malwarescore=0 suspectscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230076
 
 
-=E2=80=A6
-> +++ b/scripts/coccinelle/misc/field_modify.cocci
-> @@ -0,0 +1,24 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +///
 
-I suggest to omit a blank comment line here.
+On 4/23/2025 4:12 PM, Konrad Dybcio wrote:
+> On 4/10/25 11:00 AM, Nitin Rawat wrote:
+>> Introduce a new phy calibrate API call in the UFS Qualcomm driver to
+>> separate phy calibration from phy power-on. This change is a precursor
+>> to the next patchset in this series, which requires these two operations
+>> to be distinct.
+>>
+>> Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
+>> ---
+>>   drivers/ufs/host/ufs-qcom.c | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+>> index 1b37449fbffc..4998656e9267 100644
+>> --- a/drivers/ufs/host/ufs-qcom.c
+>> +++ b/drivers/ufs/host/ufs-qcom.c
+>> @@ -473,6 +473,12 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
+>>   		goto out_disable_phy;
+>>   	}
+>>   
+>> +	ret = phy_calibrate(phy);
+>> +	if (ret) {
+>> +		dev_err(hba->dev, "%s: Failed to calibrate PHY %d\n",
+> 
+> Please add a colon, so that it becomes "..PHY: %d\n"
+> 
+>> +			__func__, ret);
+> Avoid __func__, this print is fine without it
 
+Sure will update this in next patchset.
 
-> +/// Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
+> 
+> Shouldn't we fail the power-on if this can't succeed?
 
-Replace?
+Thanks for the catch. Yes we should return power-on failure if calibrate 
+fails.
+Even if there is calibrate phy ops registered, it will return 0. So for 
+so nonzero return value we should treat failure and fail poweron.
+Sure will this in next patchset.
 
+Thanks,
+Nitin
 
-=E2=80=A6
-> +// Copyright (C) 2025 Qualcomm Innovation Center, Inc.
+> 
+> Konrad
 
-Copyright: ?
-
-
-> +// URL: https://coccinelle.gitlabpages.inria.fr/website
-
-I suggest to omit such information here.
-
-
-=E2=80=A6
-> +virtual patch
-
-How do you think about to support additional operation modes?
-
-
-=E2=80=A6
-> +- reg &=3D ~mask;
-> +- reg |=3D FIELD_PREP(mask, val);
-> ++ FIELD_MODIFY(mask, &reg, val);
-
-Would you like to integrate the following SmPL code variant?
-
--reg &=3D ~mask;
--reg |=3D FIELD_PREP
-+       FIELD_MODIFY
-                  (mask,
-+                  &reg,
-                   val
-                  );
-
-
-Regards,
-Markus
