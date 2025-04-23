@@ -1,82 +1,68 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C39280CDC
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:50:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649B827FD7D;
+	Wed, 23 Apr 2025 18:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745434241; cv=none; b=hb/eE132JGxSL1RMAOcd47lC52rJlScUmAoOEQ97V4OmQ3mVA+zGF9QlmuNAeIloNKPdKec5khOblKijKcTrqye6O3UKKFDa1JTXYBC49Al7AJOHCBtRbpQz35NNmC5ihmKHcMZejBE241bk9xslXYwtaXrf3Ead46jCjWuelDA=
+	t=1745434278; cv=none; b=MvyvhllmJFwqmfXZGJeVduPrJJKXZOXdI/B4XG3EbSMP4mpvngN+MeTR0A7jlS2OjwqEISzgtcD6PcMBnkjGpBo8uOQJ0bpwy58IkLgRfgwwvt+LPDBFmhwo3yFrppMpZSZbfjL9+TSZE4RI1I1mgR5QR5lDoQzAeYDCuZMpHVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745434241; c=relaxed/simple;
-	bh=QwhTgQXPrLEnsOMCtPpaGts4Mr6pEIvqpO9ftc958uM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IULmGeeKPgpt6FD2uTQh9JgQx4wJzUQw016ywT39WGoKLOZieqwCsOoUq/JiQXKKI/B8G+fQiDLOshmA/lrtM5B+TJbUUaaL3GbzTCtEbwXHYfxMIQiWg1+C56a4UNbAPPh6Wl29JO8+UdWqRZIDD6iHca2rTN70QW96djWTCx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lhHEjxGE; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lhHEjxGE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=163fqENWuFQxoVuJPb9NCuNRkwVafkYxdXQIBrpfRPE=; b=lhHEjxGEl1FWIkenDXcvQ3ESps
-	370Cy8bfjUgZw6Y8R/oGtN/oX+rd5YGVZPGjVhDdmwD2YZQBD4wAL3kydqlXnXf+dg6WBBoJnalpS
-	Y3FrhrD6iZ7RE9Boc/eIY+Z5KJChC6leZBdA+9qSAnQ1P1ZOkfEA0ffX2MiprjMXrlZPyLWa2C4sE
-	bO37mXg2jeL1lMkL1KrryRRCzqbDqtMSgkXWv6tIT6w/sIRj6zVZPY3nshweOZq2j6LsXBJaQyOdR
-	DYgrMSertn4MmcFFarkZN9ol+tYPeUUmF10sHa+Q85s9TSXOfWXNbuawIGG+gZoHN4iTCEU/vhYVM
-	haqw/fVA==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7fAy-00000009uQl-4ALn;
-	Wed, 23 Apr 2025 18:50:29 +0000
-Date: Wed, 23 Apr 2025 19:50:28 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Fan Ni <nifan.cxl@gmail.com>
-Cc: muchun.song@linux.dev, mcgrof@kernel.org, a.manzanares@samsung.com,
-	dave@stgolabs.net, akpm@linux-foundation.org, david@redhat.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/hugetlb: Convert &folio->page to folio_page(folio, 0)
-Message-ID: <aAk2dCTru-C595oY@casper.infradead.org>
-References: <20250409004937.634713-1-nifan.cxl@gmail.com>
- <Z_XmUrbxKtYmzmJ6@casper.infradead.org>
- <aALVZdStnPQ-d9PA@debian>
+	s=arc-20240116; t=1745434278; c=relaxed/simple;
+	bh=B3l3DrVwceHsmAJLpOH9gKyLG+5YvzEjnbWCz/zqbq4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TWWOmYCnoL0cc8hu5Dz8fPPiccnTukLTMKwrJwctNYcXH+yX3EGp+fVoX0OTInOSAocx2uFF3bXdI/qJJCgdMOF7PXnazRwBOwRrfD7MAyStQVhkZz4YTB3HdQVWUxLiDBtiTnW4oJqv/Yfozi4pFSo4QLKw0W8qy8UeoSWERz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D6FEC4CEE2;
+	Wed, 23 Apr 2025 18:51:15 +0000 (UTC)
+Date: Wed, 23 Apr 2025 14:53:08 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux Trace Kernel
+ <linux-trace-kernel@vger.kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, David Ahern <dsahern@kernel.org>,
+ Juri Lelli <juri.lelli@gmail.com>, Breno Leitao <leitao@debian.org>,
+ netdev@vger.kernel.org, Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ bpf@vger.kernel.org, Gabriele Monaco <gmonaco@redhat.com>
+Subject: Re: [RFC][PATCH] tracepoint: Have tracepoints created with
+ DECLARE_TRACE() have _tp suffix
+Message-ID: <20250423145308.5f808ada@gandalf.local.home>
+In-Reply-To: <CAEf4BzZfoCV=irWiy1MCY0fkhsJWxq8UGTYCW9Y3pQQP35eBLQ@mail.gmail.com>
+References: <20250418110104.12af6883@gandalf.local.home>
+	<CAEf4BzZfoCV=irWiy1MCY0fkhsJWxq8UGTYCW9Y3pQQP35eBLQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aALVZdStnPQ-d9PA@debian>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 18, 2025 at 03:42:45PM -0700, Fan Ni wrote:
-> > >  	result = install_pmd
-> > > -			? set_huge_pmd(vma, haddr, pmd, &folio->page)
-> > > +			? set_huge_pmd(vma, haddr, pmd, folio_page(folio, 0))
-> > >  			: SCAN_SUCCEED;
-> > 
-> > I feel that set_huge_pmd() should take a folio.
-> There is a patch on the mailing list for it,
-> https://lore.kernel.org/linux-mm/20240817095122.2460977-5-wangkefeng.wang@huawei.com/
+On Wed, 23 Apr 2025 11:21:25 -0700
+Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+
+> The part about accessing only from code within the kernel isn't true.
+> Can we please drop that? BPF program can be attached to these bare
+> tracepoints just fine without tracefs (so-called BPF raw tracepoint
+> program types).
+
+Is it possible to see a list of these tracepoints from user space? If not,
+then it's only available via the kernel. Sure BPF and even trace probes can
+attach to them. Just like attaching to functions. The point is, they are
+not exposed directly to user space. User space only knows about it if the
+user has access to the kernel.
+
+Unless BPF does expose what's avaliable, does it?
+
 > 
-> If the above patch is needed, do_set_pmd() should be converted to use folio.
+> But I don't have an objection to the change itself, given all of them
+> currently do have _tp suffix except a few that we have in BPF
+> selftests's module, just as Jiri mentioned.
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-Maybe?  I think we'll eventually want to support folios larger than PMD
-size.  So I don't want to pass in a folio here unless we can calculate the
-precise PMD-size chunk we want to map from this folio given the
-information available in vmf.  I know that today the implementation
-does this:
+Thanks,
 
-        if (folio_order(folio) != HPAGE_PMD_ORDER)
-                return ret;
-        page = &folio->page;
-
-but eventually we should do better than that.  And I don't want to
-lose the information about which page in the folio we really want
-to map.  So have a think about what the right interface should be
-(passing in a page?  folio + offset-in-number-of-pages?  Something
-involving the PFN?)
-
-The obvious hurdle is folio_add_file_rmap_pmd() which today takes both a
-folio and a page.
+-- Steve
