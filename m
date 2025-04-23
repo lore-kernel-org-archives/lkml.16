@@ -1,50 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A456927CCD4;
-	Wed, 23 Apr 2025 14:18:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECDC2798E7;
+	Wed, 23 Apr 2025 14:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745417897; cv=none; b=GeCbEQDeYjieFehu6Qj3tnAxf7gHNGKFcHXOIsOosjIY/Ng4sGBZ5LaVSVDMy419msjrBpOuTUB7RSUeFr5B1/2GBpczyrseLP7vUQSNX64zoTcnqHiANAKhXZyIirMAI/5k4DYSa23TCy5jEObfXB6fX3LxPI76KepyIgRJGHo=
+	t=1745417925; cv=none; b=ZNtaucOo3S+syi8DkzTqC52kJqRuHl2o4y80RWZA9g5l/uv2cCTQdQ16rp5mzo2uE30IUIpF2j3YWujiTTz1dnxr3ZRcgWfSIUQce0artpm8hPadR3quwl+al3aQjq8oXGrWHO97PNmK8KQuMbxerf54b+ot1otJQHI8zPHnkAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745417897; c=relaxed/simple;
-	bh=7aKM+auJAcCA4EwMJlrxXFyhWFOU+ZvyqtXYQRJElw8=;
+	s=arc-20240116; t=1745417925; c=relaxed/simple;
+	bh=0YZv48ymyFRIQI61YYoFRv2ZRDOgov4fvmdUKtEHbFo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RlL7sQl+ICKQB0WLRLkaNIq/XPBAZzZ3KdBdzkEr2vNN4h4kpGzp8L8dTgblhvn7GbSPhel9d8xftMIERiJn9veYfPHLGCv/NHTSFkEafby4Kh048kF/3c2KD0kT1ITZt91kiGNbNrdp9oyrDoe4d2OA23OiJcr1D/oKGG6oJF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUPBRZga; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GZqD4Ldw5iZIxeKuKn4Xqnxz/iYmDxBltBSvXZAPK+mbUa4FJU/nCO6fD1ckmUg5l9Jc8VZ3agF+MDe/c6z+ulekaWNn6B5y421ItaOoR0dkkw8cedYEpBaRMvEUlSv49GDfsof5pHhMP6+wreU739jaDMyDeUxp9DDQ9vCLF6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TI7iLkm1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUPBRZga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16D5EC4CEE2;
-	Wed, 23 Apr 2025 14:18:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TI7iLkm1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CD70C4CEE2;
+	Wed, 23 Apr 2025 14:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745417895;
-	bh=7aKM+auJAcCA4EwMJlrxXFyhWFOU+ZvyqtXYQRJElw8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=VUPBRZgaVTUVw8N8jw2czHw2ITJ1jsFrSgFh29oJQLY0SBp4sqPV5HzaieeT/OI0j
-	 uZ69O1JXRZBjvDeFuGDYgVuK7Mxc9BLSN47aW6tE7mHLeK4rVSgQU9f3njrlPMtH5E
-	 rJVWMHYlx8Lip3HhTFwE8ZRmWwwCu26xBB/2hrysMZgGfM9hFmOW31GB79eEXe/kTF
-	 +QRn9Bwu/zbMGI3TMErtar0I+I/rnCIWu7swRUeLUdQRF0+p0ddcLPc4l/joIiBdtC
-	 050OQeeq+XXzBVdjWWy9pHeyMG9LWQxmihMStG6MWGwO2m6QL3dbagf22r9YEpD9qo
-	 9kEc0ZNrruMbQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id A8080CE0B75; Wed, 23 Apr 2025 07:18:14 -0700 (PDT)
-Date: Wed, 23 Apr 2025 07:18:14 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: "Aithal, Srikanth" <sraithal@amd.com>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
-Message-ID: <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250423115409.3425-1-spasswolf@web.de>
- <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
+	s=k20201202; t=1745417923;
+	bh=0YZv48ymyFRIQI61YYoFRv2ZRDOgov4fvmdUKtEHbFo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TI7iLkm186Ob1fsGeiZO77tw30OHKy43U2ZVAiEDjnPuOD8zIzeg34L9Lfd+d98JO
+	 pSlEjIu58+EcoqAIQieVYCk3fvTVB9sDRcMrJMBEfD3qlzagQwRwVXFVdSBU1M91ew
+	 CUWH5N2rD+SYeh23ZD47d0o4Wp9MyUQP5JbqrvwnntO7j3FhsTbJxydplP/DYbMVxW
+	 hUTNlB8K2yNhJy2l/DnV7iOcgG/k9NhgphBvGOzWC2Gy/dKp/Zc2X4aZ9N4hX05za9
+	 TDIuuWBhEQ4L+ZzCc/ssefxkTGJouq9qbCANvleerU3jzUgp7JumTk3N1YMzHAaZB3
+	 MBK07ySpivokQ==
+Date: Wed, 23 Apr 2025 09:18:41 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	linux-arm-msm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: arm/cpus: allow up to 3 interconnects
+ entries
+Message-ID: <174541768602.433651.10640639620501587039.robh@kernel.org>
+References: <20250418-topic-sm8x50-upstream-cpu-icc-max3-v1-1-87d9c2713d72@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,49 +48,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
+In-Reply-To: <20250418-topic-sm8x50-upstream-cpu-icc-max3-v1-1-87d9c2713d72@linaro.org>
 
-On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
-> On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
-> > Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
-> > debian sid. When booting kernel message appear on screen but no messages from
-> > init (systemd). There are also no logs written even thought emergency sync
-> > via magic sysrq works (a message is printed on screen), presumably because
-> > / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
-> > commit dd4cf8c9e1f4 as the first bad commit.
-> > Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
+
+On Fri, 18 Apr 2025 14:56:16 +0200, Neil Armstrong wrote:
+> Allow up to 3 entries as used on the Qualcomm SM8650 CPU nodes.
 > 
+> This fixes the following errors:
+> cpu@0: interconnects: [[7, 3, 3, 7, 15, 3], [8, 0, 3, 8, 1, 3], [9, 0, 9, 1]] is too long
 > 
-> Hello,
+> Fixes: 791a3fcd2345 ("dt-bindings: arm/cpus: Add missing properties")
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> On AMD platform as well boot failed starting next-20250422, bisecting the
-> issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
-> logs.
 
-Thank you all for the bisection and the report!
+Applied, thanks!
 
-Please check out the predecessor of commit dd4cf8c9e1f4 ("ratelimit:
-Force re-initialization when rate-limiting re-enabled"):
-
-13fa70e052dd ("ratelimit: Allow zero ->burst to disable ratelimiting")
-
-Then please apply the patch shown below, and let me know what happens?
-(Yes, I should have split that commit up...)
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index 04f16b8e24575..13ed636642270 100644
---- a/lib/ratelimit.c
-+++ b/lib/ratelimit.c
-@@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 	unsigned long flags;
- 	int ret;
- 
--	if (!interval || !burst)
-+	if (interval <= 0 || burst <= 0)
- 		return 1;
- 
- 	/*
