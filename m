@@ -1,203 +1,200 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2048.outbound.protection.outlook.com [40.107.92.48])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C7D223DC9
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745448868; cv=fail; b=cR6+E9fBNOH56/5zCi2xLnjRHmwtd6apBOhK0/uRwdcn8Cpfp4Bj/MJoc0Jt/cpxjRyKRKYCOC8TKNeSNr/Y0KCOW386wJRpTH6v+8Br0pwocboUOq9eeOvceoq9rq3IGWWBqL6ZDIPArzx63zy9/+aune7dq+phSsWSO8Nmr0s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745448868; c=relaxed/simple;
-	bh=YXV/WbFMYDyEcQwTQkJ6LFOXd6MbYRFRilgAgKgZ8yY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rDcFTehetmH6AxTvs5pWrWiG5JPZQ+XXIxpLV0KYN1dWosb+uMmMUI2k48Sn5Nhzvwsh9J95YsMFpZ61ciT1eHoqM8z1mj4qCn5m48s1pDzJX9WEKJqWitSoKZzIvo3/jAJRNimCt+xJyXoQ9gJ0bGU6Kb0mIF6N9OopMo/GNv8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=SZI62RTG; arc=fail smtp.client-ip=40.107.92.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A464322F74A;
+	Wed, 23 Apr 2025 22:54:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745448871; cv=none; b=Csz+h9vQsqmphCkidnTNOs0EDfzCmcfrD44J8JKAbfccv8DreNsNrT3s1/xojACeY5cOap6tNIidAuXmhTxHG4WXEZF8VGdKPqBMagM0weXDLfh8EHGERuEjiGcUWbnENriKUXplQZEgGx6ZdquXD3Nz+asL2OGHI4DvDukXqAY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745448871; c=relaxed/simple;
+	bh=4vqyQEXl14bTbW7SXMpzTQ1txRSTX9ObAWJfUhhwgkE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=u/P3oXTpmEWIelf7Eb230/Afnj3l0+1VnBz13Xeja0dOni1DL18SVAm7z31U+LTCTxDEUmw9WBPMxpRWlMbK6RdEAfEMp5SMQ+hT6g7y9E7wvsCRstVu5jV5z7ZuPf/soTPlHGmFnD6zHQu3rP5YaMEeAagf5JIIY9sB3IzLTas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Tpg/+3CB; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="SZI62RTG"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HRE2q4ahs1xEka6wODaZbmNglYUFhlwkVpW7ESHKOwQmd+oJpf3cxDDVW9m6k/UlvDJ3SfK3z9enBypRL9YEoI1xb6x+TSyb5TrrJ2r3tEPmR+jL3/L425pJIN4klrw0568IgTa4sE1aErJneS80fN3Hnup8JDJ8n5CZnhoRG+6orOsmgZ3zrCS5YKZzvz5HMz9D5btR8+hXZNDr45oADCTrJhdC4ujHWf+udkDYqstoBNKcgYMU45/1Pnjwj4Ls9FYqQmrO/zlCndK3/KgRxieQBzUe5tiiogGudI8KIAscxGGTrvcqSWHEXGppWI1FXTnZjOBlX0mONAkGHmRlyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3vRMa8P5r9/YbZULTbjcZMH1z3+2BtPXRcnApYvD/LM=;
- b=qKsZSbQBimC4h4u/sw7VN5K+EP5ezdgjvftyKJNoCi/4wBi0S7eYlrXUGMTp8Epq+CBLp1rtHCSyXV49xDwRFQ0ID1eo8e/nx627ppM9jmD3V2wgXJBGKDebXu4v+aqsCnSU4ei3IPndTB60lMat7LkUbohCWzdPpxmssBovGrzSnZf6KCs0Y4l+3at9zz9I/BtT+d0FBNNCvf2xYsVWe6GWeGOn1ItMSosMqYe2xe2LqXPEKPZx/cDg0RYlDrKZ0LOcSOkEbJwsifu4aNhaw5HBXS0qtcmyabxYbIipInOjvipD+1kRlKo3VTrD34AZ5l9G4x5EbxZsLZ1rRtkI9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3vRMa8P5r9/YbZULTbjcZMH1z3+2BtPXRcnApYvD/LM=;
- b=SZI62RTG49xP3yMVSNFGGAs9JiJuTdOJTcl1ITlxurwWUiGUwp3V5CbePKUlEIyVGP/UAb4T6j+xM2vNtrRXisSI2FgzjQyVHxqfPUmuN308e0lf4+lkCLCRcZhkmZhCBNOuIOdjaKKXT9mYla1XRRnwETDPr+BAKaYodp41YUFpJookCbaEnbGnAogKeYThBXm/hGLEiQKBZyWplmx9N3R2wLDrwVGjCNHcMWQ41I9Yg8HRyGLAjuqBOWawTou4DH8Su56bIgaeqJR51fpQwPJSxvm3MPUoxeh/T0qHZL+O4xUYULD4TVLKmKYWklbjnmRpVQMGkRFee14AV/Alsg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
- by CY8PR12MB7340.namprd12.prod.outlook.com (2603:10b6:930:50::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Wed, 23 Apr
- 2025 22:54:21 +0000
-Received: from SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
- ([fe80::4ee2:654e:1fe8:4b91%6]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
- 22:54:21 +0000
-From: Joel Fernandes <joelagnelf@nvidia.com>
-To: linux-kernel@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: nouveau@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Shirish Baskaran <sbaskaran@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Timur Tabi <ttabi@nvidia.com>,
-	Ben Skeggs <bskeggs@nvidia.com>,
-	Joel Fernandes <joelagnelf@nvidia.com>
-Subject: [PATCH 2/6] nova-core: doc: Clarify sysmembar operations
-Date: Wed, 23 Apr 2025 18:53:58 -0400
-Message-ID: <20250423225405.139613-3-joelagnelf@nvidia.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250423225405.139613-1-joelagnelf@nvidia.com>
-References: <20250423225405.139613-1-joelagnelf@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1PR13CA0321.namprd13.prod.outlook.com
- (2603:10b6:208:2c1::26) To SN7PR12MB8059.namprd12.prod.outlook.com
- (2603:10b6:806:32b::7)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Tpg/+3CB"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NMPmvH022015;
+	Wed, 23 Apr 2025 22:54:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zx7YRlSGD1wD9AFEKY5CsiKOPRvFjFjoxyPzbULqgSA=; b=Tpg/+3CBl5L/Bc6y
+	Sjo8nbvlg2qNphSBuKWBy+UgDdiodu551WVsLQBO1der4Bo38vft/vh7XpFCSZ1u
+	FaRJwuW7PJQSja2dwEkNqvSsuI3Bl8jKRygC5hxvSYccOnuMElcy/HMG1lxI6XlO
+	3gNkk2BUeB3f/2VzTXtfxoLOf3tsRHCfpi5Sn/xZQleuEbtPkY48HFeCZa4kIK2h
+	AHt7y8Z50+Rml6hiK35vFY/f3n/Gwp/K4Z2f1KScRInfta6yNvpO+5ivyQQYuxb3
+	ppQzIjbamHb7HdK7iNVzQMUam/7wdYGYPDy//s4jqu2EG5YBYXd1RZ7wnELJhiHI
+	xc2jkA==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh13j1h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 22:54:15 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53NMsEiD003673
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 22:54:14 GMT
+Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
+ 2025 15:54:13 -0700
+Message-ID: <029f3bfb-a031-4dfe-a2b4-bc41a0da7772@quicinc.com>
+Date: Wed, 23 Apr 2025 15:54:13 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|CY8PR12MB7340:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8b298af1-ca03-4855-35dc-08dd82b9c944
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?NS8O2lPp3YWrvgDFrNutN2EIM12hY1tdxk7HndTZqFvumptcQpIl4OODNH2N?=
- =?us-ascii?Q?2tmZWdkwLdo9P1d3RHdvsqoGzwuYHZgainvV4dC33Zpu0V1JYGhrw2/hUPy4?=
- =?us-ascii?Q?yIpZVlxBFHN9ix7lJdfzh+XZyvM0AlCx1EUFispka+vhyHNB6RiaXEApvIDn?=
- =?us-ascii?Q?PRQscfPx8ODEYahbjUSA/964pFWsfFGhLiUXYdLFzDEbnN5dVbDzc5Agi1eh?=
- =?us-ascii?Q?MHrEXn+6pD8qNP+Yx2hQvMq2Tt9ua47K6ymFM2XDpUsk0Sh+bkVJlnXcqkXG?=
- =?us-ascii?Q?F0pgBeazY9xUX0O6uPc/N2PhU8SW9tQ5kVwisDWoOzKU4tJmFkv8OJPBcO9D?=
- =?us-ascii?Q?m8WBavBskd78VNp69PY9swlRlgjlYx/ZwFbEQ60ENhfqMdhhJ3IrI3fr8z8T?=
- =?us-ascii?Q?7IszatHkNHRGuhu+T1NsxT23fOPsQnpuAcDMRSS8eN6nyLQ838uGbr0V/ToH?=
- =?us-ascii?Q?03sP2w+POBMryxMQCLkX5L+HHCdpqHhF0qRKsJLgZL1IlDi/Y6AEnwyNGQbZ?=
- =?us-ascii?Q?9et4/CBREB3slu02r2C3evat1tT8AZKGyzu3jQAJYBF1Ua8Fr47nmqCyF5qK?=
- =?us-ascii?Q?FZFnTG/Oc/2bvPsYXyxgj4KZ99kJkCl0cgGw/tnuCIw3qjeYT/1rrNquo28O?=
- =?us-ascii?Q?Rp8sfvBeZdXKAiR3n/KaRSpriNsX8G5jNN+V60CPZr+vPbwk4bHuWJ7hT0q2?=
- =?us-ascii?Q?RJtKEdarmG9w9AfqNnoo1kxhAsrcgwmJf9L1CQG+xWmDchBuzavz+fp7OTvL?=
- =?us-ascii?Q?6iBHB/H+HkaKL+JXzb424vrL74m93WAlbqzCtZXuOzG+JkUSg3w2oiw/SdpC?=
- =?us-ascii?Q?XKKEFH5FQGzRWeCaDi5B8rkWpalIHlXfq/kncSZu5ASfn8BoJXRURvQncF1L?=
- =?us-ascii?Q?p3BJuHBb15WSetoCP8pqS6DuKvkjPsEKnou4HaCk9/5XGcv1cW4HSDUkznPX?=
- =?us-ascii?Q?7le6tddpNenY+gh4+uRCGjAtMuCpheTcGcwxYd6Khy8azw21Zw3QeOpeuUqb?=
- =?us-ascii?Q?0l7h0FMz2EB+yzaTgH6J8Ml3B8byiQcF1/UF2ldJyXhp7fXWHIutL3Cw4cWd?=
- =?us-ascii?Q?1kcB3prOPDloE+0NnUNZuYRFL3HQPywl3v65PIFCuHcAcHmnL5xs4S9FYX0v?=
- =?us-ascii?Q?75BRjWfIljANv/8GedIJL+dYGqA6AtPRpTKHJE2TXJhVM80OlaDfCZIVrWqR?=
- =?us-ascii?Q?OgPYqO420g/FR+gSFhpY+7rMFhMSFr6IQeJ3Hs9SMVQHwEfvo2IASmXSowds?=
- =?us-ascii?Q?O+AhB7Dt4HBKEs/PXeju+2V0nFUgnR9GyIORhTX3cd9yD0jeT2DeVV6l3/Q2?=
- =?us-ascii?Q?TWZhszHFFVkDgXuLeMlp9zbxYyQ9C2sNq36QCd1nDqyJZCaACjIHsXpJB98t?=
- =?us-ascii?Q?SLsm0XdSmZ2R1+9UrB7V6/YyZD9X016P2AgoQN3vdsbX6SgGug=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?tBSdDQQibyEiAbArCQZ6kWOiLJSrYedIDdbv+W3ftSkSPTUFyJ+qe50c7F4e?=
- =?us-ascii?Q?OF8oLBFIC/IyZmy4heX6rOgSK+lrhvZWifR6Etr9z/7iScQGN3Psry+qVuAU?=
- =?us-ascii?Q?oL9Usqlg3zBoVvqUsHux/9Wt9wjxuTOkmJQNgJNHTjxm/oeC2L4ZD4nZeW2z?=
- =?us-ascii?Q?CzeUl1f8PIym4jENdXYx7FwQW6geEW6MhjrHlrYket+Tvp0jW3Vj3ZCVTu8v?=
- =?us-ascii?Q?gSWiN5zi8RHZQTKx779SE8RSvNIuSFYooTbhePurVh9lPMrvCmoiyytUJxWI?=
- =?us-ascii?Q?1HUDKdHnfTmK/uSLQv7TD8r5eGQ0znlvQDmcIp4yoBcKg7kk65KypzNBZ4H8?=
- =?us-ascii?Q?M/gjZMIPQuYjZbr0nbkXbzJXBe3kIEx9uSfOrIAc/MZeg614vhRcgDNvvwSi?=
- =?us-ascii?Q?sbr14ZSSwSprhJWSQfFB+0HQOGedfuqtySxYCV2BbymfGuRx1BJQj5cN+Vnv?=
- =?us-ascii?Q?wetocXFwXPs+T6Va6sPQgqRhEIyGNnCKStmYgTewmCcdUuFe5klFLqPNvMkf?=
- =?us-ascii?Q?J/o09DMdBXG37HLHHV/ta8iz4hBYrHMH3gzMMG0vYD7dzxXIhvYfjY5Mr9O8?=
- =?us-ascii?Q?TwkgNgZErWof8c50dwL0Gdh5Pfnus8WuscwSH+P0SsbLKKJq62+B0ak+eEXN?=
- =?us-ascii?Q?nx3wNxRWhPz/gFm+99CxsLjgB9EvRWU+geLkj0NhThKK2C3EkwMez0WIuJCC?=
- =?us-ascii?Q?rywLFdbGSDBnsQr9UGPO6Ply/xTPT8TJXtazJLqY8vw3StGG8NL2h/zvyfAH?=
- =?us-ascii?Q?H8aG3/0O/VfjFCeg9RQC5JzzDWCEclw+uqM+0/3DVZ8g8JteHBanTD5bj4lj?=
- =?us-ascii?Q?6t9k7Bg2jPadgM04/VIGv/H7HfjM+Av+vpSx4PX+Qa3lliz9NcvXHu7ooSNG?=
- =?us-ascii?Q?z5bbt9UD/1G1gEWKsFMTG/5ob+zdMSQdoA/0DM3RhlZO65/pXQGVK7cUZZlf?=
- =?us-ascii?Q?uGCqmXmc2QXU+TS5K1SWc/AgAfjJBUeVMGecfoCQOZKxjkDcoelwez5d+RZb?=
- =?us-ascii?Q?44Ye87E02J8me6xj5nj39v9C7tT1jXUyZRJak687PFzClcjafqNp8DHwfMPA?=
- =?us-ascii?Q?PoGZEyncWXnC+t5eKHIEQy12gr20betB3H4e+YVGzOJRH/Ge8x+Ro4SWJmEo?=
- =?us-ascii?Q?7+7U3elqFpi/1nSnyxv474g1BJDuHC2olM2Naz8zV2b/G0zrW3QfS+OtoJoY?=
- =?us-ascii?Q?fAkCTxqxKiW5JR03fbPtPID+HHXdOqtH0roLNhOZSxVTN2rDLWaVJK18DWu2?=
- =?us-ascii?Q?5FowfMLzjti7xQa+FQgrDzkWtWMAjliUJdxW9mxxIaXooHcnJwuxMVl/nsDI?=
- =?us-ascii?Q?N+yCJIY+Emaox2Ov7j4rmRZlS/qbg5Y2RaWNNg+LARn+4umpJEaIqzYZCpJH?=
- =?us-ascii?Q?FAqi+36gzJYNqDLrqS/cd53R4+VhFkCoZ8zN1DbjSOmtLH+0zoVg/0b0IeXv?=
- =?us-ascii?Q?1PXpsANss10lLwL21bd6c209skPEIhFn2f3rZKZGDAnIqjraYQX6sgKiOpaE?=
- =?us-ascii?Q?ow0x9WEnfk6Bv0mAlzW5hLNWgcZyFjJsReygFfl/n9vFFhvDZ4neTyOBe+9k?=
- =?us-ascii?Q?GX1jqW74+W6jVavaTez+3bkCYvpljS7woQGDToOv?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b298af1-ca03-4855-35dc-08dd82b9c944
-X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 22:54:21.5638
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3FP6RdHq/RK14KQzJWD6hLv/LeEv24YC2a7s1uNYYhSNE5/TOpZeVbL0og++xJ2fVqifiRZvyjD2K3YHsGtOgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7340
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/7] drm/msm/mdp4: register the LVDS PLL as a clock
+ provider
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+References: <20250227-fd-mdp4-lvds-v3-0-c983788987ae@linaro.org>
+ <20250227-fd-mdp4-lvds-v3-3-c983788987ae@linaro.org>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250227-fd-mdp4-lvds-v3-3-c983788987ae@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: C5POw0o9ZjBQ9Cq__clJJI3ULJz7kvDe
+X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=68096f97 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=u7um27V6BFjZWMNL6CAA:9
+ a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: C5POw0o9ZjBQ9Cq__clJJI3ULJz7kvDe
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE1MiBTYWx0ZWRfX6HUpk9BRH6Xi K9oo/uOmTz52DXpNd8UIIzOdfpD+epDDhEzMGBKHP03YYChf9vPZB1/E4EAHJKAErwv+4B43F3X rxDkgE8A54N9JzQsxlT7EwRtAyCF42ARJ5EBMi53AKj+Pc5KawaxpeRF7oXcn6oQKtCQEhX+7up
+ 1CWsGPkw16FTIfupmZq0K8dXpYkHUv0BmJLPU/Zt5/3Ug0mo5foWHGNlXjzblekHGRrlmgh37HU Q24phxjWbYc2wKSGQfWDmK/h/gOI5bvawQadvMJACOQ5XJC8O/eyJsl7mzu4UoZ8PFdWmqCqG5h mdP17q4R0QyH4M1zSYsWH+mq+uysK/ElUGWJvHZ5sDk5Wr/wxOwm7oHq+MRHIfJTtj6H5sixL4W
+ P5/CTz6L6soP5z08bRtm+UqahjtuJA8MLHR1WZZu33dcBnj9iASdaXU+Dhwy9EG5grEWvPBj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_12,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230152
 
-sysmembar is a critical operation that the GSP falcon needs to perform
-in the reset sequence. Add some code comments to clarify.
 
-Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
----
- drivers/gpu/nova-core/gpu.rs  | 11 ++++++++++-
- drivers/gpu/nova-core/regs.rs |  2 ++
- 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
-index 4d03a0b11b64..61031bccb7d3 100644
---- a/drivers/gpu/nova-core/gpu.rs
-+++ b/drivers/gpu/nova-core/gpu.rs
-@@ -158,6 +158,9 @@ pub(crate) struct Gpu {
-     /// MMIO mapping of PCI BAR 0
-     bar: Devres<Bar0>,
-     fw: Firmware,
-+    /// A system memory page for sysmembar (A GPU-initiated hardware memory-barrier
-+    /// operation that flushes all pending GPU-side memory writes that were done
-+    /// through PCIE, to system memory).
-     sysmem_flush: DmaObject,
-     timer: Timer,
-     bios: Vbios,
-@@ -204,7 +207,13 @@ pub(crate) fn new(
-         devinit::wait_gfw_boot_completion(&bar)
-             .inspect_err(|_| pr_err!("GFW boot did not complete"))?;
- 
--        // System memory page required for sysmembar to properly flush into system memory.
-+        // System memory page required for sysmembar which is a GPU-initiated hardware
-+        // memory-barrier operation that flushes all pending GPU-side memory writes that
-+        // were done through PCIE, to system memory. It is required for Falcon to be reset
-+        // as the reset operation involves a reset handshake. When the falcon acks the
-+        // reset, it writes its acknowledgement into system memory, but for this write to
-+        // be visible to the host, the falcon needs to do sysmembar to flush
-+        // its writes and prevent the driver from timing out.
-         let sysmem_flush = {
-             let page = DmaObject::new(
-                 pdev.as_ref(),
-diff --git a/drivers/gpu/nova-core/regs.rs b/drivers/gpu/nova-core/regs.rs
-index f4a6a382e83f..22906ab1a43a 100644
---- a/drivers/gpu/nova-core/regs.rs
-+++ b/drivers/gpu/nova-core/regs.rs
-@@ -37,6 +37,8 @@
- 
- /* PFB */
- 
-+/// These two registers together hold the physical system memory address
-+/// that is used by the GPU for perform sysmembar operation (see gpu.rs).
- register!(PfbNisoFlushSysmemAddr@0x00100c10;
-     31:0    adr_39_08 => as u32
- );
--- 
-2.43.0
+On 2/26/2025 6:25 PM, Dmitry Baryshkov wrote:
+> The LVDS/LCDC controller uses pixel clock coming from the multimedia
+> controller (mmcc) rather than using the PLL directly. Stop using LVDS
+> PLL directly and register it as a clock provider. Use lcdc_clk as a
+> pixel clock for the LCDC.
+> 
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h          |  2 +-
+>   drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c |  8 +++++++-
+>   drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c     | 22 +++++++---------------
+>   3 files changed, 15 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
+> index 142ccb68b435263f91ba1ab27676e426d43e5d84..b8bdc3712c73b14f3547dce3439a895e3d10f193 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
+> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
+> @@ -207,6 +207,6 @@ static inline struct drm_encoder *mdp4_dsi_encoder_init(struct drm_device *dev)
+>   }
+>   #endif
+>   
+> -struct clk *mpd4_lvds_pll_init(struct drm_device *dev);
+> +int mpd4_lvds_pll_init(struct drm_device *dev);
+>   
+>   #endif /* __MDP4_KMS_H__ */
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
+> index 8bbc7fb881d599e7d309cc61bda83697fecd253a..db93795916cdaa87ac8e61d3b44c2dadac10fd9e 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
+> @@ -381,7 +381,13 @@ struct drm_encoder *mdp4_lcdc_encoder_init(struct drm_device *dev,
+>   	drm_encoder_helper_add(encoder, &mdp4_lcdc_encoder_helper_funcs);
+>   
+>   	/* TODO: do we need different pll in other cases? */
+> -	mdp4_lcdc_encoder->lcdc_clk = mpd4_lvds_pll_init(dev);
+> +	ret = mpd4_lvds_pll_init(dev);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dev->dev, "failed to register LVDS PLL\n");
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	mdp4_lcdc_encoder->lcdc_clk = devm_clk_get(dev->dev, "lcdc_clk");
+>   	if (IS_ERR(mdp4_lcdc_encoder->lcdc_clk)) {
+>   		DRM_DEV_ERROR(dev->dev, "failed to get lvds_clk\n");
+>   		return ERR_CAST(mdp4_lcdc_encoder->lcdc_clk);
+
+Change seems fine to me, one question on the order of changes, DT change 
+has to be merged first otherwise it will fail here?
+
+Will that be managed by co-ordinating with the DT maintainer?
+
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
+> index ab8c0c187fb2cd05e26f5019244af15f1b2470c8..cbd154c72e44c848fa65fe01d848879b9f6735fb 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_pll.c
+> @@ -133,29 +133,21 @@ static struct clk_init_data pll_init = {
+>   	.num_parents = ARRAY_SIZE(mpd4_lvds_pll_parents),
+>   };
+>   
+> -struct clk *mpd4_lvds_pll_init(struct drm_device *dev)
+> +int mpd4_lvds_pll_init(struct drm_device *dev)
+>   {
+>   	struct mdp4_lvds_pll *lvds_pll;
+> -	struct clk *clk;
+>   	int ret;
+>   
+>   	lvds_pll = devm_kzalloc(dev->dev, sizeof(*lvds_pll), GFP_KERNEL);
+> -	if (!lvds_pll) {
+> -		ret = -ENOMEM;
+> -		goto fail;
+> -	}
+> +	if (!lvds_pll)
+> +		return -ENOMEM;
+>   
+>   	lvds_pll->dev = dev;
+>   
+>   	lvds_pll->pll_hw.init = &pll_init;
+> -	clk = devm_clk_register(dev->dev, &lvds_pll->pll_hw);
+> -	if (IS_ERR(clk)) {
+> -		ret = PTR_ERR(clk);
+> -		goto fail;
+> -	}
+> +	ret = devm_clk_hw_register(dev->dev, &lvds_pll->pll_hw);
+> +	if (ret)
+> +		return ret;
+>   
+> -	return clk;
+> -
+> -fail:
+> -	return ERR_PTR(ret);
+> +	return devm_of_clk_add_hw_provider(dev->dev, of_clk_hw_simple_get, &lvds_pll->pll_hw);
+>   }
+> 
 
