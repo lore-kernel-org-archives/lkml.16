@@ -1,108 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD4F1E1E1E;
-	Wed, 23 Apr 2025 07:06:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28FC428F1;
+	Wed, 23 Apr 2025 07:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.113
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392017; cv=none; b=B/V4WWWllgj9F3e7XCQ0of5JlHfFg6iFiajR/mM1r48lN5Xe4/Eh/PgeUp9ChXV1NTSwUBP7M4tFtCyv0DlypKAlYXOt0BZ0B7PLuyTUx+6nY7mBFOnrJrYUxDY1BhwkpsmIucy1xrRVkLplYWFwXi69xv1Bj1pELOR2F+OHoMY=
+	t=1745392019; cv=none; b=PDXcyggOccSrEQ1BKZe9HrcXU2lWVNAP6I9cLcnuoCAJPvxDqzr6QjBEZVCLvMX/zL0jb8ak7RGU0pNYk4w6zLnUiuO5KtNfkRKlCcKV0exjqulWgMz4AjGFOSIYYWc69uoxLqNpm+R1enWwq1ueypQvLm4luI2lXnR9S8otRJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745392017; c=relaxed/simple;
-	bh=xt0DA3GstpCfr74NeBEXDfg1bNB8goQaSwLushyxukA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iEkDYxzYJZ+FiRqnSgxrWNt+DSEfOVwhRgKtGfgeCrlfdWrnRz3OOLemy7heTrX+VClUbSd3cAm9td+T3p4quNmmxQEQd1MGV20VBTEbU4pLOfNQHzyfhsJZ1K7TMR4Rg0AkxH4o98Gzu3oljYkya5K6BhtMpC0+z28TeRNqX+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FWj7Zxbn; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745392019; c=relaxed/simple;
+	bh=xpATX4YPLLbunDJY/h6rrrlMjarYrKzu1tsDc/qnu5k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mblSIJLpIHQbC4QhdiWf/uatA+fSEISOtvUr2/wnUxODi0h5T7e6+p+Lx73kK0AQwB0QBiReohApKwuvpT2w/PO0b9XW1ri/QSB1Kf1LRsfHS+o0PEhEaiN/QUCHfSA4sdtvlmzqpQI0u6xC5atVGlSKEd5jyJXg9lYs1HtoQzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CFKu/2lA; arc=none smtp.client-ip=115.124.30.113
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FWj7Zxbn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745392016; x=1776928016;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xt0DA3GstpCfr74NeBEXDfg1bNB8goQaSwLushyxukA=;
-  b=FWj7Zxbn34McFLVwvs/C2+WOfgF2bdyal3RrNyUSoThyDGIP/nR4FQ7N
-   3xEMfAk4V2knQ2o3WQ0E116g4MsBYnyEk++NMIEFj23EmNlpqFAOwyehV
-   B34lMsr13xKFX6xmLc5KfAJIDCoh+5kYBpSJE1EFUAB6N6oqRTpUEv6No
-   vKq8PTUI4evLQGhwJSHFMHmtjJ8yxoEIzbn3iwIAgsoyE3r+2gp2r4Jym
-   tmaivebivLsZey+NCOWMdWsDJRcREtobvtUf3la2eGrkKtMqBaRSorqER
-   hzVGhS06AbnBZHB1VfrEdvLEKpYbB+qwqv32VBEILJGCiLsQ3T2W/wt35
-   Q==;
-X-CSE-ConnectionGUID: TdtBT+YGRdiTatYayQu4bg==
-X-CSE-MsgGUID: vPjP3mLRRFqIW7SO68L2UQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="49637709"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="49637709"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 00:06:55 -0700
-X-CSE-ConnectionGUID: xmFabzE5SVaVHbyoVfBwbw==
-X-CSE-MsgGUID: Qsq+L7PrTDui0jV3bz8b2g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="136302582"
-Received: from lkp-server01.sh.intel.com (HELO 050dd05385d1) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 23 Apr 2025 00:06:53 -0700
-Received: from kbuild by 050dd05385d1 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u7UC3-0001fz-1G;
-	Wed, 23 Apr 2025 07:06:51 +0000
-Date: Wed, 23 Apr 2025 15:06:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, jic23@kernel.org,
-	robh@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, ~lkcamp/patches@lists.sr.ht,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings:iio:adc:st,spear600-adc: txt to yaml format
- conversion.
-Message-ID: <202504231421.JAMhWond-lkp@intel.com>
-References: <20250423022956.31218-1-rodrigo.gobbi.7@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CFKu/2lA"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745392005; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=thXgRC2w3R+DXRSmVN/fbZ2OtHbJLiM3ElorRiOdk/U=;
+	b=CFKu/2lANlPSeSxe+qdrTZrBnZ9slDBHZGvnpS4qxYuuEXGBJSRcL+HBd6DOh0dcyWGFrWtHrfTtkn6ajJqPB44flEIxYlmIG+4yFjETjvQ0PZemfyk1TJ6nJuVUM/8CHTOzUpO083L9Bz33NSyfkvvVldMjI/bfdUj2UxzsJ5c=
+Received: from 30.74.144.121(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXtXK1g_1745392001 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 23 Apr 2025 15:06:42 +0800
+Message-ID: <977ef858-ea03-4ea7-9420-6275ecd6a40d@linux.alibaba.com>
+Date: Wed, 23 Apr 2025 15:06:40 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423022956.31218-1-rodrigo.gobbi.7@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 04/12] khugepaged: generalize alloc_charge_folio()
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
+ peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250417000238.74567-1-npache@redhat.com>
+ <20250417000238.74567-5-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250417000238.74567-5-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Rodrigo,
 
-kernel test robot noticed the following build warnings:
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on robh/for-next linus/master v6.15-rc3 next-20250422]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On 2025/4/17 08:02, Nico Pache wrote:
+> From: Dev Jain <dev.jain@arm.com>
+> 
+> Pass order to alloc_charge_folio() and update mTHP statistics.
+> 
+> Co-developed-by: Nico Pache <npache@redhat.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rodrigo-Gobbi/dt-bindings-iio-adc-st-spear600-adc-txt-to-yaml-format-conversion/20250423-103135
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20250423022956.31218-1-rodrigo.gobbi.7%40gmail.com
-patch subject: [PATCH] dt-bindings:iio:adc:st,spear600-adc: txt to yaml format conversion.
-reproduce: (https://download.01.org/0day-ci/archive/20250423/202504231421.JAMhWond-lkp@intel.com/reproduce)
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504231421.JAMhWond-lkp@intel.com/
+> ---
+>   include/linux/huge_mm.h |  2 ++
+>   mm/huge_memory.c        |  4 ++++
+>   mm/khugepaged.c         | 17 +++++++++++------
+>   3 files changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> index f190998b2ebd..55b242335420 100644
+> --- a/include/linux/huge_mm.h
+> +++ b/include/linux/huge_mm.h
+> @@ -123,6 +123,8 @@ enum mthp_stat_item {
+>   	MTHP_STAT_ANON_FAULT_ALLOC,
+>   	MTHP_STAT_ANON_FAULT_FALLBACK,
+>   	MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE,
+> +	MTHP_STAT_COLLAPSE_ALLOC,
+> +	MTHP_STAT_COLLAPSE_ALLOC_FAILED,
+>   	MTHP_STAT_ZSWPOUT,
+>   	MTHP_STAT_SWPIN,
+>   	MTHP_STAT_SWPIN_FALLBACK,
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index e97a97586478..7798c9284533 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -615,6 +615,8 @@ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
+>   DEFINE_MTHP_STAT_ATTR(anon_fault_alloc, MTHP_STAT_ANON_FAULT_ALLOC);
+>   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback, MTHP_STAT_ANON_FAULT_FALLBACK);
+>   DEFINE_MTHP_STAT_ATTR(anon_fault_fallback_charge, MTHP_STAT_ANON_FAULT_FALLBACK_CHARGE);
+> +DEFINE_MTHP_STAT_ATTR(collapse_alloc, MTHP_STAT_COLLAPSE_ALLOC);
+> +DEFINE_MTHP_STAT_ATTR(collapse_alloc_failed, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
+>   DEFINE_MTHP_STAT_ATTR(zswpout, MTHP_STAT_ZSWPOUT);
+>   DEFINE_MTHP_STAT_ATTR(swpin, MTHP_STAT_SWPIN);
+>   DEFINE_MTHP_STAT_ATTR(swpin_fallback, MTHP_STAT_SWPIN_FALLBACK);
+> @@ -680,6 +682,8 @@ static struct attribute *any_stats_attrs[] = {
+>   #endif
+>   	&split_attr.attr,
+>   	&split_failed_attr.attr,
+> +	&collapse_alloc_attr.attr,
+> +	&collapse_alloc_failed_attr.attr,
+>   	NULL,
+>   };
+>   
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 54d7f43da69c..883e9a46359f 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -1074,21 +1074,26 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
+>   }
+>   
+>   static int alloc_charge_folio(struct folio **foliop, struct mm_struct *mm,
+> -			      struct collapse_control *cc)
+> +			      struct collapse_control *cc, u8 order)
+>   {
+>   	gfp_t gfp = (cc->is_khugepaged ? alloc_hugepage_khugepaged_gfpmask() :
+>   		     GFP_TRANSHUGE);
+>   	int node = khugepaged_find_target_node(cc);
+>   	struct folio *folio;
+>   
+> -	folio = __folio_alloc(gfp, HPAGE_PMD_ORDER, node, &cc->alloc_nmask);
+> +	folio = __folio_alloc(gfp, order, node, &cc->alloc_nmask);
+>   	if (!folio) {
+>   		*foliop = NULL;
+> -		count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
+> +		if (order == HPAGE_PMD_ORDER)
+> +			count_vm_event(THP_COLLAPSE_ALLOC_FAILED);
+> +		count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC_FAILED);
+>   		return SCAN_ALLOC_HUGE_PAGE_FAIL;
+>   	}
+>   
+> -	count_vm_event(THP_COLLAPSE_ALLOC);
+> +	if (order == HPAGE_PMD_ORDER)
+> +		count_vm_event(THP_COLLAPSE_ALLOC);
+> +	count_mthp_stat(order, MTHP_STAT_COLLAPSE_ALLOC);
+> +
+>   	if (unlikely(mem_cgroup_charge(folio, mm, gfp))) {
 
-All warnings (new ones prefixed by >>):
+Nit: while we are at it, why not add a 
+‘MTHP_STAT_COLLAPSE_CHARGE_FAILED’, which is the same as anonymous and 
+shmem mTHP allocation?
 
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
-   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/staging/iio/
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
-   Can't build as 1 mandatory dependency is missing at ./scripts/sphinx-pre-install line 984.
-   make[2]: *** [Documentation/Makefile:121: htmldocs] Error 255
-   make[1]: *** [Makefile:1801: htmldocs] Error 2
-   make: *** [Makefile:248: __sub-make] Error 2
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>   		folio_put(folio);
+>   		*foliop = NULL;
+> @@ -1125,7 +1130,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   	 */
+>   	mmap_read_unlock(mm);
+>   
+> -	result = alloc_charge_folio(&folio, mm, cc);
+> +	result = alloc_charge_folio(&folio, mm, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED)
+>   		goto out_nolock;
+>   
+> @@ -1849,7 +1854,7 @@ static int collapse_file(struct mm_struct *mm, unsigned long addr,
+>   	VM_BUG_ON(!IS_ENABLED(CONFIG_READ_ONLY_THP_FOR_FS) && !is_shmem);
+>   	VM_BUG_ON(start & (HPAGE_PMD_NR - 1));
+>   
+> -	result = alloc_charge_folio(&new_folio, mm, cc);
+> +	result = alloc_charge_folio(&new_folio, mm, cc, HPAGE_PMD_ORDER);
+>   	if (result != SCAN_SUCCEED)
+>   		goto out;
+>   
