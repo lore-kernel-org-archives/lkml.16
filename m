@@ -1,131 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1156B28DF17
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7994228D82D
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432460; cv=none; b=VK5FeNsVFwwOM8KmtvPZt7JZXSkC8fxEpBY+thTiv4t7m2SDgKUhm1Y2SGQTdcEc9se5HwT6bvvAeARGb44I3GQuEBvyXkDPqiiZXMYt+Bygxt/w+f6s6yKKg6AvGM1rzhlzisG2wGYwEuKk5y68MXZfsX+qRqCk02KESu6a+GY=
+	t=1745432462; cv=none; b=PmlQgwR2A0VFweoJ3og9fdmvKK3sbCbuhyY7Lorubdgy80T2SYfCtCo1HNlO1fwAjMjvnaiG32lp+9V1XN+SQAzC+hfiu9HWrVulMTjy4VU3s0LOpQskLIav6jCpQGe4wxfsaAzylYRzcPTXKVWeRjcO7yXyVIE33k6JSVa0HGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432460; c=relaxed/simple;
-	bh=rL40QV7ZOck7njFnFxpE1AOhrGFBkAAgQb6AOZESYyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGogXTm4MF28iZjPjMGn3PnJRnR9twLHdmwdcVwQPdDHHTyuzZPnX3U96nZKrqKBOGhn2VSjBaM6lzTx2ing6Ret49tyEVlIec3yGhV34l0GWEapmvUGotsKEncVHc+CTkc/S4Dq+au4Lop0Ss+LSr/KI3WczWL/PunHJw86lK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pYmXNekC; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pYmXNekC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7290BC4CEE2;
-	Wed, 23 Apr 2025 18:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745432459;
-	bh=rL40QV7ZOck7njFnFxpE1AOhrGFBkAAgQb6AOZESYyw=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=pYmXNekC41LOXDoH5QOAMkKFF6Pojdh/uf/H3CaggiSY8u7YrARpBTt1dVtMR6hW/
-	 4Nm9fFX2uN5qdm+uucfDF/+f9k4cqlAEmVsA4VZhHAk9cf3T0dGlhdJHK16KKjVKRE
-	 vHBh5fXsu6Nft8qXYuNRk9HvBeqaFzTbY8BbUb+e8R9D0Ua0fqmm35lFRIty+Z/hw4
-	 vda7hLUFnFd37j4eudAdpd0wx01sTzqUkx19TJSl0bBXnrvzoVktJ9ONNl1flgYLb5
-	 crgVvc/v3XzS8Vo2MvZyMFYWaYyKvv613fMQZmkAbK6hqLplAvkDwsxRxv3vQL3tp/
-	 z+MUXr2tbH9nw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 21DA6CE0B75; Wed, 23 Apr 2025 11:20:59 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:20:59 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Aishwarya.TCV@arm.com, sraithal@amd.com
-Subject: Re: [PATCH v2 ratelimit 11/14] ratelimit: Force re-initialization
- when rate-limiting re-enabled
-Message-ID: <559db775-f151-4694-86e6-72809b386097@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
- <20250418171359.1187719-11-paulmck@kernel.org>
- <257c3b91-e30f-48be-9788-d27a4445a416@sirena.org.uk>
+	s=arc-20240116; t=1745432462; c=relaxed/simple;
+	bh=nlObL/M0UKId+3FGKCIAHseXw48SZkt4goXdtRoEqE8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DWqyOGNFRUqSTrtjyUOuWsFBftFjH/LydAKe03bydMYF26PzQPd9KdPe+MGSdBGhJG3f/TPmojrfLP3jl/CfpfxLcnwCy5X204jCphOLSqk1A0dn2cSvtWxfKt/+R1wkCzsmQk3E35r31QWDMl0tvNtLeTijS5vY0o6IdlPce/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-82-148.bstnma.fios.verizon.net [173.48.82.148])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 53NIKd7i005125
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 14:20:40 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 4E9A82E00E9; Wed, 23 Apr 2025 14:20:39 -0400 (EDT)
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: linux-ext4@vger.kernel.org, Artem Sadovnikov <a.sadovnikov@ispras.ru>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Andreas Dilger <adilger.kernel@dilger.ca>,
+        Eric Sandeen <sandeen@redhat.com>, Jan Kara <jack@suse.cz>,
+        linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ext4: fix off-by-one error in do_split
+Date: Wed, 23 Apr 2025 14:20:31 -0400
+Message-ID: <174543076507.1215499.15040549215780274810.b4-ty@mit.edu>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250404082804.2567-3-a.sadovnikov@ispras.ru>
+References: <20250404082804.2567-3-a.sadovnikov@ispras.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <257c3b91-e30f-48be-9788-d27a4445a416@sirena.org.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 04:59:49PM +0100, Mark Brown wrote:
-> On Fri, Apr 18, 2025 at 10:13:56AM -0700, Paul E. McKenney wrote:
-> > Currently, rate limiting being disabled results in an immediate early
-> > return with no state changes.  This can result in false-positive drops
-> > when re-enabling rate limiting.  Therefore, mark the ratelimit_state
-> > structure "uninitialized" when rate limiting is disabled.
+
+On Fri, 04 Apr 2025 08:28:05 +0000, Artem Sadovnikov wrote:
+> Syzkaller detected a use-after-free issue in ext4_insert_dentry that was
+> caused by out-of-bounds access due to incorrect splitting in do_split.
 > 
-> Today's -next is failing to boot a defconfig on a wide range of arm64
-> ACPI platforms.  One ACPI platform (Softiron) is still fine, and I've
-> not noticed any DT platforms having issues.  Output grinds to a halt
-> during boot shortly after userspace starts on affected systems:
+> BUG: KASAN: use-after-free in ext4_insert_dentry+0x36a/0x6d0 fs/ext4/namei.c:2109
+> Write of size 251 at addr ffff888074572f14 by task syz-executor335/5847
 > 
-> [   23.334050] Freeing unused kernel memory: 11328K
-> [   23.355182] Run /init as init process
-> [   23.378221] NET: Registered PF_INET6 protocol family
-> [   23.396506] Segment Routing with IPv6
-> [   23.414054] In-situ OAM (IOAM) with IPv6
+> CPU: 0 UID: 0 PID: 5847 Comm: syz-executor335 Not tainted 6.12.0-rc6-syzkaller-00318-ga9cda7c0ffed #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 10/30/2024
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+>  print_address_description mm/kasan/report.c:377 [inline]
+>  print_report+0x169/0x550 mm/kasan/report.c:488
+>  kasan_report+0x143/0x180 mm/kasan/report.c:601
+>  kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+>  __asan_memcpy+0x40/0x70 mm/kasan/shadow.c:106
+>  ext4_insert_dentry+0x36a/0x6d0 fs/ext4/namei.c:2109
+>  add_dirent_to_buf+0x3d9/0x750 fs/ext4/namei.c:2154
+>  make_indexed_dir+0xf98/0x1600 fs/ext4/namei.c:2351
+>  ext4_add_entry+0x222a/0x25d0 fs/ext4/namei.c:2455
+>  ext4_add_nondir+0x8d/0x290 fs/ext4/namei.c:2796
+>  ext4_symlink+0x920/0xb50 fs/ext4/namei.c:3431
+>  vfs_symlink+0x137/0x2e0 fs/namei.c:4615
+>  do_symlinkat+0x222/0x3a0 fs/namei.c:4641
+>  __do_sys_symlink fs/namei.c:4662 [inline]
+>  __se_sys_symlink fs/namei.c:4660 [inline]
+>  __x64_sys_symlink+0x7a/0x90 fs/namei.c:4660
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>  </TASK>
 > 
-> A bisect converges fairly smoothly on this patch in -next, which doesn't
-> look completely implausible for something that stops console output - I
-> didn't dig into it at all though.  I see that Sirkanth (CCed) seems to
-> have reported a similar issue though with a different SHA1 since he
-> noticed on yesterday's -next.
+> [...]
 
-Thank you for the confirmation of Bert's and Srikanth's reports!
+Applied, thanks!
 
-They reported that the replacing the offending commit with the following
-patch fixed things up:
+[1/1] ext4: fix off-by-one error in do_split
+      commit: 7e50bbb134aba1df0854f171b596b3a42d35605a
 
-------------------------------------------------------------------------
+(Apologies for sending this late; I've been dealing with a family
+medical emergency.  In any case, the patch landed in v6.16-rc2.)
 
-diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index 04f16b8e24575..13ed636642270 100644
---- a/lib/ratelimit.c
-+++ b/lib/ratelimit.c
-@@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 	unsigned long flags;
- 	int ret;
- 
--	if (!interval || !burst)
-+	if (interval <= 0 || burst <= 0)
- 		return 1;
- 
- 	/*
-
-------------------------------------------------------------------------
-
-If that fixes things for you, could you also please try the following,
-also replacing that same commit?
-
-							Thanx, Paul
-
-------------------------------------------------------------------------
-
-diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index 04f16b8e24575..8f6c54f719ef2 100644
---- a/lib/ratelimit.c
-+++ b/lib/ratelimit.c
-@@ -35,8 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 	unsigned long flags;
- 	int ret;
- 
--	if (!interval || !burst)
-+	if (interval <= 0 || burst <= 0) {
-+		ret = burst > 0;
- 		return 1;
-+	}
- 
- 	/*
- 	 * If we contend on this state's lock then just check if
+Best regards,
+-- 
+Theodore Ts'o <tytso@mit.edu>
