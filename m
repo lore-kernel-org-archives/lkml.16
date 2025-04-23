@@ -1,79 +1,78 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F9B2641D1
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2049E264FAF
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:15:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745378141; cv=none; b=PF5rb3wC7RYuF5BRyRuZd4oBxRJWQ0yiLQjirwP001toI1Kb+vxa+4+so0kBuhK7pMahMVI5+HxYwxk1yVKlljywY6u8b+uUK3ogxZXPclZoA0zCqzy1LuP/C37WtPikLYeScokq5EQv6pDp1fFYrZr5S5VMjhJQb+VbABDQgJY=
+	t=1745378151; cv=none; b=fJ9v04ncPtAzY+GLUJGcYf3lUIZkn/8ym4mqpgugpvGePv4J/AqfCE2AIfMEWAAg+Jwf0hRIR/chO7P6SGEeO0ODAQv7NqjaVY//F1aPhAQaassA/Owk1mrM3Bcs2IX9Ody1E9Lgt3MnkvzDCka8wVQyhTgd+EfbqlB/3Ndo/E0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745378141; c=relaxed/simple;
-	bh=/jheJB+vrJsHs4j8yUppC9Kfn4hiqrKgUFw8sHnW8HA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cBcz58tluVLWCaRZ0ChiH8kkrCuRg79RgGiSkGsS3/LXwSu9XoqaUCVLltTw9IPQfwzUYSDJl14STo7xwOyxSOn0ffEzthzjZ7vSyOknLPWty+wEHXK3niC4dWBSOR30ypmXHDubygFNhGm4lgz9NpzDiDMGDHlH5N30ePt7gIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=oWA8Tu83; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oWA8Tu83"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=daVrIe013KCmACuDIJhmGEiRt0jxJ27zL3NMUzVYjoU=; b=oWA8Tu834KdxdTQQs8prryXk33
-	uYLfoD6nD9i7t6UpFr/LQ6pp/Up2uJPAVhMM4NAVDnFPFzFSucJulIRIoRjfpyxB9Zk0X5JF84Aps
-	3p2BhV5D3Pio/upGu6IQjjG8Gv1ZVdUoRqif4Smi4H+uDkrBskrSxbtKqMnKOwt+RbPl+EmPcdjiP
-	Z27/zZFNZUm7ZuWSTXIbSS9SgaDFMpP4IrraeF6EAhefU2ZTKKrxqLUun+UYO24nmkKXhvxJCE1dJ
-	FLmh9tahne4EhEB+30mVUP8Jr4zJvpfgQGLZOqYXY2uTOwGId6NNU5mc+4qphOnV4KWGn5IlmBf+4
-	/JhVbE9w==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7Qa7-00000006z7Q-3Wyp;
-	Wed, 23 Apr 2025 03:15:27 +0000
-Date: Wed, 23 Apr 2025 04:15:27 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: nifan.cxl@gmail.com
-Cc: muchun.song@linux.dev, mcgrof@kernel.org, a.manzanares@samsung.com,
-	dave@stgolabs.net, akpm@linux-foundation.org, david@redhat.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	Fan Ni <fan.ni@samsung.com>,
-	Sidhartha Kumar <sidhartha.kumar@oracle.com>
-Subject: Re: [PATCH v2 2/4] mm/hugetlb: Refactor unmap_hugepage_range() to
- take folio instead of page
-Message-ID: <aAhbT2nzOyZ9b3ir@casper.infradead.org>
-References: <20250418170834.248318-2-nifan.cxl@gmail.com>
- <20250418170834.248318-3-nifan.cxl@gmail.com>
+	s=arc-20240116; t=1745378151; c=relaxed/simple;
+	bh=6BnjtcaJq47LpGWDNg4juqCpB830XQZ/JzrfG4RiG7g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=imYB0cJybrd+MGq8ldJM2feXAynsqft1ILen9ZDVCOGy3QxohyzWBKhWk2yFY6NKsIqoZq7uLqkXYI7yk7K3oNKldDechhW8oj5GdLv5bL9e5FSM8Lt2FG/CbO3PC8rlDc955talf+MkFq0UET6cKWWOvVz3WBks9K8SpiZeAlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3bb659201ff111f0a216b1d71e6e1362-20250423
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
+	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
+	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
+	SA_TRUSTED, SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS
+	DKIM_NOPASS, DMARC_NOPASS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:ebd4ea06-b8b1-4d65-83d7-4acedaa018cb,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:25,RT:0,SF:5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:25
+X-CID-INFO: VERSION:1.1.45,REQID:ebd4ea06-b8b1-4d65-83d7-4acedaa018cb,IP:0,URL
+	:0,TC:0,Content:-5,EDM:25,RT:0,SF:5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:25
+X-CID-META: VersionHash:6493067,CLOUDID:8a4ccbf394116520290434df499524d8,BulkI
+	D:250423111327MU0OR9DG,BulkQuantity:1,Recheck:0,SF:19|38|66|72|78|102,TC:n
+	il,Content:0|50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BEC:nil,
+	COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FSD
+X-UUID: 3bb659201ff111f0a216b1d71e6e1362-20250423
+X-User: xiaopei01@kylinos.cn
+Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <xiaopei01@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 525924543; Wed, 23 Apr 2025 11:15:39 +0800
+From: Pei Xiao <xiaopei01@kylinos.cn>
+To: john.g.garry@oracle.com,
+	linux-kernel@vger.kernel.org,
+	andriy.shevchenko@linux.intel.com,
+	xuwei5@hisilicon.com,
+	robh@kernel.org,
+	xiaopeitux@foxmail.com
+Cc: Pei Xiao <xiaopei01@kylinos.cn>
+Subject: [PATCH v3 0/2] clean up hisi_lpc and lib/logic_pio
+Date: Wed, 23 Apr 2025 11:15:34 +0800
+Message-Id: <cover.1745377493.git.xiaopei01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418170834.248318-3-nifan.cxl@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 09:57:40AM -0700, nifan.cxl@gmail.com wrote:
->  void unmap_hugepage_range(struct vm_area_struct *,
-> -			  unsigned long, unsigned long, struct page *,
-> +			  unsigned long, unsigned long, struct folio *folio,
+1.clean up included headers
+2.add and clean up comment in logic_lib
 
-I'm fine with leaving the vma and folio unnamed, but it is a crime
-against our fellow programmers to leave the two 'unsigned long's
-unnamed.  What the hell are they?
+Pei Xiao (2):
+  bus: hisi_lpc: clean up included headers
+  lib/logic_pio: add and clean up comment in logic_lib
 
->  void unmap_hugepage_range(struct vm_area_struct *vma, unsigned long start,
-> -			  unsigned long end, struct page *ref_page,
-> +			  unsigned long end, struct folio *ref_folio,
+ drivers/bus/hisi_lpc.c | 13 +++++++++----
+ lib/logic_pio.c        | 37 ++++++++++++++++++++++++++++---------
+ 2 files changed, 37 insertions(+), 13 deletions(-)
 
-... start and end.  I'd happily see a patch which only named those
-parameters and left the struct folio unnamed.
-
-> -	__unmap_hugepage_range(&tlb, vma, start, end, ref_page, zap_flags);
-> +	__unmap_hugepage_range(&tlb, vma, start, end,
-> +			       folio_page(ref_folio, 0), zap_flags);
-
-I do not like this.  Why should we pass in the first page here?  It
-seems to me that this is just "Now we will call a function which still
-takes a struct page", and we *SHOULD* use &folio->page here to indicate
-that we just haven't done the conversion yet.
+-- 
+2.25.1
 
