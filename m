@@ -1,72 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B67B298CB0;
-	Wed, 23 Apr 2025 15:23:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6BA29B22B
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421807; cv=none; b=fL/q7hCnKs8HTFOdg8RKXscYmXK9nuy5Oz/eaVT5/C6uP1o6Qs0Qv/S8Xt/lblqQ58vJkL/A5rlpAOx0DZEnGOUn6uxsVhi/7/X+gdOmBRfFIBucPWH/mmYKzITPfHX5As58c4gg78YjNBNCTbIhVO/o5OrYK87edsjDuuu9/lA=
+	t=1745421815; cv=none; b=q1rubwOtlmFvij5Zu2vF7iZcHNcnhEDQT2w3drx+YafMKL/NtI0xoLZlzoLEJq2jkEpND6/QBa3Awpgqngn/7eM+xDQdLdNSB2/sa/JhrLwqvjzO4LnrMNHy+ZrH85puySvMJ9DHuhuBaj1yA7iZitqkg3N6KQ8mJsdF9AFbnsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421807; c=relaxed/simple;
-	bh=ttYFtyupJCMupeSXwyqSaNxnbRiKjhqkBV9hyVnYY30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A7dLB4nmy3LkG3ZMebUsb/0cCDJkKzTqqqw9BDvxIlOFb5uOcJH7t3kvtaCZE42BMOi/mg/KS5DjLu5Rk/fQUdm5TFbnzxO8qPmMrfJ2FPKU9mJ/kfGSaJaF6gATeyh24Osabd+S16nRMUxxJzhyd93Tlnf2e/yz9KzpGCKtrMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLQsHTSR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745421815; c=relaxed/simple;
+	bh=vhcyUo6KAslWblrUDCqe77mhvYixtNpjDAllsEwMg2A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r9MO8sEoRpETyC/zRssMS7DIwY3v8bzP8C8KwzGpvoKqkQ9yv5fNi28/NyU7Whv9Yxoog4ZJhVT/V+GI5fucEcUf6CzEI387LEMUoWIjTb+ILNJ38uXj/9wk7b1Odk0zJxfsjql6ElHBFGEtyT9rgFYLD1wdL0riqUARZkgzTKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IezQSZXV; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLQsHTSR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D98C4CEE2;
-	Wed, 23 Apr 2025 15:23:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745421806;
-	bh=ttYFtyupJCMupeSXwyqSaNxnbRiKjhqkBV9hyVnYY30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fLQsHTSROUAK6ThwkWXhF5VTQtSjbjK5MKQgPWBeAYm3OnQl3xo9vUW3c5NIrFpzg
-	 z+lp7GpBGY+WxxQMdQI0S5e9vR73KD0m+fgVfer7oIVylZ0pDaQSMvatCNmhoAYjJz
-	 WjC+opRME537JuHl44GZKOV0qEjjp92qrZ18eFetM0akxL79A+P90DDu+CKlRgaKUc
-	 +2oRVCZHEj7iQ802qNTm67K8mbY+93IrU7H5otIH+P13xmfpnzMl3ELoTX0YE+MNMi
-	 zDHktPncfG76nUvxqFwQANV/QL0RWZHJPaNKtMlkPxd2+oKXeWR5eToaz5f6GmRs6a
-	 qhWfSTuHn/N6Q==
-Date: Wed, 23 Apr 2025 10:23:25 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Ze Huang <huangze@whut.edu.cn>
-Cc: linux-phy@lists.infradead.org, linux-riscv@lists.infradead.org,
-	Junzhong Pan <junzhong.pan@spacemit.com>,
-	Vinod Koul <vkoul@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	linux-kernel@vger.kernel.org, Yixun Lan <dlan@gentoo.org>,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	spacemit@lists.linux.dev
-Subject: Re: [PATCH v2 2/4] dt-bindings: phy: spacemit: add K1 PCIe/USB3
- combo PHY
-Message-ID: <174542180456.549434.17717366396864684617.robh@kernel.org>
-References: <20250418-b4-k1-usb3-phy-v2-v2-0-b69e02da84eb@whut.edu.cn>
- <20250418-b4-k1-usb3-phy-v2-v2-2-b69e02da84eb@whut.edu.cn>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IezQSZXV"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f435c9f2f9so9971793a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:23:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745421812; x=1746026612; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=sBJXxI+VnkOvdG03h/gTU2mlJ2vsoYyyCCSIoMLfBQ4=;
+        b=IezQSZXVaHdBTpHTOxflFZFt5kGWQIQY7hxXIQlYSqnYn5Wn/NH5iaQgSs9u7a3vej
+         XGCMrX8yogeqRmwiOHqUL5eFIdiG854Ylq6F5r7PddKFg2OWJyIRQhAlaaPWwTbpftPB
+         pfiD53sNMjZPsWzvqIRc5eyXfO1t8UBGhlaOhwfVvyc/LGrpBA+vEXEXPoLZGtZ+4fK1
+         KVZi0sTY/PyBvMcI2PtfdkGbDxDXNLVBkfe3LuY44+bOEcMQRhRg5JrKe1vxryvx2nYd
+         Y6f9LcikDyMqfLLpVc/AHiRVH2myWuTJFVMlaCc0+bR+6uWwESPhBSWDa1URs7pO08nv
+         d7Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745421812; x=1746026612;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sBJXxI+VnkOvdG03h/gTU2mlJ2vsoYyyCCSIoMLfBQ4=;
+        b=K4WONzx3rIA5i56nssDfy8SGncmq64dHmRLro7Mq752HjT38HtRRYYN1dlPYN+Qw6i
+         KFsXeyG5xE87lwv7dW3mLxAV/1eodSFN8Sy4/7UuHoVLDAFWvNHjb/et9GAlTDS3PaoY
+         oAS3+nbqqd3YdV88ao7n8TGyao0KCR+giud6KN5Qtzp3/bNbOyhKum68O+MqKfSI+FIy
+         fVAvbwYo4W7j+QVSPb+MPWf/poD75R9wJHaOGF5HwfovluRnM/JnRrKMzIp/uYPVVsOB
+         Wk75YZcjtwwKxBETPglCuURVfIhxGeasuiccxzToBSUTIxEnAZ8L7t2EBHssxcw2d3x4
+         TeKA==
+X-Forwarded-Encrypted: i=1; AJvYcCW8qZBrGyBPp9NAk/8w8MYTPLLT/zzEIhdSDWUGPPyLLCrbelhqq0JoXaLkekaGTldNWZq76lbBPbKAVZs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzfy3W4vlhbDCpvmqlintcrnPb2+78N6DbeEl8S3SdpzX+ysVS4
+	HDCfa6rh6tp2UBMAtalvPS9MoWkFYYRsdx45q3Ua7rc/oLlo1jSUYxFTwhACFxH5UZ1wjpGAq7k
+	w6DYFJlO6bUEIruFL7Tfq+mkecahymVw49fLdaA==
+X-Gm-Gg: ASbGncsrbN53KdeyY4rHs1/rDxp7wGXZt/cG2cyqxjqqHVbN0qmvDCIlS/LI6I9iKFf
+	obA8eiurmlcHyakpw7kPHhSF1ZXRRkVyQgbNYkcoyTRWX5JWJtSqPJFJQlds63Y0kjgYlzvSDEy
+	sQL3qpuOIAXCkb7AjOa2rM9E8=
+X-Google-Smtp-Source: AGHT+IGPu59FaDGH5BEkXJJ7svic3UgDeQqapGND2AunCs9qXYZnqI4o1kWAywADMLlCU4WGGSFlE+fbrGMmBQWyplk=
+X-Received: by 2002:a05:6402:524e:b0:5e5:d9e5:c4d7 with SMTP id
+ 4fb4d7f45d1cf-5f62860fdcdmr16126430a12.28.1745421811890; Wed, 23 Apr 2025
+ 08:23:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418-b4-k1-usb3-phy-v2-v2-2-b69e02da84eb@whut.edu.cn>
+References: <20250422191939.555963-1-jkangas@redhat.com>
+In-Reply-To: <20250422191939.555963-1-jkangas@redhat.com>
+From: Sumit Semwal <sumit.semwal@linaro.org>
+Date: Wed, 23 Apr 2025 20:53:20 +0530
+X-Gm-Features: ATxdqUESCavL9HzimYlvlWteFP-krmBUrVLSD6RMVwG58YA294DJfz9zHgN2yXY
+Message-ID: <CAO_48GELW3ax5Q3h9=qpWBJJa0Uy3eJwFkEcbaz4ZT56Gq513A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] dma-buf: heaps: Use constant name for CMA heap
+To: Jared Kangas <jkangas@redhat.com>
+Cc: benjamin.gaignard@collabora.com, Brian.Starkey@arm.com, jstultz@google.com, 
+	tjmercier@google.com, christian.koenig@amd.com, mripard@kernel.org, 
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hello Jared,
 
-On Fri, 18 Apr 2025 21:19:51 +0800, Ze Huang wrote:
-> Introduce support for SpacemiT K1 PCIe/USB3 combo PHY controller.
-> 
-> PCIe portA and USB3 controller share this phy, only one of them can work
-> at any given application scenario.
-> 
-> Co-developed-by: Junzhong Pan <junzhong.pan@spacemit.com>
-> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
-> ---
->  .../bindings/phy/spacemit,k1-combphy.yaml          | 72 ++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
-> 
+On Wed, 23 Apr 2025 at 00:49, Jared Kangas <jkangas@redhat.com> wrote:
+>
+> Hi all,
+>
+> This patch series is based on a previous discussion around CMA heap
+> naming. [1] The heap's name depends on the device name, which is
+> generally "reserved", "linux,cma", or "default-pool", but could be any
+> arbitrary name given to the default CMA area in the devicetree. For a
+> consistent userspace interface, the series introduces a constant name
+> for the CMA heap, and for backwards compatibility, an additional Kconfig
+> that controls the creation of a legacy-named heap with the same CMA
+> backing.
+>
+> The ideas to handle backwards compatibility in [1] are to either use a
+> symlink or add a heap node with a duplicate minor. However, I assume
+> that we don't want to create symlinks in /dev from module initcalls, and
+> attempting to duplicate minors would cause device_create() to fail.
+> Because of these drawbacks, after brainstorming with Maxime Ripard, I
+> went with creating a new node in devtmpfs with its own minor. This
+> admittedly makes it a little unclear that the old and new nodes are
+> backed by the same heap when both are present. The only approach that I
+> think would provide total clarity on this in userspace is symlinking,
+> which seemed like a fairly involved solution for devtmpfs, but if I'm
+> wrong on this, please let me know.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Thanks indeed for this patch; just one minor nit: the link referred to
+as [1] here seems to be missing. Could you please add it? This would
+make it easier to follow the chain of discussion in posterity.
+>
+> Changelog:
+>     v2: Use tabs instead of spaces for large vertical alignment.
+>
+> Jared Kangas (2):
+>   dma-buf: heaps: Parameterize heap name in __add_cma_heap()
+>   dma-buf: heaps: Give default CMA heap a fixed name
+>
+>  Documentation/userspace-api/dma-buf-heaps.rst | 11 ++++---
+>  drivers/dma-buf/heaps/Kconfig                 | 10 +++++++
+>  drivers/dma-buf/heaps/cma_heap.c              | 30 ++++++++++++++-----
+>  3 files changed, 40 insertions(+), 11 deletions(-)
+>
+> --
+> 2.49.0
+>
 
+Best,
+Sumit
