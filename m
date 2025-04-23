@@ -1,92 +1,80 @@
-Received: from plesk.hostmyservers.fr (plesk.hostmyservers.fr [45.145.164.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA21A1EB5E1
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:13:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.164.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A704D157487
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745446439; cv=none; b=J3JejYzs3yhhttozq4QckmmIxibFX5o1YwP42HQdCn8BKv14MitJIV7mpksQZnl+K5DyMil5L1t6MT1lYn9sEiqT2Ga9Z2dkM6ZilW9NgW+GMKVNNTFpR9Q7H9GL4hjDH+C71kByqsj0YbXwVCRc4gM1L3zfhlZBMSx2J9VfpZw=
+	t=1745446437; cv=none; b=fBEcAbuOttYhlzULVHREy3TNM7KShQ/Y808Jp1kOkNvJJKA/lztaoGjqyfBGRidniQr67dyPnNEn5TJbiS8MmrB2DM5XH4ag43MKkUEY/0EbysKAWYS9XFRNTccZ5pmiWGLt9zyAP/ZmCiTe2gdFr8UMcpYPUYkZNDFbxyxZ84c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745446439; c=relaxed/simple;
-	bh=QDhW+cmmNYSwt3lHjiry053KlThbivIWaPccdOIP03E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TIrGBCq9blVRsKemJz9N2EGCxuzKtOBhzv1N4b2zdplAF29QliTzGiT8BXVcL10bxtPVdvhSRYNufTIDvA+HpNuyXuO11qNXhJmQKamusAi7jHxfUXe2KJix5I1h31HreeBQujTy1QpeA1f3iU6RrFKzCtvIUrp9kM6Zp5C+on4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com; spf=pass smtp.mailfrom=arnaud-lcm.com; arc=none smtp.client-ip=45.145.164.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=arnaud-lcm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arnaud-lcm.com
-Received: from [127.0.1.1] (unknown [IPv6:2a01:e0a:3e8:c0d0:d851:318b:70da:57a7])
-	by plesk.hostmyservers.fr (Postfix) with ESMTPSA id 3C1B155807;
-	Wed, 23 Apr 2025 22:13:55 +0000 (UTC)
-Authentication-Results: Plesk;
-        spf=pass (sender IP is 2a01:e0a:3e8:c0d0:d851:318b:70da:57a7) smtp.mailfrom=contact@arnaud-lcm.com smtp.helo=[127.0.1.1]
-Received-SPF: pass (Plesk: connection is authenticated)
-From: Arnaud Lecomte <contact@arnaud-lcm.com>
-Date: Thu, 24 Apr 2025 00:13:51 +0200
-Subject: [PATCH] jfs: upper bound check of tree index in dbAllocAG
+	s=arc-20240116; t=1745446437; c=relaxed/simple;
+	bh=rzqv/y3yi54Tdp14FpA0KdAPOU65g0x0e/dLqWnvJo0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oDFCaiPOslNEnWimHXsmsQGB32Gpx3VG/HC7zBKf4+IGrffhBBVOlXbxx7vSO5YpdZ976xEXF1Bvr3jV/SafbJb+dwFZXA645FfK86lJdMsF4UVe9d8bkw8Ple5aJ9Y79Rr6Bq5WRmuqNu5Tx2EHqH6mYvLhrQ1bYw3uULCdyhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=FpZ6E9zE; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="FpZ6E9zE"
+Date: Wed, 23 Apr 2025 15:13:47 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745446432;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2+E9cdn9Glqpj5x7uDYNuQcvdwYFdyCr3nSZbwJvgho=;
+	b=FpZ6E9zEa+lLOExpS2FXQfpVOhVk22iM5558fY6pBKGIx5nUk5rvnPXAh2Li02cLFagoGK
+	OLM3zqppzThUDt8Ebm84CgZtwLFYLtcIdMfSFcs1R1OyAOn4/VEjskTOJEk7sgFeInW5SI
+	gWJdZBVbOzkF52EO6pCqjjWzTpIIytI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Huan Yang <link@vivo.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
+Subject: Re: [PATCH 1/2] mm/memcg: use kmem_cache when alloc memcg
+Message-ID: <dp5frcrqofkjjp77hw5sbkri6etnpdsvxnahs6nazvakaxt6im@xouxw25rggci>
+References: <20250423084306.65706-1-link@vivo.com>
+ <20250423084306.65706-2-link@vivo.com>
+ <20250423145912.3e0062864b6969b3623c8ff6@linux-foundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-ubsan-jfs-v1-1-2eab57c1ac50@arnaud-lcm.com>
-X-B4-Tracking: v=1; b=H4sIAB5mCWgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDEyNj3dKk4sQ83ay0Yl3jRFOLxOTEVNNUU3MloPqCotS0zAqwWdGxtbU
- AlHwwFlsAAAA=
-To: Dave Kleikamp <shaggy@kernel.org>
-Cc: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- skhan@linuxfoundation.org,
- syzbot+cffd18309153948f3c3e@syzkaller.appspotmail.com,
- Arnaud Lecomte <contact@arnaud-lcm.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745446435; l=1541;
- i=contact@arnaud-lcm.com; s=20250405; h=from:subject:message-id;
- bh=QDhW+cmmNYSwt3lHjiry053KlThbivIWaPccdOIP03E=;
- b=5aLN6ZacnP2/kPpc5ppBrtSfnIriJoSog8li82VzjHMszK0CVIgnuaoUfCoCvDTwxIViqeLsJ
- SzuH3nBapFqC2pwL97O8hoF2+rQm44O4AMbss2h8kjqWJlrYAtoP4UU
-X-Developer-Key: i=contact@arnaud-lcm.com; a=ed25519;
- pk=Ct5pwYkf/5qSRyUpocKOdGc2XBlQoMYODwgtlFsDk7o=
-X-PPP-Message-ID: <174544643558.3864.16356517934851663975@Plesk>
-X-PPP-Vhost: arnaud-lcm.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423145912.3e0062864b6969b3623c8ff6@linux-foundation.org>
+X-Migadu-Flow: FLOW_OUT
 
-When computing the tree index in dbAllocAG, we never check we are not
-out of bounds from the size of the stree.
-This could happen in a scenario where the filesystem metadata are
-corrupted.
+On Wed, Apr 23, 2025 at 02:59:12PM -0700, Andrew Morton wrote:
+> On Wed, 23 Apr 2025 16:43:04 +0800 Huan Yang <link@vivo.com> wrote:
+> 
+> > @@ -3652,7 +3654,10 @@ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
+> >  	int __maybe_unused i;
+> >  	long error;
+> >  
+> > -	memcg = kzalloc(struct_size(memcg, nodeinfo, nr_node_ids), GFP_KERNEL);
+> > +	memcg = likely(memcg_cachep) ?
+> > +			kmem_cache_zalloc(memcg_cachep, GFP_KERNEL) :
+> > +			kzalloc(struct_size(memcg, nodeinfo, nr_node_ids),
+> > +				GFP_KERNEL);
+> 
+> Why are we testing for memcg_cachep=NULL?
+> 
+> > @@ -5055,6 +5061,10 @@ static int __init mem_cgroup_init(void)
+> >  		INIT_WORK(&per_cpu_ptr(&memcg_stock, cpu)->work,
+> >  			  drain_local_stock);
+> >  
+> > +	memcg_size = struct_size_t(struct mem_cgroup, nodeinfo, nr_node_ids);
+> > +	memcg_cachep = kmem_cache_create("mem_cgroup", memcg_size, 0,
+> > +					 SLAB_PANIC | SLAB_HWCACHE_ALIGN, NULL);
+> 
+> If it's because this allocation might have failed then let's not
+> bother.  If an __init-time allocation failed, this kernel is unusable
+> anyway.
 
-Reported-by: syzbot+cffd18309153948f3c3e@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=cffd18309153948f3c3e
-Tested-by: syzbot+cffd18309153948f3c3e@syzkaller.appspotmail.com
-Fixes: 263e55949d89 ("x86/cpu/amd: Fix workaround for erratum 1054")
-Signed-off-by: Arnaud Lecomte <contact@arnaud-lcm.com>
----
- fs/jfs/jfs_dmap.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/fs/jfs/jfs_dmap.c b/fs/jfs/jfs_dmap.c
-index 26e89d0c69b6..7acebb9a21b0 100644
---- a/fs/jfs/jfs_dmap.c
-+++ b/fs/jfs/jfs_dmap.c
-@@ -1385,6 +1385,12 @@ dbAllocAG(struct bmap * bmp, int agno, s64 nblocks, int l2nb, s64 * results)
- 	    (1 << (L2LPERCTL - (bmp->db_agheight << 1))) / bmp->db_agwidth;
- 	ti = bmp->db_agstart + bmp->db_agwidth * (agno & (agperlev - 1));
- 
-+	if (ti < 0 || ti >= le32_to_cpu(dcp->nleafs)) {
-+		jfs_error(bmp->db_ipbmap->i_sb, "Corrupt dmapctl page: ti out of bounds\n");
-+		release_metapage(mp);
-+		return -EIO;
-+	}
-+
- 	/* dmap control page trees fan-out by 4 and a single allocation
- 	 * group may be described by 1 or 2 subtrees within the ag level
- 	 * dmap control page, depending upon the ag size. examine the ag's
-
----
-base-commit: 8560697b23dc2f405cb463af2b17256a9888129d
-change-id: 20250423-ubsan-jfs-3a58acae5e57
-
-Best regards,
--- 
-Arnaud Lecomte <contact@arnaud-lcm.com>
-
++1 to Andrew's point. SLAB_PANIC is used here, so, memcg_cachep can't be
+NULL later.
