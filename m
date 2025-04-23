@@ -1,86 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A0E1EDA36;
-	Wed, 23 Apr 2025 00:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BEE51EDA3F
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:20:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745367593; cv=none; b=mxz5JcwOyYA72SQoZpEGdKfNTZ9ds4TG2k99Jhb1zpIzn8dE/a9tOHAPIzGkmKFiFkHhu6hmas4FSGVlFnHfUjtGZyfzPgLh4nJoBjavollTC1jpkh2mtxz9Bqhlg2wh51Z2X/n+q1Lyh/Dn7JA3uZttBIfCELkov9LMakiXnXk=
+	t=1745367613; cv=none; b=plhYpFSTLrBJpklJVV2NFU8mg0SnQiU/y1H7mCCX+M75LI8UACqyvYwssp9l1rNOc6H9BraqhVbXZ+Sdp2q4wK/ekyyRG7ZLksoIgFfyM/TEaDEmQRSyUPyGT635Kd6CnS3fTlsSqKzxgJ7jbM+erK0PnTRW4oWA96rmtyIPNXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745367593; c=relaxed/simple;
-	bh=g4wT0br6Q3eKj2Xok4jODJ5FYGVqkxwnEIQSKqaQeVY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ean243GOAMWCRdza7SHF4GpQG5Fa4k0xfcpEsjoR7TYungDLaduoY/elIgFMScswlW5pUZR91mcMURW+DxgDij5OBPrR43P8rWrrmbJyGEwwHWtAueEy5fVas59yvmFMSe/64fGeAIFPx5wAV+y293hwSCd9OduNYkUMGb6YpXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AuaYF4a4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745367613; c=relaxed/simple;
+	bh=JiYKYwIlggoXaMGUSuySy12m3WMDMH23uuAhv8VzJ9E=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Dm+pbUtJqhaPK8DAxnkWDIonSfOgOLtaCBiJMEuQaVJXOH3LSG5mLN0/wPQkf7h9xEIVq6d5zCas81hZD4QO9U/jz/2IYDimRKjZRxXV2jQAMh+KElXT7AMWk0lBVwszuf/Jvwm56DsyEKeNhoObJZzOy4AmC+o34bgspm/ZUVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=wGqd3kU4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AuaYF4a4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF94C4CEE9;
-	Wed, 23 Apr 2025 00:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745367593;
-	bh=g4wT0br6Q3eKj2Xok4jODJ5FYGVqkxwnEIQSKqaQeVY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=AuaYF4a4LmETrC4hV+qrXOzzVOrFV3aT2VEhjAlSVKXhY05HlyTifHoS0Zw/iqT1Z
-	 wTgSYmLaiX3LyNXwAhJjj1suIanbbDEHkyQ6MrGIcU1y6MLQcVijLgUtEjDlfqVmcw
-	 FV7t2QyjjweaJdvn+u2CAl3SYWPZHfH5oH11jg24jpUrJ1q9NABoDIJUfq03dweAPW
-	 K3nOqMMZtgQIpab2pByaJw9I7BCX5BspzJCHttIBL6ya4idyLh7AZ+WTUUUV0B7sO3
-	 Xrp/Qw8dzQ9RpL5nlNB2VxqRZLIj0BXUZDpsr2Rd16tD9b4HLQLoiqG6TlHrbR/6Wa
-	 9M2MYkWh1fbbw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0C2380CEF4;
-	Wed, 23 Apr 2025 00:20:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="wGqd3kU4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72546C4CEEC;
+	Wed, 23 Apr 2025 00:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745367612;
+	bh=JiYKYwIlggoXaMGUSuySy12m3WMDMH23uuAhv8VzJ9E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=wGqd3kU4TiUNozMylRf7ZRapHRxqFfIXkVFguKnhcTggZUKOihtgqz5wqh69hAvPA
+	 D7qD7DX/6iQSzMQrz58Bhx44lxaByL5qpiRAA5sB18+zXK0VBgRD3+IMLLi7YIsI8o
+	 bqsmnMAywBXWauX4H5YQHU2w5zVGebPKBs82xrWQ=
+Date: Tue, 22 Apr 2025 17:20:11 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+Cc: linux-mm@kvack.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ andrii@kernel.org, kernel-team@meta.com, linux-kernel@vger.kernel.org,
+ Mykyta Yatsenko <yatsenko@meta.com>, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] maccess: fix strncpy_from_user_nofault empty string
+ handling
+Message-Id: <20250422172011.feb243d2f7478c0e7109b74c@linux-foundation.org>
+In-Reply-To: <20250422131449.57177-1-mykyta.yatsenko5@gmail.com>
+References: <20250422131449.57177-1-mykyta.yatsenko5@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v5 bpf-next 0/3] libbpf: Fix event name too long error and add
- tests
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174536763175.2096010.2128821424847053296.git-patchwork-notify@kernel.org>
-Date: Wed, 23 Apr 2025 00:20:31 +0000
-References: <20250417014848.59321-1-yangfeng59949@163.com>
-In-Reply-To: <20250417014848.59321-1-yangfeng59949@163.com>
-To: Feng Yang <yangfeng59949@163.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, hengqi.chen@gmail.com,
- olsajiri@gmail.com, bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
+On Tue, 22 Apr 2025 14:14:49 +0100 Mykyta Yatsenko <mykyta.yatsenko5@gmail.com> wrote:
 
-This series was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
-
-On Thu, 17 Apr 2025 09:48:45 +0800 you wrote:
-> From: Feng Yang <yangfeng@kylinos.cn>
+> From: Mykyta Yatsenko <yatsenko@meta.com>
 > 
-> Hi everyone,
+> strncpy_from_user_nofault should return the length of the copied string
+> including the trailing NUL, but if the argument unsafe_addr points to
+> an empty string ({'\0'}), the return value is 0.
 > 
-> This series tries to fix event name too long error and add tests.
+> This happens as strncpy_from_user copies terminal symbol into dst
+> and returns 0 (as expected), but strncpy_from_user_nofault does not
+> modify ret as it is not equal to count and not greater than 0, so 0 is
+> returned, which contradicts the contract.
 > 
-> When the binary path is excessively long, the generated probe_name in libbpf
-> exceeds the kernel's MAX_EVENT_NAME_LEN limit (64 bytes).
-> This causes legacy uprobe event attachment to fail with error code -22.
-> 
-> [...]
+> ...
+>
 
-Here is the summary with links:
-  - [v5,bpf-next,1/3] libbpf: Fix event name too long error
-    https://git.kernel.org/bpf/bpf-next/c/4dde20b1aa85
-  - [v5,bpf-next,2/3] selftests/bpf: Add test for attaching uprobe with long event names
-    https://git.kernel.org/bpf/bpf-next/c/e1be7c45d244
-  - [v5,bpf-next,3/3] selftests/bpf: Add test for attaching kprobe with long event names
-    https://git.kernel.org/bpf/bpf-next/c/9b72f3e5b760
+Thanks.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Does this fix any known runtime issue?  If so, please fully describe this?
 
+> --- a/mm/maccess.c
+> +++ b/mm/maccess.c
+> @@ -196,7 +196,7 @@ long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
+>  	if (ret >= count) {
+>  		ret = count;
+>  		dst[ret - 1] = '\0';
+> -	} else if (ret > 0) {
+> +	} else if (ret >= 0) {
+>  		ret++;
+>  	}
+>  
 
