@@ -1,193 +1,205 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9075C1F5430
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 403FF20CCDF;
+	Wed, 23 Apr 2025 09:18:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745399917; cv=none; b=SCVo+QmbBDgRfEZvrkqvPGB3FuqTEIDd/80PShBcghlKR3p+vCJYnLQwZa9j9bIqlZgmiAYirSayQaOf6IU0gNhgY/qcdjymZBByR3cWjG8pxfVrqFdqNgp6m0CIBL2xELnpibds9oyONsvf/M1IK5fPAB+OPHJxbF3qQdEIwEY=
+	t=1745399937; cv=none; b=g0BstyBQtuGrNYXsdMh9Tq7k+//Nx+HA93xowArkBCX/N/goY0uF7z0AhhZbBcxNY2icQLOsOEWWYo++GvCIy86TIxXq1P35Iw1B0onDbcEC4kkexBCntlvI5JKMRUJxzJRdCO7tizeZJhwt0V/AXYhCSc+cvLdwk0ngYPDhxEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745399917; c=relaxed/simple;
-	bh=DRFMe/xNRip1ceseE0adligGMIaBthdL8cS9UD9UAYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MsOzfEvfzMAE2SSdVXpXIRpMpdfPI+m4cn267Ssz8x+VuwRJklssTv8+3zakJMLvYRnDZFgzZMQtOw3gkplLFIkUKZCmNTu6wxWPdqLerFx4EKKYJlYPo+qDvuYrlU48Sg3h01GQpITz8LGlpEpf/wHvebFdamSSxGl/1Uk9mGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=CUzr8xF+; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745399937; c=relaxed/simple;
+	bh=E+HRHrDCaWbEY15xFZ9y7fcANkgo1uK8mrgkg76ViiQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JBt3i9SLA+BNTeg5+OJyTr+9/jOJJS1V0jEa75V+dk7YE+MYO3BzK6XuJwoHqpjTJK3yLN4g5H1oACQz6zn3NciYudpQNI4ReMVJj5XbLs4MAicNb+fhEYMxj7JoyksUL03QBlzZCT7YxlB14/hreZMuyoQiA2vpNIyxb6O5orc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dm5q6czB; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="CUzr8xF+"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso1018766666b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:18:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dm5q6czB"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso4898615e9.0;
+        Wed, 23 Apr 2025 02:18:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745399914; x=1746004714; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XS2IDLEZ+lWpFqfAYnZRqQbB8bAjfCDSuoTKAWSWV+E=;
-        b=CUzr8xF+e5Ce3l5RkYAj7tv7zXclIBmyvcVeDDROnOzJAIOonP1XHgD+gcqK1D6EUB
-         8jqHtt+G3ST7yeAvLEACxWB8w1njbfcvYFZQJSzXMPYAS5zq7tFMgbLKLgu5uoFJRqjv
-         D5uXknZvqOQIla3hQL7gUguPkpgpVsVI8bZTuuv0XMN8hkSd8544Uoxo0a0tzpWE4oe6
-         xpVGOo1On6zpJio1oy9+vnJ4WaXF9rkY+JQHZP23wMs9jHS3bmFI7jUZebpcMgsMFinE
-         zYjP1TN55kEv8p8zaXw3dXZB+aY/hyOfG2bMf7frqqXS2LlMae9JnjogAuLixETcSozz
-         qKFQ==
+        d=gmail.com; s=20230601; t=1745399933; x=1746004733; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VrGROsqZIwKCgrOnIO0opoKDeXx0qHVFUxais3JjiPU=;
+        b=Dm5q6czBUdLTICAcM1tK0fbsY44sGRbML/ldSA+q8dbp0afKwOB++Tk69+hL2zhD3h
+         /nOa9bV1+LeSQw9RPlz2aiLNPOFzAQX2yTUwhDcn/93DmxdgEo/tKzJQ7JbQto3su9Aa
+         6yaN9UvXjXUb6zWu4GhvMgtsLwcTso+GA1yDW+83WJM13//87Zz3ru9Xcey1j7eDOSqS
+         tsHOGQ5yH8rhOfCewfXRvunJhPtvLlshmGeAdyNBKetETm4kEIc5LEj0OnZKJ7lPVxgl
+         LJvT6Gbw1lj2DahrE5Y3Jl6weoKDWvGrGDMHZDKyK/7YyWXoqRFapPHMySWqu9Ym61Al
+         pvow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745399914; x=1746004714;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XS2IDLEZ+lWpFqfAYnZRqQbB8bAjfCDSuoTKAWSWV+E=;
-        b=FTa91kUHCzQY1b1c/94gyQMTTiphcnAikltClpQTY/OZ/ZXS/b1bKnh6Pf9YukAMtp
-         /6nqeanj0kpDdoouG7a2ea+eLz2Om788u1FFLcTyFmF+cJ9X8+Pb6IhNVBHamuIBdHnT
-         KM+I90exHrvqmn/2n7r51dvJMpJXt3iZe95RFyDnblhfEepBFmzWKaxfQnn76UAwKoTr
-         kElQRFCBn1ud0X673Z6Jp0NxAya9D+vaKxNbIpXYL1O+R8o4fcMkVKfXKuVky1WnOGoL
-         tEEvhjX7l9PQqZiSovaYzJi/jo/0vyWXG1dH76J679Vb8pUDI13AAonffvoCIOggO9c6
-         f3qA==
-X-Forwarded-Encrypted: i=1; AJvYcCVak2t4w0d4QP2cjNHyAdMoxVKk5LdMlsx5aCTJsov5OFj13/44B/+4KqJQLbRuLD8/c/XN3jesTcevt3g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJdqmbGyGhilmzWYB6uC7iD+Yv6+dKS/KigWO66d/XeqeLbZfI
-	BUVJgHuu1Aw5/Bykb9JQuQuQPaP5kscbKP4Li7q05rELOJ+MWuf2QHCnf5yLICw=
-X-Gm-Gg: ASbGncsTiKwHH6Sy3acBl8rjfnv/ZbpY/xc4wmPDNRpgA7CbFVuJtgA2NlapvC+UXrq
-	72jVpAi7AUikRSbW5gn9ZkCgUHoScWADudlsPP3M4Th3A+iHMDNs7bTSwI2HButAvcATvy0hogD
-	greKryKhHX/fSd5zG57+EHwQf0fCtpBa0zvoK4i+yylDruKMfHgPsRIllpLQHMId+zUYSDG+4Jv
-	5AOvaGB+inGDFe6+Sx1ObyeK8GSEkVNJsHCdKvFi72rx4URopcy7HPdWf9irgPkNnOceCh92qyc
-	kFK6jbsu3OC8Vmgmb6lpB+sQJtDFvhE=
-X-Google-Smtp-Source: AGHT+IGr7nxzRbH8bVQKYbkHXnAPI/7cdvmBWzI1Uo+ifStRK9qdqSMXAtz/Rs/o7ksm0lZdHmgH1w==
-X-Received: by 2002:a17:906:c113:b0:ac4:2ae:c970 with SMTP id a640c23a62f3a-acb74b38723mr1817920466b.21.1745399913724;
-        Wed, 23 Apr 2025 02:18:33 -0700 (PDT)
-Received: from localhost ([193.86.92.181])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-acb6eefcf2csm767194266b.116.2025.04.23.02.18.33
+        d=1e100.net; s=20230601; t=1745399933; x=1746004733;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VrGROsqZIwKCgrOnIO0opoKDeXx0qHVFUxais3JjiPU=;
+        b=EM+mDAkExZ9rVw6vCdF51RCD2jVZrYamTIzY1f49i2u7bGpjRD6/iXmsJQQHYAJVLR
+         +r0kQISdeJ0BGNxs72KbV3o8JmMITYOl017ydBrbwkFem8T2yn/U8TkqMtp9O52VkHZ/
+         uBi/oxeTNVR6ZzjomkGN+Nh/NPyhTAeZcez709y3u8FHUvdszQZNsuvvlhWvlBIeXN7K
+         Mf9NxU2EzIRl9J8pi6vro3Yemj+7ppAawSJiCUVs3/U8Lez5egioO5OFjwchL8FKItjH
+         V/uevLEwRysTmKwerl/998ValCGuuV5pMSNDrygwswwoOCAi3W+7yAq5Ju5UcmSanQMd
+         BxZg==
+X-Forwarded-Encrypted: i=1; AJvYcCVCv9MTvtX32jCY2+E8XdZ2qSibicZfhjL5x/wFA9MRH6crXvaP/2yWl/rl5oCU2QlUKsSUM40COIqcRRA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5iBjaS9rP7MGK2M3CUdJtMIXtXAtDVf2Y7puxN80r9jawhlaR
+	SFhEL5hMIN6MT6feZVbGReCxGWq2RVJPrqOo7k4q6k9KB3nJ1ruE
+X-Gm-Gg: ASbGncv97lHy/dAkNAKy4Lm81seq0QrsOz806JkonAB1y1kKtOHWVmLAM4rFE5A4qAv
+	skcVsAogiGbTdtwp37Kd6r08djZKnH/hh3hCcRpQ5SheLYkV35Zt+MaVP8+hv/jMJWZ9Xxo6dTZ
+	+oVGke7Bop0SAfHXRPAwJOs6Z4HvyY0u4BQGEQSIDquSQniFZD8TzSALe0xoKjtnN8QJ6fPnUGn
+	VHTOV3s++u2xr41tiAJA9f203/hem0tLdugHdHmI7iECo2ObapICV5r5GzpwQbYKsyExOSj4Dsr
+	aiIPrH9yRKUK35+nCHt5kYfhB+XV92N6IXJB0K806NBy1dhsaIO5gV5dkwgHOYMFeL/KwD3Y/ih
+	igwKXksIcZruK
+X-Google-Smtp-Source: AGHT+IG4usbOo5npOeZN1xbvBwncAj7wxo11cJLpW32A6dZWurXCH49f3H3MAKTcb59zIVTdCG5IiQ==
+X-Received: by 2002:a05:600c:2d46:b0:43b:bb72:1dce with SMTP id 5b1f17b1804b1-44091ee7a72mr12670515e9.5.1745399933033;
+        Wed, 23 Apr 2025 02:18:53 -0700 (PDT)
+Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d16dc0sm18664225e9.6.2025.04.23.02.18.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 02:18:33 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:18:32 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	linux-cve-announce@vger.kernel.org
-Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
- allocation failure
-Message-ID: <aAiwaM5ru-FJG2fI@tiehlicka>
-References: <2024122837-CVE-2024-56705-049b@gregkh>
- <aAicoAmxX0B_O3Ok@tiehlicka>
- <2025042301-flammable-masculine-ec48@gregkh>
+        Wed, 23 Apr 2025 02:18:52 -0700 (PDT)
+Message-ID: <701bfc6a715046044dbc789f1c11c7f85395c7a8.camel@gmail.com>
+Subject: Re: [PATCH v2 1/6] iio: introduce IIO_DECLARE_BUFFER_WITH_TS macros
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: David Lechner <dlechner@baylibre.com>, Jonathan Cameron
+ <jic23@kernel.org>,  Nuno =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Lars-Peter Clausen	 <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>, Eugen Hristev
+ <eugen.hristev@linaro.org>, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea
+ <claudiu.beznea@tuxon.dev>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Date: Wed, 23 Apr 2025 10:18:55 +0100
+In-Reply-To: <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+References: 
+	<20250422-iio-introduce-iio_declare_buffer_with_ts-v2-0-3fd36475c706@baylibre.com>
+	 <20250422-iio-introduce-iio_declare_buffer_with_ts-v2-1-3fd36475c706@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025042301-flammable-masculine-ec48@gregkh>
 
-On Wed 23-04-25 10:21:04, Greg KH wrote:
-> On Wed, Apr 23, 2025 at 09:54:08AM +0200, Michal Hocko wrote:
-> > Hi,
-> > our internal tools which are working with vulns.git tree have noticed
-> > that this CVE entry has been altered after the announcement.
-> 
-> Good catch!
-> 
-> > There was an additional commit added to the CVE entry. The current state
-> > is
-> > $ cat cve/published/2024/CVE-2024-56705.sha1
-> > ed61c59139509f76d3592683c90dc3fdc6e23cd6
-> > 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
-> 
-> Yup!
-> 
-> > There seem to be handful of other cases like this one AFAICS.
-> 
-> Yes, we had to add support for this type of problem.
-> 
-> > I have 3 questions:
-> > 1) What is 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
-> >    relation to the original CVE which seems to be about a missing memory
-> >    allocation failure check?
-> 
-> Removing the driver entirely from the kernel "fixed" the vulnerability :)
+Hi David,
 
-What is _the_ vulnerability? While I do understand that _any_ potential
-vulnerability in the removed code is removed as well I still do not see
-how the driver removal is related to _this_ specific CVE.
+Nice patch, I really think these will be very helpful... Just one comment b=
+ellow
 
-> > 2) What is the process when a CVE is altered? have I missed any email
-> >    notification?
-> 
-> We do not do email notifications when CVEs are altered.  You have to
-> watch the cve.org json feed for that.  Otherwise the email list would
-> just be too confusing.  Think about every new stable update that happens
-> which causes 10+ different CVEs to be updated showing where they are now
-> resolved.  That does not come across well in an email feed, but the json
-> feed shows it exactly.
+On Tue, 2025-04-22 at 17:07 -0500, David Lechner wrote:
+> Add new macros to help with the common case of declaring a buffer that
+> is safe to use with iio_push_to_buffers_with_ts(). This is not trivial
+> to do correctly because of the alignment requirements of the timestamp.
+> This will make it easier for both authors and reviewers.
+>=20
+> To avoid double __align() attributes in cases where we also need DMA
+> alignment, add a 2nd variant IIO_DECLARE_DMA_BUFFER_WITH_TS.
+>=20
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> ---
+> =C2=A0include/linux/iio/iio.h | 36 ++++++++++++++++++++++++++++++++++++
+> =C2=A01 file changed, 36 insertions(+)
+>=20
+> diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+> index
+> 638cf2420fbd85cf2924d09d061df601d1d4bb2a..4dd811e3530e228a6fadbd80cfb2f50=
+68c3d
+> 6a9a 100644
+> --- a/include/linux/iio/iio.h
+> +++ b/include/linux/iio/iio.h
+> @@ -7,6 +7,7 @@
+> =C2=A0#ifndef _INDUSTRIAL_IO_H_
+> =C2=A0#define _INDUSTRIAL_IO_H_
+> =C2=A0
+> +#include <linux/align.h>
+> =C2=A0#include <linux/device.h>
+> =C2=A0#include <linux/cdev.h>
+> =C2=A0#include <linux/compiler_types.h>
+> @@ -777,6 +778,41 @@ static inline void *iio_device_get_drvdata(const str=
+uct
+> iio_dev *indio_dev)
+> =C2=A0 * them safe for use with non-coherent DMA.
+> =C2=A0 */
+> =C2=A0#define IIO_DMA_MINALIGN ARCH_DMA_MINALIGN
+> +
+> +#define _IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+> +	type name[ALIGN((count), sizeof(s64) / sizeof(type)) + sizeof(s64) /
+> sizeof(type)]
+> +
+> +/**
+> + * IIO_DECLARE_BUFFER_WITH_TS() - Declare a buffer with timestamp
+> + * @type: element type of the buffer
+> + * @name: identifier name of the buffer
+> + * @count: number of elements in the buffer
+> + *
+> + * Declares a buffer that is safe to use with iio_push_to_buffer_with_ts=
+().
+> In
+> + * addition to allocating enough space for @count elements of @type, it =
+also
+> + * allocates space for a s64 timestamp at the end of the buffer and ensu=
+res
+> + * proper alignment of the timestamp.
+> + */
+> +#define IIO_DECLARE_BUFFER_WITH_TS(type, name, count) \
+> +	_IIO_DECLARE_BUFFER_WITH_TS(type, name, count) __aligned(sizeof(s64))
+> +
+> +/**
+> + * IIO_DECLARE_DMA_BUFFER_WITH_TS() - Declare a DMA-aligned buffer with
+> timestamp
+> + * @type: element type of the buffer
+> + * @name: identifier name of the buffer
+> + * @count: number of elements in the buffer
+> + *
+> + * Same as IIO_DECLARE_BUFFER_WITH_TS(), but is uses
+> __aligned(IIO_DMA_MINALIGN)
+> + * to ensure that the buffer doesn't share cachelines with anything that
+> comes
+> + * before it in a struct. This should not be used for stack-allocated bu=
+ffers
+> + * as stack memory cannot generally be used for DMA.
+> + */
+> +#define IIO_DECLARE_DMA_BUFFER_WITH_TS(type, name, count) \
+> +	_IIO_DECLARE_BUFFER_WITH_TS(type, name, count)
+> __aligned(IIO_DMA_MINALIGN)
+> +
+> +_Static_assert(sizeof(IIO_DMA_MINALIGN) % sizeof(s64) =3D=3D 0,
+> +	"macros above assume that IIO_DMA_MINALIGN also ensures s64 timestamp
+> alignment");
+>=20
 
-I do understand you do not want to send notifications for that. Would it
-make sense to announce a new upstream commit added to the CVE, though? This
-would make it much easier to see that we might be missing a fix that is
-considered related to a particular CVE.
+I wonder about the usefulness of the above assert... AFAICT, the default
+alignment is 8 bytes and I could not find any arch defining ARCH_DMA_MINALI=
+GN
+smaller than that (would be very odd to have a cacheline smaller than that =
+these
+days). For bigger values, nowadays they are all power of 2 and I would be
+surprised otherwise. But the more important question to me is what if the a=
+bove
+assert fails? Will we not allow IIO or some drivers to be used in that
+architecture? It can become a very "painful" situation (assuming these macr=
+os
+get widely used). So, IMHO, either we assume the above can happen and rewor=
+k the
+macros to make it work for that hypotetical case or we assume the above is
+always true and drop the assert. TBH, I think it would be a fair assumption=
+...
 
-> Or you can follow the github cve feed, which shows this, OR you can just
-> follow the vulns.git git commits which also show this.
-> 
-> > 3) Until now CVE -> sha was a 1:1 mapping. Can we expect this to change
-> >    and what exactly is the process here?
-> 
-> The process has changed in that we have had to handle a number of CVEs
-> where both the commit that caused the vulnerabilty has been tracked to
-> mutiple commits (think of one-off changes that only happened on
-> different stable branches, and then were fixed with different commit
-> ids, like what happened in CVE-2025-40364), or this example you are
-> pointing out where a vulnerability was introduced, later removed by
-> having the entire driver removed, and then added back by adding the
-> driver back and then resolving the vulnerability.
-> 
-> The original CVE had this information as you point out:
-> 
->  	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 5.10.231 with commit 0c24b82bc4d12c6a58ceacbf2598cd4df63abf9a
->  	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 5.15.174 with commit 4676e50444046b498555b849e6080a5c78cdda9b
->  	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.1.120 with commit 02a97d9d7ff605fa4a1f908d1bd3ad8573234b61
->  	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.6.64 with commit 8066badaf7463194473fb4be19dbe50b11969aa0
->  	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.11.11 with commit 74aa783682c4d78c69d87898e40c78df1fec204e
->  	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.12.2 with commit 0c25ab93f2878cab07d37ca5afd302283201e5af
->  	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 6.13-rc1 with commit ed61c59139509f76d3592683c90dc3fdc6e23cd6
-> 
-> And now it shows this:
-> 
-> 	Issue introduced in 4.12 with commit a49d25364dfb9f8a64037488a39ab1f56c5fa419 and fixed in 4.18 with commit 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
-> 	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 5.10.231 with commit 0c24b82bc4d12c6a58ceacbf2598cd4df63abf9a
-> 	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 5.15.174 with commit 4676e50444046b498555b849e6080a5c78cdda9b
-> 	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.1.120 with commit 02a97d9d7ff605fa4a1f908d1bd3ad8573234b61
-> 	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.6.64 with commit 8066badaf7463194473fb4be19dbe50b11969aa0
-> 	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.11.11 with commit 74aa783682c4d78c69d87898e40c78df1fec204e
-> 	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.12.2 with commit 0c25ab93f2878cab07d37ca5afd302283201e5af
-> 	Issue introduced in 5.8 with commit ad85094b293e40e7a2f831b0311a389d952ebd5e and fixed in 6.13 with commit ed61c59139509f76d3592683c90dc3fdc6e23cd6
-> 
-> Showing that the kernel ranges from 4.18 -> 5.8 were NOT vulnerable to
-> this specific issue.  Information that is hopefully very valuable to
-> distros dealing with old kernels, like yours :)
+On top of that the assertion is wrong:
 
-Nope, not really. Specific stable tree versions affected is not the most
-important information to downstreams like ours. We really do care about
-specific commits that are coupled with the CVE. If the specific commit
-doesn't have Fixes tag then we look a the CVE-$FOO.vulnerable as well
-(btw. I have a growing list of those that we have identified breakers
-for and I am looking for the best way to contribute that information to
-others. I am just not sure how to do that in the most efficient way -
-sorry slightly offtopic here - we can follow up off the list.).
+sizeof(IIO_DMA_MINALIGN) !=3D IIO_DMA_MINALIGN :)
 
-> So now we can properly handle this types of issues in an automated
-> fashion, thanks again for noticing, this was a non-trivial amount of
-> work to implement.  Given that no one had ever done this before, we have
-> had to create all of this "from scratch".
-> 
-> Our trees are crazy, hopefully this helps explain the lifecycle of
-> vulnerabilities and their fixes better than before.
-> 
-> One other note, perhaps you just want to parse the .dyad files we
-> create instead of mbox files?
+On the other hand, as I mentioned in V1, I think that an assertion or
+BUILD_BUG_ON_MSG for making sure 'count' is a compile time constant express=
+ion
+would be helpful. Sure, we'll get -Wvla but some developers might still ign=
+ore
+the warning and send patches with these arrays. So, it would be neater if w=
+e
+fail to build and force them to fix their code.
 
-We are not parsing mbox files. We do care about CVE-$FOO.sha1 and that
-provides the base for our future analysis. If we need to expect several
-upstream commits there we are fine with that. Quite honestly seeing a
-stream of CVEs all fixing the same vulnerability just because those
-fixes happened in many commits doesn't seem to be optimal.
--- 
-Michal Hocko
-SUSE Labs
+- Nuno S=C3=A1
