@@ -1,87 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A385B26F444;
-	Wed, 23 Apr 2025 11:44:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D85FC08;
+	Wed, 23 Apr 2025 11:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745408667; cv=none; b=OYmALDYU3dU0HjCFQVlp3+fA6Uifd9POOEF7bQRx1VBhlibTi8x9G3h1Xp84bIINRNrWQ4YgatP2bzeaCVA0sxNbQGiDMWpyqz6d7P/SJ493eSITltBEx/5Rry+PFj+v52efMvQcL0/pkl7kcNPU2YQo5SUKUJ2c6KVxjoE52uI=
+	t=1745408903; cv=none; b=TrJMCdp5avxCdKGQYDIl3ykJ9+a07/5Gw330hV5ZWqOI64tdPd8RZwvR0RDpn0I4lpfW3QNVERpO8OIdyIlq34vNnB5FAnsQ6EVc39cE2SuDCewEV2490G0mfktYl7V2mtW4ullRhS/7e6Xl67Qe37Z6dftpe6VDjIOVjcpHg6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745408667; c=relaxed/simple;
-	bh=5cQQ2k3EMTyhmzUp7//r0VkHXfsAWm3XNAjUaKxYfeQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=HPCVynFomGc6blN3pnoTSqeAv42eYqzbAtirg2NmCiBGa3G7bvDRvf+k81qiPfSfnp5wZeeQVgGc2wPCUR5I3OXLT3c2TugOOfaCYiRR70a+MKFi74Ict1u8cFJJQw7AqFMAzSw9Iqvf1n20Ese181/Z/c0/mnpt6J95z/w7qNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUwF4t6t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745408903; c=relaxed/simple;
+	bh=VUjQSnbpe34n4H4pjsG/e0RneYGeJ6IEAMI0EPffIbA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NgAw1k2CNof9wRiMb5gqdNYS6MPKrqxwNAGNWpfmWgcqVGkSrhj5NYojlqexD0GjUZZWPxGjtydewrconXCwNVtnYADPWqMjRIDF0SkbqK5V7XAj1ISsEWI3wmqUCUa8DFt3E/qEcv8rGq1bkoD6/VzihiqljgK9KgOuiLemw0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jvq0XRxN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUwF4t6t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A09BC4CEE2;
-	Wed, 23 Apr 2025 11:44:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jvq0XRxN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7CF1C4CEE2;
+	Wed, 23 Apr 2025 11:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745408667;
-	bh=5cQQ2k3EMTyhmzUp7//r0VkHXfsAWm3XNAjUaKxYfeQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=KUwF4t6t487uwT0ohnuanuQXtWNurrxiMBebUH6vxSwX5yH0Tw2/KTnMxUDmHBki7
-	 nbKsWGXM6N2YMMhZ/01UNvhT+W/vhKfCCsf356vtSTOilONszEn/yvXP+KNNrLSahd
-	 EMPy5RawgUx7sTFvBsGjSaWGI3gI6F1xy1xaKy2lgbe6xoCNhmmJ3k3Vw8yqx2LbaG
-	 uBMCNyho0hRJXJSr1DZGo1Xp96zUQf3iTX6T5RPXlSU/uzFhY40tZ995cJ0svqMqdN
-	 0cF3vqjjvdT8shUAEJIBofeEg6b5ZEaOPqOBKcW0K/sa2OJJEg6zz1PYmGE68ydWms
-	 Y0i9IX+SDeacQ==
-From: Mark Brown <broonie@kernel.org>
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Patrice Chotard <patrice.chotard@foss.st.com>, 
- Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
- linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org
-In-Reply-To: <2674c8df1d05ab312826b69bfe9559f81d125a0b.1744975624.git.christophe.jaillet@wanadoo.fr>
-References: <2674c8df1d05ab312826b69bfe9559f81d125a0b.1744975624.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH] spi: stm32-ospi: Fix an error handling path in
- stm32_ospi_probe()
-Message-Id: <174540866515.26715.3420851726467928798.b4-ty@kernel.org>
-Date: Wed, 23 Apr 2025 12:44:25 +0100
+	s=k20201202; t=1745408903;
+	bh=VUjQSnbpe34n4H4pjsG/e0RneYGeJ6IEAMI0EPffIbA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jvq0XRxNhZoppgh9qzCZg1srPngC2jUPOMRakVSq2EoT7uduMeaby5L0NsSFTWXjh
+	 T5EOWw0+GZGGdk/8ODO1S8mnRehBulTYEveU1NMgbv5I3gU1oJ29AaQRQak4c0laDa
+	 C+iU/HwHxE7hHF8Ag3QYOOMzjiqnFhwuvJgVdnj874lxUj50fFXPH0jn4eFBJrm3HH
+	 Cx/aYWyGZ3apZJ77pkOLCLJGWwG/duC31tlj5MxyC76I6+MW7KTGntLz0WuwEqJwJ/
+	 H5VSo3Ay1JB0kIoE6DhWucSDtaalvlCpA3M1lR2gcyJYbOPJ98xko8GevrUPc258yt
+	 1VwgdxFTHNiZQ==
+Date: Wed, 23 Apr 2025 17:18:19 +0530
+From: Vinod Koul <vkoul@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, dmaengine@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dmaengine: ARM_DMA350 should depend on ARM/ARM64
+Message-ID: <aAjTg8dgvxqLQOwQ@vaman>
+References: <50dbaf4ce962fa7ed0208150ca987e3083da39ec.1745345400.git.geert+renesas@glider.be>
+ <b1f19b31-3535-4bb5-bcef-6f17ad2a0ee6@arm.com>
+ <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVJKA8zYETKJTRAwg6=+EuTq4YqbFO32K4+py9YNsD1Gw@mail.gmail.com>
 
-On Fri, 18 Apr 2025 13:27:53 +0200, Christophe JAILLET wrote:
-> If an error occurs after a successful stm32_ospi_dma_setup() call, some
-> dma_release_channel() calls are needed to release some resources, as
-> already done in the remove function.
+On 23-04-25, 13:11, Geert Uytterhoeven wrote:
+> Hi Robin,
 > 
+> On Wed, 23 Apr 2025 at 12:59, Robin Murphy <robin.murphy@arm.com> wrote:
+> > On 2025-04-22 7:11 pm, Geert Uytterhoeven wrote:
+> > > The Arm DMA-350 controller is only present on Arm-based SoCs.
+> >
+> > Do you know that for sure? I certainly don't. This is a licensable,
+> > self-contained DMA controller IP with no relationship whatsoever to any
+> > particular CPU ISA - our other system IP products have turned up in the
+> > wild paired with non-Arm CPUs, so I don't see any reason that DMA-350
+> > wouldn't either.
 > 
+> The dependency can always be relaxed later, when the need arises.
+> Note that currently there are no users at all...
 
-Applied to
+True, but do we have any warnings generated as a result, if there are no
+dependency should we still limit a driver to an arch?
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[1/1] spi: stm32-ospi: Fix an error handling path in stm32_ospi_probe()
-      commit: 460b14b0929fa9f658a7e159ef646ce456962ab0
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
+-- 
+~Vinod
