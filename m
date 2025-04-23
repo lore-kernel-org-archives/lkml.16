@@ -1,153 +1,413 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BDD2CCC9
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DF31E51EA
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745410013; cv=none; b=CtHyOvOVlky90Si0FMQ2NmO+4nl8893c2j+Te1YDX4Fn6CiNuZk2gkGuD/S1zJk3lPP2UbJGz0XqxwaoEtQTLwIUMfR4rWJEGiyu+9IMXAxNdONMawmtbKQL3BKppKO2GdS05T8YLsHpYtsRwXAGv3r4az9Z5uCJSpzFAOxw9Os=
+	t=1745410069; cv=none; b=ksmIQh/rXX1EMsmUU3CKXYVKWpV9V/tSzMAcn35798sDe8/8uEyH0vocOqB5zOVuuivDM9owKQ0g7zwIRTn6P913NzZpCWGbf2yVEGqU0+/SlG0/b0I6DQbmhEaaBY1T35jvk3zZL/Z4VP9gzD40g+Ln8bn3pPF/1hDHfc6TFLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745410013; c=relaxed/simple;
-	bh=b791/nYAahqeXzyXJRKzK+9LdRgB3iieYFC/tmDGx0c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uLuxRVYiUAST7QUWY+VJdWPdTV9Frr5ySMxtR82DbQ/ypMHLmN8b/m6gOMYvOebYu7SVXgfX4N0svZr5i/H1xmXTqAzgOVQ1rRciC0xzVGdPPyvUdhPBYVK09Rfxglo4NEKGEl/6+32GwN4Cg/4J6IfQNwtrTIOIlvo+Klh/0n8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s9qhlLWo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745410069; c=relaxed/simple;
+	bh=MMQdY9N6ChtJBawtVbRqnqsgfr7DqCxaryDpCq6+jq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PD+jowcvsjZ6B5GRhqO3Dw/6GBn9fmN1ETjFZypITPuZWlGi2HdIr+BGPj+GQNSDN+TEZBZLnqIfOt1XYXUxPZVU+7tJjgAuRLbQI3xdXT18NCjUrKjzChUwH0ZyVL0QY18+Ixjqn5sspYHdDqx6YkonZ0UxjK/qbgE5ODz88mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FWEqqU8o; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s9qhlLWo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED06BC4CEEC;
-	Wed, 23 Apr 2025 12:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745410012;
-	bh=b791/nYAahqeXzyXJRKzK+9LdRgB3iieYFC/tmDGx0c=;
-	h=From:To:Cc:Subject:Date:From;
-	b=s9qhlLWoCEiFJ0aCLkLpm0gOc16IkO9mGEsWkvKEvTSnPhFy8k+gnh4rM5GILJ6Xb
-	 Bf4vjnBZEMSFxyqe4bgRy28MFE72bqiZMMak88e41yJdvWP3Kx9xn7c22eJb2kFWIr
-	 QSkNvhYE559gfgIL3BIDfthVvv0ZXC7VMJrFuuLTMtbUhSIgdodS6ks53eEYacSHdJ
-	 ZCohu/RveW0Dv7Kl3XlPsXepHCmlOFLfLb0UhI6IavRl72ZNcHjdlCU3XzOmoB8sRY
-	 8VlJYayljpfE/Cw+cgxWDfqm3d0sHrJ6mrq1CC2HmYSIf8qDaCklq6mlr4Bd8nAwdi
-	 LVbYt6/4X4bVg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Zack Rusin <zack.rusin@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH v2] drm/vmgfx: Use non-hybrid PCI devres API
-Date: Wed, 23 Apr 2025 14:06:44 +0200
-Message-ID: <20250423120643.66814-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FWEqqU8o"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac79fa6e1c2so83398366b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 05:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745410065; x=1746014865; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+IyBR9G/7UgBoXHNqf3NAUb6y3RdyTJStukCSmDm3Lc=;
+        b=FWEqqU8oWH8hdqbKjey451Xx3YlGb111c5q/oMgDOhAGHhXfGXuwkjNeARV3IMNfzX
+         wyxRKHVWjnAJno4fPIqzGJGgPjw0WhyBfbwZ0c9mQtA59tB4ilCNYnZOjw7BeiMd4ioi
+         V8K9yINcTLbgx8X3DZOPoQtlid/kxWND+UNGb4u4GJuN1vYDqgiLYqioIatASm0U3kQE
+         XZVVI5a0iNsxTRgI3hj5mrhB/wA5PqGh7uEyHGuQJlxhWpWRUxoVkKdElRxkX1zg231Q
+         t/TFvqt7j4bBBAWxpirMHOD7whHPaGGLrw7Nnqj7zRn5jiYJKnZtu7+AXN1V2WgsAHk4
+         3EJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745410065; x=1746014865;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+IyBR9G/7UgBoXHNqf3NAUb6y3RdyTJStukCSmDm3Lc=;
+        b=PUryQVDZP5Hz6ILjvS5RamLS0zZyNObHlTmATIYW9C6TRCEsVS9edrqyp7H0oxsOXe
+         XQz9Q3qZDniK+Uc2UCOm9VdhnS+anIDziRHKzpL63ARQtEIBQx80vK30jLheKvVX6hgW
+         2hFx2CkN+VICEVWHMSCZXBzv9WMBK+ZoMsLnXeZyXfe6SF6EvCMNJSmBzAL6mTj37z75
+         ExE7RgAZtuqyEdEDdUwL/zD0LdHibfJb5i7Mikmd+GqMMtQT4QxlP//XRi7rjR1tY7nO
+         zz00Pvlq2DoG2ge5EZ0VRMynUvcHaIvSAA3tmdWyftrd2PtZwDQET82aOYIamiBoVutZ
+         pF6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVqautSQ+2Iv7RUKghDEkX0lFE7aV5iqNqKryyelyKVQK1/zHrAg0GaMeBIgrOc49CzCZror6vu2LmfdbI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyj7IFCbTnYnlsYppJeJlAYUbRb21Pek3DEldkCE2WQmTP1xSYz
+	36U6J9Khk5TDj2DsO83tpCgAUS+eMRyg27hv7Cbi0LvNHDwVL0pL5y8OumaJHeo=
+X-Gm-Gg: ASbGnctdaDIEmJtLg3tHIVDVCIbLPoyXF96bQXdv60W+sa4V1JxwpJ+HxC94ZF4sak4
+	Qrcb/kKg91veCIURCqtgtq607M+qhnIHh0BJYD/QrWQijhigJyDx1u99uKhYn5OlAwqYXInmz17
+	dPh3KAKo54l1RM38HHFoSwdmgC3tipQY5i7sJqxMSSmJGO5eSF98uURRQxk08cgTMr3D6sqLOIw
+	+Y3LbsF4JzIEFTTMgdAbespE/aNy68Scrf0EXySa7YJIeonhHQ8aXNSlKT1j4gkSs3kVNrfIotp
+	r1TDUdLElcBq61ElIQk3TSnjmJXH1IQ9gtf4a8AKm6XaKi/ruPbT+4MuVYM=
+X-Google-Smtp-Source: AGHT+IFnqK44hXq299eEIuyqU9Pqmw0+4vYvktV5v5DBUMzd5dKzVLQTM2DFnNi8cE7Dh0+KZlO5/w==
+X-Received: by 2002:a17:907:d90:b0:ac7:50d6:e872 with SMTP id a640c23a62f3a-ace3de3145dmr84362866b.1.1745410065360;
+        Wed, 23 Apr 2025 05:07:45 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f6255955bfsm7433640a12.44.2025.04.23.05.07.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 05:07:44 -0700 (PDT)
+Message-ID: <ac0ae8cd-451b-49dd-840e-5fc0cce1605d@linaro.org>
+Date: Wed, 23 Apr 2025 14:07:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] dt-bindings: mfd: syscon: Add ti,am62-ddr-pmctrl
+To: Andrew Davis <afd@ti.com>, Markus Schneider-Pargmann <msp@baylibre.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Tero Kristo <kristo@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20250122-topic-am62-dt-syscon-v6-13-v1-0-515d56edc35e@baylibre.com>
+ <20250122-topic-am62-dt-syscon-v6-13-v1-2-515d56edc35e@baylibre.com>
+ <20250124-heavy-jaybird-of-vitality-4cbe24@krzk-bin>
+ <20250124-able-beagle-of-prowess-f5eb7a@krzk-bin>
+ <mocfnpebc67xegcis6tx3ekhsjcsqnvhwtipufycrtq2be4nbh@pmxhir5gmkos>
+ <639b4e3a-3f68-4fba-aa33-c46dcb6fc88f@linaro.org>
+ <d6252b73-0bcc-4724-8144-d6a98c8980f8@ti.com>
+ <74ee6d9b-fd78-4d8a-a94f-b2c4dc794b60@linaro.org>
+ <ebsbaaxyatrcikoem75t2blkhhceuidq3wnj3r2hbezfcmtc3u@ptffexrigbff>
+ <f9a2247e-e0eb-4e22-8626-80e87afa9386@linaro.org>
+ <qjwlppsq4eorzepvjsgjjyyaddouo5w2rjguu5c2mqesd6luwp@f426xeghy2ht>
+ <2130b439-74d0-475d-8429-1a1b4d9738aa@linaro.org>
+ <b7f6570f-3b80-4fc1-8201-d44f5692867f@ti.com>
+ <07bf9f93-deb8-48a1-aae9-a8a053680cc9@linaro.org>
+ <6241ff00-27e6-45ab-808e-f04e39854753@ti.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <6241ff00-27e6-45ab-808e-f04e39854753@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-vmgfx enables its PCI device with pcim_enable_device(). This,
-implicitly, switches the function pci_request_regions() into managed
-mode, where it becomes a devres function.
+On 21/04/2025 19:03, Andrew Davis wrote:
+> On 4/15/25 12:17 AM, Krzysztof Kozlowski wrote:
+>> On 09/04/2025 19:39, Andrew Davis wrote:
+>>> On 2/12/25 1:35 PM, Krzysztof Kozlowski wrote:
+>>>> On 10/02/2025 11:35, Markus Schneider-Pargmann wrote:
+>>>>> On Sun, Feb 09, 2025 at 01:21:27PM +0100, Krzysztof Kozlowski wrote:
+>>>>>> On 07/02/2025 15:40, Markus Schneider-Pargmann wrote:
+>>>>>>> Hi Krzysztof,
+>>>>>>>
+>>>>>>> On Mon, Jan 27, 2025 at 01:09:49PM +0100, Krzysztof Kozlowski wrote:
+>>>>>>>> On 24/01/2025 23:35, Andrew Davis wrote:
+>>>>>>>>> On 1/24/25 10:48 AM, Krzysztof Kozlowski wrote:
+>>>>>>>>>> On 24/01/2025 17:05, Markus Schneider-Pargmann wrote:
+>>>>>>>>>>> Hi Krzysztof,
+>>>>>>>>>>>
+>>>>>>>>>>> On Fri, Jan 24, 2025 at 09:22:54AM +0100, Krzysztof Kozlowski wrote:
+>>>>>>>>>>>> On Fri, Jan 24, 2025 at 09:19:49AM +0100, Krzysztof Kozlowski wrote:
+>>>>>>>>>>>>> On Wed, Jan 22, 2025 at 11:24:33AM +0100, Markus Schneider-Pargmann wrote:
+>>>>>>>>>>>>>> Add compatible for ti,am62-ddr-pmctrl to the list. There is a DDR pmctrl
+>>>>>>>>>>>>>> register in the wkup-conf register space of am62a and am62p. This
+>>>>>>>>>>>>>> register controls DDR power management.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+>>>>>>>>>>>>>> ---
+>>>>>>>>>>>>>>     Documentation/devicetree/bindings/mfd/syscon.yaml | 2 ++
+>>>>>>>>>>>>>>     1 file changed, 2 insertions(+)
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Un-acked, I missed the point that you really speak in commit msg about
+>>>>>>>>>>>> register and you really treat one register is a device. I assumed you
+>>>>>>>>>>>> only need that register from this device, but no. That obviously is not
+>>>>>>>>>>>> what this device is. Device is not a single register among 10000 others.
+>>>>>>>>>>>> IOW, You do not have 10000 devices there.
+>>>>>>>>>>>
+>>>>>>>>>>> Do I understand you correctly that the whole register range of the
+>>>>>>>>>>> wkup_conf node as seen in arch/arm64/boot/dts/ti/k3-am62a-wakeup.dtsi
+>>>>>>>>>>> should be considered a single syscon device?
+>>>>>>>>>>
+>>>>>>>>>> I don't have the datasheets (and not my task to actually check this),
+>>>>>>>>>> but you should probably follow datasheet. I assume it describes what is
+>>>>>>>>>> the device, more or less.
+>>>>>>>>>>
+>>>>>>>>>> I assume entire wkup_conf is considered a device.
+>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> Unfortunately wkup_conf is modeled as a simple-bus with currently 5
+>>>>>>>>>>> subnodes defined of which 4 of them consist of a single register. Most
+>>>>>>>>>>> of them are syscon as well. So I think I can't change the simple-bus
+>>>>>>>>>>> back to syscon.
+>>>>>>>>>>
+>>>>>>>>>> Huh... Maybe TI folks will help us understand why such design was chosen.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Many of the devices inside the wkup_conf are already modeled as such.
+>>>>>>>>> Clocks and muxes for instance already have drivers and bindings, this
+>>>>>>>>> is nothing new to TI.
+>>>>>>>>>
+>>>>>>>>> If we just use a blank "syscon" over the entire region we would end up
+>>>>>>>>> with drivers that use phandles to the top level wkup_conf node and
+>>>>>>>>> poke directly the registers they need from that space.
+>>>>>>>>>
+>>>>>>>>> Would you rather have
+>>>>>>>>>
+>>>>>>>>> some-device {
+>>>>>>>>> 	ti,epwm_tbclk = <&wkup_conf>;
+>>>>>>>>> }
+>>>>>>>>>
+>>>>>>>>> or
+>>>>>>>>>
+>>>>>>>>> some-device {
+>>>>>>>>> 	clocks = <&epwm_tbclk 0>;
+>>>>>>>>> }
+>>>>>>>>
+>>>>>>>> How is this comparable? These are clocks. You would have clocks property
+>>>>>>>> in both cases.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> with that epwm_tbclk being a proper clock node inside wkup_conf?
+>>>>>>>>> I would much prefer the second, even though the clock node
+>>>>>>>>> only uses a single register. And in the first case, we would need
+>>>>>>>>> to have the offset into the wkup_conf space hard-coded in the
+>>>>>>>>> driver for each new SoC. Eventually all that data would need to be
+>>>>>>>>> put in tables and we end up back to machine board files..
+>>>>>>>>>
+>>>>>>>>> I'm not saying every magic number in all drivers should
+>>>>>>>>> be offloaded into DT, but there is a line somewhere between
+>>>>>>>>> that and having the DT simply contain the SoC's name compatible
+>>>>>>>>
+>>>>>>>> That's not the question here.
+>>>>>>>>
+>>>>>>>>> and all other data going into the kernel. That line might be a
+>>>>>>>>> personal preference, so my question back is: what is wrong
+>>>>>>>>> if we do want "1000 new syscons per each register" for our
+>>>>>>>>> SoCs DT?
+>>>>>>>>
+>>>>>>>> Because it is false representation of hardware. You do not have 1000
+>>>>>>>> devices. You have only one device.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> (and the number is not 1000, scanning the kernel I can see
+>>>>>>>>> the largest wkup_conf region node we have today has a grand
+>>>>>>>>> total number sub-nodes of 6)
+>>>>>>>>
+>>>>>>>> But what is being added here is device per each register, not per feature.
+>>>>>>>
+>>>>>>> The register layout is like this:
+>>>>>>
+>>>>>> The register layout of what? How is the device called? Is datasheet
+>>>>>> available anywhere?
+>>>>>
+>>>>> Yes, it is available here: https://www.ti.com/de/lit/pdf/spruj16
+>>>>>
+>>>>> 14 Registers
+>>>>> 14.2 Device Configuration Registers
+>>>>> 14.2.1 CTRL_MMR Registers
+>>>>> 14.2.1.1 General Purpose Control Registers
+>>>>> 14.2.1.1.3 WKUP_CTRL_MMR0 Registers
+>>>>>
+>>>>> Each domain has their own set of general purpose control registers,
+>>>>> CTRL_MMR for the main domain, MCU_CTRL_MMR0 for the MCU domain,
+>>>>> WKUP_CTRL_MMR0 for the wakeup domain.
+>>>>
+>>>>
+>>>> So according to the doc you have only one device - CTRL_MMR. All other
+>>>> splits are superficial.
+>>>>
+>>>
+>>> It is not one device, it is a collection of devices under one labeled
+>>> bus range. Some items here are full normal devices, already modeled by DT
+>>> as stand-alone devices, for instance our chipid, efuse, clock controller,
+>>> etc. even our pinmux is part of this bus range.
+>>>
+>>> They are grouped as we have one set for each domain (MAIN, WKUP, MCU).
+>>>
+>>> All other splits are not superficial, if we go down that path then
+>>> the whole SoC is one "device". We could simply have the whole address
+>>> bus be one node and have Linux hard-code offsets in the drivers, we
+>>> end up back at board files..
+>>>
+>>> DT should break things into logically distinct and reusable units
+>>> so we don't have to store that in the kernel. That is what we do
+>>> here, even if some units end up being very small.
+>>>
+>>>>>
+>>>>> So I understand this to just be a collection of general purpose control
+>>>>> registers. If you go by feature, then many of the registers can be
+>>>>> grouped into units with a specific purpose or controlling a specific
+>>>>> device which are also grouped by the offsets they represent. I assume
+>>>>
+>>>> It could work if you have distinctive groups, but here:
+>>>> 1. You do not have this grouped, you just judge by yourself "oh, that's
+>>>> group A, that's B".
+>>>> 2. Group per one register is not that.
+>>>>
+>>>> For me this is one big block and even CLKSEL is spread all over so
+>>>> cannot be really made distinctive.
+>>>>
+>>>>> this is why the other nodes in this wkup_conf node were created. Also in
+>>>>
+>>>> The other nodes represent some sort of fake or totally arbitrary
+>>>> grouping. That's abuse of the syscon.
+>>>>
+>>>
+>>> They are grouped by function.
+>>
+>> Not really - other DTS sent just few days ago created each entry per one
+>> register.
+>>
+>>>
+>>>>> my opinion this makes the relation between the original device and this
+>>>>> general purpose control registers better understandable.
+>>>>>
+>>>>> For this patch the ddr-pmctrl regsiter is just a single register, but it
+>>>>> has the purpose of controlling the DDR device power management.
+>>>>
+>>>> Sure, but that is NOT syscon. One register of entire block is not system
+>>>> controller. The entire block is system controller.
+>>>>
+>>>
+>>> The whole block cannot be a system controller as there are regular
+>>> devices inside this range. If we made the whole region a syscon and
+>>
+>> That's still system controller. It's nothing special here.
+>>
+>>> also left the device nodes inside, then we would have overlapping
+>>> register owners, one register would be controlled by two or more
+>>
+>> No, owner is the parent device always.
+> 
+> Which parent device? That is my point, if the top level node for the
+> whole CTRL_MMR region is made into one big syscon, then a big regmap
+> is made that covers the whole region. All the child devices also make
 
-The PCI subsystem wants to remove this hybrid nature from its
-interfaces. To do so, users of the aforementioned combination of
-functions must be ported to non-hybrid functions.
+Children take the parent regmap or you do not have even the children.
+Actually the second point is what we talk here: you created fake devices
+per each register and these are supposed to be squashed into the parent.
+I am repeating this 3rd time or more.
 
-Moreover, since both functions are already managed in this driver, the
-calls to pci_release_regions() are unnecessary.
 
-Remove the calls to pci_release_regions().
+> regmaps covering their device range. Now these registers under the child
+> device belong to two different regmaps. No synchronization is done as
+> these are not the same regmap, regmap only handles this for multiple
+> access to registers within the same regmap.
+> 
+> Let's take a real example, here is part of AM62A CTRL_MMR node.
+> 
+> main_conf: bus@100000 {
+> 	compatible = "simple-bus";
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+> 	ranges = <0x00 0x00 0x00100000 0x20000>;
+> 
+> 	phy_gmii_sel: phy@4044 {
+> 		compatible = "ti,am654-phy-gmii-sel";
+> 		reg = <0x4044 0x8>;
+> 		#phy-cells = <1>;
+> 	};
+> 
+> 	...
+> };
+> 
+> If we turn "main_conf" into a syscon, then who "owns" 0x4044?
+> Both the top level syscon and phy_gmii_sel nodes would build
+> a different regmap instance that contains those same registers.
 
-Replace the call to sometimes-managed pci_request_regions() with one to
-the always-managed pcim_request_all_regions().
+Two registers is hardly a separate device.
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
-Changes in v2:
-  - Fix unused variable error.
----
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+> 
+> Bit of back story, this is actually how I got involved in sorting
+> out this "syscon" stuff for our devices. I built a checker into
+> the regmap framework core that would detect when multiple regmaps
+> are created that contain overlapping registers.
+> 
+> I found several bugs this way and want to push the check upstream at
+> some point. But first I wanted to fix the biggest cause of warnings,
+> which was from syscon being used as described above.
+> 
+>>
+>>> drivers. How would we synchronize mappings, access, updates, etc.
+>>> Any one register should belong to exactly one device.
+>>
+>> regmap synchronizes everything. There is no problem here, at all.
+>>
+>>>
+>>> Is your issue the name "system controller", as yes I agree some of
+>>> these regions are not "system controllers".
+>>>
+>>> Would it work better if we didn't call this "ti,am62-ddr-pmctrl"
+>>> node a "syscon"? That can be done, we just would add a normal
+>>> binding doc for it, instead of trying to reuse the generic
+>>> bindings/mfd/syscon.yaml file.
+>>
+>> You still do not have multiple subnodes, one per each register or even
+>> few registers.
+> 
+> If this ddr-pmctrl device is not modeled as a syscon device, then who
+> says it has to be more than a few (3?) registers in size? This seems like
+> a rather arbitrary rule, and completely unfeasible for several whole
+> classes of devices that only have/need a few registers to work them.
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-index 0f32471c8533..1e3ebace32ae 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-@@ -733,7 +733,7 @@ static int vmw_setup_pci_resources(struct vmw_private *dev,
- 
- 	pci_set_master(pdev);
- 
--	ret = pci_request_regions(pdev, "vmwgfx probe");
-+	ret = pcim_request_all_regions(pdev, "vmwgfx probe");
- 	if (ret)
- 		return ret;
- 
-@@ -753,7 +753,6 @@ static int vmw_setup_pci_resources(struct vmw_private *dev,
- 		if (!dev->rmmio) {
- 			drm_err(&dev->drm,
- 				"Failed mapping registers mmio memory.\n");
--			pci_release_regions(pdev);
- 			return -ENOMEM;
- 		}
- 	} else if (pci_id == VMWGFX_PCI_ID_SVGA2) {
-@@ -774,11 +773,9 @@ static int vmw_setup_pci_resources(struct vmw_private *dev,
- 		if (IS_ERR(dev->fifo_mem)) {
- 			drm_err(&dev->drm,
- 				  "Failed mapping FIFO memory.\n");
--			pci_release_regions(pdev);
- 			return PTR_ERR(dev->fifo_mem);
- 		}
- 	} else {
--		pci_release_regions(pdev);
- 		return -EINVAL;
- 	}
- 
-@@ -856,7 +853,6 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
- 	int ret;
- 	enum vmw_res_type i;
- 	bool refuse_dma = false;
--	struct pci_dev *pdev = to_pci_dev(dev_priv->drm.dev);
- 
- 	vmw_sw_context_init(dev_priv);
- 
-@@ -872,7 +868,7 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
- 		return ret;
- 	ret = vmw_detect_version(dev_priv);
- 	if (ret)
--		goto out_no_pci_or_version;
-+		return ret;
- 
- 
- 	for (i = vmw_res_context; i < vmw_res_max; ++i) {
-@@ -1172,15 +1168,13 @@ static int vmw_driver_load(struct vmw_private *dev_priv, u32 pci_id)
- 
- 	if (dev_priv->ctx.staged_bindings)
- 		vmw_binding_state_free(dev_priv->ctx.staged_bindings);
--out_no_pci_or_version:
--	pci_release_regions(pdev);
-+
- 	return ret;
- }
- 
- static void vmw_driver_unload(struct drm_device *dev)
- {
- 	struct vmw_private *dev_priv = vmw_priv(dev);
--	struct pci_dev *pdev = to_pci_dev(dev->dev);
- 	enum vmw_res_type i;
- 
- 	unregister_pm_notifier(&dev_priv->pm_nb);
-@@ -1216,8 +1210,6 @@ static void vmw_driver_unload(struct drm_device *dev)
- 		idr_destroy(&dev_priv->res_idr[i]);
- 
- 	vmw_mksstat_remove_all(dev_priv);
--
--	pci_release_regions(pdev);
- }
- 
- static void vmw_postclose(struct drm_device *dev,
--- 
-2.48.1
+What does the syscon description say? Collection of registers, a set of
+miscellaneous registers. Registers in plural. Do not use syscon for
+other purposes.
 
+It is not arbitrary. It is written in binding description.
+
+Best regards,
+Krzysztof
