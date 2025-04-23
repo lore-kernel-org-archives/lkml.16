@@ -1,188 +1,90 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5614027A93A;
-	Wed, 23 Apr 2025 07:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394859; cv=pass; b=t9d9Nw/+fdd2or1tNOEntRTURodTNrcGrYzFBPOr3J9gDs4Z/oMN9mWRIgCIPAQG+Rna90T6wC+tO9WsRUuMmBf4wXmDprUiTtKp9/6/lcg3gHOHI2UC90TplE705k6S+ZdP2DiP/br7dKeZCD4+0FkeT6/pgPbj3GKxqt2/JWs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394859; c=relaxed/simple;
-	bh=LGO4kk+bq2xXbKOrta1rlVIrB6tbMRDchCZNNF4pD+E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=af2r4n/quTYVmXRvRKTtMOcKy1hHAjuHC0fcB13heCaYMyR4eVQLWEj7gj4Uzn0M3RduOlO8xcEDJ4x43ONybVxsBHa/nA1FMnBgV9qHRkP4rwyE5sjHsBHCXbO9RazGiZVj3pOg9KLOgHRY/eHB0Jt6KlCU6P2euFMIjvon8Lo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=EeQspoWr; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78D426D4E6;
+	Wed, 23 Apr 2025 07:54:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745394866; cv=none; b=fEvXqhQJ5zrJnYK/Z9OWBnBppbSfmNEBGrmKMIQt8rjvrvyNRQ53zlpUwLvAEkT/qEMEgGG33LGL/1q2MrMneW0u9O7lT20HFVoHSXbqFb5WUTgEso8Ii3qwscRDgMwIo1P2aIEM9q+OaRPBFrLa3fFyK38R7EZffA4d4UTnyf0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745394866; c=relaxed/simple;
+	bh=zp8MWTdchx+xn/ppkDoZU95BK9wmgT/7c0FOAN4CkbE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=T9H3cRcOv+FJkjeFCNsmxUBn6XqmCQgedKZPRvwbuPIBuNh2IuUPUHhTwCzm20nYHY5nVsyS6CchbbrxtYYT1DjEbfZKxqb5SZiRLB9XQco26bbj9ScXzpBJ7d5B5uMMViH8FqPrLmljCpg6TU+Cu5PxERmHVph1mUnNZSXE6EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGJxdhvX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="EeQspoWr"
-ARC-Seal: i=1; a=rsa-sha256; t=1745394828; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=l2QuKe/naQtdCK/UHh5fyBtiP47dQkbaOA1fo4k3vk0lt3/LssUVniRCYGSiocb+TOGDUKsYSYKPGUx9bvWQAx3+KylYPcHNY7Oce1Bj7j01l4Sj0CBcmVtLkSSlqyV3vx8g0rJQdiCtLd1xMY7vmSZKpESKYXr6wwV3keXBcjk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745394828; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Oijd0aKBdyplMTnNPJrIqrieZmKmWwupu3pm2u3MJ64=; 
-	b=I0eHXxv5l1nsUJD8DGsbw644Z6TIdJ13y3TFHmlJYPiscH8PgMhQ2fjSlQRU6pfcNxbeAvDPTT6+VoQlo2/V2aOWmmsUO0WQ11xzvnoU4fw38B16cRlHrJC4X5GD1S73J5A5bTYzojG6oTPDQ//MlAocdlSGEQOxx1bLiD6+nf0=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745394828;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:To:To:Cc:Cc:Reply-To;
-	bh=Oijd0aKBdyplMTnNPJrIqrieZmKmWwupu3pm2u3MJ64=;
-	b=EeQspoWrECM8FVvMhgq0pxQ/UpzK7XmT0IycpYq3W6VvHXwbyCzFjicjSZzF0i/l
-	whh9XZv+NwxWQPWd+exftk33dP/V3kyOaL/uyuKlK7u++wPwiZE+os13oRmI+z38W/N
-	zJBF15oaarzdvGT2+83SaHD9tlrjQf92yYh/YIK4=
-Received: by mx.zohomail.com with SMTPS id 1745394825558639.0210285939858;
-	Wed, 23 Apr 2025 00:53:45 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Wed, 23 Apr 2025 09:53:32 +0200
-Subject: [PATCH v3] mmc: sdhci-of-dwcmshc: add PD workaround on RK3576
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGJxdhvX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD511C4CEEA;
+	Wed, 23 Apr 2025 07:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745394865;
+	bh=zp8MWTdchx+xn/ppkDoZU95BK9wmgT/7c0FOAN4CkbE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VGJxdhvXR4sPTThCQAJTuZko7z4HzR+4wFxbLN+/S9RkxgA5+wrmfoMOOXruNWwUI
+	 +o5zKs9W0E1aYdcFwNASVN1ozBXKPxTg+ObCu340dDODh5mTpODxp2XDKiDeGqzKH3
+	 +5ipqLM/foYOEbJD5U2hfDfo4Rn6dlvdhtNXIyAFsNUUbkPUxRLX52rkvoG1Mjm++S
+	 miE4Spb9j3oW/38dPCIkHwK3lrE8pXIQ855/Q8HHkFn6BcU0mAEyWex0QoUJVl0S6q
+	 TjDFJJvRKSVo+8VABlb4kXCN9O0Mi0irgRGj8iy9G6MuT1f8QEKiJzenUMLDztQpLd
+	 O4ikevSx3PGZg==
+From: Philipp Stanner <phasta@kernel.org>
+To: Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Jaya Kumar <jayakumar.alsa@gmail.com>,
+	Clemens Ladisch <clemens@ladisch.de>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Philipp Stanner <phasta@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Mark Brown <broonie@kernel.org>,
+	liujing <liujing@cmss.chinamobile.com>,
+	Andres Urian Florez <andres.emb.sys@gmail.com>,
+	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
+	Thorsten Blum <thorsten.blum@linux.dev>,
+	David Rhodes <drhodes@opensource.cirrus.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 04/28] ALSA: ens1370: Use pure devres PCI
+Date: Wed, 23 Apr 2025 09:53:22 +0200
+Message-ID: <20250423075346.45907-5-phasta@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
+References: <20250423075346.45907-1-phasta@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-rk3576-emmc-fix-v3-1-0bf80e29967f@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAHucCGgC/3WOwW7DIBBEf8XiXCJ2AZvklP+IesCwTlDj0IKLW
- kX+92DnECltjjOaeTNXlikFymzXXFmiEnKIlyrkW8PcyV6OxIOvmqFALSR0PH1I3bWcxtHxIfz
- wzjsDtsVOIbLa+kxU7ZV4eL/rRF/fFTzdTdbbTNzFcQzTrintBjRPTrIlfAp5iul3fVNgTb8cL
- sCBey2VV1urYNB7F89n28dkN5W+fFm7Spj/u1KIrUHTQy/hqbt8KfjYV4B/GVgZRgpqtbReDeK
- ZMc/zDQ3pxEpfAQAA
-X-Change-ID: 20250317-rk3576-emmc-fix-7dc81a627422
-To: Shawn Lin <shawn.lin@rock-chips.com>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, 
- Elaine Zhang <zhangqing@rock-chips.com>, 
- Finley Xiao <finley.xiao@rock-chips.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
- Detlev Casanova <detlev.casanova@collabora.com>, kernel@collabora.com, 
- linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-mmc@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-RK3576's power domains have a peculiar design where the PD_NVM power
-domain, of which the sdhci controller is a part, seemingly does not have
-idempotent runtime disable/enable. The end effect is that if PD_NVM gets
-turned off by the generic power domain logic because all the devices
-depending on it are suspended, then the next time the sdhci device is
-unsuspended, it'll hang the SoC as soon as it tries accessing the CQHCI
-registers.
+pci_request_regions() is a hybrid function which becomes managed if
+pcim_enable_device() was called before. This hybrid nature is deprecated
+and should not be used anymore.
 
-RK3576's UFS support needed a new dev_pm_genpd_rpm_always_on function
-added to the generic power domains API to handle what appears to be a
-similar hardware design.
+Replace pci_request_regions() with the always-managed function
+pcim_request_all_regions().
 
-Use this new function to ask for the same treatment in the sdhci
-controller by giving rk3576 its own platform data with its own postinit
-function. The benefit of doing this instead of marking the power domains
-always on in the power domain core is that we only do this if we know
-the platform we're running on actually uses the sdhci controller. For
-others, keeping PD_NVM always on would be a waste, as they won't run
-into this specific issue. The only other IP in PD_NVM that could be
-affected is FSPI0. If it gets a mainline driver, it will probably want
-to do the same thing.
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Signed-off-by: Philipp Stanner <phasta@kernel.org>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-Changes in v3:
-- Reword comment and commit message to correct that this is not a
-  silicon bug, but seemingly intentional design with regards to runtime
-  power management.
-- Link to v2: https://lore.kernel.org/r/20250412-rk3576-emmc-fix-v2-1-830e653ad4f0@collabora.com
+ sound/pci/ens1370.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Changes in v2:
-- Rewrite patch to use dev_pm_genpd_rpm_always_on in sdhci driver
-  instead, after Ulf Hansson made me aware of its existence
-- Link to v1: https://lore.kernel.org/r/20250408-rk3576-emmc-fix-v1-1-3009828b1b31@collabora.com
----
- drivers/mmc/host/sdhci-of-dwcmshc.c | 40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/drivers/mmc/host/sdhci-of-dwcmshc.c b/drivers/mmc/host/sdhci-of-dwcmshc.c
-index 09b9ab15e4995f0bddf57dd309c010c849be40d9..a20d03fdd6a93ecc5229c71f825bade5ac730370 100644
---- a/drivers/mmc/host/sdhci-of-dwcmshc.c
-+++ b/drivers/mmc/host/sdhci-of-dwcmshc.c
-@@ -17,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
- #include <linux/reset.h>
- #include <linux/sizes.h>
-@@ -745,6 +746,29 @@ static void dwcmshc_rk35xx_postinit(struct sdhci_host *host, struct dwcmshc_priv
- 	}
- }
- 
-+static void dwcmshc_rk3576_postinit(struct sdhci_host *host, struct dwcmshc_priv *dwc_priv)
-+{
-+	struct device *dev = mmc_dev(host->mmc);
-+	int ret;
-+
-+	/*
-+	 * This works around the design of the RK3576's power domains, which
-+	 * makes the PD_NVM power domain, which the sdhci controller on the
-+	 * RK3576 is in, never come back the same way once it's run-time
-+	 * suspended once. This can happen during early kernel boot if no driver
-+	 * is using either PD_NVM or its child power domain PD_SDGMAC for a
-+	 * short moment, leading to it being turned off to save power. By
-+	 * keeping it on, sdhci suspending won't lead to PD_NVM becoming a
-+	 * candidate for getting turned off.
-+	 */
-+	ret = dev_pm_genpd_rpm_always_on(dev, true);
-+	if (ret && ret != -EOPNOTSUPP)
-+		dev_warn(dev, "failed to set PD rpm always on, SoC may hang later: %pe\n",
-+			 ERR_PTR(ret));
-+
-+	dwcmshc_rk35xx_postinit(host, dwc_priv);
-+}
-+
- static int th1520_execute_tuning(struct sdhci_host *host, u32 opcode)
- {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -1176,6 +1200,18 @@ static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk35xx_pdata = {
- 	.postinit = dwcmshc_rk35xx_postinit,
- };
- 
-+static const struct dwcmshc_pltfm_data sdhci_dwcmshc_rk3576_pdata = {
-+	.pdata = {
-+		.ops = &sdhci_dwcmshc_rk35xx_ops,
-+		.quirks = SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
-+			  SDHCI_QUIRK_BROKEN_TIMEOUT_VAL,
-+		.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN |
-+			   SDHCI_QUIRK2_CLOCK_DIV_ZERO_BROKEN,
-+	},
-+	.init = dwcmshc_rk35xx_init,
-+	.postinit = dwcmshc_rk3576_postinit,
-+};
-+
- static const struct dwcmshc_pltfm_data sdhci_dwcmshc_th1520_pdata = {
- 	.pdata = {
- 		.ops = &sdhci_dwcmshc_th1520_ops,
-@@ -1274,6 +1310,10 @@ static const struct of_device_id sdhci_dwcmshc_dt_ids[] = {
- 		.compatible = "rockchip,rk3588-dwcmshc",
- 		.data = &sdhci_dwcmshc_rk35xx_pdata,
- 	},
-+	{
-+		.compatible = "rockchip,rk3576-dwcmshc",
-+		.data = &sdhci_dwcmshc_rk3576_pdata,
-+	},
- 	{
- 		.compatible = "rockchip,rk3568-dwcmshc",
- 		.data = &sdhci_dwcmshc_rk35xx_pdata,
-
----
-base-commit: f34da179a4517854b2ffbe4bce8c3405bd9be04e
-change-id: 20250317-rk3576-emmc-fix-7dc81a627422
-
-Best regards,
+diff --git a/sound/pci/ens1370.c b/sound/pci/ens1370.c
+index 71c89e4e3090..1e6adf1ae304 100644
+--- a/sound/pci/ens1370.c
++++ b/sound/pci/ens1370.c
+@@ -2022,7 +2022,7 @@ static int snd_ensoniq_create(struct snd_card *card,
+ 	ensoniq->card = card;
+ 	ensoniq->pci = pci;
+ 	ensoniq->irq = -1;
+-	err = pci_request_regions(pci, "Ensoniq AudioPCI");
++	err = pcim_request_all_regions(pci, "Ensoniq AudioPCI");
+ 	if (err < 0)
+ 		return err;
+ 	ensoniq->port = pci_resource_start(pci, 0);
 -- 
-Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+2.48.1
 
