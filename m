@@ -1,160 +1,209 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A1A4A3E;
-	Wed, 23 Apr 2025 02:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745376033; cv=none; b=PHrUaa+/H78wjfyP6f4ZP4zoUqv1T5pHzkvdvn9HjuXD4oenqxCGNSZZcJ3H5qZPFNe602J/xpqm36HJFEqEKpU9imNOtoAF4vhIwIYegIw9jRhi0E+L5lxBLsafgKDVP+4+omh2ekTLovBrvhiPfjFcbFnpLaWa4LZpMFSpy9k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745376033; c=relaxed/simple;
-	bh=fXEdKwLDEYP1FhT6qUr5SUEW8tpVM+vuvtbPberoHlU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RkuFoWqxrPz4q7gMVN36SMJnxYeods/vLU30M/AiyEKlPlAExbTkvL0H8oC+J8Gk2WXt+MWh3/t/cCtGbVz8XOLuahWc0/fXUqPzwbM8IbICJxpuCbUlYbefxNINPQfr0nnwx6wPZnv/pzhQTbb4auglbkT0YpvkW9UO6oq/lT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=f7mxGJfv; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="f7mxGJfv"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0iRBL014200;
-	Wed, 23 Apr 2025 02:40:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sEnWhSOcmsjXDCbo4JutcllgsrUm4ZD2PZsQO/oVLfI=; b=f7mxGJfvdNfUVeOi
-	Kt+bQqMr2bGb27X6PLl+rQUCEdjuJqBEB2tiV9LQcy8KERqSh5GWtD4ldobgBP46
-	QGpmILoRS0IkdxFajNEmRhe6vBmjlWQdb+VMWYMNr3VmduTsSaMeOtHzL9cof8ho
-	3CZenGmXDKFjWKICHFv3EEYAwSzz923M4J3Yrm+CF3H7FSXKQWm/mI0y+iTu1cBS
-	NY7TqUDs+SHccNkrc2qljVlpZMJXdmlURWJTiLkBTZiEhMsuf6TNRDFQLhob8eOT
-	z/GCVHRQF4qJseCpIRa+g8XFNs7lgentAWafsDtudZfSFnT3OBAqwzIzgRI0bJr9
-	rEhexQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh38mff-1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD254A3E;
+	Wed, 23 Apr 2025 02:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.166.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745376048; cv=fail; b=a4IWu8ucZYC4vKP74IBaZifB0hVKqPBN5fkytGoFu7L5QeA0s8/efs8ox8geldTyUmdwA2DzVyolKbw2uo4OKFoH4y7D2283UYnZDilIify8+X1qQwytD9M2rG3UZb98a+itxvX6ezTzfNaTkdeCpxmQa9kIq4BRheQ1z4Owqu8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745376048; c=relaxed/simple;
+	bh=a0U0M7pAWZeQf1JZWiqknq8EISqZ3aYr5V9acDxCxzg=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=c71Ag+03d6pUE0xnwC4SvWeCdFBMyS6khhPo2UmEOsfCRHxzivXhfwvDH1p9AbDJfOnsPSP3NsTBme4VOA3ubThqBo7pPg44bySteqlPKa2OewuvH3MJ/BJ6Rg6g1chtCCWdcwPRzFLX2E4ertCQZFJqgMVBj0wp5pD5fKAjGQI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eng.windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=fail smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=eng.windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N2KDjP013506;
+	Tue, 22 Apr 2025 19:40:33 -0700
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2177.outbound.protection.outlook.com [104.47.57.177])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 466jhd07t3-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 02:40:19 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53N2eIip015716
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 02:40:18 GMT
-Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
- 2025 19:40:17 -0700
-Message-ID: <743721c3-9015-4d3b-902d-cfa6ea4e94af@quicinc.com>
-Date: Tue, 22 Apr 2025 19:40:17 -0700
+	Tue, 22 Apr 2025 19:40:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ifLJGphG668fDETQLUG8p7d4u6wkHFi3STks/fpWdK9FMxPgEDawMc/ZikRCVMoORtZ2CIh3wFtMzrDaIjDUOwrEh22jkDnlkO4dxdJc06ufNrtuf4FF4aEFm0gLRZoekCb+Q8A6INMw+LRVMoOkcp55Cwfj97A5KszWAe/TLYFNjiLrQmDkNlop0f4cgrfv0aQSzKHaTwdXyAMuDk4uhFCwOz6d78InqfaOO2vAyXTek5JShEy6jxq1yfT6aCZtMX8r6TBueK5WfxYddAqHmetPCxHEzgLi4Od7ZgHObw/oaxAb1QIIHYy6r0UahwMLgNgct7lhpwhnJO+v3btMXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KeOUJ6/WP8kDQbbXap2fy3y5PS2q2V1p1+RkAW4822o=;
+ b=ZLXMieH/MlxyEw0z34yKVMouIj5eN1E/eD108sz7y0jX7zlNh5QmVaoMdHPw8vnveHs1ibnNo1BdMBsfNBUfKuQ7WuR1SYiossVQaFd9VqQppiRr5LmsQ9XPqWUG33P1wFU2ofCqpeqvjTP/olZwwR5td9AEqsQ+Vct4xdS0AkAWvtJ2jEQo2+bAORESneNK+ODevI77ofNoL4OJSM6igVJrxN15wiRp/q8R+HWuHka+agbStqjEMXestUXZS/T321qkeP4D6bAzEnFDQteFk/8dexMi5w9uPTReHtzb3l2S+ieEPf1ddqOiULX6Bs1Z7j5qsYSspbSsyazSy2sFBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=eng.windriver.com; dkim=pass header.d=eng.windriver.com; arc=none
+Received: from DM6PR11MB3324.namprd11.prod.outlook.com (2603:10b6:5:59::15) by
+ CH3PR11MB7914.namprd11.prod.outlook.com (2603:10b6:610:12c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Wed, 23 Apr
+ 2025 02:40:28 +0000
+Received: from DM6PR11MB3324.namprd11.prod.outlook.com
+ ([fe80::fd0:4a9d:56d7:c039]) by DM6PR11MB3324.namprd11.prod.outlook.com
+ ([fe80::fd0:4a9d:56d7:c039%4]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
+ 02:40:27 +0000
+From: Zhi Yang <Zhi.Yang@eng.windriver.com>
+To: stable@vger.kernel.org, llfamsec@gmail.com
+Cc: zhe.he@windriver.com, xiangyu.chen@windriver.com, amir73il@gmail.com,
+        djwong@kernel.org, dchinner@redhat.com, chandanbabu@kernel.org,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 5.15.y] xfs: add bounds checking to xlog_recover_process_data
+Date: Wed, 23 Apr 2025 10:40:08 +0800
+Message-Id: <20250423024008.1766299-1-Zhi.Yang@eng.windriver.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: TY2PR02CA0015.apcprd02.prod.outlook.com
+ (2603:1096:404:56::27) To DM6PR11MB3324.namprd11.prod.outlook.com
+ (2603:10b6:5:59::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] dt-bindings: display: msm: dp-controller: document
- clock parents better
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Mahadevan <quic_mahap@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20241202-dp_mst_bindings-v1-0-9a9a43b0624a@quicinc.com>
- <20241202-dp_mst_bindings-v1-2-9a9a43b0624a@quicinc.com>
- <bfa857c2-cd74-4fe2-a88c-3b35a58710b0@kernel.org>
- <gpqrugcsyhz32bvip5mgjtcservhral2o5b6c5nz4ocwbjw5uo@eypv4x6jyrdr>
- <hqe2pipkcnxftoq5mvdk36xmkj3ybr3oto6eghimq75rqlncsm@v45smglhedy7>
- <pxi2nf4h34xtkickkkuwh4svvhbtsutuz5u3ukzgfgd5rzzcps@g4gct5zuc6kj>
- <2ef59c6d-bef2-4763-9463-06116a2e7d04@kernel.org>
- <CAA8EJpotUkPWU4VTmtaH=XkhwPZVXfdU8ZyHqROYpZRWDdYPSQ@mail.gmail.com>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <CAA8EJpotUkPWU4VTmtaH=XkhwPZVXfdU8ZyHqROYpZRWDdYPSQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDAxNSBTYWx0ZWRfX0RgkRCZBz54K QXQwGeYVDusFGsob39/OzvGP6VYzt44Zpjyo/A7ZRiYk/bcsseDhprVkC4Uq4vbRAMMXLDpdqNp zsKz58x0/Payivce04r3qfUZNh0RiravHcsM1OfFUJ3F4e8n1L1M+OuwUbLtRqU3RHpJaqkhrqF
- 5uVpEHV9AFz1cd9RQvrwaO6JFBefwtR0QGmoS8XtiSiZ/dB05k+mFq/jhhzRWoNuzGuaHuMJ6wW H5JLqpgKFc5XSDy29g81+pR+Nwmn0bIFcHy4ICx2ItGTO5acXWwptxarKLOHz52AWSmqahiuv14 XcUVdZsOGADbJKZNytfytJnVFPIAkXG1DntGvRVMR4cvYh7w6Q0DU5CXVsXvltbZlRaLaTz4wGl
- zbZvYvqXo0BDUz9PsC7hLp9F0TXuOSZ+tgDxtulhESlsCAqpy/uwuw8VmkQe6DIbZtNneb2T
-X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=68085313 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gZuivp84EbNu_AB6qtIA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: xlAbQF5h3S4gKkjlBpZtpCfoEWMmHonf
-X-Proofpoint-GUID: xlAbQF5h3S4gKkjlBpZtpCfoEWMmHonf
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR11MB3324:EE_|CH3PR11MB7914:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b65e23a-c94f-4cab-c2cd-08dd821031ff
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|52116014|376014|1800799024|366016|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?j3VrphVjSzcmn21ohjH0slAg1Xenip3j7dF8Xa0M06Gmm8kq/lXJI9wko153?=
+ =?us-ascii?Q?0e/Sq6YR+bZKQkD/ETuXFkvv/m3/HpikFuR76nrkkhXOMN7c/akvu+vU00rj?=
+ =?us-ascii?Q?2UCnL58xzUlghYYKnYNBKzS1s4k8eKwX2RgFzb7xmHD46RmATaVCLMTg4E0T?=
+ =?us-ascii?Q?Vapfq1+2JiVK4EaRZQjVsk1C02cDpbSP5C4sWXoZJSIzmDJ7bSHRPbTPLdfS?=
+ =?us-ascii?Q?Z8UFnI0chIGcXIRfv+23Vfv7u7envKYmqxUZhnCcyrqbyk9/tqe2NEExNb5b?=
+ =?us-ascii?Q?2oQ3lMDK+2lG1eJvacegAjhEuHKfOEWndPlXgESujFL6l1Wtrd6qKcjQRu+A?=
+ =?us-ascii?Q?3sXM9bu6hXBgaEeRwvsR9O6XN6qThbenT2yPqAVHnvYdHXqEVB/z+uop6CO+?=
+ =?us-ascii?Q?vjqFXKOzvZSaNBA4j054sem4VS7Pzu2Kaja9S1xUwV3cgNsZYz0CfQhgEFPF?=
+ =?us-ascii?Q?xXZ5SlSF0C4qGpslxd2TOAN35jH+YK/1W/AYyhr7rf7ddoXUTXEc7hH/VAcf?=
+ =?us-ascii?Q?v9IgoOUrUQfLtcYjlvNdVqpaHd4UbkqI2VSMqkM+IJ/4GQ3gnhQ4Cl4uzs4c?=
+ =?us-ascii?Q?ahmJi+VAjyYWfPJ0Bs4qp6C93iYwtJAJOJKrE5FeGxwQpV+fCdRIuBAJhzEx?=
+ =?us-ascii?Q?PKzWRU1M30g4d2L/GrD670aNJO1Hu3Nq4pRpSRCdk5Y3WsewG5jdALHu2J2G?=
+ =?us-ascii?Q?dgsHmv7sXjRQVP6pI8vbV831w336EZvwvRf5lXyICnvT5S4RC4J5RGwOsjJ0?=
+ =?us-ascii?Q?l564w8skC37y3+1JCjUXbEwyawnyw7zBEs6E9+yydCIFpUrkU0e9j36odTj2?=
+ =?us-ascii?Q?MQDGN0+errau3O8JT/+gF7fNhlKOZnEa/Q76+dj6iuAC8uCPpFN2mWlyvDH6?=
+ =?us-ascii?Q?985it3gDXlpL6tBWerR1FpENbjukjagmruU5hSCQFxv2tgvHuNYOZSsbAcJU?=
+ =?us-ascii?Q?pk3lEUjTeE9ngd/P1pI/TOHsV9bFIsTUIf4OZEIBeFIqKmk/TeICNtUc6Vrz?=
+ =?us-ascii?Q?UHDjr/S+vPYxWF+hrBV6xdEdibMzZk6M8UZ9mivyCqK+Y/8o+QB6mxq6tJh5?=
+ =?us-ascii?Q?HrXACundCwEjMB8SrGuVzzaanBjY9vSiCpc1Pc7+F/MPsXJ0f5EA43L11EsZ?=
+ =?us-ascii?Q?j9ju+uQ/9DE5vy0iEK08hz7HULNa2+s0KIYkULabHZZD7Uy7FdSZ/9vxoOA3?=
+ =?us-ascii?Q?HghjAHBWGgTjx+hjYKvFrMN+mtUvrcid++21ei3NCvxfrVc92v+mJS2ssZgU?=
+ =?us-ascii?Q?jSoTiX2LKq+55EqAWf+kXkV4SxDhllpQUm7CleWE8EJV24OmPoRZ1ubBtgpK?=
+ =?us-ascii?Q?Ggf2e0YCwjfPpSShZeP2uqFhJplqrcGF4+TSG1M1/wZ0FaHpITxjSL1qNsrN?=
+ =?us-ascii?Q?62CqJk8XbarJExzLBezKwEAa1M6tZOZ4EJMJU/mknFcK+lnSA9A8HHgundKp?=
+ =?us-ascii?Q?3hizZTwDSgMxbN+zhQBQYHYunvKT56B8iIwrH2JHaLeaSbiQ5jUjxQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3324.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(376014)(1800799024)(366016)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?kq3/+wqIsYx5yFtPodZ1A6KnqaLUx8MRyz9Lbi5JhkroEWihryyjb27jdmwt?=
+ =?us-ascii?Q?zsSfVhyFpc3xL+ZmjGxOJlsIS0hGNEkWt3RuqgWoDgr/61qP2x67DZrfebzQ?=
+ =?us-ascii?Q?LCSOEENYYRXAlGsUvby1yG199mX5EYHvcscCpuptMJ2k65x8E9i9+aFMuJlP?=
+ =?us-ascii?Q?lmC0PElY9WrEnrtc6zt9c/tu/HSKgDbozRk64V7NMVRxiAsPWL0Nb9OAlD9n?=
+ =?us-ascii?Q?JM9oCfOaLb7O6fODRL+wiRHRuUvhwcUK87v8MklAxNUUnRcNpq3KIz4Vm2FY?=
+ =?us-ascii?Q?yHqs18eQJfqghbCApHF0xz8VcQ0xLwW+mFmFvMRv6fbzyLDru27REjH9STs4?=
+ =?us-ascii?Q?S4axwMqY6Lm5xRJ/D457TW8K+jfpZhymva8/VHxLAwljL+pZoXxD45wkGb0J?=
+ =?us-ascii?Q?eLjjYugu439gSvIi3/piI4Pnel+tkKEQajnPUjESCJansOyl3JYa6E9ar7zc?=
+ =?us-ascii?Q?OHkZHEcOW3A/qTCe0d6G5/IzbQogBUugjT3KbR4TIgthMW7wKMFwnZNJnGbu?=
+ =?us-ascii?Q?ONAHTlZ1llyi3Cl3mhw3kGE/n8PKsZN+IWEcQO03d3tm1oQZLqw0+AbFNg18?=
+ =?us-ascii?Q?gxpz4hu/cNdJB7dAoKu12CThPKmt8ducTe9aoX+CATUsNWnDUOr0EAglxMXV?=
+ =?us-ascii?Q?2b4EJTNyDqb+WPE4Uvrqhgn9W75kQOvwVQV61s+pyxY6/OUT0z2ZFT+52aff?=
+ =?us-ascii?Q?Jj+Pkjbz4F/AhYeHzpdZUgTjTwDkl5lwQuxmpJCDjzM3Czc5Yx/LV/ChEIaq?=
+ =?us-ascii?Q?US0+uE1nM2UFK2jyMDdKiY7Y2oLuRZZXKLV4EmMcJ+yutdUUUSjC5p3RheYC?=
+ =?us-ascii?Q?PSirfftFfZc3cGToWZ327Q5KTeyegE3cEylNmQdZg57jkBI6G/Rk10Ea4614?=
+ =?us-ascii?Q?5APdE2hqdSAt8PlEzk2R8hV0q2Z/DdhBfT7LNxihPbQX/ns3qjltaHBylllz?=
+ =?us-ascii?Q?CHXI6+dZgOJ1hVU1DUoX5+zFQXEVliY/K95zy9OtqKU6k3KL8E2PdxinLFeA?=
+ =?us-ascii?Q?SGqYVrJmZxJEGHwc6P1HoL6FbKStkTlFZ9UEaKjbog94Vg5OOmS6T3CLplz/?=
+ =?us-ascii?Q?clxbJnRIazm0YpRJAaDfypLlgu25jIytw/o2KVFNEtggk9qrXstIn87z8ohQ?=
+ =?us-ascii?Q?9gNzFJT9POE4eeJb+oBoDOSePEqoJ8nNL4QF/mo1lNs8d91vkmFWfBXC4vze?=
+ =?us-ascii?Q?DSgHDuHZ9Trb0ZzxhyWPi0ffOipVpXyR9EYC3922evtd1f0oVSzLfJNtIn7B?=
+ =?us-ascii?Q?IfBsCNBfQuINuJVUqHorIV7FdTBt71whrY/mvkvnNjeeyJacu1vkxtvMepKy?=
+ =?us-ascii?Q?V2q2Vb8H3M/eyaR2yaf3Vu4HTs5VPQU0ftZbVY6hty2SDDTnqSDUcXqetGmS?=
+ =?us-ascii?Q?6wyxZ3BEMoEqPWR4cvq5EQdIoT6K9Km+qf5mpUD6TG6Mf/Jlaag7PnKpdGEe?=
+ =?us-ascii?Q?HYZ1GHlVF0UOkjeMSkvfzk9TMkN+Vkpy1BRnMXTBkM2bAqbCffnK6idvSidO?=
+ =?us-ascii?Q?kRPI/PFCmiwbUkjWFJg7fF6iGKthhD937HLj2+TR69k0Wyokdaflbv4Vo5lm?=
+ =?us-ascii?Q?neA1yjjSsefDuc8Myl+KKIZ4Z1+VCL9/PsVaAzH4?=
+X-OriginatorOrg: eng.windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b65e23a-c94f-4cab-c2cd-08dd821031ff
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3324.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 02:40:27.7332
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JIhuBiEJgqXd4jPam3O0X7k8jy8Gqqt+zC3oCJ7Qi+HXF96/XloB0GE9ob8pxx50xGJ9ERKHBptz2UjdZitrnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7914
+X-Authority-Analysis: v=2.4 cv=ZNDXmW7b c=1 sm=1 tr=0 ts=68085320 cx=c_pps a=XlWNgFwcAB8XWrBhwjv7Vg==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=XR8D0OoHHMoA:10
+ a=pGLkceISAAAA:8 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8 a=t7CeM3EgAAAA:8 a=gZ8OVRd3LIMJ4GaTPUUA:9 a=FdTzh2GWekK77mhwV6Dw:22 a=Omh45SbU8xzqK50xPoZQ:22
+X-Proofpoint-ORIG-GUID: Y9vRASby-uv94wEHOVinHW7-0cKXILHn
+X-Proofpoint-GUID: Y9vRASby-uv94wEHOVinHW7-0cKXILHn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDAxNSBTYWx0ZWRfX/E9bhmWnweO1 W2RE4QvKZVYjHgZ06SIcJRUdHtsNug947QCZtBEi5bRQ1/OCgugI5JCD7ujKhXd3S600c5EMrFU R+n8wrDfuIX+UiuI2RzsCV33cW2TOPQFEWhOIcido3c+ADOLnl5CQelIRPy2KwgA9Y6nXV6r/Ic
+ RaGMeZsbdXc9P/JjUocA0wc5mGJiF8h+3GmNu7fI/bWjXWdMqPkPKh361dl13Xxgo5WwG0pPhmv SpImUGqePZ2XA+w8LXEL7+DKRxvXwrK9GYprMhO7JkJwNVCuZTPxkYlhVxIhJVogk1wNJJx2CjA OjJSLPokjdBnndJ1Oduj+GNqhPsXThyZY/RzmiwhvOwTmuMQW3lgWNi7i+SSZZ4esj9b6ztzUHx
+ F3owUOR9acUFnzsTb07rYuRcTjILUEQSbufV7jatuqREbAK/a5WjQfyExM6WdSFQko9pQG/d
+X-Sensitive_Customer_Information: Yes
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1095,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-23_01,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 suspectscore=0 mlxlogscore=984 mlxscore=0 phishscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 adultscore=0 spamscore=0 bulkscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
  definitions=main-2504230015
 
-Hi Krzysztof and Dmitry
+From: lei lu <llfamsec@gmail.com>
 
-Sorry for the late response.
+commit fb63435b7c7dc112b1ae1baea5486e0a6e27b196 upstream.
 
+There is a lack of verification of the space occupied by fixed members
+of xlog_op_header in the xlog_recover_process_data.
 
-On 12/5/2024 3:32 AM, Dmitry Baryshkov wrote:
-> On Thu, 5 Dec 2024 at 09:33, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On 04/12/2024 11:09, Dmitry Baryshkov wrote:
->>> On Wed, Dec 04, 2024 at 09:02:18AM +0100, Krzysztof Kozlowski wrote:
->>>> On Tue, Dec 03, 2024 at 03:41:48PM +0200, Dmitry Baryshkov wrote:
->>>>> On Tue, Dec 03, 2024 at 09:01:31AM +0100, Krzysztof Kozlowski wrote:
->>>>>> On 03/12/2024 04:31, Abhinav Kumar wrote:
->>>>>>> Document the assigned-clock-parents better for the DP controller node
->>>>>>> to indicate its functionality better.
->>>>>>
->>>>>>
->>>>>> You change the clocks entirely, not "document". I would say that's an
->>>>>> ABI break if it really is a Linux requirement. You could avoid any
->>>>>> problems by just dropping the property from binding.
->>>>>
->>>>> But if you take a look at the existing usage, the proposed change
->>>>> matches the behaviour. So, I'd say, it's really a change that makes
->>>>> documentation follow the actual hardware.
->>>>
+We can create a crafted image to trigger an out of bounds read by
+following these steps:
+    1) Mount an image of xfs, and do some file operations to leave records
+    2) Before umounting, copy the image for subsequent steps to simulate
+       abnormal exit. Because umount will ensure that tail_blk and
+       head_blk are the same, which will result in the inability to enter
+       xlog_recover_process_data
+    3) Write a tool to parse and modify the copied image in step 2
+    4) Make the end of the xlog_op_header entries only 1 byte away from
+       xlog_rec_header->h_size
+    5) xlog_rec_header->h_num_logops++
+    6) Modify xlog_rec_header->h_crc
 
-Yes, I was trying to document it better and that way adding/extending 
-more streams becomes easier for the next patches in the series.
+Fix:
+Add a check to make sure there is sufficient space to access fixed members
+of xlog_op_header.
 
->>>> First, this should be in the commit msg, instead of "document better to
->>>> indicate functionality better".
->>>>
->>>> Second, what is the point of documenting it in the first place if you
->>>> can change it and changing has no impact? So maybe just drop?
->>>
->>> So, do you suggest setting both of the property descriptions to true? Or
->>> dropping them completely and using unevaluatedProperties instead of
->>> additionalProperties?
->>>
->>
->> Dropping them entirely, without any changes of additionalProperties.
->> Unless this property was added due to limitation of dtschema?
-> 
-> I  don't remember at this point. I think it's worth trying to drop them.
-> 
+Signed-off-by: lei lu <llfamsec@gmail.com>
+Reviewed-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+Signed-off-by: Chandan Babu R <chandanbabu@kernel.org>
+Signed-off-by: Zhi Yang <Zhi.Yang@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Build test passed.
+---
+ fs/xfs/xfs_log_recover.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I tried dropping assigned-clock-parents altogether and it seems fine, No 
-schema/errors of warnings if I also fixup the examples in 
-qcom,sc7180-mdss.yaml and qcom,sa8775p-mdss.yaml to drop the usage.
-
-So I can go ahead with dropping it.
-
-Thanks
-
-Abhinav
+diff --git a/fs/xfs/xfs_log_recover.c b/fs/xfs/xfs_log_recover.c
+index 705cd5a60fbc..9eb120801979 100644
+--- a/fs/xfs/xfs_log_recover.c
++++ b/fs/xfs/xfs_log_recover.c
+@@ -2444,7 +2444,10 @@ xlog_recover_process_data(
+ 
+ 		ohead = (struct xlog_op_header *)dp;
+ 		dp += sizeof(*ohead);
+-		ASSERT(dp <= end);
++		if (dp > end) {
++			xfs_warn(log->l_mp, "%s: op header overrun", __func__);
++			return -EFSCORRUPTED;
++		}
+ 
+ 		/* errors will abort recovery */
+ 		error = xlog_recover_process_ophdr(log, rhash, rhead, ohead,
+-- 
+2.34.1
 
