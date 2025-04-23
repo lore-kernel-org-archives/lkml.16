@@ -1,117 +1,126 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04EF2749E4
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3276C26C3AE
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:31:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745393446; cv=none; b=he781Y/wzMq+g6ba5VfOUKSkA/Hu3yMeKC9HsVvbU/RgaGdgBk8apRzaT++cBtvGL6CsHq7eqb47mUfzXsfFq8758aLuPxyHSK7Odc0GCMEh3jdU0Vk7wBIFhSuogDR3vSTUEPXwTCmTrfSaHBEu/f8XPBb4QhZjvOpqiNuz40s=
+	t=1745393484; cv=none; b=DyuWNQQqFoLMUq6LB7p6q6xVjv0gCfYI60JzRrL5LRr/NTwHW3LwpJHp3Da1FSI9ZBnKhgok9TvtrTcvosa7rwrsrwVApFwg7FdrsTV9DAs2pnKww5Gxjy+cGUjCciCp3KKRuew63+P0oLN5rUYOvrDK7/kmAIu4eWjdT+YEzy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745393446; c=relaxed/simple;
-	bh=hyNieFNcuS/h91PtLLt8b0OUKH7mzpDZpGCaVOfzJt4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l2j6JqyI9rUXs0BBexrl6E7JpetcCvEna6QxjxA0CdAQOufLXhIgleSxGh/jYPE78LYQJ0VeMfKVIm9pXSzGQ0zbqt6BrOe/aU42V4gKMWsIJIUM9rnw7aTN1YK481oAKIZR4dB+PGDNI6r78whdp53jYSSDhs3ElN50SylTDOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dXWaERWU; arc=none smtp.client-ip=209.85.221.43
+	s=arc-20240116; t=1745393484; c=relaxed/simple;
+	bh=xx40UBXWzin2l8gJ2C8uis4CgnNnBmPKea5bOv3ped0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DqcYvCw19bHRgSitB4VHm98loHrfPs2XMIjbWL+7lnxuuB8whlpgmo3Nz7UQYtOVf5m8OyTL2rKMZy2l7I0XV8xR9T/V/NroUGRJRBa1Gj3em4OmYj1YStNLibuy/Hv0FMWSwNTYr+pgIEuA3tN/l/ozJImWEIj3HPcv2CuqTNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tHr9B00k; arc=none smtp.client-ip=209.85.128.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dXWaERWU"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39c1efc457bso3893208f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:30:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tHr9B00k"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6feb229b716so57563677b3.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:31:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745393442; x=1745998242; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GGM4sN065n0kuohgFrVzt2nCge5uH+nnpNW+1fSbZEo=;
-        b=dXWaERWUKBYhIdjvKj3qnuHuJ+B1ELPXq2vgs+PbzpjpyJcrqtOsPmdw9F4ZzPXSST
-         QUHvLE68xgQeYnqoNVnN+uwAmNhu7FeRZ7+ljw8vVS2MNGQfTND5nvonTtJhBPg+PSfK
-         on/YHufw3+MY69vIwcKjBSci+M71yCJF4Zxni+JkO7FfF3qxHl3Uz7hvf2kSMoCQsx5/
-         yiak6pdN7yFAPMb0eJ5M/Jtssizjjbvx4jqQHdljR3I+yQKsfBVVsx2dGJSQFmTKYNAI
-         2QaFC/H1vXDrqEPrHtdtG1VmkuUV3PvjdWlmDwtFutxcJk3gTObpHEdQKGzyl9LOUlfY
-         ANJQ==
+        d=linaro.org; s=google; t=1745393482; x=1745998282; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Wz2Pp4NKveXDGybOZvUBUVWwEBJwIqad3g3WPhZc9y0=;
+        b=tHr9B00kpukFEnzXiGao3gGOMAV5r9pp4bFBfoFfr9kPUEic9GCwh4ywQRdjcsFC4/
+         xQCrl2uheFaF2j/2mls7U+46v8MSktN8GSV86xyx5S/I6dscRQmUIXyv/1fFHaAy3ETC
+         K+w2MrM/1d+WE77J1KSyT6PCsZ8+1FENF+hQaB58YFSr0EQVmTcQYitd4qnHucslxN4E
+         7WkEMODHxqB8S3OtuExI/TMZUPXznfyZIxbcQzYUikCERCnId8ZO0PjwZT7zK89dYuD1
+         gKd0SMkmEfnMzsQVZo1ETHQMYm6hE/b12g4VqeB1eMs+3G5yagDW+NOLIZwYd4dhwff7
+         oalw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745393442; x=1745998242;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745393482; x=1745998282;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GGM4sN065n0kuohgFrVzt2nCge5uH+nnpNW+1fSbZEo=;
-        b=vEhgJuI3J/5lehLeT9l32BkPCVNI5pRN0thYsuBIvX8nCuqQSzetQDHCLVeHv7rnFR
-         mLkw8M8AMj19YPQQBdunD8zq5QlDBA6aaJMHeR8RjFeDxggxisIha6TWOdirZjscT1eB
-         5POIEgdUEF2waNa7QPNEyHrLwXfCOcr8e2t6PxuVXD9UmLGR2RypWuzCuemjnNEBL5HH
-         syX3P4iHyj3HMOrt1jRTshZpYws+jKCep1YuIsaBe53/AEAm14SLKIGpkLH2lYrrXSzy
-         +ChCcxjNr6L21KSDohWiV0ZagkefJcV5VPD6eKCR9IXbqpkiyK4XebK19Wldy8Y5yE9d
-         r19g==
-X-Forwarded-Encrypted: i=1; AJvYcCXhkBQGEbs5HJ94ouf9gWjCTiO7B2XP30kH/UZMlbbyekSU5pK5ZTcR9WFExv0hJ26QIDjZxeuzwwXgG1U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXFdFH1vSqlQHg8IfatgMuS6FG9uJN51yqBoKhFddVxBqi/uZ7
-	FNp2VflRwIzfMegX8J+OEV/fzjhMkdN6OI5pfpShKfbTdiaFMIgseJ653QMrXg8=
-X-Gm-Gg: ASbGncs05AQyFNEGCp1ecNvkfXdMbJMPhibkpTyaMnyaLYhAZNfMrrA641dyG16u8hC
-	3YrGnZojjAb50zQs3+Bb8NOcU336kdwe2JwGllaiHuv0e17NUCqdGDRauWPdruPBvHU8nNllE19
-	3WGopghTa6vIdBScomDZKMss0xjZdtuVWvZ91IvxTeMqdy5qiZmMV0wZlRw4mVboBsaU3UcJZ9K
-	ab5kPjZ+lDK4/04/9GVUbTzX2BxWOzUOg4/zDic1zEATNvvs7CBERCkhBfoYIUSF9GNoncf3KEG
-	FITgW6rZWzNSo23icn07Njw5A8ZnLYSWIuG+olvn0J3Hht1yB28/gQI=
-X-Google-Smtp-Source: AGHT+IGrdd00HBZwMyBAnnRIXBCUiZx6DleTy84BgVuyF9Z71TJR+EqNYK80pzcndTozf3SpVp1E2Q==
-X-Received: by 2002:a5d:5987:0:b0:39c:3107:d68d with SMTP id ffacd0b85a97d-39efbaf665cmr13784126f8f.49.1745393442038;
-        Wed, 23 Apr 2025 00:30:42 -0700 (PDT)
-Received: from [127.0.0.2] ([2a02:2454:ff21:ef41:67a8:3ed8:e19f:5eaa])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa493115sm17761699f8f.78.2025.04.23.00.30.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 00:30:41 -0700 (PDT)
-From: Stephan Gerhold <stephan.gerhold@linaro.org>
-Date: Wed, 23 Apr 2025 09:30:12 +0200
-Subject: [PATCH 6/6] arm64: dts: qcom: x1e80100-qcp: Fix vreg_l2j_1p2
- voltage
+        bh=Wz2Pp4NKveXDGybOZvUBUVWwEBJwIqad3g3WPhZc9y0=;
+        b=FqQQ8rcUmHef+Poa9DzCi88GGlrYCYJaYRUtd2DapEzAlfgdx/mLZcdqzjAc29gRoj
+         3+dKX8GG9rq8RtCwVixEUBhxKSutCPl2iHkmOrLPaS9GBeKPRvQlg7BiHquHZki30M7Q
+         to9ei3rOnjlh3DR560JV9LOm568sxftJgaD97Gs3T7RL7zCOT6ev1rzT1vFbBDTT2FxX
+         9VCbHO/+qGT1GO3NSNWwNdmwzTzmS3A65Gvi720PFptRTxqeaFSguZ/dHicKISSIH6OH
+         89q8UzBjvGrvbCjSEqlopU4k2ds48QhoGGjCGuChtrmkjh8bx99W8wscjOKZU4rdb2as
+         Mfzw==
+X-Forwarded-Encrypted: i=1; AJvYcCV8x7ean3+GfSU/guYBGUuS1jwDrBzDEUdW9xx+H4M7y8OvBeLx4HYM5+p2mAO0ZLRs0oWMPf2Z3cflGkk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys+SVTQVIAmaThnt6q1C1OBZwBFlCPjNgsKs8uWNi9V4pg0asZ
+	RpGjdeyEPHo7U/35YD+lw6D9urLnNSTsfrTCk5q9H8w3vr1tkDO4CeXIU2N459DkWyJV7oRz9Yr
+	KO5hRsM+USRj1gDfH7Q31p3idKgygAZ2XDvgC9A==
+X-Gm-Gg: ASbGncuTarQlBPL6zbN2XI9QibMrgfqoclrbZaWqU8i100I3Y/knyxi9aJpjJ2JfM0I
+	Silky07BK0VNo2G7h6vBV/K8Kwbs1cqoMQ/iRjQXJbWOs4vJzQEnvJ5dxg+G+iyUIu2rmd+mbxc
+	OfEquCAUNRvJegLUQHJN0HhA==
+X-Google-Smtp-Source: AGHT+IE+vAxAxZJmVGsaCnTFHZjG8MA1QnR3dHhv/DlYpHbMQAbbJHrQ+/iv4PqqOdBAor/gFff+5XP0bi9r4uUyOEw=
+X-Received: by 2002:a05:690c:905:b0:6fd:4485:9255 with SMTP id
+ 00721157ae682-706cce1025cmr244056317b3.24.1745393481950; Wed, 23 Apr 2025
+ 00:31:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-x1e-vreg-l2j-voltage-v1-6-24b6a2043025@linaro.org>
-References: <20250423-x1e-vreg-l2j-voltage-v1-0-24b6a2043025@linaro.org>
-In-Reply-To: <20250423-x1e-vreg-l2j-voltage-v1-0-24b6a2043025@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Abel Vesa <abel.vesa@linaro.org>, 
- Rajendra Nayak <quic_rjendra@quicinc.com>, 
- Sibi Sankar <quic_sibis@quicinc.com>, Marc Zyngier <maz@kernel.org>, 
- Xilin Wu <wuxilin123@gmail.com>, 
- Jens Glathe <jens.glathe@oldschoolsolutions.biz>, 
- Srinivas Kandagatla <srini@kernel.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Johan Hovold <johan@kernel.org>
-X-Mailer: b4 0.14.2
+References: <20250417142513.312939-1-ulf.hansson@linaro.org>
+ <20250417142513.312939-6-ulf.hansson@linaro.org> <CAGETcx9bHGuJ_J6yF14x0NJJXGWgoDn_X_ScBKaGdD4aTBvo5w@mail.gmail.com>
+In-Reply-To: <CAGETcx9bHGuJ_J6yF14x0NJJXGWgoDn_X_ScBKaGdD4aTBvo5w@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 23 Apr 2025 09:30:45 +0200
+X-Gm-Features: ATxdqUEwA6P7n5uoj4yF10q5muEKuOPxhwor3p-HG94_3W4Rslh-b95bMMDwj7M
+Message-ID: <CAPDyKFoBm_MbHzuf9AOLZ+xLDOmscZATiqkOfOmd5igN6WSu8A@mail.gmail.com>
+Subject: Re: [PATCH 05/11] pmdomain: core: Use device_set_node() to assign the
+ fwnode too
+To: Saravana Kannan <saravanak@google.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
+	Abel Vesa <abel.vesa@linaro.org>, Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>, 
+	Peng Fan <peng.fan@oss.nxp.com>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Johan Hovold <johan@kernel.org>, Maulik Shah <maulik.shah@oss.qualcomm.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In the ACPI DSDT table, PPP_RESOURCE_ID_LDO2_J is configured with 1256000
-uV instead of the 1200000 uV we have currently in the device tree. Use the
-same for consistency and correctness.
+On Thu, 17 Apr 2025 at 22:56, Saravana Kannan <saravanak@google.com> wrote:
+>
+> On Thu, Apr 17, 2025 at 7:25=E2=80=AFAM Ulf Hansson <ulf.hansson@linaro.o=
+rg> wrote:
+> >
+> > Rather than just assigning the dev->of_node for the genpd's device, let=
+'s
+> > use device_set_node() to make sure the fwnode gets assigned too. This i=
+s
+> > needed to allow fw_devlink to work correctly, for example.
+> >
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >  drivers/pmdomain/core.c | 14 ++++++++++----
+> >  1 file changed, 10 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+> > index da51a61a974c..3911d3e96626 100644
+> > --- a/drivers/pmdomain/core.c
+> > +++ b/drivers/pmdomain/core.c
+> > @@ -2627,6 +2627,7 @@ static bool genpd_present(const struct generic_pm=
+_domain *genpd)
+> >  int of_genpd_add_provider_simple(struct device_node *np,
+> >                                  struct generic_pm_domain *genpd)
+> >  {
+> > +       struct fwnode_handle *fwnode;
+> >         int ret;
+> >
+> >         if (!np || !genpd)
+> > @@ -2635,7 +2636,9 @@ int of_genpd_add_provider_simple(struct device_no=
+de *np,
+> >         if (!genpd_present(genpd))
+> >                 return -EINVAL;
+> >
+> > -       genpd->dev.of_node =3D np;
+> > +       fwnode =3D &np->fwnode;
+>
+> Use of_fwnode_handle() please.
 
-Cc: stable@vger.kernel.org
-Fixes: af16b00578a7 ("arm64: dts: qcom: Add base X1E80100 dtsi and the QCP dts")
-Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
----
- arch/arm64/boot/dts/qcom/x1e80100-qcp.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sure! Thanks for reviewing!
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-index 470c4f826d49866a2af87f5e109672d51c9bc9cd..c0c8ecb666e178752da8e1d5c22ec2b632776129 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e80100-qcp.dts
-@@ -773,8 +773,8 @@ vreg_l1j_0p8: ldo1 {
- 
- 		vreg_l2j_1p2: ldo2 {
- 			regulator-name = "vreg_l2j_1p2";
--			regulator-min-microvolt = <1200000>;
--			regulator-max-microvolt = <1200000>;
-+			regulator-min-microvolt = <1256000>;
-+			regulator-max-microvolt = <1256000>;
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
+[...]
 
--- 
-2.47.2
-
+Kind regards
+Uffe
