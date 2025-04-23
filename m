@@ -1,89 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF99C22F76E;
-	Wed, 23 Apr 2025 23:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8838A223DC9;
+	Wed, 23 Apr 2025 23:24:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745450411; cv=none; b=gfXHNT3Cq8cj1mkOVGZ3SXQGkj3sqmCcNiplJLzkbQ+xEpV6EFHd+tlOxeHSxV5XKQWM+spdt3w14h/xmaaeGJbVWUjGvW4UFjEKkJQVosbxnXzwI6cQzuI8qSVmp0PlEWwIz/rlJwcQxOihZbnCBQ7n1IhWz92CTfPp4Tz3Z+4=
+	t=1745450701; cv=none; b=hyTgH2V/vJuX9QYVG+arQSvJUxwStbr4L1uUukR+Cp+KqaDYyhYG0b2SjEAmv1VsxFzHOSot4fgNC1DkNF3YeVFOH/Cg4xlIRLkpBtfG9Zlf+1/dIfVS6hc+fpIl0YQX1Zq9N+j5JW+KsQ3ibDJcHyJS5jiqZ7Hrfx2/KLEm5Aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745450411; c=relaxed/simple;
-	bh=3uiOWncMcQog+VeVlYybOO33xn1I8xxSJCTzt66iHJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LSB3tw/nUp9wWpHSTOFzifT6eY65Dk3vVw5OR2Thvj81114CUws5sbo8eu1JYr17sJ+Jcz8hq4s3txztn8cK5L1FbsHsyAghrZlf6DfC32OF3lHV8A3aiYAkogbdoLjA1LdqOi//7AeHUyGPi8lkJfo5XvG10jCqHR2xcGyvLlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K0hfRwkz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745450701; c=relaxed/simple;
+	bh=yskBEWSEF6FlJkJi4DwqXGby0psHuBX/9ua/oCniJP8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BGfXTY3iZ9Dv287qopTGeAFuZgVIrDc8m82KQ/oiLlfn0gsv9XMT7ucLGil1u6izN/iUiE/2SQ6vB/g9lqm4G5KY2yOtKRKaCx+KvtMQP0O7tE+UqWfofsxkZJycIddgpRuvoWzC9jEjRx3jcprOutLYPcJSPvaBZYthxio3O4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=g52K7MMR; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K0hfRwkz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D01AC4CEE2;
-	Wed, 23 Apr 2025 23:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745450410;
-	bh=3uiOWncMcQog+VeVlYybOO33xn1I8xxSJCTzt66iHJ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=K0hfRwkzf3Lbq8g002WF5rnmccGF66P/Gou9gm059CMvfHYlMOJGG1jEDgjZRGuVF
-	 2T7NC0Bm1X1kaw08uFzcheUWFQN5d/cUOLn8xzMYzcaCJbqwef9Kaa0WXQG80KDDuw
-	 iopLK9XgfIDPn5K58qinqP2/ZUAmkSJANt2CCodDI8Zcih2dCc01ViC9xUIvNGZ8Pb
-	 QqEpjZxuHV9kuA/dx3ykYdLmS0BzURDeQJsDta0GoDl1HMvsoAw4qQsj8QUOqh832W
-	 BHd2TLRzTXi4VjZC5RNdJjulGZVfm15dFsXBu6cxeIAbiliQIizqxUNKcFFSZdz6/d
-	 rI1ejKCKVTSAQ==
-Date: Wed, 23 Apr 2025 16:20:08 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/9] crypto: tcrypt - remove CRYPTO_TEST from
- defconfigs
-Message-ID: <20250423232008.GA2305@sol.localdomain>
-References: <20250422152151.3691-1-ebiggers@kernel.org>
- <20250422152151.3691-2-ebiggers@kernel.org>
- <CAMuHMdX5XKmeVABxeDv4shrUy2yt6WrMV2hxVPZ5OUe0uWUY6w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="g52K7MMR"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53NNNmdO016856
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 23 Apr 2025 16:23:49 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53NNNmdO016856
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745450634;
+	bh=3ZRudBcQfUXdEeUGknvRzjxdjhla7ofQa9vhRPg63Iw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=g52K7MMRbWF6yLwDhmY0YU3Om9fpRH0Ut+qyo76sxSZ4NHnyBc98XW5u2s2hVCFUK
+	 PhNe+N15jsjlumb03xkDxJWNBMQ76zGMekkVPvwrCgqXTuVJomLV1T/3YW5TFZ7jZ8
+	 1UmN3Fwk6b31yjBct2QL3ajxMU+0ZhSXqsLtn5qHYLVhfR4vWwV537HB9cU8VSqJHv
+	 6bXyJrePtilh9n0zOlm3jS0UhKtUD+8gXNtFrWLBIVXKpgaPuv0YalLYf+ij4Y2WWd
+	 yrxqlPYGWH/00BTyjqGIOa+LNPKvKGQxRb/Vrh8pulNMK2D75Bck1Sw8zFpVOmUKyD
+	 ftlR5gTTNtHcw==
+Message-ID: <88bcd897-8436-4ebb-ac03-833c8c8045f2@zytor.com>
+Date: Wed, 23 Apr 2025 16:23:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdX5XKmeVABxeDv4shrUy2yt6WrMV2hxVPZ5OUe0uWUY6w@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 08/34] x86/msr: Convert a native_wrmsr() use to
+ native_wrmsrq()
+To: Dave Hansen <dave.hansen@intel.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-9-xin@zytor.com>
+ <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <2932db03-164a-447e-92cf-1ef6c35c15a4@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 08:49:24AM +0200, Geert Uytterhoeven wrote:
-> Hi Eric,
+On 4/23/2025 8:51 AM, Dave Hansen wrote:
+> On 4/22/25 01:21, Xin Li (Intel) wrote:
+>>   static __always_inline void sev_es_wr_ghcb_msr(u64 val)
+>>   {
+>> -	u32 low, high;
+>> -
+>> -	low  = (u32)(val);
+>> -	high = (u32)(val >> 32);
+>> -
+>> -	native_wrmsr(MSR_AMD64_SEV_ES_GHCB, low, high);
+>> +	native_wrmsrq(MSR_AMD64_SEV_ES_GHCB, val);
+>>   }
 > 
-> (replaying my response to v1, which I wrote before I noticed there was a v2)
-> 
-> On Tue, 22 Apr 2025 at 17:23, Eric Biggers <ebiggers@kernel.org> wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> >
-> > CONFIG_CRYPTO_TEST enables a benchmarking module that is only really
-> > useful for developers working on the crypto subsystem.  It is in a bunch
-> > of defconfigs.  But as with most of the other crypto options that tend
-> > to be randomly set in defconfigs, it is unlikely that much thought was
-> > put into these, especially when placed in "production" defconfigs.
-> > Clear it out of the defconfigs for now.
-> >
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> 
-> Thanks for your patch!
-> 
-> All of these are modular, so I don't think it's a big issue, even on
-> "production" defconfigs. It just means the test is available when
-> someone feels the urge to run it.
-> Hence I try to make all tests available as modules in m68k defconfigs.
-> 
-> Gr{oetje,eeting}s,
-> 
+> A note on ordering: Had this been a native_wrmsr()=>__wrmsr()
+> conversion, it could be sucked into the tree easily before the big
+> __wrmsr()=>native_wrmsrq() conversion.
 
-Okay, but again note that this option isn't the actual crypto tests.  It's a
-benchmark.  Patch #2 renames CONFIG_CRYPTO_TEST to CONFIG_CRYPTO_BENCHMARK
-accordingly.  The actual crypto tests are not modular and are controlled by the
-inverted option CONFIG_CRYPTO_MANAGER_DISABLE_TESTS, changed to
-CONFIG_CRYPTO_SELFTESTS by patch #5.  CONFIG_CRYPTO_TEST did used to be the
-actual tests, but that changed in 2008, and no one ever fixed it.
+Can't reorder the 2 patches, because __wrmsr() takes two u32 arguments
+and the split has to be done explicitly in sev_es_wr_ghcb_msr().
 
-Due to the renaming I'd need to update the defconfigs anyway, and I figured just
-clearing out the option is the right choice in most cases.  Hence this patch.
-But if you do understand what this option does and think it should be kept in as
-CONFIG_CRYPTO_BENCHMARK=m, we can do that instead (for all defconfigs that had
-it, presumably?).
+Thanks!
+     Xin
 
-- Eric
+
