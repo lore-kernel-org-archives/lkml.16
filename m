@@ -1,243 +1,192 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96945242D69
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E613B242D69;
+	Wed, 23 Apr 2025 10:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745403605; cv=none; b=M9ITKYm/fQ/GfsMAPaI8e/L96U236UACGOkLU1EpFavxVU/oGw6MSxXSj0y0Cd5cyRyjZtbr8k1mkkOTqImZ7ysyOWvG55I5p3mtqPWGBFM4niU9JowgBlkWSDO9XZ9RAkChyrF66EDrSQU6F1y4/6royY72eQ7Zu+XIFsEfut8=
+	t=1745403651; cv=none; b=heR2ppKx1JBBBli4DUqmIRbx12/idGNZx/3thSh1mJTg11/FCEBgkodkLwUB9PgPFOT6gb3V7VlyOaOZNm2ISInRAfyTMwagWEXgs8N1yag9It8/SYd7DOhZnorsDOZ3dPQm7DZTD7IjgMgsE5F6kggDbCceu01wH641ngspveQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745403605; c=relaxed/simple;
-	bh=Y5WhhHoTooSeCgTbRixLjPy4xiZ1x/HplHdocuD3LRA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Moy/slgkjmrcA4e1YmxS5OQ0F8GfTCI6VbMAc/sMuBJIhd+blbLHAhbGKacjMfZbtcAfhjRmYv+u1qJv9g6PMoREX6SVhD1RwUiJ8ycmVZB9FSdhLn5wi//0gwVLsCbMHzPNfCBJL/Dq6447bfIVeJG9Igg2Qq9nlJq/dIkqGnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K4tnuNvZ; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745403651; c=relaxed/simple;
+	bh=Zw/IMifo2Sug27qP6e0SQG9z+HJ+7Cn8KOOF3Mi1N9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kwsiyGT6xYDuLeCSg+CgoDdcOTVnp8YezMuX2RoFxayou3maypk/Lh4pVIP+J1VQdiUR2QXK0h52zhy2MYCPK2zKmB63C0pwNXFWKGd76zabAhq0MSKXE5jWRot73uX/yjv2idEZ6gl04xSpzE9Z7Lce53Hp9vRn00ui3MIuslk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=cQq4o4pf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K4tnuNvZ"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac345bd8e13so882477066b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745403602; x=1746008402; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=s2vdS/sQrACs5XpBhnJifnqgEvAwBwUZAEYFyylpqvk=;
-        b=K4tnuNvZmFa5WAqFAY03eM4SIxM4mDgYzsfoZz/aP8sdwQ2Myp5GYXDoWDAxlepUfp
-         gizE7Bs9fl4ZXbyOrUEniRnWpnArT8goZjs6kVOYEhUcZfkaidZ6QbRTntD0vwcmIhMB
-         gzdnjvZh80+EU9TMau1LkXJW4E5+T8Mfx41hroTBVZpWwEkj50yDOcrMffI8thhuDVkr
-         NE+O4JaiLV3gRPQM3bVK9TQvDSI0WAS/O0fC3vl+oMbBqyWEHh3UnCFo3r2ZS2x9i0xH
-         JKF9htWGSaxmYwGT290iCxgtGO2cHPMkZIhx+fCWYkMO2qYEV5xXqJLkeG0eAzwketNm
-         jEpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745403602; x=1746008402;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s2vdS/sQrACs5XpBhnJifnqgEvAwBwUZAEYFyylpqvk=;
-        b=GSN2U1MkRwYvJ8r53Y5d5+KSVs3xfN/HM9cq2BQ+2L2ht4XO8PkMGpIDtTG/zq0+7g
-         oqfA3AHr6Z2r5GeFRjOgBk5y0m85n2vuoEJgbtJK+AN8hkImYNYsAFMtOPZTyOvuzG6O
-         cyLSSZoX7eQPMB1FDUv5v7QRE39NXD0AA+KqPmJU9dC9ssylxBhCFZY0/jpPmzjzQCDi
-         babDcTnhX/9lpGX5TkQoV+T3dtyS+VSJW6gn+omwHMzlQgkw7vZ3vOPTgKuJAJBYViS0
-         vUYoR6L5b+4EY94qhCpja/moO8ulRrHElsr4MtE4tC4BytkcjrIvF4JLcBZ32IPqEoX+
-         IEyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWS7R2N8nYbobczy0kHpUYNsGSpRx0f/oDT5acTwnPhEwIAnkoIn2Rg2UsIu75GLAvZUdjagHDNA3rLgwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfuTFE8auT1fgPObuMsdDLAIc/fN3CEBXv5jxhkfZuHIXJcsQn
-	5e3IUGdDJXBfVyNnXLZSpHt2I458qpGaYZ5Xhz1fn2qZoFV3iAy4AZR2Ft2LMP3aFGVAGFo/8O8
-	UJhwlM70FLb6fxgLrH+n3ac9dV5a/MhZb29+hJA==
-X-Gm-Gg: ASbGnctZ5gLbOTdlzYxOI21uNGTxq/iS2i5fNX5HsUYoTVGAmnuMWYeJb+b42JImtGu
-	eNjFr0RLc5j/mp9ekeF1PBQlDD4IoTAFi/PUXsAIAfOyKFnoDw4NiUQpMdCWI6fE2WC5XVpgtOe
-	FYNoP0vsHsiX5rr/u2gfscfAhwbNl01uQzYOUCmzNR4X7FIBPe8LsjlNdAmauiWw==
-X-Google-Smtp-Source: AGHT+IEWSPIlARmqhfPiw6LIaQrR8Cc9JW8AVGxXz7K0qY6TzzsEgLVrPFA57OjF65DQeT1E6lffvU0m9YgD/u8jT4I=
-X-Received: by 2002:a17:907:d1b:b0:ac6:fcdd:5a97 with SMTP id
- a640c23a62f3a-acb74db7d2dmr1989843266b.48.1745403601688; Wed, 23 Apr 2025
- 03:20:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="cQq4o4pf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D1F7C4CEE2;
+	Wed, 23 Apr 2025 10:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745403650;
+	bh=Zw/IMifo2Sug27qP6e0SQG9z+HJ+7Cn8KOOF3Mi1N9s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cQq4o4pfzr2aZ66PP3K36PkbKN9pQXmQU79B7qDqVDPrFIRCYvh/W0QO3J2vCFq3r
+	 bwWpBzKqkVH+pgOT6S2VFWULj+Gq8BAHKzHjiJ5wDrgUnSzPJbbyWgLFT4tmzXh8eW
+	 uC/wcXa0LNkx9ayyoYB/jA44PDZwoXfdihRiXKBY=
+Date: Wed, 23 Apr 2025 12:20:47 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
+ allocation failure
+Message-ID: <2025042329-mystify-dramatic-dcb9@gregkh>
+References: <2024122837-CVE-2024-56705-049b@gregkh>
+ <aAicoAmxX0B_O3Ok@tiehlicka>
+ <2025042301-flammable-masculine-ec48@gregkh>
+ <aAiwaM5ru-FJG2fI@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418151225.3006867-1-vincent.guittot@linaro.org>
- <20250418155115.GI17910@noisy.programming.kicks-ass.net> <20250422101628.GA33555@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250422101628.GA33555@noisy.programming.kicks-ass.net>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 23 Apr 2025 12:19:50 +0200
-X-Gm-Features: ATxdqUF5Kg7T350hC-fvlOEipmNyhGv_obCQxfzuJ59QFYlo4NrTFKSpdPDPxNs
-Message-ID: <CAKfTPtDCDZtmc-kNthF-txf4-J8byROSbPseQ_b6W+Q0Q2W9xQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Increase max lag clamping
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com, 
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, 
-	linux-kernel@vger.kernel.org, dhaval@gianis.ca
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAiwaM5ru-FJG2fI@tiehlicka>
 
-Hi Peter,
+On Wed, Apr 23, 2025 at 11:18:32AM +0200, Michal Hocko wrote:
+> On Wed 23-04-25 10:21:04, Greg KH wrote:
+> > On Wed, Apr 23, 2025 at 09:54:08AM +0200, Michal Hocko wrote:
+> > > Hi,
+> > > our internal tools which are working with vulns.git tree have noticed
+> > > that this CVE entry has been altered after the announcement.
+> > 
+> > Good catch!
+> > 
+> > > There was an additional commit added to the CVE entry. The current state
+> > > is
+> > > $ cat cve/published/2024/CVE-2024-56705.sha1
+> > > ed61c59139509f76d3592683c90dc3fdc6e23cd6
+> > > 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
+> > 
+> > Yup!
+> > 
+> > > There seem to be handful of other cases like this one AFAICS.
+> > 
+> > Yes, we had to add support for this type of problem.
+> > 
+> > > I have 3 questions:
+> > > 1) What is 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
+> > >    relation to the original CVE which seems to be about a missing memory
+> > >    allocation failure check?
+> > 
+> > Removing the driver entirely from the kernel "fixed" the vulnerability :)
+> 
+> What is _the_ vulnerability? While I do understand that _any_ potential
+> vulnerability in the removed code is removed as well I still do not see
+> how the driver removal is related to _this_ specific CVE.
 
-On Tue, 22 Apr 2025 at 12:16, Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Apr 18, 2025 at 05:51:15PM +0200, Peter Zijlstra wrote:
-> > On Fri, Apr 18, 2025 at 05:12:25PM +0200, Vincent Guittot wrote:
-> > > sched_entity lag is currently limited to the maximum between the tick and
-> > > twice the slice. This is too short compared to the maximum custom slice
-> > > that can be set and accumulated by other tasks.
-> > > Clamp the lag to the maximum slice that a task can set. A task A can
-> > > accumulate up to its slice of negative lag while running to parity and
-> > > the other runnable tasks can accumulate the same positive lag while
-> > > waiting to run. This positive lag could be lost during dequeue when
-> > > clamping it to twice task's slice if task A's slice is 100ms and others
-> > > use a smaller value like the default 2.8ms.
-> > >
-> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> > > ---
-> > >  kernel/sched/fair.c | 16 +++++++++-------
-> > >  1 file changed, 9 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index a0c4cd26ee07..1c2c70decb20 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -683,15 +683,17 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
-> > >   * is possible -- by addition/removal/reweight to the tree -- to move V around
-> > >   * and end up with a larger lag than we started with.
-> > >   *
-> > > - * Limit this to either double the slice length with a minimum of TICK_NSEC
-> > > - * since that is the timing granularity.
-> > > - *
-> > > - * EEVDF gives the following limit for a steady state system:
-> > > + * Limit this to the max allowed custom slice length which is higher than the
-> > > + * timing granularity (the tick) and EEVDF gives the following limit for
-> > > + * a steady state system:
-> > >   *
-> > >   *   -r_max < lag < max(r_max, q)
-> > >   *
-> > >   * XXX could add max_slice to the augmented data to track this.
-> > >   */
-> >
-> > Right, its that max_slice XXX there.
-> >
-> > I think I've actually done that patch at some point, but I'm not sure
-> > where I've placed it :-)
->
-> No matter, I've redone it by copy-paste from min_slice.
->
-> How's something like this then?
+"The" vulnerability is what is fixed in the last commit id, and is what
+is documented in the text of the CVE, specifically:
 
-Thanks, I will test it
+	In ia_css_3a_statistics_allocate(), there is no check on the allocation
+	result of the rgby_data memory. If rgby_data is not successfully
+	allocated, it may trigger the assert(host_stats->rgby_data) assertion in
+	ia_css_s3a_hmem_decode(). Adding a check to fix this potential issue.
 
->
-> ---
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index f96ac1982893..9e90cd9023db 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -573,6 +573,7 @@ struct sched_entity {
->         u64                             deadline;
->         u64                             min_vruntime;
->         u64                             min_slice;
-> +       u64                             max_slice;
->
->         struct list_head                group_node;
->         unsigned char                   on_rq;
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 84916c865377..7c3c95f5cabd 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -676,6 +676,8 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
->         return cfs_rq->min_vruntime + avg;
->  }
->
-> +static inline u64 cfs_rq_max_slice(struct cfs_rq *cfs_rq);
-> +
->  /*
->   * lag_i = S - s_i = w_i * (V - v_i)
->   *
-> @@ -689,17 +691,16 @@ u64 avg_vruntime(struct cfs_rq *cfs_rq)
->   * EEVDF gives the following limit for a steady state system:
->   *
->   *   -r_max < lag < max(r_max, q)
-> - *
-> - * XXX could add max_slice to the augmented data to track this.
->   */
->  static void update_entity_lag(struct cfs_rq *cfs_rq, struct sched_entity *se)
->  {
-> +       u64 max_slice = cfs_rq_max_slice(cfs_rq) + TICK_NSEC;
->         s64 vlag, limit;
->
->         WARN_ON_ONCE(!se->on_rq);
->
->         vlag = avg_vruntime(cfs_rq) - se->vruntime;
-> -       limit = calc_delta_fair(max_t(u64, 2*se->slice, TICK_NSEC), se);
-> +       limit = calc_delta_fair(max_slice, se);
->
->         se->vlag = clamp(vlag, -limit, limit);
->  }
-> @@ -795,6 +796,21 @@ static inline u64 cfs_rq_min_slice(struct cfs_rq *cfs_rq)
->         return min_slice;
->  }
->
-> +static inline u64 cfs_rq_max_slice(struct cfs_rq *cfs_rq)
-> +{
-> +       struct sched_entity *root = __pick_root_entity(cfs_rq);
-> +       struct sched_entity *curr = cfs_rq->curr;
-> +       u64 max_slice = 0ULL;
-> +
-> +       if (curr && curr->on_rq)
-> +               max_slice = curr->slice;
-> +
-> +       if (root)
-> +               max_slice = min(max_slice, root->max_slice);
-> +
-> +       return max_slice;
-> +}
-> +
->  static inline bool __entity_less(struct rb_node *a, const struct rb_node *b)
->  {
->         return entity_before(__node_2_se(a), __node_2_se(b));
-> @@ -820,6 +836,15 @@ static inline void __min_slice_update(struct sched_entity *se, struct rb_node *n
->         }
->  }
->
-> +static inline void __max_slice_update(struct sched_entity *se, struct rb_node *node)
-> +{
-> +       if (node) {
-> +               struct sched_entity *rse = __node_2_se(node);
-> +               if (rse->max_slice < se->max_slice)
-> +                       se->max_slice = rse->max_slice;
-> +       }
-> +}
-> +
->  /*
->   * se->min_vruntime = min(se->vruntime, {left,right}->min_vruntime)
->   */
-> @@ -827,6 +852,7 @@ static inline bool min_vruntime_update(struct sched_entity *se, bool exit)
->  {
->         u64 old_min_vruntime = se->min_vruntime;
->         u64 old_min_slice = se->min_slice;
-> +       u64 old_max_slice = se->max_slice;
->         struct rb_node *node = &se->run_node;
->
->         se->min_vruntime = se->vruntime;
-> @@ -837,8 +863,13 @@ static inline bool min_vruntime_update(struct sched_entity *se, bool exit)
->         __min_slice_update(se, node->rb_right);
->         __min_slice_update(se, node->rb_left);
->
-> +       se->max_slice = se->slice;
-> +       __max_slice_update(se, node->rb_right);
-> +       __max_slice_update(se, node->rb_left);
-> +
->         return se->min_vruntime == old_min_vruntime &&
-> -              se->min_slice == old_min_slice;
-> +              se->min_slice == old_min_slice &&
-> +              se->max_slice == old_max_slice;
->  }
->
->  RB_DECLARE_CALLBACKS(static, min_vruntime_cb, struct sched_entity,
-> @@ -852,6 +883,7 @@ static void __enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
->         avg_vruntime_add(cfs_rq, se);
->         se->min_vruntime = se->vruntime;
->         se->min_slice = se->slice;
-> +       se->max_slice = se->slice;
->         rb_add_augmented_cached(&se->run_node, &cfs_rq->tasks_timeline,
->                                 __entity_less, &min_vruntime_cb);
->  }
+That has not changed here at all.  It's just that the ranges of git
+versions for when Linux was vulnerable to this issue has been "tightened
+up" to only reflect when it was possible for this to be a problem (i.e.
+we now do not count the range of releases where the driver was not
+present at all in the kernel tree.)
+
+> > > 2) What is the process when a CVE is altered? have I missed any email
+> > >    notification?
+> > 
+> > We do not do email notifications when CVEs are altered.  You have to
+> > watch the cve.org json feed for that.  Otherwise the email list would
+> > just be too confusing.  Think about every new stable update that happens
+> > which causes 10+ different CVEs to be updated showing where they are now
+> > resolved.  That does not come across well in an email feed, but the json
+> > feed shows it exactly.
+> 
+> I do understand you do not want to send notifications for that. Would it
+> make sense to announce a new upstream commit added to the CVE, though? This
+> would make it much easier to see that we might be missing a fix that is
+> considered related to a particular CVE.
+
+As this has only happened 2 times so far, it's a pretty rare occurance
+given us allocating over 6000 CVEs.  And how exactly would that email
+look like?
+
+We are just changing the ranges here, we change ranges of where a kernel
+is vulnerable all the time by adding new .vulnerable files to the tree
+as people report them, and as fixes are backported to older stable
+kernel trees.  That's much more important to you than this type of
+change, right?
+
+> > Showing that the kernel ranges from 4.18 -> 5.8 were NOT vulnerable to
+> > this specific issue.  Information that is hopefully very valuable to
+> > distros dealing with old kernels, like yours :)
+> 
+> Nope, not really. Specific stable tree versions affected is not the most
+> important information to downstreams like ours. We really do care about
+> specific commits that are coupled with the CVE. If the specific commit
+> doesn't have Fixes tag then we look a the CVE-$FOO.vulnerable as well
+> (btw. I have a growing list of those that we have identified breakers
+> for and I am looking for the best way to contribute that information to
+> others. I am just not sure how to do that in the most efficient way -
+> sorry slightly offtopic here - we can follow up off the list.).
+
+The simplest way is to send us patches to the repo that add .vulnerable
+files for those CVE ids, like others have been doing.  Look at the git
+history for many examples of this happening.
+
+And yes, git ids are the most important thing, and now we have also
+tightened up that range.  That can be shown in the diff to the dyad
+file:
+
+diff --git a/cve/published/2024/CVE-2024-56705.dyad b/cve/published/2024/CVE-2024-56705.dyad
+index d4897cd95a08..41ccd4b840c1 100644
+--- a/cve/published/2024/CVE-2024-56705.dyad
++++ b/cve/published/2024/CVE-2024-56705.dyad
+@@ -1,9 +1,13 @@
+-# dyad version: 0752e6917bd6
++# dyad version: 1.1.0
++#      getting vulnerable:fixed pairs for git id 51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
+ #      getting vulnerable:fixed pairs for git id ed61c59139509f76d3592683c90dc3fdc6e23cd6
+-4.12:a49d25364dfb9f8a64037488a39ab1f56c5fa419:5.10.231:0c24b82bc4d12c6a58ceacbf2598cd4df63abf9a
+-4.12:a49d25364dfb9f8a64037488a39ab1f56c5fa419:5.15.174:4676e50444046b498555b849e6080a5c78cdda9b
+-4.12:a49d25364dfb9f8a64037488a39ab1f56c5fa419:6.1.120:02a97d9d7ff605fa4a1f908d1bd3ad8573234b61
+-4.12:a49d25364dfb9f8a64037488a39ab1f56c5fa419:6.6.64:8066badaf7463194473fb4be19dbe50b11969aa0
+-4.12:a49d25364dfb9f8a64037488a39ab1f56c5fa419:6.11.11:74aa783682c4d78c69d87898e40c78df1fec204e
+-4.12:a49d25364dfb9f8a64037488a39ab1f56c5fa419:6.12.2:0c25ab93f2878cab07d37ca5afd302283201e5af
+-4.12:a49d25364dfb9f8a64037488a39ab1f56c5fa419:6.13:ed61c59139509f76d3592683c90dc3fdc6e23cd6
++#      Setting original vulnerable kernel to be kernel 4.12 and git id a49d25364dfb9f8a64037488a39ab1f56c5fa419
++#      Setting original vulnerable kernel to be kernel 5.8 and git id ad85094b293e40e7a2f831b0311a389d952ebd5e
++4.12:a49d25364dfb9f8a64037488a39ab1f56c5fa419:4.18:51b8dc5163d2ff2bf04019f8bf7e3bd0e75bb654
++5.8:ad85094b293e40e7a2f831b0311a389d952ebd5e:5.10.231:0c24b82bc4d12c6a58ceacbf2598cd4df63abf9a
++5.8:ad85094b293e40e7a2f831b0311a389d952ebd5e:5.15.174:4676e50444046b498555b849e6080a5c78cdda9b
++5.8:ad85094b293e40e7a2f831b0311a389d952ebd5e:6.1.120:02a97d9d7ff605fa4a1f908d1bd3ad8573234b61
++5.8:ad85094b293e40e7a2f831b0311a389d952ebd5e:6.6.64:8066badaf7463194473fb4be19dbe50b11969aa0
++5.8:ad85094b293e40e7a2f831b0311a389d952ebd5e:6.11.11:74aa783682c4d78c69d87898e40c78df1fec204e
++5.8:ad85094b293e40e7a2f831b0311a389d952ebd5e:6.12.2:0c25ab93f2878cab07d37ca5afd302283201e5af
++5.8:ad85094b293e40e7a2f831b0311a389d952ebd5e:6.13:ed61c59139509f76d3592683c90dc3fdc6e23cd6
+
+> > So now we can properly handle this types of issues in an automated
+> > fashion, thanks again for noticing, this was a non-trivial amount of
+> > work to implement.  Given that no one had ever done this before, we have
+> > had to create all of this "from scratch".
+> > 
+> > Our trees are crazy, hopefully this helps explain the lifecycle of
+> > vulnerabilities and their fixes better than before.
+> > 
+> > One other note, perhaps you just want to parse the .dyad files we
+> > create instead of mbox files?
+> 
+> We are not parsing mbox files. We do care about CVE-$FOO.sha1 and that
+> provides the base for our future analysis. If we need to expect several
+> upstream commits there we are fine with that. Quite honestly seeing a
+> stream of CVEs all fixing the same vulnerability just because those
+> fixes happened in many commits doesn't seem to be optimal.
+
+I don't see any multiple CVEs happening here for the same issue, so I do
+not understand what you are referring to.
+
+Again, try following the .dyad files.  I think that will help you out a
+lot more.
+
+thanks,
+
+greg k-h
