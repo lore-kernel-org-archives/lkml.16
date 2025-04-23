@@ -1,145 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363C9201269;
-	Wed, 23 Apr 2025 12:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546AE1F4167
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745410725; cv=none; b=Zm+8cnG+vAGXTi4WV8yXBTEc5izIo7GqOrIVLJhLzZKQUoWvWeJafDh9q0ZhCoKIXJO6seII7KVRriYRHOec4BhuLdnLE3qjFqroD0ltaQa9S0TbTE5RdrXZSCL4mIaVsWYZ+iYr/9z3OJC6Xk6oi7y5l+x707p9BzSeRgTDMfI=
+	t=1745410845; cv=none; b=HL3Gs7oZ1j8TA9EDsT3BfXqfA2I5zmSWh9JkL9y6YOy0HBiYeO19858FqRX2g8fYQDXupcF5uSVhoE1d4MY+BX/AAYH7FTdKaS/8R3cvKPMfA8YUPZLNsmemyanOaktAKL05tUxfwInPdI0iEQvDOZhkhx4tmUPEAAPz3XQ2VHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745410725; c=relaxed/simple;
-	bh=qz7ZOLyrsps+7W5jqHThd243CmHxX6DhRJ+IsqFNMbk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TPnkYIhZQtzuAMdm+nAPpfukqcWsPHklLPj7aX5kQ1UDawe1FWEl7eGItLeQntX3/W7N0q/mcF1wjbyd2ePgv2lQCz96lhFHKpOKwVHoDTWBV6rV1dodMdBHfmei9zm3PpawixqiHZIOOhueDC0hGHAg2TG2WjVwPP1xSlIw9DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S3PEWaAI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745410845; c=relaxed/simple;
+	bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KxuWn3eCwKaDoPrTyPcZwIa/MG9pYiUCrAK8IzdwtKzXBP1/Za5VviGe71BeEvbDjTOdRNNKSlv1I5v7WxTQKDSyjy5MaGdE6hg/GUSa8oM3n3+zTMTg78KzUYGtkKyMYF26mMYRyOOSSCOTV5FJyrQ88AS00GN5BC+dfFgKcZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=loNoDGht; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S3PEWaAI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB6FC4CEE2;
-	Wed, 23 Apr 2025 12:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745410724;
-	bh=qz7ZOLyrsps+7W5jqHThd243CmHxX6DhRJ+IsqFNMbk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=S3PEWaAIonixO9Yb73JdIIsiuDJhJPib8Hyjp0ud9o1w77SUFFMkIjjvYzLrzhjoW
-	 F1/Znk704QP1yRdCJ4/hBtnSERhRQjXstpclx23fp4smA/1IbGlTcQ1GrkRKoJiElg
-	 GzIABOC7hzLxYNBq2KbBx4veJGUMY9TNw4W2fCuXaSAOkVmHFQKPcXjESb69mYpxUh
-	 VCZqDFcEWklLfAJui21nkuwGPmTpyYuEgKIXm0ztY59W+pmNhjSuSYqVNxpAMQ0tiz
-	 krhmE4ff5pots/vgwnXw6+/YWsji3AC6yBadFjmfjlWTYlbeo9s2V3853w0/gT2Pb6
-	 8D/nyK6e3ssbQ==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Lyude Paul <lyude@redhat.com>
-Cc: rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,  Boqun
- Feng <boqun.feng@gmail.com>,  FUJITA Tomonori <fujita.tomonori@gmail.com>,
-  Frederic Weisbecker <frederic@kernel.org>,  Thomas Gleixner
- <tglx@linutronix.de>,  Anna-Maria Behnsen <anna-maria@linutronix.de>,
-  John Stultz <jstultz@google.com>,  Stephen Boyd <sboyd@kernel.org>,
-  Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
-  Gary Guo <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,
-  Benno Lossin <benno.lossin@proton.me>,  Alice Ryhl
- <aliceryhl@google.com>,  Trevor Gross <tmgross@umich.edu>,  Danilo
- Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH v2 2/8] rust: hrtimer: Add HrTimer::raw_forward() and
- forward()
-In-Reply-To: <20250415195020.413478-3-lyude@redhat.com> (Lyude Paul's message
-	of "Tue, 15 Apr 2025 15:48:23 -0400")
-References: <20250415195020.413478-1-lyude@redhat.com>
-	<20250415195020.413478-3-lyude@redhat.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Wed, 23 Apr 2025 14:18:35 +0200
-Message-ID: <87a587m5pg.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="loNoDGht"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30f30200b51so71024081fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 05:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745410841; x=1746015641; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
+        b=loNoDGhtPFDwLtyn6lTEysmHBdvdLLrqHgGNyAVB6bHomhivdQMs4bkrqjHcKuvfpi
+         8FrqcxSArQ4hHI0A1wsttMEjR4nbfK8Y2Ayq503riRwPj6lnMaPKU9FTzot9l4LoKCHj
+         E0Ma5k+UHYAcj0IJHnnMAoZ9W6D/JTLJLWWlFkHqC48914M6ebbd/ZY1JTRTlyDinAlG
+         CiIPRbFQle5xk27Js3BWki9878KnDuOfru2Mew0lqdd6Fu+Y0cR1EF+V8OIZyYlLq7VP
+         NJ5MXPgxDJZrDSl/PAn03cjudkNYlhPI00vwFWMqY2fKKA2NAUW404A/hZRdkZ0RJ7Ta
+         LxHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745410841; x=1746015641;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
+        b=XIIRMhj9MdodjggtG9QnXpf6wUMNCLS6d56h5Cgg9HWURN+apgllI31spKWNvnXBmh
+         dwsKqlzbh2cEE0CoVS1CF0aWItba4qQXPeODWaF1+GoVQjaJJsgu1hRGLIqj4phNUhuY
+         xC5ojTb6NfRER2D7tK9Ve86Pp9dKbXdDlBxvmlBwROlleLldcG6o2iOSMvbS4Lq2/hC3
+         t6OQa/jN9wiVmacTbd3S9RrJca8FqlM0T/41Xi2r7a72yyWz7Vx0nP12vDhmHjV2UHYj
+         cSxNGlxk9+Ir5xi34yNH69WAxmIIJX3o6Cc2mpVqBdlo8nyuQ14V1oZjS1yB1bJ6Uhem
+         99oA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ3HfoDOoVE4t0nADmeDigIJ/GGooTXOT7r99nj8x9qPbuRNgYfBQH4k2fdNrgvZpQXJiPsHMtwOst4mM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwDEprI0irTLnXiatMYm92sW+MS/VQSSbJkYx8p5tVtbhmlMJWY
+	MG5EImQfboVRyt11rtxEw0PCAGllGwlQVP7+juTGYwC4hNvc0eoK5Qj/PMZ6QykVW0Q3waJmfTE
+	4I8dIolrPxxkuD1lhL+B7zRfxESmvJxXtPfIZjQ==
+X-Gm-Gg: ASbGnctAXabAb7n+rIvbo9RvkA6AfrjooPkJffioDzhnEC8gxM59TnCHHL2Nk6M1mJo
+	3sG+dO7dZ8ucXCVwYIvB/B4HU+TrHbnz3/e9YkxXGlbbAmKyZ2VNLQSPJTBItBx2A2H3EuPO4bK
+	lvwnDN62e741tcyYFW71bWQKss8TIVp2tS1mj/2lpytGuwv08wcc+rEG9u5ubw07d3
+X-Google-Smtp-Source: AGHT+IHdOy6Vd80a71VsBDq9vq4NcDgqMFfcNVJIb9jbOrQ25R+2kyWaeho7dLvnMD7PoIkydcR5flY29jmHWUrtlnI=
+X-Received: by 2002:a2e:a814:0:b0:30b:971c:96e6 with SMTP id
+ 38308e7fff4ca-31090544994mr65437581fa.26.1745410841172; Wed, 23 Apr 2025
+ 05:20:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
+ <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk> <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
+ <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk> <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
+ <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk> <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
+ <CACRpkdaBNVyXUwErHTtGBnUjh4+6Ojb6fu9M4E7LnRCu_Oovpg@mail.gmail.com>
+ <CAMRc=McFBAG9Gi3UBfsdoQ=78fL3sTK+ZMToXWGF=KOw6zwPiQ@mail.gmail.com> <CACRpkdaKBDyd44xPA_kBxR9HVFqfLgcSnd1UDHumyB=m5-B3xQ@mail.gmail.com>
+In-Reply-To: <CACRpkdaKBDyd44xPA_kBxR9HVFqfLgcSnd1UDHumyB=m5-B3xQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 23 Apr 2025 14:20:30 +0200
+X-Gm-Features: ATxdqUFPfchZIqBJZBy7vOjihOhPD3Ut0RnZdl-eHYA4dR5GVziVhoOlmDg3B_M
+Message-ID: <CAMRc=Mc9fMrx0bek1mE2kpoxXVgD7GATaeQWZnL1eDW5oZ-FTQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
+ workarounds for regulators
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Lyude Paul <lyude@redhat.com> writes:
-
-> Within the hrtimer API there are quite a number of functions that can only
-> be safely called from one of two contexts:
+On Tue, Apr 22, 2025 at 2:05=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
 >
-> * When we have exclusive access to the hrtimer and the timer is not activ=
-e.
-> * When we're within the hrtimer's callback context as it is being execute=
-d.
+> On Thu, Apr 17, 2025 at 8:57=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> > On Tue, Apr 15, 2025 at 11:33=E2=80=AFPM Linus Walleij <linus.walleij@l=
+inaro.org> wrote:
 >
-> This commit adds bindings for hrtimer_forward() for the first such contex=
-t,
-> along with HrTimer::raw_forward() for later use in implementing the
-> hrtimer_forward() in the latter context.
+> > > There are precedents for this type of semantic IRQF_SHARED
+> > > is used whenever two devices share the same IRQ line,
+> > > and that is something the drivers have to specify, i.e. the
+> > > driver has to be aware that it may be sharing the IRQ
+> > > with other devices, and whenever it gets an IRQ it has
+> > > to check "was it for me?" and in case it was, return
+> > > IRQ_HANDLED else IRQ_NONE.
+> > >
+> >
+> > First: this flag has existed (as SA_SHIRQ) since before git days and
+> > could be considered legacy. But also: it's a bit of a different story
+> > as sometimes you get an interrupt and need to read a specific register
+> > to check from the status bits whether it concerns you. This never
+> > happens with a GPIO so I don't think it's a good argument for this
+> > specific case.
 >
-> Since we can only retrieve a &mut reference to an HrTimer<T> in contexts
-> where it is not possible for the timer to be accessed by others or
-> currently executing (e.g. a UniqueArc), a &mut is actually enough of a
-> guarantee to safely fulfill the C API requirements here.
+> But at the same time Mark describes that drivers using a shared
+> GPIO cannot really be opaque as to the status changes on the
+> GPIO line, as it may or may not need to update register contents
+> depending on whether the line has actually been low or not while
+> being disabled. Maybe this can be fixed by a per-consumer status
+> flag in the descriptor such as bool was_toggled;
 >
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> ---
->  rust/kernel/time/hrtimer.rs | 36 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
->
-> diff --git a/rust/kernel/time/hrtimer.rs b/rust/kernel/time/hrtimer.rs
-> index bfe0e25f5abd0..aadae8666f7ea 100644
-> --- a/rust/kernel/time/hrtimer.rs
-> +++ b/rust/kernel/time/hrtimer.rs
-> @@ -68,7 +68,11 @@
->  //! `start` operation.
->=20=20
->  use super::ClockId;
-> -use crate::{prelude::*, time::Instant, types::Opaque};
-> +use crate::{
-> +    prelude::*,
-> +    time::{Delta, Instant},
-> +    types::Opaque,
-> +};
->  use core::marker::PhantomData;
->  use pin_init::PinInit;
->=20=20
-> @@ -164,6 +168,36 @@ pub(crate) unsafe fn raw_cancel(this: *const Self) -=
-> bool {
->          // handled on the C side.
->          unsafe { bindings::hrtimer_cancel(c_timer_ptr) !=3D 0 }
->      }
-> +
-> +    /// Forward the timer expiry for a given timer pointer.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// `self_ptr` must point to a valid `Self`.
-> +    unsafe fn raw_forward(self_ptr: *mut Self, now: Instant, interval: D=
-elta) -> u64 {
-> +        // SAFETY:
-> +        // * The C API requirements for this function are fulfilled by o=
-ur safety contract.
-> +        // * `self_ptr` is guaranteed to point to a valid `Self` via our=
- safety contract
-> +        unsafe {
-> +            bindings::hrtimer_forward(Self::raw_get(self_ptr), now.as_na=
-nos(), interval.as_nanos())
-> +        }
-> +    }
-> +
-> +    /// Forward the timer expiry so it expires at `duration` after `now`.
-> +    ///
-> +    /// This is mainly useful for timer types that can start off providi=
-ng a mutable reference (e.g.
-> +    /// `Pin<Box<=E2=80=A6>>`) before the timer is started.
-> +    ///
-> +    /// Note that this does not requeue the timer, it simply updates its=
- expiry value. It returns
-> +    /// the number of overruns that have occurred as a result of the exp=
-iry change.
-> +    pub fn forward(&mut self, now: Instant, duration: Delta) -> u64 {
 
-Can you add an example? I think maybe we are not going to be able to get
-this mutable reference. `HrTimer` should probably be behind a `Pin<_>`.
+The few use-cases we have for that use regulator notifiers at the
+moment and I think async is the way to go here.
 
-
-Best regards,
-Andreas Hindborg
-
-
+Bart
