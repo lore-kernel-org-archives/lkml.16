@@ -1,79 +1,124 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC7D23E35D;
-	Wed, 23 Apr 2025 03:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD9423E35D;
+	Wed, 23 Apr 2025 03:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745379727; cv=none; b=FTN4X2FRiUWPzlAI/H8a5Jxp/TvndZLjtYvCwmHyb5ryi8HBaPlOl2/yacbO3YSIvPCvnkr+QAYzzVbmvXkB11007h2HTPsWxJyRSq6FpFB5SyF4UBYU7dAFQEPNnA8VlKY6wtQTS/D/5q4WuTZ3Y3hR1xPPGHMaJL0+3tJQsXM=
+	t=1745379806; cv=none; b=SS0u6mr7YAQSIQ2nlx8H23133qW72QuauMN04RWuwuhh8RrafM9oQAYzAc4QVEULll6W54xAT3TaU3qGDDW1YkknwYha9ruxSHI6FWMn2JwbhaZL7IvqUk4voVDA5XRHHQnKuM2gSthIXAyrAglhOL2FP1kWh/TgtugpMq2poWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745379727; c=relaxed/simple;
-	bh=IWyVJ7aEC0M9P/TD88qqDmwjbikyz7A4xCKX2Spz3Rc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=msEUudSD4ZJwH2q6LnvS0tGuivWqhqyeOz+HP/d9SW0cGUfSPxe8KDtwpfReoe1/Y0y4snNFBmoJyh/+/eAwk5L/R1wltDSLiP/+NgVHe+epjwfTbowSkRvxOHwptgFX19oUZs1mwuiC3QxfGs0Rgek4Q4PzXUabtZCvggwMJjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=R8vgEWJd; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1745379806; c=relaxed/simple;
+	bh=UppegL8eqOatI5rkNWA4+BqGjnxLl/vwLnSllPrK+H0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=X478bkJlk5un18uSH8fKPhMXXqGWcCgtZyjlVJ1AM0+q8HhCRqJZK6KYnMouX6uZ9Lm3oeYEAQN9NeJrhwf8evnDIwKGNMmIKKKxijdL4sqf+GFznlPDS1JP7ZiSBxQjYIJUDWLJTQ1M9XDTwmVSdPYUMLijn2nAo07R+T62GzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=XCFpCiT0; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="R8vgEWJd"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=CvPjl01CQoNJfYkNbSOrcz1LqiZzSxsyrCfhIJ29m9k=; b=R8vgEWJdqlme13UJVkaPIZHDE4
-	amrQcxE8lxDjdKupqdnGcahR2iVayU6Ag7+ewrmI7fraqxmVk96AjfEfwGyQYLdSuFBEexcTbMA7A
-	L79WeTcHIlKiAiCdFnol93lrAyDKQSIA2uBem9coPynZuro+xpaB7LkjZcVukeXjAVR1gaRiOFRW1
-	6CJdYh+CSZRnZSJxYHLtEDuRcH5Dv+ZkuJFupJH51dG7Ha6Sx5oU6U3T1o0RUrAaz3OfIDD43mk0W
-	iBegjOWKsYTtaGhJzw+PSPGbF5VvbToidzopdYO97FpWgZUm9Gk7LJ5GndirWEUdevq7rI0jhp5w0
-	xlJ7hYKg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u7QzX-000Gji-1a;
-	Wed, 23 Apr 2025 11:41:44 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 23 Apr 2025 11:41:43 +0800
-Date: Wed, 23 Apr 2025 11:41:43 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc: linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: atmel-sha204a - Set hwrng quality to lowest
- possible
-Message-ID: <aAhhd91a94ZypyWN@gondor.apana.org.au>
-References: <20250422095718.17360-1-kabel@kernel.org>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="XCFpCiT0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1745379805; x=1776915805;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UppegL8eqOatI5rkNWA4+BqGjnxLl/vwLnSllPrK+H0=;
+  b=XCFpCiT0648WW50GS99+PmhRunZYvPdkQewe2oOzXEKMmPn0EPqyRxmO
+   Z8HRc7sE4iNQ68GPew4vUzqRVpWnIRzZNv7GAwJPbj4ymJhdhtPXe7iLb
+   mmnnS/WZFWyHXkqDncgbMzDeoHnu/zCRD6HUa5Bqv4w/XfeoSW8VbLOrt
+   GyrDiwaeqZiqi8iP6DsAcdz8CG4ljNHMvRQsWhtyYzN7UWHqZdz+5ePvN
+   e7JP8n5KXQDlE+SLqxI5YKfPQPTCswdZ7YdbNV2p4iWH3sM7XQAuyIAYS
+   kXbzB0dWELvtJphAccGrPPZ2xhTGd6BYdoWkJ0p1qWDJhm+OVMSFIGVOK
+   A==;
+X-CSE-ConnectionGUID: OIKPGXYnRTy8Tk+dna2eYw==
+X-CSE-MsgGUID: 4VgQr5GbR6yfbKcfYvyGzg==
+X-IronPort-AV: E=Sophos;i="6.15,232,1739862000"; 
+   d="scan'208";a="40787373"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 22 Apr 2025 20:42:16 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 22 Apr 2025 20:41:55 -0700
+Received: from che-ld-unglab06.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Tue, 22 Apr 2025 20:41:52 -0700
+From: Rengarajan S <rengarajan.s@microchip.com>
+To: <kumaravel.thiagarajan@microchip.com>,
+	<tharunkumar.pasumarthi@microchip.com>, <gregkh@linuxfoundation.org>,
+	<jirislaby@kernel.org>, <linux-serial@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <unglinuxdriver@microchip.com>
+CC: <rengarajan.s@microchip.com>
+Subject: [PATCH v1 tty-next] 8250: microchip: pci1xxxx: Add PCIe Hot reset disable support for Rev C0 and later devices
+Date: Wed, 23 Apr 2025 09:08:41 +0530
+Message-ID: <20250423033841.33758-1-rengarajan.s@microchip.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250422095718.17360-1-kabel@kernel.org>
+Content-Type: text/plain
 
-On Tue, Apr 22, 2025 at 11:57:18AM +0200, Marek Behún wrote:
-> According to the review by Bill Cox [1], the Atmel SHA204A random number
-> generator produces random numbers with very low entropy.
-> 
-> Set the lowest possible entropy for this chip just to be safe.
-> 
-> [1] https://www.metzdowd.com/pipermail/cryptography/2014-December/023858.html
-> 
-> Fixes: da001fb651b00e1d ("crypto: atmel-i2c - add support for SHA204A random number generator")
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> ---
->  drivers/crypto/atmel-sha204a.c | 6 ++++++
->  1 file changed, 6 insertions(+)
+Systems that issue PCIe hot reset requests during a suspend/resume
+cycle cause PCI1XXXX device revisions prior to C0 to get its UART
+configuration registers reset to hardware default values. This results
+in device inaccessibility and data transfer failures. Starting with
+Revision C0, support was added in the device hardware (via the Hot
+Reset Disable Bit) to allow resetting only the PCIe interface and its
+associated logic, but preserving the UART configuration during a hot
+reset. This patch enables the hot reset disable feature during suspend/
+resume for C0 and later revisions of the device.
 
-Patch appiled.  Thanks.
+Signed-off-by: Rengarajan S <rengarajan.s@microchip.com>
+---
+ drivers/tty/serial/8250/8250_pci1xxxx.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_pci1xxxx.c b/drivers/tty/serial/8250/8250_pci1xxxx.c
+index e9c51d4e447d..ec573327590f 100644
+--- a/drivers/tty/serial/8250/8250_pci1xxxx.c
++++ b/drivers/tty/serial/8250/8250_pci1xxxx.c
+@@ -115,6 +115,7 @@
+ 
+ #define UART_RESET_REG				0x94
+ #define UART_RESET_D3_RESET_DISABLE		BIT(16)
++#define UART_RESET_HOT_RESET_DISABLE            BIT(17)
+ 
+ #define UART_BURST_STATUS_REG			0x9C
+ #define UART_TX_BURST_FIFO			0xA0
+@@ -620,7 +621,13 @@ static int pci1xxxx_suspend(struct device *dev)
+ 	}
+ 
+ 	data = readl(p + UART_RESET_REG);
+-	writel(data | UART_RESET_D3_RESET_DISABLE, p + UART_RESET_REG);
++
++	if (priv->dev_rev >= 0xC0)
++		writel(data | (UART_RESET_D3_RESET_DISABLE |
++		       UART_RESET_HOT_RESET_DISABLE), p + UART_RESET_REG);
++	else
++		writel(data | UART_RESET_D3_RESET_DISABLE,
++		       p + UART_RESET_REG);
+ 
+ 	if (wakeup)
+ 		writeb(UART_PCI_CTRL_D3_CLK_ENABLE, p + UART_PCI_CTRL_REG);
+@@ -647,7 +654,14 @@ static int pci1xxxx_resume(struct device *dev)
+ 	}
+ 
+ 	data = readl(p + UART_RESET_REG);
+-	writel(data & ~UART_RESET_D3_RESET_DISABLE, p + UART_RESET_REG);
++
++	if (priv->dev_rev >= 0xC0)
++		writel(data & ~(UART_RESET_D3_RESET_DISABLE |
++		       UART_RESET_HOT_RESET_DISABLE), p + UART_RESET_REG);
++	else
++		writel(data & ~UART_RESET_D3_RESET_DISABLE,
++		       p + UART_RESET_REG);
++
+ 	iounmap(p);
+ 
+ 	for (i = 0; i < priv->nr; i++) {
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.25.1
+
