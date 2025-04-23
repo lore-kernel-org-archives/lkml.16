@@ -1,82 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2562701D4;
-	Wed, 23 Apr 2025 21:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 489D82701CA;
+	Wed, 23 Apr 2025 21:59:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745445445; cv=none; b=tHBQ8ucj98GhjKapOsnnqQOyH0b06IKGUh/wMddEKUTj/pBq/Xj2YTyIGVfRfy8B46AmUrjF8TPVPUR21Vpfj7mA/pr3OjNLlu9b0OFkCNbSsle298vsbLpCGYibKUHMY17wgF3bJF/WQUmfU4M/Fh+ufqY9naoLOiekAYRUIjs=
+	t=1745445554; cv=none; b=EMUA1UEuMQBD/G5uEA7i0bvZCWK6qYcpXfhou4lSih0Xqk2vuApolFkjcwbDidAbaKWZgDVZSynaN8L2kQyiO+rbhVOOK/+BEIHd/w1oKsNlbm88TDA2hW+XLPu2mjqJdh85f+qfTV68Ogzuka/ajyWvLUrTP6V5JDTWd4wW+Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745445445; c=relaxed/simple;
-	bh=LTR2hs5byCKEFUsgJ7ZJqVPMvJGrhL4/fkSVIHm6vY8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VRWkDGGUDYXVYdvvUfB/sVM1BivetuQYANEZG5lP2FrkkQyKjun2b4YlLKdK7yGcBglTZk1vKw2FJD8zAxXWnbcbnObOunB2mqOvNwcoy4GaZeePpYBR/wtQyP0t8vEHBZwXGgu0K5peVz7J6+X8mWQ++p+bS8B18IgPurGpcEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ee4pCpT4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745445554; c=relaxed/simple;
+	bh=Miz9NzWnAK/CmNDcN+idx6rTUbeCo5M/yRi7KWMyvNo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=QWDGw4+7CKe0XhSzh9h4IQzHNKnDuA5tUWAZPiD4rIHhVeEIxN0V0kUu6NuJhc3P7vU1ZeUQhWMB4SGoDQDNpA4ER3aKEaNy713TLGVwloKYlXWRn+THYBa0iOoUSW+nUouzfo2mVE4KHUvrsCjeBPONWJRlD8DltTmmRjEgq8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=a8b0MZA8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ee4pCpT4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9781C4CEE2;
-	Wed, 23 Apr 2025 21:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745445444;
-	bh=LTR2hs5byCKEFUsgJ7ZJqVPMvJGrhL4/fkSVIHm6vY8=;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="a8b0MZA8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B2FC4CEE2;
+	Wed, 23 Apr 2025 21:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1745445553;
+	bh=Miz9NzWnAK/CmNDcN+idx6rTUbeCo5M/yRi7KWMyvNo=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Ee4pCpT4JI6TxES3sauuCCzIWPDS+jtUV/VUeo6DUX5gr+IAFrQU0MHeA/J00Qp7W
-	 YIbhEDp8MMN/t8t/NIgvn+35BqbkG1pKEfHG9Oacz+BU5W7wj3LWUf5SrqwFH/mboh
-	 gG5ysWBFZYNfJHus3EinC5422Lq45C68v/Sfoo08zSE1QoTa6LEIQOQzOcYUrBd0eL
-	 334qA8IvSZ8CrbhGoUHFsc7jXsdh3HAUT9MVPYBSCqKagjqbD+PBAf62LSTHfkkgOW
-	 8LvAlLyYBrFb4xaS7AViTiHzLVnfOXEHtMFGLpx8DtPz1+Q3Opnp3MLnngpdK7y/S3
-	 K7o8oHgj6JCPg==
-Date: Wed, 23 Apr 2025 14:57:23 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Haiyang Zhang <haiyangz@microsoft.com>
-Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, KY Srinivasan
- <kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui
- <decui@microsoft.com>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
- "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
- <edumazet@google.com>, "pabeni@redhat.com" <pabeni@redhat.com>, Long Li
- <longli@microsoft.com>, Konstantin Taranov <kotaranov@microsoft.com>,
- "horms@kernel.org" <horms@kernel.org>, "mhklinux@outlook.com"
- <mhklinux@outlook.com>, "pasha.tatashin@soleen.com"
- <pasha.tatashin@soleen.com>, "kent.overstreet@linux.dev"
- <kent.overstreet@linux.dev>, "brett.creeley@amd.com"
- <brett.creeley@amd.com>, "schakrabarti@linux.microsoft.com"
- <schakrabarti@linux.microsoft.com>, "shradhagupta@linux.microsoft.com"
- <shradhagupta@linux.microsoft.com>, "ssengar@linux.microsoft.com"
- <ssengar@linux.microsoft.com>, "rosenp@gmail.com" <rosenp@gmail.com>, Paul
- Rosswurm <paulros@microsoft.com>, "linux-hyperv@vger.kernel.org"
- <linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
- <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH v2 2/3] net: mana: Add sched HTB offload
- support
-Message-ID: <20250423145723.7ff12e1a@kernel.org>
-In-Reply-To: <MN0PR21MB3437359D91F059D83AF929F0CABA2@MN0PR21MB3437.namprd21.prod.outlook.com>
-References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
-	<1745217220-11468-3-git-send-email-ernis@linux.microsoft.com>
-	<20250421170349.003861f2@kernel.org>
-	<20250422194830.GA30207@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-	<20250422171846.433d620d@kernel.org>
-	<MN0PR21MB3437359D91F059D83AF929F0CABA2@MN0PR21MB3437.namprd21.prod.outlook.com>
+	b=a8b0MZA8XSIoNLMnm+Ac5ypsUHn8EM7NNXSX+bVAWtewvIavk7rAlPbeurLfchJfB
+	 3HSdgyJjsG3+NvIZtYC/T95BvvbKz5jqOxaOYTQgwRbAinynQAQelaf1UTaoevSNOE
+	 WsBgGp1yw7GGL68uNUm8hN0x/9wUEuU8uTCRRPAk=
+Date: Wed, 23 Apr 2025 14:59:12 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Huan Yang <link@vivo.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt
+ <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
+ cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ opensource.kernel@vivo.com
+Subject: Re: [PATCH 1/2] mm/memcg: use kmem_cache when alloc memcg
+Message-Id: <20250423145912.3e0062864b6969b3623c8ff6@linux-foundation.org>
+In-Reply-To: <20250423084306.65706-2-link@vivo.com>
+References: <20250423084306.65706-1-link@vivo.com>
+	<20250423084306.65706-2-link@vivo.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 23 Apr 2025 15:27:16 +0000 Haiyang Zhang wrote:
-> > > We selected tc-htb for our current use case because we plan to support
-> > > multiple speed classes in the future.  
-> > 
-> > Which net-shapers also support.  
-> 
-> Thanks for pointing that out...
-> But for easier usage with existing tc tool for customers, can we still
-> use tc-htb offload? Does using tc-htb offload for speed clamping break
-> any coding convention or API specs?
+On Wed, 23 Apr 2025 16:43:04 +0800 Huan Yang <link@vivo.com> wrote:
 
-The only spec here is that the offloaded version is supposed to look
-like the non-offloaded one. I really don't see how you can claim that
-static single class HTB is a accurate offload of HTB.
+> @@ -3652,7 +3654,10 @@ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
+>  	int __maybe_unused i;
+>  	long error;
+>  
+> -	memcg = kzalloc(struct_size(memcg, nodeinfo, nr_node_ids), GFP_KERNEL);
+> +	memcg = likely(memcg_cachep) ?
+> +			kmem_cache_zalloc(memcg_cachep, GFP_KERNEL) :
+> +			kzalloc(struct_size(memcg, nodeinfo, nr_node_ids),
+> +				GFP_KERNEL);
+
+Why are we testing for memcg_cachep=NULL?
+
+> @@ -5055,6 +5061,10 @@ static int __init mem_cgroup_init(void)
+>  		INIT_WORK(&per_cpu_ptr(&memcg_stock, cpu)->work,
+>  			  drain_local_stock);
+>  
+> +	memcg_size = struct_size_t(struct mem_cgroup, nodeinfo, nr_node_ids);
+> +	memcg_cachep = kmem_cache_create("mem_cgroup", memcg_size, 0,
+> +					 SLAB_PANIC | SLAB_HWCACHE_ALIGN, NULL);
+
+If it's because this allocation might have failed then let's not
+bother.  If an __init-time allocation failed, this kernel is unusable
+anyway.
+
+
