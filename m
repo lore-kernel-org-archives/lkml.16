@@ -1,112 +1,240 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A8D27990F
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 449D721FF5F;
+	Wed, 23 Apr 2025 16:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426825; cv=none; b=dGZ7Ig4QKgd+eUSgRbk11KQG4ljp2fwNf9rcNjLBgOhxrGxNISzm3e8f/TjV5x6Ar0q2sH0fWEtkiOaHxVbqfU0EaYF62Z7nayWE8+G4XjDe9JrwloF/mfJhrzJGT1uI+UF4ow1VW4ujZPa/LBNyEy4wBem7+mhLxHuypIIDk/4=
+	t=1745426869; cv=none; b=KFt/Opjjm/OzQfUQhgAFv1u6Q+saIxvQ54EyfbmVvP27KZTMhZVFwv/T/xE7V2uoPeybJzp9QxSZol2mM948xtWPDlNZgrzFQBRLxSzpo+tlfuureOVPnjwM/D0Do3xCy1NyF/HIxG/rOk3hbjE/XhhYcg812sxqzC6L8epWZyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426825; c=relaxed/simple;
-	bh=m4WVOwAjcjgnM8goDGj/NfyDxwbR3w9B3VjTYwZ8Bzk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A8vRUmCMMO0nYIU29PiTsPh/3MG0+M9vhifhs6Wb4MeMNNCYExDyNqA57Z9PMurSppsEN5rzrVqMgRskCPgoHNoXwiFDvVV6FExeSgb3UjhSOQetJ5t0X1LKZoxkaYIs2gCDbnL0qAaJSTt6S6xwodvR0+up737KgL9pozw/MFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=aG3/JcJe; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="aG3/JcJe"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c55500d08cso5109785a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:47:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745426822; x=1746031622; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6+8rggCr0z1qPiuM8lIjq53Nx8yYtHzEKWUk97MIIIU=;
-        b=aG3/JcJehGtN5aPn4nqpjh6+S2p4m/HqYdWqtjI5VLMeTk0Tr7Z3qYGrBKAt3PfxQS
-         goY81zdEoda9BMpYW92G7O8OJ8kd2RM9SCRrZP9cGm6N3wqqIse9lboVBtWExHJzl+cV
-         ohOA5YXjcaxnzJJ0Nfjjcxpa6hla15OS21/j/TRhDTYhnbaXOvUdjpQnbzWCYPvvjB2p
-         I8Txqw8cyc/xHS7/9KhiKJScOWQKRiHamiJLsTEtxU4WIs5+yO+Zb4kZoseVd7s34vtx
-         2+YnIcVTTmpWd/g1tNKp+gGIpWMMOOGk/qvHFATj1d9hH8Wdtc9RtNYOYfwCb8oTY+6K
-         2fuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745426822; x=1746031622;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6+8rggCr0z1qPiuM8lIjq53Nx8yYtHzEKWUk97MIIIU=;
-        b=fxTzppgllOiwGZA3t2Ep95Wrd5rLbY5O/lZ6h3mKPII+r8e7+ByO5Q4k0KcC52D11/
-         5HBzHP827aWyJLXQxXU9jPHdn8f49XQL586DAJ/yLNa2s+rBtTxEJ756pcAvkUQMK6tT
-         aJ8ds7+nSEih3RfiwIQssw57k26IBqbPuYIRUm0a4Jp3VKIiO3YqV0JiIzhHpCSb2NML
-         7vWy8rUQ49q9zryZuFUiM5MLDXWZ9XP5Z5c3NRga2/xwWzNtOd/KNU28TzeCYjjBRck7
-         oBHYscwXLab+7ez1pNcYBHyRfckatVbeawWBRo7sChzxSb8viGYosPfTguNL4c7kRQtk
-         kWsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWT3sTMWd0VX5pH7MxMVPXnIevPWxhTmle+EKOEynUZDShu240QBlpIHnl0ZpsgA2Ot27y0KQGz+Fuq8ak=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0X/080ED8kBj53faTKZN6gMYKMTubcp2wnjYUyP1mfRyfnM4B
-	+ICM7HRyhGul9LNeljtP+p1ulZXGy9ocn6V/p+ktk/k1qdUNOi5p5xkpHeZ+SU0=
-X-Gm-Gg: ASbGncv4SntN75+8o4B5xucN6CPYHqQH9KnRm089l5RVcOyWbYaGJL4oEStiGoOYEhq
-	JTJRNlFeJmVclGYcffs7Q3YuoSTHbN07vpU/605TpGIY8fHPh/omKEg8lvk1U+/ZFbedFl/dZr5
-	Bx/85v6t/5WFlhhy5WBd1aRAUJoU9rIFFA3SQ95PVb5Mi3MXvBK6zwQ70o5zC3USccFgKp9+A9t
-	8EADnYowNGOMJXeEamX5t/FrS7oWgwlpZ7iisDqI1nwQdgIJZ4SKUIiUgQ6YO49xPRz/1Kzq1bx
-	vEqqqkIuAN5ffC9MnNn6mGG0qgjJ8bKwUjew8OJofsQ+5vXUvDtZejdZMFbc2Pr2+PNOeuBN0Hk
-	A8TiuCGl+A+hqReRxqXk=
-X-Google-Smtp-Source: AGHT+IHLwFuRAmk7gfG53u60+o1yuFvnpHCWeSmLNb9pe/u1DKOYa+3/GqvlkBEaYk0caxSiBgYSCA==
-X-Received: by 2002:a05:620a:8017:b0:7c5:48af:7f99 with SMTP id af79cd13be357-7c955e6b6d6mr45515185a.35.1745426821711;
-        Wed, 23 Apr 2025 09:47:01 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925b4dbe7sm700352585a.87.2025.04.23.09.47.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 09:47:01 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7dFU-00000007LB5-344v;
-	Wed, 23 Apr 2025 13:47:00 -0300
-Date: Wed, 23 Apr 2025 13:47:00 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Magnus Damm <damm+renesas@opensource.se>,
-	Arnd Bergmann <arnd@arndb.de>, Robin Murphy <robin.murphy@arm.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Lu Baolu <baolu.lu@linux.intel.com>,
-	Vasant Hegde <vasant.hegde@amd.com>, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu: ipmmu-vmsa: avoid Wformat-security warning
-Message-ID: <20250423164700.GF1213339@ziepe.ca>
-References: <20250423164006.2661372-1-arnd@kernel.org>
+	s=arc-20240116; t=1745426869; c=relaxed/simple;
+	bh=mQdv7YXx38FAo3qeUV7ML8j/h/JcDNvwpN1YRlhBNCg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bpUPrpom80g0LKIzzLy28WjG1/bJQjnjTpVhyt7oRRjlU5x3PX1LF6Oyy85Z3d6aBxIHeSzlJvu4qYw+tnHSOxfJ7637HNmYfbszryke04ZTm9PLojJ1cA7ShkTYKtIvKJ1q4ClQRcRrWDMRyrftdjuKTNeAf3yf9Zs3m6Pgr70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZjPzx065yz6K9Pb;
+	Thu, 24 Apr 2025 00:43:09 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 709C414020A;
+	Thu, 24 Apr 2025 00:47:43 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 23 Apr
+ 2025 18:47:42 +0200
+Date: Wed, 23 Apr 2025 17:47:41 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>
+Subject: Re: [PATCH v8 12/16] cxl/pci: Assign CXL Port protocol error
+ handlers
+Message-ID: <20250423174741.000004b1@huawei.com>
+In-Reply-To: <20250327014717.2988633-13-terry.bowman@amd.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	<20250327014717.2988633-13-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423164006.2661372-1-arnd@kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500005.china.huawei.com (7.191.163.240) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Wed, Apr 23, 2025 at 06:40:02PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Wed, 26 Mar 2025 20:47:13 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
+
+> Introduce CXL error handlers for CXL Port devices. These are needed
+> to handle and log CXL protocol errors.
 > 
-> iommu_device_sysfs_add() requires a constant format string, otherwise
-> a W=1 build produces a warning:
+> Update cxl_create_prot_err_info() with support for CXL Root Ports (RP), CXL
+> Upstream Switch Ports (USP) and CXL Downstreasm Switch ports (DSP).
 > 
-> drivers/iommu/ipmmu-vmsa.c:1093:62: error: format string is not a string literal (potentially insecure) [-Werror,-Wformat-security]
->  1093 |         ret = iommu_device_sysfs_add(&mmu->iommu, &pdev->dev, NULL, dev_name(&pdev->dev));
->       |                                                                     ^~~~~~~~~~~~~~~~~~~~
-> drivers/iommu/ipmmu-vmsa.c:1093:62: note: treat the string as an argument to avoid this
->  1093 |         ret = iommu_device_sysfs_add(&mmu->iommu, &pdev->dev, NULL, dev_name(&pdev->dev));
->       |                                                                     ^
->       |                                                                     "%s",
+> Add functions cxl_port_error_detected() and cxl_port_cor_error_detected().
 > 
-> This was an old bug but I saw it now because the code was changed as part
-> of commit d9d3cede4167 ("iommu/ipmmu-vmsa: Register in a sensible order").
+> Add cxl_assign_error_handlers() and use to assign the CXL Port error
+> handlers for CXL RP, CXL USP, and CXL DSP. Make the assignments in
+> cxl_uport_init_ras() and cxl_dport_init_ras() after mapping RAS registers.
 > 
-> Fixes: 7af9a5fdb9e0 ("iommu/ipmmu-vmsa: Use iommu_device_sysfs_add()/remove()")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
 > ---
->  drivers/iommu/ipmmu-vmsa.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/cxl/core/core.h |  2 ++
+>  drivers/cxl/core/pci.c  | 23 +++++++++++++
+>  drivers/cxl/core/port.c |  4 +--
+>  drivers/cxl/core/ras.c  | 76 +++++++++++++++++++++++++++++++++--------
+>  drivers/cxl/cxl.h       |  5 +++
+>  drivers/cxl/port.c      | 29 ++++++++++++++--
+>  6 files changed, 120 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
+> index 15699299dc11..5ce7269e5f13 100644
+> --- a/drivers/cxl/core/core.h
+> +++ b/drivers/cxl/core/core.h
+> @@ -122,6 +122,8 @@ void cxl_ras_exit(void);
+>  int cxl_gpf_port_setup(struct device *dport_dev, struct cxl_port *port);
+>  int cxl_acpi_get_extended_linear_cache_size(struct resource *backing_res,
+>  					    int nid, resource_size_t *size);
+> +struct cxl_port *find_cxl_port(struct device *dport_dev,
+> +			       struct cxl_dport **dport);
+>  
+>  #ifdef CONFIG_CXL_FEATURES
+>  size_t cxl_get_feature(struct cxl_mailbox *cxl_mbox, const uuid_t *feat_uuid,
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 10b2abfb0e64..9ed6f700e132 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -739,6 +739,29 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+>  
+>  #ifdef CONFIG_PCIEAER_CXL
+>  
+> +
+> +void cxl_port_cor_error_detected(struct device *cxl_dev,
+> +				 struct cxl_prot_error_info *err_info)
+> +{
+> +	void __iomem *ras_base = err_info->ras_base;
+> +	struct device *pci_dev = &err_info->pdev->dev;
+> +	u64 serial = 0;
+> +
+> +	__cxl_handle_cor_ras(cxl_dev, pci_dev, serial, ras_base);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_port_cor_error_detected, "CXL");
+> +
+> +pci_ers_result_t cxl_port_error_detected(struct device *cxl_dev,
+> +					 struct cxl_prot_error_info *err_info)
+> +{
+> +	void __iomem *ras_base = err_info->ras_base;
+> +	struct device *pci_dev = &err_info->pdev->dev;
+> +	u64 serial = 0;
 
-Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+Maybe just put that directly in the call?  Or is it usefull to hvae
+it here as a form of documentation?
 
-Jason
+> +
+> +	return  __cxl_handle_ras(cxl_dev, pci_dev, serial, ras_base);
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_port_error_detected, "CXL");
+> +
+>  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+>  					  struct cxl_dport *dport)
+>  {
+
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index f18cb568eabd..fe38e76f2d1a 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -110,34 +110,80 @@ static void cxl_cper_prot_err_work_fn(struct work_struct *work)
+>  }
+>  static DECLARE_WORK(cxl_cper_prot_err_work, cxl_cper_prot_err_work_fn);
+>  
+> +static int match_uport(struct device *dev, const void *data)
+> +{
+> +	const struct device *uport_dev = data;
+> +	struct cxl_port *port;
+> +
+> +	if (!is_cxl_port(dev))
+> +		return 0;
+> +
+> +	port = to_cxl_port(dev);
+> +
+> +	return port->uport_dev == uport_dev;
+> +}
+> +
+>  int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
+>  			     struct cxl_prot_error_info *err_info)
+>  {
+>  	struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(_pdev);
+> -	struct cxl_dev_state *cxlds;
+>  
+>  	if (!pdev || !err_info) {
+>  		pr_warn_once("Error: parameter is NULL");
+>  		return -ENODEV;
+>  	}
+>  
+> -	if ((pci_pcie_type(pdev) != PCI_EXP_TYPE_ENDPOINT) &&
+> -	    (pci_pcie_type(pdev) != PCI_EXP_TYPE_RC_END)) {
+> +	*err_info = (struct cxl_prot_error_info){ 0 };
+> +	err_info->severity = severity;
+> +	err_info->pdev = pdev;
+Can maybe carry forward earlier suggestion for at least these two fields.
+
+	*err_info = (struct cxl_prot_error_info) {
+		.severity = ...
+
+	};
+> +
+> +	switch (pci_pcie_type(pdev)) {
+> +	case PCI_EXP_TYPE_ROOT_PORT:
+> +	case PCI_EXP_TYPE_DOWNSTREAM:
+> +	{
+> +		struct cxl_dport *dport = NULL;
+> +		struct cxl_port *port __free(put_cxl_port) =
+> +			find_cxl_port(&pdev->dev, &dport);
+> +
+> +		if (!port || !is_cxl_port(&port->dev))
+> +			return -ENODEV;
+> +
+> +		err_info->ras_base = dport ? dport->regs.ras : NULL;
+> +		err_info->dev = &port->dev;
+> +		break;
+> +	}
+> +	case PCI_EXP_TYPE_UPSTREAM:
+> +	{
+> +		struct cxl_port *port;
+> +		struct device *port_dev __free(put_device) =
+> +			bus_find_device(&cxl_bus_type, NULL, &pdev->dev,
+> +					match_uport);
+> +
+> +		if (!port_dev || !is_cxl_port(port_dev))
+> +			return -ENODEV;
+> +
+> +		port = to_cxl_port(port_dev);
+> +		err_info->ras_base = port ? port->uport_regs.ras : NULL;
+> +		err_info->dev = port_dev;
+> +		break;
+> +	}
+> +	case PCI_EXP_TYPE_ENDPOINT:
+> +	case PCI_EXP_TYPE_RC_END:
+> +	{
+> +		struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
+> +		struct cxl_memdev *cxlmd = cxlds->cxlmd;
+> +		struct device *dev __free(put_device) = get_device(&cxlmd->dev);
+> +
+> +		err_info->ras_base = cxlds->regs.ras;
+> +		err_info->dev = &cxlds->cxlmd->dev;
+> +		break;
+> +	}
+> +	default:
+> +	{
+>  		pci_warn_once(pdev, "Error: Unsupported device type (%X)", pci_pcie_type(pdev));
+>  		return -ENODEV;
+>  	}
+> -
+> -	cxlds = pci_get_drvdata(pdev);
+> -	struct device *dev __free(put_device) = get_device(&cxlds->cxlmd->dev);
+> -
+> -	if (!dev)
+> -		return -ENODEV;
+> -
+> -	*err_info = (struct cxl_prot_error_info){ 0 };
+> -	err_info->ras_base = cxlds->regs.ras;
+> -	err_info->severity = severity;
+> -	err_info->pdev = pdev;
+> -	err_info->dev = dev;
+> +	}
+>  
+>  	return 0;
+>  }
+
