@@ -1,123 +1,70 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682B027F4D9;
-	Wed, 23 Apr 2025 16:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C980617B421;
+	Wed, 23 Apr 2025 16:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426473; cv=none; b=QFF3gm+3DqcoQ1BoEqMgJ5b0j557VoAwM+gF2OzPH9xIdtWQEMgefo4vaUkFjvTzdv6PddOb8/nL448gC72VlbpAMUKh7VFSaz0FVp9L61ceF7BSAOcp54FeIRjL/hr8bA7PLtKfquPcXu6E0UGYBq4LxOClynwwlfpoATe2Ft8=
+	t=1745426502; cv=none; b=V8rhVFSlO4+JFjDzK/HqTx+vI+SGwE3Yr3kV06tWnWxWVV5Py021zKo7pa+dVUPVtSMB6PKpuRyK6MtSyXe2JiAwZX/foWT/4CNIC8gBHx6hJbpQxLrSgISmjYmyKmyuoNtNXPpjhSERollTG9eCtGNGuTMeVlJOWqFVHZJO1Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426473; c=relaxed/simple;
-	bh=t4Tz1BCNxW6564+a9wXl3Kpz3CXf6hGRqDEGOOYs6g8=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OPUtZqJjV2u+BkM70SuVKlE5ULbPOpgZJ4dHqHVGFn39DgK0agctd2QR7vLLwvJ12XtiGNs/pQDxeGeNEOUDmWOmJrdj0ldq+tXC9Gfaiv+e9tw8V8C8QiAqW3IsflSnPHDwwYrTAYV5AiUz2GnN5BVrff0hgFVNM6A4EQE53cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZjPrp2tbDz6M4lr;
-	Thu, 24 Apr 2025 00:36:58 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id DF920140146;
-	Thu, 24 Apr 2025 00:41:07 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 23 Apr
- 2025 18:41:06 +0200
-Date: Wed, 23 Apr 2025 17:41:05 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Terry Bowman <terry.bowman@amd.com>
-CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
-	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
-	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
-	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
-	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
-	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
-	<lukas@wunner.de>, <ming.li@zohomail.com>,
-	<PradeepVineshReddy.Kodamati@amd.com>
-Subject: Re: [PATCH v8 10/16] cxl/pci: Add log message if RAS registers are
- not mapped
-Message-ID: <20250423174105.0000597b@huawei.com>
-In-Reply-To: <20250327014717.2988633-11-terry.bowman@amd.com>
-References: <20250327014717.2988633-1-terry.bowman@amd.com>
-	<20250327014717.2988633-11-terry.bowman@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1745426502; c=relaxed/simple;
+	bh=+NbL2oSE3TVPn5qRJxJNJP6XmHYxcXYA0NDuyWW3TvI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XuzmxBopV2oNXWXt/T3TA6ltxvhXdsTa03odAO1PbyaccRbywRjW1BpIQ5IjzvmqqQm2HOOqUaHT62ha7rBdgRcOAV7Ezw0KP0QUOw/3gJtNhHgAUegMLrNI+pskAqBysEzi2laplEOp0MZkC1Lgbkym8SWWcihEGn9igLZkTCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieZrL53C; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieZrL53C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D592C4CEE2;
+	Wed, 23 Apr 2025 16:41:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745426502;
+	bh=+NbL2oSE3TVPn5qRJxJNJP6XmHYxcXYA0NDuyWW3TvI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ieZrL53CXwpnER+cb8kBOAGLGdL4n2GFUq8DtnXvVnpAouDvfC3xSXV+PIC6b7nud
+	 TuAiwZW/v+OiRUlHKSeI6DKfKsrmprVvIqKYPADK48XXV2lIvz+cLlObPlguCKCTc3
+	 qRbxiMheZNkazPG3us1S1fKeJy6YUl1z+NCyQ3DDm+mBO5DytM6xdlMRMWDmD/9eht
+	 tSzrRRXgYZoeGzfRTYQf4IUgUTAwcVxULovAQ+ZoiD84ogTAdE859lH+DNN6l4vaFc
+	 r48KOC9iVVIpxVNjblYMYKtcfQtS1SrjuGv6tlMFv7/PV560f/1JBGZwjTJpJbJKtJ
+	 vg0hMx/Y+y5Bw==
+Date: Wed, 23 Apr 2025 09:41:39 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: tip-bot2 for Ard Biesheuvel <tip-bot2@linutronix.de>, 
+	linux-tip-commits@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, linux-efi@vger.kernel.org, x86@kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [tip: x86/boot] x86/boot: Disable jump tables in PIC code
+Message-ID: <4dxg5dunoft5r5hd5kddqzap2stn2ytiwvgik7vvktifbhiyv4@2dxkkjlygnia>
+References: <20250422210510.600354-2-ardb+git@google.com>
+ <174539448176.31282.2929835259793717594.tip-bot2@tip-bot2>
+ <odoambb32hnupncbqfisrlqih2b2ggthhebcrg42e5fg25uxol@xe5veqq52xif>
+ <CAMj1kXFpE=P0_a3fTAnb7qQmXLt19dCtuEcd5U8xwYzAcO=ufQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFpE=P0_a3fTAnb7qQmXLt19dCtuEcd5U8xwYzAcO=ufQ@mail.gmail.com>
 
-On Wed, 26 Mar 2025 20:47:11 -0500
-Terry Bowman <terry.bowman@amd.com> wrote:
-
-> The CXL RAS handlers do not currently log if the RAS registers are
-> unmapped. This is needed in order to help debug CXL error handling. Update
-> the CXL driver to log a warning message if the RAS register block is
-> unmapped during RAS error handling.
+On Wed, Apr 23, 2025 at 05:01:42PM +0200, Ard Biesheuvel wrote:
+> > > So let's not bother and disable jump tables for code built with -fPIC
+> > > under arch/x86/boot/startup.
+> >
+> > Hm, does objtool even run on boot code?
+> >
 > 
-> Also, refactor the __cxl_handle_cor_ras() functions check for status.
-> Change it to be consistent with the same status check in
-> __cxl_handle_cor_ras().
+> This is about startup code, not boot code. This is code that is part
+> of vmlinux, but runs from a different mapping of memory than the one
+> the linker assumes, and so it needs to be built with -fPIC to
+> discourage the compiler and linker from inserting symbol references
+> via the kernel virtual mapping, which may not be up yet when this code
+> runs.
 
-Not keen on an 'also' bit in here.  Seems entirely separable
-into its own patch.
+Maybe objtool should ignore .head.text.  It doesn't need ORC, static
+calls, uaccess validation, retpolines, etc.
 
-Two trivial one thing patches seems better than one slightly larger one.
-Actual changes seem fine to me so feel free to add
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-to resulting pair of patches.
-
-> 
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> ---
->  drivers/cxl/core/pci.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 1cf1ab4d9160..4770810b2138 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -656,15 +656,18 @@ static void __cxl_handle_cor_ras(struct device *dev,
->  	void __iomem *addr;
->  	u32 status;
->  
-> -	if (!ras_base)
-> +	if (!ras_base) {
-> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
->  		return;
-> +	}
->  
->  	addr = ras_base + CXL_RAS_CORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
-> -	if (status & CXL_RAS_CORRECTABLE_STATUS_MASK) {
-> -		writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> -		trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
-> -	}
-> +	if (!(status & CXL_RAS_CORRECTABLE_STATUS_MASK))
-> +		return;
-> +	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
-> +
-> +	trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
->  }
->  
->  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
-> @@ -700,8 +703,10 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
->  	u32 status;
->  	u32 fe;
->  
-> -	if (!ras_base)
-> +	if (!ras_base) {
-> +		dev_warn_once(dev, "CXL RAS register block is not mapped");
->  		return false;
-> +	}
->  
->  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
->  	status = readl(addr);
-
+-- 
+Josh
