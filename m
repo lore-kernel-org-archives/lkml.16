@@ -1,233 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCCC818BBAE
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26F9C189F57
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745414520; cv=none; b=AkzUiPGb4GagP4jQjoXUYVyKg6XsNeQhksBzWWZV5MeSVkIR1YjKJ7Y5oL/N717NWQLnF5/OjFbCNhfzyFwjGv+ES8G+J/9o4Juo5Nx8nkeX4OrUo1E6K41lLE668J0XindRm0fNMJoq2+ZYIYyxAFgps0gDmbxRLlt6um+pKXo=
+	t=1745414522; cv=none; b=ZQS6NwBEMWfzjcW58sHLkysO//AuRRUheoJU46FfsVwL7ub8iOEcy0kHzAwfTAWRYD5XUAWrMW71BKfoxAEK294AzMAAS/vEtwS8SfDMNj/lyYkxwF6Dyi+PE8+QgT7yqAl9Ru/NM20/vOCqQo0v1BmzvstqQfsEu8qHkRbbWNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745414520; c=relaxed/simple;
-	bh=Xe+d02CG83R08Gc8sX/2gu0ycajhZ1Rrr/zsZ5RfWWA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kduOiWqH8nFYpZZvNn4vbJEMWPu8nkebYvmsbkQe+E7jDr+eght6JbcN6xcIkSSgOyh2rDhOgpBQ2mVqEI/WDcusV/l4v9+GzK8BFV+K9m/2eG4LW6bZyKr/ogE3rDQiWojvZMffq+EdctCaGOncfKSZqpady19Zxv6/2DAWh8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htvEq2vw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745414522; c=relaxed/simple;
+	bh=Kows0XL7gKJe1i0pLaRBE/Sn74cJUIQtD6WutoBDJ4w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bPEB6TRX8woIt86S2/jZeM0nfBs0mC04LE3bWIN2dNGn0iR+WdVD+FaZTTfM1un/YZriQsSDX7JvbSSRaWZNnxEz/54RxUDxxEMfF8097orF1B1T81UzMw2EUZSl5EaJUvsaW/hDF0svk4t7PmJ3Q1g2PSA5kAko+Jr4rbXDE1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=S9xDLQNp; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htvEq2vw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDD90C4CEE2;
-	Wed, 23 Apr 2025 13:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745414520;
-	bh=Xe+d02CG83R08Gc8sX/2gu0ycajhZ1Rrr/zsZ5RfWWA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=htvEq2vw84SAZmprboeiiJ59486ed2gJHBoSmTUyoyVvsOqSNwS+l1qe6ytpln894
-	 J1nNlUTxQUctwBo/qkCwvkyoSRtjuYa5nB7tlUMIHVbUFDlzo1iqKXIshm4j4JFGEr
-	 FcXiD2x35Bv5+jI9J1rSZmNu5V50Y3pJA85WB4JgKGUETotEIU3ewuhh0JW7DqNNsS
-	 M5a7quu3tDW/OEtnXm3a92LLxxIeoqqNZgIc8tBmtLHCplcrZKX/0kC8SqljsLWrtb
-	 cJ5Jhc12OcQxo4lf+hlcoUbNh8TiIyC1fVUJNk/fT+f7qhWY7y/FEVM2x3xvpvABSv
-	 RueTJUVJv/dOg==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Wed, 23 Apr 2025 15:21:46 +0200
-Subject: [PATCH v5 03/14] nvmet-fcloop: refactor fcloop_nport_alloc and
- track lport
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="S9xDLQNp"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d6d162e516so50140275ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745414518; x=1746019318; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yFxbUqe4x1e+3vHnnMvSYfdGB6uDRsaUIx6ClI9ClLM=;
+        b=S9xDLQNpEUIHmOMZiW//GTUUsvSii7NrHzNYOFwiGC6L/56nmMF8Vh1yS6+l8VpyUc
+         Nit3U6vRiOH+bIC8BI+tAlVIpH11WzKe0ISppzJ0crKo5wvhsAdJllS1QXOVIM25a1ej
+         253xFJLcGmLXTt8KUzMIg0GX2dEkIsosNQsh1zJDoM01Lspz5GmVFsIJCCQhdlUhIjW3
+         ixG+SQQnY5kWkfeNRjUaszVXoTeUtv2kv6q2L8MdErhYyaHErP6sTdlQsRts/AiZQTpR
+         0jusBQ31oo5xPeTfMjY1Y53mMPPHAPm0e+xHTXhp9B4jDOj/7PXKwn28CUqKzpHtuMGA
+         Xu8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745414518; x=1746019318;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yFxbUqe4x1e+3vHnnMvSYfdGB6uDRsaUIx6ClI9ClLM=;
+        b=MZ/gckUJf+9/GIXbAX00IwyD/q0X4I+3nBCgO15gj5QxP1Kg6bk1qBb679akdaxkmi
+         0D7HDo4cymP3Je8ZkKxQQ3zxreZAeug0UCc9soVSkc/iDNL9TMhSSzYGq9mcUIiwG8eN
+         JtBv+ICi44pvtoRGNQU9h5NZLRUN2P/cX+3s5pSCpfxeXVNSMzrq8BaQRBaLeLDYdWIh
+         eU+J49LHSCQLeJ6UbwS63eFBKN/cJg7+hXy2Bl5qtqlq6uTyZa+gmprGx31UBTHQAXNn
+         weg9bwdd392OfoLrSfgK++JFWoANavAQPtXDTxOO8AzHA11L7qXbv2jgk+A+UTASamDN
+         hhGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXalr8doXE+OF7oZOyC1GOOH4XdPcS3W2FaLROGG1NKXNnOCTpNXB3My1QFliufKqe4+5AQEDg6BGNZdRc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhfBSn2Ud93ikdkREwQp9KLvKMnbLiqzK5B0DpKpA0sTUyoJ2T
+	Rj2W3I+RRBeCoHZ9dmDxq5nmYOKJZVZjQqfWomLzd3nKmGlWL+/ep43Uocc+UmhC2J8Ic7w3GIn
+	g
+X-Gm-Gg: ASbGnctCHqrxLmYXxp5CRZzzVlIjoDeRLf2ZJL5wxm+4lgkJM01AngtEcT5YJIAIq1Q
+	guuf48ijT0hJfPpG8lWoHhqYUPUWKjcyAEdUYfpd9YrdwRFCR30ibLisCJuwmJjes3xCGMdEqXD
+	a9UM54JldqDFUBUVIdjoynkbWsP5HrqP4iNuudb5UyknkodfMgGL1M+V8MsDZvhNzxjUqJqYWIP
+	gbpCi619v9xmyZEXbLicf/RtNookHCJGfcADs7zTXJfhXqb4i6jQ/uvECHE30Gw96Y3BV4oPhj+
+	UCLtFVSV3LRnqgw4k4kK3Jkkq4kZngQZqmm8+Lefvs9BesEY
+X-Google-Smtp-Source: AGHT+IGTVEkt9W2JltunyBersFyZ6wDo6AvaUWgTrYHtS8zxIbIrUCUZrDuNaD9JWWXTO8zilUtOtA==
+X-Received: by 2002:a05:6e02:17cd:b0:3d3:f6ee:cc4c with SMTP id e9e14a558f8ab-3d889047eb1mr178691565ab.0.1745414517912;
+        Wed, 23 Apr 2025 06:21:57 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f6a3806326sm2806031173.42.2025.04.23.06.21.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 06:21:57 -0700 (PDT)
+Message-ID: <09bde11c-a3f3-4c5a-91ed-74bfd2e0f61d@kernel.dk>
+Date: Wed, 23 Apr 2025 07:21:56 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/3] nvme/pci: PRP list DMA pool partitioning
+To: Caleb Sander Mateos <csander@purestorage.com>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Kanchan Joshi <joshi.k@samsung.com>, linux-nvme@lists.infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250422220952.2111584-1-csander@purestorage.com>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250422220952.2111584-1-csander@purestorage.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-nvmet-fcloop-v5-3-3d7f968728a5@kernel.org>
-References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
-In-Reply-To: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
-To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
 
-The checks for a valid input values are mixed with the logic to insert a
-newly allocated nport. Refactor the function so that first the checks
-are done.
+On 4/22/25 4:09 PM, Caleb Sander Mateos wrote:
+> NVMe commands with more than 4 KB of data allocate PRP list pages from
+> the per-nvme_device dma_pool prp_page_pool or prp_small_pool. Each call
+> to dma_pool_alloc() and dma_pool_free() takes the per-dma_pool spinlock.
+> These device-global spinlocks are a significant source of contention
+> when many CPUs are submitting to the same NVMe devices. On a workload
+> issuing 32 KB reads from 16 CPUs (8 hypertwin pairs) across 2 NUMA nodes
+> to 23 NVMe devices, we observed 2.4% of CPU time spent in
+> _raw_spin_lock_irqsave called from dma_pool_alloc and dma_pool_free.
+> 
+> Ideally, the dma_pools would be per-hctx to minimize
+> contention. But that could impose considerable resource costs in a
+> system with many NVMe devices and CPUs.
+> 
+> As a compromise, allocate per-NUMA-node PRP list DMA pools. Map each
+> nvme_queue to the set of DMA pools corresponding to its device and its
+> hctx's NUMA node. This reduces the _raw_spin_lock_irqsave overhead by
+> about half, to 1.2%. Preventing the sharing of PRP list pages across
+> NUMA nodes also makes them cheaper to initialize.
+> 
+> Allocating the dmapool structs on the desired NUMA node further reduces
+> the time spent in dma_pool_alloc from 0.87% to 0.50%.
 
-This allows to untangle the setup steps into a more linear form which
-reduces the complexity of the functions.
+Looks good to me:
 
-Also start tracking lport when a lport is assigned to a nport. This
-ensures, that the lport is not going away as long it is still referenced
-by a nport.
-
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
----
- drivers/nvme/target/fcloop.c | 107 ++++++++++++++++++++++++++-----------------
- 1 file changed, 64 insertions(+), 43 deletions(-)
-
-diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
-index 2cce7649af276528360395b6d58f03183c11da20..a8134127ad8087190d674251a88545da3f8800d7 100644
---- a/drivers/nvme/target/fcloop.c
-+++ b/drivers/nvme/target/fcloop.c
-@@ -1028,6 +1028,9 @@ fcloop_nport_put(struct fcloop_nport *nport)
- 	list_del(&nport->nport_list);
- 	spin_unlock_irqrestore(&fcloop_lock, flags);
- 
-+	if (nport->lport)
-+		fcloop_lport_put(nport->lport);
-+
- 	kfree(nport);
- }
- 
-@@ -1234,6 +1237,25 @@ fcloop_nport_lookup(u64 node_name, u64 port_name)
- 	return nport;
- }
- 
-+static struct fcloop_lport *
-+__fcloop_lport_lookup(u64 node_name, u64 port_name)
-+{
-+	struct fcloop_lport *lport;
-+
-+	list_for_each_entry(lport, &fcloop_lports, lport_list) {
-+		if (lport->localport->node_name != node_name ||
-+		    lport->localport->port_name != port_name)
-+			continue;
-+
-+		if (fcloop_lport_get(lport))
-+			return lport;
-+
-+		break;
-+	}
-+
-+	return NULL;
-+}
-+
- static ssize_t
- fcloop_delete_local_port(struct device *dev, struct device_attribute *attr,
- 		const char *buf, size_t count)
-@@ -1272,8 +1294,8 @@ fcloop_delete_local_port(struct device *dev, struct device_attribute *attr,
- static struct fcloop_nport *
- fcloop_alloc_nport(const char *buf, size_t count, bool remoteport)
- {
--	struct fcloop_nport *newnport, *nport = NULL;
--	struct fcloop_lport *tmplport, *lport = NULL;
-+	struct fcloop_nport *newnport, *nport;
-+	struct fcloop_lport *lport;
- 	struct fcloop_ctrl_options *opts;
- 	unsigned long flags;
- 	u32 opts_mask = (remoteport) ? RPORT_OPTS : TGTPORT_OPTS;
-@@ -1288,10 +1310,8 @@ fcloop_alloc_nport(const char *buf, size_t count, bool remoteport)
- 		goto out_free_opts;
- 
- 	/* everything there ? */
--	if ((opts->mask & opts_mask) != opts_mask) {
--		ret = -EINVAL;
-+	if ((opts->mask & opts_mask) != opts_mask)
- 		goto out_free_opts;
--	}
- 
- 	newnport = kzalloc(sizeof(*newnport), GFP_KERNEL);
- 	if (!newnport)
-@@ -1307,60 +1327,61 @@ fcloop_alloc_nport(const char *buf, size_t count, bool remoteport)
- 	refcount_set(&newnport->ref, 1);
- 
- 	spin_lock_irqsave(&fcloop_lock, flags);
--
--	list_for_each_entry(tmplport, &fcloop_lports, lport_list) {
--		if (tmplport->localport->node_name == opts->wwnn &&
--		    tmplport->localport->port_name == opts->wwpn)
--			goto out_invalid_opts;
--
--		if (tmplport->localport->node_name == opts->lpwwnn &&
--		    tmplport->localport->port_name == opts->lpwwpn)
--			lport = tmplport;
-+	lport = __fcloop_lport_lookup(opts->wwnn, opts->wwpn);
-+	if (lport) {
-+		/* invalid configuration */
-+		fcloop_lport_put(lport);
-+		goto out_free_newnport;
- 	}
- 
- 	if (remoteport) {
--		if (!lport)
--			goto out_invalid_opts;
--		newnport->lport = lport;
--	}
--
--	list_for_each_entry(nport, &fcloop_nports, nport_list) {
--		if (nport->node_name == opts->wwnn &&
--		    nport->port_name == opts->wwpn) {
--			if ((remoteport && nport->rport) ||
--			    (!remoteport && nport->tport)) {
--				nport = NULL;
--				goto out_invalid_opts;
--			}
--
--			fcloop_nport_get(nport);
--
--			spin_unlock_irqrestore(&fcloop_lock, flags);
--
--			if (remoteport)
--				nport->lport = lport;
--			if (opts->mask & NVMF_OPT_ROLES)
--				nport->port_role = opts->roles;
--			if (opts->mask & NVMF_OPT_FCADDR)
--				nport->port_id = opts->fcaddr;
-+		lport = __fcloop_lport_lookup(opts->lpwwnn, opts->lpwwpn);
-+		if (!lport) {
-+			/* invalid configuration */
- 			goto out_free_newnport;
- 		}
- 	}
- 
--	list_add_tail(&newnport->nport_list, &fcloop_nports);
-+	nport = __fcloop_nport_lookup(opts->wwnn, opts->wwpn);
-+	if (nport) {
-+		if ((remoteport && nport->rport) ||
-+		    (!remoteport && nport->tport)) {
-+			/* invalid configuration */
-+			goto out_put_nport;
-+		}
- 
-+		/* found existing nport, discard the new nport */
-+		kfree(newnport);
-+	} else {
-+		list_add_tail(&newnport->nport_list, &fcloop_nports);
-+		nport = newnport;
-+	}
-+
-+	if (opts->mask & NVMF_OPT_ROLES)
-+		nport->port_role = opts->roles;
-+	if (opts->mask & NVMF_OPT_FCADDR)
-+		nport->port_id = opts->fcaddr;
-+	if (lport) {
-+		if (!nport->lport)
-+			nport->lport = lport;
-+		else
-+			fcloop_lport_put(lport);
-+	}
- 	spin_unlock_irqrestore(&fcloop_lock, flags);
- 
- 	kfree(opts);
--	return newnport;
-+	return nport;
- 
--out_invalid_opts:
--	spin_unlock_irqrestore(&fcloop_lock, flags);
-+out_put_nport:
-+	if (lport)
-+		fcloop_lport_put(lport);
-+	fcloop_nport_put(nport);
- out_free_newnport:
-+	spin_unlock_irqrestore(&fcloop_lock, flags);
- 	kfree(newnport);
- out_free_opts:
- 	kfree(opts);
--	return nport;
-+	return NULL;
- }
- 
- static ssize_t
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
 -- 
-2.49.0
+Jens Axboe
 
