@@ -1,38 +1,39 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38E51E1E1E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3BB22D793;
 	Wed, 23 Apr 2025 07:12:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392344; cv=none; b=Dwff/BKNGIuHlXONu+Aj0QZhkwx6DIkBGIu7lIg8xzwzMWcBmeu+TS/OyUP/g3K4sub5sbbbtH4ThhCKOwDkl04pmdqt9Ucx96NgkQl3mVT8N9/x3L2GVbDHlIpJHKbeGhlshPthevbx4JCayRscAV+hkSb6IN6VjPUlQcWzAvA=
+	t=1745392344; cv=none; b=LRhKTowZb3uxWBmn5rFYJIoHJDpkNDmDWvZ2ubt40Vi2AVfBRfdHoP/0OtnqSxKK4/QwccimKyOY6OfWUdBAjCknw9mKdJ7FJaok7yvQxLfmQyokV8VY/nhV4jqH7PW1FbR2sQpJm5JA4h1zUf8FJi2BISvV70A2Xh6AUAd/8tU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745392344; c=relaxed/simple;
-	bh=Pv6ZZR7QtSqhiYl5hs3FGWuovNn4uKA1JA0M7H4acYw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EDkdsPp8cI7APYdJsBJ8Qzo0yf+aiCbtoILErbgRL+k8BorXM0bc31g0rxi3zMRdpc6IhMtY9VIzqOYg3htxGkqqB/uLf/q0PRV8jGyPCpLchgB5MpVKIhX5LHXG/5cIOK/2siIBNPvIZBu/PaA6j7T22aQ+5fwD8EwGzRUm4PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OyNIlDDm; arc=none smtp.client-ip=217.70.183.197
+	bh=2jV62OjI4EGwSMWVYUa63VPh+aP1JMgho08Ke8TykIs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=HyFPuNyX2UhADoW98vMj8bblTyUgSiocBrVTV9/s2BeIzKWCmiAAkI9bLj8EWiUar09+IT3R1ithiGfShrLK2RwTG2x2HaqoDuX+s/G7A4YChHDpVZS5tWkn+hIeiUm5LTFzU7pSD+ruWF2w+pl2skVVCjrshQI2Je63JCnCIsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bGfCmCgB; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OyNIlDDm"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2539643A30;
-	Wed, 23 Apr 2025 07:12:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bGfCmCgB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3B21743A53;
+	Wed, 23 Apr 2025 07:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745392338;
+	t=1745392339;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=TkQ7C8jgkCaEq9rXFk0Vbf3ZVjNr91B4Eok6HCwhjgE=;
-	b=OyNIlDDmh31ZODQSRl36ioGEdYX9s/zBp8vjomnpUrxi6KLMPBpOciJcPYeYlRDFgXzvmB
-	Sqmbzp4Ip1AzVF7LqCev+ngzZGUMO37gsSTXv8LGmjtO1bxov5rQkxw+UAm2xQrlenzyIC
-	2KouizGjb6pKGEMEWHBqsdnPGpHDY1JXnOv3oiDdwV1Y+HIQnfwLazowzsfJ5YGW0BwdE1
-	BnBDtvHLaaf7XNWQ7TNRaEiORKJLdBqiA/fq/Et3VM2hRHLe8TXi8r4COp4pRwtrZainc5
-	13MkBdwDYsPv/M/2PUTVQJjD+wwFHJgk/4Ftdy2BmevXBYOk2UaTKi5USAfWhw==
-From: Alexis Lothore <alexis.lothore@bootlin.com>
-Subject: [PATCH net v2 0/2] net: stmmac: fix timestamp snapshots on
- dwmac1000
-Date: Wed, 23 Apr 2025 09:12:08 +0200
-Message-Id: <20250423-stmmac_ts-v2-0-e2cf2bbd61b1@bootlin.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OLySCWSlH0Sb9P602cy0L3AE+j4XwAS06FELO6RcWVA=;
+	b=bGfCmCgBvq/udV2NrOkw1l1IoijqGAVUUvhC/kg58tPe+68ZZg+XtvprSk+iataEHjYyHm
+	0pUkiZctX9u/H3QvrA6zIoi2adTyRoffwWJKjWz28eeBgFRfr7K8Qyf5fjsNwHbW5JuScJ
+	d/WcNIS12Y2Zbu/iN9vfM0KdEvgZ6iG+YrPuGZKYRJJF7rVua2iEhUzHAbM3cIdhHr8rFN
+	vVQmVwIv0Ti6GkGUfRpL3KgygwWusBeeNt42HxCSyS0Atu3ToeQ1qdDBi1UoTg8EVBUlfv
+	PccLM0CIq1MklC53ycV9zGXWiI5LTKuQKxygUoHNzIhv9XNrVv0nmuErV2O5Kw==
+From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Date: Wed, 23 Apr 2025 09:12:10 +0200
+Subject: [PATCH net v2 2/2] net: stmmac: fix multiplication overflow when
+ reading timestamp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAMiSCGgC/22MQQrCMBBFr1JmbSQd20JceQ8pksapHTBJyYSgl
- N7d0LXL9//jbSCUmASuzQaJCgvHUAFPDbjFhhcpflYG1NjrDlFJ9t66RxblEAfbX7QxhFD9NdH
- Mn6N1h0AZxjouLDmm79Ev7XH9SZVWaTX1xpm504Pu2tsUY35zOLvoYdz3/Qd1aoL/qQAAAA==
-X-Change-ID: 20250422-stmmac_ts-c226a53099e2
+Message-Id: <20250423-stmmac_ts-v2-2-e2cf2bbd61b1@bootlin.com>
+References: <20250423-stmmac_ts-v2-0-e2cf2bbd61b1@bootlin.com>
+In-Reply-To: <20250423-stmmac_ts-v2-0-e2cf2bbd61b1@bootlin.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -61,45 +61,57 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeehleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhgvuceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgleelieejgfelfffgiefhleeijeduueejvdekudeludetleelhfevhffgudeikeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopegludelvddrudeikedrtddrvddungdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudejpdhrtghpthhtohepmhgtohhquhgvlhhinhdrshhtmhefvdesghhmrghilhdrtghomhdprhgtphhtthhopegurghnihgvlhdrmhgrtghhohhnsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrlhgvgihishdrlhhot
- hhhohhrvgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgigrnhgurhgvrdhtohhrghhuvgesfhhoshhsrdhsthdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeehleeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeegveeghfetffeuhfehkeekleffffdvuefggfevjefftddvffduheettdeiveetteenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvudgnpdhmrghilhhfrhhomheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedujedprhgtphhtthhopehmtghoqhhuvghlihhnrdhsthhmfedvsehgmhgrihhlrdgtohhmpdhrtghpthhtohepuggrnhhivghlrdhmrggthhhonhesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhug
+ iesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrghnughrvgdrthhorhhguhgvsehfohhsshdrshhtrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: alexis.lothore@bootlin.com
 
-Hello,
+The current way of reading a timestamp snapshot in stmmac can lead to
+integer overflow, as the computation is done on 32 bits. The issue has
+been observed on a dwmac-socfpga platform returning chaotic timestamp
+values due to this overflow. The corresponding multiplication is done
+with a MUL instruction, which returns 32 bit values. Explicitly casting
+the value to 64 bits replaced the MUL with a UMLAL, which computes and
+returns the result on 64 bits, and so returns correctly the timestamps.
 
-this is the v2 of a small series containing two small fixes for the
-timestamp snapshot feature on stmmac, especially on dwmac1000 version.
-Those issues have been detected on a socfpga (Cyclone V) platform. They
-kind of follow the big rework sent by Maxime at the end of last year to
-properly split this feature support between different versions of the
-DWMAC IP.
+Prevent this overflow by explicitly casting the intermediate value to
+u64 to make sure that the whole computation is made on u64. While at it,
+apply the same cast on the other dwmac variant (GMAC4) method for
+snapshot retrieval.
 
+Fixes: 477c3e1f6363 ("net: stmmac: Introduce dwmac1000 timestamping operations")
 Signed-off-by: Alexis Lothoré <alexis.lothore@bootlin.com>
 ---
-Changes in v2:
-- drop additional parenthesis
-- fix wrong hashes in Fixes tags
-- add Maxime's RB on first patch
-- Link to v1: https://lore.kernel.org/r/20250422-stmmac_ts-v1-0-b59c9f406041@bootlin.com
-
----
-Alexis Lothore (1):
-      net: stmmac: fix dwmac1000 ptp timestamp status offset
-
-Alexis Lothoré (1):
-      net: stmmac: fix multiplication overflow when reading timestamp
-
- drivers/net/ethernet/stmicro/stmmac/dwmac1000.h       | 4 ++--
  drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c  | 2 +-
  drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
----
-base-commit: c03a49f3093a4903c8a93c8b5c9a297b5343b169
-change-id: 20250422-stmmac_ts-c226a53099e2
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Best regards,
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+index a8b901cdf5cbb395a0f6b4800ad6f06c6e870077..56b76aaa58f04a6f01eb56c7ad6aa135a7f76c96 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
+@@ -553,7 +553,7 @@ void dwmac1000_get_ptptime(void __iomem *ptpaddr, u64 *ptp_time)
+ 	u64 ns;
+ 
+ 	ns = readl(ptpaddr + GMAC_PTP_ATNR);
+-	ns += readl(ptpaddr + GMAC_PTP_ATSR) * NSEC_PER_SEC;
++	ns += (u64)readl(ptpaddr + GMAC_PTP_ATSR) * NSEC_PER_SEC;
+ 
+ 	*ptp_time = ns;
+ }
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+index 0f59aa98260404bece530f505500f13d35884d0c..e2840fa241f29121c4f074872c4986906201cb57 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_hwtstamp.c
+@@ -222,7 +222,7 @@ static void get_ptptime(void __iomem *ptpaddr, u64 *ptp_time)
+ 	u64 ns;
+ 
+ 	ns = readl(ptpaddr + PTP_ATNR);
+-	ns += readl(ptpaddr + PTP_ATSR) * NSEC_PER_SEC;
++	ns += (u64)readl(ptpaddr + PTP_ATSR) * NSEC_PER_SEC;
+ 
+ 	*ptp_time = ns;
+ }
+
 -- 
-Alexis Lothoré, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.49.0
 
