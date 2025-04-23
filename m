@@ -1,179 +1,150 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E440625CC73
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:41:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FD525CC73;
+	Wed, 23 Apr 2025 18:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745433698; cv=none; b=IryWNyfJivdIQHb+SWicPWJq51GXzXUjnJdQZjtgMIVxSN5I+uEeX2BqF8WI5quaAo08rqAEeLW0mv0JlTASfRSCKckzCrcCD505Xvaxdy8K9jCEsBkA0w5amUwPoH8IK9X6leDZcFD/PvfcC3Yd61rv/eP4ltqmPsJoaMPTpx4=
+	t=1745433776; cv=none; b=sw8xtn9LRBd1NjrnpMsD04SyUW0o+X9dodnuoLywGl5jXZ2LqNl+XJrTrctw4R6F0pmV9Ph0yAL2H36y5w0ghOcAze5B0TeLLdxNap1Sx7IKtteqn5rRGL4z90XcDQFqVVXtv7uaiMmjCD+Rp0/of1ibQlm/se9RDrk0bQ/vi58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745433698; c=relaxed/simple;
-	bh=XJHmYc8HCCw78nHh+059wMSaQHH7cUidzMWN9s4ZLfg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GXiGgQtUkWlB7UbGPoaqTAYLshoHpfSEVUiqUewGwAZSq7y7EwuElDU9pjq9uLfHIoZ3LcMEF+pNzGLH2Cqx2a6jxOI4+nJ947dND/+x+TQIDBdrnBhX0AcUj88+ywQimJeIJqmp0VzhPqpd2hrOGI+JpOV+9VGUgHxRAK5deeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=DwMKOjNJ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745433776; c=relaxed/simple;
+	bh=5z7cjOyEamlQH3pwzXxO5wp1qSdeGHjnJYbTuF++6OU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BsO73p/tZyGm9lfBTG8JTbhoe2TA0a4z2emXGVA/ON093ojOvGIZ0ClGJ01dX6aRMItTMfQoKonoqNon7GzldYdii0pvB5ajKy/2LvB4vmK34Vzkt+5FmQNBPoTyCQrc13xqJDne2aUdn4JZqLit9v5BFAeLHMRfGBOuMir1ePc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DIrA19eE; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="DwMKOjNJ"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NA4ChL025377;
-	Wed, 23 Apr 2025 18:40:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=eEBVX2
-	omivvc0sd9lbzbNpYWayv2ykxUycF2Bm/Seac=; b=DwMKOjNJiBIv7xzxAH7ULV
-	aImtIuTpd0sQ+hMlgmaRa/1K6iEJ0GRU/0VXOkqMz4/qGf0AFr+YY7ZUnZnPN4Ox
-	yYb1dyENXMd1TJHm/wNoXn6nGyrsAzXHHtsXNIj1eXUrTOLHywjOU3Ob8ILptaAU
-	gBz7Fq7XqUAgNXQmvUcPM9im+/pgbg0zV4Q5e/C6OzTXHMtSjTAaACOkNNgnDTzE
-	EO3dShHAm4aMbXz2yDZi82YtGJHYbl4Wih+HPaMLFIw3e0LMYZ1ccvZ18Yk5cHWj
-	EpDxJvkBH9M9BmxBHX6jmns2uhMNHxHPzpLIEJSTsaHusKChnnGWVo1uBPOxYZOQ
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466x4jtdfp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 18:40:32 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53NIc0lw022276;
-	Wed, 23 Apr 2025 18:40:31 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfxcdbd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 18:40:31 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53NIeTsA42729774
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 18:40:29 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A789E2004B;
-	Wed, 23 Apr 2025 18:40:29 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F1A1020040;
-	Wed, 23 Apr 2025 18:40:26 +0000 (GMT)
-Received: from [9.39.28.170] (unknown [9.39.28.170])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 23 Apr 2025 18:40:26 +0000 (GMT)
-Message-ID: <cd6d72c7-cdc7-4af6-b070-076f64887ee7@linux.ibm.com>
-Date: Thu, 24 Apr 2025 00:10:26 +0530
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DIrA19eE"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 1BA5F40E0192;
+	Wed, 23 Apr 2025 18:42:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id b_q9ku6oQs4F; Wed, 23 Apr 2025 18:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745433764; bh=4QYwqXRcz4L81CMD3HxW+21FD+WaKwTbBEoH7IXvigA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DIrA19eEjNfWtT787gu6rEJSRExOKb0AL8To3VBmth7NyiM+X66qOLiRb5hHhK+qn
+	 VLR216whrM4s8CTXnkPf1NP+DY7nobyd5e4swJIJTbbBbhhS2B1fVhYRU890QL5Ae0
+	 /c9r1XbzS4E5e8Ja0KD3DVT+w2KjUIW+fN+jtxRuDB+Mrlfs6vXLk27ZZwFxt4Dzwc
+	 YzsayQSYgiMVfVLRhM/Ry+1LVGLkYfqsbZHE/52Okn9PQ/nPPKifq+X0GTE+FL7i6l
+	 5+jmSd0W2CZAlbNdXYzJ1xMNaFQ6CXT6tWhTjurtbAhEkxT83tWeIxZJa7o5rQEfjZ
+	 TgpB0dahyiUPY9yuMMXRzPIBpYD/NpFywzUzom4pr2jZVLA8fZrc7dbFaYyLklvPV2
+	 v+M1UEQ63McL/5Io8VGXldkd7EZLTO7dZCp61m6Pj4KgwCCIKjRk5U16FkYwPugq90
+	 31v9oxY8ELx+t0DV3+ci8ugxNFMrwtQEzfl2Cb/l79lkNKQ1e1OJp2omeSEY5dvjLt
+	 1AmM948qC4IsYGbN0VEuHcFRvrq+quYFStqL6H78ExPPk5vsUsGtpyNQyJkpKU4kmW
+	 9q5ttq8JP4fEdAjprrwrLEo5L5YXY+F+zs4zEdDgeAceMnv1ZARqwyuvmVvFcdxJI4
+	 7GTAilLzyQDGL9KGebdKFGxE=
+Received: from rn.tnic (unknown [78.130.214.207])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 4F45240E01ED;
+	Wed, 23 Apr 2025 18:42:25 +0000 (UTC)
+Date: Wed, 23 Apr 2025 20:43:26 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
+	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
+	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6]
+ x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when
+ running in a virtual machine)
+Message-ID: <20250423184326.GCaAk0zinljkNHa_M7@renoirsky.local>
+References: <aAKDyGpzNOCdGmN2@duo.ucw.cz>
+ <aAKJkrQxp5on46nC@google.com>
+ <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
+ <aAKaf1liTsIA81r_@google.com>
+ <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
+ <aAfQbiqp_yIV3OOC@google.com>
+ <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
+ <aAfynEK3wcfQa1qQ@google.com>
+ <20250423072017.GAaAiUsYzDOdt7cmp2@renoirsky.local>
+ <aAj0ySpCnHf_SX2J@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] tick/nohz: Move nohz_full related fields out of hot
- task struct's places
-To: Frederic Weisbecker <frederic@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar
- <mingo@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org
-References: <20250410152327.24504-1-frederic@kernel.org>
- <20250410152327.24504-5-frederic@kernel.org>
-From: Shrikanth Hegde <sshegde@linux.ibm.com>
-Content-Language: en-US
-In-Reply-To: <20250410152327.24504-5-frederic@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=eJ4TjGp1 c=1 sm=1 tr=0 ts=68093420 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=jg2in13-UT4g0phRZJ0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: h5dwc9IKWEJdG14oBRXaZKD3EKjciBoM
-X-Proofpoint-ORIG-GUID: h5dwc9IKWEJdG14oBRXaZKD3EKjciBoM
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDEyOSBTYWx0ZWRfX8Rrk6+e5/QSv notdkbzQsHmgtW3SZFL8jDLCdYfAa4AFNjyKaAo1OGP3GGRKKVwZoN6WVGnzW6moJ5AP1+pUzGt WrDNSuKeTc7iM+xAgjE40r43dFlBRnXnUG/RHqRfooyuocoqAnJ36mT953KvC5HSV6df6L3pSxN
- vCt8NMueckF242l6d2OJkDFEP1I49/CUalZo7MEPVh+VyUHoJ2I8JUg9qXDUAc0m74ZT7CkqLWM Xch+hlBQ+ZTt6VhAEeV383qn+3PR6CRHJUxu0/GtpVILx8OmtcgacQ2e/N7J/Iekwy9DmrrpffB WC6xQQJmDc7jTQaHarqAdq2NN2m6HDZgOISZRNRJ0CZI2yTxkkugB1HrJTHQXZwCywond6jw0B7
- OlQc/ZGyGjlD31G2FuLoAAMunFm7of5DuOBg1ppiCHF5cqX+Upc4O2Q3Wx9aJ5p2RbYWruOC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-23_10,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1011
- bulkscore=0 adultscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- spamscore=0 mlxlogscore=999 suspectscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230129
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aAj0ySpCnHf_SX2J@google.com>
 
-
-
-On 4/10/25 20:53, Frederic Weisbecker wrote:
-> nohz_full is a feature that only fits into rare and very corner cases.
-> Yet distros enable it by default and therefore the related fields are
-> always reserved in the task struct.
+On Wed, Apr 23, 2025 at 07:10:17AM -0700, Sean Christopherson wrote:
+> On Wed, Apr 23, 2025, Borislav Petkov wrote:
+> > > Eww.  Optimization to lessen the pain of DR7 interception.  It'd be nice to clean
+> > > this up at some point, especially with things like SEV-ES with DebugSwap, where
+> > > DR7 is never intercepted.
+> > >   arch/x86/include/asm/debugreg.h:        if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+> > >   arch/x86/kernel/hw_breakpoint.c:                 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
+> > 
+> > Patch adding it says "Because DRn access is 'difficult' with virt;..."
+> > so yeah. I guess we need to agree how to do debug exceptions in guests.
+> > Probably start documenting it and then have guest and host adhere to
+> > that. I'm talking completely without having looked at what the code does
+> > but the "handshake" agreement should be something like this and then we
+> > can start simplifying code...
 > 
-> Those task fields are stored in the middle of cacheline hot places such
-> as cputime accounting and context switch counting, which doesn't make
-> any sense for a feature that is disabled most of the time.
+> I don't know that we'll be able to simplify the code.
 > 
-> Move the nohz_full storage to colder places.
+> #DBs in the guest are complex because DR[0-3] aren't context switched by hardware,
+> and running with active breakpoints is uncommon.  As a result, loading the guest's
+> DRs into hardware on every VM-Enter is undesirable, because it would add significant
+> latency (load DRs on entry, save DRs on exit) for a relatively rare situation
+> (guest has active breakpoints).
 > 
-> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-> ---
->   include/linux/sched.h | 14 ++++++++------
->   1 file changed, 8 insertions(+), 6 deletions(-)
+> KVM (and presumably other hypervisors) intercepts DR accesses so that it can
+> detect when the guest has active breakpoints (DR7 bits enabled), at which point
+> KVM does load the guest's DRs into hardware and disables DR interception until
+> the next VM-Exit.
 > 
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index f96ac1982893..b5ce76db6d75 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1110,13 +1110,7 @@ struct task_struct {
->   #endif
->   	u64				gtime;
->   	struct prev_cputime		prev_cputime;
-> -#ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
-> -	struct vtime			vtime;
-> -#endif
->   
-> -#ifdef CONFIG_NO_HZ_FULL
-> -	atomic_t			tick_dep_mask;
-> -#endif
->   	/* Context switch counts: */
->   	unsigned long			nvcsw;
->   	unsigned long			nivcsw;
-> @@ -1438,6 +1432,14 @@ struct task_struct {
->   	struct task_delay_info		*delays;
->   #endif
->   
-> +#ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
-> +	struct vtime			vtime;
-> +#endif
-> +
-> +#ifdef CONFIG_NO_HZ_FULL
-> +	atomic_t			tick_dep_mask;
-> +#endif
-> +
->   #ifdef CONFIG_FAULT_INJECTION
->   	int				make_it_fail;
->   	unsigned int			fail_nth;
+> KVM also allows the host user to utilize hardware breakpoints to debug the guest,
+> which further adds to the madness, and that's not something the guest can change
+> or even influence.
 > 
+> So removing the "am I guest logic" entirely probably isn't feasible, because in
+> the common case where there are no active breakpoints, reading cpu_dr7 instead
+> of DR7 is a significant performance boost for "normal" VMs.
 
-Hi Frederic.
+So I see three modes:
 
-maybe move these nohz related fields into their own cacheline instead?
+- default off - the usual case
 
+- host debugs the guest
 
-on PowerPC where we have 128byte cache instead, i see
-these fields are crossing a cache line boundary.
+- guests are allowed to do breakpoints
 
-without patch:
-	/* XXX last struct has 4 bytes of padding */
+So depending on what is enabled, the code can behave properly - it just
+needs logic which tells the relevant code - guest or host - which of the
+debugging mode is enabled. And then everything adheres to that and DTRT.
 
-	struct vtime               vtime;                /*  2360    48 */
-	atomic_t                   tick_dep_mask;        /*  2408     4 */
-	/* XXX 4 bytes hole, try to pack */
+But before any of that, the even more important question is: do we even
+care to beef it up that much?
 
-	long unsigned int          nvcsw;                /*  2416     8 */
-	long unsigned int          nivcsw;               /*  2424     8 */
-	/* --- cacheline 19 boundary (2432 bytes) --- */
+I get the feeling that we don't so it likely is a "whatever's the
+easiest" game.
 
+> I mentioned SEV-ES+ DebugSwap because in that case DR7 is effectively guaranteed
+> to not be intercepted, and so the native behavior of reading DR7 instead of the
+> per-CPU variable is likely desirable.  I believe TDX has similar functionality
+> (I forget if it's always on, or opt-in).
 
-With patch:
-	struct vtime               vtime;                /*  3272    48 */
-	struct callback_head       nohz_full_work;       /*  3320    16 */
-	/* --- cacheline 26 boundary (3328 bytes) was 8 bytes ago --- */
-	atomic_t                   tick_dep_mask;        /*  3336     4 */
+Aha, the choice was made by the CoCo hw designers - guests are allowed
+to do breakpoints.
 
+Oh well...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
