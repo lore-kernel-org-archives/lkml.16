@@ -1,131 +1,302 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F59428F1;
-	Wed, 23 Apr 2025 07:05:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C6D28F1
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:06:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745391909; cv=none; b=lFdpkStHvd96mFkP29i+65T+E3NRacJWgVWSkoc2gGn7XtFf8j1WH6Pb8SIriIuHAsnln7cw+YJrkGgqCJ9UMNSz+tpNDxi/U6zcoiXtd0QsP6wwF6pdyFzLip/7nG6IgUViS8786bzheqt7m/vtLjBW3vzarpNAZggTL2lPeA8=
+	t=1745391993; cv=none; b=nQAVaBlwVV0nAXZ5UBYnmgT2Iq8qZLLL/1R1ZhWI0GK37jAVGIgb6BebtnMS63Yle6zBKsg1axABRKyFZFZP4XEYkM6q416Ttp8eMaiwW6c5VsBt8/l0z0BkZsdrXR1Ab4dPaEkNdl3jUj69s2tlAGyQhzAG+v9Xz2aQO19OJ84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745391909; c=relaxed/simple;
-	bh=D+P7ur/vwKX0dY6+j01f0h5JOwkYmjANaOOZHqX3JiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pjZwCUHwe27U6UrleDrRSGLU7OFDWpMGK5DkFkz+vquQI+XjW/N1Z+j1zTxb44xpkVToq9aaEpPCVXcIcSjw3FdbDgZlQV0onmwP9c5vTjzVovqXFRqPtnbFYMXF382XPWfdoyif9fE66GS1tDKb5m8vQG5EgS/F6LM9wQarEAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HPpFHJbs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1745391993; c=relaxed/simple;
+	bh=lLqKv0R0kL0eb+FWIFo3ut3HXEE8IuEBwVZOyXaE33w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pyu76Q4LJlOqMGXnLlHxPKu4SiZzDrrhIepds489EqK1A+gCtpqEvpU6DRtEdce12x4x9uXbUphGsfRLEj/DS6gfNzJKKAbVIFvllhXZ6EvweZGVsPEhAj0JN7jjg3DBLFHg4bmnPr7BJZZ2J018sLAhsVTlDhzNmhLGH7xS5nM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AiL+pLVl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HPpFHJbs"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0iLmg022331;
-	Wed, 23 Apr 2025 07:04:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	DXs+2X22CNIfmNCVhg97ldAwTjAoi/RHfs7pocm68rY=; b=HPpFHJbssP7T5kYH
-	BNxsx8ElUHeCg7E62rJt1P52xqRL1fOs1txhXZGRK3K9voYk5BZnkJBCpafq7F/9
-	8LB/aIhFnATHzf3AUjEWwqdrO4WtAD2bh7OEkCS1yQju2REvk1s+oo0x/pUQPaNy
-	QFk6hK1NEVWslrzOMrN5kdBK7BEvhR+KVq7SrFc4LonLqkqKB3vga5AOCJGra+ya
-	evLm+J6hRnBvmrgt9AsKQ2uEJnaL9CgVi1Eb1P37KV+FgX10lqVsMs5mYKBc+1vN
-	o5HJhUo4iokMBDSEvBGHu9sRChKo1A2brmEXUdyms17PbA7zKLl4rWOMmQ/SPN+f
-	mm07CA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1164v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 07:04:39 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53N74cSZ016287
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 07:04:38 GMT
-Received: from [10.110.52.190] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
- 2025 00:04:37 -0700
-Message-ID: <c75d2cc2-e7f7-4de4-8d3d-81c3cf8ff973@quicinc.com>
-Date: Wed, 23 Apr 2025 00:04:36 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AiL+pLVl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745391990;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=e1JjUTR5AO6/ELifNnwiuDnWLUGlhgp/n6mKbz4s1r8=;
+	b=AiL+pLVl20R4ZqgGLF1Y1/qrd4dAeh/46BoyGDEsf6uhPwTZrPAkzb28FkX1F1PP9X9Te3
+	7WwHT8DI5X0PxHc53U4xQFU9T3A9WuHFR7t/T1JDFlrr3w6nslp7lAecx74kS7jXLfPld2
+	9Usu5bjChYvlnyxso+lPc3iLarnNQVw=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-693-fFHn3pImPW-xp636WpdAhA-1; Wed, 23 Apr 2025 03:06:28 -0400
+X-MC-Unique: fFHn3pImPW-xp636WpdAhA-1
+X-Mimecast-MFC-AGG-ID: fFHn3pImPW-xp636WpdAhA_1745391988
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-7071dd5dbc1so65462967b3.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:06:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745391988; x=1745996788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e1JjUTR5AO6/ELifNnwiuDnWLUGlhgp/n6mKbz4s1r8=;
+        b=k2uqJYOX3uaUXe1QGWwDB1sG4nGBsbCwKn7FMlmm/9W3LlDWSz64qwafI0vtuglNjo
+         PXSTlVM06iWICy/1pHme8UhsRKTHubZKa2e0Q7UBr9Al+8K+A63r6yXjGl06uMW9YCY7
+         8iCLMVDD9vqeUHnFdDfNtL+qIsZ6nQSn4mSa/WaWDCU7mWxVvgZpMjWNEHa+qJJLvSud
+         5IPk07QSEwaOAouA4qGTWjqQs7l54usYx+yV6PESHMBcduMaTHIFU2QoTx0JO9+NB7lt
+         EeEqF/H0G63qpk6mFPTDTe82PVuhlYf4wEjs6TPdqr278jWpOimDH1T0f3dn1VSmq806
+         jHkw==
+X-Forwarded-Encrypted: i=1; AJvYcCXBLoUO/8St47rq93W6lVL3pHJ/BbcEq/MwCEavoCKUMPlbxzSXhEMr22GK4JnnYSd/vi4k89EBlRYkwGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkymUx4tsFSbJVpx/ZJs+LCFaEc1+fajjg1XME2aSziuz7+fYp
+	DbJsFbZH00vsqEyWLCgcBQZ2HLfoH88XdXrCN+l4gCh3s5wYLpe7jp2SC1wr6JibVTNQNH+Q5BW
+	Ae2q15Qgaj5VeTBLgsBgB6t9Gv0xJ6g3OWZFGvp9EZHS6+w+K3mBRTcDeEB0R1xjAIVq0F2l02I
+	E3bYBhbuiEnbpMJaMwEke9JNT5RF/Uu3X+wAuE
+X-Gm-Gg: ASbGnctRkqftmrShax8BA3Ip40OIiIoruOAvSMWpFJ1mSzs9b1QZwJdBcY4AMWiXQto
+	cxtcbKTg6omx5cCnzPz7V2cflOByTPDOX6kpZQhK6cUAYxMJMBMqMcRsSdX/XAGE3iRz10HVyof
+	igulLRwSc=
+X-Received: by 2002:a05:6902:c10:b0:e6d:f41c:6bdb with SMTP id 3f1490d57ef6-e7297d93324mr23626283276.6.1745391988147;
+        Wed, 23 Apr 2025 00:06:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFn1zWiBl7mj2ZHMbPzEt4TQGJA7ZA52O1IykfzgHQk9rLrJ75DUXlgd4SeW7i6QSPYXTpfssBeJp5N7K7bY+g=
+X-Received: by 2002:a05:6902:c10:b0:e6d:f41c:6bdb with SMTP id
+ 3f1490d57ef6-e7297d93324mr23626241276.6.1745391987773; Wed, 23 Apr 2025
+ 00:06:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC][PATCH 00/14] introduce kmemdump
-To: Eugen Hristev <eugen.hristev@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <andersson@kernel.org>
-CC: <linux-doc@vger.kernel.org>, <corbet@lwn.net>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <rostedt@goodmis.org>, <john.ogness@linutronix.de>,
-        <senozhatsky@chromium.org>, <pmladek@suse.com>, <peterz@infradead.org>,
-        <mojha@qti.qualcomm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <vincent.guittot@linaro.org>, <konradybcio@kernel.org>,
-        <dietmar.eggemann@arm.com>, <juri.lelli@redhat.com>
-References: <20250422113156.575971-1-eugen.hristev@linaro.org>
-Content-Language: en-US
-From: Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <20250422113156.575971-1-eugen.hristev@linaro.org>
+References: <20250417000238.74567-1-npache@redhat.com> <20250417000238.74567-2-npache@redhat.com>
+ <a881ed65-351a-469f-b625-a3066d0f1d5c@linux.alibaba.com>
+In-Reply-To: <a881ed65-351a-469f-b625-a3066d0f1d5c@linux.alibaba.com>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 23 Apr 2025 01:06:01 -0600
+X-Gm-Features: ATxdqUHpjU8S0MShRUQwhPVFS5hZ7SZaiRUxbW-9PYZFjeXZxNqacPcUS1Nsk1c
+Message-ID: <CAA1CXcC+QrDJ0XkjX5MqwRGgHh6Q1jXSmBqLgaOnz_FZY6dQLg@mail.gmail.com>
+Subject: Re: [PATCH v4 01/12] introduce khugepaged_collapse_single_pmd to
+ unify khugepaged and madvise_collapse
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
+	baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org, 
+	peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com, 
+	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
+	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
+	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
+	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
+	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
+	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
+	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
+	rdunlap@infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: WG7qYevMhuvSAnvTpD6mvm3ky2sWWyNl
-X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=68089107 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=oZ8wWTcPSBrqPQfBPqMA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: WG7qYevMhuvSAnvTpD6mvm3ky2sWWyNl
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA0NiBTYWx0ZWRfX0TwZpL0SAicz oF4+evXSmwb+4LqxonlhNM/2Pc0LZLhrfKbOUZFe88P71mC4iyFnITKZSulYzUwJEld+jDIUeUJ THtFecDN/No+OXk5RiG7AMgR7aNDRbupscYOxnQFxR+pyrX78qy5u/XmRy9s91zgoZT2TDYQdBF
- cZliSTsNqg4xWCq4u1o8jwcLDjR4mSpVn5PP5AP5R1UN/28ARiNsdBIAsyrPddyzH/ExDx2ZUNZ 5BN3OMmJGm6jyzFJHngqIl47sD8q67ovCjvzvqCGDKxwd8m+tUeHBOeSh+vzh44JrwaorO7Kc4z /t4jFPSm0x1f7Ag98UOGqE/8Nnli8QfvFmjxTgYQGSH6pKORYcFnNFLcrKPK7o5rZZ2MTdw3YQl
- +lXeRaEf2NtKnxdn5XNByYsixOSYMx+r8rtcqhxFn45H5ewVVMm1lu0RtzO6BPpvPf221yJK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1011 malwarescore=0
- mlxlogscore=797 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230046
+Content-Transfer-Encoding: quoted-printable
 
-On 4/22/2025 4:31 AM, Eugen Hristev wrote:
-> kmemdump is a mechanism which allows the kernel to mark specific memory
-> areas for dumping or specific backend usage.
-> Once regions are marked, kmemdump keeps an internal list with the regions
-> and registers them in the backend.
-> Further, depending on the backend driver, these regions can be dumped using
-> firmware or different hardware block.
-> Regions being marked beforehand, when the system is up and running, there
-> is no need nor dependency on a panic handler, or a working kernel that can
-> dump the debug information.
-> The kmemdump approach works when pstore, kdump, or another mechanism do not.
-> Pstore relies on persistent storage, a dedicated RAM area or flash, which
-> has the disadvantage of having the memory reserved all the time, or another
-> specific non volatile memory. Some devices cannot keep the RAM contents on
-> reboot so ramoops does not work. Some devices do not allow kexec to run
-> another kernel to debug the crashed one.
-> For such devices, that have another mechanism to help debugging, like
-> firmware, kmemdump is a viable solution.
-> 
-> kmemdump can create a core image, similar with /proc/vmcore, with only
-> the registered regions included. This can be loaded into crash tool/gdb and
-> analyzed.
-> To have this working, specific information from the kernel is registered,
-> and this is done at kmemdump init time, no need for the kmemdump user to
-> do anything.
-> 
-> The implementation is based on the initial Pstore/directly mapped zones
-> published as an RFC here:
-> https://lore.kernel.org/all/20250217101706.2104498-1-eugen.hristev@linaro.org/
-> 
-> The back-end implementation for qcom_smem is based on the minidump
-> patch series and driver written by Mukesh Ojha, thanks:
-> https://lore.kernel.org/lkml/20240131110837.14218-1-quic_mojha@quicinc.com/
-> 
-> I appreciate the feedback on this series, I know it is a longshot, and there
-> is a lot to improve, but I hope I am on the right track.
+On Wed, Apr 23, 2025 at 12:44=E2=80=AFAM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
+>
+>
+>
+> On 2025/4/17 08:02, Nico Pache wrote:
+> > The khugepaged daemon and madvise_collapse have two different
+> > implementations that do almost the same thing.
+> >
+> > Create khugepaged_collapse_single_pmd to increase code
+> > reuse and create an entry point for future khugepaged changes.
+> >
+> > Refactor madvise_collapse and khugepaged_scan_mm_slot to use
+> > the new khugepaged_collapse_single_pmd function.
+> >
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+>
+> Can you add a prefix 'khugepaged:' for the subject line?
+I had that originally but the subject line is already extremely long.
+>
+> > ---
+> >   mm/khugepaged.c | 92 ++++++++++++++++++++++++------------------------=
+-
+> >   1 file changed, 46 insertions(+), 46 deletions(-)
+> >
+> > diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> > index b8838ba8207a..cecadc4239e7 100644
+> > --- a/mm/khugepaged.c
+> > +++ b/mm/khugepaged.c
+> > @@ -2363,6 +2363,48 @@ static int hpage_collapse_scan_file(struct mm_st=
+ruct *mm, unsigned long addr,
+> >   }
+> >   #endif
+> >
+> > +/*
+> > + * Try to collapse a single PMD starting at a PMD aligned addr, and re=
+turn
+> > + * the results.
+> > + */
+> > +static int khugepaged_collapse_single_pmd(unsigned long addr,
+> > +                                struct vm_area_struct *vma, bool *mmap=
+_locked,
+> > +                                struct collapse_control *cc)
+> > +{
+> > +     int result =3D SCAN_FAIL;
+> > +     struct mm_struct *mm =3D vma->vm_mm;
+> > +     unsigned long tva_flags =3D cc->is_khugepaged ? TVA_ENFORCE_SYSFS=
+ : 0;
+> > +
+> > +     if (thp_vma_allowable_order(vma, vma->vm_flags,
+> > +                                     tva_flags, PMD_ORDER)) {
+>
+> We've already checked the thp_vma_allowable_order() before calling this
+> function, why check again?
+>
+> > +             if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
+> > +                     struct file *file =3D get_file(vma->vm_file);
+> > +                     pgoff_t pgoff =3D linear_page_index(vma, addr);
+> > +
+> > +                     mmap_read_unlock(mm);
+> > +                     *mmap_locked =3D false;
+> > +                     result =3D hpage_collapse_scan_file(mm, addr, fil=
+e, pgoff,
+> > +                                                       cc);
+> > +                     fput(file);
+> > +                     if (result =3D=3D SCAN_PTE_MAPPED_HUGEPAGE) {
+> > +                             mmap_read_lock(mm);
+> > +                             if (hpage_collapse_test_exit_or_disable(m=
+m))
+> > +                                     goto end;
+> > +                             result =3D collapse_pte_mapped_thp(mm, ad=
+dr,
+> > +                                                              !cc->is_=
+khugepaged);
+>
+> why drop the following check?
+> if (*result =3D=3D SCAN_PMD_MAPPED)
+>         *result =3D SCAN_SUCCEED;
 
+Good catch! When generalizing this for madvise_collapse i forgot to
+properly handle the khugepaged case of PMD_MAPPED=3D=3DSUCCEED.
+>
+> > +                             mmap_read_unlock(mm);
+> > +                     }
+> > +             } else {
+> > +                     result =3D hpage_collapse_scan_pmd(mm, vma, addr,
+> > +                                                      mmap_locked, cc)=
+;
+> > +             }
+> > +             if (cc->is_khugepaged && result =3D=3D SCAN_SUCCEED)
+> > +                     ++khugepaged_pages_collapsed;
+> > +     }
+> > +end:
+> > +     return result;
+> > +}
+> > +
+> >   static unsigned int khugepaged_scan_mm_slot(unsigned int pages, int *=
+result,
+> >                                           struct collapse_control *cc)
+> >       __releases(&khugepaged_mm_lock)
+> > @@ -2437,33 +2479,9 @@ static unsigned int khugepaged_scan_mm_slot(unsi=
+gned int pages, int *result,
+> >                       VM_BUG_ON(khugepaged_scan.address < hstart ||
+> >                                 khugepaged_scan.address + HPAGE_PMD_SIZ=
+E >
+> >                                 hend);
+> > -                     if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous=
+(vma)) {
+> > -                             struct file *file =3D get_file(vma->vm_fi=
+le);
+> > -                             pgoff_t pgoff =3D linear_page_index(vma,
+> > -                                             khugepaged_scan.address);
+> >
+> > -                             mmap_read_unlock(mm);
+> > -                             mmap_locked =3D false;
+> > -                             *result =3D hpage_collapse_scan_file(mm,
+> > -                                     khugepaged_scan.address, file, pg=
+off, cc);
+> > -                             fput(file);
+> > -                             if (*result =3D=3D SCAN_PTE_MAPPED_HUGEPA=
+GE) {
+> > -                                     mmap_read_lock(mm);
+> > -                                     if (hpage_collapse_test_exit_or_d=
+isable(mm))
+> > -                                             goto breakouterloop;
+> > -                                     *result =3D collapse_pte_mapped_t=
+hp(mm,
+> > -                                             khugepaged_scan.address, =
+false);
+> > -                                     if (*result =3D=3D SCAN_PMD_MAPPE=
+D)
+> > -                                             *result =3D SCAN_SUCCEED;
+> > -                                     mmap_read_unlock(mm);
+> > -                             }
+> > -                     } else {
+> > -                             *result =3D hpage_collapse_scan_pmd(mm, v=
+ma,
+> > -                                     khugepaged_scan.address, &mmap_lo=
+cked, cc);
+> > -                     }
+> > -
+> > -                     if (*result =3D=3D SCAN_SUCCEED)
+> > -                             ++khugepaged_pages_collapsed;
+> > +                     *result =3D khugepaged_collapse_single_pmd(khugep=
+aged_scan.address,
+> > +                                             vma, &mmap_locked, cc);
+>
+> If the khugepaged_collapse_single_pmd() returns a failure caused by
+> hpage_collapse_test_exit_or_disable(), we should break out of the loop
+> according to the original logic. But you've changed the action in this
+> patch, is this intentional?
 
-Is there any way to demonstrate this framework on non-Qualcomm device? Like any
-other ARM device from TI, NXP etc; x86/RISC-V based device is also fine.
+Nope, not intentional! Thanks for pointing that out. I'll get that fixed!
 
--- 
----Trilok Soni
+Thanks for the in depth review ! I'll work on cleaning up these corner case=
+s.
+>
+> >
+> >                       /* move to next address */
+> >                       khugepaged_scan.address +=3D HPAGE_PMD_SIZE;
+> > @@ -2783,36 +2801,18 @@ int madvise_collapse(struct vm_area_struct *vma=
+, struct vm_area_struct **prev,
+> >               mmap_assert_locked(mm);
+> >               memset(cc->node_load, 0, sizeof(cc->node_load));
+> >               nodes_clear(cc->alloc_nmask);
+> > -             if (IS_ENABLED(CONFIG_SHMEM) && !vma_is_anonymous(vma)) {
+> > -                     struct file *file =3D get_file(vma->vm_file);
+> > -                     pgoff_t pgoff =3D linear_page_index(vma, addr);
+> >
+> > -                     mmap_read_unlock(mm);
+> > -                     mmap_locked =3D false;
+> > -                     result =3D hpage_collapse_scan_file(mm, addr, fil=
+e, pgoff,
+> > -                                                       cc);
+> > -                     fput(file);
+> > -             } else {
+> > -                     result =3D hpage_collapse_scan_pmd(mm, vma, addr,
+> > -                                                      &mmap_locked, cc=
+);
+> > -             }
+> > +             result =3D khugepaged_collapse_single_pmd(addr, vma, &mma=
+p_locked, cc);
+> > +
+> >               if (!mmap_locked)
+> >                       *prev =3D NULL;  /* Tell caller we dropped mmap_l=
+ock */
+> >
+> > -handle_result:
+> >               switch (result) {
+> >               case SCAN_SUCCEED:
+> >               case SCAN_PMD_MAPPED:
+> >                       ++thps;
+> >                       break;
+> >               case SCAN_PTE_MAPPED_HUGEPAGE:
+> > -                     BUG_ON(mmap_locked);
+> > -                     BUG_ON(*prev);
+> > -                     mmap_read_lock(mm);
+> > -                     result =3D collapse_pte_mapped_thp(mm, addr, true=
+);
+> > -                     mmap_read_unlock(mm);
+> > -                     goto handle_result;
+> > -             /* Whitelisted set of results where continuing OK */
+> >               case SCAN_PMD_NULL:
+> >               case SCAN_PTE_NON_PRESENT:
+> >               case SCAN_PTE_UFFD_WP:
+>
+
