@@ -1,44 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 513A11E2606;
-	Wed, 23 Apr 2025 17:44:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B39428BA93
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:44:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430271; cv=none; b=ZeQK3oVnksT8IOJzaG8A+I9slS4o0fJW4h6UyHY76ZrB5huYLAgT6OsqFmdJ4m5Ps0kQ6i148ljwtd93CvW+anNGQbweTbNwN26qpWn2L5hzpd0uhacXc5SJi9LINpahn+GxNHbS93+SjrHD56E5mLk+JNr0sLC4V28BpeTsAX0=
+	t=1745430285; cv=none; b=BqVee4pPacvZmqu/NNybeTs9fU9/Zk6YwnNHnQDbL3+QotTbMoCASSvOX4mj9nE6rByK27BjVwKHDQHO7/c7e7NBMcML9iT+zHaZujjh7E2a1cujGVSo80e2TXxRJiF1znnUBV1UbHjMUAgINNF21oKpvGUe7qa925qRG+09xeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430271; c=relaxed/simple;
-	bh=llem0D4ATDI6T5o6sjQUewox5CfgKQJnmzI3EcK5Pj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=heYR0alFbt/Ukt7cPjcbX0c2FXehnRnWQ3mCZV2n6QPdBSKGAWZtUrv7C3oZxHDMcUUl7p/AsiK73HzdFOdIqqolhK+MoDOgnB4jr6N5I1CPxFDVgIQ+LJNh0gp4MRBCiGwVoP9QIkeyMfAudIRkXRu5xbHd4Jpt4E5HwuN9mv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jy/A49MZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745430285; c=relaxed/simple;
+	bh=BCHCHTOXyJMmtJ+KLeDMf9yKqjTgX/D00D6l5oiWD8Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LZ+29aWfIYQ+JLbj55W3ZUNU3N0QA4dsxbJIzp7kU95SzdME6os7hhGyTBlzJ7iJX/zcFxtsS5W+l4lKB/ahBwd0yIVUhrOZ9zjbf3nBFeVvL+JEk7DSallZrKhPX++grIPECZPp803FsiDhLBHVRuyAdl/E5T8lSHPPoU/nkfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=sqBaQ1ux; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jy/A49MZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F09C4CEE8;
-	Wed, 23 Apr 2025 17:44:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745430271;
-	bh=llem0D4ATDI6T5o6sjQUewox5CfgKQJnmzI3EcK5Pj8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Jy/A49MZDzCLBXYnUn4t4vwseHKFwyR3byI7Kl3qOIGr1MXXGKAONVfV6+yQ4UC9B
-	 i/7hz2Hv546V7nbVnjV9E+JfdZU+7kFD9laAkDxU8ftxnVpOespE1y7hohw8fSKG1a
-	 W86uRzMUwPP+n9LX3+f2B51jmbhlKtHOV+IuuAosppg8mWPicIZV3Z2DIwb1BjBqiR
-	 AjlGEU2HeBqWqkHc6HxMeF9b76pLXn38ULza+2VvRbifgz6S8l7wL94raFz4GO7qQ2
-	 x2jAb/F1ErK4gAId5HGOkYs2SvzdG+sMx2jr/gBiCptHoiADid8BRxPhc752qoxp6I
-	 SEF+3UApACXew==
-Date: Wed, 23 Apr 2025 12:44:29 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Brian Norris <briannorris@google.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] PCI/pwrctrl: Cancel outstanding rescan work when
- unregistering
-Message-ID: <20250423174429.GA441684@bhelgaas>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="sqBaQ1ux"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=nNi428VMmxCpWKvb50p/bX9DgxfivgEs4/Ad9gqYDsM=; b=sqBaQ1uxVV1Pn/zOz3VaBK6aKx
+	/I4dFGbXcARGryXfnbvPWLGUtk1kZlUt0TMwuBBUgGzsc3TawnlO4KVddk2aiB7QCiDSrPFPX0UhH
+	fAnQPyqWRWhA73bcXJ2cxstme/cqQdzOdeNSmykzWRsh7LguLYXdC5mKFviArEbe7kE7StwD/luU3
+	KaDv+C24wS1f2nrM7EGI4Qu+rjOFF0owG01q4uyOVWtiu6Lq6cJ+r2oe6qSLvesrvkieXTZFlEpCY
+	oJqVHW/y/NnxmVaJAjV/Hdz8qBaF/6CgmBwCcTXNn4Q2H5Uve2R+1UJLcaWz6BwQT9kp9UqPXceRD
+	DY3fZ9pw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54318)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u7e93-0006K9-0Z;
+	Wed, 23 Apr 2025 18:44:25 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u7e8t-0000Dc-15;
+	Wed, 23 Apr 2025 18:44:15 +0100
+Date: Wed, 23 Apr 2025 18:44:15 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Marc Zyngier <maz@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+	Luo Jie <quic_luoj@quicinc.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Julia Lawall <Julia.Lawall@inria.fr>,
+	Nicolas Palix <nicolas.palix@imag.fr>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>, linux-kernel@vger.kernel.org,
+	cocci@inria.fr, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, quic_kkumarcs@quicinc.com,
+	quic_linchen@quicinc.com, quic_leiwei@quicinc.com,
+	quic_suruchia@quicinc.com, quic_pavir@quicinc.com
+Subject: Re: [PATCH v3 0/6] Add FIELD_MODIFY() helper
+Message-ID: <aAkm79R8f5Vf6TLh@shell.armlinux.org.uk>
+References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
+ <86sem7jb5t.wl-maz@kernel.org>
+ <0c97c659-bd28-45e0-8537-d9be2637cb22@lunn.ch>
+ <86mscek7h3.wl-maz@kernel.org>
+ <aAJq9mGswYsnAOS8@yury>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,47 +71,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
+In-Reply-To: <aAJq9mGswYsnAOS8@yury>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On Wed, Apr 09, 2025 at 11:53:13AM -0700, Brian Norris wrote:
-> From: Brian Norris <briannorris@google.com>
+On Fri, Apr 18, 2025 at 11:08:38AM -0400, Yury Norov wrote:
+> The _replace_bits() functions return fixed-width values, and intended
+> for: "manipulating bitfields both in host- and fixed-endian", as the
+> very first line in the commit message says.
 > 
-> It's possible to trigger use-after-free here by:
-> (a) forcing rescan_work_func() to take a long time and
-> (b) utilizing a pwrctrl driver that may be unloaded for some reason.
-> 
-> I'm unlucky to trigger both of these in development. It's likely much
-> more difficult to hit this in practice.
-> 
-> Anyway, we should ensure our work is finished before we allow our data
-> structures to be cleaned up.
-> 
-> Fixes: 8f62819aaace ("PCI/pwrctl: Rescan bus on a separate thread")
-> Cc: Konrad Dybcio <konradybcio@kernel.org>
-> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Brian Norris <briannorris@google.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> Those using _replace_bits() for something else abuse the API, and
+> should switch to FIELD_MODIFY().
 
-Looking for ack/reviewed-by from Bartosz before doing anything here.
+Sorry, but please explain this statement, because it means nothing to
+me.
 
-> ---
-> 
->  drivers/pci/pwrctrl/core.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pci/pwrctrl/core.c b/drivers/pci/pwrctrl/core.c
-> index 9cc7e2b7f2b5..6bdbfed584d6 100644
-> --- a/drivers/pci/pwrctrl/core.c
-> +++ b/drivers/pci/pwrctrl/core.c
-> @@ -101,6 +101,8 @@ EXPORT_SYMBOL_GPL(pci_pwrctrl_device_set_ready);
->   */
->  void pci_pwrctrl_device_unset_ready(struct pci_pwrctrl *pwrctrl)
->  {
-> +	cancel_work_sync(&pwrctrl->work);
-> +
->  	/*
->  	 * We don't have to delete the link here. Typically, this function
->  	 * is only called when the power control device is being detached. If
-> -- 
-> 2.49.0.604.gff1f9ca942-goog
-> 
+FIELD_MODIFY() replaces bits in host endian. _replace_bits() also
+replaces bits, but has a wider range of which encompass FIELD_MODIFY().
+
+I see nothing that precludes using using _replace_bits() with
+bitfields.
+
+I see nothing that would differentiate the behaviour, other than maybe
+religous ideals about C functions vs macros or upper vs lower case.
+
+Please explain why you think there's a difference between the two
+because I really can't see any reason not to use one over the other
+apart from asthetics.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
