@@ -1,95 +1,126 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253C22853F3
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:47:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1170E19E966;
+	Wed, 23 Apr 2025 16:48:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426872; cv=none; b=rmK2nOqAJtoSyTSOOcl7z3+PfYF3fworu569299d2a9tcpUjeje69ka1hp6LGqxSG6EsJW30HoI88DzNCNCD1+YTSmmwEixVBkXs7BVJOefSTixEyWm53h/tT3SsBMVjOa/9UFsj9L3AtXRzb4U88G3dUWCe2BZHibJeDKQ5MJA=
+	t=1745426913; cv=none; b=qhigZy2uFcD7aF8dxisW8WpsO+vYuBjeIeo1MENxzrtT+nbXmh0ASh4MwBhbgQTjYZJ0cnC+MIMGQ7KxHzjHpNPdj9qWKklfypB+Q9ptW/G8k1WJQ4Lp5covBTSKi49bOtQchsKkgyrGOXyF/vgdyWgkWzMmBtJRHtwetBhLd08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426872; c=relaxed/simple;
-	bh=sHyVnwcpepa8zIa3lAgxTEJ2l1IsLWodmvB6cfGIv4c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jwYkDfiTRmSGnqlLx3anH19I5eReKxvQ6iqZyqnW1nNcdtsRX2iBp66astbykGVmG2dUDd4O89wBcnC1700B0F9xZ8IzEny/dyuS6pIV8kgb/G9ml0GNoqS/W31VFvSEc657BV5oHiAQRWUR0/HcXiiYyjz75SD9rWRBaCBigQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ih/V0JGS; arc=none smtp.client-ip=91.218.175.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745426913; c=relaxed/simple;
+	bh=DT2vdXkm5UTmWS58pbDzSP2uTIp7fiBR1eJQ+9e9UMI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qd5I4Fa4tnyEZspZo/vIe50rWiR/A7B77yv6rQmutqMHP5td2ENqZlr8LcL2NXx8g3ouiXgibbAI8Ht5Ysk0sKfAa7o12ozU6xG3i00MlcPo7L+s+vArWOnoefXCNUdJV5DaVhjqMDG2YtDyr6R3Wl/sikH002RiRTf2R/konHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpQSXkaI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ih/V0JGS"
-Date: Wed, 23 Apr 2025 12:47:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745426867;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vPkM1jKEjmetc5EYd4TkOghy+zQtF2/1fXegDo8r0xM=;
-	b=ih/V0JGSYweiuXmwlO2xVLkKpu3nmHnPhZ69fPrhLGRxNcn7kK9HsAfC9dCMB7wvekV7zU
-	qwm5WtPuK6NyCukjn07H925M474YHtX9tq+JYKkS1S6dHRFw9ljzw6pdN05M74951IhL+Q
-	eWaJV64n0AMV9LSKloYJiBCeGqAcQSE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Arnaud Lecomte <contact@arnaud-lcm.com>
-Cc: syzbot+843981bb836d699c07d1@syzkaller.appspotmail.com, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: Sub volumes handling in bch2_fsck_update_backpointers
-Message-ID: <22hlu76p6uzlu6zexcjxgpijenfba3en4bx74nx6etr2mpgw4g@liyxgcpx7hbl>
-References: <6806d857.050a0220.f25bb.07a8.GAE@google.com>
- <20250423154531.376838-1-contact@arnaud-lcm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpQSXkaI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01DA3C4CEE8;
+	Wed, 23 Apr 2025 16:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745426912;
+	bh=DT2vdXkm5UTmWS58pbDzSP2uTIp7fiBR1eJQ+9e9UMI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kpQSXkaICpkzZ85VDQxj7jy1Bsx9d36+2o7RD6suAZam+Qz8iAU3ZXGGMEoI84UjR
+	 S9+zC70OJ0b4r4Prz6c8evH4/Dlu/YJd6rphhF4ecKgW2xw2iFiw/780ZHEKec8DPg
+	 g6rD9pD0TKJAtYfc8Yiwr3I314Vf55tVWwPuhG9WNHhP2oJTmYBfZBcR03qoUh5WZp
+	 sd2vF53MvXxmqLsE7hEOhoKFBgDxc5cRr4sv5vMyBBQyt+Kco4pL/GBlmaIIb/Xk96
+	 37uYkmpUqvJ/FBbbj3rsYnX4of6vmJrPIciBEklfktvC+w/i9aS9faia7MedbplwI3
+	 F6amN7bzOvcgQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Will Deacon <will@kernel.org>,
+	Joerg Roedel <joro@8bytes.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Mostafa Saleh <smostafa@google.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Rob Clark <robdclark@chromium.org>,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	Ashish Mhetre <amhetre@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	linux-arm-kernel@lists.infradead.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] iommu/io-pgtable-arm: dynamically allocate selftest device struct
+Date: Wed, 23 Apr 2025 18:48:16 +0200
+Message-Id: <20250423164826.2931382-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423154531.376838-1-contact@arnaud-lcm.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 05:45:31PM +0200, Arnaud Lecomte wrote:
-> Hey everyone, in fsck.c, we have:
-> /*
->  * Prefer to delete the first one, since that will be the one at the wrong
->  * offset:
->  * return value: 0 -> delete k1, 1 -> delete k2
->  */
-> int bch2_fsck_update_backpointers(struct btree_trans *trans,
-> 				  struct snapshots_seen *s,
-> 				  const struct bch_hash_desc desc,
-> 				  struct bch_hash_info *hash_info,
-> 				  struct bkey_i *new)
-> {
-> 	if (new->k.type != KEY_TYPE_dirent)
-> 		return 0;
-> 
-> 	struct bkey_i_dirent *d = bkey_i_to_dirent(new);
-> 	struct inode_walker target = inode_walker_init();
-> 	int ret = 0;
-> 
-> 	if (d->v.d_type == DT_SUBVOL) {
-> 		BUG();
-> 	} else {
-> 		ret = get_visible_inodes(trans, &target, s, le64_to_cpu(d->v.d_inum));
-> 		if (ret)
-> 			goto err;
-> 
-> 		darray_for_each(target.inodes, i) {
-> 			i->inode.bi_dir_offset = d->k.p.offset;
-> 			ret = __bch2_fsck_write_inode(trans, &i->inode);
-> 			if (ret)
-> 				goto err;
-> 		}
-> 	}
-> err:
-> 	inode_walker_exit(&target);
-> 	return ret;
-> }
-> 
-> What is the current state for handling subvolumes ? In someone already working on or it is something we don't want to implement
-> for some reasons ?
+From: Arnd Bergmann <arnd@arndb.de>
 
-This does need to be handled, I haven't started on it yet.
+In general a 'struct device' is way too large to be put on the kernel
+stack. Apparently something just caused it to grow a slightly larger,
+which pushed the arm_lpae_do_selftests() function over the warning
+limit in some configurations:
 
-I did just fix another subvolume root backpointers bug, which makes this
-one easier - now, only the newest snapshot version of a subvolume root
-inode needs to have a backpointer.
+drivers/iommu/io-pgtable-arm.c:1423:19: error: stack frame size (1032) exceeds limit (1024) in 'arm_lpae_do_selftests' [-Werror,-Wframe-larger-than]
+ 1423 | static int __init arm_lpae_do_selftests(void)
+      |                   ^
+
+Change the function to use a dynamically allocated faux_device
+instead of the on-stack device structure.
+
+Fixes: ca25ec247aad ("iommu/io-pgtable-arm: Remove iommu_dev==NULL special case")
+Link: https://lore.kernel.org/all/ab75a444-22a1-47f5-b3c0-253660395b5a@arm.com/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: use faux device instead of platform_device, as Robin suggested.
+    The faux device is more appropriate here since the is no actual physical
+    device, though on the other hand the v1 patch had the advantage of not
+    actually needing to register the device.
+---
+ drivers/iommu/io-pgtable-arm.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index 545229cf62d2..bbd42323c029 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -13,6 +13,7 @@
+ #include <linux/bitops.h>
+ #include <linux/io-pgtable.h>
+ #include <linux/kernel.h>
++#include <linux/device/faux.h>
+ #include <linux/sizes.h>
+ #include <linux/slab.h>
+ #include <linux/types.h>
+@@ -1437,15 +1438,17 @@ static int __init arm_lpae_do_selftests(void)
+ 	};
+ 
+ 	int i, j, k, pass = 0, fail = 0;
+-	struct device dev;
++	struct faux_device *dev;
+ 	struct io_pgtable_cfg cfg = {
+ 		.tlb = &dummy_tlb_ops,
+ 		.coherent_walk = true,
+-		.iommu_dev = &dev,
+ 	};
+ 
+-	/* __arm_lpae_alloc_pages() merely needs dev_to_node() to work */
+-	set_dev_node(&dev, NUMA_NO_NODE);
++	dev = faux_device_create("io-pgtable-test", NULL, 0);
++	if (!dev)
++		return -ENOMEM;
++
++	cfg.iommu_dev = &dev->dev;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(pgsize); ++i) {
+ 		for (j = 0; j < ARRAY_SIZE(address_size); ++j) {
+@@ -1465,6 +1468,8 @@ static int __init arm_lpae_do_selftests(void)
+ 	}
+ 
+ 	pr_info("selftest: completed with %d PASS %d FAIL\n", pass, fail);
++	faux_device_destroy(dev);
++
+ 	return fail ? -EFAULT : 0;
+ }
+ subsys_initcall(arm_lpae_do_selftests);
+-- 
+2.39.5
+
