@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244D443151;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680D852F88;
 	Wed, 23 Apr 2025 13:04:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745413453; cv=none; b=Lv6pJpvPAcQ3kA5O7iferH6KVCK7gjn3o0tDdJPPicoAzISe5y+pq4lU19V+iULYu6SzosUrmXll3q3OBmpsMFd5rgqwSePDKBP89MYZhFrUQU85ywTm0S/FFeKZ1cBi4MDn+RLMk0t/0720PJLKZjsIGQJqKVjEJru3QXXExSY=
+	t=1745413453; cv=none; b=O9nw6p1zS3khvcckwH27e0TGizfkLke/QDkcLhOp8UuyiF0T5MCI1H12CsY+8IS4n1NmdZ4ki3C5I5ZGySEf7ql8pxvYiU2NukyrMd9W5+tT2kIEI30YThqLULgjzjvpHsz8EGjlyeDPZ1vfCoab4QKxDWEd/aLlx8jTl1eZOis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745413453; c=relaxed/simple;
-	bh=5j+PZyGK15b/xCvRJYDk2eey1BgzPdvVdWTGs9O+yVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tPzfI8Hh8VITK5hATaJrNhGWhQHv/Rm4GQdqTeoR4X2/AYc3G1DEc0PhTw9srpnI+HqwX1KdcGH6iZCNaeuYwUM+wwroOtZmhGmReMv0eO5WrFSYX36hdbcVrPRKiTdGJuxMDEhuevTOBK/RVBsipkZ9HNHrab+90QIJdUBGZNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PG6f0Jhu; arc=none smtp.client-ip=10.30.226.201
+	bh=6NOXLmtGIRXsKgoQuMPbFlY7gnc/c1uKEyPPW1IlV8Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zbr4+HwIsUvbeeBpNic+FS/mKTUF4y+L18XZHj+oppIEKi9jtuxdfZoD3H7ZOsBw1sTYXf19XjNHvyPlJKyyxYUZvzWy1j1ZHTjTE7pjt64n/FoNerGu/rbujnSV1dbxGDqn+Sw93114MZy25Gzkx+QVsnKI+ZcHxOYcbBae07A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XdUq2DRh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PG6f0Jhu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 023DFC4CEED;
-	Wed, 23 Apr 2025 13:04:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XdUq2DRh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E50ACC4CEEC;
+	Wed, 23 Apr 2025 13:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745413453;
-	bh=5j+PZyGK15b/xCvRJYDk2eey1BgzPdvVdWTGs9O+yVc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PG6f0Jhu2j4BENhfKCpK+JPGk2645M14vW/NIo0rCZnxB12RhUglye+WRqS2DxWmI
-	 pT5mXxcZoITKugMbi7h5TPsfGwLi+uNnwWxjBbb0qiQx4iiuGGoV1hVfU1n7y3HLvc
-	 vuT6VYEOchBsF0X0bWTQVIGR0GO3vc+8pS9TigAjE1s3/T36nA1VJ8ovmb9Sk33NRy
-	 NP0l0BtetBuPKvhzl0ryUklGJEClKr3etB0xcJcsk1s6lI2qRlg1Yk4BfzYZcon3OW
-	 daAJN4vRtyJ87ubrnVg/z0lNAeYtY4Fjkv+kaG6E+IaMlcm6c1TL3jQd2FQs7PvjR6
-	 P5KJhKuiOMXqw==
+	s=k20201202; t=1745413452;
+	bh=6NOXLmtGIRXsKgoQuMPbFlY7gnc/c1uKEyPPW1IlV8Y=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XdUq2DRh1yUr01bxsEBLNEwF3YU88a7N7OQt1rEhA5wjlmD584dj8c6aYEvCwD00+
+	 RaatatuyY0s91vWMtxrTVcwhS7DA3US1KVBjUXVdxq2yAXodgD3v4uVuMag8rlr9F5
+	 h7hl2iOGp/ukKGdY4mIMn27uFiNusgYN2TbMoicFbuo0/pIPboRFVmZv0Ys/l2nrzd
+	 H6tH4vyDjKtYAasXgtLoiCnWGNx+6wd/rzYCJ1HLF8dT9UeEQgDdVzqpoKmToxQnEz
+	 e+9j9ZeLnP7rg5rQfdRSJ6fB5M0urGTyjqdBKNYx9zsT3nQBj5dYEcxoaumCHBe+17
+	 XfChq8Yb8WXXg==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1u7Zls-000000008Ag-1wed;
+	id 1u7Zls-000000008AX-0Vp2;
 	Wed, 23 Apr 2025 15:04:12 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Alexandre Belloni <alexandre.belloni@bootlin.com>
@@ -41,12 +40,10 @@ Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
 	linux-rtc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 4/7] rtc: jz4740: drop unused module alias
-Date: Wed, 23 Apr 2025 15:03:15 +0200
-Message-ID: <20250423130318.31244-5-johan+linaro@kernel.org>
+Subject: [PATCH 0/7] rtc: drop unused module alias
+Date: Wed, 23 Apr 2025 15:03:11 +0200
+Message-ID: <20250423130318.31244-1-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250423130318.31244-1-johan+linaro@kernel.org>
-References: <20250423130318.31244-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,24 +52,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The driver only support OF probe so drop the unused platform module
-alias.
+When working on the pm8xxx driver I noticed that it had a platform
+module alias while only supporting OF probe. This series drops it along
+with unused aliases in the other RTC drivers.
 
-Fixes: 24e1f2c9383e ("rtc: ingenic: Only support probing from devicetree")
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/rtc/rtc-jz4740.c | 1 -
- 1 file changed, 1 deletion(-)
+Johan
 
-diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index 44bba356268c..11fce47be780 100644
---- a/drivers/rtc/rtc-jz4740.c
-+++ b/drivers/rtc/rtc-jz4740.c
-@@ -437,4 +437,3 @@ module_platform_driver(jz4740_rtc_driver);
- MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("RTC driver for the JZ4740 SoC\n");
--MODULE_ALIAS("platform:jz4740-rtc");
+
+Johan Hovold (7):
+  rtc: at91rm9200: drop unused module alias
+  rtc: cpcap: drop unused module alias
+  rtc: da9063: drop unused module alias
+  rtc: jz4740: drop unused module alias
+  rtc: pm8xxx: drop unused module alias
+  rtc: s3c: drop unused module alias
+  rtc: stm32: drop unused module alias
+
+ drivers/rtc/rtc-at91rm9200.c | 1 -
+ drivers/rtc/rtc-cpcap.c      | 1 -
+ drivers/rtc/rtc-da9063.c     | 1 -
+ drivers/rtc/rtc-jz4740.c     | 1 -
+ drivers/rtc/rtc-pm8xxx.c     | 1 -
+ drivers/rtc/rtc-s3c.c        | 1 -
+ drivers/rtc/rtc-stm32.c      | 1 -
+ 7 files changed, 7 deletions(-)
+
 -- 
 2.49.0
 
