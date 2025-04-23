@@ -1,72 +1,81 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CD318BC2F;
-	Wed, 23 Apr 2025 02:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B1CF1EDA36;
+	Wed, 23 Apr 2025 02:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745375408; cv=none; b=oiCl6KoLLLogm2q0l9K5csn/31QkJcYBggku1dbcJPdLX9RMjiwIBgF4a8zq1bhHpIS+wpo4GPfxMU0qrHQIysohLdnCaGm1MnCw4iYdnDfK95KmVJDeaBHmkPITZxxW5f7RbnDxJRFX/2a0uv8/GbLzE9NvwAbeGR/GSo7s47M=
+	t=1745375833; cv=none; b=lyY/TKZ91wyldApvhpaxQkQJE+ZiieFFk4bfO89LV2aIicUw33d69BS/H2KIx6L48m0BTa+FfFelwS2yvsfgK7GCJeej07FqaaBQU2nzXOgzQ0MagnUHc1luQNPUNlqMOS+x6MblIefrswNPJ91C7ln/o51ZhfodIMEjyX7IXr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745375408; c=relaxed/simple;
-	bh=XDxkUr+ssHQNn3jIF48lOngZODLhyYp3DPRvtwKKpcE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ukbTYL/eFvwMlXGVua9lJ9zJ9+Aucmb6ylNIHvw8XbiJkToxUy8ulBcSN4C6ZuGGttSI2oiwj0Igq50Kw2Me/9cRu1kMVyiLCI4vADW2pfAEUcHU02QX49HusVQOA74S56oxAszvKKYGy4P0l1rsr5m17E5ta7pEn9k7H8XcJZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3ux//mR; arc=none smtp.client-ip=209.85.210.172
+	s=arc-20240116; t=1745375833; c=relaxed/simple;
+	bh=fbNJO/O8ZLr6gQ8KnxRAu8G94Pvwxa4PHtk3nXXv9JA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cEXJBJEetpBD1Omj+iPewCcNEWWBFAHjq1iTG/NVgQC+kLy+zPBysMtMIlWpFwaGqqQ6J/oU3WEmaZbvP8zlrMybGmHkkejbs39cMdAiRfexk+EwZnuH7GEjDkE7Krvgo/90Q0yIDSgRcxigp3Q9iofsUwpD0dGc4WMndiGhcLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S6oOOMTT; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3ux//mR"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so453807b3a.0;
-        Tue, 22 Apr 2025 19:30:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S6oOOMTT"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227cf12df27so4983525ad.0;
+        Tue, 22 Apr 2025 19:37:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745375406; x=1745980206; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=KnGRwos1kNXoXjIQZlQQXvyLKcIMntw2floMjKdISNI=;
-        b=j3ux//mRtjT+pkEL8mp9Ll8f2dsPpw9bdINvqEBwNOQWMRSWH88RFKJOx9mz6aabXE
-         BaIkwFH5dZz3nFnPQV3lyCB8mtdSUo5OzJ1hkk2adOw4KDXa6agwKr+RY0ZZcQHlpi6Q
-         /MaHzQw1hcM6iC/lPbeRpVCowuAuNeS4iQaY7LdgGKnsQRHGKnqGVLZx3Ql7oVB09l3r
-         84DQVxbkf5PoqYybvdhhbzhy/rD/9bdrtuR4JS62aRtLhtfwtzCPnlW+nstYifW3tE5T
-         7NHRygf098lNyZnsk9kQ5jzEVv/zvkfRmbTOcjk6h0KaOx3YXirFKOUsow6MU0zlqfmx
-         /UGA==
+        d=gmail.com; s=20230601; t=1745375829; x=1745980629; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q0covPsBk60C+c98aMqlqjUhpT0cBbCDGGXnljyb2rE=;
+        b=S6oOOMTTX3Q9FFY7IMh5oAx9TYGSJin3mdpfdaKP6Bc33dZ0X5qw4wdjxmjHiZU7tL
+         4BkJOXXB5myd/DRUHyidext2WBx/EiSXhQOIrLJH1C5s1ni8OVQqwwNLKsKqTIVRrNj+
+         7GQYVqt9/k8kC7B8wGt8DlDgKdn+O6F+t5xbQ/grkFTgRbi0L+vc/5GBvtCWfbh2ASxq
+         HuUvHS68zQGrfbiSLA6U0ZPK4RKus0KXD5kTLQBcZbH00Fo7I/r1Gagt+lc/kLyz5Cth
+         G646tQZF3tlvLaeenigi1tPNKgZKN10YPtqvlC9CUVUcl/jfBTSYCBUSrauRig9ViXwl
+         M39g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745375406; x=1745980206;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KnGRwos1kNXoXjIQZlQQXvyLKcIMntw2floMjKdISNI=;
-        b=mOzeZR/ZjAnyhvstugeC8fbrK7W8e1C2pYckGOZHrdow4LwKnLgGh4b8FhQCfHYJGp
-         GIWjT+KxrP2yjHodS7f0xCyMlveUXqyoYVJVSWirN/REJUtB3f+k2k90ZYANLZg9R6QW
-         YEzZIUQlEl1qz9Xb/HehdvTra/p9u+15Q86EbPIxdaJFDKO0Eu7/g0ZgES1xSddo2u3Q
-         ORQAl9Q5vj/ztIa0d7EIY0DfKjPO74MHUAXz1d5GdTT4TTxaAifDh2npU1IZD0U8KU2K
-         23EdmHUcFHJsMjqJ2k2uxIBNmVE/r1jAcpF8oIRxb77Qd3p41rO8IkKWmM/qJ8XE+3EG
-         4W8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVwVNXZ5zScU1m4P43vXJZvn930+luupQP8jGTwIEeaIrcaaJCzDjsPEAP4GEA63TVJmilsxnNJ+Uqa@vger.kernel.org, AJvYcCX2Q5PpdJVqMcbZdSgxdCiTiL7Fp7i7jFqITo5Ov6L6g6a8hDGJjUJIXUayzds64TwhWNd3BrzdQEhF@vger.kernel.org, AJvYcCXu1/SvJQ0U98b2DlXhkhwiFqLntpazytM3mGUcQ/1HCAsj8PlstXkjyZKo0FqWw0IEFV0VVnP7bxrpMw6C@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBOklldG8gxtb+DLy+/TuTjLBFxl85jJp8URtaavYn/VEWzF6t
-	LS3F7OJL0WNiNW/87p6jQs+DFAnvvh0ZyyrAnRa4/tyr4dX+nVRlC1GzjJc1
-X-Gm-Gg: ASbGnctEW3jKxXc8Hm7A8jY3zfKMausFq21Ydzn1Sv3DhVIktP86J85ZOozJXNjxZta
-	mj/P7yzTbNSKXuxVAJpUBpeBN+OTJHvkYC3PzF1DioSvK/GEVmoeqvBazCBJHzARmd4I8kACkdW
-	DVlbXqlDP5A8xfj0Zjq72YFD4Nac/65xbTDH5pJ0MNUPddCUCQyNXDLf2PxJVvzLVnAgYiE1+DZ
-	7balX8WgK4e0NsPng37JeFq2S2nYb84ShcQsZC86uVvJZEcxOF8uBUiDeRkh4dYFT/xAMqU0RO7
-	UCMCgE2AtaTRAIC8WeSKbjRWg9rwpPWsFtY7qfQzp07jlpFnKaBYHSAP5pzYxbAhDCb4CZQs5g=
-	=
-X-Google-Smtp-Source: AGHT+IEBOclr1RnspJuoV6fs8E6iL8iXbeaGfwsO/n0jWA28CCk5Q8K9Jv3yosU0KwN4aTwn7YlEiQ==
-X-Received: by 2002:a05:6a20:3d90:b0:1db:822f:36d8 with SMTP id adf61e73a8af0-2042e55c528mr1917476637.3.1745375405782;
-        Tue, 22 Apr 2025 19:30:05 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:4ff:1626:32b1:712a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db157eca9sm8007658a12.71.2025.04.22.19.30.02
+        d=1e100.net; s=20230601; t=1745375829; x=1745980629;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q0covPsBk60C+c98aMqlqjUhpT0cBbCDGGXnljyb2rE=;
+        b=QfXsI9y/EA66Dq+u/NeXFXsxvR7/okbuuhPDJvlIELIfegf3NhG79zWSvPnAhX12Zp
+         X8iG/L7DcsETAZvlkcf/u5l8kKXy9NEW331bCNkYPG+CQRyByghVt97vtulswrBFlQwQ
+         WCB5gzmGXmVV8BVdCHC3HVsEKIZ7A+TEHqsYFQTt6tF2jCinQYPsugsa3UvtpUhaScJt
+         0Rsj2yFdl5UpaydlVf8irfx4/DIgWLIdaCwtJxuk/dsFGutMqA0CaiR6aErlarqGe/L1
+         iTc0SOKmNAb61vC3ZihSf/ZOsCuk5i3pCeL9hGLDGGzr2nK5o4j5ApicvvEewN0rrqgP
+         iIzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJvGgfj32vkKMtif9d6a02Z4pyNNYjQRv0gkj+FanUuSXgpyTmJtQw1UTixtYTZh57o6nHI4UGnh7nyKEW@vger.kernel.org, AJvYcCXhe8E1+6nZwymwzveg5GZqAvNESOhEyicsreGhU+Y+yY9/j7cRT5P8+DWWsOVd8qH6ilYDu6mcJ8fcgnV8@vger.kernel.org
+X-Gm-Message-State: AOJu0YygytPMyX7vUqhwFTQNhzKcIXXxXyGq5kuuyUXuDxNGvR6DHDOb
+	O3uYhWy9+IzzZOPnQupVZ+SYlbW5Ym5hbnDPTosZ+rOcCeNRD4qn
+X-Gm-Gg: ASbGncvIcjE+OspuI48M5gKmXwmw3HcnQdD7GT0BFdSdy0cUVETAXTecFghnzlCFyEn
+	MjZCmkbb6rsmof24Te/G0eUwHoWG+MdsL/1S3tMJ7NKXb8mhOouekoHTN7hVUwf0LkYcQYKZLTV
+	KW/DnK1lPklKNVUymhXyTyOrA78UaWxUgZz2JMhSDO+JBrBFBnTyt0bs7FRVdGP9RNlbMx9ZsvP
+	GeBzq8KaiyOcPYgBqLacxEHDwYSRF0tqywCSO6kNRK2Jkp345R0BzjbceYPTwph27WsOa165Ryc
+	RQrYcKNZKPMOA8FOuccG7iikkcLNmjr05Hff1UzYWPyWt6SaLHGGBp+0adREv7U2QtKE1mk=
+X-Google-Smtp-Source: AGHT+IGsvGP5RH8UNJyAmbvgKpNx3TEl7JMeLI+5MkobhhMwpUTlsPDqtk9r7R8FG/hRcWDmkSJmCw==
+X-Received: by 2002:a17:903:1b6f:b0:215:9eac:1857 with SMTP id d9443c01a7336-22da317abf2mr19665905ad.5.1745375829230;
+        Tue, 22 Apr 2025 19:37:09 -0700 (PDT)
+Received: from vaxr-ASUSPRO-D840MB-M840MB.. ([2001:288:7001:2703:c11b:5090:296c:1c32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fe0679sm92646925ad.249.2025.04.22.19.37.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 19:30:05 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: jic23@kernel.org,
-	robh@kernel.org
-Cc: ~lkcamp/patches@lists.sr.ht,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings:iio:adc:st,spear600-adc: txt to yaml format conversion.
-Date: Tue, 22 Apr 2025 23:14:23 -0300
-Message-ID: <20250423022956.31218-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.47.0
+        Tue, 22 Apr 2025 19:37:08 -0700 (PDT)
+From: I Hsin Cheng <richard120310@gmail.com>
+To: syzbot+de1498ff3a934ac5e8b4@syzkaller.appspotmail.com,
+	viro@zeniv.linux.org.uk,
+	brauner@kernel.org
+Cc: jack@suse.cz,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	jfs-discussion@lists.sourceforge.net,
+	shaggy@kernel.org,
+	syzkaller-bugs@googlegroups.com,
+	skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev,
+	I Hsin Cheng <richard120310@gmail.com>
+Subject: [RFC PATCH] fs/buffer: Handle non folio buffer case for drop_buffer()
+Date: Wed, 23 Apr 2025 10:37:03 +0800
+Message-ID: <20250423023703.632613-1-richard120310@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <66fcb7f9.050a0220.f28ec.04e8.GAE@google.com>
+References: <66fcb7f9.050a0220.f28ec.04e8.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,124 +84,99 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Straight forward conversion from spear-adc.txt into yaml format.
+When the folio doesn't have any buffers, "folio_buffers(folio)" will
+return NULL, causing "buffer_busy(bh)" to dereference a null pointer.
+Handle the case and jump to detach the folio if there's no buffer within
+it.
 
-Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Reported-by: syzbot+de1498ff3a934ac5e8b4@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=de1498ff3a934ac5e8b4
+Fixes: 6439476311a64 ("fs: Convert drop_buffers() to use a folio")
+Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
 ---
-After the conversion to yaml file, I was not sure about the
-maintainers yaml field. It looks like the original driver author,
-Stefan Roese, is not active contributing.
-@Jonathan, I was not sure about it and I've added you on that field
-as I've noticed at other yaml`s, but feel free to give any suggestions on that
-or how to proceed in this case.
+syzbot reported a null pointer dereference issue. [1]
 
-Also noticed that the driver was moved out of staging, but the .txt was not
-in that time. Added the yaml in the proper path (out of staging as the driver).
-Tks and best regards.
+If the folio be sent into "drop_buffer()" doesn't have any buffers,
+assigning "bh = head" will make "bh" to NULL, and the following
+operation of cleaning the buffer will encounter null pointer
+dereference.
+
+I checked other use cases of "folio_buffers()", e.g. the one used in
+"buffer_check_dirty_writeback()" [2]. They generally use the same
+approach to check whether a folio_buffers() return NULL.
+
+I'm not sure whether it's normal for a non-buffer folio to reach inside
+"drop_buffers()", if it's not maybe we have to dig more into the problem
+and find out where did the buffers of folio get freed or corrupted, let
+me know if that's needed and what can I test to help. I'm new to fs
+correct me if I'm wrong I'll be happy to learn, and know more about
+what's the expected behavior or correct behavior for a folio, thanks !
+
+[1]:
+BUG: KASAN: null-ptr-deref in instrument_atomic_read include/linux/instrumented.h:68 [inline]
+BUG: KASAN: null-ptr-deref in atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+BUG: KASAN: null-ptr-deref in buffer_busy fs/buffer.c:2881 [inline]
+BUG: KASAN: null-ptr-deref in drop_buffers+0x6f/0x710 fs/buffer.c:2893
+Read of size 4 at addr 0000000000000060 by task kswapd0/74
+
+CPU: 0 UID: 0 PID: 74 Comm: kswapd0 Not tainted 6.12.0-rc1-syzkaller-00031-ge32cde8d2bd7 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ print_report+0xe8/0x550 mm/kasan/report.c:491
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+ buffer_busy fs/buffer.c:2881 [inline]
+ drop_buffers+0x6f/0x710 fs/buffer.c:2893
+ try_to_free_buffers+0x295/0x5f0 fs/buffer.c:2947
+ shrink_folio_list+0x240c/0x8cc0 mm/vmscan.c:1432
+ evict_folios+0x549b/0x7b50 mm/vmscan.c:4583
+ try_to_shrink_lruvec+0x9ab/0xbb0 mm/vmscan.c:4778
+ shrink_one+0x3b9/0x850 mm/vmscan.c:4816
+ shrink_many mm/vmscan.c:4879 [inline]
+ lru_gen_shrink_node mm/vmscan.c:4957 [inline]
+ shrink_node+0x3799/0x3de0 mm/vmscan.c:5937
+ kswapd_shrink_node mm/vmscan.c:6765 [inline]
+ balance_pgdat mm/vmscan.c:6957 [inline]
+ kswapd+0x1ca3/0x3700 mm/vmscan.c:7226
+ kthread+0x2f0/0x390 kernel/kthread.c:389
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+
+[2]:https://elixir.bootlin.com/linux/v6.14.3/source/fs/buffer.c#L97
+
+Best regards,
+I Hsin Cheng
 ---
- .../bindings/iio/adc/st,spear600-adc.yaml     | 61 +++++++++++++++++++
- .../bindings/staging/iio/adc/spear-adc.txt    | 24 --------
- 2 files changed, 61 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
- delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
+ fs/buffer.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
-new file mode 100644
-index 000000000000..a858b3f3c494
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
-@@ -0,0 +1,61 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/st,spear600-adc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ST SPEAr ADC device driver
-+
-+maintainers:
-+  - Jonathan Cameron <jic23@kernel.org>
-+
-+description: |
-+  Integrated ADC inside the ST SPEAr SoC, SPEAr600, supporting
-+  10-bit resolution. Datasheet can be found here:
-+  https://www.st.com/resource/en/datasheet/spear600.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,spear600-adc
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  sampling-frequency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Default sampling frequency of the ADC
-+
-+  vref-external:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      External voltage reference in milli-volts. If omitted
-+      the internal voltage reference will be used.
-+
-+  average-samples:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      Number of samples to generate an average value. If
-+      omitted, single data conversion will be used.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - sampling-frequency
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    adc: adc@d8200000 {
-+        compatible = "st,spear600-adc";
-+        reg = <0xd8200000 0x1000>;
-+        interrupt-parent = <&vic1>;
-+        interrupts = <6>;
-+        sampling-frequency = <5000000>;
-+        vref-external = <2500>;	/* 2.5V VRef */
-+    };
-diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-deleted file mode 100644
-index 88bc94fe1f6d..000000000000
---- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--* ST SPEAr ADC device driver
--
--Required properties:
--- compatible: Should be "st,spear600-adc"
--- reg: Address and length of the register set for the device
--- interrupts: Should contain the ADC interrupt
--- sampling-frequency: Default sampling frequency
--
--Optional properties:
--- vref-external: External voltage reference in milli-volts. If omitted
--  the internal voltage reference will be used.
--- average-samples: Number of samples to generate an average value. If
--  omitted, single data conversion will be used.
--
--Examples:
--
--	adc: adc@d8200000 {
--		compatible = "st,spear600-adc";
--		reg = <0xd8200000 0x1000>;
--		interrupt-parent = <&vic1>;
--		interrupts = <6>;
--		sampling-frequency = <5000000>;
--		vref-external = <2500>;	/* 2.5V VRef */
--	};
+diff --git a/fs/buffer.c b/fs/buffer.c
+index cc8452f60251..29fd17f78265 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -2883,6 +2883,8 @@ drop_buffers(struct folio *folio, struct buffer_head **buffers_to_free)
+ 	struct buffer_head *head = folio_buffers(folio);
+ 	struct buffer_head *bh;
+ 
++	if (!head)
++		goto detach_folio;
+ 	bh = head;
+ 	do {
+ 		if (buffer_busy(bh))
+@@ -2897,6 +2899,7 @@ drop_buffers(struct folio *folio, struct buffer_head **buffers_to_free)
+ 			__remove_assoc_queue(bh);
+ 		bh = next;
+ 	} while (bh != head);
++detach_folio:
+ 	*buffers_to_free = head;
+ 	folio_detach_private(folio);
+ 	return true;
 -- 
-2.47.0
+2.43.0
 
