@@ -1,105 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F75718C031
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8479618DB19
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:22:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745414552; cv=none; b=oQovCElBfh+8iplKVmr6VlUDLBNoNjWIkMQUgGlCgxafgTepr5nZAAga0JRIJmhWI0F0CqQ6XIJqZGFFgqI41wOcRDZ/R1Wrv+WQMPsWPiBYmwAp94RZF503Bnt2BE+j1A1dL4WA6RaUhPX3Pr1noPkoc3hfUCaQOar1cQpWDsY=
+	t=1745414554; cv=none; b=nmPX1l3TjzR6UQemQKo9OvXmSorJWZi36IJokLagWEZRUSkKIVTR++XFlwIXLZqV1Zs0DWC/1E6BaYB3CFvkKZ1NXDyVGGtoX9KvTX6q9fzfiRORPZzNs1cuZiCdZ/E7lu/fppUfN+PUTbn3Z3L4C9TO+nN9yH0VMPzDG3oqTpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745414552; c=relaxed/simple;
-	bh=/cLfvZPaGaKqTv5rGWJ2lfAMdaEHdJl7YqBZZkkNksw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=stfQKsuQLVVUHAuRhP7zW3bICVz2VeDk4YUXCcG/cETMtviLHPS/eCjrNrfwgST4z+V9G7Blq8R5uhyogjFiIt4OaaE+kv/D4VJ//qTl4qaZ6JCAV8HKwW29wMpjxIUp+PdQ95iiyD13s5a3S1Wx5xhJqhE1hwSHIRfH+jBjNYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLImKzZ/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745414554; c=relaxed/simple;
+	bh=2fSGqfGe9QF0hCkGFRwBT0+5mcM+4uAzRmVq171CGlg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jac+TpgAuqnfzNqVeH+K8g7A9ywOHoKgRRBBvqdve9VcE1K7v5Mh+C5VlTUZU09k16tGXn41cTSheKLenQyn7NH+K9EdcJy3nYJvMfTJLwluWn6VYeNkAZ4g/Laxna6+GJ2tsPZ6vQ/Z+lddK70YJH020y1q5SEsjPI0zrbf/Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WYz23Fj6; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=WYz23Fj6; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLImKzZ/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C349C4CEE2;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WYz23Fj6";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="WYz23Fj6"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8312E1F441;
 	Wed, 23 Apr 2025 13:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745414551;
-	bh=/cLfvZPaGaKqTv5rGWJ2lfAMdaEHdJl7YqBZZkkNksw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TLImKzZ/tQWXbn4ODEiwVugd6vBNT48iqotSK9rMkKp8Debxfj5BAEh5JBOCl4PP3
-	 JRqRyITxPTX4JUmrEqhZUZ61fl0wrDdLGvEifWBUCzZZFiWb0aVrNNYKq5wjr6yImo
-	 UjZyn9xXa/m8FhGH87jXr3Pu8ZQ9Hzrr5DR8Zo9WmHivVkuOITZ5Z63aSGW4fu87kT
-	 3xKwkpuZAsn8OGsn3DJbZrGseIHXH0dZAUH4IitrxODWQb5mkqZq9UJRT4k3nufm0C
-	 kCT8EgypF24kVtPnYLLEMaAByPw4/fnXdKTF+9vf0XqKQDT8ExixZJe5k1IeCxBprt
-	 jzy79wc0wEyyQ==
-From: Daniel Wagner <wagi@kernel.org>
-Date: Wed, 23 Apr 2025 15:21:57 +0200
-Subject: [PATCH v5 14/14] nvme-fc: do not reference lsrsp after failure
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745414550; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sbm+i1YS9B9TwaPdJxxSVF9m6Ca6BSDgVpX6BzZzH4E=;
+	b=WYz23Fj6yBwM4ukDzfxvaRNJM6mI/ZA6pFm8VFNRtmk9ff48jVvbW/iXqKJPd5DHx1EeV8
+	vaafql/+9gIT5jmqwkBrf+zlQ29KXkWmafiB7WPDTryaT1w08eLEOmJ9LRnJFy8xHxlYkq
+	nh4YjZeEPrtaYCZjCVim8XVmpEiKsaw=
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.com header.s=susede1 header.b=WYz23Fj6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745414550; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sbm+i1YS9B9TwaPdJxxSVF9m6Ca6BSDgVpX6BzZzH4E=;
+	b=WYz23Fj6yBwM4ukDzfxvaRNJM6mI/ZA6pFm8VFNRtmk9ff48jVvbW/iXqKJPd5DHx1EeV8
+	vaafql/+9gIT5jmqwkBrf+zlQ29KXkWmafiB7WPDTryaT1w08eLEOmJ9LRnJFy8xHxlYkq
+	nh4YjZeEPrtaYCZjCVim8XVmpEiKsaw=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 619CE13A3D;
+	Wed, 23 Apr 2025 13:22:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id RO7qFpbpCGhRWAAAD6G6ig
+	(envelope-from <neelx@suse.com>); Wed, 23 Apr 2025 13:22:30 +0000
+From: Daniel Vacek <neelx@suse.com>
+To: Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	Nick Terrell <terrelln@fb.com>
+Cc: Daniel Vacek <neelx@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] btrfs: harden parsing of compress mount option
+Date: Wed, 23 Apr 2025 15:22:19 +0200
+Message-ID: <20250423132220.4052042-1-neelx@suse.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250423073329.4021878-1-neelx@suse.com>
+References: <20250423073329.4021878-1-neelx@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-nvmet-fcloop-v5-14-3d7f968728a5@kernel.org>
-References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
-In-Reply-To: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
-To: James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Hannes Reinecke <hare@suse.de>, Keith Busch <kbusch@kernel.org>, 
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Daniel Wagner <wagi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 8312E1F441
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.com:dkim,suse.com:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	DKIM_TRACE(0.00)[suse.com:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
+X-Spam-Flag: NO
 
-The lsrsp object is maintained by the LLDD. The lifetime of the lsrsp
-object is implicit. Because there is no explicit cleanup/free call into
-the LLDD, it is not safe to assume after xml_rsp_fails, that the lsrsp
-is still valid. The LLDD could have freed the object already.
+Btrfs happily but incorrectly accepts the `-o compress=zlib+foo` and similar
+options with any random suffix. Let's handle that correctly.
 
-With the recent changes how fcloop tracks the resources, this is the
-case. Thus don't access lsrsp after xml_rsp_fails.
-
-Signed-off-by: Daniel Wagner <wagi@kernel.org>
+Signed-off-by: Daniel Vacek <neelx@suse.com>
 ---
- drivers/nvme/host/fc.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+v2: Drop useless check for comma and split compress options
+    into a separate helper function
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 2257c3c96dd2da11097d2d0d4a5bb8ece1bebc6a..fdafa3e9e66fa9b8954209efa14d3b207cb8653c 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1410,9 +1410,8 @@ nvme_fc_xmt_disconnect_assoc(struct nvme_fc_ctrl *ctrl)
+ fs/btrfs/super.c | 108 +++++++++++++++++++++++++++--------------------
+ 1 file changed, 62 insertions(+), 46 deletions(-)
+
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 40709e2a44fce..422fb82279877 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -270,6 +270,67 @@ static inline blk_mode_t btrfs_open_mode(struct fs_context *fc)
+ 	return sb_open_mode(fc->sb_flags) & ~BLK_OPEN_RESTRICT_WRITES;
  }
  
- static void
--nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
-+nvme_fc_xmt_ls_rsp_free(struct nvmefc_ls_rcv_op *lsop)
- {
--	struct nvmefc_ls_rcv_op *lsop = lsrsp->nvme_fc_private;
- 	struct nvme_fc_rport *rport = lsop->rport;
- 	struct nvme_fc_lport *lport = rport->lport;
- 	unsigned long flags;
-@@ -1433,6 +1432,14 @@ nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
- 	nvme_fc_rport_put(rport);
- }
- 
-+static void
-+nvme_fc_xmt_ls_rsp_done(struct nvmefc_ls_rsp *lsrsp)
++static int btrfs_parse_compress(struct btrfs_fs_context *ctx,
++				struct fs_parameter *param, int opt)
 +{
-+	struct nvmefc_ls_rcv_op *lsop = lsrsp->nvme_fc_private;
++	/*
++	 * Provide the same semantics as older kernels that don't use fs
++	 * context, specifying the "compress" option clears
++	 * "force-compress" without the need to pass
++	 * "compress-force=[no|none]" before specifying "compress".
++	 */
++	if (opt != Opt_compress_force && opt != Opt_compress_force_type)
++		btrfs_clear_opt(ctx->mount_opt, FORCE_COMPRESS);
 +
-+	nvme_fc_xmt_ls_rsp_free(lsop);
++	if (opt == Opt_compress || opt == Opt_compress_force) {
++		ctx->compress_type = BTRFS_COMPRESS_ZLIB;
++		ctx->compress_level = BTRFS_ZLIB_DEFAULT_LEVEL;
++		btrfs_set_opt(ctx->mount_opt, COMPRESS);
++		btrfs_clear_opt(ctx->mount_opt, NODATACOW);
++		btrfs_clear_opt(ctx->mount_opt, NODATASUM);
++	} else if (strncmp(param->string, "zlib", 4) == 0 &&
++			(param->string[4] == ':' ||
++			 param->string[4] == '\0')) {
++		ctx->compress_type = BTRFS_COMPRESS_ZLIB;
++		ctx->compress_level =
++			btrfs_compress_str2level(BTRFS_COMPRESS_ZLIB,
++						 param->string + 4);
++		btrfs_set_opt(ctx->mount_opt, COMPRESS);
++		btrfs_clear_opt(ctx->mount_opt, NODATACOW);
++		btrfs_clear_opt(ctx->mount_opt, NODATASUM);
++	} else if (strncmp(param->string, "lzo", 3) == 0 &&
++			param->string[3] == '\0') {
++		ctx->compress_type = BTRFS_COMPRESS_LZO;
++		ctx->compress_level = 0;
++		btrfs_set_opt(ctx->mount_opt, COMPRESS);
++		btrfs_clear_opt(ctx->mount_opt, NODATACOW);
++		btrfs_clear_opt(ctx->mount_opt, NODATASUM);
++	} else if (strncmp(param->string, "zstd", 4) == 0 &&
++			(param->string[4] == ':' ||
++			 param->string[4] == '\0')) {
++		ctx->compress_type = BTRFS_COMPRESS_ZSTD;
++		ctx->compress_level =
++			btrfs_compress_str2level(BTRFS_COMPRESS_ZSTD,
++						 param->string + 4);
++		btrfs_set_opt(ctx->mount_opt, COMPRESS);
++		btrfs_clear_opt(ctx->mount_opt, NODATACOW);
++		btrfs_clear_opt(ctx->mount_opt, NODATASUM);
++	} else if ((strncmp(param->string, "no", 2) == 0 &&
++			param->string[2] == '\0') ||
++		   (strncmp(param->string, "none", 4) == 0 &&
++			param->string[4] == '\0')) {
++		ctx->compress_level = 0;
++		ctx->compress_type = 0;
++		btrfs_clear_opt(ctx->mount_opt, COMPRESS);
++		btrfs_clear_opt(ctx->mount_opt, FORCE_COMPRESS);
++	} else {
++		btrfs_err(NULL, "unrecognized compression value %s",
++			  param->string);
++		return -EINVAL;
++	}
++	return 0;
 +}
 +
- static void
- nvme_fc_xmt_ls_rsp(struct nvmefc_ls_rcv_op *lsop)
+ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
  {
-@@ -1450,7 +1457,7 @@ nvme_fc_xmt_ls_rsp(struct nvmefc_ls_rcv_op *lsop)
- 		dev_warn(lport->dev,
- 			"LLDD rejected LS RSP xmt: LS %d status %d\n",
- 			w0->ls_cmd, ret);
--		nvme_fc_xmt_ls_rsp_done(lsop->lsrsp);
-+		nvme_fc_xmt_ls_rsp_free(lsop);
- 		return;
- 	}
- }
-
+ 	struct btrfs_fs_context *ctx = fc->fs_private;
+@@ -339,53 +400,8 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 		fallthrough;
+ 	case Opt_compress:
+ 	case Opt_compress_type:
+-		/*
+-		 * Provide the same semantics as older kernels that don't use fs
+-		 * context, specifying the "compress" option clears
+-		 * "force-compress" without the need to pass
+-		 * "compress-force=[no|none]" before specifying "compress".
+-		 */
+-		if (opt != Opt_compress_force && opt != Opt_compress_force_type)
+-			btrfs_clear_opt(ctx->mount_opt, FORCE_COMPRESS);
+-
+-		if (opt == Opt_compress || opt == Opt_compress_force) {
+-			ctx->compress_type = BTRFS_COMPRESS_ZLIB;
+-			ctx->compress_level = BTRFS_ZLIB_DEFAULT_LEVEL;
+-			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+-			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+-			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+-		} else if (strncmp(param->string, "zlib", 4) == 0) {
+-			ctx->compress_type = BTRFS_COMPRESS_ZLIB;
+-			ctx->compress_level =
+-				btrfs_compress_str2level(BTRFS_COMPRESS_ZLIB,
+-							 param->string + 4);
+-			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+-			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+-			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+-		} else if (strncmp(param->string, "lzo", 3) == 0) {
+-			ctx->compress_type = BTRFS_COMPRESS_LZO;
+-			ctx->compress_level = 0;
+-			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+-			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+-			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+-		} else if (strncmp(param->string, "zstd", 4) == 0) {
+-			ctx->compress_type = BTRFS_COMPRESS_ZSTD;
+-			ctx->compress_level =
+-				btrfs_compress_str2level(BTRFS_COMPRESS_ZSTD,
+-							 param->string + 4);
+-			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+-			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+-			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+-		} else if (strncmp(param->string, "no", 2) == 0) {
+-			ctx->compress_level = 0;
+-			ctx->compress_type = 0;
+-			btrfs_clear_opt(ctx->mount_opt, COMPRESS);
+-			btrfs_clear_opt(ctx->mount_opt, FORCE_COMPRESS);
+-		} else {
+-			btrfs_err(NULL, "unrecognized compression value %s",
+-				  param->string);
++		if (btrfs_parse_compress(ctx, param, opt))
+ 			return -EINVAL;
+-		}
+ 		break;
+ 	case Opt_ssd:
+ 		if (result.negated) {
 -- 
-2.49.0
+2.47.2
 
