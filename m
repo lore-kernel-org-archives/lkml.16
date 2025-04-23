@@ -1,129 +1,58 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A6B266EE0
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFAA1F470E;
+	Wed, 23 Apr 2025 08:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745395806; cv=none; b=OO4eBBoK15loTMmpiTSYQjLUbBxbBudqDSWn45HjHxyqxHASWyKUHmLZw1QEy1SkS1x7NXMtdGEtWBmhwv1Fpu7XPIUjfDTT/QMqldM7XzAZKQ4vSBi1V+Yt1vrVWSoAU4CcRBxy3wsg46zOfFg1YpI6to6dbptbZD6PYAAoABU=
+	t=1745395869; cv=none; b=XkiGPr/z3y29FyiXOewWdlnox9dPyxlcJ1TO1YizOCSpHB83REGHFZilxqoRNEgySU0ZeGu6ZqRT+f6m+G9n/mpy1b87REG/kOiWZ1NbttRCNp2WpBFilXUafbIoOKjtzUcCnrJUuucZXF0u7R1emltvMEK0Vzp1txt/FnK0b9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745395806; c=relaxed/simple;
-	bh=2cSfyhXHhJ42GXom0kqjnGO5lfglC3xG8oSxl8JfM6k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fffkh2VmHa178/EP0cfXQAQJNj3LvQ8fbaZvJZ9+uRrPnZbnzN5H5QMLmXHpl0qKL8swgfqgactyDPC9C2RTggkRAa0LWxSkO15loVxdiZxr2Ee8H2S39zRcMixVagCipAZI1rL06ozX7SfViABpLBWyYXpJTuIwawAKMbH5GkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=X0eL+KbB; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=DP2mQwEt; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="X0eL+KbB";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="DP2mQwEt"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id EDA1B1F7D3;
-	Wed, 23 Apr 2025 08:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745395802; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=MCRBBOJuZClETEUqixfcgMiw71j1SO+5sacu/xekEao=;
-	b=X0eL+KbBxVoDPpj3zNoOtdnWfvXKKeXx2MzMadN4kkXY2FvnCSghlJxGBAIZaOAIwMMvyi
-	Jwc2P6nrCoe0eZ+MM0RGVTAqNO8+A/KC+KJXRHWfhiZg47wPwXL8+YeM0XDl8Hdve2oJ2v
-	8mlMM7/AmWP7EEOn3W676ZVq3bHmDyc=
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.com header.s=susede1 header.b=DP2mQwEt
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1745395801; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=MCRBBOJuZClETEUqixfcgMiw71j1SO+5sacu/xekEao=;
-	b=DP2mQwEtcBIneT+iowSZ1uVTeNEZdtWCUppdDu0fyL9efuLxM3madybFM1rmw7eGemHRtJ
-	gzvVMZ2MJN8KOTLtB0eSPq+trrkA0GNybL97hng+RGtD0qJZ1SxP9gY1XDd0Ndb3ahDNTT
-	/m/ae+JMb6AfKl9Ns6P5WVaopUvdn/0=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D3B3413691;
-	Wed, 23 Apr 2025 08:10:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id wrL1MlmgCGgycwAAD6G6ig
-	(envelope-from <neelx@suse.com>); Wed, 23 Apr 2025 08:10:01 +0000
-From: Daniel Vacek <neelx@suse.com>
-To: Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: Daniel Vacek <neelx@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] btrfs: fiemap: make the assert more explicit after handling the error cases
-Date: Wed, 23 Apr 2025 10:09:39 +0200
-Message-ID: <20250423080940.4025020-1-neelx@suse.com>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1745395869; c=relaxed/simple;
+	bh=AcZL+tgJx6ZeqYbFnXapzYJ9r1oRCnCzprxsrk7VnzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5yAdF1cAVAJAfgLV8AnZI4foZXjSOOlgR5QZb4ZfMgNxuDHNX6fbBjwujefEn5sMV7iesh0XAIKqLC0i1MjakX2zSKpO1BcV9IlbNKmpLgng8wC1v5OHpbVfs7m9WtXWb3/SJeDfq6CHqBfFLg8E+p5bo/JqvZpoeVQWJRIdck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id B376468AFE; Wed, 23 Apr 2025 10:10:55 +0200 (CEST)
+Date: Wed, 23 Apr 2025 10:10:55 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: "Darrick J. Wong" <djwong@kernel.org>, brauner@kernel.org, hch@lst.de,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v8 05/15] xfs: ignore HW which cannot atomic write a
+ single block
+Message-ID: <20250423081055.GA28307@lst.de>
+References: <20250422122739.2230121-1-john.g.garry@oracle.com> <20250422122739.2230121-6-john.g.garry@oracle.com> <20250423003823.GW25675@frogsfrogsfrogs> <f467a921-e7dd-4f5b-ac9f-c6e8c043143c@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: EDA1B1F7D3
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=susede1];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:dkim,suse.com:mid,suse.com:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	DKIM_TRACE(0.00)[suse.com:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f467a921-e7dd-4f5b-ac9f-c6e8c043143c@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-Let's not assert the errors and clearly state the expected result only
-after eventual error handling. It makes a bit more sense this way.
+On Wed, Apr 23, 2025 at 08:15:43AM +0100, John Garry wrote:
+> Ideally we could have not set them in the first place, but need to know the 
+> blocksize when xfs_alloc_buftarg() is called, but it is not yet set for 
+> mp/sb. Is there any neat way to know the blocksize when xfs_alloc_buftarg() 
+> is called?
 
-Signed-off-by: Daniel Vacek <neelx@suse.com>
----
- fs/btrfs/fiemap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The buftarg is needed to read the superblock, which is used to determine
+the block size, so no.
 
-diff --git a/fs/btrfs/fiemap.c b/fs/btrfs/fiemap.c
-index b80c07ad8c5e7..034f832e10c1a 100644
---- a/fs/btrfs/fiemap.c
-+++ b/fs/btrfs/fiemap.c
-@@ -568,10 +568,10 @@ static int fiemap_find_last_extent_offset(struct btrfs_inode *inode,
- 	 * there might be preallocation past i_size.
- 	 */
- 	ret = btrfs_lookup_file_extent(NULL, root, path, ino, (u64)-1, 0);
--	/* There can't be a file extent item at offset (u64)-1 */
--	ASSERT(ret != 0);
- 	if (ret < 0)
- 		return ret;
-+	/* There can't be a file extent item at offset (u64)-1 */
-+	ASSERT(ret == 1);
- 
- 	/*
- 	 * For a non-existing key, btrfs_search_slot() always leaves us at a
--- 
-2.47.2
+But maybe we should just delay setting the atomic values until later so
+that it can be done in a single pass?  E.g. into xfs_setsize_buftarg
+which then should probably be rename to something like
+xfs_buftarg_setup.
 
