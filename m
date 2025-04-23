@@ -1,94 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A80328EA56;
-	Wed, 23 Apr 2025 15:21:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D422857C1;
+	Wed, 23 Apr 2025 15:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421664; cv=none; b=CzoaN6kSjcusaXMZ4Ryfpu6yP0vXKr4MFMX33jmBKZkJDxMeMzTz89V9KSsUr6JgMlnj6l3uk1k4LlzlRHcPDTnEDHYAPboI8LU3CvUZz06ukHqIXNZ+PtTknLXWWErtvnggzp8Fzcuq1UxNbHvJ7f1r0YTNXl6Jf7VwCG6TyT4=
+	t=1745421679; cv=none; b=lxlaGjwx7U971h6KXunKixmH86yrLkPxTbX0DNaVSNbZmRMNJ3qCKKuK010bILrC2k5RUlkPs4VcCaXaF0+fC7gDqiKhubzjJLpErqHDSStAtscLVGFaiB2G7z0CfUGBsfdSfbtma8+frIga19R3180v50ybIGQEot4sQgm2HsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421664; c=relaxed/simple;
-	bh=gzxfMjmVDcE5HTN533uohFiedZVmeDQ1cuY6pDnPCmw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EaWkc1oAQEdvIOweInP4s/ShATUMBBc3pJpH8NXwg4DBJyx4odNzPvW1uCmg+r0TFMUBFKaXPCohfVDL8or0clzGv5E/P02u4GjD5RNvuxIZ5x575jkMHthujX2SN3ntUA+a/9R6AoVRoLgXhcm+3SdMQ9NZY9mWhxWstS8UGCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDOfynEO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745421679; c=relaxed/simple;
+	bh=ocihTxHKjDV8ZWlIROTSWda+Ts4l5IXkFmD+6cfyN3U=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
+	 MIME-Version; b=SrkITh4CpzUqYD/gTS8HvdC9fvbjvRvXfRR4nG4HPDErlSsLM260muQD00uel7n3hLwdj7pT54CYkUYW5qE9Kd6INQ8eZAMrvzqTmDO94P9sajIdWJ0cRCgI6CCob6KCBQmhk9TrBW08J06wR1GFES79ECqgrbX9ky22uZhWHx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZfJBUchs; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDOfynEO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 946BAC4CEE2;
-	Wed, 23 Apr 2025 15:21:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745421663;
-	bh=gzxfMjmVDcE5HTN533uohFiedZVmeDQ1cuY6pDnPCmw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dDOfynEOoA4vbAHa9Hman68CVhYpB5f2QQxguP0d/0HUXVHH8mcFm0u4O+hUriE8c
-	 fqI/5nMKaytYWRHaHISUkcdsLgxWZbSkB6xcuN2bJwmAXz0G/5yzOIVAZpGMIzPdmn
-	 0rOUuqxc+KYeREy2cG9Xn8c+22AcHQRPqN7EpWDMWvA2t97//qi1ZupV0hiLw8lC02
-	 OBWRswrTEyhGusOH1d+hGuIp6+HrcjXvV2psOfPGtHgg9Ao+MMnVBiPqwEozxfXtBB
-	 K4rcNs4CTyjq70cp7FN9TxW/+fXmZyF740JCMINBW3fdddcwTWb/rTYO/y+91tI2tt
-	 74nZhaf7VhYsg==
-Date: Wed, 23 Apr 2025 08:21:03 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v8 15/15] xfs: allow sysadmins to specify a maximum
- atomic write limit at mount time
-Message-ID: <20250423152103.GD25675@frogsfrogsfrogs>
-References: <20250422122739.2230121-1-john.g.garry@oracle.com>
- <20250422122739.2230121-16-john.g.garry@oracle.com>
- <20250423083209.GA30432@lst.de>
- <20250423150110.GB25675@frogsfrogsfrogs>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZfJBUchs"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf034d4abso60913025e9.3;
+        Wed, 23 Apr 2025 08:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745421675; x=1746026475; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Li+3GRicRppsnv6S7lrbfl1VCvjPKVNnD9s3Fy6S0jw=;
+        b=ZfJBUchsLmhZSw8kjb5tjqYOoQtgKTmDMPNgbqWdt/klShPIOpIbfS0UKYMEYk/MOA
+         J3Ws5izkymByCIpJC9T13a0Ot+U+5wj4By3fxR96FvXmdgEB+uZavXrNrjgtdTutYIdY
+         FIF3+GowNvaKETZTbML8BwBiZ4oiLjwG6tGZGNVQTr3wN4FrveUPAYY/onAoSpIIFo6D
+         qCdKfmmiifqKrSH99zJY/uWBGfDwf4+50R6TjnSa67X3eNcpTY00W/ry/28lXiKQA0RJ
+         LZMVzGVUd6ay+BllHxps4cBrcD0rMVU6mlk526t67k5SprC9rAf+JGZ0m8GBrA09NPAg
+         kY8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745421675; x=1746026475;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Li+3GRicRppsnv6S7lrbfl1VCvjPKVNnD9s3Fy6S0jw=;
+        b=Gxn5iJ2aI8rKo7DW8iPdjZN79uWQbSJYY6qYyJRlxyv1xhBLY0wWCk3VZSBnbBV9eH
+         50tDsvyXFkw/gonLcyH8Nw/IudDb30oLKkIfKjaedDrvDG89dqO1Ju+WBBNc22E34mrL
+         xc0IwSGKwDXGqlqQAz650EVfuM/JZ8wIfuSN8ghFvg2XSBEfTSSm0GHcTsYqGMlFIzgb
+         FW0ewrqQdJGAoCTO7MHkicpzExKwEtRwQ95+w9dnaE0mPwUwxRhKG/7BIpEZo+yQ9Mqx
+         w6iPt8P3NQv1XenmE6qqdpXJ3pwygIURd+fkVNcIGfUQA3Z9x5ODOkAdtqEKzLNHITUH
+         nduA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8JId/rKfrXOAk9usKVwIkyaqTr4440t3QjTo0GWH85Mzf9TzassAypbcSo6CCi6FX6v6XnMGFUEflMv8m@vger.kernel.org, AJvYcCWH7vJ2hnmBJpbW6L0iRw3UIVEzuztQlae3j5S/3M/U5gYZv3vmXMlqsOFp/H/85/lA000=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6CQsVaI4C9UYePm2M41c2wHmAxSv0B+y6OL4MLm3Y9XTjWNk3
+	Z54EaUHiF5Ok4U8V1XQ3OsfFSKH4yIfN4yR3XssSF4GrCEdRj4y7MYUbQ14k
+X-Gm-Gg: ASbGncubF68dsRrA2rsnXZx7XKAnrzZhLVxtcYw+NKB1d0gpXeg/JCun+zSANbby3HF
+	2uFNhsizOJcTingCsxeOfGVzYH9rpzHH/Iy8UxWjUxzKqrHepCQdEaj9BImElfJ0k5LMW2nPM44
+	a7fYTDFFfpKyM2C8MpaL8L7LPFbE2T2XRL5wYV1LTnEXWmBox5npRSj1tptlXpI9sf/OID9STfq
+	pUCJbEXYQwMGRZg3X0F5D4fzoRx0gnihFws3/O5HSaZcOoBM47CSLLOXwLFschqZYsFdccp5TSo
+	TD1FlWkQfDuMUktmRYih7K8JyfqGsimnOfcWUfnVLgxNTnjRzsZleRQ5IPIUMgMNk3m8dq7pyGR
+	kBnX6NV2TmHRBwPG2mXRQvQ==
+X-Google-Smtp-Source: AGHT+IENHJTw1XWaNUx/Z8DhUmtsOHouN2kWNcGXTJkXEi3Tx5xDITR7zmfelv88F8OaG9mu2r1gXw==
+X-Received: by 2002:a05:600c:8716:b0:43d:745a:5a50 with SMTP id 5b1f17b1804b1-4406abb420dmr179538155e9.19.1745421674445;
+        Wed, 23 Apr 2025 08:21:14 -0700 (PDT)
+Received: from ?IPv6:2001:b07:5d29:f42d:c06f:b161:cbfc:6bf0? ([2001:b07:5d29:f42d:c06f:b161:cbfc:6bf0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d22f69sm28990695e9.10.2025.04.23.08.21.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 08:21:14 -0700 (PDT)
+Message-ID: <15e24c455fb9fca05b5af504251019b905b1bd77.camel@gmail.com>
+Subject: Re: [PATCH 31/67] KVM: SVM: Extract SVM specific code out of
+ get_pi_vcpu_info()
+From: Francesco Lavra <francescolavra.fl@gmail.com>
+To: seanjc@google.com
+Cc: baolu.lu@linux.intel.com, dmatlack@google.com, dwmw2@infradead.org, 
+	iommu@lists.linux.dev, joao.m.martins@oracle.com, joro@8bytes.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, mlevitsk@redhat.com, 
+	pbonzini@redhat.com
+Date: Wed, 23 Apr 2025 17:21:12 +0200
+In-Reply-To: <20250404193923.1413163-32-seanjc@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423150110.GB25675@frogsfrogsfrogs>
 
-On Wed, Apr 23, 2025 at 08:01:10AM -0700, Darrick J. Wong wrote:
-> On Wed, Apr 23, 2025 at 10:32:09AM +0200, Christoph Hellwig wrote:
-> > On Tue, Apr 22, 2025 at 12:27:39PM +0000, John Garry wrote:
-> > > From: "Darrick J. Wong" <djwong@kernel.org>
-> > > 
-> > > Introduce a mount option to allow sysadmins to specify the maximum size
-> > > of an atomic write.  If the filesystem can work with the supplied value,
-> > > that becomes the new guaranteed maximum.
-> > > 
-> > > The value mustn't be too big for the existing filesystem geometry (max
-> > > write size, max AG/rtgroup size).  We dynamically recompute the
-> > > tr_atomic_write transaction reservation based on the given block size,
-> > > check that the current log size isn't less than the new minimum log size
-> > > constraints, and set a new maximum.
-> > > 
-> > > The actual software atomic write max is still computed based off of
-> > > tr_atomic_ioend the same way it has for the past few commits.
-> > 
-> > The cap is a good idea, but a mount option for something that has
-> > strong effects for persistent application formats is a little suboptimal.
-> > But adding a sb field and an incompat bit wouldn't be great either.
-> > 
-> > Maybe this another use case for a trusted xattr on the root inode like
-> > the autofsck flag?
-> 
-> That would be even better, since you could set it at mkfs time and it
-> would persist until the next xfs_property set call.
+On 2025-04-04 at 19:38, Sean Christopherson wrote:
+> @@ -876,20 +874,21 @@ int avic_pi_update_irte(struct kvm_kernel_irqfd
+> *irqfd, struct kvm *kvm,
+>  	 * 3. APIC virtualization is disabled for the vcpu.
+>  	 * 4. IRQ has incompatible delivery mode (SMI, INIT, etc)
+>  	 */
+> -	if (new && new->type =3D=3D KVM_IRQ_ROUTING_MSI &&
+> -	    !get_pi_vcpu_info(kvm, new, &vcpu_info, &svm) &&
+> -	    kvm_vcpu_apicv_active(&svm->vcpu)) {
+> +	if (new && new && new->type =3D=3D KVM_IRQ_ROUTING_MSI &&
 
-[/me hands himself another coffee]
-
-The only problem is, setting the property while the fs is mounted does
-not change the actual fs capability until the next mount since
-properties are regular (and not magic) xattrs.
-
---D
-
-> --D
-> 
+The `&& new` part is redundant.
