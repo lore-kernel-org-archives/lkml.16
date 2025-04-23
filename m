@@ -1,363 +1,201 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19270202961;
-	Wed, 23 Apr 2025 17:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB298DDAD
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427982; cv=none; b=QR7JfdAtlZQt/eeWQr05rT0ZC5xJRiJy2iA8tIG2YqbDDlSNZaFVTWVqdl3A+k3dWyU23fmhlWzJASD60u98ecv8U2BqfM2qbQEwmNAHI2IdQF7NwqGHdvtAMWUtVhQIlkXYwq2LvbYUFslPzGOcSIj1Z2ej6KjG14n/6CH3MA4=
+	t=1745428025; cv=none; b=gSG5qoVk1WJSOmIXfdk4hDzVqGoA8GwtUGQxH0D6dg70Ipywaz/AdpRS3spbp4MwaZ8MehCcxLQvMbQySFjTqrkFOcNQnApvX53KECEUhczy4poYoKt2wvR4FiLFBaLe0cZMi9eeiaM7a21W9/MN3JyTqfUy1j7IMpZIrM6/YvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427982; c=relaxed/simple;
-	bh=n0hLIQMV4RgMq6A50D+8hjviVxHs848BOPaJqtM4q90=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tZhww1ddhy9W2PbbDk6tmVG0eQdww4OFUxEbGkgz9YiepUu2UvOiUCFTAyc0AgsHolDuxqbVTMz/p+vmeIYB+nWvaUiMgebXzcdlqTaPgbBO2VeGT8Oqn+qThfs2jnKdJEKLb356yj2lEmb6LTreLLoAwx00Zr7kxJgAdhjOHKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RGTZSSJJ; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745428025; c=relaxed/simple;
+	bh=+sKJnklG2LeYRGBTYEi2wsi1oZ6mYYTO1oaYPp93AXI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tSrFlgPVPppG4Cb/Zxmu8Rk0kT57uvcumEvcr7qrfsTRusG2ejlYAb4oDWVkS0Xwz6mU16mqQ1uTA0+eiyKzp4OPZftqy6WbSZw9ywIhsx9UYaHLw4g1k7/gwBo0E34C23e/WeABCiYJ52ukdL2aPtOofTjIPKrhJTnZTV6G6NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aaQMHqLA; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RGTZSSJJ"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2264aefc45dso1354405ad.0;
-        Wed, 23 Apr 2025 10:06:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aaQMHqLA"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so1341056d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:07:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745427980; x=1746032780; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zq5XdeL9ToAKwNn1O6D6mibDHxiyxNVwdZRqKOds+wk=;
-        b=RGTZSSJJAETTZi7uxGXZQLvoEBWZViVYwKBqo6WfFFlgyDlI48BQr9ozkJMdoXQ+j/
-         1hAEFlG7AlZEzCiULElEoljNcpnP9EaA3DCUyrcv4AuyjZzpWxnfa/Cs9yuGOpEIEmO1
-         3VVRUlmxH7VL9chPgwMDmWx3axAQjGIquJyPrxN/amGoxooqBHJcb4UZZHufIqN3JRBE
-         65RXS8X6jVsjcH5oftCQk6HeFbaLjqRxkkiK+6nWz7La1FbIF6xV4aGqTvuirD5c5Hgg
-         NFhmZVGKDnwBZLEt/323FEP5nMYYOhL+3gC6t+Uy3KcWekIYVMhGYN378iTIauOm11uP
-         dh5g==
+        d=google.com; s=20230601; t=1745428022; x=1746032822; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nwoLC090KAiMN1YJGTa664tyM6EnyyhutxXQA6EbVAA=;
+        b=aaQMHqLA6srFtBPwzJSka5RjkA+yerGTKs3zRg5sCVyxCbloNENxJFdmI5s4vPCxoq
+         ngXYXC8xhGw92UALtCCst3wUzI/1oO6Oku4yrTd0hgRDs6Gp3ADO/jPKMT3KHqXGfhk8
+         Tahr4h+kEn1yo0iIyi5eTv4BH1IvrxU5qeZcTbgSGVTzz/XkVJ7QJvd7hBeWDRkkT8Is
+         +W92nGA/Q3Ti76UsAXRJqQUKmYXz2bkOfNCpaVurD5Ob3wh5BF3/7zPukhsZpf9j/97m
+         EIHr8ZBFFEdaujiMalhiKgHcZQTbbyhnffRk/bxhiTR52H1PPL0RsxZjujO3iMe5e7d7
+         5Rvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745427980; x=1746032780;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zq5XdeL9ToAKwNn1O6D6mibDHxiyxNVwdZRqKOds+wk=;
-        b=KX6AOL5lXHxs55YjiyYEPlwwXeuGXPpmub4mDyqUcXBsQB7FtD7B124mIpY1m2+LzI
-         pOfUEn9fdkEpNGqCFTyQGsU1EN2pe9XFsOg8PbxauGhVmQLMNxXSJLBaUZUwOU6ppIav
-         tnm4vB/+YW1PRsUJFfToUsdqiBX2EdPhpq7XveFObGgWDJUCVUc28SCVrHEX00+HWQAQ
-         Ln2/uLkDMD6Q3bDkMoh0jA9+dY3oD5Gy8M9J6xN6VrE9O08TQrqgXd7h9WlIsA/Sz+Le
-         mNTVftSCCNSZFUlB1AKfHE4XMzl5RYQ8w+ErC1nEXt1iF1fxyVdAhUJEBBnc8xRse5jX
-         ALQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUy2fLWlEEZAvpqQ9/Xadex9zqthmRCVhWqaXxN6LUj8EAs2HC4vvBFx4pRF55hHbD+OTzM40vVD6V4WwZD@vger.kernel.org, AJvYcCVm37PvyRYw+UintLk/ubEL4+olSrSAsjx8M79tFEhlDYfLR395pjBlYRCA/4Bj+CaMadvpQ7rtONY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLMMcy10oN0cPJXG5dnEnYN25SKleOvLYUL+qN+55Vj/IuWBbL
-	Xtdq7clcQvAIpRgCiuxQLNRW9kaALSw3QxaEnEPtlCLB5zD267La
-X-Gm-Gg: ASbGncuqusQuciF9+mDDI1DtJT2S1QtLbhySg0OQ8g5RtHQyzcKLU7jinlIYlYbgNww
-	xllaa3l7UDcwUNTYoCgDDG9QGCXMAx/qDMRC+kdM8/3gDQeo6CZskKBkH7e0DOmYg/lUAfNiNMX
-	jXPrsUvb1G6wF2k2zzc9+KnHzZwdLrIt/H9f3MRpTCorzuys7yooR7a/UOaBl3PZWmXddVJRwi8
-	T6V/tspKxcUljuqZcOd8q5WfT+ktpW4t/4JGkWN0kqmV2RBpGaC1f/3m3a4dktIuxwoCymNMXct
-	ICKFY4ogZHVn75ceHu68HQPuK86V8znGb/jmXoVWASb8Es/VWRvzt7uivQ4=
-X-Google-Smtp-Source: AGHT+IEvexOcjSgNuSPlOz9TKyCXBOjUd5ptRfZhm3pBbIhNiVkRxQRrLtdhgoJbdiDeq9RqFeZxSA==
-X-Received: by 2002:a17:903:410a:b0:223:536d:f67b with SMTP id d9443c01a7336-22c53607c21mr266532495ad.38.1745427980450;
-        Wed, 23 Apr 2025 10:06:20 -0700 (PDT)
-Received: from delta4.semfio.usp.br ([143.107.45.1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdf3a6sm106943875ad.259.2025.04.23.10.06.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 10:06:20 -0700 (PDT)
-From: Andrew Ijano <andrew.ijano@gmail.com>
-X-Google-Original-From: Andrew Ijano <andrew.lopes@alumni.usp.br>
-To: jic23@kernel.org
-Cc: andrew.lopes@alumni.usp.br,
-	gustavobastos@usp.br,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	andy@kernel.org,
-	jstephan@baylibre.com,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: accel: sca3000: remove duplicated code in sca3000_read_data
-Date: Wed, 23 Apr 2025 14:05:26 -0300
-Message-ID: <20250423170526.15143-1-andrew.lopes@alumni.usp.br>
-X-Mailer: git-send-email 2.49.0
+        d=1e100.net; s=20230601; t=1745428022; x=1746032822;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nwoLC090KAiMN1YJGTa664tyM6EnyyhutxXQA6EbVAA=;
+        b=rmtI/vaxzY5vzz0shJUieaOaZty+7Lkm6EGqAhW1DRw5gVgysfb/9fRuwFcHkmzTmO
+         twsLAgxONqz44zYYE3qg6T3y28H4M/JIKI5X0pXoM4UHgJTkb35mHuEsoG5ZGyDuSDLu
+         ble+GtWALpWUIjjeGzJWBWDyHBO0BY6kr4zLVvocUDYoEWN8kOI+B+WciAf+mf/s8D8q
+         HacQiZbUW7q80Iwm2yUHM598mFl5VBunwnfxdO/x0vDcQq7uSvr8Qk1FgKDUdrVBJDKN
+         f/ClpdpbxUxtScX90PtFOfzT18C+xFGRmi6xNcFWEkqJ4QevxQUkMn4aBY/KVg7YSn2M
+         Mr6A==
+X-Forwarded-Encrypted: i=1; AJvYcCVsr6eTx7Bjy8wcpa6vMAwJ5ujTVsibDDO1YjyfcHhVFGlgPRVYgC7PRxltQB6aWmIyHqhkt2lfxDTyjbs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEGO+nH4ZtwgbLrBlVipyCEdeFkSHYB9L8AwqAwI9UyESn4aAD
+	gCeRZwSIS1YnZHQSynL2X9Bqj3lC5t6aQtlQgttL0PrEbum/YHcPIamYa4XRtkqKHgB4ta1wXBo
+	buyTt8XbHaJOL2vX+EA7mc9n6LRU3CDZDjP8=
+X-Gm-Gg: ASbGncsgvMzoie2XtpXTNypRNm+4TwVrGCgNAx1Sy58Ic9XoeyINnOGQsAN8eyCEiuZ
+	OFHNj6HSlN4cMD3JFKXYv/H5vTWBLUc32T432ms4WM4eKk9KafhCjN/LLetjust7To+z0QWKKww
+	wS+2WfBWJZjMr6xvLBgITvX+F12SKIfosBuToU+2PhFxWgiXPcIR3ACcVl/whpFA==
+X-Google-Smtp-Source: AGHT+IG9kj/bKbm3xOybDI1j9UpcbimSJl5hS4BlvPDwk4FKqxsGFeVSFvWjRYvDk3VbKvPh1kjAaZOMmUl54mN2ssk=
+X-Received: by 2002:a05:6214:5d8e:b0:6f2:c94f:56b5 with SMTP id
+ 6a1803df08f44-6f2c94f57e4mr420533326d6.10.1745428021880; Wed, 23 Apr 2025
+ 10:07:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250415184649.356683-1-yabinc@google.com> <20250415184649.356683-2-yabinc@google.com>
+ <20250423081648.GJ28953@e132581.arm.com>
+In-Reply-To: <20250423081648.GJ28953@e132581.arm.com>
+From: Yabin Cui <yabinc@google.com>
+Date: Wed, 23 Apr 2025 10:06:50 -0700
+X-Gm-Features: ATxdqUHA6VR574bbzyvYawg5qzV7NglTFU4wSViIiTNQ0tOAE65VyLttkuLoKeA
+Message-ID: <CALJ9ZPN+JoL1SCoWhgRvCkTa6YPv-psGgOoxL9aotNmbdS+cHA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] coresight: catu: Introduce refcount and spinlock
+ for enabling/disabling
+To: Leo Yan <leo.yan@arm.com>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	James Clark <james.clark@linaro.org>, Jie Gan <quic_jiegan@quicinc.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove duplicated code between sca3000_read_data and
-sca3000_read_data_short functions.
+On Wed, Apr 23, 2025 at 1:16=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+> Hi Yabin,
+>
+> Sorry for late reply as I was on vacation for the past two weeks.
+>
+> On Tue, Apr 15, 2025 at 11:46:48AM -0700, Yabin Cui wrote:
+> > When tracing ETM data on multiple CPUs concurrently via the
+> > perf interface, the CATU device is shared across different CPU
+> > paths. This can lead to race conditions when multiple CPUs attempt
+> > to enable or disable the CATU device simultaneously.
+> >
+> > To address these race conditions, this patch introduces the
+> > following changes:
+> >
+> > 1. The enable and disable operations for the CATU device are not
+> >    reentrant. Therefore, a spinlock is added to ensure that only
+> >    one CPU can enable or disable a given CATU device at any point
+> >    in time.
+> >
+> > 2. A reference counter is used to manage the enable/disable state
+> >    of the CATU device. The device is enabled when the first CPU
+> >    requires it and is only disabled when the last CPU finishes
+> >    using it. This ensures the device remains active as long as at
+> >    least one CPU needs it.
+> >
+> > Signed-off-by: Yabin Cui <yabinc@google.com>
+>
+> LGTM:
+>
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
+>
+> As Jie reminded, please add James' review tag in next spin.
 
-The common behavior is centralized in just one sca3000_read_data
-function and used for every case.
+Sorry for forgetting to add Reviewed-by. Will add it in next spin.
 
-Signed-off-by: Andrew Ijano <andrew.lopes@alumni.usp.br>
-Co-developed-by: Gustavo Bastos <gustavobastos@usp.br>
-Signed-off-by: Gustavo Bastos <gustavobastos@usp.br>
----
- drivers/iio/accel/sca3000.c | 85 ++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 52 deletions(-)
-
-diff --git a/drivers/iio/accel/sca3000.c b/drivers/iio/accel/sca3000.c
-index aabe4491efd7..cdede5df63d8 100644
---- a/drivers/iio/accel/sca3000.c
-+++ b/drivers/iio/accel/sca3000.c
-@@ -281,10 +281,11 @@ static int sca3000_write_reg(struct sca3000_state *st, u8 address, u8 val)
- 	return spi_write(st->us, st->tx, 2);
- }
- 
--static int sca3000_read_data_short(struct sca3000_state *st,
--				   u8 reg_address_high,
--				   int len)
-+static int sca3000_read_data(struct sca3000_state *st,
-+			     u8 reg_address_high,
-+			     int len)
- {
-+	int ret;
- 	struct spi_transfer xfer[2] = {
- 		{
- 			.len = 1,
-@@ -294,9 +295,15 @@ static int sca3000_read_data_short(struct sca3000_state *st,
- 			.rx_buf = st->rx,
- 		}
- 	};
-+
- 	st->tx[0] = SCA3000_READ_REG(reg_address_high);
-+	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-+	if (ret) {
-+		dev_err(&st->us->dev, "problem reading register\n");
-+		return ret;
-+	}
- 
--	return spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
-+	return 0;
- }
- 
- /**
-@@ -309,7 +316,7 @@ static int sca3000_reg_lock_on(struct sca3000_state *st)
- {
- 	int ret;
- 
--	ret = sca3000_read_data_short(st, SCA3000_REG_STATUS_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_STATUS_ADDR, 1);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -412,7 +419,7 @@ static int sca3000_read_ctrl_reg(struct sca3000_state *st,
- 	ret = sca3000_write_reg(st, SCA3000_REG_CTRL_SEL_ADDR, ctrl_reg);
- 	if (ret)
- 		goto error_ret;
--	ret = sca3000_read_data_short(st, SCA3000_REG_CTRL_DATA_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_CTRL_DATA_ADDR, 1);
- 	if (ret)
- 		goto error_ret;
- 	return st->rx[0];
-@@ -432,7 +439,7 @@ static int sca3000_print_rev(struct iio_dev *indio_dev)
- 	struct sca3000_state *st = iio_priv(indio_dev);
- 
- 	mutex_lock(&st->lock);
--	ret = sca3000_read_data_short(st, SCA3000_REG_REVID_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_REVID_ADDR, 1);
- 	if (ret < 0)
- 		goto error_ret;
- 	dev_info(&indio_dev->dev,
-@@ -575,7 +582,7 @@ static inline int __sca3000_get_base_freq(struct sca3000_state *st,
- {
- 	int ret;
- 
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	if (ret)
- 		goto error_ret;
- 	switch (SCA3000_REG_MODE_MODE_MASK & st->rx[0]) {
-@@ -665,7 +672,7 @@ static int sca3000_read_3db_freq(struct sca3000_state *st, int *val)
- {
- 	int ret;
- 
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	if (ret)
- 		return ret;
- 
-@@ -703,7 +710,7 @@ static int sca3000_write_3db_freq(struct sca3000_state *st, int val)
- 		mode = SCA3000_REG_MODE_MEAS_MODE_OP_2;
- 	else
- 		return -EINVAL;
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	if (ret)
- 		return ret;
- 
-@@ -732,7 +739,7 @@ static int sca3000_read_raw(struct iio_dev *indio_dev,
- 				return -EBUSY;
- 			}
- 			address = sca3000_addresses[chan->address][0];
--			ret = sca3000_read_data_short(st, address, 2);
-+			ret = sca3000_read_data(st, address, 2);
- 			if (ret < 0) {
- 				mutex_unlock(&st->lock);
- 				return ret;
-@@ -742,7 +749,7 @@ static int sca3000_read_raw(struct iio_dev *indio_dev,
- 					     chan->scan_type.realbits - 1);
- 		} else {
- 			/* get the temperature when available */
--			ret = sca3000_read_data_short(st,
-+			ret = sca3000_read_data(st,
- 						      SCA3000_REG_TEMP_MSB_ADDR,
- 						      2);
- 			if (ret < 0) {
-@@ -830,7 +837,7 @@ static ssize_t sca3000_read_av_freq(struct device *dev,
- 	int len = 0, ret, val;
- 
- 	mutex_lock(&st->lock);
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	val = st->rx[0];
- 	mutex_unlock(&st->lock);
- 	if (ret)
-@@ -969,32 +976,6 @@ static const struct attribute_group sca3000_attribute_group = {
- 	.attrs = sca3000_attributes,
- };
- 
--static int sca3000_read_data(struct sca3000_state *st,
--			     u8 reg_address_high,
--			     u8 *rx,
--			     int len)
--{
--	int ret;
--	struct spi_transfer xfer[2] = {
--		{
--			.len = 1,
--			.tx_buf = st->tx,
--		}, {
--			.len = len,
--			.rx_buf = rx,
--		}
--	};
--
--	st->tx[0] = SCA3000_READ_REG(reg_address_high);
--	ret = spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
--	if (ret) {
--		dev_err(&st->us->dev, "problem reading register\n");
--		return ret;
--	}
--
--	return 0;
--}
--
- /**
-  * sca3000_ring_int_process() - ring specific interrupt handling.
-  * @val: Value of the interrupt status register.
-@@ -1008,7 +989,7 @@ static void sca3000_ring_int_process(u8 val, struct iio_dev *indio_dev)
- 	mutex_lock(&st->lock);
- 
- 	if (val & SCA3000_REG_INT_STATUS_HALF) {
--		ret = sca3000_read_data_short(st, SCA3000_REG_BUF_COUNT_ADDR,
-+		ret = sca3000_read_data(st, SCA3000_REG_BUF_COUNT_ADDR,
- 					      1);
- 		if (ret)
- 			goto error_ret;
-@@ -1017,7 +998,7 @@ static void sca3000_ring_int_process(u8 val, struct iio_dev *indio_dev)
- 		 * num_available is the total number of samples available
- 		 * i.e. number of time points * number of channels.
- 		 */
--		ret = sca3000_read_data(st, SCA3000_REG_RING_OUT_ADDR, st->rx,
-+		ret = sca3000_read_data(st, SCA3000_REG_RING_OUT_ADDR,
- 					num_available * 2);
- 		if (ret)
- 			goto error_ret;
-@@ -1060,7 +1041,7 @@ static irqreturn_t sca3000_event_handler(int irq, void *private)
- 	 * but ensures no interrupt is missed.
- 	 */
- 	mutex_lock(&st->lock);
--	ret = sca3000_read_data_short(st, SCA3000_REG_INT_STATUS_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_INT_STATUS_ADDR, 1);
- 	val = st->rx[0];
- 	mutex_unlock(&st->lock);
- 	if (ret)
-@@ -1121,7 +1102,7 @@ static int sca3000_read_event_config(struct iio_dev *indio_dev,
- 	/* read current value of mode register */
- 	mutex_lock(&st->lock);
- 
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	if (ret)
- 		goto error_ret;
- 
-@@ -1164,7 +1145,7 @@ static int sca3000_freefall_set_state(struct iio_dev *indio_dev, bool state)
- 	int ret;
- 
- 	/* read current value of mode register */
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	if (ret)
- 		return ret;
- 
-@@ -1214,7 +1195,7 @@ static int sca3000_motion_detect_set_state(struct iio_dev *indio_dev, int axis,
- 	}
- 
- 	/* read current value of mode register */
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	if (ret)
- 		return ret;
- 	/* if off and should be on */
-@@ -1287,7 +1268,7 @@ int __sca3000_hw_ring_state_set(struct iio_dev *indio_dev, bool state)
- 	int ret;
- 
- 	mutex_lock(&st->lock);
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	if (ret)
- 		goto error_ret;
- 	if (state) {
-@@ -1322,7 +1303,7 @@ static int sca3000_hw_ring_preenable(struct iio_dev *indio_dev)
- 	mutex_lock(&st->lock);
- 
- 	/* Enable the 50% full interrupt */
--	ret = sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_INT_MASK_ADDR, 1);
- 	if (ret)
- 		goto error_unlock;
- 	ret = sca3000_write_reg(st,
-@@ -1353,7 +1334,7 @@ static int sca3000_hw_ring_postdisable(struct iio_dev *indio_dev)
- 	/* Disable the 50% full interrupt */
- 	mutex_lock(&st->lock);
- 
--	ret = sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_INT_MASK_ADDR, 1);
- 	if (ret)
- 		goto unlock;
- 	ret = sca3000_write_reg(st,
-@@ -1383,7 +1364,7 @@ static int sca3000_clean_setup(struct sca3000_state *st)
- 
- 	mutex_lock(&st->lock);
- 	/* Ensure all interrupts have been acknowledged */
--	ret = sca3000_read_data_short(st, SCA3000_REG_INT_STATUS_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_INT_STATUS_ADDR, 1);
- 	if (ret)
- 		goto error_ret;
- 
-@@ -1409,7 +1390,7 @@ static int sca3000_clean_setup(struct sca3000_state *st)
- 	if (ret)
- 		goto error_ret;
- 	/* Enable interrupts, relevant to mode and set up as active low */
--	ret = sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_INT_MASK_ADDR, 1);
- 	if (ret)
- 		goto error_ret;
- 	ret = sca3000_write_reg(st,
-@@ -1423,7 +1404,7 @@ static int sca3000_clean_setup(struct sca3000_state *st)
- 	 * Ring in 12 bit mode - it is fine to overwrite reserved bits 3,5
- 	 * as that occurs in one of the example on the datasheet
- 	 */
--	ret = sca3000_read_data_short(st, SCA3000_REG_MODE_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_MODE_ADDR, 1);
- 	if (ret)
- 		goto error_ret;
- 	ret = sca3000_write_reg(st, SCA3000_REG_MODE_ADDR,
-@@ -1510,7 +1491,7 @@ static int sca3000_stop_all_interrupts(struct sca3000_state *st)
- 	int ret;
- 
- 	mutex_lock(&st->lock);
--	ret = sca3000_read_data_short(st, SCA3000_REG_INT_MASK_ADDR, 1);
-+	ret = sca3000_read_data(st, SCA3000_REG_INT_MASK_ADDR, 1);
- 	if (ret)
- 		goto error_ret;
- 	ret = sca3000_write_reg(st, SCA3000_REG_INT_MASK_ADDR,
--- 
-2.49.0
-
+>
+> Thanks,
+> Leo
+>
+> > ---
+> >  drivers/hwtracing/coresight/coresight-catu.c | 25 +++++++++++++-------
+> >  drivers/hwtracing/coresight/coresight-catu.h |  1 +
+> >  2 files changed, 18 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwt=
+racing/coresight/coresight-catu.c
+> > index fa170c966bc3..3909b562b077 100644
+> > --- a/drivers/hwtracing/coresight/coresight-catu.c
+> > +++ b/drivers/hwtracing/coresight/coresight-catu.c
+> > @@ -458,12 +458,17 @@ static int catu_enable_hw(struct catu_drvdata *dr=
+vdata, enum cs_mode cs_mode,
+> >  static int catu_enable(struct coresight_device *csdev, enum cs_mode mo=
+de,
+> >                      void *data)
+> >  {
+> > -     int rc;
+> > +     int rc =3D 0;
+> >       struct catu_drvdata *catu_drvdata =3D csdev_to_catu_drvdata(csdev=
+);
+> >
+> > -     CS_UNLOCK(catu_drvdata->base);
+> > -     rc =3D catu_enable_hw(catu_drvdata, mode, data);
+> > -     CS_LOCK(catu_drvdata->base);
+> > +     guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
+> > +     if (csdev->refcnt =3D=3D 0) {
+> > +             CS_UNLOCK(catu_drvdata->base);
+> > +             rc =3D catu_enable_hw(catu_drvdata, mode, data);
+> > +             CS_LOCK(catu_drvdata->base);
+> > +     }
+> > +     if (!rc)
+> > +             csdev->refcnt++;
+> >       return rc;
+> >  }
+> >
+> > @@ -486,12 +491,15 @@ static int catu_disable_hw(struct catu_drvdata *d=
+rvdata)
+> >
+> >  static int catu_disable(struct coresight_device *csdev, void *__unused=
+)
+> >  {
+> > -     int rc;
+> > +     int rc =3D 0;
+> >       struct catu_drvdata *catu_drvdata =3D csdev_to_catu_drvdata(csdev=
+);
+> >
+> > -     CS_UNLOCK(catu_drvdata->base);
+> > -     rc =3D catu_disable_hw(catu_drvdata);
+> > -     CS_LOCK(catu_drvdata->base);
+> > +     guard(raw_spinlock_irqsave)(&catu_drvdata->spinlock);
+> > +     if (--csdev->refcnt =3D=3D 0) {
+> > +             CS_UNLOCK(catu_drvdata->base);
+> > +             rc =3D catu_disable_hw(catu_drvdata);
+> > +             CS_LOCK(catu_drvdata->base);
+> > +     }
+> >       return rc;
+> >  }
+> >
+> > @@ -550,6 +558,7 @@ static int __catu_probe(struct device *dev, struct =
+resource *res)
+> >       dev->platform_data =3D pdata;
+> >
+> >       drvdata->base =3D base;
+> > +     raw_spin_lock_init(&drvdata->spinlock);
+> >       catu_desc.access =3D CSDEV_ACCESS_IOMEM(base);
+> >       catu_desc.pdata =3D pdata;
+> >       catu_desc.dev =3D dev;
+> > diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwt=
+racing/coresight/coresight-catu.h
+> > index 141feac1c14b..755776cd19c5 100644
+> > --- a/drivers/hwtracing/coresight/coresight-catu.h
+> > +++ b/drivers/hwtracing/coresight/coresight-catu.h
+> > @@ -65,6 +65,7 @@ struct catu_drvdata {
+> >       void __iomem *base;
+> >       struct coresight_device *csdev;
+> >       int irq;
+> > +     raw_spinlock_t spinlock;
+> >  };
+> >
+> >  #define CATU_REG32(name, offset)                                     \
+> > --
+> > 2.49.0.604.gff1f9ca942-goog
+> >
