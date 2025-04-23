@@ -1,127 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDE2C8EB
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E314D27F4D9
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:02:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745424119; cv=none; b=es2Z0JdSdeHTytKKrcq1UkZ2j9lHhbbupqODvRXQbVIlPrjql4SbBKK5BWCxuEa6Uzipouvo6W8Gdfh7EKT3JbLPUXY+HPWwEwS2fcuxBE1jXioTV9pPr79geBWlMmNvNmVzTuQkcNywbqF4T2OcwdYdFzjvOMvEOVxD0qLDFIs=
+	t=1745424145; cv=none; b=hZBBvVRu4AL8sqBut9NY4s3WYicbD9QCg311iLE6++9zF6EprWzgmMTwu/9zwlzmgmo1T9Sm/5V4Sksxnm7D2yGdIrJ44jxJv8fADmCSurKXLAKmhoEeiSOGo9GuLmusGVzfQQXICola/Ua4ZjKt3XdVd1uZWf/N1w/oo24y6Jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745424119; c=relaxed/simple;
-	bh=A54MdhVOBQxwgtIaTuJyBG4odsyL8HwDnJubodBv118=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CokIOCNKv4tir0Q22/ocXhVYxoa3qTBt4KsIgAJO0YuT2HN3oFTYkW+xlISMq5IQuDbGqOUrqTMCZMBJx4JelGs3pKbhRJ96rFrSjtU9nLtorENH4XPTQQntW3n7xEDxbImNgWa1a0wmDpiFy///X/Bbo/2ANirvfD5p6skwD0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gDTYWXOq; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745424145; c=relaxed/simple;
+	bh=4i+Aa42MxjqCMrZwNRo+lSzwmT1xTOZvTjo84XR38Ag=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CGh7NVm+Fbb0wcsTWlIVtyOseKtnf0Nr+uyxLmZTsxBsLnckkT70LVY26yR34b/prPkyevLA7Nifqh/zFKHNT4NG5Xm9wnO9udvXQNXuNphPYsZG9OZlfio8ffsCNTDqj4Vanalg5sOs2EMoZ/+zcpHWy5sDetB4IPJw7uLGwRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f97jNSgf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gDTYWXOq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745424118; x=1776960118;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=A54MdhVOBQxwgtIaTuJyBG4odsyL8HwDnJubodBv118=;
-  b=gDTYWXOqnPaVY4+Ehh07jDaUewhuNO96opKv6F65c1ELy5DcffVVaUNz
-   Bc1+/Bq/CTW72fTLY3vz0grblZcFFYrHs8ihmxY7gmh1MUv56CwKhV3M2
-   yGdyc3eQsgHf4rs1baI5YKR1LaO4zhw+gXRVPM/dVa1s1S8WJitai0i7W
-   nvoRyIMh1+72ZN1nsFelJrmdWQOa/rlqR2R446Foha9Jn+KctK0BNWtDP
-   JT1Xw/kKXn465hQRK8E/orTw7/ijwi32zCgmAdaOdr0xiZDoH7K/NYFAc
-   oLN0s7HapIjSMx/Q24v5+buRpdjkpagSpEIpJchhIR6+YaU7A7zF3XfSw
-   Q==;
-X-CSE-ConnectionGUID: Fn2nyATfRK6zO8GrCUQ50Q==
-X-CSE-MsgGUID: IMnU2/AYS/uIdbBqqRQkOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="64436395"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="64436395"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:01:57 -0700
-X-CSE-ConnectionGUID: mv0934QDT2OaFSrEIMZa3w==
-X-CSE-MsgGUID: xidadFf9RCysHgcuI7tRPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132269852"
-Received: from tfalcon-desk.amr.corp.intel.com (HELO [10.124.221.81]) ([10.124.221.81])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:01:57 -0700
-Message-ID: <2cba2ae9-e29d-4eab-a77a-678be0b09a58@intel.com>
-Date: Wed, 23 Apr 2025 09:01:54 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f97jNSgf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745424142;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sh+sYc0+MNHSUal421oTmCDMNe+GTwBu1Zv/uziK5zE=;
+	b=f97jNSgfj9bFBQGXIVihJS5Se0v8SpXd455eb2AWTKH4BsQ3P1OtJ6jEolzDrI6xTxfjys
+	gClIDOx6rZ07VqkkjHBNvgTR3V4KCmnVh9Fbm5VxZivbJwPZlvqWZifae6A4wMHV1ie+A6
+	xUSE8e0Y1gY6e9phR7mc8QGY9k577rY=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-599-6X5SgKh6PsW8Oeo-P-vmeg-1; Wed, 23 Apr 2025 11:57:36 -0400
+X-MC-Unique: 6X5SgKh6PsW8Oeo-P-vmeg-1
+X-Mimecast-MFC-AGG-ID: 6X5SgKh6PsW8Oeo-P-vmeg_1745423856
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c09f73873fso987491985a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:57:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745423856; x=1746028656;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sh+sYc0+MNHSUal421oTmCDMNe+GTwBu1Zv/uziK5zE=;
+        b=HddmcgrDvB/gxiFVhwAwDfUye/EabBPZPI1PvrIBkSss+aUMFzoOxXGIkaq2YQMnFw
+         kul3pip0CEK6JR4SYzEcE0Qh013RmwXIZjQN3RhAUZaa7ly0cTYu7CPmaWsPn8zQJmhb
+         vk40fNUZR4akT6DlXpnH7dG3FW0JfMKvSynOTXddNnRuvp/Z/061IPd/3s2io2joADd9
+         SvC9lsBO0VhaXqbfcD2omaAVTauP5kjm9qxMiCEYsNoWjlbLw3ReDo2+GTI0nSC2xgYJ
+         wemfGMRNiFoCVZuM7pbW3s44KlwWY2HL78bNddkt9YmzzZ5dV6FNBU1koszAr9xAzIAQ
+         8M6w==
+X-Forwarded-Encrypted: i=1; AJvYcCW4gPBW41K38x+s89guTJz8z8HE6cWhmNyknMM44Jyb1u2mCkazdqcK++SxvRKnTx2arUm8o8JNN4lb/vU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YznZpOYJtV+FOUzpnS9ugr6q7MbIRiQ9oLeFL84camPUM12gV/k
+	pWxU/LCizav2W2OAw7PldQg66HEldzxf3GYIhX09pwz9mdBmu0yCooDjMeb7CbbluNk/NJW2ngb
+	JiQDpjKFcy+3B8j+NGNWYYhxrVJnqNW4azyy2ng01ZybJH15l92Wks7iGENsOpw==
+X-Gm-Gg: ASbGnctMwvtayBcBqW+mLHoW7YFQqKWR7CBi4k5yFBep7uKj/2hcMiZcunOIrxBiE2M
+	AAN0o0DOLZMVJzTlmR8/9+cfHJkxsOh6BjDhZ9b2QeqZ7NTGcMyPfA7pxsWHM6PNIyDMnq/zQye
+	FocHx7Dvw5YJbHEuWMZ9KFnm0Zc81AtHpbcuDMS0tmBcI8TZhDs6VBFLeOv1/MMVwT7YsRYoH3J
+	AyM5/5zv/1FDYxPQoPZo9w8kiZHxpxSQPYDEiIGg4WFyWzlDhufv/X5gX/cVyGySYMkzsWVcEmc
+	TjcnY9WNSilj1/EUFU2zNZ218fimO7/H8MZDTEBhwCs=
+X-Received: by 2002:a05:620a:414e:b0:7c5:55c0:db9b with SMTP id af79cd13be357-7c955e14742mr15096785a.58.1745423855998;
+        Wed, 23 Apr 2025 08:57:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIWB7Ovf66R3odop/eHj81SRynR7IlhrgKznJ816AeoHzYOpFR49dK5BzR9wKwh5ZqiuAyNQ==
+X-Received: by 2002:a05:620a:414e:b0:7c5:55c0:db9b with SMTP id af79cd13be357-7c955e14742mr15093785a.58.1745423855655;
+        Wed, 23 Apr 2025 08:57:35 -0700 (PDT)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c925a6eb60sm698231385a.24.2025.04.23.08.57.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 08:57:35 -0700 (PDT)
+Date: Wed, 23 Apr 2025 08:57:32 -0700
+From: Jared Kangas <jkangas@redhat.com>
+To: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: benjamin.gaignard@collabora.com, Brian.Starkey@arm.com,
+	jstultz@google.com, tjmercier@google.com, christian.koenig@amd.com,
+	mripard@kernel.org, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] dma-buf: heaps: Use constant name for CMA heap
+Message-ID: <aAkN7BXIT7RR85PR@jkangas-thinkpadp1gen3.rmtuswa.csb>
+References: <20250422191939.555963-1-jkangas@redhat.com>
+ <CAO_48GELW3ax5Q3h9=qpWBJJa0Uy3eJwFkEcbaz4ZT56Gq513A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: AMD GPU driver load hitting BUG_ON in sync_global_pgds_l5()
-To: Bharata B Rao <bharata@amd.com>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org
-Cc: Dave Hansen <dave.hansen@linux.intel.com>, luto@kernel.org,
- peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- x86@kernel.org, hpa@zytor.com, nikunj@amd.com,
- Balbir Singh <balbirs@nvidia.com>, kees@kernel.org, alexander.deucher@amd.com
-References: <bae920c0-a0ff-4d85-a37a-6b8518c0ac41@amd.com>
- <19353ca2-11f3-4718-b602-d898ff05ba87@intel.com>
- <83cf7fc7-23e0-46f5-916b-5341a0ab9599@amd.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <83cf7fc7-23e0-46f5-916b-5341a0ab9599@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAO_48GELW3ax5Q3h9=qpWBJJa0Uy3eJwFkEcbaz4ZT56Gq513A@mail.gmail.com>
 
-On 4/23/25 02:30, Bharata B Rao wrote:
-> On 22-Apr-25 8:43 PM, Dave Hansen wrote:
->> On 4/21/25 23:34, Bharata B Rao wrote:
->>> At the outset, it appears that the selection of vmemmap_base doesn't
->>> seem to consider if there is going to be enough room of accommodating
->>> future hot plugged pages.
->>
->> Is this future hotplug area in the memory map at boot?
+Hi Sumit,
+
+On Wed, Apr 23, 2025 at 08:53:20PM +0530, Sumit Semwal wrote:
+> Hello Jared,
 > 
-> The KVM guest isn't using any -m maxmem option if that's what you are
-> hinting at.
+> On Wed, 23 Apr 2025 at 00:49, Jared Kangas <jkangas@redhat.com> wrote:
+> >
+> > Hi all,
+> >
+> > This patch series is based on a previous discussion around CMA heap
+> > naming. [1] The heap's name depends on the device name, which is
+> > generally "reserved", "linux,cma", or "default-pool", but could be any
+> > arbitrary name given to the default CMA area in the devicetree. For a
+> > consistent userspace interface, the series introduces a constant name
+> > for the CMA heap, and for backwards compatibility, an additional Kconfig
+> > that controls the creation of a legacy-named heap with the same CMA
+> > backing.
+> >
+> > The ideas to handle backwards compatibility in [1] are to either use a
+> > symlink or add a heap node with a duplicate minor. However, I assume
+> > that we don't want to create symlinks in /dev from module initcalls, and
+> > attempting to duplicate minors would cause device_create() to fail.
+> > Because of these drawbacks, after brainstorming with Maxime Ripard, I
+> > went with creating a new node in devtmpfs with its own minor. This
+> > admittedly makes it a little unclear that the old and new nodes are
+> > backed by the same heap when both are present. The only approach that I
+> > think would provide total clarity on this in userspace is symlinking,
+> > which seemed like a fairly involved solution for devtmpfs, but if I'm
+> > wrong on this, please let me know.
+> 
+> Thanks indeed for this patch; just one minor nit: the link referred to
+> as [1] here seems to be missing. Could you please add it? This would
+> make it easier to follow the chain of discussion in posterity.
 
-How could vmemmap_base consider future hotplug areas if it isn't told
-where they will be?
+My bad, I must have dropped the link while revising the cover letter.
+Here's the dropped reference:
+
+[1]: https://lore.kernel.org/all/f6412229-4606-41ad-8c05-7bbba2eb6e08@ti.com/
+
+Thanks to you and John for looking this over,
+Jared
+
+> >
+> > Changelog:
+> >     v2: Use tabs instead of spaces for large vertical alignment.
+> >
+> > Jared Kangas (2):
+> >   dma-buf: heaps: Parameterize heap name in __add_cma_heap()
+> >   dma-buf: heaps: Give default CMA heap a fixed name
+> >
+> >  Documentation/userspace-api/dma-buf-heaps.rst | 11 ++++---
+> >  drivers/dma-buf/heaps/Kconfig                 | 10 +++++++
+> >  drivers/dma-buf/heaps/cma_heap.c              | 30 ++++++++++++++-----
+> >  3 files changed, 40 insertions(+), 11 deletions(-)
+> >
+> > --
+> > 2.49.0
+> >
+> 
+> Best,
+> Sumit
+> 
+
