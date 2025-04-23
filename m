@@ -1,240 +1,94 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4953E293B5A;
-	Wed, 23 Apr 2025 15:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A80328EA56;
+	Wed, 23 Apr 2025 15:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421651; cv=none; b=hfkH+/4x6csHKvfUCXKMZhWmjyMWt7kQFgIsqm0MELdjcumGuIbAp9PE8FUu4ef0POkUIRngxqn+eFdmmlzgcHx/EvzMR4QWeTYG+JgQsBuU/+XoZD5kiU3gCAMmZUwLt8VEn0Wohiiw9gF6a10TwuxzSScD2F44f9k2o4uWa9M=
+	t=1745421664; cv=none; b=CzoaN6kSjcusaXMZ4Ryfpu6yP0vXKr4MFMX33jmBKZkJDxMeMzTz89V9KSsUr6JgMlnj6l3uk1k4LlzlRHcPDTnEDHYAPboI8LU3CvUZz06ukHqIXNZ+PtTknLXWWErtvnggzp8Fzcuq1UxNbHvJ7f1r0YTNXl6Jf7VwCG6TyT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421651; c=relaxed/simple;
-	bh=VDfwmOCVRoGoEsvlBNbRNn+5O+sBsS7veCm7PZofIIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LuWSobq+eIulT1G9LQQ/XWuVnD4S3jx54LbhR3qbeuP4SUEeb1At5Ri9FW9aFygqKL16zqSDQ4N3N+4+rv3vDfimgwO/SJBZqi5EoWab5dqXq0hXokf9oxe1i1QHhVxNR2tTE4d23ehEClKbKHS9OziVCjLqBIM7DSbV3kBa4Qc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+0NWU4p; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745421664; c=relaxed/simple;
+	bh=gzxfMjmVDcE5HTN533uohFiedZVmeDQ1cuY6pDnPCmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EaWkc1oAQEdvIOweInP4s/ShATUMBBc3pJpH8NXwg4DBJyx4odNzPvW1uCmg+r0TFMUBFKaXPCohfVDL8or0clzGv5E/P02u4GjD5RNvuxIZ5x575jkMHthujX2SN3ntUA+a/9R6AoVRoLgXhcm+3SdMQ9NZY9mWhxWstS8UGCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDOfynEO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+0NWU4p"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af28bc68846so5626391a12.1;
-        Wed, 23 Apr 2025 08:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745421648; x=1746026448; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ay1hJ+xxSveKW4SXff1bMvJ/IKV12NveP9f4RrvhN6c=;
-        b=P+0NWU4p827RUysOZ6f6emFPBXhjR+uHsAF8SZVsLTvNe0nKajbhhnlZUEL+siKpo0
-         rCQq1TPV+MNE+lR44Y7lxYyR9TiAk8I3yKs2455vIIoyjCgJUASx8P2cMkScquNSCLee
-         eKGUVaDx/difRU0xlqCHzLKm59BY4QeE37wAQ12HIcJoZUPOYj5HLRCUK2/g6PzPqGTA
-         wfl4pR6ZLz+sZZf1O/i6KLImnDkW/DpZcYP+WmvNrNVdIEM4z+zgJmBBSODTmu1fTK93
-         w++d4tJ4Wmss1eTHC7kk2UBDuy/bpsWxrfA+X+otekKhdoIAHDFqOm6pfKbYOYkXLGMh
-         5isQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745421648; x=1746026448;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ay1hJ+xxSveKW4SXff1bMvJ/IKV12NveP9f4RrvhN6c=;
-        b=S+c5U7xOsvguR8rrKMyV4OrBC5K5T2tQgpakp6Kjz3advc8q4uKRDEz8oNr6QMa9U2
-         QKZdlCdaicNshhmW6JH6eSuY2x2muNV8AZclMxLPmDas+eWV9jeRAlSplbLkcj96iXHW
-         THbBzz0g2vI0M9uUHnGMHGecYVr7qjwZ8bqPgWRMAx24XP2ZQ88Jo5WkZdPOQKg+ATP2
-         78wIgS5y8nf1u8K9LF+thBqHz6fnkNFZ/Eng7Z598k+aEtdTDj9BUl1R+0+lG4dMJk9o
-         VKS26TLr2G79dDMDkLlm6v6Qgi5sPuBOTMPfQmqCg/P480lVrI3qGsn9ZuD81tBiUCQl
-         gGdw==
-X-Forwarded-Encrypted: i=1; AJvYcCUDZjf4TW7BISok2+voIgHwABx/p0fseeUa1BG90Qkyvn9Rir94yY7aYUwE5SXcTUDwX4TyoDw76Bh4E5gF@vger.kernel.org, AJvYcCUd1d2gRysVL0MfiKpfXQMmRccJVPa328qTSJ0j1MHWFSf07GbDzbTGO3Jbrj90hiGm3vQ=@vger.kernel.org, AJvYcCVT6sGdRQlPeoFG1/WFt0Prvuz8nno90AbhNKjKWMA2/QENxxPBoiwsrM8JzzsptUUWTUL4kOaE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/PUV3LmLNALL0tdgi/2Xo9DsNYrd1hKb/UrYxNmve05BF7DQL
-	QnrsVOlYYHtNNRrbvFMqIOxbSFnX3y9gFCTPxOLZdIPgUeyu5DlkREKpTm1N9BQ=
-X-Gm-Gg: ASbGncvvgOTKp+9pZbTWxhHr6cxBedliTZpDUYJJTM39qPwVBYkBzvZzeUZJK356sa6
-	yahtpp2nSLkukqtRMwbMjqk49cCwiDrLUtYV6wCViXW8zkrpC7CHJ8+2HzNbZfQ3aqPuh5MLWx3
-	lr6ZXwNtv0F+idoikEqUa/yLr1q5Jq5mRAyTyeyEFVLIDLu5+nk1hjhyQhaJB4M28f9Y8DVmnt1
-	n4bIzRW1lwsw8ok6V4I1JddG7S1ZIHKKF3m3s4z+KA+6K1PCrIxtzmixzZ7AqBvsszbCke2or3Q
-	yE4/SJa5IlnCJqfa20hIFLva4Nl++quuG4YwHhVRcFZkHbIP0zXcujP3HE20QRrF0HvJoubuL7U
-	1Gheyp6GLNhVroQ==
-X-Google-Smtp-Source: AGHT+IF0njUnwLJs73OxHmEO22W7D/ZiIYfKXmFPNk7S0195rDOuNRKX5c2xxOZE+G0FANmjiFezMw==
-X-Received: by 2002:a05:6a21:3a8d:b0:1f5:8cc8:9cc5 with SMTP id adf61e73a8af0-203cbd27edemr35835560637.34.1745421648443;
-        Wed, 23 Apr 2025 08:20:48 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:933:3ee4:f75:4ee9? ([2001:ee0:4f0e:fb30:933:3ee4:f75:4ee9])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13a3396sm9277066a12.28.2025.04.23.08.20.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 08:20:47 -0700 (PDT)
-Message-ID: <aac402b4-d04c-4d7e-91c8-ab6c20c9a74d@gmail.com>
-Date: Wed, 23 Apr 2025 22:20:41 +0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDOfynEO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 946BAC4CEE2;
+	Wed, 23 Apr 2025 15:21:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745421663;
+	bh=gzxfMjmVDcE5HTN533uohFiedZVmeDQ1cuY6pDnPCmw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dDOfynEOoA4vbAHa9Hman68CVhYpB5f2QQxguP0d/0HUXVHH8mcFm0u4O+hUriE8c
+	 fqI/5nMKaytYWRHaHISUkcdsLgxWZbSkB6xcuN2bJwmAXz0G/5yzOIVAZpGMIzPdmn
+	 0rOUuqxc+KYeREy2cG9Xn8c+22AcHQRPqN7EpWDMWvA2t97//qi1ZupV0hiLw8lC02
+	 OBWRswrTEyhGusOH1d+hGuIp6+HrcjXvV2psOfPGtHgg9Ao+MMnVBiPqwEozxfXtBB
+	 K4rcNs4CTyjq70cp7FN9TxW/+fXmZyF740JCMINBW3fdddcwTWb/rTYO/y+91tI2tt
+	 74nZhaf7VhYsg==
+Date: Wed, 23 Apr 2025 08:21:03 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v8 15/15] xfs: allow sysadmins to specify a maximum
+ atomic write limit at mount time
+Message-ID: <20250423152103.GD25675@frogsfrogsfrogs>
+References: <20250422122739.2230121-1-john.g.garry@oracle.com>
+ <20250422122739.2230121-16-john.g.garry@oracle.com>
+ <20250423083209.GA30432@lst.de>
+ <20250423150110.GB25675@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] selftests: net: add a virtio_net deadlock selftest
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: virtualization@lists.linux.dev, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250417072806.18660-1-minhquangbui99@gmail.com>
- <20250417072806.18660-5-minhquangbui99@gmail.com>
- <20250422184151.2fb4fffe@kernel.org>
-Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <20250422184151.2fb4fffe@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423150110.GB25675@frogsfrogsfrogs>
 
-On 4/23/25 08:41, Jakub Kicinski wrote:
-> On Thu, 17 Apr 2025 14:28:06 +0700 Bui Quang Minh wrote:
->> The selftest reproduces the deadlock scenario when binding/unbinding XDP
->> program, XDP socket, rx ring resize on virtio_net interface.
->>
->> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
->> ---
->>   .../testing/selftests/drivers/net/hw/Makefile |  1 +
->>   .../selftests/drivers/net/hw/virtio_net.py    | 65 +++++++++++++++++++
->>   2 files changed, 66 insertions(+)
->>   create mode 100755 tools/testing/selftests/drivers/net/hw/virtio_net.py
->>
->> diff --git a/tools/testing/selftests/drivers/net/hw/Makefile b/tools/testing/selftests/drivers/net/hw/Makefile
->> index 07cddb19ba35..b5af7c1412bf 100644
->> --- a/tools/testing/selftests/drivers/net/hw/Makefile
->> +++ b/tools/testing/selftests/drivers/net/hw/Makefile
->> @@ -21,6 +21,7 @@ TEST_PROGS = \
->>   	rss_ctx.py \
->>   	rss_input_xfrm.py \
->>   	tso.py \
->> +	virtio_net.py \
-> Maybe xsk_reconfig.py ? Other drivers will benefit from this test, too,
-> and that's a more descriptive name.
->
->>   	#
->>   
->>   TEST_FILES := \
->> diff --git a/tools/testing/selftests/drivers/net/hw/virtio_net.py b/tools/testing/selftests/drivers/net/hw/virtio_net.py
->> new file mode 100755
->> index 000000000000..7cad7ab98635
->> --- /dev/null
->> +++ b/tools/testing/selftests/drivers/net/hw/virtio_net.py
->> @@ -0,0 +1,65 @@
->> +#!/usr/bin/env python3
->> +# SPDX-License-Identifier: GPL-2.0
->> +
->> +# This is intended to be run on a virtio-net guest interface.
->> +# The test binds the XDP socket to the interface without setting
->> +# the fill ring to trigger delayed refill_work. This helps to
->> +# make it easier to reproduce the deadlock when XDP program,
->> +# XDP socket bind/unbind, rx ring resize race with refill_work on
->> +# the buggy kernel.
->> +#
->> +# The Qemu command to setup virtio-net
->> +# -netdev tap,id=hostnet1,vhost=on,script=no,downscript=no
->> +# -device virtio-net-pci,netdev=hostnet1,iommu_platform=on,disable-legacy=on
->> +
->> +from lib.py import ksft_exit, ksft_run
->> +from lib.py import KsftSkipEx, KsftFailEx
->> +from lib.py import NetDrvEnv
->> +from lib.py import bkg, ip, cmd, ethtool
->> +import re
->> +
->> +def _get_rx_ring_entries(cfg):
->> +    output = ethtool(f"-g {cfg.ifname}").stdout
->> +    values = re.findall(r'RX:\s+(\d+)', output)
-> no need for the regexps, ethtool -g supports json formatting:
->
-> 	output = ethtool(f"-g {cfg.ifname}", json=True)[0]
-> 	return output["rx"]
->
-> ?
->
->> +    return int(values[1])
->> +
->> +def setup_xsk(cfg, xdp_queue_id = 0) -> bkg:
->> +    # Probe for support
->> +    xdp = cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=False)
->> +    if xdp.ret == 255:
->> +        raise KsftSkipEx('AF_XDP unsupported')
->> +    elif xdp.ret > 0:
->> +        raise KsftFailEx('unable to create AF_XDP socket')
->> +
->> +    try:
->> +        xsk_bkg = bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} ' \
->> +                      '{xdp_queue_id} -z', ksft_wait=3)
-> This process will time out after 3 seconds but the test really
-> shouldn't leave things running after it exits. Don't worry about
-> the couple of seconds of execution time. Wrap each test in
->
-> 	with bkg(f"... the exec info ... "):
-> 		# test code here
->
-> The bkg() class has an __exit__() handle once the test finishes
-> and leaves the with block it will terminate.
+On Wed, Apr 23, 2025 at 08:01:10AM -0700, Darrick J. Wong wrote:
+> On Wed, Apr 23, 2025 at 10:32:09AM +0200, Christoph Hellwig wrote:
+> > On Tue, Apr 22, 2025 at 12:27:39PM +0000, John Garry wrote:
+> > > From: "Darrick J. Wong" <djwong@kernel.org>
+> > > 
+> > > Introduce a mount option to allow sysadmins to specify the maximum size
+> > > of an atomic write.  If the filesystem can work with the supplied value,
+> > > that becomes the new guaranteed maximum.
+> > > 
+> > > The value mustn't be too big for the existing filesystem geometry (max
+> > > write size, max AG/rtgroup size).  We dynamically recompute the
+> > > tr_atomic_write transaction reservation based on the given block size,
+> > > check that the current log size isn't less than the new minimum log size
+> > > constraints, and set a new maximum.
+> > > 
+> > > The actual software atomic write max is still computed based off of
+> > > tr_atomic_ioend the same way it has for the past few commits.
+> > 
+> > The cap is a good idea, but a mount option for something that has
+> > strong effects for persistent application formats is a little suboptimal.
+> > But adding a sb field and an incompat bit wouldn't be great either.
+> > 
+> > Maybe this another use case for a trusted xattr on the root inode like
+> > the autofsck flag?
+> 
+> That would be even better, since you could set it at mkfs time and it
+> would persist until the next xfs_property set call.
 
-I've tried to make the setup_xsk into each test. However, I've an issue 
-that the XDP socket destruct waits for an RCU grace period as I see this 
-sock's flag SOCK_RCU_FREE is set. So if we start the next test right 
-away, we can have the error when setting up XDP socket again because 
-previous XDP socket has not unbound the network interface's queue yet. I 
-can resolve the issue by putting the sleep(1) after closing the socket 
-in xdp_helper:
+[/me hands himself another coffee]
 
-diff --git a/tools/testing/selftests/net/lib/xdp_helper.c 
-b/tools/testing/selftests/net/lib/xdp_helper.c
-index f21536ab95ba..e882bb22877f 100644
---- a/tools/testing/selftests/net/lib/xdp_helper.c
-+++ b/tools/testing/selftests/net/lib/xdp_helper.c
-@@ -162,5 +162,6 @@ int main(int argc, char **argv)
-          */
+The only problem is, setting the property while the fs is mounted does
+not change the actual fs capability until the next mount since
+properties are regular (and not magic) xattrs.
 
-         close(sock_fd);
-+       sleep(1);
-         return 0;
-  }
+--D
 
-Do you think it's enough or do you have a better suggestion here?
-
-Thanks,
-Quang Minh.
-
->
->> +        return xsk_bkg
->> +    except:
->> +        raise KsftSkipEx('Failed to bind XDP socket in zerocopy. ' \
->> +                         'Please consider adding iommu_platform=on ' \
->> +                         'when setting up virtio-net-pci')
->> +
->> +def check_xdp_bind(cfg):
->> +    ip(f"link set dev %s xdp obj %s sec xdp" %
->> +       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
->> +    ip(f"link set dev %s xdp off" % cfg.ifname)
->> +
->> +def check_rx_resize(cfg, queue_size = 128):
->> +    rx_ring = _get_rx_ring_entries(cfg)
->> +    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
->> +    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
-> Why guess the ring size? What if it's already 128? I usually do:
->
-> 	rx_ring = _get_rx_ring_entries(cfg)
-> 	ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring / 2))
-> 	ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
->
-> IOW flip between half or double and current.
->
->> +def main():
->> +    with NetDrvEnv(__file__, nsim_test=False) as cfg:
->> +        try:
->> +            xsk_bkg = setup_xsk(cfg)
->> +        except KsftSkipEx as e:
->> +            print(f"WARN: xsk pool is not set up, err: {e}")
->> +
->> +        ksft_run([check_xdp_bind, check_rx_resize],
->> +                 args=(cfg, ))
->> +    ksft_exit()
->> +
->> +if __name__ == "__main__":
->> +    main()
-
+> --D
+> 
