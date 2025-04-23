@@ -1,73 +1,87 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570CF2853E0;
-	Wed, 23 Apr 2025 15:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A092135D0;
+	Wed, 23 Apr 2025 15:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423092; cv=none; b=kUPnUUBdmrAN8VFfK1w569vsexl5i3V/fSI5O89Y9VZl+qLL3jeKeODFYogDnCpuK40Lpq875wvMHRi7pFc0n+CCUkVUvxzNxP3r9Ub/nLaweKnF1Dyry9aL/MrlFmvwUwrSUs+KjsqWf3HScspWoYEBrRqwXvtJzyyvryfI8eI=
+	t=1745423145; cv=none; b=Ke8c0kmO+axNV5w/OC5U4kMOlItiqvriTFToYQHLmn3mQj01DRipfUE/FswH4ya9HxQJJzt4q5wHn6gcQz59Ez43c+H1mdyh2YKRKgIM6J7sQbVYs72Z4zawsWZ9XlIgXZMDbBneV8hpQzJRi+YMTtXK3ojqzTk+deBJPjvOCrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423092; c=relaxed/simple;
-	bh=RvH5FgF81bFkw2pxOgwseRZAgpOXsvqHOEmUofvT3cA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Id8fY9wgc6b1RG+mKCXYbRV01itshQOWkv+ptoL1OnyBbzzyk378pM9roNrCDT7yaBWcXKjUaujXCmwMQznjtv4pg09FPYmA6uygQNTA4i1ML9YYGWwhbh8Yk9gPwVvLgzXHqJWPciZv0QhUzBDgr9LBhNZSmAyZniGQafMYnaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=So8kcJYK; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1745423145; c=relaxed/simple;
+	bh=uXGY1VAD0ezdy/ybNS4JN/GqOzUTWI23//dv6QmQUdA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FCwtNAtPOrg2q3f61In6tpOOGPWSJfb/8NkpJiMq2tW2B8xC+Q60L4zusnFTDF0O1Izj6gETnuu74d/9lHnZLKniuB4dnPxtIuDHZPCb5NC6vPXUcWsVusuUWAcKvIBswoDZzjxJOVRps3Ec2tgQ2+4dtzZFHG4rZLZkVSECzUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0f0eh/2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="So8kcJYK"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=RvH5FgF81bFkw2pxOgwseRZAgpOXsvqHOEmUofvT3cA=;
-	t=1745423091; x=1746632691; b=So8kcJYKTAbL/D1EBRPJIu5p95H6F7AL1cE/SN9LvsQ87fT
-	apYp2+oagzgYrHAKks7YB7dqaJWE6uBtA4HQ6Rnru2RQ/mJfyO0Pzdm5hv+xQLhYgOfV1ELmweBEa
-	MR1hXz5tl48BKBmkFkZ10Z3fIUEjNXn5sHmJR2bs9OlDsgr360aAlb/4ysGVAKNQc5fBkiKZDsrx7
-	u8h6Mh4nHfyVeRDpFrOG1F6KBWXMvUDbHbz15n0osFxHIH6rD2eDmw1QgAYGKjR7etR7H2wwjpfw9
-	538RJ+8uZfTcZN7FsQ8+TQySTp8KkSVd/rzbBXhIfFbJzqiugiph+GwXIXrHt6Yw==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1u7cHI-0000000Ensa-0njz;
-	Wed, 23 Apr 2025 17:44:48 +0200
-Message-ID: <4a91f731c49d3449632f19dcf4a1a8f5a9eb847b.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 1/3] cfg80211: Restore initial state on failed
- device_rename() in cfg80211_switch_netns()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Ivan Abramov <i.abramov@mt-integration.ru>
-Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, linux-wireless@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org, 
-	netdev@vger.kernel.org
-Date: Wed, 23 Apr 2025 17:44:45 +0200
-In-Reply-To: <20250407125345.1238818-2-i.abramov@mt-integration.ru>
-References: <20250407125345.1238818-1-i.abramov@mt-integration.ru>
-	 <20250407125345.1238818-2-i.abramov@mt-integration.ru>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0f0eh/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3897C4CEE2;
+	Wed, 23 Apr 2025 15:45:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745423144;
+	bh=uXGY1VAD0ezdy/ybNS4JN/GqOzUTWI23//dv6QmQUdA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R0f0eh/2LvsfL4iutKlrnN7chSnjyw9pMqdFl73WtrDzgT2ZydtvcA8ApMRrfVIYy
+	 0CZgrRPJS++EmO8LsVSliQHDPcJ4RjdLHd80VCSoQOqGK2G/sxQPoZ0XojLkat0gbl
+	 X9euuD1yjltFR9FrI4sj7wt/r4snbcmpPCPgsfGpPE6QkuX0XI/6o5kEQETPqu2/NC
+	 34NzBeNuKsBs5HwcJNh7E93sOIpOuLw5h5wZ4lGRL6HeCBSSF4EK6B1Vxc96zgxjOV
+	 XwqUIMgq4hiEEAgxXOvGPFodHikCT0z4VCIUYX0Ma0thcWjIropdyYMZw+iZRxy4cb
+	 R0dclULDW9zZA==
+Date: Wed, 23 Apr 2025 10:45:42 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Chen-Yu Tsai <wenst@chromium.org>
+Cc: linux-mediatek@lists.infradead.org, linux-input@vger.kernel.org,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Douglas Anderson <dianders@chromium.org>,
+	Benson Leung <bleung@chromium.org>, chrome-platform@lists.linux.dev,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: HID: i2c-hid: elan: Introduce Elan
+ eKTH8D18
+Message-ID: <174542314188.576994.12974029497689302557.robh@kernel.org>
+References: <20250421101248.426929-1-wenst@chromium.org>
+ <20250421101248.426929-2-wenst@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421101248.426929-2-wenst@chromium.org>
 
-On Mon, 2025-04-07 at 15:53 +0300, Ivan Abramov wrote:
-> Currently, the return value of device_rename() is not acted upon.
->=20
-> To avoid an inconsistent state in case of failure, roll back the changes
-> made before the device_rename() call.
 
-This kind of seems complicated for something that ought to not happen
-...
+On Mon, 21 Apr 2025 18:12:39 +0800, Chen-Yu Tsai wrote:
+> The Elan eKTH8D18 touchscreen controller is an I2C HID device with a
+> longer boot-up time. Power sequence timing wise it is compatible with
+> the eKTH6A12NAY, with a power-on delay of at least 5ms, 20ms
+> out-of-reset for I2C ack response, and 150ms out-of-reset for I2C HID
+> enumeration, both shorter than what the eKTH6A12NAY requires.
+> Enumeration and subsequent operation follows the I2C HID standard.
+> 
+> Add a compatible string for it with the ekth6a12nay one as a fallback.
+> No enum was used as it is rare to actually add new entries. These
+> chips are commonly completely backward compatible, and unless the
+> power sequencing delays change, there is no real effort being made to
+> keep track of new parts, which come out constantly.
+> 
+> Also drop the constraints on the I2C address since it's not really
+> part of the binding.
+> 
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> ---
+> Changes since v1:
+> - Reworded commit message
+> - Dropped the enum for the new compatible string entry
+> - Dropped constraint on I2C address completely
+> ---
+>  .../devicetree/bindings/input/elan,ekth6915.yaml     | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+> 
 
-And also (+netdev), what do we do in case this is called from
-cfg80211_pernet_exit() - leak the whole network namespace because we
-couldn't allocate memory for the name? That seems counterproductive.
-
-I'm really not convinced of this whole patchset.
-
-johannes
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
