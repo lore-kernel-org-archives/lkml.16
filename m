@@ -1,193 +1,178 @@
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D9E266F0A
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:45:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E521514E4
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:45:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745390709; cv=none; b=bKhP4Ib+tKPIQMbO7c16hCQBkQMJH/7hEM5SVn+1BqzaO8YjfIlIOA8R1HTnCtgrf9rTN7xnahdVfuEark1aNU5W4yPGnqHYJjN/mND6hAuRsnyYA/y0v5pgQLlBnS/ipQwR5Zu0PoCxaSrBSnmDZUVZk2TzimuKThPa85SXXtI=
+	t=1745390717; cv=none; b=RAzTKudy9syMS/6UfaozHqJq/sCvlEesNQANoDfy+uZBwrUxZbykNDSeP0qLeoJSkjdcjAi+pFJy4LrpXCj5Er+AkoAK5qRj04GBSAsLXSvmxfBjJwyXUE657LdOxsUnH9Yf0RYevRFSFj1W3ad3dPeAAFwZC8i3XAznUF8nfC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745390709; c=relaxed/simple;
-	bh=3SqWo4ulTzFqzs780nKr+GWWXoyKc3CsqRlgn0TlszU=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=ElvJSbs6divhu8p5sV3vZI12EWXaZ64+eniM3X8FTpXziMesy1SQHoka5TzKWuwkVAvubxVAODBTcxt6Q+bMKWNqd6C1XLTozc5DMYrP2oQpyEMn+NEutV40vf0oMs2j5Zf0MmQWrI7ZlXgxSZc/b1PFVFQnFWgWOJyIP6R9MO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=YlwEzTgp; arc=none smtp.client-ip=203.254.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1745390717; c=relaxed/simple;
+	bh=h3D+v7S/DE8v4VXSLO4J78ijDrD37ur1IijJWbA1kPc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jezYbP9Y06PdtT+QBYsOuiBbbS7CwQmHymM9Hzt7oFLEa+4VDF6yvhYWuMXyS3il8acJevvj+hIyFabuEzU1M0rSE3bgO5gYB1sHod3KcVKesOd6osQLKEZx6ZcGTdy4TdaDiMe31Ew4QivE56Rdru2F3973V/ACdJ1TSNLwyfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q3h7bnKm; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YlwEzTgp"
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250423064504epoutp04b4f2f7438ca976ba61336fb7e350d078~435kKVN741455514555epoutp04-
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:45:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250423064504epoutp04b4f2f7438ca976ba61336fb7e350d078~435kKVN741455514555epoutp04-
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1745390704;
-	bh=72Psgkn+jG8bccz9lqfdGIztHlVpKbwkw3e+s4Gh1hs=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=YlwEzTgpMpZjs///FsdX8fYN8BP5T9Fi97BMxTh7KCgQcIVVF6PB/F8hLv7g2tJyK
-	 dRLBcJwhcoVFqkwHibghV7aj8uIzTtCaTjeTBkSPvvy7UNZCKXDhP3V72FRVpejbh7
-	 qvx2v5q5/f8rb2wFxNNA+Ni9Extv2Cev1CXNjXlM=
-Received: from epsnrtp04.localdomain (unknown [182.195.42.156]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250423064503epcas1p3d6b28a5118bc49104a8d5e997b579474~435jXdHAK1657316573epcas1p3M;
-	Wed, 23 Apr 2025 06:45:03 +0000 (GMT)
-Received: from epcas1p1.samsung.com (unknown [182.195.38.248]) by
-	epsnrtp04.localdomain (Postfix) with ESMTP id 4Zj8jp2dwdz6B9m6; Wed, 23 Apr
-	2025 06:45:02 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250423064501epcas1p2f5ee0585feea01613ca82118a3241d40~435hnRXYg2862928629epcas1p2V;
-	Wed, 23 Apr 2025 06:45:01 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250423064501epsmtrp1fe7e0b792b4fc098e8dc39303e55cadd~435hl4yo53246032460epsmtrp1i;
-	Wed, 23 Apr 2025 06:45:01 +0000 (GMT)
-X-AuditID: b6c32a29-fda1d2400000223e-77-68088c6db7d6
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	91.2A.08766.D6C88086; Wed, 23 Apr 2025 15:45:01 +0900 (KST)
-Received: from dh0421hwang02 (unknown [10.253.101.58]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250423064501epsmtip1dd824c9339839168ea88ffae03456c03~435hXsEvJ2704327043epsmtip1X;
-	Wed, 23 Apr 2025 06:45:00 +0000 (GMT)
-From: "DooHyun Hwang" <dh0421.hwang@samsung.com>
-To: =?UTF-8?Q?'Peter_Wang_=28=E7=8E=8B=E4=BF=A1=E5=8F=8B=29'?=
-	<peter.wang@mediatek.com>, <avri.altman@wdc.com>,
-	<quic_mnaresh@quicinc.com>, <linux-scsi@vger.kernel.org>,
-	<bvanassche@acm.org>, <linux-kernel@vger.kernel.org>,
-	<alim.akhtar@samsung.com>, <manivannan.sadhasivam@linaro.org>,
-	<martin.petersen@oracle.com>, <James.Bottomley@HansenPartnership.com>
-Cc: <sh043.lee@samsung.com>, <wkon.kim@samsung.com>,
-	<cw9316.lee@samsung.com>, <grant.jung@samsung.com>,
-	<sh8267.baek@samsung.com>, <jt77.jang@samsung.com>,
-	<jangsub.yi@samsung.com>, <junwoo80.lee@samsung.com>
-In-Reply-To: <039d433e9931e4999e4011cebc2844ffacd2ec0c.camel@mediatek.com>
-Subject: RE: [PATCH 2/2] scsi: ufs: core: Add a trace function calling when
- uic command error occurs
-Date: Wed, 23 Apr 2025 15:45:00 +0900
-Message-ID: <001001dbb41b$3c947300$b5bd5900$@samsung.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q3h7bnKm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745390715;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FJQr5daKI6/1i+nwgHlDoYSZzm+JP1wEk08aCiKUf8w=;
+	b=Q3h7bnKmngwiwDGhGcvcuCrj9oeQ8wf9e19z4HIngNfOMsITGqb03rV6rjzFGGqIhyoz45
+	+EQG+peZ4D7qYySnweXAmMyi1/oVbI4mjvmpd0Dx5Uiu+UPsJ1P44BGe/7Rvxk7Y6eN2Cs
+	nE2i8JNY/Ma/iJE1FBTwAZ9dn3u/Xww=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-142-7m5xpZt4PuOLp3i3eWG0Zw-1; Wed, 23 Apr 2025 02:45:13 -0400
+X-MC-Unique: 7m5xpZt4PuOLp3i3eWG0Zw-1
+X-Mimecast-MFC-AGG-ID: 7m5xpZt4PuOLp3i3eWG0Zw_1745390712
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d4d15058dso43028715e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:45:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745390712; x=1745995512;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FJQr5daKI6/1i+nwgHlDoYSZzm+JP1wEk08aCiKUf8w=;
+        b=fP4Zm+roQT5wCosRD+ehcNr/WtBwMQNcXP40Eb1Rs7jE2zTnqFuDoTs7BOLIOUwRKo
+         GW8UNLCJQz8ptBIUtVpGYQ49msztIAatTmG+mxTax58Ti7ipeehz0vhj79JcqCVInLSw
+         bRy4cXxVuMHRlXufeDEVGQD55QMBp+O+gCeMlhlpGUvAEhP8yuighWnTnp8yQiosipGX
+         0b5HbQm2aZSxGED3Xe7Paroktd2OgszBa00eP2+zPVsjctFsoZ6AVvCYOoIfS+pQPAEH
+         Wujhu38lYRUV5rNmx1kBhqE5RTRJ5K3nb3l1Rakea24Frqzz/eB0nUEP7pba4ZNDEOso
+         H+GQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUwDRVAereYLqjheno3QdB55/FYpuVWJwhM82sckRMf9ud53tFfKW8LcLtBfAoVaagz90QCJGxQD+mvyuc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXue+efBqtpPQhL9nHhAekUZtMALBMvHyENXTPRHJkfnDVlQav
+	cp43cbRNu9CpZO7By9PVXg7/ykdcnwQKXy2UL2jvudfkYbWfz+p1AWiszSCNd1upr3YDBGhBJc9
+	U4lK3DWjnNCrYojrTVOhaBrFWBWyx4r4sA6O6TtPyAZR8qfvEAijqzMxdQ8clfg==
+X-Gm-Gg: ASbGncuMDZBCk1f4iZ/pcdjHq1lye+ewz/d1UWZJNgx+AUS5kSS08MYwP/94qHHqQSQ
+	juZKKMjXv7GyjNuzFEqUQBTewMqGmS6VhYjq4Qwe2fMsM8O7wSQC78HLaaixEpvL9NI7y5XXRQD
+	fjBiht+fDNUdBe7bQFgq+LNnpF0SE5I40KMZpe6OCeq1ST98TgiUoNYvHgx485/fhLy51gO+rpt
+	b7oTazIhXwIBkAbzO4tVKA6EdhPNURgXW0WB2V7TaGIaGVAVh6aOH+HWnQX7rOzLxKB4uHfjIq/
+	jVbQnw==
+X-Received: by 2002:a05:600c:3487:b0:43e:a7c9:8d2b with SMTP id 5b1f17b1804b1-4406abfab7dmr152587645e9.24.1745390712285;
+        Tue, 22 Apr 2025 23:45:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IESPeBSydPIH0zVAjW7EqTg1hmkncqgVOAhXdcSWQ91oQ3uYj81WGlTIQYk3qbwlXLCw+komw==
+X-Received: by 2002:a05:600c:3487:b0:43e:a7c9:8d2b with SMTP id 5b1f17b1804b1-4406abfab7dmr152587385e9.24.1745390711947;
+        Tue, 22 Apr 2025 23:45:11 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-44092d4707csm14014875e9.40.2025.04.22.23.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 23:45:11 -0700 (PDT)
+Date: Wed, 23 Apr 2025 02:45:08 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Eric Auger <eric.auger@redhat.com>
+Cc: Gerd Hoffmann <kraxel@redhat.com>, linux-kernel@vger.kernel.org,
+	Eric Auger <eauger@redhat.com>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	David Airlie <airlied@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Simona Vetter <simona@ffwll.ch>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	dri-devel@lists.freedesktop.org, virtualization@lists.linux.dev
+Subject: Re: [PATCH v2] virtgpu: don't reset on shutdown
+Message-ID: <20250423023922-mutt-send-email-mst@kernel.org>
+References: <8490dbeb6f79ed039e6c11d121002618972538a3.1744293540.git.mst@redhat.com>
+ <ge6675q3ahypfncrwbiodtcjnoftuza6ele5fhre3jmdeifsez@yy53fbwoulgo>
+ <20250415095922-mutt-send-email-mst@kernel.org>
+ <lgizdflxcku5ew2en55ux3r72u37d6aycuoosn5i5a5wagz6sc@d2kha7ycmmpy>
+ <5aede4c4-5dfd-4ec1-9fd8-a5d6700678bd@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: ko
-Thread-Index: AQEmYeTjtFjYRI1QNWxgWL0Y7ybfIwLekswsAdKaXvgCNaz4WLTkHcVg
-X-Brightmail-Tracker: H4sIAAAAAAAAA02ReUiTYRzHed5r75bDt23gk0XEQExLUzJ4OjAjlLcZlIQa0TXz1Vnbmls3
-	FWWeM/OqqbPMDiz3R6I1HWpZW3lVmGVqZmlS2Do1y1jNrG0E/vfhe/GDH42LHhO+dIp6H6dV
-	y5VSSkDU26Tzg1SnaUXIhZ8CNFxRTyG74zmFDGMOHJV2ZpLo11QND9Xm0yjbXIwhy+gjHmqc
-	OoWhZ43nKZTbZ6HQq/QcEl1r+4Mh87ffJJo885aH0px3CNT7qJ1EN59OEhEi9llPNGso6qTY
-	wd5mik3vaCHY8XcDBFvYfJw9c8sE2Im6+WzW3VxsI3+LYFUip0w5wGmXhO8UKCb60wmNzfeQ
-	/UYGdgI0SvSAT0MmDBZlZmN6IKBFTBOAlc1NwGPMg7lDt3l6QP9jMbTZdJ6MHcAyezHpylBM
-	CCxu/US5DAnzE4N6vcW9hDNDAJb0pJOeyhSA9oES3FXhMzI4fe4q5WIxkwjLz47xXEwwfrCg
-	w+TOCJnl8GXOF8LDs2FH2Vs348wimPcmA/znqksfcc+pC6DjXRXp0SWwPCfTrUuYKDj44iRW
-	AMTGGVPGGVPGGVPGGfVKQJjAHE6jUyWrdKGaUDV3MFgnV+n2q5ODd+1V1QH3xwMDLKDBNBZs
-	BRgNrADSuFQi/BXFU4iEifLDRzjt3h3a/UpOZwVzaULqI/R5n5coYpLl+7g9HKfhtP9djOb7
-	nsD4xyJLlNbqvAnnwaqItZ9jzAFOfzM5u2t3FEs72q/tzPDa1lxQkDQ0OnGFXFEVPr3luH4g
-	tf6wE24dS355ISHg+wPlnZpon68PT6+eXq3Ir2gwTGevg8KemCDB0dq4x7xjC+55K28yH9bH
-	lW7wkRnCVc7A/rPx2MXubP+a808/p1wtvC5dSuGbJxu9B7q+XmrzX2WJMITUDW4Yvu/VZx8n
-	K8WxXpGX/VJHhjuDFmdtylKvTCv0xh3j8phu63bHdVlhySuZrCL2SWySeDDYb2QhuebusqWL
-	w0x+r9e2jJbGR2bMe841va84km9beQDMItN+dC6phq0JviNqDaDNQ5ulhE4hDw3EtTr5Xwkg
-	fxNgAwAA
-X-CMS-MailID: 20250423064501epcas1p2f5ee0585feea01613ca82118a3241d40
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-cpgsPolicy: CPGSC10-711,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250417023419epcas1p343060855c4470f8056116a207a584956
-References: <20250417023405.6954-1-dh0421.hwang@samsung.com>
-	<CGME20250417023419epcas1p343060855c4470f8056116a207a584956@epcas1p3.samsung.com>
-	<20250417023405.6954-3-dh0421.hwang@samsung.com>
-	<039d433e9931e4999e4011cebc2844ffacd2ec0c.camel@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5aede4c4-5dfd-4ec1-9fd8-a5d6700678bd@redhat.com>
 
-> On Thu, 2025-04-17 at 11:34 +0900, DooHyun Hwang wrote:
+On Tue, Apr 22, 2025 at 06:49:04PM +0200, Eric Auger wrote:
+> Hi Gerd, Michael,
+> 
+> On 4/16/25 3:57 PM, Gerd Hoffmann wrote:
+> > On Tue, Apr 15, 2025 at 10:00:48AM -0400, Michael S. Tsirkin wrote:
+> >> On Tue, Apr 15, 2025 at 01:16:32PM +0200, Gerd Hoffmann wrote:
+> >>>   Hi,
+> >>>
+> >>>> +static void virtio_gpu_shutdown(struct virtio_device *vdev)
+> >>>> +{
+> >>>> +	/*
+> >>>> +	 * drm does its own synchronization on shutdown.
+> >>>> +	 * Do nothing here, opt out of device reset.
+> >>>> +	 */
+> >>> I think a call to 'drm_dev_unplug()' is what you need here.
+> >>>
+> >>> take care,
+> >>>   Gerd
+> >> My patch reverts the behaviour back to what it was, so pls go
+> >> ahead and send a patch on top? I won't be able to explain
+> >> what it does and why it's needed.
+> > See below.  Untested.
 > >
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
+> > Eric, can you give this a spin?
 > >
+> > thanks,
+> >   Gerd
 > >
-> > When a uic command error occurs, there is no trace function calling.
-> > Therefore, trace function calls are added when a uic command error
-> > happens.
+> > ----------------------- cut here -------------------------------
+> > From f3051dd52cb2004232941e6d2cbc0c694e290534 Mon Sep 17 00:00:00 2001
+> > From: Gerd Hoffmann <kraxel@redhat.com>
+> > Date: Wed, 16 Apr 2025 15:53:04 +0200
+> > Subject: [PATCH] drm/virtio: implement virtio_gpu_shutdown
 > >
-> > Signed-off-by: DooHyun Hwang <dh0421.hwang=40samsung.com>
+> > Calling drm_dev_unplug() is the drm way to say the device
+> > is gone and can not be accessed any more.
+> >
+> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 > > ---
-> >  drivers/ufs/core/ufshcd.c =7C 5 +++++
-> >  1 file changed, 5 insertions(+)
+> >  drivers/gpu/drm/virtio/virtgpu_drv.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
 > >
-> > diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> > index ab98acd982b5..baac1ae94efc 100644
-> > --- a/drivers/ufs/core/ufshcd.c
-> > +++ b/drivers/ufs/core/ufshcd.c
-> > =40=40 -2534,6 +2534,9 =40=40 ufshcd_wait_for_uic_cmd(struct ufs_hba *h=
-ba,
-> > struct uic_command *uic_cmd)
-> >         hba->active_uic_cmd =3D NULL;
-> >         spin_unlock_irqrestore(hba->host->host_lock, flags);
-> >
-> > +       if (ret)
-> > +               ufshcd_add_uic_command_trace(hba, uic_cmd,
-> > UFS_CMD_ERR);
+> > diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > index e32e680c7197..71c6ccad4b99 100644
+> > --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
+> > @@ -130,10 +130,10 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
+> >  
+> >  static void virtio_gpu_shutdown(struct virtio_device *vdev)
+> >  {
+> > -	/*
+> > -	 * drm does its own synchronization on shutdown.
+> > -	 * Do nothing here, opt out of device reset.
+> > -	 */
+> > +	struct drm_device *dev = vdev->priv;
 > > +
-> >         return ret;
-> >  =7D
-> >
-> > =40=40 -4306,6 +4309,8 =40=40 static int ufshcd_uic_pwr_ctrl(struct ufs=
-_hba
-> > *hba, struct uic_command *cmd)
-> >         =7D
-> >  out:
-> >         if (ret) =7B
-> > +               ufshcd_add_uic_command_trace(hba, hba-
-> > >active_uic_cmd,
-> > +                                            UFS_CMD_ERR);
-> >                 ufshcd_print_host_state(hba);
-> >                 ufshcd_print_pwr_info(hba);
-> >                 ufshcd_print_evt_hist(hba);
-> > --
-> > 2.48.1
-> >
->=20
->=20
-> Hi DooHyun,
->=20
-> Is it possible to receive UFS_CMD_COMP and UFS_CMD_ERR at the same time?
-> Wouldn't it be a bit strange for a command to receive two completions?
-> Additionally, should we also add tracing for general SCSI commands that
-> receive errors?
->=20
+> > +	/* stop talking to the device */
+> > +	drm_dev_unplug(dev);
+> I have tested this patch on top of Michael's v2 and I don't see any
+> splat on guest.
+> 
+> Feel free to add my
+> 
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Tested-by: Eric Auger <eric.auger@redhat.com>
+> 
 > Thanks
-> Peter
->=20
-Thank you for your review.
+> 
+> Eric
 
-Yes, that=E2=80=99s=20correct.=20There=20is=20a=20case=20where=20both=20UFS=
-_CMD_COMP=20and=20UFS_CMD_ERR=20are=20logged=20simultaneously.=0D=0A=0D=0AI=
-n=20the=20typical=20case=20of=20a=20UIC=20command=20timeout,=20only=20UFS_C=
-MD_ERR=20would=20be=20recorded.=0D=0A=0D=0AHowever,=20the=20scenario=20you=
-=20described=20earlier,=20where=20both=20UFS_CMD_COMP=20and=20UFS_CMD_ERR=
-=20are=20received=20in=20the=20same=20UIC=20command,=20is=20distinct=20from=
-=20a=20timeout=20situation.=0D=0AIn=20this=20case,=20the=20command=20comple=
-tes=20in=20time,=20and=20UFS_CMD_COMP=20is=20received=20when=20handling=20t=
-he=20UIC=20command=20completion=20interrupt=20in=20ufshcd_uic_cmd_compl().=
-=0D=0AHowever,=20the=20UPMCRS=20status=20indicates=20an=20error=20because=
-=20PWR_LOCAL=20is=20not=20in=20its=20expected=20state=20(when=20checking=20=
-upmcrs=20in=20the=20=22check_upmcrs:=22=20section=20of=20the=20ufshcd_uic_p=
-wr_ctrl()=20function).=0D=0A=0D=0AUFS_CMD_COMP=20is=20generated=20when=20th=
-e=20system=20recognizes=20through=20interrupt=20status=20that=20the=20comma=
-nd=20has=20completed=20its=20execution,=20while=20UFS_CMD_ERR=20is=20record=
-ed=20when=20an=20error=20associated=20with=20the=20command=20is=20detected.=
-=0D=0A=0D=0AWhile=20it=20may=20be=20cumbersome,=20it=20is=20possible=20to=
-=20trace=20the=20timeout=20case=20and=20this=20case=20separately.=0D=0A=0D=
-=0ARegarding=20tracing=20general=20SCSI=20command=20errors=20directly=20thr=
-ough=20UFS_CMD_ERR,=20it=20might=20be=20challenging=20because=20SCSI=20comm=
-and=20errors=20are=20typically=20handled=20through=20various=20mechanisms=
-=20such=20as=20timeout=20detection,=20scsi_status=20value=20checks,=20sense=
-=20error=20checks,=20and=20OCS=20(Overall=20Command=20Status)=20value=20ver=
-ification.=0D=0AAdditionally,=20tracing=20SCSI=20command=20errors=20does=20=
-not=20align=20with=20the=20purpose=20of=20this=20commit.=0D=0A=0D=0ABR,=0D=
-=0AThank=20you.=0D=0ADooHyun=20Hwang=0D=0A=0D=0A
+Thanks, Eric!
+Gerd, do you want to post a patch officially?
+I just sent the dependency to Linus, maybe mention this for the
+maintainers.
+
+
+> >  }
+> >  
+> >  static void virtio_gpu_config_changed(struct virtio_device *vdev)
+
