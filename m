@@ -1,133 +1,135 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861FD28DEEA;
-	Wed, 23 Apr 2025 18:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34EC8288C9A;
+	Wed, 23 Apr 2025 18:22:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432511; cv=none; b=NMbfTe5h07KbDWFU+pRthOj4sPnfsq8T7N6qMjWxCGrrUeqr18ZO+mO2SaBraCF6bhPdJblAoFaU3r+660T71CN2GOLxYomuSG1MCfFOdDiVfGaVXJwEoHNmjf9wtgBM5LrszKsNqSBlfBVpPb/c9PSMlB++Z8YY3yVHFN5xsH4=
+	t=1745432539; cv=none; b=nU0IBRkTbazHRlCuetOxbfZfQ3jIk0opplDcMVfPS2334PYWQNLnALiXqWWNVnGHZBCELCXDivzu76bNad9GKLxXTtoLOS3AlWZ4StQvjvx7Ae9NmX91S64l/JlRpCbLmP6bPYPeAhL0aB6HwY5k+nRy6xLUsTpV9/g2Co9PZuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432511; c=relaxed/simple;
-	bh=n5KEgKPWGyndOy8RBM0wXCL7YL1bmrK2XR2keNckLaA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jvZfUW1+2rIeLvQvIm5N//sQ8ZHQEY3F7pFxz5NVnZzByTAu8SZYws3apHmrIWguqq45Yishx3v8+xAg6z5xWxYnpJkfjdHir83wFBenn56C3S9hcdFbsHX2GErOciozQRcvYlXJlZYUO3CXjiVZ2StAIpWj2+P2mjHWgiaTIPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cl2EDV52; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745432539; c=relaxed/simple;
+	bh=PWWju0lVKK/tapHVY9eYrl1sK2Ap+YQ8ODhkeluNm5o=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=tbezS8ogWr9v0TwqpkzIvI9wQkF2vbHuiN11SEscwYy75hTPdoH6HM9WIxoYBqzlGbERYSbxALK4XnoxZrR0Zb5LXe3hGxLhaUqSQ/SRuOpv2CeqV/lFwMia/WHjM7kRyEsq7YvELWcXVfOM91ZaM6LaPxjjwQq8cHSkYL30hks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YIcrqmnP; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cl2EDV52"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5f62d3ed994so172030a12.2;
-        Wed, 23 Apr 2025 11:21:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745432508; x=1746037308; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NhlqINkYpZZBLzVdSPqg22TCWxPQvkr1ZzGoXFf5r1M=;
-        b=cl2EDV52G7UXR88D2b+Ku+trcK8nub6TC31rjkxsal9iSKRDP1qab3CWKtXBfSIX6W
-         60K0hx1rWKhkLHoljiFmyk7dw/GVdYRVnVxLkNQ7lZb5b+GHIWec338zKDHmqEc38Re0
-         xMvAlkIyAP4EScG/TXCaZOFy0p1wHAjKneP3F4PrRWg5BIWdyRdKjBh/d4PYmqqVnJXW
-         VLrLbsZvBpkhBhuNbLvkK18gElc/wSsbYrBjpqBNMjjo88XlwrInc3x1/4hAjpIizg2M
-         d2eHLeUJ951FByiVyd8YHVzON6k7x3sgRl3UvcT1kslqapQd5nD1v+kEhHuHB5mwRJeC
-         rnBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745432508; x=1746037308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NhlqINkYpZZBLzVdSPqg22TCWxPQvkr1ZzGoXFf5r1M=;
-        b=qC4EK7DTEeLMraOJqBcJw0BpHN172I5cyFjE4Y6lRZH44QaxlgvGcs8bQdLLKzBsTk
-         qVvsbRHZK7OW8DsGuB/ZnZn7xNfWG7VO1Jg1u0qvfIHthikEt5uIrDABGMWvSbQhZZe3
-         OcLGvbQK5Z7k18pSQHGUHH6sTdGcVrmfcuhBpkfuNw0NrY6kvtD7mXng2dRix0k6Gmlq
-         t/8lgeIzXfFzzBaZU5cOTOgOe1pxc8pinOpHm3FCr+T8TDY+C6UQpOoVZZa7tcqz7vRt
-         DuLQL+s5IsFExIjLEeThytBMZ/E8ZUt9bzb3XQpVMp55i3c55qqn7EaLWuyVNqPnNE11
-         a/Lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUOYKfKTZZZzdUvlXzkc1h3TAkj3N/IiTvuMjD81/Tjg7ki2X3x1gt1WjcEt8oIOgo2aIE=@vger.kernel.org, AJvYcCVrRN1dM0f/sOstAO88FMHdQfmGfPEDGoymUeKnYXfyLBsuw3SJgyDcEbrU1qJ+IdopraM92qfODv3BiqeVCe9wPkSx@vger.kernel.org, AJvYcCWTn8SUlCBeGXT8asANdWme4bEp+suOB/LwYGcuS7uqM/mkMZihhCVBLHYLq5/ojCqA2QZrFkop@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHlvyDj45bOy4ndQpGp7Wsb4q7Zbnys3mz6d/L35mpn/Lw3b9N
-	65DQSyENTbaWT6w2WzOBjf4JrqIKdekrf9EkxNbUulNoDXMz/3iTRL6YvBvPdN/CDcq4kGQm99a
-	C4MkxZQ8YfQ9nPvrieSdbsbfbm6YtmkWu
-X-Gm-Gg: ASbGncuUBlWEiDPtt3sVqswjuEtHaCNXl0tlCKgPsp+Ng1a9t8r6jhXkoNCjL6fJkCr
-	K6r//g21mgQJyekqnUIr2gCj9quhZf1Hh7TrxBTbg5iH32Heexr+jhAMh628mygUspNkS4AEDFK
-	jMrMYe/Ta7IcTAfGHXcS+T/orZD4em8ud2sCw3FQ==
-X-Google-Smtp-Source: AGHT+IH5HySMSVpWQQiLuLBm1KmGGdctAt+lPhEDR0CAkLYpQS/qWp3FPfJC0WRecO9a0ItoWqyOqKqk1/lb4NE26vI=
-X-Received: by 2002:a17:907:26c3:b0:ac1:f003:be08 with SMTP id
- a640c23a62f3a-ace54e6c8ecmr12271066b.12.1745432507647; Wed, 23 Apr 2025
- 11:21:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YIcrqmnP"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NFWbV4007064;
+	Wed, 23 Apr 2025 18:21:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=PWWju0
+	lVKK/tapHVY9eYrl1sK2Ap+YQ8ODhkeluNm5o=; b=YIcrqmnPhBckVUR2GZ0zar
+	vBrmDagpuzE3c3vtkrP/3AS9A3YKYRB6ThBNg/nS0TBrvUIa7znPvvmQlHMDsWtj
+	PG2194ADUFFSJs19Ov4A3Zqvr5MXmNzjOhp8P8p6XtbDL63PvJH7aFzi2izGZvOu
+	eavpRUQ9IBToSThhxDpxt/N95l4XQNBVoUDSFqczmpTL+/1qJubSYhsPCgIuzRcq
+	5cHNh3KMiBnzmDxxJFbrPPlMOiVkPgiVIXaCvKqayafVXihWOmWPu8IOH+cYGVOd
+	TJtHiHWxM6D/Cmz/xNuiIZGzxd6vAaJ5hjbqTA1/rMNfZPPAZwvkms1p+D723x4w
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 466psnv3bh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 18:21:48 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53NEwVKq001305;
+	Wed, 23 Apr 2025 18:21:47 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfxvann-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 18:21:47 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53NILko323200312
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 18:21:46 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8482058055;
+	Wed, 23 Apr 2025 18:21:46 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E74A458063;
+	Wed, 23 Apr 2025 18:21:44 +0000 (GMT)
+Received: from li-43857255-d5e6-4659-90f1-fc5cee4750ad.ibm.com (unknown [9.31.96.173])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 23 Apr 2025 18:21:44 +0000 (GMT)
+Message-ID: <ce242647f121c90047b491fbe7305603dcfec6fd.camel@linux.ibm.com>
+Subject: Re: [PATCH v13 3/9] kexec: define functions to map and unmap
+ segments
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: steven chen <chenste@linux.microsoft.com>, stefanb@linux.ibm.com,
+        roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+        eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+        code@tyhicks.com, bauermann@kolabnow.com,
+        linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+        James.Bottomley@HansenPartnership.com, bhe@redhat.com,
+        vgoyal@redhat.com, dyoung@redhat.com
+Date: Wed, 23 Apr 2025 14:21:44 -0400
+In-Reply-To: <99e18151-2866-4646-8532-3d10d63279b9@linux.microsoft.com>
+References: <20250421222516.9830-1-chenste@linux.microsoft.com>
+	 <20250421222516.9830-4-chenste@linux.microsoft.com>
+	 <f2f4a873489b28d3baa4ac1f6073a49fe888d120.camel@linux.ibm.com>
+	 <99e18151-2866-4646-8532-3d10d63279b9@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418110104.12af6883@gandalf.local.home>
-In-Reply-To: <20250418110104.12af6883@gandalf.local.home>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 23 Apr 2025 11:21:25 -0700
-X-Gm-Features: ATxdqUHQ9RunUOfE64hoOmU3UUAYp4mJ_IcDoTqKsW5Uram8ZVu2YLxD24VGhnk
-Message-ID: <CAEf4BzZfoCV=irWiy1MCY0fkhsJWxq8UGTYCW9Y3pQQP35eBLQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] tracepoint: Have tracepoints created with
- DECLARE_TRACE() have _tp suffix
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, David Ahern <dsahern@kernel.org>, 
-	Juri Lelli <juri.lelli@gmail.com>, Breno Leitao <leitao@debian.org>, netdev@vger.kernel.org, 
-	Alexei Starovoitov <alexei.starovoitov@gmail.com>, bpf@vger.kernel.org, 
-	Gabriele Monaco <gmonaco@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: H_6UjrJAn-ekq9km0DL4j7ghNYsSHKdm
+X-Authority-Analysis: v=2.4 cv=BIezrEQG c=1 sm=1 tr=0 ts=68092fbc cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VnNF1IyMAAAA:8 a=D4UNMVMJWTiIgZffb2gA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDEyNyBTYWx0ZWRfX6apwzi04KfUn D31XsCfRues7E9xY4+jvJThcr8o30g8jPw8EserUGcyB+lelLdo5Bd8b9gcRZ2W4buyC0Cw3Mf9 4g47DjR5t4cxrNDpAo3DS43MIScIwVqYKw52VEtQJoVspAT5Gz987DBQNLrOxejoniJXxzBH/zB
+ XZQiJKUfnVr/aCIFGogwAbMNL5gPc/EEHcPNqe4ReRvj+Lc8wWboie68vsTrDUh1BilYCXasP/I wVAkK/5gt7pUQqP3l/He9O7g3lX96bkwktJODA+SBYFYYOPrJtfDhR23qhjau4Arn0quNseHhP0 ugRiJvGnO5VMSRDpfW10npIo0R7RsjYk/o6jt+WSOzNHkfmXgJQx2TMMg8ooHFoCk4sXQ1T5iBC
+ 0grY+/IKSbcowHvfoIqPBcFTX6HtWWIGj5OA7offpBmfY3lEXF9j2Nj7Q4NMi4bpAQgKti+E
+X-Proofpoint-ORIG-GUID: H_6UjrJAn-ekq9km0DL4j7ghNYsSHKdm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_10,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 phishscore=0 malwarescore=0 clxscore=1015
+ suspectscore=0 lowpriorityscore=0 spamscore=0 adultscore=0 bulkscore=0
+ mlxlogscore=924 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230127
 
-On Fri, Apr 18, 2025 at 7:59=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> From: Steven Rostedt <rostedt@goodmis.org>
->
-> Most tracepoints in the kernel are created with TRACE_EVENT(). The
-> TRACE_EVENT() macro (and DECLARE_EVENT_CLASS() and DEFINE_EVENT() where i=
-n
-> reality, TRACE_EVENT() is just a helper macro that calls those other two
-> macros), will create not only a tracepoint (the function trace_<event>()
-> used in the kernel), it also exposes the tracepoint to user space along
-> with defining what fields will be saved by that tracepoint.
->
-> There are a few places that tracepoints are created in the kernel that ar=
-e
-> not exposed to userspace via tracefs. They can only be accessed from code
-> within the kernel. These tracepoints are created with DEFINE_TRACE()
+On Wed, 2025-04-23 at 08:29 -0700, steven chen wrote:
+[ ... ]=20
+>=20
+> Hi Mimi,
+>=20
+> Could you help to add
+> Tested-by tag for this patch set: "Tested-by: Stefan Berger=20
+> <stefanb@linux.ibm.com> # ppc64/kvm"
 
-The part about accessing only from code within the kernel isn't true.
-Can we please drop that? BPF program can be attached to these bare
-tracepoints just fine without tracefs (so-called BPF raw tracepoint
-program types).
+Already done.
 
-But I don't have an objection to the change itself, given all of them
-currently do have _tp suffix except a few that we have in BPF
-selftests's module, just as Jiri mentioned.
+> Reviewed-by tags "Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>" to=
+=20
+> patch 1, 5, 6, 9.
 
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
+I'm pretty sure that Stefan added his Reviewed-by tags to the entire patch =
+set.
+As soon as we hear back from him, I'll add his tags.
 
->
-> Most of these tracepoints end with "_tp". This is useful as when the
-> developer sees that, they know that the tracepoint is for in-kernel only
-> and is not exposed to user space.
->
-> Instead of making this only a process to add "_tp", enforce it by making
-> the DECLARE_TRACE() append the "_tp" suffix to the tracepoint. This
-> requires adding DECLARE_TRACE_EVENT() macros for the TRACE_EVENT() macro
-> to use that keeps the original name.
->
-> Link: https://lore.kernel.org/all/20250418083351.20a60e64@gandalf.local.h=
-ome/
->
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/linux/tracepoint.h   | 38 ++++++++++++++++++++++++------------
->  include/trace/bpf_probe.h    |  4 ++--
->  include/trace/define_trace.h | 17 +++++++++++++++-
->  include/trace/events/sched.h | 30 ++++++++++++++--------------
->  include/trace/events/tcp.h   |  2 +-
->  5 files changed, 60 insertions(+), 31 deletions(-)
->
+Mimi
 
-[...]
+>=20
+> Thanks a lot.
+>=20
+> Hi Stefen,
+>=20
+> Thanks for your help all the time and sorry missing tags to show your wor=
+k.
+>=20
+> Sorry again,
+>=20
+> Steven
+>=20
+>=20
+
