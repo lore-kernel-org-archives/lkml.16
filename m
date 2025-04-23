@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5586F18D63A;
-	Wed, 23 Apr 2025 07:55:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A53327465A;
+	Wed, 23 Apr 2025 07:55:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394927; cv=none; b=WG02FWidjI5dmQmcYJr/l/O+QyN/0bnH+BSoegZlQc3biOwS5kO1ImIUFgO96Hqotizx2+rRxV3kCtcQ5jDYNrfJV5YcrjKfJomYqNk6UAzt1K+SiR/S+MZDLPLOT8iluJ7SXvJOXmJPp6nDTNsAjvzRYP1/ic/kFwVOmH7qljU=
+	t=1745394932; cv=none; b=sEgckDODHVECKyFji3rx2D6AJe9h903YGHZELVDfbDobOlrnWUxNO/lS4A8D1bokvaZVt94bwOa0CBMgLn3wp98wptLEzhz9CSeSp2lYUIw3QUfTQy102W1ivzy/tbfmnnG3ICQzkSBq7UUI46RCEJ87VyH/5+SAwF8NEKsfG/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394927; c=relaxed/simple;
-	bh=pRlQuKwYT6jW8iLQvmqLXqutr9MP9tCZHFL43ftBrws=;
+	s=arc-20240116; t=1745394932; c=relaxed/simple;
+	bh=cVxI83a5H3NBHRTkCPsUOKpoBtLBr5HobqXAAjYwo14=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WGzMm4+ntyvELV/+eNX9ilhWztfLvq+SJXknqx5NN9S/iRYyUy5P309H46VYupi9SBANvXEAvZjorfKwc7ZORCOiExN6un+Lmcw3PNz/O0WVPjh8FWJC93IhfQ727Q2AjngBFudWYa9aRQwEbHUrWTZpjYBvJyWYITWuBVUz93g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNyBMOBN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=RLrvmbEgo0tfLy8ZzmFrQKBMnJVzSKBuNPmrBbq25OiYdXjGwCXNusnh66t9jrUBi5Oy/W5ttu93/MbYmuhKZ6iBJNkB/QDEe7AUbEaN39pUmFIHQyELFuuv+ClCyaC5ObmLxwkgeB4/Y0IoWhiZIh/12P4UojfrhE/uphJV93s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=en5T9sv3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNyBMOBN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98C53C4CEE2;
-	Wed, 23 Apr 2025 07:55:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="en5T9sv3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AEDAC4CEEF;
+	Wed, 23 Apr 2025 07:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745394926;
-	bh=pRlQuKwYT6jW8iLQvmqLXqutr9MP9tCZHFL43ftBrws=;
+	s=k20201202; t=1745394932;
+	bh=cVxI83a5H3NBHRTkCPsUOKpoBtLBr5HobqXAAjYwo14=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nNyBMOBNWQdYVnm+yOBa4Kty5N0oznkPpIkB7ty8MJ/lk8ZgKEqF0mUZEoHKgHimj
-	 zesi+6EYwxv5lY/yQ2AuE24sg2+wZh0Bxo1VjFfYfmlJC2JrfUpMTwyYVbhELImytg
-	 w61Fygzpg306la6O0su98fiXogzKhtL2JEki7XkSoQH+nBkm6WDPeieYsKwUtdMgeb
-	 s+1QPK2y9sn1z3kc7ylnqNwVNQwbfPcTBO1PAOWlg8LOIqiKjxYJg0nPv22jwjUsRz
-	 QhsCYA3y0wBAJHX5c7zE4svo3pd7whUty3pVcKSKQ8x3J118VmiwE01ZzYHShVm8XM
-	 N4+qFdcJVKovg==
+	b=en5T9sv3f90xLk7QSt/JZ4RqBD0eC179RcJR8g2s3jorGigXUaWvKmtfxc01I6Qp+
+	 lRT1mEmhFkMfrS3NwrbsNXMRg3z3pavgzusvlXvTsmu3vo29wlgp9657Gt84Wb5Ga1
+	 UCz5lynaE9ML9vbpOzztRzUun4qTXJ1gQzaO52x+TMdUw25JdPHgLMu1gRY0LfbSUe
+	 FTDmiRV6506e+BbmbjBq6sf3Ogstt5BCWCfRtnMh2L1y2slG9GmTOojztvsyclXvcf
+	 lF7ih6QA09K652NNvjiyeXGf20KRt0GI1MbkweLvWSmYuoRNXqFXOFICKrR3CGmRxI
+	 6/Td5+YmCqYYw==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
@@ -45,9 +45,9 @@ To: Jaroslav Kysela <perex@perex.cz>,
 	Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 15/28] ALSA: vx222: Use pure devres PCI
-Date: Wed, 23 Apr 2025 09:53:33 +0200
-Message-ID: <20250423075346.45907-16-phasta@kernel.org>
+Subject: [PATCH v2 16/28] ALSA: trident: Use pure devres PCI
+Date: Wed, 23 Apr 2025 09:53:34 +0200
+Message-ID: <20250423075346.45907-17-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
 References: <20250423075346.45907-1-phasta@kernel.org>
@@ -63,31 +63,31 @@ pci_request_regions() is a hybrid function which becomes managed if
 pcim_enable_device() was called before. This hybrid nature is deprecated
 and should not be used anymore.
 
-Replace pci_request_regions() with the always-managed function
-pcim_request_all_regions().
+In addition, the request function's name parameter should describe the
+driver, not the device.
 
-Pass the driver's name as the name parameter of
+Replace pci_request_regions() with the always-managed function
 pcim_request_all_regions().
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- sound/pci/vx222/vx222.c | 2 +-
+ sound/pci/trident/trident_main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/vx222/vx222.c b/sound/pci/vx222/vx222.c
-index fdb039896205..693a4e471cf7 100644
---- a/sound/pci/vx222/vx222.c
-+++ b/sound/pci/vx222/vx222.c
-@@ -123,7 +123,7 @@ static int snd_vx222_create(struct snd_card *card, struct pci_dev *pci,
- 	vx = to_vx222(chip);
- 	vx->pci = pci;
+diff --git a/sound/pci/trident/trident_main.c b/sound/pci/trident/trident_main.c
+index 8039f445bee2..4e16b79d6584 100644
+--- a/sound/pci/trident/trident_main.c
++++ b/sound/pci/trident/trident_main.c
+@@ -3533,7 +3533,7 @@ int snd_trident_create(struct snd_card *card,
+ 	trident->midi_port = TRID_REG(trident, T4D_MPU401_BASE);
+ 	pci_set_master(pci);
  
--	err = pci_request_regions(pci, CARD_NAME);
-+	err = pcim_request_all_regions(pci, KBUILD_MODNAME);
+-	err = pci_request_regions(pci, "Trident Audio");
++	err = pcim_request_all_regions(pci, "Trident Audio");
  	if (err < 0)
  		return err;
- 	for (i = 0; i < 2; i++)
+ 	trident->port = pci_resource_start(pci, 0);
 -- 
 2.48.1
 
