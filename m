@@ -1,146 +1,98 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80008.amazon.com (smtp-fw-80008.amazon.com [99.78.197.219])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91FCA28D843
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:17:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34E5228CF6D;
+	Wed, 23 Apr 2025 18:17:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745432231; cv=none; b=HXO23N0DYm0+7OuyhxPiAVLvs7Bj9dvcx2q/d5UMGEul2KpLeXuJ4Y0+wVB38v2ZrJtdbcKuq6xFEWpW/urvoSg6cpVL7mT4RokB/mBWQvqEIm7VwjKgCRCqQsrZt6f3tfVFg99+Ylj4qsw9SL8YXZZ91zkDAVCe3idSQCiXAok=
+	t=1745432249; cv=none; b=QPPzrafjCfOCEAm4tdLta/UDSQokXkwO/wsfvNrjfqw4Oyuy3EO66wdtfDI2cHfj+ws5Ma8DNXckSkryfYYzIXot2rQry4AI4A1JL8bYNFMuGg45S2iT4kfqhK5MpEHZ6c+HeTjZdv+fc+NjhWK5+xgXg0brxUnwfX/ik/5vzbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745432231; c=relaxed/simple;
-	bh=ZwDA7dKaeXsaxB3idhnk/64Z7wWQuL5MluTl3MVfp1Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=obcYWuYpIanxo89eisa5RQ23STfcF8x8lBVn7uDgxH11ipRNZsbBvFwaFZtvIS3JuL/A1WNx+jN1H4m8bPUOQXJJntUEsYe90ZTfE/tLJsNf8zSA5yqdRPwJfnEjhhl/rHCpS3O1s6cZLKZkpdDtTH3NQneAqIzPWqYNNCcCZWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=dzaUhanA; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1745432249; c=relaxed/simple;
+	bh=cWViDUuxcwp4/QVdZ3TBEnvofiMGdKFWJSsT4185cWw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BARUX7S+r23m3xmP1OsUOqXEcrQtXwm5UKcpNuoBRZfNvZc7WKrV0U7eS21m3atElr8zjhTJt+ZyOFtJd2fFUI+HWMFjTGkJ0LF7jKq6KcPbM6N9GQfji40a5lIkiSsch8Hxq3ytXiqrBz6nLIodozBi/Hthn9y0aEZfSaVCZ+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=H3D2KdsW; arc=none smtp.client-ip=99.78.197.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dzaUhanA"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47663aeff1bso1561681cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:17:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="H3D2KdsW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1745432227; x=1746037027; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jJ8s1tHlAlZHZLBcym34Knli5JlhGSSEZ8s9pr2exho=;
-        b=dzaUhanAGnWmjNzX6EyAJDr56KrTb45PN/EThCXWubagFRugBhYwJihgbUIyGS7Oy1
-         7GCzjFgYzXJUcXpS8X+v0qNySEabX0xTyun1iMVdJj3qj7/oFbt6x+cURruzijRAYdDk
-         zJXE80/VTSJyoH+CBJNYr9Vdstbr/gur7d8cvS2fLvOMqEGRPHY5k6Y6gLOO5/5May8s
-         H49s9x4oaXHEAdgo7tHaFvKLT9alL5RGrDTb+nerpdzTtDdRYFk429vfBzWlKvfpumte
-         pXaxpLOcpJsZjP3xS3wk5BUoqNCzCRTm/fkrFCf4Nifmgv7OBgK+QHEISYKhL//7rMfK
-         9lMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745432227; x=1746037027;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jJ8s1tHlAlZHZLBcym34Knli5JlhGSSEZ8s9pr2exho=;
-        b=beVF6uyAYzEV3fNecWJhqvsU8RkDjuxzYu0mGuNiv8UVhw2SskVsEzxT0RVbn+rYsV
-         oUZDwkSLbMb4chfBA9IfbqGKlp/u6zGX/QKy79liAJzt2JMPu9ItwhhAbcMuEsZek3mM
-         L5o6ur5muxq+P1d77vjCMEC4z3X1BZItQWno9ULf7qgjGgjG0m+Cpo4qEZ08+gHiePgD
-         fXQqCTrwuHkaVDDPL6J7T4vc3I2vfWEUW3+x0OSs/G3ZcbIqr//f3fZXqgol6agLClYo
-         CCUiAIk+0xxq7BSiYKKzG2PxvCZHsOViV/e6NIbPrlbUt/+ImNtbMrzx9KjMBJ6hJMAA
-         Br3w==
-X-Forwarded-Encrypted: i=1; AJvYcCUuNhne+iP77gA4SlRTLASDRdL8ZD/w7AoWad/1yIduvPcqmgjPLq0Qr3+8+0gwEW8Gvg8ZTbsTl3xXwrc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxyfgn9zyUzkk7Eq1WOTYmaQ3mLzZJ+Igdw01dSNDLO/Td/hebH
-	nwIO6xI601qeLwzvGw86ESeblXIIexDYhSytVyAyLfbJmg2bDlkOaUuXpn95EF8=
-X-Gm-Gg: ASbGncvkUftCy0fXN9nCNGgEoBZ3YpKtCKbb4/VIhovhkBXcyumc/ZegDRXNbOg8kvJ
-	YmD1n6JugmHaBMBnQ+Uf6h5/AHP+5Xb7LPBDHjsTP1gUSQ6NxIfbK/pPUHQW9vTcPQe8y1pZOvw
-	anv1GugcolxwUT7utTTb6fnl0BLCz6bvYpyo/H0EpZQyzW7wxSw3aTwhYy5n8gytfHeEL5+xjxV
-	GzAoRqSb0CzsC8/HQsD5a9CKum9V7cCbDPWuxJUMO+mHf+8/lPYK4rSXKvQA8hDy9WCZOEppQUm
-	lBVW4fXR0HHE2B5+0XUTZkWUcUAqBR+L7O+ERLHpHA/zLFj5j9fi7c2W117eSqDnUOwAQpGBcdg
-	FRjcrIDoEiAywh8U7Poc=
-X-Google-Smtp-Source: AGHT+IECPlcFTYHnkwAKKk3B5MzEp2J+Q23qmmOis8VDE/Xdu9ZIh9LzQbjBc0+xoVESECxntDW6lg==
-X-Received: by 2002:a05:622a:d4:b0:476:95a2:64a1 with SMTP id d75a77b69052e-47e76175c16mr4073601cf.17.1745432227237;
-        Wed, 23 Apr 2025 11:17:07 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-219-86.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.219.86])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ae9c16dd2sm70921841cf.14.2025.04.23.11.17.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 11:17:06 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1u7eeg-00000007Lzi-1CSb;
-	Wed, 23 Apr 2025 15:17:06 -0300
-Date: Wed, 23 Apr 2025 15:17:06 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Mika =?utf-8?B?UGVudHRpbMOk?= <mpenttil@redhat.com>
-Cc: Leon Romanovsky <leon@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>,
-	Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 10/24] mm/hmm: let users to tag specific PFN with DMA
- mapped bit
-Message-ID: <20250423181706.GT1213339@ziepe.ca>
-References: <cover.1745394536.git.leon@kernel.org>
- <0a7c1e06269eee12ff8912fe0da4b7692081fcde.1745394536.git.leon@kernel.org>
- <7185c055-fc9e-4510-a9bf-6245673f2f92@redhat.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1745432248; x=1776968248;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yqfu2rj6ntU/1h7MczMuErOve4BDb+YoGDcVuGCnHY4=;
+  b=H3D2KdsWAzESkCW3Omfcr3LkCjN1qH/Xn7KeTPmf0T28exm7Xiec09lm
+   NGLXxLUXsIupKRIr7brrym7ClWIlG0tDc1PhUTsQqizROuurxJeHffUVR
+   IOkHY+6QB3Nc0nt3ZnRRiJIafQDoJCa8R1q1nGoTlIiVxM1DlzKTaoiUv
+   k=;
+X-IronPort-AV: E=Sophos;i="6.15,233,1739836800"; 
+   d="scan'208";a="190040270"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80008.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 18:17:26 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:2327]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.13.240:2525] with esmtp (Farcaster)
+ id 44cf353b-ca45-47b7-b2b2-94e0c0015865; Wed, 23 Apr 2025 18:17:26 +0000 (UTC)
+X-Farcaster-Flow-ID: 44cf353b-ca45-47b7-b2b2-94e0c0015865
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 23 Apr 2025 18:17:25 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.106.101.42) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 23 Apr 2025 18:17:23 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <johannes@sipsolutions.net>
+CC: <i.abramov@mt-integration.ru>, <kuniyu@amazon.com>,
+	<linux-kernel@vger.kernel.org>, <linux-wireless@vger.kernel.org>,
+	<lvc-project@linuxtesting.org>, <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] cfg80211: Restore initial state on failed device_rename() in cfg80211_switch_netns()
+Date: Wed, 23 Apr 2025 11:16:40 -0700
+Message-ID: <20250423181714.24628-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <4a91f731c49d3449632f19dcf4a1a8f5a9eb847b.camel@sipsolutions.net>
+References: <4a91f731c49d3449632f19dcf4a1a8f5a9eb847b.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7185c055-fc9e-4510-a9bf-6245673f2f92@redhat.com>
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D032UWB001.ant.amazon.com (10.13.139.152) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Wed, Apr 23, 2025 at 08:54:05PM +0300, Mika Penttilä wrote:
-> > @@ -36,6 +38,13 @@ enum hmm_pfn_flags {
-> >  	HMM_PFN_VALID = 1UL << (BITS_PER_LONG - 1),
-> >  	HMM_PFN_WRITE = 1UL << (BITS_PER_LONG - 2),
-> >  	HMM_PFN_ERROR = 1UL << (BITS_PER_LONG - 3),
-> > +
-> > +	/*
-> > +	 * Sticky flags, carried from input to output,
-> > +	 * don't forget to update HMM_PFN_INOUT_FLAGS
-> > +	 */
-> > +	HMM_PFN_DMA_MAPPED = 1UL << (BITS_PER_LONG - 7),
-> > +
+From: Johannes Berg <johannes@sipsolutions.net>
+Date: Wed, 23 Apr 2025 17:44:45 +0200
+> On Mon, 2025-04-07 at 15:53 +0300, Ivan Abramov wrote:
+> > Currently, the return value of device_rename() is not acted upon.
+> > 
+> > To avoid an inconsistent state in case of failure, roll back the changes
+> > made before the device_rename() call.
 > 
-> How is this playing together with the mapped order usage?
+> This kind of seems complicated for something that ought to not happen
+> ...
+> 
+> And also (+netdev), what do we do in case this is called from
+> cfg80211_pernet_exit() - leak the whole network namespace because we
+> couldn't allocate memory for the name? That seems counterproductive.
 
-Order shift starts at bit 8, DMA_MAPPED is at bit 7
+default_device_exit_net() does BUG() in such a case, it doens't
+assume -ENOMEM as we are freeing memory in the netns dismantle.
 
-The pfn array is linear and simply indexed. The order is intended for
-page table like HW to be able to build larger entries from the hmm
-data without having to scan for contiguity.
 
-Even if order is present the entry is still replicated across all the
-pfns that are inside the order.
-
-At least this series should replicate the dma_mapped flag as well as
-it doesn't pay attention to order.
-
-I suspect a page table implementation may need to make some small
-changes. Indeed with guarenteed contiguous IOVA there may be a
-significant optimization available to have the HW page table cover all
-the contiguous present pages in the iommu, which would be a higher
-order than the pages themselves. However this would require being able
-to punch non-present holes into contiguous mappings...
-
-Jason
+static void __net_exit default_device_exit_net(struct net *net)
+{
+...
+	for_each_netdev_safe(net, dev, aux) {
+...
+		err = dev_change_net_namespace(dev, &init_net, fb_name);
+		if (err) {
+			pr_emerg("%s: failed to move %s to init_net: %d\n",
+				 __func__, dev->name, err);
+			BUG();
+		}
+	}
+}
