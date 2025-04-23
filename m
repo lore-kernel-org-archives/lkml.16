@@ -1,37 +1,36 @@
 Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51371A0BFD
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97E01A3165
 	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415513; cv=none; b=ZXbdnVsMS+Kx6cnzkYlgy5S8Uc5pBTNJTAaaytUlMS2xRZcsWUcqOceM0D5JHMFSvuRVPvgk4GMNt4oDXL6UWSqTe67e+CFCrBlVz03KI68LJYSp7jNYWxtoquyC4c0R1xJFZtQ4TaNnFcm2oCnVEnOl98cyOD9bdhafWQIWcbg=
+	t=1745415513; cv=none; b=NJ+bTXJboQa367V5XW0aAf9Y96nfT0OkqOC56mmanwZG794Jlb6r/tmrOevFwRFkONKa0Vyg6kfCYqdmGqdqPzFa2Y5SczlsWHXjwgfuAuZcDxm4SEGlPMMytaOjVpfuWuR2VZTvTcu6k2QEVjO55w79Om1n37xWI/igw8/olUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745415513; c=relaxed/simple;
-	bh=EdpzRbGYPaQq7CSxSZt7PPoOnmEOzdvFx9cKEIgBmkQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EV7jZrRLJUnB3f3AT/5ldElWbYNGSHG7pwdRqHHyJn4tb5VzVsFAk8uRFXy1GV+3K5IrNHjGaAEcoZ+FBB2uAQj2VjFoIwovPIT4xAEdcfZvJuJjs01fH0GDfSOOAEnvvja09iQOmTnrbBwJ5rSP7FwaCarCiOAn5n+ZJmmpf4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ELHyTWTw; arc=none smtp.client-ip=90.155.50.34
+	bh=/ny8+C0v+NSGF96Dv23SSTp1anixdtvMj/J2vLjN9vk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M2XpCDk4ursI0Up0TiaHj2Kj1EaWqIssDMF4BA+GQhFj2nwxKWyFHWrG6mrqwUPBXtTW+WDZP4VuPJU3HouyPZfeaRhPQ4DylqJsY6lLKdy8ZM6QKqYiWXBgKrDAou0LTWbaFyeukGQ3kj/d0XNQhlpC84yPE8at5JvvRpDxwCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CGlnf3Kl; arc=none smtp.client-ip=90.155.50.34
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ELHyTWTw"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CGlnf3Kl"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
-	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-	Reply-To:Content-Type:Content-ID:Content-Description;
-	bh=Q9DrO1JHwLaIt6bW4FlCMne9odphYqzBVZA9TwC5d4I=; b=ELHyTWTwfHf+2TH6xRVBmTjUpF
-	mtsx52hyXN1IeETj3AyY/nShlOo1qhFnu/mGq5rz8FXCP1FTrDpVnMW0CihtnzP6YGYn3MCI7iTZj
-	nyhgKEiqfyDYNFPdJ7fDe+YfhXTspEDcIybAXPRMvZEN9EudYqyXh154H81CKUWxBe1Cy0Evh9xcN
-	43r/+6rW763eJORToBRl6knbLz5hz1SRBKuIfoNtycSHpzd0dWAl/I5G/mfirqHK/qXtv7H20IK1D
-	MLwOGVkGUt/0olVUWbm3C0+Ej7GbXA7TtCtQ17QK9Svjw4Pr+lfWazarAyNc5YwRAr35vizU8X7d6
-	ZFFzWSFw==;
+	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Reply-To:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=1R2wcJ8WNozyVRB5Zez0LopaRMyXxGSmC5SqBu1VNhc=; b=CGlnf3KlkTK55NNfKmHL9MINWg
+	+8gBwwSBH8guIB5zf/6WnJ0xNk0PpV8AuYk6sWWCeuM5UOHzvEkf4+3PdGLNoF+qdj/MD4En6fCHH
+	wLnFpZtfBTTIZmrwVgZNhtNOnhino6tLdsvwH/cr6s2eHgiqY68/xqu2MZer9FESkr7VbTi9/kk5M
+	UqDG0CHFGaQkYQvHy1cUON8QERKW4HHD6f7mhnergDvcrwOPehlYSvRXotGZagqsaf0rHr1rVqnr1
+	NDy5QciXcB17D3HTG/e4u60Fa+eEtDCl8qCaogiQt+kS2Llcn4al/QnOM+c0j98lmcEPgopQiIqYy
+	w/sFi4xg==;
 Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
 	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7aIx-000000097Jh-2A4h;
+	id 1u7aIx-000000097Jc-1AzY;
 	Wed, 23 Apr 2025 13:38:23 +0000
 Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u7aIx-00000003JOw-1HUC;
+	id 1u7aIx-00000003JOZ-04bE;
 	Wed, 23 Apr 2025 14:38:23 +0100
 From: David Woodhouse <dwmw2@infradead.org>
 To: Mike Rapoport <rppt@kernel.org>
@@ -49,61 +48,67 @@ Cc: Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org,
 	Ruihan Li <lrh2000@pku.edu.cn>
-Subject: [PATCH v4 6/7] mm: Use for_each_valid_pfn() in memory_hotplug
-Date: Wed, 23 Apr 2025 14:33:42 +0100
-Message-ID: <20250423133821.789413-7-dwmw2@infradead.org>
+Subject: [PATCH v4 0/7] mm: Introduce for_each_valid_pfn()
+Date: Wed, 23 Apr 2025 14:33:36 +0100
+Message-ID: <20250423133821.789413-1-dwmw2@infradead.org>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250423133821.789413-1-dwmw2@infradead.org>
-References: <20250423133821.789413-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: David Woodhouse <dwmw2@infradead.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-From: David Woodhouse <dwmw@amazon.co.uk>
 
-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-Acked-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
----
- mm/memory_hotplug.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+There are cases where a naïve loop over a PFN range, calling pfn_valid() on
+each one, is horribly inefficient. Ruihan Li reported the case where
+memmap_init() iterates all the way from zero to a potentially large value
+of ARCH_PFN_OFFSET, and we at Amazon found the reserve_bootmem_region()
+one as it affects hypervisor live update. Others are more cosmetic.
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 8305483de38b..8f74c55137bf 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1756,12 +1756,10 @@ static int scan_movable_pages(unsigned long start, unsigned long end,
- {
- 	unsigned long pfn;
- 
--	for (pfn = start; pfn < end; pfn++) {
-+	for_each_valid_pfn (pfn, start, end) {
- 		struct page *page;
- 		struct folio *folio;
- 
--		if (!pfn_valid(pfn))
--			continue;
- 		page = pfn_to_page(pfn);
- 		if (PageLRU(page))
- 			goto found;
-@@ -1805,11 +1803,9 @@ static void do_migrate_range(unsigned long start_pfn, unsigned long end_pfn)
- 	static DEFINE_RATELIMIT_STATE(migrate_rs, DEFAULT_RATELIMIT_INTERVAL,
- 				      DEFAULT_RATELIMIT_BURST);
- 
--	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
-+	for_each_valid_pfn (pfn, start_pfn, end_pfn) {
- 		struct page *page;
- 
--		if (!pfn_valid(pfn))
--			continue;
- 		page = pfn_to_page(pfn);
- 		folio = page_folio(page);
- 
--- 
-2.49.0
+By introducing a for_each_valid_pfn() helper it can optimise away a lot
+of pointless calls to pfn_valid(), skipping immediately to the next
+valid PFN and also skipping *all* checks within a valid (sub)region
+according to the granularity of the memory model in use.
+
+https://git.infradead.org/users/dwmw2/linux.git/shortlog/refs/heads/for_each_valid_pfn
+
+v4:
+ • Collect Reviewed/Acked/Tested-by tags
+ • Fix rebase mistake reverting FLATMEM cleanups
+
+v3: https://lore.kernel.org/all/20250423081828.608422-1-dwmw2@infradead.org/
+ • Fold the 'optimised' SPARSEMEM implementation into the original patch
+ • Drop the use of (-1) as end marker, and use end_pfn instead.
+ • Drop unused first_valid_pfn() helper for FLATMEM implementation
+ • Add use case in memmap_init() from discussion at 
+   https://lore.kernel.org/linux-mm/20250419122801.1752234-1-lrh2000@pku.edu.cn/
+
+v2 [RFC]: https://lore.kernel.org/linux-mm/20250404155959.3442111-1-dwmw2@infradead.org/
+ • Revised implementations with feedback from Mike
+ • Add a few more use cases
+
+v1 [RFC]: https://lore.kernel.org/linux-mm/20250402201841.3245371-1-dwmw2@infradead.org/
+ • First proof of concept
+
+David Woodhouse (7):
+      mm: Introduce for_each_valid_pfn() and use it from reserve_bootmem_region()
+      mm: Implement for_each_valid_pfn() for CONFIG_FLATMEM
+      mm: Implement for_each_valid_pfn() for CONFIG_SPARSEMEM
+      mm, PM: Use for_each_valid_pfn() in kernel/power/snapshot.c
+      mm, x86: Use for_each_valid_pfn() from __ioremap_check_ram()
+      mm: Use for_each_valid_pfn() in memory_hotplug
+      mm/mm_init: Use for_each_valid_pfn() in init_unavailable_range()
+
+ arch/x86/mm/ioremap.c              |  7 ++-
+ include/asm-generic/memory_model.h | 10 ++++-
+ include/linux/mmzone.h             | 88 ++++++++++++++++++++++++++++++++++++++
+ kernel/power/snapshot.c            | 42 +++++++++---------
+ mm/memory_hotplug.c                |  8 +---
+ mm/mm_init.c                       | 29 +++++--------
+ 6 files changed, 133 insertions(+), 51 deletions(-)
 
