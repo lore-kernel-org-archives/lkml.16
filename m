@@ -1,106 +1,106 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C393E26F47F
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 672F7268FC9
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396278; cv=none; b=C0577VPqs630Vjq5ahQCeFeu4klaixB/kMwb3AXYt+jb2scK8B5/BQQOCOqoUnMdQtqFkAOlgLzWc+5JJOsYj5JJUYp8mJJ7WedzMG74+JiUhsHmNrt6TpbXwfomUucWoGKCubuzMy0EH/hEBFj/yokonFJXR0sR8hDnSLOtYJw=
+	t=1745396323; cv=none; b=Me5bktoKF6aCaJ0e067PCBTpP+z1kZbQQjkI/U02E5yWyBHr3JCib5xDGz4pIO5lzC86QJbnkrJPb7bT9X9Sb7B6/9Sv3YKh+BBd+lxxIbiEKwS4iPqj04FfRy+57gFJAc4XTg5+wjAccqEHFBlHaliqCEu8itasWb43c+Zn/X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396278; c=relaxed/simple;
-	bh=oj5Razb0evj7qw4mlQSndhKoTaML66NQzQjFs2IHgj0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hEIzZcphdKfIEAKNlobfP/9lTe8RbcLoZ634bSc2B4T/0lKsKGU1TqLh7RSuXsL08sl5kM7l3Opap0p06Im8nf3i7Pna5tUHXOMm9fDAuXbRCIgw3wLqNOa4ADJW8BPml/BMXzUywUF7YvQPwA19rrNyobxXoP+UsvDsoPycZpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nbNcV99f; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745396323; c=relaxed/simple;
+	bh=cXmDa/smw3SFfJ5+0v25YOs7nGxAYzIsbMas66vAH5g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IW5d5HST+Sn8NbFraciFSgchsKHZkHC6hbY6YvyBW0rzWyOJ6pyQzvxShpa3v0awWpmiL2vGs7iLAzEG6wusNKgR3bRuDJk2ePvcLY5qp5PQ1ATSVcHQIpgmREBNMQTkF+qnKKocm1xRWJBWackuvkpI+w927ABD/yTj/bA7Nw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=casper.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=KWGOaFJX; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=casper.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nbNcV99f"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso5075087f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745396275; x=1746001075; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=eJlsow9pFCETuSY99miJym+mwybzmiktgCsSrbNRcQE=;
-        b=nbNcV99f3Ge2+RvsUzIS+KXozOhDCyHgqrm4E0UY94qA3WuYLz2Q/f0v1sd2+FuMYe
-         Px3UQxcVCOyl2VNRaXMyjMgZ72CDecXBDkzmAJRsdrcbFGJEKy9AAxh/U8pVbfxT3LL7
-         e2MS8TuChfC8UTgMVl/cjGsYX6VXv8AkzhxtrqzWT0zyoEEskVITY4QAylOVC/LzQ+K2
-         0SX2ukAr6f/vmdcYGCRv37h8UD4FyZ+G2IWQH4bcdMliRJKANS2vdcQ+z8MOxPFbJUsl
-         /KiKzOR4W2Gdrl8+lNWMQBweHNdtCoEetjWyzoO4XSZuypi9M+Ap68L6uN+k02n7vCgw
-         eAWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745396275; x=1746001075;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eJlsow9pFCETuSY99miJym+mwybzmiktgCsSrbNRcQE=;
-        b=WH0jU62LSYCYkbuzfUYc0ujEXv7aB44CFHs/2QK2/Ckr8ztK6Czp2mvGIcX0fagM7A
-         HBTwl03AGrQZGG9ZfegBiaFn0V18X02z36N9xiidnZwtRKM0MQTRyyz3jkHwvpbwknas
-         yltdSglUoS/rgCOKTmYribF75ghjR6UX9nquEOaDNPKPQsfW9I+je/14FLSCFJQhsY9D
-         2j6WOQrWrdGfii71k94gHY05xdhkJM8ah8r4Fs6BHvwXtGwqYT00PZm3ej4IrRWsxD1U
-         u9kSErvyltwss2NVxedcuh791Hu1ommGDcaemSX3l5rU7/NLad7ogLh5KymD4Vd4btJf
-         +MDg==
-X-Forwarded-Encrypted: i=1; AJvYcCU/6zSq4N25PZvt6+VbVsz9JCRI2iGjH0le9k6NYvhIDsLHp3Z3RhcaPLeoZwb7ETnc6Y51Qd6TBx7KQ98=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJZlbtNQRP9ASJgu30cOIjJ2lE1kyV1g1RbVa8Thu+EjYpZJOA
-	kS96Cem7KqcEs82q25iDL/ne4UEXM8B1OYxOjHXjv7/eHooDXb7NV2iU7IhGvv8=
-X-Gm-Gg: ASbGncvvbS+VAEJYFaU1tI0XpoAnHTACtdGIxQ+cXqTqWn1Yiw62QXcq+2wbolTXz0w
-	WqDQHlOHhOSIAEYOvXZf0kqxpSXVhLDpzSGDZmwwFXtaEq6s3jHvj3+azOf6q1R/Cl1KnQQgR6h
-	8jzZS0kRD4KJDzxkmEASh+mPMIoG9jmDoFokBzpg4pEklq+Cmg1F00N3hvGo3G4oAz6ysuDJ558
-	89L8mB6e4njrfAFgxzCR9HKhpCpbgtVX50o1PPiBMPwq5DUA+TNmohW2lmgua+TLDzZbmJ1fvob
-	YoGMeesSyyWsTZuypGfI+pAIZpC+TtYppYa7DcimuKv/Yw==
-X-Google-Smtp-Source: AGHT+IGFDsGRWEWEl41iqXxk8aBjeIQESD7eXixSYt8kxgOh7t6MkCbRrpyXFS7pLyu3bxpPdPkSyg==
-X-Received: by 2002:a5d:584e:0:b0:391:41c9:7a87 with SMTP id ffacd0b85a97d-39efbaf5562mr15384290f8f.51.1745396275079;
-        Wed, 23 Apr 2025 01:17:55 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa433170sm17690531f8f.25.2025.04.23.01.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 01:17:54 -0700 (PDT)
-Date: Wed, 23 Apr 2025 11:17:51 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>, Leon Romanovsky <leon@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] driver core: auxiliary bus: Fix IS_ERR() vs NULL check
- in __devm_auxiliary_device_create()
-Message-ID: <aAiiLzqVulfGDPsl@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KWGOaFJX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+	Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=SAQbWjWGGmEWV/yrGcgLnMo50LiJ5Xc9HvWor5bjKpE=; b=KWGOaFJXU2Zhudn7trVxYUEU0g
+	7QQaPkpOyTCf67dYB0FTPxHraBznEqfyf3CWdnhygxC8xk5dbP9BsRCymIsPTF4wAwP6KqFkr2FA6
+	FmzLrm8fgn5FNEGSPdZIG7zgut0D0wdH/1mn1S9JEK5UNaDsTXfnf9Rrdsasucwbo6CRYk20ltlub
+	zqk/SOxkESDY8NKrxvp7RlTzavj/40AZ/QicG71H0mgMDCefzRigaplRoo9o5ZJdYGcaUnGaaogvj
+	80uEUTHcGn5ocHFj4LephL03r6fmWs2hRgpoez0yWwQeFioSX2KC8ThpS1JtfEfE0maumlFjzlgHM
+	BdNg+AgA==;
+Received: from [2001:8b0:10b:1::ebe] (helo=i7.infradead.org)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1u7VJQ-000000081P3-0EV6;
+	Wed, 23 Apr 2025 08:18:32 +0000
+Received: from dwoodhou by i7.infradead.org with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u7VJO-00000002YNz-1z0F;
+	Wed, 23 Apr 2025 09:18:30 +0100
+From: David Woodhouse <dwmw2@infradead.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Sauerwein, David" <dssauerw@amazon.de>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	David Hildenbrand <david@redhat.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Will Deacon <will@kernel.org>,
+	kvmarm@lists.cs.columbia.edu,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Ruihan Li <lrh2000@pku.edu.cn>
+Subject: [PATCH v3 5/7] mm, x86: Use for_each_valid_pfn() from __ioremap_check_ram()
+Date: Wed, 23 Apr 2025 08:52:47 +0100
+Message-ID: <20250423081828.608422-6-dwmw2@infradead.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250423081828.608422-1-dwmw2@infradead.org>
+References: <20250423081828.608422-1-dwmw2@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
+Sender: David Woodhouse <dwmw2@infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 
-The auxiliary_device_create() function returns NULL.  It doesn't return
-error pointers.  Update the checking to match.
+From: David Woodhouse <dwmw@amazon.co.uk>
 
-Fixes: eaa0d30216c1 ("driver core: auxiliary bus: add device creation helpers")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Instead of calling pfn_valid() separately for every single PFN in the
+range, use for_each_valid_pfn() and only look at the ones which are.
+
+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
 ---
- drivers/base/auxiliary.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/mm/ioremap.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/base/auxiliary.c b/drivers/base/auxiliary.c
-index 810b6105a75d..61b876d90b7f 100644
---- a/drivers/base/auxiliary.c
-+++ b/drivers/base/auxiliary.c
-@@ -491,8 +491,8 @@ struct auxiliary_device *__devm_auxiliary_device_create(struct device *dev,
- 	int ret;
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 331e101bf801..12c8180ca1ba 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -71,7 +71,7 @@ int ioremap_change_attr(unsigned long vaddr, unsigned long size,
+ static unsigned int __ioremap_check_ram(struct resource *res)
+ {
+ 	unsigned long start_pfn, stop_pfn;
+-	unsigned long i;
++	unsigned long pfn;
  
- 	auxdev = auxiliary_device_create(dev, modname, devname, platform_data, id);
--	if (IS_ERR(auxdev))
--		return auxdev;
-+	if (!auxdev)
-+		return ERR_PTR(-ENOMEM);
+ 	if ((res->flags & IORESOURCE_SYSTEM_RAM) != IORESOURCE_SYSTEM_RAM)
+ 		return 0;
+@@ -79,9 +79,8 @@ static unsigned int __ioremap_check_ram(struct resource *res)
+ 	start_pfn = (res->start + PAGE_SIZE - 1) >> PAGE_SHIFT;
+ 	stop_pfn = (res->end + 1) >> PAGE_SHIFT;
+ 	if (stop_pfn > start_pfn) {
+-		for (i = 0; i < (stop_pfn - start_pfn); ++i)
+-			if (pfn_valid(start_pfn + i) &&
+-			    !PageReserved(pfn_to_page(start_pfn + i)))
++		for_each_valid_pfn(pfn, start_pfn, stop_pfn)
++			if (!PageReserved(pfn_to_page(pfn)))
+ 				return IORES_MAP_SYSTEM_RAM;
+ 	}
  
- 	ret = devm_add_action_or_reset(dev, auxiliary_device_destroy,
- 				       auxdev);
 -- 
-2.47.2
+2.49.0
 
