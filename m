@@ -1,100 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F2722F777;
-	Wed, 23 Apr 2025 09:04:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B79625C820;
+	Wed, 23 Apr 2025 09:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745399063; cv=none; b=RsY1lV4x7QuUO65adMu9erQx/kDwKkNyuWg7hvK0butwMRwUUTzwtx6tVMWRpF9Iq443lK8PDUSHeqU1mHBX9a1/SeyIEr1xDxFr/N5kN7uPVDsPruP6UgWp0Q62jx/ijtbr0C69q4OPd6O2lGjTUeObxVP0WP4glL5qQRy1mE4=
+	t=1745399078; cv=none; b=HwLVf3HaGt11J3PhKwCbp6j2zTmRbauxg8a7/Rtj14jg8p/v3gc8NCTErPZQ7Q7eWyMcHvpl1Vb8aKptCL4DNlvGBrFSQivwJXmGGWyFXhnvlJOeWBORNLGnWX2OJquhhqUfSG3IOtx5bPfkDsLF50B45X86F6GwtFyU37xScnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745399063; c=relaxed/simple;
-	bh=ZWjJudOIpG9Jg7VsgBy9ZhKQJRli5wFIxhlpwgBZ3OU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ecVo2T8JhvyeybZ4B/kwTaOR68NE6uRtLqw9H1kYWoPeZ5obVSjkBHKhgfrrcD5wg6vzNJTmSH/F/CDHxi1pO0Fivgv36BINGSZuChVWRC6t8UzLvoKWR/ON+5bPsrfBFXe9qSrbEudBFsqfxqq2p0dCA2g52abn9iYnXSsC3gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=soSssiKe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745399078; c=relaxed/simple;
+	bh=Scv61BPn1S5NCIrOFvABukt5YWGju5wHJrpfJQ5MtTs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FfZwY4Hf/TUqmqdWyWilhnJU3Fr4Lx58f53PHb2zma60mG7XxgaMglMZOxxy3I4TK5fIhbfWRUNSsMQj1PAyBU/YCMbvZaHxjOnyUeGlRk0F/AeuCqWi867qajhuPu18mxwcmWBGYbk7CYw3neaA4gcTq5yjzTSytMcSYp/nGhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=jHhglhXv; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="soSssiKe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4D9AC4CEEF;
-	Wed, 23 Apr 2025 09:04:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745399062;
-	bh=ZWjJudOIpG9Jg7VsgBy9ZhKQJRli5wFIxhlpwgBZ3OU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=soSssiKedVrbpkdVs7QRwU7NCdm00ZFSDSI/cISoGmEn+IW5SOSK1rJuj8ChCrsvg
-	 O0nhS3lGGtzQSB81j0uovcE+Vr5a+MYZG6NNTIr6FxQwOnc7Svuuf+bSv6kdLO/Hqi
-	 ZEBdwufr17dy5sWbJ4u/BfGgQDDURPT6GD+nOutRajRUxZJYXOb/YGfRJTBSgGCmQp
-	 nAFhkqqbumTuSflVnwHrDt0MOEZ/iaZ6WEPNmpSDqsLhiq03YugrPhr2t+yfkRwquC
-	 7ToveTPLHw4Z/L0HEC0a6ONVRkLMjVfRuAadhGKdi4saK/MsA2WJkKTWLs3IQWA/CH
-	 2GNMc79pdWtTA==
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-acbb48bad09so438523066b.0;
-        Wed, 23 Apr 2025 02:04:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW12axfYHw0g/JpbMGdema1qVDO+tMveqBCNg4InorvjIy/8ooWP9/l8swjXK7qrrVeOL2ZZ1YKTibK/0aJ@vger.kernel.org, AJvYcCXL6UdPbph2KNMTb03YT1eKu7igyTo4Lhgp1cnYFz5AbWXCW5R/siJeKeSmRDRKDNmy2q+mnYH6dV7STw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkLI7wvLwhJ4fP5o9+VbK/Bp3cbwuohkR1PQ0Nqa+5TBgSz9wZ
-	nB7Y3dF23lMhcxavs7ly14/dvaozuSQKYSSuj6w790ua9zI4MVEcbaZVd/bs9xoVOMdN+FLTFIS
-	KL67DD6QCwoCvdYdc4BI2lB0L8ag=
-X-Google-Smtp-Source: AGHT+IGUCPhQAELzi3473CFpEJ0ZC3dDvAKOihM/64SRSGtbWET3JI3KSLLtn+NeZ/1h6QH/Nmt2S53HqkQySgm9VCQ=
-X-Received: by 2002:a17:906:c349:b0:acb:b6c9:90af with SMTP id
- a640c23a62f3a-acbb6c99479mr607100266b.16.1745399061209; Wed, 23 Apr 2025
- 02:04:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="jHhglhXv"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53N93fQA3189218
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 23 Apr 2025 02:03:42 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53N93fQA3189218
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745399025;
+	bh=u0XOm4Pe1y26VX9KraE8lCfVMIhih5CUvlEon/+N7r8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jHhglhXvhVyTJ9jbGbBEsLpKKKBonwgJfuJebJkfdM2ZVf587fR3O1LmBPaAX8A+7
+	 Y/kQ8sy1SWT03AqNGStd9X6lus78yvsubZ9m4m+1Q78rLFEGgbDfDd5TAdwoyWFOo7
+	 QE2PAqjPMr7Nf9QsR+7zMCqsy41tHPFwJQOXdldXH4Uef0v3MZmMgxjyvQfzSoLRiS
+	 nHnSLuwIeibOtU52hStVUmkHsV08RKi82jG7O+XUZkO1n+JM2syhx8Jp+OwjcGZBEa
+	 gS0TDoUjBiODs26vxsCih9QvNtT077p8SGL+iciRZQ/Xtdur9QA3BHiJOB0btfGNTu
+	 cVHFdG56BYXAQ==
+Message-ID: <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
+Date: Wed, 23 Apr 2025 02:03:41 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423080940.4025020-1-neelx@suse.com>
-In-Reply-To: <20250423080940.4025020-1-neelx@suse.com>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Wed, 23 Apr 2025 10:03:44 +0100
-X-Gmail-Original-Message-ID: <CAL3q7H7A_OnTQviZpCgzrGUFe1K=VfMiWXaba56E3ucPHnVkNg@mail.gmail.com>
-X-Gm-Features: ATxdqUGjp7aj7hoRjbeuLsV-XldBmYEDEokNYivqRQVPyn8yAs8Ga8JxOZzQpcU
-Message-ID: <CAL3q7H7A_OnTQviZpCgzrGUFe1K=VfMiWXaba56E3ucPHnVkNg@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: fiemap: make the assert more explicit after
- handling the error cases
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
+ to read MSR
+To: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, andrew.cooper3@citrix.com, peterz@infradead.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-23-xin@zytor.com>
+ <080351cb-6c3d-4540-953d-6205f1ff0745@suse.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ xsDNBGUPz1cBDACS/9yOJGojBFPxFt0OfTWuMl0uSgpwk37uRrFPTTLw4BaxhlFL0bjs6q+0
+ 2OfG34R+a0ZCuj5c9vggUMoOLdDyA7yPVAJU0OX6lqpg6z/kyQg3t4jvajG6aCgwSDx5Kzg5
+ Rj3AXl8k2wb0jdqRB4RvaOPFiHNGgXCs5Pkux/qr0laeFIpzMKMootGa4kfURgPhRzUaM1vy
+ bsMsL8vpJtGUmitrSqe5dVNBH00whLtPFM7IbzKURPUOkRRiusFAsw0a1ztCgoFczq6VfAVu
+ raTye0L/VXwZd+aGi401V2tLsAHxxckRi9p3mc0jExPc60joK+aZPy6amwSCy5kAJ/AboYtY
+ VmKIGKx1yx8POy6m+1lZ8C0q9b8eJ8kWPAR78PgT37FQWKYS1uAroG2wLdK7FiIEpPhCD+zH
+ wlslo2ETbdKjrLIPNehQCOWrT32k8vFNEMLP5G/mmjfNj5sEf3IOKgMTMVl9AFjsINLHcxEQ
+ 6T8nGbX/n3msP6A36FDfdSEAEQEAAc0WWGluIExpIDx4aW5Aenl0b3IuY29tPsLBDQQTAQgA
+ NxYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89XBQkFo5qAAhsDBAsJCAcFFQgJCgsFFgID
+ AQAACgkQa70OVx2uN1HUpgv/cM2fsFCQodLArMTX5nt9yqAWgA5t1srri6EgS8W3F+3Kitge
+ tYTBKu6j5BXuXaX3vyfCm+zajDJN77JHuYnpcKKr13VcZi1Swv6Jx1u0II8DOmoDYLb1Q2ZW
+ v83W55fOWJ2g72x/UjVJBQ0sVjAngazU3ckc0TeNQlkcpSVGa/qBIHLfZraWtdrNAQT4A1fa
+ sWGuJrChBFhtKbYXbUCu9AoYmmbQnsx2EWoJy3h7OjtfFapJbPZql+no5AJ3Mk9eE5oWyLH+
+ QWqtOeJM7kKvn/dBudokFSNhDUw06e7EoVPSJyUIMbYtUO7g2+Atu44G/EPP0yV0J4lRO6EA
+ wYRXff7+I1jIWEHpj5EFVYO6SmBg7zF2illHEW31JAPtdDLDHYcZDfS41caEKOQIPsdzQkaQ
+ oW2hchcjcMPAfyhhRzUpVHLPxLCetP8vrVhTvnaZUo0xaVYb3+wjP+D5j/3+hwblu2agPsaE
+ vgVbZ8Fx3TUxUPCAdr/p73DGg57oHjgezsDNBGUPz1gBDAD4Mg7hMFRQqlzotcNSxatlAQNL
+ MadLfUTFz8wUUa21LPLrHBkUwm8RujehJrzcVbPYwPXIO0uyL/F///CogMNx7Iwo6by43KOy
+ g89wVFhyy237EY76j1lVfLzcMYmjBoTH95fJC/lVb5Whxil6KjSN/R/y3jfG1dPXfwAuZ/4N
+ cMoOslWkfZKJeEut5aZTRepKKF54T5r49H9F7OFLyxrC/uI9UDttWqMxcWyCkHh0v1Di8176
+ jjYRNTrGEfYfGxSp+3jYL3PoNceIMkqM9haXjjGl0W1B4BidK1LVYBNov0rTEzyr0a1riUrp
+ Qk+6z/LHxCM9lFFXnqH7KWeToTOPQebD2B/Ah5CZlft41i8L6LOF/LCuDBuYlu/fI2nuCc8d
+ m4wwtkou1Y/kIwbEsE/6RQwRXUZhzO6llfoN96Fczr/RwvPIK5SVMixqWq4QGFAyK0m/1ap4
+ bhIRrdCLVQcgU4glo17vqfEaRcTW5SgX+pGs4KIPPBE5J/ABD6pBnUUAEQEAAcLA/AQYAQgA
+ JhYhBIUq/WFSDTiOvUIqv2u9DlcdrjdRBQJlD89ZBQkFo5qAAhsMAAoJEGu9DlcdrjdR4C0L
+ /RcjolEjoZW8VsyxWtXazQPnaRvzZ4vhmGOsCPr2BPtMlSwDzTlri8BBG1/3t/DNK4JLuwEj
+ OAIE3fkkm+UG4Kjud6aNeraDI52DRVCSx6xff3bjmJsJJMb12mWglN6LjdF6K+PE+OTJUh2F
+ dOhslN5C2kgl0dvUuevwMgQF3IljLmi/6APKYJHjkJpu1E6luZec/lRbetHuNFtbh3xgFIJx
+ 2RpgVDP4xB3f8r0I+y6ua+p7fgOjDLyoFjubRGed0Be45JJQEn7A3CSb6Xu7NYobnxfkwAGZ
+ Q81a2XtvNS7Aj6NWVoOQB5KbM4yosO5+Me1V1SkX2jlnn26JPEvbV3KRFcwV5RnDxm4OQTSk
+ PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
+ gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
+ l75w1xInsg==
+In-Reply-To: <080351cb-6c3d-4540-953d-6205f1ff0745@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 23, 2025 at 9:10=E2=80=AFAM Daniel Vacek <neelx@suse.com> wrote=
-:
->
-> Let's not assert the errors and clearly state the expected result only
-> after eventual error handling. It makes a bit more sense this way.
+On 4/22/2025 4:12 AM, Jürgen Groß wrote:
+>> +
+>> +static __always_inline bool __rdmsrq(u32 msr, u64 *val, int type)
+>> +{
+>> +    bool ret;
+>> +
+>> +#ifdef CONFIG_XEN_PV
+>> +    if (cpu_feature_enabled(X86_FEATURE_XENPV))
+>> +        return __xenpv_rdmsrq(msr, val, type);
+> 
+> I don't think this will work for the Xen PV case.
 
-It doesn't make more sense to me...
-I prefer to assert expected results right after the function call.
+Well, I have been testing the code on xen-4.17 coming with Ubuntu
+24.04.2 LTS :)
 
-Thanks.
+> 
+> X86_FEATURE_XENPV is set only after the first MSR is being read.
 
->
-> Signed-off-by: Daniel Vacek <neelx@suse.com>
-> ---
->  fs/btrfs/fiemap.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/btrfs/fiemap.c b/fs/btrfs/fiemap.c
-> index b80c07ad8c5e7..034f832e10c1a 100644
-> --- a/fs/btrfs/fiemap.c
-> +++ b/fs/btrfs/fiemap.c
-> @@ -568,10 +568,10 @@ static int fiemap_find_last_extent_offset(struct bt=
-rfs_inode *inode,
->          * there might be preallocation past i_size.
->          */
->         ret =3D btrfs_lookup_file_extent(NULL, root, path, ino, (u64)-1, =
-0);
-> -       /* There can't be a file extent item at offset (u64)-1 */
-> -       ASSERT(ret !=3D 0);
->         if (ret < 0)
->                 return ret;
-> +       /* There can't be a file extent item at offset (u64)-1 */
-> +       ASSERT(ret =3D=3D 1);
->
->         /*
->          * For a non-existing key, btrfs_search_slot() always leaves us a=
-t a
-> --
-> 2.47.2
->
->
+No matter whether the code works or not, good catch!
+
+> 
+> This can be fixed by setting the feature earlier, but it shows that the
+> paravirt feature has its benefits in such cases.
+
+See my other reply to let Xen handle all the details.
+
+Plus the code actually works, I would actually argue the opposite :-P
+
+
+
