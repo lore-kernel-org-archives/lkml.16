@@ -1,154 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B854E26982A;
-	Wed, 23 Apr 2025 10:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA352701B3;
+	Wed, 23 Apr 2025 10:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745404475; cv=none; b=MLp5eG2ew6Kd1k2VQpiS7EnrRIKZ60rdtbMN+aZlvXwOQpPJV8Z5tsNbUvTn0mgx57mvxJgOeSw4vh+wxdzW+ruzOZTqZKxpf1+SBTc4Dt7ETRI95XSVpIBefOPIP/j3841p5jiGochnJYljy3XTQk3FT/Vek7Z5DcbgnUoau58=
+	t=1745404575; cv=none; b=N2zXxbH985rqijkBJwqbUyYKwtFX/LKyo+T/yR0n2ZE2hJMtE+4qz5Ss7Kz/viJYK4O+Hiw4Mx3x7EBhOxNacd8F+dv3N4IOG/L558PcCqOsDqguPOXNwDUhNeDH1ZUfaxFciM/471X2vsicJQCUbodEuAYTeXTUGXkLYz+0UfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745404475; c=relaxed/simple;
-	bh=1RB7NIL91XUf2k6m8r8JVyagzIj5xdzoJ5ohhRrl3a8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H8yp2MDA3L+heDYim+5ncnnoT3IhU+Vhx3LLzm6wwbmleiPliUOoSelTZ+uXY70fMCyIBptYVoMk6+h4PHOegvuUyP2K5S4X3V1pWFvbXTVOWH0P2Alve4y6YQW6AAsZTDi1dDD5wLndtyT6/fx48lDzfQzAYtLWA8Edu2kl0YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QQNzGFZE; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745404575; c=relaxed/simple;
+	bh=E4aNkXNAf7lPTjZel8FFf785YVcNWb1onMeMZv2npsc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u2ml7C2sefldgTq+2nwKEd0osHqtdsc7r6TRNyepvyB52yrSsrp7BF2IrKLDiNCKIDHHJ1JBtQ5RubKxQCGNnY2L+hZeRBu010JPtLHk0NU8wL0GYNprZdcQXpuSUgasGV1gC99MLdKJPV5KZRNOLyGzLADxulzz51tyK+xIaLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=UA0zPiLy; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QQNzGFZE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745404474; x=1776940474;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1RB7NIL91XUf2k6m8r8JVyagzIj5xdzoJ5ohhRrl3a8=;
-  b=QQNzGFZEUJiX+1FoWe2Lqj539/1RN55WVxgy5V5kFfa1fVPtVZcq1+5c
-   S2Dv+KO0WN27WpVz9lCLj9j/VYkgg48zpu6D0QAJ3MYxDOpaXZF4iwMzW
-   UwYuQJOrk7yne2fys5VBwlJGNPeytAwppnXRJv3GOh+MpaQwY9v/GY3na
-   QoQ2t/a3w+Du0zVug4vF4YqF/g2ldgWLiDUd+/C23Hu9zGZ7VZlvL9E2F
-   qSr0n9CjO3FFvXwbmMBbTNI/z550IuuPhoPbP+KquhY0RW/ojfLGpmpLt
-   L0nVd+ircr8WoYJyhUvkCuyz6xeUEj1kr4jfn3HrIaTbsgi6Zht3s/KtK
-   w==;
-X-CSE-ConnectionGUID: STpmY10FSuabNHbmfCnYCA==
-X-CSE-MsgGUID: FVuFOoF8TyOIefVCUixuJQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="57980407"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="57980407"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 03:34:33 -0700
-X-CSE-ConnectionGUID: ChnanD1PQAiJuLHDknsfWA==
-X-CSE-MsgGUID: cWUuRIhUSYivP4+B+XZ7QQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="132810669"
-Received: from mev-dev.igk.intel.com ([10.237.112.144])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 03:34:30 -0700
-Date: Wed, 23 Apr 2025 12:34:08 +0200
-From: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Tariq Toukan <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Vlad Dogaru <vdogaru@nvidia.com>,
-	Yevgeny Kliteynik <kliteyn@nvidia.com>
-Subject: Re: [PATCH net 1/5] net/mlx5e: Use custom tunnel header for vxlan gbp
-Message-ID: <aAjCIE/DMAlLZXGA@mev-dev.igk.intel.com>
-References: <20250423083611.324567-1-mbloch@nvidia.com>
- <20250423083611.324567-2-mbloch@nvidia.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UA0zPiLy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745404570;
+	bh=E4aNkXNAf7lPTjZel8FFf785YVcNWb1onMeMZv2npsc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UA0zPiLyV7Q9K2NWcWRFhj5QjqtUC1OdI3G2Nk5JOb6hDt0WUKc4P9OZg44rkkM55
+	 XX98hdJsrEp13mLC7RKrwb7y8assf5vX2ledBdCLpfrb0U7QKfcpvEt2yduRJLm8AF
+	 wmng5ZShNEn6yZmRAYOWtx3x9RxkMILV+wNZEnYHGp1Ufs9k7OwsJ/c9QaSZzfNzn4
+	 bPsCeUbW6BEOkWbancb0iw76bt31+tsw3cqvJgnFmh6a2aW4hZM0VKlwXkloIKXqPD
+	 X+qzo+1o8mh5Ye7QJwKhCOdN4kvXSVbBGEsHmGMnWe/3REDfuCfP1Jd5SMtJ5EXmA8
+	 R0ZvL5dKN0GyA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 223AD17E014F;
+	Wed, 23 Apr 2025 12:36:10 +0200 (CEST)
+Message-ID: <8c34fd48-5bff-4089-a217-bf2d08f00fae@collabora.com>
+Date: Wed, 23 Apr 2025 12:36:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423083611.324567-2-mbloch@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 1/2] dt-bindings: arm: mediatek: Add MT8186 Ponyta
+ Chromebook
+To: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>,
+ sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch,
+ dianders@google.com, hsinyi@google.com, matthias.bgg@gmail.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ knoxchiou@google.com
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <20250423093647.4074135-1-cengjianeng@huaqin.corp-partner.google.com>
+ <20250423093647.4074135-2-cengjianeng@huaqin.corp-partner.google.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250423093647.4074135-2-cengjianeng@huaqin.corp-partner.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 11:36:07AM +0300, Mark Bloch wrote:
-> From: Vlad Dogaru <vdogaru@nvidia.com>
+Il 23/04/25 11:36, Jianeng Ceng ha scritto:
+> Ponyta is a custom label Chromebook based on MT8186. It is a
+> self-developed project of Huaqin and has no fixed OEM.
 > 
-> Symbolic (e.g. "vxlan") and custom (e.g. "tunnel_header_0") tunnels
-> cannot be combined, but the match params interface does not have fields
-> for matching on vxlan gbp. To match vxlan bgp, the tc_tun layer uses
-> tunnel_header_0.
-> 
-> Allow matching on both VNI and GBP by matching the VNI with a custom
-> tunnel header instead of the symbolic field name.
-> 
-> Matching solely on the VNI continues to use the symbolic field name.
-> 
-> Fixes: 74a778b4a63f ("net/mlx5: HWS, added definers handling")
-> Signed-off-by: Vlad Dogaru <vdogaru@nvidia.com>
-> Reviewed-by: Yevgeny Kliteynik <kliteyn@nvidia.com>
-> Signed-off-by: Mark Bloch <mbloch@nvidia.com>
+> Signed-off-by: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
 > ---
->  .../mellanox/mlx5/core/en/tc_tun_vxlan.c      | 32 +++++++++++++++++--
->  1 file changed, 29 insertions(+), 3 deletions(-)
+> Changes in v10:
+> - PATCH 1/2: Add enum for ponyta sku.
+> - Link to v9:https://lore.kernel.org/all/20250328094034.3400233-2-cengjianeng@huaqin.corp-partner.google.com/
 > 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c
-> index 5c762a71818d..7a18a469961d 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c
-> @@ -165,9 +165,6 @@ static int mlx5e_tc_tun_parse_vxlan(struct mlx5e_priv *priv,
->  	struct flow_match_enc_keyid enc_keyid;
->  	void *misc_c, *misc_v;
->  
-> -	misc_c = MLX5_ADDR_OF(fte_match_param, spec->match_criteria, misc_parameters);
-> -	misc_v = MLX5_ADDR_OF(fte_match_param, spec->match_value, misc_parameters);
-> -
->  	if (!flow_rule_match_key(rule, FLOW_DISSECTOR_KEY_ENC_KEYID))
->  		return 0;
->  
-> @@ -182,6 +179,30 @@ static int mlx5e_tc_tun_parse_vxlan(struct mlx5e_priv *priv,
->  		err = mlx5e_tc_tun_parse_vxlan_gbp_option(priv, spec, f);
->  		if (err)
->  			return err;
-> +
-> +		/* We can't mix custom tunnel headers with symbolic ones and we
-> +		 * don't have a symbolic field name for GBP, so we use custom
-> +		 * tunnel headers in this case. We need hardware support to
-> +		 * match on custom tunnel headers, but we already know it's
-> +		 * supported because the previous call successfully checked for
-> +		 * that.
-> +		 */
-> +		misc_c = MLX5_ADDR_OF(fte_match_param, spec->match_criteria,
-> +				      misc_parameters_5);
-> +		misc_v = MLX5_ADDR_OF(fte_match_param, spec->match_value,
-> +				      misc_parameters_5);
-> +
-> +		/* Shift by 8 to account for the reserved bits in the vxlan
-> +		 * header after the VNI.
-> +		 */
-> +		MLX5_SET(fte_match_set_misc5, misc_c, tunnel_header_1,
-> +			 be32_to_cpu(enc_keyid.mask->keyid) << 8);
-> +		MLX5_SET(fte_match_set_misc5, misc_v, tunnel_header_1,
-> +			 be32_to_cpu(enc_keyid.key->keyid) << 8);
-> +
-> +		spec->match_criteria_enable |= MLX5_MATCH_MISC_PARAMETERS_5;
-> +
-> +		return 0;
->  	}
->  
->  	/* match on VNI is required */
-> @@ -195,6 +216,11 @@ static int mlx5e_tc_tun_parse_vxlan(struct mlx5e_priv *priv,
->  		return -EOPNOTSUPP;
->  	}
->  
-> +	misc_c = MLX5_ADDR_OF(fte_match_param, spec->match_criteria,
-> +			      misc_parameters);
-> +	misc_v = MLX5_ADDR_OF(fte_match_param, spec->match_value,
-> +			      misc_parameters);
-> +
->  	MLX5_SET(fte_match_set_misc, misc_c, vxlan_vni,
->  		 be32_to_cpu(enc_keyid.mask->keyid));
->  	MLX5_SET(fte_match_set_misc, misc_v, vxlan_vni,
+> Chage in V9:
+> - No change.
+> 
+> Changes in v8:
+> - PATCH 1/2: Remove custom label.
+> - Link to v7:https://lore.kernel.org/all/01020191ea98a643-2d0be5d1-e00b-48e0-b823-bfe2c65b0d00-000000@eu-west-1.amazonses.com/
+> 
+> Chage since V6:
+> - No change.
+> 
+> Changes in v5:
+> - PATCH 1/2: Remove sku2147483647.
+> - Link to v4:https://lore.kernel.org/all/20240906085739.1322676-2-cengjianeng@huaqin.corp-partner.google.com/
+> 
+> Changes in v4:
+> - PATCH 1/2: Add more info for Ponyta custom label in commit.
+> - Link to v3:https://lore.kernel.org/all/20240904081501.2060933-1-cengjianeng@huaqin.corp-partner.google.com/
+> 
+> Changes in v3:
+> - PATCH 1/2: Modify lable to label.
+> - Link to v2:https://lore.kernel.org/all/20240903061603.3007289-1-cengjianeng@huaqin.corp-partner.google.com/
+> 
+> Chage since V2:
+> - No change.
+> 
+> ---
+>   Documentation/devicetree/bindings/arm/mediatek.yaml | 13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> index 108ae5e0185d..bfa38e7fd0f7 100644
+> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> @@ -285,6 +285,19 @@ properties:
+>             - const: google,steelix-sku393218
+>             - const: google,steelix
+>             - const: mediatek,mt8186
+> +      - description: Google Ponyta
+> +        items:
+> +          - enum:
+> +              - google,ponyta-sku0
+> +              - google,ponyta-sku1
+> +          - const: google,ponyta-sku0
 
-Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+You can't have sku0 as both const and enum.
+Since there's no board declaring both, drop the enum.
 
-> -- 
-> 2.34.1
+Regards,
+Angelo
+
+
