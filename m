@@ -1,24 +1,31 @@
-Received: from mail-m49222.qiye.163.com (mail-m49222.qiye.163.com [45.254.49.222])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9EF263F4A
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:58:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.49.222
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4F3DF58
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 04:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745380692; cv=none; b=hgbw7sbNpHYUJm3BNBHj/oilZhkTnYg+d/bhr94XNe8BRmzRVcQqtv/LnF+h8A4PanSxQ0gDoZKd/QWXLHkpAkrdfBg7gGClenW0GGbMfMhAqlVrn/C+rjSsk/KX7GpE/s7ZbixMnKvbBt4swDHq1yKb27Cpfg2kHLeTdfr6bNE=
+	t=1745380863; cv=none; b=aPkWIDP7mptMgrZZOJRfW7/CJDU0XgyWp3m9e/Ew0K6haoAEs6twB/W7TtTmkZVV1RWiazIS1OH8o/3unt8NR48ymMXvYrW2+T2A6NqQo83JxpzazN0kRPJ8WftY4DhEwC+Wf6sbQElbkt/akOSQefW+yZPmlzXNagT+okXyxwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745380692; c=relaxed/simple;
-	bh=mTzqpXSxd+kl4gytZPuLNHyo8HLzfPXQbV+8YL95vXs=;
+	s=arc-20240116; t=1745380863; c=relaxed/simple;
+	bh=1zpcTxB5BY+F4goTrfKKU/Ro8A2FGSEg4P+XuFObdac=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bRzq2IzwgWW3Ksm1PXG+cM0KKFm22u690m33TYmRRp22k1b8NL5mm45y4ZdeHk9saZYcX/sHl+JEkf/rMxGwXfCpOby+wouBFNP1nxPrO9X/EQCeXNnYeI3wQfq5qWmle3QRmkoP6AasfIgx3E91WL39E7QuQYBQQ9axd9E5DNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com; spf=pass smtp.mailfrom=hj-micro.com; arc=none smtp.client-ip=45.254.49.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hj-micro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hj-micro.com
-Received: from [127.0.0.1] (unknown [122.224.241.34])
-	by smtp.qiye.163.com (Hmail) with ESMTP id 12ce7e313;
-	Wed, 23 Apr 2025 11:42:39 +0800 (GMT+08:00)
-Message-ID: <43635f5b-fdf1-468d-a800-b96c86529e03@hj-micro.com>
-Date: Wed, 23 Apr 2025 11:42:38 +0800
+	 In-Reply-To:Content-Type; b=MHury1fAqWd3+XUi46QrnnvGIeofwpKfSPtO4fSLDayDV+oNaWkXCsdD92W3QEaXH1zycXw/u4duZjO4jBI+OtEureT/TgPRel2eg2A6oBZ7sAoGmBUVGilipa7XwGiZeAcIJux4ihF/WhyhIMnk0hDbA6+ugC07aPtQcYPLcck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=q8oZC0zN; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="q8oZC0zN"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745380851; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=QciegOL47TkkCG+QP7o5Gjgw8odD30EiR0x2AoVa48I=;
+	b=q8oZC0zN3WbQNjSySlTxiHUhl1/zAaZHTZPNHA9AmgwGjLd4u4Yv+z9kST07GmTo6J9r5iw2xy8bhiKGxi2mZ4y/ZsNm/DEVfwP7sSRqkD82EsPk8BPoXyjUXMxV7P3U6DL/QcWcSKHuUgeinXVnK6bD7RNPfpa5avMlroI4ZrE=
+Received: from 30.221.131.33(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WXsrHkZ_1745380850 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 23 Apr 2025 12:00:50 +0800
+Message-ID: <7a433a6f-4c35-493c-94a7-0f925ed52230@linux.alibaba.com>
+Date: Wed, 23 Apr 2025 12:00:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -26,240 +33,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf:arm-ni: support PMUs to share IRQs for different
- clock domains
-To: Robin Murphy <robin.murphy@arm.com>, will@kernel.org
-Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, peter.du@hj-micro.com, andy.xu@hj-micro.com,
- allen.wang@hj-micro.com
-References: <20250410114214.1599777-1-allen.wang@hj-micro.com>
- <20250410114214.1599777-3-allen.wang@hj-micro.com>
- <4e25536e-459b-4376-9422-4a7d0156234d@arm.com>
- <e473bba6-a9ad-45fa-a9d0-3cabbc162966@hj-micro.com>
- <d24f34a7-5fa6-4f39-8040-e03a0816306e@arm.com>
-Content-Language: en-US
-From: Shouping Wang <allen.wang@hj-micro.com>
-In-Reply-To: <d24f34a7-5fa6-4f39-8040-e03a0816306e@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGkhKVkxIGkJNS05PSEJCGVYVFAkWGhdVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlKSUlVSUlPVUlPSlVIT1lXWRYaDxIVHRRZQVlPS0hVSktJT09PSFVKS0
-	tVSkJLS1kG
-X-HM-Tid: 0a9660bd95d809d9kunm12ce7e313
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Kzo6FRw4IzJPHk8tAgwsFTBL
-	Ky4KCx5VSlVKTE9OSExCTE1LTUhPVTMWGhIXVRoXFx4VVQwaFRw7ExFWFhIYCRRVGBQWRVlXWRIL
-	WUFZSklJVUlJT1VJT0pVSE9ZV1kIAVlBSktKQ0o3Bg++
+Subject: Re: [PATCH v3] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
+References: <20250422234546.2932092-1-dhavale@google.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250422234546.2932092-1-dhavale@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-‌Can multiple CDs of an NI700 device only register single PMU (similar
-to CMN PMU driver) by treating their PMUs as a unified entity to support
-shared interrupts? or do you already have existing solutions that
-support shared interrupt scenarios?
+Hi Sandeep,
 
-On 4/22/2025 10:35 PM, Robin Murphy wrote:
-> On 21/04/2025 10:54 am, Shouping Wang wrote:
->> For the same NI700 device, different CDs share a PMU interrupt. The
->> cd->cpu is set to the first CPU in the NUMA node associated with the
->> device, meaning all CDs share the same cd->cpu value.
+On 2025/4/23 07:45, Sandeep Dhavale wrote:
+> Currently, when EROFS is built with per-CPU workers, the workers are
+> started and CPU hotplug hooks are registered during module initialization.
+> This leads to unnecessary worker start/stop cycles during CPU hotplug
+> events, particularly on Android devices that frequently suspend and resume.
 > 
-> But what if CPUs are being onlined/offlined while arm_ni_probe() is
-> running? We can't necessarily assume that multiple calls to
-> cpumask_local_spread() at different points in time will give consistent
-> results to begin with.
+> This change defers the initialization of per-CPU workers and the
+> registration of CPU hotplug hooks until the first EROFS mount. This
+> ensures that these resources are only allocated and managed when EROFS is
+> actually in use.
 > 
->> During event_init,
->> event->cpu is assigned to cd->cpu, resulting in all CD PMUs sharing the
->> interrupt being bound to the same CPU context. if the CPU goes offline,
->> the PMU context on that CPU is migrated to a target CPU, and the
->> interrupt is rebound to the target CPU.
+> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
+> still occurs during z_erofs_exit_subsystem(), but only if they were
+> initialized.
 > 
-> Except the CDs will *each* try to migrate the same IRQ one-by-one as if
-> it's theirs uniquely. I suppose it's quite likely that the
-> cpumask_any_*() calls will all happen to pick the same new target CPU,
-> given that we should be under the global CPU hotplug lock at that point,
-> but I'm still not sure that's strictly guaranteed. Furthermore it opens
-> a race window where as soon as the first irq_set_affinity() call has
-> taken effect, the IRQ handler for all the *other* CDs may then be called
-> on the new CPU before their respective PMU contexts have been migrated.
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> ---
+> v2: https://lore.kernel.org/linux-erofs/20250402202728.2157627-1-dhavale@google.com/
+> Changes since v2:
+> - Renamed functions to use pcpu so it is clear.
+> - Removed z_erofs_init_workers_once() declaration from internal.h as
+>    there is no need.
+> - Removed empty stubs for helpers erofs_init_percpu_workers() and
+>    erofs_destroy_percpu_workers().
+> - Moved erofs_percpu_workers_initialized under
+>    CONFIG_EROFS_FS_PCPU_KTHREAD as further cleanup.
 > 
->> My understanding is that the CPU
->> affinity and hotplug operations can remain synchronized. Could you
->> confirm if there are any misunderstandings in this logic?
+>   fs/erofs/zdata.c | 65 ++++++++++++++++++++++++++++++++++++------------
+>   1 file changed, 49 insertions(+), 16 deletions(-)
 > 
-> For that to happen *reliably*, essentially the IRQ affinity needs to be
-> managed at an equivalent level to the initial IRQ request itself.
-> 
-> Thanks,
-> Robin.
-> 
->> On 4/17/2025 10:41 PM, Robin Murphy wrote:
->>> On 10/04/2025 12:42 pm, Shouping Wang wrote:
->>>> The ARM NI700 contains multiple clock domains, each with a PMU.
->>>> In some hardware implementations, these PMUs under the same device
->>>> share a common interrupt line. The current codes implementation
->>>> only supports requesting a separate IRQ for each clock domain's PMU.
->>>>
->>>> Here, a single interrupt handler is registered for shared interrupt.
->>>> Within this handler, the interrupt status of all PMUs sharing the
->>>> interrupt is checked.
->>>
->>> Unfortunately this isn't sufficient for sharing an IRQ between multiple
->>> PMUs - the CPU affinity and hotplug context migration must be kept in
->>> sync as well.
->>>
->>> I guess I really should get back to my old plan to factor out a common
->>> helper library for all this stuff - that was the main reason I left
->>> combined IRQ support out of the initial version here rather than do
->>> another copy-paste of the arm_dmc620 design again...
->>>
->>> Thanks,
->>> Robin.
->>>
->>>> Signed-off-by: Shouping Wang <allen.wang@hj-micro.com>
->>>> ---
->>>>    drivers/perf/arm-ni.c | 77 ++++++++++++++++++++++++++++
->>>> +--------------
->>>>    1 file changed, 53 insertions(+), 24 deletions(-)
->>>>
->>>> diff --git a/drivers/perf/arm-ni.c b/drivers/perf/arm-ni.c
->>>> index 3f3d2e0f91fa..611085e89436 100644
->>>> --- a/drivers/perf/arm-ni.c
->>>> +++ b/drivers/perf/arm-ni.c
->>>> @@ -104,6 +104,7 @@ struct arm_ni_cd {
->>>>        u16 id;
->>>>        int num_units;
->>>>        int irq;
->>>> +    s8 irq_friend;
->>>>        int cpu;
->>>>        struct hlist_node cpuhp_node;
->>>>        struct pmu pmu;
->>>> @@ -446,26 +447,31 @@ static irqreturn_t arm_ni_handle_irq(int irq,
->>>> void *dev_id)
->>>>    {
->>>>        struct arm_ni_cd *cd = dev_id;
->>>>        irqreturn_t ret = IRQ_NONE;
->>>> -    u32 reg = readl_relaxed(cd->pmu_base + NI_PMOVSCLR);
->>>> +    u32 reg;
->>>>    -    if (reg & (1U << NI_CCNT_IDX)) {
->>>> -        ret = IRQ_HANDLED;
->>>> -        if (!(WARN_ON(!cd->ccnt))) {
->>>> -            arm_ni_event_read(cd->ccnt);
->>>> -            arm_ni_init_ccnt(cd);
->>>> +    for (;;) {
->>>> +        reg = readl_relaxed(cd->pmu_base + NI_PMOVSCLR);
->>>> +        if (reg & (1U << NI_CCNT_IDX)) {
->>>> +            ret = IRQ_HANDLED;
->>>> +            if (!(WARN_ON(!cd->ccnt))) {
->>>> +                arm_ni_event_read(cd->ccnt);
->>>> +                arm_ni_init_ccnt(cd);
->>>> +            }
->>>>            }
->>>> -    }
->>>> -    for (int i = 0; i < NI_NUM_COUNTERS; i++) {
->>>> -        if (!(reg & (1U << i)))
->>>> -            continue;
->>>> -        ret = IRQ_HANDLED;
->>>> -        if (!(WARN_ON(!cd->evcnt[i]))) {
->>>> -            arm_ni_event_read(cd->evcnt[i]);
->>>> -            arm_ni_init_evcnt(cd, i);
->>>> +        for (int i = 0; i < NI_NUM_COUNTERS; i++) {
->>>> +            if (!(reg & (1U << i)))
->>>> +                continue;
->>>> +            ret = IRQ_HANDLED;
->>>> +            if (!(WARN_ON(!cd->evcnt[i]))) {
->>>> +                arm_ni_event_read(cd->evcnt[i]);
->>>> +                arm_ni_init_evcnt(cd, i);
->>>> +            }
->>>>            }
->>>> +        writel_relaxed(reg, cd->pmu_base + NI_PMOVSCLR);
->>>> +        if (!cd->irq_friend)
->>>> +            return ret;
->>>> +        cd += cd->irq_friend;
->>>>        }
->>>> -    writel_relaxed(reg, cd->pmu_base + NI_PMOVSCLR);
->>>> -    return ret;
->>>>    }
->>>>      static int arm_ni_init_cd(struct arm_ni *ni, struct arm_ni_node
->>>> *node, u64 res_start)
->>>> @@ -538,12 +544,6 @@ static int arm_ni_init_cd(struct arm_ni *ni,
->>>> struct arm_ni_node *node, u64 res_s
->>>>        if (cd->irq < 0)
->>>>            return cd->irq;
->>>>    -    err = devm_request_irq(ni->dev, cd->irq, arm_ni_handle_irq,
->>>> -                   IRQF_NOBALANCING | IRQF_NO_THREAD,
->>>> -                   dev_name(ni->dev), cd);
->>>> -    if (err)
->>>> -        return err;
->>>> -
->>>>        cd->cpu = cpumask_local_spread(0, dev_to_node(ni->dev));
->>>>        cd->pmu = (struct pmu) {
->>>>            .module = THIS_MODULE,
->>>> @@ -603,6 +603,30 @@ static void arm_ni_probe_domain(void __iomem
->>>> *base, struct arm_ni_node *node)
->>>>        node->num_components = readl_relaxed(base + NI_CHILD_NODE_INFO);
->>>>    }
->>>>    +static int arm_ni_irq_init(struct arm_ni *ni)
->>>> +{
->>>> +    int irq;
->>>> +    int err = 0;
->>>> +
->>>> +    for (int i = 0; i < ni->num_cds; i++) {
->>>> +        irq = ni->cds[i].irq;
->>>> +        for (int j = i; j--; ) {
->>>> +            if (ni->cds[j].irq == irq) {
->>>> +                ni->cds[j].irq_friend = i-j;
->>>> +                goto next;
->>>> +            }
->>>> +        }
->>>> +        err =  devm_request_irq(ni->dev, irq, arm_ni_handle_irq,
->>>> +                    IRQF_NOBALANCING | IRQF_NO_THREAD,
->>>> +                     dev_name(ni->dev), &ni->cds[i]);
->>>> +        if (err)
->>>> +            return err;
->>>> +next:
->>>> +        ;
->>>> +    }
->>>> +    return 0;
->>>> +}
->>>> +
->>>>    static int arm_ni_probe(struct platform_device *pdev)
->>>>    {
->>>>        struct arm_ni_node cfg, vd, pd, cd;
->>>> @@ -611,6 +635,7 @@ static int arm_ni_probe(struct platform_device
->>>> *pdev)
->>>>        void __iomem *base;
->>>>        static atomic_t id;
->>>>        int num_cds;
->>>> +    int ret;
->>>>        u32 reg, part;
->>>>          /*
->>>> @@ -669,8 +694,6 @@ static int arm_ni_probe(struct platform_device
->>>> *pdev)
->>>>                reg = readl_relaxed(vd.base + NI_CHILD_PTR(p));
->>>>                arm_ni_probe_domain(base + reg, &pd);
->>>>                for (int c = 0; c < pd.num_components; c++) {
->>>> -                int ret;
->>>> -
->>>>                    reg = readl_relaxed(pd.base + NI_CHILD_PTR(c));
->>>>                    arm_ni_probe_domain(base + reg, &cd);
->>>>                    ret = arm_ni_init_cd(ni, &cd, res->start);
->>>> @@ -683,6 +706,12 @@ static int arm_ni_probe(struct platform_device
->>>> *pdev)
->>>>            }
->>>>        }
->>>>    +    ret = arm_ni_irq_init(ni);
->>>> +    if (ret) {
->>>> +        arm_ni_remove(pdev);
->>>> +        return ret;
->>>> +    }
->>>> +
->>>>        return 0;
->>>>    }
->>>>    
->>>
->>>
->>
-> 
-> 
+> diff --git a/fs/erofs/zdata.c b/fs/erofs/zdata.c
+> index 0671184d9cf1..e12df8b914b6 100644
+> --- a/fs/erofs/zdata.c
+> +++ b/fs/erofs/zdata.c
+> @@ -291,6 +291,9 @@ static struct workqueue_struct *z_erofs_workqueue __read_mostly;
+>   
+>   #ifdef CONFIG_EROFS_FS_PCPU_KTHREAD
+>   static struct kthread_worker __rcu **z_erofs_pcpu_workers;
+> +static atomic_t erofs_percpu_workers_initialized = ATOMIC_INIT(0);
+> +static int erofs_cpu_hotplug_init(void);
+> +static void erofs_cpu_hotplug_destroy(void);
+>   
+>   static void erofs_destroy_percpu_workers(void)
+>   {
+> @@ -336,9 +339,44 @@ static int erofs_init_percpu_workers(void)
+>   	}
+>   	return 0;
+>   }
+> +
+> +static int z_erofs_init_pcpu_workers(void)
 
+I think you could just fold it in the caller.
+
+> +{
+> +	int err;
+> +
+> +	err = erofs_init_percpu_workers();
+> +	if (err)
+> +		goto err_init_percpu_workers;
+> +
+> +	err = erofs_cpu_hotplug_init();
+> +	if (err < 0)
+> +		goto err_cpuhp_init;
+> +	return err;
+> +
+> +err_cpuhp_init:
+> +	erofs_destroy_percpu_workers();
+> +err_init_percpu_workers:
+> +	atomic_set(&erofs_percpu_workers_initialized, 0);
+> +	return err;
+> +}
+> +
+> +static int z_erofs_init_workers_once(void)
+
+and rename it as `z_erofs_init_pcpu_workers()` since
+initializing once is just an internal implmentation.
+
+> +{
+> +	if (atomic_xchg(&erofs_percpu_workers_initialized, 1))
+> +		return 0;
+> +	return z_erofs_init_pcpu_workers();
+> +}
+> +
+
+..
+
+>   err_pcluster_pool:
+> @@ -644,10 +670,17 @@ static const struct address_space_operations z_erofs_cache_aops = {
+>   
+>   int z_erofs_init_super(struct super_block *sb)
+>   {
+> -	struct inode *const inode = new_inode(sb);
+> +	struct inode *inode;
+> +	int err;
+>   
+> +	err = z_erofs_init_workers_once();
+> +	if (err)
+> +		return err;
+
+
+Then just call
+	err = z_erofs_init_pcpu_workers();
+	if (err)
+		return err;
+here.
+
+
+Otherwise it looks good to me.
+
+Thanks,
+Gao Xiang
