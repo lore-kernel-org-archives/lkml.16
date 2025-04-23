@@ -1,169 +1,163 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15F922F772
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AA7266B54
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 07:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745393674; cv=none; b=GaRzEz6yIGcyz/jBIq87ggdBQpeyPdY9tn2uEM49CDsBAEljGFe3tkL6i5csDDeCRArdMI1TIT/M/DoOxn8F7Rt8Sf4wiEEryOnUnQZfVnPSu9rAfJE0Ka3V8oj2VjnAlcKGDSwO8A1vc2vNYq/P9yiN+lA0AHZM5ecVFXgyGyU=
+	t=1745393715; cv=none; b=WoJFUSLb134PCabtG/LLMmPVFkWClc19ViS+A6Vd6B1HL0i37ijIBw5SBjdr548NcTzmqVFz283+5y0hhUIPdFNWqd0EpLI/FsFMgmXf8xWv4sak0aA9N8om5tTXm1ft351pE8jEC4sS4NhC89xKk7EPTS0y9vv+grpcOFXObzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745393674; c=relaxed/simple;
-	bh=/gs94o42ywdUTHaMMH4saGRdPDxD0hFVrj6JTivrxkA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YK8MobuADEXuR7Y0aRq+CLheCjcbpa9XdrMGwvOCVRiO3OEAsOWLSwg3nnWerJF1XTDOI0+BzEywU2VK3vdbCaNuPMeBQFKRXCc5ro706LJj7GG9PMk81rga2hp2y/Fy/01yo1+bJA8RJ4ZP+PRTr1cqQsYG0uygcOADN25IhVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=LVC/6MEC; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1745393715; c=relaxed/simple;
+	bh=tp9D6dTVIqGsT3lPvtKRa//nwdux9WpqLCvVhQY9huU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lxd/+Cm4JQipxAxRnVVouykLtcZuS/cYADbOT4XbrqPBwGzkoKL/EzKLQXautO3gk/ZEt04uTuc62i3QsNx/9dF8O/5Jf7RrWecRPn9QDkE3FNP4nZo+5thNY4wMcHE9RuqSK0uzFliz2sxMWEe6sQGVsmChaQ5iPkOIWg2lTfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wkpCOhiH; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="LVC/6MEC"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=a0MdbxJn9tcqHZJ9SvBEI+x5AV7StRpHo6WCC1hnej4=; b=LVC/6MECYUZAD0g+buo9JPR1mV
-	5+UCSylrVwr5+60klkD4vmG8oWIgA5iD5Q1r+uHXXcr+C/BG2LHbliLSiRM3meLLTIiNfFCZh1cQF
-	VutiadzsMLn0lLOM8Vw/V1o+Ic3T/7myjvK1W7I21WSCAN0LLgRoEnoXZFsY2QQKgV0cTwrBGUo8t
-	yStoq4kCxKLqLyHIPYH4sQ38hPBEjQPwjNEFs60mgP6rsAqLuHAKG4L6WOSrYcvIR93KLbWS4zOcB
-	6U3brEQv5z9+tSfJw/XjlsJuDVgC5vgeEQgpwJhK8fHy16qALvSB0r7CeJNrpWkoiRJdKSGV/LLwX
-	iDD54beA==;
-Received: from [81.79.92.254] (helo=[192.168.0.101])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1u7UcT-006nyr-Nq; Wed, 23 Apr 2025 09:34:09 +0200
-Message-ID: <88f892f9-e99a-4813-830f-b3d30496ba3c@igalia.com>
-Date: Wed, 23 Apr 2025 08:34:08 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wkpCOhiH"
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-7082ce1e47cso1365577b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 00:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745393711; x=1745998511; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cMMHzQbc3DOKOLQmdiREJuJO+OIOF3BKkz8ey4xgZi8=;
+        b=wkpCOhiHgBdQpdquh14gjfTV+pihPZ8iNnfsY17poikV5Hm509SberfKshKDSfnBet
+         rd19/ce5mvr/xDX0LwW4l5/WYprzd7W/QA5Gjl4bUVw9OJDkqQ6kXYrbhD7kYsqUpywe
+         Msze9f2QFVkSbFvk6KxzJLDLbHZvFrREr2iji8hus/xYVLf5y/CgVM8MAv+GGkpNK/gZ
+         moXnuHQLTAkCMdKWlDQXDE8e/fIi9A06erYkW4RO/e1WSM8pDVuLimB5q+EHQ0PlNOw1
+         K8MTNXSWArHGqQpy0NT4wPhLjulRikw5R+ksQitBTGSU9DEFumYVJZRsKRvQ1TgPJIsx
+         SoJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745393711; x=1745998511;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cMMHzQbc3DOKOLQmdiREJuJO+OIOF3BKkz8ey4xgZi8=;
+        b=Cm0o2DNvslo/htKaUBRaVy11vLoagvgFHuxcGLVbk0UquYgGJBFh1y7h/Qd9nmjTco
+         /8G6d7+FUY6V1US8jjfKu4oAbIbDhQhvDWC4/5CklmAyRXxz+p7IE86HVEczzsa3LaRy
+         8K8DxFQDbaXBslNhWq3xKKLjKCrjhfLjv1ysYNynuK1pcdeARItVogPvemsVeMazeevo
+         SN74ZXnRTCdpOkHZf8oylc8THpx24Jeq5MYGizPSVA91T29sYhffjwkl4/dReyp0mygL
+         CuV72wt5dXrdcglRpqcTBqYaem16c5AeFkMOmMS4FwkQuK3dlEwxr63VKdMrvuNt3Jl5
+         HMbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVVdnvgeb5Woxq9o1cUPjUVQdzmS/TRIHMHHdDGcsbDMdoFWyMlTbYk72bGfB3CRuNu49rpAy+8VTmB07I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGO0W8RJ5+H2hYzlPucVYpD7kUvxMQWdLLKbtCs1ILyAVmjQkE
+	IdCuLQMN791Frv/OD9bZepmgKs1rDLhpT3UFFzWZp1atQeWlXpBmdIA2JKYPDYs9OagDn0vpeW4
+	2l887qY/Wvo2puBe8LPW2hk8k9NH5cHqCwmaSIaVn4aH2w7ZE
+X-Gm-Gg: ASbGncsMUhoAb09i1PfBxlv0JNtbUjGW0CbS9k/HjWlZigt+i9ffsGbnLr3GzgemXNj
+	XlxaYfaMh5f/Ygsq+PxWyYJZfmaLrFT28VGH42Stiir+UMzXTLqMJUFAz4hdXo+dLJTNbuDOi0H
+	SRoP44CCc/A4Wqk7WKlgLSFA==
+X-Google-Smtp-Source: AGHT+IHHAtEFUZLhcbruHxpEpPorFQEnsYo12C8JxLrs3aH6bpX9x1WDRFduNm79Hualt6eVxiRRgQbVsZLz+ZRze24=
+X-Received: by 2002:a05:690c:25c8:b0:702:d54:45be with SMTP id
+ 00721157ae682-706cce101cfmr246843717b3.35.1745393710883; Wed, 23 Apr 2025
+ 00:35:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/5] drm/sched: Warn if pending list is not empty
-To: Danilo Krummrich <dakr@kernel.org>, phasta@kernel.org
-Cc: Lyude Paul <lyude@redhat.com>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <aAEUwjzZ9w9xlKRY@cassiopeiae>
- <0e8313dc-b1bb-4ce7-b5b7-b8b3e027adb7@igalia.com>
- <0bfa746ca37de1813db22e518ffb259648d29e02.camel@mailbox.org>
- <5a5d4a33-2f7b-46e4-8707-7445ac3de376@igalia.com>
- <aAd54jUwBwgc-_g2@cassiopeiae>
- <d3c0f721-2d19-4a1c-a086-33e8d6bd7be6@igalia.com>
- <aAeMVtdkrAoMrmVk@cassiopeiae>
- <52574769-2120-41a1-b5dc-50a42da5dca6@igalia.com>
- <aAeiwZ2j2PhEwhVh@cassiopeiae>
- <f0ae2d411c21e799491244fe49880a4acca32918.camel@mailbox.org>
- <aAetRm3Sbp9vzamg@cassiopeiae>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-In-Reply-To: <aAetRm3Sbp9vzamg@cassiopeiae>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250417142513.312939-1-ulf.hansson@linaro.org>
+ <20250417142513.312939-5-ulf.hansson@linaro.org> <aAehkpXAxh3bI0WT@linaro.org>
+In-Reply-To: <aAehkpXAxh3bI0WT@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 23 Apr 2025 09:34:34 +0200
+X-Gm-Features: ATxdqUEyxZ9BnVBWNRMOFzP2PaM9YMbsKb03WnT7UGjwnB1ecsv-8AkyK7T40lE
+Message-ID: <CAPDyKFqftAzxhoSo=A7Eu_0ueK6_BgMs+-mCZy=jQdm9aXQMog@mail.gmail.com>
+Subject: Re: [PATCH 04/11] pmdomain: core: Add a bus and a driver for genpd providers
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Saravana Kannan <saravanak@google.com>, Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org, 
+	"Rafael J . Wysocki" <rafael@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Michael Grzeschik <m.grzeschik@pengutronix.de>, Bjorn Andersson <andersson@kernel.org>, 
+	Devarsh Thakkar <devarsht@lewv0571a.ent.ti.com>, Peng Fan <peng.fan@oss.nxp.com>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Johan Hovold <johan@kernel.org>, 
+	Maulik Shah <maulik.shah@oss.qualcomm.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+On Tue, 22 Apr 2025 at 16:03, Abel Vesa <abel.vesa@linaro.org> wrote:
+>
+> On 25-04-17 16:25:02, Ulf Hansson wrote:
+> > When we create a genpd via pm_genpd_init() we are initializing a
+> > corresponding struct device for it, but we don't add the device to any
+> > bus_type. It has not really been needed as the device is used as cookie to
+> > help us manage OPP tables.
+> >
+> > However, to prepare to make better use of the device let's add a new genpd
+> > provider bus_type and a corresponding genpd provider driver. Subsequent
+> > changes will make use of this.
+> >
+> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > ---
+> >  drivers/pmdomain/core.c | 89 ++++++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 88 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
+> > index 035b65563947..da51a61a974c 100644
+> > --- a/drivers/pmdomain/core.c
+> > +++ b/drivers/pmdomain/core.c
+> > @@ -27,6 +27,11 @@
+> >  /* Provides a unique ID for each genpd device */
+> >  static DEFINE_IDA(genpd_ida);
+> >
+> > +/* The parent for genpd_provider devices. */
+> > +static struct device genpd_provider_bus = {
+> > +     .init_name = "genpd_provider",
+> > +};
+> > +
+> >  #define GENPD_RETRY_MAX_MS   250             /* Approximate */
+> >
+> >  #define GENPD_DEV_CALLBACK(genpd, type, callback, dev)               \
+> > @@ -44,6 +49,14 @@ static DEFINE_IDA(genpd_ida);
+> >  static LIST_HEAD(gpd_list);
+> >  static DEFINE_MUTEX(gpd_list_lock);
+> >
+> > +#define to_genpd_provider_drv(d) container_of(d, struct genpd_provider_drv, drv)
+> > +
+> > +struct genpd_provider_drv {
+>
+> I'd replace "provider" substring and expand drv to driver everywhere.
+>
+> I think that's more in line with all other subsystems.
 
-On 22/04/2025 15:52, Danilo Krummrich wrote:
-> On Tue, Apr 22, 2025 at 04:16:48PM +0200, Philipp Stanner wrote:
->> On Tue, 2025-04-22 at 16:08 +0200, Danilo Krummrich wrote:
->>> On Tue, Apr 22, 2025 at 02:39:21PM +0100, Tvrtko Ursulin wrote:
->>
->>>> Sorry I don't see the argument for the claim it is relying on the
->>>> internals
->>>> with the re-positioned drm_sched_fini call. In that case it is
->>>> fully
->>>> compliant with:
->>>>
->>>> /**
->>>>   * drm_sched_fini - Destroy a gpu scheduler
->>>>   *
->>>>   * @sched: scheduler instance
->>>>   *
->>>>   * Tears down and cleans up the scheduler.
->>>>   *
->>>>   * This stops submission of new jobs to the hardware through
->>>>   * drm_sched_backend_ops.run_job(). Consequently,
->>>> drm_sched_backend_ops.free_job()
->>>>   * will not be called for all jobs still in
->>>> drm_gpu_scheduler.pending_list.
->>>>   * There is no solution for this currently. Thus, it is up to the
->>>> driver to
->>>> make
->>>>   * sure that:
->>>>   *
->>>>   *  a) drm_sched_fini() is only called after for all submitted jobs
->>>>   *     drm_sched_backend_ops.free_job() has been called or that
->>>>   *  b) the jobs for which drm_sched_backend_ops.free_job() has not
->>>> been
->>>> called
->>>>   *
->>>>   * FIXME: Take care of the above problem and prevent this function
->>>> from
->>>> leaking
->>>>   * the jobs in drm_gpu_scheduler.pending_list under any
->>>> circumstances.
->>>>
->>>> ^^^ recommended solution b).
->>>
->>> This has been introduced recently with commit baf4afc58314
->>> ("drm/sched: Improve
->>> teardown documentation") and I do not agree with this. The scheduler
->>> should
->>> *not* make any promises about implementation details to enable
->>> drivers to abuse
->>> their knowledge about component internals.
->>>
->>> This makes the problem *worse* as it encourages drivers to rely on
->>> implementation details, making maintainability of the scheduler even
->>> worse.
->>>
->>> For instance, what if I change the scheduler implementation, such
->>> that for every
->>> entry in the pending_list the scheduler allocates another internal
->>> object for
->>> ${something}? Then drivers would already fall apart leaking those
->>> internal
->>> objects.
->>>
->>> Now, obviously that's pretty unlikely, but I assume you get the idea.
->>>
->>> The b) paragraph in drm_sched_fini() should be removed for the given
->>> reasons.
->>>
->>> AFAICS, since the introduction of this commit, driver implementations
->>> haven't
->>> changed in this regard, hence we should be good.
->>>
->>> So, for me this doesn't change the fact that every driver
->>> implementation that
->>> just stops the scheduler at an arbitrary point of time and tries to
->>> clean things
->>> up manually relying on knowledge about component internals is broken.
->>
->> To elaborate on that, this documentation has been written so that we at
->> least have *some* documentation about the problem, instead of just
->> letting new drivers run into the knife.
->>
->> The commit explicitly introduced the FIXME, marking those two hacky
->> workarounds as undesirable.
->>
->> But back then we couldn't fix the problem quickly, so it was either
->> document the issue at least a bit, or leave it completely undocumented.
-> 
-> Agreed, but b) really sounds like an invitation (or even justification) for
-> doing the wrong thing, let's removed it.
+I understand your point, but it's not that straight-forward to find a
+proper name this time.
 
-IMO it is better to leave it. Regardless of whether it was added because 
-some driver is actually operating like that, it does describe a 
-_currently_ workable option to avoid memory leaks. Once a better method 
-is there, ie. FIXME is addressed, then it can be removed or replaced.
+We already have another bus_type for genpd consumer devices (virtual
+devices created when attaching a device to one of its multiple PM
+domains). That bus is already named "genpd".
 
-Regards,
+>
+> > +     struct device_driver drv;
+> > +     int (*probe)(struct device *dev);
+> > +     void (*remove)(struct device *dev);
+> > +};
+> > +
+> >  struct genpd_lock_ops {
+> >       void (*lock)(struct generic_pm_domain *genpd);
+> >       void (*lock_nested)(struct generic_pm_domain *genpd, int depth);
+> > @@ -2225,6 +2238,26 @@ static int genpd_set_default_power_state(struct generic_pm_domain *genpd)
+> >       return 0;
+> >  }
+> >
+> > +static int genpd_provider_bus_probe(struct device *dev)
+>
+> ... and then here drop the "provider" as well.
 
-Tvrtko
+For the reason I pointed out above, I decided to use "provider" in the
+bus/driver's functions names to have a clear difference from the
+"consumer" genpd bus.
 
+I am worried that if we don't use "provider" we will mix up things
+with the existing genpd bus. Maybe there is a better option?
+
+>
+> Other than that, LGTM:
+>
+> Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+
+Thanks for reviewing!
+
+Kind regards
+Uffe
