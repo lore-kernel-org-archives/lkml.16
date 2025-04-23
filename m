@@ -1,101 +1,110 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E5B42701DB;
-	Wed, 23 Apr 2025 01:51:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D67C1AB531
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745373110; cv=none; b=AeQczy7dHAcKPdVdH0Cotkb1TlCdJxNwSwoncnQhNtkxDnG5P2fSTA/9apcm2+vFafDiu5GgdtcakEsb0DJ9oZvMqnzooze8R4K1WLYQ+uSlzpvkJe2wyVaq9OfXoUiz/B23rXcQOGniXBW1IHvdWeGW4LT2tg6uP42z2rOL/8k=
+	t=1745373165; cv=none; b=shQtds3VCBTTv8U2fEiyqGBiZJ8RQxry93DC1hV4DEnPfnIQisYYOI48Vgsy1Iry4RVGDfEliuimK8HLekqx3hIXqIWhFFTpt/l0GguCfvsVEOqo6PAf3WL5yXUOURfiJSjH/y6iUKuF9VUZhrQwRfmBjt3xl2lEU5O/8IRYZb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745373110; c=relaxed/simple;
-	bh=524B77zUmQ8K7a2shf7Mu+7jo//vmdRuMIeZyo4ImCM=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=jYITZtkp+7yaIKxwAbG4LhbrUiT0p58JSaKTRJqHRwDbkJKF9WLG2x5AIUlVUa318MObPBQJh+MMPgv36uPBeETjOatg2wXMS5rXDK1HEZS/r30bj5uxbP95fvwxGsU6q8ngVmnBnLVW0rRfh6PcxOgcBhbpjOXKRYwyXGmFmAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.62])
-	by gateway (Coremail) with SMTP id _____8CxaWpaRwhoIWLEAA--.65011S3;
-	Wed, 23 Apr 2025 09:50:19 +0800 (CST)
-Received: from [10.20.42.62] (unknown [10.20.42.62])
-	by front1 (Coremail) with SMTP id qMiowMCxrhtYRwhooO2QAA--.47758S3;
-	Wed, 23 Apr 2025 09:50:18 +0800 (CST)
-Subject: Re: BUG: bpf test case fails to run on LoongArch
-To: Tiezhu Yang <yangtiezhu@loongson.cn>, Huacai Chen <chenhuacai@loongson.cn>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev
-References: <32989acf-93ef-b90f-c3ba-2a3c07dee4a3@loongson.cn>
- <8cd87100-88f3-687d-6704-f4fec0ca48b3@loongson.cn>
-From: bibo mao <maobibo@loongson.cn>
-Message-ID: <c9d7be2b-8c2d-bd5e-b32d-37ed4bb693cc@loongson.cn>
-Date: Wed, 23 Apr 2025 09:49:13 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1745373165; c=relaxed/simple;
+	bh=4wLhV3IbHlgGXoJekz7dNit5CqhCaxM+G6qgYArGhWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QKn+qVX83cjhMSxxwxcDwiPmj0h42MyN6XfmILrS58CHVDI6Lxryfccl6HRsTok6qRd7PwnS2fTr6fJvMjvp0p6LEW4oLCHrzmdXjTASaqt4ZmFAjLFKAAZoLR8fUHJmxJkvDhsfNz7bEa0ZQlAHdPIQPsmMfJ5aBIIxYu5UDv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=llUF6W06; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="llUF6W06"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736b0c68092so5022903b3a.0
+        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:52:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1745373163; x=1745977963; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=J3aNxDyiOPHAlWqSU66cOhuYSikR8PHGxfrsyOzZYqs=;
+        b=llUF6W06WsNn9CDlbW64n7oxfp5mLCLf/cioUKFyhjbVa1inCrlScn3cgClVHviUIn
+         tzTkh5VYdZWpJ2OlJqTJPQtkmB5cvjvC2t3jxceYsFemS36Js1JAlD+ySPaovwgWVLke
+         XVlu0Q9IN8RUuIiBel7fL801qK8DN7qpPvSWU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745373163; x=1745977963;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=J3aNxDyiOPHAlWqSU66cOhuYSikR8PHGxfrsyOzZYqs=;
+        b=tnH+4RlvKMfStaplIB2ahjP0JhUDuhrl92lY50oFgvnsRCEGuUc/hlB9mgquoUPOcl
+         Os0i0tcxdoxiA/4h3tS6GGu2g8I2fDuujVJL+bh7ab+P8qQZ+iniqIckevnsTUgUgUI5
+         w00Q5LY4ZvuCZZ+tYJ51+oWgIRuDHvqnU3rockTgNR9cNUrt3/g3iBOxMrX5q9Kv5vF0
+         +wq/xrpSBEnmPFfcWQAnXKWLGYVpg1496UYaNJsr2jlXc02tK94huPZkE8PI/WvRPDmF
+         H7H6M4NwtE0eaUO/Ogevi7dOYcLEZcs+9tFRO1DSuIBLpByGC3HK3oBFzxZnxIPo5Lg4
+         Xz7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ45oBXRU6GJA4JAtzPfhcIobFonrAu31t9831cznd4ljOjq6HpneG3LDlpFYlBvflViTik4l2lpOq9WA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNuOQ68Lfzd1hBeZc4oSaU3juDLsOV8lEtO6RqXLzxZKL/nShD
+	+u1HA1ha8fT4eUBEyS6sqQ8lQyuj3n4GTCILcP7wVmqNqh+x5Pua6aPcM9GrFxI=
+X-Gm-Gg: ASbGncvJJ/vq7Tr1zPrew+05HyvBa2qhEa+YzooZ2pw66kIACwuJhvg1WXT6AHWGdrj
+	3wBOFunsoRgHqyVV5XpPy8ikkdy1sQaYkAUIwes7Mpfwaa77xzbZLFHvwmtlctySfwnfVWAAJhn
+	vE2/nvKgtHGWAuBsoDkEG9/iytdKuLnjxwnvNEEpuJNjNvg5D9hyYODiVwGd4jvDxFV7jeo3odw
+	OSnB33Xt8ODlCv3lAqtvj1OzfRQvASmwA241j3hl09ta/aabR8tg1qKAZxQTW641stAiyNxW8O8
+	62sfgu6X14P/JNm+msFZdmXgDCIPg31f+u65wwl+sXsz5CZT11Wn68qKnOHPKsCP3DC7Ar0Dxhg
+	L0aBi8dE=
+X-Google-Smtp-Source: AGHT+IFNcDRLC8JrDRyeuZbCW/ZJZarqcruDNdE2GGwIN74QiRY5cyf1Dg86vye1n8OlLjdTw9Gqsg==
+X-Received: by 2002:a05:6a21:9981:b0:1ee:e2ac:5159 with SMTP id adf61e73a8af0-203cbc74809mr23837012637.19.1745373162682;
+        Tue, 22 Apr 2025 18:52:42 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbfa5836bsm9371009b3a.119.2025.04.22.18.52.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 18:52:42 -0700 (PDT)
+Date: Tue, 22 Apr 2025 18:52:39 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Harshitha Ramamurthy <hramamurthy@google.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
+	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com,
+	pkaligineedi@google.com, yyd@google.com, joshwash@google.com,
+	shailend@google.com, linux@treblig.org, thostet@google.com,
+	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 5/6] gve: Add support for SIOC[GS]HWTSTAMP IOCTLs
+Message-ID: <aAhH5_kFB0Jrf4xj@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
+	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com,
+	pkaligineedi@google.com, yyd@google.com, joshwash@google.com,
+	shailend@google.com, linux@treblig.org, thostet@google.com,
+	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org
+References: <20250418221254.112433-1-hramamurthy@google.com>
+ <20250418221254.112433-6-hramamurthy@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <8cd87100-88f3-687d-6704-f4fec0ca48b3@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMCxrhtYRwhooO2QAA--.47758S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7uw1xJry3XF15ZF1ftF4UJrc_yoW8Jw1UpF
-	ZxtryfKw1Yga40qr10qa10yF9YyFsay3y5AryUJ34kGrs5Ar1qqF18Jr1Svr93tryv9rWU
-	A3y0qan0kwnrJFcCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU9Yb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67
-	vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v2
-	6r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxUrNtxDUUUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250418221254.112433-6-hramamurthy@google.com>
 
-
-
-On 2025/4/23 上午9:28, Tiezhu Yang wrote:
-> On 04/21/2025 10:52 AM, bibo mao wrote:
->> Hi,
->>
->> When I run built-in bpf test case with lib/test_bpf.c,
->> it reports such error, I do not know whether it is a problem.
->>
->>  test_bpf: #843 ALU32_RSH_X: all shift values jited:1 239 PASS
->>  test_bpf: #844 ALU32_ARSH_X: all shift values jited:1 237 PASS
->>  test_bpf: #845 ALU64_LSH_X: all shift values with the same register
->>  ------------[ cut here ]------------
->>  kernel BUG at lib/test_bpf.c:794!
+On Fri, Apr 18, 2025 at 10:12:53PM +0000, Harshitha Ramamurthy wrote:
+> From: John Fraker <jfraker@google.com>
 > 
-> This is a known issue I have ever encountered.
-> I guess your GCC version is 14.1, this is a bug of GCC,
-yes, My gcc version is 14.1
-
-> it has been fixed in the higher version, you can update
-> you GCC version (14.2+).
-OK, I will update my gcc. And sorry for the noise.
-
-Regards
-Bibo Mao
+> Add support for the SIOCSHWTSTAMP and SIOCGHWTSTAMP IOCTL methods using
+> gve_get_ts_config and gve_set_ts_config. Included with this support is
+> the small change necessary to read the rx timestamp out of the rx
+> descriptor, now that timestamps start being enabled. The gve clock is
+> only used for hardware timestamps, so started when timestamps are
+> requested and stopped when not needed.
 > 
-> $ gcc --version | head -1
-> gcc (GCC) 14.2.1 20241104
-> $ dmesg -t | grep Summary
-> test_bpf: Summary: 1053 PASSED, 0 FAILED, [0/1041 JIT'ed]
-> test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [0/10 JIT'ed]
-> test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
-> test_bpf: Summary: 1053 PASSED, 0 FAILED, [1041/1041 JIT'ed]
-> test_bpf: test_tail_calls: Summary: 10 PASSED, 0 FAILED, [10/10 JIT'ed]
-> test_bpf: test_skb_segment: Summary: 2 PASSED, 0 FAILED
+> This version only supports RX hardware timestamping with the rx filter
+> HWTSTAMP_FILTER_ALL. If the user attempts to configure a more
+> restrictive filter, the filter will be set to HWTSTAMP_FILTER_ALL in the
+> returned structure.
 > 
-> Thanks,
-> Tiezhu
-> 
+> Co-developed-by: Ziwei Xiao <ziweixiao@google.com>
+> Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
+> Reviewed-by: Willem de Bruijn <willemb@google.com>
+> Signed-off-by: John Fraker <jfraker@google.com>
+> Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
 
+Reviewed-by: Joe Damato <jdamato@fastly.com>
