@@ -1,103 +1,154 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E33628DEE8
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26357265CB9
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745433372; cv=none; b=WfEjlAKjobcUw7P8zPKsD9FhFoaisYH73DxIn2vIqdut6dkZm3Ijs7NDzDNFVRLomncUtmYOSGtqyDvRv3aYmkhMSsF89/P3P7UexRntNh7wPkuntP56o/9TdR4fiplo6NUeG7xIEmGDiqrrLMuBpQmAi0Lpgnrcd0svbexLtMA=
+	t=1745433452; cv=none; b=aleghTk86/MaVtIIm6J8dOblHrgj58UKz2aSx1ttlhxWf3S0Dd6QRFLVADJcDhNqy+VqcEslJsRAJ9t0rGu3pwJxJ6P5lTwoMUZmAAEvNV1cuJEWb8MMGnP5rrsYE+OAvoFoyOaDPndrA+XzAks86mQhwXUUr6ibk5YU3ZmNu8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745433372; c=relaxed/simple;
-	bh=CQxwBsqxOevm8XyRK++9ix/s14GbRhhSVJJKe5IIdUE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p1NDrR4vzHcf5CuEzW4CESvyx2XE6+KvabgQNobgnRRCXlpbXdrdJKCz77Bnx2WYezTI0nYrTVI/w/RGyHQHVa88hO8fmh3j0nHpdNwkwk6wee//Ye0W5oy6zhO1H3UACuHkiNMzVvGSXyCeIz7NAuFgDujEJSg/hOu5COcablg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jTFnRXCs; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745433452; c=relaxed/simple;
+	bh=gh76Cwi537UAiZiZzvQ7qO7K4eMJvXZ5GcYqQsv4qVM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sCdVxvjw+tdzXn0xV2oz2ZQVxyCMLWAB6e7DL0lznXxsst7D8rK6jo59cYsEq46Ild/ALOmQ6jjFIhEUORFH2qKsmUr/gv7xrpmcao6kjVQ1b7QrFQGFNGUH57/Ec2N2whfAddGGVnjH5f4bfwv7Guf3X270cnuQODcBx+jX1IM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OKUWjwQ3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jTFnRXCs"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3105ef2a070so2325731fa.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:36:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745433368; x=1746038168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CQxwBsqxOevm8XyRK++9ix/s14GbRhhSVJJKe5IIdUE=;
-        b=jTFnRXCsW8zrOKUSQHGTcbT2G7+l9u7h6kHoUgyfwDlJ2v7lKWIhJDa4LqSyIGfWhF
-         NMcxGj9bfw6PxBVX/YyEjGEPk+TNS4HvgI/sz+zIOwv0/8oDxuKYt36jmbms9giekp6l
-         sDAHn5sw3tS1vN5gXmiN/GDiA8+fmjYsSK1xOXvSYWcQELz2K58O/EJePhvGO17bWzdA
-         BBtAw6jeI2mx8Etr/OOntYdOEvP7NZ+5RKWID5klvFj3CZIbQEZlDvbdwEFjGxf+uMux
-         PS4FsfX1TmJnZq9jakQfExB2b9po6YUVIEgGd8tHPWAWUgGaNTYZCrm1CsBqLyZrX0OM
-         GcaA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OKUWjwQ3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745433450;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y6pwEnRnhkHgazDgVxPbcQpa5mERaCMyYK1dziw6UIo=;
+	b=OKUWjwQ33Y3CEfmRTPWjnwt/Yv203NbMviwGsEIX5vlv3km9tJAPGMUScqJkZoTfWyi0A6
+	5C7qCbb6z2B+SlphsXI9N8SnmX2CEnsvo3VybIrBdBIt1mrUEnp5/dejjff+fsoniQPaLa
+	WB5ZI4VXF9/XN+dqbo0XFtw/ZFCT4Ns=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-3EGCM-teMXeOOm2LlAEkiw-1; Wed, 23 Apr 2025 14:37:28 -0400
+X-MC-Unique: 3EGCM-teMXeOOm2LlAEkiw-1
+X-Mimecast-MFC-AGG-ID: 3EGCM-teMXeOOm2LlAEkiw_1745433447
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-30bfaec88edso5898311fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:37:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745433368; x=1746038168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CQxwBsqxOevm8XyRK++9ix/s14GbRhhSVJJKe5IIdUE=;
-        b=KNlJ0Q7kxDk+XP3mGoIjpSDWwrT929K2hePtS9L0k6jzR8Iez2hoBnVHYIoh5QYALH
-         +Sug4WIaMuW5jKRbschVLGkeqVUx+RddagrODeXwYuxjj5ccQcyijVh3/4uwwwA0m//0
-         7eH1Al32VXPhPNTLQrWGw3APYoq+H1rL0C7bjDhWTU/Nexs5tPOGfSLJ9Z4qBZ8QRtnE
-         E/3BUY+ntS2UGAxopwFxCLV2Vqjz1pLHeYxbmDlXwGvcoesF+QXUU2GheMUWphCX9wde
-         TIlVit5e1cDl1NrzuOrTFEtZrQNHx0g5DWD3mqpxH54k1l38uf0+YsC9V0W4aqB2dsUS
-         KrZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOdU6Ef6G7ILlYg+v6NeVjXEZ9ph0mQFyKK/DlXjhTb1FZYfgugMvy4ZPzebnRpTCFOk+0i3nMrTyyFa4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3+4Z3eea0QeCz0AdYLo0pkEPTmTCoGPRYscQPUYpDRHZ9I2OS
-	bItou7sJMFaq9JMrYNrS73O7poykxZd00RmxoCJo51neGddnx/TBPQfgzX/RGA3ExaLOQLgnJji
-	oOk5Z2VES9YRK7rFKbdv358jhUhmwwCjCVubQZw==
-X-Gm-Gg: ASbGncuqN+kjmqaKIIV8w8iDHyM3KBmess6xMk/77zlyInafYQlWMlh8AtBfRHM4NcU
-	QLk5nuHv4kKL05J+jxoJ8YLRUdoTsIHWW3d/Ps8ZVzduT5jwrTUK3Dlf7UB6g4aWOHl6Hn7+MOU
-	oMWmYrX5qVEXAeNAzd15MPTZENBT0HoIlE3tRkHoo3E8G++GxVjLRDGg==
-X-Google-Smtp-Source: AGHT+IEymM2ho6uHtG1Zdu07Wqud8fmld1N+xT1EeRnMqI1j8xJFCO2sGEl3h4YmgUWZYqeXGNDm3XEnhX+HJ+s+S9s=
-X-Received: by 2002:a2e:bc84:0:b0:30b:b987:b676 with SMTP id
- 38308e7fff4ca-3179e0e739fmr246971fa.2.1745433368448; Wed, 23 Apr 2025
- 11:36:08 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745433447; x=1746038247;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y6pwEnRnhkHgazDgVxPbcQpa5mERaCMyYK1dziw6UIo=;
+        b=YJFWZMBgnO9W9ef4Q29ePf9fEowgaw+0JpK+G4F8R/Z6uj+ggNrS7y2Yq+0f15xIiH
+         qGccs1OqCG0fdFygDzEvyMF1ewo1e+KLuKMHN01KMAEGTy4XlCymx0CaY5NNYViHrZD0
+         Ck1HskhR2YNDlWMedt/Zom2Yy63Y1ZYsvUMhB7Md/6LdIyJy1McxHeAGqWzx3pfshg6p
+         iuvZzapjFHXr5vZqQdyfmLoQAS3uj7cmWTNYzGuK2ia3Lt8c5mERc0MHDQde6PO+pcc8
+         EKaQGelT9LPySVjZseUbDJasqmWU+5YFhhk/ZaeEX6RsgFihrE4zT1z136aFLa4JOEf3
+         +gJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQH9+CoU7jRbZhAo5ryapNsc9kLCSUxVJHPlG5WlsY7aGYdi3my7WoF2fIhmnF610iHbsQ8jM4+YYPqs8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgjPRSFdEXYmSg1Qcw3W6CFT44MEtX8b8m4n42KADvu1uyYnSE
+	2Teo9kDLutGba1qKwIu78TFnjjwz9IURAlxKfZS6KW8xnd3CwtIiKpvkkwphXMLwryGrRy4t0b3
+	hdOGJdbyS3yxdXTzusNZBSV3BUEEn0hG4q6jRmAXOokG+eyMAW2rlrcnLg+G2
+X-Gm-Gg: ASbGncujfj1/XKdIgZJeUrfPooUYAfkkGTG+gZr6w2CXInRT+/AWNoPERQQ/Pal+Vh+
+	Mhyfh7vr03mz9aCOeteqFjPe3g0N46TgQFisQXVtCiz+odzBldPYu6Ct4iWjEDpd0IBsRyY8GE9
+	d11O+wXo/2S2oz0e2R+ePUYmOqR+2yCwMtLe89sTDHUMSm1lXcN8eY0l2M88Oj2NL7mOBLuhVZC
+	zbZD6g/Qth+xWP5LK97fIao7mDkHcsuht7qCV8VOFGDp79WM5dyFraLNgd5vhXLMmLQbDgip7n3
+	4PgPyt1Of4KI2FoLDrgt2BnyEUpDMe6zNDRolg==
+X-Received: by 2002:a2e:8818:0:b0:308:e956:66e with SMTP id 38308e7fff4ca-3179449456amr499931fa.0.1745433446931;
+        Wed, 23 Apr 2025 11:37:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHeLX03zhP8nSlFHqNWBiKFBjf3MShxZQb8tc2EeW+8vLK6+b+87nnEoR+0vFre3XFcDl9w4g==
+X-Received: by 2002:a2e:8818:0:b0:308:e956:66e with SMTP id 38308e7fff4ca-3179449456amr499761fa.0.1745433446435;
+        Wed, 23 Apr 2025 11:37:26 -0700 (PDT)
+Received: from [192.168.1.86] (85-23-48-6.bb.dnainternet.fi. [85.23.48.6])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3109075e8e9sm19833701fa.12.2025.04.23.11.37.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 11:37:26 -0700 (PDT)
+Message-ID: <36891b0e-d5fa-4cf8-a181-599a20af1da3@redhat.com>
+Date: Wed, 23 Apr 2025 21:37:24 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
-In-Reply-To: <20250409115313.1.Ia319526ed4ef06bec3180378c9a008340cec9658@changeid>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 23 Apr 2025 20:35:57 +0200
-X-Gm-Features: ATxdqUFDGFpMo4aaci34Zse_W5zMkzP72gRHA5kbQNTJZvoubqTPc2GMnWhswtM
-Message-ID: <CAMRc=Mc67rALxbFu3KJBT7k0oMwjLchyackknXbgRD04v1Xaqw@mail.gmail.com>
-Subject: Re: [PATCH] PCI/pwrctrl: Cancel outstanding rescan work when unregistering
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Brian Norris <briannorris@google.com>, 
-	Konrad Dybcio <konradybcio@kernel.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 10/24] mm/hmm: let users to tag specific PFN with DMA
+ mapped bit
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Leon Romanovsky <leon@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>, Jens Axboe <axboe@kernel.dk>,
+ Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+ Leon Romanovsky <leonro@nvidia.com>, Jake Edge <jake@lwn.net>,
+ Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+ Bjorn Helgaas <bhelgaas@google.com>, Logan Gunthorpe <logang@deltatee.com>,
+ Yishai Hadas <yishaih@nvidia.com>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+ Kevin Tian <kevin.tian@intel.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+ linux-rdma@vger.kernel.org, iommu@lists.linux.dev,
+ linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+ kvm@vger.kernel.org, linux-mm@kvack.org,
+ Niklas Schnelle <schnelle@linux.ibm.com>,
+ Chuck Lever <chuck.lever@oracle.com>, Luis Chamberlain <mcgrof@kernel.org>,
+ Matthew Wilcox <willy@infradead.org>, Dan Williams
+ <dan.j.williams@intel.com>, Kanchan Joshi <joshi.k@samsung.com>,
+ Chaitanya Kulkarni <kch@nvidia.com>
+References: <cover.1745394536.git.leon@kernel.org>
+ <0a7c1e06269eee12ff8912fe0da4b7692081fcde.1745394536.git.leon@kernel.org>
+ <7185c055-fc9e-4510-a9bf-6245673f2f92@redhat.com>
+ <20250423181706.GT1213339@ziepe.ca>
+Content-Language: en-US
+From: =?UTF-8?Q?Mika_Penttil=C3=A4?= <mpenttil@redhat.com>
+In-Reply-To: <20250423181706.GT1213339@ziepe.ca>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 9, 2025 at 8:54=E2=80=AFPM Brian Norris <briannorris@chromium.o=
-rg> wrote:
->
-> From: Brian Norris <briannorris@google.com>
->
-> It's possible to trigger use-after-free here by:
-> (a) forcing rescan_work_func() to take a long time and
-> (b) utilizing a pwrctrl driver that may be unloaded for some reason.
->
-> I'm unlucky to trigger both of these in development. It's likely much
-> more difficult to hit this in practice.
->
-> Anyway, we should ensure our work is finished before we allow our data
-> structures to be cleaned up.
->
-> Fixes: 8f62819aaace ("PCI/pwrctl: Rescan bus on a separate thread")
-> Cc: Konrad Dybcio <konradybcio@kernel.org>
-> Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Signed-off-by: Brian Norris <briannorris@google.com>
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
->
 
-Sorry, it fell off my radar.
+On 4/23/25 21:17, Jason Gunthorpe wrote:
+> On Wed, Apr 23, 2025 at 08:54:05PM +0300, Mika Penttilä wrote:
+>>> @@ -36,6 +38,13 @@ enum hmm_pfn_flags {
+>>>  	HMM_PFN_VALID = 1UL << (BITS_PER_LONG - 1),
+>>>  	HMM_PFN_WRITE = 1UL << (BITS_PER_LONG - 2),
+>>>  	HMM_PFN_ERROR = 1UL << (BITS_PER_LONG - 3),
+>>> +
+>>> +	/*
+>>> +	 * Sticky flags, carried from input to output,
+>>> +	 * don't forget to update HMM_PFN_INOUT_FLAGS
+>>> +	 */
+>>> +	HMM_PFN_DMA_MAPPED = 1UL << (BITS_PER_LONG - 7),
+>>> +
+>> How is this playing together with the mapped order usage?
+> Order shift starts at bit 8, DMA_MAPPED is at bit 7
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+hmm bits are the high bits, and order is 5 bits starting from
+(BITS_PER_LONG - 8)
+
+
+> The pfn array is linear and simply indexed. The order is intended for
+> page table like HW to be able to build larger entries from the hmm
+> data without having to scan for contiguity.
+>
+> Even if order is present the entry is still replicated across all the
+> pfns that are inside the order.
+>
+> At least this series should replicate the dma_mapped flag as well as
+> it doesn't pay attention to order.
+>
+> I suspect a page table implementation may need to make some small
+> changes. Indeed with guarenteed contiguous IOVA there may be a
+> significant optimization available to have the HW page table cover all
+> the contiguous present pages in the iommu, which would be a higher
+> order than the pages themselves. However this would require being able
+> to punch non-present holes into contiguous mappings...
+>
+> Jason
+>
+--Mika
+
+
