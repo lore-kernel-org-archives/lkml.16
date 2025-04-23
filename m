@@ -1,209 +1,357 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F0B270ECC
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BEF26AA93;
+	Wed, 23 Apr 2025 08:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745395400; cv=none; b=h2rv97tXq75z/BOKfl1xAGAUM34ntK2HGhnXwOajwOghOclkKtQ8D5s4ErHheTTkWgz3b1SWnqXjstzTPWc+Z+XdSXtwQp/SAmwTf5s+g2Ub8Pjb+vjjUdT2BkCAdTEUoHS0xEN4gNLRp2jrZh/tWTS4zVHXKRIDQ9PhlY5c6+I=
+	t=1745395543; cv=none; b=SGkuQVTHNK5jBxrbkwWn4JiGjXTjtr1cXwQBxMNB4oogP/M11GswwRP0z59gmDzFbSqQK1klxZvqEzMvG0/OPmE1NuZ6f4X2Jfbp8vTfny1Z+8iamnfPSPj4F3ekavWp8J+JjVYdwt7Ij/XRxCa07V3oSqKgIeVQlXCSbLtMdz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745395400; c=relaxed/simple;
-	bh=7zi/VGJAai9L8BZ01QEEznoM0u5vIMx02DdsfPaof3g=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=OyMXLrmoyFbTsOnRfTXbjfM5J9nilfsAssz6nkeoSiYieaSkD9uvfh0n460fda3r08KQBiUONA14Okd/5iyvbEp6bsUUBvpgMtRgNjCnyRVaKn+05E2C9rSIAOcnqCvRkiAzwKc4ncszaM4mdACsoEb4tchDj7U3epTBXFpzLQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3MXTuZgq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KN5FmSPO; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=3MXTuZgq; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KN5FmSPO; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1745395543; c=relaxed/simple;
+	bh=KUyrRN8NjKL+c1I9SS/fI/oehCmKuyGz2I/+FaYF3oc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=JTIz6k1bCsH3Rc9bsbe5Yo2JnrwnQ6vkXXWa6UPO0hWnhbS89Cf+TaCaLcEqiKJYqc2Onzlu67Qis5KiW2t6Jk1rGBJD24Ieo7l47zZQJ0LCH8ctWXprpX9mS0S89ZmvPmnTPLPASCXny99F6As76narIqlP6pU6Ea10VYyeQRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iG/+WCnG; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3MXTuZgq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KN5FmSPO";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="3MXTuZgq";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KN5FmSPO"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 05B882118E;
-	Wed, 23 Apr 2025 08:03:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745395396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VLduGxsUVUHR/ygPLzOccrmiWWCk116mKUNY4+PD46I=;
-	b=3MXTuZgqDz6BOfQ4HuFpXLMkGrvOA0lVAYpXObwTJbB4k4iBOidCAerEhrPQdnGRcqHsN1
-	QdfM+YRxnJlcWmgt/AqbM2bt3qo29wpF8kjWGsByfLkTgWqQL3NPJHkkk1JY/bcWw5fQYE
-	rUpa1XpTf+xV9QB+HMO1/PDeh4V/h6U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745395396;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VLduGxsUVUHR/ygPLzOccrmiWWCk116mKUNY4+PD46I=;
-	b=KN5FmSPOaCEWo+QI/L+lHA1dh3w6j6WhpUqruDXfrkz+Tf572T1z4dPjYgyE5soZ7noyuT
-	ubHFjX5u0OAJuqDg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=3MXTuZgq;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=KN5FmSPO
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1745395396; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VLduGxsUVUHR/ygPLzOccrmiWWCk116mKUNY4+PD46I=;
-	b=3MXTuZgqDz6BOfQ4HuFpXLMkGrvOA0lVAYpXObwTJbB4k4iBOidCAerEhrPQdnGRcqHsN1
-	QdfM+YRxnJlcWmgt/AqbM2bt3qo29wpF8kjWGsByfLkTgWqQL3NPJHkkk1JY/bcWw5fQYE
-	rUpa1XpTf+xV9QB+HMO1/PDeh4V/h6U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1745395396;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VLduGxsUVUHR/ygPLzOccrmiWWCk116mKUNY4+PD46I=;
-	b=KN5FmSPOaCEWo+QI/L+lHA1dh3w6j6WhpUqruDXfrkz+Tf572T1z4dPjYgyE5soZ7noyuT
-	ubHFjX5u0OAJuqDg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DBFE013691;
-	Wed, 23 Apr 2025 08:03:15 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id YPTxNMOeCGgAcQAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 23 Apr 2025 08:03:15 +0000
-Message-ID: <bb701616-26b8-41f0-8a19-0f76b2a64deb@suse.cz>
-Date: Wed, 23 Apr 2025 10:03:15 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iG/+WCnG"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22435603572so65443345ad.1;
+        Wed, 23 Apr 2025 01:05:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745395539; x=1746000339; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qpZG8w/6yabmuOISJ5IM1b+4kVX8LAERzuJkJnF5eAE=;
+        b=iG/+WCnGiQwysYQlD+nBqDkJBsroKFDuXDTSuBrguWSMfHOAH4OZeJFZ5BiBQSPXmA
+         3LkB8MFcQXCFSxYYankolYCVLG6w2cgrvnOfuaksVg91nwe8O70mNLxVjK3AOx3Hshb3
+         JVEy+xslBOBIxKo606EgGbBGOs27pqDFHuOJjiY5SIQ9KRNRfuWK5DEj2PpeYVdIQelF
+         xQKSE3+Tj/c/k4BZ/Nks+3j+qIX9ctlwrU1Fmntar1EZefg7nRdS90be5OKDecKZAWkL
+         L0MWVpaXBbFT7YDvCw7ZqdkED8kKwoxAH91uD565fwg8mUGzwIGhMoB8jn9ss4rxsNpa
+         DT6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745395539; x=1746000339;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=qpZG8w/6yabmuOISJ5IM1b+4kVX8LAERzuJkJnF5eAE=;
+        b=FjUa2tb2ePfiEuZUnozUJ+OBk0yI1gijoL3tzskmDjcQegEOvVK8lBZSg6xcqk3TUI
+         VnMMEzBIfBOvFpIALkl16UlZBgYjTECOBCiBBkbO4M7o2cNM9uFeq8bVGxnaM2vskLff
+         adDkL8dK6JpyUigtMxGKQFKGQ+iAmYeTkTjcYEgJ+4Kqj6zMyl2vgVEeKv6dox3wjxZe
+         RAB2Lcj1YELLI+sJ5TPCY2XWpwkwK2p1zazFjQvzI3zavZ0ZMe1vVSzm8x3Lv00tfPp2
+         pZyk8C5ETgUmQXUuKX1nEbuB6ss2xAZrFism2Sfix/HtjcImgSrFoMD35NpDsQaM2gAu
+         ZWUA==
+X-Forwarded-Encrypted: i=1; AJvYcCWN7/+kxzLU2kQVymu9opK8HJ4FMibSSzGzgONDLwO7b5H+IfxmHTK2M2DkkRwQ1qSVBaeGo+pTTuFf1NU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzxk/0TUcJxYg5dUHxCpolI9S0kvqp5fx9TCc64nrO7fzm+qssU
+	rlw9P6GHG4inckQShB0tWHNvWqxlRvUXy8tDWsC1BKDFHNlcWZEI
+X-Gm-Gg: ASbGncswZyAsNZXikyYseBOQGDcxXMnFdvfAo6127yyEd4HJfFmoKD7k7Sa2vT9NG1Z
+	JUZG5MrEQm421UeqEdRptUxmuUZyeXQiqqMOKe2iKNAwmVBZ5diMh1d63so4UL0rr1eFYvgcPKo
+	bmecICpYEBw4kXo+lzEdyDQFKzZz9eea2qMV7j1sIUJEYE+sA/ut9LEhTYCfIRZelpPmAlceHGc
+	HArce6z+JmrTalPcdu2N2gtUmUzc16fhuC1XK5uROxE1r/qz86p9nT7BxNskHeCdSanvASm0egt
+	t4RrXcberZ8HZ5hlQt3I1/yhMQKB0vHq5w==
+X-Google-Smtp-Source: AGHT+IHaLJhz40kitf1dYKxTtQaOLc9OHtiq3tVK1R7dXUzLw86SAuLeMwfNyJbH6EnFurdvEogCog==
+X-Received: by 2002:a17:903:3c6b:b0:223:5c33:56a2 with SMTP id d9443c01a7336-22c535ac9bfmr292361185ad.28.1745395539370;
+        Wed, 23 Apr 2025 01:05:39 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fdf1f1sm97881165ad.237.2025.04.23.01.05.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 01:05:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Linux 6.15-rc3
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
- Dave Airlie <airlied@gmail.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Sebastian Sewior <bigeasy@linutronix.de>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Alexei Starovoitov <ast@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAHk-=wgjZ4fzDKogXwhPXVMA7OmZf9k0o1oB2FJmv-C1e=typA@mail.gmail.com>
- <CAPM=9tzj_OBFJNsN9j7nMs4OR3=V9yrPmaH7VvN-KNYUYhf-vQ@mail.gmail.com>
- <CAADnVQ+KnfDLd-=Mg1BDJxCf80K_=RN0dJy_yp681gf1dQMhtg@mail.gmail.com>
- <0981c1fe-05d2-4bab-a0a4-6dc5666d98d7@suse.cz>
-In-Reply-To: <0981c1fe-05d2-4bab-a0a4-6dc5666d98d7@suse.cz>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 05B882118E
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[gmail.com,linux.dev,linutronix.de,linux-foundation.org];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Date: Wed, 23 Apr 2025 05:05:35 -0300
+Message-Id: <D9DV2VOCWEK3.TQ96Z41CV0P4@gmail.com>
+Cc: <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ "Joshua Grisham" <josh@joshuagrisham.com>
+Subject: Re: [PATCH 1/2] platform/x86: firmware_attributes_class: Provide a
+ highlevel interface
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>, "Hans de
+ Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Armin Wolf" <W_Armin@gmx.de>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250107-pdx86-firmware-attributes-v1-0-9d75c04a3b52@weissschuh.net> <20250107-pdx86-firmware-attributes-v1-1-9d75c04a3b52@weissschuh.net>
+In-Reply-To: <20250107-pdx86-firmware-attributes-v1-1-9d75c04a3b52@weissschuh.net>
 
-On 4/23/25 09:14, Vlastimil Babka wrote:
-> On 4/23/25 01:37, Alexei Starovoitov wrote:
->> On Tue, Apr 22, 2025 at 4:01 PM Dave Airlie <airlied@gmail.com> wrote:
->>>
->>> > Alexei Starovoitov (2):
->>> >       locking/local_lock, mm: replace localtry_ helpers with
->>> > local_trylock_t type
->>>
->>> This seems to have upset some phoronix nginx workload
->>> https://www.phoronix.com/review/linux-615-nginx-regression/2
->> 
->> 3x regression? wow.
->> Thanks for heads up.
->> I'm staring at the patch and don't see it.
->> Adding more experts.
-> 
-> Incidentally my work on slab sheaves using local_trylock() got to a phase
-> yesterday when after rebasing on rc3 and some refactoring I was looking at
-> sheaf stats that showed the percpu sheaves were used exactly once per cpu,
-> and other attempts failed. Which would be explained by local_trylock()
-> failing. In the context of rc3 itself it would mean the memcg stocks aren't
-> used at all because they can't be try-locked. Which could make benchmarks
-> unhappy of course, although surprising that it would be that much.
-> 
-> What I suspect now is the _Generic() part doesn't work as expected. So consider:
-> 
-> local_trylock() (or _irqsave variant) has no _Generic() part, does the
-> "if (READ_ONCE(tl->acquired))" and "WRITE_ONCE(tl->acquired, 1)" directly,
-> succeeds the first attempt on each cpu where executed.
-> 
-> local_unlock() goes via __local_lock_release() and since the _Generic() part
-> there doesn't work, we don't do WRITE_ONCE(tl->acquired, 0); so it stays 1.
-> 
-> preempt or irq handling is fine so nothing like lockdep, preempt debugging,
-> watchdogs gets suspicious, just the cpu can never succeed local_trylock() again
-> 
-> local_lock(_irqsave()) uses __local_lock_acquire() which also has a
-> _Generic() part but since it doesn't work, the "lockdep_assert(tl->acquired
-> == 0);" there isn't triggered either
-> 
-> In fact I've put BUG() in the _Generic() sections of _acquire() and _release()
-> and it didn't trigger, which would prove the code isn't executed. But I don't
-> know why _Generic() doesn't recognize the correct type there.
-> 
-> --- a/include/linux/local_lock_internal.h
-> +++ b/include/linux/local_lock_internal.h
-> @@ -104,6 +104,7 @@ do {                                                                \
->                 _Generic((lock),                                        \
->                         local_trylock_t *: ({                           \
->                                 lockdep_assert(tl->acquired == 0);      \
-> +                               BUG();                                  \
->                                 WRITE_ONCE(tl->acquired, 1);            \
->                         }),                                             \
->                         default:(void)0);                               \
-> @@ -173,6 +174,7 @@ do {                                                                \
->                 _Generic((lock),                                        \
->                         local_trylock_t *: ({                           \
->                                 lockdep_assert(tl->acquired == 1);      \
-> +                               BUG();                                  \
->                                 WRITE_ONCE(tl->acquired, 0);            \
->                         }),                                             \
->                         default:(void)0);                               \
-> 
+On Tue Jan 7, 2025 at 2:05 PM -03, Thomas Wei=C3=9Fschuh wrote:
+> Currently each user of firmware_attributes_class has to manually set up
+> kobjects, devices, etc.
+> Provide a higher level API which takes care of the low-level details.
+>
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> ---
+>  drivers/platform/x86/firmware_attributes_class.c | 146 +++++++++++++++++=
+++++++
+>  drivers/platform/x86/firmware_attributes_class.h |  37 ++++++
+>  2 files changed, 183 insertions(+)
+>
+> diff --git a/drivers/platform/x86/firmware_attributes_class.c b/drivers/p=
+latform/x86/firmware_attributes_class.c
+> index 736e96c186d9dc6d945517f090e9af903e93bbf4..70ceae5215820098b017bfda9=
+91a3c2a7824c98e 100644
+> --- a/drivers/platform/x86/firmware_attributes_class.c
+> +++ b/drivers/platform/x86/firmware_attributes_class.c
+> @@ -2,6 +2,9 @@
+> =20
+>  /* Firmware attributes class helper module */
+> =20
+> +#include <linux/device/class.h>
+> +#include <linux/device.h>
+> +#include <linux/kobject.h>
+>  #include <linux/module.h>
+>  #include "firmware_attributes_class.h"
+> =20
+> @@ -22,6 +25,149 @@ static __exit void fw_attributes_class_exit(void)
+>  }
+>  module_exit(fw_attributes_class_exit);
+> =20
+> +static ssize_t fw_attributes_sysfs_show(struct kobject *kobj, struct att=
+ribute *attr, char *buf)
+> +{
+> +	struct firmware_attributes_device *fwadev =3D to_firmware_attribute_dev=
+ice(kobj);
+> +	const struct firmware_attribute *fw_attr =3D to_firmware_attribute(attr=
+);
+> +
+> +	if (!fw_attr->show)
+> +		return -EIO;
+> +
+> +	return fw_attr->show(fwadev, fw_attr, buf);
+> +}
+> +
+> +static ssize_t fw_attributes_sysfs_store(struct kobject *kobj, struct at=
+tribute *attr,
+> +					 const char *buf, size_t count)
+> +{
+> +	struct firmware_attributes_device *fwadev =3D to_firmware_attribute_dev=
+ice(kobj);
+> +	const struct firmware_attribute *fw_attr =3D to_firmware_attribute(attr=
+);
+> +
+> +	if (!fw_attr->store)
+> +		return -EIO;
+> +
+> +	return fw_attr->store(fwadev, fw_attr, buf, count);
+> +}
+> +
+> +static const struct sysfs_ops fw_attributes_sysfs_ops =3D {
+> +	.show	=3D fw_attributes_sysfs_show,
+> +	.store	=3D fw_attributes_sysfs_store,
+> +};
+> +
+> +static void fw_attributes_attr_release(struct kobject *kobj)
+> +{
+> +	struct firmware_attributes_device *fwadev =3D to_firmware_attribute_dev=
+ice(kobj);
+> +	struct device *cdev;
+> +
+> +	cdev =3D fwadev->dev;
+> +
+> +	kfree(fwadev);
+> +	device_unregister(cdev);
+> +}
+> +
+> +static const struct kobj_type fw_attributes_attr_type =3D {
+> +	.sysfs_ops	=3D &fw_attributes_sysfs_ops,
+> +	.release	=3D fw_attributes_attr_release,
+> +};
+> +
+> +DEFINE_FREE(firmware_attributes_device_unregister, struct firmware_attri=
+butes_device *,
+> +	    if (_T) firmware_attributes_device_unregister(_T))
+> +
+> +struct firmware_attributes_device *
+> +firmware_attributes_device_register(struct device *parent, const char *n=
+ame,
+> +				    const struct attribute_group **groups, void *data)
+> +{
+> +	struct firmware_attributes_device *fwadev =3D NULL;
+> +	struct device *cdev =3D NULL;
+> +	int ret;
+> +
+> +	fwadev =3D kzalloc(sizeof(*fwadev), GFP_KERNEL);
+> +	if (!fwadev)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	cdev =3D device_create(&firmware_attributes_class, parent, MKDEV(0, 0),=
+ "%s", name);
+> +	if (IS_ERR(cdev))
+> +		return ERR_CAST(cdev);
+> +
+> +	fwadev->data =3D data;
+> +	fwadev->dev =3D cdev;
+> +
+> +	ret =3D kobject_init_and_add(&fwadev->attributes, &fw_attributes_attr_t=
+ype, &cdev->kobj,
+> +				   "attributes");
+> +	if (ret) {
+> +		device_del(cdev);
+> +		return ERR_PTR(ret);
+> +	}
+> +
+> +	if (groups) {
+> +		ret =3D sysfs_create_groups(&fwadev->attributes, groups);
+> +		if (ret) {
+> +			firmware_attributes_device_unregister(fwadev);
+> +			return ERR_PTR(ret);
+> +		}
+> +
+> +		kobject_uevent(&fwadev->dev->kobj, KOBJ_CHANGE);
+> +	}
+> +
+> +	return fwadev;
+> +}
+> +EXPORT_SYMBOL_GPL(firmware_attributes_device_register);
+> +
+> +void firmware_attributes_device_unregister(struct firmware_attributes_de=
+vice *fwadev)
+> +{
+> +	kobject_del(&fwadev->attributes);
+> +	kobject_put(&fwadev->attributes);
+> +}
+> +EXPORT_SYMBOL_GPL(firmware_attributes_device_unregister);
+> +
+> +static void devm_firmware_attributes_device_release(void *data)
+> +{
+> +	struct firmware_attributes_device *fwadev =3D data;
+> +
+> +	firmware_attributes_device_unregister(fwadev);
+> +}
+> +
+> +struct firmware_attributes_device *
+> +devm_firmware_attributes_device_register(struct device *parent, const ch=
+ar *name,
+> +					 const struct attribute_group **groups, void *data)
+> +{
+> +	struct firmware_attributes_device *fwadev;
+> +	int ret;
+> +
+> +	fwadev =3D firmware_attributes_device_register(parent, name, groups, da=
+ta);
+> +	if (IS_ERR(fwadev))
+> +		return fwadev;
+> +
+> +	ret =3D devm_add_action_or_reset(parent, devm_firmware_attributes_devic=
+e_release, fwadev);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	return fwadev;
+> +}
+> +EXPORT_SYMBOL_GPL(devm_firmware_attributes_device_register);
+> +
+> +static ssize_t firmware_attributes_type_show(struct firmware_attributes_=
+device *fwadev,
+> +					     const struct firmware_attribute *attr, char *buf)
+> +{
+> +	if (attr =3D=3D &_firmware_attribute_type_string)
+> +		return sysfs_emit(buf, "string\n");
+> +	else if (attr =3D=3D &_firmware_attribute_type_enumeration)
+> +		return sysfs_emit(buf, "enumeration\n");
+> +	else if (attr =3D=3D &_firmware_attribute_type_integer)
+> +		return sysfs_emit(buf, "integer\n");
+> +	else
+> +		return -EIO;
+> +}
+> +
+> +#define __FW_TYPE_ATTR	__ATTR(type, 0444, firmware_attributes_type_show,=
+ NULL)
+> +
+> +const struct firmware_attribute _firmware_attribute_type_string =3D __FW=
+_TYPE_ATTR;
+> +EXPORT_SYMBOL_GPL(_firmware_attribute_type_string);
+> +const struct firmware_attribute _firmware_attribute_type_enumeration =3D=
+ __FW_TYPE_ATTR;
+> +EXPORT_SYMBOL_GPL(_firmware_attribute_type_enumeration);
+> +const struct firmware_attribute _firmware_attribute_type_integer =3D __F=
+W_TYPE_ATTR;
+> +EXPORT_SYMBOL_GPL(_firmware_attribute_type_integer);
+> +
+>  MODULE_AUTHOR("Mark Pearson <markpearson@lenovo.com>");
+> +MODULE_AUTHOR("Thomas Wei=C3=9Fschuh <linux@weissschuh.net>");
+>  MODULE_DESCRIPTION("Firmware attributes class helper module");
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/platform/x86/firmware_attributes_class.h b/drivers/p=
+latform/x86/firmware_attributes_class.h
+> index d27abe54fcf9812a2f0868eec5426bbc8e7eb21c..66837ad9f65b8ca501dee73f4=
+8c01f2710d86bf5 100644
+> --- a/drivers/platform/x86/firmware_attributes_class.h
+> +++ b/drivers/platform/x86/firmware_attributes_class.h
+> @@ -5,8 +5,45 @@
+>  #ifndef FW_ATTR_CLASS_H
+>  #define FW_ATTR_CLASS_H
+> =20
+> +#include <linux/device.h>
+>  #include <linux/device/class.h>
+> +#include <linux/sysfs.h>
+> =20
+>  extern const struct class firmware_attributes_class;
+> =20
+> +struct firmware_attributes_device {
+> +	struct device *dev;
+> +	struct kobject attributes;
+> +	void *data;
+> +};
+> +
+> +struct firmware_attribute {
+> +	struct attribute attr;
+> +	ssize_t (*show)(struct firmware_attributes_device *fwadev,
+> +			const struct firmware_attribute *attr, char *buf);
+> +	ssize_t (*store)(struct firmware_attributes_device *fwadev,
+> +			 const struct firmware_attribute *attr, const char *buf, size_t count=
+);
+> +};
+> +
+> +#define to_firmware_attribute(_a) container_of_const(_a, struct firmware=
+_attribute, attr)
+> +#define to_firmware_attribute_device(_s) \
+> +	container_of_const(_s, struct firmware_attributes_device, attributes)
+> +
+> +extern const struct firmware_attribute _firmware_attribute_type_string;
+> +#define firmware_attribute_type_string ((struct attribute *)&_firmware_a=
+ttribute_type_string.attr)
+> +extern const struct firmware_attribute _firmware_attribute_type_enumerat=
+ion;
+> +#define firmware_attribute_type_enumeration ((struct attribute *)&_firmw=
+are_attribute_type_enumeration.attr)
+> +extern const struct firmware_attribute _firmware_attribute_type_integer;
+> +#define firmware_attribute_type_integer ((struct attribute *)&_firmware_=
+attribute_type_integer.attr)
+> +
+> +struct firmware_attributes_device * __must_check
+> +firmware_attributes_device_register(struct device *parent, const char *n=
+ame,
+> +				    const struct attribute_group **groups, void *data);
+> +
+> +void firmware_attributes_device_unregister(struct firmware_attributes_de=
+vice *fwadev);
+> +
+> +struct firmware_attributes_device * __must_check
+> +devm_firmware_attributes_device_register(struct device *parent, const ch=
+ar *name,
+> +					 const struct attribute_group **groups, void *data);
+> +
+>  #endif /* FW_ATTR_CLASS_H */
 
-Oh I see, replacing the default: which "local_lock_t *:" which is the only
-other expected type, forces the compiler to actually tell me what's wrong:
+Hi Thomas,
 
-./include/linux/local_lock_internal.h:174:26: error: ‘_Generic’ selector of
-type ‘__seg_gs local_lock_t *’ is not compatible with any association
+Are you still working on this patchset?
 
+If you don't mind I can take it from here. I'm planning on fixing a
+couple memory leaks of this patch and extend it a bit more with some
+helper macros for ABI compliant drivers. I might drop the test driver
+though.
 
+I ask this because I want to use this class in another series I'm
+to do, and I think this patch is a great starting point.
+
+Let me know what you think!
+
+--=20
+ ~ Kurt
