@@ -1,76 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDBC4C62;
-	Wed, 23 Apr 2025 12:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CFF379D2;
+	Wed, 23 Apr 2025 12:54:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745412691; cv=none; b=KxTv6jXVG/J3GblnvBRwMrd/rlB2tDazJH8OYscMcXTzBq8tOu5vGoKjlPJuWlD+qt8CkmWZ4pPsEraVUMNNX7ipUH6AVHpz3Hzpl3tGkQdaPDCpCEMPB4KezsP9FK3GzRpn+GrhdGIyMMcKy5RfCXaZlhFCKHFZ+w9AJr19PM4=
+	t=1745412845; cv=none; b=pMWpdbmFLc6Tg4St4bmaHJaX726fTaOWvW+MqKDrx/Yg1BAoRwxkz6WQ2TUV/QSLxPAozr7YGaA8ZddXHxebfTyWsuW01avQQ4bq9JOuhtr/1iqMxYFp8ovUhZrlt10JuhaXSs9ZwTQgSRmTbHxnuIlkSUMGPepSWaSrzJUBDIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745412691; c=relaxed/simple;
-	bh=O24AVo87Xl3zKaU3Z4Nac3ocv+3MkbB4zf+ZspP3r6c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uF6NTOzhNs9IU9lmw51fqskrQICT9TuzHgLOVAh4fKIBueIzT4xhrjHm1/Um3kPqKp/kwe57gzFM4tShrJm81dhDTOEtSwYbNBzTgLfY5kf+LHu2EgGy4H+arr6uoCp7RZq+qZ4Q+8A7yrw8p+Dt7F7si5nq0nbBNemy1uH2NDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i/MDVqo4; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745412845; c=relaxed/simple;
+	bh=ZKAVMogWXPx2pj2K5Hh9LlE9qAqI5Iu2j9uhvzT38OM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OzlaK1uMP7tYow8zXg+FQ9brS+Y5OL9T+lE7yHkoRGe/RsSQxE+up7hakRIRyT4KAWZpU/dx0QrGAJalI1a71sf3JELBEtmM5aBmoCgnXMykF0DKzibdYJGMmxmo3kqya36jbMQT/lrT4bhBCaiCYffyILkUoTukJY5SJYmExSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=dVO0Rj96; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i/MDVqo4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745412690; x=1776948690;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=O24AVo87Xl3zKaU3Z4Nac3ocv+3MkbB4zf+ZspP3r6c=;
-  b=i/MDVqo4WT85uCQOsh9DBKxyoRCyhKMB+nOaW7lm1CMt/QUlth4vc/of
-   HiBUsgL1JHJNK6TuMPSDYxIyss9U/03bvsu8iBH0QvK6xy2OBL6nst0Sr
-   jCUwnEFWm2uB1dcG/VXC61hXCNlIkafjmwXMJJaWeBnfeKVEBIRzNP1Dp
-   Lzv1oPvtjsPeOf8W/dFtlQHFiGa/3w9N1dEKJiVKfZ/soRW92Yr8uSLwL
-   HvEysBfEGeX9ufmnLL+pJRyKE/lXPErQlJ6mIRRW2FiMb7Osf1HNsqkIP
-   n0oQ84Rf/jRY4z9IirU3f4QXVF1rvTSHEBjOnYgRg74gYB9S1m606gC2c
-   A==;
-X-CSE-ConnectionGUID: M7bjXovzTaCWp2t5ONGCsg==
-X-CSE-MsgGUID: pS0Qxy02QEWBKf/SHXQW+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="50665060"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="50665060"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 05:51:29 -0700
-X-CSE-ConnectionGUID: h88h5D9OT66vHIycEe6hZw==
-X-CSE-MsgGUID: OfANx+SmSLGfjdfkMYLzCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="137465673"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 05:51:26 -0700
-Date: Wed, 23 Apr 2025 15:51:21 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: eugen.hristev@linaro.org, mchehab@kernel.org,
-	nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, hugues.fruchet@foss.st.com,
-	alain.volmat@foss.st.com, mcoquelin.stm32@gmail.com,
-	alexandre.torgue@foss.st.com, andriy.shevchenko@linux.intel.com,
-	sakari.ailus@linux.intel.com
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Convert media drivers to use devm_kmemdup_array()
-Message-ID: <aAjiSa_TD1r6Sqrn@black.fi.intel.com>
-References: <20250409084738.1851463-1-raag.jadav@intel.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="dVO0Rj96"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=b0qvYVi5EKKwE4d58vIOem1eVuvc6m9T7pA9hU6GFgM=;
+	t=1745412843; x=1746622443; b=dVO0Rj96yMJJjFjxpy/QBleZZ5HxPWK28C/le7dpDSsps+L
+	X2wYSC+N9iUguA3RTgwunXPmUx1apwxcAj/IFJYnXi4sbr2XzhM26/s9PfOsrAd7maVawqRVZwQuC
+	HRBOhO3tJ8kCBQUE17nxwDbjrSnh+zsja76n+5LoGHTyw7/AAuwhMaBXB2RaLsuJbSbdSvVAuIrfQ
+	2NZLxc4W0EHgMbVtWPm/e+x++HO+AmuN/OTpMSdKzF84rQJ4Q/jMAGmaCKUJWrFUDhQYyxAupjs0e
+	3eN3M2eSQYNQqISRaz5mQccHHyXtmVJPq9zvAdAOWyFLjcnsMLoM4fpNd1upSnQQ==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1u7Zbu-0000000EfWY-2Ois;
+	Wed, 23 Apr 2025 14:53:54 +0200
+Message-ID: <b30cc04676a031db8c36df243160992094b3848d.camel@sipsolutions.net>
+Subject: Re: [PATCH] wifi: mac80211_hwsim: Prevent tsf from setting if
+ beacon is disabled
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Edward Adam Davis <eadavis@qq.com>, 
+	syzbot+064815c6cd721082a52a@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Date: Wed, 23 Apr 2025 14:53:53 +0200
+In-Reply-To: <tencent_096EDEEED78C81A7D006E812E4C66E898A06@qq.com>
+References: <67fac9a6.050a0220.379d84.0016.GAE@google.com>
+	 <tencent_096EDEEED78C81A7D006E812E4C66E898A06@qq.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250409084738.1851463-1-raag.jadav@intel.com>
+X-malware-bazaar: not-scanned
 
-On Wed, Apr 09, 2025 at 02:17:36PM +0530, Raag Jadav wrote:
-> This series converts media drivers to use the newly introduced[1]
-> devm_kmemdup_array() helper.
-> 
-> [1] https://lore.kernel.org/r/20250212062513.2254767-1-raag.jadav@intel.com
+On Sun, 2025-04-13 at 14:11 +0800, Edward Adam Davis wrote:
+>=20
+> --- a/drivers/net/wireless/virtual/mac80211_hwsim.c
+> +++ b/drivers/net/wireless/virtual/mac80211_hwsim.c
+> @@ -1226,6 +1226,11 @@ static void mac80211_hwsim_set_tsf(struct ieee8021=
+1_hw *hw,
+>  {
+>  	struct mac80211_hwsim_data *data =3D hw->priv;
+>  	u64 now =3D mac80211_hwsim_get_tsf(hw, vif);
+> +	struct ieee80211_bss_conf *conf =3D link_conf_dereference_protected(vif=
+,
+> +			data->link_data[0].link_id);
+> +
+> +	if (conf && !conf->enable_beacon)
+> +		return;
+>  	/* MLD not supported here */
+>  	u32 bcn_int =3D data->link_data[0].beacon_int;
+>  	u64 delta =3D abs(tsf - now);
 
-Bump. Any guidance on this?
+Please keep kernel coding style - the line break there is awful (but
+with "conf =3D ..." on a line by itself it can be just one line), and you
+shouldn't have code before variable declarations.
 
-Raag
+The comment should probably also move because it's relevant for your new
+[0] as well.
+
+johannes
