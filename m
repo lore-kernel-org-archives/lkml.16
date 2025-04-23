@@ -1,134 +1,76 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13B121CC68
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7E0265CBC;
+	Wed, 23 Apr 2025 08:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745397221; cv=none; b=kdJCV8/9CwJIwT9QdW6XUBrOoYwvkHlVN4E7ihLTpsSMrVuUlG3Ni+HhOROx0yYopZ+5eZvsSBMQRSNO900mnTf+uZPdtIbMQDJbd6BX1jJuFQ/jUtFYFGX+JTqmBfn+IRObb5I0XND/+dOCsEMK2NGbERlDQtx1vAPp+oQFLek=
+	t=1745397268; cv=none; b=rjrIu8Tj+Z43mwjkk3zeV6zj65hxMYGAftyYiaNaLDV+ZnteF8XIVpDRKaluKv/NkeRfS5KThaQdwor1isIVjd0638vdIutULPAQqv01BD80YDg3ExlhNvzBA0+RMky8jmMTSev+qP6y9rinuGpXPiBE+tKZfYQLw7O4tUYqXe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745397221; c=relaxed/simple;
-	bh=BUSjh0lFxXUIRIYg/SjVFXpaplWWU3J0vA9OO4StOEI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=StQo5aG3XMmD4AXCcpyuExSDFYxOOnwH+twsW69cJSIvZUiOhOIzG8wN0ToLwzVceq/oYxPJ8icQV63+R+3ginudFHwfUicwzH7x84NteUDAe7WHptt9/Zb62QBIg+BNwGxAMooIwBwW+43HB4UHlhNMpyT7YP+rL89wdDpzdBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Klo2IEpz; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745397268; c=relaxed/simple;
+	bh=yNcym9AB15nC9Tu7sEWtC7GM04KbMiS2dWyXXltgH3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=j9QoOqqBX5UU/3JaKGOolYsasnwblDFHEVabBoccWOhnD062WFDo9pI47bvvI6uB8TyTxL9sFWyWQqZWB/Hp7JeCrGdPVO1bF4PqRkqQvIiRKK4rBuOiCv+F5hudeNFSDDh85Xmja/t7OKSXvGiswWCUwzIyDnuYIhBBGHwPGo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CGPEKNRX; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Klo2IEpz"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3913d129c1aso499118f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:33:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745397218; x=1746002018; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vdQA0CLkraq1AuvbxRbpE3fElw8sj3Gp+Oh8urZ3zAY=;
-        b=Klo2IEpz8Ns2V381NDlhyTMAixC18dkFqlMiRojlM9p9gy9A3/uwwibseP6NGnhuq4
-         +MHfA5l4AGzG45wOy6Bh5NEo/VDLndgnCIKdfabRHiY9GJlzrd8NId12upyq9Hl5fbtM
-         60P8HYOAGNQncgIWqVizeVVUqQ1UYc54vAjEU+eSXpfRQEI8w0L3mIuC4vYUYGy9GdQe
-         ZkN7bqOc6SrQq5s2azY7ZCJ9Xd7R5/jhxeyyZMQlLlzMrVafPXjYYtZjwP+peDjgh3ue
-         EVLw9ct7ksTu8Jm8O7l4Z7QfdKzWgGVoEQj1n6796HmXVNJsxQ+iXbzs/Sqym1S1y1Eg
-         obYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745397218; x=1746002018;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vdQA0CLkraq1AuvbxRbpE3fElw8sj3Gp+Oh8urZ3zAY=;
-        b=eyEhXEZ1OSOzlw3b6RajA7mNz8NhNWBWc4p83dsLLMW+FgwKJ0xJp18cGBK+2VY712
-         7O/vqHtwcNRslVAktOFx2YUKNmp+dfRKJbXGDfKK60pqzgTbXt3U8d6NctZ2bOHKal/Z
-         kkqZUBmIJNimMMVj9fceLuGF3fm7zIHFjIkb2ofdWF53xC2ibpQaEaMlxPgFjhvm38ug
-         tcRv9jnO73Fb0Z2k3kCLRUJcnasAQpWqlZ0yZNAdO3KTE57lCo4cVPQ4lNOKk4unJX22
-         ECK+umrmwl6uLej4CirX9TdtBdlwmOPFcmN+KAlcyjb9NPZ85wEgoETnNjzGPAXaLH8k
-         HVCA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfHaL2m6K3VSBqT/rGyoSJgjmSjjYtbq+1kd2BeZDzddvpo4D10EvUEMr+GKvLIxoKkyZQ792EdWf4nK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpysuMRcxjPmG6glNghQwQnKBkUYqVGrgrN8+b0r0YOgLWFrWJ
-	Rc7aS3cMI+iVme3vpRfuGzpOUy4i9HIHrKyJE8s0Ww1YgDP60KrixFOO4V+6kG4BsqpVRAc/bby
-	UiOgwYp7AhEiXb/Dk0mwlL2oZyZpNfqdSNnQu9ackXLodHd+gxA==
-X-Gm-Gg: ASbGncuFdntc2as8oYjdSklxyiUPLXFk9FMq7rGBr+QIkwMM4guzhUX1QflRofBtYfg
-	3MCGyu5mC1ypeHPFkKF7w07EffXPn9KB1Zx59P3a431FkZsfQEw8giXjOq7fMnZO3DWzWIkcmkO
-	zUqRR3d4JAt1c7gffHjgSljbzuP7ySnS99sM+DMxrlvQSMxA3SHqMRBzavDvlW/eA=
-X-Google-Smtp-Source: AGHT+IG3tYu376KIhCsSndKDh5W5hvfIKvAUTboABKPK8G5/7XT+wdQFf7zoWZ9IBgLxtb98yQxMoxzc+s6IfZlppjE=
-X-Received: by 2002:a5d:6d89:0:b0:39d:8e61:b6eb with SMTP id
- ffacd0b85a97d-3a067221366mr1544806f8f.1.1745397218013; Wed, 23 Apr 2025
- 01:33:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CGPEKNRX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745397264;
+	bh=yNcym9AB15nC9Tu7sEWtC7GM04KbMiS2dWyXXltgH3g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CGPEKNRXsbehCZXs4NA5cZw4zmzXv5MuCy41cXQLI4yxUFDSRlSKQWwswuc2GDOQV
+	 1n0Sxo6wDzxQo0iczXrCIF8xxvv2KgBiFG3vswfMl5M0PmKwRWEZtd+hCCX6C9Rxgc
+	 L0Gzt546S+u3LZ9h2EY8+cLmFz6h6ZSTgR34BgbkyC+vYuWByLixZ47GvM+m9M6MSc
+	 xNfNlmkQ76VU7Ho8SE9S6+z4H0Ata/0FJzixfCHlPU4eWcgSlkOmkTGUeCQAIs6N41
+	 kGQOPv3ca8St1RgcVjr3QJDZ8dCl+tkQHMjqIc/xZXu3mzdZOjK3a4mVJS/L1YuVYp
+	 OchThd/qjHByw==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id CF55617E03B6;
+	Wed, 23 Apr 2025 10:34:23 +0200 (CEST)
+Date: Wed, 23 Apr 2025 10:34:19 +0200
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ kernel@collabora.com, Liviu Dudau <liviu.dudau@arm.com>, Steven Price
+ <steven.price@arm.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Sumit Semwal <sumit.semwal@linaro.org>,
+ Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH v10 4/4] drm/panthor: show device-wide list of DRM GEM
+ objects over DebugFS
+Message-ID: <20250423103419.587a88f9@collabora.com>
+In-Reply-To: <20250423090149.2748ef62@collabora.com>
+References: <20250423021238.1639175-1-adrian.larumbe@collabora.com>
+	<20250423021238.1639175-5-adrian.larumbe@collabora.com>
+	<20250423090149.2748ef62@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
- <20250422-vec-methods-v3-6-deff5eea568a@google.com> <6808171f.050a0220.393a1.5936@mx.google.com>
-In-Reply-To: <6808171f.050a0220.393a1.5936@mx.google.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Wed, 23 Apr 2025 10:33:26 +0200
-X-Gm-Features: ATxdqUGImfp2bR0xOD5HfkqMs7mwAWwJAreDXNjk4yPoS1Qm9cYgqXb66d-Sc1s
-Message-ID: <CAH5fLgh=MCDw74XEYPh4_T9fryrdA=aBLioewe+=biJc8C2PzA@mail.gmail.com>
-Subject: Re: [PATCH v3 6/7] rust: alloc: add Vec::remove
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 12:24=E2=80=AFAM Boqun Feng <boqun.feng@gmail.com> =
-wrote:
->
-> On Tue, Apr 22, 2025 at 09:52:21AM +0000, Alice Ryhl wrote:
-> > This is needed by Rust Binder in the range allocator, and by upcoming
-> > GPU drivers during firmware initialization.
-> >
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> >  rust/kernel/alloc/kvec.rs | 31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-> > index 2f894eac02212d15d902fe6702d6155f3128997c..2f28fda793e13841b59e83f=
-34681e71ac815aff2 100644
-> > --- a/rust/kernel/alloc/kvec.rs
-> > +++ b/rust/kernel/alloc/kvec.rs
-> > @@ -386,6 +386,37 @@ pub fn pop(&mut self) -> Option<T> {
-> >          Some(unsafe { removed.read() })
-> >      }
-> >
-> > +    /// Removes the element at the given index.
-> > +    ///
-> > +    /// # Examples
-> > +    ///
-> > +    /// ```
-> > +    /// let mut v =3D kernel::kvec![1, 2, 3]?;
-> > +    /// assert_eq!(v.remove(1), 2);
-> > +    /// assert_eq!(v, [1, 3]);
-> > +    /// # Ok::<(), Error>(())
-> > +    /// ```
-> > +    pub fn remove(&mut self, i: usize) -> T {
-> > +        // INVARIANT: This breaks the invariants by invalidating the v=
-alue at index `i`, but we
-> > +        // restore the invariants below.
-> > +        // SAFETY: Since `&self[i]` did not result in a panic, the val=
-ue at index `i` is valid.
->
-> So a out-of-bound `i` would result into a panic? Then I think we need a
-> "# Panics" section?
+On Wed, 23 Apr 2025 09:01:49 +0200
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-I can add a section.
-
-> > +        let value =3D unsafe { ptr::read(&self[i]) };
 > > +
-> > +        // SAFETY: Since the above access did not panic, the length is=
- at least one.
-> > +        unsafe { self.dec_len(1) };
-> > +
->
-> I think you need to move this line after the `ptr::copy()`, right?
-> Otherwise, you're using the *new* length to calculate how many elements
-> you are copying. (For example, in your above example, self.len is 2
-> after self.dec_len(), and the the following copy would be copy(p.add(1),
-> p, 2 - 1 - 1), which copies zero data, but it would be wrong.)
+> > +enum panthor_debugfs_gem_usage_flags {
+> > +	PANTHOR_DEBUGFS_GEM_USAGE_KERNEL_BIT = 0,
+> > +	PANTHOR_DEBUGFS_GEM_USAGE_FW_MAPPED_BIT = 1,  
+> 
+> Now that you print the flags as raw hex values, you don't need those
+> _BIT definitions.
 
-Good catch, thanks.
-
-Alice
+My bad, I didn't notice you were still printing flag names as a legend.
