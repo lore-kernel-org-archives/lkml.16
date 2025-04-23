@@ -1,84 +1,109 @@
-Received: from freeshell.de (freeshell.de [116.202.128.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DADB244670;
-	Wed, 23 Apr 2025 20:25:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B6B267725
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:25:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745439916; cv=none; b=E6yN+BiGglU76hgn84ysOqoXVs1U3s4Hc/UC0rdpunax03gxKYuSO/mJ6sAO43jaMkO2BDqbZWb0DF9k1LVLkw6sS8YtOpVJNDw/HR/MM7iPV0X86tX5z/dk7zqd6U4Pry2B8tEIkvxOHwgv0CXMbk69rsjDOBjwdrcJVZ4SNyc=
+	t=1745439952; cv=none; b=Ba3NfXTKENV5E7FCOAS1/1OcNeVrBEZfETgsOGPaOg6wmGp0Udd10DDsQVWdEUzvWxPMY2FxupydpjjiUG2UfKSb4nJJ66k8r2dCw29H4fgbChuy/mZw1mBDVTklE+Otw7iDDv/CAG8cL3paKzuoqc1n0GCHyXACV+GN/BUIDB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745439916; c=relaxed/simple;
-	bh=L9c8Wbib4Le+3TFbPIViZCMxCLCeZwmVDh80pjYJCwg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uKvGa8Sp8ziqyqRaU9l6bcemZNYdlHf/TKGYZXHir6s44tt3tIVJgKmp3Nj8Tq1n9wc7TPZUljaHZLaq1MU6E/5iBxb7ebcsasiKxpwk8kGnzvhIRfsLC5T9x+dd+g5g6Tkcx/ikXgObvZxTY/eLJn4nZgD9VAO8hlMeHuA1QVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; arc=none smtp.client-ip=116.202.128.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
-Received: from [192.168.2.35] (unknown [98.97.25.173])
-	(Authenticated sender: e)
-	by freeshell.de (Postfix) with ESMTPSA id EEF91B4C0D36;
-	Wed, 23 Apr 2025 22:18:07 +0200 (CEST)
-Message-ID: <1044b038-1e29-4058-9cb5-155551cd62ae@freeshell.de>
-Date: Wed, 23 Apr 2025 13:18:06 -0700
+	s=arc-20240116; t=1745439952; c=relaxed/simple;
+	bh=FVGAb43n+nj0WTaGxkD+7N48DxDKHF+TEMQjE/V8uF4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oDJHF0F75Mup29t9giduUlySKAGD/oTVUImibb30bIrBFexdeRLZN6GsFpc8i4QjX0kYczXTIEDDD+NpLiYpzIg/Eg5PIHDcBpdpGHCuADUkWi/GSY0t4W9o+rr25hAEWw2IweEmP0mTcxtv7sWHPdvLIr4ll8HFa4QMDyyzshk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B6KWxEd0; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B6KWxEd0"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-73dff14aa55so157138b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:25:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745439949; x=1746044749; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjX2WJaP/+hIZJnKE7ZkAy8ut0H0AnZ+KN3YDGIa+EI=;
+        b=B6KWxEd0568908TIWQLQx4k1c+x0CSpZXkE1kYcxVLL81Tt9AN3dr3ltUQGsHM6mmL
+         34jEuwT3lO03sF6lEH8EyoEIjz711G+PVcqYO8eqh6o/A2PpqXF3FySQzQGxx41v9Wqr
+         yqS806Ds3P/KHbo5eiVSbHOLT4nY1ipeuog0OFyW4De9uwzamEuvQ9Qopbgjwd6qjrrp
+         24kNv/QukRbbI9kcg4PBEEnENJRQ0oddSV8CUlmbgv4u+ncGFuFeh25OArs4+PJ3lidk
+         UX6aZyAx0WQylgvg6WrqZ6lmaOrpJBfqkxhkI69tiSZRMEP6BHldGEkvesIvb3w6WcdN
+         NSBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745439949; x=1746044749;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CjX2WJaP/+hIZJnKE7ZkAy8ut0H0AnZ+KN3YDGIa+EI=;
+        b=OipobGVEjA+LXC5WPMsrnqH2cobUgKSrPT4go8nOj9qK5lpjb76t8xibW63MWidchU
+         gKov423/VcoKSUGXNGFW9gabFSh80hYUv0LCKkzILgfVctcVL1oQmpv0dYH8edsDVTil
+         d72j83K83NIL1DomiUaaB8nl1bKjme9FOxec4kIMhgJWNiu/cxqQsWrMriS8CQSCU9OZ
+         HHwRGMCLtenx++HRxAcmr+Lwe/guQmi5QH0Lep18rqXhscPNJmRjA7bdbeuXh9Iw8Bq7
+         zVxfVem7bWAai5t0JxQJa0JpK/WkPLTP9StzAmFHbceOKONsyVp3gkIZnT2V8G9wRVfN
+         hhpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXzi/8l4aT5pirj2dU+C7S5q2F7NUQDZMtCGCOBfaW1QYVhHnsH1CfFPj4O9xNsfpfNarEzZdtN95DOHiM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhT0BLfihR9YtnxXt75mhwQUw/gQlhEh7+UNeQKwA68pGdwxLD
+	Da++X/76+NuwqQqF+ggzMkKQ6ItoV2ixF2W8qyebTbvKKhWyEx1sh+PLZJXdpy30cwLljYiBae/
+	yROj+DnIU/A54124KNh0T/A==
+X-Google-Smtp-Source: AGHT+IFLEEtCn1zkdoknKQC40EflQZ5HCAiPFEe4xIPUK0dlv/WJ0C7ai9MKNllw9+iA8ZkUhOs7ih4lNf6hYQC50w==
+X-Received: from pfam7.prod.google.com ([2002:aa7:8a07:0:b0:736:ae72:7543])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a20:c889:b0:1ee:a914:1d64 with SMTP id adf61e73a8af0-2044113e9a5mr1184451637.28.1745439949162;
+ Wed, 23 Apr 2025 13:25:49 -0700 (PDT)
+Date: Wed, 23 Apr 2025 13:25:47 -0700
+In-Reply-To: <Z47RSls2rr-xVqNk@x1n>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] riscv: dts: starfive: jh7110-common: assign 24MHz
- clock-frequency to uart0
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
- Conor Dooley <conor@kernel.org>, Emil Renner Berthing <kernel@esmil.dk>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-riscv@lists.infradead.org
-References: <20250203013730.269558-1-e@freeshell.de>
- <20250203013730.269558-4-e@freeshell.de>
- <CAJM55Z95pwTZmw-WPcUaB1BGpVoNgaRYYjUnqSFcLTNyVmZahg@mail.gmail.com>
-Content-Language: en-US
-From: E Shattow <e@freeshell.de>
-In-Reply-To: <CAJM55Z95pwTZmw-WPcUaB1BGpVoNgaRYYjUnqSFcLTNyVmZahg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <cover.1726009989.git.ackerleytng@google.com> <5a05eb947cf7aa21f00b94171ca818cc3d5bdfee.1726009989.git.ackerleytng@google.com>
+ <Z47RSls2rr-xVqNk@x1n>
+Message-ID: <diqzplh2zktw.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 27/39] KVM: guest_memfd: Allow mmapping guest_memfd files
+From: Ackerley Tng <ackerleytng@google.com>
+To: Peter Xu <peterx@redhat.com>
+Cc: tabba@google.com, quic_eberman@quicinc.com, roypat@amazon.co.uk, 
+	jgg@nvidia.com, david@redhat.com, rientjes@google.com, fvdl@google.com, 
+	jthoughton@google.com, seanjc@google.com, pbonzini@redhat.com, 
+	zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
+	isaku.yamahata@intel.com, muchun.song@linux.dev, mike.kravetz@oracle.com, 
+	erdemaktas@google.com, vannapurve@google.com, qperret@google.com, 
+	jhubbard@nvidia.com, willy@infradead.org, shuah@kernel.org, 
+	brauner@kernel.org, bfoster@redhat.com, kent.overstreet@linux.dev, 
+	pvorel@suse.cz, rppt@kernel.org, richard.weiyang@gmail.com, 
+	anup@brainfault.org, haibo1.xu@intel.com, ajones@ventanamicro.com, 
+	vkuznets@redhat.com, maciej.wieczor-retman@intel.com, pgonda@google.com, 
+	oliver.upton@linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, linux-fsdevel@kvack.org
+Content-Type: text/plain; charset="UTF-8"
 
+Peter Xu <peterx@redhat.com> writes:
 
+> On Tue, Sep 10, 2024 at 11:43:58PM +0000, Ackerley Tng wrote:
+>> @@ -790,6 +791,9 @@ static long kvm_gmem_punch_hole(struct inode *inode, loff_t offset, loff_t len)
+>>  	 */
+>>  	filemap_invalidate_lock(inode->i_mapping);
+>>  
+>> +	/* TODO: Check if even_cows should be 0 or 1 */
+>> +	unmap_mapping_range(inode->i_mapping, start, len, 0);
+>> +
+>>  	list_for_each_entry(gmem, gmem_list, entry)
+>>  		kvm_gmem_invalidate_begin(gmem, start, end);
+>>  
+>> @@ -946,6 +950,9 @@ static void kvm_gmem_hugetlb_teardown(struct inode *inode)
+>>  {
+>>  	struct kvm_gmem_hugetlb *hgmem;
+>>  
+>> +	/* TODO: Check if even_cows should be 0 or 1 */
+>> +	unmap_mapping_range(inode->i_mapping, 0, LLONG_MAX, 0);
+>
+> Setting to 0 is ok in both places: even_cows only applies to MAP_PRIVATE,
+> which gmemfd doesn't support.  So feel free to drop the two comment lines.
+>
+> Thanks,
+>
+> -- 
+> Peter Xu
 
-On 2/5/25 02:29, Emil Renner Berthing wrote:
-> E Shattow wrote:
->> Set uart0 clock-frequency for better compatibility with operating system
->> and downstream boot loader SPL secondary program loader.
->>
->> Signed-off-by: E Shattow <e@freeshell.de>
->> ---
->>  arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->> index 8a59c3001339..6bb13af82147 100644
->> --- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->> +++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
->> @@ -635,6 +635,7 @@ GPOEN_DISABLE,
->>  };
->>
->>  &uart0 {
->> +	clock-frequency = <24000000>;
->>  	pinctrl-names = "default";
->>  	pinctrl-0 = <&uart0_pins>;
->>  	status = "okay";
-> 
-> The uart0 node already has a reference to the uart0_core clock, so it shouldn't
-> need this property.
-> 
-> /Emil
-
-Okay. I'll drop this patch from next version of the series, and asking
-on U-Boot mailing list what to do about it there [1]. Thanks for reviewing!
-
--E
-
-1:
-https://lore.kernel.org/u-boot/c0023d23-4614-40c5-b612-9c0cb5b4d8b1@freeshell.de/
+Thank you for reviewing and helping me check on this!
