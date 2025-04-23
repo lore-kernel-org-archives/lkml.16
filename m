@@ -1,185 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4665152F88;
-	Wed, 23 Apr 2025 20:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10F802741A1
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:12:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745439124; cv=none; b=NxAXMV2otg0VuX02dTKH7sbKhQVVMt4Sbibzt95SokSapCM+gHMlrU1c5HdVSFNvUJC7gWBWSQ5QKrQldAtrCluckCoYHcEh99rNZsSkmDKgFIbbt/ivG0qTty2btM+W45AUViyf8HlCeQ+npqDTpuL5AdKId5KK+c3Jc6YOITQ=
+	t=1745439134; cv=none; b=jiMTtqInO4m875UADnE0Iix5fXTW4jadBPd6ejBlzfsNRMfFgoKAnOnl+S2IVNrglAX2qkhDpACUFCif/YYVVHqHBRy754p0jrDwx/4l0NHiikPcQ/RZ4CiS+QEGm+iMyah8bnhckzfKLoGRcLtaPAZ6eiEnr+MKsCW6uz9If/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745439124; c=relaxed/simple;
-	bh=LnD+ue8gxZJNFdo/2xfgOYOBuy04/6e3cNIPxTVvdRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VBzBkw4Gbv1D+xjYYqXt0k0w4gAYkRYyCn7kgL3Q7cl+LBNnsXb+sRI1TDFK/DhfkJIRiN2a/is0mAkgY6cu5UIAU4ymRvlxd01YXYYISA+vQ5TE/ahyUyoFLSJoHFc+YF+S9U9e3oKcXtCLG3uvJWW9Sjd8zpb6wCnv/ZuMSYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2qFhSZl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745439134; c=relaxed/simple;
+	bh=0oI6H3JU7dXC/ESxQwhxoh6QKaSMqhYZPxTmYuOujis=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ffwPzcyJloABseqWPonkTXIe+C0Ng/IBouY8dubKt1TygSUo8IIw8pyMcm9ZB9GubY4Es9FORxIZLmA4Ttv9hU4+A/wwNv4sXkS3tHrN/a+DZy6qjOgdzOTjIPWaomSbNqBLsULWqqcfizay6pmzWreyMQtxpXtLZI+yf3bXT+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=Sx4d+njZ; arc=none smtp.client-ip=209.85.166.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2qFhSZl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95048C4CEE2;
-	Wed, 23 Apr 2025 20:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745439123;
-	bh=LnD+ue8gxZJNFdo/2xfgOYOBuy04/6e3cNIPxTVvdRo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n2qFhSZlxizUAuFSVlnuAdPaqwCQ/xa+wkw5ryFyKcgp8+Ghsdi+1UkdPICc4xw08
-	 qxeh8i8MSZ4ck7E/2MBg2NYoF53MXkj1pSlyEtrq/1mqaxvTVd73oiylCsfO4ZlkFN
-	 FLxKQ844wtaHxfFutwYkpcvGpPzSyi+Bg6Wx9PkjdHbo5RvCv+FbF0ZvH9t9aR0Krk
-	 /jxZeT6ORj8fNBaL3oewJJS+CvUnJbsd563wa3hglRLbdYgHjDbePipQfRKmab6/+u
-	 cEkfPIzKH+n9lDTMFHG6Ce2VbXdajdTUDlH+pyhBTNYbR9erJxrZU6YJdgjkI2sdqY
-	 ONHU3y6VLShtg==
-Date: Wed, 23 Apr 2025 15:12:01 -0500
-From: Rob Herring <robh@kernel.org>
-To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-Cc: jic23@kernel.org, ~lkcamp/patches@lists.sr.ht,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings:iio:adc:st,spear600-adc: txt to yaml format
- conversion.
-Message-ID: <20250423201201.GA983074-robh@kernel.org>
-References: <20250423022956.31218-1-rodrigo.gobbi.7@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="Sx4d+njZ"
+Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-85dac9728cdso8913839f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:12:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745439132; x=1746043932; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4GYDwOUZ2pYA1l2ZUcy5ttcsi+e563LieF768X0Rxoc=;
+        b=Sx4d+njZD8u0myy2Idfy2VTol9FDgv9JcISNE+jHE6CQueZKiFE+eYfjUA5vhQq071
+         2rzgIVtzzDLyobjY6qWZR49nTu5hNvM8TDn8+4yTyJwvygQrnq6gGH55p9cL/fcICEmO
+         Up2qdUuFUJSGlmX8EflIKsLZBlixgWYGhzBVB3BdGNDhfk71RgOFob6Hk9/3exrse5up
+         XuWE1+i1r2Y6ClPEB2l/ms2irkMltW4wAo38ovXv1gt6CwUqiD/mBZ153RrG9VYw4q15
+         ujuA/wIEjrgVOHBlBIN30J5PL+DI+TL3ZV+Mc3p/rwaenGwZtiCXYlbfri6xx4LYoJwa
+         lZXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745439132; x=1746043932;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4GYDwOUZ2pYA1l2ZUcy5ttcsi+e563LieF768X0Rxoc=;
+        b=G/gWseteX9ZlZ/fXPokhh/xVtoYL1/UYaT6d6OsPOLc9QNZzTGABqg2XQUgHZmO8vq
+         WU64R06vynI274Y+tSEDO6XznavuPo04diOLelZxVi1YQaIDne0QVe32JsbAaik+ut8I
+         kXwph4bXNyb8J4Sv3j98oZzgtfmlf619l0zv7FJ2qh8A8fUjnGMcEQSPjJwFVm1qcp5L
+         0z4JCa3VqVO7IcXt2iZmKvue1yawTUOqcZUJcUa/4WQ/t2+vON/NaeihyjY0tH3i8vc+
+         ZXNvsukpexdmZwlQMEQ8jk2ERuZ6hsqQl/up4F1u3tuFnlLu82IkDsDEQV39XYNL/uYB
+         ultA==
+X-Forwarded-Encrypted: i=1; AJvYcCXp5IqyL4all8D2qZjdQIe2YcOyd4tyKtwxKcfMuhCajMiP9BmEHAC8P1C3wWfEozTcfg32wH7R9KVMUTY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yza6SRV8osJhAEsjHZC/Zx6Uf/d4RMiOmBy1D5WsY4RXAS8yVjy
+	DOblWNwJC2JsjB+lzI2hIWKS/x5Tui7UEIAfhpGU39pFNEeCffKIqO5srCHqBMU=
+X-Gm-Gg: ASbGncsohhnEHx2EK1qNhDAvcBBKwoEawY0oD1rrWHf5rjw3z4KVycCrC6eKSrMJjNt
+	ifnC3gBT0BqQsMNbhWhqBpqfHhF5oCTuo6l8TXVuPkZ37lz0VjoN/lfdJUDtPS0/yA8idN0VjTn
+	iZwLBgcSQ99WRddIQuwKkPG2JxNvAut0OiVhHZ8wEbUTxo6X2jb7cEZJjaZiRqq+Ud2QS3C21rY
+	suoc2BBIpgcZO8XEuCUAFgXWHeE91oHff1Jimo+1dfPkGSTiE8zsO0uWvk9IcXGfgrJh8DmQgNa
+	ADvDUU4pQDU4abDs6xMvPvs7WbgkTPZgL6w5
+X-Google-Smtp-Source: AGHT+IF9vIk8OfA8cuvvqIlQdjlqT8DUNnmqT7ndDWNAzbdPkvhypxwcvV4DAZpmUzsxMViIR4dExA==
+X-Received: by 2002:a05:6602:27cf:b0:864:4a9c:1bd7 with SMTP id ca18e2360f4ac-8644f84d864mr37879539f.0.1745439132084;
+        Wed, 23 Apr 2025 13:12:12 -0700 (PDT)
+Received: from [192.168.1.116] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-864447402a9sm43361039f.15.2025.04.23.13.12.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 13:12:11 -0700 (PDT)
+Message-ID: <f57ec419-08ef-4a87-b4ac-fc60c5fd2d3d@kernel.dk>
+Date: Wed, 23 Apr 2025 14:12:10 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423022956.31218-1-rodrigo.gobbi.7@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] relay: Remove unused relay_late_setup_files
+To: Andrew Morton <akpm@linux-foundation.org>, linux@treblig.org
+Cc: andriy.shevchenko@linux.intel.com, viro@zeniv.linux.org.uk,
+ corbet@lwn.net, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250418234932.490863-1-linux@treblig.org>
+ <20250420140758.601ae8abaa03aacb33ce7084@linux-foundation.org>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20250420140758.601ae8abaa03aacb33ce7084@linux-foundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 11:14:23PM -0300, Rodrigo Gobbi wrote:
-> Straight forward conversion from spear-adc.txt into yaml format.
+On 4/20/25 3:07 PM, Andrew Morton wrote:
+> On Sat, 19 Apr 2025 00:49:32 +0100 linux@treblig.org wrote:
 > 
-> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-> ---
-> After the conversion to yaml file, I was not sure about the
-> maintainers yaml field. It looks like the original driver author,
-> Stefan Roese, is not active contributing.
-> @Jonathan, I was not sure about it and I've added you on that field
-> as I've noticed at other yaml`s, but feel free to give any suggestions on that
-> or how to proceed in this case.
-
-That's fine I think, or you can add the spear platform maintainers.
-
+>> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>>
+>> The last use of relay_late_setup_files() was removed in 2018
+>> by commit 2b47733045aa ("drm/i915/guc: Merge log relay file and channel
+>> creation")
+>>
+>> Remove it and the helper it used.
+>>
+>> relay_late_setup_files() was used for eventually registering
+>> 'buffer only' channels.  With it gone, delete the docs that
+>> explain how to do that.   Which suggests it should be possible
+>> to lose the 'has_base_filename' flags.
+>>
+>> (Are there any other uses??)
+>>
 > 
-> Also noticed that the driver was moved out of staging, but the .txt was not
-> in that time. Added the yaml in the proper path (out of staging as the driver).
-> Tks and best regards.
-> ---
->  .../bindings/iio/adc/st,spear600-adc.yaml     | 61 +++++++++++++++++++
->  .../bindings/staging/iio/adc/spear-adc.txt    | 24 --------
->  2 files changed, 61 insertions(+), 24 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
->  delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
-> new file mode 100644
-> index 000000000000..a858b3f3c494
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
-> @@ -0,0 +1,61 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/st,spear600-adc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ST SPEAr ADC device driver
-> +
-> +maintainers:
-> +  - Jonathan Cameron <jic23@kernel.org>
-> +
-> +description: |
-> +  Integrated ADC inside the ST SPEAr SoC, SPEAr600, supporting
-> +  10-bit resolution. Datasheet can be found here:
-> +  https://www.st.com/resource/en/datasheet/spear600.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - st,spear600-adc
+> For some reason get_maintainer points at Al and Andy for relay.c but my
+> mental rolodex thinks "Axboe".
 
-blank line
+Heh, probably because I did dabble in it 20 YEARS AGO as we used it for
+the original blktrace! I'm not saying we're both old, but...
 
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  sampling-frequency:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Default sampling frequency of the ADC
+> Jens, does this look OK?
 
-Constraints?
+Looks fine to me.
 
-> +
-> +  vref-external:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      External voltage reference in milli-volts. If omitted
-> +      the internal voltage reference will be used.
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
-Constraints?
-
-> +
-> +  average-samples:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description:
-> +      Number of samples to generate an average value. If
-> +      omitted, single data conversion will be used.
-
-Constraints?
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - sampling-frequency
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    adc: adc@d8200000 {
-> +        compatible = "st,spear600-adc";
-> +        reg = <0xd8200000 0x1000>;
-> +        interrupt-parent = <&vic1>;
-> +        interrupts = <6>;
-> +        sampling-frequency = <5000000>;
-> +        vref-external = <2500>;	/* 2.5V VRef */
-> +    };
-> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-> deleted file mode 100644
-> index 88bc94fe1f6d..000000000000
-> --- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-> +++ /dev/null
-> @@ -1,24 +0,0 @@
-> -* ST SPEAr ADC device driver
-> -
-> -Required properties:
-> -- compatible: Should be "st,spear600-adc"
-> -- reg: Address and length of the register set for the device
-> -- interrupts: Should contain the ADC interrupt
-> -- sampling-frequency: Default sampling frequency
-> -
-> -Optional properties:
-> -- vref-external: External voltage reference in milli-volts. If omitted
-> -  the internal voltage reference will be used.
-> -- average-samples: Number of samples to generate an average value. If
-> -  omitted, single data conversion will be used.
-> -
-> -Examples:
-> -
-> -	adc: adc@d8200000 {
-> -		compatible = "st,spear600-adc";
-> -		reg = <0xd8200000 0x1000>;
-> -		interrupt-parent = <&vic1>;
-> -		interrupts = <6>;
-> -		sampling-frequency = <5000000>;
-> -		vref-external = <2500>;	/* 2.5V VRef */
-> -	};
-> -- 
-> 2.47.0
-> 
+-- 
+Jens Axboe
