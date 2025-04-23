@@ -1,74 +1,82 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-b3-smtp.messagingengine.com (fout-b3-smtp.messagingengine.com [202.12.124.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6DA1A9B39;
-	Wed, 23 Apr 2025 14:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74CB27CB12
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745419810; cv=none; b=ovzee0oWCNMuLhw4rWbtMFAeZ42DlMocU7PmJBI8zKLdeSPh0NAx9PEJRWy5g/Ptkv3+fJqBXv2GbTU4vD3sGproarb7ZUY+HDcTN1bkCWzTHHPKD8f6VNwhCE608zbdeOxJukdC08TUydw11PruJ2G1RjmR8kreoBGrgVD68gk=
+	t=1745419865; cv=none; b=Xto2ZWl0MeAnHZTcdfPeaZC+qRFiTTT0jcGKBOPlqqrBC97c5JwOOVJFe7fiEEMNhUq9wP76ISJXqOcmRa7Vbnsr+Xz/4s/6gPA9Kx6/tjsWwx6GH6QBHn/UQCdXVmowa9swPfEqkCcj6Of/pbzE2M3g1v+UPrVacYgs6HYUv4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745419810; c=relaxed/simple;
-	bh=cqboPyTx2cmE3bXcH8hw3VHROeLIbbmXPrr/jpwekTs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QnBhd6mqj6KFseWb+9aN2UnJ2oEcgY+RsQtXQPHZ9CpyxOBLzj3dBVA1W39IHgtXjSJIW5+P/bMVrzz0L48oRgEOwMEs2R360cFpXHBH0IaZGV6OSfHKH8FO45oTxGuVrsPVRxNaMZGzKX84pZA7x9nK1ONiELaXGugYaUfm5ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R+ylJyDv; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745419865; c=relaxed/simple;
+	bh=TJPTDQFz2u94NfPN6dhTJuABRU2xSEH29n4F2CZio+0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k/c1sjes2Nr65ViWSBar8sXLuxy1aikoRFvHzRROUqIldZPPb1T/BIwC20KymQOaQYHDoGgd9XHRGhLP5ib/I6SUlH25pUBGS2yuNYyU734Oad8CX/D9DTksxksWO1rhi6G4kZI+NOsyKtkwrTNvnbiaywbMP5Jnw+qoYlUHinQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev; spf=pass smtp.mailfrom=svenpeter.dev; dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b=vIdrmn72; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Zl/3LmPy; arc=none smtp.client-ip=202.12.124.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svenpeter.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svenpeter.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R+ylJyDv"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2243803b776so102180235ad.0;
-        Wed, 23 Apr 2025 07:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745419808; x=1746024608; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kacme6riPUWb6HwFjmzh0C2P6n/HVJi+iGJ7APUnik8=;
-        b=R+ylJyDvO0+EmGQ10Mt2avyMaS+hzvt+HBzmMPigCXr1ntNylS+Zam+vbLv7sd6qgy
-         VAG/CBezJmOrTIw8WTzaT2g4LqSozvtAR3c/pPhj7eCL3+PdwhFKj7IoU2rjlBra2lvf
-         gasnR60qhavA8/n9nN5GJbjxyJMB+OeFQmy9tvIfru0/ZFyGMAr+YbjrsJUanp1tS73t
-         uQ56sIH2XySh2ab4iaHFKMRK0i97YIJXNRabjKeJcSdesaAlr9wQaOkzmy7pBjCCi/KZ
-         Bv5qN3ex4jrmpHpV/YS+STL+dQ+5/4Qh6Da+z1yd/BuHo/ypdNU01tzI1afzvKzt/wGg
-         km1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745419808; x=1746024608;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kacme6riPUWb6HwFjmzh0C2P6n/HVJi+iGJ7APUnik8=;
-        b=jZjJvelfoIllPPquMQgn4uikEmEW1e6Pk01JdrHj6+6GVxQ6rZrDEm2kWy7I0mp8Va
-         D27DvZ/NP8AiYKFrdy6/qLuMF1tAqjzBNYEfhKuLIX86m5j6utkypO7EsyWDge4ORpKJ
-         BZL4UF5xPIbR/Nq0Vl4gXWGtj21zsl0IhXQrpRmrTncBzma2gInMOljIufAm175udXKb
-         oXnEehmjD+rznMUP/JVKfC1F0+0E9porrn327pzja1DBkk+zKaLGQ3eAB6UuNQI6zota
-         22nvrtP1RA1GG6Wl4u1oZj4hsHUdazdrg9bqfMmbHIMW51XeioPYYTb+b2gUC3H/4Mk3
-         8crw==
-X-Forwarded-Encrypted: i=1; AJvYcCXTSTIcdDdFSSQ18tDkhZZZNyDAX37rYnYKa+itBdYL744/3C7+3XKV4EWz52qtgAVerlxVMq7isAMSSd8=@vger.kernel.org, AJvYcCXdWifj7LebFLyba+2yRNHfg6he0Wb3/ekaKwe1zo4ypGp45p4ZpMiyA6UEJkGEtTKTFHtkYIKYExffGIo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcKB7KH4pWfRKOhkUqHiXKMX+wPNQmmv3Oa0Vg0VUibacL8dLp
-	vN9hKlHfXHsRGHR1jHx4X3PdZ8fmcIGfyUemcskaKNnRW5cHf0Tk
-X-Gm-Gg: ASbGnctdDG4LObHXdukRT/lfG4/ffT4ZTF+98cLaWHYitCiZ5mWdzqpGzzYtuscLa/2
-	RkdDptsdmSV9o18b9+7VW+PNGn1n4DumADXVA6/zOh0rfuwRO4dQNCTiLVIEESSG9BGYjpt9SQC
-	7gOqIcbjpqx0Ze44YgXevhDN42UIKKsno9sMLUA/GiqKtXTspxdZo33ldpFzunWubRPy1It4r83
-	fmJ+iectBBsWBQEaiUtgXV9Ie6qRF9+VNvgksMPReM07uTsXj9WvNYM9+zi1y9xZp7qruREeT9i
-	Ib94gR5Fke7UUBdh2KCWT0LI+u/W2dTNqAdgnGbjSjqSdSDcgKwyh5RJe8lYqRI=
-X-Google-Smtp-Source: AGHT+IEqPjhKdysQZK6cQg9qIZ6iAF0G4yZ/FAGa3E9ZtvhdAhxYy4nxgibZOTZ5/l3OVQFUXXEd+w==
-X-Received: by 2002:a17:902:ced0:b0:224:1ec0:8a1a with SMTP id d9443c01a7336-22c536423c5mr269107925ad.51.1745419808425;
-        Wed, 23 Apr 2025 07:50:08 -0700 (PDT)
-Received: from tech-Alienware-m15-R6.. ([223.185.129.6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4287sm105144655ad.130.2025.04.23.07.50.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 07:50:08 -0700 (PDT)
-From: Sunny Patel <nueralspacetech@gmail.com>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sunny Patel <nueralspacetech@gmail.com>
-Subject: [PATCH] media: i2c: ov13858: Enable clock frequency macro
-Date: Wed, 23 Apr 2025 20:19:35 +0530
-Message-ID: <20250423144941.20826-2-nueralspacetech@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <Z_5K9Kz2i8TouhC4@kekkonen.localdomain>
-References: <Z_5K9Kz2i8TouhC4@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=svenpeter.dev header.i=@svenpeter.dev header.b="vIdrmn72";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zl/3LmPy"
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfout.stl.internal (Postfix) with ESMTP id C963D11401F7;
+	Wed, 23 Apr 2025 10:50:59 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Wed, 23 Apr 2025 10:50:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm3; t=1745419859; x=1745506259; bh=G7fJXu4jyQ
+	dtN3N4XbnGyi2XfxpE/vrFhi3nZwuRLSs=; b=vIdrmn72Zr+p9bSfnB40Za/1py
+	6k4fhm7awpAbIxEvDkgtiaFuleqPolPAyAAoxVjOG6Ke8IBP+6+yF6llloG9b+GT
+	rTg5ZRZTHcmd/d8GeRnYG99dM93C+XUjPSX3tLL0uAVvJv+MQUXnBJlhZ73V+MTv
+	AEW0n+r+4Ucwuti2mNHUZ/G3X+ytrjCFNbgsS3gPjNGnkIGIzCEWhQ6ldb7b5mLG
+	DMUVcEYLtQ1XbphIv75JOWA9cyjNL42Uetp6Se0BTaC+CxUkqqyjVB2B4h41D0op
+	lKyagDd/D97fB+gyDMfIW5vHjOMhqHPBgGNegCQOyMHYcaSIHugqBx7XPuFQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1745419859; x=1745506259; bh=G7fJXu4jyQdtN3N4XbnGyi2XfxpE/vrFhi3
+	nZwuRLSs=; b=Zl/3LmPyjVCeKjXPtq6oJGCQtVf67lqX1Je9LiVGwcmjl57ELjZ
+	hf3eWfEnMZR+6RPejr5DXNlxs4PEbSraUbDbkOe15uGJ2OAoxb6tBFTv6OVOOZ4+
+	O9RkjG0lwJcHKmd+r4xqxSC+xfbG+n/O/bo36on7JJz5FPWnDz5iGJ3IpkuV7tLr
+	ErxALos37LQnUY1lgdZMDw4PyWf9gFGsMQkK6T8L1pcXKXpIjXdOGnIHeYlpiYrI
+	SYYpRdTKFsZI0TIGC0bCPvrB439g1zW4EP8Z4pkEnYVCwSDmyJM9Fda7tpUBoNcx
+	73CWqd06OXdOpG99g+waGV2Sfa4HlxP7OyQ==
+X-ME-Sender: <xms:U_4IaE3ZmKovaZ4BzZB9PCSu3MSVdHkdT5eWtdtM_E5mPTcfVRxLNQ>
+    <xme:U_4IaPHPQVcln5jUAEZYsBwG0I5xsSF5KCZQU7tma0-nt4SKItDYjNLD_dgAPjHyM
+    9aNiDSMHjbuhmZsf9o>
+X-ME-Received: <xmr:U_4IaM5nZO9r6Qf9T0grvbOx7WPWvKTVpV_fmWPVZ-IiRFLNIPLgQY0Xdy6AS2MDGQ7N-Ko-zccZHIOynQ1nE_jZ_Qjrq82pOJeRUEOim5hJzuFGMOQJJsSNHDqUUXk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeikeelucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvf
+    evufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefuvhgvnhcurfgvthgvrhcuoehs
+    vhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrfgrthhtvghrnhepudeiiefhge
+    etgfektdeiffekhfejgeeikefftdfghfegveegkeegjeetueffvdeinecuffhomhgrihhn
+    pehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmh
+    grihhlfhhrohhmpehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdpnhgspghrtghpthht
+    ohepgedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepshhotgeslhhishhtshdrlh
+    hinhhugidruggvvhdprhgtphhtthhopegrshgrhhhisehlihhsthhsrdhlihhnuhigrdgu
+    vghvpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinh
+    hfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgv
+    rhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:U_4IaN2yzr0umJZVNR_dt1n3AbJiiOqv41ZBAv-oSidEkM6YKebL0w>
+    <xmx:U_4IaHF6tEtAKgauoUr14PbJnw93bcwPnfedWnKTJzrvlbGUr1JsOQ>
+    <xmx:U_4IaG9E7MC7yr-n9nCPfs67URyXrRBiMeMSozxOjUoaUfc9aqEQGw>
+    <xmx:U_4IaMluBjXclKO0rWpDVfT2ezHmG87WP3jsAe6ZJYkT3UW7KTOtog>
+    <xmx:U_4IaNRtDswWqhEf1HvsBLkEEcwd0AanCfD617GQRKZMZJPE4WfriCI7>
+Feedback-ID: i51094778:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 23 Apr 2025 10:50:58 -0400 (EDT)
+From: Sven Peter <sven@svenpeter.dev>
+To: soc@lists.linux.dev
+Cc: asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Apple SoC fixes for v6.15
+Date: Wed, 23 Apr 2025 16:50:47 +0200
+Message-Id: <20250423145047.3098-1-sven@svenpeter.dev>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,40 +85,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Defines a macro `OV13858_MCLK` for the clock frequency (19200000 Hz).
-Replaces the hardcoded clock frequency value in the probe function.
+Hi Arnd,
 
-Signed-off-by: Sunny Patel <nueralspacetech@gmail.com>
+Here are two small fixes which should go into v6.15 from our side,
+see the tag description for details. They've already been added to -next.
 
-Thanks for the feedback. I have revised the commit message to use
-correct terminology
 
----
- drivers/media/i2c/ov13858.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/media/i2c/ov13858.c b/drivers/media/i2c/ov13858.c
-index 7a3fc1d28514..a1242a90cdc9 100644
---- a/drivers/media/i2c/ov13858.c
-+++ b/drivers/media/i2c/ov13858.c
-@@ -21,6 +21,8 @@
- #define OV13858_REG_SOFTWARE_RST	0x0103
- #define OV13858_SOFTWARE_RST		0x01
- 
-+#define OV13858_MCLK				19200000
-+
- /* PLL1 generates PCLK and MIPI_PHY_CLK */
- #define OV13858_REG_PLL1_CTRL_0		0x0300
- #define OV13858_REG_PLL1_CTRL_1		0x0301
-@@ -1664,7 +1666,7 @@ static int ov13858_probe(struct i2c_client *client)
- 	u32 val = 0;
- 
- 	device_property_read_u32(&client->dev, "clock-frequency", &val);
--	if (val != 19200000)
-+	if (val != OV13858_MCLK)
- 		return -EINVAL;
- 
- 	ov13858 = devm_kzalloc(&client->dev, sizeof(*ov13858), GFP_KERNEL);
--- 
-2.43.0
 
+Sven
+
+
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/AsahiLinux/linux.git tags/asahi-soc-fixes-6.15
+
+for you to fetch changes up to dc5befecbe2683ac49fc8dc76aade35e62f4cf30:
+
+  arm64: dts: apple: touchbar: Mark ps_dispdfr_be as always-on (2025-04-19 08:40:33 +0200)
+
+----------------------------------------------------------------
+Apple SoC fixes for 6.15
+
+This tag contains two small commits since rc1:
+- Add a .mailmap entry requested by Asahi Lina to better filter her
+  emails
+- Mark the power domains for the touchbar support introduced with 6.15
+  as always on since the driver cannot initialize the touchbar from
+  scratch after the domains are powered off (e.g. during suspend).
+
+----------------------------------------------------------------
+Asahi Lina (1):
+      mailmap: Update email for Asahi Lina
+
+Janne Grunau (1):
+      arm64: dts: apple: touchbar: Mark ps_dispdfr_be as always-on
+
+ .mailmap                                 |  1 +
+ arch/arm64/boot/dts/apple/t8103-j293.dts | 10 ++++++++++
+ arch/arm64/boot/dts/apple/t8112-j493.dts | 10 ++++++++++
+ 3 files changed, 21 insertions(+)
