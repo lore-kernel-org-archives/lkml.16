@@ -1,195 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE7C27F4D1;
-	Wed, 23 Apr 2025 15:11:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED51D280A2C
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:12:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421107; cv=none; b=idLeB2rdmi13x62tsJ5eDMs32GNMJ2rHKIqwlv2rYZo0Zc+M5N5FHM7Nw8AUxJJ0kprF1TPri7QWfR2q22EeNyJCK9QcAsJuk1CQCtIBBYayKKWKWfKX4Ko77Iq5v4aaB5uuAdUvgxs93Xbu6EToOayl69ZNo93ApbUX2hJD2lA=
+	t=1745421128; cv=none; b=FeAvb5kCptT9wtmDzvB/tEhekxYxAYxjOGqRQ+SWoocMWmue+2gAfczzO+cd2wfSOU0EsoSbG8nHQ9RX47/BnCTrKWfR3p4wSZFKHeinb2S1O81Mu2ef++ys+ydLrXl0sN2LFQNMrW8SLOeIPtex476/TsWhe7RFgpI1MxfHzvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421107; c=relaxed/simple;
-	bh=7DTSy5c0LEFq6TqHnzfnsQmzUsM4pf25hH2RxLEG93Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VsEcSOy+JeYra2YSoGa0J8cei+Xx2igNPCWQen0onmweNHG/JudpLqLmG5kQMkpsMXsAZL3DBTdO7yRr1fDTSQtoxSl7F5I8DeLjWJp4ezbdIio05LswDYY4HqKOXV7a6HKbLyxDc53QiPokQfYI1c0jIbtR8KrKrcWLSQRGOUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0hvFVCAT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745421128; c=relaxed/simple;
+	bh=Q61qQez5UnHF9zfHJ4kGv5x076vnjHwkr5s2qepPiAc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SQGkk/m2JUot7aVuv+fNz2RjSMSlaAi01692C7RtPBPnpU2bbNv2okFlurtlMpmlLUJ83ru7SC+1koLDU9rg0UA/XgbHaXCDBr6RrVGIIweezUmqZQFOniUg5VZ3hztLNiLIMR/W1ZfdiLR/X8pxl5lrk1VctFyFDv2A/Foya7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R34x74x8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0hvFVCAT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A40FC4CEE2;
-	Wed, 23 Apr 2025 15:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1745421107;
-	bh=7DTSy5c0LEFq6TqHnzfnsQmzUsM4pf25hH2RxLEG93Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=0hvFVCAT5jtCig0nLcR7J+2P1wXVGhGv9rr1fqWPCDQqC+r/7lY6jONUP0bL1ytgl
-	 5mFUJqmXQQe+4u9tGT5X8/QqouQIk1PlkkqIa90I1ICOq8vw+QED7eZHLF8F1SngTk
-	 3vQDZQF1wXYC9QPBtFNzmVYq8r7P2N/Ly4RFZTd0=
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: stable@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	patches@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 6.12 192/223] arm64/boot: Enable EL2 requirements for FEAT_PMUv3p9
-Date: Wed, 23 Apr 2025 16:44:24 +0200
-Message-ID: <20250423142624.996855042@linuxfoundation.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250423142617.120834124@linuxfoundation.org>
-References: <20250423142617.120834124@linuxfoundation.org>
-User-Agent: quilt/0.68
-X-stable: review
-X-Patchwork-Hint: ignore
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R34x74x8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F8CC4CEE2;
+	Wed, 23 Apr 2025 15:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745421127;
+	bh=Q61qQez5UnHF9zfHJ4kGv5x076vnjHwkr5s2qepPiAc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R34x74x8E/GSFGWZ5m+9EbzgrAfdYbTSE5a1mEAPpvDlHh7KA0cPK10twzml4AXox
+	 7CccmKY7KDDDm5SsgGpq7kW6Ubn2FQZO7xzsdqFJjxIcJnJ2UU04CNef7Wbp8bfbk8
+	 TBB3AmDS0WgAopfq7uXn+Ln7NvzDtLvn7qeU7HeykjX5kahaDHvkeEF1jGTDBR6bRO
+	 rhu4Do/epOw+gBOnFza6HEuiUDEQtFX9NB976SI/ZMy+SJSYiNYIFwDW/9QiyYVCIU
+	 hykLIbl33cSoZut46KWf209FF+RhYPKnhwZeEc24xCft+6DTLvcyN5yBI00ASMxOwF
+	 M3d++d7AV3B/g==
+Date: Wed, 23 Apr 2025 05:12:06 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, gaoxu <gaoxu2@honor.com>,
+	Dennis Zhou <dennis@kernel.org>, Christoph Lameter <cl@linux.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	yipengxiang <yipengxiang@honor.com>
+Subject: Re: mm: percpu: increase PERCPU_MODULE_RESERVE to avoid allocation
+ failure
+Message-ID: <aAkDRg0Ajl3ByXMq@slm.duckdns.org>
+References: <bcfb90b2cecf43d7a0760ebaddde10d8@honor.com>
+ <20250422170209.a8beaa8a3610d2e92421476f@linux-foundation.org>
+ <CAJuCfpF4SbPWMgECD89e=QDcrCTNqnchYZ=dpod-cdRxfsCtjA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpF4SbPWMgECD89e=QDcrCTNqnchYZ=dpod-cdRxfsCtjA@mail.gmail.com>
 
-6.12-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Apr 22, 2025 at 05:19:31PM -0700, Suren Baghdasaryan wrote:
+...
+> Allocating this reserved area dynamically would be ideal. OTOH this
+> change increases the area size from 64kb to 128kb. Don't know how much
+> effort we should put into it.
 
-------------------
+The easiest solution would be switching the modules to use alloc_percpu()
+instead of declaring per-cpu variables statically. I couldn't think of a
+better way to support static percpu variables in modules and still can't,
+but there aren't noticeable downsides to using dynamically allocated percpu
+variables, so if you have several bytes here and there, sure, declare them
+statically, but for anything chunky, please use dynamic allocations.
 
-From: Anshuman Khandual <anshuman.khandual@arm.com>
+Thanks.
 
-commit 858c7bfcb35e1100b58bb63c9f562d86e09418d9 upstream.
-
-FEAT_PMUv3p9 registers such as PMICNTR_EL0, PMICFILTR_EL0, and PMUACR_EL1
-access from EL1 requires appropriate EL2 fine grained trap configuration
-via FEAT_FGT2 based trap control registers HDFGRTR2_EL2 and HDFGWTR2_EL2.
-Otherwise such register accesses will result in traps into EL2.
-
-Add a new helper __init_el2_fgt2() which initializes FEAT_FGT2 based fine
-grained trap control registers HDFGRTR2_EL2 and HDFGWTR2_EL2 (setting the
-bits nPMICNTR_EL0, nPMICFILTR_EL0 and nPMUACR_EL1) to enable access into
-PMICNTR_EL0, PMICFILTR_EL0, and PMUACR_EL1 registers.
-
-Also update booting.rst with SCR_EL3.FGTEn2 requirement for all FEAT_FGT2
-based registers to be accessible in EL2.
-
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kvmarm@lists.linux.dev
-Fixes: 0bbff9ed8165 ("perf/arm_pmuv3: Add PMUv3.9 per counter EL0 access control")
-Fixes: d8226d8cfbaf ("perf: arm_pmuv3: Add support for Armv9.4 PMU instruction counter")
-Tested-by: Rob Herring (Arm) <robh@kernel.org>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Link: https://lore.kernel.org/r/20250227035119.2025171-1-anshuman.khandual@arm.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/arch/arm64/booting.rst |   22 ++++++++++++++++++++++
- arch/arm64/include/asm/el2_setup.h   |   25 +++++++++++++++++++++++++
- arch/arm64/tools/sysreg              |    1 +
- 3 files changed, 48 insertions(+)
-
---- a/Documentation/arch/arm64/booting.rst
-+++ b/Documentation/arch/arm64/booting.rst
-@@ -285,6 +285,12 @@ Before jumping into the kernel, the foll
- 
-     - SCR_EL3.FGTEn (bit 27) must be initialised to 0b1.
- 
-+  For CPUs with the Fine Grained Traps 2 (FEAT_FGT2) extension present:
-+
-+  - If EL3 is present and the kernel is entered at EL2:
-+
-+    - SCR_EL3.FGTEn2 (bit 59) must be initialised to 0b1.
-+
-   For CPUs with support for HCRX_EL2 (FEAT_HCX) present:
- 
-   - If EL3 is present and the kernel is entered at EL2:
-@@ -379,6 +385,22 @@ Before jumping into the kernel, the foll
- 
-     - SMCR_EL2.EZT0 (bit 30) must be initialised to 0b1.
- 
-+  For CPUs with the Performance Monitors Extension (FEAT_PMUv3p9):
-+
-+ - If EL3 is present:
-+
-+    - MDCR_EL3.EnPM2 (bit 7) must be initialised to 0b1.
-+
-+ - If the kernel is entered at EL1 and EL2 is present:
-+
-+    - HDFGRTR2_EL2.nPMICNTR_EL0 (bit 2) must be initialised to 0b1.
-+    - HDFGRTR2_EL2.nPMICFILTR_EL0 (bit 3) must be initialised to 0b1.
-+    - HDFGRTR2_EL2.nPMUACR_EL1 (bit 4) must be initialised to 0b1.
-+
-+    - HDFGWTR2_EL2.nPMICNTR_EL0 (bit 2) must be initialised to 0b1.
-+    - HDFGWTR2_EL2.nPMICFILTR_EL0 (bit 3) must be initialised to 0b1.
-+    - HDFGWTR2_EL2.nPMUACR_EL1 (bit 4) must be initialised to 0b1.
-+
-   For CPUs with Memory Copy and Memory Set instructions (FEAT_MOPS):
- 
-   - If the kernel is entered at EL1 and EL2 is present:
---- a/arch/arm64/include/asm/el2_setup.h
-+++ b/arch/arm64/include/asm/el2_setup.h
-@@ -215,6 +215,30 @@
- .Lskip_fgt_\@:
- .endm
- 
-+.macro __init_el2_fgt2
-+	mrs	x1, id_aa64mmfr0_el1
-+	ubfx	x1, x1, #ID_AA64MMFR0_EL1_FGT_SHIFT, #4
-+	cmp	x1, #ID_AA64MMFR0_EL1_FGT_FGT2
-+	b.lt	.Lskip_fgt2_\@
-+
-+	mov	x0, xzr
-+	mrs	x1, id_aa64dfr0_el1
-+	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMUVer_SHIFT, #4
-+	cmp	x1, #ID_AA64DFR0_EL1_PMUVer_V3P9
-+	b.lt	.Lskip_pmuv3p9_\@
-+
-+	orr	x0, x0, #HDFGRTR2_EL2_nPMICNTR_EL0
-+	orr	x0, x0, #HDFGRTR2_EL2_nPMICFILTR_EL0
-+	orr	x0, x0, #HDFGRTR2_EL2_nPMUACR_EL1
-+.Lskip_pmuv3p9_\@:
-+	msr_s   SYS_HDFGRTR2_EL2, x0
-+	msr_s   SYS_HDFGWTR2_EL2, x0
-+	msr_s   SYS_HFGRTR2_EL2, xzr
-+	msr_s   SYS_HFGWTR2_EL2, xzr
-+	msr_s   SYS_HFGITR2_EL2, xzr
-+.Lskip_fgt2_\@:
-+.endm
-+
- .macro __init_el2_nvhe_prepare_eret
- 	mov	x0, #INIT_PSTATE_EL1
- 	msr	spsr_el2, x0
-@@ -240,6 +264,7 @@
- 	__init_el2_nvhe_idregs
- 	__init_el2_cptr
- 	__init_el2_fgt
-+	__init_el2_fgt2
- .endm
- 
- #ifndef __KVM_NVHE_HYPERVISOR__
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -1238,6 +1238,7 @@ UnsignedEnum	11:8	PMUVer
- 	0b0110	V3P5
- 	0b0111	V3P7
- 	0b1000	V3P8
-+	0b1001	V3P9
- 	0b1111	IMP_DEF
- EndEnum
- UnsignedEnum	7:4	TraceVer
-
-
+-- 
+tejun
