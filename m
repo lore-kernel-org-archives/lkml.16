@@ -1,437 +1,240 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BA7283687;
-	Wed, 23 Apr 2025 15:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4953E293B5A;
+	Wed, 23 Apr 2025 15:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421627; cv=none; b=e/Qq0r6WUZNT1UBNEWVDmbV79TtZ9QTfLc2Qvv1h/yf2hrS0fkyzY6mmvAlKYKJGy7pkrdLXgV3Nm/ShgKjK/5yvsYUFQ3qjzbhkSo4z8SjU4//c5URApL50KxyM94NmhL9FLOKX2LuJShenvn6Bb3H/NyVr7akmuTaJ5qAj5i8=
+	t=1745421651; cv=none; b=hfkH+/4x6csHKvfUCXKMZhWmjyMWt7kQFgIsqm0MELdjcumGuIbAp9PE8FUu4ef0POkUIRngxqn+eFdmmlzgcHx/EvzMR4QWeTYG+JgQsBuU/+XoZD5kiU3gCAMmZUwLt8VEn0Wohiiw9gF6a10TwuxzSScD2F44f9k2o4uWa9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421627; c=relaxed/simple;
-	bh=OpNwcBsn5GWUrEwgmZUEWuFm3smC+jDr1D0Xyaa91xs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=C6ur8BG362t2eXy+ygOYhMCMoXM6aIvjNHNSvN02BzUHKl4v+O5Ve9XNgtWr+tAY+G2xUG7PuIrIAoFDfl5OaAc8fCA/w8x/F84w1KzenDiS5ZtyXWqhpsAKggHz/Y3k6f/hdX+HmDg53uQepSxyQrplJeh+lecdqKAYdQROgDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=Iy1WbPEK; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1745421651; c=relaxed/simple;
+	bh=VDfwmOCVRoGoEsvlBNbRNn+5O+sBsS7veCm7PZofIIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LuWSobq+eIulT1G9LQQ/XWuVnD4S3jx54LbhR3qbeuP4SUEeb1At5Ri9FW9aFygqKL16zqSDQ4N3N+4+rv3vDfimgwO/SJBZqi5EoWab5dqXq0hXokf9oxe1i1QHhVxNR2tTE4d23ehEClKbKHS9OziVCjLqBIM7DSbV3kBa4Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+0NWU4p; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="Iy1WbPEK"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 4B58941A92
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1745421624; bh=NkSbcwqUaiTpX26ksQ4x5WS4TrDmKK21EmlBzp9sgAU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Iy1WbPEK7WwfgT6bpRXEQ/hpr3KTWU/lfTJ8J5/o9pZ7AaCPzW7zZFZnnA0wtb7q7
-	 Wb/4AU5IGUGcqNNp/Bz1a5nw1Y56l89jCBBKXkfz/OUZ64ZIvXtHeZ9g4aUdd85ekO
-	 FUHzsgsgJLOJ1CnSbXYSPY1ryBLrFWekCdAFGCO7vKXyCn5pN37OkFJSglfKqbTsWl
-	 30iTDxUchzu0uJtehii4GRtYV+fy9ssCYRn2ThlhV+KJCrpS7Cr1FMRlUTV3NYa8s+
-	 RwQ7CH6R5GZk97FmsEZeo/HYiKuQJohaEdU6xP+ppFv4Yqy1fjsv9KQu8i4KUgyFx0
-	 ryZWk9VOu4YIQ==
-Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 4B58941A92;
-	Wed, 23 Apr 2025 15:20:24 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: saivishnu725@gmail.com, mchehab@kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Sai Vishnu M
- <saivishnu725@gmail.com>
-Subject: Re: [PATCH] add --interactive feature
-In-Reply-To: <20250422153555.85219-1-saivishnu725@gmail.com>
-References: <20250422153555.85219-1-saivishnu725@gmail.com>
-Date: Wed, 23 Apr 2025 09:20:23 -0600
-Message-ID: <87bjsmsy4o.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+0NWU4p"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af28bc68846so5626391a12.1;
+        Wed, 23 Apr 2025 08:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745421648; x=1746026448; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Ay1hJ+xxSveKW4SXff1bMvJ/IKV12NveP9f4RrvhN6c=;
+        b=P+0NWU4p827RUysOZ6f6emFPBXhjR+uHsAF8SZVsLTvNe0nKajbhhnlZUEL+siKpo0
+         rCQq1TPV+MNE+lR44Y7lxYyR9TiAk8I3yKs2455vIIoyjCgJUASx8P2cMkScquNSCLee
+         eKGUVaDx/difRU0xlqCHzLKm59BY4QeE37wAQ12HIcJoZUPOYj5HLRCUK2/g6PzPqGTA
+         wfl4pR6ZLz+sZZf1O/i6KLImnDkW/DpZcYP+WmvNrNVdIEM4z+zgJmBBSODTmu1fTK93
+         w++d4tJ4Wmss1eTHC7kk2UBDuy/bpsWxrfA+X+otekKhdoIAHDFqOm6pfKbYOYkXLGMh
+         5isQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745421648; x=1746026448;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ay1hJ+xxSveKW4SXff1bMvJ/IKV12NveP9f4RrvhN6c=;
+        b=S+c5U7xOsvguR8rrKMyV4OrBC5K5T2tQgpakp6Kjz3advc8q4uKRDEz8oNr6QMa9U2
+         QKZdlCdaicNshhmW6JH6eSuY2x2muNV8AZclMxLPmDas+eWV9jeRAlSplbLkcj96iXHW
+         THbBzz0g2vI0M9uUHnGMHGecYVr7qjwZ8bqPgWRMAx24XP2ZQ88Jo5WkZdPOQKg+ATP2
+         78wIgS5y8nf1u8K9LF+thBqHz6fnkNFZ/Eng7Z598k+aEtdTDj9BUl1R+0+lG4dMJk9o
+         VKS26TLr2G79dDMDkLlm6v6Qgi5sPuBOTMPfQmqCg/P480lVrI3qGsn9ZuD81tBiUCQl
+         gGdw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDZjf4TW7BISok2+voIgHwABx/p0fseeUa1BG90Qkyvn9Rir94yY7aYUwE5SXcTUDwX4TyoDw76Bh4E5gF@vger.kernel.org, AJvYcCUd1d2gRysVL0MfiKpfXQMmRccJVPa328qTSJ0j1MHWFSf07GbDzbTGO3Jbrj90hiGm3vQ=@vger.kernel.org, AJvYcCVT6sGdRQlPeoFG1/WFt0Prvuz8nno90AbhNKjKWMA2/QENxxPBoiwsrM8JzzsptUUWTUL4kOaE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/PUV3LmLNALL0tdgi/2Xo9DsNYrd1hKb/UrYxNmve05BF7DQL
+	QnrsVOlYYHtNNRrbvFMqIOxbSFnX3y9gFCTPxOLZdIPgUeyu5DlkREKpTm1N9BQ=
+X-Gm-Gg: ASbGncvvgOTKp+9pZbTWxhHr6cxBedliTZpDUYJJTM39qPwVBYkBzvZzeUZJK356sa6
+	yahtpp2nSLkukqtRMwbMjqk49cCwiDrLUtYV6wCViXW8zkrpC7CHJ8+2HzNbZfQ3aqPuh5MLWx3
+	lr6ZXwNtv0F+idoikEqUa/yLr1q5Jq5mRAyTyeyEFVLIDLu5+nk1hjhyQhaJB4M28f9Y8DVmnt1
+	n4bIzRW1lwsw8ok6V4I1JddG7S1ZIHKKF3m3s4z+KA+6K1PCrIxtzmixzZ7AqBvsszbCke2or3Q
+	yE4/SJa5IlnCJqfa20hIFLva4Nl++quuG4YwHhVRcFZkHbIP0zXcujP3HE20QRrF0HvJoubuL7U
+	1Gheyp6GLNhVroQ==
+X-Google-Smtp-Source: AGHT+IF0njUnwLJs73OxHmEO22W7D/ZiIYfKXmFPNk7S0195rDOuNRKX5c2xxOZE+G0FANmjiFezMw==
+X-Received: by 2002:a05:6a21:3a8d:b0:1f5:8cc8:9cc5 with SMTP id adf61e73a8af0-203cbd27edemr35835560637.34.1745421648443;
+        Wed, 23 Apr 2025 08:20:48 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:933:3ee4:f75:4ee9? ([2001:ee0:4f0e:fb30:933:3ee4:f75:4ee9])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db13a3396sm9277066a12.28.2025.04.23.08.20.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 08:20:47 -0700 (PDT)
+Message-ID: <aac402b4-d04c-4d7e-91c8-ab6c20c9a74d@gmail.com>
+Date: Wed, 23 Apr 2025 22:20:41 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 4/4] selftests: net: add a virtio_net deadlock selftest
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: virtualization@lists.linux.dev, "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250417072806.18660-1-minhquangbui99@gmail.com>
+ <20250417072806.18660-5-minhquangbui99@gmail.com>
+ <20250422184151.2fb4fffe@kernel.org>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <20250422184151.2fb4fffe@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-OK, we are getting somewhere, but there are various things to point
-out/fix here. 
-
-saivishnu725@gmail.com writes:
-
-> From: Sai Vishnu M <saivishnu725@gmail.com>
+On 4/23/25 08:41, Jakub Kicinski wrote:
+> On Thu, 17 Apr 2025 14:28:06 +0700 Bui Quang Minh wrote:
+>> The selftest reproduces the deadlock scenario when binding/unbinding XDP
+>> program, XDP socket, rx ring resize on virtio_net interface.
+>>
+>> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+>> ---
+>>   .../testing/selftests/drivers/net/hw/Makefile |  1 +
+>>   .../selftests/drivers/net/hw/virtio_net.py    | 65 +++++++++++++++++++
+>>   2 files changed, 66 insertions(+)
+>>   create mode 100755 tools/testing/selftests/drivers/net/hw/virtio_net.py
+>>
+>> diff --git a/tools/testing/selftests/drivers/net/hw/Makefile b/tools/testing/selftests/drivers/net/hw/Makefile
+>> index 07cddb19ba35..b5af7c1412bf 100644
+>> --- a/tools/testing/selftests/drivers/net/hw/Makefile
+>> +++ b/tools/testing/selftests/drivers/net/hw/Makefile
+>> @@ -21,6 +21,7 @@ TEST_PROGS = \
+>>   	rss_ctx.py \
+>>   	rss_input_xfrm.py \
+>>   	tso.py \
+>> +	virtio_net.py \
+> Maybe xsk_reconfig.py ? Other drivers will benefit from this test, too,
+> and that's a more descriptive name.
 >
-> This patch introduces an interactive mode to the sphinx-pre-install script
-> that guides users through missing dependency installation for convenience.
-
-Some maintainers will react strongly to "this patch", insisting that
-changelogs be written in the imperative mode.  I am less fussy about
-such things, but that's a good practice to follow in general.
-
-> - Adds `--interactive` flag to trigger prompt-based guidance
-> - Handles cases where stdin is not available
-> - Implements default behavior for invalid or no input
-> - Improves messages for unknown distros and errors
-
-A list like this is a clear sign that a patch needs to be broken up into
-a series.  Remember, each patch should do one clearly verifiable thing.
-When you mix changes like this, you make things much harder to review.
-
-> RFC: https://lore.kernel.org/linux-doc/20250410155414.47114-1-saivishnu725@gmail.com/T/#u
-
-This is not a normal patch tag.  Putting in a link to the RFC is fine,
-but it should go below the "---" line.  It also *really* helps to add a
-summary of what has changed since the previous revision.
-
-> Signed-off-by: Sai Vishnu M <saivishnu725@gmail.com>
-> ---
->  scripts/sphinx-pre-install | 185 ++++++++++++++++++++++++++++++++-----
->  1 file changed, 160 insertions(+), 25 deletions(-)
+>>   	#
+>>   
+>>   TEST_FILES := \
+>> diff --git a/tools/testing/selftests/drivers/net/hw/virtio_net.py b/tools/testing/selftests/drivers/net/hw/virtio_net.py
+>> new file mode 100755
+>> index 000000000000..7cad7ab98635
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/drivers/net/hw/virtio_net.py
+>> @@ -0,0 +1,65 @@
+>> +#!/usr/bin/env python3
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +
+>> +# This is intended to be run on a virtio-net guest interface.
+>> +# The test binds the XDP socket to the interface without setting
+>> +# the fill ring to trigger delayed refill_work. This helps to
+>> +# make it easier to reproduce the deadlock when XDP program,
+>> +# XDP socket bind/unbind, rx ring resize race with refill_work on
+>> +# the buggy kernel.
+>> +#
+>> +# The Qemu command to setup virtio-net
+>> +# -netdev tap,id=hostnet1,vhost=on,script=no,downscript=no
+>> +# -device virtio-net-pci,netdev=hostnet1,iommu_platform=on,disable-legacy=on
+>> +
+>> +from lib.py import ksft_exit, ksft_run
+>> +from lib.py import KsftSkipEx, KsftFailEx
+>> +from lib.py import NetDrvEnv
+>> +from lib.py import bkg, ip, cmd, ethtool
+>> +import re
+>> +
+>> +def _get_rx_ring_entries(cfg):
+>> +    output = ethtool(f"-g {cfg.ifname}").stdout
+>> +    values = re.findall(r'RX:\s+(\d+)', output)
+> no need for the regexps, ethtool -g supports json formatting:
 >
-> diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-> index ad9945ccb0cf..a3fbe920bb44 100755
-> --- a/scripts/sphinx-pre-install
-> +++ b/scripts/sphinx-pre-install
-> @@ -42,6 +42,7 @@ my $latest_avail_ver;
->  my $pdf = 1;
->  my $virtualenv = 1;
->  my $version_check = 0;
-> +my $interactive = 0;
->  
->  #
->  # List of required texlive packages on Fedora and OpenSuse
-> @@ -338,12 +339,96 @@ sub which($)
->  	return undef;
->  }
->  
-> +sub run_if_interactive($)
-> +{
-> +	my $command = shift;
-> +	printf("\n\t$command\n");
-> +
-> +	if($interactive) {
+> 	output = ethtool(f"-g {cfg.ifname}", json=True)[0]
+> 	return output["rx"]
+>
+> ?
+>
+>> +    return int(values[1])
+>> +
+>> +def setup_xsk(cfg, xdp_queue_id = 0) -> bkg:
+>> +    # Probe for support
+>> +    xdp = cmd(f'{cfg.net_lib_dir / "xdp_helper"} - -', fail=False)
+>> +    if xdp.ret == 255:
+>> +        raise KsftSkipEx('AF_XDP unsupported')
+>> +    elif xdp.ret > 0:
+>> +        raise KsftFailEx('unable to create AF_XDP socket')
+>> +
+>> +    try:
+>> +        xsk_bkg = bkg(f'{cfg.net_lib_dir / "xdp_helper"} {cfg.ifindex} ' \
+>> +                      '{xdp_queue_id} -z', ksft_wait=3)
+> This process will time out after 3 seconds but the test really
+> shouldn't leave things running after it exits. Don't worry about
+> the couple of seconds of execution time. Wrap each test in
+>
+> 	with bkg(f"... the exec info ... "):
+> 		# test code here
+>
+> The bkg() class has an __exit__() handle once the test finishes
+> and leaves the with block it will terminate.
 
-Please try to stick with something close to the kernel coding style
-(space after "if")
+I've tried to make the setup_xsk into each test. However, I've an issue 
+that the XDP socket destruct waits for an RCU grace period as I see this 
+sock's flag SOCK_RCU_FREE is set. So if we start the next test right 
+away, we can have the error when setting up XDP socket again because 
+previous XDP socket has not unbound the network interface's queue yet. I 
+can resolve the issue by putting the sleep(1) after closing the socket 
+in xdp_helper:
 
-> +		printf("Run the command now? [Y/n, default:Y]: ");
-> +		my $user_input = <STDIN>;
-> +		chomp $user_input;
-> +		# Default = Y
+diff --git a/tools/testing/selftests/net/lib/xdp_helper.c 
+b/tools/testing/selftests/net/lib/xdp_helper.c
+index f21536ab95ba..e882bb22877f 100644
+--- a/tools/testing/selftests/net/lib/xdp_helper.c
++++ b/tools/testing/selftests/net/lib/xdp_helper.c
+@@ -162,5 +162,6 @@ int main(int argc, char **argv)
+          */
 
-Given that the code just above makes the default explicit, this comment
-is not too helpful.
+         close(sock_fd);
++       sleep(1);
+         return 0;
+  }
 
-> +		if ($user_input eq '' or $user_input =~ /^y(es)?$/i) {
-> +			system($command) == 0 or warn "Failed to run the command";
-> +		}
-
-It seems that, if a command fails, everything should come to a stop
-immediately? 
-
-> +	}
-> +}
-> +
-> +sub fallback_unknown_distro()
-> +{
-> +	# Fall-back to generic hint code for other distros
-> +	# That's far from ideal, specially for LaTeX dependencies.
-> +	my %map = (
-> +		"sphinx-build" => "sphinx"
-> +	);
-> +	check_missing_tex(2) if ($pdf);
-> +	check_missing(\%map);
-> +	print "I don't know distro $system_release.\n";
-> +	print "So, I can't provide you a hint with the install procedure.\n";
-> +	print "There are likely missing dependencies.\n";
-> +}
-> +
-> +# checks if a package exists in path
-> +sub is_in_path($)
-> +{
-> +    my $cmd = shift;
-> +    for my $dir (split /:/, $ENV{PATH}) {
-> +        return 1 if -x "$dir/$cmd";
-> +    }
-> +    return 0;
-> +}
-> +
-> +# adding a check in --interactive
-> +# Reason: Selecting an incorrect distribution in cases where the user's distribution is unrecognized may lead to unexpected behavior.
-
-Please keep lines within 80 columns
-
-> +sub check_user_choice($)
-> +{
-> +	my $package_manager = shift;
-> +	if ($interactive) {
-> +		# checks if the package manager exists. hence, confirming the distribution
-> +		if (!is_in_path($package_manager)) {
-> +			print "$package_manager not found\n";
-> +			fallback_unknown_distro();
-> +			return 0;
-> +		}
-> +		return 1; # package_manager found
-> +	}
-> +	return 1; # non-interactive
-> +}
-
-...and the case where the tool isn't in the user's path, but running
-under sudo will find it...?
-
-> +# checks if either of the package manager exists
-> +sub check_user_choice_two($$)
-> +{
-> +	my ($pm1, $pm2) = @_;
-> +	if ($interactive) {
-> +		my $found = 0;
-> +		# checks if either of the package managers exists. hence, confirming the distribution
-> +		if(is_in_path($pm1)) {
-
-Again, watch coding style
-
-> +			$found = 1;
-> +		}
-> +		if(is_in_path($pm2)) {
-> +			$found = 1;
-> +		}
-
-this whole series could be something like:
-
-  $found = is_in_path($pm1) or is_in_path($pm2)
-
-right?
-
-> +		if(!$found) {
-> +			print "both $pm1 and $pm2 not found\n";
-> +			fallback_unknown_distro();
-> +			return 0; # package_manager not found
-> +		}
-> +		return 1; # package_manager found
-> +	}
-> +	return 1; # non-interactive
-> +}
-> +
->  #
->  # Subroutines that check distro-specific hints
->  #
->  
->  sub give_debian_hints()
->  {
-> +	if (!check_user_choice("apt-get")) {
-> +		return;
-> +	}
-
-I guess I don't understand why we have to do these checks.  We know it's
-Debian, right?
-
->  	my %map = (
->  		"python-sphinx"		=> "python3-sphinx",
->  		"yaml"			=> "python3-yaml",
-> @@ -374,11 +459,16 @@ sub give_debian_hints()
->  
->  	return if (!$need && !$optional);
->  	printf("You should run:\n") if ($verbose_warn_install);
-> -	printf("\n\tsudo apt-get install $install\n");
-> +	my $command = "sudo apt-get install $install";
-> +	run_if_interactive($command);
->  }
->  
->  sub give_redhat_hints()
->  {
-> +	if (!check_user_choice_two("dnf", "yum")) {
-> +		return;
-> +	}
-
-Do we support any RH versions that still have yum at this point?
-
->  	my %map = (
->  		"python-sphinx"		=> "python3-sphinx",
->  		"yaml"			=> "python3-pyyaml",
-> @@ -452,16 +542,21 @@ sub give_redhat_hints()
->  	if (!$old) {
->  		# dnf, for Fedora 18+
->  		printf("You should run:\n") if ($verbose_warn_install);
-> -		printf("\n\tsudo dnf install -y $install\n");
-> +		my $command = "sudo dnf install -y $install";
-> +		run_if_interactive($command);
->  	} else {
->  		# yum, for RHEL (and clones) or Fedora version < 18
->  		printf("You should run:\n") if ($verbose_warn_install);
-> -		printf("\n\tsudo yum install -y $install\n");
-> +		my $command = "sudo yum install -y $install";
-> +		run_if_interactive($command);
->  	}
->  }
->  
->  sub give_opensuse_hints()
->  {
-> +	if (!check_user_choice("zypper")) {
-> +		return;
-> +	}
->  	my %map = (
->  		"python-sphinx"		=> "python3-sphinx",
->  		"yaml"			=> "python3-pyyaml",
-> @@ -505,11 +600,16 @@ sub give_opensuse_hints()
->  
->  	return if (!$need && !$optional);
->  	printf("You should run:\n") if ($verbose_warn_install);
-> -	printf("\n\tsudo zypper install --no-recommends $install\n");
-> +	my $command = "sudo zypper install --no-recommends $install";
-> +	run_if_interactive($command);
-> +
->  }
->  
->  sub give_mageia_hints()
->  {
-> +	if (!check_user_choice_two("dnf", "urpmi")) {
-> +		return;
-> +	}
->  	my %map = (
->  		"python-sphinx"		=> "python3-sphinx",
->  		"yaml"			=> "python3-yaml",
-> @@ -538,7 +638,6 @@ sub give_mageia_hints()
->  		$noto_sans = "google-noto-sans-cjk-ttc-fonts";
->  	}
->  
-> -
->  	if ($pdf) {
->  		check_missing_file(["/usr/share/fonts/google-noto-cjk/NotoSansCJK-Regular.ttc",
->  				    "/usr/share/fonts/TTF/NotoSans-Regular.ttf"],
-> @@ -550,11 +649,17 @@ sub give_mageia_hints()
->  
->  	return if (!$need && !$optional);
->  	printf("You should run:\n") if ($verbose_warn_install);
-> -	printf("\n\tsudo $packager_cmd $install\n");
-> +	my $command = "sudo $packager_cmd $install";
-> +	run_if_interactive($command);
-> +
->  }
->  
->  sub give_arch_linux_hints()
->  {
-> +	if (!check_user_choice("pacman")) {
-> +		return;
-> +	}
-> +
->  	my %map = (
->  		"yaml"			=> "python-yaml",
->  		"virtualenv"		=> "python-virtualenv",
-> @@ -581,11 +686,16 @@ sub give_arch_linux_hints()
->  
->  	return if (!$need && !$optional);
->  	printf("You should run:\n") if ($verbose_warn_install);
-> -	printf("\n\tsudo pacman -S $install\n");
-> +	my $command = "sudo pacman -S $install";
-> +	run_if_interactive($command);
->  }
->  
->  sub give_gentoo_hints()
->  {
-> +	if (!check_user_choice("emerge")) {
-> +		return;
-> +	}
-> +
->  	my %map = (
->  		"yaml"			=> "dev-python/pyyaml",
->  		"virtualenv"		=> "dev-python/virtualenv",
-> @@ -617,14 +727,15 @@ sub give_gentoo_hints()
->  	my $portage_cairo = "/etc/portage/package.use/graphviz";
->  
->  	if (qx(grep imagemagick $portage_imagemagick 2>/dev/null) eq "") {
-> -		printf("\tsudo su -c 'echo \"$imagemagick\" > $portage_imagemagick'\n")
-> +		my $imagemagick_command = "sudo su -c 'echo \"$imagemagick\" > $portage_imagemagick'";
-> +		run_if_interactive($imagemagick_command);
->  	}
->  	if (qx(grep graphviz $portage_cairo 2>/dev/null) eq  "") {
-> -		printf("\tsudo su -c 'echo \"$cairo\" > $portage_cairo'\n");
-> +		my $portage_command = "sudo su -c 'echo \"$cairo\" > $portage_cairo'";
-> +		run_if_interactive($portage_command);
->  	}
-> -
-> -	printf("\tsudo emerge --ask $install\n");
-> -
-> +	my $command = "sudo emerge --ask $install";
-> +	run_if_interactive($command);
->  }
->  
->  sub check_distros()
-> @@ -678,19 +789,35 @@ sub check_distros()
->  		give_gentoo_hints;
->  		return;
->  	}
-> +	# if the distro is not recognised
-> +	# but it is derived from the available options
-> +	if ($interactive) {
-> +		my @distros = (
-> +			{ name => "Debian/Ubuntu", func => \&give_debian_hints },
-> +			{ name => "RedHat/CentOS/Fedora", func => \&give_redhat_hints },
-> +			{ name => "OpenSUSE", func => \&give_opensuse_hints },
-> +			{ name => "Mageia", func => \&give_mageia_hints },
-> +			{ name => "Arch Linux", func => \&give_arch_linux_hints },
-> +			{ name => "Gentoo", func => \&give_gentoo_hints },
-> +		);
-> +		print "Which distro is your OS based on?\n";
-> +		for my $i (0 .. $#distros) {
-> +			printf("[%d] %s\n", $i + 1, $distros[$i]->{name});
-> +		}
-> +		print "[0] Others\n";
-
-Are there really any cases where we will not detect the distribution,
-but where our canned commands will work anyway?  Which distributions
-have you tested this on?
-
-> -	#
-> -	# Fall-back to generic hint code for other distros
-> -	# That's far from ideal, specially for LaTeX dependencies.
-> -	#
-> -	my %map = (
-> -		"sphinx-build" => "sphinx"
-> -	);
-> -	check_missing_tex(2) if ($pdf);
-> -	check_missing(\%map);
-> -	print "I don't know distro $system_release.\n";
-> -	print "So, I can't provide you a hint with the install procedure.\n";
-> -	print "There are likely missing dependencies.\n";
-> +		print "Select a number: ";
-> +		my $choice = <STDIN>;
-> +		chomp $choice;
-> +
-> +		if ($choice =~ /^\d+$/ && $choice >= 1 && $choice <= scalar(@distros)) {
-> +			$distros[$choice - 1]->{func}->();
-> +		} else {
-> +			fallback_unknown_distro();
-> +		}
-> +	} else {
-> +		fallback_unknown_distro();
-> +	}
->  }
->  
->  #
-> @@ -1002,12 +1129,20 @@ while (@ARGV) {
->  		$pdf = 0;
->  	} elsif ($arg eq "--version-check"){
->  		$version_check = 1;
-> +	} elsif ($arg eq "--interactive") {
-> +		# check if the user can interact with the script
-> +		if (-t STDIN) {
-> +			$interactive = 1;
-> +		} else {
-> +    		print "Non-interactive environment\n";
-> +		}
->  	} else {
->  		print "Usage:\n\t$0 <--no-virtualenv> <--no-pdf> <--version-check>\n\n";
->  		print "Where:\n";
->  		print "\t--no-virtualenv\t- Recommend installing Sphinx instead of using a virtualenv\n";
-
-Installing sphinx is happening either way, so this is not quite right.
-
->  		print "\t--version-check\t- if version is compatible, don't check for missing dependencies\n";
-> -		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n\n";
-> +		print "\t--no-pdf\t- don't check for dependencies required to build PDF docs\n";
-> +		print "\t--interactuve\t- Ask to intsall missing dependencies\n\n";
-
-I don't think that's how you spell "interactive"
-
->  		exit -1;
->  	}
->  }
+Do you think it's enough or do you have a better suggestion here?
 
 Thanks,
+Quang Minh.
 
-jon
+>
+>> +        return xsk_bkg
+>> +    except:
+>> +        raise KsftSkipEx('Failed to bind XDP socket in zerocopy. ' \
+>> +                         'Please consider adding iommu_platform=on ' \
+>> +                         'when setting up virtio-net-pci')
+>> +
+>> +def check_xdp_bind(cfg):
+>> +    ip(f"link set dev %s xdp obj %s sec xdp" %
+>> +       (cfg.ifname, cfg.net_lib_dir / "xdp_dummy.bpf.o"))
+>> +    ip(f"link set dev %s xdp off" % cfg.ifname)
+>> +
+>> +def check_rx_resize(cfg, queue_size = 128):
+>> +    rx_ring = _get_rx_ring_entries(cfg)
+>> +    ethtool(f"-G %s rx %d" % (cfg.ifname, queue_size))
+>> +    ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
+> Why guess the ring size? What if it's already 128? I usually do:
+>
+> 	rx_ring = _get_rx_ring_entries(cfg)
+> 	ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring / 2))
+> 	ethtool(f"-G %s rx %d" % (cfg.ifname, rx_ring))
+>
+> IOW flip between half or double and current.
+>
+>> +def main():
+>> +    with NetDrvEnv(__file__, nsim_test=False) as cfg:
+>> +        try:
+>> +            xsk_bkg = setup_xsk(cfg)
+>> +        except KsftSkipEx as e:
+>> +            print(f"WARN: xsk pool is not set up, err: {e}")
+>> +
+>> +        ksft_run([check_xdp_bind, check_rx_resize],
+>> +                 args=(cfg, ))
+>> +    ksft_exit()
+>> +
+>> +if __name__ == "__main__":
+>> +    main()
+
