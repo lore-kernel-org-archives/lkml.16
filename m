@@ -1,44 +1,35 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 071E6263F27;
-	Wed, 23 Apr 2025 01:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1163263F2B;
+	Wed, 23 Apr 2025 01:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745372979; cv=none; b=AbkEHGuHGfPMBdE7xpZPzii9GtJX/81yLuYrvqX2gwHvHKHuY2yIJqgIMioAMP2SUIobsEm4mYWF6+QCKwg9k5LcAfZZQATaMDlpnPAPV0Q9qncoN02oNIkdWNmqS9edTpstMpAqD+sriL/Zg72v/yrGs6U0de+fQIo42vQCAiM=
+	t=1745372991; cv=none; b=r6tudF9CLgbi9hEw8iE+wH11D4S3hAORNUYZIPuXHJIm07yEFWsVkFd9UIqs2BDoRAD9SgzsDCz/hhtNfyIa0t5lE4evp3c2uEFAznLHVgzg8JCY7YRxHKjmQikvGVXpyd4BTpLi9XhM6QEiTIM3IM6AWQaW6lcs2kjKXa3HFF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745372979; c=relaxed/simple;
-	bh=jMSJ0gf0b0aPu4uBEGao57zRb4usICWr8tS/e0fHtJw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=VdYk4hEP69Sm3OEdiTjflh5GzFUcyMaj2bRkSkZTpLcZ7Cn1fevaMo1kv2k0VvzVdKJd3tzFJrZWzC8iBB2PzpdFAIWjbmDWWRm4W1t6XVsa8iP4xro6OZjJGPI7XkZ0jNcCv6rKtOcohkNwKYaAyTiakTaOB+oufwPDWnUkT+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=hDIfCpjq; arc=none smtp.client-ip=91.218.175.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745372991; c=relaxed/simple;
+	bh=QxEqK4cbT808ELsKax+8p0w2UjvmBOkBNaPB8xPHKI0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=FkUmokrMd43VBYmyfgA20UdNPS+Ykyug340Aqv0awR94SxCMy0ckLOVpkA5fHFnzNodPFDvAiSCSIBeS0l9vlmtG19A8R5XlUFUgTCHqGUDYGatj0WnKaQyjV1Wg+VkF8HxVBTFZ/ZzHH/8YhOZJQb2+/UVv8gfHFvBegd2gtjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMqDL6ga; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="hDIfCpjq"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745372973;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=D7+Eeawz4Y8be/9ifCJRuEJtqE9u4PyZ//yEy9tp5gM=;
-	b=hDIfCpjquE1JLYG/4MpX+xVTGu9k+j4qthA+S/jS9mLcZMNR6fspBEDZeuI/O4zCMlPkyP
-	Z5qhwNtkHDuUCJWpPusNB6X5SoGfoJUSXafQalpX/21JzuyG/OqZiVm9yU14C8anogzOJ1
-	wJ9xXiQb+ouXbvv5z7MY0YlzBQwDU9Y=
-From: Ye Liu <ye.liu@linux.dev>
-To: akpm@linux-foundation.org
-Cc: linux-debuggers@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-toolchains@vger.kernel.org,
-	osandov@osandov.com,
-	paulmck@kernel.org,
-	sweettea-kernel@dorminy.me,
-	liuye@kylinos.cn,
-	ye.liu@linux.dev
-Subject: [PATCH v3] tools/mm: Add script to display page state for a given PID and VADDR
-Date: Wed, 23 Apr 2025 09:48:50 +0800
-Message-Id: <20250423014850.344501-1-ye.liu@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMqDL6ga"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E7AC4CEE9;
+	Wed, 23 Apr 2025 01:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745372990;
+	bh=QxEqK4cbT808ELsKax+8p0w2UjvmBOkBNaPB8xPHKI0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=oMqDL6gaQ1PJBIb8WuncnlC8rKeAuIxBOoptE52dnZSIzFVX2NRF49ZuY2GXBir8q
+	 3G+Mnddyg6c2pzc7MB+7oXQBA1N2tPwUHVjkFFxfM5UcRri/E6DDcYxHoKwXvceLWK
+	 qDE61VAN5rPNCfA6xTBtHpg/JnD3biqsxRoLZ5uFEArHoXnTiRQvIS/Z8+q1YxbZUW
+	 6gVv2nxcoXuB9ACLmK20ieFP2ogZZhSK1oipFZr4BxCrkE1eBVtnInN5fg4nrqCm9M
+	 eY86mTyh+xOXXtWWFtKkHy7Z+N5iOWh25DwgFtCkLNWZsPj5GprJKnTgWD8dn81XqC
+	 mbOedOKZs3f7Q==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE67380CEF4;
+	Wed, 23 Apr 2025 01:50:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,206 +37,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Subject: Re: [PATCH v4 0/4] virtio-net: disable delayed refill when pausing rx
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174537302875.2111809.8543884098526067319.git-patchwork-notify@kernel.org>
+Date: Wed, 23 Apr 2025 01:50:28 +0000
+References: <20250417072806.18660-1-minhquangbui99@gmail.com>
+In-Reply-To: <20250417072806.18660-1-minhquangbui99@gmail.com>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: virtualization@lists.linux.dev, mst@redhat.com, jasowang@redhat.com,
+ xuanzhuo@linux.alibaba.com, andrew+netdev@lunn.ch, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, ast@kernel.org, daniel@iogearbox.net,
+ hawk@kernel.org, john.fastabend@gmail.com, eperezma@redhat.com,
+ davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
 
-From: Ye Liu <liuye@kylinos.cn>
+Hello:
 
-Introduces a new drgn script, `show_page_info.py`, which allows users
-to analyze the state of a page given a process ID (PID) and a virtual
-address (VADDR). This can help kernel developers or debuggers easily
-inspect page-related information in a live kernel or vmcore.
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-The script extracts information such as the page flags, mapping, and
-other metadata relevant to diagnosing memory issues.
+On Thu, 17 Apr 2025 14:28:02 +0700 you wrote:
+> Hi everyone,
+> 
+> This series tries to fix a deadlock in virtio-net when binding/unbinding
+> XDP program, XDP socket or resizing the rx queue.
+> 
+> When pausing rx (e.g. set up xdp, xsk pool, rx resize), we call
+> napi_disable() on the receive queue's napi. In delayed refill_work, it
+> also calls napi_disable() on the receive queue's napi. When
+> napi_disable() is called on an already disabled napi, it will sleep in
+> napi_disable_locked while still holding the netdev_lock. As a result,
+> later napi_enable gets stuck too as it cannot acquire the netdev_lock.
+> This leads to refill_work and the pause-then-resume tx are stuck
+> altogether.
+> 
+> [...]
 
-Output example:
-sudo ./show_page_info.py 1 0x7f43df5acf00
-PID: 1 Comm: systemd mm: 0xffff8881273bbc40
-Raw: 0017ffffc000416c ffffea00043a4508 ffffea0004381e08 ffff88810f086a70
-Raw: 0000000000000000 ffff888120c9b0c0 0000002500000007 ffff88812642c000
-User Virtual Address: 0x7f43df5acf00
-Page Address:         0xffffea00049a0b00
-Page Flags:           PG_referenced|PG_uptodate|PG_lru|PG_head|PG_active|
-		      PG_private|PG_reported
-Page Size:            16384
-Page PFN:             0x12682c
-Page Physical:        0x12682c000
-Page Virtual:         0xffff88812682c000
-Page Refcount:        37
-Page Mapcount:        7
-Page Index:           0x0
-Page Memcg Data:      0xffff88812642c000
-Memcg Name:           init.scope
-Memcg Path:           /sys/fs/cgroup/memory/init.scope
-Page Mapping:         0xffff88810f086a70
-Page Anon/File:       File
-Page VMA:             0xffff88810e4af3b8
-VMA Start:            0x7f43df5ac000
-VMA End:              0x7f43df5b0000
-This page is part of a compound page.
-This page is the head page of a compound page.
-Head Page:            0xffffea00049a0b00
-Compound Order:       2
-Number of Pages:      4
+Here is the summary with links:
+  - [v4,1/4] virtio-net: disable delayed refill when pausing rx
+    https://git.kernel.org/netdev/net/c/4bc12818b363
+  - [v4,2/4] selftests: net: move xdp_helper to net/lib
+    (no matching commit)
+  - [v4,3/4] selftests: net: add flag to force zerocopy mode in xdp_helper
+    (no matching commit)
+  - [v4,4/4] selftests: net: add a virtio_net deadlock selftest
+    (no matching commit)
 
-Signed-off-by: Ye Liu <liuye@kylinos.cn>
-
-Changes in v3:
-- Adjust display style.
-- Link to v2:https://lore.kernel.org/all/20250421080748.114750-1-ye.liu@linux.dev/
-
-Changes in v2:
-- Move the show_page_info.py file to tools/mm.
-- Link to v1: https://lore.kernel.org/all/20250415075024.248232-1-ye.liu@linux.dev/
----
- MAINTAINERS                |   5 ++
- tools/mm/show_page_info.py | 120 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 125 insertions(+)
- create mode 100755 tools/mm/show_page_info.py
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 17ed0b5ffdd2..85686a30dc72 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -18351,6 +18351,11 @@ F:	Documentation/mm/page_table_check.rst
- F:	include/linux/page_table_check.h
- F:	mm/page_table_check.c
- 
-+PAGE STATE DEBUG SCRIPT
-+M:	Ye Liu <liuye@kylinos.cn>
-+S:	Maintained
-+F:	tools/mm/show_page_info.py
-+
- PANASONIC LAPTOP ACPI EXTRAS DRIVER
- M:	Kenneth Chan <kenneth.t.chan@gmail.com>
- L:	platform-driver-x86@vger.kernel.org
-diff --git a/tools/mm/show_page_info.py b/tools/mm/show_page_info.py
-new file mode 100755
-index 000000000000..8622c5499dfe
---- /dev/null
-+++ b/tools/mm/show_page_info.py
-@@ -0,0 +1,120 @@
-+#!/usr/bin/env drgn
-+# SPDX-License-Identifier: GPL-2.0-only
-+# Copyright (C) 2025 Ye Liu <liuye@kylinos.cn>
-+
-+import argparse
-+from drgn import Object
-+from drgn.helpers.linux import find_task, follow_page, page_size
-+from drgn.helpers.linux.mm import (
-+    decode_page_flags, page_to_pfn, page_to_phys, page_to_virt, vma_find,
-+    PageSlab, PageCompound, PageHead, PageTail, compound_head, compound_order, compound_nr
-+)
-+from drgn.helpers.linux.cgroup import cgroup_name, cgroup_path
-+
-+DESC = """
-+This is a drgn script to show the page state.
-+For more info on drgn, visit https://github.com/osandov/drgn.
-+"""
-+
-+MEMCG_DATA_OBJEXTS = 1 << 0
-+MEMCG_DATA_KMEM = 1 << 1
-+__NR_MEMCG_DATA_FLAGS = 1 << 2
-+
-+def format_page_data(data):
-+    """Format raw page data into a readable hex dump."""
-+    chunks = [data[i:i+8] for i in range(0, len(data), 8)]
-+    hex_chunks = ["".join(f"{b:02x}" for b in chunk[::-1]) for chunk in chunks]
-+    lines = [" ".join(hex_chunks[i:i+4]) for i in range(0, len(hex_chunks), 4)]
-+    return "\n".join(f"Raw: {line}" for line in lines)
-+
-+def get_memcg_info(page):
-+    """Retrieve memory cgroup information for a page."""
-+    memcg_data = page.memcg_data.value_()
-+    if memcg_data & MEMCG_DATA_OBJEXTS:
-+        memcg_value = 0
-+    elif memcg_data & MEMCG_DATA_KMEM:
-+        objcg = Object(prog, "struct obj_cgroup *", address=memcg_data & ~__NR_MEMCG_DATA_FLAGS)
-+        memcg_value = objcg.memcg.value_()
-+    else:
-+        memcg_value = memcg_data & ~__NR_MEMCG_DATA_FLAGS
-+
-+    memcg = Object(prog, "struct mem_cgroup *", address=memcg_value)
-+    cgrp = memcg.css.cgroup
-+    return cgroup_name(cgrp).decode(), f"/sys/fs/cgroup/memory{cgroup_path(cgrp).decode()}"
-+
-+def show_page_state(page, addr, mm, pid, task):
-+    """Display detailed information about a page."""
-+    print(f'PID: {pid} Comm: {task.comm.string_().decode()} mm: {hex(mm)}')
-+    print(format_page_data(prog.read(page.value_(), 64)))
-+    fields = {
-+        "User Virtual Address": hex(addr),
-+        "Page Address": hex(page.value_()),
-+        "Page Flags": decode_page_flags(page),
-+        "Page Size": page_size(page).value_(),
-+        "Page PFN": hex(page_to_pfn(page).value_()),
-+        "Page Physical": hex(page_to_phys(page).value_()),
-+        "Page Virtual": hex(page_to_virt(page).value_()),
-+        "Page Refcount": page._refcount.counter.value_(),
-+        "Page Mapcount": page._mapcount.counter.value_(),
-+        "Page Index": hex(page.index.value_()),
-+        "Page Memcg Data": hex(page.memcg_data.value_()),
-+    }
-+
-+    memcg_name, memcg_path = get_memcg_info(page)
-+    fields["Memcg Name"] = memcg_name
-+    fields["Memcg Path"] = memcg_path
-+    fields["Page Mapping"] = hex(page.mapping.value_())
-+    fields["Page Anon/File"] = "Anon" if page.mapping.value_() & 0x1 else "File"
-+
-+    vma = vma_find(mm, addr)
-+    fields["Page VMA"] = hex(vma.value_())
-+    fields["VMA Start"] = hex(vma.vm_start.value_())
-+    fields["VMA End"] = hex(vma.vm_end.value_())
-+
-+    # Calculate the maximum field name length for alignment
-+    max_field_len = max(len(field) for field in fields)
-+
-+    # Print aligned fields
-+    for field, value in fields.items():
-+        print(f"{field}:".ljust(max_field_len + 2) + f"{value}")
-+
-+    # Additional information about the page
-+    if PageSlab(page):
-+        print("This page belongs to the slab allocator.")
-+
-+    if PageCompound(page):
-+        print("This page is part of a compound page.")
-+        if PageHead(page):
-+            print("This page is the head page of a compound page.")
-+        if PageTail(page):
-+            print("This page is the tail page of a compound page.")
-+        print(f"{'Head Page:'.ljust(max_field_len + 2)}{hex(compound_head(page).value_())}")
-+        print(f"{'Compound Order:'.ljust(max_field_len + 2)}{compound_order(page).value_()}")
-+        print(f"{'Number of Pages:'.ljust(max_field_len + 2)}{compound_nr(page).value_()}")
-+    else:
-+        print("This page is not part of a compound page.")
-+
-+def main():
-+    """Main function to parse arguments and display page state."""
-+    parser = argparse.ArgumentParser(description=DESC, formatter_class=argparse.RawTextHelpFormatter)
-+    parser.add_argument('pid', metavar='PID', type=int, help='Target process ID (PID)')
-+    parser.add_argument('vaddr', metavar='VADDR', type=str, help='Target virtual address in hexadecimal format (e.g., 0x7fff1234abcd)')
-+    args = parser.parse_args()
-+
-+    try:
-+        vaddr = int(args.vaddr, 16)
-+    except ValueError:
-+        print(f"Error: Invalid virtual address format: {args.vaddr}")
-+        return
-+
-+    task = find_task(args.pid)
-+    mm = task.mm
-+    page = follow_page(mm, vaddr)
-+
-+    if page:
-+        show_page_state(page, vaddr, mm, args.pid, task)
-+    else:
-+        print(f"Address {hex(vaddr)} is not mapped.")
-+
-+if __name__ == "__main__":
-+    main()
-\ No newline at end of file
+You are awesome, thank you!
 -- 
-2.25.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
