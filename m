@@ -1,145 +1,274 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D292676FC;
-	Wed, 23 Apr 2025 07:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745392095; cv=none; b=AJJInJ/ORKTXVnN3zhh8F9HrERwug2zmrB7Oaps5fwwcgGi3jukDwdGmCRYKVw63BsmlnX54Vl9do8cK+OTNAiTHMHW7SykQBS/liFbl0uDZRT+KFaSB5epFYAuSgQkXQ6dJ6pb7j5OUizquV2Ad6yPcNXWwz1lZjc48VzKNfoY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745392095; c=relaxed/simple;
-	bh=7mnMqfZJXmRF7AEubXC5Quz0rD3EwGLxnuaIQrs31aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lGUuY5DKZgT2tGD3vQDnyxQgxKOnFraMjbQa5kKedVgn7Ud5Rin32RHc0i0UrKgi7kGhAfMawB+IvrGh1tVNEBE1muJbVCkB3ThOtGfTualdYJHe0oAybR4ynjGX6xy5/tpYHt9t2sp0AI8wudSk1IfTElpT3ToKKN+trf+SMjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=taM+nq0T; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E1628F1;
+	Wed, 23 Apr 2025 07:09:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745392154; cv=fail; b=dxbI9SvuBTvWrMBYDMKaWz/Qp3LvOEEWZwAabuLGipew5fuONGNG+2sBiGcZ6fti1ALfAHYTV34UCp7eiuEAcrT2beZv7kM8p/dG4pYI8dqnjKYc3Ft8opW6PFjG1z6T2mXYPwe0gjHWifBbBL1mTT+mGpuakIVT2WzjVxZuqo4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745392154; c=relaxed/simple;
+	bh=AT3W/RRJfBwsWDr8/mcOXNGni6lg6BgY27jfUuA0N4c=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=GEXIXRn+pokdqZ8ioI4+7S5T9kPy9eFSY78diTNq+m4Zg3tQh8VAsEAQtFYzFB7SR+ZU9rScYu+JRigo66LFN0cp92vloSS6bWjC1+hBPFffxoY5Y2+SDk/eYdrcoEs3f62IrfaNVGyIkPRhsgn6vMqB6NYIwMs4t3/O1b7vFsc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=YceZHwKL; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=PdzF6+IF; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="taM+nq0T"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id DB3B91F984;
-	Wed, 23 Apr 2025 09:08:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1745392089;
-	bh=/0EQyW6sKhsHbEM0FiXvZEMPWbxrVBqoFMcw038Fo0o=; h=From:To:Subject;
-	b=taM+nq0Tp+9ii+S0WaDF9seZryAoqKrz/vlplFL9/ZBKvYNh75kCC715TxDFQa+7j
-	 C/sGGFpIK77WVU5hAsa96KvTgz0cbCtwlSeMWTZM1eSsgb80787R1TEDZ13sDDM7GW
-	 m9Z7zfRZZMUu6acYf0lAsIKp7oi/a6A+Q9yGEc/kyS63x9sEef5+xz2ESa0JVOJ5d3
-	 eOdQVUXumLYh6f12oLeAynDGKptfRtEJhUzCj7jMfFXKsVktMRWbgLkMojclU174EO
-	 /wrDlZW4ofcXxj2R+S0I3MGfFJcZRhDvsNVCxViB6AMQjgUiz1cFqeO5rPYDOfd35J
-	 /6AKlQjxqp/Kg==
-Date: Wed, 23 Apr 2025 09:08:07 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Frieder Schrempf <frieder.schrempf@kontron.de>
-Cc: Wojciech Dubowik <Wojciech.Dubowik@mt.com>,
-	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Philippe Schenker <philippe.schenker@impulsing.ch>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: imx8mm-verdin: Link reg_usdhc2_vqmmc to
- usdhc2
-Message-ID: <20250423070807.GB4811@francesco-nb>
-References: <20250422124619.713235-1-Wojciech.Dubowik@mt.com>
- <522decdf-faa0-433b-8b92-760f8fd04388@kontron.de>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YceZHwKL";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="PdzF6+IF"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0tkrI018396;
+	Wed, 23 Apr 2025 07:08:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2023-11-20; bh=xH80FdJUhauhqClr6xd7Cc83WfYnmwyDHYO58m+EC3E=; b=
+	YceZHwKLy9sNe0qL0c/fJ9syELmHo4kQED4a7lnkb/eLcdP/Z0EL9huSelPwOqyG
+	D1pUF6iR6OfCpanqqd9aDEhAXSn5OW7WVCxaqOu/XQuDXl9RAD8HoQXsM12jNKWI
+	gJo7fcZmJT9AleTkHQyfgXfw7MEInbLur+Qdk5f+iUvK+QGlCdUyKryUBeCxJ4BH
+	F6fjGF77PSV7wN9mJI7o02m4bXb7apQ9TrnH84f1Zv6BDZrsaWB7esWWKwQuh/40
+	yUsNfpV42V1QulqQtysQ/SNQjZBywhxXVprkNNI/lQiklKkCl4K+iwn2db7Y9ZID
+	6s0JuopAVF2QiXZeidAr/Q==
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 466jhe0m31-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 07:08:47 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53N5lPWM013805;
+	Wed, 23 Apr 2025 07:08:46 GMT
+Received: from sn4pr2101cu001.outbound.protection.outlook.com (mail-southcentralusazlp17012015.outbound.protection.outlook.com [40.93.14.15])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 466jxnescx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 23 Apr 2025 07:08:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YcmVTLRe7JZZ+au/gyQMMjCutAeCqful8JeX47K3oGXUwLkXNfvX+PGUycmWNwY0PewxtUDiIiMmpX7woGm96BJVGFZF+eJmkVCLO0pxvTvWp4z7lURATXMnIi1j4lV30ZwlbBscmAmcDvcWAXHPby7gppS8JyVnHTndejPF2BnlFPIZSPdNOfMzZMHP0c96PqbQtpu+D6DuShSnasQ2s4QRldz8ymrehPGk6JwUySHxFFAJkqUpUrAxaUKVZiqiiWXDlDTNVQQZozmLcJIxUt8H2+E9IFDobLgwmnJWGp3oAMaqk7LjkCDhl2GRsAwwwytMmcfdASaJhDDQ/Qjcug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xH80FdJUhauhqClr6xd7Cc83WfYnmwyDHYO58m+EC3E=;
+ b=rkk80JXgTM48i7ZPI270Ft0/7RcSZ8MRlsAlKXIRNrb9oRfmFIRCO22qX0ee0xKEvTm8XTCch++UC2QmrgGsXxZWUWA5I4CRgNw7zmJkUlwdjPke8XoxirMoxQmdCXTrvx09it9tBiZUX1t0dC6MaC9PgbZGu/S/ec5l/FC/ZE/9yjE9vtma2UkccqzF6qQSY4pN7NqimdGCTk1nOcWeteAo/CVIPNKf5maGQ2cEzqIt+Ur1V3TXzfE7qYe2XDdIj2P6vIx18FgdX1bdDapBcR8lK/28UkMamq3qEawFtMycT9hAiQ2DZcMlrzO31g1G9HwLiH9PEBGgrBOUD7kJ2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xH80FdJUhauhqClr6xd7Cc83WfYnmwyDHYO58m+EC3E=;
+ b=PdzF6+IFS+9fRUJC0vQMZXv/R+/YgmRRdofzGkk3HgHmSrOYvlJXuI72yEeAEBZBds92M/fZtoXffUGCMroL+Uj7zFVwN3uUeWlq+uQ8Galx7aPbNPAB74SWD3vt2NKEJteX157kwFgmVxbHPdBsZDCNZFotnfDBgoxU2YZMOVE=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by CH3PR10MB7761.namprd10.prod.outlook.com (2603:10b6:610:1bc::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
+ 2025 07:08:44 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::4f45:f4ab:121:e088%4]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
+ 07:08:44 +0000
+Message-ID: <cf67f166-4c65-4d76-a3a2-1ad2614e89b7@oracle.com>
+Date: Wed, 23 Apr 2025 08:08:40 +0100
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 11/14] xfs: add xfs_file_dio_write_atomic()
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        brauner@kernel.org, djwong@kernel.org, hch@lst.de,
+        viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
+        linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+        martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+        linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+        linux-api@vger.kernel.org, Pankaj Raghav <p.raghav@samsung.com>,
+        Daniel Gomez <da.gomez@samsung.com>
+References: <20250415121425.4146847-1-john.g.garry@oracle.com>
+ <20250415121425.4146847-12-john.g.garry@oracle.com>
+ <aAa2HMvKcIGdbJlF@bombadil.infradead.org>
+ <69302bf1-78b4-4b95-8e9b-df56dd1091c0@oracle.com>
+ <aAh4L9crlnEf3uuJ@bombadil.infradead.org>
+Content-Language: en-US
+From: John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <aAh4L9crlnEf3uuJ@bombadil.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DB8PR06CA0055.eurprd06.prod.outlook.com
+ (2603:10a6:10:120::29) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <522decdf-faa0-433b-8b92-760f8fd04388@kontron.de>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|CH3PR10MB7761:EE_
+X-MS-Office365-Filtering-Correlation-Id: 24b190cf-7109-4bf3-1a83-08dd8235af22
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MGhIUEM5Q2xNeU1KK0VUbko4OE13UlAyb1BkdFYzdlhKT1VMelRQRHZRL01h?=
+ =?utf-8?B?KzRjeGlDMFUvSjJBNmw5anAvQTlXckxERXBJRnFNUUdwbFFlODl2eVBpelVk?=
+ =?utf-8?B?M1lvaXFBM2J4emdSeXkrSkdOWlBwcVhzcXdBcE8rRnptNWZnSmFwUXlHZ21H?=
+ =?utf-8?B?ZlZrdW9MVnB2QnFHN1FEMklWcndud3JhRUFDTUFsbzM2Umc3d2svR3ArZDZV?=
+ =?utf-8?B?KzUrYS9mSUltbXoySUZKdTd1LzAvZEtneXZrUkJLTk53d0szUkEvV1JvUDc4?=
+ =?utf-8?B?MHV6WkNNazdheHlvODd0TFY0MTFxNXZ3YnpCS3o2cmlZNlV4RTlhaFd6Y0g1?=
+ =?utf-8?B?SlE5cHJLZ1BNUDhVejcyU3hSdXRKUzQvNUNGaFhLR3dEVWpZUWJxZHNrRFdm?=
+ =?utf-8?B?cCtiaURoMEVEYmhXMXBpQU4xRnhkVWg2VHc1eWFQNEFVSERqWW5Nbk5vc1Rr?=
+ =?utf-8?B?cG1ieVVlTno2REpIQk9sN0hha1h5ZnZXcTlRSFFBUG94RDA3UlZUMTB3MExx?=
+ =?utf-8?B?RjZmVE1UNEJoSysvSERYYnpQZkVENnFmNWRhbXR5clZHa09EVk8xYlJCckYz?=
+ =?utf-8?B?S2o0MVUyaENTTzYrMGczcDgrSGV6em5XelJQN1JUK3dLOWJ1dE00djAvNXZt?=
+ =?utf-8?B?NFdMQnRjZTRrd0ZrTTBBQ3NnRWE4d1k5TFpjbTJIYWYzNjRsV21ZYjYyaXJO?=
+ =?utf-8?B?NlVYMThQZVRHT0xGWVQ2a3VRb0RxQksrNFBhdERUUEdBdUtkMkxxWEdCcFJt?=
+ =?utf-8?B?aVdRalZqMmIzcGdUK213TnhFanpxYzhQWTY1c05VSjhkVGplRnFpYlRXM3pD?=
+ =?utf-8?B?UHREamVWd1ZoTnJHOGo5c014VEppN01mNTEzQnlCMW9nN2NENjBCY0dPSHM2?=
+ =?utf-8?B?eUZXYWF3cXh4Nlg5SHk5bm4ydS9rdVIzNEltd0NsS3lJbnMxSWYyd2VwSGRX?=
+ =?utf-8?B?eExXZmIya2IxSFdRSkhKTTcraWdhZlhXNHZ1MnBYL202YUZNSTZkTmZxWnc0?=
+ =?utf-8?B?emFYYUdqdHB1VE9YVitxL1o3TFluQXpUZ0thWVFVanZFSGlIVkRnekVJL1JO?=
+ =?utf-8?B?bWVteERTTnd6OE5GTFkxdkN4dTNubHpwT29DY1Z4MVRBNjlWWUFSTnlFTmIw?=
+ =?utf-8?B?M0VWSHlDblBweTRNSjNPVVkrbTJNRXB5cklTb0lvN1JNaFB0OU5xQXVJSVZu?=
+ =?utf-8?B?d3VUczZUZFd6em5EVmxqWit5TFJ4OHRtQ1pRVmtjZHVvVjdVQUtWL1NZZmJQ?=
+ =?utf-8?B?blZZUGZRbE5yNCtKTHNDdCtjMTF3MHo0WUV0Y3BPTXZQLzAvT3RJTVVLM3Q3?=
+ =?utf-8?B?aEcveDFNbEhZdDEvUHZqcisxS0FFb3FtWDZ4bFpwVkxsdG45WmhIN2dlMUJI?=
+ =?utf-8?B?NzNEVWJSNE1iVWNiR0x1ZHpzdS94TitrTlozTmY1djV2TUFZUzlYRUIxZStE?=
+ =?utf-8?B?cm8reVpCS0JjdkdZOW93c0dpVGNub1VuV0RrWnNsS20xM2g1NXE4d05yclB2?=
+ =?utf-8?B?M0htSjV2Mm50Um5yNXdqQnROdW9zUFY3c2dpdHpGaWljSmJPRVZ1SWxWaWNt?=
+ =?utf-8?B?cTdiaDRJQnRHcVlObkJkR1BNWkJVczBxMCt5MGdqZUlHV2JKOVdXeTIvTGhm?=
+ =?utf-8?B?NnpkWTlXLzhpU3M2TzQ4Yi9POVNyMks0cFpNZmlXYUxTTEk1MFE2WW1KeVIr?=
+ =?utf-8?B?eHVYbUxnU2h2NnNDNlFnNXQvODFtVWpZWUdaSHZTckNKK3NWSGlQeU10TEFS?=
+ =?utf-8?B?UUVJWStkU2R0ckpoYVloSjNsQTNleVdhQzFBWG53VlIyd3c4U1N6N1F0ckVD?=
+ =?utf-8?B?bDQySlFmUFdlU3hraGhETnMvM2QxRFh6Tkx4TmdLblUxL3lOT3hNMjM2WXI4?=
+ =?utf-8?B?MzdOWmxvejNLdG43dHZqSlhxNDJWV092OGkyYThMQWt5TnRXcEM2K1RSdGd0?=
+ =?utf-8?Q?hqny5y80QsA=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?elpWd3BVMHVXdURWZ0RPbHNRdWVMY09XWTFlZGJiays2UmNKZzFwR2xvMWJy?=
+ =?utf-8?B?c3RIUENiL2NnUVJCT2R0UnEvZ1B6RVdTNlNaamtoWUJHNzg3QmlXSmE3S095?=
+ =?utf-8?B?OTF5NTNOcU93R3UwRmJWeHR0Z2tpdXVOQysxZFJ3bXFIbGcvSzU5R3U5Qlhr?=
+ =?utf-8?B?cndCcmE0WDlJdmJOZ3lTUGJidjZicGxPdnF4ZG1MMUhySzZsb1UycWRqdzZE?=
+ =?utf-8?B?TWtDV3h0YS9rUmVQcU5DQU5sWFVvbFlpRnJJOU1CSENCT0cwN2UvV0tSc3ZQ?=
+ =?utf-8?B?dUx3dHB5RXRZNjlvOWlPaDk0NVFFSFFiNmpJOXo3VTBTcFJoTnorWGxsNDBK?=
+ =?utf-8?B?WncrM2FzeEdwOVg1NGs4MEgzb3c3ekU5VnpCMUdDWHZTMHRTUFQ2d0w5L2tz?=
+ =?utf-8?B?MG5xVThINFZJZVBxQ3JOTnZEVUlYeGxPUGdSdlJKaUdrT1BDYzlLclVEVjVD?=
+ =?utf-8?B?R1pTZ29ZczE1OEhQVnFqMmRpMllIMnc0ei91UEh2WFlEL1o2Nm5uQkFxTnUx?=
+ =?utf-8?B?dlErNkRFM09KMjIyd0ttbWp3dVRickloREdaQm9VWGhaV2RKL1gwYTZzL2RU?=
+ =?utf-8?B?OTRZYU9mRmF2RzNKUTFvWHJRczdRMTZ5bDBiTG0ySEZyVE9YUkhybGVjNGt1?=
+ =?utf-8?B?aGVWNEdZSlVZMGdWcFpteGpqZlhWTk5pdFBrNEZTMnUxNytqWU5najR3TU9x?=
+ =?utf-8?B?bnNHNHNmNFBZUlpUWXRwWnQzdGFoR21vQmEya0p4cys5TjhRTURWSFNUazlj?=
+ =?utf-8?B?ejk3Tk0zOEFHMGhRamgycnpRT2Yyd0tCSDlHbk5BM29Ca3ZsUnltZkI3ZEFX?=
+ =?utf-8?B?V0I2ektCeHJGelBJb1lsa2M0Q3pOZStMaFJGdFg2V0hJL3R0RU9JZ3JVb3A0?=
+ =?utf-8?B?dW1qRGVmbVpFdWpIMjBPMDQ4NlV0dVJ2ZVVBL2lZYVlldVRDSnp2L2l3Q0NN?=
+ =?utf-8?B?R2ZGV3lvNFlCOCtYWlJId0M5Y3ZEM2JEc0lCOTZmbE5xWmxTZFV6TERsc21X?=
+ =?utf-8?B?SEZBS1EyaERYL21XZVlXYVlla3pMbVN1UmNHeEFIcUUxcXFLZ1kxRU10TjI5?=
+ =?utf-8?B?cko3N2lHOGJ6Q3E4YmRvdU50NmdpRlFYM2JQMUtMeGFUbmF4cjhKdmdDSTZH?=
+ =?utf-8?B?Mk1pcDhlWDRYY2ZKMGxtamx6K1dOdi9sdHV3dndmNHo1Z01DdUtna0o2dk9l?=
+ =?utf-8?B?UEhxTFRMVS9kM3ptc0NrbE1mMkFQazUzOWpkVkZHcFVhSVFrQW5mUjV1MUlq?=
+ =?utf-8?B?QmpLYnZ5VVllalNjL2RqYi92RjZJcU1Qc1Y2REh6anBXZDRhNG9IZFBHNHpy?=
+ =?utf-8?B?MVdhRzQ3bVlPS1RXSWI2WGxmK0c2RVlZaW5oeGIweEM0cVhjaGExWVNuTGZS?=
+ =?utf-8?B?bENUNGEwSkxIWEc1Q3dIZjZnZWxiZlF1WmxMdW5lcjdUZGxwSUFEakIvM29a?=
+ =?utf-8?B?WVgxM2hRSzhJcUlDKzN5TWJzaVYxc2szZ2d3N05GcGE2aG9UOWhHVW1HREhF?=
+ =?utf-8?B?dTNlMGhTTXpoM2ZPN1lsTTdBRzFmK2dHV3Y1UGRHTVZGamJRcmRLQ2tzZVMv?=
+ =?utf-8?B?M2hyZTdmVXZSb0laOTJOa1o4QUZKL3dVL1Z1aElVb1JSWGdHTXgzT3FWUjdD?=
+ =?utf-8?B?OVlQeFFMaHJpMkxMSXFYeGdVQytNS3RES1h5ZFNnNFVhN0h2L2hhS2RXZWgv?=
+ =?utf-8?B?TzU4amFEUjBEaDdGN1dTRC9EMkRWODAvR0g0NWhaSHNZRmF6UEp4SWJEeis0?=
+ =?utf-8?B?WXBqNU0xckhYZTRYOGxjblJCdTRRTHhraStSKzg3MmdCRWxQNm5HL1lTYm1Q?=
+ =?utf-8?B?SnhGUzFnWW1yOExiWFZBZjB1d3RRdWExWW5MLzZDcnNONldrU2c5UWpwcEh3?=
+ =?utf-8?B?N1dLNmNmVWtueDBMU2E4VThwWTI5SU41MkpuMUxMSEpsd2VrSVl5Wm5ycmtw?=
+ =?utf-8?B?Z1VTaHdsQ3FiNE1FMkZqZXRLUUxhTGs2MElHSVBiZkRNK3YzcGNXTmZFbnpr?=
+ =?utf-8?B?R1p6SXVSRW1KQlFnRTJ1VDB1SDJhWHJSemQrWGFpR3o0Nm1Qby95UTJ6YjNs?=
+ =?utf-8?B?RXp0K3NpRTRkNzk1U3BSYmhlOVNVeGYrQXlEQ0ZwQldyNmdHZnpuc2RReGpH?=
+ =?utf-8?B?c0svZUpDZ0JjQnZUVThHYXdqWjVrb3ZhUzBRSDdIcVRPcEVHbGlCVVlxaTg3?=
+ =?utf-8?B?UFE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	GPLDztDqwebLmfSGMJbMsWrZOO0NleltL5ifu489r2yUHELd6FRFP8UbgUAz5mcaDov80eN1ZX+H2joSl+OLTaEs/2Aj2rUR/uIKy//jGcx0eppdlcPGXjg2zrJEc97Ee26RIBcXxOxvLjaMR3KRbsZEj3KOQOwXP178svTMg3deF/slxc8JGtfkh8a4/dMzi1OoaA3dDvhJkBnDsCrehR04Zv/HlZOJkuxq6xVumnXlZYe87M71HKe7M5xN7x6YSMoVVicESHgIh0vSsCeFtMXn71uN/KIs8x/MWMDc5/QxxUd8Yf+mNpVdRIPZB70Lgh7VfU68/8HbrICA8zRWR5NDt7QpZa+y19CGuvk18CGm1PbyALlbP44hbcrN0oZWR2BvBnLvqjUqGgafLxvu0DZ6kM15Z6RiABS6Lo8xtNh6Q8CNI2iduzCHnYqK66uUs2Ne8xGUwG4hnrpYVsZuj78pqq1wa3jYO+VBH56rz+D6cFGyaPsIa21J3Rfc3Kz8TglUndPXoEGWuQWWx8fEUmTPWvpRHFCOJ2zglSa7KX+6Riy8ZRZU4TVWsdlP2o8EuWsZLWBG9yC93rS/ZU/VvNHUsWxEv6gKPU3Xhg9MS0Q=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24b190cf-7109-4bf3-1a83-08dd8235af22
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 07:08:44.1611
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0Uim2+rdQXl1qDs3UIT+LI9Rw+HSeyL0+II6/KUbdbCW2VGbfHoLaBXnQZedrCrAhuq6RZUr/ZYz7ngdPayH2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7761
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 adultscore=0
+ phishscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2504230047
+X-Proofpoint-GUID: 3gIK41OqePHrfeIhEohx3Nz21pCTsRb6
+X-Proofpoint-ORIG-GUID: 3gIK41OqePHrfeIhEohx3Nz21pCTsRb6
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA0NyBTYWx0ZWRfX1LfdQ1+tPTiP EEnE1FoK62MjtVd/gG/pKcXXczxUjKOzLQSJcDHI48fs8OMWoDLMrzarwFw8AdC38Py2gYWHZ+J RTF7CT230qJxo5q3Fc3rSG1T9lSbjg7+23eleSSTnGLf2eKZW3k8O/GGD6lYmfLUVgQG5sAUUcI
+ hlSiwdxIvibIxq18pRM7Y4SS2WFAkt5OV3IvHvQBaqOUbmw+jxLpPHyl5esZ447QaCAX4hkuL0w IY7TUElJ7u0Ia7map/fyvppcEfGHI6H4/KJHo54Hsh83bkgxmIBBT2ja2Gln/ASgAk3gAM3pyrN jfMpN2i55cnVh9p35DYTY55ziGTpTRBPuqpFejEmy8s01uiq9C9fuxIpL0xkpBtLy5TwBvaSpCy tMpt8x51
 
-Hello Frieder,
-
-On Wed, Apr 23, 2025 at 08:50:54AM +0200, Frieder Schrempf wrote:
-> Am 22.04.25 um 14:46 schrieb Wojciech Dubowik:
-> > [Sie erhalten nicht häufig E-Mails von wojciech.dubowik@mt.com. Weitere Informationen, warum dies wichtig ist, finden Sie unter https://aka.ms/LearnAboutSenderIdentification ]
-> > 
-> > Define vqmmc regulator-gpio for usdhc2 with vin-supply
-> > coming from LDO5.
-> > 
-> > Without this definition LDO5 will be powered down, disabling
-> > SD card after bootup. This has been introduced in commit
-> > f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5").
-> > 
-> > Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
-> > 
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
-> > ---
-> > v1 -> v2: https://lore.kernel.org/all/20250417112012.785420-1-Wojciech.Dubowik@mt.com/
-> >  - define gpio regulator for LDO5 vin controlled by vselect signal
-> > ---
-> >  .../boot/dts/freescale/imx8mm-verdin.dtsi     | 23 +++++++++++++++----
-> >  1 file changed, 19 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> > index 7251ad3a0017..9b56a36c5f77 100644
-> > --- a/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/imx8mm-verdin.dtsi
-> > @@ -144,6 +144,19 @@ reg_usdhc2_vmmc: regulator-usdhc2 {
-> >                 startup-delay-us = <20000>;
-> >         };
-> > 
-> > +       reg_usdhc2_vqmmc: regulator-usdhc2-vqmmc {
-> > +               compatible = "regulator-gpio";
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&pinctrl_usdhc2_vsel>;
-> > +               gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
-> > +               regulator-max-microvolt = <3300000>;
-> > +               regulator-min-microvolt = <1800000>;
-> > +               states = <1800000 0x1>,
-> > +                        <3300000 0x0>;
-> > +               regulator-name = "PMIC_USDHC_VSELECT";
-> > +               vin-supply = <&reg_nvcc_sd>;
-> > +       };
+On 23/04/2025 06:18, Luis Chamberlain wrote:
+> On Tue, Apr 22, 2025 at 07:08:32AM +0100, John Garry wrote:
+>> On 21/04/2025 22:18, Luis Chamberlain wrote:
+>>>> /*
+>>>> +	 * The retry mechanism is based on the ->iomap_begin method returning
+>>>> +	 * -ENOPROTOOPT, which would be when the REQ_ATOMIC-based write is not
+>>>> +	 * possible. The REQ_ATOMIC-based method typically not be possible if
+>>>> +	 * the write spans multiple extents or the disk blocks are misaligned.
+>>>> +	 */
+>>>> +	if (ret == -ENOPROTOOPT && dops == &xfs_direct_write_iomap_ops) {
+>>> Based on feedback from LSFMM, due to the performance variaibility this
+>>> can introduce, it sounded like some folks would like to opt-in to not
+>>> have a software fallback and just require an error out.
+>>>> Could an option be added to not allow the software fallback?
+>>
+>> I still don't see the use in this.
 > 
-> Please do not describe the SD_VSEL of the PMIC as gpio-regulator. There
-> already is a regulator node reg_nvcc_sd for the LDO5 of the PMIC.
+> Its not the use, its the concern for underdeterminism in performance.
+
+Sure, we don't offer RT performance guarantees, but what does?
+
 > 
-> > +
-> >         reserved-memory {
-> >                 #address-cells = <2>;
-> >                 #size-cells = <2>;
-> > @@ -785,6 +798,7 @@ &usdhc2 {
-> >         pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_cd>;
-> >         pinctrl-3 = <&pinctrl_usdhc2_sleep>, <&pinctrl_usdhc2_cd_sleep>;
-> >         vmmc-supply = <&reg_usdhc2_vmmc>;
-> > +       vqmmc-supply = <&reg_usdhc2_vqmmc>;
+>> So consider userspace wants to write something atomically and we fail as a
+>> HW-based atomic write is not possible.
 > 
-> You should reference the reg_nvcc_sd directly here and actually this
-> should be the only change you need to fix things, no?
+> Sounds like a terrible predicant for those that want hw atomics and
+> reliability for it.
 
-If you just do this change you end-up in the situation I described in
-the v1 version of this patch
-https://lore.kernel.org/all/20250417130342.GA18817@francesco-nb/
+Well from our MySQL testing performance is good.
 
-With the IO being driven by the SDHCI core, while the linux driver
-changes the voltage over i2c.
+> 
+>> What is userspace going to do next?
+> 
+> It would seem that would depend on their analysis on the number of
+> software fallbacks where a software atomic based solution is used and
+> the impact on performance.
 
-I was not aware of this sd-vsel-gpios, that if I understand correctly
-should handle the concern I raised initially, having the PMIC driver
-aware of this GPIO, however I do not see why that solution should be
-better than this one.
+sorry, but I don't understand this
 
-BTW, is this solution safe from any kind of race condition? You have
-this IO driven by the SDHCI IP, and the I2C communication to the PMIC
-driven by the mmc driver, with the PMIC driver just reading this GPIO
-once when changing/reading the voltage.
+> 
+>> I heard something like "if HW-based atomics are not possible, then something
+>> has not been configured properly for the FS" - that something would be
+>> extent granularity and alignment, but we don't have a method to ensure this.
+>> That is the whole point of having a FS fallback.
+> 
+> We do with LBS.
 
-With this solution (that I proposed), the sdcard driver just use the
-GPIO to select the right voltage and that's it, simple, no un-needed i2c
-communication with the PMIC, and the DT clearly describe the way the HW
-is designed.
+Sure, but not everyone wants LBS
 
-Francesco
+> Its perfectly deterministic to be aligned with a sector
+> size matching the block size, even for metadata writes.
+> 
+>>> If so, then I think the next patch would also need updating.
+>>>
+>>> Or are you suggesting that without the software fallback atomic writes
+>>> greater than fs block size are not possible?
+>>
+>> Yes, as XFS has no method to guarantee extent granularity and alignment.
+> 
+> Ah, I think the documentation for this featuer should make this clear,
+> it was not clear up to this point in patch review.
+> 
+
+ok, that can be added
 
