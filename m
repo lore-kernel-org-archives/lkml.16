@@ -1,83 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8812E265CBC;
-	Wed, 23 Apr 2025 08:34:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB2726D4F6;
+	Wed, 23 Apr 2025 08:35:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745397278; cv=none; b=kqlfD6nXtosf4Z40p0CfciDUNz716q+JettfV18tdrRYerLj2qsQ3XjYH9QsnPYpxNtlzCEV58wizAfBmW9uGSFqWWweiAjbX308tN76LU1Q78rFrFNbFSvk9Gfs5xmVOGuqbXmpW78GUw2B0bKvZnY6IdzPLghFFmGwbdDKpqk=
+	t=1745397322; cv=none; b=sISeXJgiG6zr6tZwqAdvh7/bCx25wcQwLtTjD+xKSgM9gtwD3AXgtF0KXMVcky68VfNN2MdkM2fSDBXOId1011hm7jSHUG8bWUf+fdBLMnHaMC2hgP/MmLoxOjSykmRSVAz3aMIk4WXAjOCI2HbAhz1Ok+BvC/TRFyJl6J+0Umo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745397278; c=relaxed/simple;
-	bh=f1x+ftMPRdcn0aPedNNc/tdTLstPKeUh6hNNmacMbwQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=S8sCp7Yxrxsh1KGG850s2iYI04/T7kmjiVbw72wWlVphKsDJSy8wRPQtF3/GHotZdbig6B8mbVrNGk4KgfCZRBgkd0ZWVNWZp0OaBxoSuJTVlIextfhGXEecJ3VyA0ZlLNjlGk6w+V8as7rVB4836UqmsBh98KgyNsiah1pfkns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6r9JzMD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745397322; c=relaxed/simple;
+	bh=BZSLijxSXMIiXrMszqB3BP92kAcntEir0dS6YlGxXnk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IOjDzryE9CAlf9CQMY1C+6ccpLS1X4Qi47b5AE3jDqicJc51o0U3Cin2EZ+GLC1QbNkHLq+yH52xGgIVpnHAKf8raU3ctl7ZCbKuv+B8rkk3an9xQredbk5oAtgzWywN+ozICwhQF/YU1YAOKNvQbITHLO0rBgZiBpoKSLkoyxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hT9a5pGD; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6r9JzMD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE7DDC2BCB7;
-	Wed, 23 Apr 2025 08:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745397278;
-	bh=f1x+ftMPRdcn0aPedNNc/tdTLstPKeUh6hNNmacMbwQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=P6r9JzMDcuKFbO590uKnJZndjTdi9gn91fKrO0tTJx5PhqMnaXz9u/mAD/4Onp7nf
-	 WVItAG07msVfJVy6oncR4Z5Dj+FgsiUPJL2D9zjxUWKoCC5nyqffTWthe0zI0mqs0z
-	 Ht4D7iObBpIqLlar5g+tQ+68HBGH+qF7+qDgsrMF9hTHKBIsY6scXu2nxdVyY8Fubb
-	 IwR/wlbvD/vw2WqrP5BgmjAjcoSDhJnw+9HdeenXOHq/67lCqbBogZxww6YrM3H5Su
-	 B6fvu0dPNjIdSAsKQupCquDwrMAHnMvV4U6EJJAoGrfSeA4X3oGRwSCsEX8eB7sxJw
-	 4w9aOtk1CpnZw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: boqun.feng@gmail.com,  a.hindborg@samsung.com,
-  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org,
-  netdev@vger.kernel.org,  andrew@lunn.ch,  hkallweit1@gmail.com,
-  tmgross@umich.edu,  ojeda@kernel.org,  alex.gaynor@gmail.com,
-  gary@garyguo.net,  bjorn3_gh@protonmail.com,  benno.lossin@proton.me,
-  aliceryhl@google.com,  anna-maria@linutronix.de,  frederic@kernel.org,
-  tglx@linutronix.de,  arnd@arndb.de,  jstultz@google.com,
-  sboyd@kernel.org,  mingo@redhat.com,  peterz@infradead.org,
-  juri.lelli@redhat.com,  vincent.guittot@linaro.org,
-  dietmar.eggemann@arm.com,  rostedt@goodmis.org,  bsegall@google.com,
-  mgorman@suse.de,  vschneid@redhat.com,  tgunders@redhat.com,
-  me@kloenk.dev,  david.laight.linux@gmail.com
-Subject: Re: [PATCH v14 1/6] rust: hrtimer: Add Ktime temporarily
-In-Reply-To: <20250422.233132.892973714799206364.fujita.tomonori@gmail.com>
-	(FUJITA Tomonori's message of "Tue, 22 Apr 2025 23:31:32 +0900 (JST)")
-References: <20250422135336.194579-1-fujita.tomonori@gmail.com>
-	<20250422135336.194579-2-fujita.tomonori@gmail.com>
-	<aAelbeiWVZgL-kMh@Mac.home>
-	<20250422.233132.892973714799206364.fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Wed, 23 Apr 2025 10:34:21 +0200
-Message-ID: <87wmbbmg36.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hT9a5pGD"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so4191001f8f.0;
+        Wed, 23 Apr 2025 01:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745397319; x=1746002119; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MsqunO9lss/uBzeiIi4q3QDIiMQHRXAesVvljbjm2ZY=;
+        b=hT9a5pGDmKHJ3LB/pYIbp31pmxgbdYvmxkrxlHunRsVyQmyyascqRwapaYXiEJ3+le
+         fxON6MrJAMb1sbD4mR9A+MerAIdjotwQrUiRI4DO1fGu5YuYMpmuJ5LBbxe6R9fA9b2z
+         JLJdITa1AVmbShhz2tPh3EB0fPQmnxIthd4eoMrnIHlgYztkSGqR65XGxRG6Pryil8vQ
+         eOtIDpKfvw4JeA4a8wI0Ddl0qKSY+68jy8cxU7nPOG2fPAdhEzXpy6F2x8ok5tYZpOYK
+         S245A2FxvJOHQKHQ7buSzYNhAAfPUhgB2B2bshTM97T9VZ0pGSi64Je70NQZVK5Gdpg1
+         5O+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745397319; x=1746002119;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MsqunO9lss/uBzeiIi4q3QDIiMQHRXAesVvljbjm2ZY=;
+        b=oevYDj14rZsysqKNKG2vPuIbU4XsbmHKLw/7zrl6uxBGA2AuhXL5uCONZtRgJ9qFOu
+         N+ZpfAuQB9lBvkbsIqZLTUExWO/sN3Z8c4x3nRNzYFwDHyh5drmCvpfgy73Qg/8SPESx
+         sCU7B2AncxErC/rE1sV0HL2BmbZYYypc1TRnNcmBD76plgh+ZrOp12CZiINWKmSUnmS4
+         h5ol4SLZIYluQTTf8DFIhAMkFsGuwmPcj+51DHny0D7vQjr00s+NR/486VpObTQJIN9l
+         /dZXWoRtNsYFscgbWxg9x3T29liqoCH8pB/bWRUK6AVTxdjgRq3MXSeeQA8nlpVD6h6X
+         rGmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTsCjA+IZL0UiTqozXwGVXSJnuUgg7etdTJYoiU6iMYlgf/fQzeaBCpgaWegDrnYIthoLYLax+sDfuKPs=@vger.kernel.org, AJvYcCVD1wjv6yAvGITN359Ov1y4Tayzl3ZOrVXoAJYOwla+DSrn+kHdMGhx4NiwINxE9d4rEKUmprnOLDTR5wwirW65@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlcItChbbWd3UGrQ4rJtBYsu+VQGWsdsL2yfxDjcgFYOKLfBQx
+	1H6/uS9nzSXnjZl6RayO7MPDEpznbWBG5g7EjgJgn2chpDt8ME/2
+X-Gm-Gg: ASbGncssUBPrmlTpwKZ3K7p63lP7BkWKdy1Eukr7KiyRJwjFs1W0WKy9GgpSEDv+oed
+	fqtqwGi0Ec0pkK8htvrIR6EM3FPo1Eg8L//o2jPMY69rDqH+LeHkFS0rbic4S8qQgLXIXmzbJtM
+	vbR3MVSx+welrApXV7b0Nevnw0M3fTnMNnjgQAI0+b0ntoHM8/FQN/cQ/mXTpnpsE9OzseMks5A
+	GCfuzKjMAzcHLQzcoOtF35Vh1Ux71JVLk1UKxkDzuX0nFRrrvaptAFkwCVgBL78ckRwDuUfkDSv
+	hdkRurCbMX+ITeACpy0t6oQJAaKxcW+p9vegaGQboyfBioacVJ7s
+X-Google-Smtp-Source: AGHT+IHq+qc9wzwJk0+h6l/1r7L8EKtIf1dbPpgU53Uopd7ij6Jpyj36OOnzVIYCr9XQy8gtMHHv3w==
+X-Received: by 2002:a05:6000:184c:b0:38f:4d40:358 with SMTP id ffacd0b85a97d-39efba39a4amr12792668f8f.9.1745397318513;
+        Wed, 23 Apr 2025 01:35:18 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-39efa4a517dsm17742256f8f.100.2025.04.23.01.35.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 01:35:18 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] selftests/perf_events: Fix spelling mistake "sycnhronize" -> "synchronize"
+Date: Wed, 23 Apr 2025 09:35:11 +0100
+Message-ID: <20250423083511.139896-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
+There is a spelling mistake in an error message. Fix it.
 
-> On Tue, 22 Apr 2025 07:19:25 -0700
-> Boqun Feng <boqun.feng@gmail.com> wrote:
->
->> On Tue, Apr 22, 2025 at 10:53:30PM +0900, FUJITA Tomonori wrote:
->>> Add Ktime temporarily until hrtimer is refactored to use Instant and
->>> Duration types.
->
-> s/Duration/Delta/
->
-> It would also be better to fix the comment on Ktime in the same way.
->
-> Andreas, can you fix them when merging the patch? Or would you prefer
-> that I send v15?
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ tools/testing/selftests/perf_events/watermark_signal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Either way is fine for me - you decide.
-
-
-Best regards,
-Andreas Hindborg
-
+diff --git a/tools/testing/selftests/perf_events/watermark_signal.c b/tools/testing/selftests/perf_events/watermark_signal.c
+index 49dc1e831174..e03fe1b9bba2 100644
+--- a/tools/testing/selftests/perf_events/watermark_signal.c
++++ b/tools/testing/selftests/perf_events/watermark_signal.c
+@@ -75,7 +75,7 @@ TEST(watermark_signal)
+ 	if (waitpid(child, &child_status, WSTOPPED) != child ||
+ 	    !(WIFSTOPPED(child_status) && WSTOPSIG(child_status) == SIGSTOP)) {
+ 		fprintf(stderr,
+-			"failed to sycnhronize with child errno=%d status=%x\n",
++			"failed to synchronize with child errno=%d status=%x\n",
+ 			errno,
+ 			child_status);
+ 		goto cleanup;
+-- 
+2.49.0
 
