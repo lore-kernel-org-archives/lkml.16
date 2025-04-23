@@ -1,152 +1,105 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5081A83E2;
-	Wed, 23 Apr 2025 09:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFD71F1534;
+	Wed, 23 Apr 2025 09:56:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745402152; cv=none; b=rKNkzoEH4qqBYkYr/6hFdo5yxz0HE7dK7ynSEdvTXUw2W4JuJfx25z/4GvhRiVjxXDOZTATfqUYv6x815M8HqhbML7vQivmCHcg7PO/uSpjaNRfvOobZsy3b2GvCc/RNMfzgBf6nKg1gGbxMR+FoKy6CViidZRrL1xkMMdeDf2Y=
+	t=1745402211; cv=none; b=U9pgdnQzthZrd79xHRU/Q1EJgC5WSXxiJ0HJ9lXRGiD8g5DZyUUmw0m8E+1/vXyOt4d4q6hRAi2hY35+VlPSEha6sP8JR7l6eAw/BzKOd+kupQfyrMSFy5FlbrxNK4lfrkakbEAH3Xs72i0i3RZf9zf0odCt/Ik8F+dzE/84ii8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745402152; c=relaxed/simple;
-	bh=IX355T5bF+gY8hYv3hsDrYQj7EXvm48oDjcOSaLE15Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n8jozom497YxQZl5khUzep6O/Oi4Sg1FSmpX2gQZ/A2bRRZ9ChvI1gYEtqiNAKFGj5OsZClbtV9IBIwWb2qIyLhwJ97Fbco09rP8lhSCJAM18Lt5o8rzAEB+v+1UJPLKCVY9Ec7NzWtONDNX5bXrJI9Z1GUAsU+OGwxM9WHAdnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=KsqFhg/1; arc=none smtp.client-ip=1.95.21.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1745402211; c=relaxed/simple;
+	bh=5yZBvNuVYmifPJSDr+HNB9Vckbn3EBGqIJPHXQ/LNEQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Viq8jcZsXIHJtQdxFlfbwUkOeQuDZ5BcKM2bojB+zujOhEt2gYTsxG5v611CFNc6pd3A42IEgAglH0IDx51EnzkIin4TwDtMoFZkBmNPP1l1RgzaBpb2D7eOY/U13Bin7I8NLtvl/A5TYaycB5uCb1sKFXvaKVMiGdwSvu4ABG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DZ0gOEqh; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="KsqFhg/1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=NlhH8WEkZpuN13W3VEIII6VHYDH2gaUlvN68bRqY43U=;
-	b=KsqFhg/1z+Wlpt1mkRvAVzxScxkUwbLEiLR9Mk8dymJf9frcxhtvyZt/0v4j2A
-	rxsY5FsARt9RdCppDIP17UtGdGdeP/7TBjeVhNwe9g2M0vfpFz1eUQP53x7GIA6h
-	nZ2+m9/K2vEpM7qVZMrln+BW3tAVNdJ4h8yDFfsCg3GdY=
-Received: from dragon (unknown [])
-	by gzsmtp2 (Coremail) with SMTP id Ms8vCgCHItjtuAhoHeXSAw--.33364S3;
-	Wed, 23 Apr 2025 17:54:55 +0800 (CST)
-Date: Wed, 23 Apr 2025 17:54:53 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, imx@lists.linux.dev,
-	Frank Li <Frank.Li@nxp.com>
-Subject: Re: [PATCH v2 5/7] ARM: dts: ls1021a-tqmals1021a: Add overlay for
- CDTech FC21 RGB display
-Message-ID: <aAi47dGoKbHqEo7Q@dragon>
-References: <20250408093059.551700-1-alexander.stein@ew.tq-group.com>
- <20250408093059.551700-6-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZ0gOEqh"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ace333d5f7bso230640366b.3;
+        Wed, 23 Apr 2025 02:56:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745402208; x=1746007008; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YwA18LRT0uq0phnjE2h0pHsa2q7k3j4dQrZL4VXB764=;
+        b=DZ0gOEqh2sv8fymphGg+oYyMPr6qXUKndIN01QZS0YJO0olIPPUWcQMiiKPzSFOZAu
+         rdZP0TrX6qleq35VlD5LVXU1u/ubXxkueTBv72pmT+8xXlvvS1hoIjcVE9xtd3VTGbEe
+         1Ohtp5remuDPW/TuPIeIoMGcJ+hp3slLnBzk1i1tolbjP51p0DPys0jY0tpnhzSM0x2X
+         AcC1a2RQp3hmC3m9ybD1UB3kze7XExrHsc+JSvIerRbTA/JrvTrd1V1KcKzg3Um1hcv6
+         TB4PHeMHQOQCZkztfD1+m6KbwEimUCQc1VBg9OtJvgRCw6bopy2yXIkeRud/BXkmVLSX
+         ju6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745402208; x=1746007008;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YwA18LRT0uq0phnjE2h0pHsa2q7k3j4dQrZL4VXB764=;
+        b=TctyH2t2OMMrUvSR1ZBKO4NitDJRDLxx7h+/wPmRXE6ZAUNqKDTWaG6r/9hL7CTM3t
+         098mqFc9qSYUvoMTxjOfs1RgAAaAN8BBO1VmzhpjUzXoaGPWT2j3i6a4YIVoh5HUx7P7
+         vWhFP/dq0LNzmwdgAsprEAELsVKTkCeGFgaqvQx0QILGuxPHXHtFlIf9aRM2eTeBD80w
+         IGx1Hjc9SI5UPnTtNL/aLOV+n0PfylwakGTCHA052CvQzRpYnYscZo8f5h/j4qdRAK/s
+         89+AjwZUCBzAHn2EIbKwkR4pKhVfVfAZgh34u3GnY7inNhAIs/yobiDS1OLvybLSqeSz
+         ArqA==
+X-Forwarded-Encrypted: i=1; AJvYcCUWslcR4rm0VN4kprXvyc/RCr7p2oIM3RUuSufCVUtHzvlaf/9R/wsLM6FNq2RKB0TzvFjdleEGJBMMRUOa@vger.kernel.org, AJvYcCUag+WowCHr5wN8ORy6UgrMQPcXcjSX7G34oNZufMAA/5dGEKuGw4NucXJlP5/azoo1TPcE/X9sjJLl@vger.kernel.org, AJvYcCXaA2aH1f9bXtmSfeSm2kgqfV7TayvRztwfwttgmrQuRVbeCfEHXNcclUioFKyQ2OzjkaF4kHF3zis=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuHGBcsssw/3w0SCeFFPrmiKoNQ6SlfvOWvVJEQci15CrqnXDY
+	y/96OwJzpIgIac8iLieNeoSh2dilNRLejFrYVGjiNkpKLqIqOjmT
+X-Gm-Gg: ASbGncsBm+ochraNGbYqPjqdykfF7Krm/mg/1sisBkCoUzsS9MaCiO7R1Z5WLpZ1PyD
+	acBjI6snzk8TzgRofa3RzQHSDf9PoMPKPcitO+9gqTXVvuEOsHEokkw2JoTrEjaApEHc9eTDyWn
+	K4grsOC1apbDncP4QOQSmQGA9WJwDU3zF4jgLBlA6vkE+HDHMMB1kutIIrGndInSyxNZRb+hKdu
+	56aTaLY60EOWura7uz3nRWlAvp20frvwVtWNcEnefFDguerGyvF2wRPjT9Kec6Gre2oZ3HtGtDq
+	wER8DrQBgHDFrY5wfa2V6SjML9q8qCwANCD3/Qmt4DITOQk0XsQfLhTkXjLxrCRFI7E=
+X-Google-Smtp-Source: AGHT+IEtOoJSaHh13UT19v8/zmlhQZa1pyS18v5YTBOq5/OCSUsJPtlqQbjbpBqmKCino8dWIpCXdA==
+X-Received: by 2002:a17:907:9407:b0:ac7:391b:e688 with SMTP id a640c23a62f3a-acb74e6f381mr1506718066b.58.1745402207508;
+        Wed, 23 Apr 2025 02:56:47 -0700 (PDT)
+Received: from A13PC04R.einet.ad.eivd.ch ([185.144.39.75])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6eefc782sm773431066b.87.2025.04.23.02.56.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 02:56:46 -0700 (PDT)
+From: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+To: 
+Cc: rick.wertenbroek@heig-vd.ch,
+	dlemoal@kernel.org,
+	Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	linux-pci@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: Fix path for NVMe PCI endpoint target driver
+Date: Wed, 23 Apr 2025 11:56:43 +0200
+Message-Id: <20250423095643.490495-1-rick.wertenbroek@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250408093059.551700-6-alexander.stein@ew.tq-group.com>
-X-CM-TRANSID:Ms8vCgCHItjtuAhoHeXSAw--.33364S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxGw1DWr1rWF17Jr4fCF13XFb_yoW5Zw1xpr
-	nrAayDCr4UGF4UXr18GFs8Kr1DK3yFg3W3ZFyYyFWjqrsruw17JFZ8KFnxWry3ZrW5Gw15
-	XasY9ayFgFnxJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jO8nOUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiNA+F6mgIuO8d-AAA3C
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 08, 2025 at 11:30:52AM +0200, Alexander Stein wrote:
-> This adds an overlay for the supported RGB display CDTech FC21.
-> DCU graphics chain is configured accordingly.
-> 
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  arch/arm/boot/dts/nxp/ls/Makefile             |  2 +
->  ...-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso | 56 +++++++++++++++++++
->  2 files changed, 58 insertions(+)
->  create mode 100644 arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso
-> 
-> diff --git a/arch/arm/boot/dts/nxp/ls/Makefile b/arch/arm/boot/dts/nxp/ls/Makefile
-> index 7f96de6f80224..7b97b718ebc16 100644
-> --- a/arch/arm/boot/dts/nxp/ls/Makefile
-> +++ b/arch/arm/boot/dts/nxp/ls/Makefile
-> @@ -9,5 +9,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
->  
->  ls1021a-tqmls1021a-mbls1021a-hdmi-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-hdmi.dtbo
->  ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33.dtbo
-> +ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21-dtbs += ls1021a-tqmls1021a-mbls1021a.dtb ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtbo
->  dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-hdmi.dtb
->  dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-lvds-tm070jvhg33.dtb
-> +dtb-$(CONFIG_SOC_LS1021A) += ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtb
-> diff --git a/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso
-> new file mode 100644
-> index 0000000000000..31494d9d09f8f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/nxp/ls/ls1021a-tqmls1021a-mbls1021a-rgb-cdtech-fc21.dtso
-> @@ -0,0 +1,56 @@
-> +// SPDX-License-Identifier: (GPL-2.0-or-later OR MIT)
-> +/*
-> + * Copyright 2013-2014 Freescale Semiconductor, Inc.
-> + * Copyright 2018-2025 TQ-Systems GmbH <linux@ew.tq-group.com>,
-> + * D-82229 Seefeld, Germany.
-> + * Author: Alexander Stein
-> + */
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +&backlight_dcu {
-> +	status = "okay";
-> +};
-> +
-> +&dcu {
-> +	status = "okay";
-> +
-> +	port {
-> +		dcu_out: endpoint {
-> +			remote-endpoint = <&panel_in>;
-> +		};
-> +	};
-> +};
-> +
-> +&display {
-> +	compatible = "cdtech,s070pws19hp-fc21";
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	polytouch: touchscreen@38 {
-> +		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
-> +		reg = <0x38>;
-> +		interrupt-parent = <&pca9554_0>;
-> +		interrupts = <6 IRQ_TYPE_EDGE_FALLING>;
-> +		/* LCD_PWR_EN -> TSC_WAKE */
-> +		wake-gpios = <&pca9554_1 4 GPIO_ACTIVE_HIGH>;
-> +		iovcc-supply = <&reg_3p3v>;
-> +		vcc-supply = <&reg_3p3v>;
-> +		gain = <20>;
-> +		touchscreen-size-x = <800>;
-> +		touchscreen-size-y = <480>;
-> +	};
-> +};
-> +
-> +&panel_in {
-> +	remote-endpoint = <&dcu_out>;
-> +};
-> +
+The path for the driver points to an non-existant file.
+Update path with the correct file: drivers/nvme/target/pci-epf.c
 
-Whitespace at EOF.  Fixed it and applied the series.
+Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+---
+ Documentation/PCI/endpoint/pci-nvme-function.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Shawn
-
-> -- 
-> 2.43.0
-> 
+diff --git a/Documentation/PCI/endpoint/pci-nvme-function.rst b/Documentation/PCI/endpoint/pci-nvme-function.rst
+index df57b8e7d066..a68015317f7f 100644
+--- a/Documentation/PCI/endpoint/pci-nvme-function.rst
++++ b/Documentation/PCI/endpoint/pci-nvme-function.rst
+@@ -8,6 +8,6 @@ PCI NVMe Function
+ 
+ The PCI NVMe endpoint function implements a PCI NVMe controller using the NVMe
+ subsystem target core code. The driver for this function resides with the NVMe
+-subsystem as drivers/nvme/target/nvmet-pciep.c.
++subsystem as drivers/nvme/target/pci-epf.c.
+ 
+ See Documentation/nvme/nvme-pci-endpoint-target.rst for more details.
+-- 
+2.25.1
 
