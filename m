@@ -1,65 +1,54 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934F9262FE8;
-	Wed, 23 Apr 2025 09:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B84A2641F8;
+	Wed, 23 Apr 2025 09:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745399094; cv=none; b=h7fH2Va7k0yinhRp4oU1mfJMG4U+BRxbEPZVGgQMBOiWtrTZ7wGH4wDzJ85v8zpu8BgPCMF3H7daq1P1CvQNsqalzrprP7GLUlJCdwaUnT55gK+IUmK9o2nViUE6FiKfKD65+j1lS80I3eaARM1ZeKGJigV7WH6AoMDxinHmIRw=
+	t=1745399134; cv=none; b=FFNIB+qYlaTr/2TjAw6/YmBmfR2GZPwtXVtJ50lehlgXy9aGHx94ohhtOhMqtWNgd/l+QHIA9wIivbRda4T03EcWtVeJ9mnlUu5UfSabBivuzsQZo01raCuSGg2sld2q4q36zdSkXTxTn4zHtKKfipAUCJiEygdp3QNpmlrdBaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745399094; c=relaxed/simple;
-	bh=J8zSjG1YWRpP2BiZ7FfzE1KFXnUG0V8xG6UkQqapBhg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PpPo0mzHHnBBJgRHt81iUbqE+l1nUl57l3tXy0/xMbfKhc0tyuMh+JOyKbE3vDvG2TyP+ouyBlIF6pS9u0AtXTZWIG1N8o16fJYXRMeIDAc+9mWsF9JlBlv3yGP1+Zy0bQzbtSY3ElWYgKy/3ei/d2BjyBvaC5sAI1E2nH0lCx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=SlXcN0il; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1745399134; c=relaxed/simple;
+	bh=5LRmniywZxMxDlI5Oxe49VfAgh8CxFPg1n4DHapt+9k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mmjsEVGMh6Dvewu0hPnF7RewXbl67ZJ4MRyvF0KLlGXegnkK/tZSjQ8IlM3+BpKzrmOGzg0yRMPpZtbtKWKVA5DvHwmE5qGO3YROIabGIGn2FIYEa+SpeYdoeqovNhibkQkEMfbvQg3knlH5w2p4NvT5wRmYlwFe4ciBKTh73xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de; spf=pass smtp.mailfrom=amazon.de; dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b=mACXAwmz; arc=none smtp.client-ip=207.171.188.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="SlXcN0il"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6mbUO000814;
-	Wed, 23 Apr 2025 11:04:13 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	NrWZEBaWAkproY8CI+qS1Q6z3QO/fCAcsTOlY185XKo=; b=SlXcN0ilXq6D/CFM
-	l7bGdVHVSPNEx/713V1F+QtdaIBgGfPsr6Vtv3fjUr3etcM8z/ONZM7RsDQg+Y3z
-	9qBIu/GWaEzyx+ZRnHgGShtxwGXmHNuY6oo/otJ1/1TfXRX90Ouko2fJs1ofsGgk
-	004Rp6aKYGBUMlU5uQVxuP9jdjWGZiA9u/hvCmzqIq/afKd//6xVMGo3IHB5Y+ck
-	4+yXeOJzb4U58+kMrj/QqDy6VQ0jerNWku0ifnPxBskraLuUEGQg31/4QOeRb+LI
-	EEfAwxUEfa37tKHsLs+eIMkwLR715WOjByaQpqhwn6EdksrEFKjNxELPhRaJKNTW
-	uWnChA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jjv28kh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 11:04:13 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BC47A4005E;
-	Wed, 23 Apr 2025 11:02:42 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 08D9391F73E;
-	Wed, 23 Apr 2025 11:01:27 +0200 (CEST)
-Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
- 2025 11:01:26 +0200
-From: Christian Bruel <christian.bruel@foss.st.com>
-To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
-        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
-        <cassel@kernel.org>, <johan+linaro@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 3/9] dt-bindings: PCI: Add STM32MP25 PCIe Endpoint bindings
-Date: Wed, 23 Apr 2025 11:01:13 +0200
-Message-ID: <20250423090119.4003700-4-christian.bruel@foss.st.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250423090119.4003700-1-christian.bruel@foss.st.com>
-References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="mACXAwmz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1745399133; x=1776935133;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FXlYnAZ24E+gP3h3vZ2maJPRoNj+Qo4OgFh+v0oTL4I=;
+  b=mACXAwmzEBH62QT+7z1HtAKbTm4ra2yq33Mo0i9kqETCCSafu2IOjg3a
+   qgXUN6WJfxXD6XpVdN3UkoxM9ybCQvUyhXFzOG8J11nyuHRp50wQO+S7y
+   uC98lIpmZIcd4X9F3lY+qTA88lsKJNdsY90HtNVreQyvUP04QDZtTZuPx
+   c=;
+X-IronPort-AV: E=Sophos;i="6.15,233,1739836800"; 
+   d="scan'208";a="818324122"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 09:05:27 +0000
+Received: from EX19MTAEUB001.ant.amazon.com [10.0.43.254:2286]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.11.178:2525] with esmtp (Farcaster)
+ id e508e646-c623-42bd-acdb-51aeea751e1c; Wed, 23 Apr 2025 09:05:26 +0000 (UTC)
+X-Farcaster-Flow-ID: e508e646-c623-42bd-acdb-51aeea751e1c
+Received: from EX19D029EUC001.ant.amazon.com (10.252.61.252) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 23 Apr 2025 09:05:25 +0000
+Received: from dev-dsk-bsz-1b-e2c65f5d.eu-west-1.amazon.com (10.13.227.240) by
+ EX19D029EUC001.ant.amazon.com (10.252.61.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Wed, 23 Apr 2025 09:05:23 +0000
+From: Bartosz Szczepanek <bsz@amazon.de>
+To: Ard Biesheuvel <ardb@kernel.org>
+CC: <nh-open-source@amazon.com>, Bartosz Szczepanek <bsz@amazon.de>,
+	<linux-efi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] efi: Improve logging around memmap init
+Date: Wed, 23 Apr 2025 09:05:16 +0000
+Message-ID: <20250423090517.47049-1-bsz@amazon.de>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,96 +57,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-23_06,2025-04-22_01,2024-11-22_01
+X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
+ EX19D029EUC001.ant.amazon.com (10.252.61.252)
 
-STM32MP25 PCIe Controller is based on the DesignWare core configured as
-end point mode from the SYSCFG register.
+Be more informative if memremap fails, and print out physical address
+together with size. This change intends to make investigations of such
+early failures slightly easier.
 
-Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Bartosz Szczepanek <bsz@amazon.de>
 ---
- .../bindings/pci/st,stm32-pcie-ep.yaml        | 67 +++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/st,stm32-pcie-ep.yaml
+ drivers/firmware/efi/memmap.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/st,stm32-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/st,stm32-pcie-ep.yaml
-new file mode 100644
-index 000000000000..fc1bbe19e616
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/st,stm32-pcie-ep.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/st,stm32-pcie-ep.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: STMicroelectronics STM32MP25 PCIe Endpoint
-+
-+maintainers:
-+  - Christian Bruel <christian.bruel@foss.st.com>
-+
-+description:
-+  PCIe endpoint controller based on the Synopsys DesignWare PCIe core.
-+
-+allOf:
-+  - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
-+  - $ref: /schemas/pci/st,stm32-pcie-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: st,stm32mp25-pcie-ep
-+
-+  reg:
-+    items:
-+      - description: Data Bus Interface (DBI) registers.
-+      - description: PCIe configuration registers.
-+
-+  reg-names:
-+    items:
-+      - const: dbi
-+      - const: addr_space
-+
-+  reset-gpios:
-+    description: GPIO controlled connection to PERST# signal
-+    maxItems: 1
-+
-+  phys:
-+    maxItems: 1
-+
-+required:
-+  - phys
-+  - reset-gpios
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/st,stm32mp25-rcc.h>
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/phy/phy.h>
-+    #include <dt-bindings/reset/st,stm32mp25-rcc.h>
-+
-+    pcie-ep@48400000 {
-+        compatible = "st,stm32mp25-pcie-ep";
-+        reg = <0x48400000 0x400000>,
-+              <0x10000000 0x8000000>;
-+        reg-names = "dbi", "addr_space";
-+        clocks = <&rcc CK_BUS_PCIE>;
-+        phys = <&combophy PHY_TYPE_PCIE>;
-+        resets = <&rcc PCIE_R>;
-+        pinctrl-names = "default", "init";
-+        pinctrl-0 = <&pcie_pins_a>;
-+        pinctrl-1 = <&pcie_init_pins_a>;
-+        reset-gpios = <&gpioj 8 GPIO_ACTIVE_LOW>;
-+        access-controllers = <&rifsc 68>;
-+        power-domains = <&CLUSTER_PD>;
-+    };
+diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
+index 34109fd86c55..f1c04d7cfd71 100644
+--- a/drivers/firmware/efi/memmap.c
++++ b/drivers/firmware/efi/memmap.c
+@@ -31,31 +31,32 @@
+  * Returns: zero on success, a negative error code on failure.
+  */
+ int __init __efi_memmap_init(struct efi_memory_map_data *data)
+ {
+ 	struct efi_memory_map map;
+ 	phys_addr_t phys_map;
+ 
+ 	phys_map = data->phys_map;
+ 
+ 	if (data->flags & EFI_MEMMAP_LATE)
+ 		map.map = memremap(phys_map, data->size, MEMREMAP_WB);
+ 	else
+ 		map.map = early_memremap(phys_map, data->size);
+ 
+ 	if (!map.map) {
+-		pr_err("Could not map the memory map!\n");
++		pr_err("Could not map the memory map! phys_map=%pa, size=0x%lx\n",
++			&phys_map, data->size);
+ 		return -ENOMEM;
+ 	}
+ 
+ 	map.phys_map = data->phys_map;
+ 	map.nr_map = data->size / data->desc_size;
+ 	map.map_end = map.map + data->size;
+ 
+ 	map.desc_version = data->desc_version;
+ 	map.desc_size = data->desc_size;
+ 	map.flags = data->flags;
+ 
+ 	set_bit(EFI_MEMMAP, &efi.flags);
+ 
+ 	efi.memmap = map;
+ 
 -- 
-2.34.1
+2.47.1
 
