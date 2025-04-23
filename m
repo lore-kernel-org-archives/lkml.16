@@ -1,356 +1,277 @@
-Received: from SJ2PR03CU002.outbound.protection.outlook.com (mail-westusazon11013002.outbound.protection.outlook.com [52.101.44.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4084288C8E;
-	Wed, 23 Apr 2025 15:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.44.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745420610; cv=fail; b=XSxCZ7TOllolrTC9yib8Aqzmu7DTYRc+WFiaXFeecSkIr+b7FXRuKHvCy+1aN7szRftazrOhu5RZfATVdhQjR82SJv5lvUc9J3h2hV7Kp7pdseAvG0wr/Z+XRhrKQZfREYHrDrgtL9ZCeBhgpDHc07y2RaCTQrXyH9zt+FQPJcY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745420610; c=relaxed/simple;
-	bh=1cqbxX1TUVYQKVQZAdnmko3SJ0/KxWPdJkIfSefmhUs=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=iwcoDpcgNCYjIwYlVnZ+DX99N9UzgqzqI31SzgUa9AlT7/08qyQlyi0tlS52IKUySmhxEo6uVSzKCFFIF6FxVYM8MQ1pxrted8xXbX8U5ls0WFQEGmkrY9+9fz+Ks154pKN3jg973jqvGw0XLOiUqBQVI27vGrmVqx5cM8PWcig=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=wDQhKn7m; arc=fail smtp.client-ip=52.101.44.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18F7289344
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745420615; cv=none; b=GOscSg85e0lQx3VY+ShYPii/EOJTNujZdoOOn7owQj0Ii5xmhfRM/9OHzdDg37YHlSwOMroORG389fdSUOVrQK0yohu0xWx32e0gQTTgnuCO28atJwZ6yNC9roqOugHWWJatjby2mkaVCdkZYe3+OJJdjFMqMQzoN1bKEI3tnww=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745420615; c=relaxed/simple;
+	bh=12qzKXY0BzwvID0wgiAUqMdZl3WivHrcHHDo50Rut44=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I8DD6dooNPJAwNAE4qVRerUSKFAufPZ5Rfu8yvDl3IJ+0+9xUsmnF69iEQ6EOTFVXpSEXuRSUqTWEVqPwLhHiGbPj4gCvcYJ0/SBECpe4nXmio52dp10zQyZHM1l9SgGrsBxJFjUn4Jqm2+FZ/VuGuKaS9IsJPYPaz4YUxRteko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aRvoDM/R; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="wDQhKn7m"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=RjM9b3U177d6tIonKUpW/MfhSA+PIzPiyYdzDlyQjS0FXcBK58iNk/6BCQ+EetVnHC3ko1HCZV/v2VjTo4W7zq7cEMsvd9JhoiZeB46IP5RuEaaQuLKQlGwj3yZq9jSq+dYf/iSz2krG2uXxWtqsoEHvIUJukEYrKoSb40TNECGs+ZyrsnckT5JEldXe9AZ2PYpd+irl9Q05B7d38EXaIU8G9dbY11ftfB2WM2GkiJPNZDIGErtN0sk3Y6RcZ3pdMudrtT6emgmMUcFRZk5uw2l5BK0/7bOzYiwLSu6vrtXvhU3nLElNc0AFySDw2ZktsTOttD0AGy3BjeuATTvLaA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hfoN5NighFND4Djg0B9Y5ixwVO/fTLBLCMoDqBY4GQ4=;
- b=DVB9WlfO3nervPtJX42RZ3XSLEUYVylQTJNkQFNLXxjfZny5AAW/WEP9Z6XIe/nnoR30N0CidQc3cDdKc8CkX7gF4ek3cJzoFhfnfAmrq8e+rWVHR1qsLZzmoWRWfx/C6yBecK2UQ+/U6tQArpt4zKVQfXTUx7q9m9e6t6GkPs0NjoVlphT1EZl4tji00oYdFuv3FKf8abU1YNANtCta1i4TGRsEaRONPpWNmLbsXJSW1O92ljCBRtytFxkn2lf+rj/OxWyL2Sc0pz+UMR15n2XE2DLviDtCF3PWSNxutxgMuPk28UN5TiqP6+346chr0lz7wwdU0pC1NdapIpEozA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hfoN5NighFND4Djg0B9Y5ixwVO/fTLBLCMoDqBY4GQ4=;
- b=wDQhKn7mkLNLHgzAUKA8uUykE+Qsk5Xy4Ki6cce26xVzgrPnFDEAzaa0rRHx4SaGxjjndjdLPAG9vppI0jhi0zThGKUMdsIJ4JRftxSN97WRdMKAtM1mjRSA5dz1ePXQDSfeyhJy9F79K47NWzbtEaYHusQBOudvNTX4z8TJ+m5XP6ypUSwXy47A09PHVat/swFXYV2p4gy+5/IBgaNXe4rgot3INnF+DxLenf78OtbiZZOJA1N1ig7QUTrlUjFpDkekjL3WNipFX/JYUN+w4I3xmnLMdIm48J4nbYj5CQDm/7pJV/DXT2EN7ZRl0hfHvGpUWIJi5A316gPT+fvPVA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from SN6PR03MB3471.namprd03.prod.outlook.com (2603:10b6:805:45::21)
- by SJ0PR03MB6647.namprd03.prod.outlook.com (2603:10b6:a03:38b::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
- 2025 15:03:23 +0000
-Received: from SN6PR03MB3471.namprd03.prod.outlook.com
- ([fe80::cc6d:d13:da28:d505]) by SN6PR03MB3471.namprd03.prod.outlook.com
- ([fe80::cc6d:d13:da28:d505%6]) with mapi id 15.20.8678.021; Wed, 23 Apr 2025
- 15:03:23 +0000
-From: Matthew Gerlach <matthew.gerlach@altera.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	dinguyen@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@altera.com>
-Subject: [PATCH v2] dt-bindings: clock: socfpga: convert to yaml
-Date: Wed, 23 Apr 2025 08:03:18 -0700
-Message-Id: <20250423150318.27101-1-matthew.gerlach@altera.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR07CA0105.namprd07.prod.outlook.com
- (2603:10b6:a03:12b::46) To SN6PR03MB3471.namprd03.prod.outlook.com
- (2603:10b6:805:45::21)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aRvoDM/R"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d91a45d148so206035ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:03:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745420613; x=1746025413; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MeALuF8jKVLJRlKRLq/6pLCkpUuGmGPwZiC4ZXVfYlg=;
+        b=aRvoDM/RNINBn3VK96HXnNtXxDRtiDDRdya/2pDvkjSoowT96C5NgLh3GC60RuMBJa
+         eWkKA2gHmVXDv7LhhkBmcM3w3jE49BTDLtSOtoBYHK/SXfTNX5OMG2PBspKYKrpifNyp
+         i67UuMd6ull83RONO+eUqueGWs6dJlWdZ2DiVw9Gi0n/BpS1jjBlF/T5KwPUhYHc4pwe
+         EEzbNNvs5pniASJ71Qd6S851prvPbPllqcRbUhjC6Y8RwvLthrpjFFWHQ5AVHi44l6UU
+         uqaXH8Tpq7TqNa1ko1A1NF4c6DtkPOL+OMyqk8mkePrODaZtU/MKJiJM1N+MSWSgt1rp
+         YvjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745420613; x=1746025413;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MeALuF8jKVLJRlKRLq/6pLCkpUuGmGPwZiC4ZXVfYlg=;
+        b=IyaSL0uHiqKtQBzJ1v++EFJHD6knIV30IA81/8nH59eDT7sBk6f7N+zwDFPX+pGGXr
+         Ucf4qDhsfxThnqaXRFZhAr1OaNUJFdd007+l+wT24BTxsCEmbIyzgvDtr6i0WpATcO6T
+         wtBHwYHMhqyjo/xUP7ESk+I0mhoB3y6W5eEY0yuDTm/yvnNThkSJIRKQjdBiYF+0kxse
+         g6IKoQnsLwE3Cy5lC6NUzP87ckyKg501lt5PR/Ny1u/wUliEXiDDYJmal/OUsKxqBraD
+         yJwIeM3xzyGIB20lXjiVajLcmFHY2nBD3sD8qBPS2sjt2ii7Vdg08mnV6R8AdfNYynEI
+         /13g==
+X-Forwarded-Encrypted: i=1; AJvYcCVUojhl+y+j9j60lkaiv0DIkaEanks3RAgdK2YgAxM5zqRbp+W5raS2Rk5gywYjf6nRYUAzSSCSSHfHBDE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmXA7Ese0JHt61tYNnMAWCmn44i0byzXFSE+mJQr+QklJeBqA0
+	jCeUDNxd+GtSnh25iwkOm239uL1r93LymkD7Fygi5ZaZEW8dqH8eO83nhnS/G2ltsLfiRhhJSiS
+	ACq7VcdBx7TYL7JP7w1zURWtir2129QVoWz8Q
+X-Gm-Gg: ASbGncvVwRbGwdO1McpwZJKl3MHsog/G283FuaBfyvp2x8XQRaAuRk7pC2PNjb7CfsR
+	Qjl5PRPodybCkgm6pP/cZx7386fccBweYTgKKc4/ud6K3dvpGc0v4BSrX66sbX9Wo7h/tWpcM1q
+	BvGaz3N43Ds6fqZVGrRv+uX8AskssPSe7b9icsUOJVXBJZeg4Eq6w=
+X-Google-Smtp-Source: AGHT+IEiVg+r9k0GPVsb58FfTecIW8FL7oqxuNIJ+9fbKQlVi8lDoMz0e9WPUX7FFI56Oddi4JpWt8CNAuFxVH5aph4=
+X-Received: by 2002:a05:6e02:128f:b0:3d9:28d8:966d with SMTP id
+ e9e14a558f8ab-3d928d89906mr2257965ab.5.1745420612385; Wed, 23 Apr 2025
+ 08:03:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR03MB3471:EE_|SJ0PR03MB6647:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96dd5cd0-97b2-49ac-f338-08dd8277fdcb
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?iKusRCfNl1QlUvMIIp7VObQXy4fFAzFUcOs3oQfK8MxejhEUHk/3GpDuBaSJ?=
- =?us-ascii?Q?lw9EoUQxfOB6NeQgzqs3KOfwB3fDxZG1eIutN9m79RhFMEZdQLEutKu8xBMj?=
- =?us-ascii?Q?iUI+fARWMXkmmwZwsW6joVNy31l5cx6zJYXVqGqjB5yRYkQAR7cx3FdoHlfl?=
- =?us-ascii?Q?pKQQsPYNjb0kpypjuQzWp325foWqEbsgjkoPk5K48liHm2Ha4bQNbeA3qmbK?=
- =?us-ascii?Q?vX446U6SO4lUcgkthG1Jmfi1CFyDJYwkIu5N0f2oZulCj0jOvY3/cL+1rSlq?=
- =?us-ascii?Q?MfCU3f0BzKjtGz2ZjWzCLnjw44W+/Az9iOS5iOTjcyrC34bacLwtqdjqj6Xl?=
- =?us-ascii?Q?2k1qXBtF2YdxwrwQ0dlaV7FULGtZjOKBtZ/2I5j0hU0bLQMYSuOm6AsGrkXm?=
- =?us-ascii?Q?ISrX9Wb3E74B2QfLMOwbBCYYIMVtovGyPepHeRZGl+0Ghs2BTHgAEbTWr+CB?=
- =?us-ascii?Q?a3Unzq/QUKjB5YqLHzYIrhoBj47RmD4mk0B15ogHXjER4k5SxETXj0kLX1bq?=
- =?us-ascii?Q?5HEaq0Q6eC3lxuMUST3Eh14JyehfKY+bhTg6ec4Tva65xM1eXvTux1Fxue/R?=
- =?us-ascii?Q?GQs/rQg8IEEzfQ33YT75534S5etf35ZipU987xEZSgIMcU8qOF9l5gkZH0A9?=
- =?us-ascii?Q?EuIHELh6UfczF8f5/GUn447Bnk1YxSVW0Y/bqEN1S320NuEZpSGxZU+l4+Tq?=
- =?us-ascii?Q?2s8gjbtTJgsB4/PEpw6596mcZfIY5wXhJ8nrGRJvEo9DaU8oqD4x6ut9wFxg?=
- =?us-ascii?Q?tl32eNFbHR0tkKXnCU4Z0pLfwLMJw9M7GdhbqpiYxHLUa+Oa93lAXAN7liCG?=
- =?us-ascii?Q?8vmGUqX1und+aR2yVJ+XtRwnVdBsyMjkgtvyAmn6IXPTrIRvC7SWi1CD9yef?=
- =?us-ascii?Q?918YoziabSBCNaEt5ccPR4YK8NtPI8iVjj2mrTtvSEDLB8H4IUDOdQlQlQiq?=
- =?us-ascii?Q?Qsl6r7AhuIc2nH6FjKPPkc9j2d8gqGNiWPPNvWzEx5aWlPoWVrG0SxKerOSQ?=
- =?us-ascii?Q?9d7a+yv6tS+VcPuFlioiJfUp4GcHyMbKh8SPkZ8WZcVUzMYSzQSDq1REzqy+?=
- =?us-ascii?Q?eYAlG3yPiSWIRmHVk2i/5c17kemPRoba9TOWlAoHLrk6llRUEF2ryHX0hPJu?=
- =?us-ascii?Q?xB9pnp0f6YsGB1jzyaDUSTfTgHBO6US5K0qektPuOVqxgQ5T4iyoYZmSnpjF?=
- =?us-ascii?Q?GbC2lUs4XrEzPIBdZqyVCcKTvsKfUT73rzhWCZtCt8imt/9GPfy3EsRC3QvE?=
- =?us-ascii?Q?W3uXXauWtb/nQXCSbt8sKfiseZ5bKFsTgsgtZPqbweCHVnTVva76qW/jGrlT?=
- =?us-ascii?Q?DMJSCZKm15w0iNw6k/9rJ09G8QnFWl5cGnNKzy1df82NxFzCocHQWDm+yp4W?=
- =?us-ascii?Q?KkItlykB40BTGjKV9Qax/KlVicQKjVgQKm9qFMf57izJGj5g+OBPQ94aCV8y?=
- =?us-ascii?Q?KWAXPrBFDJY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR03MB3471.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?HrVEMIdRRq9mFo+hZHBV/3bmbdD2Rtc/GQgekJTcXV00Sg/opZbA05YNsAKS?=
- =?us-ascii?Q?3kVCly7xqYl2kmzglDZCPUzetT4zibJg9jtApiersr5whxE8KdzrSsUV4cV4?=
- =?us-ascii?Q?wljwqtJLmSsuF2LvgVc9YR+/qp/tMop9BGkXdht6BLJxUG7wKDpTHeEwpbRJ?=
- =?us-ascii?Q?EXYXNsT/BamOeWKPM3gOv4nAfhBpl9SEOEyyVjqHzTrIf1c5vG5rm+D+34Cw?=
- =?us-ascii?Q?oau3P+hJvdRy4t5CsU3XPtR25xdGdtNoD4dWGgx+U/AyCaOUbTUahIVdf4wm?=
- =?us-ascii?Q?LOPrhNKsp+PknZMBeQV9ax26CpRDDMFBsMuAKPdnZ2no5zVJLxFFLIJRNL8D?=
- =?us-ascii?Q?KJ7DFyhJAUXYRt/Qmfy1U8WrtvlrNXnlYMgMDuZfBNrFDOP40exdDJeNoDek?=
- =?us-ascii?Q?B8fJH4gJ1JQEeTUaaTotBaSDOSSDAD8litM+dpct+gIaauEhZ+Qvk/3YcMnQ?=
- =?us-ascii?Q?v/UZWzea/yKqrMPkXM4oD1iH5hJ/v41B2PJC8BbaIkTCIzDRzLvxAu9xYxnd?=
- =?us-ascii?Q?/bNIXYJaoa09k2Y3sLbIzeRUmAyod6ek1dr8nI3yXgENFQ8LsD+Ri9uF3JEl?=
- =?us-ascii?Q?5L8m+LyU+9IXLI7MjalHeU+aZMXBIS3RZbnEu/p/ZYvz3ZFEgZMuouAw+me5?=
- =?us-ascii?Q?39WV6qMq8zs40hPiwFoz/wbYa5WP1bij8jSaDndYo8i/ADnfLqGLAwRDaZF1?=
- =?us-ascii?Q?vkSF8kCUOU2fLEsgCO6I954UrL5KY0QifBOJFxESn5LwfWwVe9sNx8zoLjGQ?=
- =?us-ascii?Q?HrcyGw9FMD745aJ2eidNaFc96JZdmhft4QkEjkF2ZU0FDBkTNWR3JTXkSRy0?=
- =?us-ascii?Q?WRhMEZXBoTOLSPptT9gim3lvues3T35EeFIkXBNW0auggjPOwwYz4J1OEWnx?=
- =?us-ascii?Q?QrF3i5QyzXpcaZZ3Us9xZ8xNngmbZyRJ1NfxEYu6bT0GDO2Xwq1JllqWHaYw?=
- =?us-ascii?Q?W0g/uwT09Q18Le5rZ4J9QJ1puiwYsNy84rKy6Fhke9aARdcHQUhZMdxRsSo4?=
- =?us-ascii?Q?3EQ/Upw2ak5tor92FGRRcL66MXTnZckDCsS1D0fTE6V1eX4yXAx6AcHCK8Yl?=
- =?us-ascii?Q?xoWXD576KZEFcPPOHED7bVVRXI79n3WGgCkabRc8Mn66lfM0QejptKybfsDu?=
- =?us-ascii?Q?0XIJ/xqMkf5aRaH5GKmBBK5cB3GeeoNtSZdlA4NH94+5a76bM2nNQG4XdiOP?=
- =?us-ascii?Q?ntlbNf0VKljztVisASATR7NvN0mB1wNxoJJjJ93ir/8l0O0j/vwpoGYV2PEV?=
- =?us-ascii?Q?Bu8NKRnXiMg/LbuFOt+K4IrvtOTyZnb6OLBU6l2OhzEGhovBIGHYdS+ZwFfZ?=
- =?us-ascii?Q?w3+LXKlnUcG0swQMpMUOp8K7OC76JQOjq5EHSLgWddG5f5sAuQRcJs74rVTm?=
- =?us-ascii?Q?KMWDbSWcpwKbQ1UzA5pUME8ZPPmzVTYW8AWbuqpzXt36E2eOc5s5gELZmnv6?=
- =?us-ascii?Q?wVwT5ySEtIyDbt10vOK+5IFDQYfw5uFXcU37TrGk8872HV4NjPIJJJrOp1Aa?=
- =?us-ascii?Q?OvtQPjR2YTjhZNzJJdL1ApAAIvwnsc16E45QkS2Fv8C+Tiz/apM2NrSzMvC8?=
- =?us-ascii?Q?w5Uq0By3XcBQrEwT+q/sEOIha1nab18BKSU6GlzCXePLIDKXjB8j3ZLhKwY8?=
- =?us-ascii?Q?Og=3D=3D?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96dd5cd0-97b2-49ac-f338-08dd8277fdcb
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR03MB3471.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 15:03:22.9382
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Lt5xuTreh44ftoe0cjj+RF1Dz8IUmA4J64Pz2gjGDnp1QWiOu3XGod6camvBmS1MjH1RMCD8MSZmTdrHBv8QEzLqr0jBtQ/JEVwgccknsb4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR03MB6647
+References: <20250414174134.3095492-1-irogers@google.com> <20250414174134.3095492-15-irogers@google.com>
+ <aAjxkfz4rSHe5Eoi@x1>
+In-Reply-To: <aAjxkfz4rSHe5Eoi@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 23 Apr 2025 08:03:21 -0700
+X-Gm-Features: ATxdqUFsWQJKyZcPwpKNBRwYmnKwjJeUY9t4bXm9rd-t6ERhHUw3S8DYw9QTfTY
+Message-ID: <CAP-5=fU0N9dkJhVm4+nsBQqXNA5v4pNmTO8JGAEzRsoE0im6Fg@mail.gmail.com>
+Subject: Re: [PATCH v5 14/16] perf stat: Add mean, min, max and last
+ --tpebs-mode options
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert the clock device tree bindings to yaml for the Altera SoCFPGA
-Cyclone5, Arria5, and Arria10 chip families. Since the clock nodes are
-subnodes to Altera SOCFPGA Clock Manager, the yaml was added to
-socfpga-clk-manager.yaml.
+On Wed, Apr 23, 2025 at 6:56=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Mon, Apr 14, 2025 at 10:41:32AM -0700, Ian Rogers wrote:
+> > Add command line configuration option for how retirement latency
+> > events are combined. The default "mean" gives the average of
+> > retirement latency. "min" or "max" give the smallest or largest
+> > retirment latency times respectively. "last" uses the last retirment
+> > latency sample's time.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Tested-by: Weilin Wang <weilin.wang@intel.com>
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/Documentation/perf-stat.txt |  7 +++++++
+> >  tools/perf/builtin-stat.c              | 27 ++++++++++++++++++++++++++
+> >  tools/perf/util/intel-tpebs.c          | 20 ++++++++++++++++++-
+> >  tools/perf/util/intel-tpebs.h          |  8 ++++++++
+> >  4 files changed, 61 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Docume=
+ntation/perf-stat.txt
+> > index 2bc063672486..61d091670dee 100644
+> > --- a/tools/perf/Documentation/perf-stat.txt
+> > +++ b/tools/perf/Documentation/perf-stat.txt
+> > @@ -506,6 +506,13 @@ this option is not set. The TPEBS hardware feature=
+ starts from Intel Granite
+> >  Rapids microarchitecture. This option only exists in X86_64 and is mea=
+ningful on
+> >  Intel platforms with TPEBS feature.
+> >
+> > +--tpebs-mode=3D[mean|min|max|last]::
+> > +Set how retirement latency events have their sample times
+> > +combined. The default "mean" gives the average of retirement
+> > +latency. "min" or "max" give the smallest or largest retirment latency
+> > +times respectively. "last" uses the last retirment latency sample's
+> > +time.
+> > +
+> >  --td-level::
+> >  Print the top-down statistics that equal the input level. It allows
+> >  users to print the interested top-down metrics level instead of the
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index 80e491bd775b..4adf2ae53b11 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -2327,6 +2327,30 @@ static void setup_system_wide(int forks)
+> >       }
+> >  }
+> >
+> > +static int parse_tpebs_mode(const struct option *opt, const char *str,
+> > +                         int unset __maybe_unused)
+> > +{
+> > +     enum tpebs_mode *mode =3D opt->value;
+> > +
+> > +     if (!strcasecmp("mean", str)) {
+> > +             *mode =3D TPEBS_MODE__MEAN;
+> > +             return 0;
+> > +     }
+> > +     if (!strcasecmp("min", str)) {
+> > +             *mode =3D TPEBS_MODE__MIN;
+> > +             return 0;
+> > +     }
+> > +     if (!strcasecmp("max", str)) {
+> > +             *mode =3D TPEBS_MODE__MAX;
+> > +             return 0;
+> > +     }
+> > +     if (!strcasecmp("last", str)) {
+> > +             *mode =3D TPEBS_MODE__LAST;
+> > +             return 0;
+> > +     }
+> > +     return -1;
+> > +}
+> > +
+> >  int cmd_stat(int argc, const char **argv)
+> >  {
+> >       struct opt_aggr_mode opt_mode =3D {};
+> > @@ -2431,6 +2455,9 @@ int cmd_stat(int argc, const char **argv)
+> >  #ifdef HAVE_ARCH_X86_64_SUPPORT
+> >               OPT_BOOLEAN(0, "record-tpebs", &tpebs_recording,
+> >                       "enable recording for tpebs when retire_latency r=
+equired"),
+> > +             OPT_CALLBACK(0, "tpebs-mode", &tpebs_mode, "tpebs-mode",
+> > +                     "Mode of TPEBS recording: mean, min or max",
+> > +                     parse_tpebs_mode),
+> >  #endif
+>
+>   20     5.60 debian:experimental-x-mips    : FAIL gcc version 14.2.0 (De=
+bian 14.2.0-1)
+>     builtin-stat.c:2330:12: error: 'parse_tpebs_mode' defined but not use=
+d [-Werror=3Dunused-function]
+>      2330 | static int parse_tpebs_mode(const struct option *opt, const c=
+har *str,
+>           |            ^~~~~~~~~~~~~~~~
+>     --
+>
+>
+> I'm enclosing parse_tpebs_mode() under #ifdef HAVE_ARCH_X86_64_SUPPORT
+> to fix this.
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
----
-v2:
- - Fix node name regexs.
- - Remove redundant type for clocks.
- - Put repeated properties under '$defs'.
- - Move reg property after compatible.
----
- .../arm/altera/socfpga-clk-manager.yaml       | 129 +++++++++++++++++-
- .../bindings/clock/altr_socfpga.txt           |  30 ----
- 2 files changed, 128 insertions(+), 31 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/altr_socfpga.txt
+Thanks, I agree with the fix. Longer term I think we can remove the
+HAVE_ARCH_X86_64_SUPPORT. Now that events carry the retirement latency
+information and hardware isn't required, there's no reason why
+retirement latency couldn't be added to architectures that aren't
+Intel (HAVE_ARCH_X86_64_SUPPORT is already covering AMD which lacks
+support).
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
-index 572381306681..6f09458f22a4 100644
---- a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
-@@ -9,20 +9,147 @@ title: Altera SOCFPGA Clock Manager
- maintainers:
-   - Dinh Nguyen <dinguyen@kernel.org>
- 
--description: test
-+description:
-+  This binding describes the Altera SOCFGPA Clock Manager and its associated
-+  tree of clocks, pll's, and clock gates for the Cyclone5, Arria5 and Arria10
-+  chip families.
- 
- properties:
-   compatible:
-     items:
-       - const: altr,clk-mgr
-+
-   reg:
-     maxItems: 1
- 
-+  clocks:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#address-cells":
-+        const: 1
-+
-+      "#size-cells":
-+        const: 0
-+
-+    patternProperties:
-+      "^osc[0-9]$":
-+        type: object
-+
-+      "^[a-z0-9,_]+(clk|pll|clk_gate|clk_divided)(@[a-f0-9]+)?$":
-+        type: object
-+        additionalProperties: false
-+
-+        properties:
-+
-+          compatible:
-+            enum:
-+              - altr,socfpga-pll-clock
-+              - altr,socfpga-perip-clk
-+              - altr,socfpga-gate-clk
-+              - altr,socfpga-a10-pll-clock
-+              - altr,socfpga-a10-perip-clk
-+              - altr,socfpga-a10-gate-clk
-+              - fixed-clock
-+
-+          reg:
-+            maxItems: 1
-+
-+          clocks:
-+            description: one or more phandles to input clock
-+            minItems: 1
-+            maxItems: 5
-+
-+          "#address-cells":
-+            const: 1
-+
-+          "#clock-cells":
-+            const: 0
-+
-+          "#size-cells":
-+            const: 0
-+
-+          clk-gate:
-+            $ref: '#/$defs/clk-gate'
-+            unevaluatedProperties: false
-+
-+          div-reg:
-+            $ref: '#/$defs/div-reg'
-+            unevaluatedProperties: false
-+
-+          fixed-divider:
-+            $ref: '#/$defs/fixed-divider'
-+            unevaluatedProperties: false
-+
-+        patternProperties:
-+          "^[a-z0-9,_]+(clk|pll)(@[a-f0-9]+)?$":
-+            type: object
-+            additionalProperties: false
-+
-+            properties:
-+              compatible:
-+                enum:
-+                  - altr,socfpga-perip-clk
-+                  - altr,socfpga-gate-clk
-+                  - altr,socfpga-a10-perip-clk
-+                  - altr,socfpga-a10-gate-clk
-+
-+              reg:
-+                maxItems: 1
-+
-+              "#clock-cells":
-+                const: 0
-+
-+              clocks:
-+                description: one or more phandles to input clock
-+                minItems: 1
-+                maxItems: 4
-+
-+              clk-gate:
-+                $ref: '#/$defs/clk-gate'
-+                unevaluatedProperties: false
-+
-+              div-reg:
-+                $ref: '#/$defs/div-reg'
-+                unevaluatedProperties: false
-+
-+              fixed-divider:
-+                $ref: '#/$defs/fixed-divider'
-+                unevaluatedProperties: false
-+
-+            required:
-+              - compatible
-+              - clocks
-+              - "#clock-cells"
-+
-+        required:
-+          - compatible
-+          - "#clock-cells"
-+
- required:
-   - compatible
-+  - reg
- 
- additionalProperties: false
- 
-+$defs:
-+  clk-gate:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    items:
-+      - description: gating register offset
-+      - description: bit index
-+
-+  div-reg:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    items:
-+      - description: divider register offset
-+      - description: bit shift
-+      - description: bit width
-+
-+  fixed-divider:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
- examples:
-   - |
-     clkmgr@ffd04000 {
-diff --git a/Documentation/devicetree/bindings/clock/altr_socfpga.txt b/Documentation/devicetree/bindings/clock/altr_socfpga.txt
-deleted file mode 100644
-index f72e80e0dade..000000000000
---- a/Documentation/devicetree/bindings/clock/altr_socfpga.txt
-+++ /dev/null
-@@ -1,30 +0,0 @@
--Device Tree Clock bindings for Altera's SoCFPGA platform
--
--This binding uses the common clock binding[1].
--
--[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
--
--Required properties:
--- compatible : shall be one of the following:
--	"altr,socfpga-pll-clock" - for a PLL clock
--	"altr,socfpga-perip-clock" - The peripheral clock divided from the
--		PLL clock.
--	"altr,socfpga-gate-clk" - Clocks that directly feed peripherals and
--		can get gated.
--
--- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
--- clocks : shall be the input parent clock phandle for the clock. This is
--	either an oscillator or a pll output.
--- #clock-cells : from common clock binding, shall be set to 0.
--
--Optional properties:
--- fixed-divider : If clocks have a fixed divider value, use this property.
--- clk-gate : For "socfpga-gate-clk", clk-gate contains the gating register
--        and the bit index.
--- div-reg : For "socfpga-gate-clk" and "socfpga-periph-clock", div-reg contains
--	the divider register, bit shift, and width.
--- clk-phase : For the sdmmc_clk, contains the value of the clock phase that controls
--	the SDMMC CIU clock. The first value is the clk_sample(smpsel), and the second
--	value is the cclk_in_drv(drvsel). The clk-phase is used to enable the correct
--	hold/delay times that is needed for the SD/MMC CIU clock. The values of both
--	can be 0-315 degrees, in 45 degree increments.
--- 
-2.35.3
+Thanks,
+Ian
 
+> - Arnaldo
+>
+> >               OPT_UINTEGER(0, "td-level", &stat_config.topdown_level,
+> >                       "Set the metrics level for the top-down statistic=
+s (0: max level)"),
+> > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpeb=
+s.c
+> > index de9fea601964..6b00bd5b0af1 100644
+> > --- a/tools/perf/util/intel-tpebs.c
+> > +++ b/tools/perf/util/intel-tpebs.c
+> > @@ -31,6 +31,7 @@
+> >  #define PERF_DATA            "-"
+> >
+> >  bool tpebs_recording;
+> > +enum tpebs_mode tpebs_mode;
+> >  static LIST_HEAD(tpebs_results);
+> >  static pthread_t tpebs_reader_thread;
+> >  static struct child_process tpebs_cmd;
+> > @@ -45,6 +46,8 @@ struct tpebs_retire_lat {
+> >       char *event;
+> >       /** @stats: Recorded retirement latency stats. */
+> >       struct stats stats;
+> > +     /** @last: Last retirement latency read. */
+> > +     uint64_t last;
+> >       /* Has the event been sent to perf record? */
+> >       bool started;
+> >  };
+> > @@ -142,6 +145,7 @@ static int process_sample_event(const struct perf_t=
+ool *tool __maybe_unused,
+> >        * latency value will be used. Save the number of samples and the=
+ sum of
+> >        * retire latency value for each event.
+> >        */
+> > +     t->last =3D sample->retire_lat;
+> >       update_stats(&t->stats, sample->retire_lat);
+> >       mutex_unlock(tpebs_mtx_get());
+> >       return 0;
+> > @@ -517,7 +521,21 @@ int evsel__tpebs_read(struct evsel *evsel, int cpu=
+_map_idx, int thread)
+> >                       return ret;
+> >               mutex_lock(tpebs_mtx_get());
+> >       }
+> > -     val =3D rint(t->stats.mean);
+> > +     switch (tpebs_mode) {
+> > +     case TPEBS_MODE__MIN:
+> > +             val =3D rint(t->stats.min);
+> > +             break;
+> > +     case TPEBS_MODE__MAX:
+> > +             val =3D rint(t->stats.max);
+> > +             break;
+> > +     case TPEBS_MODE__LAST:
+> > +             val =3D t->last;
+> > +             break;
+> > +     default:
+> > +     case TPEBS_MODE__MEAN:
+> > +             val =3D rint(t->stats.mean);
+> > +             break;
+> > +     }
+> >       mutex_unlock(tpebs_mtx_get());
+> >
+> >       if (old_count) {
+> > diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpeb=
+s.h
+> > index 218a82866cee..9475e2e6ea74 100644
+> > --- a/tools/perf/util/intel-tpebs.h
+> > +++ b/tools/perf/util/intel-tpebs.h
+> > @@ -8,7 +8,15 @@
+> >  struct evlist;
+> >  struct evsel;
+> >
+> > +enum tpebs_mode {
+> > +     TPEBS_MODE__MEAN,
+> > +     TPEBS_MODE__MIN,
+> > +     TPEBS_MODE__MAX,
+> > +     TPEBS_MODE__LAST,
+> > +};
+> > +
+> >  extern bool tpebs_recording;
+> > +extern enum tpebs_mode tpebs_mode;
+> >
+> >  int evsel__tpebs_open(struct evsel *evsel);
+> >  void evsel__tpebs_close(struct evsel *evsel);
+> > --
+> > 2.49.0.604.gff1f9ca942-goog
