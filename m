@@ -1,266 +1,246 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA881F1508
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745444987; cv=none; b=H/Fu1IxA3HXEx31RxktIi5tqmJbKWmHlXhbwYX1ybjgfD4CbATFWmFgFWw6G8GJ017vNvWeEhbSSmEREqnan1xrQRkG4ymTxS8y89ddCPXT19gpqeak+umOVmLgbezJoCDo7/9FsdvaKbhZfYJ3jhC+sbwtRo8im/FfyoScfLDI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745444987; c=relaxed/simple;
-	bh=psYEn7dEjIzHfh5YIb2BttsfQcmcniB8jfG0+YWBGsQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mWbXHEgHTMWhgc8S1v3MITSSl8nhTHjpICkJ+pTXWH3j3KP4OB8oGxYPuSWNzCPEBSFOPpZZ40tWAaMYblIhyMK8mWcSaOY7TCjv0ppA67F7AbH1LZACcZNMU7rYqqEh9E9u0mg4m3CBIWBCq25KWeInx89tlKumIPG+ywNWHl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qSz4BKmf; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607662701D4;
+	Wed, 23 Apr 2025 21:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745445163; cv=fail; b=cfFD5sKYqAxLWwcxUchZXnlXKjsQEddr24NRffmV6sy27NQ//Pl6/aFy4j7YA98rZ5zumbXbKIETNvBWXYGgeqWpGtA6Zz+EOu2SIx3xDVnXd/jAlOdTc0fQ/Aw3WixBLWYbhoUfxYxbix96BqnZUeasDRVGBwdzZofVUfN1h2g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745445163; c=relaxed/simple;
+	bh=iPgVXcE22yt+JdTyg2WF1vqYXqd/klRqQZBYosd85Pc=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=BIHdb7TsJRIODXQT3PQCnQ0TkEqu7ZfSoXRBzpGevwnxkfVj9EWrqPmqzYJXe9/g4/SQOspDVU2QOL5ZFm0gZTMJVcOdcVBCAhK2mVxBePT162YIoiEL8zY7L5092CI8thtafYE95nwXS0hJpMnV+z4pWtPqki3QD9z+y12xgY8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NYTysjEr; arc=fail smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qSz4BKmf"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-47681dba807so41571cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:49:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745444985; x=1746049785; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S7/wD0XYriNGKp673eGGJ1mXgCpZhTWu5sE1MgjgFPg=;
-        b=qSz4BKmfMNv2Lmv7KZnfcVszTwzxJl2iLZDggXOjubDfI+6VrIot9Lr3bYX+nVhX4l
-         zMAUid5s2NMRDawAvIFgr6UdkIAjKVD5SEffeN8/xqSkd1Ic+kGAUYQSEcKkKZwcyBlz
-         BZdGUESmz0t1e2gOiQEjWwDt/6avWIHiCZ/Wcys+cY4P/IazvL4nJlvpS4XC6cpcy8/F
-         aqXVJhmTcY9wIkFcv4p18r86dUOha8dF2hnLx45ua8ok/WPk5+faJLCsUW/BHwpoNOHi
-         KjnXiSXC/BgUhJNElsNcUprWySrGUV2zL/ijKqfd/4wu5Yeuxex8Rs9RzauooZJ26LbE
-         pgSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745444985; x=1746049785;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S7/wD0XYriNGKp673eGGJ1mXgCpZhTWu5sE1MgjgFPg=;
-        b=fpLdIfqsRuBGc3HJbxsQCppuTN8WtGnmomdWFuOqKEIQEsnftEjTjTf4z3OAYscDLI
-         4ucgwXo/5i2PAtLmRSfCVt5WoXa8lCfK38oWXVr1rLP9+pldbiwjx/5X+c1Rys+hf7EB
-         9rTMNNGIZUKXbcZDALUBpn2LpZH2rmJRXxThTnRTUkR2gli6nIiexmNy96Yjoaze99lM
-         EdGb7R1voekw/XJ6ceU8PVAfi9vz0IsHySBMMbGO6g6bUYHvMyd5Up1GeukW73cS0ffZ
-         75ljr7NI6InQlvTXRsLyKvNjoP3GufdLvqSddSu49GmowV8AYoTpmUv5lQSXPj6RdnJ0
-         R/UA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1+a00NjCRJ+Yum+rA7b3kMsbf/AyjLKeYzXIv+OEbDV2I+h9KFahluy7rf6ec5eonrQDhA0xG/7ed8vc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGeR0MqZ6c6KBZrFX/oKpCiQr4bVid58wUPol1k4x/CgZbhCc0
-	a70+PNeDkaSc2EOob8LSNmtY9TqxBXr9TpaFeLwZCjChWg4N7mEGlZWJTG7pL69nTY/UPEZfBhG
-	ZTO/VKsueuP5DQfLaPEzl9h+rY9xEL989Nd0Q
-X-Gm-Gg: ASbGncsN9ST1bA8uHR6KcgNdXQNsSgvr9lSFNcXvKbhXssXIL/7MGTX4VhzoI6cOkON
-	HWcE+KaF0HD4Vj75OzeZwO7Pb+dl1Sy6vV1pw7je46qStMIOZwSARxutmKOVuswpEbuegCIFW8c
-	RnjLSlA8GB+9x8ZLxleAJ3G8Yai7GYNIe2kRKCyQpYoUXNNpxhk1R6
-X-Google-Smtp-Source: AGHT+IFQfVsUfGLvaOpqsQMsbqmuN8itGhxrZwwZ0MFIqvRyvcpvtZya/7FsimV2oONrYFkrBH9PEKrdK8GJwxZvGa0=
-X-Received: by 2002:a05:622a:4105:b0:47a:ed97:373e with SMTP id
- d75a77b69052e-47e79facab0mr1370541cf.10.1745444984405; Wed, 23 Apr 2025
- 14:49:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NYTysjEr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745445160; x=1776981160;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=iPgVXcE22yt+JdTyg2WF1vqYXqd/klRqQZBYosd85Pc=;
+  b=NYTysjEr+Pyvuq92savyRcCAjtWpsDxy5D02jTnuN1D9NqFommBXo9af
+   kxwJXgCwfrdTUxM53aVlsn2ag9dYEhvcMZd1S53eOAaJioG4LMZq8uQu7
+   BjWwqEjKpwKY0sQsKHwGwYFDiwl/K07sI7Qo+c+0A+oyAXCF/Ggxy1dMm
+   9IcKke00PI/uXryNKXgfIhcu6xJSy3D+FbDWovQbouCnS+SuDx2HasmxP
+   2mlhtsj4jcBBOQgCE4Yfi9Slm1UrwRU6P15NCbt29XN+XnRZ9hibTWEcW
+   OpfYOCR//ifNfBD3GpOmUCiAdDXMIceFf+2RJlYAA6ETKSotrbKyu6U2k
+   A==;
+X-CSE-ConnectionGUID: T7jFdG0MT+eezB8NED7seQ==
+X-CSE-MsgGUID: bWoaXOe8Qniw4Q3dcpsG/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="58419797"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="58419797"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 14:52:39 -0700
+X-CSE-ConnectionGUID: uNgGf18ySPa6mRQZv5Lx3g==
+X-CSE-MsgGUID: BpUZyOVvQnemd9C5tXHSqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
+   d="scan'208";a="132317077"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 14:52:37 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 23 Apr 2025 14:52:34 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Wed, 23 Apr 2025 14:52:34 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Wed, 23 Apr 2025 14:52:34 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hlKAKdEmuRRbRhsZPeW1PUvFwytmGPxRC5X2Vqf7syjlyME7MXZznVUoietLRPM+o5NwPTJbSb7MOEe6r3C+yV1KeVOUSMLO8l81DyC3Igpp242YM2OZe4Zw6yku+KoNf9MfHr+xA47PXkeeReYw5gt/fG95//YTKh3owJ44RTcpJvkgaVzIA29nozSTPGOPemLywHCyKWZq6K/SpDRnsSdnS4e+zp4xwC3UuWj3kFAVYqas/ygTyxBaHpManham/vG/JUUsxb4oe+OeSp29tIF98KSWGeBj06j8Jhg/gAVzDIpJ9Ur0Q4wq55ULjREIdYeP0l9ImpLYc1fGITIILw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rI4TTqex2mnndLzTOj6JAHDba++etP8ibpsPcxCEVBs=;
+ b=UOp9Mr8INQMUd9iDpjG72lUBofpVbEcgEmH9Xcg7a6HPirTWT6LKaoqvCZSqbJtUnFDqzk1wKzsbTSjzs3VRIt3B1rV4qFxXik9vcqdJs4837Sf1MIOABXXbk/NekKn92ogZl4JLSI2fMP7CjsgGn5pEpA9LULnQPtC7M1bu0NiNbPsUwliIEGjdYIn3tg1OhrQlpuYnOwMEi5Bw3dXG/dXgxlSw0H9Zab28q/X2Xs1jtOKp5j6obUcwKniidCH/c4EQH83dAXItyS9pgbCrnY+xCJS7heK9LoGaqHbJuVN/VRI/5rFsyX57wcciE+pakyGOEMTWoJeaUInvp1f4yQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
+ by SJ2PR11MB7545.namprd11.prod.outlook.com (2603:10b6:a03:4cc::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Wed, 23 Apr
+ 2025 21:51:51 +0000
+Received: from SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57]) by SA1PR11MB6733.namprd11.prod.outlook.com
+ ([fe80::cf7d:9363:38f4:8c57%6]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
+ 21:51:50 +0000
+Date: Wed, 23 Apr 2025 16:52:25 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: shaikh.kamal <shaikhkamal2012@gmail.com>, <dan.j.williams@intel.com>
+CC: shaikh.kamal <shaikhkamal2012@gmail.com>, Davidlohr Bueso
+	<dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>, "Dave
+ Jiang" <dave.jiang@intel.com>, Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Shiju Jose <shiju.jose@huawei.com>, "Fabio M. De Francesco"
+	<fabio.m.de.francesco@linux.intel.com>, "Steven Rostedt (Google)"
+	<rostedt@goodmis.org>, Smita Koralahalli
+	<Smita.KoralahalliChannabasappa@amd.com>, <linux-cxl@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] [PATCH] cxl: trace: Fix macro safety in
+ CXL_EVT_TP_fast_assign
+Message-ID: <68096119523f6_1bed7d294ad@iweiny-mobl.notmuch>
+References: <20250421184520.154714-1-shaikhkamal2012@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250421184520.154714-1-shaikhkamal2012@gmail.com>
+X-ClientProxiedBy: MW3PR05CA0018.namprd05.prod.outlook.com
+ (2603:10b6:303:2b::23) To SA1PR11MB6733.namprd11.prod.outlook.com
+ (2603:10b6:806:25c::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
- <CAEf4BzYuA3ZRCwPsAxhQZDOOpjSTrphKEsgPAqgRP8Ly7+fTWw@mail.gmail.com>
-In-Reply-To: <CAEf4BzYuA3ZRCwPsAxhQZDOOpjSTrphKEsgPAqgRP8Ly7+fTWw@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 23 Apr 2025 14:49:33 -0700
-X-Gm-Features: ATxdqUHhpsoXV5fOytdwpz53cjD4EaJekweJa9XT6PbfPehhPHjBovEw6rKpEEE
-Message-ID: <CAJuCfpE_jJ0Xq5T0HcLpquRzO+NdvN3T3_JXEwSjt2NG9Ryy5g@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
-	peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, mhocko@kernel.org, 
-	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, brauner@kernel.org, 
-	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
-	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
-	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SJ2PR11MB7545:EE_
+X-MS-Office365-Filtering-Correlation-Id: ca010ade-b638-47d8-fe3a-08dd82b10d54
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?MaLVcZRI1not2y+HtfKhxRpEMOVBhEwjQbH4V8PLJNbrhecSA0oFgzN2GWg7?=
+ =?us-ascii?Q?wo6C+bcmHRrZAcH9UmIJAeKyUKAKUWHQyrKJf3pKVETjPBngfvNdVKEMUfTl?=
+ =?us-ascii?Q?1V5aHb1z7tHZeECZ00W73lwJVgxfABP4CTOxS5QyvQvGsnLYOr3p7lu9OPvX?=
+ =?us-ascii?Q?NWY82BvpD1J5wg16LcSnBgPmctoMg6roobTFZvnqxvLul+6Hm0TPE/AvkyCe?=
+ =?us-ascii?Q?HKX9YXXpReCKBy7DMnJ8BoCFR0ZbtT2hVmzroih3Qv4U7tbCfnLVPNKKXMAT?=
+ =?us-ascii?Q?PEncq7ewKW8NZexLoSlh0xMF+RMUF5Nd/oBatBxlvodEoV2U3bktQVeQP24L?=
+ =?us-ascii?Q?QMJXXOuVLQFVFhXPfzDuEQttIzfZH4kkiCZ8YcDbynGlMuAfRNzo9kKtJDwD?=
+ =?us-ascii?Q?MoMjBtizl+qm9iFmfmEnPLSaOQXa57zsg9cugKQan2/Mra22uNv2ivSI+yOr?=
+ =?us-ascii?Q?McPUPS0ojgJuxzDvAODGTTnetfuV8DByjd+Nk1aOQQgdrkpqay68z1yE9jgp?=
+ =?us-ascii?Q?srULcAz3h67cc2ABcZ14lRMC4E7ULChMLHAPovyYTwJW629STJViHwrd4+vT?=
+ =?us-ascii?Q?/1tuFrm04tDKZ96BC8a9Q4RHtPP5kDvpNJYv+M7ayPZF8o3N84iC7gYs8xoI?=
+ =?us-ascii?Q?Ea5bbKbxd6mQBVecPnirwkwm+4IsXFzbd2fb1486wpRtggQNCSKBF7mtsQJd?=
+ =?us-ascii?Q?oISIvtfWknHktIoQZT000fUQmiXvonMmCGQ5yNvUsHZErib3Z9CpUWleyzAi?=
+ =?us-ascii?Q?75yZ57P17xNhi2bD5+RpQEAbi2JfYM5l4r2VLcCYBzL8JgnGxVBKIl8/v1eV?=
+ =?us-ascii?Q?byflsSj/Bc0hle5QuOI+/juvW1DBxoHWtDNuQJ0JRWokpjNxYmDJ7K9FNdrd?=
+ =?us-ascii?Q?EsD1Liz28bJNbRH0oS8Uqk8tONVYhA6g+J4NonTbgjn961XHwaUQGO/KbBbn?=
+ =?us-ascii?Q?UcHO1hN3c+CfJBbeNkcy2U/GtQvxUBjrnPEGajS2iX77SrcZf4BtPirz9TrJ?=
+ =?us-ascii?Q?5p7/mkiYBsFQ6phakSVlJhArafi4RETikh/HPxBMT28KZ8bxqM314QzjX3up?=
+ =?us-ascii?Q?jtvIu5kLFqGtfT0rJ/SLcpXRfs0KGbvi4dwHuIFkaNpB3Id8HDl5+VvqTrTk?=
+ =?us-ascii?Q?U9D9VBWW8nKLt1GJTebQNnixCm4W/eqLHV1tF0TPDwaMM6dpmIMgj7HkCuEP?=
+ =?us-ascii?Q?OeXQa5p5G2MsFz/Gj2wDh6MqCHawRZIjRHLH/JP9v+GvH3I1OTCxWE+Utxad?=
+ =?us-ascii?Q?P0C/j+0g8dmVb47ONAsLnpRDSNCUQ43LtkHa8PTauDGkryyc/b6jZ4AG2Um+?=
+ =?us-ascii?Q?GP/39kCpgBOQYjExgzXWYyNqg0S7mItmBY1uz0yB3QaGKyoy4ClgCe5qpROC?=
+ =?us-ascii?Q?K0gw0MHQfBSfmF08Aye7OGLhs1GxFJRUEG1JGS/17LjxWEGGuiacwh1GhoWi?=
+ =?us-ascii?Q?APQI0ZF0h7w=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NRmEjlJRtwHpHS1zWb5X8CI0BiEKpe0TQKoYO1TN4uQqYdUaFSyHKGGxj/jz?=
+ =?us-ascii?Q?cmbV/WCHHa/gIk/coDrl2Itu9H5lraPvv6qNvhjwMoxfgv05cUMLLd1fId3o?=
+ =?us-ascii?Q?naqGXp73uykstuSZHbcSU8Y81sQSzOi3e11U+IU5YDw6lbbyZqZrk4FtzogJ?=
+ =?us-ascii?Q?HAJavxy4yBzVbRw8zT/LMaiYnaa4UAldeJ3KinLV+7mDWcj0PtzDe7TRJiav?=
+ =?us-ascii?Q?DzOqVkwK8ne92rFDlaKpZEht1CVy1Ii8Y6IqP1OlSuCEy5JxqqmHRtsbj5nK?=
+ =?us-ascii?Q?R1nRx0qxL7PGxGKJ2PWiDnvK9761pcrFyclyuTdCXwe2BNydUKTZmKBccEef?=
+ =?us-ascii?Q?qMkXN9ewdLKtf5P6qCJlHRdcC7Bnbws5hR9reRaVvGbkv8X2a3+QlZboB34Y?=
+ =?us-ascii?Q?PHmDnM2PFDqKJyyUd4IIAYLRcldF0SmxltdLwnHzAkBaXH7oK0CGSj3QCi+U?=
+ =?us-ascii?Q?DRjwKDGBUma102ISkaGyVg63JEZCzZd73vJcEC7BDGes23I/wOPGhkDNDkQq?=
+ =?us-ascii?Q?pAhpPvLjRAR7RU0SYHpOwV288ZAf0RVSrB7hrt9pW+Tqsq01VYls6wctL84u?=
+ =?us-ascii?Q?tIevaqoTP6RZ1OgnIHsaKAg/nAzftbzti0177kJIcVj2lZgkl/6iQIZD7aTe?=
+ =?us-ascii?Q?bRDpzOCT2ao9i2Fw/az+EODRTo8SjNJ0EYVGvc+//qYnEUwC+6hqi3zN+P6D?=
+ =?us-ascii?Q?8PVF3b38kJrBGQjbUuC76SivcyuyEClFAzWv7Eq5jZRuRaaINKQfPUOyfwlw?=
+ =?us-ascii?Q?46GR1imt7vtPxs1QDydMA6bYhvsNwLXIjljbthV1F44a7853BpXsBKCvlGRR?=
+ =?us-ascii?Q?TgA2joiVn07lDOw2F0VE+7EC2RVnX+tCfGCkeX2FOI9aLjrGXgcENblGUXFk?=
+ =?us-ascii?Q?6Bbzg62abc5ukbpoTdHQabi3eePCnJ0LIC+bya54lLtAGaqiu6icG7IcnM1l?=
+ =?us-ascii?Q?6nC+7LR/4MLTTLTOxftlGcU30nvaIi8ZPb/ySnwVdZAQ8v5cpWWKaU5UvndI?=
+ =?us-ascii?Q?ZDIXkdBPcmv7HlI72AjwEZ4O4Jhbw2j6s0+6cOQkqOY4L7qAzsueYRGlRG9Q?=
+ =?us-ascii?Q?z6UMBM5FGl423mEKcbTEtwHz8rYLpl2I5YulIe2gsmxKjiWgF2zEeI2E3FG+?=
+ =?us-ascii?Q?EmA5wF9naORRaOy4bUctjtt1f34JrL0H2oARUMfk9Q+vPf2xjAhI6UUKqs/P?=
+ =?us-ascii?Q?Jc1qtQTGtNfsABR/CiDuzBJyw5NGfqD5iuVv5QyGD3TTmagZfkYeWL4NExEX?=
+ =?us-ascii?Q?u6xmFfAZmboEDo0g+nurdrhM3Lw5CjirpgN8GOvBWsuL3letfhI4MQkSmlIZ?=
+ =?us-ascii?Q?BXPGD2tRnqOjNUfztYZLTFc5Kut1v1QZmcNH2Qokt7WDXm+U+glOCPOd9G5r?=
+ =?us-ascii?Q?WD0tXWOlMqoxTYIH54YHRoAdEJdgX+jUuH1XJNZ9Wf//cACVU0tP+czsqinB?=
+ =?us-ascii?Q?Kr6hmHZir15L4rMfzQL0X7DL6Kg2BQI18BmMH4QnXHpEV7TgglYitS0lPvpI?=
+ =?us-ascii?Q?j7kcK3WCvIHtvnc4p2pg+xuDv/QBWQ788R2X5eAv+niODecd+uYMTeBnxp++?=
+ =?us-ascii?Q?XmDdU3iJjw6JWE1bKr21vcT8KZO4iObzgqgt6l+h?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca010ade-b638-47d8-fe3a-08dd82b10d54
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 21:51:50.6522
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: r7FKk1moHkxvu5uv89g0gwhqbPLDe4zagNdr1qOsLjtRK42XMGmqmFlFVNzaY9Kc1sJ4MqQ9ynIgIlIhH8amNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR11MB7545
+X-OriginatorOrg: intel.com
 
-On Tue, Apr 22, 2025 at 3:49=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <surenb@googl=
-e.com> wrote:
-> >
-> > With maple_tree supporting vma tree traversal under RCU and vma and
-> > its important members being RCU-safe, /proc/pid/maps can be read under
-> > RCU and without the need to read-lock mmap_lock. However vma content
-> > can change from under us, therefore we make a copy of the vma and we
-> > pin pointer fields used when generating the output (currently only
-> > vm_file and anon_name). Afterwards we check for concurrent address
-> > space modifications, wait for them to end and retry. While we take
-> > the mmap_lock for reading during such contention, we do that momentaril=
-y
-> > only to record new mm_wr_seq counter. This change is designed to reduce
->
-> This is probably a stupid question, but why do we need to take a lock
-> just to record this counter? uprobes get away without taking mmap_lock
-> even for reads, and still record this seq counter. And then detect
-> whether there were any modifications in between. Why does this change
-> need more heavy-weight mmap_read_lock to do speculative reads?
+shaikh.kamal wrote:
+> Fix checkpatch.pl detected error
+> The CXL_EVT_TP_fast_assign macro assigns multiple fields, but does not
+> wrap the body in a `do { ... } while (0)` block. This can lead to
+> unexpected behavior when used in conditional branches.
+> 
+> Add checks to ensure cxlmd is valid before accessing its fields.
+> 
+> Signed-off-by: shaikh.kamal <shaikhkamal2012@gmail.com>
 
-Not a stupid question. mmap_read_lock() is used to wait for the writer
-to finish what it's doing and then we continue by recording a new
-sequence counter value and call mmap_read_unlock. This is what
-get_vma_snapshot() does. But your question made me realize that we can
-optimize m_start() further by not taking mmap_read_lock at all.
-Instead of taking mmap_read_lock then doing drop_mmap_lock() we can
-try mmap_lock_speculate_try_begin() and only if it fails do the same
-dance we do in the get_vma_snapshot(). I think that should work.
+Nak
 
->
-> > mmap_lock contention and prevent a process reading /proc/pid/maps files
-> > (often a low priority task, such as monitoring/data collection services=
-)
-> > from blocking address space updates.
-> > Note that this change has a userspace visible disadvantage: it allows
-> > for sub-page data tearing as opposed to the previous mechanism where
-> > data tearing could happen only between pages of generated output data.
-> > Since current userspace considers data tearing between pages to be
-> > acceptable, we assume is will be able to handle sub-page data tearing
-> > as well.
-> >
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> >  fs/proc/internal.h        |   6 ++
-> >  fs/proc/task_mmu.c        | 170 ++++++++++++++++++++++++++++++++++----
-> >  include/linux/mm_inline.h |  18 ++++
-> >  3 files changed, 177 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/fs/proc/internal.h b/fs/proc/internal.h
-> > index 96122e91c645..6e1169c1f4df 100644
-> > --- a/fs/proc/internal.h
-> > +++ b/fs/proc/internal.h
-> > @@ -379,6 +379,12 @@ struct proc_maps_private {
-> >         struct task_struct *task;
-> >         struct mm_struct *mm;
-> >         struct vma_iterator iter;
-> > +       bool mmap_locked;
-> > +       loff_t last_pos;
-> > +#ifdef CONFIG_PER_VMA_LOCK
-> > +       unsigned int mm_wr_seq;
-> > +       struct vm_area_struct vma_copy;
-> > +#endif
-> >  #ifdef CONFIG_NUMA
-> >         struct mempolicy *task_mempolicy;
-> >  #endif
-> > diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> > index b9e4fbbdf6e6..f9d50a61167c 100644
-> > --- a/fs/proc/task_mmu.c
-> > +++ b/fs/proc/task_mmu.c
-> > @@ -127,13 +127,130 @@ static void release_task_mempolicy(struct proc_m=
-aps_private *priv)
-> >  }
-> >  #endif
-> >
-> > -static struct vm_area_struct *proc_get_vma(struct proc_maps_private *p=
-riv,
-> > -                                               loff_t *ppos)
-> > +#ifdef CONFIG_PER_VMA_LOCK
-> > +
-> > +static const struct seq_operations proc_pid_maps_op;
-> > +
-> > +/*
-> > + * Take VMA snapshot and pin vm_file and anon_name as they are used by
-> > + * show_map_vma.
-> > + */
-> > +static int get_vma_snapshot(struct proc_maps_private *priv, struct vm_=
-area_struct *vma)
-> > +{
-> > +       struct vm_area_struct *copy =3D &priv->vma_copy;
-> > +       int ret =3D -EAGAIN;
-> > +
-> > +       memcpy(copy, vma, sizeof(*vma));
-> > +       if (copy->vm_file && !get_file_rcu(&copy->vm_file))
-> > +               goto out;
-> > +
-> > +       if (!anon_vma_name_get_if_valid(copy))
-> > +               goto put_file;
->
-> Given vm_file and anon_vma_name are both RCU-protected, if we take
-> rcu_read_lock() at m_start/m_next before fetching VMA, we shouldn't
-> even need getting/putting them, no?
+This is not a normal macro.  checkpatch.pl does not apply in this case.
+Also checking cxlmd here is not necessary.  The callers of the tracepoint
+know very well that it needs to be valid.
 
-Yeah, anon_vma_name indeed looks safe without pinning but vm_file is
-using SLAB_TYPESAFE_BY_RCU cache, so it might still be a valid pointer
-but pointing to a wrong object even if the rcu grace period did not
-pass. With my assumption that seq_file can't rollback once show_map()
-is done, I would need a completely stable vma at the time show_map()
-is executed so that it does not change from under us while we are
-generating the output.
-OTOH, if we indeed can rollback while generating seq_file output then
-show_map() could output potentially invalid vma, then check for vma
-changes and when detected, rollback seq_file and retry again.
+Ira
 
->
-> I feel like I'm missing some important limitations, but I don't think
-> they are spelled out explicitly...
->
-> > +
-> > +       if (!mmap_lock_speculate_retry(priv->mm, priv->mm_wr_seq))
-> > +               return 0;
-> > +
-> > +       /* Address space got modified, vma might be stale. Re-lock and =
-retry. */
-> > +       rcu_read_unlock();
->
-> Another question I have is whether we really need to copy vma into
-> priv->vma_copy to have a stable snapshot? Can't we just speculate like
-> with uprobes under assumption that data doesn't change. And once we
-> are done producing text output, confirm that speculation was
-> successful, and if not - retry?
->
-> We'd need an API for seq_file to rollback to previous good known
-> location for that, but that seems straightforward enough to do, no?
-> Just remember buffer position before speculation, write data, check
-> for no mm modifications, and if something changed, rollback seq file
-> to last position.
+> ---
+>  drivers/cxl/core/trace.h | 30 ++++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index 25ebfbc1616c..a1a1014ee1fe 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -249,18 +249,24 @@ TRACE_EVENT(cxl_overflow,
+>  	__field(u8, hdr_maint_op_class)				\
+>  	__field(u8, hdr_maint_op_sub_class)
+>  
+> -#define CXL_EVT_TP_fast_assign(cxlmd, l, hdr)					\
+> -	__assign_str(memdev);				\
+> -	__assign_str(host);			\
+> -	__entry->log = (l);							\
+> -	__entry->serial = (cxlmd)->cxlds->serial;				\
+> -	__entry->hdr_length = (hdr).length;					\
+> -	__entry->hdr_flags = get_unaligned_le24((hdr).flags);			\
+> -	__entry->hdr_handle = le16_to_cpu((hdr).handle);			\
+> -	__entry->hdr_related_handle = le16_to_cpu((hdr).related_handle);	\
+> -	__entry->hdr_timestamp = le64_to_cpu((hdr).timestamp);			\
+> -	__entry->hdr_maint_op_class = (hdr).maint_op_class;			\
+> -	__entry->hdr_maint_op_sub_class = (hdr).maint_op_sub_class
+> +#define CXL_EVT_TP_fast_assign(cxlmd, l, hdr) \
+> +	do { \
+> +		if (!(cxlmd)) { \
+> +			pr_err("Invalid arguments to CXL_EVT_TP_fast_assign\n"); \
+> +			break; \
+> +		} \
+> +		__assign_str(memdev); \
+> +		__assign_str(host); \
+> +		__entry->log = (l); \
+> +		__entry->serial = (cxlmd)->cxlds->serial; \
+> +		__entry->hdr_length = (hdr).length; \
+> +		__entry->hdr_flags = get_unaligned_le24((hdr).flags); \
+> +		__entry->hdr_handle = le16_to_cpu((hdr).handle); \
+> +		__entry->hdr_related_handle = le16_to_cpu((hdr).related_handle); \
+> +		__entry->hdr_timestamp = le64_to_cpu((hdr).timestamp); \
+> +		__entry->hdr_maint_op_class = (hdr).maint_op_class; \
+> +		__entry->hdr_maint_op_sub_class = (hdr).maint_op_sub_class; \
+> +	} while (0)
+>  
+>  #define CXL_EVT_TP_printk(fmt, ...) \
+>  	TP_printk("memdev=%s host=%s serial=%lld log=%s : time=%llu uuid=%pUb "	\
+> -- 
+> 2.43.0
+> 
 
-From looking at seq_read_iter() I think for a rollback we would have
-to reset seq_file.count and seq_file.index to their previous states.
-At this location:
-https://elixir.bootlin.com/linux/v6.14.3/source/fs/seq_file.c#L272 if
-show_map() returns negative value m->count will indeed be rolled back
-but not seq_file.index. Also returning negative value at
-https://elixir.bootlin.com/linux/v6.14.3/source/fs/seq_file.c#L230
-would be interpreted as a hard error... So, I'll need to spend some
-time in this code to get the answer about rollback.
-Thanks for the review!
 
->
->
-> > +       ret =3D mmap_read_lock_killable(priv->mm);
-> > +       if (!ret) {
-> > +               /* mmap_lock_speculate_try_begin() succeeds when holdin=
-g mmap_read_lock */
-> > +               mmap_lock_speculate_try_begin(priv->mm, &priv->mm_wr_se=
-q);
-> > +               mmap_read_unlock(priv->mm);
-> > +               ret =3D -EAGAIN;
-> > +       }
-> > +
-> > +       rcu_read_lock();
-> > +
-> > +       anon_vma_name_put_if_valid(copy);
-> > +put_file:
-> > +       if (copy->vm_file)
-> > +               fput(copy->vm_file);
-> > +out:
-> > +       return ret;
-> > +}
-> > +
-> > +static void put_vma_snapshot(struct proc_maps_private *priv)
-> > +{
-> > +       struct vm_area_struct *vma =3D &priv->vma_copy;
-> > +
-> > +       anon_vma_name_put_if_valid(vma);
-> > +       if (vma->vm_file)
-> > +               fput(vma->vm_file);
-> > +}
-> > +
->
-> [...]
