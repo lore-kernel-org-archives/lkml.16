@@ -1,169 +1,108 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81F426C38B;
-	Wed, 23 Apr 2025 10:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4186517D346;
+	Wed, 23 Apr 2025 10:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745405681; cv=none; b=kvEe00fFmylmJKoxvl6hEDiiI9IhmeteDj61K8rlOLPrGSxBQ0PrNLY+ZgW6U35wY3butKkfvpfjs2D9oQPLye5+ZqgMQppHXMV/zoWXDVdmn+MMolkVaB+1BokyvuOmb/8WWv1zR+DO3YXY5Gs8a8DkssjgAalf76hlTPCdk94=
+	t=1745405707; cv=none; b=GKVABEb14IOZVdTPxAiwyzqYtSzcdIoTBxE+aT/5XnRRdiq99uL8Gm1VClW8fw0t62PyCvveM6icucZ+K0ybkAbhr+IIYxCi/DT5Rway4J93QPE3gBubG1gAqkuGq70dIiqQmeM6/IkdyiHRRYZqLBzHBvkU8Nm9pL0KvtNEB3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745405681; c=relaxed/simple;
-	bh=PKRxF5CSeXMnjowgFobPAyzE/YcGtkyPnA1UcaUN9us=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=a+LcjmrP+aAmIEUhBFNn9Acs/1Ynlxd4CoEG48xtNiLKMafWkZqzL67qLbyaLLHlkpWek0i9/N6Z0MlbeF415BpADvvd9FI8Cr3kmWJqgfDkLPBM/C/V54P6h32PGfTfmQOiRi6dYGOfduLoen1S3LmCU7rj2+OCuXAHQuZLDeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=Up4iEUVK; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1745405707; c=relaxed/simple;
+	bh=LydAg/3DZqJBoy3RvGL9TnEWtAS497xWnCoRb7eMUN8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hVGeXT/PgH82KEMa6y7DpoFKTzGqwyrmyFiphYLQJvaGV9ZU08fC6Ckxtctl9iwc4wqqzILAqojB00gTdRZtmUxf5tfiaUEnR/6k5sVRyMUxAiu3zVC9XAzfgGrUkG4YpCloJvFZNkHIi/bjYw9KuZdCfHYt9BDn4UrrjfrcIUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=VJUCQCIt; arc=none smtp.client-ip=117.135.210.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="Up4iEUVK"
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53NArs5S32446350, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
-	t=1745405634; bh=PKRxF5CSeXMnjowgFobPAyzE/YcGtkyPnA1UcaUN9us=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=Up4iEUVKeOna4yP778vBMZbKx3A5ugyvfwy4E59mKuVEspOFdjU5nDYImJuGg93Ta
-	 2s3nZiiqJOKmiCKWL6GRdPslfW1tmpOa/rJiQqP+Ok8izxkqZbmczfzalWl29f8xBW
-	 ykmkbtInuWV4wYGYGE091BxRluJdVutQV4RwIZNFQziPGs2P+k8Auy4vZIvBWGvOr2
-	 rwAk0Wsc88eQN5sdtpsUTDgMIIvW/Ria1cF6Lf3epwXpNT7khGrDZ1H0+rUT2/d0tw
-	 020Inc4nvp5WwwScw7UYATJeNHa0EhO6NZloDnpyiOE+sKGhgxRQtbVRPC9lIEAqrf
-	 Lq2AFD62IU/0Q==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53NArs5S32446350
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 23 Apr 2025 18:53:54 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Wed, 23 Apr 2025 18:53:54 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 23 Apr 2025 18:53:53 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
- RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
- 15.01.2507.035; Wed, 23 Apr 2025 18:53:53 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Simon Horman <horms@kernel.org>
-CC: "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "andrew+netdev@lunn.ch"
-	<andrew+netdev@lunn.ch>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Larry Chiu
-	<larry.chiu@realtek.com>, Andrew Lunn <andrew@lunn.ch>,
-        David Laight
-	<david.laight.linux@gmail.com>
-Subject: RE: [PATCH net v3 3/3] rtase: Fix a type error in min_t
-Thread-Topic: [PATCH net v3 3/3] rtase: Fix a type error in min_t
-Thread-Index: AQHbr3bl9x+S2lV3JkCdeosgY8bnPbOvL9aAgAHmKAA=
-Date: Wed, 23 Apr 2025 10:53:53 +0000
-Message-ID: <040b019af779423f96752f10a697195b@realtek.com>
-References: <20250417085659.5740-1-justinlai0215@realtek.com>
- <20250417085659.5740-4-justinlai0215@realtek.com>
- <20250422132831.GH2843373@horms.kernel.org>
-In-Reply-To: <20250422132831.GH2843373@horms.kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VJUCQCIt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=8Zmrb
+	eq6bLjH06q2d/S498jz0cbVk1UENxMwcMkAn1U=; b=VJUCQCItXqAHYSERxhXjG
+	bogofW1u71PDTk9/YcgKwHGZN3XSd8B+zNnzTV9GekBPgDrmFhovExSPKcONQ2Nl
+	QKohm02Z8KmKgOAXEf8STgZ/0iA3/pncnoCMSrwEv4xi/SttMnUj/6d/v2MwP7SJ
+	DeIDW1gRBnkVAXYPle2cAo=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wAnRTjYxghozJctBw--.58909S2;
+	Wed, 23 Apr 2025 18:54:18 +0800 (CST)
+From: Hans Zhang <18255117159@163.com>
+To: lpieralisi@kernel.org,
+	kw@linux.com,
+	bhelgaas@google.com,
+	heiko@sntech.de
+Cc: manivannan.sadhasivam@linaro.org,
+	robh@kernel.org,
+	jingoohan1@gmail.com,
+	shawn.lin@rock-chips.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Hans Zhang <18255117159@163.com>
+Subject: [PATCH v2 0/3] PCI: dw-rockchip: Reorganize register and bitfield definitions
+Date: Wed, 23 Apr 2025 18:54:12 +0800
+Message-Id: <20250423105415.305556-1-18255117159@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wAnRTjYxghozJctBw--.58909S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WFykKw4ruF1kZry5tryfCrg_yoW5Jry7p3
+	Z8JFZ8ur43Jw40van7tw17XFy8K3ZrCFyY9w4UKw18Xa40qa48WFyftF1rury7XrWxKF17
+	ZwsrX3yI9a4av3JanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zE4E_JUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDws4o2gIwTqxqgAAsf
 
->=20
-> + David Laight
->=20
-> On Thu, Apr 17, 2025 at 04:56:59PM +0800, Justin Lai wrote:
-> > Fix a type error in min_t.
-> >
-> > Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this
-> > module")
-> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> > Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> > ---
-> >  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > index 55b8d3666153..bc856fb3d6f3 100644
-> > --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> > @@ -1923,7 +1923,7 @@ static u16 rtase_calc_time_mitigation(u32
-> time_us)
-> >       u8 msb, time_count, time_unit;
-> >       u16 int_miti;
-> >
-> > -     time_us =3D min_t(int, time_us, RTASE_MITI_MAX_TIME);
-> > +     time_us =3D min_t(u32, time_us, RTASE_MITI_MAX_TIME);
->=20
-> Hi Justin, Andrew, David, all,
->=20
-> I may be on the wrong track here, but near the top of minmax.h I see:
->=20
-> /*
->  * min()/max()/clamp() macros must accomplish several things:
->  *
->  * - Avoid multiple evaluations of the arguments (so side-effects like
->  *   "x++" happen only once) when non-constant.
->  * - Perform signed v unsigned type-checking (to generate compile
->  *   errors instead of nasty runtime surprises).
->  * - Unsigned char/short are always promoted to signed int and can be
->  *   compared against signed or unsigned arguments.
->  * - Unsigned arguments can be compared against non-negative signed
-> constants.
->  * - Comparison of a signed argument against an unsigned constant fails
->  *   even if the constant is below __INT_MAX__ and could be cast to int.
->  */
->=20
-> So, considering the 2nd last point, I think we can simply use min() both =
-above
-> and below. Which would avoid the possibility of casting to the wrong type=
- again
-> in future.
->=20
-> Also, aside from which call is correct. Please add some colour to the com=
-mit
-> message describing why this is a bug if it is to be treated as a fix for =
-net rather
-> than a clean-up for net-next.
->=20
-> >
-> >       if (time_us > RTASE_MITI_TIME_COUNT_MASK) {
-> >               msb =3D fls(time_us);
-> > @@ -1945,7 +1945,7 @@ static u16 rtase_calc_packet_num_mitigation(u16
-> pkt_num)
-> >       u8 msb, pkt_num_count, pkt_num_unit;
-> >       u16 int_miti;
-> >
-> > -     pkt_num =3D min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-> > +     pkt_num =3D min_t(u16, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-> >
-> >       if (pkt_num > 60) {
-> >               pkt_num_unit =3D RTASE_MITI_MAX_PKT_NUM_IDX;
-> > --
-> > 2.34.1
-> >
+1. PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+2. PCI: dw-rockchip: Reorganize register and bitfield definitions
+3. PCI: dw-rockchip: Unify link status checks with FIELD_GET
 
-Hi Simon,
+---
+Changes for v2:
+- Add register annotations to enhance readability.
+- Use macro definitions instead of magic numbers.
 
-According to a more detailed clarification, this part is actually an
-enhancement and does not cause any issues during operation, so it is
-not a real bug. Therefore, I will post this patch in net-next.
+https://patchwork.kernel.org/project/linux-pci/patch/20250416151926.140202-1-18255117159@163.com/
 
-Thanks,
-Justin
+Bjorn Helgaas:
+These would be material for a separate patch:
+
+- The #defines for register offsets and bits are kind of a mess,
+  e.g., PCIE_SMLH_LINKUP, PCIE_RDLH_LINKUP, PCIE_LINKUP,
+  PCIE_L0S_ENTRY, and PCIE_LTSSM_STATUS_MASK are in
+  PCIE_CLIENT_LTSSM_STATUS, but you couldn't tell that from the
+  names, and they're not even defined together.
+
+- Same for PCIE_RDLH_LINK_UP_CHGED, PCIE_LINK_REQ_RST_NOT_INT,
+  PCIE_RDLH_LINK_UP_CHGED, which are in PCIE_CLIENT_INTR_STATUS_MISC.
+
+- PCIE_LTSSM_ENABLE_ENHANCE is apparently in PCIE_CLIENT_HOT_RESET_CTRL?
+  Sure wouldn't guess that from the names or the order of #defines.
+
+- PCIE_CLIENT_GENERAL_DEBUG isn't used at all.
+
+- Submissions based on the following v5 patches:
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-1-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-2-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744850111-236269-3-git-send-email-shawn.lin@rock-chips.com/
+https://patchwork.kernel.org/project/linux-pci/patch/1744940759-23823-1-git-send-email-shawn.lin@rock-chips.com/
+---
+
+Hans Zhang (3):
+  PCI: dw-rockchip: Remove unused PCIE_CLIENT_GENERAL_DEBUG
+  PCI: dw-rockchip: Reorganize register and bitfield definitions
+  PCI: dw-rockchip: Unify link status checks with FIELD_GET
+
+ drivers/pci/controller/dwc/pcie-dw-rockchip.c | 87 +++++++++++--------
+ 1 file changed, 50 insertions(+), 37 deletions(-)
+
+
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+prerequisite-patch-id: 5d9f110f238212cde763b841f1337d0045d93f5b
+prerequisite-patch-id: b63975b89227a41b9b6d701c9130ee342848c8b6
+prerequisite-patch-id: 46f02da0db4737b46cd06cd0d25ba69b8d789f90
+prerequisite-patch-id: d06e25de3658b73ad85d148728ed3948bfcec731
+-- 
+2.25.1
+
