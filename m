@@ -1,132 +1,102 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D7A28A1DB;
-	Wed, 23 Apr 2025 15:38:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F19E529008D;
+	Wed, 23 Apr 2025 15:38:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745422703; cv=none; b=s+BHgmS/iGw6pFi8//D2ygWqhEvwCeZpI7iL7ZzjwpMa4J+h2BRzhSc7XhZJK3iJFtQwVzzdK8z8BixhLnr+UxywOHLYJK60ZYNT+VFmfTAexCQs4xQn760Rt0Ad1fWIrpVM6z9xTuVJrJHyyNzlqYU2wr/sdsiY9pfKs2P9zv0=
+	t=1745422708; cv=none; b=sxLyxw49LyPMHJHZvObkNpaUGH7XJ26Jr8CD39ALNtMNgz/d2xdmPCsghDGfLvE4DaQqFU7Kq2eZn79YG+CnVatN3FcjO5+UNH29aFomFXTOc385S4pMwH2BujBXIbEAhwlBEHmJwM9L/4FQwGrIKbvzEuTNaQqUw7lCu8u7X14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745422703; c=relaxed/simple;
-	bh=Abk3WUggpCh+pV9/jGehaWPhGHzsr5iDxN7IoX5cqEk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=EuPAQzh4QFDodIhDPBSJSI7AOnnLOMHO7A5xlkTFN/qlKZLZc5z/RkNuAqCMDz9tXcMQlLf78bfpq6o1MJfb5drL8lmA3RweaJJLMgttBMsyR97b+12vP+NAKH4fMgrsXAozvK3YCeXYi6qtECCmTyn1M+NEmvMooTZt9DyA0vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RI7Tw1As; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745422708; c=relaxed/simple;
+	bh=mohsE5Vqds5YWoBBauAQ6zbZMHHjxudeDOZFcUECQs8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EOwJkf73MG2ed2ZcdoakioypfoqL4ziCGnOLY8bAe1RdolVHu7ms4QSy6IXtRkTOBtfI5O4dpCsba7logVeQl1axQU+9gotpnTt1GT+2M15741/GVo/XQXsu8s5BA9k2bSdNWaRTSPVOsDPG5lAf23LndzgmPOj5CiiGP77I4mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=K64VmT7X; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RI7Tw1As"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 1449D43201;
-	Wed, 23 Apr 2025 15:38:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745422694;
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="K64VmT7X"
+Received: from wse-pc.fritz.box (host-88-217-226-44.customer.m-online.net [88.217.226.44])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPA id 8853A2FC004A;
+	Wed, 23 Apr 2025 17:38:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1745422695;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Abk3WUggpCh+pV9/jGehaWPhGHzsr5iDxN7IoX5cqEk=;
-	b=RI7Tw1As9wOTHmRLRlOtw+97DusGjkgz5iMRLKZN4zcskq36CRb9ussT2NX7gXEdh90q7r
-	POeVrueShYUjYRyn65z8VBjfO7iTqa/ZspwQMggtDMw3E7uMMC48R6WZou47bJ0oCgze/d
-	xb5vD9tIm0T9icAfYRLJuQE1aslLweYHBA0hMYlsY/FV97+ZuevI1AS2ZMiBYPewPNmzHP
-	vroE13/rb7Gl2LXV09Id2Du0mc/S0jjLsyK+HNJgSCKUPB9FLTgL3SLZiwDSQ71MgYofaA
-	OsbniHoJmQ711I/9rNmlgjJpQ10ueCniBFkZSq8VBczxUgBqcTzGumXVtj+Zww==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CsrRfvsK8H5f4CKApG2FFAZq+/r8/VdgR/k9Hykvb58=;
+	b=K64VmT7XZRMb9FTkx2QowrKV68X8S7Lro4gaTowt5LoivnkohCW8lgsYC8EdaDYnJ6bJZ7
+	AMrKAkaqWPvVvE0Rmt8vCSSRn5nGuCZseFHekQW9GyBQ+mPD/AaS944W9uHNrGulEBRveJ
+	1dqrKfwnpLeOy3E7+ldGDexWAv6kpr8=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+From: Werner Sembach <wse@tuxedocomputers.com>
+To: hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	Werner Sembach <wse@tuxedocomputers.com>
+Subject: [PATCH v8 0/1] platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices
+Date: Wed, 23 Apr 2025 17:33:09 +0200
+Message-ID: <20250423153804.64395-1-wse@tuxedocomputers.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 23 Apr 2025 17:38:09 +0200
-Message-Id: <D9E4PE3RTE37.2LU30RI1ZS6XL@bootlin.com>
-Cc: "Alexei Starovoitov" <ast@kernel.org>, "Daniel Borkmann"
- <daniel@iogearbox.net>, "John Fastabend" <john.fastabend@gmail.com>,
- "Andrii Nakryiko" <andrii@kernel.org>, "Martin KaFai Lau"
- <martin.lau@linux.dev>, "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu"
- <song@kernel.org>, "Yonghong Song" <yonghong.song@linux.dev>, "KP Singh"
- <kpsingh@kernel.org>, "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo"
- <haoluo@google.com>, "Jiri Olsa" <jolsa@kernel.org>, "Puranjay Mohan"
- <puranjay@kernel.org>, "Catalin Marinas" <catalin.marinas@arm.com>, "Will
- Deacon" <will@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>, "Shuah Khan"
- <shuah@kernel.org>, "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
- "Alexandre Torgue" <alexandre.torgue@foss.st.com>, "Florent Revest"
- <revest@chromium.org>, "Bastien Curutchet" <bastien.curutchet@bootlin.com>,
- <ebpf@linuxfoundation.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, <bpf@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-kselftest@vger.kernel.org>,
- <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH RFC bpf-next 1/4] bpf: add struct largest member size in
- func model
-From: =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-To: "Xu Kuohai" <xukuohai@huaweicloud.com>, "Andrii Nakryiko"
- <andrii.nakryiko@gmail.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250411-many_args_arm64-v1-0-0a32fe72339e@bootlin.com>
- <20250411-many_args_arm64-v1-1-0a32fe72339e@bootlin.com>
- <CAEf4Bzbn6BdXTOb0dTcsQmOMZpp5=DzGS2hHHQ3+dwcja=gv+w@mail.gmail.com>
- <D98Q8BRNUVS9.11J60C67L1ALR@bootlin.com>
- <9da88811-cce0-41df-8069-2e8b67541c39@huaweicloud.com>
- <D9BLCJSCHE9A.1IKHK3XBPF8MU@bootlin.com>
- <8b800c09-eade-4dcf-90f6-2f5a78170bc4@huaweicloud.com>
-In-Reply-To: <8b800c09-eade-4dcf-90f6-2f5a78170bc4@huaweicloud.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeileejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkvefuhffvofhfjgesthhqredtredtjeenucfhrhhomheptehlvgigihhsucfnohhthhhorhoruceorghlvgigihhsrdhlohhthhhorhgvsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelkeehiefhfeehvefhtdegueelkeehffffffeuvdekkeekuddvueeguefgieeukeenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpegrlhgvgihishdrlhhothhhohhrvgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedtpdhrtghpthhtohepgihukhhuohhhrghisehhuhgrfigvihgtlhhouhgurdgtohhmpdhrtghpthhtoheprghnughrihhirdhnrghkrhihihhkohesghhmrghilhdrtghomhdprhgtphhtthhopegrshhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhesihhoghgvrghrsghogidrnhgvthdprhgtphhtthhopehjohhhn
- hdrfhgrshhtrggsvghnugesghhmrghilhdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrhhtihhnrdhlrghusehlihhnuhigrdguvghvpdhrtghpthhtohepvgguugihiiekjeesghhmrghilhdrtghomh
-X-GND-Sasl: alexis.lothore@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon Apr 21, 2025 at 4:14 AM CEST, Xu Kuohai wrote:
-> On 4/21/2025 12:02 AM, Alexis Lothor=C3=A9 wrote:
->> Hi Xu,
->>=20
->> On Thu Apr 17, 2025 at 4:10 PM CEST, Xu Kuohai wrote:
->>> On 4/17/2025 3:14 PM, Alexis Lothor=C3=A9 wrote:
->>>> Hi Andrii,
->>>>
->>>> On Wed Apr 16, 2025 at 11:24 PM CEST, Andrii Nakryiko wrote:
->>>>> On Fri, Apr 11, 2025 at 1:32=E2=80=AFPM Alexis Lothor=C3=A9 (eBPF Fou=
-ndation)
->>>>> <alexis.lothore@bootlin.com> wrote:
+@Ilpos you can ignore my small question from my last e-mail. The spec file
+of the firmware wants the struct to be zeroed (albeit it does also work if
+not) so I implemented it like that.
 
-[...]
+v2: - Integrated Armins feedback and fixed kernel test robot warnings.
+v3: - Fixed borked subject line of v2.
+v4: - Remove unrequired WMI mutex.
+    - Move device checking from probe to init.
+    - Fix device checking working exactly reverse as it should.
+    - Fix null pointer dereference because,
+        hdev->driver_data != hdev->dev.driver_data.
+v5: - Move everything to subfolder nb04 in preparation for the eventual
+        upstreaming of other tuxedo-driver parts.
+    - Integrated Ilpos coding style feedback.
+    - Use dev_set/get_drvdata() based on Armins feedback.
+v6: - Integrated more of Ilpo coding style feedback from a different LKML
+        patch-thread (less files, local functions prefixed with a short
+        string).
+v7: - Integrated more of Ilpos feedback e.g.:
+        - Use cleanup.h
+        - replace some if cases with a pointer in driver_data
+        - coding style oversights
+v8: - Integrated more of Ilpos feedback
+    - Typo fix spotted by Alok
 
->> Ah, thanks for those clear examples, I completely overlooked this
->> possibility. And now that you mention it, I feel a bit dumb because I no=
-w
->> remember that you mentioned this in Puranjay's series...
->>=20
->> I took a quick look at the x86 JIT compiler for reference, and saw no co=
-de
->> related to this specific case neither. So I searched in the kernel for
->> actual functions taking struct arguments by value AND being declared wit=
-h some
->> packed or aligned attribute. I only found a handful of those, and none
->> seems to take enough arguments to have the corresponding struct passed o=
-n the
->> stack. So rather than supporting this very specific case, I am tempted
->> to just return an error for now during trampoline creation if we detect =
-such
->> structure (and then the JIT compiler can keep using data size to compute
->> alignment, now that it is sure not to receive custom alignments). Or am =
-I
->> missing some actual cases involving those very specific alignments ?
->>=20
->
-> How can we reliably 'detect' the case? If a function has such a parameter
-> but we fail to detect it, the BPF trampoline will pass an incorrect value
-> to the function, which is also unacceptable.
+Werner Sembach (1):
+  platform/x86/tuxedo: Add virtual LampArray for TUXEDO NB04 devices
 
-That's a question I still have to answer :) I imagined being able to detect
-it thanks to some info somewhere in BTF, but I have to dig further to find
-how.
+ MAINTAINERS                                 |   6 +
+ drivers/platform/x86/Kconfig                |   2 +
+ drivers/platform/x86/Makefile               |   3 +
+ drivers/platform/x86/tuxedo/Kconfig         |   8 +
+ drivers/platform/x86/tuxedo/Makefile        |   8 +
+ drivers/platform/x86/tuxedo/nb04/Kconfig    |  15 +
+ drivers/platform/x86/tuxedo/nb04/Makefile   |  10 +
+ drivers/platform/x86/tuxedo/nb04/wmi_ab.c   | 916 ++++++++++++++++++++
+ drivers/platform/x86/tuxedo/nb04/wmi_util.c |  91 ++
+ drivers/platform/x86/tuxedo/nb04/wmi_util.h | 109 +++
+ 10 files changed, 1168 insertions(+)
+ create mode 100644 drivers/platform/x86/tuxedo/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/Makefile
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/Kconfig
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/Makefile
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_ab.c
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_util.c
+ create mode 100644 drivers/platform/x86/tuxedo/nb04/wmi_util.h
 
-
-Alexis
-
---=20
-Alexis Lothor=C3=A9, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+-- 
+2.43.0
 
