@@ -1,306 +1,198 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A405F255E31
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1CD318BC2F;
+	Wed, 23 Apr 2025 02:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745375144; cv=none; b=KXir6hAbCBlSZfu8zhDWkw32LdDGZM3/bHgWzavBuQoyV+juZS8FDAxBHDCS1p0biqeFU9KebVL4zh4zztbal6IrWo0D7mFF4oZPA6NINMnNR+u+GqnAoawCIMzHwhdc8LV9xAGTepQQMSCXOEGuG7UsRfEpJGebFNWhva5gnx0=
+	t=1745375408; cv=none; b=oiCl6KoLLLogm2q0l9K5csn/31QkJcYBggku1dbcJPdLX9RMjiwIBgF4a8zq1bhHpIS+wpo4GPfxMU0qrHQIysohLdnCaGm1MnCw4iYdnDfK95KmVJDeaBHmkPITZxxW5f7RbnDxJRFX/2a0uv8/GbLzE9NvwAbeGR/GSo7s47M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745375144; c=relaxed/simple;
-	bh=Hn1ZIKPfiixtlmBOkzoQtHjMFOjoiyeEcqzFKzghOzw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P7j+EI34Qijhg6qgvr1oxL6atPixYlbiEf+B9OZfKBaNSRCTR3BLbiw61Lrh01x2ooDJWJ9fVTeqUDrMXcGE4+BPlUUjF7GrHlUC/UXrvL2WeSOaH7sk79Yv705iVGhiWuwyCJcyZnwTLemKbg6YMgJ1ZpCTeRt3Q5ZBsUbqN8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=s1lDcVDP; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1745375408; c=relaxed/simple;
+	bh=XDxkUr+ssHQNn3jIF48lOngZODLhyYp3DPRvtwKKpcE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ukbTYL/eFvwMlXGVua9lJ9zJ9+Aucmb6ylNIHvw8XbiJkToxUy8ulBcSN4C6ZuGGttSI2oiwj0Igq50Kw2Me/9cRu1kMVyiLCI4vADW2pfAEUcHU02QX49HusVQOA74S56oxAszvKKYGy4P0l1rsr5m17E5ta7pEn9k7H8XcJZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3ux//mR; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="s1lDcVDP"
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 51E4C41A21
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:25:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1745375134;
-	bh=VZ/wtoYsWd6DgcbKoPTdYSKvbBkgvce35f7alM5I6EI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=s1lDcVDPlYEY3kBzKHKvMH+4G429p7l67PLApp/BDtNQ2vZb8+g6GkNq/hTJuBs6E
-	 H/XnkPMqpabKIE1g0qJdNWB6xQfJiLkMTBCWbTmWHb0Bi0dun3J7R342tx21yBjaUo
-	 8oRfev0O4/PNSD59zBbZjOdW7hr01SRU8ux2duV4G6KBvgtGkLNETkVMISCAMextTN
-	 mjQz5eK9Y4tsugSmKouMGdCb+aSoLTkuE3T5NB+ooSXf2inKLsG7kvEkF/Rwe6f0l6
-	 NOf0pHA+9K1IIHdT07uOB8EX/G+kmX5ZUgW/c4rjeohgz4HINAnbDHx0tfnIm0V3xW
-	 5BTZCUDKvLeiw==
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-acbbb000796so138046266b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 19:25:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3ux//mR"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-736dd9c4b40so453807b3a.0;
+        Tue, 22 Apr 2025 19:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745375406; x=1745980206; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KnGRwos1kNXoXjIQZlQQXvyLKcIMntw2floMjKdISNI=;
+        b=j3ux//mRtjT+pkEL8mp9Ll8f2dsPpw9bdINvqEBwNOQWMRSWH88RFKJOx9mz6aabXE
+         BaIkwFH5dZz3nFnPQV3lyCB8mtdSUo5OzJ1hkk2adOw4KDXa6agwKr+RY0ZZcQHlpi6Q
+         /MaHzQw1hcM6iC/lPbeRpVCowuAuNeS4iQaY7LdgGKnsQRHGKnqGVLZx3Ql7oVB09l3r
+         84DQVxbkf5PoqYybvdhhbzhy/rD/9bdrtuR4JS62aRtLhtfwtzCPnlW+nstYifW3tE5T
+         7NHRygf098lNyZnsk9kQ5jzEVv/zvkfRmbTOcjk6h0KaOx3YXirFKOUsow6MU0zlqfmx
+         /UGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745375133; x=1745979933;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VZ/wtoYsWd6DgcbKoPTdYSKvbBkgvce35f7alM5I6EI=;
-        b=nDoKEev+1W5nqpEgzjvm2OpyEWgMOUFEDpkXDv3yTYkdsujSXOlR+nN32vy8BfIPOA
-         nkq/2NCTbW31OVk6gCKZfcvmSVcEDctGjAWvaHBD5AK0TDaPKp8MWnbphwZVc+YYr8qE
-         UntdvnWGfgYLfQIi4iCeRc0owJcUQThM3x7BSi5FTsX0CVQLZ7erdOMkmiDNX8Argh5V
-         A4gWiFImEr+X3IYggRfA/2TxjFfUf2zqro7ceKrgUMWU+5rNQjlftr7NxOm8HZTRWc7I
-         sq6uNBbJEDFrwstTLLXPwcEq3VL9pBo28gZJg0CxBsfv7EzKz/Ewhz+xKjqCaMxdaGqh
-         v3Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCU8Suakc3jQMeosX+QKPV2AN9oFbolR4Q13fx0aiGOQImLmq0D0zE3j9rC7ftolr29symIKu4C6PotTCPU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJCuiiMkIDttl+gbn310nNYatIM7m4oesZ6GhzsfXXDJHl9LEu
-	/uyKHg4q/gKU6+3gIU6NFgaSsLAzSlRvi0Hmo9SJNZhtZAojDlabZ2UXxfJXOqBqYQ2NxA/SkOQ
-	Z5sSWsyJZBVQHsF7LRsKP6LT9t6MobHPUECcd2yVC/6AzFEgX7knNW9MxjPgRL1/CadbbKJ4I0E
-	hDOZViRb2HNioR9uRY2s1a5czZZTmmtoKUvT9PxeDOySPAHsjhJqJ8lhZAiRxPnRI=
-X-Gm-Gg: ASbGncu42sF6HvUkyVwS0wcBVWIDDv652CUS1Y7APdW/gHIi1JYMq8qzIJG12x0QT0Z
-	lrUNA3Ns41fOTdIVNqnWyQqwPqnIp/W//7lso0E3UJjdU0zdC2sfwXiWLb+3DEdusM6926A==
-X-Received: by 2002:a17:906:478f:b0:ac2:9841:3085 with SMTP id a640c23a62f3a-acb74b7743bmr1326232666b.30.1745375132855;
-        Tue, 22 Apr 2025 19:25:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHIdojfV5b0KyC7J2nTqENIJbr2BkJCKEwKwbnPOKpiorYi9Jw1+vi/xhrySjjMkyatWeUeoTfIjJi9XEZx0sw=
-X-Received: by 2002:a17:906:478f:b0:ac2:9841:3085 with SMTP id
- a640c23a62f3a-acb74b7743bmr1326231166b.30.1745375132434; Tue, 22 Apr 2025
- 19:25:32 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745375406; x=1745980206;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KnGRwos1kNXoXjIQZlQQXvyLKcIMntw2floMjKdISNI=;
+        b=mOzeZR/ZjAnyhvstugeC8fbrK7W8e1C2pYckGOZHrdow4LwKnLgGh4b8FhQCfHYJGp
+         GIWjT+KxrP2yjHodS7f0xCyMlveUXqyoYVJVSWirN/REJUtB3f+k2k90ZYANLZg9R6QW
+         YEzZIUQlEl1qz9Xb/HehdvTra/p9u+15Q86EbPIxdaJFDKO0Eu7/g0ZgES1xSddo2u3Q
+         ORQAl9Q5vj/ztIa0d7EIY0DfKjPO74MHUAXz1d5GdTT4TTxaAifDh2npU1IZD0U8KU2K
+         23EdmHUcFHJsMjqJ2k2uxIBNmVE/r1jAcpF8oIRxb77Qd3p41rO8IkKWmM/qJ8XE+3EG
+         4W8g==
+X-Forwarded-Encrypted: i=1; AJvYcCVwVNXZ5zScU1m4P43vXJZvn930+luupQP8jGTwIEeaIrcaaJCzDjsPEAP4GEA63TVJmilsxnNJ+Uqa@vger.kernel.org, AJvYcCX2Q5PpdJVqMcbZdSgxdCiTiL7Fp7i7jFqITo5Ov6L6g6a8hDGJjUJIXUayzds64TwhWNd3BrzdQEhF@vger.kernel.org, AJvYcCXu1/SvJQ0U98b2DlXhkhwiFqLntpazytM3mGUcQ/1HCAsj8PlstXkjyZKo0FqWw0IEFV0VVnP7bxrpMw6C@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBOklldG8gxtb+DLy+/TuTjLBFxl85jJp8URtaavYn/VEWzF6t
+	LS3F7OJL0WNiNW/87p6jQs+DFAnvvh0ZyyrAnRa4/tyr4dX+nVRlC1GzjJc1
+X-Gm-Gg: ASbGnctEW3jKxXc8Hm7A8jY3zfKMausFq21Ydzn1Sv3DhVIktP86J85ZOozJXNjxZta
+	mj/P7yzTbNSKXuxVAJpUBpeBN+OTJHvkYC3PzF1DioSvK/GEVmoeqvBazCBJHzARmd4I8kACkdW
+	DVlbXqlDP5A8xfj0Zjq72YFD4Nac/65xbTDH5pJ0MNUPddCUCQyNXDLf2PxJVvzLVnAgYiE1+DZ
+	7balX8WgK4e0NsPng37JeFq2S2nYb84ShcQsZC86uVvJZEcxOF8uBUiDeRkh4dYFT/xAMqU0RO7
+	UCMCgE2AtaTRAIC8WeSKbjRWg9rwpPWsFtY7qfQzp07jlpFnKaBYHSAP5pzYxbAhDCb4CZQs5g=
+	=
+X-Google-Smtp-Source: AGHT+IEBOclr1RnspJuoV6fs8E6iL8iXbeaGfwsO/n0jWA28CCk5Q8K9Jv3yosU0KwN4aTwn7YlEiQ==
+X-Received: by 2002:a05:6a20:3d90:b0:1db:822f:36d8 with SMTP id adf61e73a8af0-2042e55c528mr1917476637.3.1745375405782;
+        Tue, 22 Apr 2025 19:30:05 -0700 (PDT)
+Received: from localhost.localdomain ([2804:14d:4c64:81ec:4ff:1626:32b1:712a])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b0db157eca9sm8007658a12.71.2025.04.22.19.30.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 19:30:05 -0700 (PDT)
+From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+To: jic23@kernel.org,
+	robh@kernel.org
+Cc: ~lkcamp/patches@lists.sr.ht,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings:iio:adc:st,spear600-adc: txt to yaml format conversion.
+Date: Tue, 22 Apr 2025 23:14:23 -0300
+Message-ID: <20250423022956.31218-1-rodrigo.gobbi.7@gmail.com>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250416-for-upstream-spd5118-spd-write-prot-detect-v1-0-8b3bcafe9dad@canonical.com>
- <20250416-for-upstream-spd5118-spd-write-prot-detect-v1-2-8b3bcafe9dad@canonical.com>
- <acf31929-5d13-4fc5-b370-ab7fc5062455@roeck-us.net>
-In-Reply-To: <acf31929-5d13-4fc5-b370-ab7fc5062455@roeck-us.net>
-From: "Yo-Jung (Leo) Lin" <leo.lin@canonical.com>
-Date: Wed, 23 Apr 2025 10:25:20 +0800
-X-Gm-Features: ATxdqUH5EeFZ6ymv0ydpxwd4RcHCLJqEW0GUNkUaet1rNsKFU1iusKFJFLff8tc
-Message-ID: <CABscksOHUdS2jJ2PZQXymheLuX25spxYVGX5Bu0YJxEybvYw+Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] hwmon: (spd5118) restrict writes under SPD write protection
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 17, 2025 at 6:39=E2=80=AFAM Guenter Roeck <linux@roeck-us.net> =
-wrote:
->
-> On 4/15/25 23:46, Yo-Jung (Leo) Lin wrote:
-> > On some platforms, SPD Write Protection for the SMBus controller may be
-> > enabled. For the i801 family, this will forbid writing data to devices
-> > residing on addresses from 0x50 to 0x57. This may lead to the following
-> > issues:
-> >
-> >    1) Writes to the sensor hwmon sysfs attributes will always result in
-> >       ENXIO.
-> >
-> >    2) System-wide resume will encounter errors during regcache sync bac=
-k,
-> >       resulting in the following messages during resume:
-> >
-> >       kernel: spd5118 1-0050: Failed to write b =3D 0: -6
-> >       kernel: spd5118 1-0050: PM: dpm_run_callback(): spd5118_resume [s=
-pd5118] returns -6
-> >       kernel: spd5118 1-0050: PM: failed to resume async: error -6
-> >
->
-> Missing:
->
-> 3) NVMEM access will fail
->
-> > To address this, check if the sensor can be written to at probe, and by=
-pass
-> > write-related functions if writing to the sensor is not possible.
-> >
-> > Signed-off-by: Yo-Jung (Leo) Lin <leo.lin@canonical.com>
-> > ---
-> >   drivers/hwmon/spd5118.c | 31 +++++++++++++++++++++++++++++--
-> >   1 file changed, 29 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/hwmon/spd5118.c b/drivers/hwmon/spd5118.c
-> > index 3cb2eb2e0227..9dd5342c31dd 100644
-> > --- a/drivers/hwmon/spd5118.c
-> > +++ b/drivers/hwmon/spd5118.c
-> > @@ -75,6 +75,7 @@ static const unsigned short normal_i2c[] =3D {
-> >   struct spd5118_data {
-> >       struct regmap *regmap;
-> >       struct mutex nvmem_lock;
-> > +     bool write_protected;
-> >   };
-> >
-> >   /* hwmon */
-> > @@ -284,7 +285,7 @@ static umode_t spd5118_is_visible(const void *_data=
-, enum hwmon_sensor_types typ
-> >       case hwmon_temp_lcrit:
-> >       case hwmon_temp_crit:
-> >       case hwmon_temp_enable:
-> > -             return 0644;
-> > +             return data->write_protected ? 0444 : 0644;
-> >       case hwmon_temp_min_alarm:
-> >       case hwmon_temp_max_alarm:
-> >       case hwmon_temp_crit_alarm:
-> > @@ -499,7 +500,7 @@ static const struct regmap_range_cfg spd5118_regmap=
-_range_cfg[] =3D {
-> >       },
-> >   };
-> >
-> > -static const struct regmap_config spd5118_regmap_config =3D {
-> > +static struct regmap_config spd5118_regmap_config =3D {
-> >       .reg_bits =3D 8,
-> >       .val_bits =3D 8,
-> >       .max_register =3D 0x7ff,
-> > @@ -563,6 +564,21 @@ static int spd5118_init(struct i2c_client *client)
-> >       return 0;
-> >   }
-> >
-> > +static bool spd5118_write_protected(struct i2c_client *client)
-> > +{
-> > +     struct device *dev =3D &client->dev;
-> > +     int mode =3D 0;
-> > +     int err =3D 0;
->
-> Both initializations are unnecessary.
->
-> > +
-> > +     mode =3D i2c_smbus_read_byte_data(client, SPD5118_REG_I2C_LEGACY_=
-MODE);
-> > +     if (mode < 0)
-> > +             dev_warn(dev, "Failed to read MR11: %d", mode);
-> > +
-> > +     err =3D i2c_smbus_write_byte_data(client, SPD5118_REG_I2C_LEGACY_=
-MODE, mode);
-> > +
->
-> That would try to write the error back if MR11 can not be read, which wou=
-ld be
-> a bad idea. If the register is not even readable, being able to write it =
-is of
-> secondary concern.
->
-> > +     return (err < 0);
->
-> I think this requires a better means to determine if the address range is=
- write
-> protected. The above is just a wild guess, after all.
+Straight forward conversion from spear-adc.txt into yaml format.
 
-For now I'll probably approach this from the i801 side (as later part
-of your comments suggest), and skip the device instantiation if write
-protection is enabled.
+Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+---
+After the conversion to yaml file, I was not sure about the
+maintainers yaml field. It looks like the original driver author,
+Stefan Roese, is not active contributing.
+@Jonathan, I was not sure about it and I've added you on that field
+as I've noticed at other yaml`s, but feel free to give any suggestions on that
+or how to proceed in this case.
 
->
-> Isn't this already handled somehow for DDR4 nvmem (ee1004) ? That has ult=
-imately
-> the same problem because ee1004 devices can not be accessed if the i2c ad=
-dress
-> range is write protected.
+Also noticed that the driver was moved out of staging, but the .txt was not
+in that time. Added the yaml in the proper path (out of staging as the driver).
+Tks and best regards.
+---
+ .../bindings/iio/adc/st,spear600-adc.yaml     | 61 +++++++++++++++++++
+ .../bindings/staging/iio/adc/spear-adc.txt    | 24 --------
+ 2 files changed, 61 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
 
-From ee1004_probe_temp_sensor() I think that the temperature sensor on
-ee1004 (jc42) uses address 0x18, and the ee1004 itself at 0x5*
-addresses seems to be just an read-only eeprom and has no pm
-operations. That's probably why it evades the issue of write
-disabling.
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
+new file mode 100644
+index 000000000000..a858b3f3c494
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/st,spear600-adc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ST SPEAr ADC device driver
++
++maintainers:
++  - Jonathan Cameron <jic23@kernel.org>
++
++description: |
++  Integrated ADC inside the ST SPEAr SoC, SPEAr600, supporting
++  10-bit resolution. Datasheet can be found here:
++  https://www.st.com/resource/en/datasheet/spear600.pdf
++
++properties:
++  compatible:
++    enum:
++      - st,spear600-adc
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  sampling-frequency:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Default sampling frequency of the ADC
++
++  vref-external:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      External voltage reference in milli-volts. If omitted
++      the internal voltage reference will be used.
++
++  average-samples:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description:
++      Number of samples to generate an average value. If
++      omitted, single data conversion will be used.
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - sampling-frequency
++
++additionalProperties: false
++
++examples:
++  - |
++    adc: adc@d8200000 {
++        compatible = "st,spear600-adc";
++        reg = <0xd8200000 0x1000>;
++        interrupt-parent = <&vic1>;
++        interrupts = <6>;
++        sampling-frequency = <5000000>;
++        vref-external = <2500>;	/* 2.5V VRef */
++    };
+diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
+deleted file mode 100644
+index 88bc94fe1f6d..000000000000
+--- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
++++ /dev/null
+@@ -1,24 +0,0 @@
+-* ST SPEAr ADC device driver
+-
+-Required properties:
+-- compatible: Should be "st,spear600-adc"
+-- reg: Address and length of the register set for the device
+-- interrupts: Should contain the ADC interrupt
+-- sampling-frequency: Default sampling frequency
+-
+-Optional properties:
+-- vref-external: External voltage reference in milli-volts. If omitted
+-  the internal voltage reference will be used.
+-- average-samples: Number of samples to generate an average value. If
+-  omitted, single data conversion will be used.
+-
+-Examples:
+-
+-	adc: adc@d8200000 {
+-		compatible = "st,spear600-adc";
+-		reg = <0xd8200000 0x1000>;
+-		interrupt-parent = <&vic1>;
+-		interrupts = <6>;
+-		sampling-frequency = <5000000>;
+-		vref-external = <2500>;	/* 2.5V VRef */
+-	};
+-- 
+2.47.0
 
->
-> > +}
-> > +
-> >   static int spd5118_probe(struct i2c_client *client)
-> >   {
-> >       struct device *dev =3D &client->dev;
-> > @@ -580,6 +596,11 @@ static int spd5118_probe(struct i2c_client *client=
-)
-> >       if (!data)
-> >               return -ENOMEM;
-> >
-> > +     if (spd5118_write_protected(client)) {
-> > +             data->write_protected =3D true;
-> > +             spd5118_regmap_config.cache_type =3D REGCACHE_NONE;
-> > +     }
-> > +
->
-> This is insufficient, and overwriting spd5118_regmap_config is not a good=
- idea.
-> It should be a completely separate configuration which does not list any =
-writeable
-> registers. I also don't see the value in dropping register caching entire=
-ly.
->
-> However, even that is insufficient: The driver relies on the register ran=
-ge
-> being writeable. It is not immediately visible, but the regmap code write=
-s
-> MR11 to select the nvmem page. If this fails, the entire driver is unusab=
-le.
-> At the very least nvmem access would have to be disabled. However, if the=
- ROM
-> monitor left the chip in read-only state and had set the page to a value =
-!=3D 0
-> (I have seen that with some motherboards), temperature monitoring would n=
-ot work
-> either at least for memory with spd chips from manufacturers who took the
-> specification literally (such as Renesas).
->
-> That does not apply if the chip is programmed in 16-bit mode (which is no=
-t
-> currently supported), making handling the situation even more complicated=
-.
->
-> I think that drivers/i2c/busses/i2c-i801.c should detect if the address s=
-pace
-> is write protected, and the driver should not even try to instantiate if =
-that
-> is the case.
->
-> _If_ the driver is to be instantiated, the write protect flag should be p=
-assed
-> to the driver from the instantiating code, for example with a device prop=
-erty.
-
-Although I'll try not instantiate the device at all for now, in case
-that there are some users that still think reading DRAM temperature is
-helpful, if I were to add a device property here at runtime (e.g. in
-i2c_register_spd), should I also update its devicetree binding?
-
->
-> >       regmap =3D devm_regmap_init_i2c(client, &spd5118_regmap_config);
-> >       if (IS_ERR(regmap))
-> >               return dev_err_probe(dev, PTR_ERR(regmap), "regmap init f=
-ailed\n");
-> > @@ -638,6 +659,9 @@ static int spd5118_suspend(struct device *dev)
-> >       u32 regval;
-> >       int err;
-> >
-> > +     if (data->write_protected)
-> > +             return 0;
-> > +
-> >       /*
-> >        * Make sure the configuration register in the regmap cache is cu=
-rrent
-> >        * before bypassing it.
-> > @@ -662,6 +686,9 @@ static int spd5118_resume(struct device *dev)
-> >       struct spd5118_data *data =3D dev_get_drvdata(dev);
-> >       struct regmap *regmap =3D data->regmap;
-> >
-> > +     if (data->write_protected)
-> > +             return 0;
-> > +
->
-> suspend/resume support should be disabled completely in this situation
-> since it is very much pointless.
->
-> Worse, if the BIOS for some reason decides to select a different (non-zer=
-o)
-> page on resume, the driver would be completely inoperable after resume.
-> That is another argument for not instantiating it in the first place
-> if this is the case. The impact is just completely unpredictable.
-Wouldn't this already be catched spd5118_init() function, where the
-driver would attempt to overwrite the MR11, and the device won't even
-probe successfully if that fails?
-
-
->
-> Guenter
->
-> >       regcache_cache_only(regmap, false);
-> >       return regcache_sync(regmap);
-> >   }
-> >
->
