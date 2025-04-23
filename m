@@ -1,183 +1,227 @@
-Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11012068.outbound.protection.outlook.com [40.107.75.68])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CAC62701B5;
-	Wed, 23 Apr 2025 09:29:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745400572; cv=fail; b=W+bK3KoXAmZHOpDyIvxZizdtENdMwycRXGqSRAHgwqsTHt6gyRFpT5y0daX0b6eU3B1vMC70u+UwiMThRIZ94FwtmZRN3kVWPYbnZyIJlN6SIP8w5E67zGXKQAApMjPk78aAzjG3UBwMUD3ysnM0Ii+pVEBe4ggl/aLyOrcuO+w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745400572; c=relaxed/simple;
-	bh=i8ZPRykO6YEHzjitYlpDrfhxZcgsey7YLPzSP+Q2kqY=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=n8BzYbtLig/IdmFWbaS9crrfL75rf+qPCOaIX9i0Gkc0QyRVFCOVN8UbTWvKa5Nv2R+/CDsHarhMcU+2jm504ENK+VYT5yi8GQ5gDR3X7UdjlgFvGYto/bzitIMk+F+LEtIJV75YM37ECK+bCjG4h+o+ZBD25d548e7FFFoN2aE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com; spf=pass smtp.mailfrom=vivo.com; dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b=QCkDpJ9W; arc=fail smtp.client-ip=40.107.75.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=vivo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vivo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B87425C809
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:29:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745400584; cv=none; b=eIjre5W25Lm/Lph8pDQnkCV5xfMD7u9RJr19LQk6ZiRb8t6tYCOhbmBDpeOVVU0sAqdP+/flDu2zpeU13m6QnfEpWuHO4q0/IAyZNp5FbBtnxhtT5hyc7DT/3Bc3mImbV6WK9iB2K2PA15fFicf8GzDsFQOwS2VHAOEhQn6OCLY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745400584; c=relaxed/simple;
+	bh=HfajR4jkoRL29+tIXfodAl7lyAx8wExv/1di+VXnfEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BUbfJQsWoJYaMUo6b/q8UEE5wfcoSMFFQLUgD2wNmDQnIOJnXR/sF/9EzuhSO8eAjZuw0guOmHswG5JLq8Fvvj/iw0gkuFmOV43g/vWuES2SxrlSRBVvVh3gEKfqMcVrYTcb9/sDABTLd71i5R8kjnS+wb7ValJsuXM1TpwcoQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P5ImFb+i; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=vivo.com header.i=@vivo.com header.b="QCkDpJ9W"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=K9z/IVGWfHo64n7wzpVuhsJgnKIWsmsPXuXPXlsd7KKbuoYJ7LElfEKCKkcrJ3BuplmypAGHCB+ukKeKgoXhHZ5XjWASiKrIRnr0v7fGGMOAqYWep/G3ZKERpKQnXyzHIcOGreyOfU5Q1EUrMXrTEGljLBAuSPUXVJEJALufn3KN69dWw/jxCvGznXbWsA879ZxXTVSsYCRAu6Y5gt01Rjz5IIyJ/uY5DE27lMabTdAutnqnuEMHZqQjq+h6DFyh/0+Mh8cyRnc5Qu4z9mxyl4w1hVx2Z2iP+rULg0iA4qoQulXK+tngGoOdtYuZnqpzqbdfToGOPiaLkF6EmZ6npw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mPXJneXeT2u2B1aUpOuoCvgNUJXDcpNqtI0IcFFAqrQ=;
- b=VGRp+1d1MP4514EzKvMMThGNz/coBHF5fbJT2r6PXEJ7L2Ia5ykDsYK3eFlPzkjwAIFKN4cZG/7Clhs8I1HBFjbXF5gkAtVH9PtO+C0NR8Pbs5mJVkDKJeHvggZioatgeBqteQtXx7PrQB/aWXlQvcYkI+1olDUpIHoMGIL3zt1BHpB4hZisHMCWzkQH2HrTRjsKwTuJN8yz+DXuYRraugQ7F1sKoJNvoX02ANl0TSu4PQec5fxpt1nSjhAWqzdkdm0FKreR3Tx61p8qEYD6xQhXNFlthKdyQK8Sz8S9BcUDz3QbsSu9niC1IvduTkuHA9Kdutlk4RijYZvg3JsCNA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mPXJneXeT2u2B1aUpOuoCvgNUJXDcpNqtI0IcFFAqrQ=;
- b=QCkDpJ9WWztTwAtoBXrn7/FObCt2MXQJoBRiOH1YDjNxyxBbtRavOpwjsG5w68Kzu8vZPFOpXxZuLuzpRr+g64eTHmm7pQVHpxx4MqZjmMvH+t2mGS3pwqQudmgSG0qxZPOTVT1CPrz5EgWktvkGGWAcSspZIBjD5UETCSpSOGSjQHx5lUdBq1ZHN4Sd25LviLG2FNGC5D41GfSIxa6bHkJuTpnUg0ui6vHSDrXcuzO94CEuL2hhRZ0XdMgzMwK7ILAf7PWhiT4bHw5dNV8IEjN9dCW3y/aaitnBjf5gs/FUFLlL3dj7Y8YvCAwc6V62/n5oBEVfK01r4EOA12A1ow==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from KL1PR06MB6273.apcprd06.prod.outlook.com (2603:1096:820:ec::10)
- by PUZPR06MB5651.apcprd06.prod.outlook.com (2603:1096:301:fc::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Wed, 23 Apr
- 2025 09:29:27 +0000
-Received: from KL1PR06MB6273.apcprd06.prod.outlook.com
- ([fe80::9d21:d819:94e4:d09]) by KL1PR06MB6273.apcprd06.prod.outlook.com
- ([fe80::9d21:d819:94e4:d09%3]) with mapi id 15.20.8632.030; Wed, 23 Apr 2025
- 09:29:27 +0000
-From: Huan Tang <tanghuan@vivo.com>
-To: alim.akhtar@samsung.com,
-	avri.altman@wdc.com,
-	bvanassche@acm.org,
-	James.Bottomley@HansenPartnership.com,
-	martin.petersen@oracle.com,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	peter.wang@mediatek.com,
-	manivannan.sadhasivam@linaro.org,
-	quic_nguyenb@quicinc.com,
-	luhongfei@vivo.com,
-	tanghuan@vivo.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Cc: opensource.kernel@vivo.com
-Subject: [PATCH] ufs: core: fix WB resize use wrong offset
-Date: Wed, 23 Apr 2025 17:29:17 +0800
-Message-Id: <20250423092917.1031-1-tanghuan@vivo.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2P153CA0014.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::6)
- To KL1PR06MB6273.apcprd06.prod.outlook.com (2603:1096:820:ec::10)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P5ImFb+i"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0iRqF014200
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:29:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	3IJOhUo/VX2ZSjPsc4BMKNKU4usWbdjsJil7nFv3fuY=; b=P5ImFb+ijMrucFZ7
+	ss1wDWWID4k5kR0pY70Sbi8UGl5gbfuHzxXi/melTqMfG3BhAVQv2ZsJkBIV5abU
+	G/ASu+u48zFOw9FepRVrgnqavImvzwdhJgm4Tt9K620kLn1/vJdDKbzRd1IAl0f2
+	MQZyGd1ifaCBMr60CdTgLkPbNcRMLkmdRRiOZ2UShQWX7PBrcVbRW91X6CXlsCe7
+	RB9lImilI5LUwiFnioomyb+MKadqhur2sZ2nHnmHPjFm653CGrf0/D/M//mv5ZQs
+	Z1lNxnZdznp11k5f1KWODFAGbCve/G4mi2f7rEKS3FZOQt9PddQRfDvCVparG868
+	NicZ/g==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh39kac-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:29:41 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4766654b0c3so11938151cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 02:29:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745400580; x=1746005380;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3IJOhUo/VX2ZSjPsc4BMKNKU4usWbdjsJil7nFv3fuY=;
+        b=sLaL1+jw/J+Rz9UFsJHYQR4fVJ8jLgj90/9nquYK7H+PC0YOCiL2l1i7ezXU6diO4y
+         7EH0Nn+Dubp47+I8WM8Gh7+U2qpfY6Ehv1jT089zNXI5ONpEu+MXl9LXU1C4ES9+5xhH
+         br1C9BfH0+V5+q7LMTmk23YeoZvx0hYuHf78WUauFXal/CwlwWms24epHOK2EynNVeGa
+         3Q3DZKjzDPZ9O7+Vjrutkx+/bjtwRL9+FANHcXhOHecuvhERfbQOfpwMYVXVhBEgVaKr
+         Jn3SkhpIpcrxEtBYVfQF8+dGYzoe6EwMrI7ytZyDYFrJq4obikWD3ZHst9GfqpVhSuSt
+         WxAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQI1lfGfsrmwomd5DsUPVEVim/Qmbpi24+Qcka39ZHd5A26Ai5vKKpTftmA7OEz2jtmt3zv+XhVOZGyE0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOSE02HCgK/m2hjb3oO+lJ0nCfs9EBkwawniDCi1Fl9IPceYDU
+	bVe3Cq1z3rslwqXOD8hdkmKCWPA5SHA2ZCJ9MIEUDObhWHPkWveAWWm1hp8tBBiW/UDc81YbYSL
+	Mbdu/813dlh7c6NLgebyKXwcNCv5kFC2nA7t9oQiV+nA0cs5F+znefOVM/Ee4PaQ=
+X-Gm-Gg: ASbGncuaa0fIKO82V8DuKokuHFC6HDgHJbhgqOS/Xz8mA20QrsIPIIGqJhWWweozBrp
+	6BZV52/lUCWqZCPoHEj5w8nfm/AZXVaeERLpo+RqCQFZUJeZEDoMb12qPQyE1QaOqXCwxAMy82F
+	0/mlDJ4IdLhCxYmtWdBeNFeaJ3C3ffGk/qkmJL8KL0tHraaqFXqle6p0gO/sJ4+JgFvXkwqQ8o2
+	34ZU00dr+uTNPOL/FmY3L/SMdeNamdBxd0jGOWi5YTha83SyYfAyP7w/JVIAS+l4x5HaTQBzcc2
+	616EDMPl/WKqxDVw9sLPw95/MYIeGx5nvsNA8lqLZeP8hruJp3TJ8AMQIc4Brwr+KI4=
+X-Received: by 2002:a05:622a:251:b0:47b:3a2:1fc6 with SMTP id d75a77b69052e-47d1b89d080mr14403131cf.3.1745400580379;
+        Wed, 23 Apr 2025 02:29:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEdny5fOZQ/qOaIGMfGM2UJEzXsu/AVomAsa8SRTqZeN1JSrDmSVwu15sKN8rjBrgJBsxL5+g==
+X-Received: by 2002:a05:622a:251:b0:47b:3a2:1fc6 with SMTP id d75a77b69052e-47d1b89d080mr14402971cf.3.1745400579936;
+        Wed, 23 Apr 2025 02:29:39 -0700 (PDT)
+Received: from [192.168.65.183] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec0b30dsm789693766b.18.2025.04.23.02.29.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 02:29:39 -0700 (PDT)
+Message-ID: <c8e36d23-3325-4ad8-91da-94f9f31c3c15@oss.qualcomm.com>
+Date: Wed, 23 Apr 2025 11:29:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: KL1PR06MB6273:EE_|PUZPR06MB5651:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1acc429a-6d03-489d-3740-08dd82495767
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|7416014|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?QbYmuJX7ByAY1IgjRN2fStH51Ahc1v+7yZhUpuzSQ/cRgG29yulKZnRjfvDl?=
- =?us-ascii?Q?pNaVdvX2jZVtgcY4xTSC/++Df5WMabZd68uu2LHFmU1EdKM+43zuKnSYqWU1?=
- =?us-ascii?Q?YBh2Kr/Zw9Ww8gupLT8kmZ+It4lJli220MTomHVG7mFAHWvaAWJlGkvAoPnn?=
- =?us-ascii?Q?7xELr4ZOSPlaP0/px+TguP3cvP5o1JCH8IBW3mS96zhNgnI33NRU9riB3zdh?=
- =?us-ascii?Q?eWJfn8bNb9a4cDuwhZAivdZ6cZINXBRjscMyb82KZbVH28+QL/mUxx6/5l+5?=
- =?us-ascii?Q?KqAFtk6R+N3cZLX6/0Y/4+JiJdXCjhAgb05FwTS6reOITakRvQI7cHUawnLc?=
- =?us-ascii?Q?3GX/ymt3wHhkzQ9yDGFWs0I5AkoSDbTXCQXjdX7XDpwMW8slupw2oKn2O0gc?=
- =?us-ascii?Q?FfDdFxZNx8sL+LK06pA9g6D+0hUDw03TBi64RQYK3R1bEilljArUHaap4oNs?=
- =?us-ascii?Q?6pnPgjRz2PXkxs+Q4RW8n5DtE0dKpUoyf5mUGAT7wSNTnkUtDVBfrTcF1OAd?=
- =?us-ascii?Q?J/jsFessqy6O89gIk/v9GvyW+LRYnI0N0rVUpC97SVUly7x5YMYIIFCujcMJ?=
- =?us-ascii?Q?jbU6L4lARd8qoFuNmy1iFEIdlk1HfLD0NowYukmKAsqU3a5e5EdYj5ZxY4hP?=
- =?us-ascii?Q?rcOyezdBH9YcKlkMXa9c+mTRUp8+TunoGE5L5if4DO1Iw65w3lnRW9bFMETf?=
- =?us-ascii?Q?j0iyqGidR1F34/DPRmr0/O1S73stjkx1tJCIPVT7srMlsPpZdN19LkXGT8fi?=
- =?us-ascii?Q?76jJZNgENcfMfmeM5CojjZjpR6gHzzW1wN/zEXicRQEex+D864HNV5jLBEE0?=
- =?us-ascii?Q?D9UUYC0dAu1XZGCLWuqImHmVJXW5biYYdjJZuRx6QdBtmjJ4k7oK/PjiB9Nu?=
- =?us-ascii?Q?YEB7pydccySsi/Xof4pzgyKtOkrW14Vn963WAWoMj4Egzm5VL2QQOa35uIVd?=
- =?us-ascii?Q?TpO5jBQwDHFn3dZlcFRBjfWE3D7T3tfOk57pzoBdtegrk7ySVegepi955MTp?=
- =?us-ascii?Q?WqhuNEx+gt3eEwuVDXdf36FltKIGeWpTxr8oS7EmM3AluXLaDM8epq49ySbE?=
- =?us-ascii?Q?71ei+xZvHT71KuPKowrxGXVRmNFEtsEmZXhm+QccgjB975KkOL1Alz/qwobT?=
- =?us-ascii?Q?0AXw9Mr7tliO+1xVnPqF1wtZPNUQs1sbTiv75K9YOh+skJRtd7JFzyh83ZDJ?=
- =?us-ascii?Q?o7QUMAku14ktzyLFDvcPebySZnRmwn4G6AkvxtSv4N7+wN4RlRbX55mny23J?=
- =?us-ascii?Q?7RXr33jKLzwtRT2KJfQ8uS6NRUVv/dMFkeikshO+qn0JxCF5I8rEnaRxm2BF?=
- =?us-ascii?Q?knkUqNt335pYr35uAkOQG7GER8PhNJC6STC/hpOeZaGxyl/ex8zyj3sOb/PZ?=
- =?us-ascii?Q?dBRiUX2Nw9PfNh/lGtID/oNWbRwQGajSplvKPDlF9TLoBul8zdD9KsnHtHXm?=
- =?us-ascii?Q?dmor7UprPfK6Ha+DQjQ7cbkJkkdZpl/D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:KL1PR06MB6273.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(7416014)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?iQiDnpKn/eYZWh7puhw5yL+ucyDGxHVTrgHkEg/ICJjEodckYxhq/tMR8Sci?=
- =?us-ascii?Q?UKDioOPL79ULtnxjmcvtIU1OipPFVdNG8Tt75eC2SVq/URHEUIxL9Xvkapm+?=
- =?us-ascii?Q?geLKbAMXm8I8AEH150nZoaRFrLFF9ZNO+wiwUWooNtbI/dgeu33VeL/iJBa3?=
- =?us-ascii?Q?YvHRVBf0NY3114rOoinAkngDQh9dVqCUj/J30YFymbOHY5Dt2w2arRmsyp3Y?=
- =?us-ascii?Q?JUH27HDaGF/GEGbWGm2v5Fu4T7efCZNVGaIIcOZhIdN3Wl8KIxLdDPkubb94?=
- =?us-ascii?Q?RCyIGrdZ5z53PN6I7sZzkaOl9q69KTaqUQyTDq+wdsCMyU5/X31K8LJHnJQ8?=
- =?us-ascii?Q?2WAP3FlwsPjwVzQxus5fSVJlvTBYb82D9TwM+e/ddWhi6SjSNuFBRk8n8mz+?=
- =?us-ascii?Q?KZhWIffUD0W8u8o7lt991U1eVA9g6iiqxQFnaYh2XscLarI25FnX4RElMzFp?=
- =?us-ascii?Q?Gec0MVbWDU+UOOzfb7GdnBaxpbUmr3I1M1O+mO5s8pAoIaRp9m4l9wb7kLWF?=
- =?us-ascii?Q?BRNibfeBchD1/c3EtHN7f7C6tCH6Kj6uEKhV++erA07vlVOGpbrM+f4wAG4G?=
- =?us-ascii?Q?9RzFKlN6mxEMJZDaer56tBp/sCKM3aYrismhmyIazShi9AAcJLtF79Av2KFw?=
- =?us-ascii?Q?HOTdbNWMS58MiHmujTAgZQA/VJ3eVizvmlE4QF4opBCFyHSboPruGl8hKyCC?=
- =?us-ascii?Q?JbMGVC/L1BgzbpAIJihv08N5ORadpYKhx568aMaQJT6LI2qghwrWQJSLfZxI?=
- =?us-ascii?Q?lkslr/JD88lL+MaAMQWVOg6uE9xAB+85YN4u7t6tqmsQK2qHEQ9l6yEQMP/P?=
- =?us-ascii?Q?yqG4rLMG1j6bsjR4pZqWNaw1Sb8EvRJfztFNmwH0308R1cCC7CE0miMgOgPU?=
- =?us-ascii?Q?bkAPJS4LLwqfdEvAw6o8ooxb3V+yPbuwz52RCfbG42HeAlzD0H+xWQehSybU?=
- =?us-ascii?Q?ZqSUvASOWLCdWugv7ScjLgnNhAXNiBkKc1gb4F9RQY4Ds2xftJXLNKFU3Sn5?=
- =?us-ascii?Q?sG1zXYk6+RhIm7IXMToSIhf+Mdd/st18y6Bbmf2JK1zZgLO3WR1vqc0Epj0V?=
- =?us-ascii?Q?advO1DRARVku6zaJTIeRB5Abgd3GUgRW/KizTvGp6fsIDJ4NFoFQrfOaz/JH?=
- =?us-ascii?Q?gvAXS8uYNQVuFkTI7vtetLvanRN9yM/jhQDtKC5PYyjY6+FcrJCBKAEyyLDs?=
- =?us-ascii?Q?dO8LOsgfgo3Pp4pU4zVTvQMC5BaMgzDXKg9wrlpZ1xHUuicDv/NxZ56Njmcn?=
- =?us-ascii?Q?c0lDPnGXDk0SJa74tQRqy7qlgMsnupf4HwYy1OsHF9zNpV7gA+pABqPjqzc2?=
- =?us-ascii?Q?0nCsxolD40t+uDveVmzDAla3mrK77KQ+Jucf7VnH+PNJfPIFIA2BmuxhncF1?=
- =?us-ascii?Q?SVBmDyuucBXdiO2tqJgV2gdQk5L5MVaVstOLp6g/kcm3bEiXv+X2I/5eg/Up?=
- =?us-ascii?Q?bMwXzPivAR2jYzWVQFGTbPhX2aDGOkfI0MqhRMqyBvx0QIbiQi6JwcQ0NucJ?=
- =?us-ascii?Q?m0sqxe9O0zCWlX6/wDdsyMKhwqDRCfcwvHdQkGW0SHoDaS3Hmu8qx0KvvYHz?=
- =?us-ascii?Q?yroK8CzoN7YWVxxfhl3dL5f+YR81CiLjPLfnh+Q+?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1acc429a-6d03-489d-3740-08dd82495767
-X-MS-Exchange-CrossTenant-AuthSource: KL1PR06MB6273.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 09:29:27.0063
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DNkWUejRkbwBVAVEIHiGz41L0X2DoiLxv5oDhASOT1aLoE/0r6sPx14j4wwHXhrOzy07FuDSTai8SEGQRQHO0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR06MB5651
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/6] arm64: dts: qcom: qcs615: Add mproc node for SEMP2P
+To: Lijuan Gao <quic_lijuang@quicinc.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: kernel@quicinc.com, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kyle Deng <quic_chunkaid@quicinc.com>
+References: <20250423-add_qcs615_remoteproc_support-v1-0-a94fe8799f14@quicinc.com>
+ <20250423-add_qcs615_remoteproc_support-v1-3-a94fe8799f14@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250423-add_qcs615_remoteproc_support-v1-3-a94fe8799f14@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA2NCBTYWx0ZWRfX1EQflUPyUg9m WnVqmLySPyKAFMwt2mcKkhT5P/PMtb6nQGHB/2XMMEBUTyH5d7F+GBfiqS6K/IJgn2qJBJmiPWJ 9Bn12KhFJwOY2lsKFopWRKvAXFaKFqoeUqJxoI7Wy+WWiv0y4A11UC7sjW8ef0QI9jBlhO1jhnN
+ BKj4mscsSMGUanNPREbVwYVqJvFB49xsvNi7hs/dBZ2apxytjZtaC24LahNLR7G3QHZqdsl9Cgg xzn+LRor5POrxW2mHihbORcoWgm+DxSeK9+jc4fExL+2uLIk2sjgH1Avab6MgYbDcLmX76KxBQ6 a+sweFjXGVosR/wviW8V0lGiOwdhr+vXUfuR+ozwerRJW5QSdMhp76NNBJK3MeT1DtYz3C2jo1a
+ FQGb2pp0/XUpZXS3tusvPYmcFGr3Vm0QOzkhzR3e07NJimrd7KvdaV3Xf8Pi6xBom6FBQQsg
+X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=6808b305 cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=IXTFuLhWsd_PX2s7ergA:9 a=QEXdDO2ut3YA:10
+ a=kacYvNCVWA4VmyqE58fU:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 9jDVEgd8RQ2JTcsLDeWYy5sNe0Hwz7F5
+X-Proofpoint-GUID: 9jDVEgd8RQ2JTcsLDeWYy5sNe0Hwz7F5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-23_06,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=930 mlxscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230064
 
-'Commit 500d4b742e0c ("scsi: ufs: core: Add WB buffer resize support")'
-incorrectly reads the value of offset
-"DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP" to determine whether WB resize
-is supported.
+On 4/23/25 11:17 AM, Lijuan Gao wrote:
+> From: Kyle Deng <quic_chunkaid@quicinc.com>
+> 
+> The Shared Memory Point to Point (SMP2P) protocol facilitates
+> communication of a single 32-bit value between two processors.
+> Add these two nodes for remoteproc enablement on QCS615 SoC.
+> 
+> Signed-off-by: Kyle Deng <quic_chunkaid@quicinc.com>
+> Signed-off-by: Lijuan Gao <quic_lijuang@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/qcs615.dtsi | 79 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 79 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> index edfb796d8dd3..ab3c6ba5842b 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> @@ -332,6 +332,80 @@ mc_virt: interconnect-2 {
+>  		qcom,bcm-voters = <&apps_bcm_voter>;
+>  	};
+>  
+> +	qcom,smp2p-adsp {
 
-Fix the issue by read the value of "DEVICE_DESC_PARAM_EXT_WB_SUP"
-to determine whether the device supports WB resize.
+Remove the qcom prefix
 
-Fixes: 500d4b742e0c ("scsi: ufs: core: Add WB buffer resize support")
-Reported-by: Peter Wang <peter.wang@mediatek.com>
-Closes: https://lore.kernel.org/all/7ce05b28f5d4b4b4973244310010c1487
-bdf4124.camel@mediatek.com/
-Signed-off-by: Huan Tang <tanghuan@vivo.com>
----
- drivers/ufs/core/ufshcd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +		compatible = "qcom,smp2p";
+> +		qcom,smem = <443>, <429>;
+> +		interrupts = <GIC_SPI 172 IRQ_TYPE_EDGE_RISING>;
+> +		mboxes = <&apss_shared 26>;
+> +		qcom,ipc = <&apcs 0 26>;
+> +		qcom,local-pid = <0>;
+> +		qcom,remote-pid = <2>;
+> +
+> +		adsp_smp2p_out: master-kernel {
+> +			qcom,entry-name = "master-kernel";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		adsp_smp2p_in: slave-kernel {
+> +			qcom,entry-name = "slave-kernel";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +
+> +		sleepstate_smp2p_out: sleepstate-out {
+> +			qcom,entry-name = "sleepstate";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		sleepstate_smp2p_in: qcom,sleepstate-in {
+> +			qcom,entry-name = "sleepstate_see";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +		smp2p_rdbg2_out: qcom,smp2p-rdbg2-out {
+> +			qcom,entry-name = "rdbg";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		smp2p_rdbg2_in: qcom,smp2p-rdbg2-in {
+> +			qcom,entry-name = "rdbg";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+> +	qcom,smp2p-cdsp {
+> +		compatible = "qcom,smp2p";
+> +		qcom,smem = <94>, <432>;
+> +		interrupts = <GIC_SPI 576 IRQ_TYPE_EDGE_RISING>;
+> +		mboxes = <&apss_shared 6>;
+> +		qcom,ipc = <&apcs 0 6>;
+> +		qcom,local-pid = <0>;
+> +		qcom,remote-pid = <5>;
+> +
+> +		cdsp_smp2p_out: master-kernel {
+> +			qcom,entry-name = "master-kernel";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		cdsp_smp2p_in: slave-kernel {
+> +			qcom,entry-name = "slave-kernel";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +
+> +		smp2p_rdbg5_out: qcom,smp2p-rdbg5-out {
+> +			qcom,entry-name = "rdbg";
+> +			#qcom,smem-state-cells = <1>;
+> +		};
+> +
+> +		smp2p_rdbg5_in: qcom,smp2p-rdbg5-in {
+> +			qcom,entry-name = "rdbg";
+> +			interrupt-controller;
+> +			#interrupt-cells = <2>;
+> +		};
+> +	};
+> +
+>  	qup_opp_table: opp-table-qup {
+>  		compatible = "operating-points-v2";
+>  		opp-shared;
+> @@ -3337,6 +3411,11 @@ apss_shared: mailbox@17c00000 {
+>  			#mbox-cells = <1>;
+>  		};
+>  
+> +		apcs: syscon@17c0000c {
+> +			compatible = "syscon";
 
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index dc55c94fa45e..1c53ccf5a616 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -8143,7 +8143,7 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, const u8 *desc_buf)
- 	dev_info->wb_buffer_type = desc_buf[DEVICE_DESC_PARAM_WB_TYPE];
- 
- 	dev_info->ext_wb_sup =  get_unaligned_be16(desc_buf +
--						DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP);
-+						DEVICE_DESC_PARAM_EXT_WB_SUP);
- 
- 	dev_info->b_presrv_uspc_en =
- 		desc_buf[DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN];
--- 
-2.39.0
+There is already a description for this block above what you added
 
+qcom,ipc under smp2p is mutually exclusive with `mboxes`, so adding
+the above isn't necessary at all
+
+Konrad
