@@ -1,273 +1,276 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 448421386DA
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5048A17B421;
+	Wed, 23 Apr 2025 16:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745424676; cv=none; b=KeZ48u/1XxosAwSifSPZhWUHy+RVZJVuUtT9FVEOwW6ueY/eaWc2pGFYIskVgtA0wtuKA7/9tdzLtpIuF04IMx/nZMhudr9Uf4E5/LcC9BwKJ4FOaRBqP4vp2xpIYQKTps6JwD5TeJ4lWsJZDjznfcGLXRAsNPBds+0UcwtGyZU=
+	t=1745424870; cv=none; b=ndGx+hBdHPNlvwhnVAylHbcAlg7DFStrIsUbr1X6rtkrnL6LogMe0S0qSMz+RBJTACiwtqoWkKyQjMSdgryYM+KIYxJJUoBcbULg/aAI6FHW2q47X6PcojJ7R84yLKszE0govB7JzPTq02Vimumc7rWtWPgIjjWs4BXs7dnfVTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745424676; c=relaxed/simple;
-	bh=r6M9Ja1D8Zs6b5j1y3MnNQBue4KN5PdtElPgqLbvxSg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ijaIamod3D+CnXropohA4ClQQF6OK9cGIfZSMOAoF68J2ava9D1+WJ6o3vQXxcmKOMrtt4B1AdPbv3cNgagGL85Wg776ge1wob9UazwlsvQdTS3WumypTy+Yzxeo6Fa/MBd6faeDIcNssQIefNdDlUJsG6jNBOHbKZ6lTIIj0bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=foHx8vG8; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745424870; c=relaxed/simple;
+	bh=u2WHQ+ulAOKjQww0T8nhaN1AuWQKWah8fcMg9dvTeAo=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=TgJXvw5tEFL6TSfxjYKrp25dn4y75Ot//6hNkX47/smN05kGGGJd3OM0tM/Oe7FyUc5ZNnAmfETuv1b1Ii2FZo6okWp/lqzLT80Gp4u3k0PLf/x08Onp1PH2y+T8UPcMzRkq5PnwK6efNRk5jgjY4ox7gHF9RV80EE+Z5Iguwqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=llIFZKHl; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="foHx8vG8"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac7bd86f637so230378266b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 09:11:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="llIFZKHl"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22401f4d35aso71905ad.2;
+        Wed, 23 Apr 2025 09:14:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745424672; x=1746029472; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=r6M9Ja1D8Zs6b5j1y3MnNQBue4KN5PdtElPgqLbvxSg=;
-        b=foHx8vG8PQfH0jKC0Ufn87MRkGXSXtLPt9ndfFmB/CBj5NXqlBrmsHPuoq0ZbYDYEi
-         qDtgDo2r4St6mitw5+zUq18bHaCf5P9nV2AjWm6alFhzbXtfHqDNm1pSSb6QBbD7k42l
-         khrRlcGn8tce6EP2TLEJRoRNkByxfm5GEo047t07clh+vb9phjPcvki9oUkIj4QaaZfp
-         MCkB8iSRHc8UyJc59a5zuSGQE9gYQF4TO6Q961KwvFzyEuKv5VjViagfN2YGCv7N+6Nb
-         XqTzFTpoR4UGDAU8by/odEGmUmuU6nwaXKXLfGMnQ8GeIDChcNre9TXc/bvzv/VnFeMd
-         iYIw==
+        d=gmail.com; s=20230601; t=1745424868; x=1746029668; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xbm0MYz/Snn5GTSIsILgCRMCDiLDb03j0g6ohbWHNcQ=;
+        b=llIFZKHlqf4JJ3N6IPuX6o5LS3S58vQOvrn3ARfRbJh5haXSDnzmZW1sIkIzelQNyv
+         u2e4/s9RiEBCzWSh/lyp2sAV7LgFyGxC0Et797j89ZqnLhYETHVk43PeFqzV2GDAXqxI
+         qmA4oGTp8XzFG71KR+vBYMT4JNiVXo9Uh+Z0WqKAdy0Iljki8ATXxi1zvqvpKBMjk4SI
+         PJzGvfNOc6Xvg7F3kULA1+mWcGUS7AsA6Ipvcp0Dl1hBlmt3Se5MmVACsfC1geW5to1s
+         M13JpSD6GRuKIYw/wPSt0j9L9qpsG0MwhPl8dETgbh44FG9sO1zDDk26ZqpHbPVozfol
+         VW6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745424672; x=1746029472;
-        h=in-reply-to:autocrypt:from:content-language:references:cc:to
-         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r6M9Ja1D8Zs6b5j1y3MnNQBue4KN5PdtElPgqLbvxSg=;
-        b=dmrbdtJQJm+2SrJc4CaMH3RkFbe5eV1/vQZh1B6YJTeCWLMzfThvRYwfdcLkAzI1fG
-         WA/oVoWP3YdUoJSH9yFDVUxfr/NTJI3lfKuYAZmuQQLq4jvbcsoDHDwyb9FRt9eS3UV5
-         Fh0QTNVH5R8bjTnSXmTKnzV9/nG1GdVjnnIgOdi4Mg8UgLGM8Wuq8YI42nQ1r/cR1Uc9
-         QHP8qMReBgYBzPrViX7VI8GAmr987xRr2lCT3IH1A4CeuVvob4zqeYmEePcCXKh/gV/A
-         mdxy5WUzQH8X0tNZrOHAwGXtKLpmYV38a73lYCkJNBGEg0jro7vDkrt3OqWa5rgHHcts
-         nQag==
-X-Forwarded-Encrypted: i=1; AJvYcCUHurI10A+jvwn4FhYk9kH4Tfs74lrgIkT3JayiyG4rpBnudiMYBXLc7E+1nlLuQJjj0p58lWh8s4wx/ZU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR4aFQOAi0xqqWR6LnYpvL65GIpCe36G2fSWs0AhIavLyBTLRo
-	0vyLZ1O4uax7B974fIUxOSw75MenLKKosjO97xPcrx6hylKFWLfpHNKnCJD/4Zc=
-X-Gm-Gg: ASbGnct++ce43V1136PY+XhkUevOz2RoNAKYcYELqKUxHBBFg3dqxhtogbs9JJomYwp
-	E3omwz0JsBQSYnFmKJuLhSkGra28DTpjVs5R87BGAlDOyOXJlDnFgGogzTAtzT4eD6XtkFYRKY6
-	dIyjGOLdpFe3NQ3Rk9TxRo5lpfazvQMKgteYzljYVDv2l2XTulqOqRMlg59i3b1FvM44YoI1uUM
-	L7gxegCPb7qIFJJh8199nSZQIboQbldK89799XE5FnVLaYfPL28U9Px8gkfjgdZ6Sct3sFL9xnd
-	HQptZSzTGaJePgRL+TYb17DqctDfzL5PZ4eA/IHV3MmCg5lRXAPC3Aw+0MwqKmb+P45wmIOSekl
-	pn3nio/b3SWxNBRVKb+7681/6sBjBL6hu6W1DoVtDjs9XEmKRfI6p5w5VgU/fMZGm4w==
-X-Google-Smtp-Source: AGHT+IGCpPmCGC7IHEh0MIOg0AX5sgy1qpm3zmVV6d+GogUn6nD6VtfuVEh/CSiuiB3OjgZ0F+tEng==
-X-Received: by 2002:a17:907:728e:b0:ac7:3441:79aa with SMTP id a640c23a62f3a-ace3f4c1d0dmr289156466b.13.1745424672252;
-        Wed, 23 Apr 2025 09:11:12 -0700 (PDT)
-Received: from ?IPV6:2003:e5:870f:e000:6c64:75fd:2c51:3fef? (p200300e5870fe0006c6475fd2c513fef.dip0.t-ipconnect.de. [2003:e5:870f:e000:6c64:75fd:2c51:3fef])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec04668sm821934866b.24.2025.04.23.09.11.11
+        d=1e100.net; s=20230601; t=1745424868; x=1746029668;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xbm0MYz/Snn5GTSIsILgCRMCDiLDb03j0g6ohbWHNcQ=;
+        b=J+85MsE07EzuhWOQfPzHbILndxndMNhVAIZMT0Gyn4pQ/GPwoqZgw1c7+8EzGtsy3e
+         9hymRHCEj7xrlvACYvNYNl0aYj/S5nXNqmNZ8d5tvEH01BfDHEriNWOPxXPnMelYdvgg
+         OKySZz9ynqLLfY0ImgULTWR0AlFysLG2OcjlPUoeQyhkV82+kELb1dBTSKwVPZ3fLHzw
+         UYNVu6U56Nl5IjzlieolCnwMwHebGdg2V5aXZ6z9DUjPIeblcjQSirfckT64eN37ruQV
+         cY1xOtECn29AuFjYVH9G8x0K3g4wtbHo7ohwfMQ+Yn9Pu8zWVQFnfeopSIzFLquCX0pO
+         KHAw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOYg2AASTTOnF/pfPDItCDtpYh7e0DI1E1Gv4kTQZGlniM7YFkmfPtgZjgAdZvXI5KIKMr4zwpq7TlHgV1pZxnp6Z1Lw==@vger.kernel.org, AJvYcCWBLgNmcaucom71XlpKLwqZZzKh9os09Z25gf5C1K5LwmeTn9mAVNzbP9cf5EIHGyQASx/Ey81uPkaB/gc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAQg8C9u/CNvY5UGWbi0OMEst0yAD5lkhTAeB8WNfxcUauOD6Z
+	BeJMSVOwGI0Fy2TcqZ5+SAViUOLW8Hj7SpfjnWRrWWSnVWos4nBZ
+X-Gm-Gg: ASbGncvK7PO4T+sM0fxOO9xKvsdIt4dwVx5TqNulz5UWS0PWYgP1VfoRSPuuBQ5u2L3
+	nrjDIGaiD2fjZxm7AzIS9aukHUQQccpiA+yprad0dfP0ceWiW4I1gttjjETg8yWOFceupa4mzys
+	URwR3RQrTuIF46JMtzFIQfRo1OkuF1zCDxxEe5m87EMw5VE0L0zcDE7SK8L+j1B4B1ouSyVBcl/
+	ZCVG5+s2cVRV7tPL4uO3FA9M/yRzN9XJonlbp2kFMRLPpl61LEDJRzztTAL2p95ONxHW7l1p7pS
+	4yL0HlBkonjPlkfR+Mf2OJ9nU+fgMisJ1w==
+X-Google-Smtp-Source: AGHT+IHyioSF4OvVOr8p+6fFMIfKbDX0xY/TNTq4JnFhtnxiB7MIjpAV+ZkV751ueGWWQudfJb8z2A==
+X-Received: by 2002:a17:902:f0d2:b0:224:1eaa:5de1 with SMTP id d9443c01a7336-22c535830e1mr207608875ad.18.1745424868353;
+        Wed, 23 Apr 2025 09:14:28 -0700 (PDT)
+Received: from localhost ([181.91.133.137])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50fde74fsm106638035ad.220.2025.04.23.09.14.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 09:11:11 -0700 (PDT)
-Message-ID: <281505d5-7459-4903-887e-dc78a4c1fce4@suse.com>
-Date: Wed, 23 Apr 2025 18:11:10 +0200
+        Wed, 23 Apr 2025 09:14:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
- to read MSR
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-23-xin@zytor.com>
- <080351cb-6c3d-4540-953d-6205f1ff0745@suse.com>
- <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------FE970QYjLz2b50Iy5t5x4Ioe"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------FE970QYjLz2b50Iy5t5x4Ioe
-Content-Type: multipart/mixed; boundary="------------mQHAHZCn0fpZPeY8nLddn93h";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
- linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
- linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
- platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
- andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- wei.liu@kernel.org, ajay.kaher@broadcom.com,
- bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
- pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
- luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
- haiyangz@microsoft.com, decui@microsoft.com
-Message-ID: <281505d5-7459-4903-887e-dc78a4c1fce4@suse.com>
-Subject: Re: [RFC PATCH v2 22/34] x86/msr: Utilize the alternatives mechanism
- to read MSR
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-23-xin@zytor.com>
- <080351cb-6c3d-4540-953d-6205f1ff0745@suse.com>
- <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
-In-Reply-To: <7899fcd9-3492-49d3-8097-a3ddefaaeef0@zytor.com>
-
---------------mQHAHZCn0fpZPeY8nLddn93h
-Content-Type: multipart/mixed; boundary="------------hwRd1olu00ORJ06CZhGAHDwc"
-
---------------hwRd1olu00ORJ06CZhGAHDwc
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
-
-T24gMjMuMDQuMjUgMTE6MDMsIFhpbiBMaSB3cm90ZToNCj4gT24gNC8yMi8yMDI1IDQ6MTIg
-QU0sIErDvHJnZW4gR3Jvw58gd3JvdGU6DQo+Pj4gKw0KPj4+ICtzdGF0aWMgX19hbHdheXNf
-aW5saW5lIGJvb2wgX19yZG1zcnEodTMyIG1zciwgdTY0ICp2YWwsIGludCB0eXBlKQ0KPj4+
-ICt7DQo+Pj4gK8KgwqDCoCBib29sIHJldDsNCj4+PiArDQo+Pj4gKyNpZmRlZiBDT05GSUdf
-WEVOX1BWDQo+Pj4gK8KgwqDCoCBpZiAoY3B1X2ZlYXR1cmVfZW5hYmxlZChYODZfRkVBVFVS
-RV9YRU5QVikpDQo+Pj4gK8KgwqDCoMKgwqDCoMKgIHJldHVybiBfX3hlbnB2X3JkbXNycSht
-c3IsIHZhbCwgdHlwZSk7DQo+Pg0KPj4gSSBkb24ndCB0aGluayB0aGlzIHdpbGwgd29yayBm
-b3IgdGhlIFhlbiBQViBjYXNlLg0KPiANCj4gV2VsbCwgSSBoYXZlIGJlZW4gdGVzdGluZyB0
-aGUgY29kZSBvbiB4ZW4tNC4xNyBjb21pbmcgd2l0aCBVYnVudHUNCj4gMjQuMDQuMiBMVFMg
-OikNCg0KSG1tLCBzZWVtcyB0aGF0IHRoZSBhY2Nlc3NlZCBNU1IocykgYXJlIHRoZSBvbmVz
-IGZhbGxpbmcgYmFjayB0byB0aGUNCm5hdGl2ZV9yZG1zcigpIGNhbGxzLiBBdCBsZWFzdCBv
-biB0aGUgaGFyZHdhcmUgeW91IHRlc3RlZCBvbi4NCg0KPj4gWDg2X0ZFQVRVUkVfWEVOUFYg
-aXMgc2V0IG9ubHkgYWZ0ZXIgdGhlIGZpcnN0IE1TUiBpcyBiZWluZyByZWFkLg0KPiANCj4g
-Tm8gbWF0dGVyIHdoZXRoZXIgdGhlIGNvZGUgd29ya3Mgb3Igbm90LCBnb29kIGNhdGNoIQ0K
-PiANCj4+DQo+PiBUaGlzIGNhbiBiZSBmaXhlZCBieSBzZXR0aW5nIHRoZSBmZWF0dXJlIGVh
-cmxpZXIsIGJ1dCBpdCBzaG93cyB0aGF0IHRoZQ0KPj4gcGFyYXZpcnQgZmVhdHVyZSBoYXMg
-aXRzIGJlbmVmaXRzIGluIHN1Y2ggY2FzZXMuDQo+IA0KPiBTZWUgbXkgb3RoZXIgcmVwbHkg
-dG8gbGV0IFhlbiBoYW5kbGUgYWxsIHRoZSBkZXRhaWxzLg0KPiANCj4gUGx1cyB0aGUgY29k
-ZSBhY3R1YWxseSB3b3JrcywgSSB3b3VsZCBhY3R1YWxseSBhcmd1ZSB0aGUgb3Bwb3NpdGUg
-Oi1QDQoNCkJUVywgaXQgd2FzIGluIGtlcm5lbCA2LjEyIEkgaGFkIHRvIGNoYW5nZSB0aGUg
-TVNSIHJlYWQgZW11bGF0aW9uIGZvcg0KWGVuLVBWIHRoZSBsYXN0IHRpbWUgKGZpeCBzb21l
-IHByb2JsZW1zIHdpdGggY2hhbmdlZCB4ODYgdG9wb2xvZ3kNCmRldGVjdGlvbikuIFRoaW5n
-cyBsaWtlIHRoYXQgd29uJ3QgYmUgZWFzaWx5IHB1dCBpbnRvIHRoZSBoeXBlcnZpc29yLA0K
-d2hpY2ggbmVlZHMgdG8gc2VydmUgb3RoZXIgT1MtZXMsIHRvby4NCg0KDQpKdWVyZ2VuDQo=
-
---------------hwRd1olu00ORJ06CZhGAHDwc
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 23 Apr 2025 13:14:24 -0300
+Message-Id: <D9E5H5B9X448.12FJT48775C50@gmail.com>
+Cc: "Lyndon Sanche" <lsanche@lyndeno.ca>, "Mario Limonciello"
+ <mario.limonciello@amd.com>, <platform-driver-x86@vger.kernel.org>, "LKML"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] platform/x86: dell-pc: Transition to faux device
+From: "Kurt Borja" <kuurtb@gmail.com>
+To: "Hans de Goede" <hdegoede@redhat.com>, =?utf-8?q?Ilpo_J=C3=A4rvinen?=
+ <ilpo.jarvinen@linux.intel.com>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
+ <20250411-dell-faux-v1-3-ea1f1c929b7e@gmail.com>
+ <2afb6e58-44cb-486e-8062-074ff397dc2c@linux.intel.com>
+ <1e8a6fe0-518d-4eac-9895-51179ca23f36@redhat.com>
+In-Reply-To: <1e8a6fe0-518d-4eac-9895-51179ca23f36@redhat.com>
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+Hi all,
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+On Wed Apr 23, 2025 at 10:44 AM -03, Hans de Goede wrote:
+> Hi Ilpo,
+>
+> On 23-Apr-25 3:27 PM, Ilpo J=C3=A4rvinen wrote:
+>> On Fri, 11 Apr 2025, Kurt Borja wrote:
+>>=20
+>>> Use a faux device parent for registering the platform_profile instead o=
+f
+>>> a "fake" platform device.
+>>>
+>>> The faux bus is a minimalistic, single driver bus designed for this
+>>> purpose.
+>>=20
+>> Hi Kurt, Hans & Greg,
+>>=20
+>> I'm not sure about this change. So dell-pc not a platform device but
+>> a "fake".
+>
+> Arguably the dell-pc driver does not need a struct device at all,
+> since it just exports /sys/firmware/acpi/platform_profile sysfs
+> interface by using the relevant Dell SMBIOS interfaces for this.
+>
+> As such maybe we should just completely get rid of the whole
+> struct device here?
+>
+> If we do decide to keep the struct device, then since the struct device
+> seems to just be there to tie the lifetime of the platform_profile
+> handler to, I guess that calling it a faux device is fair.
 
---------------hwRd1olu00ORJ06CZhGAHDwc--
+I think it's important to mention that a parent device is required to
+register a platform profile, see [1].
 
---------------mQHAHZCn0fpZPeY8nLddn93h--
+I guess we could get away with removing the device altogether from here,
+but that would require to find another suitable parent device. The
+obvious choice would be the `dell-smbios` device, however that would
+require exporting it in the first place.
 
---------------FE970QYjLz2b50Iy5t5x4Ioe
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+For some reason, exporting devices doesn't seem right to me, so IMO a
+faux device is a good choice here.
 
------BEGIN PGP SIGNATURE-----
+Another solution that would make more sense, lifetime wise, is to turn
+this into an aux driver and let `dell-smbios` create the matching aux
+device. I could do this, but I think it's overly complicated.
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgJER4FAwAAAAAACgkQsN6d1ii/Ey9B
-OAgAgUnmx2ytj5fx0ZWLVVSeVgbrAkAAJwflobLTfsKbhnmAKSXlnLeLRLVkxNnEl2JtohZ6+oZD
-YIxawfxiIGTbwbemJOWdlKj6zJJE2cKl39wCE83gJZM/VGYiBo+Q0dTWWOWGfUJD04EkOMAAiJ96
-iI2xfjOnxm1YBb5TqBqC/CvC2mbHOg543h8N5NoVx39tEeSepbZH6UirBZ3B50y3/Zgp50DK2R3O
-6YLl6jBayBEHkZkqK59qYmjBrj6OriVMZpo5QCK+NLuv2mdv3O7hI1nKbmUmS94/7UcuHFtan862
-npbfPTBwkAXV5WDYJ7uyIdkMVl3F9PhN2zVI4a4VUQ==
-=Dl6w
------END PGP SIGNATURE-----
+>
+>> I'm not saying this is wrong, but feel I'm a bit just lost where the=20
+>> dividing line is.
+>
+> In this case it seems to be clear that this is a faux device,
+> but I do agree that sometimes the line can be a bit blurry.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>> Is it just because this driver only happens to call
+>> dell_send_request(), etc., not contains that low-level access code withi=
+n?=20
+>> Or is that dell-smbios "fake" too?
 
---------------FE970QYjLz2b50Iy5t5x4Ioe--
+IMO `dell-smbios` is "fake" too? It is there only to expose either the
+WMI or the SMM backend through a single sysfs interface.
+
+I think a more natural design for `dell-smbios` would be an aux driver
+that exposed it's interface through a class device. Maybe I'm wrong in
+this regard though.
+
+[1] https://elixir.bootlin.com/linux/v6.15-rc3/source/drivers/acpi/platform=
+_profile.c#L556
+
+--=20
+ ~ Kurt
+
+>>=20
+>>> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
+>>> ---
+>>>  drivers/platform/x86/dell/dell-pc.c | 46 +++++++++++------------------=
+--------
+>>>  1 file changed, 13 insertions(+), 33 deletions(-)
+>>>
+>>> diff --git a/drivers/platform/x86/dell/dell-pc.c b/drivers/platform/x86=
+/dell/dell-pc.c
+>>> index 794924913be0c6f13ed4aed8b01ffd21f1d34dea..48cc7511905a62d2828e3a7=
+b593b3d2dae893e34 100644
+>>> --- a/drivers/platform/x86/dell/dell-pc.c
+>>> +++ b/drivers/platform/x86/dell/dell-pc.c
+>>> @@ -13,18 +13,18 @@
+>>>  #include <linux/bitfield.h>
+>>>  #include <linux/bitops.h>
+>>>  #include <linux/bits.h>
+>>> +#include <linux/device/faux.h>
+>>>  #include <linux/dmi.h>
+>>>  #include <linux/err.h>
+>>>  #include <linux/init.h>
+>>>  #include <linux/kernel.h>
+>>>  #include <linux/module.h>
+>>>  #include <linux/platform_profile.h>
+>>> -#include <linux/platform_device.h>
+>>>  #include <linux/slab.h>
+>>> =20
+>>>  #include "dell-smbios.h"
+>>> =20
+>>> -static struct platform_device *platform_device;
+>>> +static struct faux_device *dell_pc_fdev;
+>>>  static int supported_modes;
+>>> =20
+>>>  static const struct dmi_system_id dell_device_table[] __initconst =3D =
+{
+>>> @@ -246,7 +246,7 @@ static const struct platform_profile_ops dell_pc_pl=
+atform_profile_ops =3D {
+>>>  	.profile_set =3D thermal_platform_profile_set,
+>>>  };
+>>> =20
+>>> -static int thermal_init(void)
+>>> +static int dell_pc_faux_probe(struct faux_device *fdev)
+>>>  {
+>>>  	struct device *ppdev;
+>>>  	int ret;
+>>> @@ -258,51 +258,31 @@ static int thermal_init(void)
+>>>  	if (ret < 0)
+>>>  		return ret;
+>>> =20
+>>> -	platform_device =3D platform_device_register_simple("dell-pc", PLATFO=
+RM_DEVID_NONE, NULL, 0);
+>>> -	if (IS_ERR(platform_device))
+>>> -		return PTR_ERR(platform_device);
+>>> +	ppdev =3D devm_platform_profile_register(&fdev->dev, "dell-pc", NULL,
+>>> +					       &dell_pc_platform_profile_ops);
+>>> =20
+>>> -	ppdev =3D devm_platform_profile_register(&platform_device->dev, "dell=
+-pc",
+>>> -					       NULL, &dell_pc_platform_profile_ops);
+>>> -	if (IS_ERR(ppdev)) {
+>>> -		ret =3D PTR_ERR(ppdev);
+>>> -		goto cleanup_platform_device;
+>>> -	}
+>>> -
+>>> -	return 0;
+>>> -
+>>> -cleanup_platform_device:
+>>> -	platform_device_unregister(platform_device);
+>>> -
+>>> -	return ret;
+>>> +	return PTR_ERR_OR_ZERO(ppdev);
+>>>  }
+>>> =20
+>>> -static void thermal_cleanup(void)
+>>> -{
+>>> -	platform_device_unregister(platform_device);
+>>> -}
+>>> +static const struct faux_device_ops dell_pc_faux_ops =3D {
+>>> +	.probe =3D dell_pc_faux_probe,
+>>> +};
+>>> =20
+>>>  static int __init dell_init(void)
+>>>  {
+>>> -	int ret;
+>>> -
+>>>  	if (!dmi_check_system(dell_device_table))
+>>>  		return -ENODEV;
+>>> =20
+>>> -	ret =3D thermal_init();
+>>> -	if (ret)
+>>> -		goto fail_thermal;
+>>> +	dell_pc_fdev =3D faux_device_create("dell-pc", NULL, &dell_pc_faux_op=
+s);
+>>> +	if (!dell_pc_fdev)
+>>> +		return -ENODEV;
+>>> =20
+>>>  	return 0;
+>>> -
+>>> -fail_thermal:
+>>> -	thermal_cleanup();
+>>> -	return ret;
+>>>  }
+>>> =20
+>>>  static void __exit dell_exit(void)
+>>>  {
+>>> -	thermal_cleanup();
+>>> +	faux_device_destroy(dell_pc_fdev);
+>>>  }
+>>> =20
+>>>  module_init(dell_init);
+>>>
+>>>
+>>=20
+
