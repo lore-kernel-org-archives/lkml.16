@@ -1,121 +1,82 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177A61F2B90
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2562701D4;
+	Wed, 23 Apr 2025 21:57:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745445215; cv=none; b=bYoDzEwjcneTc0IS/AM0uTdnS08WzYJmOMhKQ5vF3wupk4E2SscCJ/AIy9AimvWJKECGaX2xwAej1X9JZE9sIOzjBUlTLO/X3jYabtuSden+gdx0y38gv+7J6/91gJZR5hfdeUFDsTlOKgROu3doJ8pEVkcSk9cCgtm3ly98v0I=
+	t=1745445445; cv=none; b=tHBQ8ucj98GhjKapOsnnqQOyH0b06IKGUh/wMddEKUTj/pBq/Xj2YTyIGVfRfy8B46AmUrjF8TPVPUR21Vpfj7mA/pr3OjNLlu9b0OFkCNbSsle298vsbLpCGYibKUHMY17wgF3bJF/WQUmfU4M/Fh+ufqY9naoLOiekAYRUIjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745445215; c=relaxed/simple;
-	bh=1VENgflOh3MnWBXlewKcXCnf2iJGOO5S/6TsTkBKJjg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sAKiwBE8+5AJXYCkmWrNxSrOjIK9oZBO4tDwZ+HXwnyi27DttwvNWFwAVW0c4dp9L6MdKSYTvO9yYchtUKKQwAnjmV72JK2EdWf9ZW0KZ/W6Wpo+XdVR/hTbB734UTID6+PMHf/2oVUsKcKqe2BmsikyZLBVVjimQY6rSd0Lcio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=w+I0yi0r; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745445445; c=relaxed/simple;
+	bh=LTR2hs5byCKEFUsgJ7ZJqVPMvJGrhL4/fkSVIHm6vY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VRWkDGGUDYXVYdvvUfB/sVM1BivetuQYANEZG5lP2FrkkQyKjun2b4YlLKdK7yGcBglTZk1vKw2FJD8zAxXWnbcbnObOunB2mqOvNwcoy4GaZeePpYBR/wtQyP0t8vEHBZwXGgu0K5peVz7J6+X8mWQ++p+bS8B18IgPurGpcEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ee4pCpT4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="w+I0yi0r"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-47e9fea29easo43311cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:53:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745445213; x=1746050013; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+wxOEPg2lzGGAAEWxyMxHF7QDi50JL+cgIXLanH/rmg=;
-        b=w+I0yi0rZZufAMzk4tikYMnTXTZf++GbQxgW+IxjOi5cx4TQwMsstWg0p0bO7Mrlw+
-         mxitFGHMdZvDFJ668oSWaAqR3oCstXTO7c7qiiWrg7wIL0jSThMu31JybgLVOttLJllW
-         pthV4qTsN9eW7jF6CXDBlF+4XNjlXxDHjtTxNz2faxldy4W67NIO66rKa7v6NRMvxy8V
-         XsQ0pWldRNWHyrvP6kuFgsBhV4AMSZEt/tpepJQCbYx3ZiK99GX6ipj3sip0Q/6G6NZp
-         +hKn4VIqvVqzXQvJvu0ZH2X94qkbaqdjs/6zOL2j1hYX6qi//7lwXIfp2qTO24e9wlqh
-         fciQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745445213; x=1746050013;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+wxOEPg2lzGGAAEWxyMxHF7QDi50JL+cgIXLanH/rmg=;
-        b=HY+iMzmd98ifATQGSZEPYfUjfAmKRirZunpyom4WD4soDlkYMDfxs1wDyGSf+xaj/f
-         Bwhuvl9IstOu47SG+8ZlZ+c6WD1c2CsSg+imHR2EtClgpJOx+VSm5vj9SFQpzCHvzFo4
-         gjHw3gboi7QB77L3mt1KYg83nLUFFjNJ2Brg4W8PHXyCvmqRYUWyytejCBb1XIZ+2gIr
-         puYMMFReT/KG1i10wlidwKM5CDmEWozZgUfXuOvT72JfZDB8ByNV/coPYFtQTSKq9y5w
-         Ykubt//IbcfFceMD0oIAbWz+zxH6RAbckeogwXk/GYhcpKqQcbhbn8bJiIznXsCNc/C/
-         mTeA==
-X-Forwarded-Encrypted: i=1; AJvYcCW5kacrffMyqe3aA5bbo6pZ9waOLW6jUfC1ddfj2/3TZ00lgzLq/Opz7U6HbrUcCJjj72avI1jA/pSxi64=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdffpFoSdo7r/I2IOGIF7OJDMp9ulQJ4NT2eP0q2sGRJ8y0fYO
-	/Q1ZcjgI6wco6SbxBAMD2cyLVmvypYnPhdIQFseTz0wVJSdVydlO8nRJM7c5QZ9o73hfhJxb/YH
-	+NdJEwJ2kY9oPjGhPm+jDuT1Tn10CkyKF313J
-X-Gm-Gg: ASbGncupesczZHAmF1YMB0MsrDqRDr5dKnfA10D1zM7DJl7nkleJSeYtpM4oJhg5tSX
-	SdhivdQb3JMb37KDBtSj25Mntpaop0jPZh7HKS307Z24aoiM1oPe63EYTfki7gJ6Jlqsjh5tfQH
-	ECJ60A4I0JPmnwJVLZJQPysnQw0EygkfvwaiGaqwBUORKwWuxre9oq
-X-Google-Smtp-Source: AGHT+IFxKf4JMsoiImdRCM9Gv2EFQUjIOz6bkJ3ODyiXPnj15zTxtQdogrWnY80WdKRS5ErJulohCQQ1CRC+j+mpd8k=
-X-Received: by 2002:a05:622a:1bab:b0:476:d668:fd1c with SMTP id
- d75a77b69052e-47e79cbfd5emr1736981cf.2.1745445212617; Wed, 23 Apr 2025
- 14:53:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ee4pCpT4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9781C4CEE2;
+	Wed, 23 Apr 2025 21:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745445444;
+	bh=LTR2hs5byCKEFUsgJ7ZJqVPMvJGrhL4/fkSVIHm6vY8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Ee4pCpT4JI6TxES3sauuCCzIWPDS+jtUV/VUeo6DUX5gr+IAFrQU0MHeA/J00Qp7W
+	 YIbhEDp8MMN/t8t/NIgvn+35BqbkG1pKEfHG9Oacz+BU5W7wj3LWUf5SrqwFH/mboh
+	 gG5ysWBFZYNfJHus3EinC5422Lq45C68v/Sfoo08zSE1QoTa6LEIQOQzOcYUrBd0eL
+	 334qA8IvSZ8CrbhGoUHFsc7jXsdh3HAUT9MVPYBSCqKagjqbD+PBAf62LSTHfkkgOW
+	 8LvAlLyYBrFb4xaS7AViTiHzLVnfOXEHtMFGLpx8DtPz1+Q3Opnp3MLnngpdK7y/S3
+	 K7o8oHgj6JCPg==
+Date: Wed, 23 Apr 2025 14:57:23 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Erni Sri Satya Vennela <ernis@linux.microsoft.com>, KY Srinivasan
+ <kys@microsoft.com>, "wei.liu@kernel.org" <wei.liu@kernel.org>, Dexuan Cui
+ <decui@microsoft.com>, "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>,
+ "davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com"
+ <edumazet@google.com>, "pabeni@redhat.com" <pabeni@redhat.com>, Long Li
+ <longli@microsoft.com>, Konstantin Taranov <kotaranov@microsoft.com>,
+ "horms@kernel.org" <horms@kernel.org>, "mhklinux@outlook.com"
+ <mhklinux@outlook.com>, "pasha.tatashin@soleen.com"
+ <pasha.tatashin@soleen.com>, "kent.overstreet@linux.dev"
+ <kent.overstreet@linux.dev>, "brett.creeley@amd.com"
+ <brett.creeley@amd.com>, "schakrabarti@linux.microsoft.com"
+ <schakrabarti@linux.microsoft.com>, "shradhagupta@linux.microsoft.com"
+ <shradhagupta@linux.microsoft.com>, "ssengar@linux.microsoft.com"
+ <ssengar@linux.microsoft.com>, "rosenp@gmail.com" <rosenp@gmail.com>, Paul
+ Rosswurm <paulros@microsoft.com>, "linux-hyperv@vger.kernel.org"
+ <linux-hyperv@vger.kernel.org>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [EXTERNAL] Re: [PATCH v2 2/3] net: mana: Add sched HTB offload
+ support
+Message-ID: <20250423145723.7ff12e1a@kernel.org>
+In-Reply-To: <MN0PR21MB3437359D91F059D83AF929F0CABA2@MN0PR21MB3437.namprd21.prod.outlook.com>
+References: <1745217220-11468-1-git-send-email-ernis@linux.microsoft.com>
+	<1745217220-11468-3-git-send-email-ernis@linux.microsoft.com>
+	<20250421170349.003861f2@kernel.org>
+	<20250422194830.GA30207@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	<20250422171846.433d620d@kernel.org>
+	<MN0PR21MB3437359D91F059D83AF929F0CABA2@MN0PR21MB3437.namprd21.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-9-surenb@google.com>
- <CAEf4BzabPLJTy1U=aBrGZqKpskNYvj5MYuhPHSh_=hjmVJMvrg@mail.gmail.com>
-In-Reply-To: <CAEf4BzabPLJTy1U=aBrGZqKpskNYvj5MYuhPHSh_=hjmVJMvrg@mail.gmail.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 23 Apr 2025 14:53:20 -0700
-X-Gm-Features: ATxdqUFczXuJ3MtAVzm6hOXwKgR46ihWvXXCSbcxhMDhIph3juTGEiPJwzlaPbY
-Message-ID: <CAJuCfpGQPO5AqiZxfb9JYUqd5suS2C+qWt-_acjU0zFf-g-eGA@mail.gmail.com>
-Subject: Re: [PATCH v3 8/8] mm/maps: execute PROCMAP_QUERY ioctl under RCU
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, 
-	lorenzo.stoakes@oracle.com, david@redhat.com, vbabka@suse.cz, 
-	peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, mhocko@kernel.org, 
-	paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, brauner@kernel.org, 
-	josef@toxicpanda.com, yebin10@huawei.com, linux@weissschuh.net, 
-	willy@infradead.org, osalvador@suse.de, andrii@kernel.org, 
-	ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Apr 22, 2025 at 3:54=E2=80=AFPM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <surenb@googl=
-e.com> wrote:
-> >
-> > Utilize speculative vma lookup to find and snapshot a vma without
-> > taking mmap_lock during PROCMAP_QUERY ioctl execution. Concurrent
-> > address space modifications are detected and the lookup is retried.
-> > While we take the mmap_lock for reading during such contention, we
-> > do that momentarily only to record new mm_wr_seq counter.
->
-> PROCMAP_QUERY is an even more obvious candidate for fully lockless
-> speculation, IMO (because it's more obvious that vma's use is
-> localized to do_procmap_query(), instead of being spread across
-> m_start/m_next and m_show as with seq_file approach). We do
-> rcu_read_lock(), mmap_lock_speculate_try_begin(), query for VMA (no
-> mmap_read_lock), use that VMA to produce (speculative) output, and
-> then validate that VMA or mm_struct didn't change with
-> mmap_lock_speculate_retry(). If it did - retry, if not - we are done.
-> No need for vma_copy and any gets/puts, no?
+On Wed, 23 Apr 2025 15:27:16 +0000 Haiyang Zhang wrote:
+> > > We selected tc-htb for our current use case because we plan to support
+> > > multiple speed classes in the future.  
+> > 
+> > Which net-shapers also support.  
+> 
+> Thanks for pointing that out...
+> But for easier usage with existing tc tool for customers, can we still
+> use tc-htb offload? Does using tc-htb offload for speed clamping break
+> any coding convention or API specs?
 
-Yeah, since we can simply retry, this should indeed work without
-trying to stabilize the vma. I'll update the code to simplify this.
-Thanks!
-
->
-> > This change is designed to reduce mmap_lock contention and prevent
-> > PROCMAP_QUERY ioctl calls (often a low priority task, such as
-> > monitoring/data collection services) from blocking address space
-> > updates.
-> >
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> >  fs/proc/task_mmu.c | 63 ++++++++++++++++++++++++++++++++++++++++------
-> >  1 file changed, 55 insertions(+), 8 deletions(-)
-> >
->
-> [...]
+The only spec here is that the offloaded version is supposed to look
+like the non-offloaded one. I really don't see how you can claim that
+static single class HTB is a accurate offload of HTB.
