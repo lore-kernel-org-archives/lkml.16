@@ -1,136 +1,156 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 227F2264614;
-	Wed, 23 Apr 2025 02:57:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9F74430;
+	Wed, 23 Apr 2025 03:01:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745377045; cv=none; b=NZtw8UeQ1uLT4xSTo/OH1L8UOeONZCdzJiTABft/Jw8Mq4bALXcEVtkjPMe2u/mFRnWy+x8xJJVHc0nFs0F1LtkAik0WhZ3TuiygCRyA2O1l2DSlpgCRqKdgLdi5B3Wfz9PC8d4pRpyFBtCsz7yarTpRyUjmhE7X9WaJB4FAZJg=
+	t=1745377301; cv=none; b=FFMfv7asWkUtOWRIQiNGePi+OJnBc/M3LLl+5DTo3VOhDIQuxL1ECHkhhfb0K5G7W9jHDFq/Vx11mg7lNZfJoW4VOnOERMFKB+cuiVWOl+aKcSrzeKvkr+zmldSzCrWKY/S0Cn11p++M+xyuKmQjQaRZsIZbLg3ddUvwXSZ0OGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745377045; c=relaxed/simple;
-	bh=g/gbn7A6cZ+FC1ptKgjenHq9YU3nzme2+BFBotu9TaE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SAT/E5tIdMOWQliPPIBC5hXrlKMO/D9MSjTfU/Rpk2NVQp7LY6i4wrm5+2VxAhXNaExA4LVgohKdkVKuF/26HG00TViKujx+0zq6tDq4ZBBA20hFNLJNua9DTQo4YxbtXW7Asa1EIam1/o6LQQtPkRoKf/FwEK+0y1l+ZG/WJr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jSmmJD14; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1745377301; c=relaxed/simple;
+	bh=BAItGtMvUQMaGArBydxBPtvmh5HWfBTAHeLnEo7Qhhs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CprrXcwj4W04VTgJuBCz8fq/X/RR+zeX7uuwF+lcxiFyE4RVDgkKUq77VCCDi6JddtsSRvEMz2GTtuaQP2/SQIYcpWylQD7SaIoIeXFjaQrYnxeR0n2ldp/yar2s0mn3xUNnnzYLQe7Q/v8IaZqlVVbdiUqQqQmHrsm3q8NPLmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MLIb4Hxx; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jSmmJD14"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-736c277331eso510809b3a.1;
-        Tue, 22 Apr 2025 19:57:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MLIb4Hxx"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af548cb1f83so5685919a12.3;
+        Tue, 22 Apr 2025 20:01:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745377043; x=1745981843; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yKWchauYEfB2oukRGA1LcQGAR3/VAz4QEa9G/xeNelk=;
-        b=jSmmJD14uk+Exytak/RxfcJpfVhF49Iemf4qR1vD4voCe0Vab9MjIAP7FEF8pAO6aq
-         PXFxodJjbxwODucnt+N0X+cXKH0weKCIsUPauZjVacay+Sxkn5fYYjPI9ihk+VqrbZtx
-         7hSWxR6SZEBM5jBIrx6Qy3t10ybP+BkzErOCmPI2ghf3iG8SsT0kUNrPEseQOLsgQiAb
-         HsxKmVQjrk4EM3r4mQHJwQ9Ev/eu6mfydLzpL6dGVNJ1EqbMWUuRVpmr26pXjE2HbxYC
-         MHrqdPl8Cs7I/KLOHyVi60fVVfwTE6FkbP4LUBYRjgFp0vN620OpFoJ5Kmlq9qw0zw7B
-         0qVA==
+        d=gmail.com; s=20230601; t=1745377299; x=1745982099; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LwxzT9QLt6IshzEG1Tru0bmv2OjKa0OhkfKjCsQ9V4c=;
+        b=MLIb4HxxYhlFfDsB0poPcCjYRrXdaw1dw5tRRDwe+wcaoqqVFnpUTCyDh/S9nLUHAJ
+         e4ZSM9YTgbMOWlrHBgbHCr5qD0UxHRygNq4ZUVRDsYGb8ZkLr312Z3+4+9vLKlwW+iCX
+         CnHZVMuythHRJ35LMo7zAOUjqMe+VE05M6DhSEbqnI0n9KYsJaYbLXrpbLmssxIim2db
+         YUEYMISwRN5AXfC49Lvp8HeECsQNOWLief8eIeaboYrf25hiFvDQv+6tBaA/nfMDZUKF
+         TBMPSJPt5htRtf5GbITrX+MjUg6OuRMqQRIfVNNSYdPLgRDONjRakVH5+BETcETrjynk
+         Pr5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745377043; x=1745981843;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yKWchauYEfB2oukRGA1LcQGAR3/VAz4QEa9G/xeNelk=;
-        b=qBGMQcTVfEozJdSt9YcdAZUbJZSGyINCkRi60HiksBnF39D/iZ54TpUbuMV1e30ca7
-         7joosY1p539Dv3dCExdNxTNzTfMBMSlyRm+2CbLmXfUFl3aR9EqXnHjORlxu3KIDUADk
-         sgRBOB41FLnbAsgaha7GVAtQp4JubmN6j7t5WkKM3kEzNA7jIs3aCmgKraDW4V3e5lrp
-         8UC05vp5ovyiL08Bo/DsCDNw4/EfQZebUGy1I4EGRlLBpq7GjFO3Sk+7W2tTvKpWBeID
-         Q5x8S60OEDNrZeD75SQe3vAYZ/G0CjeIY+D2rezUDVPf0UTKhgMgJcGJIhRAc0R28QKs
-         BdhA==
-X-Forwarded-Encrypted: i=1; AJvYcCX292DpeMQbWvL/uHHZwFI/TTS5zqllouC6WiLA7a8QNs2iOsL4a7xuhUDIl0KZGn9eg6itBzN8LUVEk6A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxWgvQO4Cqkn7PcmCkHPYCc8stEM9RK1A5AK2X0yaR7pIuhLqRk
-	b42g8HMelZY6gHqZtYKHiMG+7Wdfn9uCJ7JV6TpKcnSmsMgDvKtUlRUR3UmC
-X-Gm-Gg: ASbGncsi8AGBLclXsnwmigR0Og0PCNbbdJI0Q1vH1IkREEr/h4y4Hoo9sDwnQ6t++c5
-	PJK5onR05nEn+H2wbwwtgA4qjhvn2tThTOi97IP3/HsHnk4UeALPw+hUCXFVwyi7u5+y6wdHcEB
-	GL70zr3QeHmK7Dc1aAFyLtcSsf/8rHOFxWcaUaow8fctOvpKCIBW28qIOTvAeZKt7g+iuw6U+Xe
-	lEsGAdyz0FEKw9M9WU8PMmIyWlBEGkcxXnvmtj0fWnWV/UkmpGLt0YJmkmRWFiXPkgi5nNJIoiu
-	zg8D+QBHhF3F3G71Zk9y4/OmbVRECfhrCH57vMslrfTSH+sTNNCzAJbzPeSVMb6EI50w+1v18AY
-	IgSZKZm7+Oqih
-X-Google-Smtp-Source: AGHT+IE33MRUAYYmMd33jJ5efewE5f3KJ0s+kNpk5dooQ3cQarABcgDINtWHATMZoSWtmHFLqMfazw==
-X-Received: by 2002:a05:6a21:501a:b0:1f0:e2d0:fb65 with SMTP id adf61e73a8af0-2042e55d3f6mr1235966637.2.1745377043371;
-        Tue, 22 Apr 2025 19:57:23 -0700 (PDT)
-Received: from ?IPV6:2001:56a:f6b2:4a00:7181:6803:4a12:f331? ([2001:56a:f6b2:4a00:7181:6803:4a12:f331])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8c023esm9436170b3a.34.2025.04.22.19.57.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Apr 2025 19:57:23 -0700 (PDT)
-Message-ID: <1b914523-5b26-4fc0-b5c5-4b2f90ffaa3d@gmail.com>
-Date: Tue, 22 Apr 2025 20:57:22 -0600
+        d=1e100.net; s=20230601; t=1745377299; x=1745982099;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LwxzT9QLt6IshzEG1Tru0bmv2OjKa0OhkfKjCsQ9V4c=;
+        b=MVfi1MvA1NTWyTRppUI7nF2nll9D1Wo4q+0eFvC63zhL2tpg0xHerSx8cZrUEo4K5G
+         VXyHXDmMuGILEalKAHqcB8NUXSqJYUb/To49oV3n78pcg7BQbcfZ9BeVhPG5LJVlhEQK
+         q82YAqt0ow9GwsEDvkLkFvC4dpic5T+FA8aPNd78CpnAr53SbD8mldAKVBw4UrRu4lqe
+         WgTX0/8JoJpmcS9kezHDcGZJ2ow2N7d5UVoINU0OgShIKThLfvopyZq77vtf86NBcBFv
+         ACJek6m/mSf9VeoSc61vC44TGJ/IUPJqXF9ld6kePrv4vdvTidhiW4yKY7NW9r7/5nJT
+         owPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEpsqZ8aB2agHuMnYBoNPNi3QTHRgJTIk7tUuPHL1mkfI4pYIAA3qkwyrUb7evgNMetWnRLgGR5DFAiYli@vger.kernel.org, AJvYcCXcrGRDGO2g5LghPFnit1mjSZZJeA2JxgwBTX+daR5tTuAVIPIXCdeiWhHlpqLv6j6f8XuXJJR6Mwo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSbWtnbJsvBbdjt3foxFat/KBlp5wTKfPAr0WloFWpmXEPrJ/0
+	/pARVR9EruhUlz9lTh6nIABV2+yv33C7i46NLLUtMZXogQck2HxE
+X-Gm-Gg: ASbGncuH+F1x7hdxE6n3Kt6DYCdgJNdKQhzKKoT5JHyIPBOu7sfWVOne+Eg0SGyugHi
+	kXnuTg0CLRHtblKXhRnlu1N/jNH9b85zrWLV5r8k7kfefCwk7axZXuqFBqfNb4+tGcbelUVobsn
+	cVo2CgJD45RTQRuvXSL/BULM8HuAscwtMk/7+M448gT/14M8V0PN/gq2tbQlvV65Ew/ZR4VnhfI
+	ylAyCNQak+aAbmJqxS6VNrNW8ddow9uvLTUQTVOKFhi9ZPrVv9PqLJ46kq2sBEoU65UIfR/rMIY
+	Nif86kTBRRXJr9BYk+BmPe6V1qadm4y1odUDCziw
+X-Google-Smtp-Source: AGHT+IG7j5f5kDqzRaacdMWuwEx5CcG85GeEJmOYeCzHIk4y+xMtnsBehjvQW7y9PJSJi4MwyOSjcQ==
+X-Received: by 2002:a17:90b:3d09:b0:2ff:5ed8:83d1 with SMTP id 98e67ed59e1d1-3087bb6d268mr23641556a91.19.1745377298665;
+        Tue, 22 Apr 2025 20:01:38 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309d3472785sm1573470a91.0.2025.04.22.20.01.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Apr 2025 20:01:37 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 300974209E47; Wed, 23 Apr 2025 10:01:34 +0700 (WIB)
+Date: Wed, 23 Apr 2025 10:01:33 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Jean-Michel Hautbois <jeanmichel.hautbois@yoseli.org>,
+	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>
+Cc: linux-leds@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Documentation: leds: improve readibility of multicolor
+ doc
+Message-ID: <aAhYDY2DBxFW0yI_@archie.me>
+References: <20250421-leds-doc-v1-1-9a32df7fc6f4@yoseli.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] cpufreq: acpi: Re-sync CPU boost state on system
- resume
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Lifeng Zheng <zhenglifeng1@huawei.com>
-Cc: linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- linux-kernel@vger.kernel.org
-References: <cover.1745315548.git.viresh.kumar@linaro.org>
- <d8651db6d8687a0e37d527267ebfec05f209b1b7.1745315548.git.viresh.kumar@linaro.org>
-Content-Language: en-US
-From: Nicholas Chin <nic.c3.14@gmail.com>
-In-Reply-To: <d8651db6d8687a0e37d527267ebfec05f209b1b7.1745315548.git.viresh.kumar@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="SYRXAiKrxoZNUrDh"
+Content-Disposition: inline
+In-Reply-To: <20250421-leds-doc-v1-1-9a32df7fc6f4@yoseli.org>
 
-On 2025-04-22 03:53, Viresh Kumar wrote:
-> During suspend/resume cycles, platform firmware may alter the CPU boost
-> state.
-> 
-> If boost is disabled before suspend, it correctly remains off after
-> resume. However, if firmware re-enables boost during suspend, the system
-> may resume with boost frequencies enabled—even when the boost flag was
-> originally disabled. This violates expected behavior.
-> 
-> Ensure the boost state is re-synchronized with the kernel policy during
-> system resume to maintain consistency.
-> 
-> Fixes: 2b16c631832d ("cpufreq: ACPI: Remove set_boost in acpi_cpufreq_cpu_init()")
-> Reported-by: Nicholas Chin <nic.c3.14@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220013
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/acpi-cpufreq.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-> index 7002e8de8098..0ffabf740ff5 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -893,8 +893,19 @@ static int acpi_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	if (perf->states[0].core_frequency * 1000 != freq_table[0].frequency)
->  		pr_warn(FW_WARN "P-state 0 is not max freq\n");
->  
-> -	if (acpi_cpufreq_driver.set_boost)
-> -		policy->boost_supported = true;
-> +	if (acpi_cpufreq_driver.set_boost) {
-> +		if (policy->boost_supported) {
-> +			/*
-> +			 * The firmware may have altered boost state while the
-> +			 * CPU was offline (for example during a suspend-resume
-> +			 * cycle).
-> +			 */
-> +			if (policy->boost_enabled != boost_state(cpu))
-> +				set_boost(policy, policy->boost_enabled);
-> +		} else {
-> +			policy->boost_supported = true;
-> +		}
-> +	}
->  
->  	return result;
->  
 
-The first two patches in this series appear to work as intended. The boost state (both enabled and disabled) persists across a resume from S3 suspend.
+--SYRXAiKrxoZNUrDh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Nicholas Chin <nic.c3.14@gmail.com>
+On Mon, Apr 21, 2025 at 06:48:10PM +0200, Jean-Michel Hautbois wrote:
+> +.. code-block:: console
+> +
+> +    root:/sys/class/leds/multicolor:status# ls -lR
 
+The equivalent is ``ls -lR /sys/class/leds/multicolor``.
+
+> +    -rw-r--r--    1 root     root          4096 Oct 19 16:16 brightness
+> +    -r--r--r--    1 root     root          4096 Oct 19 16:16 max_brightn=
+ess
+> +    -r--r--r--    1 root     root          4096 Oct 19 16:16 multi_index
+> +    -rw-r--r--    1 root     root          4096 Oct 19 16:16 multi_inten=
+sity
+> +
+> +..
+> =20
+> <snipped>...
+>
+> @@ -71,16 +79,28 @@ may want to dim the LED color group to half.  The use=
+r would write a value of
+>  128 to the global brightness file then the values written to each LED wi=
+ll be
+>  adjusted base on this value.
+> =20
+> -cat /sys/class/leds/multicolor:status/max_brightness
+> -255
+> -echo 128 > /sys/class/leds/multicolor:status/brightness
+> +.. code-block:: console
+> +
+> +    # cat /sys/class/leds/multicolor:status/max_brightness
+> +    255
+> +    # echo 128 > /sys/class/leds/multicolor:status/brightness
+> =20
+> -adjusted_red_value =3D 128 * 138/255 =3D 69
+> -adjusted_green_value =3D 128 * 43/255 =3D 21
+> -adjusted_blue_value =3D 128 * 226/255 =3D 113
+> +..
+> +
+> +.. code-block:: none
+> +
+> +    adjusted_red_value =3D 128 * 138/255 =3D 69
+> +    adjusted_green_value =3D 128 * 43/255 =3D 21
+> +    adjusted_blue_value =3D 128 * 226/255 =3D 113
+> +
+> +..
+
+Are these adjusted values intended to be part of previous block on brightne=
+ss
+status? If not, I'd like to interleave these two blocks with "The adjusted
+values are now::".
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--SYRXAiKrxoZNUrDh
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaAhYBwAKCRD2uYlJVVFO
+o0z8AP4zTmN5lD/WuS5ZzbFW201LkvpK5+CJh1BNpRZUknJkqQD/S1nhav8VoIVa
+yAxrs+a+kuWrmf0+DlDvyPHyT9hgMAo=
+=ETle
+-----END PGP SIGNATURE-----
+
+--SYRXAiKrxoZNUrDh--
