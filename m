@@ -1,117 +1,135 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546AE1F4167
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:20:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087FF201269
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745410845; cv=none; b=HL3Gs7oZ1j8TA9EDsT3BfXqfA2I5zmSWh9JkL9y6YOy0HBiYeO19858FqRX2g8fYQDXupcF5uSVhoE1d4MY+BX/AAYH7FTdKaS/8R3cvKPMfA8YUPZLNsmemyanOaktAKL05tUxfwInPdI0iEQvDOZhkhx4tmUPEAAPz3XQ2VHc=
+	t=1745410909; cv=none; b=BSAs2BqFGZD9yXOsQQd6aUJ1ehqKZEwQ2qp2bybYaGGOGWzQx5yGAJxYJj5RXI2nIfAwNoTxze0ubLa/iilqK+0lnLBoOQ1ma5aQi0LS+Dd+O0j/oa//oyHb1SFCwD5o827v6ZWU13MNfJ9ZjaM8MPWPLU2mHaiU946qSnGFJCI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745410845; c=relaxed/simple;
-	bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KxuWn3eCwKaDoPrTyPcZwIa/MG9pYiUCrAK8IzdwtKzXBP1/Za5VviGe71BeEvbDjTOdRNNKSlv1I5v7WxTQKDSyjy5MaGdE6hg/GUSa8oM3n3+zTMTg78KzUYGtkKyMYF26mMYRyOOSSCOTV5FJyrQ88AS00GN5BC+dfFgKcZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=loNoDGht; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1745410909; c=relaxed/simple;
+	bh=yUlmQngLWM95uTbYGzUfTXaf2KiV+RckgPCq0lwW5TA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CtwU4WMToVRWmMJGuu5RDgHYxueLWhwm54oS4KrwrELcDks0u00YKQ5YZSFznyslmBBt4mqEzSnssV9lZrGRrITZsitREFu+x3jk9K3qAcOVQj5YcuPrdtsRQHdHDaDGPA2TJHtfgUrazZQ6dfk2+OJnqL8XiADxlEoTYagU5PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=iEfdqrJv; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="loNoDGht"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30f30200b51so71024081fa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 05:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745410841; x=1746015641; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
-        b=loNoDGhtPFDwLtyn6lTEysmHBdvdLLrqHgGNyAVB6bHomhivdQMs4bkrqjHcKuvfpi
-         8FrqcxSArQ4hHI0A1wsttMEjR4nbfK8Y2Ayq503riRwPj6lnMaPKU9FTzot9l4LoKCHj
-         E0Ma5k+UHYAcj0IJHnnMAoZ9W6D/JTLJLWWlFkHqC48914M6ebbd/ZY1JTRTlyDinAlG
-         CiIPRbFQle5xk27Js3BWki9878KnDuOfru2Mew0lqdd6Fu+Y0cR1EF+V8OIZyYlLq7VP
-         NJ5MXPgxDJZrDSl/PAn03cjudkNYlhPI00vwFWMqY2fKKA2NAUW404A/hZRdkZ0RJ7Ta
-         LxHQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="iEfdqrJv"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAbiu4024110
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:21:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yEy3BB74MydlFE5SvSBjX4VOfZhaorZTjCn7mz9RhEM=; b=iEfdqrJvitZsTSxv
+	xsGCnrcjXPQ2IcWoKVAnGGCLzDRIk4aNsh8+XceLEgtJnBHzppKtkd+PX0XgPy+a
+	/OkacEzWoTkABAA44fkCf4sbZ/umnbmaBjr7/E8pFzFzwflwenKcY3iHtwqUFxX/
+	yy0NRf1fuFuESEyfU1CJv+pyi8cY2grdbFYwBsVJFg5uFktiiZz27uPCFdI8S4YY
+	y7xfEZfaona7VSXAXKXXC85waLtsZlL8PLEC+e08Ort8NOFMbtsJFzywu0Plzmlh
+	rZnTjZled51CzoiAENbgJamTBVAMIL7HsfGVDN46I1QOA/BOXBzkQJ5GUysx/yKR
+	IFpN8w==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3a2mk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 12:21:46 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5af539464so141167185a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 05:21:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745410841; x=1746015641;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JWIAObcKDCSS5jaLNcTcz91pENIuWUJrYuOG5yyP5uQ=;
-        b=XIIRMhj9MdodjggtG9QnXpf6wUMNCLS6d56h5Cgg9HWURN+apgllI31spKWNvnXBmh
-         dwsKqlzbh2cEE0CoVS1CF0aWItba4qQXPeODWaF1+GoVQjaJJsgu1hRGLIqj4phNUhuY
-         xC5ojTb6NfRER2D7tK9Ve86Pp9dKbXdDlBxvmlBwROlleLldcG6o2iOSMvbS4Lq2/hC3
-         t6OQa/jN9wiVmacTbd3S9RrJca8FqlM0T/41Xi2r7a72yyWz7Vx0nP12vDhmHjV2UHYj
-         cSxNGlxk9+Ir5xi34yNH69WAxmIIJX3o6Cc2mpVqBdlo8nyuQ14V1oZjS1yB1bJ6Uhem
-         99oA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZ3HfoDOoVE4t0nADmeDigIJ/GGooTXOT7r99nj8x9qPbuRNgYfBQH4k2fdNrgvZpQXJiPsHMtwOst4mM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwDEprI0irTLnXiatMYm92sW+MS/VQSSbJkYx8p5tVtbhmlMJWY
-	MG5EImQfboVRyt11rtxEw0PCAGllGwlQVP7+juTGYwC4hNvc0eoK5Qj/PMZ6QykVW0Q3waJmfTE
-	4I8dIolrPxxkuD1lhL+B7zRfxESmvJxXtPfIZjQ==
-X-Gm-Gg: ASbGnctAXabAb7n+rIvbo9RvkA6AfrjooPkJffioDzhnEC8gxM59TnCHHL2Nk6M1mJo
-	3sG+dO7dZ8ucXCVwYIvB/B4HU+TrHbnz3/e9YkxXGlbbAmKyZ2VNLQSPJTBItBx2A2H3EuPO4bK
-	lvwnDN62e741tcyYFW71bWQKss8TIVp2tS1mj/2lpytGuwv08wcc+rEG9u5ubw07d3
-X-Google-Smtp-Source: AGHT+IHdOy6Vd80a71VsBDq9vq4NcDgqMFfcNVJIb9jbOrQ25R+2kyWaeho7dLvnMD7PoIkydcR5flY29jmHWUrtlnI=
-X-Received: by 2002:a2e:a814:0:b0:30b:971c:96e6 with SMTP id
- 38308e7fff4ca-31090544994mr65437581fa.26.1745410841172; Wed, 23 Apr 2025
- 05:20:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745410905; x=1746015705;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yEy3BB74MydlFE5SvSBjX4VOfZhaorZTjCn7mz9RhEM=;
+        b=X/7UkS6ObbtrYL6m+S5Z08EOvEstzwTln4wHEMvL5FumhuE6NaWEyjTN46XQgzj3vS
+         z6TCn30sUE33zfLu1EBLxCNRybRuWXXPGcRKaBM/J5IpHAA0FeneIaQCMgKitHed2WJF
+         wC+vz4WDhXpHCK1xlITIQK3f76l/H/FQ8ECGCmAMfOgKMF7coz0bp11kI90+lH/jyZSh
+         lTPIFfzH36nTJdxRUKjYt8QDaZGvx61Km3BP3kHnKubLFLsEQqdMKcx4PN1m5FSXkn3A
+         dKnileBxLDVXr7LV8OBb/ZFl3cmrsMnHDZgvRXCwkl80WEZRxJ4VK461K6n39qwiJnyd
+         egAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWq0EQwGTIvtQ0M7kZH4TxNTsynN2qL/WWZdLNuzl1jAQt+3LRXopS5y5Wm390xRsuqAZhwXdkExggZE+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzH2HGybw1d1vI8FpD61Fh+bvjVcNkwhpNMLq7/J3kaWgbZWAJw
+	7FbWBWeYiCIupBn17XPTJjGklwYeNxQ6R1MWlK2kZE2nSECwnZ0jlO63imibZIXwFaZcjmx4EMR
+	MR7X6t0GfysCFGHJ4/otru9UKWxMy/raV8Smc8wSqjP34fUzyBEZECLLFZa7gb7M=
+X-Gm-Gg: ASbGncu2D7As/tK5BadQUNSHhdwGo1b9CBtBEf4Hp9NYLIc2kdB6puYEa0AfdGl/Mp3
+	oXel3S7m9wIfa40HLgyzwkB72ZsWBWpH91KBvMp+yl406YutWbOD466g3qLKCVFl6n8RTVLJwz7
+	vYUz3Bb8bXklu8eBOh7F2I7Tv/EgHIhJHb9TK1cqUsnYvaxj9RGQPnjDUwMifuudN8ZrJKk78OJ
+	Ghk4H05sIv59ikLrrYicuJ0T8Dx+LJtbDQNyG8+8/yz4cDc7Bvb0XW+1oHJkuvNvi26vWnRBzYc
+	XUjACPH+Vp/fZSUnhby3VijJSI9iEn8yMy/n7c3Kb9uB0eZEk7ogHj2KSuTVwLhU9IU=
+X-Received: by 2002:a05:620a:318f:b0:7c0:af16:b4a8 with SMTP id af79cd13be357-7c927f6f902mr1108010985a.3.1745410904999;
+        Wed, 23 Apr 2025 05:21:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEXBbDZMwLarl+zI6FrhIiRzh9IB3F9PW0wtQy5FUQ3y8e0F2Y8/CQ5HRXpH8vW397/Zsevcw==
+X-Received: by 2002:a05:620a:318f:b0:7c0:af16:b4a8 with SMTP id af79cd13be357-7c927f6f902mr1108007685a.3.1745410904673;
+        Wed, 23 Apr 2025 05:21:44 -0700 (PDT)
+Received: from [192.168.65.183] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ec4c622sm786854066b.44.2025.04.23.05.21.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Apr 2025 05:21:44 -0700 (PDT)
+Message-ID: <ec7b53a4-0321-44bb-938d-0cb955e64397@oss.qualcomm.com>
+Date: Wed, 23 Apr 2025 14:21:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401-gpio-todo-remove-nonexclusive-v2-0-7c1380797b0d@linaro.org>
- <c8ca3c8a-3201-4dde-9050-69bc2c9152c4@sirena.org.uk> <CAMRc=Mcq9yag6yBswhW0OJ8MKzGBpscwo+UGpfCo2aha93LzXA@mail.gmail.com>
- <846010c0-7dc1-421c-8136-9ae2894c9acd@sirena.org.uk> <CAMRc=Mff0TkeiHbM3TAJLJ2HYU_nnPFUpUjbWsdCnW6O4E=+gQ@mail.gmail.com>
- <c3bb82f9-5a2f-4a14-9726-f3e10bf5d427@sirena.org.uk> <CAMRc=Mc_nXwvj_9w6w8cB3K58AVLHBLCV+MOO1z_6y+uuT86Og@mail.gmail.com>
- <CACRpkdaBNVyXUwErHTtGBnUjh4+6Ojb6fu9M4E7LnRCu_Oovpg@mail.gmail.com>
- <CAMRc=McFBAG9Gi3UBfsdoQ=78fL3sTK+ZMToXWGF=KOw6zwPiQ@mail.gmail.com> <CACRpkdaKBDyd44xPA_kBxR9HVFqfLgcSnd1UDHumyB=m5-B3xQ@mail.gmail.com>
-In-Reply-To: <CACRpkdaKBDyd44xPA_kBxR9HVFqfLgcSnd1UDHumyB=m5-B3xQ@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 23 Apr 2025 14:20:30 +0200
-X-Gm-Features: ATxdqUFPfchZIqBJZBy7vOjihOhPD3Ut0RnZdl-eHYA4dR5GVziVhoOlmDg3B_M
-Message-ID: <CAMRc=Mc9fMrx0bek1mE2kpoxXVgD7GATaeQWZnL1eDW5oZ-FTQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] gpio: deprecate and track the removal of GPIO
- workarounds for regulators
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/7] drm/msm/adreno: Add support for ACD
+To: Akhil P Oommen <quic_akhilpo@quicinc.com>,
+        Rob Clark
+ <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Maya Matuszczyk <maccraft123mc@gmail.com>,
+        Anthony Ruhier <aruhier@mailbox.org>,
+        Dmitry Baryshkov <lumag@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250419-gpu-acd-v5-0-8dbab23569e0@quicinc.com>
+ <20250419-gpu-acd-v5-1-8dbab23569e0@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250419-gpu-acd-v5-1-8dbab23569e0@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: _fFtzIiVKHzypuGiYTlrpqbBMzAIP0av
+X-Proofpoint-GUID: _fFtzIiVKHzypuGiYTlrpqbBMzAIP0av
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA4NiBTYWx0ZWRfX9Zk937dLwwxB QrlEQsHLCipRt724+rKZXJTJG95tAkZOTeFqnhR2OxTjQqNft7sBXidF+rD30ZeAWHuEmpPg39o ohluW7BDhB5rBTB+ZQ8dE+Z8QopWTRixuuurzKm3zRlQqZroHW1s73NyjdzVQQwW6Vr4TxsdUH7
+ 3F+eHVk+WUWnnU4kM8hpSR6GoPCo0Sd3ES2R6DES6jI6zvxQEIaQTFxrfvWAk/mHEuGgWnEgy1i BrnKIEHxUfWAQJHg3Z83IuoPcbJIHHCYgofC33cXBzHlJAihRuypZTK50ggUeEnuIvzhV2L9l+V KWEG/5KmwMY9SGibbzL6wZe4F+1u6avekgdD5rJFz4bn4ELUbCQYOL67+m9K9ImkbApDfzg33zr
+ YTfD/o+HhqTVeUj95hBMIkd2ArfNKTcslT4czKRHq0//1V0gqgKl2Nk8grpcOAM/qsbKfcwe
+X-Authority-Analysis: v=2.4 cv=Mepsu4/f c=1 sm=1 tr=0 ts=6808db5a cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=pGLkceISAAAA:8 a=b3CbU_ItAAAA:8 a=EUspDBNiAAAA:8
+ a=rNhkmTvpKUHMLWWBcFsA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22 a=TjNXssC_j7lpFel5tvFf:22 a=Rv2g8BkzVjQTVhhssdqe:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_07,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=960 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230086
 
-On Tue, Apr 22, 2025 at 2:05=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> On Thu, Apr 17, 2025 at 8:57=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> > On Tue, Apr 15, 2025 at 11:33=E2=80=AFPM Linus Walleij <linus.walleij@l=
-inaro.org> wrote:
->
-> > > There are precedents for this type of semantic IRQF_SHARED
-> > > is used whenever two devices share the same IRQ line,
-> > > and that is something the drivers have to specify, i.e. the
-> > > driver has to be aware that it may be sharing the IRQ
-> > > with other devices, and whenever it gets an IRQ it has
-> > > to check "was it for me?" and in case it was, return
-> > > IRQ_HANDLED else IRQ_NONE.
-> > >
-> >
-> > First: this flag has existed (as SA_SHIRQ) since before git days and
-> > could be considered legacy. But also: it's a bit of a different story
-> > as sometimes you get an interrupt and need to read a specific register
-> > to check from the status bits whether it concerns you. This never
-> > happens with a GPIO so I don't think it's a good argument for this
-> > specific case.
->
-> But at the same time Mark describes that drivers using a shared
-> GPIO cannot really be opaque as to the status changes on the
-> GPIO line, as it may or may not need to update register contents
-> depending on whether the line has actually been low or not while
-> being disabled. Maybe this can be fixed by a per-consumer status
-> flag in the descriptor such as bool was_toggled;
->
+On 4/19/25 4:51 PM, Akhil P Oommen wrote:
+> ACD a.k.a Adaptive Clock Distribution is a feature which helps to reduce
+> the power consumption. In some chipsets, it is also a requirement to
+> support higher GPU frequencies. This patch adds support for GPU ACD by
+> sending necessary data to GMU and AOSS. The feature support for the
+> chipset is detected based on devicetree data.
+> 
+> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+> Tested-by: Maya Matuszczyk <maccraft123mc@gmail.com>
+> Tested-by: Anthony Ruhier <aruhier@mailbox.org>
+> ---
 
-The few use-cases we have for that use regulator notifiers at the
-moment and I think async is the way to go here.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Bart
+Konrad
