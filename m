@@ -1,74 +1,74 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A08B82BE108
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE1527B4F1
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745442687; cv=none; b=Bm4Z34bDgjfqNCyhsrC4+aM9xmoJuBqucnxs7nKelnsPkUh5q38IsTbSa97aBIsM5V0Vo3dzD1c3x++seiiEN30IVn9aLYeaSWw7JwdHxbAu2nGN+IQPk2WCaOGp6c+xDOWFZLZg8fk1lg0HR7ekeQI4b/XD7fSsDT9RJJ3ckms=
+	t=1745442689; cv=none; b=Ol37fJAesv3Ge8WCVppTeDeargmkfXDQmXL/H4vvBvFbVpGg1InGN6M//7bqlMbrECFSiBQuGd66gaUh2KDxZkU3rJ4jTwri3nqzSUORlYDQyuN2uY4uove+Wi9gTqAQODiadGsAqSAyXMIG5eR2+1B5D+A0wZ/WO3mfxzuZ034=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745442687; c=relaxed/simple;
-	bh=tjLaEXS6saL4Tjk3z+TVeg4Wlv4axFBIVr+nnvsQZO8=;
+	s=arc-20240116; t=1745442689; c=relaxed/simple;
+	bh=+r9MMbxZ3ekxD/2ICqlcudFe68TBHlQKa7rixk0bnbk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Nn0gC3/lLWSDflsS+p6BN6oJrpd90pIwMnEVelFX3oZ9mcjOjxxydTEE4VyLLKlT7aCZPE70SvVU+AQnw4X/ra746ZT1JP38VaRKk6Qzf0ooBQSBNtdHIElbd871lI79TrRxoWK2cKn7SlcJ8SmfzzUnDs9x+KW6SwqRNKt2EPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FU98TDO9; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=ZjHAm9lsifhoSwyyHt+UJUPBd9VtdZhLFRP2FK6DpyijYkCg/38CJOHihlFJSQmtxZcpDmC43/niVFJe2GxOvM50EYFOnazHGS/hI+eb9iFacKPdlB5H+rEpGvebVIQ3nN/3OkuRvckKzRoVeOWyB4fI2oHFc7ExDDdq/BkxBHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i1nudbFI; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FU98TDO9"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAYYom016850
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:11:24 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i1nudbFI"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NB5F0o014200
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:11:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WrNtkZH+H2Vic+NyXDzxkBmQFFTYEFIIb43Hc+6ZEJc=; b=FU98TDO9NfzCSINF
-	h8UOecwQXmOxIO5r5DzzTswUsOCi65LPZHm7pmo3cafXg9JFnMeKd9N3ZGZwYCQo
-	l9XBhNfInmTCcBJVxomKEvsfft75GLvGOiDdR5UNdEQSWnYpphWiUdQ0ZsR66Ed9
-	BQ5gRElF0lWmbwCUwyXrlSQnKiaks5vl5l1MDd8K9VoCDgATCMv0ad/qBJtGMCcr
-	7cZcFcOkXFr4Bx0cOvh/YASp6QwWo/JxB9wQR3qtzqC8dtkaz0z/zbF/Hoyo4aup
-	zfsrOs4pdyIBdXelcoN8JHpIc6fT+FIQthT5ATNc0PLgSv8W2Lzuczs8IPFMMe9/
-	p6Id5Q==
+	7juAG/GkF3du8/wYABYn1XxvOib8H+R8fcCmEsp2kaM=; b=i1nudbFITywtFoJT
+	pjqWvw17B4rb3NJb9k8YkMX35vF66nelsxDIPIaKlrhG364AkA94ieT1ShEGqBZZ
+	Ze1KeEFN/2VoQBLtj+jS3SS3MXHAWR/C6VHGyLyqBaokfhkMhFns/OEMj1rAHZdh
+	g2Szjm8S+ESi6IDRzeWcXRze3lLNnsVh28/J32jqD19xfVk/toqCdC5ZCzwRdXdj
+	T/53rmywi8E53sHN1xb4auVNffhtSUr92ZyyB6ket3nF8uCvvyZFY3TL4R+B9Tb7
+	xOG9WP+dbHYa+bc8QM2vy3Q2Qc4n5zn4cvNhNF60efjos8x8bBYDa5YH3FTaPhZr
+	dG5Ekw==
 Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3kdek-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3bd21-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:11:24 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c790dc38b4so60425985a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:11:24 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:11:27 +0000 (GMT)
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c543ab40d3so43104385a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 14:11:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745442683; x=1746047483;
+        d=1e100.net; s=20230601; t=1745442686; x=1746047486;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WrNtkZH+H2Vic+NyXDzxkBmQFFTYEFIIb43Hc+6ZEJc=;
-        b=gEvZhsW5gzKpYvGd2gwSObY5SSsXGZ0tJ+R2zuOXJBEYdhC+mhHy6XtmS+iY0Yi3t6
-         xDdq8IxZIfagz6213WhNwm/bwRJpsmiJKpamjh266y1O7l/UiJF5q49zhSRQhPfGuvhr
-         PosF1Y9YIHG5fNU/ykrDteX6Goi3Xiv1sWboGb6kCAa8IgbSSanRfbhA7B679a6TJgxC
-         ce+fErwg39B31rtWqkLNB6VhwdV2T92Fr9OImSTPK+sJkMobggiFk5FdJPR/38YF6plt
-         i9wHNNriJoEnKnEWRegD57OgwPpyFhYgd3uwaAhw70PQhkm0xHNzNgh1R6Qeu+GOj6Zh
-         aPLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGpz4kFGTXgl9ZxwvrPkC3wWuuQaSnHx76H9ljqbarkK7L8jG93opOGqwSOq69QlzuKUmDYBt1h0mBma0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyh94e0/z8wMU+xw+KCKKJ7MPaeQnPGFbb9Q4ng8gQ5dTJE80JV
-	5I8O/S5WjbyR5GoutA0Vn/qUpNpGEKh+TnWnwH5JiEkQWcNWtWW4m3mmh5ASKpUz0FfFCzJKgEW
-	9trdpP4190bwAWtTfKgvPBfIeba9bxo6z6xAo3VHm6xAoJiddNY2cmJ18EpSXTsw=
-X-Gm-Gg: ASbGncsMlT9r+k0Jlg9Jk11Zq3zf2qMUFC2XtdexZkfP090pK5sNl1hIO39bs+GlFC5
-	D8gMHQ2kGtAaIDL2dfr/AQpXyFI579ROccq1T54t+Gl+HpQL+1QZSkoYbMipgfl7qIBbbNABSxd
-	K2JEo98QZsVP3yKYN8iXcqMHxPPawksA4YCJo9BWg9fgeG896CZxDXS4wUgYoSK0nyROXKWcCb7
-	j2ZpO9letH7Np7l3Mj7fBAw6SNUjsa4HOTsythSlZstanTtzP6XpRzzI5o4pllnkP4j5vIwbW5O
-	UqEG9t1X+ncV7X37B1GHpdWIPdeaVhnRMrGLetlVuvSB+A37ZAjZm85oVDmXAZu56TawAv1ZmR9
-	/SEkp04Ip6MhMTDjICg5N4lp5
-X-Received: by 2002:a05:620a:1912:b0:7c5:3b8d:9f2f with SMTP id af79cd13be357-7c957854052mr11853185a.17.1745442683514;
-        Wed, 23 Apr 2025 14:11:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHbEJvNAoP2/UxaJGavz+cKgjLPAcAoimjNe/UsaIMkbpMhagGwiYJ/zs3p1tSQw61czn09yg==
-X-Received: by 2002:a05:620a:1912:b0:7c5:3b8d:9f2f with SMTP id af79cd13be357-7c957854052mr11850585a.17.1745442683161;
-        Wed, 23 Apr 2025 14:11:23 -0700 (PDT)
+        bh=7juAG/GkF3du8/wYABYn1XxvOib8H+R8fcCmEsp2kaM=;
+        b=TDg+uGNHMRNR/b+Hsri2PhtuMgOZXVyl02o8Dm5hErCPIK8GLoE8u1/LduDCcFOGCL
+         U6mXTLU388EpvniGqpqLH8SM1AFpKXHP/FoHLy3oZTwPAEaiUyoQGAEhb+4UAxJ3efhu
+         malJP18GwUQuvKas4yI2RcnoZtEJ/2JQz2THPwnCsl9cOmZ0soVUiXcG143ogAdvhBEa
+         /Z6t2rekldD2NBubQ1F64Uom4ev2tbLQAb9WJMaDm0lgM1IgjeFh/FVtoI+ExOfvCYgy
+         416GC816g3+mtyoWsW/SQhAzsDufoU7Jj/2iH7RQqWFgfuzdKL8evzURKgcc74TJxTzQ
+         quHw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/DvR0YUOf10gLgqLiC1MWb78nvOmrkwS95VQw7duKs+W6CgRG7NYY7cM/hQoDDBU4ODKeDELUS7iKbd0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbaWu13muV6eptf4M1JHW/n+DuItdX28D0LGeuKGNknroFo4o9
+	rcrW/vEo/ltrWXKsDII/WuPbbJiggo+3128cbgx7vqut2kbXheCEdRjeVSJhKP6m/pnV1SSC+Sh
+	VIlGNNfQ2VJFkobSrdOUUMh9oeYUqTQN5D7xpkvj+3SXoaxXLkItZWphu9Omuo06UNGLsOTQ=
+X-Gm-Gg: ASbGncs1hGQIkDrA3h9kDIk4dD1bsAiSYU/S0DbdmfALp0XwVj9RgGxKBBA0rrfuzhU
+	UuZZCzj+Z0uXrmoeuYEuZMUqjEqc/h4ex3mvX1h5Jx+inoAlmRWojO9SzEymyzyKWr41a71UOHM
+	49Vnr02TzlOo9VaN6BGzJAfFufwd0wkQXO30/q9t+Rk1dHvsXOpEp07lQZWgki7jj3PUFJzO8eJ
+	QvhbiGcQOIGWgVOwQmtHn6dvRqDJG+vMqD5e83ZCEgqCcTrU7Rai8gLpTg5m5WneXZsN/TRsRjq
+	cOMYs/mU3NnA/ux22GNd/xjj3r2e5OAXP2nHRG4JQ0eWLsmKyh6QrR0k+HN4i64iWnI0V0a9WJ8
+	E9qjH1+6ZP3SnkiUzbwIau77L
+X-Received: by 2002:a05:620a:3181:b0:7c5:18bb:f8b8 with SMTP id af79cd13be357-7c956ea98b4mr47852685a.1.1745442685993;
+        Wed, 23 Apr 2025 14:11:25 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEBiCLzMjle0UO/afRLR2+FdbfmRTBHY4/qAev7T6DsOdXSopPHAINyFixXVJzXLX325cROSg==
+X-Received: by 2002:a05:620a:3181:b0:7c5:18bb:f8b8 with SMTP id af79cd13be357-7c956ea98b4mr47850385a.1.1745442685607;
+        Wed, 23 Apr 2025 14:11:25 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb3987csm3852e87.59.2025.04.23.14.11.19
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb3987csm3852e87.59.2025.04.23.14.11.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 14:11:21 -0700 (PDT)
+        Wed, 23 Apr 2025 14:11:24 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Thu, 24 Apr 2025 00:10:24 +0300
-Subject: [PATCH v2 28/33] drm/msm/dpu: drop ununused PINGPONG features
+Date: Thu, 24 Apr 2025 00:10:25 +0300
+Subject: [PATCH v2 29/33] drm/msm/dpu: drop ununused MIXER features
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-dpu-drop-features-v2-28-0a9a66a7b3a2@oss.qualcomm.com>
+Message-Id: <20250424-dpu-drop-features-v2-29-0a9a66a7b3a2@oss.qualcomm.com>
 References: <20250424-dpu-drop-features-v2-0-0a9a66a7b3a2@oss.qualcomm.com>
 In-Reply-To: <20250424-dpu-drop-features-v2-0-0a9a66a7b3a2@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
@@ -90,164 +90,67 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         Dmitry Baryshkov <lumag@kernel.org>,
         Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6066;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1050;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=0Xucrl9p3RVanutrsrXG/AILscg4MPlsZPdz9DRUTfA=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCVcu3InOIzon+HTk/sVfvnvpQ0BT6uQ12sZlM
- J2l+5MvrQGJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAlXLgAKCRCLPIo+Aiko
- 1W2JB/9q7xY2GLIB0nQ+zYlua/+2UHgruY7PGWRW1j3dNlJIYsawhn49BuqQ4pykaDQsqXu6HqT
- D+T9ZVQfl4oEwMrmMoT+DpH34kYnGKEGvDHugYScQj6xXEn5ON8JhdRo/A48FAW2qhvezacGKoV
- At3vRuI8s/Z0xuTtoct1dYgMr4v1BH3i1ek4bZlURgSty9Tz5fIXEWBfY88LhkbpzCgNLP6+Ax9
- DF3D8ytfVLthNBJsBY/EnyHZPIgDucVhqFM+OkL1Hj8IXGsl//j0MIYvBUnFa5St31f7nVZfvRh
- /Inmc0zljN84uW4NgEkVO0vCL6y+xHZ3uoe+bbo339WD+L4n
+ bh=oq1wDHFI9F1rM8Vg4jlGeQy7++4ktlgP1SkYjPIrj9c=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCVcurOQwmw4mipyLk4xtDigIfZZRv3wsszemX
+ 9hk31N/tM2JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAlXLgAKCRCLPIo+Aiko
+ 1ataCACp7q5C2z1OKTIZTteRTOMWwwrni7zhoxTCOn6yAO8b5EEyhXosAsxOTWTVc30mVVcdep/
+ 2vIpet/BP0REXC+2ZMtja6f+BagsNXHyjhCR7hkTZDti+d+ME2kprZUzJkEB0O8Wc1ZvVDPpXlT
+ nOGKpWe25Zm0CSa1pLNT3R3tr3CEn6TA5r+1/KbeQMOyN+7BHEOcPl59Knnw6J79hU8H1/myYS2
+ X8MaQQzNhWqbewDxhXC8MK1AoY1qUmbY7CsDOzD5aCgvEP9e9ahwcwrb9b0Q75Rq7WKvQ/HOxkZ
+ uZIH5aQdmH3Am7P9XclOpul6PuwPWz3R4Bz9L/c3sqXgVyZE
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-ORIG-GUID: aBFlzxHzmNnurx63M-vp-l3GSO_oHGtl
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0NCBTYWx0ZWRfXwDmAZegVIsIj g6t0nMB2osWakZASqeET2Jx9DC4B4m4A+Dbt1Vi3+SD/Rcki6XMOSaZUipeyKFJIMMpUMrVsyEx dCKhVbC9ndRh68qKOQ6ghu16W+L1WfntrrzoAmWhzSmluIEmXPI8ikSz/G4+ZtqjoTVzCvm3BRf
- Q+Pl1YwsMaRf6TNB96/JPDixtBAoAZI+J1jptEN62DlV/wqIJrzjB9NhWJY9+8cDyI47MOIdmdF yoOaymUi1crujRr1X1siMyBEMUs3Xiz3tHAPb9TMh/5MnAnsUDDkxvNMozRpsyewb3O317VhWRy MJg6wtD5HCiupDkandMC7JELXYcjb07LrddJG9ezPWAhHyO1hEyzAMNPdf76lDw0A5O/Z9oqmPm
- q9yBKrdd6iLP4bm/AytIMmKdK1tyvP0hiONSiwSxYxa+GpZpk6+UPVpx4yaKgAHJpHBIbIuH
-X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=6809577c cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=BKnecdA5F2l9gEOK9gkA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDE0NCBTYWx0ZWRfX3AHP80DpH/ZP Lx2DeYfUbeH79v0MG8mrox2dbPH1S7VlkabQNZpU8YRmqJkwue1qYp8muqpBzYZf2VJnhDiqrDt bMzQNFsqI1aLj9D4ckbeG6iThJxLegi/kKVYiuqVK+K6LqaUjGrUZCYSJI3UE3SQgI1xwK1e3pL
+ 9YXXovuEKMGoWuv2XsxumzXbONTcsnlO4Ov8YWQmhPPfy/gcjwLkrMRs4u/v3e3Z4QdOtPliczn SI6piKerVYyWuRoLTIOc5IEA2u1SzARqocVAXpZABnJAAApvL9rppaTq46JrgUFDVnTaVXqK97W 7F3f4hzNhABFbC3T7vs9iyYM2wQ8OOdRB5oUpX2y9K5T1r3ulo6NuENmBnlYRzhsqLxzommzzbn
+ WzttN4SL30fbrxh/BS6EyWqgCwc+UGqUlK7eUyzyHnPQ6HrHsSOHB1cjG5xBJ0BAJSXsH1+F
+X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=6809577f cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=87smWpNc5u_ETeg062IA:9 a=QEXdDO2ut3YA:10
  a=bTQJ7kPSJx9SKPbeHEYW:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: aBFlzxHzmNnurx63M-vp-l3GSO_oHGtl
+X-Proofpoint-ORIG-GUID: _7xHSmUrIC2Vdx2hhKTOuyltA_AYaAsB
+X-Proofpoint-GUID: _7xHSmUrIC2Vdx2hhKTOuyltA_AYaAsB
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-23_11,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- mlxlogscore=767 classifier=spam authscore=0 authtc=n/a authcc=
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=914 mlxscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504230144
 
 From: Dmitry Baryshkov <lumag@kernel.org>
 
-The DPU_PINGPONG_TE2 is unused by the current code (and can further be
-replaced by the checking for the te2 sblk presense). Other feature bits
-are completely unused. Drop them from the current codebase.
+Drop unused LM features from the current codebase.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h |  2 --
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h |  2 --
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h  |  2 --
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h  |  1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h  |  2 --
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h          | 14 --------------
- 6 files changed, 23 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-index 436fa56e2ba2d867b58b59ec6b02d1d0f396c23b..7f606be1f79fe83568b467c47e7280537f1ce091 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h
-@@ -180,14 +180,12 @@ static const struct dpu_pingpong_cfg msm8996_pp[] = {
- 	{
- 		.name = "pingpong_0", .id = PINGPONG_0,
- 		.base = 0x70000, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &msm8996_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
- 	}, {
- 		.name = "pingpong_1", .id = PINGPONG_1,
- 		.base = 0x70800, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &msm8996_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 9),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 13),
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h
-index 38cdea019bf2b1391c242953e4c67d9dc4c2274c..a10ca16d2d63d8b6e2e2165dcd4bf0cf915f8e3d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h
-@@ -169,14 +169,12 @@ static const struct dpu_pingpong_cfg msm8998_pp[] = {
- 	{
- 		.name = "pingpong_0", .id = PINGPONG_0,
- 		.base = 0x70000, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &sdm845_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
- 	}, {
- 		.name = "pingpong_1", .id = PINGPONG_1,
- 		.base = 0x70800, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &sdm845_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 9),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 13),
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-index 176640bff1214e89606286ce572f74300f6f343f..c1fc91b3f6f85af18cf6a6c1690ec69074fc3545 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h
-@@ -140,14 +140,12 @@ static const struct dpu_pingpong_cfg sdm660_pp[] = {
- 	{
- 		.name = "pingpong_0", .id = PINGPONG_0,
- 		.base = 0x70000, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &sdm845_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
- 	}, {
- 		.name = "pingpong_1", .id = PINGPONG_1,
- 		.base = 0x70800, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &sdm845_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 9),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 13),
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-index e6eb95173cfef2a52f5dc606ca41a2f1f5650c2c..65975e7ebd9ba1970b48d8753a87835677d58df7 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h
-@@ -114,7 +114,6 @@ static const struct dpu_pingpong_cfg sdm630_pp[] = {
- 	{
- 		.name = "pingpong_0", .id = PINGPONG_0,
- 		.base = 0x70000, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &sdm845_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
-index 21264184566493ab4e356a4e0c032ee7780cabff..8d5b7033f12f740fe7b9226e93fcece8ed54b890 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h
-@@ -189,14 +189,12 @@ static const struct dpu_pingpong_cfg sdm845_pp[] = {
- 	{
- 		.name = "pingpong_0", .id = PINGPONG_0,
- 		.base = 0x70000, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &sdm845_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 8),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 12),
- 	}, {
- 		.name = "pingpong_1", .id = PINGPONG_1,
- 		.base = 0x70800, .len = 0xd4,
--		.features = BIT(DPU_PINGPONG_TE2),
- 		.sblk = &sdm845_pp_sblk_te,
- 		.intr_done = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 9),
- 		.intr_rdptr = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR, 13),
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 4b6af58429361c49b71f6067dce8ca1daa6493fa..5eeb693f0e282da2aa0e5a729aed1bc8573639dd 100644
+index 5eeb693f0e282da2aa0e5a729aed1bc8573639dd..beffb92adf5d8a150e049811bf2caa212dace1a6 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -87,20 +87,6 @@ enum {
- 	DPU_DSPP_MAX
+@@ -66,16 +66,12 @@ enum {
+ 
+ /*
+  * MIXER sub-blocks/features
+- * @DPU_MIXER_LAYER           Layer mixer layer blend configuration,
+  * @DPU_MIXER_SOURCESPLIT     Layer mixer supports source-split configuration
+- * @DPU_MIXER_GC              Gamma correction block
+  * @DPU_MIXER_MAX             maximum value
+  */
+ enum {
+-	DPU_MIXER_LAYER = 0x1,
+-	DPU_MIXER_SOURCESPLIT,
+-	DPU_MIXER_GC,
+-	DPU_MIXER_MAX
++	DPU_MIXER_SOURCESPLIT = 0x1,
++	DPU_MIXER_MAX,
  };
  
--/**
-- * PINGPONG sub-blocks
-- * @DPU_PINGPONG_TE2        Additional tear check block for split pipes
-- * @DPU_PINGPONG_SPLIT      PP block supports split fifo
-- * @DPU_PINGPONG_SLAVE      PP block is a suitable slave for split fifo
-- * @DPU_PINGPONG_MAX
-- */
--enum {
--	DPU_PINGPONG_TE2 = 0x1,
--	DPU_PINGPONG_SPLIT,
--	DPU_PINGPONG_SLAVE,
--	DPU_PINGPONG_MAX
--};
--
  /**
-  * CTL sub-blocks
-  * @DPU_CTL_SPLIT_DISPLAY:	CTL supports video mode split display
 
 -- 
 2.39.5
