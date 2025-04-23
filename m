@@ -1,63 +1,63 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00F0270568;
-	Wed, 23 Apr 2025 09:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A01D2749F6;
+	Wed, 23 Apr 2025 09:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745401297; cv=none; b=EjCfZP3+JuSuTZ9ls7xk18McQromoBPeP+3BpyPeqZHKj/YU6z3hP6IGfeNoQLh3vHIJ5v8V+yEhKbFjGkOHtUANY/KvNe1gvzZMg+AUzs/YJ7YPM+iQ0wPxt4AWwtrX80VkNGjSReijA5UsIxd9Wha5kFgp1TXwdDjTzKngKG4=
+	t=1745401305; cv=none; b=MvOq3I6I+txKixNnCFTAIvuktOqk9VTAHi55KMgZkMT9G088Cl5fMDRuSB5xvwUuH8uHjkVFm7QncUd1Q4kv9lkvjO1vIScJN/T4WvB16juoZ4Sx1Fuz8Hmfb4LI1mG9AL9lYS9ZpNjq+ptzPDylGKV8MqgycQjkzfjO6zYepss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745401297; c=relaxed/simple;
-	bh=TtsYZ0wRvxdthz6fHIGwLw3I+xgktbgMdUmVQh8lCj4=;
+	s=arc-20240116; t=1745401305; c=relaxed/simple;
+	bh=8ZWT716Kvf9Nmir1qWbHYxD7A02pPultL0YPRcp8J0I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Y+n0g8Je1obsWEOGfRVaR+Rf0PgAFwlF0POcH2ldP6KJENbTVrQDEQ4UzcYbcOaok7RBUxySNMeK2vd0QBSO50zphx69pePDncTaMzayxycsLM5lQ6m2bNo/QvY5gYg+NCKGPPlH3p8NG82X+3GhzadZ+0wWU+sX2/TMVeue/6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=THYN9p73; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version; b=gc33yBDNj/gk2xn/oQu+bD12yyVLBMxbvV3G44aR1XcG+1t07f1ptNR26wk7JeIuUE8OKPby3pd1hliZ1DLSA5VSPslvngQx7s7SDKNZlBRCK6cF3xHocuxr3Q/+KZU3f0TiqgH7iQ9QfdO/PNXQqX5p93Jd1NgxehYxs/jEz+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QeNlUiiO; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="THYN9p73"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22c33e5013aso71006665ad.0;
-        Wed, 23 Apr 2025 02:41:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QeNlUiiO"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22c33677183so72489605ad.2;
+        Wed, 23 Apr 2025 02:41:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745401295; x=1746006095; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745401303; x=1746006103; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IvPUEK8FP58UiWiTVOwRwtNqekY157VBMTk/U2siaJ4=;
-        b=THYN9p73UsHzCELakLd1M+/3ggh4Y8EgNd8hbuFZ3b8ZLUhHneIyg0kyJRxtDJqZuO
-         sNcLv/68Q/Jx1yze3RFw0duhNCPKUz1QDRaa0XxPzT4WHFTELIQ+o3k8nybDmXgzaaZs
-         y9jyodS+o7U1sRwv6TdC8cL/ObH0bCY0jNkCNgt6DxbB7T2CgIxEvag/Oa8KyevGyBCW
-         t/25XpUVqesw6phmS81HnBzeuhR4ad0qadbMYUV1wj915c4lJm38XGGK6WZzvVRbPJqY
-         e5Php00eAzEBCOpbKQFtiej0h5ud6M6vjV1KIvclED0rkqhBTFau+tOId/EP67YOYh8L
-         5ONw==
+        bh=Sog+/W6AVctfHjoxm2zZUHdfyp4KwnzETFplxHLsp8g=;
+        b=QeNlUiiO9wQGB+IJ+CkkMFsWG4cQkMOhb13OZqRbbyof/4NmznYWWEAFGL9dJfsYsJ
+         +KpiyPHEm2t0w4vdmYsm0NfZKFJX4z2eggXYnAkhTk30H4BlWcpEgPpc5+Z+880ztEkW
+         9QKX3vNfGkwPmhpw/jPsqCthzggXUeEAe7DfHZBwwFed2NDKfVVxzJtGY6nxBQtigV5T
+         swTWXgn0QN4CvuDkY/DuXPsxh+hv81QINwsWWL+cglVHefdSiURy0+UoL4sVTpMxvo+0
+         3Mz1rvX8GgCxNOu8HO2jJvwhxrfLF4xaWNMAh1QjVLAvzHvchZrZnTFD6lHI/1a4T9c3
+         eUXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745401295; x=1746006095;
+        d=1e100.net; s=20230601; t=1745401303; x=1746006103;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IvPUEK8FP58UiWiTVOwRwtNqekY157VBMTk/U2siaJ4=;
-        b=inYt7iaT16srhP2LSfzKdHPxKS9T6EXnVML3UaRZEgKBrSl/kB3J4B4/UtdXqC5FSj
-         qpsbwKPabFToeSPD6Ib+SDPYdJkz0+g/gP/8F7spCnUeH28tWq3/gov9QWzga6DNJSVm
-         n7AC1plFZEXC+H4WY1+06yvSjrA1afCtI9/4S+AgJIebOS6lqntD2VXLpyayCTNIF/dK
-         +e/B19H5zcP6zu3+NlIK47BLbC1FeA6FsLPS9hP3efhNZ2t7BF3J31WTBtjIyAARBG8c
-         cWyO1t3xayALaDWbG5Q5DBQbpSKEgr2yCbf6kgXX+EJF26g06x0aKZ9DnUn8K9KoA/jr
-         PJdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUDl+vhU0ZfENG/KJ1JgbxJOz0N846eJVxKG9UrTd3ykNDGb15JtpcOSwpv6jeFPtV3Nyxis/x4@vger.kernel.org, AJvYcCUWASvesSUuZXZ086WuMbWz2fzV67CkbN+n0zlvBUYHh5i1mK/BXk5rPZyGfIqCC0HmpJXfGmV057Ev@vger.kernel.org, AJvYcCUhdtgcskVQY/a6WFDQNTe/LZEovW8c4ai7eFC90ktYTPTw2i1cGRVd3hVa5TdPyqw4SDLv/vljoUXM@vger.kernel.org, AJvYcCVF3lHH/lV5vM1pTZfwgOSyC6xKpBWwoiNuw0WxI/UkWOEkf2Yunwl/Od+jNlheOJoX2hZwL9/QEBFs@vger.kernel.org, AJvYcCVXPci+B6KBmnros9pyABmkPTW7bnHQDcm4zh6TFR0pRIIgDe4d+J/SOGZ2nCOMdB0kRxWdBSLpDRP/LJg=@vger.kernel.org, AJvYcCVsz1p6WUAy/AiiUI+uKK9DA/oSF4bfqxYJ+JjIcxIcM3bgYuggjVVsA3+6ed2BzNMkL8KJvOPrWubyIvMTlFo=@vger.kernel.org, AJvYcCVwmWfzjxgREIMU4Sl2FFa/BfEppKVKbybFOESIdESD3Hbh20cEzrUNXslNKXP2jes4WOaf/VFhEPg=@vger.kernel.org, AJvYcCXwKLK7L5WTVfsWXNcVTFvGryi133wwTLgUXW40yjNpQ7EQgekaAv4JSuZVtJJ+UxsJRiCA1J/C8vfL1g==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPaiY7EL5kxr/n+6CldP/OXVSFWFjzgSdmWqDoPI9vUiIf8T6i
-	F6MHH/Rd6b309106jRtJy3322vJ/uopMBRQuPFWlk96fwze+G0b1
-X-Gm-Gg: ASbGncvefvuvEvbJByWmmxWpR4ANRz60fNtzNa1XCeqhZ2XnfRPjsiUR7h+X1AKpnoP
-	cKHroVvCyc0FFgIOUz8d3SFTV9nETb/QsKWckfSJ6kx01YlkcUVv4oHVp4dVpCsxHy4YiMm58Z+
-	SyDH29U4g3P1W8MvUvU7/mlK9/vSKiaTp7qOWdJpaUoyd3CITLGeGci27VY8oUkiGqHasj/EKja
-	K6jEwPmGyAnUFKs/SitbO4FsMm+ilArHntn6VQkVxse0UEU9HopP1Ehzq8XyQCoxp1ALBBly2Qd
-	s1OW+rhPQARGuwZGnYYEkmSmts0BQrtvABwfZSxbVZji0//ULtanGD97/6iMWYMuOloQBwn5GTc
-	tDHo=
-X-Google-Smtp-Source: AGHT+IFN7C4QPN+PqOOIFQ0sKNG9loEtIal90YgK5Orjq4JR6W8aQbNTGIbz2O/VBMLQb6kpQ+xerg==
-X-Received: by 2002:a17:902:f789:b0:223:6657:5008 with SMTP id d9443c01a7336-22c535bded1mr351580395ad.24.1745401295054;
-        Wed, 23 Apr 2025 02:41:35 -0700 (PDT)
+        bh=Sog+/W6AVctfHjoxm2zZUHdfyp4KwnzETFplxHLsp8g=;
+        b=gX53t/6MmZGOvMFXLAp7SHDhplfF7uFIX5FEFtrZ2SxAR3llowhLpQm+6iRZROGxn+
+         ptosc2vtBnPRk/86sm2XoNT68FNIEAxH/Gyrdlttx8tDUvLRlxvr6+KnRaRbg5g3uyjb
+         KWHy7idXW2fG1X/zSqMk7aRemttYwn+Zp6Ws98Zqqr+hBFfrUI3bIIV/okrwbueHKinF
+         UcVyQz+dsJQT8XIwZlNlCtZxEv35y3JNp2RobU9ztP4ulHIyCGl+qGycxN1IVDBkSlKY
+         04NKQhLxoOUOgk41AeVMick+/lb5fu+WxH3DxfJRtxj94n8+fZytnGW/2dOW45Ps2alr
+         2Cmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEuhnLiQCU9rMYC8ipRqt9hOATYFL7D/r8PnYdQasX3fupZjrPUnDgrwP+YKxHyBquduTVr9JRm0Y=@vger.kernel.org, AJvYcCUKPCsJWvstqgbGF68uMXgo03TMWF6Xj2ABNMXRDoX5lxW5K8NbpuN69XhFnKia8FKWuEV2Wa+u@vger.kernel.org, AJvYcCUddnZMviwJteFh29gBJtQf+mOzxhvD43TMY5LddzzEUHPUNR5f1lA2RC6R5qoeoKsJ+h0dZtfHgL1j/ak=@vger.kernel.org, AJvYcCWCRVZBvYcWXEsFKu6u42CUJqhlQJxEn/7tmR8bIsClSmdNzwcAHtopZrtSU30lLmjDoatCxu2vDl1gyA==@vger.kernel.org, AJvYcCWK4d/wNxEyomzDxrktSDq1d20ZaPx82Nw37veOeONyyIwfRx4/uMHtCtctBwORAu0LKO3oTmA1f/V3@vger.kernel.org, AJvYcCWucO6oo70vkd2mK5xfd1Gu07KWBrfiL4m+dv/QQwjufm/esirwq7dUofoaTO+TH3Zqk0nwkW+Ubobl@vger.kernel.org, AJvYcCXHQRGq3Uemxlx/5xRoynYsjk080hQlrWsHh1ehGAZsEn1Jj4GikGAoJEjR47vI3IXi4FkYvWmwAsJW@vger.kernel.org, AJvYcCXb9PZ0GAu3gnB5+x9BQrT9ugEzZztfxD3TT/n61ahtEqq+31x4SSKCIo+pHKNWRwoRwiDmJeFZ8oDYcZmxh/U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6Fo63Anb5YC8zdPNeLWKlbeBxe5nwjQabjHtTCSeI5yJABjl4
+	7JLj+otcSt/D88BPKvVXkqpZjd6nd265zDLu9tKjHVz+sBXfI0DW
+X-Gm-Gg: ASbGnct85X6P4cvzCVHvO+WUcYs24WcT6eVAoWxP3RucMGeWhoHtULIs2BCIigTGklP
+	8gnZvvz7Y91M3J2RpKd//i5jzUEMmGOCO/u4mRproPb70WazD102FmPn41nvNCVels/tlBlJ6NX
+	z7UE7crPoFMrc6bXDW4Y4/EWYKBIIe1WlWK/HD9e7WpYvC+UJi/qIlExYPxOqy16KJJU/tpcknB
+	XHvmAqWzOMMMBO1Hn9/MkPEj+IaUnnvPPNLBdfwCCASi3jHAl6By5sUrTVdf2jNSCmBAk96XHxO
+	7xPV+V1l6rFjQ37ZvsDRfSCdIx69zNJQxwT+w3jdDbqFWHEzf8Q1Qf03V4uTs+4QulfZIYzCxV8
+	gYyA=
+X-Google-Smtp-Source: AGHT+IErZyJ7tT8dzYSmK+hrSa5NYGbKDJ5zpqYD7lrhUFQQUR6L51YgyQh6NQl+PA3JRfhf2AdxAQ==
+X-Received: by 2002:a17:903:986:b0:224:e33:889b with SMTP id d9443c01a7336-22c5359a406mr311914135ad.12.1745401303161;
+        Wed, 23 Apr 2025 02:41:43 -0700 (PDT)
 Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4b8esm99972775ad.124.2025.04.23.02.41.31
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4b8esm99972775ad.124.2025.04.23.02.41.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 02:41:34 -0700 (PDT)
+        Wed, 23 Apr 2025 02:41:42 -0700 (PDT)
 From: a0282524688@gmail.com
 X-Google-Original-From: tmyu0@nuvoton.com
 To: lee@kernel.org,
@@ -85,9 +85,9 @@ Cc: linux-kernel@vger.kernel.org,
 	linux-rtc@vger.kernel.org,
 	linux-usb@vger.kernel.org,
 	Ming Yu <tmyu0@nuvoton.com>
-Subject: [PATCH v10 5/7] watchdog: Add Nuvoton NCT6694 WDT support
-Date: Wed, 23 Apr 2025 17:40:56 +0800
-Message-Id: <20250423094058.1656204-6-tmyu0@nuvoton.com>
+Subject: [PATCH v10 7/7] rtc: Add Nuvoton NCT6694 RTC support
+Date: Wed, 23 Apr 2025 17:40:58 +0800
+Message-Id: <20250423094058.1656204-8-tmyu0@nuvoton.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250423094058.1656204-1-tmyu0@nuvoton.com>
 References: <20250423094058.1656204-1-tmyu0@nuvoton.com>
@@ -101,368 +101,368 @@ Content-Transfer-Encoding: 8bit
 
 From: Ming Yu <tmyu0@nuvoton.com>
 
-This driver supports Watchdog timer functionality for NCT6694 MFD
-device based on USB interface.
+This driver supports RTC functionality for NCT6694 MFD device
+based on USB interface.
 
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Ming Yu <tmyu0@nuvoton.com>
 ---
- MAINTAINERS                    |   1 +
- drivers/watchdog/Kconfig       |  11 ++
- drivers/watchdog/Makefile      |   1 +
- drivers/watchdog/nct6694_wdt.c | 298 +++++++++++++++++++++++++++++++++
- 4 files changed, 311 insertions(+)
- create mode 100644 drivers/watchdog/nct6694_wdt.c
+ MAINTAINERS               |   1 +
+ drivers/rtc/Kconfig       |  10 ++
+ drivers/rtc/Makefile      |   1 +
+ drivers/rtc/rtc-nct6694.c | 298 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 310 insertions(+)
+ create mode 100644 drivers/rtc/rtc-nct6694.c
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index ee8583edc2d2..d71577041fb0 100644
+index 8f76bf3bdbf4..885e74f8ff5a 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -17365,6 +17365,7 @@ F:	drivers/gpio/gpio-nct6694.c
+@@ -17366,6 +17366,7 @@ F:	drivers/hwmon/nct6694-hwmon.c
  F:	drivers/i2c/busses/i2c-nct6694.c
  F:	drivers/mfd/nct6694.c
  F:	drivers/net/can/usb/nct6694_canfd.c
-+F:	drivers/watchdog/nct6694_wdt.c
++F:	drivers/rtc/rtc-nct6694.c
+ F:	drivers/watchdog/nct6694_wdt.c
  F:	include/linux/mfd/nct6694.h
  
- NVIDIA (rivafb and nvidiafb) FRAMEBUFFER DRIVER
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 0d8d37f712e8..6d84a509501e 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -760,6 +760,17 @@ config MAX77620_WATCHDOG
- 	  MAX77620 chips. To compile this driver as a module,
- 	  choose M here: the module will be called max77620_wdt.
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 838bdc138ffe..d8662b5d1e47 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -416,6 +416,16 @@ config RTC_DRV_NCT3018Y
+ 	   This driver can also be built as a module, if so, the module will be
+ 	   called "rtc-nct3018y".
  
-+config NCT6694_WATCHDOG
-+	tristate "Nuvoton NCT6694 watchdog support"
++config RTC_DRV_NCT6694
++	tristate "Nuvoton NCT6694 RTC support"
 +	depends on MFD_NCT6694
-+	select WATCHDOG_CORE
 +	help
-+	  Say Y here to support Nuvoton NCT6694 watchdog timer
-+	  functionality.
++	  If you say yes to this option, support will be included for Nuvoton
++	  NCT6694, a USB device to RTC.
 +
-+	  This driver can also be built as a module. If so, the module
-+	  will be called nct6694_wdt.
++	  This driver can also be built as a module. If so, the module will
++	  be called rtc-nct6694.
 +
- config IMX2_WDT
- 	tristate "IMX2+ Watchdog"
- 	depends on ARCH_MXC || ARCH_LAYERSCAPE || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index c9482904bf87..7fe51bb06060 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -233,6 +233,7 @@ obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
- obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
- obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
- obj-$(CONFIG_MAX77620_WATCHDOG) += max77620_wdt.o
-+obj-$(CONFIG_NCT6694_WATCHDOG) += nct6694_wdt.o
- obj-$(CONFIG_ZIIRAVE_WATCHDOG) += ziirave_wdt.o
- obj-$(CONFIG_SOFT_WATCHDOG) += softdog.o
- obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
-diff --git a/drivers/watchdog/nct6694_wdt.c b/drivers/watchdog/nct6694_wdt.c
+ config RTC_DRV_RK808
+ 	tristate "Rockchip RK805/RK808/RK809/RK817/RK818 RTC"
+ 	depends on MFD_RK8XX
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 31473b3276d9..da091d66e2d7 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -118,6 +118,7 @@ obj-$(CONFIG_RTC_DRV_MXC)	+= rtc-mxc.o
+ obj-$(CONFIG_RTC_DRV_MXC_V2)	+= rtc-mxc_v2.o
+ obj-$(CONFIG_RTC_DRV_GAMECUBE)	+= rtc-gamecube.o
+ obj-$(CONFIG_RTC_DRV_NCT3018Y)	+= rtc-nct3018y.o
++obj-$(CONFIG_RTC_DRV_NCT6694)	+= rtc-nct6694.o
+ obj-$(CONFIG_RTC_DRV_NTXEC)	+= rtc-ntxec.o
+ obj-$(CONFIG_RTC_DRV_OMAP)	+= rtc-omap.o
+ obj-$(CONFIG_RTC_DRV_OPAL)	+= rtc-opal.o
+diff --git a/drivers/rtc/rtc-nct6694.c b/drivers/rtc/rtc-nct6694.c
 new file mode 100644
-index 000000000000..bced9630d3b6
+index 000000000000..a6e79304d7ac
 --- /dev/null
-+++ b/drivers/watchdog/nct6694_wdt.c
++++ b/drivers/rtc/rtc-nct6694.c
 @@ -0,0 +1,298 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Nuvoton NCT6694 WDT driver based on USB interface.
++ * Nuvoton NCT6694 RTC driver based on USB interface.
 + *
 + * Copyright (C) 2024 Nuvoton Technology Corp.
 + */
 +
++#include <linux/bcd.h>
++#include <linux/irqdomain.h>
 +#include <linux/kernel.h>
 +#include <linux/mfd/core.h>
 +#include <linux/mfd/nct6694.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
++#include <linux/rtc.h>
 +#include <linux/slab.h>
-+#include <linux/watchdog.h>
-+
-+#define DEVICE_NAME "nct6694-wdt"
-+
-+#define NCT6694_DEFAULT_TIMEOUT		10
-+#define NCT6694_DEFAULT_PRETIMEOUT	0
 +
 +/*
-+ * USB command module type for NCT6694 WDT controller.
++ * USB command module type for NCT6694 RTC controller.
 + * This defines the module type used for communication with the NCT6694
-+ * WDT controller over the USB interface.
++ * RTC controller over the USB interface.
 + */
-+#define NCT6694_WDT_MOD			0x07
++#define NCT6694_RTC_MOD		0x08
 +
-+/* Command 00h - WDT Setup */
-+#define NCT6694_WDT_SETUP		0x00
-+#define NCT6694_WDT_SETUP_SEL(idx)	(idx ? 0x01 : 0x00)
++/* Command 00h - RTC Time */
++#define NCT6694_RTC_TIME	0x0000
++#define NCT6694_RTC_TIME_SEL	0x00
 +
-+/* Command 01h - WDT Command */
-+#define NCT6694_WDT_COMMAND		0x01
-+#define NCT6694_WDT_COMMAND_SEL(idx)	(idx ? 0x01 : 0x00)
++/* Command 01h - RTC Alarm */
++#define NCT6694_RTC_ALARM	0x01
++#define NCT6694_RTC_ALARM_SEL	0x00
 +
-+static unsigned int timeout = NCT6694_DEFAULT_TIMEOUT;
-+module_param(timeout, int, 0);
-+MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds");
++/* Command 02h - RTC Status */
++#define NCT6694_RTC_STATUS	0x02
++#define NCT6694_RTC_STATUS_SEL	0x00
 +
-+static unsigned int pretimeout = NCT6694_DEFAULT_PRETIMEOUT;
-+module_param(pretimeout, int, 0);
-+MODULE_PARM_DESC(pretimeout, "Watchdog pre-timeout in seconds");
++#define NCT6694_RTC_IRQ_INT_EN	BIT(0)	/* Transmit a USB INT-in when RTC alarm */
++#define NCT6694_RTC_IRQ_GPO_EN	BIT(5)	/* Trigger a GPO Low Pulse when RTC alarm */
 +
-+static bool nowayout = WATCHDOG_NOWAYOUT;
-+module_param(nowayout, bool, 0);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
-+			   __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++#define NCT6694_RTC_IRQ_EN	(NCT6694_RTC_IRQ_INT_EN | NCT6694_RTC_IRQ_GPO_EN)
++#define NCT6694_RTC_IRQ_STS	BIT(0)	/* Write 1 clear IRQ status */
 +
-+enum {
-+	NCT6694_ACTION_NONE = 0,
-+	NCT6694_ACTION_SIRQ,
-+	NCT6694_ACTION_GPO,
++struct __packed nct6694_rtc_time {
++	u8 sec;
++	u8 min;
++	u8 hour;
++	u8 week;
++	u8 day;
++	u8 month;
++	u8 year;
 +};
 +
-+struct __packed nct6694_wdt_setup {
-+	__le32 pretimeout;
-+	__le32 timeout;
-+	u8 owner;
-+	u8 scratch;
-+	u8 control;
-+	u8 status;
-+	__le32 countdown;
++struct __packed nct6694_rtc_alarm {
++	u8 sec;
++	u8 min;
++	u8 hour;
++	u8 alarm_en;
++	u8 alarm_pend;
 +};
 +
-+struct __packed nct6694_wdt_cmd {
-+	__le32 wdt_cmd;
-+	__le32 reserved;
++struct __packed nct6694_rtc_status {
++	u8 irq_en;
++	u8 irq_pend;
 +};
 +
-+union __packed nct6694_wdt_msg {
-+	struct nct6694_wdt_setup setup;
-+	struct nct6694_wdt_cmd cmd;
++union __packed nct6694_rtc_msg {
++	struct nct6694_rtc_time time;
++	struct nct6694_rtc_alarm alarm;
++	struct nct6694_rtc_status sts;
 +};
 +
-+struct nct6694_wdt_data {
-+	struct watchdog_device wdev;
-+	struct device *dev;
++struct nct6694_rtc_data {
 +	struct nct6694 *nct6694;
-+	struct mutex lock;
-+	union nct6694_wdt_msg *msg;
-+	unsigned int wdev_idx;
++	struct rtc_device *rtc;
++	union nct6694_rtc_msg *msg;
++	int irq;
 +};
 +
-+static int nct6694_wdt_setting(struct watchdog_device *wdev,
-+			       u32 timeout_val, u8 timeout_act,
-+			       u32 pretimeout_val, u8 pretimeout_act)
++static int nct6694_rtc_read_time(struct device *dev, struct rtc_time *tm)
 +{
-+	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
-+	struct nct6694_wdt_setup *setup = &data->msg->setup;
-+	const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_WDT_MOD,
-+		.cmd = NCT6694_WDT_SETUP,
-+		.sel = NCT6694_WDT_SETUP_SEL(data->wdev_idx),
-+		.len = cpu_to_le16(sizeof(*setup))
++	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
++	struct nct6694_rtc_time *time = &data->msg->time;
++	static const struct nct6694_cmd_header cmd_hd = {
++		.mod = NCT6694_RTC_MOD,
++		.cmd = NCT6694_RTC_TIME,
++		.sel = NCT6694_RTC_TIME_SEL,
++		.len = cpu_to_le16(sizeof(*time))
 +	};
-+	unsigned int timeout_fmt, pretimeout_fmt;
-+
-+	guard(mutex)(&data->lock);
-+
-+	if (pretimeout_val == 0)
-+		pretimeout_act = NCT6694_ACTION_NONE;
-+
-+	timeout_fmt = (timeout_val * 1000) | (timeout_act << 24);
-+	pretimeout_fmt = (pretimeout_val * 1000) | (pretimeout_act << 24);
-+
-+	memset(setup, 0, sizeof(*setup));
-+	setup->timeout = cpu_to_le32(timeout_fmt);
-+	setup->pretimeout = cpu_to_le32(pretimeout_fmt);
-+
-+	return nct6694_write_msg(data->nct6694, &cmd_hd, setup);
-+}
-+
-+static int nct6694_wdt_start(struct watchdog_device *wdev)
-+{
-+	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
 +	int ret;
 +
-+	ret = nct6694_wdt_setting(wdev, wdev->timeout, NCT6694_ACTION_GPO,
-+				  wdev->pretimeout, NCT6694_ACTION_GPO);
++	ret = nct6694_read_msg(data->nct6694, &cmd_hd, time);
 +	if (ret)
 +		return ret;
 +
-+	dev_dbg(data->dev, "Setting WDT(%d): timeout = %d, pretimeout = %d\n",
-+		data->wdev_idx, wdev->timeout, wdev->pretimeout);
++	tm->tm_sec = bcd2bin(time->sec);		/* tm_sec expect 0 ~ 59 */
++	tm->tm_min = bcd2bin(time->min);		/* tm_min expect 0 ~ 59 */
++	tm->tm_hour = bcd2bin(time->hour);		/* tm_hour expect 0 ~ 23 */
++	tm->tm_wday = bcd2bin(time->week) - 1;		/* tm_wday expect 0 ~ 6 */
++	tm->tm_mday = bcd2bin(time->day);		/* tm_mday expect 1 ~ 31 */
++	tm->tm_mon = bcd2bin(time->month) - 1;		/* tm_month expect 0 ~ 11 */
++	tm->tm_year = bcd2bin(time->year) + 100;	/* tm_year expect since 1900 */
 +
 +	return ret;
 +}
 +
-+static int nct6694_wdt_stop(struct watchdog_device *wdev)
++static int nct6694_rtc_set_time(struct device *dev, struct rtc_time *tm)
 +{
-+	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
-+	struct nct6694_wdt_cmd *cmd = &data->msg->cmd;
-+	const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_WDT_MOD,
-+		.cmd = NCT6694_WDT_COMMAND,
-+		.sel = NCT6694_WDT_COMMAND_SEL(data->wdev_idx),
-+		.len = cpu_to_le16(sizeof(*cmd))
++	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
++	struct nct6694_rtc_time *time = &data->msg->time;
++	static const struct nct6694_cmd_header cmd_hd = {
++		.mod = NCT6694_RTC_MOD,
++		.cmd = NCT6694_RTC_TIME,
++		.sel = NCT6694_RTC_TIME_SEL,
++		.len = cpu_to_le16(sizeof(*time))
 +	};
 +
-+	guard(mutex)(&data->lock);
++	time->sec = bin2bcd(tm->tm_sec);
++	time->min = bin2bcd(tm->tm_min);
++	time->hour = bin2bcd(tm->tm_hour);
++	time->week = bin2bcd(tm->tm_wday + 1);
++	time->day = bin2bcd(tm->tm_mday);
++	time->month = bin2bcd(tm->tm_mon + 1);
++	time->year = bin2bcd(tm->tm_year - 100);
 +
-+	memcpy(&cmd->wdt_cmd, "WDTC", 4);
-+	cmd->reserved = 0;
-+
-+	return nct6694_write_msg(data->nct6694, &cmd_hd, cmd);
++	return nct6694_write_msg(data->nct6694, &cmd_hd, time);
 +}
 +
-+static int nct6694_wdt_ping(struct watchdog_device *wdev)
++static int nct6694_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 +{
-+	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
-+	struct nct6694_wdt_cmd *cmd = &data->msg->cmd;
-+	const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_WDT_MOD,
-+		.cmd = NCT6694_WDT_COMMAND,
-+		.sel = NCT6694_WDT_COMMAND_SEL(data->wdev_idx),
-+		.len = cpu_to_le16(sizeof(*cmd))
++	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
++	struct nct6694_rtc_alarm *alarm = &data->msg->alarm;
++	static const struct nct6694_cmd_header cmd_hd = {
++		.mod = NCT6694_RTC_MOD,
++		.cmd = NCT6694_RTC_ALARM,
++		.sel = NCT6694_RTC_ALARM_SEL,
++		.len = cpu_to_le16(sizeof(*alarm))
 +	};
-+
-+	guard(mutex)(&data->lock);
-+	memcpy(&cmd->wdt_cmd, "WDTS", 4);
-+	cmd->reserved = 0;
-+
-+	return nct6694_write_msg(data->nct6694, &cmd_hd, cmd);
-+}
-+
-+static int nct6694_wdt_set_timeout(struct watchdog_device *wdev,
-+				   unsigned int new_timeout)
-+{
 +	int ret;
 +
-+	ret = nct6694_wdt_setting(wdev, new_timeout, NCT6694_ACTION_GPO,
-+				  wdev->pretimeout, NCT6694_ACTION_GPO);
++	ret = nct6694_read_msg(data->nct6694, &cmd_hd, alarm);
 +	if (ret)
 +		return ret;
 +
-+	wdev->timeout = new_timeout;
++	alrm->time.tm_sec = bcd2bin(alarm->sec);
++	alrm->time.tm_min = bcd2bin(alarm->min);
++	alrm->time.tm_hour = bcd2bin(alarm->hour);
++	alrm->enabled = alarm->alarm_en;
++	alrm->pending = alarm->alarm_pend;
 +
-+	return 0;
++	return ret;
 +}
 +
-+static int nct6694_wdt_set_pretimeout(struct watchdog_device *wdev,
-+				      unsigned int new_pretimeout)
++static int nct6694_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
 +{
-+	int ret;
-+
-+	ret = nct6694_wdt_setting(wdev, wdev->timeout, NCT6694_ACTION_GPO,
-+				  new_pretimeout, NCT6694_ACTION_GPO);
-+	if (ret)
-+		return ret;
-+
-+	wdev->pretimeout = new_pretimeout;
-+
-+	return 0;
-+}
-+
-+static unsigned int nct6694_wdt_get_time(struct watchdog_device *wdev)
-+{
-+	struct nct6694_wdt_data *data = watchdog_get_drvdata(wdev);
-+	struct nct6694_wdt_setup *setup = &data->msg->setup;
-+	const struct nct6694_cmd_header cmd_hd = {
-+		.mod = NCT6694_WDT_MOD,
-+		.cmd = NCT6694_WDT_SETUP,
-+		.sel = NCT6694_WDT_SETUP_SEL(data->wdev_idx),
-+		.len = cpu_to_le16(sizeof(*setup))
++	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
++	struct nct6694_rtc_alarm *alarm = &data->msg->alarm;
++	static const struct nct6694_cmd_header cmd_hd = {
++		.mod = NCT6694_RTC_MOD,
++		.cmd = NCT6694_RTC_ALARM,
++		.sel = NCT6694_RTC_ALARM_SEL,
++		.len = cpu_to_le16(sizeof(*alarm))
 +	};
-+	unsigned int timeleft_ms;
-+	int ret;
 +
-+	guard(mutex)(&data->lock);
++	alarm->sec = bin2bcd(alrm->time.tm_sec);
++	alarm->min = bin2bcd(alrm->time.tm_min);
++	alarm->hour = bin2bcd(alrm->time.tm_hour);
++	alarm->alarm_en = alrm->enabled ? NCT6694_RTC_IRQ_EN : 0;
++	alarm->alarm_pend = 0;
 +
-+	ret = nct6694_read_msg(data->nct6694, &cmd_hd, setup);
-+	if (ret)
-+		return 0;
-+
-+	timeleft_ms = le32_to_cpu(setup->countdown);
-+
-+	return timeleft_ms / 1000;
++	return nct6694_write_msg(data->nct6694, &cmd_hd, alarm);
 +}
 +
-+static const struct watchdog_info nct6694_wdt_info = {
-+	.options = WDIOF_SETTIMEOUT	|
-+		   WDIOF_KEEPALIVEPING	|
-+		   WDIOF_MAGICCLOSE	|
-+		   WDIOF_PRETIMEOUT,
-+	.identity = DEVICE_NAME,
-+};
-+
-+static const struct watchdog_ops nct6694_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = nct6694_wdt_start,
-+	.stop = nct6694_wdt_stop,
-+	.set_timeout = nct6694_wdt_set_timeout,
-+	.set_pretimeout = nct6694_wdt_set_pretimeout,
-+	.get_timeleft = nct6694_wdt_get_time,
-+	.ping = nct6694_wdt_ping,
-+};
-+
-+static int nct6694_wdt_probe(struct platform_device *pdev)
++static int nct6694_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
 +{
-+	const struct mfd_cell *cell = mfd_get_cell(pdev);
-+	struct device *dev = &pdev->dev;
++	struct nct6694_rtc_data *data = dev_get_drvdata(dev);
++	struct nct6694_rtc_status *sts = &data->msg->sts;
++	static const struct nct6694_cmd_header cmd_hd = {
++		.mod = NCT6694_RTC_MOD,
++		.cmd = NCT6694_RTC_STATUS,
++		.sel = NCT6694_RTC_STATUS_SEL,
++		.len = cpu_to_le16(sizeof(*sts))
++	};
++
++	if (enabled)
++		sts->irq_en |= NCT6694_RTC_IRQ_EN;
++	else
++		sts->irq_en &= ~NCT6694_RTC_IRQ_EN;
++
++	sts->irq_pend = 0;
++
++	return nct6694_write_msg(data->nct6694, &cmd_hd, sts);
++}
++
++static const struct rtc_class_ops nct6694_rtc_ops = {
++	.read_time = nct6694_rtc_read_time,
++	.set_time = nct6694_rtc_set_time,
++	.read_alarm = nct6694_rtc_read_alarm,
++	.set_alarm = nct6694_rtc_set_alarm,
++	.alarm_irq_enable = nct6694_rtc_alarm_irq_enable,
++};
++
++static irqreturn_t nct6694_irq(int irq, void *dev_id)
++{
++	struct nct6694_rtc_data *data = dev_id;
++	struct nct6694_rtc_status *sts = &data->msg->sts;
++	static const struct nct6694_cmd_header cmd_hd = {
++		.mod = NCT6694_RTC_MOD,
++		.cmd = NCT6694_RTC_STATUS,
++		.sel = NCT6694_RTC_STATUS_SEL,
++		.len = cpu_to_le16(sizeof(*sts))
++	};
++	int ret;
++
++	rtc_lock(data->rtc);
++
++	sts->irq_en = NCT6694_RTC_IRQ_EN;
++	sts->irq_pend = NCT6694_RTC_IRQ_STS;
++	ret = nct6694_write_msg(data->nct6694, &cmd_hd, sts);
++	if (ret) {
++		rtc_unlock(data->rtc);
++		return IRQ_NONE;
++	}
++
++	rtc_update_irq(data->rtc, 1, RTC_IRQF | RTC_AF);
++
++	rtc_unlock(data->rtc);
++
++	return IRQ_HANDLED;
++}
++
++static void nct6694_irq_dispose_mapping(void *d)
++{
++	struct nct6694_rtc_data *data = d;
++
++	irq_dispose_mapping(data->irq);
++}
++
++static int nct6694_rtc_probe(struct platform_device *pdev)
++{
++	struct nct6694_rtc_data *data;
 +	struct nct6694 *nct6694 = dev_get_drvdata(pdev->dev.parent);
-+	struct nct6694_wdt_data *data;
-+	struct watchdog_device *wdev;
 +	int ret;
 +
 +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
 +	if (!data)
 +		return -ENOMEM;
 +
-+	data->msg = devm_kzalloc(dev, sizeof(union nct6694_wdt_msg),
++	data->msg = devm_kzalloc(&pdev->dev, sizeof(union nct6694_rtc_msg),
 +				 GFP_KERNEL);
 +	if (!data->msg)
 +		return -ENOMEM;
 +
-+	data->dev = dev;
-+	data->nct6694 = nct6694;
-+	data->wdev_idx = cell->id;
++	data->irq = irq_create_mapping(nct6694->domain, NCT6694_IRQ_RTC);
++	if (!data->irq)
++		return -EINVAL;
 +
-+	wdev = &data->wdev;
-+	wdev->info = &nct6694_wdt_info;
-+	wdev->ops = &nct6694_wdt_ops;
-+	wdev->timeout = timeout;
-+	wdev->pretimeout = pretimeout;
-+	if (timeout < pretimeout) {
-+		dev_warn(data->dev, "pretimeout < timeout. Setting to zero\n");
-+		wdev->pretimeout = 0;
-+	}
-+
-+	wdev->min_timeout = 1;
-+	wdev->max_timeout = 255;
-+
-+	ret = devm_mutex_init(dev, &data->lock);
++	ret = devm_add_action_or_reset(&pdev->dev, nct6694_irq_dispose_mapping,
++				       data);
 +	if (ret)
 +		return ret;
 +
++	ret = devm_device_init_wakeup(&pdev->dev);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Failed to init wakeup\n");
++
++	data->rtc = devm_rtc_allocate_device(&pdev->dev);
++	if (IS_ERR(data->rtc))
++		return PTR_ERR(data->rtc);
++
++	data->nct6694 = nct6694;
++	data->rtc->ops = &nct6694_rtc_ops;
++	data->rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
++	data->rtc->range_max = RTC_TIMESTAMP_END_2099;
++
 +	platform_set_drvdata(pdev, data);
 +
-+	watchdog_set_drvdata(&data->wdev, data);
-+	watchdog_set_nowayout(&data->wdev, nowayout);
-+	watchdog_stop_on_reboot(&data->wdev);
++	ret = devm_request_threaded_irq(&pdev->dev, data->irq, NULL,
++					nct6694_irq, IRQF_ONESHOT,
++					"rtc-nct6694", data);
++	if (ret < 0)
++		return dev_err_probe(&pdev->dev, ret, "Failed to request irq\n");
 +
-+	return devm_watchdog_register_device(dev, &data->wdev);
++	return devm_rtc_register_device(data->rtc);
 +}
 +
-+static struct platform_driver nct6694_wdt_driver = {
++static struct platform_driver nct6694_rtc_driver = {
 +	.driver = {
-+		.name	= DEVICE_NAME,
++		.name	= "nct6694-rtc",
 +	},
-+	.probe		= nct6694_wdt_probe,
++	.probe		= nct6694_rtc_probe,
 +};
 +
-+module_platform_driver(nct6694_wdt_driver);
++module_platform_driver(nct6694_rtc_driver);
 +
-+MODULE_DESCRIPTION("USB-WDT driver for NCT6694");
++MODULE_DESCRIPTION("USB-RTC driver for NCT6694");
 +MODULE_AUTHOR("Ming Yu <tmyu0@nuvoton.com>");
 +MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:nct6694-wdt");
++MODULE_ALIAS("platform:nct6694-rtc");
 -- 
 2.34.1
 
