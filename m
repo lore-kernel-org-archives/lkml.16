@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21F6D28D826;
-	Wed, 23 Apr 2025 17:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A385F28D85D;
+	Wed, 23 Apr 2025 17:50:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745430655; cv=none; b=FJysrOLpJ5Zf8+6vY5V9cmaQhUgDX8h33C/XDBBeVS1oE7+3TyZfmJ9nouDWSaH5MGJ2UiEJOvQ/zKp3oqtrbSuPAYZ01CRM2ZFZwwAQHCdFvGDolXNj8xRFrOveeZxZp9TTb99ToU+JjZSDFKHjw+OJ2SmDDchlXyyZo44uDaw=
+	t=1745430656; cv=none; b=rZUo1Ub18D4EsR/nnpHyTqM1ZzwtAl1+DI83ku6nIQZrxiyXNKP7zMa/3u2jJFMN5nPxz8DM5B9P+MCrFJX1VjTw4eLohkFeAlqt0+HSuKYB5f6i+1W1PtnOn5dqFBJhKuWJm1PZQSo4UNBN+NVtOgDRcsbAMCp6NhmXiiFFRIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745430655; c=relaxed/simple;
-	bh=IJCyRhnBl/jq8ICFiPmQRSjel5Gqz/wB2SAcG7SGuTU=;
+	s=arc-20240116; t=1745430656; c=relaxed/simple;
+	bh=pspP0LoaB25ewweJpkQNKt1iGCUbJ6t/mkm9l0BSOVU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nEF1ziNqKikJJgVSzL1R8Z4MC+wlJVzjLE5fL/n6v289rDY5mFNcMgMIA8wXG8Y+j2OPGvUHTP52SSU5sRXZ0gCgp0B+SN8SH6VaROYvLhoLojah2GSWS1tYytgXdp6zCs41n/3gXdQ1tFk2S8d0vpJDUFGEO+ePp2AbnuhDlbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ijI5Bs2y; arc=none smtp.client-ip=198.175.65.18
+	 MIME-Version; b=YxfuWen+cTAwU+6hcvZlLK9iS5Fe4kGW5VVn4hdI6pgWWXncKiMTtNbOhlX5HcTs7X6H+rvKbDlhBfo3LQ4VnOe49wp2y9EL1Nx5DyBOVMEvEIIJR14cvf2fH5QjdiSO743aZZT2Ijbd7SJ4Ihw41HTKvN5NhOvzAsx/idxmx5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IPooBr7l; arc=none smtp.client-ip=198.175.65.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ijI5Bs2y"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IPooBr7l"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745430653; x=1776966653;
+  t=1745430655; x=1776966655;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IJCyRhnBl/jq8ICFiPmQRSjel5Gqz/wB2SAcG7SGuTU=;
-  b=ijI5Bs2yRe42iEeYQe8KyfDmovTappy5+nE8jRknXWFzradmdswjz2EP
-   4nUQYXhkkj1TnyIkRgawAzQOETeJXpzjnh7857mYkcB+0SkVI7Z0SnLHf
-   jIPMmK+ON+DTLhOLoLAIfJouW2OySN+k2GE2KGldeWECN3cRmLc0BZp9B
-   BjTN2V+PhWD7isQq3dfchPX6HiFHwN+CInt7SJsBUMBNqDckTBxHzxx3M
-   q3zWIkyyIFYSH97BymiLawAUFNps66iHA6ChTiN5TNIrqaL8Dacey8+dE
-   8IfwNCIaQDdDV+mivdEozTR8MxY7XQHYqnw3i3C7po72fkdEw31udxFYz
-   g==;
-X-CSE-ConnectionGUID: Ov0x0mhxRh2EhHNKOOJM2Q==
-X-CSE-MsgGUID: PWcvIQMWQzqdXPGPD2/aPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47168334"
+  bh=pspP0LoaB25ewweJpkQNKt1iGCUbJ6t/mkm9l0BSOVU=;
+  b=IPooBr7lFf1+faR8WHphNIrnWXXxlevJ6tDgrQihw1kqjyUC3+V3Pst0
+   W5HhhMMiYCIZ2okCl1jkhGF6F0tm3K1Bwo0cuJvd+gcKH9G9X9a0wG8Xh
+   X3q7ZvP8BtJRVSRoOhkvqwcyXUC/7eXzHYBKcUe536lqDj4EP1nX7iWAX
+   Xbq1yPdL7zrM3CqFfgo19iKvxMM4/8xXEamfxk5w6x9LGMM8K8a8Na9vq
+   3Fff/hPHxdxWB+j/FwqJZz8ToLbOQxOFNVb9Ore50yEwlyKzv/X4uSfON
+   SMsZKtygw0V+V0K9PSl9Ti7uxoZ0mw9Sf55jupDn/mP1uIBhHELQOYrKR
+   w==;
+X-CSE-ConnectionGUID: I9ztMGPQRP6foR41NcRO3w==
+X-CSE-MsgGUID: y9s1ZnT5R2ODGOWmE3v0Wg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47168352"
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="47168334"
+   d="scan'208";a="47168352"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:51 -0700
-X-CSE-ConnectionGUID: 485ZsBaRRHeCIEPewcWQNQ==
-X-CSE-MsgGUID: BQw05VOXTYqOkMhR2d36PQ==
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:52 -0700
+X-CSE-ConnectionGUID: xwHH6O9mSkq8biLXi0V1ig==
+X-CSE-MsgGUID: H3DH1ZQyT1+9xMampYd3Kw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="163350466"
+   d="scan'208";a="163350474"
 Received: from ldmartin-desk2.corp.intel.com (HELO debox1-desk4.lan) ([10.125.111.241])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:51 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 10:50:52 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
 To: corbet@lwn.net,
 	bhelgaas@google.com,
@@ -65,9 +65,9 @@ Cc: linux-doc@vger.kernel.org,
 	platform-driver-x86@vger.kernel.org,
 	Dell.Client.Kernel@dell.com,
 	linux-sound@vger.kernel.org
-Subject: [PATCH 3/7] docs: sysfs.rst: document additional attribute group macros
-Date: Wed, 23 Apr 2025 10:50:33 -0700
-Message-ID: <20250423175040.784680-4-david.e.box@linux.intel.com>
+Subject: [PATCH 5/7] soundwire: sysfs: Use ATTRIBUTE_GROUP_VISIBLE()
+Date: Wed, 23 Apr 2025 10:50:35 -0700
+Message-ID: <20250423175040.784680-6-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250423175040.784680-1-david.e.box@linux.intel.com>
 References: <20250423175040.784680-1-david.e.box@linux.intel.com>
@@ -79,299 +79,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add documentation to Documentation/filesystems/sysfs.rst for several sysfs
-helper macros, including recently introduced and previously undocumented
-helpers.
+Replace the manual definition of the dp0 attribute group with the newly
+introduced ATTRIBUTE_GROUP_VISIBLE() macro, simplifying the code and
+improving maintainability.
 
-Document the following macros:
+Consolidate the definition of dp0_attrs and move the attribute array above
+the macro so that they are visibly tied together.  While here, also remove
+the unneeded trailing comma after NULL at the end of all attribute arrays.
+No functional changes are intended.
 
-	__ATTR_IGNORE_LOCKDEP
-	DEFINE_SYSFS_GROUP_VISIBILITY
-	DEFINE_SYSFS_BIN_GROUP_VISIBILITY
-	DEFINE_SYSFS_BIN_GROUP_COMBO_VISIBILITY
-	ATTRIBUTE_GROUPS
-	BIN_ATTRIBUTE_GROUPS
-	NAMED_ATTRIBUTE_GROUP_VISIBLE
-	NAMED_ATTRIBUTE_GROUPS_VISIBLE
-	NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE
-	NAMED_ATTRIBUTE_GROUPS_COMBO_VISIBLE
-
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- Documentation/filesystems/sysfs.rst | 244 ++++++++++++++++++++++++++++
- 1 file changed, 244 insertions(+)
+ drivers/soundwire/sysfs_slave.c | 32 +++++++++++++-------------------
+ 1 file changed, 13 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/filesystems/sysfs.rst b/Documentation/filesystem=
-s/sysfs.rst
-index c32993bc83c7..16bcc3e7c80c 100644
---- a/Documentation/filesystems/sysfs.rst
-+++ b/Documentation/filesystems/sysfs.rst
-@@ -147,6 +147,250 @@ __ATTR_RW(name):
- __ATTR_NULL:
- 	         which sets the name to NULL and is used as end of list
-                  indicator (see: kernel/workqueue.c)
-+__ATTR_IGNORE_LOCKDEP(name, mode, show, store):
-+                 like __ATTR() but disables lockdep checks; used in cases
-+                 where lockdep may emit false positives
-+
-+Additional Attribute Helpers
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+ATTRIBUTE_GROUPS(name):
-+       Convenience macro to create an array of attribute group pointers.
-+
-+Example::
-+
-+    static struct attribute *foo_attrs[] =3D {
-+            &attr1.attr,
-+            &attr2.attr,
-+            NULL
-+    };
-+    ATTRIBUTE_GROUPS(foo);
-+
-+BIN_ATTRIBUTE_GROUPS(name):
-+        Same as ATTRIBUTE_GROUPS(), but for bin_attribute_group structures.
-+
-+Example::
-+
-+    static struct bin_attribute *foo_attrs[] =3D {
-+            &bin_attr1.attr,
-+            &bin_attr2.attr,
-+            NULL
-+    };
-+    BIN_ATTRIBUTE_GROUPS(bin_foo);
-+
-+DEFINE_SYSFS_GROUP_COMBO_VISIBILITY(name):
-+        A helper macro to pair with the assignment of
-+
-+                ".is_visible =3D SYSFS_GROUP_VISIBLE(name)",
-+
-+        that arranges for the directory associated with a named attribute_=
-group
-+        to optionally be hidden.  This allows for static declaration of
-+        attribute_groups, and the simplification of attribute visibility
-+        lifetime that implies, without polluting sysfs with empty attribute
-+        directories.
-+
-+Example::
-+
-+    static umode_t example_attr_visible(struct kobject *kobj,
-+                                        struct attribute *attr, int n)
-+    {
-+            if (example_attr_condition)
-+                    return 0;
-+            if (ro_attr_condition)
-+                    return 0444;
-+            return a->mode;
-+    }
-+
-+    static bool example_group_visible(struct kobject *kobj)
-+    {
-+            if (example_group_condition)
-+                    return false;
-+            return true;
-+    }
-+
-+    DEFINE_SYSFS_GROUP_COMBO_VISIBILITY(example);
-+
-+    static struct attribute_group example_group =3D {
-+            .name =3D "example",
-+            .is_visible =3D SYSFS_GROUP_VISIBLE(example),
-+            .attrs =3D &example_attrs,
-+    };
-+
-+Note that it expects <name>_attr_visible and <name>_group_visible to
-+be defined. For cases where individual attributes do not need
-+separate visibility consideration, only entire group visibility at
-+once, see DEFINE_SYSFS_GROUP_VISIBILITY().
-+
-+DEFINE_SYSFS_GROUP_VISIBILITY(name):
-+        A helper macro to pair with SYSFS_GROUP_VISIBLE() that, like
-+        DEFINE_SYSFS_GROUP_COMBO_VISIBILITY(), controls group visibility, =
-but
-+        does not require the implementation of a per-attribute visibility
-+        callback.
-+
-+Example::
-+
-+    static bool example_group_visible(struct kobject *kobj)
-+    {
-+            if (example_group_condition)
-+                    return false;
-+            return true;
-+    }
-+
-+    DEFINE_SYSFS_GROUP_VISIBILITY(example);
-+
-+    static struct attribute_group example_group =3D {
-+            .name =3D "example",
-+            .is_visible =3D SYSFS_GROUP_VISIBLE(example),
-+            .attrs =3D &example_attrs,
-+    };
-+
-+DEFINE_SYSFS_BIN_GROUP_COMBO_VISIBILITY(name):
-+DEFINE_SYSFS_BIN_GROUP_VISIBILITY(name):
-+        Same as DEFINE_SYSFS_GROUP_VISIBILITY(), but for groups with only =
-binary
-+        attributes. If an attribute_group defines both text and binary
-+        attributes, the group visibility is determined by the function
-+        specified to is_visible() not is_bin_visible().
-+
-+Named Attribute Group Macros (with visibility)
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+These macros define struct attribute_group objects with a static name and
-+visibility function(s). They are useful for creating named directories in =
-sysfs
-+where individual attributes can be conditionally exposed.
-+
-+NAMED_ATTRIBUTE_GROUP_VISIBLE(name):
-+        Defines an attribute group with a fixed directory name (matching n=
-ame)
-+        with a group visibility function. Expects an attribute array
-+        <name>_attrs. The macro automatically defines the visibility funct=
-ion.
-+
-+Example::
-+
-+    static ssize_t foo_show(struct device *dev, struct device_attribute *a=
-ttr,
-+                            char *buf)
-+    {
-+            ...
-+    }
-+
-+    static ssize_t foo_store(struct device *dev, struct device_attribute *=
-attr,
-+                             const char *buf, size_t count)
-+    {
-+            ...
-+    }
-+    static DEVICE_ATTR_RW(foo);
-+
-+    static bool bar_group_visible(struct kobject *kobj)
-+    {
-+            if (bar_group_condition)
-+                    return false;
-+            return true;
-+    }
-+
-+    static struct attribute *bar_attrs[] =3D {
-+            &dev_attr_foo.attr,
-+            NULL
-+    };
-+    NAMED_ATTRIBUTE_GROUP_VISIBLE(bar);
-+
-+Creates::
-+
-+    static const struct attribute_group bar_group =3D {
-+            .name =3D "bar",
-+            .attrs =3D bar_attrs,
-+            .is_visible =3D SYSFS_GROUP_VISIBLE(bar),
-+    };
-+
-+    /*
-+     * Where SYSFS_GROUP_VISIBLE(bar) is a function created by
-+     * DEFINE_SYSFS_GROUP_VISIBILITY(bar) that calls bar_group_visible().
-+     */
-+
-+NAMED_ATTRIBUTE_GROUPS_VISIBLE(name):
-+        Like NAMED_ATTRIBUTE_GROUP_VISIBLE(), defines the visible attribute
-+        group but also creates the group list <name>_groups[].
-+
-+Example::
-+
-+    ...
-+
-+    static struct attribute *bar_attrs[] =3D {
-+            &attr1.attr,
-+            &attr2.attr,
-+            NULL
-+    };
-+    NAMED_ATTRIBUTE_GROUPS_VISIBLE(bar);
-+
-+Creates::
-+
-+    static const struct attribute_group bar_group =3D {
-+            .name =3D "bar",
-+            .attrs =3D bar_attrs,
-+            .is_visible =3D SYSFS_GROUP_VISIBLE(bar),
-+    };
-+
-+    static const struct attribute_group *bar_groups[] =3D {
-+            &bar_group,
-+            NULL
-+    };
-+
-+NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(name):
-+        Same as NAMED_ATTRIBUTE_GROUP_VISIBLE(), but uses the "combo" visi=
-bility
-+        variant to support both group and per-attribute visibility control.
-+        Automatically generates the combo visibility boilerplate.
-+
-+Example::
-+
-+    static ssize_t foo_show(struct device *dev, struct device_attribute *a=
-ttr,
-+                            char *buf)
-+    {
-+            ...
-+    }
-+
-+    static ssize_t foo_store(struct device *dev, struct device_attribute *=
-attr,
-+                             const char *buf, size_t count)
-+    {
-+            ...
-+    }
-+    static DEVICE_ATTR_RW(foo);
-+
-+    static umode_t foo_attr_visible(struct kobject *kobj,
-+                                    struct attribute *attr, int n)
-+    {
-+            if (example_attr_condition)
-+                    return 0;
-+            return attr->mode;
-+    }
-+
-+    static bool foo_group_visible(struct kobject *kobj)
-+    {
-+            if (foo_group_condition)
-+                    return false;
-+            return true;
-+    }
-+
-+    static struct attribute *foo_attrs[] =3D {
-+            &dev_attr_foo.attr,
-+            NULL
-+    };
-+    NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(foo);
-+
-+Creates::
-+
-+    static const struct attribute_group foo_group =3D {
-+            .name =3D "foo",
-+            .attrs =3D foo_attrs,
-+            .is_visible =3D SYSFS_GROUP_VISIBLE(foo),
-+    };
-+
-+    /*
-+     * Where SYSFS_GROUP_VISIBLE(foo) is a function created by
-+     * DEFINE_SYSFS_GROUP_COMBO_VISIBILITY(foo) that calls foo_group_visib=
-le()
-+     * and foo_attr_visible().
-+     */
-+
-+NAMED_ATTRIBUTE_GROUPS_COMBO_VISIBLE(name):
-+        Like NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE() defines the attribute g=
-roup,
-+        supporting both group and per-attribute visibility control, but al=
-so
-+        creates the group list <name>_groups[].
+diff --git a/drivers/soundwire/sysfs_slave.c b/drivers/soundwire/sysfs_slav=
+e.c
+index c5c22d1708ec..400f2a17f140 100644
+--- a/drivers/soundwire/sysfs_slave.c
++++ b/drivers/soundwire/sysfs_slave.c
+@@ -103,7 +103,7 @@ static DEVICE_ATTR_RO(modalias);
 =20
- Subsystem-Specific Callbacks
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ static struct attribute *slave_attrs[] =3D {
+ 	&dev_attr_modalias.attr,
+-	NULL,
++	NULL
+ };
+=20
+ static const struct attribute_group slave_attr_group =3D {
+@@ -126,7 +126,7 @@ static struct attribute *slave_dev_attrs[] =3D {
+ 	&dev_attr_master_count.attr,
+ 	&dev_attr_source_ports.attr,
+ 	&dev_attr_sink_ports.attr,
+-	NULL,
++	NULL
+ };
+=20
+ static const struct attribute_group sdw_slave_dev_attr_group =3D {
+@@ -170,16 +170,6 @@ static ssize_t words_show(struct device *dev,
+ }
+ static DEVICE_ATTR_RO(words);
+=20
+-static struct attribute *dp0_attrs[] =3D {
+-	&dev_attr_max_word.attr,
+-	&dev_attr_min_word.attr,
+-	&dev_attr_words.attr,
+-	&dev_attr_BRA_flow_controlled.attr,
+-	&dev_attr_simple_ch_prep_sm.attr,
+-	&dev_attr_imp_def_interrupts.attr,
+-	NULL,
+-};
+-
+ static umode_t dp0_attr_visible(struct kobject *kobj, struct attribute *at=
+tr,
+ 			      int n)
+ {
+@@ -198,19 +188,23 @@ static bool dp0_group_visible(struct kobject *kobj)
+ 		return true;
+ 	return false;
+ }
+-DEFINE_SYSFS_GROUP_VISIBLE(dp0);
+=20
+-static const struct attribute_group dp0_group =3D {
+-	.attrs =3D dp0_attrs,
+-	.is_visible =3D SYSFS_GROUP_VISIBLE(dp0),
+-	.name =3D "dp0",
++static struct attribute *dp0_attrs[] =3D {
++	&dev_attr_max_word.attr,
++	&dev_attr_min_word.attr,
++	&dev_attr_words.attr,
++	&dev_attr_BRA_flow_controlled.attr,
++	&dev_attr_simple_ch_prep_sm.attr,
++	&dev_attr_imp_def_interrupts.attr,
++	NULL
+ };
++NAMED_ATTRIBUTE_GROUP_COMBO_VISIBLE(dp0);
+=20
+ const struct attribute_group *sdw_attr_groups[] =3D {
+ 	&slave_attr_group,
+ 	&sdw_slave_dev_attr_group,
+ 	&dp0_group,
+-	NULL,
++	NULL
+ };
+=20
+ /*
+@@ -249,7 +243,7 @@ static DEVICE_ATTR_RO(device_number);
+ static struct attribute *slave_status_attrs[] =3D {
+ 	&dev_attr_status.attr,
+ 	&dev_attr_device_number.attr,
+-	NULL,
++	NULL
+ };
+=20
+ /*
 --=20
 2.43.0
 
