@@ -1,151 +1,145 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D911F4625
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6152701B2;
+	Wed, 23 Apr 2025 08:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745398723; cv=none; b=Yy+r5JBMdLpzsg9fsNwP+0qbzrT3XUxzQ9pNISvdgpQRqaQ1na74ATV+8HiFdnDQN+P8YNX2snV9jn6eWGZMu7kN+Yp2X2LhYnWjbHjD6RHf84VO1DPkxq76wl94vLIKYi9ZkhkhQ7PDythqvLPBM1vXs11L3kGR3rRg7l1E0MA=
+	t=1745398787; cv=none; b=j2TU0KcH156LY4EYY9dCnyYUepxexviGi/9oK1icQvQKYfn6BCz1fb+NzYSbmXw9a1SrIDSMwl8RPx9/0Qb2Z7E6fJ+UXQjnBpDmYzRs275edsYwXoyHEF9g46CcZuF+ls3WsMIZBfgg+f92vvpeVf3vbn9T6iuCrTqW7TtbMao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745398723; c=relaxed/simple;
-	bh=y/r92ZoKSv7oC9AvAw2txCOSGIwZK0JD6u99kRaYQ/A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TRG5UE8G4MnCOImCwcnEvzYTEBCu7ln0C78uJpDMuGvHxogffvWjk4rMny+GvrOgmKxKvbsQpHVSKMUQ0dtrnpi/A7MQ4UxdSndMY6CsErSkv2lOK9oGoFKjc29KDcLD9dN4/dKrv6D7u8/Yjeern4eP/9NWvvMe7v4hTA+qU/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tx/gJgS5; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tx/gJgS5"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so4093337f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:58:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745398720; x=1746003520; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XPH17I4ByfRvhzK6JEBH2X9LLFdHrZvG5tQMgObXYcY=;
-        b=tx/gJgS5+qfs7PY1wosv1aTHFkqsp/xJHW2D9DIMwTB8rdRWECHoteO3dcKr/zGnPW
-         bDhQ7bZIHtS9ccsBg5rQyU7EiNto3mGXVN1jsbgguNMIKwC9EJQ+EqOqJ7jDecqjkelD
-         azujUBHRXXhhjw6JCEaW/+nZG3MVEN1xqIpM14kvcd5N6FZGdYnsRhRNKsdAY5dmq+n6
-         2vmrdIiJUaL603kVWzncPq+aTaG6ivzDfY8T9Ic+4/WDGp2xrNo07qHRUfs/Oed/Nvxi
-         08dxN+/yStwu0Qc1Ys9f+PjS9lCGgc6jxSFy0pIOvlYWhqjQE53+eiWfr9dkKxILNxeZ
-         Psrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745398720; x=1746003520;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XPH17I4ByfRvhzK6JEBH2X9LLFdHrZvG5tQMgObXYcY=;
-        b=xAsPqPdDhNc8ICX7yeYNUyU6SMaTlx30StbNhGDROvFoAf64KQObz9kenaDEljApNQ
-         eHYLhpYn/U/6P5e9KnNZik3y/tinYGwaUvPHGY3egg6d4MTdlBeCF2pET3QzAg6mUUtd
-         JNwpcArGox0ZsyrIVcwFSrpyqZlbr7g+u01LVWXfGE8PgWcWi6ZzC51NjgneGtF7qt+N
-         v4EMM5E7CokQlRdKj1I4/MIy+N+zqjsALXoO65rAxTmKTywwB+fPAiyU2zQxuNCHb+go
-         Lt2RqHJbQECh6z75JiLN9ybzW1e/N7NKUfw/yemO9r2nxCz6SLxmSuqi1b/n7sUIvaDn
-         O3tA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKnfg35TgKQ91B7ipnbSKAYSHLz3EPKTZfZfN05XIIjRAhDJSc3//ltgCmoYifSbm6rGZUFBoxIKq0kJA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXPfrFEGHiiJdqi2vdZ3bQ6oJjysLWCQv3153W5LqQfLr8mCxv
-	Cw2fJpzxCfX5Z2p/6XKUo3Sgmzq80DQdi12FeiI8PMuU7TMtXudEgsKOicIDzFs=
-X-Gm-Gg: ASbGncvbYlA7CVv9kqVBUoU1dNFEFLERtUDihXbhZ/CwS2cFGzTXuoPtLcnm+PuVq9f
-	QQNCgBDutBjWypWJvuVtbPBKOTN2sO1mjjp00He9rxchuD0oxM0aasOKtvp2nCpj09pYUMamspP
-	Jcuxoyb06hIoT/XUelQlmChgphn7q1vIDkVrOynKh7yF+iUjq+WHgGZWGgycjMGM+IkueNMkX/p
-	wg6bSB1VFFDNHjek2kgnYxbv5EQY+wj82rsYBjooDxjcIL+pzWqWUn6dJiWTNuFe9jBziS7qHPR
-	A6lpzAgVKcnbIB5toiYX0ZYmSDQqQemhA9woSLCR6d0=
-X-Google-Smtp-Source: AGHT+IF4S09LrLbSM+FpPSpWVvWiOPyvGCGJjG8WXcNrRQavVfCzJ8UKSNqk5Khjopq6gx7t1dvnHQ==
-X-Received: by 2002:a5d:47aa:0:b0:39c:cd5:4bc0 with SMTP id ffacd0b85a97d-39efbaf70bfmr14908891f8f.52.1745398720120;
-        Wed, 23 Apr 2025 01:58:40 -0700 (PDT)
-Received: from [192.168.1.3] ([77.81.75.81])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-39efa4a49b5sm17987165f8f.86.2025.04.23.01.58.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 01:58:39 -0700 (PDT)
-Message-ID: <b05aa0fc-05ab-4784-90ab-2d91b78d152b@linaro.org>
-Date: Wed, 23 Apr 2025 09:58:38 +0100
+	s=arc-20240116; t=1745398787; c=relaxed/simple;
+	bh=uHWekA94BHUStyZoX5LJyDtvPegkwkDK+SHYN1zdReg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RDfbwazxNYO0iT7YSMLOKrMzzhn4uYSScu3i2dORpRH4xE5J/81NO1Y2odqhjES9Z/mAc9SKq9i+xTWt7avrnXq/yJA8hoYxqNki/Fa76FwYoeDYtAjeWnE2zwt4vHaMg3oALvI4SyLqwa4erGQW6JAtxMlFYOvV05NqKjX04Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N7lBYB025978;
+	Wed, 23 Apr 2025 08:59:29 GMT
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 466jhj8h9w-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Wed, 23 Apr 2025 08:59:28 +0000 (GMT)
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Wed, 23 Apr 2025 01:59:27 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Wed, 23 Apr 2025 01:59:23 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <jianqi.ren.cn@windriver.com>, <jhs@mojatatu.com>,
+        <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
+        <michal.swiatkowski@linux.intel.com>
+Subject: [PATCH 5.15.y] net/sched: act_mirred: don't override retval if we already lost the skb
+Date: Wed, 23 Apr 2025 16:59:23 +0800
+Message-ID: <20250423085923.2890055-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] perf tool_pmu: Fix aggregation on duration_time
-To: Ian Rogers <irogers@google.com>
-Cc: Stephane Eranian <eranian@google.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, Thomas Richter
- <tmricht@linux.ibm.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250423050358.94310-1-irogers@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20250423050358.94310-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: IEluZoRdqirOPmjxdYA4XupcAB1J8Z7l
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA2MCBTYWx0ZWRfX1DCx4QgzP1eT V7bkHXk0uxGxAdOYczLh1Os+Z3ICuxlVea4uNIKt8uEoraFjPw0NLVxockOYz78qapziTu8svOV 1Il5u1NCjMOv2ezzm7tbzG3/KMG0HrBEGAo3NlIgf8DV8UnvmVnR8TQbVO5nA4KKmNQKYnGz2y3
+ vgfDogb2axwTt+N0JAyEYjHaE3vK3ts0i9T/3EtowoXibBOlYJrhrmUo/3caGAkF3PqOu99LQO+ KsRjky49T4tH0ufdMLsYIk53jjogwe739+PzG0gOgvmnhQTIqANE0G4GbEuGzSczo98Cz3eDuTG dCaBNqXQ4vs2XbnoeGS0a46bPeLIM1V6Xi1LxlrjE5aycDrKUDXd7/33TFwVAClchQYJ7ZtVNOj
+ ykJqaNkuPcy62VHFT4JcijhyheK3oPvTuEl6n+y0Ojf3s4zJUJMH+pNhgVm86AsHl7V511bi
+X-Authority-Analysis: v=2.4 cv=ONQn3TaB c=1 sm=1 tr=0 ts=6808abf0 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=A7XncKjpAAAA:8 a=J1Y8HTJGAAAA:8 a=t7CeM3EgAAAA:8
+ a=z6SZLS2PjRZJ6NiNSX0A:9 a=R9rPLQDAdC6-Ub70kJmZ:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: IEluZoRdqirOPmjxdYA4XupcAB1J8Z7l
+X-Sensitive_Customer_Information: Yes
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-23_06,2025-04-22_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ mlxscore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0 spamscore=0
+ malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2504070000
+ definitions=main-2504230060
 
+From: Jakub Kicinski <kuba@kernel.org>
 
+[ Upstream commit 166c2c8a6a4dc2e4ceba9e10cfe81c3e469e3210 ]
 
-On 23/04/2025 6:03 am, Ian Rogers wrote:
-> evsel__count_has_error fails counters when the enabled or running time
-> are 0. The duration_time event reads 0 when the cpu_map_idx != 0 to
-> avoid aggregating time over CPUs. Change the enable and running time
-> to always have a ratio of 100% so that evsel__count_has_error won't
-> fail.
-> 
-> Before:
-> ```
-> $ sudo /tmp/perf/perf stat --per-core -a -M UNCORE_FREQ sleep 1
-> 
->   Performance counter stats for 'system wide':
-> 
-> S0-D0-C0              1      2,615,819,485      UNC_CLOCK.SOCKET                 #     2.61 UNCORE_FREQ
-> S0-D0-C0              2      <not counted>      duration_time
-> 
->         1.002111784 seconds time elapsed
-> ```
-> 
-> After:
-> ```
-> $ perf stat --per-core -a -M UNCORE_FREQ sleep 1
-> 
->   Performance counter stats for 'system wide':
-> 
-> S0-D0-C0              1        758,160,296      UNC_CLOCK.SOCKET                 #     0.76 UNCORE_FREQ
-> S0-D0-C0              2      1,003,438,246      duration_time
-> 
->         1.002486017 seconds time elapsed
-> ```
-> 
-> Note: the metric reads the value a different way and isn't impacted.
-> 
-> Reported-by: Stephane Eranian <eranian@google.com>
-> Fixes: 240505b2d0ad ("perf tool_pmu: Factor tool events into their own PMU")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   tools/perf/util/tool_pmu.c | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-> index 97b327d1ce4a..727a10e3f990 100644
-> --- a/tools/perf/util/tool_pmu.c
-> +++ b/tools/perf/util/tool_pmu.c
-> @@ -486,8 +486,14 @@ int evsel__tool_pmu_read(struct evsel *evsel, int cpu_map_idx, int thread)
->   		delta_start *= 1000000000 / ticks_per_sec;
->   	}
->   	count->val    = delta_start;
-> -	count->ena    = count->run = delta_start;
->   	count->lost   = 0;
-> +	/*
-> +	 * The values of enabled and running must make a ratio of 100%. The
-> +	 * exact values don't matter as long as they are non-zero to avoid
-> +	 * issues with evsel__count_has_error.
-> +	 */
-> +	count->ena++;
-> +	count->run++;
->   	return 0;
->   }
->   
+If we're redirecting the skb, and haven't called tcf_mirred_forward(),
+yet, we need to tell the core to drop the skb by setting the retcode
+to SHOT. If we have called tcf_mirred_forward(), however, the skb
+is out of our hands and returning SHOT will lead to UaF.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+Move the retval override to the error path which actually need it.
+
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Fixes: e5cf1baf92cb ("act_mirred: use TC_ACT_REINSERT when possible")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[Minor conflict resolved due to code context change.]
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
+---
+Verified the build test
+---
+ net/sched/act_mirred.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index 97cd4b2377d6..e1c183b28306 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -258,13 +258,13 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 	dev = rcu_dereference_bh(m->tcfm_dev);
+ 	if (unlikely(!dev)) {
+ 		pr_notice_once("tc mirred: target device is gone\n");
+-		goto out;
++		goto err_cant_do;
+ 	}
+ 
+ 	if (unlikely(!(dev->flags & IFF_UP)) || !netif_carrier_ok(dev)) {
+ 		net_notice_ratelimited("tc mirred to Houston: device %s is down\n",
+ 				       dev->name);
+-		goto out;
++		goto err_cant_do;
+ 	}
+ 
+ 	/* we could easily avoid the clone only if called by ingress and clsact;
+@@ -278,7 +278,7 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 	if (!use_reinsert) {
+ 		skb2 = skb_clone(skb, GFP_ATOMIC);
+ 		if (!skb2)
+-			goto out;
++			goto err_cant_do;
+ 	}
+ 
+ 	want_ingress = tcf_mirred_act_wants_ingress(m_eaction);
+@@ -321,12 +321,16 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 	}
+ 
+ 	err = tcf_mirred_forward(want_ingress, skb2);
+-	if (err) {
+-out:
++	if (err)
+ 		tcf_action_inc_overlimit_qstats(&m->common);
+-		if (tcf_mirred_is_act_redirect(m_eaction))
+-			retval = TC_ACT_SHOT;
+-	}
++	__this_cpu_dec(mirred_nest_level);
++
++	return retval;
++
++err_cant_do:
++	if (is_redirect)
++		retval = TC_ACT_SHOT;
++	tcf_action_inc_overlimit_qstats(&m->common);
+ 	__this_cpu_dec(mirred_nest_level);
+ 
+ 	return retval;
+-- 
+2.34.1
 
