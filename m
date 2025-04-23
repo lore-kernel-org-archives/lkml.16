@@ -1,515 +1,477 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa9.fujitsucc.c3s2.iphmx.com (esa9.fujitsucc.c3s2.iphmx.com [68.232.159.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3ED4269816
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745388204; cv=none; b=Bdip6kT/0L+amN07mJiaxwTvLQFKB3re8xeHb5Tjq67hObZYywU8NnX9uiXlAEfusJ6k1WCiZB+STAxCwwTRn95/j4Oo/IUYnOi4MHK/5SinNEgPtgrnkTfjyRq/Uvj4vWGY7KKt5BuQzeFiIIEDu2jzQMlgUdKmASrUTEOV5yE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745388204; c=relaxed/simple;
-	bh=9Qscboeia2uNRBLH5/GZHOKIudnPwjvYFXRMx7RjKvM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V78346PS279HF+bdCMw0GCffIcwgH9KDNRpg5lllM4wDF4nnN7aOG94FvnKi3+im+PwTqMFaYyy8qyJKuol+9MdHpz5il9QxBHiwET5yx/wXlgKQMEy9ZOPll2xfmzN62Aie1ewdG7n8K5Pi0jJANSj/quBGdEQG5TcQPBcxrlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=Xo8WiGLB; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD96C26657C
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.159.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745388372; cv=fail; b=qXk54P5wZunlcy8tG038ZYnqVtqrBuGMhwbFkP02pyU/2YLyQVzaK7dyrxJt7SgmcfnvouE63Q0m5O2Qx9nMuZw/ahc/sqExt0lc/PVS8JORtGnSUZuBi08P89iRkYMOTmyJMJuUIuXOYMYRdVTH8fAw6RMYWG1ryik17h+kuPs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745388372; c=relaxed/simple;
+	bh=3cdvTlX24pf/QAuWrPQo5VbDMAxVhUakeMVIkAx7yeQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PM/4JX3bdsZ9EBLXX90GwrTn/5NnQlrgHqc7SURdwZu5uSvbYnnq0n53Cl40j4ZPro5XuZP0pxuPTBv484RV7nN9vRGyNAk9T1PO8MzGzM6PzvBHxDmnGl/TCimmRTRr2yPO+v4XUyZBxj3dZQsjwdua4BhWtQgwlqjdnlyvZpI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=jS8xtDmI; arc=fail smtp.client-ip=68.232.159.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="Xo8WiGLB"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac2963dc379so890515366b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 23:03:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1745388198; x=1745992998; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M1LPvgW76Syl4Gq/D4YwH1w+u1FqKAGdfyLm4OGDki8=;
-        b=Xo8WiGLBrSH0oThaDVwrz/WFkIFseCYWBUlN/Donygdue83EcwzEriIvhz5gVBBACe
-         aSwbdqSz177FoxT23UFnEkmBQ6mQXLtRMU3MBvBEtHOTQCttUB/FRVWNAXhVB2TN3+Zy
-         j36aI3/3Ct8ZJKVwhrEzhw1quCYEuNqBmRk78=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745388198; x=1745992998;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M1LPvgW76Syl4Gq/D4YwH1w+u1FqKAGdfyLm4OGDki8=;
-        b=VQ9fLftUWac0r/HfJk9sI8KvfdyechxNAEf/4bPhXzvN6YLigdJveYxONWLdGrqQCs
-         BJ0HHIE7nx9oiS9s03gP2WPBfRObyj4Wl/+ycjQpBCkq7QDhYgI4ZVjRGlFUZC5lImGX
-         fda/W3hy2vi+qg9f+HacZz230FncfNfDyJWimYDEOTK41M7XfY/iC9bL0HOG5GCzB0rW
-         tYdC3urZiVJiWFUBYaE+9t1nz5aheHG7C2sQR9bSg5wWYbZJ7EUY/QlwCOMQGCWu254T
-         mDHkd+N5DGKSMe8VBWPbsle3r6fKsd0gK+ctGa4ljwgkZ6Aap4MPOv6yoI2dw59kvjgh
-         JWWQ==
-X-Gm-Message-State: AOJu0Yyt9FfrGEzbirrciEr2jEq8wVNfkMHRibdvmd2KiJ1T+QDlmeEF
-	8zQKI6rSCEDLa/1EcdnmtTbcqECvqA/GNhaNYMzQEI5xhMkVx4I96DC1N5tkRinUMfD0vEWbSJ/
-	/
-X-Gm-Gg: ASbGncsPoSPSj9rjxTBlW/4Z4F4XgXCVNX907jX7iQcJIi2TjdC3T1B5Rp/GM0Ib/lZ
-	fvUxsE/ACr4s8MH+KM46chg3wybya/6K7Uv+cXTy01UV/uEju8AgzcZYsAXkqnQUdnSzpSoBEPD
-	9TZZQPl48Mruzp7scPjsVc23CE20+NmByUeHYmJK453Cm+O7QYPJxyB6OCpRP2It/LxiB7bGJ80
-	i2otTH8p/3XteqfI9YIja5oskJVtldbHvQiSwWavzL3TQ7/7kAAMDb9mh2HHSWqM5qC4EEd1W+h
-	5j8dhu8Z3vl4OnEo9gOI5XyfJXdgAyvZTHXuavyfs+BcqqLLO5V7fQuecqFSLrn6UcHW2cb4BbR
-	WcZ6s
-X-Google-Smtp-Source: AGHT+IH7CUPO9d2B4FgKffdP14l+kQYdOEIRv7TdYTNksy3KVuCSFzHmMalHuKPqGKdShh5WXZlu6g==
-X-Received: by 2002:a17:907:7246:b0:ac3:ccf7:3a11 with SMTP id a640c23a62f3a-acb74dd4b1bmr1634138466b.44.1745388197709;
-        Tue, 22 Apr 2025 23:03:17 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.. ([2.196.40.29])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acb6ef9e7e6sm745234366b.162.2025.04.22.23.03.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 23:03:17 -0700 (PDT)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-amarula@amarulasolutions.com,
-	Abel Vesa <abelvesa@kernel.org>,
-	Peng Fan <peng.fan@nxp.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-clk@vger.kernel.org
-Subject: [PATCH v11 14/18] clk: imx8mp: rename ccm_base to base
-Date: Wed, 23 Apr 2025 08:02:31 +0200
-Message-ID: <20250423060241.95521-15-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250423060241.95521-1-dario.binacchi@amarulasolutions.com>
-References: <20250423060241.95521-1-dario.binacchi@amarulasolutions.com>
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="jS8xtDmI"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
+  t=1745388370; x=1776924370;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=3cdvTlX24pf/QAuWrPQo5VbDMAxVhUakeMVIkAx7yeQ=;
+  b=jS8xtDmIg5UZVDVv97LcshQnGnLpoka20Czp2YVwS1sArdtM4/9r23y9
+   lS9Q3j5jvqupzTZdNkyUDayRaVco05m7QGTJSZ8r3KvKVIh/PXYNTc/6e
+   R8EoF5/k+zFXYo0Otw0zzT0gfa8xhZADWeFiT+Y0iQBVbGpYjokO63UAR
+   TxOjP88p+wAoRGdn30oSntetF6Ju7jWy/qbdsOd4FtygnBpx0PR8valVB
+   /b4iHAmyX4eXls9Jw3q9AoKW8kBiueeKnaaSnMzovc8ZRitby8kZmFJ8c
+   IjP+5nt1ezpGnujIAVA7o69qHjDdVCNwET10jzZTxFENGS4wqCktsahnY
+   w==;
+X-CSE-ConnectionGUID: w3SqcTtOQl2JhNzjiLVG7A==
+X-CSE-MsgGUID: KlMHr6lBSAiIuqz0VRFMOA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11411"; a="153668409"
+X-IronPort-AV: E=Sophos;i="6.15,233,1739804400"; 
+   d="scan'208";a="153668409"
+Received: from mail-japaneastazlp17010004.outbound.protection.outlook.com (HELO TY3P286CU002.outbound.protection.outlook.com) ([40.93.73.4])
+  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 15:04:53 +0900
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cz5LAi4SO/0uZh09i2FskM9p8sypU8Aw5u0s3sM1RBWJE2qVvXma15OGpX3mI57qxFgqa2zCgJxmweu8JNWyi0xZS/eM+6jqgOBsIy9eDRhHp2NhaC8sTV0RNGjgbNwQAkM1WLPLWTWVE2fJwrhRSoLDZqL6dO53de87coPVT2ZWdpeET3vvovfKp6y46NNVwyZi5W8Tr74l/CRnY0ewo3vg2x9huIQal+pQaq7iKFD8HqaMM/ItHeUH5eajBgwgoMYnihbKqksQ91RJylfuFmj0/RYT5z+2HBhAP0vRDTt4he7CM10h3ZDsaI8TbjPuQH86mfcXuht0hbbkvReeMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3cdvTlX24pf/QAuWrPQo5VbDMAxVhUakeMVIkAx7yeQ=;
+ b=tvS+Y2lQ4z0x7/EqAF5NzQtmI6iGhvJ3bXhXP+u+YC+ODgenzSrdvEaNqJIUt75Wu4wp6+KuAdBN3wmgdW2i1W6khLcVPKPl9X3lVGCBVlLvySoHzH5Lf7bL17hndLomEZMUnAOFG3zY5D2zKpIW/nghDUDOzjwKD+gDE8AhjwJncDjrzk3HUjMWttiX+kDm20r9dPC/zYnPwlNvvKBXv61HOv3vEkNGNPS2ACfQ0DxeLP76lBT8a35r1+2ET+Y/2rgsQL1IxMcm/6j1AYHk4oEEkVMgZeRroQWPiG7fyLJGXyMGGDmLGMYvSbAP3cMQjVFz9xSxGeTEYG24P/yIdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
+ dkim=pass header.d=fujitsu.com; arc=none
+Received: from TY4PR01MB13777.jpnprd01.prod.outlook.com (2603:1096:405:1f8::9)
+ by OS0PR01MB6436.jpnprd01.prod.outlook.com (2603:1096:604:105::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Wed, 23 Apr
+ 2025 06:04:45 +0000
+Received: from TY4PR01MB13777.jpnprd01.prod.outlook.com
+ ([fe80::60b7:270b:27c7:4fcc]) by TY4PR01MB13777.jpnprd01.prod.outlook.com
+ ([fe80::60b7:270b:27c7:4fcc%4]) with mapi id 15.20.8632.035; Wed, 23 Apr 2025
+ 06:04:45 +0000
+From: "Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>
+To: 'Dylan Hatch' <dylanbhatch@google.com>
+CC: 'Daniel Borkmann' <daniel@iogearbox.net>, 'Andrii Nakryiko'
+	<andrii@kernel.org>, 'Martin KaFai Lau' <martin.lau@linux.dev>, 'Eduard
+ Zingerman' <eddyz87@gmail.com>, 'Yonghong Song' <yonghong.song@linux.dev>,
+	'John Fastabend' <john.fastabend@gmail.com>, 'KP Singh' <kpsingh@kernel.org>,
+	'Stanislav Fomichev' <sdf@fomichev.me>, 'Hao Luo' <haoluo@google.com>, 'Jiri
+ Olsa' <jolsa@kernel.org>, 'Puranjay Mohan' <puranjay@kernel.org>, 'Xu Kuohai'
+	<xukuohai@huaweicloud.com>, =?utf-8?B?J1BoaWxpcHBlIE1hdGhpZXUtRGF1ZMOpJw==?=
+	<philmd@linaro.org>, 'Catalin Marinas' <catalin.marinas@arm.com>, 'Will
+ Deacon' <will@kernel.org>, "'Mike Rapoport (Microsoft)'" <rppt@kernel.org>,
+	'Arnd Bergmann' <arnd@arndb.de>, 'Geert Uytterhoeven' <geert@linux-m68k.org>,
+	'Luis Chamberlain' <mcgrof@kernel.org>, 'Andrew Morton'
+	<akpm@linux-foundation.org>, 'Song Liu' <song@kernel.org>, 'Ard Biesheuvel'
+	<ardb@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>,
+	"'linux-arm-kernel@lists.infradead.org'"
+	<linux-arm-kernel@lists.infradead.org>, "'linux-kernel@vger.kernel.org'"
+	<linux-kernel@vger.kernel.org>, 'Roman Gushchin' <roman.gushchin@linux.dev>,
+	"Toshiyuki Sato (Fujitsu)" <fj6611ie@fujitsu.com>
+Subject: RE: [PATCH v2 2/2] arm64/module: Use text-poke API for late
+ relocations.
+Thread-Topic: [PATCH v2 2/2] arm64/module: Use text-poke API for late
+ relocations.
+Thread-Index: AQJQ2MPA2IfPkDwlEMtcmbC/rx7VpwI/LuwUsrRw8WA=
+Date: Wed, 23 Apr 2025 06:04:44 +0000
+Message-ID:
+ <TY4PR01MB1377739F1CC08549A619C8635D7BA2@TY4PR01MB13777.jpnprd01.prod.outlook.com>
+References: <20250412010940.1686376-1-dylanbhatch@google.com>
+ <20250412010940.1686376-3-dylanbhatch@google.com>
+In-Reply-To: <20250412010940.1686376-3-dylanbhatch@google.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ =?utf-8?B?TVNJUF9MYWJlbF8xZTkyZWY3My0wYWQxLTQwYzUtYWQ1NS00NmRlMzM5Njgw?=
+ =?utf-8?B?MmZfQWN0aW9uSWQ9NzhjZjQzZDUtZDZhZC00MDAzLTk0ZmItNDVlY2ZjMTA1?=
+ =?utf-8?B?NGZjO01TSVBfTGFiZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFkNTUtNDZkZTMz?=
+ =?utf-8?B?OTY4MDJmX0NvbnRlbnRCaXRzPTA7TVNJUF9MYWJlbF8xZTkyZWY3My0wYWQx?=
+ =?utf-8?B?LTQwYzUtYWQ1NS00NmRlMzM5NjgwMmZfRW5hYmxlZD10cnVlO01TSVBfTGFi?=
+ =?utf-8?B?ZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFkNTUtNDZkZTMzOTY4MDJmX01ldGhv?=
+ =?utf-8?B?ZD1Qcml2aWxlZ2VkO01TSVBfTGFiZWxfMWU5MmVmNzMtMGFkMS00MGM1LWFk?=
+ =?utf-8?B?NTUtNDZkZTMzOTY4MDJmX05hbWU9RlVKSVRTVS1QVUJMSUPigIs7TVNJUF9M?=
+ =?utf-8?B?YWJlbF8xZTkyZWY3My0wYWQxLTQwYzUtYWQ1NS00NmRlMzM5NjgwMmZfU2V0?=
+ =?utf-8?B?RGF0ZT0yMDI1LTA0LTIzVDA1OjEzOjIyWjtNU0lQX0xhYmVsXzFlOTJlZjcz?=
+ =?utf-8?B?LTBhZDEtNDBjNS1hZDU1LTQ2ZGUzMzk2ODAyZl9TaXRlSWQ9YTE5ZjEyMWQt?=
+ =?utf-8?Q?81e1-4858-a9d8-736e267fd4c7;?=
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=fujitsu.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY4PR01MB13777:EE_|OS0PR01MB6436:EE_
+x-ms-office365-filtering-correlation-id: 0e0c62e0-c15b-437e-1df4-08dd822cbec1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|7416014|376014|1800799024|366016|38070700018|1580799027;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?dFFyR2QrcmtvR0lRTldYOW1KdVZSZ2FBOXp6dVNHclZGa0tnd3k3S2dPSXE3?=
+ =?utf-8?B?Q0pzTElocnE1SkQ1dG5RejR0WXlYNkZOck5xNEVSL0FrU3pURWxhUnBEaGN3?=
+ =?utf-8?B?Y2tXVmk5WWgvL1FubG82a3c4NDRJZmloRXJDUnhNUDJGeWtNY1BnRFhXekVp?=
+ =?utf-8?B?VGplTkNCbEd0MmkvOVZuMEhnTWNGb1c3aG8xMndWM2xhYS81QmFUcndWMzJu?=
+ =?utf-8?B?RjUrVmdKY0lEcnNiaDcwdmk0TCs3MHhzQTJBZWkyQnNrQit2WVU2cGtYTlhi?=
+ =?utf-8?B?aVpNOHRrbWs2UWFpZEtWWjZuRGFSVyt6UlFPWW9NZEUyMnNoL3FxWVJEZzhj?=
+ =?utf-8?B?T3ZJTm9ESVJmOUJ6Zkh0ZzBaNDVWKzhNV0ErQkp4Z1FBWlNkeWxxc2loZTBX?=
+ =?utf-8?B?eW5wUjdJVTB3NnN2R0VianZTSWU4Wk54U2l2dXorWTNBMUZTeWJIZkRHZ0Yz?=
+ =?utf-8?B?dnRpaGZYUjJOYStIY3RXbDNEVDJtSHMzc1lYSSt6Q0NwZE1WSUZoMllsWXE4?=
+ =?utf-8?B?NHZOV3hUcVBWaEJhVG9yUldwV09VVjB4TU05cUZvQklmQUdZRzlsZmd2OTdh?=
+ =?utf-8?B?OHNUZmt0b0phNGZuUmNBMjRCMlFnQkllQkx6K1lBQVhaUjVuNjd5TzJOc3Bx?=
+ =?utf-8?B?M2UzQ2orNUdqSDhoMzcwbEdKd2hGUnkrWGdUOTBBbTF5RzkrMlZuVWZiTm9y?=
+ =?utf-8?B?dGdqZUNIR3NoUHY5dFpycmx6VDJtREg0N3dUR0dYeWdtK0Q1WUNWdkNCS3Bq?=
+ =?utf-8?B?cVJINHJRNHd5QjZZcnFoRFNiVVJGMzZxa2xtUEpQNjdDM0prWnJldkNFTXpp?=
+ =?utf-8?B?dkI5dzUxV1hlTkl2T0piUmFSeGlMbEVJWXVOeG9hSzIrRFV0VG9McFFUYUJx?=
+ =?utf-8?B?UWpWTzVDUzRVbjN2QXhlbkVUMTNDNTZ2Z2prd3VZL2J2cCs0Mjg1VnppZFo4?=
+ =?utf-8?B?YlYydUU1Uk1WbVV0QVU3Kzg0ckJwbjZuYkhWSmVWemNmL1JKTnR1VEg5czFQ?=
+ =?utf-8?B?OXJJeWJvZUFhSVZqQUFuQUljNlNNQU5LN002Yk9ESktPbHY4dVZUeGpycnQw?=
+ =?utf-8?B?clcxZjZYMjBoQTloZ0NXaXhwVFlPRzBUcjI2WDkzaTZtYXdvWmtHZ1FyRUcy?=
+ =?utf-8?B?MWZJUGhTMXRsdjhLYVpUczV3RjRIaHVwaWpRNkQ4ZGFsdHdHWGVPVHRZUFdv?=
+ =?utf-8?B?NVk5b1pSRlp3eTBUeWpOdTQ4NkhBWk5CYWJmanhWM3Z0K01GbVR3UEpNc2Na?=
+ =?utf-8?B?ZDdDN2pCaXc5MmdkYlNZOVhWc3BjaEhSWFZFMm10ZnZpejUycnJNb3MxdjFJ?=
+ =?utf-8?B?NnFuTnRrMTV6MUhQSi9CbVZnSHJJeTltdWlzOG5BTno1dW0vbjR2TWNDN3hY?=
+ =?utf-8?B?Uk8rTFhybzdJbzNhMzUvU0RNLzFuZFN6VW5IOHZwZTE4TmcvTGtRMjdhRmJs?=
+ =?utf-8?B?blpXRFN4djJyNVdLSktlOEdzcVhLWFdxeE0zNmpIVmhVNVdrUnZsRCsrcXRE?=
+ =?utf-8?B?Zld5TEFnNElCdlBiK2tFcHIreHhjbndyWmVmYWc0dmo4QzNBMUN1eklDVTZU?=
+ =?utf-8?B?aGtFbC9pa1gwemJ1QTZvcERPNGZxMDM5RG1PQ3R1OHpZOU1IYTY5UnZ1ZjBi?=
+ =?utf-8?B?RHZ1a2lQNWdFT05DRWI0Tm15OUg0RE0zRHY1Q1B1bDhzWkt0WmlSWldXaEMy?=
+ =?utf-8?B?MG81M2VkbkJsWUpEMnFFZmVwbk42WTdGZlh1bUpJTjg0K2NZL0c0UERxSmx1?=
+ =?utf-8?B?OVhmK29GSFhjTDRwWVM2aWhpMVFJNk5KbFhRUHYwQnJpbXhpN2xhamxHZUd6?=
+ =?utf-8?B?N0hQRnErTWh1clZySU1vREU4amR1d3NJejBqeVNqTkhKY01OcXVlQ3NURW5v?=
+ =?utf-8?B?K29sanRzek9Kd0JMeEZGMENjSGRyTnlKVjVYRTQ4N3M2ZHoxdGNnWVg1d0VP?=
+ =?utf-8?B?aVNvcWJha1VVMGlRMGZKakZGalZSdXRYV3liTVdMTnJSekU4VHpuWFdWUnlj?=
+ =?utf-8?B?MFJRZ2QxbXJnPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY4PR01MB13777.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016)(38070700018)(1580799027);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?cjlqUVY2akNXdGtDTTV3VFVBelVvSkVmdmFmWk9ka1hGRkdMdGFWZVY3eFJv?=
+ =?utf-8?B?L3ltSytsT1phaStwUlByQWFSb1A4eGxaOUtFUXRvYXhweGtXSkZMbjZjNWMv?=
+ =?utf-8?B?T1VxVGRFQVBjbEdVdUVlcEEydVNUUHI2aUp3RnVGSDBsSkQzaG9IMUJMbHJl?=
+ =?utf-8?B?U2JYM2JUM0hMUXpLemEzSUdaS1NjWC8reHBlYXRBRU94b1Q0L1B5RTBxeE9U?=
+ =?utf-8?B?Zm5MbnNycitNU1JLcm1BZmlLQVZYdldwU0dRbnF2UXFmRmlXZFpqeFVmNFFs?=
+ =?utf-8?B?OEZOSkNXTGo4Z3lRWkFaK1ZEeGxwSUw3bXZOZjNkaHVha3ZJTHFjZ3BEQmVN?=
+ =?utf-8?B?LzNLMjJIUE9ZT3QrdXFHdTU5Yk1EeHJSbmQ4U3BDZUhMV3BaWjVDaHpLd3g1?=
+ =?utf-8?B?Zy84U2RCRjRCcGJtNmJ5dzF5K0gwS0NxZlJvUEltcmhZTWIwamJIOCtaUVZx?=
+ =?utf-8?B?Q0JBeFBtenVmeXE1ZFcvYmcrMzVpRStzZWhEZHdnbEI3L1NVMDZZL2YwL2RK?=
+ =?utf-8?B?dFA4c09YdFMyYldPL3g5cnRqY2dhdGg1WUZFRVAwWFpVSENycjdlUmhGU2Z0?=
+ =?utf-8?B?cnR6eUdLdTdPMDJWQlB5VlpmK2ZuT0poRkhicXE3cVhQVDMxbUF0R0k0SXBx?=
+ =?utf-8?B?d1o1UUtRN2dUWDNNQVh6Z2V4OHFjcjJKZTNkZWtKUDdNZlRNcGE4TnVvaEVj?=
+ =?utf-8?B?RVEyVS9QR04vQy9MN09uRm9WdytBY2hsWmJvR0FRbWlSZUVpazYrNS9SV3A5?=
+ =?utf-8?B?M2orOXZZdkppRGE0VXJ5ZldtRmszbGdINGNaSXNVMXlmQzFpdWYzRFIzSzRM?=
+ =?utf-8?B?a0pqMCtwMnR1bGtIN2pPVTdaSk1wVGprWjgwb0ppUjk3ajltU2g1TERZUnlM?=
+ =?utf-8?B?T2duYUVNTmwyMTF1TXZQM3Jaa1huOGF4ZnNxeUMwNGZwWEllTEh0Q0doRFdC?=
+ =?utf-8?B?bjFjNjAyR1gva1JEWGVKcDZLcjh2RklTVkFuWlY5ZTM5am9lYTY0b3lOWldo?=
+ =?utf-8?B?V2lVL09JT2RUd1Vud1J1czNoRXJWVHc3dEZoajJDSlN3NkRLS1VPc2ZuT1VX?=
+ =?utf-8?B?Vk43MStBM2ZQcmJmVjBRNGJZSmU3bFBka29YblJGZWxoQmIvd3huTmh5My9P?=
+ =?utf-8?B?UEtkZzA0c0RIRTlKRHFrRW00SDhhc0lxQ013ZGVuZFdVbGNXek5ITkZDSCtM?=
+ =?utf-8?B?Y01RTnE4NGtnZlBtdFFvcFkrdzAwdTdFbUdnbWtRbU9VV0l5ZXN0YzQ4VDhv?=
+ =?utf-8?B?L0Z6NmZKcHZLeTNVUWpPdTF5U1phZFMwcWVqeERIMG9EeWpZMjNtZ2QrWTJv?=
+ =?utf-8?B?QXJCSGxZcnlkckI3bVBtUTZQVytDVklGQlk2TGpYV1J3dzhtODBHOTZwdE1O?=
+ =?utf-8?B?T1p3VU1oMDlBZllwL2hTaEtBandPaWlTKytMbTBPUzgwb2UxTmsvVWhuZzlU?=
+ =?utf-8?B?a2pvQnF6czN0NSt4N21JZ2FxQVdXaXBnZkVVcjRveEdYQS9YMjdTME83Zm9Z?=
+ =?utf-8?B?cFdqRUZJejJocjQ2dFl3OElGODR0QTdKQ0YxTTlnVW1xZms3RVJKckIzVEZs?=
+ =?utf-8?B?YVpxQTJnTkVjcnNrOERpazVkd2V2VzFqV1JETFczVDdGOHNvOGdodUFkMnJT?=
+ =?utf-8?B?SW5lc0dYOGhvR1VoQ1U2Um1JZlVYcWY3cFQ3UzlTZGd5dUtrREh3OFRxd0VC?=
+ =?utf-8?B?RHl6WWNaM1RLZmV0bzNxNVdaRnlDNnA4cWFnT3NyYWlwa1J3MzhKMFNweE1z?=
+ =?utf-8?B?YnR0NkJ3RDQraDRJSi9jUzJVZFl5YU5nYmRjVk80T1BNaFBIRWhEVVN2UVht?=
+ =?utf-8?B?QlYwVWI1WW5jZXV4WHFKV1Y0Sm5La0REZExLOXJUYW1SdUZKTEpXMzZxVmJO?=
+ =?utf-8?B?YTUrM3NweHhocDYzUE8rSElwL0l1YmRZaTBVRGo1ejYxS256aGpqNnRxcjFT?=
+ =?utf-8?B?OW9vN3VvVWNQTmVDOU1US2dNaUMwYXhVaVNvY2lZOWFNMmhaY1FjczUvZXNB?=
+ =?utf-8?B?allhRURWc0lFSDhzWDVZOFI3M2h6S1FnT0VoZTR2cDgxSHdqUDRzNVBadmh1?=
+ =?utf-8?B?d2Urd1lOc1lTNWRxTW9FNkd2SThWVThVK0gra3NmeFpJaW5KUEtHd29rMW82?=
+ =?utf-8?Q?Mlv9JR6z/jGFqD+fjhz9RvQlw?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	AghEwt2+PPK32VTqEZL2wGkYAuy2sFyicK+RnoBEdhzUYrwwig34Ol0m7bY/8NTdlK/Dxv+Aro3dE6pUSpDY9AyOT9Y6gNeo6/G/thPG9mqNpcTtv+GxuAE/OfY57MMEfOPVIaRHCZ8RgBiJwcU+fN4z1SgAty5goxZFodE4GO+YhtbAB8wFaHBKkGmrsM5U9KdrThl+XjqbLHdtHk4IoOOV94vd1xsxHflPmMU62nkbrn6l9llzUVfSvO6bUbVwH/glEbAPU74Yai2hxTE86DgijZk+/y2pwvWhnqeHSky048dDCszKvdmUMXZ1pXWbhvuAuFETpMUuYa6lKHUl1hxG6kgd3t9PUay099nIzPT2fFTcwgwnihq831ql24I8YXDGeKZYvcW/S0R3vAwjMVgzMXoHLFO0k230/CJ+SS3OKukAdMsmcUCVSl0qo65Ydac0iELxMo5gMj1FYuHF1DV1WSmU1ld56iKTT9DupHw18QZQATOHYuhofiisMJOAcRaUF+TT0gS73O4IQSo5aB5fcLRdB7ETlvQ9v25x6xodsiBpPPrVKuMjQ1WoSxZB852QFeVz0PUMzYHn5KbnlRMyu+mzMXjArGJHgnwx3oslFewcLxnEaZj71lQXYwKd
+X-OriginatorOrg: fujitsu.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY4PR01MB13777.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e0c62e0-c15b-437e-1df4-08dd822cbec1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2025 06:04:44.6452
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: njnSDFggYlky211vwtd3n5gctwMiun1IIWX3wGQTF6lL4w9IogJavZgtEOrhQncmAy49EpJ+IUaSGonMC13AUXCFrXwSZ26Llkwg6vQ0T94=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS0PR01MB6436
 
-The old code also accessed the anatop address space and therefore used
-the variables anatop_base and ccm_base to distinguish between the two
-address spaces. However, now that a specific anatop driver exists for
-the i.MX8MP platform, the variable ccm_base can be renamed to base, as
-is usually the case for the variable pointing to the memory region
-managed by a Linux driver.
-The patch does not introduce any functional changes.
-
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-Reviewed-by: Peng Fan <peng.fan@nxp.com>
-
----
-
-Changes in v11:
-- Add 'Reviewed-by' tag of Peng Fan
-- Fix conflict while rebasing on master
-
- drivers/clk/imx/clk-imx8mp.c | 378 +++++++++++++++++------------------
- 1 file changed, 189 insertions(+), 189 deletions(-)
-
-diff --git a/drivers/clk/imx/clk-imx8mp.c b/drivers/clk/imx/clk-imx8mp.c
-index 3fa6241dede9..f90533664953 100644
---- a/drivers/clk/imx/clk-imx8mp.c
-+++ b/drivers/clk/imx/clk-imx8mp.c
-@@ -532,13 +532,13 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node, *anp;
--	void __iomem *ccm_base;
-+	void __iomem *base;
- 	const char *opmode;
- 	int err;
- 
--	ccm_base = devm_platform_ioremap_resource(pdev, 0);
--	if (WARN_ON(IS_ERR(ccm_base)))
--		return PTR_ERR(ccm_base);
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (WARN_ON(IS_ERR(base)))
-+		return PTR_ERR(base);
- 
- 	clk_hw_data = devm_kzalloc(dev, struct_size(clk_hw_data, hws, IMX8MP_CLK_END), GFP_KERNEL);
- 	if (WARN_ON(!clk_hw_data))
-@@ -634,198 +634,198 @@ static int imx8mp_clocks_probe(struct platform_device *pdev)
- 	hws[IMX8MP_CLK_CLKOUT2_DIV] = imx_anatop_get_clk_hw(anp, IMX8MP_ANATOP_CLK_CLKOUT2_DIV);
- 	hws[IMX8MP_CLK_CLKOUT2] = imx_anatop_get_clk_hw(anp, IMX8MP_ANATOP_CLK_CLKOUT2);
- 
--	hws[IMX8MP_CLK_A53_DIV] = imx8m_clk_hw_composite_core("arm_a53_div", imx8mp_a53_sels, ccm_base + 0x8000);
-+	hws[IMX8MP_CLK_A53_DIV] = imx8m_clk_hw_composite_core("arm_a53_div", imx8mp_a53_sels, base + 0x8000);
- 	hws[IMX8MP_CLK_A53_SRC] = hws[IMX8MP_CLK_A53_DIV];
- 	hws[IMX8MP_CLK_A53_CG] = hws[IMX8MP_CLK_A53_DIV];
--	hws[IMX8MP_CLK_M7_CORE] = imx8m_clk_hw_composite_core("m7_core", imx8mp_m7_sels, ccm_base + 0x8080);
--	hws[IMX8MP_CLK_ML_CORE] = imx8m_clk_hw_composite_core("ml_core", imx8mp_ml_sels, ccm_base + 0x8100);
--	hws[IMX8MP_CLK_GPU3D_CORE] = imx8m_clk_hw_composite_core("gpu3d_core", imx8mp_gpu3d_core_sels, ccm_base + 0x8180);
--	hws[IMX8MP_CLK_GPU3D_SHADER_CORE] = imx8m_clk_hw_composite("gpu3d_shader_core", imx8mp_gpu3d_shader_sels, ccm_base + 0x8200);
--	hws[IMX8MP_CLK_GPU2D_CORE] = imx8m_clk_hw_composite("gpu2d_core", imx8mp_gpu2d_sels, ccm_base + 0x8280);
--	hws[IMX8MP_CLK_AUDIO_AXI] = imx8m_clk_hw_composite("audio_axi", imx8mp_audio_axi_sels, ccm_base + 0x8300);
-+	hws[IMX8MP_CLK_M7_CORE] = imx8m_clk_hw_composite_core("m7_core", imx8mp_m7_sels, base + 0x8080);
-+	hws[IMX8MP_CLK_ML_CORE] = imx8m_clk_hw_composite_core("ml_core", imx8mp_ml_sels, base + 0x8100);
-+	hws[IMX8MP_CLK_GPU3D_CORE] = imx8m_clk_hw_composite_core("gpu3d_core", imx8mp_gpu3d_core_sels, base + 0x8180);
-+	hws[IMX8MP_CLK_GPU3D_SHADER_CORE] = imx8m_clk_hw_composite("gpu3d_shader_core", imx8mp_gpu3d_shader_sels, base + 0x8200);
-+	hws[IMX8MP_CLK_GPU2D_CORE] = imx8m_clk_hw_composite("gpu2d_core", imx8mp_gpu2d_sels, base + 0x8280);
-+	hws[IMX8MP_CLK_AUDIO_AXI] = imx8m_clk_hw_composite("audio_axi", imx8mp_audio_axi_sels, base + 0x8300);
- 	hws[IMX8MP_CLK_AUDIO_AXI_SRC] = hws[IMX8MP_CLK_AUDIO_AXI];
--	hws[IMX8MP_CLK_HSIO_AXI] = imx8m_clk_hw_composite("hsio_axi", imx8mp_hsio_axi_sels, ccm_base + 0x8380);
--	hws[IMX8MP_CLK_MEDIA_ISP] = imx8m_clk_hw_composite("media_isp", imx8mp_media_isp_sels, ccm_base + 0x8400);
-+	hws[IMX8MP_CLK_HSIO_AXI] = imx8m_clk_hw_composite("hsio_axi", imx8mp_hsio_axi_sels, base + 0x8380);
-+	hws[IMX8MP_CLK_MEDIA_ISP] = imx8m_clk_hw_composite("media_isp", imx8mp_media_isp_sels, base + 0x8400);
- 
- 	/* CORE SEL */
--	hws[IMX8MP_CLK_A53_CORE] = imx_clk_hw_mux2("arm_a53_core", ccm_base + 0x9880, 24, 1, imx8mp_a53_core_sels, ARRAY_SIZE(imx8mp_a53_core_sels));
--
--	hws[IMX8MP_CLK_MAIN_AXI] = imx8m_clk_hw_composite_bus_critical("main_axi", imx8mp_main_axi_sels, ccm_base + 0x8800);
--	hws[IMX8MP_CLK_ENET_AXI] = imx8m_clk_hw_composite_bus("enet_axi", imx8mp_enet_axi_sels, ccm_base + 0x8880);
--	hws[IMX8MP_CLK_NAND_USDHC_BUS] = imx8m_clk_hw_composite("nand_usdhc_bus", imx8mp_nand_usdhc_sels, ccm_base + 0x8900);
--	hws[IMX8MP_CLK_VPU_BUS] = imx8m_clk_hw_composite_bus("vpu_bus", imx8mp_vpu_bus_sels, ccm_base + 0x8980);
--	hws[IMX8MP_CLK_MEDIA_AXI] = imx8m_clk_hw_composite_bus("media_axi", imx8mp_media_axi_sels, ccm_base + 0x8a00);
--	hws[IMX8MP_CLK_MEDIA_APB] = imx8m_clk_hw_composite_bus("media_apb", imx8mp_media_apb_sels, ccm_base + 0x8a80);
--	hws[IMX8MP_CLK_HDMI_APB] = imx8m_clk_hw_composite_bus("hdmi_apb", imx8mp_media_apb_sels, ccm_base + 0x8b00);
--	hws[IMX8MP_CLK_HDMI_AXI] = imx8m_clk_hw_composite_bus("hdmi_axi", imx8mp_media_axi_sels, ccm_base + 0x8b80);
--	hws[IMX8MP_CLK_GPU_AXI] = imx8m_clk_hw_composite_bus("gpu_axi", imx8mp_gpu_axi_sels, ccm_base + 0x8c00);
--	hws[IMX8MP_CLK_GPU_AHB] = imx8m_clk_hw_composite_bus("gpu_ahb", imx8mp_gpu_ahb_sels, ccm_base + 0x8c80);
--	hws[IMX8MP_CLK_NOC] = imx8m_clk_hw_composite_bus_critical("noc", imx8mp_noc_sels, ccm_base + 0x8d00);
--	hws[IMX8MP_CLK_NOC_IO] = imx8m_clk_hw_composite_bus_critical("noc_io", imx8mp_noc_io_sels, ccm_base + 0x8d80);
--	hws[IMX8MP_CLK_ML_AXI] = imx8m_clk_hw_composite_bus("ml_axi", imx8mp_ml_axi_sels, ccm_base + 0x8e00);
--	hws[IMX8MP_CLK_ML_AHB] = imx8m_clk_hw_composite_bus("ml_ahb", imx8mp_ml_ahb_sels, ccm_base + 0x8e80);
--
--	hws[IMX8MP_CLK_AHB] = imx8m_clk_hw_composite_bus_critical("ahb_root", imx8mp_ahb_sels, ccm_base + 0x9000);
--	hws[IMX8MP_CLK_AUDIO_AHB] = imx8m_clk_hw_composite_bus("audio_ahb", imx8mp_audio_ahb_sels, ccm_base + 0x9100);
--	hws[IMX8MP_CLK_MIPI_DSI_ESC_RX] = imx8m_clk_hw_composite_bus("mipi_dsi_esc_rx", imx8mp_mipi_dsi_esc_rx_sels, ccm_base + 0x9200);
--	hws[IMX8MP_CLK_MEDIA_DISP2_PIX] = imx8m_clk_hw_composite_bus_flags("media_disp2_pix", imx8mp_media_disp_pix_sels, ccm_base + 0x9300, CLK_SET_RATE_PARENT);
--
--	hws[IMX8MP_CLK_IPG_ROOT] = imx_clk_hw_divider2("ipg_root", "ahb_root", ccm_base + 0x9080, 0, 1);
--
--	hws[IMX8MP_CLK_DRAM_ALT] = imx8m_clk_hw_fw_managed_composite("dram_alt", imx8mp_dram_alt_sels, ccm_base + 0xa000);
--	hws[IMX8MP_CLK_DRAM_APB] = imx8m_clk_hw_fw_managed_composite_critical("dram_apb", imx8mp_dram_apb_sels, ccm_base + 0xa080);
--	hws[IMX8MP_CLK_VPU_G1] = imx8m_clk_hw_composite("vpu_g1", imx8mp_vpu_g1_sels, ccm_base + 0xa100);
--	hws[IMX8MP_CLK_VPU_G2] = imx8m_clk_hw_composite("vpu_g2", imx8mp_vpu_g2_sels, ccm_base + 0xa180);
--	hws[IMX8MP_CLK_CAN1] = imx8m_clk_hw_composite("can1", imx8mp_can1_sels, ccm_base + 0xa200);
--	hws[IMX8MP_CLK_CAN2] = imx8m_clk_hw_composite("can2", imx8mp_can2_sels, ccm_base + 0xa280);
--	hws[IMX8MP_CLK_PCIE_AUX] = imx8m_clk_hw_composite("pcie_aux", imx8mp_pcie_aux_sels, ccm_base + 0xa400);
--	hws[IMX8MP_CLK_I2C5] = imx8m_clk_hw_composite("i2c5", imx8mp_i2c5_sels, ccm_base + 0xa480);
--	hws[IMX8MP_CLK_I2C6] = imx8m_clk_hw_composite("i2c6", imx8mp_i2c6_sels, ccm_base + 0xa500);
--	hws[IMX8MP_CLK_SAI1] = imx8m_clk_hw_composite("sai1", imx8mp_sai1_sels, ccm_base + 0xa580);
--	hws[IMX8MP_CLK_SAI2] = imx8m_clk_hw_composite("sai2", imx8mp_sai2_sels, ccm_base + 0xa600);
--	hws[IMX8MP_CLK_SAI3] = imx8m_clk_hw_composite("sai3", imx8mp_sai3_sels, ccm_base + 0xa680);
--	hws[IMX8MP_CLK_SAI5] = imx8m_clk_hw_composite("sai5", imx8mp_sai5_sels, ccm_base + 0xa780);
--	hws[IMX8MP_CLK_SAI6] = imx8m_clk_hw_composite("sai6", imx8mp_sai6_sels, ccm_base + 0xa800);
--	hws[IMX8MP_CLK_ENET_QOS] = imx8m_clk_hw_composite("enet_qos", imx8mp_enet_qos_sels, ccm_base + 0xa880);
--	hws[IMX8MP_CLK_ENET_QOS_TIMER] = imx8m_clk_hw_composite("enet_qos_timer", imx8mp_enet_qos_timer_sels, ccm_base + 0xa900);
--	hws[IMX8MP_CLK_ENET_REF] = imx8m_clk_hw_composite("enet_ref", imx8mp_enet_ref_sels, ccm_base + 0xa980);
--	hws[IMX8MP_CLK_ENET_TIMER] = imx8m_clk_hw_composite("enet_timer", imx8mp_enet_timer_sels, ccm_base + 0xaa00);
--	hws[IMX8MP_CLK_ENET_PHY_REF] = imx8m_clk_hw_composite("enet_phy_ref", imx8mp_enet_phy_ref_sels, ccm_base + 0xaa80);
--	hws[IMX8MP_CLK_NAND] = imx8m_clk_hw_composite("nand", imx8mp_nand_sels, ccm_base + 0xab00);
--	hws[IMX8MP_CLK_QSPI] = imx8m_clk_hw_composite("qspi", imx8mp_qspi_sels, ccm_base + 0xab80);
--	hws[IMX8MP_CLK_USDHC1] = imx8m_clk_hw_composite("usdhc1", imx8mp_usdhc1_sels, ccm_base + 0xac00);
--	hws[IMX8MP_CLK_USDHC2] = imx8m_clk_hw_composite("usdhc2", imx8mp_usdhc2_sels, ccm_base + 0xac80);
--	hws[IMX8MP_CLK_I2C1] = imx8m_clk_hw_composite("i2c1", imx8mp_i2c1_sels, ccm_base + 0xad00);
--	hws[IMX8MP_CLK_I2C2] = imx8m_clk_hw_composite("i2c2", imx8mp_i2c2_sels, ccm_base + 0xad80);
--	hws[IMX8MP_CLK_I2C3] = imx8m_clk_hw_composite("i2c3", imx8mp_i2c3_sels, ccm_base + 0xae00);
--	hws[IMX8MP_CLK_I2C4] = imx8m_clk_hw_composite("i2c4", imx8mp_i2c4_sels, ccm_base + 0xae80);
--
--	hws[IMX8MP_CLK_UART1] = imx8m_clk_hw_composite("uart1", imx8mp_uart1_sels, ccm_base + 0xaf00);
--	hws[IMX8MP_CLK_UART2] = imx8m_clk_hw_composite("uart2", imx8mp_uart2_sels, ccm_base + 0xaf80);
--	hws[IMX8MP_CLK_UART3] = imx8m_clk_hw_composite("uart3", imx8mp_uart3_sels, ccm_base + 0xb000);
--	hws[IMX8MP_CLK_UART4] = imx8m_clk_hw_composite("uart4", imx8mp_uart4_sels, ccm_base + 0xb080);
--	hws[IMX8MP_CLK_USB_CORE_REF] = imx8m_clk_hw_composite("usb_core_ref", imx8mp_usb_core_ref_sels, ccm_base + 0xb100);
--	hws[IMX8MP_CLK_USB_PHY_REF] = imx8m_clk_hw_composite("usb_phy_ref", imx8mp_usb_phy_ref_sels, ccm_base + 0xb180);
--	hws[IMX8MP_CLK_GIC] = imx8m_clk_hw_composite_critical("gic", imx8mp_gic_sels, ccm_base + 0xb200);
--	hws[IMX8MP_CLK_ECSPI1] = imx8m_clk_hw_composite("ecspi1", imx8mp_ecspi1_sels, ccm_base + 0xb280);
--	hws[IMX8MP_CLK_ECSPI2] = imx8m_clk_hw_composite("ecspi2", imx8mp_ecspi2_sels, ccm_base + 0xb300);
--	hws[IMX8MP_CLK_PWM1] = imx8m_clk_hw_composite("pwm1", imx8mp_pwm1_sels, ccm_base + 0xb380);
--	hws[IMX8MP_CLK_PWM2] = imx8m_clk_hw_composite("pwm2", imx8mp_pwm2_sels, ccm_base + 0xb400);
--	hws[IMX8MP_CLK_PWM3] = imx8m_clk_hw_composite("pwm3", imx8mp_pwm3_sels, ccm_base + 0xb480);
--	hws[IMX8MP_CLK_PWM4] = imx8m_clk_hw_composite("pwm4", imx8mp_pwm4_sels, ccm_base + 0xb500);
--
--	hws[IMX8MP_CLK_GPT1] = imx8m_clk_hw_composite("gpt1", imx8mp_gpt1_sels, ccm_base + 0xb580);
--	hws[IMX8MP_CLK_GPT2] = imx8m_clk_hw_composite("gpt2", imx8mp_gpt2_sels, ccm_base + 0xb600);
--	hws[IMX8MP_CLK_GPT3] = imx8m_clk_hw_composite("gpt3", imx8mp_gpt3_sels, ccm_base + 0xb680);
--	hws[IMX8MP_CLK_GPT4] = imx8m_clk_hw_composite("gpt4", imx8mp_gpt4_sels, ccm_base + 0xb700);
--	hws[IMX8MP_CLK_GPT5] = imx8m_clk_hw_composite("gpt5", imx8mp_gpt5_sels, ccm_base + 0xb780);
--	hws[IMX8MP_CLK_GPT6] = imx8m_clk_hw_composite("gpt6", imx8mp_gpt6_sels, ccm_base + 0xb800);
--	hws[IMX8MP_CLK_WDOG] = imx8m_clk_hw_composite("wdog", imx8mp_wdog_sels, ccm_base + 0xb900);
--	hws[IMX8MP_CLK_WRCLK] = imx8m_clk_hw_composite("wrclk", imx8mp_wrclk_sels, ccm_base + 0xb980);
--	hws[IMX8MP_CLK_IPP_DO_CLKO1] = imx8m_clk_hw_composite("ipp_do_clko1", imx8mp_ipp_do_clko1_sels, ccm_base + 0xba00);
--	hws[IMX8MP_CLK_IPP_DO_CLKO2] = imx8m_clk_hw_composite("ipp_do_clko2", imx8mp_ipp_do_clko2_sels, ccm_base + 0xba80);
--	hws[IMX8MP_CLK_HDMI_FDCC_TST] = imx8m_clk_hw_composite("hdmi_fdcc_tst", imx8mp_hdmi_fdcc_tst_sels, ccm_base + 0xbb00);
--	hws[IMX8MP_CLK_HDMI_24M] = imx8m_clk_hw_composite("hdmi_24m", imx8mp_hdmi_24m_sels, ccm_base + 0xbb80);
--	hws[IMX8MP_CLK_HDMI_REF_266M] = imx8m_clk_hw_composite("hdmi_ref_266m", imx8mp_hdmi_ref_266m_sels, ccm_base + 0xbc00);
--	hws[IMX8MP_CLK_USDHC3] = imx8m_clk_hw_composite("usdhc3", imx8mp_usdhc3_sels, ccm_base + 0xbc80);
--	hws[IMX8MP_CLK_MEDIA_CAM1_PIX] = imx8m_clk_hw_composite("media_cam1_pix", imx8mp_media_cam1_pix_sels, ccm_base + 0xbd00);
--	hws[IMX8MP_CLK_MEDIA_MIPI_PHY1_REF] = imx8m_clk_hw_composite("media_mipi_phy1_ref", imx8mp_media_mipi_phy1_ref_sels, ccm_base + 0xbd80);
--	hws[IMX8MP_CLK_MEDIA_DISP1_PIX] = imx8m_clk_hw_composite_bus_flags("media_disp1_pix", imx8mp_media_disp_pix_sels, ccm_base + 0xbe00, CLK_SET_RATE_PARENT);
--	hws[IMX8MP_CLK_MEDIA_CAM2_PIX] = imx8m_clk_hw_composite("media_cam2_pix", imx8mp_media_cam2_pix_sels, ccm_base + 0xbe80);
--	hws[IMX8MP_CLK_MEDIA_LDB] = imx8m_clk_hw_composite("media_ldb", imx8mp_media_ldb_sels, ccm_base + 0xbf00);
--	hws[IMX8MP_CLK_MEMREPAIR] = imx8m_clk_hw_composite_critical("mem_repair", imx8mp_memrepair_sels, ccm_base + 0xbf80);
--	hws[IMX8MP_CLK_MEDIA_MIPI_TEST_BYTE] = imx8m_clk_hw_composite("media_mipi_test_byte", imx8mp_media_mipi_test_byte_sels, ccm_base + 0xc100);
--	hws[IMX8MP_CLK_ECSPI3] = imx8m_clk_hw_composite("ecspi3", imx8mp_ecspi3_sels, ccm_base + 0xc180);
--	hws[IMX8MP_CLK_PDM] = imx8m_clk_hw_composite("pdm", imx8mp_pdm_sels, ccm_base + 0xc200);
--	hws[IMX8MP_CLK_VPU_VC8000E] = imx8m_clk_hw_composite("vpu_vc8000e", imx8mp_vpu_vc8000e_sels, ccm_base + 0xc280);
--	hws[IMX8MP_CLK_SAI7] = imx8m_clk_hw_composite("sai7", imx8mp_sai7_sels, ccm_base + 0xc300);
-+	hws[IMX8MP_CLK_A53_CORE] = imx_clk_hw_mux2("arm_a53_core", base + 0x9880, 24, 1, imx8mp_a53_core_sels, ARRAY_SIZE(imx8mp_a53_core_sels));
-+
-+	hws[IMX8MP_CLK_MAIN_AXI] = imx8m_clk_hw_composite_bus_critical("main_axi", imx8mp_main_axi_sels, base + 0x8800);
-+	hws[IMX8MP_CLK_ENET_AXI] = imx8m_clk_hw_composite_bus("enet_axi", imx8mp_enet_axi_sels, base + 0x8880);
-+	hws[IMX8MP_CLK_NAND_USDHC_BUS] = imx8m_clk_hw_composite("nand_usdhc_bus", imx8mp_nand_usdhc_sels, base + 0x8900);
-+	hws[IMX8MP_CLK_VPU_BUS] = imx8m_clk_hw_composite_bus("vpu_bus", imx8mp_vpu_bus_sels, base + 0x8980);
-+	hws[IMX8MP_CLK_MEDIA_AXI] = imx8m_clk_hw_composite_bus("media_axi", imx8mp_media_axi_sels, base + 0x8a00);
-+	hws[IMX8MP_CLK_MEDIA_APB] = imx8m_clk_hw_composite_bus("media_apb", imx8mp_media_apb_sels, base + 0x8a80);
-+	hws[IMX8MP_CLK_HDMI_APB] = imx8m_clk_hw_composite_bus("hdmi_apb", imx8mp_media_apb_sels, base + 0x8b00);
-+	hws[IMX8MP_CLK_HDMI_AXI] = imx8m_clk_hw_composite_bus("hdmi_axi", imx8mp_media_axi_sels, base + 0x8b80);
-+	hws[IMX8MP_CLK_GPU_AXI] = imx8m_clk_hw_composite_bus("gpu_axi", imx8mp_gpu_axi_sels, base + 0x8c00);
-+	hws[IMX8MP_CLK_GPU_AHB] = imx8m_clk_hw_composite_bus("gpu_ahb", imx8mp_gpu_ahb_sels, base + 0x8c80);
-+	hws[IMX8MP_CLK_NOC] = imx8m_clk_hw_composite_bus_critical("noc", imx8mp_noc_sels, base + 0x8d00);
-+	hws[IMX8MP_CLK_NOC_IO] = imx8m_clk_hw_composite_bus_critical("noc_io", imx8mp_noc_io_sels, base + 0x8d80);
-+	hws[IMX8MP_CLK_ML_AXI] = imx8m_clk_hw_composite_bus("ml_axi", imx8mp_ml_axi_sels, base + 0x8e00);
-+	hws[IMX8MP_CLK_ML_AHB] = imx8m_clk_hw_composite_bus("ml_ahb", imx8mp_ml_ahb_sels, base + 0x8e80);
-+
-+	hws[IMX8MP_CLK_AHB] = imx8m_clk_hw_composite_bus_critical("ahb_root", imx8mp_ahb_sels, base + 0x9000);
-+	hws[IMX8MP_CLK_AUDIO_AHB] = imx8m_clk_hw_composite_bus("audio_ahb", imx8mp_audio_ahb_sels, base + 0x9100);
-+	hws[IMX8MP_CLK_MIPI_DSI_ESC_RX] = imx8m_clk_hw_composite_bus("mipi_dsi_esc_rx", imx8mp_mipi_dsi_esc_rx_sels, base + 0x9200);
-+	hws[IMX8MP_CLK_MEDIA_DISP2_PIX] = imx8m_clk_hw_composite_bus_flags("media_disp2_pix", imx8mp_media_disp_pix_sels, base + 0x9300, CLK_SET_RATE_PARENT);
-+
-+	hws[IMX8MP_CLK_IPG_ROOT] = imx_clk_hw_divider2("ipg_root", "ahb_root", base + 0x9080, 0, 1);
-+
-+	hws[IMX8MP_CLK_DRAM_ALT] = imx8m_clk_hw_fw_managed_composite("dram_alt", imx8mp_dram_alt_sels, base + 0xa000);
-+	hws[IMX8MP_CLK_DRAM_APB] = imx8m_clk_hw_fw_managed_composite_critical("dram_apb", imx8mp_dram_apb_sels, base + 0xa080);
-+	hws[IMX8MP_CLK_VPU_G1] = imx8m_clk_hw_composite("vpu_g1", imx8mp_vpu_g1_sels, base + 0xa100);
-+	hws[IMX8MP_CLK_VPU_G2] = imx8m_clk_hw_composite("vpu_g2", imx8mp_vpu_g2_sels, base + 0xa180);
-+	hws[IMX8MP_CLK_CAN1] = imx8m_clk_hw_composite("can1", imx8mp_can1_sels, base + 0xa200);
-+	hws[IMX8MP_CLK_CAN2] = imx8m_clk_hw_composite("can2", imx8mp_can2_sels, base + 0xa280);
-+	hws[IMX8MP_CLK_PCIE_AUX] = imx8m_clk_hw_composite("pcie_aux", imx8mp_pcie_aux_sels, base + 0xa400);
-+	hws[IMX8MP_CLK_I2C5] = imx8m_clk_hw_composite("i2c5", imx8mp_i2c5_sels, base + 0xa480);
-+	hws[IMX8MP_CLK_I2C6] = imx8m_clk_hw_composite("i2c6", imx8mp_i2c6_sels, base + 0xa500);
-+	hws[IMX8MP_CLK_SAI1] = imx8m_clk_hw_composite("sai1", imx8mp_sai1_sels, base + 0xa580);
-+	hws[IMX8MP_CLK_SAI2] = imx8m_clk_hw_composite("sai2", imx8mp_sai2_sels, base + 0xa600);
-+	hws[IMX8MP_CLK_SAI3] = imx8m_clk_hw_composite("sai3", imx8mp_sai3_sels, base + 0xa680);
-+	hws[IMX8MP_CLK_SAI5] = imx8m_clk_hw_composite("sai5", imx8mp_sai5_sels, base + 0xa780);
-+	hws[IMX8MP_CLK_SAI6] = imx8m_clk_hw_composite("sai6", imx8mp_sai6_sels, base + 0xa800);
-+	hws[IMX8MP_CLK_ENET_QOS] = imx8m_clk_hw_composite("enet_qos", imx8mp_enet_qos_sels, base + 0xa880);
-+	hws[IMX8MP_CLK_ENET_QOS_TIMER] = imx8m_clk_hw_composite("enet_qos_timer", imx8mp_enet_qos_timer_sels, base + 0xa900);
-+	hws[IMX8MP_CLK_ENET_REF] = imx8m_clk_hw_composite("enet_ref", imx8mp_enet_ref_sels, base + 0xa980);
-+	hws[IMX8MP_CLK_ENET_TIMER] = imx8m_clk_hw_composite("enet_timer", imx8mp_enet_timer_sels, base + 0xaa00);
-+	hws[IMX8MP_CLK_ENET_PHY_REF] = imx8m_clk_hw_composite("enet_phy_ref", imx8mp_enet_phy_ref_sels, base + 0xaa80);
-+	hws[IMX8MP_CLK_NAND] = imx8m_clk_hw_composite("nand", imx8mp_nand_sels, base + 0xab00);
-+	hws[IMX8MP_CLK_QSPI] = imx8m_clk_hw_composite("qspi", imx8mp_qspi_sels, base + 0xab80);
-+	hws[IMX8MP_CLK_USDHC1] = imx8m_clk_hw_composite("usdhc1", imx8mp_usdhc1_sels, base + 0xac00);
-+	hws[IMX8MP_CLK_USDHC2] = imx8m_clk_hw_composite("usdhc2", imx8mp_usdhc2_sels, base + 0xac80);
-+	hws[IMX8MP_CLK_I2C1] = imx8m_clk_hw_composite("i2c1", imx8mp_i2c1_sels, base + 0xad00);
-+	hws[IMX8MP_CLK_I2C2] = imx8m_clk_hw_composite("i2c2", imx8mp_i2c2_sels, base + 0xad80);
-+	hws[IMX8MP_CLK_I2C3] = imx8m_clk_hw_composite("i2c3", imx8mp_i2c3_sels, base + 0xae00);
-+	hws[IMX8MP_CLK_I2C4] = imx8m_clk_hw_composite("i2c4", imx8mp_i2c4_sels, base + 0xae80);
-+
-+	hws[IMX8MP_CLK_UART1] = imx8m_clk_hw_composite("uart1", imx8mp_uart1_sels, base + 0xaf00);
-+	hws[IMX8MP_CLK_UART2] = imx8m_clk_hw_composite("uart2", imx8mp_uart2_sels, base + 0xaf80);
-+	hws[IMX8MP_CLK_UART3] = imx8m_clk_hw_composite("uart3", imx8mp_uart3_sels, base + 0xb000);
-+	hws[IMX8MP_CLK_UART4] = imx8m_clk_hw_composite("uart4", imx8mp_uart4_sels, base + 0xb080);
-+	hws[IMX8MP_CLK_USB_CORE_REF] = imx8m_clk_hw_composite("usb_core_ref", imx8mp_usb_core_ref_sels, base + 0xb100);
-+	hws[IMX8MP_CLK_USB_PHY_REF] = imx8m_clk_hw_composite("usb_phy_ref", imx8mp_usb_phy_ref_sels, base + 0xb180);
-+	hws[IMX8MP_CLK_GIC] = imx8m_clk_hw_composite_critical("gic", imx8mp_gic_sels, base + 0xb200);
-+	hws[IMX8MP_CLK_ECSPI1] = imx8m_clk_hw_composite("ecspi1", imx8mp_ecspi1_sels, base + 0xb280);
-+	hws[IMX8MP_CLK_ECSPI2] = imx8m_clk_hw_composite("ecspi2", imx8mp_ecspi2_sels, base + 0xb300);
-+	hws[IMX8MP_CLK_PWM1] = imx8m_clk_hw_composite("pwm1", imx8mp_pwm1_sels, base + 0xb380);
-+	hws[IMX8MP_CLK_PWM2] = imx8m_clk_hw_composite("pwm2", imx8mp_pwm2_sels, base + 0xb400);
-+	hws[IMX8MP_CLK_PWM3] = imx8m_clk_hw_composite("pwm3", imx8mp_pwm3_sels, base + 0xb480);
-+	hws[IMX8MP_CLK_PWM4] = imx8m_clk_hw_composite("pwm4", imx8mp_pwm4_sels, base + 0xb500);
-+
-+	hws[IMX8MP_CLK_GPT1] = imx8m_clk_hw_composite("gpt1", imx8mp_gpt1_sels, base + 0xb580);
-+	hws[IMX8MP_CLK_GPT2] = imx8m_clk_hw_composite("gpt2", imx8mp_gpt2_sels, base + 0xb600);
-+	hws[IMX8MP_CLK_GPT3] = imx8m_clk_hw_composite("gpt3", imx8mp_gpt3_sels, base + 0xb680);
-+	hws[IMX8MP_CLK_GPT4] = imx8m_clk_hw_composite("gpt4", imx8mp_gpt4_sels, base + 0xb700);
-+	hws[IMX8MP_CLK_GPT5] = imx8m_clk_hw_composite("gpt5", imx8mp_gpt5_sels, base + 0xb780);
-+	hws[IMX8MP_CLK_GPT6] = imx8m_clk_hw_composite("gpt6", imx8mp_gpt6_sels, base + 0xb800);
-+	hws[IMX8MP_CLK_WDOG] = imx8m_clk_hw_composite("wdog", imx8mp_wdog_sels, base + 0xb900);
-+	hws[IMX8MP_CLK_WRCLK] = imx8m_clk_hw_composite("wrclk", imx8mp_wrclk_sels, base + 0xb980);
-+	hws[IMX8MP_CLK_IPP_DO_CLKO1] = imx8m_clk_hw_composite("ipp_do_clko1", imx8mp_ipp_do_clko1_sels, base + 0xba00);
-+	hws[IMX8MP_CLK_IPP_DO_CLKO2] = imx8m_clk_hw_composite("ipp_do_clko2", imx8mp_ipp_do_clko2_sels, base + 0xba80);
-+	hws[IMX8MP_CLK_HDMI_FDCC_TST] = imx8m_clk_hw_composite("hdmi_fdcc_tst", imx8mp_hdmi_fdcc_tst_sels, base + 0xbb00);
-+	hws[IMX8MP_CLK_HDMI_24M] = imx8m_clk_hw_composite("hdmi_24m", imx8mp_hdmi_24m_sels, base + 0xbb80);
-+	hws[IMX8MP_CLK_HDMI_REF_266M] = imx8m_clk_hw_composite("hdmi_ref_266m", imx8mp_hdmi_ref_266m_sels, base + 0xbc00);
-+	hws[IMX8MP_CLK_USDHC3] = imx8m_clk_hw_composite("usdhc3", imx8mp_usdhc3_sels, base + 0xbc80);
-+	hws[IMX8MP_CLK_MEDIA_CAM1_PIX] = imx8m_clk_hw_composite("media_cam1_pix", imx8mp_media_cam1_pix_sels, base + 0xbd00);
-+	hws[IMX8MP_CLK_MEDIA_MIPI_PHY1_REF] = imx8m_clk_hw_composite("media_mipi_phy1_ref", imx8mp_media_mipi_phy1_ref_sels, base + 0xbd80);
-+	hws[IMX8MP_CLK_MEDIA_DISP1_PIX] = imx8m_clk_hw_composite_bus_flags("media_disp1_pix", imx8mp_media_disp_pix_sels, base + 0xbe00, CLK_SET_RATE_PARENT);
-+	hws[IMX8MP_CLK_MEDIA_CAM2_PIX] = imx8m_clk_hw_composite("media_cam2_pix", imx8mp_media_cam2_pix_sels, base + 0xbe80);
-+	hws[IMX8MP_CLK_MEDIA_LDB] = imx8m_clk_hw_composite("media_ldb", imx8mp_media_ldb_sels, base + 0xbf00);
-+	hws[IMX8MP_CLK_MEMREPAIR] = imx8m_clk_hw_composite_critical("mem_repair", imx8mp_memrepair_sels, base + 0xbf80);
-+	hws[IMX8MP_CLK_MEDIA_MIPI_TEST_BYTE] = imx8m_clk_hw_composite("media_mipi_test_byte", imx8mp_media_mipi_test_byte_sels, base + 0xc100);
-+	hws[IMX8MP_CLK_ECSPI3] = imx8m_clk_hw_composite("ecspi3", imx8mp_ecspi3_sels, base + 0xc180);
-+	hws[IMX8MP_CLK_PDM] = imx8m_clk_hw_composite("pdm", imx8mp_pdm_sels, base + 0xc200);
-+	hws[IMX8MP_CLK_VPU_VC8000E] = imx8m_clk_hw_composite("vpu_vc8000e", imx8mp_vpu_vc8000e_sels, base + 0xc280);
-+	hws[IMX8MP_CLK_SAI7] = imx8m_clk_hw_composite("sai7", imx8mp_sai7_sels, base + 0xc300);
- 
- 	hws[IMX8MP_CLK_DRAM_ALT_ROOT] = imx_clk_hw_fixed_factor("dram_alt_root", "dram_alt", 1, 4);
--	hws[IMX8MP_CLK_DRAM_CORE] = imx_clk_hw_mux2_flags("dram_core_clk", ccm_base + 0x9800, 24, 1, imx8mp_dram_core_sels, ARRAY_SIZE(imx8mp_dram_core_sels), CLK_IS_CRITICAL);
--
--	hws[IMX8MP_CLK_DRAM1_ROOT] = imx_clk_hw_gate4_flags("dram1_root_clk", "dram_core_clk", ccm_base + 0x4050, 0, CLK_IS_CRITICAL);
--	hws[IMX8MP_CLK_ECSPI1_ROOT] = imx_clk_hw_gate4("ecspi1_root_clk", "ecspi1", ccm_base + 0x4070, 0);
--	hws[IMX8MP_CLK_ECSPI2_ROOT] = imx_clk_hw_gate4("ecspi2_root_clk", "ecspi2", ccm_base + 0x4080, 0);
--	hws[IMX8MP_CLK_ECSPI3_ROOT] = imx_clk_hw_gate4("ecspi3_root_clk", "ecspi3", ccm_base + 0x4090, 0);
--	hws[IMX8MP_CLK_ENET1_ROOT] = imx_clk_hw_gate4("enet1_root_clk", "enet_axi", ccm_base + 0x40a0, 0);
--	hws[IMX8MP_CLK_GPIO1_ROOT] = imx_clk_hw_gate4("gpio1_root_clk", "ipg_root", ccm_base + 0x40b0, 0);
--	hws[IMX8MP_CLK_GPIO2_ROOT] = imx_clk_hw_gate4("gpio2_root_clk", "ipg_root", ccm_base + 0x40c0, 0);
--	hws[IMX8MP_CLK_GPIO3_ROOT] = imx_clk_hw_gate4("gpio3_root_clk", "ipg_root", ccm_base + 0x40d0, 0);
--	hws[IMX8MP_CLK_GPIO4_ROOT] = imx_clk_hw_gate4("gpio4_root_clk", "ipg_root", ccm_base + 0x40e0, 0);
--	hws[IMX8MP_CLK_GPIO5_ROOT] = imx_clk_hw_gate4("gpio5_root_clk", "ipg_root", ccm_base + 0x40f0, 0);
--	hws[IMX8MP_CLK_GPT1_ROOT] = imx_clk_hw_gate4("gpt1_root_clk", "gpt1", ccm_base + 0x4100, 0);
--	hws[IMX8MP_CLK_GPT2_ROOT] = imx_clk_hw_gate4("gpt2_root_clk", "gpt2", ccm_base + 0x4110, 0);
--	hws[IMX8MP_CLK_GPT3_ROOT] = imx_clk_hw_gate4("gpt3_root_clk", "gpt3", ccm_base + 0x4120, 0);
--	hws[IMX8MP_CLK_GPT4_ROOT] = imx_clk_hw_gate4("gpt4_root_clk", "gpt4", ccm_base + 0x4130, 0);
--	hws[IMX8MP_CLK_GPT5_ROOT] = imx_clk_hw_gate4("gpt5_root_clk", "gpt5", ccm_base + 0x4140, 0);
--	hws[IMX8MP_CLK_GPT6_ROOT] = imx_clk_hw_gate4("gpt6_root_clk", "gpt6", ccm_base + 0x4150, 0);
--	hws[IMX8MP_CLK_I2C1_ROOT] = imx_clk_hw_gate4("i2c1_root_clk", "i2c1", ccm_base + 0x4170, 0);
--	hws[IMX8MP_CLK_I2C2_ROOT] = imx_clk_hw_gate4("i2c2_root_clk", "i2c2", ccm_base + 0x4180, 0);
--	hws[IMX8MP_CLK_I2C3_ROOT] = imx_clk_hw_gate4("i2c3_root_clk", "i2c3", ccm_base + 0x4190, 0);
--	hws[IMX8MP_CLK_I2C4_ROOT] = imx_clk_hw_gate4("i2c4_root_clk", "i2c4", ccm_base + 0x41a0, 0);
--	hws[IMX8MP_CLK_MU_ROOT] = imx_clk_hw_gate4("mu_root_clk", "ipg_root", ccm_base + 0x4210, 0);
--	hws[IMX8MP_CLK_OCOTP_ROOT] = imx_clk_hw_gate4("ocotp_root_clk", "ipg_root", ccm_base + 0x4220, 0);
--	hws[IMX8MP_CLK_PCIE_ROOT] = imx_clk_hw_gate4("pcie_root_clk", "pcie_aux", ccm_base + 0x4250, 0);
--	hws[IMX8MP_CLK_PWM1_ROOT] = imx_clk_hw_gate4("pwm1_root_clk", "pwm1", ccm_base + 0x4280, 0);
--	hws[IMX8MP_CLK_PWM2_ROOT] = imx_clk_hw_gate4("pwm2_root_clk", "pwm2", ccm_base + 0x4290, 0);
--	hws[IMX8MP_CLK_PWM3_ROOT] = imx_clk_hw_gate4("pwm3_root_clk", "pwm3", ccm_base + 0x42a0, 0);
--	hws[IMX8MP_CLK_PWM4_ROOT] = imx_clk_hw_gate4("pwm4_root_clk", "pwm4", ccm_base + 0x42b0, 0);
--	hws[IMX8MP_CLK_QOS_ROOT] = imx_clk_hw_gate4("qos_root_clk", "ipg_root", ccm_base + 0x42c0, 0);
--	hws[IMX8MP_CLK_QOS_ENET_ROOT] = imx_clk_hw_gate4("qos_enet_root_clk", "ipg_root", ccm_base + 0x42e0, 0);
--	hws[IMX8MP_CLK_QSPI_ROOT] = imx_clk_hw_gate4("qspi_root_clk", "qspi", ccm_base + 0x42f0, 0);
--	hws[IMX8MP_CLK_NAND_ROOT] = imx_clk_hw_gate2_shared2("nand_root_clk", "nand", ccm_base + 0x4300, 0, &share_count_nand);
--	hws[IMX8MP_CLK_NAND_USDHC_BUS_RAWNAND_CLK] = imx_clk_hw_gate2_shared2("nand_usdhc_rawnand_clk", "nand_usdhc_bus", ccm_base + 0x4300, 0, &share_count_nand);
--	hws[IMX8MP_CLK_I2C5_ROOT] = imx_clk_hw_gate2("i2c5_root_clk", "i2c5", ccm_base + 0x4330, 0);
--	hws[IMX8MP_CLK_I2C6_ROOT] = imx_clk_hw_gate2("i2c6_root_clk", "i2c6", ccm_base + 0x4340, 0);
--	hws[IMX8MP_CLK_CAN1_ROOT] = imx_clk_hw_gate2("can1_root_clk", "can1", ccm_base + 0x4350, 0);
--	hws[IMX8MP_CLK_CAN2_ROOT] = imx_clk_hw_gate2("can2_root_clk", "can2", ccm_base + 0x4360, 0);
--	hws[IMX8MP_CLK_SDMA1_ROOT] = imx_clk_hw_gate4("sdma1_root_clk", "ipg_root", ccm_base + 0x43a0, 0);
--	hws[IMX8MP_CLK_SIM_ENET_ROOT] = imx_clk_hw_gate4("sim_enet_root_clk", "enet_axi", ccm_base + 0x4400, 0);
--	hws[IMX8MP_CLK_ENET_QOS_ROOT] = imx_clk_hw_gate4("enet_qos_root_clk", "sim_enet_root_clk", ccm_base + 0x43b0, 0);
--	hws[IMX8MP_CLK_GPU2D_ROOT] = imx_clk_hw_gate4("gpu2d_root_clk", "gpu2d_core", ccm_base + 0x4450, 0);
--	hws[IMX8MP_CLK_GPU3D_ROOT] = imx_clk_hw_gate4("gpu3d_root_clk", "gpu3d_core", ccm_base + 0x4460, 0);
--	hws[IMX8MP_CLK_UART1_ROOT] = imx_clk_hw_gate4("uart1_root_clk", "uart1", ccm_base + 0x4490, 0);
--	hws[IMX8MP_CLK_UART2_ROOT] = imx_clk_hw_gate4("uart2_root_clk", "uart2", ccm_base + 0x44a0, 0);
--	hws[IMX8MP_CLK_UART3_ROOT] = imx_clk_hw_gate4("uart3_root_clk", "uart3", ccm_base + 0x44b0, 0);
--	hws[IMX8MP_CLK_UART4_ROOT] = imx_clk_hw_gate4("uart4_root_clk", "uart4", ccm_base + 0x44c0, 0);
--	hws[IMX8MP_CLK_USB_ROOT] = imx_clk_hw_gate2_shared2("usb_root_clk", "hsio_axi", ccm_base + 0x44d0, 0, &share_count_usb);
--	hws[IMX8MP_CLK_USB_SUSP] = imx_clk_hw_gate2_shared2("usb_suspend_clk", "osc_32k", ccm_base + 0x44d0, 0, &share_count_usb);
--	hws[IMX8MP_CLK_USB_PHY_ROOT] = imx_clk_hw_gate4("usb_phy_root_clk", "usb_phy_ref", ccm_base + 0x44f0, 0);
--	hws[IMX8MP_CLK_USDHC1_ROOT] = imx_clk_hw_gate4("usdhc1_root_clk", "usdhc1", ccm_base + 0x4510, 0);
--	hws[IMX8MP_CLK_USDHC2_ROOT] = imx_clk_hw_gate4("usdhc2_root_clk", "usdhc2", ccm_base + 0x4520, 0);
--	hws[IMX8MP_CLK_WDOG1_ROOT] = imx_clk_hw_gate4("wdog1_root_clk", "wdog", ccm_base + 0x4530, 0);
--	hws[IMX8MP_CLK_WDOG2_ROOT] = imx_clk_hw_gate4("wdog2_root_clk", "wdog", ccm_base + 0x4540, 0);
--	hws[IMX8MP_CLK_WDOG3_ROOT] = imx_clk_hw_gate4("wdog3_root_clk", "wdog", ccm_base + 0x4550, 0);
--	hws[IMX8MP_CLK_VPU_G1_ROOT] = imx_clk_hw_gate4("vpu_g1_root_clk", "vpu_g1", ccm_base + 0x4560, 0);
--	hws[IMX8MP_CLK_GPU_ROOT] = imx_clk_hw_gate4("gpu_root_clk", "gpu_axi", ccm_base + 0x4570, 0);
--	hws[IMX8MP_CLK_VPU_VC8KE_ROOT] = imx_clk_hw_gate4("vpu_vc8ke_root_clk", "vpu_vc8000e", ccm_base + 0x4590, 0);
--	hws[IMX8MP_CLK_VPU_G2_ROOT] = imx_clk_hw_gate4("vpu_g2_root_clk", "vpu_g2", ccm_base + 0x45a0, 0);
--	hws[IMX8MP_CLK_NPU_ROOT] = imx_clk_hw_gate4("npu_root_clk", "ml_core", ccm_base + 0x45b0, 0);
--	hws[IMX8MP_CLK_HSIO_ROOT] = imx_clk_hw_gate4("hsio_root_clk", "ipg_root", ccm_base + 0x45c0, 0);
--	hws[IMX8MP_CLK_MEDIA_APB_ROOT] = imx_clk_hw_gate2_shared2("media_apb_root_clk", "media_apb", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_AXI_ROOT] = imx_clk_hw_gate2_shared2("media_axi_root_clk", "media_axi", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_CAM1_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_cam1_pix_root_clk", "media_cam1_pix", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_CAM2_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_cam2_pix_root_clk", "media_cam2_pix", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_DISP1_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_disp1_pix_root_clk", "media_disp1_pix", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_DISP2_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_disp2_pix_root_clk", "media_disp2_pix", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_MIPI_PHY1_REF_ROOT] = imx_clk_hw_gate2_shared2("media_mipi_phy1_ref_root", "media_mipi_phy1_ref", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_LDB_ROOT] = imx_clk_hw_gate2_shared2("media_ldb_root_clk", "media_ldb", ccm_base + 0x45d0, 0, &share_count_media);
--	hws[IMX8MP_CLK_MEDIA_ISP_ROOT] = imx_clk_hw_gate2_shared2("media_isp_root_clk", "media_isp", ccm_base + 0x45d0, 0, &share_count_media);
--
--	hws[IMX8MP_CLK_USDHC3_ROOT] = imx_clk_hw_gate4("usdhc3_root_clk", "usdhc3", ccm_base + 0x45e0, 0);
--	hws[IMX8MP_CLK_HDMI_ROOT] = imx_clk_hw_gate4("hdmi_root_clk", "hdmi_axi", ccm_base + 0x45f0, 0);
--	hws[IMX8MP_CLK_TSENSOR_ROOT] = imx_clk_hw_gate4("tsensor_root_clk", "ipg_root", ccm_base + 0x4620, 0);
--	hws[IMX8MP_CLK_VPU_ROOT] = imx_clk_hw_gate4("vpu_root_clk", "vpu_bus", ccm_base + 0x4630, 0);
--
--	hws[IMX8MP_CLK_AUDIO_AHB_ROOT] = imx_clk_hw_gate2_shared2("audio_ahb_root", "audio_ahb", ccm_base + 0x4650, 0, &share_count_audio);
--	hws[IMX8MP_CLK_AUDIO_AXI_ROOT] = imx_clk_hw_gate2_shared2("audio_axi_root", "audio_axi", ccm_base + 0x4650, 0, &share_count_audio);
--	hws[IMX8MP_CLK_SAI1_ROOT] = imx_clk_hw_gate2_shared2("sai1_root", "sai1", ccm_base + 0x4650, 0, &share_count_audio);
--	hws[IMX8MP_CLK_SAI2_ROOT] = imx_clk_hw_gate2_shared2("sai2_root", "sai2", ccm_base + 0x4650, 0, &share_count_audio);
--	hws[IMX8MP_CLK_SAI3_ROOT] = imx_clk_hw_gate2_shared2("sai3_root", "sai3", ccm_base + 0x4650, 0, &share_count_audio);
--	hws[IMX8MP_CLK_SAI5_ROOT] = imx_clk_hw_gate2_shared2("sai5_root", "sai5", ccm_base + 0x4650, 0, &share_count_audio);
--	hws[IMX8MP_CLK_SAI6_ROOT] = imx_clk_hw_gate2_shared2("sai6_root", "sai6", ccm_base + 0x4650, 0, &share_count_audio);
--	hws[IMX8MP_CLK_SAI7_ROOT] = imx_clk_hw_gate2_shared2("sai7_root", "sai7", ccm_base + 0x4650, 0, &share_count_audio);
--	hws[IMX8MP_CLK_PDM_ROOT] = imx_clk_hw_gate2_shared2("pdm_root", "pdm", ccm_base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_DRAM_CORE] = imx_clk_hw_mux2_flags("dram_core_clk", base + 0x9800, 24, 1, imx8mp_dram_core_sels, ARRAY_SIZE(imx8mp_dram_core_sels), CLK_IS_CRITICAL);
-+
-+	hws[IMX8MP_CLK_DRAM1_ROOT] = imx_clk_hw_gate4_flags("dram1_root_clk", "dram_core_clk", base + 0x4050, 0, CLK_IS_CRITICAL);
-+	hws[IMX8MP_CLK_ECSPI1_ROOT] = imx_clk_hw_gate4("ecspi1_root_clk", "ecspi1", base + 0x4070, 0);
-+	hws[IMX8MP_CLK_ECSPI2_ROOT] = imx_clk_hw_gate4("ecspi2_root_clk", "ecspi2", base + 0x4080, 0);
-+	hws[IMX8MP_CLK_ECSPI3_ROOT] = imx_clk_hw_gate4("ecspi3_root_clk", "ecspi3", base + 0x4090, 0);
-+	hws[IMX8MP_CLK_ENET1_ROOT] = imx_clk_hw_gate4("enet1_root_clk", "enet_axi", base + 0x40a0, 0);
-+	hws[IMX8MP_CLK_GPIO1_ROOT] = imx_clk_hw_gate4("gpio1_root_clk", "ipg_root", base + 0x40b0, 0);
-+	hws[IMX8MP_CLK_GPIO2_ROOT] = imx_clk_hw_gate4("gpio2_root_clk", "ipg_root", base + 0x40c0, 0);
-+	hws[IMX8MP_CLK_GPIO3_ROOT] = imx_clk_hw_gate4("gpio3_root_clk", "ipg_root", base + 0x40d0, 0);
-+	hws[IMX8MP_CLK_GPIO4_ROOT] = imx_clk_hw_gate4("gpio4_root_clk", "ipg_root", base + 0x40e0, 0);
-+	hws[IMX8MP_CLK_GPIO5_ROOT] = imx_clk_hw_gate4("gpio5_root_clk", "ipg_root", base + 0x40f0, 0);
-+	hws[IMX8MP_CLK_GPT1_ROOT] = imx_clk_hw_gate4("gpt1_root_clk", "gpt1", base + 0x4100, 0);
-+	hws[IMX8MP_CLK_GPT2_ROOT] = imx_clk_hw_gate4("gpt2_root_clk", "gpt2", base + 0x4110, 0);
-+	hws[IMX8MP_CLK_GPT3_ROOT] = imx_clk_hw_gate4("gpt3_root_clk", "gpt3", base + 0x4120, 0);
-+	hws[IMX8MP_CLK_GPT4_ROOT] = imx_clk_hw_gate4("gpt4_root_clk", "gpt4", base + 0x4130, 0);
-+	hws[IMX8MP_CLK_GPT5_ROOT] = imx_clk_hw_gate4("gpt5_root_clk", "gpt5", base + 0x4140, 0);
-+	hws[IMX8MP_CLK_GPT6_ROOT] = imx_clk_hw_gate4("gpt6_root_clk", "gpt6", base + 0x4150, 0);
-+	hws[IMX8MP_CLK_I2C1_ROOT] = imx_clk_hw_gate4("i2c1_root_clk", "i2c1", base + 0x4170, 0);
-+	hws[IMX8MP_CLK_I2C2_ROOT] = imx_clk_hw_gate4("i2c2_root_clk", "i2c2", base + 0x4180, 0);
-+	hws[IMX8MP_CLK_I2C3_ROOT] = imx_clk_hw_gate4("i2c3_root_clk", "i2c3", base + 0x4190, 0);
-+	hws[IMX8MP_CLK_I2C4_ROOT] = imx_clk_hw_gate4("i2c4_root_clk", "i2c4", base + 0x41a0, 0);
-+	hws[IMX8MP_CLK_MU_ROOT] = imx_clk_hw_gate4("mu_root_clk", "ipg_root", base + 0x4210, 0);
-+	hws[IMX8MP_CLK_OCOTP_ROOT] = imx_clk_hw_gate4("ocotp_root_clk", "ipg_root", base + 0x4220, 0);
-+	hws[IMX8MP_CLK_PCIE_ROOT] = imx_clk_hw_gate4("pcie_root_clk", "pcie_aux", base + 0x4250, 0);
-+	hws[IMX8MP_CLK_PWM1_ROOT] = imx_clk_hw_gate4("pwm1_root_clk", "pwm1", base + 0x4280, 0);
-+	hws[IMX8MP_CLK_PWM2_ROOT] = imx_clk_hw_gate4("pwm2_root_clk", "pwm2", base + 0x4290, 0);
-+	hws[IMX8MP_CLK_PWM3_ROOT] = imx_clk_hw_gate4("pwm3_root_clk", "pwm3", base + 0x42a0, 0);
-+	hws[IMX8MP_CLK_PWM4_ROOT] = imx_clk_hw_gate4("pwm4_root_clk", "pwm4", base + 0x42b0, 0);
-+	hws[IMX8MP_CLK_QOS_ROOT] = imx_clk_hw_gate4("qos_root_clk", "ipg_root", base + 0x42c0, 0);
-+	hws[IMX8MP_CLK_QOS_ENET_ROOT] = imx_clk_hw_gate4("qos_enet_root_clk", "ipg_root", base + 0x42e0, 0);
-+	hws[IMX8MP_CLK_QSPI_ROOT] = imx_clk_hw_gate4("qspi_root_clk", "qspi", base + 0x42f0, 0);
-+	hws[IMX8MP_CLK_NAND_ROOT] = imx_clk_hw_gate2_shared2("nand_root_clk", "nand", base + 0x4300, 0, &share_count_nand);
-+	hws[IMX8MP_CLK_NAND_USDHC_BUS_RAWNAND_CLK] = imx_clk_hw_gate2_shared2("nand_usdhc_rawnand_clk", "nand_usdhc_bus", base + 0x4300, 0, &share_count_nand);
-+	hws[IMX8MP_CLK_I2C5_ROOT] = imx_clk_hw_gate2("i2c5_root_clk", "i2c5", base + 0x4330, 0);
-+	hws[IMX8MP_CLK_I2C6_ROOT] = imx_clk_hw_gate2("i2c6_root_clk", "i2c6", base + 0x4340, 0);
-+	hws[IMX8MP_CLK_CAN1_ROOT] = imx_clk_hw_gate2("can1_root_clk", "can1", base + 0x4350, 0);
-+	hws[IMX8MP_CLK_CAN2_ROOT] = imx_clk_hw_gate2("can2_root_clk", "can2", base + 0x4360, 0);
-+	hws[IMX8MP_CLK_SDMA1_ROOT] = imx_clk_hw_gate4("sdma1_root_clk", "ipg_root", base + 0x43a0, 0);
-+	hws[IMX8MP_CLK_SIM_ENET_ROOT] = imx_clk_hw_gate4("sim_enet_root_clk", "enet_axi", base + 0x4400, 0);
-+	hws[IMX8MP_CLK_ENET_QOS_ROOT] = imx_clk_hw_gate4("enet_qos_root_clk", "sim_enet_root_clk", base + 0x43b0, 0);
-+	hws[IMX8MP_CLK_GPU2D_ROOT] = imx_clk_hw_gate4("gpu2d_root_clk", "gpu2d_core", base + 0x4450, 0);
-+	hws[IMX8MP_CLK_GPU3D_ROOT] = imx_clk_hw_gate4("gpu3d_root_clk", "gpu3d_core", base + 0x4460, 0);
-+	hws[IMX8MP_CLK_UART1_ROOT] = imx_clk_hw_gate4("uart1_root_clk", "uart1", base + 0x4490, 0);
-+	hws[IMX8MP_CLK_UART2_ROOT] = imx_clk_hw_gate4("uart2_root_clk", "uart2", base + 0x44a0, 0);
-+	hws[IMX8MP_CLK_UART3_ROOT] = imx_clk_hw_gate4("uart3_root_clk", "uart3", base + 0x44b0, 0);
-+	hws[IMX8MP_CLK_UART4_ROOT] = imx_clk_hw_gate4("uart4_root_clk", "uart4", base + 0x44c0, 0);
-+	hws[IMX8MP_CLK_USB_ROOT] = imx_clk_hw_gate2_shared2("usb_root_clk", "hsio_axi", base + 0x44d0, 0, &share_count_usb);
-+	hws[IMX8MP_CLK_USB_SUSP] = imx_clk_hw_gate2_shared2("usb_suspend_clk", "osc_32k", base + 0x44d0, 0, &share_count_usb);
-+	hws[IMX8MP_CLK_USB_PHY_ROOT] = imx_clk_hw_gate4("usb_phy_root_clk", "usb_phy_ref", base + 0x44f0, 0);
-+	hws[IMX8MP_CLK_USDHC1_ROOT] = imx_clk_hw_gate4("usdhc1_root_clk", "usdhc1", base + 0x4510, 0);
-+	hws[IMX8MP_CLK_USDHC2_ROOT] = imx_clk_hw_gate4("usdhc2_root_clk", "usdhc2", base + 0x4520, 0);
-+	hws[IMX8MP_CLK_WDOG1_ROOT] = imx_clk_hw_gate4("wdog1_root_clk", "wdog", base + 0x4530, 0);
-+	hws[IMX8MP_CLK_WDOG2_ROOT] = imx_clk_hw_gate4("wdog2_root_clk", "wdog", base + 0x4540, 0);
-+	hws[IMX8MP_CLK_WDOG3_ROOT] = imx_clk_hw_gate4("wdog3_root_clk", "wdog", base + 0x4550, 0);
-+	hws[IMX8MP_CLK_VPU_G1_ROOT] = imx_clk_hw_gate4("vpu_g1_root_clk", "vpu_g1", base + 0x4560, 0);
-+	hws[IMX8MP_CLK_GPU_ROOT] = imx_clk_hw_gate4("gpu_root_clk", "gpu_axi", base + 0x4570, 0);
-+	hws[IMX8MP_CLK_VPU_VC8KE_ROOT] = imx_clk_hw_gate4("vpu_vc8ke_root_clk", "vpu_vc8000e", base + 0x4590, 0);
-+	hws[IMX8MP_CLK_VPU_G2_ROOT] = imx_clk_hw_gate4("vpu_g2_root_clk", "vpu_g2", base + 0x45a0, 0);
-+	hws[IMX8MP_CLK_NPU_ROOT] = imx_clk_hw_gate4("npu_root_clk", "ml_core", base + 0x45b0, 0);
-+	hws[IMX8MP_CLK_HSIO_ROOT] = imx_clk_hw_gate4("hsio_root_clk", "ipg_root", base + 0x45c0, 0);
-+	hws[IMX8MP_CLK_MEDIA_APB_ROOT] = imx_clk_hw_gate2_shared2("media_apb_root_clk", "media_apb", base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_AXI_ROOT] = imx_clk_hw_gate2_shared2("media_axi_root_clk", "media_axi", base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_CAM1_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_cam1_pix_root_clk", "media_cam1_pix", base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_CAM2_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_cam2_pix_root_clk", "media_cam2_pix", base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_DISP1_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_disp1_pix_root_clk", "media_disp1_pix", base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_DISP2_PIX_ROOT] = imx_clk_hw_gate2_shared2("media_disp2_pix_root_clk", "media_disp2_pix", base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_MIPI_PHY1_REF_ROOT] = imx_clk_hw_gate2_shared2("media_mipi_phy1_ref_root", "media_mipi_phy1_ref", base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_LDB_ROOT] = imx_clk_hw_gate2_shared2("media_ldb_root_clk", "media_ldb", base + 0x45d0, 0, &share_count_media);
-+	hws[IMX8MP_CLK_MEDIA_ISP_ROOT] = imx_clk_hw_gate2_shared2("media_isp_root_clk", "media_isp", base + 0x45d0, 0, &share_count_media);
-+
-+	hws[IMX8MP_CLK_USDHC3_ROOT] = imx_clk_hw_gate4("usdhc3_root_clk", "usdhc3", base + 0x45e0, 0);
-+	hws[IMX8MP_CLK_HDMI_ROOT] = imx_clk_hw_gate4("hdmi_root_clk", "hdmi_axi", base + 0x45f0, 0);
-+	hws[IMX8MP_CLK_TSENSOR_ROOT] = imx_clk_hw_gate4("tsensor_root_clk", "ipg_root", base + 0x4620, 0);
-+	hws[IMX8MP_CLK_VPU_ROOT] = imx_clk_hw_gate4("vpu_root_clk", "vpu_bus", base + 0x4630, 0);
-+
-+	hws[IMX8MP_CLK_AUDIO_AHB_ROOT] = imx_clk_hw_gate2_shared2("audio_ahb_root", "audio_ahb", base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_AUDIO_AXI_ROOT] = imx_clk_hw_gate2_shared2("audio_axi_root", "audio_axi", base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_SAI1_ROOT] = imx_clk_hw_gate2_shared2("sai1_root", "sai1", base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_SAI2_ROOT] = imx_clk_hw_gate2_shared2("sai2_root", "sai2", base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_SAI3_ROOT] = imx_clk_hw_gate2_shared2("sai3_root", "sai3", base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_SAI5_ROOT] = imx_clk_hw_gate2_shared2("sai5_root", "sai5", base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_SAI6_ROOT] = imx_clk_hw_gate2_shared2("sai6_root", "sai6", base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_SAI7_ROOT] = imx_clk_hw_gate2_shared2("sai7_root", "sai7", base + 0x4650, 0, &share_count_audio);
-+	hws[IMX8MP_CLK_PDM_ROOT] = imx_clk_hw_gate2_shared2("pdm_root", "pdm", base + 0x4650, 0, &share_count_audio);
- 
- 	hws[IMX8MP_CLK_ARM] = imx_clk_hw_cpu("arm", "arm_a53_core",
- 					     hws[IMX8MP_CLK_A53_CORE]->clk,
--- 
-2.43.0
-
+SGkgRHlsYW4sDQoNCj4gVG8gZW5hYmxlIGxhdGUgbW9kdWxlIHBhdGNoaW5nLCBsaXZlcGF0Y2gg
+bW9kdWxlcyBuZWVkIHRvIGJlIGFibGUgdG8NCj4gYXBwbHkgc29tZSBvZiB0aGVpciByZWxvY2F0
+aW9ucyB3ZWxsIGFmdGVyIGJlaW5nIGxvYWRlZC4gSW4gdGhpcw0KPiBzY2VuYXJpbywgdXNlIHRo
+ZSB0ZXh0LXBva2luZyBBUEkgdG8gYWxsb3cgdGhpcywgZXZlbiB3aXRoDQo+IFNUUklDVF9NT0RV
+TEVfUldYLg0KPiANCj4gVGhpcyBwYXRjaCBpcyBsYXJnZWx5IGJhc2VkIG9mZiBjb21taXQgODhm
+YzA3OGE3YThmNiAoIng4Ni9tb2R1bGU6IFVzZQ0KPiB0ZXh0X3Bva2UoKSBmb3IgbGF0ZSByZWxv
+Y2F0aW9ucyIpLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRHlsYW4gSGF0Y2ggPGR5bGFuYmhhdGNo
+QGdvb2dsZS5jb20+DQo+IC0tLQ0KPiAgYXJjaC9hcm02NC9rZXJuZWwvbW9kdWxlLmMgfCAxMjkg
+KysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQs
+IDgzIGluc2VydGlvbnMoKyksIDQ2IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJtNjQva2VybmVsL21vZHVsZS5jIGIvYXJjaC9hcm02NC9rZXJuZWwvbW9kdWxlLmMNCj4g
+aW5kZXggMDZiYjY4MGJmZTk3NS4uMDcwMzUwMmQ5ZGMzNyAxMDA2NDQNCj4gLS0tIGEvYXJjaC9h
+cm02NC9rZXJuZWwvbW9kdWxlLmMNCj4gKysrIGIvYXJjaC9hcm02NC9rZXJuZWwvbW9kdWxlLmMN
+Cj4gQEAgLTE4LDExICsxOCwxMyBAQA0KPiAgI2luY2x1ZGUgPGxpbnV4L21vZHVsZWxvYWRlci5o
+Pg0KPiAgI2luY2x1ZGUgPGxpbnV4L3JhbmRvbS5oPg0KPiAgI2luY2x1ZGUgPGxpbnV4L3Njcy5o
+Pg0KPiArI2luY2x1ZGUgPGxpbnV4L21lbW9yeS5oPg0KPiAgDQo+ICAjaW5jbHVkZSA8YXNtL2Fs
+dGVybmF0aXZlLmg+DQo+ICAjaW5jbHVkZSA8YXNtL2luc24uaD4NCj4gICNpbmNsdWRlIDxhc20v
+c2NzLmg+DQo+ICAjaW5jbHVkZSA8YXNtL3NlY3Rpb25zLmg+DQo+ICsjaW5jbHVkZSA8YXNtL3Rl
+eHQtcGF0Y2hpbmcuaD4NCj4gIA0KPiAgZW51bSBhYXJjaDY0X3JlbG9jX29wIHsNCj4gIAlSRUxP
+Q19PUF9OT05FLA0KPiBAQCAtNDgsNyArNTAsOCBAQCBzdGF0aWMgdTY0IGRvX3JlbG9jKGVudW0g
+YWFyY2g2NF9yZWxvY19vcCByZWxvY19vcCwgX19sZTMyICpwbGFjZSwgdTY0IHZhbCkNCj4gIAly
+ZXR1cm4gMDsNCj4gIH0NCj4gIA0KPiAtc3RhdGljIGludCByZWxvY19kYXRhKGVudW0gYWFyY2g2
+NF9yZWxvY19vcCBvcCwgdm9pZCAqcGxhY2UsIHU2NCB2YWwsIGludCBsZW4pDQo+ICtzdGF0aWMg
+aW50IHJlbG9jX2RhdGEoZW51bSBhYXJjaDY0X3JlbG9jX29wIG9wLCB2b2lkICpwbGFjZSwgdTY0
+IHZhbCwgaW50IGxlbiwNCj4gKwkJICAgICAgdm9pZCAqKCp3cml0ZSkodm9pZCAqZGVzdCwgY29u
+c3Qgdm9pZCAqc3JjLCBzaXplX3QgbGVuKSkNCj4gIHsNCj4gIAlzNjQgc3ZhbCA9IGRvX3JlbG9j
+KG9wLCBwbGFjZSwgdmFsKTsNCj4gIA0KPiBAQCAtNjYsNyArNjksNyBAQCBzdGF0aWMgaW50IHJl
+bG9jX2RhdGEoZW51bSBhYXJjaDY0X3JlbG9jX29wIG9wLCB2b2lkICpwbGFjZSwgdTY0IHZhbCwg
+aW50IGxlbikNCj4gIA0KPiAgCXN3aXRjaCAobGVuKSB7DQo+ICAJY2FzZSAxNjoNCj4gLQkJKihz
+MTYgKilwbGFjZSA9IHN2YWw7DQo+ICsJCXdyaXRlKHBsYWNlLCAmc3ZhbCwgc2l6ZW9mKHMxNikp
+Ow0KPiAgCQlzd2l0Y2ggKG9wKSB7DQo+ICAJCWNhc2UgUkVMT0NfT1BfQUJTOg0KPiAgCQkJaWYg
+KHN2YWwgPCAwIHx8IHN2YWwgPiBVMTZfTUFYKQ0KPiBAQCAtODIsNyArODUsNyBAQCBzdGF0aWMg
+aW50IHJlbG9jX2RhdGEoZW51bSBhYXJjaDY0X3JlbG9jX29wIG9wLCB2b2lkICpwbGFjZSwgdTY0
+IHZhbCwgaW50IGxlbikNCj4gIAkJfQ0KPiAgCQlicmVhazsNCj4gIAljYXNlIDMyOg0KPiAtCQkq
+KHMzMiAqKXBsYWNlID0gc3ZhbDsNCj4gKwkJd3JpdGUocGxhY2UsICZzdmFsLCBzaXplb2YoczMy
+KSk7DQo+ICAJCXN3aXRjaCAob3ApIHsNCj4gIAkJY2FzZSBSRUxPQ19PUF9BQlM6DQo+ICAJCQlp
+ZiAoc3ZhbCA8IDAgfHwgc3ZhbCA+IFUzMl9NQVgpDQo+IEBAIC05OCw3ICsxMDEsNyBAQCBzdGF0
+aWMgaW50IHJlbG9jX2RhdGEoZW51bSBhYXJjaDY0X3JlbG9jX29wIG9wLCB2b2lkICpwbGFjZSwg
+dTY0IHZhbCwgaW50IGxlbikNCj4gIAkJfQ0KPiAgCQlicmVhazsNCj4gIAljYXNlIDY0Og0KPiAt
+CQkqKHM2NCAqKXBsYWNlID0gc3ZhbDsNCj4gKwkJd3JpdGUocGxhY2UsICZzdmFsLCBzaXplb2Yo
+czY0KSk7DQo+ICAJCWJyZWFrOw0KPiAgCWRlZmF1bHQ6DQo+ICAJCXByX2VycigiSW52YWxpZCBs
+ZW5ndGggKCVkKSBmb3IgZGF0YSByZWxvY2F0aW9uXG4iLCBsZW4pOw0KPiBAQCAtMTEzLDExICsx
+MTYsMTMgQEAgZW51bSBhYXJjaDY0X2luc25fbW92d19pbW1fdHlwZSB7DQo+ICB9Ow0KPiAgDQo+
+ICBzdGF0aWMgaW50IHJlbG9jX2luc25fbW92dyhlbnVtIGFhcmNoNjRfcmVsb2Nfb3Agb3AsIF9f
+bGUzMiAqcGxhY2UsIHU2NCB2YWwsDQo+IC0JCQkgICBpbnQgbHNiLCBlbnVtIGFhcmNoNjRfaW5z
+bl9tb3Z3X2ltbV90eXBlIGltbV90eXBlKQ0KPiArCQkJICAgaW50IGxzYiwgZW51bSBhYXJjaDY0
+X2luc25fbW92d19pbW1fdHlwZSBpbW1fdHlwZSwNCj4gKwkJCSAgIHZvaWQgKigqd3JpdGUpKHZv
+aWQgKmRlc3QsIGNvbnN0IHZvaWQgKnNyYywgc2l6ZV90IGxlbikpDQo+ICB7DQo+ICAJdTY0IGlt
+bTsNCj4gIAlzNjQgc3ZhbDsNCj4gIAl1MzIgaW5zbiA9IGxlMzJfdG9fY3B1KCpwbGFjZSk7DQo+
+ICsJX19sZTMyIGxlX2luc247DQo+ICANCj4gIAlzdmFsID0gZG9fcmVsb2Mob3AsIHBsYWNlLCB2
+YWwpOw0KPiAgCWltbSA9IHN2YWwgPj4gbHNiOw0KPiBAQCAtMTQ1LDcgKzE1MCw4IEBAIHN0YXRp
+YyBpbnQgcmVsb2NfaW5zbl9tb3Z3KGVudW0gYWFyY2g2NF9yZWxvY19vcCBvcCwgX19sZTMyICpw
+bGFjZSwgdTY0IHZhbCwNCj4gIA0KPiAgCS8qIFVwZGF0ZSB0aGUgaW5zdHJ1Y3Rpb24gd2l0aCB0
+aGUgbmV3IGVuY29kaW5nLiAqLw0KPiAgCWluc24gPSBhYXJjaDY0X2luc25fZW5jb2RlX2ltbWVk
+aWF0ZShBQVJDSDY0X0lOU05fSU1NXzE2LCBpbnNuLCBpbW0pOw0KPiAtCSpwbGFjZSA9IGNwdV90
+b19sZTMyKGluc24pOw0KPiArCWxlX2luc24gPSBjcHVfdG9fbGUzMihpbnNuKTsNCj4gKwl3cml0
+ZShwbGFjZSwgJmxlX2luc24sIHNpemVvZihsZV9pbnNuKSk7DQo+ICANCj4gIAlpZiAoaW1tID4g
+VTE2X01BWCkNCj4gIAkJcmV0dXJuIC1FUkFOR0U7DQo+IEBAIC0xNTQsMTEgKzE2MCwxMyBAQCBz
+dGF0aWMgaW50IHJlbG9jX2luc25fbW92dyhlbnVtIGFhcmNoNjRfcmVsb2Nfb3Agb3AsIF9fbGUz
+MiAqcGxhY2UsIHU2NCB2YWwsDQo+ICB9DQo+ICANCj4gIHN0YXRpYyBpbnQgcmVsb2NfaW5zbl9p
+bW0oZW51bSBhYXJjaDY0X3JlbG9jX29wIG9wLCBfX2xlMzIgKnBsYWNlLCB1NjQgdmFsLA0KPiAt
+CQkJICBpbnQgbHNiLCBpbnQgbGVuLCBlbnVtIGFhcmNoNjRfaW5zbl9pbW1fdHlwZSBpbW1fdHlw
+ZSkNCj4gKwkJCSAgaW50IGxzYiwgaW50IGxlbiwgZW51bSBhYXJjaDY0X2luc25faW1tX3R5cGUg
+aW1tX3R5cGUsDQo+ICsJCQkgIHZvaWQgKigqd3JpdGUpKHZvaWQgKmRlc3QsIGNvbnN0IHZvaWQg
+KnNyYywgc2l6ZV90IGxlbikpDQo+ICB7DQo+ICAJdTY0IGltbSwgaW1tX21hc2s7DQo+ICAJczY0
+IHN2YWw7DQo+ICAJdTMyIGluc24gPSBsZTMyX3RvX2NwdSgqcGxhY2UpOw0KPiArCV9fbGUzMiBs
+ZV9pbnNuOw0KPiAgDQo+ICAJLyogQ2FsY3VsYXRlIHRoZSByZWxvY2F0aW9uIHZhbHVlLiAqLw0K
+PiAgCXN2YWwgPSBkb19yZWxvYyhvcCwgcGxhY2UsIHZhbCk7DQo+IEBAIC0xNzAsNyArMTc4LDgg
+QEAgc3RhdGljIGludCByZWxvY19pbnNuX2ltbShlbnVtIGFhcmNoNjRfcmVsb2Nfb3Agb3AsIF9f
+bGUzMiAqcGxhY2UsIHU2NCB2YWwsDQo+ICANCj4gIAkvKiBVcGRhdGUgdGhlIGluc3RydWN0aW9u
+J3MgaW1tZWRpYXRlIGZpZWxkLiAqLw0KPiAgCWluc24gPSBhYXJjaDY0X2luc25fZW5jb2RlX2lt
+bWVkaWF0ZShpbW1fdHlwZSwgaW5zbiwgaW1tKTsNCj4gLQkqcGxhY2UgPSBjcHVfdG9fbGUzMihp
+bnNuKTsNCj4gKwlsZV9pbnNuID0gY3B1X3RvX2xlMzIoaW5zbik7DQo+ICsJd3JpdGUocGxhY2Us
+ICZsZV9pbnNuLCBzaXplb2YobGVfaW5zbikpOw0KPiAgDQo+ICAJLyoNCj4gIAkgKiBFeHRyYWN0
+IHRoZSB1cHBlciB2YWx1ZSBiaXRzIChpbmNsdWRpbmcgdGhlIHNpZ24gYml0KSBhbmQNCj4gQEAg
+LTE4OSwxNyArMTk4LDE5IEBAIHN0YXRpYyBpbnQgcmVsb2NfaW5zbl9pbW0oZW51bSBhYXJjaDY0
+X3JlbG9jX29wIG9wLCBfX2xlMzIgKnBsYWNlLCB1NjQgdmFsLA0KPiAgfQ0KPiAgDQo+ICBzdGF0
+aWMgaW50IHJlbG9jX2luc25fYWRycChzdHJ1Y3QgbW9kdWxlICptb2QsIEVsZjY0X1NoZHIgKnNl
+Y2hkcnMsDQo+IC0JCQkgICBfX2xlMzIgKnBsYWNlLCB1NjQgdmFsKQ0KPiArCQkJICAgX19sZTMy
+ICpwbGFjZSwgdTY0IHZhbCwNCj4gKwkJCSAgIHZvaWQgKigqd3JpdGUpKHZvaWQgKmRlc3QsIGNv
+bnN0IHZvaWQgKnNyYywgc2l6ZV90IGxlbikpDQo+ICB7DQo+ICAJdTMyIGluc247DQo+ICsJX19s
+ZTMyIGxlX2luc247DQo+ICANCj4gIAlpZiAoIWlzX2ZvcmJpZGRlbl9vZmZzZXRfZm9yX2FkcnAo
+cGxhY2UpKQ0KPiAgCQlyZXR1cm4gcmVsb2NfaW5zbl9pbW0oUkVMT0NfT1BfUEFHRSwgcGxhY2Us
+IHZhbCwgMTIsIDIxLA0KPiAtCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fQURSKTsNCj4gKwkJ
+CQkgICAgICBBQVJDSDY0X0lOU05fSU1NX0FEUiwgd3JpdGUpOw0KPiAgDQo+ICAJLyogcGF0Y2gg
+QURSUCB0byBBRFIgaWYgaXQgaXMgaW4gcmFuZ2UgKi8NCj4gIAlpZiAoIXJlbG9jX2luc25faW1t
+KFJFTE9DX09QX1BSRUwsIHBsYWNlLCB2YWwgJiB+MHhmZmYsIDAsIDIxLA0KPiAtCQkJICAgIEFB
+UkNINjRfSU5TTl9JTU1fQURSKSkgew0KPiArCQkJICAgIEFBUkNINjRfSU5TTl9JTU1fQURSLCB3
+cml0ZSkpIHsNCj4gIAkJaW5zbiA9IGxlMzJfdG9fY3B1KCpwbGFjZSk7DQo+ICAJCWluc24gJj0g
+fkJJVCgzMSk7DQo+ICAJfSBlbHNlIHsNCj4gQEAgLTIxMSwxNSArMjIyLDE3IEBAIHN0YXRpYyBp
+bnQgcmVsb2NfaW5zbl9hZHJwKHN0cnVjdCBtb2R1bGUgKm1vZCwgRWxmNjRfU2hkciAqc2VjaGRy
+cywNCj4gIAkJCQkJCSAgIEFBUkNINjRfSU5TTl9CUkFOQ0hfTk9MSU5LKTsNCj4gIAl9DQo+ICAN
+Cj4gLQkqcGxhY2UgPSBjcHVfdG9fbGUzMihpbnNuKTsNCj4gKwlsZV9pbnNuID0gY3B1X3RvX2xl
+MzIoaW5zbik7DQo+ICsJd3JpdGUocGxhY2UsICZsZV9pbnNuLCBzaXplb2YobGVfaW5zbikpOw0K
+PiAgCXJldHVybiAwOw0KPiAgfQ0KPiAgDQo+IC1pbnQgYXBwbHlfcmVsb2NhdGVfYWRkKEVsZjY0
+X1NoZHIgKnNlY2hkcnMsDQo+ICtzdGF0aWMgaW50IF9fYXBwbHlfcmVsb2NhdGVfYWRkKEVsZjY0
+X1NoZHIgKnNlY2hkcnMsDQo+ICAJCSAgICAgICBjb25zdCBjaGFyICpzdHJ0YWIsDQo+ICAJCSAg
+ICAgICB1bnNpZ25lZCBpbnQgc3ltaW5kZXgsDQo+ICAJCSAgICAgICB1bnNpZ25lZCBpbnQgcmVs
+c2VjLA0KPiAtCQkgICAgICAgc3RydWN0IG1vZHVsZSAqbWUpDQo+ICsJCSAgICAgICBzdHJ1Y3Qg
+bW9kdWxlICptZSwNCj4gKwkJICAgICAgIHZvaWQgKigqd3JpdGUpKHZvaWQgKmRlc3QsIGNvbnN0
+IHZvaWQgKnNyYywgc2l6ZV90IGxlbikpDQo+ICB7DQo+ICAJdW5zaWduZWQgaW50IGk7DQo+ICAJ
+aW50IG92ZjsNCj4gQEAgLTI1NSwyMyArMjY4LDIzIEBAIGludCBhcHBseV9yZWxvY2F0ZV9hZGQo
+RWxmNjRfU2hkciAqc2VjaGRycywNCj4gIAkJLyogRGF0YSByZWxvY2F0aW9ucy4gKi8NCj4gIAkJ
+Y2FzZSBSX0FBUkNINjRfQUJTNjQ6DQo+ICAJCQlvdmVyZmxvd19jaGVjayA9IGZhbHNlOw0KPiAt
+CQkJb3ZmID0gcmVsb2NfZGF0YShSRUxPQ19PUF9BQlMsIGxvYywgdmFsLCA2NCk7DQo+ICsJCQlv
+dmYgPSByZWxvY19kYXRhKFJFTE9DX09QX0FCUywgbG9jLCB2YWwsIDY0LCB3cml0ZSk7DQo+ICAJ
+CQlicmVhazsNCj4gIAkJY2FzZSBSX0FBUkNINjRfQUJTMzI6DQo+IC0JCQlvdmYgPSByZWxvY19k
+YXRhKFJFTE9DX09QX0FCUywgbG9jLCB2YWwsIDMyKTsNCj4gKwkJCW92ZiA9IHJlbG9jX2RhdGEo
+UkVMT0NfT1BfQUJTLCBsb2MsIHZhbCwgMzIsIHdyaXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgCQlj
+YXNlIFJfQUFSQ0g2NF9BQlMxNjoNCj4gLQkJCW92ZiA9IHJlbG9jX2RhdGEoUkVMT0NfT1BfQUJT
+LCBsb2MsIHZhbCwgMTYpOw0KPiArCQkJb3ZmID0gcmVsb2NfZGF0YShSRUxPQ19PUF9BQlMsIGxv
+YywgdmFsLCAxNiwgd3JpdGUpOw0KPiAgCQkJYnJlYWs7DQo+ICAJCWNhc2UgUl9BQVJDSDY0X1BS
+RUw2NDoNCj4gIAkJCW92ZXJmbG93X2NoZWNrID0gZmFsc2U7DQo+IC0JCQlvdmYgPSByZWxvY19k
+YXRhKFJFTE9DX09QX1BSRUwsIGxvYywgdmFsLCA2NCk7DQo+ICsJCQlvdmYgPSByZWxvY19kYXRh
+KFJFTE9DX09QX1BSRUwsIGxvYywgdmFsLCA2NCwgd3JpdGUpOw0KPiAgCQkJYnJlYWs7DQo+ICAJ
+CWNhc2UgUl9BQVJDSDY0X1BSRUwzMjoNCj4gLQkJCW92ZiA9IHJlbG9jX2RhdGEoUkVMT0NfT1Bf
+UFJFTCwgbG9jLCB2YWwsIDMyKTsNCj4gKwkJCW92ZiA9IHJlbG9jX2RhdGEoUkVMT0NfT1BfUFJF
+TCwgbG9jLCB2YWwsIDMyLCB3cml0ZSk7DQo+ICAJCQlicmVhazsNCj4gIAkJY2FzZSBSX0FBUkNI
+NjRfUFJFTDE2Og0KPiAtCQkJb3ZmID0gcmVsb2NfZGF0YShSRUxPQ19PUF9QUkVMLCBsb2MsIHZh
+bCwgMTYpOw0KPiArCQkJb3ZmID0gcmVsb2NfZGF0YShSRUxPQ19PUF9QUkVMLCBsb2MsIHZhbCwg
+MTYsIHdyaXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgDQo+ICAJCS8qIE1PVlcgaW5zdHJ1Y3Rpb24g
+cmVsb2NhdGlvbnMuICovDQo+IEBAIC0yODAsODggKzI5Myw4OCBAQCBpbnQgYXBwbHlfcmVsb2Nh
+dGVfYWRkKEVsZjY0X1NoZHIgKnNlY2hkcnMsDQo+ICAJCQlmYWxsdGhyb3VnaDsNCj4gIAkJY2Fz
+ZSBSX0FBUkNINjRfTU9WV19VQUJTX0cwOg0KPiAgCQkJb3ZmID0gcmVsb2NfaW5zbl9tb3Z3KFJF
+TE9DX09QX0FCUywgbG9jLCB2YWwsIDAsDQo+IC0JCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1f
+TU9WS1opOw0KPiArCQkJCQkgICAgICBBQVJDSDY0X0lOU05fSU1NX01PVktaLCB3cml0ZSk7DQo+
+ICAJCQlicmVhazsNCj4gIAkJY2FzZSBSX0FBUkNINjRfTU9WV19VQUJTX0cxX05DOg0KPiAgCQkJ
+b3ZlcmZsb3dfY2hlY2sgPSBmYWxzZTsNCj4gIAkJCWZhbGx0aHJvdWdoOw0KPiAgCQljYXNlIFJf
+QUFSQ0g2NF9NT1ZXX1VBQlNfRzE6DQo+ICAJCQlvdmYgPSByZWxvY19pbnNuX21vdncoUkVMT0Nf
+T1BfQUJTLCBsb2MsIHZhbCwgMTYsDQo+IC0JCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9W
+S1opOw0KPiArCQkJCQkgICAgICBBQVJDSDY0X0lOU05fSU1NX01PVktaLCB3cml0ZSk7DQo+ICAJ
+CQlicmVhazsNCj4gIAkJY2FzZSBSX0FBUkNINjRfTU9WV19VQUJTX0cyX05DOg0KPiAgCQkJb3Zl
+cmZsb3dfY2hlY2sgPSBmYWxzZTsNCj4gIAkJCWZhbGx0aHJvdWdoOw0KPiAgCQljYXNlIFJfQUFS
+Q0g2NF9NT1ZXX1VBQlNfRzI6DQo+ICAJCQlvdmYgPSByZWxvY19pbnNuX21vdncoUkVMT0NfT1Bf
+QUJTLCBsb2MsIHZhbCwgMzIsDQo+IC0JCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9WS1op
+Ow0KPiArCQkJCQkgICAgICBBQVJDSDY0X0lOU05fSU1NX01PVktaLCB3cml0ZSk7DQo+ICAJCQli
+cmVhazsNCj4gIAkJY2FzZSBSX0FBUkNINjRfTU9WV19VQUJTX0czOg0KPiAgCQkJLyogV2UncmUg
+dXNpbmcgdGhlIHRvcCBiaXRzIHNvIHdlIGNhbid0IG92ZXJmbG93LiAqLw0KPiAgCQkJb3ZlcmZs
+b3dfY2hlY2sgPSBmYWxzZTsNCj4gIAkJCW92ZiA9IHJlbG9jX2luc25fbW92dyhSRUxPQ19PUF9B
+QlMsIGxvYywgdmFsLCA0OCwNCj4gLQkJCQkJICAgICAgQUFSQ0g2NF9JTlNOX0lNTV9NT1ZLWik7
+DQo+ICsJCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9WS1osIHdyaXRlKTsNCj4gIAkJCWJy
+ZWFrOw0KPiAgCQljYXNlIFJfQUFSQ0g2NF9NT1ZXX1NBQlNfRzA6DQo+ICAJCQlvdmYgPSByZWxv
+Y19pbnNuX21vdncoUkVMT0NfT1BfQUJTLCBsb2MsIHZhbCwgMCwNCj4gLQkJCQkJICAgICAgQUFS
+Q0g2NF9JTlNOX0lNTV9NT1ZOWik7DQo+ICsJCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9W
+TlosIHdyaXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgCQljYXNlIFJfQUFSQ0g2NF9NT1ZXX1NBQlNf
+RzE6DQo+ICAJCQlvdmYgPSByZWxvY19pbnNuX21vdncoUkVMT0NfT1BfQUJTLCBsb2MsIHZhbCwg
+MTYsDQo+IC0JCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9WTlopOw0KPiArCQkJCQkgICAg
+ICBBQVJDSDY0X0lOU05fSU1NX01PVk5aLCB3cml0ZSk7DQo+ICAJCQlicmVhazsNCj4gIAkJY2Fz
+ZSBSX0FBUkNINjRfTU9WV19TQUJTX0cyOg0KPiAgCQkJb3ZmID0gcmVsb2NfaW5zbl9tb3Z3KFJF
+TE9DX09QX0FCUywgbG9jLCB2YWwsIDMyLA0KPiAtCQkJCQkgICAgICBBQVJDSDY0X0lOU05fSU1N
+X01PVk5aKTsNCj4gKwkJCQkJICAgICAgQUFSQ0g2NF9JTlNOX0lNTV9NT1ZOWiwgd3JpdGUpOw0K
+PiAgCQkJYnJlYWs7DQo+ICAJCWNhc2UgUl9BQVJDSDY0X01PVldfUFJFTF9HMF9OQzoNCj4gIAkJ
+CW92ZXJmbG93X2NoZWNrID0gZmFsc2U7DQo+ICAJCQlvdmYgPSByZWxvY19pbnNuX21vdncoUkVM
+T0NfT1BfUFJFTCwgbG9jLCB2YWwsIDAsDQo+IC0JCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1f
+TU9WS1opOw0KPiArCQkJCQkgICAgICBBQVJDSDY0X0lOU05fSU1NX01PVktaLCB3cml0ZSk7DQo+
+ICAJCQlicmVhazsNCj4gIAkJY2FzZSBSX0FBUkNINjRfTU9WV19QUkVMX0cwOg0KPiAgCQkJb3Zm
+ID0gcmVsb2NfaW5zbl9tb3Z3KFJFTE9DX09QX1BSRUwsIGxvYywgdmFsLCAwLA0KPiAtCQkJCQkg
+ICAgICBBQVJDSDY0X0lOU05fSU1NX01PVk5aKTsNCj4gKwkJCQkJICAgICAgQUFSQ0g2NF9JTlNO
+X0lNTV9NT1ZOWiwgd3JpdGUpOw0KPiAgCQkJYnJlYWs7DQo+ICAJCWNhc2UgUl9BQVJDSDY0X01P
+VldfUFJFTF9HMV9OQzoNCj4gIAkJCW92ZXJmbG93X2NoZWNrID0gZmFsc2U7DQo+ICAJCQlvdmYg
+PSByZWxvY19pbnNuX21vdncoUkVMT0NfT1BfUFJFTCwgbG9jLCB2YWwsIDE2LA0KPiAtCQkJCQkg
+ICAgICBBQVJDSDY0X0lOU05fSU1NX01PVktaKTsNCj4gKwkJCQkJICAgICAgQUFSQ0g2NF9JTlNO
+X0lNTV9NT1ZLWiwgd3JpdGUpOw0KPiAgCQkJYnJlYWs7DQo+ICAJCWNhc2UgUl9BQVJDSDY0X01P
+VldfUFJFTF9HMToNCj4gIAkJCW92ZiA9IHJlbG9jX2luc25fbW92dyhSRUxPQ19PUF9QUkVMLCBs
+b2MsIHZhbCwgMTYsDQo+IC0JCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9WTlopOw0KPiAr
+CQkJCQkgICAgICBBQVJDSDY0X0lOU05fSU1NX01PVk5aLCB3cml0ZSk7DQo+ICAJCQlicmVhazsN
+Cj4gIAkJY2FzZSBSX0FBUkNINjRfTU9WV19QUkVMX0cyX05DOg0KPiAgCQkJb3ZlcmZsb3dfY2hl
+Y2sgPSBmYWxzZTsNCj4gIAkJCW92ZiA9IHJlbG9jX2luc25fbW92dyhSRUxPQ19PUF9QUkVMLCBs
+b2MsIHZhbCwgMzIsDQo+IC0JCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9WS1opOw0KPiAr
+CQkJCQkgICAgICBBQVJDSDY0X0lOU05fSU1NX01PVktaLCB3cml0ZSk7DQo+ICAJCQlicmVhazsN
+Cj4gIAkJY2FzZSBSX0FBUkNINjRfTU9WV19QUkVMX0cyOg0KPiAgCQkJb3ZmID0gcmVsb2NfaW5z
+bl9tb3Z3KFJFTE9DX09QX1BSRUwsIGxvYywgdmFsLCAzMiwNCj4gLQkJCQkJICAgICAgQUFSQ0g2
+NF9JTlNOX0lNTV9NT1ZOWik7DQo+ICsJCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9WTlos
+IHdyaXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgCQljYXNlIFJfQUFSQ0g2NF9NT1ZXX1BSRUxfRzM6
+DQo+ICAJCQkvKiBXZSdyZSB1c2luZyB0aGUgdG9wIGJpdHMgc28gd2UgY2FuJ3Qgb3ZlcmZsb3cu
+ICovDQo+ICAJCQlvdmVyZmxvd19jaGVjayA9IGZhbHNlOw0KPiAgCQkJb3ZmID0gcmVsb2NfaW5z
+bl9tb3Z3KFJFTE9DX09QX1BSRUwsIGxvYywgdmFsLCA0OCwNCj4gLQkJCQkJICAgICAgQUFSQ0g2
+NF9JTlNOX0lNTV9NT1ZOWik7DQo+ICsJCQkJCSAgICAgIEFBUkNINjRfSU5TTl9JTU1fTU9WTlos
+IHdyaXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgDQo+ICAJCS8qIEltbWVkaWF0ZSBpbnN0cnVjdGlv
+biByZWxvY2F0aW9ucy4gKi8NCj4gIAkJY2FzZSBSX0FBUkNINjRfTERfUFJFTF9MTzE5Og0KPiAg
+CQkJb3ZmID0gcmVsb2NfaW5zbl9pbW0oUkVMT0NfT1BfUFJFTCwgbG9jLCB2YWwsIDIsIDE5LA0K
+PiAtCQkJCQkgICAgIEFBUkNINjRfSU5TTl9JTU1fMTkpOw0KPiArCQkJCQkgICAgIEFBUkNINjRf
+SU5TTl9JTU1fMTksIHdyaXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgCQljYXNlIFJfQUFSQ0g2NF9B
+RFJfUFJFTF9MTzIxOg0KPiAgCQkJb3ZmID0gcmVsb2NfaW5zbl9pbW0oUkVMT0NfT1BfUFJFTCwg
+bG9jLCB2YWwsIDAsIDIxLA0KPiAtCQkJCQkgICAgIEFBUkNINjRfSU5TTl9JTU1fQURSKTsNCj4g
+KwkJCQkJICAgICBBQVJDSDY0X0lOU05fSU1NX0FEUiwgd3JpdGUpOw0KPiAgCQkJYnJlYWs7DQo+
+ICAJCWNhc2UgUl9BQVJDSDY0X0FEUl9QUkVMX1BHX0hJMjFfTkM6DQo+ICAJCQlvdmVyZmxvd19j
+aGVjayA9IGZhbHNlOw0KPiAgCQkJZmFsbHRocm91Z2g7DQo+ICAJCWNhc2UgUl9BQVJDSDY0X0FE
+Ul9QUkVMX1BHX0hJMjE6DQo+IC0JCQlvdmYgPSByZWxvY19pbnNuX2FkcnAobWUsIHNlY2hkcnMs
+IGxvYywgdmFsKTsNCj4gKwkJCW92ZiA9IHJlbG9jX2luc25fYWRycChtZSwgc2VjaGRycywgbG9j
+LCB2YWwsIHdyaXRlKTsNCj4gIAkJCWlmIChvdmYgJiYgb3ZmICE9IC1FUkFOR0UpDQo+ICAJCQkJ
+cmV0dXJuIG92ZjsNCj4gIAkJCWJyZWFrOw0KPiBAQCAtMzY5LDQ2ICszODIsNDYgQEAgaW50IGFw
+cGx5X3JlbG9jYXRlX2FkZChFbGY2NF9TaGRyICpzZWNoZHJzLA0KPiAgCQljYXNlIFJfQUFSQ0g2
+NF9MRFNUOF9BQlNfTE8xMl9OQzoNCj4gIAkJCW92ZXJmbG93X2NoZWNrID0gZmFsc2U7DQo+ICAJ
+CQlvdmYgPSByZWxvY19pbnNuX2ltbShSRUxPQ19PUF9BQlMsIGxvYywgdmFsLCAwLCAxMiwNCj4g
+LQkJCQkJICAgICBBQVJDSDY0X0lOU05fSU1NXzEyKTsNCj4gKwkJCQkJICAgICBBQVJDSDY0X0lO
+U05fSU1NXzEyLCB3cml0ZSk7DQo+ICAJCQlicmVhazsNCj4gIAkJY2FzZSBSX0FBUkNINjRfTERT
+VDE2X0FCU19MTzEyX05DOg0KPiAgCQkJb3ZlcmZsb3dfY2hlY2sgPSBmYWxzZTsNCj4gIAkJCW92
+ZiA9IHJlbG9jX2luc25faW1tKFJFTE9DX09QX0FCUywgbG9jLCB2YWwsIDEsIDExLA0KPiAtCQkJ
+CQkgICAgIEFBUkNINjRfSU5TTl9JTU1fMTIpOw0KPiArCQkJCQkgICAgIEFBUkNINjRfSU5TTl9J
+TU1fMTIsIHdyaXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgCQljYXNlIFJfQUFSQ0g2NF9MRFNUMzJf
+QUJTX0xPMTJfTkM6DQo+ICAJCQlvdmVyZmxvd19jaGVjayA9IGZhbHNlOw0KPiAgCQkJb3ZmID0g
+cmVsb2NfaW5zbl9pbW0oUkVMT0NfT1BfQUJTLCBsb2MsIHZhbCwgMiwgMTAsDQo+IC0JCQkJCSAg
+ICAgQUFSQ0g2NF9JTlNOX0lNTV8xMik7DQo+ICsJCQkJCSAgICAgQUFSQ0g2NF9JTlNOX0lNTV8x
+Miwgd3JpdGUpOw0KPiAgCQkJYnJlYWs7DQo+ICAJCWNhc2UgUl9BQVJDSDY0X0xEU1Q2NF9BQlNf
+TE8xMl9OQzoNCj4gIAkJCW92ZXJmbG93X2NoZWNrID0gZmFsc2U7DQo+ICAJCQlvdmYgPSByZWxv
+Y19pbnNuX2ltbShSRUxPQ19PUF9BQlMsIGxvYywgdmFsLCAzLCA5LA0KPiAtCQkJCQkgICAgIEFB
+UkNINjRfSU5TTl9JTU1fMTIpOw0KPiArCQkJCQkgICAgIEFBUkNINjRfSU5TTl9JTU1fMTIsIHdy
+aXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgCQljYXNlIFJfQUFSQ0g2NF9MRFNUMTI4X0FCU19MTzEy
+X05DOg0KPiAgCQkJb3ZlcmZsb3dfY2hlY2sgPSBmYWxzZTsNCj4gIAkJCW92ZiA9IHJlbG9jX2lu
+c25faW1tKFJFTE9DX09QX0FCUywgbG9jLCB2YWwsIDQsIDgsDQo+IC0JCQkJCSAgICAgQUFSQ0g2
+NF9JTlNOX0lNTV8xMik7DQo+ICsJCQkJCSAgICAgQUFSQ0g2NF9JTlNOX0lNTV8xMiwgd3JpdGUp
+Ow0KPiAgCQkJYnJlYWs7DQo+ICAJCWNhc2UgUl9BQVJDSDY0X1RTVEJSMTQ6DQo+ICAJCQlvdmYg
+PSByZWxvY19pbnNuX2ltbShSRUxPQ19PUF9QUkVMLCBsb2MsIHZhbCwgMiwgMTQsDQo+IC0JCQkJ
+CSAgICAgQUFSQ0g2NF9JTlNOX0lNTV8xNCk7DQo+ICsJCQkJCSAgICAgQUFSQ0g2NF9JTlNOX0lN
+TV8xNCwgd3JpdGUpOw0KPiAgCQkJYnJlYWs7DQo+ICAJCWNhc2UgUl9BQVJDSDY0X0NPTkRCUjE5
+Og0KPiAgCQkJb3ZmID0gcmVsb2NfaW5zbl9pbW0oUkVMT0NfT1BfUFJFTCwgbG9jLCB2YWwsIDIs
+IDE5LA0KPiAtCQkJCQkgICAgIEFBUkNINjRfSU5TTl9JTU1fMTkpOw0KPiArCQkJCQkgICAgIEFB
+UkNINjRfSU5TTl9JTU1fMTksIHdyaXRlKTsNCj4gIAkJCWJyZWFrOw0KPiAgCQljYXNlIFJfQUFS
+Q0g2NF9KVU1QMjY6DQo+ICAJCWNhc2UgUl9BQVJDSDY0X0NBTEwyNjoNCj4gIAkJCW92ZiA9IHJl
+bG9jX2luc25faW1tKFJFTE9DX09QX1BSRUwsIGxvYywgdmFsLCAyLCAyNiwNCj4gLQkJCQkJICAg
+ICBBQVJDSDY0X0lOU05fSU1NXzI2KTsNCj4gKwkJCQkJICAgICBBQVJDSDY0X0lOU05fSU1NXzI2
+LCB3cml0ZSk7DQo+ICAJCQlpZiAob3ZmID09IC1FUkFOR0UpIHsNCj4gIAkJCQl2YWwgPSBtb2R1
+bGVfZW1pdF9wbHRfZW50cnkobWUsIHNlY2hkcnMsIGxvYywgJnJlbFtpXSwgc3ltKTsNCj4gIAkJ
+CQlpZiAoIXZhbCkNCj4gIAkJCQkJcmV0dXJuIC1FTk9FWEVDOw0KPiAgCQkJCW92ZiA9IHJlbG9j
+X2luc25faW1tKFJFTE9DX09QX1BSRUwsIGxvYywgdmFsLCAyLA0KPiAtCQkJCQkJICAgICAyNiwg
+QUFSQ0g2NF9JTlNOX0lNTV8yNik7DQo+ICsJCQkJCQkgICAgIDI2LCBBQVJDSDY0X0lOU05fSU1N
+XzI2LCB3cml0ZSk7DQo+ICAJCQl9DQo+ICAJCQlicmVhazsNCj4gIA0KPiBAQCAtNDMxLDYgKzQ0
+NCwzMCBAQCBpbnQgYXBwbHlfcmVsb2NhdGVfYWRkKEVsZjY0X1NoZHIgKnNlY2hkcnMsDQo+ICAJ
+cmV0dXJuIC1FTk9FWEVDOw0KPiAgfQ0KPiAgDQo+ICtpbnQgYXBwbHlfcmVsb2NhdGVfYWRkKEVs
+ZjY0X1NoZHIgKnNlY2hkcnMsDQo+ICsJCSAgICAgICBjb25zdCBjaGFyICpzdHJ0YWIsDQo+ICsJ
+CSAgICAgICB1bnNpZ25lZCBpbnQgc3ltaW5kZXgsDQo+ICsJCSAgICAgICB1bnNpZ25lZCBpbnQg
+cmVsc2VjLA0KPiArCQkgICAgICAgc3RydWN0IG1vZHVsZSAqbWUpDQo+ICt7DQo+ICsJaW50IHJl
+dDsNCj4gKwlib29sIGVhcmx5ID0gbWUtPnN0YXRlID09IE1PRFVMRV9TVEFURV9VTkZPUk1FRDsN
+Cj4gKwl2b2lkICooKndyaXRlKSh2b2lkICosIGNvbnN0IHZvaWQgKiwgc2l6ZV90KSA9IG1lbWNw
+eTsNCj4gKw0KPiArCWlmICghZWFybHkpIHsNCj4gKwkJd3JpdGUgPSB0ZXh0X3Bva2U7DQo+ICsJ
+CW11dGV4X2xvY2soJnRleHRfbXV0ZXgpOw0KPiArCX0NCj4gKw0KPiArCXJldCA9IF9fYXBwbHlf
+cmVsb2NhdGVfYWRkKHNlY2hkcnMsIHN0cnRhYiwgc3ltaW5kZXgsIHJlbHNlYywgbWUsDQo+ICsJ
+CQkJICAgd3JpdGUpOw0KPiArDQo+ICsJaWYgKCFlYXJseSkNCj4gKwkJbXV0ZXhfdW5sb2NrKCZ0
+ZXh0X211dGV4KTsNCj4gKw0KPiArCXJldHVybiByZXQ7DQo+ICt9DQo+ICsNCj4gIHN0YXRpYyBp
+bmxpbmUgdm9pZCBfX2luaXRfcGx0KHN0cnVjdCBwbHRfZW50cnkgKnBsdCwgdW5zaWduZWQgbG9u
+ZyBhZGRyKQ0KPiAgew0KPiAgCSpwbHQgPSBnZXRfcGx0X2VudHJ5KGFkZHIsIHBsdCk7DQo+IC0t
+IA0KPiAyLjQ5LjAuNjA0LmdmZjFmOWNhOTQyLWdvb2cNCg0KVGhhbmtzIGZvciBwb3N0aW5nIHRo
+ZSBwYXRjaC4NCldlIGFyZSB0ZXN0aW5nIHRoaXMgcGF0Y2ggdXNpbmcgdHdvIHR5cGVzIG9mIGtl
+cm5lbHMuDQpCb3RoIGtlcm5lbHMgYXJlIGJhc2VkIG9uIHZlcnNpb24gNi4xMywgb25lIGlzIHBh
+dGNoZWQgdG8gdXNlIHRoZSBzZnJhbWUgdW53aW5kZXINCmluIGxpdmVwYXRjaCBbMV0sIHRoZSBv
+dGhlciBpcyBwYXRjaGVkIHRvIG5vdCB1c2Ugc2ZyYW1lIFsyXS4NCg0KWzFdIGh0dHBzOi8vbG9y
+ZS5rZXJuZWwub3JnL2FsbC8yMDI1MDEyNzIxMzMxMC4yNDk2MTMzLTEtd25saXVAZ29vZ2xlLmNv
+bS8NClsyXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1hcm0ta2VybmVsLzIwMjUwMzIw
+MTcxNTU5LjM0MjMyMjQtMS1zb25nQGtlcm5lbC5vcmcvDQoNCkZvciB0ZXN0aW5nLCB3ZSB1c2Vk
+IGEga3BhdGNoIGZvciBhcm02NCBbM10gYW5kIHRoZSBwYWNrYWdlJ3MgaW50ZWdyYXRpb24gdGVz
+dHMuIA0KSW4gYW4gZW52aXJvbm1lbnQgd2hlcmUgb25seSB0aGUgbGl2ZXBhdGNoIHBhdGNoIHdh
+cyBhcHBsaWVkLCANCiJtb2R1bGUtTE9BREVELnRlc3QiIGZhaWxlZCwgYnV0IGFmdGVyIGFwcGx5
+aW5nIHRoaXMgcGF0Y2gsIGl0IHBhc3NlZC4gDQpIZXJlIGFyZSB0aGUgY29tbWVudHMgb24gdGhl
+IHRlc3QgcmVzdWx0czpbNF0NCg0KWzNdIGh0dHBzOi8vZ2l0aHViLmNvbS9keW51cC9rcGF0Y2gv
+cHVsbC8xNDM5DQpbNF0gaHR0cHM6Ly9naXRodWIuY29tL2R5bnVwL2twYXRjaC9wdWxsLzE0Mzkj
+aXNzdWVjb21tZW50LTI3ODE3MzE0NDANCg0KSSBqdXN0IHdhbnQgdG8gY29uZmlybSBvbmUgdGhp
+bmcuIA0KSSB0aGluayB0aGUgaXNzdWVzIHRoaXMgcGF0Y2ggc29sdmVzIGFyZSB0aGUgc2FtZSBh
+cyB0aG9zZSBpbiB0aGUgcHJldmlvdXNseSANCnBvc3RlZCBwYXRjaCBbNV0uIA0KQW0gSSBjb3Jy
+ZWN0IGluIHVuZGVyc3RhbmRpbmcgdGhhdCB0aGlzIGlzIGFuIGltcHJvdmVkIHZlcnNpb24/IA0K
+RnVydGhlcm1vcmUsIHRoaXMgcGF0Y2ggYWxzbyBzdXBwb3J0cyByZXdyaXRpbmcgZGF0YSByZWxv
+Y2F0aW9uIHNlY3Rpb25zLCANCndoaWNoIHRoZSBwcmV2aW91c2x5IHBvc3RlZCBwYXRjaCBkaWQg
+bm90IHN1cHBvcnQuDQoNCls1XSBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1hcm0ta2Vy
+bmVsLzIwMjExMTAzMjEwNzA5LjMxNzkwLTEtc3VyYWpqc0BhbWF6b24uY29tLw0KDQpUZXN0ZWQt
+Ynk6IFRvc2hpeXVraSBTYXRvIDxmajY2MTFpZUBhYS5qcC5mdWppdHN1LmNvbT4NCg0KUmVnYXJk
+cywNClRvc2hpeXVraSBTYXRvDQoNCg==
