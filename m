@@ -1,97 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1036926982F;
-	Wed, 23 Apr 2025 18:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C4B175D47;
+	Wed, 23 Apr 2025 18:13:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745431790; cv=none; b=iySZk73tkD4+BwNiKtTlybT/3AONnR8Vld/m8NTuEPvocPvOduYQivoemrxCoMBd5TuC0W77We6pCIzGBtAVmL4GDJYImJqV96rTNkD3ZS4C8A2/TgLiCHC2hpBe40krjJbsMH8JhZ2dwAvdcsCI6tOmu28W4sKt9GK6ilDH/vg=
+	t=1745432023; cv=none; b=bIKAlkj9Bmb3XadfTK2vkOWe3RqgoSTpiXBuOhFGo5E0yIOl2XaAKGdNqwSsMy+EPBGxGUcp5hsj3f5kVKcMkyjtJ4P3JUgQ38K6BoHL+OHRb9ZxDokId8hlqgXBT4L5cOkxQ9s2wd7d9/4t5O68kwzfGrnjpk8q0nS1fU9jo0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745431790; c=relaxed/simple;
-	bh=U9F+PeVnBpGsSyekbAgYUh9ERhGGMV7iRfE7ZeUqWsQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=P2pr7QU7ipo0RJ1IABl5AOCCO36rWcJ7VHuB+QLL8Gmm6wnPSdFb6VxMpKLNi1OSLm3n5R7u6MYf7wbNP5ybm9FpTDTgGdvBdj/EEw5RYHXA9BTdycVus+5dTEwPpVoi8WCCngWnZpcg+MKpCPJkiGLvcX2DIFcTdTQsUwkuYdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=daQVXA9p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745432023; c=relaxed/simple;
+	bh=qXtrvCsA3+3JrgwEaAdODp1qT84ppQWrEQVajR6IVDM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sgyF7bBdyyt5MBk5zFbbK2WKTxtSnl9KPznmXT0kC0rxVa7mUjEMH+sNRozHWMVeAhlw7xvRIxVXqwsqDbrWKdq6QWLHCV8DC1ma7SlFbiEGvZZTA4HWZQWM/lU7vGFq/qmHnFEnho38WALSOo4xiLQwkmFM3tlyvsGfIVzZCro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UyuM3LmS; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="daQVXA9p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B918C4CEE2;
-	Wed, 23 Apr 2025 18:09:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745431789;
-	bh=U9F+PeVnBpGsSyekbAgYUh9ERhGGMV7iRfE7ZeUqWsQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=daQVXA9p8n9Fh2VwDQ/9hhp9N7zLF5WAXuy+o4TGyaNSTUAKR4JdlQxjNI2kMvlth
-	 +nPyQbvIv28S+WxkfBWMy7pXNx1fhL8oMMrqH4ViMR17+TUoXRIg04YCI+eFGIl0T4
-	 VCPfg/a59P0rPYZhSWsHSf7CwGiuJD4dUoNarCP8vWyMZsOyG+JRaZI62aGdA9NCHB
-	 Zq0CNSI9/v2AGSIoPUpBHgMDlIzTFhrHZPNkNJAP6ttE1fCi5vy3qJMHkw/cnvNAUU
-	 zdC8fpVlp2EaNfpsHb75e8qju7W089Kci3//gIp30LVORZExRyod4j2xvAoxsdnrIl
-	 kxORYu9o2e0rQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33EF6380CED9;
-	Wed, 23 Apr 2025 18:10:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UyuM3LmS"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac29fd22163so26198166b.3;
+        Wed, 23 Apr 2025 11:13:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745432020; x=1746036820; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lqZC2cvHybw215HtjOE35s4MFqOf4otsAy8qU3GB0pk=;
+        b=UyuM3LmSY+1iNoTVEUiBCfKtMVSgyec0koSqkGRXjrpPJgNzOpXxAOO5YST8S/8Ue4
+         yIjY2+fYrpJAeUHrO5s3Th/kvShDK2/HqlHH5hnputpS3Txpij1Mwfsq6ndxpOwjBZPA
+         ALMktNbBv2W/V4dEnfvG66Ds9YQJGOi7nzZfgnC2FQPVJhsLuzrrpGDVuV0wC9ksQpZo
+         uKPyUjyI5Ni8YlMe8aHU3bQ6PBgt9tkQm5itCfWcTknOIHDXjuGr0D2uNOy9lnFw25gq
+         9dFqudHsiH9HLvqymKQHueIhbCG/OOGCD20iGl6brhB5vIdSHoyl7MRV5/J9uU+bDHh0
+         CpjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745432020; x=1746036820;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lqZC2cvHybw215HtjOE35s4MFqOf4otsAy8qU3GB0pk=;
+        b=cqNO1CJk29hYPSdupeA4JU74ioEGeLCphF/v4nOQmdIyj+oHEvTbhM/RcavDqXwFlI
+         uKHu0PRU0PP6XPNfH2Z5ax4uAJN07XzfCYUgXxn2h+iMzK5v8DLrq4uqyA+YsAhEM8lG
+         0bq/eIG/LErRZ+z5XSHu4kPEu5En2vb04m/RyLQ1GtA5RdUGrQy1ZJg8dacB4VfsZRvp
+         nR4beHIrnCfTS1phI+8iFMzCNpx+J6q3Z45vkG2xWZliMtEZT8EjKLObVexmgS7w0gqD
+         f4tdEuX4jI9gxhSva5wGqX2f8xoi++lqXBP0AeeUEan+GZLQp2ExrMMWqrWOEGlsbys5
+         a+3g==
+X-Forwarded-Encrypted: i=1; AJvYcCU9tcJKP+cr/3g1lmsG1SLO7RIxQknNKEzTKQRG3iBV5JRDcroF8mGQVcG0LcYDeqCX6SKWDcXwW4A=@vger.kernel.org, AJvYcCV6VdktTIrq5TM9laBIfQhA6kMCp4M5Djugh7/pB5C3vYS+R8eO4Qzqixx1VVnJG5gBw67Smm4Ofqhx0RRZ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzHU7dhFoBXHyl0JRf+NXlpqSaVd7lxypFhj3JaO9Jh0qd9ONI
+	U0hFWoYmIKs4cWXQyk/Odm8/WkRkVt1BivF85KI/VZePtbLf86MgxPjIV1vRMOESfRK0m2B+XbZ
+	Nzfd+WxZYoI2jLPNFbUWRj0F5MJk=
+X-Gm-Gg: ASbGncsMZ9PtWLv3n7E6cnHv3IFWj8VDWDtyA+96FjmRCPljQUX41J+im6LXtmZgm4s
+	Z+KVO9H+jg1e0tjq3fEm55XHcYZy05NoJpaJ0XMqSzzM0mspPkgDBXzc88iY8aXjrPWZJorJSct
+	BQybftR8V7hUmRME5lyFsLOYs9
+X-Google-Smtp-Source: AGHT+IFv3b4xO8qwHY3gQEQHEhIGCt6mh/mCsF1e6HEI/uGpWwIWMAle7lnSVJBD0A3N5hpCr6SjEZKUiSTzhoVMIBY=
+X-Received: by 2002:a17:906:d153:b0:acd:89ba:8069 with SMTP id
+ a640c23a62f3a-acd89baac19mr645890466b.7.1745432020041; Wed, 23 Apr 2025
+ 11:13:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next v4] bpf: streamline allowed helpers between tracing
- and base sets
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174543182801.2725891.7635648941344459709.git-patchwork-notify@kernel.org>
-Date: Wed, 23 Apr 2025 18:10:28 +0000
-References: <20250423073151.297103-1-yangfeng59949@163.com>
-In-Reply-To: <20250423073151.297103-1-yangfeng59949@163.com>
-To: Feng Yang <yangfeng59949@163.com>
-Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
- martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
- mattbobrowski@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
- mathieu.desnoyers@efficios.com, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250423170526.15143-1-andrew.lopes@alumni.usp.br>
+In-Reply-To: <20250423170526.15143-1-andrew.lopes@alumni.usp.br>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 23 Apr 2025 21:13:03 +0300
+X-Gm-Features: ATxdqUHrjl502dqMW3pSVFtWg2PL7AsEHm3l3XtvdMz9Fb2sNN-W6SgU_JzzQTU
+Message-ID: <CAHp75VeCNt2nVZ4V5XXvd5iTfGjM0g2Ur-bA+B3HORiOaP5h-A@mail.gmail.com>
+Subject: Re: [PATCH] iio: accel: sca3000: remove duplicated code in sca3000_read_data
+To: Andrew Ijano <andrew.ijano@gmail.com>
+Cc: jic23@kernel.org, andrew.lopes@alumni.usp.br, gustavobastos@usp.br, 
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org, 
+	jstephan@baylibre.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Wed, Apr 23, 2025 at 8:06=E2=80=AFPM Andrew Ijano <andrew.ijano@gmail.co=
+m> wrote:
+>
+> Remove duplicated code between sca3000_read_data and
+> sca3000_read_data_short functions.
+>
+> The common behavior is centralized in just one sca3000_read_data
+> function and used for every case.
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+We refer to the functions as func() (mind the parentheses).
 
-On Wed, 23 Apr 2025 15:31:51 +0800 you wrote:
-> From: Feng Yang <yangfeng@kylinos.cn>
-> 
-> Many conditional checks in switch-case are redundant
-> with bpf_base_func_proto and should be removed.
-> 
-> Regarding the permission checks bpf_base_func_proto:
-> The permission checks in bpf_prog_load (as outlined below)
-> ensure that the trace has both CAP_BPF and CAP_PERFMON capabilities,
-> thus enabling the use of corresponding prototypes
-> in bpf_base_func_proto without adverse effects.
-> bpf_prog_load
-> 	......
-> 	bpf_cap = bpf_token_capable(token, CAP_BPF);
-> 	......
-> 	if (type != BPF_PROG_TYPE_SOCKET_FILTER &&
-> 	    type != BPF_PROG_TYPE_CGROUP_SKB &&
-> 	    !bpf_cap)
-> 		goto put_token;
-> 	......
-> 	if (is_perfmon_prog_type(type) && !bpf_token_capable(token, CAP_PERFMON))
-> 		goto put_token;
-> 	......
-> 
-> [...]
+...
 
-Here is the summary with links:
-  - [bpf-next,v4] bpf: streamline allowed helpers between tracing and base sets
-    https://git.kernel.org/bpf/bpf-next/c/6aca583f90b0
+> +       ret =3D spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+> +       if (ret) {
+> +               dev_err(&st->us->dev, "problem reading register\n");
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> +               return ret;
+> +       }
+>
+> -       return spi_sync_transfer(st->us, xfer, ARRAY_SIZE(xfer));
+> +       return 0;
 
+Simply return ret instead of 4 LoCs we get only one.
 
+--=20
+With Best Regards,
+Andy Shevchenko
