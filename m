@@ -1,587 +1,526 @@
-Received: from mx0b-00128a01.pphosted.com (mx0b-00128a01.pphosted.com [148.163.139.77])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3409267383;
-	Wed, 23 Apr 2025 07:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.139.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394839; cv=fail; b=BeHmYEZ/Xj80yLx7IMIzsicgeINHZcaJIcPEhS+XUme8CZiCI5fyJKzSzaOad0JUc5wV27iTNSdy+XP6fTkRV44XIuP32CRaG4KoZHHCzAcqDmjacCsc4G2ER9P/VTJnmjEorqb7Zg8Xr2hwiME3xy/l2d3Jf+ml5f01fnGNU/o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394839; c=relaxed/simple;
-	bh=f2NWxyYWedMMh2iSyY/4HoKHx98A9D79+2nDSqTzlso=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ei8CiMTdJJihUWXRzL/21mizRqNpHol4AWQHUOUrQUusTMGpSE1Rj9PEVZCnx9cKKnJe98E9KB1SMgl441DKq2lruRM1AIaZLQyfV4raGOJ2ZRYpl+zSBgeAlEpeokLQXJj6J0iYck3Q/BHGwa4OUeDI1soSC796G4dQdrvAN5o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=Wir6eoDD; arc=fail smtp.client-ip=148.163.139.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC29D266EE0;
+	Wed, 23 Apr 2025 07:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745394841; cv=none; b=sSRnnjI3ITZ1amhSTdJgDfQE3d8fRI8Onzmo4mZ/jhBr2GPufAddn7ZN51fzJQFP5rYU7TVocCciUUykoa6wzAM9/eP5fdzf8OKrE/h74d1KUuXMi96Yn0MrcbBUtTNzllBosrBjJLM5hanMy0Uf0fWoqNrfT8A/lPFGE/dLJnE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745394841; c=relaxed/simple;
+	bh=7yndZTEF11v28LB71szPAP1uD85QMEfxp8VOtzahXKA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c5hOJ/byJLUCu+mEGxaK8DWtvX2zJ+zrPRazZMQJRtqVRskYTLh00+ebUI4pwljtX6RJLEt9HmPShHmzq2SAuu7F1WOTFqM2O3MMpXRIHmTNK2M5roKqpcG/8Bbty1hf3atXi6Cd6tDbXGjBwb+LmvKHS9T84Wsqeu44B5Y65N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=chx4P1RE; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="Wir6eoDD"
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N65CPf029014;
-	Wed, 23 Apr 2025 03:53:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=2o0Z9
-	qE1h5P0thCq8n1SIAMrLpAEgYSs+oR4bUG4atM=; b=Wir6eoDD2tn0PF+le0UY8
-	q7XjwpgftF+CydNfYX7pEemw912478/iTKcMsY/d+ldEUQUDlxkdhzliCawxzLPX
-	R5xKfEhB5RgStv2SZQMTseWO9OHhwADgAYn6lbuvT19XLow5xFRSilQ7Fmi8RLF0
-	SAOTHdHH5KHEF3ZBtYVhNooCzGnbPGDC6nwDRZTmiaCXdXL8E03GQtaLg24lK9g6
-	Wu5AnMqHxZLwnCXjW6ERGXgTNI50MvgVOrilkx87Bc+0AxSxXJGh0t+uI3tihKN0
-	e7rPvXBiweXlju0OccnDdE4ot8q8B0VWh64Lfi53Lo7R7f/W8YgSg1sd8L2Vhu6z
-	g==
-Received: from sa9pr02cu001.outbound.protection.outlook.com (mail-southcentralusazlp17011026.outbound.protection.outlook.com [40.93.14.26])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 466jjta24g-2
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="chx4P1RE"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6Nggo016610;
+	Wed, 23 Apr 2025 09:53:28 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	rvMYNbaGLtIE0FfsKR2Th55N0M9THqiUG0jBoOkWeBw=; b=chx4P1REJn/P1wLo
+	eg/DZbctrKrHO6Z8XQJGIenMS9lCZGEyK8ZfWHNB8AhxUjPnm6HIktuRD6oaQTFx
+	LHts5oi40bXwuZYQV4AXHol76u9Yyzap3wM/VnQhLXcVq5zPcLksHNFipSTPMqbT
+	oQixdgL3gB7jGIUyzcJS6kV5yiUDaWCAAZmJKFGC8ojgAcXwWvWmykLBlwRM+0Wz
+	nTZIgczl//wViiQi6RG52j+1XKtJooYb7fkaRrqkpdJJ6ojxJxM/KDfL100ZAbKv
+	7GqqACZxwkuJzsETq8GWC8Ji/p76SS8xL0oJNEKsQSYZYENsIuGlpNHv58nMGFCo
+	RYR9yA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jjx9wck-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 03:53:40 -0400 (EDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jdtPBgBwQNpyNkWnv4NQr5faI7jke9uhHhDd0opN6uijiOolYqXgIzxmVh1JVeSb5UOcea9lEmD4QyGtR9dBRUH9qrW0Y7+kflusGpSMwBCSu2m5S638KtfWpZSUEfi2cv+0QQdoqz9P/Bw5m5pGZgNJUryEAX6Lm4Na3/SWEtllP/Tc2rtyTBwoNj7LRSOI3NzrwrgeZ1mEURqfNaWQ3DIn7SaTxt5deOAIOQ790rRrUs2nFCwa1e2v4wFlpaDvwp3wiJI4yyJtVM/InibfgJg17htjA2f9+lobUthQFoKN+cGXKQfaZGWQKESVeVDDm0BndpqJjuKlygXqjj7dVg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2o0Z9qE1h5P0thCq8n1SIAMrLpAEgYSs+oR4bUG4atM=;
- b=yORXBeKIL4++j3KBm5CoDfnD5qG3s5+DjmjsGQJsY4Am2HCFdor74bY2nooNp2hlbFUjI/0llfBzHdrkJaNcWbMkvwoqZvCKGj8KESUNT3fOWYrY75xst0K0uZirYFIepgLxJ5Yd4iEDxz95Z1IQ9VYf3Dye4e02cXPnNRJNFSgXvT+Uva8LKQIBLzmJzPmUuSyO8iY5W6ktqfTxU7VTYa57hZMo51aAEAtwE1bo9/p4n7Gf/8aVXeHrbu828c0GQxssU1tbMdWikFrIt2fDbptM6Z6eXAibatQF9wOEq9CBZh/V/O5s3bv326RPAZY/ENpWhPR+ccdbMRJc8ywTdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from PH0PR03MB7141.namprd03.prod.outlook.com (2603:10b6:510:296::20)
- by SJ0PR03MB7025.namprd03.prod.outlook.com (2603:10b6:a03:4e0::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Wed, 23 Apr
- 2025 07:53:37 +0000
-Received: from PH0PR03MB7141.namprd03.prod.outlook.com
- ([fe80::c559:3d31:1af3:b01]) by PH0PR03MB7141.namprd03.prod.outlook.com
- ([fe80::c559:3d31:1af3:b01%5]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
- 07:53:37 +0000
-From: "Paller, Kim Seer" <KimSeer.Paller@analog.com>
-To: Andy Shevchenko <andy@kernel.org>
-CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        David Lechner <dlechner@baylibre.com>,
-        =?iso-8859-1?Q?Nuno_S=E1?= <noname.nuno@gmail.com>,
-        "Sa, Nuno"
-	<Nuno.Sa@analog.com>,
-        "linux-iio@vger.kernel.org"
-	<linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>
-Subject: RE: [PATCH v5 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-Thread-Topic: [PATCH v5 3/3] iio: dac: ad3530r: Add driver for AD3530R and
- AD3531R
-Thread-Index: AQHbsnVyrRgqZmjV0EKE05LwnZhDMLOvzK8AgAETIrA=
-Date: Wed, 23 Apr 2025 07:53:37 +0000
-Message-ID:
- <PH0PR03MB71410D0F7716DAB4A2103AA1F9BA2@PH0PR03MB7141.namprd03.prod.outlook.com>
-References: <20250421-togreg-v5-0-94341574240f@analog.com>
- <20250421-togreg-v5-3-94341574240f@analog.com>
- <aAexmOU1e-7hXq6Y@smile.fi.intel.com>
-In-Reply-To: <aAexmOU1e-7hXq6Y@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-dg-rorf: true
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR03MB7141:EE_|SJ0PR03MB7025:EE_
-x-ms-office365-filtering-correlation-id: 6027bdac-b35c-49a5-61ee-08dd823bf48a
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?nbw8Hw7ERQo4rFr6XUDJaaFRcd5lk1OhDw2MeFi5s//4MCub3Zm+dspwF+?=
- =?iso-8859-1?Q?C7ax156kJJcMA9A7QrjUA53Okav6s3YZ9fI7/MANvsGcVTn2JuV6FgI993?=
- =?iso-8859-1?Q?r6GhupaLB/yrk+sWs/j86W+35JZi2UW4Dh6VuCexpDC3/zO6rksh77z+cu?=
- =?iso-8859-1?Q?LsX6/f4DwSDVTSlt0F8o5kp0SDq9n/VITcqAfsblJglytHXyJho7BESSKq?=
- =?iso-8859-1?Q?2tibinNR+6Rxt4lPDieyHuvVmm6IzBXUJwvZjs1lw9SwxP7w5Pd/ytn3oK?=
- =?iso-8859-1?Q?maJSWfRk5mVVOFtnLviUH/4bbfpQw65w3aoZ/9TrH30e2t8QoWza1ASV4P?=
- =?iso-8859-1?Q?eHPRvq3xBzxDizZJ6BcR3hHtS+utQXgriVuSI7l5vMOSDVNmHO8sOUNOMT?=
- =?iso-8859-1?Q?sTvqLpew64MM4I8+p4zcHskZqdNufUEPjmECrW37H9abg4CZnRJudSOsmJ?=
- =?iso-8859-1?Q?3zCq5mVrCur8VDSBYo4Ht2mzVMVXGo2aMnn1GS+zlIpEs7Dhs3T57v4+s3?=
- =?iso-8859-1?Q?2Lrd2KpAuOfgcUlqC7oFXn2DBq6Y72xi9445/M7YnTQkOCY8ep3a6eNm6y?=
- =?iso-8859-1?Q?k746Mi24v7wdX7lT8Sjn80Yzq9AOJ0ZK4ZzUOOTdEmyGaxrvWGuGGnxqKD?=
- =?iso-8859-1?Q?CLtr0bPa56zhz3AR7P1ZReEZyVPwGzfks1P65zZG2Z77wVG0KwLxtaQiv6?=
- =?iso-8859-1?Q?9e2p4z0Dz/g8a2w1Bln4ctxa8PDVnGk5JLgVexVAMTC68QnUDLwC3IjHVo?=
- =?iso-8859-1?Q?3vRyvNa3dzBULdoHw18b4+6dvC2z00bCni0vrheCnoIydgPFvdv7vy3WAF?=
- =?iso-8859-1?Q?W0SRaFOOaSpehlb0QX37VBkd8gREiyz6MBjyA/NApa5XCjvVwpTb/UcDYT?=
- =?iso-8859-1?Q?RiaDoOWa6Mxp+5dnx7fj4F+SQfic5PAvkQE8fe7sey2srwrSGESFwf2Fvt?=
- =?iso-8859-1?Q?G/QosNHREbyE1hqvabiO8fcUSBJV5OaitvtyPeiLL41IVedShtBQsddOAs?=
- =?iso-8859-1?Q?yw6AC+1GnGb/VDQEmN9hkncrAqCxkHLpoF5sgW1oExc0GZxG/8Un6VNmN6?=
- =?iso-8859-1?Q?DjktTIXDTdA4QqUUt6oFSCE+wOatsD8np95TIDeYILYWxc/pK22WGv11pZ?=
- =?iso-8859-1?Q?0EcPRA1X0q+vaj8bVxNVuYsmTfa54t12yjfAITTt/W4nkCnGJl0+f4pIza?=
- =?iso-8859-1?Q?99oI9wa1NMU7MTbFGOV/O8iw3MtOemDVo2ZUBmZ4+TMNExy0dPmPrmpJ3Y?=
- =?iso-8859-1?Q?SuWkdI/R56wXlWYK/ENlgcCUPfssSg3Uu/GSQcR/j6Nu0eRog6zN+NQvjs?=
- =?iso-8859-1?Q?oN4h9PYGIcvmyNp55SKLRsMRgIi7862yf4RKRLGpwQdH9oV8HzKnQW4sin?=
- =?iso-8859-1?Q?pU4hLteto6hh35Pg8WzPBJ3YJRrJZ7NFlJficApXCOxw8ZH5HCVGaY5JYk?=
- =?iso-8859-1?Q?AWqGK7Dw+oTS3t02WzJAAOwVrZfA/lRbtiOUS7K93h60mCfUFh7e8TbmI/?=
- =?iso-8859-1?Q?rGfNoQ7nLiVRuoWSKInEl5bfYV2envx8dmRJGK14eILV/J7zlqkhB8NgTf?=
- =?iso-8859-1?Q?Yn3z/w8=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR03MB7141.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?Kwy3ezzXyhmFLryuDJQTiPgnh3R1Z5ic21EXMm6/21eBcnNvm24D6lUTec?=
- =?iso-8859-1?Q?r65wmQOfpihiNd7xDxMKq4r2Km8XC7r2nx5gVGPnK7fMSU4NnQ8c02UxBC?=
- =?iso-8859-1?Q?+PJ9vZka6e6D4EpcGITC9dPQcE2Id/hj897pvNMdp3R5Sbtzi8Q4/Lazxi?=
- =?iso-8859-1?Q?qvMoKMqbX9iv5rSToXWv0VLQbI/2BkdHAeQgJhEoORfa3pymQGlWY2zBd1?=
- =?iso-8859-1?Q?LQ2CMo6wlQsnx2Yum4h3Z9YVy3ek5xf6CXFIoFADpVLKQ4ZkxYztEyGUzc?=
- =?iso-8859-1?Q?ERW4o3JPYSCGBDCEkA6mx4AO4yxCARDW6gHKPdPyMANOL9Uk33DyB7dQND?=
- =?iso-8859-1?Q?S0qoqfowv0DVLcffglCfaJdPOBdXVZfIRs/ncaQu2AWcSK4PvgfzQV8oDD?=
- =?iso-8859-1?Q?SZFta8tSIvjCeZK11zgpnYHkGLlptwdj1tbbBeNcJ+pzwbmcKmg0MfHiEv?=
- =?iso-8859-1?Q?Gb4ju+5BaOBoi7/kVvPLed1g2yNC0StakhsNsIajVzJE56yBopkPxxPdfG?=
- =?iso-8859-1?Q?a+A/FROLHRgEIoWdReYpSSdHy5ZHw0ShAF0Fnqaaez7x6jvBTyC8AE152J?=
- =?iso-8859-1?Q?LMdZjjv0UE5yql209Tg+DOIoUvWpp/pxS+MMadrDibmuX11Oz4oS86q1u5?=
- =?iso-8859-1?Q?QokQRwyCAm5+J8x8ZnSxuizGJxVDcFCpUc3hlk/rdvj/EZVZpwvtudCPl1?=
- =?iso-8859-1?Q?m0i5iLWn84qJgPHxGQJVQ3P8H2i2KiRc4Pek27IdrRIpRMbYRvCFV3rloO?=
- =?iso-8859-1?Q?DkMPhedkFX5F5P8ZmCrOsrr8FCDftZctOfj3Ka1N299zgZhA/my6C1YAdU?=
- =?iso-8859-1?Q?FptVPLAZ0g9zS6Eyr/bmMDUwbe2tgHxeOlbp0FJ0H8NmjYdy+4RVP/JTJB?=
- =?iso-8859-1?Q?23zdInRVxsKgsHgznMne8WoV1Rsl3luJJ5fBu4MoJVEbeHXH6Uv3y8IlJV?=
- =?iso-8859-1?Q?u0UGW9pMe1cosGSwX5KDjULYjBAP1OsTCalFfFeTpmXvi+CN5HaCrvRwTe?=
- =?iso-8859-1?Q?/FbxtQGWTp45oWjZ8el+RME4xOMMWQIzeRsyUxxpNYgdd6AjKXPeQFo6lf?=
- =?iso-8859-1?Q?o7CpHcUQS1uYMG9JsOXu5f85TMF3NkTyKO7Ps/ZK1E0Iq49eaYgqLZeoP+?=
- =?iso-8859-1?Q?JvlEf+x7JUn7w/Efeao74KcUWLzRTLxrkPz51CaOgt4yHFEmamzPSnwt9v?=
- =?iso-8859-1?Q?DPg8/9w5MUzz3upkOeOBRJLJDEVqay1pL3tB/+LkcYpWmWQxJQX1ALAlc4?=
- =?iso-8859-1?Q?aKIamYY8VwQDxDvCLQ3NeEM0jfsJROiGal5pGbHFgJVzGQKBe+r60T8gF1?=
- =?iso-8859-1?Q?7pSwxRu+K1kfjKN8m6q0lp0chl1gSLQRPvfFshe5tFOUuCtoetu4ywr9Qd?=
- =?iso-8859-1?Q?EmacJ5nqz7QJEp2N0B38tFJ4E2wI1l5OgV+qFRdZqlEZFte6r7zTsp/z+e?=
- =?iso-8859-1?Q?7ENuC8adonHxKEG7IB9p1gTgSoU3rK/AKs/qdZkZEWo780WGwHRpwR3+LT?=
- =?iso-8859-1?Q?DPEe1xt3upSNKZYwaVj7N+IZLF5Gw2flcqya9ohQa7LKQPojf5Zufo162M?=
- =?iso-8859-1?Q?q4D8ED4JY1imxm+DOE3TTV7+3exZGt3VlyFU5vTqTu9U7CRN2kc/9qKlRb?=
- =?iso-8859-1?Q?wsC0P6/Fr6Gdc+1v6jNZ02Lipr//t7qZJU?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	Wed, 23 Apr 2025 09:53:28 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id CCC4840054;
+	Wed, 23 Apr 2025 09:52:00 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A7B0CA06888;
+	Wed, 23 Apr 2025 09:50:06 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
+ 2025 09:50:06 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 2/9] PCI: stm32: Add PCIe host support for STM32MP25
+Date: Wed, 23 Apr 2025 09:49:33 +0200
+Message-ID: <20250423074940.3849091-3-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250423074940.3849091-1-christian.bruel@foss.st.com>
+References: <20250423074940.3849091-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR03MB7141.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6027bdac-b35c-49a5-61ee-08dd823bf48a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Apr 2025 07:53:37.3529
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: m+XNAgtDHurTTZ+K+RuOnQNXsSr1pYUlbRH6DlbOxkgOyxI1EuIUYGNHKIeCBLjPATirlbVO0q+1c3rfLIgpOaX4eITcHVYoZk1HaVE1UHI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR03MB7025
-X-Proofpoint-ORIG-GUID: Dl1Gv5aLIr2l4Jhds1KGVi0L6V5zjDvI
-X-Authority-Analysis: v=2.4 cv=UfxRSLSN c=1 sm=1 tr=0 ts=68089c84 cx=c_pps a=GnUjYDbtZuq/T0BoTQNfSw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
- a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8 a=IpJZQVW2AAAA:8 a=pGLkceISAAAA:8 a=EjWbAKJ-xnEP_5bF_h8A:9 a=wPNLvfGTeEIA:10 a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-GUID: Dl1Gv5aLIr2l4Jhds1KGVi0L6V5zjDvI
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA1MiBTYWx0ZWRfX9X6mhy838lVK q35QbmMPuuPYh7jLR95Rtz+ak/HFLKKhCmodSngpkO+ThsAFbxn+I3b7yJcrtMsIxflSnvxV4QN MLXnlfVdiTBLljzoiB/Z+i6BzMUJGuD109wRVzQdW0sM0CpDeRvw8mhoTnabYkTrvK1e/n73hHY
- 9Ek4TMTWWJ0R0V/uf5q9ZVWTbRptSS/jEaRkCkWWT1q05XwtXgpj26Fs9zbfMfH7tELupNgKrLw rouy7Px7IF61RfH6x/iPaFAfL4kVZNupgj7+t9E+ffYDOT9kYvRE3l5RQvi0C5iFAJWL9C4uvuS Zm220U+zZGfeTW0pwUw96dOso3NdNofrB1Gsv7g9++luw0tGdXmUbv+/MR0nGtPHL+QGqIx8jv1
- uDd587uOcKkC1V1b9dDXLzCR2HFwuPquGsne5Di0Lv3m2ObNykEJ0AwKt8LQNZhg7goy6I4I
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- suspectscore=0 bulkscore=0 impostorscore=0 clxscore=1015 spamscore=0
- malwarescore=0 mlxscore=0 priorityscore=1501 adultscore=0
- lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2504070000 definitions=main-2504230052
 
-> -----Original Message-----
-> From: Andy Shevchenko <andy@kernel.org>
-> Sent: Tuesday, April 22, 2025 11:11 PM
-> To: Paller, Kim Seer <KimSeer.Paller@analog.com>
-> Cc: Jonathan Cameron <jic23@kernel.org>; Lars-Peter Clausen
-> <lars@metafoo.de>; Hennerich, Michael <Michael.Hennerich@analog.com>;
-> Rob Herring <robh@kernel.org>; Krzysztof Kozlowski <krzk+dt@kernel.org>;
-> Conor Dooley <conor+dt@kernel.org>; David Lechner
-> <dlechner@baylibre.com>; Nuno S=E1 <noname.nuno@gmail.com>; Sa, Nuno
-> <Nuno.Sa@analog.com>; linux-iio@vger.kernel.org; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org
-> Subject: Re: [PATCH v5 3/3] iio: dac: ad3530r: Add driver for AD3530R and
-> AD3531R
->=20
-> [External]
->=20
-> On Mon, Apr 21, 2025 at 12:24:54PM +0800, Kim Seer Paller wrote:
-> > The AD3530/AD3530R (8-channel) and AD3531/AD3531R (4-channel) are
-> > low-power, 16-bit, buffered voltage output DACs with software-
-> > programmable gain controls, providing full-scale output spans of 2.5V
-> > or 5V for reference voltages of 2.5V. These devices operate from a
-> > single 2.7V to 5.5V supply and are guaranteed monotonic by design. The =
-"R"
-> > variants include a 2.5V, 5ppm/=B0C internal reference, which is disable=
-d
-> > by default.
-> >
-> > Support for monitoring internal die temperature, output voltages, and
-> > current of a selected channel via the MUXOUT pin using an external ADC
-> > is currently not implemented.
->=20
-> ...
->=20
-> > +#include <linux/bitfield.h>
-> > +#include <linux/bits.h>
-> > +#include <linux/cleanup.h>
-> > +#include <linux/delay.h>
->=20
-> > +#include <linux/device.h>
->=20
-> I don't see how you use this. But
->=20
-> + dev_printk.h
->=20
-> > +#include <linux/gpio/consumer.h>
-> > +#include <linux/iio/iio.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/property.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/regulator/consumer.h> #include <linux/spi/spi.h>
->=20
-> ...
->=20
-> > +#define AD3530R_SW_RESET			(BIT(7) | BIT(0))
->=20
-> > +#define AD3530R_MAX_CHANNELS			8
-> > +#define AD3531R_MAX_CHANNELS			4
->=20
-> Sounds to me that these two shouldn't be grouped with the rest here. Perh=
-aps
-> move them out to after the LDAC_PULSE?
->=20
-> > +#define AD3530R_INTERNAL_VREF_MV		2500
->=20
-> _mV (yes, with Volts and Amperes we use proper spelling).
->=20
-> > +#define AD3530R_LDAC_PULSE_US			100
->=20
-> ...
->=20
-> > +	int (*input_ch_reg)(unsigned int c);
->=20
-> c? channel?
+Add driver for the STM32MP25 SoC PCIe Gen1 2.5 GT/s and Gen2 5GT/s
+controller based on the DesignWare PCIe core.
 
-Thank you for the feedback. I'll change this to 'channel' to make it cleare=
-r.
+Supports MSI via GICv2m, Single Virtual Channel, Single Function
 
->=20
-> ...
->=20
-> > +	int vref_mv;
->=20
-> _mV
->=20
-> ...
->=20
-> > +static int ad3530r_input_ch_reg(unsigned int c) {
-> > +	return 2 * c + AD3530R_INPUT_CH;
-> > +}
-> > +
-> > +static int ad3531r_input_ch_reg(unsigned int c) {
-> > +	return 2 * c + AD3531R_INPUT_CH;
-> > +}
->=20
-> c --> channel
->=20
-> ...
->=20
-> > +static const char * const ad3530r_powerdown_modes[] =3D {
-> > +	"1kohm_to_gnd",
->=20
-> kOhm
->=20
-> > +	"7.7kohm_to_gnd",
->=20
-> Ditto.
->=20
-> > +	"32kohm_to_gnd",
->=20
-> Ditto.
->=20
-> > +};
->=20
-> ...
->=20
-> > +static const struct iio_enum ad3530r_powerdown_mode_enum =3D {
-> > +	.items =3D ad3530r_powerdown_modes,
-> > +	.num_items =3D ARRAY_SIZE(ad3530r_powerdown_modes),
->=20
-> + array_size.h
->=20
-> > +	.get =3D ad3530r_get_powerdown_mode,
-> > +	.set =3D ad3530r_set_powerdown_mode,
-> > +};
->=20
-> ...
->=20
-> > +static ssize_t ad3530r_get_dac_powerdown(struct iio_dev *indio_dev,
-> > +					 uintptr_t private,
-> > +					 const struct iio_chan_spec *chan,
-> > +					 char *buf)
-> > +{
-> > +	struct ad3530r_state *st =3D iio_priv(indio_dev);
-> > +
-> > +	guard(mutex)(&st->lock);
-> > +	return sysfs_emit(buf, "%d\n", st->chan[chan->channel].powerdown);
->=20
-> + sysfs.h
->=20
-> > +}
->=20
-> ...
->=20
-> > +static ssize_t ad3530r_set_dac_powerdown(struct iio_dev *indio_dev,
-> > +					 uintptr_t private,
-> > +					 const struct iio_chan_spec *chan,
-> > +					 const char *buf, size_t len)
-> > +{
-> > +	struct ad3530r_state *st =3D iio_priv(indio_dev);
-> > +	int ret;
-> > +	unsigned int mask, val, reg;
-> > +	bool powerdown;
-> > +
-> > +	ret =3D kstrtobool(buf, &powerdown);
->=20
-> + kstrtox.h
->=20
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	guard(mutex)(&st->lock);
-> > +	mask =3D GENMASK(chan->address + 1, chan->address);
-> > +	reg =3D chan->channel < AD3531R_MAX_CHANNELS ?
-> > +	      AD3530R_OUTPUT_OPERATING_MODE_0 :
-> > +	      AD3530R_OUTPUT_OPERATING_MODE_1;
-> > +	val =3D (powerdown ? st->chan[chan->channel].powerdown_mode : 0)
-> > +	       << chan->address;
->=20
-> Please, move the operator to the previous line, Or even
->=20
-> 	... pdmode;
->=20
-> 	pdmode =3D powerdown ? st->chan[chan->channel].powerdown_mode :
-> 0;
-> 	val =3D pdmode << ...;
->=20
-> > +	ret =3D regmap_update_bits(st->regmap, reg, mask, val);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	st->chan[chan->channel].powerdown =3D powerdown;
-> > +
-> > +	return len;
-> > +}
->=20
-> ...
->=20
-> > +	struct ad3530r_state *st =3D iio_priv(indio_dev);
-> > +
-> > +	switch (info) {
-> > +	case IIO_CHAN_INFO_RAW:
-> > +		if (val < 0 || val > U16_MAX)
->=20
-> U16_MAX is an abstract type with this limit, do you have any predefined H=
-W
-> limit instead? Probably better to use that one as defined via BIT() / GEN=
-MASK().
+Supports WAKE# GPIO.
 
-Will add a macro for this hardware limit.
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
+---
+ drivers/pci/controller/dwc/Kconfig      |  12 +
+ drivers/pci/controller/dwc/Makefile     |   1 +
+ drivers/pci/controller/dwc/pcie-stm32.c | 368 ++++++++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-stm32.h |  15 +
+ 4 files changed, 396 insertions(+)
+ create mode 100644 drivers/pci/controller/dwc/pcie-stm32.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-stm32.h
 
->=20
-> > +			return -EINVAL;
-> > +
-> > +		return ad3530r_dac_write(st, chan->channel, val);
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
->=20
-> ...
->=20
-> > +static const struct iio_chan_spec_ext_info ad3530r_ext_info[] =3D {
-> > +	{
-> > +		.name =3D "powerdown",
-> > +		.shared =3D IIO_SEPARATE,
-> > +		.read =3D ad3530r_get_dac_powerdown,
-> > +		.write =3D ad3530r_set_dac_powerdown,
-> > +	},
-> > +	IIO_ENUM("powerdown_mode", IIO_SEPARATE,
-> &ad3530r_powerdown_mode_enum),
-> > +	IIO_ENUM_AVAILABLE("powerdown_mode", IIO_SHARED_BY_TYPE,
-> > +			   &ad3530r_powerdown_mode_enum),
-> > +	{ }
-> > +};
-> > +
-> > +#define AD3530R_CHAN(_chan, _pos) {
-> 	\
->=20
-> Slightly better to have the curly braces on the same column as it's easie=
-r to
-> read.
->=20
-> #define AD3530R_CHAN(_chan, _pos)				\
-> {								\
->=20
-> (and make it one TAB less for the backslash).
->=20
-> > +	.type =3D IIO_VOLTAGE,						\
-> > +	.indexed =3D 1,							\
-> > +	.channel =3D _chan,						\
-> > +	.address =3D _pos,						\
-> > +	.output =3D 1,							\
-> > +	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
-> 	\
-> > +			      BIT(IIO_CHAN_INFO_SCALE),			\
-> > +	.ext_info =3D ad3530r_ext_info,					\
-> > +}
->=20
-> ...
->=20
-> > +static int ad3530r_setup(struct ad3530r_state *st, int vref,
-> > +			 bool has_external_vref)
-> > +{
-> > +	struct device *dev =3D regmap_get_device(st->regmap);
-> > +	struct gpio_desc *reset_gpio;
-> > +	int i, ret;
-> > +	u8 range_multiplier;
->=20
-> + types.h (and especially for boolean type along with true/false definiti=
-ons.
->=20
-> > +
-> > +	reset_gpio =3D devm_gpiod_get_optional(dev, "reset",
-> GPIOD_OUT_HIGH);
-> > +	if (IS_ERR(reset_gpio))
-> > +		return dev_err_probe(dev, PTR_ERR(reset_gpio),
-> > +				     "Failed to get reset GPIO\n");
->=20
-> + err.h
->=20
-> > +	if (reset_gpio) {
-> > +		/* Perform hardware reset */
-> > +		fsleep(1000);
->=20
-> (1 * USEC_PER_MSEC) ?
->=20
-> > +		gpiod_set_value_cansleep(reset_gpio, 0);
-> > +	} else {
-> > +		/* Perform software reset */
-> > +		ret =3D regmap_update_bits(st->regmap,
-> AD3530R_INTERFACE_CONFIG_A,
-> > +					 AD3530R_SW_RESET,
-> AD3530R_SW_RESET);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
->=20
-> > +	fsleep(10000);
->=20
-> 10 * USEC_PER_MSEC
->=20
-> With these constants it's less error prone (when 3 or more zeroes) and ea=
-sier to
-> get the units without looking into fsleep() implementation / documentatio=
-n.
-
-I'll take note of this.
-
->=20
-> > +	range_multiplier =3D 1;
-> > +	if (device_property_read_bool(dev, "adi,range-double")) {
-> > +		ret =3D regmap_set_bits(st->regmap,
-> AD3530R_OUTPUT_CONTROL_0,
-> > +				      AD3530R_OUTPUT_CONTROL_RANGE);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		range_multiplier =3D 2;
-> > +	}
-> > +
-> > +	if (!has_external_vref && st->chip_info->internal_ref_support) {
-> > +		ret =3D regmap_set_bits(st->regmap,
-> AD3530R_REFERENCE_CONTROL_0,
-> > +				      AD3530R_REFERENCE_CONTROL_SEL);
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		st->vref_mv =3D range_multiplier *
-> AD3530R_INTERNAL_VREF_MV;
-> > +	}
-> > +
-> > +	if (has_external_vref)
-> > +		st->vref_mv =3D range_multiplier * vref / 1000;
->=20
-> MILLI?
-
-Yes this is milli, will change this also to vref_mV
-
-	st->vref_mV =3D range_multiplier * vref_mV / 1000;
-
->=20
->=20
-> > +	/* Set operating mode to normal operation. */
-> > +	ret =3D regmap_write(st->regmap,
-> AD3530R_OUTPUT_OPERATING_MODE_0,
-> > +			   AD3530R_NORMAL_OPERATION);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	if (st->chip_info->num_channels > AD3531R_MAX_CHANNELS) {
-> > +		ret =3D regmap_write(st->regmap,
-> AD3530R_OUTPUT_OPERATING_MODE_1,
-> > +				   AD3530R_NORMAL_OPERATION);
-> > +		if (ret)
-> > +			return ret;
-> > +	}
-> > +
-> > +	for (i =3D 0; i < st->chip_info->num_channels; i++)
-> > +		st->chan[i].powerdown_mode =3D AD3530R_POWERDOWN_32K;
-> > +
-> > +	st->ldac_gpio =3D devm_gpiod_get_optional(dev, "ldac",
-> GPIOD_OUT_LOW);
-> > +	if (IS_ERR(st->ldac_gpio))
-> > +		return dev_err_probe(dev, PTR_ERR(st->ldac_gpio),
-> > +				     "Failed to get ldac GPIO\n");
-> > +
-> > +	return 0;
-> > +}
->=20
-> ...
->=20
-> > +	vref =3D devm_regulator_get_enable_read_voltage(dev, "ref");
-> > +	if (vref < 0 && vref !=3D -ENODEV)
-> > +		return vref;
-> > +
-> > +	has_external_vref =3D vref !=3D -ENODEV;
->=20
-> Wouldn't be better just make this 0 when it's =3D=3D -ENODEV and check ju=
-st the
-> value without having this additional boolean variable (note, I haven't ch=
-ecked
-> the meaning of Vref =3D=3D 0 in case it's possible in real life and hardw=
-are behaves
-> adequately)?
-
-I think it could be simpler to set vref to 0 when it's -ENODEV and check it=
-s value directly
-without having additional boolean variable. I'll try this approach.
-
->=20
-> > +	if (!st->chip_info->internal_ref_support && !has_external_vref)
-> > +		return -ENODEV;
->=20
-> > +	ret =3D ad3530r_setup(st, vref, has_external_vref);
-> > +	if (ret)
-> > +		return ret;
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index d9f0386396ed..2aec5d2f9a46 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -410,6 +410,18 @@ config PCIE_SPEAR13XX
+ 	help
+ 	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
+ 
++config PCIE_STM32_HOST
++	tristate "STMicroelectronics STM32MP25 PCIe Controller (host mode)"
++	depends on ARCH_STM32 || COMPILE_TEST
++	depends on PCI_MSI
++	select PCIE_DW_HOST
++	help
++	  Enables support for the DesignWare core based PCIe host controller
++	  found in STM32MP25 SoC.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called pcie-stm32.
++
+ config PCI_DRA7XX
+ 	tristate
+ 
+diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+index 908cb7f345db..9d3b43504725 100644
+--- a/drivers/pci/controller/dwc/Makefile
++++ b/drivers/pci/controller/dwc/Makefile
+@@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_UNIPHIER) += pcie-uniphier.o
+ obj-$(CONFIG_PCIE_UNIPHIER_EP) += pcie-uniphier-ep.o
+ obj-$(CONFIG_PCIE_VISCONTI_HOST) += pcie-visconti.o
+ obj-$(CONFIG_PCIE_RCAR_GEN4) += pcie-rcar-gen4.o
++obj-$(CONFIG_PCIE_STM32_HOST) += pcie-stm32.o
+ 
+ # The following drivers are for devices that use the generic ACPI
+ # pci_root.c driver but don't support standard ECAM config access.
+diff --git a/drivers/pci/controller/dwc/pcie-stm32.c b/drivers/pci/controller/dwc/pcie-stm32.c
+new file mode 100644
+index 000000000000..700c9bc1a54c
+--- /dev/null
++++ b/drivers/pci/controller/dwc/pcie-stm32.c
+@@ -0,0 +1,368 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * STMicroelectronics STM32MP25 PCIe root complex driver.
++ *
++ * Copyright (C) 2025 STMicroelectronics
++ * Author: Christian Bruel <christian.bruel@foss.st.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_platform.h>
++#include <linux/phy/phy.h>
++#include <linux/pinctrl/devinfo.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++#include <linux/pm_wakeirq.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++#include "pcie-designware.h"
++#include "pcie-stm32.h"
++#include "../../pci.h"
++
++struct stm32_pcie {
++	struct dw_pcie pci;
++	struct regmap *regmap;
++	struct reset_control *rst;
++	struct phy *phy;
++	struct clk *clk;
++	struct gpio_desc *perst_gpio;
++	struct gpio_desc *wake_gpio;
++};
++
++static void stm32_pcie_deassert_perst(struct stm32_pcie *stm32_pcie)
++{
++	/* Delay PERST# de-assertion until the power stabilizes */
++	msleep(PCIE_T_PVPERL_MS);
++
++	gpiod_set_value(stm32_pcie->perst_gpio, 0);
++
++	/* Wait for the REFCLK to stabilize  */
++	if (stm32_pcie->perst_gpio)
++		msleep(PCIE_T_RRS_READY_MS);
++}
++
++static void stm32_pcie_assert_perst(struct stm32_pcie *stm32_pcie)
++{
++	gpiod_set_value(stm32_pcie->perst_gpio, 1);
++}
++
++static int stm32_pcie_start_link(struct dw_pcie *pci)
++{
++	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
++
++	return regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
++				  STM32MP25_PCIECR_LTSSM_EN,
++				  STM32MP25_PCIECR_LTSSM_EN);
++}
++
++static void stm32_pcie_stop_link(struct dw_pcie *pci)
++{
++	struct stm32_pcie *stm32_pcie = to_stm32_pcie(pci);
++
++	regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
++			   STM32MP25_PCIECR_LTSSM_EN, 0);
++}
++
++static int stm32_pcie_suspend_noirq(struct device *dev)
++{
++	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
++	int ret;
++
++	ret = dw_pcie_suspend_noirq(&stm32_pcie->pci);
++	if (ret)
++		return ret;
++
++	stm32_pcie_assert_perst(stm32_pcie);
++
++	clk_disable_unprepare(stm32_pcie->clk);
++
++	if (!device_wakeup_path(dev))
++		phy_exit(stm32_pcie->phy);
++
++	return pinctrl_pm_select_sleep_state(dev);
++}
++
++static int stm32_pcie_resume_noirq(struct device *dev)
++{
++	struct stm32_pcie *stm32_pcie = dev_get_drvdata(dev);
++	int ret;
++
++	/*
++	 * The core clock is gated with CLKREQ# from the COMBOPHY REFCLK,
++	 * thus if no device is present, must force it low with an init pinmux
++	 * to be able to access the DBI registers.
++	 */
++	if (!IS_ERR(dev->pins->init_state))
++		ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
++	else
++		ret = pinctrl_pm_select_default_state(dev);
++
++	if (ret) {
++		dev_err(dev, "Failed to activate pinctrl pm state: %d\n", ret);
++		return ret;
++	}
++
++	if (!device_wakeup_path(dev)) {
++		ret = phy_init(stm32_pcie->phy);
++		if (ret) {
++			pinctrl_pm_select_default_state(dev);
++			return ret;
++		}
++	}
++
++	ret = clk_prepare_enable(stm32_pcie->clk);
++	if (ret)
++		goto err_phy_exit;
++
++	stm32_pcie_deassert_perst(stm32_pcie);
++
++	ret = dw_pcie_resume_noirq(&stm32_pcie->pci);
++	if (ret)
++		goto err_disable_clk;
++
++	pinctrl_pm_select_default_state(dev);
++
++	return 0;
++
++err_disable_clk:
++	stm32_pcie_assert_perst(stm32_pcie);
++	clk_disable_unprepare(stm32_pcie->clk);
++
++err_phy_exit:
++	phy_exit(stm32_pcie->phy);
++	pinctrl_pm_select_default_state(dev);
++
++	return ret;
++}
++
++static const struct dev_pm_ops stm32_pcie_pm_ops = {
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(stm32_pcie_suspend_noirq,
++				  stm32_pcie_resume_noirq)
++};
++
++static const struct dw_pcie_host_ops stm32_pcie_host_ops = {
++};
++
++static const struct dw_pcie_ops dw_pcie_ops = {
++	.start_link = stm32_pcie_start_link,
++	.stop_link = stm32_pcie_stop_link
++};
++
++static int stm32_add_pcie_port(struct stm32_pcie *stm32_pcie,
++			       struct platform_device *pdev)
++{
++	struct device *dev = stm32_pcie->pci.dev;
++	unsigned int wake_irq;
++	int ret;
++
++	/* Start to enable resources with PERST# asserted */
++
++	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
++	if (ret)
++		return ret;
++
++	ret = phy_init(stm32_pcie->phy);
++	if (ret)
++		return ret;
++
++	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
++				 STM32MP25_PCIECR_TYPE_MASK,
++				 STM32MP25_PCIECR_RC);
++	if (ret)
++		goto err_phy_exit;
++
++	stm32_pcie_deassert_perst(stm32_pcie);
++
++	if (stm32_pcie->wake_gpio) {
++		wake_irq = gpiod_to_irq(stm32_pcie->wake_gpio);
++		ret = dev_pm_set_dedicated_wake_irq(dev, wake_irq);
++		if (ret) {
++			dev_err(dev, "Failed to enable wakeup irq %d\n", ret);
++			goto err_assert_perst;
++		}
++		irq_set_irq_type(wake_irq, IRQ_TYPE_EDGE_FALLING);
++	}
++
++	return 0;
++
++err_assert_perst:
++	stm32_pcie_assert_perst(stm32_pcie);
++
++err_phy_exit:
++	phy_exit(stm32_pcie->phy);
++
++	return ret;
++}
++
++static void stm32_remove_pcie_port(struct stm32_pcie *stm32_pcie)
++{
++	stm32_pcie_assert_perst(stm32_pcie);
++
++	phy_exit(stm32_pcie->phy);
++}
++
++static int stm32_pcie_parse_port(struct stm32_pcie *stm32_pcie)
++{
++	struct device *dev = stm32_pcie->pci.dev;
++	struct device_node *root_port;
++
++	root_port = of_get_next_available_child(dev->of_node, NULL);
++
++	stm32_pcie->phy = devm_of_phy_get(dev, root_port, NULL);
++	if (IS_ERR(stm32_pcie->phy)) {
++		of_node_put(root_port);
++		return dev_err_probe(dev, PTR_ERR(stm32_pcie->phy),
++				     "Failed to get pcie-phy\n");
++	}
++
++	stm32_pcie->perst_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(root_port),
++						       "reset", GPIOD_OUT_HIGH, NULL);
++	if (IS_ERR(stm32_pcie->perst_gpio)) {
++		if (PTR_ERR(stm32_pcie->perst_gpio) != -ENOENT) {
++			of_node_put(root_port);
++			return dev_err_probe(dev, PTR_ERR(stm32_pcie->perst_gpio),
++					     "Failed to get reset GPIO\n");
++		}
++		stm32_pcie->perst_gpio = NULL;
++	}
++
++	stm32_pcie->wake_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(root_port),
++						      "wake", GPIOD_IN, NULL);
++
++	if (IS_ERR(stm32_pcie->wake_gpio)) {
++		if (PTR_ERR(stm32_pcie->wake_gpio) != -ENOENT) {
++			of_node_put(root_port);
++			return dev_err_probe(dev, PTR_ERR(stm32_pcie->wake_gpio),
++					     "Failed to get wake GPIO\n");
++		}
++		stm32_pcie->wake_gpio = NULL;
++	}
++
++	of_node_put(root_port);
++
++	return 0;
++}
++
++static int stm32_pcie_probe(struct platform_device *pdev)
++{
++	struct stm32_pcie *stm32_pcie;
++	struct device *dev = &pdev->dev;
++	int ret;
++
++	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
++	if (!stm32_pcie)
++		return -ENOMEM;
++
++	stm32_pcie->pci.dev = dev;
++	stm32_pcie->pci.ops = &dw_pcie_ops;
++	stm32_pcie->pci.pp.ops = &stm32_pcie_host_ops;
++
++	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
++	if (IS_ERR(stm32_pcie->regmap))
++		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
++				     "No syscfg specified\n");
++
++	stm32_pcie->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(stm32_pcie->clk))
++		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
++				     "Failed to get PCIe clock source\n");
++
++	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
++	if (IS_ERR(stm32_pcie->rst))
++		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
++				     "Failed to get PCIe reset\n");
++
++	ret = stm32_pcie_parse_port(stm32_pcie);
++	if (ret)
++		return ret;
++
++	platform_set_drvdata(pdev, stm32_pcie);
++
++	ret = pm_runtime_set_active(dev);
++	if (ret < 0) {
++		dev_err(dev, "Failed to activate runtime PM %d\n", ret);
++		return ret;
++	}
++
++	ret = devm_pm_runtime_enable(dev);
++	if (ret < 0) {
++		dev_err(dev, "Failed to enable runtime PM %d\n", ret);
++		return ret;
++	}
++
++	pm_runtime_get_noresume(dev);
++
++	ret = stm32_add_pcie_port(stm32_pcie, pdev);
++	if (ret) {
++		pm_runtime_put_noidle(&pdev->dev);
++		return ret;
++	}
++
++	reset_control_assert(stm32_pcie->rst);
++	reset_control_deassert(stm32_pcie->rst);
++
++	ret = clk_prepare_enable(stm32_pcie->clk);
++	if (ret) {
++		dev_err(dev, "Core clock enable failed %d\n", ret);
++		goto err_remove_port;
++	}
++
++	ret = dw_pcie_host_init(&stm32_pcie->pci.pp);
++	if (ret)
++		goto err_disable_clk;
++
++	if (stm32_pcie->wake_gpio)
++		device_init_wakeup(dev, true);
++
++	return 0;
++
++err_disable_clk:
++	clk_disable_unprepare(stm32_pcie->clk);
++
++err_remove_port:
++	stm32_remove_pcie_port(stm32_pcie);
++	pm_runtime_put_noidle(&pdev->dev);
++
++	return ret;
++}
++
++static void stm32_pcie_remove(struct platform_device *pdev)
++{
++	struct stm32_pcie *stm32_pcie = platform_get_drvdata(pdev);
++	struct dw_pcie_rp *pp = &stm32_pcie->pci.pp;
++
++	if (stm32_pcie->wake_gpio)
++		device_init_wakeup(&pdev->dev, false);
++
++	dw_pcie_host_deinit(pp);
++
++	clk_disable_unprepare(stm32_pcie->clk);
++
++	stm32_remove_pcie_port(stm32_pcie);
++
++	pm_runtime_put_noidle(&pdev->dev);
++}
++
++static const struct of_device_id stm32_pcie_of_match[] = {
++	{ .compatible = "st,stm32mp25-pcie-rc" },
++	{},
++};
++
++static struct platform_driver stm32_pcie_driver = {
++	.probe = stm32_pcie_probe,
++	.remove = stm32_pcie_remove,
++	.driver = {
++		.name = "stm32-pcie",
++		.of_match_table = stm32_pcie_of_match,
++		.pm = &stm32_pcie_pm_ops,
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
++	},
++};
++
++module_platform_driver(stm32_pcie_driver);
++
++MODULE_AUTHOR("Christian Bruel <christian.bruel@foss.st.com>");
++MODULE_DESCRIPTION("STM32MP25 PCIe Controller driver");
++MODULE_LICENSE("GPL");
++MODULE_DEVICE_TABLE(of, stm32_pcie_of_match);
+diff --git a/drivers/pci/controller/dwc/pcie-stm32.h b/drivers/pci/controller/dwc/pcie-stm32.h
+new file mode 100644
+index 000000000000..387112c4e42c
+--- /dev/null
++++ b/drivers/pci/controller/dwc/pcie-stm32.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * ST PCIe driver definitions for STM32-MP25 SoC
++ *
++ * Copyright (C) 2025 STMicroelectronics - All Rights Reserved
++ * Author: Christian Bruel <christian.bruel@foss.st.com>
++ */
++
++#define to_stm32_pcie(x)	dev_get_drvdata((x)->dev)
++
++#define STM32MP25_PCIECR_TYPE_MASK	GENMASK(11, 8)
++#define STM32MP25_PCIECR_LTSSM_EN	BIT(2)
++#define STM32MP25_PCIECR_RC		BIT(10)
++
++#define SYSCFG_PCIECR			0x6000
+-- 
+2.34.1
 
