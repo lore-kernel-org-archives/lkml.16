@@ -1,111 +1,122 @@
-Received: from fhigh-b8-smtp.messagingengine.com (fhigh-b8-smtp.messagingengine.com [202.12.124.159])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0679D268FC2;
-	Wed, 23 Apr 2025 10:49:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.159
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5727526B0B6
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745405372; cv=none; b=q6z7XaaYLMcIxRSL4i+s6/TZ2Yj31/ppQww+UBnTKdb+RuJn37Ds/bf0SMIcXo1T6Umvexe0WRcVztnplx7QERSGTwQDGWK5XLf8kE4ihRcvZSxHSDi2Onk/4fGahG0FKmiudo48kakqvn51SMTdgcWrvN3St+cPvUDTe88wNFI=
+	t=1745405524; cv=none; b=BlziLgjU7iYqJDx0eJEsDHZkaJoxZGV6XKmlOLrgTBizZPliQeJbQdmBdJYTCHqn4OlmoCgI2nhuXFpyZb5i/ibrsnqfHOtbvOnqdaOALZXFV4LtjrEQXLzquJ3lXPvkLskMovG/le/DjmhE/cWDvZ0PkD9BOVE9/72Zz0v5ENs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745405372; c=relaxed/simple;
-	bh=GZW5rZ92n5nSfDahO/HbWsl9vTtzX0nsXwTMgd7hG4E=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=mmJ4nnOiCJkjDhwAkWSgxAZQrj6PVMWw1nt2t4cuRNeJhrQz7pA17AbXJyfPV8qyz/uGhsRRXiOSIoroqBKZ0nJXzlDO5v26BcgMB+v9FZ6+H7/RHiic48Y2uXj5lzy6XsNf+pEuMfKan20qetMfQRR8Ej/d1oRbE4wRH02uN9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=ws6+6zNd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=J8Z6rLJA; arc=none smtp.client-ip=202.12.124.159
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1745405524; c=relaxed/simple;
+	bh=2F36LOlrnYgPW+20PAv1FMuxvBNKqoBjcgw/bp9pnBw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HeQOo03xYezl+0uQznQu3mHjxLTUC+2jiHE+ryLTIjDp7hRzXIfeGFp52w4bAJGI7QzEDCr0tErpb8jDRbkmQhx0D2PJIF+OoDeZSg+3OAa02hg4lF1E81xfHPF9QkA2Dj8H5qD/eS+4e1WNUvqaiOoWztvp8guQuei1QR0Cr+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=F+wDET03; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="ws6+6zNd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="J8Z6rLJA"
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id C08482540234;
-	Wed, 23 Apr 2025 06:49:27 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Wed, 23 Apr 2025 06:49:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745405367;
-	 x=1745491767; bh=dgGNq7d0G1/PWhPlhLSXNkc2S9AqH2jVe/cjv1rl06o=; b=
-	ws6+6zNdJ1sSDTMpM2qvSx8JvAre2XkqW59mo8j9MhmwGoYH8a9Nt27t6DF6keyL
-	n3Qr1LgPgCOj6vhMfHyWM/FkbnqpUjTYpscQWq/d6leawaHRxnE1gnrG5MT8XQfx
-	xlzwahI+kqPPV3BTQo/f5FiezF6b1ODzuZ/x4hP1npE8cEmu9Ym7BVYaMX0XVzJA
-	IOFe3Ck1+N3HnNLA4IwafA0o9lvb0erI1Y+x2cxDPXLNc7kjEw107F9pER+fkif4
-	waUrcR/XTxFAJHFrO0pKVCdfmjMfmvOeema524nsPirzOpCcCj8CU4ncnLg2zIBG
-	0Z5sq3CkA40IS90cJYXfvg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1745405367; x=
-	1745491767; bh=dgGNq7d0G1/PWhPlhLSXNkc2S9AqH2jVe/cjv1rl06o=; b=J
-	8Z6rLJA3e8JcXS20AItgtZiqhot7R3nmOtCK9Wp2fd4fB9LijU7bUmuzcVZgIAp/
-	QttPgRoSA7a2sM14TEFWIBcPxwl3oIkuCKT/porVnaWZYKikP4Z6+uGLweozs3mz
-	P7dBcdnSTMQieWq0J5Mqao2Md0CZTpvzYVv1lRbYn7j0N1vIWXt1N3TbMCDPOkAg
-	Ugl9C/+N84UtVYK8RY1kpg3j4VKs8DdiBRNyTNrXZrPotcAPuupZk/MONkOG25pD
-	1co8ye87Nf01d+u5Ob2Hn5jicVHgp1D4jIvaIHPrfv438C89nngj1C9xC6jySosP
-	uVFPqtsnRQ3cCkvfx9hsw==
-X-ME-Sender: <xms:tsUIaIQYu7QRxOgkwWGNRF-5e2DOim6wkFYAVELHFlpHC3bzaihDOg>
-    <xme:tsUIaFwkVmUn92Fett6rnEr5IrYP93TuhpYhpGtLEaVAyYf3fFiznZhOYqfIPjg55
-    HrHk6qeeT9kxnUJAPI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeigedtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    kedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoih
-    hssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghnughirdhshhihthhisehkvghr
-    nhgvlhdrohhrghdprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghroh
-    drohhrghdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhr
-    ghdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrgh
-    dprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhn
-    ghdrtghomhdprhgtphhtthhopehkvghrnhgvlhdqjhgrnhhithhorhhssehvghgvrhdrkh
-    gvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdr
-    khgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:tsUIaF17iM6FlVDB1UVi6Qr5JrTu-R1HTnQe3XIGGuCI2BN3DJLfPA>
-    <xmx:t8UIaMCAkTPHlbIt2jbfwE5qOidtp8i43a1EU9SyVdVD1G_kcPtmEg>
-    <xmx:t8UIaBgW5Bv4-go_IzC4TqU5T7d_O7JO_xU-oH900KaI1MLAiY0xjg>
-    <xmx:t8UIaIqU_XoetQemU-l1YfVhyjt4SbWsmEAyp60-8xrfgzV42Twmnw>
-    <xmx:t8UIaDfOfXyPES32LeAJf0bmfXbKaBngnEur1D6l2jAtlwGzbRvK8s6l>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id DDFB42220073; Wed, 23 Apr 2025 06:49:26 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="F+wDET03"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac339f53df9so1055734166b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 03:52:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google09082023; t=1745405521; x=1746010321; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zFO2mmTugaYerF/bVgaeCak/CfVfIQBIS6clL7bKh/Y=;
+        b=F+wDET03+W6kL+nT3x6gKvGTlS3O2sQb8t9udKdEDmi6cf0GapHa7ONs2TLBPb6+Vm
+         eBcs339yY5hwqf6USiauefJmy9xTbKGkoX9Z70qlF/irS9S3s+T101MbzOmGs6W9JzVx
+         h5xNB2MdvjnABbCJDVwyhsmAqbt1L0kJ7EyEh8ZzXU2y+7UxzCnVR84NhgrRhLIdV8gw
+         +aWWI9oGsqNMFn4OuDN3T5c/gT5dsY26Sgu5fQoIYomUofifl3bzegVi+5TbQKJHUHAZ
+         gbFdH9GyjHlSmhntbwapCEFlIjYUGQar0Nq3eigQDtum4El38+wuLz5zUR+KA34yKTKo
+         o0gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745405521; x=1746010321;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zFO2mmTugaYerF/bVgaeCak/CfVfIQBIS6clL7bKh/Y=;
+        b=D2Vq74FxOZJbBR0bzPIntMI8Ddh7jTw+eyhrNUNn7WpXzVzHFjJ1+YFfMNhMObtoJd
+         cWU+qsd3mnhlHWdg7VvB9xo5U0S2q25Se9XwG/BsR4xjQ7/mFJUGpkVOJ5YVEdc5hUgH
+         zjqk5W4oJXEAF0UXouuUIEfYkGd8VXhAyy/dnK2wuMbCc9gSI1LWP5NuXyKb9bn8WxOd
+         7QrfEDHoNENHQno/CWgXudUrOUx0rCkrHejRNe5nU5kpqt0c0X+V8BpPLEXLbKvubWqo
+         ar9Rue4f1nqcFd1bJ20y02yuQx5juaS9CY+rkuT4K7Vwz2T87FmJ7d+2JJn2jFPxXyxf
+         fOQw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5FoCR8GunlGAJTcXhw9ET1MYV8wCKoM1LUVizxSEBWWQWOdNiTy7kbiTplSlLY94rJkoB+2np05E6PgU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCVX3/VFNp5IXxtgpFPhR8zz+csTpvFpTTZ73ASjDcQuC/OV2V
+	dOQuktAtiXGJJDlGBbQghkzCzrPFaUpGkxcmtv0TsUOuuQXTAg/tcEUfyWmP1asLFKdYrOLD6jP
+	UHC3Tk2P5+ZXw1nPBQblJZimc+jVfGtaFsEFzgg==
+X-Gm-Gg: ASbGncvnmD+kFTue+H6h6nmO3TDbmzDzl0yyeyjWdKMDJrCifUUDmAmWMSipuzhOCYr
+	2+8yH7JwrBVvRQPALTvLPQs0BtFyOkIAqy2mPYtHZj7pci5CW3Rls+8ztkdogYno0oBzdwErDCA
+	pwkCTIvVIAEB0vOze7eASFRY7rLww9hNerBOMRXQ==
+X-Google-Smtp-Source: AGHT+IE/6pYUsMYMqhI2sEYVYX9i4m5CojtOxAROai1tsh+YLxDn4eQAJh180vtKXL3rYE+ymaXy85dh6zaYjIY7VKo=
+X-Received: by 2002:a17:907:7e84:b0:ac7:6222:4869 with SMTP id
+ a640c23a62f3a-acb74dbf2demr1572534466b.37.1745405520636; Wed, 23 Apr 2025
+ 03:52:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T775286d0781a9516
-Date: Wed, 23 Apr 2025 12:49:06 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Romain Gantois" <romain.gantois@bootlin.com>
-Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
- "Andi Shyti" <andi.shyti@kernel.org>, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Message-Id: <48972165-8cda-4db4-a5d9-299854afb112@app.fastmail.com>
-In-Reply-To: <aAijRtGLzKLdwP0-@stanley.mountain>
-References: <aAijRtGLzKLdwP0-@stanley.mountain>
-Subject: Re: [PATCH next] misc: ti_fpc202: Fix off by one in probe()
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+References: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
+ <dd2db843-843f-db15-c54f-f2c44548dee3@huaweicloud.com>
+In-Reply-To: <dd2db843-843f-db15-c54f-f2c44548dee3@huaweicloud.com>
+From: Matt Fleming <mfleming@cloudflare.com>
+Date: Wed, 23 Apr 2025 11:51:49 +0100
+X-Gm-Features: ATxdqUHvdxhkEJsQjh9v6htOzoAzXGkLqhK6uEUE3jiVW8bPlhzCFKk6UwnvJNs
+Message-ID: <CAGis_TWtWMK93nVBa_D_Y2D3Su8x_dDNwNw9h=v=8zoaHuAXBA@mail.gmail.com>
+Subject: Re: 10x I/O await times in 6.12
+To: Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-team <kernel-team@cloudflare.com>, 
+	"yukuai (C)" <yukuai3@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Apr 23, 2025, at 10:22, Dan Carpenter wrote:
-> The "port_id" is used as an array index into the struct fpc202_priv
-> priv->addr_caches[] array in fpc202_write_dev_addr().  It's a 2 by 2
-> array so if "port_id" is FPC202_NUM_PORTS (2) then it's one element
-> out of bounds.  Change the > to >= to fix this bug.
+On Mon, 21 Apr 2025 at 13:21, Yu Kuai <yukuai1@huaweicloud.com> wrote:
 >
-> Fixes: 1e5c9b1efa1c ("misc: add FPC202 dual port controller driver")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
+> Can you drop this expensive bpftrace script which might affect IO
+> performance, and replace __submit_bio directly to __blk_flush_plug? If
+> nsecs - plug->cur_ktime is still milliseconds, can you check if the
+> following patch can fix your problem?
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+Yep, the below patch fixes the regression and restores I/O wait times
+that are comparable to 6.6. Thanks!
+
+> diff --git a/block/blk-mq.c b/block/blk-mq.c
+> index ae8494d88897..37197502147e 100644
+> --- a/block/blk-mq.c
+> +++ b/block/blk-mq.c
+> @@ -1095,7 +1095,9 @@ static inline void blk_account_io_start(struct
+> request *req)
+>                  return;
+>
+>          req->rq_flags |= RQF_IO_STAT;
+> -       req->start_time_ns = blk_time_get_ns();
+> +
+> +       if (!current->plug)
+> +               req->start_time_ns = blk_time_get_ns();
+>
+>          /*
+>           * All non-passthrough requests are created from a bio with one
+> @@ -2874,6 +2876,7 @@ void blk_mq_flush_plug_list(struct blk_plug *plug,
+> bool from_schedule)
+>   {
+>          struct request *rq;
+>          unsigned int depth;
+> +       u64 now;
+>
+>          /*
+>           * We may have been called recursively midway through handling
+> @@ -2887,6 +2890,10 @@ void blk_mq_flush_plug_list(struct blk_plug
+> *plug, bool from_schedule)
+>          depth = plug->rq_count;
+>          plug->rq_count = 0;
+>
+> +       now = ktime_get_ns();
+> +       rq_list_for_each(&plug->mq_list, rq)
+> +               rq->start_time_ns = now;
+> +
+>          if (!plug->multiple_queues && !plug->has_elevator &&
+> !from_schedule) {
+>                  struct request_queue *q;
+>
