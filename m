@@ -1,50 +1,49 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4959D293469;
-	Wed, 23 Apr 2025 19:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4E5293469;
+	Wed, 23 Apr 2025 19:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745436859; cv=none; b=dvWDdagBxiJKDDUUfS/GGFIEQ6MO/fWRZDljdys+tin7eNXmqSkikRCLJPOdLXMG/Cu5ejeUQMywws6SVMm+AEP1BPeC4stvl1PuHAQs2CZldDkafaNjcyS3GyT1b4eP5BWLsHjjhJa+roUB4d/np0Br6fim21Gx2gUqE5MFzvQ=
+	t=1745436867; cv=none; b=SALRyJvIQu6//9v7YIf/xEaslkdJsyPx6+uYUrX9tF9usmrFLAVRwBU9J2O68pk51ZU2sq1YtGike78qY0qLnmJjVU2n1re/7W7F5+58R7NLMgaP4PDYL+hi2BEvkw2lBJt26NXsLL9O6gAPaEDkVmj+9NmxiaW+kFZEQeAt3Ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745436859; c=relaxed/simple;
-	bh=ljh29i1lbPV8eBJD87ZuVb9gALLN2MJpzbh2M/ZeJdw=;
+	s=arc-20240116; t=1745436867; c=relaxed/simple;
+	bh=17FHpN7OPLpSTxhSQ3ax9kT0w7kb6PuiXwGLVtxjFiM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=TLNU2f3T7rjgWcTt9Pj9sJ3Fb0D3sbsPfds48keq2/kv8nntE9pA/Xcj3dGzEmvePmNOZUQ3VGTs/C8Nf2duXBTnboqt1n/e+seKpIVh9Byhpv+ckc5nhkJewohTXF7DY0mXXSEWSP64PLRA9nNIZNhpFJo4urVsEVrczkGtCME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IrdmOAwT; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=MF1PGyMWbCfB0u8BW3JQFMhI+1lPaTD5cET4gEHtQ1oihDyQBYCPwSthAkYn0LvmBBANMwv74281X28BWApxcdRsKZPElWV1ipdtTJVOWbFmyRqg6xf/5qSsYrsAzsL2vz4oUHN16FCTYJJ+EVr1A/Wgu3ZhAoL/uYismVlYWio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Q+b7naO3; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IrdmOAwT"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAbnEb016102;
-	Wed, 23 Apr 2025 19:34:15 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Q+b7naO3"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NApUVW014055;
+	Wed, 23 Apr 2025 19:34:23 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lS5I/aeA8KBq163Rb4Fwi1w1uuJfq6wc7C6e0yYkH8I=; b=IrdmOAwT1g+Zai5x
-	53yFLph5CNaMYNIwW+fT6x61uHID59gYHcL/szu1KxHv9BrhwsbswGSiGeIkcpTW
-	CwFiTRkktCoa5OF+SC5SAgBRuxwRYHiNHaVQoWmHwgiyVNOwrvS8HR1lwGJCDhU8
-	ZQj4aDbQc0IZ3zIZgfBU6c3ks2zczADZZ9+teygFvFkd1DYdSXukFyXFgaB58sRk
-	x2YbKopJFxPMbhGSh7CXQ3PfXPE4Z+diBBtsQwraFEk7QJCCbp2GO456wP0Wm8Fm
-	GaTLMdiGgorR+18tY/beWsDri2GWzH8wfeJQiPwJdogJ1h0ktS8WSIbQy4GJbNsZ
-	ZgX6AA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0b8g9-1
+	OHM1+ecweGIUaxejqjdHohSzi4ggVpGgb90+CFG/GNw=; b=Q+b7naO3QNhTaBDy
+	k9scdr52sjdfjFfd3gzmsaFbT1jCFMu32Is2LkTe0lxEucqmB/yiI7qtOFs4upA1
+	YpN0lVD57Zbr5P3js9AUv/dBfHQFz4D9r6onJkQWCYe/4Bk1H4ligtZTepS8NRqy
+	PBlFOpHaao4qSI5DnF5SCQcL7hei2aCI7cUOC7c0VQla/bM2crOb+efWkYrlqAjK
+	GmBCoeJ3Tqfw/vOhmtK/+bcUWWkUk+ug+5YpS+6B5qJijQ6gOJonRXQFI831ZUjU
+	oxreQ1p7CYhuQZSWCGP8lkT6CxAHCxwOYZGw1Xmgy4/CKpQ3poI34k3jaSGn5z0n
+	ZuNe2w==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3b6he-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 19:34:15 +0000 (GMT)
+	Wed, 23 Apr 2025 19:34:23 +0000 (GMT)
 Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53NJY27F000921
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53NJXsmt012930
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 19:34:02 GMT
+	Wed, 23 Apr 2025 19:33:54 GMT
 Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
  nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 23 Apr 2025 12:33:58 -0700
+ 15.2.1544.9; Wed, 23 Apr 2025 12:33:50 -0700
 From: Vikash Garodia <quic_vgarodia@quicinc.com>
-Date: Thu, 24 Apr 2025 01:03:34 +0530
-Subject: [PATCH v4 4/5] arm64: dts: qcom: qcs8300: add support for video
- node
+Date: Thu, 24 Apr 2025 01:03:32 +0530
+Subject: [PATCH v4 2/5] media: iris: fix the order of compat strings
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250424-qcs8300_iris-v4-4-6e66ed4f6b71@quicinc.com>
+Message-ID: <20250424-qcs8300_iris-v4-2-6e66ed4f6b71@quicinc.com>
 References: <20250424-qcs8300_iris-v4-0-6e66ed4f6b71@quicinc.com>
 In-Reply-To: <20250424-qcs8300_iris-v4-0-6e66ed4f6b71@quicinc.com>
 To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
@@ -72,124 +71,68 @@ CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
         Vikash Garodia
 	<quic_vgarodia@quicinc.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745436821; l=2668;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745436821; l=1123;
  i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
- bh=ljh29i1lbPV8eBJD87ZuVb9gALLN2MJpzbh2M/ZeJdw=;
- b=7MHCn4ZM12YxUpxVaAPOUZ+yuHIbVizbvEuOnsq73wpZH1C6wGVh7DNI8Nm5mYyC3k6UH2Q0W
- WrHoS0W4Qx9Cbcss1UJ39hzPFFhhoK+KEk9qRSyrJvSJlqSC07rkfYl
+ bh=17FHpN7OPLpSTxhSQ3ax9kT0w7kb6PuiXwGLVtxjFiM=;
+ b=7M8iX4PGZe2vJmlTNkmCPT+r1hAaALj5p1QTCLj82x3SJiu+LGgBG2SEneYag4r2CmX1EpJQY
+ 3YbaOATXnwtB8c2IDo1FH2Cw4iEwv/upfT2Q+ZUpE8WoDtsDMO+yNrx
 X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
  pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: U1tIRKJKWyXKs6pYuCLlFyW4ntaxsoq9
-X-Proofpoint-ORIG-GUID: U1tIRKJKWyXKs6pYuCLlFyW4ntaxsoq9
-X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=680940b7 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=gsePXWo3U9w2I85xqPwA:9
- a=-MVX0H8OmFgSA6gq:21 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDEzNSBTYWx0ZWRfX879a52zKVzyc 9dIIvlKCf3lnXw01b5vgatFLyB4J4iFO6vC6gtX0+IJa4RBsv+Jo12x3jLPQWwhV7TIxB1IPn+e fjBq9XrvdddTYUfa5xaM8nABYaoej5fTWNQ/0DdwmWcKudR7QvSvkPI+NebPhpSZuqfdKTbfFCw
- nWhfttB8n/82uW04g1Sg1DWk0dRiCJIPNMZAEkNbxy6Vp7Xh7HCeCpX6bnv+69VSYR3ug2+LjMg YcyvW0iikxRTYgmOL4E31+bxB2byeoNCePjFl39g8M9Ct5wr77sldB4oOcJpb/zipmbhf7veksC qPVhjt3Ga0LnmcjzV/WuNf2U799Zx7yWUNIjw8aBNsiVxkVnmIMlNBwT/Tku8Rf3Twz1vqqWAJv
- 9rfFd3JdnQ7WDRRv9nb6Ba50+RsVHlZ8G7H3DXoHIQ+wj6L9B/dpZJ88g2Hqsch1DYbzch0B
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDEzNSBTYWx0ZWRfX0IDepBKhTLmu hiqD3KVE6r8dmjNtTZxPBVxMm9hhFt5VW8rmEdkYz82H3TETPJLyN8192k0gzZQ3Di3eEnI/3Ur OUSShnayJ7Fz8Fa/qF9QTutz7IkYfboe7flwQPLEk1Qhbf1QWZOUkB5W9nLZnj9h5s77RUraaUt
+ RKsMIpIlsX7bDwRPhxKYRZ96jZfyM9BLV9+dggA2Apxn7JCUJzam8h/yw9wpICXxCVfGN8oEXjr sN2LMXqC3s/5of6Tbvw68jkY6nucIcBJB0QL8DeIsVb8e+41GPnuRQa9hRYZW048akE7sCPsc2L cscgACmElZi4qvCe9Xp7t4E9tlOi7TZJFUYUJIVnPt7I4JseL6dM4pVnkKkICDKOxafvLV7MwvG
+ kG3PgQaPmLnqtW1mDRcCpHqhfAnWxhWLDn0bVX8+tkv/joe8uYjbIojhHZsp7XGbB4YiwScd
+X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=680940bf cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=d5lHoUSSCM4tM_bkGUsA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: mGUYiM-W_9V2bIYdn1eCO-jenb58LU0r
+X-Proofpoint-GUID: mGUYiM-W_9V2bIYdn1eCO-jenb58LU0r
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-23_11,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504230135
 
-Add the IRIS video-codec node on QCS8300.
+Fix the order of compatible strings to make it in alpha numeric order.
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/qcs8300.dtsi | 71 +++++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+ drivers/media/platform/qcom/iris/iris_probe.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8300.dtsi b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-index 4a057f7c0d9fae0ebd1b3cf3468746b382bc886b..158779434f610b10ea82d2cdae08090a7a4402de 100644
---- a/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs8300.dtsi
-@@ -2929,6 +2929,77 @@ usb_2_dwc3: usb@a400000 {
- 			};
- 		};
+diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
+index 7cd8650fbe9c09598670530103e3d5edf32953e7..fa3b9c9b1493e4165f8c6d9c1cc0b76d3dfa9b7b 100644
+--- a/drivers/media/platform/qcom/iris/iris_probe.c
++++ b/drivers/media/platform/qcom/iris/iris_probe.c
+@@ -335,16 +335,16 @@ static const struct dev_pm_ops iris_pm_ops = {
+ };
  
-+		iris: video-codec@aa00000 {
-+			compatible = "qcom,qcs8300-iris";
-+
-+			reg = <0x0 0x0aa00000 0x0 0xf0000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
-+					<&videocc VIDEO_CC_MVS0_GDSC>,
-+					<&rpmhpd RPMHPD_MX>,
-+					<&rpmhpd RPMHPD_MMCX>;
-+			power-domain-names = "venus",
-+					     "vcodec0",
-+					     "mxc",
-+					     "mmcx";
-+
-+			operating-points-v2 = <&iris_opp_table>;
-+
-+			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
-+				 <&videocc VIDEO_CC_MVS0C_CLK>,
-+				 <&videocc VIDEO_CC_MVS0_CLK>;
-+			clock-names = "iface",
-+				      "core",
-+				      "vcodec0_core";
-+
-+			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
-+					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
-+					<&mmss_noc MASTER_VIDEO_P0 QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-+			interconnect-names = "cpu-cfg",
-+					     "video-mem";
-+
-+			memory-region = <&video_mem>;
-+
-+			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
-+			reset-names = "bus";
-+
-+			iommus = <&apps_smmu 0x0880 0x0400>,
-+				 <&apps_smmu 0x0887 0x0400>;
-+			dma-coherent;
-+
-+			status = "disabled";
-+
-+			iris_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-366000000 {
-+					opp-hz = /bits/ 64 <366000000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>,
-+							<&rpmhpd_opp_svs_l1>;
-+				};
-+
-+				opp-444000000 {
-+					opp-hz = /bits/ 64 <444000000>;
-+					required-opps = <&rpmhpd_opp_nom>,
-+							<&rpmhpd_opp_nom>;
-+				};
-+
-+				opp-533333334 {
-+					opp-hz = /bits/ 64 <533333334>;
-+					required-opps = <&rpmhpd_opp_turbo>,
-+							<&rpmhpd_opp_turbo>;
-+				};
-+
-+				opp-560000000 {
-+					opp-hz = /bits/ 64 <560000000>;
-+					required-opps = <&rpmhpd_opp_turbo_l1>,
-+							<&rpmhpd_opp_turbo_l1>;
-+				};
-+			};
-+		};
-+
- 		videocc: clock-controller@abf0000 {
- 			compatible = "qcom,qcs8300-videocc";
- 			reg = <0x0 0x0abf0000 0x0 0x10000>;
+ static const struct of_device_id iris_dt_match[] = {
++#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
++	{
++		.compatible = "qcom,sm8250-venus",
++		.data = &sm8250_data,
++	},
++#endif
+ 	{
+ 		.compatible = "qcom,sm8550-iris",
+ 		.data = &sm8550_data,
+ 	},
+-#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
+-		{
+-			.compatible = "qcom,sm8250-venus",
+-			.data = &sm8250_data,
+-		},
+-#endif
+ 	{
+ 		.compatible = "qcom,sm8650-iris",
+ 		.data = &sm8650_data,
 
 -- 
 2.34.1
