@@ -1,42 +1,78 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C6A19E966
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:45:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6B9288C8C;
+	Wed, 23 Apr 2025 16:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426731; cv=none; b=dSGenGm/1Q9kDrxEoQIDP0hfy1sRDzbodZQaq/l3M3nahRAb+CteRFg4mnjvy+p3wrtHVyWfxNkowbq4vzsToCRf+oQ8JAAgDQyvTi9vsu8oMsrV7jhPM0Pxs7cjitcSuCWiYvbUmp03w6dQgYqc+2eS6qnfClRFzO0lbGCrVTQ=
+	t=1745426803; cv=none; b=gKrR7MvR8ieSn614BF1H76qPP6jqQFmdKZfzJJKpNgQpARaxSf+TI7cydZIq/eeDN1prYxQRfUJKcrkRB+cC45bUBS/HC9z0puOKqJm5h61x9op/3+F67LiemkOFMWWmQGXns1ALfaPgOev0qxARO59kpG4EPvEVR12W6OTmn/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426731; c=relaxed/simple;
-	bh=xqNKIkniXMZ2Bue/bRImQv3X6cquBQMuJT+ZQkIdRs0=;
+	s=arc-20240116; t=1745426803; c=relaxed/simple;
+	bh=wiFJ793Wnu9Lov6l//YMxINYe6XWlbwpVqBwV5uHa9s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SMyet0faa02GPrPsxN3vcooFCQGVcLo3amhbmFKeFfWN8fe7EIn5O9hPAm6nxujFzlpZnOrks4sYZuZiILuHKw36PEQZK4nTIU4Zd4RGvahwntfxttJjqxf0Lko83xY3NkrHzSRNucW2hTvcPwMNJ4tU2jkhBY1e3T9altVsiz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=CvpUDcyj; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=GUh2rGFpDPRrt2yVySP70hkFnm33o8vMGskomb/Q0wdzuMd7sAhSiorJkHq+LDcmObv7kConHN4DA+v4c0wM5lvQha3T60QL1QUlssWf1hfUBY/m8kvMeJRxhClcg2EmmbBCM3i5AQjFOQTjfQ6NmP/+BsmBun5WCAoT200+iEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dfDkJGUW; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="CvpUDcyj"
-Date: Wed, 23 Apr 2025 12:45:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745426726;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cwssp7L2YuKXDB1wtg97P/TTd8hGa1LcOFzKxxSHNeI=;
-	b=CvpUDcyjUn7Rnm9crssuzquRN6bp2N+iYO1ZrLUqYuShSStd+B4F5EOqHutHpwBChYolBV
-	1M23YssKmkRZJ804rGUTeWN5dudeSmkVY/IMEeqepGZsP4bHW+dZrwmYLKB/uw248XdpvW
-	RcwJnkX7s/RWoXcN7/xDu13i34O2/qU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: I Hsin Cheng <richard120310@gmail.com>
-Cc: syzbot+549710bad9c798e25b15@syzkaller.appspotmail.com, 
-	bfoster@redhat.com, linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	davem@davemloft.net, herbert@gondor.apana.org.au, linux-crypto@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Subject: Re: [PATCH] bcachefs: Fix unit-value within btree_bounce_alloc()
-Message-ID: <ur4a24w2wb3euh3ej7ybeqnvmqyhzmqp2wwsjtilh6mfetv45l@qlxs3vggfq5h>
-References: <000000000000736bd406151001d7@google.com>
- <20250423163718.194316-1-richard120310@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dfDkJGUW"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7376dd56f8fso8129203b3a.2;
+        Wed, 23 Apr 2025 09:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745426801; x=1746031601; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WVT+rsq7u5oPOFTHY3CgYIi+sPXsVCdah/RCqBk3XIU=;
+        b=dfDkJGUW7InkOWg8YwhD/xlFoZ1dPztlal/4M92eLI8QzngELu3iFS0RQ3GY6zLaxz
+         XtQKGOBKVf3yAyiKkE6bXVMl76lzxJywbHssbNkz2s6Zy/QpZUhgaIzYL+l1ug3UmKDT
+         YVE/X0GwMkC1dIsoytLwM0QGADK6Hz3t+mDVigP+gD/Y2dhSazIrCSvH2UErgxJsp47D
+         EmFGrxqAj3sZLkq/w7Y9B/Kt7aNefYC+Iz9cJgdzW+5dywDc+gOMGK+F6xTlrRBn4M6q
+         BjF3vpPIkmBsT8fE4VS0nSJGCdVL3MYlAJUgfAk9rni1wpXOgWEA3/7d+DAWBaAcuBUg
+         nmew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745426801; x=1746031601;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WVT+rsq7u5oPOFTHY3CgYIi+sPXsVCdah/RCqBk3XIU=;
+        b=A5e4ELSAFTFH9B03jUJvtZ9aTQif4IpTfgH5M9pm5RjxDoO4k7bGvOjQ2GRJLfXXTE
+         ynSGF0rYvyfRMACBvzAJpoNZ+ik7gMmD3csPE/IR3SVJT35DVZ04CBHzKLTQOxsbV/ff
+         SmsPLoFRddU9nhTJ3/O153InXrFI2qztRdNsEuGN27UAV15TKsj2YHzxFenOCzadFovy
+         27HAAaEKP4UAQvEuQYPPGxQVe1i/goM8FckU+gPc5mjJodn/AaQhf1ixlm8c/BFz0R9u
+         OrawlUpJF0nxSGxlQgXgJqOVgY6PTbF7UaxvGDVh5imASBCViBz1ZJIL4fOjZiPSxXa+
+         lgNA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQQ95B7PFpGXtHpuN0L9vtiTVgwhL6cQF7fdzhe82A6BZIC4xutbmUZn1jO0jBLIoi5PFs0DexMjqk3d4=@vger.kernel.org, AJvYcCWINTb6yr4Q7Zjc5cbIXMdn8yIEbo0n54cbUvAJAid/tOhweVrXVedPFUIy+f69uYaAO5t6h93eFOcERoTTKlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvbUH662uIPkaPGvLNszbUvkqzTgysl9R83vQaey5Ts1pMq3EJ
+	AcMMtpIwAOMp2gHl730RF+Bp7dsU7QLyy++rkGqjiQrkKfTEQT1K
+X-Gm-Gg: ASbGncs9ERl4bOsQVW2t6aJMwSrL2CLDt1rE13hP1Kox7s6vVWrbVtJQo4CnyLp0dyZ
+	i4HW4tQTI/dh1hIEjAu63P/PzkUU7sGBPm4sD7dUI8miGuMsv2dl/z057PYv80EO0pBiExkxLI0
+	xeGbFEV2nxlJpJnyNLUzobw/ZiiOY9UNi+mi7rJQSOEalLd3yCw5qs5/UvHSVmgPI4QkuG9teoU
+	YlfSh9lfRm52etG9lBi6uJMs7wgL85ES9vCaK3I5qZw+dZVBdC7mb7p1NbO4h1w2jco6mnur9YP
+	jt0ItlRNkWk2lkkhsn3ggMRU1V/kSQ3GPwpReTUQ
+X-Google-Smtp-Source: AGHT+IFjVnlLUmCgSZW8+dFj8PsA2OEylU3Ah1LfifaIsIAM53X2HSa9pVU0mAFegu5Cf/0i7dwv2Q==
+X-Received: by 2002:a05:6a21:392:b0:1ee:d687:c39b with SMTP id adf61e73a8af0-204410572cemr275442637.7.1745426800967;
+        Wed, 23 Apr 2025 09:46:40 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73dbf8bed02sm10762449b3a.29.2025.04.23.09.46.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 09:46:40 -0700 (PDT)
+Date: Wed, 23 Apr 2025 12:46:38 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Burak Emir <bqe@google.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 3/5] rust: add bitmap API.
+Message-ID: <aAkZZd8QRXKejVV0@yury>
+References: <20250423134344.3888205-2-bqe@google.com>
+ <20250423134344.3888205-5-bqe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,147 +81,176 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423163718.194316-1-richard120310@gmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250423134344.3888205-5-bqe@google.com>
 
-On Thu, Apr 24, 2025 at 12:37:18AM +0800, I Hsin Cheng wrote:
-> Use "kvzalloc()" instead of "kvmalloc()" in btree_bounce_alloc() to
-> prevent uninit-value issue.
+On Wed, Apr 23, 2025 at 01:43:35PM +0000, Burak Emir wrote:
 > 
-> Reported-by: syzbot+549710bad9c798e25b15@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=549710bad9c798e25b15
-> Fixes: cb6fc943b650 ("bcachefs: kill kvpmalloc()")
-> Signed-off-by: I Hsin Cheng <richard120310@gmail.com>
+> Provides an abstraction for C bitmap API and bitops operations.
+> We follow the C Bitmap API closely in naming and semantics, with
+> a few differences that take advantage of Rust language facilities
+> and idioms:
+> 
+>   * not all operations are exposed yet, to avoid dead code. This commit
+>     includes enough to implement an Android Binder data structure that
+>     was introduced in commit 15d9da3f818c ("binder: use bitmap for
+>     faster descriptor lookup"), namely drivers/android/dbitmap.h. This
+>     is part of upstreaming the Android Binder driver.
+> 
+>   * API uses Option types where appropriate
+> 
+>   * bound checks are used to treat out-of-bounds access as bug
+>     (hardening). The C operations treat out-of-bounds parameters
+>     as a default case e.g. "not found" which is safe (avoids UB) but
+>     may hide bugs.
+
+Few paragraphs later you say:
+
+> It enables Rust
+> code to be a lot more similar and predictable with respect to C code
+
+If you want to make Rust similar to C (which is good), you need to
+make all that Panic'ing stuff configurable, right?
+
+This is what I suggested originally, and this is the right way to go,
+to me.
+
+There was a long discussion few years ago regarding BUG_ON()s in the
+kernel, and the bottomline for it is simple: the kernel has many nice
+isolating and self-debugging features that help to resolve (hopefully)
+non-fatal errors like out-of-bond access, so we should let it try.
+
+Just halting the kernel helps little, particularly it prevents from
+collecting syslogs and other debugging info. You can check git history
+and see how many BUG()s were demoted to WARN()s, or simply dropped.
+
+So, this is again my suggestion: it's OK to have a hardening feature,
+but the panic should be configurable for the reasons:
+ - robustness;
+ - compatibility;
+ - debugability.
+
+To me, this should end up with something like:
+
+  fn bitmap_assert(bool, msg) 
+  {
+  #if CONFIG_RUST_HARDENING_PANIC && CONFIG_RUST_BITMAP_HARDENING
+        assert(bool, msg)
+  #elif CONFIG_RUST_BITMAP_HARDENING
+        if (!bool)
+                pr_err(msg)
+  #else
+        // do nothing; for the best performance.
+  #endif
+  }
+
+This doesn't look difficult anyhow right? But if you find it
+impractical, you can just replace the panic with printing an error.
+
+After all, this # Panic simply breaks your own coding rules:
+
+  Please note that panicking should be very rare and used only with a good
+  reason. In almost all cases, a fallible approach should be used, typically
+  returning a ``Result``.
+
+>   * better naming convention to distinguish non-atomic from atomic
+>     operations: {set,clear}_bit vs {set,clear}_bit_atomic.
+>     The Rust type system ensures that all non-atomic operations
+>     require a &mut reference which amounts to exclusive access.
+>     Using the atomic variants only makes sense when multiple threads
+>     have a shared reference &bitmap which amounts to the interior
+>     mutability pattern.
+> 
+>   * optimized to represent the bitmap inline if it would take the space
+>     of a pointer. This saves allocations which is relevant in the
+>     Binder use case.
+> 
+> The underlying C bitmap is *not* exposed. This would lose all static
+> guarantees.
+> 
+> An alternative route of vendoring an existing Rust bitmap package was
+> considered but suboptimal overall. Reusing the C implementation is
+> preferable for a basic data structure like bitmaps. It enables Rust
+> code to be a lot more similar and predictable with respect to C code
+> that uses the same data structures and enables the use of code that
+> has been tried-and-tested in the kernel.
+> 
+> We use the `usize` type for sizes and indices into the bitmap,
+> because Rust generally always uses that type for indices and lengths
+> and it will be more convenient if the API accepts that type. This means
+> that we need to perform some casts to/from u32 and usize, since the C
+> headers use unsigned int instead of size_t/unsigned long for these
+> numbers in some places.
+> 
+> Adds new MAINTAINERS section BITMAP API [RUST].
+> 
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Suggested-by: Yury Norov <yury.norov@gmail.com>
+> Signed-off-by: Burak Emir <bqe@google.com>
 > ---
-> syzbot reported an uninit-value issue. [1]
+>  MAINTAINERS           |   7 +
+>  rust/kernel/bitmap.rs | 396 ++++++++++++++++++++++++++++++++++++++++++
+>  rust/kernel/lib.rs    |   1 +
+>  3 files changed, 404 insertions(+)
+>  create mode 100644 rust/kernel/bitmap.rs
 > 
-> Though the uninit value was detected in the context of crc32_body(), the
-> memory was actually allocated in "btree_bounce_alloc()". Use
-> "kvzalloc()" to allocate the memory can solve the issue, and I've tested
-> against syzbot. [2]
-> 
-> If there're any further tests needed to be performed, please let me
-> know. I'll be more than happy to assist you with that, thanks !
-
-See Documentation/filesystems/bcachefs/SubmittingPatches.
-
-And this isn't the correct fix - the correct fix is already in Linus's
-tree.
-
-> 
-> [1]:
-> BUG: KMSAN: uninit-value in crc32_body lib/crc32.c:110 [inline]
-> BUG: KMSAN: uninit-value in crc32_le_generic lib/crc32.c:179 [inline]
-> BUG: KMSAN: uninit-value in __crc32c_le_base+0x43c/0xd80 lib/crc32.c:201
->  crc32_body lib/crc32.c:110 [inline]
->  crc32_le_generic lib/crc32.c:179 [inline]
->  __crc32c_le_base+0x43c/0xd80 lib/crc32.c:201
->  chksum_update+0x5b/0xd0 crypto/crc32c_generic.c:88
->  crypto_shash_update+0x79/0xa0 crypto/shash.c:52
->  crc32c+0xba/0x170 lib/libcrc32c.c:47
->  bch2_checksum_update+0x106/0x1d0 fs/bcachefs/checksum.c:83
->  bch2_checksum+0x3c5/0x7c0 fs/bcachefs/checksum.c:216
->  __bch2_btree_node_write+0x528c/0x67c0 fs/bcachefs/btree_io.c:2151
->  bch2_btree_node_write+0xa5/0x2e0 fs/bcachefs/btree_io.c:2288
->  btree_node_write_if_need fs/bcachefs/btree_io.h:153 [inline]
->  __btree_node_flush+0x4d0/0x640 fs/bcachefs/btree_trans_commit.c:229
->  bch2_btree_node_flush0+0x35/0x60 fs/bcachefs/btree_trans_commit.c:238
->  journal_flush_pins+0xce6/0x1780 fs/bcachefs/journal_reclaim.c:553
->  __bch2_journal_reclaim+0xd88/0x1610 fs/bcachefs/journal_reclaim.c:685
->  bch2_journal_reclaim_thread+0x18e/0x760 fs/bcachefs/journal_reclaim.c:727
->  kthread+0x3e2/0x540 kernel/kthread.c:389
->  ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> 
-> Uninit was stored to memory at:
->  memcpy_u64s_small fs/bcachefs/util.h:511 [inline]
->  bkey_p_copy fs/bcachefs/bkey.h:46 [inline]
->  bch2_sort_keys+0x1b4d/0x2cb0 fs/bcachefs/bkey_sort.c:194
->  __bch2_btree_node_write+0x3acd/0x67c0 fs/bcachefs/btree_io.c:2100
->  bch2_btree_node_write+0xa5/0x2e0 fs/bcachefs/btree_io.c:2288
->  btree_node_write_if_need fs/bcachefs/btree_io.h:153 [inline]
->  __btree_node_flush+0x4d0/0x640 fs/bcachefs/btree_trans_commit.c:229
->  bch2_btree_node_flush0+0x35/0x60 fs/bcachefs/btree_trans_commit.c:238
->  journal_flush_pins+0xce6/0x1780 fs/bcachefs/journal_reclaim.c:553
->  __bch2_journal_reclaim+0xd88/0x1610 fs/bcachefs/journal_reclaim.c:685
->  bch2_journal_reclaim_thread+0x18e/0x760 fs/bcachefs/journal_reclaim.c:727
->  kthread+0x3e2/0x540 kernel/kthread.c:389
->  ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:147
->  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
-> 
-> Uninit was created at:
->  __kmalloc_large_node+0x231/0x370 mm/slub.c:3994
->  __do_kmalloc_node mm/slub.c:4027 [inline]
->  __kmalloc_node+0xb10/0x10c0 mm/slub.c:4046
->  kmalloc_node include/linux/slab.h:648 [inline]
->  kvmalloc_node+0xc0/0x2d0 mm/util.c:634
->  kvmalloc include/linux/slab.h:766 [inline]
->  btree_bounce_alloc fs/bcachefs/btree_io.c:118 [inline]
->  bch2_btree_node_read_done+0x4e68/0x75e0 fs/bcachefs/btree_io.c:1185
->  btree_node_read_work+0x8a5/0x1eb0 fs/bcachefs/btree_io.c:1324
->  bch2_btree_node_read+0x3d42/0x4b50
->  __bch2_btree_root_read fs/bcachefs/btree_io.c:1748 [inline]
->  bch2_btree_root_read+0xa6c/0x13d0 fs/bcachefs/btree_io.c:1772
->  read_btree_roots+0x454/0xee0 fs/bcachefs/recovery.c:457
->  bch2_fs_recovery+0x7b6a/0x93e0 fs/bcachefs/recovery.c:785
->  bch2_fs_start+0x7b2/0xbd0 fs/bcachefs/super.c:1043
->  bch2_fs_open+0x152a/0x15f0 fs/bcachefs/super.c:2105
->  bch2_mount+0x90d/0x1d90 fs/bcachefs/fs.c:1906
->  legacy_get_tree+0x114/0x290 fs/fs_context.c:662
->  vfs_get_tree+0xa7/0x570 fs/super.c:1779
->  do_new_mount+0x71f/0x15e0 fs/namespace.c:3352
->  path_mount+0x742/0x1f20 fs/namespace.c:3679
->  do_mount fs/namespace.c:3692 [inline]
->  __do_sys_mount fs/namespace.c:3898 [inline]
->  __se_sys_mount+0x725/0x810 fs/namespace.c:3875
->  __x64_sys_mount+0xe4/0x150 fs/namespace.c:3875
->  x64_sys_call+0x2bf4/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:166
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> [2]:
-> https://lore.kernel.org/all/000000000000736bd406151001d7@google.com/T/#m748384a36239a7f66e63cfde949e3db6bf14d5c6
-> 
-> syzbot reply me with:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger any issue:
-> 
-> Reported-by: syzbot+549710bad9c798e25b15@syzkaller.appspotmail.com
-> Tested-by: syzbot+549710bad9c798e25b15@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         614da38e Merge tag 'hid-for-linus-2024051401' of git:/..
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10be763f980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=49342144b6a907af
-> dashboard link: https://syzkaller.appspot.com/bug?extid=549710bad9c798e25b15
-> compiler:       Debian clang version 15.0.6, Debian LLD 15.0.6
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=15b99a6f980000
-> 
-> Note: testing is done by a robot and is best-effort only.
-> 
-> Best regards,
-> I Hsin Cheng
-> ---
->  fs/bcachefs/btree_io.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/bcachefs/btree_io.c b/fs/bcachefs/btree_io.c
-> index debb0edc3455..dc00c5273ffe 100644
-> --- a/fs/bcachefs/btree_io.c
-> +++ b/fs/bcachefs/btree_io.c
-> @@ -115,7 +115,7 @@ static void *btree_bounce_alloc(struct bch_fs *c, size_t size,
->  	BUG_ON(size > c->opts.btree_node_size);
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 1f162f64eded..7d107dc91390 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -4135,6 +4135,13 @@ S:	Maintained
+>  F:	rust/helpers/bitmap.c
+>  F:	rust/helpers/cpumask.c
 >  
->  	*used_mempool = false;
-> -	p = kvmalloc(size, __GFP_NOWARN|GFP_NOWAIT);
-> +	p = kvzalloc(size, __GFP_NOWARN|GFP_NOWAIT);
->  	if (!p) {
->  		*used_mempool = true;
->  		p = mempool_alloc(&c->btree_bounce_pool, GFP_NOFS);
-> -- 
-> 2.43.0
-> 
+> +BITMAP API [RUST]
+> +M:	Alice Ryhl <aliceryhl@google.com>
+> +M:	Burak Emir <bqe@google.com>
+> +R:	Yury Norov <yury.norov@gmail.com>
+> +S:	Maintained
+> +F:	rust/kernel/bitmap.rs
+> +
+>  BITOPS API
+>  M:	Yury Norov <yury.norov@gmail.com>
+>  R:	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> diff --git a/rust/kernel/bitmap.rs b/rust/kernel/bitmap.rs
+> new file mode 100644
+> index 000000000000..79ddbef2b028
+> --- /dev/null
+> +++ b/rust/kernel/bitmap.rs
+> @@ -0,0 +1,396 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +// Copyright (C) 2025 Google LLC.
+> +
+> +//! Rust API for bitmap.
+> +//!
+> +//! C headers: [`include/linux/bitmap.h`](srctree/include/linux/bitmap.h).
+> +
+> +use crate::alloc::{AllocError, Flags};
+> +use crate::bindings;
+> +use core::ptr::NonNull;
+> +
+> +/// Holds either a pointer to array of `unsigned long` or a small bitmap.
+> +#[repr(C)]
+> +union BitmapRepr {
+> +    bitmap: usize,
+> +    ptr: NonNull<usize>,
+> +}
+> +
+> +    pub fn last_bit(&self) -> Option<usize> {
+
+[...]
+
+> +        // SAFETY: access is within bounds.
+> +        let index = unsafe { bindings::_find_last_bit(self.as_ptr(), self.nbits) };
+> +        if index == self.nbits {
+
+Here and everywhere, can you please:
+
+        if index >= self.nbits {
+
+I know that bitmap documentation says that index would be exactly
+nbits, but really it was a bad decision. If one day I'll find a safe
+way to relax this to >=, your code will stay untouched.
+
+Thanks,
+Yury
