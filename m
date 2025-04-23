@@ -1,43 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBEF26F444;
-	Wed, 23 Apr 2025 11:44:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A385B26F444;
+	Wed, 23 Apr 2025 11:44:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745408656; cv=none; b=eisivIksde6UZS0/wvZJBDrmqfyfycu50jygFmEpGb4l6KGhaj2FrwkH2qm+ODgAq2WEuIyZ/i1ww2uyl2Mzb7BbsMQ47fotetMDdlpU/fNxAly1x9rYmfjYXhxTDNKIXSkfm/sYyqE24P7TEfuQHS1wb5jMCsEbArjSCmbjDug=
+	t=1745408667; cv=none; b=OYmALDYU3dU0HjCFQVlp3+fA6Uifd9POOEF7bQRx1VBhlibTi8x9G3h1Xp84bIINRNrWQ4YgatP2bzeaCVA0sxNbQGiDMWpyqz6d7P/SJ493eSITltBEx/5Rry+PFj+v52efMvQcL0/pkl7kcNPU2YQo5SUKUJ2c6KVxjoE52uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745408656; c=relaxed/simple;
-	bh=vQWAgT7Iwn7jEUiHJ8xk4aq3zrIok3LX/0vZNqA9i/k=;
+	s=arc-20240116; t=1745408667; c=relaxed/simple;
+	bh=5cQQ2k3EMTyhmzUp7//r0VkHXfsAWm3XNAjUaKxYfeQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=DzS0JAEyhUwEEZHj5D1F+Xdv53JNPVmn6RtAtzKHv9Di40Arw9Ub8R0XfPEpnoWeSCIHO68xMxRSGZGl0pPf/Icwi1pvmGIg5oUllb4FtBss5K3J3z5BIho754pnE6nlgRjRafVZ2t8AyXHKM2XpXkEkAFQPi6tmKVz2k1En0D0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HBGn7XEN; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=HPCVynFomGc6blN3pnoTSqeAv42eYqzbAtirg2NmCiBGa3G7bvDRvf+k81qiPfSfnp5wZeeQVgGc2wPCUR5I3OXLT3c2TugOOfaCYiRR70a+MKFi74Ict1u8cFJJQw7AqFMAzSw9Iqvf1n20Ese181/Z/c0/mnpt6J95z/w7qNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUwF4t6t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HBGn7XEN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E92EC4CEE2;
-	Wed, 23 Apr 2025 11:44:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUwF4t6t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A09BC4CEE2;
+	Wed, 23 Apr 2025 11:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745408653;
-	bh=vQWAgT7Iwn7jEUiHJ8xk4aq3zrIok3LX/0vZNqA9i/k=;
+	s=k20201202; t=1745408667;
+	bh=5cQQ2k3EMTyhmzUp7//r0VkHXfsAWm3XNAjUaKxYfeQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=HBGn7XENZiAaisVArAG67qLMjFcAhxtgHR+wW/Pdo3XNXgHKTuqRVIvNIb1duSNZJ
-	 pgzp4ddh5m9W/UQDMDpSLygMgVXa8BLzNeWe0Q6WVptE2+mDPqLl+8I/sixBtW6Az1
-	 VCQqinfHlIY44GNWFwzSQ/a/OYXKev+w9KdSPrWv4fnWUKXhl43rkt8U95YXwuDKRQ
-	 RVosM9dthVEQzDDG4ZmQ5o8Qi0wFrzqAeKf2bbJQmZLnztg+Fy3vUty2hsyMXjb8/z
-	 Drkt5Yw+F/w3iVzbn5ygLzKP0mismsaNzD0Z56bjofief1fB4bZehDTJPF3m6qh3Vu
-	 QYd17dJbC0Q/A==
+	b=KUwF4t6t487uwT0ohnuanuQXtWNurrxiMBebUH6vxSwX5yH0Tw2/KTnMxUDmHBki7
+	 nbKsWGXM6N2YMMhZ/01UNvhT+W/vhKfCCsf356vtSTOilONszEn/yvXP+KNNrLSahd
+	 EMPy5RawgUx7sTFvBsGjSaWGI3gI6F1xy1xaKy2lgbe6xoCNhmmJ3k3Vw8yqx2LbaG
+	 uBMCNyho0hRJXJSr1DZGo1Xp96zUQf3iTX6T5RPXlSU/uzFhY40tZ995cJ0svqMqdN
+	 0cF3vqjjvdT8shUAEJIBofeEg6b5ZEaOPqOBKcW0K/sa2OJJEg6zz1PYmGE68ydWms
+	 Y0i9IX+SDeacQ==
 From: Mark Brown <broonie@kernel.org>
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Michael Sikora <michael.sikora@axis.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- kernel@axis.com
-In-Reply-To: <20250411-adau7118-dsp-a-v1-1-be3fb487a6ac@axis.com>
-References: <20250411-adau7118-dsp-a-v1-1-be3fb487a6ac@axis.com>
-Subject: Re: [PATCH] ASoC: adau7118: Allow dsp_a mode
-Message-Id: <174540865206.26570.15373342000293538987.b4-ty@kernel.org>
-Date: Wed, 23 Apr 2025 12:44:12 +0100
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Patrice Chotard <patrice.chotard@foss.st.com>, 
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+ linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org
+In-Reply-To: <2674c8df1d05ab312826b69bfe9559f81d125a0b.1744975624.git.christophe.jaillet@wanadoo.fr>
+References: <2674c8df1d05ab312826b69bfe9559f81d125a0b.1744975624.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH] spi: stm32-ospi: Fix an error handling path in
+ stm32_ospi_probe()
+Message-Id: <174540866515.26715.3420851726467928798.b4-ty@kernel.org>
+Date: Wed, 23 Apr 2025 12:44:25 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,21 +50,21 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Fri, 11 Apr 2025 09:49:29 +0200, Michael Sikora wrote:
-> TDM mode on the adau7118 is dsp_a compatible. Set SPT_SAI_MODE on the
-> SPT_CTRL1 register to 1 for TDM mode when the DAI is operating in
-> dsp_a mode.
+On Fri, 18 Apr 2025 13:27:53 +0200, Christophe JAILLET wrote:
+> If an error occurs after a successful stm32_ospi_dma_setup() call, some
+> dma_release_channel() calls are needed to release some resources, as
+> already done in the remove function.
 > 
 > 
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
 Thanks!
 
-[1/1] ASoC: adau7118: Allow dsp_a mode
-      commit: 6d7ee6de75010ed5d70f1c496070c4a7cd1968b5
+[1/1] spi: stm32-ospi: Fix an error handling path in stm32_ospi_probe()
+      commit: 460b14b0929fa9f658a7e159ef646ce456962ab0
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
