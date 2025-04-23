@@ -1,48 +1,29 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtpbguseast1.qq.com (smtpbguseast1.qq.com [54.204.34.129])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF1CDF71;
-	Wed, 23 Apr 2025 06:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC3B3398B;
+	Wed, 23 Apr 2025 06:48:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.129
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745390889; cv=none; b=C8NHn6NxFrPdwLiPi2b8gJaIdSwMCacoL09HzMxxICNwzB+tWWaYS1jK7XxFsqumCy30ef66KdS57u6b7Zg3NBBpSl8FwP/B5xVLqse3hv+XoCf2zsoFENLRv+c/D6l3vnyz4J+sdAX4mwLab+bsn9uKhQ+5ddrZAhmXG0MCgew=
+	t=1745390933; cv=none; b=EnpmclyB/kmrH8YPAX+EcBsv7eof8XKirw6pxgu4sDxT09HxGRnuexSG1raU4Pte/+z93C5Wnq+nhRb2F1fYav4ViVFJoYE2qmsNKpHQAphCzkmGMw1kvJiFTV1YJpwlI9imKmJdCo1tl+IaM829TX1e0txnlK0eMrQu4shLtgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745390889; c=relaxed/simple;
-	bh=Re80YO+XGpkwKCTnuHzFbdUy9d2n/brVmMl0G4abPCs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RGSufamy+9WKwEkBEGRzMsw22ZogN7MxjeYZ1Hs5DTR037c1XJDDiGVtFsNDtzGNTCbfucJthO0GXZggMe/Z69Y1nC/gke5if0V09K1LyMys9kF/E0fyb/9W4NZSslHTMu+jUwcQPNb5Dsds277pnBaPeyUpg1iJeWQVG64fxcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=br1P+PVX; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="br1P+PVX"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N0inuw012378;
-	Wed, 23 Apr 2025 06:48:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	s7sn2Ki4lw0FDzWIxaoJbtxaZwRLg7GkANaCKPRUwqc=; b=br1P+PVXAjglsnVA
-	PM7zy37doelaGr/eKpwFhLYS5EkcNEndCxeT23m3WHBNDlQJU7w3NpLVAfkqwXy2
-	jHxHM+DNmI1SutIYvBq++cthWcnOSBxIKN6yEuMjpLWadhK5aE5qcqyPQqmFoiN5
-	0eEMgxoagV9tXCB/jHCrRwGgbWX1aCoX2NCYkQkeTakHPPDgQpmQa3FkSMfjtlPC
-	5LnB0iqLHH89/ZeEfbSN8DMA+2wMpkAnCWTQ0Asc9VVaDOTCtgLqPK2GjSqMCr6P
-	zVVZpNO+jqPnkiznXeWCKejqe9PKdMly0OUInEXelfn2aCYwpZo6DpSgrDG1y6Kj
-	Tjhndw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh1h55x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 06:48:01 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53N6m0tJ027678
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 06:48:00 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 22 Apr
- 2025 23:47:58 -0700
-Message-ID: <38fdb314-da3c-400f-98a4-88937717619f@quicinc.com>
-Date: Wed, 23 Apr 2025 14:47:55 +0800
+	s=arc-20240116; t=1745390933; c=relaxed/simple;
+	bh=rz3h6aO1iqe6HjpBhPgGdm/q1GWce7TmX00nfd6SlpA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EIAH/yAbjjNhnIjyYx5OBfBOXRzJxs6A5kn9mcYt7V3gSv0ME2WcsL5quB0z2pZFK3Kj4iSwntZ9k9ukfbMy4NfbDGfltvjsx77tXDMGyNo1cbIntEN4vlIgSYBIx82g14hx2NyXpEKvk9H5Ob+gy9Scrj7Jtq0AXWC+JiqHGuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com; spf=pass smtp.mailfrom=radxa.com; arc=none smtp.client-ip=54.204.34.129
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=radxa.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=radxa.com
+X-QQ-mid: zesmtpsz6t1745390836t9b6dfae2
+X-QQ-Originating-IP: d5OllYoDBWfSWoV0vu3d6MtEzomJiKDiaIT5EPH1lH4=
+Received: from [127.0.0.1] ( [117.144.82.47])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 23 Apr 2025 14:47:12 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 5299619483516575992
+Message-ID: <98F1324C86982D2B+13f97453-f1ec-4c08-977b-c1bd9a68d409@radxa.com>
+Date: Wed, 23 Apr 2025 14:47:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,149 +31,132 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: ath11k: Fix memory reuse logic
-To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-        Jeff Johnson
-	<jjohnson@kernel.org>, Kalle Valo <kvalo@kernel.org>,
-        Anilkumar Kolli
-	<quic_akolli@quicinc.com>
-CC: <kernel@collabora.com>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20250418120951.94021-1-usama.anjum@collabora.com>
- <5ae72a5c-798a-4c57-b344-02b231cb881c@quicinc.com>
- <b30bc7f6-845d-4f9d-967e-c04a2b5f13f5@collabora.com>
- <6c4ae1f8-a2ea-4ee3-b67d-4a379f097d9b@quicinc.com>
- <1fc423d1-762c-4e0f-8cf1-d4610c547596@collabora.com>
+Subject: Re: [PATCH v6 0/4] Add static channel mapping between soundwire
+ master and slave
+From: Xilin Wu <sophon@radxa.com>
+To: Mohammad Rafi Shaik <quic_mohs@quicinc.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Bard Liao <yung-chuan.liao@linux.intel.com>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>,
+ Sanyog Kale <sanyog.r.kale@intel.com>, linux-arm-msm@vger.kernel.org,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, quic_pkumpatl@quicinc.com,
+ kernel@oss.qualcomm.com
+References: <20250206112225.3270400-1-quic_mohs@quicinc.com>
+ <22F78335AF3DCDCB+3c44f925-88fc-438d-9482-ab39a1d70df8@radxa.com>
 Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <1fc423d1-762c-4e0f-8cf1-d4610c547596@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: daacLj_0TEYHjVq6LOV-hHCPWRSLTViD
-X-Proofpoint-ORIG-GUID: daacLj_0TEYHjVq6LOV-hHCPWRSLTViD
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA0NCBTYWx0ZWRfXyKgEv3hmqL9T bsV0EQeqqUvwkBkzB7Bw3zbhrVqcGrvTzXCkhcA0XMBdjlNYrJdR2+VWkS2zK/xs5Gvocb07ZrA a4Q5cTevWw5oHa7ki/tfXY/JyWX7TE7z9/WwQE3i1YT/+jwwryny/QyRQDChsGO49ZZhJjVudyU
- L3215cNoUqcJgIF/Nogmcmoqh4OogLMAGfx0caG2X6fUxRqKSgM0a3NXeQsL0iPiz6euODr3Dgc Mp895ojFqIy8vdA8dv/KdOXYdWXJKrK/YW+MiQCpzQxXDDNXRjeaaKnWvfLRCQaJ1rlRR9/Cv5U MiSIt2e9i5sCHLh735UEfh9hz7yLzb8+efdUWafbKTMjbThgIeHgPuZiR8a0DaRH8SVROYfua6Z
- 3Km47MzSdd00Tv4gio4tQYSBE4RC//5lHvXOohiAvMMLPbEIkCmhE4FNhNPSSTAEUmQReiEy
-X-Authority-Analysis: v=2.4 cv=ZpjtK87G c=1 sm=1 tr=0 ts=68088d21 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=S5AssN6JXeREewhyV9UA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 clxscore=1015
- bulkscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 impostorscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504230044
+In-Reply-To: <22F78335AF3DCDCB+3c44f925-88fc-438d-9482-ab39a1d70df8@radxa.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:radxa.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NfJJAz0ICuA6DrZEMsSV3vPXNizf8zo+0RCjvFzhNAyG8tonserKM+B5
+	tqNOPOrp+xfOrMpPE2elETKfkE1oONKDPWICDfeXpY+wmXSLlllzoN82Z0nII6yAj9GTyY/
+	P9lyYBKES/ZspLn6/EddqK88WXyb1oEDA0MgaaggUsJylHjcm1p3cqSFp0nUjNPFPhxX94V
+	AQDXxdT2ti+OjZyr74/bVTdaaFlNXUvrjpLKWOyk36X3a7UbmGsyIqD0TIKL+EaBXtxXyda
+	mj+PNBa4+OnmuEaJLE3y04g2ebqqREAEYB2l5O+bkbfjBtnzJCe1N3EQMlHFCdr68Wg2cHc
+	2+I3pg5a4rK7R6H5Boql3Ne+HmTRQvgyt+RqJ542dbMvANIgRpDYjfM3+/2Ym7bpPzs4o7t
+	2zbHf9QhLCft1BYTzmfGMVwU7RSbRFbfZW/ETjtQ9SyonwL+RSTXzYQCU2BSQlM/INIRTGX
+	S30jIwe3XF1nVcVF0jJBFMCnDdzNruCgD9nuDQIOkgVqW49+ukO5Bx+/tENnQj9+zfwPy06
+	osUDm/C/45WfbML1AFlC8PbfNpxLAe3ubC7gPnS/Nkts7JtCxVmwwJrNqXteZ6ZN+mmQSMx
+	mpjHubBcRXShsrom5PP1D6yeR7gfQv5r1KO2M9apCapWoGSjZUwNsjn001ZoxrWKPCsQjdp
+	BiiAnRfvNgW0TxfjzF6CVpht8xna8v3grx4hgvqQjmScRQuKJ4cyIoHJbkNNevfSq/6B0zP
+	DNBbjTmCck4CLESPIIMfVLTRk2hNclIOefA9/OPaQfJgukP6gj4ksUP8btYF8UbrVnI6qbQ
+	UBEfMjqnAh4ozKOIgbFBdmDrfzWgtP3g8nImcEszlWxZ+cY+uIJhZhdH6qArqomlwtNphea
+	yuNOwVnZnklENXvOshPQ9d3V19+qtoTsb9DduACWx1rR2Q2DzvUGdkhPYs8Tr4e4OWUW60f
+	XV0PvW9RXOuT31NGQsjITg2m7MUor3j52csA=
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+X-QQ-RECHKSPAM: 0
 
-
-
-On 4/23/2025 2:26 PM, Muhammad Usama Anjum wrote:
-> On 4/22/25 1:01 PM, Baochen Qiang wrote:
+On 2025/4/22 22:59:13, Xilin Wu wrote:
+> On 2025/2/6 19:22:21, Mohammad Rafi Shaik wrote:
+>> Add static channel map support between soundwire master and slave.
 >>
+>> Currently, the channel value for each soundwire port is hardcoded in the
+>> wcd937x-sdw driver and the same channel  value is configured in the
+>> soundwire master.
 >>
->> On 4/22/2025 3:46 PM, Muhammad Usama Anjum wrote:
->>> Hi,
->>>
->>> Thank you for excellent review.
->>>
->>> On 4/22/25 7:15 AM, Baochen Qiang wrote:
->>>>
->>>>
->>>> On 4/18/2025 8:09 PM, Muhammad Usama Anjum wrote:
->>>>> Firmware requests 2 segments at first. 1st segment is of 6799360 whose
->>>>> allocation fails and we return success to firmware. Then firmware asks
->>>>
->>>> Host won't fail in case DMA remapping is enabled. Better to rephrase to make it clear that
->>>> the big segment allocation fails in case DMA remapping is not working, usually due to
->>>> IOMMU not present or any necessary kernel config not enabled.
->>> IOMMU is turned off. I'll make description better.
->>>
->>>>
->>>>> for 22 smaller segments. Those get allocated. At suspend/hibernation
->>>>> time, these segments aren't freed as they are reused by firmware.
->>>>>
->>>>> After resume the firmware asks for 2 segments again with first segment
->>>>> of 6799360 and with same vaddr of the first smaller segment which we had
->>>>
->>>> Not follow you here. What do you mean by 'same vaddr'? firmware does not care about vaddr
->>>> at all.
->>> So we get request to allocate memory of size = 6799360 and vaddr =
->>> 0xABC). We fail it. Then we get request to allocate memory of size =
->>> 500000 and vaddr is same 0xABC which gets allocated successfully.
->>>
->>> When we resume, firmware asks again for 6799360 with 0xABC vaddr even
->>> though we had allocated memory of 500000 size at 0xABC. I'm referring to
->>> this vaddr that its same.
+>> The Qualcomm board like the QCM6490-IDP require static channel map
+>> settings for the soundwire master and slave ports.
 >>
->> OK, get your point. But like I said, firmware doesn't case about vaddr, so it is not
->> asking for a 'same vaddr'.
+>> If another boards which are using enable wcd937x, the channel mapping
+>> index values between master and slave may be different depending on the
+>> board hw design and requirements. If the above properties are not used
+>> in a SoC specific device tree, the channel mapping index values are set
+>> to default.
 >>
->> IMO just mentioning vaddr is not NULL is sufficient.
-> Okay. I'll update the description to avoid confusion.
+>> With the introduction of the following channel mapping properties, it is
+>> now possible to configure the master channel mapping directly from the
+>> device tree.
+>>
+>> Added qcom_swrm_set_channel_map api to set the master channel values
+>> which allows more flexible to configure channel values in runtime for
+>> specific active soundwire ports.
+>>
+>> Add get and set channel maps support from codec to cpu dais in common
+>> Qualcomm sdw driver.
+>>
+>> Changes since v5:
+>>   - Fixed build compile issue with v5-0003 patch, reported by Mark Brown.
+>>
+>> Changes since v4:
+>>   - Update the order of channel map index values in v4-0001 dt- 
+>> bindings patch as suggested by Krzysztof.
+>> Changes since v3:
+>>   - Change the order of channel map index values in v3-0002 dt- 
+>> bindings patch as suggested by Krzysztof.
+>>   - Dropped V3-0001 patch which is not required.
+>>
+>> Changes since v2:
+>>   - Rephrase commit description v2-0001 dt-bindings patch as suggested 
+>> by Krzysztof.
+>>
+>> Changes since v1:
+>>   - Modified the design and followed new approach to setting the 
+>> master channel mask.
+>>   - Used existing set_channel_map api as suggested by Pierre-Louis
+>>   - Fixed the typo mistake in v1-0001 dt-bindings patch.
+>>   - Rephrase the commit description for all v1 patches.
+>>
+>> Mohammad Rafi Shaik (4):
+>>    ASoC: dt-bindings: wcd937x-sdw: Add static channel mapping support
+>>    ASoC: codecs: wcd937x: Add static channel mapping support in
+>>      wcd937x-sdw
+>>    soundwire: qcom: Add set_channel_map api support
+>>    ASoC: qcom: sdw: Add get and set channel maps support from codec to
+>>      cpu dais
+>>
+>>   .../bindings/sound/qcom,wcd937x-sdw.yaml      | 36 +++++++++++++
+>>   drivers/soundwire/qcom.c                      | 26 +++++++++
+>>   sound/soc/codecs/wcd937x-sdw.c                | 39 ++++++++++++--
+>>   sound/soc/codecs/wcd937x.c                    | 53 ++++++++++++++++++-
+>>   sound/soc/codecs/wcd937x.h                    |  7 ++-
+>>   sound/soc/qcom/sdw.c                          | 34 ++++++++++--
+>>   6 files changed, 185 insertions(+), 10 deletions(-)
 > 
->>
->>>
->>>>
->>>>> allocated. Hence vaddr isn't NULL and we compare the type and size if it
->>>>> can be reused. Unfornately, we detect that we cannot reuse it and this
->>>>
->>>> s/Unfornately/Unfortunately/
->>>>
->>>>> first smaller segment is freed. Then we continue to allocate 6799360 size
->>>>> memory from dma which fails and we call ath11k_qmi_free_target_mem_chunk()
->>>>> which frees the second smaller segment as well. Later success is returned
->>>>> to firmware which asks for 22 smaller segments again. But as we had freed
->>>>> 2 segments already, we'll allocate the first 2 new segments again and
->>>>> reuse the remaining 20.
->>>>>
->>>>> This patch is correctiong the skip logic when vaddr is set, but size/type
->>>>
->>>> s/correctiong/correcting/
->>>>
->>>>> don't match. In this case, we should use the same skip and success logic
->>>>> as used when dma_alloc_coherent fails without freeing the memory area.
->>>>>
->>>>> We had got reports that memory allocation in this function failed at
->>>>
->>>> any public link to the report?
->>> There's no public report. I've attached the logs. You'll find following
->>> error logs in it:
->>>
->>> ath11k_pci 0000:03:00.0: failed to allocate dma memory for qmi (524288 B
->>> type 1)
->>> ath11k_pci 0000:03:00.0: failed to allocate qmi target memory: -22
->>>
->>>
->>>>
->>>>> resume which made us debug why the reuse logic is wrong. Those failures
->>>>> weren't because of the bigger chunk allocation failure as they are
->>>>> skipped. Rather these failures were because of smaller chunk allocation
->>>>> failures. This patch fixes freeing and allocation of 2 smaller chunks.
->>>>
->>>> any you saying kernels fail to alloc a smaller chunk? why? is system memory exhausted or
->>>> too fragmented?
->>> Yes, the smaller chunk doesn't get allocated. I've not been able to
->>> reproduce it on my setup. Both system memory exhaustion and
->>> fragmentation are the suspects.
->>
->> so it is kernel failing to allocate the buffer, not any issue in ath12k leading to this.
->> Please help make this clear to avoid confusion.
-> We caught the bug as kernel was unable to allocate memory at resume.
-> Later found out that with the optimization in ath11k, we shouldn't be
-> trying to allocate memory in the first place. That's why I've sent this
-> patch.
+> Hi Mohammad,
+> 
+> I'm working on a QCS6490 board with the WCD9380 codec. I wonder if a 
+> similar patch is needed to enable headset audio? Currently, DisplayPort 
+> audio and headset plug-in detection work, but no audio is coming from 
+> the headset.
+> 
+> Additionally, I noticed an unusual output in dmesg:
+> 
+> qcom-soundwire 3210000.soundwire: qcom_swrm_irq_handler: SWR Port 
+> collision detected
+> 
+> Could this be related to the issue? Let me know if you need further 
+> details.
 > 
 
-yeah, understand that.
+Well, headset audio works now. It seems that the error message has 
+nothing to do with it :)
 
-> Let me update the description and send v2.
-> 
-
-looking forward to it.
-
-> 
-
+-- 
+Best regards,
+Xilin Wu <sophon@radxa.com>
