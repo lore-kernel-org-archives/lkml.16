@@ -1,152 +1,99 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AE2E10957
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:59:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4B11C1F21
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 18:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745431173; cv=none; b=c91qb0OuK6wKFCrtkAzQQ5tjbB1MnbFJ3rpk2izqSYsFD/9tXwyYFrh1NfJhJeocU9/y6/uzf7mFiq+CWe6TfXOwj4M29qF8dzWVHwVxIPEZ1DWp8PBm/3C1XPwhr1SNlksMeeahekCNY6fwtFKXouwarI8SHCLpwlgiku6FGww=
+	t=1745431231; cv=none; b=pygacMY1+Mivx8fcIvlTHNppQ9Khg9YDuhgH/TR8kJdfmqhGxSpbk7DrZOHsFBl6i2+6tj5i0S9gtzIe+kMIxr4jZXLeOgOSilvdkdteNiXsJeMDb/nESDjWvXVGKkXSyDAOR3umu95uywWFoT5YgHD2k56M+wItvw/kGweawks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745431173; c=relaxed/simple;
-	bh=T2TBlvkxpqSt4Yg66wrWZfHI9nHaKVofCMCsYRliPm4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OaLtBzBJWA6iPZE670pJQEHvxbQ1On0BkqF0XbN0CQ/ZqRcwywveZ5XRago3AJ5ON+/WJLcGcoXlHDG4Gx1b3LLc0R9Ei1bOU747uZlCbQVLxtKqsy/qaRbCXWGxCYtwuiO27fyMYv+ck0gm9M3i/Hg9mCQKIgE4UwNaO5xFVO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HACIZgpw; arc=none smtp.client-ip=209.85.214.174
+	s=arc-20240116; t=1745431231; c=relaxed/simple;
+	bh=+AfY+0DnN3cknayUVzyft99P4jOmZpu3yiNDoJr8V7g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=N+bSchspvQnfDWGSnZG09xiDmtXvHeWGsc9geBP2N7y/8iLZcIMY50HaXTY7LRc784qPau2dCwzHAjgfxjuknaShewzwmiUBViZzw0HynNwi7dbe3zHJ1Ncy/pKZ5KPJnSEDb83ulG7DupIKY/SW1BnLaSbuA0/ge4Go+cS5w/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=liNqck4c; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tjmercier.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HACIZgpw"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2264c9d0295so27525ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:59:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="liNqck4c"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3055f2e1486so210151a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 11:00:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745431171; x=1746035971; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+8ET6hBVRzBDqshUdhbgCvSUTaazcby/sOi3F1Bc3pI=;
-        b=HACIZgpw4Xflv3W6XmdPwNuTYxQ8zATeYzoR01w5U1QhvU797QxfB3VWNBYsoEXN0D
-         r1sBI0OEbn075eeaSweSTK9Kt/MJ+oPdDAesZPl/+gwjrSyjiKHi/louVdIOC2rBhz0F
-         gfHVMBUSPw9v6u9oUVGZYXOL2Hsolk65Haz4RZ3eyh8VtpyVn4oN+idH/iRyUan57kOv
-         VJ6+rf3ozumb3R4FPyShUVTDwoFxVdmAp+3zSh7bj83RiPJA3ghFhOAXou/grUCVcWQN
-         ED6+2Mxhsurs/2rbbxTEY/C3kPb4RP2/y6TjS8R445L88/BoxlCYyj8cauarXMlwAt0F
-         s43Q==
+        d=google.com; s=20230601; t=1745431229; x=1746036029; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/2XkzTc2PJn4A+a+JXQEXeGTLyFH8I/nd3+JwtUQBwE=;
+        b=liNqck4cGDDoaggOjUmZ/sitXRq0vvwWuFBbBzYwnp1DhnEnQbMIGwJfXIbvUllCqb
+         g0Ms9zfO0iy65jZ/5iP/1HoAGNsDTCWBU6nQsTaVoLoSa4tOoPax8WteRxtrh2aYP27x
+         2qZoY/jnKZ3JY/Ab4ke7pfBeqPROKaHEP5atv2+eDM4B3SRUOV1j/DOvhnefY1CyIOJo
+         4mo1uC+luLN+Xq2qtDrNM4cCaCq/V3pV9TQ6n7Ot5xsEo4BCBRHRAQmkvRjGPEinuJi+
+         ZdZB5ytJwtwj9O8FgP8VXcczztUpChLI5Fhm8/QGnRpD+tO/jiNfTzRpbgpVTDOhq1f5
+         4amQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745431171; x=1746035971;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+8ET6hBVRzBDqshUdhbgCvSUTaazcby/sOi3F1Bc3pI=;
-        b=omECl59PIlSc4cXsYr8zewMzSFN20WHLtZbbKXnSjrmVnKSoVGH/aOkh0aXNY4jcwd
-         2ewnSsp+P7p2jBX3mIdgAHPLiDmuUQYItSD15kkn31ygueUAXg7PeLagntns1eQc3SW0
-         nDPEWAtr1js1I2GKUJf+C1+EyRLTi7NNbx6KZU5IM8YLc4uTB7t6/V1gDeF3r+y8OTvA
-         9PBTNMqeVW4nZDKbM8W2vr4SELtvEZX75z4gF9nKV0NRJ/BC4bgqeCGsSx5pSrsUvfDs
-         XKIV3/c4LG7Y2SfFtucWz5VdfAeyAiPexttyXDst7eP1zC2yY2JUS0zWz2Ynp8Bk52sf
-         fs4A==
-X-Forwarded-Encrypted: i=1; AJvYcCUwRknAzoBU7w7NAgEwgTu2520kAGji0sPZ0QdrJ+YAzCNaml4yQ68fc2p+KKcerjyHUM6CmSTSTfrFMf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaPwkdngIwCvbQXS2v5cpLPrc+8wmiRxEdPf3ar2euxVJ8B8LD
-	zIMpAWv/bZAnX2KCi+Aix4x6KwPoSXv8Kg5QapIRE/C6wwMW6IBZKNCxTLjmCXAsdRhu309u3Uq
-	z3/rH61+m7sgeYcjB7ED8B5kMu7ySR5zkdc57
-X-Gm-Gg: ASbGncuhY2mdVgO+yM1XijybT0IUSCxp90VScTr7MxCYejQs6/Gy0pXuijdTCkUJZkk
-	WFpEysR+fJrNlQW78Og5vuwcAww1xQ0CMEYMLivARf3iX/zHsB17VoeeNnvP8TGrJv3J2QZALs3
-	2ICCwOxO0ost+1iAg2KGKFL/ynqnyi9tNEpfedkPbKtxlYmagXLIGY
-X-Google-Smtp-Source: AGHT+IHvMK0SV6VtztVj+YoeYQ5/i4hvqsncQiTOPb2g+BToFdj7TZ78J3grFAhStRy75jc6hEr26BgE749DHVAlZwc=
-X-Received: by 2002:a17:902:ce08:b0:21f:3f5c:d24c with SMTP id
- d9443c01a7336-22db2089754mr282595ad.0.1745431171080; Wed, 23 Apr 2025
- 10:59:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745431229; x=1746036029;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/2XkzTc2PJn4A+a+JXQEXeGTLyFH8I/nd3+JwtUQBwE=;
+        b=Js/pf69/KuqGlFrxQwfbVnPc74iwfKdSIGZdh7Pfukclddy2ntk4DIFaubj+zKnumL
+         2lQHQc/3rRRq9Fpga5dNMs/tea+GFI+AFOiU6ttX6YqzEXSlhOr2uk6k5vSbfidElA6Q
+         OyPCiSWSkdJQiCQ769Edk1EMgIP4S/5DmIcKhCb7lC/H5EDEv701iWrh6c7e4WqbSzrr
+         QvlxZzevUG5RYoyCFFqV4UgafRbtfKN8tgoxptCLKxRixQtjzFnxQ4ELP4mhmTRzR5Tt
+         /gS9r9Gmgif1SuXHb38++G4BZI1vSujPwmtY+4RNz6Ke/AWyS/j+95XmF3ezuHdzS4ue
+         rUIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgPIK2LhhbsGbWLvOnMpG/g6mpRpj83T/5R2T311FuQhX9gvxtYpHjQd66/b8TdNJKEcXX9Pfszj7kMCs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy52XsCeYYj3ObWvq+BAM//bO5IJTSEM8byqDTxEXX5Gx3UUmYx
+	u77dm1+u/mUhU1eShome1Ut5GXpI7QEKAkdhhshr1Nnej2MkCuMbj95M+PN27ErsBHm1pUeZOK4
+	ysPerpIwM5B/elg==
+X-Google-Smtp-Source: AGHT+IFqLpkFseBunG8fACc1+jNza00V5SiHoWz9+D+PYIihJbr2Oc/oxVvJXJdUbkhWRZP5M/gY1MykKMLBRrA=
+X-Received: from pjbee11.prod.google.com ([2002:a17:90a:fc4b:b0:2fc:3022:36b8])
+ (user=tjmercier job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:5828:b0:308:2945:386d with SMTP id 98e67ed59e1d1-3087bbad74bmr31666512a91.24.1745431229546;
+ Wed, 23 Apr 2025 11:00:29 -0700 (PDT)
+Date: Wed, 23 Apr 2025 18:00:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250423031117.907681-1-almasrymina@google.com>
- <20250423031117.907681-4-almasrymina@google.com> <m2y0vrtd5i.fsf@gmail.com>
-In-Reply-To: <m2y0vrtd5i.fsf@gmail.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Wed, 23 Apr 2025 10:59:17 -0700
-X-Gm-Features: ATxdqUHq-n2Ogx9j37-VJ8KU3c5QgjU5O-8PAbfORQ_YtioEYEuiwEUpYsuISUQ
-Message-ID: <CAHS8izNUOO-X0WHFTMd3_yEjCDu4sPYADE1oDEtWTYFNNMB5wQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v10 3/9] net: devmem: TCP tx netlink api
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
-	virtualization@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, dw@davidwei.uk, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
-	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250423180025.2627670-1-tjmercier@google.com>
+Subject: [PATCH] splice: remove duplicate noinline from pipe_clear_nowait
+From: "T.J. Mercier" <tjmercier@google.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Jens Axboe <axboe@kernel.dk>
+Cc: "T.J. Mercier" <tjmercier@google.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 5:11=E2=80=AFAM Donald Hunter <donald.hunter@gmail.=
-com> wrote:
->
-> Mina Almasry <almasrymina@google.com> writes:
->
-> > From: Stanislav Fomichev <sdf@fomichev.me>
-> >
-> > Add bind-tx netlink call to attach dmabuf for TX; queue is not
-> > required, only ifindex and dmabuf fd for attachment.
-> >
-> > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ---
-> >
-> > v3:
-> > - Fix ynl-regen.sh error (Simon).
-> >
-> > ---
-> >  Documentation/netlink/specs/netdev.yaml | 12 ++++++++++++
-> >  include/uapi/linux/netdev.h             |  1 +
-> >  net/core/netdev-genl-gen.c              | 13 +++++++++++++
-> >  net/core/netdev-genl-gen.h              |  1 +
-> >  net/core/netdev-genl.c                  |  6 ++++++
-> >  tools/include/uapi/linux/netdev.h       |  1 +
-> >  6 files changed, 34 insertions(+)
-> >
-> > diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/ne=
-tlink/specs/netdev.yaml
-> > index f5e0750ab71db..c0ef6d0d77865 100644
-> > --- a/Documentation/netlink/specs/netdev.yaml
-> > +++ b/Documentation/netlink/specs/netdev.yaml
-> > @@ -743,6 +743,18 @@ operations:
-> >              - defer-hard-irqs
-> >              - gro-flush-timeout
-> >              - irq-suspend-timeout
-> > +    -
-> > +      name: bind-tx
-> > +      doc: Bind dmabuf to netdev for TX
->
-> nit: maybe add "for RX" to the bind-rx doc.
->
+pipe_clear_nowait has two noinline macros, but we only need one.
 
-Thanks, will pull this with the next iteration.
+I checked the whole tree, and this is the only occurrence:
 
-> > +      attribute-set: dmabuf
->
-> The bind-rx op has "flags: [ admin-perm ]", should bind-tx also?
->
+$ grep -r "noinline .* noinline"
+fs/splice.c:static noinline void noinline pipe_clear_nowait(struct file *file)
+$
 
-The omission of admin-perm for tx is intentional.
+Fixes: 0f99fc513ddd ("splice: clear FMODE_NOWAIT on file if splice/vmsplice is used")
+Signed-off-by: T.J. Mercier <tjmercier@google.com>
+---
+ fs/splice.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Binding a dmabuf to an rx queue should and is a privileged operation,
-because basically the application doing the binding is taking
-ownership of this rx queue. For TX, no such queue ownership is being
-taken. The TX binding just gives the netdevice access to the dmabuf
-dma-addresses so the netdevice can send from there. It's very similar
-to a normal dma-map with normal memory. There is no need for privilege
-checks.
+diff --git a/fs/splice.c b/fs/splice.c
+index 90d464241f15..4d6df083e0c0 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -45,7 +45,7 @@
+  * here if set to avoid blocking other users of this pipe if splice is
+  * being done on it.
+  */
+-static noinline void noinline pipe_clear_nowait(struct file *file)
++static noinline void pipe_clear_nowait(struct file *file)
+ {
+ 	fmode_t fmode = READ_ONCE(file->f_mode);
+ 
 
---=20
-Thanks,
-Mina
+base-commit: 9d7a0577c9db35c4cc52db90bc415ea248446472
+-- 
+2.49.0.805.g082f7c87e0-goog
+
