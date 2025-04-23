@@ -1,54 +1,86 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14122561A2;
-	Wed, 23 Apr 2025 10:26:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAA422E403
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745404017; cv=none; b=dxgHU0m6ppcFYI8fvxdFCOeskH5CW+j4e7R6Xm85ZDwd8RK+T1Exc0DaqWVHL2VH/1e+0QFBzA84sZaEckx7qJfyjCtg2e5X8K/sFTkITse8qCpCW2lteWrGdUbyLF8uXZzzxPTUUzqyqBFWpnF9EOb/+/aDAffrC3yGKEHzGG8=
+	t=1745404177; cv=none; b=oSbovAd6pPNu7ipSHRPyE5cZQ8PYSKLapjMN+BqbMtUsufGqVv0ZaMDQrGruYhZAL0Y3J3/gbK3dY0f8bQ8ck7mER+ymSL4rZDFY0+KKxQKlo16+Ymc6PSCclCp+2AyipVkMVDAUrVr2vwmOX925tmP1nvLe5Qn1SI/rXeKPLrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745404017; c=relaxed/simple;
-	bh=+SxBSMk7orLxVFxL8Gww7YOLecKij/zxaEXdo8QiJaI=;
+	s=arc-20240116; t=1745404177; c=relaxed/simple;
+	bh=4Rq/Gmlehpk/AKr8lWH+o1utdeFgmGjl3cShUrUXn5w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PGeWeQQxOWAht7IrLculbxYiqrJHXX1kR6tGzknA28gGUiiDiBfhHbWuSX9JHEXGIIQZmXqozrGcDKvyNSZgmXiyEIlGJ4DXZqpvWS9aWoLYSq1rQ5kwMbP7uROTokmqAP6PIj/RoKdwpijU2HOaPkPr2X5bVbgQ8E73b6HU/rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=jjgZ+LnT; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=udxA2TpB5o+BiroCGVtAchwBu0IkQNgnvEY6AvTvMmHqhAvQmkIpqac/D0tmroRitWSXBbNE59vGV3o0PUmlc1LYa6iRpTqX7cZa00QGoCnFvq3T51XVDZ43AlZYVIvki9FRK79ZdqEywc+WonpXMqzekwhOGZsdMkbNIxdT+eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=np10QHAt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0+a/QD5l; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=np10QHAt; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0+a/QD5l; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="jjgZ+LnT"
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 6EFAF1F96C;
-	Wed, 23 Apr 2025 12:26:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1745404014;
-	bh=YfVwzaklYqB2yPGJrUhReU1MAXFmWBiktB9H9OnlWHA=; h=From:To:Subject;
-	b=jjgZ+LnTi8D+QhEDcCoLzSUblRuMauYhItZqnADRVM14O2rzj11ls30N4onzc9Akp
-	 lOTOQ1i/3h8HqOsk2LiCiFju1aGmHdnVJl8VDP5bVbHyjU0mhFk9LNKszMNexjjJZZ
-	 rdz0mPsCmMFURLeaVXI9ptj5SaKX/fSXdkmQc/PE31R4OLs9D2CVAWC+eVZgstYWyH
-	 iLAP37E2POs5SACE1q8eCs67zEzY6MC66t+QYA4RDFMSS+3AGYMXvHLQCeLoedgXGL
-	 CkYeXMmE9YAjF07qOwhaABWRXgMhbG7GohCYNTo8qr8I4Y2aSdMF1GyOJ+Ud3ZdivO
-	 6h033Efpnke3A==
-Date: Wed, 23 Apr 2025 12:26:51 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Frieder Schrempf <frieder.schrempf@kontron.de>
-Cc: Francesco Dolcini <francesco@dolcini.it>,
-	Wojciech Dubowik <Wojciech.Dubowik@mt.com>,
-	linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	Philippe Schenker <philippe.schenker@impulsing.ch>,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: dts: imx8mm-verdin: Link reg_usdhc2_vqmmc to
- usdhc2
-Message-ID: <20250423102651.GC4811@francesco-nb>
-References: <20250422124619.713235-1-Wojciech.Dubowik@mt.com>
- <522decdf-faa0-433b-8b92-760f8fd04388@kontron.de>
- <20250423070807.GB4811@francesco-nb>
- <17ec22a0-b68b-4ac5-b2bc-986837639a37@kontron.de>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="np10QHAt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0+a/QD5l";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="np10QHAt";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0+a/QD5l"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BAEBE1F38E;
+	Wed, 23 Apr 2025 10:29:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745404166;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eyPfh9WBuQEiVfWgDNclL0FrZScn/rQD0SlbJwshX10=;
+	b=np10QHAtl1Ns6Y5rxp7bP0jK478S3x/34VkpICh4+WTyfDUkp6V8/ETIIikm7hGPFVx+Iu
+	9PH5g0FJm2I5zgONsbitWla1QJt7fjfvfTMLI8VnN5CnHf6n4clEK048133xGSFbvjGBrm
+	qTrD0Rw62qlyFQY1xEekiDDJdRsE7ZY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745404166;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eyPfh9WBuQEiVfWgDNclL0FrZScn/rQD0SlbJwshX10=;
+	b=0+a/QD5lcL10KxA6LS5/Eurx2PlVoYICV2z70Ow7ATB8ITAnRgKNIZ6+bUEhjQM9DgVx9w
+	LE90xX9kCWnS8sDA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1745404166;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eyPfh9WBuQEiVfWgDNclL0FrZScn/rQD0SlbJwshX10=;
+	b=np10QHAtl1Ns6Y5rxp7bP0jK478S3x/34VkpICh4+WTyfDUkp6V8/ETIIikm7hGPFVx+Iu
+	9PH5g0FJm2I5zgONsbitWla1QJt7fjfvfTMLI8VnN5CnHf6n4clEK048133xGSFbvjGBrm
+	qTrD0Rw62qlyFQY1xEekiDDJdRsE7ZY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1745404166;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eyPfh9WBuQEiVfWgDNclL0FrZScn/rQD0SlbJwshX10=;
+	b=0+a/QD5lcL10KxA6LS5/Eurx2PlVoYICV2z70Ow7ATB8ITAnRgKNIZ6+bUEhjQM9DgVx9w
+	LE90xX9kCWnS8sDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A726413691;
+	Wed, 23 Apr 2025 10:29:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vDmTKAbBCGjDHwAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Wed, 23 Apr 2025 10:29:26 +0000
+Date: Wed, 23 Apr 2025 12:29:25 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, Nick Terrell <terrelln@fb.com>,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: harden parsing of compress mount option
+Message-ID: <20250423102925.GG3659@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20250423073329.4021878-1-neelx@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,42 +89,62 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <17ec22a0-b68b-4ac5-b2bc-986837639a37@kontron.de>
+In-Reply-To: <20250423073329.4021878-1-neelx@suse.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Score: -4.00
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email];
+	RCVD_COUNT_TWO(0.00)[2];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Apr 23, 2025 at 10:00:22AM +0200, Frieder Schrempf wrote:
-> Am 23.04.25 um 09:08 schrieb Francesco Dolcini:
-> > On Wed, Apr 23, 2025 at 08:50:54AM +0200, Frieder Schrempf wrote:
-> >> Am 22.04.25 um 14:46 schrieb Wojciech Dubowik:
-> >>>
-> >>> Define vqmmc regulator-gpio for usdhc2 with vin-supply
-> >>> coming from LDO5.
-> >>>
-> >>> Without this definition LDO5 will be powered down, disabling
-> >>> SD card after bootup. This has been introduced in commit
-> >>> f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5").
-> >>>
-> >>> Fixes: f5aab0438ef1 ("regulator: pca9450: Fix enable register for LDO5")
-> >>>
-> >>> Cc: stable@vger.kernel.org
-> >>> Signed-off-by: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
-
-...
-
-> > With this solution (that I proposed), the sdcard driver just use the
-> > GPIO to select the right voltage and that's it, simple, no un-needed i2c
-> > communication with the PMIC, and the DT clearly describe the way the HW
-> > is designed.
+On Wed, Apr 23, 2025 at 09:33:28AM +0200, Daniel Vacek wrote:
+> Btrfs happily but incorrectly accepts the `-o compress=zlib+foo` and similar
+> options with any random suffix. Let's handle that correctly.
 > 
-> Yes, but your solution relies on the fact that the LDO5 registers
-> actually have the correct values for 1v8 and 3v3 setup. The bootloader
-> might have changed these values. I would prefer it if we could have a
-> solution that puts the LDO5 in a defined state, that is independent from
-> any external conditions.
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
+> ---
+>  fs/btrfs/super.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+> index 40709e2a44fce..f7e064b8c6d88 100644
+> --- a/fs/btrfs/super.c
+> +++ b/fs/btrfs/super.c
+> @@ -354,7 +354,10 @@ static int btrfs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+>  			btrfs_set_opt(ctx->mount_opt, COMPRESS);
+>  			btrfs_clear_opt(ctx->mount_opt, NODATACOW);
+>  			btrfs_clear_opt(ctx->mount_opt, NODATASUM);
+> -		} else if (strncmp(param->string, "zlib", 4) == 0) {
+> +		} else if (strncmp(param->string, "zlib", 4) == 0 &&
+> +				(param->string[4] == ':' ||
+> +				 param->string[4] == ',' ||
+> +				 param->string[4] == '\0')) {
+>  			ctx->compress_type = BTRFS_COMPRESS_ZLIB;
+>  			ctx->compress_level =
+>  				btrfs_compress_str2level(BTRFS_COMPRESS_ZLIB,
 
-I do not think this is a real concern, the PMIC is programmed during
-manufacturing, if the PMIC programming is not correct we have way more
-issues ...
+With more checks the block under the Opt_compress* has grown beyond what
+I'd consider reasonable. It would be good to factor it out to a helper,
+pass the param->string and context.
 
-Francesco
-
-
+Extending with more checks will be easier, we can also validate the
+negative levels or other garbage in the string.
