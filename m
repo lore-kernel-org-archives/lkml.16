@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277F926FDAD;
-	Wed, 23 Apr 2025 07:55:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C2BA270570;
+	Wed, 23 Apr 2025 07:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394904; cv=none; b=S+0HvU1KTS9G78FJW+utXmboq2JevXE1ueLCI/EIHyoQbsvFMfF5aIqoN9XP1pZuvd9Xx62cz9vfrWMbBlXyr2BJlV0hONi+zefwQRv1cRwXZ/dEO+rRbu4vDrGuE+BkYTboa7Tr4d7W3TMMJkQC3YqXaQv/oCpELYT36G9Q1DA=
+	t=1745394910; cv=none; b=cm3DDLBXjvz4R32nhgz04RolymR3ek+P7wtfi1qMiD0sPUPk5SR/+O/ROYVxd6mav2QW4UYy87LkQgikJzQx+tit6PjkI+39WieiCFQ4E4+Ys7TgUG9FrFlE0kvlKfZeE9ZrAzeZ1O4y38EE05mmu7X2D90MUEMXVYs+0YUMf2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394904; c=relaxed/simple;
-	bh=fSRnfCoL9a6bxdshBIQMdkRn5cXeVSOBriq8mo2FYvo=;
+	s=arc-20240116; t=1745394910; c=relaxed/simple;
+	bh=hpsl3GfCNgR6vusE1HtvWnkX8X5I671B1NgKWynmTdc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rcOV+aCvYaU6VKhJFhnx98WJSGEhUOFHu52chMfpaV3CUYH0XHM063qtTz1xsACgiwrQpLnz62BGA8At1/j3YiqA2Xgfr8DeCb5WMyjuP0qvBlILIq51cE+0nh7+x6wKkXBtklkPwxsDIVIApwciFXscbFw04EREWLKOb5kxmoA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFSyyzAP; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NUBrEExtKvAjVLbvbuz+eAToCzlog/53oF3PMEncbvavHOM8ds6CTxEKpYQ8dU8huIe3UHcWjFWO3VkC+FcR21Yy9cMTGblH1GiBDWODBmHTRFYRDKQCeb15yLH6kQv3FkuTG40Uee3n3E6kSa6G1iEF0mpDdbAZgHO8Jh9UClI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ND6QBbxE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFSyyzAP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A1A5C4CEE2;
-	Wed, 23 Apr 2025 07:54:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ND6QBbxE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80A8FC4CEEC;
+	Wed, 23 Apr 2025 07:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745394904;
-	bh=fSRnfCoL9a6bxdshBIQMdkRn5cXeVSOBriq8mo2FYvo=;
+	s=k20201202; t=1745394909;
+	bh=hpsl3GfCNgR6vusE1HtvWnkX8X5I671B1NgKWynmTdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KFSyyzAPKxzu2KSN5dwToRslJYt1kEE1qzWiFDC2D2hHU88F5Xb2oBm07xyRUc1vP
-	 10LNMKic6iymSfu7tv9hLAhZ8bi68CptoNIXrJKo5e5mpICQWx7WTwtfYZHyIpDLMr
-	 VuyEWfPSmktZslptNH03EaK4NI0d20ouq4kgvy1Ko7scSqjZVNhcikNziV87bX8aOg
-	 W2gaTt6q3PJsCwD0RdMgc36bcCzzBTLEvwUhTi7saKGOtR87k/QT7FH58FvB6ufDDB
-	 RwXOgbdCGejHMJtwBuhEaLveWP/yLs2IIFKuH25zy3wqLYx8bDxwHyTB1/OQ0mD6g4
-	 4cZQKS7MD964g==
+	b=ND6QBbxEdLXyHNB6VwFjJ3O4Prg2BAbBWmezB9com7jpPe2Lzdz+1wNxsrgjnkYAD
+	 SBOZ589RtnejUrUehjqY3wlWaPte0Kj/D2fErd+i0oF0JKj7dnwLCd6FhfJQSpjR9g
+	 a9+j9KT8iDcuT1d4Gj+PAoLd90y0F0RliUTNy3cAPf5fcbOca2E+wTjlFB57KxyNvH
+	 PNIT54zM1pif3VIi/iYfNR7tcPrd2wXib1ZovGp+Nj2nbDJZnQ44l5/OqIdSkdjc0I
+	 2uNaxlpte7CVYd18tDrcad/8siKmjLJ7p4DIMsd6f73m+d5PuJWXKq6hTPqTs1bfbY
+	 mqmPAvKJ2bIrg==
 From: Philipp Stanner <phasta@kernel.org>
 To: Jaroslav Kysela <perex@perex.cz>,
 	Takashi Iwai <tiwai@suse.com>,
@@ -45,9 +45,9 @@ To: Jaroslav Kysela <perex@perex.cz>,
 	Thomas Gleixner <tglx@linutronix.de>
 Cc: linux-sound@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/28] ALSA: azt3328: Use pure devres PCI
-Date: Wed, 23 Apr 2025 09:53:29 +0200
-Message-ID: <20250423075346.45907-12-phasta@kernel.org>
+Subject: [PATCH v2 12/28] ALSA: als: Use pure devres PCI
+Date: Wed, 23 Apr 2025 09:53:30 +0200
+Message-ID: <20250423075346.45907-13-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
 References: <20250423075346.45907-1-phasta@kernel.org>
@@ -69,22 +69,36 @@ pcim_request_all_regions().
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- sound/pci/azt3328.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/als300.c  | 2 +-
+ sound/pci/als4000.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/azt3328.c b/sound/pci/azt3328.c
-index 8a895d838005..053a18f434bf 100644
---- a/sound/pci/azt3328.c
-+++ b/sound/pci/azt3328.c
-@@ -2347,7 +2347,7 @@ snd_azf3328_create(struct snd_card *card,
- 		return -ENXIO;
- 	}
+diff --git a/sound/pci/als300.c b/sound/pci/als300.c
+index c7c481203ef8..43f98719e61b 100644
+--- a/sound/pci/als300.c
++++ b/sound/pci/als300.c
+@@ -617,7 +617,7 @@ static int snd_als300_create(struct snd_card *card,
+ 	chip->chip_type = chip_type;
+ 	spin_lock_init(&chip->reg_lock);
  
--	err = pci_request_regions(pci, "Aztech AZF3328");
-+	err = pcim_request_all_regions(pci, "Aztech AZF3328");
+-	err = pci_request_regions(pci, "ALS300");
++	err = pcim_request_all_regions(pci, "ALS300");
  	if (err < 0)
  		return err;
  
+diff --git a/sound/pci/als4000.c b/sound/pci/als4000.c
+index 022473594c73..3f4f3037f71f 100644
+--- a/sound/pci/als4000.c
++++ b/sound/pci/als4000.c
+@@ -836,7 +836,7 @@ static int __snd_card_als4000_probe(struct pci_dev *pci,
+ 		return -ENXIO;
+ 	}
+ 
+-	err = pci_request_regions(pci, "ALS4000");
++	err = pcim_request_all_regions(pci, "ALS4000");
+ 	if (err < 0)
+ 		return err;
+ 	iobase = pci_resource_start(pci, 0);
 -- 
 2.48.1
 
