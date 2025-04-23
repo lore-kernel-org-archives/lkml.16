@@ -1,138 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060E725C83E
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7E128A414;
+	Wed, 23 Apr 2025 16:00:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745423996; cv=none; b=OGcLDaofeCyNm4xOsx0m6gpY+8PJT+dMMc4/QZcCPB52y4JIfhsU3xPMQOu5tjpgj2Wk+o/a7fosHGUeSrHNT9MYQXmyQhu3kXVQqqmeq8At5hZnUZrrjUpgDq+62g/1yYyFG8KmWvBtLGtdP/KTQE7I9/f90CL7o7EZ+v8PB5c=
+	t=1745424002; cv=none; b=KEHbHIhJlRSAKwY5GV38t7Faxq7KXzvt1b4MdWOm96O8rb6byGO4r+Y5l8x5YedaSCB3VZzRc8drgFBkOFfc8HE3Cya4UKQydAuOdlGj3A3hiTXCqxGwmMTP1N9ThsI2jhKoA4UxV5UUD/zDkolr/ANO07Uf3nYZDpsI2LiCLYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745423996; c=relaxed/simple;
-	bh=fKOOhxBmLqqUQizLEtoVJN4/gxy8qbr7uqSO+qgPMpA=;
+	s=arc-20240116; t=1745424002; c=relaxed/simple;
+	bh=QPJfcjXdLieG82fN+AZrPgGVjBSFHt/vMUNUousEIyM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f0zlrMwrfgEmJ/dkxbGpsemDVzFi2nnvcnTeYHX0ey1rBiRPhioCRSOvOTKQFaktwp/B1WhtWN2iaffjxypbbZQ0tf51pzTnY2S3OorUzjXevH/zMDaJjRwyhCL8UucGHyJdLNKucmgUF5upuZvk5+ZlGSna7MM+TJSpEqBAORw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g7XrU6R0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=c+spK3EAb8xTaQg4zCq8iMvBuqWTbph0B7qmbtVLo0oWUCOYIKDlIoorKLJUMYHL7Ol7XTaUhXVvIREP4wCQcvXwSKiQK8Kk/8+WBwIfZgKonP04kevG4iO0kPLPcTxSXTRFr2t7Zu/qYu+hQvMrjaToMZ6aLaD8KkFZ6s5MEfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cbrxbRlG; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g7XrU6R0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A217CC4CEE2;
-	Wed, 23 Apr 2025 15:59:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745423995;
-	bh=fKOOhxBmLqqUQizLEtoVJN4/gxy8qbr7uqSO+qgPMpA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g7XrU6R046vTfci5uyQGMwpPcPX/5rUAmqCpG7ekzsoBXUnhCKr7mZ5fHyrS5Ud9/
-	 kNwf5VSIu370pLS4UCaiLxHYE/SrHgvItuLoMoCU6pT3foe73B1gK0zLppsD/d33DC
-	 fZ1Ndkh7DOf/PVi1Y19GoNLtL61A0wRdr4XweA6mOo5vXpBWFsfluVbTlMrTmDiei1
-	 AwoXQ5dUYhNnHzom5Z/+YKIpmO0oO4XmpN2tXB6WN+obrgc45mxafAYyp+4Nam8EJL
-	 Bj0+ZD1MY3DjHjStdV8vtTAExMpRgKGiEyKoiEr1lBLVinNM2MheFKd0pmJvaojtOJ
-	 dc6JA04rOnKeA==
-Date: Wed, 23 Apr 2025 16:59:49 +0100
-From: Mark Brown <broonie@kernel.org>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Jon Pan-Doh <pandoh@google.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Karolina Stolarek <karolina.stolarek@oracle.com>,
-	Aishwarya.TCV@arm.com, sraithal@amd.com
-Subject: Re: [PATCH v2 ratelimit 11/14] ratelimit: Force re-initialization
- when rate-limiting re-enabled
-Message-ID: <257c3b91-e30f-48be-9788-d27a4445a416@sirena.org.uk>
-References: <4edcefb0-cdbd-4422-8a08-ffc091de158e@paulmck-laptop>
- <20250418171359.1187719-11-paulmck@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cbrxbRlG"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6ecf99dd567so562946d6.0;
+        Wed, 23 Apr 2025 09:00:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745424000; x=1746028800; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ouo4X4IJUdjgJTmW5w+NARiJGi4G+qZbFnJpYhAWztE=;
+        b=cbrxbRlGDtlBHw7mGOgvT5dFYmRi7fZ57a0Skq/j9WootZL7rUVFTSwKqsk+soOqKQ
+         EBww0R0xzeW/hOnYT28IbJjl82MeG0rup3XYQXwSeMkswMW3qsShAqBxYpzQ4rD2WE3X
+         q5QLxMG1TBHnnbPgbMngCxTDLBT2kRPi6Yitcuhf6w/zjgWTZMNWQEDeBBUQXnZDwEpR
+         gQjQSpTi33vXugRv4rfGociOrhcWgkpvGle58XgKhEs4zpAwDKEgalR7yyX0p9chUNlu
+         0tXnoE9C1xQRKOAhJhNZr5xzQJ5SegVE67IbjzZi6MN4XodBb244KxaUTvQjkqMr9hng
+         LSmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745424000; x=1746028800;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ouo4X4IJUdjgJTmW5w+NARiJGi4G+qZbFnJpYhAWztE=;
+        b=W3IX214pmem2NTbxwvgc16VBBG077nU5wsDNNzzMgl/fjGEwG8WkC7CpERN/WsMpkj
+         Mjd24Ufbn/PJsLhSfi9NtZZllqHAQrvsHm8fyhxOZdBGCZILuLVSAsZEWWAnbGJ0yKee
+         GdFwDLbrrfLrKUDw4fTCqECbxzlbW+4Gp3vYDMl8gUnYRu586JPc1R7g3x0wVihjOOIh
+         JWDm89otxXk+gNNmGK+56zh3lo9aS82xgz9ZMQfVqswQZ8eh+2DCSn5MxfvzSUiPotxg
+         BmL/SRe3S0ACpqgS/2+bHRkczsUifkeRkbhRPi210qJABBwhPjwi2ZPFtZAVdfztpWn/
+         mYHw==
+X-Forwarded-Encrypted: i=1; AJvYcCX4rNHmFHEFoamc4NsfYUQgCwOU1UdoIJ1lAs+YwIF06L9Fm3y+qg/f2BRb0P4k7A88SaEldR4WKJAV3O20cyw=@vger.kernel.org, AJvYcCXwb7jGJCsmprukhz+rqUt9AmWrj/OS4mdNPiDFimQ8d2lDMu3Qb/RnlYwygVJILgTBwUohI64csRrZDXI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUFVIapRl4WpQOvDh80xsNp5hcnlaeLjSgs7LM2xvfkmIyZqPs
+	Nwb1LIiWhR10dQMO6xd4vyFAqXgHNWcOq3nKaIAdGPTn+UpzNtU6
+X-Gm-Gg: ASbGncuchwa0Y7mycJwVWSHPcsFBBdjVHrdJ4RPUJSYWBW6ykaG28CNqd4766y+EPYk
+	/odIDU33Y/qs5UrPTB1Pn0FXq4RML7li9fq1m0o9EkEHZLJwKiNaJd6LhfuJY/7NJ9oS+U+ASzX
+	BABs5OozHWsWbCfY8a9QQvCVNhDzfwRX/6jvJZaDQo9/4b2OewpmpCWiGOLAMj6n7Mnkn6124GZ
+	8t20QfUi7Ur64gcRMJMbeqNcf7iW5Mm7Uhn7tX/SbaLr5+BMcM7ISMWyQ2lq0pb58fpUhI+4Nr1
+	YdZCVVp4Sy7+V/4muepc2BfalDgMHNOXMHMlhYpcR+yjjEjokzFE8OCW3mIuHnB6bCWLPMFuqN8
+	whz5DBnWLgnR4wYRXzFcP0Kmq5bzm8zc=
+X-Google-Smtp-Source: AGHT+IFQL4/eHWDTwuX2mRBHoZlsBgouOwIX6qIDFuzVAzjKEXALU0XbvEgwIN5msgrac1BdzJtHSQ==
+X-Received: by 2002:a0c:ff0a:0:b0:6f2:d45c:4a35 with SMTP id 6a1803df08f44-6f2d45c4c2fmr214701366d6.37.1745423999562;
+        Wed, 23 Apr 2025 08:59:59 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2c21cccsm71913046d6.106.2025.04.23.08.59.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 08:59:59 -0700 (PDT)
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfauth.phl.internal (Postfix) with ESMTP id B8CE81200043;
+	Wed, 23 Apr 2025 11:59:58 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-04.internal (MEProxy); Wed, 23 Apr 2025 11:59:58 -0400
+X-ME-Sender: <xms:fg4JaBe-roJo0YgN5QuBVC1zAzy_jk6w0pgtCRu4SXuhwmXg2eMGEg>
+    <xme:fg4JaPO1WRpGcHJwxLl_GV0cC8ZHgCrtBI6Sniza2BRzgAWBM-MSzIxCEBupQMkKY
+    irPuByZb7dszrU5bQ>
+X-ME-Received: <xmr:fg4JaKgiDz-PCZRoZD41w2qy55V6VlBv51Rn0Oygr4ZfUmWs3Q-oTN0Z>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeejtddvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
+    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepiedpmhho
+    uggvpehsmhhtphhouhhtpdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrd
+    gtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehm
+    mhgruhhrvghrsehgohhoghhlvgdrtghomhdprhgtphhtthhopehruhhsthdqfhhorhdqlh
+    hinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhk
+    vghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegsohhquhhnse
+    hfihigmhgvrdhnrghmvg
+X-ME-Proxy: <xmx:fg4JaK8dWFozj2aO0KZt0FDdm-tFpY-L97ls-qGL2q0OZfjpGmuNxA>
+    <xmx:fg4JaNuhx_28ieyG9MzjfpipfT9ydU6MDqzSec-Jo3vkU1VRm-p3ow>
+    <xmx:fg4JaJFINQrhZrdV5Oq1Ugd2Wl5f-h1t4J4rs2BwemKR15uvEUIpgQ>
+    <xmx:fg4JaEO9K05kYuHaF046nVOQDc-v9j9RUKDyIXfye158Aj-glETX0g>
+    <xmx:fg4JaGOUHjE0SBBiNTfcXc5tA57MdWQ4q23YQEW4ccJlMmKf8OJHeKc8>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 23 Apr 2025 11:59:58 -0400 (EDT)
+Date: Wed, 23 Apr 2025 08:59:57 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/7] rust: alloc: add Vec::push_within_capacity
+Message-ID: <aAkOfZ6I_w4VUsnx@Mac.home>
+References: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
+ <20250422-vec-methods-v3-3-deff5eea568a@google.com>
+ <68080a53.050a0220.c2cd7.6290@mx.google.com>
+ <aAirBuiNdraU4ty3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wGDMa8FcLiC2f7lB"
-Content-Disposition: inline
-In-Reply-To: <20250418171359.1187719-11-paulmck@kernel.org>
-X-Cookie: I'm wearing PAMPERS!!
-
-
---wGDMa8FcLiC2f7lB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <aAirBuiNdraU4ty3@google.com>
 
-On Fri, Apr 18, 2025 at 10:13:56AM -0700, Paul E. McKenney wrote:
-> Currently, rate limiting being disabled results in an immediate early
-> return with no state changes.  This can result in false-positive drops
-> when re-enabling rate limiting.  Therefore, mark the ratelimit_state
-> structure "uninitialized" when rate limiting is disabled.
+On Wed, Apr 23, 2025 at 08:55:34AM +0000, Alice Ryhl wrote:
+> On Tue, Apr 22, 2025 at 02:29:53PM -0700, Boqun Feng wrote:
+> > On Tue, Apr 22, 2025 at 09:52:18AM +0000, Alice Ryhl wrote:
+> > > This introduces a new method called `push_within_capacity` for appending
+> > > to a vector without attempting to allocate if the capacity is full. Rust
+> > > Binder will use this in various places to safely push to a vector while
+> > > holding a spinlock.
+> > > 
+> > > The implementation is moved to a push_within_capacity_unchecked method.
+> > > This is preferred over having push() call push_within_capacity()
+> > > followed by an unwrap_unchecked() for simpler unsafe.
+> > > 
+> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > ---
+> > >  rust/kernel/alloc/kvec.rs | 41 ++++++++++++++++++++++++++++++++++++++---
+> > >  1 file changed, 38 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> > > index ebca0cfd31c67f3ce13c4825d7039e34bb54f4d4..a005a295262cb1e8b7c118125ffa07ae252e257c 100644
+> > > --- a/rust/kernel/alloc/kvec.rs
+> > > +++ b/rust/kernel/alloc/kvec.rs
+> > > @@ -307,17 +307,52 @@ pub fn spare_capacity_mut(&mut self) -> &mut [MaybeUninit<T>] {
+> > >      /// ```
+> > >      pub fn push(&mut self, v: T, flags: Flags) -> Result<(), AllocError> {
+> > >          self.reserve(1, flags)?;
+> > > +        // SAFETY: The call to `reserve` was successful, so the capacity is at least one greater
+> > > +        // than the length.
+> > > +        unsafe { self.push_within_capacity_unchecked(v) };
+> > > +        Ok(())
+> > > +    }
+> > > +
+> > > +    /// Appends an element to the back of the [`Vec`] instance without reallocating.
+> > > +    ///
+> > > +    /// Fails if the vector does not have capacity for the new element.
+> > > +    ///
+> > > +    /// # Examples
+> > > +    ///
+> > > +    /// ```
+> > > +    /// let mut v = KVec::with_capacity(10, GFP_KERNEL);
+> > 
+> > Should be:
+> > 
+> >     /// let mut v = KVec::with_capacity(10, GFP_KERNEL)?;
+> > 
+> > , right? I.e. a question mark is missing.
+> > 
+> > The rest looks good to me.
+> 
+> Will be fixed in the next version. Let me know if you want me to add
+> your Reviewed-by tag with this fixed?
+> 
 
-Today's -next is failing to boot a defconfig on a wide range of arm64
-ACPI platforms.  One ACPI platform (Softiron) is still fine, and I've
-not noticed any DT platforms having issues.  Output grinds to a halt
-during boot shortly after userspace starts on affected systems:
+Sure, feel free to add
 
-[   23.334050] Freeing unused kernel memory: 11328K
-[   23.355182] Run /init as init process
-[   23.378221] NET: Registered PF_INET6 protocol family
-[   23.396506] Segment Routing with IPv6
-[   23.414054] In-situ OAM (IOAM) with IPv6
+Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 
-A bisect converges fairly smoothly on this patch in -next, which doesn't
-look completely implausible for something that stops console output - I
-didn't dig into it at all though.  I see that Sirkanth (CCed) seems to
-have reported a similar issue though with a different SHA1 since he
-noticed on yesterday's -next.
+Regards,
+Boqun
 
-Bisect log:
-
-git bisect start
-# status: waiting for both good and bad commits
-# bad: [6ac908f24cd7ddae52c496bbc888e97ee7b033ac] Add linux-next specific files for 20250423
-git bisect bad 6ac908f24cd7ddae52c496bbc888e97ee7b033ac
-# status: waiting for good commit(s), bad commit known
-# good: [2a9308cbc987660dd54df7af2a8685d512d467d0] Merge branch 'for-linux-next-fixes' of https://gitlab.freedesktop.org/drm/misc/kernel.git
-git bisect good 2a9308cbc987660dd54df7af2a8685d512d467d0
-# good: [68123785b5b6b54698b92e534c2d42cbb39701c0] Merge branch 'drm-next' of https://gitlab.freedesktop.org/drm/kernel.git
-git bisect good 68123785b5b6b54698b92e534c2d42cbb39701c0
-# good: [99554718252d6f01036ac8e0b45bcfc16bf0e0ce] next-20250414/tip
-git bisect good 99554718252d6f01036ac8e0b45bcfc16bf0e0ce
-# bad: [d017479907b87ffbcfe908c7188f19722d3fdb46] Merge branch 'togreg' of git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
-git bisect bad d017479907b87ffbcfe908c7188f19722d3fdb46
-# bad: [379565a0c27c2b9c9e6df8cac66dd458a71a33b5] Merge branch 'driver-core-next' of git://git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git
-git bisect bad 379565a0c27c2b9c9e6df8cac66dd458a71a33b5
-# good: [fd02aa45bda6d2f2fedcab70e828867332ef7e1c] Merge branch 'kvm-tdx-initial' into HEAD
-git bisect good fd02aa45bda6d2f2fedcab70e828867332ef7e1c
-# bad: [a46505d01338de4299d417ebe01b12060ebadce7] next-20250414/workqueues
-git bisect bad a46505d01338de4299d417ebe01b12060ebadce7
-# good: [5109fd27d5ade19fe5de22c746157c693878dde7] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/rcu/linux.git
-git bisect good 5109fd27d5ade19fe5de22c746157c693878dde7
-# bad: [ad0c7a85f8b529154c99103d4daa0e86f4c14272] ratelimit: Avoid atomic decrement under lock if already rate-limited
-git bisect bad ad0c7a85f8b529154c99103d4daa0e86f4c14272
-# good: [945e63d4897045421a64f86cbd8194e0ff06dc41] ratelimit: Count misses due to lock contention
-git bisect good 945e63d4897045421a64f86cbd8194e0ff06dc41
-# good: [13fa70e052ddc778ecf70db21a07d97c2487da90] ratelimit: Allow zero ->burst to disable ratelimiting
-git bisect good 13fa70e052ddc778ecf70db21a07d97c2487da90
-# bad: [5d80e7bbfddda9369f301b484d621c45de8edf5f] ratelimit: Don't flush misses counter if RATELIMIT_MSG_ON_RELEASE
-git bisect bad 5d80e7bbfddda9369f301b484d621c45de8edf5f
-# bad: [c8943bdecfc76711f83241e21da9d4530f872f0d] ratelimit: Force re-initialization when rate-limiting re-enabled
-git bisect bad c8943bdecfc76711f83241e21da9d4530f872f0d
-# first bad commit: [c8943bdecfc76711f83241e21da9d4530f872f0d] ratelimit: Force re-initialization when rate-limiting re-enabled
-
---wGDMa8FcLiC2f7lB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgJDnUACgkQJNaLcl1U
-h9A4sgf/fSfrk/7ZH7MgvVTv2cpWXUBgg/KwE9CdVrUEwtL65meKJIrnUirJjqcO
-6Mpez4CcguqNayP9OCBzHVdh6VNE8SbyRo0QCrkv3nDmDF/FGHgldPNDEC3sZhBd
-Cs3WSRXbdwm97+Mpk/oF+TzXFzOuys7F44Ghv49AkZ+85i9ZjK79tdGTbF3HVqYG
-rwwvQiAyveNQ0DU9T1tqwcdn15iM6LuOkDh7ml2DMvjtfMAhxhAUf8TldZI0I9Oz
-diIzWboKD7dWxx5BXta4SSFMSv429hOzx6AGLRbX/C6BD8NS9ZQQvHuywHxHFkBX
-txwjpdGgrD7601JxbkrA2EJKdnq1rQ==
-=mLke
------END PGP SIGNATURE-----
-
---wGDMa8FcLiC2f7lB--
+> Alice
