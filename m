@@ -1,81 +1,51 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD469259C89
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:21:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AA61EA7FD;
+	Wed, 23 Apr 2025 01:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745371306; cv=none; b=FHFZvsVNb5iBQLuKYGMufxzTygv3MqK2x5D7tUO+yBFnu+mAWPWwyjrVd+szMnFeSuQpiP0wLfPzVdgf6FfFUsBL/J7p3LwvoDv+P3d0RKvUQY2hhG6lb2Dg13J/lWUbhp3HlWMLCUcIgvB04QGW4Otn6OQGjwVeEyYzdLWSj0I=
+	t=1745371369; cv=none; b=TkEiwUIJkEanXpaLZ3H4mA875/NlLNOH38sjoxy36sTx0NrVorb2Xv5kQSMv2mW8j4Xq9ljGfc7q6eBdUIMPfIZPq91JzophPEocABRN+nbEWYMDBpvrPB+Ja7sK+QPo92+CbteQNE0sGLSaETsND/BZwqdF+FD6ztvNMojcI1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745371306; c=relaxed/simple;
-	bh=7oCvZbjyJy+tbhwD741EF4yStpE1Dx0IW6TfkQyeRW0=;
+	s=arc-20240116; t=1745371369; c=relaxed/simple;
+	bh=3IU9xggvxaGyK7C8FsIJX/MreMYfHLvHVx3mahRv7VA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lAA1wkVkI5iepYEUXE695YhIzQXPx5F1S8jNBolWm8mkb0VLvzsiRNFQXY4xs5ZWZcj6dhSR+98+ZXQ/BHOv0URF5NdT1HbG0V6X+hv1VifWrfTs4mesWrU+QtRqipjUlxhiR52qDEaCNX3TznEGC7ZKDZLL5mf5YKhRvC+/BFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=daqp3zPZ; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GELEn8mSzQcvyo1DXRsEwLkDAE7y/EAV33BJN8GFdU7ujthiMicbYNBxd32AHiUgOgbS1jx+VmRfYZID//OZ0jhre0zHR3rd7fKSr882EqhmEIQ9Y19LEF0q4C0nKtkGnjGR3UcktUR8YKyGgp0h7Z3NXBRZTqgNrA2ciAWPvAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=jydTR+Nw; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="daqp3zPZ"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-227b828de00so62935965ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 22 Apr 2025 18:21:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1745371303; x=1745976103; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0XoWI2RzfOQa1ulADmyuzmk0HP40c08H5o4VzcnZv4o=;
-        b=daqp3zPZNNV7iK4TepUPhTYEpn6RwbrbtR7sps2dPn3NSFLuSay/HsTFy4Ac9wq0Ve
-         GGQWNZmSMHf7RqzU53AaXXmxRPhoJmT6mdib4L9Yii6m57XFhSujez8uRHhGQiITS/7c
-         VxkJU94+g3O+UunhexUinKL91eqw5u6HQA/3c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745371303; x=1745976103;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0XoWI2RzfOQa1ulADmyuzmk0HP40c08H5o4VzcnZv4o=;
-        b=aX/dSBNkiOvyZ2dXOqqwsX0de3JadMHuBql28TIFBz9EUY7gpcCjoMWSmvcTV2DUst
-         LmaZo5ldE6YEb4K8MDZ6K5JqLqMou7QP/K1kekpxDRgXisdAAsQEXvNKOZ1DWX2NIaUL
-         FvfNhLdqibP4HeMI40JHcbHcPbO4HY2VfniFEPFFc1U1z4W5UjxeNxMUKQrP394ROoNI
-         +AM6isbMjePtohFoXMsVvHFT0rhK1lEZFPlMM8wlXl3Htmzk43hLXERe+BGB7wKBF8Gk
-         Vt+OV27UlX660dWJ7kRav1tIDy6kyUZy6BdCi7TgK761jc+zCk+bnWZNZw6w2lBDG0Ov
-         RkGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXFPC/6uasdSCaCFZ9DeGCpXB1USYWDGCCaoTQooWQi8TqjkSVr4sJ17tLbZhQQYNIxrLCCdaJIRazIZTo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjJYW815+HbLC8ThBS9o/0PTG5vNMugQpRfzgQiSKJA3Fnz7HL
-	oWGcdSqaY7mzCx6BxtG0Yx0u1q71j/KQGfu6lq1NerUcy6BpXIttVz+026U9Fgs=
-X-Gm-Gg: ASbGncvyw7jAXkXvvo3uugM3aBOH1QcjOxoSHWpvn8ny4dtnGWVIYKBp3CTLeWRfN4d
-	huazZyhIgLeQm69RBPklphhsQUA1HTcXcJ4QTSM5SBYQlJvkIvZtGbw7DRqPPePrFwEwjU4nyih
-	h4A9euDqUm/70uWyYDaUtK1RkgtsUB89Ozq7XHl0ybOeP9GQ4u8GGsqlwCBnwb/cxuGNKxQ6FI5
-	hBgz7fKbKHav5rsMl2/ohug8KXArSixM+NprjrUXMt/osT4Ni60hpeSPkblLHK9JmLGpINFJFnA
-	RkWyuIT1u4XFGHHdDHVlO8V7uVPjBVK0XPSvYrsF4UakvSudLtdX2BAn518GPz+8Vv32tKTPlCr
-	UPUgs6QLopMhSaN63Cg==
-X-Google-Smtp-Source: AGHT+IHFoWOXbc0yjeIcAUEo6Kb0nJ7VwpRb9IXpFAJ3MPY1vqBMFBg87lY6ydyBLOYb+AiXf+/KeQ==
-X-Received: by 2002:a17:902:f70d:b0:225:abd2:5e39 with SMTP id d9443c01a7336-22c535ac94bmr241821455ad.30.1745371302877;
-        Tue, 22 Apr 2025 18:21:42 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50cfae4asm92420035ad.106.2025.04.22.18.21.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Apr 2025 18:21:42 -0700 (PDT)
-Date: Tue, 22 Apr 2025 18:21:39 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Harshitha Ramamurthy <hramamurthy@google.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
-	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com,
-	pkaligineedi@google.com, yyd@google.com, joshwash@google.com,
-	shailend@google.com, linux@treblig.org, thostet@google.com,
-	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 4/6] gve: Add rx hardware timestamp expansion
-Message-ID: <aAhAoxmUSCQkq979@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, jeroendb@google.com,
-	andrew+netdev@lunn.ch, willemb@google.com, ziweixiao@google.com,
-	pkaligineedi@google.com, yyd@google.com, joshwash@google.com,
-	shailend@google.com, linux@treblig.org, thostet@google.com,
-	jfraker@google.com, horms@kernel.org, linux-kernel@vger.kernel.org
-References: <20250418221254.112433-1-hramamurthy@google.com>
- <20250418221254.112433-5-hramamurthy@google.com>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="jydTR+Nw"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=Bm5aY/6VVF0bgAOLgzDfud9C1Mj1JgBZ+ZlOE5CW70w=; b=jydTR+NwHdzKIURBEiuMVZboYi
+	DCzwWQLhKnGgUo5HZYkqzhQ0Qz4mqZljqyNFR4KZ748gcounLL9OJfWLO9LCXsHD72iXYufOYaV1P
+	sboHKZo/GUYfcCaZlUJxUiAOdrFgPiUh1R1kKLJmYiCA+eLkrq3n3sYoOrjjZ7el4b9E7204of4jf
+	8aNRskw8RyHMGk/okwwPl2V0fiSxWpTuNAZluzf5ubyATJh3JG0vjWfh9hGc/TaKN2/mMovlLb4Ij
+	NE6K3gIk1LKIRV7jAZ5frHwcgR6VaRMJuSYa4yTALGKsKpB352lgMQg24ePUV/T5rpGh+OJPfVWCO
+	7yVn584g==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u7Ooc-000FHI-0h;
+	Wed, 23 Apr 2025 09:22:19 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 23 Apr 2025 09:22:18 +0800
+Date: Wed, 23 Apr 2025 09:22:18 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Zhihao Cheng <chengzhihao1@huawei.com>,
+	Richard Weinberger <richard@nod.at>,
+	linux-mtd <linux-mtd@lists.infradead.org>,
+	Matthew Wilcox <willy@infradead.org>, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: Re: Linux 6.15-rc1 regression, folio/ubifs Oops
+Message-ID: <aAhAylotNK_zHl0C@gondor.apana.org.au>
+References: <20250408082018.GA23886@francesco-nb>
+ <20250422175409.GA877874@francesco-nb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,56 +54,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250418221254.112433-5-hramamurthy@google.com>
+In-Reply-To: <20250422175409.GA877874@francesco-nb>
 
-On Fri, Apr 18, 2025 at 10:12:52PM +0000, Harshitha Ramamurthy wrote:
-> From: John Fraker <jfraker@google.com>
+On Tue, Apr 22, 2025 at 07:54:09PM +0200, Francesco Dolcini wrote:
 > 
-> Allow the rx path to recover the high 32 bits of the full 64 bit rx
-> timestamp.
-> 
-> Use the low 32 bits of the last synced nic time and the 32 bits of the
-> timestamp provided in the rx descriptor to generate a difference, which
-> is then applied to the last synced nic time to reconstruct the complete
-> 64-bit timestamp.
-> 
-> This scheme remains accurate as long as no more than ~2 seconds have
-> passed between the last read of the nic clock and the timestamping
-> application of the received packet.
-> 
-> Co-developed-by: Ziwei Xiao <ziweixiao@google.com>
-> Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
-> Reviewed-by: Willem de Bruijn <willemb@google.com>
-> Signed-off-by: John Fraker <jfraker@google.com>
-> Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
-> ---
->  drivers/net/ethernet/google/gve/gve_rx_dqo.c | 23 ++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/google/gve/gve_rx_dqo.c b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-> index dcb0545baa50..483d188d33ab 100644
-> --- a/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-> +++ b/drivers/net/ethernet/google/gve/gve_rx_dqo.c
-> @@ -437,6 +437,29 @@ static void gve_rx_skb_hash(struct sk_buff *skb,
->  	skb_set_hash(skb, le32_to_cpu(compl_desc->hash), hash_type);
->  }
->  
-> +/* Expand the hardware timestamp to the full 64 bits of width, and add it to the
-> + * skb.
-> + *
-> + * This algorithm works by using the passed hardware timestamp to generate a
-> + * diff relative to the last read of the nic clock. This diff can be positive or
-> + * negative, as it is possible that we have read the clock more recently than
-> + * the hardware has received this packet. To detect this, we use the high bit of
-> + * the diff, and assume that the read is more recent if the high bit is set. In
-> + * this case we invert the process.
-> + *
-> + * Note that this means if the time delta between packet reception and the last
-> + * clock read is greater than ~2 seconds, this will provide invalid results.
-> + */
-> +static void __maybe_unused gve_rx_skb_hwtstamp(struct gve_rx_ring *rx, u32 hwts)
-> +{
-> +	s64 last_read = rx->gve->last_sync_nic_counter;
+> On Tue, Apr 08, 2025 at 10:20:18AM +0200, Francesco Dolcini wrote:
+> > I do have the following regression on single core system using UBIFS,
+> > dual core seems not affected, any idea?
 
-Does this need a READ_ONCE to match the WRITE_ONCE in the previous
-patch ?
+Please try this patch which will go in today:
+
+https://patchwork.kernel.org/project/linux-crypto/patch/aAW8E9NrKWq1Xk2w@gondor.apana.org.au/
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
