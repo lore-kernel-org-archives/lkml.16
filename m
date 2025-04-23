@@ -1,215 +1,253 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2081.outbound.protection.outlook.com [40.107.96.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F6232701B1;
-	Wed, 23 Apr 2025 09:40:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745401217; cv=fail; b=Rdzxt7jHa6l6+5wnoYj8cGpiB2HCLYvvY122T6vso6z9f2N20l0KTxQt9OWOxd5r+PgXRd0UK2NbDtsMWaQdi/kHlwskmkbugt2GaUDXxtMgmEVGg2exaantVFSYJWOvBJOU4YaLDnLdZmov7KQCOpU6pb5KsByMbdvfSNhod3k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745401217; c=relaxed/simple;
-	bh=Y7ddmRGVDVT7h0HWvObWLsyLeV2i5QBq+ibR9/7uDo4=;
-	h=Content-Type:Date:Message-Id:To:Cc:Subject:From:References:
-	 In-Reply-To:MIME-Version; b=FhJVEoAP4+w/hb7/KcgnFPrYeVU9HF/Vkpk7oMx8WaOTIe2kdjASzpFCJ1Q2+plV0r56Xea0+zRQjNgFL4EcrrN5p2OIjeJ/vvwLF9ToU/ZsxDAb3LJNA/s0o3KAKd8oqz1EK2U+CCSyn1iQBsu7Y6FGXEE/3rb6nWYCxYuUKBc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=suFd7g7g; arc=fail smtp.client-ip=40.107.96.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0076F1F0991;
+	Wed, 23 Apr 2025 09:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745401278; cv=none; b=JwgDYPF5I48RH9EcYfZ80kaTiAVJUVkZNrmKQETc91kfVkDXyuAelakYFRiex9VJFmqGOqoCW/MnzK1wFNPbOjUWc+IVo0XDWdC7F6XULW6igt8UQ+0XBRJu3TwagBrUaAu5cSh5gx3pF3rX+uguTtqHCczuCyOIUDR7MXy8P90=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745401278; c=relaxed/simple;
+	bh=oHlnbFyG9mqqg/nGHUoA0yQVFyX9osgvGnAa5HoU7Co=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BDuqGvvYDsUGQJB7wjDim99p4C75t6a5lnegTDfJWgOu+D/sPEatJ+I24rDozsgodL1G+IzWI3NiQVztlFPJ4/gR+mF5pkqBH1y+ICDYu3CnSDFhF3RkSTCSCgxouPEWVnzn5jgCV+L/b/U+qPXGw+znMUfrqXrSYthXiI4C+8g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XjwMuKkW; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="suFd7g7g"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yom016xkwU11RVxslOVxakQueEnt6VmM0LE3H37c5VK3+8wCr63cY7Vhs5r3tQfgVBRIOTwowKTMX3Q9N8/b8INlo5PLvZIEvHirsVzEydUT3s4KURWNj/3mdLRm8B+KeLu8sKo/hNN0B1BZcBEejPIfxFiL4gK+1D5nP4P4ki3mIDT7ZYYvAyJHrLyDORv0SVsfouZIWbZ/qN6R0iI31IV0LL9/4JHf3i8QIZcBfuLolwf/gm4F0ydBFN5zxzEgML1V0REdeBWULjex2A1LpuyLl78yr3/FfXtGzQSHgMaISsw2iQbftyMhK/NurH5VcY0ZLB+NXdixmk58R9COug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=a+6M2/pyabA+aUFOfb16KtoVdjOO78txFjayBMlAn2E=;
- b=aB+2kmM/SCGHNDx2D8gbnKNfwY0bYkEDczixljy3f+uMjJ0QX/vsIhyZUSi3eC1Uj5juBcLKCF1IBA3pwPzDLpJyCYVYGeL6g56NzkgcpQqwsAteyBP8hQqy8DSLHjEVvIc9s/g853rAY73I6m1dfOOiaPRdF2lhZlQXbmqhilADn1Ud9Tqdln7mv614K2GjBqB9QCVKpwc9XG/KF7yVk5bGGIfFOE2zfXWbtqBwMvkSyiOOuqsOlGtREdH9h0k2u69tynUIZIx+X9z0Rq5P7U2ySyXo3sE77crHtmz3UduMFHDSyZQLjeR3v5n5kVc9btFJ8HOYmi+CEWmakjNl6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=a+6M2/pyabA+aUFOfb16KtoVdjOO78txFjayBMlAn2E=;
- b=suFd7g7gfDFNBzs+u6YANXSksa20NutSq9gx6aIokGWVjxqSLrHK16Fg2OCdkOy6xw77cgAv1fFUqSRUhp2DJN5Px+QR26gYoiEe7ipwopxNTKFwuOww1J7XCMWVGvb5mgQg8/M9+M7fkCN/6YulxsZa+lsrjCYHMZJ08DrMitva3rV3Sx6XOniXeDnfqnNZUdddIss3K8jaBW6aKGOV65/s2rRF5E29Q+QibXPBqR6e5x+lMNHMhMq6Hc4TkLvt5cloit3b9sX/noS675h+kvD9D5ShSrOWPXKqcV7qLl8PG/zPpiNnOhKVycKz2FxzV6vUU2dE06TJvTYRm1huYw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by SN7PR12MB6690.namprd12.prod.outlook.com (2603:10b6:806:272::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8632.29; Wed, 23 Apr
- 2025 09:40:13 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8655.033; Wed, 23 Apr 2025
- 09:40:12 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 23 Apr 2025 18:40:07 +0900
-Message-Id: <D9DX39CF2RB7.IM219BZLVMCY@nvidia.com>
-To: "Alice Ryhl" <aliceryhl@google.com>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>,
- "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>,
- "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
- "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor Gross"
- <tmgross@umich.edu>, "Joel Fernandes" <joelagnelf@nvidia.com>, "John
- Hubbard" <jhubbard@nvidia.com>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] rust: alloc: implement `extend` for `Vec`
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250406-vec_extend-v3-1-ec5c5c0acf2a@nvidia.com>
- <Z_OwmEKHgsZlt2cs@pollux> <D91AOKOTDXWC.7R5K5DI87QU4@nvidia.com>
- <D9C61DDI99JX.31T59XPQGYBB1@nvidia.com> <aAfL-e6qA9oBce5t@cassiopeiae>
- <D9DM3AR3FUAF.6JSNSB9WAJ4T@nvidia.com> <aAiqCXB9sJe_v6Yc@google.com>
-In-Reply-To: <aAiqCXB9sJe_v6Yc@google.com>
-X-ClientProxiedBy: TYCP286CA0321.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:3b7::14) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XjwMuKkW"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2255003f4c6so69437525ad.0;
+        Wed, 23 Apr 2025 02:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745401275; x=1746006075; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2SqgX5yk3G5zH8iNmgJsbxRbrXshnlNTIZZ5Y1GKN9Y=;
+        b=XjwMuKkWzvoqluNG0E3VIavAtXu0ZEZmKCNT0TM8n+Xm/jxAgSzLKcVHHHITeqoO3d
+         qxi6KkdobGbTIfW/UAqHecZ5LBYkZpzrlSwR2U9f4LO9qXaGYnnHV53j630cdpm+jiVK
+         E5u/xaVEOjZjfemq2NoFfFJlIDjH8EcZXN8hxteXK+7CmyCTL83IQokBdyvPtIdciGh5
+         8eYJGYMSuXlb6QMbgvfnThTlybYU02l9Y/7LxObkQNAjCjp6paetKyRR2hBC+AYAV4tH
+         Flr+uTfdng79xAQnyOexiEzu5xdIp4C/+gTXEYa6jJJWEiq3bCWNJhgw3bDWyFlIwB+x
+         b1lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745401275; x=1746006075;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2SqgX5yk3G5zH8iNmgJsbxRbrXshnlNTIZZ5Y1GKN9Y=;
+        b=Fka4vk9QQQamLM1RMVQuHDS93U/DibcigW+dXf1HmFq0+7bRDfp+UpghimPU+ifnqi
+         VspI4LcCXV/+64AIwPeTcMH8++ZL/WMcHaCp6ZEOIvFa/0EqbS6Ll24ruPZQ2OkgN1E5
+         JeyfMjfyVx8pFnT9C9mZG+VwJqTmc3Ow4+PVac01c4JpjfBycWq4Vc5JKZGasqy1MyVQ
+         XKlGOrmz6up+aGNBS0bt2ItSDMPiojreJw+Nauclu3OOrwBqx3SnlM9Y+hsiyhEZkfv3
+         eHl/7O/Ud4+JOYp6tjp66haqay8ai3QVnkqUKqPajRMC+QqI2fFe20+vnv7/gvaDSB+t
+         fahQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUHuHRshLB5lQvxs4UHw3VkVP3z3bHSTtgScMJsyqfXxCzBVsugB0iG4uG5Jq9eDUV8nupO/RM6H7GHZ5U=@vger.kernel.org, AJvYcCUUcoHwLLJAWoLv/gSgDS/kczvfwiI7SqGVqJ/BUxntAJQDg/kPcu95Z9D8qb2GtPe11eqOZy2+h8OxDQ==@vger.kernel.org, AJvYcCV6hUCJeZyo5aiiSlbsLNKpu9XNHwu3GjP62DgFXmMqw0zHH2rbkIfry4NJp8PnavNmnUuXX1FS@vger.kernel.org, AJvYcCVMDF10tPTglxqqbLYti1q0KKKYEufsH0+h9ZF9C9tJv/r83wEEHb4EjV465g3AkEmNhy+/yrlFoPo=@vger.kernel.org, AJvYcCVsPyavgwAPG1Qi4WHRg+mqmPBwpCsLniTUh3wHNPeywZdXqG4UdFvUAc0TaUMpPQc+XKiTgu5CRL+a@vger.kernel.org, AJvYcCVva+cdZyT5cFvXbvGfheWu3GDE4Ff+klS4XssyePHK5Gnzhruy4nbi8aSamQjboe7DiIZDGvuYzrci@vger.kernel.org, AJvYcCWNX5QT2Ef+Fcjrq817eYjtZa6jtEDv1sFDoDBVDYYQRxj5sG7K8e29Q1q0gbXYAHQJh1WA4YGskStKG7aZjNk=@vger.kernel.org, AJvYcCXEOWZoxMRlSrblm80sS1NRpg4EWIK/a8lkyImWlCuDWEet/853nsILgubqcmEg5VcjSCpejN1aoqo7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwRkYq2/a7nlji1qEUzKZZXXL/zADaMfkOowyhn+vwGY/p4b7E
+	bQIoDku1UNVgeZ6BMjkmfktfb+6Fb4E0sUjWykZA3S1vcJTJd1+wH+Qy4g==
+X-Gm-Gg: ASbGncspCQBph7J5S1muqEgqrykyxeJL77PP9LPD1eadXEfuaaOYcP2a/bGqZbsim9Y
+	lMCjaailbjRc67KFzmSoXDole4nV0PnM7dP/KGiJ+Vwq3697nvdTH1hAnRacjZIzJx7SKE5UzWE
+	j/9DYIPwiPLjsFwONija8XwSJKeVex1WCnXJVXuNFo3GqCb1jqeecbnNpyFqIAzEiaksLQe/GrY
+	FGzr+ighv/RN7a+/nvmAiPgcgSlM/OWm+7bcjkj0sH95gxK0Bjnbawhu06GQivpPE3xHABkJXFx
+	lu6pm9yt+vNxXmdJ4CR14qeEqxvmWUznMfdMSq1+tit8H/bMySy110xxBar0SP6TDWcQmh2B74y
+	+OuU=
+X-Google-Smtp-Source: AGHT+IHJ2b+wzuUgb1oWT0K06TkVwgGEp/EMqO2RVm3gEmPO3nfnZP0WPTbCe/sI27aWESFdCbxmdg==
+X-Received: by 2002:a17:902:ebc4:b0:223:5c77:7ef1 with SMTP id d9443c01a7336-22c53586639mr278890195ad.21.1745401274768;
+        Wed, 23 Apr 2025 02:41:14 -0700 (PDT)
+Received: from hcdev-d520mt2.. (60-250-196-139.hinet-ip.hinet.net. [60.250.196.139])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c50eb4b8esm99972775ad.124.2025.04.23.02.41.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 02:41:14 -0700 (PDT)
+From: a0282524688@gmail.com
+X-Google-Original-From: tmyu0@nuvoton.com
+To: lee@kernel.org,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andi.shyti@kernel.org,
+	mkl@pengutronix.de,
+	mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	wim@linux-watchdog.org,
+	linux@roeck-us.net,
+	jdelvare@suse.com,
+	alexandre.belloni@bootlin.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: [PATCH v10 0/7] Add Nuvoton NCT6694 MFD drivers
+Date: Wed, 23 Apr 2025 17:40:51 +0800
+Message-Id: <20250423094058.1656204-1-tmyu0@nuvoton.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SN7PR12MB6690:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7841f492-4480-4b9c-ac4c-08dd824ad788
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|366016|376014|7416014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VlJHbkZwNHBlSHBKZkNqZWFYYXErWmNXcEFCbHkwSFdyYkpNdG5KV0Z2bE1H?=
- =?utf-8?B?TWUzZjdOMDBROUpSSVE0UHRQT0JuT3Z5aVJuN245ckdiT0g0SUZ6Z21qVDJz?=
- =?utf-8?B?eTMwbjgzTGZSQ0VURTQwU0VzUVB4MlNhWHlkSi9hWTlSY2c4N09WcXhTeGg5?=
- =?utf-8?B?OW5zRVhkSkZrSG9FRk1MbkdtdHM3U2xMSC9TSlY3MW1LUDY5M1V2Q3ZKMWUy?=
- =?utf-8?B?VGYyT3RwZmZvaDhwdVBJODJFd3orRFp5T0VCN2F6bGRXSmYyRTU5ZXJ0amlo?=
- =?utf-8?B?em10RmRFRTJaR1hhajdva2NaNmdnZzNoVGwvSmw5OEowUEVvVGdCR1FrT2pl?=
- =?utf-8?B?clhNN3F0NzdVYlhwRFl4cGcrYS9SOEJmK0xZMEVTY0NFMG9IQ0MwYmpyR0wv?=
- =?utf-8?B?NlprYktXUlo0TmVuVjgvbnpPUFVtV2hQQTRUSThNMFV1YjJQQVVBd2doTUpO?=
- =?utf-8?B?Mmd1MmxKdmM5YjNFUjJRUU5mYUtSbjZOQWkxL3p4ZXlzUHk1UlJFL0FPSnE0?=
- =?utf-8?B?Slk5d0xLRkEvUjROcVRJQTRzTFpXdE8xSnBmZ1BTMi8zQ3lBM0ZHZ2ZhM29l?=
- =?utf-8?B?eXVmVUgzVENmQlVZdXlnU3JNS2RISnN0Zk41VG8wSCtORjZkTlRicmNnVlo2?=
- =?utf-8?B?UmZQOHZMWXBndFc3RXQ0UGdkckpUSzVLdnpCK1NYZk1Zbkc3azRESGNUQ0JW?=
- =?utf-8?B?bUR6ajZoM3Zjekc4MTJyUDhUZkp5TzZzRGNvc2dqcTU0ZkFXM1N6VW1kandU?=
- =?utf-8?B?eFExM0Ewck1TQm1YNkJEenE4Ty94YzZQdUpsTGwxTFRSS3EyWXBTR2ZneTNa?=
- =?utf-8?B?S09VMnRMdnVvRlBqZ0hWUllHZ3JOeVJocE9lZHUrQzZCZ0ozT2NiUWpLLzdj?=
- =?utf-8?B?eUZnNmpFUTZTY0lQb2ljYUZPeGNrMHI5RERDbEdOTmg1Nzl5cHdGS1ZuMnNZ?=
- =?utf-8?B?R2NnVCtVRDFuNC9oK0xRb05rUnVDSk50eWdLZVhsNnhZWksrVllIUXVERzFD?=
- =?utf-8?B?YTJwQnhhK1ZKTjBqT2pvZGlYL1dOK1FQRFFSSnU1ZXlwNVFKMWFzdSswaUp0?=
- =?utf-8?B?dXlYWXBhKy9Hc0xiVmliVG1FWnZYRmlQN1Z2NjVWU0VxMzhmZEdSVnBhaVhw?=
- =?utf-8?B?M3dXL2hTU0U1WXBJKzBLRjVnWXVCaERma0pvblovZnNWc2lqYVlyVDNLZkNi?=
- =?utf-8?B?SUp0L2U3eXFmUDhXQlZ6SW9MR214ZU51Z3QrV3R3Z0hqOXlybW5jZTV0SjI5?=
- =?utf-8?B?SURPWjNGS0tITVZrVGE1RnhkdjFTTExpZWp2Qi95T0VtMlBPdUgwTnY2dGpt?=
- =?utf-8?B?SlZYU3UxemtYTnQ4eTlTaFpVTmdhUjF0Rm9pYmpWWHV5QWptMURINVgydjhM?=
- =?utf-8?B?dHBWR1VlNGRWTG1mcUZuTXJ6Q21ad0JrWThmbDV2T3ErMmFBbUtYZmpYSXY0?=
- =?utf-8?B?SUNHZnNJK252MlJmbzErcVFSMzNmdEJ1dmhtYmZkczFnNmVQRWhCUnppbExL?=
- =?utf-8?B?U05zQWNrNWtndTVXcjNiSHNXNGpXczBKS1FYMUlzUkl0ZGNKOGxsTGExcmhj?=
- =?utf-8?B?WnU4SkJVeGliaTJpdmlIZ0ViYmNvQmc1VHRaSisxWVlqeXJSL3RESmJybGFQ?=
- =?utf-8?B?bUJvNHIyRTc0MlVDRmUxTG4zWmRzbmVTK0hqcjF4WG92R1VtOVNkRDRvbG9x?=
- =?utf-8?B?VjYrU0hrNjlRbnhFSUxlcFFSdlVEWWJBSk54U2RJOUViY1JSNHJab3VsNFZn?=
- =?utf-8?B?UUpFNFIydFpRWmVwQUNPTTlUYjNqYXhwZW51cDkzb2xyakJtYk9Pdy94eW5Q?=
- =?utf-8?B?WjJoaFhUN3l1c1BOOUJnTXlUZ2xzSEFFMTZuL3FNdW1oVTRaSUJIa2NsTDVj?=
- =?utf-8?B?L1hYUGZXbm9HclJXajlJbVg2akN0ZDB1RmxhVTUyV3V4RUJSS3RJbWZxdlUy?=
- =?utf-8?Q?NyZkowO1FXI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MXdRRFRvVEZiL0hJQk9hejJrTUdKZXZmcnozYmdEQTd1Tk1LRmFwWFUzWnJm?=
- =?utf-8?B?RUFkZ2hkeWVlZjlMOEl4VXRiSlE0VndqMFF5Wldwd3F2SUpvdXJIc24vQVlv?=
- =?utf-8?B?bE5FYmxTV0dLUEZPZDl0UEoxN1RYYXgwUmtyb0xxclBaMU4za3lMRlZOWEty?=
- =?utf-8?B?T2sveGdFOFdza1dWTXNudFlMekYxTldjR3E3bHVvNURhM3RhTExFSjR5WWgv?=
- =?utf-8?B?bTllellWQUZTYTNNMTNUZDk1NUhveEpwWVlHQ1pnL3BlRzVvRmFjNGI0RS9R?=
- =?utf-8?B?WGJ2em1IS1RVSnNzVXkweTAzcG9CSGJHQzlWSlpTUm5WWEpydlVVQzk3UUVj?=
- =?utf-8?B?SFl5TWYrNEtSOU9tVXBGZnpmUG1zUS85NzJTRE56TDRYQWRvR2s0NGhnMlY5?=
- =?utf-8?B?MUY5eHh6ZzI2VVVUQ2ZLb3QzS05MVjRvdFZ3K01hanM0T1VYVTdRWWFWcms0?=
- =?utf-8?B?RVJWcW1UQTZzV2RabkozU2REdkxWSWM3V0Vnd3ZaaWxLNjBleFVlUHJ2UWxi?=
- =?utf-8?B?R0NNWkp5ZTRJVWdHVXY1Vk5JN2tXb3E0Sy9ndXBYV1JyckN3WWNHK2Q3Zi9L?=
- =?utf-8?B?OWpRbzdkSGgySlYvQnV2TU9pa2p1Z081b2ErNlJQWHR3RW5ybU5rLy9NK2Fk?=
- =?utf-8?B?OHovTTRRRDZNbHhJbGoxbWhNaDhuWVh2WWZHNnViSWFCLzRiZHdYOGdYODh6?=
- =?utf-8?B?a2o4alZyVUhzUXdJemhxeU1HYXRLeWJnTFhVU0lSQmI2am1qRjVsMkFhUmp5?=
- =?utf-8?B?bWNJdnBsUVY3TTI0MzYvOE44ZWtUbzhYUU5yTTJvZmZRVDNIK0Z3eEZQSEta?=
- =?utf-8?B?TVltQmZoeUx5Z1VWOFU0ZDBENDZGT21ER0dtSlg2MHc3c01tMmw1RWtXSCtn?=
- =?utf-8?B?Z3dCN0xYSmtZWTNiNUlCaWg4MjZrZjZuTW81NUM3ZG1MSmUxdFpkTW1yVDhB?=
- =?utf-8?B?NlJsaU9qQjNFVHVNSFpBQzFRQlpseEhSQittWURiVndMN3lsOU5tdWp3VUw4?=
- =?utf-8?B?T1lWSkRvVXRuLzVLeGxIL3JGYU1BZHBSeHVmYnBNbVN5UWlpOUlxemJ4Sk9j?=
- =?utf-8?B?c1djUVM0YnVIVThsVGVFTU4wWHNNMVJhbFhUWFJFUCtvRW0rMEF5ZTloNFZo?=
- =?utf-8?B?eEhpNlYyT3pJOFRjeE1OdDRqTWVOMWJCazVDQnZWSEtFb083clhRK0tDN2t4?=
- =?utf-8?B?MEttVWVjMUR3QU95QTdCajgyaExTbXpyYlJtaXpGTkVSY01sSFBUT0pTT2pM?=
- =?utf-8?B?cG5HZXhockNqb2RYUlVJVEVIZlU2anFhNVVwWUg0eVluZ1dsYUZTNU96OTBq?=
- =?utf-8?B?NWRFOGFrVThwNXhyTG9BYUZFUE1acDJaVVVzNjV6OFlhUkJ0WTRxd2I4MWZE?=
- =?utf-8?B?bXpYV09lUE5nVElzNFVFS2l6SWxnajhxTkNQZENDbng2Nm1ISnFZSXFZSEth?=
- =?utf-8?B?Rmo0Mm1BY1loN0FnTVEzOTVGblNNM09rTHJkWnVBSWJySGc0VmpuSWFQay9r?=
- =?utf-8?B?SFF1REJRaXNsSHBtWmdXMzNqUFJzaCtZc2xqZ2tlb0VhaExZbjAwdHVKU3lU?=
- =?utf-8?B?eGR4VHkxbWxrK083QlVUSUV5ZkZMNEx2Vjg5bDkzVVNBWkt1amI4WVl6QXJt?=
- =?utf-8?B?aHYxNG1BaVVZMnc4Y3RSTUlNME1qNmFkQW52OGFsZy9TbElUSDBDYzBhN05u?=
- =?utf-8?B?SnJVVDhoRHBpVmNIdUx3OFk2UGYyOGFoYS9VaUtwQVV0YWpSRDJNejQ5ZENN?=
- =?utf-8?B?NXEwTndkWnNhR2J6NzFXZUZMM1dkZmJjWHAvSnlybFJJVDdEWFYwcDVwMGk3?=
- =?utf-8?B?YTV1bzhhTXVVOHNEZ3NJL2p2K2NPcjVzTHl3ZjZNK2EzWXFGdEtDUmZMRjJi?=
- =?utf-8?B?b2xiRXB3SjE0UGlkTzYwclF0VXk2bFRMcEN3Q0ZHaXFyelo5dmFpeDYwL1dL?=
- =?utf-8?B?ODlZOXlRc2MzYy9jcDdFU2xtUDd5R2NTcFZLRlBZYVZyVjgzMFpiWDhZSjBo?=
- =?utf-8?B?N1dnNjRoblNYRkFHT0U3MENVVTNVYVBTdW5BWDBhdUdPdFVyL01rVndSU1ov?=
- =?utf-8?B?UGJkTkdvem5WR3h6L0NiQnJqWWlPRG5aM1k4RTk2SzM3MFdzWmd5VTNuaTdO?=
- =?utf-8?B?QXh1SFJ2ekpJL0VnK245bmpMRDI0SnVXVmxWQlRMTzhZdXB1RmNuVSt0U2Qy?=
- =?utf-8?Q?K2A8ohw9/rWzOcxlOAnVgrQJHoAHvUZ9d/4rsuchqcKP?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7841f492-4480-4b9c-ac4c-08dd824ad788
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Apr 2025 09:40:12.6078
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6DfjvAq8UHKMMz01C5hjhBrED0VrGkYmQHU9kvXflR3XMoijIuCcw9Pa5LIQZH4/hV8D9aG6VS3Ut59HlYFeHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6690
+Content-Transfer-Encoding: 8bit
 
-On Wed Apr 23, 2025 at 5:51 PM JST, Alice Ryhl wrote:
-> On Wed, Apr 23, 2025 at 10:02:58AM +0900, Alexandre Courbot wrote:
->> The problem I see is that if you try and do something like:
->>=20
->>   vec.extend((0..10).into_iter().skip(2));
->>=20
->> with the standard library, then the use of `skip` will remove the
->> `TrustedLen` implementation from the resulting iterator and
->> `extend_desugared` will be called instead of `extend_trusted`, which
->> could add some unwanted (and unexpected) overhead.
->>=20
->> If we want an implementation of `extend` as simple as "confidently
->> increase the length of the vector and copy the new items into it, once",
->> then we need a trait that can be implemented on both shrinking and
->> extending adapters. Anything else and we might trick the caller into a
->> code path less efficient than expected (i.e. my original version, which
->> generates more core even for the obvious cases that are `extend_with`
->> and `extend_from_slice`). Or if we rely on `TrustedLen` solely in the
->> kernel, then `extend` could not be called at all with this particular
->> iterator.
->>=20
->> There is also the fact that `TrustedLen` is behind a nightly feature,
->> which I guess is another obstacle for using it.
->
-> The stdlib alloc crate relies on specialization to speed up methods
-> related to iterators. We can't use specialization, so losing these
-> optimizations is simply a cost of not using the upstream alloc library
-> that we have to accept.
+From: Ming Yu <tmyu0@nuvoton.com>
 
-Yeah I was surprised to see
+This patch series introduces support for Nuvoton NCT6694, a peripheral
+expander based on USB interface. It models the chip as an MFD driver
+(1/7), GPIO driver(2/7), I2C Adapter driver(3/7), CANfd driver(4/7),
+WDT driver(5/7), HWMON driver(6/7), and RTC driver(7/7).
 
-  impl<T, I, A: Allocator> SpecExtend<T, I> for Vec<T, A>
-  where
-      I: Iterator<Item =3D T>
+The MFD driver implements USB device functionality to issue
+custom-define USB bulk pipe packets for NCT6694. Each child device can
+use the USB functions nct6694_read_msg() and nct6694_write_msg() to issue
+a command. They can also request interrupt that will be called when the
+USB device receives its interrupt pipe.
 
-and
+The following introduces the custom-define USB transactions:
+	nct6694_read_msg - Send bulk-out pipe to write request packet
+			   Receive bulk-in pipe to read response packet
+			   Receive bulk-in pipe to read data packet
 
-  impl<T, I, A: Allocator> SpecExtend<T, I> for Vec<T, A>
-  where
-      I: TrustedLen<Item =3D T>
+	nct6694_write_msg - Send bulk-out pipe to write request packet
+			    Send bulk-out pipe to write data packet
+			    Receive bulk-in pipe to read response packet
+			    Receive bulk-in pipe to read data packet
 
-in the standard library, which clearly looks like an overlap. Didn't
-know it was relying on a non-standard feature.
+Changes since version 9:
+- Add devm_add_action_or_reset() to dispose irq mapping
+- Add KernelDoc to exported functions in nct6694.c
 
-That's going to limit what we can do in the kernel, but nonetheless if
-we can support only the cases that can be optimized I think we would
-have our bases covered.
+Changes since version 8:
+- Modify the signed-off-by with my work address
+- Rename all MFD cell names to "nct6694-xxx"
+- Add irq_dispose_mapping() in the error handling path and in the remove
+  function
+- Fix some comments in nct6694.c and in nct6694.h
+- Add module parameters to configure I2C's baudrate in i2c-nct6694.c
+- Rename all function names nct6694_can_xxx to nct6694_canfd_xxx in
+  nct6694_canfd.c
+- Fix nct6694_canfd_handle_state_change() in nct6694_canfd.c
+- Fix nct6694_canfd_start() to configure NBTP and DBTP in nct6694_canfd.c
+- Add can_set_static_ctrlmode() in nct6694_canfd.c
+
+Changes since version 7:
+- Add error handling for devm_mutex_init()
+- Modify the name of the child devices CAN1 and CAN2 to CAN0 and CAN1.
+- Fix multiline comments to net-dev style in nct6694_canfd.c
+
+Changes since version 6:
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+- Fix warnings in nct6694_canfd.c
+- Move the nct6694_can_priv's bec to the end in nct6694_canfd.c
+- Fix warning in nct6694_wdt.c
+- Fix temp_hyst's data type to signed variable in nct6694-hwmon.c
+
+Changes since version 5:
+- Modify the module name and the driver name consistently
+- Fix mfd_cell to MFD_CELL_NAME() and MFD_CELL_BASIC()
+- Drop unnecessary macros in nct6694.c
+- Update private data and drop mutex in nct6694_canfd.c
+- Fix nct6694_can_handle_state_change() in nct6694_canfd.c
+
+Changes since version 4:
+- Modify arguments in read/write function to a pointer to cmd_header
+- Modify all callers that call the read/write function
+- Move the nct6694_canfd.c to drivers/net/can/usb/
+- Fix the missing rx offload function in nct6694_canfd.c
+- Fix warngings in nct6694-hwmon.c
+
+Changes since version 3:
+- Modify array buffer to structure for each drivers
+- Fix defines and comments for each drivers
+- Add header <linux/bits.h> and use BIT macro in nct6694.c and
+  gpio-nct6694.c
+- Modify mutex_init() to devm_mutex_init()
+- Add rx-offload helper in nct6694_canfd.c
+- Drop watchdog_init_timeout() in nct6694_wdt.c
+- Modify the division method to DIV_ROUND_CLOSEST() in nct6694-hwmon.c
+- Drop private mutex and use rtc core lock in rtc-nct6694.c
+- Modify device_set_wakeup_capable() to device_init_wakeup() in
+  rtc-nct6694.c
+
+Changes since version 2:
+- Add MODULE_ALIAS() for each child driver
+- Modify gpio line names be a local variable in gpio-nct6694.c
+- Drop unnecessary platform_get_drvdata() in gpio-nct6694.c
+- Rename each command in nct6694_canfd.c
+- Modify each function name consistently in nct6694_canfd.c
+- Modify the pretimeout validation procedure in nct6694_wdt.c
+- Fix warnings in nct6694-hwmon.c
+
+Changes since version 1:
+- Implement IRQ domain to handle IRQ demux in nct6694.c
+- Modify USB_DEVICE to USB_DEVICE_AND_INTERFACE_INFO API in nct6694.c
+- Add each driver's command structure
+- Fix USB functions in nct6694.c
+- Fix platform driver registration in each child driver
+- Sort each driver's header files alphabetically
+- Drop unnecessary header in gpio-nct6694.c
+- Add gpio line names in gpio-nct6694.c
+- Fix errors and warnings in nct6694_canfd.c
+- Fix TX-flow control in nct6694_canfd.c
+- Fix warnings in nct6694_wdt.c
+- Drop unnecessary logs in nct6694_wdt.c
+- Modify start() function to setup device in nct6694_wdt.c
+- Add voltage sensors functionality in nct6694-hwmon.c
+- Add temperature sensors functionality in nct6694-hwmon.c
+- Fix overwrite error return values in nct6694-hwmon.c
+- Add write value limitation for each write() function in nct6694-hwmon.c
+- Drop unnecessary logs in rtc-nct6694.c
+- Fix overwrite error return values in rtc-nct6694.c
+- Modify to use dev_err_probe API in rtc-nct6694.c
+
+
+Ming Yu (7):
+  mfd: Add core driver for Nuvoton NCT6694
+  gpio: Add Nuvoton NCT6694 GPIO support
+  i2c: Add Nuvoton NCT6694 I2C support
+  can: Add Nuvoton NCT6694 CANFD support
+  watchdog: Add Nuvoton NCT6694 WDT support
+  hwmon: Add Nuvoton NCT6694 HWMON support
+  rtc: Add Nuvoton NCT6694 RTC support
+
+ MAINTAINERS                         |  12 +
+ drivers/gpio/Kconfig                |  12 +
+ drivers/gpio/Makefile               |   1 +
+ drivers/gpio/gpio-nct6694.c         | 480 ++++++++++++++
+ drivers/hwmon/Kconfig               |  10 +
+ drivers/hwmon/Makefile              |   1 +
+ drivers/hwmon/nct6694-hwmon.c       | 949 ++++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig          |  10 +
+ drivers/i2c/busses/Makefile         |   1 +
+ drivers/i2c/busses/i2c-nct6694.c    | 184 ++++++
+ drivers/mfd/Kconfig                 |  15 +
+ drivers/mfd/Makefile                |   2 +
+ drivers/mfd/nct6694.c               | 387 ++++++++++++
+ drivers/net/can/usb/Kconfig         |  11 +
+ drivers/net/can/usb/Makefile        |   1 +
+ drivers/net/can/usb/nct6694_canfd.c | 814 ++++++++++++++++++++++++
+ drivers/rtc/Kconfig                 |  10 +
+ drivers/rtc/Makefile                |   1 +
+ drivers/rtc/rtc-nct6694.c           | 298 +++++++++
+ drivers/watchdog/Kconfig            |  11 +
+ drivers/watchdog/Makefile           |   1 +
+ drivers/watchdog/nct6694_wdt.c      | 298 +++++++++
+ include/linux/mfd/nct6694.h         | 101 +++
+ 23 files changed, 3610 insertions(+)
+ create mode 100644 drivers/gpio/gpio-nct6694.c
+ create mode 100644 drivers/hwmon/nct6694-hwmon.c
+ create mode 100644 drivers/i2c/busses/i2c-nct6694.c
+ create mode 100644 drivers/mfd/nct6694.c
+ create mode 100644 drivers/net/can/usb/nct6694_canfd.c
+ create mode 100644 drivers/rtc/rtc-nct6694.c
+ create mode 100644 drivers/watchdog/nct6694_wdt.c
+ create mode 100644 include/linux/mfd/nct6694.h
+
+-- 
+2.34.1
+
