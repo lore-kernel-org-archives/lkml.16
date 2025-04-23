@@ -1,92 +1,393 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE96727FD71
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 16:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDAD202961;
+	Wed, 23 Apr 2025 16:44:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745426669; cv=none; b=Nyg23ve1C2HL8kulqyw9XgaMbkjCgc3vMcH/B0/MZck6tNx6SmVS2ISqw3W/htvmE+RWbyWmuliGwC4dhBl4UtebHfUn1LtUEUWmEMVyboKzbe91qjc9H6Ewe7yjb9I4vflNQsaeO1SN+E/5XhhsI1jXcSJxRMbU0KrHttV8NuE=
+	t=1745426689; cv=none; b=r2VJyBaWMKLqJPuBhYr7MuRLz7j6DD2YC4kQe/9oeD3MeQ0RQPWqJPclQoas+LOHqGV/Xp4GNMPkCuIFXc0kLxN/XW6hKKt3VoMCPy24yX5xrwlmEHeJdyYTDU5YN6nlDNjZyZGUdPaG6GLOXZDPm3W5vDz33CfoeWMDk89Z+QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745426669; c=relaxed/simple;
-	bh=FX/Vo6MgthKdRTi+CWkqnrzMpTD/YHg19LlWfAknldU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gfuLhRQPUQT0dQApOc7Cr4so8dZSrMGbf/dwp8f8LGMpBDgofitw8rhRwdzq1HdIyuLihmvxGFHoQEgbnv4oTmOUwlQ5yYEdrwZsEWjX4WpjTMYYSGSVImhZUjHGU3uldlwO0IMKG7XczPiCra3cP6xnX31xqCOLXBroi5tUrz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLIO7yB9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLIO7yB9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E43FC4CEE2;
-	Wed, 23 Apr 2025 16:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745426669;
-	bh=FX/Vo6MgthKdRTi+CWkqnrzMpTD/YHg19LlWfAknldU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TLIO7yB9lKAb3xtqbawTI9uuH7U0buTQA287nqui8dXH5EcJZs9zQXzSUbb8PzWsy
-	 RNWcexpB7kcsIemNT+mZa97uo1GZoNa2eSlZ2NWj7v4fwrY36cwTuRpIT4Sjj1X3wP
-	 3HReIrVK6ck+ajc+V5gaae3eGR3NaAvgowNSm+upyMYOAyBfr2bchU8L3G9JXwFXZ6
-	 bK/Sq1HnGegVngE9Vt7g9vVxQpKsyBo3Uv/3hLahw2M1asmtUDdHtP35QZf1rglrQb
-	 5Qr9PrQSF/fZz87dmlYQwcYyUv1Wl/6vHDHO7nAzbLQfgLQ1X7HwSmx0r6AQyj/0p+
-	 LBc9aJbWay+Gw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Damon Ding <damon.ding@rock-chips.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Heiko Stuebner <heiko.stuebner@cherry.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/rockchip: add CONFIG_OF dependency
-Date: Wed, 23 Apr 2025 18:44:16 +0200
-Message-Id: <20250423164422.2793634-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1745426689; c=relaxed/simple;
+	bh=J3dGqqQso8uMlF4GZUv6nHab0F7TwN763ay9JpuS+4o=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P6s1xKHENPtbijbGWU1Lo3P5winNFXcjM9w+914Y388URwQomSzyJwd3bOUGmd2u/KCsuSwN4FpXVmId17x90aaJ+wsoRHvwYx3ZlMqJPwwuTeJ8IvsdHw1wNf069sEWFlMBNzdAxTc66rM1bLZnpDaQI/YvLQiACBsuUMGMAzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZjPzm5sVNz6L57y;
+	Thu, 24 Apr 2025 00:43:00 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 937251400DB;
+	Thu, 24 Apr 2025 00:44:44 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 23 Apr
+ 2025 18:44:43 +0200
+Date: Wed, 23 Apr 2025 17:44:42 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Terry Bowman <terry.bowman@amd.com>
+CC: <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-pci@vger.kernel.org>, <nifan.cxl@gmail.com>, <dave@stgolabs.net>,
+	<dave.jiang@intel.com>, <alison.schofield@intel.com>,
+	<vishal.l.verma@intel.com>, <dan.j.williams@intel.com>,
+	<bhelgaas@google.com>, <mahesh@linux.ibm.com>, <ira.weiny@intel.com>,
+	<oohall@gmail.com>, <Benjamin.Cheatham@amd.com>, <rrichter@amd.com>,
+	<nathan.fontenot@amd.com>, <Smita.KoralahalliChannabasappa@amd.com>,
+	<lukas@wunner.de>, <ming.li@zohomail.com>,
+	<PradeepVineshReddy.Kodamati@amd.com>, <shiju.jose@huawei.com>
+Subject: Re: [PATCH v8 11/16] cxl/pci: Unifi CXL trace logging for CXL
+ Endpoints and CXL Ports
+Message-ID: <20250423174442.000039b0@huawei.com>
+In-Reply-To: <20250327014717.2988633-12-terry.bowman@amd.com>
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+	<20250327014717.2988633-12-terry.bowman@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Wed, 26 Mar 2025 20:47:12 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-DRM_DISPLAY_DP_AUX_BUS cannot be selected when CONFIG_OF is disabled:
+Unify.
 
-WARNING: unmet direct dependencies detected for DRM_DISPLAY_DP_AUX_BUS
-  Depends on [n]: HAS_IOMEM [=y] && DRM [=y] && OF [=n]
-  Selected by [y]:
-  - DRM_ROCKCHIP [=y] && HAS_IOMEM [=y] && DRM [=y] && ROCKCHIP_IOMMU [=y] && ROCKCHIP_ANALOGIX_DP [=y]
 
-Rockchip platforms all depend on OF anyway, so add the dependency here
-for compile testing.
+> CXL currently has separate trace routines for CXL Port errors and CXL
+> Endpoint errors. This is inconvnenient for the user because they must
+> enable 2 sets of trace routines. Make updates to the trace logging such
+> that a single trace routine logs both CXL Endpoint and CXL Port protocol
+> errors.
+> 
+> Also, CXL RAS errors are currently logged using the associated CXL port's
+> name returned from devname(). They are typically named with 'port1',
+> 'port2', etc. to indicate the hierarchial location in the CXL topology.
+> But, this doesn't clearly indicate the CXL card or slot reporting the
+> error.
+> 
+> Update the logging to also log the corresponding PCIe devname. This will
+> give a PCIe SBDF or ACPI object name (in case of CXL HB). This will provide
+> details helping users understand which physical slot and card has the
+> error.
+> 
+> Below is example output after making these changes.
+> 
+> Correctable error example output:
+> cxl_port_aer_correctable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status='Received Error From Physical Layer'
+> 
+> Uncorrectable error example output:
+> cxl_port_aer_uncorrectable_error: device=port1 (0000:0c:00.0) parent=root0 (pci0000:0c) status: 'Memory Byte Enable Parity Error' first_error: 'Memory Byte Enable Parity Error'
 
-Fixes: d7b4936b2bc0 ("drm/rockchip: analogix_dp: Add support to get panel from the DP AUX bus")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/rockchip/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I'm not sure the pcie parent is adding much... Why bother with that?
 
-diff --git a/drivers/gpu/drm/rockchip/Kconfig b/drivers/gpu/drm/rockchip/Kconfig
-index caa251f91dd8..6b9f43c05148 100644
---- a/drivers/gpu/drm/rockchip/Kconfig
-+++ b/drivers/gpu/drm/rockchip/Kconfig
-@@ -2,6 +2,7 @@
- config DRM_ROCKCHIP
- 	tristate "DRM Support for Rockchip"
- 	depends on DRM && ROCKCHIP_IOMMU
-+	depends on OF
- 	select DRM_CLIENT_SELECTION
- 	select DRM_GEM_DMA_HELPER
- 	select DRM_KMS_HELPER
--- 
-2.39.5
+Shiju, is this going to affect rasdaemon handling?
+
+I'd assume we can't just rename fields in the tracepoints and
+combining them will also presumably make a mess?
+
+Jonathan
+
+
+> 
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> ---
+>  drivers/cxl/core/pci.c   |  29 ++++++------
+>  drivers/cxl/core/ras.c   |  14 +++---
+>  drivers/cxl/core/trace.h | 100 +++++++++++++--------------------------
+>  3 files changed, 55 insertions(+), 88 deletions(-)
+> 
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 4770810b2138..10b2abfb0e64 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -650,14 +650,14 @@ void read_cdat_data(struct cxl_port *port)
+>  }
+>  EXPORT_SYMBOL_NS_GPL(read_cdat_data, "CXL");
+>  
+> -static void __cxl_handle_cor_ras(struct device *dev,
+> -				 void __iomem *ras_base)
+> +static void __cxl_handle_cor_ras(struct device *cxl_dev, struct device *pcie_dev,
+> +				 u64 serial, void __iomem *ras_base)
+>  {
+>  	void __iomem *addr;
+>  	u32 status;
+>  
+>  	if (!ras_base) {
+> -		dev_warn_once(dev, "CXL RAS register block is not mapped");
+> +		dev_warn_once(cxl_dev, "CXL RAS register block is not mapped");
+>  		return;
+>  	}
+>  
+> @@ -667,12 +667,12 @@ static void __cxl_handle_cor_ras(struct device *dev,
+>  		return;
+>  	writel(status & CXL_RAS_CORRECTABLE_STATUS_MASK, addr);
+>  
+> -	trace_cxl_aer_correctable_error(to_cxl_memdev(dev), status);
+> +	trace_cxl_aer_correctable_error(cxl_dev, pcie_dev, serial, status);
+>  }
+>  
+>  static void cxl_handle_endpoint_cor_ras(struct cxl_dev_state *cxlds)
+>  {
+> -	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, cxlds->regs.ras);
+> +	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, NULL, cxlds->serial, cxlds->regs.ras);
+>  }
+>  
+>  /* CXL spec rev3.0 8.2.4.16.1 */
+> @@ -696,7 +696,8 @@ static void header_log_copy(void __iomem *ras_base, u32 *log)
+>   * Log the state of the RAS status registers and prepare them to log the
+>   * next error status. Return 1 if reset needed.
+>   */
+> -static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+> +static pci_ers_result_t __cxl_handle_ras(struct device *cxl_dev, struct device *pcie_dev,
+> +					 u64 serial, void __iomem *ras_base)
+>  {
+>  	u32 hl[CXL_HEADERLOG_SIZE_U32];
+>  	void __iomem *addr;
+> @@ -704,14 +705,14 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>  	u32 fe;
+>  
+>  	if (!ras_base) {
+> -		dev_warn_once(dev, "CXL RAS register block is not mapped");
+> -		return false;
+> +		dev_warn_once(cxl_dev, "CXL RAS register block is not mapped");
+> +		return PCI_ERS_RESULT_NONE;
+>  	}
+>  
+>  	addr = ras_base + CXL_RAS_UNCORRECTABLE_STATUS_OFFSET;
+>  	status = readl(addr);
+>  	if (!(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK))
+> -		return false;
+> +		return PCI_ERS_RESULT_NONE;
+>  
+>  	/* If multiple errors, log header points to first error from ctrl reg */
+>  	if (hweight32(status) > 1) {
+> @@ -725,15 +726,15 @@ static bool __cxl_handle_ras(struct device *dev, void __iomem *ras_base)
+>  	}
+>  
+>  	header_log_copy(ras_base, hl);
+> -	trace_cxl_aer_uncorrectable_error(to_cxl_memdev(dev), status, fe, hl);
+> +	trace_cxl_aer_uncorrectable_error(cxl_dev, pcie_dev, serial, status, fe, hl);
+>  	writel(status & CXL_RAS_UNCORRECTABLE_STATUS_MASK, addr);
+>  
+> -	return true;
+> +	return PCI_ERS_RESULT_PANIC;
+>  }
+>  
+>  static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+>  {
+> -	return __cxl_handle_ras(&cxlds->cxlmd->dev, cxlds->regs.ras);
+> +	return __cxl_handle_ras(&cxlds->cxlmd->dev, NULL, cxlds->serial, cxlds->regs.ras);
+>  }
+>  
+>  #ifdef CONFIG_PCIEAER_CXL
+> @@ -741,13 +742,13 @@ static bool cxl_handle_endpoint_ras(struct cxl_dev_state *cxlds)
+>  static void cxl_handle_rdport_cor_ras(struct cxl_dev_state *cxlds,
+>  					  struct cxl_dport *dport)
+>  {
+> -	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, dport->regs.ras);
+> +	return __cxl_handle_cor_ras(&cxlds->cxlmd->dev, NULL, cxlds->serial, dport->regs.ras);
+>  }
+>  
+>  static bool cxl_handle_rdport_ras(struct cxl_dev_state *cxlds,
+>  				       struct cxl_dport *dport)
+>  {
+> -	return __cxl_handle_ras(&cxlds->cxlmd->dev, dport->regs.ras);
+> +	return __cxl_handle_ras(&cxlds->cxlmd->dev, NULL, cxlds->serial, dport->regs.ras);
+>  }
+>  
+>  /*
+> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+> index 1f94fc08e72b..f18cb568eabd 100644
+> --- a/drivers/cxl/core/ras.c
+> +++ b/drivers/cxl/core/ras.c
+> @@ -13,7 +13,7 @@ static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+>  {
+>  	u32 status = ras_cap.cor_status & ~ras_cap.cor_mask;
+>  
+> -	trace_cxl_port_aer_correctable_error(&pdev->dev, status);
+> +	trace_cxl_aer_correctable_error(&pdev->dev, &pdev->dev, 0, status);
+>  }
+>  
+>  static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
+> @@ -28,8 +28,8 @@ static void cxl_cper_trace_uncorr_port_prot_err(struct pci_dev *pdev,
+>  	else
+>  		fe = status;
+>  
+> -	trace_cxl_port_aer_uncorrectable_error(&pdev->dev, status, fe,
+> -					       ras_cap.header_log);
+> +	trace_cxl_aer_uncorrectable_error(&pdev->dev, &pdev->dev, 0,
+> +					  status, fe, ras_cap.header_log);
+>  }
+>  
+>  static void cxl_cper_trace_corr_prot_err(struct pci_dev *pdev,
+> @@ -42,7 +42,8 @@ static void cxl_cper_trace_corr_prot_err(struct pci_dev *pdev,
+>  	if (!cxlds)
+>  		return;
+>  
+> -	trace_cxl_aer_correctable_error(cxlds->cxlmd, status);
+> +	trace_cxl_aer_correctable_error(&cxlds->cxlmd->dev, &pdev->dev,
+> +					cxlds->serial, status);
+>  }
+>  
+>  static void cxl_cper_trace_uncorr_prot_err(struct pci_dev *pdev,
+> @@ -62,8 +63,9 @@ static void cxl_cper_trace_uncorr_prot_err(struct pci_dev *pdev,
+>  	else
+>  		fe = status;
+>  
+> -	trace_cxl_aer_uncorrectable_error(cxlds->cxlmd, status, fe,
+> -					  ras_cap.header_log);
+> +	trace_cxl_aer_uncorrectable_error(&cxlds->cxlmd->dev, &pdev->dev,
+> +					  cxlds->serial, status,
+> +					  fe, ras_cap.header_log);
+>  }
+>  
+>  static void cxl_cper_handle_prot_err(struct cxl_cper_prot_err_work_data *data)
+> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+> index 25ebfbc1616c..399e0b8bf0f2 100644
+> --- a/drivers/cxl/core/trace.h
+> +++ b/drivers/cxl/core/trace.h
+> @@ -48,49 +48,26 @@
+>  	{ CXL_RAS_UC_IDE_RX_ERR, "IDE Rx Error" }			  \
+>  )
+>  
+> -TRACE_EVENT(cxl_port_aer_uncorrectable_error,
+> -	TP_PROTO(struct device *dev, u32 status, u32 fe, u32 *hl),
+> -	TP_ARGS(dev, status, fe, hl),
+> -	TP_STRUCT__entry(
+> -		__string(device, dev_name(dev))
+> -		__string(host, dev_name(dev->parent))
+> -		__field(u32, status)
+> -		__field(u32, first_error)
+> -		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+> -	),
+> -	TP_fast_assign(
+> -		__assign_str(device);
+> -		__assign_str(host);
+> -		__entry->status = status;
+> -		__entry->first_error = fe;
+> -		/*
+> -		 * Embed the 512B headerlog data for user app retrieval and
+> -		 * parsing, but no need to print this in the trace buffer.
+> -		 */
+> -		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+> -	),
+> -	TP_printk("device=%s host=%s status: '%s' first_error: '%s'",
+> -		  __get_str(device), __get_str(host),
+> -		  show_uc_errs(__entry->status),
+> -		  show_uc_errs(__entry->first_error)
+> -	)
+> -);
+> -
+>  TRACE_EVENT(cxl_aer_uncorrectable_error,
+> -	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status, u32 fe, u32 *hl),
+> -	TP_ARGS(cxlmd, status, fe, hl),
+> +	TP_PROTO(struct device *cxl_dev, struct device *pcie_dev, u64 serial,
+> +		 u32 status, u32 fe, u32 *hl),
+> +	TP_ARGS(cxl_dev, pcie_dev, serial, status, fe, hl),
+>  	TP_STRUCT__entry(
+> -		__string(memdev, dev_name(&cxlmd->dev))
+> -		__string(host, dev_name(cxlmd->dev.parent))
+> +		__string(cxl_name, dev_name(cxl_dev))
+> +		__string(cxl_parent_name, dev_name(cxl_dev->parent))
+> +		__string(pcie_name, dev_name(pcie_dev))
+> +		__string(pcie_parent_name, dev_name(pcie_dev->parent))
+>  		__field(u64, serial)
+>  		__field(u32, status)
+>  		__field(u32, first_error)
+>  		__array(u32, header_log, CXL_HEADERLOG_SIZE_U32)
+>  	),
+>  	TP_fast_assign(
+> -		__assign_str(memdev);
+> -		__assign_str(host);
+> -		__entry->serial = cxlmd->cxlds->serial;
+> +		__assign_str(cxl_name);
+> +		__assign_str(cxl_parent_name);
+> +		__assign_str(pcie_name);
+> +		__assign_str(pcie_parent_name);
+> +		__entry->serial = serial;
+>  		__entry->status = status;
+>  		__entry->first_error = fe;
+>  		/*
+> @@ -99,10 +76,11 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>  		 */
+>  		memcpy(__entry->header_log, hl, CXL_HEADERLOG_SIZE);
+>  	),
+> -	TP_printk("memdev=%s host=%s serial=%lld: status: '%s' first_error: '%s'",
+> -		  __get_str(memdev), __get_str(host), __entry->serial,
+> -		  show_uc_errs(__entry->status),
+> -		  show_uc_errs(__entry->first_error)
+> +	TP_printk("device=%s (%s) parent=%s (%s) serial: %lld status: '%s' first_error: '%s'",
+> +		__get_str(cxl_name), __get_str(pcie_name),
+> +		__get_str(cxl_parent_name), __get_str(pcie_parent_name),
+> +		__entry->serial, show_uc_errs(__entry->status),
+> +		show_uc_errs(__entry->first_error)
+>  	)
+>  );
+>  
+> @@ -124,43 +102,29 @@ TRACE_EVENT(cxl_aer_uncorrectable_error,
+>  	{ CXL_RAS_CE_PHYS_LAYER_ERR, "Received Error From Physical Layer" }	\
+>  )
+>  
+> -TRACE_EVENT(cxl_port_aer_correctable_error,
+> -	TP_PROTO(struct device *dev, u32 status),
+> -	TP_ARGS(dev, status),
+> -	TP_STRUCT__entry(
+> -		__string(device, dev_name(dev))
+> -		__string(host, dev_name(dev->parent))
+> -		__field(u32, status)
+> -	),
+> -	TP_fast_assign(
+> -		__assign_str(device);
+> -		__assign_str(host);
+> -		__entry->status = status;
+> -	),
+> -	TP_printk("device=%s host=%s status='%s'",
+> -		  __get_str(device), __get_str(host),
+> -		  show_ce_errs(__entry->status)
+> -	)
+> -);
+> -
+>  TRACE_EVENT(cxl_aer_correctable_error,
+> -	TP_PROTO(const struct cxl_memdev *cxlmd, u32 status),
+> -	TP_ARGS(cxlmd, status),
+> +	TP_PROTO(struct device *cxl_dev, struct device *pcie_dev, u64 serial, u32 status),
+> +	TP_ARGS(cxl_dev, pcie_dev, serial, status),
+>  	TP_STRUCT__entry(
+> -		__string(memdev, dev_name(&cxlmd->dev))
+> -		__string(host, dev_name(cxlmd->dev.parent))
+> +		__string(cxl_name, dev_name(cxl_dev))
+> +		__string(cxl_parent_name, dev_name(cxl_dev->parent))
+> +		__string(pcie_name, dev_name(pcie_dev))
+> +		__string(pcie_parent_name, dev_name(pcie_dev->parent))
+>  		__field(u64, serial)
+>  		__field(u32, status)
+>  	),
+>  	TP_fast_assign(
+> -		__assign_str(memdev);
+> -		__assign_str(host);
+> -		__entry->serial = cxlmd->cxlds->serial;
+> +		__assign_str(cxl_name);
+> +		__assign_str(cxl_parent_name);
+> +		__assign_str(pcie_name);
+> +		__assign_str(pcie_parent_name);
+> +		__entry->serial = serial;
+>  		__entry->status = status;
+>  	),
+> -	TP_printk("memdev=%s host=%s serial=%lld: status: '%s'",
+> -		  __get_str(memdev), __get_str(host), __entry->serial,
+> -		  show_ce_errs(__entry->status)
+> +	TP_printk("device=%s (%s) parent=%s (%s) serieal=%lld status='%s'",
+> +		__get_str(cxl_name), __get_str(pcie_name),
+> +		__get_str(cxl_parent_name), __get_str(pcie_parent_name),
+> +		__entry->serial, show_ce_errs(__entry->status)
+>  	)
+>  );
+>  
 
