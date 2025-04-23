@@ -1,213 +1,92 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B717255229;
-	Wed, 23 Apr 2025 08:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03F4EAFA
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745397898; cv=none; b=iBrQUodbhw0baASCi5e5sbVyWdFlWqySd1HIcXT74tp+b6VgpPfgZCchO8Z3A/65LeHgbwGuU8TzfP3LW6yOh5l2QqdUNUC6vsC66ifk9MLtqfrdNbrvGFVxZ6XOGkRfc6ZyaKChyin+wzV5tLB/JshaqzQd3B6tOnUeUJZOTIE=
+	t=1745397960; cv=none; b=IsH4ZxbsM86XBDYqbbp4ieQkIzobVYASfidRangIUWJOegvnbskJefaSQpyuH4IeIh8mQRmnPA5/4vJEc8CqTRxznIe1laKqU/40YCW71EoSzTWzPKljdWL3fymg5iP4cBghMVu/7pfQbRLRbmOmlyQ7AJUnNdptZxNxWz84BiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745397898; c=relaxed/simple;
-	bh=fB5j9Qh2d3h0SnxxtIGEil8fLk3S4gA+eewhDbj2B6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kFMnXzMJUtx/X54PUgBi+d5XV6mJhj8NF0MPuEOqyfowUr1cnpbyjidU5Gh3xbB+gJh6XFwG01R/blUuZiK3g4TgHF8dPWCkTcnQ1761Y+bkoi4MG1KgMy1ncvIAw/3F5ZXhr4tvlfMktytlJU+nLKDdd9rRdvzovQKqy+1BYbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=mPONR0tJ; arc=none smtp.client-ip=1.95.21.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1745397960; c=relaxed/simple;
+	bh=ggd634lHnb2gNywn40oGwS0ugGvo2FpcGUZ7FmiBMH4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LybK/T9KkYv+ewTpMG0sSQahcgH+J6ePnoRQfUXvN4uZcf11Jbs6AC/UfTI6Ozk/Ly6ROzscgQi2h49ZVKG2RhvfsobymzbuA7uCAgbdzjwRZW48TqVwaoQ/nV/zaBfIWk4aiT/CBTJOz6kY/dWGqezxy6T5R48PNbsZe0531Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=maDc/Kda; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="mPONR0tJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
-	Content-Type; bh=cTTTAQDf6fHnIShOY7nHVrkl1CzARvdCJOI3IZdV3Ac=;
-	b=mPONR0tJ6JOAJK6st/hPw4OWfYhiQ3c37toLpvSvAaTUNYLlNVJC1R9nNG+9bO
-	H8o+3/NoDauh6x0yPfh+wYor+sUeJSUF4A25f5qsCk4oitUYlN9mKUDmXZZeIpqs
-	hptJqog/aAY1kmbLxXjDx5rYnCbMdc1NB+fa+38LBlu4Q=
-Received: from dragon (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgD39tU8qAhoAhnAAw--.25448S3;
-	Wed, 23 Apr 2025 16:43:42 +0800 (CST)
-Date: Wed, 23 Apr 2025 16:43:40 +0800
-From: Shawn Guo <shawnguo2@yeah.net>
-To: Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux@ew.tq-group.com
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mp-tqma8mpql-mba8mp-ras314: Add
- Raspberry Pi Camera V2 overlay
-Message-ID: <aAioPO9pZUFfyjpc@dragon>
-References: <20250324071102.23765-1-alexander.stein@ew.tq-group.com>
- <20250324071102.23765-2-alexander.stein@ew.tq-group.com>
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="maDc/Kda"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=h/liMcuEUfy+HSngWwdJOc2MreTUFz3n+kzPTK+CxF8=; b=maDc/Kda9gV6qGWKCxvz+VWZay
+	/r2u5lclRONvr5SmRJq6vSwcptCmQaVCQQ8iYsb6Wwzx18n0+nXUUWHvbjqqNM9OpD1RpRed/aWVb
+	sOaURYt/TVb4JfSaI3YynUeVM6w215Ts12Kd/o+xuxOTE9mneOPvHPPe4QRCObbllNhL2IZnXbsP4
+	YA5O+wHwvKUL0r3f9LHKXOEJoEQhS0izDtxr8QY0DK0BdHFxz7Hi/FTeHP28ZEBs56PMQFlB7xo4y
+	6vKl/mmUAXMJARdm0hc03bz9MhcluRUwtG/n/ewctBypx8Gi9Axw2oDLsGcLpcywjwZ9mhHCFEURT
+	2Q4L7LXg==;
+Received: from 179-125-92-204-dinamico.pombonet.net.br ([179.125.92.204] helo=[192.168.67.187])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1u7Vjr-006pQt-Kh; Wed, 23 Apr 2025 10:45:51 +0200
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Subject: [PATCH v4 0/2] char: misc: improve test and dynamic allocation
+Date: Wed, 23 Apr 2025 05:45:41 -0300
+Message-Id: <20250423-misc-dynrange-v4-0-133b5ae4ca18@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324071102.23765-2-alexander.stein@ew.tq-group.com>
-X-CM-TRANSID:Mc8vCgD39tU8qAhoAhnAAw--.25448S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXrWDKFyfXrWkJrWxJFWfGrg_yoWrKryfpr
-	n7Ca93GFs7Jr4xAwsIqrnIgrn0y3y8GF4jvr1UAry8Cr129FyxtF90qr15urWfWFnFv3yj
-	vF92qry2gFnIqaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jO8nOUUUUU=
-X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiEQ04ZWgIgd2b8QAAsX
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALWoCGgC/3WPQQ6CMBBFr0K6tlpaC8LKexgXpQw6iRRtodEY7
+ u5YE6Mm7ubP5L3Mv7MAHiGwOrszDxEDDo7CepExezTuABxbykwKqYUSJe8xWN7enE/HVq9tJY0
+ GlVeMmLOHDq/Jt9tTPmIYB39L+iif23+mKLngRQd5JZSEriy2eDAnNEs79OypiuoDzze/uCJc2
+ 0KL0jZWgvzC59drHi4TNRxf/7HGBOB073GsM2rrk3P1nvgJ3RSInh+Uo8cfJwEAAA==
+X-Change-ID: 20250307-misc-dynrange-d54c92a5e319
+To: Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+ Dirk VanDerMerwe <dirk.vandermerwe@sophos.com>, 
+ Vimal Agrawal <vimal.agrawal@sophos.com>, linux-kernel@vger.kernel.org, 
+ Thadeu Lima de Souza Cascardo <cascardo@igalia.com>, kernel-dev@igalia.com
+X-Mailer: b4 0.14.2
 
-On Mon, Mar 24, 2025 at 08:11:00AM +0100, Alexander Stein wrote:
-> This overlay configures IMX219 MIPI-CSI-2 camera attached to ISP1.
-> Also add additional overlay both using LVDS display and camera.
-> 
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->  arch/arm64/boot/dts/freescale/Makefile        |   4 +
->  ...imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso | 107 ++++++++++++++++++
->  2 files changed, 111 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index d7ac8dda4bde5..b5cd2efd260cb 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -247,10 +247,14 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk-pcie-ep.dtb
->  
->  imx8mp-tqma8mpql-mba8mpxl-lvds-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds.dtbo
->  imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01.dtbo
-> +imx8mp-tqma8mpql-mba8mp-ras314-imx219-dtbs += imx8mp-tqma8mpql-mba8mp-ras314.dtb imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtbo
->  imx8mp-tqma8mpql-mba8mp-ras314-lvds-dtbs += imx8mp-tqma8mpql-mba8mp-ras314.dtb imx8mp-tqma8mpql-mba8mpxl-lvds.dtbo
-> +imx8mp-tqma8mpql-mba8mp-ras314-lvds-imx219-dtbs += imx8mp-tqma8mpql-mba8mp-ras314.dtb imx8mp-tqma8mpql-mba8mpxl-lvds.dtbo imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtbo
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mp-ras314-lvds.dtb
-> +dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mp-ras314-lvds-imx219.dtb
->  
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
->  dtb-$(CONFIG_ARCH_MXC) += imx8mq-hummingboard-pulse.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso b/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso
-> new file mode 100644
-> index 0000000000000..0bc96d242f33f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/imx8mp-tqma8mpql-mba8mp-ras314-imx219.dtso
-> @@ -0,0 +1,107 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-> +/*
-> + * Copyright 2022-2025 TQ-Systems GmbH <linux@ew.tq-group.com>,
-> + * D-82229 Seefeld, Germany.
-> + * Author: Alexander Stein
-> + */
-> +/dts-v1/;
-> +/plugin/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/media/video-interfaces.h>
-> +
-> +#include "imx8mp-pinfunc.h"
-> +
-> +&{/} {
-> +	/*
-> +	 * The three camera regulators are controlled by a single GPIO. Declare
-> +	 * a single regulator for the three supplies.
-> +	 */
-> +	reg_cam: regulator-cam {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "reg_cam";
-> +		/* pad muxing already done in gpio2grp */
-> +		gpio = <&gpio2 6 GPIO_ACTIVE_HIGH>;
-> +		enable-active-high;
-> +		vin-supply = <&reg_vcc_3v3>;
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	cam24m: cam24m {
+This includes a change that prevents dynamic allocation from using a minor
+number that belongs to the historically static reserved range, which is
+still used by some drivers.
 
-Can we name the node clock-cam24m?
+It also improves the test, including a lot of corner cases, specially ones
+that would fail before past fixes.
 
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <24000000>;
-> +		clock-output-names = "cam24m";
-> +	};
-> +};
-> +
-> +&i2c2 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	camera@1a {
-> +		compatible = "sony,imx219";
-> +		reg = <0x10>;
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+---
+Changes in v4:
+- mark some tests as init-only, since they use init-only symbols
+- Link to v3: https://lore.kernel.org/r/20250318-misc-dynrange-v3-0-5c6507cbc2e2@igalia.com
 
-'reg' doesn't match unit address.
+Changes in v3:
+- remove code around DYNAMIC_MINORS and the backwards allocation
+- try to open devices in tests by using init_mknod plus filp_open
+- Link to v2: https://lore.kernel.org/r/20250307-misc-dynrange-v2-0-6fe19032ef76@igalia.com
 
-Shawn
+---
+Thadeu Lima de Souza Cascardo (2):
+      char: misc: restrict the dynamic range to exclude reserved minors
+      char: misc: add test cases
 
-> +		clocks = <&cam24m>;
-> +		VANA-supply = <&reg_cam>;
-> +		VDIG-supply = <&reg_cam>;
-> +		VDDL-supply = <&reg_cam>;
-> +		orientation = <2>;
-> +		rotation = <0>;
-> +
-> +		port {
-> +			sony_imx219: endpoint {
-> +				remote-endpoint = <&imx8mp_mipi_csi_in>;
-> +				clock-lanes = <0>;
-> +				clock-noncontinuous;
-> +				data-lanes = <1 2>;
-> +				link-frequencies = /bits/ 64 <456000000>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&isi_0 {
-> +	status = "disabled";
-> +
-> +	ports {
-> +		port@0 {
-> +			/delete-node/ endpoint;
-> +		};
-> +	};
-> +};
-> +
-> +&isp_0 {
-> +	status = "okay";
-> +
-> +	ports {
-> +		port@1 {
-> +			isp0_in: endpoint {
-> +				bus-type = <MEDIA_BUS_TYPE_PARALLEL>;
-> +				remote-endpoint = <&mipi_csi_0_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&mipi_csi_0 {
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			imx8mp_mipi_csi_in: endpoint {
-> +				remote-endpoint = <&sony_imx219>;
-> +				clock-lanes = <0>;
-> +				data-lanes = <1 2>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&mipi_csi_0_out {
-> +	remote-endpoint = <&isp0_in>;
-> +};
-> -- 
-> 2.43.0
-> 
+ drivers/char/misc.c             |  28 +-
+ drivers/misc/misc_minor_kunit.c | 589 +++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 592 insertions(+), 25 deletions(-)
+---
+base-commit: 4d239f447f96bd2cb646f89431e9db186c1ccfd4
+change-id: 20250307-misc-dynrange-d54c92a5e319
+
+Best regards,
+-- 
+Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
 
