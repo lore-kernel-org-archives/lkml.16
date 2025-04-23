@@ -1,152 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43AC20C028;
-	Wed, 23 Apr 2025 12:42:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508B620D51E;
+	Wed, 23 Apr 2025 12:42:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745412124; cv=none; b=SwPT9wfLZbfixGvcOQnvDZQYHfEa7IVjuV7YWdIQK0SLkIfaTIFnsqv/pjsh1xSOxkK/7uxe2YKwEXXTbNpXAatwUeoOV7rFlLvkESF7CfNvrwNEcDXRBaoRfHfCzA9lGmIZLErf5uRUeeQU4K9oTkr5xUPKsTvWDs03EsNnS80=
+	t=1745412172; cv=none; b=te8NvSxjV0zxrWrKtiWkYI9PZCMJ+yBmDQv2weMX+l7ifR9um1UZ1a4tQo67LT6l5Bqr7S8QoheEvuh3bciQqWiMr+Tm7ub7aHUVJ9wgAMeihfvMZIdEpve37Do1R8CkFyG4F2WTPilZtiyzXlKjOlerYM6kU3tdxU4an5EJAfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745412124; c=relaxed/simple;
-	bh=6JXUw9KDlKhlNf9LvTyb80wcPFCs/dCF06cs55twRs4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OuV9LKL7UN6RknduTon6CKYV+vFvjDYQD7or0knQOt6Fnl6V1KJ3rwOvn07XO7XoMkSx83fyUnkeM+IeMIC0OxBvne8OkvzozxvJfxUm9MujaUXvQp3xepw8vZnme9+5sir2UHjG4xFFny2UtZqCY4r7jglYAWR1TFPgrwSlJJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rrp72AKI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745412172; c=relaxed/simple;
+	bh=u3ZcKkgoB25HPKxRDflmB22KCmGVK2aSNrcu+cjWhgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ru8VrNSEUmVRcYRl26/ElqhjXYvSjImwAg8orkGqWsjkR6wVgvo9RJ4GH62dqrkfbpAR8vYUHdSFtZlf1f4C/+DSyIHe1VPh53rQRH7g1ntg/8SNvhqoWuDFsSw/fu5HmP1s1V9Iigv2t/OR6gsWGQtlNEXUFTYDF5WCoxmThk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t1e7bsHo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rrp72AKI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A937C4CEE2;
-	Wed, 23 Apr 2025 12:42:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t1e7bsHo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A85C3C4CEE2;
+	Wed, 23 Apr 2025 12:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745412124;
-	bh=6JXUw9KDlKhlNf9LvTyb80wcPFCs/dCF06cs55twRs4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Rrp72AKIAv1LoaxnsmE0Z4ev+0kI6cg8tlYQFaOO8+oQQ0adL7P7AfLy+NFrIcotj
-	 Lg55HqxaKGY0Pa65azbJ0IrPFL70bVh0cfHk2Kt9dv+ZzXlM2T437sbVHPFssirXDg
-	 IlE9S2XyqGk5Bim4Dl5KvVfoWu2X5HJoRIWSey+3fw6RKpIxdonnMxnmS8OCMuwPPm
-	 xjeKWCaqL2iYOyDvPy/1jnSkjccWFUevvjL30U8Z/j8yKkE97LNfpLs4wrRILJnnGI
-	 LzgELYgaM2e0Tq4H+KZaROBpuXixmgZGwlU0RrY7QqMl8l9NhOrEWefAidAfhJTRYO
-	 FtfygJSbijCkg==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-2b8e2606a58so3472355fac.0;
-        Wed, 23 Apr 2025 05:42:04 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW240JpmGz+DX6XU9T3r6GQDBl3jRenmy+VS/apkiCrsHg6H8ejjOVxGKCG9eF+Lu9a1vMkP7iNiacB@vger.kernel.org, AJvYcCXutO0K0iZBDKpX36/IWp4ltWlb4NCL4zN+vBQlL+oYZm1YM8p8+579/r7gsD+f4pGMRh0LB/+5Dz2kvZ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWNPJzyvvi7Q+yqTyMfXAJz2SPygVJdKH2bBuez+dL+wAETvMf
-	9Rvn1JkrE2WX8FHsB9WCoGjclIpYYL6J6YhQQa6d/ILtI5AHWr3bLOYNr1oGVMSjh8EyMrXmeA2
-	cXuN5EjsbpU+ysUxP8tB6yXLAhus=
-X-Google-Smtp-Source: AGHT+IG/Mn2Gdw6BufcDTpp8opMgvyFLfa1jgjgwIIwbfktnPgvUyN1Iv0Aj9WOBxD1DHjHqO+fC2n5X8dOk12DvydQ=
-X-Received: by 2002:a05:6870:2112:b0:2cc:3603:f05f with SMTP id
- 586e51a60fabf-2d526e25275mr12308732fac.35.1745412123964; Wed, 23 Apr 2025
- 05:42:03 -0700 (PDT)
+	s=k20201202; t=1745412171;
+	bh=u3ZcKkgoB25HPKxRDflmB22KCmGVK2aSNrcu+cjWhgg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=t1e7bsHoDNO9UXqZkRsVprI8RdUubhWlnAprcIJjZLyY3sODt4/iMpdlKU+86e7/m
+	 zNnPqicAf99qbZjjI0cBmMsA6Bgv8bQoAd7ISy+Z8mKqiH0sHG/ij072jYwZoQWwBZ
+	 a+bF5t2mhRHb4z5bYMsClZbwZGP/OAo+ug4BU7vgS1cMDQJl/5lMwr07H/ue3tJoZW
+	 YfiM6ZHxS/Y7NE8lgtxDDc+l2WxDXTFwDgA/igsJFtVENqd/HZBhuMJGzj8WdXBy1r
+	 lGSjwDZ83KbT0BKLcUmDOHaGH+owFd/UlrczBGgDk5gubNpxSYR+dL1hrkMMt0piQy
+	 z494dPyAjR4rg==
+Date: Wed, 23 Apr 2025 13:42:44 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	andriy.shevchenko@intel.com,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v6 05/12] regmap: irq: Remove unreachable goto
+Message-ID: <b7c42d62-6700-4558-9034-29f78b6fc22d@sirena.org.uk>
+References: <20250409-mdb-max7360-support-v6-0-7a2535876e39@bootlin.com>
+ <20250409-mdb-max7360-support-v6-5-7a2535876e39@bootlin.com>
+ <1b280408-888e-48e1-8e6b-de4e7a913e74@sirena.org.uk>
+ <D9E0YCJXMSJ6.2689GYOSQDC8M@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422135341.2780925-1-raag.jadav@intel.com>
-In-Reply-To: <20250422135341.2780925-1-raag.jadav@intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 23 Apr 2025 14:41:52 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gBxkFF-BTTsAM_LHSGq9uuWF2Fq3-jDYPkOhWK4b+qaw@mail.gmail.com>
-X-Gm-Features: ATxdqUHc2_qjWYGhUFZxApzUYB_8rBJHdL6YdtW9OV8O8advii08NxH7vfc9A0A
-Message-ID: <CAJZ5v0gBxkFF-BTTsAM_LHSGq9uuWF2Fq3-jDYPkOhWK4b+qaw@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/PM: Avoid suspending the device with errors
-To: Raag Jadav <raag.jadav@intel.com>
-Cc: rafael@kernel.org, mahesh@linux.ibm.com, oohall@gmail.com, 
-	bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ilpo.jarvinen@linux.intel.com, lukas@wunner.de, 
-	aravind.iddamsetty@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 22, 2025 at 3:55=E2=80=AFPM Raag Jadav <raag.jadav@intel.com> w=
-rote:
->
-> If an error is triggered before or during system suspend, any bus level
-> power state transition will result in unpredictable behaviour by the
-> device with failed recovery. Avoid suspending such a device and leave
-> it in its existing power state.
->
-> This only covers the devices that rely on PCI core PM for their power
-> state transition.
->
-> Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> ---
->
-> v2: Synchronize AER handling with PCI PM (Rafael)
->
-> More discussion on [1].
-> [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=3D9eRPuW08t-6PwzdyMXsC=
-6FZRKYJtY03Q@mail.gmail.com/
->
->  drivers/pci/pci-driver.c |  3 ++-
->  drivers/pci/pcie/aer.c   | 11 +++++++++++
->  include/linux/aer.h      |  2 ++
->  3 files changed, 15 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index f57ea36d125d..289a1fa7cb2d 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -884,7 +884,8 @@ static int pci_pm_suspend_noirq(struct device *dev)
->                 }
->         }
->
-> -       if (!pci_dev->state_saved) {
-> +       /* Avoid suspending the device with errors */
-> +       if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
-
-Apart from the potential raciness mentioned by Bjorn, doing it just
-here is questionable because this is not the only place where the PCI
-device power state can change.
-
-It would be better to catch this in pci_set_low_power_state() IMO.
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JTE7YVeMq4uD56QT"
+Content-Disposition: inline
+In-Reply-To: <D9E0YCJXMSJ6.2689GYOSQDC8M@bootlin.com>
+X-Cookie: If you have to hate, hate gently.
 
 
->                 pci_save_state(pci_dev);
->
->                 /*
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 508474e17183..b70f5011d4f5 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -233,6 +233,17 @@ int pcie_aer_is_native(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_NS_GPL(pcie_aer_is_native, "CXL");
->
-> +bool pci_aer_in_progress(struct pci_dev *dev)
-> +{
-> +       u16 reg16;
-> +
-> +       if (!pcie_aer_is_native(dev))
-> +               return false;
-> +
-> +       pcie_capability_read_word(dev, PCI_EXP_DEVSTA, &reg16);
-> +       return !!(reg16 & PCI_EXP_AER_FLAGS);
-> +}
-> +
->  static int pci_enable_pcie_error_reporting(struct pci_dev *dev)
->  {
->         int rc;
-> diff --git a/include/linux/aer.h b/include/linux/aer.h
-> index 947b63091902..68ae5378256e 100644
-> --- a/include/linux/aer.h
-> +++ b/include/linux/aer.h
-> @@ -48,12 +48,14 @@ struct aer_capability_regs {
->  #if defined(CONFIG_PCIEAER)
->  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);
->  int pcie_aer_is_native(struct pci_dev *dev);
-> +bool pci_aer_in_progress(struct pci_dev *dev);
->  #else
->  static inline int pci_aer_clear_nonfatal_status(struct pci_dev *dev)
->  {
->         return -EINVAL;
->  }
->  static inline int pcie_aer_is_native(struct pci_dev *dev) { return 0; }
-> +static inline bool pci_aer_in_progress(struct pci_dev *dev) { return fal=
-se; }
->  #endif
->
->  void pci_print_aer(struct pci_dev *dev, int aer_severity,
-> --
-> 2.34.1
->
+--JTE7YVeMq4uD56QT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Apr 23, 2025 at 02:41:47PM +0200, Mathieu Dubois-Briand wrote:
+
+> As there has been a bit of discussion on this patch, may I ask you for
+> your current opinion about this change?
+
+> Should I drop it from my next series?
+
+Please.
+
+--JTE7YVeMq4uD56QT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgI4EQACgkQJNaLcl1U
+h9AMcwf7Bd2ZUEygD1Y+NmSxJzaxakCHL7GdfD9YDMUN7X0vQdZr5fyKnk6hI0+9
+b57IP0skpP8OcKlom7bNTc13YjZyRdSms7lcObI0nH+84P+HeF1OibYqfCObMvW3
+NAaGz6xhCWvXtZ6+PjF5ZTCYiY1lhP6VVwSwzEiVb9u2lA3Gwkq/+FgpLc9CQgyi
+xB0EdEabDr3tBNPu0mcRmoN0uOiHZzBGKFvj+aJ9+PRhDTqN/V4L0Ik5L5tTOXJ0
+N3ey3KuHahxMFdt5WM3dENb9dCRbx4CB2H9jHU6qs/QDiBqjVuR06e9teZ8jvb6I
+MFIQ9dDN0eOP5ZintHbPzZ4uZp93iw==
+=0EoB
+-----END PGP SIGNATURE-----
+
+--JTE7YVeMq4uD56QT--
