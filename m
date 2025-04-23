@@ -1,191 +1,91 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACEA2701A4
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3A4B2701BF
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 22:59:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745449084; cv=none; b=TUAZA5YB93WlgnuJhKoiI1FnXfdFg78+KQWzyIf7qzEMtOCFnGeRyVaKhDyRS1qnjH6T8NsAxc3R/MB/ph96wTw5BoUoLBJ6jlhdB9VljrtzJcoHEgRxziNBwtezV7W5LQbsUzMJrJiC1zmSKd+Mh+dfti3/5mwOI/MeD67yASo=
+	t=1745449168; cv=none; b=ecZxJD75X1s3cVn5YtIK+SQREVFcdIdUgLdhrHtBgECeu7FbD8+rbWGvKj/eHj+1dkuVMgJg9bFxxl8Pic+LvaFhZaeYCRThccFT5fhtwHBXKtM4n6RY+tfmSHl/K/M48q3gaBxXZONwKumTgmcqY3vzvEmBOtMmNdgSq01GAwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745449084; c=relaxed/simple;
-	bh=/4UucL9OcZlLE1S45vGuepvKmt16lIs23KtTTy+xA0I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jlj/6AgKXYCOgfBgIDoSLr50sA28Nhy4aSvSyv4etHUanQluBNEWfBfol7bQpSAGjRIxLTD1CMesaQEv/A/u+Y6DWqIeX6zhGJZhSUb85011R2Kiy/gsJY8kD7U5PbhLgA9Y5t5ydrKZgWmNBQ3y3o29/6koUG5L7KZ5E9CcIgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=SNAREsU3; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745449168; c=relaxed/simple;
+	bh=ANM1L0fguovtc5G10RZhCVZ6sfOMQzacN9PCVs7IQb0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzwKpqI4Hngt7w3gQZAxbkmgvvbQnWrhPhpZ4ipSokqj8M0H8NkLxVO+lGI6LPRZzit4xiMSk+EUmBo+xRyIQZHPuuK0vHorh/aFTRA6XMw6znSW5lm3pQQyhLiHAdjk1rW7wfxsU1NUj+tIgj4TPYHnxjhbcPoYmYj2StKuJUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R/jHDlrK; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="SNAREsU3"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3cda56e1dffso2610975ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 15:58:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745449080; x=1746053880; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nEu7FtyxOTjoxH8k/xvlBTXItgCBkcLdRHMwp3SvrfA=;
-        b=SNAREsU3vTSMUcc6Id3hic0KSOkZuL2+Zb9NbZ0OBj323wHoTP1G26s48H4UJBudap
-         5Rc+4NtpkasQc4/rmp+ocS/9D6zfRoaxh3D68GHErIBGhR8otlUShlkJ/SYYAfiOVWtQ
-         x6IajrALIfjUFoXMbu+zFtFVmjxcSnpc7jx/yVW+jlDnDWrPPT8b+/xfb9hhZy8U0ZUN
-         tJPPPozsB/JN3k5aMVpdna07BLJVvmkFOAE8uL3wjNMCyqyVydJJiUVteZHNYEYCC+lh
-         Y2M50syLASatyEQJfSNxNBnZ9+vr+GJyXkcE5p6J7MlT2hzjNl5O96M04/RbtVLRXAfX
-         /XaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745449080; x=1746053880;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nEu7FtyxOTjoxH8k/xvlBTXItgCBkcLdRHMwp3SvrfA=;
-        b=hSqbQSyNmHvFEQNFaj2XQURDr1ZA0kI+JD/tnjWC/4FwobVke9qkWsVF4wnZs97D3E
-         QJTpjGPieYXHeL2d/KpCsQ1UCj78skXLVxSYnEzORghxk4QuFbPYuWus71uCyAPOROdn
-         UpA4nSmyFVwLJDN+beK2RisoFevAFqMo72PP7nKdZrS1E8TrZKlLZ7JXtxL433z7icd1
-         j1ll4S+zDgISgiR3LGAUSaxvkUKeUutHkm2SrMmFulppypvUyoqQnshtVsXCLHpSdzio
-         1RUE0DdQ/eeTmBu6RNREJjHlmDAjEqc5+b2uEJ2UPa5/2J0VUw7vD5fLHMEx+psZsVU8
-         oAjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVr4wX7Gq7EcnEr1CeO872OeMquWrZJfmtMpex/N8qYJ/+o9ewoyLbmLFRUdHPaAJmXAK3q6ra8tXZ0rHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo6H0cyjTIgtPt9ulge3MFcR5g43n+4lNlCXZwNlPNN1d+j8nA
-	1Pj9qpdn8LfbVhf3SSge5c1Hg9tfrmrFCFjgCjft4EhqL4eSbkd7Wq/oiXD9l1A=
-X-Gm-Gg: ASbGncvD4WYU8ANvg+Gnfx3mqW9Ed9jYuWsIfAFLLHravh8L1aTUgVMnhL9NQSfDJwE
-	jCnaW0BCFUCdBeZhAxY9zDX5hBmfOYKNc/SX7Zbil7FWKPDM47BmCyarW6jsxINRluhx/H/9f94
-	WP83HUh1Jvbhd9FchvI9MKB4VFCMsQNfVzZhqWwscyYjEN7HGOxgh475JmmNWATygXOnm2Jcwvg
-	5/F42SZMhHFGNbPzAJSXe0Uy2RO9evBm+uy+pN2h36eGeBZ6Svcfq3KIXOD5pYDGWY5JJ1TrOon
-	v2RxNpnftG2LSZyqtd5wpg0S4zpKXHwaE4MVQV3aj70tVFDr
-X-Google-Smtp-Source: AGHT+IH1BGArJHSmQ1z4igvxLHm34FM/Kao2fQH/vkfme/lYyWZaPS1lcFv9aGEXqQEZu1RKSF8Qag==
-X-Received: by 2002:a05:6e02:1a25:b0:3d8:975:b825 with SMTP id e9e14a558f8ab-3d93038f94bmr5164455ab.5.1745449079826;
-        Wed, 23 Apr 2025 15:57:59 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d9314b05a0sm191505ab.4.2025.04.23.15.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 15:57:59 -0700 (PDT)
-Message-ID: <cac3a5c9-e798-47f2-81ff-3c6003c6d8bb@kernel.dk>
-Date: Wed, 23 Apr 2025 16:57:58 -0600
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R/jHDlrK"
+Date: Wed, 23 Apr 2025 15:59:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745449163;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FD1aCXz6k1Jg0AnKxmnZHvXUq4o3mf+YIXA3Fl6SqoY=;
+	b=R/jHDlrKZgVW0GCW96rhyiqI6YnD5xtDMGwoo1oNLRj2fVRKDrh6KmAIm7qD90e8JubDzX
+	ua56Bp6ukaev27wDIN48iLTDca/GfUdS5y6ny4gwJtK+9RnXs3H3fqd+QI4l3374GuaBtv
+	5aNZfIGGaoVtYBpacUKmrF7iPdrzK3Y=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Eric Dumazet <edumazet@google.com>, 
+	Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
+Message-ID: <agazegt7js4jrbbng2di33xggfswxgrdrojoiqh4vaqxxmdidj@zmyzkgfuhykl>
+References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
+ <20250422181022.308116c1@kernel.org>
+ <ha4sqstdknwvvubs2g33r3itrabepz2jwlr3ksrbjdlgjnbuel@appekpf6ffud>
+ <20250423153046.54d135f2@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault
- scenarios
-From: Jens Axboe <axboe@kernel.dk>
-To: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz,
- akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
- <20250422162913.1242057-2-qq282012236@gmail.com>
- <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
- <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
- <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk>
- <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
- <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk>
- <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
-Content-Language: en-US
-In-Reply-To: <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423153046.54d135f2@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On 4/23/25 9:55 AM, Jens Axboe wrote:
-> Something like this, perhaps - it'll ensure that io-wq workers get a
-> chance to flush out pending work, which should prevent the looping. I've
-> attached a basic test case. It'll issue a write that will fault, and
-> then try and cancel that as a way to trigger the TIF_NOTIFY_SIGNAL based
-> looping.
+On Wed, Apr 23, 2025 at 03:30:46PM -0700, Jakub Kicinski wrote:
+> On Wed, 23 Apr 2025 15:16:56 -0700 Shakeel Butt wrote:
+> > > > -	if (!local_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
+> > > > +	if (nr_pages > MEMCG_CHARGE_BATCH ||
+> > > > +	    !local_trylock_irqsave(&memcg_stock.stock_lock, flags)) {
+> > > >  		/*
+> > > > -		 * In case of unlikely failure to lock percpu stock_lock
+> > > > -		 * uncharge memcg directly.
+> > > > +		 * In case of larger than batch refill or unlikely failure to
+> > > > +		 * lock the percpu stock_lock, uncharge memcg directly.
+> > > >  		 */  
+> > > 
+> > > We're bypassing the cache for > CHARGE_BATCH because the u8 math 
+> > > may overflow? Could be useful to refocus the comment on the 'why'
+> > 
+> > We actually never put more than MEMCG_CHARGE_BATCH in the cache and thus
+> > we can use u8 as type here. Though we may increase the batch size in
+> > future, so I should put a BUILD_BUG_ON somewhere here.
+> 
+> No idea if this matters enough to deserve its own commit but basically
+> I was wondering if that behavior change is a separate optimization.
+> 
+> Previously we'd check if the cache was for the releasing cgroup and sum
+> was over BATCH - drain its stock completely. Now we bypass looking at
+> the cache if nr_pages > BATCH so the cgroup may retain some stock.
 
-Something that may actually work - use TASK_UNINTERRUPTIBLE IFF
-signal_pending() is true AND the fault has already been tried once
-before. If that's the case, rather than just call schedule() with
-TASK_INTERRUPTIBLE, use TASK_UNINTERRUPTIBLE and schedule_timeout() with
-a suitable timeout length that prevents the annoying parts busy looping.
-I used HZ / 10.
+Yes indeed there is a little bit behavior change as you have explained.
+The older behavior (fully drain if nr_pages > BATCH) might be due to
+single per-cpu memcg cache limitation and in my opinion is problematic
+in some scenarios. If you see commit 5387c90490f7 ("mm/memcg: improve
+refill_obj_stock() performance"), a very similar behavior for objcg
+cache was having a performance impact and was optimized by only allowing
+the drain for some code paths. With multi-memcg support, I think we
+don't need to worry about it. Multi-objcg per-cpu cache is also on my
+TODO list.
 
-I don't see how to fix userfaultfd for this case, either using io_uring
-or normal write(2). Normal syscalls can pass back -ERESTARTSYS and get
-it retried, but there's no way to do that from inside fault handling. So
-I think we just have to be nicer about it.
-
-Andrew, as the userfaultfd maintainer, what do you think?
-
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index d80f94346199..1016268c7b51 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -334,15 +334,29 @@ static inline bool userfaultfd_must_wait(struct userfaultfd_ctx *ctx,
- 	return ret;
- }
- 
--static inline unsigned int userfaultfd_get_blocking_state(unsigned int flags)
-+struct userfault_wait {
-+	unsigned int task_state;
-+	bool timeout;
-+};
-+
-+static struct userfault_wait userfaultfd_get_blocking_state(unsigned int flags)
- {
-+	/*
-+	 * If the fault has already been tried AND there's a signal pending
-+	 * for this task, use TASK_UNINTERRUPTIBLE with a small timeout.
-+	 * This prevents busy looping where schedule() otherwise does nothing
-+	 * for TASK_INTERRUPTIBLE when the task has a signal pending.
-+	 */
-+	if ((flags & FAULT_FLAG_TRIED) && signal_pending(current))
-+		return (struct userfault_wait) { TASK_UNINTERRUPTIBLE, true };
-+
- 	if (flags & FAULT_FLAG_INTERRUPTIBLE)
--		return TASK_INTERRUPTIBLE;
-+		return (struct userfault_wait) { TASK_INTERRUPTIBLE, false };
- 
- 	if (flags & FAULT_FLAG_KILLABLE)
--		return TASK_KILLABLE;
-+		return (struct userfault_wait) { TASK_KILLABLE, false };
- 
--	return TASK_UNINTERRUPTIBLE;
-+	return (struct userfault_wait) { TASK_UNINTERRUPTIBLE, false };
- }
- 
- /*
-@@ -368,7 +382,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	struct userfaultfd_wait_queue uwq;
- 	vm_fault_t ret = VM_FAULT_SIGBUS;
- 	bool must_wait;
--	unsigned int blocking_state;
-+	struct userfault_wait wait_mode;
- 
- 	/*
- 	 * We don't do userfault handling for the final child pid update
-@@ -466,7 +480,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	uwq.ctx = ctx;
- 	uwq.waken = false;
- 
--	blocking_state = userfaultfd_get_blocking_state(vmf->flags);
-+	wait_mode = userfaultfd_get_blocking_state(vmf->flags);
- 
-         /*
-          * Take the vma lock now, in order to safely call
-@@ -488,7 +502,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 	 * following the spin_unlock to happen before the list_add in
- 	 * __add_wait_queue.
- 	 */
--	set_current_state(blocking_state);
-+	set_current_state(wait_mode.task_state);
- 	spin_unlock_irq(&ctx->fault_pending_wqh.lock);
- 
- 	if (!is_vm_hugetlb_page(vma))
-@@ -501,7 +515,11 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, unsigned long reason)
- 
- 	if (likely(must_wait && !READ_ONCE(ctx->released))) {
- 		wake_up_poll(&ctx->fd_wqh, EPOLLIN);
--		schedule();
-+		/* See comment in userfaultfd_get_blocking_state() */
-+		if (!wait_mode.timeout)
-+			schedule();
-+		else
-+			schedule_timeout(HZ / 10);
- 	}
- 
- 	__set_current_state(TASK_RUNNING);
-
--- 
-Jens Axboe
