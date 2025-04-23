@@ -1,180 +1,189 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F077D2797A1;
-	Wed, 23 Apr 2025 14:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745418141; cv=pass; b=ZMjnnU/rdzFfxYi1/oHP3biIj9z/Uo+PkXLu8SziOf3l2hVgT/g2zeZfgDSOliLsPMSem/L5EWwxERjSresjBOBMRP/HmMcq4Y7obOY8M0kYE70Is2yBImiNadR8njhJsGvr/qqedN5CF/IoSeni8/Be9hUYqZ1l1npz2fgBMyY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745418141; c=relaxed/simple;
-	bh=9yB/Qq+BRZ2Phu3AIq9BfdJXrDlB28zaBQ+JFyqEXRQ=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XZlyV5W7w5YWuANla/mC3kYaQHqMsZVG9DAv6ggzxzbUyeiZXi/KO+6EXg5+M67qJpN56XVWmoOU6zxhw/WmTTKo/nTEQGDJy/pcPGlMbloNyI+6qeBEw5f2BDOZCwWqKf7A5Tm8M1sHtGz3DlbyXVg6Opy1BcbTXy9xfkZvtso=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=BCp7xZzU; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7C327C17C;
+	Wed, 23 Apr 2025 14:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745418200; cv=none; b=eW6M35+282erK9jFuVeN2nn3KMlgcf9ndVBr5Z7gVIUipfbsdEfQcNcGe4Uty+00/ZKh44DuelzZEz6EjWsHDtp64xHEO4VFTAUZeYa8zyZCKjOdpEulbzQAf5uh63JjysgigYs3gixSIYvVY3qYFEotDdzTny2OtI6U/+Ie8Jo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745418200; c=relaxed/simple;
+	bh=CcnWWaraODw9SuKt8kDAC0krPCJiWe4ppv3BuwGOnPs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=piE/4QPRqZHUe3AgCmncPGolIBxKYci6ZI+HWdgmCnMHYoumGNeMKHPTTJSza7kHWk4PlS/l+5FJpBqO1ZroPshXRT5mgLWsgFUVG62xMdugVWzWaY9cJgfCHjQiFMCw92AxuPWEEQQp2+6A+AHphhnMRg//IIhsOZUNbpNcHCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsXkaJba; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="BCp7xZzU"
-ARC-Seal: i=1; a=rsa-sha256; t=1745418119; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=ZDV+mpsgzh1T0Z7SwITf51hq64jkmPmYNt4ZPn0hf+9iQUFiOtzyQMPeXB87ELeh+mtm0UOI4jL2g1e/LMrwTzDC0BRsX75fwD0adNraebUpUKmFHW9gr7CgloAcfeoufKzEPsJjkocYEdjaYrgmGLmoOfPEbLhalr0b5sCzNPU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745418119; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=9yB/Qq+BRZ2Phu3AIq9BfdJXrDlB28zaBQ+JFyqEXRQ=; 
-	b=F5/MLn65UFcUWqfKpz3lDq0IhkS7oAIQyNKd2KZ5EU9HZHN+B9YFkSdfZyQmIXdM3Wz7VOf6+ZJCfWet4D+HuzGYUTSINMcFZ2hlkO9UxfYg1oiKMWGFCLuYV5pL+BIJEImgjBEJyHXXSNXmt48yYpxZd76A9sTv88MnprWaJ1s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745418119;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=9yB/Qq+BRZ2Phu3AIq9BfdJXrDlB28zaBQ+JFyqEXRQ=;
-	b=BCp7xZzUEkm77k0kl7WIn+l0ZF78PFghvUmTccTyk2NkPGAR5Mow55ts+gKKKQzO
-	lRN2aPfzHc1aWe5MSAQDSLtrzwrnCdch6bRj126kI6Z+R9I2D3wtlAcVHvNROyzAyFi
-	ITU2NmEE4IervwC6IboL3/0/bp5d59sP/fTsMJRApy/BaqBcsGExlTQOGzBaUavdYU5
-	8zNNFQvUE5hPg+Qutt+DiVV3CiAV6x7MvaSromHkNvCcRZZp3Ih12fOAJf6m3gxkUeg
-	2nsU/Hr/gyo4GmKdRLdXdra415DjJutSVRAf20Pg0dDLBYR2Sm7KGECIO/nFRn+17Qd
-	RI3tRN6TsQ==
-Received: by mx.zohomail.com with SMTPS id 1745418117666283.0504327658683;
-	Wed, 23 Apr 2025 07:21:57 -0700 (PDT)
-Message-ID: <c5efd677fd2199cbf8f9d6006905acdf19da02bc.camel@icenowy.me>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: jh7110-sys: add force
- inputs
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
- <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Date: Wed, 23 Apr 2025 22:21:51 +0800
-In-Reply-To: <CACRpkdYgkDpC1iJ-KaZj2GZ3A3_V=3-KQef_nCRhMDrUK=FHXg@mail.gmail.com>
-References: <20250422162250.436169-1-uwu@icenowy.me>
-	 <20250422162250.436169-2-uwu@icenowy.me>
-	 <CACRpkdbGwPyQgVL18iMvUTAvh4XTjo6g3mGT4e_b2aNAjr2obg@mail.gmail.com>
-	 <B4C8B369-E345-4133-A106-7C5E71513329@icenowy.me>
-	 <CACRpkdYgkDpC1iJ-KaZj2GZ3A3_V=3-KQef_nCRhMDrUK=FHXg@mail.gmail.com>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsXkaJba"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFC15C4CEE2;
+	Wed, 23 Apr 2025 14:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745418198;
+	bh=CcnWWaraODw9SuKt8kDAC0krPCJiWe4ppv3BuwGOnPs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tsXkaJbawDIRGlUM4SjTsvjb+UnrVISvHnzVbtSUUYaZm4YLGQBbTa5lp72ZHHhnI
+	 mTmgmX2UPYRW9j1cEye/I8G6zYqzoYeaIJg8VXDk5IWf49Ch4iE7ueuTkAQzNdrqQx
+	 ZWpzTb3bexY8jMu1+mPhK8YGZxjltPP7doNyd1Nv7Amgk5m9hTixmutNPDIUkPpqtT
+	 2gEkINnRLifd+iRPimiBFwTZ3R2JZvLT9dd1XTg8h3qEulyFpxy8vg3xBWE1e3Mcpr
+	 RL2MNI1vMVG5ZTu0Kxzu+H6AtofiBShALnhXwZdJafUcIfErXmpTdS0JoDN9SpIyIB
+	 vQfylKq8Ww8gQ==
+Date: Wed, 23 Apr 2025 11:23:15 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Caleb Biggers <caleb.biggers@intel.com>,
+	Weilin Wang <weilin.wang@intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Thomas Falcon <thomas.falcon@intel.com>
+Subject: Re: [PATCH v5 09/16] perf intel-tpebs: Refactor tpebs_results list
+Message-ID: <aAj30xLNXtXhn6IP@x1>
+References: <20250414174134.3095492-1-irogers@google.com>
+ <20250414174134.3095492-10-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250414174134.3095492-10-irogers@google.com>
 
-=E5=9C=A8 2025-04-23=E6=98=9F=E6=9C=9F=E4=B8=89=E7=9A=84 12:55 +0200=EF=BC=
-=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
-> On Wed, Apr 23, 2025 at 11:41=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me>
-> wrote:
-> > =E4=BA=8E 2025=E5=B9=B44=E6=9C=8823=E6=97=A5 GMT+08:00 17:09:42=EF=BC=
-=8CLinus Walleij
-> > <linus.walleij@linaro.org> =E5=86=99=E9=81=93=EF=BC=9A
-> > > Hi Icenowy,
-> > >=20
-> > > thanks for your patch!
-> > >=20
-> > > On Tue, Apr 22, 2025 at 6:23=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me=
->
-> > > wrote:
-> > >=20
-> > > > +=C2=A0 starfive,force-low-inputs:
-> > > > +=C2=A0=C2=A0=C2=A0 description:
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 The list of input signals forced to=
- be low inside the
-> > > > SoC itself.
-> > > > +=C2=A0=C2=A0=C2=A0 $ref: /schemas/types.yaml#/definitions/uint32-a=
-rray
-> > >=20
-> > > I don't see why you need this hack.
-> >=20
-> > Unfortunately these properties are not for pins, but internal
-> > signals that isn't
-> > bound to external pins.
->=20
-> We don't really care if pins are external or not, we are an operating
-> system
-> not a philosophy department ;)
->=20
-> You calculate the offset and shift like this and write into a
-> base+offset:
->=20
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 offset =3D 4 *=
- (pin / 4);
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 shift=C2=A0 =
-=3D 8 * (pin % 4);
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D readl_=
-relaxed(sfp->base +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 info->gpi_reg_base +
-> offset);
->=20
-> Compare to jh7110_pin_dbg_show():
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 unsigned int offset =3D 4 * (pin / 4);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 unsigned int shift=C2=A0 =3D 8 * (pin % 4);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 u32 dout =3D readl_relaxed(sfp->base +
-> info->dout_reg_base + offset);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 u32 doen =3D readl_relaxed(sfp->base +
-> info->doen_reg_base + offset);
->=20
-> So clearly the entities that you affect are in the same numberspace,
-> and that is all we care about. They are not enumerated in any way
-> orthogonal to any other pins AFAICT.
+On Mon, Apr 14, 2025 at 10:41:27AM -0700, Ian Rogers wrote:
+> evsel names and metric-ids are used for matching but this can be
+> problematic, for example, multiple occurrences of the same retirement
+> latency event become a single event for the record. Change the name of
+> the record events so they are unique and reflect the evsel of the
+> retirement latency event that opens them (the retirement latency
+> event's evsel address is embedded within them). This allows an evsel
+> based close to close the event when the retirement latency event is
+> closed. This is important as perf stat has an evlist and the session
+> listen to the record events has an evlist, knowing which event should
+> remove the tpebs_retire_lat can't be tied to an evlist list as there
+> is more than 1, so closing which evlist should cause the tpebs to
+> stop? Using the evsel and the last one out doing the tpebs_stop is
+> cleaner.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Tested-by: Weilin Wang <weilin.wang@intel.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/builtin-stat.c     |   2 -
+>  tools/perf/util/evlist.c      |   1 -
+>  tools/perf/util/evsel.c       |   2 +-
+>  tools/perf/util/intel-tpebs.c | 150 +++++++++++++++++++++-------------
+>  tools/perf/util/intel-tpebs.h |   2 +-
+>  5 files changed, 93 insertions(+), 64 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 68ea7589c143..80e491bd775b 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -681,8 +681,6 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+>  	if (child_pid != -1)
+>  		kill(child_pid, SIGTERM);
+>  
+> -	tpebs_delete();
+> -
+>  	return COUNTER_FATAL;
+>  }
+>  
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index c1a04141aed0..0a21da4f990f 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -183,7 +183,6 @@ void evlist__delete(struct evlist *evlist)
+>  	if (evlist == NULL)
+>  		return;
+>  
+> -	tpebs_delete();
+>  	evlist__free_stats(evlist);
+>  	evlist__munmap(evlist);
+>  	evlist__close(evlist);
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 121283f2f382..554252ed1aab 100644
+> --- a/tools/perf/util/evsel.c
+<SNIP>
 
-They just share the field width, they're not in the same numberspace.
+>  static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *evsel)
+>  {
+>  	struct tpebs_retire_lat *t;
+> +	uint64_t num;
+> +	const char *evsel_name;
+>  
+> +	/*
+> +	 * Evsels will match for evlist with the retirement latency event. The
+> +	 * name with "tpebs_event_" prefix will be present on events being read
+> +	 * from `perf record`.
+> +	 */
+> +	if (evsel__is_retire_lat(evsel)) {
+> +		list_for_each_entry(t, &tpebs_results, nd) {
+> +			if (t->evsel == evsel)
+> +				return t;
+> +		}
+> +		return NULL;
+> +	}
+> +	evsel_name = strstr(evsel->name, "tpebs_event_");
+> +	if (!evsel_name) {
+> +		/* Unexpected that the perf record should have other events. */
+> +		return NULL;
+> +	}
+> +	errno = 0;
+> +	num = strtoull(evsel_name + 12, NULL, 16);
+> +	if (errno) {
+> +		pr_err("Bad evsel for tpebs find '%s'\n", evsel->name);
+> +		return NULL;
+> +	}
+>  	list_for_each_entry(t, &tpebs_results, nd) {
+> -		if (t->tpebs_name == evsel->name ||
+> -		    !strcmp(t->tpebs_name, evsel->name) ||
+> -		    (evsel->metric_id && !strcmp(t->tpebs_name, evsel->metric_id)))
+> +		if ((uint64_t)t->evsel == num)
+>  			return t;
 
-The design of the JH7110 pin mux control is quite simple and stupid:
+I'm adding the following patch to address building on 32-bit systems:
 
-- First per-GPIO map configuration to map the GPIO's DOEn pin to
-internal tri-stating signals.
-- Then per-GPIO map configuration to map the GPIO's DOUT pin to
-internal output signals.
-- Then per-input-signal configuration (note that it's no longer per-
-GPIO) map configuration to map the signal to a GPIO's DIN (or fixed
-low/high).
+  20     4.97 debian:experimental-x-mips    : FAIL gcc version 14.2.0 (Debian 14.2.0-13) 
+    util/intel-tpebs.c: In function 'tpebs_retire_lat__find':
+    util/intel-tpebs.c:377:21: error: cast from pointer to integer of different size [-Werror=pointer-to-int-cast]
+      377 |                 if ((uint64_t)t->evsel == num)
+          |                     ^
+    cc1: all warnings being treated as errors
 
-For examples, here's some field names of a few registers (according to
-the TRM):
-0x0 [5:0]: sys_iomux_gpo0_doen_cfg
-0x40 [6:0]: sys_iomux_gpo0_dout_cfg
-0x80 [6:0]: sys_iomux_gpi_u0_WAVE511_i_=C2=ADuart_rxsin_cfg
+- Arnaldo
 
-P.S. I just now found that the vendor's 6.12 BSP (which uses the
-mainlined pinctrl driver) has pinmux configuration that maps the same
-GPIO pin (GPIO38) to two input signals (both BCLK signals of two I2S
-controllers, one RX and one TX) [1]. This makes me think use two
-virtual pad numbers (one for internal low level, another for internal
-high) for these internal connections viable again -- In this case I can
-write `GPIOMUX(PAD_INTERNAL_HIGH, GPOUT_LOW, GPOEN_DISABLE,
-GPI_SYS_USB_OVERCURRENT)` .
-
-[1]
-https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_6.12.y_devel=
-/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2.dtsi#L298
-
->=20
-> Both pin control and GPIO handle chip-internal lines that are not
-> routed outside sometimes, that's fine. Just deal with them as any
-> other
-> "pins".
->=20
-> Yours,
-> Linus Walleij
+⬢ [acme@toolbx perf-tools-next]$ git diff
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index a723687e67f6d7b3..b48f3692c798f924 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -242,7 +242,7 @@ static void tpebs_retire_lat__delete(struct tpebs_retire_lat *r)
+ static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *evsel)
+ {
+        struct tpebs_retire_lat *t;
+-       uint64_t num;
++       unsigned long num;
+        const char *evsel_name;
+ 
+        /*
+@@ -269,7 +269,7 @@ static struct tpebs_retire_lat *tpebs_retire_lat__find(struct evsel *evsel)
+                return NULL;
+        }
+        list_for_each_entry(t, &tpebs_results, nd) {
+-               if ((uint64_t)t->evsel == num)
++               if ((unsigned long)t->evsel == num)
+                        return t;
+        }
+        return NULL;
 
