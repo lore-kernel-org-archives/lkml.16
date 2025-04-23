@@ -1,113 +1,155 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fhigh-a1-smtp.messagingengine.com (fhigh-a1-smtp.messagingengine.com [103.168.172.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5B519E966;
-	Wed, 23 Apr 2025 16:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9C3D7081C;
+	Wed, 23 Apr 2025 16:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745425612; cv=none; b=q6Dms4etnmErGYADYRPY13T6GHwFzRvJJYIItk7vm+uJNBduMOdHQzfqNRIp2ZPNQe2CjzrBNh1rZgXhr1lNui8QJCEJN3rhIeO7my2yzDX2XT1OLL/9XrgoFznkfQLnQPA5bASybyiBEAfbbiZ7TgYwzUz5I+j/9myaazehMzQ=
+	t=1745425666; cv=none; b=UZ/OvMLjGVsK947pFRI9XdCbGGIjXusQjE422qRamReyHYjKGokH9b4Ix8MMgIgFwB7kcA4nLHHqa5eDWghZVQbXy84mGfiXZvSypdLUAaeoGTJ0/OwJeQYpBRcg7O3tn/UFlhTr9K8pCOPY6+QX+bXBGCrkPU0fEmtWeCYVgos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745425612; c=relaxed/simple;
-	bh=GUZor68HKAiFhk1CoHF1cPigBjqy7WyQHNIzboArcL0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=otuDPwdjb4x9y+sFJkM4J8Vss4BvZ6btfR5P+7587d8f3h3iyXFFT4M9Shnx3QwHK3Fcee5pp4wbEZp2ZTquKw23nEJHtrMy9dh6pg20XaXGshIAcklZRUg9Jm8fUCRazUKJejdm2u+9L9uKIzvpeqM9/hJEPmbeB+fqnM9fbKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAX2ppDU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745425666; c=relaxed/simple;
+	bh=YRSeARXLJ0+M5QmRsyz4Ce0deqMVgy2QaSMuzKH37GY=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=Sw6FetIg3ZTE54pTFY66VsFY4jl3c77y7kN0AOKuCbGyjOl74yHxSoe9ePwRvd0Utce1m2hJDz/8BItmIRud5Wh4KJuNWmLzNRjl8eSY3037a24m+diockoju2xMX1atTHa9iVKymOF0vpS7wHf8NDdRdHHu4D0zLRwEfDNSo3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=j5roQobR; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=duftJup6; arc=none smtp.client-ip=103.168.172.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAX2ppDU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FB64C4CEE2;
-	Wed, 23 Apr 2025 16:26:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745425611;
-	bh=GUZor68HKAiFhk1CoHF1cPigBjqy7WyQHNIzboArcL0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cAX2ppDUspAzzI/coldlB9n2gPLSqST2GWYpV8k4Bz733pJZjW0+LNA9k2sDiY6jU
-	 dQZfPTjK8Qcz/t7yAAGHCA4g40uvt22NhyNDylcLTkkUjUUSR2PbHWNuxnGjYjZn/O
-	 X4HwqpdlsfCsOU+GLJyR2TrLT0mprTc3AVZH2QpRJW1zHDvPyBCfeR6Xez4OFJBudb
-	 frZXPA6GIP3KdyRtIJlBnBUB19W6rES4U7AUBMQr3WMA5ob4URDgdrHI6HbCgOqitf
-	 OmViEctw2ReC/So0/xtlGCJY2jCs9/vEHayVOsAX/MCSwe0Xe4xV2d+zaCjgjqtS6V
-	 3Tf2WI43fBVCA==
-Date: Wed, 23 Apr 2025 13:26:48 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] perf trace: Implement syscall summary in BPF
-Message-ID: <aAkUyFjRFLkS170u@x1>
-References: <20250326044001.3503432-1-namhyung@kernel.org>
- <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="j5roQobR";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="duftJup6"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 8DC8411401A3;
+	Wed, 23 Apr 2025 12:27:42 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-06.internal (MEProxy); Wed, 23 Apr 2025 12:27:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
+	 h=cc:cc:content-id:content-type:content-type:date:date:from
+	:from:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1745425662; x=
+	1745512062; bh=laGTWJgN6UXMp/JePdc+em5lh/zIgzPhHj+TRdm/XTA=; b=j
+	5roQobRuUZBo4oSrXJp3rLhbaK5D6itijy0J5yld3XvkI1AdJbWj5m5ORa0t7h+M
+	gjYDD9gPKG5O9LMnnW0Iq/4MHI1NkqKpjp6kHYsBC7Cl0XM0Wh4/sn8CDqzfXvtn
+	WyQQgv9nBjIticuyHKPtipSWsMbkQ9qSTqwhkLpRuDjT5PBUZhcCUyD+UxHoxoAB
+	ta0sFbm6eDLy2WUrphbjWFvGGDopC23gDAVHypiQ8JozWytTBN8mYlCpLP5Pxsmd
+	AYJqzjuQy9heQ4IEyXXFftQix3DnbH9A3VQCYBAO8rtLNMTDokQNmq0coi8j5wsg
+	yrrzZwluLwMa0qACqu5Cg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-id:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
+	:x-me-sender:x-sasl-enc; s=fm2; t=1745425662; x=1745512062; bh=l
+	aGTWJgN6UXMp/JePdc+em5lh/zIgzPhHj+TRdm/XTA=; b=duftJup6BBprq1Q4d
+	9TUiJU1fGeeGxC8fpx6qlUPedU3EM7hYe36FmVBNKjJ0QfqR2dxI1VZY37oNN8Nv
+	Di+wSofY1oS1YQGue7/cvju6Xpz81EDxPGKXRVOPNC+BcSZF4CMswuBerlNZ7v84
+	Uq2NWWC3siD0e/pd68VLv3zKruHzqaHTxN9hUA8979GfmBLTBqgNfypAace/rG4P
+	0hmfaW3tZaH1KbILKHCymWTjXLyBnb00HQf/s5JXOye8gbi385Ax+jQM/4mI3HpP
+	55e27NU7sBYzUPhuLRdE67c6tfdxjqRILuRXbuHOv5++6oiLwWRkPFEV4IHom7Jm
+	r09DA==
+X-ME-Sender: <xms:_hQJaFEpjEImHWzGuHR0uRJltqXr_gz2P2SJe1L3wAK1DybwjHMhTw>
+    <xme:_hQJaKV5bt_meAaHUQTmbHd7Sbt5JpqfXkXevMKI4_0RIfW8L5LZjwaByChE15pVQ
+    A7xhpILGRdJR1DszLA>
+X-ME-Received: <xmr:_hQJaHJh0JT6Y5C2sl0lgjhMNQK0uhvBXmMBHGTlSn9ucmTNgeHALvV3fs1oQjn1F3_AcQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeejtdejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhephffvvefujghfofggtgffkfesthdtredtredt
+    vdenucfhrhhomheplfgrhicugghoshgsuhhrghhhuceojhhvsehjvhhoshgsuhhrghhhrd
+    hnvghtqeenucggtffrrghtthgvrhhnpeejvdfghfetvedvudefvdejgeelteevkeevgedt
+    hfdukeevieejueehkeegffejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehjvhesjhhvohhssghurhhghhdrnhgvthdpnhgspghrtghpthht
+    ohepuddupdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehrrgiiohhrsegslhgrtg
+    hkfigrlhhlrdhorhhgpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgv
+    thdprhgtphhtthhopehlihhuhhgrnhhgsghinhesghhmrghilhdrtghomhdprhgtphhtth
+    hopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhhorhhmshes
+    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrsehkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohep
+    tghrrghtihhusehnvhhiughirgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvug
+    hhrghtrdgtohhm
+X-ME-Proxy: <xmx:_hQJaLFVQYpxtYmw1bhObOqTh8klmDWe51TsXHNmtI6swv074KxUng>
+    <xmx:_hQJaLVGPkrWmpWM8GaStSGkYNjbx_FGsFPOWcsIRjXXZfEwJASAGQ>
+    <xmx:_hQJaGNVzTXWtQ-na1IaOE1J3o8kJxAeywIUgCOjun9v-cksv9RuIg>
+    <xmx:_hQJaK3eBWfiwBN7VXTKUENDAU7-Z0XsltHnvqx9gF97fQjpIsNcSg>
+    <xmx:_hQJaBjgyyp7xVRpWGfCVVH-pgrGwuV1GyJHXMEBo7I7gh-5gct-RgIf>
+Feedback-ID: i53714940:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 23 Apr 2025 12:27:41 -0400 (EDT)
+Received: by famine.localdomain (Postfix, from userid 1000)
+	id 99B339FD42; Wed, 23 Apr 2025 09:27:40 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+	by famine.localdomain (Postfix) with ESMTP id 9882D9FC4C;
+	Wed, 23 Apr 2025 09:27:40 -0700 (PDT)
+From: Jay Vosburgh <jv@jvosburgh.net>
+To: Hangbin Liu <liuhangbin@gmail.com>
+cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>,
+    Nikolay Aleksandrov <razor@blackwall.org>,
+    Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
+ device address is same
+In-reply-to: <aAXhiW6n-ftxAr9M@fedora>
+References: <20250401090631.8103-1-liuhangbin@gmail.com>
+ <3383533.1743802599@famine> <Z_OcP36h_XOhAfjv@fedora>
+ <Z_yl7tQne6YTcU6S@fedora> <4177946.1744766112@famine>
+ <Z_8bfpQb_3fqYEcn@fedora> <155385.1744949793@famine>
+ <aAXIZAkg4W71HQ6c@fedora> <360700.1745212224@famine>
+ <aAXhiW6n-ftxAr9M@fedora>
+Comments: In-reply-to Hangbin Liu <liuhangbin@gmail.com>
+   message dated "Mon, 21 Apr 2025 06:11:21 -0000."
+X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAH0uvojPaZ-byE-quc=sUvXyExaZPU3PUjdTYOzE5iDAT_wNVA@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <511372.1745425660.1@famine>
+Date: Wed, 23 Apr 2025 09:27:40 -0700
+Message-ID: <511373.1745425660@famine>
 
-On Fri, Mar 28, 2025 at 06:46:36PM -0700, Howard Chu wrote:
-> Hello Namhyung,
-> 
-> On Tue, Mar 25, 2025 at 9:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > When -s/--summary option is used, it doesn't need (augmented) arguments
-> > of syscalls.  Let's skip the augmentation and load another small BPF
-> > program to collect the statistics in the kernel instead of copying the
-> > data to the ring-buffer to calculate the stats in userspace.  This will
-> > be much more light-weight than the existing approach and remove any lost
-> > events.
-> >
-> > Let's add a new option --bpf-summary to control this behavior.  I cannot
-> > make it default because there's no way to get e_machine in the BPF which
-> > is needed for detecting different ABIs like 32-bit compat mode.
-> >
-> > No functional changes intended except for no more LOST events. :)
-> >
-> >   $ sudo ./perf trace -as --summary-mode=total --bpf-summary sleep 1
-> >
-> >    Summary of events:
-> >
-> >    total, 6194 events
-> >
-> >      syscall            calls  errors  total       min       avg       max       stddev
-> >                                        (msec)    (msec)    (msec)    (msec)        (%)
-> >      --------------- --------  ------ -------- --------- --------- ---------     ------
-> >      epoll_wait           561      0  4530.843     0.000     8.076   520.941     18.75%
-> >      futex                693     45  4317.231     0.000     6.230   500.077     21.98%
-> >      poll                 300      0  1040.109     0.000     3.467   120.928     17.02%
-> >      clock_nanosleep        1      0  1000.172  1000.172  1000.172  1000.172      0.00%
-> >      ppoll                360      0   872.386     0.001     2.423   253.275     41.91%
-> >      epoll_pwait           14      0   384.349     0.001    27.453   380.002     98.79%
-> >      pselect6              14      0   108.130     7.198     7.724     8.206      0.85%
-> >      nanosleep             39      0    43.378     0.069     1.112    10.084     44.23%
-> >      ...
+Hangbin Liu <liuhangbin@gmail.com> wrote:
 
-I added the following to align sched_[gs]etaffinity,
+>On Sun, Apr 20, 2025 at 10:10:24PM -0700, Jay Vosburgh wrote:
+>> >I'm not familiar with infiniband devices. Can we use eth_random_addr()
+>> >to set random addr for infiniband devices? And what about other device
+>> >type? Just return error directly?
+>> 
+>> 	Infiniband devices have fixed MAC addresses that cannot be
+>> changed.  Bonding permits IB devices only in active-backup mode, and
+>> will set fail_over_mac to active (fail_over_mac=follow is not permitted
+>> for IB).
+>> 
+>> 	I don't understand your questions about other device types or
+>> errors, could you elaborate?
+>> 
+>
+>I mean what if other device type enslaves, other than ethernet or infiniband.
+>I'm not sure if we can set random mac address for these devices. Should we
+>ignore all none ethernet device or devices that don't support
+>ndo_set_mac_address?
 
-Thanks,
+	Devices without ndo_set_mac_address are already handled; they
+are limited to active-backup mode and fail_over_mac is set to active
+(just like Infiniband).
 
-- Arnaldo
+	I'm not aware of any network device types other than Ethernet
+(which to bonding is anything with dev->type == ARPHRD_ETHER) or
+Infiniband in use with bonding.  If there are any, and the driver
+supports ndo_set_mac_address, and it fails for a random MAC if they try
+to use fail_over_mac=follow, then I'll look forward to the bug report.
 
+	If you're thinking of devices that are type ARPHRD_ETHER but
+aren't actual ethernet (virtual devices, veth, et al, perhaps?), then
+I'm not sure why those would require fail_over_mac=follow, as its reason
+for existence is for multiport devices that can't handle multiple ports
+programmed to the same MAC, which shouldn't matter for virtual devices
+or single port physical devices.
 
-diff --git a/tools/perf/util/bpf-trace-summary.c b/tools/perf/util/bpf-trace-summary.c
-index 114d8d9ed9b2d3f3..af37d3bb5f9c42e7 100644
---- a/tools/perf/util/bpf-trace-summary.c
-+++ b/tools/perf/util/bpf-trace-summary.c
-@@ -139,9 +139,9 @@ static int print_common_stats(struct syscall_data *data, FILE *fp)
- 		/* TODO: support other ABIs */
- 		name = syscalltbl__name(EM_HOST, node->syscall_nr);
- 		if (name)
--			printed += fprintf(fp, "   %-15s", name);
-+			printed += fprintf(fp, "   %-17s", name);
- 		else
--			printed += fprintf(fp, "   syscall:%-7d", node->syscall_nr);
-+			printed += fprintf(fp, "   syscall:%-9d", node->syscall_nr);
- 
- 		printed += fprintf(fp, " %8u %6u %9.3f %9.3f %9.3f %9.3f %9.2f%%\n",
- 				   stat->count, stat->error, total, min, avg, max,
+	-J
+
+---
+	-Jay Vosburgh, jv@jvosburgh.net
