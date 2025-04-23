@@ -1,56 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78D426D4E6;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CF6527C157;
 	Wed, 23 Apr 2025 07:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745394866; cv=none; b=fEvXqhQJ5zrJnYK/Z9OWBnBppbSfmNEBGrmKMIQt8rjvrvyNRQ53zlpUwLvAEkT/qEMEgGG33LGL/1q2MrMneW0u9O7lT20HFVoHSXbqFb5WUTgEso8Ii3qwscRDgMwIo1P2aIEM9q+OaRPBFrLa3fFyK38R7EZffA4d4UTnyf0=
+	t=1745394867; cv=none; b=IzVscJOF2qN7d3SkPz2DyEecnOUKV0AQfonp/J+N4pTDBWUroEDw906oHzkVpRxGblmoYTas4yWUM/hIVUTkydzyAmlfWgdU4swwgKmUIlKQAzCse3pkJZKAaFSDJaXsGYKcPc3oiGc0H4zq55lRnsTrKuBZDLVso22DooQ6aKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745394866; c=relaxed/simple;
-	bh=zp8MWTdchx+xn/ppkDoZU95BK9wmgT/7c0FOAN4CkbE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T9H3cRcOv+FJkjeFCNsmxUBn6XqmCQgedKZPRvwbuPIBuNh2IuUPUHhTwCzm20nYHY5nVsyS6CchbbrxtYYT1DjEbfZKxqb5SZiRLB9XQco26bbj9ScXzpBJ7d5B5uMMViH8FqPrLmljCpg6TU+Cu5PxERmHVph1mUnNZSXE6EM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGJxdhvX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745394867; c=relaxed/simple;
+	bh=O0wUXEzKv1nq2OT8hGbC2F8CqszQvzZnma/shsd9vXc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pk6pxrrOpYnME5ovDXUEvAwV4nyc2zgg4AePRCwLi2eMXEajxlPyVS36R8Hmz1RbX1LUMtokvA61SK8CyxrVpNBlKrmVSuBdNbFjeStwLaOpKfZ2nq9xN8fiGfsqc/fwYzATG6C/whaSUieFle6kLJPNVnWCio6dUcFxmFDjMcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=aPc+PO8t; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGJxdhvX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD511C4CEEA;
-	Wed, 23 Apr 2025 07:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745394865;
-	bh=zp8MWTdchx+xn/ppkDoZU95BK9wmgT/7c0FOAN4CkbE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VGJxdhvXR4sPTThCQAJTuZko7z4HzR+4wFxbLN+/S9RkxgA5+wrmfoMOOXruNWwUI
-	 +o5zKs9W0E1aYdcFwNASVN1ozBXKPxTg+ObCu340dDODh5mTpODxp2XDKiDeGqzKH3
-	 +5ipqLM/foYOEbJD5U2hfDfo4Rn6dlvdhtNXIyAFsNUUbkPUxRLX52rkvoG1Mjm++S
-	 miE4Spb9j3oW/38dPCIkHwK3lrE8pXIQ855/Q8HHkFn6BcU0mAEyWex0QoUJVl0S6q
-	 TjDFJJvRKSVo+8VABlb4kXCN9O0Mi0irgRGj8iy9G6MuT1f8QEKiJzenUMLDztQpLd
-	 O4ikevSx3PGZg==
-From: Philipp Stanner <phasta@kernel.org>
-To: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Jaya Kumar <jayakumar.alsa@gmail.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Mark Brown <broonie@kernel.org>,
-	liujing <liujing@cmss.chinamobile.com>,
-	Andres Urian Florez <andres.emb.sys@gmail.com>,
-	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	David Rhodes <drhodes@opensource.cirrus.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 04/28] ALSA: ens1370: Use pure devres PCI
-Date: Wed, 23 Apr 2025 09:53:22 +0200
-Message-ID: <20250423075346.45907-5-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
-References: <20250423075346.45907-1-phasta@kernel.org>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="aPc+PO8t"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53N6TTxC017793;
+	Wed, 23 Apr 2025 09:53:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	b3alW43WvHJRTnbjVnK0tT/qRTZ+LjL/F72bfjWZPsY=; b=aPc+PO8tOHlZu24N
+	Ra8alGm+S4QUtoxZf4CszlMNB2ZymuQKQXj6YyU8UQkIMgi5vpM2JYmMlMOYkFLj
+	HxcwAixrDeEbIUQFVeaHNh4ERdAVoL77jNQLE8coff4DcBRhz1eyjsa8FrsFNuuJ
+	1fuxofS9OgNuhoD1l/90lTqkaxNyKlE7YI1FBSoS0UkFvI6PgvkGwtirb7BO3QDg
+	uB3ga1n9OWtwvyarxSW6hvN4LvWe4upOdZ1CiQG1WdF0NKOi8fStBqCvyWyrXlMy
+	LyGSN69EV/Ud24em+Kn1Hn+HV5Or1maxCxOBQwvk6VuFfG3024lLme5qvYaGWtLL
+	7LLrwg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jk29xwn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 23 Apr 2025 09:53:58 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1A81640062;
+	Wed, 23 Apr 2025 09:52:28 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 57926A0B18E;
+	Wed, 23 Apr 2025 09:51:10 +0200 (CEST)
+Received: from localhost (10.130.77.120) by SHFDAG1NODE3.st.com (10.75.129.71)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 23 Apr
+ 2025 09:51:10 +0200
+From: Christian Bruel <christian.bruel@foss.st.com>
+To: <christian.bruel@foss.st.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
+        <p.zabel@pengutronix.de>, <thippeswamy.havalige@amd.com>,
+        <shradha.t@samsung.com>, <quic_schintav@quicinc.com>,
+        <cassel@kernel.org>, <johan+linaro@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 8/9] arm64: dts: st: Add PCIe Endpoint mode on stm32mp251
+Date: Wed, 23 Apr 2025 09:49:39 +0200
+Message-ID: <20250423074940.3849091-9-christian.bruel@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250423074940.3849091-1-christian.bruel@foss.st.com>
+References: <20250423074940.3849091-1-christian.bruel@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,33 +67,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-04-23_05,2025-04-22_01,2024-11-22_01
 
-pci_request_regions() is a hybrid function which becomes managed if
-pcim_enable_device() was called before. This hybrid nature is deprecated
-and should not be used anymore.
+Add pcie_ep node to support STM32 MP25 PCIe driver based on the
+DesignWare PCIe core configured as Endpoint mode
 
-Replace pci_request_regions() with the always-managed function
-pcim_request_all_regions().
-
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
 ---
- sound/pci/ens1370.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/st/stm32mp251.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/sound/pci/ens1370.c b/sound/pci/ens1370.c
-index 71c89e4e3090..1e6adf1ae304 100644
---- a/sound/pci/ens1370.c
-+++ b/sound/pci/ens1370.c
-@@ -2022,7 +2022,7 @@ static int snd_ensoniq_create(struct snd_card *card,
- 	ensoniq->card = card;
- 	ensoniq->pci = pci;
- 	ensoniq->irq = -1;
--	err = pci_request_regions(pci, "Ensoniq AudioPCI");
-+	err = pcim_request_all_regions(pci, "Ensoniq AudioPCI");
- 	if (err < 0)
- 		return err;
- 	ensoniq->port = pci_resource_start(pci, 0);
+diff --git a/arch/arm64/boot/dts/st/stm32mp251.dtsi b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+index 5a5c177036cb..71b89cbab9f2 100644
+--- a/arch/arm64/boot/dts/st/stm32mp251.dtsi
++++ b/arch/arm64/boot/dts/st/stm32mp251.dtsi
+@@ -909,6 +909,19 @@ stmmac_axi_config_1: stmmac-axi-config {
+ 				};
+ 			};
+ 
++			pcie_ep: pcie-ep@48400000 {
++				compatible = "st,stm32mp25-pcie-ep";
++				reg = <0x48400000 0x400000>,
++				      <0x10000000 0x8000000>;
++				reg-names = "dbi", "addr_space";
++				clocks = <&rcc CK_BUS_PCIE>;
++				resets = <&rcc PCIE_R>;
++				phys = <&combophy PHY_TYPE_PCIE>;
++				access-controllers = <&rifsc 68>;
++				power-domains = <&CLUSTER_PD>;
++				status = "disabled";
++			};
++
+ 			pcie_rc: pcie@48400000 {
+ 				compatible = "st,stm32mp25-pcie-rc";
+ 				device_type = "pci";
 -- 
-2.48.1
+2.34.1
 
