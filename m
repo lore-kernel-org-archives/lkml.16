@@ -1,298 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DE71A5B8F;
-	Wed, 23 Apr 2025 13:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF041A0BFD
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745415465; cv=none; b=A5qLc2ERgYOF45pb5B05xnd9BhjpQtxma4+eGAB7peKfasPuGs7Qd4ken1csuDJfFGVqBM3Wp6J0aaK+sc4wpO67LpwnCgA8SVU0AujuMLExY89ocZDVBEtILmLbsA7iiVccktvXdHAIcqOHnT5QGh8AixleJTyLB/MEDjfvQpE=
+	t=1745415477; cv=none; b=EXI0Ld+HbhQG91QIHRzSWa+VwgTL8lS9KUEmaXEOGeyUoktvaACq70fveGy2TyQQqPyrx36aRbeU6sqX5V0PtASExke6zildjLI+eFz6lHUPCxdTZOVDh7y3CsM6E2rIB0LWA+0g1SmQ/j38TlB2dR+ZuXs2Uq3YYQ/MWctXjOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745415465; c=relaxed/simple;
-	bh=Z7aXhF1PMMnEtCARJD64Zg3Ihl0WPcHH/gy6wwnFk6A=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=R8he4v8nRi0guN/iUaUQaLG/n8gosqPoAWQT1NdUBp+M5F016BsRExbBJYxq9ZmV66qGzLOyfHuySsAVZghfI8TFob8M1OBu3MvotxcSacWbK4z3izR5JRJ91Oo88/jMHV5U2C29rKgjHYg921WFoggqQCV76vEwonyPjR1rmY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqxGEHGm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745415477; c=relaxed/simple;
+	bh=Bk1vBly7Gn9wz6+X16ugqS+ZdEVmF8hiBAf0LZPkYjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NQOZGuTy9XEu5KbKqT5n+hdrtfYjBXmcRixGMoGVctgQ1jURplw+eAsB44RRPXDzEehJfMMTyfjODvYiHtMIC17d4L+O+DNy2zcj4gsrjo2DHU/qDKF+1F08mzB52v/uEh5XkTSqU0sScvKMR+CTpILqTLjVnvNIAae67v6Z/ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EMq2faP6; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqxGEHGm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B39CAC4CEEC;
-	Wed, 23 Apr 2025 13:37:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745415464;
-	bh=Z7aXhF1PMMnEtCARJD64Zg3Ihl0WPcHH/gy6wwnFk6A=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=WqxGEHGmgyYAqddIT0VvUzUx3lFjwbKNUPUT6SlacMhiWPAJH/caP+smHmx0Hsb2q
-	 mdez6aN4cDkGv2QvYFKP22MNBGYzqfbSvmMtCGCKrdNl20N7ipCqVwoO1spXv28gFb
-	 ACpmc9Ovk8rFgqucNV6XFLWrGb8US38hIQqBc0hoEdi5/ok5ywXRO8txDx6ZVBhI2M
-	 ++jMNJ71NXMG97shTSOruANWwrnJW2kWvWTU8AZWCNDdFPt/53NiA05YKr0U74VSkS
-	 LM1zsAtscxqQCqEaaF7VIBuOFUoRqVMU7WUwtfYiDv/5B1b2IM8m3jvg6K4bDa73Q3
-	 T/wapBMh7ltlg==
-Date: Wed, 23 Apr 2025 08:37:42 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EMq2faP6"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NAMdQQ014535
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:37:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=+2ze/rnX+AqFYjoGgrqs+s9R
+	DoXeSpWH2VHtigOpg8U=; b=EMq2faP65RSDIjkMhd4B/vQC1OAI1u2q4B8h76xD
+	bo05K3A2ocZpXMZDt7r/8iq8PtmXUjxoVVsauKPKOvCOisWrNCrKBAA1/fY0Ioo0
+	pau+Txpiq+sCHgqfJT0r5wEeLm+GmvzcjuPXAfIOjnj1eOEleAYY/K6hafyWCxfL
+	uBoxCQntWvVt689Xcxwy11Ok4ppVL8Hwm52qVNUV1EbFyNO++6dfZROQo1Wmmyd/
+	9tmjR5Uw70HUs4Akj7iaFvXMqmImXtj21goy0VVnfU1T0qdHg6VyfXXX2od8KqAT
+	VK+E63ecyTp9hUv55QmFN+4AFm2da6ryERG3fZyqV8QKVg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0j8xb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 13:37:54 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c572339444so984090285a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 06:37:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745415474; x=1746020274;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+2ze/rnX+AqFYjoGgrqs+s9RDoXeSpWH2VHtigOpg8U=;
+        b=YpQgpE9jouWrHkTCPJYREG/31kibIqCMyeAjxi/aK5GTM5q2tShS4GhDYqns5bLp6k
+         8N+PdrpbF46CyH8Ln/PdpEUXqJOiscslMxef57IVFR+AZMyNgAZkvNbNJZ88Wl0pP6uW
+         RY0PonZdesNBbNljVyXnorefa+6pP/XMzHQ7hKZJjkYyjoUXM1dzjw/6HAl29lq5zsHn
+         9UlnafbhXD9qrFV3a4bsMpo0gatafXl49UmF2A7Y9p7SWQb2vOvWXZ1jbRdP1xrvqnv2
+         PbT98/0vDWFMAhtcKi1rAD/pva/nqPAc8e3QHKCBFBePcVkhyCaYHKTmgTd20Un2yDft
+         R18g==
+X-Forwarded-Encrypted: i=1; AJvYcCWRecB+dGltr69UqjvNcPg6mB016vjnOD0wdIbv12BHYbdYOIqBu5yMG42apljjtrrq6TJTMT9lp9jL2/c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlpVho7vLW/ewtXYAOpNkpy8+WrquG00qNDJnabWwz0z/Dcc6U
+	EEhtYqJk50DWUH+3gp91dFevE5F49589GI2JilM+YgM9yuNQ2EtOCAkPJDZJDZf5BRRTRQYzzZg
+	KI5lUKHj/R0YJ2OY022/HZjrDyBn1AE0D5dEMAkvL35M+X3CAoq5RzTP8vJ2VzLs=
+X-Gm-Gg: ASbGnctnjsEQx5N8iq/RQkurMxohoD0rpCi7C/OHKZcRjZHPhM2xIDC6JojdO1VQ35i
+	CozKCR41cqZ91YXPS9TbBTJQjFZ93fCaIRc1j3hCMpfl7UlwPJ4Npz6zLYanf7TkY6bLbEx/NUt
+	lWwUi43rNB1fuKXvzHqlZWKTGDOEUiDke0aG1XYAs1FnKh23Qvw7KFiEQPwxgn+zvCXtqhJ/ffy
+	E85LyGH+FFIlkq54YLqKFjsG/C7/UGUwTRULJ4heNeVHexWwZ6ZdmkYXbpJhdEUB0zNLrNYrBUs
+	gqZBqv/P7XwNL4JUU0NzzR4Owr2XRhRud1DcjRmzCnjhG4i/MZ1Mrb1VhKKmsmELPyDBAcVvLPM
+	=
+X-Received: by 2002:a05:620a:d95:b0:7c5:18bb:f8b8 with SMTP id af79cd13be357-7c927f63367mr2730405485a.1.1745415474037;
+        Wed, 23 Apr 2025 06:37:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHHQxjyT3iMSomg5ijBHCAHqMp5xzTzundL8sqlTqkPCKrDcBt3wVLGtMzpfLC7BB1RtedrtQ==
+X-Received: by 2002:a05:620a:d95:b0:7c5:18bb:f8b8 with SMTP id af79cd13be357-7c927f63367mr2730399985a.1.1745415473543;
+        Wed, 23 Apr 2025 06:37:53 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54d6e5d010dsm1533420e87.120.2025.04.23.06.37.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 06:37:52 -0700 (PDT)
+Date: Wed, 23 Apr 2025 16:37:51 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        devicetree@vger.kernel.org, krishna.chundru@oss.qualcomm.com,
+        quic_vbadigan@quicinc.com, quic_nayiluri@quicinc.com,
+        quic_ramkri@quicinc.com, quic_nitegupt@quicinc.com
+Subject: Re: [PATCH 1/2] phy: qcom: qmp-pcie: Update PHY settings for SA8775P
+Message-ID: <tqzmof6rq7t7k3jbdmay7dplz7el3c6i3ehesdiqnp7iq5f7ul@3lnf3awj7af5>
+References: <20250423-update_phy-v1-0-30eb51703bb8@oss.qualcomm.com>
+ <20250423-update_phy-v1-1-30eb51703bb8@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: dianders@google.com, daniel@ffwll.ch, krzk+dt@kernel.org, 
- conor+dt@kernel.org, matthias.bgg@gmail.com, 
- dri-devel@lists.freedesktop.org, sam@ravnborg.org, 
- angelogioacchino.delregno@collabora.com, linux-mediatek@lists.infradead.org, 
- linux-kernel@vger.kernel.org, neil.armstrong@linaro.org, 
- knoxchiou@google.com, hsinyi@google.com, devicetree@vger.kernel.org
-To: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
-In-Reply-To: <20250423093647.4074135-1-cengjianeng@huaqin.corp-partner.google.com>
-References: <20250423093647.4074135-1-cengjianeng@huaqin.corp-partner.google.com>
-Message-Id: <174541475783.315252.12086637953539668018.robh@kernel.org>
-Subject: Re: [PATCH v10 0/2]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423-update_phy-v1-1-30eb51703bb8@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: 68bDsJgZymDthWZ_Ku4Jgl4u2PG8cOC7
+X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=6808ed32 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=Vt7sqbXHGhqwYxysgRMA:9 a=CjuIK1q_8ugA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-GUID: 68bDsJgZymDthWZ_Ku4Jgl4u2PG8cOC7
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDIzMDA5NSBTYWx0ZWRfX0joL2YD9fFeY zzgMGVsN1AnayWzaTDrU+M/ko1ih4idDWPwWA76ZNxdu3Oi/r+/vfvOnHYT2n4TkI5QjGJKw3g5 EMbdf4MKLQsgSK3anZyFEoYR+pswYoTmPwiJZyCx4o9+RNOfPILMD6Wx0xKqsiPkqJUjcA5FR0l
+ kl/oUZJ7qWRXEYcg7ujExTf41NrrpcpWi9VBdkbl+3QjoiORkHI1n8w7Ey1rsfcnFQBjgnI1LoU 8LbgjlC7auNo8zva7xb/K5E/EwY1+HEpf6mXOTB82E2ahaKRiqhW69UWqa62KvFYgRpQvD1dz03 fvTVGRKsBAdMIlcelt54TIeVntgRl8JGhlKRIj3EOU2i7c3dT6q3tIw0gCjovyMbw5elirKgzAV
+ iehR93DebBoSbg+qSGt2u5t7sWXehQipnnIIRJ4wWgNrYNJAc0EG2seOGd8831xYvE0HN5Lq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-23_08,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
+ malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504230095
 
+On Wed, Apr 23, 2025 at 04:45:43PM +0530, Mrinmay Sarkar wrote:
+> This change updates the PHY settings to align with the latest
+> PCIe PHY Hardware Programming Guide for both PCIe controllers
+> on the SA8775P platform.
 
-On Wed, 23 Apr 2025 17:36:45 +0800, Jianeng Ceng wrote:
-> This is v10 of the MT8186 Chromebook device tree series.
+Please read Documentation/process/submitting-patches.rst, look for
+'[This patch] makes xyzzy'.
+
+> 
+> Signed-off-by: Mrinmay Sarkar <mrinmay.sarkar@oss.qualcomm.com>
 > ---
-> Changes in v10:
-> - PATCH 1/2: Add enum for ponyta sku.
-> - Link to v9:https://lore.kernel.org/all/20250328094034.3400233-2-cengjianeng@huaqin.corp-partner.google.com/
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c           | 89 ++++++++++++----------
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5_20.h |  2 +
+>  drivers/phy/qualcomm/phy-qcom-qmp-pcs-v5_20.h      |  4 +
+>  .../phy/qualcomm/phy-qcom-qmp-qserdes-ln-shrd-v5.h | 11 +++
+>  drivers/phy/qualcomm/phy-qcom-qmp.h                |  1 +
+>  5 files changed, 66 insertions(+), 41 deletions(-)
 > 
-> Changes in v9:
-> - PATCH 2/2: Add sound model to fix the warning.
-> - Link to v8:https://lore.kernel.org/all/20240914063122.1622196-1-cengjianeng@huaqin.corp-partner.google.com/
-> 
-> Changes in v8:
-> - PATCH 1/2: Remove custom label.
-> - PATCH 2/2: Change the commit about ponyta.
-> - Link to v7:https://lore.kernel.org/all/20240913031505.372868-1-cengjianeng@huaqin.corp-partner.google.com/
-> 
-> Changes in v7:
-> - PATCH 2/2: Remove prototype sku.
-> - PATCH 2/2: Disable the other trackpad to enable one of them.
-> - Link to v5:https://lore.kernel.org/all/20240913015503.4192806-1-cengjianeng@huaqin.corp-partner.google.com/
-> 
-> Changes in v6:
-> - No change.
-> 
-> Changes in v5:
-> - PATCH 1/2: Remove sku2147483647.
-> - PATCH 2/2: Remove sku2147483647.
-> - Link to v4:https://lore.kernel.org/all/20240906085739.1322676-1-cengjianeng@huaqin.corp-partner.google.com/
-> 
-> Changes in v4:
-> - PATCH 1/2: Add more info for Ponyta custom label in commit.
-> - Link to v3:https://lore.kernel.org/all/20240904081501.2060933-1-cengjianeng@huaqin.corp-partner.google.com/
-> 
-> Changes in v3:
-> - PATCH 0/2: Add the modify records.
-> - PATCH 1/2: Modify lable to label.
-> - Link to v2:https://lore.kernel.org/all/20240903061603.3007289-1-cengjianeng@huaqin.corp-partner.google.com/
-> 
-> Changes in v2:
-> - PATCH 2/2: Modify the dtb name without rev2.
-> - Link to v1:https://lore.kernel.org/all/20240902125502.1844374-1-cengjianeng@huaqin.corp-partner.google.com/
-> 
-> Jianeng Ceng (2):
->   dt-bindings: arm: mediatek: Add MT8186 Ponyta Chromebook
->   arm64: dts: mediatek: Add MT8186 Ponyta Chromebooks
-> 
->  .../devicetree/bindings/arm/mediatek.yaml     | 13 +++++
->  arch/arm64/boot/dts/mediatek/Makefile         |  2 +
->  .../mediatek/mt8186-corsola-ponyta-sku0.dts   | 18 +++++++
->  .../mediatek/mt8186-corsola-ponyta-sku1.dts   | 22 +++++++++
->  .../dts/mediatek/mt8186-corsola-ponyta.dtsi   | 49 +++++++++++++++++++
->  5 files changed, 104 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku1.dts
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta.dtsi
-> 
-> --
-> 2.34.1
-> 
-> 
-> 
+> @@ -3191,6 +3194,7 @@ static const struct qmp_pcie_offsets qmp_pcie_offsets_v5_20 = {
+>  	.rx		= 0x0200,
+>  	.tx2		= 0x0800,
+>  	.rx2		= 0x0a00,
+> +	.ln_shrd	= 0x0e00,
+>  };
 
+This does more than just updating PHY sequences. ln_shrd-related changes
+should go into a separate commit.
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+>  
+>  static const struct qmp_pcie_offsets qmp_pcie_offsets_v5_30 = {
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250423 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/mediatek/' for 20250423093647.4074135-1-cengjianeng@huaqin.corp-partner.google.com:
-
-arch/arm64/boot/dts/mediatek/mt8183-pumpkin.dtb: pinctrl@10005000 (mediatek,mt8183-pinctrl): 'i2c0', 'i2c1', 'i2c2', 'i2c3', 'i2c4', 'i2c5', 'i2c6', 'keyboard' do not match any of the regexes: '-pins(-[a-z]+)?$', '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/pinctrl/mediatek,mt8183-pinctrl.yaml#
-arch/arm64/boot/dts/mediatek/mt8186-corsola-ponyta-sku0.dtb: / (google,ponyta-sku0): compatible: 'oneOf' conditional failed, one must be fixed:
-	['google,ponyta-sku0', 'google,ponyta', 'mediatek,mt8186'] is too long
-	['google,ponyta-sku0', 'google,ponyta', 'mediatek,mt8186'] is too short
-	'google,ponyta-sku0' is not one of ['mediatek,mt2701-evb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt2712-evb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt6580-evbp1']
-	'google,ponyta-sku0' is not one of ['prestigio,pmt5008-3g']
-	'google,ponyta-sku0' is not one of ['fairphone,fp1', 'mundoreader,bq-aquaris5']
-	'google,ponyta-sku0' is not one of ['mediatek,mt6592-evb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt6755-evb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt6765-evb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt6779-evb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt6795-evb', 'sony,xperia-m5']
-	'google,ponyta-sku0' is not one of ['archermind,mt6797-x20-dev', 'mediatek,mt6797-evb']
-	'google,ponyta-sku0' is not one of ['bananapi,bpi-r64', 'mediatek,mt7622-rfb1']
-	'google,ponyta-sku0' is not one of ['mediatek,mt7623a-rfb-emmc', 'mediatek,mt7623a-rfb-nand', 'mediatek,mt7623n-rfb-emmc', 'bananapi,bpi-r2']
-	'google,ponyta-sku0' is not one of ['mediatek,mt7629-rfb']
-	'google,ponyta-sku0' is not one of ['cudy,wr3000-v1', 'openwrt,one', 'xiaomi,ax3000t']
-	'google,ponyta-sku0' is not one of ['acelink,ew-7886cax', 'bananapi,bpi-r3', 'bananapi,bpi-r3mini', 'mediatek,mt7986a-rfb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt7986b-rfb']
-	'google,ponyta-sku0' is not one of ['bananapi,bpi-r4']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8127-moose']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8135-evbp1']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8167-pumpkin']
-	'google,elm-rev8' was expected
-	'google,hana-rev6' was expected
-	'google,hana-rev7' was expected
-	'google,ponyta-sku0' is not one of ['mediatek,mt8173-evb']
-	'google,burnet' was expected
-	'google,cozmo' was expected
-	'google,damu' was expected
-	'google,ponyta-sku0' is not one of ['google,fennel-sku0', 'google,fennel-sku1', 'google,fennel-sku2', 'google,fennel-sku6', 'google,fennel-sku7']
-	'google,ponyta-sku0' is not one of ['google,juniper-sku16', 'google,juniper-sku17']
-	'google,kakadu-rev3' was expected
-	'google,kakadu-rev3-sku22' was expected
-	'google,kappa' was expected
-	'google,ponyta-sku0' is not one of ['google,katsu-sku32', 'google,katsu-sku38']
-	'google,ponyta-sku0' is not one of ['google,kodama-sku16', 'google,kodama-sku272', 'google,kodama-sku288', 'google,kodama-sku32']
-	'google,ponyta-sku0' is not one of ['google,krane-sku0', 'google,krane-sku176']
-	'google,ponyta-sku0' is not one of ['google,makomo-sku0', 'google,makomo-sku1']
-	'google,ponyta-sku0' is not one of ['google,pico-sku1', 'google,pico-sku2']
-	'google,ponyta-sku0' is not one of ['google,willow-sku0', 'google,willow-sku1']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8183-evb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8183-pumpkin']
-	'google,chinchou-sku0' was expected
-	'google,chinchou-sku1' was expected
-	'google,chinchou-sku16' was expected
-	'google,steelix-sku393219' was expected
-	'google,steelix-sku393220' was expected
-	'google,steelix-sku393221' was expected
-	'google,ponyta-sku1' was expected
-	'google,steelix-sku196609' was expected
-	'google,starmie-sku0' was expected
-	'google,starmie-sku1' was expected
-	'google,ponyta-sku0' is not one of ['google,steelix-sku131072', 'google,steelix-sku131073']
-	'google,tentacruel-sku262147' was expected
-	'google,tentacruel-sku262151' was expected
-	'google,tentacruel-sku327681' was expected
-	'google,tentacruel-sku327683' was expected
-	'google,ponyta-sku0' is not one of ['google,voltorb-sku589824', 'google,voltorb-sku589825']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8186-evb']
-	'google,ponyta-sku0' is not one of ['google,ciri-sku0', 'google,ciri-sku1', 'google,ciri-sku2', 'google,ciri-sku3', 'google,ciri-sku4', 'google,ciri-sku5', 'google,ciri-sku6', 'google,ciri-sku7']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8188-evb']
-	'google,hayato-rev1' was expected
-	'google,spherion-rev3' was expected
-	'google,ponyta-sku0' is not one of ['mediatek,mt8192-evb']
-	'google,ponyta-sku0' is not one of ['google,tomato-rev2', 'google,tomato-rev1']
-	'google,tomato-rev4' was expected
-	'google,dojo-sku7' was expected
-	'google,ponyta-sku0' is not one of ['mediatek,mt8195-demo', 'mediatek,mt8195-evb']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8365-evk']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8370-evk']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8390-evk']
-	'google,ponyta-sku0' is not one of ['kontron,3-5-sbc-i1200', 'mediatek,mt8395-evk', 'radxa,nio-12l']
-	'google,ponyta-sku0' is not one of ['mediatek,mt8516-pumpkin']
-	'mediatek,mt2701' was expected
-	'mediatek,mt2712' was expected
-	'mediatek,mt6580' was expected
-	'mediatek,mt6582' was expected
-	'mediatek,mt6589' was expected
-	'mediatek,mt6592' was expected
-	'mediatek,mt6755' was expected
-	'mediatek,mt6765' was expected
-	'mediatek,mt6779' was expected
-	'mediatek,mt6795' was expected
-	'mediatek,mt6797' was expected
-	'mediatek,mt7622' was expected
-	'mediatek,mt7623' was expected
-	'mediatek,mt7629' was expected
-	'mediatek,mt7981b' was expected
-	'mediatek,mt7986a' was expected
-	'mediatek,mt7986b' was expected
-	'mediatek,mt7988a' was expected
-	'mediatek,mt8127' was expected
-	'mediatek,mt8135' was expected
-	'mediatek,mt8167' was expected
-	'google,elm-rev7' was expected
-	'google,hana-rev5' was expected
-	'mediatek,mt8173' was expected
-	'mediatek,mt8183' was expected
-	'google,fennel' was expected
-	'google,juniper' was expected
-	'google,kakadu-rev2' was expected
-	'google,kakadu-rev2-sku22' was expected
-	'google,katsu' was expected
-	'google,kodama' was expected
-	'google,krane' was expected
-	'google,makomo' was expected
-	'google,pico' was expected
-	'google,willow' was expected
-	'google,chinchou-sku2' was expected
-	'google,chinchou-sku3' was expected
-	'google,chinchou-sku18' was expected
-	'google,steelix-sku393216' was expected
-	'google,steelix-sku393217' was expected
-	'google,steelix-sku393218' was expected
-	'google,ponyta-sku0' was expected
-	'google,steelix-sku196608' was expected
-	'google,starmie-sku2' was expected
-	'google,starmie-sku4' was expected
-	'google,steelix' was expected
-	'google,tentacruel-sku262146' was expected
-	'google,tentacruel-sku262150' was expected
-	'google,tentacruel' was expected
-	'google,voltorb' was expected
-	'mediatek,mt8186' was expected
-	'google,ciri' was expected
-	'mediatek,mt8188' was expected
-	'google,hayato' was expected
-	'google,spherion-rev2' was expected
-	'mediatek,mt8192' was expected
-	'google,tomato' was expected
-	'google,tomato-rev3' was expected
-	'google,dojo-sku5' was expected
-	'mediatek,mt8195' was expected
-	'mediatek,mt8365' was expected
-	'mediatek,mt8370' was expected
-	'mediatek,mt8390' was expected
-	'mediatek,mt8395' was expected
-	'mediatek,mt8516' was expected
-	'google,elm-rev6' was expected
-	'google,hana-rev4' was expected
-	'google,kakadu' was expected
-	'google,chinchou-sku4' was expected
-	'google,chinchou-sku6' was expected
-	'google,chinchou-sku19' was expected
-	'google,ponyta' was expected
-	'google,starmie-sku3' was expected
-	'google,starmie' was expected
-	'google,tentacruel-sku262145' was expected
-	'google,tentacruel-sku262149' was expected
-	'google,spherion-rev1' was expected
-	'google,dojo-sku3' was expected
-	from schema $id: http://devicetree.org/schemas/arm/mediatek.yaml#
-
-
-
-
-
+-- 
+With best wishes
+Dmitry
