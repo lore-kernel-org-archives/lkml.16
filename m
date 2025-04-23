@@ -1,124 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796671EFFBB
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:03:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20241799F
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745427818; cv=none; b=lCuKFmNFfObM3yPAuYOfqCWAqjnp6ncyAJlsHZzx/gaSTOnk44VKPtLiop2LejyQsAMFTsUW12v9t/BHU0LxT4n4Pmt5FvjWK05o/31wddDs0xyPLsIdZLBAiJ0SJk2J93xOqO8UvB/39KIn+PUD/v/yKh30RhDDivDbI3/e7B8=
+	t=1745427863; cv=none; b=IXIAIcB62Urz22h+ehglrilILyfbZ5zbpEH3d6QoDu7VxD/L1oq2phKBQ2VUs8i0m6xZy+YxfKWROs8XWAVgR8J6YF4e9psrIT6QGJeTpZzNZ7Vxym0DrTYgjFgCPUDmJo7dwHSxXQWo/nFJ5c5/bDQTSZx9UIxP8HN2m0wr6fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745427818; c=relaxed/simple;
-	bh=0XVlTRBgn1AxRwlX5L5gSRRecvWpaBNYjygKefRRLLU=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=a8JhguUiq8fCC0+zSy1D7JGxqvu+CTo2JNWXfIHUM+FACLsTWiugGCPXTu4m/COYsr3PdVGXNucna5GEal50G271jOqZmnq0NsVVDVqqDtNXRmQFb8ECmQ7kwbL6GU4J69lgK2JtiUIO9QcTDlHvlXdUAIQqN1WQQVKF5QjmjCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cNIc9Q2I; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745427863; c=relaxed/simple;
+	bh=4T78alXt/iIwXp78tg/kPkO/5eMQaCbSQmkPu/StvNk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k5hU0XTvRwUsl2KDAI3J3A3X+xA9CNdcLUBRK5BuPob4PjG3elk4Kv8hSttDGJ1gIVyI/ysB7ooLDBqyqvav82w/4vGMK/wPveMIkxcRhfh9AvMhXEMxTvydS8C1Gwd9RKDChoC5dhCYcRSc9/1zd12kd4XU3jtxtd4fdikJxDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A2MxVz5h; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cNIc9Q2I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745427815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+3+7SBYIT0EMoPG6wTKgHOcC2ipTqOMHgJd9hrWDUp8=;
-	b=cNIc9Q2IKqCImx36/GS0GOQjwrOr5Wq4ELk+DNh4SqmDk5K5d0tMTZTHhqN5nB6kuYBUkf
-	o3oIz8Obk8uUI6n7c2J5GLGnn7OciXhT+I5DLBEm/zaJaWmFQsRF4HsAdkCeQtWi7IcQVG
-	OF+jLKkk7R88awGAtpUmJAUEZOTs71Q=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-bpIfVjBuMaS9eZq6QJDLCA-1; Wed, 23 Apr 2025 13:03:34 -0400
-X-MC-Unique: bpIfVjBuMaS9eZq6QJDLCA-1
-X-Mimecast-MFC-AGG-ID: bpIfVjBuMaS9eZq6QJDLCA_1745427813
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f0e2d30ab4so1646936d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:03:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A2MxVz5h"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47681dba807so8951cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 10:04:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745427860; x=1746032660; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4T78alXt/iIwXp78tg/kPkO/5eMQaCbSQmkPu/StvNk=;
+        b=A2MxVz5he6OvZH4d9MGmckCmLiIk0jKKv9reHuFBuF/hfG39Rvg1miohRgm6/sfMbE
+         59Egz6U1W5jcOgV7VCYjc9op9MZI9bSoeAdAIir0SXgElB4/art/yIrEpyv63oXqTT3h
+         RkIWwP5hoDdiQKiF7VHrESbzNzLIKvBnajhFCug/s2fVs0gbt7FDvWAwJtHtIpqCcQpQ
+         X1B1ZKAHr0Ajum0iPFNTJbhUPFo09JRI766AbDGTHldoWU+QGKPk0iHUlC2II9+PBB+b
+         HwMqBEVi5W6d/CL1/ELaJU5dhvl0dEQaNyNoQXiK+FfGgS3pTHnHMSI7vJ/bN6jxQ2E6
+         FGIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745427813; x=1746032613;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+3+7SBYIT0EMoPG6wTKgHOcC2ipTqOMHgJd9hrWDUp8=;
-        b=tJJRn55QHh7+Ju05UYrANi6gLeYnWcGR6Z9QvyJnAWisWcgVpZi5PcqQEyKU/Wsw8h
-         RWf/HwkBmydzZ3O6EuUZUY332ya+gjYEoIjG7FckPGhDqKv7DMwG3kbtBg7DfXJYaAlL
-         f0vRUhYnVGJd07Zhtbi/KhC7OQzJEzZ0wItiV32CpYrcwwyOH9MpBeGsqYFBZlhous1B
-         sMxkPCvn056l27/VO4BBDUZV1SKcM0Rk2aQzORWSNj19oMGGTKPn6daghlejt08HJnJ+
-         4m4q031QqiVFAwjoxMXpyYSiCsmxd57CLPoK0ToqtDHppwwhVJViytIA4LUV6qL+nMDc
-         lpqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxBqHkNMGAAHGoj/qo88rYLxftRGRUDsH2FMv376Nk8JEWpYUXmoie4SvxErOaVgZz6u1UOj3hZyd4oqc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPbaLt8+I/1gUGiGTobKPzVW6ikzVoZzGcod/W4x/70B67gumU
-	7YzM3Fy8JvCaWSKWh3nuodk1xIYhz4NMz6dZrHnaaJw3/YVawL95n1jkVHlZOLn1r/RQrcgBcId
-	S89nUWclhYQ3Ci3ARhxRiu7zTYE/Ug9yAYshBPWHf7p1nIff60LN49pnRViuOtA==
-X-Gm-Gg: ASbGncvLeBD0GwsHt8ut+pbK8d3JXC9fXTamaZoFTlZGpWaRyPldst/obJW1BqOjzhF
-	/JLkSUU+RymSEop4+HTg54By21NemVKYT+dsSnIfYDjzhPLO/ySn49qu8H7X83THSO6gj//+CkO
-	RA1LNjdrqv8r9arARU/mEy7ffRbIgqxxg+qOLN+quwMtfUbB1QA5PHEw1GxXhSC4IH+uXq+auJR
-	9kuhMxnKX6rRhx4487fAfXTS2oIcYSNitGOE6M9TmjpfAmNYzRMlx6+bIAUEiTeGzaWqanIW9Ch
-	YiWwBRX8t1kVZhtbYZnfyx4Od4cK42VVQm4TJIipRgOCc0cFyErGK76gXg==
-X-Received: by 2002:a05:6214:5292:b0:6e8:fbb7:6764 with SMTP id 6a1803df08f44-6f2c46992f3mr343421186d6.45.1745427813505;
-        Wed, 23 Apr 2025 10:03:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE0Jady51wQ0Po3UBtRHbwZVYJnEaUhKMy5jHguua0DBLjtBhN5wZ/fJFmpmlLKNdXjaqxXqQ==
-X-Received: by 2002:a05:6214:5292:b0:6e8:fbb7:6764 with SMTP id 6a1803df08f44-6f2c46992f3mr343420656d6.45.1745427813160;
-        Wed, 23 Apr 2025 10:03:33 -0700 (PDT)
-Received: from ?IPV6:2601:408:c101:1d00:6621:a07c:fed4:cbba? ([2601:408:c101:1d00:6621:a07c:fed4:cbba])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f2c2b33134sm72456966d6.54.2025.04.23.10.03.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 10:03:32 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <40e1ec0a-63a8-4c07-8b42-e31676453265@redhat.com>
-Date: Wed, 23 Apr 2025 13:03:31 -0400
+        d=1e100.net; s=20230601; t=1745427860; x=1746032660;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4T78alXt/iIwXp78tg/kPkO/5eMQaCbSQmkPu/StvNk=;
+        b=Mryih7FcwWvZlVLI6l1tWOGSFqdCo/euJXxXmlZo8CdWINVfNh/VMSxii2V6A0C5nJ
+         EO0dsBxSXvQ3M5eahalDnvgjvJITkum3ORKACdZYXDaNzQmPxj/oZJjhgkho/OfsAIE9
+         MPgvDVN3B9/3kTpN/pWihkoSd7TDBf1jyUcTepG61pOC3cTg5Jcz4Y2kH+cOLbDWdwq0
+         ogx72HgJINuEK70esY1tmX9VPGlaW0cKYc+/B0yYFN89EnePBZOiLB1Ei8c3GmiNgeD2
+         DWAUE18tWzhVhKHvC1yn8iIEl9/X4ZJ6H1wqHx0i64JrD18itocs/I/v73OZCDU1DkuD
+         kylw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPI7QE+SHpT8ktIsQ7zbdH3OV/Ok988UdMSipAP0lomdUoNujfyPVolFwWsjGsJDlvkDCKPzr0wEbwDHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8dTHkOprWacIH8hpNeSo6FaymPkmIyV6IaTlu7wL40PYHdnC2
+	kKkdW76vtJkwPQ9SsVORm2OF4rVCjPb+bzX6j92V7hA1k7Ak78t3zaJYDfyPVX5bHQgTgacY6ZK
+	3FmdPws9N7MHcVyC1hRwX/Ic3rNjafMkbFWCE
+X-Gm-Gg: ASbGnct/YHLAqEqE5qggFL69E4UXbsr1ioqRmKXonH3+ukkFLrVJU68z/mDDfGzOxrq
+	zqlocs5A7CJP7D3cXfqY7FAcIARThMZtfc02guR8DpbMhdMAMyHnMHpMkgmo8cQSJwvhlN2DM1f
+	4YD7KzfdjfpLvabyldsTIHZF8Xgez8Uovw1DRfYz4eYthTnU1gdIIb
+X-Google-Smtp-Source: AGHT+IHfwTdYoSufLjSJ58LqZBhkAkdFx/ssz56U94sPn0nQbStE/Va0flBY27HFgzAD7B7hO4D1JmbA5Qx0DPk6l+I=
+X-Received: by 2002:a05:622a:5a85:b0:479:1958:d81a with SMTP id
+ d75a77b69052e-47d11cdfed8mr5784911cf.6.1745427860136; Wed, 23 Apr 2025
+ 10:04:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/2] selftests: memcg: Allow low event with no
- memory.low and memory_recursiveprot on
-To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
- Waiman Long <llong@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Muchun Song <muchun.song@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>, Tejun Heo <tj@kernel.org>,
- Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
- cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
-References: <20250415210415.13414-1-longman@redhat.com>
- <20250415210415.13414-2-longman@redhat.com>
- <psbduszek3llnvsykbm3qld22crppq4z24hyhsp66ax3r2jji5@xhklroqn2254>
- <0033f39f-ff47-4645-9b1e-f19ff39233e7@redhat.com>
- <h64z4wl6mw3qxfwmqsvlddsie62ehkoag47lm2in3nda7dhloq@rjxpkggawqem>
- <d32c626d-1c93-47ec-8b01-1c085b4bf2fa@redhat.com>
- <d36jhvahtoqqtuw4y2k4rjzmxnu4ejbffvimrnffvcu3raby6l@asjm6h6r7w3k>
-Content-Language: en-US
-In-Reply-To: <d36jhvahtoqqtuw4y2k4rjzmxnu4ejbffvimrnffvcu3raby6l@asjm6h6r7w3k>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <bcfb90b2cecf43d7a0760ebaddde10d8@honor.com> <20250422170209.a8beaa8a3610d2e92421476f@linux-foundation.org>
+ <CAJuCfpF4SbPWMgECD89e=QDcrCTNqnchYZ=dpod-cdRxfsCtjA@mail.gmail.com> <aAkDRg0Ajl3ByXMq@slm.duckdns.org>
+In-Reply-To: <aAkDRg0Ajl3ByXMq@slm.duckdns.org>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Wed, 23 Apr 2025 10:04:09 -0700
+X-Gm-Features: ATxdqUHJ30i9OLvtE2fA9LHY6wYiUe30eXJDWxJRdsQ2iAe3qRdieefkGhz3J4A
+Message-ID: <CAJuCfpHSYz6-VtR2Q_44eEeCYb=rXcVApKiCZckQwU2X3eEa-A@mail.gmail.com>
+Subject: Re: mm: percpu: increase PERCPU_MODULE_RESERVE to avoid allocation failure
+To: Tejun Heo <tj@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, gaoxu <gaoxu2@honor.com>, 
+	Dennis Zhou <dennis@kernel.org>, Christoph Lameter <cl@linux.com>, 
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yipengxiang <yipengxiang@honor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 4/23/25 12:49 PM, Michal Koutný wrote:
-> On Tue, Apr 22, 2025 at 07:58:56PM -0400, Waiman Long <llong@redhat.com> wrote:
->> Am I correct to assume that the purpose of 1d09069f5313f ("selftests:
->> memcg: expect no low events in unprotected sibling") is to force a
->> failure in the test_memcg_low test to force a change in the current
->> behavior? Or was it the case that it didn't fail when you submit your
->> patch?
-> Yes, the failure had been intended to mark unexpected mode of reclaim
-> (there's still a reproducer somewhere in the references). However, I
-> learnt that:
->    a) it ain't easy to fix,
->    b) the only occurence of the troublesome behavior was in the test and
->       never reported by users in real life.
+On Wed, Apr 23, 2025 at 8:12=E2=80=AFAM Tejun Heo <tj@kernel.org> wrote:
 >
-> I've started to prefer the variant where the particular check is
-> indefinite since that.
+> On Tue, Apr 22, 2025 at 05:19:31PM -0700, Suren Baghdasaryan wrote:
+> ...
+> > Allocating this reserved area dynamically would be ideal. OTOH this
+> > change increases the area size from 64kb to 128kb. Don't know how much
+> > effort we should put into it.
+>
+> The easiest solution would be switching the modules to use alloc_percpu()
+> instead of declaring per-cpu variables statically. I couldn't think of a
+> better way to support static percpu variables in modules and still can't,
+> but there aren't noticeable downsides to using dynamically allocated perc=
+pu
+> variables, so if you have several bytes here and there, sure, declare the=
+m
+> statically, but for anything chunky, please use dynamic allocations.
 
-OK, I will update the patch as you had suggested. I am fine doing that, 
-just that I did not understand why you wanted the result to be undefined 
-in the first place.
+In case of allocation tags, we are trying to minimize performance
+overhead as much as possible and allocating their per-cpu counters at
+compile time is in line with that goal. I'll check how much overhead
+dynamic allocation would add but it won't be zero.
 
-Cheers,
-Longman
-
+>
+> Thanks.
+>
+> --
+> tejun
