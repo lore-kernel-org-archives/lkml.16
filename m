@@ -1,212 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4871128D849;
-	Wed, 23 Apr 2025 15:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D586F28D849;
+	Wed, 23 Apr 2025 15:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745421066; cv=none; b=s9EbO4SpOpTriTAR64K65B0KOh4bPIT6BW5idJYLOiM5YGU0uSZFbdImA/Ypsmg2o5HJHAowVMF6aDsujSkMIdPNSPrin+tjhZH5t/uUn3UwsablSlrKt9XSqzXP8zDOBuUvzmafIYTOSWozyByQNDdFAt9GHkJcOAJ+P6PDBnU=
+	t=1745421074; cv=none; b=d6gybAwO2h1xhuBCpEpnPR/Cu1RNIlgM1AIxqjM8KodS4f7q/5C9OMF45joGmypdJJgZ4F1gQs1FziX0GHpnUciz9Zq8yJID/Sk5J0aKvVs84fU98OYGuSppe0mv5SMhGHfdmlaQ06iDRJl7qog8HTP+Dyf52fke5NrxGEXtgHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745421066; c=relaxed/simple;
-	bh=3Di99da41+qMjMtTmt4vHje94p895LiHCPSvw1Hu7lg=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=sRDsVY73KrkI1QYIshehQUCYwRvPz9Oo/JxqBIhb8DKR0goz8K8kky/Pisg907FdHObpkHADQN5xUfzJLJRMBjUZhkjM7aK+dTKQ0ZgTggAti3PQ3s5bdgydKDP6Gsd5yudxmKtaLHdDlT/VDhrhX+Fw1SO5HphDhPkL9lNXchs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JyIjc6P4; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EHVZUP7k; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745421074; c=relaxed/simple;
+	bh=F+hx4Fn5mDfpyt0oGlpKpllYKk1cWAK1EFxhtiq3FK8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=f6ejhX8GCBw+F4zsQUA4Jcd/s8pQAUWmlSGM5d3Jc+R+5r2T7O2IUJiKU1WxS9cWPiESYnushGhgNfB/C20SWNOKg/KxkoouthXrD6YevyJupCYZLmi5s5qKI+JSuB3hDib8c+2S0rQ/gcpfgsfcl0yw53zZ2P0R8ZLbxoYf9KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=muBl9RGQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JyIjc6P4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EHVZUP7k"
-Date: Wed, 23 Apr 2025 15:10:56 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745421062;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=BEGNVsuzeqAKKmzVHLqEk0GLgkV1Mzj2EoAKCSxOcAM=;
-	b=JyIjc6P421JhU9WROCMGVeA2gp4FYBI1r0XP/R3Tou/QxAXLgTyEm7iAaK4dgu3c1cr6h8
-	9g/3NbNtzq62Pq8ttRmtw8kuyl6uI8pFIf+SjGIZuVS1y39NZRt0dhZAhE/KkZpwb/Prod
-	Q6minpkhbkxaNGngpHZCPgeZ3EUkEhUmoCjfk34IAumuJNnMJyd6Cf3/22sn+FXpvMEc5c
-	aMpZNaP7lsLsDqQ8R4WgkKrBalSkGDydWQCe+KFF9vUfTtjKwKpjQH7etjl1PqvX2/OyY/
-	Aikl/FAgqEOzTE0HFkCU+wlBVsXHl2mfpxE1AsEuUwH6mfDAe1IiUjJFIX123g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745421062;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=BEGNVsuzeqAKKmzVHLqEk0GLgkV1Mzj2EoAKCSxOcAM=;
-	b=EHVZUP7kKwY5C8Q8ft5jKqp8QyeQQSbJqTpVfByV0Osh0Oor8Sw2CGykVt3aE7PQ5HCDU+
-	m08ylTUSsjVQksDw==
-From: "tip-bot2 for Juergen Gross" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/mm: Fix _pgd_alloc() for Xen PV mode
-Cc: arkamar@atlas.cz, Juergen Gross <jgross@suse.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, stable@vger.kernel.org,
- x86@kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="muBl9RGQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 097EFC4CEE2;
+	Wed, 23 Apr 2025 15:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745421073;
+	bh=F+hx4Fn5mDfpyt0oGlpKpllYKk1cWAK1EFxhtiq3FK8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=muBl9RGQg5hOTawKUYt3aISA7ofsXcDD2l7VaiJp0G1/e+v1Wcb1nM/HW4Wve9ktJ
+	 9GO7SNUUa3Q4vHsRsOsTIqHNkU2dj0Q6LFziSuEeXmhy99sb7GTBzQhgs1a+DPjDSi
+	 wAyfJbTlWt3xDSyApWiub5Po207YBYflida11p44=
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: stable@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	patches@lists.linux.dev,
+	Will Deacon <will@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Eric Auger <eric.auger@redhat.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 6.12 189/223] arm64/sysreg: Add register fields for HFGITR2_EL2
+Date: Wed, 23 Apr 2025 16:44:21 +0200
+Message-ID: <20250423142624.873400250@linuxfoundation.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250423142617.120834124@linuxfoundation.org>
+References: <20250423142617.120834124@linuxfoundation.org>
+User-Agent: quilt/0.68
+X-stable: review
+X-Patchwork-Hint: ignore
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174542105684.31282.17108172724272710051.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/urgent branch of tip:
+6.12-stable review patch.  If anyone has any objections, please let me know.
 
-Commit-ID:     4ce385f56434f3810ef103e1baea357ddcc6667e
-Gitweb:        https://git.kernel.org/tip/4ce385f56434f3810ef103e1baea357ddcc=
-6667e
-Author:        Juergen Gross <jgross@suse.com>
-AuthorDate:    Tue, 22 Apr 2025 15:17:17 +02:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Wed, 23 Apr 2025 07:49:14 -07:00
+------------------
 
-x86/mm: Fix _pgd_alloc() for Xen PV mode
+From: Anshuman Khandual <anshuman.khandual@arm.com>
 
-Recently _pgd_alloc() was switched from using __get_free_pages() to
-pagetable_alloc_noprof(), which might return a compound page in case
-the allocation order is larger than 0.
+commit 9401476f17747586a8bfb29abfdf5ade7a8bceef upstream.
 
-On x86 this will be the case if CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
-is set, even if PTI has been disabled at runtime.
+This adds register fields for HFGITR2_EL2 as per the definitions based
+on DDI0601 2024-12.
 
-When running as a Xen PV guest (this will always disable PTI), using
-a compound page for a PGD will result in VM_BUG_ON_PGFLAGS being
-triggered when the Xen code tries to pin the PGD.
-
-Fix the Xen issue together with the not needed 8k allocation for a
-PGD with PTI disabled by replacing PGD_ALLOCATION_ORDER with an
-inline helper returning the needed order for PGD allocations.
-
-Fixes: a9b3c355c2e6 ("asm-generic: pgalloc: provide generic __pgd_{alloc,free=
-}")
-Reported-by: Petr Van=C4=9Bk <arkamar@atlas.cz>
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Tested-by: Petr Van=C4=9Bk <arkamar@atlas.cz>
-Cc:stable@vger.kernel.org
-Link: https://lore.kernel.org/all/20250422131717.25724-1-jgross%40suse.com
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Link: https://lore.kernel.org/r/20250203050828.1049370-5-anshuman.khandual@arm.com
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/pgalloc.h     | 19 +++++++++++--------
- arch/x86/kernel/machine_kexec_32.c |  4 ++--
- arch/x86/mm/pgtable.c              |  4 ++--
- arch/x86/platform/efi/efi_64.c     |  4 ++--
- 4 files changed, 17 insertions(+), 14 deletions(-)
+ arch/arm64/tools/sysreg |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/include/asm/pgalloc.h b/arch/x86/include/asm/pgalloc.h
-index a331475..c88691b 100644
---- a/arch/x86/include/asm/pgalloc.h
-+++ b/arch/x86/include/asm/pgalloc.h
-@@ -6,6 +6,8 @@
- #include <linux/mm.h>		/* for struct page */
- #include <linux/pagemap.h>
-=20
-+#include <asm/cpufeature.h>
+--- a/arch/arm64/tools/sysreg
++++ b/arch/arm64/tools/sysreg
+@@ -2694,6 +2694,12 @@ Field	1	AMEVCNTR00_EL0
+ Field	0	AMCNTEN0
+ EndSysreg
+ 
++Sysreg	HFGITR2_EL2	3	4	3	1	7
++Res0	63:2
++Field	1	nDCCIVAPS
++Field	0	TSBCSYNC
++EndSysreg
 +
- #define __HAVE_ARCH_PTE_ALLOC_ONE
- #define __HAVE_ARCH_PGD_FREE
- #include <asm-generic/pgalloc.h>
-@@ -29,16 +31,17 @@ static inline void paravirt_release_pud(unsigned long pfn=
-) {}
- static inline void paravirt_release_p4d(unsigned long pfn) {}
- #endif
-=20
--#ifdef CONFIG_MITIGATION_PAGE_TABLE_ISOLATION
- /*
-- * Instead of one PGD, we acquire two PGDs.  Being order-1, it is
-- * both 8k in size and 8k-aligned.  That lets us just flip bit 12
-- * in a pointer to swap between the two 4k halves.
-+ * In case of Page Table Isolation active, we acquire two PGDs instead of on=
-e.
-+ * Being order-1, it is both 8k in size and 8k-aligned.  That lets us just
-+ * flip bit 12 in a pointer to swap between the two 4k halves.
-  */
--#define PGD_ALLOCATION_ORDER 1
--#else
--#define PGD_ALLOCATION_ORDER 0
--#endif
-+static inline unsigned int pgd_allocation_order(void)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_PTI))
-+		return 1;
-+	return 0;
-+}
-=20
- /*
-  * Allocate and free page tables.
-diff --git a/arch/x86/kernel/machine_kexec_32.c b/arch/x86/kernel/machine_kex=
-ec_32.c
-index 8026516..1f32530 100644
---- a/arch/x86/kernel/machine_kexec_32.c
-+++ b/arch/x86/kernel/machine_kexec_32.c
-@@ -42,7 +42,7 @@ static void load_segments(void)
-=20
- static void machine_kexec_free_page_tables(struct kimage *image)
- {
--	free_pages((unsigned long)image->arch.pgd, PGD_ALLOCATION_ORDER);
-+	free_pages((unsigned long)image->arch.pgd, pgd_allocation_order());
- 	image->arch.pgd =3D NULL;
- #ifdef CONFIG_X86_PAE
- 	free_page((unsigned long)image->arch.pmd0);
-@@ -59,7 +59,7 @@ static void machine_kexec_free_page_tables(struct kimage *i=
-mage)
- static int machine_kexec_alloc_page_tables(struct kimage *image)
- {
- 	image->arch.pgd =3D (pgd_t *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
--						    PGD_ALLOCATION_ORDER);
-+						    pgd_allocation_order());
- #ifdef CONFIG_X86_PAE
- 	image->arch.pmd0 =3D (pmd_t *)get_zeroed_page(GFP_KERNEL);
- 	image->arch.pmd1 =3D (pmd_t *)get_zeroed_page(GFP_KERNEL);
-diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
-index a05fcdd..f7ae44d 100644
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -360,7 +360,7 @@ static inline pgd_t *_pgd_alloc(struct mm_struct *mm)
- 	 * We allocate one page for pgd.
- 	 */
- 	if (!SHARED_KERNEL_PMD)
--		return __pgd_alloc(mm, PGD_ALLOCATION_ORDER);
-+		return __pgd_alloc(mm, pgd_allocation_order());
-=20
- 	/*
- 	 * Now PAE kernel is not running as a Xen domain. We can allocate
-@@ -380,7 +380,7 @@ static inline void _pgd_free(struct mm_struct *mm, pgd_t =
-*pgd)
-=20
- static inline pgd_t *_pgd_alloc(struct mm_struct *mm)
- {
--	return __pgd_alloc(mm, PGD_ALLOCATION_ORDER);
-+	return __pgd_alloc(mm, pgd_allocation_order());
- }
-=20
- static inline void _pgd_free(struct mm_struct *mm, pgd_t *pgd)
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index ac57259..a4b4ebd 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -73,7 +73,7 @@ int __init efi_alloc_page_tables(void)
- 	gfp_t gfp_mask;
-=20
- 	gfp_mask =3D GFP_KERNEL | __GFP_ZERO;
--	efi_pgd =3D (pgd_t *)__get_free_pages(gfp_mask, PGD_ALLOCATION_ORDER);
-+	efi_pgd =3D (pgd_t *)__get_free_pages(gfp_mask, pgd_allocation_order());
- 	if (!efi_pgd)
- 		goto fail;
-=20
-@@ -96,7 +96,7 @@ free_p4d:
- 	if (pgtable_l5_enabled())
- 		free_page((unsigned long)pgd_page_vaddr(*pgd));
- free_pgd:
--	free_pages((unsigned long)efi_pgd, PGD_ALLOCATION_ORDER);
-+	free_pages((unsigned long)efi_pgd, pgd_allocation_order());
- fail:
- 	return -ENOMEM;
- }
+ Sysreg	ZCR_EL2	3	4	1	2	0
+ Fields	ZCR_ELx
+ EndSysreg
+
+
