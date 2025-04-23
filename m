@@ -1,153 +1,117 @@
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7B32857D2
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:23:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B72289351
+	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745396633; cv=none; b=NzdH8xcnygQci15ZNZDBqZ7sZl9tH2lnzaGgARhsXbqwKZ/M0oBCEXw7NC4VF2jEmGj9JTgLHugDh5lfcpZda7aHS6FSVZsW//HZhMJyA/pMXt4/60JxQMceuyyj4xBJ9HXREe/Yn5WLu15xXDdXdTpCKSt/YdYpdDA/QfTvKXA=
+	t=1745396641; cv=none; b=JboMV9phU1/w0liPCQcOIUzsI45lv7GxdhZYdCvejMIsAJVdsihTWGy9sxC4V5XqjmgBPCdPWkOG5Tq45zXPMKNtcTCJuICHs8TA/wSdZiDGKDe3LtsXiP5G6As2R+wZz3CyYk0hKKmdniXGRXFK0E6WV7EoWMoZkcD5yta/fpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745396633; c=relaxed/simple;
-	bh=nA8rNGt4A1igenmejWnsQynu+m/nFjtozT6TQLu70NI=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=gx5qoLaB0EaihdM/X23c68gVLg6HIfFuP1XO7W2XcgLpOan007TG8BXNzKmu0NY3t/06v9pyBW3o+hBf7nsIdtg00nhZdOGnVXbmG2heBWN0Hy2TFwwNnrz7tEmmTs7m50JOH0cqH48modWpGGSIuU4fAaVHKJz2CPk/3DRFjPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=svc3XXae; arc=none smtp.client-ip=203.254.224.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1745396641; c=relaxed/simple;
+	bh=9AoM/AIPb3N4elSC5sH2DHMkFgmxak1AJlaKm7usVmc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=AjEJODZClq0+Paxldg5KtAFXp+uoW0XfhYVeSSUWA0FbhFVIuEm9dWwOoyxw4f1SSECC0M2qi1yE+gffZu9OfIZG+0aGUvbvnMsSu6gh4dTdIP9kQQPIpv57vuKJJosyRp1J1yWCMm5i1CZ/NOaK/8Kx9H8SbY45HscAwRtIXf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=j4NijQWT; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="svc3XXae"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20250423082344epoutp0375c26d2cacdc9cfd5812851535289b23~45PtqNvwE1282412824epoutp03z
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 08:23:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20250423082344epoutp0375c26d2cacdc9cfd5812851535289b23~45PtqNvwE1282412824epoutp03z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1745396624;
-	bh=4S1yvQgwjaSQPCxRvjbfFApSmtTLLVqtOux/1CmiffM=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=svc3XXaemdH98jUA8H5RBZnG51pHpCw0Cqv1L20oGkKKbHwb2ykgfQwgay6kuPIeE
-	 Dny87YEJKb59sEihRkJ9bPhQ9+yVjv/tr/GOAe1PZrtS5mAQ4YaTyquFBi2zFE9GDZ
-	 BVjZSptrZlymnoChPdh1deegEVZ7PL4Pa9u+ArdA=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250423082343epcas5p2859446c8e5bc718417786106955cc012~45PsvxeeO1969819698epcas5p28;
-	Wed, 23 Apr 2025 08:23:43 +0000 (GMT)
-Received: from epcas5p2.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4ZjBvd5GpSz6B9mD; Wed, 23 Apr
-	2025 08:23:41 +0000 (GMT)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250423082341epcas5p39444809bd4c8cb0676dc942d76b42365~45PrBIWav1352713527epcas5p3m;
-	Wed, 23 Apr 2025 08:23:41 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250423082341epsmtrp20653e6b78f9f4c17e6effa4382b3c3bb~45PrATVbO0694106941epsmtrp2J;
-	Wed, 23 Apr 2025 08:23:41 +0000 (GMT)
-X-AuditID: b6c32a28-460ee70000001e8a-53-6808a38dc248
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	81.F5.07818.D83A8086; Wed, 23 Apr 2025 17:23:41 +0900 (KST)
-Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250423082339epsmtip2a817efb40038bd9238c8dd033bde5bcc~45PpYrBW91211812118epsmtip2W;
-	Wed, 23 Apr 2025 08:23:39 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Yashwant Varur'" <yashwant.v@samsung.com>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Cc: <cs0617.lee@samsung.com>, <g.naidu@samsung.com>,
-	<niyas.ahmed@samsung.com>
-In-Reply-To: <20250423060034.973-1-yashwant.v@samsung.com>
-Subject: RE: [PATCH] arm64: dts: exynos: Added the ethernet pin
- configuration
-Date: Wed, 23 Apr 2025 13:53:38 +0530
-Message-ID: <008a01dbb429$04f55f50$0ee01df0$@samsung.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j4NijQWT"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf58eea0fso29233735e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 01:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745396638; x=1746001438; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y01SW2UsKHrmSkBJiFRdXdGr5Bt5eDkwEO8sgbkacPw=;
+        b=j4NijQWT3Gg1tDJocMoFEem4SPvLpQNMi3fnLglvwIhwRm06Ip/qae0ZxWvzzh55Gh
+         EhYRxQzZj90KqHQ4+Ae07w+kCu0BAZEj4+VdXZg35PXNGRzV3miI6t6OIRWnbU+bQkJR
+         ABNtMCpXYSdB6g1bEQdzWBJTbSXW0Q+xtlxCSDaegFVTC+d6rN6N3xopJEBu25/7tveI
+         UMfl4ksJpz5FTbqR9+UfCqTlGh4Oey1A8XHo5/EwBCV3XJ8gLgYwvS0mRs6OfWJUZJei
+         TdfG8elIZnZswCnnVM0OCBXUrxPZCwnLHWHFO8qdoJ+Oe0CqXcMi8tYdW8luSz5OLmSK
+         vhKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745396638; x=1746001438;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y01SW2UsKHrmSkBJiFRdXdGr5Bt5eDkwEO8sgbkacPw=;
+        b=hl9kDiRqAGL610y2JQ6iSMz2zU7uBNgIBuyL6zSB0MYz1O3QvNKa2U0jCQok1D+RgF
+         hz+D4zM1HsIYuvFbYgzp2kw42OOHaNA/ZafCvsf9x0cc3Vggiov/cxFyXaIRUIkf6pHH
+         8Pz/ajU0egL+jO2uw7vJXmY/G/1h7ah4H3koRsY90cAmh2jNnadLHkYhckuwsNK21d+e
+         8yQW7ZQzCCN6eNmTRaILHo2+1+7aHCANrJOt/6IgzSSLlTUjXquJ+hHSIRTLpS27MJ/m
+         ES4sPMvAyh/nhvyKbxSHQJU3t+VYFmpnTtP7qBfhj+s0+ke04qjmayiDzjOw8ikUZa8S
+         E4Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCUDGK6fQfl3RCjpMBhOyNeMw1lWw6Nr88rWw6H/5uYVcA/lHatoenR8z5ng6JK8icTsV7xO4juYqQU7gWE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0JJOZDzGs6atcWFY6KvTYpizqXe8Ivf1JIfhs4uQrBjkav0wN
+	3at7CzPFKH5qJ271jHOb2w3z7yy6p5kZOw5fHsckUW5B0o4mSFxsE5zP/l1nBYE=
+X-Gm-Gg: ASbGncu0Z9UUyqLpjIJyq+sYmXJDhAlodvbTqHv6265JtxQ2vPcj0mtUzMzuQ/MX6/y
+	1kUV+PGUX2PC8A3bDJBWSyQGNQQRCXao6C+69atKBqvcigwvDormfJRKq5rs6Io1djvxrHOfsji
+	8jOKdmC3CbmoR9exfiGCZ0b6roCpn8bmoOIs+mbTK47Fvo5KRICmp3QnndpHbexfm40BXCQI5fk
+	MUXj1sC5VgmU2nweW0mvQeWJVmypXzvfQ7JEuzKIK0KNBzXXr8CqYrhl53rRAoUtDzPS2/fd8Gq
+	SQzgbiybAWF3sktBPzDi2upeq1UxyMmCH5dkDlhjvkYJLMbtaZlkguOc
+X-Google-Smtp-Source: AGHT+IECPr27/stUCSI1PWk+UsjbUIKYWkA1fnIwKTwVRmawMohMG5diVeFjOVyCEZb5VbXMG1aMDA==
+X-Received: by 2002:a05:600c:4e52:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-4408efbaebemr33514505e9.26.1745396637683;
+        Wed, 23 Apr 2025 01:23:57 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-44092b0a52asm17463555e9.0.2025.04.23.01.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 01:23:57 -0700 (PDT)
+Date: Wed, 23 Apr 2025 11:23:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH next] usb: dwc3: qcom: Fix error handling in probe
+Message-ID: <aAijmfAph0FlTqg6@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQI+tP5AvR0g22A5T67WLyfPVk3CYgKkYErqstW+shA=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSvG7vYo4Mg847LBZr9p5jslj1jtdi
-	/pFzrBZbZl5mtng56x6bxabH11gtLu+aw2Yx4/w+JosnUx6xWvzfs4PdYtXER2wO3B6bVnWy
-	eWxeUu/Rt2UVo8fnTXIBLFFcNimpOZllqUX6dglcGQceJhU0CFR8u3GVqYHxKm8XIyeHhICJ
-	ROPFLYxdjFwcQgK7GSW+npzKDJGQlri+cQI7hC0ssfLfc3aIoueMEq0rHoEl2AR0JXYsbmMD
-	SYgIdDBJXH/zgLWLkYODWSBI4svuQIiGbkaJFQc7waZyClhJ/F14mRXEFhbwldjdcQZsEIuA
-	qsSudRvB4rwClhLn/sxlgbAFJU7OfAJmMwtoS/Q+bGWEsZctfA11qYLEz6fLwHpFgObPaOtl
-	g6gRl3h59Aj7BEbhWUhGzUIyahaSUbOQtCxgZFnFKJlaUJybnptsWGCYl1quV5yYW1yal66X
-	nJ+7iREcaVoaOxjffWvSP8TIxMF4iFGCg1lJhPeXG3uGEG9KYmVValF+fFFpTmrxIUZpDhYl
-	cd6VhhHpQgLpiSWp2ampBalFMFkmDk6pBia71hmcnT3e2Tl626N2Hpuw4I5wsJmWRvC/VsVP
-	9f9n1kywtzkzOX5lXq3sBwv/av/fAndeXnTLn2jAn/NMU8PiefKCfXsE3C43Vrd/ON5hMP/a
-	RF7RZ3k/EsUTF5UXXhJ8HT3/T87Bn1c0NzkdqDt0z6qyfou5GJ+A28L4hS9VDdcEFPi/Xv91
-	NueC5pLVEzScucuW1azun+qVpb/33KudNkWzIkuuLjD1S/13fJKMrqnf1EMLFsRerA5rt5r/
-	4crG7X8/FD5Y7nN4oV6b+zXpbZ85jq9Si5H03y6h+Gqp0nyx3xINAkp9kls8wsUENpfeeXc7
-	yOTZivdft5rJNm0/dK69c6oVI9O7f/4b+mYqsRRnJBpqMRcVJwIAfGKkqSMDAAA=
-X-CMS-MailID: 20250423082341epcas5p39444809bd4c8cb0676dc942d76b42365
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-cpgsPolicy: CPGSC10-542,Y
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a
-References: <CGME20250423060042epcas5p2c04be779e21089f33b8a9a7785bb151a@epcas5p2.samsung.com>
-	<20250423060034.973-1-yashwant.v@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Hi Yashwant,
+There are two issues:
+1) Return -EINVAL if platform_get_resource() fails.  Don't return
+   success.
+2) The devm_ioremap() function doesn't return error pointers, it returns
+   NULL.  Update the check.
 
-> -----Original Message-----
-> From: Yashwant Varur <yashwant.v=40samsung.com>
-> Sent: Wednesday, April 23, 2025 11:31 AM
-> To: robh=40kernel.org; krzk+dt=40kernel.org; conor+dt=40kernel.org;
-> alim.akhtar=40samsung.com; devicetree=40vger.kernel.org; linux-arm-
-> kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.org; linux-
-> kernel=40vger.kernel.org
-> Cc: cs0617.lee=40samsung.com; g.naidu=40samsung.com;
-> niyas.ahmed=40samsung.com; yashwant.v=40samsung.com
-> Subject: =5BPATCH=5D arm64: dts: exynos: Added the ethernet pin configura=
-tion
->=20
-> This patch adds the ethernet pin configuration.
->=20
-Please follow https://www.kernel.org/doc/html/latest/process/submitting-pat=
-ches.html=23describe-your-changes
-to describe our changes.
+Fixes: 1881a32fe14d ("usb: dwc3: qcom: Transition to flattened model")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/usb/dwc3/dwc3-qcom.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-> Signed-off-by: Yashwant Varur <yashwant.v=40samsung.com>
-> Signed-off-by: Changsub Lee <cs0617.lee=40samsung.com>
-> ---
->  .../dts/exynos/exynosautov920-pinctrl.dtsi    =7C 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-> b/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-> index 663e8265cbf5..778584d339d5 100644
-> --- a/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynosautov920-pinctrl.dtsi
-> =40=40 -166,6 +166,24 =40=40 gph6: gph6-gpio-bank =7B
->  		interrupt-controller;
->  		=23interrupt-cells =3D <2>;
->  	=7D;
-> +
-> +	eth0_pps_out: eth0_pps_out =7B
-> +		samsung,pins =3D =22gph3-0=22;
-> +		samsung,pin-function =3D <EXYNOS_PIN_FUNC_OUTPUT>;
-> +		samsung,pin-pud =3D <EXYNOS_PIN_PULL_NONE>;
-> +	=7D;
-> +
-> +	eth0_rgmii: eth0_rgmii =7B
-> +		samsung,pins =3D =22gph3-1=22, =22gph3-2=22, =22gph3-3=22, =22gph3-4=
-=22,
-> +				=22gph3-5=22, =22gph3-6=22, =22gph3-7=22, =22gph4-0=22,
-> +				=22gph4-1=22, =22gph4-2=22, =22gph4-3=22, =22gph4-4=22;
-> +		samsung,pin-function =3D <EXYNOS_PIN_FUNC_2>;
-> +	=7D;
-> +
-> +	eth0_mdc_mdio: eth0_mdc_mdio =7B
-> +		samsung,pins =3D =22gph4-5=22, =22gph4-6=22;
-> +		samsung,pin-function =3D <EXYNOS_PIN_FUNC_2>;
-No need to set drive strength and pull-=7Bup/down=7D??
+diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+index d512002e1e88..b63fcaf823aa 100644
+--- a/drivers/usb/dwc3/dwc3-qcom.c
++++ b/drivers/usb/dwc3/dwc3-qcom.c
+@@ -740,15 +740,17 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!r)
++	if (!r) {
++		ret = -EINVAL;
+ 		goto clk_disable;
++	}
+ 	res = *r;
+ 	res.end = res.start + SDM845_QSCRATCH_BASE_OFFSET;
+ 
+ 	qcom->qscratch_base = devm_ioremap(dev, res.end, SDM845_QSCRATCH_SIZE);
+-	if (IS_ERR(qcom->qscratch_base)) {
+-		dev_err(dev, "failed to map qscratch region: %pe\n", qcom->qscratch_base);
+-		ret = PTR_ERR(qcom->qscratch_base);
++	if (!qcom->qscratch_base) {
++		dev_err(dev, "failed to map qscratch region\n");
++		ret = -ENOMEM;
+ 		goto clk_disable;
+ 	}
+ 
+-- 
+2.47.2
 
