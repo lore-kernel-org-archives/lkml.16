@@ -1,140 +1,403 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3EB82D98
-	for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:42:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E111269AF9;
+	Wed, 23 Apr 2025 20:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745440936; cv=none; b=eqe20wtCga6cn7GZPw+HMp6GgssnPKsbhwRweaPMytJiJ2sRfKtBLDda4/YYd11MCq5FwfLEWz2+P0bz1N6U4SEkVEwbXXl9k8rDb7MR3OSmaH8sMgzQVWI4jdyq0vLYsgUP8p44/vw2UTqzevTK71Dabc/xl6z25Iu/5+PsaUg=
+	t=1745441018; cv=none; b=YI4v1u7uxxuCi0O2FGVH8kptSUkWgBqPIQkCuWXtrv5k7gCgEadFr5j9/r2TQuHLjdacnXcaDC8OdSUeAuAzlklBvIAZd97qBeF+PK6atwyxAErkyFePRa4TUqXebBt55b49iS2TtLF1WGhSmrlu7M2cd/O9bSE1W6etjktUz8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745440936; c=relaxed/simple;
-	bh=wfJ6+4eVtw+8JERkjQFdREF36flMRPTYH+jHdoBhteI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jcXRS9DXwda5tsMxyhed9tH6DalJqulHuaxMi1iGuEWERPCflsJ7ZIbWE5O03QE6lxivzeFUiIqZL4VnstsOCMidUWPqBmTmHAXrhc19/KcFuYQjspKIq8gTPejknsyJp49hz6pBbh973CsOxvKNTcZevI2O2diSdBHEFVeK3UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=linux.dev; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Wed, 23 Apr 2025 16:41:58 -0400
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ben Collins <bcollins@kernel.org>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, 
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-Message-ID: <2025042316-nippy-lemur-debd6b@boujee-and-buff>
-Mail-Followup-To: Arnd Bergmann <arnd@arndb.de>, dmaengine@vger.kernel.org, 
-	Vinod Koul <vkoul@kernel.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	Robin Murphy <robin.murphy@arm.com>
-References: <2025042122-bizarre-ibex-b7ed42@boujee-and-buff>
- <fb0b5293-1cf3-4fcc-be9c-b5fe83f32325@app.fastmail.com>
- <2025042202-uncovered-mongrel-aee116@boujee-and-buff>
- <ace8c85d-6dec-499f-8a8a-35d4672c181d@app.fastmail.com>
- <2025042204-apricot-tarsier-b7f5a1@boujee-and-buff>
- <29bdb7e0-6db9-445e-986f-b29af8369c69@app.fastmail.com>
- <2025042216-hungry-hound-77ecae@boujee-and-buff>
- <06765168-a36a-4229-b03b-6ea91157237a@app.fastmail.com>
+	s=arc-20240116; t=1745441018; c=relaxed/simple;
+	bh=HrL/5UsnsNjf51o3+tYUbdc3ePvfKmSpex/M7qcCV0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=mYQ+lUNLPOlyO/mrl2q2h/FMOt+CtzKKGjj+mKLk8Hb+Kw4mK7ots6vjSyjxBnukAzRMCDFqczaySnNhPqCJQ9zzALzUAdEjRtCUcipw+9WGQ5xEFZFZ7orNX92zAnAjAclpO04B0sBFc2JiYWlSuM7axusZtmVGTIxXX3nNReE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X7q0UEC5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X7q0UEC5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFDB3C4CEE2;
+	Wed, 23 Apr 2025 20:43:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745441018;
+	bh=HrL/5UsnsNjf51o3+tYUbdc3ePvfKmSpex/M7qcCV0w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=X7q0UEC57iIo8snpOnLNlXN2Q8guqDBQihA1ZEnGi9CsJ1GW4aa5UnCTDVmZZOGnv
+	 HurnvhwOpPkFSXdCCw93hrOwP/VrN5Dl3kaXHqj9XDdpH3Tr5OvrEEON9/DKSqWI3M
+	 0DbDHac6N49q2CLjEYJz6MI01csZCjFN1J34BSQxgS8S6CmtLSfx72rfvVifqlb3xB
+	 37r4x/JIeZkgbEj1ba4pKNQzlgdT8VeUeZHr4KWJPhTIzsU0pfBJhzadEx4WzK5Poc
+	 kCBJJ+rojfIYLjaFV29WLZ9meddmlm5tuazz7CXtrhgRL2IqNWoGD3vljjYDlBhdmC
+	 NHh+5lurYvUyw==
+Date: Wed, 23 Apr 2025 15:43:36 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>,
+	"Martin K . Petersen" <martin.petersen@oracle.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+	linux-scsi@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] [v2] PCI: add CONFIG_MMU dependency
+Message-ID: <20250423204336.GA452880@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fxpjaem6afceona6"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06765168-a36a-4229-b03b-6ea91157237a@app.fastmail.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250423202215.3315550-1-arnd@kernel.org>
 
+On Wed, Apr 23, 2025 at 10:16:32PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> It turns out that there are no platforms that have PCI but don't have an MMU,
+> so adding a Kconfig dependency on CONFIG_PCI simplifies build testing kernels
+> for those platforms a lot, and avoids a lot of inadvertent build regressions.
+> 
+> Add a dependency for CONFIG_PCI and remove all the ones for PCI specific
+> device drivers that are currently marked not having it.
+> 
+> There are a few platforms that have an optional MMU, but they usually cannot
+> have PCI at all. The one exception is Coldfire MCF54xx, but this is mainly
+> for historic reasons, and anyone using those chips should really use the
+> MMU these days.
+> 
+> Link: https://lore.kernel.org/lkml/a41f1b20-a76c-43d8-8c36-f12744327a54@app.fastmail.com/
+> Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com> # SCSI
+> Acked-by: Alex Deucher <alexander.deucher@amd.com>
+> Reviewed-by: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: update changelog text
+> 
+> Bjorn, can you take this through the PCI tree? I thought about splitting
+> it up by subsystem, but it's really one thing that I'm doing here, and
+> doing it in one bit makes more sense to me.
 
---fxpjaem6afceona6
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] fsldma: Support 40 bit DMA addresses where capable
-MIME-Version: 1.0
+Applied to pci/misc for v6.16, thanks!
 
-On Wed, Apr 23, 2025 at 03:49:16PM -0500, Arnd Bergmann wrote:
-> On Tue, Apr 22, 2025, at 23:10, Ben Collins wrote:
-> > On Tue, Apr 22, 2025 at 11:25:40AM -0500, Arnd Bergmann wrote:
-> >> On Tue, Apr 22, 2025, at 10:56, Ben Collins wrote:
-> >>
-> >> >> > I'll check on this, but I think it's a seperate issue. The main t=
-hing is
-> >> >> > just to configure the dma hw correctly.
-> >> >>=20
-> >> >> I think it's still important to check this before changing the
-> >> >> driver: if the larger mask doesn't actually have any effect now
-> >> >> because the DT caps the DMA at 4GB, then it might break later
-> >> >> when someone adds the correct dma-ranges properties.
-> >> >
-> >> > I'm adding dma-ranges to my dt for testing.
-> >>=20
-> >> Ok. The other thing you can try is to printk() the dev->bus_dma_limit
-> >> to see if it even tries to use >32bit addressing.
-> >
-> > Did that. Every combination of IOMMU on/off and dma-ranges in my dt alw=
-ays
-> > showed bus_dma_limit as 0x0.
+The PCI tree is based on -rc1, so there were a few minor merge
+conflicts, but they're obvious.
 
-> There was originally a hack for powerpc that allowed DMA to be
-> done in the absence of a dma-ranges property in the bus node, but
-> limit it to 32-bit addressing for backwards compatibility, while
-> all other architectures should require either an empty dma-ranges
-> to allow full addressing or a specific translation if there is
-> a bus specific limit and/or offset.
->=20
-> Looking at the current code I don't see that any more, so it's
-> possible that now any DMA is allowed even if there is no
-> dma-ranges property at all.
-
-It's still there. It hardcodes zone_dma_limit to 31-bits:
-
-arch/powerpc/mm/mem.c: paging_init()
-
-I'm digging into this more. I'll check back when I have a better
-understanding.
-
-> > As an aside, if you could give this a quick check, I can send the revis=
-ed
-> > patch. Appreciate the feedback.
-> >
-> > https://github.com/benmcollins/linux/commit/2f2946b33294ebff2fdaae6d1ea=
-dc976147470d6
->=20
-> This looks correct to me, but I would change two things:
->=20
->  - remove the debug message, which you probably left by accident
->  - instead of the explicit of_device_is_compatible(), change it
->    to use the .data field of the of_device_id table instead.
-
-Will do.
-
---=20
- Ben Collins
- https://libjwt.io
- https://github.com/benmcollins
- --
- 3EC9 7598 1672 961A 1139  173A 5D5A 57C7 242B 22CF
-
---fxpjaem6afceona6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEPsl1mBZylhoRORc6XVpXxyQrIs8FAmgJUJYACgkQXVpXxyQr
-Is+a+BAAhV5mcf/TO/RILq33XlzL0rUsb9XinOexT5is1rmUn3HdeX2F4BG+AGpj
-lyo7gYAACqsOSNGZOrAaRo8BJsp9m7XYO4tpeMX4R1lnHyd6Fpc1q+XbGkWjInzD
-2RKNBnx6B+vMcOV3628ZmapiiEtjBXQvCYiKcS+mS6eGDQwgMkOkChDJjp1ldEHt
-EB9lOrPAggMt/PNXSXNsLY/dnHux7yFMunOdh3zCaBMOZAWQ3VCPfU8FTI75ODhU
-Jvy5kL+pXzBxQ1ZCZdQdQINjW26O/0iX8xoar/vCy2NjczbOfhvSYk5Y+Bcyb3dh
-6Crokq+KkJuNv78zsc2Rwh+yoIcg2lt5iDQIo84swlPFmSHtLYef2fhtANU535UB
-mDf5zN25jwWGI6SE+wXqu5odNCo55Azu5iOcbIt4RwOesrpW89zakAyqQ7x9KpnO
-iT9YoH9HNxqE9Z8IXPnBMUiQR8pLVFJ9BPmhCgyWSGjLNeaXn7Phe0gm+UML0Brg
-2pl/1wXEhOLIv5/SgWkVlHo9AsWMBObDwUr5egnpzR8GyWe3qm8eGXsq86tqcE2P
-FtlS+qGcJdonTViNd+obXzjSTEnBtZ13DdikK/BgpGGvfW/Swqux2Sp4vNG2aYli
-WrUwf2ZjsYjo4l6xdRH1nNmZeTkpqEcDD0S3tZR1x44ZAMd5xhU=
-=/lyT
------END PGP SIGNATURE-----
-
---fxpjaem6afceona6--
+> ---
+>  drivers/accel/qaic/Kconfig              | 1 -
+>  drivers/firewire/Kconfig                | 2 +-
+>  drivers/gpu/drm/Kconfig                 | 2 +-
+>  drivers/gpu/drm/amd/amdgpu/Kconfig      | 3 +--
+>  drivers/gpu/drm/ast/Kconfig             | 2 +-
+>  drivers/gpu/drm/gma500/Kconfig          | 2 +-
+>  drivers/gpu/drm/hisilicon/hibmc/Kconfig | 1 -
+>  drivers/gpu/drm/loongson/Kconfig        | 2 +-
+>  drivers/gpu/drm/mgag200/Kconfig         | 2 +-
+>  drivers/gpu/drm/nouveau/Kconfig         | 3 +--
+>  drivers/gpu/drm/qxl/Kconfig             | 2 +-
+>  drivers/gpu/drm/radeon/Kconfig          | 2 +-
+>  drivers/gpu/drm/tiny/Kconfig            | 2 +-
+>  drivers/gpu/drm/vmwgfx/Kconfig          | 2 +-
+>  drivers/gpu/drm/xe/Kconfig              | 2 +-
+>  drivers/net/ethernet/broadcom/Kconfig   | 1 -
+>  drivers/pci/Kconfig                     | 1 +
+>  drivers/pci/pci.c                       | 4 ++--
+>  drivers/scsi/bnx2fc/Kconfig             | 1 -
+>  drivers/scsi/bnx2i/Kconfig              | 1 -
+>  drivers/vfio/pci/Kconfig                | 2 +-
+>  21 files changed, 17 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/accel/qaic/Kconfig b/drivers/accel/qaic/Kconfig
+> index a9f866230058..5e405a19c157 100644
+> --- a/drivers/accel/qaic/Kconfig
+> +++ b/drivers/accel/qaic/Kconfig
+> @@ -8,7 +8,6 @@ config DRM_ACCEL_QAIC
+>  	depends on DRM_ACCEL
+>  	depends on PCI && HAS_IOMEM
+>  	depends on MHI_BUS
+> -	depends on MMU
+>  	select CRC32
+>  	help
+>  	  Enables driver for Qualcomm's Cloud AI accelerator PCIe cards that are
+> diff --git a/drivers/firewire/Kconfig b/drivers/firewire/Kconfig
+> index 905c82e26ce7..a5f5e250223a 100644
+> --- a/drivers/firewire/Kconfig
+> +++ b/drivers/firewire/Kconfig
+> @@ -83,7 +83,7 @@ config FIREWIRE_KUNIT_SELF_ID_SEQUENCE_HELPER_TEST
+>  
+>  config FIREWIRE_OHCI
+>  	tristate "OHCI-1394 controllers"
+> -	depends on PCI && FIREWIRE && MMU
+> +	depends on PCI && FIREWIRE
+>  	help
+>  	  Enable this driver if you have a FireWire controller based
+>  	  on the OHCI specification.  For all practical purposes, this
+> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+> index 89d00265d578..831bd384f1fd 100644
+> --- a/drivers/gpu/drm/Kconfig
+> +++ b/drivers/gpu/drm/Kconfig
+> @@ -393,7 +393,7 @@ source "drivers/gpu/drm/imagination/Kconfig"
+>  
+>  config DRM_HYPERV
+>  	tristate "DRM Support for Hyper-V synthetic video device"
+> -	depends on DRM && PCI && MMU && HYPERV
+> +	depends on DRM && PCI && HYPERV
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+>  	select DRM_GEM_SHMEM_HELPER
+> diff --git a/drivers/gpu/drm/amd/amdgpu/Kconfig b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> index 7b95221d2f3d..64e603f971b8 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/Kconfig
+> +++ b/drivers/gpu/drm/amd/amdgpu/Kconfig
+> @@ -2,7 +2,7 @@
+>  
+>  config DRM_AMDGPU
+>  	tristate "AMD GPU"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on !UML
+>  	select FW_LOADER
+>  	select DRM_CLIENT
+> @@ -68,7 +68,6 @@ config DRM_AMDGPU_CIK
+>  config DRM_AMDGPU_USERPTR
+>  	bool "Always enable userptr write support"
+>  	depends on DRM_AMDGPU
+> -	depends on MMU
+>  	select HMM_MIRROR
+>  	select MMU_NOTIFIER
+>  	help
+> diff --git a/drivers/gpu/drm/ast/Kconfig b/drivers/gpu/drm/ast/Kconfig
+> index da0663542e8a..242fbccdf844 100644
+> --- a/drivers/gpu/drm/ast/Kconfig
+> +++ b/drivers/gpu/drm/ast/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_AST
+>  	tristate "AST server chips"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_GEM_SHMEM_HELPER
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/gma500/Kconfig b/drivers/gpu/drm/gma500/Kconfig
+> index 1613e51eff2d..e4c80e1a6da5 100644
+> --- a/drivers/gpu/drm/gma500/Kconfig
+> +++ b/drivers/gpu/drm/gma500/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_GMA500
+>  	tristate "Intel GMA500/600/3600/3650 KMS Framebuffer"
+> -	depends on DRM && PCI && X86 && MMU && HAS_IOPORT
+> +	depends on DRM && PCI && X86 && HAS_IOPORT
+>  	select DRM_CLIENT_SELECTION
+>  	depends on ACPI_VIDEO || !ACPI
+>  	depends on I2C
+> diff --git a/drivers/gpu/drm/hisilicon/hibmc/Kconfig b/drivers/gpu/drm/hisilicon/hibmc/Kconfig
+> index 98d77d74999d..d1f3f5793f34 100644
+> --- a/drivers/gpu/drm/hisilicon/hibmc/Kconfig
+> +++ b/drivers/gpu/drm/hisilicon/hibmc/Kconfig
+> @@ -2,7 +2,6 @@
+>  config DRM_HISI_HIBMC
+>  	tristate "DRM Support for Hisilicon Hibmc"
+>  	depends on DRM && PCI
+> -	depends on MMU
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_DISPLAY_HELPER
+>  	select DRM_DISPLAY_DP_HELPER
+> diff --git a/drivers/gpu/drm/loongson/Kconfig b/drivers/gpu/drm/loongson/Kconfig
+> index 552edfec7afb..d739d51cf54c 100644
+> --- a/drivers/gpu/drm/loongson/Kconfig
+> +++ b/drivers/gpu/drm/loongson/Kconfig
+> @@ -2,7 +2,7 @@
+>  
+>  config DRM_LOONGSON
+>  	tristate "DRM support for Loongson Graphics"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on LOONGARCH || MIPS || COMPILE_TEST
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/mgag200/Kconfig b/drivers/gpu/drm/mgag200/Kconfig
+> index 412dcbea0e2d..a962ae564a75 100644
+> --- a/drivers/gpu/drm/mgag200/Kconfig
+> +++ b/drivers/gpu/drm/mgag200/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_MGAG200
+>  	tristate "Matrox G200"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_GEM_SHMEM_HELPER
+>  	select DRM_KMS_HELPER
+> diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+> index 9ba89b35d1a2..4fae780f7d78 100644
+> --- a/drivers/gpu/drm/nouveau/Kconfig
+> +++ b/drivers/gpu/drm/nouveau/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_NOUVEAU
+>  	tristate "Nouveau (NVIDIA) cards"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on (ACPI_VIDEO && ACPI_WMI && MXM_WMI) || !(ACPI && X86)
+>  	depends on BACKLIGHT_CLASS_DEVICE
+>  	select IOMMU_API
+> @@ -86,7 +86,6 @@ config DRM_NOUVEAU_SVM
+>  	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+>  	depends on DEVICE_PRIVATE
+>  	depends on DRM_NOUVEAU
+> -	depends on MMU
+>  	depends on STAGING
+>  	select HMM_MIRROR
+>  	select MMU_NOTIFIER
+> diff --git a/drivers/gpu/drm/qxl/Kconfig b/drivers/gpu/drm/qxl/Kconfig
+> index 69427eb8bed2..d8f24bcae34b 100644
+> --- a/drivers/gpu/drm/qxl/Kconfig
+> +++ b/drivers/gpu/drm/qxl/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_QXL
+>  	tristate "QXL virtual GPU"
+> -	depends on DRM && PCI && MMU && HAS_IOPORT
+> +	depends on DRM && PCI && HAS_IOPORT
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+>  	select DRM_TTM
+> diff --git a/drivers/gpu/drm/radeon/Kconfig b/drivers/gpu/drm/radeon/Kconfig
+> index f51bace9555d..c479f0c0dd5c 100644
+> --- a/drivers/gpu/drm/radeon/Kconfig
+> +++ b/drivers/gpu/drm/radeon/Kconfig
+> @@ -2,7 +2,7 @@
+>  
+>  config DRM_RADEON
+>  	tristate "ATI Radeon"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on AGP || !AGP
+>  	select FW_LOADER
+>  	select DRM_CLIENT_SELECTION
+> diff --git a/drivers/gpu/drm/tiny/Kconfig b/drivers/gpu/drm/tiny/Kconfig
+> index 95c1457d7730..c50186a65464 100644
+> --- a/drivers/gpu/drm/tiny/Kconfig
+> +++ b/drivers/gpu/drm/tiny/Kconfig
+> @@ -37,7 +37,7 @@ config DRM_BOCHS
+>  
+>  config DRM_CIRRUS_QEMU
+>  	tristate "Cirrus driver for QEMU emulated device"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_KMS_HELPER
+>  	select DRM_GEM_SHMEM_HELPER
+> diff --git a/drivers/gpu/drm/vmwgfx/Kconfig b/drivers/gpu/drm/vmwgfx/Kconfig
+> index 6c3c2922ae8b..aab646b91ca9 100644
+> --- a/drivers/gpu/drm/vmwgfx/Kconfig
+> +++ b/drivers/gpu/drm/vmwgfx/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config DRM_VMWGFX
+>  	tristate "DRM driver for VMware Virtual GPU"
+> -	depends on DRM && PCI && MMU
+> +	depends on DRM && PCI
+>  	depends on (X86 && HYPERVISOR_GUEST) || ARM64
+>  	select DRM_CLIENT_SELECTION
+>  	select DRM_TTM
+> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
+> index dd256b355613..bb3f34a29f4e 100644
+> --- a/drivers/gpu/drm/xe/Kconfig
+> +++ b/drivers/gpu/drm/xe/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  config DRM_XE
+>  	tristate "Intel Xe Graphics"
+> -	depends on DRM && PCI && MMU && (m || (y && KUNIT=y))
+> +	depends on DRM && PCI && (m || (y && KUNIT=y))
+>  	depends on INTEL_VSEC
+>  	select INTERVAL_TREE
+>  	# we need shmfs for the swappable backing store, and in particular
+> diff --git a/drivers/net/ethernet/broadcom/Kconfig b/drivers/net/ethernet/broadcom/Kconfig
+> index 46d07b81097f..1bcf406a9e36 100644
+> --- a/drivers/net/ethernet/broadcom/Kconfig
+> +++ b/drivers/net/ethernet/broadcom/Kconfig
+> @@ -98,7 +98,6 @@ config BNX2
+>  config CNIC
+>  	tristate "QLogic CNIC support"
+>  	depends on PCI && (IPV6 || IPV6=n)
+> -	depends on MMU
+>  	select BNX2
+>  	select UIO
+>  	help
+> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
+> index da28295b4aac..9c0e4aaf4e8c 100644
+> --- a/drivers/pci/Kconfig
+> +++ b/drivers/pci/Kconfig
+> @@ -21,6 +21,7 @@ config GENERIC_PCI_IOMAP
+>  menuconfig PCI
+>  	bool "PCI support"
+>  	depends on HAVE_PCI
+> +	depends on MMU
+>  	help
+>  	  This option enables support for the PCI local bus, including
+>  	  support for PCI-X and the foundations for PCI Express support.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 186858293df5..206f271e869a 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -4257,7 +4257,7 @@ unsigned long __weak pci_address_to_pio(phys_addr_t address)
+>  #ifndef pci_remap_iospace
+>  int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
+>  {
+> -#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+> +#if defined(PCI_IOBASE)
+>  	unsigned long vaddr = (unsigned long)PCI_IOBASE + res->start;
+>  
+>  	if (!(res->flags & IORESOURCE_IO))
+> @@ -4290,7 +4290,7 @@ EXPORT_SYMBOL(pci_remap_iospace);
+>   */
+>  void pci_unmap_iospace(struct resource *res)
+>  {
+> -#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
+> +#if defined(PCI_IOBASE)
+>  	unsigned long vaddr = (unsigned long)PCI_IOBASE + res->start;
+>  
+>  	vunmap_range(vaddr, vaddr + resource_size(res));
+> diff --git a/drivers/scsi/bnx2fc/Kconfig b/drivers/scsi/bnx2fc/Kconfig
+> index ecdc0f0f4f4e..3cf7e08df809 100644
+> --- a/drivers/scsi/bnx2fc/Kconfig
+> +++ b/drivers/scsi/bnx2fc/Kconfig
+> @@ -5,7 +5,6 @@ config SCSI_BNX2X_FCOE
+>  	depends on (IPV6 || IPV6=n)
+>  	depends on LIBFC
+>  	depends on LIBFCOE
+> -	depends on MMU
+>  	select NETDEVICES
+>  	select ETHERNET
+>  	select NET_VENDOR_BROADCOM
+> diff --git a/drivers/scsi/bnx2i/Kconfig b/drivers/scsi/bnx2i/Kconfig
+> index 0cc06c2ce0b8..75ace2302fed 100644
+> --- a/drivers/scsi/bnx2i/Kconfig
+> +++ b/drivers/scsi/bnx2i/Kconfig
+> @@ -4,7 +4,6 @@ config SCSI_BNX2_ISCSI
+>  	depends on NET
+>  	depends on PCI
+>  	depends on (IPV6 || IPV6=n)
+> -	depends on MMU
+>  	select SCSI_ISCSI_ATTRS
+>  	select NETDEVICES
+>  	select ETHERNET
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index c3bcb6911c53..2b0172f54665 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+>  menu "VFIO support for PCI devices"
+> -	depends on PCI && MMU
+> +	depends on PCI
+>  
+>  config VFIO_PCI_CORE
+>  	tristate
+> -- 
+> 2.39.5
+> 
