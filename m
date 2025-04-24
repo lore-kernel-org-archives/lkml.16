@@ -1,190 +1,211 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EAD1F5838
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1DE81FA261
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:52:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745495497; cv=none; b=uts+KUMelGuFzaHb50YEf7i+YXFByFH1MTt0mKgvrrwJ14GLyuDdBL+Z1w8Mv+C0LnmHDGniCoMtxH/huJ7n5XQnwu/wxJcEk4f+c66SiLqsC3ZGA8uhaog6eAEw8ZWPNsmBRnXFSOOBFViG34R4DOLtrGvTv1v8/f7wM6d6L4Q=
+	t=1745495567; cv=none; b=k87PEuTQ4TMC6NUe1O1tZ+RmT5GXSlbkzKZNfO6Mrdw816ayvyj0w2wiZpC2iZHcjk4FNLcm00oKQIqOoHh7kvamKOu7HAId7rwUWIYBStEkh1d6wtNQmOLVBgG9GVaGA/nTyr0l9xvGI5QCbLBfe3m0Yau2TwPSsmt8VffK3EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745495497; c=relaxed/simple;
-	bh=0PT1TPYFDY5G6tMNtteu+yeV5ak++DmaDyKeQUb0pVo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YicWkSjtPFk1wNxYvBLpvn8h62Wy+2Azp3bSW2GjERn3GhyaN1D8WklefYPJxI+XvkHrBztR+i8vOiOKQAkcTm/dAN9Vj3sCUJ6PaoxLrFdTbH0BCzT7InJiIodoMsTsQmR0kCq0YsVVjLTzNd/ymlk4mZKdSSP9C3hHxuGMA/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LIBS4o9A; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745495567; c=relaxed/simple;
+	bh=DjB6yBsMl6lrqs3kS6J4Z5q3FIya7mHUZ9ybBLQq0UM=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=qXjdD5j1jc3CKZMod2BXSEDUJ44AeCZgQTUPmr0zygMP5uB+Zu6GnQ/ww1Xw/3Hd0aOtaMseqgYnPOAXYBplwzDbp/ThcMLZHTZBe65eB8WkChBwtG1UfJNc1T22l3maKzZRjzE0G2QphOLNLgMsD9Ien5E7BNxX8YcZo/JpxAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=bxkmDyDA; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIBS4o9A"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-391342fc0b5so687004f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:51:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="bxkmDyDA"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-440668acbf3so1375595e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:52:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745495494; x=1746100294; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2EvBYji/1ahd9sU82U8VdJNcvWBfppZjw224cPiT/hg=;
-        b=LIBS4o9AhuUFPMpeREmzeVDB1vuQ+FirAqbEFw4NtfOJ4/9Owyl0KsGG9Q5d38MFEF
-         8xb7RGmSv/a5u2WJpyPEraCyPxUKJ9Fugd2IuOKHuEgMxdVhER8zs5FcjiTpObDDOAl2
-         fFzXoHb7gV/7oYLd0U7yHBT8CGtbKXeGpC7u+qqpFz6EM6J9292tdeVpV90auPhtlJGy
-         xwbLPk9263PuHrELo9yVhfNoGSg1eaGbaW/vE8OKd6Ueh6qIaMBq2ztIQWnQejIu4ke7
-         JXT0J5KBVnGo/oZJ1+uCU4ZrU45l/BA3fh60ieMKql5NUkNRcCifxfS/bYkc++w9Unew
-         +FKQ==
+        d=ventanamicro.com; s=google; t=1745495564; x=1746100364; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s+dd0LSkGUj1HE7Y4OEfSLazS5H3NN900Vi5gbnC580=;
+        b=bxkmDyDArMx0OqwBa+08lv4xzsGf09Af9eKmh54vpjoHPwLrnysj0ZYaflCREJRWts
+         AKiNtHz8cjrkSf0Lbb9NetGIph216zEBEWzP4tv3W681HV5wi6Pp5fu3AOMHWAxsuhky
+         MxMQgFjVqxRF0xd+zaK7mTBfYwRrP4UBVdRwSiirZT5trdIhjcLA6DBFRwemvpMjtxhV
+         0f/32r5EV8BffeBi7CqmwagilSyuDkE1jLzZxQNIIHhBudYRKIkuEuJyTaBt13eqcawp
+         jOABUZF8+8WhJiIA/bf0daBGvGLUfzHDtR59SpViLKNZNAEJI6hfWU7YLCcb4fS26KIL
+         Zj4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745495494; x=1746100294;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2EvBYji/1ahd9sU82U8VdJNcvWBfppZjw224cPiT/hg=;
-        b=HAfFWZOrHvTmjstFyqnDzuyCWu03FoQJNnuUx2ldWIAUfFts/8/vRYrKtTZyUCNkM6
-         zHIgwDxmNWBAqr5metgoVvoG58d+/63AGwTrXRDYEPqJ9bGf/2A7jQ9Lb6hCksFUH+I9
-         fvqPEhEaPmBOuWXYYPjrWgh7B2L4BIo/cv9uGdCtwxfGJnGVRcqo3yS8BqkLw6QDMVv9
-         RUYI8Wvg03n1LnLH+3m+55h/2HHAyQKVN4UoTovjRnHJlDvdZwNM663oBKO4+PXKeP9d
-         KwydMFpbCvVsXrCt0kM2JU7IBMVSIcNZ+gMukPb81/B4MtlRijLVYhDhg7KXNtDsFhUr
-         n5gA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnXM+nHoaHHoY1ZL0B9pNmfUc3V2U/dlUWHgtsWaM8Ashto0OAxCl9x3SzbizQCy+KMQB9cCntWXVdIVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzqcT6Tk++JsQ3LwpqAKpaIPjTQ/GZh9syU4USci1sQaCghmngB
-	IdD3OKrOURRkPLN85JHolkk9hSdGliHctsHDy3OxX4KeYPX6ffRRytxC1NGsjSs=
-X-Gm-Gg: ASbGncsLgPl7V1HOSgpZUYR4D7NpYJ98bcfEpP2ksvixPD2IfAUKfhv1u8wiYdr6o1R
-	0v3jAT20pY3id35o5uo1P3kJBdIQb4PMomYKFF7payfedAG+flvMTIJcVNqKxYUQm+ilukJs5Zw
-	oD5V5ubW6+kbP2H7xLqaR6Ws78IzRgvnyQYLkt1amAA/XktUWudLFTTcjJ/pHTmC2ihc8CKAQ4Q
-	QFDxCo+ghvSegUsfEoUthaRDFcZ7D8YSupAEsX5CK2yOHGJ5YkbgLNODLQnATqGN0ItTAEjwgLF
-	wN9dPt+lw9KFZJK36V30gyvLW8PojMlPANoXkZ8r1qf9a1A2noaidobzG/Hgi7T3GdXxIB9+XaU
-	tWc9cEA==
-X-Google-Smtp-Source: AGHT+IEop8XqL9U0AH5g2cYKTCsldgKggxJPgUQlskofg+gw24g+Yaw/3ndrjXlnzZ//1SP31cIDpg==
-X-Received: by 2002:a05:6000:402a:b0:39c:266c:400a with SMTP id ffacd0b85a97d-3a06cfc5d7amr2053936f8f.50.1745495493484;
-        Thu, 24 Apr 2025 04:51:33 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8144sm1900115f8f.19.2025.04.24.04.51.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 04:51:33 -0700 (PDT)
-Message-ID: <42b56d7d-26cc-4c10-aca2-a0a5a16b09f6@linaro.org>
-Date: Thu, 24 Apr 2025 12:51:31 +0100
+        d=1e100.net; s=20230601; t=1745495564; x=1746100364;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=s+dd0LSkGUj1HE7Y4OEfSLazS5H3NN900Vi5gbnC580=;
+        b=soeDc5s0qjPIY6Od5LLkgfzKyn4kM53Mah0PYUM1Zxv8y5TEfKomRZjUDF+few38uf
+         pQwJTfFvxk5EpqLF50AEKhGFqshmNFUGtWkQfU8ir4wa+3dJc2hYLupVaf2rV1e+ZHYV
+         XFdBzrQ6rZllBbauBKhAdWN9aj3vsOuouHL91txIGBPzrzZLj+xMTa5UYKQyE4NEc8Ys
+         XLGq2To4bVaHg0RzJXqcNZvXUbTNUqbdEXUEfDR6I1peLM/buoSHNRwrlRPALAvgGhXX
+         rivHaf5aLmYPSp1Yq5WT1jX5Ilee/d2nmaMSWUfXAVB/0sUn6r2wAQe4/w5U2OEgBaSb
+         Z1Xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVD5TtNHoXceiQSucWLIV5uswu1LDEQWq37V1QlvNA+yQ5G0EHoRbK62kfMEI2ZxTLrfquS5r0tP6xf8u8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT4g2GVa9uDW2VtCxvkpLHcd135kjj4693N3hDWKaXlOu8N5av
+	kG730luIqp3UwNxJh9v4JSDarg0wbz+UFd/co5k9XiqcLKocYvu1vScjhGyMpVo=
+X-Gm-Gg: ASbGncu/1r2d7tsGLNha4WzJQ9WvKYQ92e26rSDg6RMntbVH3VIwimof7XLHYLJb89z
+	KXFJLtfGsNOzaRkkxLuKyociljFj147nkrmGGtjdMOjibxgolapAi0GfLmwjEqCQPdSeF+Gt71l
+	DRGHl0n1tgpHjvLhlmQCsnUQxlOsozh7UXlPk/YsdIuYGnPKCWtYl0Nal/sR6TJoaNZbgC+y6K2
+	IiYuGbU7q+RL10t1Lm8OAdhd11ogcgXNFKeYQPG/le3sCMBXTJubQnR+7D2+pifR6XK24w7ZAQX
+	yjtoy/2afdDWeIMwlgnrbHvU8o66KEgW8Dt7V1qUTvVjgKF/
+X-Google-Smtp-Source: AGHT+IF8wqwUphleYE2qKoazIUMOkR8h6x1rMfa0xrlvKXCx8csAkRx3P4JsSRpMyeAudqq5D+3jRA==
+X-Received: by 2002:a5d:6d8a:0:b0:3a0:678f:ddd8 with SMTP id ffacd0b85a97d-3a06cf5262cmr625001f8f.2.1745495563895;
+        Thu, 24 Apr 2025 04:52:43 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:b30c:ee4d:9e10:6a46])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d5323casm1860957f8f.75.2025.04.24.04.52.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 04:52:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/5] dt-bindings: media: Add qcom,x1e80100-camss
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-References: <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-0-edcb2cfc3122@linaro.org>
- <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-2-edcb2cfc3122@linaro.org>
- <3ec3fd62-bf21-47e7-873c-ce151589d743@linaro.org>
- <54eeb470-cd90-4bc2-b415-6dea1ce2321d@linaro.org>
- <0ab31397-580f-4e5a-b9ad-d9bf79d29106@linaro.org>
- <36feffed-4558-4e59-97db-2f0e916dbfc7@linaro.org>
- <krofzevprczeuptn6yfj4n656qsw52s52c7cgiwotidxmi2xo6@d3q5bb5zbccc>
- <f05cba73-6d8b-4b7b-9ebe-366fcd92a079@linaro.org>
- <lwv5pk3dtyyxgtrwxss43dyecesv7pvrzvgwacwrnztkiowfkp@jqosvhrs3jk5>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <lwv5pk3dtyyxgtrwxss43dyecesv7pvrzvgwacwrnztkiowfkp@jqosvhrs3jk5>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 24 Apr 2025 13:52:43 +0200
+Message-Id: <D9EUJBQ5OHN0.2KUJHGXK262TR@ventanamicro.com>
+Subject: Re: [PATCH v12 05/28] riscv: usercfi state for task and
+ save/restore of CSR_SSP on trap entry/exit
+Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar"
+ <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+ <hpa@zytor.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, "Vlastimil Babka" <vbabka@suse.cz>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, "Conor Dooley" <conor@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Arnd Bergmann" <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>,
+ "Eric Biederman" <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann
+ Horn" <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+ <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
+ <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
+ <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
+ <cleger@rivosinc.com>, <broonie@kernel.org>, <rick.p.edgecombe@intel.com>,
+ "Zong Li" <zong.li@sifive.com>, "linux-riscv"
+ <linux-riscv-bounces@lists.infradead.org>
+To: "Deepak Gupta" <debug@rivosinc.com>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-5-e51202b53138@rivosinc.com>
+ <D92WQWAUQYY4.2ED8JAFBDHGRN@ventanamicro.com>
+ <aAl_HRk49lnseiio@debug.ba.rivosinc.com>
+In-Reply-To: <aAl_HRk49lnseiio@debug.ba.rivosinc.com>
 
-On 24/04/2025 12:32, Dmitry Baryshkov wrote:
-> On Thu, Apr 24, 2025 at 12:29:39PM +0100, Bryan O'Donoghue wrote:
->> On 24/04/2025 11:45, Dmitry Baryshkov wrote:
->>>> Which would then be consistent across SoCs for as long as 0p9 and 1p2 are
->>>> the power-domains used by these PHYs.
->>> This won't be consistent with other cases where we have a shared power
->>> pin. For example, for PMICs we provide supply names which match pin
->>> names rather than one-supply-per-LDO.
+2025-04-23T17:00:29-07:00, Deepak Gupta <debug@rivosinc.com>:
+> On Thu, Apr 10, 2025 at 01:04:39PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
+te:
+>>2025-03-14T14:39:24-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/=
+asm/thread_info.h
+>>> @@ -62,6 +62,9 @@ struct thread_info {
+>>>  	long			user_sp;	/* User stack pointer */
+>>>  	int			cpu;
+>>>  	unsigned long		syscall_work;	/* SYSCALL_WORK_ flags */
+>>> +#ifdef CONFIG_RISCV_USER_CFI
+>>> +	struct cfi_status	user_cfi_state;
+>>> +#endif
 >>
->> Yes but taking a random example from a PMIC vdd-l2-l13-l14-supply is
->> specific to a given PMIC, so you need to name it specifically wrt its PMIC
->> pin-name whereas csiphyX-1p2 is there for every CSIPHY we have.
-> 
-> This is fine from my POV.
-> 
->> For example on qcom2290 there's a shared power-pin for VDD_A_CAMSS_PLL_1P8
->> but then individual power-pins for VDD_A_CSI_0_1P2 and VDD_A_CSI_1_1P2.
-> 
-> So far so good.
-> 
+>>I don't think it makes sense to put all the data in thread_info.
+>>kernel_ssp and user_ssp is more than enough and the rest can comfortably
+>>live elsewhere in task_struct.
 >>
->> If we follow the general proposal of
->>
->> vdd-csiphyX-1p2-supply
->> vdd-csiphyX-0p9-supply
->>
->> in the yaml, then whether SoCs like qcm2290 share 1p8 or SoCs like sm8650,
->> sm8450, x1e have individual 1p8 pins is up to the dtsi to decide.
-> 
-> So, what should be the behaviour if the DT defines different supplies
-> for csiphy0 and csiphy1? Would you express that constraint in DT?
-> 
+>>thread_info is supposed to be as small as possible -- just spanning
+>>multiple cache-lines could be noticeable.
+>
+> I can change it to only include only `user_ssp`, base and size.
 
-You'd have that for qcm2290
+No need for base and size either -- we don't touch that in the common
+exception code.
 
-yaml:
+> But before we go there, see below:
+>
+> $ pahole -C thread_info kbuild/vmlinux
+> struct thread_info {
+>          long unsigned int          flags;                /*     0     8 =
+*/
+>          int                        preempt_count;        /*     8     4 =
+*/
+>
+>          /* XXX 4 bytes hole, try to pack */
+>
+>          long int                   kernel_sp;            /*    16     8 =
+*/
+>          long int                   user_sp;              /*    24     8 =
+*/
+>          int                        cpu;                  /*    32     4 =
+*/
+>
+>          /* XXX 4 bytes hole, try to pack */
+>
+>          long unsigned int          syscall_work;         /*    40     8 =
+*/
+>          struct cfi_status          user_cfi_state;       /*    48    32 =
+*/
+>          /* --- cacheline 1 boundary (64 bytes) was 16 bytes ago --- */
+>          long unsigned int          a0;                   /*    80     8 =
+*/
+>          long unsigned int          a1;                   /*    88     8 =
+*/
+>          long unsigned int          a2;                   /*    96     8 =
+*/
+>
+>          /* size: 104, cachelines: 2, members: 10 */
+>          /* sum members: 96, holes: 2, sum holes: 8 */
+>          /* last cacheline: 40 bytes */
+> };
+>
+> If we were to remove entire `cfi_status`, it would still be 72 bytes (88 =
+bytes
+> if shadow call stack were enabled) and already spans across two cacheline=
+s.
 
-vdd-csiphy0-1p2-supply
-vdd-csiphy1-1p2-supply
+It has only 64 bytes of data without shadow call stack, but it wasted 8
+bytes on the holes.
+a2 is somewhat an outlier that is not used most exception paths and
+excluding it makes everything fit nicely even now.
 
-vdd-csiphy0-0p8-supply
-vdd-csiphy1-0p8-supply
+> if shadow call stack were enabled) and already spans across two cacheline=
+s. I
+> did see the comment above that it should fit inside a cacheline. Although=
+ I
+> assumed its stale comment given that it already spans across cacheline an=
+d I
+> didn't see any special mention in commit messages of changes which grew t=
+his
+> structure above one cacheline. So I assumed this was a stale comment.
+>
+> On the other hand, whenever enable/lock bits are checked, there is a high
+> likelyhood that user_ssp and other fields are going to be accessed and
+> thus it actually might be helpful to have it all in one cacheline during
+> runtime.
 
-qcm2290-example0.dtsi
+Yes, although accessing enable/lock bits will be relatively rare.
+It seems better to have the overhead during thread setup, rather than on
+every trap.
 
-vdd-csiphy0-1p2-supply = <&vreg_1p2_ex0>; <- individual supply in PCB
-vdd-csiphy1-1p2-supply = <&vreg_1p2_ex1>; <- individual supply in PCB
+> So I am not sure if its helpful sticking to the comment which already is =
+stale.
 
-vdd-csiphy0-0p8-supply = <&vreg_0p9_ex0>; <- shared pin in the SoC
-vdd-csiphy1-0p8-supply = <&vreg_0p9_ex0>; <- shared pin in the SoC
+We could fix the holes and also use sp instead of a0 in the
+new_vmalloc_check, so everything would fit better.
 
+We are really close to fitting into a single cache-line, so I'd prefer
+if shadow stack only filled thread_info with data that is used very
+often in the exception handling code.
 
-qcm2290-example1.dtsi
+I think we could do without user_sp in thread_info as well, so there are
+other packing options.
 
-vdd-csiphy0-1p2-supply = <&vreg_1p2_ex0>; <- shared supply in this PCB
-vdd-csiphy1-1p2-supply = <&vreg_1p2_ex0>; <- shared supply in this PCB
+Btw. could ssp be added to pt_regs?
 
-vdd-csiphy0-0p8-supply = <&vreg_0p9_ex0>; <- shared pin in the SoC
-vdd-csiphy1-0p8-supply = <&vreg_0p9_ex0>; <- shared pin in the SoC
-
-Then sm8650:
-yaml:
-
-vdd-csiphy0-1p2-supply
-vdd-csiphy1-1p2-supply
-
-vdd-csiphy0-0p8-supply
-vdd-csiphy1-0p8-supply
-
-
-sm8650-example0.dtsi
-
-vdd-csiphy0-1p2-supply = <&vreg_1p2_ex0>; <- individual pin & pcb supply
-vdd-csiphy1-1p2-supply = <&vreg_1p2_ex1>; <- individual pin & pcb supply
-
-vdd-csiphy0-0p8-supply = <&vreg_0p9_ex0>; <- individual pin & pcb supply
-vdd-csiphy1-0p8-supply = <&vreg_0p9_ex1>; <- individual pin & pcb supply
-
-
-sm8650-example1.dtsi
-
-vdd-csiphy0-1p2-supply = <&vreg_1p2_ex0>; <- shared supply in this PCB
-vdd-csiphy1-1p2-supply = <&vreg_1p2_ex0>; <- shared supply in this PCB
-
-vdd-csiphy0-0p8-supply = <&vreg_0p9_ex0>; <- shared supply in this PCB
-vdd-csiphy1-0p8-supply = <&vreg_0p9_ex0>; <- shared supply in this PCB
-
-That way we have a consistent naming across SoCs and PCBs and its up to 
-the DT to get the pointer to the regulator right.
-
----
-bod
+Thanks.
