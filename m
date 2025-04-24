@@ -1,92 +1,109 @@
-Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE91198851
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F0B4502A;
+	Thu, 24 Apr 2025 03:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745465508; cv=none; b=PyiWP6O7ib1k4uu/0p/ncl6udQ76LV/DfIH3ogdqwU7s14uS30Ky1okZyMK3JSM8Ww1iHHOr3CB0oL2VPqQBhDiEyuLlZacH5BZRnj8Y1rCV8SkAqo4u9o2PaR6xXS98nmcn0Ohq5QgLpiZ+QxTRlKrs5Nnj4VssuY3muVnFG6E=
+	t=1745465817; cv=none; b=RHWaGAamszRFhguBewTuncvKzp+yk/sP3imDWl8O9TCz+yzxb32bY0b68H3aPUKshLLPRLiqcClDIxhEZ3CPS45cOtATwBbnqJTCjiu3HWMM3TSdTRiivlX+48gm17qbYC13ge/uuR4+uJJLj2L5kwcgphHZ8PPTw5TLgprPfa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745465508; c=relaxed/simple;
-	bh=myVeZki5kl3rn1vxZyH9N9VwH0GO58e55paaJT0M4WM=;
+	s=arc-20240116; t=1745465817; c=relaxed/simple;
+	bh=HhzHNCgULNfL7LJBad0ypUxqGGDAtAMFWHnub7l1hGE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QMNGK3dwz2BuZ7jXmEKVFkVlsE1ww72jFEhnNmMs++kXPfid5yIAA8pnZY8fy7zQHKXPrAD9Rc2k7RgMKS8lbdgIW0JrnVgkVQV7dpBWYgBFKs7+j5JCNsxJ/mFEKeHBK3uuh7vVkxcSmNQ8OSr9vl66n6mxkI8bvkU9p2x3sBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=W4ZjFaEc; arc=none smtp.client-ip=95.215.58.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=ckrppIoZpchtE9JISSRkOqBsrD4L4Wmn6FCZQd1yYk2zMA4MHE5mXY0hTp83B5sk6zwaIQ1EN05wECL1jN+F5rntXlIs8Jig3zCY8qlulRnvjAMNJhVHcdfGU0Vs0CizxSJ6486vhpWHPoT93kHswrXH2UARIrriY+c55BvkT28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2uvbdCn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="W4ZjFaEc"
-Date: Wed, 23 Apr 2025 20:31:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745465494;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DeaKk60E/kzeqVMGJJGoBhBfYcDEvCUOFG7Nv4xRzV4=;
-	b=W4ZjFaEcUWJs2mYyhmZzzwkPM7j8mzynlEFPEoEReon5sMBmgHjrChq5BsFwt9oKoDkKas
-	vFrJyK6upHqjAPpOli8KkaiVaQILHU1N8Bj/NuLQwBr+r5pNv0taT0MKVa6y4FV/sFgO8E
-	CuGV+cwhJa6lzIvZHRGh3dSlrzNnKuE=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Huan Yang <link@vivo.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, cgroups@vger.kernel.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH 1/2] mm/memcg: use kmem_cache when alloc memcg
-Message-ID: <3txgkddzf62xhxwlzm63ip3tqv3r2tmd4elnka2z5ya7ngqr62@f554paqdco5s>
-References: <20250423084306.65706-1-link@vivo.com>
- <20250423084306.65706-2-link@vivo.com>
- <20250423145912.3e0062864b6969b3623c8ff6@linux-foundation.org>
- <dp5frcrqofkjjp77hw5sbkri6etnpdsvxnahs6nazvakaxt6im@xouxw25rggci>
- <142e6a02-80bf-4e7e-9165-1b5690fde690@vivo.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2uvbdCn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57EE4C4CEE3;
+	Thu, 24 Apr 2025 03:36:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745465816;
+	bh=HhzHNCgULNfL7LJBad0ypUxqGGDAtAMFWHnub7l1hGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u2uvbdCnr/2SmEEKHo9pru/KihtClbAMmd9KLYKDx6Txb1PNnrCinzs9VUVK+HCIC
+	 /27h8ZbE2/2kuprCaA684E/y+kcgglhBFPNq1hzbFJbDoZVSDfjuA2C/R7G01SkvWg
+	 BOV+onquxFFWrXSxG7DsSh9elFpU8DyNeYXp2AXlGOCNjxeXvCJhUqVIVZkN8yX8k7
+	 kHu6iG6hqkYBqdS5S7VceUIG3pg4iWigKzOT4KyxpxkP05lMfhcpn4Vboc24q4JfVI
+	 rY/O4YzA5/erTSV5y9xqAkN3O7lF8zOm+jrHQ1PoDnvTtzdkopHcJSqJWiZef5QBZr
+	 bPChJ8ipUBTkA==
+Date: Thu, 24 Apr 2025 11:36:48 +0800
+From: "Peter Chen (CIX)" <peter.chen@kernel.org>
+To: hans.zhang@cixtech.com
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, peter.chen@cixtech.com,
+	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Manikandan K Pillai <mpillai@cadence.com>
+Subject: Re: [PATCH v4 3/5] PCI: cadence: Add header support for PCIe HPA
+ controller
+Message-ID: <aAmx0CaXh24co_cm@nchen-desktop>
+References: <20250424010445.2260090-1-hans.zhang@cixtech.com>
+ <20250424010445.2260090-4-hans.zhang@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <142e6a02-80bf-4e7e-9165-1b5690fde690@vivo.com>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250424010445.2260090-4-hans.zhang@cixtech.com>
 
-On Thu, Apr 24, 2025 at 10:45:05AM +0800, Huan Yang wrote:
-> Hi Shakeel
+On 25-04-24 09:04:42, hans.zhang@cixtech.com wrote:
+> From: Manikandan K Pillai <mpillai@cadence.com>
 > 
-> 在 2025/4/24 06:13, Shakeel Butt 写道:
-> > On Wed, Apr 23, 2025 at 02:59:12PM -0700, Andrew Morton wrote:
-> > > On Wed, 23 Apr 2025 16:43:04 +0800 Huan Yang <link@vivo.com> wrote:
-> > > 
-> > > > @@ -3652,7 +3654,10 @@ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
-> > > >   	int __maybe_unused i;
-> > > >   	long error;
-> > > > -	memcg = kzalloc(struct_size(memcg, nodeinfo, nr_node_ids), GFP_KERNEL);
-> > > > +	memcg = likely(memcg_cachep) ?
-> > > > +			kmem_cache_zalloc(memcg_cachep, GFP_KERNEL) :
-> > > > +			kzalloc(struct_size(memcg, nodeinfo, nr_node_ids),
-> > > > +				GFP_KERNEL);
-> > > Why are we testing for memcg_cachep=NULL?
-> > > 
-> > > > @@ -5055,6 +5061,10 @@ static int __init mem_cgroup_init(void)
-> > > >   		INIT_WORK(&per_cpu_ptr(&memcg_stock, cpu)->work,
-> > > >   			  drain_local_stock);
-> > > > +	memcg_size = struct_size_t(struct mem_cgroup, nodeinfo, nr_node_ids);
-> > > > +	memcg_cachep = kmem_cache_create("mem_cgroup", memcg_size, 0,
-> > > > +					 SLAB_PANIC | SLAB_HWCACHE_ALIGN, NULL);
-> > > If it's because this allocation might have failed then let's not
-> > > bother.  If an __init-time allocation failed, this kernel is unusable
-> > > anyway.
-> > > 
-> > > +1 to Andrew's point. SLAB_PANIC is used here, so, memcg_cachep can't be
-> > > NULL later.
-> 
-> I see cgroup_init(in start_kernel) ahead of initcall( which in rest_init->kernel_init->...->initcall). So, root_mem_cgroup create use
-> 
-> cachep will trigger NULL pointer access.
+> +/**
+> + * struct cdns_plat_pcie_of_data - Register bank offset for a platform
+> + * @is_rc: controller is a RC
+> + * @is_hpa: Controller architecture is HPA
+> + * @ip_reg_bank_off: ip register bank start offset
+> + * @ip_cfg_ctrl_reg_off: ip config control register start offset
+> + * @axi_mstr_common_off: AXI master common register start
+> + * @axi_slave_off: AXI slave offset start
+> + * @axi_master_off: AXI master offset start
+> + * @axi_hls_off: AXI HLS offset start
+> + * @axi_ras_off: AXI RAS offset
+> + * @axi_dti_off: AXI DTI offset
 
-So, either create a new function which creates this kmem cache before
-cgroup_init() or just call mem_cgroup_init() before cgroup_init()
-(similar to cpuset_init()).
+The variable's suffix _off may confuse the reader, since off stands for
+something is turned off and also used at device driver commonly,
+suggest using _offset and align with your other code.
+
+> + */
+> +struct cdns_plat_pcie_of_data {
+> +	u32 is_rc:1;
+> +	u32 is_hpa:1;
+> +	u32 ip_reg_bank_off;
+> +	u32 ip_cfg_ctrl_reg_off;
+> +	u32 axi_mstr_common_off;
+> +	u32 axi_slave_off;
+> +	u32 axi_master_off;
+> +	u32 axi_hls_off;
+> +	u32 axi_ras_off;
+> +	u32 axi_dti_off;
+>  };
+>  
+> +static inline void cdns_pcie_hpa_writel(struct cdns_pcie *pcie,
+> +					enum cdns_pcie_reg_bank bank,
+> +					u32 reg,
+> +					u32 value)
+> +{
+> +	u32 offset =  cdns_reg_bank_to_off(pcie, bank);
+
+More than one blank space after "=".
+
+> +}
+> +
+> +static inline u32 cdns_pcie_hpa_readl(struct cdns_pcie *pcie,
+> +				      enum cdns_pcie_reg_bank bank,
+> +				      u32 reg)
+> +{
+> +	u32 offset =  cdns_reg_bank_to_off(pcie, bank);
+
+ditto
+
+-- 
+
+Best regards,
+Peter
