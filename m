@@ -1,168 +1,183 @@
-Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13342701B1;
-	Thu, 24 Apr 2025 11:25:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ECA221FA5;
+	Thu, 24 Apr 2025 11:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745493919; cv=none; b=keJvIdU4fEC0BtUoP8L/udZnhCH+MOtadUtqhXC/F4/z5Nh23db8p9b2GdIxVhwgBY3XUs3lHQse/Wm57SxObqKPShPK5yq8dxZkVyyyiC6wFjtEbRGs5NmYEPd/5k/07KPn6hw6oB9v+wwDjWxmdWLOAJqhVpTxuhKhIQrY2sQ=
+	t=1745493940; cv=none; b=AdLj3G14tj60eEVObbu7r74WtNaKViDxN1X2/Um1jv63xn1Z4T2JEFiqS4kEJTdEnNOg9HxoEvB9bydOF2pOaN0HAn1FbEuhUOBpSTPVl3IfQefjdhg3FAnrxP5Ub/jpBq8K/b6gaD5F7Wim2UgoLDT+IkU06yIZkQT7LZ1g/As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745493919; c=relaxed/simple;
-	bh=W6tJpgnftyybvOmgb91AxxJLH5thveT4lxoF8PvYsBk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ksNIWGrZW2jlk6GzyLTTA6aLBGneqbbVTV/R56qgKND7XJ+zlRhTwutnTL1ChgZJMAuRUUF5v7z4csSA1e8dczCaBxzOcTQuabCTMc6tmiPQSmIEU2bgmLuJxZiMeZUvyrQr/KduX/jsT4xqpdFFTKeYkhw297kd410pRa29xq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=MBgYNqNU; arc=none smtp.client-ip=185.226.149.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="MBgYNqNU"
-Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
-	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1u7uhV-0085bP-6Z; Thu, 24 Apr 2025 13:25:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector1; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=JZApLhOYYL7Gqypq3hjscSfsYIt3RrbmRWc33u1K0sM=; b=MBgYNqNU8d5LkneO5n1eRve+2j
-	0MyfUPk7oUhulA17+g9hJlICQl5cM3Ssy2rXQOj+dsBKFkUT0Ia/Q1a3Y7FTAjwQ5rWajb43VkFZe
-	HnGNDotLiq6yd4B3k945gHHumhhKnco6TlpHOnD/o9Jk1mwn/gxFQQXKJ+fkQoIvCqUlGm2ZS2afk
-	+pKKNDqXh/Zt7hUwbVkl6qXQItx/bM99j5iUcfXLsh2tFfbpYaecdF2w0mry/ftAl8O5DUrWanXQ8
-	av+AEUYYE4Oe/drgfFqY901lk7pUp0Mv+W7sSlVCXirbIJb2AjgiFE4Ok1D+1YwUxdH/bdUZsA3gX
-	tGpDJItQ==;
-Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1u7uhT-00051C-If; Thu, 24 Apr 2025 13:25:03 +0200
-Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1u7uhR-003pnq-DJ; Thu, 24 Apr 2025 13:25:01 +0200
-Message-ID: <81940d67-1a9b-42e1-8594-33af86397df6@rbox.co>
-Date: Thu, 24 Apr 2025 13:24:59 +0200
+	s=arc-20240116; t=1745493940; c=relaxed/simple;
+	bh=T6vlT/iufvMVBJdh00gNIO67VTiPTNMihGurbSdPLaQ=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=poi8sN7hZuN0MI56tCAL/pIbOUVfXzhjwYkaBW5Q2INM7/yrqbuf3NU3xCYQS0eGL4tDqHvOkLri+tM6ffnftXB5wBCnEY0LVjuLXngLmhep07D5N+4cU74gcL/IAkq+UtENGvXGcRd4nA9NB+PDHEiclo3dWqVlxEAn41ofcvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Zjtv10yLzz9sm9;
+	Thu, 24 Apr 2025 13:25:33 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v2 1/3] vsock: Linger on unsent data
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Luigi Leonardi <leonardi@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20250421-vsock-linger-v2-0-fe9febd64668@rbox.co>
- <20250421-vsock-linger-v2-1-fe9febd64668@rbox.co>
- <km2nad6hkdi3ngtho2xexyhhosh4aq37scir2hgxkcfiwes2wd@5dyliiq7cpuh>
- <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
- <ee09df9b-9804-49de-b43b-99ccd4cbe742@rbox.co>
- <wnonuiluxgy6ixoioi57lwlixfgcu27kcewv4ajb3k3hihi773@nv3om2t3tsgo>
- <5a4f8925-0e4d-4e4c-9230-6c69af179d3e@rbox.co>
- <CAGxU2F6YSwrpV4wXH=mWSgK698sjxfQ=zzXS8tVmo3D84-bBqw@mail.gmail.com>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <CAGxU2F6YSwrpV4wXH=mWSgK698sjxfQ=zzXS8tVmo3D84-bBqw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Date: Thu, 24 Apr 2025 13:25:28 +0200
+Message-Id: <D9ETYGX6RS7R.1LLJX3WDZI4QY@buenzli.dev>
+Cc: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
+From: "Remo Senekowitsch" <remo@buenzli.dev>
+To: "Dirk Behme" <dirk.behme@de.bosch.com>, "Rob Herring" <robh@kernel.org>,
+ "Saravana Kannan" <saravanak@google.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250414152630.1691179-1-remo@buenzli.dev>
+ <20250414152630.1691179-3-remo@buenzli.dev>
+ <d179848e-63e1-4921-891e-455834f3733e@de.bosch.com>
+In-Reply-To: <d179848e-63e1-4921-891e-455834f3733e@de.bosch.com>
 
-On 4/24/25 10:36, Stefano Garzarella wrote:
-> On Thu, 24 Apr 2025 at 09:53, Michal Luczaj <mhal@rbox.co> wrote:
->>
->> On 4/24/25 09:28, Stefano Garzarella wrote:
->>> On Wed, Apr 23, 2025 at 11:06:33PM +0200, Michal Luczaj wrote:
->>>> On 4/23/25 18:34, Stefano Garzarella wrote:
->>>>> On Wed, Apr 23, 2025 at 05:53:12PM +0200, Luigi Leonardi wrote:
->>>>>> Hi Michal,
->>>>>>
->>>>>> On Mon, Apr 21, 2025 at 11:50:41PM +0200, Michal Luczaj wrote:
->>>>>>> Currently vsock's lingering effectively boils down to waiting (or timing
->>>>>>> out) until packets are consumed or dropped by the peer; be it by receiving
->>>>>>> the data, closing or shutting down the connection.
->>>>>>>
->>>>>>> To align with the semantics described in the SO_LINGER section of man
->>>>>>> socket(7) and to mimic AF_INET's behaviour more closely, change the logic
->>>>>>> of a lingering close(): instead of waiting for all data to be handled,
->>>>>>> block until data is considered sent from the vsock's transport point of
->>>>>>> view. That is until worker picks the packets for processing and decrements
->>>>>>> virtio_vsock_sock::bytes_unsent down to 0.
->>>>>>>
->>>>>>> Note that such lingering is limited to transports that actually implement
->>>>>>> vsock_transport::unsent_bytes() callback. This excludes Hyper-V and VMCI,
->>>>>>> under which no lingering would be observed.
->>>>>>>
->>>>>>> The implementation does not adhere strictly to man page's interpretation of
->>>>>>> SO_LINGER: shutdown() will not trigger the lingering. This follows AF_INET.
->>>>>>>
->>>>>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
->>>>>>> ---
->>>>>>> net/vmw_vsock/virtio_transport_common.c | 13 +++++++++++--
->>>>>>> 1 file changed, 11 insertions(+), 2 deletions(-)
->>>>>>>
->>>>>>> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
->>>>>>> index 7f7de6d8809655fe522749fbbc9025df71f071bd..aeb7f3794f7cfc251dde878cb44fdcc54814c89c 100644
->>>>>>> --- a/net/vmw_vsock/virtio_transport_common.c
->>>>>>> +++ b/net/vmw_vsock/virtio_transport_common.c
->>>>>>> @@ -1196,12 +1196,21 @@ static void virtio_transport_wait_close(struct sock *sk, long timeout)
->>>>>>> {
->>>>>>>   if (timeout) {
->>>>>>>           DEFINE_WAIT_FUNC(wait, woken_wake_function);
->>>>>>> +         ssize_t (*unsent)(struct vsock_sock *vsk);
->>>>>>> +         struct vsock_sock *vsk = vsock_sk(sk);
->>>>>>> +
->>>>>>> +         /* Some transports (Hyper-V, VMCI) do not implement
->>>>>>> +          * unsent_bytes. For those, no lingering on close().
->>>>>>> +          */
->>>>>>> +         unsent = vsk->transport->unsent_bytes;
->>>>>>> +         if (!unsent)
->>>>>>> +                 return;
->>>>>>
->>>>>> IIUC if `unsent_bytes` is not implemented, virtio_transport_wait_close
->>>>>> basically does nothing. My concern is that we are breaking the
->>>>>> userspace due to a change in the behavior: Before this patch, with a
->>>>>> vmci/hyper-v transport, this function would wait for SOCK_DONE to be
->>>>>> set, but not anymore.
->>>>>
->>>>> Wait, we are in virtio_transport_common.c, why we are talking about
->>>>> Hyper-V and VMCI?
->>>>>
->>>>> I asked to check `vsk->transport->unsent_bytes` in the v1, because this
->>>>> code was part of af_vsock.c, but now we are back to virtio code, so I'm
->>>>> confused...
->>>>
->>>> Might your confusion be because of similar names?
->>>
->>> In v1 this code IIRC was in af_vsock.c, now you pushed back on virtio
->>> common code, so I still don't understand how
->>> virtio_transport_wait_close() can be called with vmci or hyper-v
->>> transports.
->>>
->>> Can you provide an example?
->>
->> You're right, it was me who was confused. VMCI and Hyper-V have their own
->> vsock_transport::release callbacks that do not call
->> virtio_transport_wait_close().
->>
->> So VMCI and Hyper-V never lingered anyway?
-> 
-> I think so.
-> 
-> Indeed I was happy with v1, since I think this should be supported by
-> the vsock core and should not depend on the transport.
-> But we can do also later.
+Hi Dirk,
 
-OK, for now let me fix this nonsense in comment and commit message.
+On Wed Apr 23, 2025 at 2:29 PM CEST, Dirk Behme wrote:
+> Hi Remo,
+>
+> On 14/04/2025 17:26, Remo Senekowitsch wrote:
+>> The device property API is a firmware agnostic API for reading
+>> properties from firmware (DT/ACPI) devices nodes and swnodes.
+>>=20
+>> While the C API takes a pointer to a caller allocated variable/buffer,
+>> the rust API is designed to return a value and can be used in struct
+>> initialization. Rust generics are also utilized to support different
+>> types of properties where appropriate.
+>>=20
+>> The PropertyGuard is a way to force users to specify whether a property
+>> is supposed to be required or not. This allows us to move error
+>> logging of missing required properties into core, preventing a lot of
+>> boilerplate in drivers.
+>>=20
+>> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+>> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+>> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+>> ---
+>>  rust/kernel/property.rs | 385 +++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 383 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
+>> index f6e6c980d..0d4ea3168 100644
+>> --- a/rust/kernel/property.rs
+>> +++ b/rust/kernel/property.rs
+> ...
+>> +    /// helper used to display name or path of a fwnode
+>> +    ///
+>> +    /// # Safety
+>> +    ///
+>> +    /// Callers must provide a valid format string for a fwnode.
+>> +    unsafe fn fmt(&self, f: &mut core::fmt::Formatter<'_>, fmt_str: &CS=
+tr) -> core::fmt::Result {
+>> +        let mut buf =3D [0; 256];
+>> +        // SAFETY: `buf` is valid and `buf.len()` is its length. `self.=
+as_raw()` is
+>> +        // valid because `self` is valid.
+>> +        let written =3D unsafe {
+>> +            bindings::scnprintf(buf.as_mut_ptr(), buf.len(), fmt_str.as=
+_ptr(), self.as_raw())
+>> +        };
+>> +        // SAFETY: `written` is smaller or equal to `buf.len()`.
+>> +        let b: &[u8] =3D unsafe { core::slice::from_raw_parts(buf.as_pt=
+r(), written as usize) };
+>> +        write!(f, "{}", BStr::from_bytes(b))
+>> +    }
+>> +
+>> +    /// Returns an object that implements [`Display`](core::fmt::Displa=
+y) for
+>> +    /// printing the name of a node.
+>> +    pub fn display_name(&self) -> impl core::fmt::Display + use<'_> {
+>
+>
+> I don't know about the details but with rustc 1.81 [1] I'm getting [2].
+> Just doing what is proposed seems to "fix" it:
+>
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index 3b1af034e902e..eadf7501d499b 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -26,6 +26,7 @@
+>  #![feature(const_mut_refs)]
+>  #![feature(const_ptr_write)]
+>  #![feature(const_refs_to_cell)]
+> +#![feature(precise_capturing)]
+>
+>  // Ensure conditional compilation based on the kernel configuration work=
+s;
+>  // otherwise we may silently break things like initcall handling.
+>
+> Just want to mention it because I think the minimal rustc version we
+> have to support is 1.78.
 
-But I'll wait for your opinion on [1] (drop, squash, change order of
-patches?) before posting v3.
+Thanks for catching this! I'll make sure to compile with 1.78 from now
+on. Luckily we don't need to activate an unstable feature, there is an
+"older" capturing syntax that works here. (`'_` instead of `use<'_>`)
 
-[1]:
-https://lore.kernel.org/netdev/20250421-vsock-linger-v2-2-fe9febd64668@rbox.co/
+> Best regards
+>
+> Dirk
+>
+> P.S.: Many thanks for working on this! :)
+>
+> [1]
+>
+> $ rustc --version
+> rustc 1.81.0 (eeb90cda1 2024-09-04)
+>
+> [2]
+>
+> error[E0658]: precise captures on `impl Trait` are experimental
+>    --> rust/kernel/property.rs:256:61
+>     |
+> 256 |     pub fn display_name(&self) -> impl core::fmt::Display + use<'_>=
+ {
+>     |                                                             ^^^
+>     |
+>     =3D note: see issue #123432
+> <https://github.com/rust-lang/rust/issues/123432> for more information
+>     =3D help: add `#![feature(precise_capturing)]` to the crate attribute=
+s
+> to enable
+>     =3D note: this compiler was built on 2024-09-04; consider upgrading i=
+t
+> if it is out of date
+>
+> error[E0658]: precise captures on `impl Trait` are experimental
+>    --> rust/kernel/property.rs:271:61
+>     |
+> 271 |     pub fn display_path(&self) -> impl core::fmt::Display + use<'_>=
+ {
+>     |                                                             ^^^
+>     |
+>     =3D note: see issue #123432
+> <https://github.com/rust-lang/rust/issues/123432> for more information
+>     =3D help: add `#![feature(precise_capturing)]` to the crate attribute=
+s
+> to enable
+>     =3D note: this compiler was built on 2024-09-04; consider upgrading i=
+t
+> if it is out of date
+>
+> error: aborting due to 2 previous errors
 
-Thanks,
-Michal
-
+--
+Best regards,
+Remo
