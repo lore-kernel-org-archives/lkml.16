@@ -1,91 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909F61714B2;
-	Thu, 24 Apr 2025 14:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD9E1714B2;
+	Thu, 24 Apr 2025 14:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505750; cv=none; b=mpPN6F/HOPMWucikVABry23I7V9aWy5GBE/6Z2ovBo4Nu2Ve2GN3Zbynth691P+mIpL/D+/LKgXQKH9otWydeHz0a6DwzMTR2zhfLOGqnvVoSUBxpS5NZJYZtV31KAZVmwSyvK5oCFI7Fye1eqt94iBmv/pKMwfFV84Cq+E1Zfs=
+	t=1745505779; cv=none; b=L20KjtNCD/mPIOZ0VxdfjrbENXpQu8BM00JekMKI5xUSO5tnsxv9H8C2a5n6+BWphJEpljEFG8HwZBS3YNZw0m0aWKxQadP5QN0EFVpaza5AUCRTuOTBq1ZmUxKaa00vzul61bZ1yt4yoYCkfuyaoCL/sRLebW7Vczy+3tCVPMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505750; c=relaxed/simple;
-	bh=MbqWnfszZO2tpVYAjg9JWbWMTQTT2mkVql/ztM6vVPw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PvaPfgMeYUeNQlkknIXg9R1Lge/dmsJE/0qnAohmG0Ie/Xe/+CzgfL0Nmp1Gu6OVySoaQZtog8UpHe77A2J+HiPNhOekdAHGaIqdbF3rYtq3t9dPZ3zfL3ZdWRdjyuth6KWF0JlUM7ClgRSRGTy4A/+5gGnMbXralqYOD9EQa78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1uCbVrU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745505779; c=relaxed/simple;
+	bh=BqsuEfLmVQ54d1yAO977vIaq6YQIN3NLcabuMfK2m7g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M2224r6fyp0oIFE7NsWVqymHJQMLuS8wxQiF6r5LvRX3rZ5k8cNxtW0h75F7Vcj7A73QkhxZxWiArYmdeTDAEYEgmvsmuQIVLhSYxGpOARMD2sxN4Kn8KfnetcxLXBGfeTsX0QTX+bvRy5je11BlDbDkF3IpRVdREPquf/JfH1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=s1eDrVde; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1uCbVrU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07D6DC4AF09;
-	Thu, 24 Apr 2025 14:42:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745505750;
-	bh=MbqWnfszZO2tpVYAjg9JWbWMTQTT2mkVql/ztM6vVPw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=S1uCbVrUh4gmgegvzwAZPPVyp6WogO8Mt/f7cUv01bi7CqeCaeYlAtzZeDEO4C51y
-	 LPjnnu7+oxVkI/mfyZU3WX8f+sQD6pGVuhn2uJjNXpS/Qh/h08dtLpUx+hdtFX6Z64
-	 LM6zb8VMTXnFmIyl+LnC6kitOtKLSKHU8eTEwLDNUZUdvMRwVkBJvdT0c3EI7pxYuo
-	 RRZZlLDpl6Eowie3D0tbeHXG8K0alH44FT70ce6sBbHpzVNbzdoHES7Vo614/GfkuM
-	 xD4SbYD44OCpLhAWO1JWfPy9QR1Pirl+wvqLl0oQn7CP9rsK3c1RhOaR0vUPFZA4QT
-	 rizAIYDie10qA==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e5e34f4e89so2053531a12.1;
-        Thu, 24 Apr 2025 07:42:29 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVBUWwguZnX7yhW74L8P4jXQ5a8DpnPOb/z1FcPRb36X0wbnjtbSLk8pniKKOc+9COmhM1C1Pwa2zRA@vger.kernel.org, AJvYcCVWhm2ZEHSK32BeyeTXCbx2JHv9f7aO7e8dloZyCgwm+o+j11TXtEZaKd/m5UM8e4FwmR+tHZYI6398LCEA@vger.kernel.org, AJvYcCVn7XnNDzCIt0e5KFiWn1N7B5pDCxTql1BcSll0q6YPhDeC9fjqt/3LmuV6pXMlvVolAuBzhHo8zfcHBKTS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLoCg2Xep8OS976sYLYWXdyh5DMGEyOSi1ZR6hd8P3gmwglFJ6
-	uzDbz4ufLs+iNzCirzefeIaQ/fpygsLFt6wLE5//2Nr1UwdwkXwzzSibr2Vmq7FXqf1Sy/SIyOl
-	MqiMUzZvb4RYfK5hyXAe52v0d2w==
-X-Google-Smtp-Source: AGHT+IGGFqu0L47CHz2DJ5cIaB7S3hoAageJyJhrGdRr9cOUHUygoaN/XZusHvgN0Jkxp1vNsCp8qBoorCHtV0sHXWs=
-X-Received: by 2002:a17:906:7305:b0:acb:b1be:4873 with SMTP id
- a640c23a62f3a-ace570cd13amr312500966b.2.1745505748560; Thu, 24 Apr 2025
- 07:42:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="s1eDrVde"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=zLdQVHzL4FKXauQ7XSb6g2ClL/VZ30PE02RIuDCShDQ=; b=s1eDrVdeXGZfcZJpDgHNd0dzRn
+	f4lr9y3xBO1jffoVZzgim3+2DqAObzJeB7KVWiZbplr0RB+fWRyaC7vnpMLuOCDHVVJyfqnVV2Tr0
+	eC0BTD6knf4EVvGu5mHRh0Qx5lB527snAQR0IqT5/U5OWnzHAnQzVmuEq+sOrmcyTM7/IqWJhEO7Q
+	BOmMFXYxgOuymMZBtDzmJjTobhRl1AXIZGPhCgCszcfPvgsalb5J5DS3QWmSEfh+y2uKuXmAlxgK7
+	3PRJmD4KqiqG4+M7ya+qckYghkeEWabjplpnRoj/mYKCj/6676kfmVnDpxHiPir8I2q4toaG6eCca
+	nNRLT0gw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u7xmt-000jRp-2o;
+	Thu, 24 Apr 2025 22:42:52 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 24 Apr 2025 22:42:51 +0800
+Date: Thu, 24 Apr 2025 22:42:51 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: Remove CRYPTO_ALG_ENGINE bit
+Message-ID: <aApN64n7i15ArnX4@gondor.apana.org.au>
+References: <aAop_uMhxVh2l5Fy@Red>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424-uart-binding-v1-1-eb0f6d97a654@amlogic.com>
-In-Reply-To: <20250424-uart-binding-v1-1-eb0f6d97a654@amlogic.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 24 Apr 2025 09:42:17 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKD=yespd0WM90VBr_XWdppimzDzecmwNfGMV+hNSHuRA@mail.gmail.com>
-X-Gm-Features: ATxdqUHKHPJdWFXmqoM4Bm1TD1_GnaXoZ-XsaWeX2h598TzyyhAIydJNjtK4jps
-Message-ID: <CAL_JsqKD=yespd0WM90VBr_XWdppimzDzecmwNfGMV+hNSHuRA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: serial: amlogic,meson-uart: Add compatible
- string for S6/S7/S7D
-To: xianwei.zhao@amlogic.com
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, 
-	Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAop_uMhxVh2l5Fy@Red>
 
-On Thu, Apr 24, 2025 at 3:43=E2=80=AFAM Xianwei Zhao via B4 Relay
-<devnull+xianwei.zhao.amlogic.com@kernel.org> wrote:
->
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
->
-> Amlogic S6/S7/7D SoCs uses the same UART controller as S4 SoCs and G12A.
-> There is no need for an extra compatible line in the driver, but
-> add S6/S7/S7D compatible line for documentation.
->
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
-> ---
-> This patch has been reviewed in the submission below(patch 4/7).
-> https://lore.kernel.org/all/20250317-s6-s7-basic-v1-0-d653384e41f3@amlogi=
-c.com/
->
-> It is just sent again separately since it goes via the tty tree
+On Thu, Apr 24, 2025 at 02:09:34PM +0200, Corentin Labbe wrote:
+> 
+> Example on x86_64:
+> [    4.637589] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> [    4.637822] #PF: supervisor instruction fetch in kernel mode
+> [    4.637931] #PF: error_code(0x0010) - not-present page
+> [    4.638166] PGD 0 P4D 0 
+> [    4.638359] Oops: Oops: 0010 [#1] SMP NOPTI
+> [    4.638808] CPU: 0 UID: 0 PID: 64 Comm: virtio1-engine Not tainted 6.15.0-rc1-g63dc06cd12f9 #1 PREEMPT(voluntary) 
 
-The default assumption is a series is applied by 1 maintainer. If you
-want maintainers to pick up a patch out of a series, it is best to ask
-them in that patch. Or you have to resend like this.
+This patch should fix the crypto_engine failures:
 
-Also, for bindings only adding new compatibles and no driver change,
-it is fine for the sub-arch maintainer (Neil) to pick them all up.
+---8<---
+Remove the private and obsolete CRYPTO_ALG_ENGINE bit which is
+conflicting with the new CRYPTO_ALG_DUP_FIRST bit.
 
-Rob
+Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Fixes: f1440a90465b ("crypto: api - Add support for duplicating algorithms before registration")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+
+diff --git a/crypto/crypto_engine.c b/crypto/crypto_engine.c
+index c7c16da5e649..445d3c113ee1 100644
+--- a/crypto/crypto_engine.c
++++ b/crypto/crypto_engine.c
+@@ -23,9 +23,6 @@
+ 
+ #define CRYPTO_ENGINE_MAX_QLEN 10
+ 
+-/* Temporary algorithm flag used to indicate an updated driver. */
+-#define CRYPTO_ALG_ENGINE 0x200
+-
+ struct crypto_engine_alg {
+ 	struct crypto_alg base;
+ 	struct crypto_engine_op op;
+@@ -148,16 +145,9 @@ static void crypto_pump_requests(struct crypto_engine *engine,
+ 		}
+ 	}
+ 
+-	if (async_req->tfm->__crt_alg->cra_flags & CRYPTO_ALG_ENGINE) {
+-		alg = container_of(async_req->tfm->__crt_alg,
+-				   struct crypto_engine_alg, base);
+-		op = &alg->op;
+-	} else {
+-		dev_err(engine->dev, "failed to do request\n");
+-		ret = -EINVAL;
+-		goto req_err_1;
+-	}
+-
++	alg = container_of(async_req->tfm->__crt_alg,
++			   struct crypto_engine_alg, base);
++	op = &alg->op;
+ 	ret = op->do_one_request(engine, async_req);
+ 
+ 	/* Request unsuccessfully executed by hardware */
+@@ -569,9 +559,6 @@ int crypto_engine_register_aead(struct aead_engine_alg *alg)
+ {
+ 	if (!alg->op.do_one_request)
+ 		return -EINVAL;
+-
+-	alg->base.base.cra_flags |= CRYPTO_ALG_ENGINE;
+-
+ 	return crypto_register_aead(&alg->base);
+ }
+ EXPORT_SYMBOL_GPL(crypto_engine_register_aead);
+@@ -614,9 +601,6 @@ int crypto_engine_register_ahash(struct ahash_engine_alg *alg)
+ {
+ 	if (!alg->op.do_one_request)
+ 		return -EINVAL;
+-
+-	alg->base.halg.base.cra_flags |= CRYPTO_ALG_ENGINE;
+-
+ 	return crypto_register_ahash(&alg->base);
+ }
+ EXPORT_SYMBOL_GPL(crypto_engine_register_ahash);
+@@ -660,9 +644,6 @@ int crypto_engine_register_akcipher(struct akcipher_engine_alg *alg)
+ {
+ 	if (!alg->op.do_one_request)
+ 		return -EINVAL;
+-
+-	alg->base.base.cra_flags |= CRYPTO_ALG_ENGINE;
+-
+ 	return crypto_register_akcipher(&alg->base);
+ }
+ EXPORT_SYMBOL_GPL(crypto_engine_register_akcipher);
+@@ -677,9 +658,6 @@ int crypto_engine_register_kpp(struct kpp_engine_alg *alg)
+ {
+ 	if (!alg->op.do_one_request)
+ 		return -EINVAL;
+-
+-	alg->base.base.cra_flags |= CRYPTO_ALG_ENGINE;
+-
+ 	return crypto_register_kpp(&alg->base);
+ }
+ EXPORT_SYMBOL_GPL(crypto_engine_register_kpp);
+@@ -694,9 +672,6 @@ int crypto_engine_register_skcipher(struct skcipher_engine_alg *alg)
+ {
+ 	if (!alg->op.do_one_request)
+ 		return -EINVAL;
+-
+-	alg->base.base.cra_flags |= CRYPTO_ALG_ENGINE;
+-
+ 	return crypto_register_skcipher(&alg->base);
+ }
+ EXPORT_SYMBOL_GPL(crypto_engine_register_skcipher);
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
