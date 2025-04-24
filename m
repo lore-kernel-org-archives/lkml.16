@@ -1,221 +1,291 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7299C293476
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1F028D85C
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513474; cv=none; b=jHEw5ogavuCAZcdrZN4Js3ZHVBeMVHyKIDH6nCsw1HHqGYXvhQPFZSOXEkuOiIzlfTgoAR/CsuCYzulcCZpnopAUqIi9sYWIQGkFHdqR4M0C44y/P7Eo3VJg3M8CG1a/NxAewM2m+dYX2Zb8ZEG55BX1A8zt9yR5rkuef1BmUd4=
+	t=1745513499; cv=none; b=UK4PTuDZhGhoVrKotKJwmJ+phABxVfRwHtCtJFK6nIWVJuGi5YZqnXFE8ThncoQRAOwdToRigb7OAVUt7x0FUNeMigtb26xvUabPoUFifzV1Rhp8znQthku6dKFEclyDzpb8OFRZ41rmf7HKCKzSt6NKS0guJPtg2YRbXderzVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513474; c=relaxed/simple;
-	bh=gDye0TlyhUI7D6/X2UpFJ0FpYsClsGf08yxjJi6IYlg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lmY3oxgjY+KXuQ8mUs4nmHGq99q/JptBO/WYURPfgiDIiLFrHIFFuoHBomglX/Rw/yU85iXlwecm9BG+zZlxE3P/ZGRib1Mwn9aAX3cvwUJw4kKHVP3dMkee7847VwBZUMeEsIzH/uXF+ukulbXRJpikW8HUHHRiKTIDZQwWqbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=uBp3OmG4; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
+	s=arc-20240116; t=1745513499; c=relaxed/simple;
+	bh=ZErkREVVKBLW2GnKWjUeSG/6wxC7rAMxZQ6sFlbrsuc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e4/pMj/AWiUTRoHUkJD9LdmCdNjGQb0ozsmfYrvMDVxYXhXddqtmBW1yQUlAzedbNi6NVcxCvICYDBhQJfScjHiMWbZqJicFFYS8CafY3PzAfuyJ4pp5cRF1v1Bnl8nPrS997MgcE+70KbLx1DNwjPPaI+mLvvRZRrnhZwojsJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DairlIo+; arc=none smtp.client-ip=209.85.128.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="uBp3OmG4"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3f9a7cbc8f1so438433b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:51:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DairlIo+"
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-70825de932bso21334337b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:51:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1745513471; x=1746118271; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1745513496; x=1746118296; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5DtP54tyqxFhFBILx2kDBmZqGd2mYL3dx6NE92iFW4Q=;
-        b=uBp3OmG4H5wx+EV/d8H7DpJB6bD3AWX+UuoAj7CA5rPJriD5AtuY+QkRaYBKbKTHaV
-         3trxzJB29joFOTggWK7ntK7C6GxJpY3SdKlRiWYnz06Nc1mlDj/Dde6JUpyJXYpLNh7x
-         RbuPGbhOS/tlqeYHQvC5Zf3aqE/kV/igDQNS8Lxy6o5ZBMvC5GUH5GcQyRumS9X1KiFM
-         hlF7s98qZy2rZGqfZFXULm24+nEH7wRMwjVwOSUdx0wSsflTF32G+cKORwqYPLPuJt4/
-         NAXNTHuSGqL+orjke8a/lY75oziFaEMaYXDu9m/GEdlhDVFjsxH3co3UNmJ6/7zDwofo
-         IH4w==
+        bh=rhOPT0e1r3Giz9fOG9P4UwNB4Pxq9ccasHzycgLN8t4=;
+        b=DairlIo+uIWDqeWStbJeUsUNVIH6CNY6BqFBPo2KThV+NUEhUsOb/ZNbBk4H5nHN6O
+         yJW7kxQIgV4WmNgwONRJslZ7FEY3JghDPPl8zOecZ3JPDCUvpNq8nS4Copr2iFZyOyjB
+         CNxxd8IL5a7hiGwUHy9gXXbnkcN9OXEB3MDxiaMK2dpW3jmkYn6PJBrMmDNrEMIfIZog
+         OC35QKXFz3SrwvFEIFXfFFbSRAlrvSrrRgK2vx6xaEVrX5gTJ6Ziqykud6wBGj/wWm5M
+         KiMITuQp7XGKdNiODKIZRsa6M8iRWjzl7ldAhsNimX+Smo0pbF94XkcpRicX9Dfeds3q
+         Rj2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745513471; x=1746118271;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745513496; x=1746118296;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5DtP54tyqxFhFBILx2kDBmZqGd2mYL3dx6NE92iFW4Q=;
-        b=wDJJhKMHo6onlaqQtgM3AMbfd67LsIRXGG2gleXl/lbZSt1JMLF0yNYSa77Ipc698Z
-         FrOQ3QJianG11aiwoLA1WxMWl/Q53ZP6/KdvnwLCjVaLLUoA2NeIFasREjpID25uEFQj
-         zBB57VGPjXQ4o2U+f+c35q8eHYaAIpLIAekiUhLB4njFYRx5FYjqz9EvYCjtzKnppyhl
-         lUeJsA3hqQ8+N/h5TuCF7/yI9VEOeD0FfS/crpNntF6To7DD9hSWjDyFc1Xe1OqK48uV
-         msQvZFu7ceso4aS12nDw1Ir4H89P4JSCvE4tZMmSvQvB49i8cmNUJK2EIODzwTIjmkh4
-         RksA==
-X-Gm-Message-State: AOJu0Yyn+0eDd+XsFn9BthKs11/Ss+HfsneI2UMC/q2Yfd+5aDoNJfuX
-	oQ8O94jBCYESegF0jvHrak0ZUeXthLWMHxGmdohPCneGHh6ZWO6aYIXdcLwdJQm+lmw2Xsic/LA
-	c
-X-Gm-Gg: ASbGncu146AaOz41l+xaUW5Ftj5RS3XJlz7G31wU34PHgtqYYIXTfFX26wr6Ig65b47
-	G6CyOyG1s0VtA5R3mymqFyNUWnpxPI9hojAaj27B4AValwKQdpYKHcyug2gQnlm1/smbVE4JNM7
-	itq6Q7DExOoqpeyfw+V1CG5Ciu8nie+qLCnxcGhkZvuwm4D6hRgFxK0eHqHC19V3CXrC0tH1WOC
-	z6SFZOuZ2KyMt/aw5o2pi7wwTs1dWkxXuOKCJOruYZD0cfWhrM96aYicg8o0dHgqK+5iBE/K7SC
-	d/z+153fu8jdcs0A6fqRj/gjBKfMIWdfkN8=
-X-Google-Smtp-Source: AGHT+IHZgD6N5Ydm2i854rDOI9bgjRs+sNeoNUESxEFdm0GMfAu3nWPsdoBeLj7XFF1Qh0xyiRdviA==
-X-Received: by 2002:a05:6808:6c8e:b0:3f6:7832:77f1 with SMTP id 5614622812f47-401eb3cf753mr1932722b6e.33.1745513470904;
-        Thu, 24 Apr 2025 09:51:10 -0700 (PDT)
-Received: from localhost ([2001:470:b8f6:1b:af2e:7abf:8abe:2726])
-        by smtp.gmail.com with UTF8SMTPSA id 5614622812f47-401ec8c9dd3sm308524b6e.11.2025.04.24.09.51.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 09:51:10 -0700 (PDT)
-From: Corey Minyard <corey@minyard.net>
-To: linux-kernel@vger.kernel.org,
-	openipmi-developer@lists.sourceforge.net,
-	Rik van Riel <riel@surriel.com>
-Cc: "Paul E . McKenney" <paulmck@kernel.org>,
-	Breno Leitao <leitao@debian.org>,
-	Corey Minyard <corey@minyard.net>,
-	Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 23/23] ipmi:watchdog: Use the new interface for panic messages
-Date: Thu, 24 Apr 2025 11:50:00 -0500
-Message-ID: <20250424165020.627193-24-corey@minyard.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250424165020.627193-1-corey@minyard.net>
-References: <20250424165020.627193-1-corey@minyard.net>
+        bh=rhOPT0e1r3Giz9fOG9P4UwNB4Pxq9ccasHzycgLN8t4=;
+        b=RghrLdxKJSA/kX6FkQ3FOFkyeDvyHxIBzRXF3IfRgfULjkiVAwCfrH3dF7OjBKTl3h
+         NH17r45+RXQ6EQlwZ5qmDhkkFjoa8cBz3ehL4LB1eTP2rW6/1umFOIgwxLB8GX9oFZh9
+         gFT0ZczAz9TI6HTntmv81tULU1VAQ7a+coue1jddJkT74sdR+72/hsJz+Z5EhL7BobNN
+         Az7IKRzaHxJ/fi/tg9dwxkLBMh5L/QvCW8gtj8WTFx7+JbniNazsdLcHyRZm6VDbaXO/
+         3pqLROLeIBjKFXMMPV3AR4iDikShoeFh089kEvrChiD0mhNhLwogm4aDinUqJ9MK6iwS
+         5OSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSBQqlFvYN1l8DG2OMqwovE9IVubczoRGbChzVh/XcqfaGGQ98Q4y/n4WQZm3kb9fVfc+EYPR8mnbkFoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp4KULmxROAJN8dcmqTHMbP0Y0f90q8vy30dVmb5vD8HSNeu1D
+	zwEqegtLmmlZY/Ip2F1d4Ac9zepXh/X3cNqtcBrmXsJDXacA2janbpkoV0MZLtChGOrrQDytRYs
+	7RiaHgzRb44/3YLaE63cRMdQbW93PYXvXD1+gvo9nJsSRuOMX
+X-Gm-Gg: ASbGncvPQ8ofrQA2Yvxh9ktIk96EMBAJz0KP5S6QJo5TSbetU1ognrHc7ecsBA9nXLG
+	ghy7W7XxbB7EolY5XLFY8FuMfF122DnEgpPt/CajVnbD0gd2lDuX5c/6oj41+KTqj0kPWKpe4SZ
+	/kRmSGkHy/sG8onJeplCCgGdA=
+X-Google-Smtp-Source: AGHT+IEEs5xpXrn/Gy6ZKVAC++BN0ySj3Ol6R2Q7H49jw3nb/AVQ/nGqoQkOth8cQwpLnS19kr0sXiN3reDfdCQJutw=
+X-Received: by 2002:a05:690c:112:b0:6fd:33a1:f4b with SMTP id
+ 00721157ae682-708418756dcmr40063507b3.4.1745513496489; Thu, 24 Apr 2025
+ 09:51:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20250414185314eucas1p1ae57b937773a2ed4ce8d52d5598eb028@eucas1p1.samsung.com>
+ <20250414-apr_14_for_sending-v2-0-70c5af2af96c@samsung.com>
+ <20250414-apr_14_for_sending-v2-1-70c5af2af96c@samsung.com>
+ <CAJZ5v0irRq8_p35vf41_ZgomW0X=KZN+0HqwU2K9PvPRm8iZQA@mail.gmail.com>
+ <b9c4182d-38c2-4173-a35a-0e1773c8f2ed@samsung.com> <CAJZ5v0gE0anjW_mDSwNXY8xoZ_0=bDDxiSbUq1GP7-NycDojrQ@mail.gmail.com>
+ <cbf20469-02ab-403a-8db7-2b66e9936b4f@samsung.com>
+In-Reply-To: <cbf20469-02ab-403a-8db7-2b66e9936b4f@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 24 Apr 2025 18:51:00 +0200
+X-Gm-Features: ATxdqUENtu5F1LST4-s_k9n76eHWAuQ6u_ynqkGko5ZMfaiEw5aNABhT-1bG-Qs
+Message-ID: <CAPDyKFqND2JrH8nLUzAqwWgHkwia6M9XOJoY6AqxtR0t120JUA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] PM: device: Introduce platform_resources_managed flag
+To: Michal Wilczynski <m.wilczynski@samsung.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
+	Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	m.szyprowski@samsung.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-It's available, remove all the duplicate code.
++ Stephen
 
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
----
- drivers/char/ipmi/ipmi_watchdog.c | 72 ++++++++-----------------------
- 1 file changed, 17 insertions(+), 55 deletions(-)
+On Thu, 17 Apr 2025 at 18:19, Michal Wilczynski
+<m.wilczynski@samsung.com> wrote:
+>
+>
+>
+> On 4/16/25 16:48, Rafael J. Wysocki wrote:
+> > On Wed, Apr 16, 2025 at 3:32=E2=80=AFPM Michal Wilczynski
+> > <m.wilczynski@samsung.com> wrote:
+> >>
+> >> On 4/15/25 18:42, Rafael J. Wysocki wrote:
+> >>> On Mon, Apr 14, 2025 at 8:53=E2=80=AFPM Michal Wilczynski
+> >>> <m.wilczynski@samsung.com> wrote:
+> >>>>
+> >>>> Introduce a new dev_pm_info flag - platform_resources_managed, to
+> >>>> indicate whether platform PM resources such as clocks or resets are
+> >>>> managed externally (e.g. by a generic power domain driver) instead o=
+f
+> >>>> directly by the consumer device driver.
+> >>>
+> >>> I think that this is genpd-specific and so I don't think it belongs i=
+n
+> >>> struct dev_pm_info.
+> >>>
+> >>> There is dev->power.subsys_data->domain_data, why not use it for this=
+?
+> >>
+> >> Hi Rafael,
+> >>
+> >> Thanks for the feedback.
+> >>
+> >> You're right =E2=80=94 this behavior is specific to genpd, so embeddin=
+g the flag
+> >> directly in struct dev_pm_info may not be the best choice. Using
+> >> dev->power.subsys_data->domain_data makes more sense and avoids bloati=
+ng
+> >> the core PM structure.
+> >>
+> >>>
+> >>> Also, it should be documented way more comprehensively IMV.
+> >>>
+> >>> Who is supposed to set it and when?  What does it mean when it is set=
+?
+> >>
+> >> To clarify the intended usage, I would propose adding the following
+> >> explanation to the commit message:
+> >>
+> >> "This flag is intended to be set by a generic PM domain driver (e.g.,
+> >> from within its attach_dev callback) to indicate that it will manage
+> >> platform specific runtime power management resources =E2=80=94 such as=
+ clocks
+> >> and resets =E2=80=94 on behalf of the consumer device. This implies a =
+delegation
+> >> of runtime PM control to the PM domain, typically implemented through
+> >> its start and stop callbacks.
+> >>
+> >> When this flag is set, the consumer driver (e.g., drm/imagination) can
+> >> check it and skip managing such resources in its runtime PM callbacks
+> >> (runtime_suspend, runtime_resume), avoiding conflicts or redundant
+> >> operations."
+> >
+> > This sounds good and I would also put it into a code comment somewhere.
+> >
+> > I guess you'll need helpers for setting and testing this flag, so
+> > their kerneldoc comments can be used for that.
+> >
+> >> This could also be included as a code comment near the flag definition
+> >> if you think that=E2=80=99s appropriate.
+> >>
+> >> Also, as discussed earlier with Maxime and Matt [1], this is not about
+> >> full "resource ownership," but more about delegating runtime control o=
+f
+> >> PM resources like clocks/resets to the genpd. That nuance may be worth
+> >> reflecting in the flag name as well, I would rename it to let's say
+> >> 'runtime_pm_platform_res_delegated', or more concise
+> >> 'runtime_pm_delegated'.
+> >
+> > Or just "rpm_delegated" I suppose.
+> >
+> > But if the genpd driver is going to set that flag, it will rather mean
+> > that this driver will now control the resources in question, so the
+> > driver should not attempt to manipulate them directly.  Is my
+> > understanding correct?
+>
+> Yes, your understanding is correct =E2=80=94 with one minor clarification=
+.
+>
+> When the genpd driver sets the flag, it indicates that it will take over
+> control of the relevant PM resources in the context of runtime PM, i.e.,
+> via its start() and stop() callbacks. As a result, the device driver
+> should not manipulate those resources from within its RUNTIME_PM_OPS
+> (e.g., runtime_suspend, runtime_resume) to avoid conflicts.
+>
+> However, outside of the runtime PM callbacks, the consumer device driver
+> may still access or use those resources if needed e.g for devfreq.
+>
+> >
+> > Assuming that it is correct, how is the device driver going to know
+> > which resources in particular are now controlled by the genpd driver?
+>
+> Good question =E2=80=94 to allow finer-grained control, we could replace =
+the
+> current single boolean flag with a u32 bitmask field. Each bit would
+> correspond to a specific category of platform managed resources. For
+> example:
+>
+> #define RPM_TAKEOVER_CLK        BIT(0)
+> #define RPM_TAKEOVER_RESET      BIT(1)
+>
+> This would allow a PM domain driver to selectively declare which
+> resources it is taking over and let the consumer driver query only the
+> relevant parts.
 
-diff --git a/drivers/char/ipmi/ipmi_watchdog.c b/drivers/char/ipmi/ipmi_watchdog.c
-index 01c10bd5f099..ab759b492fdd 100644
---- a/drivers/char/ipmi/ipmi_watchdog.c
-+++ b/drivers/char/ipmi/ipmi_watchdog.c
-@@ -363,7 +363,7 @@ static int __ipmi_set_timeout(struct ipmi_smi_msg  *smi_msg,
- {
- 	struct kernel_ipmi_msg            msg;
- 	unsigned char                     data[6];
--	int                               rv;
-+	int                               rv = 0;
- 	struct ipmi_system_interface_addr addr;
- 	int                               hbnow = 0;
- 
-@@ -405,14 +405,18 @@ static int __ipmi_set_timeout(struct ipmi_smi_msg  *smi_msg,
- 	msg.cmd = IPMI_WDOG_SET_TIMER;
- 	msg.data = data;
- 	msg.data_len = sizeof(data);
--	rv = ipmi_request_supply_msgs(watchdog_user,
--				      (struct ipmi_addr *) &addr,
--				      0,
--				      &msg,
--				      NULL,
--				      smi_msg,
--				      recv_msg,
--				      1);
-+	if (smi_msg)
-+		rv = ipmi_request_supply_msgs(watchdog_user,
-+					      (struct ipmi_addr *) &addr,
-+					      0,
-+					      &msg,
-+					      NULL,
-+					      smi_msg,
-+					      recv_msg,
-+					      1);
-+	else
-+		ipmi_panic_request_and_wait(watchdog_user,
-+					    (struct ipmi_addr *) &addr, &msg);
- 	if (rv)
- 		pr_warn("set timeout error: %d\n", rv);
- 	else if (send_heartbeat_now)
-@@ -431,9 +435,7 @@ static int _ipmi_set_timeout(int do_heartbeat)
- 
- 	atomic_set(&msg_tofree, 2);
- 
--	rv = __ipmi_set_timeout(&smi_msg,
--				&recv_msg,
--				&send_heartbeat_now);
-+	rv = __ipmi_set_timeout(&smi_msg, &recv_msg, &send_heartbeat_now);
- 	if (rv) {
- 		atomic_set(&msg_tofree, 0);
- 		return rv;
-@@ -460,27 +462,10 @@ static int ipmi_set_timeout(int do_heartbeat)
- 	return rv;
- }
- 
--static atomic_t panic_done_count = ATOMIC_INIT(0);
--
--static void panic_smi_free(struct ipmi_smi_msg *msg)
--{
--	atomic_dec(&panic_done_count);
--}
--static void panic_recv_free(struct ipmi_recv_msg *msg)
--{
--	atomic_dec(&panic_done_count);
--}
--
--static struct ipmi_smi_msg panic_halt_heartbeat_smi_msg =
--	INIT_IPMI_SMI_MSG(panic_smi_free);
--static struct ipmi_recv_msg panic_halt_heartbeat_recv_msg =
--	INIT_IPMI_RECV_MSG(panic_recv_free);
--
- static void panic_halt_ipmi_heartbeat(void)
- {
- 	struct kernel_ipmi_msg             msg;
- 	struct ipmi_system_interface_addr addr;
--	int rv;
- 
- 	/*
- 	 * Don't reset the timer if we have the timer turned off, that
-@@ -497,24 +482,10 @@ static void panic_halt_ipmi_heartbeat(void)
- 	msg.cmd = IPMI_WDOG_RESET_TIMER;
- 	msg.data = NULL;
- 	msg.data_len = 0;
--	atomic_add(2, &panic_done_count);
--	rv = ipmi_request_supply_msgs(watchdog_user,
--				      (struct ipmi_addr *) &addr,
--				      0,
--				      &msg,
--				      NULL,
--				      &panic_halt_heartbeat_smi_msg,
--				      &panic_halt_heartbeat_recv_msg,
--				      1);
--	if (rv)
--		atomic_sub(2, &panic_done_count);
-+	ipmi_panic_request_and_wait(watchdog_user, (struct ipmi_addr *) &addr,
-+				    &msg);
- }
- 
--static struct ipmi_smi_msg panic_halt_smi_msg =
--	INIT_IPMI_SMI_MSG(panic_smi_free);
--static struct ipmi_recv_msg panic_halt_recv_msg =
--	INIT_IPMI_RECV_MSG(panic_recv_free);
--
- /*
-  * Special call, doesn't claim any locks.  This is only to be called
-  * at panic or halt time, in run-to-completion mode, when the caller
-@@ -526,22 +497,13 @@ static void panic_halt_ipmi_set_timeout(void)
- 	int send_heartbeat_now;
- 	int rv;
- 
--	/* Wait for the messages to be free. */
--	while (atomic_read(&panic_done_count) != 0)
--		ipmi_poll_interface(watchdog_user);
--	atomic_add(2, &panic_done_count);
--	rv = __ipmi_set_timeout(&panic_halt_smi_msg,
--				&panic_halt_recv_msg,
--				&send_heartbeat_now);
-+	rv = __ipmi_set_timeout(NULL, NULL, &send_heartbeat_now);
- 	if (rv) {
--		atomic_sub(2, &panic_done_count);
- 		pr_warn("Unable to extend the watchdog timeout\n");
- 	} else {
- 		if (send_heartbeat_now)
- 			panic_halt_ipmi_heartbeat();
- 	}
--	while (atomic_read(&panic_done_count) != 0)
--		ipmi_poll_interface(watchdog_user);
- }
- 
- static int __ipmi_heartbeat(void)
--- 
-2.43.0
+Assuming we are targeting device specific resources for runtime PM;
+why would we want the driver to be responsible for some resources and
+the genpd provider for some others? I would assume we want to handle
+all these RPM-resources from the genpd provider, if/when possible,
+right?
 
+The tricky part though (maybe Stephen had some ideas in his talk [a]
+at OSS), is to teach the genpd provider about what resources it should
+handle. In principle the genpd provider will need some kind of device
+specific knowledge, perhaps based on the device's compatible-string
+and description in DT.
+
+My point is, using a bitmask doesn't scale as it would end up having
+one bit for each clock (a device may have multiple clocks), regulator,
+pinctrl, phy, etc. In principle, reflecting the description in DT.
+
+>
+> >
+> > Also "rpm_takeover" may be a better name for the flag in that case.
+>
+> Sounds good, bitmask could also be named like that
+>
+> >
+> >> [1] - https://lore.kernel.org/all/a3142259-1c72-45b9-b148-5e5e6bef87f9=
+@samsung.com/
+> >>
+> >>>
+> >>>> This flag enables device drivers to cooperate with SoC-specific PM
+> >>>> domains by conditionally skipping management of clocks and resets wh=
+en
+> >>>> the platform owns them.
+> >>>>
+> >>>> This idea was discussed on the mailing list [1].
+> >>>>
+> >>>> [1] - https://lore.kernel.org/all/CAPDyKFq=3DBF5f2i_Sr1cmVqtVAMgr=3D=
+0FqsksL7RHZLKn++y0uwg@mail.gmail.com/
+> >>>>
+> >>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> >>>> ---
+> >>>>  include/linux/device.h | 11 +++++++++++
+> >>>>  include/linux/pm.h     |  1 +
+> >>>>  2 files changed, 12 insertions(+)
+> >>>>
+> >>>> diff --git a/include/linux/device.h b/include/linux/device.h
+> >>>> index 79e49fe494b7c4c70d902886db63c4cfe5b4de4f..3e7a36dd874cfb6b98e2=
+451c7a876989aa9f1913 100644
+> >>>> --- a/include/linux/device.h
+> >>>> +++ b/include/linux/device.h
+> >>>> @@ -881,6 +881,17 @@ static inline bool device_async_suspend_enabled=
+(struct device *dev)
+> >>>>         return !!dev->power.async_suspend;
+> >>>>  }
+> >>>>
+> >>>> +static inline bool device_platform_resources_pm_managed(struct devi=
+ce *dev)
+> >>>
+> >>> Could this function name be shorter?
+> >>
+> >> Maybe:
+> >>
+> >> static inline bool dev_is_runtime_pm_delegated(struct device *dev);
+> >> static inline void dev_set_runtime_pm_delegated(struct device *dev, bo=
+ol val);
+> >
+> > What about
+> >
+> > dev_pm_genpd_rpm_delegated()
+> > dev_pm_genpd_set_rpm_delegated()
+> >
+> > respectively (or analogously with the "takeover" variant)?
+>
+> Right sounds good, so if you also like a bitmask idea they could look
+> like this:
+>
+> static inline bool dev_pm_genpd_rpm_takeover(struct device *dev, u32 flag=
+s);
+> static inline void dev_pm_genpd_set_rpm_takeover(struct device *dev, u32 =
+flags);
+
+These names sound fine to me. Although, as stated, I am not sure how
+useful the 'flags' would really be.
+
+>
+> Regards,
+> Micha=C5=82
+>
+> >
+
+[a] - https://osseu2024.sched.com/event/1ej38/the-case-for-an-soc-power-man=
+agement-driver-stephen-boyd-google
