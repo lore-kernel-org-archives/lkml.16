@@ -1,33 +1,50 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFFF1A2564;
-	Thu, 24 Apr 2025 06:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C0E19CCEA;
+	Thu, 24 Apr 2025 06:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745476350; cv=none; b=RsnXpOISgR2JF1i8bGPhqmCZ0xOmim/80yNpEqjJSy9hM8BBA+C8HAphz0MBfGz5C39WChMvhNs9au8sI+8DQoYfMqULUxrhkZot3sHO0nbWSpkystHdNa7pfOKLm36vXZDTtMf7zgUnrIOXBFCeo/TKt4zqWks+NpkdZN1WjO8=
+	t=1745476434; cv=none; b=PckO/jjVo20UONbbDxSVPbxaLHBocQtGQx+hUlTZqKsIUbSte3UoZ65IzaLVDlkoMBcPki6QDUIlhU/Wx3R5DfU02kP7NyJBJ220fScJ9CxiSXHHs56FzvhzZ+q3WXZ7L9CmEle+3HPtQkFQry6JvfW9cZnPwbgnUwdz22RCkvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745476350; c=relaxed/simple;
-	bh=liyLOHEfidVTyWtRf+MLB60Y1iLLOVmBw2oiN28abxY=;
+	s=arc-20240116; t=1745476434; c=relaxed/simple;
+	bh=dcxOn/nuTpss+vf24oXBlr34cv3+AgMg/89LV6ad5rM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O7li+0Z8ufPrS7IsLkoPIf6AYiItJyXI+YLCnGk0GhWh4sDHdlvDuvxDHrj6vTWVD0UzOJKcZIE2iKCj52YKotDW7FJNM+CnJBJGpDpy9dbk16+Sl98JTSNeGlGEQxVoyFWSIGAXoZmMeD8Y2ktcN/cEZyQFrxwzyPUp1EUu+vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=J0WOX4ef; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 In-Reply-To:Content-Type; b=TguzyjdlRYpyypXyh4QUvrvtNBCfYKkjtbEMK/0nzZUX5u513PJQOkTmS4FuqpjpqMMLcQWvVOAiN5DmhvKBqoB1SXzIwEj1xoXcVVYQzA42EdGavwq3N894EfUsXKQ2ctQa7fwbdwz2vPtLt4uubZNIwIJLHV/KQady6rYldR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d9Tmj1Ln; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="J0WOX4ef"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 93EE59CE;
-	Thu, 24 Apr 2025 08:32:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1745476344;
-	bh=liyLOHEfidVTyWtRf+MLB60Y1iLLOVmBw2oiN28abxY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J0WOX4efldDHhA54s9NegRnXYRg4BEGkNNnyX3Ki6WBkH6IfYCP4iJeQMQgTbf3ZN
-	 1haGrB6KgxZ1q+oLXFeaeRNG99mHtD3RCbc+DF9KYGo4kQ9gM1iOtTdVPeBFf/oy98
-	 Emgkqk5Pag9o6Yg8m4loaLH9EffMIOLCJbwdPh6c=
-Message-ID: <9cd0c3cc-9f3c-4a3e-9080-c832def8f317@ideasonboard.com>
-Date: Thu, 24 Apr 2025 09:32:22 +0300
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d9Tmj1Ln"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745476432; x=1777012432;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dcxOn/nuTpss+vf24oXBlr34cv3+AgMg/89LV6ad5rM=;
+  b=d9Tmj1LnQP9hx66yDS6p8glM4v/kq94XcF1sxC/aAvR91xyy4tJ+J2QP
+   qpEVmOZKrirDlBd0Za96P28j8Q4H2kLk2chbF+PwbPt3u/j5Il0yPnUte
+   WfSjkje9MkPX46sLkjidfG9wEgPo/kJ/aThqvgdRR9RLzQlTQBeH/3iXM
+   Ll7egNGKwyjLOAXGECBHUTgJExXBYpJK3QeEaLcWtg+/hvEmu0yx2a55p
+   yYy1g6OkFMA58JQznGkzpwwwrPmv7ZyHHyosO9TYGQT0/AEWSvVVpMknQ
+   xGZZ1ZeXi66cRiJa2PAsxZXlV0TaYHZDkRpephhm1uYf/1j72MBA6MMKO
+   w==;
+X-CSE-ConnectionGUID: uh33JJM0TIKbNwp+P2uWIQ==
+X-CSE-MsgGUID: 5cQyryPySRKKPU1udgZxkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47226706"
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="47226706"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 23:33:51 -0700
+X-CSE-ConnectionGUID: l3lwgHW4RvWGJqWYsXT+Ow==
+X-CSE-MsgGUID: x4fuAgz/TQeaZNeRxG6fQQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="163563116"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.245.128]) ([10.124.245.128])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 23:33:39 -0700
+Message-ID: <7c44da88-72bb-4d1f-9f38-bf0e7e79b7a0@linux.intel.com>
+Date: Thu, 24 Apr 2025 14:33:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,105 +52,173 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH next] i2c: Fix end of loop test in
- i2c_atr_find_mapping_by_addr()
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Romain Gantois <romain.gantois@bootlin.com>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <aAii_iawJdptQyCt@stanley.mountain> <2427370.em1n7HOibB@fw-rgant>
- <a22d74b9-06b1-4a4b-9c06-4b0ff7f9b6c2@stanley.mountain>
+Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
+ linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
+ platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, acme@kernel.org,
+ jgross@suse.com, andrew.cooper3@citrix.com, peterz@infradead.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, wei.liu@kernel.org,
+ ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+ tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+ seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+ kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-13-xin@zytor.com>
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <a22d74b9-06b1-4a4b-9c06-4b0ff7f9b6c2@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20250422082216.1954310-13-xin@zytor.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
 
-On 23/04/2025 20:29, Dan Carpenter wrote:
-> On Wed, Apr 23, 2025 at 05:25:44PM +0200, Romain Gantois wrote:
->> Hello Dan,
->>
->> On Wednesday, 23 April 2025 10:21:18 CEST Dan Carpenter wrote:
->>> When the list_for_each_entry_reverse() exits without hitting a break
->>> then the list cursor points to invalid memory.  So this check for
->>> if (c2a->fixed) is checking bogus memory.  Fix it by using a "found"
->>> variable to track if we found what we were looking for or not.
->>
->> IIUC the for loop ending condition in list_for_each_entry_reverse() is
->> "!list_entry_is_head(pos, head, member);", so even if the loop runs to
->> completion, the pointer should still be valid right?
->>
-> 
-> head is &chan->alias_pairs.  pos is an offset off the head.  In this
-> case, the offset is zero.  So it's &chan->alias_pairs minus zero.
-> 
-> So we exit the list with c2a = (void *)&chan->alias_pairs.
-> 
-> If you look how struct i2c_atr_chan is declareted the next struct member
-> after alias_pairs is:
-> 
-> 	struct i2c_atr_alias_pool *alias_pool;
-> 
-> So if (c2a->fixed) is poking around in the alias_pool pointer.  It's not
-> out of bounds but it's not valid either.
+On 4/22/2025 4:21 PM, Xin Li (Intel) wrote:
+> As pmu_msr_{read,write}() are now wrappers of pmu_msr_chk_emulated(),
+> remove them and use pmu_msr_chk_emulated() directly.
+>
+> While at it, convert the data type of MSR index to u32 in functions
+> called in pmu_msr_chk_emulated().
+>
+> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+> ---
+>  arch/x86/xen/enlighten_pv.c | 17 ++++++++++-------
+>  arch/x86/xen/pmu.c          | 24 ++++--------------------
+>  arch/x86/xen/xen-ops.h      |  3 +--
+>  3 files changed, 15 insertions(+), 29 deletions(-)
+>
+> diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
+> index 1418758b57ff..b5a8bceb5f56 100644
+> --- a/arch/x86/xen/enlighten_pv.c
+> +++ b/arch/x86/xen/enlighten_pv.c
+> @@ -1089,8 +1089,9 @@ static void xen_write_cr4(unsigned long cr4)
+>  static u64 xen_do_read_msr(unsigned int msr, int *err)
+>  {
+>  	u64 val = 0;	/* Avoid uninitialized value for safe variant. */
+> +	bool emulated;
+>  
+> -	if (pmu_msr_read(msr, &val, err))
+> +	if (pmu_msr_chk_emulated(msr, &val, true, &emulated) && emulated)
 
-Maybe it's just me, but I had hard time following that explanation. So 
-here's mine:
+ah, here it is.
 
-The list head (i2c_atr_chan.alias_pairs) is not a full entry, it's just 
-a struct list_head. When the for loop runs to completion, c2a doesn't 
-point to a struct i2c_atr_alias_pair, so you can't access c2a->fixed.
+Could we merge this patch and previous patch into a single patch? It's
+unnecessary to just modify the pmu_msr_read()/pmu_msr_write() in previous
+patch and delete them immediately. It just wastes the effort.
 
-For the patch:
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-
-  Tomi
-
+>  		return val;
+>  
+>  	if (err)
+> @@ -1133,6 +1134,7 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+>  			     unsigned int high, int *err)
+>  {
+>  	u64 val;
+> +	bool emulated;
+>  
+>  	switch (msr) {
+>  	case MSR_FS_BASE:
+> @@ -1162,12 +1164,13 @@ static void xen_do_write_msr(unsigned int msr, unsigned int low,
+>  	default:
+>  		val = (u64)high << 32 | low;
+>  
+> -		if (!pmu_msr_write(msr, val)) {
+> -			if (err)
+> -				*err = native_write_msr_safe(msr, low, high);
+> -			else
+> -				native_write_msr(msr, low, high);
+> -		}
+> +		if (pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated)
+> +			return;
+> +
+> +		if (err)
+> +			*err = native_write_msr_safe(msr, low, high);
+> +		else
+> +			native_write_msr(msr, low, high);
+>  	}
+>  }
+>  
+> diff --git a/arch/x86/xen/pmu.c b/arch/x86/xen/pmu.c
+> index 95caae97a394..afb02f43ee3f 100644
+> --- a/arch/x86/xen/pmu.c
+> +++ b/arch/x86/xen/pmu.c
+> @@ -128,7 +128,7 @@ static inline uint32_t get_fam15h_addr(u32 addr)
+>  	return addr;
+>  }
+>  
+> -static inline bool is_amd_pmu_msr(unsigned int msr)
+> +static bool is_amd_pmu_msr(u32 msr)
+>  {
+>  	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
+>  	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
+> @@ -194,8 +194,7 @@ static bool is_intel_pmu_msr(u32 msr_index, int *type, int *index)
+>  	}
+>  }
+>  
+> -static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
+> -				  int index, bool is_read)
+> +static bool xen_intel_pmu_emulate(u32 msr, u64 *val, int type, int index, bool is_read)
+>  {
+>  	uint64_t *reg = NULL;
+>  	struct xen_pmu_intel_ctxt *ctxt;
+> @@ -257,7 +256,7 @@ static bool xen_intel_pmu_emulate(unsigned int msr, u64 *val, int type,
+>  	return false;
+>  }
+>  
+> -static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
+> +static bool xen_amd_pmu_emulate(u32 msr, u64 *val, bool is_read)
+>  {
+>  	uint64_t *reg = NULL;
+>  	int i, off = 0;
+> @@ -298,8 +297,7 @@ static bool xen_amd_pmu_emulate(unsigned int msr, u64 *val, bool is_read)
+>  	return false;
+>  }
+>  
+> -static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
+> -				 bool *emul)
+> +bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read, bool *emul)
+>  {
+>  	int type, index = 0;
+>  
+> @@ -313,20 +311,6 @@ static bool pmu_msr_chk_emulated(unsigned int msr, uint64_t *val, bool is_read,
+>  	return true;
+>  }
+>  
+> -bool pmu_msr_read(u32 msr, u64 *val)
+> -{
+> -	bool emulated;
+> -
+> -	return pmu_msr_chk_emulated(msr, val, true, &emulated) && emulated;
+> -}
+> -
+> -bool pmu_msr_write(u32 msr, u64 val)
+> -{
+> -	bool emulated;
+> -
+> -	return pmu_msr_chk_emulated(msr, &val, false, &emulated) && emulated;
+> -}
+> -
+>  static u64 xen_amd_read_pmc(int counter)
+>  {
+>  	struct xen_pmu_amd_ctxt *ctxt;
+> diff --git a/arch/x86/xen/xen-ops.h b/arch/x86/xen/xen-ops.h
+> index a1875e10be31..fde9f9d7415f 100644
+> --- a/arch/x86/xen/xen-ops.h
+> +++ b/arch/x86/xen/xen-ops.h
+> @@ -271,8 +271,7 @@ void xen_pmu_finish(int cpu);
+>  static inline void xen_pmu_init(int cpu) {}
+>  static inline void xen_pmu_finish(int cpu) {}
+>  #endif
+> -bool pmu_msr_read(u32 msr, u64 *val);
+> -bool pmu_msr_write(u32 msr, u64 val);
+> +bool pmu_msr_chk_emulated(u32 msr, u64 *val, bool is_read, bool *emul);
+>  int pmu_apic_update(uint32_t reg);
+>  u64 xen_read_pmc(int counter);
+>  
