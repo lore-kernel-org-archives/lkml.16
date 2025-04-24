@@ -1,109 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D72701B1;
-	Thu, 24 Apr 2025 11:26:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526932701B1
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745493983; cv=none; b=riJCu5ywZwmnGyDgjrD3GWxRBXK/O9fyCsUAnOdMEjGcHRQChGud7iNZ5qBsNod1vUmxnZ8Bm8DUx1jHht8Fe+II3399xG4NdQUr5r1v5wIrjME7Y982nHpQW8zQne2qNoMII6gXbSSkcv7TpCWDRj9ohh0wlj8f23gILXeleJg=
+	t=1745494003; cv=none; b=fSX75Uu104bdQnLI8ZlPK+pXiZo1ZN3//s0HtKkoK5sdtpdaUlpQFFNqHh3kCoczZGS8H48+3QjTu56xMe/w9MYJmtbCvJPxpnkUz2FLUCr/o8N4/lAduWjU2N8oNWpRcrKwsVaAIbeEmqK26ymeBm8ASZfjCfd2nSVTXSKa6aE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745493983; c=relaxed/simple;
-	bh=t1mLYWzl++Dp6co3SY5ATnlJ+E6q5o9OOxJL/Gz01cQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q8lqPuJhaOXQf7wTcEhp452n3TegsI8b19HtOule1FjBr20zWqNxbqZc4qiM2jHJP9ChWSOi6WhuJBVl7fpPxkP1KRk+W9n3rLH3EhBfdd/JJKDsJ4jI7426k009a/vEOw2vD2KGVch/eLd3Jg9Efx2sGvPwo8T4yosCnxTnCcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWFzyxe5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745494003; c=relaxed/simple;
+	bh=A+RYlcmQmsEmIG25G70lkCafpndJRI9Esoh9VrB89Vs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y2W78aVZDlI49kng2nMimHuxIoMbRnOJUEFeLpPlUqJ+QL5jlJJVbpbIZ8RAdeWClQ4QFpuW43dXFRlvfULTP8NdjR7K8VcOvU5Gn+ci9mzm1+W0Ad4ZI8neoRwtK/W0o9KckaWcCb0qChdwy8JAm/eL0D0KoOCU5gzUkwlZaKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeHn4zay; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWFzyxe5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80CB8C4CEEE;
-	Thu, 24 Apr 2025 11:26:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeHn4zay"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2734EC4CEE3;
+	Thu, 24 Apr 2025 11:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745493982;
-	bh=t1mLYWzl++Dp6co3SY5ATnlJ+E6q5o9OOxJL/Gz01cQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=EWFzyxe5j2BoL8qlFkhmdWweuR+SvDtT67Qjx0054eAHyf0CankiHXa2+sQ6AD8V8
-	 7fcRlSsU9C1YK27A3E0mp+xxze6IOzS1vdWq+rDaq5lVDGCz5uLWBbcHiAEJ5zMmI3
-	 sZQYe6ItNBy5yvjhIZW4ZTQqheVgjDUWHRvseUKg904qJEdnNUuzOVjwuyA8rWK4Gd
-	 NZHUnMdsvZck9jhQeJgbUFBKuqT1xxy3v82RxY32iWm64zg3Xi51SdxWbojISAxi9j
-	 KFlbskOPhyXwelQwIF6aepco8XvclbM+1xhWGQL82slnX2bIIU6BDGYEjpSKRCT16v
-	 NIDchPd7EIhgA==
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72bceb93f2fso1168736a34.0;
-        Thu, 24 Apr 2025 04:26:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVI1NN/rWMS6NUvFMNyjiFkPaTk+O4vSq+z2dOXGS8GswGNtlWA2eOce9sFi1TtTlPSV4cIzaAmGwEFzxI=@vger.kernel.org, AJvYcCVVbKpIVkQDa4ToAlNT8Pk24CRgO7g5dJmOI8hOWLI0FYRKpAjzTuPt/x/+ysmKyKK73kNzASmG2Lo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4m90s05Gjb4LV0W9EXDLSXyH8TymM864OTD+PBzgiKG5Cp11q
-	5GSZ4z3IVloNS0svJPRQut0YGX5ySZFcXhkx32mpn9s14/ehwPYOWfiaS91pEP7E63TLe/+9bnu
-	ituOVnywQph4PZgFYsSBNcgq9c8s=
-X-Google-Smtp-Source: AGHT+IHc+M0OTAx+GOWmGYuhmkDFbvYnaIudvg2OOLa+0NPepqRu/Y2tib0yj2sxRGw5P3Gjm2cE79Hq0RNtTwLhY9M=
-X-Received: by 2002:a05:6870:cd96:b0:2d9:7a9e:99ef with SMTP id
- 586e51a60fabf-2d97a9ea48cmr618355fac.1.1745493981792; Thu, 24 Apr 2025
- 04:26:21 -0700 (PDT)
+	s=k20201202; t=1745494002;
+	bh=A+RYlcmQmsEmIG25G70lkCafpndJRI9Esoh9VrB89Vs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=oeHn4zay9DfEUn5bcf5MU7u9XX60Lw+zmMzqOyUquvijfGKed8fHmWTMDlw21oz7g
+	 MYzjR6fzhsS6vRzMwti10RZBhbHSi2UUjaX+fe5A+F71ZEesP9UgFs9/1Dj7wXGOMh
+	 VZifZuCzJ61aovvWuSPisiuvgwZzxo0hWBh6SpcuM/SMQqj1mxbqxCKjwzBqeZw1nZ
+	 x1gmytDIXhtEPP2/nPpwFAjO5+gtHHCkKCe8tZdVVOrw1Cde5EstmLPDP2n55H/d9m
+	 Es/YbHg3ZA/UnIPahBVoAkb0b9ce5s9l/SCQyPIa9P+bq7kBXlbpSmTJH2dr5QBQlA
+	 AUGRyHWec/5fQ==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+	Florent Tomasin <florent.tomasin@arm.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/panthor: fix building without CONFIG_DEBUG_FS
+Date: Thu, 24 Apr 2025 13:25:47 +0200
+Message-Id: <20250424112637.3432563-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1745315548.git.viresh.kumar@linaro.org> <7ce4ffb166beef83cf1bd703a41bf91622011585.1745315548.git.viresh.kumar@linaro.org>
- <CAJZ5v0iCrQeKs=4S-x83Fgf-W4u=2JYLA5VmgKPaLCvYAkNpig@mail.gmail.com> <20250424071503.2uhc4k3jxy7x5mo2@vireshk-i7>
-In-Reply-To: <20250424071503.2uhc4k3jxy7x5mo2@vireshk-i7>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 24 Apr 2025 13:26:10 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hLBE0vLvpw6k8E7KxiUGqXbH7wEZwFhEziJNYqfxJbyA@mail.gmail.com>
-X-Gm-Features: ATxdqUEwm1MBdN3yTHiwvvP-_C0jH4FqSTGGRVGw3dTSLhnVeRhno7cCEnalCQM
-Message-ID: <CAJZ5v0hLBE0vLvpw6k8E7KxiUGqXbH7wEZwFhEziJNYqfxJbyA@mail.gmail.com>
-Subject: Re: [PATCH 1/6] cpufreq: acpi: Don't enable boost on policy exit
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Lifeng Zheng <zhenglifeng1@huawei.com>, linux-pm@vger.kernel.org, 
-	Vincent Guittot <vincent.guittot@linaro.org>, Nicholas Chin <nic.c3.14@gmail.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 9:15=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
->
-> On 23-04-25, 16:14, Rafael J. Wysocki wrote:
-> > Even after commit 2b16c631832d, the code removed by this patch does a
-> > useful thing.  Namely, it clears the boost-disable bit in the MSR so
-> > that the offline CPU doesn't prevent online CPUs from getting the
-> > boost (in case the boost settings change after it has been taken
-> > offline).
->
-> I didn't understand this part earlier (and even now). How does a CPU
-> with boost-disabled, prevents others from boosting ? I have tried
-> looking at git logs, and still don't understand it :(
+From: Arnd Bergmann <arnd@arndb.de>
 
-At the HW level, this is certainly possible.
+When debugfs is disabled, including panthor_gem.h causes warnings
+about a non-static global function defined in a header:
 
-Say two (or more) cores are driven by the same VR.  Boost typically
-(always?) requires a separate OPP with a higher voltage and this
-applies to all cores sharing the VR, so if one of them says it doesn't
-want that (which is what the bit in the boost-disable MSR effectively
-means), they all won't get it.
+In file included from drivers/gpu/drm/panthor/panthor_drv.c:30:
+drivers/gpu/drm/panthor/panthor_gem.h:222:6: error: no previous prototype for 'panthor_gem_debugfs_set_usage_flags' [-Werror=missing-prototypes]
+  222 | void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
 
-They arguably should belong to the same cpufreq policy, but this
-information is often missing from the ACPI tables, sometimes on
-purpose (for instance, the firmware may want to be in charge of the
-frequency coordination between the cores).
+This could be changed to a static inline function, but as the normal
+one is also static inline, just move the #ifdef check in there.
+The #ifdef is still needed to avoid accessing a struct member that
+does not exist without debugfs.
 
-> Also, IIUC this and the boost-enabling at init() only happens for one
-> CPU in a policy, as init() and exit() are only called for the first
-> and last CPU of a policy. So if a policy has multiple CPUs, we aren't
-> touching boost states of other CPUs at init/exit.
+Fixes: a3707f53eb3f ("drm/panthor: show device-wide list of DRM GEM objects over DebugFS")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/panthor/panthor_gem.h | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-But there may be a policy per CPU.
+diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
+index 4641994ddd7f..693842e10dee 100644
+--- a/drivers/gpu/drm/panthor/panthor_gem.h
++++ b/drivers/gpu/drm/panthor/panthor_gem.h
+@@ -209,17 +209,14 @@ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
+ 
+ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
+ 
+-#ifdef CONFIG_DEBUG_FS
+ void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
+ 				   struct seq_file *m);
+ static inline void
+ panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags)
+ {
++#ifdef CONFIG_DEBUG_FS
+ 	bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
+-}
+-
+-#else
+-void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
+ #endif
++}
+ 
+ #endif /* __PANTHOR_GEM_H__ */
+-- 
+2.39.5
 
-> And yes, this patch isn't mandatory at all for the
->
-> > Moreover, without the $subject patch, the change made by the next one
-> > will cause the boost setting in the MSR to get back in sync with
-> > policy->boost_enabled during online AFAICS, so why exactly is the
-> > $subject patch needed?
->
-> Right, this is merely a cleanup patch and isn't really required for
-> the next patch to make it work.
-
-So I'd rather not make this change.
-
-Evidently, someone made the effort to put in a comment explaining the
-purpose of the code in question, so it looks like they had a reason
-for adding it.
