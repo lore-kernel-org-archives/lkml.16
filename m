@@ -1,125 +1,142 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F8B223DF9
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:43:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECBF91552FD;
+	Thu, 24 Apr 2025 15:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745509440; cv=none; b=q5ZjfDg/RN6JdUPfGUTzDhvO7SFKAaOn2L/rxNXzhqE39g97b4G4dyWrsrN3z5MnfM0Kh0NVWqgBhp8ZX3zbWpQJ2Oewz1msGKdpzOje6ggi7DpqGEOSXHuKuQGACQa4M891HKxjUXB+jz8tz91piT491+/CmVxV5DS2Dnvtj58=
+	t=1745509450; cv=none; b=a5pZPRTwBzplhYc4u4HeGs4gga5Ly6GZt/34JgdkBVR6+b+Rp6hzkIi6TbmTCnzInDChInJpWsJt+vESip1iknpHf688mUQ0DFiQNcr0y/AYYvIcoDkFDd9s2Hszm0dlNONgi2wlp7I9a0AsrhRFfgaCc+6+xkOdgBTwlvlZqQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745509440; c=relaxed/simple;
-	bh=PrIt9cti1YTt57yyhwhu+yoL+H0Pauq0wEpWZElruNg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PLp9Y7dZPrut6Y0uTTCpsUEpZEpzDr5PGtAEmxlpOW7+1TTfR3cbjhNjBhbmc72xx/O7X4fhtwiVKObs8VLS63dgLRD7nzQBF13gSUspWRBAnAefFoQxzkgsOI4h8fOCly9d6BpynrstBPYHF0iGKLhnXsM1o47ByGpZfW+E22M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=t+p7faQV; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
+	s=arc-20240116; t=1745509450; c=relaxed/simple;
+	bh=NKYBJGRW3NLditWJHCd6B3AWhUotnr3wjlWIP9wQJYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NFu9XKtvUykS2uPnr920C7Lr6NtHv53hvC7NzlURoOx0pz58z93K9GeAXuHf9X+mN8XkYNALO3whOHeYllAmiR/G1+DHDgJeQ5Mqj9/I11zTqxxYfuIGgV/lQNwnWAV16vMQeeHpJqU6c/XLRGD/OGGJjjV//ssms7fkew09HBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DTerlyrt; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="t+p7faQV"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4774d68c670so19781141cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:43:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTerlyrt"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3015001f862so1070224a91.3;
+        Thu, 24 Apr 2025 08:44:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745509438; x=1746114238; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PxG91MvO3mEZmIhtAaDJXqnva49Kcev69TBhblsIWrY=;
-        b=t+p7faQVjB+XtCOkcmZXBFDP3t3+pPIiPbFUCVPjTnTU8FQA8gTcLxKVD0nrwQGSp4
-         oVgM865DLG7XB4fV0U3+82gwY9p5fHIw6si6KftvrZyH2psdwC3u1a0veYN8PjobmaH1
-         BCDuJmaYrG2g8XoQ2WzyUErbJQ0aefE/Mr5xrfuKs4Kx3zcemNlYHJUglxmqrO0ZfKWY
-         lsLyyzopjF6esf5XfXLJBcwSHemXrLlXqCnciNpBivIWO770U+0sL9+9mkudfs9MdIYV
-         SQtmci8SZwjUf9rBHWPpt8voxqbhrT6//UIa5FGc4Y+i0dkGNXQZ5rfIMEaLvz0lbAgZ
-         sBCg==
+        d=gmail.com; s=20230601; t=1745509448; x=1746114248; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NKYBJGRW3NLditWJHCd6B3AWhUotnr3wjlWIP9wQJYg=;
+        b=DTerlyrtWRQ5hYGtlySTEqR9HwevJDDbtp3vKshLcJT8wdp1i88GMQUQVTz4+lpoxR
+         nMvJQJhQu9lxgXizHjc3fzE5oGJG7jsUkiA3R5StaKQS3nVn51ahxldwRdyEyW/5HiYg
+         VF4k0F5aWpv1pyjMAAuvRxHUhF5xzs0EuwzbJCj8twsWoKzbqce5a57tndR/Pim7lAmy
+         IVQH6k4GbLXYXH5grjKysgR2TwZCQb2a4PDqcXub9KLe5Iemh9Dd7BsstSmko74oPZTH
+         EkmY9KnCUd0Jk/bmcaNJzS8XbZ7fOn3dinvQ3ZUxnu88YvCbTrJbAIDsROz4TPYS4Gwr
+         AjjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745509438; x=1746114238;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PxG91MvO3mEZmIhtAaDJXqnva49Kcev69TBhblsIWrY=;
-        b=P633NJ4Pp2xOGPwcngtd14uWgKgcx5YYj47g1K46Raw+XoLWL6p0bk8C43jzUoHeLL
-         KBWYVFyOv4Jjt4Cc7oF/g/P4gDOGOrJLtCpqj493bkg18Dx8ga9pn2yGcdOLbGDUPHTt
-         xDLI6uK/8GE9HneaQtBuAhIph9wQMWMx2RVo5dTA7gfHRzxvPGAwQD8AHse2ygY4HuUZ
-         NEhN3TAnmCMwLpGVFW5RonB0DHnXTSr/vQqVOsBsqT605tRontT0DDQm8HsG3zkhR53s
-         doWYZwNjoaQeb0HML1LSC7OZZf8t8yeId8f0H+v0xBt89GjyIwpTcsP4DD9CHMAjfX8k
-         A5jA==
-X-Forwarded-Encrypted: i=1; AJvYcCVETKwYPpgrlWKBB7Wb+THNzoGDROMT69wlh9vXo5TRlvUuGLnUlhj7yhhtQJqFthR5dK8jFBWOwKp6XaE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJckR1qtE4RJQL6CIGdIdPaCIDgnj9jFpt+f0nvIW6lk/pMopc
-	WXwmwN932enpiUqBRCZXPOyUIQGZx90nX52DLLvRb9a61AUrj3KKWP2fYWf4tQ0=
-X-Gm-Gg: ASbGncsNnBKDdiLI8EuNbU/lvDaNxHJDT3HjuFfO/fVmq+YnLFM5H0fS133XidfrSfX
-	slvg6U+hOpwSdEUxw1v80pnI/NegfkzspCu8BPbI5IdEjpzctJO9wLXVlUuyHrPkV6YZ2R7YO2m
-	02izRIoKeAjjw4UY8VEjW2C6kAmAnNXrzf9vOKhESNiwX6l6qrqW/DCSNbqqt2x9Slc2kdixfwY
-	XhtJCVOluSgYx8G4tQveZxP8r37xtq4BCEoXO6mnvVDJzUguybYufzw7vCMlukfqXYFvsjUzVM8
-	SmX9Fwq8LTflefwF4gBah+snB9/0AoMlXzN40fnKIQyZmw==
-X-Google-Smtp-Source: AGHT+IGA+IIOug/obYsp2byfQYiQAcdnJn27C+FPUJJIN+Z+DBmj+uagyzwdTCFBqechz7yf+kP/FA==
-X-Received: by 2002:a05:622a:153:b0:476:b7cf:4d42 with SMTP id d75a77b69052e-47fba39b562mr2788641cf.27.1745509437827;
-        Thu, 24 Apr 2025 08:43:57 -0700 (PDT)
-Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9eaf2086sm12964521cf.8.2025.04.24.08.43.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 08:43:57 -0700 (PDT)
-Message-ID: <6148110c513d2177d886469c2276c6810eb93c34.camel@ndufresne.ca>
-Subject: Re: [PATCH v2 1/8] media: v4l2-common: Add YUV24 format info
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-To: Nas Chung <nas.chung@chipsnmedia.com>, mchehab@kernel.org, 
-	hverkuil@xs4all.nl, sebastian.fricke@collabora.com, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-imx@nxp.com, marex@denx.de, 
-	jackson.lee@chipsnmedia.com, lafley.kim@chipsnmedia.com
-Date: Thu, 24 Apr 2025 11:43:56 -0400
-In-Reply-To: <20250422093119.595-2-nas.chung@chipsnmedia.com>
-References: <20250422093119.595-1-nas.chung@chipsnmedia.com>
-	 <20250422093119.595-2-nas.chung@chipsnmedia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+        d=1e100.net; s=20230601; t=1745509448; x=1746114248;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NKYBJGRW3NLditWJHCd6B3AWhUotnr3wjlWIP9wQJYg=;
+        b=v9q+nde9IUa6+WrA5cT2RmsxtTA3ylBTn1qDEsPJZC8B35QtlvzpHRPmqVURlar+gr
+         HWbJV2Ibu2RAsZpGjmVo44LJX12Tv4Xr41CTARTstAXAqbS6UsTp8ZnD6cPfxGIknXXI
+         aZRfPlGAV9ILoJX+eTg+9LjE3uB1koPcedgxMvikbGf4O56anJUoLbs75i3oWJFzWJn5
+         WxrsCpd2EjHZUjAj6ZXXlwzhGNsupt3NU1JqkW3ht6ulSuIIhuP8s5UuSK66Z8MgtXL4
+         Iskv07yjjVHOkaW8Ka2qInaI41kBhV5Mc8MiiTFe+sLPscJzCYq37L5lhrFDgueYzstY
+         Y2NA==
+X-Forwarded-Encrypted: i=1; AJvYcCUXgAHQad9PtPqZaMg7MR9iecQB9Qb+AsA4wFzM1aAFsZJsZGBoQSyfATz+yO0KHQDvwXTaLMibBsTXYm/p@vger.kernel.org, AJvYcCUa356jozzhqTwrcJrreYeu0Ot0Awygdr7Dsl+h60nVTTk23W/7dcXxbl0y67WqC6sZ1HWmdJWdjw==@vger.kernel.org, AJvYcCUfOnLd/4BUtI5jjgqMtnsQSY2pFRQNAFLjQho77+5bz8rjrZOFYxix4798dBx2mw//TXTC7ElLrHWZQWVI@vger.kernel.org, AJvYcCVoh51co39Vr0S78Q3+uUkoxynHkewFMOIuOArVOW14ITNpZfrBOmJY9t8lkZIV54B1AaYXGw1M0FMIK5wnpU96H+fyxPRx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0+42pRZBY6AEX2pvcpF8sDhy4TvUewxi2H9nx9kJKwGBKltu+
+	mDaKDk5gYzFzUDJYh4P4FsRha8s/2+Iwl+CHbvPwB482eq8mzhimlZBVwq8V/bFEgOoWi7DmISN
+	lhjgnnlHVgWtjN5gPYJd1JJLj0c0rVawj2Qo=
+X-Gm-Gg: ASbGncucVVDLhuIpRxIk4XjOrIqtkep+DNayIQTMdhAoG0C7g2SP5SvmucLjX/SeR8D
+	cIN+bpQ+qjHCIUTyRM1d4iDekD2B5Tewmo/L51ITvCyCA7NhXMwCJXcpRI3r2c0qi8A9ptitnvn
+	3VW0hxE2HBPLuVZZhLSmI4p+xv0SaQ36Zy
+X-Google-Smtp-Source: AGHT+IExkOfI5k5BNcG7WP0dv3ff3ZjZnNG+ANJn4rp1JjEbkTgLNnWinqdWCZ12YxP21dwWCmISmEhEEildeIz1PSs=
+X-Received: by 2002:a17:90b:1f90:b0:2ee:aed2:c15c with SMTP id
+ 98e67ed59e1d1-309ed3521b0mr4687662a91.28.1745509448048; Thu, 24 Apr 2025
+ 08:44:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250424124644.4413-1-stephen.smalley.work@gmail.com>
+ <2025042427-hardship-captive-4d7b@gregkh> <CAEjxPJ5LGH_Vyf2KCL0HNwa-U70GVAOVvyFMnhpnzi-CEKvC5w@mail.gmail.com>
+ <CAEjxPJ4C7ritSqF0mE+2rczKJHdUTNGs5_RDx3PHKcg_rQQV4w@mail.gmail.com>
+In-Reply-To: <CAEjxPJ4C7ritSqF0mE+2rczKJHdUTNGs5_RDx3PHKcg_rQQV4w@mail.gmail.com>
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+Date: Thu, 24 Apr 2025 11:43:57 -0400
+X-Gm-Features: ATxdqUFYwUVwbOLgKuPMj0VkvJRIPCYIatOOHAVWcZMu6tTjFJjA7nGJQgros6k
+Message-ID: <CAEjxPJ4i3fN8qtuY2TRiWRqy+sY3-nV_FYc4uzD-h2ZxAF-M2A@mail.gmail.com>
+Subject: Re: [PATCH] vfs,shmem,kernfs: fix listxattr to include security.* xattrs
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: paul@paul-moore.com, omosnace@redhat.com, 
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Hugh Dickins <hughd@google.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, Apr 24, 2025 at 10:55=E2=80=AFAM Stephen Smalley
+<stephen.smalley.work@gmail.com> wrote:
+>
+> On Thu, Apr 24, 2025 at 9:53=E2=80=AFAM Stephen Smalley
+> <stephen.smalley.work@gmail.com> wrote:
+> >
+> > On Thu, Apr 24, 2025 at 9:12=E2=80=AFAM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Thu, Apr 24, 2025 at 08:46:43AM -0400, Stephen Smalley wrote:
+> > > > The vfs has long had a fallback to obtain the security.* xattrs fro=
+m the
+> > > > LSM when the filesystem does not implement its own listxattr, but
+> > > > shmem/tmpfs and kernfs later gained their own xattr handlers to sup=
+port
+> > > > other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-bas=
+ed
+> > > > filesystems like sysfs no longer return the synthetic security.* xa=
+ttr
+> > > > names via listxattr unless they are explicitly set by userspace or
+> > > > initially set upon inode creation after policy load. coreutils has
+> > > > recently switched from unconditionally invoking getxattr for securi=
+ty.*
+> > > > for ls -Z via libselinux to only doing so if listxattr returns the =
+xattr
+> > > > name, breaking ls -Z of such inodes.
+> > > >
+> > > > Before:
+> > > > $ getfattr -m.* /run/initramfs
+> > > > <no output>
+> > > > $ getfattr -m.* /sys/kernel/fscaps
+> > > > <no output>
+> > > >
+> > > > After:
+> > > > $ getfattr -m.* /run/initramfs
+> > > > security.selinux
+> > > > $ getfattr -m.* /sys/kernel/fscaps
+> > > > security.selinux
+> > > >
+> > > > Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=3DiOawX=
+4y77ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
+> > > > Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen=
+.smalley.work@gmail.com/
+> > > > Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+> > >
+> > > As this "changed" in the past, shouldn't it have a "Fixes:" tag?
+> >
+> > Yes, I'll add that on v2. Also appears that it doesn't quite correctly
+> > handle the case where listxattr() is called with size =3D=3D 0 to probe
+> > for the required size.
+>
+> And doesn't correctly handle the case where the list size exceeds the
+> original buffer size. On second look, this can be done more simply and
+> safely in simple_xattr_list() itself, avoiding the need to modify
+> shmem/tmpfs and kernfs. I'll submit an updated patch.
 
-Le mardi 22 avril 2025 =C3=A0 18:31 +0900, Nas Chung a =C3=A9crit=C2=A0:
-> The YUV24 format is missing an entry in the v4l2_format_info().
-> The YUV24 format is the packed YUV 4:4:4 formats with 8 bits
-> per component.
->=20
-> Fixes: 0376a51fbe5e ("media: v4l: Add packed YUV444 24bpp pixel format")
-> Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
+Submitted here,
+https://lore.kernel.org/selinux/20250424152822.2719-1-stephen.smalley.work@=
+gmail.com/
 
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-
-> ---
-> =C2=A0drivers/media/v4l2-core/v4l2-common.c | 1 +
-> =C2=A01 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-c=
-ore/v4l2-common.c
-> index 0a2f4f0d0a07..de3636f1cdf1 100644
-> --- a/drivers/media/v4l2-core/v4l2-common.c
-> +++ b/drivers/media/v4l2-core/v4l2-common.c
-> @@ -269,6 +269,7 @@ const struct v4l2_format_info *v4l2_format_info(u32 f=
-ormat)
-> =C2=A0		{ .format =3D V4L2_PIX_FMT_Y212,=C2=A0=C2=A0=C2=A0 .pixel_enc =3D=
- V4L2_PIXEL_ENC_YUV, .mem_planes =3D 1, .comp_planes =3D 1, .bpp =3D { 4, 0=
-, 0, 0 }, .bpp_div =3D { 1, 1, 1, 1 }, .hdiv =3D 2, .vdiv =3D 1 },
-> =C2=A0		{ .format =3D V4L2_PIX_FMT_Y216,=C2=A0=C2=A0=C2=A0 .pixel_enc =3D=
- V4L2_PIXEL_ENC_YUV, .mem_planes =3D 1, .comp_planes =3D 1, .bpp =3D { 4, 0=
-, 0, 0 }, .bpp_div =3D { 1, 1, 1, 1 }, .hdiv =3D 2, .vdiv =3D 1 },
-> =C2=A0		{ .format =3D V4L2_PIX_FMT_YUV48_12, .pixel_enc =3D V4L2_PIXEL_EN=
-C_YUV, .mem_planes =3D 1, .comp_planes =3D 1, .bpp =3D { 6, 0, 0, 0 }, .bpp=
-_div =3D { 1, 1, 1, 1 }, .hdiv =3D 1, .vdiv =3D 1 },
-> +		{ .format =3D V4L2_PIX_FMT_YUV24,=C2=A0=C2=A0 .pixel_enc =3D V4L2_PIXE=
-L_ENC_YUV, .mem_planes =3D 1, .comp_planes =3D 1, .bpp =3D { 3, 0, 0, 0 }, =
-.bpp_div =3D { 1, 1, 1, 1 }, .hdiv =3D 1, .vdiv =3D 1 },
-> =C2=A0		{ .format =3D V4L2_PIX_FMT_MT2110T, .pixel_enc =3D V4L2_PIXEL_ENC=
-_YUV, .mem_planes =3D 2, .comp_planes =3D 2, .bpp =3D { 5, 10, 0, 0 }, .bpp=
-_div =3D { 4, 4, 1, 1 }, .hdiv =3D 2, .vdiv =3D 2,
-> =C2=A0		=C2=A0 .block_w =3D { 16, 8, 0, 0 }, .block_h =3D { 32, 16, 0, 0 =
-}},
-> =C2=A0		{ .format =3D V4L2_PIX_FMT_MT2110R, .pixel_enc =3D V4L2_PIXEL_ENC=
-_YUV, .mem_planes =3D 2, .comp_planes =3D 2, .bpp =3D { 5, 10, 0, 0 }, .bpp=
-_div =3D { 4, 4, 1, 1 }, .hdiv =3D 2, .vdiv =3D 2,
+Sorry I forgot the Fixes tag again but added it in a reply.
