@@ -1,139 +1,288 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE622A93D;
-	Thu, 24 Apr 2025 18:14:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5741C6FE7
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745518497; cv=none; b=j1rNs1I3e9CJDLKkTcrGrcrQcOITxC5H6PgggAJEvx3X6GVAasHjqZ5V229E2Hvrh6bhE/cEh2WXH3My9eRyUs6BCIIM4tHU5kT6dR7nmn4TpC0/TyfFa8jn2RmmTAOTbjksjh6iOQwYIrP6JVRdgw7y3BOWgtr6BSQuoftWek0=
+	t=1745518516; cv=none; b=eM9rWzHt3YwL03bF4nScM/Rj5meQVgQtzCc9qEOBO06hWg3ywGm+FjJHu4zwODW3Y7ejlrRsd4i2gih+l0+2Y0B2xoiuRjFbRyJcQO6OvSi5OWeAS5V/jJTMjNiU0KrLhaJWgNQq2tpkB/XVuNA5Z0PFJl8m01klUdwV4zSccP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745518497; c=relaxed/simple;
-	bh=WFqtPfQdkLZLt+UyMUSZ9boxe3thilAnq9y5ADpkmEc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ofi/yh10iiIPRJoQPSqs132o/aGev6ibHpMSMtUI3WdLthpGiLdOq7xE57GFSvujMk4JtoGmOl2IvJz89cor095s0B82W0Y5Ym9OwWm4NPG2tBrU0vEKtm1q3o7t37oYcaKZNRa8TfsRGfxAHAMhQ+v9gyA+mYmRjC4tZCol4q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBmrKgvr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745518516; c=relaxed/simple;
+	bh=PyuSdL80DbmXr9kGJoeGx6tq2St315/tjlTgqAsijBo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=riTtS9a4tTJ2xW+4o2Lq+9pvd8QiANdZIf0EUeBN3qF77E1pRoXJNzqLwZCHuwzt+7OrEGuu+vXaI0GLuKQvwjGZe5Uy8WzUfiauVzJVbdiAO4yyJ5cAPjKcJhT4iKWtbx73JwtHZdZHhYx3isVuMyrrRLBlDKkEQVOx8Of0djc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KpsJppya; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBmrKgvr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA4F4C4CEE3;
-	Thu, 24 Apr 2025 18:14:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745518495;
-	bh=WFqtPfQdkLZLt+UyMUSZ9boxe3thilAnq9y5ADpkmEc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MBmrKgvrpNziHMooTnbcC/ZhKtRWBOryAFZ2gXZxXSl4k4jpDcvLeMFZ3f9Fc1LSb
-	 8X8ySzW8rvtQiozGvzmuZILtfjShKf9jxZxIsmhQuzUkn7C5IB5dldWTD68CfQMXMn
-	 3P0yeSZAI3ficPu2ocTyB4VtOKOH3ryEw5Lko2pYk4/GDANO8QznCuFGDcuVN5zTWH
-	 0ZO9j+f7mFuOzduTkUPtFT4a+L5P3ExHh4trRUh+D+KF6b1C9UBlIopJpHpF9oe1nb
-	 6PsSqfxjP7xmlPqze2Oi/UgyFZev+IEWq0jcI3/IPAKA6qEBdbR4okbJvKdjeScGyr
-	 9aJCiZMJnujnQ==
-Date: Thu, 24 Apr 2025 20:14:49 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, ravi.bangoria@amd.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86: Fix open counting event error
-Message-ID: <aAp_mQadre6-aFg8@gmail.com>
-References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
- <aApkwfEUCJcc9PXn@gmail.com>
- <e85c1a65-fa55-457f-82d9-c25f6a4deb49@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpsJppya"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso908442b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745518513; x=1746123313; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D5ca3BAG75clyx23dBcL2JDA6BjjGOPOYCSfGb5BdZc=;
+        b=KpsJppyaBqeGD73Fhp64nHRcAbIUxbycAph9B2n5hD1uaBKbFYgl7a9dn144PajEKL
+         h3NQxZlIP8oxHMIc5HS4I5l9oSG9qc39064QpAMgWM5y8qiaW1AOpFwnt+yNUpD+kQEA
+         e7kPeyJ05KOhHX5DlvU55FIKLKbLLmXor+U0RFzFdWklkO61qPj8u0pLfoMT2zzuOkNF
+         hW7BF2428+wCzzHLMcCi10WBc8fOahp7tYblrnSftXYB7zYCnyOhbVoYBrclKONh7uMK
+         5Bm28nd5BLh+/+SxmTOG50U/HXKAoNlY63ozxiLBX/w5Yqt1tjyyaekwpDc3xr8lVjYy
+         Gagg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745518513; x=1746123313;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=D5ca3BAG75clyx23dBcL2JDA6BjjGOPOYCSfGb5BdZc=;
+        b=tRvuAdhKPQxuWTAC/XjH0AvfB+CwPyc/wP42mjicjYe9UPeyg3+LZRkyYMwh9VvDFr
+         ed+9XEBlobRann0sdEYkDUWjj8b1HJ6W9KvEOk8U6uhFgCs6NS5wSGZ1PTfGUdDkoS1q
+         ftilDRp6m1+yayht2xK4q4IXjdMV7yoYw/nhbaYwA0asW43hnpnBv7GKnGDC9FnK0mkL
+         AmdKA3LmWnUho99sYtI6xZgwfL2PDQHVBqU+dUIbcJvD/yID/D8wmH7fEDrX+hsnur8S
+         F6ZGwrH2z+jCUcWX+lm8qMlmcUzurzYZgqEF0L8ggqFrXsuiSOKWK9E664FNqk113cef
+         x7gA==
+X-Forwarded-Encrypted: i=1; AJvYcCUqefTU1GHpiQhOFHD4wMjMV00LMbjSAHxkVuYTsttn+nJeWySq93GdUb0is+q2+RqjVa8dTrm1J5RCWls=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyd/iIOdU52q0jXN9FUh4/NLDA6dPNa9lKgK6UkOP7JUKTW6oHQ
+	B1IZwwq6/a5jTw0OeUeuCzi7i9Od0CgX83Mlqcj70ff/YpJRZYTVnMZpn4iHfwaRSt4wKs246Yf
+	8AGmUdOYjPMY6J4MkVDD1KA==
+X-Google-Smtp-Source: AGHT+IEjHUImTvNW706XVptp79KSjxcaqI5ueQhopNSPDN6+zyHSYy4f+9kb3ZIp9FE3XNV/3Ks8SXHBhHpHnX8+oA==
+X-Received: from pfbfe15.prod.google.com ([2002:a05:6a00:2f0f:b0:736:b063:5038])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:4acb:b0:732:2923:b70f with SMTP id d2e1a72fcca58-73e32fda318mr943178b3a.11.1745518513546;
+ Thu, 24 Apr 2025 11:15:13 -0700 (PDT)
+Date: Thu, 24 Apr 2025 11:15:11 -0700
+In-Reply-To: <CAGtprH-Ana5A2hz_D+CQ0NYRVxfpR6e0Sojssym-UtUnYpOPqg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e85c1a65-fa55-457f-82d9-c25f6a4deb49@linux.intel.com>
+Mime-Version: 1.0
+References: <cover.1726009989.git.ackerleytng@google.com> <38723c5d5e9b530e52f28b9f9f4a6d862ed69bcd.1726009989.git.ackerleytng@google.com>
+ <Z+6AGxEvBRFkN5mN@yzhao56-desk.sh.intel.com> <diqzh62ezgdh.fsf@ackerleytng-ctop.c.googlers.com>
+ <aAmPQssuN9Zba//b@yzhao56-desk.sh.intel.com> <aAm9OHGt6Ag7ztqs@yzhao56-desk.sh.intel.com>
+ <c4dae65f-b5e6-44fa-b5ab-8614f1d47cb5@intel.com> <aAnytM/E6sIdvKNq@yzhao56-desk.sh.intel.com>
+ <CAGtprH-Ana5A2hz_D+CQ0NYRVxfpR6e0Sojssym-UtUnYpOPqg@mail.gmail.com>
+Message-ID: <diqz7c39zas0.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 39/39] KVM: guest_memfd: Dynamically split/reconstruct
+ HugeTLB page
+From: Ackerley Tng <ackerleytng@google.com>
+To: Vishal Annapurve <vannapurve@google.com>, Yan Zhao <yan.y.zhao@intel.com>
+Cc: Chenyi Qiang <chenyi.qiang@intel.com>, tabba@google.com, quic_eberman@quicinc.com, 
+	roypat@amazon.co.uk, jgg@nvidia.com, peterx@redhat.com, david@redhat.com, 
+	rientjes@google.com, fvdl@google.com, jthoughton@google.com, 
+	seanjc@google.com, pbonzini@redhat.com, zhiquan1.li@intel.com, 
+	fan.du@intel.com, jun.miao@intel.com, isaku.yamahata@intel.com, 
+	muchun.song@linux.dev, erdemaktas@google.com, qperret@google.com, 
+	jhubbard@nvidia.com, willy@infradead.org, shuah@kernel.org, 
+	brauner@kernel.org, bfoster@redhat.com, kent.overstreet@linux.dev, 
+	pvorel@suse.cz, rppt@kernel.org, richard.weiyang@gmail.com, 
+	anup@brainfault.org, haibo1.xu@intel.com, ajones@ventanamicro.com, 
+	vkuznets@redhat.com, maciej.wieczor-retman@intel.com, pgonda@google.com, 
+	oliver.upton@linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
+Vishal Annapurve <vannapurve@google.com> writes:
 
-* Liang, Kan <kan.liang@linux.intel.com> wrote:
+> On Thu, Apr 24, 2025 at 1:15=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> w=
+rote:
+>>
+>> On Thu, Apr 24, 2025 at 01:55:51PM +0800, Chenyi Qiang wrote:
+>> >
+>> >
+>> > On 4/24/2025 12:25 PM, Yan Zhao wrote:
+>> > > On Thu, Apr 24, 2025 at 09:09:22AM +0800, Yan Zhao wrote:
+>> > >> On Wed, Apr 23, 2025 at 03:02:02PM -0700, Ackerley Tng wrote:
+>> > >>> Yan Zhao <yan.y.zhao@intel.com> writes:
+>> > >>>
+>> > >>>> On Tue, Sep 10, 2024 at 11:44:10PM +0000, Ackerley Tng wrote:
+>> > >>>>> +/*
+>> > >>>>> + * Allocates and then caches a folio in the filemap. Returns a =
+folio with
+>> > >>>>> + * refcount of 2: 1 after allocation, and 1 taken by the filema=
+p.
+>> > >>>>> + */
+>> > >>>>> +static struct folio *kvm_gmem_hugetlb_alloc_and_cache_folio(str=
+uct inode *inode,
+>> > >>>>> +                                                           pgof=
+f_t index)
+>> > >>>>> +{
+>> > >>>>> +       struct kvm_gmem_hugetlb *hgmem;
+>> > >>>>> +       pgoff_t aligned_index;
+>> > >>>>> +       struct folio *folio;
+>> > >>>>> +       int nr_pages;
+>> > >>>>> +       int ret;
+>> > >>>>> +
+>> > >>>>> +       hgmem =3D kvm_gmem_hgmem(inode);
+>> > >>>>> +       folio =3D kvm_gmem_hugetlb_alloc_folio(hgmem->h, hgmem->=
+spool);
+>> > >>>>> +       if (IS_ERR(folio))
+>> > >>>>> +               return folio;
+>> > >>>>> +
+>> > >>>>> +       nr_pages =3D 1UL << huge_page_order(hgmem->h);
+>> > >>>>> +       aligned_index =3D round_down(index, nr_pages);
+>> > >>>> Maybe a gap here.
+>> > >>>>
+>> > >>>> When a guest_memfd is bound to a slot where slot->base_gfn is not=
+ aligned to
+>> > >>>> 2M/1G and slot->gmem.pgoff is 0, even if an index is 2M/1G aligne=
+d, the
+>> > >>>> corresponding GFN is not 2M/1G aligned.
+>> > >>>
+>> > >>> Thanks for looking into this.
+>> > >>>
+>> > >>> In 1G page support for guest_memfd, the offset and size are always
+>> > >>> hugepage aligned to the hugepage size requested at guest_memfd cre=
+ation
+>> > >>> time, and it is true that when binding to a memslot, slot->base_gf=
+n and
+>> > >>> slot->npages may not be hugepage aligned.
+>> > >>>
+>> > >>>>
+>> > >>>> However, TDX requires that private huge pages be 2M aligned in GF=
+N.
+>> > >>>>
+>> > >>>
+>> > >>> IIUC other factors also contribute to determining the mapping leve=
+l in
+>> > >>> the guest page tables, like lpage_info and .private_max_mapping_le=
+vel()
+>> > >>> in kvm_x86_ops.
+>> > >>>
+>> > >>> If slot->base_gfn and slot->npages are not hugepage aligned, lpage=
+_info
+>> > >>> will track that and not allow faulting into guest page tables at h=
+igher
+>> > >>> granularity.
+>> > >>
+>> > >> lpage_info only checks the alignments of slot->base_gfn and
+>> > >> slot->base_gfn + npages. e.g.,
+>> > >>
+>> > >> if slot->base_gfn is 8K, npages is 8M, then for this slot,
+>> > >> lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [4K, 2M+8K=
+);
+>> > >> lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M+8K, 4M=
++8K);
+>> > >> lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M+8K, 6M=
++8K);
+>> > >> lpage_info[2M][3].disallow_lpage =3D 1, which is for GFN [6M+8K, 8M=
++8K);
+>> >
+>> > Should it be?
+>> > lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [8K, 2M);
+>> > lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M, 4M);
+>> > lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M, 6M);
+>> > lpage_info[2M][3].disallow_lpage =3D 0, which is for GFN [6M, 8M);
+>> > lpage_info[2M][4].disallow_lpage =3D 1, which is for GFN [8M, 8M+8K);
+>> Right. Good catch. Thanks!
+>>
+>> Let me update the example as below:
+>> slot->base_gfn is 2 (for GPA 8KB), npages 2000 (for a 8MB range)
+>>
+>> lpage_info[2M][0].disallow_lpage =3D 1, which is for GPA [8KB, 2MB);
+>> lpage_info[2M][1].disallow_lpage =3D 0, which is for GPA [2MB, 4MB);
+>> lpage_info[2M][2].disallow_lpage =3D 0, which is for GPA [4MB, 6MB);
+>> lpage_info[2M][3].disallow_lpage =3D 0, which is for GPA [6MB, 8MB);
+>> lpage_info[2M][4].disallow_lpage =3D 1, which is for GPA [8MB, 8MB+8KB);
+>>
+>> lpage_info indicates that a 2MB mapping is alllowed to cover GPA 4MB and=
+ GPA
+>> 4MB+16KB. However, their aligned_index values lead guest_memfd to alloca=
+te two
+>> 2MB folios, whose physical addresses may not be contiguous.
+>>
+>> Additionally, if the guest accesses two GPAs, e.g., GPA 2MB+8KB and GPA =
+4MB,
+>> KVM could create two 2MB mappings to cover GPA ranges [2MB, 4MB), [4MB, =
+6MB).
+>> However, guest_memfd just allocates the same 2MB folio for both faults.
+>>
+>>
+>> >
+>> > >>
+>> > >>   ---------------------------------------------------------
+>> > >>   |          |  |          |  |          |  |          |  |
+>> > >>   8K        2M 2M+8K      4M  4M+8K     6M  6M+8K     8M  8M+8K
+>> > >>
+>> > >> For GFN 6M and GFN 6M+4K, as they both belong to lpage_info[2M][2],=
+ huge
+>> > >> page is allowed. Also, they have the same aligned_index 2 in guest_=
+memfd.
+>> > >> So, guest_memfd allocates the same huge folio of 2M order for them.
+>> > > Sorry, sent too fast this morning. The example is not right. The cor=
+rect
+>> > > one is:
+>> > >
+>> > > For GFN 4M and GFN 4M+16K, lpage_info indicates that 2M is allowed. =
+So,
+>> > > KVM will create a 2M mapping for them.
+>> > >
+>> > > However, in guest_memfd, GFN 4M and GFN 4M+16K do not correspond to =
+the
+>> > > same 2M folio and physical addresses may not be contiguous.
+>
+> Then during binding, guest memfd offset misalignment with hugepage
+> should be same as gfn misalignment. i.e.
+>
+> (offset & ~huge_page_mask(h)) =3D=3D ((slot->base_gfn << PAGE_SHIFT) &
+> ~huge_page_mask(h));
+>
+> For non guest_memfd backed scenarios, KVM allows slot gfn ranges that
+> are not hugepage aligned, so guest_memfd should also be able to
+> support non-hugepage aligned memslots.
+>
 
-> 
-> 
-> On 2025-04-24 12:20 p.m., Ingo Molnar wrote:
-> > 
-> > * Luo Gengkun <luogengkun@huaweicloud.com> wrote:
-> > 
-> >> Perf doesn't work at perf stat for hardware events:
-> >>
-> >>  $perf stat -- sleep 1
-> >>  Performance counter stats for 'sleep 1':
-> >>              16.44 msec task-clock                       #    0.016 CPUs utilized
-> >>                  2      context-switches                 #  121.691 /sec
-> >>                  0      cpu-migrations                   #    0.000 /sec
-> >>                 54      page-faults                      #    3.286 K/sec
-> >>    <not supported>	cycles
-> >>    <not supported>	instructions
-> >>    <not supported>	branches
-> >>    <not supported>	branch-misses
-> >>
-> >> The reason is that the check in x86_pmu_hw_config for sampling event is
-> >> unexpectedly applied to the counting event.
-> >>
-> >> Fixes: 88ec7eedbbd2 ("perf/x86: Fix low freqency setting issue")
-> >> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> >> ---
-> >>  arch/x86/events/core.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> >> index 6866cc5acb0b..3a4f031d2f44 100644
-> >> --- a/arch/x86/events/core.c
-> >> +++ b/arch/x86/events/core.c
-> >> @@ -629,7 +629,7 @@ int x86_pmu_hw_config(struct perf_event *event)
-> >>  	if (event->attr.type == event->pmu->type)
-> >>  		event->hw.config |= x86_pmu_get_event_config(event);
-> >>  
-> >> -	if (!event->attr.freq && x86_pmu.limit_period) {
-> >> +	if (is_sampling_event(event) && !event->attr.freq && x86_pmu.limit_period) {
-> > 
-> > Hm, so how come it works here, on an affected x86 system:
-> > 
-> > $ perf stat -- sleep 1
-> > 
-> >  Performance counter stats for 'sleep 1':
-> > 
-> >               0.64 msec task-clock:u                     #    0.001 CPUs utilized             
-> >                  0      context-switches:u               #    0.000 /sec                      
-> >                  0      cpu-migrations:u                 #    0.000 /sec                      
-> >                 73      page-faults:u                    #  114.063 K/sec                     
-> >            325,849      instructions:u                   #    0.56  insn per cycle            
-> >                                                   #    0.88  stalled cycles per insn   
-> >            580,323      cycles:u                         #    0.907 GHz                       
-> >            286,348      stalled-cycles-frontend:u        #   49.34% frontend cycles idle      
-> >             72,623      branches:u                       #  113.474 M/sec                     
-> >              4,713      branch-misses:u                  #    6.49% of all branches           
-> > 
-> > 
-> > ?
-> 
-> It doesn't affect all X86 platforms. It should only impact the platforms
-> with limit_period used for the non-pebs events. For Intel platforms, it
-> should only impact some older platforms, e.g., HSW, BDW and NHM.
-> 
-> For other platforms, the x86_pmu.limit_period is invoked. But the left
-> is not updated. So it still equals to event->attr.sample_period.
-> It doesn't error out.
-> 
-> 	if (!event->attr.freq && x86_pmu.limit_period) {
-> 		s64 left = event->attr.sample_period;
-> 		x86_pmu.limit_period(event, &left);
-> 		if (left > event->attr.sample_period)
-> 			return -EINVAL;
-> 	}
+I drew up a picture [1] which hopefully clarifies this.
 
-Makes sense. I've added this paragraph to the changelog:
+Thanks for pointing this out, I understand better now and we will add an
+extra constraint during memslot binding of guest_memfd to check that gfn
+offsets within a hugepage must be guest_memfd offsets.
 
-    It should only impact x86 platforms with limit_period used for non-PEBS
-    events. For Intel platforms, it should only impact some older platforms,
-    e.g., HSW, BDW and NHM.
+Adding checks at binding time will allow hugepage-unaligned offsets (to
+be at parity with non-guest_memfd backing memory) but still fix this
+issue.
 
-Thanks,
+lpage_info will make sure that ranges near the bounds will be
+fragmented, but the hugepages in the middle will still be mappable as
+hugepages.
 
-	Ingo
+[1] https://lpc.events/event/18/contributions/1764/attachments/1409/3706/bi=
+nding-must-have-same-alignment.svg
+
+>> > >
+>> > >
+>> > >> However, for TDX, GFN 6M and GFN 6M+4K should not belong to the sam=
+e folio.
+>> > >> It's also weird for a 2M mapping in KVM to stride across 2 huge fol=
+ios.
+>> > >>
+>> > >>> Hence I think it is okay to leave it to KVM to fault pages into th=
+e
+>> > >>> guest correctly. For guest_memfd will just maintain the invariant =
+that
+>> > >>> offset and size are hugepage aligned, but not require that
+>> > >>> slot->base_gfn and slot->npages are hugepage aligned. This behavio=
+r will
+>> > >>> be consistent with other backing memory for guests like regular sh=
+mem or
+>> > >>> HugeTLB.
+>> > >>>
+>> > >>>>> +       ret =3D kvm_gmem_hugetlb_filemap_add_folio(inode->i_mapp=
+ing, folio,
+>> > >>>>> +                                                aligned_index,
+>> > >>>>> +                                                htlb_alloc_mask=
+(hgmem->h));
+>> > >>>>> +       WARN_ON(ret);
+>> > >>>>> +
+>> > >>>>>         spin_lock(&inode->i_lock);
+>> > >>>>>         inode->i_blocks +=3D blocks_per_huge_page(hgmem->h);
+>> > >>>>>         spin_unlock(&inode->i_lock);
+>> > >>>>>
+>> > >>>>> -       return page_folio(requested_page);
+>> > >>>>> +       return folio;
+>> > >>>>> +}
+>> > >
+>> >
