@@ -1,73 +1,146 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915F31DCB09;
-	Thu, 24 Apr 2025 07:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9CE1F5616;
+	Thu, 24 Apr 2025 08:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745481551; cv=none; b=Xq/mw9c679gK66s0s7mAZAg2DHzWghZMXEYBTkELHFHoXO8PN3ZoFcd1IwoNZMa3M3kbIQcOYqsKsVXctvv7NqEsrqvd/xjhGrHu1ZbNIcEhxM8OZ8pN7g2L+49DJWkOmQVYavXzEDZ6zTkhwcfcGoN3007doNhUsZ4PkLXk+H4=
+	t=1745481607; cv=none; b=KZjpezBuqwuCxhRjAQG+3DRyk2QTptrgY/gtudxW1aCvT2OwhgEhr9nTNwdYE2flT2vETTkOxd/m66M8tcMGOUQkshkvzl6W3XuELlw+4HijmRaDed36SCVWE6eXi9doitlLWcDsOO79stRHKbXoqNoRTYPcZC8bmp6+rsPDxLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745481551; c=relaxed/simple;
-	bh=EkRGMXV61mxS1Jr+5BweoZLfS5HQIMfM2iHDQZfDtgs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=U+zsSN+6uXXim6DT51IjLIU88RNr1En6izrYN1YAuw4SV7a+9vdcI5NzFnYzx8DLux2ndYiOnIRcAr6v7aNd+WiiVESp4chnkMrOlt27tI+Dp4p0m9Mbc/TPuXSpnVnanDJEhaiuBSAgfJ7biIZ/bez2Fm4TMwxu2qI7OzE8CcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=iR53X055; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745481607; c=relaxed/simple;
+	bh=oc7MkbyEHI0jmohHyp3HOjrz/Rq49FEipRcCOk3Ft4c=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=HXZ5CLrD+P/y1lvJ8gAnqWuNyxrQJsi6kutg5nSpwBUiJ+512qjLo0O5aPh0NKVCmXvSTU9pDgUJDrcAfR1F38tErSbtaPHfsYG1ukzmGjYp3IXQw7S1Izh1pmBZaB9QQO7f0HZes2ci404k+dIRHTSbNOEe6B8OSqPrPmHdwYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=a1R9o3BD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AqO9ssO0; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="iR53X055"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745481547;
-	bh=EkRGMXV61mxS1Jr+5BweoZLfS5HQIMfM2iHDQZfDtgs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=iR53X055QzTaG7CuxiPOpdr/6nFMLEZ9Um8oMTyaTdS5eibjpOq0Ol+tKricl9S1F
-	 uqncnA0BBgwBns1Dcwl61zFvyjPHwMAj3OCc/5QMFAGKoFgCmlY9G+R/n7FOdfGrO7
-	 SaMIJWYEGJdCILI7NQb/WTbQjjFA9jkvGp5Vkmo3Q9I4W0wTIR/+7sbuPwz3OrgrpV
-	 Jq++GRuR6cyfv9zfbabX2h479qabjzFxZMy78tLqqPwFoo2UpVYmvLnb+0lbnYCtXe
-	 6VFj0Kb2v8qjpDn63hzB+UMn8sPBDWdOO5sK4k6kfUc4tVPldTIg3GapwCpphg33OS
-	 4O2lGkPLCNMAA==
-Received: from IcarusMOD.eternityproject.eu (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id CA15217E0C96;
-	Thu, 24 Apr 2025 09:59:06 +0200 (CEST)
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-To: sam@ravnborg.org, neil.armstrong@linaro.org, dianders@google.com, 
- hsinyi@google.com, matthias.bgg@gmail.com, robh@kernel.org, 
- krzk+dt@kernel.org, conor+dt@kernel.org, knoxchiou@google.com, 
- Simona Vetter <simona.vetter@ffwll.ch>, 
- Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-In-Reply-To: <20250424010850.994288-1-cengjianeng@huaqin.corp-partner.google.com>
-References: <20250424010850.994288-1-cengjianeng@huaqin.corp-partner.google.com>
-Subject: Re: [PATCH v11 0/2]
-Message-Id: <174548154674.22041.7217055615854393236.b4-ty@collabora.com>
-Date: Thu, 24 Apr 2025 09:59:06 +0200
+	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="a1R9o3BD";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AqO9ssO0"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 343301140083;
+	Thu, 24 Apr 2025 04:00:04 -0400 (EDT)
+Received: from phl-imap-01 ([10.202.2.91])
+  by phl-compute-04.internal (MEProxy); Thu, 24 Apr 2025 04:00:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
+	 h=cc:cc:content-transfer-encoding:content-type:content-type
+	:date:date:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
+	 t=1745481604; x=1745568004; bh=D9BxmcOlj48skfTkt5tTv4HRI52Kr3br
+	Pmi2tjpeVrs=; b=a1R9o3BDj43M5ULYH0efGR5bqc6K9OTMot7Vc0LLRwlWz/NW
+	w+itHYaPgsfBd1lu9HLGEFB6+FpOr142EdmyM3ZM0D9vnfqRVLxEILPcVdlpW0+y
+	FNVwYkFSS/ySKw5RAaqI2qnLp/zb9+D9reObD6azG+o86BfxoILtge7zfLIDQbpJ
+	JPmIkEP9runnRZcnKP6l7B5FrhjJxKbjHDZ6EuXNweYC2Ddi2DP/xyvZ0fa06wXw
+	KSEXur6+M8MMlRManClAd/eKAqvP/nR8a5Yg/3eQ/4U9mcO39dF6u9EoJtXhMtyW
+	pcNem2A+YFT/rs+RXmgIMaeBGHrohCKQJoqDOw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745481604; x=
+	1745568004; bh=D9BxmcOlj48skfTkt5tTv4HRI52Kr3brPmi2tjpeVrs=; b=A
+	qO9ssO0DkSiUpjH/ieHbj9ZvuK5vo2tbqaOALMv78uunf/cUxueFDWkY2nx+d43g
+	KMihbJ6TIJbBBVI8pn/eERYSNHwsflCekckWMzfKg4rl8GZbBC5QT2b2qAxnzgm/
+	7tFksBepi+5GAy/Q3cuAeg6EyGJhBudl3XSRNT91UBMr8ZU69VqP+OC/JVnQGqDu
+	f0m7U9OEH4TeWihwQzizCSyxZsnKVdH1u1e/VPbdFiTc3WhbFXjPfn0Mp087I5xG
+	C7Qp17awNCoBX/bfaLcoFY1IgD7YGYoc7yu4hPRhbfFTgXNq9Og/weUODXLtAPdn
+	+MjNyvS36NQM7dtsynh+Q==
+X-ME-Sender: <xms:g-8JaAn-Xv7-FKukOTiSfay5mCemT1Qn-kW58XMOJi1R4oDWDZr3Cg>
+    <xme:g-8JaP1b8Oxs6VMsTgzb95liJooxtVN3qxKyQjaD1WACF_gZyZA6r1QkgexKKhsUQ
+    8IbYSXvOwOCej4g8Rw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekleefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpeetlhhishhtrghirhcuoegrlhhishhtrghirhesrghlihhsthgrih
+    hrvdefrdhmvgeqnecuggftrfgrthhtvghrnhepheejffegleelgfffhfetheevvdfhkeef
+    feeluedvheduiedtudevgefgiefggeffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheprghlihhsthgrihhrsegrlhhishhtrghirhdvfedrmhgv
+    pdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehhvh
+    hilhhlvghnvghuvhgvseguihhmohhnohhffhdrtghomhdprhgtphhtthhopehmghhonhgv
+    lhhlrggsohhlughutgesughimhhonhhofhhfrdgtohhmpdhrtghpthhtohepughmihhtrh
+    ihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehhuhhgoheshhhu
+    ghhovhhilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrg
+    hrohdrohhrghdprhgtphhtthhopehmfigvihhgrghnugesmhifvghighgrnhgurdhnvght
+    pdhrtghpthhtoheplhhinhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+    dprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
+    ghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:g-8JaOrQmP-TQEbJPiYlVSUoufRiDvr3ZLtHk-hlbGsBUJXjdPSUzg>
+    <xmx:g-8JaMmbXuj1voDF0RF-qtOPX4t93NWRmfgdYZuot7D5RY1YPTyylw>
+    <xmx:g-8JaO2uzhdQt3I-u5ClnqGf7QuGItdsfFJS6rzvfxXuHHPTP5aOPg>
+    <xmx:g-8JaDsFjB0GZuNj_QTErCml1SZ-BYHNYAlfTR9NeOGZhJnrlr6i3A>
+    <xmx:hO8JaLdWQ1ZrLU0tfCieulk6DoJHx5StThSkoEL_g6FYq3z7NTfy22UN>
+Feedback-ID: ifd214418:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B6254336007E; Thu, 24 Apr 2025 04:00:03 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+X-ThreadId: T59643a954d2ed3f9
+Date: Thu, 24 Apr 2025 18:00:02 +1000
+From: Alistair <alistair@alistair23.me>
+To: "Hugo Villeneuve" <hugo@hugovil.com>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Maximilian Weigand" <mweigand@mweigand.net>
+Cc: "Mikael Gonella-Bolduc" <mgonellabolduc@dimonoff.com>,
+ stable@vger.kernel.org, "Hugo Villeneuve" <hvilleneuve@dimonoff.com>,
+ linux-input@vger.kernel.org,
+ "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Message-Id: <ed682022-509e-452b-b4f8-7ddeb17a2475@app.fastmail.com>
+In-Reply-To: <20250423135243.1261460-1-hugo@hugovil.com>
+References: <20250423135243.1261460-1-hugo@hugovil.com>
+Subject: Re: [PATCH v2] Input: cyttsp5 - fix power control issue on wakeup
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
 
-On Thu, 24 Apr 2025 09:08:48 +0800, Jianeng Ceng wrote:
-> This is v11 of the MT8186 Chromebook device tree series.
+On Wed, 23 Apr 2025, at 11:52 PM, Hugo Villeneuve wrote:
+> From: Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>
 > 
+> The power control function ignores the "on" argument when setting the
+> report ID, and thus is always sending HID_POWER_SLEEP. This causes a
+> problem when trying to wakeup.
+> 
+> Fix by sending the state variable, which contains the proper HID_POWER_ON or
+> HID_POWER_SLEEP based on the "on" argument.
+> 
+> Fixes: 3c98b8dbdced ("Input: cyttsp5 - implement proper sleep and wakeup procedures")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
+> Signed-off-by: Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>
 
-Applied to v6.15-next/dts64, thanks!
+Reviewed-by: Alistair Francis <alistair@alistair23.me>
 
-[1/2] dt-bindings: arm: mediatek: Add MT8186 Ponyta Chromebook
-      commit: ce8ec1f8c8b363c2511332c909d06df7ae01f1b3
-[2/2] arm64: dts: mediatek: Add MT8186 Ponyta Chromebooks
-      commit: ed34944cc3bc5602c1151effdb6aced9f2f992a6
+Alistair
 
-Cheers,
-Angelo
-
-
+> ---
+> Changes for v2:
+> - Add Mikael SOB tag
+> 
+> drivers/input/touchscreen/cyttsp5.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/input/touchscreen/cyttsp5.c b/drivers/input/touchscreen/cyttsp5.c
+> index eafe5a9b89648..86edcacb4ab3e 100644
+> --- a/drivers/input/touchscreen/cyttsp5.c
+> +++ b/drivers/input/touchscreen/cyttsp5.c
+> @@ -580,7 +580,7 @@ static int cyttsp5_power_control(struct cyttsp5 *ts, bool on)
+> int rc;
+>  
+> SET_CMD_REPORT_TYPE(cmd[0], 0);
+> - SET_CMD_REPORT_ID(cmd[0], HID_POWER_SLEEP);
+> + SET_CMD_REPORT_ID(cmd[0], state);
+> SET_CMD_OPCODE(cmd[1], HID_CMD_SET_POWER);
+>  
+> rc = cyttsp5_write(ts, HID_COMMAND_REG, cmd, sizeof(cmd));
+> 
+> base-commit: 7adf8b1afc14832de099f9e178f08f91dc0dd6d0
+> -- 
+> 2.39.5
+> 
+> 
