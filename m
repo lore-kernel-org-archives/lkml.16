@@ -1,190 +1,157 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9937A28F501;
-	Thu, 24 Apr 2025 18:20:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371BA28F501;
+	Thu, 24 Apr 2025 18:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.159
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745518831; cv=none; b=Eun4wbMEbhfXoubq9WXr2LVCCXWRkFIz0O+xRUbyjbnNs++xs6MdDBmpc23ijLAm5VY7yh+Qu/JvVdDRveOHbcUWMfMnY9W+dch02l2Iw1IW1EhVX0agYxp7Bh1iz5OkvQ4Rl9LTku/LCYe7RSNNvx112MEFwAB0eNwipVwBNAQ=
+	t=1745518854; cv=none; b=M37zYwUShO4gvZBlP/SWWnu7VFZxt2TkpchsVvBagjCbQ6amXgljsKiaYK6EJzNt4dl8WKQCAf1SHEhrWPrfkAKXP1MkJLAJQeMAxKnabjXrMGzuN9H8QpGFw1HToXrT/BSBSt0E+t+NX1LrzilAMgYkKSov2q95Nz0OCL7dSQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745518831; c=relaxed/simple;
-	bh=ovtahvZEMFGVaxFa2bucb/xvKBh6g0ARBv2BYQjMjDA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LKeGK0BmpQ6AcQscFRN/UrAjHpnv4g0cX4c/tg0DGdbwhWhVlVb/hP/SA21pmvmmSy4gA931EWuCOXdfr3ZMQRxr5Ly7NFZPeTIiF3ABdlJ953NA75GXVkVqVhVQRKivE6+PBqM2V1T3tqL+fHZHJstswx1idwlg1elmjfYs6dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XAjQiv2S; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745518854; c=relaxed/simple;
+	bh=w9XDNMrQy6uyNf+fQzmb40l49o55digRyTVAV/Fqo3Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tgwJ7pCtenYOWfJl0gAXlX/n8zzXlPu7NfR8+s8cCCkQe/kCtnx3eS1LpGt6CtVoBxwnJgucm+u5dF2qJiixIn4iRwua/xbV8+uYUEiA9/wrLTGhpOGnfTnFr1Zl59qg7GQCB7cx/aXVEBQwysOQ2Yv0BGV5mbcZ/gDBWY0uCWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bur.io; spf=pass smtp.mailfrom=bur.io; dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b=v0xyQ8VL; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AB66wB8Y; arc=none smtp.client-ip=103.168.172.159
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bur.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bur.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XAjQiv2S"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5efe8d9eb12so1983669a12.1;
-        Thu, 24 Apr 2025 11:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745518828; x=1746123628; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ke2htjOdEMv6+V6OvVMVgB0NcfIGZYBPjYHJTWyZADc=;
-        b=XAjQiv2SpQDJsx59fz3RHdpEZTs4yccCrUHYl81EnMSTL7HzEc6Hp30B2qMagS1yUk
-         0UKPQ69tsMPKU57T/R0J8cicN9qM+yWragLnzLsLI8UDzGBv8jrYg9IOZdPlIYRVJbuv
-         aCx9JwWOq+LEwRv0l5F6WP2dXdoRT9SCo4loNq7dxhTrbFDtn6w8NDdmLkM958xWXDAz
-         Jm+CjiHNMR4ZYmmUCxwB9LsLa7JJHxSKEWLtUSnpZU1C6DWReYKXNAKw/73r5gieWpX5
-         I+Uw0SJChAMFl7/CLxn0nLhxWEnIL5wXMHZpjbyzQv8hLZS+mh5iZh337HpWaJNSIx1a
-         Yp+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745518828; x=1746123628;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ke2htjOdEMv6+V6OvVMVgB0NcfIGZYBPjYHJTWyZADc=;
-        b=LG/KlbRfXrn9UgSotVYvgLlpo3Xn6XQDIHE/0SozBNqfPUHFNsarbjReTSPJMgGEtz
-         4CCsn5g7duul5ISyCEe1Fz8ouijYSMu6u13x40nXuIJH9UDxt9jytcwN4cltnO+ItYOx
-         e1Mj1jDZJMJpMKf9eS0C4Res+GvsX9SVjjyMiOFLfp6hm2XUh2sj/F6Qh2sgEeHFNhWm
-         ijixs1SZtwD9yQmDBub0O9nmtC0ynHkET+nv1oPIdgAzO0ndwb5jFDQ4UK4nLj77aceE
-         SoqP9BrWBtlaTlxr5QB4vfQVHrn16fkvVFFcYPtJGxMtkOLnlA82OKCxzM8ngTBKE8Ge
-         lM6g==
-X-Forwarded-Encrypted: i=1; AJvYcCVq62dUwgqVM09/jqqGRY+Q+jK/KYSh2qLpcW0rp81zAzcXOXykeTkSDtag6zbmtfko9D4=@vger.kernel.org, AJvYcCWm77gpdd5r6VBV6St7XuVz+ud/OfAWLjrKB8mVghQig6cpxOT4aM1AMPeW0sxDPDLNc9+fGKwcG/TBcmsR@vger.kernel.org, AJvYcCXicugOk0ls+iPwFyz4WAZfptq0lD+f0IDVW6PHy8/OzAPbn30BvQODMYRjHYoqUH5DLdgIMmTVI93tFAoO5iNBFKCc@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywf/Dm0YDMGQF/oQ3kN9SBxyFWiGG6jVWwuyL31+R6k/bXGU7F2
-	HAO6WnEsaQAiiUtw4EkN0TriQKl1VQeBYsfvw3H6p+04jh7t3bYFWh9s+io6qrvyalWqdEFkwsD
-	MEfT+AoxBJickmMpmHUsG0bOClCg=
-X-Gm-Gg: ASbGncsEW9jsgm8vkwntoplyarSiMqIvtV9P5PUZvDiD9gWKGQdIw69vMHxJViY26ZV
-	pwkehkuoOKpJXU3hCeF0b7Cy24UdVkeEbv4ygdvIn6wyojKVPbykFoFZ1T5kH8wzMtD4ht1pNrW
-	uf/C4jOCi1os7zDXEzZz45Diw+FiGnn21uDgzNWA==
-X-Google-Smtp-Source: AGHT+IH+fKYgMGLfkoH2vGq+xgfLWSkrv6VeyRaPXLdDZWrjcNaSURF8L8kxg23mdNkeyXcNVPDPY78ZQV6r+LUoNkY=
-X-Received: by 2002:a17:906:1615:b0:ace:6bfb:4a12 with SMTP id
- a640c23a62f3a-ace6bfb4a2amr39389966b.7.1745518827594; Thu, 24 Apr 2025
- 11:20:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bur.io header.i=@bur.io header.b="v0xyQ8VL";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AB66wB8Y"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 2D757114020A;
+	Thu, 24 Apr 2025 14:20:50 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Thu, 24 Apr 2025 14:20:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bur.io; h=cc:cc
+	:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1745518850; x=1745605250; bh=fvsfPHcxgY
+	3gYTa61n0of+zF8tOmo18oblg3QLtTipI=; b=v0xyQ8VLf1IZ3BBdoqyP4uuvs4
+	3rvtCOYLKLkkwqAADlLZInY+2eTbWhAzjvInDyhZJw4Gb+3KC0OTvJBdox/twHkM
+	dS0pxcPp+yzJ1GXZm+CaNc7/zPSgSRgM9jRaosHyl9h8afv0XgTxP0z9x9Q30w5i
+	TJH6NXGrExdZnfbCVtNcBwJ2REiZdcRgR/NTQM63S6ox2XH/kBNyITBacEtzi6W+
+	lj0gv8VNprEVT3z74glt4QKSLyW+zCEoW0h47UdoOzn1fjFYlct8W9tNhgSFEDUA
+	UbJUSbz77u9MCcoL3gh4a6YgORFPqszl0XSFYg2qaaHBRGcqCLGcLNk7YwfA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1745518850; x=1745605250; bh=fvsfPHcxgY3gYTa61n0of+zF8tOmo18oblg
+	3QLtTipI=; b=AB66wB8YEJSuUpGrFO9MAfljK6WXIllJt8uu+0QycpbuQOj8ar+
+	kbODKGbzRWPAT0LZPoTyjl3a7B7oZZijHWEjCv7wfOgAXQgUTsJ0xfAcfxJj+tO2
+	2cMmbE8/Jwob5C5bY6B6H1y+hseR8V4oASVBknmqrB1KADaSFCdr7rWxOmjRLhvD
+	zVAWDmDHpm8VERXwLtbCp0TxfSSoaWczpv9fIx4ZTwPFqTsPwRWO6HuGcqwoHmCR
+	Wt1C7MDf8zZoI4hvQhnUGQKu5WPHGrlYujmuvAKUSwCvK50iGYlNLscbOjlB1k9B
+	DutGZkQPp/yzuUh9RLREDBCst7+p96bS4Tw==
+X-ME-Sender: <xms:AYEKaO3XVCXrvq0Y2Og3Gn-JHiSvCLLTqGRhTma9Aw0l1VJu1R6NxA>
+    <xme:AYEKaBH6kPsJrAwu07wvtXS1tsu0zu7ay8crZXWBq6x0N-yOYkxeOTXuglrr8BojL
+    rbRZqW6Iz-ArK9qVxg>
+X-ME-Received: <xmr:AYEKaG4XcprbNeT1utelHjl9DekxbOW2gJkBJ4b_broiSKNZqQebH2lTGFUHnwzwvjrIgLjhtzhBg477GAJ8vCimBWc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedtudejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehorhhishcuuehurhhkohhvuceosghorhhishessghurhdrihhoqe
+    enucggtffrrghtthgvrhhnpeekvdekffejleelhfevhedvjeduhfejtdfhvdevieeiiedu
+    gfeugfdtjefgfeeljeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
+    hlfhhrohhmpegsohhrihhssegsuhhrrdhiohdpnhgspghrtghpthhtohepiedpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepnhgvvghlgiesshhushgvrdgtohhmpdhrtghpth
+    htoheptghlmhesfhgsrdgtohhmpdhrtghpthhtohepjhhoshgvfhesthhogihitghprghn
+    uggrrdgtohhmpdhrtghpthhtohepughsthgvrhgsrgesshhushgvrdgtohhmpdhrtghpth
+    htoheplhhinhhugidqsghtrhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:AYEKaP057IWn8oQqVigoUR3ahBYe4a0lD42DJ0Pd8JliWvCkq8ud0A>
+    <xmx:AYEKaBHDLVksfTeVIpX1LfFPxrerKmMHhUqGYX-pezSJTiV1CgHBrA>
+    <xmx:AYEKaI_wTygI967yCCQGr5TD4WdyFhvhMnXe_nWRXPnOdDgxsY9o9g>
+    <xmx:AYEKaGl4mzSXYSxKxI3s50dxwLWcW0U9eqm-tI_ozrnFxgo0sytXSA>
+    <xmx:AoEKaJc_JU53PK2jqzFRgRFu1eVNC0Y039EIsN8Fi0eZiKBhjize_KoZ>
+Feedback-ID: i083147f8:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 24 Apr 2025 14:20:49 -0400 (EDT)
+Date: Thu, 24 Apr 2025 11:21:54 -0700
+From: Boris Burkov <boris@bur.io>
+To: Daniel Vacek <neelx@suse.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] btrfs: put all allocated extent buffer folios in
+ failure case
+Message-ID: <20250424182154.GB3340135@zen.localdomain>
+References: <20250422125701.3939257-1-neelx@suse.com>
+ <20250424150809.4170099-1-neelx@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-12-jolsa@kernel.org>
- <CAEf4BzbxCqgPErQVBV7Ojz23ZEqYKvxi0Y4j8hq6FgXVvdQo9A@mail.gmail.com>
- <aAozU3alQYU0vNkw@krava> <CAEf4BzagXsyr-iKB=ZpRZ3kS2FE69jpbWa8EVyFJknUOCGtEEQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzagXsyr-iKB=ZpRZ3kS2FE69jpbWa8EVyFJknUOCGtEEQ@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 24 Apr 2025 11:20:11 -0700
-X-Gm-Features: ATxdqUGbvPzCaaRKhboVgR-vCppiSUq1JwIJG-nhSV_mJEgjvx-79vVkaf0nB0s
-Message-ID: <CAEf4BzZvwH2GR6cr8EN8Up02tHBkGij_1v6UNPcKaVFATmKvUQ@mail.gmail.com>
-Subject: Re: [PATCH perf/core 11/22] selftests/bpf: Use 5-byte nop for x86
- usdt probes
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424150809.4170099-1-neelx@suse.com>
 
-On Thu, Apr 24, 2025 at 9:29=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Thu, Apr 24, 2025 at 5:49=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wr=
-ote:
-> >
-> > On Wed, Apr 23, 2025 at 10:33:18AM -0700, Andrii Nakryiko wrote:
-> > > On Mon, Apr 21, 2025 at 2:46=E2=80=AFPM Jiri Olsa <jolsa@kernel.org> =
-wrote:
-> > > >
-> > > > Using 5-byte nop for x86 usdt probes so we can switch
-> > > > to optimized uprobe them.
-> > > >
-> > > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > > > ---
-> > > >  tools/testing/selftests/bpf/sdt.h | 9 ++++++++-
-> > > >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > > >
-> > >
-> > > So sdt.h is an exact copy/paste from systemtap-sdt sources. I'd prefe=
-r
-> > > to not modify it unnecessarily.
-> > >
-> > > How about we copy/paste usdt.h ([0]) and use *that* for your
-> > > benchmarks? I've already anticipated the need to change nop
-> > > instruction, so you won't even need to modify the usdt.h file itself,
-> > > just
-> > >
-> > > #define USDT_NOP .byte 0x0f, 0x1f, 0x44, 0x00, 0x00
-> > >
-> > > before #include "usdt.h"
-> >
-> >
-> > sounds good, but it seems we need bit more changes for that,
-> > so far I ended up with:
-> >
-> > -       __usdt_asm1(990:        USDT_NOP)                              =
-                         \
-> > +       __usdt_asm5(990:        USDT_NOP)                              =
-                         \
-> >
-> > but it still won't compile, will need to spend more time on that,
-> > unless you have better solution
-> >
->
-> Use
->
-> #define USDT_NOP .ascii "\x0F\x1F\x44\x00\x00"
->
-> for now, I'll need to improve macro magic to handle instructions with
-> commas in them...
+On Thu, Apr 24, 2025 at 05:08:08PM +0200, Daniel Vacek wrote:
+> When attaching a folio fails, for example if another one is already mapped,
+> we need to put all newly allocated folios. And as a consequence we do not
+> need to flag the eb UNMAPPED anymore.
+> 
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
 
-Ok, fixed in [0]. If you get the latest version, the .byte approach
-will work (I have tests in CI now to validate this).
+Reviewed-by: Boris Burkov <boris@bur.io>
 
-  [0] https://github.com/libbpf/usdt/pull/12
-
->
-> > thanks,
-> > jirka
-> >
-> > >
-> > >
-> > >   [0] https://github.com/libbpf/usdt/blob/main/usdt.h
-> > >
-> > > > diff --git a/tools/testing/selftests/bpf/sdt.h b/tools/testing/self=
-tests/bpf/sdt.h
-> > > > index 1fcfa5160231..1d62c06f5ddc 100644
-> > > > --- a/tools/testing/selftests/bpf/sdt.h
-> > > > +++ b/tools/testing/selftests/bpf/sdt.h
-> > > > @@ -236,6 +236,13 @@ __extension__ extern unsigned long long __sdt_=
-unsp;
-> > > >  #define _SDT_NOP       nop
-> > > >  #endif
-> > > >
-> > > > +/* Use 5 byte nop for x86_64 to allow optimizing uprobes. */
-> > > > +#if defined(__x86_64__)
-> > > > +# define _SDT_DEF_NOP _SDT_ASM_5(990:  .byte 0x0f, 0x1f, 0x44, 0x0=
-0, 0x00)
-> > > > +#else
-> > > > +# define _SDT_DEF_NOP _SDT_ASM_1(990:  _SDT_NOP)
-> > > > +#endif
-> > > > +
-> > > >  #define _SDT_NOTE_NAME "stapsdt"
-> > > >  #define _SDT_NOTE_TYPE 3
-> > > >
-> > > > @@ -288,7 +295,7 @@ __extension__ extern unsigned long long __sdt_u=
-nsp;
-> > > >
-> > > >  #define _SDT_ASM_BODY(provider, name, pack_args, args, ...)       =
-           \
-> > > >    _SDT_DEF_MACROS                                                 =
-           \
-> > > > -  _SDT_ASM_1(990:      _SDT_NOP)                                  =
-           \
-> > > > +  _SDT_DEF_NOP                                                    =
-           \
-> > > >    _SDT_ASM_3(          .pushsection .note.stapsdt,_SDT_ASM_AUTOGRO=
-UP,"note") \
-> > > >    _SDT_ASM_1(          .balign 4)                                 =
-           \
-> > > >    _SDT_ASM_3(          .4byte 992f-991f, 994f-993f, _SDT_NOTE_TYPE=
-)          \
-> > > > --
-> > > > 2.49.0
-> > > >
+> ---
+>  fs/btrfs/extent_io.c | 32 ++++++++++++++------------------
+>  1 file changed, 14 insertions(+), 18 deletions(-)
+> 
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index 197f5e51c4744..7023dd527d3e7 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -3385,30 +3385,26 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
+>  	 * we'll lookup the folio for that index, and grab that EB.  We do not
+>  	 * want that to grab this eb, as we're getting ready to free it.  So we
+>  	 * have to detach it first and then unlock it.
+> -	 *
+> -	 * We have to drop our reference and NULL it out here because in the
+> -	 * subpage case detaching does a btrfs_folio_dec_eb_refs() for our eb.
+> -	 * Below when we call btrfs_release_extent_buffer() we will call
+> -	 * detach_extent_buffer_folio() on our remaining pages in the !subpage
+> -	 * case.  If we left eb->folios[i] populated in the subpage case we'd
+> -	 * double put our reference and be super sad.
+>  	 */
+> -	for (int i = 0; i < attached; i++) {
+> -		ASSERT(eb->folios[i]);
+> -		detach_extent_buffer_folio(eb, eb->folios[i]);
+> -		folio_unlock(eb->folios[i]);
+> -		folio_put(eb->folios[i]);
+> +	for (int i = 0; i < num_extent_pages(eb); i++) {
+> +		struct folio *folio = eb->folios[i];
+> +
+> +		if (i < attached) {
+> +			ASSERT(folio);
+> +			detach_extent_buffer_folio(eb, folio);
+> +			folio_unlock(folio);
+> +		} else if (!folio)
+> +			continue;
+> +
+> +		ASSERT(!folio_test_private(folio));
+> +		folio_put(folio);
+>  		eb->folios[i] = NULL;
+>  	}
+> -	/*
+> -	 * Now all pages of that extent buffer is unmapped, set UNMAPPED flag,
+> -	 * so it can be cleaned up without utilizing folio->mapping.
+> -	 */
+> -	set_bit(EXTENT_BUFFER_UNMAPPED, &eb->bflags);
+> -
+>  	btrfs_release_extent_buffer(eb);
+> +
+>  	if (ret < 0)
+>  		return ERR_PTR(ret);
+> +
+>  	ASSERT(existing_eb);
+>  	return existing_eb;
+>  }
+> -- 
+> 2.47.2
+> 
