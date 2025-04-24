@@ -1,62 +1,62 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D782284666
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9096627FD76
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513431; cv=none; b=urWU72a5Ud0aj6wojVGQJjxz8+8GrSYy06iFFcA8qWYesVK9rrzzSvLxLXjTX5hTS7d4EfNH7djSBzJaoD3ecxQqfbdhMA2OuxWJVI1oAVI8gd2yfwqe0e2iEgYa6lzWt8jSuDvBaOsAeO4MiuCeDRUP9vaGW77Pqp/P2LF6Ijc=
+	t=1745513437; cv=none; b=nnmSZld4C3LnOpCHd+E9fi0dEvleCKawIFcqaEfTCru3UNiyWm/QKkz2Y1VpUZuezUJnybNebxauznsZJb8fXBlFWKaR0SEchoHRDuaWoGnfmd8/2sLPxv8aVKsAi5j+cMKavpBtyfck+7174DmaPnPy1+IrzhILnUfepYTrvpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513431; c=relaxed/simple;
-	bh=iRQ+tCNzTUzFjP3Q4w00NQLj2m8U6lvE3Ij0XsGhtg0=;
+	s=arc-20240116; t=1745513437; c=relaxed/simple;
+	bh=LuPSXS2gDM+3dccuKoPqDx7Vgdx+itgEGLDoJj+6O5c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bzxrdbTEBIai1IMkvnqJSYt5z/qnMF5+vDfaNFh3+v6i5DqFvk8jWQ2i47KhPv0i+bkpkp1TibJvGHa0KKMK3j8J9iUGinuBsMcjVrKuJWSYG9yJSTrw4OyoPBgduceEcizbIAXeZIB3EotgjKF7divnCELfZgxjCU9OH91ogjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=o83uobAZ; arc=none smtp.client-ip=209.85.210.53
+	 MIME-Version; b=lLsEDlduQ71fx4H54d/TbWtt2+mTukUtEAVmXCppPjpyNNFgm7lEvlvAJsEXA16HhtEx4U0rmgHQBcwHaEst0QJZlLmea4WrM7qLrlYE0BsrHJJimFBnLVBu9quuGS8cQi0tpic2bc5ly2CrE0q0g5lqV5mMaRG2jl6lv+mdqh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=s9v0V51b; arc=none smtp.client-ip=209.85.167.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="o83uobAZ"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72ecb4d9a10so915647a34.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:50:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="s9v0V51b"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3f8ae3ed8adso886818b6e.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:50:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1745513429; x=1746118229; darn=vger.kernel.org;
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1745513434; x=1746118234; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Zwio3ISUto8LUTujsv8QXqK82cuXiEJf2BXkC619czg=;
-        b=o83uobAZg32ukEuqNqmjmBkLvOMfa+6cW0v80YCN6cMnOhJGBQT2rpSZxNmkTv0jyt
-         YOvrpu/t9We2fTUFKNwTgBOIOrrlzp2xAWjguLEDfxcPIv570BXNoDX2GmbuoIEMXtkx
-         w8dUjpWv2MEkk1p8lwGUo4T6nWVpZ+ij7rT9Wn8CoN3p6Ki+JZs26pPRLeRt4FPIUWW9
-         npQkSv8qsGXpTt9daNoRcHWmCGVbZky9YpEpXwD4JWX6la4D8tyKLNCbl+PxH8Ti9PFG
-         TV5ayfwM6XcAU8whgJtCKP5xsyAfEv+LOfo743HH1A95g4owXeA50rvTpxE1x2P8hE09
-         8GRg==
+        bh=OcNpKj2ULrV1lWDMQw0DBFTmPSr8bbwLxdvwy2alDVU=;
+        b=s9v0V51b95Lcy2UOPFV5mTZIkbA2JF93VVlBACJ/x67Pj1r5igyyHeio4eMDZ/2dnF
+         rtXSLCbHTGdSLj4ARRUAgu2+s61KujOa4HSSPKPLfB14vo0DE/+wLPDOZgSCet9hYKjI
+         jOQdq+NMt8gemvB5tCe6KCMlisI2IESgXnmLvG2YLc+r+zc3AYVTYODVlg5teT70tuP5
+         mWfAAWGC1PVKW09N1yqA4ie/sTViWn6nITX9SAif/USpybjCyqK3t/Ix9roEcb4v7rSe
+         fi/aAQGzI8A0xLFIW5G+JSsxXrs8WsP2LQ2L8sVYQHpfXT44z2CR/3VEewvohet0Wu9h
+         IBGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745513429; x=1746118229;
+        d=1e100.net; s=20230601; t=1745513434; x=1746118234;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Zwio3ISUto8LUTujsv8QXqK82cuXiEJf2BXkC619czg=;
-        b=coFp7g+6rhXiuav6s5cBcL4hkfNxI6pD7dn8J5LsJr3ugJL9HNN6qs7KF7hqy/Sj+N
-         wjUBqNUVj651uVpNlqVA49jG5D9WDIZ1Yx6WrpL+J4Sl9GnH8oAgqZrutP35qMNOWqH5
-         uiekvbXQ8PxuVrmuOvK6yYsJaE5JAdPCT0c7AyRcr6RbWwJLqqnKoH9e7zIpmM+TgB9t
-         c8uQMTUl/2pmcsoPVg4Adk6k0N4GsqPPopCTvALWWl9+LakMEaOGOjsbfnJGjpBrDPci
-         5iLgbJRBXT0YqWTq/TWrvpP/5v6l0ioNoBrgJ3l4h08Q/Tt+YRqOXGXAsxdRJOco1JTJ
-         3XDg==
-X-Gm-Message-State: AOJu0Yy01z5vRIsjVR4xx0AtDEza564wl54QqBypo/aNO6U1TZtZXRic
-	wzI04qpBigENuG8/VzYIRHF+w6hFnpnVo2PQX6Wmz46DuSRcHlslJOUR7fWXe4DikBR1zhwJeXq
-	0
-X-Gm-Gg: ASbGncsR5tLZAgY73XdUfeYJg43EOU3vBf2HyUQWB9th6eIxcoLwg7dhlHlRI88yjyl
-	mZZlDuQxhKGdyBfzGQOh0Sef8BBcvVkrW+1oFAEyzy8/T84/QLu05YAvs46MNxM5AXsOgMv2lmW
-	+m8r/fwNmuRTh343mByA0PT4Cr0QVUox5GLhwNA/t5SEy2fS+UZuKjFGkZfvwaT0KHUhi5Opjvb
-	8ge7Oq6cf9gsFAg6wRz5kbrqoDEmhzEbo+1AxjuXm9+/G0zlcQXCpbVCDk/3/Hq7riWx7XLm9aX
-	/9gXT7lTb3jNQRrVUF+8VfJ2e8PR8knji0c=
-X-Google-Smtp-Source: AGHT+IGy7CZalF5Miu4rlUrqy24erWiGVBihUFSHTQCWfAbTX6kMHsZPYJdkMwwydQR7vrtwIl+ZPQ==
-X-Received: by 2002:a05:6830:3c08:b0:72b:a175:2f1d with SMTP id 46e09a7af769-7304dbd8709mr2441810a34.23.1745513428769;
-        Thu, 24 Apr 2025 09:50:28 -0700 (PDT)
+        bh=OcNpKj2ULrV1lWDMQw0DBFTmPSr8bbwLxdvwy2alDVU=;
+        b=SOGgI6ZviGgtvDswCaCPpU4js4LA/zgWZvgzOEvg058Dm3ncXlh8mpBfncbYjzMMC3
+         LXAo5YkHQBc1JNs+U+vLABThoQl6GQK2IWUj3T3Ck1exoZn+kx5DWzJeBRPrKoQiunja
+         KItP+M4UR6pM8QcEzgUJ6o8PZEPi5RSoKuOYM73snh1p1qBjJuokoGL2/OLMcynJI37D
+         kmVwAit9QuBATCj4/YkVcbbHgcbt313jNeW7whpqvEEZ8LA56sVzvr+/l6vxRtgDl4J0
+         Tu4euMVfk6gUQ8hRtlvVatFgpO6LkEKRijT919rlPTI0WAWAgzWHgLiYYa5rXBw3lotf
+         ktIA==
+X-Gm-Message-State: AOJu0YyDFh4xVJkdYt8jMCFZ9mu2JgztFJEp1Dss0Ossh46gqobXy4th
+	JbgbaYH54vbck1hlidCfYJNrd3E5/xfXrEUpy3zUJCTK1EfJqEHgdf+dCRsdxo2UXpH+v77X4ke
+	I
+X-Gm-Gg: ASbGnctIURQwTqMg4tT4+V8JsnKpdC3T9ziHzn58IJJF6zYaQ03khe6n6i4JrVWT2Vb
+	LSM+I7oMEcB8BwKL1ZIoU3NV3s5JaiiWxs0AxH/ptZONanW739IqBghAUQV5/5iOV/R3KtWjNCs
+	hT8aJ/uvd7UtaVsaH8h1f6+qys08PT1sjnS9yDmIHZ6Na+n2ZPJ2064DZ16+AHv3XOcGniBuCtz
+	CjhScwZOwRIz5IHU/Pp7rxZAIwRefPQrNjoxufmzuEd4wPAFl2YEwWG/Is2V15aijItNTJSfg1l
+	1YEsAZL3SBgm85pZ+ZWAha2fsQ0w/O7LXj7aATrki5nmNQ==
+X-Google-Smtp-Source: AGHT+IELql/wRvoa8BM3ex/dBaoFvABrW93Nk4W9CtFRx3vZMu1Go4RmhcXkY4KkH82YYqlFrrynyw==
+X-Received: by 2002:a05:6808:3198:b0:3f6:6d32:bdb4 with SMTP id 5614622812f47-401eb35f74bmr1991846b6e.24.1745513434105;
+        Thu, 24 Apr 2025 09:50:34 -0700 (PDT)
 Received: from localhost ([2001:470:b8f6:1b:af2e:7abf:8abe:2726])
-        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-7304f188d01sm296180a34.14.2025.04.24.09.50.27
+        by smtp.gmail.com with UTF8SMTPSA id 006d021491bc7-60646862ec5sm319763eaf.3.2025.04.24.09.50.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 09:50:27 -0700 (PDT)
+        Thu, 24 Apr 2025 09:50:32 -0700 (PDT)
 From: Corey Minyard <corey@minyard.net>
 To: linux-kernel@vger.kernel.org,
 	openipmi-developer@lists.sourceforge.net,
@@ -65,9 +65,9 @@ Cc: "Paul E . McKenney" <paulmck@kernel.org>,
 	Breno Leitao <leitao@debian.org>,
 	Corey Minyard <corey@minyard.net>,
 	Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 01/23] ipmi:msghandler: Use READ_ONCE on run_to_completion
-Date: Thu, 24 Apr 2025 11:49:38 -0500
-Message-ID: <20250424165020.627193-2-corey@minyard.net>
+Subject: [PATCH 03/23] ipmi:msghandler: Move timer handling into a work queue
+Date: Thu, 24 Apr 2025 11:49:40 -0500
+Message-ID: <20250424165020.627193-4-corey@minyard.net>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250424165020.627193-1-corey@minyard.net>
 References: <20250424165020.627193-1-corey@minyard.net>
@@ -79,77 +79,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It needs to be read only once because it's used in lock/unlock
-scenarios.
+Get all operations that manipulate the interface list into thread
+context.
 
 Signed-off-by: Corey Minyard <cminyard@mvista.com>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/char/ipmi/ipmi_msghandler.c | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 1e5313748f8b..77f0f41f2e3d 100644
+index 22813b1598b0..e08ec9918a32 100644
 --- a/drivers/char/ipmi/ipmi_msghandler.c
 +++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -1882,13 +1882,12 @@ static void smi_send(struct ipmi_smi *intf,
- 		     const struct ipmi_smi_handlers *handlers,
- 		     struct ipmi_smi_msg *smi_msg, int priority)
+@@ -5083,8 +5083,11 @@ static struct timer_list ipmi_timer;
+ 
+ static atomic_t stop_operation;
+ 
+-static void ipmi_timeout(struct timer_list *unused)
++static void ipmi_timeout_work(struct work_struct *work)
  {
--	int run_to_completion = intf->run_to_completion;
-+	int run_to_completion = READ_ONCE(intf->run_to_completion);
- 	unsigned long flags = 0;
- 
- 	if (!run_to_completion)
- 		spin_lock_irqsave(&intf->xmit_msgs_lock, flags);
- 	smi_msg = smi_add_send_msg(intf, smi_msg, priority);
--
- 	if (!run_to_completion)
- 		spin_unlock_irqrestore(&intf->xmit_msgs_lock, flags);
- 
-@@ -4753,10 +4752,10 @@ static int handle_one_recv_msg(struct ipmi_smi *intf,
-  */
- static void handle_new_recv_msgs(struct ipmi_smi *intf)
- {
--	struct ipmi_smi_msg  *smi_msg;
--	unsigned long        flags = 0;
--	int                  rv;
--	int                  run_to_completion = intf->run_to_completion;
-+	struct ipmi_smi_msg *smi_msg;
-+	unsigned long flags = 0;
-+	int rv;
-+	int run_to_completion = READ_ONCE(intf->run_to_completion);
- 
- 	/* See if any waiting messages need to be processed. */
- 	if (!run_to_completion)
-@@ -4813,7 +4812,7 @@ static void smi_recv_work(struct work_struct *t)
- {
- 	unsigned long flags = 0; /* keep us warning-free. */
- 	struct ipmi_smi *intf = from_work(intf, t, recv_work);
--	int run_to_completion = intf->run_to_completion;
-+	int run_to_completion = READ_ONCE(intf->run_to_completion);
- 	struct ipmi_smi_msg *newmsg = NULL;
- 
- 	/*
-@@ -4843,9 +4842,9 @@ static void smi_recv_work(struct work_struct *t)
- 			intf->curr_msg = newmsg;
- 		}
- 	}
--
- 	if (!run_to_completion)
- 		spin_unlock_irqrestore(&intf->xmit_msgs_lock, flags);
++	if (atomic_read(&stop_operation))
++		return;
 +
- 	if (newmsg)
- 		intf->handlers->sender(intf->send_info, newmsg);
+ 	struct ipmi_smi *intf;
+ 	bool need_timer = false;
+ 	int index;
+@@ -5111,6 +5114,16 @@ static void ipmi_timeout(struct timer_list *unused)
+ 		mod_timer(&ipmi_timer, jiffies + IPMI_TIMEOUT_JIFFIES);
+ }
  
-@@ -4859,7 +4858,7 @@ void ipmi_smi_msg_received(struct ipmi_smi *intf,
- 			   struct ipmi_smi_msg *msg)
++static DECLARE_WORK(ipmi_timer_work, ipmi_timeout_work);
++
++static void ipmi_timeout(struct timer_list *unused)
++{
++	if (atomic_read(&stop_operation))
++		return;
++
++	queue_work(system_bh_wq, &ipmi_timer_work);
++}
++
+ static void need_waiter(struct ipmi_smi *intf)
  {
- 	unsigned long flags = 0; /* keep us warning-free. */
--	int run_to_completion = intf->run_to_completion;
-+	int run_to_completion = READ_ONCE(intf->run_to_completion);
+ 	/* Racy, but worst case we start the timer twice. */
+@@ -5538,6 +5551,7 @@ static void __exit cleanup_ipmi(void)
+ 		 */
+ 		atomic_set(&stop_operation, 1);
+ 		del_timer_sync(&ipmi_timer);
++		cancel_work_sync(&ipmi_timer_work);
  
- 	/*
- 	 * To preserve message order, we keep a queue and deliver from
+ 		initialized = false;
+ 
 -- 
 2.43.0
 
