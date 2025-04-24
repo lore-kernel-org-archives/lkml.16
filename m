@@ -1,198 +1,204 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5BC1F2BA4
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:38:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745480327; cv=fail; b=oxRSVcIbEazsYzTpJo6gl87EoPxJOVOyptBqBlChlxYm0LBXk8xejXy5E5ZCmc9nG7B6XX+dbkxFNvjffRpgl5D9JujyFaX0tjrGUekhZSCVgbw/XJ9xspWxyg/CklizX2sT1MOmosHt5LGe51y9nzalKuMEEnplbF0hVQchOe8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745480327; c=relaxed/simple;
-	bh=AYSyXkpYxeGew0FHCo7MzIhyOTXYKrTzIawjxslr/9Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RfBkI6AcIBUhc9BqpxG04msVnvHM0xmLN3rYVwhFPkWev/+mpFW/IyrsiMojI3lKn3RdZF1tEhsbspzEUe89CsE/Kn/6sVnA5Kz/cCRfvGWKr/EdXSmZxsZG1y0tGo6/qCJtKTOzfRSMD3wD94WDq2Ynmv/TRwVCeQlIIHaP7wk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ll7H6rHt; arc=fail smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 919491F1927;
+	Thu, 24 Apr 2025 07:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745480426; cv=none; b=JA5yENP9+RZrMYgEOrCBJXODRkolFQkelRoVo/IMqh/TdbWsE7+H4/j+TLZu4qID2beblU0ih0TiEBdsJZVHD6aZN1Dkl6l7LkKcAA+DYhG2MrR56FZBBC5JVye6kZe77Nq/A16zE0iAQ12m3tYPudeXUa2QWi6EBIz86/4oWM0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745480426; c=relaxed/simple;
+	bh=wJzBuNv3LpnWTInF73DPDdf568PiX49EKsvdzlN+VNM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=hTQwLLKCBthzbjAq4tcso/6l3WzfYrz2tyaiDMnarx8ZxlOOEqgBBp87G8BfTw6kMVkhIc4Xl28Qzo9UYM0YgsUY6m+1qAJIhu9fQg5+c1E0iQDP3rZKKD3SK1KLQ8tVAu2UY0T/T2Pr7+Tlpj32n5ux0un/qtNpzeE9WjPGF6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=o88nyfQg; arc=none smtp.client-ip=212.129.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ll7H6rHt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745480326; x=1777016326;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=AYSyXkpYxeGew0FHCo7MzIhyOTXYKrTzIawjxslr/9Q=;
-  b=ll7H6rHtV3DDvqLb1Acx7o/BjXSkYZfszYUQm79VRs+CKiO3T/QiXuYK
-   DO1Ha0Xz+mdSn6ZfAu8jeoFw+Xyhyzs/+x//0xoT9nuUuMsBE51qPY7Kh
-   fq0NzgXYkL9z5ZMCtn3rJkpVxActRFNLM/T27Hu6USNjURoGsvOKHxBwp
-   UmwkrUtVEA+yN36cyV8dFZXbPieiYtv6IP7ns0emklCOcfAUFDJfOkfAy
-   7T+pJRpTgQfLzlFKl+pJ/WhLqDc3KuJ1xlzvPq5JIWFCgqCQIYQtDg8mI
-   LeXOCTHK+U6cVn/A68DDefBVM1VR80CQckVb9RXnGMUjKM3LUrcjiC6PH
-   Q==;
-X-CSE-ConnectionGUID: iCN75mQrSW+pGSDuYSSlsw==
-X-CSE-MsgGUID: nqnld0CIS2OIItrFVaBlAg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47232365"
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="47232365"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 00:38:36 -0700
-X-CSE-ConnectionGUID: vX4Xky5YTWWp3WInQjftgQ==
-X-CSE-MsgGUID: 06aUANesTuuiSNA/ryew5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="163577862"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 00:38:36 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 24 Apr 2025 00:38:35 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 24 Apr 2025 00:38:35 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.40) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 24 Apr 2025 00:38:34 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HMRP/VT6xwTuCaul60H9Vk4JsRnOcaL6JJwbcIG5etUD+vFsOKgBR3Hh9x6CxC8dn5GY4KQt4bi4jaRjvp8DfTKLiJIcH/PBOVUqXvoGk79/XKvVaBN8Era4Bl8B7um7va07KTrhNhR6bZNLdx3dFDA0ANt4ZLx2m9sRMKFVNlJZhkK3SIxMZigwwUiC7fc7dyVcpcmwcJx9gNqL7roDXk2WECpIAJVJGexsQP9gZ8gD5TtTHXUpGGkiFPUFlDW2a2d8Wz5GPND97gqAx0jftipFA4Ilq2V2hp9RwfuZF9+v5SlriczeE1RSYX9RfnNmhHF7KByk53qwZXw47xXo6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AYSyXkpYxeGew0FHCo7MzIhyOTXYKrTzIawjxslr/9Q=;
- b=STaSlNoUINa38miZ7CEawlMXio7uNQ4GPJkFTQHQcgEfhQHtgA3jxHM2JEkENeusGAk1T3StJGMZ2spgF1/07LpuTFIzTLGXamLCYrjI8RSu4KB+0GbAQsgSgc0E0djvgcvFXwkxRsQd7gxIuaWbfmq+QBlqm6TJJmNHpT/mVn7QtlwT4s0SQnNcG20dhN7VT6vLSxuPxE+FJl2NhlF1v2wa8wEyS3nN00FWVjMOBMWGFKlUFTotNalS3yVlqJnmVho2RukCpggnk1JOAwN7v9yhqAALU1Icvc5spytjlqkqdrmnAxeCxMkEtKtDFi4n15uB3xQ83fVH+sruET2yuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
- by IA1PR11MB8801.namprd11.prod.outlook.com (2603:10b6:208:599::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.38; Thu, 24 Apr
- 2025 07:38:18 +0000
-Received: from BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
- ([fe80::b576:d3bd:c8e0:4bc1%6]) with mapi id 15.20.8678.021; Thu, 24 Apr 2025
- 07:38:18 +0000
-From: "Tian, Kevin" <kevin.tian@intel.com>
-To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
- Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
- Gunthorpe" <jgg@ziepe.ca>
-CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/3] iommu/vt-d: Replace spin_lock with mutex to protect
- domain ida
-Thread-Topic: [PATCH 2/3] iommu/vt-d: Replace spin_lock with mutex to protect
- domain ida
-Thread-Index: AQHbs/05ZnF40s0szEWUx2H8p0UFI7Oyb28w
-Date: Thu, 24 Apr 2025 07:38:18 +0000
-Message-ID: <BN9PR11MB52768FF211A4E8D034380A7D8C852@BN9PR11MB5276.namprd11.prod.outlook.com>
-References: <20250423031020.2189546-1-baolu.lu@linux.intel.com>
- <20250423031020.2189546-3-baolu.lu@linux.intel.com>
-In-Reply-To: <20250423031020.2189546-3-baolu.lu@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|IA1PR11MB8801:EE_
-x-ms-office365-filtering-correlation-id: 11bcfe35-d823-4d89-4b96-08dd8302fb3c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?gP8wP/O17wO7isO+2zMhk3/pMQMSL2SJjgtUZ4Sf97vGqPLYuDEn5lPgMF9E?=
- =?us-ascii?Q?oB3Tamjeu41I1WtlGi1rIRYBQM+pzJOWxp0HpRUloHaxnbqpBYudX8xdVgFV?=
- =?us-ascii?Q?/7cRUh2uD4Dk8Ett1whrL+rmL/7AZLkAQdJvRKkF6n64i2X+BeBJB8DFmdjF?=
- =?us-ascii?Q?V1w7zZHh28Pmi+vcqApr2qrFo35OpDkTgw50Nz0ppLSHCrFD69Wfq5MJcjRl?=
- =?us-ascii?Q?Z7NPx8+iwnOgcFoLA4EWmgBA7BU3//6eGgEyIeNMIUkOBTZNIzBrh7wkGTF3?=
- =?us-ascii?Q?EhQ0l6mkSZ8+ycxpfjTlnFuURSbKFlgTejmKcPHPe8gCVPaN2lvG4ccS6f+y?=
- =?us-ascii?Q?onDI5W7OeviQOYFvBr4aaeSWzsVLGcFDs0VR19Q3WNOo3eLT01y6jo7O/FO+?=
- =?us-ascii?Q?d3McMqz4slRvGrI3bKAa+p4+jlW7Rj41NJZ4nMFRTcwh+iNoemQLqpckbl3i?=
- =?us-ascii?Q?VkJ1fTdObwXHdghLHDvo7E33J4AZGw4gBWdMXPLUm1p6odV94xW5qEKKI0zP?=
- =?us-ascii?Q?dme7yScFI5fjXhBCJSUMWsXaxLBBMLZ29Td3rFO18NYtYESDvvBMspCjC34R?=
- =?us-ascii?Q?I2hxZfmJ8YvIITkqORKPxBOanPQwkm20m9L7y6B/RCLbO48Nhm9zTzOVkTx2?=
- =?us-ascii?Q?2bIcmbez2jBMzcBnePj/od1RH2lxsxfGtlEUDJYw5lqQDYhesP9Hk2FADyRX?=
- =?us-ascii?Q?1A/oSiwxt0HF9W05gb6dri/EZ/wlkDFehkHQPT9HPEBTyjrXkRk1FxE9+M1/?=
- =?us-ascii?Q?3Gry21+j09BIT4PbMnWXuxI69b5TQ8is6bqfrwLAJbxQS9VE7Mzn61hlNljY?=
- =?us-ascii?Q?r6e9nY9kU00NS9OvR2uWrb9f0Sfd4+gJa/YLPVaSDwHYh2g9u+VMhk2DIfUg?=
- =?us-ascii?Q?zvVQwfImF+2DI7oDqEHN7EtZhZ1r0NxijjavHvvMzgvPLMlVnUZaV1TOBT8W?=
- =?us-ascii?Q?IAgbwhb85/hacSw6Th9qgEFnN7iLU9/RlvlGrbHvAwp8lYAKidjWCJS6E7pA?=
- =?us-ascii?Q?n45EvJoYb8kDjc76Ntg5Z5bNb6/1v25RT38Zb06FudDt5N5qH9rpmOhSh5wZ?=
- =?us-ascii?Q?fh1IMmbOVz7oaSYTRbJhbuMWvccGXehuvW9qaBuvOkTae3Awoz0/O5O0OpF7?=
- =?us-ascii?Q?FKm+fHEc6HMtWBLq0mheeV47Uz4e9SWx+16nOaOD5V5p8Gf26A9CEipZ4f3B?=
- =?us-ascii?Q?EjN+c4Z4zKwGJmLryq+XgqvaPUg4igSfjkCu2tJNKdgBLKffgAwzHf7adRrD?=
- =?us-ascii?Q?iBAU93fm3OzlqgciEkGnEQDWGP201jS8lWVduJiXQTEhm1qQtVKEtW1XjGQD?=
- =?us-ascii?Q?QcwQLc4udsYsvpOuZ7xzFZRpfkdrCgD4vHnVjeeXw/w6Mlj8yLvMvG0EntDx?=
- =?us-ascii?Q?QOkAjSmNXnhMx+LvXMRgx6RrQmMRoB1+ulTXD3+ns0qp6L9TZ7LZqfPR2Zkl?=
- =?us-ascii?Q?MgkzLflw5/NlskJplaQt8hWJwd68fKfTYmF8fseEmK56SASDMeI+tqRqFcso?=
- =?us-ascii?Q?t+5b+DsBo5PoZuI=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?A6yVrJvtRX+PsnREY3HDgOkg7jlLhYF2KGYaEIilhnjdouAb/aNaUdxcrvuc?=
- =?us-ascii?Q?0P8XSeG8JRev8izShDsmQb4784UkA0Pid0kqaHglpMVe8KkUQnUePf80q9oZ?=
- =?us-ascii?Q?yJzzGm1hhk+Vzrwp919uHXQHSbVlGnjszQStVdvkKZh2GeovFQBJPMl2gseF?=
- =?us-ascii?Q?zCv67siumL2DqEqrODxkAgTckBquYen1s3b4vFDhoq1P5x+UcJXfFhrbxqe9?=
- =?us-ascii?Q?jE29qepRmnXRwAx+/6AFxiCc3bpCp+SyXuEFrvX0GzmYmSllfpWBZzYIkEW7?=
- =?us-ascii?Q?mWjH+XkZOjrWrGghX5W4qiuOsoXAxyWExVWBUMCIJ6a/x2gPY6/GiHghdurb?=
- =?us-ascii?Q?mpeySO2ngnKkdsGudFzJgZKdaBQ4tjLFJNAfftskbQo42NbR25OxNrRiu+1A?=
- =?us-ascii?Q?k0VCfhEZaNldUICo0tfG0F455AbbVA7zMysJhXKVUEaizy8vwOv5btJwPbOI?=
- =?us-ascii?Q?VKS0GKKNN1uI/V9+DUmZ/EiTgvSGkBH+We/65AQjEbGNUqnIHK6R64hNFZRD?=
- =?us-ascii?Q?tNOKku+0AmcNKdt+NmapPKWRn3+NkZ6qBl1OjWLcIfqGqsU30BrJq2NlC1E5?=
- =?us-ascii?Q?GblVA5OiaH5bZowVFe2WfKhz3SoibzwYXB/pTf8J5tiT1z8uaz2itGynjqy9?=
- =?us-ascii?Q?/8TFjGW20b9zMwbSBelm3Fq2g9yoxmsY1D1tEzAAyg+udWkJJcvLxh8rt4JY?=
- =?us-ascii?Q?S8x3wGx0LiWARViDcGcjHC69G00+Dea/CFkoSVWj3iR+lS96QV6lrcVms286?=
- =?us-ascii?Q?FEkyQ5mlwTYUIB7VDf9e5Qg0IKX599dI57COFltWApg+rPqz2IKaQv4lNSmB?=
- =?us-ascii?Q?8LzBuJaKjRAiaVWmnQ+fsauMawkRE5EEfi8EHJFzXGkXmUDHwWqC4CBQ46Vi?=
- =?us-ascii?Q?KCTvE3F490ZxhY0Zt5STz3XZKb5F/42DW0wIPecQzxtq2nCFXlOUnzzzqnCB?=
- =?us-ascii?Q?0sWc/8W/M4+EZ1sap3EMqznbc5s0IayVpXXI3YCVEkf/YQopyDS8To827m9Y?=
- =?us-ascii?Q?lG3HpyDbifz+IDFAyqDuTicuuG+cy2N8M7icX7s4PfXhfDUjEZv8QVkTuElB?=
- =?us-ascii?Q?UqvAXSCbDFNgUBGo2Wqc6gmvn3igReECDO+4zCtz/a/hUccGZ9sOzjcApqaf?=
- =?us-ascii?Q?sL/hruYhV1m0HRrlEC8wD62CsIsKDFEaZ+lFFeOEOcvNd5SPVcowW+HnH+y3?=
- =?us-ascii?Q?tUJTM9cEf7s4HTJaPg5IPcgFn+cKk8l9dFg8KNDTHQi5FF6Nf+DRVHHY2yoN?=
- =?us-ascii?Q?VsfBD8ZDNWYDYngpk6HtJHiIJdl2tmG7UDBhEUsseabizIPcwI3S9T0w2vr/?=
- =?us-ascii?Q?IfdrLnxMCQNKQUjJkl1449OQGNUr7sys6fifcHuOqGFjkxknMLtjxLejk8ns?=
- =?us-ascii?Q?otwoncQje/LM6RKWnZZmwRkaXJ0q72wqHlmQDx/UW2w94cEjwhvXajq1QgBe?=
- =?us-ascii?Q?LutAzbLO6otuWWVokDigG8X3JyYpiQu4cpVTzVnNSUsok099d+HD0Z2NRvdI?=
- =?us-ascii?Q?+qdJD9fzT0Hd617zPP+OVmu1qELwaE0EFYScRR7+Tb6teg9SiPc1YpaKe/iJ?=
- =?us-ascii?Q?Y/yKNQqINihx0a1mc32NDrOf0g1OgzfJfCigleWD?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="o88nyfQg"
+Received: from localhost (mail.3xo.fr [212.129.21.66])
+	by mail.3xo.fr (Postfix) with ESMTP id 4616ECB;
+	Thu, 24 Apr 2025 09:40:21 +0200 (CEST)
+X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
+Received: from mail.3xo.fr ([212.129.21.66])
+ by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
+ id H1RaQ-c1-sZu; Thu, 24 Apr 2025 09:40:18 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr B33EA8D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
+	t=1745480418; bh=tkMxtFneChkyh6FH2tvBrsB//VGTblVVYgMkNJr9ZRg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=o88nyfQgvhZspqftbeutotYHg7ag/f98EgtlBX4u5ywFKamoDhhB2xAe8/pOJC40Y
+	 ghJpjAiFBUQkHUtiILfM/4WQc16ky+ePbgr/s0VSRbkGbKGyRa6YrdCgU3t33brc+Y
+	 4v0B95j6b44kNRBTBtvddbUK9vFLLwgTwJ6QjhU3HnrzAe7vj2dOoyd9G0LTD8qNC3
+	 dh+e8aGQ95LP0eGCZ4FMdOEBx58CvTwfDObEsRmEWnIgTCsodkw2cWGrD61P5/q1NJ
+	 kGVS8Vg9YRtIzyWeXT2ymX2dtPmZqRa+9KdJTfat6CCgETkKPNVMc9B2wrS8v6olY+
+	 0+VdMLzZblIeg==
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3xo.fr (Postfix) with ESMTPSA id B33EA8D;
+	Thu, 24 Apr 2025 09:40:18 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11bcfe35-d823-4d89-4b96-08dd8302fb3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2025 07:38:18.4181
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YHNJrw56Q66daNaqGq9MQLoDaosganmU9n6Y9HzdRjKtzF8AdR83EeVLNKWx70qfa0GiPdHBCRQ9WvQ/8HJViQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8801
-X-OriginatorOrg: intel.com
+Date: Thu, 24 Apr 2025 09:40:18 +0200
+From: Nicolas Baranger <nicolas.baranger@3xo.fr>
+To: Paulo Alcantara <pc@manguebit.com>
+Cc: Christoph Hellwig <hch@infradead.org>, hch@lst.de, David Howells
+ <dhowells@redhat.com>, netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Steve French
+ <smfrench@gmail.com>, Jeff Layton <jlayton@kernel.org>, Christian Brauner
+ <brauner@kernel.org>
+Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when files
+ are on CIFS share
+In-Reply-To: <bb5f1ed84df1686aebdba5d60ab0e162@3xo.fr>
+References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
+ <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
+ <48685a06c2608b182df3b7a767520c1d@3xo.fr>
+ <F89FD4A3-FE54-4DB2-BA08-3BCC8843C60E@manguebit.com>
+ <5087f9cb3dc1487423de34725352f57c@3xo.fr>
+ <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
+ <e63e7c7ec32e3014eb758fd6f8679f93@3xo.fr>
+ <53697288e2891aea51061c54a2e42595@manguebit.com>
+ <bb5f1ed84df1686aebdba5d60ab0e162@3xo.fr>
+Message-ID: <af401afc7e32d9c0eeb6b36da70d2488@3xo.fr>
+X-Sender: nicolas.baranger@3xo.fr
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 
-> From: Lu Baolu <baolu.lu@linux.intel.com>
-> Sent: Wednesday, April 23, 2025 11:10 AM
->=20
-> The domain ID allocator is currently protected by a spin_lock. However,
-> ida_alloc_range can potentially block if it needs to allocate memory to
-> grow its internal structures.
->=20
-> Replace the spin_lock with a mutex which allows sleep on block. Thus,
-> the memory allocation flags can be updated from GFP_ATOMIC to
-> GFP_KERNEL
-> to allow blocking memory allocations if necessary.
->=20
-> Introduce a new mutex, did_lock, specifically for protecting the domain
-> ida. The existing spinlock will remain for protecting other intel_iommu
-> fields.
->=20
-> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Hi Paolo
 
-Reviewed-by: Kevin Tian <kevin.tian@intel.com>
+Thanks again for help.
+
+I'm sorry, I made a mistake in my answer yesterday:
+
+> After a lot of testing, the mounts buffers values: rsize=65536, 
+> wsize=65536, bsize=16777216,...
+
+The actual values in /etc/fstab are:
+rsize=4194304,wsize=4194304,bsize=16777216
+
+But negociated values in /proc/mounts are:
+rsize=65536,wsize=65536,bsize=16777216
+
+And don't know if it's related but I have:
+grep -i maxbuf /proc/fs/cifs/DebugData
+CIFSMaxBufSize: 16384
+
+I've just force a manual 'mount -o remount' and now I have in 
+/proc/mounts the good values (SMB version is 3.1.1).
+Where does this behavior comes from ?
+
+After some search, it appears that when the CIFS share is mounted by 
+systemd option x-systemd.automount (for example doing 'ls' in the mount 
+point directory), negociated values are:
+rsize=65536,wsize=65536,bsize=16777216
+If I umount / remount manually, the negociated values are those defined 
+in /etc/fstab !
+
+Don't know if it's a normal behavior but it is a source of errors / 
+mistake and makes troubleshooting performance issues harder
+
+Kind regards
+Nicolas
+
+
+
+Le 2025-04-23 18:28, Nicolas Baranger a écrit :
+
+> Hi Paolo
+> 
+> Thanks for answer, all explanations and help
+> 
+> I'm happy you found those 2 bugs and starting to patch them.
+> Reading your answer, I want to remember that I already found a bug in 
+> cifs DIO starting from Linux 6.10 (when cifs statring to use netfs to 
+> do its IO) and it was fixed by David and Christoph
+> full story here: 
+> https://lore.kernel.org/all/14271ed82a5be7fcc5ceea5f68a10bbd@manguebit.com/T/
+> 
+>> I've noticed that you disabled caching with 'cache=none', is there any
+>> particular reason for that?
+> 
+> Yes, it's related with the precedent use case describes in the other 
+> bug:
+> For backuping servers, I've got some KSMBD cifs share on which there 
+> are some 4TB+ sparses files (back-files) which are LUKS + BTRFS 
+> formatted.
+> The cifs share is mounted on servers and each server mount its own 
+> back-file as a block device and make its backup inside this crypted 
+> disk file
+> Due to performance issues, it is required that the disk files are using 
+> 4KB block and are mounted in servers using losetup DIO option (+ 4K 
+> block size options)
+> When I use something else than 'cache=none', sometimes the BTRFS 
+> filesystem on the back file get corrupted and I also need to mount the 
+> BTRFS filesystem with 'space_cache=v2' to avoid filesystem corruption
+> 
+>> Have you also set rsize, wsize and bsize mount options?  If so, why?
+> 
+> After a lot of testing, the mounts buffers values: rsize=65536, 
+> wsize=65536, bsize=16777216, are the one which provide the best 
+> performances with no corruptions on the back-file filesystem and with 
+> these options a ~2TB backup is possible in few hours during  timeframe 
+> ~1 -> ~5 AM each night
+> 
+> For me it's important that kernel async DIO on netfs continue to work 
+> as it's used by all my production backup system (transfer speed ratio 
+> compared with and without DIO is between 10 to 25)
+> 
+> I will try the patch "[PATCH] netfs: Fix setting of transferred bytes 
+> with short DIO reads", thanks
+> 
+> Let me know if you need further explanations,
+> 
+> Kind regards
+> Nicolas Baranger
+> 
+> Le 2025-04-22 01:45, Paulo Alcantara a écrit :
+> 
+> Nicolas Baranger <nicolas.baranger@3xo.fr> writes:
+> 
+> If you need more traces or details on (both?) issues :
+> 
+> - 1) infinite loop issue during 'cat' or 'copy' since Linux 6.14.0
+> 
+> - 2) (don't know if it's related) the very high number of several bytes
+> TCP packets transmitted in SMB transaction (more than a hundred) for a 
+> 5
+> bytes file transfert under Linux 6.13.8
+> According to your mount options and network traces, cat(1) is 
+> attempting
+> to read 16M from 'toto' file, in which case netfslib will create 256
+> subrequests to handle 64K (rsize=65536) reads from 'toto' file.
+> 
+> The first 64K read at offset 0 succeeds and server returns 5 bytes, the
+> client then sets NETFS_SREQ_HIT_EOF to indicate that this subrequest 
+> hit
+> the EOF.  The next subrequests will still be processed by netfslib and
+> sent to the server, but they all fail with STATUS_END_OF_FILE.
+> 
+> So, the problem is with short DIO reads in netfslib that are not being
+> handled correctly.  It is returning a fixed number of bytes read to
+> every read(2) call in your cat command, 16711680 bytes which is the
+> offset of last subrequest.  This will make cat(1) retry forever as
+> netfslib is failing to return the correct number of bytes read,
+> including EOF.
+> 
+> While testing a potential fix, I also found other problems with DIO in
+> cifs.ko, so I'm working with Dave to get the proper fixes for both
+> netfslib and cifs.ko.
+> 
+> I've noticed that you disabled caching with 'cache=none', is there any
+> particular reason for that?
+> 
+> Have you also set rsize, wsize and bsize mount options?  If so, why?
+> 
+> If you want to keep 'cache=none', then a possible workaround for you
+> would be making rsize and wsize always greater than bsize.  The default
+> values (rsize=4194304,wsize=4194304,bsize=1048576) would do it.
