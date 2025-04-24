@@ -1,123 +1,217 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780E61B3939
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4892701C1;
+	Thu, 24 Apr 2025 15:07:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745507133; cv=none; b=QEEU+S3WwYOWZxsbANKVHsdAY2WP8o8W2Fk1GEJE/IGMGY0bB3q9q19s7Whj/UmZYcEJB3PLKtLpuAw+adwnL8wSRIwEJGdj/k4sMegpYima2Cui632QIPP7jGhBf+fsfpYFVuxiQbD8Lod6cCQ/2ASZLtSflG5IqWORUNWiBvE=
+	t=1745507263; cv=none; b=DEP5A10pcKuJkOzQYC+LPdRaHe1C9CP8SV7RY2aV2rxmaQQwouJxYpW9XKtpaj7G4krmeZksFY+Nan5HAoMPKIxm4YT+WR4rbSs4rEodvDVp5wvs9Ei8fmcbqr03QSheBwPmqzFgj0P7KDJHT2JPKPFSjvpf5z0kIZxpNb/uiYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745507133; c=relaxed/simple;
-	bh=unMncNq2brLx3SFqedtBHI7Svfe3aKAUdpwvabhKt5s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HPZ+PZeHyZ4wa+oy8kZ08FdJPkld53W4dW/UuDxIThzrdicTfUlNBz7dvyLtGHXs3ip2LAqDPyR0adI+nQIDIC+87R8xx4tJKq4R5ezZiS/GjM8TG7gis3aAP4bRKYIS2UOwWNGcvwAOOAQ9iu+6+7NwYU/xqahcaNbdbwOSneg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=G4RlSguV; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1745507263; c=relaxed/simple;
+	bh=xk2GRBY750TwszttNFyXLeYPgO0ZG5/i9N1Bc2Z1fGw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BnadKRi9dsaD8N3cMFaaR5gjvH0bBGu4BJ9z1EzUKyE/4vLL3hu90C4huNk5mMj5xYb1ZFpXVy6Ehky4pkFX6Ue0jt/e1TtVPYyTfiI/SPhZA2tTqyPODKNKbvaiYMaA2lpPDA/VsFirXOs6V8U0Cq7gJMPc8LCkMITW3fNxpuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Ftx1BgOa; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="G4RlSguV"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4394a823036so11259535e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:05:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1745507130; x=1746111930; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=unMncNq2brLx3SFqedtBHI7Svfe3aKAUdpwvabhKt5s=;
-        b=G4RlSguVPSmqiPxmn1cdPJ2bxkg/+d/SdEQmbiGanFXuubcqJ1+1PIVZExoqzhSyq5
-         +DIg19t6x7hGVTaB92AEcHd/CXKUd263M+/Xu+XUWJldnShde5BLvNhxn40OEoKwn3xm
-         kqRBm2iXbCUl5vbSiZZD/v08PMT/eqclhHCVct3HrFFoAgShufWqJCdDD9t0SUaUHiCn
-         iyhX7dCZXL/vs6tqRQhqU+3p7IGiwMO65abo5orRGn5y2fUUOx0cVpDG+YBGjAZ5DS8G
-         ZF7542jgQf2/wIU1Kfg6OoT0KhqhQIDnx3FyisULIgXum8sVJaz6m9jkSmtuROqQC+N/
-         kzlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745507130; x=1746111930;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=unMncNq2brLx3SFqedtBHI7Svfe3aKAUdpwvabhKt5s=;
-        b=uH/6UiKT7cYtv88Qe0Am2npuMdriVGNrJpzgxEUTXo++3BbhLLNrpoz0xC8YOGO/iP
-         HodcFx7/SYb9BSSbWMK3bp2iRMxqVIMUaTSJ9xUHo8rt2fkfdfpohclFw/2JVgmCVfpQ
-         6ciBQOGFUejEiJOWY7IrHJzXzYBFAyjynbcgD5Cywh2Ite1QSfW/pGDWzr1dowX708ly
-         TLOZ//0+s8fmGUL1rXWq/mDI6vwgOi3FWi3u1bnLAK9AkF9XzoB0P7hohD+O3ThgEBi7
-         awXaSMedeNoZMeA3KFbXpryTsixXX9KCTXbas7gKPVj4fpfrxesWWhMJ12/0rjlr3EUL
-         HkBA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9mw6g+vDc1k6GNBwTuvs4ylhwOw41QDA6VS9ILi7sOuLTA3pYG318D0RCVgXMZLKEFdBKCRTfLpVfs/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXvsdozre4bVodxP6VSYoQVWH5xunZutHT7zT0uT0kXDjUBHBf
-	DxYtxpI0qhO0jCGoBG7Bc0s3eeDXpmECCZvFoi/A6WDERkIAdP8ClJWLVRlyYs4=
-X-Gm-Gg: ASbGnctUhPhMhJqq63r5a5TR4JxfRQxdLQXQ6d3u/NLEC9gBBnQq9GRVl8fFY46lL8H
-	gG65OFeMaTNEnTV+4BXRgfEOjzOiWBGrM33LqdM8szFNvingNHqpLUB3nyXHTn1zMlK/JzeHT9X
-	Mmrskpl87aYX2dwTQ2YKlVah1Y8V9byABijePOuEV5wOLfpGLXLkM8DCMt4vjeFsOiUIFv6ZsSu
-	Itbyt4Yu08YnvykwmkBSDJrFc0dkfDJJkb68wg2IYNpru1ofFzBjuzeLbMPUHbAq58o0LOVl7Le
-	hu0EaldJKln/M2DuoVU+6sYtI6RipBFGscHwFtWtuvniPHQz91JWeUJnQmMi2gLEOzU+TF7AbRP
-	X+7n+zGc=
-X-Google-Smtp-Source: AGHT+IGZerVnzzo+3licesW6Rjehtmkd5CAagkG0LYgOKDQGkVRLoR8KgscNzd0tm4Vv9ry8z/vBqw==
-X-Received: by 2002:a05:600c:698d:b0:43c:f332:7038 with SMTP id 5b1f17b1804b1-4409bd76f40mr21710945e9.21.1745507126313;
-        Thu, 24 Apr 2025 08:05:26 -0700 (PDT)
-Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4408d8d191bsm63019605e9.1.2025.04.24.08.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 08:05:25 -0700 (PDT)
-Date: Thu, 24 Apr 2025 17:05:23 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Vladimir Zapolskiy <vz@mleia.com>, 
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
-Cc: Purva Yeshi <purvayeshi550@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: dts: lpc32xx: Add #pwm-cells property to the two
- SoC PWMs
-Message-ID: <hbz3gikjqwuqmexzrxis43gmxcviiryihi7pdp3btdb3sopqi4@mssyr62bunxk>
-References: <20250403104915.251303-2-u.kleine-koenig@baylibre.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Ftx1BgOa"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=A5e4j/jtYATU7avKCEo1DM3FNXJct3asQ+rGyfJl/tU=;
+	t=1745507262; x=1746716862; b=Ftx1BgOah57YvQ7mgk/YaZqPTiZXqXDGhm79Ei/RFAW87px
+	sMGikKE6ZyW2sKVDYTaTeqsl/WWE59OWXUrzpA+L5Le+rrlXUYjflaYF08h01utjlNAfTQa3G1KZl
+	tqXFqCDQPhutp8ZWk9aLVphHSliBKkZ2TK+1veA15K8JpbROru4Ve3KH8YJVu3/U1ry7fERvcGlZb
+	+JWrqZI6lHxYel/6W9WOt0razm3E4crPaeA+sve0Z+ONC52O2658O73lB25VsOoY7WYzzAreEo5e7
+	QPDTyGbf1PQqcNiSr/5PAGwgr4ZzMJZcOoviBlhgJ6lOBi+i766zUp6vK8mRxH6A==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1u7yAt-0000000HPbn-0WT1;
+	Thu, 24 Apr 2025 17:07:39 +0200
+Message-ID: <45b74f9f0831294e783a019cd6a1437fdad4eb6a.camel@sipsolutions.net>
+Subject: Re: [RFC PATCH v2 2/2] wifi: Add Nordic nRF70 series Wi-Fi driver
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Artur Rojek <artur@conclusive.pl>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski
+	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Liam Girdwood
+	 <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sascha Hauer
+	 <s.hauer@pengutronix.de>
+Cc: linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jakub Klama <jakub@conclusive.pl>, Wojciech
+ Kloska	 <wojciech@conclusive.pl>, Ulf Axelsson <ulf.axelsson@nordicsemi.no>
+Date: Thu, 24 Apr 2025 17:07:38 +0200
+In-Reply-To: <20250422175918.585022-3-artur@conclusive.pl>
+References: <20250422175918.585022-1-artur@conclusive.pl>
+	 <20250422175918.585022-3-artur@conclusive.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kubdbvpqoinlop4p"
-Content-Disposition: inline
-In-Reply-To: <20250403104915.251303-2-u.kleine-koenig@baylibre.com>
+X-malware-bazaar: not-scanned
+
+On Tue, 2025-04-22 at 19:59 +0200, Artur Rojek wrote:
+> Introduce support for Nordic Semiconductor nRF70 series wireless
+> companion IC.
+
+Seems simple enough ... but I notice you're not even adding a
+MAINTAINERS file entry. Does that mean you're not going to stick around
+to maintain it at all? I'm definitely _not_ going to. Please don't
+expect the community to.
+
+Are you doing this for your customers? Or are you just doing this a
+contract for someone who needs it? I don't really care all that much but
+contracts have a tendency to go away and then we're left with nothing
+upstream ...
+
+Also, related, what are your plans to help out with wireless in general,
+particularly reviews? You're building on the shoulders of everyone who
+did work before ... I'll do a _very_ cursory review, but if you want to
+get this merged I would expect you to also become a part of the
+community and help review other people's code:
+
+https://lore.kernel.org/linux-wireless/21896d2788b8bc6c7fcb534cd43e75671a57=
+f494.camel@sipsolutions.net/
+
+> +config NRF70
+> +	tristate "Nordic Semiconductor nRF70 series wireless companion IC"
+> +	depends on CFG80211 && INET && SPI_MEM && CPU_LITTLE_ENDIAN
+
+That CPU_LITTLE_ENDIAN seems like a cop-out. Do we really want that?
+Asking not specifically you I guess...
 
 
---kubdbvpqoinlop4p
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] ARM: dts: lpc32xx: Add #pwm-cells property to the two
- SoC PWMs
-MIME-Version: 1.0
+> +#define	NRF70_RADIOTAP_PRESENT_FIELDS				\
+> +	cpu_to_le32((1 << IEEE80211_RADIOTAP_RATE) |		\
+> +		    (1 << IEEE80211_RADIOTAP_CHANNEL) |		\
+> +		    (1 << IEEE80211_RADIOTAP_DBM_ANTSIGNAL))
 
-Hello,
+You did some work on making it little endian properly ..
 
-On Thu, Apr 03, 2025 at 12:49:14PM +0200, Uwe Kleine-K=F6nig wrote:
-> If these PWMs are to be used, a #pwm-cells property is necessary. The
-> right location for that is in the SoC's dtsi file to not make
-> machine.dts files repeat the value for each usage. Currently the
-> machines based on nxp/lpc/lpc32xx.dtsi don't make use of the PWMs, so
-> there are no properties to drop there.
+
+> +
+> +#define	NRF70_FW_FEATURE_RAW_MODE	BIT(3)
+> +struct __packed nrf70_fw_header {
+> +	u32 signature;
+> +	u32 num_images;
+> +	u32 version;
+> +	u32 feature_flags;
+> +	u32 length;
+> +	u8 hash[NRF70_FW_HASH_LEN];
+> +	u8 data[];
+> +};
+> +
+> +struct __packed nrf70_fw_img {
+> +	u32 type;
+> +	u32 length;
+> +	u8 data[];
+> +};
+
+making the u32's here __le32's (and fixing sparse) would probably go a
+long way of making it endian clean. The __packed is also placed oddly.
+
+> +static int nrf70_verify_firmware(struct device *dev,
+> +				 const struct nrf70_fw_header *fw)
+
+
+What's the point in doing this? The hash is trivially adjusted if
+someone wants to play with the file, if hw doesn't check anything, and
+... not sure we really need such a thing for "file is corrupt by
+accident"? *shrug*
+
+> +	ret =3D request_firmware(&firmware, "nrf70.bin", dev);
+
+
+You might want to make that async so that the driver can be built-in
+without requiring the firmware to also be built-in.
+
+> +	if (ret < 0) {
+> +		dev_err(dev, "Failed to request firmware: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	header =3D (const struct nrf70_fw_header *)firmware->data;
+
+(const void *) cast would probably be sufficient
+
+
+> +	return ret ? ret : (wait_for_completion_timeout(&priv->init_done, HZ) ?
+> +			    0 : -ETIMEDOUT);
+
+that construct seems a bit questionable :)
+
+
+> +static void nrf70_handle_rx_mgmt(struct spi_mem *mem,
+> +				 struct nrf70_event_mlme *ev)
+> +{
+> +	struct nrf70_priv *priv =3D spi_mem_get_drvdata(mem);
+> +	struct nrf70_vif *vif =3D nrf70_get_vif(priv, ev->header.idx.wdev_id);
+> +
+> +	if (IS_ERR(vif))
+> +		return;
+> +
+> +	(void)cfg80211_rx_mgmt(&vif->wdev, ev->frequency, ev->rx_signal_dbm,
+> +			       ev->frame.data, ev->frame.len, ev->wifi_flags);
+
+
+shouldn't need the (void) cast?
+
+
+> +static int nrf70_change_bss(struct wiphy *wiphy, struct net_device *ndev=
+,
+> +			    struct bss_parameters *params)
+
+
+See also this discussion:
+https://lore.kernel.org/linux-wireless/29fa5ea7f4cc177bed823ec3489d610e1d69=
+a08f.camel@sipsolutions.net/
+
+> +static int nrf70_dequeue_umac_event(struct spi_mem *mem, void *data)
+> +{
+> +	struct nrf70_priv *priv =3D spi_mem_get_drvdata(mem);
+> +	struct device *dev =3D &mem->spi->dev;
+> +	struct nrf70_umac_header *header =3D data;
+> +	struct nrf70_vif *vif =3D nrf70_get_vif(priv, header->idx.wdev_id);
+> +	struct cfg80211_scan_info scan_info =3D { .aborted =3D true };
+> +
+> +	if (IS_ERR(vif))
+> +		return PTR_ERR(vif);
+> +
+> +	switch (header->id) {
+> +	case NRF70_UMAC_EVENT_TRIGGER_SCAN_START:
+> +		break;
+
+
+This sounds like you pretty much built the firmware for cfg80211 ;-)
+
+
+> +#define	NRF70_MSG_SYSTEM		0
+> +#define	NRF70_MSG_DATA			2
+> +#define	NRF70_MSG_UMAC			3
+> +
+> +struct __packed nrf70_msg {
+> +	u32 len;
+> +	u32 resubmit;
+> +	u32 type;
+> +	u8 data[];
+
+
+similar comments here throughout this entire file wrt __packed and
+__le32, obviously
+
+> +/* Undocumented PHY configuration parameters. */
 >=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 
-I wonder if this patch is still on someone's radar. I didn't hear
-anything back and it's not in next.
+haha :)
 
-Best regards
-Uwe
 
---kubdbvpqoinlop4p
-Content-Type: application/pgp-signature; name="signature.asc"
+Oh and before I forget, how about firmware availability?
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgKUzAACgkQj4D7WH0S
-/k773QgAt0YvjENQdbx0qGBqEFrZ7A2MKIrQOmIzi5tHb4ZU5atUQjFVrspi85w7
-8E9dp57nMgLABhMSLsq9jFfOCEConixxOGhnnQ3uw8wi04mFHmicB0DJTIMAbT9S
-4VqYdC6GDtQXZfTjoSIYhas3c5n140j9rNEDYKvbmKfQye2cp6YifjKxeeWEF92M
-vB/e9r4X//tv3o3ZqrgRYuAan8T6xF7XjxyqHieZ3JcP+ZD/MwRksBMMgQBMLXyE
-uI1vrPLOKMiakQICU4pTT+JRR2+Kj0XufdXfAI+oz5GEiR8JwDDAl8XCdna6Vfjd
-KRhgqVp9RXsYnuWiOjkkCa80mr/xqQ==
-=nKWo
------END PGP SIGNATURE-----
-
---kubdbvpqoinlop4p--
+johannes
