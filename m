@@ -1,120 +1,102 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C86691F8BA6
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:07:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF4428540E
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745536049; cv=none; b=m54WwzDM0qNXKp0TrM1+2glvjxKc2c5D1YMJ/ZudwFR7qKgv986Wq3h4oriwDsDPclujlpb7jYfVBe90AKb4HWt8eKnz+6Zhfi/JgXkqQPReg7DchRTEa8woVx5oRWL3rEvzy/rFVTaAwJjf7dncaBSOXvATsd3xnorDpNVjI4g=
+	t=1745536173; cv=none; b=TATW1SV//CWgCXEUzhls+lIM8r6aB/Fx+1a6EJRvIbJHFgg0g0W/ub1ZYeaV0Y8+x6p+NzyCRuwxXvlCsMJD+bIYwnmuhh6H7jW+MHHtIkGs2jVRS7Em5GqE9HOYNQg/yf+EMj5TuH7/Bshi2EyVEvlsKKcsvwmqyE6QyC23UVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745536049; c=relaxed/simple;
-	bh=QNiHWZ7qBguVy4s8n+62BvHVCzA4eTMredPNza24+Fo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Pw4NfmkGsyp3FcByEtiR9SwCapkzljaSa4MixIUh9aXd/eHvzoE1wogjh82l3EuI/VDjKq/ZhmB2Cp53vEasdg8Sdi3JY+kI+/thhdh9lHNQ1IAF6n0wPUH6NcX7FJxiwk/OygSvsieRYERPd7p0aidcmrhh3ONKvQr/oxGTrD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=O2zdA4o0; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745536173; c=relaxed/simple;
+	bh=LBAj35BXtPm72neUP6fWKKhui+OAcA6lM/hlfGmwp+8=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ERoLTD2Xkw7GkVpCfsg0a/j9SF6m5IjzDqPqwHfk9qk9+2GarU7zXQf2ha+XgcsuU0Vg3S+//2qp7n6rb6ccfYs3l/I5PvziL95IHZUNWGcRe0hXkZhyEhSM3at+B8VMQGCpxYrxlYN1M2GotzN5QRULUwXkPnc3c+SMmvLSJMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=T9X3Dc4N; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="O2zdA4o0"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4766cb762b6so18459131cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:07:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="T9X3Dc4N"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3d81768268dso13377965ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745536046; x=1746140846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745536170; x=1746140970; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4sY9PcGrMcPiR93EzC54QuJTM2y/dFMLC4+Ts0wH+Kk=;
-        b=O2zdA4o0GqgV0yZxu88iL4I40xX2ccNCIhD4P6g9kG3jZV9MYo9ROjRDgdkr78jwUA
-         s9A237cBo06rZQpmXnNteime7pvYv14YCx3XhVvBWjcD+YtLJkl23HUfvHNx3gRs2nug
-         Bi3mmzXdymLFz1Hy0NM8w9mNwWB2sQNeFA8pZg7WaIblqWGnki3u+5w1Y6+jlfkjK7Yl
-         /e5cUux1+DXZYgSgQ1MvMdLy+VZHNT46KoT1LkAd2aUmki28aEcUkI9qewD85G2Nl5Gi
-         OerXiihvQaz+2D0AlmDZb1iujz2I9JEH3p3RJvcT4PXz+hTJ6MYPiIRuM5rqxEhGvzCR
-         WXJA==
+        bh=LJjb6BpJL6QKvLq7uGZb94kh5q9VZv1RBI7gdmZfS1s=;
+        b=T9X3Dc4NEwuLh1xEy5ZOt9W45gZV8ejJw5cZKce6/nCy3xU+vWawF6UGjbfTIF7/8k
+         eCxopddy1dqwLhxGpqZcF0g9BfMwjFOm8jDUCqYwSpGwCd7SOR7ooC6hmxM7PpXhyzcX
+         m7ClQWBQoHTXIlq/K70mq/3EObJr4MoPHNcDD1BDBu+5QfIOMWsezPXof98/BcL5agxf
+         jcFDBO3RDOqG9NMlcENP8655EDuAhsuycQyZCfFTQLd87HkqO5YKHXZF4Q3CuAiEFcg4
+         M6o+FQKxSl3HsxlUwtLBqRRlOhxWGdTExQjuQyVbFgN5Tdxu94K1UC1GNPYMM72G69kZ
+         8xgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745536046; x=1746140846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745536170; x=1746140970;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4sY9PcGrMcPiR93EzC54QuJTM2y/dFMLC4+Ts0wH+Kk=;
-        b=gdW7imwpFFHlBds2dtMJ0GLucNVbNB/E2d15jS+RfhJW9xjl8DUpjazpwLNMtXY/Dm
-         oxub/rsAisEdAQZK3Oz4CJp0fFO8zhbXIl42TRy0GM5T6U7x+WlaslQaNJHLTs8oJr9G
-         fFhMbbq64ar0Gf1Wzc/enYNzpSNgDATwcOlrOIKag8luYnqmBeFaMAoqA+lVu+/iKc74
-         miJxtRFe3qpGKkSnINfPrbKmWDMdo5VP1aIOMALZUdnkJdMBpR/uQihghsKxJmiahUWk
-         1/U5bdeEB3/SNb6NOaFRC+6e2548JiyOz7k8kZdYY6RIJYzm5F20Uo0iQ+Ij1L/KBfEV
-         wURg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7vQ3AN7ZgsL9C5jgHrFX7SkGO5JBNFZ43wl3pp8HunnCFnEyel4MjEIlA53JYMk2mZ1HbU2m0LGNo3z8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqQI172WvY67Ore0z+RRY1YttczbA7t26NmB8Plhxu+hL2mMOY
-	xD/hiPfpOCND5cZJm1hFt8n3p4I26DVgm3S5b1lfWvmkJz5a05B1IrSAiM/H1K3T/BkE1iaIBBC
-	rxPzyraMdiM3Ra3hmC8inZaKvF2RNg1BAyaRJ
-X-Gm-Gg: ASbGncuszyRpWGgwPZ0gcrRs2/uW8UoW+iGDYL8nXyS2XxnOKyqDSwRqO8bv/6C+wPh
-	WT0BYdt2LX/BWlk6U9ZfiKZ4V3SwqgBsCT81EBIaAY8CagF91xDLpFUycunMeueGIdwUpHNZ8z2
-	tOFtc9nhTVe+FrewnDP8b9rZScEgVFWmLeRMWY+c5+NrZc5kLXpQ8=
-X-Google-Smtp-Source: AGHT+IHN8EnBHya10mMVBn9FOeITQVpdIezkflqNJZpBYOMFJYkRn1iwNCF5+tGu6ieRDiTcg2yFkhFm2/dK+WIhoo4=
-X-Received: by 2002:a05:622a:1490:b0:476:fd6e:df89 with SMTP id
- d75a77b69052e-4802f401555mr817831cf.17.1745536046449; Thu, 24 Apr 2025
- 16:07:26 -0700 (PDT)
+        bh=LJjb6BpJL6QKvLq7uGZb94kh5q9VZv1RBI7gdmZfS1s=;
+        b=MTht8AoZL4aN6QewY0HsQm0zfjFwlaPvLpL4yBzknA4nlloc/jzKYHbM9Zgor1f1Zj
+         iYWYs/ZZh3SkIG35pXufIRggfVvHMsOUeUhmGyiAQfNR01NzEHJGwfXwAc+zK+o9rY/n
+         dWeZuybbH/VY6wSKnMEucOdCpoh3QOpNY7twHObhl9Owfn2M2y9B/GswKd0mUto2riHv
+         0Tii4tUYRMrPXAphNNuQiK39NJuCPquCXGiHS5rgKtKW+AwB7+uZ4mmqDH9Kovx/zXaJ
+         Q3dWAngOqla9xbeZRjo2mS25XeTujBZ6fUarD5bmwnKx2n79LXicjXVNfndIHcUjFNE1
+         yrFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUpYGy4aSEQUKgo5uCtKraL2x5vgTx3TQgimAU5sZseuhxB3Go2eZvua6QvgCXEahw/d7IJVUIRFcjtOIg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYMWpufNrW2RRKbyxT4WQCJBMSm16jSpSbOLaxRkDa+66kV4hI
+	kA9Wq8YWBjDfy9eNO2LuFB1ILajd+p/QgNG3ZVjn5kIrTkMgF1g3pQhkx+Zphy4=
+X-Gm-Gg: ASbGncuNgpVFVjgYS48LYG7qc//TpeSpjAtZ0sENLecPeqJmgjQp8cbalD2HoGd9OCH
+	A1zPbR4pG0JGCYqa313NLtomjVhFnaDYT1DkLUonOz5eSFAOJwgsVCP+xnaYgb1g936F2jfObBC
+	PoE8Uo7gA3jZMt4xIAloijxAO4jO0J4Ot5/kLxXhBPC30htnxbCVUgG2kGqnIETnyn6n9qw/btc
+	QGrM/Zzw/uvIhpBHwUXP59oyjv6ytdYHJH915KLJqaiAA9S8Qe9wdg4SSevXpIqICaBXN/8c8wK
+	SGjCzpjXcFeHCPTRBy1wPPw9MPO95cWiFvjSN0nSatQ=
+X-Google-Smtp-Source: AGHT+IFN4iX9Opo/jgx0my1Sh/OktR9LAH6c9SxUf0e5vgEkErJNPR+8tLRlz2/fbrwi+twY4MhFrw==
+X-Received: by 2002:a05:6e02:19c7:b0:3d4:244b:db20 with SMTP id e9e14a558f8ab-3d93b5c8413mr1280655ab.16.1745536170090;
+        Thu, 24 Apr 2025 16:09:30 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f824ba0ec4sm486419173.113.2025.04.24.16.09.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 16:09:29 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: io-uring@vger.kernel.org, Haiyue Wang <haiyuewa@163.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>, David Wei <dw@davidwei.uk>, 
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250419141044.10304-1-haiyuewa@163.com>
+References: <20250419141044.10304-1-haiyuewa@163.com>
+Subject: Re: [PATCH v1] selftests: iou-zcrx: Get the page size at runtime
+Message-Id: <174553616879.1018402.4580438030053211278.b4-ty@kernel.dk>
+Date: Thu, 24 Apr 2025 17:09:28 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org>
- <20250418-reftrack-dbgfs-v4-7-5ca5c7899544@kernel.org> <20250423165323.270642e3@kernel.org>
- <a07cd1c64b16b074d8e1ec2e8c06d31f4f27d5e5.camel@kernel.org>
- <20250423173231.5c61af5b@kernel.org> <cdfc5c6f260ee1f81b8bb0402488bb97dd4351bb.camel@kernel.org>
- <4118dbd6-2b4b-42c3-9d1e-2b533fc92a66@lunn.ch> <20250424155238.7d0d2a29@kernel.org>
-In-Reply-To: <20250424155238.7d0d2a29@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Thu, 24 Apr 2025 16:07:15 -0700
-X-Gm-Features: ATxdqUF1y81lAMD7mTkP2HpcEnhJ1AnwgKYKeN-Rcvh0ryWWWr7u-uFeynOUxZU
-Message-ID: <CANn89iJn53KF8CG4Q8D97sFy0hhkLrgWbFwHfJb8-w2DudZdZw@mail.gmail.com>
-Subject: Re: [PATCH v4 7/7] net: register debugfs file for net_device refcnt tracker
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jeff Layton <jlayton@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, "David S. Miller" <davem@davemloft.net>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, 
-	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-On Thu, Apr 24, 2025 at 3:52=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
-ote:
 
-> But with all that said, I guess you still want the "meaningful" ID for
-> the netns, and that one is in fact stable :S
+On Sat, 19 Apr 2025 22:10:15 +0800, Haiyue Wang wrote:
+> Use the API `sysconf()` to query page size at runtime, instead of using
+> hard code number 4096.
+> 
+> And use `posix_memalign` to allocate the page size aligned momory.
+> 
+> 
 
-We could add a stable id for net devices, and use it for this purpose
+Applied, thanks!
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 0321fd952f70887735ac789d72f72948a3879832..339d09167eaf7f58fc877fa470c=
-94175237ce534
-100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -2544,6 +2544,8 @@ struct net_device {
+[1/1] selftests: iou-zcrx: Get the page size at runtime
+      commit: 6f4cc653bf408ad0cc203c6ab3088b11f5da11df
 
-        struct hwtstamp_provider __rcu  *hwprov;
+Best regards,
+-- 
+Jens Axboe
 
-+       u64                     permanent_id;
-+
-        u8                      priv[] ____cacheline_aligned
-                                       __counted_by(priv_len);
- } ____cacheline_aligned;
-diff --git a/net/core/dev.c b/net/core/dev.c
-index d1a8cad0c99c47996e8bda44bf220266a5e51102..9d2d45e0246fab99ad3e7523885=
-224bd114fa686
-100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10954,6 +10954,9 @@ int register_netdevice(struct net_device *dev)
- {
-        int ret;
-        struct net *net =3D dev_net(dev);
-+       static atomic64_t permanent_id;
-+
-+       dev->permanent_id =3D atomic64_inc_return(&permanent_id);
 
-        BUILD_BUG_ON(sizeof(netdev_features_t) * BITS_PER_BYTE <
-                     NETDEV_FEATURE_COUNT);
+
