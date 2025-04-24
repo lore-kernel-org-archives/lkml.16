@@ -1,118 +1,137 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B0E19F471
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:17:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF5A1A93D;
+	Thu, 24 Apr 2025 23:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745536650; cv=none; b=Olfv/MnCbo1zc6aMiX+cVg838gOmDJGz4g7h4ymY6Ra6qt1HzH+cDFRiCZjbT1ObOjfAT8e4uGhntZZ3xSqwsXU404E6Cr/lvoNYN5ZZMULkOnZ0TgZFree/n07bJP+S3bVd1CmpKX4pNZHPngW6oeP7z18hWw/skyQFrCfIbTw=
+	t=1745536852; cv=none; b=WtCKPsv4E1gS4KYHgACvVOBN66Q3A4zUF0GqocqtIQJ5eukPPyIt/FQRBztI+0emwKE0sYzzzcLvwWjouxLco4jokaq7YuONCTqdQtVVGdMqNwl3hJYV9AXaVj2s0ygH7H5ag8OAZsmN+Ha3OtVxBXA81y9dTBaMUf8w3fcj51Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745536650; c=relaxed/simple;
-	bh=xuBNdBaDtoK9PUIk07YmwqOIvCjfqiMbpRQh8zcCEnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=as9n6V52WMtrQXmqAorsgRvZU9LV66Pf9NpSLxPQoOdgAK+SEObWzJitD4yT+2iFDRxDwF+4zkEsv2SGrsSgK1m9OzVCPN2IKZZEsX5leUNnrHvIAUJss5OpvPBki9rxx7UGPUnEZDjWtV6bei2xfJMFhSzcU5PwU8Iw6tj9c0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=XPXtDxfJ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="XPXtDxfJ"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OJmfb2025197
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:17:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Zi78O5WbxVRKiMoABrInJVSACYsCJLLIPTs7LoDla78=; b=XPXtDxfJGoyg9mvS
-	1PWDaXIin5QzK7YNqN8tHHx/D2LWbLNohlhLjX6R4WAPRSRMlIJe6kFEfNEiZotl
-	w87emtDd5bead2nduArq5DR1V7TaDEgqYpxlx7FNjzbXJVCBqXDPurMskSBfDi7M
-	PIan4bURnzV+kSzblYrqd3dF89r5SiuplgF06xc9cHpzLqOzpf2RTb6rws3B4jrl
-	muEpUp8WvRHZ1Hwi0ACniTzl0/QDxjX7OjkfDuZJgHr0jPDIYzXPe9d/4mXWIwBd
-	HoyvLJikSrqkXtl9JV92irgnKYBKu8KAqvGJ7NqyVfW0rZJd0NeAXyERQVxaiTZN
-	xPL8Ug==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jgy73tg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:17:26 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6f0c76e490cso3349406d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:17:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745536646; x=1746141446;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zi78O5WbxVRKiMoABrInJVSACYsCJLLIPTs7LoDla78=;
-        b=fh5SoCCI4kUVPYlZDakzhm3bcT/mJnSWKQKWtuiKVY9o8riuNKdRb+68xu/FsuZWh6
-         zybixOTwFRfOJZ+12/yWB6qncqoh8pMRsxT70rsRl1scPO/DxMMYK5SK1427/xZ0RgCu
-         RW/iL6m7uc64x4YNZ43PHtgucLApe44f7adlLAh9GQP/a6iW9ba77AROCbBxxef1TGd+
-         Zmr/ci9kSYLF2OmfZlxiQWSPoBhbSEbTBHxvRI4dOQ4rXuoS6lWuTSV33dp/yKGYUHUb
-         NGJUIJFnKCm2oOE4ZO9O7EkEkDRknJQtFLOho++AIZId6IdEpvO1mmC9ZBKXBe033gLB
-         /TDA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsjV4HQlIsvG/xd0+P3jrW0dzD7YmrQwDgG7TCUOTt/lsck460wYvIh7Hr6NacWOXAAnBLIa9NmCvJJgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8RmFaeaUS1LeloKmA27nPu+FkqoKnsim2NwwUBBdGk6bqEYR8
-	XHsmF1lnnt1qNGg3bD+RradOFMPE8mVnL/tcmXpjono4B9Z8N/PN64xhXaP5FlbxiXKtktsfbnd
-	BMVcXVoCZaGyttzOc6bHY4yZiyiu0ZFRyPTOUGkNHuD0eo7Yt2w2MqVLquZ9tZwo=
-X-Gm-Gg: ASbGnct83aw5htIaTzUAAVfVxI6f3VQUsGJ9lcdxvzupMX8UWYKlQBXZnAQJlF2Tvx7
-	dxUuH6HvCgQi+cipYUatmwzG8LT4+1gqmb0sBXNDJPMFzOqcKa69UPk76I7q7+KJXVV9RDX2aqV
-	PJmBnuqkg2DI8XY+5wC0rkkhrDaQiqnJ47YVHTWpP916neeJsK7dsHAowGd/bqk7lHJJkBxNI7C
-	ooY9GIcD22ZIE+y0pBa7aoGTMzp710OvpmRks3Rm00FX3NBsmXXp66mBKUpHRFBNjVqh7gP9BFK
-	DZzDuBfvNgbOyqpk4ZyDZWa5J+uoecJ805pMGxUP120MmqHniZFcln3jwp7fjG4W/w0=
-X-Received: by 2002:a05:6214:21a7:b0:6e6:9c39:ae44 with SMTP id 6a1803df08f44-6f4cbb7cb69mr2191246d6.10.1745536645885;
-        Thu, 24 Apr 2025 16:17:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGDZmAS7DYVWeiSkMuy8GfwZYTNe5JvZjTC0/L6j7VV4QyQaPwFxEfacEvvuXKFduP20LB3BA==
-X-Received: by 2002:a05:6214:21a7:b0:6e6:9c39:ae44 with SMTP id 6a1803df08f44-6f4cbb7cb69mr2191016d6.10.1745536645591;
-        Thu, 24 Apr 2025 16:17:25 -0700 (PDT)
-Received: from [192.168.65.221] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7013ff4e7sm361610a12.22.2025.04.24.16.17.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 16:17:25 -0700 (PDT)
-Message-ID: <c6a7278b-9c11-4cca-9400-c8ccbb1473a2@oss.qualcomm.com>
-Date: Fri, 25 Apr 2025 01:17:22 +0200
+	s=arc-20240116; t=1745536852; c=relaxed/simple;
+	bh=N4jW3VnF6lQU+lm5lYfa5xJbQYoyDpUDVIHaXmX3tL4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=POmSnxhr7Gi5LzyWz4B+Kzul7R0V3uMBTBlwlv+ZKA1Hd4ErDW/dtmAh9+pn4wtCpuMCo/YcIcOtUrkcGSptsq1YDNzKNSdd50XXscN48niDfsvTn1QgwzyNI6Gti1LTHwuUOx8I0tonqsAstHpastB5CSPM0Y5CCdmNou4hf80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2C472F;
+	Thu, 24 Apr 2025 16:20:43 -0700 (PDT)
+Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB6653F59E;
+	Thu, 24 Apr 2025 16:20:46 -0700 (PDT)
+Date: Fri, 25 Apr 2025 00:19:45 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej
+ Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
+ Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Corentin Labbe <clabbe.montjoie@gmail.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Subject: Re: [PATCH v2 3/5] arm64: dts: allwinner: a523: Add EMAC0 ethernet
+ MAC
+Message-ID: <20250425001945.48473374@minigeek.lan>
+In-Reply-To: <20250424-01-sun55i-emac0-v2-3-833f04d23e1d@gentoo.org>
+References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
+	<20250424-01-sun55i-emac0-v2-3-833f04d23e1d@gentoo.org>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sc7280: add UFS operating points
-To: Neil Armstrong <neil.armstrong@linaro.org>,
-        cros-qcom-dts-watchers@chromium.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250424-topic-sc7280-upstream-ufs-opps-v1-1-e63494d65f45@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250424-topic-sc7280-upstream-ufs-opps-v1-1-e63494d65f45@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDE2NSBTYWx0ZWRfX+XQdakl6lckn rfdDPBNJ3lWsak7SGh5gxMlNx/gcsSy2GoUv9748fNan+fvRIqgdCn1PfCrXWQX2hM2j590pQzn XkGN6vj7NbRRudrCFfzKufXBokIVXbBloX2AFA7c6ZacdvuDqYEiZIkssK+gc/gJMRXEh36o7z7
- CYrFm+TOxthG4TzPPV+9Gcp/xqd2mdU9KaM/LElR/gig6HFizuDp9Zp0PKcxbXrDK0sfqGL3UGI l1Tt5BitCcMjaQXWWoQm0qVieK9xnNFULv9JjACyWCKj7RaCD6zmUX376buFzznvW74QW5rlB8N vthCJgBzcoOrpFOUis4KaxMqeeJ+YW0CpgkLhvQ2SrVXBGPje948QgXA3vgsXSsqHz0z980/81v
- TLkfLyFLem2iV5u6pumTTSvcdezpy010C2LBZtOSYj4ZIleoE2fEV6qemLPK7W1ADlbRTRsI
-X-Proofpoint-GUID: glC6xh2vg5NPZH7FwKO4NyWTiwoVqm_6
-X-Proofpoint-ORIG-GUID: glC6xh2vg5NPZH7FwKO4NyWTiwoVqm_6
-X-Authority-Analysis: v=2.4 cv=M5VNKzws c=1 sm=1 tr=0 ts=680ac686 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=DVEdH54ji4F9k0XG-nIA:9 a=QEXdDO2ut3YA:10
- a=OIgjcC2v60KrkQgK7BGD:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_09,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 malwarescore=0 impostorscore=0 clxscore=1015
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240165
 
-On 4/24/25 6:31 PM, Neil Armstrong wrote:
-> Replace the deprecated freq-table-hz property with an operating
-> points table with all supported frequencies and power levels.
+On Thu, 24 Apr 2025 18:08:41 +0800
+Yixun Lan <dlan@gentoo.org> wrote:
+
+> Add EMAC0 ethernet MAC support which found on A523 variant SoCs,
+> including the A527/T527 chips. MAC0 is compatible to the A64 chip which
+> requires an external PHY. This patch only add RGMII pins for now.
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+
+Thanks, looks good now!
+
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Cheers,
+Andre
+
 > ---
+>  arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 40 ++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> index ee485899ba0af69f32727a53de20051a2e31be1d..c9a9b9dd479af05ba22fe9d783e32f6d61a74ef7 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
+> @@ -126,6 +126,15 @@ pio: pinctrl@2000000 {
+>  			interrupt-controller;
+>  			#interrupt-cells = <3>;
+>  
+> +			rgmii0_pins: rgmii0-pins {
+> +				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
+> +				       "PH5", "PH6", "PH7", "PH9", "PH10",
+> +				       "PH14", "PH15", "PH16", "PH17", "PH18";
+> +				allwinner,pinmux = <5>;
+> +				function = "emac0";
+> +				drive-strength = <40>;
+> +			};
+> +
+>  			mmc0_pins: mmc0-pins {
+>  				pins = "PF0" ,"PF1", "PF2", "PF3", "PF4", "PF5";
+>  				allwinner,pinmux = <2>;
+> @@ -409,6 +418,15 @@ i2c5: i2c@2503400 {
+>  			#size-cells = <0>;
+>  		};
+>  
+> +		syscon: syscon@3000000 {
+> +			compatible = "allwinner,sun55i-a523-system-control",
+> +				     "allwinner,sun50i-a64-system-control";
+> +			reg = <0x03000000 0x1000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +		};
+> +
+>  		gic: interrupt-controller@3400000 {
+>  			compatible = "arm,gic-v3";
+>  			#address-cells = <1>;
+> @@ -521,6 +539,28 @@ ohci1: usb@4200400 {
+>  			status = "disabled";
+>  		};
+>  
+> +		emac0: ethernet@4500000 {
+> +			compatible = "allwinner,sun55i-a523-emac0",
+> +				     "allwinner,sun50i-a64-emac";
+> +			reg = <0x04500000 0x10000>;
+> +			clocks = <&ccu CLK_BUS_EMAC0>;
+> +			clock-names = "stmmaceth";
+> +			resets = <&ccu RST_BUS_EMAC0>;
+> +			reset-names = "stmmaceth";
+> +			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "macirq";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&rgmii0_pins>;
+> +			syscon = <&syscon>;
+> +			status = "disabled";
+> +
+> +			mdio0: mdio {
+> +				compatible = "snps,dwmac-mdio";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +		};
+> +
+>  		r_ccu: clock-controller@7010000 {
+>  			compatible = "allwinner,sun55i-a523-r-ccu";
+>  			reg = <0x7010000 0x250>;
+> 
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
-Konrad
