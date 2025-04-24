@@ -1,124 +1,118 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D8910F9;
-	Thu, 24 Apr 2025 07:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C101B392B;
+	Thu, 24 Apr 2025 07:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478577; cv=none; b=p6S3VEod8VTXncZc27nnfOv1k3z42ACBXShXYi44ZjTV1A7v2nJL9C8rxECeQVGIBt147+vQGWvWy/bgD4r/Hv443kXIwnQWfy8wil9XykgpVOqnLMeAj6e7F6JUKMwqDFDzy/Vfsyv4N4wBDX1ZDObkgnzlzljLtjJdlIs2vLQ=
+	t=1745478588; cv=none; b=JLIg8n2va+QuJRrC+2UeCtpcJm42QezaS1+DdpRuISyWIK8iAg8aYEDfuOBE3FfYqglH8UuQH9w0/Znpveo4YWH9o7Z/KueGe9ROXRUD4S1KjrEQdfZn85cS4mDXGV9GhX7lDemTLkysVBAvohmhPDRtvYiHxDuPW36BfeEqDSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478577; c=relaxed/simple;
-	bh=sLp3VTmXFwFdL/QtxIAmgPlUiMfX9n7GBJMrj4i3iU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z7CC46yuftte70G/orSHYHc5YZqYKLkxkq4ulR9Klpy9dzLcQRnx/Sqzky5xTf52/TCY+usD/Be8f7dOK/LGdhHWpcvRqQRj4bmAxY0T43TTkffp2E19Pa5zp2Rf9yOPXhwfbFlOEOnC73c+VTu4xtaNIG9ZFi0xB4QVdSsGIho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.192] (unknown [95.90.241.25])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id E266B61E64788;
-	Thu, 24 Apr 2025 09:09:10 +0200 (CEST)
-Message-ID: <990a6a3c-bc1e-4b42-b3ae-1ec849d48f5e@molgen.mpg.de>
-Date: Thu, 24 Apr 2025 09:09:10 +0200
+	s=arc-20240116; t=1745478588; c=relaxed/simple;
+	bh=UuEiPUkTylj/qy2WlmonUTfYQxAcxdMagrpv3K72TtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eNFPjJEHbpEizrVVtyroQhaGwq6i3eM20dde+OAocLE+pEOuyRmVofUcq7c0loREvzMXfGrbtMLrV/hC0v00eOA4N/RaQC52jmT3cpewO2OTgKCoLdd832fo4ILu1wtktU7ylNjY4kMLMIJqgZUHcbY1UdsBFq8s35raRO7YgGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GXqiHtiY; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXqiHtiY"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22c33e4fdb8so6558395ad.2;
+        Thu, 24 Apr 2025 00:09:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745478585; x=1746083385; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3EUZgQOVtgxwPj0Cm4KzOqZ3U97D0/GKNyUNvaflq+g=;
+        b=GXqiHtiYfWkgyQPFupa58+FUfB/cMcy4yX6x8NI/pzt3FHDEELKO1ho6axTuDe2dWJ
+         K+ry5Oku49iNcElVGKgzoDu3iEqwKM2Bd88qTz8VHdLrZNxyOUuZb/iWGLksdTnkiVGG
+         vP8yiQ+5AWekY3+iKd10X6HPTw/NN++hHeecRSfNpcCUOGaDrix0/ZOkuFKfW5cv9RbT
+         LMzbPL92I/PWaWy8Ot5pwCpLEtbnUbDrA2hdqUmaeoqDJufOWMmW1a8yoKWgKpYbHnXi
+         6G8ZSLVqFV5rOzYI5CEuN4H7P+WP9+jQQspvuWDif5T5QYKBZDBxYiPbOgBZlmpzqlFS
+         glDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745478585; x=1746083385;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3EUZgQOVtgxwPj0Cm4KzOqZ3U97D0/GKNyUNvaflq+g=;
+        b=UKq2x8uta5r0DvOwB1RshUbD/wbJgt4b7zW+TuLslrsBqQu79hVXn+FTTekGKSokaj
+         65r4viLPeh9wMq8Guhec+s/TdT19J6XEHP9u7FM8wH1KFuIR7XzVNCE7JlM1VXLMedjj
+         mrBlq/1IivpuqjSWszZINnRu3GJepuHGA0JBJmrfcNKAIrWxZkfQ7FM4ejTgwdEnbxHF
+         /h7Yzfl9goWlW0Ux9d81Igz3zSEoeL5DUFnwYxI9orvQe+E9CxbCvmSf1K6LomKrn/0b
+         d8sY/99ruy3HS/eGw2YI+7b3hD8Z5y/CzBQf/hcNoW4DcoB/1MCKbCe5k/QYNuSytt1M
+         y6Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxMzd5IUoirWXHJ6YG6DsEQyqhiJ91RV5cKm/VSlJTT68U2ZmlhAHufdTloRAxGfCk4ga5n9rICCmu@vger.kernel.org, AJvYcCV7NyxVr18l1gQlCWUo5bKKDo4gZwoecrhiAkFvsI+E0oWceAFC1FiKrvH3yRGdjatiLlHTI+xiJHda@vger.kernel.org, AJvYcCVo4XQNa+axkjpPPPQeJSjZBbzHA/qi5BIw7zpS4iZfowPUB+ODGsTyQsPbxL+mCllNczTlsWkI6je4ru5c@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzGb0siY1cLCwrdKAYldCUyRTS/OCMtTjlvOW4AM0ly2Ox5Kd9
+	4/hsWNrwN7+JIRccw1BzMHAcwGDFvpQ/wW1r9EvIYc9uZBlzc43Q
+X-Gm-Gg: ASbGncuSu1WUHkmQ/VeC5pJJeYgh/Tbxe8oDtMW57RLKj5HUwi8jLUUCVIPRkAugBN2
+	X+p/knSROatziDzIyCU5gJrHBV1Imt866WClIeldkc0QYYg1FryB+IEm3/Wbe7iq/UkU05pqKr6
+	pZHLk3iVIoULJYp3Og9S8OhzquA3JhAUDtGe7cBNrBIflyhJhOw9r5NNx53hpG/iYP39aq9ENzD
+	vHwG3e3HdS/O476Nqqya30NTNYp5SnZ2x3JQ8QwCLqbZcxAHaLmJqGljJrmTilzp5LwNEgETVkK
+	JVl//LBxrYA+sCcgeTox056ov0ia4mF2A7qVe7gnKw==
+X-Google-Smtp-Source: AGHT+IE9LsCk9tmFZI/PC5UZGmINwk24jJUeXSF+9kMM7rkzh8Y23OYpJUYh4V8Tdm5IfIlvZOU+AA==
+X-Received: by 2002:a17:903:1b23:b0:224:826:279e with SMTP id d9443c01a7336-22db3ddbea1mr20093095ad.50.1745478584913;
+        Thu, 24 Apr 2025 00:09:44 -0700 (PDT)
+Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22db50e7cf2sm6038875ad.154.2025.04.24.00.09.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 00:09:44 -0700 (PDT)
+Date: Thu, 24 Apr 2025 15:09:42 +0800
+From: Longbin Li <looong.bin@gmail.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
+	Inochi Amaoto <inochiama@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 1/3] dt-bindings: pwm: sophgo: add pwm controller for
+ SG2044
+Message-ID: <ikq5pa74pk5e26m2vinye4wanauyzwqlxrgyx7hwr27k5dk6dt@ibv3o476jrpm>
+References: <20250424012335.6246-1-looong.bin@gmail.com>
+ <20250424012335.6246-2-looong.bin@gmail.com>
+ <20250424-bright-vague-finch-57fc38@kuoka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: r8169: MAC address programmed by coreboot to onboard RTL8111F
- does not persist
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: netdev@vger.kernel.org, nic_swsd@realtek.com,
- LKML <linux-kernel@vger.kernel.org>, Keith Hui <buurin@gmail.com>
-References: <49df3c73-f253-4b48-b86d-fa8ec3a20d2c@molgen.mpg.de>
- <065dabff-dfcc-4a86-ba0e-e3d6de2d21fc@gmail.com>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <065dabff-dfcc-4a86-ba0e-e3d6de2d21fc@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-bright-vague-finch-57fc38@kuoka>
 
-Dear Heiner,
-
-
-Thank you for your reply.
-
-Am 22.03.25 um 14:04 schrieb Heiner Kallweit:
-> On 22.03.2025 09:50, Paul Menzel wrote:
-
->> Keith Hui reported the issue *MAC address programmed by coreboot
->> to onboard RTL8111F does not persist* [1] below when using
->> coreboot:
->
-> Why do you consider this a bug? IOW: Where is it specified otherwise?
-
-Good question. I do not have the documentation or specification. On 
-other boards the current coreboot – a FLOSS firmware – implementation 
-worked. coreboot’s driver name is r8168 though, but I guess that is due 
-to historical reasons.
-
->>> I am producing a coreboot port on Asus P8Z77-V LE PLUS on which this
->>> issue is observed. It has a RTL8111F ethernet controller without
->>> EEPROM for vital product data.
->>>
->>> I enabled the rtl8168 driver in coreboot so I can configure the LEDs
->>> and MAC address. Lights work great, but the MAC address always
->>> revert to 00:00:00:00:00:05 by the Linux r8169 kernel module. I
->>> would then have to reassign its proper MAC address using ip link
->>> change eno0 address <mac>.
->
-> r8169 in a first place reads the factory-programmed MAC from the chip.
-> If this is 00:00:00:00:00:05, then this seems to be an issue with your
-> board.
+On Thu, Apr 24, 2025 at 08:47:38AM +0200, Krzysztof Kozlowski wrote:
+> On Thu, Apr 24, 2025 at 09:23:26AM GMT, Longbin Li wrote:
 > 
->>> The device appears to be taking the address I programmed, but r8169
->>> reverts it both on init and teardown, insisting that
->>> 00:00:00:00:00:05 is its permanent MAC address.
->>>
->>> Survival of coreboot programmed MAC address before r8169 driver is
->>> confirmed by a debug read back I inserted in the coreboot rtl81xx
->>> driver, as well as by temporarily blacklisting r8169.
->>>
->>> Vendor firmware is unaffected.
->>
-> What do you mean with this? What vendor firmware are you referring to?
-
-“vendor firmware” was meant to be the firmware shipped by Asus, that 
-comes with the board. coreboot (and the payload) replaces this firmware, 
-by flashing the coreboot image to the flash ROM chip.
-
->> Do you have an idea, where in the Linux driver that happens?
->
-> See rtl_init_mac_address() in r8169, and rtl8168_get_mac_address()
-> in Realtek's r8168 driver.
-
-Thank you. Keith found a fix for the issue [2]:
-
-> On mainboard/asus/p8z77-v_le_plus, programmed MAC address is being
-> reverted with controller resets done at loading and unloading of Linux
-> r8169 kernel module.
+> <form letter>
+> This is a friendly reminder during the review process.
 > 
-> Ghidra examination of vendor BIOS reveals an additional sequence to
-> program the MAC address into its ERI register block. This patch
-> adds code to replicate that sequence, gated by a Kconfig so it's
-> only included where necessary.
+> It looks like you received a tag and forgot to add it.
+> 
+> If you do not know the process, here is a short explanation:
+> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+> versions of patchset, under or above your Signed-off-by tag, unless
+> patch changed significantly (e.g. new properties added to the DT
+> bindings). Tag is "received", when provided in a message replied to you
+> on the mailing list. Tools like b4 can help here. However, there's no
+> need to repost patches *only* to add the tags. The upstream maintainer
+> will do that for tags received on the version they apply.
+> 
+> Please read:
+> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+> 
+> If a tag was not added on purpose, please state why and what changed.
+> </form letter>
+> 
+> 
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> Best regards,
+> Krzysztof
+> 
 
-As stated in the beginning, I do not have have the datasheet, so cannot 
-say, if this solution is how it’s supposed to work. (Why program it in 
-too places?)
+I will pay more attention to that, thanks!
 
-Thank you for you time again, and the pointers.
-
-
-Kind regards,
-
-Paul
-
-
->> [1]: https://ticket.coreboot.org/issues/579#change-2029
-[2]: https://review.coreboot.org/c/coreboot/+/87436
+Best regards,
+Longbin Li
