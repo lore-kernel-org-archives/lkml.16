@@ -1,63 +1,63 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B036138DEC
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:13:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA3619EED2
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504032; cv=none; b=Bh05Jo580AulINFLaqka3qY209sdgbf3HCdV+bKj/dTOu8G9ExfhcdB6kTpQhnoymP3kVSD5/6qA5yRPtosTDaxVmCDx3M531NWlKFCp22+/T6GXt0C+q5bVW9dhm5HMYV1qQwfCyjeks78EoGd/Sk3LWMudZtAfn8sEqNVa8cw=
+	t=1745504032; cv=none; b=r6hB37DQMneD21sKl0MvkMW8/J7ZV/s4YlIVSoapn4rEKEFHa4Y+7BS4qigTKK+oicOv6RYhrA7F/B/D6LwIShZoLizPpSsjA6M8a/YJEYr9fLMJE9Ly01vZGH+n5rJld/p/zxh4c/PYeCaD7dGdhp/svRje7ZyoIPOaWUgDetI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745504032; c=relaxed/simple;
-	bh=g59SsG0N84wb4f6piJJJcigRQ9wXVyh8p4R6BkHSxiU=;
+	bh=CvFb1okbnEK9wiiZwwdcGSqHE02tQmbzZOFs1CBcYGk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BwRZwnEiZo7e6o3G03szRKEFQXbNB86FvrlZfEWvBEghdUcTrhmpTKzQYmqE80wqhrxmYzRtC3zXb3vFuMcMY38ACMATbddnbJkeRKch2ou8ttkoREXZp5EbDY7iwk44p8idXuiL4JZBvSOqzGzcD/oF8piCreklFnnWaZ898IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=d4ub933F; arc=none smtp.client-ip=209.85.221.51
+	 MIME-Version; b=MY+vNNK1PkEEUrjoi+2kXQ6tjcSgqo6kRYq32kA/4QmDQmqZpduzRtF7DxcrWBQCcFOzk7MUas4r8zifKxlyUJd5uLjZ6/UV5qhthZhKBZRFCPQyuZQD+1TJ5vpkZS54EDrASo4h3BMT8udTrjdu5+TrgXl5lEM6F5DraMC6jfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iLOwI++f; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d4ub933F"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c266c1389so744596f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:13:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iLOwI++f"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3912fdddf8fso1551221f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:13:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745504026; x=1746108826; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745504028; x=1746108828; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9pJfw58KOVJlcvsi2YwD0da6h5VnpsCyDZ/he/rc1kk=;
-        b=d4ub933FvrTaDPxCrebBqFETW/r4aHP5Zgr0uloJ5fW2q1BgsSLYE9WfvREpVpK5Yz
-         rFlJg17xycIpGpNDwGK1zzI7gb73tqT1kOVRMlGs7gMFeSid/hTjvGdK6tahBOKODrA9
-         MIxU7d7+HD7laNzNMfGSRvGavpy/f6Zy7eHGHmV0O8Ii55ik8j1NGSeVDdWQlkcSaI6z
-         le/xGuUuVHwERSloTou3x5Ocpx3XILcqiE2eyLPMMyRuEnmmiAM+J8jK63LuX3uz/rpZ
-         y4zVZGqKyx6CMRrPLhtw2EZmfxMNZSgCyjBgTPAQ6bb1QZRnylv5EaQbwNSG0ZYHJqTG
-         uOng==
+        bh=hvXrACbOQaGlhym8epnVf2FRavXrOILN2RCY7mrPgRw=;
+        b=iLOwI++fMXomw84Au6sHZmvf4XEzvfBtSvOEbGXBg1IqUMdLW0+v/JK3OSvPQBiK07
+         G7DAOlkh3Dn7nSPFwYfcmRBHN4JhU6Z7fOWSzh4GJgLLSKO1hmkm6NG5WZH0AfoEC9Bo
+         NaVFDFNV39iAFQcXUNIXRLyqVzXYxsfBRnVLgKEH3URDsPi8jYpP5eiVPiklRMRJO+fD
+         KUIEEE9ixPIFXkDrY/7Qt3c6/QbTS76DZoKYstIM7n24LZL98RND02LEMC+RNX+PpEON
+         PTHZTJSA7cSemMaHjeV4uQBh4Xu/4+vnuIYtqe3zD61Dyl0L28stdByuBTQVTBs9JVfw
+         TXHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745504027; x=1746108827;
+        d=1e100.net; s=20230601; t=1745504028; x=1746108828;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9pJfw58KOVJlcvsi2YwD0da6h5VnpsCyDZ/he/rc1kk=;
-        b=sT4Ju63ptsy7o4404OVmre/eTvU6h21nbYBZDkBhkjXtCj1xuERG9KaZRh5mAe18mR
-         lQc5BT02o8daFq/BVibWqaZwht3GFdievdC3FppUkIfmTQnNPyhpcqtufQuw89QuQvxG
-         1XG+d8++6iVJz9jpzH6gJWFqW8gyPHdxSmIevPC4HCxFs8n2JIn0qZ9b4HhOX03IUzBx
-         MSm+Z4JzRlaC241IVgs2RV7rcO4FlA5a833KwVkTxitjMZaaTPGYOP2vu3DgukHnsauK
-         PQZSW6qjbUfiGpgLxZBLMuM1nwNBVH/jRSmdE34gQPEWfI9aoiEC8Z/tdnJYf7Xa3AAF
-         u5kg==
-X-Gm-Message-State: AOJu0YzY6udaFCC65YNK0JjNcTa0vZ+BdGBjOPijWmLEgawUNlgNsOUK
-	0eTK/qtr6ZnK6mhRNNHnywShbqENnhygv++4mYVid0xwIm/11CaAzEJxuphJGqKV8+pyIpKA7vf
-	U+7o=
-X-Gm-Gg: ASbGncvu8LIQ5fyHK8kgwNGfqdPrkV4Vtnx1OiFNCJeBNJEfIW1fSmIfPpgNvGabsU8
-	4N8CRLbZ8+hbVLbMlE8nVIkF2YDv+knUGG+x8lCkcE4w9r7s4zhSsNf1D4whM0JRQUf+ODCpqyE
-	0sofG3GCkvwfYjx4OQAyTOo1Tl3Egca9UQ7Jcpq91Cvce2ATWi6R7dX1XEC6FmPOhNRPQ8GLhQI
-	Db45PWIO8kqQajIPK04eNKZgTYfvDHJaM0Z3tWJcjacktXWkSvNqJzhNkFNjgzW+wvoDSbAQ0S9
-	S25AbCRebLwZ8mFhwxV7Cfcfzcb1Kb7nA0uYFn9KW7WYLkjZUf6CMeBDRqBnagtUg+SRDOqQECy
-	T9cpPZtxlim9RazQW
-X-Google-Smtp-Source: AGHT+IGfRrIJRrexUH30juVxzQxuzQYHkS7hGTbMmJLV2Lp0+vmOpc/tkASkqUk2GbTXQepziYNH6A==
-X-Received: by 2002:a05:6000:2510:b0:391:304f:34e7 with SMTP id ffacd0b85a97d-3a06cfab9abmr2560733f8f.44.1745504026564;
-        Thu, 24 Apr 2025 07:13:46 -0700 (PDT)
+        bh=hvXrACbOQaGlhym8epnVf2FRavXrOILN2RCY7mrPgRw=;
+        b=R8/a5c937dnrXOnSxEI+auQAeB/rf/t9uEqRTg7yKkFhVSfg6JmaH0Wn9xTaIlerpy
+         XWfNeVA4zjxQxF3WgtzzNAJRjyLinzFV86WwhUZSQQEQYoCREAaDweVJ5ymEUjmn41si
+         KJDBNDLkfyxkZIc71oC6rEozayzxwNjau9c7ShtfkYoT7OM+ajexWg4/ABtTuI2rMjjk
+         z3AL6SEgB0eto6c0ycKjlrJa76wcuWRDoLvJNsKT+bIvShGIAmhMSGn+hlV8s2A7tXqQ
+         u8GG/VSa0KmOQG/UeCDk15ZtN1nFC1y/7/4hFWjP11Ws6IsIF9dNvDVEy7GV6ItO1cK+
+         ZdXA==
+X-Gm-Message-State: AOJu0YwHn44QLMjPNorUrx/z/BMzpNitTQ1jFX1LFwz8aBdhahoUlRxd
+	3tbuMDRIPzY/0dcgKtRWRBRi4zgpSYIuOAtTZXwvAxW1sn2qmVVmlRrQufwx6zb+YtFu3GF/45m
+	cDlM=
+X-Gm-Gg: ASbGncsyxrZvCH2cGE2vw/Odfle1Ux+kYUByM9oUXCGxPGr1gAwLPtkiNP3rGXGKvpY
+	csB3KoFql5NNhUXd4SX2GGh7PPuf10rU9d/MUlp8bNVERozKaUyIaT/qM1fv5JPKdZG66tR9D1/
+	d6eswyxNyecNhY4hOwlLibNociTTv904Zv7XtJMsXwLuf+VEOQfUqRfJ/BDY2WISKUjGc1ohkFO
+	Vu1UmSZqhtZMd8ptow5zyPVb/1H64/XmQVTjAwNRjC29ntwgRmiY0Ad4jr9CwtZNwus3qU2iuP7
+	aAPXGDM/2DrlRKZITzYJVQ0kYj3AzfkzWeAVslxrT/emwwWt8YeCEF7HXfIrXPxPgFqOD3uYPGD
+	ww58O5xIh41uQiq0Nrvm43TfADu8=
+X-Google-Smtp-Source: AGHT+IEBkZ1IBJCII/ywyTdMC0fLKprAp65skAqA7s+zC8i8AN1EGINZeECW9VcRyNwMhKCFTJTxcg==
+X-Received: by 2002:adf:fb4c:0:b0:391:1218:d5f4 with SMTP id ffacd0b85a97d-3a06d698d62mr2225510f8f.23.1745504027803;
+        Thu, 24 Apr 2025 07:13:47 -0700 (PDT)
 Received: from seksu.systems-nuts.com (stevens.inf.ed.ac.uk. [129.215.164.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.13.45
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.13.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:13:46 -0700 (PDT)
+        Thu, 24 Apr 2025 07:13:47 -0700 (PDT)
 From: Karim Manaouil <karim.manaouil@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
@@ -88,9 +88,9 @@ Cc: Karim Manaouil <karim.manaouil@linaro.org>,
 	Sreenivasulu Chalamcharla <sreeniva@qti.qualcomm.com>,
 	Trilok Soni <tsoni@quicinc.com>,
 	Stefan Schmidt <stefan.schmidt@linaro.org>
-Subject: [RFC PATCH 01/34] KVM: Allow arch-specific vCPU allocation and freeing
-Date: Thu, 24 Apr 2025 15:13:08 +0100
-Message-Id: <20250424141341.841734-2-karim.manaouil@linaro.org>
+Subject: [RFC PATCH 02/34] KVM: irqfd: Add architecture hooks for irqfd allocation and initialization
+Date: Thu, 24 Apr 2025 15:13:09 +0100
+Message-Id: <20250424141341.841734-3-karim.manaouil@linaro.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250424141341.841734-1-karim.manaouil@linaro.org>
 References: <20250424141341.841734-1-karim.manaouil@linaro.org>
@@ -102,93 +102,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Gunyah KVM backend [1] requires custom vCPU allocation to associate
-architecture-specific state with each virtual CPU. The generic KVM
-core currently allocates vCPUs directly using the kvm_vcpu_cache slab,
-which does not allow architecture code to intervene in the allocation
-process.
+Some KVM backends, such as Gunyah, require irqfd structures to carry
+platform-specific state or setup logic. To support these use cases,
+introduce three weakly-defined functions:
 
-Introduce two weakly-defined functions, kvm_arch_vcpu_alloc() and
-kvm_arch_vcpu_free(), which default to using kmem_cache_zalloc()
-and kmem_cache_free() respectively. Architectures can override
-these functions to implement custom vCPU allocation behavior.
+  - kvm_arch_irqfd_alloc()
+  - kvm_arch_irqfd_free()
+  - kvm_arch_irqfd_init()
 
-Replace all direct allocations and frees of vCPUs in kvm_main.c
-with calls to these helper functions to allow arch-specific
-substitution.
+These allow KVM backends to override irqfd allocation, teardown,
+and initialization logic. The default implementations simply
+allocate/finalize a standard `struct kvm_kernel_irqfd`, maintaining
+existing behaviour.
 
-This change is required to support architectures such as Gunyah
-that must allocate architecture-private state along with the vCPU.
-
-[1] https://github.com/quic/gunyah-hypervisor
+This change is required by the Gunyah backend, which uses these hooks
+to associate irqfd objects with Gunyah-specific bell resource handles
+for IRQ injection via hypercalls.
 
 Signed-off-by: Karim Manaouil <karim.manaouil@linaro.org>
 ---
- include/linux/kvm_host.h |  2 ++
- virt/kvm/kvm_main.c      | 16 +++++++++++++---
- 2 files changed, 15 insertions(+), 3 deletions(-)
+ include/linux/kvm_irqfd.h |  4 ++++
+ virt/kvm/eventfd.c        | 31 ++++++++++++++++++++++++++++---
+ 2 files changed, 32 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 1dedc421b3e3..3461346b37e0 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -1581,6 +1581,8 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id);
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu);
- void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu);
- void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu);
-+struct kvm_vcpu *kvm_arch_vcpu_alloc(void);
-+void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu);
+diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
+index 8ad43692e3bb..e8d21d443c58 100644
+--- a/include/linux/kvm_irqfd.h
++++ b/include/linux/kvm_irqfd.h
+@@ -61,4 +61,8 @@ struct kvm_kernel_irqfd {
+ 	struct irq_bypass_producer *producer;
+ };
  
- #ifdef CONFIG_HAVE_KVM_PM_NOTIFIER
- int kvm_arch_pm_notifier(struct kvm *kvm, unsigned long state);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 69782df3617f..dbb7ed95523f 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -476,7 +476,7 @@ static void kvm_vcpu_destroy(struct kvm_vcpu *vcpu)
- 	put_pid(vcpu->pid);
++struct kvm_kernel_irqfd *kvm_arch_irqfd_alloc(void);
++void kvm_arch_irqfd_free(struct kvm_kernel_irqfd *irqfd);
++int kvm_arch_irqfd_init(struct kvm_kernel_irqfd *irqfd);
++
+ #endif /* __LINUX_KVM_IRQFD_H */
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index 11e5d1e3f12e..5f3776a1b960 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -32,6 +32,24 @@
  
- 	free_page((unsigned long)vcpu->run);
--	kmem_cache_free(kvm_vcpu_cache, vcpu);
-+	kvm_arch_vcpu_free(vcpu);
- }
+ static struct workqueue_struct *irqfd_cleanup_wq;
  
- void kvm_destroy_vcpus(struct kvm *kvm)
-@@ -4067,6 +4067,16 @@ static void kvm_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
- }
++struct kvm_kernel_irqfd __attribute__((weak))
++*kvm_arch_irqfd_alloc(void)
++{
++	return kzalloc(sizeof(struct kvm_kernel_irqfd), GFP_KERNEL_ACCOUNT);
++}
++
++void __attribute__((weak))
++kvm_arch_irqfd_free(struct kvm_kernel_irqfd *irqfd)
++{
++	kfree(irqfd);
++}
++
++int __attribute__((weak))
++kvm_arch_irqfd_init(struct kvm_kernel_irqfd *irqfd)
++{
++	return 0;
++}
++
+ bool __attribute__((weak))
+ kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
+ {
+@@ -153,7 +171,7 @@ irqfd_shutdown(struct work_struct *work)
+ 	irq_bypass_unregister_consumer(&irqfd->consumer);
  #endif
+ 	eventfd_ctx_put(irqfd->eventfd);
+-	kfree(irqfd);
++	kvm_arch_irqfd_free(irqfd);
+ }
  
-+struct kvm_vcpu __attribute__((weak)) *kvm_arch_vcpu_alloc(void)
-+{
-+	return kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL_ACCOUNT);
-+}
-+
-+void __attribute__((weak)) kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
-+{
-+	return kmem_cache_free(kvm_vcpu_cache, vcpu);
-+}
-+
- /*
-  * Creates some virtual cpus.  Good luck creating more than one.
-  */
-@@ -4103,7 +4113,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
- 	kvm->created_vcpus++;
- 	mutex_unlock(&kvm->lock);
  
--	vcpu = kmem_cache_zalloc(kvm_vcpu_cache, GFP_KERNEL_ACCOUNT);
-+	vcpu = kvm_arch_vcpu_alloc();
- 	if (!vcpu) {
- 		r = -ENOMEM;
- 		goto vcpu_decrement;
-@@ -4182,7 +4192,7 @@ static int kvm_vm_ioctl_create_vcpu(struct kvm *kvm, unsigned long id)
- vcpu_free_run_page:
- 	free_page((unsigned long)vcpu->run);
- vcpu_free:
--	kmem_cache_free(kvm_vcpu_cache, vcpu);
-+	kvm_arch_vcpu_free(vcpu);
- vcpu_decrement:
- 	mutex_lock(&kvm->lock);
- 	kvm->created_vcpus--;
+@@ -315,7 +333,7 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
+ 	if (!kvm_arch_irqfd_allowed(kvm, args))
+ 		return -EINVAL;
+ 
+-	irqfd = kzalloc(sizeof(*irqfd), GFP_KERNEL_ACCOUNT);
++	irqfd = kvm_arch_irqfd_alloc();
+ 	if (!irqfd)
+ 		return -ENOMEM;
+ 
+@@ -396,6 +414,13 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
+ 	init_waitqueue_func_entry(&irqfd->wait, irqfd_wakeup);
+ 	init_poll_funcptr(&irqfd->pt, irqfd_ptable_queue_proc);
+ 
++	/*
++	 * Give a chance to archiectures to finish initilization.
++	 * E.g. Gunyah needs to register a resource ticket for this irq.
++	 */
++	if (kvm_arch_irqfd_init(irqfd))
++		goto fail;
++
+ 	spin_lock_irq(&kvm->irqfds.lock);
+ 
+ 	ret = 0;
+@@ -452,7 +477,7 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
+ 		eventfd_ctx_put(eventfd);
+ 
+ out:
+-	kfree(irqfd);
++	kvm_arch_irqfd_free(irqfd);
+ 	return ret;
+ }
+ 
 -- 
 2.39.5
 
