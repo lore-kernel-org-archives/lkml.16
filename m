@@ -1,202 +1,234 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D5027B508;
-	Thu, 24 Apr 2025 15:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7964B1805B
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745510240; cv=none; b=IPscT7GtaK/4EXuvOOSWzRA4rYCrQkbHC/1gKsVi2qSCEVfwdjYVNi2qOSgSsykKEErvxJNWkZ/D1gbH3Z/zXXF8iCc+eSZaGW0rTDqHwU7gsSyXSsGtGZH/4K/A4blFtQvpIhh6JKGLnF5NNjI+7FRTEe4zDaC2XttRuymgokM=
+	t=1745510307; cv=none; b=l9q5NMlPI40RBh0GmvS35rx9LYqu4OZUn86Xge4xG4qrqhhCs7R/jTCxmfw+RhhgFkDcCSuoRSRYYucmUxC7RK2ZpoI0aACZ2/lI8lgsjNif8LOf/1WSd5kBN3h7LUqVRGvX4evh9gXsAMOYw6tLam/3mZ00gDvaYR6SFVsD/5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745510240; c=relaxed/simple;
-	bh=yGnKRKir5CWdHLM8+GR/2wc8O1hvqXv1nna2yOR+ESw=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XbDIVfITOBLU2v6hh2LjoWrWvXD5pA0GJdt23gXUdLrWQzQ0ufHn44s+poIHgcxUAJmXOkMvgeWvXXEEwHGiYeFy8rWERxoMNa3otQhWRB4j3U+EDPmrVsNeIXfacNFlK791CG1eRYZ7xzg9i6Oj4kCW+cjwOgiI2rOpxO6Y5/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AlpOY09F; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745510307; c=relaxed/simple;
+	bh=hGn5TZPzUXh2UE6Ua37oAM8ekjIXxJZVqcwYwC5z9Hs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HurpPfE6P0MCwPKx6VHNVMCsoHkmZAen3pWZovx/tojllYxGdt8vLoGwbRx1r7Wpx+gklnAm6oatw46tmB3VOINkBWFk7aCVcMPAk48YLC7BTycZ8YulK9Pz3FfVJUaXSlfjn76/Y3C018wkumNbT0ZWTIufonvG8NSbNqgWB/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=IyOZRVbE; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AlpOY09F"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7c5e39d1e0eso128254785a.1;
-        Thu, 24 Apr 2025 08:57:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745510238; x=1746115038; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0NxQeWbkMyuwKBWgdQlTj3gkmzk6nmzq6DBCz9r3oz4=;
-        b=AlpOY09FzWERpy8ezGKuFZQlAn9x0BOi7smhrj/2zzd5KK8fe2eJhXbItiBMGep/+D
-         zukafoMHqlC6SM3vqbh2toAxRRPbwHlGv7IcNJSn1DcNHOSgsepu3MzHT/H3T5QUokbX
-         q6nf//OKWceNUSVhKEmyTP7ByD0jv3PF4yOdNjjK1baE8WymU76/wYWmcBvDUa/ckeN4
-         +1wKQRT1k2PKz2Tna95i/RqMA7eCcIORyVeTUQJ7PfbjcEzojOBhMBD6tSD/l0TJhset
-         /PBgEfkQMNeWbx/vzyKWTzIgg5rnPRAd49IadasfXX9vO43g3+aWM0kQvOtdgEGknDjG
-         TA9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745510238; x=1746115038;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0NxQeWbkMyuwKBWgdQlTj3gkmzk6nmzq6DBCz9r3oz4=;
-        b=XOkI4YgZQTMwSziw9Z5nlV0WEDWoP4JEGy/YcfuHh8KHfKKadzb4YJhRZsffBlTGfA
-         d2AVv0n4dJOJTmAZkqeBYXcXjVeC/ykVDnxCRNX4MNUiIWf5mrAb8Yk3HvrN8w4UxJbL
-         Ovrp0UHOxkjD1cj5wwhcrA7oV6CR04eeSw5LlcT384fuPnWuhbRYiy5NUy2A/li+POUZ
-         lgCyw4NjcxE1PKeJJ6jiyqv316fHv/cmaAVSzMNZl/51K+kefXThQ5Bb+oNLCwkSNBmS
-         Yh4IiP8wykdtu7KqWF/GHGDOPZ3pWIYqH0NFjfFzpz5VBlvsymQoabSux5+SUwX0Vdxn
-         8Vrg==
-X-Forwarded-Encrypted: i=1; AJvYcCVnbvp4bS/7ckG9vXrYs/D9vh8wFQih1ygK6erHRXqZ4xWdO8XdSp18uK2zv8P9A59o9b8i5l3c5XR7+zY=@vger.kernel.org, AJvYcCXEEtciMRtuHLti/it6FGb3TYcI0FWUE1QnKc0nENiP5bTwCPU2sp6s9NIAYYNsBY2zO7/sEbQArJ1DH/nWlVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1ffK9YevoqhQeXm3+rmC5+0jhNz/XCpF7fMeEs9g2+v1mjoXR
-	VqNCpl0wOuD+exfGxTQE6Ex0xsefnFnMuRkfoLwB04phSmk23OXN
-X-Gm-Gg: ASbGnctI0vJdm5+ecGCzu8U4N6Jr8ShGAQ8PXuhRafMDwxbuHlkVOdvBu1CoHPytTbQ
-	z+JgLOJdOlZYaEyfUEmtsm61Ob+larwiYJ8EbokA8xPPa/z/oSUeHGBhoI5JC4iQ2qZToDMtFtV
-	giQZ7ewOD5I77S7U7+Q07a3Qf4gdVdBJ/CBr4GtAWXLAhNh8oIhzZJg/JsfH887PTJZnTvgpo7+
-	tIBQf0Mfe3/ME1hs7evh22cmtHvcBkOmOABbMhehNpcedAm1TKyCfJO8WO9sZtcJ8Y0iZwgYQQc
-	blkFQgeZI1kr4/Tnok+WfRP+Np5ECpKQF9W6WSsW8mWwiX0zxGJWLCyTW6ntdHP/Af8SA67fSiW
-	4ggQSoC9yxnB2YKOhGgJ/gLLc/DWxWb9Pcd8f2rKT7A==
-X-Google-Smtp-Source: AGHT+IF0gCm0iSOAFEyb8HnqqUinMlFNn3AbjKbRYEyksxhDhTb5c+QUAlXHlheQwPFBbk5ZGtx6tQ==
-X-Received: by 2002:a05:620a:2551:b0:7c7:a5cb:2b65 with SMTP id af79cd13be357-7c956ed3884mr434348485a.26.1745510237628;
-        Thu, 24 Apr 2025 08:57:17 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958cdeb4dsm101941985a.63.2025.04.24.08.57.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 08:57:17 -0700 (PDT)
-Message-ID: <680a5f5d.050a0220.2035d2.545b@mx.google.com>
-X-Google-Original-Message-ID: <aApfWTTg05lEMvWN@winterfell.>
-Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 8EC451200068;
-	Thu, 24 Apr 2025 11:57:16 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-08.internal (MEProxy); Thu, 24 Apr 2025 11:57:16 -0400
-X-ME-Sender: <xms:XF8KaLax0Db-MSiBMZGXlT8jQkzE23dqTbPTQHZ91pi7G91B8E_XTQ>
-    <xme:XF8KaKZKQ8YJxrOun01c4ChDwHABsRGXLERRUms8j9EseampLygtFTnFXNp-Ieg6i
-    SbFy-VkrCIs7Ar6og>
-X-ME-Received: <xmr:XF8KaN9EIJwTFbkJb3gKcp1zhn4cIKdBkky45VvwED07wFJSifQmvTQwWKbC8Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeelkeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
-    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudegpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvg
-    drtghomhdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pegrkhhpmheslhhinhhugidqfhhouhhnuggrthhiohhnrdhorhhgpdhrtghpthhtohepvh
-    hirhhoseiivghnihhvrdhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehgrhgvghhk
-    hheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehgrghrhiesgh
-    grrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhm
-    rghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrd
-    hmvgdprhgtphhtthhopegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:XF8KaBoZFZygrwFpulFDLZINJfaFx8MkTr02laT4RWMScPfkgDOzVg>
-    <xmx:XF8KaGrQxFVUP9nFLiSHueuXCcCTu08tm8alkRwY9GzQM7xVwfRPrg>
-    <xmx:XF8KaHSVqubfFWomM_h1rhd1huugz7h3g8iiqZV1vxe3FPJPWpozBg>
-    <xmx:XF8KaOprdUrQSByHu1j_v5p2GkmIFqYdICmdaVZF3LqDFz73_UZEZw>
-    <xmx:XF8KaH77W6OFRwwm7RZz9SAxR4sIYt12ETPWtqNOiZwZEqI8q-U34tHG>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 24 Apr 2025 11:57:15 -0400 (EDT)
-Date: Thu, 24 Apr 2025 08:57:13 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] uaccess: rust: add strncpy_from_user
-References: <20250424-strncpy-from-user-v1-1-f983fe21685a@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="IyOZRVbE"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O9EZeA014502;
+	Thu, 24 Apr 2025 15:58:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=R30PE/
+	pVh5sh9qCfJc7TEhJ9R4WvOk+j2vyXVmxXjVc=; b=IyOZRVbEGP3EeKVESk9joo
+	jm3E+m4rseCttspJbkYvKgXyDjchLcjKNAnvbw7998GS2xNZnuEMO3uZOATnxMqb
+	IcBNtc+b+j6MF5dD+kSWOgMbgLzjWAsZdkn9mljinnUIpACuZSPz4Zt9SR9VxKCj
+	hmzliHqJZkbu/rs/2C1MW1pIu4J0ffu3S7EUIldWymdqo7IaAbIVnDelxP77ZZb1
+	EfJQ6AfZ7hZh8NRVA0LdU0/Oo59LiMQCWE9SVaDOJJx9WmnjTUAO96Mhn+6s1fLZ
+	B3sCKjWbFesANK99MIUw+M/NXfc2l0yffk8vIDkxald7dPIHXdT/KUMrGlsUMP3A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4678bwcedk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 15:58:08 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53OFq6t8010040;
+	Thu, 24 Apr 2025 15:58:07 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4678bwcedg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 15:58:07 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OFTqJ9022281;
+	Thu, 24 Apr 2025 15:58:06 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 466jfxgwbm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 15:58:06 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53OFw3N643909608
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 24 Apr 2025 15:58:03 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1889B20043;
+	Thu, 24 Apr 2025 15:58:03 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4E57D20040;
+	Thu, 24 Apr 2025 15:58:01 +0000 (GMT)
+Received: from [9.39.28.91] (unknown [9.39.28.91])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 24 Apr 2025 15:58:01 +0000 (GMT)
+Message-ID: <365ba747-9311-45ab-b798-80ba4e578796@linux.ibm.com>
+Date: Thu, 24 Apr 2025 21:27:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424-strncpy-from-user-v1-1-f983fe21685a@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] powerpc: kvm: use generic transfer to guest mode work
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: maddy@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, gautam@linux.ibm.com,
+        vaibhav@linux.ibm.com, linux-kernel@vger.kernel.org
+References: <20250421102837.78515-1-sshegde@linux.ibm.com>
+ <20250421102837.78515-2-sshegde@linux.ibm.com>
+ <20250424144215._ooDjDz9@linutronix.de>
+From: Shrikanth Hegde <sshegde@linux.ibm.com>
+Content-Language: en-US
+In-Reply-To: <20250424144215._ooDjDz9@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDEwNiBTYWx0ZWRfX4dggBOUBP4Fo htQ/BokLdhbpY+X0AdK+/tH2C+X3swTgmk1M2mzFNu6K1i2ouwdPHnvfl2jOOAp7FuNLTFG9Xuy uKqfhQcXt+IXxJIo78NHdMiieZKhJ4y2clYf9/d/KhI0LIo13SxV7+BAmh3wAZ6Adp+Rh7HhdcH
+ Lo6h6cZx92qh/bIHKrvUwA9VWscYAxJM9bqS4jL7z0r7XopDzMpRffY/ih5eUn6nM5YM40i3OiN C8xsjkscwJ0GAYA1YHakaS8Way1OSgDd+kfeegLRHz/3z6A+UaBQ4sT2sqoeYLnT55NjgqnVnwm n1CoN9xl9xGp7rC98TsgPwwAKeDQvO+1/gIjVVNTbvGjbash6QL6HpKQG3euJQtb3RPe9FzVMYE
+ N3su4q2fcRD8z3amEkKa1+dk/61v15Yxif1Ge0kJLMGbiFBb8zvJbwHnY1zyLbOah143M4Rj
+X-Proofpoint-ORIG-GUID: yLCGgi62YEacsIUiGMg_GRfHcyoIlg2J
+X-Authority-Analysis: v=2.4 cv=KZzSsRYD c=1 sm=1 tr=0 ts=680a5f90 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=aRSudAjuEQCHUFqpYEwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: 4jsIiudgz4lPelbXPqhO5DiJGVp0_3Wh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 priorityscore=1501 lowpriorityscore=0 adultscore=0
+ clxscore=1015 mlxscore=0 impostorscore=0 spamscore=0 malwarescore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240106
 
-On Thu, Apr 24, 2025 at 03:17:48PM +0000, Alice Ryhl wrote:
-> This is needed for ioctls that operate on a user-provided string.
-> 
-> It is somewhat unfortunate that strncpy_from_user does not nul-terminate
-> the string when the end of `buf` is reached. This implies that we can't
-> return a &CStr from the function, since the buffer may not always be
-> nul-terminated.
-> 
-> That said, we could add more convenient helpers on top that add a NUL
-> byte in that case.
-> 
-> This method isn't defined on UserSliceReader because it complicates the
-> semantics. The UserSliceReader type also has its own maximum length, so
-> we would have to limit the read by that length too.
-> 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  rust/kernel/uaccess.rs | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/rust/kernel/uaccess.rs b/rust/kernel/uaccess.rs
-> index 80a9782b1c6e98ed6eae308ade8551afa7adc188..1bd82045e81ea887008e30241bd6de27f096b639 100644
-> --- a/rust/kernel/uaccess.rs
-> +++ b/rust/kernel/uaccess.rs
-> @@ -369,3 +369,30 @@ pub fn write<T: AsBytes>(&mut self, value: &T) -> Result {
->          Ok(())
->      }
->  }
-> +
-> +/// Reads a nul-terminated string into `buf` and returns the length.
-> +///
-> +/// Fails with [`EFAULT`] if the read happens on a bad address. If the end of `buf` is reached,
-> +/// then the buffer will not be nul-terminated.
-> +#[inline]
-> +pub fn strncpy_from_user(ptr: UserPtr, buf: &mut [u8]) -> Result<usize> {
 
-Sorry maybe there is an email I'm missing, but could you provide more
-context of the usage?
 
-First the function name is a bit weird, because the 'n' in "strncpy"
-means the parameters should have an 'n' (i.e. length) in it, but there
-is none in the Rust version. Also, we don't need to replicate the
-semantics of C here, we could just do a strncpy_from_user(..., ..., len
-- 1), where `len` is the len of the `buf`, and then we would always have
-a nul-terminated string. But maybe I'm missing something from the usage
-side, so this is not doable?
+On 4/24/25 20:12, Sebastian Andrzej Siewior wrote:
 
-Regards,
-Boqun
+Thanks Sebastian for taking a look.
 
-> +    // CAST: Slice lengths are guaranteed to be `<= isize::MAX`.
-> +    let len = buf.len() as isize;
-> +
-> +    // SAFETY: `buf` is valid for writing `buf.len()` bytes.
-> +    let res = unsafe {
-> +        bindings::strncpy_from_user(
-> +            buf.as_mut_ptr(),
-> +            ptr as *const u8,
-> +            len,
-> +        )
-> +    };
-> +
-> +    if res < 0 {
-> +        Err(Error::from_errno(res as i32))
-> +    } else {
-> +        #[cfg(CONFIG_RUST_OVERFLOW_CHECKS)]
-> +        assert!(res <= len);
-> +        Ok(res as usize)
-> +    }
-> +}
+> On 2025-04-21 15:58:36 [+0530], Shrikanth Hegde wrote:
+>> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+>> index 19f4d298d..123539642 100644
+>> --- a/arch/powerpc/kvm/book3s_hv.c
+>> +++ b/arch/powerpc/kvm/book3s_hv.c
+>> @@ -80,8 +80,8 @@
+>>   #include <asm/ultravisor.h>
+>>   #include <asm/dtl.h>
+>>   #include <asm/plpar_wrappers.h>
+>> -
+>>   #include <trace/events/ipi.h>
+>> +#include <linux/entry-kvm.h>
+>>   
+>>   #include "book3s.h"
+>>   #include "book3s_hv.h"
+>> @@ -4901,7 +4901,7 @@ int kvmhv_run_single_vcpu(struct kvm_vcpu *vcpu, u64 time_limit,
+>>   	}
+>>   
+>>   	if (need_resched())
+>> -		cond_resched();
+>> +		schedule();
 > 
-> ---
-> base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-> change-id: 20250424-strncpy-from-user-1f2d06b0cdde
+
+
+> This looks unrelated and odd. I don't why but this should be a
+> cond_resched() so it can be optimized away on PREEMPT kernels.
+
+This is needed, otherwise KVM on powerVM setup gets stuck on preempt=full/lazy.
+
 > 
-> Best regards,
-> -- 
-> Alice Ryhl <aliceryhl@google.com>
+>>   	kvmppc_update_vpas(vcpu);
+>>   
+>> @@ -5097,10 +5097,11 @@ static int kvmppc_vcpu_run_hv(struct kvm_vcpu *vcpu)
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> -	/* No need to go into the guest when all we'll do is come back out */
+>> -	if (signal_pending(current)) {
+>> -		run->exit_reason = KVM_EXIT_INTR;
+>> -		return -EINTR;
+>> +	/* use generic frameworks to handle signals, need_resched  */
+>> +	if (__xfer_to_guest_mode_work_pending()) {
+>> +		r = xfer_to_guest_mode_handle_work(vcpu);
+> This could be unconditional.
 > 
+>> +		if (r)
+>> +			return r;
+>>   	}
+>>   
+>>   #ifdef CONFIG_PPC_TRANSACTIONAL_MEM
+>> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+>> index 153587741..4ff334532 100644
+>> --- a/arch/powerpc/kvm/powerpc.c
+>> +++ b/arch/powerpc/kvm/powerpc.c
+>> @@ -34,6 +34,7 @@
+>>   #endif
+>>   #include <asm/ultravisor.h>
+>>   #include <asm/setup.h>
+>> +#include <linux/entry-kvm.h>
+>>   
+>>   #include "timing.h"
+>>   #include "../mm/mmu_decl.h"
+>> @@ -80,24 +81,17 @@ int kvmppc_prepare_to_enter(struct kvm_vcpu *vcpu)
+>>   {
+>>   	int r;
+>>   
+>> +	/* use generic framework to handle need resched and signals */
+>> +	if (__xfer_to_guest_mode_work_pending()) {
+>> +		r = xfer_to_guest_mode_handle_work(vcpu);
+> 
+> there is nothing special you do checking and handling the work. Couldn't
+> you invoke xfer_to_guest_mode_handle_work() unconditionally?
+> 
+
+I followed what was in arch/x86/kvm/x86.c. Since xfer_to_guest_mode_handle_work does the same check
+it makes sense to call it without checks too.
+
+Will update in v2.
+
+>> +		if (r)
+>> +			return r;
+>> +	}
+>> +
+>>   	WARN_ON(irqs_disabled());
+>>   	hard_irq_disable();
+>>   
+>>   	while (true) {
+>> -		if (need_resched()) {
+>> -			local_irq_enable();
+>> -			cond_resched();
+>> -			hard_irq_disable();
+>> -			continue;
+>> -		}
+>> -
+>> -		if (signal_pending(current)) {
+>> -			kvmppc_account_exit(vcpu, SIGNAL_EXITS);
+>> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
+>> -			r = -EINTR;
+>> -			break;
+> 
+> I don't how this works but couldn't SIGNAL_EXITS vanish now that it
+> isn't updated anymore? The stat itself moves in kvm_handle_signal_exit()
+> to a different counter so it is not lost. The reader just needs to look
+> somewhere else for it.
+
+ok. thanks for pointing out.
+
+AFAIU it is updating the stats mostly. But below could keep the stats happy.
+I will update that in v2.
+
+         if (__xfer_to_guest_mode_work_pending()) {
+                 r = xfer_to_guest_mode_handle_work(vcpu);
++               /* generic framework doesn't update ppc specific stats*/
++               if (r == -EINTR)
++                       kvmppc_account_exit(vcpu, SIGNAL_EXITS);
+                 if (r)
+                         return r;
+
+> 
+>> -		}
+>> -
+>>   		vcpu->mode = IN_GUEST_MODE;
+>>   
+>>   		/*
+> 
+> Sebastian
+
