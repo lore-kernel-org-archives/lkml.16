@@ -1,152 +1,169 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B92715533F;
-	Thu, 24 Apr 2025 14:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA85817AE1D
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505544; cv=none; b=aSDK3qrcyFv+Mkp2t0Gs1ty5ICFRARNAFyz6jZRk9Dja3+JK4uYnJyjtOQzoffviE5FXftUqnfJLknRF1DZhSq2smyCu8fNzA4XP2NvKl9hku1oZr1DjhSzw9UfraussVZKbNVOE4+ape82ItuBWhjKc0yyBJJA24wbFhRwgAj0=
+	t=1745505576; cv=none; b=HdYKf23MEcQjWTfxwNDmU2SDIt1wZv30DHJmqUoiZKckE0Eq/w8hL93QqJxdHN5yw91iPlfC/aisk5rrdgB/8dh6vqEFCkIIY4enqcEdejjqeGwmkXXB3EpqWphYwvTemeZ4oWyYQT97PaWgh2vgNiUQZXrk0+9TjI61JFWTGGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505544; c=relaxed/simple;
-	bh=TLVz/CTjw1SW9cTVLZDqmNJSZsjwJqxJYyBQRUZ2vG0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
-	 MIME-Version; b=cj0kY4L7SzRr831PXLBzgkgo6k+Oxkx7wATqEFcUZ39f0auYhjM4koCIGimralGmbEc8/QKT4cXhoy9Cg8T1lpUA3UgV+1fw8qxHejbSK9ZmwAm763xJNQUWI1gtN3NFBnEC0ROrJTvJFhSKNMsv90LU4oKjlGuR/DOsg7JMCN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OJePo/ng; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745505576; c=relaxed/simple;
+	bh=tjTun3+QMHsb18vgwjRVBQvaVSnTULRZQf43KMXODKA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=t06Z60HjLOij8lMjfuMVBbNDNwlGWVqYQe/JOtzkIFez4dRJqYQEG1PvCkzZ/+EcY3LI1A73ctgfG5ewx2yuUJNU8ixpfr3wgo2AEbc8F9bHVDDQY1E2p9TZRkTC3dHIsa1VvLuaEMymBz25nNPoZrSR8cmpsJANYdX3LWmcapw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dLgWaQfQ; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OJePo/ng"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so8044105e9.0;
-        Thu, 24 Apr 2025 07:39:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dLgWaQfQ"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39123ad8a9fso66783f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745505540; x=1746110340; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
-         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=He1Y9ktqx1lW20BpUlUu2/rAP5XgA+Dn5l+R6PEz93M=;
-        b=OJePo/ng/AqMarQCDSzT6H6ruSuD5KfXshF5MJYSWlcTNSghmBfZxCFHuBfYWkxqCW
-         NlkYoLyK2LghjDA+tTrNRf9Yt5fMQldT6lznNXqmmVSNgvNW9VRD+2ScSbl8CWE30j4k
-         3pZcNKPGyEkf2uopnOSG083znxyJ6WFQ/urkcd021jsFBsoLDBcf1HCU3BeaDKj25B6G
-         8RR77nqAiImCnJgQ1U3f+1dDq4r0Ftto8MG8MW+YBKe8CBwyFsMov6y+E2kJ1Cy/W1GX
-         DTfYY2bGfJlBgIsDvctjnx3TW5YT9GgcF9xvwcl1oYLnSmmJcEjM4H2v49ASs2yqIxDl
-         /FoA==
+        d=linaro.org; s=google; t=1745505572; x=1746110372; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=f7qUmlXZ2pLbCIPmypgfiGHhX5nNOykglYCDqUy1IAI=;
+        b=dLgWaQfQa8O0/IV376duLGMgnGM3QvVPYy51vdwRTCoUpaiNM51ePE9sYx3Ir7m48y
+         Mpp/N6NG0fVd8BijJDu3OQNOH0dN6Ba5iuuidtecbMAm3v8nbMmSsqy/Y5QYC7VESzd5
+         s4nlfY9sM5tqHxB004vMaxMTnHqaPTXZE3U4DCPM8bkxDMipDs4mAfbMB81j0hhnIlZy
+         rtt/ALQyPTC/W6LjFQl82QVVzM92zXkVSKsMU0t0UzW/aFSglkzNYStqGop/lgYBYU25
+         jdFHiKDheHMyHefMRjAULp81msM3j/N+sbouOdxzYnoj1YViYf1BSFHcVZ6JrPIqiwnC
+         IdMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745505540; x=1746110340;
-        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
-         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=He1Y9ktqx1lW20BpUlUu2/rAP5XgA+Dn5l+R6PEz93M=;
-        b=p2NEwzSoYV5Eh4femfe85x2rJtoxlqnA0pbIQWhjpqpzU8NUY/wG/gjZE86EWN3mhK
-         Xg8RMgNKQpeeDJCv78NrSzXM5ZQkAqKrCYfOWNztoxEWqWfoUUnO4GLOYM02nuSb1Qjz
-         Da7DPY0XepSRwpaR5tf8tGthzZ7AdeB0iQVLfhN3l7JXAw4jQ5owoRiRbsqXmAhU3npv
-         l9q64JFBUseDjDjQYIIiAOS2HOytpc0GdVi5igb0EEPeaQNzg0COOPZto+08S8XuQIKw
-         5x9pppJU/5cI7K1dDfouZaMjgibcgruVeJp3l5VsI8l1OVmSJkFppqIAFVm9dDsW54bz
-         Z3hA==
-X-Forwarded-Encrypted: i=1; AJvYcCWXS1YgAQ/kO5CcscXa6zwpffTd99jglbtlNfyiaXvisZAebjOcQLNfVBqBOAa6SQ3hy/s=@vger.kernel.org, AJvYcCWgPl9t0ZDqjQvhgQHAdDC4DmGzjb+cD18IVtihZL3y8YnI/mARJ2hH/qG7oJwezUsHvuwuYr1/qZO2k2WW@vger.kernel.org, AJvYcCXfanbnSgNKxzSVPhJrB+UEdunIhqOaQ6J4NHjxvstaVrzLv3Xm4kgZIt8pM7jCm9vX7jB2t+eKpyDjeTJJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLJPultxfHt0LklKGiv5iELd2dxHrmkva0zMphRdlA09XJ1727
-	iFMPnvNGdXwI8evIyllX63ENh1NxUAt6IaO2yToUfvKH0qDQZgwX5bXGvsUI
-X-Gm-Gg: ASbGncuIO6Katmrlkjae3hkduehSW8zlrBYl2hkCbNEmGj3RwyCha+DNVmzz9+Eujhu
-	/nsI2j+3PGexwXT6trA2WgN3bfwuKlODrMdE+c90F+xjv3Beh6hlf4Go5wOdpTtG54pmkI+2yJB
-	k6+rT7AE2GITVgZplMWdBytAHlhIiT5gGo9QCv9S0CpKn3j/TGWp9RttlaB4xRmC41CDd+t1TSY
-	Jv7WekhSF9rd2JlSDq4qAbwzHE1Q9DmIfWn2Suk397wXWNjP6DIYqStrLEczJe7jl3CAV/g9wl6
-	MgWGMUAcFxgbD25eKMXoMgVSVY2fXfWWobr9Qw3kpO7KNKOr1HmjawoqMh5cGAk9m0KpUcoQuYe
-	lwF4w9wh17jvAPZ2kQ6GjGQ==
-X-Google-Smtp-Source: AGHT+IHguIgZwJYV78SWBgbaRJqi2L28fF8iAgoCSk/UNtw4z12GqAm7g8nXeMSLOYYgnmRBoYQR5g==
-X-Received: by 2002:a05:600c:1f93:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-4409bd8cf5amr25620225e9.20.1745505540103;
-        Thu, 24 Apr 2025 07:39:00 -0700 (PDT)
-Received: from ?IPv6:2001:b07:5d29:f42d:16d3:1272:6f9c:e726? ([2001:b07:5d29:f42d:16d3:1272:6f9c:e726])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2b8940sm23938575e9.30.2025.04.24.07.38.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:38:59 -0700 (PDT)
-Message-ID: <7da931d3e045aad6349879c16db9a8bf17aa0d60.camel@gmail.com>
-Subject: Re: [PATCH v3 2/4] crypto: ccp: Add support for SNP_FEATURE_INFO
- command
-From: Francesco Lavra <francescolavra.fl@gmail.com>
-To: ashish.kalra@amd.com
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, davem@davemloft.net, 
- herbert@gondor.apana.org.au, hpa@zytor.com, john.allen@amd.com, 
- kvm@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-kernel@vger.kernel.org,  michael.roth@amd.com, mingo@redhat.com,
- pbonzini@redhat.com, seanjc@google.com,  tglx@linutronix.de,
- thomas.lendacky@amd.com, x86@kernel.org
-Date: Thu, 24 Apr 2025 16:38:58 +0200
-In-Reply-To: <0ec035a24116dce7c8b2a36a29cf5eed96e0eb52.1745279916.git.ashish.kalra@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+        d=1e100.net; s=20230601; t=1745505572; x=1746110372;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f7qUmlXZ2pLbCIPmypgfiGHhX5nNOykglYCDqUy1IAI=;
+        b=NtIjHrodb0S4tDHxXeu1SjgYx/2p0EZGSHHtJP8iHHJ3UTzf7vtSDFqEJrfGVCZ7lh
+         ev65oIBEfMZDeNbuNvUZoiEtQRuL5cCDbyyGPyvbXabZxiKEsnnxbCI8mU/As3oepR0+
+         P6/Wc6DShCFQVa7L14lDLMXq7iEFsNePvX4Adt1Q2kq+TJObCpRlF20aE+Vhu+cKzNf6
+         F7myh6ayXLRVYkVRQMagf1bXU/H/iuchxg4Vuk4v9uyenoh5Ssgr1lSgyPh+JvpV15PI
+         YvVPRns3idklfQqh5E/ugCm8ap72TU8JId0lnpF7nKx8NAW8jho1QtDOEoQDcgaJTvlL
+         c8Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNAVLvK8Yvmc7RS8v5S5eoK5Tpx5Oz/IWEtEJxe+oPSGqgiF3J7yfNFMv8GnHsWlqab+VZV8Bh/igjPQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyosvG3oxcsk+23q6Qs/BgKDyICf8TeFqcJnSJyID1t4dcwd2Cv
+	/5J5Vy576RfO6higXTTr7o3Q7rArdbTsRCws/9K/7qQKhxzswopGAAwMSFuK9H8=
+X-Gm-Gg: ASbGncsSWBISGy2yT2htoOPBrPNyx9EWIsZNSEOuRSbk+qQZHPDGCDDg/mlrFY+2edF
+	OlluurQ3F1QMWdNHZq9tGh37D6MFr/u5ZEklZZ5TlzgGlmU8aDFVdJh1zQn4Ijbfxj7eCW7pJGa
+	eC6dezPHPCSmxT+Plvfd+EF042alnN2IFk59q6AnBqz+lN6XeF8S7uGD42Tzm0XU01wBH1PPtci
+	9n61xb1NPynaQhH1VE+6BTvNTQjCyMpDSzve0Ak4kOZW80cCRpNFvQ4knr4LPg1E0z2jcaM76Pl
+	wWMHibcn0XIxXFtX1+GtDZfOMhsjoFcRdJA+sW/5wagRPUzpIxTcwvH688M=
+X-Google-Smtp-Source: AGHT+IGpXKfd7zkb5GxIWBKYkreXNXNfFhHP54+thzmnG0KgMIvx4hnph/tOHz06RnPnR7UjEWxDUA==
+X-Received: by 2002:a05:6000:1846:b0:386:3a50:8c52 with SMTP id ffacd0b85a97d-3a06cf5beeamr952306f8f.7.1745505571888;
+        Thu, 24 Apr 2025 07:39:31 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a804fsm2386814f8f.10.2025.04.24.07.39.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 07:39:31 -0700 (PDT)
+Message-ID: <3818d7c2-187f-409f-8479-bcdd6c0e9be3@linaro.org>
+Date: Thu, 24 Apr 2025 16:39:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC/WIP 3/4] arm64: dts: qcom: sm8750-mtp: Enable USB
+ headset and Type-C altmode
+To: Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Jessica Zhang <jesszhan@quicinc.com>, Abhinav Kumar
+ <abhinavk@quicinc.com>, Abel Vesa <abel.vesa@linaro.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250424-sm8750-display-dts-v1-0-6fb22ca95f38@linaro.org>
+ <20250424-sm8750-display-dts-v1-3-6fb22ca95f38@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20250424-sm8750-display-dts-v1-3-6fb22ca95f38@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-22 at 0:24, Ashish Kalra wrote:
-> diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-
-> dev.c
-> index b08db412f752..f4f8a8905115 100644
-> --- a/drivers/crypto/ccp/sev-dev.c
-> +++ b/drivers/crypto/ccp/sev-dev.c
-> @@ -232,6 +232,7 @@ static int sev_cmd_buffer_len(int cmd)
->  	case SEV_CMD_SNP_GUEST_REQUEST:		return
-> sizeof(struct sev_data_snp_guest_request);
->  	case SEV_CMD_SNP_CONFIG:		return sizeof(struct
-> sev_user_data_snp_config);
->  	case SEV_CMD_SNP_COMMIT:		return sizeof(struct
-> sev_data_snp_commit);
-> +	case SEV_CMD_SNP_FEATURE_INFO:		return sizeof(struct
-> snp_feature_info);
+On 24/04/2025 15:04, Krzysztof Kozlowski wrote:
+> MTP8750 does not have audio jack connected and relies on USB mux
+> (WCD9395).  Add necessary nodes for proper audio headset support along
+> with USB Type-C altmode and orientation.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8750-mtp.dts | 58 +++++++++++++++++++++++++++++++++
+>  1 file changed, 58 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
+> index bd0918e8a7a7e03530eea577c7609454fecfdaf7..c3470e1daa6b7f31196645759be23fb168ce8eb7 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
+> @@ -53,6 +53,15 @@ wcd939x: audio-codec {
+>  		vdd-mic-bias-supply = <&vreg_bob1>;
+>  
+>  		#sound-dai-cells = <1>;
+> +
+> +		mode-switch;
+> +		orientation-switch;
+> +
+> +		port {
+> +			wcd_codec_headset_in: endpoint {
+> +				remote-endpoint = <&wcd_usbss_headset_out>;
+> +			};
+> +		};
+>  	};
+>  
+>  	chosen {
+> @@ -220,6 +229,14 @@ port@1 {
+>  					pmic_glink_ss_in: endpoint {
 
-This function is supposed to return the size of the command buffer, so
-for this command it should return sizeof(struct
-sev_data_snp_feature_info).
+port@0 and port@1 need updates for endpoints as well. I will do that in v2.
 
->  	default:				return 0;
->  	}
-> =20
-> @@ -1072,6 +1073,50 @@ static void snp_set_hsave_pa(void *arg)
->  	wrmsrq(MSR_VM_HSAVE_PA, 0);
->  }
-> =20
-> +static void snp_get_platform_data(void)
-> +{
-> +	struct sev_device *sev =3D psp_master->sev_data;
-> +	struct sev_data_snp_feature_info snp_feat_info;
-> +	struct snp_feature_info *feat_info;
-> +	struct sev_data_snp_addr buf;
-> +	int error =3D 0, rc;
-> +
-> +	if (!cc_platform_has(CC_ATTR_HOST_SEV_SNP))
-> +		return;
-> +
-> +	/*
-> +	 * The output buffer must be firmware page if SEV-SNP is
-> +	 * initialized.
-> +	 */
-> +	if (sev->snp_initialized)
-> +		return;
-> +
-> +	buf.address =3D __psp_pa(&sev->snp_plat_status);
-> +	rc =3D __sev_do_cmd_locked(SEV_CMD_SNP_PLATFORM_STATUS, &buf,
-> &error);
-> +
-> +	/*
-> +	 * Do feature discovery of the currently loaded firmware,
-> +	 * and cache feature information from CPUID 0x8000_0024,
-> +	 * sub-function 0.
-> +	 */
-> +	if (!rc && sev->snp_plat_status.feature_info) {
-> +		/*
-> +		 * Use dynamically allocated structure for the
-> SNP_FEATURE_INFO
-> +		 * command to handle any alignment and page boundary
-> check
-> +		 * requirements.
-> +		 */
-> +		feat_info =3D kzalloc(sizeof(*feat_info), GFP_KERNEL);
 
-The SEV firmware requires the supplied memory range to not cross a page
-boundary, but kzalloc() does not guarantee that the allocated memory
-fits this requirement. You need to allocate a larger chunk of memory (2
-* sizeof(*feat_info) will be enough), and possibly set
-feature_info_paddr to an offset from the start of the allocated memory.
+
+Best regards,
+Krzysztof
