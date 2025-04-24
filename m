@@ -1,108 +1,407 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359644A29;
-	Thu, 24 Apr 2025 02:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5354A29;
+	Thu, 24 Apr 2025 02:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745460213; cv=none; b=SICKQ7+saZPlCX2bFTBbi6BpdL0f+q/K7sLdr1cNeYrvxvUqUBgXVpwEhc77VpPMNbu38QU/nov4SDyKHv1DkQOH4hc2MZgihGBT6lTkNPTwcW9pSd/ahOq0VzAUfTSn/C+5EdfU50LWUiuBZyh/OjyruMaY2prkHzphXofSR8M=
+	t=1745460278; cv=none; b=upBYM3yLkUR7jcUNVWjLgcvFr3FyabZh77fGdO8P3qQ7BF+/B/U1QoIS2h36d+bLTT/aTazxcsEovI6/8G7xbKG43Ic6fD97rEAje/6C1qO67KdhxcD5azxmG217OjXoxKdMIkXwayACOX/1QpLpYj/fiINgLV7bGPThaNPNpJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745460213; c=relaxed/simple;
-	bh=frVu7i0unayAF/vcXkdvWuD/HBqvYDiTRKb7kPsqwZ0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lsPKz3WjND+PtD5C6oxa0VY9SgPg5ftZJYCACLqEKOn3Yj0PwJ4MimpuxgrsXK8FbfwYuq3KvXGAxhhBqKIorWUNRKmTdGKsAlIXJlG9V3AEf/sK/ms2Krrq+HRMskp9cWUcelHSExa/zNAe3XgytE/bpIzjXrwb2tAtLjUuMeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I5GPV34l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745460278; c=relaxed/simple;
+	bh=2Ye6Q9tbEXXetLsYr6YRSEFUr/cH1QI6KB9fhqGrs5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WruZfFk1Bg8lR+maALxoAkwwEhjRPzCh2yGVgKaK91YeX1rgONCu/QM5K5dmcOenKdfGr+vQUChzKl81yj2Fe7gBsBqc+cTmB6zCFjhGrYGupmjPuO/XkctP5zFueBD4MQtDKi0SgqMQuSp+2kTersaKWMvV9HOK2KP7xgwb+7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=JTk4LHfx; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I5GPV34l"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9512EC4CEE2;
-	Thu, 24 Apr 2025 02:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745460211;
-	bh=frVu7i0unayAF/vcXkdvWuD/HBqvYDiTRKb7kPsqwZ0=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=I5GPV34lkCde7VRTCkep1A6AhE40s0M2I7Od+Y67CebqFH2knsHoxGY6YpztwoZCZ
-	 8K95mM3nVAjfNuf2Cd1kSd++IaLpRIeeG5MSqlXXP2ZUBq+ZOqzzoL1M/l5yuh8DTk
-	 rLjoHLXXedcFY39t14Ifb+OKbIiFUWsE5Uxd/vC6jcISK7ycSU2FtMIXWCIzfPQ7hh
-	 kZ/t+0bR2xp/3IPb0tVlfkoDZoAjXevWgBPmsl9RG4/Pmwxg0L65qK+oPmDDaTfrKX
-	 5iQkVyVSKErWqxPcsjzPPzjoNXtOAx7ULBOXV1lJF/EDtYyR4rfJCHbUqlbfF/i2Fl
-	 WljVyTl2dtlWg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B52C369CB;
-	Thu, 24 Apr 2025 02:03:31 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Wed, 23 Apr 2025 21:03:03 -0500
-Subject: [PATCH] spi: tegra114: Don't fail set_cs_timing when delays are
- zero
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JTk4LHfx"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F95I031020;
+	Thu, 24 Apr 2025 02:04:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	OmdFnkI+KYknQIpsY7fmp59A39xGyJfScTZfISfvPD8=; b=JTk4LHfxtisuuPL3
+	Uus4A8yo+Yqla084tcgRFHz/R5If+2KQdYLkT04DHJ9r+qEZk+hJoQ+sj5FYqO0V
+	cubXzn2HTrf1fAul73e8UgHhjQVosgxcZZsW6Bt2G1ORAL1G4QxIhtv0lDgpnn2I
+	ftcTn7+E0BRZY6CniW4AzeCKvhmFm2gLsvw4GdRv80MU5B22xOuDjTjGZ++VAhVU
+	Ym6HjCY+lLO8uuPi8dYks4V3Yym0VA8Fc0mgN0rC/L9cMwyFR1OUofugjEmtTKzk
+	XvEbU7wL0DB2vxtpy7MR4RKejBwWG7TeMrfSYWo4KNuRkegkW3hvM8MOZkuod7RM
+	5kuEAQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5bwe5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 02:04:18 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O24HB9002129
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 02:04:17 GMT
+Received: from [10.134.71.247] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
+ 2025 19:04:17 -0700
+Message-ID: <63e5ddf6-151a-42aa-b2cf-003d91b34a04@quicinc.com>
+Date: Wed, 23 Apr 2025 19:04:16 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 6/7] drm/msm/mdp4: switch LVDS to use
+ drm_bridge/_connector
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark
+	<robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten
+	<marijn.suijten@somainline.org>,
+        Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn
+ Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250227-fd-mdp4-lvds-v3-0-c983788987ae@linaro.org>
+ <20250227-fd-mdp4-lvds-v3-6-c983788987ae@linaro.org>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250227-fd-mdp4-lvds-v3-6-c983788987ae@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250423-spi-tegra114-v1-1-2d608bcc12f9@gmail.com>
-X-B4-Tracking: v=1; b=H4sIANabCWgC/x3MTQqAIBBA4avIrBP8Bekq0cJstNmYaEQg3T1p+
- S3e69CwEjaYWYeKNzU684CcGITD54Sc9mFQQllhlOatEL8wVS+l4ZtzTrlgg4gaRlIqRnr+3bK
- +7wfRnhCvXgAAAA==
-X-Change-ID: 20250423-spi-tegra114-b88828c5c0f3
-To: Laxman Dewangan <ldewangan@nvidia.com>, Mark Brown <broonie@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Mason Zhang <Mason.Zhang@mediatek.com>
-Cc: linux-spi@vger.kernel.org, linux-tegra@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745460211; l=1447;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=6Ntl3heYOtSRo+SbZlaWWlJ/8sphcbur4awnUfzmiKk=;
- b=UngeTiHC4/irfiREWVxaOQlDY8BZIa8YqVXnNAGy9+5094zQFFqJTZfL0x7LsHsqt4Xzi66Qi
- /gjS63hepyMAYsfBK0t3ZXzr3Aqn7BW9OywpDOqR/OVYdI1zkQ1Jluu
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAxMCBTYWx0ZWRfXw27yqXELL9ax 97+PtW0vRpFkNpEHEB1AKB6/VT/9TC6UvexB5WDYsmLbES7z2x5/0MunUYGkcpTDSH2FbO8JU08 vWxbwd887W3OKVfpW8g6lS0XP10xZnZQ3WJaRGHov00a/7xuXSZmV7v1hO2RkLBPCbI81auoSon
+ K0UOyqgwXCSaPFVZ+4GuDmozrjyMdPWi26miCCtMBbRHsTQFZEsBGOMmlECNUUEEhz550ZeJTu0 drl43QKsVadZzl4JjRddX8Hj2yXBeY5EIMMlmcRXHEuThMZqesQiY5iAztz+PAgoMcCBsLKvO3+ bWCJlQfOblawQB+7Les/mEWaCss4y90yWb9O8SA/8nO3CyYFgFG3uSrgXxhditzyOsXSZtq9DiR
+ XXYKOHzcp2wta5AvHRD/FAiDNia1tBk8f7HMCjn6jywJcULv8Bk+k9GW3mG/IX08vB8C9ovy
+X-Proofpoint-GUID: QNjkBK0bFuFE4f19JGGgxItYhw7neibc
+X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=68099c23 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=7oS1v-cyAAAA:8
+ a=dd0EAvHu3vwreEp4BEUA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=PcM2qe9_4d1tJnOwuzRa:22
+X-Proofpoint-ORIG-GUID: QNjkBK0bFuFE4f19JGGgxItYhw7neibc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_01,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240010
 
-From: Aaron Kling <webgeek1234@gmail.com>
 
-The original code would skip null delay pointers, but when the pointers
-were converted to point within the spi_device struct, the check was not
-updated to skip delays of zero. Hence all spi devices that didn't set
-delays would fail to probe.
 
-Fixes: 04e6bb0d6bb1 ("spi: modify set_cs_timing parameter")
-Cc: stable@vger.kernel.org
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/spi/spi-tegra114.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On 2/26/2025 6:25 PM, Dmitry Baryshkov wrote:
+> LVDS support in MDP4 driver makes use of drm_connector directly. However
+> LCDC encoder and LVDS connector are wrappers around drm_panel. Switch
+> them to use drm_panel_bridge/drm_bridge_connector. This allows using
+> standard interface for the drm_panel and also inserting additional
+> bridges between encoder and panel.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>   drivers/gpu/drm/msm/Makefile                       |   1 -
+>   drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c           |  34 +++++--
+>   drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h           |   6 +-
+>   drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c  |  20 +----
+>   .../gpu/drm/msm/disp/mdp4/mdp4_lvds_connector.c    | 100 ---------------------
+>   5 files changed, 28 insertions(+), 133 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
+> index 5df20cbeafb8bf07c825a1fd72719d5a56c38613..7a2ada6e2d74a902879e4f12a78ed475e5209ec2 100644
+> --- a/drivers/gpu/drm/msm/Makefile
+> +++ b/drivers/gpu/drm/msm/Makefile
+> @@ -48,7 +48,6 @@ msm-display-$(CONFIG_DRM_MSM_MDP4) += \
+>   	disp/mdp4/mdp4_dsi_encoder.o \
+>   	disp/mdp4/mdp4_dtv_encoder.o \
+>   	disp/mdp4/mdp4_lcdc_encoder.o \
+> -	disp/mdp4/mdp4_lvds_connector.o \
+>   	disp/mdp4/mdp4_lvds_pll.o \
+>   	disp/mdp4/mdp4_irq.o \
+>   	disp/mdp4/mdp4_kms.o \
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> index 689e210660a5218ed1e2d116073723215af5a187..93c9411eb422bc67b7fedb5ffce4c330310b520f 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> @@ -6,6 +6,8 @@
+>   
+>   #include <linux/delay.h>
+>   
+> +#include <drm/drm_bridge.h>
+> +#include <drm/drm_bridge_connector.h>
+>   #include <drm/drm_vblank.h>
+>   
+>   #include "msm_drv.h"
+> @@ -189,7 +191,7 @@ static int mdp4_modeset_init_intf(struct mdp4_kms *mdp4_kms,
+>   	struct msm_drm_private *priv = dev->dev_private;
+>   	struct drm_encoder *encoder;
+>   	struct drm_connector *connector;
+> -	struct device_node *panel_node;
+> +	struct drm_bridge *next_bridge;
+>   	int dsi_id;
+>   	int ret;
+>   
+> @@ -199,27 +201,43 @@ static int mdp4_modeset_init_intf(struct mdp4_kms *mdp4_kms,
+>   		 * bail out early if there is no panel node (no need to
+>   		 * initialize LCDC encoder and LVDS connector)
+>   		 */
+> -		panel_node = of_graph_get_remote_node(dev->dev->of_node, 0, 0);
+> -		if (!panel_node)
+> -			return 0;
+> +		next_bridge = devm_drm_of_get_bridge(dev->dev, dev->dev->of_node, 0, 0);
+> +		if (IS_ERR(next_bridge)) {
+> +			ret = PTR_ERR(next_bridge);
+> +			if (ret == -ENODEV)
+> +				return 0;
+> +			return ret;
+> +		}
+>   
+> -		encoder = mdp4_lcdc_encoder_init(dev, panel_node);
+> +		encoder = mdp4_lcdc_encoder_init(dev);
+>   		if (IS_ERR(encoder)) {
+>   			DRM_DEV_ERROR(dev->dev, "failed to construct LCDC encoder\n");
+> -			of_node_put(panel_node);
+>   			return PTR_ERR(encoder);
+>   		}
+>   
+>   		/* LCDC can be hooked to DMA_P (TODO: Add DMA_S later?) */
+>   		encoder->possible_crtcs = 1 << DMA_P;
+>   
+> -		connector = mdp4_lvds_connector_init(dev, panel_node, encoder);
+> +		ret = drm_bridge_attach(encoder, next_bridge, NULL, DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> +		if (ret) {
+> +			DRM_DEV_ERROR(dev->dev, "failed to attach LVDS panel/bridge: %d\n", ret);
+> +
+> +			return ret;
+> +		}
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 3822d7c8d8edb9730e937df50d1c75e095dd18ec..2a8bb798e95b954fe573f1c50445ed2e7fcbfd78 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -728,9 +728,9 @@ static int tegra_spi_set_hw_cs_timing(struct spi_device *spi)
- 	u32 inactive_cycles;
- 	u8 cs_state;
- 
--	if (setup->unit != SPI_DELAY_UNIT_SCK ||
--	    hold->unit != SPI_DELAY_UNIT_SCK ||
--	    inactive->unit != SPI_DELAY_UNIT_SCK) {
-+	if ((setup->unit && setup->unit != SPI_DELAY_UNIT_SCK) ||
-+	    (hold->unit && hold->unit != SPI_DELAY_UNIT_SCK) ||
-+	    (inactive->unit && inactive->unit != SPI_DELAY_UNIT_SCK)) {
- 		dev_err(&spi->dev,
- 			"Invalid delay unit %d, should be SPI_DELAY_UNIT_SCK\n",
- 			SPI_DELAY_UNIT_SCK);
+Can you pls point me to the lvds bridge used with this apq8064 board? I 
+was unable to find it. Just wanted to compare that against this while 
+reviewing.
 
----
-base-commit: a79be02bba5c31f967885c7f3bf3a756d77d11d9
-change-id: 20250423-spi-tegra114-b88828c5c0f3
-
-Best regards,
--- 
-Aaron Kling <webgeek1234@gmail.com>
-
+> +
+> +		connector = drm_bridge_connector_init(dev, encoder);
+>   		if (IS_ERR(connector)) {
+>   			DRM_DEV_ERROR(dev->dev, "failed to initialize LVDS connector\n");
+> -			of_node_put(panel_node);
+>   			return PTR_ERR(connector);
+>   		}
+>   
+> +		ret = drm_connector_attach_encoder(connector, encoder);
+> +		if (ret) {
+> +			DRM_DEV_ERROR(dev->dev, "failed to attach LVDS connector: %d\n", ret);
+> +
+> +			return ret;
+> +		}
+> +
+>   		break;
+>   	case DRM_MODE_ENCODER_TMDS:
+>   		encoder = mdp4_dtv_encoder_init(dev);
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
+> index e0380d3b7e0cee99c4c376bf6369887106f44ede..306f5ca8f810aaeecea56e74065933bbffcb67ec 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
+> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.h
+> @@ -191,11 +191,7 @@ struct drm_crtc *mdp4_crtc_init(struct drm_device *dev,
+>   long mdp4_dtv_round_pixclk(struct drm_encoder *encoder, unsigned long rate);
+>   struct drm_encoder *mdp4_dtv_encoder_init(struct drm_device *dev);
+>   
+> -struct drm_encoder *mdp4_lcdc_encoder_init(struct drm_device *dev,
+> -		struct device_node *panel_node);
+> -
+> -struct drm_connector *mdp4_lvds_connector_init(struct drm_device *dev,
+> -		struct device_node *panel_node, struct drm_encoder *encoder);
+> +struct drm_encoder *mdp4_lcdc_encoder_init(struct drm_device *dev);
+>   
+>   #ifdef CONFIG_DRM_MSM_DSI
+>   struct drm_encoder *mdp4_dsi_encoder_init(struct drm_device *dev);
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
+> index cfcedd8a635cf0297365e845ef415a8f0d553183..a4f3edabefbd06286bfb8fbcd7f8c0a4281e5ef1 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lcdc_encoder.c
+> @@ -14,7 +14,6 @@
+>   
+>   struct mdp4_lcdc_encoder {
+>   	struct drm_encoder base;
+> -	struct device_node *panel_node;
+>   	struct drm_panel *panel;
+>   	struct clk *lcdc_clk;
+>   	unsigned long int pixclock;
+> @@ -262,19 +261,12 @@ static void mdp4_lcdc_encoder_disable(struct drm_encoder *encoder)
+>   	struct mdp4_lcdc_encoder *mdp4_lcdc_encoder =
+>   			to_mdp4_lcdc_encoder(encoder);
+>   	struct mdp4_kms *mdp4_kms = get_kms(encoder);
+> -	struct drm_panel *panel;
+>   
+>   	if (WARN_ON(!mdp4_lcdc_encoder->enabled))
+>   		return;
+>   
+>   	mdp4_write(mdp4_kms, REG_MDP4_LCDC_ENABLE, 0);
+>   
+> -	panel = of_drm_find_panel(mdp4_lcdc_encoder->panel_node);
+> -	if (!IS_ERR(panel)) {
+> -		drm_panel_disable(panel);
+> -		drm_panel_unprepare(panel);
+> -	}
+> -
+>   	/*
+>   	 * Wait for a vsync so we know the ENABLE=0 latched before
+>   	 * the (connector) source of the vsync's gets disabled,
+> @@ -300,7 +292,6 @@ static void mdp4_lcdc_encoder_enable(struct drm_encoder *encoder)
+>   			to_mdp4_lcdc_encoder(encoder);
+>   	unsigned long pc = mdp4_lcdc_encoder->pixclock;
+>   	struct mdp4_kms *mdp4_kms = get_kms(encoder);
+> -	struct drm_panel *panel;
+>   	uint32_t config;
+>   	int ret;
+>   
+> @@ -335,12 +326,6 @@ static void mdp4_lcdc_encoder_enable(struct drm_encoder *encoder)
+>   	if (ret)
+>   		DRM_DEV_ERROR(dev->dev, "failed to enable lcdc_clk: %d\n", ret);
+>   
+> -	panel = of_drm_find_panel(mdp4_lcdc_encoder->panel_node);
+> -	if (!IS_ERR(panel)) {
+> -		drm_panel_prepare(panel);
+> -		drm_panel_enable(panel);
+> -	}
+> -
+>   	setup_phy(encoder);
+>   
+>   	mdp4_write(mdp4_kms, REG_MDP4_LCDC_ENABLE, 1);
+> @@ -375,8 +360,7 @@ static const struct drm_encoder_helper_funcs mdp4_lcdc_encoder_helper_funcs = {
+>   };
+>   
+>   /* initialize encoder */
+> -struct drm_encoder *mdp4_lcdc_encoder_init(struct drm_device *dev,
+> -		struct device_node *panel_node)
+> +struct drm_encoder *mdp4_lcdc_encoder_init(struct drm_device *dev)
+>   {
+>   	struct drm_encoder *encoder;
+>   	struct mdp4_lcdc_encoder *mdp4_lcdc_encoder;
+> @@ -387,8 +371,6 @@ struct drm_encoder *mdp4_lcdc_encoder_init(struct drm_device *dev,
+>   	if (IS_ERR(mdp4_lcdc_encoder))
+>   		return ERR_CAST(mdp4_lcdc_encoder);
+>   
+> -	mdp4_lcdc_encoder->panel_node = panel_node;
+> -
+>   	encoder = &mdp4_lcdc_encoder->base;
+>   
+>   	drm_encoder_helper_add(encoder, &mdp4_lcdc_encoder_helper_funcs);
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_connector.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_connector.c
+> deleted file mode 100644
+> index 4755eb13ef79f313d2be088145c8cd2e615226fe..0000000000000000000000000000000000000000
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_lvds_connector.c
+> +++ /dev/null
+> @@ -1,100 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0-only
+> -/*
+> - * Copyright (C) 2014 Red Hat
+> - * Author: Rob Clark <robdclark@gmail.com>
+> - * Author: Vinay Simha <vinaysimha@inforcecomputing.com>
+> - */
+> -
+> -#include "mdp4_kms.h"
+> -
+> -struct mdp4_lvds_connector {
+> -	struct drm_connector base;
+> -	struct drm_encoder *encoder;
+> -	struct device_node *panel_node;
+> -	struct drm_panel *panel;
+> -};
+> -#define to_mdp4_lvds_connector(x) container_of(x, struct mdp4_lvds_connector, base)
+> -
+> -static enum drm_connector_status mdp4_lvds_connector_detect(
+> -		struct drm_connector *connector, bool force)
+> -{
+> -	struct mdp4_lvds_connector *mdp4_lvds_connector =
+> -			to_mdp4_lvds_connector(connector);
+> -
+> -	if (!mdp4_lvds_connector->panel) {
+> -		mdp4_lvds_connector->panel =
+> -			of_drm_find_panel(mdp4_lvds_connector->panel_node);
+> -		if (IS_ERR(mdp4_lvds_connector->panel))
+> -			mdp4_lvds_connector->panel = NULL;
+> -	}
+> -
+> -	return mdp4_lvds_connector->panel ?
+> -			connector_status_connected :
+> -			connector_status_disconnected;
+> -}
+> -
+> -static void mdp4_lvds_connector_destroy(struct drm_connector *connector)
+> -{
+> -	struct mdp4_lvds_connector *mdp4_lvds_connector =
+> -			to_mdp4_lvds_connector(connector);
+> -
+> -	drm_connector_cleanup(connector);
+> -
+> -	kfree(mdp4_lvds_connector);
+> -}
+> -
+> -static int mdp4_lvds_connector_get_modes(struct drm_connector *connector)
+> -{
+> -	struct mdp4_lvds_connector *mdp4_lvds_connector =
+> -			to_mdp4_lvds_connector(connector);
+> -	struct drm_panel *panel = mdp4_lvds_connector->panel;
+> -	int ret = 0;
+> -
+> -	if (panel)
+> -		ret = drm_panel_get_modes(panel, connector);
+> -
+> -	return ret;
+> -}
+> -
+> -static const struct drm_connector_funcs mdp4_lvds_connector_funcs = {
+> -	.detect = mdp4_lvds_connector_detect,
+> -	.fill_modes = drm_helper_probe_single_connector_modes,
+> -	.destroy = mdp4_lvds_connector_destroy,
+> -	.reset = drm_atomic_helper_connector_reset,
+> -	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> -	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> -};
+> -
+> -static const struct drm_connector_helper_funcs mdp4_lvds_connector_helper_funcs = {
+> -	.get_modes = mdp4_lvds_connector_get_modes,
+> -};
+> -
+> -/* initialize connector */
+> -struct drm_connector *mdp4_lvds_connector_init(struct drm_device *dev,
+> -		struct device_node *panel_node, struct drm_encoder *encoder)
+> -{
+> -	struct drm_connector *connector = NULL;
+> -	struct mdp4_lvds_connector *mdp4_lvds_connector;
+> -
+> -	mdp4_lvds_connector = kzalloc(sizeof(*mdp4_lvds_connector), GFP_KERNEL);
+> -	if (!mdp4_lvds_connector)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	mdp4_lvds_connector->encoder = encoder;
+> -	mdp4_lvds_connector->panel_node = panel_node;
+> -
+> -	connector = &mdp4_lvds_connector->base;
+> -
+> -	drm_connector_init(dev, connector, &mdp4_lvds_connector_funcs,
+> -			DRM_MODE_CONNECTOR_LVDS);
+> -	drm_connector_helper_add(connector, &mdp4_lvds_connector_helper_funcs);
+> -
+> -	connector->polled = 0;
+> -
+> -	connector->interlace_allowed = 0;
+> -	connector->doublescan_allowed = 0;
+> -
+> -	drm_connector_attach_encoder(connector, encoder);
+> -
+> -	return connector;
+> -}
+> 
 
