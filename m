@@ -1,136 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717B42918DB;
-	Thu, 24 Apr 2025 19:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CCE292912
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 19:58:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745524696; cv=none; b=phV5UvR6UHvqS4g+wzlS+YEfPu/yLSf0CUEb7v7B2z5q5CSSDNbvEeg2vFQCsZimEur0uJKmXLqUmK+XVYD4G9dTNa/r/CzXHMiQrX3aCn6o4ZBM0wZOM0jL8mu3CQoe+ElieiWrqnyifYyYIKDgQKcdwNggEJjM4JRIs8beOdU=
+	t=1745524717; cv=none; b=ZgrTZDBiGnf4t9Ti/2if9AkuHIGmJCZKoy1oydNbtS4hJUjaOYMgLWDNOcb3a23EMaw3IBQrcLmkiju0e5hX8qknHWClL29Fu0UTQgDFyGK91YZyZhdtDODnJqoOWbq9R/mKUSJin+/oR3Yl01H30p7+skQXGcsXbHRQpd6U02s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745524696; c=relaxed/simple;
-	bh=jCqnrkO49i/1KDnDy3AYs8SCV2Yp2zZbgIKGirX117w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZP1OFvNPpoQa8V0sugvfKbjTA8xRWdpObrNil5XcwM8Tam2M3EiT8/IjtGRWypjgExQqNcet7xyjN0UK24JiSQ5NubpELSma7H2q4FcQHDJUTTI2PAb0TMRZVrzZfK451tAPlHZeMriWwoNN79ajTaNyxVS5VF2PCIPw6BK+UZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LVK/CGCM; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745524717; c=relaxed/simple;
+	bh=+RY+q+hJwDOImCGmTObp5ZfX3k4NCCjexNpcM/rV9ow=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=Qi5qdzDG1OQuhVOpXm4lA8usriuk/ffImNQAHjEP2rzQEhhrY+rKlkKtgcPlhO3lxcT9IAw7Ja9/rKCw23PMsYvBPkCUS75hiPU5Il7pCT3mx1wbmeZqFay4s+eFnQHU3lZMquFBB8hbjcRZU8A+n8iLocx5oT6y9lFY7yO3SCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dgNmfC/G; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LVK/CGCM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745524695; x=1777060695;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jCqnrkO49i/1KDnDy3AYs8SCV2Yp2zZbgIKGirX117w=;
-  b=LVK/CGCMEm3oK/EHX81F/+alWcW8zmEfGtMTSsFX7piscwES+Tpp6ahq
-   rFFu5KIFky9lLkH5fuWaxgB+wGWYzQFz+o9+/LlQ8QusveE9hbjTOSVd1
-   jvW+o+v+sy42RxrytFE3UqWE11/jWd2VSVqZ0LEg9SCbwj4Ugv9irAnMz
-   MZyOAaMPEbaHWWGj27ncSceKtKDfzb93SE5NB1wqSbh62dm2LwGcSloWC
-   83fiZLupDp5gKi8YieHFQo+jEyicHK3HcbWl0GnTOgKBKY0SQ0zO990py
-   SJePxxISnW5yMhebmixv/uKCzbo637DibNayxTDAj+IGD5L7MgxR+zwHD
-   A==;
-X-CSE-ConnectionGUID: lIZZPLv0S6KMhRZsRfFMmw==
-X-CSE-MsgGUID: wed0sED/Ssiy/bziQZKw0w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="58167196"
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="58167196"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 12:58:14 -0700
-X-CSE-ConnectionGUID: JgFzrgizQpOpB0Mkg8fUZA==
-X-CSE-MsgGUID: 234+q1wvQwCY3fUsv8QVqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
-   d="scan'208";a="133679088"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.124.101.220]) ([10.124.101.220])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 12:58:13 -0700
-Message-ID: <a659c122-5a39-451e-8c24-102f4d240bd3@linux.intel.com>
-Date: Thu, 24 Apr 2025 12:58:12 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dgNmfC/G"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736cd27d51fso1212131b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745524715; x=1746129515; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=q7sNSlEoh3Ww7j5/GpP6XSkW5Nfndqm2bW7+y1NMx1s=;
+        b=dgNmfC/GtTwkMj7e3L8uWrDWZm5J4JoTuXCnLy61dDd6fDxFP58OzwD+d7iofs5iWi
+         tf4au9kQ5Qnpa0n1PcuBxHL7SFdvjy3UhRpNoxzMbVKjYJgGRvPXfjuGgEyhlXdxJV6U
+         ZBm6ZyAePBWx8zrtqOq8poi3Xvh1G07rz7O/MYirj+A3qSy/ealq6fjKUMzMEYbbBXkE
+         SNrkRFOPYvHTFar1dXJ0dy1Jcj54hTOCnbE30CcB8EnY4trI6HAtKEGvTnhWLoSkIyUQ
+         3rSk8Vuwk0P6EqmMxrTCoN0SErn7mo4dRqh/6eZUSuXWUZEjjR9BbKELmuQfXTMLcR/J
+         TvgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745524715; x=1746129515;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q7sNSlEoh3Ww7j5/GpP6XSkW5Nfndqm2bW7+y1NMx1s=;
+        b=wvPIIrbDM9DzEZulxlqOLo1cZSTo/sD0tqjh/iLF8jgmX6GHQhpqfQJoOfz56gxafs
+         IMvJyuayQ5LasKqTsZVO65tnowu6MSNwAZ16mHE7uxcPPlHQ8Afkx2j5GIuAieXgGuKP
+         YuDUAirvihEci7cdtET/m6TUgGC/8qTPUYa4c+MF8Em0kZMETmwGiafSz/wyT0Ej8qLv
+         0HAbaampJd9Yp+Rtj9DCNehmMZY1OU7k/UbShWJt1UwmHjVDcXjRXNZHe4y+SXTUJOI0
+         PhFN+MrmTWE2f4efLX6h/fU5eljzQQ4a1UE4AZTpa8wKd6zK85NXxROytlzK5QmkdIDI
+         oi2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWpU62vAglI3x+w8PiUucBGvcefMfafsPT8N+RCGPuAEehN0mGLECvNfwWM4Z63vFX8CQdwyLkePWSpI+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwMm4LQ6aLbuLlzwLOAyA5Pdi25dTiyoo4d/PkXnlK22suY/25r
+	HGFGDWgs5rOHAZVWTVx2MZETLp0nZczE3Zk00q+AivaoUqdFh4o8tpQvlhJtlfskJKcjb+JywmZ
+	x/VzEqw==
+X-Google-Smtp-Source: AGHT+IFawFJI77cbJR22Buh8Gc3QU2W5Qpl5CiCQ8mIfHNOGIgryv+Il5hJbbZUqB7zx7RlHuHa2w3a4hR1q
+X-Received: from pffk9.prod.google.com ([2002:aa7:88c9:0:b0:732:20df:303c])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:a86:b0:736:32d2:aa82
+ with SMTP id d2e1a72fcca58-73e330c8b69mr1115793b3a.23.1745524715146; Thu, 24
+ Apr 2025 12:58:35 -0700 (PDT)
+Date: Thu, 24 Apr 2025 12:58:23 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] platform/x86:intel/pmc: Move error handling to
- init function
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-References: <20250421211100.687250-1-xi.pardee@linux.intel.com>
- <20250421211100.687250-4-xi.pardee@linux.intel.com>
- <c468af86-4bb8-4a8b-b601-07e29d4907e3@linux.intel.com>
-Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <c468af86-4bb8-4a8b-b601-07e29d4907e3@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <20250424195831.1767457-1-irogers@google.com>
+Subject: [PATCH v2 0/8] perf: Default use of build IDs and improvements
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
+	"Steinar H. Gunderson" <sesse@google.com>, James Clark <james.clark@linaro.org>, 
+	Stephen Brennan <stephen.s.brennan@oracle.com>, Andi Kleen <ak@linux.intel.com>, 
+	Dmitry Vyukov <dvyukov@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, 
+	"=?UTF-8?q?Krzysztof=20=C5=81opatowski?=" <krzysztof.m.lopatowski@gmail.com>, 
+	"Dr. David Alan Gilbert" <linux@treblig.org>, Zixian Cai <fzczx123@gmail.com>, 
+	Steve Clevenger <scclevenger@os.amperecomputing.com>, 
+	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
+	"=?UTF-8?q?Martin=20Li=C5=A1ka?=" <m.liska@foxlink.cz>, Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Build ID mmap2 events have been available since Linux v5.12 and avoid
+certain races. Enable these by default as discussed in:
+https://lore.kernel.org/linux-perf-users/CAP-5=fXP7jN_QrGUcd55_QH5J-Y-FCaJ6=NaHVtyx0oyNh8_-Q@mail.gmail.com/
 
-On 4/24/2025 7:02 AM, Ilpo Järvinen wrote:
-> On Mon, 21 Apr 2025, Xi Pardee wrote:
->
->> Move error handling code to generic_core_init() function. The previous
->> implementation is that init function called for "full cleanup" function
->> when error occurs which is error prone. The init function should handle
->> the error path itself to improve code maintainability.
->>
->> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel/pmc/core.c | 23 ++++++++++++++++++++---
->>   1 file changed, 20 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
->> index 042b60c1185f..e09a97564398 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -1583,10 +1583,26 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
->>   	if (pmc_dev_info->dmu_guid)
->>   		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
->>   
->> -	if (ssram)
->> -		return pmc_core_ssram_get_lpm_reqs(pmcdev, pmc_dev_info->pci_func);
->> +	if (ssram) {
->> +		ret = pmc_core_ssram_get_lpm_reqs(pmcdev, pmc_dev_info->pci_func);
->> +		if (ret)
->> +			goto unmap_regbase;
->> +	}
->>   
->>   	return 0;
->> +
->> +unmap_regbase:
->> +	for (unsigned int i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
->> +		struct pmc *pmc = pmcdev->pmcs[i];
->> +
->> +		if (pmc && pmc->regbase)
->> +			iounmap(pmc->regbase);
->> +	}
->> +
->> +	if (pmcdev->punit_ep)
->> +		pmt_telem_unregister_endpoint(pmcdev->punit_ep);
->> +
->> +	return ret;
->>   }
->>   
->>   static const struct x86_cpu_id intel_pmc_core_ids[] = {
->> @@ -1734,7 +1750,8 @@ static int pmc_core_probe(struct platform_device *pdev)
->>   		ret = generic_core_init(pmcdev, pmc_dev_info);
->>   
->>   	if (ret) {
->> -		pmc_core_clean_structure(pdev);
->> +		platform_set_drvdata(pdev, NULL);
->> +		mutex_destroy(&pmcdev->lock);
-> Please change also the mutex init to use devm_mutex_init(), don't forget
-> to include error handling for it as it devm_mutex_init() can fail.
+The dso_id is used to indentify a DSO that may change by being
+overwritten. The inode generation isn't present in /proc/pid/maps and
+so was already only optionally filled in. With build ID mmap events
+the other major, minor and inode varialbes aren't filled in. Change
+the dso_id implementation to make optional values explicit, rather
+than injecting a dso_id we want to improve it during find operations,
+add the buildid to the dso_id for sorting and so that matching fails
+when build IDs vary between DSOs.
 
-Will change to devm_mutex_init() in next version.
+Mark the callchain for buildids and not just the sample IP, fixing
+missing DSOs.
 
-Thanks!
+Fix sample__for_each_callchain_node to populate the map even when
+symbols aren't computed.
 
-Xi
+Other minor bits of build_id clean up.
 
->>   		return ret;
->>   	}
->>   
->>
+v2: Make marking DSOs still the default even with the defaulted build
+    ID mmap. The command line option still disables this to avoid
+    regressions. Add callchain patches and jitdump fix.
+
+Ian Rogers (8):
+  perf callchain: Always populate the addr_location map when adding IP
+  perf jitdump: Directly mark the jitdump DSO
+  perf build-id: Reduce size of "size" variable
+  perf build-id: Truncate to avoid overflowing the build_id data
+  perf build-id: Change sprintf functions to snprintf
+  perf build-id: Mark DSO in sample callchains
+  perf dso: Move build_id to dso_id
+  perf record: Make --buildid-mmap the default
+
+ tools/perf/builtin-buildid-cache.c            |  12 +-
+ tools/perf/builtin-buildid-list.c             |   6 +-
+ tools/perf/builtin-inject.c                   |  32 ++---
+ tools/perf/builtin-record.c                   |  33 ++++--
+ tools/perf/builtin-report.c                   |  11 +-
+ tools/perf/include/perf/perf_dlfilter.h       |   2 +-
+ tools/perf/tests/symbols.c                    |   4 +-
+ tools/perf/util/build-id.c                    |  57 +++++----
+ tools/perf/util/build-id.h                    |   8 +-
+ tools/perf/util/disasm.c                      |   2 +-
+ tools/perf/util/dso.c                         | 111 ++++++++++--------
+ tools/perf/util/dso.h                         |  75 ++++++------
+ tools/perf/util/dsos.c                        |  20 ++--
+ tools/perf/util/event.c                       |   2 +-
+ tools/perf/util/header.c                      |   2 +-
+ tools/perf/util/jitdump.c                     |  21 +++-
+ tools/perf/util/machine.c                     |  34 +++---
+ tools/perf/util/map.c                         |  15 ++-
+ tools/perf/util/map.h                         |   5 +-
+ tools/perf/util/probe-file.c                  |   4 +-
+ .../scripting-engines/trace-event-python.c    |   7 +-
+ tools/perf/util/sort.c                        |  27 +++--
+ tools/perf/util/symbol.c                      |   2 +-
+ tools/perf/util/symbol_conf.h                 |   2 +-
+ tools/perf/util/synthetic-events.c            |  42 ++++---
+ tools/perf/util/thread.c                      |   8 +-
+ tools/perf/util/thread.h                      |   2 +-
+ 27 files changed, 314 insertions(+), 232 deletions(-)
+
+-- 
+2.49.0.850.g28803427d3-goog
+
