@@ -1,117 +1,137 @@
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B017DA6D
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B195D1E9B32;
+	Thu, 24 Apr 2025 10:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745489965; cv=none; b=gaBq8WwFurQkFVuoqNEllGljj+SEpGAdZ3MyfxazmIbM/JwnYzmd47YHhOpH7tpsTAKWuB09DMUjHZQ+hCNgpNH680mNszMR8YMeoKMutPL5u2dJNx4q5C7SMvvrrS0UYk3XSaphIr8DfwuvCwuX64oGrOVo71G4s4Uh+FpF8xE=
+	t=1745489978; cv=none; b=jy+b3tFwtwNI/7vMyiJu1HRfxzTFDZmH4QWJKZja+XS/vyW/5NCrvCTX3tSG2NUl1W4f5+eM8OmtQ5mdfo9KmlmDPCsHOtoP72X6z5OGXIK66HligjG/sCDGy+XtjMRJ4BFGbedxC0+YGoJ2zSY5yeMNYlUjnnrmpQr4uN07IQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745489965; c=relaxed/simple;
-	bh=gZMQkuTH5eS6MID9lI2Ptd6S1ztbvFrHop/MX8doq/k=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nMLUk/YLhtGueQ12/XYYBfvnVDlyqDSIrJZIoMpvd+xZkSqVlVKYkU5yIRk/gVWmQSIFlsF6Bqwv0rDLzXLKEVgdzUOH1QDhAFRO0J5rItVoeARS0AhXwxXWVfmdfHN37H0FSxr88YpFq2M/i7EgAFryNoXJMGjIpLabls7k5ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jz5WuAuJ; arc=none smtp.client-ip=209.85.221.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
+	s=arc-20240116; t=1745489978; c=relaxed/simple;
+	bh=N2s2BcXDjzDVGxuA4kX71UjVh3HFxxJt6DnEPEaPjXA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:Content-Type:
+	 MIME-Version; b=cYHjuH+zCSz8n+9NKD1hQGJRHaid+yHHokbRZzbOF6aDhqnbrj+PECbk3zqvD/hydtna4lRJiWtP9dHZy+wxXHh15J3QNfqF+TZ/OwAbbWtRmZe8f17aseyr9Lil8f9KaxysFH5gw3LkTEQs21hDEb2LVn6znHawdBTrFA9bKVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PMQjdnnI; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jz5WuAuJ"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3912fe32a30so305411f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:19:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PMQjdnnI"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso5261355e9.0;
+        Thu, 24 Apr 2025 03:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745489962; x=1746094762; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=THf/MVT4cQwV13+M3Pb20JJhOEchUgH+Tc6DDI5GnFk=;
-        b=Jz5WuAuJZ9Cn9HyW7VRP8pHL5L6IpaoryFRLZyzpjouVK0DisOYrg1+LcXnoMeAKcP
-         nRF74v8zlSjOJztLC/5yoVYs30+4qFUtQxdYhO5jpKEiOo8adqcJr102ZlEGbeWTSlVD
-         BB8/SsAbC306h8gvyoZZcpgWRohB+VdL64GZeFEU0vKHRTZ960j2WU1L7gru0cTEy//+
-         jQHt/L9UFcP7lgmrt/LE1pHdBTY3fi6QZJ2p5kEOgSizVg+xrqtfa1m6ibjcWpw12jNq
-         4f3qQOXs053kCycNBwxfMq71aku5LsNy1d03UgGUVJ+HQktHVKZ14XBmASk0stIa489a
-         YYgw==
+        d=gmail.com; s=20230601; t=1745489975; x=1746094775; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1tt+JiBvs/QL64nfkQEuwIxILZiVxeis5k9XCW27jc0=;
+        b=PMQjdnnIdX5I+57lGZR6VZ6m57lEkD3N+vOrUcxEmef/AQPBZTt0QEFd7dCuopxx0u
+         ug3l0+TYICsEypAO24y76sT6ir+AoqIm6NRyd/7r3MLM2G/uGeY0XBWSds+gPZ+n6LwP
+         Im+m03ls9EMyKWKETj/HpaA8mv6HRdpnHApGAbkUdpWZMzNZ/4H6RVdhIPKC54ina1aC
+         JowgShiYHpb1F8O6qC4Q5PFl/Arym+vLsDIYYRpjUahA9qsCblC5pcTvCv+zwag5MP7o
+         wnY2MmaN1/zuZ0Yzx83PNDjulMwnDg6JlST1FTMREngxH8F3fxrIIdaKwBBuRMwsMRW9
+         5UOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745489962; x=1746094762;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=THf/MVT4cQwV13+M3Pb20JJhOEchUgH+Tc6DDI5GnFk=;
-        b=MdREOjaPNxLILLSauj9peDF/d22m43sgooWtDlZPYJQLfUI9a0/AF4uakfpj8DCbfd
-         PLQssuQGRozNuTRkvqNNbJWT9JzRU2madQkfL+MXiNKEd/pRhcgIJKipvy4+yvMO3c3p
-         qHYVuzuigsG19NMROeycisH/UK4BntRZIYogOZKdZQ1FmjTPWerM0ySW+iCI64sK8h4r
-         qBpWrRoJ27vgdlkvcEgeQqrV4YV2ZykgCprB6UzVI5sPga1lNKvdYwzPo1iKz41EKURp
-         kSROeZNlXGpbrz6WMTAU0ecC7aQe6VhyjswPj1bJVgPq1tIYNsr4Il2GQF2ZlrxVtbmU
-         A9Nw==
-X-Gm-Message-State: AOJu0YysFKi+8H3NoUUwQQzeESwBRqtuaI/9rxttkrXUJANWqD4P1GLV
-	72fulW0P4hl4BBrs/LWxbmORVYiIvCnn3ryxMZaQKhbHRZqyX6XqAbP+ypTZkgkQB+eTNi+IDA4
-	fEb2ZRoHAh51hA+9Al49z9ahbAbfw2F5qoHW/YyAm0aMQfYYgArqm151QEl15gXI+GC5NQENGph
-	qsL93nXD6OysTtX61HrckXHDeu2hI7rA==
-X-Google-Smtp-Source: AGHT+IE9QT2YCBnyamrFo/mAoRhbchwidUtlGGNUVHPx5Tx6d0FVpLkhq+w48OTzmO/azn0L8DPTjZdy
-X-Received: from wrse12.prod.google.com ([2002:adf:fc4c:0:b0:39a:be9d:f396])
- (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:220c:b0:39e:cbca:922f
- with SMTP id ffacd0b85a97d-3a06cf523e4mr1587553f8f.12.1745489962524; Thu, 24
- Apr 2025 03:19:22 -0700 (PDT)
-Date: Thu, 24 Apr 2025 12:19:18 +0200
+        d=1e100.net; s=20230601; t=1745489975; x=1746094775;
+        h=mime-version:user-agent:content-transfer-encoding:in-reply-to:date
+         :cc:to:from:subject:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1tt+JiBvs/QL64nfkQEuwIxILZiVxeis5k9XCW27jc0=;
+        b=rvMZhI5kj3JWdx/tf5/Pn+sDvyWRLU+NBuDlCXs+qfSNjE5evsu5l5wyzK2TnOlkCn
+         BCHyRScch2RUg2ye7yhcF4gbCYwJOgHe8muP1XQQoC4420CBYqI1kmlgdDC+rIbWVCk9
+         S0dMv311a44VoTb8im9HBi6riyN6ZLnKBz8xQCWspHCKEL0GUEfA1fOKlOG4wLJKvpKI
+         KjmhCIaMbAOKxb0Mv5PUesOPpSb/cywsXzBaLTsgEX+v9io50fKA0LQztS1PcVrsxQG6
+         BIvq8TiSB83LTVeQFUCe9M5hL4u4cUSkoZ7uqyY28WuqlfVPzLow2/GmG3ZJ0CEe4VK/
+         P+0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWRVz5jY6JtqzQfnhjrMzFPUN0FNBd+jmfKXNyslzBs7YvDFJT/cmPeDRq9kshVgsI3CbF/wWg1w1LAuY19@vger.kernel.org, AJvYcCWv1wEJZnPVE1odUsIuz1QuQdqyd0dLkzQgqDQ4XIHx35RNV9tna4WMCrHUzLiivbCG05I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwR0cLDDFWQX2bkEg7Qat2o/G0y4p1hchMPbZviXgN+cpwVlQDV
+	yVhMw73FFu0PaFDSjm87wSQJvPLAOJB4kSfDwEcmShQM8UVKw7ip
+X-Gm-Gg: ASbGncuUx/YaODPunyU9TBudpDFYtSYezclEVEIieig3b8d+88SnEEKdamr5lv0bIxb
+	/ebmVIXuosq37j0rtdezJvPBBMdgZ5bM9ormuZcR96cec36wnU7hxQq0wxT6OUthM4kbx+rWv3p
+	DHklyPtfMwo2Rvpbz1HarCJh5inKmDJTHVcOAiEMsq+i9Hakodn7/T6saEBHVgCrxm7YBhzXVcy
+	QayXoQ5k4/xR9+iF248opK+HTy8JQEzVW9amDTjxIViizBJzZJRtNSeA5fIm2AxsxdffkFhR00X
+	YJ9Vf567PrcgLBsByNd+tfts7ff9EuSN2T93cldC1gDbqtqsVrJOWFFh7ms4j2QJ2BCI9pFy2am
+	FmqNtgb9TseConJo7q46IYg==
+X-Google-Smtp-Source: AGHT+IGU3dE7mOe0k8jag2/WwmwmZW16j8TNvMk1B2MzBanVRVP6xUmi1yhNxAb4AHKWCz0sZxRcYQ==
+X-Received: by 2002:a05:600d:10:b0:43d:683:8caa with SMTP id 5b1f17b1804b1-4409bd22cf7mr18604175e9.15.1745489974655;
+        Thu, 24 Apr 2025 03:19:34 -0700 (PDT)
+Received: from ?IPv6:2001:b07:5d29:f42d:f708:e6f8:ba5c:1977? ([2001:b07:5d29:f42d:f708:e6f8:ba5c:1977])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d29bf8fsm14995935e9.1.2025.04.24.03.19.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 03:19:34 -0700 (PDT)
+Message-ID: <a850503bc9bd789d2531fa64c5321d2d9cce5725.camel@gmail.com>
+Subject: Re: [RFC PATCH 19/21] KVM: gmem: Split huge boundary leafs for
+ punch hole of private memory
+From: Francesco Lavra <francescolavra.fl@gmail.com>
+To: yan.y.zhao@intel.com
+Cc: ackerleytng@google.com, binbin.wu@linux.intel.com,
+ chao.p.peng@intel.com,  dave.hansen@intel.com, david@redhat.com,
+ fan.du@intel.com, ira.weiny@intel.com,  isaku.yamahata@intel.com,
+ jroedel@suse.de, jun.miao@intel.com,  kirill.shutemov@intel.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,  michael.roth@amd.com,
+ pbonzini@redhat.com, pgonda@google.com,  quic_eberman@quicinc.com,
+ rick.p.edgecombe@intel.com, seanjc@google.com,  tabba@google.com,
+ thomas.lendacky@amd.com, vannapurve@google.com, vbabka@suse.cz, 
+ x86@kernel.org, xiaoyao.li@intel.com, zhiquan1.li@intel.com
+Date: Thu, 24 Apr 2025 12:19:32 +0200
+In-Reply-To: <20250424030858.519-1-yan.y.zhao@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1771; i=ardb@kernel.org;
- h=from:subject; bh=ucK+ySCXtMGXNmRaMwKgu6ZLmvylzJoP9YoIfmYlA7U=;
- b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYNLQE3kC6dIWeDq+KhLUxfdENT207zx5MX/lUmVnu/Xs
- G0waxPpKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABNREmf4pyz0SvRJUmj32ri1
- nnILhKqWO/WesDf75fUq9u3Jl0cCgxgZzphF83Ku1Zt4+WLUQ2nBE+kBBhEXHTk2s2ueDPUxqLX kBgA=
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-Message-ID: <20250424101917.1552527-2-ardb+git@google.com>
-Subject: [PATCH] x86/boot: Work around broken busybox truncate tool
-From: Ard Biesheuvel <ardb+git@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, phasta@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
 
-From: Ard Biesheuvel <ardb@kernel.org>
+On 2025-04-24 at 3:08, Yan Zhao wrote:
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index 4bb140e7f30d..008061734ac5 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -292,13 +292,14 @@ static struct folio *kvm_gmem_get_folio(struct
+> inode *inode, pgoff_t index, int
+>  	return folio;
+>  }
+> =20
+> -static void kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t
+> start,
+> -				      pgoff_t end)
+> +static int kvm_gmem_invalidate_begin(struct kvm_gmem *gmem, pgoff_t
+> start,
+> +				     pgoff_t end, bool need_split)
+>  {
+>  	bool flush =3D false, found_memslot =3D false;
+>  	struct kvm_memory_slot *slot;
+>  	struct kvm *kvm =3D gmem->kvm;
+>  	unsigned long index;
+> +	int ret =3D 0;
+> =20
+>  	xa_for_each_range(&gmem->bindings, index, slot, start, end -
+> 1) {
+>  		pgoff_t pgoff =3D slot->gmem.pgoff;
+> @@ -319,14 +320,23 @@ static void kvm_gmem_invalidate_begin(struct
+> kvm_gmem *gmem, pgoff_t start,
+>  			kvm_mmu_invalidate_begin(kvm);
+>  		}
+> =20
+> +		if (need_split) {
+> +			ret =3D kvm_split_boundary_leafs(kvm,
+> &gfn_range);
+> +			if (ret < 0)
+> +				goto out;
+> +
+> +			flush |=3D ret;
+> +		}
+>  		flush |=3D kvm_mmu_unmap_gfn_range(kvm, &gfn_range);
+>  	}
+> =20
+> +out:
+>  	if (flush)
+>  		kvm_flush_remote_tlbs(kvm);
+> =20
+>  	if (found_memslot)
+>  		KVM_MMU_UNLOCK(kvm);
+> +	return 0;
 
-The GNU coreutils version of truncate, which is the original, accepts a
-% prefix for the -s size argument which means the file in question
-should be padded to a multiple of the given size. This is currently used
-to pad the setup block of bzImage to a multiple of 4k before appending
-the decompressor.
-
-busybux reimplements truncate but does not support this idiom, and
-therefore fails the build since commit
-
-  9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
-
-Work around this by avoiding truncate altogether, and relying on dd to
-perform the padding.
-
-Reported-by: <phasta@kernel.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
----
-I personally think using a busybox environment for building the kernel
-is a terrible idea, and does not satisfy the build tool requirements
-listed in the documentation. But apparently, it used to work and now it
-doesn't, and the workaround is rather straight-forward.
-
-IOW, I don't care whether this gets applied or not, so I will leave it
-to others to make the argument.
-
- arch/x86/boot/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 81f55da81967..640fcac3af74 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -59,7 +59,7 @@ KBUILD_CFLAGS	+= $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
- $(obj)/bzImage: asflags-y  := $(SVGA_MODE)
- 
- quiet_cmd_image = BUILD   $@
--      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
-+      cmd_image = (dd if=$< bs=4k conv=sync status=none; cat $(filter-out $<,$(real-prereqs))) >$@
- 
- $(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin FORCE
- 	$(call if_changed,image)
--- 
-2.49.0.805.g082f7c87e0-goog
-
+Should return ret, not 0
