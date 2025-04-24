@@ -1,119 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C9621C9F1
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF0D23D29D;
+	Thu, 24 Apr 2025 09:38:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487496; cv=none; b=IJTsscU8GKd8voCBr7lJgFF8xwF2l7caznwjXVuH8GEzbpaE8Qa+6wkAfthuUQ74fAIX2XDRUTSrzwlQaKdICjrxTKOrQ0kGa31E2ANXuYLQaRJJpyM1XLRlHH4/sStyZN5paIKBTdhjcLEk4dW+t51a0ZTcXnK+0NDpecFkaGU=
+	t=1745487503; cv=none; b=aB/GreKzkXBvZBZPhzKMKCU0RrBqb5YaHc1K9+VftJN8TvhJ1hI9pi91A/Uio8AkYUg0cnSZ9BD6uAEnoO1ntsSY7XN68mbbsNDU2Y0gszMMl41jNYrT+515EayPydyS5Z2oowgUByb8fcfHkU+Nrtru4YfpWOI5ndtOAZxONGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487496; c=relaxed/simple;
-	bh=FuJlduOQyXCFyeF3mH4fN6Q/13fmq7kiMrRfBbJMj7o=;
+	s=arc-20240116; t=1745487503; c=relaxed/simple;
+	bh=JID61eSxQsJgBmkqNJZMZpjUO6Kl5+UYlI+ISdEz/PQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UIcpzVDbIrVklrvWfzlN/a8tVcUlF78pjBj18iHorHpnyY4MzFiCZhgj6c/xM2De/tBOt//0n7XsRcf9ClYsnpgdJ+W/kSdTUiKECVjC1y6hgxUyAIB4mI75fNUW93d7iaWQ/ef/IHGXo8ZhJPHsTtR8BQfl4vccckjuJHz0kKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/zvold2; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kfKaAJmZfK2nGqEyIQj1D+rQfBnPNNebFhaq++/awhruXoi7FbOzT6KUcVUvfcF1jM5o3YyYAj4tVQECs0l5MpShDksMlvuBp24J8It4/l+mHs81CK8XBg1bJFI2ovsr28mXTE/gnGbET7TWRrWFxpmGlfen+vPam0J4rRBAqEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mbl2UA5Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/zvold2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26349C4CEE3;
-	Thu, 24 Apr 2025 09:38:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mbl2UA5Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80DC1C4CEEB;
+	Thu, 24 Apr 2025 09:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745487495;
-	bh=FuJlduOQyXCFyeF3mH4fN6Q/13fmq7kiMrRfBbJMj7o=;
+	s=k20201202; t=1745487502;
+	bh=JID61eSxQsJgBmkqNJZMZpjUO6Kl5+UYlI+ISdEz/PQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=W/zvold2hOQtPOLzBYH20bFl1T+MtgX/UQe2LtCH++T+9ar262StTYb9OL/3PR4GA
-	 0dMsr72npxUQh59NwP0HEFMVW8nMsspoXbo78HnrIGTN9ZfrG00KdfL2bmFJM9Bzj1
-	 TVDzaEMwijMcKNY337b7KjPbVcEqOMCxeyvcJwCnONrgIorpY2Q/qT0S8PxnYUAMr6
-	 sr51RYfc8KK4rUyurniWI1bbWrt9do+s/SqDCS8pOPE6y5g8Xr4odnPRQ7iFgugjiv
-	 AKqhN2kok21jQxiwS/zW3ULDWi5zLHu7Ivfy9///lL6P3vHegqZCAu0J5BlzFgod/y
-	 KSSKEE3UrRMtw==
-Date: Thu, 24 Apr 2025 11:38:08 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>, linux-kernel@vger.kernel.org, 
-	mrpre@163.com, mkoutny@suse.com, 
-	syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com, syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com, 
-	syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com, Andrew Morton <akpm@linux-foundation.org>, 
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Wei Yang <richard.weiyang@gmail.com>, 
-	David Hildenbrand <david@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Mateusz Guzik <mjguzik@gmail.com>, Joel Granados <joel.granados@kernel.org>, 
-	Jens Axboe <axboe@kernel.dk>, Wei Liu <wei.liu@kernel.org>, 
-	Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v1] pid: annotate data-races around pid_ns->pid_allocated
-Message-ID: <20250424-marsch-radio-fb7bf6484c05@brauner>
-References: <20250423115542.7081-1-jiayuan.chen@linux.dev>
- <20250423135101.GA28646@redhat.com>
- <25a402bb9ddfecba22b5b24684d950494fc7410d@linux.dev>
- <20250423163818.GB28646@redhat.com>
+	b=Mbl2UA5Zy8sM2dQjwd3BZF/dMugS44M8jxov0KzeVUi167r5mEMqwQZ+soCWkbhhZ
+	 ulfJtzY9d59Tymo6ay43VtiSdKIy1kBhDVTW3SfMWPfab7B3D0rUlnzgOpxUvBNYoC
+	 h9Z0TpGherjzv9luL5nF79Ra6VU2aiJLY0TsiuUZSVNL2iXnQhYCmLSV3r9eRGlsFr
+	 RxU1KJxDb9T2yy23KT1R8vpOh0aiL2Llf6XSy5mNZy80SGn/ADcjlUnyQ/TvJNDDxB
+	 VkyEwWWMn/RAGbkJcF+/GZCwS2TXTRj7suXByiJv8ya8/GMpyH8O7M0LS2aqBv1+4r
+	 xEQBY8zpB7jgA==
+Date: Thu, 24 Apr 2025 10:38:16 +0100
+From: Simon Horman <horms@kernel.org>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Stephen Hemminger <stephen@networkplumber.org>, kys@microsoft.com,
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	pabeni@redhat.com, longli@microsoft.com, kotaranov@microsoft.com,
+	kent.overstreet@linux.dev, brett.creeley@amd.com,
+	schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
+	ssengar@linux.microsoft.com, rosenp@gmail.com,
+	paulros@microsoft.com, linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: Re: [PATCH 2/3] net: mana: Add sched HTB offload support
+Message-ID: <20250424093816.GD3042781@horms.kernel.org>
+References: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
+ <1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
+ <20250417081053.5b563a92@hermes.local>
+ <20250417194727.GB10777@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20250417170052.76e52039@kernel.org>
+ <20250418165324.GA29127@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250423163818.GB28646@redhat.com>
+In-Reply-To: <20250418165324.GA29127@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-On Wed, Apr 23, 2025 at 06:38:18PM +0200, Oleg Nesterov wrote:
-> On 04/23, Jiayuan Chen wrote:
-> >
-> > April 23, 2025 at 21:51, "Oleg Nesterov" <oleg@redhat.com> wrote:
-> >
-> >
-> >
-> > >
-> > > On 04/23, Jiayuan Chen wrote:
-> > >
-> > > >
-> > > > Suppress syzbot reports by annotating these accesses using
-> > > >
-> > > >  READ_ONCE() / WRITE_ONCE().
-> > > >
-> > >
-> > > ...
-> > >
-> > > >
-> > > > --- a/kernel/pid.c
-> > > >
-> > > >  +++ b/kernel/pid.c
-> > > >
-> > > >  @@ -122,7 +122,8 @@ void free_pid(struct pid *pid)
-> > > >
-> > > >  for (i = 0; i <= pid->level; i++) {
-> > > >
-> > > >  struct upid *upid = pid->numbers + i;
-> > > >
-> > > >  struct pid_namespace *ns = upid->ns;
-> > > >
-> > > >  - switch (--ns->pid_allocated) {
-> > > >
-> > > >  + WRITE_ONCE(ns->pid_allocated, READ_ONCE(ns->pid_allocated) - 1);
-> > > >
-> > > >  + switch (READ_ONCE(ns->pid_allocated)) {
-> > > >
-> > >
-> > > I keep forgetting how kcsan works, but we don't need
-> > >
-> > > READ_ONCE(ns->pid_allocated) under pidmap_lock?
-> > >
-> > > Same for other functions which read/modify ->pid_allocated with
-> > >
-> > > this lock held.
-> > >
-> > > Oleg.
-> > >
-> >
-> > However, not all places that read/write pid_allocated are locked,
-> > for example:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/kernel/pid_namespace.c#n271
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/kernel/fork.c#n2602
-> >
-> > So, in fact, the pidmap_lock is not effective. And if we were to add locks
-> > to all these places, it would be too heavy.
+On Fri, Apr 18, 2025 at 09:53:24AM -0700, Erni Sri Satya Vennela wrote:
+> On Thu, Apr 17, 2025 at 05:00:52PM -0700, Jakub Kicinski wrote:
+> > On Thu, 17 Apr 2025 12:47:27 -0700 Erni Sri Satya Vennela wrote:
+> > > > A single leaf is just Token Bucket Filter (TBF).
+> > > > Are you just trying to support some vendor config?  
+> > > TBF does not support hardware offloading.
+> > 
+> > Did you take a look at net_shapers? Will it not let you set a global
+> > config the way you intend?
+> Yes, Jakub. I have reviewed net-shapers and noted that it is not
+> integrated into the kernel like tc. I mean there isn't a standard,
+> general-purpose command for net-shaper in Linux. It is used by other
+> tools or potentially device-specific drivers that want to leverage the
+> NIC's hardware shaping capabilities.
 > 
-> It seems you misunderstood me. I didn't argue with the lockless READ_ONCE()s
-> outside of pidmap_lock.
+> To configure shaping with net-shapers, users would need to execute a
+> command similar to:
+> 
+> ./tools/net/ynl/cli.py --spec Documentation/netlink/specs/shaper.yaml
+> --do set --json '{"ifindex":'$IFINDEX', 
+> 		  "shaper": {"handle": 
+> 			    {"scope": "node", "id":'$NODEID' },
+> 		  "bw-max": 2000000}}'
+> 
+> Ref: https://lore.kernel.org/all/cover.1722357745.git.pabeni@redhat.com/
+> 
+> Given the simplicity of code implementation and ease of use for users in
+> writing commands, I opted for tc-htb.
 
-Agreed. We should only add those annotations where they're really
-needed (someone once taught me ;).
+Hi Erni,
+
+As someone who was involved with the design of net-shapers, I think it is
+reasonable to instead use the Kernel API which appears to have been
+designed specifically for this purpose: to control HW TX rate limiting.
+
+If tooling isn't intuitive or otherwise doesn't meet user's needs
+then that is something that can be addressed. But it's not a Kernel issue.
