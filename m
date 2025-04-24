@@ -1,181 +1,254 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7CA71AC43A;
-	Thu, 24 Apr 2025 17:43:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31BE7288CAF;
+	Thu, 24 Apr 2025 17:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745516608; cv=none; b=K/TsX8dk+yZOfsZz0cqeBWpZgfAoviy4932ac979PfVSZP/DR6Ij7E2l5jbCsMwVaPQScLhDeQ4l7pYMl4yKojFtge/Bziy5YHzMFgGdRWnYBMwGqhBakHv9GTswSvQVW8x+WJI/G3MW1nq9mX5mILHaBPOUsUmeHEmNyqQMBY4=
+	t=1745516674; cv=none; b=gwsBk5LW3c+epYrari1pdBdH1F3TA26T9jPMiRC4gFvyh0fdT4CzIF+mYhIsAbOnaUOQn5MQXty6VRDC0rQI3IpZDd975sr9UCFgrKTyoKUc+gJr3DOwplWSRL6uLxTt3BPIr+93R6cON3K52awPulE/7riZrmfxcRKhAqa8dSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745516608; c=relaxed/simple;
-	bh=Q1rWsjGwZfqwAIAQoTWSKSH3d5oKZMxaqiONRAi9gsk=;
+	s=arc-20240116; t=1745516674; c=relaxed/simple;
+	bh=mI3TaOY4zVaD8dsCUeprbP96juwMm2SKYnaVvR6aaX4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EOAGTZY2Bm2ms0g+iQzHlvcYfTpgCT5DH5vy3QYhWZlBDmmYkcFbZV8vOZ9W1GrgYwRM64eDEYk/i0Ot723MUecBTV7MukERKBXUeEM7a53yecOEpfx2fsYoJVSvGp4QL3WRVd6nllSoaFFCIG1vB/Uh0C9IhZ4iM/eEGnW6klA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+	 To:Content-Type; b=jwKOXAlRK72weUyfu+Oa2Q3pGdnX7m82oAfzblqFNQxESWL7jR7vXP7u5r6UG5dxRQL1XWagVcHDrwD0kwdpmAkuXXxU6Xb1LVta4mfaglABE7wlyK6KhLkaxee3Q4yBYMfrCUmy/EIFqGejWFixE6qU6bHxeTqxJQQm8Mjln4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kfgest+e; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54e7967cf67so1492460e87.0;
-        Thu, 24 Apr 2025 10:43:26 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kfgest+e"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-301cda78d48so1626787a91.0;
+        Thu, 24 Apr 2025 10:44:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745516671; x=1746121471; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mffAT54qMPQbjpYgx52ilpx2rHU47fkXThvhDlA6gFI=;
+        b=kfgest+eNT+HtSglfF3Irmd+HPFEDGtyZlb8LZMEoZL7dnpObe8JiNkKDcOcm9s8jE
+         cQTcM/ToWdUayShXb1vbU1Ut3v0zlNLD9Wj2TNgvX8TpG9U6+0b0KOj7aNMpptsqm1YR
+         aWL5e33zf86sBJHaC4QZGv8qUeZZLJKhly4eAyhzlDEg5BoOkBMKIERiM07KbIyipVjY
+         +e5AK/mMpKkjCUEP11O+8J4w35I112pI0dsZDaWklybRIajTIlZ+mQbAC8k800cSac++
+         Pwj1d1FAKd+ubFPveXROhCMxcRfylszX5u9WgUmwSAqgwQnGcnnd/KM1JoJ9Pp0TDkfy
+         fTgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745516602; x=1746121402;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PmRnlbEicfo57AAZvezn0z0uuZ1cfiLTFbR9RI0t2I8=;
-        b=kL8sSovfGj/thg+HW+O9SG+gjyIpwc8C6xzfnDIS+biA/MqBHmSRlwP1rkKvX+MkbW
-         GsBTl0YMa9wFe7tA4eb2d5etJk9riRo0F0CxtMFa8IgkFfwmvY5z1h3lp+s2mc7MUcZJ
-         i5o269BTzLwC59bHImnRZIWOpUOj1REcJZ/iinqp1AeVmyrfyCdO0MAW6t6weDhq4EJH
-         QT4xItWLmHXVZ6NFHD0hOpodWdiQIIOUKQ9mpBtzASx5db0EIVrxUx8/8iMDq7tcGvuG
-         bcr8tpZblAh5rcfxOcggy+zh/G8SuyEkQTelOkPVTIcbOsm9keEIJ6E8tyt7xArsm7Me
-         afoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPFIDzej8mgS1+Z7c0RJDalPaeUaUO1RPQ9e1u8BTpDhCEqytyZhgXF/gcgOjYjYNxERJ3Fz6F/1RitA==@vger.kernel.org, AJvYcCUV6C1QqCS/hgKi/MjvKShzPjFDS4FkS5VUDIB5yMnwkLdRIIOSc3ESC9B09tctIB+avjhnR1qBdR6F54S0@vger.kernel.org, AJvYcCVAvLB7zG0IMVjUWSOLQ1kPMoyrxLF3m+Tb5xtMBdppfVOFyEdjFzNWpdl6wJq45CVfgBf/pxWPN7bB@vger.kernel.org, AJvYcCViLtv+Hta8mj8l2BZjixnTRn0ItUuAIOH2tvFX1KaHTByVuWDR8aJInc1H2zvQ8A3G++9088srRTloX3BHLFkgYoE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8l+X3LccXYxqBO3/3vf9Idg84+MoUOrbIm2g7l5lWRgXuv9WF
-	20qRjEXcH12IIJGCqwsHFlGPzmRoakUnJNd8dQDVK5ItKkuDbHsSc7n7JQ18
-X-Gm-Gg: ASbGnctSF4+QCFG8J78BubSgLXgwYzJwsK5Joh1j+6B6Ec5pGLCHgDsLEuqUY9sGjIw
-	Ti1NKdDk3mamJnMSITNdoO/DcTpLUWy9PksRn8cHdMTDzFid6VOZ04D/AbJR35JW/xkILE5ULa6
-	NoqoFRj++bN9cPAcT5R/kKVDHjS1zpMk9Qn3+8yqX+k9C4HFzwmd0NoHw1/WSVHehzCFR8RZKfh
-	Q1fBKXru58iYY2LxnnypMApaLwao6kjk1X7w31YdKe6Ooho4gAAKiaPuXKJxCNn3x2v+5YOGLFH
-	OPqB2nTcUpoI+nt6UpS1fokvpw7IV88H/TpYp6fNJecNHVzLQMPL5qbWOEF8ILCA3jPsJQ==
-X-Google-Smtp-Source: AGHT+IHKzBXq9qRzoDToL55ggomyo8yrSMxRDduyR7cHd7WuZAHGHt3x798+Np/sTzAQ8qHWrFhh5w==
-X-Received: by 2002:a05:6512:238f:b0:549:8b24:989f with SMTP id 2adb3069b0e04-54e885d4806mr91454e87.0.1745516601448;
-        Thu, 24 Apr 2025 10:43:21 -0700 (PDT)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cca83c6sm297733e87.113.2025.04.24.10.43.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 10:43:20 -0700 (PDT)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54b10594812so1380468e87.1;
-        Thu, 24 Apr 2025 10:43:20 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVM5z8IPfIMS8vfZRct7NLiFVKrmjDW2VvSuVsNuSPqgal80M+/WjFhFehpkih2OmOynQQOgr+VDRhmpO2p@vger.kernel.org, AJvYcCVx37Rk4gShK6A94MidyXmFxApLxI81Q/Ew0JMuayF4qxp0qdTrS1v+HXP8gJavGmSuUic5pc4rkfFGGeeI9PTTo+4=@vger.kernel.org, AJvYcCWyPZYtv8ZMHCwQySm3jCxmSBWgQ1FP/lDXuWDEKjvkFXkz/sIRjnOP5BImPZ0FH+sUNbpIBHbCFglHgA==@vger.kernel.org, AJvYcCWzRRlfO1mLIZxVwZ60jCPFcpStQx4grxsecDeA5vVjXWqX+BYEoIynKgQ74TS0F9Io6gKrDyLSosY9@vger.kernel.org
-X-Received: by 2002:a05:6512:2310:b0:540:2fd2:6c87 with SMTP id
- 2adb3069b0e04-54e8977aeb9mr70103e87.16.1745516600353; Thu, 24 Apr 2025
- 10:43:20 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745516671; x=1746121471;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mffAT54qMPQbjpYgx52ilpx2rHU47fkXThvhDlA6gFI=;
+        b=EEMwYYHri35yfznVpXj8GurcWJJIoUl2jQc3FxI40IEuEuv5/ypFDMlFuNe3WbLdhf
+         Wbsh84dcFJcl4BY2Bbf06VJtGAAufgAxPh4CMYSbu4UNBanwbx1pCTyivm/IuYXCPXly
+         AaebFP+XLU5HUDLrMbZ+qY+zJtPoF94lN9DdIkf7QPZ7+3V9Um4pCVUvIiFibA2vqPtC
+         b/4cvVOC6FQp+JPzLqq6QZE08Rkoc7nviZaOK2HZNKrOYn9zoh828EvV8w+W/q53UOkH
+         IlR2mkSthq+5093DuSHQ/huJgwMSEoHlfftT9Yv9AoCdUb8EAo5WgjXa3WihG/seQlhd
+         +t0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUtSqNGLcrWLXrSVI71CMgZcKYcLMObhea8aBOEdfCV47g9bkgCW0AajpnaCZUglZ4JZNlUjJbqwa9gd//V@vger.kernel.org, AJvYcCVKigMAlGaPdN3SoUcyjoqSOivtLmXNj99X8rmK/poLe/UY5Pl2Vq6R3/CuA1KEABVKtMJICkktvMWF+aCG1v33@vger.kernel.org, AJvYcCWL1vCUH6fijJGyCVkMLuWI4Y7bJkoAtpZX8OuwIuOVXrwGl0VPd72pw+/WyaIlvMjHoxgOM0JLb5+knQjl@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsValBbmCch9AyiACKq1IoWNI/js0hFcDo5U1ZYHqSyNyvmsWX
+	xJWMnfY2g2E6/SA6MWIITJ1TkgkL98NV3hzzXeFLySGtQMxsLWQjRnw+ph32/yTRVC0old1dnTc
+	AgmIf2yZv3tZswqB6gqpM+ZVY9nM=
+X-Gm-Gg: ASbGnctAXBMvja+RFA7E7iKy+We+yJDGBKNI/UecoXFAm/DHhezYuYFarY4/vh7TFRQ
+	UtSbsfmXf9D9UNh9wsOoTrORy3+mKgAABR3UFN/1FRedx5LnDBkoGQUFJ9wHdgbQM0Edl5nM8D3
+	t0+4tzfu7rv/mda5IseMGE1EVmcSq328+8DXn07w==
+X-Google-Smtp-Source: AGHT+IEbC9MfH5k//FpLzbteCvNMZEOW+FW4qBhgPMfH21QiQKG25C2OHUzSRugHR0yrctME3aO8CzTi/i+3qJY7ijY=
+X-Received: by 2002:a17:90b:37ce:b0:2ee:45fd:34f2 with SMTP id
+ 98e67ed59e1d1-309f551b2f5mr761953a91.6.1745516671386; Thu, 24 Apr 2025
+ 10:44:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
- <20250424-gpiochip-set-rv-pinctrl-part2-v1-2-504f91120b99@linaro.org>
-In-Reply-To: <20250424-gpiochip-set-rv-pinctrl-part2-v1-2-504f91120b99@linaro.org>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Fri, 25 Apr 2025 01:43:07 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67jH2G_i51fg3T7qu2dDtj7FqUO7q9pBJJw_uKhdGV6uQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHeMGKXwILdemaV4iIduxoy9n-SC7kRH607ob8j4Z0cm-iXg78WkqCwkx4
-Message-ID: <CAGb2v67jH2G_i51fg3T7qu2dDtj7FqUO7q9pBJJw_uKhdGV6uQ@mail.gmail.com>
-Subject: Re: [PATCH 02/12] pinctrl: axp209: use new GPIO line value setter callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Paul Cercueil <paul@crapouillou.net>, 
-	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
-	UNGLinuxDriver@microchip.com, 
-	Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, 
-	linux-mips@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
+ <CAEf4BzYuA3ZRCwPsAxhQZDOOpjSTrphKEsgPAqgRP8Ly7+fTWw@mail.gmail.com>
+ <CAJuCfpE_jJ0Xq5T0HcLpquRzO+NdvN3T3_JXEwSjt2NG9Ryy5g@mail.gmail.com>
+ <CAEf4BzYctDuS4DRTzdRQyyhCYvFTggOz=wcbizXEYvC_z_SSng@mail.gmail.com>
+ <6ay37xorr35nw4ljtptnfqchuaozu73ffvjpmwopat42n4t6vr@qnr6xvralx2o>
+ <CAJuCfpGc-23xpEYZQQevkzx+iN3AAqXXzbyqJAQjd4TQP9j9Dg@mail.gmail.com>
+ <CAEf4BzYBdG95Zhi0M0CDTHAU6V9sF+kGSLB+346dq0Aa4Timmg@mail.gmail.com> <by4pd6zomtvo64vjddthqu3ps2n7fqzaeqttinmy5nzttxjjd6@ch2uxmy2bgks>
+In-Reply-To: <by4pd6zomtvo64vjddthqu3ps2n7fqzaeqttinmy5nzttxjjd6@ch2uxmy2bgks>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 24 Apr 2025 10:44:19 -0700
+X-Gm-Features: ATxdqUERQdGbt6np1cB_OGPNOZCBsAnzZeDlTy6xzP7Epb6E5SYubXPJlY8PLHw
+Message-ID: <CAEf4BzY10_NdGOcQMZo2On3VnE3DRTiGDb5JydtAzw2AVQHAgQ@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
+To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
+	Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, 
+	david@redhat.com, vbabka@suse.cz, peterx@redhat.com, jannh@google.com, 
+	hannes@cmpxchg.org, mhocko@kernel.org, paulmck@kernel.org, shuah@kernel.org, 
+	adobriyan@gmail.com, brauner@kernel.org, josef@toxicpanda.com, 
+	yebin10@huawei.com, linux@weissschuh.net, willy@infradead.org, 
+	osalvador@suse.de, andrii@kernel.org, ryan.roberts@arm.com, 
+	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 4:35=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Thu, Apr 24, 2025 at 9:42=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
+e.com> wrote:
 >
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> * Andrii Nakryiko <andrii.nakryiko@gmail.com> [250424 12:04]:
+> > On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
+le.com> wrote:
+> > >
+> > > On Wed, Apr 23, 2025 at 5:24=E2=80=AFPM Liam R. Howlett <Liam.Howlett=
+@oracle.com> wrote:
+> > > >
+> > > > * Andrii Nakryiko <andrii.nakryiko@gmail.com> [250423 18:06]:
+> > > > > On Wed, Apr 23, 2025 at 2:49=E2=80=AFPM Suren Baghdasaryan <suren=
+b@google.com> wrote:
+> > > > > >
+> > > > > > On Tue, Apr 22, 2025 at 3:49=E2=80=AFPM Andrii Nakryiko
+> > > > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <=
+surenb@google.com> wrote:
+> > > > > > > >
+> > > > > > > > With maple_tree supporting vma tree traversal under RCU and=
+ vma and
+> > > > > > > > its important members being RCU-safe, /proc/pid/maps can be=
+ read under
+> > > > > > > > RCU and without the need to read-lock mmap_lock. However vm=
+a content
+> > > > > > > > can change from under us, therefore we make a copy of the v=
+ma and we
+> > > > > > > > pin pointer fields used when generating the output (current=
+ly only
+> > > > > > > > vm_file and anon_name). Afterwards we check for concurrent =
+address
+> > > > > > > > space modifications, wait for them to end and retry. While =
+we take
+> > > > > > > > the mmap_lock for reading during such contention, we do tha=
+t momentarily
+> > > > > > > > only to record new mm_wr_seq counter. This change is design=
+ed to reduce
+> > > > > > >
+> > > > > > > This is probably a stupid question, but why do we need to tak=
+e a lock
+> > > > > > > just to record this counter? uprobes get away without taking =
+mmap_lock
+> > > > > > > even for reads, and still record this seq counter. And then d=
+etect
+> > > > > > > whether there were any modifications in between. Why does thi=
+s change
+> > > > > > > need more heavy-weight mmap_read_lock to do speculative reads=
+?
+> > > > > >
+> > > > > > Not a stupid question. mmap_read_lock() is used to wait for the=
+ writer
+> > > > > > to finish what it's doing and then we continue by recording a n=
+ew
+> > > > > > sequence counter value and call mmap_read_unlock. This is what
+> > > > > > get_vma_snapshot() does. But your question made me realize that=
+ we can
+> > > > > > optimize m_start() further by not taking mmap_read_lock at all.
+> > > > > > Instead of taking mmap_read_lock then doing drop_mmap_lock() we=
+ can
+> > > > > > try mmap_lock_speculate_try_begin() and only if it fails do the=
+ same
+> > > > > > dance we do in the get_vma_snapshot(). I think that should work=
+.
+> > > > >
+> > > > > Ok, yeah, it would be great to avoid taking a lock in a common ca=
+se!
+> > > >
+> > > > We can check this counter once per 4k block and maintain the same
+> > > > 'tearing' that exists today instead of per-vma.  Not that anyone sa=
+id
+> > > > they had an issue with changing it, but since we're on this road an=
+yways
+> > > > I'd thought I'd point out where we could end up.
+> > >
+> > > We would need to run that check on the last call to show_map() right
+> > > before seq_file detects the overflow and flushes the page. On
+> > > contention we will also be throwing away more prepared data (up to a
+> > > page worth of records) vs only the last record. All in all I'm not
+> > > convinced this is worth doing unless increased chances of data tearin=
+g
+> > > is identified as a problem.
+> > >
+> >
+> > Yep, I agree, with filling out 4K of data we run into much higher
+> > chances of conflict, IMO. Not worth it, I'd say.
 >
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. Convert the driver to using
-> them.
+> Sounds good.
 >
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/pinctrl/pinctrl-axp209.c | 29 +++++++++++++----------------
->  1 file changed, 13 insertions(+), 16 deletions(-)
+> If this is an issue we do have a path forward still.  Although it's less
+> desirable.
 >
-> diff --git a/drivers/pinctrl/pinctrl-axp209.c b/drivers/pinctrl/pinctrl-a=
-xp209.c
-> index 2b4805e74eed..28ff846d263a 100644
-> --- a/drivers/pinctrl/pinctrl-axp209.c
-> +++ b/drivers/pinctrl/pinctrl-axp209.c
-> @@ -192,34 +192,31 @@ static int axp20x_gpio_get_direction(struct gpio_ch=
-ip *chip,
->  static int axp20x_gpio_output(struct gpio_chip *chip, unsigned int offse=
-t,
->                               int value)
->  {
-> -       chip->set(chip, offset, value);
-> -
-> -       return 0;
-> +       return chip->set_rv(chip, offset, value);
->  }
+> >
+> > > >
+> > > > I am concerned about live locking in either scenario, but I haven't
+> > > > looked too deep into this pattern.
+> > > >
+> > > > I also don't love (as usual) the lack of ensured forward progress.
+> > >
+> > > Hmm. Maybe we should add a retry limit on
+> > > mmap_lock_speculate_try_begin() and once the limit is hit we just tak=
+e
+> > > the mmap_read_lock and proceed with it? That would prevent a
+> > > hyperactive writer from blocking the reader's forward progress
+> > > indefinitely.
+> >
+> > Came here to say the same. I'd add a small number of retries (3-5?)
+> > and then fallback to the read-locked approach. The main challenge is
+> > to keep all this logic nicely isolated from the main VMA
+> > search/printing logic.
+> >
+> > For a similar pattern in uprobes, we don't even bother to rety, we
+> > just fallback to mmap_read_lock and proceed, under the assumption that
+> > this is going to be very rare and thus not important from the overall
+> > performance perspective.
 >
-> -static void axp20x_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> -                           int value)
-> +static int axp20x_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +                          int value)
->  {
->         struct axp20x_pctl *pctl =3D gpiochip_get_data(chip);
->         int reg;
->
->         /* AXP209 has GPIO3 status sharing the settings register */
->         if (offset =3D=3D 3) {
-> -               regmap_update_bits(pctl->regmap, AXP20X_GPIO3_CTRL,
-> -                                  AXP20X_GPIO3_FUNCTIONS,
-> -                                  value ? AXP20X_GPIO3_FUNCTION_OUT_HIGH=
- :
-> -                                  AXP20X_GPIO3_FUNCTION_OUT_LOW);
-> -               return;
-> +               return regmap_update_bits(pctl->regmap, AXP20X_GPIO3_CTRL=
-,
-> +                                         AXP20X_GPIO3_FUNCTIONS,
-> +                                         value ?
-> +                                               AXP20X_GPIO3_FUNCTION_OUT=
-_HIGH :
-> +                                               AXP20X_GPIO3_FUNCTION_OUT=
-_LOW);
->         }
+> In this problem space we are dealing with a herd of readers caused by
+> writers delaying an ever-growing line of readers, right?
 
-I guess you could also drop the curly braces, but otherwise
+I'm assuming that the common case is there is no writer, we attempt
+lockless vma read, but then (very rarely) writer comes in and starts
+to change something, disrupting the read. In uprobe vma lookup
+speculation case we don't even attempt to do lockless read if there is
+an active writer, we just fallback to mmap_read_lock.
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+So I guess in that case we don't really need many retries. Just check
+if there is active writer, and if not - mmap_read_lock. If there was
+no writer, speculate, and when done double-check that nothing changed.
+If something changed - retry with mmap_read_lock.
+
+Does that sound more reasonable?
 
 >
->         reg =3D axp20x_gpio_get_reg(offset);
->         if (reg < 0)
-> -               return;
-> +               return reg;
+> Assuming there is a backup caused by a writer, then I don't know if the
+> retry is going to do anything more than heat the data centre.
+
+In this scenario, yes, I agree that retrying isn't useful, because
+writer probably is going to be quite a lot slower than fast readers.
+So see above, perhaps no retries are needed beyond just lockles ->
+mmap_read_lock retry. Just a quick mmap_lock_speculate_try_begin()
+check at the start.
+
+BTW, I realized that me referencing uprobe speculation is done with no
+context or code pointers. I'm talking about
+find_active_uprobe_speculative() in kernel/events/uprobes.c, if you
+are curious.
+
 >
-> -       regmap_update_bits(pctl->regmap, reg,
-> -                          AXP20X_GPIO_FUNCTIONS,
-> -                          value ? AXP20X_GPIO_FUNCTION_OUT_HIGH :
-> -                          AXP20X_GPIO_FUNCTION_OUT_LOW);
-> +       return regmap_update_bits(pctl->regmap, reg, AXP20X_GPIO_FUNCTION=
-S,
-> +                                 value ? AXP20X_GPIO_FUNCTION_OUT_HIGH :
-> +                                         AXP20X_GPIO_FUNCTION_OUT_LOW);
->  }
+> The readers that take the read lock will get the data, while the others
+> who arrive during read locked time can try lockless, but will most
+> likely have a run time that extends beyond the readers holding the lock
+> and will probably be interrupted by the writer.
 >
->  static int axp20x_pmx_set(struct pinctrl_dev *pctldev, unsigned int offs=
-et,
-> @@ -468,7 +465,7 @@ static int axp20x_pctl_probe(struct platform_device *=
-pdev)
->         pctl->chip.owner                =3D THIS_MODULE;
->         pctl->chip.get                  =3D axp20x_gpio_get;
->         pctl->chip.get_direction        =3D axp20x_gpio_get_direction;
-> -       pctl->chip.set                  =3D axp20x_gpio_set;
-> +       pctl->chip.set_rv               =3D axp20x_gpio_set;
->         pctl->chip.direction_input      =3D pinctrl_gpio_direction_input;
->         pctl->chip.direction_output     =3D axp20x_gpio_output;
+> We can predict the new readers will also not make it through in time
+> because the earlier ones failed.  The new readers will then take the
+> lock and grow the line of readers.
 >
+> Does that make sense?
+
+I think so, though not 100% sure I got all the points you are raising.
+But see above if my thoughts make sense to you :)
+
 >
-> --
-> 2.45.2
+> Thanks,
+> Liam
+>
 >
