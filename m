@@ -1,129 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96900205AB2
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:18:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B017DA6D
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745489926; cv=none; b=pC1BJc2vXVCLPvdEeaqI87o1Q5NzoU0+FZV/QeDwM8VTfmaYjHFX/fztSJWAf9ETawbWGC1Yi39DsFXrrTi0NhzTBfSYac05N/xsVkWR5aXpfhNOESrK6NG7vjZUaP/sluLpvechMc7zjD3WZZqwIu7o1f6UA57PS+hw3sCSqRo=
+	t=1745489965; cv=none; b=gaBq8WwFurQkFVuoqNEllGljj+SEpGAdZ3MyfxazmIbM/JwnYzmd47YHhOpH7tpsTAKWuB09DMUjHZQ+hCNgpNH680mNszMR8YMeoKMutPL5u2dJNx4q5C7SMvvrrS0UYk3XSaphIr8DfwuvCwuX64oGrOVo71G4s4Uh+FpF8xE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745489926; c=relaxed/simple;
-	bh=VwIF9MZwN8skAcnpaYsKQGj6HgJVPjIpATiFvE46JIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s1nsAVzwK4AT6oZleEKVAnXCg0oKMWVZT3PbQnMd73gi/oVjwFKVO0oPkegDgzzhyXW18mEaJRKmZKuHr6eFv4xJeAJCUZTV5O7JLkgu885F5l3OcuheUNZHTHyEwMaHqaahsUyy9auxqsDSilNv6C8g4FpwGMQ6LXea156xRXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=fXWNQZKA; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745489965; c=relaxed/simple;
+	bh=gZMQkuTH5eS6MID9lI2Ptd6S1ztbvFrHop/MX8doq/k=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=nMLUk/YLhtGueQ12/XYYBfvnVDlyqDSIrJZIoMpvd+xZkSqVlVKYkU5yIRk/gVWmQSIFlsF6Bqwv0rDLzXLKEVgdzUOH1QDhAFRO0J5rItVoeARS0AhXwxXWVfmdfHN37H0FSxr88YpFq2M/i7EgAFryNoXJMGjIpLabls7k5ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jz5WuAuJ; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ardb.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="fXWNQZKA"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0Fkcf018009
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:18:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=b+CZ5yvanwkNwsrX8wbr0v7b
-	U5gRB/4DWTNm7EwR2xs=; b=fXWNQZKA5tt55ydMaRlEOxI8rt25vsq1M699s9O/
-	WjAuarD1DKKd/nTTiQg+ZWmsp6YdMHuDoY1nIznIYRQAZ1fNRQvsM4QKTF+Sndvg
-	qhAAMFrcLtQRbVD261Qae/tRoQk+oJsYcg/ja0VbIvdRjFriWLU4a5ltySvZM5sG
-	wq7xdqsPuiHYVA1F2VLk90hltCiiWf/MADWXYbhM3kOW5TeXA2hqB8+M+NPcEjR4
-	Ab9MBQWGe3HJFKcCEav7V5ksv9JmNneYYkqCTBKvRxjIjC8ITyI9YGGbfd2uEEpa
-	O1mRIo/TcenQcgSu6mjx/yu8Ug8uKDxmv7CuPBU0SWJigw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh15416-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:18:43 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c5bb68b386so243601285a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:18:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jz5WuAuJ"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3912fe32a30so305411f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745489962; x=1746094762; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=THf/MVT4cQwV13+M3Pb20JJhOEchUgH+Tc6DDI5GnFk=;
+        b=Jz5WuAuJZ9Cn9HyW7VRP8pHL5L6IpaoryFRLZyzpjouVK0DisOYrg1+LcXnoMeAKcP
+         nRF74v8zlSjOJztLC/5yoVYs30+4qFUtQxdYhO5jpKEiOo8adqcJr102ZlEGbeWTSlVD
+         BB8/SsAbC306h8gvyoZZcpgWRohB+VdL64GZeFEU0vKHRTZ960j2WU1L7gru0cTEy//+
+         jQHt/L9UFcP7lgmrt/LE1pHdBTY3fi6QZJ2p5kEOgSizVg+xrqtfa1m6ibjcWpw12jNq
+         4f3qQOXs053kCycNBwxfMq71aku5LsNy1d03UgGUVJ+HQktHVKZ14XBmASk0stIa489a
+         YYgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745489922; x=1746094722;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b+CZ5yvanwkNwsrX8wbr0v7bU5gRB/4DWTNm7EwR2xs=;
-        b=VFgyGwTTgMYgNE95hBBVg+V5MxQkMbM9RyRlTFn7mRrv2xOyXhlXBt50BWFmfBvC+r
-         v/pa60LzS7hFUrmVGTigFNGDH8DMhjKsMbtfrDaVO71LBcjbWXAXGB128BdFI0pv9csK
-         GJnfa8RkBclUf0VdjeeiZKxWdr8n4fStweoGns5PnJ4lXUlMHH70rkjPsb0TIZfzQ/YM
-         Oi08DhQdy2/fxa++VytPvI/LhWvZIYQBE4xkgaapIVZx6fLxyzAHPm1gXgOSfiq+eHX/
-         hyj3c4kQXELnDGCtVBQ6x7gPuLDd6utxM/Ai4T1SAb82Fu9IB7s4oeZuaHHQfpieq07H
-         tJgg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnmDEyO9Zys7PrbTUMu0aTDGr1X7N6RdOOROEzW3vWAwrv7gLGlyUwoQN0tbnGZYQ+dE8s4YgSWzxwr9s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyeg/tYlOuBi1e3B3VwSUGpg3TnETyevwa/ZYf2dY/70l/aV7Qq
-	avIRVH5sd8bLOn9A8w1Ze/s/X87nnRYBlwV8eVeVD9do1u3qSC68J2OHc3f69//C8pOmBAU/KF5
-	D0oxVlGg/ZJKt2mQAVkRt/S07pMaC8qloM4QnJjcePVTcf7G+mIt2I6w9Pdmq3Aw=
-X-Gm-Gg: ASbGncuLrwvTwtAa9m8y0E1cRbmpoqsBxzEoJOg8yoCzL328vIsCuIX91mON03ipxEE
-	lF/ggFbnG4V8KxMnTgsIbfWrY6/+9+0kc4gfMnkPObbtOiteHb3p8jyusyBGL/zbYJdKA84eSQw
-	+DmVkzaZkhoh5X2xREyYWvKg/iHK6/Xov9KjIK/c1JB3iy9KBAN/JX6VCfJShCH59YoC0TumkiN
-	S912OiJYQwQo4vBSmXIJmgVqs/09ccSNexCW93dEgXQF6saRdFBdhlOXgC7vXm23hRnNjSThIic
-	4cVww4SFZ0AVe/x51+dQVUwp6OcwKvpJNfLfFnJNVs0yMKOjOD47TAkAgbOBrDyM4sZmtmR0pV8
-	=
-X-Received: by 2002:a05:620a:2453:b0:7c5:4eee:5406 with SMTP id af79cd13be357-7c956f5f787mr334007985a.49.1745489922690;
-        Thu, 24 Apr 2025 03:18:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUyasljwk71lheOvieQO8GWyGCHy47iFL98wqeOfteeZQyBP2cQ9ZJ7ujqmqOzXQolEaEspg==
-X-Received: by 2002:a05:620a:2453:b0:7c5:4eee:5406 with SMTP id af79cd13be357-7c956f5f787mr334004385a.49.1745489922351;
-        Thu, 24 Apr 2025 03:18:42 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb26242sm181296e87.21.2025.04.24.03.18.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 03:18:41 -0700 (PDT)
-Date: Thu, 24 Apr 2025 13:18:39 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Taniya Das <quic_tdas@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik <quic_imrashai@quicinc.com>,
-        Jagadeesh Kona <quic_jkona@quicinc.com>, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v8 10/10] arm64: defconfig: Enable QCS615 clock
- controllers
-Message-ID: <2gqcoofsvftuvvo7fl7ktkevrhjcsmei423qjdownslucqezib@xpcrhcwnwn3m>
-References: <20250424-qcs615-mm-v7-clock-controllers-v8-0-bacad5b3659a@quicinc.com>
- <20250424-qcs615-mm-v7-clock-controllers-v8-10-bacad5b3659a@quicinc.com>
+        d=1e100.net; s=20230601; t=1745489962; x=1746094762;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=THf/MVT4cQwV13+M3Pb20JJhOEchUgH+Tc6DDI5GnFk=;
+        b=MdREOjaPNxLILLSauj9peDF/d22m43sgooWtDlZPYJQLfUI9a0/AF4uakfpj8DCbfd
+         PLQssuQGRozNuTRkvqNNbJWT9JzRU2madQkfL+MXiNKEd/pRhcgIJKipvy4+yvMO3c3p
+         qHYVuzuigsG19NMROeycisH/UK4BntRZIYogOZKdZQ1FmjTPWerM0ySW+iCI64sK8h4r
+         qBpWrRoJ27vgdlkvcEgeQqrV4YV2ZykgCprB6UzVI5sPga1lNKvdYwzPo1iKz41EKURp
+         kSROeZNlXGpbrz6WMTAU0ecC7aQe6VhyjswPj1bJVgPq1tIYNsr4Il2GQF2ZlrxVtbmU
+         A9Nw==
+X-Gm-Message-State: AOJu0YysFKi+8H3NoUUwQQzeESwBRqtuaI/9rxttkrXUJANWqD4P1GLV
+	72fulW0P4hl4BBrs/LWxbmORVYiIvCnn3ryxMZaQKhbHRZqyX6XqAbP+ypTZkgkQB+eTNi+IDA4
+	fEb2ZRoHAh51hA+9Al49z9ahbAbfw2F5qoHW/YyAm0aMQfYYgArqm151QEl15gXI+GC5NQENGph
+	qsL93nXD6OysTtX61HrckXHDeu2hI7rA==
+X-Google-Smtp-Source: AGHT+IE9QT2YCBnyamrFo/mAoRhbchwidUtlGGNUVHPx5Tx6d0FVpLkhq+w48OTzmO/azn0L8DPTjZdy
+X-Received: from wrse12.prod.google.com ([2002:adf:fc4c:0:b0:39a:be9d:f396])
+ (user=ardb job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:220c:b0:39e:cbca:922f
+ with SMTP id ffacd0b85a97d-3a06cf523e4mr1587553f8f.12.1745489962524; Thu, 24
+ Apr 2025 03:19:22 -0700 (PDT)
+Date: Thu, 24 Apr 2025 12:19:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424-qcs615-mm-v7-clock-controllers-v8-10-bacad5b3659a@quicinc.com>
-X-Proofpoint-GUID: jgp4bVkSMYvZeKi-XgNL4xBTSTrUlaSy
-X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=680a1003 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=mLCiClLL8ZwIBs7X0_kA:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: jgp4bVkSMYvZeKi-XgNL4xBTSTrUlaSy
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2OCBTYWx0ZWRfX8vuqw7Hu49PE UH3nmAUlIK88yVi0uvpPCKLT4wONGfV7G2Odd2sFTb+0VvCbsjy7cnxWPJLGDPWij/EtMaI6+aY rKTYpOrUQnygYzkcPsLQoKi9+NtjretgkioV9OExsSba40My75aONl8xpdAgcf9aSeRTliz+Mpc
- a3yPyFnkPjwhSDbK+5feMTPa/6SCw+ldx2pTtiDOUxlBdOJgDHeyMJT+N5D7i1gQ13ZJdD317ds LdOlVufpXf/gp82NINv1tNct5NMvrjvB6M6wKLA7O5HNEWJiVIKEqdxP7vJ/tJ+/AiBRYv0b4zI fyL3vUOJy2831zB8tbWBMpksUbiE96RNBnOY4fWSC7huWFQZyEZ/pFOwJ5tVm+KvL9k4JELHEVU
- OOPhup6k3ZsNZxn9d/sqCPtkMP3mGS2giw7xZuXrCqz8Gm8NVwziTeZrhSDXs1iT7lB3aGHh
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_05,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=620 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240068
+Mime-Version: 1.0
+X-Developer-Key: i=ardb@kernel.org; a=openpgp; fpr=F43D03328115A198C90016883D200E9CA6329909
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1771; i=ardb@kernel.org;
+ h=from:subject; bh=ucK+ySCXtMGXNmRaMwKgu6ZLmvylzJoP9YoIfmYlA7U=;
+ b=owGbwMvMwCFmkMcZplerG8N4Wi2JIYNLQE3kC6dIWeDq+KhLUxfdENT207zx5MX/lUmVnu/Xs
+ G0waxPpKGVhEONgkBVTZBGY/ffdztMTpWqdZ8nCzGFlAhnCwMUpABNREmf4pyz0SvRJUmj32ri1
+ nnILhKqWO/WesDf75fUq9u3Jl0cCgxgZzphF83Ku1Zt4+WLUQ2nBE+kBBhEXHTk2s2ueDPUxqLX kBgA=
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+Message-ID: <20250424101917.1552527-2-ardb+git@google.com>
+Subject: [PATCH] x86/boot: Work around broken busybox truncate tool
+From: Ard Biesheuvel <ardb+git@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, phasta@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 24, 2025 at 03:03:05PM +0530, Taniya Das wrote:
-> Enable the QCS615 display, video, camera and graphics clock controller
-> for their respective functionalities on the Qualcomm QCS615 ride
-> platform.
-> 
-> Signed-off-by: Taniya Das <quic_tdas@quicinc.com>
-> ---
->  arch/arm64/configs/defconfig | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
+From: Ard Biesheuvel <ardb@kernel.org>
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> 
+The GNU coreutils version of truncate, which is the original, accepts a
+% prefix for the -s size argument which means the file in question
+should be padded to a multiple of the given size. This is currently used
+to pad the setup block of bzImage to a multiple of 4k before appending
+the decompressor.
 
+busybux reimplements truncate but does not support this idiom, and
+therefore fails the build since commit
+
+  9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
+
+Work around this by avoiding truncate altogether, and relying on dd to
+perform the padding.
+
+Reported-by: <phasta@kernel.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+I personally think using a busybox environment for building the kernel
+is a terrible idea, and does not satisfy the build tool requirements
+listed in the documentation. But apparently, it used to work and now it
+doesn't, and the workaround is rather straight-forward.
+
+IOW, I don't care whether this gets applied or not, so I will leave it
+to others to make the argument.
+
+ arch/x86/boot/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 81f55da81967..640fcac3af74 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -59,7 +59,7 @@ KBUILD_CFLAGS	+= $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
+ $(obj)/bzImage: asflags-y  := $(SVGA_MODE)
+ 
+ quiet_cmd_image = BUILD   $@
+-      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
++      cmd_image = (dd if=$< bs=4k conv=sync status=none; cat $(filter-out $<,$(real-prereqs))) >$@
+ 
+ $(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin FORCE
+ 	$(call if_changed,image)
 -- 
-With best wishes
-Dmitry
+2.49.0.805.g082f7c87e0-goog
+
