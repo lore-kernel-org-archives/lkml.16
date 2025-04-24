@@ -1,131 +1,90 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from forward202d.mail.yandex.net (forward202d.mail.yandex.net [178.154.239.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BC32820D0
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745520103; cv=pass; b=Cfhk5zI8Tm7rLcvrn1dAy4UIJxudQDQDlzfufH9xtGYr2nFbTEeNC/E6uhH2cMR8QVRQkzqNJHIRHAoTrorgkDn1nGsKt/bA9US5AplAzMMJRqTYPfq1wE08/tEQeLs8B8ZnYzm8tstbjO8QpQMHCrMHXHb9amY4pIsETzlGHFk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745520103; c=relaxed/simple;
-	bh=6QDY2QlgTAoMtxAm4+AWExyyfiAsTbhtjS1gYHPng74=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y6zElNq3c9hVVvPFO6IwgAojoMYUKXmU2KXF9s6ML2Ntwqd6bCrbz60jhQdJW1NtYBuRezCaHSWxFkzUMBLqBHcI3R+vXAB08LdAvHiT9l9KnE8sWI657D01yuzgaLZYIa+BVdnV83GU95MM3OawYAsPhGq2lellGVl1WgKoe5E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=ZpjD8Hjx; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9D31624E5;
+	Thu, 24 Apr 2025 18:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.219
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745520106; cv=none; b=ceK/ruuPsQWv5/L2PPxG6UDh9o7mkCpTjH9lw/DdAC6MF7VfByQmDdXofzJXWU8HxyR8M/5P5r76mao4rHGlv+4AkCcEKrTxd7YlSAMnGONVt/TS7JyEyt6Mkh5+msu0X8FC1pM1TKrzTsp3+UWwZWcab9f91cYFiyEb1OMogGk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745520106; c=relaxed/simple;
+	bh=UY7mwzK6h3h/JHCIa8gPjepYiPqxs1+ZGL7ML4m7Lc0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I+eE2LlGME2Fbiy2qN5yFcF9Ai9nwnKakJKaJktI5vTsGBbvDfO1dY+MvFcg7jidenhyUXtBrUPf1CxMVK9VJEehQpPCUU6XKiJkj/3zYCtBcu/4tDI4nrJ7d2B7s9TrFL5Mhu774qTQjD1WNHb0wRZ206rB34IbxwnOQi7NjmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru; spf=pass smtp.mailfrom=rosa.ru; dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b=GcZBwvFW; arc=none smtp.client-ip=178.154.239.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosa.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="ZpjD8Hjx"
-ARC-Seal: i=1; a=rsa-sha256; t=1745520081; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Yhe5Xr9t12zwU+IOcKtiaA3sKod3DXZjlytupzWF+5Fi7DRPzBdz3McMvACkn6bXO3GhxxPPJ5aDyvzUAv0ZZsPRZiqr0598Mzr2Mpmd3y5uisFZDwJcdQ1JVr/5SFlykYcIMk83s+07QNO+03KWqnMWYxNs4AF2sN2JM5PLyzE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745520081; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=wo4SNOOXx8cgEs1+iLeNUIV7Y12odEqq00gmOP6sgDE=; 
-	b=RelQ2wx+nIsAnuS8OA5QzaTKqoZbLfy7ClNk3j4IknRwAJGU3dpW3PI2TDCftM+2q0w9yWl2BgSTbk7233EcUElNGwhiG/mmVjY/lGywVy0FoNRRbA6R6MN+QZgTenD9gx8yEkmuV8qb6zETcMtj5cu7AvpPwIx2wSaV0xKmwOg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
-	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745520081;
-	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=wo4SNOOXx8cgEs1+iLeNUIV7Y12odEqq00gmOP6sgDE=;
-	b=ZpjD8HjxiH3FB165+xZW9kOvSnZAF+W5DVJluxxC78R/qyKDcmxwLgaOcuITw0I5
-	9w5le2ZCSl4K9E9FoMWFZPlF2/Hcy+B2Rdm3eASk+NDST75TbSvlzlZ53vGzZBBbVaK
-	pzkrAyixcEBqT2YQB1r+a+4lrk5rmKZpmr5XMAD8=
-Received: by mx.zohomail.com with SMTPS id 1745520078498206.35498888534835;
-	Thu, 24 Apr 2025 11:41:18 -0700 (PDT)
-From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@kernel.org>,
-	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/panthor: Fix build warning when DEBUG_FS is disabled
-Date: Thu, 24 Apr 2025 19:40:34 +0100
-Message-ID: <20250424184041.356191-1-adrian.larumbe@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b="GcZBwvFW"
+Received: from forward100d.mail.yandex.net (forward100d.mail.yandex.net [IPv6:2a02:6b8:c41:1300:1:45:d181:d100])
+	by forward202d.mail.yandex.net (Yandex) with ESMTPS id 2DC43689D4;
+	Thu, 24 Apr 2025 21:33:56 +0300 (MSK)
+Received: from mail-nwsmtp-smtp-production-main-77.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-77.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:3bcd:0:640:dc38:0])
+	by forward100d.mail.yandex.net (Yandex) with ESMTPS id 075F160027;
+	Thu, 24 Apr 2025 21:33:48 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-77.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id kXVCAB2LZmI0-s6An8AkH;
+	Thu, 24 Apr 2025 21:33:47 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosa.ru; s=mail;
+	t=1745519627; bh=9699AcloeCDb7D22U3eJAvZmA6C/RcO8yloHAzmxeEk=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=GcZBwvFWGhzYWKa9NQMASVuJBRpvlkYld+BsaOPqKfl13YUPViF8gaZJ3zpsyBMdb
+	 KDLpkzrEiV8s0HNRIWdiY2w+lhHpUbJAc7sp9iNHRXI22CYeEJVLFWUXVfyurU0ZIJ
+	 fjQCzYrIsxvJq1gI0U0TKhe8rIpXDy1K/E54Xurc=
+Authentication-Results: mail-nwsmtp-smtp-production-main-77.klg.yp-c.yandex.net; dkim=pass header.i=@rosa.ru
+From: Alexei Safin <a.safin@rosa.ru>
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Alexei Safin <a.safin@rosa.ru>,
+	Kalle Valo <kvalo@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] iwlegacy: 4965: fix possible out-of-bounds access in il4965_tx_cmd_build_rate()
+Date: Thu, 24 Apr 2025 21:33:38 +0300
+Message-Id: <20250424183338.3277-1-a.safin@rosa.ru>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Commit a3707f53eb3f ("drm/panthor: show device-wide list of DRM GEM
-objects over DebugFS") causes a build warning and linking error when
-built without support for DebugFS, because of a non-inline non-static
-function declaration in a header file.
+Prevent out-of-bounds access in il4965_tx_cmd_build_rate() by rejecting
+rate_idx values greater than or equal to RATE_COUNT_LEGACY.
 
-On top of that, the function is only being used inside a single
-compilation unit, so there is no point in exposing it as a global
-symbol.
+Use a correct bounds check to avoid accessing il_rates[] with
+an invalid index. The previous comparison allowed rate_idx to become
+equal to RATE_COUNT_LEGACY, which exceeds the array limit.
 
-This is a follow-up from Arnd Bergmann's first fix.
-Also move panthor_gem_debugfs_set_usage_flags() into panthor_gem.c and
-declare it static.
+Replace the check 'rate_idx > RATE_COUNT_LEGACY' with
+'rate_idx >= RATE_COUNT_LEGACY' to ensure memory safety.
 
-Fixes: a3707f53eb3f ("drm/panthor: show device-wide list of DRM GEM objects over DebugFS")
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Closes: https://lore.kernel.org/dri-devel/20250424142419.47b9d457@collabora.com/T/#t
-Signed-off-by: Adrián Larumbe <adrian.larumbe@collabora.com>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 7ac9a364c172 ("iwlegacy: move under intel directory")
+Signed-off-by: Alexei Safin <a.safin@rosa.ru>
 ---
- drivers/gpu/drm/panthor/panthor_gem.c | 5 +++++
- drivers/gpu/drm/panthor/panthor_gem.h | 8 --------
- 2 files changed, 5 insertions(+), 8 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
-index 2dcf308094b2..7c00fd77758b 100644
---- a/drivers/gpu/drm/panthor/panthor_gem.c
-+++ b/drivers/gpu/drm/panthor/panthor_gem.c
-@@ -42,11 +42,16 @@ static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)
- 	mutex_unlock(&ptdev->gems.lock);
- }
- 
-+static void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags)
-+{
-+	bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
-+}
- #else
- static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
- 				       struct panthor_gem_object *bo)
- {}
- static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo) {}
-+static void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {}
- #endif
- 
- static void panthor_gem_free_object(struct drm_gem_object *obj)
-diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
-index 4641994ddd7f..4dd732dcd59f 100644
---- a/drivers/gpu/drm/panthor/panthor_gem.h
-+++ b/drivers/gpu/drm/panthor/panthor_gem.h
-@@ -212,14 +212,6 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
- #ifdef CONFIG_DEBUG_FS
- void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
- 				   struct seq_file *m);
--static inline void
--panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags)
--{
--	bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
--}
--
--#else
--void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
- #endif
- 
- #endif /* __PANTHOR_GEM_H__ */
-
-base-commit: 3a2b7389feea9a7afd18d58cda59b7a989445f38
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index 78dee8ccfebf..f60d9b9798c1 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -1572,7 +1572,7 @@ il4965_tx_cmd_build_rate(struct il_priv *il,
+ 	 */
+ 	rate_idx = info->control.rates[0].idx;
+ 	if ((info->control.rates[0].flags & IEEE80211_TX_RC_MCS) || rate_idx < 0
+-	    || rate_idx > RATE_COUNT_LEGACY)
++	    || rate_idx >= RATE_COUNT_LEGACY)
+ 		rate_idx = rate_lowest_index(&il->bands[info->band], sta);
+ 	/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
+ 	if (info->band == NL80211_BAND_5GHZ)
 -- 
-2.48.1
+2.39.5 (Apple Git-154)
 
