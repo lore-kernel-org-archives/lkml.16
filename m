@@ -1,116 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2CE5BAF0
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B415D1C5D55
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745492669; cv=none; b=YFVbOedvJVTFToy6Serj/sHkdi+TSpcfXTAHU9qZc5OFd1oxJb5aPDe2MRSjJwQDqMunDI+eFe/lm3aX2PX4KcQ3CZ7Ko8gZktbs1jnD7ZzjCQxJ5+6ye5qmrzM6s6UYFHNBWKcXlLpp74M6PxRULUMlBlZKVtvKB8qhzV2epWc=
+	t=1745492796; cv=none; b=RJB0974MF+RmujLEQK2NPlcemerB4Oy9O08sTOWa8VB3ZEwu880sk2rDD4vi3p8Vpc0sL3yaoCMwu3o3pCDsNNPNuHXEmIeHVV29P31zJnRkg56enHv0phzmmckz3qwSuzVFlpsKv+tCddogPSMhrWq9aeGWRUCwuvqJaZg3d4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745492669; c=relaxed/simple;
-	bh=2U/DZ98nyb43Zevabrjr+i1gak+2K8H1G+KpXSGgK/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SbXYSQ3DVc0pWbxp2nXs1pJPDxyQo8qFNe3TgSi6UibVYWEucP98EAW/Haat0XyyMWFcWRmo18MHnupL+QZkgffH/sGdoX1STqUmNFxDZjlZLvBp1BDkeWHv1nbsCpLasZLz8yVB1FUxml50vZepmGndtDmXm78m4lWNWv88Jmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aZDGJhD4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745492796; c=relaxed/simple;
+	bh=6ZbEQkK5v1recDZlp8qUumVPv5BX8yXmX7kuXiecGNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WN1ciOQQxb6rDOcGvyshxZ/A4V399646cBAIkc0s0XPUJW3PoJd0Q4O6OAog9fovuVgM77Zu3TnaoSF8jE4CyBwos6ibk/f1O9KCWXQJrsj+PbMwK6jW2J42n1rI+yikyqi5Dqa222XTrHXIYBuf9x7HedKb9uBhDGMpZ7Pc6RA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Gy0EJs10; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aZDGJhD4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745492666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lyu9hNwObLGr+KhrEDmYPVh+6IL5Ud0sbGGYl34RVrU=;
-	b=aZDGJhD4KS797PojGlOJkuvFgocIG5jA5LHTwhkhuz/hHtrkN1MZVm6pKQJn327XHsN0BN
-	cF9TvhRY1I6QaFXWfSgmUmAwJDd1bM52QdTrcb/oXcip7G6G3gpUdNg0yXbo+GJd1cO5RA
-	5VdfQPpJhrTqfPxqwxDsHZL3BoyF+cY=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-386-3hzp5OXQO32unmFFKsuryg-1; Thu, 24 Apr 2025 07:04:25 -0400
-X-MC-Unique: 3hzp5OXQO32unmFFKsuryg-1
-X-Mimecast-MFC-AGG-ID: 3hzp5OXQO32unmFFKsuryg_1745492664
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-391492acb59so413032f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:04:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Gy0EJs10"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so3806135e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1745492792; x=1746097592; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xaFlU49KHj/WqsyzkJFZpLzZkQa35ucQoiXjJp4Ub20=;
+        b=Gy0EJs10rMvro03mVTAfkh2uOmSqhv5l6CqSh2herdP8uC3jkqB/pZ6fxqq/fOgXJH
+         JhPkfyD2FELWaG9ZoWwKJA2sd/AHWYNuVAQ+4p3ohqdhFu3ODFLIC7rmC4KfngpeCKGh
+         dNXtvoA67a+Q80x43HpEKcE13PsxgXybGrHtNFg5gUfaaDC+d9+kdwb+L0A4uAjHD7vO
+         RRlW8co/etNkSCy7aDbO7+fXHYLJeglYLHM+Ew0EsRpRIKMJA6n2oBVs2IePUUdpLqP4
+         2nUfKo8OmxUUZj7UqiBqjQEK02XBFWuBkWPU/GmuOc0bkZByY2LWSp0fXiYsdcwUOOqH
+         lS0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745492664; x=1746097464;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1745492792; x=1746097592;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lyu9hNwObLGr+KhrEDmYPVh+6IL5Ud0sbGGYl34RVrU=;
-        b=f8paPxvPmY7I5H66YTKFbbqKxbEw2irU4qkq4MKCSbRQVqNsq0tNBNU7y8TBTRVwH+
-         cfmU+od0EIaDBU739lTgzotX0rbwCSSEpD7wUduo3FWMpLqX567D9JKLn7At3RF1y/sc
-         fcp/IAEhSRXjecS8jXXHy9e3Bq3ezelLvgeWU+Xcv7qvUAz1vUu7Pcn4BpCSf4YjQ1gP
-         qgfoeziCHbvVcPFrd5Iyoc+ZgdsVLlIoJg4sHlQ7zA9p5nLFMe36WWd8Z3GxjtBvZorD
-         u8tBLm6PYJ6H4GcEH0+byps/BRMI2obCRj+LPXyXjzl29eYPiqjWL6OP0N7J+waCAzRE
-         Mq+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXmI/CiinGTxYsxegKlQmGYqIZsMX2H8xZxUt9OUJPgH6e1EqKp9pSOWcv9a9P19JxrBFUrjW+kX51+zvk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0Cl2ulYpEwRE+Hvgb9i/VGIjB+2Tc6zJ/QE6+TwoH+1/paxlm
-	EOfM8M1kHFxNa7jvwg7Adpm/gEmxl8mr//js/EwhdHnCTFNS6HfFsS1avV8TXDPyPqy+TrQe2Nu
-	wJQc8PHw9l1JJ+GnhaQmxH6bAPt2+w+C1bABED8PALkCAg+117RrC8GbMfu7nyg==
-X-Gm-Gg: ASbGnctRaHMPqc/wvQBbZgoWgEsTGgYiiscFKrWhCmS8PCg5gp3RKu5BQELlDr0KkGf
-	XS2lCjRuGfPf5+oHHnKjMLIkzkzG1+jd6sGPiwyia1t7DTBgvCbFHc4cUPCN52alrsIDciDIp+/
-	PLGV5KcsKvkxC8Bi5Qp4euHMxM4XtsBqtHWkKZpoa2w7W7m3HGr/l3bmZ2MVY3K7BF9ZtsCS05R
-	MLWGov5HfyzzAhfNa4UMVUUnF22HxG2+3aLFElEaVOJIcy89MP1whGQd05A/QKHyEQTvqwmvycU
-	Xtbevs6Rhy/amepJYtFbF621LD1f4EtitX/vk8g=
-X-Received: by 2002:a5d:47ab:0:b0:39e:faf8:feef with SMTP id ffacd0b85a97d-3a06cfab965mr1636781f8f.56.1745492663903;
-        Thu, 24 Apr 2025 04:04:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHolj4jAkXWZgjgiY9g67zZ4iSrWcvdEryaUkNLkRqtxvRgz/PM71yD5V2etIdvFtP43ygB4A==
-X-Received: by 2002:a5d:47ab:0:b0:39e:faf8:feef with SMTP id ffacd0b85a97d-3a06cfab965mr1636744f8f.56.1745492663418;
-        Thu, 24 Apr 2025 04:04:23 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-7-183.dyn.eolo.it. [146.241.7.183])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4ae0b8sm1735217f8f.32.2025.04.24.04.04.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 04:04:23 -0700 (PDT)
-Message-ID: <4e7227ef-a1d6-409f-a21b-5b1f26cf52b7@redhat.com>
-Date: Thu, 24 Apr 2025 13:04:21 +0200
+        bh=xaFlU49KHj/WqsyzkJFZpLzZkQa35ucQoiXjJp4Ub20=;
+        b=lzUuMQdrGJGJCmHqIzlUpuFnRZgDOOrUf3G80wbMGYqIWxPjEUjWtkBLiNHm3McVMZ
+         bj1kKpSDvdyqLd94LMgqzH7lBHS6fbwswsPzreGtwK/vz3DuLgT6n/CqKbf9n8RZtdPS
+         RfcgujBE5Z5mPIiNv7wywXoANqIvW6sZJDU9CMbq+UbY5lQ2q5ezQd7d13SZ7Qyqm6sz
+         /lxDVNw7j8ZGTnDh16Jmti76xJAcaRG/CtKMPG1ZRLJkyGILXnevg++m30Dmfpy7cge8
+         cQs9qxqpvJ83YShJN8LBiz74bgexs+Dz7Fh/4FwauHIfVQD3GioWo9FylQgn1UfXC5hi
+         cRsg==
+X-Forwarded-Encrypted: i=1; AJvYcCWU3ZtGa1gAYePLyMUFOgscS1ESXPe1QGUTd/Rk4xaW+AmG2ZOflb4jbnexGpaPLzSOKhakf3oy7OtUk2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxwsx/UCDwv7JFrxyB7RBwroXRLJ/JgdGjpR/GP2T5w/pUPCEpg
+	4l8XlmvHvEua9T74R4tE9bMQwFxSo9hWceTEyoQUVXsW7nd1gQ8QP0tQ3yi3BZI=
+X-Gm-Gg: ASbGncsZzTqAk7ciqCNkUI14pGUEQIxLobzANxzgA0RTR2QyrVZ1rRu0HYxtD8gtKCB
+	ENNlIG3Ztnj7Ewx8CTv6m0QBAwXnE1fG882IVT1y3M5yrDa3FF/ypVseqyFw/A7gsru4Lb2hAwg
+	sWIQH800z3iwZGaSSGKuHbyHcWREoL3E6jAb6j/fPSRzFHjCxX0h0SVRXDpms6oUT8pNCQ1fsaW
+	7KqZZk2Dkhd/FRMuiyEEdm6Uoa7rgleNFMJmQQzttDqV1jC4cXwT6Y804t0Xf3bhpqnFxvZqkaJ
+	gOJlI9u2GI0gQJNXKBba+UQifVWQ
+X-Google-Smtp-Source: AGHT+IGdWaGhxvTRb6GutdDIuLG/aiIZCV4CCAGWlaD0KDkW+nhzZtqNPgORxU7ENnJYG2P45T9aiQ==
+X-Received: by 2002:a05:600c:1c93:b0:43c:fded:9654 with SMTP id 5b1f17b1804b1-4409bd32458mr16398415e9.19.1745492791956;
+        Thu, 24 Apr 2025 04:06:31 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::f716])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2a13bdsm16546245e9.9.2025.04.24.04.06.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 04:06:31 -0700 (PDT)
+Date: Thu, 24 Apr 2025 13:06:30 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>, 
+	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: Re: [PATCH v5 04/13] riscv: sbi: add SBI FWFT extension calls
+Message-ID: <20250424-c0700f89bcd29438d6d8d65c@orel>
+References: <20250417122337.547969-1-cleger@rivosinc.com>
+ <20250417122337.547969-5-cleger@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] net: fully namespace net.core.{r,w}mem_{default,max}
- sysctls
-To: Danny Lin <danny@orbstack.dev>, Matteo Croce <teknoraver@meta.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
- David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250418070037.33971-1-danny@orbstack.dev>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250418070037.33971-1-danny@orbstack.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250417122337.547969-5-cleger@rivosinc.com>
 
-On 4/18/25 9:00 AM, Danny Lin wrote:
-> This builds on commit 19249c0724f2 ("net: make net.core.{r,w}mem_{default,max} namespaced")
-> by adding support for writing the sysctls from within net namespaces,
-> rather than only reading the values that were set in init_net. These are
-> relatively commonly-used sysctls, so programs may try to set them without
-> knowing that they're in a container. It can be surprising for such attempts
-> to fail with EACCES.
+On Thu, Apr 17, 2025 at 02:19:51PM +0200, Clément Léger wrote:
+> Add FWFT extension calls. This will be ratified in SBI V3.0 hence, it is
+> provided as a separate commit that can be left out if needed.
 > 
-> Unlike other net sysctls that were converted to namespaced ones, many
-> systems have a sysctl.conf (or other configs) that globally write to
-> net.core.rmem_default on boot and expect the value to propagate to
-> containers, and programs running in containers may depend on the increased
-> buffer sizes in order to work properly. This means that namespacing the
-> sysctls and using the kernel default values in each new netns would break
-> existing workloads.
+> Signed-off-by: Clément Léger <cleger@rivosinc.com>
+> ---
+>  arch/riscv/kernel/sbi.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
 > 
-> As a compromise, inherit the initial net.core.*mem_* values from the
-> current process' netns when creating a new netns. This is not standard
-> behavior for most netns sysctls, but it avoids breaking existing workloads.
+> diff --git a/arch/riscv/kernel/sbi.c b/arch/riscv/kernel/sbi.c
+> index 379981c2bb21..7b062189b184 100644
+> --- a/arch/riscv/kernel/sbi.c
+> +++ b/arch/riscv/kernel/sbi.c
+> @@ -299,6 +299,8 @@ static int __sbi_rfence_v02(int fid, const struct cpumask *cpu_mask,
+>  	return 0;
+>  }
+>  
+> +static bool sbi_fwft_supported;
 
-AFAICS leveraging the above and any protocol without memory accounting
-(e.g. UDP for tx) child netns could use an "unlimited" amount of kernel
-memory. I'm wondering if it would be safer to limit, for child netns,
-the maximum value to the corresponding initns one.
+At some point we may want an SBI extension bitmap, but this is only the
+second SBI extension supported boolean that I'm aware of, so I guess we're
+still OK for now.
 
-/P
+> +
+>  /**
+>   * sbi_fwft_set() - Set a feature on the local hart
+>   * @feature: The feature ID to be set
+> @@ -309,7 +311,15 @@ static int __sbi_rfence_v02(int fid, const struct cpumask *cpu_mask,
+>   */
+>  int sbi_fwft_set(u32 feature, unsigned long value, unsigned long flags)
+>  {
+> -	return -EOPNOTSUPP;
+> +	struct sbiret ret;
+> +
+> +	if (!sbi_fwft_supported)
+> +		return -EOPNOTSUPP;
+> +
+> +	ret = sbi_ecall(SBI_EXT_FWFT, SBI_EXT_FWFT_SET,
+> +			feature, value, flags, 0, 0, 0);
+> +
+> +	return sbi_err_map_linux_errno(ret.error);
+>  }
+>  
+>  struct fwft_set_req {
+> @@ -348,6 +358,9 @@ int sbi_fwft_local_set_cpumask(const cpumask_t *mask, u32 feature,
+>  		.error = ATOMIC_INIT(0),
+>  	};
+>  
+> +	if (!sbi_fwft_supported)
+> +		return -EOPNOTSUPP;
+> +
+>  	if (feature & SBI_FWFT_GLOBAL_FEATURE_BIT)
+>  		return -EINVAL;
+>  
+> @@ -679,6 +692,11 @@ void __init sbi_init(void)
+>  			pr_info("SBI DBCN extension detected\n");
+>  			sbi_debug_console_available = true;
+>  		}
+> +		if ((sbi_spec_version >= sbi_mk_version(3, 0)) &&
+> +		    (sbi_probe_extension(SBI_EXT_FWFT) > 0)) {
 
+Unnecessary (), but I see it's consistent with the expressions above.
+
+> +			pr_info("SBI FWFT extension detected\n");
+> +			sbi_fwft_supported = true;
+> +		}
+>  	} else {
+>  		__sbi_set_timer = __sbi_set_timer_v01;
+>  		__sbi_send_ipi	= __sbi_send_ipi_v01;
+> -- 
+> 2.49.0
+>
+
+Besides the () nit
+
+Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
