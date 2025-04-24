@@ -1,350 +1,273 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBBE226D0B;
-	Thu, 24 Apr 2025 10:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4FF235BF1
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:25:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745490346; cv=none; b=l7qh7Lk3RKLFfPPATCVBG1gbyeMN4cNqc/+SvTe3qST3h0tPAoAQPItsyLPBD4luo9qnc25XTEKs9RyCZu+Qpi9gdGF9XuaMZ5lSrsetd1E5tJu0MU6N4U8YLzV0pRkyjD5IkdtVhsQLKmP/N3sT/ImMWSn9VV3mjDEYI01CM4Q=
+	t=1745490348; cv=none; b=NAKHlY9hDrtnSoJaiDnE7QxKNgu2vPhGV75jKgTXiodhGKPMkugZYWXFApv/QFB/EUn07ygbKQpFFeolHS3sqavWyeXu4l4VI52EouFBBfxnPi9M+yeXeDuGT7BzIQfjse/V8qdUJxndBg5eZrqXInwL7rh5yTcrgCWqrjuKG7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745490346; c=relaxed/simple;
-	bh=UwZN9vFIXuaCFnOnc0JW9XEymTalTODJy+XEW2zbroI=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FUCXa5dcMORIFdAgTBbfwGGBT+Z22Vs0HFjkkAxzNIwDjzJ3DqZ7/blU6ArW5SgZYbwrGmEheyZAlJZ8Zf4T9V3JdjwWenULWRz9tc7u1TjjinczydG+REE2ettnOs9ZcK8XjUbP1wRdcBxtc038lO1k3UqtRNFwJ1kVW1eszQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oRHjEqXr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745490348; c=relaxed/simple;
+	bh=gnsNUIE5fVMgm1yzsatCfzS1CVhAuzl2OFSf1bbgvqg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lG6iDj2ISA3Msn6zY45K7IHvNqk2fy8wk2cciVYjngZKHAofKsQlIwM/Sw1zrI/1tOnoa7oMDRrtW/6ZFS5r7R1WguR0l1q/p2cGWMswWjUE6s/3oL6lDEsyQkCpcZWz4bfwWMDSRQsr2dYzYVlu+udVVNVCKfo8b3RSfqOXMbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gZwqnAhL; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oRHjEqXr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDC8C4CEE4;
-	Thu, 24 Apr 2025 10:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745490343;
-	bh=UwZN9vFIXuaCFnOnc0JW9XEymTalTODJy+XEW2zbroI=;
-	h=From:Subject:Date:To:Cc:From;
-	b=oRHjEqXrxsXnC3jrASy8/Rb266KDlxPjhvTk74aLvVNpspSJlANIqEjde+th+ZZfW
-	 R2CmRzl2DI5oCdikOoL3H0iQqBHjF+dt6w8hwNvTsnrvE7r5zyV9N4vBsHMDTvcrcw
-	 E3cABLNJ0NEO1zvt8dGsyzJv1gCg5kiGZe9ofI3aieWz2CHR94A78XfdJiRMOkDYwg
-	 owMF6viN+g2PvQXAvkAhmwKe0kSec3+F9owVY6D7Kp421ylYoJxdXoZc1I6pA1Drwq
-	 Hv9+DTMmBVMzq5yqTgfiDuwhi0Bv2pX1YPPeah7hB1DlTO1u6giNlN3LTq/jQqQn3C
-	 obAFDcMCbFDsw==
-From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: [PATCH v2 00/22] Arm GICv5: Host driver implementation
-Date: Thu, 24 Apr 2025 12:25:11 +0200
-Message-Id: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gZwqnAhL"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so800241a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:25:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745490346; x=1746095146; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IE7aKSxABLvt9Zl1mpyqzpBOR0S+DjSniaX8iFCPAyw=;
+        b=gZwqnAhLXhyO4Xis3QTZdVMCx4pp3/qI8adTIraxc88BY2vZUaUEA/ZFfel+ajb736
+         7MktRFF5SArRt1a40MLr5wYLub3TteKeSlJhZqw7DG64zcsp2IIUCBy/7TeC9qwtsVY5
+         IMBpHBQR2wheUkg/flK6P5Dk9gGYiK1S8Fu8U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745490346; x=1746095146;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IE7aKSxABLvt9Zl1mpyqzpBOR0S+DjSniaX8iFCPAyw=;
+        b=oGcDzNNkGJLf8cpZPYx0HhVoQx6zggt2559QkFHTiT84gVwFQgLZ9it2XBTspfZP0m
+         +mg/LZanCq443RiGg6YIUwJtJ39v1dTUXeDOZO1vYC4qCscjX0qMlnbW/bdh6DGTpjJ6
+         4+IDcvsFdKu5+ON/TUGc7vcNAHL1qsSTrzZLZSsUkDjj5I0UiqrRUT6O3pus7ytm4rji
+         7dH2X4Ubc1EpgfhoJCsefyv5UkRXUoYp+ckmpvCMmpxDttjSm8nHlDhWnnhY1zH12pN9
+         gVxeX0O95on1hlB64LdlyHZ7kDA2O6iJF7HsE2VopQ7pHgGNQOqjgjDPPltzT2u661jH
+         813A==
+X-Forwarded-Encrypted: i=1; AJvYcCW03KQP+4TPWk+ur/lAdIw4ziPmWZ5qXmvoomE7vXmGL7XiE9tshCb2ODVv+bns62XAsR456pypgcdJCEc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0YzGyY99Nc83FyrcBdtVI+h0r0B6o3xlTep9tt6DzvIY5efad
+	OOS2JrL7D/rz5f41fEr3tB85OGLnBh7l1eDF7H7AIGT/T5KVbQIZ7n9zG3gX9Q==
+X-Gm-Gg: ASbGncv+1xOb7Co4sUOm5NQnerwUwYEGJbwxyU5u76YhCko8tu8eATvRbv9ffLLyvuJ
+	qypRPPJ9b3Z0MtpPWvrPL6ZeMuoP9w12ugzbj+dVD7V98WYFqe6EPdetyOf//VZDielkFuBpA1v
+	EPLMUdyRyfQAil1rGtt8fpko55UeqtkLWMR5shiS0bqSeNN7TCDQ2E7yTbbiuqzfyoS+g+vjpI0
+	y+b3yg9o0mUFAOn0OXAEacf4i3zQoOF5i/wazLXdz5JJxtsGpDZSpX6D7u3DqeVLfgsBjrBN/Nj
+	LPkDjirg2wK3OVOGvOrQ+WNZfX7zNL9qgsjEeySILxBguhsNcYDtv3t1tg==
+X-Google-Smtp-Source: AGHT+IEXiipgjpnZjo9b641rUil17G3O4+rk2vLeF36iNimZzjzuklvaviqehXQCV3mCF6B2BIqVZg==
+X-Received: by 2002:a17:90b:224a:b0:2fe:d766:ad8e with SMTP id 98e67ed59e1d1-309ed24bc78mr3343313a91.4.1745490345566;
+        Thu, 24 Apr 2025 03:25:45 -0700 (PDT)
+Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:fa13:e633:684b:257])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dda40fsm9680305ad.104.2025.04.24.03.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 03:25:45 -0700 (PDT)
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: Chen-Yu Tsai <wenst@chromium.org>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Jiaxin Yu <jiaxin.yu@mediatek.com>,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 08/13] ASoC: mediatek: mt8173-afe-pcm: use local `dev` pointer in driver callbacks
+Date: Thu, 24 Apr 2025 18:25:02 +0800
+Message-ID: <20250424102509.1083185-9-wenst@chromium.org>
+X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+In-Reply-To: <20250424102509.1083185-1-wenst@chromium.org>
+References: <20250424102509.1083185-1-wenst@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIcRCmgC/23MQQ7CIBCF4as0sxYDCBVdeQ/TRS1DmWiggYZoG
- u4udu3yf8n7NsiYCDNcuw0SFsoUQwt56GDyY5iRkW0NkkvNFTdspqlo5mNe2Vld3En0o0OjoB2
- WhI7eO3YfWnvKa0yf3S7it/5limCcCSd7+1C9dsbenpgCvo4xzTDUWr8KsH2tpQAAAA==
-X-Change-ID: 20250408-gicv5-host-749f316afe84
-To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, 
- Sascha Bischoff <sascha.bischoff@arm.com>, 
- Timothy Hayes <timothy.hayes@arm.com>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-Implement the irqchip kernel driver for the Arm GICv5 architecture,
-as described in the GICv5 beta0 specification, available at:
+The probe and remove functions in the mt8183-afe-pcm driver repeatedly uses
+`&pdev->dev` for |struct device *|, but then assigns this value to
+`afe->dev` and uses that in other places in the same function.
 
-https://developer.arm.com/documentation/aes0070
+Store `&pdev->dev` in a local pointer and use that exclusively to avoid
+the numerous dereferences and to make the code more consistent. Lines
+are reflowed where it makes sense.
 
-The GICv5 architecture is composed of multiple components:
-
-- one or more IRS (Interrupt Routing Service)
-- zero or more ITS (Interrupt Translation Service)
-- zero or more IWB (Interrupt Wire Bridge)
-
-The GICv5 host kernel driver is split into units corresponding
-to GICv5 components.
-
-The GICv5 architecture defines the following interrupt types:
-
-- PPI (PE-Private Peripheral Interrupt)
-- SPI (Shared Peripheral Interrupt)
-- LPI (Logical Peripheral Interrupt)
-
-This series adds sysreg entries required to automatically generate
-GICv5 registers handling code, one patch per-register.
-
-The GICv5 driver is split into patches matching *logical* entities,
-that make the respective drivers functional.
-
-Logical entities:
-
-- PPI, IRS/SPI, LPI/IPI
-- ITS
-- IWB
-
-The salient points of the driver are summarized below.
-
-=============
-1. Testing
-=============
-
-Patchset tested with an architecturally compliant FVP model with
-the following setup:
-
-- 1 IRS
-- 1 and 2 ITSes
-- 1 and 2 IWBs
-
-configured with different parameters that vary the IRS(IST) and
-ITS(DT/ITT) table levels and INTID/DEVICEID/EVENTID bits.
-
-A Trusted-Firmware (TF-A) prototype was used for device tree
-bindings and component initializations.
-
-================
-2. Driver design
-================
-
-=====================
-2.1 GICv5 DT bindings
-=====================
-
-The DT bindings attempt to map directly to the GICv5 component
-hierarchy, with a top level node corresponding to the GICv5 "system",
-having IRS child nodes, that have in turn ITS child nodes.
-
-The IWB is defined in a separate schema; its relationship with the ITS
-is explicit through the msi-parent property required to define the IWB
-deviceID.
-
-===================
-2.2 GICv5 top level
-===================
-
-The top-level GICv5 irqchip driver implements separate IRQ
-domains - one for each interrupt type, PPI (PE-Private Peripheral
-Interrupt), SPI (Shared Peripheral Interrupt) and LPI (Logical
-Peripheral Interrupt).
-
-The top-level exception handler routes the IRQ to the relevant IRQ
-domain for handling according to the interrupt type detected when the
-IRQ is acknowledged.
-
-All IRQs are set to the same priority value.
-
-The driver assumes that the GICv5 components implement enough
-physical address bits to address the full system RAM, as required
-by the architecture; it does not check whether the physical address
-ranges of memory allocated for IRS/ITS tables are within the GICv5
-physical address range.
-
-Components are probed by relying on the early DT irqchip probing
-scheme. The probing is carried out hierarchically, starting from
-the top level.
-
-The IWB driver is not implemented using the wired-to-MSI interface
-(i.e. with bus_token == DOMAIN_BUS_WIRED_TO_MSI mechanism), for two
-specific reasons:
-
-- An IWB is tightly coupled with a GICv5 ITS and its eventIDs
-  are fixed and cannot be allocated by the GICv5 ITS as it does
-  for other devices. An IWB is plugged directly into the ITS
-  driver for this specific reason.
-- The DOMAIN_BUS_WIRED_TO_MSI interface requires the IWBs to be
-  platform devices - fiddling with platform device creation and
-  DT nodes is doable but a bit hacky.
-
-Having said that, an alternative IWB driver with DOMAIN_BUS_WIRED_TO_MSI
-bus token was implemented and can be shared for subsequent patchsets
-versions depending on feedback, ref: 2.5 GICv5 IWB section below.
-
-=============
-2.3 GICv5 IRS
-=============
-
-The GICv5 IRS driver probes and manages SPI interrupts by detecting their
-presence and by providing the top-level driver the information required
-to set up the SPI interrupt domain.
-
-The GICv5 IRS driver also parses from firmware Interrupt AFFinity ID
-(IAFFID) IDs identifying cores and sets up IRS IRQ routing.
-
-The GICv5 IRS driver allocates memory to handle the IRS tables.
-
-The IRS LPI interrupts state is kept in an Interrupt State Table (IST)
-and it is managed through CPU instructions.
-
-The IRS driver allocates the IST table that, depending on available HW
-features can be either 1- or 2-level.
-
-If the IST is 2-level, memory for the level-2 table entries
-is allocated on demand (ie when LPIs are requested), using an IRS
-mechanism to make level-1 entry valid on demand after the IST
-has already been enabled.
-
-Chunks of memory allocated for IST entries can be smaller or larger than
-PAGE_SIZE and are required to be physically contiguous within an IST level
-(i.e. a linear IST is a single memory block, a 2-level IST is made up of a
-block of memory for the L1 table, whose entries point at different L2 tables
-that are in turn allocated as memory chunks).
-
-LPI INTIDs are allocated in software using an IDA. IDA does not support
-allocating ranges, which is a bit cumbersome because this forces us
-to allocate IDs one by one where the LPIs could actually be allocated
-in chunks.
-
-An IDA was chosen because basically it is a dynamic bitmap, which
-carries out memory allocation automatically.
-
-Other drivers/subsystems made different choices to allocate ranges,
-an IDA was chosen since it is part of the core kernel and an IDA
-range API is in the making.
-
-IPIs are implemented using LPIs and a hierarchical domain is created
-specifically for IPIs using the LPI domain as a parent.
-
-arm64 IPI management core code is augmented with a new API to handle
-IPIs that are not per-cpu interrupts and force the affinity of the LPI
-backing an IPI to a specific and immutable value.
-
-=============
-2.4 GICv5 ITS
-=============
-
-The ITS driver reuses the existing GICv3/v4 MSI-parent infrastructure
-and on top builds an IRQ domain needed to enable message based IRQs.
-
-ITS tables - DT (device table) and ITT (Interrupt Translation Table) are
-allocated according to the number of required deviceIDs and eventIDs on
-a per device basis. The ITS driver relies on the kmalloc() interface
-because memory pages must be physically contiguous within a table level
-and can be < or > than PAGE_SIZE.
-
-=============
-2.5 GICv5 IWB
-=============
-
-The IWB is a wire to message translator; its driver implements the
-IRQ domain needed to carry out this translation and passes the
-interrupt to its parent ITS domain.
-
-An IWB is connected to an ITS and it has its own deviceID for all
-interrupt wires that it manages; the IWB input wire number is
-exposed to the ITS as an eventID. This eventID is not programmable
-and therefore requires special handling in the ITS driver.
-
-The current driver is tied to the ITS code and basically creates
-a wired domain that allocates eventIDs into the ITS driver directly.
-The ITS device allocation for the IWB is implemented directly in
-the IWB driver at probe time (after all the IWB is a wired interrupt
-controller with fixed events). An IWB IRQ domain is assigned to
-the IWB wired IRQs, with the corresponding ITS domain as its
-parent. Upon IRQ allocation (triggered by firmware parsing
-the devices IRQ entries) the domain hierarchy maps the requested IWB
-wire to an ITS {device/event}ID fixed pair.
-
-An alternative IWB driver, based on the DOMAIN_BUS_WIRED_TO_MSI bus
-token, was already developed and tested but the authors preferred
-to post the current version to get feedback on it even though it
-makes the IWB driver tied to the ITS driver requiring boilerplate
-code that is not really needed (e.g. platform device deviceID parsing).
-
-In particular, the fixed eventID nature of the IWB requires ITS
-{device/event}ID allocation code to be IWB aware. To make this
-work for the DOMAIN_BUS_WIRED_TO_MSI bus token approach,
-the IWB should be made to work as a platform device and
-most importantly, ITS code should add special handling for the
-IWB (probably using an OF compatible string match or a new MSI
-alloc flag). In a way, that's what the current IWB driver does.
-Feedback is welcome on the matter.
-
-===================
-3. Acknowledgements
-===================
-
-The patchset was co-developed with T.Hayes and S.Bischoff from
-Arm - thank you so much for your help.
-
-A big thank you to M.Zyngier for his fundamental help/advice.
-
-If you have some time to help us review this series and get it into
-shape, thank you very much.
-
-Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 ---
-Changes in v2:
-- Squashed patches [18-21] into a single logical entity
-- Replaced maple tree with IDA for LPI IDs allocation
-- Changed coding style to tip-maintainer guidelines
-- Tried to consolidate poll wait mechanism into fewer functions
-- Added comments related to _relaxed accessors, barriers and kmalloc
-  limitations
-- Removed IPI affinity check hotplug callback
-- Applied DT schema changes requested, moved IWB into a separate schema
-- Fixed DT examples
-- Fixed guard() usage
-- Link to v1: https://lore.kernel.org/r/20250408-gicv5-host-v1-0-1f26db465f8d@kernel.org
+ sound/soc/mediatek/mt8173/mt8173-afe-pcm.c | 63 +++++++++++-----------
+ 1 file changed, 32 insertions(+), 31 deletions(-)
 
----
-Lorenzo Pieralisi (21):
-      dt-bindings: interrupt-controller: Add Arm GICv5
-      arm64/sysreg: Add GCIE field to ID_AA64PFR2_EL1
-      arm64/sysreg: Add ICC_PPI_PRIORITY<n>_EL1
-      arm64/sysreg: Add ICC_ICSR_EL1
-      arm64/sysreg: Add ICC_PPI_HMR<n>_EL1
-      arm64/sysreg: Add ICC_PPI_ENABLER<n>_EL1
-      arm64/sysreg: Add ICC_PPI_{C/S}ACTIVER<n>_EL1
-      arm64/sysreg: Add ICC_PPI_{C/S}PENDR<n>_EL1
-      arm64/sysreg: Add ICC_CR0_EL1
-      arm64/sysreg: Add ICC_PCR_EL1
-      arm64/sysreg: Add ICC_IDR0_EL1
-      arm64/sysreg: Add ICH_HFGRTR_EL2
-      arm64/sysreg: Add ICH_HFGWTR_EL2
-      arm64/sysreg: Add ICH_HFGITR_EL2
-      arm64: Disable GICv5 read/write/instruction traps
-      arm64: cpucaps: Rename GICv3 CPU interface capability
-      arm64: cpucaps: Add GICv5 CPU interface (GCIE) capability
-      irqchip/gic-v5: Add GICv5 CPU interface/IRS support
-      irqchip/gic-v5: Add GICv5 ITS support
-      irqchip/gic-v5: Add GICv5 IWB support
-      arm64: Kconfig: Enable GICv5
-
-Marc Zyngier (1):
-      arm64: smp: Support non-SGIs for IPIs
-
- .../interrupt-controller/arm,gic-v5-iwb.yaml       |   76 ++
- .../bindings/interrupt-controller/arm,gic-v5.yaml  |  196 +++
- MAINTAINERS                                        |   10 +
- arch/arm64/Kconfig                                 |    1 +
- arch/arm64/include/asm/arch_gicv5.h                |   91 ++
- arch/arm64/include/asm/el2_setup.h                 |   45 +
- arch/arm64/include/asm/smp.h                       |   24 +-
- arch/arm64/kernel/cpufeature.c                     |   17 +-
- arch/arm64/kernel/smp.c                            |  156 ++-
- arch/arm64/tools/cpucaps                           |    3 +-
- arch/arm64/tools/sysreg                            |  495 +++++++-
- drivers/irqchip/Kconfig                            |   16 +
- drivers/irqchip/Makefile                           |    5 +-
- drivers/irqchip/irq-gic-common.h                   |    2 -
- ...3-its-msi-parent.c => irq-gic-its-msi-parent.c} |    3 +-
- drivers/irqchip/irq-gic-its-msi-parent.h           |   13 +
- drivers/irqchip/irq-gic-v3-its.c                   |    3 +-
- drivers/irqchip/irq-gic-v5-irs.c                   |  851 +++++++++++++
- drivers/irqchip/irq-gic-v5-its.c                   | 1325 ++++++++++++++++++++
- drivers/irqchip/irq-gic-v5-iwb.c                   |  356 ++++++
- drivers/irqchip/irq-gic-v5.c                       | 1062 ++++++++++++++++
- drivers/irqchip/irq-gic-v5.h                       |  388 ++++++
- drivers/irqchip/irq-gic.c                          |    2 +-
- 23 files changed, 5074 insertions(+), 66 deletions(-)
----
-base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-change-id: 20250408-gicv5-host-749f316afe84
-
-Best regards,
+diff --git a/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c b/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
+index f93d6348fdf8..c0fa623e0b17 100644
+--- a/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
++++ b/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
+@@ -1054,26 +1054,26 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	struct mtk_base_afe *afe;
+ 	struct mt8173_afe_private *afe_priv;
+ 	struct snd_soc_component *comp_pcm, *comp_hdmi;
++	struct device *dev = &pdev->dev;
+ 
+-	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(33));
++	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(33));
+ 	if (ret)
+ 		return ret;
+ 
+-	afe = devm_kzalloc(&pdev->dev, sizeof(*afe), GFP_KERNEL);
++	afe = devm_kzalloc(dev, sizeof(*afe), GFP_KERNEL);
+ 	if (!afe)
+ 		return -ENOMEM;
+ 
+-	afe->platform_priv = devm_kzalloc(&pdev->dev, sizeof(*afe_priv),
+-					  GFP_KERNEL);
++	afe->platform_priv = devm_kzalloc(dev, sizeof(*afe_priv), GFP_KERNEL);
+ 	afe_priv = afe->platform_priv;
+ 	if (!afe_priv)
+ 		return -ENOMEM;
+ 
+-	afe->dev = &pdev->dev;
++	afe->dev = dev;
+ 
+-	ret = of_reserved_mem_device_init(&pdev->dev);
++	ret = of_reserved_mem_device_init(dev);
+ 	if (ret) {
+-		dev_info(&pdev->dev, "no reserved memory found, pre-allocating buffers instead\n");
++		dev_info(dev, "no reserved memory found, pre-allocating buffers instead\n");
+ 		afe->preallocate_buffers = true;
+ 	}
+ 
+@@ -1085,27 +1085,27 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	if (IS_ERR(afe->base_addr))
+ 		return PTR_ERR(afe->base_addr);
+ 
+-	afe->regmap = devm_regmap_init_mmio(&pdev->dev, afe->base_addr,
+-		&mt8173_afe_regmap_config);
++	afe->regmap = devm_regmap_init_mmio(dev, afe->base_addr,
++					    &mt8173_afe_regmap_config);
+ 	if (IS_ERR(afe->regmap))
+ 		return PTR_ERR(afe->regmap);
+ 
+ 	/* initial audio related clock */
+ 	ret = mt8173_afe_init_audio_clk(afe);
+ 	if (ret) {
+-		dev_err(afe->dev, "mt8173_afe_init_audio_clk fail\n");
++		dev_err(dev, "mt8173_afe_init_audio_clk fail\n");
+ 		return ret;
+ 	}
+ 
+ 	/* memif % irq initialize*/
+ 	afe->memif_size = MT8173_AFE_MEMIF_NUM;
+-	afe->memif = devm_kcalloc(afe->dev, afe->memif_size,
++	afe->memif = devm_kcalloc(dev, afe->memif_size,
+ 				  sizeof(*afe->memif), GFP_KERNEL);
+ 	if (!afe->memif)
+ 		return -ENOMEM;
+ 
+ 	afe->irqs_size = MT8173_AFE_IRQ_NUM;
+-	afe->irqs = devm_kcalloc(afe->dev, afe->irqs_size,
++	afe->irqs = devm_kcalloc(dev, afe->irqs_size,
+ 				 sizeof(*afe->irqs), GFP_KERNEL);
+ 	if (!afe->irqs)
+ 		return -ENOMEM;
+@@ -1124,9 +1124,9 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, afe);
+ 
+-	pm_runtime_enable(&pdev->dev);
+-	if (!pm_runtime_enabled(&pdev->dev)) {
+-		ret = mt8173_afe_runtime_resume(&pdev->dev);
++	pm_runtime_enable(dev);
++	if (!pm_runtime_enabled(dev)) {
++		ret = mt8173_afe_runtime_resume(dev);
+ 		if (ret)
+ 			goto err_pm_disable;
+ 	}
+@@ -1136,13 +1136,12 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	afe->runtime_resume = mt8173_afe_runtime_resume;
+ 	afe->runtime_suspend = mt8173_afe_runtime_suspend;
+ 
+-	ret = devm_snd_soc_register_component(&pdev->dev,
+-					 &mtk_afe_pcm_platform,
+-					 NULL, 0);
++	ret = devm_snd_soc_register_component(dev, &mtk_afe_pcm_platform,
++					      NULL, 0);
+ 	if (ret)
+ 		goto err_pm_disable;
+ 
+-	comp_pcm = devm_kzalloc(&pdev->dev, sizeof(*comp_pcm), GFP_KERNEL);
++	comp_pcm = devm_kzalloc(dev, sizeof(*comp_pcm), GFP_KERNEL);
+ 	if (!comp_pcm) {
+ 		ret = -ENOMEM;
+ 		goto err_pm_disable;
+@@ -1150,7 +1149,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 
+ 	ret = snd_soc_component_initialize(comp_pcm,
+ 					   &mt8173_afe_pcm_dai_component,
+-					   &pdev->dev);
++					   dev);
+ 	if (ret)
+ 		goto err_pm_disable;
+ 
+@@ -1164,7 +1163,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_pm_disable;
+ 
+-	comp_hdmi = devm_kzalloc(&pdev->dev, sizeof(*comp_hdmi), GFP_KERNEL);
++	comp_hdmi = devm_kzalloc(dev, sizeof(*comp_hdmi), GFP_KERNEL);
+ 	if (!comp_hdmi) {
+ 		ret = -ENOMEM;
+ 		goto err_cleanup_components;
+@@ -1172,7 +1171,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 
+ 	ret = snd_soc_component_initialize(comp_hdmi,
+ 					   &mt8173_afe_hdmi_dai_component,
+-					   &pdev->dev);
++					   dev);
+ 	if (ret)
+ 		goto err_cleanup_components;
+ 
+@@ -1186,30 +1185,32 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_cleanup_components;
+ 
+-	ret = devm_request_irq(afe->dev, irq_id, mt8173_afe_irq_handler,
++	ret = devm_request_irq(dev, irq_id, mt8173_afe_irq_handler,
+ 			       0, "Afe_ISR_Handle", (void *)afe);
+ 	if (ret) {
+-		dev_err(afe->dev, "could not request_irq\n");
++		dev_err(dev, "could not request_irq\n");
+ 		goto err_cleanup_components;
+ 	}
+ 
+-	dev_info(&pdev->dev, "MT8173 AFE driver initialized.\n");
++	dev_info(dev, "MT8173 AFE driver initialized.\n");
+ 	return 0;
+ 
+ err_cleanup_components:
+-	snd_soc_unregister_component(&pdev->dev);
++	snd_soc_unregister_component(dev);
+ err_pm_disable:
+-	pm_runtime_disable(&pdev->dev);
++	pm_runtime_disable(dev);
+ 	return ret;
+ }
+ 
+ static void mt8173_afe_pcm_dev_remove(struct platform_device *pdev)
+ {
+-	snd_soc_unregister_component(&pdev->dev);
++	struct device *dev = &pdev->dev;
+ 
+-	pm_runtime_disable(&pdev->dev);
+-	if (!pm_runtime_status_suspended(&pdev->dev))
+-		mt8173_afe_runtime_suspend(&pdev->dev);
++	snd_soc_unregister_component(dev);
++
++	pm_runtime_disable(dev);
++	if (!pm_runtime_status_suspended(dev))
++		mt8173_afe_runtime_suspend(dev);
+ }
+ 
+ static const struct of_device_id mt8173_afe_pcm_dt_match[] = {
 -- 
-Lorenzo Pieralisi <lpieralisi@kernel.org>
+2.49.0.805.g082f7c87e0-goog
 
