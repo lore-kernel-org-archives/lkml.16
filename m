@@ -1,142 +1,145 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3E52192FD
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DFED2192FD
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745526770; cv=none; b=IFGLZWqRyVxcFzNfEg6k+Z/Hx0h1Qk0ifMabNnH9F57yYOVBqNtLe3cJVa1UJmjQbJvhChT7tT+cBurUWez/SU/SDehaeWJV07IhhUc6TqdME22lhfddX9M5tD5PUxTpZcxPrmHwxisXkzW5XqQquRPjCQe2gkS1GxueF+NOD7A=
+	t=1745526801; cv=none; b=ImVADkUekcEz5A4UkLyAghxWG4UG0D+kyvjXfp2V0sDnUmGHZJApLcmYtvutle6j2rb0kG4HKKgA5T/7/fbjO6oIq+u4r+NlAvM47SO9HJumKibOU7IMMwICHMc3N/q8IhGuYKVPIWp/344kGfSPqKpZMzfR68ySaSGi0/hU8gE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745526770; c=relaxed/simple;
-	bh=tjaBPN56UPOtib4A2G46hSfnd9J/OzQOEib8ipL3O24=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QcH5dsjRcafInUcyEJHCjpK76vsejnRMPqxJW7IcS562gnykQLlFewN0cUPOx+5IJ/JC5LiLGLSMSFeEv6kqOFZFFc4ZyG5iVzcfui4DRSEDjpiCwzTdr1UxzL/IlD8XuxjiVARm37Pu0n7JKfGhmdAWPAbiBvkJ9ri3fstWTAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=h6jfwCVH; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745526801; c=relaxed/simple;
+	bh=4QeWTXypptQJXSP2hw72WicyVT12KyhEiOJC2dhD6mA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lQKaFPw3D2Drkr0uBSR6IL9CS9zzEIkKKSEVVjHR211pcrBTjtkTGVH0S6cCVSsGs4usuUMV9wKFttKWbGp3qdY1GBsCo6c7VLdX3MBZNkGGIFnPKoONM9+xlOV6IBPOgcbndfWbPnJ+bHCOHwVaIPZ32Z9h8QfNIP1F4pQphA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y2yYW7JQ; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="h6jfwCVH"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OJn9A7028320
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:32:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	m8HkOPFKN3GC9vWOM46Nwa7p+fPHQ6WYQxK03zZBQac=; b=h6jfwCVHDQOYZElI
-	KqMdn+DgOWPc7UbIDJNyh+xGuawbfmXa8O0O57XaiRXJsnmV+l/iGaHsp0idoiFp
-	wO+gEUVRIXqPHuEjil8byuZHj+LvyGZwvDOTWOczB1QMMeIaY1ShCNR3C5PcxytU
-	/c6UZQhL93L6eQzZ5Nbhb0RUNvbOTCdB/x94/ZA2y4/4Q2w8RbGXgdm1uvhRnHGk
-	rOwaLk3VIKby1TQ9v98EgkVtAUdOWiHO+wEh1dSpFBgBYOHT8vR81vn6GZLcYtTX
-	plnrPVO6ig3K0zRVIbiDw+EaiKLA5jq86tMJnvNt+NtHFa4jzbOouq4hDcL9xy4P
-	S2zGJQ==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0psen-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:32:48 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7c552802e9fso26637685a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:32:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y2yYW7JQ"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39127effa72so190054f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745526797; x=1746131597; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=idgVGL6g4QaZWwBvT7pD7vd7IkM4X5ShmrP8Se1lMVw=;
+        b=y2yYW7JQUyirdQS3zK7xAjyaIl/xp21D351k7p5bhQjnHgspU7DI/RY50jXCYpb/In
+         WM/W47bfdwJi7j3UQJIl6kf2FrNaKN97OkICpzw0QVH3yMFHSN8AMxm1paqDuU6S2Yyz
+         06ijdj4u87+27maAS1ZPEz+Wej1HrZU91EEslcWWb3+Ryns1VtQKzvC669JlEn6cwlYh
+         njVumXc+tkwBCmQXfHPRNHhbyLZDF7EtOH+z1LomYKMxUkAr15wzloF+tXkzozS9jZkp
+         38/SsLJy94+R5h4TMP4RsYerbj+a5gsv5ahhlXZUMSRCSZMx414DL7ry3CQ0e8xzcR9k
+         lRdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745526767; x=1746131567;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m8HkOPFKN3GC9vWOM46Nwa7p+fPHQ6WYQxK03zZBQac=;
-        b=Xai1lGvI3O0G1A2Ou3057uYbKoLc7UxQJPSZwO94z8ttBYtNaHWJFCqFGIVHIPf+Cm
-         ZVRru1vMQYMwo1bLSooGgk5NNYJzTR0T1kWeaKCCtc2Govy3Z1zesI4RX4h+ed2/fnR6
-         IQusG1wn1VHr1NVOLWOneCwmLi9UDu1dDgXQcBfRVTJTRIqIfgsOPU5tdhw7In4xAFTn
-         qS+2dQ/OGO8tFXx5LjeCk1D7XpLuA3wnQIMmJ/2m9oRdjb/1tws5h6V1K9DGtbbc+UFe
-         8xuUjKRxLnyK4SZaEBJbYRFMDJRpNmE3lLMQB9qWW/0irnonFKE4wkOvltLq2+o+wPa0
-         wiMg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlxd31r3wrHwnJS3DFx+xea4aWvpJJQzkeE5XyO1A17N6RJF/8JP34FYsbEdMkbWwC7GFO6WS9lOyZQnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIgs0U9rT41rMCBG17Rma+wM9OVMSFHKak3FWgXaxjj/F5uWx1
-	h9AoRGgyOAp7dTD+zMK1pJq+kRPf7JlMhARsCG7ow/zAwhAzmoQw7FqLn8Snf6lqN3sCfwKlt2J
-	X9PpKDjEe8LhJ+TKvfjv+kT2HE9H6dgoH0/YCzjU55IZu8we0cZ4OCHhxxizpTk0=
-X-Gm-Gg: ASbGncu+4L1XYxrMHoGBZ4CL2iPWYJZ2EfbdfTwJpi/0dy13VtOpT6lnsSGBsUfT+AA
-	bh0LEIRDkvP2P+IZQbu9IVCqYwuvfXSIrLrCYZer7B4uKYI/YpPs1nfHjvIBQpqltVeYJkuFx+p
-	5BOpjAplYxpZt2X9FecUM5ZYBkwPN7K9/mwsCR7P0j6wFvUZrxxlSXKlHJSep/7VpKpGoeUZkEM
-	tpNk+qFJr0PXyWDb9Y1RlnyozpfDl79Lb3MnlRFd3OJV2dyLtCwVnRYtKNNQidhsQ6dPn1b1XBk
-	crAYRWNY9cm1994swGeoxH1e8xMGAhJJcKmY1aNs5AcTZ2PSuUDlkVmJQMizRvx/agM=
-X-Received: by 2002:a05:620a:1729:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7c956f79fe9mr259897585a.10.1745526767261;
-        Thu, 24 Apr 2025 13:32:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHzye98f6Zt0tar8sWeQ6uN8aYWFW+oIeMzfavLC0AjRUoW90eRnRuTlTFArGMlyuz16164NQ==
-X-Received: by 2002:a05:620a:1729:b0:7c3:c9d4:95e3 with SMTP id af79cd13be357-7c956f79fe9mr259896085a.10.1745526766905;
-        Thu, 24 Apr 2025 13:32:46 -0700 (PDT)
-Received: from [192.168.65.221] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f658csm173401a12.41.2025.04.24.13.32.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 13:32:46 -0700 (PDT)
-Message-ID: <01bb7183-eb33-4b9b-b73a-e7e3622bf9dd@oss.qualcomm.com>
-Date: Thu, 24 Apr 2025 22:32:44 +0200
+        d=1e100.net; s=20230601; t=1745526797; x=1746131597;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=idgVGL6g4QaZWwBvT7pD7vd7IkM4X5ShmrP8Se1lMVw=;
+        b=eJI4mA7KWo2RUg9TXDoW8FPLnlss5PxEFU8Q5Pejw79JitelhLnpBzFsuVvLg7ReCU
+         RDlSk94QmoVMbX1V8nyWLoIZTiIxd6JxbFcVbt+K3980ngoKxl+EJrtyIEHQZhIkGynu
+         mYAkWgsP/p31RRZl12D2jBOr0OnvvrAvOyBpeywLDfdzEKvnif5z/p9jxJzsKJ6/OlEZ
+         UeF5CzygXh+pEcm0LbnEtClpHb/OaNkGFff/dSxReByecDGnaltcH+V5NBLagoIGqGHR
+         xbE0enECR5XdEbGj8HWMHcXWXexOREsV3YcvVahi+d3iLdEU1x+dGEOUtkQt+ARQLqod
+         wG/g==
+X-Forwarded-Encrypted: i=1; AJvYcCV+YxNzTPn3cCWYdVNAYqb4RFzlydDCHu/7N7WWxCZONbK7prHEZ2z6krF7pDSK20kCU+LA84N0VBKb2lM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/UoM0oQsGXy9uYeDwPfyDChgRA/2BgoQi2PvN/BuHNa8nfuhP
+	ve4oqM+gVGIVq1Ch1vNVeW0L+m2mHs8hE11jsAK3XZvKYTibY8BvahioB44m8gqaeym/m9/Tgsl
+	S
+X-Gm-Gg: ASbGnctcFvOyP9WGJn3efCd6XE7f280kxGEwOK9jgC7/0yZf5VNaOdX+aBD06CJRgiR
+	/YkgpLVMvnYB1ieAJ04hHjD7QtS73LZdiau4qBS3lxNAZCb27+syAE5rvpUq4YjWxbi9Yj/VMr3
+	UcZ4bbJLryiW5vnwnaRXbJTQv998DzuLZf+pBuLw9l1+Kiw0tVYCSZHub92P0c6w1oLXqvHVg+j
+	k2B9uXVo58x1GEx3mIlmGsEFv9Kxa1wxqcvWR7n7j8G08sa5J8vAcEfxKBnD3oyJEcTCzwOm5NG
+	0aoQH6Y3KCm0G8po6+xwMW7x/mhhis8ubyc8tirVDIu0TAJK7g==
+X-Google-Smtp-Source: AGHT+IE5Mc9hxBHCR2InV+3GYjWm+yX48MSznxSGfJQ+nJnypxIRQDaL1uLviaLHAXTFGuG4bu8Mbw==
+X-Received: by 2002:a05:600c:198f:b0:43d:745a:5a49 with SMTP id 5b1f17b1804b1-4409bd77f64mr15358405e9.4.1745526797180;
+        Thu, 24 Apr 2025 13:33:17 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a53870f9sm797625e9.33.2025.04.24.13.33.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 13:33:16 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Tudor Ambarus <tudor.ambarus@linaro.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	=?UTF-8?q?Andr=C3=A9=20Draszik?= <andre.draszik@linaro.org>,
+	linux-kernel@vger.kernel.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] firmware: exynos-acpm: Correct kerneldoc and use typical np argument name
+Date: Thu, 24 Apr 2025 22:33:09 +0200
+Message-ID: <20250424203308.402168-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] coresight: Add remote etm support
-To: Mao Jinlong <quic_jinlmao@quicinc.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
- <mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20250424115854.2328190-1-quic_jinlmao@quicinc.com>
- <20250424115854.2328190-5-quic_jinlmao@quicinc.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250424115854.2328190-5-quic_jinlmao@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: uRRy_NJZ5dcR45WRtbTo3j5rX4KfJUtU
-X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=680a9ff0 cx=c_pps a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=day4Cjbagy4oAH_-zrgA:9 a=QEXdDO2ut3YA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: uRRy_NJZ5dcR45WRtbTo3j5rX4KfJUtU
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDE0NCBTYWx0ZWRfX0qQbVM+K+jnB 8YeL+YB+yZAffm88iNMs9nMWA31sPukPu22yB4a0DnrDhxPUNUj0ybWTA1faekTYxbRRLtg1q/B WmfRaHHiukwopj8mshABaoqOZVGsEEfyyrOfQZ+r266Fdi+VPgYSp6GPC1+hwHBL4cotZarVNvu
- 7tC7OVT6uFtW4s6dCtnZy+4SbRNXY/CVuvVLpXn7pA6UCP19Zt30M1v96DK4CEkpLf0+7QpB9VV 8I+bUheVcE3epblZnUkZTBGIuZ+bi7tExFybrdy5EWxcwb3RU5zvJJvEkUREDo70UiNW1Vee4OF qEJl3YKKQqpGgiPUO8ciiNRp+DliDfZ/8ChKXpxaTSRyLdrfVkRN4dIYeav0l3XRKyPVI1TgOXw
- ZmmDRxBn9QIVSQYhmhp0Q3Dwn9jaj8lsLeCH5vqT2/LAgAD/GA3SEd4j7+EynooAdkYc3oLV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_09,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240144
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2015; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=4QeWTXypptQJXSP2hw72WicyVT12KyhEiOJC2dhD6mA=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoCqAE1H7molI2SrPDwvMlO3UDSVTRVDm+gevDd
+ knoDzWIWGyJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaAqgBAAKCRDBN2bmhouD
+ 11FzEACRaBawm3jRXDBKOuAGgA7XIz7w2537aCM6EOBi6nKWKvWSPJeGtPKK+sAXHBvWzom7pxw
+ pdsqKgUW9MVmcs6W/nIUTPKdyy78eyx4luOQLpXbNjQOTY1qoxUWJvF4Niwaj4oqlobww//yOo1
+ 0sQs0QbiLddmFdBjNdaLj1pPG2ojQwnsfKZcfS2G8IXqnc6EYKw75xkwoazdQvrdizqmJ0C32Pu
+ Kcb8qYpr22iEqmc+rpKZhGoz7Pe0MSJlYwNuMsd0JhtEm0geN2l8b/bmqXrNGNKZ+CUbjPKcldJ
+ ad9h6C2syO0/kA8akIOy9kM0VPb6nDup8gqmxVHugYGvVP3gc4R16BNMklOV3GU0f2+BKtmAHOh
+ f0EdX5gz14N4wiE0Q2gWaNYRxdORLjPrx1MiJrnL8E/8pE1wB0K12jIKIrsaqEN5B6hOpkDIbno
+ jE7+odrH+wztsqozQoDuzPhA+Wn/eRpfwSRNeb691pM2N86mbE6UDaGEpzFG5OJZzEs1URFPMUe
+ Lr5k+RH6GmaB3TpoQMjoyACrwkIqglxwZAoFb4znIBOH7jtBVKJ6fhxD51HXH4TVS2IuqcwCuXb
+ B7+L3G37ogeJzckbACLv6cRtBxByNsMZxrxhv3NekNF6FuCpsmhQqae5r3GM3YDSxbdIa9NyUUi gXCBG3mKlOq5AYg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On 4/24/25 1:58 PM, Mao Jinlong wrote:
-> The system on chip (SoC) consists of main APSS(Applications
-> processor subsytem) and additional processors like modem, lpass.
-> Coresight remote etm(Embedded Trace Macrocell) driver is for
-> enabling and disabling the etm trace of remote processors. It
-> uses QMI interface to communicate with remote processors' software
-> and uses coresight framework to configure the connection from
-> remote etm source to TMC sinks.
-> 
-> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
-> ---
+Correct kerneldoc warnings after commit a8dc26a0ec43 ("firmware:
+exynos-acpm: introduce devm_acpm_get_by_node()") changed the function
+prototype:
 
-[...]
+  exynos-acpm.c:672: warning: Function parameter or struct member 'acpm_np' not described in 'acpm_get_by_node'
+  exynos-acpm.c:672: warning: expecting prototype for acpm_get_by_phandle(). Prototype was for acpm_get_by_node() instead
 
-> +/*
-> + * Element info to descrbe the coresight_set_etm_req_msg_v01 struct
-> + * which is used to encode the request.
-> + */
-> +static struct qmi_elem_info coresight_set_etm_req_msg_v01_ei[] = {
-> +	{
-> +			.data_type = QMI_UNSIGNED_4_BYTE,
+While touching the lines, change the name of device_node pointer to
+'np' to match convention.
 
-There's one tab too many here and in other declarations (make sure your
-tab width is set to 8 spaces)
+Fixes: a8dc26a0ec43 ("firmware: exynos-acpm: introduce devm_acpm_get_by_node()")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202504222051.7TqaSQ48-lkp@intel.com/
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/firmware/samsung/exynos-acpm.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-I'll try to read into the actual code a bit later
+diff --git a/drivers/firmware/samsung/exynos-acpm.c b/drivers/firmware/samsung/exynos-acpm.c
+index b3afb2069fd1..e02f14f4bd7c 100644
+--- a/drivers/firmware/samsung/exynos-acpm.c
++++ b/drivers/firmware/samsung/exynos-acpm.c
+@@ -677,20 +677,20 @@ static void devm_acpm_release(struct device *dev, void *res)
+ }
+ 
+ /**
+- * acpm_get_by_phandle() - get the ACPM handle using DT phandle.
+- * @dev:        device pointer requesting ACPM handle.
+- * @property:   property name containing phandle on ACPM node.
++ * acpm_get_by_node() - get the ACPM handle using node pointer.
++ * @dev:	device pointer requesting ACPM handle.
++ * @np:		ACPM device tree node.
+  *
+  * Return: pointer to handle on success, ERR_PTR(-errno) otherwise.
+  */
+ static const struct acpm_handle *acpm_get_by_node(struct device *dev,
+-						  struct device_node *acpm_np)
++						  struct device_node *np)
+ {
+ 	struct platform_device *pdev;
+ 	struct device_link *link;
+ 	struct acpm_info *acpm;
+ 
+-	pdev = of_find_device_by_node(acpm_np);
++	pdev = of_find_device_by_node(np);
+ 	if (!pdev)
+ 		return ERR_PTR(-EPROBE_DEFER);
+ 
+-- 
+2.45.2
 
-Konrad
