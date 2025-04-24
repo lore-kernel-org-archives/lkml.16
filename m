@@ -1,156 +1,242 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2053.outbound.protection.outlook.com [40.107.94.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900F018FC86
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 19:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745522334; cv=none; b=rzlaVkHabtO8pXDn9OM5VQHpqgd+cc8Qlfqn8VdU81tmFX466czHgVVtjCdt63v+4iXYGrzylngL4qCcDp3ikv/KNWtwyYNvjFGDuaLxfaz3ANZ0MWu/K0SjyN1qvFfXvESu0pmGQuHKdVX43KnxIthtHJqUScENBUeezK5KXmo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745522334; c=relaxed/simple;
-	bh=CNqJAhaPW3biEFXxsysRoh2Kl5MnjeIup+Zj4mxMEr0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PK0cXfDy7Op6jS7MNI0WUVll9Bpd5/e3+sh5Fc+ZmoiT6HKwbdSL79zX/WfztmEn3lMarodElx8qnZSvV4BI7WqiUtP6Kpx7fsyo6uY5VQCdwIkkm5cir52CQRIuVmMe8P0LA3ae2WtroeljZmuSaH8dSI12LQJ7EDgFn4tj/RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uXg1sazt; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87CD28E5FB;
+	Thu, 24 Apr 2025 19:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745522348; cv=fail; b=p+EGPf2ayeZAVj5fvBA9RrDMizuJMpmyyABClfJUX/nLWrxv3eREHmqSbtIklEZJmjSWJhx03clW/MTqTKSY1zbdKXjY+dGJJYMMGo/qBco+Ig2krn0SnGrNwa11QS3W8OF6EAxT+J74XNQpOlbwkTapihvbUkyFVZVLOialRfk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745522348; c=relaxed/simple;
+	bh=WKAGNAf4s7KyD5YzBNXkTysGIu4zwqvhQmTliMUv5ZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=sh1MZB2zMlbU7YAKvUvmsqbEi9kwER4fH03Y6134UF2gjqrqMlElzYf4mdF0JoU91eoZuyviZpYoJLmgaNPkhcqXvvf1onvk6tQXs1WTLMPcw7jllKqjqdwDHMAS3CIrMrVJhS9Wz5ErGpiCOab/AcqYG/TjfkmFHZxQrA5csf4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pp6k5+zB; arc=fail smtp.client-ip=40.107.94.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uXg1sazt"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-306b51e30ffso1245703a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:18:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745522332; x=1746127132; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=70v12mDUmlFvJZJFlpkmDmUBkvzpwiKi4qrZR0uczEU=;
-        b=uXg1sazt9+2xbjAZ2Hr1ytV4srDzdmc8OnwqWgBAflsVcChqzzO3i+qn6eOztuuOmF
-         J/6fNd+nXq7XT58oVrUzj43ZSoMQ+OP6w/lggmXrlpjFRm7SlvH21jR/bFfR2dxT2ou7
-         Ia8FGyOTEvCJjli+jMlIgMxl99vC5OkyjZhkC/Tl2fkCXmCBiZf13EYz+gVtoRprLosa
-         t8xicuGRL3YY1XikwszAUNfvsaxMmLcYvIfe4W1lhxq5WoZ91cqxc/D9draz0rmMbTck
-         SoKgIr2MEJc8hEoYRFa/HiTHJHSdqepdBYZTMZeClXans7jF7m4jXMP6wHB8fxOAwKi9
-         H05w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745522332; x=1746127132;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=70v12mDUmlFvJZJFlpkmDmUBkvzpwiKi4qrZR0uczEU=;
-        b=Sztq/33tc2Yt17EIZSVXRGDEfhyu10Ub9aVq4g5AOCcRV6jPwksQbhQqv7GjbrGNub
-         jm6MpdHERHiU5gmq4Lc9qHz13BSnKrcF/F0odyWSRbckyZyFy/JHCgqf00ZoLAoA/3xm
-         6MpUlaNAk/Kr229Prm2aDkuA5OC/fOOuY/g5+shjKPBiaAjBbn451PYCbuW+tuHiBDk5
-         gZhPzO/JHWCUhvBU++iaGZ8z8ZOmB2BVfc20a8bPvlJIJdSXcYtqPeben9eqHR+zmAqy
-         4yHqoIKj5BLQjKYfMcCCqc0jIYQ2m6rfwoh+7bUef0mv3LmR1Y2tsZTo/sdOJpX2f0b8
-         bwOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUnIq1Nuao9+5b9IMMcx5lfH4kt6jWJ/eCZ5Uq9N2lIAVXQYPwsPkLpnq4BLnENt1aDYUBWC90foDKGLao=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHAusr1Lq2O0N3B/sdC3dm9ypHQK41LZYzylemz5G/UcXxRTAU
-	zO7I+B6BvVoDF2vUK10Iub7yf425HTuYBiLwIMX4RQ2elRI6NeYuwMwctsP2f1uYAXlSgKlzdxu
-	Xmw==
-X-Google-Smtp-Source: AGHT+IFt+KQNer0HsT1+wyzNJuRXokrit8ZoX5QLwZzULjrNKOxXmFCFh9efFkgrYlVR68PULGJxjztoj4U=
-X-Received: from pjtu6.prod.google.com ([2002:a17:90a:c886:b0:2ef:d283:5089])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:50cf:b0:2ff:6e72:b8e9
- with SMTP id 98e67ed59e1d1-309f56b55cfmr1082807a91.25.1745522331596; Thu, 24
- Apr 2025 12:18:51 -0700 (PDT)
-Date: Thu, 24 Apr 2025 12:18:50 -0700
-In-Reply-To: <20250423184326.GCaAk0zinljkNHa_M7@renoirsky.local>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pp6k5+zB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hSJmkF90zrJ/4H1qIe3iNgj6S8ROjvNzxaEf43qseQkBYjkhfZ1owPMcYTxt9NzIumKUocga922XyxtibJZNIvkL+F/boOmUkGNxQ650zbyp4FDDuc7jPbVJKcSXk6aSKzlBHDFCmDP45XQVSpL2wdcSTP+JAqx/RGayHhFzjb5BD/9trcIhFgYgTiTS6Be6766vpKJ6U9Y9875/sM2kW9lp4cEojBUn2fL9QNGs4cSRDVHIAZ2fWDex+9iWyZWSJn4vI6LxMSOQRlET2h2MVs0dJ6AlluGnyEqTPQGQu67/xVyZIAHs7frdPL0Hf2UZI+bK3I/erMVOy3fzB/gX2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7XGcZFvdkllNkhBgzuL4JIscTQDkBTw5A4uANNNrld0=;
+ b=MVHlSSYWHgotaXQ/8Se+qQPbeKw8HhZVJTDtkyTAVe4cZPdrFf/ZOToSWXn6P9YyZxErRXOrQfebqLaNLU+3wJCoJmi2pxuzuvR/DXmVohzqVIpst0QwS4dCtoHIBHTEnBB0NKB/AAHiXABFbBEgtC2tTtHHynuZN3IJx/Y3rgyZBew1kemdD0mtcsgV49EdCEd9mtwoeRIaSD87cUlC+U65LP90f66UyQtnQi8nlEafVEy17fg8cmKlOQM8+Pi3ndGFU7olxV5dNSBOooSMzAYGQMrooFIL0uIwT+vWoevTVMUtGE739H+y/8jOvby4CUY1MiR845maN7i/3uuhaQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7XGcZFvdkllNkhBgzuL4JIscTQDkBTw5A4uANNNrld0=;
+ b=pp6k5+zB3BGlIMfvKuvT8I0DaSqXuEUAD/ySEULlz1xKnuyzHrk59N8ZPwH0/ZCKp1PP+WV3ni1ZQjY1CnIrUyRZtoANyCVv3hbzAc8HYjvQtcjMXR1iQAwfyZ+vCxf6gfiRwOl8zKyIGCt7q+lgk13jJRApzXAcl4XoIhRSLT/8ax3QhHnwqBurnYU7stI0YYBHAuF7uOBkEDQ+MkTzOb/xR0zpRRg/QM5irhUGAwtJKugYkM1UCkZ8zNAesRlzWyhQ0XODZk523fxcD/Abr1rzqut0nx77pEmSrRmPJsmDpDnll83iikZiJsSPmjg8OCc34w1tmLiVbai6rjgxPw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by DS4PR12MB9658.namprd12.prod.outlook.com (2603:10b6:8:280::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Thu, 24 Apr
+ 2025 19:19:03 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%6]) with mapi id 15.20.8655.033; Thu, 24 Apr 2025
+ 19:19:03 +0000
+Date: Thu, 24 Apr 2025 15:19:00 -0400
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Alexandre Courbot <acourbot@nvidia.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>,
+	Timur Tabi <ttabi@nvidia.com>, Alistair Popple <apopple@nvidia.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 13/16] gpu: nova-core: Add support for VBIOS ucode
+ extraction for boot
+Message-ID: <20250424191900.GA174004@joelnvbox>
+References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
+ <20250420-nova-frts-v1-13-ecd1cca23963@nvidia.com>
+ <aAjz2CYTsAhidiEU@pollux>
+ <88937e2b-6950-4c9d-8f02-50f9b12c7376@nvidia.com>
+ <aAkBIvfTkKVNbdnm@pollux>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAkBIvfTkKVNbdnm@pollux>
+X-ClientProxiedBy: BL6PEPF00016418.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:22e:400:0:1004:0:7) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aAKJkrQxp5on46nC@google.com> <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
- <aAKaf1liTsIA81r_@google.com> <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
- <aAfQbiqp_yIV3OOC@google.com> <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
- <aAfynEK3wcfQa1qQ@google.com> <20250423072017.GAaAiUsYzDOdt7cmp2@renoirsky.local>
- <aAj0ySpCnHf_SX2J@google.com> <20250423184326.GCaAk0zinljkNHa_M7@renoirsky.local>
-Message-ID: <aAqOmjQ_bNy8NhDh@google.com>
-Subject: Re: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6] x86/cpu:
- Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when running in
- a virtual machine)
-From: Sean Christopherson <seanjc@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org, Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>, 
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, 
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com, 
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com, 
-	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|DS4PR12MB9658:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd506992-1ee8-42c8-f9b9-08dd8364dfa5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?c5mfFE/4hrvT9qYmIkfqz9OaZQ/BjMn2r24jJdGUYj0LiRJ7hju89IwQwwhL?=
+ =?us-ascii?Q?c8YGwH/9PhoJERp5Ghs724efpl7jMe68XCGIkxssHMX8I0LpVA6fWodexTVS?=
+ =?us-ascii?Q?JaCaKrkhBetrRJ4xfeWuXivn/KpYBClPFjld1uIZv8bzhPWpw0BYQKBaOq4e?=
+ =?us-ascii?Q?b9Rp/bJLWw+BGtk8kTc22s9RqQEzqlqWESVHPwtSSPfUQFPm/8PDzbz5pSli?=
+ =?us-ascii?Q?q9t+Hi9FlB/sWlXML2dXGos3bgfqHm7zsaCZbGGpcR6zl4oRYzuYy10kFpX/?=
+ =?us-ascii?Q?Nk+0HLHEXfSXrXD2NzAsZiZw6F/1LqIOBWk8dF6z0i3Zd4kKe349Aoed0TzO?=
+ =?us-ascii?Q?c7OUXY8i8MJPP6SXYcAqkVXROTfrpJER+Nzv38AMc8pZCky7QTWgdU+Ulxcu?=
+ =?us-ascii?Q?5qdyJduI4O26EUGyYCH9uwg/Izk1Yk9BJJNgurbVeQ3KFY04X3gwKpq0C5iw?=
+ =?us-ascii?Q?j82WTkDDywXyU/oJntzqObsHOTH9WhpFZyTv3LMUP9cwRGnThDA74dCe2/Uj?=
+ =?us-ascii?Q?hHJCVDQ5OeXrMtuXOepacwFczyYmZmGAXgQTjrNLSaIE1li2awgA7iSUHDQz?=
+ =?us-ascii?Q?v/J9+O5Vwcm0a6FEAdytfSGJJ8uB5x3cBSFUsmlbiTuKOSyIxOiQOEj7OqOA?=
+ =?us-ascii?Q?TEg0np9WvS44gwx13j2ZIeKZS4+5PhiSMwG6Ld7t/9ryWDCUfOZAaYepHz/t?=
+ =?us-ascii?Q?4RlQ9PYDfD0uNmErGZZ7FSreH6Snfp20c1vHg/BHxd4PFF2Co6fVHPOrwQnz?=
+ =?us-ascii?Q?A3olIQvncjt4uz0YI5c1Rs6X0GbFtcagUSAylDB/ASbJJg7TAwmAG2vQRcgB?=
+ =?us-ascii?Q?EWKiOVGuVlKYyHX1HfF8ogOgkm90OfLx2G17llkuHxIlMl1DxlqS0su4JUHD?=
+ =?us-ascii?Q?O9LZ6vQ/xKxxTpwqteIgjhBLV/spXBEq3tD3zzT4hwuCQInRUOWFOfXmvcqR?=
+ =?us-ascii?Q?t5ex2F5IF58Jamkgmur7YCf/D7l6A6PFvZRwUFgMsE1NVPrjLIO6w6Se/g4F?=
+ =?us-ascii?Q?8FHmLS+/dVy/21K26L1okPIXsLV/mklsHkQJqy5rK+o/pgyKhc4hhAXvq0Jc?=
+ =?us-ascii?Q?wGbNVWOHNpl5dmweSJKwHxIfUTycz5OoduaZcZ6VCsgz9ToGfwOn/Xfr8VMt?=
+ =?us-ascii?Q?hSSbBZyhIsfPBR6n0VTd1knT4pnbJLQNZ9cHjFPDCUj+oqkx2VILrGeK1Hu4?=
+ =?us-ascii?Q?uE6aEaVkfvmk2u7A6NohtdPNCmbocZIoTE5nbJbX24GfsD900WqopDHFGqsQ?=
+ =?us-ascii?Q?cozAzDB6YiqQ1Uxf6g7uKZgOyn5p/Bpu+GQwYU/hZO7zlk/GDr4oPYEryr29?=
+ =?us-ascii?Q?ahkak128NVfhCOMyFiQV7VqLChq8gaErEbW05oLBCJclaAnAAknIsES13QEQ?=
+ =?us-ascii?Q?o78ftU2Ega95Qohl0b5wlmOtCBevO3tbGS9XE0fSQdmbQw+nJPkd2xXc5ORY?=
+ =?us-ascii?Q?TuaAR3BochM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?YIolb0lYFm7a6w1XwltIgare2uyZ5a7M8fwAgRh66OAwaXP7Jzed7SwLejeY?=
+ =?us-ascii?Q?BqRdBn2VUPrkaNGKD1zwHFonpp/elwTeS2Wofh7Hoq/ek4NOCyGtcKf95+Jx?=
+ =?us-ascii?Q?h8M1rKEkIpScrewZ1XypnMmqohzdmMIpdoHhZqwb0a6R1OSpn/JSAFFkZ79t?=
+ =?us-ascii?Q?pjABCYrEQRL6BcyXc03H0PgXXhAF+MBpfsjSMoTFE8PRCBKMQ0MR8uElAjpt?=
+ =?us-ascii?Q?v/bTD/wZsg2J67ejkfAvBrhwX4p/uL56j6G8H7avASpob5UUggGHeI5S/xDA?=
+ =?us-ascii?Q?6oytCPiofoWBga4+lXoxwrcKEWcvmY4LcWvB8wQvhPRGuAmFVT5RCaqrsq3W?=
+ =?us-ascii?Q?9Yrof3gtH05ClrQsJrq978nCRN7M4BW4TOmTIih/abJ5nejfx6nkX5pacIi3?=
+ =?us-ascii?Q?RbWbEnrUNzO0/9uXC1Iewx5sKJ3t99rvtMCGZGK9zDQjAr0+OM2dvLuix2UE?=
+ =?us-ascii?Q?uBGJRmaCTNHcgE3o9u50heTwpFS+wLhS6hp602Tm0k3fG9OXzdDQCF+okL9Q?=
+ =?us-ascii?Q?0qC7zOgXvSDQ7xONdUvlJrJFbRDyd0s5LNrw2CKq8FyL6Ems1RKrvlHAfwj9?=
+ =?us-ascii?Q?bvWQGPUmcMwQ6O127Or6Dg2rpKVuBj0AAGPQb0SK/rqbGx9/iyDo+Zaj8wnA?=
+ =?us-ascii?Q?aMPfAA4LMhBygw2rF2zCxbO7lRZcHnx3D6gEjQeYDucQnPKkE6IgeEIV2T1P?=
+ =?us-ascii?Q?3uwBs5kyuZXM9k/zXh22QNfm/c3k1e4OFJmzLOieWvdqhzeJn/ZhEyAoil61?=
+ =?us-ascii?Q?qlckSDxzM6TtVXGDAr4QEpepjgac5NoNdSdlP0qN5jasI+amksYWDFsm0FEf?=
+ =?us-ascii?Q?JzKP+utn35rM7DjHI4/lHTYSs088gJ6woSSGwflmr606zub4SRvCMhiQYBb+?=
+ =?us-ascii?Q?W0EIBm4W5ynLRKwxp8Y/R6J60htqg5gMLGqSGx9a6fWrZfZ73KK9pLw3FNsa?=
+ =?us-ascii?Q?H9pY52wLBlXutcq6vYpTsL/LCZu0sL/Ag6Y1e0GBtI+JZjUSlh0ZKBAThXSK?=
+ =?us-ascii?Q?Wh9KVdFK642p4R6DmK1bBvyktKPPvVQKlO+za9Dp3wu2uAgv1EomsbZqw+II?=
+ =?us-ascii?Q?s+MDyUIoo8ZMc7ciGVPeEuT8jbrALw2URh0Gq1lA4QDSJGM22Ba231dqjliQ?=
+ =?us-ascii?Q?tJ2SchACgGqPYmggEbNdQkMmNbDPDDs7aYk7sOgGxtzSxYTCPP8wuASS9ydE?=
+ =?us-ascii?Q?d3LEP0jAmPJkxwbMHJEE+4a8mTgwqYfqa0DLEQVu9SwJEzeAwMbFOIXkKxvP?=
+ =?us-ascii?Q?mIoFNJxkh2foL2crAmbisWymaaT/R6dxlpDzKcfkdTbePJtRXFOtN/EB0rW/?=
+ =?us-ascii?Q?bvLSNXHB9moUaIYES79brBs/2uhTA0uSTS0DSfRaOxMkx1lpmq/FLvNZxuoL?=
+ =?us-ascii?Q?VkISbsTqusV3mwG6TX3WVN2tfQ96jyY83gj4LtnAI1nfaVFVc4qOqbCGIJlg?=
+ =?us-ascii?Q?gXWVt7WcE05Yp06JSG5PHqJDICWyvV7HfOFWChuyTAs7FFS1QcKw+/qE2PEj?=
+ =?us-ascii?Q?WOuTrXj6cJt0/pNotqP/VtP6mng3/vKHoRw2nHw7237FmuGt0fUw2RZi8T8m?=
+ =?us-ascii?Q?LfaTyB+bc1ZtGUQVgNiQgZeGPng5DFR4UlukC7NP?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd506992-1ee8-42c8-f9b9-08dd8364dfa5
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 19:19:03.1331
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hTkDYORE4+/hCGdQf28ebVr/i04bnPxvK8zczLwmfewuOw9bd4hTqYhl7FlXu/Z7DYpsFVa+1y9n6xoftI/hkA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS4PR12MB9658
 
-On Wed, Apr 23, 2025, Borislav Petkov wrote:
-> On Wed, Apr 23, 2025 at 07:10:17AM -0700, Sean Christopherson wrote:
-> > On Wed, Apr 23, 2025, Borislav Petkov wrote:
-> > > > Eww.  Optimization to lessen the pain of DR7 interception.  It'd be nice to clean
-> > > > this up at some point, especially with things like SEV-ES with DebugSwap, where
-> > > > DR7 is never intercepted.
-> > > >   arch/x86/include/asm/debugreg.h:        if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
-> > > >   arch/x86/kernel/hw_breakpoint.c:                 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
-> > > 
-> > > Patch adding it says "Because DRn access is 'difficult' with virt;..."
-> > > so yeah. I guess we need to agree how to do debug exceptions in guests.
-> > > Probably start documenting it and then have guest and host adhere to
-> > > that. I'm talking completely without having looked at what the code does
-> > > but the "handshake" agreement should be something like this and then we
-> > > can start simplifying code...
+On Wed, Apr 23, 2025 at 05:02:58PM +0200, Danilo Krummrich wrote:
+
+[..]
+
+> > >> +        data.extend_with(len, 0, GFP_KERNEL)?;
+> > >> +        with_bar!(?bar0, |bar0_ref| {
+> > >> +            let dst = &mut data[current_len..current_len + len];
+> > >> +            for (idx, chunk) in dst
+> > >> +                .chunks_exact_mut(core::mem::size_of::<u32>())
+> > >> +                .enumerate()
+> > >> +            {
+> > >> +                let addr = start + (idx * core::mem::size_of::<u32>());
+> > >> +                // Convert the u32 to a 4 byte array. We use the .to_ne_bytes()
+> > >> +                // method out of convenience to convert the 32-bit integer as it
+> > >> +                // is in memory into a byte array without any endianness
+> > >> +                // conversion or byte-swapping.
+> > >> +                chunk.copy_from_slice(&bar0_ref.try_read32(addr)?.to_ne_bytes());
+> > >> +            }
+> > >> +            Ok(())
+> > >> +        })?;
+> > >> +
+> > >> +        Ok(())
+> > >> +    }
+> > ..actually initially was:
 > > 
-> > I don't know that we'll be able to simplify the code.
+> > +        with_bar!(self.bar0, |bar0| {
+> > +            // Get current length
+> > +            let current_len = self.data.len();
+> > +
+> > +            // Read ROM data bytes push directly to vector
+> > +            for i in 0..bytes as usize {
+> > +                // Read byte from the VBIOS ROM and push it to the data vector
+> > +                let rom_addr = ROM_OFFSET + current_len + i;
+> > +                let byte = bar0.try_readb(rom_addr)?;
+> > +                self.data.push(byte, GFP_KERNEL)?;
 > > 
-> > #DBs in the guest are complex because DR[0-3] aren't context switched by hardware,
-> > and running with active breakpoints is uncommon.  As a result, loading the guest's
-> > DRs into hardware on every VM-Enter is undesirable, because it would add significant
-> > latency (load DRs on entry, save DRs on exit) for a relatively rare situation
-> > (guest has active breakpoints).
+> > Where this bit could result in a lot of allocation.
 > > 
-> > KVM (and presumably other hypervisors) intercepts DR accesses so that it can
-> > detect when the guest has active breakpoints (DR7 bits enabled), at which point
-> > KVM does load the guest's DRs into hardware and disables DR interception until
-> > the next VM-Exit.
+> > There was an unsafe() way of not having to do this but we settled with
+> > extends_with().
 > > 
-> > KVM also allows the host user to utilize hardware breakpoints to debug the guest,
-> > which further adds to the madness, and that's not something the guest can change
-> > or even influence.
-> > 
-> > So removing the "am I guest logic" entirely probably isn't feasible, because in
-> > the common case where there are no active breakpoints, reading cpu_dr7 instead
-> > of DR7 is a significant performance boost for "normal" VMs.
+> > Thoughts?
 > 
-> So I see three modes:
+> If I understand you correctly, you just want to make sure that subsequent push()
+> calls don't re-allocate? If so, you can just use reserve() [1] and keep the
+> subsequent push() calls.
 > 
-> - default off - the usual case
-> 
-> - host debugs the guest
-> 
-> - guests are allowed to do breakpoints
+> [1] https://rust.docs.kernel.org/kernel/alloc/kvec/struct.Vec.html#method.reserve
 
-Not quite.  KVM supports all of those seamlessly, with some caveats.  E.g. if
-host userspace and guest kernel are trying to use the same DRx, the guest will
-"lose" and not get its #DBs.
 
-> So depending on what is enabled, the code can behave properly - it just
-> needs logic which tells the relevant code - guest or host - which of the
-> debugging mode is enabled. And then everything adheres to that and DTRT.
-> 
-> But before any of that, the even more important question is: do we even
-> care to beef it up that much?
-> 
-> I get the feeling that we don't so it likely is a "whatever's the
-> easiest" game.
 
-Definitely not.  All I was thinking was something like:
+Ok that does turn out to be cleaner! I replaced it with the following and it works.
 
-diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
-index fdbbbfec745a..a218c5170ecd 100644
---- a/arch/x86/include/asm/debugreg.h
-+++ b/arch/x86/include/asm/debugreg.h
-@@ -121,7 +121,7 @@ static __always_inline unsigned long local_db_save(void)
- {
-        unsigned long dr7;
- 
--       if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
-+       if (static_cpu_has(X86_FEATURE_DRS_MAY_VMEXIT) && !hw_breakpoint_active())
-                return 0;
- 
-        get_debugreg(dr7, 7);
+Let me know if it looks good now? Here's a preview:
 
-Where X86_FEATURE_DRS_MAY_VMEXIT is set if HYPERVISOR is detected, but then
-cleared by SEV-ES+ and TDX guests with guaranteed access to DRs.  That said,
-even that much infrastructure probably isn't worth the marginal benefits.
+-        data.extend_with(len, 0, GFP_KERNEL)?;
++        data.reserve(len, GFP_KERNEL)?;
++
+         with_bar_res!(bar0, |bar0_ref| {
+-            let dst = &mut data[current_len..current_len + len];
+-            for (idx, chunk) in dst
+-                .chunks_exact_mut(core::mem::size_of::<u32>())
+-                .enumerate()
+-            {
+-                let addr = start + (idx * core::mem::size_of::<u32>());
+-                // Convert the u32 to a 4 byte array. We use the .to_ne_bytes()
+-                // method out of convenience to convert the 32-bit integer as it
+-                // is in memory into a byte array without any endianness
+-                // conversion or byte-swapping.
+-                chunk.copy_from_slice(&bar0_ref.try_read32(addr)?.to_ne_bytes());
++            // Read ROM data bytes and push directly to vector
++            for i in 0..len {
++                // Read 32-bit word from the VBIOS ROM
++                let rom_addr = start + i * core::mem::size_of::<u32>();
++                let word = bar0_ref.try_read32(rom_addr)?;
++
++                // Convert the u32 to a 4 byte array and push each byte
++                word.to_ne_bytes().iter().try_for_each(|&b| data.push(b, GFP_KERNEL))?;
+             }
+
+Thanks.
+
+
