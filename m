@@ -1,288 +1,243 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F5741C6FE7
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3013E28F503
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:16:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745518516; cv=none; b=eM9rWzHt3YwL03bF4nScM/Rj5meQVgQtzCc9qEOBO06hWg3ywGm+FjJHu4zwODW3Y7ejlrRsd4i2gih+l0+2Y0B2xoiuRjFbRyJcQO6OvSi5OWeAS5V/jJTMjNiU0KrLhaJWgNQq2tpkB/XVuNA5Z0PFJl8m01klUdwV4zSccP8=
+	t=1745518587; cv=none; b=P+0IzH7hIltbJi/37RsUHawKjPa3SWM3O4HtTn9FVS+vFCgZVGSMQpJmjStlGvTYpcOZqHyk+Ia2MNKkCSJmNRx1FLEE56ZRL+gIQQIDNbijt+sZGs1FwhxWFNhzN1z4TcwiXRiIfY2YdRQiXsByIA7d12fP758wIhWrpduIZ7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745518516; c=relaxed/simple;
-	bh=PyuSdL80DbmXr9kGJoeGx6tq2St315/tjlTgqAsijBo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=riTtS9a4tTJ2xW+4o2Lq+9pvd8QiANdZIf0EUeBN3qF77E1pRoXJNzqLwZCHuwzt+7OrEGuu+vXaI0GLuKQvwjGZe5Uy8WzUfiauVzJVbdiAO4yyJ5cAPjKcJhT4iKWtbx73JwtHZdZHhYx3isVuMyrrRLBlDKkEQVOx8Of0djc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KpsJppya; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1745518587; c=relaxed/simple;
+	bh=xwIJYlS8Mxej9Ue36QIm4SREbYsNaNZe158F8eJvF30=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O5M26V+uzJlOm4DiPvewrl7rf5J2oM8VFtUMqD79Ai9QhdAeOMadHxho/LZ8qxmF19J6fxdQxsr3cANsDZKVQNPq9kwkpVKaszKb8cxACfvaM+5+ajvAQEdU09nxTH1Meh3Fd37W77FuqnVRUPjjLP2YsF2LutSTD0KB80hMrts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=NOK+8qnl; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KpsJppya"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7395d07a3dcso908442b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:15:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="NOK+8qnl"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-739525d4e12so1234816b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:16:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745518513; x=1746123313; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=D5ca3BAG75clyx23dBcL2JDA6BjjGOPOYCSfGb5BdZc=;
-        b=KpsJppyaBqeGD73Fhp64nHRcAbIUxbycAph9B2n5hD1uaBKbFYgl7a9dn144PajEKL
-         h3NQxZlIP8oxHMIc5HS4I5l9oSG9qc39064QpAMgWM5y8qiaW1AOpFwnt+yNUpD+kQEA
-         e7kPeyJ05KOhHX5DlvU55FIKLKbLLmXor+U0RFzFdWklkO61qPj8u0pLfoMT2zzuOkNF
-         hW7BF2428+wCzzHLMcCi10WBc8fOahp7tYblrnSftXYB7zYCnyOhbVoYBrclKONh7uMK
-         5Bm28nd5BLh+/+SxmTOG50U/HXKAoNlY63ozxiLBX/w5Yqt1tjyyaekwpDc3xr8lVjYy
-         Gagg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745518583; x=1746123383; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=T9sHYezjUq6l/x/6C81DhRiO6Hkx3zNHx6RVEna5xiI=;
+        b=NOK+8qnltocl7IjsIDqxYetNVinHbSt9qBQwhXvmJSzZm/Uj/A+EmAwPtIXsueGmIj
+         m+XPDNBpYdajzutI+CSSyCjBf7HjgMqFV5tzTuvVtSkIK3eBz59mRmxbiO0UBJytArVJ
+         JwbIsuvj2ZoNoLvKSqPlotq7uiV3tqPJhkh+4datkYvfGhyOgDt7kMovCVzgiIpfstBk
+         S4v/2M/Ds4YsAEEEQlfryl2sv4S/tt+DeE3VGGSG3emgoJpBwato5wcWUETazw8nIdLn
+         z56G++pZ3eW8WcfzbpGHR4a8Rf5DIByZE1/v3D4yk7znJHeBdY590OLcMTSOC9jC4C69
+         3d9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745518513; x=1746123313;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=D5ca3BAG75clyx23dBcL2JDA6BjjGOPOYCSfGb5BdZc=;
-        b=tRvuAdhKPQxuWTAC/XjH0AvfB+CwPyc/wP42mjicjYe9UPeyg3+LZRkyYMwh9VvDFr
-         ed+9XEBlobRann0sdEYkDUWjj8b1HJ6W9KvEOk8U6uhFgCs6NS5wSGZ1PTfGUdDkoS1q
-         ftilDRp6m1+yayht2xK4q4IXjdMV7yoYw/nhbaYwA0asW43hnpnBv7GKnGDC9FnK0mkL
-         AmdKA3LmWnUho99sYtI6xZgwfL2PDQHVBqU+dUIbcJvD/yID/D8wmH7fEDrX+hsnur8S
-         F6ZGwrH2z+jCUcWX+lm8qMlmcUzurzYZgqEF0L8ggqFrXsuiSOKWK9E664FNqk113cef
-         x7gA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqefTU1GHpiQhOFHD4wMjMV00LMbjSAHxkVuYTsttn+nJeWySq93GdUb0is+q2+RqjVa8dTrm1J5RCWls=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyd/iIOdU52q0jXN9FUh4/NLDA6dPNa9lKgK6UkOP7JUKTW6oHQ
-	B1IZwwq6/a5jTw0OeUeuCzi7i9Od0CgX83Mlqcj70ff/YpJRZYTVnMZpn4iHfwaRSt4wKs246Yf
-	8AGmUdOYjPMY6J4MkVDD1KA==
-X-Google-Smtp-Source: AGHT+IEjHUImTvNW706XVptp79KSjxcaqI5ueQhopNSPDN6+zyHSYy4f+9kb3ZIp9FE3XNV/3Ks8SXHBhHpHnX8+oA==
-X-Received: from pfbfe15.prod.google.com ([2002:a05:6a00:2f0f:b0:736:b063:5038])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a00:4acb:b0:732:2923:b70f with SMTP id d2e1a72fcca58-73e32fda318mr943178b3a.11.1745518513546;
- Thu, 24 Apr 2025 11:15:13 -0700 (PDT)
-Date: Thu, 24 Apr 2025 11:15:11 -0700
-In-Reply-To: <CAGtprH-Ana5A2hz_D+CQ0NYRVxfpR6e0Sojssym-UtUnYpOPqg@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1745518583; x=1746123383;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=T9sHYezjUq6l/x/6C81DhRiO6Hkx3zNHx6RVEna5xiI=;
+        b=cqhmyjufsVd1bBxwCuUmvQ0ZL2IU9GfTwBZcCHwJ6gio2FsgmvqVtpweBgMY33vXAY
+         36jUDkE2GL7deRaxsU1Q5MYTLVKnEyX2mxLvyPm3eAT/qfSiZhOMlrA/ocDox8QGc6y3
+         QYfE9zZ/MwKLZofozmqs+uHY2/0jQDFMz5h5Q3yyUzF5MX5SG7ma4ZufRJzNexwpKacZ
+         maxMGeCaDOR9wY0U58qp4Nkgg0iZHdLNlUBeieAcmN9nXg594Swdoy0gr12cGCj+PqXh
+         a34W1fvejdrLPMTWcMPZct/on2pmUVCuPeQA0QSqoStuRGO8QZw658Jy2WCI+4MuPaWV
+         UZvg==
+X-Forwarded-Encrypted: i=1; AJvYcCW+ky5g/ErkYs6WhZvENYPkakNOkKft4D2TQC0GMCDSYZp2P2Fmku0lpPgvDp3WGJHEKF2/51v2WeQZtX4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3N59hjfnIGdTAUbJuOc5fmJtYo2PHtEl0W/5nnyJr/eYtJxTt
+	oIrM2IIYPx8TXIdbE5Ur4Si+1hyPDfaFSMtv3a6qWg6RFqFJQ3tHgHpd8CdU43Q=
+X-Gm-Gg: ASbGncsEJqpvLgusng/h/5fPVFCBOqTdF0QtYeFiDJzqDRpN3qcT99IvFS5/U60LhjX
+	2T8nfwv/+ZVKdAUDVCNF3IAWBmE90x82MfkNbRBSopgSiQ7mx0o+WUkUWBguHuK4dCYHADfBANO
+	bTnmeIr5Qj53Cqurlivn9kKELmOB5Xklc19mAZQSs9RIA5KpwjlM9gdXkv0d2H3/+3AGp0G1eSO
+	ElK6XosfAS/NnDvNbizSKFdFUA5i96XTbvLmeXMt9vEMZwIsKVs/6xlx1q1TVh3PVZep815aPuo
+	35H2Jz/VCJUFFQpC+WTZsqSea37McMIeCYTQVgxxyJLy0lhuqVI=
+X-Google-Smtp-Source: AGHT+IF0jVzUPU4VWGuVNQ17BhULhOztKBekv2BW5HkIJsQ1IRCAo1z8B5DG3h77AtgqUMysW+802Q==
+X-Received: by 2002:aa7:9315:0:b0:736:9e40:13b1 with SMTP id d2e1a72fcca58-73e24ae7b45mr5236452b3a.23.1745518583417;
+        Thu, 24 Apr 2025 11:16:23 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e259414c7sm1783697b3a.62.2025.04.24.11.16.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 11:16:23 -0700 (PDT)
+Date: Thu, 24 Apr 2025 11:16:19 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, alexghiti@rivosinc.com,
+	samitolvanen@google.com, broonie@kernel.org,
+	rick.p.edgecombe@intel.com,
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH v12 12/28] riscv: Implements arch agnostic shadow stack
+ prctls
+Message-ID: <aAp_87-Xr6gn_hD7@debug.ba.rivosinc.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
+ <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
+ <aAnBmexbL4XmVxQk@debug.ba.rivosinc.com>
+ <D9EWR3RQK0FD.3GF55KNS53YSR@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1726009989.git.ackerleytng@google.com> <38723c5d5e9b530e52f28b9f9f4a6d862ed69bcd.1726009989.git.ackerleytng@google.com>
- <Z+6AGxEvBRFkN5mN@yzhao56-desk.sh.intel.com> <diqzh62ezgdh.fsf@ackerleytng-ctop.c.googlers.com>
- <aAmPQssuN9Zba//b@yzhao56-desk.sh.intel.com> <aAm9OHGt6Ag7ztqs@yzhao56-desk.sh.intel.com>
- <c4dae65f-b5e6-44fa-b5ab-8614f1d47cb5@intel.com> <aAnytM/E6sIdvKNq@yzhao56-desk.sh.intel.com>
- <CAGtprH-Ana5A2hz_D+CQ0NYRVxfpR6e0Sojssym-UtUnYpOPqg@mail.gmail.com>
-Message-ID: <diqz7c39zas0.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 39/39] KVM: guest_memfd: Dynamically split/reconstruct
- HugeTLB page
-From: Ackerley Tng <ackerleytng@google.com>
-To: Vishal Annapurve <vannapurve@google.com>, Yan Zhao <yan.y.zhao@intel.com>
-Cc: Chenyi Qiang <chenyi.qiang@intel.com>, tabba@google.com, quic_eberman@quicinc.com, 
-	roypat@amazon.co.uk, jgg@nvidia.com, peterx@redhat.com, david@redhat.com, 
-	rientjes@google.com, fvdl@google.com, jthoughton@google.com, 
-	seanjc@google.com, pbonzini@redhat.com, zhiquan1.li@intel.com, 
-	fan.du@intel.com, jun.miao@intel.com, isaku.yamahata@intel.com, 
-	muchun.song@linux.dev, erdemaktas@google.com, qperret@google.com, 
-	jhubbard@nvidia.com, willy@infradead.org, shuah@kernel.org, 
-	brauner@kernel.org, bfoster@redhat.com, kent.overstreet@linux.dev, 
-	pvorel@suse.cz, rppt@kernel.org, richard.weiyang@gmail.com, 
-	anup@brainfault.org, haibo1.xu@intel.com, ajones@ventanamicro.com, 
-	vkuznets@redhat.com, maciej.wieczor-retman@intel.com, pgonda@google.com, 
-	oliver.upton@linux.dev, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9EWR3RQK0FD.3GF55KNS53YSR@ventanamicro.com>
 
-Vishal Annapurve <vannapurve@google.com> writes:
-
-> On Thu, Apr 24, 2025 at 1:15=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.com> w=
-rote:
+On Thu, Apr 24, 2025 at 03:36:54PM +0200, Radim Krčmář wrote:
+>2025-04-23T21:44:09-07:00, Deepak Gupta <debug@rivosinc.com>:
+>> On Thu, Apr 10, 2025 at 11:45:58AM +0200, Radim Krčmář wrote:
+>>>2025-03-14T14:39:31-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>>> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
+>>>> @@ -14,7 +15,8 @@ struct kernel_clone_args;
+>>>>  struct cfi_status {
+>>>>  	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
+>>>> -	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 1);
+>>>> +	unsigned long ubcfi_locked : 1;
+>>>> +	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
+>>>
+>>>The rsvd field shouldn't be necessary as the container for the bitfield
+>>>is 'unsigned long' sized.
+>>>
+>>>Why don't we use bools here, though?
+>>>It might produce a better binary and we're not hurting for struct size.
 >>
->> On Thu, Apr 24, 2025 at 01:55:51PM +0800, Chenyi Qiang wrote:
->> >
->> >
->> > On 4/24/2025 12:25 PM, Yan Zhao wrote:
->> > > On Thu, Apr 24, 2025 at 09:09:22AM +0800, Yan Zhao wrote:
->> > >> On Wed, Apr 23, 2025 at 03:02:02PM -0700, Ackerley Tng wrote:
->> > >>> Yan Zhao <yan.y.zhao@intel.com> writes:
->> > >>>
->> > >>>> On Tue, Sep 10, 2024 at 11:44:10PM +0000, Ackerley Tng wrote:
->> > >>>>> +/*
->> > >>>>> + * Allocates and then caches a folio in the filemap. Returns a =
-folio with
->> > >>>>> + * refcount of 2: 1 after allocation, and 1 taken by the filema=
-p.
->> > >>>>> + */
->> > >>>>> +static struct folio *kvm_gmem_hugetlb_alloc_and_cache_folio(str=
-uct inode *inode,
->> > >>>>> +                                                           pgof=
-f_t index)
->> > >>>>> +{
->> > >>>>> +       struct kvm_gmem_hugetlb *hgmem;
->> > >>>>> +       pgoff_t aligned_index;
->> > >>>>> +       struct folio *folio;
->> > >>>>> +       int nr_pages;
->> > >>>>> +       int ret;
->> > >>>>> +
->> > >>>>> +       hgmem =3D kvm_gmem_hgmem(inode);
->> > >>>>> +       folio =3D kvm_gmem_hugetlb_alloc_folio(hgmem->h, hgmem->=
-spool);
->> > >>>>> +       if (IS_ERR(folio))
->> > >>>>> +               return folio;
->> > >>>>> +
->> > >>>>> +       nr_pages =3D 1UL << huge_page_order(hgmem->h);
->> > >>>>> +       aligned_index =3D round_down(index, nr_pages);
->> > >>>> Maybe a gap here.
->> > >>>>
->> > >>>> When a guest_memfd is bound to a slot where slot->base_gfn is not=
- aligned to
->> > >>>> 2M/1G and slot->gmem.pgoff is 0, even if an index is 2M/1G aligne=
-d, the
->> > >>>> corresponding GFN is not 2M/1G aligned.
->> > >>>
->> > >>> Thanks for looking into this.
->> > >>>
->> > >>> In 1G page support for guest_memfd, the offset and size are always
->> > >>> hugepage aligned to the hugepage size requested at guest_memfd cre=
-ation
->> > >>> time, and it is true that when binding to a memslot, slot->base_gf=
-n and
->> > >>> slot->npages may not be hugepage aligned.
->> > >>>
->> > >>>>
->> > >>>> However, TDX requires that private huge pages be 2M aligned in GF=
-N.
->> > >>>>
->> > >>>
->> > >>> IIUC other factors also contribute to determining the mapping leve=
-l in
->> > >>> the guest page tables, like lpage_info and .private_max_mapping_le=
-vel()
->> > >>> in kvm_x86_ops.
->> > >>>
->> > >>> If slot->base_gfn and slot->npages are not hugepage aligned, lpage=
-_info
->> > >>> will track that and not allow faulting into guest page tables at h=
-igher
->> > >>> granularity.
->> > >>
->> > >> lpage_info only checks the alignments of slot->base_gfn and
->> > >> slot->base_gfn + npages. e.g.,
->> > >>
->> > >> if slot->base_gfn is 8K, npages is 8M, then for this slot,
->> > >> lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [4K, 2M+8K=
-);
->> > >> lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M+8K, 4M=
-+8K);
->> > >> lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M+8K, 6M=
-+8K);
->> > >> lpage_info[2M][3].disallow_lpage =3D 1, which is for GFN [6M+8K, 8M=
-+8K);
->> >
->> > Should it be?
->> > lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [8K, 2M);
->> > lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M, 4M);
->> > lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M, 6M);
->> > lpage_info[2M][3].disallow_lpage =3D 0, which is for GFN [6M, 8M);
->> > lpage_info[2M][4].disallow_lpage =3D 1, which is for GFN [8M, 8M+8K);
->> Right. Good catch. Thanks!
->>
->> Let me update the example as below:
->> slot->base_gfn is 2 (for GPA 8KB), npages 2000 (for a 8MB range)
->>
->> lpage_info[2M][0].disallow_lpage =3D 1, which is for GPA [8KB, 2MB);
->> lpage_info[2M][1].disallow_lpage =3D 0, which is for GPA [2MB, 4MB);
->> lpage_info[2M][2].disallow_lpage =3D 0, which is for GPA [4MB, 6MB);
->> lpage_info[2M][3].disallow_lpage =3D 0, which is for GPA [6MB, 8MB);
->> lpage_info[2M][4].disallow_lpage =3D 1, which is for GPA [8MB, 8MB+8KB);
->>
->> lpage_info indicates that a 2MB mapping is alllowed to cover GPA 4MB and=
- GPA
->> 4MB+16KB. However, their aligned_index values lead guest_memfd to alloca=
-te two
->> 2MB folios, whose physical addresses may not be contiguous.
->>
->> Additionally, if the guest accesses two GPAs, e.g., GPA 2MB+8KB and GPA =
-4MB,
->> KVM could create two 2MB mappings to cover GPA ranges [2MB, 4MB), [4MB, =
-6MB).
->> However, guest_memfd just allocates the same 2MB folio for both faults.
->>
->>
->> >
->> > >>
->> > >>   ---------------------------------------------------------
->> > >>   |          |  |          |  |          |  |          |  |
->> > >>   8K        2M 2M+8K      4M  4M+8K     6M  6M+8K     8M  8M+8K
->> > >>
->> > >> For GFN 6M and GFN 6M+4K, as they both belong to lpage_info[2M][2],=
- huge
->> > >> page is allowed. Also, they have the same aligned_index 2 in guest_=
-memfd.
->> > >> So, guest_memfd allocates the same huge folio of 2M order for them.
->> > > Sorry, sent too fast this morning. The example is not right. The cor=
-rect
->> > > one is:
->> > >
->> > > For GFN 4M and GFN 4M+16K, lpage_info indicates that 2M is allowed. =
-So,
->> > > KVM will create a 2M mapping for them.
->> > >
->> > > However, in guest_memfd, GFN 4M and GFN 4M+16K do not correspond to =
-the
->> > > same 2M folio and physical addresses may not be contiguous.
+>> If you remember one of the previous patch discussion, this goes into
+>> `thread_info` Don't want to bloat it. Even if we end shoving into task_struct,
+>> don't want to bloat that either. I can just convert it into bitmask if
+>> bitfields are an eyesore here.
 >
-> Then during binding, guest memfd offset misalignment with hugepage
-> should be same as gfn misalignment. i.e.
+>  "unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);"
 >
-> (offset & ~huge_page_mask(h)) =3D=3D ((slot->base_gfn << PAGE_SHIFT) &
-> ~huge_page_mask(h));
+>is an eyesore that defines exactly the same as the two lines alone
 >
-> For non guest_memfd backed scenarios, KVM allows slot gfn ranges that
-> are not hugepage aligned, so guest_memfd should also be able to
-> support non-hugepage aligned memslots.
+>  unsigned long ubcfi_en : 1;
+>  unsigned long ubcfi_locked : 1;
 >
+>That one should be removed.
+>
+>If we have only 4 bits in 4/8 bytes, then bitfields do generate worse
+>code than 4 bools and a 0/4 byte hole.  The struct size stays the same.
+>
+>I don't care much about the switch to bools, though, because this code
+>is not called often.
 
-I drew up a picture [1] which hopefully clarifies this.
+I'll remove the bitfields, have single `unsigned long cfi_control_state`
+And do `#define RISCV_UBCFI_EN 1` and so on.
+>
+>>>> @@ -262,3 +292,83 @@ void shstk_release(struct task_struct *tsk)
+>>>> +int arch_set_shadow_stack_status(struct task_struct *t, unsigned long status)
+>>>> +{
+>>>> +	/* Request is to enable shadow stack and shadow stack is not enabled already */
+>>>> +	if (enable_shstk && !is_shstk_enabled(t)) {
+>>>> +		/* shadow stack was allocated and enable request again
+>>>> +		 * no need to support such usecase and return EINVAL.
+>>>> +		 */
+>>>> +		if (is_shstk_allocated(t))
+>>>> +			return -EINVAL;
+>>>> +
+>>>> +		size = calc_shstk_size(0);
+>>>> +		addr = allocate_shadow_stack(0, size, 0, false);
+>>>
+>>>Why don't we use the userspace-allocated stack?
+>>>
+>>>I'm completely missing the design idea here...  Userspace has absolute
+>>>over the shadow stack pointer CSR, so we don't need to do much in Linux:
+>>>
+>>>1. interface to set up page tables with -W- PTE and
+>>>2. interface to control senvcfg.SSE.
+>>>
+>>>Userspace can do the rest.
+>>
+>> Design is like following:
+>>
+>> When a user task wants to enable shadow stack for itself, it has to issue
+>> a syscall to kernel (like this prctl). Now it can be done independently by
+>> user task by first issuing `map_shadow_stack`, then asking kernel to light
+>> up envcfg bit and eventually when return to usermode happens, it can write
+>> to CSR. It is no different from doing all of the above together in single
+>> `prctl` call. They are equivalent in that nature.
+>>
+>> Background is that x86 followed this because x86 had workloads/binaries/
+>> functions with (deep)recursive functions and thus by default were forced
+>> to always allocate shadow stack to be of the same size as data stack. To
+>> reduce burden on userspace for determining and then allocating same size
+>> (size of data stack) shadow stack, prctl would do the job of calculating
+>> default shadow stack size (and reduce programming error in usermode). arm64
+>> followed the suite. I don't want to find out what's the compatiblity issues
+>> we will see and thus just following the suite (given that both approaches
+>> are equivalent). Take a look at static `calc_shstk_size(unsigned long size)`.
+>>
+>> Coming back to your question of why not allowing userspace to manage its
+>> own shadow stack. Answer is that it can manage its own shadow stack. If it
+>> does, it just have to be aware of size its allocating for shadow stack.
+>
+>It's just that userspace cannot prevent allocation of the default stack
+>when enabling it, which is the weird part to me.
+>The allocate and enable syscalls could have been nicely composable.
+>
+>> There is already a patch series going on to manage this using clone3.
+>> https://lore.kernel.org/all/20250408-clone3-shadow-stack-v15-4-3fa245c6e3be@kernel.org/
+>
+>A new ioctl does seem to solve most of the practical issues, thanks.
+>
+>> I fully expect green thread implementations in rust/go or swapcontext
+>> based thread management doing this on their own.
+>>
+>> Current design is to ensure existing apps dont have to change a lot in
+>> userspace and by default kernel gives compatibility. Anyone else wanting
+>> to optimize the usage of shadow stack can do so with current design.
+>
+>Right, changing rlimit_stack around shadow stack allocation is not the
+>most elegant way, but it does work.
+>
+>>>> +int arch_lock_shadow_stack_status(struct task_struct *task,
+>>>> +				  unsigned long arg)
+>>>> +{
+>>>> +	/* If shtstk not supported or not enabled on task, nothing to lock here */
+>>>> +	if (!cpu_supports_shadow_stack() ||
+>>>> +	    !is_shstk_enabled(task) || arg != 0)
+>>>> +		return -EINVAL;
+>>>
+>>>The task might want to prevent shadow stack from being enabled?
+>>
+>> But Why would it want to do that? Task can simply not issue the prctl. There
+>> are glibc tunables as well using which it can be disabled.
+>
+>The task might do it as some last resort to prevent a buggy code from
+>enabling shadow stacks that would just crash.  Or whatever complicated
+>reason userspace can think of.
+>
+>It's more the other way around.  I wonder why we're removing this option
+>when we don't really care what userspace does to itself.
+>I think it's complicating the kernel without an obvious gain.
 
-Thanks for pointing this out, I understand better now and we will add an
-extra constraint during memslot binding of guest_memfd to check that gfn
-offsets within a hugepage must be guest_memfd offsets.
+It just feels wierd. There isn't anything like this for other features lit-up
+via envcfg. Does hwprobe allow this on per-task basis? I'll look into it.
 
-Adding checks at binding time will allow hugepage-unaligned offsets (to
-be at parity with non-guest_memfd backing memory) but still fix this
-issue.
-
-lpage_info will make sure that ranges near the bounds will be
-fragmented, but the hugepages in the middle will still be mappable as
-hugepages.
-
-[1] https://lpc.events/event/18/contributions/1764/attachments/1409/3706/bi=
-nding-must-have-same-alignment.svg
-
->> > >
->> > >
->> > >> However, for TDX, GFN 6M and GFN 6M+4K should not belong to the sam=
-e folio.
->> > >> It's also weird for a 2M mapping in KVM to stride across 2 huge fol=
-ios.
->> > >>
->> > >>> Hence I think it is okay to leave it to KVM to fault pages into th=
-e
->> > >>> guest correctly. For guest_memfd will just maintain the invariant =
-that
->> > >>> offset and size are hugepage aligned, but not require that
->> > >>> slot->base_gfn and slot->npages are hugepage aligned. This behavio=
-r will
->> > >>> be consistent with other backing memory for guests like regular sh=
-mem or
->> > >>> HugeTLB.
->> > >>>
->> > >>>>> +       ret =3D kvm_gmem_hugetlb_filemap_add_folio(inode->i_mapp=
-ing, folio,
->> > >>>>> +                                                aligned_index,
->> > >>>>> +                                                htlb_alloc_mask=
-(hgmem->h));
->> > >>>>> +       WARN_ON(ret);
->> > >>>>> +
->> > >>>>>         spin_lock(&inode->i_lock);
->> > >>>>>         inode->i_blocks +=3D blocks_per_huge_page(hgmem->h);
->> > >>>>>         spin_unlock(&inode->i_lock);
->> > >>>>>
->> > >>>>> -       return page_folio(requested_page);
->> > >>>>> +       return folio;
->> > >>>>> +}
->> > >
->> >
