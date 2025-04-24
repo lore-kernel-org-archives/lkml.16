@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4429128136E;
-	Thu, 24 Apr 2025 16:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A520280CCE;
+	Thu, 24 Apr 2025 16:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511876; cv=none; b=lS5JNDYm4gfPT50QAMhzTbDK/6KGVLTPzP68wYTYtF2oxyGbhErHrjfCzwjQqr3JvDyAcwooLSJhwgwFZSDUSwvDlcuWqLGOY5FP+Amw3uiiuEnMihcwjYFMuqz1TjzzlmLc3p0zJ2j2wfxu30bdIC66vpakchqnyPPqfQlZjt4=
+	t=1745511876; cv=none; b=iXBMZI7ExWGk8A2OVuLc571l+1e3tZscvXCvKGThJrjH2ojzayqI9+95iJZhkIRCIitnI3FCZLID1ZThpwTU0JwK6fPNLWMO2fq26udPSPmIWqheZDqPQTe8pPWWJQ/kG/iCp5+DbUe2mqgovF+GG5/47/ZRZsNiqGEsOEcdUfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745511876; c=relaxed/simple;
-	bh=Ivqqrdd6BFIWSz+UZ5uzPlJbABlGLJtKzmx89lxeAbI=;
+	bh=ZfOgRcymcHrXOx9DYdiARib8d6EhLJ0cnWfEsNrQqSI=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=UUjTnOxfd5k57WBI6S97CiNEJ/WxYWWUMGLTFajFOYIsViA65aIUx1J7Hu/H7z9UHesGCRA89gzxArGALPPZYJ5+D7ByYmqOVvBQlA6mT8XNW5k9AUdezwiiNw2SSGesOA/xAbWsJNvrnTq2H8Z78eawrjNXuDTIUhCieENdm5M=
+	 Content-Type; b=bMkq1i9nHLRWOzi3mq6bxWsCug+QK+CKkgurEvRuyZnX8jvxZmw6fUJ4Wy3DuUFK2riK5yqNbnL951eBUxwOodVUyTNrzI7kJUfBfP3297YZOhLAb//im7ey+BKTaEeqSJOcLw46QNvb/VLtmZTsPffyJPu6i2Y21bmwuJAeU9c=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E83B5C4CEF0;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B35E0C4CEE3;
 	Thu, 24 Apr 2025 16:24:35 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u7zPD-0000000GyWh-3Ro5;
+	id 1u7zPD-0000000GyWD-2jWR;
 	Thu, 24 Apr 2025 12:26:31 -0400
-Message-ID: <20250424162631.673073801@goodmis.org>
+Message-ID: <20250424162631.496223149@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 12:25:32 -0400
+Date: Thu, 24 Apr 2025 12:25:31 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -52,7 +52,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Blake Jones <blakejones@google.com>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>
-Subject: [PATCH v5 03/17] unwind_user/x86: Enable frame pointer unwinding on x86
+Subject: [PATCH v5 02/17] unwind_user: Add frame pointer support
 References: <20250424162529.686762589@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,47 +64,137 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Use ARCH_INIT_USER_FP_FRAME to describe how frame pointers are unwound
-on x86, and enable CONFIG_HAVE_UNWIND_USER_FP accordingly so the
-unwind_user interfaces can be used.
+Add optional support for user space frame pointer unwinding.  If
+supported, the arch needs to enable CONFIG_HAVE_UNWIND_USER_FP and
+define ARCH_INIT_USER_FP_FRAME.
+
+By encoding the frame offsets in struct unwind_user_frame, much of this
+code can also be reused for future unwinder implementations like sframe.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/Kconfig                   |  1 +
- arch/x86/include/asm/unwind_user.h | 11 +++++++++++
- 2 files changed, 12 insertions(+)
- create mode 100644 arch/x86/include/asm/unwind_user.h
+ arch/Kconfig                      |  4 +++
+ include/asm-generic/unwind_user.h |  9 ++++++
+ include/linux/unwind_user_types.h |  1 +
+ kernel/unwind/user.c              | 51 +++++++++++++++++++++++++++++--
+ 4 files changed, 63 insertions(+), 2 deletions(-)
+ create mode 100644 include/asm-generic/unwind_user.h
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index aeac63b11fc2..b5a85d2be5ee 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -301,6 +301,7 @@ config X86
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_UACCESS_VALIDATION		if HAVE_OBJTOOL
- 	select HAVE_UNSTABLE_SCHED_CLOCK
-+	select HAVE_UNWIND_USER_FP		if X86_64
- 	select HAVE_USER_RETURN_NOTIFIER
- 	select HAVE_GENERIC_VDSO
- 	select VDSO_GETRANDOM			if X86_64
-diff --git a/arch/x86/include/asm/unwind_user.h b/arch/x86/include/asm/unwind_user.h
+diff --git a/arch/Kconfig b/arch/Kconfig
+index ccbcead9fac0..0e3844c0e200 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -438,6 +438,10 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
+ config UNWIND_USER
+ 	bool
+ 
++config HAVE_UNWIND_USER_FP
++	bool
++	select UNWIND_USER
++
+ config HAVE_PERF_REGS
+ 	bool
+ 	help
+diff --git a/include/asm-generic/unwind_user.h b/include/asm-generic/unwind_user.h
 new file mode 100644
-index 000000000000..8597857bf896
+index 000000000000..832425502fb3
 --- /dev/null
-+++ b/arch/x86/include/asm/unwind_user.h
-@@ -0,0 +1,11 @@
++++ b/include/asm-generic/unwind_user.h
+@@ -0,0 +1,9 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_UNWIND_USER_H
-+#define _ASM_X86_UNWIND_USER_H
++#ifndef _ASM_GENERIC_UNWIND_USER_H
++#define _ASM_GENERIC_UNWIND_USER_H
 +
-+#define ARCH_INIT_USER_FP_FRAME							\
-+	.cfa_off	= (s32)sizeof(long) *  2,				\
-+	.ra_off		= (s32)sizeof(long) * -1,				\
-+	.fp_off		= (s32)sizeof(long) * -2,				\
-+	.use_fp		= true,
++#ifndef ARCH_INIT_USER_FP_FRAME
++ #define ARCH_INIT_USER_FP_FRAME
++#endif
 +
-+#endif /* _ASM_X86_UNWIND_USER_H */
++#endif /* _ASM_GENERIC_UNWIND_USER_H */
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+index 6ed1b4ae74e1..65bd070eb6b0 100644
+--- a/include/linux/unwind_user_types.h
++++ b/include/linux/unwind_user_types.h
+@@ -6,6 +6,7 @@
+ 
+ enum unwind_user_type {
+ 	UNWIND_USER_TYPE_NONE,
++	UNWIND_USER_TYPE_FP,
+ };
+ 
+ struct unwind_stacktrace {
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+index ddf68750b3cb..73fd4e150dfd 100644
+--- a/kernel/unwind/user.c
++++ b/kernel/unwind/user.c
+@@ -6,10 +6,54 @@
+ #include <linux/sched.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/unwind_user.h>
++#include <linux/uaccess.h>
++#include <asm/unwind_user.h>
++
++static struct unwind_user_frame fp_frame = {
++	ARCH_INIT_USER_FP_FRAME
++};
++
++static inline bool fp_state(struct unwind_user_state *state)
++{
++	return IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP) &&
++	       state->type == UNWIND_USER_TYPE_FP;
++}
+ 
+ int unwind_user_next(struct unwind_user_state *state)
+ {
+-	/* no implementation yet */
++	struct unwind_user_frame _frame;
++	struct unwind_user_frame *frame = &_frame;
++	unsigned long cfa = 0, fp, ra = 0;
++
++	if (state->done)
++		return -EINVAL;
++
++	if (fp_state(state))
++		frame = &fp_frame;
++	else
++		goto the_end;
++
++	cfa = (frame->use_fp ? state->fp : state->sp) + frame->cfa_off;
++
++	/* stack going in wrong direction? */
++	if (cfa <= state->sp)
++		goto the_end;
++
++	if (get_user(ra, (unsigned long *)(cfa + frame->ra_off)))
++		goto the_end;
++
++	if (frame->fp_off && get_user(fp, (unsigned long __user *)(cfa + frame->fp_off)))
++		goto the_end;
++
++	state->ip = ra;
++	state->sp = cfa;
++	if (frame->fp_off)
++		state->fp = fp;
++
++	return 0;
++
++the_end:
++	state->done = true;
+ 	return -EINVAL;
+ }
+ 
+@@ -24,7 +68,10 @@ int unwind_user_start(struct unwind_user_state *state)
+ 		return -EINVAL;
+ 	}
+ 
+-	state->type = UNWIND_USER_TYPE_NONE;
++	if (IS_ENABLED(CONFIG_HAVE_UNWIND_USER_FP))
++		state->type = UNWIND_USER_TYPE_FP;
++	else
++		state->type = UNWIND_USER_TYPE_NONE;
+ 
+ 	state->ip = instruction_pointer(regs);
+ 	state->sp = user_stack_pointer(regs);
 -- 
 2.47.2
 
