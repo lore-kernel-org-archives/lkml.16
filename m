@@ -1,134 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24A4CA52;
-	Thu, 24 Apr 2025 07:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFE3CA52
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:16:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478952; cv=none; b=FI24Nzb+mhsuzug8076nMp2QNckg//CvQoVQcBZh+4/EvpVxky1v3j+It1Vjc9qokbAIPf5MZ2sjnQ/rL5tUVbchDjNFdoKywslJpRpAp2nt4szoVqh/bE7KcjOOz+xclykMGshC2vpZzHYz/BogMMICj6meOq5rpm2ZZpbdCRw=
+	t=1745478965; cv=none; b=mwd9wI0d2fNILU2dbPvFahllx2hy1B1LNI8KYiYtDVHp4Z5OxDnbdmcq+zO91YztYFnjILneY4wpp9aRMVthARbWZiiKEbtH5pB6gHC4nR+HZSITPVXmDTzhExFbwrc6AxbPvFfEZHup1LFNetcAazE2r84EoHYvZPp9YetJvLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478952; c=relaxed/simple;
-	bh=pTkF/OxNxP3a5nhNTZxPZtH9LiokbdzIPY4lcClh0Q0=;
+	s=arc-20240116; t=1745478965; c=relaxed/simple;
+	bh=zkhUNRFxN1wVZxu5dT7cU/HABXTx8rHe+Sl1o/dwW24=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LkL6ZRu6rZ1q2KFRUROFPShUq/68RaF++pKn22XR0HrQZdXhA8ee0sA0NHs0scmQHpCkmqaI63RdnDV8f3h03CdqO4fD+7Vvn2A8Ht1kAB3WbpTQeSvLGmjWk62GEqr2iO+vHu0ojDnZjxr4k8PNpOQAPCzgxBIame0w5jEciTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBTgU71u; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nHdNubt6CcqpC4hLhX6Zhh1SnrQjquv1yzhwFMiNnCUQ5D83C6mLcHfy3w0cjGLkrpBdvsa/wkR44LM+XlPWjOrsXf+q1q5GJIefy4wkmoSlVZz5savhO5CYRpA04N+p4DQLxCzrebrgNlh+yAXNWFtKMVwFOtCH530++ztmqKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=toHVGeMe; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IsLUglRE; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBTgU71u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B8E3C4CEE3;
-	Thu, 24 Apr 2025 07:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745478951;
-	bh=pTkF/OxNxP3a5nhNTZxPZtH9LiokbdzIPY4lcClh0Q0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aBTgU71uDQ76gGQRWfJMAVuYX3A0QbPaLJvEVuFRBRrxPSIlRhqbBqclL9MgN42Mz
-	 mOyKpbfujbO9d4jcdRZl8T1Go5m+UqQxIRaX0tVYAWP8gY0N23/sDzG80Ns8/xrjOx
-	 yRFGVRmXxsj5fmUE6A3mSSt4ikS5jl7uqbR1Q9jdp7zW3uELJvckJZvlrjbWQLAFMI
-	 rlKfp1i/mcS2aG+fPOR4bIoU7h9FpaLggeY2LHT/xOyqKlGS/6YJVHuNgwdRNVVRsH
-	 wu0LFFiidEyDynwIeD0OFcSLI8I/quvZGtTqBj02iqPtvdHAUsLiUcS2TnnGA7c1LM
-	 7VSAaFBMPFnUw==
-Date: Thu, 24 Apr 2025 10:15:45 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 11/24] mm/hmm: provide generic DMA managing logic
-Message-ID: <20250424071545.GM48485@unreal>
-References: <cover.1745394536.git.leon@kernel.org>
- <3abc42885831f841dd5dfe78d7c4e56c620670ea.1745394536.git.leon@kernel.org>
- <20250423172856.GM1213339@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="toHVGeMe";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IsLUglRE"
+Date: Thu, 24 Apr 2025 09:15:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745478955;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2PCGrdmxoQ3SbHA+7E+kNOmoS0qvn21yo5rrDA+j3rw=;
+	b=toHVGeMeU2cfiS1J7qzC0zNuHQNrnhoBv7pm+YyFA3l0Mqtw5VpFwwyrR8ACkHbSMh8PUZ
+	bRVRhtLFL7PudO4ZIEFTTQ/J5srMRBTxCT/qAgA30CLEX22Kv1EpEIZX9ZWiNwX6MjcEAz
+	RCgJYeR8dj17UUs2MeSz9pP1GOLkmEW9PF0pqfJGKgmrF7YmCDMabd5gNpxAu05vIaGx3T
+	uTk8WkvgRXlPgXe8o4qoF0nDoyC/TCBUGyvXAcMrmh9MVmF5vA5JWpmytYFWDbMdRvUgWV
+	nPPhD9aWKvF5NzI/jNGBRAiMM4MrxlvDJd8IRKmA3NCIm5mcvp+y0pAB8aJ43g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745478955;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2PCGrdmxoQ3SbHA+7E+kNOmoS0qvn21yo5rrDA+j3rw=;
+	b=IsLUglREf3JqL+7nt64O8XhbXk70GcRbLMhGRAWmAsPhBPqp+BJcAtp61Q84B7+dvXom/5
+	Rc9wphuvfPmPqMBQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Junxiao Chang <junxiao.chang@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	Tvrtko Ursulin <tursulin@ursulin.net>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq
+ disabled context
+Message-ID: <20250424071553.yT9-dWWM@linutronix.de>
+References: <20250424065609.624457-1-junxiao.chang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250423172856.GM1213339@ziepe.ca>
+In-Reply-To: <20250424065609.624457-1-junxiao.chang@intel.com>
 
-On Wed, Apr 23, 2025 at 02:28:56PM -0300, Jason Gunthorpe wrote:
-> On Wed, Apr 23, 2025 at 11:13:02AM +0300, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > HMM callers use PFN list to populate range while calling
-> > to hmm_range_fault(), the conversion from PFN to DMA address
-> > is done by the callers with help of another DMA list. However,
-> > it is wasteful on any modern platform and by doing the right
-> > logic, that DMA list can be avoided.
-> > 
-> > Provide generic logic to manage these lists and gave an interface
-> > to map/unmap PFNs to DMA addresses, without requiring from the callers
-> > to be an experts in DMA core API.
-> > 
-> > Tested-by: Jens Axboe <axboe@kernel.dk>
+On 2025-04-24 14:56:08 [+0800], Junxiao Chang wrote:
+> MEI GSC interrupt comes from i915. It has top half and bottom half.
+> Top half is called from i915 interrupt handler. It should be in
+> irq disabled context.
 > 
-> I don't think Jens tested the RDMA and hmm parts :)
+> With RT kernel, by default i915 IRQ handler is in threaded IRQ. MEI GSC
+> top half might be in threaded IRQ context. In this case, local IRQ
+> should be disabled for MEI GSC interrupt top half.
+> 
+> This change fixes A380/A770 GPU boot hang issue with RT kernel.
 
-I know, but he posted his Tested-by tag on cover letter and b4 picked it
-for whole series. I decided to keep it as is.
+This should have a Fixes when generic_handle_irq() was introduced. 
 
+> Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
+> ---
+>  drivers/gpu/drm/i915/gt/intel_gsc.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> > +	/*
-> > +	 * The HMM API violates our normal DMA buffer ownership rules and can't
-> > +	 * transfer buffer ownership.  The dma_addressing_limited() check is a
-> > +	 * best approximation to ensure no swiotlb buffering happens.
-> > +	 */
-> 
-> This is a bit unclear, HMM inherently can't do cache flushing or
-> swiotlb bounce buffering because its entire purpose is to DMA directly
-> and coherently to a mm_struct's page tables. There are no sensible
-> points we could put the required flushing that wouldn't break the
-> entire model.
-> 
-> FWIW I view that fact that we now fail back to userspace in these
-> cases instead of quietly malfunction to be a big improvement.
-> 
-> > +bool hmm_dma_unmap_pfn(struct device *dev, struct hmm_dma_map *map, size_t idx)
-> > +{
-> > +	struct dma_iova_state *state = &map->state;
-> > +	dma_addr_t *dma_addrs = map->dma_list;
-> > +	unsigned long *pfns = map->pfn_list;
-> > +	unsigned long attrs = 0;
-> > +
-> > +#define HMM_PFN_VALID_DMA (HMM_PFN_VALID | HMM_PFN_DMA_MAPPED)
-> > +	if ((pfns[idx] & HMM_PFN_VALID_DMA) != HMM_PFN_VALID_DMA)
-> > +		return false;
-> > +#undef HMM_PFN_VALID_DMA
-> 
-> If a v10 comes I'd put this in a const function level variable:
-> 
->           const unsigned int HMM_PFN_VALID_DMA = HMM_PFN_VALID | HMM_PFN_DMA_MAPPED;
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+> diff --git a/drivers/gpu/drm/i915/gt/intel_gsc.c b/drivers/gpu/drm/i915/gt/intel_gsc.c
+> index 1e925c75fb080..9c72117263f78 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_gsc.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
+> @@ -270,6 +270,9 @@ static void gsc_init_one(struct drm_i915_private *i915, struct intel_gsc *gsc,
+>  static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
+>  {
+>  	int ret;
+> +#ifdef CONFIG_PREEMPT_RT
+> +	int irq_disabled_flag;
+> +#endif
+>  
+>  	if (intf_id >= INTEL_GSC_NUM_INTERFACES) {
+>  		gt_warn_once(gt, "GSC irq: intf_id %d is out of range", intf_id);
+> @@ -284,7 +287,18 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
+>  	if (gt->gsc.intf[intf_id].irq < 0)
+>  		return;
+>  
+> +#ifdef CONFIG_PREEMPT_RT
+> +	/* mei interrupt top half should run in irq disabled context */
+> +	irq_disabled_flag = irqs_disabled();
+> +	if (!irq_disabled_flag)
+> +		local_irq_disable();
+> +#endif
+>  	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
 
-I have no idea if v10 is needed. DMA API is stable for a long time and
-only DMA part should go in shared branch. Everything else will need to
-go through relevant subsystems anyway.
+What about generic_handle_irq_safe() instead the whole ifdef show?
 
-Thanks
+> +#ifdef CONFIG_PREEMPT_RT
+> +	if (!irq_disabled_flag)
+> +		local_irq_enable();
+> +#endif
+> +
+>  	if (ret)
+>  		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
+>  }
 
-> 
-> Jason
+Sebastian
