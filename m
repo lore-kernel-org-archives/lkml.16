@@ -1,56 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFF51991B2;
-	Thu, 24 Apr 2025 14:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE7D15C15F;
+	Thu, 24 Apr 2025 14:30:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505024; cv=none; b=EnjCkhv23w4gzYk/5I+dXlIoPY85WS+tXchY3Wg/KoavZ+8riGRQnNm6jICXuhYZzODRSkC85ynjkIERf7ni8+rKQeh94KWmW8MpBw3EJI7LuTlH+Ds2pRfK5mDpeLU2LO2lyh94JI03jWqDR4zob7yNSJAdWj18pmc6iWe1Cro=
+	t=1745505052; cv=none; b=jD36Ycwr3gkQK6asoYrvxbCxlgx6IcrTjwPbo8F67nhkWgY9qqp4MI2GPAklei5ue/7tjhs+mS/8DijMdO14AoaaPpd8pjCf7Fn995QckXyxV9cPwmk7odcM02wE2Wc+aWxNHiKq5ojlnZITQba3Gutt3AT/LiO7t0Roe1l6ZBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505024; c=relaxed/simple;
-	bh=1whdVZV9lMiBX4UD7o/X13mkpVB75MtHtuHctYsLOyQ=;
+	s=arc-20240116; t=1745505052; c=relaxed/simple;
+	bh=ZFc4orxBfXaOKJwAgG5MmhnmivFZu74kaL+MgA9Ew0Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LyXsXKM1IjyuAbW6SC7PbG78f5ZpykwWcFjUTVtxEOL0TtUpxFkE/BmBsBh2olq8yd7JngmvQUiBZI3VJwu09aOXHVOhANQPglm99jZiNhY7JoPtewcFPVg4mehqO6wHktZSXUj1EZDSwgEnACyAquuwhzOD6SZnEF/FfEqH0iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TeyoiUMJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=P+H/vLK5eTZeJFsMjrk8JCpR/pE+RmIyrTgWk0N/IpBtcD/V+bpQBs5v/wl0D90oVzeIAAj26vmpTyOxnqf0OpvUwOk0FzEQ1vNfQHLfNdr9HNBti64U7oFGIxoTtI2I7PaEgO9d6mGBs9wQbMtX+kfGqdZyPt8ew5L7/grc0D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=rGwUIeZk; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TeyoiUMJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A3E4C4CEE3;
-	Thu, 24 Apr 2025 14:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745505023;
-	bh=1whdVZV9lMiBX4UD7o/X13mkpVB75MtHtuHctYsLOyQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=TeyoiUMJScN2qui5/zPMO8u0xwWMFpFKP9154khubjJvno5jpDty0CjoSvzeWwxAd
-	 ScWMJD88G8o+aUFSNzlnvWbqv8D0diBVg89h6618e9YY4F6rNyoXsP4w+TlCkoM8zF
-	 iVx78rwjRRtTKHgI3DpmUQY4Cey3gquDSM+VmIgCiQ1N5SQHMduSengUCzMTVu27Aq
-	 86u66qS2+JnmligsNLShhPBMHnr+JG7wqs+qB52TSaMxb45Z7OH0jTruaPuag1UU5+
-	 iMWkmggWrcs1x2h4iid6Z1Un9O8b8IxyjADQdpM3hh5tDl8z2H5bx4ydwthnB75zIB
-	 MKahr+o1UQbqg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 0869FCE076F; Thu, 24 Apr 2025 07:30:23 -0700 (PDT)
-Date: Thu, 24 Apr 2025 07:30:23 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Bert Karwatzki <spasswolf@web.de>
-Cc: "Aithal, Srikanth" <sraithal@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>, Petr Mladek <pmladek@suse.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
-Message-ID: <c5c7d5b8-f1a7-4485-a238-e7c523e742a6@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20250423115409.3425-1-spasswolf@web.de>
- <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
- <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
- <5a4a3d0d-a2e1-4fd3-acd2-3ae12a2ac7b0@amd.com>
- <82ff38fc-b295-472c-bde5-bd96f0d144fb@paulmck-laptop>
- <1509f29e04b3d1ac899981e0adaad98bbc0ee61a.camel@web.de>
- <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
- <0b5a918ba68e9e696329ed9894d7d93d2d71cc6e.camel@web.de>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="rGwUIeZk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=owGFFqZxx5YPM9OVVa3CXcYpxABz6/DpdMCwx9oKsR8=; b=rGwUIeZko9Zpb2DLhEAxXKIy6L
+	gs3XBlK13qYez6Du8tw5y8i0dFxb6spPl+Ak7NkzrOXq2GMgI3FigXs/9XI8SQp3FsV/QkSb29lJ0
+	26xxeDxcxh6asjozvSqObmgQ5h1kabG2SwXC0PA6EwaFyu9W8Z80DQuel0mQBe6v/evA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u7xb6-00ATNY-GD; Thu, 24 Apr 2025 16:30:40 +0200
+Date: Thu, 24 Apr 2025 16:30:40 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Woojung Huh <woojung.huh@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v1 3/4] net: phy: Don't report advertised EEE
+ modes if EEE is disabled
+Message-ID: <07bd8b38-c49c-481b-b08b-fff78b9ffe98@lunn.ch>
+References: <20250424130222.3959457-1-o.rempel@pengutronix.de>
+ <20250424130222.3959457-4-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,148 +52,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0b5a918ba68e9e696329ed9894d7d93d2d71cc6e.camel@web.de>
+In-Reply-To: <20250424130222.3959457-4-o.rempel@pengutronix.de>
 
-On Thu, Apr 24, 2025 at 02:40:25PM +0200, Bert Karwatzki wrote:
-> Am Mittwoch, dem 23.04.2025 um 12:56 -0700 schrieb Paul E. McKenney:
-> > On Wed, Apr 23, 2025 at 09:19:56PM +0200, Bert Karwatzki wrote:
-> > > Am Mittwoch, dem 23.04.2025 um 11:07 -0700 schrieb Paul E. McKenney:
-> > > > On Wed, Apr 23, 2025 at 08:49:08PM +0530, Aithal, Srikanth wrote:
-> > > > > On 4/23/2025 7:48 PM, Paul E. McKenney wrote:
-> > > > > > On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
-> > > > > > > On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
-> > > > > > > > Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
-> > > > > > > > debian sid. When booting kernel message appear on screen but no messages from
-> > > > > > > > init (systemd). There are also no logs written even thought emergency sync
-> > > > > > > > via magic sysrq works (a message is printed on screen), presumably because
-> > > > > > > > / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
-> > > > > > > > commit dd4cf8c9e1f4 as the first bad commit.
-> > > > > > > > Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > Hello,
-> > > > > > > 
-> > > > > > > On AMD platform as well boot failed starting next-20250422, bisecting the
-> > > > > > > issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
-> > > > > > > logs.
-> > > > > > 
-> > > > > > Thank you all for the bisection and the report!
-> > > > > > 
-> > > > > > Please check out the predecessor of commit dd4cf8c9e1f4 ("ratelimit:
-> > > > > > Force re-initialization when rate-limiting re-enabled"):
-> > > > > > 
-> > > > > > 13fa70e052dd ("ratelimit: Allow zero ->burst to disable ratelimiting")
-> > > > > > 
-> > > > > > Then please apply the patch shown below, and let me know what happens?
-> > > > > > (Yes, I should have split that commit up...)
-> > > > > > 
-> > > > > > 							Thanx, Paul
-> > > > > > 
-> > > > > > ------------------------------------------------------------------------
-> > > > > > 
-> > > > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > > > > index 04f16b8e24575..13ed636642270 100644
-> > > > > > --- a/lib/ratelimit.c
-> > > > > > +++ b/lib/ratelimit.c
-> > > > > > @@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > > > > >   	unsigned long flags;
-> > > > > >   	int ret;
-> > > > > > -	if (!interval || !burst)
-> > > > > > +	if (interval <= 0 || burst <= 0)
-> > > > > >   		return 1;
-> > > > > >   	/*
-> > > > > 
-> > > > > 
-> > > > > I applied above patch on top of 13fa70e052dd ("ratelimit: Allow zero ->burst
-> > > > > to disable ratelimiting") [linux-20250423]. This is fixing the boot issue.
-> > > > > 
-> > > > > Tested-by: Srikanth Aithal <sraithal@amd.com>
-> > > > 
-> > > > Thank you both, and to Bert for intuiting the correct -next commit!
-> > > > 
-> > > > Could you please try the next increment, which is this patch, again
-> > > > on top of 24ff89c63355 ("ratelimit: Allow zero ->burst to > disable
-> > > > ratelimiting")?
-> > > > 
-> > > > In the meantime, I will expose the version you two just tested to
-> > > > -next.
-> > > > 
-> > > > 							Thanx, Paul
-> > > > 
-> > > > ------------------------------------------------------------------------
-> > > > 
-> > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > > index 04f16b8e24575..8f6c54f719ef2 100644
-> > > > --- a/lib/ratelimit.c
-> > > > +++ b/lib/ratelimit.c
-> > > > @@ -35,8 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > > >  	unsigned long flags;
-> > > >  	int ret;
-> > > >  
-> > > > -	if (!interval || !burst)
-> > > > +	if (interval <= 0 || burst <= 0) {
-> > > > +		ret = burst > 0;
-> > > >  		return 1;
-> > > > +	}
-> > > >  
-> > > >  	/*
-> > > >  	 * If we contend on this state's lock then just check if
-> > > 
-> > > If you set "ret = burst > 0", but "return 1" this will make no difference
-> > > (except in the case of a major compiler bug, probably), as I wrote in my other
-> > > email which overlapped yours, this fixes the issue in next-20250422:
-> > > 
-> > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > index b5c727e976d2..fc28f6cf8269 100644
-> > > --- a/lib/ratelimit.c
-> > > +++ b/lib/ratelimit.c
-> > > @@ -40,7 +40,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > >          * interval says never limit.
-> > >          */
-> > >         if (interval <= 0 || burst <= 0) {
-> > > -               ret = burst > 0;
-> > > +               ret = 1;
-> > >                 if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
-> > >                     !raw_spin_trylock_irqsave(&rs->lock, flags))
-> > >                         return ret;
-> > 
-> > You are quite right, your patch does fix the issue that you three say.
-> > Unfortunately, it prevents someone from completely suppressing output
-> > by setting burst to zero.  Could you please try the patch below?
-> > 
-> > 							Thanx, Paul
-> > 
-> > ------------------------------------------------------------------------
-> > 
-> > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > index 04f16b8e24575..d6531e5c6ec4e 100644
-> > --- a/lib/ratelimit.c
-> > +++ b/lib/ratelimit.c
-> > @@ -35,8 +35,8 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> >  	unsigned long flags;
-> >  	int ret;
-> >  
-> > -	if (!interval || !burst)
-> > -		return 1;
-> > +	if (interval <= 0 || burst <= 0)
-> > +		return interval == 0 || burst > 0;
-> >  
-> >  	/*
-> >  	 * If we contend on this state's lock then just check if
+On Thu, Apr 24, 2025 at 03:02:21PM +0200, Oleksij Rempel wrote:
+> Currently, `ethtool --show-eee` reports "Advertised EEE link modes" even when
+> EEE is disabled, which can be misleading. For example:
 > 
-> This patch will make no difference for me as I've monitored every call to
-> ___ratelimit() with "printk(KERN_INFO "%s: interval = %d burst = %d\n",
-> __func__, interval, burst)" and at least for me burst == 0 is always acompanied
-> by intervall == 0.
+>   EEE settings for lan1:
+>           EEE status: disabled
+>           Tx LPI: disabled
+>           Supported EEE link modes:  100baseT/Full
+>                                      1000baseT/Full
+>           Advertised EEE link modes:  100baseT/Full
+>                                       1000baseT/Full
+>           Link partner advertised EEE link modes:  Not reported
 
-You lost me on this one.
+What is the behaviour for normal link mode advertisement? If i turn
+autoneg off, do the advertised link modes disappear? Do they reappear
+when i turn autoneg back on again?
 
-With my previous "burst > 0", if both are zero, it would set ret to
-false, right?
+I would expect EEE to follow what the normal link modes do. Assuming
+the Read/modify/write does not break this.
 
-With the new "interval == 0 || burst > 0", if both are zero, then interval
-must be zero, so the result would instead be true, correct?
-
-So what am I missing here?
-
-							Thanx, Paul
+	Andrew
