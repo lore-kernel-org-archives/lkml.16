@@ -1,167 +1,128 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F38612CDA5;
-	Thu, 24 Apr 2025 14:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E08C12CDA5;
+	Thu, 24 Apr 2025 14:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745506029; cv=none; b=SZtTuGSqwSeOAgkazdEtnypL3/69ofMqk3HxtkQhuxOYTNhoOErzQf4z5QwhXFd/NB57g8E9yDgHbUINTtx3M9KUJDta7CYEyf/28xwV1YFYbylqWCzj63HIyMZeACtKL8115h5iy9JM3jx8q5AkD0R4mTIhfI4cFwp6DOlMraE=
+	t=1745506034; cv=none; b=ele7AY1Jeot8Ay3yMMTYjhtDjp+9Z7RaHMWCDlYtaCA4FAqlYxP5lcUsFrOVkT5ENL1fySXvFvDnLai+inJUarsUk/INzEvrkC5gBVBqEFE0I1JZkkR272p1aeJP4q34pegr5iv1OpbYbd+neAobgKOD79X4nacY++RdauaLW4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745506029; c=relaxed/simple;
-	bh=Bn7qKgmVirMnL4HSoD6+ySbU242thJzaLTltDmOvM9c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YOHyrghSLKMSGgPUJ9casVPkVL8lEYrVzGLY8Bd5cU663iCxks4Gv4GeaHbM7fZTqY2ElfuAV3H7cF8pX102Kh5d/9iKpVlZeO3elRVdPhJwD47DQndKt0J3N7/lNdEWzIsnCy5oG4j30KVKWt375MxVhn0jLlskUWCReFy46As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=UiBzdblN; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	s=arc-20240116; t=1745506034; c=relaxed/simple;
+	bh=B+vaQDz34gASz2r9IySDvBGxFWVbRYQhO0FGeJb7jVg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P28DUCLdISiZPpK/F4ZmJubKnY6XHCHzoDAjabWPBbxzmDlag7DFmu3blb533m4Kz64r52aIzfSVO1zvWktcV20DnwxTglszBZg289s19+yXAftsM84uCjxPC7Z05hoBjQP/PvalTlEpfQXnr1o9x/X/srfixkUOPPyucUuhSiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=xfZuxBCt; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="UiBzdblN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1745506020; x=1746110820; i=christian@heusel.eu;
-	bh=BiYoI3t07zEC8MRuyXYTtYuABNrGYYjjjTp7cv/tN5k=;
-	h=X-UI-Sender-Class:From:Date:Subject:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding:Message-Id:To:Cc:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=UiBzdblNx8SwoBGVxvk9jjILOoLWahs1kH+IM9Jg1GoFjDtyCk7d6VMXlArVRrCV
-	 cImoPPph4TrSVxDGFE4IFj2DND54y/B6fE6KDxDealrOQ8kNrQq1/YvHSSPLMxZ9I
-	 xyk6DtjWUJEpcJV3O9PZPKmD0QBFd0KESuAK0mAVObJyNaehAL43rmKHkIgsC6GQl
-	 DAYR2elgIPK/3EdTRx5hyUD4BgpERUy+gRW35H43fpfG00yTsJNKg5kEuBpcJNqEu
-	 JLz6g3bh9yLkh4i+UQrKViu6W8HiUfsubgDPrBUJ4K26vux5YRRwkMWJ0FCbbYIOV
-	 QdVGVxbZY82aIH5o/Q==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from meterpeter.localdomain ([80.187.66.147]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1M7auL-1uBYB23HSf-0093Pm; Thu, 24 Apr 2025 16:01:06 +0200
-From: Christian Heusel <christian@heusel.eu>
-Date: Thu, 24 Apr 2025 16:00:28 +0200
-Subject: [PATCH] Revert "rndis_host: Flag RNDIS modems as WWAN devices"
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xfZuxBCt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=egGfbK658OSDe69FyW4Tv8G+ziXxzHDqqyx8wDiPEAQ=; b=xfZuxBCt41e8zQmoDtvq/y7N6h
+	eiNOk5OhQwqmfZBZXA7zAFlssU1QXNmZGTPi4+UXL+xrQEC0aV/TkHALoRHzVhA1q7uRfyqzfXinD
+	JzBHpTLyFd9tzBYFuaxQ6RiCLeeDKA533gXzs1bXQsZXGXyCRIJ5gC9BvcBRXfSdIYXJQjgsWDZHM
+	ba5q3dlk9tDSz+CJn1Go4Mpmbz4A+9cBUr/I8B0wh440PewQx11KVL6rndMzu/aoM4klFnXyu9KUd
+	kB6BxZfUHig2ZcwRABJ+ou1gs5rzb6onH6/Jni03BjdDDGJTXPTWXG1jBMQTnJaICgiNXy2mvDA74
+	8fQTlo4Q==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52174)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u7xqz-0007Wd-1T;
+	Thu, 24 Apr 2025 15:47:05 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u7xqx-0001Bh-2x;
+	Thu, 24 Apr 2025 15:47:03 +0100
+Date: Thu, 24 Apr 2025 15:47:03 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v1 4/4] net: phy: Always read EEE LPA in
+ genphy_c45_ethtool_get_eee()
+Message-ID: <aApO59e6I6uLaw2P@shell.armlinux.org.uk>
+References: <20250424130222.3959457-1-o.rempel@pengutronix.de>
+ <20250424130222.3959457-5-o.rempel@pengutronix.de>
+ <aAo5keWOAVWxj9_o@shell.armlinux.org.uk>
+ <8f0d5725-04b7-4e15-897d-1fd5e540dacb@lunn.ch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20250424-usb-tethering-fix-v1-1-b65cf97c740e@heusel.eu>
-X-B4-Tracking: v=1; b=H4sIAPtDCmgC/x2MywqAIBAAf0X23ELZA+tXokPmpnux0Iog+veWj
- jMw80CmxJRhUA8kujjzFgWqQsES5ugJ2QmDLnVbNrrBM1s86AiSRY8r31j3pjPG1trNDqTbE4n
- +n+P0vh/8VO0nYwAAAA==
-X-Change-ID: 20250424-usb-tethering-fix-398688b32dad
-To: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, 
- Christian Heusel <christian@heusel.eu>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2318; i=christian@heusel.eu;
- h=from:subject:message-id; bh=uCmWJ08d3T6sqzruRhhWDBmrpAmhzZjpMdT+4kKwQso=;
- b=owEBbQKS/ZANAwAIAcBH1PMotSWFAcsmYgBoCkQYdLRPMzkf+QHfzbvX3tEyVNKkXCfmnJZ2b
- F3yPlBdc5+JAjMEAAEIAB0WIQRvd5reJHprig9yzBPAR9TzKLUlhQUCaApEGAAKCRDAR9TzKLUl
- hbkUEADVFJTdIYmV70vJOafWG6Q0MJ2+D744VIi72htiDZaU5KXXnhjhgcCkc7ERzzc6EPBdfvh
- fT0tSm0OSj5EmPxftgKRfnKpuSzgUf3JrqszWBjc3b1VS116beAeKyBSL3CDxn410Qgefxq6ONN
- Snx4HfR6mmQMdYskMAmBfXcnhZumZbOs6E79j4Rgo9aGyhn8e5br9Wjydvdaha6ofhalKG4/noI
- 3V1sxjlLAtItMZN6x8K/Sw//g6oOpKeUarSXzINs2jE1KE+KM9iEL0ao23V7D/Abvx5j8uIOnsH
- Zd3XTbOumKO9MwGhRFcWscVXtTbwcwE4l08BvhjLrNQcx1CCXK4r1NDkqEvmCEQPkEs5gOCKe2s
- KcH2umRSOXY3MdEFn6MfOaswwA9qB3GYfklyjZJ5sFsZ7B/CYK5taj4ZBdF2B2mJN+n8ZZJNOTa
- GRQh2SZ5wcR4TfSt/UO8xGbvngKYeHzj1PVMBar79KJNDpwolwDF4Q12CUTfP0aPs2kCuWFaeTA
- qSq8esVlTmrAYmpstcqq5ggZHK12aTwAgzo137jYyjctXFMGjwAMeHZ2/tAEHRQKYF/x0xp1J8l
- rQvN2uVtySCduj5BGS8ibjNrLYHIy+QSEWgpYxK7DTRpQcR+TXmmojhXCma6F4AKINd9+Xit5sO
- aVMbYywjdZ0p1AQ==
-X-Developer-Key: i=christian@heusel.eu; a=openpgp;
- fpr=6F779ADE247A6B8A0F72CC13C047D4F328B52585
-X-Provags-ID: V03:K1:inbTguRCRiMzNvBapqeKfvNgoRAp4ykFIM+J2mJo0gamsw0VmE2
- SCWeqUtxg/rShR/rwfRc771bqCWDaQuMi2EiSCFU/1U7cbNqcuOcfj6n03OKFnTz8PoT3Xy
- cj3rVVGs0Lo8CPxQbCb3CxFRkiY/ojr9BH/QlvXlUFPFXIBABy3qJl/IsDYJqUiFt5Q2FTk
- /8AdAL1xp0bS9+MPHtEHw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:PflABPEdXXQ=;RPRrPH81t1zq5AQlBJjAPtNrmDf
- z1ri80UOQmYc4dRQUCwE5PDe/i4AuVyT68lf9t4FuUdxaA6OqAOMueSuojh8tubI4CHNBcRW7
- 6jAjlC3xrBbdKpr26g06tMgBOivVL0NfE2FXD5NK5f4pUUFRSVczL34JXwwY2GsRLERxgRZvr
- Xwf0Jb6vgkwENptVDqO8r7I5CZBayJBwgfnRtdvarmas+9hzEMs8sNtBMRzvwyyUQadp95qQc
- ZjmGS9cHnh9nrzr/vfbCu5v1MNbbxhEawVbH+dNpjxl7A7hG6YUVXLGy7QjBP3XNDyC6JZnLu
- CoTVuxEs/3aLm+6vTqVhbTO2MyCNQqvbONprbOhfckBCsJ7fLHuNdMogxphtbiCUKJ4FhuDpc
- tfcbRormUhfG15NRrOY2pdX7iTXliAvZPdBOPJZfXehfsssLtv7VrQNcKtkecnKxc6gH2ivFd
- DY1XrrOMyEJcVCZf6lZGyXr5BrI3xbSvCkWUwCOPHugWzsrNtLrTyw8xO9v6HJNpCx7DH4ayd
- yKtxvKjcXLrUkyCrQoULoM2CGNamwCtEXdvpUDCfonqww/ED4jio9nURsWRRkBjcbzebweZ0H
- /qYqskUX9VQpXLidBVBZhdirQLm5Ex049Vb50Iv+8w5fxCoWx7uMi0hRhJxKoRsu5//Zqp3/x
- hYJMaVFao/MPUPXdId7ujlm48QFsxT7ALMXmTJtMy+1MHBoJ+u8FB12OXdmQ1lsvjoEqxb/TL
- 8ix9TaULacjJ7hw+sWq3GDtHmZMwH81/ekfIA1SkbmwJ88ixv7HJ2Bq5H8aurUKBGDWK5s20y
- yfrbNkEKuhlzI3Lqa/ZSTjYEJy6i/hT0DAY2xznOO4kLF5BgbJQQ38Cl+xq7Rl/0IEJmAwkKm
- eLGCYYpUt3vXzKKMhh7eGl0j7i1uFHzfcLm0AG+6e6yAxmm0M+C/THAZg2GxZGqcowO4p2IF7
- wsBJShEbeaBWPmfd9Jy+MJtMYboksE+8moo2SUTuPyzBFwvQFBHRNChAmt+vKXlVbw+wG3wPS
- 1GxyDcFvAk2QbjjiTIm2pG9hrUHCLkzyXZ2COmHf787pNwXQO3oP+2w2DKA8xKxaNveeozQEo
- ebEriHEf+7+pL2Ih0kZmk5xvpRh3GBw4FNf7WdP6z8NGsOL+fv0HdGFDtHWH4PsYq3ww/Co5i
- CDbZuHM40lxEAIeMWLr8XzPzMzxW5GW5l/3a8Ol3TZucCEEmcI571WTcuG9Or5Jrl8BGvP/dy
- 93ZYovJGafW889NA9VXP4Gvp9hJITNjbnLnjxMrF9UePt8x5PiIGgyBmFrNUHieqWpUZe06No
- /q3t2GI+gAXepIrMOGveVwcKBQrjL7+gTtItIBFrZXs94+JSNsSP78Gf3Hce63EOyIYWsKe4R
- 33jLZG0aF7F35D1DYAYsjHW+kq43b0ci7QzcE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f0d5725-04b7-4e15-897d-1fd5e540dacb@lunn.ch>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-This reverts commit 67d1a8956d2d62fe6b4c13ebabb57806098511d8. Since this
-commit has been proven to be problematic for the setup of USB-tethered
-ethernet connections and the related breakage is very noticeable for
-users it should be reverted until a fixed version of the change can be
-rolled out.
+On Thu, Apr 24, 2025 at 04:34:27PM +0200, Andrew Lunn wrote:
+> On Thu, Apr 24, 2025 at 02:16:01PM +0100, Russell King (Oracle) wrote:
+> > However, I've no objection to reading the LPA EEE state and
+> > reporting it.
+> 
+> What happens with normal link mode LPA when autoneg is disabled? I
+> guess they are not reported because the PHY is not even listening for
+> the autoneg pulses. We could be inconsistent between normal LPA and
+> LPA EEE, but is that a good idea?
 
-Closes: https://lore.kernel.org/all/e0df2d85-1296-4317-b717-bd757e3ab928@h=
-eusel.eu/
-Link: https://chaos.social/@gromit/114377862699921553
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D220002
-Link: https://bugs.gentoo.org/953555
-Link: https://bbs.archlinux.org/viewtopic.php?id=3D304892
-Cc: stable@vger.kernel.org
-Acked-by: Lubomir Rintel <lkundrak@v3.sk>
-Signed-off-by: Christian Heusel <christian@heusel.eu>
-=2D--
- drivers/net/usb/rndis_host.c | 16 ++--------------
- 1 file changed, 2 insertions(+), 14 deletions(-)
+With autoneg state, that controls whether the various pages get
+exchanged or not - which includes the EEE capabilties. This is the
+big hammer for anything that is negotiated.
 
-diff --git a/drivers/net/usb/rndis_host.c b/drivers/net/usb/rndis_host.c
-index bb0bf1415872745aea177ce0ba7d6eb578cb4a47..7b3739b29c8f72b7b108c5f4ae=
-11fdfcf243237d 100644
-=2D-- a/drivers/net/usb/rndis_host.c
-+++ b/drivers/net/usb/rndis_host.c
-@@ -630,16 +630,6 @@ static const struct driver_info	zte_rndis_info =3D {
- 	.tx_fixup =3D	rndis_tx_fixup,
- };
-=20
--static const struct driver_info	wwan_rndis_info =3D {
--	.description =3D	"Mobile Broadband RNDIS device",
--	.flags =3D	FLAG_WWAN | FLAG_POINTTOPOINT | FLAG_FRAMING_RN | FLAG_NO_SET=
-INT,
--	.bind =3D		rndis_bind,
--	.unbind =3D	rndis_unbind,
--	.status =3D	rndis_status,
--	.rx_fixup =3D	rndis_rx_fixup,
--	.tx_fixup =3D	rndis_tx_fixup,
--};
--
- /*-----------------------------------------------------------------------=
-=2D-*/
-=20
- static const struct usb_device_id	products [] =3D {
-@@ -676,11 +666,9 @@ static const struct usb_device_id	products [] =3D {
- 	USB_INTERFACE_INFO(USB_CLASS_WIRELESS_CONTROLLER, 1, 3),
- 	.driver_info =3D (unsigned long) &rndis_info,
- }, {
--	/* Mobile Broadband Modem, seen in Novatel Verizon USB730L and
--	 * Telit FN990A (RNDIS)
--	 */
-+	/* Novatel Verizon USB730L */
- 	USB_INTERFACE_INFO(USB_CLASS_MISC, 4, 1),
--	.driver_info =3D (unsigned long)&wwan_rndis_info,
-+	.driver_info =3D (unsigned long) &rndis_info,
- },
- 	{ },		// END
- };
+With EEE, as long as autoneg in the main config is true, the PHY will
+exchange the EEE capability pages if it supports them. Our eee_enabled
+is purely just a software switch, there's nothing that corresponds to it
+in hardware, unlike autoneg which has a bit in BMCR.
 
-=2D--
-base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-change-id: 20250424-usb-tethering-fix-398688b32dad
+We implement eee_enabled by clearing the advertisement in the hardware
+but accepting (and remembering) the advertisement from userspace
+unmodified.
 
-Best regards,
-=2D-=20
-Christian Heusel <christian@heusel.eu>
+The two things are entirely different in hardware.
 
+Since:
+
+ ethtool --set-eee eee off
+
+Will use ETHTOOL_GEEE, modify eee_enabled to be false (via
+do_generic_set), and then use ETHTOOL_SEEE to write it back, the
+old advertisement will be passed back to the kernel in this case.
+
+If we don't preserve the advertisement, then:
+
+ ethtool --set-eee eee off
+
+will clear the advertisement, and then:
+
+ ethtool --set-eee eee on
+
+will set eee_enabled true but we'll have an empty advertisement. Not
+ideal.
+
+If we think about forcing it for an empty advertisement to e.g. fully
+populated, then:
+
+ ethtool --set-eee eee on advertise 0
+
+will surprisingly not end up with an empty advertisement.
+
+So, I don't think it's realistic to come up with a way that --set-eee
+behaves the same way as -s because of the way ethtool has been
+implemented.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
