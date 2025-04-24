@@ -1,105 +1,167 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E23127FD69
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A6528467A
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:57:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513860; cv=none; b=KK94+pwv+ZIyCLoKDuGXkYKa2SdR6fZyWgR0RCX06x+74G1Sv3DvZH+EwzFpuITim7cu9W5Mc09ewwhudzJR+lkOLCKiNkG71FwWisxZeSZgMBbdYwW8xzz9jJCq5rFusWY9p0Ess7KaSefot+kgxKEQl13oDf6CUCO0j+4buk0=
+	t=1745513866; cv=none; b=tKcWhi2gIZio2xNto/J3Uov3OecMiSVLgPCW7GHME4i5RfHSmJlqMTZ7CBrvoLkXs1ElX7ZtZfb3ApwVv5Gc+8aH9Ce8SktgJLocmWnj/fJDa7yfelZjusuGK8dSu6hthUmfHVxgHQ4ntO+kaY+wznEcRmWqJLQ7yY02oXf6SeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513860; c=relaxed/simple;
-	bh=hS6YdVyjaOxJfdDNyVfmlBPQQSzKuRq4dxje6DjD3Jg=;
+	s=arc-20240116; t=1745513866; c=relaxed/simple;
+	bh=yj4rCFYUboh+oGGNVwQYJQBo6D0RI06SDrhlkvLGY0M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MIITjej/lYXF9X/RY+W1PyMk2lh4iyo90SDAvRzBFZ75KfU7CTVu+qvuEJz6yRxmTxcP7Fgjbo+DT5rs8MJdK4w/IzH5kT9zC+XpcxHHxYqMttReZXxnPf9tuM1eU6YNcLCx02Abtlehv3knupLDRIZcg+vOZ7vmzNWbXPe0Kw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BELN2Xlj; arc=none smtp.client-ip=209.85.219.179
+	 To:Cc:Content-Type; b=ah12Ea/3i+NUVKLfltUdR79nGrcNfD/208RUDGFsElMWMI3Wy8OM+4/2Z8c1Y3LiYUjcDVWxmDpIiel4Am5cK0vvJOU9imkNEpGCtWm1imdkYsIhLF4/2iAfB1QTKQYuUu1FLoo3KYozKijO3wx3x3s4mclxIqi0SLpLPRNL4lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=exMHs3Lm; arc=none smtp.client-ip=209.85.219.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BELN2Xlj"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e6cea43bb31so1115480276.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:57:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="exMHs3Lm"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e728841ed96so1034419276.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:57:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745513857; x=1746118657; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745513863; x=1746118663; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XMDqtfSsgswAHK2zMki+icWH9z9g6NMe+d35IYgU6n4=;
-        b=BELN2XljavDZtosWC9tWlOifhW73t+TMCc+khWL/dze/lq2mIlef3Wiw2V2VOKfJln
-         6h/Uu/nyyGHXWyiFh0VfBCJDQdGY6KzQ/WBgrIKcYKQ2KZiVGJjdHCKVAXk4qhQEf3wT
-         vXkCn4QTHXa++N/Y8s7u7+VMNdbIM6uW69rlloBxeWcu8FJKO+x9nLPfPVWoGhyvbwzI
-         hhv/hVyQZRud32Hl7CyB1kHaW1wzBedoVi7BOcOaKmiLxFujQ6qwetcqtHu9PZ/PiZae
-         UFZYfQnPCx+qSQykZbRYD+R0dgS/HvVg+b73btWWpUd22S80299TICTu+t70VmI5tTFT
-         fJLg==
+        bh=9CKM2cs1qGXFMlOy1JK4RKIIOdS1MYoTVq0pqbGBT8I=;
+        b=exMHs3LmYMlf9whwT3msph2IKLOMNotERPPSYCTo5JXOg6qmCKa2+K/4cXoNz1kuVY
+         AEHWISu33ok1r00IxMony/80PGTjPVcZ3s1VkI/J2zmo3TxpLtq87djQOa0HDxyxSwG8
+         tjQuxFKRuqarx7H4190ybOqMBh3hcoGuLLrCY6y0CeK6g8lRJSVFQXbCVayX2P0CzkuO
+         m3GON/tGHF+0hUTIsYT6ae5stQIu5ChkgW9K/tuNjlQna+E6sdTC7Nyi7QhrxNkrgEtH
+         wkqrAdnu5hTeHHObBNHW3McnTHQEsfehDdeUS+GUsNa4uuVzBhRL6QcoqleTYW8jty8K
+         jPgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745513857; x=1746118657;
+        d=1e100.net; s=20230601; t=1745513863; x=1746118663;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=XMDqtfSsgswAHK2zMki+icWH9z9g6NMe+d35IYgU6n4=;
-        b=pyvGRPJj3u9iNL7ew/O6KXFG3KmMA9CD0LF1hKKzJgKm/h1j2QHwgLDjUf/BHaMYVb
-         P8Yo4lufO4NsumOI2eJUfvYRAB2a605y555OByC5EiOY7hdrmQlHSbFMvYiVKCvPY/y2
-         ap16WBg/vLu3HT91I381pcxiFHw548rqUFEuELbaPJRu+1i85kTwkPpkR2/hWPdZA4dq
-         7gSzVUyYa5m1kTH+TD6H4Lkp/z/IUqz297Bb0KJ9Aic8/4Rd2EANJSOX/djw0p8Jsd0n
-         1z+PEcgaL3YLH6C/VBFssXvLP353UynjBh7yGi8vidDCnElPek+q7TNwX+AEIvHYnhLc
-         ecgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXux/sPtlObXFBnWpkrlZvMUytILJMi8SGefkjL//2N5YlxUQgRAyYMUS5GhAbP01E013YVZFFXLfkY8/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkAFZxS2BKG11d9LRYwqemyINAZr9GyaPlWMXaEjPxzrr/feWp
-	Knh3Qa8NFFcskaq4yH5x7juSMIJRpBr8/rZgfOZU2I8gdbOfOz2EPSZbCbX5zxGJ9SHAN94oBDb
-	m8GQLNc+vVBG2LVxPhW9rFl5EJvV5rPK5D3vYWg==
-X-Gm-Gg: ASbGnct5duTWVWPtxZeDds8fxdDvbGBPNUM0DJhCBw9y/9C6kh7gjrZt9QchnbjtjqT
-	3bOFKp0+3rI6DxV8XW4xuTJVEaxAIRsjjHYgbW8SiIC5ZoKQcpM24vthO/eqVWY4ueenr1wzVij
-	YYzYedxk5QH+3FpDc1iQWIySg=
-X-Google-Smtp-Source: AGHT+IHIsM0JcIVkaYurwu7Xm76aeWCRBd2kXA94L1zA7HY4+kXgxndqZ0iWhzKWJZRbPN5Psmgt3hk6PaDxQyb1LIo=
-X-Received: by 2002:a05:6902:13ce:b0:e6d:ecfc:2328 with SMTP id
- 3f1490d57ef6-e73034f04f0mr5006786276.3.1745513857331; Thu, 24 Apr 2025
- 09:57:37 -0700 (PDT)
+        bh=9CKM2cs1qGXFMlOy1JK4RKIIOdS1MYoTVq0pqbGBT8I=;
+        b=VlsRinU1wWlcsLhN8hrVCZtDrHQAYASM3/4x6gpPqISjvGcddZmeoaR/Y9eco4MRKy
+         BLFX13/21wIOd3rhBnuIfynXALbtZ3IeO3smezPZ+2qYWnHIga0YGslOtET40Got4TgX
+         ETy9BifebJvYNxhMpxrEhW9Z/ytMqt9zf48ggFSahQiF+v6KHSIojUIpWTOr+32a7CX0
+         WtYErJlkl2Igj7F4XejpBPdAI6Oc7GegT0yu9V9LiJtfKzDwmRxJtPo+INlVJyLiDyfN
+         3NA7NpNR5Q9jOKqc6e9aCXx/3oatdHjthzg7lUC1q3wshciHyK82+ahA+OcuJYhq1BjK
+         /eIA==
+X-Forwarded-Encrypted: i=1; AJvYcCXu3IHOR+PSVM2oN6hGcuTK1NEGlJrvgb2uN5/6m7glrQ5lop1DBqJg7m5SMKY8a/K9PgTSdCDrw1oR8OI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxugMzf1MtLlGxGsb7Fj64tLYDuZKv7I0x/pspYox4f/KwRJy7c
+	abDGZ6B6h/7HHuSuW1WzW8Pyx8OOqSLuP2yJKLF30I7pKycPAi4gO3hDUJ5lFlKRoIMOs2jMUze
+	6tXC0ljfhAAbFjSsm0kzxLckKS7JIK11iAincnw==
+X-Gm-Gg: ASbGnctIKwCjhOX46JGzYhiXNaOgC9qW5f2ML6B/haZB1DrET1iEBre+Z0X4BMiGTh5
+	qaqLkDpbmB6BB1DE1TIROztVZxjX7NSTpWroQudIqxD2BCYoOeLRFPow0LAYrgX64RQ3BlHWo3x
+	0Jw70mkHiKVb2leVPFZJaqHOA=
+X-Google-Smtp-Source: AGHT+IFGTdWSdsZcdsNen5sZq4wJnWapLXpFuPlaVUGf+rGu5EnJXdabOZuRe3KyJ3ZRIkLzq1oum5ZWE02emFXzcCY=
+X-Received: by 2002:a05:6902:1ac8:b0:e6d:ecbb:e530 with SMTP id
+ 3f1490d57ef6-e7312d44613mr185101276.27.1745513863337; Thu, 24 Apr 2025
+ 09:57:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250410143944.475773-1-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20250410143944.475773-1-angelogioacchino.delregno@collabora.com>
+References: <20250415032314.44997-1-kever.yang@rock-chips.com>
+In-Reply-To: <20250415032314.44997-1-kever.yang@rock-chips.com>
 From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Thu, 24 Apr 2025 18:57:01 +0200
-X-Gm-Features: ATxdqUG-Jb1AZR77fk7uAdSggUmnOFrjqf9oHFUx6Q2HN7mjbQy7Up3T4KB7Soo
-Message-ID: <CAPDyKFob2wB=stDXLPG0VG7mBso4Hid32pXpMvaP6WPbL0SyEA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] MediaTek Dimensity 1200 - Add Power Domains support
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	matthias.bgg@gmail.com, fshao@chromium.org, y.oudjana@protonmail.com, 
-	wenst@chromium.org, lihongbo22@huawei.com, mandyjh.liu@mediatek.com, 
-	mbrugger@suse.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
+Date: Thu, 24 Apr 2025 18:57:06 +0200
+X-Gm-Features: ATxdqUGgd2BtezeD6Buv4aip6IDl4W4AEEpLnidEVI-YRjiR40IiiYl0lpXZjps
+Message-ID: <CAPDyKFqdx+ZmEWJeyw3hAWXYhH4ibMK96FpJ5B2wfLC6QiOOAA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: power: rockchip: Add support for
+ RK3562 SoC
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: heiko@sntech.de, linux-rockchip@lists.infradead.org, 
+	Finley Xiao <finley.xiao@rock-chips.com>, devicetree@vger.kernel.org, 
+	Conor Dooley <conor+dt@kernel.org>, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.com>, 
+	Elaine Zhang <zhangqing@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 10 Apr 2025 at 16:39, AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
+On Tue, 15 Apr 2025 at 05:23, Kever Yang <kever.yang@rock-chips.com> wrote:
 >
-> In preparation for adding basic support for the OnePlus Nord 2 5G
-> DN2103 smartphone, this series adds support for the power domains
-> (MTCMOS) of the MediaTek Dimensity 1200 (MT6893) SoC.
+> From: Finley Xiao <finley.xiao@rock-chips.com>
 >
-> AngeloGioacchino Del Regno (3):
->   dt-bindings: power: mediatek: Support Dimensity 1200 MT6893 MTCMOS
->   pmdomain: mediatek: Bump maximum bus protect data array elements
->   pmdomain: mediatek: Add support for Dimensity 1200 MT6893
+> According to a description from TRM, add all the power domains.
 >
->  .../power/mediatek,power-controller.yaml      |   2 +
->  drivers/pmdomain/mediatek/mt6893-pm-domains.h | 585 ++++++++++++++++++
->  drivers/pmdomain/mediatek/mtk-pm-domains.c    |   5 +
->  drivers/pmdomain/mediatek/mtk-pm-domains.h    |   2 +-
->  .../dt-bindings/power/mediatek,mt6893-power.h |  35 ++
->  5 files changed, 628 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/pmdomain/mediatek/mt6893-pm-domains.h
->  create mode 100644 include/dt-bindings/power/mediatek,mt6893-power.h
->
-> --
-> 2.49.0
->
+> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
 Applied for next, thanks!
 
 Kind regards
 Uffe
+
+
+> ---
+>
+> Changes in v4:
+> - Collect review tag from Heiko
+>
+> Changes in v3:
+> - squash the header file and the binding document
+> - Update license
+>
+> Changes in v2:
+> - rename to rockchip,rk3562-power.h
+> - update the subject
+> - use dual license
+>
+>  .../power/rockchip,power-controller.yaml      |  1 +
+>  .../dt-bindings/power/rockchip,rk3562-power.h | 35 +++++++++++++++++++
+>  2 files changed, 36 insertions(+)
+>  create mode 100644 include/dt-bindings/power/rockchip,rk3562-power.h
+>
+> diff --git a/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml b/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+> index ebab98987e49..f494b7710c09 100644
+> --- a/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+> +++ b/Documentation/devicetree/bindings/power/rockchip,power-controller.yaml
+> @@ -40,6 +40,7 @@ properties:
+>        - rockchip,rk3366-power-controller
+>        - rockchip,rk3368-power-controller
+>        - rockchip,rk3399-power-controller
+> +      - rockchip,rk3562-power-controller
+>        - rockchip,rk3568-power-controller
+>        - rockchip,rk3576-power-controller
+>        - rockchip,rk3588-power-controller
+> diff --git a/include/dt-bindings/power/rockchip,rk3562-power.h b/include/dt-bindings/power/rockchip,rk3562-power.h
+> new file mode 100644
+> index 000000000000..5182c2427a55
+> --- /dev/null
+> +++ b/include/dt-bindings/power/rockchip,rk3562-power.h
+> @@ -0,0 +1,35 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (c) 2022-2024 Rockchip Electronics Co., Ltd.
+> + */
+> +#ifndef __DT_BINDINGS_POWER_RK3562_POWER_H__
+> +#define __DT_BINDINGS_POWER_RK3562_POWER_H__
+> +
+> +/* VD_CORE */
+> +#define RK3562_PD_CPU_0                0
+> +#define RK3562_PD_CPU_1                1
+> +#define RK3562_PD_CPU_2                2
+> +#define RK3562_PD_CPU_3                3
+> +#define RK3562_PD_CORE_ALIVE   4
+> +
+> +/* VD_PMU */
+> +#define RK3562_PD_PMU          5
+> +#define RK3562_PD_PMU_ALIVE    6
+> +
+> +/* VD_NPU */
+> +#define RK3562_PD_NPU          7
+> +
+> +/* VD_GPU */
+> +#define RK3562_PD_GPU          8
+> +
+> +/* VD_LOGIC */
+> +#define RK3562_PD_DDR          9
+> +#define RK3562_PD_VEPU         10
+> +#define RK3562_PD_VDPU         11
+> +#define RK3562_PD_VI           12
+> +#define RK3562_PD_VO           13
+> +#define RK3562_PD_RGA          14
+> +#define RK3562_PD_PHP          15
+> +#define RK3562_PD_LOGIC_ALIVE  16
+> +
+> +#endif
+> --
+> 2.25.1
+>
