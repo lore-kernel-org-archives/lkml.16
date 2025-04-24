@@ -1,215 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from irl.hu (irl.hu [95.85.9.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17A562147F6
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927EE21505C
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745485891; cv=none; b=BS1tIDagXTrkO5N6Zn7WBCU9ChNbfcHFV4C/pvOxSQJA2jy/2A28Wepme1pQN8mFMpeWINoip/t70cFunNTFFSkTV2KCgwy2GrFSRiE4SNPskf/itCcbakjWlGIN6YUwupnG02fliGJmP5Qm6+Nqm33S7h4Cx4Pq6QUgTvuXMDQ=
+	t=1745485907; cv=none; b=PsoC3KD9s4o8CPcYbiya4oGQrwbu76tyNFy09CpVih8ob8EVwAfqsDyYWVcoE4witwkZ2/nNnBjAWNx9cb5YqdR/sjAp7y8NzSYT6OVpuMWgdGXLM7LMbY2vCeHwzq4UE+HaI3ehtf95dkafJxPgWq2ezL0hiLUxgv2UXFHZW9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745485891; c=relaxed/simple;
-	bh=D0+QLnTTaA8BoAdM+fBMbb/li+nh5U0QU3E85OBSLLA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WvULyxKKSfBCEkPks3P8ykthEqMRHw6Wue7Y1pj/bh4McUh7Jr7UwD3e0fedmq6rENkgQbnwErWfCrqH7fCuOiQhhnVhB81ak5a0VZeZckT48StpMmocFV0pUp91WsPmKMEph4NhDtxz95eOeRB8d4usISpTdIl3djgLR3T/2yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C4pPYpxS; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C4pPYpxS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745485888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=S9HOt8K1x3ctE3BWSKA9qeH3oq86sKFq23Km/AG9m9c=;
-	b=C4pPYpxS81l2+KLqeFQm4g4yMBZHyVwfuMI/F5XN+ibi31BSp0FoNlACl9HfHM7hnkdzen
-	Am/hgIltRfMAUymhPA0rgNZBMQnZ4LYGUOUPKsT6yhaaltspawp/Y4z54iNhiGzjviQNn/
-	X868ZzOsjY60UTc8tROdEyTNkS5rM9g=
-Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
- [209.85.210.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-153-ZaE1gfTlOAeznCTMK1-aPw-1; Thu, 24 Apr 2025 05:11:26 -0400
-X-MC-Unique: ZaE1gfTlOAeznCTMK1-aPw-1
-X-Mimecast-MFC-AGG-ID: ZaE1gfTlOAeznCTMK1-aPw_1745485885
-Received: by mail-ot1-f72.google.com with SMTP id 46e09a7af769-72a48b91fbbso180572a34.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:11:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745485885; x=1746090685;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S9HOt8K1x3ctE3BWSKA9qeH3oq86sKFq23Km/AG9m9c=;
-        b=P8Q9Nb5TQQiFiXfaDaFmRxwlMtWKQceg0SYSxZxdf8ARHZWWfXGaUpblK8Ji8xw3O2
-         CSZPRoFdhBH2eGgcKZXmOLYHr2rOwPTQbAZmpZyP7wX/UNyLSsiOFZ65+CpL6dMFpwsa
-         ytQf+3aWn+UDXy7bxGRnYb1jwJhUVmE1qWVX3etutweMA4FKuOIBGWkSkFd8foQ/l/Kg
-         2Q7ZS1UmLFe37Z9GU6gfGwcPpbIfxusiCC6j1AyVCsbb5wtUtLTCxIcG/gLZHqJDXMbx
-         T929fAf8UO9cgRZzosLUDfnVuJ/i4ftf8jaZcMTUku1mNdxVi51HdDC6D4mQxjoYYTkS
-         5QOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVTY9ZM1lBmXGV5dBa3tBpqAdigAWZ+sz/14ZbMhwvorkgbnzw+1NwY9i3DSGz4Qf/hS5BPBgYF1QbwHow=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUWHOcBj9pE69sbCJq1BvBopVsWt3qL8hsnGEA0sAgyTabfsHJ
-	QmowzXco3HS/V23hhLKz2iCV6UX+SHOi96AL1Y/LBTE2kf/7BaeaLWSNnLK1DSnzVb74wVF0LFD
-	ZzE4TFtWKwNT6EplNTJE4m8g0bzfNmzCFtdf02RWgi0yCEYfsrETRBrmeRWF7Sf/No38Isf93Lm
-	L6UXcHlLdk+7TQKOCQejNrjRg6d7cXTEslyemc
-X-Gm-Gg: ASbGncvmT75vMS1ytninFkryRJZY08g1bfQ2Zx5A0KBryjvsrHgilF3oywZSOaQsbCO
-	whdXJBr3cOFqcuWxi5nYlaPLzJDva1afua08KNOnU2T8sk6atw2DmqfoqxDJKtKGiOeE=
-X-Received: by 2002:a05:6871:7406:b0:2c8:234d:971b with SMTP id 586e51a60fabf-2d96e6aa4ebmr380756fac.9.1745485885525;
-        Thu, 24 Apr 2025 02:11:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFK7qUeJJwQjklraK2nHiUwpH65h8T9xweuQl27N0LwRhvIakqeaQOVUhg1tEDsLwCPFdAeBvDc3b678FCalLc=
-X-Received: by 2002:a05:6871:7406:b0:2c8:234d:971b with SMTP id
- 586e51a60fabf-2d96e6aa4ebmr380751fac.9.1745485885149; Thu, 24 Apr 2025
- 02:11:25 -0700 (PDT)
+	s=arc-20240116; t=1745485907; c=relaxed/simple;
+	bh=GktCEw93LWx29fKSfCeGp2sL+s4pz8Hwysuvj+LEd4I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=OfW079Fg2KaNLLZn+6jQkGYNVOYsjP/nOyfQCCX9ftY6+Jq6B30gnYaFxJ/hcCQ8Ma3FdNyVdIpVe627B2JdK9og9y4WUiJChWSRAVK3OHWYMKXEvuQ3VCrdgCp6kko+7i+4yL7rFN5NxmCjmASFpqFS4Mv/CRAj3PoTSqNVhoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
+Received: from [192.168.2.19] (51b69338.dsl.pool.telekom.hu [::ffff:81.182.147.56])
+  (AUTH: CRAM-MD5 soyer@irl.hu, )
+  by irl.hu with ESMTPSA
+  id 0000000000084239.000000006809FF1B.000C6449; Thu, 24 Apr 2025 11:06:34 +0200
+Message-ID: <a2dbbf4e79c42b99d0772db5712f52a430864240.camel@irl.hu>
+Subject: Re: amdgpu_dm_connector_mode_valid regression
+From: Gergo Koteles <soyer@irl.hu>
+To:
+  Marek =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
+Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
+  Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
+  dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+  amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
+  Alex Deucher <alexander.deucher@amd.com>,
+  Mario Limonciello <mario.limonciello@amd.com>,
+  Alex Hung <alex.hung@amd.com>,
+  Harry Wentland <harry.wentland@amd.com>
+Date: Thu, 24 Apr 2025 11:06:34 +0200
+In-Reply-To: <aAn6wsnJ-6mqK4vR@mail-itl>
+References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
+	 <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
+	 <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
+	 <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+	 <Z_jodBrNFdEpJRKA@mail-itl> <aAn6wsnJ-6mqK4vR@mail-itl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415072724.3565533-1-peter.chen@cixtech.com>
-In-Reply-To: <20250415072724.3565533-1-peter.chen@cixtech.com>
-From: Enric Balletbo i Serra <eballetb@redhat.com>
-Date: Thu, 24 Apr 2025 11:11:00 +0200
-X-Gm-Features: ATxdqUE5d3FPvXzpICK8B6GZkItGWuDz2HbxbB6ClXETUq4KFHFcvwKgyIo7a18
-Message-ID: <CALE0LRsnuAfaXWPvZAktRk-RKkbhv9DAvdfAfg-AwbMbPynsig@mail.gmail.com>
-Subject: Re: [PATCH v6 00/10] arm64: Introduce CIX P1 (SKY1) SoC
-To: Peter Chen <peter.chen@cixtech.com>
-Cc: soc@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
-	jassisinghbrar@gmail.com, linux-arm-kernel@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	cix-kernel-upstream@cixtech.com, maz@kernel.org, kajetan.puchalski@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
+Hi Marek,
 
-On Tue, Apr 15, 2025 at 9:30=E2=80=AFAM Peter Chen <peter.chen@cixtech.com>=
+On Thu, 2025-04-24 at 10:48 +0200, Marek Marczykowski-G=C3=B3recki wrote:
+> On Fri, Apr 11, 2025 at 12:01:28PM +0200, Marek Marczykowski-G=C3=B3recki=
  wrote:
->
-> Cixtech P1 (internal name sky1) is high performance generic Armv9 SoC.
-> Orion O6 is the Arm V9 Motherboard built by Radxa. You could find brief
-> introduction for SoC and related boards at:
-> https://radxa.com/products/orion/o6#overview
->
-> In this series, we add initial SoC and board support for Kernel building.
-> Patch 1-2: add dt-binding doc for CIX and its sky1 SoC
-> Patch 3-4: add Arm64 build support
-> Patch 5-7: add CIX mailbox driver which needs to support SCMI clock proto=
-col.
-> Patch 8-9: add initial dts support for SoC and Orion O6 board
+> >=20
+> > Hi,
+> >=20
+> > On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
+> > > Hi Dmitry,
+> > >=20
+> > > But the code would start to become quite untraceable.
+> > > duplicate mode in amdgpu_dm_connector_mode_valid()
+> > > call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
+> > > duplicate mode in create_stream_for_sink()
+> > > overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
+> > > if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
+> > > create_stream_for_sink()=20
+> >=20
+> > FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
+> > Ryzen 5 4500U). And the patch quoted below fixes it for me too.
+>=20
+> I've re-tested it with 6.15-rc3 and the issue is still there. Is there
+> something I can do to help fixing it before final 6.15 is out?
+>=20
 
-Many thanks for these patches, with these I was able to run the latest
-mainline kernel on boot to the console on my Orion O6 board. I think
-others already tested just wanted to point out if you can keep me in
-the loop, thanks.
+This patch has been accepted into the the amd drm-fixes-6.15 branch, so
+hopefully it will be fixed in 6.15-rc4.
 
-If you feel is useful you can add:
+https://lore.kernel.org/dri-devel/24439c13a014e1cd200785db6f3dcf08f4773eb3.=
+1743612701.git.soyer@irl.hu/
+https://gitlab.freedesktop.org/agd5f/linux/-/commits/drm-fixes-6.15
 
-Tested-by: Enric Balletbo i Serra <eballetb@redhat.com>
-
-Thanks,
-  Enric
-
-> Patch 10: add MAINTAINERS entry
->
-> Currently, to run upstream kernel at Orion O6 board, you need to
-> use BIOS released by Radxa, and add "clk_ignore_unused=3D1" at bootargs.
-> https://docs.radxa.com/en/orion/o6/bios/install-bios
->
-> Changes for v6:
-> - Rebase to v6.15-rc2
-> - Add mailbox driver
-> - Add device tree description for uart, mailbox and scmi firmware (for cl=
-ock).
->
-> Changes for v5:
-> - Patch 5: Delete pmu-spe node which need to refine, and add it in future
-> - Patch 6: Refine MAINTAINERS for all CIX SoC and adding code tree locati=
-on
->
-> Changes for v4:
-> - Move add MAINTAINERS entry patch to the last, and add two dts files ent=
-ry in it.
-> - Add three Krzysztof Kozlowski's Reviewed-by Tags
-> - For sky1.dtsi, makes below changes:
->         - Add ppi-partition entry for gic-v3 node, and let pmu-a520 and p=
-mu-a720's interrupt entry
->         get its handle
->         - Remove gic-v3's #redistributor-regions and redistributor-stride=
- properties
->         - Change gic-v3's #interrupt-cells as 4, and change all interrupt=
- specifiers accordingly
->         - Remove "arm,no-tick-in-suspend" for timer due to global counter=
- is at always-on power domain
->         - Remove timer's clock frequency due to firmware has already set =
-it
->
-> Changes for v3:
-> - Patch 1: Add Krzysztof Kozlowski's Acked-by Tag
-> - Patch 2: Add Krzysztof Kozlowski's Reviewed-by Tag
-> - Patch 6: Fix two dts coding sytle issues
->
-> Changes for v2:
-> - Pass dts build check with below commands:
-> make O=3D$OUTKNL dt_binding_check DT_SCHEMA_FILES=3Dvendor-prefixes.yaml
-> make O=3D$OUTKNL dt_binding_check DT_SCHEMA_FILES=3Darm/cix.yaml
-> make O=3D$OUTKNL CHECK_DTBS=3Dy W=3D1 cix/sky1-orion-o6.dtb
-> - Re-order the patch set, and move vendor-perfixes to the 1st patch.
-> - Patch 4: Ordered Kconfig config entry by alpha-numerically
-> - Patch 5: Corrects the Ack tag's name
-> - Patch 6: see below.
-> 1) Corrects the SoF tag's name
-> 2) Fix several coding sytle issues
-> 3) move linux,cma node to dts file
-> 4) delete memory node, memory size is passed by firmware
-> 5) delete uart2 node which will be added in future patches
-> 6) Improve for pmu and cpu node to stands for more specific cpu model
-> 7) Improve the timer node and add hypervisor virtual timer irq
->
-> Fugang Duan (1):
->   arm64: Kconfig: add ARCH_CIX for cix silicons
->
-> Gary Yang (1):
->   dt-bindings: clock: cix: Add CIX sky1 scmi clock id
->
-> Guomin Chen (2):
->   dt-bindings: mailbox: add cix,sky1-mbox
->   mailbox: add CIX mailbox driver
->
-> Peter Chen (6):
->   dt-bindings: vendor-prefixes: Add CIX Technology Group Co., Ltd.
->   dt-bindings: arm: add CIX P1 (SKY1) SoC
->   arm64: defconfig: Enable CIX SoC
->   arm64: defconfig: enable CIX mailbox
->   arm64: dts: cix: add initial CIX P1(SKY1) dts support
->   MAINTAINERS: Add CIX SoC maintainer entry
->
->  .../devicetree/bindings/arm/cix.yaml          |  26 +
->  .../bindings/mailbox/cix,sky1-mbox.yaml       |  71 ++
->  .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
->  MAINTAINERS                                   |  11 +
->  arch/arm64/Kconfig.platforms                  |   6 +
->  arch/arm64/boot/dts/Makefile                  |   1 +
->  arch/arm64/boot/dts/cix/Makefile              |   2 +
->  arch/arm64/boot/dts/cix/sky1-orion-o6.dts     |  39 ++
->  arch/arm64/boot/dts/cix/sky1.dtsi             | 335 ++++++++++
->  arch/arm64/configs/defconfig                  |   2 +
->  drivers/mailbox/Kconfig                       |  10 +
->  drivers/mailbox/Makefile                      |   2 +
->  drivers/mailbox/cix-mailbox.c                 | 632 ++++++++++++++++++
->  include/dt-bindings/clock/sky1-clk.h          | 279 ++++++++
->  14 files changed, 1418 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cix.yaml
->  create mode 100644 Documentation/devicetree/bindings/mailbox/cix,sky1-mb=
-ox.yaml
->  create mode 100644 arch/arm64/boot/dts/cix/Makefile
->  create mode 100644 arch/arm64/boot/dts/cix/sky1-orion-o6.dts
->  create mode 100644 arch/arm64/boot/dts/cix/sky1.dtsi
->  create mode 100644 drivers/mailbox/cix-mailbox.c
->  create mode 100644 include/dt-bindings/clock/sky1-clk.h
->
-> --
-> 2.25.1
->
->
+Gergo
 
