@@ -1,94 +1,155 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1111F4CB5;
-	Thu, 24 Apr 2025 07:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181BC1E1E0B;
+	Thu, 24 Apr 2025 07:49:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745480937; cv=none; b=QkcHYywabVvHB4ZO+UIfkbwfTcRxvMsp/RAwDjEbrQ61VT88T5/QpjyM/IQ3gIo9sfmiKON+XejDrSqGIOKLXq/AF0I5dSgqvO80OwPF7Z6MZYv6ms+Evh9NwvcLaL6Xb330fC1bGhqP8XvL5WXdw9kI/uShhQsp9G/SAc7K/5E=
+	t=1745480948; cv=none; b=JQ961OAjIilmi1hkFLgIb0yqmqbPY7FnuzSKLxqkKWXdOnmcS656VObXZZfgUsJGzXkQTZG2XEAPMPHB9C6IkC5yODNdc7nEgKfnF2I9ZBZz2LGSolad4iyp4rO7WTuaZAoNEZJ3N4gt5+98MQInhc7u8P4OBIUTFhA4UoiWFm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745480937; c=relaxed/simple;
-	bh=ar6PJxQCfp8ZAa3ugdAz/W3cAjD/5BbmeHHp3Asx3/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S02QB0v4I9aI/KjfkNZKr2owsl6yKnPG0pl1+j4b7aAFdZjD8/EGga2nNQRmfGWM51SpMEiMNSq+wBXMa8693MDYAdoFTkvwkuzOqRzjkPhz57zr5xnEyE2RaT5YukydSA6HczzNsx+a24SK4EDw4EuoaZO3JSAaBV+mFHmB3Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XwUKRY1q; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1745480948; c=relaxed/simple;
+	bh=5rqtFzqootFSChXvYMUWn6GhsW3oKVWEt0dqvLi8/ec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iKrVkWNdVWOUncm1tzcZksdYhti2vCDPbNEYzcH2wSGuKSnu4yzO9cU4tEzSAYvNlSgFkX8rHfA7gzBueJLR9aDWLAuYI8WPyLHpB7f80pd/o7fij9zymomH/fyQVHZFjwSVLII5lxmtxMI4CKPgei6rPfH+PHyfoLPEW/rxoZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=QZSU+U25; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=oAMSk4a1; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XwUKRY1q"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745480930; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=vSzEDm0PVZR5+6nReRulGLUiGC7gv59rpmdxNdHwhFY=;
-	b=XwUKRY1qF66kQQUh211jyyvaIJWrdquSMSMJtet0GCw708tZzpAvYMaoa27YHa9aZIcjZO1Hdd4ty2EJeqP2ElE7FtdT18xCSBQfW82+B9Gt8CEtzWild1Qgkarnriv6DYhHuetJ4bCa9oIDiLfnybwTo6NvYjrX67klOPGPMMQ=
-Received: from 30.74.146.225(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXyG8sZ_1745480926 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 24 Apr 2025 15:48:47 +0800
-Message-ID: <fb932eac-86ce-4f7d-8eed-8dc44f5a40c1@linux.alibaba.com>
-Date: Thu, 24 Apr 2025 15:48:45 +0800
+	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="QZSU+U25";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="oAMSk4a1"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 2A99111402CF;
+	Thu, 24 Apr 2025 03:49:05 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Thu, 24 Apr 2025 03:49:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm1; t=1745480945; x=
+	1745567345; bh=hjgOlGzyuUts0fVVNf3iH4m6Ug06tDRN1v46IIYPYNA=; b=Q
+	ZSU+U254xGJaQDwHsGh+Go8x/A3laVE4wQPDVUBg5Fr+GgMqButYIPfwRj2PhJU4
+	VjF83dsy2oOVHZdidquZgyfQJS8J/Z+sCIV4l43wxPSiiPfGeOtwG/ipiEFavoMf
+	AAEjESIPH2OehVzHN0kUTAu58ldwYc47OTipfcEMUw8JuWKz9FGojWgUDWjGkwVt
+	GxHrM8tMgIdGt14JN8gN5miEqQ5+bFE7KyML6IWv2OATOsNB1CghLxQgAjZ5hI5T
+	/xwq9LtYi+/XrUNlJgW+VV1n4V0ddDkvzPeN2SBnCqe+tN7T1zDmDF6WMmqMz0WI
+	ROcCudQJmHHDkYL+5ZPBw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1745480945; x=1745567345; bh=hjgOlGzyuUts0fVVNf3iH4m6Ug06tDRN1v4
+	6IIYPYNA=; b=oAMSk4a11MTbmGUsMFK+lo58+HthNdSCYo4NJDY1rZIFZ00vKUd
+	zEAZaPAdAdrF0Pkq6Cg0x8DzgX4lLEg1S8Ocll9ysHR8QQ35FPPGXE1y4NuWA0JB
+	wQgY+iJLC5rY4rCBCI5iytEe736umneX7sxJF/C+zGV/SPrXO/ncicNNDfMEOz/T
+	3YvEw14puOaldMSF0Za/ll7LpENwGtFF58wrO4/fmZL1ixn0NYaZz/pp+zFnmwvf
+	Xts3QRbh2ZWbX3tkCOoHtMm7SlqsamQsOkNzqA5mVBT1gTsp/lhgRiyf9UhCIekB
+	ZfIRsfsoR5LJfUG/mZ7XWbex+1az2AuL0Gg==
+X-ME-Sender: <xms:8OwJaBWgXcFJqsxPCT2iG2tgh4vExi_z6CkgxUfVgi-ELi3RJGkikw>
+    <xme:8OwJaBkjAoQq_kLNw1wq2qF-5PNfzZoobHred0mfwrOIoSFwQ5S6jOGwN8uQoInx6
+    2A8qdx60nP-Jf-P76I>
+X-ME-Received: <xmr:8OwJaNa_3SCaNCFcTNJC0fSLrkvZ9ZbZ3w-fufOFMBRIy1KpDfdw6NVmwNk48vz--ASLdg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekleduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
+    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
+    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
+    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
+    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepvdejpdhmohguvgepshhmthhpohhuthdprh
+    gtphhtthhopeihrghnrdihrdiihhgrohesihhnthgvlhdrtghomhdprhgtphhtthhopehp
+    sghonhiiihhnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepshgvrghnjhgtsehgoh
+    hoghhlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
+    vghrnhgvlhdrohhrghdprhgtphhtthhopehkvhhmsehvghgvrhdrkhgvrhhnvghlrdhorh
+    hgpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhitghk
+    rdhprdgvughgvggtohhmsggvsehinhhtvghlrdgtohhmpdhrtghpthhtohepuggrvhgvrd
+    hhrghnshgvnhesihhnthgvlhdrtghomhdprhgtphhtthhopehkihhrihhllhdrshhhuhht
+    vghmohhvsehinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:8OwJaEVe8OpTCoEuaomq3rdjSfdSyFOMhcOXqxwWBhTHkA_rR70YSA>
+    <xmx:8OwJaLnl6fZIasiijhc5h3AiSqwgG6NHp5-eLU5X2Rehp1bns9VtRA>
+    <xmx:8OwJaBeibfvuXZ02AQnNcwSoHW5eaW7l8LoZIhaF8-73Dpu9egQLoA>
+    <xmx:8OwJaFE_IF_4QsPiydh4mbK2PTPPwThgDOjdQZOVDRegd0YnReK0xQ>
+    <xmx:8ewJaM9gUMm_O4WgnqFPIITTvHahLrrBIXdohGvR2QetBt_cNcqqQTwU>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 24 Apr 2025 03:48:56 -0400 (EDT)
+Date: Thu, 24 Apr 2025 10:48:53 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com, 
+	dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com, 
+	ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, david@redhat.com, 
+	vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
+	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
+	ira.weiny@intel.com, isaku.yamahata@intel.com, xiaoyao.li@intel.com, 
+	binbin.wu@linux.intel.com, chao.p.peng@intel.com
+Subject: Re: [RFC PATCH 02/21] x86/virt/tdx: Enhance tdh_mem_page_aug() to
+ support huge pages
+Message-ID: <stswyrtsciz3ujhzhs72ncpozax7nawg5sbg7gbsclb5jgw5vt@y5fxmsstslca>
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <20250424030428.32687-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 08/12] khugepaged: skip collapsing mTHP to smaller
- orders
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
- baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
- peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
- usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
- cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250417000238.74567-1-npache@redhat.com>
- <20250417000238.74567-9-npache@redhat.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20250417000238.74567-9-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424030428.32687-1-yan.y.zhao@intel.com>
 
-
-
-On 2025/4/17 08:02, Nico Pache wrote:
-> khugepaged may try to collapse a mTHP to a smaller mTHP, resulting in
-> some pages being unmapped. Skip these cases until we have a way to check
-> if its ok to collapse to a smaller mTHP size (like in the case of a
-> partially mapped folio).
+On Thu, Apr 24, 2025 at 11:04:28AM +0800, Yan Zhao wrote:
+> Enhance the SEAMCALL wrapper tdh_mem_page_aug() to support huge pages.
 > 
-> This patch is inspired by Dev Jain's work on khugepaged mTHP support [1].
+> Verify the validity of the level and ensure that the mapping range is fully
+> contained within the page folio.
 > 
-> [1] https://lore.kernel.org/lkml/20241216165105.56185-11-dev.jain@arm.com/
+> As a conservative solution, perform CLFLUSH on all pages to be mapped into
+> the TD before invoking the SEAMCALL TDH_MEM_PAGE_AUG. This ensures that any
+> dirty cache lines do not write back later and clobber TD memory.
 > 
-> Co-developed-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> Signed-off-by: Nico Pache <npache@redhat.com>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
+> Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
 > ---
->   mm/khugepaged.c | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
+>  arch/x86/virt/vmx/tdx/tdx.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 > 
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index ece39fd71fe6..383aff12cd43 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -625,7 +625,12 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
->   		folio = page_folio(page);
->   		VM_BUG_ON_FOLIO(!folio_test_anon(folio), folio);
->   
-> -		/* See hpage_collapse_scan_pmd(). */
-> +		if (order != HPAGE_PMD_ORDER && folio_order(folio) >= order) {
-> +			result = SCAN_PTE_MAPPED_HUGEPAGE;
-> +			goto out;
-> +		}
+> diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
+> index f5e2a937c1e7..a66d501b5677 100644
+> --- a/arch/x86/virt/vmx/tdx/tdx.c
+> +++ b/arch/x86/virt/vmx/tdx/tdx.c
+> @@ -1595,9 +1595,18 @@ u64 tdh_mem_page_aug(struct tdx_td *td, u64 gpa, int level, struct page *page, u
+>  		.rdx = tdx_tdr_pa(td),
+>  		.r8 = page_to_phys(page),
+>  	};
+> +	unsigned long nr_pages = 1 << (level * 9);
 
-Should we also add this check in hpage_collapse_scan_pmd() to abort the 
-scan early?
+PTE_SHIFT.
+
+> +	struct folio *folio = page_folio(page);
+> +	unsigned long idx = 0;
+>  	u64 ret;
+>  
+> -	tdx_clflush_page(page);
+> +	if (!(level >= TDX_PS_4K && level < TDX_PS_NR) ||
+
+Do we even need this check?
+
+> +	    (folio_page_idx(folio, page) + nr_pages > folio_nr_pages(folio)))
+> +		return -EINVAL;
+> +
+> +	while (nr_pages--)
+> +		tdx_clflush_page(nth_page(page, idx++));
+> +
+>  	ret = seamcall_ret(TDH_MEM_PAGE_AUG, &args);
+>  
+>  	*ext_err1 = args.rcx;
+> -- 
+> 2.43.2
+> 
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
