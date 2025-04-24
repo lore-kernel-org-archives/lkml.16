@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2A528A1F9;
-	Thu, 24 Apr 2025 16:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A6F289368;
+	Thu, 24 Apr 2025 16:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511877; cv=none; b=WPwHiXK1iIwvswuiCEP8oqRMXoyse0FtciG+vfLU8KCRvSMN3c9V8eeE1HM/Pd4LpnoxLvqXm6PoFXT5SejVvSJ0RYpm+DCoDeW53Y8AEg9bS5qawkqgE4AToL5OuC1UX4MH8/zp/yGlJS4AZ6qc9cqf4t8jh/BASRTItEtJjNA=
+	t=1745511877; cv=none; b=rcVSkAlyesrzOcnpZ/eE7zMO7cGnRg6GEmPLM0Ny/NfwwCCIwYi3QPeXvtV7Cz+n8A5kHhaN9brxbbXO3/yy4IyoB3ye5UXRx6Afp6PH/VZYdGCRlZ9FmR/Z5ob8Zr6ZZcUjizf+I9pC3Lip9FlMEkKxceeV/ZbfpA2EKwL+FoQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745511877; c=relaxed/simple;
-	bh=FOpCcB0SHYp4WJdk6l5JxGOtcrrVvxc0E7NzipAYfug=;
+	bh=2Sqq0bl5H4O9BedasVfX3C2gLm22jhWqlwCry6RWenU=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=HPWrFscD0U/5mDukqjDes5rekac+aRIebk6mKTtgp4+5C51jBuyjyGFtiRf3Yb/1QEluuZJ3sM0jreTVjd7h1BTW9eFU5DsC5DRxhNn93uAcCGj62bprzxJFSJf92+tbLHazZMzaYgvlzSGpe7QdQlvpevyxs5wddiIqGNUwuxU=
+	 Content-Type; b=U6b8wL8z/NoLWVFGG4kIXtL84/WdY9sWrY9xttAr5DQpaovmAmvt1HQNNb652MYUNXs8v7+Ra/aa5e6zH+CJIzw7xpo59m0ttahoxgykpo+n4cQra7EzvhFntGEboxS+NOHNCOyji16eM8DIQVuiigmw65ensMsz9hRn7dluAfg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C0EBC4CEFC;
-	Thu, 24 Apr 2025 16:24:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D3FC4CEE3;
+	Thu, 24 Apr 2025 16:24:35 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u7zPF-0000000GybA-1XiL;
-	Thu, 24 Apr 2025 12:26:33 -0400
-Message-ID: <20250424162633.216110813@goodmis.org>
+	id 1u7zPD-0000000GyVi-1zYA;
+	Thu, 24 Apr 2025 12:26:31 -0400
+Message-ID: <20250424162631.327216594@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 12:25:41 -0400
+Date: Thu, 24 Apr 2025 12:25:30 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -52,7 +52,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Blake Jones <blakejones@google.com>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>
-Subject: [PATCH v5 12/17] perf: Skip user unwind if !current->mm
+Subject: [PATCH v5 01/17] unwind_user: Add user space unwinding API
 References: <20250424162529.686762589@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,32 +64,211 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-If the task doesn't have any memory, there's no stack to unwind.
+Introduce a generic API for unwinding user stacks.
+
+In order to expand user space unwinding to be able to handle more complex
+scenarios, such as deferred unwinding and reading user space information,
+create a generic interface that all architectures can use that support the
+various unwinding methods.
+
+This is an alternative method for handling user space stack traces from
+the simple stack_trace_save_user() API. This does not replace that
+interface, but this interface will be used to expand the functionality of
+user space stack walking.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Note from v4: https://lore.kernel.org/all/24cde1381495cd637f0d5663ab7629572bc0eca6.1737511963.git.jpoimboe@kernel.org/
+Changes since v4: https://lore.kernel.org/all/cd54347d26967427bc831f473d76e424ba3eba95.1737511963.git.jpoimboe@kernel.org/
 
-- From the previous version, Peter Zijlstra brought up concern about
-  io_uring helpers, but this was never resolved. No update was made.
+- Removed unused variables from unwind_user_next() (Jens Remus)
 
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+- Added "return" to unwind_user_next() (Andrii Nakryiko)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 009f34bd9e63..40b98b05fb7c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8101,7 +8101,7 @@ struct perf_callchain_entry *
- perf_callchain(struct perf_event *event, struct pt_regs *regs)
- {
- 	bool kernel = !event->attr.exclude_callchain_kernel;
--	bool user   = !event->attr.exclude_callchain_user;
-+	bool user   = !event->attr.exclude_callchain_user && current->mm;
- 	/* Disallow cross-task user callchains. */
- 	bool crosstask = event->ctx->task && event->ctx->task != current;
- 	const u32 max_stack = event->attr.sample_max_stack;
+ MAINTAINERS                       |  8 +++++
+ arch/Kconfig                      |  3 ++
+ include/linux/unwind_user.h       | 15 +++++++++
+ include/linux/unwind_user_types.h | 31 +++++++++++++++++
+ kernel/Makefile                   |  1 +
+ kernel/unwind/Makefile            |  1 +
+ kernel/unwind/user.c              | 55 +++++++++++++++++++++++++++++++
+ 7 files changed, 114 insertions(+)
+ create mode 100644 include/linux/unwind_user.h
+ create mode 100644 include/linux/unwind_user_types.h
+ create mode 100644 kernel/unwind/Makefile
+ create mode 100644 kernel/unwind/user.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 74667f36b013..237e642df25a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -25278,6 +25278,14 @@ F:	Documentation/driver-api/uio-howto.rst
+ F:	drivers/uio/
+ F:	include/linux/uio_driver.h
+ 
++USERSPACE STACK UNWINDING
++M:	Josh Poimboeuf <jpoimboe@kernel.org>
++M:	Steven Rostedt <rostedt@goodmis.org>
++S:	Maintained
++F:	include/linux/unwind*.h
++F:	kernel/unwind/
++
++
+ UTIL-LINUX PACKAGE
+ M:	Karel Zak <kzak@redhat.com>
+ L:	util-linux@vger.kernel.org
+diff --git a/arch/Kconfig b/arch/Kconfig
+index b0adb665041f..ccbcead9fac0 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -435,6 +435,9 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
+ 	  It uses the same command line parameters, and sysctl interface,
+ 	  as the generic hardlockup detectors.
+ 
++config UNWIND_USER
++	bool
++
+ config HAVE_PERF_REGS
+ 	bool
+ 	help
+diff --git a/include/linux/unwind_user.h b/include/linux/unwind_user.h
+new file mode 100644
+index 000000000000..aa7923c1384f
+--- /dev/null
++++ b/include/linux/unwind_user.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_UNWIND_USER_H
++#define _LINUX_UNWIND_USER_H
++
++#include <linux/unwind_user_types.h>
++
++int unwind_user_start(struct unwind_user_state *state);
++int unwind_user_next(struct unwind_user_state *state);
++
++int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries);
++
++#define for_each_user_frame(state) \
++	for (unwind_user_start((state)); !(state)->done; unwind_user_next((state)))
++
++#endif /* _LINUX_UNWIND_USER_H */
+diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
+new file mode 100644
+index 000000000000..6ed1b4ae74e1
+--- /dev/null
++++ b/include/linux/unwind_user_types.h
+@@ -0,0 +1,31 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_UNWIND_USER_TYPES_H
++#define _LINUX_UNWIND_USER_TYPES_H
++
++#include <linux/types.h>
++
++enum unwind_user_type {
++	UNWIND_USER_TYPE_NONE,
++};
++
++struct unwind_stacktrace {
++	unsigned int	nr;
++	unsigned long	*entries;
++};
++
++struct unwind_user_frame {
++	s32 cfa_off;
++	s32 ra_off;
++	s32 fp_off;
++	bool use_fp;
++};
++
++struct unwind_user_state {
++	unsigned long ip;
++	unsigned long sp;
++	unsigned long fp;
++	enum unwind_user_type type;
++	bool done;
++};
++
++#endif /* _LINUX_UNWIND_USER_TYPES_H */
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 434929de17ef..5a2b2be2a32d 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -55,6 +55,7 @@ obj-y += rcu/
+ obj-y += livepatch/
+ obj-y += dma/
+ obj-y += entry/
++obj-y += unwind/
+ obj-$(CONFIG_MODULES) += module/
+ 
+ obj-$(CONFIG_KCMP) += kcmp.o
+diff --git a/kernel/unwind/Makefile b/kernel/unwind/Makefile
+new file mode 100644
+index 000000000000..349ce3677526
+--- /dev/null
++++ b/kernel/unwind/Makefile
+@@ -0,0 +1 @@
++ obj-$(CONFIG_UNWIND_USER) += user.o
+diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
+new file mode 100644
+index 000000000000..ddf68750b3cb
+--- /dev/null
++++ b/kernel/unwind/user.c
+@@ -0,0 +1,55 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++* Generic interfaces for unwinding user space
++*/
++#include <linux/kernel.h>
++#include <linux/sched.h>
++#include <linux/sched/task_stack.h>
++#include <linux/unwind_user.h>
++
++int unwind_user_next(struct unwind_user_state *state)
++{
++	/* no implementation yet */
++	return -EINVAL;
++}
++
++int unwind_user_start(struct unwind_user_state *state)
++{
++	struct pt_regs *regs = task_pt_regs(current);
++
++	memset(state, 0, sizeof(*state));
++
++	if (!current->mm || !user_mode(regs)) {
++		state->done = true;
++		return -EINVAL;
++	}
++
++	state->type = UNWIND_USER_TYPE_NONE;
++
++	state->ip = instruction_pointer(regs);
++	state->sp = user_stack_pointer(regs);
++	state->fp = frame_pointer(regs);
++
++	return 0;
++}
++
++int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries)
++{
++	struct unwind_user_state state;
++
++	trace->nr = 0;
++
++	if (!max_entries)
++		return -EINVAL;
++
++	if (!current->mm)
++		return 0;
++
++	for_each_user_frame(&state) {
++		trace->entries[trace->nr++] = state.ip;
++		if (trace->nr >= max_entries)
++			break;
++	}
++
++	return 0;
++}
 -- 
 2.47.2
 
