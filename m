@@ -1,476 +1,273 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9C679D0;
-	Thu, 24 Apr 2025 03:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F4879D0;
+	Thu, 24 Apr 2025 03:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745463871; cv=none; b=KFfZCKzqrIC7HvpH7FkLLvvdp0rccFQUuPCkUeXbttnYkT5zn3jQ0XFwcQi7wSt/drSeln2FLXS1paNVEgosx2d7PpSBsa0mk4R//9AoDf8oa4Q43b2EEINPeVamCYFbkctCoGOHG3WwLXJwQ9itwrtjeEiI5mG48yZHcmRMQHY=
+	t=1745463955; cv=none; b=P557qgTtdtlZNdK2vmQzvblGsWfRyHvMZS1T+/DEq4b40TAaOtsLW4EcDbU1yFD2XJz4+1gkfF/15hGyySMthqqvZOoflvYnqi5ZScXMKHfvFI04Jcw5rjRSiMq5AJFPiIoZdmTojDWMAc0JT+MsXWO+/b+R5DwQTg6Gb88Y/ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745463871; c=relaxed/simple;
-	bh=FBuMCz98dRxZxnNfNDUwwxkSyUYk5JHRBFbSQhaGAPo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FxOgefEd4AM9mywUWtTl86zeEPVcWTxSn72r55C7eb3FEGUKS6DFbXl5Viqkw0CHjSXr0pme72aUHe+1MGupa1Liutg3T25KoTDMDC1emps/iJGkGi9bqjrvbmtAZ6Zc15GGmPERZy+h3CV75tr79iDM5wHh6LNsGabjLV1Q/s8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=haiXz99N; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745463955; c=relaxed/simple;
+	bh=YCeXBVahkx2lcAmBCFU2fMvSEWQMKKrdLCdBEJCcrZA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bBJTeN8xW7NE9Sm3nSCKMqO5yzfSjkakTMHmHvWlL9N6qbHFbEW/Ux9Zqkr8xkpRnX7f9QinpOeCVrmw2ZYnT4pVE9wv1Icdl6RgqE5SH7N1Ewgm3V0j0C1lIKPEQlVYeutioLKAkjjvIFtV5GU6xsoURwTdnnqUT9yDrF81UU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XXBASjbY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="haiXz99N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745463869; x=1776999869;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FBuMCz98dRxZxnNfNDUwwxkSyUYk5JHRBFbSQhaGAPo=;
-  b=haiXz99Nt6JW7lpI3vTorcYHd9ia5Ba5ihmpqKyE3WIYX+Rn4JAgADMl
-   6SLdNazy3FfI9fdo0BX51SnyAypnxojVV1R4WHSJRIVL8aRL9MlKlz4Jj
-   wSNaSfmmJQsEutzGgxVqjUQuH00KeIhHX7ozh6lPlnQQ+3mDvLl/M5/Ls
-   bZGXDXM6rIvJZbIU/vAi4l5yokQmGDVVy6UdCmW47D5ScD8sJ9eyJs9Qd
-   M9AfXRs8II1YE3rm/Jgk/WhYVrs81AmYf5qtkuKM8orrBXSgtPUDA/j6z
-   oo15Nbk9F5ZKUw0NYLrX2bNSTwJ9/z7t+LNCf91XuE4yEAOLqVitWlEM+
-   g==;
-X-CSE-ConnectionGUID: O3N4s/L1RnC1Nz1CoRqdsg==
-X-CSE-MsgGUID: EBCf+KcSSduj6HXc2N5f/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47094218"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="47094218"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:04:28 -0700
-X-CSE-ConnectionGUID: IKqJdi5yR6O/tdOmT5F6tg==
-X-CSE-MsgGUID: YGEx9l6BR+iIk+PV5IFqDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="133014863"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:04:24 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	x86@kernel.org,
-	rick.p.edgecombe@intel.com,
-	dave.hansen@intel.com,
-	kirill.shutemov@intel.com,
-	tabba@google.com,
-	ackerleytng@google.com,
-	quic_eberman@quicinc.com,
-	michael.roth@amd.com,
-	david@redhat.com,
-	vannapurve@google.com,
-	vbabka@suse.cz,
-	jroedel@suse.de,
-	thomas.lendacky@amd.com,
-	pgonda@google.com,
-	zhiquan1.li@intel.com,
-	fan.du@intel.com,
-	jun.miao@intel.com,
-	ira.weiny@intel.com,
-	chao.p.peng@intel.com,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [RFC PATCH 00/21] KVM: TDX huge page support for private memory
-Date: Thu, 24 Apr 2025 11:00:32 +0800
-Message-ID: <20250424030033.32635-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XXBASjbY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 690F2C4CEE2;
+	Thu, 24 Apr 2025 03:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745463953;
+	bh=YCeXBVahkx2lcAmBCFU2fMvSEWQMKKrdLCdBEJCcrZA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=XXBASjbYNT13ZJM3R41fuvS7vjhrEZ43YinGaXBjG2q4+Z+MThA51i8IdrZXjJt+b
+	 qblwAFmEDkpqbUzQppCPevBILppBfrQuEEmoL//0DPTQHg0JwVSDv0NgvezQdyBWpO
+	 RpMub1NNuHgX9Ac0AZ1uCZE/gDwEVTKOOfv3e+38R2AvAZFu52DZrnnAHdDR/KYFma
+	 oBeRZhhek3epUMrkmo3Ly9OSneBihJHZYaK95rV0H8e00oj10oWTMm897wvqauUbBS
+	 JOT53seG7MjQX1kE6QcZ/5GznaVKw1K6hfX1/poR0/BLj3pgbvJY2WZAekCy4a1c2q
+	 MdYT8qhZMuo8g==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 0D9F3CE0B75; Wed, 23 Apr 2025 20:05:53 -0700 (PDT)
+Date: Wed, 23 Apr 2025 20:05:53 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [linux-next:master] [rcutorture]  ddd062f753:
+ WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_updown[rcutorture]
+Message-ID: <5863ed5d-81b4-452a-a929-d68c26d6d028@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <202504211513.23f21a0-lkp@intel.com>
+ <9db0175d-eb50-4534-969f-35afaa677927@paulmck-laptop>
+ <aAcixqijvHL2ihHS@xsang-OptiPlex-9020>
+ <4d8dd409-259c-4775-baf9-e272cc5238e7@paulmck-laptop>
+ <aAmYzAsE6fPz5uaB@xsang-OptiPlex-9020>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAmYzAsE6fPz5uaB@xsang-OptiPlex-9020>
 
-This is an RFC series to support huge pages in TDX. It's an evolution of
-the previous patches from Isaku [0]. (Please find the main changes to [0]
-at a later section).
+On Thu, Apr 24, 2025 at 09:50:04AM +0800, Oliver Sang wrote:
+> hi, Paul,
+> 
+> On Tue, Apr 22, 2025 at 10:54:10AM -0700, Paul E. McKenney wrote:
+> 
+> [...]
+> 
+> > > > > 
+> > > > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> > > > > the same patch/commit), kindly add following tags
+> > > > > | Reported-by: kernel test robot <oliver.sang@intel.com>
+> > > > > | Closes: https://lore.kernel.org/oe-lkp/202504211513.23f21a0-lkp@intel.com
+> > > > > 
+> > > > > 
+> > > > > The kernel config and materials to reproduce are available at:
+> > > > > https://download.01.org/0day-ci/archive/20250421/202504211513.23f21a0-lkp@intel.com
+> > > > 
+> > > > Good catch, and thank you for your testing efforts!
+> > > > 
+> > > > Does the patch at the end of this email help?
+> > > 
+> > > sorry but the patch does not help. one dmesg is attached.
+> > 
+> > And idiot here failed to check for the exact same problem at the point
+> > where the timer is queued, so thank you for bearing with me.
+> > 
+> > Does the patch at the end of this email (in addition to the previous
+> > patch) get the job done?
+> 
+> unfortunately, it still doesn't fix, one dmesg is attached. part of is as [2]
+> 
+> but I applied your two patches directly upon ddd062f753, like below:
+> 
+> * 1c91d0bd4809f (linux-devel/fixup-1539a7e7b61a9) further patch for ddd062f753 from Paul
+> * 1539a7e7b61a9 (linux-devel/fixup-ddd062f753) fix for ddd062f753 from Paul E. McKenney
+> * ddd062f7536cc rcutorture: Complain if an ->up_read() is delayed more than 10 seconds
+> * 1b983c34d5695 rcutorture: Comment invocations of tick_dep_set_task()
+> 
+> 
+> I noticed there are some conflicts while applying your second patch, the
+> 1c91d0bd4809f looks like [1]. there is no "int rtorsu_cpu;" before line:
+> +	ktime_t rtorsu_kt;
+> 
+> seems your patch has a different base? I worried if my applyment has
+> problems. if so, could you tell me the correct base? thanks!
 
-As the series of enabling guest_memfd to support 1GB huge page with
-in-place conversion [1] is still under development, we temporarily based
-the TDX work on top of the series from Michael Roth that enables basic 2M
-guest_memfd support without in-place conversion[2].  The goal is to have an
-early review and discussion of the TDX huge page work (including changes to
-KVM core MMU and the TDX specific code), which should remain stable, with
-only minor adjustments, regardless the changes coming in guest_memfd.
+It looks correct to me.  I will rebase at my end to make it apply cleanly
+by the end of my tomorrow at the latest.  Attempting it now would likely
+just make a mess.  :-/
 
-The series is currently focused on supporting 2MB huge pages only.
+And thank you very much for your help with this because...
 
-Tip folks, there are some SEAMCALL wrapper changes in this series, but we
-need to have some discussion on the KVM side to figure out what it needs
-still. Please feel free to ignore it for now.
+> [1]
+> commit 1c91d0bd4809f9f12e61f25d881a02f25c473702 (linux-devel/fixup-1539a7e7b61a9)
+> Author: 0day robot <lkp@intel.com>
+> Date:   Wed Apr 23 10:27:51 2025 +0800
+> 
+>     further patch for ddd062f753 from Paul
+> 
+>     Signed-off-by: 0day robot <lkp@intel.com>
+> 
+> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> index e7b5811e0e456..14cc67d436c97 100644
+> --- a/kernel/rcu/rcutorture.c
+> +++ b/kernel/rcu/rcutorture.c
+> @@ -2438,6 +2438,7 @@ rcu_torture_reader(void *arg)
+>  struct rcu_torture_one_read_state_updown {
+>         struct hrtimer rtorsu_hrt;
+>         bool rtorsu_inuse;
+> +       ktime_t rtorsu_kt;
+>         unsigned long rtorsu_j;
+>         struct torture_random_state rtorsu_trs;
+>         struct rcu_torture_one_read_state rtorsu_rtors;
+> @@ -2522,12 +2523,14 @@ static void rcu_torture_updown_one(struct rcu_torture_one_read_state_updown *rto
+>                 schedule_timeout_idle(HZ);
+>                 return;
+>         }
+> -       rtorsup->rtorsu_j = jiffies;
+>         smp_store_release(&rtorsup->rtorsu_inuse, true);
+>         t = torture_random(&rtorsup->rtorsu_trs) & 0xfffff; // One per million.
+>         if (t < 10 * 1000)
+>                 t = 200 * 1000 * 1000;
+>         hrtimer_start(&rtorsup->rtorsu_hrt, t, HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
+> +       smp_mb(); // Sample jiffies after posting hrtimer.
+> +       rtorsup->rtorsu_j = jiffies;  // Not used by hrtimer handler.
+> +       rtorsup->rtorsu_kt = t;
+>  }
+> 
+>  /*
+> @@ -2548,7 +2551,9 @@ rcu_torture_updown(void *arg)
+>                                 break;
+>                         j = smp_load_acquire(&jiffies); // Time before ->rtorsu_inuse.
+>                         if (smp_load_acquire(&rtorsup->rtorsu_inuse)) {
+> -                               WARN_ON_ONCE(time_after(j, rtorsup->rtorsu_j + 10 * HZ));
+> +                               WARN_ONCE(time_after(j, rtorsup->rtorsu_j + 1 + HZ * 10),
+> +                                         "hrtimer queued at jiffies %lu for %lld ns took %lu jiffies\n", rtorsup->rtorsu_j, rtorsup->rtorsu_kt, j - rtorsup->rtorsu_j);
+>                                 continue;
+>                         }
+>                         rcu_torture_updown_one(rtorsup);
+> 
+> 
+> 
+> [2]
+> 
+> [  168.048387][  T796] ------------[ cut here ]------------
+> [  168.049342][  T796] hrtimer queued at jiffies 4294952214 for 200000000 ns took 1502 jiffies
 
+... I am quite surprised by the 1502 jiffies.  On a HZ=1000 system,
+I would have expected this value to be at least 10,000.  I clearly need
+to dig into this code much more carefully.
 
-Design
-======
-guest_memfd
------------
-TDX huge page support has a basic assumption to guest_memfd: guest_memfd
-allocates private huge pages whenever alignment of GFN/index, range size
-and the consistency of page attributes allow.
+So thank you again for your testing efforts!
 
-Patch 01 (based on [2]) in this RFC acts as glue code to ensure this
-assumption is met for TDX. It can be absorbed into any future
-guest_memfd series (e.g., future in-place conversion series) in any form.
+							Thanx, Paul
 
-TDX interacts with guest_memfd through interfaces kvm_gmem_populate() and
-kvm_gmem_get_pfn(), obtaining the allocated page and its order.
+> [  168.050699][  T796] WARNING: CPU: 0 PID: 796 at kernel/rcu/rcutorture.c:2555 rcu_torture_updown+0x143/0x4f0 [rcutorture]
+> [  168.052702][  T796] Modules linked in: rcutorture torture
+> [  168.054084][  T796] CPU: 0 UID: 0 PID: 796 Comm: rcu_torture_upd Not tainted 6.15.0-rc1-00010-g1c91d0bd4809 #1 NONE  e0cf54ed16af150d49bfa95e1fe661f9e9161d42
+> [  168.056119][  T796] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+> [  168.058045][  T796] RIP: 0010:rcu_torture_updown+0x143/0x4f0 [rcutorture]
+> [  168.059229][  T796] Code: 48 c1 e8 03 42 80 3c 38 00 74 05 e8 a7 1b 49 e1 49 8b 54 2d 48 49 29 de 48 c7 c7 c0 9e 5e a0 48 89 de 4c 89 f1 e8 dd 6a c4 e0 <0f> 0b e9 d2 01 00 00 4c 89 24 24 4c 8d 34 2d 68 00 00 00 4d 01 ee
+> [  168.061887][  T796] RSP: 0000:ffff888152bf7e60 EFLAGS: 00210246
+> [  168.062804][  T796] RAX: 0000000000000000 RBX: 00000000ffffc516 RCX: 0000000000000000
+> [  168.064097][  T796] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> [  168.065436][  T796] RBP: 0000000000002a00 R08: 0000000000000000 R09: 0000000000000000
+> [  168.066674][  T796] R10: 0000000000000000 R11: 0000000000000000 R12: ffff888150812a40
+> [  168.067932][  T796] R13: ffff888150810000 R14: 00000000000005de R15: dffffc0000000000
+> [  168.069302][  T796] FS:  0000000000000000(0000) GS:ffff888424c90000(0000) knlGS:0000000000000000
+> [  168.070729][  T796] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  168.071772][  T796] CR2: 000000000805b740 CR3: 000000014b9ef000 CR4: 00000000000406f0
+> [  168.073736][  T796] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  168.075050][  T796] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  168.076319][  T796] Call Trace:
+> [  168.076954][  T796]  <TASK>
+> [  168.077552][  T796]  kthread+0x4b7/0x5e0
+> [  168.079269][  T796]  ? rcu_torture_updown_hrt+0x60/0x60 [rcutorture e5c5209c38907516252542c1d07dd3e619a57f4e]
+> [  168.080832][  T796]  ? kthread_unuse_mm+0x150/0x150
+> [  168.081731][  T796]  ret_from_fork+0x3c/0x70
+> [  168.082491][  T796]  ? kthread_unuse_mm+0x150/0x150
+> [  168.083328][  T796]  ret_from_fork_asm+0x11/0x20
+> [  168.084182][  T796]  </TASK>
+> [  168.084826][  T796] irq event stamp: 90885
+> [  168.085562][  T796] hardirqs last  enabled at (90895): [<ffffffff815a4e82>] __console_unlock+0x72/0x80
+> [  168.086968][  T796] hardirqs last disabled at (90904): [<ffffffff815a4e67>] __console_unlock+0x57/0x80
+> [  168.088472][  T796] softirqs last  enabled at (90738): [<ffffffff8148ecce>] handle_softirqs+0x5de/0x6e0
+> [  168.089989][  T796] softirqs last disabled at (90729): [<ffffffff8148ef41>] __irq_exit_rcu+0x61/0xc0
+> [  168.091310][  T796] ---[ end trace 0000000000000000 ]---
+> 
+> > 
+> > 							Thanx, Paul
+> > 
+> > [ . . . ]
+> > 
+> > > > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> > > > index 3dd213bfc6662..53f0860b3748d 100644
+> > > > --- a/kernel/rcu/rcutorture.c
+> > > > +++ b/kernel/rcu/rcutorture.c
+> > > > @@ -2557,6 +2557,7 @@ static void rcu_torture_updown_one(struct rcu_torture_one_read_state_updown *rto
+> > > >  static int
+> > > >  rcu_torture_updown(void *arg)
+> > > >  {
+> > > > +	unsigned long j;
+> > > >  	struct rcu_torture_one_read_state_updown *rtorsup;
+> > > >  
+> > > >  	VERBOSE_TOROUT_STRING("rcu_torture_updown task started");
+> > > > @@ -2564,8 +2565,9 @@ rcu_torture_updown(void *arg)
+> > > >  		for (rtorsup = updownreaders; rtorsup < &updownreaders[n_up_down]; rtorsup++) {
+> > > >  			if (torture_must_stop())
+> > > >  				break;
+> > > > +			j = smp_load_acquire(&jiffies); // Time before ->rtorsu_inuse.
+> > > >  			if (smp_load_acquire(&rtorsup->rtorsu_inuse)) {
+> > > > -				WARN_ON_ONCE(time_after(jiffies, rtorsup->rtorsu_j + 10 * HZ));
+> > > > +				WARN_ON_ONCE(time_after(j, rtorsup->rtorsu_j + 10 * HZ));
+> > > >  				continue;
+> > > >  			}
+> > > >  			rcu_torture_updown_one(rtorsup);
+> > 
+> > 
+> > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
+> > index abe48ff48f54c..7268e33086eb4 100644
+> > --- a/kernel/rcu/rcutorture.c
+> > +++ b/kernel/rcu/rcutorture.c
+> > @@ -2449,6 +2449,7 @@ struct rcu_torture_one_read_state_updown {
+> >  	struct hrtimer rtorsu_hrt;
+> >  	bool rtorsu_inuse;
+> >  	int rtorsu_cpu;
+> > +	ktime_t rtorsu_kt;
+> >  	unsigned long rtorsu_j;
+> >  	unsigned long rtorsu_ndowns;
+> >  	unsigned long rtorsu_nups;
+> > @@ -2548,12 +2549,14 @@ static void rcu_torture_updown_one(struct rcu_torture_one_read_state_updown *rto
+> >  		schedule_timeout_idle(HZ);
+> >  		return;
+> >  	}
+> > -	rtorsup->rtorsu_j = jiffies;
+> >  	smp_store_release(&rtorsup->rtorsu_inuse, true);
+> >  	t = torture_random(&rtorsup->rtorsu_trs) & 0xfffff; // One per million.
+> >  	if (t < 10 * 1000)
+> >  		t = 200 * 1000 * 1000;
+> >  	hrtimer_start(&rtorsup->rtorsu_hrt, t, HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
+> > +	smp_mb(); // Sample jiffies after posting hrtimer.
+> > +	rtorsup->rtorsu_j = jiffies;  // Not used by hrtimer handler.
+> > +	rtorsup->rtorsu_kt = t;
+> >  }
+> >  
+> >  /*
+> > @@ -2574,7 +2577,8 @@ rcu_torture_updown(void *arg)
+> >  				break;
+> >  			j = smp_load_acquire(&jiffies); // Time before ->rtorsu_inuse.
+> >  			if (smp_load_acquire(&rtorsup->rtorsu_inuse)) {
+> > -				WARN_ON_ONCE(time_after(j, rtorsup->rtorsu_j + 10 * HZ));
+> > +				WARN_ONCE(time_after(j, rtorsup->rtorsu_j + 1 + HZ * 10),
+> > +					  "hrtimer queued at jiffies %lu for %lld ns took %lu jiffies\n", rtorsup->rtorsu_j, rtorsup->rtorsu_kt, j - rtorsup->rtorsu_j);
+> >  				continue;
+> >  			}
+> >  			rcu_torture_updown_one(rtorsup);
 
-The remaining TDX code should remain stable despite future changes in
-guest_memfd.
-
-
-Basic huge page mapping/unmapping
----------------------------------
-- TD build time
-  This series enforces that all private mappings be 4KB during the TD build
-  phase, due to the TDX module's requirement that tdh_mem_page_add(), the
-  SEAMCALL for adding private pages during TD build time, only supports 4KB
-  mappings. Enforcing 4KB mappings also simplifies the implementation of
-  code for TD build time, by eliminating the need to consider merging or
-  splitting in the mirror page table during TD build time.
-  
-  The underlying pages allocated from guest_memfd during TD build time
-  phase can still be large, allowing for potential merging into 2MB
-  mappings once the TD is running.
-
-- TD runtime
-  This series allows a private fault's max_level to be 2MB after TD is
-  running. KVM core MMU will map/unmap 2MB mappings in the mirror page
-  table according to a fault's goal_level as what're done for normal VMs.
-  Changes in the mirror page table are then propagated to the S-EPT.
-
-  For transitions from non-present to huge leaf in the mirror page table,
-  hook set_external_spte is invoked, leading to the execution of
-  tdh_mem_page_aug() to install a huge leaf in the S-EPT.
-
-  Conversely, during transitions from a huge leaf to non-present, the
-  remove_external_spte hook is invoked to execute SEAMCALLs that remove the
-  huge leaf from the S-EPT.
-
-  (For transitions from huge leaf to non-leaf, or from non-leaf to huge
-   leaf, SPTE splitting/merging will be triggered. More details are in
-   later sections.)
-
-- Specify fault max_level
-  In the TDP MMU, a fault's max_level is initially set to the 1GB level for
-  x86. KVM then updates the fault's max_level by determining the lowest
-  order among fault->max_level, the order of the allocated private page,
-  and the TDX-specified max_level from hook private_max_mapping_level.
-  For TDX, a private fault's req_level, and goal_level finally equal to the
-  fault's max_level as TDX platforms do not have the flaw for NX huge page.
-  
-  So, if TDX has specific requirements to influence a fault's goal_level
-  for private memory (e.g., if it knows an EPT violation is caused by a
-  TD's ACCEPT operation, mapping at the ACCEPT's level is preferred), this
-  can be achieved either by affecting the initial value of fault->max_level
-  or through the private_max_mapping_level hook.
-
-  The former approach requires more changes in the KVM core (e.g., by using
-  some bits in the error_code passed to kvm_mmu_page_fault() and having
-  KVM check for them). This RFC opts for the latter, simpler method, using
-  the private_max_mapping_level hook.
-  
-
-Page splitting (page demotion)
-------------------------------
-Page splitting occurs in two paths:
-(a) with exclusive kvm->mmu_lock, triggered by zapping operations,
-
-    For normal VMs, if zapping a narrow region that would need to split a
-    huge page, KVM can simply zap the surrounding GFNs rather than
-    splitting a huge page. The pages can then be faulted back in, where KVM
-    can handle mapping them at a 4KB level.
-
-    The reason why TDX can't use the normal VM solution is that zapping
-    private memory that is accepted cannot easily be re-faulted, since it
-    can only be re-faulted as unaccepted. So KVM will have to sometimes do
-    the page splitting as part of the zapping operations.
-
-    These zapping operations can occur for few reasons:
-    1. VM teardown.
-    2. Memslot removal.
-    3. Conversion of private pages to shared.
-    4. Userspace does a hole punch to guest_memfd for some reason.
-
-    For case 1 and 2, splitting before zapping is unnecessary because
-    either the entire range will be zapped or huge pages do not span
-    memslots.
-    
-    Case 3 or case 4 requires splitting, which is also followed by a
-    backend page splitting in guest_memfd.
-
-(b) with shared kvm->mmu_lock, triggered by fault.
-
-    Splitting in this path is not accompanied by a backend page splitting
-    (since backend page splitting necessitates a splitting and zapping
-     operation in the former path).  It is triggered when KVM finds that a
-    non-leaf entry is replacing a huge entry in the fault path, which is
-    usually caused by vCPUs' concurrent ACCEPT operations at different
-    levels.
-
-    This series simply ignores the splitting request in the fault path to
-    avoid unnecessary bounces between levels. The vCPU that performs ACCEPT
-    at a lower level would finally figures out the page has been accepted
-    at a higher level by another vCPU.
-
-    A rare case that could lead to splitting in the fault path is when a TD
-    is configured to receive #VE and accesses memory before the ACCEPT
-    operation. By the time a vCPU accesses a private GFN, due to the lack
-    of any guest preferred level, KVM could create a mapping at 2MB level.
-    If the TD then only performs the ACCEPT operation at 4KB level,
-    splitting in the fault path will be triggered. However, this is not
-    regarded as a typical use case, as usually TD always accepts pages in
-    the order from 1GB->2MB->4KB. The worst outcome to ignore the resulting
-    splitting request is an endless EPT violation. This would not happen
-    for a Linux guest, which does not expect any #VE.
-
-- Splitting for private-to-shared conversion or punch hole
-  Splitting of a huge mapping requires the allocation of page table page
-  and the corresponding shadow structures. This memory allocation can fail.
-  So, while the zapping operations in the two scenarios don't have an
-  understanding of failure, the overall operations do. Therefore, the RFC
-  introduces a separate step kvm_split_boundary_leafs() to split huge
-  mappings ahead of the zapping operation.
-
-  Patches 16-17 implement this change. As noted in the patch log, the
-  downside of the current approach is that although
-  kvm_split_boundary_leafs() is invoked before kvm_unmap_gfn_range() for
-  each GFN range, the entire zapping range may consist of several GFN
-  ranges. If an out-of-memory error occurs during the splitting of a GFN
-  range, some previous GFN ranges may have been successfully split and
-  zapped, even though their page attributes remain unchanged due to the
-  splitting failure. This may not be a significant issue, as the user can
-  retry the ioctl to split and zap the full range. However, if it becomes
-  problematic, further modifications to invoke kvm_unmap_gfn_range() after
-  executing kvm_mmu_invalidate_range_add() and kvm_split_boundary_leafs()
-  for all GFN ranges could address the problem.
-  
-  Alternatively, a possible solution could be pre-allocating sufficiently
-  large splitting caches at the start of the private-to-shared conversion
-  or hole punch process. The downside is that this may allocate more memory
-  than necessary and require more code changes.
-
-- The full call stack for huge page splitting
-
-  With exclusive kvm->mmu_lock,
-  kvm_vm_set_mem_attributes/kvm_gmem_punch_hole
-     |kvm_split_boundary_leafs
-     |   |kvm_tdp_mmu_gfn_range_split_boundary
-     |       |tdp_mmu_split_boundary_leafs
-     |           |tdp_mmu_alloc_sp_for_split
-     |           |tdp_mmu_split_huge_page
-     |               |tdp_mmu_link_sp
-     |                   |tdp_mmu_iter_set_spte
-     |                       |tdp_mmu_set_spte
-     |                           |split_external_spt
-     |                               |kvm_x86_split_external_spt
-     |                                   | BLOCK, TRACK, DEMOTION
-     |kvm_mmu_unmap_gfn_range
-
- 
-  With shared kvm->mmu_lock,
-  kvm_tdp_mmu_map
-     |tdp_mmu_alloc_sp
-     |kvm_mmu_alloc_external_spt
-     |tdp_mmu_split_huge_page
-         |tdp_mmu_link_sp
-             |tdp_mmu_set_spte_atomic
-                 |__tdp_mmu_set_spte_atomic
-		    |set_external_spte_present
-		        |split_external_spt
-			    |kvm_x86_split_external_spt
-
-
-- Handle busy & errors
-
-  Splitting huge mappings in S-EPT requires to execute
-  tdh_mem_range_block(), tdh_mem_track(), kicking off vCPUs,
-  tdh_mem_page_demote() in sequence.
-
-  Possible errors during the process include TDX_OPERAND_BUSY or
-  TDX_INTERRUPTED_RESTARTABLE.
-
-  With exclusive kvm->mmu_lock, TDX_OPERAND_BUSY can be handled similarly
-  to removing a private page, i.e., by kicking off all vCPUs and retrying,
-  which should succeed on the second attempt.
-  
-  TDX_INTERRUPTED_RESTARTABLE occurs when there is a pending interrupt on
-  the host side during SEAMCALL tdh_mem_page_demote(). The approach is to
-  retry indefinitely in KVM for TDX_INTERRUPTED_RESTARTABLE, because the
-  interrupts are for host only in current exclusive kvm->mmu_lock path.
-
-  
-Page merging (page promotion)
------------------------------
-  The RFC disallows the page merging on the mirror page table.
-
-  Unlike normal VMs, private memory in TDX requires the guest's ACCEPT
-  operation. Therefore, transitioning from a non-leaf entry to a huge leaf
-  entry in the S-EPT requires the non-leaf entry to be initially populated
-  with small child entries, all in PENDING or ACCEPTED status.
-  Subsequently, the merged huge leaf can be set to either PENDING or
-  ACCEPTED status.
-  
-  Therefore, counter-intuitively, converting a partial range (e.g., one
-  4KB) of a 2MB range from private to shared and then converting back to
-  private does not result in a successful page promotion in the S-EPT.
-  After converting a shared 4KB page back to private:
-  a) Linux Guest: Accepts the 4K page prior to accessing memory, prompting
-     KVM to map it at the 4KB level, which prevents further EPT violations
-     and avoids triggering page promotion.
-  b) Non-Linux Guest: May access the page before executing the ACCEPT
-     operation. KVM identifies the physical page is 2MB contiguous and maps
-     it at 2MB, causing a non-leaf to leaf transition in the mirror page
-     table. However, after the preparation step, only 511 child entries in
-     the S-EPT are in ACCEPTED status, with 1 newly mapped entry in PENDING
-     status. The promotion request to the S-EPT fails due to this mixed
-     status. If KVM re-enters the guest and triggers #VE for the guest to
-     accept the page, the guest must accept the page at the 4KB level, as
-     no 2MB mapping is available. After the ACCEPT operation, no further
-     EPT violations occur to trigger page promotion.
-
-  
-  So, also to avoid the comprehensive BUSY handling and rolling back code
-  due to shared kvm->mmu_lock, the RFC disallows the page merging on the
-  mirror page table. This should have minimal performance impact in
-  practice, as up to now no page merging is observed for a real guest,
-  except for the selftests.
- 
-
-Patches layout
-==============
-Patch 01: Glue code to [2].
-          It allows kvm_gmem_populate() and kvm_gmem_get_pfn() to get a
-          2MB private huge page from guest_memfd whenever GFN/index
-          alignment, remaining size, and page attribute layout.
-          Though this patch may not be needed after guest_memfd supporting
-          in-place conversion in future, the guest_memfd needs to ensure
-          something similar.
-Patches 02-03: SEAMCALL changes under x86/virt.
-Patches 04-09: Basic private huge page mapping/unmapping.
-           04: For build time, no huge pages, forced to 4KB.
-        05-07: Enhancements of tdx_clear_page(),tdx_reclaim_page,
-               tdx_wbinvd_page() to handle huge pages.
-           08: inc/dec folio ref count for huge pages.
-               The increasing of private folio ref count should be dropped
-               after guest_memfd supporting in-place conversion. TDX will
-               then only acquire private folio ref count upon errors during
-               the page removing/reclaiming stage.
-           09: Turn on mapping/unmapping of huge pages for TD runtime.
-Patch 10: Disallow page merging in the mirror page table.
-Patches 11-12: Allow guest's ACCEPT level to determine page mapping size. 
-Patches 13-19: Basic page splitting support (with exclusive kvm->mmu_lock)
-           13: Enhance tdp_mmu_alloc_sp_split() for external page table
-           14: Add code to propagate splitting request to external page
-               table in tdp_mmu_set_spte(), which updates SPTE under
-               exclusive kvm->mmu_lock.
-           15: TDX's counter part to patch 14. Implementation of hook
-               split_external_spt.
-        16-19: Split private huge pages for private-to-shared conversion
-               and punch hole.
-Patches 20-21: Ignore page splitting request with shared kvm->mmu_lock
-
-
-Main changes to [0]:
-===================
-- Disallow huge mappings in TD build time.
-- Use hook private_max_mapping_level to convey TDX's mapping level info
-  instead of having KVM MMU core to check certain bits in error_code to
-  determine a fault's max_level.
-- Move tdh_mem_range_block() for page splitting to TDX's implementation of
-  hook split_external_spt.
-- Do page splitting before tdp_mmu_zap_leafs(). So instead of BUG_ON() the
-  tdp_mmu_zap_leafs(), out-of-memory failure for splitting can fail the
-  ioctl KVM_SET_MEMORY_ATTRIBUTES or punch hole.
-- Restrict page splitting to be under exclusive kvm->mmu_lock and ignore
-  the page splitting under shared kvm->mmu_lock.
-- Drop page merging support.
-
-
-Testing
--------
-The series is based on kvm/next.
-
-This patchset is also available at: [3]
-It is able to launch TDs with page demotion working correctly. Though it's
-still unable to trigger page promotion with a linux guest yet, the part of
-page promotion code is tested working with a selftest.
-
-It's able to check huge mapping count in KVM at runtime at
-/sys/kernel/debug/kvm/pages_2m.
-(Though this node includes huge mapping count for both shared and private
-memory, currently there're not many shared huge pages. In future,
-guest_memfd in-place conversion requires all shared pages to be 4KB. So
-there's no need to expand this interface).
-
-[0] https://lore.kernel.org/all/cover.1708933624.git.isaku.yamahata@intel.com
-[1] https://lore.kernel.org/lkml/cover.1726009989.git.ackerleytng@google.com
-[2] https://lore.kernel.org/all/20241212063635.712877-1-michael.roth@amd.com
-[3] https://github.com/intel/tdx/tree/huge_page_kvm_next_2025_04_23
-
-
-Edgecombe, Rick P (1):
-  KVM: x86/mmu: Disallow page merging (huge page adjustment) for mirror
-    root
-
-Isaku Yamahata (1):
-  KVM: x86/tdp_mmu: Alloc external_spt page for mirror page table
-    splitting
-
-Xiaoyao Li (5):
-  x86/virt/tdx: Add SEAMCALL wrapper tdh_mem_page_demote()
-  KVM: TDX: Enhance tdx_clear_page() to support huge pages
-  KVM: TDX: Assert the reclaimed pages were mapped as expected
-  KVM: TDX: Add a helper for WBINVD on huge pages with TD's keyID
-  KVM: TDX: Support huge page splitting with exclusive kvm->mmu_lock
-
-Yan Zhao (14):
-  KVM: gmem: Allocate 2M huge page from guest_memfd backend
-  x86/virt/tdx: Enhance tdh_mem_page_aug() to support huge pages
-  KVM: TDX: Enforce 4KB mapping level during TD build Time
-  KVM: TDX: Increase/decrease folio ref for huge pages
-  KVM: TDX: Enable 2MB mapping size after TD is RUNNABLE
-  KVM: x86: Add "vcpu" "gfn" parameters to x86 hook
-    private_max_mapping_level
-  KVM: TDX: Determine max mapping level according to vCPU's ACCEPT level
-  KVM: x86/tdp_mmu: Invoke split_external_spt hook with exclusive
-    mmu_lock
-  KVM: x86/mmu: Introduce kvm_split_boundary_leafs() to split boundary
-    leafs
-  KVM: Change the return type of gfn_handler_t() from bool to int
-  KVM: x86: Split huge boundary leafs before private to shared
-    conversion
-  KVM: gmem: Split huge boundary leafs for punch hole of private memory
-  KVM: x86: Force a prefetch fault's max mapping level to 4KB for TDX
-  KVM: x86: Ignore splitting huge pages in fault path for TDX
-
- arch/arm64/kvm/mmu.c               |   4 +-
- arch/loongarch/kvm/mmu.c           |   4 +-
- arch/mips/kvm/mmu.c                |   4 +-
- arch/powerpc/kvm/book3s.c          |   4 +-
- arch/powerpc/kvm/e500_mmu_host.c   |   4 +-
- arch/riscv/kvm/mmu.c               |   4 +-
- arch/x86/include/asm/kvm-x86-ops.h |   1 +
- arch/x86/include/asm/kvm_host.h    |   7 +-
- arch/x86/include/asm/tdx.h         |   2 +
- arch/x86/kvm/mmu/mmu.c             |  67 +++++---
- arch/x86/kvm/mmu/mmu_internal.h    |   2 +-
- arch/x86/kvm/mmu/paging_tmpl.h     |   2 +-
- arch/x86/kvm/mmu/tdp_mmu.c         | 200 +++++++++++++++++++----
- arch/x86/kvm/mmu/tdp_mmu.h         |   1 +
- arch/x86/kvm/svm/sev.c             |   5 +-
- arch/x86/kvm/svm/svm.h             |   5 +-
- arch/x86/kvm/vmx/main.c            |   8 +-
- arch/x86/kvm/vmx/tdx.c             | 244 +++++++++++++++++++++++------
- arch/x86/kvm/vmx/tdx.h             |   4 +
- arch/x86/kvm/vmx/tdx_arch.h        |   3 +
- arch/x86/kvm/vmx/tdx_errno.h       |   1 +
- arch/x86/kvm/vmx/x86_ops.h         |  14 +-
- arch/x86/virt/vmx/tdx/tdx.c        |  31 +++-
- arch/x86/virt/vmx/tdx/tdx.h        |   1 +
- include/linux/kvm_host.h           |  13 +-
- virt/kvm/guest_memfd.c             | 183 ++++++++++------------
- virt/kvm/kvm_main.c                |  38 +++--
- 27 files changed, 612 insertions(+), 244 deletions(-)
-
--- 
-2.43.2
 
