@@ -1,25 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAA9A1C6FFA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50448202C26;
 	Thu, 24 Apr 2025 20:16:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745525788; cv=none; b=RnowhRD95rrVuF1jtbt6UCqH+RpHDIgsOmjMJcSkNcdIZsaT0YrT5Wu3aJ69PffKOAQFgLtGc4mjdNjxoyBzpLhPTs+hrx5mstB809Ji+AD3MF/KV68TJskqaS9b21dPhqL4KlUwqKc+cjAwEaWgQjmA+HaHHcC7uwK8XmRNKzk=
+	t=1745525788; cv=none; b=ui/jgiJ35mLRey/l6spejQdK8XfJwRPg2ZXeNT8sHTwpqV/EVQ+avRgVYImiznLN7n70VSLeFgKyyapjTxtjkNl8FekwckiNbE6okK6tBPIHX6d4BZBaXI2QFSYUnC2p/Vqd+/XOwqx3ZM+XMcrsWLKMpn6BO3XZIRJdHVQ0k+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745525788; c=relaxed/simple;
-	bh=KeeVbnNomauR1fqRtkCW4Hw5hNY/GMwON7hWq9lvYvk=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=B9Kv45iTyDlZhci/toUDkn6jPceAaRYk2gcFWx9apfvBMyUjUMMQ/2rlswKjBA85DjXDJka9mqyGGWTmucwMXwRYBjmiCL4jZ3G+lWdG2N3UaTQ0l/nS9/01wU12QUdvIuk5Q1tyWlGyyzsCEwTl/Z0/LUshh2iPirpg2r6iiDU=
+	bh=ckTATXCHrvGOC+WZsqQof/3QKuBCz763BBzol3sDKjI=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=o+m6sb95e9CS0K22sHJLMmpG8sj8PGqCIIr/a81F1G1SxccTN7FSkgqI0rMibnK043hBtTAPCDVbqDsDNxNdG/EWfoZrBahsd+bGxsIZhdydasDvz2ZTgO7ICqk6gjIJ0h/suENJk6JMiT5Jvv1G1B0Z8WnfMSbyrn/YR0bGJYc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AC8BC4CEE3;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0D87C4CEFC;
 	Thu, 24 Apr 2025 20:16:27 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u831b-0000000H3sF-2N4W;
-	Thu, 24 Apr 2025 16:18:23 -0400
-Message-ID: <20250424201511.921245242@goodmis.org>
+	id 1u831c-0000000H3tj-0Nux;
+	Thu, 24 Apr 2025 16:18:24 -0400
+Message-ID: <20250424201823.941052159@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 16:15:11 -0400
+Date: Thu, 24 Apr 2025 16:15:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -52,99 +53,85 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v5 00/12] unwind_deferred: Implement sframe handling
+Subject: [PATCH v5 03/12] x86/uaccess: Add unsafe_copy_from_user() implementation
+References: <20250424201511.921245242@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+
+Add an x86 implementation of unsafe_copy_from_user() similar to the
+existing unsafe_copy_to_user().
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ arch/x86/include/asm/uaccess.h | 39 +++++++++++++++++++++++++---------
+ 1 file changed, 29 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index 3a7755c1a441..3caf02d0503e 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -599,7 +599,7 @@ _label:									\
+  * We want the unsafe accessors to always be inlined and use
+  * the error labels - thus the macro games.
+  */
+-#define unsafe_copy_loop(dst, src, len, type, label)				\
++#define unsafe_copy_to_user_loop(dst, src, len, type, label)			\
+ 	while (len >= sizeof(type)) {						\
+ 		unsafe_put_user(*(type *)(src),(type __user *)(dst),label);	\
+ 		dst += sizeof(type);						\
+@@ -607,15 +607,34 @@ _label:									\
+ 		len -= sizeof(type);						\
+ 	}
+ 
+-#define unsafe_copy_to_user(_dst,_src,_len,label)			\
+-do {									\
+-	char __user *__ucu_dst = (_dst);				\
+-	const char *__ucu_src = (_src);					\
+-	size_t __ucu_len = (_len);					\
+-	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u64, label);	\
+-	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u32, label);	\
+-	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u16, label);	\
+-	unsafe_copy_loop(__ucu_dst, __ucu_src, __ucu_len, u8, label);	\
++#define unsafe_copy_to_user(_dst, _src, _len, label)				\
++do {										\
++	void __user *__dst = (_dst);						\
++	const void *__src = (_src);						\
++	size_t __len = (_len);							\
++	unsafe_copy_to_user_loop(__dst, __src, __len, u64, label);		\
++	unsafe_copy_to_user_loop(__dst, __src, __len, u32, label);		\
++	unsafe_copy_to_user_loop(__dst, __src, __len, u16, label);		\
++	unsafe_copy_to_user_loop(__dst, __src, __len, u8,  label);		\
++} while (0)
++
++#define unsafe_copy_from_user_loop(dst, src, len, type, label)			\
++	while (len >= sizeof(type)) {						\
++		unsafe_get_user(*(type *)(dst), (type __user *)(src), label);	\
++		dst += sizeof(type);						\
++		src += sizeof(type);						\
++		len -= sizeof(type);						\
++	}
++
++#define unsafe_copy_from_user(_dst, _src, _len, label)				\
++do {										\
++	void *__dst = (_dst);							\
++	void __user *__src = (_src);						\
++	size_t __len = (_len);							\
++	unsafe_copy_from_user_loop(__dst, __src, __len, u64, label);		\
++	unsafe_copy_from_user_loop(__dst, __src, __len, u32, label);		\
++	unsafe_copy_from_user_loop(__dst, __src, __len, u16, label);		\
++	unsafe_copy_from_user_loop(__dst, __src, __len, u8,  label);		\
+ } while (0)
+ 
+ #ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
+-- 
+2.47.2
 
 
-I'm currently working on getting sframe support from the kernel.
-Josh Poimboeuf did a lot of the hard work already, but he told me he doesn't
-have time to continue it so I'm picking it up where he left off.
-
-His last series of v4 is here:
-
-  https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.org/
-
-It covers a lot of topics as he found issues with other aspects of
-the kernel that needed to be fixed for sframes to work properly.
-
-This adds the support for sframes to the deferred unwinder. It is based
-on top of this series:
-
-  https://lore.kernel.org/all/20250424192456.851953422@goodmis.org/
-
-This series is the last of the work that Josh had done in v4.
-Note, I did not address the comments that were made in the previous series.
-I'm posting this so that others may have something to work from that is
-based on the deferred unwinder code of the other series. This series is
-specific for sframe decoding itself and can be worked on separately from the
-other series.
-
-Hopefully someone that understands the sframe specification better than
-I do can continue this work. I'm only posting this so that there's
-something others can start with.
-
-Where there were discussions done on patches in v4, I left a Link:
-tag in the change log so that it is easy to go back and see what was
-discussed, as this series did not make an attempt to resolve those
-discussions.
-
-I'll be working on the other three series in trying to get them ready
-for submission. Those series are:
-
- vdso: https://lore.kernel.org/all/20250422183439.895236512@goodmis.org/
- [ Which is a separate work that is not directly needed by the other serise ]
-
- perf: https://lore.kernel.org/all/20250424162529.686762589@goodmis.org/
-
- tracing: https://lore.kernel.org/all/20250424192456.851953422@goodmis.org/
- [ This is based on top of the perf series ]
-
-Again, this series is based on the tracing series.
-
-Hopefully someone can help me and work on this series ;-)
-
-Cheers!
-
-Josh Poimboeuf (12):
-      unwind_user/sframe: Add support for reading .sframe headers
-      unwind_user/sframe: Store sframe section data in per-mm maple tree
-      x86/uaccess: Add unsafe_copy_from_user() implementation
-      unwind_user/sframe: Add support for reading .sframe contents
-      unwind_user/sframe: Detect .sframe sections in executables
-      unwind_user/sframe: Add prctl() interface for registering .sframe sections
-      unwind_user/sframe: Wire up unwind_user to sframe
-      unwind_user/sframe/x86: Enable sframe unwinding on x86
-      unwind_user/sframe: Remove .sframe section on detected corruption
-      unwind_user/sframe: Show file name in debug output
-      unwind_user/sframe: Enable debugging in uaccess regions
-      unwind_user/sframe: Add .sframe validation option
-
-----
- MAINTAINERS                       |   1 +
- arch/Kconfig                      |  23 ++
- arch/x86/Kconfig                  |   1 +
- arch/x86/include/asm/mmu.h        |   2 +-
- arch/x86/include/asm/uaccess.h    |  39 ++-
- fs/binfmt_elf.c                   |  49 +++-
- include/linux/mm_types.h          |   3 +
- include/linux/sframe.h            |  60 ++++
- include/linux/unwind_user_types.h |   1 +
- include/uapi/linux/elf.h          |   1 +
- include/uapi/linux/prctl.h        |   5 +-
- kernel/fork.c                     |  10 +
- kernel/sys.c                      |   9 +
- kernel/unwind/Makefile            |   1 +
- kernel/unwind/sframe.c            | 596 ++++++++++++++++++++++++++++++++++++++
- kernel/unwind/sframe.h            |  71 +++++
- kernel/unwind/sframe_debug.h      |  99 +++++++
- kernel/unwind/user.c              |  22 +-
- mm/init-mm.c                      |   2 +
- 19 files changed, 977 insertions(+), 18 deletions(-)
- create mode 100644 include/linux/sframe.h
- create mode 100644 kernel/unwind/sframe.c
- create mode 100644 kernel/unwind/sframe.h
- create mode 100644 kernel/unwind/sframe_debug.h
