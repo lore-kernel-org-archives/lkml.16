@@ -1,176 +1,96 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70CF22C35B
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FF71AF0C7;
+	Thu, 24 Apr 2025 12:17:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745496996; cv=none; b=PrAhJxop337eMxExWWk+LXJQJftcbqRm1lvEzEfLaRR4aluWyb1OPhpqnN9rsbsPr2EL9LQEF7S9cHqA+LV37qQ69ZwgIUlM2x2ujG/pSv/ew6UqkaxOP0cSqjkiyKh1/FRiNMTBEyqOFHPZ+5DKsiQg9JDcSXwR++Xk7Qpx66g=
+	t=1745497048; cv=none; b=PsrQwZmzTYeCJ60ZppcmO37TLEj1yruRXDBZLDHWlmRJ4wQx2HU/tqKxlcB2S2fEmUZWDfyePgIgqEwdyoO29JPCo2dW4aHzlhT4fXUNNk/IPUbaGXABVvr+EKk0L+35Tk0E1hPmPVOcV+gCwg/oQrRf89KJAJZaZipJfqLna2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745496996; c=relaxed/simple;
-	bh=Uyv4cF6roX/rqkabZ8AOPchJ7yqQ3BZD7UJEcGbUnSY=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=r55IbrhKP0A1xDDJxV9yYvAtqPdffrDBuTGwAavVmsy1UtD3pmDabjfEzmC+0jU4oQ/dXvS495ccdiAMDBQAL/FVMDJtVAcpJpLwilruj/BIU1pc/nuW52PDdXRlRLAoj1icXIaC53KwGfNF3NOqNd/tYzi/tiHo9UP2F3jhE5g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Wsmpr30p; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745497048; c=relaxed/simple;
+	bh=Fa0JMJmKW07jw7qoCo4mzqLiB0/HwjaZUJP82v+kjAQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fu+wrZSYLuT+q3VjZZjpGkpK6X2DyYfE0j0a9gXSuUdnwMBFDUiKzrdovI8vMK/gnSeQtEz/5/xvqm2bWnn0WuhzbQtzlNXroaMUC+A6lMjUAONKybRu8verzDcWsXGYRYfhLNAIz8am5f1C+rRsMVYiCPPXToKcJJqM3+Ks6ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sjii1C9Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Wsmpr30p"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3912622c9c0so107219f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745496993; x=1746101793; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=byLZxcTmkHUnhPkEGnhkt8kzHy94FpcWiEA8cXwsuq0=;
-        b=Wsmpr30poYCAfYRyzPvB/UKdx7aMJQxZiKrY6+7Fc+wqkXq2JKC92pP40TNuGLyznO
-         J0k6TPUycyj4xKJygrOkgJk/JNY0LqKpStnlGWO/IlKB/P+X7otxfD+C0HW2Tj3FcThj
-         frwGBAfNIV9V+6ueHR8SSBmJRwFoeyxh5WmOpqNqXukH7UUrWVf3aIC6chBZnN8yuZV6
-         wLqVhy7qbDlMLeBgCohY47FBJCuCpkhev4pydU2sbHWCx+kdbE6mmKpZFtnb1feB3NaE
-         P293PgLgv1M6vw2Ik/rc0f7Ed7209rI3ZW3YyQUm3KzBOsACaPukRZ78rCU3jE20BX2B
-         /UIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745496993; x=1746101793;
-        h=in-reply-to:references:subject:from:to:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=byLZxcTmkHUnhPkEGnhkt8kzHy94FpcWiEA8cXwsuq0=;
-        b=PA0VNh2fDCbuFQ8W7ZPx3oG/lWgxUls8i6VegVZHuWMBjC7RpXWZ15qn0BzzWh+Gic
-         /G3dOBGeuW//QCO7eAIKupL9MWUNU0zVMTqPD9UlxEbozFiaOivhU9I6eiKdUEmlI7hX
-         UeximVNEPtay2OPowA0WRa3QkOiX7/kaYLstdCnBP8VDpX/cjHpA8KXANvtStpIoKCyO
-         cmai3RIJRKSFkcbLU+01ddo/wJlXj+ez9doB9hH66wlSGrKd+CP9LIQIYhuhNV2bCdpB
-         XgHFMV2Po2YVy9eVTIf8QQAPl7luRD6NFbX9eeAMhcmwa14m6bf2GbTbE3zd0RFBvZhz
-         5BHg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaw0grbgEgzWdk/UVno5mEqXcTd2M/xkJerR7K+u2tMTJ33YfJkrZD+kg9XevqjpOvQ5MJcOkNrwpc/TQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhlANkTocOhHCvsqjKn4LrlwFRyYzbbgI7gNiiUAvgnRVZ//12
-	Qd4AX7MSb8qsZdXYjqFjydihNGLhdA/U/KMwPm46TSmlU3O7mLkWwzVFcpjEOoA=
-X-Gm-Gg: ASbGnctmL5xfOx0BEiQ6mOCE5FYU3bXT/ZNtLVRO/usUO8/Md5JQ5gi6bBrP9A6Olge
-	PEWWRZ5xHBL5ATbCVXL3BFLzkLj8QEAhVzX+/2YdJInphis1w0+wFD3RyBJQEmyVdD02CH9sXbR
-	4Xf6bVhHb3Itod7FLzJ870DsHwOCv2O6cz+Zl5GxI7XBIBAe/VUs3hf7TLyJAz6ND4XLxWVTlT7
-	A4OgVa8R5B/2/MihlZZafY2el54Gdxfzuj2kbitywtXDJ1/fwof/citZvtXHwvZi+2dXpHtxRFJ
-	Vko9l2bM1++FsTkIvo/S/I7X9jgb5tHflQcnXV7blgQzRUt6
-X-Google-Smtp-Source: AGHT+IERZA3DYVew3V/bn5OiODM5GwUm1JM3y/BJyY+6CSbEdsIoN7nn+jjX5wED4r1h6h8dKZG5oA==
-X-Received: by 2002:a05:6000:40da:b0:39c:12ce:697 with SMTP id ffacd0b85a97d-3a06cf5cb78mr706514f8f.7.1745496993026;
-        Thu, 24 Apr 2025 05:16:33 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200:b30c:ee4d:9e10:6a46])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d5326casm1929903f8f.64.2025.04.24.05.16.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:16:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sjii1C9Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E330AC4CEE3;
+	Thu, 24 Apr 2025 12:17:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745497048;
+	bh=Fa0JMJmKW07jw7qoCo4mzqLiB0/HwjaZUJP82v+kjAQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sjii1C9YSuUdt8xaFxLkC9UA/BiBmfYthu1hg340GoNrnIBIyilWZYrgmN4uYkjSD
+	 R5DImLgX4b0nhROVBdLpK/T+AU1fijmW/phyzmqkq9VskN7jHVkFLGwbZHiMTj8jnk
+	 UXtFuZz9UlnRzCGuRBVk1YMPQTCMWrpr/1OvvqxiFiNRb6aczVLAzTFY4zZ/jhD2vG
+	 ntPPuctiWswMRDm10D8v5tFfM6OuD+mUQpIaRMCFfmxcMtyG+qClKm51w6hqngPTKd
+	 54IJ6YVrG7tMCyt6bQu0q/o9xZiSC0gjINFn9AVM0Idr1Tjna99tAB8s7trQWQsC/3
+	 XTVvWZfl9+uxA==
+Date: Thu, 24 Apr 2025 13:17:21 +0100
+From: Simon Horman <horms@kernel.org>
+To: Boon Khai Ng <boon.khai.ng@altera.com>
+Cc: netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Furong Xu <0x1207@gmail.com>,
+	Matthew Gerlach <matthew.gerlach@altera.com>,
+	Tien Sung Ang <tien.sung.ang@altera.com>,
+	Mun Yew Tham <mun.yew.tham@altera.com>,
+	G Thomas Rohan <rohan.g.thomas@altera.com>
+Subject: Re: [PATCH net-next v4 2/2] net: stmmac: dwxgmac2: Add support for
+ HW-accelerated VLAN stripping
+Message-ID: <20250424121721.GF3042781@horms.kernel.org>
+References: <20250421162930.10237-1-boon.khai.ng@altera.com>
+ <20250421162930.10237-3-boon.khai.ng@altera.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 24 Apr 2025 14:16:32 +0200
-Message-Id: <D9EV1K8ZQQJR.20CRTYLQBN9UE@ventanamicro.com>
-Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar"
- <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
- <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
- <hpa@zytor.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Liam R.
- Howlett" <Liam.Howlett@oracle.com>, "Vlastimil Babka" <vbabka@suse.cz>,
- "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Paul Walmsley"
- <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
- Ou" <aou@eecs.berkeley.edu>, "Conor Dooley" <conor@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Arnd Bergmann" <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>,
- "Peter Zijlstra" <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>,
- "Eric Biederman" <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>,
- "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann
- Horn" <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
- <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
- <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
- <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
- <broonie@kernel.org>, <rick.p.edgecombe@intel.com>, "Zong Li"
- <zong.li@sifive.com>, "linux-riscv"
- <linux-riscv-bounces@lists.infradead.org>
-To: "Deepak Gupta" <debug@rivosinc.com>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-Subject: Re: [PATCH v12 05/28] riscv: usercfi state for task and
- save/restore of CSR_SSP on trap entry/exit
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-5-e51202b53138@rivosinc.com>
- <D92WQWAUQYY4.2ED8JAFBDHGRN@ventanamicro.com>
- <aAmEnK0vSgZZOORL@debug.ba.rivosinc.com>
-In-Reply-To: <aAmEnK0vSgZZOORL@debug.ba.rivosinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250421162930.10237-3-boon.khai.ng@altera.com>
 
-2025-04-23T17:23:56-07:00, Deepak Gupta <debug@rivosinc.com>:
-> On Thu, Apr 10, 2025 at 01:04:39PM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
-te:
->>2025-03-14T14:39:24-07:00, Deepak Gupta <debug@rivosinc.com>:
->>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
->>> @@ -147,6 +147,20 @@ SYM_CODE_START(handle_exception)
->>>
->>>  	REG_L s0, TASK_TI_USER_SP(tp)
->>>  	csrrc s1, CSR_STATUS, t0
->>> +	/*
->>> +	 * If previous mode was U, capture shadow stack pointer and save it a=
-way
->>> +	 * Zero CSR_SSP at the same time for sanitization.
->>> +	 */
->>> +	ALTERNATIVE("nop; nop; nop; nop",
->>> +				__stringify(			\
->>> +				andi s2, s1, SR_SPP;	\
->>> +				bnez s2, skip_ssp_save;	\
->>> +				csrrw s2, CSR_SSP, x0;	\
->>> +				REG_S s2, TASK_TI_USER_SSP(tp); \
->>> +				skip_ssp_save:),
->>> +				0,
->>> +				RISCV_ISA_EXT_ZICFISS,
->>> +				CONFIG_RISCV_USER_CFI)
->>
->>(I'd prefer this closer to the user_sp and kernel_sp swap, it's breaking
->> the flow here.  We also already know if we've returned from userspace
->> or not even without SR_SPP, but reusing the information might tangle
->> the logic.)
->
-> If CSR_SCRATCH was 0, then we would be coming from kernel else flow goes
-> to `.Lsave_context`. If we were coming from kernel mode, then eventually
-> flow merges to `.Lsave_context`.
->
-> So we will be saving CSR_SSP on all kernel -- > kernel trap handling. Tha=
-t
-> would be unnecessary. IIRC, this was one of the first review comments in
-> early RFC series of these patch series (to not touch CSR_SSP un-necessari=
-ly)
->
-> We can avoid that by ensuring when we branch by determining if we are com=
-ing
-> from user to something like `.Lsave_ssp` which eventually merges into
-> ".Lsave_context". And if we were coming from kernel then we would branch =
-to
-> `.Lsave_context` and thus skipping ssp save logic. But # of branches it
-> introduces in early exception handling is equivalent to what current patc=
-hes
-> do. So I don't see any value in doing that.
->
-> Let me know if I am missing something.
+On Tue, Apr 22, 2025 at 12:29:30AM +0800, Boon Khai Ng wrote:
+> This patch adds support for MAC level VLAN tag stripping for the
+> dwxgmac2 IP. This feature can be configured through ethtool.
+> If the rx-vlan-offload is off, then the VLAN tag will be stripped
+> by the driver. If the rx-vlan-offload is on then the VLAN tag
+> will be stripped by the MAC.
+> 
+> Signed-off-by: Boon Khai Ng <boon.khai.ng@altera.com>
+> Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
 
-Right, it's hard to avoid the extra branches.
+...
 
-I think we could modify the entry point (STVEC), so we start at
-different paths based on kernel/userspace trap and only jump once to the
-common code, like:
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
 
-  SYM_CODE_START(handle_exception_kernel)
-    /* kernel setup magic */
-    j handle_exception_common
-  SYM_CODE_START(handle_exception_user)
-    /* userspace setup magic */
-  handle_exception_common:
+...
 
-This is not a suggestion for this series.  I would be perfectly happy
-with just a cleaner code.
+> @@ -69,6 +70,21 @@ static int dwxgmac2_get_tx_ls(struct dma_desc *p)
+>  	return (le32_to_cpu(p->des3) & XGMAC_RDES3_LD) > 0;
+>  }
+>  
+> +static u16 dwxgmac2_wrback_get_rx_vlan_tci(struct dma_desc *p)
+> +{
+> +	return (le32_to_cpu(p->des0) & XGMAC_RDES0_VLAN_TAG_MASK);
 
-Would it be possible to hide the ALTERNATIVE ugliness behind a macro and
-move it outside the code block that saves pt_regs?
+nit: The outer parentheses are not needed on the line above.
 
-Thanks.
+	return le32_to_cpu(p->des0) & XGMAC_RDES0_VLAN_TAG_MASK;
+
+
+> +}
+
+...
