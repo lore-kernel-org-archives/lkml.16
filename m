@@ -1,142 +1,109 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C532F221FBD
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118D72701B1;
+	Thu, 24 Apr 2025 11:26:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745493977; cv=none; b=kwAcsH/zlpbtm2H9VXHA3jeu5VfEbPIznMngvbnvtJMs90gXeXaChpHZJLv1MQPSsm7gnui+DUmqehYjx34eRolQfj5mar2kpin6IEkTi3hm4l0Tn2phSc178i4ecJLonUED0Naw6Q4LibHJwa5Mn8ll198nHNcoerr2iAEAESc=
+	t=1745493983; cv=none; b=riJCu5ywZwmnGyDgjrD3GWxRBXK/O9fyCsUAnOdMEjGcHRQChGud7iNZ5qBsNod1vUmxnZ8Bm8DUx1jHht8Fe+II3399xG4NdQUr5r1v5wIrjME7Y982nHpQW8zQne2qNoMII6gXbSSkcv7TpCWDRj9ohh0wlj8f23gILXeleJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745493977; c=relaxed/simple;
-	bh=DxWPNEYePRHJk+mrrlZ9LGFtuXks7s/MsOJehVi659w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NIel+cheiuId7tbKG8yYWm0m6mK3ClSvJnev2MVuSX+6M2sVi4hrk7h2jDiGeagDO7X2taLekqlP25wMJAJ4tOvbqVhQkKmGSRN003/860nG11OJrGmqRTZqtzhFlhDxtfltU1r2knmQk3FVZM5rI8AP3tpzjqdvwJjFWfgXggI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Y6dGXbMw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TBR+T+nc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Y6dGXbMw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TBR+T+nc; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745493983; c=relaxed/simple;
+	bh=t1mLYWzl++Dp6co3SY5ATnlJ+E6q5o9OOxJL/Gz01cQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q8lqPuJhaOXQf7wTcEhp452n3TegsI8b19HtOule1FjBr20zWqNxbqZc4qiM2jHJP9ChWSOi6WhuJBVl7fpPxkP1KRk+W9n3rLH3EhBfdd/JJKDsJ4jI7426k009a/vEOw2vD2KGVch/eLd3Jg9Efx2sGvPwo8T4yosCnxTnCcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWFzyxe5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Y6dGXbMw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TBR+T+nc";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Y6dGXbMw";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TBR+T+nc"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DDE4921171;
-	Thu, 24 Apr 2025 11:26:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745493973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oe37kHa6OjABHOtp27KFBj6FfYXoBY4b396xoyxnzoo=;
-	b=Y6dGXbMwS9heb+/Fs+KWsMOpwCIjZapSKWgunkd7LFXKvpvmrxnf5jwRz0gf9HzIl+KaoG
-	72g0ZBXio+JFpCwfRXbkCAlBre+pQvocNH3qWabNaB/764VJKDy05yIVQPS0ZGIkDvvmBZ
-	Rm+ak4vHXgE4jKoCh67xR4t18J62pqE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745493973;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oe37kHa6OjABHOtp27KFBj6FfYXoBY4b396xoyxnzoo=;
-	b=TBR+T+ncVgireaKgoU8ClVbRIp/p6cLFPKGf3ZzzqNIq8casg0ygGQbFPRk+skOx7hwhNF
-	ZhEBiBO6Y/Uf5fCw==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745493973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oe37kHa6OjABHOtp27KFBj6FfYXoBY4b396xoyxnzoo=;
-	b=Y6dGXbMwS9heb+/Fs+KWsMOpwCIjZapSKWgunkd7LFXKvpvmrxnf5jwRz0gf9HzIl+KaoG
-	72g0ZBXio+JFpCwfRXbkCAlBre+pQvocNH3qWabNaB/764VJKDy05yIVQPS0ZGIkDvvmBZ
-	Rm+ak4vHXgE4jKoCh67xR4t18J62pqE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745493973;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oe37kHa6OjABHOtp27KFBj6FfYXoBY4b396xoyxnzoo=;
-	b=TBR+T+ncVgireaKgoU8ClVbRIp/p6cLFPKGf3ZzzqNIq8casg0ygGQbFPRk+skOx7hwhNF
-	ZhEBiBO6Y/Uf5fCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BCCE81393C;
-	Thu, 24 Apr 2025 11:26:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id dmuxK9UfCmiTOwAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Thu, 24 Apr 2025 11:26:13 +0000
-Date: Thu, 24 Apr 2025 13:26:08 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Hannes Reinecke <hare@suse.de>
-Cc: Daniel Wagner <wagi@kernel.org>, 
-	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
-	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 06/14] nvmet-fcloop: add missing
- fcloop_callback_host_done
-Message-ID: <44b6159a-a86f-4b76-bcef-35f267e69835@flourine.local>
-References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
- <20250423-nvmet-fcloop-v5-6-3d7f968728a5@kernel.org>
- <89289452-3647-4d94-baf9-529d145b652f@suse.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWFzyxe5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80CB8C4CEEE;
+	Thu, 24 Apr 2025 11:26:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745493982;
+	bh=t1mLYWzl++Dp6co3SY5ATnlJ+E6q5o9OOxJL/Gz01cQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=EWFzyxe5j2BoL8qlFkhmdWweuR+SvDtT67Qjx0054eAHyf0CankiHXa2+sQ6AD8V8
+	 7fcRlSsU9C1YK27A3E0mp+xxze6IOzS1vdWq+rDaq5lVDGCz5uLWBbcHiAEJ5zMmI3
+	 sZQYe6ItNBy5yvjhIZW4ZTQqheVgjDUWHRvseUKg904qJEdnNUuzOVjwuyA8rWK4Gd
+	 NZHUnMdsvZck9jhQeJgbUFBKuqT1xxy3v82RxY32iWm64zg3Xi51SdxWbojISAxi9j
+	 KFlbskOPhyXwelQwIF6aepco8XvclbM+1xhWGQL82slnX2bIIU6BDGYEjpSKRCT16v
+	 NIDchPd7EIhgA==
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-72bceb93f2fso1168736a34.0;
+        Thu, 24 Apr 2025 04:26:22 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVI1NN/rWMS6NUvFMNyjiFkPaTk+O4vSq+z2dOXGS8GswGNtlWA2eOce9sFi1TtTlPSV4cIzaAmGwEFzxI=@vger.kernel.org, AJvYcCVVbKpIVkQDa4ToAlNT8Pk24CRgO7g5dJmOI8hOWLI0FYRKpAjzTuPt/x/+ysmKyKK73kNzASmG2Lo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4m90s05Gjb4LV0W9EXDLSXyH8TymM864OTD+PBzgiKG5Cp11q
+	5GSZ4z3IVloNS0svJPRQut0YGX5ySZFcXhkx32mpn9s14/ehwPYOWfiaS91pEP7E63TLe/+9bnu
+	ituOVnywQph4PZgFYsSBNcgq9c8s=
+X-Google-Smtp-Source: AGHT+IHc+M0OTAx+GOWmGYuhmkDFbvYnaIudvg2OOLa+0NPepqRu/Y2tib0yj2sxRGw5P3Gjm2cE79Hq0RNtTwLhY9M=
+X-Received: by 2002:a05:6870:cd96:b0:2d9:7a9e:99ef with SMTP id
+ 586e51a60fabf-2d97a9ea48cmr618355fac.1.1745493981792; Thu, 24 Apr 2025
+ 04:26:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <89289452-3647-4d94-baf9-529d145b652f@suse.de>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-8.30 / 50.00];
-	REPLY(-4.00)[];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,flourine.local:mid]
-X-Spam-Score: -8.30
-X-Spam-Flag: NO
+References: <cover.1745315548.git.viresh.kumar@linaro.org> <7ce4ffb166beef83cf1bd703a41bf91622011585.1745315548.git.viresh.kumar@linaro.org>
+ <CAJZ5v0iCrQeKs=4S-x83Fgf-W4u=2JYLA5VmgKPaLCvYAkNpig@mail.gmail.com> <20250424071503.2uhc4k3jxy7x5mo2@vireshk-i7>
+In-Reply-To: <20250424071503.2uhc4k3jxy7x5mo2@vireshk-i7>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 24 Apr 2025 13:26:10 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hLBE0vLvpw6k8E7KxiUGqXbH7wEZwFhEziJNYqfxJbyA@mail.gmail.com>
+X-Gm-Features: ATxdqUEwm1MBdN3yTHiwvvP-_C0jH4FqSTGGRVGw3dTSLhnVeRhno7cCEnalCQM
+Message-ID: <CAJZ5v0hLBE0vLvpw6k8E7KxiUGqXbH7wEZwFhEziJNYqfxJbyA@mail.gmail.com>
+Subject: Re: [PATCH 1/6] cpufreq: acpi: Don't enable boost on policy exit
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Lifeng Zheng <zhenglifeng1@huawei.com>, linux-pm@vger.kernel.org, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Nicholas Chin <nic.c3.14@gmail.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 12:13:10PM +0200, Hannes Reinecke wrote:
-> > +	if (!tfcp_req) {
-> >   		/* abort has already been called */
-> > -		return;
-> > +		goto out_host_done;
-> > +	}
-> Sure this is correct?
-> If the abort has been called I would have expected that all resources
-> are cleaned up by the abort, so we wouldn't need to do that here...
+On Thu, Apr 24, 2025 at 9:15=E2=80=AFAM Viresh Kumar <viresh.kumar@linaro.o=
+rg> wrote:
+>
+> On 23-04-25, 16:14, Rafael J. Wysocki wrote:
+> > Even after commit 2b16c631832d, the code removed by this patch does a
+> > useful thing.  Namely, it clears the boost-disable bit in the MSR so
+> > that the offline CPU doesn't prevent online CPUs from getting the
+> > boost (in case the boost settings change after it has been taken
+> > offline).
+>
+> I didn't understand this part earlier (and even now). How does a CPU
+> with boost-disabled, prevents others from boosting ? I have tried
+> looking at git logs, and still don't understand it :(
 
-Yes, it is still necessary to call fcpreq->done for this particular request.
+At the HW level, this is certainly possible.
 
-> > @@ -983,7 +984,7 @@ fcloop_fcp_abort(struct nvme_fc_local_port *localport,
-> >   	default:
-> >   		spin_unlock_irqrestore(&tfcp_req->reqlock, flags);
-> >   		WARN_ON(1);
-> > -		return;
-> > +		goto out_host_done;
-> 
-> Do we still need the WARN_ON()? We can now gracefully recover, so a
-> simple log message would be sufficient here, no?
+Say two (or more) cores are driven by the same VR.  Boost typically
+(always?) requires a separate OPP with a higher voltage and this
+applies to all cores sharing the VR, so if one of them says it doesn't
+want that (which is what the bit in the boost-disable MSR effectively
+means), they all won't get it.
 
-The WARN_ON is there because it catches when tfcp_req is in an wrong
-state. It should be either in INI_IO_START, INI_IO_ACTIVE or
-INI_IO_COMPLETED but never INI_IO_ABORT.
+They arguably should belong to the same cpufreq policy, but this
+information is often missing from the ACPI tables, sometimes on
+purpose (for instance, the firmware may want to be in charge of the
+frequency coordination between the cores).
+
+> Also, IIUC this and the boost-enabling at init() only happens for one
+> CPU in a policy, as init() and exit() are only called for the first
+> and last CPU of a policy. So if a policy has multiple CPUs, we aren't
+> touching boost states of other CPUs at init/exit.
+
+But there may be a policy per CPU.
+
+> And yes, this patch isn't mandatory at all for the
+>
+> > Moreover, without the $subject patch, the change made by the next one
+> > will cause the boost setting in the MSR to get back in sync with
+> > policy->boost_enabled during online AFAICS, so why exactly is the
+> > $subject patch needed?
+>
+> Right, this is merely a cleanup patch and isn't really required for
+> the next patch to make it work.
+
+So I'd rather not make this change.
+
+Evidently, someone made the effort to put in a comment explaining the
+purpose of the code in question, so it looks like they had a reason
+for adding it.
