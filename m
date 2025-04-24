@@ -1,85 +1,100 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 927EE21505C
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:11:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339322147F6;
+	Thu, 24 Apr 2025 09:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745485907; cv=none; b=PsoC3KD9s4o8CPcYbiya4oGQrwbu76tyNFy09CpVih8ob8EVwAfqsDyYWVcoE4witwkZ2/nNnBjAWNx9cb5YqdR/sjAp7y8NzSYT6OVpuMWgdGXLM7LMbY2vCeHwzq4UE+HaI3ehtf95dkafJxPgWq2ezL0hiLUxgv2UXFHZW9c=
+	t=1745485913; cv=none; b=SdyZT28xP4FszBNi8ZgfOkPDCvaHkbRomYe0jt4wMNZD+8joqbVOA4wseu3VibtP/8o979iqBj0taZ+qRS46magM7mrnePi+e355zdHYE21kQtrXgTAmlhodCjTp3BLw7EL605rkRNnZtExSO0ReAZD1awdblgNJSh2tO6bvIEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745485907; c=relaxed/simple;
-	bh=GktCEw93LWx29fKSfCeGp2sL+s4pz8Hwysuvj+LEd4I=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OfW079Fg2KaNLLZn+6jQkGYNVOYsjP/nOyfQCCX9ftY6+Jq6B30gnYaFxJ/hcCQ8Ma3FdNyVdIpVe627B2JdK9og9y4WUiJChWSRAVK3OHWYMKXEvuQ3VCrdgCp6kko+7i+4yL7rFN5NxmCjmASFpqFS4Mv/CRAj3PoTSqNVhoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from [192.168.2.19] (51b69338.dsl.pool.telekom.hu [::ffff:81.182.147.56])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000084239.000000006809FF1B.000C6449; Thu, 24 Apr 2025 11:06:34 +0200
-Message-ID: <a2dbbf4e79c42b99d0772db5712f52a430864240.camel@irl.hu>
-Subject: Re: amdgpu_dm_connector_mode_valid regression
-From: Gergo Koteles <soyer@irl.hu>
-To:
-  Marek =?ISO-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
-Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
-  Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
-  dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-  amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
-  Alex Deucher <alexander.deucher@amd.com>,
-  Mario Limonciello <mario.limonciello@amd.com>,
-  Alex Hung <alex.hung@amd.com>,
-  Harry Wentland <harry.wentland@amd.com>
-Date: Thu, 24 Apr 2025 11:06:34 +0200
-In-Reply-To: <aAn6wsnJ-6mqK4vR@mail-itl>
-References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
-	 <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
-	 <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
-	 <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
-	 <Z_jodBrNFdEpJRKA@mail-itl> <aAn6wsnJ-6mqK4vR@mail-itl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1745485913; c=relaxed/simple;
+	bh=15vRsUE0bDXeqQTgh2kUDIT+VRozCY31BdgeStUR/M8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nION++yxj5aB09oS+c89ruiNmhYz56XTqzHXP5Jf3eAFI7AuhnL6H8sszHqzcSbwT4iEYCFfa/KCi/hexH9lYL24dG8bd4ibWLS2sb16xBxC+a52sCHMPGSLRJrRYayD4sxeScSU7BqUMmUbRfxxz0bqNQYqSgtdwbZzMr6OU3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dIOomLFT; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dIOomLFT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7193C4CEE3;
+	Thu, 24 Apr 2025 09:11:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745485912;
+	bh=15vRsUE0bDXeqQTgh2kUDIT+VRozCY31BdgeStUR/M8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dIOomLFTA32COw9i8Mv1mpV5Y4V63i1JGQc6qx8dJ9njwQwWpAnkL6ThhOAtCg8dH
+	 2fQmcOS9B80t5Q8s9cFqB/tTu/9iOKjsfDL8VUzoLss+2r2Zb5bDLwNo5DwcW9nipx
+	 RoY4qWXhiK8btBDAeFRWR0T28PeS8qITapO12PN6HIPz8m+hqGienY+sr9k9X/etyb
+	 oU0tmOKsdEG/X7IimcgLEsJiWKxM7ULVhBZkvHVsG3kKnLW3obx2Wq6QMn5y5PheDn
+	 pdr0glpa1vkwoxidfVrxXaMYlGlBS5kpimxy1ISQNcihWrQmTeqSyvjO7Lh8JVNFvm
+	 hakoQIDL9XSuw==
+Date: Thu, 24 Apr 2025 11:11:47 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Erhard Furtner <erhard_f@mailbox.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] mm: vmalloc: Support more granular vrealloc() sizing
+Message-ID: <aAoAU4vhrpxiXaLF@pollux>
+References: <20250424023119.work.333-kees@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424023119.work.333-kees@kernel.org>
 
-Hi Marek,
+On Wed, Apr 23, 2025 at 07:31:23PM -0700, Kees Cook wrote:
+> Introduce struct vm_struct::requested_size so that the requested
+> (re)allocation size is retained separately from the allocated area
+> size. This means that KASAN will correctly poison the correct spans
+> of requested bytes. This also means we can support growing the usable
+> portion of an allocation that can already be supported by the existing
+> area's existing allocation.
+> 
+> Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+> Closes: https://lore.kernel.org/all/20250408192503.6149a816@outsider.home/
+> Fixes: 3ddc2fefe6f3 ("mm: vmalloc: implement vrealloc()")
+> Signed-off-by: Kees Cook <kees@kernel.org>
 
-On Thu, 2025-04-24 at 10:48 +0200, Marek Marczykowski-G=C3=B3recki wrote:
-> On Fri, Apr 11, 2025 at 12:01:28PM +0200, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> >=20
-> > Hi,
-> >=20
-> > On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
-> > > Hi Dmitry,
-> > >=20
-> > > But the code would start to become quite untraceable.
-> > > duplicate mode in amdgpu_dm_connector_mode_valid()
-> > > call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
-> > > duplicate mode in create_stream_for_sink()
-> > > overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
-> > > if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
-> > > create_stream_for_sink()=20
-> >=20
-> > FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
-> > Ryzen 5 4500U). And the patch quoted below fixes it for me too.
->=20
-> I've re-tested it with 6.15-rc3 and the issue is still there. Is there
-> something I can do to help fixing it before final 6.15 is out?
->=20
+Good catch!
 
-This patch has been accepted into the the amd drm-fixes-6.15 branch, so
-hopefully it will be fixed in 6.15-rc4.
+One question below, otherwise
 
-https://lore.kernel.org/dri-devel/24439c13a014e1cd200785db6f3dcf08f4773eb3.=
-1743612701.git.soyer@irl.hu/
-https://gitlab.freedesktop.org/agd5f/linux/-/commits/drm-fixes-6.15
+	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
 
-Gergo
+> @@ -4088,14 +4093,27 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+>  	 * would be a good heuristic for when to shrink the vm_area?
+>  	 */
+>  	if (size <= old_size) {
+> -		/* Zero out spare memory. */
+> -		if (want_init_on_alloc(flags))
+> +		/* Zero out "freed" memory. */
+> +		if (want_init_on_free())
+>  			memset((void *)p + size, 0, old_size - size);
+> +		vm->requested_size = size;
+>  		kasan_poison_vmalloc(p + size, old_size - size);
+>  		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
+>  		return (void *)p;
+>  	}
+>  
+> +	/*
+> +	 * We already have the bytes available in the allocation; use them.
+> +	 */
+> +	if (size <= alloced_size) {
+> +		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
+> +		/* Zero out "alloced" memory. */
+> +		if (want_init_on_alloc(flags))
+> +			memset((void *)p + old_size, 0, size - old_size);
+> +		vm->requested_size = size;
+> +		kasan_poison_vmalloc(p + size, alloced_size - size);
 
+Do we need this? We know that old_size < size <= alloced_size. And since
+previously [p + old_size, p + alloced_size) must have been poisoned,
+[p + size, p + alloced_size) must be poisoned already?
+
+Maybe there was a reason, since in the above (size <= old_size) case
+kasan_unpoison_vmalloc() seems unnecessary too.
