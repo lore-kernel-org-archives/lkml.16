@@ -1,96 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D921717FAC2;
-	Thu, 24 Apr 2025 13:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 863C51624E9;
+	Thu, 24 Apr 2025 13:58:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745503103; cv=none; b=g4HKNaWQT4Arqziw8c8ov1bqsFCx4AH7Gk/LjPi5nQCt8RyPM5HZblFEQbFkkUhkM7EwbsNPc+veis23Xq7YvfleMjbiUqmmdTIlW7hQt+88ynvumkHlb6C6IhcP7LhpwzOQF0dWN5Z7Ad0aBYbWUNq3/vJ0vTryCaU1ND01AD8=
+	t=1745503129; cv=none; b=mgQXdT/UgktYbNIRRhuYFDhIGzfz8lp/PWRYZ8K5G7oKhC2fKIZDXLj86ikb7ChSsYMK2sG0jQ3jD1pClTbv6oNdCzN2YJjxzdK/RfnHEfqJ5kZel11OuvuRBBrnBqJpV0OBxOtgU/fhnxsBA1RYFoncF2DoHm59YP0wyVH6A0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745503103; c=relaxed/simple;
-	bh=uVSxY822Rea4tkAmQlq7O+vfDd2OfqMavnTSirvBBmg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=ln5gPBMcn52y1aiTtCZh3BOl9Bxv1aM4DX/ndt1k0oC9Cv0d09f1J+C1jKEFl7jjRGki+mEhPz1C//wN+pciTo5F7B3GupI4PHqtKoFosoCiyhOFdgetaWMT0YNieBbBlzuiAtmwB0wlf0oJFDorEjh2L5t4lDe5HIk3PFIhvkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BfopJUu4; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfopJUu4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84109C4CEE3;
-	Thu, 24 Apr 2025 13:58:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745503102;
-	bh=uVSxY822Rea4tkAmQlq7O+vfDd2OfqMavnTSirvBBmg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=BfopJUu4/5VDAMEZhmVVqp0+Z8UYrgjZkfU0/+JvqdQi6jVenD4/rjhe6tUlka9+g
-	 X+QFtultyrbN8O0+FYqKnxZY80u+GreYihCpxrqhJwD/IFqeQDIkbpYx20FB2CaZLW
-	 LU5fGkrP79zFQbqa2pMDBLhHcSt8jVl/CbdXpbNEn6gZ5RvBvs3Zt7EeVykKkndED0
-	 yY/DWMcqG5GqmXMi9QL9i68Aohe8JCoMT4XLhz5TzJ5TJ0qsgg7UWph0ugzlBrM2ty
-	 eIoUrZp5T2XEmnHDhXNS2yDE9Ns8piKZuTi3SVxyVjWgY13mtdO8wRIoJSy8nqrVyT
-	 wEgtFg09x9UIQ==
-From: Lee Jones <lee@kernel.org>
-To: Matti Vaittinen <mazziesaccount@gmail.com>, 
- Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-In-Reply-To: <cover.1744090658.git.mazziesaccount@gmail.com>
-References: <cover.1744090658.git.mazziesaccount@gmail.com>
-Subject: Re: [PATCH v3 00/14] Support ROHM Scalable PMIC family
-Message-Id: <174550310025.1376894.8036030194609947768.b4-ty@kernel.org>
-Date: Thu, 24 Apr 2025 14:58:20 +0100
+	s=arc-20240116; t=1745503129; c=relaxed/simple;
+	bh=GKD+gkPElawo8czkMB4gd9u+/i+vf91GGYLhQ7q/F6M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rod71oaXq9jIFsgz/Wu4KuYUQD+4OC2DVNvg8aoxGv7Sx+5CJefr7Pr2bu+20XOcWsWGmsqAPmWz+DDAv2MTEJaDheZp/Qxt3H+UCAQjahj0+VZhD0hBROerYdONcKlB9g+1ZNJE25ZajOEEmn2NGdJawRcihzHpUWImK6+0r30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B13781063;
+	Thu, 24 Apr 2025 06:58:41 -0700 (PDT)
+Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AB5A3F66E;
+	Thu, 24 Apr 2025 06:58:41 -0700 (PDT)
+Message-ID: <f55869ea-0a96-4cef-b394-7c6bf0359617@arm.com>
+Date: Thu, 24 Apr 2025 14:58:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-510f9
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/4] iommu: Get DT/ACPI parsing into the proper probe
+ path
+To: Johan Hovold <johan@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
+ Russell King <linux@armlinux.org.uk>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Danilo Krummrich <dakr@kernel.org>, Stuart Yoder <stuyoder@gmail.com>,
+ Laurentiu Tudor <laurentiu.tudor@nxp.com>, Nipun Gupta
+ <nipun.gupta@amd.com>, Nikhil Agarwal <nikhil.agarwal@amd.com>,
+ Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, linux-acpi@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ iommu@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-pci@vger.kernel.org, Charan Teja Kalla <quic_charante@quicinc.com>
+References: <cover.1740753261.git.robin.murphy@arm.com>
+ <e3b191e6fd6ca9a1e84c5e5e40044faf97abb874.1740753261.git.robin.murphy@arm.com>
+ <Z_jMiC1uj_MJpKVj@hovoldconsulting.com>
+ <50a06ba8-0a99-40d2-8601-778ebf451f6a@arm.com>
+ <Z_52heGno2Y5M6uF@hovoldconsulting.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <Z_52heGno2Y5M6uF@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 08 Apr 2025 11:40:24 +0300, Matti Vaittinen wrote:
-> Support ROHM BD96802, BD96805 and BD96806 PMICs
+On 15/04/2025 4:08 pm, Johan Hovold wrote:
+> On Mon, Apr 14, 2025 at 04:37:59PM +0100, Robin Murphy wrote:
+>> On 2025-04-11 9:02 am, Johan Hovold wrote:
+>>> On Fri, Feb 28, 2025 at 03:46:33PM +0000, Robin Murphy wrote:
 > 
-> The ROHM BD96801 [1] and BD96805 [2] are almost identical PMICs what comes
-> to the digital interface. Main difference is voltage tuning range.
-> Supporting BD96805 with BD96801 drivers is mostly just a matter of being
-> able to differentiate the PMICs (done based on the devicetree
-> compatible) and then providing separate voltage tables.
+>>>> @@ -155,7 +155,12 @@ int of_iommu_configure(struct device *dev, struct device_node *master_np,
+>>>>    		dev_iommu_free(dev);
+>>>>    	mutex_unlock(&iommu_probe_device_lock);
+>>>>    
+>>>> -	if (!err && dev->bus)
+>>>> +	/*
+>>>> +	 * If we're not on the iommu_probe_device() path (as indicated by the
+>>>> +	 * initial dev->iommu) then try to simulate it. This should no longer
+>>>> +	 * happen unless of_dma_configure() is being misused outside bus code.
+>>>> +	 */
+>>>
+>>> This assumption does not hold as there is nothing preventing iommu
+>>> driver probe from racing with a client driver probe.
+>>
+>> Not sure I follow - *this* assumption is that if we arrived here with
+>> dev->iommu already allocated then __iommu_probe_device() is already in
+>> progress for this device, either in the current callchain or on another
+>> thread, and so we can (and should) skip calling into it again. There's
+>> no ambiguity about that.
 > 
-> [...]
+> I was referring to the this "should no longer happen unless
+> of_dma_configure() is being misused outside bus code" claim, which
+> appears to be false given the splat below.
 
-Applied, thanks!
+That's not an assumption so much as a statement of intent. And really 
+it's the other way round anyway, as a reminder that this replay call is 
+only still here (unlike in the ACPI path) because there *is* still 
+plenty of sketchy usage of of_dma_configure() which I'm wary of breaking.
+>>>> +	if (!err && dev->bus && !dev_iommu_present)
+>>>>    		err = iommu_probe_device(dev);
+>>>>    
+>>>>    	if (err && err != -EPROBE_DEFER)
+>>>
+>>> I hit the (now moved) dev_WARN() on the ThinkPad T14s where the GPU SMMU
+>>> is probed late due to a clock dependency and can end up probing in
+>>> parallel with the GPU driver.
+>>
+>> And what *should* happen is that the GPU driver probe waits for the
+>> IOMMU driver probe to finish. Do you have fw_devlink enabled?
+> 
+> Yes, but you shouldn't rely on devlinks for correctness.
+> 
+> That said it does seem like something is not working as you think it is
+> here, and indeed the iommu supplier link is not created until SMMUv2
+> probe_device() (see arm_smmu_probe_device()).
+> 
+> So client devices can start to be probed (bus dma_configure() is called)
+> before their iommu is ready also with devlinks enabled (and I do see
+> this happen on every boot).
 
-[01/14] dt-bindings: regulator: Add ROHM BD96802 PMIC
-        commit: 9effbfda6bfd677042434722a9c2f2e17d261dce
-[02/14] dt-bindings: mfd: Add ROHM BD96802 PMIC
-        commit: 9d851b2e016a13b0a673503f5600315b6601e025
-[03/14] dt-bindings: mfd: bd96801: Add ROHM BD96805
-        commit: d5a30228b6fa86cf841d8c12af0025c0bacb90fb
-[04/14] dt-bindings: mfd: bd96802: Add ROHM BD96806
-        commit: 82c218969eb0ec989d8e049878fd3d6a97ccd8ba
-[05/14] mfd: rohm-bd96801: Add chip info
-        commit: 7289d96ba557fb5e0a90813b7e24f3815127d14d
-[06/14] mfd: bd96801: Drop IC name from the regulator IRQ resources
-        commit: d082571fca4d1db5642ad4436cef22d65bfe4153
-[07/14] regulator: bd96801: Drop IC name from the IRQ resources
-        commit: 9cc957546e3865bc3adfd39ceeedc8074521024d
-[08/14] mfd: rohm-bd96801: Support ROHM BD96802
-        commit: 4094040b1a133206ed893da2cf5e17cc22f7ca7c
-[09/14] regulator: bd96801: Support ROHM BD96802
-        commit: 55606b9b20639b634560f44a070ff6153b59b557
-[10/14] mfd: bd96801: Support ROHM BD96805
-        commit: 6a309b489215f705c20cb4ed7f85d9c16f768e55
-[11/14] regulator: bd96801: Support ROHM BD96805 PMIC
-        commit: 7baf818d0d90e00c0688d8156bc7d9d1d1ee1dbb
-[12/14] mfd: bd96801: Support ROHM BD96806
-        commit: fecc18a9f59ce9c36eb3622ae77bff5fa5c6d976
-[13/14] regulator: bd96801: Support ROHM BD96806 PMIC
-        commit: 956e9363c8230a0dc9a83cf5de61200206a9154b
-[14/14] MAINTAINERS: Add BD96802 specific header
-        commit: 5d61bb1675ff7662f519ca203b1f8cdc455b9df4
+I didn't mean the explicit power management links created by the SMMU 
+driver itself, I meant the fwnode links created automatically by 
+fw_devlink_link_device() at device_add() time, which infer a 
+supplier-consumer relationship from the "iommus" DT property, wherein 
+device_links_check_suppliers() would then defer the GPU driver probe 
+until the SMMU driver probe has completed successfully probing and 
+called device_links_driver_bound().
 
---
-Lee Jones [李琼斯]
+Except it turns out that "iommus" is one of the optional properties 
+which are only linked that way under "fw_devlink=strict", so that 
+explains that, fair enough.
+>>> [    3.805282] arm-smmu 3da0000.iommu: probing hardware configuration...
+> 
+>>> [    3.829042] platform 3d6a000.gmu: Adding to iommu group 8
+>>>
+>>> [    3.992050] ------------[ cut here ]------------
+>>> [    3.993045] adreno 3d00000.gpu: late IOMMU probe at driver bind, something fishy here!
+>>> [    3.994058] WARNING: CPU: 9 PID: 343 at drivers/iommu/iommu.c:579 __iommu_probe_device+0x2b0/0x4ac
+>>>
+>>> [    4.003272] CPU: 9 UID: 0 PID: 343 Comm: kworker/u50:2 Not tainted 6.15.0-rc1 #109 PREEMPT
+>>> [    4.003276] Hardware name: LENOVO 21N2ZC5PUS/21N2ZC5PUS, BIOS N42ET83W (2.13 ) 10/04/2024
+>>>
+>>> [    4.025943] Call trace:
+>>> [    4.025945]  __iommu_probe_device+0x2b0/0x4ac (P)
+>>> [    4.030453]  iommu_probe_device+0x38/0x7c
+>>> [    4.030455]  of_iommu_configure+0x188/0x26c
+>>> [    4.030457]  of_dma_configure_id+0xcc/0x300
+>>> [    4.030460]  platform_dma_configure+0x74/0xac
+>>> [    4.030462]  really_probe+0x74/0x38c
+>>
+>> Indeed this is exactly what is *not* supposed to be happening - does
+>> this patch help at all?
+>>
+>> https://lore.kernel.org/linux-iommu/09d901ad11b3a410fbb6e27f7d04ad4609c3fe4a.1741706365.git.robin.murphy@arm.com/
+> 
+> I've only seen that splat once so far so I don't have a reliable
+> reproducer.
+> 
+> But AFAICS that patch won't help help here where we appear to have iommu
+> probe racing with bus dma_configure() called from really_probe() for the
+> client device.
 
+Well, tightening up __iommu_probe_device() would stand to slightly 
+reduce the window in general while bus_set_iommu() is running. However 
+you're right that this is a different race from the ones implicated 
+there. I have now managed to provoke it on my Juno board with 
+"driver_async_probe=*" (which does also require that patch for other 
+reasons), and I think I've got a reasonable fix which I shall finish 
+writing up and send shortly. Thanks for helping me nail this one down!
+
+Cheers,
+Robin.
