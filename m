@@ -1,94 +1,102 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E948C11
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C3D17F7;
+	Thu, 24 Apr 2025 00:22:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745453922; cv=none; b=O7hgjyk5OqqXWGVNDP5DW8NLG5YlgtOReoqvaqgKq0CcQT2r6iK4pkQTU/1Ge+KTpnz5+Rm7A+zjgQF9v1uZ5RUoXdOpnW48jWCYzJRuc+auJnTGU9FhpOJUKoDFQOwbfmEUIEfPoOQcD11qL/NZsMCI5zjvw5TbsZ6YnF71vuE=
+	t=1745454177; cv=none; b=Ie0CF/ihgAhiK2HmAl1Q2vHsIXx+9AK3jpyZoAKeWnfvm8BNZIFAn4J/h4fuSaHpp0jPSMVFE9WdKvWk5JCMrWXuBD2pKAYIj4YUOBjQRPuD4heCS5CtPehBMZvcFo+XQFZf6fFOBnqB0xbb/lTmPeTmetlerlcfq5txGGFrClE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745453922; c=relaxed/simple;
-	bh=DXH1IO1hAdU2AUtjl6a4PRgTHigbz0MdgoHTabtuTrk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=F+75PlGoB/cuHo7xZmu4ROSu2IqH700GN1stDoFMbYWbOJmcLPbOOjHYWn2xLLxQP1ksXAKzwY2owPfx1LVGaNoOYix7qkG++a9VLa1XSpP0PYnZEI9LS2ZcleeOOJSUZvo+AbTS3xwNPkN3uNLG0qBZnJb8iK+jlkBBS50O0Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=d87D02gG; arc=none smtp.client-ip=209.85.166.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1745454177; c=relaxed/simple;
+	bh=zkgW3SiDgnggtuRkQQ2RvOw/6rX9QtoTG8UCIHjtB6s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=G0IeIbe17B7qzDYMeD/ggvd7I9E+lTBh/t6pmT0H+H9b+qblszKBEuaFIpVG254jyQ4J+WOaVDYdnVNt2pqIm/kYtnrb7SK7V8Q+j0ddmWPSYhpaBS2xVzXKaa/qMJy2rrkKvtmiV9+9KOoAjLBRMAucLP+iy5u/Cb0pbHXt2jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UO/B6EN6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="d87D02gG"
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d5e2606a1bso3909545ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:18:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1745453919; x=1746058719; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=no699vHbUtCiDhtLMFa9ixz998D4Np4s8xMtsBpgtGE=;
-        b=d87D02gGa/UZORutiv03V45T81hXnmmU+G3VpRlz9SjGV6rGeWbrPDPntpPLFihWPZ
-         M9IfOkMlSenOm+fU53pdMJyWhBHTU7BWD+6UA88n4peLvi2fQDzWtZTuBwDYiRl/ejDQ
-         Shp8YKMciKEDOvCiK/uMKf1GLqzt1LOG+yLZUijtwh3m5aBBV//RvPhmrlr0yG8fvbsa
-         zmd1Pa+go8j4OIFHJ4pW9rylm+9ZZLERQ0QhxYB3sT1/YEnaonDPVEwuFHaE7u4vorwW
-         4+/Tcs17BSq52Au8eSDu1pa098/AQ1IfXTaUUBEAaw36KRoQVoz3C54DBNLyxfczmYKs
-         E25w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745453919; x=1746058719;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=no699vHbUtCiDhtLMFa9ixz998D4Np4s8xMtsBpgtGE=;
-        b=cSx8k67PsuOilcMkW0YO1P0tPACLrEX9eGyj6UuHAhsHjTGW2CLXbgB7FM+4A1J7HG
-         WzlcH4+1cbnO9SvpT3TelVt9J2wG54+GgQ2awz2MzBB/zODQeTfKUA52t1VMzqC9MpVX
-         eASMHnn+yZsltCGhp9UhszQfKdNTNiQOFzPX+ZkBdARS41GTmeN9KO6Kqo3eC5uMsWHQ
-         n+ikd2qEfhcwxmXsh8L+Nt47kEHJvEDVUtMPDtgn2dagsdW0XbGNWwuP5dBHUOCiedmn
-         0GdNzxByH2kv9PNdyZX0jrKjviSOWo/s/LGW3VJ3eH/BHi+dCzWr005fRAP0uheO5veZ
-         +pRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJCJLj8nWUsTftZUrpg4pEhBVS1PLPUFoLR8hXPqk+3/1PsyA86Zhil3jswXkgpP4wo3+AfhVdyyDuG1c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLDx+HkIAhzCnuMllpKO/cOJWkEOohl40G5AmisT96XGwQKZuQ
-	DVUZeJrn/CgwrcEHxHhnOlYcIh8WYxNL0K3bDhftFwzDGh3d02598mpG7oRl20Q=
-X-Gm-Gg: ASbGnctNkOdSWggfz2np/9VvtjgoBISXHBgHOvzieU6xQD2LEfhSOl00RHmSLpNzTPX
-	qUefRzJpGEPOA5TL2leTDsh9trqZjF8p0FLfFrORtcyzgoXKotbP7V5IQm+eCVMN2PNGkjOuSJu
-	yErU4CcVPou7g//fAoaRTizzJKIqazr/dLZRv+9ts8WTT5Rzkcfluxq699gFY7vruvRpwyByrnD
-	VVc5rnndCuB0MEAgBa6YuDOdkNzVHnqDslhiMUuxQMCLQtbBZX6OMMc1/khbmf+Fa5ixZS2A3IY
-	Fk5l8kzz1diCoJhLmNy1S0lzrSHLdBW6uFhgGg==
-X-Google-Smtp-Source: AGHT+IHb+es9H9M9kGSwtETCKJLbMt7YPfw3chQ/Lxuw7WSyGf0XVM1d+FlyYn7Hy8udiuXpl/zxhQ==
-X-Received: by 2002:a05:6e02:188f:b0:3d4:3db1:77ae with SMTP id e9e14a558f8ab-3d93041d81cmr7327905ab.18.1745453918771;
-        Wed, 23 Apr 2025 17:18:38 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d9314c828bsm410385ab.27.2025.04.23.17.18.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Apr 2025 17:18:38 -0700 (PDT)
-Message-ID: <1c7744df-329f-4b95-9afb-a005a358851b@kernel.dk>
-Date: Wed, 23 Apr 2025 18:18:37 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UO/B6EN6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E23DCC4CEE2;
+	Thu, 24 Apr 2025 00:22:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745454177;
+	bh=zkgW3SiDgnggtuRkQQ2RvOw/6rX9QtoTG8UCIHjtB6s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=UO/B6EN63Q0MfszXeohxRiovANguNpxtJg/NNqgy8lk+bdQaa6mbu/8S4libCyQRR
+	 HSIRMYpy+ZiYfoztydxN34bUyWR6KCKmB0xU7hRk8iYxvJIOIkrRWT8Zmc1uU02NsJ
+	 xsBYWT37QGnF9rebc74+R/9OllnOrqij45u+GI7YlOwbQwtqkd0s2GL4hFXQmCr5GG
+	 /n8N6mnXAy2GCs2mMHcQJVwFcppJhYXpQ5n4lleosLvV9DlnLFRP9uYCdskDE+QiTN
+	 0YTC5KsqgM5kAzcadtPwXpGKAj+oluDbScYL38nyedfMU0m402zA/WhqIEhv3zsxYS
+	 1+YvvpI7odh7g==
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	linux-crypto@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	x86@kernel.org
+Subject: [PATCH 0/7] lib/crc: drop "glue" from filenames
+Date: Wed, 23 Apr 2025 17:20:31 -0700
+Message-ID: <20250424002038.179114-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] selftests: ublk: kublk: build with -Werror
-To: Uday Shankar <ushankar@purestorage.com>, Ming Lei <ming.lei@redhat.com>,
- Shuah Khan <shuah@kernel.org>
-Cc: linux-block@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com>
- <20250423-ublk_selftests-v1-1-7d060e260e76@purestorage.com>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20250423-ublk_selftests-v1-1-7d060e260e76@purestorage.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/23/25 3:29 PM, Uday Shankar wrote:
-> Heeding compiler warnings is generally a good idea, and is easy to do
-> for kublk since there is not much source code. Turn warnings into errors
-> so that anyone making changes is forced to heed them.
+This series fixes an odd naming convention that was unnecessarily
+carried over from the original Crypto API code.
 
-Honestly not a fan of this, it tends to cause random warnings on
-different compilers, and then just causing trouble for people
-rather than being useful. If you think it's a good idea, make
-it follow CONFIG_WERROR at least, don't make it unconditional.
+I'm planning to take this via the crc tree.
 
+Eric Biggers (7):
+  arm/crc: drop "glue" from filenames
+  arm64/crc: drop "glue" from filenames
+  powerpc/crc: drop "glue" from filenames
+  powerpc/crc: rename crc32-vpmsum_core.S to crc-vpmsum-template.S
+  s390/crc: drop "glue" from filenames
+  sparc/crc: drop "glue" from filenames
+  x86/crc: drop "glue" from filenames
+
+ arch/arm/lib/Makefile                                       | 4 ++--
+ arch/arm/lib/{crc-t10dif-glue.c => crc-t10dif.c}            | 0
+ arch/arm/lib/{crc32-glue.c => crc32.c}                      | 0
+ arch/arm64/lib/Makefile                                     | 4 ++--
+ arch/arm64/lib/{crc-t10dif-glue.c => crc-t10dif.c}          | 0
+ arch/arm64/lib/{crc32.S => crc32-core.S}                    | 0
+ arch/arm64/lib/{crc32-glue.c => crc32.c}                    | 0
+ arch/powerpc/lib/Makefile                                   | 4 ++--
+ arch/powerpc/lib/{crc-t10dif-glue.c => crc-t10dif.c}        | 0
+ .../lib/{crc32-vpmsum_core.S => crc-vpmsum-template.S}      | 0
+ arch/powerpc/lib/{crc32-glue.c => crc32.c}                  | 0
+ arch/powerpc/lib/crc32c-vpmsum_asm.S                        | 2 +-
+ arch/powerpc/lib/crct10dif-vpmsum_asm.S                     | 2 +-
+ arch/s390/lib/Makefile                                      | 2 +-
+ arch/s390/lib/{crc32-glue.c => crc32.c}                     | 0
+ arch/sparc/lib/Makefile                                     | 2 +-
+ arch/sparc/lib/{crc32_glue.c => crc32.c}                    | 2 +-
+ arch/x86/lib/Makefile                                       | 6 +++---
+ arch/x86/lib/{crc-t10dif-glue.c => crc-t10dif.c}            | 0
+ arch/x86/lib/{crc32-glue.c => crc32.c}                      | 0
+ arch/x86/lib/{crc64-glue.c => crc64.c}                      | 0
+ 21 files changed, 14 insertions(+), 14 deletions(-)
+ rename arch/arm/lib/{crc-t10dif-glue.c => crc-t10dif.c} (100%)
+ rename arch/arm/lib/{crc32-glue.c => crc32.c} (100%)
+ rename arch/arm64/lib/{crc-t10dif-glue.c => crc-t10dif.c} (100%)
+ rename arch/arm64/lib/{crc32.S => crc32-core.S} (100%)
+ rename arch/arm64/lib/{crc32-glue.c => crc32.c} (100%)
+ rename arch/powerpc/lib/{crc-t10dif-glue.c => crc-t10dif.c} (100%)
+ rename arch/powerpc/lib/{crc32-vpmsum_core.S => crc-vpmsum-template.S} (100%)
+ rename arch/powerpc/lib/{crc32-glue.c => crc32.c} (100%)
+ rename arch/s390/lib/{crc32-glue.c => crc32.c} (100%)
+ rename arch/sparc/lib/{crc32_glue.c => crc32.c} (97%)
+ rename arch/x86/lib/{crc-t10dif-glue.c => crc-t10dif.c} (100%)
+ rename arch/x86/lib/{crc32-glue.c => crc32.c} (100%)
+ rename arch/x86/lib/{crc64-glue.c => crc64.c} (100%)
+
+base-commit: 1ec3d4ff5c77422927896c1f7d0ed01267ec1213
 -- 
-Jens Axboe
+2.49.0
 
