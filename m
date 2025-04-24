@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E804221261
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8296022170B
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:56:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745488571; cv=none; b=mJKJNG0IG9A7jyHf2sGWubNn30vieci+ib4H+wNYBSxRPjghU2/FbqqBaI85VlR1rrX1dwgDgFs7NT9FcqeJftlcwwKnsxxslqjYLgnNeRlEiMJRiXfoJTZkULVUfZ+GyC3iUF9fRjUroXInQ48NIN72cOidzqmaRit+V5FKGps=
+	t=1745488576; cv=none; b=ksujgsnbs8dyOss8JbTzhZiQxF+N56q5LaYe1ZdCf7Jat0PJ21lXlGU+5eIGw3s1MmNr5AErLgjsZ9gLIgHXN9+K1GyQbgVtRPICXQr2EzO3jZQfTV4kM8b+Wo8OjNAtSBHyvfZO0RamAokrhH9RdWTfIsVLjf8tLUO85A9TvHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745488571; c=relaxed/simple;
-	bh=KwTxUWB8eoY1enwOmL1Rz7TnjVwHUrW7NjL5EDBhkRE=;
+	s=arc-20240116; t=1745488576; c=relaxed/simple;
+	bh=jWhUXx8C0pjgulz9f55tvHNeys7srTOZ3/RnhWeUk5Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Rswld3AA6q6FbpwyTwmp58aoMHOv0hDnucxQbWliSCUTUhtp6YAG3YEaHKApMMz++pH0G+guz9KER1pleD40Qy759XCrjzVSdh9boCgc6H18cAA3Uf7Et+oA3x5Jx9C642TZciFe/vzEqqk20PSKtrFd7VwVmwCHupyeNEkBYUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEqN75eq; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Y5Kw5a4FMBlGcOw7e5PGOqnear6H/eQKaS85jxJ5BZIVOSTlOjMZCUEGF6YeYRsqrbEzMSsDn+qQTKqDwuUbfGm/f8vts1Z2KXLDhAtwo6kqTZLJUGWXehb+t05nA1gSy5O2UoR2GVVjTdwmLKHWAA9P1i+9vQ/pvJXAo3IJpfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOQeDJpI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEqN75eq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A239EC4CEEB;
-	Thu, 24 Apr 2025 09:56:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOQeDJpI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EAA4C4CEE3;
+	Thu, 24 Apr 2025 09:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745488571;
-	bh=KwTxUWB8eoY1enwOmL1Rz7TnjVwHUrW7NjL5EDBhkRE=;
+	s=k20201202; t=1745488574;
+	bh=jWhUXx8C0pjgulz9f55tvHNeys7srTOZ3/RnhWeUk5Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KEqN75eqyoVVKaygRATIKVaTzIYqoNMjVzyvM+liC+gY5iTMuVg9bK6KI/4CLxIxL
-	 1XQiTOUQocxaJLcGFUZIa9c7PfQJXaB4brw2ZXtH62uKWsiMTXrSs/a6RhRgrZVrTL
-	 OVdtXZABxPyNw4QCqjTHnTkTztBNk7VobZAjIvGeBLTDclf8nywqFCyP58FC87RnPy
-	 HXOt/+FL/ukQUKD6T4JTD4oqA2h/E31zqN+az/YBYmbLGJdm9ZUfra3+KA7Cjh+HCH
-	 MMmx6c9PnIdm1FF8LLmHAYfZiKfaGkJWJIxOs2uA4DkWHhRDFZbOKBLj5jAeo25SBp
-	 vW3wInHd7NWgA==
+	b=QOQeDJpI7lVlNB7hZwnGy70cpZqHqlUdfqbtzK8ADj/sGvDaewdztJqkAWOgy6ywy
+	 wYHBRer1MGX57f8S86pEx7QO3dyhXTbEked6yBwrb6R1I13FBQ52XaIjtwz0qtVpE5
+	 15vkiSRiUzs+nu3PS/W/T20Rx6EkWy/El71vyuYasgnUYg7eYMHif0uzrwZt0+viRh
+	 R6qKx8LlEYfw0Piqb+f9zfcsNbQBcGNIfz7QADF8BZPgPA+kppm9+1paqE094YQn2+
+	 dM1C/INg0wMa6boocd2507yFk5KBrE+nI+pmX2PF/nmV3OXOlYOFDv8gf8kDCCkZZ6
+	 TV1FG4C949Ozg==
 From: Philipp Stanner <phasta@kernel.org>
 To: Lyude Paul <lyude@redhat.com>,
 	Danilo Krummrich <dakr@kernel.org>,
@@ -41,9 +41,9 @@ To: Lyude Paul <lyude@redhat.com>,
 Cc: dri-devel@lists.freedesktop.org,
 	nouveau@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/6] drm/sched: Warn if pending list is not empty
-Date: Thu, 24 Apr 2025 11:55:33 +0200
-Message-ID: <20250424095535.26119-5-phasta@kernel.org>
+Subject: [PATCH v2 4/6] drm/nouveau: Add new callback for scheduler teardown
+Date: Thu, 24 Apr 2025 11:55:34 +0200
+Message-ID: <20250424095535.26119-6-phasta@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250424095535.26119-2-phasta@kernel.org>
 References: <20250424095535.26119-2-phasta@kernel.org>
@@ -55,28 +55,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-drm_sched_fini() can leak jobs under certain circumstances.
+There is a new callback for always tearing the scheduler down in a
+leak-free, deadlock-free manner.
 
-Warn if that happens.
+Port Nouveau as its first user by providing the scheduler with a
+callback that ensures the fence context gets killed in drm_sched_fini().
 
 Signed-off-by: Philipp Stanner <phasta@kernel.org>
 ---
- drivers/gpu/drm/scheduler/sched_main.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/nouveau/nouveau_abi16.c |  4 ++--
+ drivers/gpu/drm/nouveau/nouveau_drm.c   |  2 +-
+ drivers/gpu/drm/nouveau/nouveau_sched.c | 19 +++++++++++++++++--
+ drivers/gpu/drm/nouveau/nouveau_sched.h |  3 +++
+ 4 files changed, 23 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/scheduler/sched_main.c b/drivers/gpu/drm/scheduler/sched_main.c
-index c2ad6c70bfb6..0c56b85c574f 100644
---- a/drivers/gpu/drm/scheduler/sched_main.c
-+++ b/drivers/gpu/drm/scheduler/sched_main.c
-@@ -1457,6 +1457,9 @@ void drm_sched_fini(struct drm_gpu_scheduler *sched)
- 	sched->ready = false;
- 	kfree(sched->sched_rq);
- 	sched->sched_rq = NULL;
-+
-+	if (!list_empty(&sched->pending_list))
-+		dev_err(sched->dev, "Tearing down scheduler while jobs are pending!\n");
+diff --git a/drivers/gpu/drm/nouveau/nouveau_abi16.c b/drivers/gpu/drm/nouveau/nouveau_abi16.c
+index 2a0617e5fe2a..53b8a85a8adb 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_abi16.c
++++ b/drivers/gpu/drm/nouveau/nouveau_abi16.c
+@@ -415,8 +415,8 @@ nouveau_abi16_ioctl_channel_alloc(ABI16_IOCTL_ARGS)
+ 	 * The client lock is already acquired by nouveau_abi16_get().
+ 	 */
+ 	if (nouveau_cli_uvmm(cli)) {
+-		ret = nouveau_sched_create(&chan->sched, drm, drm->sched_wq,
+-					   chan->chan->dma.ib_max);
++		ret = nouveau_sched_create(&chan->sched, drm, chan->chan,
++					   drm->sched_wq, chan->chan->dma.ib_max);
+ 		if (ret)
+ 			goto done;
+ 	}
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index c69139701056..2a2b319dca5f 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -313,7 +313,7 @@ nouveau_cli_init(struct nouveau_drm *drm, const char *sname,
+ 	 * locks which indirectly or directly are held for allocations
+ 	 * elsewhere.
+ 	 */
+-	ret = nouveau_sched_create(&cli->sched, drm, NULL, 1);
++	ret = nouveau_sched_create(&cli->sched, drm, NULL, NULL, 1);
+ 	if (ret)
+ 		goto done;
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.c b/drivers/gpu/drm/nouveau/nouveau_sched.c
+index d326e55d2d24..3659ac78bb3e 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_sched.c
++++ b/drivers/gpu/drm/nouveau/nouveau_sched.c
+@@ -11,6 +11,7 @@
+ #include "nouveau_exec.h"
+ #include "nouveau_abi16.h"
+ #include "nouveau_sched.h"
++#include "nouveau_chan.h"
+ 
+ #define NOUVEAU_SCHED_JOB_TIMEOUT_MS		10000
+ 
+@@ -392,10 +393,22 @@ nouveau_sched_free_job(struct drm_sched_job *sched_job)
+ 	nouveau_job_fini(job);
  }
- EXPORT_SYMBOL(drm_sched_fini);
+ 
++static void
++nouveau_sched_fence_context_kill(struct drm_gpu_scheduler *sched)
++{
++	struct nouveau_sched *nsched;
++
++	nsched = container_of(sched, struct nouveau_sched, base);
++
++	if (nsched->chan)
++		nouveau_channel_kill(nsched->chan);
++}
++
+ static const struct drm_sched_backend_ops nouveau_sched_ops = {
+ 	.run_job = nouveau_sched_run_job,
+ 	.timedout_job = nouveau_sched_timedout_job,
+ 	.free_job = nouveau_sched_free_job,
++	.kill_fence_context = nouveau_sched_fence_context_kill,
+ };
+ 
+ static int
+@@ -461,7 +474,8 @@ nouveau_sched_init(struct nouveau_sched *sched, struct nouveau_drm *drm,
+ 
+ int
+ nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
+-		     struct workqueue_struct *wq, u32 credit_limit)
++		     struct nouveau_channel *chan, struct workqueue_struct *wq,
++		     u32 credit_limit)
+ {
+ 	struct nouveau_sched *sched;
+ 	int ret;
+@@ -470,6 +484,8 @@ nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
+ 	if (!sched)
+ 		return -ENOMEM;
+ 
++	sched->chan = chan;
++
+ 	ret = nouveau_sched_init(sched, drm, wq, credit_limit);
+ 	if (ret) {
+ 		kfree(sched);
+@@ -481,7 +497,6 @@ nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
+ 	return 0;
+ }
+ 
+-
+ static void
+ nouveau_sched_fini(struct nouveau_sched *sched)
+ {
+diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.h b/drivers/gpu/drm/nouveau/nouveau_sched.h
+index 20cd1da8db73..e6e2016a3569 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_sched.h
++++ b/drivers/gpu/drm/nouveau/nouveau_sched.h
+@@ -9,6 +9,7 @@
+ #include <drm/gpu_scheduler.h>
+ 
+ #include "nouveau_drv.h"
++#include "nouveau_chan.h"
+ 
+ #define to_nouveau_job(sched_job)		\
+ 		container_of((sched_job), struct nouveau_job, base)
+@@ -101,6 +102,7 @@ struct nouveau_sched {
+ 	struct drm_sched_entity entity;
+ 	struct workqueue_struct *wq;
+ 	struct mutex mutex;
++	struct nouveau_channel *chan;
+ 
+ 	struct {
+ 		struct {
+@@ -112,6 +114,7 @@ struct nouveau_sched {
+ };
+ 
+ int nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
++			 struct nouveau_channel *chan,
+ 			 struct workqueue_struct *wq, u32 credit_limit);
+ void nouveau_sched_destroy(struct nouveau_sched **psched);
  
 -- 
 2.48.1
