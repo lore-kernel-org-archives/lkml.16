@@ -1,128 +1,169 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E08C12CDA5;
-	Thu, 24 Apr 2025 14:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C670149C41;
+	Thu, 24 Apr 2025 14:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745506034; cv=none; b=ele7AY1Jeot8Ay3yMMTYjhtDjp+9Z7RaHMWCDlYtaCA4FAqlYxP5lcUsFrOVkT5ENL1fySXvFvDnLai+inJUarsUk/INzEvrkC5gBVBqEFE0I1JZkkR272p1aeJP4q34pegr5iv1OpbYbd+neAobgKOD79X4nacY++RdauaLW4M=
+	t=1745506059; cv=none; b=K2B8+DDqFJjGYcUwYIoDzWCNfkzy8htAK8xbON4x0ydnU6HqRAFhOLqioNGyz96V/D+yMJTgN5cElgqjfE0Dk8Q6FWKWhgbu+9bd6kyADsViJUzvSVTudc5gN+ZeV1gRaqMyKLz5TNo+rZqOB19Dkc2dV9HxRqGTZRbei/LvQuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745506034; c=relaxed/simple;
-	bh=B+vaQDz34gASz2r9IySDvBGxFWVbRYQhO0FGeJb7jVg=;
+	s=arc-20240116; t=1745506059; c=relaxed/simple;
+	bh=aI+0J8pNI48g/nj9AVjzAh0Eq0xcHXjVInXIA5TOWqw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P28DUCLdISiZPpK/F4ZmJubKnY6XHCHzoDAjabWPBbxzmDlag7DFmu3blb533m4Kz64r52aIzfSVO1zvWktcV20DnwxTglszBZg289s19+yXAftsM84uCjxPC7Z05hoBjQP/PvalTlEpfQXnr1o9x/X/srfixkUOPPyucUuhSiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=xfZuxBCt; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=EGioGVzL7vCeiw1F1xRCdHWERCodvK3OSkiCnra7G5nHJ5xZhQWUug322ZGJKdBX8Z9MdX82VMHSIqewdpT+QlfffqCGhro3kRlwCazEl/FMmaZj6oWsu7qjWMXSkHFvh0dvieznxJyNRkFU1uegjpbkNvcI6fDoQZtuds8ENfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eN9AYyRT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xfZuxBCt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=egGfbK658OSDe69FyW4Tv8G+ziXxzHDqqyx8wDiPEAQ=; b=xfZuxBCt41e8zQmoDtvq/y7N6h
-	eiNOk5OhQwqmfZBZXA7zAFlssU1QXNmZGTPi4+UXL+xrQEC0aV/TkHALoRHzVhA1q7uRfyqzfXinD
-	JzBHpTLyFd9tzBYFuaxQ6RiCLeeDKA533gXzs1bXQsZXGXyCRIJ5gC9BvcBRXfSdIYXJQjgsWDZHM
-	ba5q3dlk9tDSz+CJn1Go4Mpmbz4A+9cBUr/I8B0wh440PewQx11KVL6rndMzu/aoM4klFnXyu9KUd
-	kB6BxZfUHig2ZcwRABJ+ou1gs5rzb6onH6/Jni03BjdDDGJTXPTWXG1jBMQTnJaICgiNXy2mvDA74
-	8fQTlo4Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52174)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u7xqz-0007Wd-1T;
-	Thu, 24 Apr 2025 15:47:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u7xqx-0001Bh-2x;
-	Thu, 24 Apr 2025 15:47:03 +0100
-Date: Thu, 24 Apr 2025 15:47:03 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v1 4/4] net: phy: Always read EEE LPA in
- genphy_c45_ethtool_get_eee()
-Message-ID: <aApO59e6I6uLaw2P@shell.armlinux.org.uk>
-References: <20250424130222.3959457-1-o.rempel@pengutronix.de>
- <20250424130222.3959457-5-o.rempel@pengutronix.de>
- <aAo5keWOAVWxj9_o@shell.armlinux.org.uk>
- <8f0d5725-04b7-4e15-897d-1fd5e540dacb@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eN9AYyRT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1877C4CEE3;
+	Thu, 24 Apr 2025 14:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745506059;
+	bh=aI+0J8pNI48g/nj9AVjzAh0Eq0xcHXjVInXIA5TOWqw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=eN9AYyRTJunIPoIKnx1LWKGqL9hiQRVPIsv4MSxykjdGtV6LBxOyy5b4R70iop/0G
+	 JKtPScOyukzAKGsw8w8+h+j9JW4Y4cCf9toc5ETZksoW1Hf4HD1lnqRK/5O0qYz69J
+	 ZBRDdm2CfF0xQ2Ont3qAIpwVac7yyEwgKG67G/9eFPjw7UyIp7jGCFlXsTfubIMIWD
+	 DAuQ3/yTqle0JPLu/aRHrnI76L8+RhPI8XWtdwHJc2iGnMRc/aPmv6tnBZRUSYQbVz
+	 JNeXpYhSqAXIB5lKj60oLLx+E+12RplIBgLtS8r5n+pTLXtHWRHbC0xVQBHILdGhNm
+	 05Ys2OsCleNRw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 94F42CE191C; Thu, 24 Apr 2025 07:47:38 -0700 (PDT)
+Date: Thu, 24 Apr 2025 07:47:38 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Benjamin Berg <benjamin@sipsolutions.net>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+	johannes@sipsolutions.net, Daniel Gomez <da.gomez@samsung.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v3 15/28] module: Use RCU in all users of
+ __module_text_address().
+Message-ID: <2219e88b-61a5-4176-bec8-73e6db9a36cc@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250108090457.512198-1-bigeasy@linutronix.de>
+ <20250108090457.512198-16-bigeasy@linutronix.de>
+ <db0f8ec385762e6edb3edf5054a76ea189135e6e.camel@sipsolutions.net>
+ <4446525f-4e89-41bb-91a0-89c72dd0e8f8@paulmck-laptop>
+ <20250424090539.0O37K8vN@linutronix.de>
+ <bc9896f2470c70519c3b9257a1a2dd32e5e9c6e9.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <8f0d5725-04b7-4e15-897d-1fd5e540dacb@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bc9896f2470c70519c3b9257a1a2dd32e5e9c6e9.camel@sipsolutions.net>
 
-On Thu, Apr 24, 2025 at 04:34:27PM +0200, Andrew Lunn wrote:
-> On Thu, Apr 24, 2025 at 02:16:01PM +0100, Russell King (Oracle) wrote:
-> > However, I've no objection to reading the LPA EEE state and
-> > reporting it.
+On Thu, Apr 24, 2025 at 11:30:39AM +0200, Benjamin Berg wrote:
+> On Thu, 2025-04-24 at 11:05 +0200, Sebastian Andrzej Siewior wrote:
+> > On 2025-04-23 11:16:49 [-0700], Paul E. McKenney wrote:
+> > > On Wed, Apr 23, 2025 at 05:17:31PM +0200, Benjamin Berg wrote:
+> > > > Hi,
+> > > > 
+> > > > On Wed, 2025-01-08 at 10:04 +0100, Sebastian Andrzej Siewior wrote:
+> > > > > __module_text_address() can be invoked within a RCU section, there is no
+> > > > > requirement to have preemption disabled.
+> > > > > 
+> > > > > Replace the preempt_disable() section around __module_text_address()
+> > > > > with RCU.
+> > > > 
+> > > > Unfortunately, this patch causes a performance regression for us. The
+> > > > trouble is that we enable kmemleak and run trace-cmd so a lot of stack
+> > > > traces need to be collected. Obviously, we also have lockdep enabled.
+> > > > 
+> > > > Now, combine this with the UML stack dumping code calling into
+> > > > __kernel_text_address a lot[1] and it really has a relevant performance
+> > > > impact. I saw the kernel spending 40% of its own CPU time just on the
+> > > > lock in is_module_text_address.
+> > > > 
+> > > > Maybe kernel_text_address should leave the RCU handling to the caller
+> > > > and assume that the RCU read lock is already taken?
+> > > > 
+> > > > Benjamin
+> > > > 
+> > > > [1] The UM arch dump_stack function reads every "unsigned long" on the
+> > > > stack and tests it using __kernel_text_address.
+> > > 
+> > > Use of a single guard(rcu)() is regressing performance?  Interesting and
+> > > quite unexpected.  That said, tiven the amount of debug you have enabled,
+> > > I am not so sure that people are going to be all that excited about a
+> > > further performance regression.
+> > > 
+> > > But is this regression due to the cleanup hook that guard(rcu)()
+> > > registers?  If so, please feel free to try using rcu_read_lock()
+> > > and rcu_read_unlock() instead.  I would be surprised if this makes a
+> > > difference, but then again, your initial regression report also comes
+> > > as a surprise, so...
+> > > 
+> > > Another way to reduce guard(rcu)() overhead is to build your kernel
+> > > with CONFIG_PREEMPT_NONE=y.  Not so good for real-time response, but
+> > > then again, neither are your debug options.
+> > 
+> > The guard notation is not regression I guess it is just the plenty of
+> > rcu_read_lock()/ unlock(). We had one regression which was "fixed" by
+> > commit ee57ab5a32129 ("locking/lockdep: Disable KASAN instrumentation of lockdep.c").
 > 
-> What happens with normal link mode LPA when autoneg is disabled? I
-> guess they are not reported because the PHY is not even listening for
-> the autoneg pulses. We could be inconsistent between normal LPA and
-> LPA EEE, but is that a good idea?
+> Yup, we really pretty much created a micro-benchmark for grabbing stack
+> traces.
+> 
+> > My guess would be that this is a preemptible kernel and the preempt
+> > disable/ enable is cheaper that the RCU version. So going back to a
+> > non-preemtible kernel should "fix" it.
+> 
+> Yes, preempt_disable() is extremely cheap.
+> 
+> > Looking at kernel_text_address(), is_bpf_text_address() has also a
+> > RCU read section so probably subject to the same trouble. And
+> > is_ftrace_trampoline() could be also converted to RCU which would
+> > increase the trouble. 
+> > 
+> > Improving the stack trace on UM or caching some of the most common one
+> > might help. Not sure if disabling kmemleak for lockdep is possible/
+> > makes a difference.
+> 
+> What does seem to help is to simply disable lockdep inside dump_trace.
+> That should be good enough for us at least, bringing the overhead down
+> to a manageable amount when running these tests.
+> Some unscientific numbers:
+> 
+> config                               dump_trace     locking
+> ----
+> no locking (preempt_disable)            6 %         -
+> guard(rcu)() + lockdep_off             15 %         58 % of that
+> rcu_read_lock + lockdep_off            17 %         60 % of that
+> guard(rcu)()                           48 %         91 % of that
+> 
+> That confirms that guard(rcu)() really is not a problem. There might be
+> slight overhead, but it is probably within the margin of error. Turning
+> lockdep off/on inside the UML dump_trace() function brings down the
+> overhead a lot and I guess that should be an acceptable level for us.
 
-With autoneg state, that controls whether the various pages get
-exchanged or not - which includes the EEE capabilties. This is the
-big hammer for anything that is negotiated.
+Whew!!!  ;-)
 
-With EEE, as long as autoneg in the main config is true, the PHY will
-exchange the EEE capability pages if it supports them. Our eee_enabled
-is purely just a software switch, there's nothing that corresponds to it
-in hardware, unlike autoneg which has a bit in BMCR.
+> Not sure if something like that would be desirable upstream. This is
+> happening for us when running the hostap "hwsim" tests inside UML (with
+> time-travel). At least internally, we could carry a custom patch to add
+> the lockdep_off()/lockdep_on() to dump_trace in order to work around
+> it[1].
 
-We implement eee_enabled by clearing the advertisement in the hardware
-but accepting (and remembering) the advertisement from userspace
-unmodified.
+That makes sense to me, but I am not the maintainer of that code.  ;-)
 
-The two things are entirely different in hardware.
+							Thanx, Paul
 
-Since:
-
- ethtool --set-eee eee off
-
-Will use ETHTOOL_GEEE, modify eee_enabled to be false (via
-do_generic_set), and then use ETHTOOL_SEEE to write it back, the
-old advertisement will be passed back to the kernel in this case.
-
-If we don't preserve the advertisement, then:
-
- ethtool --set-eee eee off
-
-will clear the advertisement, and then:
-
- ethtool --set-eee eee on
-
-will set eee_enabled true but we'll have an empty advertisement. Not
-ideal.
-
-If we think about forcing it for an empty advertisement to e.g. fully
-populated, then:
-
- ethtool --set-eee eee on advertise 0
-
-will surprisingly not end up with an empty advertisement.
-
-So, I don't think it's realistic to come up with a way that --set-eee
-behaves the same way as -s because of the way ethtool has been
-implemented.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> Benjamin
+> 
+> [1] Actually, now I am reminded that we already have that for kmemleak
+> as lockdep was considerably slowing down the scanning.
+> 
+> > 
+> > > 							Thanx, Paul
+> > 
+> > Sebastian
+> > 
+> 
