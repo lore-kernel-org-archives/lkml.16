@@ -1,74 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1F62820A3;
-	Thu, 24 Apr 2025 16:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E29528A3F9;
+	Thu, 24 Apr 2025 16:28:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745512029; cv=none; b=d/IqG8jRolJPqcZMcKR/vAKRbo1l75lIZ+95JTLmKAkxb4ArRCQ+qGxcvfreIna4wSAX6sCNFyjeP82d3OGZ3YARZrrJSPRKMyOUVytqLbFM4EsHv/kdSnH5Qo3Wb5GPr8cSlC5gDS6TrXMLoLzoovldpA81sXIL/mbBeUS6Ifo=
+	t=1745512103; cv=none; b=lxs8EeufXHYYotz+lDpZkNhjVWrB3OPzUEPIwA901JmXY8xfR4O3EppHs5kwYYJdBLxGNQ0ImRQdXCaUb4sipj5YVdocOKQTp46a+nL2mCPC/vc9/YND5b8WSb/yPhFFBZ+R4Tts3WUXlTMVveGXeCxcidS3DhzeXQzvsjT9E9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745512029; c=relaxed/simple;
-	bh=d1i2vxS7CCH8AHpspZpCA8aleNzCCGucvlzIXJ8m8lk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Q9Ue9cyF9S+VvKks/ggqmiVKd7M2vqjQ0wS8xIW7mUO977qydgmNzkZuNWpXRVIpGQ/+g2ipa7HGJ5Jl4ehW5TnmWt/sMGDgTHe1MWZcaF6mvusY139390Lp75vaH7xadoCDOkW7xGsxVymxl0dtknmhSJXKdwVIAxaw3OAoijM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOBHLsyp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745512103; c=relaxed/simple;
+	bh=4WMCh8NBjTaV4M9SrxgBR1w7kMq66hiK3n4SxDFcays=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=NN2ztNO4K0mGsf3qmFbyRpOe4VyyTnRS0O3xV8VejU4fYHAWcW/ybA2QWrP44RAYz4ztqan8COA+be3LZHj6bFKcNcMfzpxlJclb479BGQDzlJk8gi9vJltpc7pNrVt7zIIEETcLhKPhaKqALPDh5BX9gcIy24xfDF4kXmqZpPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MT+8RRFJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOBHLsyp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE3DC4CEE3;
-	Thu, 24 Apr 2025 16:27:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MT+8RRFJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9C17C4CEE3;
+	Thu, 24 Apr 2025 16:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745512028;
-	bh=d1i2vxS7CCH8AHpspZpCA8aleNzCCGucvlzIXJ8m8lk=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=dOBHLsypE4rC02aLc6grE+cStS/j6LGRdO3yyBW3rrrJQmvep/Ecz0x3sOk0+IRtY
-	 X/tDfNK0Pgomdax/LIoqBA/91p2VUfnWDTXWwAkoO2RRIqWYDI0evMO1aN/uHctP6h
-	 hyqoUq8iYYxADE+GIWsVVy9YyHD26f/wEYuIh/beYerx2s942Et3ITVMIZ1qWzYsq4
-	 Ed25TZMdrTW/5N3/RnO6FeTyFqGnlObSl2KVqN3ygw1kt9RpK4sIpEg2XB1Hv1bZri
-	 rLdKxP03iK3Ba8UCH/kVl612EdrW3tBWLpczD8KZFUZdb/asGq8xbrd9ENqk3wR3qc
-	 4vnbogUlAUeIA==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Riku Voipio <riku.voipio@iki.fi>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-In-Reply-To: <20250423-gpiochip-set-rv-leds-v1-0-2f42d8fbb525@linaro.org>
-References: <20250423-gpiochip-set-rv-leds-v1-0-2f42d8fbb525@linaro.org>
-Subject: Re: [PATCH 0/4] leds: use new GPIO setter callbacks
-Message-Id: <174551202650.1497727.15230416483981358083.b4-ty@kernel.org>
-Date: Thu, 24 Apr 2025 17:27:06 +0100
+	s=k20201202; t=1745512103;
+	bh=4WMCh8NBjTaV4M9SrxgBR1w7kMq66hiK3n4SxDFcays=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=MT+8RRFJhGiStu13+mgI26NCoXCcaqcfM4rNGgqbPmm7w9ucVu6o0fSSyms3bU0q5
+	 3VPfY5hlS5DP3lAMLhitZhpBA3apLf3/2NT3ywCfNZBhgoGbxZPW4Cs7Qp4610itEg
+	 T+owoa648SpOn8vFxqCW/6Adv2Z3OYoZn6BYVmR9cvdFxCTeNbmEav1GqphB5SQKx5
+	 PlasxjaVJPXoPKLg+iq1CmW+F2Fijkq5Ge+iN758elfvdZR2pLoiBasYg7Dfybotmz
+	 avcENAfUf40s5FWIG2QJ34T8js66hZ1Jap/aFvaqz/HFTWAqYseMJO+6CTGCnTeyWb
+	 j7PzkiP7q6w5g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id BD64A380CFD9;
+	Thu, 24 Apr 2025 16:29:02 +0000 (UTC)
+Subject: Re: [GIT PULL] Networking for v6.15-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250424110659.163332-1-pabeni@redhat.com>
+References: <20250424110659.163332-1-pabeni@redhat.com>
+X-PR-Tracked-List-Id: <netdev.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250424110659.163332-1-pabeni@redhat.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.15-rc4
+X-PR-Tracked-Commit-Id: cc0dec3f659d19805fcaf8822204137c9f27a912
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: e72e9e6933071fbbb3076811d3a0cc20e8720a5b
+Message-Id: <174551214157.3411799.2593289565638624789.pr-tracker-bot@kernel.org>
+Date: Thu, 24 Apr 2025 16:29:01 +0000
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: torvalds@linux-foundation.org, kuba@kernel.org, davem@davemloft.net, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-510f9
 
-On Wed, 23 Apr 2025 09:53:49 +0200, Bartosz Golaszewski wrote:
-> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
-> values") added new line setter callbacks to struct gpio_chip. They allow
-> to indicate failures to callers. We're in the process of converting all
-> GPIO controllers to using them before removing the old ones. This series
-> converts all GPIO drivers under drivers/leds/.
-> 
-> 
-> [...]
+The pull request you sent on Thu, 24 Apr 2025 13:06:59 +0200:
 
-Applied, thanks!
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.15-rc4
 
-[1/4] leds: lgm-sso: use new line value setter callbacks
-      commit: d48b4a8402c07453f82a95af60702d06c14bca18
-[2/4] leds: pca955x: use new line value setter callbacks
-      commit: f5800749963eefb11001fe961434a1b0fdf12382
-[3/4] leds: pca9532: use new line value setter callbacks
-      commit: e3f286285f19d985323f4e3454894d6f8ba83dbc
-[4/4] leds: tca6507: use new line value setter callbacks
-      commit: df80e14ebe1035004c515b952cb700a391f220f5
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/e72e9e6933071fbbb3076811d3a0cc20e8720a5b
 
---
-Lee Jones [李琼斯]
+Thank you!
 
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
