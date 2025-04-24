@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457B2212FAB
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:13:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3259F2701CC
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:15:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745486001; cv=none; b=CcNfmyZ/WoUhdfET/yi00ilVZ3wsCrygtlMN5927ot3L928/ZYaZrZJIS2ObZGqYJOTct9mi19vZeGXKyF0XHNLJGJ7bE0smac8ag9AjkiAHEjYzsIpqo9CVpbc4dK230WPWZTU/bPxRncT1dcLoGCKYKKQ6epNv84jtJiOOAzs=
+	t=1745486124; cv=none; b=XLKTIc9dARhVxYyHLVzOIUHaK9MdvW7iLRBZF18OGQ/TRQccGsR9i5N0f0etlOYlthLv3vjEgtzxoQ4XNxIB6zgsz1ijgtrg/rS3o55G0LanJe0fxGK+3OR1XjiwaJt0fxQxSYtlJHEynTlvWfc1YgLTgxA6/DZfC42/aQqECGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745486001; c=relaxed/simple;
-	bh=2x3yOcv4qSe4Jq1as4fknGnxJi6Z05xGD+6EbldsjQc=;
+	s=arc-20240116; t=1745486124; c=relaxed/simple;
+	bh=Jrfga0n+DIwSYFtPo/KzGVOxGL6d9C0zVE201GuiIjw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AUIXP7ft+v9ebXLZ9BLR2S3N3qUV/AR5nEEf16SsAmd8W5yXhBLrfsyDsGTWellXB4idblXVtOsLKnbHBwguE9xl6tv2NZsOY5HVRMKGHqw5a21k7ohecv6MhQ72D8D5h1SlbyIheUZmagMKGbv8DdVJOTCJ2Hmw1A44hzsR9Hs=
+	 In-Reply-To:Content-Type; b=ZnqzRngaLXUKvCxS4Lg2tpgOjuGkk5VeO3XmNEsE34lq7qy8/K9A5b/4mFSZBr0DUDOrl7RzhrU8fCyX+Hi5+X2014NPaaYPZZAeb4tX5odcds/LeKugCtctmasB45+fWXLoJr9v5mB1NPQIydqPicEF8LM+RYF4KTXsMEbJEwk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D7911063;
-	Thu, 24 Apr 2025 02:13:11 -0700 (PDT)
-Received: from [10.163.49.106] (unknown [10.163.49.106])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88FE63F66E;
-	Thu, 24 Apr 2025 02:13:11 -0700 (PDT)
-Message-ID: <faaaaba2-db31-489c-8016-36f11f52d11a@arm.com>
-Date: Thu, 24 Apr 2025 14:43:08 +0530
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 977AD1063;
+	Thu, 24 Apr 2025 02:15:17 -0700 (PDT)
+Received: from [10.1.196.43] (eglon.cambridge.arm.com [10.1.196.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D27EE3F66E;
+	Thu, 24 Apr 2025 02:15:18 -0700 (PDT)
+Message-ID: <dfb42daf-74ac-461f-bc56-f1d9ec805e9d@arm.com>
+Date: Thu, 24 Apr 2025 10:15:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,221 +27,165 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 11/11] arm64/mm: Batch barriers when updating kernel
- mappings
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+Subject: Re: [PATCH v8 04/21] x86/resctrl: resctrl_exit() teardown resctrl but
+ leave the mount point
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-References: <20250422081822.1836315-1-ryan.roberts@arm.com>
- <20250422081822.1836315-12-ryan.roberts@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250422081822.1836315-12-ryan.roberts@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com,
+ Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
+References: <20250411164229.23413-1-james.morse@arm.com>
+ <20250411164229.23413-5-james.morse@arm.com>
+ <81a54d21-40af-438e-8139-322597a7506e@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <81a54d21-40af-438e-8139-322597a7506e@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi Reinette,
+
+On 16/04/2025 01:25, Reinette Chatre wrote:
+> On 4/11/25 9:42 AM, James Morse wrote:
+>> resctrl_exit() was intended for use when the 'resctrl' module was unloaded.
+>> resctrl can't be built as a module, and the kernfs helpers are not exported
+>> so this is unlikely to change. MPAM has an error interrupt which indicates
+>> the MPAM driver has gone haywire. Should this occur tasks could run with
+>> the wrong control values, leading to bad performance for important tasks.
+>> In this scenario the MPAM driver will reset the hardware, but it needs
+>> a way to tell resctrl that no further configuration should be attempted.
+>>
+>> In particular, moving tasks between control or monitor groups does not
+>> interact with the architecture code, so there is no opportunity for the
+>> arch code to indicate that the hardware is no-longer functioning.
+>>
+>> Using resctrl_exit() for this leaves the system in a funny state as
+>> resctrl is still mounted, but cannot be un-mounted because the sysfs
+>> directory that is typically used has been removed. Dave Martin suggests
+>> this may cause systemd trouble in the future as not all filesystems
+>> can be unmounted.
+>>
+>> Add calls to remove all the files and directories in resctrl, and
+>> remove the sysfs_remove_mount_point() call that leaves the system
+>> in a funny state. When triggered, this causes all the resctrl files
+>> to disappear. resctrl can be unmounted, but not mounted again.
 
 
-On 4/22/25 13:48, Ryan Roberts wrote:
-> Because the kernel can't tolerate page faults for kernel mappings, when
-> setting a valid, kernel space pte (or pmd/pud/p4d/pgd), it emits a
-> dsb(ishst) to ensure that the store to the pgtable is observed by the
-> table walker immediately. Additionally it emits an isb() to ensure that
-> any already speculatively determined invalid mapping fault gets
-> canceled.
-> 
-> We can improve the performance of vmalloc operations by batching these
-> barriers until the end of a set of entry updates.
-> arch_enter_lazy_mmu_mode() and arch_leave_lazy_mmu_mode() provide the
-> required hooks.
-> 
-> vmalloc improves by up to 30% as a result.
-> 
-> Two new TIF_ flags are created; TIF_LAZY_MMU tells us if the task is in
-> the lazy mode and can therefore defer any barriers until exit from the
-> lazy mode. TIF_LAZY_MMU_PENDING is used to remember if any pte operation
-> was performed while in the lazy mode that required barriers. Then when
-> leaving lazy mode, if that flag is set, we emit the barriers.
-> 
-> Since arch_enter_lazy_mmu_mode() and arch_leave_lazy_mmu_mode() are used
-> for both user and kernel mappings, we need the second flag to avoid
-> emitting barriers unnecessarily if only user mappings were updated.
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  arch/arm64/include/asm/pgtable.h     | 81 ++++++++++++++++++++++------
->  arch/arm64/include/asm/thread_info.h |  2 +
->  arch/arm64/kernel/process.c          |  9 ++--
->  3 files changed, 72 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 39c331743b69..ab4a1b19e596 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -40,6 +40,63 @@
->  #include <linux/sched.h>
->  #include <linux/page_table_check.h>
->  
-> +static inline void emit_pte_barriers(void)
-> +{
-> +	/*
-> +	 * These barriers are emitted under certain conditions after a pte entry
-> +	 * was modified (see e.g. __set_pte_complete()). The dsb makes the store
-> +	 * visible to the table walker. The isb ensures that any previous
-> +	 * speculative "invalid translation" marker that is in the CPU's
-> +	 * pipeline gets cleared, so that any access to that address after
-> +	 * setting the pte to valid won't cause a spurious fault. If the thread
-> +	 * gets preempted after storing to the pgtable but before emitting these
-> +	 * barriers, __switch_to() emits a dsb which ensure the walker gets to
-> +	 * see the store. There is no guarantee of an isb being issued though.
-> +	 * This is safe because it will still get issued (albeit on a
-> +	 * potentially different CPU) when the thread starts running again,
-> +	 * before any access to the address.
-> +	 */
-> +	dsb(ishst);
-> +	isb();
-> +}
-> +
-> +static inline void queue_pte_barriers(void)
-> +{
-> +	unsigned long flags;
-> +
-> +	VM_WARN_ON(in_interrupt());
-> +	flags = read_thread_flags();
-> +
-> +	if (flags & BIT(TIF_LAZY_MMU)) {
-> +		/* Avoid the atomic op if already set. */
-> +		if (!(flags & BIT(TIF_LAZY_MMU_PENDING)))
-> +			set_thread_flag(TIF_LAZY_MMU_PENDING);
-> +	} else {
-> +		emit_pte_barriers();
-> +	}
-> +}
-> +
-> +#define  __HAVE_ARCH_ENTER_LAZY_MMU_MODE
-> +static inline void arch_enter_lazy_mmu_mode(void)
-> +{
-> +	VM_WARN_ON(in_interrupt());
-> +	VM_WARN_ON(test_thread_flag(TIF_LAZY_MMU));
-> +
-> +	set_thread_flag(TIF_LAZY_MMU);
-> +}
-> +
-> +static inline void arch_flush_lazy_mmu_mode(void)
-> +{
-> +	if (test_and_clear_thread_flag(TIF_LAZY_MMU_PENDING))
-> +		emit_pte_barriers();
-> +}
-> +
-> +static inline void arch_leave_lazy_mmu_mode(void)
-> +{
-> +	arch_flush_lazy_mmu_mode();
-> +	clear_thread_flag(TIF_LAZY_MMU);
-> +}
-> +
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  #define __HAVE_ARCH_FLUSH_PMD_TLB_RANGE
->  
-> @@ -326,10 +383,8 @@ static inline void __set_pte_complete(pte_t pte)
->  	 * Only if the new pte is valid and kernel, otherwise TLB maintenance
->  	 * has the necessary barriers.
->  	 */
-> -	if (pte_valid_not_user(pte)) {
-> -		dsb(ishst);
-> -		isb();
-> -	}
-> +	if (pte_valid_not_user(pte))
-> +		queue_pte_barriers();
->  }
->  
->  static inline void __set_pte(pte_t *ptep, pte_t pte)
-> @@ -801,10 +856,8 @@ static inline void set_pmd(pmd_t *pmdp, pmd_t pmd)
->  
->  	WRITE_ONCE(*pmdp, pmd);
->  
-> -	if (pmd_valid(pmd)) {
-> -		dsb(ishst);
-> -		isb();
-> -	}
-> +	if (pmd_valid(pmd))
-> +		queue_pte_barriers();
->  }
->  
->  static inline void pmd_clear(pmd_t *pmdp)
-> @@ -869,10 +922,8 @@ static inline void set_pud(pud_t *pudp, pud_t pud)
->  
->  	WRITE_ONCE(*pudp, pud);
->  
-> -	if (pud_valid(pud)) {
-> -		dsb(ishst);
-> -		isb();
-> -	}
-> +	if (pud_valid(pud))
-> +		queue_pte_barriers();
->  }
->  
->  static inline void pud_clear(pud_t *pudp)
-> @@ -951,8 +1002,7 @@ static inline void set_p4d(p4d_t *p4dp, p4d_t p4d)
->  	}
->  
->  	WRITE_ONCE(*p4dp, p4d);
-> -	dsb(ishst);
-> -	isb();
-> +	queue_pte_barriers();
->  }
->  
->  static inline void p4d_clear(p4d_t *p4dp)
-> @@ -1080,8 +1130,7 @@ static inline void set_pgd(pgd_t *pgdp, pgd_t pgd)
->  	}
->  
->  	WRITE_ONCE(*pgdp, pgd);
-> -	dsb(ishst);
-> -	isb();
-> +	queue_pte_barriers();
->  }
->  
->  static inline void pgd_clear(pgd_t *pgdp)
-> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
-> index 1114c1c3300a..1fdd74b7b831 100644
-> --- a/arch/arm64/include/asm/thread_info.h
-> +++ b/arch/arm64/include/asm/thread_info.h
-> @@ -82,6 +82,8 @@ void arch_setup_new_exec(void);
->  #define TIF_SME_VL_INHERIT	28	/* Inherit SME vl_onexec across exec */
->  #define TIF_KERNEL_FPSTATE	29	/* Task is in a kernel mode FPSIMD section */
->  #define TIF_TSC_SIGSEGV		30	/* SIGSEGV on counter-timer access */
-> +#define TIF_LAZY_MMU		31	/* Task in lazy mmu mode */
-> +#define TIF_LAZY_MMU_PENDING	32	/* Ops pending for lazy mmu mode exit */
->  
->  #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)
->  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
-> diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-> index 42faebb7b712..45a55fe81788 100644
-> --- a/arch/arm64/kernel/process.c
-> +++ b/arch/arm64/kernel/process.c
-> @@ -680,10 +680,11 @@ struct task_struct *__switch_to(struct task_struct *prev,
->  	gcs_thread_switch(next);
->  
->  	/*
-> -	 * Complete any pending TLB or cache maintenance on this CPU in case
-> -	 * the thread migrates to a different CPU.
-> -	 * This full barrier is also required by the membarrier system
-> -	 * call.
-> +	 * Complete any pending TLB or cache maintenance on this CPU in case the
-> +	 * thread migrates to a different CPU. This full barrier is also
-> +	 * required by the membarrier system call. Additionally it makes any
-> +	 * in-progress pgtable writes visible to the table walker; See
-> +	 * emit_pte_barriers().
->  	 */
->  	dsb(ish);
->  
+> The caveat here is that resctrl pretends to be mounted (resctrl_mounted == true)
+> but there is nothing there. The undocumented part of this is that for this
+> to work resctrl fs depends (a lot) on the architecture's callbacks to know
+> if they are being called after a resctrl_exit() call so that they return data
+> that will direct resctrl fs behavior to safest exit for those
+> resctrl fs flows that are still possible after a resctrl_exit(). Not ideal
+> layering.
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+It was the arch code that called resctrl_exit() - there is no other path into it.
+I don't think its a problem for the arch code to also know to return an error.
+I haven't found anything where which error is returned actually matter - so there
+is no 'direction', only errors.
+
+I agree the documentation can be improved.
+
+
+> I understand from a previous comment [1] that one of the Arm "tricks" is to
+> offline all domains. This seems to be a good "catch all" to ensure that at least
+> current flows of concern are not running anymore.
+
+Yup, that is necessary to stop the limbo and overflow workers for trying to read the
+counters - which is a waste of time.
+
+
+> Considering this,
+> what if there is a new resctrl_error_exit() that does something like below?
+> 
+> 	void resctrl_error_exit(void)
+> 	{
+> 		mutex_lock(&rdtgroup_mutex);
+> 		WARN_ON_ONCE(resctrl_new_function_returns_true_if_any_resource_has_a_control_or_monitor_domain());
+> 		resctrl_fs_teardown();
+> 		mutex_unlock(&rdtgroup_mutex);
+> 		resctrl_exit();
+> 	}
+
+Makes sense - the alternative would be to dig around to cancel the limbo/overflow
+work, and a subsequent CPU-online might start them again.
+
+> I do not see this as requiring anything new from architecture but instead
+> making what Arm already does a requirement and keeping existing behavior?
+
+I agree.
+
+
+> This leaves proc_resctrl_show() that relies on resctrl_mounted but as I see
+> the resctrl_fs_cleanup() will remove all resource groups that should result
+> in the output being as it will be if resctrl is not mounted. No dependence
+> on architecture callbacks returning resctrl_exit() aware data here.
+
+Great - I'd missed that one,
+
+
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index fdf2616c7ca0..3f9c37637d7e 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+
+>> @@ -4416,11 +4429,26 @@ int __init resctrl_init(void)
+>>  	return ret;
+>>  }
+>>  
+>> +/**
+>> + * resctrl_exit() - Remove the resctrl filesystem and free resources.
+>> + *
+>> + * Called by the architecture code in response to a fatal error.
+>> + * Resctrl files and structures are removed from kernfs to prevent further
+>> + * configuration.
+> 
+> Please write with imperative tone. For example, "Remove resctrl files and structures ..."
+> 
+>> + */
+>>  void __exit resctrl_exit(void)
+>>  {
+>> +	mutex_lock(&rdtgroup_mutex);
+>> +	resctrl_fs_teardown();
+>> +	mutex_unlock(&rdtgroup_mutex);
+>> +
+>>  	debugfs_remove_recursive(debugfs_resctrl);
+> 
+> Is it possible for the fatal error handling to trigger multiple calls here?
+> To protect against multiple calls causing issues debugfs_resctrl can be set to NULL here.
+
+It's not, the driver keeps track of whether resctrl_init() had been called, and only calls
+resctrl_exit() once. But I agree it would be better to make it robust to this.
+
+
+>>  	unregister_filesystem(&rdt_fs_type);
+> 
+> unregister_filesystem() seems to handle an already-unregistered filesystem.
+> 
+>> -	sysfs_remove_mount_point(fs_kobj, "resctrl");
+>> +
+>> +	/*
+>> +	 * The sysfs mount point added by resctrl_init() is not removed so that
+>> +	 * it can be used to umount resctrl.
+>> +	 */
+> 
+> (needs imperative)
+> 
+>>  
+>>  	resctrl_mon_resource_exit();
+>>  }
+
+
+Thanks,
+
+James
