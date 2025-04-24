@@ -1,259 +1,199 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from pop36.abv.bg (pop36.abv.bg [194.153.145.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68F21C6FF5
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508259; cv=fail; b=Y5z6/Orsv8h0lN26D1CTepWZaqDrn6NFXau/2lYEZaEvE+DTCAaQVGHB63BAKbbNXvtLkgzw+T88c0wDpR9StK30bAxmfhqvPz7ZydPxpPhV+ERqIpPcK0MBIIjdGms7YMMsfw4xEHb6J4KxvYmkr2IqvHnW5I4i1VsddSwfn3w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508259; c=relaxed/simple;
-	bh=i1XKhiqyh9lSJQx4mSw3v8TUM1/CY/MQ6wOMZ7Mjt6c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ERzYTp9HmYhNORvRi2bwXRKhsKHaXzH8XEbfvNcaFHAnY7sTtD/anWOaAd3zhsKbL0KpwyDp8+0bF5ezXvj/PNgW6CNXa+EGJAdTtBiISLEgkgZm4yD891nFf+luwgFGHk4u+kpkwyiItNqkx5rMU+0WDoTn6kquVLk+ZA1t4ps=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cPPodkX0; arc=fail smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322CA1A841C
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.153.145.227
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745508273; cv=none; b=HqhLecapaZ608hqEFm00MHxd0YoE5bLVsKRSuSqEugO47xr2iqiECyUxzH/46zicuyV9HDzYpSD/lsizgrHgw30BMuGdfgXc98V6h6oQ0fTfm09DP6q5Sko2hBNFlIj82AbHMiPyBW4x1FNGI/zhcITLLv+Cj4S+PDVmSYFop3s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745508273; c=relaxed/simple;
+	bh=r9WvBOzO9ub9cvnpN+Vt2Llv1rg9QEbN9Ah6Hd3dmog=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qkAroVrUvK5GpwufyWPEc2R+t34NhCM/jaVXxBGyM+WU7VWa66/EMAGJMtd0beaqS/ymaflujG4CnWZRkFkMjlzFEdFTSNiJEB81cyUKD7A8q+M1tgtjyuNKw/D2MiVh0jTmwLCh6+pTbXTE/riGmmYzU+5MSyTylUuemn5dCJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=abv.bg; spf=pass smtp.mailfrom=abv.bg; dkim=pass (1024-bit key) header.d=abv.bg header.i=@abv.bg header.b=I8pMzi8/; arc=none smtp.client-ip=194.153.145.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=abv.bg
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=abv.bg
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cPPodkX0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745508257; x=1777044257;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=i1XKhiqyh9lSJQx4mSw3v8TUM1/CY/MQ6wOMZ7Mjt6c=;
-  b=cPPodkX0yGi5AO8S35H116mzm2oPpaD/SMn6mh5g7F95yplRCEJazNAQ
-   bR6jQHgyXkkz5lONnPD7t9PjTudyuu6Em0P3GIO3vbKLYZxy9hcPDWIlR
-   BpZPPs+byVx/9hzIo2x4F7zQyQ8PmvXnNEWp+XBU+VoeJfoGDdeML4iXo
-   qSrO0uMAPBAsD+pZpVa6FQd4bMnnVKmsGf0ngNhemSjVGQ/dzez2SrLck
-   PUR4ogOeYNYOYnuagM0MZ8rFupA+HOIU8GPj99GDgIi5DIF6AS8MFOEro
-   RVPjakw2Vhfhj9AwD9AS2a8JzlhyL8vi+EbMrl1p2dcKudwbUYpc8McAL
-   A==;
-X-CSE-ConnectionGUID: MqY9CuzITjqtYTUOH/pEJA==
-X-CSE-MsgGUID: 6T2TaSZtQ3SDSrljEV/ueg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="46864660"
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="46864660"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 08:24:14 -0700
-X-CSE-ConnectionGUID: X4chSc92SseO7WUEHG++BQ==
-X-CSE-MsgGUID: tZ3w1560QdSla1JuKd11FA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="169862474"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 08:24:14 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 24 Apr 2025 08:24:13 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 24 Apr 2025 08:24:13 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.45) by
- edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 24 Apr 2025 08:24:12 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yWOhKoMgcc1sWCCFUu7fdilvKo5X9oPJt7xoqyYHaCO4errH9A0U5lHHg0i684pWMNvUZexCK641Smc5VwGvljiBWMky5fPu2wTYml0/rpbVnLUBcKnfeXTf4mSP9yfSafVXzVJ2aoY1Fe9z+sqAyw6cxu2Sz+DGw39Xwd9PBts1B5UVEYPM8Qv6GZ0+bk3AecRdzTipj25TKu1Zh+1kvpo7S1juiro6vboUXoMB+Y5csDeN7vqdqTGyih9zx0GYxqcuPC/uirXBr77kNwY1T91B2HYP2j0Lt55X9jKJ8tATt0T1gXg0eboEBbST4wE+OlI4cbDtzgroQaYbssh5mA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p8/gLHYIIBDXwab+DrY1rc98eAMI2ts8Ml0d5JaX2t4=;
- b=v6Z9mTBnpAVQCIZEnoTYGxHaNvYVr8yx/bNPEZZiSDR14TxWvMwWO7bL8kHzHeHGkLmkdGeobItIl734HS6yK4qJCw0Q1XxUicqKoWH+D8Fugm/u0o4v20rEx7NQOPRtzgMIC8jY+IXxXnkuFiikNHfooFLc34CDzWW3SVTPqHYlXByprZ6UgMTiMwXhkoKeP6p1WLcfKXOCohY/NUMMerQp5dBsezqY0lujYDHLClOIk8ug4+ny/QoIqyRQtczZWz6PyvdhtrfxPVFjUPu7J6zcmZ0eUh9BExnaIVexLctLRwSag+gEiWb+OST05Pq+r44htMMday2RfK4TkcgRvQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH0PR11MB5095.namprd11.prod.outlook.com (2603:10b6:510:3b::14)
- by SA1PR11MB7085.namprd11.prod.outlook.com (2603:10b6:806:2ba::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Thu, 24 Apr
- 2025 15:24:08 +0000
-Received: from PH0PR11MB5095.namprd11.prod.outlook.com
- ([fe80::215b:e85e:1973:8189]) by PH0PR11MB5095.namprd11.prod.outlook.com
- ([fe80::215b:e85e:1973:8189%3]) with mapi id 15.20.8655.025; Thu, 24 Apr 2025
- 15:24:08 +0000
-From: "Keller, Jacob E" <jacob.e.keller@intel.com>
-To: Jie Luo <quic_luoj@quicinc.com>, "Russell King (Oracle)"
-	<linux@armlinux.org.uk>
-CC: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes
-	<linux@rasmusvillemoes.dk>, Julia Lawall <Julia.Lawall@inria.fr>, "Nicolas
- Palix" <nicolas.palix@imag.fr>, Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton
-	<oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose
-	<suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"cocci@inria.fr" <cocci@inria.fr>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "andrew@lunn.ch" <andrew@lunn.ch>,
-	"quic_kkumarcs@quicinc.com" <quic_kkumarcs@quicinc.com>,
-	"quic_linchen@quicinc.com" <quic_linchen@quicinc.com>,
-	"quic_leiwei@quicinc.com" <quic_leiwei@quicinc.com>,
-	"quic_suruchia@quicinc.com" <quic_suruchia@quicinc.com>,
-	"quic_pavir@quicinc.com" <quic_pavir@quicinc.com>
-Subject: RE: [cocci] [PATCH v3 3/6] arm64: tlb: Convert the opencoded field
- modify
-Thread-Topic: [cocci] [PATCH v3 3/6] arm64: tlb: Convert the opencoded field
- modify
-Thread-Index: AQHbtCzwqS29KFwsakalRi4XUJvnbbOoH9IAgAkbb4CAAbUNYA==
-Date: Thu, 24 Apr 2025 15:24:08 +0000
-Message-ID: <PH0PR11MB50957B606B76490E205923F8D6852@PH0PR11MB5095.namprd11.prod.outlook.com>
-References: <20250417-field_modify-v3-0-6f7992aafcb7@quicinc.com>
- <20250417-field_modify-v3-3-6f7992aafcb7@quicinc.com>
- <aAFEOr_PnZRH2ocR@shell.armlinux.org.uk>
- <2b7ca78e-18f8-41bf-979d-8d502f6f8fe1@quicinc.com>
-In-Reply-To: <2b7ca78e-18f8-41bf-979d-8d502f6f8fe1@quicinc.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH0PR11MB5095:EE_|SA1PR11MB7085:EE_
-x-ms-office365-filtering-correlation-id: 97cf7960-5499-489e-7d2b-08dd83440eec
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?ieRK0i+A3um1ILzk3cw5z2yud10fFS+yYlQGXY+sCnJkPI2BtLgo9DVVo7dE?=
- =?us-ascii?Q?PhK8/cR+3gcL78W6cTxKfSyr3Jz2yftgr4wrt7HmRDymneTtLeKJ/80GFWQ6?=
- =?us-ascii?Q?8kThBzlUq9Z9ppE/oAL57KbKz22Ejl0AzJkthAZw9BL5AyUMANaKIh06QYFP?=
- =?us-ascii?Q?gTYTbcGid0LUnEtvIY/cV0KejcbWa+6iXepUIiQ9GS9fK5R5WhGGA4jJ00n4?=
- =?us-ascii?Q?ChFLKbDa0g19ZeyYe0pMCPsm1axcr5OV/FtlLh9ONIdzEHAItURplQPjC51+?=
- =?us-ascii?Q?ThLMMm2QazQf2rbR51giWZC7OgOqYJ24xGuV95iMnhtatjWXJXeBzoZ5o3P2?=
- =?us-ascii?Q?8R++chvFsDkDbKkS89P+reEPnqcLBJLdVqsqMOTv3pOrxc7rlHW4jgbrBxCJ?=
- =?us-ascii?Q?OFa5U+jEF9E19OV8fOMI37i1wG0okbawgxQc4ZHMFboeZPELTraFaHd9dKGP?=
- =?us-ascii?Q?gMTnXzZvSvPoy1ZgWIwfZmxdV5AD2wpKCZrnMlw1bGAw7qWgUOqfEZZD/pSS?=
- =?us-ascii?Q?hAHKC4uJG+vaIcNveRTPZerteAy6ibKqAdEit6Nw+6q2BzIMj/7gIIl1JoXP?=
- =?us-ascii?Q?wxu/d+0j5g13gjehXl2pOp4a/mEoeuJHsBkQyT8RgpUJDNAW7iQ98PhaCmk6?=
- =?us-ascii?Q?/cNGGDgMecNksONxQt6aRhr4xnp6XRd7h9k9Rdko03y/YFNW94t9H8FcW2Fp?=
- =?us-ascii?Q?xeZfkNavjFtnLewy4Ga09uIknNfsIidRi2OAuw7uEP2N0kFdgRFZFSuSsUhK?=
- =?us-ascii?Q?lV2NVhfvhVasBRdXkcgnnWIRUVyCEAIZLdt7U29WkHfehkw/AKXl3Zl/y/Ea?=
- =?us-ascii?Q?AmfLfz2urf/gTmc9cnqET4WfZ3TfcpdQ47hsfQzHnP1jd23ntIvAhndtflPa?=
- =?us-ascii?Q?TnzqLpZF9rTtSF9zVp5xhUopSca9aUYwxWhnvwtg3MK/yn8pZFxvm2jI/ErO?=
- =?us-ascii?Q?EeERReBQett6LODa4OrKEs8v4hbgGNpTjz9NVyGyLlzXwhMj1az8LFidH02g?=
- =?us-ascii?Q?IWVbOA8UDdD/cZNpZzwGouy97S8CNXu53EvYtX0oMVdI+VQhgNyPg/H0gu9Q?=
- =?us-ascii?Q?+HkSmXvZuKpA6rkryxzjG6OijvJQDSRVp8n4GkeRwb2r6Op4J/q5sUYVxKb8?=
- =?us-ascii?Q?CSbmnJHaRDoFDNIeR2IGThnDBIPfdv35imsCLjYL+g1XJUKkJbIIdJvuQXe7?=
- =?us-ascii?Q?Ll3Y+HNbj9RyPhvDp+ZZiPqbEVE5RXZp2Yjx8NVogDCTOzYtKfP2Tjgay/YA?=
- =?us-ascii?Q?/waDVyxEbkKRGbJSnvKLqKQyU1IA0S0a7DoiVR0PbwaD10Sb293yBztCXKvB?=
- =?us-ascii?Q?oqEh9Ers0wCW+ftQib7U27/NwJ7T+FneuRHU8LkCJMQ7phnx8fCMMgNberRE?=
- =?us-ascii?Q?brDw5wxSgJoNH1aY0GQbNo6ijqa2M/MAnDGQMpaWBveY38dZV8Fp83AwB7qm?=
- =?us-ascii?Q?XIp0iqbJHFU=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR11MB5095.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?1vhIy2pkzz87YGb/QyTOeowgP2WOtiQpHGhM4dgszwsLs9YLqcenl/O65Qs6?=
- =?us-ascii?Q?ONXSCnhR9wkgO65ktrogoklRxH8osWzt4Up5Qbeow5sKGux/zRZSJAOxZCCW?=
- =?us-ascii?Q?A7K4Zj2qDpyPl8n12jQa1datNvtkxiYurFKf2r1WG28yKhFFLFM+1RjogmGZ?=
- =?us-ascii?Q?qmWPkIV4Bq24MCB/ZPSvUgzh9+9CTTMUZpUlNvcYARGzc/i7j7XkfgVDjMAi?=
- =?us-ascii?Q?m0i9E+EI/9FkXl7GxsXYyGuor77+1b3rHPrzLtGrKDY9Q3x4Kh/A3SdIT54N?=
- =?us-ascii?Q?pkYQOMHzhmmlRcHVS94db/yfYti9oDjr6+F3GkxsO4GupebFB1tjoqledy4n?=
- =?us-ascii?Q?qrwSqejttR/IcU2iymAWVvh/LU904o7/56VypNp4vDkHnv3Y93KvH3boMNYr?=
- =?us-ascii?Q?zGcWZfQt1kdbjLZrv+O5xjbNhy7u66Ee7q0sxxioyiEOU7692t8qzQzoxJjn?=
- =?us-ascii?Q?wd0gkwSK2yT929mhvexOS496xCGG8rwfD/x4G6SaA/7yLu2+1DlsJpu6TWHa?=
- =?us-ascii?Q?hPzS6GeDtGwquh0kct76JoUtrx62LIvY4nVtMebTNB34pNJpvFMoDRZJK/iG?=
- =?us-ascii?Q?ti/QwtVuAEbCwEMSIzWJ55R170mtETTZvucVxXSSz61j0NI3Zky8j0IwroaM?=
- =?us-ascii?Q?UaRv6puAi8apr6DfXkbp2R8qsth4inQMZZYFSMQVxDIp386vkaGKBsRQ2Vxy?=
- =?us-ascii?Q?jj9PgFB9I3lv7mT0IJXP/J/DJkrnp4RZNRY05v2iIYqA04xElLjEwqNeUk/t?=
- =?us-ascii?Q?mYtIumL5FxfpAgvE9SyYDD/NXmVP3kvC5GwrPpvJfJhHqrgHXhHOqrW1A4Jz?=
- =?us-ascii?Q?sg5G1hcNleUdBftKWTNOcYDmweEauQ0b5Lg3tyrghpHgdv5oHwFTuvD0VjS0?=
- =?us-ascii?Q?EwcFf72XnwGxGX5jnMpd2pYm24nWSgoMtqnk3Rbn46kFDuwrKJXbrHd4sbUJ?=
- =?us-ascii?Q?0zX5XdffWLNnleR+0a0pnyeih/p+rOgpZRy6BuE7nryMvozo6uCq5B6CAYdW?=
- =?us-ascii?Q?VjL6/yJIgM4sybs7wAYU+9toV3fUeHukss818w2a9wAP/yQ+Ctbp6jre5UpM?=
- =?us-ascii?Q?iImF+b8Srl2wLisDcYwgCF+at5p/RMR579owU523eEH524rJxMWpUwKKw511?=
- =?us-ascii?Q?OKVHOmUMEvbSPEsChddOKI4YJhNY/6BRKNbhXG5AExCNgobCnhzaFwoAN6hl?=
- =?us-ascii?Q?tsxq+bbyCn4m2TAQ0ROhzdcJWus+j1zwaPVeqgPmPDoqX+z7xIUfJ3kqEcVu?=
- =?us-ascii?Q?07cfrxS0iL9MCdurEQdJ8uzEtO7HMjuKdoghCiwyjsaYVW86xItPT+PGIyLq?=
- =?us-ascii?Q?gpWZGblTdVQwKNcE5fLYGQZkGm2BECYoOnYx364KpzBnNAxmEc4edk++0pJM?=
- =?us-ascii?Q?WUJpjIb2Befm1y8waIVN2WMB9/lO6MWHj0eQ/EbEePeHB4V5SLC/rJ4SNcG3?=
- =?us-ascii?Q?x00WtvQiMBbW1jWAcqgEHdclA75u4lutFHzlneexx0SjhA1wgEdVpDKhcvep?=
- =?us-ascii?Q?d9L3RcuKIlglfQ0BGcEnusf+gaXN6lEC1c0e/YChkqx1qM669vcaH/kVtpNC?=
- =?us-ascii?Q?70dpHgqnCvdnex7Xdh2D0pbIshuw3GoPeMBd6Lo9?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=abv.bg header.i=@abv.bg header.b="I8pMzi8/"
+Received: from smtp.abv.bg (localhost [127.0.0.1])
+	by pop36.abv.bg (Postfix) with ESMTP id 6B4C91805D2D;
+	Thu, 24 Apr 2025 18:14:56 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=abv.bg; s=smtp-out;
+	t=1745507696; bh=MPc9jSI1zCl6BTdIscu6ybN1aJS6kPg8y/OMmaKXouI=;
+	h=Date:From:To:Cc:Subject:From;
+	b=I8pMzi8/zHh5bNJGwhoMxzJiVcHML1GBgsIK7eGdSFX9xuyebQNayivyvD9YR5lbs
+	 V0qgliH47GWcprFXGtP5M996bKEbT2htoowfrDpU8BuONA/AZY/lXpdCcx1gt2mwy1
+	 RssQamanLsZF90fVP+2O6d76EYThn375EJW5Avow=
+X-HELO: laptop
+Authentication-Results: smtp.abv.bg; auth=pass (login) smtp.auth=ivan.shamliev.dev@abv.bg
+Received: from pop-144.92.escom.bg (HELO laptop) (93.183.144.92)
+ by smtp.abv.bg (qpsmtpd/0.96) with ESMTPSA (ECDHE-RSA-AES256-GCM-SHA384 encrypted); Thu, 24 Apr 2025 18:14:56 +0300
+Date: Thu, 24 Apr 2025 18:14:53 +0300
+From: Ivan Shamliev <ivan.shamliev.dev@abv.bg>
+To: austin.zheng@amd.com, jun.lei@amd.com, harry.wentland@amd.com
+Cc: amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ ivan.shamliev.dev@abv.bg
+Subject: [PATCH] drm/amd/display: Use true/false for boolean variables in
+ DML2 core files
+Message-ID: <20250424181453.3f78a2a9@laptop>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR11MB5095.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97cf7960-5499-489e-7d2b-08dd83440eec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2025 15:24:08.7851
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: R/LfsaZNoJND62+TqlbG0a24kqRM2ijdBbIli1a4bt8mhsFloVVl4wCrep4dTmbHtHFkKXE3roKDBe1LlhsfJnhZw74jRzz9IT2CTUWEpRA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB7085
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+=46rom 694c017112d176af07c2a65f015a8e73d6895e81 Mon Sep 17 00:00:00 2001
+From: Ivan Shamliev <ivan.shamliev.dev@abv.bg>
+Date: Thu, 24 Apr 2025 11:00:08 +0300
+Subject: [PATCH] drm/amd/display: Use true/false for boolean variables in D=
+ML2
+ core files
 
+Replace 0 and 1 with false and true for boolean variables in
+dml2_core_dcn4_calcs.c and dml2_core_utils.c to align with the Linux
+kernel coding style guidelines, which recommend using C99 bool type
+with true/false values.
 
-> -----Original Message-----
-> From: cocci-request@inria.fr <cocci-request@inria.fr> On Behalf Of Jie Lu=
-o
-> Sent: Wednesday, April 23, 2025 6:16 AM
-> To: Russell King (Oracle) <linux@armlinux.org.uk>
-> Cc: Yury Norov <yury.norov@gmail.com>; Rasmus Villemoes
-> <linux@rasmusvillemoes.dk>; Julia Lawall <Julia.Lawall@inria.fr>; Nicolas=
- Palix
-> <nicolas.palix@imag.fr>; Catalin Marinas <catalin.marinas@arm.com>; Will
-> Deacon <will@kernel.org>; Marc Zyngier <maz@kernel.org>; Oliver Upton
-> <oliver.upton@linux.dev>; Joey Gouly <joey.gouly@arm.com>; Suzuki K Poulo=
-se
-> <suzuki.poulose@arm.com>; Zenghui Yu <yuzenghui@huawei.com>; linux-
-> kernel@vger.kernel.org; cocci@inria.fr; linux-arm-kernel@lists.infradead.=
-org;
-> kvmarm@lists.linux.dev; andrew@lunn.ch; quic_kkumarcs@quicinc.com;
-> quic_linchen@quicinc.com; quic_leiwei@quicinc.com;
-> quic_suruchia@quicinc.com; quic_pavir@quicinc.com
-> Subject: Re: [cocci] [PATCH v3 3/6] arm64: tlb: Convert the opencoded fie=
-ld
-> modify
->=20
->=20
->=20
-> On 4/18/2025 2:11 AM, Russell King (Oracle) wrote:
-> > On Thu, Apr 17, 2025 at 06:47:10PM +0800, Luo Jie wrote:
-> >> Replaced below code with the wrapper FIELD_MODIFY(MASK, &reg, val)
-> >> - reg &=3D ~MASK;
-> >> - reg |=3D FIELD_PREP(MASK, val);
-> >> The semantic patch that makes this change is available
-> >> in scripts/coccinelle/misc/field_modify.cocci.
-> >>
-> >> More information about semantic patching is available at
-> >> https://coccinelle.gitlabpages.inria.fr/website
-> >>
-> >> Signed-off-by: Luo Jie <quic_luoj@quicinc.com>
-> >> ---
-> >>   arch/arm64/include/asm/tlbflush.h | 3 +--
-> >>   1 file changed, 1 insertion(+), 2 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/include/asm/tlbflush.h
-> b/arch/arm64/include/asm/tlbflush.h
-> >> index eba1a98657f1..0d250ef4161c 100644
-> >> --- a/arch/arm64/include/asm/tlbflush.h
-> >> +++ b/arch/arm64/include/asm/tlbflush.h
-> >> @@ -112,8 +112,7 @@ static inline unsigned long get_trans_granule(void=
-)
-> >>   	    level >=3D 0 && level <=3D 3) {					\
-> >>   		u64 ttl =3D level & 3;					\
-> >>   		ttl |=3D get_trans_granule() << 2;			\
-> >> -		arg &=3D ~TLBI_TTL_MASK;					\
-> >> -		arg |=3D FIELD_PREP(TLBI_TTL_MASK, ttl);			\
-> >> +		FIELD_MODIFY(TLBI_TTL_MASK, &arg, ttl);			\
-> >
-> > This could equally be:
-> > 		arg =3D u64_replace_bits(arg, ttl, TLBI_TTL_MASK);
-> >
-> > which already exists, so doesn't require a new macro to be introduced.
-> >
-> Looks like the new macro FIELD_MODIFY() is accepted by Yury, maybe we
-> can keep to use FIELD_MODIFY() with this change for better readability?
+Signed-off-by: Ivan Shamliev <ivan.shamliev.dev@abv.bg>
+---
+ .../dml21/src/dml2_core/dml2_core_dcn4_calcs.c   | 16 ++++++++--------
+ .../dml2/dml21/src/dml2_core/dml2_core_utils.c   |  8 ++++----
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-I'd prefer this version too rather than a pointer that modifies in place. F=
-eels like it fits better with the other FIELD macros which don't take point=
-ers and return their bits by value.
+diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_c=
+ore_dcn4_calcs.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/=
+dml2_core_dcn4_calcs.c
+index 4c504cb0e1c5..c299fe4b3b74 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn=
+4_calcs.c
++++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_dcn=
+4_calcs.c
+@@ -4962,11 +4962,11 @@ static double get_urgent_bandwidth_required(
+ 		l->adj_factor_cur_pre =3D UrgentBurstFactorCursorPre[k];
+=20
+ 		bool is_phantom =3D dml_is_phantom_pipe(&display_cfg->plane_descriptors[=
+k]);
+-		bool exclude_this_plane =3D 0;
++		bool exclude_this_plane =3D false;
+=20
+ 		// Exclude phantom pipe in bw calculation for non svp prefetch state
+ 		if (state_type !=3D dml2_core_internal_soc_state_svp_prefetch && is_phan=
+tom)
+-			exclude_this_plane =3D 1;
++			exclude_this_plane =3D true;
+=20
+ 		// The qualified row bandwidth, qual_row_bw, accounts for the regular no=
+n-flip row bandwidth when there is no possible immediate flip or HostVM inv=
+alidation flip.
+ 		// The qual_row_bw is zero if HostVM is possible and only non-zero and e=
+qual to row_bw(i) if immediate flip is not allowed for that pipe.
+@@ -7163,13 +7163,13 @@ static unsigned int get_qos_param_index(unsigned lo=
+ng uclk_freq_khz, const struc
+ static unsigned int get_active_min_uclk_dpm_index(unsigned long uclk_freq_=
+khz, const struct dml2_soc_state_table *clk_table)
+ {
+ 	unsigned int i;
+-	bool clk_entry_found =3D 0;
++	bool clk_entry_found =3D false;
+=20
+ 	for (i =3D 0; i < clk_table->uclk.num_clk_values; i++) {
+ 		dml2_printf("DML::%s: clk_table.uclk.clk_values_khz[%d] =3D %d\n", __fun=
+c__, i, clk_table->uclk.clk_values_khz[i]);
+=20
+ 		if (uclk_freq_khz =3D=3D clk_table->uclk.clk_values_khz[i]) {
+-			clk_entry_found =3D 1;
++			clk_entry_found =3D true;
+ 			break;
+ 		}
+ 	}
+@@ -8502,7 +8502,7 @@ static bool dml_core_mode_support(struct dml2_core_ca=
+lcs_mode_support_ex *in_out
+=20
+ 	for (k =3D 0; k < mode_lib->ms.num_active_planes; ++k) {
+ 		double line_time_us =3D (double)display_cfg->stream_descriptors[display_=
+cfg->plane_descriptors[k].stream_index].timing.h_total / ((double)display_c=
+fg->stream_descriptors[display_cfg->plane_descriptors[k].stream_index].timi=
+ng.pixel_clock_khz / 1000);
+-		bool cursor_not_enough_urgent_latency_hiding =3D 0;
++		bool cursor_not_enough_urgent_latency_hiding =3D false;
+=20
+ 		if (display_cfg->plane_descriptors[k].cursor.num_cursors > 0) {
+ 			calculate_cursor_req_attributes(
+@@ -11097,7 +11097,7 @@ static bool dml_core_mode_programming(struct dml2_c=
+ore_calcs_mode_programming_ex
+ 		mode_lib->soc.qos_parameters.qos_params.dcn4x.fabric_max_transport_laten=
+cy_margin);
+=20
+ 	for (k =3D 0; k < s->num_active_planes; ++k) {
+-		bool cursor_not_enough_urgent_latency_hiding =3D 0;
++		bool cursor_not_enough_urgent_latency_hiding =3D false;
+ 		s->line_times[k] =3D display_cfg->stream_descriptors[display_cfg->plane_=
+descriptors[k].stream_index].timing.h_total /
+ 			((double)display_cfg->stream_descriptors[display_cfg->plane_descriptors=
+[k].stream_index].timing.pixel_clock_khz / 1000);
+=20
+@@ -12199,10 +12199,10 @@ void dml2_core_calcs_get_dpte_row_height(
+=20
+ static bool is_dual_plane(enum dml2_source_format_class source_format)
+ {
+-	bool ret_val =3D 0;
++	bool ret_val =3D false;
+=20
+ 	if ((source_format =3D=3D dml2_420_12) || (source_format =3D=3D dml2_420_=
+8) || (source_format =3D=3D dml2_420_10) || (source_format =3D=3D dml2_rgbe=
+_alpha))
+-		ret_val =3D 1;
++		ret_val =3D true;
+=20
+ 	return ret_val;
+ }
+diff --git a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_c=
+ore_utils.c b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_=
+core_utils.c
+index 2504d9c2ec34..215fd80cdc8d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_uti=
+ls.c
++++ b/drivers/gpu/drm/amd/display/dc/dml2/dml21/src/dml2_core/dml2_core_uti=
+ls.c
+@@ -533,13 +533,13 @@ unsigned int dml2_core_utils_get_qos_param_index(unsi=
+gned long uclk_freq_khz, co
+ unsigned int dml2_core_utils_get_active_min_uclk_dpm_index(unsigned long u=
+clk_freq_khz, const struct dml2_soc_state_table *clk_table)
+ {
+ 	unsigned int i;
+-	bool clk_entry_found =3D 0;
++	bool clk_entry_found =3D false;
+=20
+ 	for (i =3D 0; i < clk_table->uclk.num_clk_values; i++) {
+ 		dml2_printf("DML::%s: clk_table.uclk.clk_values_khz[%d] =3D %d\n", __fun=
+c__, i, clk_table->uclk.clk_values_khz[i]);
+=20
+ 		if (uclk_freq_khz =3D=3D clk_table->uclk.clk_values_khz[i]) {
+-			clk_entry_found =3D 1;
++			clk_entry_found =3D true;
+ 			break;
+ 		}
+ 	}
+@@ -555,10 +555,10 @@ unsigned int dml2_core_utils_get_active_min_uclk_dpm_=
+index(unsigned long uclk_fr
+=20
+ bool dml2_core_utils_is_dual_plane(enum dml2_source_format_class source_fo=
+rmat)
+ {
+-	bool ret_val =3D 0;
++	bool ret_val =3D false;
+=20
+ 	if (dml2_core_utils_is_420(source_format) || dml2_core_utils_is_422_plana=
+r(source_format) || (source_format =3D=3D dml2_rgbe_alpha))
+-		ret_val =3D 1;
++		ret_val =3D true;
+=20
+ 	return ret_val;
+ }
+--=20
+2.43.0
+
