@@ -1,139 +1,66 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1111F3BAB
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02D427FD76;
+	Thu, 24 Apr 2025 16:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513916; cv=none; b=PP834j9DpzchguOiRgn5xSycEmjCKMqrMD+6tDxqUwtwGqEo11tqLF62bQkLH6sO0S9ByFWMwZghFwZYTEtuYuxo2Ucan/uLeomEQhycrLTIyXlGrvWDxSwJCbp45qQ8E9/gaSlzNQxwXYgKzUnzdvfup+XForDAMB2JpqtvwqM=
+	t=1745513971; cv=none; b=M9lhUvNj5+uA54ZNduJMST8ntJdMA+q64GQTOTW4C8bsXukOM5rM6hn5JOjRPDzQZ7kQf+LQFEh8j2uIafJ2JfIXLxO0DjAJX08KJSbgW74AylOZK5hW+Bg8aEfFu0XaEi8erRMVM25prDWEofmEz2SW0KJXq8vrbOWHNwz83+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513916; c=relaxed/simple;
-	bh=LikPWzHKXlZ0AYHql8L8oY6SV6BxDqyvwmWhGZMgt30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DjPWsWXBW7RW3KgPbnw3kheBvrvO077icdoFSPvEOQCDHv2NmaQRAVBbTa67+Wps1yaLLAdYtsNEGT5Ug7KKhAK7tUEs6W62ImiyIorwaNIbeUq8FTcL+oHeCxO9H14UGQQxIIOPGHPGm6s8k5GsKruxF50c2JA6+FUOijYaw9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=hFLHoD2d; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="hFLHoD2d"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2255003f4c6so15084095ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:58:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1745513914; x=1746118714; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3CRbLMNDhQNMb/odIgtWlV1wOeeHs/lBu8IWLIInXCM=;
-        b=hFLHoD2dDxbEuqS4SMJ7Ad6I4sudpcVJli4ahff432zd6E5dmhkOOK68DzgT4mN//i
-         tZSNPZaXSFvuoIor9RBAWpTB7S1AL4RxWsGyvEf4pssN4xR/KvEbdqcqKFBHccm5tr1b
-         VGg+nY1qauYF6KVKgYsWeaLFmEDr6gdym/YDI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745513914; x=1746118714;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3CRbLMNDhQNMb/odIgtWlV1wOeeHs/lBu8IWLIInXCM=;
-        b=FDPBsFaBTc1gNQSSkAgVKXHWqZmnOROgAwh12fhzB3+3nZjWOdRaAIl9r7mlT3lsLX
-         HpMtzYaiZsiECUaiQMu/lJ+OiXvIuf/0GVykDxN0n8XTzlSuL4PDzxj2gyZpXXG/tsaA
-         SQWeqVdaex0lBXOA5z17Q0T6fmRj/mDx4lmjyIVYdqCFy5hpg4iJkTOvoK/8ArO5MmkL
-         RlevmzK+og2x6K2CoJMeW0eSe/ZhiM0qIgRZDcXgDSGfjSrKi8ZCe9a5osj1CAKwfcLP
-         4CrdyX9Q/svi4IbAKb14XHjMPn6KFV/C2hWsRh5src8UScCisxf8m6PAgmtXwc+xGsMs
-         VH6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVjpyjZRJxbnTBISqtOxrh4xoHSm47qxSIrXectLXyJ1hz4RW8v54uHBYR0untxeXEcxb7kaJ5M86uYu7o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbObSdnHH1MutJoU3DG54KopARtrHeY+xLmrheQ0XqHYfZS5aX
-	TJ3FG2NtBhNge8uW7dY84tyi8Fnan7lDKwMPk9zx89JkKkL5xq4y9qg9V6RbSUw=
-X-Gm-Gg: ASbGncth8nYl1riAvkSEz0uPihueOCprvhlsES1KV61J7AtMyCjheLYMHQ81z2jA6QO
-	Xyl+ieEFf0bWGbvMl9y6M2UkKIpioybSugfLDBjSp87WWAqVlhiH4uTMObWyvsazhC5tDIzWoCq
-	YgOnvy9f7EM0+3e9jZwjHKiTHMmrxSzNogKV3kjhde1xUQE2TlWleGVWZ4l4O2MRqsV2jtzkjtM
-	cXuWVBTqcdOexE8wq5yTKa+HR0Ll4U3/EJm5YsbHlJNV+NSLaFrY7kDBRz5n+Qw/LZziR18WM3H
-	WdIuzE8OIkwZoIcvjyxnn2iCN+NrfYcXwfh+panYO6T7r9VdT4wtL1SQBWFqCYf1y0AiRbQVAwH
-	oeJGI+izsaCEj
-X-Google-Smtp-Source: AGHT+IE71FOArPf4fbjAK6Tz9mz5XvykXh05FzQ9Ed4nGtj0H+VIVi4oA8obRPXBo9ZdgRuJ/X8wkg==
-X-Received: by 2002:a17:902:d589:b0:223:fb3a:8631 with SMTP id d9443c01a7336-22db3c33a03mr55527375ad.24.1745513914369;
-        Thu, 24 Apr 2025 09:58:34 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbbf8dsm16031545ad.65.2025.04.24.09.58.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 09:58:33 -0700 (PDT)
-Date: Thu, 24 Apr 2025 09:58:31 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Justin Lai <justinlai0215@realtek.com>
-Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, andrew+netdev@lunn.ch,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	horms@kernel.org, pkshih@realtek.com, larry.chiu@realtek.com
-Subject: Re: [PATCH net-next] rtase: Use min() instead of min_t()
-Message-ID: <aApttwNRkiMP6xMJ@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Justin Lai <justinlai0215@realtek.com>, kuba@kernel.org,
-	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
-	andrew+netdev@lunn.ch, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, horms@kernel.org, pkshih@realtek.com,
-	larry.chiu@realtek.com
-References: <20250424062145.9185-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1745513971; c=relaxed/simple;
+	bh=knzsGm15P6a2Z39+5aVkyTJFWX9Hojaj1ywEJQ3gv8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=E/IeOQiT33FuKVrDMIrFY0prZDW52LWJ3Bn5Q+lQz/zH6wIM9ulkb4/e+JFJUqg2IU34RThVyMIF6e3zbB7KOeNJh8+ssMOV4R8ftLIhTklu1xH5mzx9TiEdhMYuAS50swIUw3eJbFEQwmja1qNvmYscFktKJxwClUOxAYmMeLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C50C4CEE3;
+	Thu, 24 Apr 2025 16:59:27 +0000 (UTC)
+Date: Thu, 24 Apr 2025 13:01:22 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
+ Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark
+ Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
+ <jordalgo@meta.com>, Sam James <sam@gentoo.org>, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Florian
+ Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Weinan Liu
+ <wnliu@google.com>, Blake Jones <blakejones@google.com>, Beau Belgrave
+ <beaub@linux.microsoft.com>, "Jose E. Marchesi" <jemarch@gnu.org>
+Subject: Re: [PATCH v5 12/17] perf: Skip user unwind if !current->mm
+Message-ID: <20250424130122.4b6ee0df@gandalf.local.home>
+In-Reply-To: <20250424163718.GF18306@noisy.programming.kicks-ass.net>
+References: <20250424162529.686762589@goodmis.org>
+	<20250424162633.216110813@goodmis.org>
+	<20250424163718.GF18306@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424062145.9185-1-justinlai0215@realtek.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 02:21:45PM +0800, Justin Lai wrote:
-> Use min() instead of min_t() to avoid the possibility of casting to the
-> wrong type.
+On Thu, 24 Apr 2025 18:37:18 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> > Note from v4: https://lore.kernel.org/all/24cde1381495cd637f0d5663ab7629572bc0eca6.1737511963.git.jpoimboe@kernel.org/
+> > 
+> > - From the previous version, Peter Zijlstra brought up concern about
+> >   io_uring helpers, but this was never resolved. No update was made.  
 > 
-> Fixes: a36e9f5cfe9e ("rtase: Add support for a pci table in this module")
-> Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> ---
->  drivers/net/ethernet/realtek/rtase/rtase_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> index 6251548d50ff..8c902eaeb5ec 100644
-> --- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-> @@ -1983,7 +1983,7 @@ static u16 rtase_calc_time_mitigation(u32 time_us)
->  	u8 msb, time_count, time_unit;
->  	u16 int_miti;
->  
-> -	time_us = min_t(int, time_us, RTASE_MITI_MAX_TIME);
-> +	time_us = min(time_us, RTASE_MITI_MAX_TIME);
->  
->  	msb = fls(time_us);
->  	if (msb >= RTASE_MITI_COUNT_BIT_NUM) {
-> @@ -2005,7 +2005,7 @@ static u16 rtase_calc_packet_num_mitigation(u16 pkt_num)
->  	u8 msb, pkt_num_count, pkt_num_unit;
->  	u16 int_miti;
->  
-> -	pkt_num = min_t(int, pkt_num, RTASE_MITI_MAX_PKT_NUM);
-> +	pkt_num = min(pkt_num, RTASE_MITI_MAX_PKT_NUM);
->  
->  	if (pkt_num > 60) {
->  		pkt_num_unit = RTASE_MITI_MAX_PKT_NUM_IDX;
+> What is there to resolve? If you want to check for kthreads, don't check
+> for ->mm
 
-This looks fine to me and the patch is against net-next according to
-the subject line (I think?).
+I misunderstood what the issue was then ;-)
 
-I suppose there might be the question of whether this should go
-against net (because it has a fixes), but my vote is that this is
-cleanup and should go in net-next as titled.
+OK, so the check should be task->flags & PF_KTHREAD ?
 
-Unless you've seen a bug around this and it should be against net
-instead?
-
-I don't know, but I think it is unlikely there would be a bug in the
-wild because:
-  - RTASE_MITI_DEFAULT_TIME (128)
-  - RTASE_MITI_DEFAULT_PKT_NUM (64) 
-  - RTASE_MITI_MAX_TIME (491520)
-  - RTASE_MITI_MAX_PKT_NUM (240) 
-
-all seem to fit in an int, so I think this change is probably more
-of a cleanup than a fixes ?
-
-All that said:
-
-Reviewed-by: Joe Damato <jdamato@fastly.com>
+-- Steve
