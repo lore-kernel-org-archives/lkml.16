@@ -1,58 +1,60 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB4E15E5DC;
-	Thu, 24 Apr 2025 14:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF09117A316;
+	Thu, 24 Apr 2025 14:07:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745503617; cv=none; b=uqjT01ma/xDyn4HTgWcNQlcipsiVfe0fU9FeAPhltUnLNWSi7kqsHkSWNcdAEdF/Ovi7DvSICU5DBnGiD6GusFgmRSj56bx67PrDT526Yy4bPl8yKFOnkgaw1TcP9hYCn40RB9DiSRY+mFm0JJPscgLTqyFyQBLjVi/tY+4MwXU=
+	t=1745503625; cv=none; b=NmY9ZYwmGbILW+blqvT5WbkgeyUv92KqapTvfMCSMyhXkDzEinDdJfcz4jrAW0d2GXRd8zlqeTrbfJL3BKX7ePPxY/ELvYQhvbTrn2GepGQPqbi1STfVhcwFgOfYBuDZPA/D8rsVlKd9uM6EbDIwfIYjy3cSaK7VdCjH69EY5gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745503617; c=relaxed/simple;
-	bh=Q5IY/Mu6aKi7yoYYMtieJmLRNqWv9SMsygOgMrJp0/Y=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=o776GXL+2tEa/WR6KNRKIK1s2ejVEGCkmAhUbBUSc0k96OHnmJP9cLme9VPY8r4pVebwtsuQL49CFBkhxsymZ66uBcVuMp+lAgafxiblYh+a45ZeL+zXJWkhi80SHod2vXXH9ucvAVn54sCu23ibn9LPzEinGu4pP8Tz8/Ajwck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bfutFV62; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1745503625; c=relaxed/simple;
+	bh=l9uxteUXwRUtqWXQO0d5MHD12GPOmwnft3l6x62fl5Y=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=QQNaRMdivJw4NHraY0sD7I1tcuN4R9dDQKwqWorKcJI5r486a8sHAsj7jQff9w8gwgMCffZUnnFsDcrsORL6EuWupFdkTr22ktOCxJEfSU3uDHnwgT9otQeN4xKOyzzE5IuDvxnFXzBvRoInD/wR1BisNKlAihqXE7hLKbBk7gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KTN0kyt8; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bfutFV62"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KTN0kyt8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745503616; x=1777039616;
-  h=from:to:cc:in-reply-to:references:subject:message-id:
-   date:mime-version:content-transfer-encoding;
-  bh=Q5IY/Mu6aKi7yoYYMtieJmLRNqWv9SMsygOgMrJp0/Y=;
-  b=bfutFV62af3/ecAU8jHXqw+Kwd4LCozm1k68AEJjsuXRVTBo4tGhWSJ7
-   I6F5097XP8UCfdFhjqpfClRfpcds5qREDIMoLaOUlcEMB+T8mBJ29gYai
-   z17v9kGBZRMb7CFPg3PKUBNlM0MlK4LxARpZSZgM0LRC7GRyhnOeqB9yM
-   Tbik6xRtF2c9pXNVIVe4UlfNuMzYgBOElngDeFU0d60rqWXCaf6A8fshs
-   Omk7uhbs4bzV+hu9M2heVbsLaVB4Uy8pQj1dt8rDXry7UDDf4aWLxPrs4
-   JuUrNmEbdls+7y8Y7genVC/bUWPdAchabW3GCFQJ972mwIuhBl1Uv4ULh
+  t=1745503624; x=1777039624;
+  h=from:to:in-reply-to:references:subject:message-id:date:
+   mime-version:content-transfer-encoding;
+  bh=l9uxteUXwRUtqWXQO0d5MHD12GPOmwnft3l6x62fl5Y=;
+  b=KTN0kyt8iqnS+IekY3sLiH8Ba6liP32FByQ52VVcheQRXphEwvia9uSl
+   tmVt6dDIhCmVBjULIfiWTv/MXyks4v9CHySsCD7Mr2hn606IVQ5/M52wb
+   7EvTJaUzyvQSeJTCISGdDnvv5yzFnnyLPQWtx3K1+m98bHGIFxwMttQwV
+   wMn4rzUeriH1X3DMMOwD825B+xu8Hhq/5e9/F+FH7E0FD9CmnjpDIZOcV
+   t2mmEalqKb/N4uUZCKPF5SAZ2L38BTAq9OihTIDNkgAS0QJDY+/FwIXA2
+   kcVOmjr+j9FuittiJWe5VjGIi5izPVhXeJl0xI2z94VDj1Sp9ojvW99dK
    g==;
-X-CSE-ConnectionGUID: h9hIqfmtRpC8smysF982wA==
-X-CSE-MsgGUID: SNf5T+8JShmk/iNAmnaueg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="34760533"
+X-CSE-ConnectionGUID: 6qwPgDJfRT+QKIS6sdRbvw==
+X-CSE-MsgGUID: GR2/RjIMRG66Hxe+N2ACDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="34760557"
 X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="34760533"
+   d="scan'208";a="34760557"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 07:06:55 -0700
-X-CSE-ConnectionGUID: 2lgzKjiJQZeoVQnKTiuJLQ==
-X-CSE-MsgGUID: m6ExJB+eS0G8v8wulIkEkw==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 07:07:03 -0700
+X-CSE-ConnectionGUID: eQfsw6JfQOubaowAo76hJA==
+X-CSE-MsgGUID: 9XKzVPmFSIqzjcl9WH4w0g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="132518355"
+   d="scan'208";a="132518380"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.213])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 07:06:53 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 07:07:00 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Lyndon Sanche <lsanche@lyndeno.ca>, Hans de Goede <hdegoede@redhat.com>, 
- Mario Limonciello <mario.limonciello@amd.com>, 
- Kurt Borja <kuurtb@gmail.com>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
-References: <20250411-dell-faux-v1-0-ea1f1c929b7e@gmail.com>
-Subject: Re: [PATCH 0/3] platform/x86: dell-pc: Transition to faux device
-Message-Id: <174550360804.9369.10436834276962327207.b4-ty@linux.intel.com>
-Date: Thu, 24 Apr 2025 17:06:48 +0300
+To: Hans de Goede <hdegoede@redhat.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Maximilian Luz <luzmaximilian@gmail.com>, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250417074648.81528-1-krzysztof.kozlowski@linaro.org>
+References: <20250417074648.81528-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] platform: Do not enable by default during compile
+ testing
+Message-Id: <174550361551.9369.12732089183757711883.b4-ty@linux.intel.com>
+Date: Thu, 24 Apr 2025 17:06:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,16 +65,12 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Fri, 11 Apr 2025 11:36:40 -0300, Kurt Borja wrote:
+On Thu, 17 Apr 2025 09:46:47 +0200, Krzysztof Kozlowski wrote:
 
-> In commit
+> Enabling the compile test should not cause automatic enabling of all
+> drivers, but only allow to choose to compile them.
 > 
-> 	35fa2d88ca94 ("driver core: add a faux bus for use when a simple device/bus is needed")
 > 
-> the new faux bus was introduced. It was designed for cases where a
-> module needs a fake parent device.
-> 
-> [...]
 
 
 Thank you for your contribution, it has been applied to my local
@@ -81,12 +79,8 @@ platform-drivers-x86/review-ilpo-next branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/3] platform/x86: dell-pc: Propagate errors when detecting feature support
-      commit: 4630b99d2e93a91b304f498c4d543c002fb78ca5
-[2/3] platform/x86: dell-pc: Use non-atomic bitmap operations
-      commit: 48e21e0226a9325fc75145840d289113fb0c27bc
-[3/3] platform/x86: dell-pc: Transition to faux device
-      commit: 99fb11d1edb2104f976a672a0863f1ea1ea27398
+[1/1] platform: Do not enable by default during compile testing
+      commit: e99e2c54ea9fcad143837e800beb3468f17f9ce1
 
 --
  i.
