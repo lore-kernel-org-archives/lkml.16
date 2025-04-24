@@ -1,79 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9651A5B82;
-	Thu, 24 Apr 2025 18:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0841D61A3
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745517704; cv=none; b=LueUOw++tHRKQPq0AZj2+fRYkcoK/faFANYpFOuwWhVyJsdGuvinrTFw8+/YA2DZNc8miibohDI7wkNgDHw3ZGWkW3Q6TSTk7V9wGnIe9tfi2IUPfd+y7BoA8f4HgWWbfPTczLLY0OMMbFnGgk9Gi6CqFLwwiOXGEySOUKE1eKU=
+	t=1745517845; cv=none; b=kxp1Gr8CyQ3iwkR4I66eBAu4x9V5P3PEw17kLPXldhbonniMgTdXuF7PPLELCDhEeKZsJvfeToPYd8VhJq7Tfcm0RivIWVpcPUSS3+8+l/SB3gY1rSNvO2kOYWMW0qYsiWGqHbSNY08fxjTbG7H2NuBfbemsgJ80RuDfZ7HICoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745517704; c=relaxed/simple;
-	bh=1UzqVogGL3LmH9d4R4wP/lOW2RL5bF/zoPL9eg44mVk=;
+	s=arc-20240116; t=1745517845; c=relaxed/simple;
+	bh=uPn6plOz3AG5jrEfFpRZaDs6P0aP85UrPumlULvK+r8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JK9LzEySc70oRUNnKWjy3yIAqw4+EsI5ov9+Vn2hgcyxu8TyyEcXisQykjwGhIRYqytaYziM49ICVmdAsd3HPCiRUlTivd+wMmXDiTScLEiVUZkPIleivuBIUk/bGvekZuU6QdeMlp5UOZsuAk623nFVd9saPRc1W24iBlRA49E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Di8Auxp0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=KEZfw+HGaD6SK2ap55QVjPFqMQt5gC2q3iNb8N1olRFl1Fsl8ILz9uAydTMQnLvnJYJ39ZmmQaGhtLnCRD9v3aVGwC5GK/j7LeKWcFxzYhTKGwUFzKxgdb6wvHAoO0hQSpRgcfOIqsau2YnVQP8M8we7uiJ7Z54ouhY2FryUIyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BrzPX+ns; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Di8Auxp0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89FDEC4CEE3;
-	Thu, 24 Apr 2025 18:01:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745517704;
-	bh=1UzqVogGL3LmH9d4R4wP/lOW2RL5bF/zoPL9eg44mVk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Di8Auxp0PFt+QYUVd68e5bxQhwlqwWHun1bpXlYJfNpumVCakhDueyYfAxAoxruBO
-	 nAfWiC56BxHXFFnZ12X5L3TyyxEnZKSNpMk+pbimrvsKJKb0YlX4yHTd0YSVr+rwc6
-	 7R7wcAoRyglL9ZU8BuU4SoVA/xtVO7tNIP1kFSK0PeknizuQB3PHczHst4MVMPadrO
-	 G1jToK2eaDnfkptNYKA9RhRu0YJYIxvMJx0OmexXc7iCUc4N07ukYo9rWqTbkCyi5N
-	 ACJ/79IAPe5/DV4XOBP867DL1nEzMLuTEat9X3F1dd3XPZKMUph5eIXFzegTd6Os8k
-	 xRHjEdYropK3A==
-Date: Thu, 24 Apr 2025 20:01:39 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-	kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-	John Stultz <jstultz@google.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Stephen Boyd <sboyd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BrzPX+ns"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224191d92e4so15804715ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745517843; x=1746122643; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=R+2ifGTP7Zuk1f3PGxpKoh8D1eRLE/ZHAefBGZIpiLo=;
+        b=BrzPX+nsbBbhPpijNsceUyyDomfenzy/7GbMN64AroqKTxoylv2ovD6hn0CRWqBlxs
+         ulrrWRaiMYzHEdGqjtf/3RqjjwY6kRG5bEvpPsloj2x6unflxrvd7OZeFcolPB3CVKBE
+         eupWPZWQUEaGbsD7rKhdEueNm0qf1/qtRRW05uUzXnvTB3AKt5nuHzXOrHtTr5XnD6Ri
+         jXZraAzv+36aPvl7LB8SMNA+JU/JJaS+pw30Qwz7cznpfAC76YlfziI4Qwx4v8iXAy2a
+         O6FSsZL5LpnN3TihyjvB5S0s3dnYShOd4bWtKX7O65OT7pbg3b2/Gk0NB+qX7HIv4Jmr
+         bHKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745517843; x=1746122643;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R+2ifGTP7Zuk1f3PGxpKoh8D1eRLE/ZHAefBGZIpiLo=;
+        b=m0XwVPEfLkeyGDK/EmvXJCulJ6jF6XRxwDV9GhsMoQuHcuTE/tgzLGaALyOb3vce5s
+         6Wevmf7AMk4ZHjz16vfhkVK1+kzKIntKhoTOLZLMYf0Hq0S8TgZobkeFzs5V0dfmfoAP
+         KME8ylhjIcGc1P3J1W5KoB+cpsh7TC6nGfi+6aMPC/n0tEIEJejY10ALk7eW84hUgVyJ
+         QFLhVDiw9RaXEBvQaaiI/DLJDdzdUhVfl9TPmVhaNSObepdoPmyCOiAkthPwkIeecrYO
+         V6pg4triKYxDvhnuTiFBRPQlvi9Djs4rpsEVYjDZPOc6Q4ten6m3BKWbWSfB/lpIQiDr
+         3vIg==
+X-Forwarded-Encrypted: i=1; AJvYcCX0BDQJH1XlO1J9vwVn9VcC/jrGuovUX7U7XgmQ6YXiOtixWlgiJj2vHBMjNxremPSS60DCmq8NsrdAExQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUndtz3K5twbeJkXUuhdbkXh8TowHBurx2vVKnQ+WajUK7q825
+	tL3nROPke5yYKG3LPCP9n500tb0DcWLFxjRxcmOYtUUgh96Q5aid44LI6nWEi5M=
+X-Gm-Gg: ASbGncvI7KkoTBhXEJOaGqeyLRfitBKtmu8ReeF+MM9PiWVz7xCkk8Nli8ck8kmHiC5
+	dZnT8XS2D/Ma22F0CEbMyiV746QcUzTfgIVkA3SjQV6EXGD4Ir+UKU6NffizBoN1+pvjxvGMKab
+	O8+ai9E8fX0HGh0Oaeb1H8AkH4v2BSfKXUscC0WK71gzx1rZrdNojUDnwKrIsdifGyiRofkbw2G
+	Q5eAxTqOY1Z3A/p+tMCEeF/u54V9Nd+ZCDWMSsmBYN5oHeJnnxPaCvtZ2FhSLTfy4bGoKRxFguH
+	BZU2msBJG0c6Lf8hgkKsljKeoys7+BdEE7PKENvR2xWidvlIRRfoIORHq+nTuw==
+X-Google-Smtp-Source: AGHT+IEwApZFffChVQ3IgP8GwvBv+BNm7qJFv/s7tyP4mivow/7aAesEdu2H5hIh83xgouvcI3whKA==
+X-Received: by 2002:a17:902:cec8:b0:21f:4c8b:c514 with SMTP id d9443c01a7336-22dbd46edccmr5459035ad.45.1745517843026;
+        Thu, 24 Apr 2025 11:04:03 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f7ec0bb2sm1513897a12.18.2025.04.24.11.04.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 11:04:02 -0700 (PDT)
+Date: Thu, 24 Apr 2025 11:03:59 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
 	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
- CPUs
-Message-ID: <aAp8gyKY1YJqIOXL@gmail.com>
-References: <202504211553.3ba9400-lkp@intel.com>
- <59198081-15e2-4b02-934f-c34dd1a0ac93@app.fastmail.com>
- <aAmeJmL0hUx2kcXC@xsang-OptiPlex-9020>
- <f1ccb8b4-bbe2-42bc-bb86-c2bf3f9c557d@app.fastmail.com>
- <CAHk-=wi6k0wk89u+8vmOhcLHPmapK13DDsL2m+xeqEwR9iTd9A@mail.gmail.com>
- <aAp6u9ylKCpvMJRF@gmail.com>
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, alexghiti@rivosinc.com,
+	samitolvanen@google.com, broonie@kernel.org,
+	rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>,
+	linux-riscv <linux-riscv-bounces@lists.infradead.org>
+Subject: Re: [PATCH v12 05/28] riscv: usercfi state for task and save/restore
+ of CSR_SSP on trap entry/exit
+Message-ID: <aAp9D7txw8y9WL5m@debug.ba.rivosinc.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-5-e51202b53138@rivosinc.com>
+ <D92WQWAUQYY4.2ED8JAFBDHGRN@ventanamicro.com>
+ <aAmEnK0vSgZZOORL@debug.ba.rivosinc.com>
+ <D9EV1K8ZQQJR.20CRTYLQBN9UE@ventanamicro.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <aAp6u9ylKCpvMJRF@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <D9EV1K8ZQQJR.20CRTYLQBN9UE@ventanamicro.com>
 
+On Thu, Apr 24, 2025 at 02:16:32PM +0200, Radim Krčmář wrote:
+>2025-04-23T17:23:56-07:00, Deepak Gupta <debug@rivosinc.com>:
+>> On Thu, Apr 10, 2025 at 01:04:39PM +0200, Radim Krčmář wrote:
+>>>2025-03-14T14:39:24-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+>>>> @@ -147,6 +147,20 @@ SYM_CODE_START(handle_exception)
+>>>>
+>>>>  	REG_L s0, TASK_TI_USER_SP(tp)
+>>>>  	csrrc s1, CSR_STATUS, t0
+>>>> +	/*
+>>>> +	 * If previous mode was U, capture shadow stack pointer and save it away
+>>>> +	 * Zero CSR_SSP at the same time for sanitization.
+>>>> +	 */
+>>>> +	ALTERNATIVE("nop; nop; nop; nop",
+>>>> +				__stringify(			\
+>>>> +				andi s2, s1, SR_SPP;	\
+>>>> +				bnez s2, skip_ssp_save;	\
+>>>> +				csrrw s2, CSR_SSP, x0;	\
+>>>> +				REG_S s2, TASK_TI_USER_SSP(tp); \
+>>>> +				skip_ssp_save:),
+>>>> +				0,
+>>>> +				RISCV_ISA_EXT_ZICFISS,
+>>>> +				CONFIG_RISCV_USER_CFI)
+>>>
+>>>(I'd prefer this closer to the user_sp and kernel_sp swap, it's breaking
+>>> the flow here.  We also already know if we've returned from userspace
+>>> or not even without SR_SPP, but reusing the information might tangle
+>>> the logic.)
+>>
+>> If CSR_SCRATCH was 0, then we would be coming from kernel else flow goes
+>> to `.Lsave_context`. If we were coming from kernel mode, then eventually
+>> flow merges to `.Lsave_context`.
+>>
+>> So we will be saving CSR_SSP on all kernel -- > kernel trap handling. That
+>> would be unnecessary. IIRC, this was one of the first review comments in
+>> early RFC series of these patch series (to not touch CSR_SSP un-necessarily)
+>>
+>> We can avoid that by ensuring when we branch by determining if we are coming
+>> from user to something like `.Lsave_ssp` which eventually merges into
+>> ".Lsave_context". And if we were coming from kernel then we would branch to
+>> `.Lsave_context` and thus skipping ssp save logic. But # of branches it
+>> introduces in early exception handling is equivalent to what current patches
+>> do. So I don't see any value in doing that.
+>>
+>> Let me know if I am missing something.
+>
+>Right, it's hard to avoid the extra branches.
+>
+>I think we could modify the entry point (STVEC), so we start at
+>different paths based on kernel/userspace trap and only jump once to the
+>common code, like:
+>
+>  SYM_CODE_START(handle_exception_kernel)
+>    /* kernel setup magic */
+>    j handle_exception_common
+>  SYM_CODE_START(handle_exception_user)
+>    /* userspace setup magic */
+>  handle_exception_common:
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+Hmm... This can be done. But then it would require to constantly modify `stvec`
+When you're going back to user mode, you would have to write `stvec` with addr
+of `handle_exception_user`. But then you can easily get a NMI. It can become
+ugly. Needs much more thought and on first glance feels error prone.
 
-> The patches most relevant to this discussion should be:
-> 
->       x86/cpu: Remove M486/M486SX/ELAN support
->       ...
->       x86/cpu: Remove TSC-less CONFIG_M586 support
->       x86/cpu: Make CONFIG_X86_TSC unconditional
->       x86/cpu: Make CONFIG_X86_CX8 unconditional
->       x86/percpu: Remove !CONFIG_X86_CX8 methods
->       x86/atomics: Remove !CONFIG_X86_CX8 methods
+Only if we have an extension that allows different trap address depending on
+mode you're coming from (arm does that, right?, I think x86 FRED also does
+that)
+>
+>This is not a suggestion for this series.  I would be perfectly happy
+>with just a cleaner code.
+>
+>Would it be possible to hide the ALTERNATIVE ugliness behind a macro and
+>move it outside the code block that saves pt_regs?
 
-also:
+Sure, I'll do something about it.
 
->       x86/cpu: Remove TSC-less CONFIG_M586 support
-
-Thanks,
-
-	Ingo
+>
+>Thanks.
