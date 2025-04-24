@@ -1,108 +1,112 @@
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42489289342
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 22:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFE51EA84;
+	Thu, 24 Apr 2025 22:25:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745533118; cv=none; b=qEa4agFeQXzUOESXV0FKGSo0LCmDlEr8O8gOaKMLvtE5o+pBxOw23TeVTySP8imIz3gUCHxTc+2Zg9DwOkxU58GSz4EanXO/1kPwHtkKrJTppCS/P7mGQt4L1UqZfvaTr1R0roNmEDwstdllQOFCSm9CA86Gl3erqxgq8t/0nTQ=
+	t=1745533527; cv=none; b=I4aEcUBWtINBEXrHx4KbFbMyNh8bRI3EY4eOFnbcCJIOSN+EZbXa5yVydooscTjzt4FRxBF/EJxFH2fRMagqWUI60jgwabIA6OMTP9fhI+AY2drHIJrnnDmV/9mJLGAwvJLd3Ri5Jra2M9AWo8YuvfqzGrZslmDRfiKIaUQN1G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745533118; c=relaxed/simple;
-	bh=X4h7FN0K3AFnFkrK7uikaQMdM0fvE4Ke805Jw4zseXE=;
-	h=Date:Message-ID:MIME-Version:Content-Type:From:To:Cc:Subject:
-	 References:In-Reply-To; b=Zfzsl18tclalg5694ZmoFfu8eo7qlDDy72Af1epKZinzd+QVhQfXfmE3Z43djRkcH6VyZkZQUzsmhbIGpvrrS+kBS76DKDvOKD2JzNS8w02koFR/gztb70+LW69eaM9d1uY5jwVpDjM5LnOjUn/IUVldUkpWJgMDP8NxP10mHZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=Hja4uQdI; arc=none smtp.client-ip=209.85.222.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1745533527; c=relaxed/simple;
+	bh=geVdAODQa5LNlip0NptpinhwFwtWBxWKaCUmeLAWNLw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SV5P2FlPNmBJWUkgLr8+UQJh1wU/30sy+pcoGkocGBYTKH18PH1pj95m7smEjHXh6RjuBDcw7IwpQecQ4dGJejYfwl/eXbGGBw3sq4yTApgytwq21e4TGLNYLGA0/jUkXHz16IGwcDSAdCoVRHLEKNvdGcUfKyGubnW1QRBFgeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=aIcpLSsA; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="Hja4uQdI"
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c53b9d66fdso228450285a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:18:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1745533115; x=1746137915; darn=vger.kernel.org;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k0NabyRe0e3LwNpls9HOHadDr3ssMH+3gnQlYlzw91o=;
-        b=Hja4uQdITa+eenQfjoIj1V61UqOroOW29mbhUUy3OBZMMna4CmLimvZ2NhvVs+Ahs2
-         fE5x9kGpaNfHR2vgPJa5iM6UV5a/6HQX6hX98J4OqRSFGXII31L1gtMvVU/hMRSIvNAq
-         f+18NsnPBUfpO0Nn1Of3m6laMZzb3k03ufDZAjTHULm66aG7UTRFPp6N2BDrxEh5H9VN
-         u7W0taaQLswlPgTjaR5UTR+mkJqY3r5xp9WfECpMHtqvIjEc28E3HaYeXvVOtQNTwDtp
-         ifq4JOxKJmvTmALR2UauDs7AGcF6unUcaYk/v41bXYdjJ+ubNbrFu8lcSe0ynD18cmne
-         wFSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745533115; x=1746137915;
-        h=in-reply-to:references:subject:cc:to:from:content-transfer-encoding
-         :mime-version:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=k0NabyRe0e3LwNpls9HOHadDr3ssMH+3gnQlYlzw91o=;
-        b=LKnwlgFXbZv+cxhqjNQS47v9jbtZ2JLPwnInK6Lf8jCW6fwjEGv3nIzctKl05YGaNr
-         ITfGOY+UpM0RDyUED4/7ZEdTipFl9q29nbfBz48ZK1Ei/dJLcJs7xvL2vx3gclrxmvBs
-         aH2cv3vNtWAMMk3CzOCR7QZO8b52ZctEVTbr5OXW3MC9thOnkpbt2xJXfak5HNnTnx+B
-         yXY2B3F5g03hJXLdcUBBrfD30S/7uRIfuitEomoQ69xQYBsH+NtIbgkkJ22/3lqR08h8
-         DZ8QqwmZRjzwWbLy4aWzTN7cFMx1Hyqytl4rEeKBodlriDzErS/A9uxr9ZP4W++zEjJb
-         V6TA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZK/CSryY9ojIDLNMOZB3ShQ/DbqHuqkZDUjweMFSVd9pcA7G93V5/WUE40bef6HuKYHwYknUHSlAXbxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAz1mJACHYwff/XkX1gxu9yldZoq0bSWfcZvNqSyMwvIqTRe/V
-	OhP9XECaOpq5NblJBZ/2JhnDFxW8R7+KwiZOIHP5zrvVULI0ZFQ7an/coPP3nw==
-X-Gm-Gg: ASbGncvR7FmKUDNd4phnRvYl5xL+ot4H0kf+jzGo2TIlijG6glHSejLnbfajdFbXO5s
-	OjAs8i5bzqY4srs8yY//Sdw/FxqImZ98wCyAlfuLgHCGtGtnbkYGKZfmY/YxQy3kXmqe/hq/gF6
-	B39eryto+RqO0Hh0pcjFOmv60HzaxxWx0FpKNkN+d0QZi4czwpIdcatlDIprdHmxoZ34vDmSz4I
-	eZWeq9KgYdsMeD2SXpvieeeO2fcX4iWkn62nx1s19zcdS7fdFfPtfhn3q52Y/zeXuJtUl2Pl+HO
-	DMZooCithPI2Ex+OMQJa3ZSWEAZvhjofrrSVMg6Pa1ElMvW+w+INjplQJG0RxQHhCU2Gs//Mjbv
-	1Y72kjDqkctHe++igvAX6
-X-Google-Smtp-Source: AGHT+IFXv+GKneGs4dyxpna32Ck391ho+kWorlrs9AQeZAzriLk2fUEknpnAV+uKlCt4qAUgszKdaA==
-X-Received: by 2002:a05:6214:490:b0:6e8:98a1:3694 with SMTP id 6a1803df08f44-6f4cb9b43cfmr3210286d6.8.1745533115060;
-        Thu, 24 Apr 2025 15:18:35 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f4c0969657sm14659426d6.65.2025.04.24.15.18.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 15:18:34 -0700 (PDT)
-Date: Thu, 24 Apr 2025 18:18:34 -0400
-Message-ID: <5e95e5d8b2b262548220382f14fcb3e4@paul-moore.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aIcpLSsA"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53OMORWG1692289
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Thu, 24 Apr 2025 15:24:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53OMORWG1692289
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1745533472;
+	bh=G5UVXicyTBIPs6yn0Aol/9aUmVhDamNK2RBM6HiC8ec=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aIcpLSsAz7DGTiM9hjhLHyD03dBWLKbzaB0V7WrZg3rVc8ktBSYGZKS94ZpxkPHnw
+	 CsFJQCtr1TeOAu7k8gJdRylK+VYPpFazuWZNgwVB32EqC/nJxAiobWbnAqdHF65XG2
+	 +FO7dAWYnt93+w+yiJ8iigZ28z1jIOGv0wAmPXqKWpxUUG4KtkHHdonr86KgEl9+fD
+	 7Y9QDxWWLyY4HpxDsapGfWsbm1L0xMFDZR8rHZtRI58j1lRq1WnC1HJADQJGBgpjyn
+	 A0jWqTb6KjE+o3MzIzTtJ2zwLsjRHOlx4VenrIMKzRUYWNwBX4y23nDAjPzb2IQV56
+	 EdGEcpRBEmJvg==
+Message-ID: <7649416e-1955-4c9c-a851-8b0c4da34c6f@zytor.com>
+Date: Thu, 24 Apr 2025 15:24:27 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 
-Content-Type: text/plain; charset=UTF-8 
-Content-Transfer-Encoding: 8bit 
-X-Mailer: pstg-pwork:20250424_1707/pstg-lib:20250424_1742/pstg-pwork:20250424_1707
-From: Paul Moore <paul@paul-moore.com>
-To: Casey Schaufler <casey@schaufler-ca.com>, casey@schaufler-ca.com, eparis@redhat.com, linux-security-module@vger.kernel.org, audit@vger.kernel.org
-Cc: jmorris@namei.org, serge@hallyn.com, keescook@chromium.org, john.johansen@canonical.com, penguin-kernel@i-love.sakura.ne.jp, stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org, selinux@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] Audit: Add record for multiple object contexts
-References: <20250319222744.17576-6-casey@schaufler-ca.com>
-In-Reply-To: <20250319222744.17576-6-casey@schaufler-ca.com>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
+To: "H. Peter Anvin" <hpa@zytor.com>,
+        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
+ <jgross@suse.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
+        andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com
+References: <20250422082216.1954310-1-xin@zytor.com>
+ <20250422082216.1954310-13-xin@zytor.com>
+ <8944b510-6d70-472c-99a2-52a60517733d@suse.com>
+ <ca088501-2fbe-4a32-b191-04f7be6a2713@zytor.com>
+ <018705C7-35CF-406A-85DA-360FF7BCB072@zytor.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <018705C7-35CF-406A-85DA-360FF7BCB072@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mar 19, 2025 Casey Schaufler <casey@schaufler-ca.com> wrote:
+> By the way, this patch should have "xen" in its subject tag.
 > 
-> Create a new audit record AUDIT_MAC_OBJ_CONTEXTS.
-> An example of the MAC_OBJ_CONTEXTS (1424) record is:
-> 
->     type=MAC_OBJ_CONTEXTS[1424]
->     msg=audit(1601152467.009:1050):
->     obj_selinux=unconfined_u:object_r:user_home_t:s0
-> 
-> When an audit event includes a AUDIT_MAC_OBJ_CONTEXTS record
-> the "obj=" field in other records in the event will be "obj=?".
-> An AUDIT_MAC_OBJ_CONTEXTS record is supplied when the system has
-> multiple security modules that may make access decisions based
-> on an object security context.
-> 
-> Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-> ---
->  include/linux/audit.h      |  6 +++++
->  include/uapi/linux/audit.h |  1 +
->  kernel/audit.c             | 51 +++++++++++++++++++++++++++++++++++++-
->  kernel/auditsc.c           | 45 ++++++++-------------------------
->  4 files changed, 68 insertions(+), 35 deletions(-)
 
-Similar to patch 4/5, this looks fine modulo the obj count changes.
-
-Related, you changed to a single subj/obj count in v3, is it no longer
-important to distinguish between the two?
-
---
-paul-moore.com
+Right, I should add it.
