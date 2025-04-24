@@ -1,62 +1,62 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED2FB288C9F
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:20:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522B3289346
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:20:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511641; cv=none; b=Fcd2ghgIhxXs/AI4y2x6ikUGTcAIOcUK6snHkAgd7OypUnuKO2+ky42ul7UMtZVWuTeB8VKkJW3UYrvXnfGferp/3EJtHrvXCCr2vx65dhV5mtpqG2Id33vlPrm4QXypTCR6KmUtokqQKl5NG3ynuvGXzLOSWklBvQNeeqxIaOs=
+	t=1745511644; cv=none; b=Mc94om1pMCBxSe+pnSWcGxxanpDQrKFeOlzU3ksER0Qw7Va0fof08g6HebQLs4AYMRKIrvWM3b/2Ru/3IAR66j+kdcDnXdFZOpBnGFn8/51u66RS254MAk8T8ohf30EsmkhotMK5eAQ1M9yWVMGKsPoKYUVqXbTTLzT6OX0BRss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511641; c=relaxed/simple;
-	bh=aQN5teKVGNGQm4z2BGpbj1y8aIdHhsEm4YbiL+C0864=;
+	s=arc-20240116; t=1745511644; c=relaxed/simple;
+	bh=sr91ZCkfh9/+1qgwRvc7NFp+/ypX7PeuKKUTBWh2e5M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OR7v5gxs7dzKqZf5TRHdyL/oW1JuKvqWqfk7ADbqvjLdGgeH5dEB/jfBkiWXggMno3P311JCVbdh8b6CZBR1S8KVUe4q3eEH5R6w+Cva8avoUQLyxEho2SxVPLVJLQpCRQSuZc20hVqCxdTURBxbLmLYRiTyQUQy0zUxAemEbz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uhauOXai; arc=none smtp.client-ip=209.85.215.178
+	 MIME-Version; b=Am3ewCBKmsKVNKBPjtLQgtqLHqYXMEf4cdvOTTrapnZ4UdK0GdZze8T8iBV4/aw5mNAsmbwjgYLdaaY+tWoQtSDiJC1s7bZxRpsI+uunuH/ZiydLkyv+d5kH7uAESbUu5Fjp+sU9WcCkxeDTn9FW2nZXhIR2MYmHpb+cPQ8mntU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ezjT/iNz; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uhauOXai"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-af589091049so868907a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:20:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ezjT/iNz"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2240b4de12bso19030765ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745511639; x=1746116439; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745511642; x=1746116442; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z1EcXJf5+RLLmpglmtLJhsY9yapkHMCfsVON2VNDCH0=;
-        b=uhauOXaie3VIlx6jiF279viqG4pZgd6vYYbugKuNKexgresp5jqsG/otA9RknSXMYS
-         Bugnq9kR+aLzqHpz0BOH2vYCl18eqNuiWF6VWsXyGvUEuxKKnz/Nzb/5q49DaraqyH4F
-         zFlg867D1IaZA4O/QfD9T3dG+XcyAvxkovvdx1qeZpVq+dSyK1TGyJYTqO/QQxeKFX2z
-         FPP5ZHwJ61hRaP5qumvoayM8AYawicEkiuiVT+d3EeZm5JL9hRZHO/HvMnvORUw19paf
-         Uf6soZ3eCekUGU4Dnci1SBjSxSkNe+2piOywW5TrXQgXcaHXxK35ZSvweZpO5Tjk8B06
-         0bhQ==
+        bh=QSyaOuxRYv6eWeED9vze/Zx1Ra4wgUaI0r8PRqeWN0U=;
+        b=ezjT/iNz+b4drFWmN5xEGoQAS/QQfBWV70zcg4XGRg3+y3mb8py47MBHlkz95iwkqx
+         eP4pCK26BXLfmDPwJdR9Xjv5y+P0esh6g58flAlhAIjrDpqh26jK6qzeTwBIxhWZ61rC
+         6njYkWiHNdIpoGADe0SWeU5Bsk9S37YZAix2SUwEBA4nLAWRppd+/bmFBodDThMJZwem
+         /GQDbAXtTaHuAhgz0JsmaOdR9+zDaxFhCJIyYkpbGmJIJAL3uT7Gowg4H1mHpVNXjpfN
+         qasDeD6KLxybk0me0GcHOjMtcW7V9+HMxcpaLQlM/aCVn/HXdXxZ++88tqzKUQRBJbjN
+         hAxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745511639; x=1746116439;
+        d=1e100.net; s=20230601; t=1745511642; x=1746116442;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z1EcXJf5+RLLmpglmtLJhsY9yapkHMCfsVON2VNDCH0=;
-        b=t+C/lUnZEXKSe7ywmFpN7onRvYIvCdeZMb1DWoL9XM+MduPUijy5I5bDCEqe1dlrD3
-         zv30yOKNmhMyntPvLgkawpk2Ov5LK1HOzltUzIdP5CnI7ZUq/CBVpRoVw4FTiuAhBWyX
-         jWHFrmZ3sklxCaBAsdVNnM2nC7ELZex0qjAyNlXzzXgS/Jyd4wsAI7qmMFeNvh64DDNl
-         2twRyCOL0dw1KrYSpsH2XMQhYdBSd72l+Ssp+ioVdbibLqLyVAf0LltI5oL4I0izA6vE
-         +6/g0Wtb2ztnAAEgQxQ89oSgf9o4PvM61rZJ1E5goX/lqyUsBFphTTIN6K/qtnMrSo6G
-         B1oA==
-X-Forwarded-Encrypted: i=1; AJvYcCVDj18Q7Ms+hx54ID4MA/xqof8SeJkDB/za6JDGd7iFLbx+N7smthavfKP7ZqlLqqI7Fu+QwaadllpEkr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzlOdjkYKcDTJmE0xJcl9zcI1jaLtejslMwgsAm3S6kFUkDtPzU
-	+atizzDu7V+XPPU2Tuf6v0I7TU9F52YVbJnrgolSD4UYBP6H/KnCDYelfQWLAdY=
-X-Gm-Gg: ASbGncsHWZqUjr+VKOTGelAYtqrn6qAJerUIHDKWYRc3Y/+DofSgHECXf52k7MbIyrB
-	qgdehEMruJ/pd2llUrkw8zhaxpo0LC7KSjwagldlKt0G1gCx2BhWaiFuWY0L9e3Y5AK9ABdzkOI
-	OvGoCkW4OHNu+tMB/5zXu4d+sK+ry/g5bfyiVJdmumzRPP/j7ogoOa7IryGqK1zO6iiqE2atrC/
-	9tEXGYmd25EvHvL1ZHm+YYJ7ztcKs8HIqtF6vEs5Ngwmt7k4eybtRToKPT7yPoNhXy6mZXnXWD8
-	t7ip+ZaK1Ps4TKrbzRWn3+fwLny/rQqRGEEzI7nmpg==
-X-Google-Smtp-Source: AGHT+IF2xaoqZl8hWDUiXJ8nEem/xafyn/QQzYjrSVu1qxUZTPGra1ixV/+mmDNdtV5/54Q+x2U2eA==
-X-Received: by 2002:a17:90a:d88c:b0:2ff:6788:cc67 with SMTP id 98e67ed59e1d1-309ed36e9d0mr4033176a91.34.1745511639284;
-        Thu, 24 Apr 2025 09:20:39 -0700 (PDT)
+        bh=QSyaOuxRYv6eWeED9vze/Zx1Ra4wgUaI0r8PRqeWN0U=;
+        b=pp2KTsrI+pzBweLAJOTCzZdZtcTi0AGeDIWfAmplj/+aIeSw2+ACJLQOgC7M4egE+n
+         bL0ThoDKrkKegdNslSOAZ/w7icfg6j7tcQKXtlNO0ADCo75PvusMtxPMochoDOk0mm3j
+         HV56hmK8NHL6UXj4AxboIMsnaf89a7SYmzdvyb56vsXigrfxbkP12UJExuJwZLULilmK
+         SFN+WJhMeV7cqKaTPZEulUy1SJyFFAJAsma/DRbHHlYitwFHPjtYT4qHqYNVao0hrWHc
+         6Vq8Cdz5QA68+EecE3Z0ZJpDW5yMwTpe1tO+75F1lgo9xDTgVCVW8fcKStfePgzxcvYU
+         fZgg==
+X-Forwarded-Encrypted: i=1; AJvYcCUHO2UJblUiv2yHpfQLUCDPXUWEEh+Ar4+PO0Ug+gCF1mc42efxWoRo2hp5Bk8xNyI38WAQI2nURDHoIhA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweEFtoNQR0Z+u8dX9u7IuHAbBBtIpM4ffBiAZ5KiGjaj+o1yjp
+	7zOp75WIKGJXz9vE7ZOCbLOF7WI9uzlNZ87Kao6EqrCe35P5pV9Zrb8hUhK347g=
+X-Gm-Gg: ASbGncvTAr/OPaU32FrmJUPNY37bJGnOvy50QltA786Q/ersNaoyOvL99oYTOM8om/O
+	vfElv/0PBWSHWBNx+k++60OIILxMhC6aLjYgswxQcDzxLj0ySrHaVOeuJ2X1N3Ytn/2ccXw9FQf
+	m/fqgalXKjCC6IMONReckzdL0CBYaGhuUDjB+bHE8yXh5dqTfX2+ZAhFWsbTfECLNRIWL5nlTxU
+	uNqNkMWjrD5xhaV7JXgtQxvjlzfUnw21uamKNcf0XNxbn1VHilPyu69FC3a9d0EsiWSiw8Hrvu4
+	65TD7xRTjqTuzc9PEh7vvuCZoWsnkosmmZvYWzIffQ==
+X-Google-Smtp-Source: AGHT+IEYPSmkALRG18EbLkZ4r4Mc9Zk2ENSNaMuK68sqW3bha49PXaIcVchPcu5dRFET7GZx/n/KrQ==
+X-Received: by 2002:a17:902:f64d:b0:223:f408:c3e2 with SMTP id d9443c01a7336-22dbd41875bmr1217355ad.14.1745511642636;
+        Thu, 24 Apr 2025 09:20:42 -0700 (PDT)
 Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef03c806sm1581702a91.8.2025.04.24.09.20.38
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5216b7csm15475485ad.232.2025.04.24.09.20.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 09:20:38 -0700 (PDT)
+        Thu, 24 Apr 2025 09:20:42 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: "Rafael J. Wysocki" <rafael@kernel.org>,
 	Viresh Kumar <viresh.kumar@linaro.org>
@@ -65,9 +65,9 @@ Cc: linux-pm@vger.kernel.org,
 	Lifeng Zheng <zhenglifeng1@huawei.com>,
 	Nicholas Chin <nic.c3.14@gmail.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH V2 4/5] cpufreq: Preserve policy's boost state after resume
-Date: Thu, 24 Apr 2025 21:50:17 +0530
-Message-Id: <de5c72a0af101049204305c73cd30eb3a3e7b4a0.1745511526.git.viresh.kumar@linaro.org>
+Subject: [PATCH V2 5/5] cpufreq: Force sync policy boost with global boost on sysfs update
+Date: Thu, 24 Apr 2025 21:50:18 +0530
+Message-Id: <852ff11c589e6300730d207baac195b2d9d8b95f.1745511526.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1745511526.git.viresh.kumar@linaro.org>
 References: <cover.1745511526.git.viresh.kumar@linaro.org>
@@ -79,43 +79,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-If the global boost flag was enabled and policy boost flag was disabled
-before a suspend resume cycle, cpufreq_online() will enable the policy
-boost flag on resume.
+If the global boost flag is enabled and policy boost flag is disabled, a
+call to `cpufreq_boost_trigger_state(true)` must enable the policy's
+boost state.
 
-While it is important for the policy boost flag to mirror the global
-boost flag when a policy is first created, it should be avoided when the
-policy is reinitialized (for example after a suspend resume cycle).
+The current code misses that because of an optimization. Fix it.
 
-Though, if the global boost flag is disabled at this point of time, we
-want to make sure policy boost flag is disabled too.
-
+Suggested-by: Lifeng Zheng <zhenglifeng1@huawei.com>
 Reviewed-by: Lifeng Zheng <zhenglifeng1@huawei.com>
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/cpufreq/cpufreq.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/cpufreq/cpufreq.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 24745088403b..0ad459bc8f84 100644
+index 0ad459bc8f84..4ac5d4fcfdd4 100644
 --- a/drivers/cpufreq/cpufreq.c
 +++ b/drivers/cpufreq/cpufreq.c
-@@ -1626,8 +1626,13 @@ static int cpufreq_online(unsigned int cpu)
- 	if (new_policy && cpufreq_thermal_control_enabled(cpufreq_driver))
- 		policy->cdev = of_cpufreq_cooling_register(policy);
+@@ -2863,8 +2863,10 @@ static int cpufreq_boost_trigger_state(int state)
+ 	unsigned long flags;
+ 	int ret = 0;
  
--	/* Let the per-policy boost flag mirror the cpufreq_driver boost during init */
--	if (cpufreq_driver->set_boost && policy->boost_supported) {
+-	if (cpufreq_driver->boost_enabled == state)
+-		return 0;
 +	/*
-+	 * Let the per-policy boost flag mirror the cpufreq_driver boost during
-+	 * initialization for a new policy. For an existing policy, maintain the
-+	 * previous boost value unless global boost is disabled.
++	 * Don't compare 'cpufreq_driver->boost_enabled' with 'state' here to
++	 * make sure all policies are in sync with global boost flag.
 +	 */
-+	if (cpufreq_driver->set_boost && policy->boost_supported &&
-+	    (new_policy || !cpufreq_boost_enabled())) {
- 		ret = policy_set_boost(policy, cpufreq_boost_enabled());
- 		if (ret) {
- 			/* If the set_boost fails, the online operation is not affected */
+ 
+ 	write_lock_irqsave(&cpufreq_driver_lock, flags);
+ 	cpufreq_driver->boost_enabled = state;
 -- 
 2.31.1.272.g89b43f80a514
 
