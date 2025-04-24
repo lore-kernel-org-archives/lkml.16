@@ -1,118 +1,137 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3C101B392B;
-	Thu, 24 Apr 2025 07:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5659510F9;
+	Thu, 24 Apr 2025 07:10:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478588; cv=none; b=JLIg8n2va+QuJRrC+2UeCtpcJm42QezaS1+DdpRuISyWIK8iAg8aYEDfuOBE3FfYqglH8UuQH9w0/Znpveo4YWH9o7Z/KueGe9ROXRUD4S1KjrEQdfZn85cS4mDXGV9GhX7lDemTLkysVBAvohmhPDRtvYiHxDuPW36BfeEqDSo=
+	t=1745478649; cv=none; b=cRbzJAyCmBaE15ZbceoUVU3eVCkPFA3+o6d5NMgSj3n+2pMCu3kOcPXX4i5kFV0d3WOYe4PMEjQanovpCcaXz/dGhM7XNV11YfOYHCIGdzW0QwXD38mVp5HoEJG9PTaWqYnWiU2SSw9kESJwL5WpcWrAa5NgAmsw5YXSl2hfZjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478588; c=relaxed/simple;
-	bh=UuEiPUkTylj/qy2WlmonUTfYQxAcxdMagrpv3K72TtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eNFPjJEHbpEizrVVtyroQhaGwq6i3eM20dde+OAocLE+pEOuyRmVofUcq7c0loREvzMXfGrbtMLrV/hC0v00eOA4N/RaQC52jmT3cpewO2OTgKCoLdd832fo4ILu1wtktU7ylNjY4kMLMIJqgZUHcbY1UdsBFq8s35raRO7YgGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GXqiHtiY; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745478649; c=relaxed/simple;
+	bh=t+K0ESiXzCsl44QHMLJtE1n+4hg/PkQFOPFvd9iGyuc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LvQXhNELiZCGjEvlOSsdLDU6OmrMzve0awBIJSwCPy95dXMlh2mdJLCSXJB8cvRMgjPhcX8XPZzlLw+Ny9pq2rL/7XP+pmzQyLkuD4ICyem/vxBw6Ra0lPaV3vM1M26vVpGzuJ0OaHRDNP3SZlOOnRelX8LUFyRkRkHv5tcL+Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RRBIE2FG; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GXqiHtiY"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22c33e4fdb8so6558395ad.2;
-        Thu, 24 Apr 2025 00:09:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745478585; x=1746083385; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3EUZgQOVtgxwPj0Cm4KzOqZ3U97D0/GKNyUNvaflq+g=;
-        b=GXqiHtiYfWkgyQPFupa58+FUfB/cMcy4yX6x8NI/pzt3FHDEELKO1ho6axTuDe2dWJ
-         K+ry5Oku49iNcElVGKgzoDu3iEqwKM2Bd88qTz8VHdLrZNxyOUuZb/iWGLksdTnkiVGG
-         vP8yiQ+5AWekY3+iKd10X6HPTw/NN++hHeecRSfNpcCUOGaDrix0/ZOkuFKfW5cv9RbT
-         LMzbPL92I/PWaWy8Ot5pwCpLEtbnUbDrA2hdqUmaeoqDJufOWMmW1a8yoKWgKpYbHnXi
-         6G8ZSLVqFV5rOzYI5CEuN4H7P+WP9+jQQspvuWDif5T5QYKBZDBxYiPbOgBZlmpzqlFS
-         glDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745478585; x=1746083385;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3EUZgQOVtgxwPj0Cm4KzOqZ3U97D0/GKNyUNvaflq+g=;
-        b=UKq2x8uta5r0DvOwB1RshUbD/wbJgt4b7zW+TuLslrsBqQu79hVXn+FTTekGKSokaj
-         65r4viLPeh9wMq8Guhec+s/TdT19J6XEHP9u7FM8wH1KFuIR7XzVNCE7JlM1VXLMedjj
-         mrBlq/1IivpuqjSWszZINnRu3GJepuHGA0JBJmrfcNKAIrWxZkfQ7FM4ejTgwdEnbxHF
-         /h7Yzfl9goWlW0Ux9d81Igz3zSEoeL5DUFnwYxI9orvQe+E9CxbCvmSf1K6LomKrn/0b
-         d8sY/99ruy3HS/eGw2YI+7b3hD8Z5y/CzBQf/hcNoW4DcoB/1MCKbCe5k/QYNuSytt1M
-         y6Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxMzd5IUoirWXHJ6YG6DsEQyqhiJ91RV5cKm/VSlJTT68U2ZmlhAHufdTloRAxGfCk4ga5n9rICCmu@vger.kernel.org, AJvYcCV7NyxVr18l1gQlCWUo5bKKDo4gZwoecrhiAkFvsI+E0oWceAFC1FiKrvH3yRGdjatiLlHTI+xiJHda@vger.kernel.org, AJvYcCVo4XQNa+axkjpPPPQeJSjZBbzHA/qi5BIw7zpS4iZfowPUB+ODGsTyQsPbxL+mCllNczTlsWkI6je4ru5c@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzGb0siY1cLCwrdKAYldCUyRTS/OCMtTjlvOW4AM0ly2Ox5Kd9
-	4/hsWNrwN7+JIRccw1BzMHAcwGDFvpQ/wW1r9EvIYc9uZBlzc43Q
-X-Gm-Gg: ASbGncuSu1WUHkmQ/VeC5pJJeYgh/Tbxe8oDtMW57RLKj5HUwi8jLUUCVIPRkAugBN2
-	X+p/knSROatziDzIyCU5gJrHBV1Imt866WClIeldkc0QYYg1FryB+IEm3/Wbe7iq/UkU05pqKr6
-	pZHLk3iVIoULJYp3Og9S8OhzquA3JhAUDtGe7cBNrBIflyhJhOw9r5NNx53hpG/iYP39aq9ENzD
-	vHwG3e3HdS/O476Nqqya30NTNYp5SnZ2x3JQ8QwCLqbZcxAHaLmJqGljJrmTilzp5LwNEgETVkK
-	JVl//LBxrYA+sCcgeTox056ov0ia4mF2A7qVe7gnKw==
-X-Google-Smtp-Source: AGHT+IE9LsCk9tmFZI/PC5UZGmINwk24jJUeXSF+9kMM7rkzh8Y23OYpJUYh4V8Tdm5IfIlvZOU+AA==
-X-Received: by 2002:a17:903:1b23:b0:224:826:279e with SMTP id d9443c01a7336-22db3ddbea1mr20093095ad.50.1745478584913;
-        Thu, 24 Apr 2025 00:09:44 -0700 (PDT)
-Received: from localhost ([2001:19f0:ac00:4eb8:5400:5ff:fe30:7df3])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22db50e7cf2sm6038875ad.154.2025.04.24.00.09.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 00:09:44 -0700 (PDT)
-Date: Thu, 24 Apr 2025 15:09:42 +0800
-From: Longbin Li <looong.bin@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: pwm: sophgo: add pwm controller for
- SG2044
-Message-ID: <ikq5pa74pk5e26m2vinye4wanauyzwqlxrgyx7hwr27k5dk6dt@ibv3o476jrpm>
-References: <20250424012335.6246-1-looong.bin@gmail.com>
- <20250424012335.6246-2-looong.bin@gmail.com>
- <20250424-bright-vague-finch-57fc38@kuoka>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RRBIE2FG"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id BEA6743A57;
+	Thu, 24 Apr 2025 07:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745478644;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Ls6ZOwr4X07+mFxbErQdmry+CO4o/SQ2lrx34X9QQTE=;
+	b=RRBIE2FGJdwYRYGLOTx1+qCnf8F/EKYhYO66/Phh3rBBsU7Sm7K3d4FwxTzxfu3pEaP8zA
+	N1LaVgnsNvsX5eSgFrkjccYzmxUWQ0tVj7ubeBRvVq2E8rUMVgsf+qHk/SbkIb1oGRkrcf
+	36aRsLbmScl4x3KCQCny5ulOX84AI924X01GPoReJDQuPHyKR54IhOatvaOMeG2C96IAsC
+	pzh5oR9CuACWcJF35qS9rJTXFVzC2ZGePcT3FKKHQqujSfo7WP/0+0ZadxcyYIRda8XlAd
+	ZdiI8dTQM/UvG5r3k2yAr2kx/f3VENswIkuLQVvvf2XXAKuxE9iyTzW9MAOQxg==
+From: Romain Gantois <romain.gantois@bootlin.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject:
+ Re: [PATCH next] i2c: Fix end of loop test in i2c_atr_find_mapping_by_addr()
+Date: Thu, 24 Apr 2025 09:10:43 +0200
+Message-ID: <2778486.mvXUDI8C0e@fw-rgant>
+In-Reply-To: <9cd0c3cc-9f3c-4a3e-9080-c832def8f317@ideasonboard.com>
+References:
+ <aAii_iawJdptQyCt@stanley.mountain>
+ <a22d74b9-06b1-4a4b-9c06-4b0ff7f9b6c2@stanley.mountain>
+ <9cd0c3cc-9f3c-4a3e-9080-c832def8f317@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424-bright-vague-finch-57fc38@kuoka>
+Content-Type: multipart/signed; boundary="nextPart12651876.O9o76ZdvQC";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekkeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeikeekffdvuefgkeejgeefhfdvteeuhfdtleeiudehieeludelvdetleeggfffffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepfhifqdhrghgrnhhtrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrt
+ ghomhdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhdqjhgrnhhithhorhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: romain.gantois@bootlin.com
 
-On Thu, Apr 24, 2025 at 08:47:38AM +0200, Krzysztof Kozlowski wrote:
-> On Thu, Apr 24, 2025 at 09:23:26AM GMT, Longbin Li wrote:
-> 
-> <form letter>
-> This is a friendly reminder during the review process.
-> 
-> It looks like you received a tag and forgot to add it.
-> 
-> If you do not know the process, here is a short explanation:
-> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-> versions of patchset, under or above your Signed-off-by tag, unless
-> patch changed significantly (e.g. new properties added to the DT
-> bindings). Tag is "received", when provided in a message replied to you
-> on the mailing list. Tools like b4 can help here. However, there's no
-> need to repost patches *only* to add the tags. The upstream maintainer
-> will do that for tags received on the version they apply.
-> 
-> Please read:
-> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> </form letter>
-> 
-> 
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> Best regards,
-> Krzysztof
-> 
+--nextPart12651876.O9o76ZdvQC
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Romain Gantois <romain.gantois@bootlin.com>
+Date: Thu, 24 Apr 2025 09:10:43 +0200
+Message-ID: <2778486.mvXUDI8C0e@fw-rgant>
+In-Reply-To: <9cd0c3cc-9f3c-4a3e-9080-c832def8f317@ideasonboard.com>
+MIME-Version: 1.0
 
-I will pay more attention to that, thanks!
+On Thursday, 24 April 2025 08:32:22 CEST Tomi Valkeinen wrote:
+> Hi,
+> 
+> On 23/04/2025 20:29, Dan Carpenter wrote:
+> > On Wed, Apr 23, 2025 at 05:25:44PM +0200, Romain Gantois wrote:
+> >> Hello Dan,
+> >> 
+> >> On Wednesday, 23 April 2025 10:21:18 CEST Dan Carpenter wrote:
+> >>> When the list_for_each_entry_reverse() exits without hitting a break
+> >>> then the list cursor points to invalid memory.  So this check for
+> >>> if (c2a->fixed) is checking bogus memory.  Fix it by using a "found"
+> >>> variable to track if we found what we were looking for or not.
+> >> 
+> >> IIUC the for loop ending condition in list_for_each_entry_reverse() is
+> >> "!list_entry_is_head(pos, head, member);", so even if the loop runs to
+> >> completion, the pointer should still be valid right?
+> > 
+> > head is &chan->alias_pairs.  pos is an offset off the head.  In this
+> > case, the offset is zero.  So it's &chan->alias_pairs minus zero.
+> > 
+> > So we exit the list with c2a = (void *)&chan->alias_pairs.
+> > 
+> > If you look how struct i2c_atr_chan is declareted the next struct member
+> > 
+> > after alias_pairs is:
+> > 	struct i2c_atr_alias_pool *alias_pool;
+> > 
+> > So if (c2a->fixed) is poking around in the alias_pool pointer.  It's not
+> > out of bounds but it's not valid either.
+> 
+> Maybe it's just me, but I had hard time following that explanation. So
+> here's mine:
+> 
+> The list head (i2c_atr_chan.alias_pairs) is not a full entry, it's just
+> a struct list_head. When the for loop runs to completion, c2a doesn't
+> point to a struct i2c_atr_alias_pair, so you can't access c2a->fixed.
 
-Best regards,
-Longbin Li
+Ah I see, in that case thanks for the fix Dan!
+
+Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
+
+--nextPart12651876.O9o76ZdvQC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmgJ4/MACgkQ3R9U/FLj
+286FVQ/8DWmGsioZ0zngygJdrvQPd3X3Sf3Kd/9u0lB5kzV4sTCbc3yY5dug60Jm
+ol0peHRedrLQCyudxFWTnjkM/LTgdZ7plaUtOJox8tvPD1lyvcfGLwzl67xM+7Re
+PMqhyZNB2tClFQpUC7/buQjJdo5MzOZSmbl3TtLzz0+NB0sCeVw6XwIqvc+KWz92
+QfP7Ni8X65mdqWuT4faAAV0PCkZeBknh8v1He6MnKsjXxOaJ0yO/6IUYUl8COJS/
+22CIjOHNI3ZgfDzg11bEDI/qaHbuuWv7Ke1np6wLyOhD26sqoCP5TQUGA7Fw/c+H
+V0TQB/08nW13SDHdtB6LgbnCvri59paDJM5gMyUwVMxYOLHPN3u+VXIxSpRc/6aC
+1N62+xZ7SRf/TkoEfxeZILnQib5m8GyvjR1PRhMi7QIgdXFfbH+g2j/BTNQmup/0
+1o7Q+Z90Hi3OSoR5Bviktk8eLh00C0H+pPk7V03b0oh4xx7KVzGXYikeIV9jp/+U
+gkzeLCCVAFjM2wm/DYwGos+Ys2zNWUjb1C7KJlCP2Fl/JGCQO9txPO1BZ3pRrRyf
+/oXcI5tpTj3x5oZpuIdPZzpOZjS4LvHojFkvUBNFP3JO9r8GHaLeoA4X+UknqN1r
+gH73eOfSbUFAPDwDiuOG3hxte9WOdKiIZ8Fcb6pRgk+p9HnCDHs=
+=pYya
+-----END PGP SIGNATURE-----
+
+--nextPart12651876.O9o76ZdvQC--
+
+
+
