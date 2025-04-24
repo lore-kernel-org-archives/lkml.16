@@ -1,142 +1,85 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D177F27B51C
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB8C81CFBC;
+	Thu, 24 Apr 2025 13:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745500259; cv=none; b=NGXHpHp+f2eUHR1t4PmYOxe9oO/lWPbcAXsKaaDn1Q5eLfm+BZwdssFMP3xPNaQbDwTiw3Z9lp5CRa/KND9Q/DfBmoBDd57iPci/B3t9+Soh+jp5vpl7Y9C+lMH7cGnVhol/W4jPf3H5O1IsaBOs3ZCj5unf53YsvDP2Hbd95is=
+	t=1745500312; cv=none; b=Zxicw4wlrZfv7IIpKxg7zsCdysTJrB3Q778iqU4FGXnoiFuuHCIagFRksJBp+mW8FfaYq5F7vDK9BAQSoWOIvcJNEpHMeBSrp1ykycVZClJvkQBhRuSLMWY8aGvgXaS5+dRe2akNIY6eVgG4rixGeNdGtBrxiI7ykpoW0gyPhO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745500259; c=relaxed/simple;
-	bh=vCmo/ncUFx3Q4A6rohFpnlMkKBne4AUJJq60e1MXpJI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kY1jNZ6nOUkgPiLmA+e9tYFD/VNMSlfrjjt+i9uhkrzJDRO2sQ1Q6LQut/8nF1N2IiTSwvNcCR8qvEyHVQm9S9QmDl1/FZsMg4m/NSLgyUtBqCWa6D6tCxbUDJ5pjKuo7mUWZb/hGP0mW2kBHRN6/gTthznG5hCDW0eN04mFNfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BUANBtHk; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745500312; c=relaxed/simple;
+	bh=CHJqzREMGbUzbXinXVCfP0X6YZcxNE0Bo9DQZXFy3ug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IioKysbao1evCd5OSKY9Ip69aj3CInHuhqGGk4LwRRGZ+AQu03aabujL3fFB3Moe9ah3k7Gdr4y1rtQe7A+Fkbpq/7j//wjqGOuhWEWVzzl8DLY6fdaEmaCu4IFhdLBoVw8dg5yzB5nKdamwPVgWMLIqBbNj7CZK1ufep3DRdaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=NFlq+0iX; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BUANBtHk"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso688254f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745500256; x=1746105056; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ToOXcZCzkUmOmOHjlckeBC8JkRzjRqX1pToQblrwu6c=;
-        b=BUANBtHks2E5U1SLXQWiyeUjuvN/YYh9GzAFaxmJUMFB7hYHa/59ae46Fsb4A0A/pn
-         yXXMb6lqeH6AyQIqXyOz0s4cISx0vmyKWuJgqNpPAiRCDjwksbb0v4vx0rlbwx4azUU3
-         iA1+RC57YPgjUlo0qLmue2h/Q2l2xrD+92JD5oNx0oK/Rg/x+Yh8cW0sphh+o14NDK3j
-         JiTiUNTBg8xFcPgBbm3gs1pJwfatCwCan+13RA9T2OGgUmovMh6AEXWfvwiYOj2DxEmR
-         X24tHrgUvxZtzAFmrgFHeGGmqlegY/lObivIqZfBJIPTtlb3hO+dvQbXxtX9qI0U+dub
-         3xOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745500256; x=1746105056;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ToOXcZCzkUmOmOHjlckeBC8JkRzjRqX1pToQblrwu6c=;
-        b=tuAPDmvMiAz2ETtq8IPNlZgSEohUEU/zL6Ubh7o5NCyFv7xRtmuq/CUoZ5XaIL3mOk
-         m3Op1dfgYPR6pu12ELPk+OvRJ93iw0zc0H2BMu5oc1H5ZVrFUmnjXTkYk2GZ8LEwF+5g
-         USaLg/WAjZf8p5qDBlpozcGuTcD+hJi4xJTg76eC1fhUgQCH4LyTViqiJtA7PRDX2uuQ
-         3daO1G6SsFlGYSn3hxQHyrU1/+nqq/BVCGRTVTZHivxmxWTpzMuk2Wyz/zx7FNKXby7b
-         qEvwo2zOdGDoQ5NYfz6Nw4MT8mekaELKes3slttrsGB42Ktpp3rXeoo8oa88FhegZH5d
-         /e5A==
-X-Gm-Message-State: AOJu0Yw+8NRiuv2xLbQCNc4aHARehtHXjlWpCxR9/I8lwVicYTz7rdZm
-	hIpL09FQuWeZUwFJ4Xd+GY0RB/6/9VmatimYtmfESQFowcnsGbREbnHKz1uvEPg=
-X-Gm-Gg: ASbGnctbBFYnRiV7yeGyRVZU9N2uUKin3AQtRb7DgozMrkr35NVwg6DWOockMBHfZbZ
-	AHqbwDh5kG2u8IocNpvZjNYBhWC4HLCm5sD7Ax5yQlcYzT8zZ7WanL0k5dAz+/OyLlJ0SaRMjSq
-	3cq/aOT7l7EU5GHZnKFG5zC0P9cWsEmVZO7vZk9R81NQYMQNPzNhYLllNx02rMpnO72CmCrFDd7
-	7QQOndGKyBaTdjkQRT+dRCkJTqs+fNFhiztIJXEl4GppC8Cf/FtombEU17qrCzA9UEmozlo0kxo
-	jdF6M8tCiz66lHtL7zLxXbngie1z0Eu3nHhi1UM0wa9IhVonPqVFx0K7Vuzdk90KHq2H1azvO6n
-	UzsYX
-X-Google-Smtp-Source: AGHT+IH0ALByF3zf32RDzm9OP9YpoQBOQE4RcKh5A0e2QxjL29sJpL4Zq1vlx+/BnwTUZW8Hiz1p8g==
-X-Received: by 2002:a5d:6da6:0:b0:391:3207:2e68 with SMTP id ffacd0b85a97d-3a06d64c8a5mr2338891f8f.9.1745500256009;
-        Thu, 24 Apr 2025 06:10:56 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a06d5323casm2076931f8f.75.2025.04.24.06.10.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 06:10:55 -0700 (PDT)
-Message-ID: <669b6ef8-e0ce-42ce-8258-647ec2a77f19@linaro.org>
-Date: Thu, 24 Apr 2025 15:10:54 +0200
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="NFlq+0iX"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=SCwhwnEgU84foJw4uoHZ/PyE0iZXP6+4MusHFOc7+CM=; b=NFlq+0iXErFd1D93UbdPD/8hFD
+	jguofo6asX9AtBvL+aOMJER7diy+vqdPcttFSfAad2Ri8jHCCRQoS5EoTa62hur7odw6Mh8dhY/EM
+	aKA70fnq9oRJdFrzTaqCiOXfyEiHUIusIesy0Of4nfi2D4Bol5iyRsVyBDGnMhrnkGxWQehwUksGK
+	jok21P4CTjZaOlujRvCrsl6GWRvJpj88kCc+XI1bsNzp4KF6sqPT5j44SCDDSFR6iMyUq9fq/F92g
+	K1K9a0RTSWomx0nakviIvXRAZo/zzwK65mipkRRCrUSxu8O/ufBTnQsQB7BY6iNC4zfnxQWj7UNc1
+	QTHderQw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33266)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1u7wMd-0007Pn-2x;
+	Thu, 24 Apr 2025 14:11:39 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1u7wMa-00017f-2Y;
+	Thu, 24 Apr 2025 14:11:36 +0100
+Date: Thu, 24 Apr 2025 14:11:36 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Woojung Huh <woojung.huh@microchip.com>, Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v1 1/4] net: dsa: user: Skip set_mac_eee() if
+ support_eee() is implemented
+Message-ID: <aAo4iHMDByAzxP-m@shell.armlinux.org.uk>
+References: <20250424130222.3959457-1-o.rempel@pengutronix.de>
+ <20250424130222.3959457-2-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 0/2] Add the System Timer Module for the NXP S32
- architecture
-To: tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, thomas.fossati@linaro.org,
- Larisa.Grigore@nxp.com, ghennadi.procopciuc@nxp.com,
- krzysztof.kozlowski@linaro.org, S32@nxp.com
-References: <20250417151623.121109-1-daniel.lezcano@linaro.org>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20250417151623.121109-1-daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424130222.3959457-2-o.rempel@pengutronix.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-On 17/04/2025 17:16, Daniel Lezcano wrote:
-> These couple of changes bring the System Timer Module - STM which is
-> part of the NXP S32 architecture.
+On Thu, Apr 24, 2025 at 03:02:19PM +0200, Oleksij Rempel wrote:
+> Some switches with integrated PHYs, like Microchip KSZ, manage EEE
+> internally based on PHY advertisement and link resolution. If
+> ds->ops->support_eee() is implemented, assume EEE is supported
+> and skip requiring set_mac_eee().
 > 
-> The timer module has one counter and four comparators, an interrupt
-> line when one of the comparator matches the counter. That means the
-> interrupt is shared across the comparator.
-> 
-> The number of STM is equal to the number of core available on the
-> system. For the s32g2 variant, there are three Cortex-M3 and four
-> Cortex-A53, consequently there are seven STM modules dedicated to
-> those.
-> 
-> In addition, there is a STM variant which is read-only, so the counter
-> can not be set because it is tied to another STM module dedicated to
-> timestamp. These special STM modules are apart and will be handled
-> differently as they can not be used as a clockevent. They are not part
-> of these changes.
-> 
-> The choice is to have one STM instance, aka one STM description in the
-> device tree, which initialize a clocksource and a clockevent per
-> CPU. The latter is assigned to a CPU given the order of their
-> description. First is CPU0, second is CPU1, etc ...
-> 
-> Changelog:
-> 
->   - v5
->     - Fixed typos in the comments (Ghennadi Procopciuc)
->     - Added clocks bindings for the module and the register (Ghennadi Procopciuc)
->     - Fixed help in the Kconfig option (Ghennadi Procopciuc)
->     - Changed max_ticks to ULONG_MAX when registering the clockevent
->     - Removed Reviewed-by tag from Krzysztof Kozlowski as the binding changed
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-I do believe all comments were taken into account. I'll apply these changes.
+If you look at the conditions here, there's a path for legacy where
+set_mac_eee() is mandatory (which is what you're changing to be
+optional) and there's a path for phylink based EEE where set_mac_eee()
+becomes optional.
 
-Thanks
-
-   -- Daniel
-
-
-> Daniel Lezcano (2):
->    dt-bindings: timer: Add NXP System Timer Module
->    clocksource/drivers/nxp-timer: Add the System Timer Module for the
->      s32gx platforms
-> 
->   .../bindings/timer/nxp,s32g2-stm.yaml         |  64 +++
->   drivers/clocksource/Kconfig                   |   8 +
->   drivers/clocksource/Makefile                  |   2 +
->   drivers/clocksource/timer-nxp-stm.c           | 495 ++++++++++++++++++
->   4 files changed, 569 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/timer/nxp,s32g2-stm.yaml
->   create mode 100644 drivers/clocksource/timer-nxp-stm.c
-> 
-
+I would rather we left legacy alone, except to remove it entirely.
 
 -- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
