@@ -1,62 +1,62 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9096627FD76
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:50:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AF8288CA1
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513437; cv=none; b=nnmSZld4C3LnOpCHd+E9fi0dEvleCKawIFcqaEfTCru3UNiyWm/QKkz2Y1VpUZuezUJnybNebxauznsZJb8fXBlFWKaR0SEchoHRDuaWoGnfmd8/2sLPxv8aVKsAi5j+cMKavpBtyfck+7174DmaPnPy1+IrzhILnUfepYTrvpA=
+	t=1745513439; cv=none; b=ExuSpUqUBETJNuVDB1n76DQBltQP3uuonySmFEr+CKqcQ64PUD93uIJC7mF4ACAk5HFsAtUeyKMBRJe8xnFT6Ti5Ht4czmahsw9bCmBm9cU9U+b2fiVJQ+5h4DgNAtnKoec3f44bDx4asho5wfgCVu+gKacx+86g+L5eEDO6u8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513437; c=relaxed/simple;
-	bh=LuPSXS2gDM+3dccuKoPqDx7Vgdx+itgEGLDoJj+6O5c=;
+	s=arc-20240116; t=1745513439; c=relaxed/simple;
+	bh=KUifTsl6uYWPkVN/kw6Cc33Z7cdDir1H9t3W+GvVit0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lLsEDlduQ71fx4H54d/TbWtt2+mTukUtEAVmXCppPjpyNNFgm7lEvlvAJsEXA16HhtEx4U0rmgHQBcwHaEst0QJZlLmea4WrM7qLrlYE0BsrHJJimFBnLVBu9quuGS8cQi0tpic2bc5ly2CrE0q0g5lqV5mMaRG2jl6lv+mdqh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=s9v0V51b; arc=none smtp.client-ip=209.85.167.179
+	 MIME-Version; b=MevJhWanKCDJ+BJ02hADQ7WdxtRO3sbN7g33QhVBQyehQBek7f2fJ5BulAyjuetI7uq+dlBXNECloj9Xl9rNraeiD742RNj7HFwxpRQLOdV0Ts4k1iXHjrg2MPf0s6A8f11ulzN9F7w6UR7mheBG5DnIipdpu4YT/RQPk7hwBM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net; spf=none smtp.mailfrom=minyard.net; dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b=Hl33PXVT; arc=none smtp.client-ip=209.85.161.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=minyard.net
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=minyard.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="s9v0V51b"
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3f8ae3ed8adso886818b6e.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:50:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=minyard-net.20230601.gappssmtp.com header.i=@minyard-net.20230601.gappssmtp.com header.b="Hl33PXVT"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-604ad6c4cf1so478046eaf.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:50:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1745513434; x=1746118234; darn=vger.kernel.org;
+        d=minyard-net.20230601.gappssmtp.com; s=20230601; t=1745513436; x=1746118236; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OcNpKj2ULrV1lWDMQw0DBFTmPSr8bbwLxdvwy2alDVU=;
-        b=s9v0V51b95Lcy2UOPFV5mTZIkbA2JF93VVlBACJ/x67Pj1r5igyyHeio4eMDZ/2dnF
-         rtXSLCbHTGdSLj4ARRUAgu2+s61KujOa4HSSPKPLfB14vo0DE/+wLPDOZgSCet9hYKjI
-         jOQdq+NMt8gemvB5tCe6KCMlisI2IESgXnmLvG2YLc+r+zc3AYVTYODVlg5teT70tuP5
-         mWfAAWGC1PVKW09N1yqA4ie/sTViWn6nITX9SAif/USpybjCyqK3t/Ix9roEcb4v7rSe
-         fi/aAQGzI8A0xLFIW5G+JSsxXrs8WsP2LQ2L8sVYQHpfXT44z2CR/3VEewvohet0Wu9h
-         IBGg==
+        bh=SZCnXReemUxFfOn+5GlvXuuUi6hFy4IX7Q4LFZGGFqo=;
+        b=Hl33PXVTvXnk+kJHgV9X1ViKtgO1fAUq8IkgQXoNb5PTzZQQQekAzQLumYxoiKPDe5
+         +AaLqQe3wyv4ZfiaMJ4ATtcG7a9755LJpYMu3sx+m1Xqkye0ZZg2OqElfJrYAns6shOp
+         Q64BKnpxm4IM3/QFiF7YI3GQUIH4HAcNk6FWVoY7jhgdMIgAmsEQ1VqBpCEumYDuBYFK
+         J9eyE7o/HQoavBVdCSQyOpkzcuG4dWvVUPgOAniV6QrpIso+fMSe+DzJfn+a9PhcMnPn
+         WNFSKIIDfA7xt1466Y15j8OaVppRbL1iOqEuPChQHtTp/LqeGgZlzE1VJdhG9aJSks1S
+         3pTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745513434; x=1746118234;
+        d=1e100.net; s=20230601; t=1745513436; x=1746118236;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OcNpKj2ULrV1lWDMQw0DBFTmPSr8bbwLxdvwy2alDVU=;
-        b=SOGgI6ZviGgtvDswCaCPpU4js4LA/zgWZvgzOEvg058Dm3ncXlh8mpBfncbYjzMMC3
-         LXAo5YkHQBc1JNs+U+vLABThoQl6GQK2IWUj3T3Ck1exoZn+kx5DWzJeBRPrKoQiunja
-         KItP+M4UR6pM8QcEzgUJ6o8PZEPi5RSoKuOYM73snh1p1qBjJuokoGL2/OLMcynJI37D
-         kmVwAit9QuBATCj4/YkVcbbHgcbt313jNeW7whpqvEEZ8LA56sVzvr+/l6vxRtgDl4J0
-         Tu4euMVfk6gUQ8hRtlvVatFgpO6LkEKRijT919rlPTI0WAWAgzWHgLiYYa5rXBw3lotf
-         ktIA==
-X-Gm-Message-State: AOJu0YyDFh4xVJkdYt8jMCFZ9mu2JgztFJEp1Dss0Ossh46gqobXy4th
-	JbgbaYH54vbck1hlidCfYJNrd3E5/xfXrEUpy3zUJCTK1EfJqEHgdf+dCRsdxo2UXpH+v77X4ke
-	I
-X-Gm-Gg: ASbGnctIURQwTqMg4tT4+V8JsnKpdC3T9ziHzn58IJJF6zYaQ03khe6n6i4JrVWT2Vb
-	LSM+I7oMEcB8BwKL1ZIoU3NV3s5JaiiWxs0AxH/ptZONanW739IqBghAUQV5/5iOV/R3KtWjNCs
-	hT8aJ/uvd7UtaVsaH8h1f6+qys08PT1sjnS9yDmIHZ6Na+n2ZPJ2064DZ16+AHv3XOcGniBuCtz
-	CjhScwZOwRIz5IHU/Pp7rxZAIwRefPQrNjoxufmzuEd4wPAFl2YEwWG/Is2V15aijItNTJSfg1l
-	1YEsAZL3SBgm85pZ+ZWAha2fsQ0w/O7LXj7aATrki5nmNQ==
-X-Google-Smtp-Source: AGHT+IELql/wRvoa8BM3ex/dBaoFvABrW93Nk4W9CtFRx3vZMu1Go4RmhcXkY4KkH82YYqlFrrynyw==
-X-Received: by 2002:a05:6808:3198:b0:3f6:6d32:bdb4 with SMTP id 5614622812f47-401eb35f74bmr1991846b6e.24.1745513434105;
-        Thu, 24 Apr 2025 09:50:34 -0700 (PDT)
+        bh=SZCnXReemUxFfOn+5GlvXuuUi6hFy4IX7Q4LFZGGFqo=;
+        b=KQ3Kfm8rigtYMmsEbYyGi8M0RGQ02PDWmUpAn95SctP0z/pvtp4maCyexUH0N91HTL
+         kXziDTEukPFcqKzNWnD8ZUctvUK0kRC+RAQrm+OZGynhHP2NQld3RwoXZkLxTiXe2g3Q
+         Ri7anGjrsI5fouUxq5OV41uLDeRNUYnHOABZPggtRu78p0MAT9VgSZjXgqFuCWxLcRxH
+         Ij5Wz5KNu7cI1UrpnQ4ZkG9uCykRZeasVuUUeStrnarW4dnA/7mLllnJpU7ytRl1mrAp
+         XDEs1LJqN7CQ6AtoXnADWO7Pz1vnMxk7sv1QMBTT63dNeP3sGO0bBlW+xVDgibPBWSw7
+         Ztzw==
+X-Gm-Message-State: AOJu0YyCRk2fd+hWkCy7kpoZ/SoNAayOlvYMTY58BBlb/kga06l2EOfr
+	tG3OHtHnYbnzDrkvEtM5q0JYlLK1KUV32VdXap1Vc9MajiX1gtBxZ0c1lc9a234yBbJqV1STrid
+	d
+X-Gm-Gg: ASbGncsDBfFi+p63/89yDjoabqWZQGNgNiaLC2GN/lG2xb1ijMVY88AD49ZvNOP14N4
+	M2kxkcfwGUoA7VOiobkf8+QBubIbhOSNF4w65CLPjo8BaG0vftR3xDDV1eQGequtjuV/5hgdHQv
+	fLeWXiHRKWLoCs3quvAhRePbnJDPY0q4l0BpYr4Wb0miF3J4cyOHpnxrI4lp8I5xxaExnp3tqWG
+	EeEAqjUpYXcb/F9agpNney15vxFhxPA8tLoQVCd7XRbiL9oHf3yMT3gTm9xzGWLchxLkQ0Vldkf
+	EjlJ2+2KYD+ceRhsX4Ncs2q7dQ7cp+w5tqQ=
+X-Google-Smtp-Source: AGHT+IGc6CxvVncjGX9yYC21KFrqVXSC+mtv5R2uoUCopPdPsclItA9g8NY1N3XeTKAv8V27mY7Pfw==
+X-Received: by 2002:a05:6820:1e04:b0:603:f777:980a with SMTP id 006d021491bc7-6064fd81116mr123021eaf.7.1745513436253;
+        Thu, 24 Apr 2025 09:50:36 -0700 (PDT)
 Received: from localhost ([2001:470:b8f6:1b:af2e:7abf:8abe:2726])
-        by smtp.gmail.com with UTF8SMTPSA id 006d021491bc7-60646862ec5sm319763eaf.3.2025.04.24.09.50.31
+        by smtp.gmail.com with UTF8SMTPSA id 006d021491bc7-60646863e7dsm324897eaf.6.2025.04.24.09.50.34
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 09:50:32 -0700 (PDT)
+        Thu, 24 Apr 2025 09:50:34 -0700 (PDT)
 From: Corey Minyard <corey@minyard.net>
 To: linux-kernel@vger.kernel.org,
 	openipmi-developer@lists.sourceforge.net,
@@ -65,9 +65,9 @@ Cc: "Paul E . McKenney" <paulmck@kernel.org>,
 	Breno Leitao <leitao@debian.org>,
 	Corey Minyard <corey@minyard.net>,
 	Corey Minyard <cminyard@mvista.com>
-Subject: [PATCH 03/23] ipmi:msghandler: Move timer handling into a work queue
-Date: Thu, 24 Apr 2025 11:49:40 -0500
-Message-ID: <20250424165020.627193-4-corey@minyard.net>
+Subject: [PATCH 04/23] ipmi:msghandler: Deliver user messages in a work queue
+Date: Thu, 24 Apr 2025 11:49:41 -0500
+Message-ID: <20250424165020.627193-5-corey@minyard.net>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250424165020.627193-1-corey@minyard.net>
 References: <20250424165020.627193-1-corey@minyard.net>
@@ -79,56 +79,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Get all operations that manipulate the interface list into thread
-context.
+This simplifies the locking and lets us remove some weird event
+handling code.  deliver_response() and friends can now be called
+from an atomic context.
 
 Signed-off-by: Corey Minyard <cminyard@mvista.com>
 ---
- drivers/char/ipmi/ipmi_msghandler.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/char/ipmi/ipmi_msghandler.c | 41 ++++++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index 22813b1598b0..e08ec9918a32 100644
+index e08ec9918a32..fc939b5bb7f8 100644
 --- a/drivers/char/ipmi/ipmi_msghandler.c
 +++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -5083,8 +5083,11 @@ static struct timer_list ipmi_timer;
+@@ -495,6 +495,12 @@ struct ipmi_smi {
+ 	struct seq_table seq_table[IPMI_IPMB_NUM_SEQ];
+ 	int curr_seq;
  
- static atomic_t stop_operation;
- 
--static void ipmi_timeout(struct timer_list *unused)
-+static void ipmi_timeout_work(struct work_struct *work)
- {
-+	if (atomic_read(&stop_operation))
-+		return;
++	/*
++	 * Messages queued for deliver to the user.
++	 */
++	struct mutex user_msgs_mutex;
++	struct list_head user_msgs;
 +
- 	struct ipmi_smi *intf;
- 	bool need_timer = false;
- 	int index;
-@@ -5111,6 +5114,16 @@ static void ipmi_timeout(struct timer_list *unused)
- 		mod_timer(&ipmi_timer, jiffies + IPMI_TIMEOUT_JIFFIES);
+ 	/*
+ 	 * Messages queued for delivery.  If delivery fails (out of memory
+ 	 * for instance), They will stay in here to be processed later in a
+@@ -525,7 +531,6 @@ struct ipmi_smi {
+ 	spinlock_t       events_lock; /* For dealing with event stuff. */
+ 	struct list_head waiting_events;
+ 	unsigned int     waiting_events_count; /* How many events in queue? */
+-	char             delivering_events;
+ 	char             event_msg_printed;
+ 
+ 	/* How many users are waiting for events? */
+@@ -945,9 +950,13 @@ static int deliver_response(struct ipmi_smi *intf, struct ipmi_recv_msg *msg)
+ 		struct ipmi_user *user = acquire_ipmi_user(msg->user, &index);
+ 
+ 		if (user) {
+-			atomic_dec(&user->nr_msgs);
+-			user->handler->ipmi_recv_hndl(msg, user->handler_data);
++			/* Deliver it in smi_work. */
++			kref_get(&user->refcount);
++			mutex_lock(&intf->user_msgs_mutex);
++			list_add_tail(&msg->link, &intf->user_msgs);
++			mutex_unlock(&intf->user_msgs_mutex);
+ 			release_ipmi_user(user, index);
++			queue_work(system_bh_wq, &intf->smi_work);
+ 		} else {
+ 			/* User went away, give up. */
+ 			ipmi_free_recv_msg(msg);
+@@ -1610,13 +1619,6 @@ int ipmi_set_gets_events(struct ipmi_user *user, bool val)
+ 		atomic_dec(&intf->event_waiters);
+ 	}
+ 
+-	if (intf->delivering_events)
+-		/*
+-		 * Another thread is delivering events for this, so
+-		 * let it handle any new events.
+-		 */
+-		goto out;
+-
+ 	/* Deliver any queued events. */
+ 	while (user->gets_events && !list_empty(&intf->waiting_events)) {
+ 		list_for_each_entry_safe(msg, msg2, &intf->waiting_events, link)
+@@ -1627,17 +1629,11 @@ int ipmi_set_gets_events(struct ipmi_user *user, bool val)
+ 			intf->event_msg_printed = 0;
+ 		}
+ 
+-		intf->delivering_events = 1;
+-		spin_unlock_irqrestore(&intf->events_lock, flags);
+-
+ 		list_for_each_entry_safe(msg, msg2, &msgs, link) {
+ 			msg->user = user;
+ 			kref_get(&user->refcount);
+ 			deliver_local_response(intf, msg);
+ 		}
+-
+-		spin_lock_irqsave(&intf->events_lock, flags);
+-		intf->delivering_events = 0;
+ 	}
+ 
+  out:
+@@ -3590,6 +3586,8 @@ int ipmi_add_smi(struct module         *owner,
+ 	}
+ 	if (slave_addr != 0)
+ 		intf->addrinfo[0].address = slave_addr;
++	INIT_LIST_HEAD(&intf->user_msgs);
++	mutex_init(&intf->user_msgs_mutex);
+ 	INIT_LIST_HEAD(&intf->users);
+ 	atomic_set(&intf->nr_users, 0);
+ 	intf->handlers = handlers;
+@@ -4814,6 +4812,7 @@ static void smi_work(struct work_struct *t)
+ 	struct ipmi_smi *intf = from_work(intf, t, smi_work);
+ 	int run_to_completion = READ_ONCE(intf->run_to_completion);
+ 	struct ipmi_smi_msg *newmsg = NULL;
++	struct ipmi_recv_msg *msg, *msg2;
+ 
+ 	/*
+ 	 * Start the next message if available.
+@@ -4851,6 +4850,16 @@ static void smi_work(struct work_struct *t)
+ 	rcu_read_unlock();
+ 
+ 	handle_new_recv_msgs(intf);
++
++	mutex_lock(&intf->user_msgs_mutex);
++	list_for_each_entry_safe(msg, msg2, &intf->user_msgs, link) {
++		struct ipmi_user *user = msg->user;
++
++		atomic_dec(&user->nr_msgs);
++		user->handler->ipmi_recv_hndl(msg, user->handler_data);
++		kref_put(&user->refcount, free_user);
++	}
++	mutex_unlock(&intf->user_msgs_mutex);
  }
  
-+static DECLARE_WORK(ipmi_timer_work, ipmi_timeout_work);
-+
-+static void ipmi_timeout(struct timer_list *unused)
-+{
-+	if (atomic_read(&stop_operation))
-+		return;
-+
-+	queue_work(system_bh_wq, &ipmi_timer_work);
-+}
-+
- static void need_waiter(struct ipmi_smi *intf)
- {
- 	/* Racy, but worst case we start the timer twice. */
-@@ -5538,6 +5551,7 @@ static void __exit cleanup_ipmi(void)
- 		 */
- 		atomic_set(&stop_operation, 1);
- 		del_timer_sync(&ipmi_timer);
-+		cancel_work_sync(&ipmi_timer_work);
- 
- 		initialized = false;
- 
+ /* Handle a new message from the lower layer. */
 -- 
 2.43.0
 
