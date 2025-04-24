@@ -1,133 +1,92 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5139C20C47A
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD3E1C5D55;
+	Thu, 24 Apr 2025 11:54:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745495627; cv=none; b=dNQyH8opeKSUxX52GDZETSlYN3Aw75xl+tYgGr6BrS/ajLbYD5PAvXQ8dNHo29pkGNAocz336gMwJgXsbGdgxfEU2J3o/UNuj+9dnU9VVB355BST7lPKuvj5ko1S8JPnNrX2hlSwOX2T0Cf/8C8lyrCruwvAxFZhg49hIdVpqeg=
+	t=1745495679; cv=none; b=pF17FRjTmZ6MzIg8QwBEApy7k0x85W4LTfR/w9ZKOIrUiz8K/+l2cJ9Pho0ARPk5RgHE1lnQbuPyLmV3V5RFLcF417L90uMCZ6l81/ncTrGzxYwTr5tygRH5Va4hqUvVvu+76+nb4rThsIAsZpJ6SB3jZRLIVCzrf2lumwRQaC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745495627; c=relaxed/simple;
-	bh=Fpd73RRnHn/l4PYVjhLh24iJQjof1gdaW83Nyo/GhgU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j16B+A/BNpCvUyuDqF9gmPgmFUdooFhTfQ7IQpQqEpItu3l5pvc1xBD3+nIbx2Iqfw3rp6Japfi7ZJXBWTPL0f/tW7F85PcSA4DMCpnmlsgpDF1O/4kvZDOUDiH5mtAZIceF5RbugR/YaEFZakvcd9MNLVpI75K7eWScAPtRm4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U0x6VSFZ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745495679; c=relaxed/simple;
+	bh=2LfjVBYMaapqG+RGUDzyZUCD3VsHLRQTARBAX5EftSM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qrDgPLEq56KbU4PHbs7YCGHEj7HwJuXheb3RUluSnssed1/ixjy3jA8TyA7pc5DSPg1RPf+HwX6UKnTER891pVkT6zscNiifdTU0x2khtTC+VnM+73GhMbt5P1lpX9cqg5sK0eOaWWstxNmVPxHKWu1CRmGBVi3xvnuWa19aM+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kv5BtFUS; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U0x6VSFZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745495624;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7O71wS6omUP4Za+qu8KkJ9Z+HYsi5jrXQRVuEjbLS/Y=;
-	b=U0x6VSFZpsG194wzvpvDS5puCDW1O4c6T2wxbF4VaeOkTqTz8aUnoZ8dIdiCV/bFQlsJSZ
-	B23RuiJbzuIAYP2Xey7gg9+hQdr3WC79uHcoQquf/Fi6bzAfYF2wBwlEraZgplsbU8nYh0
-	NP2+iAKn90MetYoSuwWcWga6M4nmHfA=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-128-1N7Uj2yvN2CJWOwmjR7pLA-1; Thu, 24 Apr 2025 07:53:43 -0400
-X-MC-Unique: 1N7Uj2yvN2CJWOwmjR7pLA-1
-X-Mimecast-MFC-AGG-ID: 1N7Uj2yvN2CJWOwmjR7pLA_1745495622
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43efa869b0aso5598945e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:53:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kv5BtFUS"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fb0f619dso9582365ad.1;
+        Thu, 24 Apr 2025 04:54:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745495678; x=1746100478; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cOeIljM0dsLpiUp3sMIwGCn1MBf/0oPhJSiBM5sc4As=;
+        b=Kv5BtFUSMcO3r4Rmm0vtZiWU1KtW6zLyykVoEAFecAxqsCFRYpwRt5pp1VDPKEfvIy
+         W+wwwhl4fBgY44XKBrSoNlduK1JMQK93aV3979AZ0e3E5LVKYZT0eLXhaLR62FSIimOj
+         SYD37cYr+mpfU3etx352lG0igXHMeItNrzcxYrZ7MgVQb/L6SmG74H42WUZgqzEHAMzI
+         kpgN/OPY1WoFtvv/XQtScf28ctzREUd3oHTY4Mvs66TgDbiZyY8h36zHX9iOCz1pKhom
+         TKIW225o3vV+C2Jp+qX16xsMPEMEP3x0gbwgW4xKb58M96w5Ar734RWjsJzGcUCq4xCT
+         ZEKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745495622; x=1746100422;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7O71wS6omUP4Za+qu8KkJ9Z+HYsi5jrXQRVuEjbLS/Y=;
-        b=wYc5eUfWD50F7/L/F/QCxzLx77W20xOZQ7moPWl+nrrGI1QGfFB2i+MMk8wE0x+rnz
-         oopARyaVcYTiGFlj+B5Jns+20Huq/KZtizZZ90wwj3u35mrax8gAWYu2i4Lxn4PE+jwj
-         Jtq7cQXNA9se8gDPH2IBURoIzYQOkjZ8Snh+P1s6OdafTUdFSIILQgPbuuraPRIvF/O1
-         vqg/5jRsNIPwJKjHRXvukrs0nydqFXpxf7aU8C1Gxddzq3SV3jjbsvMKZvdGYtuLAoZi
-         5t5p2vpeMdIIq3Qjvy2PVWs9Z0D/HjI50o1sm+Itx9RO8B9kZNhhSoue7sjVwHbbR7SX
-         2iCA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6XTry+CzDMlTS+sStT44lXz4BhxHN+wrsMz2QP8eEcqQLMoAIQmiKl9bB2zQ53NXrBwhoOyzTEQuLapY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0VDMf5ezALvce5gF2rTHZ0xBFrts1NFgSYC+5QasXKnchNT4Z
-	EF1uy9Ue70dVNck3VSANHA54mSHUaz7R+bg1kZx8ndIZNSqECEiF2KxeH4dIl5qzNytVFbk6ICk
-	Ekatg+XwfpsHfHX/xJKwpOK3c1sZN1Uj8SigAyzmwk2otHFPvF+N/9DB0QsGelA==
-X-Gm-Gg: ASbGnctiIigdGqpg2w4wlgCwgqwLa34awHOBoHNIHQETnnfi0QuDS0FME8Dn4U/M89D
-	t3xKCYLmgY8bom/XiggMax4Ue3WhtSA/q/Jkg/0SrJxb3VwrNIypqWtGukg+FgQU3xnP6jDnOLA
-	sp/hWwT0JBpfnvC6sRCSKcJtTyDUcYj+GKwwdhpnMkbTkfP+LkSV7+9MIzd2rZWsWpsO5FDxvFv
-	49dxElSt2+RDQxiES1XL+F5D3mDuEiLjyj5n0D5Qc/yXwy6J+K11uCpd1UIST/GUxcLpXOb/Anh
-	g12DDAP7NHhdDTBsQXN2u2KEl4zheQV2k05Ymt8=
-X-Received: by 2002:a05:600c:4e0a:b0:43c:f513:9585 with SMTP id 5b1f17b1804b1-4409bd210eemr25352645e9.13.1745495621866;
-        Thu, 24 Apr 2025 04:53:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEUAI2NQUKhz4qnOoSRg3Qvi8tq8xdza5SLA8RiijZXZRu9gfA8tceguZucQbwMmFsJdyoLyg==
-X-Received: by 2002:a05:600c:4e0a:b0:43c:f513:9585 with SMTP id 5b1f17b1804b1-4409bd210eemr25352255e9.13.1745495621516;
-        Thu, 24 Apr 2025 04:53:41 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-7-183.dyn.eolo.it. [146.241.7.183])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d54c246sm1831740f8f.86.2025.04.24.04.53.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 04:53:40 -0700 (PDT)
-Message-ID: <edfa1585-c10c-4211-a985-ebfcb8e671d5@redhat.com>
-Date: Thu, 24 Apr 2025 13:53:39 +0200
+        d=1e100.net; s=20230601; t=1745495678; x=1746100478;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cOeIljM0dsLpiUp3sMIwGCn1MBf/0oPhJSiBM5sc4As=;
+        b=qguGVToOP7vUo+VUWlMUPP/cC5IgzYwZ/rMLGpqX9pxGettl0dg8tsil3bu+eMbAwl
+         twGXzU0a/H52yR7WGGqHrtPIc3PpXtPZ74qzILpi0a/df8NWHcqXHY1DG00GXlvqxeUJ
+         nbuLwW3/Hf8zBolng82EvfrClmRNxJ8cFNee8RIQq629HXVuAfLlEuOJrFoT1Eiy+Wkz
+         C1u14ozzj1k/YXWIuISbolo0xnWuvAnZJLfpH7qguBO/v99i/IneeLQ3+eZNmHbR/fp0
+         2jeXYppjVQvMT1UJU7ijFn7CIOO+x799iKJZbLcMVMmCx9qHnSH5EhR7Yfa98UjNojUZ
+         IYNg==
+X-Forwarded-Encrypted: i=1; AJvYcCUWauvcQYe1FRGxmWQr3DF7t4NDAnDFiYY2Xe0jSjr62X56dc6DTTgVdV/OyreZXDkvX4f76E5+hLRb@vger.kernel.org, AJvYcCVR5yK+6hxQ18/HnxCe16gNoJOjevzDi4sVyfH11FuGRZsTt0ALz1kbkKdDGaSb+ENp+Wg0bQXRLdJqXrMe@vger.kernel.org
+X-Gm-Message-State: AOJu0YyvUPln/KrK0kJJBBEr+sn1BQk+GaQmGZXzDY/DjlvfTrMvoyun
+	PsdN8I2MyUR/28Jn3tUiy3uyuOu7JgPLHLmC3zhjsTnbHt5iajx7Fnd+cZ0MqCIK6D0sGPLB8me
+	13OVFk7Zuhqb3f/Hqz0KXvQj3xiU=
+X-Gm-Gg: ASbGncsmUqme6owxfitLbfOoYLaPJMw8glbeIoAz1gfXAs3KHMpOmed87NghP7jQNdP
+	oAXwE/rhvx3Dt/lIqjdsU1DuwoOdw52Y3j5AVxuzbzaw8douFQjYHZMRvZBxuV3fYPJ48oIEfNZ
+	gUp9vySLA5DEYwIrm8bQ==
+X-Google-Smtp-Source: AGHT+IEwa/y2fOKiJtPJOHNNBAcDhjfvq/eByFcVBE+2/Yf64GYFD5P4bbwNs4WymJaSgMNAyONJWmAiuB1qSHp44q0=
+X-Received: by 2002:a17:903:2a83:b0:227:e980:9190 with SMTP id
+ d9443c01a7336-22db3dc0b8bmr41057205ad.44.1745495677805; Thu, 24 Apr 2025
+ 04:54:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v4 2/2] net: stmmac: dwxgmac2: Add support for
- HW-accelerated VLAN stripping
-To: Boon Khai Ng <boon.khai.ng@altera.com>, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Russell King <linux@armlinux.org.uk>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>, Furong Xu <0x1207@gmail.com>,
- Matthew Gerlach <matthew.gerlach@altera.com>,
- Tien Sung Ang <tien.sung.ang@altera.com>,
- Mun Yew Tham <mun.yew.tham@altera.com>,
- G Thomas Rohan <rohan.g.thomas@altera.com>
-References: <20250421162930.10237-1-boon.khai.ng@altera.com>
- <20250421162930.10237-3-boon.khai.ng@altera.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250421162930.10237-3-boon.khai.ng@altera.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250424084800.105300-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250424084800.105300-1-krzysztof.kozlowski@linaro.org>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Thu, 24 Apr 2025 14:56:28 +0300
+X-Gm-Features: ATxdqUHiE5YmwRp_Og4qSAkF2P9kcgp5oyollWnIMyXy-GIrHjsW43cM8hbn2Gw
+Message-ID: <CAEnQRZDjKpUDgj5FwxGT-vK8WNGqdtf0JXoebsYqCYbWkOnUww@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: imx: Align wifi node name with bindings
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, 
+	Christoph Niedermaier <cniedermaier@dh-electronics.com>, Marek Vasut <marex@denx.de>, 
+	devicetree@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	kernel@dh-electronics.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/21/25 6:29 PM, Boon Khai Ng wrote:
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-> index 389aad7b5c1e..55921c88efd0 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-> @@ -4,6 +4,7 @@
->   * stmmac XGMAC support.
->   */
->  
-> +#include <linux/bitfield.h>
->  #include <linux/stmmac.h>
->  #include "common.h"
->  #include "dwxgmac2.h"
-> @@ -69,6 +70,21 @@ static int dwxgmac2_get_tx_ls(struct dma_desc *p)
->  	return (le32_to_cpu(p->des3) & XGMAC_RDES3_LD) > 0;
->  }
->  
-> +static u16 dwxgmac2_wrback_get_rx_vlan_tci(struct dma_desc *p)
-> +{
-> +	return (le32_to_cpu(p->des0) & XGMAC_RDES0_VLAN_TAG_MASK);
-> +}
-> +
-> +static inline bool dwxgmac2_wrback_get_rx_vlan_valid(struct dma_desc *p)
+On Thu, Apr 24, 2025 at 11:52=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Since commit 3c3606793f7e ("dt-bindings: wireless: bcm4329-fmac: Use
+> wireless-controller.yaml schema"), bindings expect 'wifi' as node name:
+>
+>   imx8mm-var-som-symphony.dtb: bcrmf@1: $nodename:0: 'bcrmf@1' does not m=
+atch '^wifi(@.*)?$'
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Please, avoid 'inline' function in .c files, especially for functions
-that will land into function pointer like this one.
-
-Thanks,
-
-Paolo
-
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
