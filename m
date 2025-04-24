@@ -1,122 +1,120 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B0A28A1CE;
-	Thu, 24 Apr 2025 16:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E92A1A23BE
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:45:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513113; cv=none; b=bvLFJVPzLVBguRqt6JpjgSU9X/YMwS4Kll8uDFenzHKzzS3f3Ke5gi4yd2PgLPW7PlXaDAzRjecQaIV9P8VSVaCDqBjZ751dhLw8UuRpyZGx/5M1GqBOkF1xEVJBF1zsgGWkpPedrjl2yb8p2rmIllV6nAHhvx91jILJ3JUW6q4=
+	t=1745513148; cv=none; b=SF6ODLtXoBtlhS94LYU70FoBhq8j2bCa/Ua97LttVHThhb6fa+6NQRRL9djkuqjlSMeYZGGEbfvrmCBDeeqyqM/S9MB/xMFNhd22OHuWSoipdFFmfNyY9L28RFZGCuRORwvYn7q13yvYGRvW1youRx4IC5hoWk+/3ZML0hdoZ7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513113; c=relaxed/simple;
-	bh=WTCPC6me0UUZGdyCdncOvrVaoH5MZBIcs5xmtWo09Kc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=dJu5VIz21T4mq3LhFSfG5yVJg+3hDPr323tuUbUOBeVr2XqpFZCr2kw0rT9LxhXA0En7G7CCtZcAjTeW/6lLJOXtw0HVwqKgyYRbi4MnLUmoL19gm7ib5SYxn/aRiAOJe+vNdiw/cnqBA+XQwqQBkgJUGqW7EQPV3hb617X0dho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PCm8clwV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+yogsccb; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745513148; c=relaxed/simple;
+	bh=5rAHjnIDFZi5iq0Y0Ha5vnOtuzWDbFJPQwj2EbkGh3M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HyFZdvmdOjJ9jxKUyHN/qpyIojrYlmYg3mZdvF06FFmHmrZRqhJays6WAC5sXsWr66VjlWMuxRogoMPs8Rar0q/yUdNG03Nhk4HTmJg6UIiEFMZR9QsJgNuzAYFAf3XVeBrAGiDyZsxJZfWHTLWefHrTSe4NUIIpZXjGjT3Buh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rczbqJcQ; arc=none smtp.client-ip=209.85.161.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PCm8clwV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+yogsccb"
-Date: Thu, 24 Apr 2025 16:45:01 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745513109;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Gsm8C6ZSxaKbaMEe1Yfo9NNH4KponKBkPpmeAIjepE=;
-	b=PCm8clwVYPU4oVo0yHQx5k5Zu1U2U6yfPPuMpRer3aRJ1+rLpgVyX6VA0h46IwBeQSYWdF
-	6CSVl8vD93QzJzxOAg5tWV2cEwU8oXf6Yzi5Mja5p/R426Wm81hSSRWkNdGGMLtgLN5LCW
-	Sw2qNRffIi+lpRmcmm77qaIsBzflKPDuDRDzPTRBmh9nc37CMtMQ3Uf2ogpQzU16GZWh6L
-	Yi6jeJI0SLC7LjcXLMcOCGTf3t/YpACEqSNdtSEEu4ei0fYLUz4Jhkg56Nz409xUKXmiGm
-	ipGmLIrWArSQWk9k/fM6gRPZP4rG123UbpnEsY1ws+ZK1EnQ8gsXuiR4F6kevw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745513109;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2Gsm8C6ZSxaKbaMEe1Yfo9NNH4KponKBkPpmeAIjepE=;
-	b=+yogsccbwOH6VcPlS0U/qQe95xS4cXPirw9RAQNjNn2XL/TscwYkmcSOK4PBgHc4OY8SyE
-	ylmq1Gx6d/VDqnCA==
-From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/urgent] x86/boot: Work around broken busybox 'truncate' tool
-Cc:  <phasta@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
- Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Kees Cook <keescook@chromium.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250424101917.1552527-2-ardb+git@google.com>
-References: <20250424101917.1552527-2-ardb+git@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rczbqJcQ"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-603fd257386so370698eaf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:45:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745513145; x=1746117945; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sEk0tqXKTFf2XG0zzMJM8NS+jZAhohGk/IEw2rvL6Tg=;
+        b=rczbqJcQl0KTX/6AfEPogB0U+uT2b2DRh+tpjyuugYCpqX23nH5bYDONAUil5RoSrH
+         o4PnSjktddK2XcRJNNfNle4q4sffiSjHxUko1w41vYH3QL6693+Paoando8AbAWLY93i
+         4NXvFCn+j0i98G+gyILuRYl2lgtUM/El9h3dEnMqRB/ekuh99tCYCy1xAhmowTUU4f2i
+         zIeKLmVz4Wbm9fRcxH4wKYc8V+R9DegArYFwDB10K79KvMuBIGaCqMnxvziu5cwxZjUM
+         n5gMuDe9+G3GTBX4hCXo0ahoHBjmVfBSY5MBWowjFOhao2+IHfMb6TRZqlpY5B+Y+Djs
+         GyMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745513145; x=1746117945;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sEk0tqXKTFf2XG0zzMJM8NS+jZAhohGk/IEw2rvL6Tg=;
+        b=GF/9unXH6xcmkktTjip1L6AONytlHLD+SASYwL3gg4xpi57z7dff41WWkRQPEnizua
+         HA8NCJAUppTwWi0XD1y98MpwYKpJcryXgtOsDwNPbjkVlNIxon7ikNMwKUVkjaR4sWkQ
+         HG4pKa1pNNlrThRNyUzImuzQ1MzMJ/CNnh7bWi2MJMWP1iYp8d+VcYNyTgP2bm3ErTSQ
+         k11a+1YpCinbM0O3Z0KDaCelUrN718+xlZM/D4BPMPeRGleqUZ24oiUz+cmEXJ2G6m6s
+         ujxiFHYLArORSuPx7V4fSpimPrh8t1R2ETxbTZgZ0PtOnXxk8kjp2w5NAyfjdxAeAPAn
+         P60w==
+X-Forwarded-Encrypted: i=1; AJvYcCUDBhVApHJWIUYzKI/AZH6imR+inkKTvJNa81BOpkawge20Fy9aPIGkX4BWWXKxrPxDQ+/WDsHuXg6hD1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYqK0PwWEx1Qabo30cy5g7IJPrn7NB0O/E3D1m5OvOtSxITF0i
+	H6eQB4SxPNbI722R40h4MHdLvd9BiNcpjmflbXVQvAvczY2bq0ChrwcskZzWIqCFjTUpLc6AfRo
+	KGvTOxmyTGa/04lF4axszjbjAZWk8u1/3MSHp
+X-Gm-Gg: ASbGncsaL9Mw23vV4/uup3QO9lBUCL84sx5ogxFWMN3OhpOy4xQ3BjGUVXRWniKoB4+
+	Wyxdw6q+20D5dOwK1siHHwW8X7fkON81N8+CNmZ/JKFVsz1EPFnpuJ4RQJPIpB8cyUTpty573Qk
+	EtpSLm2lbWjPsepbv0ZAxMJN/EuPys7kxxJHFX7hSyQDsG43+JC7yXxKLRJjp59jI=
+X-Google-Smtp-Source: AGHT+IGGhcBLAs+AfH0rQ86xrZn62rdmOCwhyJBo08kJknfw21TKi3VhTOgbs0xV+7jsEdYB0tkU39OVbk/1QvzcBjY=
+X-Received: by 2002:a05:6870:31cc:b0:2c2:4c92:77f with SMTP id
+ 586e51a60fabf-2d99459989bmr302042fac.38.1745513145302; Thu, 24 Apr 2025
+ 09:45:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174551310208.31282.4477051029885255124.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20250423134344.3888205-2-bqe@google.com> <20250423134344.3888205-6-bqe@google.com>
+ <aAkbw0jEp_IGzvgB@yury>
+In-Reply-To: <aAkbw0jEp_IGzvgB@yury>
+From: Burak Emir <bqe@google.com>
+Date: Thu, 24 Apr 2025 18:45:33 +0200
+X-Gm-Features: ATxdqUG3hKo3v7rZB79Cjitmd15MGlawnnyBZoA3Y930-k0kcMlNDYYHQM4UNDE
+Message-ID: <CACQBu=XaOohewMnLj9PvgR5rYBxzYSXf2OAjCzUY=GFTJ9L=+Q@mail.gmail.com>
+Subject: Re: [PATCH v7 4/5] rust: add find_bit_benchmark_rust module.
+To: Yury Norov <yury.norov@gmail.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Rong Xu <xur@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Wed, Apr 23, 2025 at 6:56=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+> So? Can you show your numbers?
 
-Commit-ID:     032ce1ea9442e140a80e41078b5431d4c0fa2893
-Gitweb:        https://git.kernel.org/tip/032ce1ea9442e140a80e41078b5431d4c0fa2893
-Author:        Ard Biesheuvel <ardb@kernel.org>
-AuthorDate:    Thu, 24 Apr 2025 12:19:18 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 24 Apr 2025 18:23:27 +02:00
+For now, I only have numbers that may not be very interesting:
 
-x86/boot: Work around broken busybox 'truncate' tool
+- for find_next_bit,  find_next_zero_bit and find_next_zero_bit (sparse):
+  22 ns/iteration in C, 32 ns/iteration in Rust.
 
-The GNU coreutils version of truncate, which is the original, accepts a
-% prefix for the -s size argument which means the file in question
-should be padded to a multiple of the given size. This is currently used
-to pad the setup block of bzImage to a multiple of 4k before appending
-the decompressor.
+- for sparse find_next_bit (sparse):
+  60 ns/iteration in C, 70 ns/iteration in Rust.
 
-busybox reimplements truncate but does not support this idiom, and
-therefore fails the build since commit
+This is a VM running nested in a VM. More importantly: the C helper
+method is not inlined.
+So we are likely measuring the overhead (plus the extra bounds checking).
 
-  9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
+I would like to get cross-language inlining to work with thinLTO to
+have a more realistic comparison.
+However, that is not something that works out of the box.
+I am looking at Gary Guo's patch for this:
+https://lore.kernel.org/all/20250319205141.3528424-1-gary@garyguo.net/
+Currently, I get duplicate symbol errors.
 
-Since very little build code within the kernel depends on the 'truncate'
-utility, work around this incompatibility by avoiding truncate altogether,
-and relying on dd to perform the padding.
+> Can you print the existing C test output back to back with the new one?
+> Can you also ask 0-day folks to enable your test in their rust config?
 
-Fixes: 9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
-Reported-by: <phasta@kernel.org>
-Tested-by: Philipp Stanner <phasta@kernel.org>
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250424101917.1552527-2-ardb+git@google.com
----
- arch/x86/boot/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Will look into these. Rong (hi!) is working on LTO for kernel and will
+know a lot more than me how Rust will fit in eventually.
+IMHO, making cross-language inlining work out of the box will be a
+necessary baseline to get Rust performance for hot code.
 
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index 81f55da..640fcac 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -59,7 +59,7 @@ KBUILD_CFLAGS	+= $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
- $(obj)/bzImage: asflags-y  := $(SVGA_MODE)
- 
- quiet_cmd_image = BUILD   $@
--      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
-+      cmd_image = (dd if=$< bs=4k conv=sync status=none; cat $(filter-out $<,$(real-prereqs))) >$@
- 
- $(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin FORCE
- 	$(call if_changed,image)
+> > We add a fill_random() method protected by the config in order to
+> > maintain the abstraction.
+> >
+> > Minor fix to the documentation of the corresponding C config
+> > FIND_BIT_BENCHMARK, it was mentioning the wrong module name.
+>
+> Indeed. Can you make it a separate patch, please?
+
+Will do.
