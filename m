@@ -1,113 +1,84 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FFC27B51E
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:12:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDF227B519;
+	Thu, 24 Apr 2025 13:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745500322; cv=none; b=DCSjT43o68QrTkm9ej1q87Jf7AakVtKT+rZSrxf4loQiGaToUWftI/AhYhbZ1KJ0lA4hPi4I1wGuHhjJJpSXOBWHRCQeOspMKkVf9eBQwx9AZMBZkohxAh+N6hP+fYsfSa5gvpBbjVgnRKQvuFupLf1AlrC1LJVniSHh8fNoMqc=
+	t=1745500325; cv=none; b=ulqwG+xPeidfsPabwo9zwn9WDb56tOhhatwm6cmd9bJ400/5S9X0cSJ6Wpla2yUxc1BoCikJnTLLZWb4kc4gka0kKLM5jrGFNTd1fVsT43RCEKDBg/oIPI8NacHm0EZBtGqiyaazgbUj+geUgfkXxbr3ozNAfXNmiosHnyWxrLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745500322; c=relaxed/simple;
-	bh=C/Q8y1WOoI79mrUc5AXR5uiVEkK5ZuZpj0XY0ZtO+X8=;
+	s=arc-20240116; t=1745500325; c=relaxed/simple;
+	bh=4cvuzHcmHrwa785PAn6weho6zU3Lk00QP2t5Neo56Rg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RhtebC++2+PcOFq9fAHo/HiRGeev4tB++czr7Igq9ptNpxaXiPlJCRQC3LHAuqtiH/X0Ui9LARunStYpwbh2YOZwxgASqt/RGaSsWuxLztgstGOt1bu+Mq2QEyOZYh9HnjHJXA9vY4uKLds+UMZLzknslWbaxDHfBueMqtYcNQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u7wMs-0006vL-DW; Thu, 24 Apr 2025 15:11:54 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1u7wMr-001tDV-0t;
-	Thu, 24 Apr 2025 15:11:53 +0200
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id D1028400B40;
-	Thu, 24 Apr 2025 13:11:52 +0000 (UTC)
-Date: Thu, 24 Apr 2025 15:11:52 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Antonios Salios <antonios@mwa.re>
-Cc: rcsekar@samsung.com, mailhol.vincent@wanadoo.fr, 
-	linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, lukas@mwa.re, jan@mwa.re, 
-	Markus Schneider-Pargmann <msp@baylibre.com>
-Subject: Re: [PATCH] can: m_can: initialize spin lock on device probe
-Message-ID: <20250424-industrious-rottweiler-of-attack-e7ef77-mkl@pengutronix.de>
-References: <20250424125219.47345-2-antonios@mwa.re>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ncYVPSkUqyCPrKdjc9WGaQu388vMQCiAa40N/EAiMp14xnHOsellQqALJvdT3gJ8M71sWWAN+b6K4naRHKS0FzzbLyeV4y2Jy57hhf9F3KWe+gJp0RDqFx0RAbgS6Yq2DMMo9J1rfL7IpHyoyVlXW91mFDxpghmFgSkUicry20Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=aZbBSCNm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="aZbBSCNm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E35AC4CEE3;
+	Thu, 24 Apr 2025 13:12:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745500324;
+	bh=4cvuzHcmHrwa785PAn6weho6zU3Lk00QP2t5Neo56Rg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aZbBSCNmLH4viOCChkBsuLlguE6dtJB0G2K9cC0usOI1PKUGrCDJwQwU3SWPFUL33
+	 R65w6nXourbz1aa70I21U+di6kSvmxqF54iX9Lkx9XOKqOjTb3fANiWmSYq+c+UWL5
+	 I3uYWEvMGHw27lsitsRLn514qiByywTncJJURXcQ=
+Date: Thu, 24 Apr 2025 15:12:02 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: paul@paul-moore.com, omosnace@redhat.com,
+	linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+	Tejun Heo <tj@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Hugh Dickins <hughd@google.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCH] vfs,shmem,kernfs: fix listxattr to include security.*
+ xattrs
+Message-ID: <2025042427-hardship-captive-4d7b@gregkh>
+References: <20250424124644.4413-1-stephen.smalley.work@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4xawpvijbzqi6nhz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424125219.47345-2-antonios@mwa.re>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20250424124644.4413-1-stephen.smalley.work@gmail.com>
 
+On Thu, Apr 24, 2025 at 08:46:43AM -0400, Stephen Smalley wrote:
+> The vfs has long had a fallback to obtain the security.* xattrs from the
+> LSM when the filesystem does not implement its own listxattr, but
+> shmem/tmpfs and kernfs later gained their own xattr handlers to support
+> other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
+> filesystems like sysfs no longer return the synthetic security.* xattr
+> names via listxattr unless they are explicitly set by userspace or
+> initially set upon inode creation after policy load. coreutils has
+> recently switched from unconditionally invoking getxattr for security.*
+> for ls -Z via libselinux to only doing so if listxattr returns the xattr
+> name, breaking ls -Z of such inodes.
+> 
+> Before:
+> $ getfattr -m.* /run/initramfs
+> <no output>
+> $ getfattr -m.* /sys/kernel/fscaps
+> <no output>
+> 
+> After:
+> $ getfattr -m.* /run/initramfs
+> security.selinux
+> $ getfattr -m.* /sys/kernel/fscaps
+> security.selinux
+> 
+> Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=iOawX4y77ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
+> Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.smalley.work@gmail.com/
+> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
 
---4xawpvijbzqi6nhz
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] can: m_can: initialize spin lock on device probe
-MIME-Version: 1.0
+As this "changed" in the past, shouldn't it have a "Fixes:" tag?
 
-Hello Antonios,
+thanks,
 
-On 24.04.2025 14:52:20, Antonios Salios wrote:
-> The spin lock tx_handling_spinlock in struct m_can_classdev is not being
-> initialized. This leads to bug complaints from the kernel, eg. when
-> trying to send CAN frames with cansend from can-utils.
-
-Thanks for your contribution, that's a good catch!
-
-> This patch fixes that by initializing the spin lock in the corresponding
-> device probe functions.
-
-The spin_lock is only used in m_can.c, so it's better to be initialized
-there.
-
-Please add a fixes tag:
-
-Fixes: 1fa80e23c150 ("can: m_can: Introduce a tx_fifo_in_flight counter")
-
-I've also added Markus on Cc, who introduced the spin_lock.
-
-regards,
-Marc
-
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---4xawpvijbzqi6nhz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgKOJUACgkQDHRl3/mQ
-kZy6Owf/b2L6Bn5o2hjsAMj82tkKqpAYWWrEBq7jN79SC1v9FmyAMG276AsPR4Cw
-ssE+fmTQ9htgAzDFprC90KruobaEKUdDBtRGQO+bktZOkxBJ7WF49mXB7WQdi7gJ
-HwM5R1dgVgjCPSy01AkD7BQI+4suCcwWepuX7KTRLi33pLHnkHXsca//K98EWYBX
-zSlraNg5Oq1alB+XpLFulTvIwg5/JHVIIiJDqsH+D3sFhWJBJkOzFUhh5k0lw5lF
-6AsbHAc8F967kBuOCHZej1ihSPBnPsIElpC7ZyMiemG1PLaB9jwTHHf1N1C6MPmE
-jp3SCFAJFcmVSgzsyzpQRg6k4NEtMA==
-=5GTM
------END PGP SIGNATURE-----
-
---4xawpvijbzqi6nhz--
+greg k-h
