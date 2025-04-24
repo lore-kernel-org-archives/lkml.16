@@ -1,236 +1,161 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFEE1FDD
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 22:14:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA5E14E2E2;
+	Thu, 24 Apr 2025 22:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745532868; cv=none; b=M4kMqAT2nd5wpD7M5mIvc5QVYu7c9B47wXAErRnUsWP5JDEHZub5u37xaIr3h/ibCOQtsJw8PQAAjoFPBTnOTv7JM/wyDJaZxKOcN8y3Zcv7AGJv4fBGL/sHSv7rYh/RHMDd9b9C3lvZ85fZ6xrr6M93GN+tcqjoPyvAwk7BdFw=
+	t=1745532923; cv=none; b=HZg8RdgRJ+MXkhtPoTryt9gVxsk73M44i3IfhjMOoFNS05hgbsEouuL9C9Pk/Aqtr+rDlQZEWMPEcd4dera3J5Cj2vgLvnhVeUyQTxIcx/od8X4wauL0CRYbT3Blev2FUjKPL6SUrJU2LBrwokOF66VQw214KEGNT8hMI6DDk1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745532868; c=relaxed/simple;
-	bh=sNqbIfVVS0v7/OcKITy+qOzPnbY7oTqGeF2iUw3Czzo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrR9yWWOWlYEL2Fmnn8JTc0Flk/iKBGPlAm5OYW1Dq/8wwItR6LC+tDjuCvJA7CNCkjLop4Ys2HKfzW/vmEXU0M23CezBU+8djdBZG8NaXsmHgOfH3onOeP685LGxS/g5Bv06jqKsxFH0nT5Nna9QYZlC0v/czLmSWcz+Zr33QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dWFw95oT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745532923; c=relaxed/simple;
+	bh=cLccinpdq9BnRjmr6I3r9r6pi+KRQdpKQxYw20kNtY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UVy4f7ykhPbGkRESHkQQnsMVLlC88G12UlToep/36SuW7L5erWlWQ4mEa7JCC0SdWOEpT+s3rrg9FZrPyzNB/PyUodF88WbbAlejDQQL7mcd8LGOidtnO2uAB/5dTyv1xf1Q2/iQDnQuryKN9cd46tig6KZyYgRwT+PQIM6kyAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b=cItIbCef; arc=none smtp.client-ip=212.227.17.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dWFw95oT"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OJmq3j007060
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 22:14:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sGFxOl9tb1uWwBTzomkNAaRI9BVKWxW/VCzFDUKeLqA=; b=dWFw95oTzT5pTLuV
-	Nm8I+C9BefWBvfFCumpW0sZjIX5x/QCZSlyQmUKgoNP9z9IqOAx14cvyohA55P7q
-	SLVKT9WhOj2Pz/WkXAedTU44mO3mi6Izxli9iUVwJseBv2cgQ6mAicsFexC2NYgp
-	DLHS3u5/wM5FrrZNoDDaxLlt3fvDmehlwX/mC8KsWU5RuE1HAy6o8LukPoYm5rX5
-	kv5aogmm8IVkPfT+G1ILE6kS5ls4XEj8/U4lyE434KYRqAY7lWmOdLU8clmDzJIK
-	KQADJq+5jv5KsbgL3zZI80BHw/YxB4Hu0t48AKWMYQkNbDn0ZUkuRjg8ZQ0IkxcH
-	AjTyXA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh2f325-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 22:14:25 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c955be751aso255533985a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:14:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745532864; x=1746137664;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sGFxOl9tb1uWwBTzomkNAaRI9BVKWxW/VCzFDUKeLqA=;
-        b=WqR4vh+TDxaVINuBJ6xZkGI97JdLRo05Sm7ixwij0FVFI6vFWz+3+GoPy1iQST2D3q
-         H46YWLczny+2TJb0k6PCkomJCbUlWkBnkLhx/ljB3xyxqOTUzH3zo1gDBM6XOYm8Qbjx
-         47ADIlNv+I0dfN0iQdyaCGrEYWuvrbUgUuu+B7fR1kTA4JWJ/fhLnJWnw66DicSp8roS
-         wAyzo1xtF0xsd2e93Trbz6XoZPr/y6ij2A9e3oZ+BYUJfevHZ5qpTNxaYX1mP/GlbO4Z
-         r6VPmOjTYSfwARvxxddY8KmIZWvixxV/O14bV7IJQ0UA7ckD+53AW0jqPGBGhl0qYllN
-         BWGg==
-X-Forwarded-Encrypted: i=1; AJvYcCXe3eCiQHvGEoTWraU4IJ/kHxrt/J/P0vZ4kw8SI2JPrc0lpHmACj7s/APfAojfAbOtLm72mySW8EpjbYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxf/IB7K0rK0o0TvC49ppW+oQFTFRYcbELKm0DuPvIvJNECygTM
-	BVWYX3YVrnhK867ATImdaaSx1WsGuapszNPbeQ/4tIcKJNFpV7pFTXSJoAlM33aHW2FyN6Kgnw6
-	5bhSxXplh60QGXZvUij9KlIJ67oP3yBsG6d1QzrDo40/JBzYNKN+f1ku6y5cHdkI=
-X-Gm-Gg: ASbGnctOUFGfikuzeX1jO46fsFIMemyHAbZyBeKnCN+MVxIh+wHdRXIQqWaRbQLPBIC
-	SExrKOusMXlvV0rBHdmQtyeIJlo+ByhCkZLt47IUp5SU6LPYbsALWG0iMXfWlUYl27HqWycCekQ
-	QM2tMgLWyxicwvnCNjJFfO/bvBPl6Ib49sBoe2X3Q/QmNsvpkoW9d1yaP8UGeCwqNE2mQ1LSxyJ
-	QFd5zvrDON/qu3SPaHWH7zaDMLll7nu43djM81ZRrOmD/KNbbI6FI3MyT6pSuVQJwJtOPhoW7lj
-	BkpqCynAdjqqFYMmcsTQS392Z1SaC/LHGHY0S4cNiY20ifuwL+wBNMLrnDRVNdvuuxJa5JbPlas
-	=
-X-Received: by 2002:a05:620a:4492:b0:7c5:5909:18f3 with SMTP id af79cd13be357-7c96077f5e3mr30010985a.37.1745532864194;
-        Thu, 24 Apr 2025 15:14:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF8HUjpHWu1vfSTPhZe4k1ZaRnS080d806N1Oqj8kDA2MR5+f8rJBbCwkO61rR/i9VHSTnesA==
-X-Received: by 2002:a05:620a:4492:b0:7c5:5909:18f3 with SMTP id af79cd13be357-7c96077f5e3mr30007085a.37.1745532863751;
-        Thu, 24 Apr 2025 15:14:23 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b9837dsm4294571fa.108.2025.04.24.15.14.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 15:14:22 -0700 (PDT)
-Date: Fri, 25 Apr 2025 01:14:19 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Rob Clark <robdclark@gmail.com>
-Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-        Dmitry Baryshkov <lumag@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        laurentiu.tudor1@dell.com, abel.vesa@linaro.org, johan@kernel.org
-Subject: Re: drm/msm/dp: Introduce link training per-segment for LTTPRs
-Message-ID: <n2wt3i3lrbz2spfxdmkwvq6xdjq4rwif3sul755h6prs4w4fj5@ishlqsc4qxr2>
-References: <20250417021349.148911-1-alex.vinarskis@gmail.com>
- <CAF6AEGs5Sw76kVS6_GaK6=VZ3jWPuqN9bc+7UvVU=jfaBBTLDQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=deller@gmx.de header.b="cItIbCef"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1745532907; x=1746137707; i=deller@gmx.de;
+	bh=r9il4+0uPvGSzMSMpJf4QPTP/vXv0B5R4fBBczgTIKw=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=cItIbCef6E0U+BsIgujHPoJZx0gaR8d/mC9pAOcIisRyxuGaSrRg/snKHMFnECdt
+	 BAEaM6uq8qatLvTe5HRtp7vQvo/Y9vqIObhMfN1Cbjl6uSsxUgEWJrdvRNQnH8jJT
+	 3sl3s3fHB/lKpnnD2LtolAfj3tSkAXRPL0Cs7Ma61XKR3fgqMHadFX4WRxPGGNXE0
+	 N7BGX956/kMCNTyxaxsUMyQvc7eyCFdRWfBJlzkCaIY0vOJwldfSGO1VE5v8DPid2
+	 V3ctXlitQYiVkhfUF7JgcBXQ7DOGfTcPk5Cha5glDbeWnh2Bh50DMGjUw9+HDRAME
+	 32jnPUQ9CGuHngjuXg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.173] ([109.250.63.181]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N9MpY-1vD30B1h5Q-016qTF; Fri, 25
+ Apr 2025 00:15:07 +0200
+Message-ID: <92b09e80-c7d7-49b1-9c67-c61239f86517@gmx.de>
+Date: Fri, 25 Apr 2025 00:15:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAF6AEGs5Sw76kVS6_GaK6=VZ3jWPuqN9bc+7UvVU=jfaBBTLDQ@mail.gmail.com>
-X-Proofpoint-GUID: ecosTo-AeXI-Q5ekFuW3CnO2xNoiQhmz
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDE1NyBTYWx0ZWRfX+HNr14x6APZU /FlSdjoiUiJy7GMxxPd+e63x9992uhjcBHyK+oNOk0tkmwQ7cGH3EDUsb7dEwJ67+GVvNOTGo2m Rij4iMOybEYzd4LlpT+7vCxVNEkzUTsL7u0Cmcvo27fwrJUbwZ3/zTWMy3LFr3Om3BJyBAE2Fsh
- B2pbxceuplFt48PdKh3891ioxnVAVdNPTQKAEE9QJTn9V7MOwSXN3oeGUmjk+WYsTO4JK5c15J0 UmIzldSj3cyummbZj9LQweFbtCKmLhlbLMHnRYbi5DfxRnvFT6jQB2zpG+vannNNKCbq+NUKimt 4bqX9Lv8bRuewY5xxE95nX+RO7qpsZJ74JztVflmrcl3/9Cr5syDHDpPIrhnCcs50g8MeO9c9O0
- v3aACIzNJ/UXyb9XZxULoKMP4srpjDAsEyPeBJH4nr0TSZP4iOz8Q+wLnSRhYCLSXCeY67Bk
-X-Authority-Analysis: v=2.4 cv=Tu/mhCXh c=1 sm=1 tr=0 ts=680ab7c1 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=dNxstN5UYNHJ3myx06AA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-ORIG-GUID: ecosTo-AeXI-Q5ekFuW3CnO2xNoiQhmz
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_09,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 spamscore=0 clxscore=1015 lowpriorityscore=0
- impostorscore=0 adultscore=0 phishscore=0 mlxlogscore=999 bulkscore=0
- mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240157
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] atyfb: Remove unused PCI vendor ID
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+References: <20250424115652.2451062-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
+From: Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+In-Reply-To: <20250424115652.2451062-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/GCferr3Eh+1eGWeQvTIYJncNGqCVFXMUBRYZVWmOhSxLps5F1B
+ 931y/lJBqsvSIFodf8on+rgQ9DcYp9U1cXTnw6L8HLRC63FJyobik5REqk6Zz5AySnvvuvW
+ FAPz2Id+BO2TA9lFJOg63Xx2kTITU3YIDPT+m3b2+e0lAIyJaTnIXssPBDCYx/shgkjgmHV
+ kNSqsLz2cPCgiF+/Jyqtg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:knZtSTdx7OA=;CfCiCBYkP2KOf1M3JesePsJpCGw
+ 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
+ A==
 
-On Thu, Apr 24, 2025 at 02:12:15PM -0700, Rob Clark wrote:
-> On Wed, Apr 16, 2025 at 7:13 PM Aleksandrs Vinarskis
-> <alex.vinarskis@gmail.com> wrote:
-> >
-> > Recently added Initial LTTPR support in msm/dp has configured LTTPR(s)
-> > to non-transparent mode to enable video output on X1E-based devices
-> > that come with LTTPR on the motherboards. However, video would not work
-> > if additional LTTPR(s) are present between sink and source, which is
-> > the case for USB Type-C docks (eg. Dell WD19TB/WD22TB4), and at least
-> > some universal Thunderbolt/USB Type-C monitors (eg. Dell U2725QE).
-> >
-> > First, take into account LTTPR capabilities when computing max link
-> > rate, number of lanes. Take into account previous discussion on the
-> > lists - exit early if reading DPCD caps failed. This also fixes
-> > "*ERROR* panel edid read failed" on some monitors which seems to be
-> > caused by msm_dp_panel_read_sink_caps running before LTTPR(s) are
-> > initialized.
-> >
-> > Finally, implement link training per-segment. Pass lttpr_count to all
-> > required helpers.
-> > This seems to also partially improve UI (Wayland) hanging when
-> > changing external display's link parameters (resolution, framerate):
-> > * Prior to this series, via direct USB Type-C to display connection,
-> >   attempt to change resolution or framerate hangs the UI, setting does
-> >   not stick. Some back and forth replugging finally sets desired
-> >   parameters.
-> > * With this series, via direct USB Type-C to display connection,
-> >   changing parameters works most of the time, without UI freezing. Via
-> >   docking station/multiple LTTPRs the setting again does not stick.
-> > * On Xorg changing link paramaters works in all combinations.
-> >
-> > These appear to be mainlink initialization related, as in all cases LT
-> > passes successfully.
-> >
-> > Test matrix:
-> > * Dell XPS 9345, Ubuntu 24.10, Gnome 47, Wayland (myself)
-> >         * Left USB Type-C, Right USB Type-C
-> >         * Direct monitor connection, Dell WD19TB, Dell WD22TB4, USB
-> >           Type-C to HDMI dongle, USB Type-C to DP dongle
-> >         * Dell AW3423DWF, Samsung LS24A600, dual Samsung LS24A600 (one
-> >           monitor per USB Type-C connector)
-> > * Dell XPS 9345, Ubuntu 24.10, Gnome 47, Wayland (myself)
-> >         * Left USB Type-C, Right USB Type-C
-> >         * Direct monitor connection
-> >         * Samsung S34BG85 (USB Type-C), Dell U2725QE (universal
-> >           Thunderbolt/USB Type-C, probes with an LTTPR when in USB
-> >           Type-C/DP Alt mode)
-> > * Dell XPS 9345, Debian trixie/sid, Gnome 48, Wayland (Stefan Schmidt)
-> >         * Left USB Type-C, Right USB Type-C
-> >         * Dell WD15 Dock with DisplayPort connected
-> >         * Dell HD22Q dock with HDMI connected
-> >         * USB Type-C to HDMI dongle
-> >         * Dell U3417W
-> 
-> For the series,
-> 
-> Tested-by: Rob Clark <robdclark@gmail.com>  # yoga slim 7x
+On 4/24/25 13:56, Andy Shevchenko wrote:
+> The custom definition of PCI vendor ID in video/mach64.h is unused.
+> Remove it. Note, that the proper one is available in pci_ids.h.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   include/video/mach64.h | 3 ---
+>   1 file changed, 3 deletions(-)
 
-Could you please send this as a response to one of the patches, so that
-it's also recorded by the patchwork?
+applied.
 
-> 
-> patch 4/4 had a number of conflicting hunks, you might need to rebase
-> on msm-next
-> 
-> BR,
-> -R
-> 
-> > In both cases, "Thunderbot Support"/"USB4 PCIE Tunneling" was disabled
-> > in UEFI to force universal Thunderbolt/USB Type-C devices to work in
-> > DP Alt mode.
-> > In both cases laptops had HBR3 patches applied [1], resulting in
-> > maximum successful link at 3440x1440@100hz and 4k@60hz respectively.
-> > When using Dell WD22TB4/U2725QE, USB Type-C pin assigment D got enabled
-> > and USB3.0 devices were working in parallel to video ouput.
-> >
-> > Known issues:
-> > * As mentioned above, it appears that on Gnome+Wayland framerate and
-> >   resolution parameter adjustment is not stable.
-> >
-> > Due to lack of access to the official DisplayPort specfication, changes
-> > were primarily inspired by/reverse engineered from Intel's i915 driver.
-> >
-> > [1] https://lore.kernel.org/all/20250226231436.16138-2-alex.vinarskis@gmail.com/
-> >
-> > Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-> >
-> > ---
-> >
-> > Changes in v3:
-> > - Split 1st patch into 3
-> > - Simplified handling of max_lttpr_lanes/max_lttpr_rate
-> > - Moved lttpr_common_caps to msm_dp_link (not msm_dp_panel, as LTTPRs
-> >   are link related, not panel related)
-> > - Picked Stefan's T-b tag (last patch only, as 1st one is getting split)
-> > - Droped Abel's R-b tags from 1st patch that got split due to high diff
-> > - Fixed alignment issues, initialization of variables, debug prints
-> > - Moved lttpr_count to avoid ugly pointer
-> > - Link to v2: https://lore.kernel.org/all/20250311234109.136510-1-alex.vinarskis@gmail.com/
-> >
-> > Changes in v2:
-> > - Picked up Abel's R-b tags
-> > - Fixed typo as per Abel, fixed readability as per Johan
-> > - Updated cover and commit message on mailink issue which appears to be
-> >   specific to Gnome+Wayland. No problems on Xorg.
-> > - Link to v1: https://lore.kernel.org/all/20250310211039.29843-1-alex.vinarskis@gmail.com/
-> >
-> > Aleksandrs Vinarskis (4):
-> >   drm/msm/dp: Fix support of LTTPR initialization
-> >   drm/msm/dp: Account for LTTPRs capabilities
-> >   drm/msm/dp: Prepare for link training per-segment for LTTPRs
-> >   drm/msm/dp: Introduce link training per-segment for LTTPRs
-> >
-> >  drivers/gpu/drm/msm/dp/dp_ctrl.c    | 126 ++++++++++++++++++++--------
-> >  drivers/gpu/drm/msm/dp/dp_display.c |  27 ++++--
-> >  drivers/gpu/drm/msm/dp/dp_link.h    |   4 +
-> >  drivers/gpu/drm/msm/dp/dp_panel.c   |  12 ++-
-> >  4 files changed, 122 insertions(+), 47 deletions(-)
-> >
-> > --
-> > 2.45.2
-> >
-
--- 
-With best wishes
-Dmitry
+Thanks!
+Helge
