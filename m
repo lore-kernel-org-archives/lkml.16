@@ -1,190 +1,85 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF678C11
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 21:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF672701AC;
+	Thu, 24 Apr 2025 21:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745530245; cv=none; b=JHCRRMY+NsUrga2Vx1Kl1TXoKuJ3tS64D/HpPMdlqByA9g0+0DTckEg0DApodRXv4PqKIHsb9+qtju2YtCUXbDZVbhec+X/kyz/4Sh0l5m03usTA44acHpL828DfzmwgabgF6vzys7+9rstW/xkwugk996LOH0yGrPyOM8yvEZw=
+	t=1745530344; cv=none; b=C8HEvwhrMPrACzd0ta3A7IU2RM9Tj9uvaX+Qo5eicli/HIGkXhAkZzstiEzX+fNsTEjnOdw/tmWKqpHZI1CufKPy5FK9giOS8p75eS8Myr1HA29Mgwi2V9LuKjZgZ5oyUV3r8mfUKKvubxF27Brh3ARqtuCkDVGiCiaOpWIBHwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745530245; c=relaxed/simple;
-	bh=w32nwEDCkygY3ZfKWVxe6EUsop97yeA9rvgWBEdbpYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jYTiX1JJhuCxO/01Lkxk8AWjEVoiGtAVwrFiAmgrNomzPP+fT88+++rjDEy5UUw73vyNF29vLMemlADOlp5mUpo6n9CAw4gywDdy+d2lxzfN52oEFDpgPA55u1DlVGpbwRpuGUrQKIoqRKSVg/AfudhWwa3o5sDVPQ0/sAL+Mc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SUFDzfnq; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745530344; c=relaxed/simple;
+	bh=F9Jv4GJ3j0VXb2ogXxDFAGRTm9u7zm0uKbOes1xYM2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kh/mo+dk/pm+98sRzKMIiKY6VH4TLHyuHDrQYz+JKAlASUGT2kcKm/HQoKH6MGShXStanNK57oTtVp8BqEw6dm3nkUtxz+3b5z7PCQSTEld8HW0QHvhtHNTyAbA9gdwVZMsS8jPuf5039IcidZfpv1QVL9diAFMRxa3FtPTFRnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=JvLMt4bI; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SUFDzfnq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745530240;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=En/U4xCVC8IUrkhb8YvvUXRlBXUdP84iSGUw9FOJF+0=;
-	b=SUFDzfnqZpqudeO4TZYxaQq4pT0HLRmmblTf7vcLQvyhrDjuZ3/vierxd7raKNuiBYsuZ0
-	TE2vEQ8GDntacwxMUCaUrEOwyU4yMLwDwSJi5oLIO5JQLZXBTj+Xc7JE09tfUXrRGFt2Sy
-	YvptfSySHg5eNmkblbSFQYZVU4IJSDQ=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-498-AH8kNPpjPvWMcbQwQVut5g-1; Thu, 24 Apr 2025 17:30:39 -0400
-X-MC-Unique: AH8kNPpjPvWMcbQwQVut5g-1
-X-Mimecast-MFC-AGG-ID: AH8kNPpjPvWMcbQwQVut5g_1745530238
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cec217977so7836875e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:30:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745530238; x=1746135038;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=En/U4xCVC8IUrkhb8YvvUXRlBXUdP84iSGUw9FOJF+0=;
-        b=enJqv3IP0p57lS/iRCJQxezvDjUb+oJ2VV12zjnwEdlhB/yGdqtlo+iHS3ZwoUevrX
-         49BLzqw74FK/R7WziTnfOJ0cPaJ2QUtIxhEZNQ8UJjI3QOutdxpO/c8ZMabWN2zCAQyo
-         O8iVWIzTq73bYozaW1xnnzevqjsgQTGVtDfTTAE7zOpmmvCuYttrDnZDHS5xXN5xFSXm
-         ddTO086164hxlKUHnYT+kgDVAvM67dbi+QrjJm7/mO0Ug2M4tHWhUrI1Ohuwp0wAY1lG
-         9IJIM3jVeQAuGSoK0AdJ1V/yd3yBWtUaoPuLKlKTFXOwAquaagH0GtDk4vf+xfX3nEIR
-         Zg1A==
-X-Forwarded-Encrypted: i=1; AJvYcCXFkSnvKlmf3rVMvXbCeY0x5ZH96N7pZHpFosLf5Vgk2e8HLbnI3ssU1jU4s5lFCf7oSBweXZ7CRlm5VPo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyggnKzY4M4bqSMUJRf8Y2ZvNuVaXdecYbadQltk82VDihXdW0n
-	zGaOFabkTEMsv/Cv5Y3mJwZznAAgW+81FzRGNJMm97jYb+Aw/NlQ0atdGRep1J2sYznTkTfArjB
-	uZxw4tcDCEc5TPBhrm7HmyjmCKAsNVXeyqn+8G0JhLmhT2+9G/lzhhavU1yVpRQ==
-X-Gm-Gg: ASbGncs0WHRqaJEHjF8oCCb8oVX7mVLamHeHDcBjpGO/O2NUf5T4W0hZyyFr81JzHY2
-	k5sp0peB5lyB6QVZJ+vXzNGhTDi7vOmmc0tjMsVf8QOodGngwa3Xa0fbFuJqVcUmx175f4yGsWJ
-	WO3VySkeoZvxhdk1EfSaxam06TkQruTVKJUYj77h0ehHHeYMwBmIl6OnYf13bOSOeTqS6H/LbbQ
-	4fdE6W1uENVJYbZnLJEILQXqSIw+fSZUIQp8qJzAd1qzEkouq1cCuf6mW4NlUoQ09mmXe5GTss2
-	8Kkmx3iGMRxGpHUJF4qbhjdxNYk60W3JoIIpzfmUvvCTlkhlIy0s0wQ3mrnEr3TkMkNv0Ln+vDA
-	h2K7K0oznuVdrx54aFFoBQWvJ1oW6cSgOfV4j
-X-Received: by 2002:a05:600c:1e26:b0:43c:f3e4:d6f6 with SMTP id 5b1f17b1804b1-440a31c1ae2mr9178325e9.31.1745530238002;
-        Thu, 24 Apr 2025 14:30:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEuXN9ITnOPJC6jMWD4dUoy8kuFZLZbLSas71gn7Ljm6pHV/cKMAY4dZqvUxw+u3Iw/i44OrA==
-X-Received: by 2002:a05:600c:1e26:b0:43c:f3e4:d6f6 with SMTP id 5b1f17b1804b1-440a31c1ae2mr9178125e9.31.1745530237641;
-        Thu, 24 Apr 2025 14:30:37 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c74e:ff00:f734:227:6936:cdab? (p200300cbc74eff00f73402276936cdab.dip0.t-ipconnect.de. [2003:cb:c74e:ff00:f734:227:6936:cdab])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-440a5394bfasm2013205e9.40.2025.04.24.14.30.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 14:30:36 -0700 (PDT)
-Message-ID: <57e543a2-4c5a-445e-a3ab-affbea337d93@redhat.com>
-Date: Thu, 24 Apr 2025 23:30:35 +0200
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JvLMt4bI"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=BBDzFFL9rZVzREy0qETSrAqtD3sLRPAv+48jROirht8=; b=JvLMt4bIVJ61LUC5hRtAm852o9
+	Tm5EsPu7k/wZYWiVIlTgT1EfbijSRBoVLFGfyZGot23N/OSmQGnLn7z4HKCTV82FeL1iJB0t3OlO/
+	276TZae6ABbZxB6Uh70LdMzl85PZMGzeR5KxF2IWfJ5Ah8MJqh0GtLGC1o6Fe1UmpSY0=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u84B2-00AW1O-32; Thu, 24 Apr 2025 23:32:12 +0200
+Date: Thu, 24 Apr 2025 23:32:12 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: David Howells <dhowells@redhat.com>
+Cc: Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Paulo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: Is it possible to undo the ixgbe device name change?
+Message-ID: <7b468f16-f648-4432-aa59-927d37a411a7@lunn.ch>
+References: <3452224.1745518016@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] mm: abstract initial stack setup to mm subsystem
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
- Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>, Kees Cook <kees@kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Suren Baghdasaryan <surenb@google.com>, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1745528282.git.lorenzo.stoakes@oracle.com>
- <e7b4c979ec056ddc3a8ef909d41cc45148d1056f.1745528282.git.lorenzo.stoakes@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <e7b4c979ec056ddc3a8ef909d41cc45148d1056f.1745528282.git.lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3452224.1745518016@warthog.procyon.org.uk>
 
-On 24.04.25 23:15, Lorenzo Stoakes wrote:
-> There are peculiarities within the kernel where what is very clearly mm
-> code is performed elsewhere arbitrarily.
+On Thu, Apr 24, 2025 at 07:06:56PM +0100, David Howells wrote:
+> [resent with mailing list addresses fixes]
 > 
-> This violates separation of concerns and makes it harder to refactor code
-> to make changes to how fundamental initialisation and operation of mm logic
-> is performed.
+> Hi,
 > 
-> One such case is the creation of the VMA containing the initial stack upon
-> execve()'ing a new process. This is currently performed in __bprm_mm_init()
-> in fs/exec.c.
+> With commit:
 > 
-> Abstract this operation to create_init_stack_vma(). This allows us to limit
-> use of vma allocation and free code to fork and mm only.
+> 	a0285236ab93fdfdd1008afaa04561d142d6c276
+> 	ixgbe: add initial devlink support
 > 
-> We previously did the same for the step at which we relocate the initial
-> stack VMA downwards via relocate_vma_down(), now we move the initial VMA
-> establishment too.
-> 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> ---
-...
+> the name of the device that I see on my 10G ethernet card changes from enp1s0
+> to enp1s0np0.
 
-> +/*
-> + * Establish the stack VMA in an execve'd process, located temporarily at the
-> + * maximum stack address provided by the architecture.
-> + *
-> + * We later relocate this downwards in relocate_vma_down().
-> + *
-> + * This function is almost certainly NOT what you want for anything other than
-> + * early executable initialisation.
-> + *
-> + * On success, returns 0 and sets *vmap to the stack VMA and *top_mem_p to the
-> + * maximum addressable location in the stack (that is capable of storing a
-> + * system word of data).
-> + *
-> + * on failure, returns an error code.
-> + */
+Are you sure this patch is directly responsible? Looking at the patch
+i see:
 
-I was about to say, if you already write that much documentation, why 
-not turn it into kerneldoc? :) But this function is clearly not intended 
-to have more than one caller, so ... :)
+@@ -11617,6 +11626,11 @@ static int ixgbe_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+        }
+        strcpy(netdev->name, "eth%d");
+        pci_set_drvdata(pdev, adapter);
++
++       devl_lock(adapter->devlink);
++       ixgbe_devlink_register_port(adapter);
++       SET_NETDEV_DEVLINK_PORT(adapter->netdev, &adapter->devlink_port);
++
 
-Acked-by: David Hildenbrand <david@redhat.com>
+Notice the context, not the change. The interface is being called
+eth%d, which is normal. The kernel will replace the %d with a unique
+number. So the kernel will call it eth42 or something. You should see
+this in dmesg.
 
--- 
-Cheers,
+It is systemd which later renames it to enp1s0 or enp1s0np0. If you
+ask me, you are talking to the wrong people.
 
-David / dhildenb
-
+	Andrew
