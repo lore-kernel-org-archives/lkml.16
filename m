@@ -1,86 +1,124 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACBA2206BE
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F5F227EAB
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487661; cv=none; b=JPSMGFJWRlQVEL7HEfOqe6bjId2Rs+1+XghxWjt0PVmGF96qlxeZbDpWRaF3dG7w+HOO/Kb0Ep6BhgNgzPlyqK60FJ4orD4Kax97tlbsRxDkh0mdjoRuGgo3lG99fSWXDqK+HJCqq++Ec2sAZp2Y8+74fxdvm6tgM9DgWOZGCvg=
+	t=1745487666; cv=none; b=O7dmlx3NvJ2Um8KAkEd5jL0R7qC/KTIy2xZ1duNjPh385xLndLw+/9A/oeILiRq0H3Mrz+pLGWtNQ82MHCuKqHnzhvxwDNjK+sUYMAI9Qa/BOxgEskBTv+MI2lTBkU5IF19MqUoak+vCD7rbu8yna82hoZVDLf1mTnZRoMG0v8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487661; c=relaxed/simple;
-	bh=Zj4rZc/o0d+mPGfyouleH+pLFelBv74hCt+szCNjbKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VlbvCFcytvWxRZEkwainuqQF3STgcEV0M1CqcsYqOuQsDuIyZa790apqtUwo7afB/xHv5cQKXOGS/Pz1kUkTjGwg6xcfzmsrEfgDGFLxAxZPdgSHPA+J9vGdDNKYHyZtLOzE4UbAZmuuDgT/glCSQ4NfY61lWiQJzr0pdacJscM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lj4V+1BE; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745487666; c=relaxed/simple;
+	bh=SlgEdGDb/DKWCOuA4W5dZrzXGJJOrqjhh0pU26wetQE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QAgrtkzOKN/BgWGy0vd9dofaNzFXNREjjIfjQLSsOonPNnLtTB9jIDP4VS/iYV20YuPDH90EcWbrD8+6P+l/PaumE0crg5ukGWrAPeMUDvyzi/EV5pVnIeUVYmgovq9mhm8PJxRlMN8tUNJWJxS5jWfy2cWZ4t+BCv2xO9K2hcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JH7mhBgp; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lj4V+1BE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=V52SN0rAjrBhAIoaJ+IUA3O9fZi2COSECdESbmwo4T0=; b=lj4V+1BE89nBZi3fMhYGM2l/MC
-	ss6cg5XA9Q/WfsDiVGX/uNzbY9LQVnycOCtv8YqYohaCr0XwLO8xU2GozFR4CsHstHv6678KLNrBr
-	bSa/LAly5CMxlexxSHXWRfVhjGS5wA2NAxjEEcrY8yE4VNL038Xr8GfxPwzvmS3VLjEGEj4MxZaef
-	mplMK023ifHSr/EL51wWWJ9cbVKDVeoKQlvshIr/AqOS2t6bHvVLPEPEBFT4jQzI3qu5XUYXCYnLw
-	IQA3GS/P+zP/2WVI5giAS//n14B1bpxdLKNxDnmWwuKtFjiRWG/OvEmbL0oUuuFhFPNxdBTxgiHXa
-	qZzA7cwg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u7t4d-0000000Bh2J-2hVJ;
-	Thu, 24 Apr 2025 09:40:51 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 0432730057E; Thu, 24 Apr 2025 11:40:51 +0200 (CEST)
-Date: Thu, 24 Apr 2025 11:40:50 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: kan.liang@linux.intel.com
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	irogers@google.com, linux-kernel@vger.kernel.org,
-	Luo Gengkun <luogengkun@huaweicloud.com>
-Subject: Re: [PATCH 1/2] perf/x86/intel: Only check the group flag for X86
- leader
-Message-ID: <20250424094050.GE19534@noisy.programming.kicks-ass.net>
-References: <20250423221015.268949-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JH7mhBgp"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ce4e47a85so808965e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745487663; x=1746092463; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FQ+2XPxe7PcUywYmBjNxkwdoBQCPKKKmxzqhiPsfSo8=;
+        b=JH7mhBgpdkIiIs5QotxDvLbArt6+RlBcFlpuBtWokXbuZwEK3ZIe1sL87xBihMyfB/
+         PS1WmXrTVQn6VWnEZkr0rcfoWHKilehcx+ROtOTB/pdRj0ljJgdMUmR+Y17VtUu22vC7
+         B9YeT+VeagwweovGVsN1wBmem6aF/M4iwu2fkvluF0rD7jO5xHRVHb0BHwcr1oehjIw4
+         ZiejLMXRoGeuFpHkrM9547ovQG+pHMzyrCi6cxO04++krKdzIumJISUSgHxOCYqfMn0z
+         dsuDc+c5ymP7FC63FZm+HEVfT2Mp7S+MkarjyYPef2xDJ8LecWq1GNlWSl093NQgCB8V
+         sSzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745487663; x=1746092463;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FQ+2XPxe7PcUywYmBjNxkwdoBQCPKKKmxzqhiPsfSo8=;
+        b=tn4ASIeZ+5Qxk6uvAn8xZqRvDVqJXh9Ld2ZCDnwXthirz6ZaA13bMHm0iU2nPmYE1X
+         shovbuGwYW8dM9YH1rEF7Wv7sl9ZbPFFqzlGEKxRlJwwvxvu1Rt0SHt+25ZtBJ7HR2tn
+         d3/sXZA++6Hh0PvFFKO23jUZj4KfsyyPx/Elz17C+5J+ZEZ6TfNVLdZ9KPjRMk67opPC
+         JoUmX+gsuf4HKLE/puFK6tCsLL8uVawJfIO+/ceuoGu4LZMejSHKXycLwqFCEZMXs+08
+         ixYyOUiFFdoGjDC0NK6LlbUwr9PhLV9WcsYMn8Mw8jZpCg7L8xsWKgrWnoQz6Nov6q5Q
+         Kp5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX6mo9jEI6/wEsLWlYIcwMLGGGsvkSDA6yPka6kJ6tjT0dqTPGXb2EZ8qG2ZhNd9D3nmvQZoxjZhTiiwHQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZODlVLre9rwIMVsqEXc/jVpFV47hNBO9/4TB/o+9eiHn2bBJA
+	+pMNjQYUWkCrjZjIY1mnE5Egca2Zjtw5w8IJN54SMEXptoEDKnSIdh34WN8eaXiBDuMkcsrcAYQ
+	I
+X-Gm-Gg: ASbGncsSpUmWKhOsy8hkGj9k7X/DzWI31bgBJLcckCBt20Ewo0nMxWL0pgGSzspqP/D
+	bHqMLixQ6Bn30RnmcZH1gXny9GzLhif6mCq90ukg5tTqWn9QnJsP70EbrzP2I3Hs00L+F3DXavi
+	2vlA/ArrmyDE9LqXkSrTiEpuAiSS2sw2EWJjx5zuKBpH45msC9GLXzzxkyaacM/nBzVDaUEaZz5
+	JxNtpkkTcKQYYgRApRuGwSGVau2dGuWqluBQZhaD2ZvS59mPBclpwSMdnNo6kXWXHVDKrTmyVys
+	C2dsuQG+wdiJmXw7sazetI5qP02aKo4iRXxuiuv2n9bz9jUUFFJNTqS3pD8=
+X-Google-Smtp-Source: AGHT+IH6QjibDV6FMB7BupWJ4Rz4BI5NVCaaysKCD+vN41xLRxC6QExKkQh4znHdZzlbXnjaZqcX9w==
+X-Received: by 2002:a05:600c:4707:b0:439:9b3f:2dd9 with SMTP id 5b1f17b1804b1-4409bd8c327mr6387265e9.7.1745487663119;
+        Thu, 24 Apr 2025 02:41:03 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408c8b0ea0sm41526975e9.2.2025.04.24.02.41.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 02:41:01 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/2] arm64: dts: qcom: sm8750: Add sound
+Date: Thu, 24 Apr 2025 11:40:51 +0200
+Message-Id: <20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423221015.268949-1-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACMHCmgC/y3MQQqDMBCF4avIrB1IRiXaq4iLYKbtLKp2oqUQv
+ LtBXX4P3p8gsgpHeBQJlH8SZZ4ybFnA+PbTi1FCNpCh2loijJ/WNQb9FmTGxeuKhF1dkXOhbSp
+ DkJ+L8lP+Z7UfLit/txxf73HfD8cfh4J6AAAA
+X-Change-ID: 20241122-sm8750-audio-part-2-943277d85302
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=800;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=SlgEdGDb/DKWCOuA4W5dZrzXGJJOrqjhh0pU26wetQE=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoCgcn6//8BzPKJ5ntOP4kIjJna/umo7zZXjkJw
+ YPNlvQwV/+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaAoHJwAKCRDBN2bmhouD
+ 1wMQD/9x8PW9l3kJPQY/9L14kgJnatrwjcxMjYYZqePCWUYug4mPdT/q9/688blJHqEH51qjqzy
+ Mz57BAxH05nRbTSAzxVj2lSU6itcet2HNgllGIua+DxrpwM9VX8z3NztpLfrXCSS627TI1tz8Yv
+ /p35DOoGHdRX+yRan7s0JY21a6w+mPidbPCbWqrXCB333j6wZDxJ1JMQkOTM1wZ+TTQu/BIcEeh
+ HXCCiARfIVlNjw4u2yqO4uaV6JEZkgLcUu/Hg/srVVaG0W/dvsncpGyoDAjY23Kv76Q87wiCzKj
+ cATqvwNT7H1BHK0EF0jzNyApWl2oice+fucYMIbmKyEwIsn/30tXKDrpoyt1l/1jk7M0rk0kLE2
+ 9PHULtjz0cAg4QBR3ZSVVtcTZRkh82QUlb8UQH9ZPqKpdZIYdnEUwH5ty4kKbdZ3F3nQY7+FN6U
+ jtKDb9tfqB5GiNuwsGjo6Cq9bzwk1d7Tm1F63OOIsQxg6GtJPmtU98MnxAToTPyNobeikvPr4X9
+ De/NC0Hkxpxr6gaVntcqsg9Ebc+LzHh0pE5LGQvRa4jDtAf1zJFYDfPaDysaXNLiQ2vGsh+eMLw
+ H+noh3CcVqUGb5FjgXUc58ohCPgUDUs57UakEtljVYgmBH+2EvNUePbrXLeNQB0RAmZ3cB7nC6e
+ /rO7ubk+5n2JKMg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Wed, Apr 23, 2025 at 03:10:14PM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> A warning in intel_pmu_lbr_counters_reorder() may be triggered by below
-> perf command.
-> 
-> perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
-> 
-> It's because the group is mistakenly treated as a branch counter group.
-> 
-> The hw.flags of the leader are used to determine whether a group is a
-> branch counters group. However, the hw.flags is only available for a
-> hardware event. The field to store the flags is a union type. For a
-> software event, it's a hrtimer. The corresponding bit may be set if the
-> leader is a software event.
-> 
-> For a branch counter group and other groups that have a group flag
-> (e.g., topdown, PEBS counters snapshotting, and ACR), the leader must
-> be a X86 event. Check the X86 event before checking the flag.
-> 
-> There may be an alternative way to fix the issue by moving the hw.flags
-> out of the union type. It should work for now. But it's still possible
-> that the flags will be used by other types of events later. As long as
-> that type of event is used as a leader, a similar issue will be
-> triggered. So the alternative way is dropped.
-> 
-> Reported-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> Closes: https://lore.kernel.org/lkml/20250412091423.1839809-1-luogengkun@huaweicloud.com/
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Dependencies were merged, so this brings the necessary sound on SM8750
+MTP.  I have patches work-in-progress for QRD and also USB headset, but
+this have dependencies and need some cleanup. I will be posting these
+separately.
 
-Can I get a Fixes tag for this such that I can stick it in urgent?
+Best regards,
+Krzysztof
+
+---
+Krzysztof Kozlowski (2):
+      arm64: dts: qcom: sm8750: Add Soundwire nodes
+      arm64: dts: qcom: sm8750-mtp: Add sound (speakers, headset codec, dmics)
+
+ arch/arm64/boot/dts/qcom/sm8750-mtp.dts | 214 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sm8750.dtsi    | 122 ++++++++++++++++++
+ 2 files changed, 336 insertions(+)
+---
+base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+change-id: 20241122-sm8750-audio-part-2-943277d85302
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
