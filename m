@@ -1,106 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1E917A314
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:16:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5368528EA77
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745518613; cv=none; b=sTxqD7l2Cn3kVlNAjCASOpmTsZZ2KUk2jUsxW75Fc3FGNjH2M5gvHfSOIGJq/lT/Tgjc3rCuYkAm/FKA5prXAHcelJz+SNSkZ8a/dtoSvh/PyGAwOvUjQo9ADvtsApD2V7QrzemNwj4RZGjQVmSkyBvxjqrsY9r+WN2reOLMuN4=
+	t=1745518660; cv=none; b=jjz05WR0tfopRq7AZqLbv/nJXC4Z/PNckKxH7fRIRSRRQu7W5Hz3Vk8UXLz0oQ7WA0viWLVBIXwp+BcmostLAr+657zjRave3Jgx6BruzIpyefG8OHBwQt2Lg6tTTgB977hiyM0/A7EccW91H5T6iZ9LUHg8UlZ6k1+A0UKTmUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745518613; c=relaxed/simple;
-	bh=nO9oDbUN0pVhI9Ph/BWwbpzy+8+xtBEG217PX7K48is=;
+	s=arc-20240116; t=1745518660; c=relaxed/simple;
+	bh=bYuTN1lzzJp0S/KXCampda7sf8j0POvQwSgItljisHA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KO6uCqCS6wcZFy7NKOVleKsqyDTOodLYmY9ZomXIHUtVdhgFAHBoXu+wwZqxxaoar0FvrdHMTk/ERXXH+d3A0XOEo+IBXdL4wT1nDW+n8c53VN/rQ+lLPbxnTV+OVpFk/Fxxbx61KogBsOqkzOBYjwQNDSZ9PEuQ0NtZMdZX7Po=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5tlIiki; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=K3nU+sNNUg6f4UX2RHCUI5tgMte3fKVVkZKkQ9ihnRpjgMU8Rsw15SXn877uPLvWbkhojGBRTawewGiqB7EpAyMCJtQqtE4PkNcakqW6wDm0BvJUFzmAPPFhQXIlCJiquGyC7UGElyxzHSwLyBHKHvAm0ECBmn/s7kFgkNglZy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tqIgarZ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5tlIiki"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAEF9C4CEE3
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:16:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tqIgarZ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAE38C4CEE3
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745518613;
-	bh=nO9oDbUN0pVhI9Ph/BWwbpzy+8+xtBEG217PX7K48is=;
+	s=k20201202; t=1745518659;
+	bh=bYuTN1lzzJp0S/KXCampda7sf8j0POvQwSgItljisHA=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=t5tlIikiJYpDYjX8QimvoL7mtLIyw4l4GPMsYARwrLyICt8WOcl5cMHR/cVQwnZXx
-	 t3h8cSuwYE6RhkTWW4YFTSa1F27o5DFjPaS41aW0iuqBsbD0dlnDoZM+N/z+Ico9pa
-	 3jGmZqj9PMHBqwwEtq+WCChBk5nlen5eeU8bs3mi6aOgNddJbDr4EsLH+gK4fV/Bdh
-	 e/RhbfvWTP1owVRBxoepOHOgysV1TEwu0GApvJ0V75oj6aTu9WP5hWAgBkhhw2Mv04
-	 jJVzjofgbwrhV4rY0rK+JCuZqNvcJ+Pgm5WIic4CS0i1jetILMGIgfqgUM2GrToW3x
-	 whtgpRoCrmH/Q==
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54d3ee30af1so1459671e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:16:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWGNrjjLxC2OMBECerKBKJtTjf61TGnfBn9tegTS44mw9IkVmi7gHBH8tJQKU750RFGYgfp0La77q5oup8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQ/8bPBVlI+p0gSYrZtbqxVFfFL7HHFMOqxSo3jukO2iGzdUZU
-	c6OxYYqMaAn4KVxVOc5A+2UfEFhIGwDxQQ/zxTvjeDb92vU/GnbXzGd5rNXK2HRuRq6CzkVfbeY
-	aD2LupyKtVY7xlHrGRHFSsd8GSaA=
-X-Google-Smtp-Source: AGHT+IEGk1YSO028lcgtWwNMa9C4cSXeOtMO5Qsg35m7q1XC6uXTW7FYvg4W77icgi44fs/zKsXpq5V5fGDCvNgDUuI=
-X-Received: by 2002:a2e:bc94:0:b0:310:85ba:115f with SMTP id
- 38308e7fff4ca-318a92908a2mr2737331fa.33.1745518611329; Thu, 24 Apr 2025
- 11:16:51 -0700 (PDT)
+	b=tqIgarZ0r3JD+R8W9rhM9BNXYYwW6kMe8qm/MUpODN84eo3J1AOKyJTSn2RTz8mye
+	 CTtaXFOdwq3unz17hEs3k6WzZddGiHM/kXnyGo8TMk+/H740B6YU7EP+lEpj5SG6aQ
+	 LwnDA8VD0MWo6Y5NUU7KkSWI9+pgwWyTax9QqvHtO818wGKFLSjL3k388qijWn06wm
+	 hL4l+nlrT4BAOkNWPZnLLKz+wmHkmNjYIW8xO/zv40pQM6RaAgPzJ7CvFn3gefoGSQ
+	 C37+/HBAegW1gfjijyDwjwAEdru+HjKlOkoiMwxIfdP8RWtZ9uMOvTw47eab8gdx2F
+	 Dt5nMYl7GfIxQ==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-317f68d0dffso11078931fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:17:39 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXcMo2Vn3hn769Mf2JCAAo5HxxduqA1FXVcizpt3f6lEk9ATblOetc4gxjmhb1R8Cr3uthzWcrlc3aqcYk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBulzCG0DeAP0gGEcj6mQn4kyXgrdEAbNPH8+rMSNVSxbKBa2z
+	CN8roBFnyYC+fSpU7/8Zt52bVbqOZEMd/r58izTBXjymFrZqkq7TfkpxAXeS8MCtOdOGOyPvEbM
+	TlIzWeTICbmzq//eTHuvMbPuy6c8=
+X-Google-Smtp-Source: AGHT+IHxiG+nTuBjec15io9GjMYOoU6fsD7vDX9He6co7X5a7BspwXg7X9n0/eZKtCqYuKKygohSm8cWcvJWgdotFrE=
+X-Received: by 2002:a05:651c:b0b:b0:30b:cb10:3a20 with SMTP id
+ 38308e7fff4ca-3179facad86mr15677261fa.32.1745518658232; Thu, 24 Apr 2025
+ 11:17:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423110948.1103030-13-ardb+git@google.com> <aAp-SThmX5PcsrWU@gmail.com>
-In-Reply-To: <aAp-SThmX5PcsrWU@gmail.com>
+References: <20250423110948.1103030-13-ardb+git@google.com>
+ <20250423110948.1103030-14-ardb+git@google.com> <aAp9dMyCJ982GvKY@gmail.com>
+In-Reply-To: <aAp9dMyCJ982GvKY@gmail.com>
 From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 24 Apr 2025 20:16:39 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFswd1Au-tyHuYtCVon_02OJixGLf8X-=k9y7jajoEHUw@mail.gmail.com>
-X-Gm-Features: ATxdqUGklj5LUWPDXEqCs2yB2UfYNNrPKsLftO37iwDO0w21MUbOfqXY6mGzOSk
-Message-ID: <CAMj1kXFswd1Au-tyHuYtCVon_02OJixGLf8X-=k9y7jajoEHUw@mail.gmail.com>
-Subject: Re: [RFC PATCH PoC 00/11] x86: strict separation of startup code
+Date: Thu, 24 Apr 2025 20:17:27 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXG4umHx6ebVRjg-C+_xJRRBrxmqhiDKqVychCPF9PJoGQ@mail.gmail.com>
+X-Gm-Features: ATxdqUE2WWjPDnNhaWMCk4rdZrJQx6z3Bsp85x_MwKZoD0Fy9ZkeB8U9nIfIpJg
+Message-ID: <CAMj1kXG4umHx6ebVRjg-C+_xJRRBrxmqhiDKqVychCPF9PJoGQ@mail.gmail.com>
+Subject: Re: [RFC PATCH PoC 01/11] x86/linkage: Add SYM_PI_ALIAS() macro
+ helper to emit symbol aliases
 To: Ingo Molnar <mingo@kernel.org>
 Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 24 Apr 2025 at 20:09, Ingo Molnar <mingo@kernel.org> wrote:
+On Thu, 24 Apr 2025 at 20:05, Ingo Molnar <mingo@kernel.org> wrote:
 >
 >
 > * Ard Biesheuvel <ardb+git@google.com> wrote:
 >
 > > From: Ard Biesheuvel <ardb@kernel.org>
 > >
-> > This is a proof-of-concept series that implements a strict separation
-> > between startup code and ordinary code, where startup code is built in a
-> > way that tolerates being invoked from the initial 1:1 mapping of memory.
+> > Startup code that may execute from the early 1:1 mapping of memory will
+> > be confined into its own address space, and only be permitted to access
+> > ordinary kernel symbols if this is known to be safe.
 > >
-> > The current approach of emitting this code into .head.text and checking
-> > for absolute relocations in that section is not 100% safe, and produces
-> > diagnostics that are sometimes difficult to interpret.
-> >
-> > Instead, rely on symbol prefixes, similar to how this is implemented for
-> > the EFI stub and for the startup code in the arm64 port. This ensures
-> > that startup code can only call other startup code, unless a special
-> > symbol alias is emitted that exposes a non-startup routine to the
-> > startup code.
+> > Introduce a macro helper PI_ALIAS() that emits a __pi_ prefixed alias
+> > for a symbol, which allows startup code to access it.
 >
-> So when startup code accidentally references non-startup symbols
-> outside the __pi namespace, we get a build/link error, right?
+> s/PI_ALIAS
+>  /SYM_PI_ALIAS
+>
+> What does 'PI' stand for? 'Physical memory Identity' map?
 >
 
-Yes.
-
-> > This is somewhat intrusive, as there are many data objects that are
-> > referenced both by startup code and by ordinary code, and an alias
-> > needs to be emitted for each of those.
->
-> Yeah, but this should make it ultimately safe(r): every object is
-> either local to the startup code, or has been 'exported' intentionally
-> to the startup code.
->
-
-Indeed.
-
-> > This ultimately allows the .head.text section to be dropped entirely,
-> > as it no longer has a special significance. Instead, code that only
-> > executes at boot is emitted into .init.text as it should.
-> >
-> > This series is presented for discussion only - defconfig should build
-> > and run correctly, but allmodconfig will likely need the last patch
-> > omitted.
->
-> No fundamental objections from me.
->
-
-Good to know - thanks.
+'position independent' - it's what we ended up with on arm64, but I'm
+not attached to it so happy to switch to something better.
