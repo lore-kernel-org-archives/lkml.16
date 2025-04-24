@@ -1,112 +1,148 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85D502BE;
-	Thu, 24 Apr 2025 17:28:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8914A288C8D
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745515692; cv=none; b=MOaXQwrv5Jhr3hd+uY2yfj9MqtPBLPGE9ZxWZNJLkd3KTsotzo8Mr8w4+Uvi7X+OBx2iogn7pr4tbmOX099EUscfjm7k2poVfoZH4KBmu2yU0CHLUNAQXkkxp5nLZRGYlN7Uh5fPYvd+ocXLLKoiv2blLrJlchYHo+mPMDnu85s=
+	t=1745515721; cv=none; b=dAM0L1CaIuRdR7yH7F2DB5uuA6gZzRKvSLabhtLv5M+thkvwv/RThinCRviO8mbQa8bCwp+K72TOoAaerox6UhXXkOLveJeFXNIGjjzHnT5m6f0/gyjR29+WGZKjhnYc5HE7DtakzezQwlCZgOqSqM2sqlgGsWFKZSKg+EbmzwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745515692; c=relaxed/simple;
-	bh=2kjHhC3dxG5BHNkLf48Njg6bM4No+8qiawuMt1tj/nE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=ilzN9NlpEOOlF3+4W808oK7K68s/AjvXDBuFKpavVKPsix5EOeaIhKmpH4FyaOWKs8+DMPr6IVedIPYfrVunn5v+TLR0GIRKJ0sR3CsTJ5xz+K4XxI2yo2K5V1wP/UJHirXm8f7pLs5AIXPBSdKcmjZBfvicLmVLrQjHigG163g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vt9WYs58; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745515721; c=relaxed/simple;
+	bh=1HqLQ3YZh70ZNkGmU2mK9InfcNAWorDdlkXLec74Sqk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nO3Z/MjKG1VocpNZxVfab2YfBMHzzXQYtHbwdxaMMkLUZ2ztibKJ2XswEB59q7lU2JPrYCbjr8nLBMYvZ3VtFXbdoZNYRSUGTf6m5pPKK5j7pFny4dVVsFOHKP6peJGHYvNJJainDTf7zFNdsHtO2i2m5nsooLvxMQ2vMtwZTWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=anS+6W0Q; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vt9WYs58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E64C4CEE3;
-	Thu, 24 Apr 2025 17:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745515691;
-	bh=2kjHhC3dxG5BHNkLf48Njg6bM4No+8qiawuMt1tj/nE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=Vt9WYs58G+zD+pVPzuTfYiH3UACzBDZu9vmwRBwBMJCXEQ6Y6w7htIBy4O1Uy0wmi
-	 NxMD9T+UM7lfumJDZNm9VLQVIn3CZHgc6smqZDZgJ46BBxjRc3iaac0wFq0TfaNTcT
-	 cCfOpgEyO++cXAXadJ0l/bMIUJ/wWDCy2Hq/VfSzJ3QK56/Li6Vz83pw0MgdVT4P1e
-	 teZkNVzoKDJbW5K4Zc2xeQ6+20kVY49RDfg4kJR9XBCVJgtFprUFJ0RaZ/48kYPzbJ
-	 QGFgkwWy43NYJ61QAetemj4FGqkg2eTjPa59946BwJXTkvRxw4fGMixrmbaQp9ITO/
-	 1vyuNv8T0Yj8g==
-Date: Thu, 24 Apr 2025 12:28:09 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Karolina Stolarek <karolina.stolarek@oracle.com>,
-	"Shen, Yijun" <Yijun.Shen@dell.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-	Jon Pan-Doh <pandoh@google.com>,
-	Terry Bowman <terry.bowman@amd.com>, Len Brown <lenb@kernel.org>,
-	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Liu Xinpeng <liuxp11@chinatelecom.cn>,
-	Darren Hart <darren@os.amperecomputing.com>,
-	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
- reporting paths
-Message-ID: <20250424172809.GA492728@bhelgaas>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="anS+6W0Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745515718;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9ZG9YrbKiFItvh1cWxjw3CM1aJWpjuP1SdA+uk1qv0I=;
+	b=anS+6W0QwYvLYI+Zyxy6Y/z5NTCG5umSG8Ek09oAP0EbgleK9hmHLr0xi2NIAVm7AJHVyT
+	tOGaDZEK6edcqVDSvCHMjHG9VUe3dWN1iE95pVPdmnGXnmdNn6YbhcpqhP4nccnZv4OzUc
+	kI7AdbY6z/vWrjQRJ7l5VAwer4srpJ4=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-303--wJBHBPbP0WIvcChOE1VOQ-1; Thu,
+ 24 Apr 2025 13:28:35 -0400
+X-MC-Unique: -wJBHBPbP0WIvcChOE1VOQ-1
+X-Mimecast-MFC-AGG-ID: -wJBHBPbP0WIvcChOE1VOQ_1745515714
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E6E8D1800879;
+	Thu, 24 Apr 2025 17:28:33 +0000 (UTC)
+Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 367381800374;
+	Thu, 24 Apr 2025 17:28:33 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Cc: seanjc@google.com,
+	oliver.upton@linux.dev
+Subject: [PATCH v2] KVM: arm64, x86: make kvm_arch_has_irq_bypass() inline
+Date: Thu, 24 Apr 2025 13:28:32 -0400
+Message-ID: <20250424172832.401651-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5a92a75f-4348-4578-9b61-45682edaa514@oracle.com>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-[+to Yijun @Dell in case there's some testing opportunity, thread at
-https://lore.kernel.org/r/81c040d54209627de2d8b150822636b415834c7f.1742900213.git.karolina.stolarek@oracle.com]
+kvm_arch_has_irq_bypass() is a small function and even though it does
+not appear in any *really* hot paths, it's also not entirely rare.
+Make it inline---it also works out nicely in preparation for using it in
+kvm-intel.ko and kvm-amd.ko, since the function is not currently exported.
 
-On Thu, Apr 24, 2025 at 11:01:11AM +0200, Karolina Stolarek wrote:
-> On 23/04/2025 22:31, Bjorn Helgaas wrote:
-> > On Wed, Apr 23, 2025 at 03:52:27PM +0200, Karolina Stolarek wrote:
-> > > 
-> > > I wasn't able to produce logs for the CXL path (that is, Restricted CXL
-> > > Device, as CXL1.1 devices not supported by the driver due to a missing
-> > > functionality; confirmed by Terry) and faced issues when trying to inject
-> > > errors via GHES. Is the lack of logs a blocker for this patch? I tested
-> > > other CXL scenarios and my changes didn't cause regression, as far as I
-> > > know.
-> > 
-> > Yes, I do think we need to say something about the output format
-> > changes.
-> 
-> I understand.
-> 
-> > I assume you're trying GHES on machines that actually do
-> > firmware-first error handling, right?  I found several GHES logs by
-> > searching the web for "APEI Generic Hardware Error Source" "PCIe
-> > error".  The majority were Dell boxes.
-> 
-> The only way to inject GHES errors I'm aware of is Mauro's patch for
-> qemu[1], so I went down the virtualization path. As for working with the
-> actual hardware, I'd need to ask around and learn more about the platform.
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Acked-by: Oliver Upton <oliver.upton@linux.dev>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+v1->v2: leave extern declaration in place and don't touch arch/powerpc [Sean]
 
-I'd be surprised if the qemu firmware supports firmware-first
-handling, so I wouldn't expect to be able to exercise this path that
-way.  I think there are some bits in HEST and similar tables that tell
-us about this, e.g., ACPI r6.5, sec 18.3.2.4.
+ arch/arm64/include/asm/kvm_host.h | 5 +++++
+ arch/arm64/kvm/arm.c              | 5 -----
+ arch/x86/include/asm/kvm_host.h   | 6 ++++++
+ arch/x86/kvm/x86.c                | 5 -----
+ 4 files changed, 11 insertions(+), 10 deletions(-)
 
-Unfortunately there are some typos in the spec (FIRMWARE_FIRST,
-FIRMWAREFIRST in 18.4), so it's a little hard to find all the
-references.
+diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+index e98cfe7855a6..08ba91e6fb03 100644
+--- a/arch/arm64/include/asm/kvm_host.h
++++ b/arch/arm64/include/asm/kvm_host.h
+@@ -1588,4 +1588,9 @@ void kvm_set_vm_id_reg(struct kvm *kvm, u32 reg, u64 val);
+ #define kvm_has_s1poe(k)				\
+ 	(kvm_has_feat((k), ID_AA64MMFR3_EL1, S1POE, IMP))
+ 
++static inline bool kvm_arch_has_irq_bypass(void)
++{
++	return true;
++}
++
+ #endif /* __ARM64_KVM_HOST_H__ */
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 68fec8c95fee..19ca57def629 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -2743,11 +2743,6 @@ bool kvm_arch_irqchip_in_kernel(struct kvm *kvm)
+ 	return irqchip_in_kernel(kvm);
+ }
+ 
+-bool kvm_arch_has_irq_bypass(void)
+-{
+-	return true;
+-}
+-
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
+ 				      struct irq_bypass_producer *prod)
+ {
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 3bdae454a959..7bc174a1f1cb 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -35,6 +35,7 @@
+ #include <asm/mtrr.h>
+ #include <asm/msr-index.h>
+ #include <asm/asm.h>
++#include <asm/irq_remapping.h>
+ #include <asm/kvm_page_track.h>
+ #include <asm/kvm_vcpu_regs.h>
+ #include <asm/reboot.h>
+@@ -2423,4 +2424,9 @@ int memslot_rmap_alloc(struct kvm_memory_slot *slot, unsigned long npages);
+  */
+ #define KVM_EXIT_HYPERCALL_MBZ		GENMASK_ULL(31, 1)
+ 
++static inline bool kvm_arch_has_irq_bypass(void)
++{
++	return enable_apicv && irq_remapping_cap(IRQ_POSTING_CAP);
++}
++
+ #endif /* _ASM_X86_KVM_HOST_H */
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 3712dde0bf9d..c1fdd527044c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13556,11 +13556,6 @@ bool kvm_arch_has_noncoherent_dma(struct kvm *kvm)
+ }
+ EXPORT_SYMBOL_GPL(kvm_arch_has_noncoherent_dma);
+ 
+-bool kvm_arch_has_irq_bypass(void)
+-{
+-	return enable_apicv && irq_remapping_cap(IRQ_POSTING_CAP);
+-}
+-
+ int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
+ 				      struct irq_bypass_producer *prod)
+ {
+-- 
+2.43.5
 
-It's a long shot, but I added Yijun as a Dell contact that who might
-have a pointer to someone who could possibly test GHES logging on a
-Dell box with and without your patch so we could have a concrete
-comparison of the dmesg log differences.
-
-> > If you can't produce actual logs for comparison, I think we can take
-> > info from a sample log somebody has posted and synthesize what the
-> > changes would be after this patch.
-> 
-> I also found some logs at some point, mostly from 2021 and 2023, but I felt
-> bad about mocking up the messages and tried to produce actual logs. If I
-> can't find a way to get this working in two weeks, I'll revisit this idea.
-> 
-> All the best,
-> Karolina
-> 
-> -------------------------------------------------------------
-> [1] - https://lore.kernel.org/lkml/76824dfc6bb5dd23a9f04607a907ac4ccf7cb147.1740653898.git.mchehab+huawei@kernel.org/
