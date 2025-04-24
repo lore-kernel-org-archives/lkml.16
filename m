@@ -1,127 +1,111 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2CF7221FBD;
-	Thu, 24 Apr 2025 10:33:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CB822A4FA;
+	Thu, 24 Apr 2025 10:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745490841; cv=none; b=JYsex1bZ46ovtAwBPtV4O9SRNNLcN0grYHh/Gt03R/qbD25sJtqrxamHCeiDVKVBIT0T/HPThWuQqAYsGN9YylrKW88oTQoHVSkSDe/rpN2aIVB8zzBxHmDYyF3mCeSXYyG/jA3iE8TpLSDz0OXLDqG2uQvAp+nbbez5l+IDc+g=
+	t=1745490854; cv=none; b=ahyg/OZPxKXxqE7nJ1zH4Bg+zHfd00+dgJ2BWqs/sW5/jge9D3Ys+XAJL+SyXuXLyOfJEhAQ5N38QFiK+Q5trb5J8Wx3iixOICKo2Y+0rIQfEBHwkx1BUOncbwC+hzHlL0cqFjFcSsmkWdlDyyxFRtYsBI8zGg2y4fRSQEcsdkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745490841; c=relaxed/simple;
-	bh=Uy+mUasuhKbgXtDTxk3JR8h6eqRQF8rsNoKeGi5WQnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TiNw0PHBMdp8Wc4hYWxRwvBIgPS9TZBUQI51FXN79lIweOlB/i1vKBpYPABQgc46xB9D4f52gfataykj8x5YU6GKDLlFAIpwq6Cybrs/Wjy8UF+/g9s+YSgLZgdZWOc+UXOm+b0lyoZQspf7gsz6Tb4a40osWC2Mm+mL6sI1Vks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cjn9rSzg; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745490854; c=relaxed/simple;
+	bh=gA2UxQqlLFPwEP0NKKHr0A+IRi4dfKbHfD4ZUz5RCSY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bU3AJin+E2wSYN6f+EHO6+WJ0Bj9uB6TQmG1mRSNzMCanFnjTXoCkijIIoV4OTLNtzew5GU1OdwicEQqSD87BdNh4MkVtd0oMDO5i6q8qgVwtgua5yf8x4/czNTYEN3hQ8UP82LM71hpswJS1/bVpYFP2fG2domeereB2S8nC7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=keZTWgFW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cjn9rSzg"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-af5139ad9a2so493049a12.1;
-        Thu, 24 Apr 2025 03:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745490838; x=1746095638; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VS98H9vhuUvesz4nn7FmfvGAmjamAD7zXnYiaxDdLvI=;
-        b=Cjn9rSzgZhzKxCTkD5Y1dbLostMYVv9P8SmrxTOqGa42FLZGUyIJD1ECiDS9yQGNzS
-         mwVy5nYCMi5WpQV5p8BvfWEzhk26Q9pjuAsaHQ6E394ZT5Vu5poQtWF/XpiPHjv6IrHY
-         ho5vmMwVKJJpKwQpoMbVDautjIJq6EL4ZeQpl/LbTyiLIk/nFaktDhxoVKm9I477sZpm
-         37tXi+3wuqIgvb5TncwN0YxOlTSCGENSUCTzNjSLT8Rvr5RNfreDhsWH9B8aAjqojlhV
-         WBViyXoZTjfBxxXIRLtFk2K7s2HNnguDOjar20ONK3Ym2EJMixM/eaKAVJkiC1axeMgk
-         Ko6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745490838; x=1746095638;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VS98H9vhuUvesz4nn7FmfvGAmjamAD7zXnYiaxDdLvI=;
-        b=LgerZmXO8PGGSk6q5X1rRSDHuiFFYD5ciKKgV67xFBsngY/tJbPZvXYkJFkzchdEx8
-         P7rmRtHHjnmQtYUuveOQrOtOxJLtlErSh922kF14W1M0Z35ft8pl2piZweVHJ54FRe+p
-         HQHZP+6T1AsOTIEmfRfvGVJRvGx/X+NgonnXDqaUk1yMaPb/AjBxqPkMHyqhWTNwVwzE
-         lbXQFkAWiyKKcCb9NdtFwVBYCyhOmiBN2VeupGNMPxjZ8QKxDEQ0uI61x+cXQF64lLu+
-         zZz9AIuICpfHudSTUr9XyGjSszSVapYGoReijRY6IrXL6HZ5nJ4vobpeITknmFAI5/yj
-         k7HA==
-X-Forwarded-Encrypted: i=1; AJvYcCUFphkqn5Za+z2ZCWu6WrUQvZ53M1H7MapuGueTtSDO2khsv0pGvxgS2FT4JuQcFbz7ogQFsvjO@vger.kernel.org, AJvYcCX6q+vXYH2qsH3zIJrsmMNU+gb3vUligsCmd5XbuWxpmviqPphp4gzYpRdVpkeIJCJGZpo=@vger.kernel.org, AJvYcCXEEkXrSUaSTrUhC+dRgkWL+0TvTj0GujZ0zD0T234pLGmO/7wNsCjc/ZTlx2R6K7hHVY7fi28KBfdLZJxD@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZjvRtE5OnvYcIAj4F39A539GsXnA6ak/rK67DxURFf74GaprI
-	28JdflIEdrRo7V0unBReZeSOjEd3AAu+RlNAnZLPyBYYmaS48NCQ
-X-Gm-Gg: ASbGnct5iRjXGkTbVimKb1LSpma0YFaXY1+rZpeZVR3kFOttcy/WexMHZFhc3sX++Jp
-	rkFTpUK5EDqIWKQKLmU8BnJGYLIsQMkRQX0mnVkDpezsOCA0EVk6Yloq/zsOmO+/VNcShU0HBaP
-	Lnoc1Vq0OYXsTFFp5EKyxC90iNojh7RhFFZepFWTNBSANOoRhRTyO37JezC9Nv7HhT5+hCqS14/
-	W5SA8XozHlu9I7fI7RD9s6ciqn9gSOw4BARMPk2V6BNnTmM/16GjPgK4DwM/hXmdRhK9KyX1rPj
-	qEzCBvSEbTJC8rlAiG7elDVhnXAu8ENPMvh00i5Z1eqTGnLJDenJHMjVn4IxeMd/NDzWc1nm8gq
-	OeGH1AedW3g6I7XE8jzY=
-X-Google-Smtp-Source: AGHT+IE16otPz//YJ1TEtt4Uv/PnG/T0CeZp27eSS79xfdk9zP1F3OBCyutLV1LXJhRM9Cm0Rt17bg==
-X-Received: by 2002:a17:90a:e7c5:b0:2ff:5357:1c7f with SMTP id 98e67ed59e1d1-309ed3424efmr3084886a91.30.1745490837878;
-        Thu, 24 Apr 2025 03:33:57 -0700 (PDT)
-Received: from ?IPV6:2001:ee0:4f0e:fb30:f632:6238:46f4:702e? ([2001:ee0:4f0e:fb30:f632:6238:46f4:702e])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef03b27asm1086032a91.6.2025.04.24.03.33.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 03:33:57 -0700 (PDT)
-Message-ID: <619bc46d-4acf-4c54-bd47-6b482fb76878@gmail.com>
-Date: Thu, 24 Apr 2025 17:33:49 +0700
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="keZTWgFW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D0DAC4CEE3;
+	Thu, 24 Apr 2025 10:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745490853;
+	bh=gA2UxQqlLFPwEP0NKKHr0A+IRi4dfKbHfD4ZUz5RCSY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=keZTWgFWSzMWH7Qrxoe+GuvmXBG+ITmOagXehi264gmg300rfR7i582U0U8Nbu62R
+	 HC8DFfydurX1ppefokyc7cj5eF3ad+3BzOEabHrEN7Hg/QQY2CWYiG0hXS2CTGeuNx
+	 9+NFp6OXN4MgN+HvdS0F588gxFbGpzbH/80Ig+Hw=
+Date: Thu, 24 Apr 2025 12:34:10 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jacek Lawrynowicz <jacek.lawrynowicz@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Karol Wachowski <karol.wachowski@intel.com>
+Subject: Re: [PATCH] accel/ivpu: Add handling of
+ VPU_JSM_STATUS_MVNCI_CONTEXT_VIOLATION_HW
+Message-ID: <2025042449-capitol-neuron-b6fe@gregkh>
+References: <20250408095711.635185-1-jacek.lawrynowicz@linux.intel.com>
+ <2025042227-crumb-rubble-7854@gregkh>
+ <80f49ba8-caea-47d5-be38-dd1eefd09988@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] selftests: net: add a virtio_net deadlock selftest
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: virtualization@lists.linux.dev, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250417072806.18660-1-minhquangbui99@gmail.com>
- <20250417072806.18660-5-minhquangbui99@gmail.com>
- <20250422184151.2fb4fffe@kernel.org>
- <aac402b4-d04c-4d7e-91c8-ab6c20c9a74d@gmail.com>
- <20250423152333.68117196@kernel.org>
-Content-Language: en-US
-From: Bui Quang Minh <minhquangbui99@gmail.com>
-In-Reply-To: <20250423152333.68117196@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80f49ba8-caea-47d5-be38-dd1eefd09988@linux.intel.com>
 
-On 4/24/25 05:23, Jakub Kicinski wrote:
-> On Wed, 23 Apr 2025 22:20:41 +0700 Bui Quang Minh wrote:
->> I've tried to make the setup_xsk into each test. However, I've an issue
->> that the XDP socket destruct waits for an RCU grace period as I see this
->> sock's flag SOCK_RCU_FREE is set. So if we start the next test right
->> away, we can have the error when setting up XDP socket again because
->> previous XDP socket has not unbound the network interface's queue yet. I
->> can resolve the issue by putting the sleep(1) after closing the socket
->> in xdp_helper:
->>
->> diff --git a/tools/testing/selftests/net/lib/xdp_helper.c
->> b/tools/testing/selftests/net/lib/xdp_helper.c
->> index f21536ab95ba..e882bb22877f 100644
->> --- a/tools/testing/selftests/net/lib/xdp_helper.c
->> +++ b/tools/testing/selftests/net/lib/xdp_helper.c
->> @@ -162,5 +162,6 @@ int main(int argc, char **argv)
->>            */
->>
->>           close(sock_fd);
->> +       sleep(1);
->>           return 0;
->>    }
->>
->> Do you think it's enough or do you have a better suggestion here?
-> Interesting :S What errno does the kernel return? EBUSY?
-> Perhaps we could loop for a second retrying the bind()
-> if kernel returns EBUSY in case it's just a socket waiting
-> to be cleaned up?
+On Thu, Apr 24, 2025 at 12:22:31PM +0200, Jacek Lawrynowicz wrote:
+> Hi,
+> 
+> On 4/22/2025 2:17 PM, Greg KH wrote:
+> > On Tue, Apr 08, 2025 at 11:57:11AM +0200, Jacek Lawrynowicz wrote:
+> >> From: Karol Wachowski <karol.wachowski@intel.com>
+> >>
+> >> commit dad945c27a42dfadddff1049cf5ae417209a8996 upstream.
+> >>
+> >> Trigger recovery of the NPU upon receiving HW context violation from
+> >> the firmware. The context violation error is a fatal error that prevents
+> >> any subsequent jobs from being executed. Without this fix it is
+> >> necessary to reload the driver to restore the NPU operational state.
+> >>
+> >> This is simplified version of upstream commit as the full implementation
+> >> would require all engine reset/resume logic to be backported.
+> > 
+> > We REALLY do not like taking patches that are not upstream.  Why not
+> > backport all of the needed patches instead, how many would that be?
+> > Taking one-off patches like this just makes it harder/impossible to
+> > maintain the code over time as further fixes in this same area will NOT
+> > apply properly at all.
+> > 
+> > Think about what you want to be touching 5 years from now, a one-off
+> > change that doesn't match the rest of the kernel tree, or something that
+> > is the same?
+> 
+> Sure, I'm totally on board with backporting all required patches.
+> I thought it was not possible due to 100 line limit.
+> 
+> This would be the minimum set of patches:
+> 
+> Patch 1:
+>  drivers/accel/ivpu/ivpu_drv.c   | 32 +++-----------
+>  drivers/accel/ivpu/ivpu_drv.h   |  2 +
+>  drivers/accel/ivpu/ivpu_job.c   | 78 ++++++++++++++++++++++++++-------
+>  drivers/accel/ivpu/ivpu_job.h   |  1 +
+>  drivers/accel/ivpu/ivpu_mmu.c   |  3 +-
+>  drivers/accel/ivpu/ivpu_sysfs.c |  5 ++-
+>  6 files changed, 75 insertions(+), 46 deletions(-)
+> 
+> Patch 2:
+>  drivers/accel/ivpu/ivpu_job.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+> 
+> Patch 3:
+>  drivers/accel/ivpu/ivpu_job.c     |   2 +-
+>  drivers/accel/ivpu/ivpu_jsm_msg.c |   3 +-
+>  drivers/accel/ivpu/vpu_boot_api.h |  45 +++--
+>  drivers/accel/ivpu/vpu_jsm_api.h  | 303 +++++++++++++++++++++++++-----
+>  4 files changed, 293 insertions(+), 60 deletions(-)
+> 
+> Patch 4:
+>  drivers/accel/ivpu/ivpu_job.c | 27 ++++++++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> First patch needs some changes to apply correctly to 6.12 but the rest of them apply pretty cleanly.
+> Is this acceptable?
 
-Yes, the kernel returns EBUSY. Loop and retry sounds good to me but it's 
-not easy to get the return code when using bkg(). So for simplicity, 
-I'll retry with sleep(1) 3 times when the xdp_helper fails.
+Totally acceptable, that's trivial compared to many of the larger
+backports we have taken over the years :)
 
-Thanks,
-Quang Minh.
+thanks,
+
+greg k-h
