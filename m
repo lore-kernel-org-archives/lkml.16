@@ -1,167 +1,156 @@
-Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D682B226CFC
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7A0204680
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484491; cv=none; b=b8EtFtHkKQ1vwDBct5GRUB9tzJyWxbj4kBbm1eR4Py6+8CvsinW/UM7X/aUX1hS/Ny12KLOiLIzpTGOL0Ciub0xlGSTmTyU2f1kAUr4BE/WJMYPEdbw5OMmmKvrIWd9ajdv0fRxNS+wuIlSfP4I2Lf9ThWkTde+HxBFXEKyTj0Y=
+	t=1745484539; cv=none; b=MMZXt5GGE7xhNBIjUwUrjLiRygPkR5DBE/cNwoeGlmUjzFJrUKhlSPH1RhjXQG4mBWy14WNajP9w4dFblDNIABmQUgzM8DfGU8DNJcSl0SYDDENS3JVao58QZnXnnhWL8HxwkvyItcmwur2bQktQLFSUXM50g98gPM/g01Uh20c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484491; c=relaxed/simple;
-	bh=MtgIwWbIPn87IvPj1gJ/fUK8oXePhz8hnN/c5xubQ7Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejQx3cp+Vd0a3mb+pCN0njpkb7BcA1r5VLGYlJA998z7kwGnUsibztXN52t1VUrRMbNeCWOZxjXfxCzFFKlcRS8Uh80HhUlcfKmqap4aA86e+ybXsvSvJAkYz+hpoF2+1C2tvrLGGIn4NjFI1PFkA3EW/tFxU8R3pk5ADPmO45Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=ZsmY+OzE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lHGhLUpZ; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
+	s=arc-20240116; t=1745484539; c=relaxed/simple;
+	bh=bN+ogKEKRzfQQuY4t0TN0TGxrm6Tw0q/1hhOwW1I+ow=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ph4FgErRe9S4nT5t71I8U0Ooc90zRBwDAdjPnw1alhoDN02cImxgIEvaeN5BajdrMqKvbiDZ/N5FiMnCZwQ85fDXFrZV1fbQ+4a0a0zYnBk3XX5rmEN/CyHulptntT/i233s9x/5kM/3eYzcHv9jGCiIQlKAULP+so9vtlZYavs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DB7L+g0E; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="ZsmY+OzE";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lHGhLUpZ"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfout.phl.internal (Postfix) with ESMTP id CAB27138076D;
-	Thu, 24 Apr 2025 04:48:07 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Thu, 24 Apr 2025 04:48:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1745484487;
-	 x=1745570887; bh=moUx0r6Zq8JwwGRRoRpEamtclvFlhO2+mjvAHef9WeQ=; b=
-	ZsmY+OzEb1pQg4GiC4JG4Sh5g+Ip+k6fuayHtkGVKQ+IjcAqVxY/D+FAS3CVT9FB
-	bg29pfm41Lck3qQ0nffQ9xF94B1iZA4/5xt3cwjzEo7tkMc3i+haiyiXmfPPuWLf
-	I9QHoVUY/Bhn795UHXTMVgVXG8nzaix/igvDa79xsIv++E+SWUZHpsUwmm06VBhw
-	E2SHliyjCtS7CGWkP0gEBedsT+nvNY01YWL+BSLCqKgkzdmbp9l04pOAdw0iiRgO
-	LMgJxWjdyO820kBGpJoqJuA2UnB35x1uLKDuoLpPPKsrCciLTKO5wupwYfd4MyiY
-	E48ZjxUYOxysFpM8N8tTlg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1745484487; x=1745570887; bh=moUx0r6Zq8JwwGRRoRpEamtclvFlhO2+mjv
-	AHef9WeQ=; b=lHGhLUpZQ9XRUW06rGYsOJZ+OA+9JUUWyUfWkkz2DjS0HftXE7s
-	Puk7F8F5vbVFydidVwxpmpEhnfr09aPPoQOJXcLVDpD36eZWskRdyV/MPYBPw7QU
-	IXgt9CGIk5eNG5vI5hp1BfJ+zBD6EpsCgC6z51fOVGnXZzmpLW9/DwxHaH4OId6F
-	QhaeIG9lJVAL+moq4p1G/i0J7x1X2fzRlUMfsMg57qlnnz8xyLKFQHIpSi/l4Vij
-	cVD/wLO2sQ+S9gtU2Bwh50YfPNLuJQ+9btw1HUJUqbbECMegks3lhTlbLw564bol
-	bM5rHHEt/4oA6Tv55AC2g4roroZCiT2RrJg==
-X-ME-Sender: <xms:x_oJaDotSKYiM2R2_3OoS3yD-5pJrI8bx9yPpKJRzJ9rk8LvGtoCsQ>
-    <xme:x_oJaNp5y-pgrTNpg7MxfBTkwBvTfsIc5fO_MXizIXALjBzgVAtItlU2HlP7Eb-oZ
-    qlwFI6y1jQCiw>
-X-ME-Received: <xmr:x_oJaAMWdSCNpaQpUnwW9sv5MKsuG3e3IgR2fZfNdrGQTZWjTshkHFl_cudhZbN1g7Z84lj3JH00ZnuuyfagnH8ZduTFO_ipNg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeltdefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddt
-    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
-    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
-    ggftrfgrthhtvghrnhepgfduleetfeevhfefheeiteeliefhjefhleduveetteekveettd
-    dvgeeuteefjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
-    rhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
-    dpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehs
-    ohihvghrsehirhhlrdhhuhdprhgtphhtthhopegusggrrhihshhhkhhovhesghhmrghilh
-    drtghomhdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthho
-    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
-    epughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgt
-    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
-    gtphhtthhopegrmhguqdhgfhigsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhg
-    pdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhope
-    grlhgvgigrnhguvghrrdguvghutghhvghrsegrmhgurdgtohhm
-X-ME-Proxy: <xmx:x_oJaG59SC0ie0iwmzaqx2MElZOGTcF7BgPvDNKXGsdCK7sCX-ycxg>
-    <xmx:x_oJaC4AOqptvFe75JzIIoHYAJ4tciwEHu3v3woNbQtHFavZlhfHkQ>
-    <xmx:x_oJaOgDKiZ4-XDkuT9cjxeo_C-MqFqlP0gtyAaXlUaA24pN0XO7Eg>
-    <xmx:x_oJaE6r4zv8apJtEI8fuJtpJJFQK3epsNsNk0JdcXsdfcpXpWDqdA>
-    <xmx:x_oJaBD3p2rjIbttTnFuS0qHrVsa-1zlCddRfvwQxDaC1fvlSEaINl1l>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 24 Apr 2025 04:48:05 -0400 (EDT)
-Date: Thu, 24 Apr 2025 10:48:02 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Gergo Koteles <soyer@irl.hu>
-Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
-	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>
-Subject: Re: amdgpu_dm_connector_mode_valid regression
-Message-ID: <aAn6wsnJ-6mqK4vR@mail-itl>
-References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
- <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
- <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
- <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
- <Z_jodBrNFdEpJRKA@mail-itl>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DB7L+g0E"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso6876941fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:48:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745484535; x=1746089335; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KQRA7d452oryDtFvJjN4gzdIi0T+CiF3zcn8EUThZUo=;
+        b=DB7L+g0E8n/ocHOXDvLaDw7VMLHqrc0CM2WTDAL4ZwfHtEpDLarD9elbKn3DsT5ukd
+         7MCado8Uanz7ectGCeyPsQYZLqeo4IOiKHX/igv6BIvu4w3L8I86EXieQfjdIyybA1bl
+         W7lK8GT63sZBO4+cZff7i3frbKidUMOAJOaHUAXTpKZRySXDPgdSuJbI4vjo2PUpcDTj
+         NGDoF9M4+2qxY4EsBWts9rjIooLdL9zZLsBXx2c8cdg9zvgF3jsNX3IHq0jQyPr+yHKW
+         iTpP4GTefbbB5A66FcwRh4iZqDm/arVSfbyeQLfjo2OyaaCh8VA4bDB6y4XQgW2Ldblg
+         mB+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745484535; x=1746089335;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KQRA7d452oryDtFvJjN4gzdIi0T+CiF3zcn8EUThZUo=;
+        b=Z3nyIZAvvMCtSLUpwL41HRBi3fvq2VuAg5SI99/RM+Q+5ViFUlMrA93D7P4+Eq2J5U
+         wwhY+hjquPurbAzcIHh6ICHie8qdUYHn1us0A1uiL9qJB09Od1aiDmMd4+NmqHrI6CCB
+         s0mP3BoVmJzAXY4dzZ9zsr92Ad5cub200E/c/xygJJY0nLK9FSjVuH0N5OOp6j+rmHPG
+         cqRBzr+tW4RkMYtAU6jrIlHmhGiL/PF4acQKso8KeohhqxYHWW+rCfEkQq38VclJM1C3
+         UQmzVUzCuFBN877TqTfPp8RhpXKzp5VYmfiJ3Ew5/kJtfvimpMOmI66Qxl4GhPPwqtYh
+         E50Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWIjGdhwKgDMCExxP/fyL0zlp10cDVzGway4hclKp8Wc5G0Si3bOWunig/HJI7PgR9Pqeyuw9XtrqE8eBI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5xwUsn9fk1HZkSP0jmm0L3V88FVFos0qi4uvuRkdWLrcBgyIW
+	fc/jqneCQ2S5wqKUhRXS4f9TQM9QWebsgnSiNIe3y5UIb11dhU8H6aTmkg50y5BMqhyLGy5b7EK
+	BixlqJpIdimKuMSvX6yOCG9bv8SYR8XJqiVy0Rw==
+X-Gm-Gg: ASbGncsTuLVwtE9F5/Fwfz0TG3q8Ls91R12gZtzvwFJatvyWiujafeEJZj+MbK72eS7
+	Y1M5j/1kNLY/rAUaqixBO4cKLl9Ozv7S0lPOjN4I8ErrxgVzFW5vyvRfFWK019h8ikrmPhannbv
+	EpCbjaeKGoaLr3NuPrDhVQHw==
+X-Google-Smtp-Source: AGHT+IE7By8Nl0BxiZtKTH0/jnSaFSHNwDqu5lHCKflXtrMxeoGrVVWZsRliLty3NtgjSGU/XT7xVZJZbRmvKEOyiGY=
+X-Received: by 2002:a2e:bc0a:0:b0:30d:7c12:5725 with SMTP id
+ 38308e7fff4ca-3179ffb04f8mr8038931fa.33.1745484535556; Thu, 24 Apr 2025
+ 01:48:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="0nQ5TDnVhV5gn1bQ"
-Content-Disposition: inline
-In-Reply-To: <Z_jodBrNFdEpJRKA@mail-itl>
-
-
---0nQ5TDnVhV5gn1bQ
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250422162250.436169-1-uwu@icenowy.me> <20250422162250.436169-2-uwu@icenowy.me>
+ <CACRpkdbGwPyQgVL18iMvUTAvh4XTjo6g3mGT4e_b2aNAjr2obg@mail.gmail.com>
+ <B4C8B369-E345-4133-A106-7C5E71513329@icenowy.me> <CACRpkdYgkDpC1iJ-KaZj2GZ3A3_V=3-KQef_nCRhMDrUK=FHXg@mail.gmail.com>
+ <c5efd677fd2199cbf8f9d6006905acdf19da02bc.camel@icenowy.me>
+In-Reply-To: <c5efd677fd2199cbf8f9d6006905acdf19da02bc.camel@icenowy.me>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 24 Apr 2025 10:48:44 +0200
+X-Gm-Features: ATxdqUHt-uv_Jd5XJrneHwwa9WAzFXDYu1AWIehUvUHevx0I0mgG49yxhuUvhlA
+Message-ID: <CACRpkdbmF5BucsRjGZYgT709QA_Qnd3VrDoXg9dJdtAb_QLPwA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: pinctrl: jh7110-sys: add force inputs
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
+	Hal Feng <hal.feng@starfivetech.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Apr 2025 10:48:02 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Gergo Koteles <soyer@irl.hu>
-Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
-	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Alex Hung <alex.hung@amd.com>,
-	Harry Wentland <harry.wentland@amd.com>
-Subject: Re: amdgpu_dm_connector_mode_valid regression
 
-On Fri, Apr 11, 2025 at 12:01:28PM +0200, Marek Marczykowski-G=C3=B3recki w=
-rote:
->=20
-> Hi,
->=20
-> On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
-> > Hi Dmitry,
-> >=20
-> > But the code would start to become quite untraceable.
-> > duplicate mode in amdgpu_dm_connector_mode_valid()
-> > call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
-> > duplicate mode in create_stream_for_sink()
-> > overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
-> > if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
-> > create_stream_for_sink()=20
->=20
-> FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
-> Ryzen 5 4500U). And the patch quoted below fixes it for me too.
+On Wed, Apr 23, 2025 at 4:22=E2=80=AFPM Icenowy Zheng <uwu@icenowy.me> wrot=
+e:
 
-I've re-tested it with 6.15-rc3 and the issue is still there. Is there
-something I can do to help fixing it before final 6.15 is out?
+> > So clearly the entities that you affect are in the same numberspace,
+> > and that is all we care about. They are not enumerated in any way
+> > orthogonal to any other pins AFAICT.
+>
+> They just share the field width, they're not in the same numberspace.
 
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
+OK I trust you on this, I just had to put a bit of pressure so we try
+to stay with standard bindings.
 
---0nQ5TDnVhV5gn1bQ
-Content-Type: application/pgp-signature; name=signature.asc
+> The design of the JH7110 pin mux control is quite simple and stupid:
+>
+> - First per-GPIO map configuration to map the GPIO's DOEn pin to
+> internal tri-stating signals.
+> - Then per-GPIO map configuration to map the GPIO's DOUT pin to
+> internal output signals.
+> - Then per-input-signal configuration (note that it's no longer per-
+> GPIO) map configuration to map the signal to a GPIO's DIN (or fixed
+> low/high).
 
------BEGIN PGP SIGNATURE-----
+I get it, I think.
 
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmgJ+sIACgkQ24/THMrX
-1yzQtwf/V1Kwj5a1YqzIurMPiJsNiEryIIzzNggnyRm78T9GwN33DU6aKpvdbcwH
-q4Iz18yFSH2T8suYaXLjan3o4HkwIh6shkMRJ1S+J8KRP1vinn9Olq0pDu7bCxrl
-98+lRYOQpl7n1s8Ne2Mw/z2aaUuE4rd2lKym9YrkkPhvijC7A3XeUqRSS8mkdydw
-gkx4Up1lc0hp0X1o90fc7UJYaxM231XjnT+HqVEYNsnt/8bsaj2FN09SJwsBmVTk
-481dT17Ts2ffRRAw+4lp6ecY3Y+RIbKkvC0rra+y5XFaFzd6O7hQ9MrKxqkLH4xK
-WyLBwwfno2qFjv2Y2lzONmiSwS2YGw==
-=x2tm
------END PGP SIGNATURE-----
+So if I understand correctly this set-up is necessary to use any one
+pin as a GPIO pin?
 
---0nQ5TDnVhV5gn1bQ--
+In that case, consider that this must probably be deeply integrated
+with the GPIO subsystem rather than the pin control subsystem.
+
+For example GPIO usually has this:
+
+gpio-ranges =3D <&pinctrl1 0 20 10>, <&pinctrl2 10 50 20>;
+
+Indicating which pins are actually routed as GPIO and implicitly
+contains the information you need as to which pins are
+affected.
+
+There is also
+
+gpio-reserved-ranges =3D <0 4>, <12 2>;
+
+that can be used to say certain number ranges in the GPIO
+controller can *not* be used for GPIO.
+
+This type of inferred information should ideally be used to
+infer the configuration rather than hardcoded properties.
+
+And if you have pin control as a back-end to GPIO, the
+callbacks in struct pinmux_ops:
+
+        int (*gpio_request_enable) (struct pinctrl_dev *pctldev,
+                                    struct pinctrl_gpio_range *range,
+                                    unsigned int offset);
+        void (*gpio_disable_free) (struct pinctrl_dev *pctldev,
+                                   struct pinctrl_gpio_range *range,
+                                   unsigned int offset);
+        int (*gpio_set_direction) (struct pinctrl_dev *pctldev,
+                                   struct pinctrl_gpio_range *range,
+                                   unsigned int offset,
+                                   bool input);
+
+which you could implement in jh7110_pinmux_ops to get
+a tighter connection between you pinmux and GPIO controller
+portions.
+
+I have a strong feeling that the missing piece is using these
+callbacks along with the gpio-ranges to connect the GPIO and
+pin mux systems together so that you can set this stuff up
+in the above callbacks instead.
+
+That would save you the weird DT properties that will be a real
+pain to keep in sync with the actual use.
+
+Yours,
+Linus Walleij
