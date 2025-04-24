@@ -1,67 +1,67 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE728221260;
-	Thu, 24 Apr 2025 10:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D387C22ACDC;
+	Thu, 24 Apr 2025 10:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745491126; cv=none; b=JtIDwrWvfBy8oXj+UkcY3vVQOisBi82WFHKhVZ3/Lw+IRKuImTIbprEac9lM+9DspeM2dqhCq3fiTGMBIoW9+3bzOWp8xGdVfZjZbr/qhdAXDd37ZzxgfvnBMuR7nkANEgTsJgCd5h8lRMsQi2aj9Iz0ahvSFRuEZ5lUVM0La2g=
+	t=1745491127; cv=none; b=JKgWpJYYyeMpufOUdEcHI51FtCxH1iNapn5wT5IqfBTZuaDYTU2Ws1xdYHEDqsh3CuRvrn2Q1NZIXvhRDE8Rpo3hGBwYg2DQ1sXLxwCfSaGoi1MaLIWIkpYP4xOGvbZS0ZprY+bpdkj7oU2ecBG9KTKAqky3RK8Z3Ne7JiHhXic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745491126; c=relaxed/simple;
-	bh=EcgjYzcNAdicxTJFoLYwwyNYeIc6l/+cClMgQZ8ucjE=;
+	s=arc-20240116; t=1745491127; c=relaxed/simple;
+	bh=9z8l/dFEhuQOiIab2nWRpzikEglc8VJiThpKHkuXvN4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CnlCnhZV42zLP5Bujxeq1VeapsJSPmd4IUGYlkN53zJpbhxlpU+fJgXG89WsBRdU1iZ6kAJizWfvkN5/zoz7l1fvtqmmn+2Gax9Uoui/s6V4UlPxO/d4UaVLFc/InMwrHvXzC9LmV9mDr2s+slZNYKr2gc+EGzRlfRdJnIBJj84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SiOgBvph; arc=none smtp.client-ip=209.85.219.52
+	 In-Reply-To:To:Cc; b=QaXtDLGolUJQYYYepG9n6/0yoFsJXxYKdeokTuZNdFetx2NlL4ocWgixPcDGeiGf1Rp/i1oeP144CG/UPIw7sMt/3OEnoXYfMsOzZQiAyAj3atQDO68sO21LydQM+RD6l8xiBYrCqUwadZEnkW4I/Bnwyuj67OabHKVHBeYY9eU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XKcTSeuF; arc=none smtp.client-ip=209.85.219.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SiOgBvph"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8f254b875so9359586d6.1;
-        Thu, 24 Apr 2025 03:38:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XKcTSeuF"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6eeb7589db4so13563416d6.1;
+        Thu, 24 Apr 2025 03:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745491122; x=1746095922; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745491124; x=1746095924; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2YfkggDtpS/kJF+/fc2cefmXFqbpg0MphTpGixawO1o=;
-        b=SiOgBvphB2rKSeiZmt15ApwRFBwAxInmkrbXnK7CeNXx+wvX4qmFNMyZ0BVBp1ww7v
-         gkx/P8SrV195DpAw6g1KjvQXYNtGJXHKhp6d4IrMnPyspWGyMlpBOcmwyM0i2lIWFbvy
-         HOKCUL3towH4WFPFY+MhvqNyM2MF8Lg+KJeSEm9kPkGkkSajGXPbZLexIpSKl9KoC5uu
-         FY+eJfysmONiEq50rd6Wv+MLBedqnsTCdR2JNYVpicTTiYUx/93x6cSepDA7VW8dBjf2
-         zKsbPaCv5NqcU5ZChPa+QWAFtri0tLHMY4/hatismorqx95dXVINTvAUilM9KkdDZCIo
-         iFEQ==
+        bh=HuzymJ9n0BC+qMvDBmG7AY9Go4UpM0QvCNINZtBLgXw=;
+        b=XKcTSeuFbmUcg7WsBHtoqdNn3seA8FsfB44dWbkuYGfnK1p7rWBw1Arsd3K0Mm52JI
+         dDZh6YXuTuS9/iIq81eGxk0v0SIiMPg+KW0vuoxSfcUwa72SBnURmRDq04BgXLhtI+Ce
+         qhLx6+g2a8nXdsbtv2VAemCqH1uqL2RdMls5i9lqHTH8Arwp6AN9GyLDaVrnR3C5Z4/W
+         6ax9uSCSVW4SixvbXbks+0Qw7w9Get7fnZuxykIiKzryIF7w18mr4FCz8aT/MKyj1i94
+         8FvCFqnXBSvgNGuGSHLaGXUAkKuI21RFj5n93aHwmv6u8mZVO0/MW1ZSb98Y3lbXUGDg
+         r2FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745491122; x=1746095922;
+        d=1e100.net; s=20230601; t=1745491124; x=1746095924;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2YfkggDtpS/kJF+/fc2cefmXFqbpg0MphTpGixawO1o=;
-        b=UMNg2MmJom3YAxpwp29PhyRF0+NEMQsjzr4N87uLwdCJY7L3GY80zSVclhHk+xHqY8
-         AQ3SoD7Tl7Skp2ykGROb5rSMLk8Gf897RCItND6ajAtHwjRPQWzURI0DLV8e2Qn3aG5n
-         HsJnn67N/qxzRBZJU7crOK64MbAOaxnBhRgKm3NEZr1yXr44tge5qGx9GES2pgN6dwH3
-         u2dEpL34kjUPukMN49GKAa3baQYzNVA/ADTuFxy7SxFVq0iKWWbj3YAKjxvliq0Jzhx3
-         lLvCe2rT7EsYohmAONJV8auNEhN03na0xXDixese29LttKPu7nJH5kKWZRvYxzhSJuDc
-         18Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUpmrkulWZ24FIlFmWraBqTVZZAcvxN8S6LYomBStqbC6u5T+05BblByCDJTvQ3e2gOTRJo99Q9QUEBi9k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwIBfHdUq4eDtuUIkomeEUsuh59xZQ1CGWmwL0lkLwmN2fktqA
-	Ms2Yt2Jsrrg74T4mhtWB7dfyxyzbH7LGNmvu8HGun4AAV62QMktZ
-X-Gm-Gg: ASbGncustABZfS+/btlIkQGHjIi7zjQqXa1xgcp5VXdUQfMbsa1G8UTCkhN0/d+Rc1p
-	jl3uWulWma3KSJyNodcPYCwfxE4BGjtSWUpwqow4fkfkhe5ed+eIwrZ/a/PG11HkHqYffo2db8n
-	zJXcSFwR5OINp2vhCeuNhQP1FWijb/lMTBuK2/ZPg9nUDiDEqk80M4dNOi9K5xVJgsBVvyL5Cjr
-	ZEibsNojMhY0z6YJUA37DTWWnHR2vKUbxV+MLD5s5pbdiD35SJSxxcM3k2pEphRP5NMignWjvy0
-	E7q+knTG+DK2+2iQqqenSmXQXaQ7l+pPIDTvSZxwfCsGiXyJO6lkvkMBpLorudUXcZA4l9O0AIF
-	SRK8=
-X-Google-Smtp-Source: AGHT+IF79EH0ohCsuNjsnRVdasXaVGugAor47aN7eBTvmzPTDhsInoRRkA5UwfX1gmZYyS5/94u56Q==
-X-Received: by 2002:ad4:4eea:0:b0:6e8:ebfa:42f9 with SMTP id 6a1803df08f44-6f4bfbe0984mr39360816d6.16.1745491122489;
-        Thu, 24 Apr 2025 03:38:42 -0700 (PDT)
+        bh=HuzymJ9n0BC+qMvDBmG7AY9Go4UpM0QvCNINZtBLgXw=;
+        b=OCcUlFADlhpR3bouMvoOd/t2xGoLcmyLdJor8GxCWINBds+ZUQRN30KcL7F9qDnNRu
+         e2cH+ogWrsIJV/4opItNs2gudVi7ovUG7vIPEGnSfmQcH71VMhQrQ1JWIkSXO/xZxW8W
+         riyxiOZpwqtEV2IO07iYS2WXMhLOKmbr0UGtJ1KmDNzyGgNPmHWDP+p4utt+kcfv6/no
+         Adqegh4a1eG7KVVpODMQNmktTZFaEiubggodKoM7pyyt/eDQ/HqpcWYwv5M6rpm9NiZz
+         rB6+0pseD4H3/qfZonZUXH3xty1EfUr6V6nb05orm7i0teK9gKKA+IF4krQyt/Q3pL1f
+         DfRw==
+X-Forwarded-Encrypted: i=1; AJvYcCWf9x4tXJU7N9L3F18skMxgxoYPoTunC/9oQhsA8J/G3/xs8UsNg29MerB3p4eqEsDTimFwGmuXciK/uqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz10okaUt9pAsOycnoomYAGKg+fMlSuOmwn0LI6aCHte88TcORx
+	pRmqoO5TNDIc7XRE2U3n5gLcf7ooUyZ69VLg0ZeLqLOlA2FxIyag
+X-Gm-Gg: ASbGncuZ8y5r0Q07AVINbKEXysEci4UHfFPXF8aEOdiSzbg40rXq/81BWilQT85Y7qz
+	YkCTBfd63wFTUAoSxiZfFlTpAnz/5loOZtjKI/gC9NNcCkhdPk880ocQgt8U+GSXUsCMRSmxu/Z
+	QExps1W8pcpGQ/AHjf9DNX6pRN9RFIwaRmRxKKTsQHdk181s0Q4s8fRIiuGbTa5X7mn5e/GGxRy
+	95RqBWEw5NI8HT/WI/SqFNr9RgBcw/07RKXaqpoYiOarzFg7tsKLEO/spVHVUxjt7nkF4izM1iP
+	Uq3ixmO8OVeLH7plOW61tFGxs0imAUx9UcZWKY1AfkVAzdDk3aUsmoF/Z01jXC6wbAdo+21K+ze
+	N1J8=
+X-Google-Smtp-Source: AGHT+IEMGKsBLUAJF3t0OlabtV2yGV38LocH7XfPYD7+JltokkDcvLkPrBeYEs0c0gT8d12CVYJtDQ==
+X-Received: by 2002:a05:6214:1d26:b0:6ec:f51f:30e9 with SMTP id 6a1803df08f44-6f4bfbc3f00mr34261376d6.4.1745491123607;
+        Thu, 24 Apr 2025 03:38:43 -0700 (PDT)
 Received: from [192.168.1.159] ([2600:4041:5be7:7c00:4047:3830:186a:1bb1])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0a73b63sm7839096d6.70.2025.04.24.03.38.41
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0a73b63sm7839096d6.70.2025.04.24.03.38.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 03:38:42 -0700 (PDT)
+        Thu, 24 Apr 2025 03:38:43 -0700 (PDT)
 From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 24 Apr 2025 06:38:29 -0400
-Subject: [PATCH v6 01/13] scripts: generate_rust_analyzer.py: add missing
- whitespace
+Date: Thu, 24 Apr 2025 06:38:30 -0400
+Subject: [PATCH v6 02/13] scripts: generate_rust_analyzer.py: use double
+ quotes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-rust-analyzer-host-v6-1-40e67fe5c38a@gmail.com>
+Message-Id: <20250424-rust-analyzer-host-v6-2-40e67fe5c38a@gmail.com>
 References: <20250424-rust-analyzer-host-v6-0-40e67fe5c38a@gmail.com>
 In-Reply-To: <20250424-rust-analyzer-host-v6-0-40e67fe5c38a@gmail.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -87,53 +87,34 @@ Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
  Daniel Almeida <daniel.almeida@collabora.com>
 X-Mailer: b4 0.15-dev
 
-Add a space before the `/` operator for consistency with surrounding
-code and code formatting tools. Add a second newline between top-level
-items in accordance with PEP 8[1]:
-
-> Surround top-level function and class definitions with two blank
-lines.
+Replace inconsistent use of single quotes with double quotes.
 
 This change was made by a code formatting tool.
 
-Link: https://peps.python.org/pep-0008/ [1]
 Reviewed-by: Fiona Behrens <me@kloenk.dev>
 Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
 Reviewed-by: Trevor Gross <tmgross@umich.edu>
 Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 ---
- scripts/generate_rust_analyzer.py | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ scripts/generate_rust_analyzer.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/scripts/generate_rust_analyzer.py b/scripts/generate_rust_analyzer.py
-index fe663dd0c43b..f66c74dd4e8d 100755
+index f66c74dd4e8d..c473e7a2d6f4 100755
 --- a/scripts/generate_rust_analyzer.py
 +++ b/scripts/generate_rust_analyzer.py
-@@ -124,7 +124,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
-     ):
-         append_crate(
-             display_name,
--            srctree / "rust"/ display_name / "lib.rs",
-+            srctree / "rust" / display_name / "lib.rs",
-             deps,
-             cfg=cfg,
-         )
-@@ -173,6 +173,7 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
+@@ -176,8 +176,8 @@ def generate_crates(srctree, objtree, sysroot_src, external_src, cfgs):
  
-     return crates
- 
-+
  def main():
      parser = argparse.ArgumentParser()
-     parser.add_argument('--verbose', '-v', action='store_true')
-@@ -199,5 +200,6 @@ def main():
- 
-     json.dump(rust_project, sys.stdout, sort_keys=True, indent=4)
- 
-+
- if __name__ == "__main__":
-     main()
+-    parser.add_argument('--verbose', '-v', action='store_true')
+-    parser.add_argument('--cfgs', action='append', default=[])
++    parser.add_argument("--verbose", "-v", action="store_true")
++    parser.add_argument("--cfgs", action="append", default=[])
+     parser.add_argument("srctree", type=pathlib.Path)
+     parser.add_argument("objtree", type=pathlib.Path)
+     parser.add_argument("sysroot", type=pathlib.Path)
 
 -- 
 2.49.0
