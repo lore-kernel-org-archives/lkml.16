@@ -1,217 +1,115 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4892701C1;
-	Thu, 24 Apr 2025 15:07:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C872701C1;
+	Thu, 24 Apr 2025 15:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745507263; cv=none; b=DEP5A10pcKuJkOzQYC+LPdRaHe1C9CP8SV7RY2aV2rxmaQQwouJxYpW9XKtpaj7G4krmeZksFY+Nan5HAoMPKIxm4YT+WR4rbSs4rEodvDVp5wvs9Ei8fmcbqr03QSheBwPmqzFgj0P7KDJHT2JPKPFSjvpf5z0kIZxpNb/uiYI=
+	t=1745507272; cv=none; b=Kew2/rDFnE0u7GAZYhaU1n8VKnyysAsB1ZM88z9Z0qxxxOLP7JWTf/Vqc1UBapjZVcHTVv7GkKj9L7CDAxEIvoF0ot7fJiXCXeHrM59EHz4Jks6neLLbOHgOzvHRaVLz0SL5Wvj4hsDELOMh0eU3S1wDbZszbIjTwg9DaRBYAsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745507263; c=relaxed/simple;
-	bh=xk2GRBY750TwszttNFyXLeYPgO0ZG5/i9N1Bc2Z1fGw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=BnadKRi9dsaD8N3cMFaaR5gjvH0bBGu4BJ9z1EzUKyE/4vLL3hu90C4huNk5mMj5xYb1ZFpXVy6Ehky4pkFX6Ue0jt/e1TtVPYyTfiI/SPhZA2tTqyPODKNKbvaiYMaA2lpPDA/VsFirXOs6V8U0Cq7gJMPc8LCkMITW3fNxpuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=Ftx1BgOa; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1745507272; c=relaxed/simple;
+	bh=C2EZ1apAndk3/v0vmgQAhEZ5P5qimA9TdHfeO5X9suY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l2tyh0kU2Ig09IqZ/wffaXO5U35OKHhPdqYHVdoPhRLsGO4igldtuZpwx1ZLESQz7BM9MM9iCO+s1sCwd08VuWc9Y+80LZvIOJcdKmqDsHQLBmGPSuhGsk34OHHwRGPh5v6h01aK1O5HMTVMrHAe7sGuQzN/4GLaxVLhgpSqTQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSuoc2CC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="Ftx1BgOa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=A5e4j/jtYATU7avKCEo1DM3FNXJct3asQ+rGyfJl/tU=;
-	t=1745507262; x=1746716862; b=Ftx1BgOah57YvQ7mgk/YaZqPTiZXqXDGhm79Ei/RFAW87px
-	sMGikKE6ZyW2sKVDYTaTeqsl/WWE59OWXUrzpA+L5Le+rrlXUYjflaYF08h01utjlNAfTQa3G1KZl
-	tqXFqCDQPhutp8ZWk9aLVphHSliBKkZ2TK+1veA15K8JpbROru4Ve3KH8YJVu3/U1ry7fERvcGlZb
-	+JWrqZI6lHxYel/6W9WOt0razm3E4crPaeA+sve0Z+ONC52O2658O73lB25VsOoY7WYzzAreEo5e7
-	QPDTyGbf1PQqcNiSr/5PAGwgr4ZzMJZcOoviBlhgJ6lOBi+i766zUp6vK8mRxH6A==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1u7yAt-0000000HPbn-0WT1;
-	Thu, 24 Apr 2025 17:07:39 +0200
-Message-ID: <45b74f9f0831294e783a019cd6a1437fdad4eb6a.camel@sipsolutions.net>
-Subject: Re: [RFC PATCH v2 2/2] wifi: Add Nordic nRF70 series Wi-Fi driver
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Artur Rojek <artur@conclusive.pl>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski
-	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Liam Girdwood
-	 <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sascha Hauer
-	 <s.hauer@pengutronix.de>
-Cc: linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jakub Klama <jakub@conclusive.pl>, Wojciech
- Kloska	 <wojciech@conclusive.pl>, Ulf Axelsson <ulf.axelsson@nordicsemi.no>
-Date: Thu, 24 Apr 2025 17:07:38 +0200
-In-Reply-To: <20250422175918.585022-3-artur@conclusive.pl>
-References: <20250422175918.585022-1-artur@conclusive.pl>
-	 <20250422175918.585022-3-artur@conclusive.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSuoc2CC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9072C4CEEE;
+	Thu, 24 Apr 2025 15:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745507271;
+	bh=C2EZ1apAndk3/v0vmgQAhEZ5P5qimA9TdHfeO5X9suY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sSuoc2CCIv7YZ24pPXJFesLUJibGNO4r4KltBKGt4WicyIsIytf0Y29fvXDcEV1Ur
+	 XrBICWdnMEPKqZiKHoWEOl2aWpbg3OsUrn76JIRXdAKrbuhImEzxL7O+S471CDtszy
+	 /7kU4efIJN46IOk7M4SDaMwL8+YXOs/tdmb6yjOP6b1rOmXvsX7qJdiMWcFcu1EX4/
+	 uUXR1tWRWr/0mf8emQhFYU7EIHlxbDoZhl/v1zRYBMM02vW+wkXWa0HKQcg6c4YoHe
+	 vR/LyQO78DiGEPHMP9z40cMJ6CvsxUS9/Uq/P8fYiCe9bsbD8qNCW2yz4ARPwzH6II
+	 5wnb/TGVgbU5g==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5deb6482cso4155382a12.1;
+        Thu, 24 Apr 2025 08:07:51 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWSxh4VKVRJIQWYiMhcrzczOzI4c6cz9WVkX9EDhp4XKBU8v8jQveplpTbeAQ1wtrLEyBHKGOKKhZoqtXbP@vger.kernel.org, AJvYcCWqbzeHAPXM2l+tRCnqdplHXCFtTh9eVjfGKHBkbsspfzX/FFNlmL/IIQEfdIbrDfjjMza+W90WDStl@vger.kernel.org, AJvYcCWyAXCU/ZztuPlkoUqm1Kiatzq62VOWLo07BAz+ZJbWrC6mAy18HJ/iXAwscpozb4d7HDor+ZszvnjQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9jsLDMOmpnbL9GFO9Hx17bffDcRPIllxfj76zec+uc7X8COPI
+	KAqBEpy9ssWYQri1IERxk2In3KBbqyJbfJZkFoNzvdUPONHd2UM94j/XcwoPd1SN2BsPVYy+JNC
+	OxHEgHZCC9fLAWP3zlK9I+PrbHw==
+X-Google-Smtp-Source: AGHT+IFhdMzyhzAig9c3GEzCIGFQQOuVXL3nlcgWG+8YQAheYOsb+jucq+ZoRkeYL8tN2ih3I3/l6YbuF0ROow8cHbw=
+X-Received: by 2002:a05:6402:210d:b0:5e0:6332:9af0 with SMTP id
+ 4fb4d7f45d1cf-5f6ef1f8249mr2720700a12.14.1745507270130; Thu, 24 Apr 2025
+ 08:07:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+References: <20250411103656.2740517-1-hans.zhang@cixtech.com>
+ <20250411103656.2740517-6-hans.zhang@cixtech.com> <20250411202420.GA3793660-robh@kernel.org>
+ <CH2PPF4D26F8E1C8ABE8B2902E5775F594FA2B32@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+ <CAL_JsqLNteS0m_32HuCjY8Mk9Wf+z6=HBpM7Wv=zLVqNs-7Y1Q@mail.gmail.com> <CH2PPF4D26F8E1C6C03FA2110C5AF9045F7A2852@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+In-Reply-To: <CH2PPF4D26F8E1C6C03FA2110C5AF9045F7A2852@CH2PPF4D26F8E1C.namprd07.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 24 Apr 2025 10:07:38 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJgaeOcnUzw+rUF2yO4hQYCdZYssjxHzrDvvHGJimrASA@mail.gmail.com>
+X-Gm-Features: ATxdqUG31eOi_waVP5NwjBplcNZWHhFFniBtiZHxRDCwGY3iPVWCvE4bH0E69wc
+Message-ID: <CAL_JsqJgaeOcnUzw+rUF2yO4hQYCdZYssjxHzrDvvHGJimrASA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/6] PCI: cadence: Add callback functions for RP and EP controller
+To: Manikandan Karunakaran Pillai <mpillai@cadence.com>
+Cc: "hans.zhang@cixtech.com" <hans.zhang@cixtech.com>, "bhelgaas@google.com" <bhelgaas@google.com>, 
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com" <kw@linux.com>, 
+	"manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>, 
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-04-22 at 19:59 +0200, Artur Rojek wrote:
-> Introduce support for Nordic Semiconductor nRF70 series wireless
-> companion IC.
-
-Seems simple enough ... but I notice you're not even adding a
-MAINTAINERS file entry. Does that mean you're not going to stick around
-to maintain it at all? I'm definitely _not_ going to. Please don't
-expect the community to.
-
-Are you doing this for your customers? Or are you just doing this a
-contract for someone who needs it? I don't really care all that much but
-contracts have a tendency to go away and then we're left with nothing
-upstream ...
-
-Also, related, what are your plans to help out with wireless in general,
-particularly reviews? You're building on the shoulders of everyone who
-did work before ... I'll do a _very_ cursory review, but if you want to
-get this merged I would expect you to also become a part of the
-community and help review other people's code:
-
-https://lore.kernel.org/linux-wireless/21896d2788b8bc6c7fcb534cd43e75671a57=
-f494.camel@sipsolutions.net/
-
-> +config NRF70
-> +	tristate "Nordic Semiconductor nRF70 series wireless companion IC"
-> +	depends on CFG80211 && INET && SPI_MEM && CPU_LITTLE_ENDIAN
-
-That CPU_LITTLE_ENDIAN seems like a cop-out. Do we really want that?
-Asking not specifically you I guess...
-
-
-> +#define	NRF70_RADIOTAP_PRESENT_FIELDS				\
-> +	cpu_to_le32((1 << IEEE80211_RADIOTAP_RATE) |		\
-> +		    (1 << IEEE80211_RADIOTAP_CHANNEL) |		\
-> +		    (1 << IEEE80211_RADIOTAP_DBM_ANTSIGNAL))
-
-You did some work on making it little endian properly ..
-
-
-> +
-> +#define	NRF70_FW_FEATURE_RAW_MODE	BIT(3)
-> +struct __packed nrf70_fw_header {
-> +	u32 signature;
-> +	u32 num_images;
-> +	u32 version;
-> +	u32 feature_flags;
-> +	u32 length;
-> +	u8 hash[NRF70_FW_HASH_LEN];
-> +	u8 data[];
-> +};
-> +
-> +struct __packed nrf70_fw_img {
-> +	u32 type;
-> +	u32 length;
-> +	u8 data[];
-> +};
-
-making the u32's here __le32's (and fixing sparse) would probably go a
-long way of making it endian clean. The __packed is also placed oddly.
-
-> +static int nrf70_verify_firmware(struct device *dev,
-> +				 const struct nrf70_fw_header *fw)
-
-
-What's the point in doing this? The hash is trivially adjusted if
-someone wants to play with the file, if hw doesn't check anything, and
-... not sure we really need such a thing for "file is corrupt by
-accident"? *shrug*
-
-> +	ret =3D request_firmware(&firmware, "nrf70.bin", dev);
-
-
-You might want to make that async so that the driver can be built-in
-without requiring the firmware to also be built-in.
-
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to request firmware: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	header =3D (const struct nrf70_fw_header *)firmware->data;
-
-(const void *) cast would probably be sufficient
-
-
-> +	return ret ? ret : (wait_for_completion_timeout(&priv->init_done, HZ) ?
-> +			    0 : -ETIMEDOUT);
-
-that construct seems a bit questionable :)
-
-
-> +static void nrf70_handle_rx_mgmt(struct spi_mem *mem,
-> +				 struct nrf70_event_mlme *ev)
-> +{
-> +	struct nrf70_priv *priv =3D spi_mem_get_drvdata(mem);
-> +	struct nrf70_vif *vif =3D nrf70_get_vif(priv, ev->header.idx.wdev_id);
-> +
-> +	if (IS_ERR(vif))
-> +		return;
-> +
-> +	(void)cfg80211_rx_mgmt(&vif->wdev, ev->frequency, ev->rx_signal_dbm,
-> +			       ev->frame.data, ev->frame.len, ev->wifi_flags);
-
-
-shouldn't need the (void) cast?
-
-
-> +static int nrf70_change_bss(struct wiphy *wiphy, struct net_device *ndev=
+On Wed, Apr 23, 2025 at 10:54=E2=80=AFPM Manikandan Karunakaran Pillai
+<mpillai@cadence.com> wrote:
+>
+> >> >What exactly is shared between these 2 implementations. Link handling=
 ,
-> +			    struct bss_parameters *params)
+> >> >config space accesses, address translation, and host init are all
+> >> >different. What's left to share? MSIs (if not passed thru) and
+> >> >interrupts? I think it's questionable that this be the same driver.
+> >> >
+> >> The address of both these have changed as the controller architecture =
+has
+> >> changed. In the event these driver have to be same driver, there will =
+lot of
+> >> sprinkled "if(is_hpa)" and that was already rejected in earlier versio=
+n of
+> >code.
+> >
+> >I'm saying they should *not* be the same driver because you don't
+> >share hardly anything. Again, what is really common here?
+>
+> The architecture of the PCie controller is next generation but the softwa=
+re flow
+> and functions are almost same. The addresses of the registers accessed fo=
+r the
+> newly added functions have changed and to ensure that we reduce "if(is_hp=
+a)"
+> checks, the ops method was adopted as in other existing drivers.
 
+Please listen when I say we do not want the ops method used in other
+drivers. That's called a midlayer and is an anti-pattern. Here's some
+background reading for you:
 
-See also this discussion:
-https://lore.kernel.org/linux-wireless/29fa5ea7f4cc177bed823ec3489d610e1d69=
-a08f.camel@sipsolutions.net/
+https://lwn.net/Articles/708891/
+https://blog.ffwll.ch/2016/12/midlayers-once-more-with-feeling.html
 
-> +static int nrf70_dequeue_umac_event(struct spi_mem *mem, void *data)
-> +{
-> +	struct nrf70_priv *priv =3D spi_mem_get_drvdata(mem);
-> +	struct device *dev =3D &mem->spi->dev;
-> +	struct nrf70_umac_header *header =3D data;
-> +	struct nrf70_vif *vif =3D nrf70_get_vif(priv, header->idx.wdev_id);
-> +	struct cfg80211_scan_info scan_info =3D { .aborted =3D true };
-> +
-> +	if (IS_ERR(vif))
-> +		return PTR_ERR(vif);
-> +
-> +	switch (header->id) {
-> +	case NRF70_UMAC_EVENT_TRIGGER_SCAN_START:
-> +		break;
+So what are you supposed to do with the common parts? Make them a
+library that each driver can call into as I already suggested. If you
+want an example, see SDHCI drivers and library (sdhci.c). Actually,
+the current Cadence support is also an example of this. It's 2
+different drivers (pcie-cadence-plat.c and pci-j721e.c) with a library
+of functions (pcie-cadence.c). We probably had this same discussion
+when all that was upstreamed. Sigh.
 
+Now, where there should be more ops is in struct pci_host_bridge for
+things like link state and PERST# control. Then the PCI core could
+manage the link state and drivers only have to provide
+start/stop/status.
 
-This sounds like you pretty much built the firmware for cfg80211 ;-)
-
-
-> +#define	NRF70_MSG_SYSTEM		0
-> +#define	NRF70_MSG_DATA			2
-> +#define	NRF70_MSG_UMAC			3
-> +
-> +struct __packed nrf70_msg {
-> +	u32 len;
-> +	u32 resubmit;
-> +	u32 type;
-> +	u8 data[];
-
-
-similar comments here throughout this entire file wrt __packed and
-__le32, obviously
-
-> +/* Undocumented PHY configuration parameters. */
->=20
-
-haha :)
-
-
-Oh and before I forget, how about firmware availability?
-
-johannes
+Rob
