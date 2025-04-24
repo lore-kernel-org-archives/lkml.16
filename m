@@ -1,225 +1,144 @@
-Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80EF427FD46;
-	Thu, 24 Apr 2025 23:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1A177111
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745538300; cv=none; b=bR489wM6O6Vatpr9ptSDeqnv8rzM0AStwXs4/TeOgwLY9+6rrqAbhgdIsB0DNE0czUOadtUk1/rY4VwmuohyD6EG0tcuy1pw9MhlLPAHl2xTwhB/joA8WgP2uAmu/rTqmK1NUMQvZSpjQ+eId634Xl+euzKy3homWwtm8XQ2cDo=
+	t=1745538350; cv=none; b=qOtesFKwZwp8oMQQ8yCa9jmEFZ4kIRKDZ5IuyyTLZyHb4EOpiZlifz1gXH++lVnL4ETmZ/F4io4Ggfq2XEYkqy8A/38vF7rVvfByjr8UjBnDD5s3ROXHozUKVh0Guhq6mCDLcqyut+iYb3BJy0IRhIJYQE4tcKdCGnYgRbaAqrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745538300; c=relaxed/simple;
-	bh=lun9oItj3a6mtNiZ2QrHlZ/USbxg+pQvtAnM5YQEJEg=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=B+rLQDPoVUDpWf6UqE1OGRderQS8GTqflcyNacx0gTikhEZ+02qbYEx9+RjwumCF+pPsIT20STvPaEipxM4sF3U7vXD17blneKNSXKoiooKkZU0Oub95ySU7jiP5yV04rt9UgGcsCXiX/8rL38RTFRaCMPGCe25pOdM2gTNTkWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=pSAz60SO; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ldCu1f0G; arc=none smtp.client-ip=202.12.124.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
+	s=arc-20240116; t=1745538350; c=relaxed/simple;
+	bh=ofmEoSMhKo06h+U5NhGAMej5n5ubYDTAlHp5FYY78RQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=X/RmA8Sie52NfUIqiGzjqwGJFUUcVq1sOxK4jab7oyXVpdkDZhu7m2HIngoQRII2snwC4jxmHL24s+kLp9GvRr26GTgY1ECth9q2lhdE/xT7qdCI+KJFR+YUXRg6LC0BPCfSXsnMZGi55TQNtu9XO6je4GiXyGyrMv/MUSFSQlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ksov6oMn; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="pSAz60SO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ldCu1f0G"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfout.stl.internal (Postfix) with ESMTP id 24C8111401D4;
-	Thu, 24 Apr 2025 19:44:55 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-04.internal (MEProxy); Thu, 24 Apr 2025 19:44:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
-	 h=cc:cc:content-id:content-transfer-encoding:content-type
-	:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to; s=fm1; t=1745538294; x=1745624694; bh=o9S0MIYd6tAo0RWuuqQx3
-	og4VdbgUeUIGxHVINE1dCg=; b=pSAz60SOOJuuVLuxdr7yb2lzD0l0sPjVIgNfX
-	q5TtnpwAu1IkRglvW0h0SNppRSwq/ONY/E+JwjZ7LVFzcvE/ObauGxPoH5N7IGm4
-	XHM1k+IkY/Vl5cmT2/XZQSdCPkgx79Bb730EguoY0oDA7wQYSFTAQ9a81wwnNcTv
-	3f8ZQOEdLKdYLEJCqtj63BMXmpMXoebBvQMq8ULcDLhIfqy7QcGmsQXE1HMjdupB
-	+vCv/QsU1qayEBUjG4lMPS345wsJnpvnnYX4Pd4wVv2ClU8COhA+c0ra24M8Hmx9
-	YWRrLfNXWeKiAYJUSzF3hQiEuoT0SF0pvJ4rFF1PzNXNDLbJQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-id
-	:content-transfer-encoding:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1745538294; x=1745624694; bh=o9S0MIYd6tAo0RWuuqQx3og4VdbgUeUIGxH
-	VINE1dCg=; b=ldCu1f0GLfRQ+oizklWLsEZlOfv0NCKTVhXuF5mtujF5FyGvoBW
-	FK0mxtNTAm1VDpIZgrOFQc5kpleXrth53r1VnVAJt0CIsezIXEKdRFZtHb211ul2
-	A+EbGzo2KNoY/XnCygW7JT1BM7MA+PnOizXmxREtfy4KBi56qSMh27Fy79YChkgp
-	AM0ABSkPX4djULxz7N2sU0d8TTrT9Kxo3dZzmqEqPutKiIMrXdJpbq4WVPQuVEs7
-	HW/6EtcXI1gCSDj/+4LOgCKV9z1dWqAsFN/Ezp4+xF8tr5vybkU3LBncp/Fda1am
-	bwMuIjvYFOPu0cNnGEs9taDVhAhamSoBasQ==
-X-ME-Sender: <xms:9swKaB0LPIaR7dnnhmKIEirbeCXJWsXCXZu1UkZsly8r0KpQiTjwcQ>
-    <xme:9swKaIHlPsadw9mWCQ8SN8XWXKJHq74ISfP-oKoNGSpucXAIlL5bOhSlXkWy-5gKL
-    Sbp7gwlEYeQ1-UuYxs>
-X-ME-Received: <xmr:9swKaB72RVMcMERQ_zRQGDaqatS1VDY7tmcsvgBy4FhHFDS5LLUjoZMzm2HNVJoCzrmYGQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedtkeduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhephffvvefujghfofggtgfgfffksehtqhertder
-    tddvnecuhfhrohhmpeflrgihucggohhssghurhhghhcuoehjvhesjhhvohhssghurhhghh
-    drnhgvtheqnecuggftrfgrthhtvghrnhepieefvdelfeeljeevtefhfeeiudeuiedvfeei
-    veelffduvdevfedtheffffetfeffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepjhhvsehjvhhoshgsuhhrghhhrdhnvghtpdhnsggprhgtphht
-    thhopeduuddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprhgriihorhessghlrg
-    gtkhifrghllhdrohhrghdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhn
-    vghtpdhrtghpthhtoheplhhiuhhhrghnghgsihhnsehgmhgrihhlrdgtohhmpdhrtghpth
-    htohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehhohhrmhhs
-    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpd
-    hrtghpthhtoheprghnughrvgifodhnvghtuggvvheslhhunhhnrdgthhdprhgtphhtthho
-    pegtrhgrthhiuhesnhhvihguihgrrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvg
-    guhhgrthdrtghomh
-X-ME-Proxy: <xmx:9swKaO0qdHztAVpXS07MWlk0XaV0l6g-E6CySBWR5cMG5aHt3GKPcw>
-    <xmx:9swKaEH5xrDSyjmAK7DMl7HDGJF8SFUYIgDaDg8P2Nj2WRt7ix6lmw>
-    <xmx:9swKaP8ie6-zlLMX9hV-_WQ6_D8ECtrRP85QlLU6XSMxvBVn7y1Yyg>
-    <xmx:9swKaBmSkDAe-554tXvxDqVYfWvAnMH8TnMmxscIzqGcDC4VqPiZQA>
-    <xmx:9swKaJQ_zHmdjLHBZsxgeXowMqBhJ9yojvzZtwb_9OcJVunFzd3FoRcC>
-Feedback-ID: i53714940:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 24 Apr 2025 19:44:53 -0400 (EDT)
-Received: by famine.localdomain (Postfix, from userid 1000)
-	id D0C839FD42; Thu, 24 Apr 2025 16:44:52 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-	by famine.localdomain (Postfix) with ESMTP id CFA3A9FC3F;
-	Thu, 24 Apr 2025 16:44:52 -0700 (PDT)
-From: Jay Vosburgh <jv@jvosburgh.net>
-To: Hangbin Liu <liuhangbin@gmail.com>
-cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>,
-    Nikolay Aleksandrov <razor@blackwall.org>,
-    Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 net] bonding: assign random address if device address is
- same as bond
-In-reply-to: <20250424042238.618289-1-liuhangbin@gmail.com>
-References: <20250424042238.618289-1-liuhangbin@gmail.com>
-Comments: In-reply-to Hangbin Liu <liuhangbin@gmail.com>
-   message dated "Thu, 24 Apr 2025 04:22:38 -0000."
-X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ksov6oMn"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OJmfBm001749
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:45:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=KyqYKtxradzfRqDlkOHzNZ
+	aH2YGpNBHk4kCUBoruzdw=; b=Ksov6oMngp7mBuyBNIetidXOKmDHlIIrl/seov
+	W6UfRrVwAbnoKMacer9pPdcdi3RxjMrhuz8X6BdO6EAqNN1N/2vDt7jjfs8dT2VJ
+	JHj9Ptxgv9Ui2TO7CoDQWxUgO2P0w6VV8NA+3p4EK8KmAIrtM1l0v5OJ9OCHp35r
+	RxOZIiq+kRmnqY/BDKhLEoTH0i8efMOiBxNi99PAviRwqFPGlMsIDdneVT/2TLET
+	Vu2Zvk5OFjbwI9ltAeJmpDedncfA4K/qOTIAC83Yd0mKbaJ2ZJjCvsiubk7ibVlg
+	yKB61doEnopb44RUrQxgJCTpl1Zb9MD/sOxphWRFa4PQ8hMg==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3f6yc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 23:45:47 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso1904469a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:45:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745538346; x=1746143146;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KyqYKtxradzfRqDlkOHzNZaH2YGpNBHk4kCUBoruzdw=;
+        b=UQevEr7UoNgtMGxx0Y2oK12YbhlF3yOINuFdISnnoCnYYhG2LxG2xhC/9G9N+t/AJQ
+         zRqrBJTSjpdBikQwz81UQwigngbR2khuqFATP4Ei+4H2SRRgCMkDnyj6Um39Y2OoS2L+
+         bCW8FbcDmfQmhcgUaQ/OnIZnpP0P6hbX6S66EnvBnq2RSWTg+4vo3pY0nX8SnaxYLNVl
+         GahVFWJrLVw9BT13OuizNkSXqoQbNiaW+0skW/qQhpMVhAOgHmMtj8c+fj2s5Ddyptog
+         9sFihi78o8w/raIkEhYNnWq6QsKtQ8efejJPOm31Z33k/QKjuRG1egTPC7d5elvX+5hx
+         k8OQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUCjnK8Zsor4j4rUFM3oUT03vrWxxVQWkJE/cm0R5xmCbmD0L5LZQi0IxWbZT3betTX8hlLWMoge9bdetg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw14xHPy/CrRQxYymmIOPavO5/xqCAWY6QJbwVEkMAtRqtquyr7
+	b6rnMgkgjeTIlEorNPIGEVrVh/H/Yi+b/HIOfK3hcwVPsKJrooZoYVH4+9bn1NJVErF0shZF86y
+	mrl3stBaPTjK304yfIKlCAgTohaFti5liduH0BaWrwZW4FD91EwioaYFOhRDNiTRBw4N1jVA=
+X-Gm-Gg: ASbGncvZ42VBz0CEHFWwWSDedACaOlqpVLa7PnfCyP4IFIxagsEOBLDpvsEWETl/ocI
+	cwiF5upPV76iKAL2ZDg14z2nX4ZUwFDG6/9vJz4COVHNcgtodIxxMgIVC+lDYoqNYtVUqyaeelN
+	8j53XtcNm5hB9/38BX84NORsllBxRkzdDUNjtG0UrJzR/X4/CFFwH/aZMJbwCaPm+gETIHP1Ukq
+	JXwfFzVDM0gHEm4nJqhRdFSaB5YTiXQopTmF5jL0k4XLAXwM4J0I7uiWgH5R3r6RAzBjCezHzcy
+	I/PdK3EGVQ08qeILmSI1IxXqxMmKuUZZo2fYq1TnOoJXHHuBlabqu61ezi0JatscTKQauAvFqhL
+	05Dk=
+X-Received: by 2002:a17:902:e404:b0:225:ac99:ae0f with SMTP id d9443c01a7336-22dbf5d8b00mr3086405ad.1.1745538346475;
+        Thu, 24 Apr 2025 16:45:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF3rWDrNgerPAeRbJmrwpa//JpdMGGhQSUPOjFG5CY6PYdzl4ek838Z0IyiHzO8Hat64ueuYA==
+X-Received: by 2002:a17:902:e404:b0:225:ac99:ae0f with SMTP id d9443c01a7336-22dbf5d8b00mr3086185ad.1.1745538346087;
+        Thu, 24 Apr 2025 16:45:46 -0700 (PDT)
+Received: from hu-uchalich-lv.qualcomm.com (Global_NAT1.qualcomm.com. [129.46.96.20])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309f774e4ffsm225078a91.12.2025.04.24.16.45.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 16:45:45 -0700 (PDT)
+From: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
+Date: Thu, 24 Apr 2025 16:45:41 -0700
+Subject: [PATCH] soc: qcom: smem: Update max processor count
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <587558.1745538292.1@famine>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 24 Apr 2025 16:44:52 -0700
-Message-ID: <587559.1745538292@famine>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250424-smem_count-v1-1-931cf68f71a8@oss.qualcomm.com>
+X-B4-Tracking: v=1; b=H4sIACTNCmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDEyMT3eLc1Nz45PzSvBLdRAtToxQLy7Q04+QUJaCGgqLUtMwKsGHRsbW
+ 1AGokHK5cAAAA
+X-Change-ID: 20250424-smem_count-a852d89ff3cd
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: Jingyi Wang <quic_jingyw@quicinc.com>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Aiqun Yu <quic_aiquny@quicinc.com>, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@oss.qualcomm.com,
+        Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745538344; l=916;
+ i=unnathi.chalicheemala@oss.qualcomm.com; s=20240514;
+ h=from:subject:message-id; bh=ofmEoSMhKo06h+U5NhGAMej5n5ubYDTAlHp5FYY78RQ=;
+ b=L6Org0dMHoH66e4fXaSqOfQAEKmeC+VHumQGQrTITeKxuIaYIbGh7nsyPxclzzls3z5S4shL6
+ acgflenu2gRDq+5W72D53/by81Ul5Bs3AfBR1XKNAOWC28YK5Vn2vVj
+X-Developer-Key: i=unnathi.chalicheemala@oss.qualcomm.com; a=ed25519;
+ pk=o+hVng49r5k2Gc/f9xiwzvR3y1q4kwLOASwo+cFowXI=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDE2OSBTYWx0ZWRfX77AkVgYqUZvB mFTmnzrZcPa1Wn0kmdNyeGEgOV72TgtrxPf/cIzZDs9DnDF3Xe5/60QSkreMoPesvJdINg0tJvP H4q33/V80jjpwZhcZNN2nCNFHHSbjWz/sdc0dm1uVbJO0wbrOmxVPbWrkCn5dpOeTtJqGXHqFZC
+ qz9XNwE9i4VViCi31aPpLavNm7wSH5sSUXwM4oB9cR5Ms00F/0KibJgVkRZKqZi3EIErQK1dHHN CG+dANueufrHN0dJOxuraYzCabeHueG4DbOdSbWMqAjkM+xAV7Dzyjb7cDUXv5SUF2T7Hl/7w1M xlnKhMZUhZ1Y+8FrybaMQzem1qLG0acO6m7fUvY+xxIOeMy6+L4AkqClQTsvwgqIWgvNMZzlaxk
+ nfNDx36VyV2VEQ5PF0clB/8CmGCx4uYn6UbKJBLasy43yeHeDid9DQaTIeCt+T4JkQi65IYf
+X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=680acd2b cx=c_pps a=0uOsjrqzRL749jD1oC5vDA==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=dluG079SF-FDyRJlmAYA:9 a=QEXdDO2ut3YA:10
+ a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-ORIG-GUID: zdAP_bwONvzR6S-WCpo3vJbnwFksMH9U
+X-Proofpoint-GUID: zdAP_bwONvzR6S-WCpo3vJbnwFksMH9U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-24_09,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=779 mlxscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240169
 
-Hangbin Liu <liuhangbin@gmail.com> wrote:
+Update max processor count to reflect the number of co-processors on
+upcoming SoC.
 
->This change addresses a MAC address conflict issue in failover scenarios,
->similar to the problem described in commit a951bc1e6ba5 ("bonding: correc=
-t
->the MAC address for 'follow' fail_over_mac policy").
->
->In fail_over_mac=3Dfollow mode, the bonding driver expects the formerly a=
-ctive
->slave to swap MAC addresses with the newly active slave during failover.
->However, under certain conditions, two slaves may end up with the same MA=
-C
->address, which breaks this policy:
->
->1) ip link set eth0 master bond0
->   -> bond0 adopts eth0's MAC address (MAC0).
->
->2) ip link set eth1 master bond0
->   -> eth1 is added as a backup with its own MAC (MAC1).
->
->3) ip link set eth0 nomaster
->   -> eth0 is released and restores its MAC (MAC0).
->   -> eth1 becomes the active slave, and bond0 assigns MAC0 to eth1.
->
->4) ip link set eth0 master bond0
->   -> eth0 is re-added to bond0, now both eth0 and eth1 have MAC0.
->
->This results in a MAC address conflict and violates the expected behavior
->of the failover policy.
->
->To fix this, we assign a random MAC address to any newly added slave if
->its current MAC address matches that of the bond. The original (permanent=
-)
->MAC address is saved and will be restored when the device is released
->from the bond.
->
->This ensures that each slave has a unique MAC address during failover
->transitions, preserving the integrity of the fail_over_mac=3Dfollow polic=
-y.
->
->Fixes: 3915c1e8634a ("bonding: Add "follow" option to fail_over_mac")
->Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
+---
+ drivers/soc/qcom/smem.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	The code flow is a little clunky in the "if (situation one) else
-if (situation two) else goto skip_mac_set" bit, but I don't really have
-a better suggestion that isn't clunky in some other way.
-
-	This implementation does keep the already complicated failover
-logic from becoming more complicated for this corner case.
-
-	-J
-
-Acked-by: Jay Vosburgh <jv@jvosburgh.net>
-
-
->---
->v3: set random MAC address for the new added link (Jakub Kicinski)
->    change the MAC address during enslave, not failover (Jay Vosburgh)
->v2: use memcmp directly instead of adding a redundant helper (Jakub Kicin=
-ski)
->---
-> drivers/net/bonding/bond_main.c | 25 ++++++++++++++++++-------
-> 1 file changed, 18 insertions(+), 7 deletions(-)
->
->diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_m=
-ain.c
->index 8ea183da8d53..b91ed8eb7eb7 100644
->--- a/drivers/net/bonding/bond_main.c
->+++ b/drivers/net/bonding/bond_main.c
->@@ -2118,15 +2118,26 @@ int bond_enslave(struct net_device *bond_dev, str=
-uct net_device *slave_dev,
-> 		 * set the master's mac address to that of the first slave
-> 		 */
-> 		memcpy(ss.__data, bond_dev->dev_addr, bond_dev->addr_len);
->-		ss.ss_family =3D slave_dev->type;
->-		res =3D dev_set_mac_address(slave_dev, (struct sockaddr *)&ss,
->-					  extack);
->-		if (res) {
->-			slave_err(bond_dev, slave_dev, "Error %d calling set_mac_address\n", =
-res);
->-			goto err_restore_mtu;
->-		}
->+	} else if (bond->params.fail_over_mac =3D=3D BOND_FOM_FOLLOW &&
->+		   BOND_MODE(bond) =3D=3D BOND_MODE_ACTIVEBACKUP &&
->+		   memcmp(slave_dev->dev_addr, bond_dev->dev_addr, bond_dev->addr_len)=
- =3D=3D 0) {
->+		/* Set slave to random address to avoid duplicate mac
->+		 * address in later fail over.
->+		 */
->+		eth_random_addr(ss.__data);
->+	} else {
->+		goto skip_mac_set;
-> 	}
-> =
-
->+	ss.ss_family =3D slave_dev->type;
->+	res =3D dev_set_mac_address(slave_dev, (struct sockaddr *)&ss, extack);
->+	if (res) {
->+		slave_err(bond_dev, slave_dev, "Error %d calling set_mac_address\n", r=
-es);
->+		goto err_restore_mtu;
->+	}
->+
->+skip_mac_set:
->+
-> 	/* set no_addrconf flag before open to prevent IPv6 addrconf */
-> 	slave_dev->priv_flags |=3D IFF_NO_ADDRCONF;
-> =
-
->-- =
-
->2.46.0
->
+diff --git a/drivers/soc/qcom/smem.c b/drivers/soc/qcom/smem.c
+index 59281970180921b76312fd5020828edced739344..cf425930539e406fb81307a17803955371545f32 100644
+--- a/drivers/soc/qcom/smem.c
++++ b/drivers/soc/qcom/smem.c
+@@ -86,7 +86,7 @@
+ #define SMEM_GLOBAL_HOST	0xfffe
+ 
+ /* Max number of processors/hosts in a system */
+-#define SMEM_HOST_COUNT		20
++#define SMEM_HOST_COUNT		25
+ 
+ /**
+   * struct smem_proc_comm - proc_comm communication struct (legacy)
 
 ---
-	-Jay Vosburgh, jv@jvosburgh.net
+base-commit: 02ddfb981de88a2c15621115dd7be2431252c568
+change-id: 20250424-smem_count-a852d89ff3cd
+
+Best regards,
+-- 
+Unnathi Chalicheemala <unnathi.chalicheemala@oss.qualcomm.com>
+
