@@ -1,79 +1,78 @@
 Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9CE1F5616;
-	Thu, 24 Apr 2025 08:00:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408231B4233
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:01:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745481607; cv=none; b=KZjpezBuqwuCxhRjAQG+3DRyk2QTptrgY/gtudxW1aCvT2OwhgEhr9nTNwdYE2flT2vETTkOxd/m66M8tcMGOUQkshkvzl6W3XuELlw+4HijmRaDed36SCVWE6eXi9doitlLWcDsOO79stRHKbXoqNoRTYPcZC8bmp6+rsPDxLQ=
+	t=1745481711; cv=none; b=mkigVOxploFmNL+VG62YU1dh02EiGunLWhuoOdNvF3UrPE0qD2ZM7qbplmxDkmRa3Zh3pzIMPs23WaVl4V5OC/1Ti+WVWDxo4aXEAzzy8W1ynthDdB0mT4LK0foVlHsdb2bP9bIO3/Vj06aCPWsTq4Rv732jSfVlvNBiViUuQ18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745481607; c=relaxed/simple;
-	bh=oc7MkbyEHI0jmohHyp3HOjrz/Rq49FEipRcCOk3Ft4c=;
+	s=arc-20240116; t=1745481711; c=relaxed/simple;
+	bh=D/Y6/EHMonZc0iYP7R/PSf9GY26fQNeAQSDvYFmK8JM=;
 	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=HXZ5CLrD+P/y1lvJ8gAnqWuNyxrQJsi6kutg5nSpwBUiJ+512qjLo0O5aPh0NKVCmXvSTU9pDgUJDrcAfR1F38tErSbtaPHfsYG1ukzmGjYp3IXQw7S1Izh1pmBZaB9QQO7f0HZes2ci404k+dIRHTSbNOEe6B8OSqPrPmHdwYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me; spf=pass smtp.mailfrom=alistair23.me; dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b=a1R9o3BD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=AqO9ssO0; arc=none smtp.client-ip=103.168.172.153
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alistair23.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alistair23.me
+	 Subject:Content-Type; b=kN+yLsjYlgXFO1ORDjQtuysJLV60we5X4gRY+uPQ6Ry00xrSddRBrJL20QfxlOhu77eWWCPA+kUxhRMUNCz4giPp+tKLLhR7oraxzczVcTNdlbeWxGnXbLpxIRWUUlM9P7H8tlZQQz2/ZFdW0d88hndGXFwtn+gSAa3Oui++438=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=pufJE6Du; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=TQNL2fLS; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alistair23.me header.i=@alistair23.me header.b="a1R9o3BD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AqO9ssO0"
-Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 343301140083;
-	Thu, 24 Apr 2025 04:00:04 -0400 (EDT)
-Received: from phl-imap-01 ([10.202.2.91])
-  by phl-compute-04.internal (MEProxy); Thu, 24 Apr 2025 04:00:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alistair23.me;
-	 h=cc:cc:content-transfer-encoding:content-type:content-type
-	:date:date:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:subject:subject:to:to; s=fm2;
-	 t=1745481604; x=1745568004; bh=D9BxmcOlj48skfTkt5tTv4HRI52Kr3br
-	Pmi2tjpeVrs=; b=a1R9o3BDj43M5ULYH0efGR5bqc6K9OTMot7Vc0LLRwlWz/NW
-	w+itHYaPgsfBd1lu9HLGEFB6+FpOr142EdmyM3ZM0D9vnfqRVLxEILPcVdlpW0+y
-	FNVwYkFSS/ySKw5RAaqI2qnLp/zb9+D9reObD6azG+o86BfxoILtge7zfLIDQbpJ
-	JPmIkEP9runnRZcnKP6l7B5FrhjJxKbjHDZ6EuXNweYC2Ddi2DP/xyvZ0fa06wXw
-	KSEXur6+M8MMlRManClAd/eKAqvP/nR8a5Yg/3eQ/4U9mcO39dF6u9EoJtXhMtyW
-	pcNem2A+YFT/rs+RXmgIMaeBGHrohCKQJoqDOw==
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="pufJE6Du";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="TQNL2fLS"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 6801C11401A3;
+	Thu, 24 Apr 2025 04:01:48 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Thu, 24 Apr 2025 04:01:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745481708;
+	 x=1745568108; bh=tCzfdIEPQk+Ked1eBto3FEOqBRQDz+qBwzWQxHxvs+U=; b=
+	pufJE6Dux1/maYer3mM6ufjgni0zVYL3OTIvD7l44hZaTKG5wXKV9LDnGHo/pIXA
+	VEGMb4YCfPPqoMr4S+A8tUpqGzdg6JrrrGVAeWFeBarjwpSRWGVllXysdS2uU02b
+	MuKDr6O+idoBznmuMO5+WKiHQ0oOnNzuAZVe0gSJkg0B4O0BDRwJYodJSFjL6AAP
+	abYycSEKBzO3Yusi2bwyhJ9MtlGlTDfH2LUvRo2rwygc7p3t1cJ4FApFnTMZHkvd
+	fi/tCLDcVPjXwYb+7uZAwZorCKYTbnENlqqzqGuBiWbEPDAsABk1LgSbLuO/xKd8
+	zVcQ7dRlxR25JE67gCKItA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745481604; x=
-	1745568004; bh=D9BxmcOlj48skfTkt5tTv4HRI52Kr3brPmi2tjpeVrs=; b=A
-	qO9ssO0DkSiUpjH/ieHbj9ZvuK5vo2tbqaOALMv78uunf/cUxueFDWkY2nx+d43g
-	KMihbJ6TIJbBBVI8pn/eERYSNHwsflCekckWMzfKg4rl8GZbBC5QT2b2qAxnzgm/
-	7tFksBepi+5GAy/Q3cuAeg6EyGJhBudl3XSRNT91UBMr8ZU69VqP+OC/JVnQGqDu
-	f0m7U9OEH4TeWihwQzizCSyxZsnKVdH1u1e/VPbdFiTc3WhbFXjPfn0Mp087I5xG
-	C7Qp17awNCoBX/bfaLcoFY1IgD7YGYoc7yu4hPRhbfFTgXNq9Og/weUODXLtAPdn
-	+MjNyvS36NQM7dtsynh+Q==
-X-ME-Sender: <xms:g-8JaAn-Xv7-FKukOTiSfay5mCemT1Qn-kW58XMOJi1R4oDWDZr3Cg>
-    <xme:g-8JaP1b8Oxs6VMsTgzb95liJooxtVN3qxKyQjaD1WACF_gZyZA6r1QkgexKKhsUQ
-    8IbYSXvOwOCej4g8Rw>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745481708; x=
+	1745568108; bh=tCzfdIEPQk+Ked1eBto3FEOqBRQDz+qBwzWQxHxvs+U=; b=T
+	QNL2fLSQ9uIJGxrizeWCGw100TVB6p6SFWUeORXvPOus8IQjK7Moha0X8jsCucPZ
+	cKZDeehgeI4eRRaHu0TpS4vUd3PhetREkUGcC6UgOX4R0KKIXhLGwfQGEssoyUXB
+	uO/sIEutiWvwOnL3U+URpNLIC0eEZu7eiVwiunWIWhhdKEd4U8eVtrfaHk94qmrw
+	G3fe87vuqJSM1ukF8nG5HN3DU5gEvwAUNIo/JgaAjdA2lA7zGiIyc7RinNn4m+CX
+	bQmUd/7UEzwVGxA4KKFpK9sj+fT+Hqsur7cfj4XMv75zHwIryaDXLRBRnq1jJQBf
+	9aqJ4eSEn/A3Ir0S19SFg==
+X-ME-Sender: <xms:6-8JaPij_fi9iQ542pnnEUEd07zmRP41jkqKLEI2vg2b1Xu0mePKSQ>
+    <xme:6-8JaMC85WXMSfIdZui_Hh_BDUIyNjCrtxGQb4IXGmS0M6Vtz66L5rpNCCwr0MLNk
+    Rb_EOJzku4J0mPPyWQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekleefucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
     gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpeetlhhishhtrghirhcuoegrlhhishhtrghirhesrghlihhsthgrih
-    hrvdefrdhmvgeqnecuggftrfgrthhtvghrnhepheejffegleelgfffhfetheevvdfhkeef
-    feeluedvheduiedtudevgefgiefggeffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghlihhsthgrihhrsegrlhhishhtrghirhdvfedrmhgv
-    pdhnsggprhgtphhtthhopeelpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehhvh
-    hilhhlvghnvghuvhgvseguihhmohhnohhffhdrtghomhdprhgtphhtthhopehmghhonhgv
-    lhhlrggsohhlughutgesughimhhonhhofhhfrdgtohhmpdhrtghpthhtohepughmihhtrh
-    ihrdhtohhrohhkhhhovhesghhmrghilhdrtghomhdprhgtphhtthhopehhuhhgoheshhhu
-    ghhovhhilhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrg
-    hrohdrohhrghdprhgtphhtthhopehmfigvihhgrghnugesmhifvghighgrnhgurdhnvght
-    pdhrtghpthhtoheplhhinhhugidqihhnphhuthesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-    dprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhr
-    ghdprhgtphhtthhopehsthgrsghlvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:g-8JaOrQmP-TQEbJPiYlVSUoufRiDvr3ZLtHk-hlbGsBUJXjdPSUzg>
-    <xmx:g-8JaMmbXuj1voDF0RF-qtOPX4t93NWRmfgdYZuot7D5RY1YPTyylw>
-    <xmx:g-8JaO2uzhdQt3I-u5ClnqGf7QuGItdsfFJS6rzvfxXuHHPTP5aOPg>
-    <xmx:g-8JaDsFjB0GZuNj_QTErCml1SZ-BYHNYAlfTR9NeOGZhJnrlr6i3A>
-    <xmx:hO8JaLdWQ1ZrLU0tfCieulk6DoJHx5StThSkoEL_g6FYq3z7NTfy22UN>
-Feedback-ID: ifd214418:Fastmail
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepfefhheetffduvdfgieeghfejtedvkeetkeej
+    feekkeelffejteevvdeghffhiefhnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnuges
+    rghrnhgusgdruggvpdhnsggprhgtphhtthhopedufedpmhhouggvpehsmhhtphhouhhtpd
+    hrtghpthhtohepsghpsegrlhhivghnkedruggvpdhrtghpthhtohepjhhsthhulhhtiies
+    ghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhkphesihhnthgvlhdrtghomhdprhgtph
+    htthhopeholhhivhgvrhdrshgrnhhgsehinhhtvghlrdgtohhmpdhrtghpthhtohepmhhi
+    nhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgsohihugeskhgvrhhnvghlrd
+    horhhgpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthhg
+    lhigsehlihhnuhhtrhhonhhigidruggvpdhrtghpthhtohepthhorhhvrghlughssehlih
+    hnuhigqdhfohhunhgurghtihhonhdrohhrgh
+X-ME-Proxy: <xmx:6-8JaPE1xkLsM5sGm2OIy8bp5UR3TlbjNnIftx705cHh0VO-Z9R5Xg>
+    <xmx:6-8JaMTp6n_VBlp8W3Veintkasp-DXj8Ztttw-I1IkRWLFleOJcOJw>
+    <xmx:6-8JaMxk_zntweq-ooy0zvqqv4PTiJJzIs4Wux8yAs4jQsDNzcxdEQ>
+    <xmx:6-8JaC7PQ3vOKbotClxQxbEU6BU0UQLh7kY44ek4X1qvDBVZtYfRXQ>
+    <xmx:7O8JaDWWd0mnYUi-ouAKJMm5IeyUEc-w4BKYNJVvBVrTemj09QziEpXG>
+Feedback-ID: i56a14606:Fastmail
 Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B6254336007E; Thu, 24 Apr 2025 04:00:03 -0400 (EDT)
+	id 22F5B2220074; Thu, 24 Apr 2025 04:01:47 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -81,66 +80,105 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T59643a954d2ed3f9
-Date: Thu, 24 Apr 2025 18:00:02 +1000
-From: Alistair <alistair@alistair23.me>
-To: "Hugo Villeneuve" <hugo@hugovil.com>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- "Maximilian Weigand" <mweigand@mweigand.net>
-Cc: "Mikael Gonella-Bolduc" <mgonellabolduc@dimonoff.com>,
- stable@vger.kernel.org, "Hugo Villeneuve" <hvilleneuve@dimonoff.com>,
- linux-input@vger.kernel.org,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Message-Id: <ed682022-509e-452b-b4f8-7ddeb17a2475@app.fastmail.com>
-In-Reply-To: <20250423135243.1261460-1-hugo@hugovil.com>
-References: <20250423135243.1261460-1-hugo@hugovil.com>
-Subject: Re: [PATCH v2] Input: cyttsp5 - fix power control issue on wakeup
+X-ThreadId: T98d234c297665c71
+Date: Thu, 24 Apr 2025 09:59:38 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "kernel test robot" <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, "kernel test robot" <lkp@intel.com>,
+ linux-kernel@vger.kernel.org, "Ingo Molnar" <mingo@kernel.org>,
+ "Linus Torvalds" <torvalds@linux-foundation.org>,
+ "John Stultz" <jstultz@google.com>, "Thomas Gleixner" <tglx@linutronix.de>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Borislav Petkov" <bp@alien8.de>,
+ "Dave Hansen" <dave.hansen@linux.intel.com>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+Message-Id: <f1ccb8b4-bbe2-42bc-bb86-c2bf3f9c557d@app.fastmail.com>
+In-Reply-To: <aAmeJmL0hUx2kcXC@xsang-OptiPlex-9020>
+References: <202504211553.3ba9400-lkp@intel.com>
+ <59198081-15e2-4b02-934f-c34dd1a0ac93@app.fastmail.com>
+ <aAmeJmL0hUx2kcXC@xsang-OptiPlex-9020>
+Subject: Re: [linus:master] [x86/cpu]  f388f60ca9:
+ BUG:soft_lockup-CPU##stuck_for#s![swapper:#]
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-On Wed, 23 Apr 2025, at 11:52 PM, Hugo Villeneuve wrote:
-> From: Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>
-> 
-> The power control function ignores the "on" argument when setting the
-> report ID, and thus is always sending HID_POWER_SLEEP. This causes a
-> problem when trying to wakeup.
-> 
-> Fix by sending the state variable, which contains the proper HID_POWER_ON or
-> HID_POWER_SLEEP based on the "on" argument.
-> 
-> Fixes: 3c98b8dbdced ("Input: cyttsp5 - implement proper sleep and wakeup procedures")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hugo Villeneuve <hvilleneuve@dimonoff.com>
-> Signed-off-by: Mikael Gonella-Bolduc <mgonellabolduc@dimonoff.com>
+On Thu, Apr 24, 2025, at 04:12, Oliver Sang wrote:
+> On Tue, Apr 22, 2025 at 12:16:33PM +0200, Arnd Bergmann wrote:
 
-Reviewed-by: Alistair Francis <alistair@alistair23.me>
+Cc:  x86 and timekeeping maintainers, see
+https://lore.kernel.org/lkml/202504211553.3ba9400-lkp@intel.com/
+for the thread so far.
 
-Alistair
+>> > [ 721.016779][ C0] hardirqs last disabled at (159506): 
+>> > sysvec_apic_timer_interrupt (arch/x86/kernel/apic/apic.c:1049) 
+>> > [ 721.016779][ C0] softirqs last enabled at (159174): handle_softirqs 
+>> > (kernel/softirq.c:408 kernel/softirq.c:589) 
+>> > [ 721.016779][ C0] softirqs last disabled at (159159): __do_softirq 
+>> > (kernel/softirq.c:596) 
+>> > [  721.016779][    C0] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 
+>> > 6.14.0-rc3-00037-gf388f60ca904 #1
+>> > [  721.016779][    C0] Hardware name: QEMU Standard PC (i440FX + PIIX, 
+>> > 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+>> > [ 721.016779][ C0] EIP: timekeeping_notify 
+>> > (kernel/time/timekeeping.c:1522) 
+>> 
+>> Timekeeping code could be related, I see that CONFIG_X86_TSC
+>> is disabled for i486SX configurations, so even if a TSC is present
+>> in the emulated machine, it is not being used to measure time
+>> accurately.
+>> 
+>> > -CONFIG_X86_CMPXCHG64=y
+>> 
+>> This could be another issue, if there is code that relies on
+>> the cx8/cmpxchg8b feature to be used. Since this is a non-SMP
+>> kernel, this is less likely to be the cause of the problem.
+>
+> thanks a lot for all these details!
+>
+>> 
+>> Can you try what happens when you enable the two options, either
+>> by changing CONFIG_M486SX to CONFIG_M586TSC, or with a patch
+>> like the one below? Note that CONFIG_X86_CMPXCHG64 recently
+>> got renamed to CONFIG_X86_CX8, but they are the exact same thing.
+>
+> I applied your patch directly upon f388f60ca9 (change for X86_CMPXCHG64
+> instead of X86_CX8 as you metnioned), commit id is
+> c1f7ef63239411313163a7b1bff654236f48351c
+>
+...
+> by running same tests, now it backs to the clean status like
+> fc2d5cbe541032e7 (parent of f388f60ca9)
 
-> ---
-> Changes for v2:
-> - Add Mikael SOB tag
-> 
-> drivers/input/touchscreen/cyttsp5.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/input/touchscreen/cyttsp5.c b/drivers/input/touchscreen/cyttsp5.c
-> index eafe5a9b89648..86edcacb4ab3e 100644
-> --- a/drivers/input/touchscreen/cyttsp5.c
-> +++ b/drivers/input/touchscreen/cyttsp5.c
-> @@ -580,7 +580,7 @@ static int cyttsp5_power_control(struct cyttsp5 *ts, bool on)
-> int rc;
->  
-> SET_CMD_REPORT_TYPE(cmd[0], 0);
-> - SET_CMD_REPORT_ID(cmd[0], HID_POWER_SLEEP);
-> + SET_CMD_REPORT_ID(cmd[0], state);
-> SET_CMD_OPCODE(cmd[1], HID_CMD_SET_POWER);
->  
-> rc = cyttsp5_write(ts, HID_COMMAND_REG, cmd, sizeof(cmd));
-> 
-> base-commit: 7adf8b1afc14832de099f9e178f08f91dc0dd6d0
-> -- 
-> 2.39.5
-> 
-> 
+Thanks for confirming. So a 486-targeted kernel still passes
+your tests on modern hardware if we force TSC and CX8 to
+be enabled, but the boot fails if the options are turned
+off in Kconfig (though available in emulated hardware).
+
+To be completely sure, you could re-run the same test with
+just one of these enabled, but I'm rather sure that the TSC
+is the root cause. I tried reproducing the problem locally
+with your .config on a qemu/tcg emulation running on an
+arm64 host, but this seems to run fine, including the
+rcutorture tests.
+
+Comparing my results with your log file, I see that your
+crash happens while changing the clocksource:
+
+Your dmesg:
+[   92.548514][    T1] hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+[  721.016745][    C0] watchdog: BUG: soft lockup - CPU#0 stuck for 626s! [swapper:1]
+
+My dmesg:
+[    1.154511][    T1] hpet0: 3 comparators, 64-bit 100.000000 MHz counter
+[    1.157896][    T1] clocksource: Switched to clocksource tsc-early
+
+There are also clearly some differences between TCG and KVM in
+the handling of TSC, e.g. I get this warning from qemu itself
+for the SandyBridge CPU:
+
+qemu-system-i386: warning: TCG doesn't support requested feature: CPUID.01H:ECX.tsc-deadline [bit 24]
+
+I tried a few other variations, including KVM on an x86 laptop
+(using kvmclock or tsc-early clocksource), but none of them failed
+the way yours did.
+
+      Arnd
