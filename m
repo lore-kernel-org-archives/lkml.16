@@ -1,84 +1,157 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990D71F8730;
-	Thu, 24 Apr 2025 22:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E66422686B
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 22:33:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745534000; cv=none; b=ozDk2xgodbRSAwaUq2/eBebHnPfalrp8Nf2nsylOOkJyGU4b7wQReOEdw+pi2F87gSDffQDZtUgiN0u126Nm2jnWIzeZgu9lzfRpzeaAz4DXepAX/bNFAbNmRkpKSmt4xoV/d/hxlZOPbjmd9Fc2PLzKK+RlccmItQvXXgHlZiA=
+	t=1745534012; cv=none; b=kQt3jkY/4RJZmpUzxeJSST0O1IfRoRAKTW9oF8GVGmfqoYz4MmmIJ5ZHB82UnBZR7VkRk8YmzARcxWiZbN5vjDItuzd9HQnym2GjM+3ZC8f/A75XqCK4aJ158OjiaA1EzyVRznUK4+AN5+vY5Dr3/HhnFYuVtu3qsJKxiaUNxVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745534000; c=relaxed/simple;
-	bh=Uz13JfKvZ+24a7z1jXBRScfADeh8EaIQpZXTqJCuKo0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L9Sgj3lip+4IKgf3EkggZC9zc7x3PtpO/1DeeLZH7dxtkGhuyLm6o8qGrQJoCBBRBPxpznDvGD51ZgF5GFQ9VKsD5xAdvbPtLJIIC6/0Lrph7iItoBO5BqWgwTzx88BaRjlXwm60tt3WIIQnQwz/4fmvIJESt3GO/5FUIWtuGGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q+Yf/ze9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745534012; c=relaxed/simple;
+	bh=zomNnsq4MsaGCQsrSebnFKdmD63FlCoHwAdaLyqTj5c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UbsYCxp9ElDZu/xngu/HKQIjGXaFaIqlWBYlwvaMySN57YqXdf3zIzxtXz4qBsd6YNpPtjqsqvqsruq6luLoRxSJ61vnIdLeVg3rze4JTZfRLdKSdvVhahlK5zUfuuWLudSNJTSPwaiiqvVkTRLkNbXk61969kPDxTqSVoLHNYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dd6ZKHml; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q+Yf/ze9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90FA0C4CEE3;
-	Thu, 24 Apr 2025 22:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745533998;
-	bh=Uz13JfKvZ+24a7z1jXBRScfADeh8EaIQpZXTqJCuKo0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q+Yf/ze96gqzV5dUGQsAMk2JWKAASE3FC9Voo6SgaKi8F3YTgAhY99jgHISrZgRIN
-	 WucoY4Pvb1ZomKx23yeqVImNBdtINmCv1Wc9umqlGxRycznaTswP+GSzndtyl6f/cQ
-	 yUfuy1MdKo4bOO4B+DKUcpqndb7h4D2qizknv3aHd5EOXsMrw8lBeCHwYkDLMfABso
-	 noeKNgH7eGGlP82aoPBi6UVGaVbB50VqvXZhz+y3A4pKmupBPKKerchyzTuxrACpcU
-	 LbYzvT+GQ5Kg2Mr5s6LWtIQfJYZhiz4ALS4ZbMpHjoKeHpqrBYQLpFQkKwEBHiFzGJ
-	 KtDlz5Ifmx5Ow==
-Message-ID: <fdb7423f-3bb5-4921-a27f-c8db6f3a6f16@kernel.org>
-Date: Thu, 24 Apr 2025 17:33:16 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dd6ZKHml"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745534009;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UBnlZ15iRFsPHl5PsW20DUMO/a0bOB7UNxRRbwZg5Ik=;
+	b=dd6ZKHmlKgDN5apGG0udVBoMiSl4Oi6e2y0LJm0dg6r60yw6LVPl9TrmC2k5JpykHG28RE
+	aE9HIWEMu+COVi4XstyM/88rriPAOLcKzN+M2TDNlYob4J5ch7zoCYSzmqPpl3IqhWHy+7
+	d64D0h9wIf9jFiPFqdFlkSXQyln/5Eo=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-497-v5UPUSufPCWjN2c5tDGFmQ-1; Thu,
+ 24 Apr 2025 18:33:25 -0400
+X-MC-Unique: v5UPUSufPCWjN2c5tDGFmQ-1
+X-Mimecast-MFC-AGG-ID: v5UPUSufPCWjN2c5tDGFmQ_1745534004
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 118DE1956086;
+	Thu, 24 Apr 2025 22:33:24 +0000 (UTC)
+Received: from llong-thinkpadp16vgen1.westford.csb (unknown [10.22.81.10])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5CAEC1956095;
+	Thu, 24 Apr 2025 22:33:22 +0000 (UTC)
+From: Waiman Long <longman@redhat.com>
+To: Tejun Heo <tj@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Waiman Long <longman@redhat.com>
+Subject: [PATCH] cgroup/rstat: Improve cgroup_rstat_push_children() documentation
+Date: Thu, 24 Apr 2025 18:33:08 -0400
+Message-ID: <20250424223308.770393-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] clk: socfpga: clk-pll: Optimize local variables
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250219104224.1265-2-thorsten.blum@linux.dev>
- <d7df3b86-c3ff-48af-ad72-428e105976b9@kernel.org>
- <0BD7D71D-6F6B-4864-BEA7-E13563908D62@linux.dev>
- <FC8B34B6-642F-4228-90FB-D8B3148C03D3@linux.dev>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <FC8B34B6-642F-4228-90FB-D8B3148C03D3@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 4/22/25 07:22, Thorsten Blum wrote:
-> On 8. Apr 2025, at 19:45, Thorsten Blum wrote:
->> On 19. Feb 2025, at 13:42, Dinh Nguyen wrote:
->>> On 2/19/25 04:42, Thorsten Blum wrote:
->>>> Since readl() returns a u32, the local variables reg and bypass can also
->>>> have the data type u32. Furthermore, divf and divq are derived from reg
->>>> and can also be a u32.
->>>> Since do_div() casts the divisor to u32 anyway, changing the data type
->>>> of divq to u32 removes the following Coccinelle/coccicheck warning
->>>> reported by do_div.cocci:
->>>> WARNING: do_div() does a 64-by-32 division, please consider using div64_ul instead
->>>> Compile-tested only.
->>>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
->>>> ---
->>>> drivers/clk/socfpga/clk-pll.c | 4 ++--
->>>
->>> Applied!
->>
->> Did this patch and [*] get lost somehow?
->>
->> They aren't in -next and also didn't make it into the last merge window.
-> 
-> Does anybody else know what happened or where I could find them?
-> 
+The cgroup_rstat_push_children() function converts a set of
+updated_children lists from different cgroups into a single ordered
+list of cgroups to be flushed via the rstat_flush_next pointer.
+The algorithm used isn't that well illustrated and it takes time to
+grasp what it is doing. Improve the embedded documentation and variable
+names to better illustrate the transformation process and make the code
+easier to understand.
 
-This is my bad. I missed the merge window for the PR. I'll resend it 
-this time.
+Also add a warning if one of the updated_children lists is NULL
+terminated like that reported in [1].
 
-Dinh
+[1] https://lore.kernel.org/lkml/BY5PR04MB68495E9E8A46CA9614D62669BCBB2@BY5PR04MB6849.namprd04.prod.outlook.com/
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/cgroup/rstat.c | 37 ++++++++++++++++++++++++++++---------
+ 1 file changed, 28 insertions(+), 9 deletions(-)
+
+diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+index b2239156b7de..ac2046f427eb 100644
+--- a/kernel/cgroup/rstat.c
++++ b/kernel/cgroup/rstat.c
+@@ -134,30 +134,47 @@ __bpf_kfunc void cgroup_rstat_updated(struct cgroup *cgrp, int cpu)
+  * @head: current head of the list (= subtree root)
+  * @child: first child of the root
+  * @cpu: target cpu
+- * Return: A new singly linked list of cgroups to be flush
++ * Return: A new singly linked list of cgroups to be flushed
+  *
+  * Iteratively traverse down the cgroup_rstat_cpu updated tree level by
+  * level and push all the parents first before their next level children
+- * into a singly linked list built from the tail backward like "pushing"
+- * cgroups into a stack. The root is pushed by the caller.
++ * into a singly linked list via the rstat_flush_next pointer built from the
++ * tail backward like "pushing" cgroups into a stack. The root is pushed by
++ * the caller.
+  */
+ static struct cgroup *cgroup_rstat_push_children(struct cgroup *head,
+ 						 struct cgroup *child, int cpu)
+ {
+-	struct cgroup *chead = child;	/* Head of child cgroup level */
++	struct cgroup *cnext = child;	/* Next head of child cgroup level */
+ 	struct cgroup *ghead = NULL;	/* Head of grandchild cgroup level */
+ 	struct cgroup *parent, *grandchild;
+ 	struct cgroup_rstat_cpu *crstatc;
+ 
+ 	child->rstat_flush_next = NULL;
+ 
++	/*
++	 * Notation: -> updated_next pointer
++	 *	     => rstat_flush_next pointer
++	 *
++	 * Assuming the following sample updated_children lists:
++	 *  P: C1 -> C2 -> P
++	 *  C1: G11 -> G12 -> C1
++	 *  C2: G21 -> G22 -> C2
++	 *
++	 * After 1st iteration:
++	 *  head => C2 => C1 => NULL
++	 *  ghead => G21 => G11 => NULL
++	 *
++	 * After 2nd iteration:
++	 *  head => G12 => G11 => G22 => G21 => C2 => C1 => NULL
++	 */
+ next_level:
+-	while (chead) {
+-		child = chead;
+-		chead = child->rstat_flush_next;
++	while (cnext) {
++		child = cnext;
++		cnext = child->rstat_flush_next;
+ 		parent = cgroup_parent(child);
+ 
+-		/* updated_next is parent cgroup terminated */
++		/* updated_next is parent cgroup terminated if !NULL */
+ 		while (child != parent) {
+ 			child->rstat_flush_next = head;
+ 			head = child;
+@@ -171,11 +188,13 @@ static struct cgroup *cgroup_rstat_push_children(struct cgroup *head,
+ 			}
+ 			child = crstatc->updated_next;
+ 			crstatc->updated_next = NULL;
++			if (WARN_ON_ONCE(!child))
++				break;
+ 		}
+ 	}
+ 
+ 	if (ghead) {
+-		chead = ghead;
++		cnext = ghead;
+ 		ghead = NULL;
+ 		goto next_level;
+ 	}
+-- 
+2.49.0
 
