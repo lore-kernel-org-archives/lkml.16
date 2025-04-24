@@ -1,155 +1,108 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F472147EA;
-	Thu, 24 Apr 2025 12:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CEF22CBE9;
+	Thu, 24 Apr 2025 12:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745496610; cv=none; b=MK7w5dtRn3SjTH8rJX4CC1cEpjjsxYeebvVjH9PlqKfKJm/t6vEH0vkLIE1Zp9MPnBIev1ssCaIgsh861ufcQp65MlW2wiYz5N9RlkpyGLXBnGCl2fjdDzv0O1+wiDOHbuzu641fu89UwJlq8Mz+BOplEYkobENwt31czZN6uwQ=
+	t=1745496617; cv=none; b=Cnl7CSeBDDgPeDz5j6PFYt0Pe3O6IHsE+tOF3e3LC4quF3QsQRrJanlPRQjr//MOS1KvGBrgzVYIwAGuFTj8jK5jNvG4Bt/li55Hul0p6xwekSAOgPdFAmVBBPpov31WNu++qB9fdKM/cM1WpDz1LxyopBHicAe8pF0vMUQog9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745496610; c=relaxed/simple;
-	bh=YkxuED/HPMVTzxMfaj/13xIMhTlcrbMb1CQQCsqaRK8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oTmk1h1GGR431zfte54UFMqFCdJF8+eAm0/MR7Qb8htCvDrCVIQd6/o/jJ/rmexrmCBLQt6x9AX9BRh5nAE0cH3F48VKkDpti2+pkxj7tcdfYLdPtKGfoLQl26iJiOy7ZYuBfURwxMLz7dahgnlF02S+eYvbcZdYhNcdj5dGtNU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IlVIXJju; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745496617; c=relaxed/simple;
+	bh=nAj0N3ovD8bLyyRqHE5gU6mhmOpMsErhRtAn2uNjcJQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SRufBBUuyZ4Zo7/n2hEJy8cyMzFabTTDMaIyA0/aSfC/zVgfFladxdJ9INTiflwlgRFtLRNA3NsGs+mScQ92taEOll3hG2IfO12Mvxj+RMuJ0VN1pexE6ttIPfpIJYlQn7dfsUMbL8J7sp75TTplLfkzoFn53CS4Vgue8PpBMzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BESfJqtA; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IlVIXJju"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-227b828de00so9101095ad.1;
-        Thu, 24 Apr 2025 05:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745496607; x=1746101407; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=EX3SgmhMPLeBJmDhxjtUamBoOEgguGRipxPe692JA7E=;
-        b=IlVIXJjuDAoStRUqTXEHzoZI2fXFYUx8vEF6IOTpU4WLdH9HUo+WcHuOjo76Kf4LOh
-         1iNdABTgIDVAHwh+OelC1QhUkMynVn/lx6xfVnanxLI4cvKkG6/qDZ8g7+UP2LBTj1Sg
-         SMGoaWSTuGV/ukF0nFP580jWdOYj0BwE2hJVNHmqGTJuTIHJoTLnR5XW69LvO1/KadJW
-         BZ1ErK4g0AclxI5a7WciiEwTBs3bGPwOnQjtxLAQYJ3ZK/cOQEY5vQofcWONcos+RVQX
-         Ql5t1OSLnfi9GZpMadcH+YoxXxOwpgYpQLhgDDtZXz54oPJxry97yUtYdBUA1bM/pYsG
-         NPBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745496607; x=1746101407;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EX3SgmhMPLeBJmDhxjtUamBoOEgguGRipxPe692JA7E=;
-        b=P8sqPrtc/KkZl+f7rtktKd257d7tGxKRjO6arylQNdaCp3sCOmdsf7DvtWmNF7nu2i
-         ZGwGMrkXtmSN32b84OfMLeBlbYPC6ldrpJuVp3s1eq+dPdsVvHR7birXpI0dOtnXUnDl
-         cugoeaYF96QQ6FVB59cV+rCcJXLx5lh4dfQoM2vRErilybVJpzPBi2GfU/+4EQmlXA3R
-         Z/O97FMgPQZVpmoBAsVURCpRqX9Ft1wtupBZ3lR0iclPdmOBa2Fh2dhGgjnQnJvZd6kb
-         x4aWkFLgTUeDvNgNIhfawi5cqnOScZtfC4mgoUyNO4O5vmWCNrvS/a/LwAPFTelOHc9c
-         ycTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIoJaRH2fUwOUJ5KZSxw3KzVoLeob8GJAHYh0Bg1xnfQkEaocOFC97jiR0bzAkCYXKk6IQbhxBSGpMEwg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGyqfy0IPAwG9Kx0fUn0/kkdGLbWCiXoldAhtoDxWPU6iJ7ASj
-	QzbjnOiOomYjoMgp/ZHdmzb5XBJezYIi8uO9Y6r0m6tycwM5D6KW
-X-Gm-Gg: ASbGncu0CdIzaw/lrGij6hiw92RNMW5ChC2IgZOPf5QlmwBjoElG5urfYZ6BLRp3Mv+
-	x1zQ4M9CgizlO675LY1gcjwcynTLFq1tuW24m1zKVHf5dOHa3iXWVyIjXdm6J+w85CuKIk1zigN
-	jhkQQk1qZn+14jXijOWcef0Td0Pt+6eaJzqQZ1WDs2cpTDUFrOL2CI6UXF6DKagPX5qAEdEsaqR
-	w8b/fu0AxFICHtn1XbxN79ucGHvaWEqDXCCT07sV4K7u/rl2vgogu73oviKCZ/hWtAoNAH4Y4QT
-	u//WIn6y+sHJIfFoVErmrRcixxh57uEWELjtaKMjgZWeXkd3cRVBs67kMG7GGdeL2DSi+RIHaqC
-	hOdloftLYawomh8QygqcL11s3
-X-Google-Smtp-Source: AGHT+IFiMwRg9krBKjHCGQ2cWM8EFLEJICW5R0MKaOqIXB69g0tVB5p4duEFx3SzKPfcdMO5SBhSyA==
-X-Received: by 2002:a17:902:e5c8:b0:220:c813:dfd1 with SMTP id d9443c01a7336-22db3d777c4mr35729795ad.36.1745496607318;
-        Thu, 24 Apr 2025 05:10:07 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbcb0dsm11496585ad.73.2025.04.24.05.10.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 05:10:06 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <e5b126df-a311-49e5-bf6f-fe59dd083bb2@roeck-us.net>
-Date: Thu, 24 Apr 2025 05:10:05 -0700
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BESfJqtA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=ZZUTwd9c1S61T3iZg2G9dEZKpyLqqlMebgnkhbCpRhM=; b=BESfJqtAkHEkdiAs4hmeY2BD3M
+	I3fxRVGOqYbB8jrR3eeonKM08yb9JJpGMG6tEqWjir3D7m388wCO2lslvA28AKgtwuxlWTALdYblN
+	JQC2ACUq7APaQOV3AS+sFg30RZ4hbz3z8UYX7IvmuFWCbPqyOmPCUEjZ3ldCJb19UQlw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u7vP1-00ASRQ-NS; Thu, 24 Apr 2025 14:10:03 +0200
+Date: Thu, 24 Apr 2025 14:10:03 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Qasim Ijaz <qasdev00@gmail.com>,
+	Nathan Chancellor <nathan@kernel.org>, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] net: register debugfs file for net_device refcnt
+ tracker
+Message-ID: <4118dbd6-2b4b-42c3-9d1e-2b533fc92a66@lunn.ch>
+References: <20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org>
+ <20250418-reftrack-dbgfs-v4-7-5ca5c7899544@kernel.org>
+ <20250423165323.270642e3@kernel.org>
+ <a07cd1c64b16b074d8e1ec2e8c06d31f4f27d5e5.camel@kernel.org>
+ <20250423173231.5c61af5b@kernel.org>
+ <cdfc5c6f260ee1f81b8bb0402488bb97dd4351bb.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] watchdog: lenovo_se30_wdt: Fix null-ptr-deref in
- lenovo_se30_wdt_probe()
-To: Henry Martin <bsdhenrymartin@gmail.com>, wim@linux-watchdog.org
-Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250424071648.89016-1-bsdhenrymartin@gmail.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250424071648.89016-1-bsdhenrymartin@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cdfc5c6f260ee1f81b8bb0402488bb97dd4351bb.camel@kernel.org>
 
-On 4/24/25 00:16, Henry Martin wrote:
-> devm_ioremap() returns NULL on error. Currently, lenovo_se30_wdt_probe()
-> does not check for this case, which results in a NULL pointer
-> dereference.
+On Thu, Apr 24, 2025 at 06:56:06AM -0400, Jeff Layton wrote:
+> On Wed, 2025-04-23 at 17:32 -0700, Jakub Kicinski wrote:
+> > On Wed, 23 Apr 2025 20:04:58 -0400 Jeff Layton wrote:
+> > > On Wed, 2025-04-23 at 16:53 -0700, Jakub Kicinski wrote:
+> > > > Names are not unique and IIUC debugfs is not namespaced.
 > 
-> Add NULL check after devm_ioremap() to prevent this issue.
+> Correct, debugfs is not namespaced.
 > 
-> Fixes: c284153a2c55 ("watchdog: lenovo_se30_wdt: Watchdog driver for Lenovo SE30 platform")
-> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->   drivers/watchdog/lenovo_se30_wdt.c | 2 ++
->   1 file changed, 2 insertions(+)
+> I meant to say earlier that I'm open to suggestions on how to make the
+> netdev names unique. Low-level netdev stuff is not my area of
+> expertise. We can drop this patch if doing so is problematic.
 > 
-> diff --git a/drivers/watchdog/lenovo_se30_wdt.c b/drivers/watchdog/lenovo_se30_wdt.c
-> index 024b842499b3..1c73bb7eeeee 100644
-> --- a/drivers/watchdog/lenovo_se30_wdt.c
-> +++ b/drivers/watchdog/lenovo_se30_wdt.c
-> @@ -271,6 +271,8 @@ static int lenovo_se30_wdt_probe(struct platform_device *pdev)
->   		return -EBUSY;
->   
->   	priv->shm_base_addr = devm_ioremap(dev, base_phys, SHM_WIN_SIZE);
-> +	if (!priv->shm_base_addr)
-> +		return -ENOMEM;
->   
->   	priv->wdt_cfg.mod = WDT_MODULE;
->   	priv->wdt_cfg.idx = WDT_CFG_INDEX;
+> > > > How much naming the objects in a "user readable" fashion actually
+> > > > matter? It'd be less churn to create some kind of "object class"
+> > > > with a directory level named after what's already passed to
+> > > > ref_tracker_dir_init() and then id the objects by the pointer value 
+> > > > as sub-dirs of that?  
+> > > 
+> > > That sounds closer to what I had done originally. Andrew L. suggested
+> > > the flat directory that this version represents. I'm fine with whatever
+> > > hierarchy, but let's decide that before I respin again.
+> > 
+> > Sorry about that :(
+> > 
+> 
+> No worries...but we do need to decide what this directory hierarchy
+> should look like.
+> 
+> Andrew's point earlier was that this is just debugfs, so a flat
+> "ref_tracker" directory full of files is fine. I tend to agree with
+> him; NAME_MAX is 255, so we have plenty of room to make uniquely-named
+> files.
+> 
+> We could build a dir hierarchy though. Something like:
+> 
+> - ref_tracker
+>     + netdev
+>     + netns
 
+How do you make that generic? How due the GPU users of reftracker fit
+in? And whatever the next users are? A flat directory keeps it
+simple. Anybody capable of actually using this has to have a level of
+intelligence sufficient for glob(3).
+
+However, a varargs format function does make sense, since looking at
+the current users, many of them will need it.
+
+	Andrew
