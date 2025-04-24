@@ -1,162 +1,180 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2087.outbound.protection.outlook.com [40.107.101.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF95C186294;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEED619993D;
 	Thu, 24 Apr 2025 13:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745502512; cv=none; b=F5WDIbnXVjaDjOfuEUpgK1FbCStHYuTilVZicHkJBVvTj1v8u2aR+O7d2oah+K5DizcaXy5B9Ni5JOGEFWHZIT1ayn/1Nz4dyQQY4U5DwsRNzgLqJ2j4LItJV3Ra2URie78Yw4AVdjQ+cG+W2zkTJRd+uhRhwyW6TdrVcMdEIQU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745502512; cv=fail; b=MOJLFvS4vpKyPy9jEd+iHn3dIV2nbI+57AEXzTWF+nxR+I4GFTiAzp1QrB2kBxI/7aDADOztaUOKZaR16MnvEF21ErhSlr1Ba/dpCEgdxY4K1MuGkwGdC+oPAGQcZNGOaCElAGaJjtrqczoVDNc4PZty53G7fQtY8/S2hAIrjOY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745502512; c=relaxed/simple;
-	bh=qvIve6pwWQ5C2gYqgC67Nyk4ECh/prYFjYyaen8N8ME=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qnZG+MBTnbc3HtM/nwn8lJf0oOtthEwltCYdenNa7hSTZxgPzW8N66Lzcd0PM6NAz7GjSI1sJaYL3Ffl4LYXfuMsnedMRKYUe1CekZAK8qIRBsZUFpfn/aI3JxWqzpyy6y20KKvGVC+zYnkxn2RD5+oVFMAja4tmeN2a2zTqx9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=foryxtg2; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	bh=51l29vM9tM/+S2bY4lRmzJDIA8GeDPaEJGJxy4I7DDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ksqNbjfrZV20uuhIZLFh6ezkf1lri+llwMaNFXqCx+op1DE6YrHKi3ny23HKLaT1esRn8CSbw5T5ElxHTlmsD/nTH8QlKSPu+BfihGFYprcZTtPv7gufYFbBvcOHopvQP1Cvj5v0eiEZzqyMUTMA/kd5lse123+qCMvL2IDRyyk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uYPH8lEo; arc=fail smtp.client-ip=40.107.101.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foryxtg2"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so9757051fa.2;
-        Thu, 24 Apr 2025 06:48:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745502509; x=1746107309; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0RwzVTwG8nmHSDimraa9LWFea9Cdtru6px1wsv7MBh4=;
-        b=foryxtg2kpRKFvTGfnNZojtHm2DZ4BqHY/NAYRtORxOaCJ8rjSC3taa4yCNBlAXMb8
-         Lwx62tXS+pA2VFaFr//HfPxs5uZc+biDs4KqMnLvAXEf5qSvb08prIMXoZdwzmLuNHW3
-         SE0fIAGLw3uCJ1ageNUZRX3RcVWPn39izyqnMTfAuTtJfDR/rr0RmT2/yMVoJu2asBgy
-         KphtCQMomuc8rCDEwq/e4agQFLblnbqxFaibLxrumzRg3iD+6o3HToqafcRWXqjTyczt
-         cN5/GELn4y4Hrim7vRR75dzjc83Vj4rp0G3/ZMsPBbXgv2n1L91JmKHk4uTfJGYkvNYa
-         7roA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745502509; x=1746107309;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0RwzVTwG8nmHSDimraa9LWFea9Cdtru6px1wsv7MBh4=;
-        b=plaeue5v77OcJ1vHgp7Cbjk18cFpM2rwRZ8K8u75fXbQ5nfLveZ3qiZYwkQ8FwMlwx
-         7kD0WAilX6QgZ32upnFNhcjbNyJlP2PRUKNH1AN5v7kWko9Yjyum+YloGnzVajXq5Q10
-         NCWmxhMPtlD3TWaTkMeYqK4G85zpQc7z8RyA+af2gADObQQBDQ7Vbt8oXtSpVDlBFVZn
-         QxHmnGBxKrDP3NvUDICVl6u7b5/vOyGohjQf7t9Va0I+qG2SzLWMbaX22n7HxUJyE4NX
-         mfZdhHU2YN2Igjxef585glzSMbVR2xuwTMoC2qY4EgMIeNyjwzmFrfGHuq3MdN1l64s/
-         86qg==
-X-Forwarded-Encrypted: i=1; AJvYcCULZIwzR2NNacGqwQaYluoVh7aKssw7T/YgZMPgwvOGlcyFLIGeERYWan2gT8H/512YvNSpUxoOPDLoxJE=@vger.kernel.org, AJvYcCWTtbcruru/gc3Qg/ShoYPaO4G1kpIjL/UJ0TFxk3izt5hHkHF+i7RmC+F2tfyuFyvuvwQKIcXIG32eKaceNR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwNAkE4R+okomvjHGRB+M5tWcY+p/S62A18O57IOobOnNfvp2lT
-	qJYujUhEpKdZjkgl9FPthkmop/yi1bK3nftDssnUMdw+bsPpkX5HKiOh81p11VkK1Iwei8I2ECW
-	AJunPcAM27kHo0uLrDdMlP5ddDLs=
-X-Gm-Gg: ASbGnctsGaN1Gb/cMVfPYrz+W74jsB8BIdq3Twm0IoU8OGF3fDzfu7byd7DxJynlH7j
-	Hfv10zEAiCvULRTIsj5Lf/Uh2LArJWNEc9Hww9wQ/1G6Fg+p7MVr9kBSx8d7FCr6nWKObF1532r
-	QoUJWKBzAT6eWVA+UPzrW+vcJ0ltXNb20e7pQz6g==
-X-Google-Smtp-Source: AGHT+IGfYtqtqnEQUmVVtVkr9ACHBDu7yCTF+ZijzmAOFXGQaNxtgq89CZsSs5L3NcdakGMOgFAKoAOhJbpVJkpsElg=
-X-Received: by 2002:a2e:a588:0:b0:30c:177c:9e64 with SMTP id
- 38308e7fff4ca-3179ffc89aemr9631721fa.35.1745502508531; Thu, 24 Apr 2025
- 06:48:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uYPH8lEo"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xYH8SoAZw8Ce4Uig167bButOapDworqpYqBOYUMsWTamwnAqDdnxteTM+h18l9kqyqKPAl865tb1fqprkOQQ6V515TmlKAzhp6NuMzGnJm4n13IUQdp/k4keV6zJtNVy6pkKDzvoNIv02aCvNoMUfJ1k8nW2afy3GCY/e/JHvSHkFTYQP3WmLbXlNt5PsqqM0Tqe2z+mFyJPx1M6j/WifSDbgtQ8PziFnR4rlCbs4djOJr4ehmQZgm40NzgunoITTe6rZhD4bygh/+BCppCLTr/jIpXc9PF0865MDrJVP6gwJEhej/ohEbgNM2a4Ai/sDxh0Q20N1DAsdh5BuI5W0A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lBe2lCq4bGsKe2iIwuGmPLxO3cPus2MHbNCCNhiyciw=;
+ b=r2NCC60+Ute5/1CqHY1XqrNAZyFlQ7Xq9jWBNIQ4LEiHn3ubW9Qj5whXvyzuFMNW+cw6IHvYqL8rhEsR5kuBpoXcSxNUSgZ3yJ5dXB//j4hVxJhOIP7DKrUbdbdZVmZKbqoFkqb+/3BakRDwvgEUrJvxYEHkFU39ryV/5iRR1F+479NZ5XldKg4d6qHOoCagzdBwRC+ujgWU1Ji9W0B/YRVEu6WJu8wirQHV8fK1DsA/MzdZHYmn4Z1dEj7AKKUr3T8yb2kjd0dzVV8Z7fSuy+J9b9ydWeNp7aZ5xLVHCJiKxzA/n0eabKQMkiGpxLCvcND7fR0qkMSdSF9czPIp8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lBe2lCq4bGsKe2iIwuGmPLxO3cPus2MHbNCCNhiyciw=;
+ b=uYPH8lEoCdxiiN5mcF2svMk5FzHp18pFm62o0QkMEqz4xRdUpanVBP2XuJSoFxhj6fWKONalwqdU683Bt526VjL1dsA+Iczhgi0WtOZAsZ99vfOtdgDYe3JpQnBKOR9ZEhdFt7+/+sNRSYtNSLq4bldezrslyJm+HyxqHiJxO6EQR/mC/3hPHG2/U7Vwb1ve7yR99mjnoyRc/xL8r+I8kB6wjoK+CYUjD6ZDfA3N49BLWKxkgDx5s42Dx8WEwIfBiPjGy7+YJqy42Vk38Lr0Bfo921YGxGeBTx9Bab+Z78F7uEd26ebWTfFqtpQrgr8ub+xftQ9snVuSrqVWaXDuyg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by SN7PR12MB6814.namprd12.prod.outlook.com (2603:10b6:806:266::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Thu, 24 Apr
+ 2025 13:48:27 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%4]) with mapi id 15.20.8632.030; Thu, 24 Apr 2025
+ 13:48:27 +0000
+Date: Thu, 24 Apr 2025 10:48:26 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>, shangsong2@lenovo.com,
+	Dave Jiang <dave.jiang@intel.com>, jack.vogel@oracle.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] iommu: Allow attaching static domains in
+ iommu_attach_device_pasid()
+Message-ID: <20250424134826.GQ1648741@nvidia.com>
+References: <20250424034123.2311362-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424034123.2311362-1-baolu.lu@linux.intel.com>
+X-ClientProxiedBy: BN9PR03CA0378.namprd03.prod.outlook.com
+ (2603:10b6:408:f7::23) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423-b4-container-of-type-check-v3-1-7994c56cf359@gmail.com> <aAomRMzyu3EX5Xal@google.com>
-In-Reply-To: <aAomRMzyu3EX5Xal@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 24 Apr 2025 09:47:52 -0400
-X-Gm-Features: ATxdqUEyShDrMfzYO0ZcV0Cacwz0kfxfITOaTr0jwTwMEZmEjiAEwXlZ4uo-zMg
-Message-ID: <CAJ-ks9nMqjj85rK6LsSnTPqsTHmMUDJsQxqJ7n2+r4oSZqBibA@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: check type of `$ptr` in `container_of!`
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SN7PR12MB6814:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9cc7cfd5-f28f-4785-c5a0-08dd8336b0a0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?BzgUd1kVAUO3XwjYwrIwG76/IIrpBE16XOJtNIG/AEUV9xosyc+Qw9gbxsJ6?=
+ =?us-ascii?Q?GAkwH9bBxo4n+XWfKVuFDVvafChZ4NUfV6ym3TJpPgGMunQvD/nV9EuJI/9c?=
+ =?us-ascii?Q?0xVUvbAFo6ENtHEDkKcCwWNkhREqUrMgBsA+oma8c8/cCTiZihSZn1CkwIxt?=
+ =?us-ascii?Q?o3IihAio7dZ5ZzBvRYn7xJMms7ftgX7hB9qJk2C+VnCteePN/AlwTS2VvVhZ?=
+ =?us-ascii?Q?EG4rV2iEywa4zBL/zASiqQYhUArSF5RnGmCT46z+TjqJ4cRo7pGnbfzwaM+Y?=
+ =?us-ascii?Q?+iGeaS1l4Hw8lrudD2NWmdy+8liBqjkgN+BDFG6EpnrJ0ZuMixA3bPBYLc/8?=
+ =?us-ascii?Q?NEbVfU3c/KuJc/vMY1BYtSO+NkUkU6A0EnQSEK942zJzP8h8jagJWblNMvU+?=
+ =?us-ascii?Q?iwewDNKy7ozDAV3QwaFAX/j3fjg8LtpQ0wp7Pun2oM5q+2f7hX0lcRFae1AQ?=
+ =?us-ascii?Q?15NN6M6Cq8WZvX14VsuFMvZMLyIZ9zqUqxp6yK38eg0V5DccvdQORynZ+JWZ?=
+ =?us-ascii?Q?6z2OnxwqVzt6K6h4E3/zBUcvIs2+69QUp2hfEWGT/IXxOOwBYOQ64jYoNC3t?=
+ =?us-ascii?Q?l7EKBHg24A02GZYxgJaOaskBlqR88y9tNnolE6MxsMcmdRIy/aZDOANO9Uyq?=
+ =?us-ascii?Q?0BE9ZJ/2+1lsEvtiSGnlt94VWS61ZhuM7jBf2sRyaiNUajTkzxLQZ0vS/b/K?=
+ =?us-ascii?Q?l8cTz2O4cmxwjXUscmGzobawQP91Z5Fnn9V6Iv0oE2ApZ3uRPVAI4FoNrepz?=
+ =?us-ascii?Q?qMCXEWu/p28ZZuYJo9xroW4OiJvGce5oALrUG+2t+jILPt8hcsQ0WYIsMqg2?=
+ =?us-ascii?Q?CWM2Ifgk7dF+69KdxcQWfGR0HLY+suLaAwXCqZSfJ/4VeJ7g4BPpTvKfuc94?=
+ =?us-ascii?Q?DOxqePzZaKiKePHqbAnrDvHYFVMyRVDSOyrjP/r6E8E7zZBLdvJpjksPeV2A?=
+ =?us-ascii?Q?LVZhnE+gVzbapSp+qnIf6wQb+froTSrknZkprVdPM1mBiJ56+hQMEPV2VwTY?=
+ =?us-ascii?Q?/mOwGzbpgNJS8vEtyOLTeCz9zZcQ1UPWxI25KmW2+YdE76yfnt2D6IwhakuU?=
+ =?us-ascii?Q?FbPOzzAaHEzwdA9vN+cABPL+yyWifXa6lsTnREvyz3G54gOA6+t2G0lToqnx?=
+ =?us-ascii?Q?RoVXY+9V8BMKiEySJUknauTPmAgeYMYc2nn3moxFjfIcuHTgMk19ghuS3O3X?=
+ =?us-ascii?Q?sK7BTpVRb0ylLZYSIxD+dDIqrl8h8kum9ni0o7znB3RprWg57HCMHNh1gq7y?=
+ =?us-ascii?Q?6bzaeF42JKWihBzM+R//Dwdj6BpFrvVAL/RZPsWQe+6Q78cBLW39Wet5S+Lt?=
+ =?us-ascii?Q?sPM972sPhfScCUa1peVejdbWd60bAsEdYVUCek7Npc1PZialnH0wJZRpRpj0?=
+ =?us-ascii?Q?/DSWgjZO71OfCstCM9Le8Ki/IGAB4C//yYDR/Y3BpDyymn1Ew/52eGqcHqod?=
+ =?us-ascii?Q?aQOx7DbNWok=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?oXQBNV8ClbEYWrDnfXNOezSZW25Qb2LGrleDGvYxmbafS0cKVlMzb0I0Btar?=
+ =?us-ascii?Q?HhCGlzvafaZDHGjyNrJjhLo3wth19pJMzK/WSC8EQR24jvsa6gOFhpMpBCBO?=
+ =?us-ascii?Q?SjCAOZe172EgVwpxPDD+dr2T62oXUxi5V8glkmG7X8YSy+VSgUigAH5yNeqR?=
+ =?us-ascii?Q?H3EUdYKDicNmt/Q1yAhFS3mlYVkCIVNMs2VFISu0qnNGJAGi7cQasWjLRc3h?=
+ =?us-ascii?Q?BPqmZsKEGx+qTFjMqmlWF+ty4JVbEgbM6gQvw3vSjxx6fw30S+76KBCgrCaZ?=
+ =?us-ascii?Q?BMM0A6/Tdy25T4zIQmhHprYFt90LuwBhZeZhr29dU8mh30gXAG+MdPc0UWhd?=
+ =?us-ascii?Q?o8jgjUQKjwhSjeYsSQuVUHFInSPghWM6VVdwoGi1FQ44bVbrw8f8Fg4M/1sS?=
+ =?us-ascii?Q?y6gGlgATIepXNIYFYU4okSX34aYuuwB8vWsCgdJF0QjP0i+NHXYTQ3ZGQKdx?=
+ =?us-ascii?Q?0aWA654dO5XSVCRd3wJ+Qxy0Neu3tE0hnxOcwlVYtJPjuXOO3YPTSp+QUmaa?=
+ =?us-ascii?Q?YyM0L3Fv6Q6h3C1GvNoPhCejtMXXVZfPr5oBa1LSIirBr938O89fOMEW2j5D?=
+ =?us-ascii?Q?hvtVLYARnSnUTPLGl749lMLI12dQYWH1o171tIbCL20RMjGbilziGiaRYLaA?=
+ =?us-ascii?Q?e7D/HRioQ+vaOGT3C6RutM0PXMs9o5jc7VzAO6T9ey4n9cvgDYwhV9acGt97?=
+ =?us-ascii?Q?VtNykATib/8pdYXdIjz/Xe8Ii/iCVVCulrY4+BeaX993qHROHMCE/UwgeLpV?=
+ =?us-ascii?Q?mjmAyBcu9Whf5woF3THP2JQJ77P+jOb6kmjc2lqE+QvJviGND6fUvfOnGUUh?=
+ =?us-ascii?Q?/WteXXpU4ObSV5SNrQOkmmYanhnqN/otvrdSGPaWWOKyrSpB7ND6yA8eLqV2?=
+ =?us-ascii?Q?jYB/ZEzUIV0EHJiFA+kvPtxtCYebifoym5H6WuYA9u6dLk5M7cadbtyjS0Db?=
+ =?us-ascii?Q?4HRqHRQ5bl81chRqenyAg1ERBZwXvWrdWvbmVv560240eHdD1zDuK6Z3CKZ5?=
+ =?us-ascii?Q?ycPPRg87NmfEOdAyfJAB1c0NK+yljf6RA7RKXMCMyc2Oz3sRXXJzD2dqhQf6?=
+ =?us-ascii?Q?n3bhqzeJC76XA+E0mKtTwuBWFiWUoaCO28D8zBsrMoJvFdG0uHn1nz62/UVF?=
+ =?us-ascii?Q?XaqBVBRgJTQ5hxwZ8wYvZ5eIv5kSSN8+tt5ZLT2kZ5VcOupCTWWgYNnkKUMy?=
+ =?us-ascii?Q?+Ead5/AhoQyrERjUSNTCOewtNvcfsPWrK19p4mITkfpWKpHdS4w/+/9a0U6r?=
+ =?us-ascii?Q?Hjp/yd33VayjO3YQ7aonE7aV5BVee24OG58XKY2nrOSNooE3Gpsa+g3SKjbV?=
+ =?us-ascii?Q?DvMqxsGKIMbBr6t7SW/ZPrqaGDIel9HxJ+atRqQk2hfXGBUMo9IOiLzEOCzf?=
+ =?us-ascii?Q?Afx+J60NT5fqwHmyYwHzwVrcy3Ssssd3SbauRohzLvxt01LZMralQvDmR5zK?=
+ =?us-ascii?Q?kwp7cTJM85iWbciRzRpPnxz6yEGdGroRp9dlez1R8TqV4FzY7WTVEfjcFn1O?=
+ =?us-ascii?Q?xMs4FejZHUMYemGaB6kHIgokj0AyF5l8xbB6Z0sO7v5qmF7fSo4cEncihfo8?=
+ =?us-ascii?Q?kWEIq77u1JrJlyn774s/JBO/G/CzMsMbAEFmGu/H?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cc7cfd5-f28f-4785-c5a0-08dd8336b0a0
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 13:48:27.2981
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xc9qu3na+Ar154O4i6t8yAa7qr1D8XZBRW5ZQPMlT97yO5LKvmhO/iRSITdlMBkr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6814
 
-On Thu, Apr 24, 2025 at 7:53=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Wed, Apr 23, 2025 at 01:40:10PM -0400, Tamir Duberstein wrote:
-> > Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*`=
-.
-> > Rename those placeholders for clarity.
-> >
-> > Given the incorrect usage:
-> >
-> > > diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
-> > > index 8d978c896747..6a7089149878 100644
-> > > --- a/rust/kernel/rbtree.rs
-> > > +++ b/rust/kernel/rbtree.rs
-> > > @@ -329,7 +329,7 @@ fn raw_entry(&mut self, key: &K) -> RawEntry<'_, =
-K, V> {
-> > >          while !(*child_field_of_parent).is_null() {
-> > >              let curr =3D *child_field_of_parent;
-> > >              // SAFETY: All links fields we create are in a `Node<K, =
-V>`.
-> > > -            let node =3D unsafe { container_of!(curr, Node<K, V>, li=
-nks) };
-> > > +            let node =3D unsafe { container_of!(curr, Node<K, V>, ke=
-y) };
-> > >
-> > >              // SAFETY: `node` is a non-null node so it is valid by t=
-he type invariants.
-> > >              match key.cmp(unsafe { &(*node).key }) {
-> >
-> > this patch produces the compilation error:
-> >
-> > > error[E0308]: mismatched types
-> > >    --> rust/kernel/lib.rs:207:25
-> > >     |
-> > > 207 |             [field_ptr, container_field_ptr]; // typeof(`$field=
-_ptr`) =3D=3D typeof(`$Container.$($fields)*`)
-> > >     |                         ^^^^^^^^^^^^^^^^^^^ expected `*mut rb_n=
-ode`, found `*mut K`
-> > >     |
-> > >    ::: rust/kernel/rbtree.rs:270:6
-> > >     |
-> > > 270 | impl<K, V> RBTree<K, V>
-> > >     |      - found this type parameter
-> > > ...
-> > > 332 |             let node =3D unsafe { container_of!(curr, Node<K, V=
->, key) };
-> > >     |                                 -------------------------------=
------ in this macro invocation
-> > >     |
-> > >     =3D note: expected raw pointer `*mut bindings::rb_node`
-> > >                found raw pointer `*mut K`
-> > >     =3D note: this error originates in the macro `container_of` (in N=
-ightly builds, run with -Z macro-backtrace for more info)
-> > >
-> > > error: aborting due to 1 previous error
-> >
-> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> > Link: https://lore.kernel.org/all/CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP5=
-wBuGPYh9ZTAiww@mail.gmail.com/
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
->
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
->
-> >  rust/kernel/lib.rs | 12 +++++++++---
-> >  1 file changed, 9 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> > index 1df11156302a..d14ed86efb68 100644
-> > --- a/rust/kernel/lib.rs
-> > +++ b/rust/kernel/lib.rs
-> > @@ -198,9 +198,15 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
-> >  /// ```
-> >  #[macro_export]
-> >  macro_rules! container_of {
-> > -    ($ptr:expr, $type:ty, $($f:tt)*) =3D> {{
-> > -        let offset: usize =3D ::core::mem::offset_of!($type, $($f)*);
-> > -        $ptr.byte_sub(offset).cast::<$type>()
-> > +    ($field_ptr:expr, $Container:ty, $($fields:tt)*) =3D> {{
->
-> It's rather unusual to use an uppercase C in the name of this parameter.
+On Thu, Apr 24, 2025 at 11:41:23AM +0800, Lu Baolu wrote:
+> The idxd driver attaches the default domain to a PASID of the device to
+> perform kernel DMA using that PASID. The domain is attached to the
+> device's PASID through iommu_attach_device_pasid(), which checks if the
+> domain->owner matches the iommu_ops retrieved from the device. If they
+> do not match, it returns a failure.
+> 
+>         if (ops != domain->owner || pasid == IOMMU_NO_PASID)
+>                 return -EINVAL;
+> 
+> The static identity domain implemented by the intel iommu driver doesn't
+> specify the domain owner. Therefore, kernel DMA with PASID doesn't work
+> for the idxd driver if the device translation mode is set to passthrough.
+> 
+> Generally the owner field of static domains are not set because they are
+> already part of iommu ops. Add a helper domain_iommu_ops_compatible()
+> that checks if a domain is compatible with the device's iommu ops. This
+> helper explicitly allows the static blocked and identity domains associated
+> with the device's iommu_ops to be considered compatible.
+> 
+> Fixes: 2031c469f816 ("iommu/vt-d: Add support for static identity domain")
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220031
+> Cc: stable@vger.kernel.org
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Link: https://lore.kernel.org/linux-iommu/20250422191554.GC1213339@ziepe.ca/
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/iommu/iommu.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
 
-I took the parameter name from `offset_of`:
-https://doc.rust-lang.org/stable/std/mem/macro.offset_of.html.
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
+
+Jason
