@@ -1,233 +1,187 @@
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DDAA22686B;
-	Thu, 24 Apr 2025 22:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53CD71F8730;
+	Thu, 24 Apr 2025 22:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745534087; cv=none; b=gCD9oZR84C0iMV3rs0MBcBykCrrpu3HtGE3VRo/OfB3dKirpc5WyP0pQZ/YBW79Ibx3TG3ox5lzcUeIl1gex/0BSUz3dJCGwqV97C8o3YgeH0ukkK9yhMbliqQX16Kx59ue2SjyBU4QroxDF4hxqLUwublHKPVg87OhwqJhAhzE=
+	t=1745534140; cv=none; b=dzD3XeUh253pKD5Ien+g/Zobk33S/sCKv2otahbnoyZNKr5tVLhbGRzH+Vwc/pCGtrvMJqc+8Wd6A4FIP+w4oK0B1lPyz4IZx7Lymp0XJT6S7ICKFpgCoIqQta4miWKmCP/SE6vWlAisdXs6j0nGQMZOGB94dnLFPt1XDmtg6iY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745534087; c=relaxed/simple;
-	bh=sqeoJp+2jRFNDH3TzY9O6mzMr5Isww/bZnpTdl7s7Uw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bCyS9V6BkoqhAiXQ7AZFvrbfS5D+DRhLbBkfcxtpAk5/mnuunwWdPZTVAUfoC3XwtcFvMMEaVSpNqWXdIKoY1k3s168StQF1jUu/gKgtIgT9s/cf/emxnFtPjDy7eVaINTjzF34yHh6NUfyj0otviVNpQrFU6VxMRU/AcaCJQYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aIhp8xLl; arc=none smtp.client-ip=209.85.222.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1745534140; c=relaxed/simple;
+	bh=MLVolz7xk13M9MhNqOr5SrRTUcG5GkLN8vAM2KJiSNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TvtXkhR5xqaSUOMtxVwzpNk24hmXyMx1uKvJQXER6wd7JZnNKjKhOqNU3x41rkWZyd9UB8uPEonF/asRjJi13i0n7GGCQGISkL9/HRJUm8Zb0nuGsEZLndQV+L0W39evBST3EZSNx8t9D0rZn5Lmqc63JaWhsroP8IgKaIkIHcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GWWNgy++; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aIhp8xLl"
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c5e39d1e0eso169079285a.1;
-        Thu, 24 Apr 2025 15:34:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWWNgy++"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2295d78b433so18618985ad.2;
+        Thu, 24 Apr 2025 15:35:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745534085; x=1746138885; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M6HQQxzT0Bc9xltCaxxJ7uLhPmo14NYdtMTMXhuJ1RU=;
-        b=aIhp8xLlZBMdfa6b9283ZxFlcT3e1Ok84ymZZVeI+koBJI0O2YOIvWV72qGzwybbrs
-         ovKNWpseuAFWDVzeEdYw5ajtyPj63qJMSDz+Oq6EIhEtGzkJbLloIfjzzg/fEaXlTEHh
-         0SqAqlDOQOoDtyVT3ZEf8I1FACUlHgVbwOcfwaPgShMvEIhsfKeLSdIdlxh0tDkpFQ1a
-         +qWhZf66Kcl6vvOPrGLivGop+T84hMLI9PJECdSMLukeI59u2mNdPJ4C3WmiPAMnEGlz
-         /12vaGTVKP9/U9JMitGmMmOQD2Ws2pHbxHsZ/lRH40H0l3ZBcCu3RXfKJyNpmYmp02Rq
-         F6Yw==
+        d=gmail.com; s=20230601; t=1745534138; x=1746138938; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=piRcXVq7sMzE5VR64xTnV64DS5lFgHG+6gelj4V0wvQ=;
+        b=GWWNgy++MN6Z+l9Kajt+3Fc792sKq/ozfMax2W/38D8NygwSctZVmXC+7SFJU8U071
+         +SJRNBMQy5SiEfP4TA5Mpl3aDFX5g66qh0528xx7ysG1DlrY8rGZN9toSEvczfXuNoj+
+         dFfX5FFlA6YGnqY3aHNaBtROKPSKI1cA6VBl10MagydJGSQ9y9uZmSscE6vEKSZs/0h+
+         Zb6MhIDLxSXDZSyoBpKm4eAtH8MxqVo2ZHdBVIbfde1V0sOhxPUH+woui+2djT05kfzU
+         4DJEakyvbOM5zg+Ig4tDK+Fc6b6B0pLLosop4gtA85UUfEY3SuqADMoFQZC2oomJbqsj
+         i+1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745534085; x=1746138885;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M6HQQxzT0Bc9xltCaxxJ7uLhPmo14NYdtMTMXhuJ1RU=;
-        b=e3ibccBDcnz8EKr/vL8UwdMi6psoCo1lA+6oggGyQQIph2rfpXVBsO5+9xeMyDM27o
-         Q8yw5vSP+MRoEe0Q0Lmi151hcHl+drSXer4CAFx3gsy/yy9p1XHbITd78ZtnCgimTPVe
-         a1QVIvfi6Tkx9w/CLZf8CNEWnpTUVyrOy5UOuR9vnuA7H3h28CG+/1wCAZG6qtkX3h3j
-         UESSQr7Ilr/EgcRCj7ssE9VjnS9dEqzD7SrGpo23Ixhd07QhGFrJMs96Hun1w+9il0Yh
-         EsipCUNVpcNy6mFYkIxoxIo9J5m3agI97Oy+JKAE1vHc8mE1EgNDbsK4j1WiTZWCwR50
-         ejcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWAkSptXBhO2HWDaYaqrjW63iyCaHHBaw0gYEekWACN5NZdBzooYtvWG1RMgxxFp3fGv9ZgZP+vivJYrNsw@vger.kernel.org, AJvYcCWU3HvnnMYSQ1G/tFLv02+2PDV3OvZEQHb1ELSiBoGCdJAsT+wm/ldLX3Qe0Sku/wCX/KsuXKnjVy8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpFnjwg92YXkcpSAi08CApvC57MQdRZHLjaHgRJyYsSS90tYDm
-	MAlsNjRk1Ev8l6VYvcdoalc1qxKlzoHvAGjQ1oQeOydjlkzWc1HR
-X-Gm-Gg: ASbGncvwAppvConOM21Urqnl0FAFhgwq+PWAJdHgmvDxjcNGvtfWPDLcCGEmaIlkBPA
-	pH6CvPL51VAefG+PSx951DLaXyAwSlSuzWDQr5Bg9ESHv4+gC77/gTl99AQd6QsWW32VGMlUOl+
-	Ameq4NdgcQIEViduaDd9LTwphwrkQs60HMFQ70zJhXRUYirzS/rwIQ60i0h+LCqk+Gmvu6JzkK7
-	+2zhj2/l99ME4hoKgl0114RZMWvZBC0TKAfAmTW6RiLFbCcrIuISswQbNcRzry93Ebz92R32L7D
-	bS3Er0T+FaMKeon536HSYq9nJdh5elkUY5QLSRDHffIfqdHMbGa0sv/aaIX9kPYmlXIT4dihXWN
-	lj6NVZfew/2lXNMERspTg6udhnev7dg==
-X-Google-Smtp-Source: AGHT+IEHNcRZ8mQ6zC3MsB97BOz3q06O+YLI0Gv2TZzEcTOdD+Jy+MSlgXuIuIVaSjsiDwOHMnKE7g==
-X-Received: by 2002:a05:620a:191d:b0:7c5:6375:1450 with SMTP id af79cd13be357-7c9606de128mr40651985a.18.1745534084963;
-        Thu, 24 Apr 2025 15:34:44 -0700 (PDT)
-Received: from theriatric.mshome.net (c-73-123-232-110.hsd1.ma.comcast.net. [73.123.232.110])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958ea36eesm142986885a.111.2025.04.24.15.34.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 15:34:44 -0700 (PDT)
-From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
-To: andy@kernel.org,
-	dlechner@baylibre.com,
-	gregkh@linuxfoundation.org,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	Michael.Hennerich@analog.com,
-	nuno.sa@analog.com
-Cc: gshahrouzi@gmail.com,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH v4 2/2] staging: iio: frequency: ad9832: Refactor powerdown control
-Date: Thu, 24 Apr 2025 18:32:09 -0400
-Message-ID: <20250424223210.91317-3-gshahrouzi@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250424223210.91317-1-gshahrouzi@gmail.com>
-References: <20250424223210.91317-1-gshahrouzi@gmail.com>
+        d=1e100.net; s=20230601; t=1745534138; x=1746138938;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=piRcXVq7sMzE5VR64xTnV64DS5lFgHG+6gelj4V0wvQ=;
+        b=h3uReva7uWW+cGnAUwWWN9lmVRzI+nmC1ptPaCKqfcFnETOdRVr7NPabetL8Gamvdb
+         ia8Z5HxoiGx/BaRI9F3/dOXQCSF4X+IgKWg+VeVqNRC/gtuBaMBWDgNhTEBa7bmajJel
+         iE0Oxb+g0NXWDhSxjObi+hdao+UiqE9K+x6Tqr7i1EJAty5OIdqAg/kxuvzHTOR09dV2
+         rEfM3reBkIbJTKtePGkaKExI/yNpeSEsnZ2lCFsdwu39J1+d7nOG/Q0MhlUAqSQmvDp5
+         LLh5OW1KC5zv43w5C0jamzqG4pop2dOlj8ls/eiPOAZJEfk2LJayn0tq0zzl+KPJOWXI
+         RiOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUeHkNanVIsxoCTpE5WJ2RW2kudDnSyLF0DiMr3p4WKdu+QrU5f6koGRYqPCxQNr2sRHMj0udyuvYhBPqot@vger.kernel.org, AJvYcCXid/7gIhUzHo6/6q87O9G1UZfMS944B+yukG0MJyARRfMb0EYhQLT6gQ3v3QCGrfbczNtzpcddH4JhYw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXw5JlMlMWaiHwy73Fu5a00l/UKHbbxlVsh1PtTKzbz5UOqu6N
+	PUF6TJuXa4WMbohTmx5cdZqh3aQPFV7OsXsViDFojkIhDj3mH0H2
+X-Gm-Gg: ASbGncuUZQlv3YtYzpstiBBe6xAD1ZzU6d8lokMvVxS0xlns/D3uikMV5xd0qJpZ8qi
+	y9gn/1v7DPVOi61+pBU9GvvN5ltnE0nQgmJqHI1J/xCR0OhD8SeOeLXyzZHszyNgpcW50KDZdMJ
+	mlQdpfNr20yaM7tnoOf6uTyW68tFzPlXtRK6oKhetkQO82vJuriDYGdUfhU6McLGpX042FXB2oV
+	qwKy4VmgNSBqJv9L7hju7DUTiscWCg9dCZBSyZgtDk7/u4SRQJoRoKdn9YiRGNcD+QrIO8Xff67
+	Ud4KoqjS++gj9VK7FzdWSpAoTU8y6hUJo3/pgPGGRwbD2/ebFkaHbhHzMSwUhR1pCwbqMXshspH
+	g/8dm2AeZtEpFcA==
+X-Google-Smtp-Source: AGHT+IF2BOZPaiyXen+OZfliYlqLibOIJlWawICtf7pjpxTaxc+vSQv4LbYQ5ubZQ1zyG5IXCrRf8w==
+X-Received: by 2002:a17:902:e805:b0:223:5de7:6c81 with SMTP id d9443c01a7336-22dbf5f34f9mr543135ad.27.1745534137647;
+        Thu, 24 Apr 2025 15:35:37 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dc2119sm19029765ad.91.2025.04.24.15.35.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 15:35:37 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <c79317ca-27ba-48bc-8245-ff6d1eb0cba9@roeck-us.net>
+Date: Thu, 24 Apr 2025 15:35:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] hwmon: (asus-ec-sensors) check sensor index in
+ read_string()
+To: Eugene Shalygin <eugene.shalygin@gmail.com>,
+ Alexei Safin <a.safin@rosa.ru>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+ linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+References: <20250424202654.5902-1-a.safin@rosa.ru>
+ <CAB95QAQ7P=sET9nxtp9OQ-kqosHXTcyBKvqwo_aDFuav=OVoEA@mail.gmail.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+In-Reply-To: <CAB95QAQ7P=sET9nxtp9OQ-kqosHXTcyBKvqwo_aDFuav=OVoEA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Replace custom implementation with out_altvoltage_powerdown ABI. The
-attribute's logic is inverted (1 now enables powerdown) to match the
-standard.
+On 4/24/25 13:39, Eugene Shalygin wrote:
+> Hi,
+> 
+> maybe return the value of sensor_index, which already contains the
+> error code, rather than EINVAL?
+> 
 
-Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
----
-V3 -> v4:
-	- Use guard(mutex) for simplified locking.
-	- Use an extended attribute.
-v2 -> v3:
-v1 -> v2:
-	Refactor powerdown functionality.
----
- drivers/staging/iio/frequency/ad9832.c | 69 +++++++++++++++++++-------
- 1 file changed, 51 insertions(+), 18 deletions(-)
+Yes. The error is theoretic since attributed which are not supported
+will be filtered out in asus_ec_hwmon_is_visible(), but the error return
+from find_ec_sensor_index() should not be replaced. Also, returning
+-EINVAL is just plain wrong.
 
-diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
-index 2e555084ff98a..b8b52302abf36 100644
---- a/drivers/staging/iio/frequency/ad9832.c
-+++ b/drivers/staging/iio/frequency/ad9832.c
-@@ -174,6 +174,32 @@ static int ad9832_write_phase(struct ad9832_state *st,
- 	return spi_sync(st->spi, &st->phase_msg);
- }
- 
-+static ssize_t ad9832_write_powerdown(struct iio_dev *indio_dev, uintptr_t private,
-+				      const struct iio_chan_spec *chan,
-+				      const char *buf, size_t len)
-+{
-+	struct ad9832_state *st = iio_priv(indio_dev);
-+	int ret;
-+	bool val;
-+
-+	ret = kstrtobool(buf, &val);
-+	if (ret)
-+		return ret;
-+
-+	guard(mutex)(&st->lock);
-+	if (val)
-+		st->ctrl_src |= AD9832_SLEEP;
-+	else
-+		st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP |
-+				 AD9832_CLR);
-+
-+	st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
-+					  st->ctrl_src);
-+	ret = spi_sync(st->spi, &st->msg);
-+
-+	return ret ? ret : len;
-+}
-+
- static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t len)
- {
-@@ -185,9 +211,9 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
- 
- 	ret = kstrtoul(buf, 10, &val);
- 	if (ret)
--		goto error_ret;
-+		return ret;
- 
--	mutex_lock(&st->lock);
-+	guard(mutex)(&st->lock);
- 	switch ((u32)this_attr->address) {
- 	case AD9832_FREQ0HM:
- 	case AD9832_FREQ1HM:
-@@ -232,22 +258,9 @@ static ssize_t ad9832_write(struct device *dev, struct device_attribute *attr,
- 						  st->ctrl_fp);
- 		ret = spi_sync(st->spi, &st->msg);
- 		break;
--	case AD9832_OUTPUT_EN:
--		if (val)
--			st->ctrl_src &= ~(AD9832_RESET | AD9832_SLEEP | AD9832_CLR);
--		else
--			st->ctrl_src |= FIELD_PREP(AD9832_SLEEP, 1);
--
--		st->data = cpu_to_be16(FIELD_PREP(AD9832_CMD_MSK, AD9832_CMD_SLEEPRESCLR) |
--						  st->ctrl_src);
--		ret = spi_sync(st->spi, &st->msg);
--		break;
- 	default:
- 		ret = -ENODEV;
- 	}
--	mutex_unlock(&st->lock);
--
--error_ret:
- 	return ret ? ret : len;
- }
- 
-@@ -270,8 +283,6 @@ static IIO_CONST_ATTR_PHASE_SCALE(0, "0.0015339808"); /* 2PI/2^12 rad*/
- 
- static IIO_DEV_ATTR_PINCONTROL_EN(0, 0200, NULL,
- 				ad9832_write, AD9832_PINCTRL_EN);
--static IIO_DEV_ATTR_OUT_ENABLE(0, 0200, NULL,
--				ad9832_write, AD9832_OUTPUT_EN);
- 
- static struct attribute *ad9832_attributes[] = {
- 	&iio_dev_attr_out_altvoltage0_frequency0.dev_attr.attr,
-@@ -285,7 +296,6 @@ static struct attribute *ad9832_attributes[] = {
- 	&iio_dev_attr_out_altvoltage0_pincontrol_en.dev_attr.attr,
- 	&iio_dev_attr_out_altvoltage0_frequencysymbol.dev_attr.attr,
- 	&iio_dev_attr_out_altvoltage0_phasesymbol.dev_attr.attr,
--	&iio_dev_attr_out_altvoltage0_out_enable.dev_attr.attr,
- 	NULL,
- };
- 
-@@ -293,6 +303,27 @@ static const struct attribute_group ad9832_attribute_group = {
- 	.attrs = ad9832_attributes,
- };
- 
-+static const struct iio_chan_spec_ext_info ad9832_ext_info[] = {
-+	{
-+		.name = "powerdown",
-+		.shared = IIO_SEPARATE,
-+		.write = ad9832_write_powerdown,
-+	},
-+	{ },
-+};
-+
-+#define AD9832_CHANNEL(chan) {					\
-+	.type = IIO_ALTVOLTAGE,					\
-+	.indexed = 1,						\
-+	.output = 1,						\
-+	.channel = (chan),					\
-+	.ext_info = ad9832_ext_info,				\
-+}
-+
-+static const struct iio_chan_spec ad9832_channels[] = {
-+	AD9832_CHANNEL(0),
-+};
-+
- static const struct iio_info ad9832_info = {
- 	.attrs = &ad9832_attribute_group,
- };
-@@ -333,6 +364,8 @@ static int ad9832_probe(struct spi_device *spi)
- 	indio_dev->name = spi_get_device_id(spi)->name;
- 	indio_dev->info = &ad9832_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = ad9832_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(ad9832_channels);
- 
- 	/* Setup default messages */
- 
--- 
-2.43.0
+FWIW, this should really be WARN_ONCE() instead of just an error
+return because it indicates a programming error. This also applies
+to the same check in asus_ec_hwmon_read().
+
+Guenter
+
+> Eugene
+> 
+> On Thu, 24 Apr 2025 at 22:27, Alexei Safin <a.safin@rosa.ru> wrote:
+>>
+>> Prevent a potential invalid memory access when the requested sensor
+>> is not found.
+>>
+>> find_ec_sensor_index() may return a negative value (e.g. -ENOENT),
+>> but its result was used without checking, which could lead to
+>> undefined behavior when passed to get_sensor_info().
+>>
+>> Add a proper check to return -EINVAL if sensor_index is negative.
+>>
+>> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>>
+>> Fixes: d0ddfd241e57 ("hwmon: (asus-ec-sensors) add driver for ASUS EC")
+>> Signed-off-by: Alexei Safin <a.safin@rosa.ru>
+>> ---
+>>   drivers/hwmon/asus-ec-sensors.c | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/hwmon/asus-ec-sensors.c b/drivers/hwmon/asus-ec-sensors.c
+>> index d893cfd1cb82..769725ea18db 100644
+>> --- a/drivers/hwmon/asus-ec-sensors.c
+>> +++ b/drivers/hwmon/asus-ec-sensors.c
+>> @@ -839,6 +839,10 @@ static int asus_ec_hwmon_read_string(struct device *dev,
+>>   {
+>>          struct ec_sensors_data *state = dev_get_drvdata(dev);
+>>          int sensor_index = find_ec_sensor_index(state, type, channel);
+>> +
+>> +       if (sensor_index < 0)
+>> +               return -EINVAL;
+>> +
+>>          *str = get_sensor_info(state, sensor_index)->label;
+>>
+>>          return 0;
+>> --
+>> 2.39.5 (Apple Git-154)
+>>
+> 
 
