@@ -1,133 +1,162 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A258919CC02;
-	Thu, 24 Apr 2025 13:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F2419CC02;
+	Thu, 24 Apr 2025 13:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745502514; cv=none; b=ppZDftf+Zz9ahsf6us1AP4mfYfHZwSj6M7vYhRp096WMm/AcmnrEZtrB5MQJZZakYlpDS6QwQx+Gc0dftowVFdItEwm+aiVCfKJnjz7B056TxapQqADLZ4hnU/5Ou9p7wcGQqENIrO0W2t0z6a0p6t2y98iU/14cVsNGoeIKiSY=
+	t=1745502519; cv=none; b=jdeN1QaWrBRfZ3qJX/XQadO+tajlHmdSdE+EMGoUpSTwDZjXio4jLPomTSgLev3lUUWhmj44o9iTQJWt3yed9JbvyA7lyESHJodty8ix6dKaTu9V2zGceZrVTwnZ19rTZFYpeb3KFFFMGE+bZ8R2G0e0eQKCwx1T0M5AEEaQQzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745502514; c=relaxed/simple;
-	bh=fKvIjrI0hCSQFHlGnjhD521l6JdrQsCaiG2ru0+NjF4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HBK0l/JyfhWb7tDIR7wSGPGx6ZhX4AC0yK/ycvHq2TvnoAUq+EpM3y07H0xIbadDFWhTI5FRu1ztDRMzzwLlaQRq2U/rfpTspUgA8k8rq/MPdqEwwzfWmCwKjYS8KX6SDxACksJpzTorgPxivcKrTyBskRv9yhll0sK2OA4ryuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g30p5Vff; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745502519; c=relaxed/simple;
+	bh=MD6RQCkFVVErsOAdSw1Blml2wWyRYQ3oNub1LnMfAZ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sF1N0VArDKgoOCc1KIfLEycQ2kikshGi+3+ygKAc025Qie598GgTi31qkf9pmHKI5ubqblrdfPHdK0IfgGwPT+av8Yd+VEO35bgldPe7nhCw1l2WSe2ObdsutSd6OHZ+5kJeNh6Slc+SfIbwdN7ltre6CCPsOxuRS9bH5aaBX2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=or0C2NuW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g30p5Vff"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bf7d0c15eso11097841fa.0;
-        Thu, 24 Apr 2025 06:48:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745502511; x=1746107311; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lr3IyKd6FrWyCjNMXq3F2D4owrOxZcXyVpO7W9rSEOs=;
-        b=g30p5VffTMGVTXqhrAU9pSS66QFxWlTjr5yfYx7XIZbGmHlUQetPhNmO5ok/eg3TVh
-         cY11pgx6L8ZnX4YZY1Ls/2WXGV/ppzG9bItr06sLxHKOMqzMerjQ2Y8VIO8Ws+aGBA5k
-         7QC+9gnXgJGjd3+hASVEwOeG/P6+rMvtdifCw3veHgBmpH1WH6JYylyLchEd8YhDjoDT
-         y+qiGv3uRz2uO7K0OZ6s9npjndSw1PBFWlirB1e+jG/sihULVkU64c1/FsmSdEAzskI3
-         Cb5GQFMXumt7cqtXHS0gHSIL6pygihqN8yHa4aC7KAh67LWnBVJnbSDijo1x0je8Zuij
-         C7oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745502511; x=1746107311;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lr3IyKd6FrWyCjNMXq3F2D4owrOxZcXyVpO7W9rSEOs=;
-        b=CvzDoDjqaeDbWXr8WoxtAMvcvJlEdr8uYjZGoxC2qF1ReoJdtcUrQKhrkRYeO99VsY
-         +hshKotrXQDjTk1Afi8It0E3IKS7piXrI9gm6U+2ipfE5QOQ5l+TqtKY6QXU6HRT2+sX
-         5JoEiCFQ08Abm7u0o1IZNDaWaIhzmkgOB14XTZc0ZXpecqsI0E/P3uH5WcI+0zo/xXHO
-         t9l44RgmvQ/8s9mvDsmozbrFGaPYHLL3tf302GiNs6lUlW6A1RpomAcS/waxcwCbY6Jo
-         YR7nug//N3LWyEW/bQBvQrxMR8qDQDzIRV6x1IsLxvDmJdxfPx3tOJCPLCKLshtTQTcr
-         mAGA==
-X-Forwarded-Encrypted: i=1; AJvYcCV88QUrMGM51TRb6Mxkguf7I19TLTp9kEDygY4SU4PcJBbXFrDcXO7OgSjEB6+Cfp8H/x3qFLhXHWp2wf4=@vger.kernel.org, AJvYcCWlX9oadcTL9i3sr2pE2y0HHsOvF+/mpveeHuZVxulD7aIM9yDHDGLIZM5GLXKoBgJQUM621PITy31BQ1ZCl0k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxry/KJaoKl/Uqh7lQyaXUUotdibhPD3g960Mh7IzkAUq3fHNW7
-	78zXYLu3j6y4yXb8aJcxuxoL2AmSWtuphYmyTk9TbHkZNbuGE2NUIGmtflLYaoUk6ZS8Pe/Q+Di
-	T4M3xUbNpV7FQb5zSnUYnmZZSW0M=
-X-Gm-Gg: ASbGncvk6I0ca1Cgz6WyBLlFppbVapB9/4qsEw8n4rveV7X8I70DSJ3qV4d/2UJc/nA
-	Qu04KhwjpLWENHkmEbveHYHcqQjSVNcRv47GR4S9ZA23LIF7JFmqIZQjdsrZcrKjhnLgAN9IZjB
-	8au8bNNr0SsQ3X9r0+i4/gYRmFA5PCBCl5uQqTDvzbJ4ux8XhT
-X-Google-Smtp-Source: AGHT+IHfaHMP16utXda1BAYlLkxGwbHqkmSa8+htrKYQej48TUwF7eeeD4JZ1JfHM9MaBzZoyk68vO+si0P6x3osYyo=
-X-Received: by 2002:a2e:a917:0:b0:307:e498:1254 with SMTP id
- 38308e7fff4ca-3179ffc2d0amr9162911fa.35.1745502510592; Thu, 24 Apr 2025
- 06:48:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="or0C2NuW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADA95C4CEE3;
+	Thu, 24 Apr 2025 13:48:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745502519;
+	bh=MD6RQCkFVVErsOAdSw1Blml2wWyRYQ3oNub1LnMfAZ8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=or0C2NuWIPU0Di9pnsnreBxmCmkvWUhwWBjBoDji39XVG19wPWpIG0y2oQ5ke1VpM
+	 bJc8KT00fJEBnFgzUZRYOmIKubyVpWesjxz31ooTQdI0uxO8dT609VufZe7tTSDThS
+	 qRtU8F/Cp5iozc7bMDn2GJvIY1AtVfMJeUhzMYuE=
+Date: Thu, 24 Apr 2025 15:48:36 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Michal Hocko <mhocko@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
+ allocation failure
+Message-ID: <2025042429-pediatric-tasting-20eb@gregkh>
+References: <2024122837-CVE-2024-56705-049b@gregkh>
+ <aAicoAmxX0B_O3Ok@tiehlicka>
+ <2025042301-flammable-masculine-ec48@gregkh>
+ <aAiwaM5ru-FJG2fI@tiehlicka>
+ <2025042329-mystify-dramatic-dcb9@gregkh>
+ <aAjOK_f-GPFHIdWK@tiehlicka>
+ <2025042355-hypnotize-relight-789f@gregkh>
+ <aAoLh_l-cEI4fDTa@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423-b4-container-of-type-check-v3-1-7994c56cf359@gmail.com> <CANiq72kQWNfSV0KK6qs6oJt+aGdgY=hXg=wJcmK3zYcokY1LNw@mail.gmail.com>
-In-Reply-To: <CANiq72kQWNfSV0KK6qs6oJt+aGdgY=hXg=wJcmK3zYcokY1LNw@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 24 Apr 2025 09:47:54 -0400
-X-Gm-Features: ATxdqUFodVm71rg2xbdZ_cjne5hMO5lP5ehhd9bV_I34pfmsHA8XA0FufFsQ1tk
-Message-ID: <CAJ-ks9myad-3MA6-TN_XyE98ZgefOgtoCiXC57KVYFjm3pw2LQ@mail.gmail.com>
-Subject: Re: [PATCH v3] rust: check type of `$ptr` in `container_of!`
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAoLh_l-cEI4fDTa@tiehlicka>
 
-On Thu, Apr 24, 2025 at 8:48=E2=80=AFAM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Wed, Apr 23, 2025 at 7:40=E2=80=AFPM Tamir Duberstein <tamird@gmail.co=
-m> wrote:
-> >
-> > +        if false {
-> > +            let container_field_ptr =3D ::core::ptr::addr_of!((*contai=
-ner_ptr).$($fields)*).cast_mut();
-> > +            [field_ptr, container_field_ptr]; // typeof(`$field_ptr`) =
-=3D=3D typeof(`$Container.$($fields)*`)
->
-> If I understand correctly, we keep the `// typeof ...` in the same
-> line so that it appears in the error message and thus it is clearer to
-> the user, right?
->
-> In that case, could we nevertheless please clarify things a bit at the
-> top of the `if false` block, i.e. something like:
->
->     // Ensure that both types are equal while avoiding codegen .....
->     // ... i.e. effectively compare `typeof(...) =3D=3D ...`.
->     if false {
->         ...
->
-> etc.?
->
-> Or, perhaps even better, we move this into its own macro, so that we
-> document it there and why we chose this particular approach, assuming
-> the error message still prints the right thing.
->
-> Speaking of magic, to be honest, is this approach worth it? I liked v1
-> quite more. The error seems concise enough, and the first line that
-> the compiler points out is `assert_same_type` which makes it super
-> clear, and showed the actual expressions involved without using a
-> comment.
->
-> With v1, we could also just put `assert_same_type` outside as a
-> utility for others to use, i.e. in the `kernel` crate, which
-> simplifies things and makes the error a bit shorter. Moving the
-> function out makes the error slightly shorter, would also allow us to
-> document its usage, including the suggestion to use `if false` in an
-> example.
->
-> Regarding the `if false`, the kernel is always built with at least
-> -O2. Benno mentioned debug performance -- was that related to
-> something like debug assertions being enabled or just optimization
-> level? Either way, even with the assertions enabled, I don't see it in
-> codegen.
->
-> Am I missing something?
+On Thu, Apr 24, 2025 at 11:59:35AM +0200, Michal Hocko wrote:
+> On Wed 23-04-25 16:50:48, Greg KH wrote:
+> > On Wed, Apr 23, 2025 at 01:25:31PM +0200, Michal Hocko wrote:
+> > > On Wed 23-04-25 12:20:47, Greg KH wrote:
+> [...]
+> > > > 	In ia_css_3a_statistics_allocate(), there is no check on the allocation
+> > > > 	result of the rgby_data memory. If rgby_data is not successfully
+> > > > 	allocated, it may trigger the assert(host_stats->rgby_data) assertion in
+> > > > 	ia_css_s3a_hmem_decode(). Adding a check to fix this potential issue.
+> > > 
+> > > I do understand this statement.
+> > 
+> > That is the commit information, and as such we deemed it a
+> > vulnerability.
+> > 
+> > > 
+> > > > That has not changed here at all.  It's just that the ranges of git
+> > > > versions for when Linux was vulnerable to this issue has been "tightened
+> > > > up" to only reflect when it was possible for this to be a problem (i.e.
+> > > > we now do not count the range of releases where the driver was not
+> > > > present at all in the kernel tree.)
+> > > 
+> > > But I fail to follow this. The commit itself says Fixes: a49d25364dfb
+> > > ("staging/atomisp: Add support for the Intel IPU v2") which makes it
+> > > clear since when the issue has been introduced. If this tag was not
+> > > present then there is CVE-$FOO.vulnerable which can specify the same
+> > > thing. I do not understand how 51b8dc5163d2 is related as it has a
+> > > different implementation of ia_css_3a_statistics_allocate that doesn't
+> > > have any unchecked kernel allocations AFAICS.
+> > 
+> > Ah, ok, that changes things.  The person who said that we should count
+> > the previous version of the driver said it was vulnerable at that point
+> > when it was in the kernel tree.  If this isn't the case, we will be glad
+> > to change this CVE to reflect that.
+> 
+> OK, so I have dived into this deeper just to be sure 
+> 	- fix ed61c5913950 merged v6.13-rc1
+> 	- breaker: the commit says Fixes: a49d25364dfb merged v4.12-rc1 which
+> 	  indeed adds  ia_css_3a_statistics_allocate and uses it in atomisp_alloc_3a_output_buf
+> 	- now we have 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
+> 	  merged 4.18 mentioned in .sha1 file which drops the whole
+> 	  driver. The driver was later reintroduced by ad85094b293e in v5.8-rc1
+> 	- that being said the kernel has been vulnerable since 4.12
+> 	  until 4.18 and 5.8 until 6.13. There is a gap when the code
+> 	  was not there and the kernel was therefore not affected. 
+> All that being said I do understand the second entry now but considering
+> the first entry and its Fixes tag I believe the second entry is simply
+> redundant.
 
-I have no strong opinions here, I'm just trying to keep everyone
-happy. I'm happy to go back to v1 with or without `assert_same_type`
-moved out of the macro body.
+Redundant if you are just using the .sha1 files, yes.  Not if you use
+the .dyad files which show you exactly what you came up with here.
+
+So for now, let's leave the .sha1 file alone, as without that second
+commit in there, the tools can not figure out what you just determined
+above in a programatic way.  Or if you think they can, hey, patches are
+always gladly accepted!  The tools are now in rust, not crazy bash, with
+a regression test suite, and any help is always welcome.
+
+> CVE-2024-53204, CVE-2024-53205 are the same situation.
+> 
+> CVE-2025-40364 is different. Both of the sha1 entries are stable
+> specific commits (same change) with a references to Fixes: c7fb19428d67d
+> merged in v5.19-rc1. This one has a follow up fix merged in fc9375e3f763
+> v5.19-rc3. 
+> So this CVE seems like stable specific (probably a misbackport?) or is this
+> a mistake?
+
+It is a stable-specific CVE.  It's not the first time we've had this,
+and will probably not be the last.
+
+> > > > > > > 2) What is the process when a CVE is altered? have I missed any email
+> > > > > > >    notification?
+> > > > > > 
+> > > > > > We do not do email notifications when CVEs are altered.  You have to
+> > > > > > watch the cve.org json feed for that.  Otherwise the email list would
+> > > > > > just be too confusing.  Think about every new stable update that happens
+> > > > > > which causes 10+ different CVEs to be updated showing where they are now
+> > > > > > resolved.  That does not come across well in an email feed, but the json
+> > > > > > feed shows it exactly.
+> > > > > 
+> > > > > I do understand you do not want to send notifications for that. Would it
+> > > > > make sense to announce a new upstream commit added to the CVE, though? This
+> > > > > would make it much easier to see that we might be missing a fix that is
+> > > > > considered related to a particular CVE.
+> > > > 
+> > > > As this has only happened 2 times so far, it's a pretty rare occurance
+> > > > given us allocating over 6000 CVEs.  And how exactly would that email
+> > > > look like?
+> > > 
+> > > We have identified that CVE-$FOO fix has been incomplete so far and
+> > > extended list of fixes required for this CVE. Please make sure that
+> > > those are appplied.
+> > > 
+> > > Or something in those lines.
+> > 
+> > Again, that would happen every stable release, and every -rc release,
+> > could you really keep up with such an email flow in a way that wouldn't
+> > just mirror watching the json feed instead?
+> 
+> AFAICS there usually are no updates to CVE-$FOO.sha1 file and that is what
+> really matters to us to identify all the commits that are associated
+> with the specific CVE.
+
+Hopefully you all have the same tooling in place that we've created to
+dig through the git repo to track what has been backported where.  But
+again, if not, feel free to use the .dyad files which show you all of
+the needed information in a machine readable format :)
+
+thanks,
+
+greg k-h
