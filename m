@@ -1,412 +1,239 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B54C223DF1
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5D4521ADCC
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:29:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745526496; cv=none; b=fKKIDC36xMZ7pwmarq6KXvIU6uf0y4Bc0SeMSuaSnRGQ/WW6o94yWiHQl304vVdz9n6m3a7Qb8Avck0HiOaSNzD6Yr2tU5Q39Z9Zlb/HZj4BIDw3u0eIo5gIsky0y2sQpvjm6zEiPzzAXwrXMEHMlcAmCOJHRD8Nk0sKIhCsWdc=
+	t=1745526546; cv=none; b=Vwjeultz0x8hqiebhT8r1ts+p+mclVNKw4lf+m6rd1OC/I041iwOrn8FxlEL8xa6cvtDqKa32s47KXM6/bImlHxG9ZjUOx7za2hOqz/cZ/YmVY+33hNZtAOIlVSacqluAj/TTkQgFrUsxdVYaakbLxplHXCA5ey3D6RHv5mKEyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745526496; c=relaxed/simple;
-	bh=zfoCZAi+qgWXFIaHeDNfmek6cFG6y/TXE1VwWMa2yYs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N4MdTI7xgspQBam5HsZgoAx8a3kVk6JhJ8oYTbUNYrkILZ0gVJFyrHvzCZNXDD/6PaybGRGFxoP5GXqaLETugady6LlUQjNgsTDWQ2+MUPNaDRNo8fvKToEXCelbJj+WJ0EZQNHi+0UR5Pobl4Ud09v+GuU50quwcLi8EAsA7zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=AI7rOCnF; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1745526546; c=relaxed/simple;
+	bh=jaF2/WGmmF6IhprUJ3GJa+AzVehMU23iTKAX6lGzPnw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZRXRP/ogwsrk2ygxYS7oVXhcbmu3gmAKrJnQYgXD58WDIjyMc+sfLetDjaqt692qeuLMVvbF2mU5XE4f8rO4Y3rENzOu8UeWBKUoImBAkjJtT6JpJXce4BuQoXhlYxxSJzalomvE7ERkMtx1QLmLfL6PCpOGWdaFjy7WiynVZcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=FuFXDoxV; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="AI7rOCnF"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476ac73c76fso17352661cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745526493; x=1746131293; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CxWEnn5MTFE6+1tVKFs4oJ/SdesKMia6cc2bPiHfnm4=;
-        b=AI7rOCnFe+64PBkGlQ4be3bDf6h5+hsJ2h27O6VWlAcz43ClTYv/o4OK3+f29ZcF2r
-         oO+PjGNPp8tGRl7f/rwYy8ayfgt4+qURjib91VXPP9CUu2yp6PPkBsUobQEzT+JJM3hf
-         nuFrRrf2DiyWy4+v0wF+5yal0OJzMt72ppyvuM3YhbuVs75dfCrsJhjGm6UZBsWnO5mb
-         YLQ/vivH1FEUpmSohv5NgWo5MF7y7teC/D5/+NsezXbKtEMtlOUsfKJQchJEvbwR0aLW
-         7iyQL7IjARwP8XyrsTQUyhZcDnJ0xtdf/lt9oMk0Brctg5XxKpjyEGZNAJ1dAgduiu2b
-         5ckA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="FuFXDoxV"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OJmgHn005857
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:29:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	AE6pFsekqcqEpjtxscTH0U9yzSRkz2si1yg/1Rn6R0I=; b=FuFXDoxVcgsmKjY8
+	bMlQIDCswn+OWe9kpnZwSVbK/gROM10pRlRH+jjoT2NZ5o/BOvs/L1U1fk1WWelN
+	PRAh8+BzNJfrzr9fjgBU79QOpCGmwZYm+W1sV7zsUPL3NQdMRvYyiP7G8DTeL7Xo
+	AbUP/VmKBR4jeBQDSbtnSSP5o4SwTFVC+P4vVf3f7v9RAMugBeJaZghvaHOISPZF
+	xt1j+Ew1XUisdTeuFo1SjnkT9XeScVZoIyhBhD51u/phtHzuvgVgG/tWK563h3s7
+	G8tHf8aMxpPFSjY1c5DLX+RAXQ9EfWgmRbt8+ljbSB6cjvJfE9oQ9/ZrRpn3BwlV
+	rn4QDg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3etsx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:29:03 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c53d5f85c9so29119285a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:29:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745526493; x=1746131293;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CxWEnn5MTFE6+1tVKFs4oJ/SdesKMia6cc2bPiHfnm4=;
-        b=h/s10b/wmLfZmJUikoJafCy6d7rYa2tpp7wjz7I3J0jw7a+9ly8twjemgL5125zivg
-         kDO7koJg0mUtR8y0YXKmVBVuIGs0RbKs3sENgB03wqTzFyjsOh1Z5vcLqYMunWvCPOmw
-         tzsg5doxqLu8kiH5MQNh22StzJipPOGoElvUCrwdunDpO1P61rg0GIvdb18QDBEPeyVf
-         2PwCVPJ5ocEISEo/SupQaTn5MK2xLU/tBTqfjfBaLXErxLndcXZm4iECzZgILtEk6AcA
-         Dfu9iZ2yanpXDZ7OoevUQZIGUO86RSdU0tgZO3fhxEMNqqmjTnp9O2M8qV7sCSGyGDow
-         Resw==
-X-Forwarded-Encrypted: i=1; AJvYcCVVUOmCAxD8rOzxk8qczO0ZFcBtRtgjt9Z6rf0Mf7QAOwyt8YoTOvv/RIwd1ILn8akjNJ7f/xV9PhfS/8g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTQ866m3/m3PmcJ/98EdCRlBFK1d6Ztzrup+tJmiXyik+dWete
-	J69Pe8DBqRTDu/aGHHWHjZVHylioYEmeubt+BfivnqpBGyQGYo2flCPNSpAScgo=
-X-Gm-Gg: ASbGncupyd5j/+AqQazLVWkfNDeABVJOYQSF9XtbmOomayMryxwgLTum2NrNNbOEmrC
-	lOXnr8Dg6VabA9VQMqmIlZjsNcTsjZEyRHySyorM3wpuS3IAw7npw7I+kNsP29vPxxHDvU0JWJ3
-	Qb3frfwlRYdl4pqY8so7SONQq0AHOo+SL9C/Xzqoefk2VnT03DvezteAnCwEpo9t3wSPHRJSwCV
-	lVJ/HyO2Zc4wqz70MxaSvGXR5/rlu9TyWMBLpuPv+nvCF7JqTiZM8gbD70eCFzeFpl67yHrO3Hb
-	j39ou3pKljg0xDBkz6nrUO1jrTXZJUk9gTGlgPci9ATsSa+Y/cXjn9waCOiX4dtBJDhu2DEub+o
-	znZKPeGlx/uW2NsZSd91kxdbnitIT34jhYBEAa9w=
-X-Google-Smtp-Source: AGHT+IHogOSfTg5LJdUBkMbpkPdMOCaNUDFPxTL0UeOXpsUsIFBmyFi+0UOFbb/jmohzrTYiFE7SSQ==
-X-Received: by 2002:ac8:7d44:0:b0:47f:9f87:ce0a with SMTP id d75a77b69052e-47fb68d7bf9mr14855211cf.0.1745526493434;
-        Thu, 24 Apr 2025 13:28:13 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9ebeb870sm16091691cf.5.2025.04.24.13.28.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 13:28:13 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-mm@kvack.org
-Cc: cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	longman@redhat.com,
-	hannes@cmpxchg.org,
-	mhocko@kernel.org,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	muchun.song@linux.dev,
-	tj@kernel.org,
-	mkoutny@suse.com,
-	akpm@linux-foundation.org
-Subject: [PATCH v5 2/2] vmscan,cgroup: apply mems_effective to reclaim
-Date: Thu, 24 Apr 2025 16:28:06 -0400
-Message-ID: <20250424202806.52632-3-gourry@gourry.net>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250424202806.52632-1-gourry@gourry.net>
-References: <20250424202806.52632-1-gourry@gourry.net>
+        d=1e100.net; s=20230601; t=1745526542; x=1746131342;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AE6pFsekqcqEpjtxscTH0U9yzSRkz2si1yg/1Rn6R0I=;
+        b=ZvAbNktQHd/UAzI5cml6HVl86YdFn5xoaW+6vzMrJmERETWepUPGOb4ycb/PFbygCS
+         KhZgpnY/RencKygYj+u/oYpatFI6Kb1uz3oeUdtr0J+QevkGH46nQwjOVwnor2bYC5EN
+         PUCW8q/Ip0pgtuLq/K730kq56TNF66fZgfJNzAqUHvQj0f3dnGvPW2keljYOYjbaWIWA
+         m3B4Lk6tBxR1ukOYMKBhY5BaaF0Btgz5hif9Bw9jqkhxmpaK3ZN+gZDFPlKUJAqXGypG
+         WpaIZB2xiptSslYSg2JPRoX0hs3u1K8WRKikpnkOIfXoacni7JC2jttYL36/WXmshcyk
+         h5sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW7plFAO6xwW907zjZB0PoDGAPHZUceFLFfPvH9GGu4E3UT7PfJEuGIBq/bPR3GBxwHmTtYpgsOUlkunWs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/60BFWwn93Lda0as/MWd0MHYnp+rNdvzbHG1UDKMGC/vZKNKv
+	OyhZPifsv1aKhtXG2kGsB0Ulux50I7/fVV0bsBIYklPWxxbFEEGM8vE8etGLkmXBa20J3SL3x/i
+	R2j+C8wdhw0S3ea3MeWfV+e1yMUu7dYdqI7bX/2AyJ70HefQDJxv1dVzajiJolNM=
+X-Gm-Gg: ASbGncs6NJNyU4kaycyy/EfqnaTFVFP76PJjq96LCdSayfqc0OB9XBcakBHUGw2zftY
+	J6ilqfw74MY55qb5NoTRknFj3MMTmQ48yoeMQJyrnC1oZhKmpkD6oRL/gS8U680VBWJGZaCeW6r
+	HHwbnoQrWzVMm3Odl9OdQAlZSYC2aEHr01qndn0MsoW3Ctr0k1nA6jzAnYTALuUUI+hSzwngpjw
+	Tu5O3YwlLGRM+V7i9PPG5XW5YhJRZefYMk2MCw77YNGyAde/2k/QoCsdQ5KFQGZs5Tqj8f0v1TZ
+	cHMDdgv1zRWa3SuFYFIN6O0AWtIv4p579sXFgUjg93/QFCPdAfdQGo5QW5au0PgxZwI=
+X-Received: by 2002:a05:620a:390a:b0:7c0:b106:94ba with SMTP id af79cd13be357-7c956efd7fdmr209395885a.7.1745526541820;
+        Thu, 24 Apr 2025 13:29:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG5WXJS8NaqdeMt/+KLcu9ZSJwqsayh1efliZCQC90ik+AnNBQkVEBnW9Khoq4PWXzzmvC+AQ==
+X-Received: by 2002:a05:620a:390a:b0:7c0:b106:94ba with SMTP id af79cd13be357-7c956efd7fdmr209392885a.7.1745526541344;
+        Thu, 24 Apr 2025 13:29:01 -0700 (PDT)
+Received: from [192.168.65.221] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4e7ccbsm17442766b.59.2025.04.24.13.28.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 13:29:00 -0700 (PDT)
+Message-ID: <eac33841-4796-43bf-affe-31901344c5ff@oss.qualcomm.com>
+Date: Thu, 24 Apr 2025 22:28:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] drm/msm/a6xx: Get HBB dynamically, if available
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Rob Clark <robdclark@gmail.com>
+Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>,
+        Connor Abbott <cwabbott0@gmail.com>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Kees Cook <kees@kernel.org>,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+        Sean Paul <sean@poorly.run>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dmitry Baryshkov <lumag@kernel.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        dri-devel
+ <dri-devel@lists.freedesktop.org>,
+        freedreno@lists.freedesktop.org
+References: <20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com>
+ <20250410-topic-smem_dramc-v2-3-dead15264714@oss.qualcomm.com>
+ <20911703-ab4e-4eb2-8611-294730a06d2f@quicinc.com>
+ <CACu1E7HDmQXDNtEQCXpHXsOKPCOgrWgo+_kcgizo9Mp1ntjDbA@mail.gmail.com>
+ <1282bf58-e431-4a07-97e5-628437e7ce5f@quicinc.com>
+ <CACu1E7GwMCt6+JJQGgSvJObTMMWYLPd69owyFo7S=sxu_EEsUw@mail.gmail.com>
+ <16845de2-a40a-4e3d-b3aa-c91e7072b57f@quicinc.com>
+ <CAF6AEGvyeRLHFBYmxkevgT+hosXGiH_w8Z+UjQmL+LdbNfVZ+w@mail.gmail.com>
+ <acd1c8dd-286b-40b7-841d-e53e2d155a61@oss.qualcomm.com>
+ <CAF6AEGts5rWvgyZy8RtAaUOsad362AG-uNjxF9vyj4szg=b5Bw@mail.gmail.com>
+ <6233171a-2964-4d57-986c-d3f1725eacd6@oss.qualcomm.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <6233171a-2964-4d57-986c-d3f1725eacd6@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: mSWEoCEpRUZCGGdAugM0R0r2n5fx_RlX
+X-Proofpoint-GUID: mSWEoCEpRUZCGGdAugM0R0r2n5fx_RlX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDE0MyBTYWx0ZWRfX8KTPSc0y3jdD 73lQ5QtxR95uvG6lltiaag2sr4ka4/sXCEWQ9H6Bz37g57zOKxvSozfR6kWiN1XsWJYI9wr5xHg YAL/4V5XKJPZH+G7lcptKE0BFlurfg4B5L2zKJ25vUlMw9bj8M7BmqhbM93iW6YkOvFGF21Erwz
+ LrPnj8mF90xb6Gtx5d62V3xNRP/adR71kAOczE7VBOiKWv6ieP5P3J7Zy9WAsw2VxQBmmLb8mIJ er01Jy8vz58DaigLn3S5Mkn2OmNIvedj+lgS3yGy51IdzUYNkcPxsPHdUfF2QPIOZbkL8nWLvMr kFAdHKS4z/gLFijubbQ5emLXZRmREoANVk7Ll5cMefZ2CTUfjGJu9tLzRpJNkzNepwA5iMlnAFT
+ 3pfi4OvbW9ZPJRWxSSbnDOIyjybzjp3JPQl2Xbf2pdBD+XG7NFOaDorxujNmdOC5ElPNr9zz
+X-Authority-Analysis: v=2.4 cv=Mepsu4/f c=1 sm=1 tr=0 ts=680a9f0f cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=U4o27yoWPFISaBf6hsEA:9 a=3ZKOabzyN94A:10
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-24_09,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 impostorscore=0 clxscore=1015
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240143
 
-It is possible for a reclaimer to cause demotions of an lruvec belonging
-to a cgroup with cpuset.mems set to exclude some nodes. Attempt to apply
-this limitation based on the lruvec's memcg and prevent demotion.
+On 4/23/25 5:23 PM, Dmitry Baryshkov wrote:
+> On 23/04/2025 17:55, Rob Clark wrote:
+>> On Tue, Apr 22, 2025 at 4:57 PM Konrad Dybcio
+>> <konrad.dybcio@oss.qualcomm.com> wrote:
+>>>
+>>> On 4/21/25 10:13 PM, Rob Clark wrote:
+>>>> On Fri, Apr 18, 2025 at 9:00 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
+>>>>>
+>>>>> On 4/18/2025 6:40 AM, Connor Abbott wrote:
+>>>>>> On Thu, Apr 17, 2025, 1:50 PM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
+>>>>>>>
+>>>>>>> On 4/17/2025 9:02 PM, Connor Abbott wrote:
+>>>>>>>> On Thu, Apr 17, 2025 at 3:45 AM Akhil P Oommen <quic_akhilpo@quicinc.com> wrote:
+>>>>>>>>>
+>>>>>>>>> On 4/10/2025 11:13 PM, Konrad Dybcio wrote:
+>>>>>>>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>>>>>>>>
+>>>>>>>>>> The Highest Bank address Bit value can change based on memory type used.
+>>>>>>>>>>
+>>>>>>>>>> Attempt to retrieve it dynamically, and fall back to a reasonable
+>>>>>>>>>> default (the one used prior to this change) on error.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>>>>>>>> ---
+>>>>>>>>>>   drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 15 ++++++++++++++-
+>>>>>>>>>>   1 file changed, 14 insertions(+), 1 deletion(-)
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>>>>>>>> index 06465bc2d0b4b128cddfcfcaf1fe4252632b6777..a6232b382bd16319f20ae5f8f5e57f38ecc62d9f 100644
+>>>>>>>>>> --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>>>>>>>> +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+>>>>>>>>>> @@ -13,6 +13,7 @@
+>>>>>>>>>>   #include <linux/firmware/qcom/qcom_scm.h>
+>>>>>>>>>>   #include <linux/pm_domain.h>
+>>>>>>>>>>   #include <linux/soc/qcom/llcc-qcom.h>
+>>>>>>>>>> +#include <linux/soc/qcom/smem.h>
+>>>>>>>>>>
+>>>>>>>>>>   #define GPU_PAS_ID 13
+>>>>>>>>>>
+>>>>>>>>>> @@ -587,6 +588,8 @@ static void a6xx_set_cp_protect(struct msm_gpu *gpu)
+>>>>>>>>>>
+>>>>>>>>>>   static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>>>>>>>>   {
+>>>>>>>>>> +     int hbb;
+>>>>>>>>>> +
+>>>>>>>>>>        gpu->ubwc_config.rgb565_predicator = 0;
+>>>>>>>>>>        gpu->ubwc_config.uavflagprd_inv = 0;
+>>>>>>>>>>        gpu->ubwc_config.min_acc_len = 0;
+>>>>>>>>>> @@ -635,7 +638,6 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>>>>>>>>            adreno_is_a690(gpu) ||
+>>>>>>>>>>            adreno_is_a730(gpu) ||
+>>>>>>>>>>            adreno_is_a740_family(gpu)) {
+>>>>>>>>>> -             /* TODO: get ddr type from bootloader and use 2 for LPDDR4 */
+>>>>>>>>>>                gpu->ubwc_config.highest_bank_bit = 16;
+>>>>>>>>>>                gpu->ubwc_config.amsbc = 1;
+>>>>>>>>>>                gpu->ubwc_config.rgb565_predicator = 1;
+>>>>>>>>>> @@ -664,6 +666,13 @@ static void a6xx_calc_ubwc_config(struct adreno_gpu *gpu)
+>>>>>>>>>>                gpu->ubwc_config.highest_bank_bit = 14;
+>>>>>>>>>>                gpu->ubwc_config.min_acc_len = 1;
+>>>>>>>>>>        }
+>>>>>>>>>> +
+>>>>>>>>>> +     /* Attempt to retrieve the data from SMEM, keep the above defaults in case of error */
+>>>>>>>>>> +     hbb = qcom_smem_dram_get_hbb();
+>>>>>>>>>> +     if (hbb < 0)
+>>>>>>>>>> +             return;
+>>>>>>>>>> +
+>>>>>>>>>> +     gpu->ubwc_config.highest_bank_bit = hbb;
+>>>>>>>>>
+>>>>>>>>> I am worried about blindly relying on SMEM data directly for HBB for
+>>>>>>>>> legacy chipsets. There is no guarantee it is accurate on every chipset
+>>>>>>>>> and every version of firmware. Also, until recently, this value was
+>>>>>>>>> hardcoded in Mesa which matched the value in KMD.
+>>>>>>>>
+>>>>>>>> To be clear about this, from the moment we introduced host image
+>>>>>>>> copies in Mesa we added support for querying the HBB from the kernel,
+>>>>>>>> explicitly so that we could do what this series does without Mesa ever
+>>>>>>>> breaking. Mesa will never assume the HBB unless the kernel is too old
+>>>>>>>> to support querying it. So don't let Mesa be the thing that stops us
+>>>>>>>> here.
+>>>>>>>
+>>>>>>> Thanks for clarifying about Mesa. I still don't trust a data source that
+>>>>>>> is unused in production.
+>>>>>>
+>>>>>> Fair enough, I'm not going to argue with that part. Just wanted to
+>>>>>> clear up any confusion about Mesa.
+>>>>>>
+>>>>>> Although, IIRC kgsl did set different values for a650 depending on
+>>>>>> memory type... do you know what source that used?
+>>>>>
+>>>>> KGSL relies on an undocumented devicetree node populated by bootloader
+>>>>> to detect ddrtype and calculates the HBB value based on that.
+>>>>
+>>>> Would it be reasonable to use the smem value, but if we find the
+>>>> undocumented dt property, WARN_ON() if it's value disagrees with smem?
+>>>>
+>>>> That would at least give some confidence, or justified un-confidence
+>>>> about the smem values
+>>>
+>>> The aforementioned value is populated based on the data that this
+>>> driver reads out, and only on the same range of platforms that this
+>>> driver happens to cater to
+>>
+>> Did I understand that correctly to mean that the dt property is based
+>> on the same smem value that you are using?  In that case, there should
+>> be no argument against using the smem value as the source of truth.
+> 
+> It is, but is done by the bootloader that knows exact format of the data.
 
-Notably, this may still allow demotion of shared libraries or any memory
-first instantiated in another cgroup. This means cpusets still cannot
-cannot guarantee complete isolation when demotion is enabled, and the
-docs have been updated to reflect this.
+Right, so the only point of concern here is the handwavy matching-by-size
+logic.
 
-This is useful for isolating workloads on a multi-tenant system from
-certain classes of memory more consistently - with the noted exceptions.
-
-Note on locking:
-
-The cgroup_get_e_css reference protects the css->effective_mems, and
-calls of this interface would be subject to the same race conditions
-associated with a non-atomic access to cs->effective_mems.
-
-So while this interface cannot make strong guarantees of correctness,
-it can therefore avoid taking a global or rcu_read_lock for performance.
-
-Suggested-by: Shakeel Butt <shakeel.butt@linux.dev>
-Suggested-by: Waiman Long <longman@redhat.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Reviewed-by: Shakeel Butt <shakeel.butt@linux.dev>
-Reviewed-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Gregory Price <gourry@gourry.net>
----
- .../ABI/testing/sysfs-kernel-mm-numa          | 16 +++++---
- include/linux/cpuset.h                        |  5 +++
- include/linux/memcontrol.h                    |  6 +++
- kernel/cgroup/cpuset.c                        | 36 ++++++++++++++++
- mm/memcontrol.c                               |  6 +++
- mm/vmscan.c                                   | 41 +++++++++++--------
- 6 files changed, 88 insertions(+), 22 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-numa b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-index 77e559d4ed80..90e375ff54cb 100644
---- a/Documentation/ABI/testing/sysfs-kernel-mm-numa
-+++ b/Documentation/ABI/testing/sysfs-kernel-mm-numa
-@@ -16,9 +16,13 @@ Description:	Enable/disable demoting pages during reclaim
- 		Allowing page migration during reclaim enables these
- 		systems to migrate pages from fast tiers to slow tiers
- 		when the fast tier is under pressure.  This migration
--		is performed before swap.  It may move data to a NUMA
--		node that does not fall into the cpuset of the
--		allocating process which might be construed to violate
--		the guarantees of cpusets.  This should not be enabled
--		on systems which need strict cpuset location
--		guarantees.
-+		is performed before swap if an eligible numa node is
-+		present in cpuset.mems for the cgroup (or if cpuset v1
-+		is being used). If cpusets.mems changes at runtime, it
-+		may move data to a NUMA node that does not fall into the
-+		cpuset of the new cpusets.mems, which might be construed
-+		to violate the guarantees of cpusets.  Shared memory,
-+		such as libraries, owned by another cgroup may still be
-+		demoted and result in memory use on a node not present
-+		in cpusets.mem. This should not be enabled on systems
-+		which need strict cpuset location guarantees.
-diff --git a/include/linux/cpuset.h b/include/linux/cpuset.h
-index 893a4c340d48..5255e3fdbf62 100644
---- a/include/linux/cpuset.h
-+++ b/include/linux/cpuset.h
-@@ -171,6 +171,7 @@ static inline void set_mems_allowed(nodemask_t nodemask)
- 	task_unlock(current);
- }
- 
-+extern bool cpuset_node_allowed(struct cgroup *cgroup, int nid);
- #else /* !CONFIG_CPUSETS */
- 
- static inline bool cpusets_enabled(void) { return false; }
-@@ -282,6 +283,10 @@ static inline bool read_mems_allowed_retry(unsigned int seq)
- 	return false;
- }
- 
-+static inline bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
-+{
-+	return true;
-+}
- #endif /* !CONFIG_CPUSETS */
- 
- #endif /* _LINUX_CPUSET_H */
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 53364526d877..a6c4e3faf721 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1736,6 +1736,8 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
- 	rcu_read_unlock();
- }
- 
-+bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid);
-+
- #else
- static inline bool mem_cgroup_kmem_disabled(void)
- {
-@@ -1793,6 +1795,10 @@ static inline void count_objcg_events(struct obj_cgroup *objcg,
- {
- }
- 
-+static inline bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
-+{
-+	return true;
-+}
- #endif /* CONFIG_MEMCG */
- 
- #if defined(CONFIG_MEMCG) && defined(CONFIG_ZSWAP)
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index f8e6a9b642cb..7eb71d411dc7 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -4163,6 +4163,42 @@ bool cpuset_current_node_allowed(int node, gfp_t gfp_mask)
- 	return allowed;
- }
- 
-+bool cpuset_node_allowed(struct cgroup *cgroup, int nid)
-+{
-+	struct cgroup_subsys_state *css;
-+	struct cpuset *cs;
-+	bool allowed;
-+
-+	/*
-+	 * In v1, mem_cgroup and cpuset are unlikely in the same hierarchy
-+	 * and mems_allowed is likely to be empty even if we could get to it,
-+	 * so return true to avoid taking a global lock on the empty check.
-+	 */
-+	if (!cpuset_v2())
-+		return true;
-+
-+	css = cgroup_get_e_css(cgroup, &cpuset_cgrp_subsys);
-+	if (!css)
-+		return true;
-+
-+	/*
-+	 * Normally, accessing effective_mems would require the cpuset_mutex
-+	 * or callback_lock - but node_isset is atomic and the reference
-+	 * taken via cgroup_get_e_css is sufficient to protect css.
-+	 *
-+	 * Since this interface is intended for use by migration paths, we
-+	 * relax locking here to avoid taking global locks - while accepting
-+	 * there may be rare scenarios where the result may be innaccurate.
-+	 *
-+	 * Reclaim and migration are subject to these same race conditions, and
-+	 * cannot make strong isolation guarantees, so this is acceptable.
-+	 */
-+	cs = container_of(css, struct cpuset, css);
-+	allowed = node_isset(nid, cs->effective_mems);
-+	css_put(css);
-+	return allowed;
-+}
-+
- /**
-  * cpuset_spread_node() - On which node to begin search for a page
-  * @rotor: round robin rotor
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 40c07b8699ae..2f61d0060fd1 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -29,6 +29,7 @@
- #include <linux/page_counter.h>
- #include <linux/memcontrol.h>
- #include <linux/cgroup.h>
-+#include <linux/cpuset.h>
- #include <linux/sched/mm.h>
- #include <linux/shmem_fs.h>
- #include <linux/hugetlb.h>
-@@ -5437,3 +5438,8 @@ static int __init mem_cgroup_swap_init(void)
- subsys_initcall(mem_cgroup_swap_init);
- 
- #endif /* CONFIG_SWAP */
-+
-+bool mem_cgroup_node_allowed(struct mem_cgroup *memcg, int nid)
-+{
-+	return memcg ? cpuset_node_allowed(memcg->css.cgroup, nid) : true;
-+}
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 2b2ab386cab5..32a7ce421e42 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -342,16 +342,22 @@ static void flush_reclaim_state(struct scan_control *sc)
- 	}
- }
- 
--static bool can_demote(int nid, struct scan_control *sc)
-+static bool can_demote(int nid, struct scan_control *sc,
-+		       struct mem_cgroup *memcg)
- {
-+	int demotion_nid;
-+
- 	if (!numa_demotion_enabled)
- 		return false;
- 	if (sc && sc->no_demotion)
- 		return false;
--	if (next_demotion_node(nid) == NUMA_NO_NODE)
-+
-+	demotion_nid = next_demotion_node(nid);
-+	if (demotion_nid == NUMA_NO_NODE)
- 		return false;
- 
--	return true;
-+	/* If demotion node isn't in the cgroup's mems_allowed, fall back */
-+	return mem_cgroup_node_allowed(memcg, demotion_nid);
- }
- 
- static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
-@@ -376,7 +382,7 @@ static inline bool can_reclaim_anon_pages(struct mem_cgroup *memcg,
- 	 *
- 	 * Can it be reclaimed from this node via demotion?
- 	 */
--	return can_demote(nid, sc);
-+	return can_demote(nid, sc, memcg);
- }
- 
- /*
-@@ -1096,7 +1102,8 @@ static bool may_enter_fs(struct folio *folio, gfp_t gfp_mask)
-  */
- static unsigned int shrink_folio_list(struct list_head *folio_list,
- 		struct pglist_data *pgdat, struct scan_control *sc,
--		struct reclaim_stat *stat, bool ignore_references)
-+		struct reclaim_stat *stat, bool ignore_references,
-+		struct mem_cgroup *memcg)
- {
- 	struct folio_batch free_folios;
- 	LIST_HEAD(ret_folios);
-@@ -1109,7 +1116,7 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
- 	folio_batch_init(&free_folios);
- 	memset(stat, 0, sizeof(*stat));
- 	cond_resched();
--	do_demote_pass = can_demote(pgdat->node_id, sc);
-+	do_demote_pass = can_demote(pgdat->node_id, sc, memcg);
- 
- retry:
- 	while (!list_empty(folio_list)) {
-@@ -1658,7 +1665,7 @@ unsigned int reclaim_clean_pages_from_list(struct zone *zone,
- 	 */
- 	noreclaim_flag = memalloc_noreclaim_save();
- 	nr_reclaimed = shrink_folio_list(&clean_folios, zone->zone_pgdat, &sc,
--					&stat, true);
-+					&stat, true, NULL);
- 	memalloc_noreclaim_restore(noreclaim_flag);
- 
- 	list_splice(&clean_folios, folio_list);
-@@ -2031,7 +2038,8 @@ static unsigned long shrink_inactive_list(unsigned long nr_to_scan,
- 	if (nr_taken == 0)
- 		return 0;
- 
--	nr_reclaimed = shrink_folio_list(&folio_list, pgdat, sc, &stat, false);
-+	nr_reclaimed = shrink_folio_list(&folio_list, pgdat, sc, &stat, false,
-+					 lruvec_memcg(lruvec));
- 
- 	spin_lock_irq(&lruvec->lru_lock);
- 	move_folios_to_lru(lruvec, &folio_list);
-@@ -2214,7 +2222,7 @@ static unsigned int reclaim_folio_list(struct list_head *folio_list,
- 		.no_demotion = 1,
- 	};
- 
--	nr_reclaimed = shrink_folio_list(folio_list, pgdat, &sc, &stat, true);
-+	nr_reclaimed = shrink_folio_list(folio_list, pgdat, &sc, &stat, true, NULL);
- 	while (!list_empty(folio_list)) {
- 		folio = lru_to_folio(folio_list);
- 		list_del(&folio->lru);
-@@ -2646,7 +2654,7 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
-  * Anonymous LRU management is a waste if there is
-  * ultimately no way to reclaim the memory.
-  */
--static bool can_age_anon_pages(struct pglist_data *pgdat,
-+static bool can_age_anon_pages(struct lruvec *lruvec,
- 			       struct scan_control *sc)
- {
- 	/* Aging the anon LRU is valuable if swap is present: */
-@@ -2654,7 +2662,8 @@ static bool can_age_anon_pages(struct pglist_data *pgdat,
- 		return true;
- 
- 	/* Also valuable if anon pages can be demoted: */
--	return can_demote(pgdat->node_id, sc);
-+	return can_demote(lruvec_pgdat(lruvec)->node_id, sc,
-+			  lruvec_memcg(lruvec));
- }
- 
- #ifdef CONFIG_LRU_GEN
-@@ -2732,7 +2741,7 @@ static int get_swappiness(struct lruvec *lruvec, struct scan_control *sc)
- 	if (!sc->may_swap)
- 		return 0;
- 
--	if (!can_demote(pgdat->node_id, sc) &&
-+	if (!can_demote(pgdat->node_id, sc, memcg) &&
- 	    mem_cgroup_get_nr_swap_pages(memcg) < MIN_LRU_BATCH)
- 		return 0;
- 
-@@ -4695,7 +4704,7 @@ static int evict_folios(struct lruvec *lruvec, struct scan_control *sc, int swap
- 	if (list_empty(&list))
- 		return scanned;
- retry:
--	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false);
-+	reclaimed = shrink_folio_list(&list, pgdat, sc, &stat, false, memcg);
- 	sc->nr.unqueued_dirty += stat.nr_unqueued_dirty;
- 	sc->nr_reclaimed += reclaimed;
- 	trace_mm_vmscan_lru_shrink_inactive(pgdat->node_id,
-@@ -5850,7 +5859,7 @@ static void shrink_lruvec(struct lruvec *lruvec, struct scan_control *sc)
- 	 * Even if we did not try to evict anon pages at all, we want to
- 	 * rebalance the anon lru active/inactive ratio.
- 	 */
--	if (can_age_anon_pages(lruvec_pgdat(lruvec), sc) &&
-+	if (can_age_anon_pages(lruvec, sc) &&
- 	    inactive_is_low(lruvec, LRU_INACTIVE_ANON))
- 		shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
- 				   sc, LRU_ACTIVE_ANON);
-@@ -6681,10 +6690,10 @@ static void kswapd_age_node(struct pglist_data *pgdat, struct scan_control *sc)
- 		return;
- 	}
- 
--	if (!can_age_anon_pages(pgdat, sc))
-+	lruvec = mem_cgroup_lruvec(NULL, pgdat);
-+	if (!can_age_anon_pages(lruvec, sc))
- 		return;
- 
--	lruvec = mem_cgroup_lruvec(NULL, pgdat);
- 	if (!inactive_is_low(lruvec, LRU_INACTIVE_ANON))
- 		return;
- 
--- 
-2.49.0
-
+Konrad
