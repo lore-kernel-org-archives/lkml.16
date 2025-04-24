@@ -1,139 +1,126 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CDA42A82;
-	Thu, 24 Apr 2025 03:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF3F9460;
+	Thu, 24 Apr 2025 03:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745464956; cv=none; b=JZtReC24oXxpi/qOMZ9dYBh3Sls1MzjSRYwNDKZS7TacfmBZ/tFtjt3UWsTUBd20EdICYhMnZSNDNKdKFP7ZRYqhs5qQm2SYQmscXEo9YE5szxuNdGLEVKaSShzmboWtYink50HkCoMkBBWIC4JZ4Zi6w2ARhnZq8TjKh2q9Tz4=
+	t=1745465033; cv=none; b=sC9W/1H/AfHgJwA3LuvHzjoydOj0sXnSZujD5s6d6rSS3Wy+z53etcyzp0hllsUtqKidoYcu+c4bvCdvTczwHAig1FkfD6nSN01Y36vBaFf870kqw3I+gXJ5DCwaN9m9XaxYHA2L1YFra1QXkZ1AvlKLTk37p1gySPGZweptRcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745464956; c=relaxed/simple;
-	bh=vdgInaK0zgQsVJx6BiUQjXFYztTVDeBQFXdq4XP48sM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hyyUSZL8r6jC3KCZdfaFSREXjOFjO7XHIxLY3nbwC2hn48pTonJdGFb6i7/pI34HpyuGe5ATOC+b4R5aStC9s9ZX8389+cYijM4pkuMYWC0p85AaoHC46XaXuBM28v9+7EXqzN2t+7/c/aHYlCPFIFKYQUMy5EGJB7iSAImbx9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSa2P975; arc=none smtp.client-ip=209.85.215.174
+	s=arc-20240116; t=1745465033; c=relaxed/simple;
+	bh=P7IDOSDSeq2YXVOxTkIixmo3fIAp2ltZ79X4aODDyuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dg0vjFzNhlY/h2fGxYAsOYOQNtpL4CA47SUr1v43C2nbhUwh+GsFdyY41BPxlpsYfUeHOLaXpE5ifXrGKF+IeBBOqwUSoIJP1iK9D0E2nI8YCyX4zexlsUTFAJlC9fYLbpWkov2zQdBRxKEBCnXWNZ2zRD3Ltn4IBuaHwASn5GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ULYR+vUf; arc=none smtp.client-ip=209.85.208.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSa2P975"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-af908bb32fdso477882a12.1;
-        Wed, 23 Apr 2025 20:22:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULYR+vUf"
+Received: by mail-lj1-f195.google.com with SMTP id 38308e7fff4ca-30db1bc464dso6146421fa.0;
+        Wed, 23 Apr 2025 20:23:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745464954; x=1746069754; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6tiA8hgxcjhXyZluGTFINPezke1l2JWhQR23G4LvhXA=;
-        b=OSa2P975eqvOpufW8GZdHVDR/il7BwyoGkk2tJZpiXu5kyHvIbPdTFxHCpdcL7Xr9B
-         NWRv+8PyxhVVhF7TlS2qni+T1WIF474Kq0IpuKeGUvOwH80jBj4/qPv/CibD8mllDfay
-         afDWNZOmAHZArrYV95uHlizKqAStUPVjpmA1+SzMx+dJcHfvEA1ED1LpnKseknBfrGlK
-         IRyWPhtWE4rS7bE+ajauQ3egipqDwI1/TQzxBKMzJV9aNCgiFG72ULTXnwe6dL/AR2SG
-         80HTPo4V9uVxh9//01THW/JgzPRI6nySl2/A70A5kbA166UGokK1l3EcwL5qS/XT0NAV
-         n+9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745464954; x=1746069754;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1745465029; x=1746069829; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6tiA8hgxcjhXyZluGTFINPezke1l2JWhQR23G4LvhXA=;
-        b=UMXg5Qggngj8hwe43m5RS0dEKRtARR5tk0Pm0bIfA6wND2SDMA+KdDibumOcsho4yZ
-         wQ9QQnr92lJguT3aAZjRZrVzIpllM2Ma3x1tpaldNxxaj2O5RsYZ7w1ZIUwPFJacl5gu
-         EpZMFpFDP+O/ksc6b/nCCZzOO2US3GJDcAhLu7WX1LEzpIK9YrXrcUQeVAVkRNp/wuVj
-         dhL/mzJKVj7l8QMNDyNwYHd0opBgcaWVsl2CMJLvpzSF6l4ybQJEWZHFY22n+ccaY60E
-         Oa77fgnbdpMIu8PYoDG+c9f3GvbKgPAuzwOHjePTx/Xo5Wck5Sa3+IBShocMac3E3+IG
-         3Bgw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlMw2jVY7ucUXROk5O07s3OqvGPj90BlMbHTN6lNyh6XExGnErxcpjW49xj4reZiQWDwp4xRNCJZycdHI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdXtlujXP+M8rkgAps1fLMqslDvV/cp3lC0Aqeq52lWN2DGS+Y
-	B89CrEDGWgt0UhFRTsfoLcNdINAvhS8sdjTnliyaZfEE6DDA3U7X
-X-Gm-Gg: ASbGnctqK4gfR8D+6dzI3Cna8h0mxAFMXpMBKjkyH7au8FtE7P1dr4VpQS7wwidOrL5
-	Lsp5Ak0IStoL1iSI9NWzYWVZGN2cxM8/RuGqNjNLL8ko7cIqiLS3q7iNEI1ke21t5b1W+fzJnoD
-	cwQdP86yDKPWtylStMKqPDT9mt7DgpN3MzSIKDdtnyUWUAv86Gz1HqFgFyEUSFnlWDIZfghHtAu
-	GMWGsztxqvuZuA3TNtAF1uKZvJEh5gGYadLl3DgJH9/Xbn2thZMKfPhVtzC5ZrrUdMKmrXuGQSR
-	EIbJVJ88o2oXr19POnXP9vaRSwZPsLHHIFhfd2Y4E0fI2rji97G7pV0m
-X-Google-Smtp-Source: AGHT+IGAWek2SCfcL/ppTRJDqmJDibjl7Bf5xjM/TaddgK9fHUFD89sVe/41ZP5km5qZ/J4/+Yha0w==
-X-Received: by 2002:a17:90b:2749:b0:2fa:6793:e860 with SMTP id 98e67ed59e1d1-309ee2c9ecemr1229434a91.0.1745464954068;
-        Wed, 23 Apr 2025 20:22:34 -0700 (PDT)
-Received: from fedora ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef09985asm182023a91.28.2025.04.23.20.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 20:22:33 -0700 (PDT)
-Date: Thu, 24 Apr 2025 03:22:26 +0000
-From: Hangbin Liu <liuhangbin@gmail.com>
-To: Jay Vosburgh <jv@jvosburgh.net>
-Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@kernel.org>, Cosmin Ratiu <cratiu@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 net] bonding: use permanent address for MAC swapping if
- device address is same
-Message-ID: <aAmucicgHHTeNTSA@fedora>
-References: <3383533.1743802599@famine>
- <Z_OcP36h_XOhAfjv@fedora>
- <Z_yl7tQne6YTcU6S@fedora>
- <4177946.1744766112@famine>
- <Z_8bfpQb_3fqYEcn@fedora>
- <155385.1744949793@famine>
- <aAXIZAkg4W71HQ6c@fedora>
- <360700.1745212224@famine>
- <aAXhiW6n-ftxAr9M@fedora>
- <511373.1745425660@famine>
+        bh=lm6fgchcfVrIoTbYF8HjVQc55WI83UqWvrYwf6Qmcoo=;
+        b=ULYR+vUfCIFnTcmTch+fdzhwtxE+pVxMT6qkSuV/OvGllg1wvbjERtqiR2g9NKxofk
+         ZMdSyfXnCWaLwLHw9e9JN8YW8maThw6Uf2RIrpsY8lBBxWgauGvzdWxXI1/ctYjP79qh
+         wu4j1WRJPy1NuWyM2D3rqgkxbkGwMpGHjY9lVzXFEAELvm0l3gTmbd4NpQ6BpQJj6qnG
+         kvbOn2eBZVY+wtTY+ceebJGW156btGn4G5ayf4gJO5Et//FnArn4tB6CMQiDShu7YHW8
+         DwmwKPvBBVJpEZDbrKyTw755lJsodrQ9kC5SlS4z6/pg71RvOtjfYOVwFXpF5u8/cRqa
+         xVbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745465029; x=1746069829;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lm6fgchcfVrIoTbYF8HjVQc55WI83UqWvrYwf6Qmcoo=;
+        b=Yu1/hd4Ob8n0AsHkj01mhXNFdurLiG0wfi+VOXKkbOmboW/32LfRFxuoAC3iPio9Ey
+         /GmDQNiHo6NfxyBcLCRinT0SpcBxMSYQlvzC2mnE6u8MR/jH8UaQwnFQBEB6UkKmcZ6I
+         K6yxY1i4+USVe/kNLGF+P0FBOOO9NTf88r5vlZOfc/X0R8874lgXEPpxskFOowYmGfXQ
+         zZS9wnz22w6i0wKgce+pXwFJlGHhgZAWcruPy/2Yg904fhLPMxNWmGgDtNnJO+UXo4YG
+         vIOYMcimaMsI+9mPu/yCqhQ88OrqHmHw/eiF8KvjdRZihgGEFQH4aZoP7th9m8acmurH
+         Pwkw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDoaTkwg/uK1FpZy9UC3UPL2qrF0uid7Z4ALDJs/7LvJk26j0Z+uC5E4a8e1pv6eWh+rGE5Qk+cwzJYvs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYGd/u6gIcu8q/zG1J7xV+yi+rQNRl1xjHRfttvNnBCxrJ4yRU
+	pisvYdiy41QZgHQRkeAEdIuHMPpbXPqQqNZRb4jIiMZvdWLUcBfLK9jlf/vIyO4gQXrJm4pkcdD
+	/XAIT5zjLNVYj0O7ZkN3HbEJ/C6U=
+X-Gm-Gg: ASbGncvq90s3r2bqPzdS8/fYKpfpdCMNqnYlCNC82HeVI2SlKGs2y0MWkZ7UWapvLSf
+	erg1lJqV6/NORB0mm4Q8RWkLxTCe41/QWbt8TLJo3ERSErcEmLWMukOPEpPw6iOldCGw6S/wnK+
+	kvZ8xhumXoN7wEh79nRmjdSxDVyVGvEom5
+X-Google-Smtp-Source: AGHT+IHpA2IlBQgHwPHIfvZ0vrqa0XeHqBHX/F/8jy+/sFcXwLmevs5nk9hDPwg0SpLGxpuTEIuCYu/XuIPdjNdHMlE=
+X-Received: by 2002:a05:651c:1603:b0:30b:c96a:775 with SMTP id
+ 38308e7fff4ca-3179e5e3f4amr2733571fa.14.1745465029230; Wed, 23 Apr 2025
+ 20:23:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <511373.1745425660@famine>
+References: <20250407032349.83360-1-bsdhenrymartin@gmail.com>
+In-Reply-To: <20250407032349.83360-1-bsdhenrymartin@gmail.com>
+From: henry martin <bsdhenrymartin@gmail.com>
+Date: Thu, 24 Apr 2025 11:23:39 +0800
+X-Gm-Features: ATxdqUEHu3299Lh20GzTqgUT9Pu1Hxw92kjaOjVxuPDzebfVP7Ppk-ZRHXIQRRQ
+Message-ID: <CAEnQdOrroDzrz+Y4ch8EGTP6T798-zwLpMJi5eNaW_S+Ew+BtQ@mail.gmail.com>
+Subject: Re: [PATCH v2] wifi: mt76: mt7996: Fix null-ptr-deref in mt7996_mmio_wed_init()
+To: nbd@nbd.name, lorenzo@kernel.org, ryder.lee@mediatek.com, 
+	shayne.chen@mediatek.com, sean.wang@mediatek.com, matthias.bgg@gmail.com, 
+	angelogioacchino.delregno@collabora.com, chui-hao.chiu@mediatek.com, 
+	bsdhenrymartin@gmail.com, rex.lu@mediatek.com
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2025 at 09:27:40AM -0700, Jay Vosburgh wrote:
-> Hangbin Liu <liuhangbin@gmail.com> wrote:
-> 
-> >On Sun, Apr 20, 2025 at 10:10:24PM -0700, Jay Vosburgh wrote:
-> >> >I'm not familiar with infiniband devices. Can we use eth_random_addr()
-> >> >to set random addr for infiniband devices? And what about other device
-> >> >type? Just return error directly?
-> >> 
-> >> 	Infiniband devices have fixed MAC addresses that cannot be
-> >> changed.  Bonding permits IB devices only in active-backup mode, and
-> >> will set fail_over_mac to active (fail_over_mac=follow is not permitted
-> >> for IB).
-> >> 
-> >> 	I don't understand your questions about other device types or
-> >> errors, could you elaborate?
-> >> 
-> >
-> >I mean what if other device type enslaves, other than ethernet or infiniband.
-> >I'm not sure if we can set random mac address for these devices. Should we
-> >ignore all none ethernet device or devices that don't support
-> >ndo_set_mac_address?
-> 
-> 	Devices without ndo_set_mac_address are already handled; they
-> are limited to active-backup mode and fail_over_mac is set to active
-> (just like Infiniband).
+Hi all,
 
-Thanks, I saw this.
-> 
-> 	I'm not aware of any network device types other than Ethernet
-> (which to bonding is anything with dev->type == ARPHRD_ETHER) or
-> Infiniband in use with bonding.  If there are any, and the driver
-> supports ndo_set_mac_address, and it fails for a random MAC if they try
-> to use fail_over_mac=follow, then I'll look forward to the bug report.
+I=E2=80=99d like to kindly follow up on my previous patch submission to che=
+ck if there
+are any additional feedback or suggestions for improvement. If there are
+further changes needed, I=E2=80=99ll be happy to address them and send a v3=
+.
 
-OK, this makes me feel much better :)
+Please let me know if you have any comments. Thanks for your time and revie=
+w!
 
-> 
-> 	If you're thinking of devices that are type ARPHRD_ETHER but
-> aren't actual ethernet (virtual devices, veth, et al, perhaps?), then
-> I'm not sure why those would require fail_over_mac=follow, as its reason
-> for existence is for multiport devices that can't handle multiple ports
-> programmed to the same MAC, which shouldn't matter for virtual devices
-> or single port physical devices.
+Best regards,
 
-Thank for all your explanations.
-
-Best Regards
-Hangbin
+Henry Martin <bsdhenrymartin@gmail.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=887=
+=E6=97=A5=E5=91=A8=E4=B8=80 11:24=E5=86=99=E9=81=93=EF=BC=9A
+>
+> devm_ioremap() returns NULL on error. Currently, mt7996_mmio_wed_init()
+> does not check for this case, which results in a NULL pointer
+> dereference.
+>
+> Prevent null pointer dereference in mt7996_mmio_wed_init()
+>
+> Fixes: 83eafc9251d6 ("wifi: mt76: mt7996: add wed tx support")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+> V1 -> V2: Add a blank after the check and correct the summary.
+>
+>  drivers/net/wireless/mediatek/mt76/mt7996/mmio.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c b/drivers/n=
+et/wireless/mediatek/mt76/mt7996/mmio.c
+> index 13b188e281bd..af9169030bad 100644
+> --- a/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
+> +++ b/drivers/net/wireless/mediatek/mt76/mt7996/mmio.c
+> @@ -323,6 +323,9 @@ int mt7996_mmio_wed_init(struct mt7996_dev *dev, void=
+ *pdev_ptr,
+>         wed->wlan.base =3D devm_ioremap(dev->mt76.dev,
+>                                       pci_resource_start(pci_dev, 0),
+>                                       pci_resource_len(pci_dev, 0));
+> +       if (!wed->wlan.base)
+> +               return -ENOMEM;
+> +
+>         wed->wlan.phy_base =3D pci_resource_start(pci_dev, 0);
+>
+>         if (hif2) {
+> --
+> 2.34.1
+>
