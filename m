@@ -1,175 +1,340 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazolkn19012014.outbound.protection.outlook.com [52.103.14.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673AF1A9B29;
-	Thu, 24 Apr 2025 13:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.14.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745502524; cv=fail; b=NP10bYaIRQIl6b17BeqQEE9TVZ/Y5wy2UtEgOdxFueNjG7jrzP8Pf9d3s6GrKTQZsiu9LTBNDDSeiOPQeqEqXfGlZBkdhmFMLvHtU/I7Lsy09PjlLy/fq4Q3ldDQJWJzykdaZsJKNat5002G3iJ02d+k9c/maJtPH96IwHABxYI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745502524; c=relaxed/simple;
-	bh=gfusUIMgZdNVW6slfHVDA4++A+tIRrwJDxxL/vlKNcI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=MSvlWvKE592sjJUrliYiHXbdg0tDUZvyUSNacxIE1UDPwY7Rdboj/o7VHPQlHu2NHsR2DX0KcGFsTc0ZqdekLqoMtsYDvH75gfI6ByUKUZ/UOiDEtZ1XQZGFXidmz0IuSVA7sEjprvBQAtfyQcd2a3Bm713xBILEmMDcNR0KWoI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=LcTvzRB1; arc=fail smtp.client-ip=52.103.14.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6301B3929;
+	Thu, 24 Apr 2025 13:48:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745502534; cv=none; b=t7L+mWZGRmzwR8emGUP4T/+2xmIi+mh39iSfl/3ZTFjAym19yryt6rR4LvPZl/12xd7E8Fx3kJCCFFgmXTWE+XKCYh0CZmD/uND0QJ7yjjBGFbCD1/emtQSiOKIkelKFvLlxCKcQovC50lj0hre9v2nD1mI2Fg/GiPLJK1gJWSQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745502534; c=relaxed/simple;
+	bh=4FlVdAMHwr32o+T5a8iielNhGK5S+TqpCQF4fydWrKQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=tFMq6K7aZq5VcGaQFPk0oFctamz8ptjcpfrgrL6FfeKWTYXVDzgsdCtNOP8DQB6dCHjRoO8JpkjOZnwbLUkJXA/uqnO/UyXKyuDGOfNOx9wsrrnpcBMF6Vqe0rtTlV/L1I4E37ievuk31uCaGHyUZspDmpUCyt9R++OQkiSucVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RFVgqhHQ; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="LcTvzRB1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BHy5APFtSKsBoEPGs1xeDnTt7Qe1V/orilixwRlevWyVw7gPbtQBygsKTH3Qah6U8Kkpn7tEiVIO+Bg4n30E6b693NXM5aMP4BDuG5c0cD6K11RTzA9jY+jJEXIm0gGuPxGmatkjXU9trhcJlwPhNp4Q/WtYaUChWDjU74HdqvF3hybTg6p78i8j9qE8DrUBhXxlpjc3wugM/LxogLs3b4u+FLEXsgcjr5vl3ldcmtB2XyfvqlhgDyHODmCzZ2Q97N/92znIViKRwQiMSGnZOqCOKIAurY3OIzyA4oY+qZMcxLTAdDYf+4knSXOGEmNwAk9n82m0+cvKpOYQp5biyQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WIOPVUpCEm3+nRwc3+DcYkH5NKOjOTbURlmaScVb94c=;
- b=Lppz6M4wYBzHvo7BuamjVjLIG8SvY1vbAhED/tTXz30wsr7nZS9JXP8lZy6GPFMu3V66dOWOqQepmRdaEfepbVlbi65ksgF1hnL+NECiPMQp1SW9EUNVZFzn65CgI5rGrdP4euX1ytLOkEhIJ9p3jvGbcXFAWVRktH7SAhS/ZJvdTTRGvaJ4hbCwbo8a+1eeSX9yGx75Q/t9UwONQrmngHJTz/xl2nDHp6IuXooNnXTSxa3uufqKDVXAox188g7CgkXJVOPUCt+XAczuwhq7rCZuWHir6dFs9LqRXSSz2q1uMLrvXscj1YT3IQeNisxAUQMNAu4/gwxon8LCxFDlBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WIOPVUpCEm3+nRwc3+DcYkH5NKOjOTbURlmaScVb94c=;
- b=LcTvzRB1YJ03QRHUeVBGvy/d3d3CBiumgCWMw9Xyk+h2yilK9Q65sRoVfj1P23KQ0DhI8ScVdg4waHZ223IZY1R4VSvSqDOJOkJSaIMcXwMJPbM+3VSNbLKB0A441BQ+PP4ob/SMbVYHSqyBcQh0drlL71tN6+3ITCmtHtn2Oqj61WpNqT2BfTICXEbrJZVlXSsfgbLmnodwtrxh1ivq8dqkJ9r+wU/qf681Wuy5JgDT5N1WTRtXT6VF3IVvYfFmPAtmfn5w2NLbshcjNwIHt6OyS/rDUYykV0rH9mKIvjuV5hpWH+1lsZ8MowwOljsboH7BQYdhDDw4PEyY/EOBeQ==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CYYPR02MB9825.namprd02.prod.outlook.com (2603:10b6:930:bb::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.19; Thu, 24 Apr
- 2025 13:48:38 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Thu, 24 Apr 2025
- 13:48:38 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Naman Jain <namjain@linux.microsoft.com>, "K . Y . Srinivasan"
-	<kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu
-	<wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Stephen Hemminger <stephen@networkplumber.org>
-CC: "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"stable@kernel.org" <stable@kernel.org>, Saurabh Sengar
-	<ssengar@linux.microsoft.com>
-Subject: RE: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-Thread-Topic: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-Thread-Index: AQHbtNq0cr/h2nAp6Uaq+yUzZjBCvrOy1Bfg
-Date: Thu, 24 Apr 2025 13:48:38 +0000
-Message-ID:
- <SN6PR02MB415788B8A1C18603497A9653D4852@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250424053524.1631-1-namjain@linux.microsoft.com>
-In-Reply-To: <20250424053524.1631-1-namjain@linux.microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CYYPR02MB9825:EE_
-x-ms-office365-filtering-correlation-id: de3be7a2-2b30-4e53-6536-08dd8336b758
-x-ms-exchange-slblob-mailprops:
- 7J/vb0KDx3gr+YHKmSMzj5jlTHKVEqRiDfwhIf6ekDOfCz0b1/JvA03VrEDoyLRG8aGmAf2XYdK7VpPkd2GcIHq1mxBB5pEmCH+QmTGYtobYP/LKrWS9O2/RpSxDg0TEKe27BcoKjijd9UTggsGXjqzPGVfqgsgsxDJobh6zByGKkhIdvfbQLMkgyquqYOVZxy3bXmigXP7pGxvREfkGLNOXjnJN73v24YsPiV0bEt16Eqqefv0xo2nQxdvQmKG/4Dfh94bSock9dup1Y3ROQHKZ/KwEfu41+gH55eKCzkvPFhHB4aMnXyF/hOoHg9Tm9h1UZ9Z6AuZ4hw5PrD5iUgPPXhkW31tu+ksMTsKuuQxLsMfmj05wajv1XQVr7QeranBOka4tpwDvpwQ4gY9DYjXo+ep0Be5CcOFdGnx07fRzIYAztZc6NhKmDt+YVx3ss0tJ7c2zV2uZ8o9QfOvd9Iy+QX57BU98y9GYSlT7RvXdxsRhTYPeJ5wVhCd7hmRgUB+S3nxbvEJFtjKAEWrcIXY4UGHXm45H/O3khrbRjAnmCn/68zYJxGkqncaeLyzPgeUu6bfd7BPaNX3FnmIFg/CqQ7JZUu0+NK7qxKAi8VZ0MpYwC7uvfUAZEEaCZr8+tUQJVA99zWcaus3bqziTXmRE8m97QtTw5PZ69vgQleoujJxpTAE1EweAW7XIfmI0GFUZN/SRMskDbb2zxP8+EQG40GLc2nO7cZ8p/wz/vlnT2XLxR+S0vSqkfH5oG42i1zZw1lyyoY/3A2d46TWoVIJ1fcIUy5VB/UFgcsKgvKI=
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|8062599003|8060799006|19110799003|15080799006|10035399004|3412199025|4302099013|440099028|41001999003|102099032|1602099012;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?JW71PjcypIASZioK73YNbZxANWy7OUXjNpBoxw0Wntfgdaz/T2acpRu+RStY?=
- =?us-ascii?Q?RoNrjlj1yqnK6T/fgGdVdhDkewmUmCw+B7+7bdKELAgg1JW112kk8DPwlh5c?=
- =?us-ascii?Q?+0LDWKQ9WShTQTs0hW/no2fBPNmwurMhycn78jmNErEoXsnRbcQoJcSMt6xV?=
- =?us-ascii?Q?EaW6zXvm38O/MNxkApJKI+WnuBH4VciN1G+LTq2797mATCdOAQDJhf4HuJjg?=
- =?us-ascii?Q?74utvzlkiFZDy+0+g9QqQLn4L3dLVlWy7jEJbUkY5qn7+7mRK2G0s/uHM5RU?=
- =?us-ascii?Q?HAH5mrtScv6QNZgFIswga01+NzFvOJFqvqe8O3WEMJw8fqrAyja31vBpKVgZ?=
- =?us-ascii?Q?Wsqll2CfPK8l59Fi0vGKDV+ulAvQyfdrNi0I4uv4vs90FsMhTOdbinxj4xD1?=
- =?us-ascii?Q?uHXcLzLrlIMgoTrFuSWjwWhFMIKKJJtnE4HTUWLnfPKTQipZqifuYtmPHJnf?=
- =?us-ascii?Q?MYmGqWGwGxCTcuZGioq/nAXptFxJ23hvRD12Fjt62rk2t0GSo3WrgsLVwTUt?=
- =?us-ascii?Q?xs072UFw9awUjkHbqZlM1JzQwo+yiLFRAhASp01M6HLMozI82880YSQ1Ujd0?=
- =?us-ascii?Q?KA4PxIKKABXoLVYy83DYSpK/RuWrGB2vqjgrCJXCjwL9sa+Sok/J2VZ8fLQ0?=
- =?us-ascii?Q?9Xtu9FKULCnMnpP2bfW0ZUIZOA1lE3OAjtUw/GZ/xadwfCLaac0TOpbM4jyG?=
- =?us-ascii?Q?zYq6uJMvr8EnwlWRo5vctup1pfWv5ZYvLQN0P5lk9WYST1hdWeT+lD2MR7SW?=
- =?us-ascii?Q?1d661NjVf6eVcCzCbPIQRQRUQcuWwyqapGBFE7K6I9hG5ggrxgAb2HWyIJt7?=
- =?us-ascii?Q?F6+yof2FxpOAV6Ktx1dSuAWVKgpm64Khnq1YLASgjCcC9wQ8WTdSlqoMw3v2?=
- =?us-ascii?Q?+88b/tchyjOxE4tntdt9t72FGKOax0QEOKHX7NkNhnSt3tkVm64yhebLMlGB?=
- =?us-ascii?Q?fgmRNelvzKGPsZidU6z9z+96Vf6DCCS0FIj5AP9cKRnIa/9guFb8P/ApLcwE?=
- =?us-ascii?Q?1leHQQwi6n/C95oouTFvu79numHQjxT8lo7CN40Sczs9bIG3Q0OI4PWtxYQK?=
- =?us-ascii?Q?ou/Az7LDohIZwq2G4+Swo3+Gn1n5OBWEsAwOU2zbNxNTjwX8pbg1Pydkhiiy?=
- =?us-ascii?Q?LxboUBuAOIR23pAbnlqQgWVVyfIUaq7PvAzk75mZAnEan1yL1e0Vamj9EIOv?=
- =?us-ascii?Q?Ha7Joyj2B6iXzjlPlRCnI4lolOZxS9dG84lK+O+RY5x2EgYtUPKNTSlGmDx1?=
- =?us-ascii?Q?2jQDGfQ3CQhAJymf0NZlhhJE8yRBhsmwcthD4nl61A=3D=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Jq7jgtoVDOZh+KyPt16I/y4wSaG/hAIutw59vo2s8TMR5rotqtemnn/yqMoA?=
- =?us-ascii?Q?MQJ65kFNwGCZQoUBRVj34PlOob0ujyg5kzSS4vLnFJnefC2r0ghhQaxoZY5K?=
- =?us-ascii?Q?f4+rRlgttrMg9VjNFLBgx/MVGNosFEPXH05qWsp6sOqJBxVBUsKTrllmp09u?=
- =?us-ascii?Q?sQlEaBcZGB95qr3QmXuLSz3eoI3OpA6s072ChIGErlZJSwXd6+/veinrdx4n?=
- =?us-ascii?Q?4tevNC1wHdzIN/glLQ/Z+syH8dSopX3ekaM18fQcgdpQ4xf5NNzSw8jb6vsE?=
- =?us-ascii?Q?/2vDzM1qVArCA4zGPpKD/UwT+VcEsFDB0kuUW4W4nPePI6s0HGymMx3VbxNI?=
- =?us-ascii?Q?6W9Tqk69w2ka2Yec0EMgVxJoWuYFNNhMOjWOs/i5HzIhuy7UNpJkOVlKJvpY?=
- =?us-ascii?Q?hKQIt7GZjv8i2q4WcsMbxHhI19d7sQWjVjPPncyd6/lf5KJHxznI5ogYkUC/?=
- =?us-ascii?Q?Q+/dlS2LyaxVoh1LscVMhWK65SMVGSarKrhJxczenEKtVUPi48gI3XjYXlKN?=
- =?us-ascii?Q?0w7EP6nHF6HmisHbIY2vVwdXsY5YManyfPryGSl7h2eraPr5Tc3OFflCYx3B?=
- =?us-ascii?Q?/ybdtEySfjSwlpBnS9FFZbevRpKqpoqM92D8uBsGXySbxq5VrYhpKwW2AyiT?=
- =?us-ascii?Q?J4sBSRroROxE3ihXLvaTzQzRw9AUFqGL1jdVCzhfDmUjtaWhk+E51DUpXyC6?=
- =?us-ascii?Q?J8bItw7nyaUdQlO5c7elcqZfeMcT8we/fagCM1u4TZ+JWDVWtHRoY9KMc6nB?=
- =?us-ascii?Q?76VWrDrE83d1jfKLsYEH9LHxmXvKWu9W5CW7VvC5gNUs2MLsw1TN0Hh4ZVPy?=
- =?us-ascii?Q?2EnWP92ovnV1AAkq8urefReGdmgD3gTzmvzJnRXG1ogJOpHUP7ocNL2Mh9ne?=
- =?us-ascii?Q?46VD3y61HebBOJkCCX8OdLyjj/E9LyRyvAB6HZPkQ+UEsP/TbuHlJnquJYjQ?=
- =?us-ascii?Q?lQ96Ttk+XHKLBYwS/OXkijQTqQ7ECZZo8Rj7KZ0Yoyu2gOa6iwiBiKrnBxmW?=
- =?us-ascii?Q?NC7iK592vlsqRSOQi2HoMGf6EA3+azpgA0rCN68OT29ELA49e4AT4CTxvNx5?=
- =?us-ascii?Q?k3uJ3+QDV+I4pfzPIASGR9oul9cbxoc0qoL8DALBXxvIO8sJs2l51b3Zm1Xr?=
- =?us-ascii?Q?bo0MBhl7a6bDkU9gle8G7nP9JGYcle604dL7V9h0ScaXahXjJod5kFuCtv8V?=
- =?us-ascii?Q?EUbsjCKwGTDkvDatTFSiK6wpvSumF6Z/WXjEnBj4LC2v3WKDdfafA8GeQhQ?=
- =?us-ascii?Q?=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RFVgqhHQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745502532; x=1777038532;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=4FlVdAMHwr32o+T5a8iielNhGK5S+TqpCQF4fydWrKQ=;
+  b=RFVgqhHQ257wdwjqlVeClQXfMxx0jNoYoAa9VrEcS7LzTWNW4l53gbIt
+   AirtyiEsUiTJmU683MmKTaIgZYRcwxN2U6sjUqrc8u5KoEXm81hPtPN9C
+   att8kslf+3ZXuQedzAwt3I0UMYDeFDu5ijlfSJ/GImdwClxgwQkehb175
+   1iEStKekra/bnyXp94qfWzw0PMh09XueGRqeakv79ClOJSScwkg3vCl9l
+   Xqjhuurl01km4vcjCy9X56Fb/eT+dFbh5Q6AxIdqqbTQhu7eVrn56WW/2
+   1ElffPdEBjiRlo+ZQ0TLaTGVMOtmaiw1FcFU14CWgS9v1MFhYrVU7XEqf
+   A==;
+X-CSE-ConnectionGUID: f7tYdETbQWS021SBEbu3VQ==
+X-CSE-MsgGUID: kii36djRQ1W74LTEi6oxmw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47271631"
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="47271631"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 06:48:51 -0700
+X-CSE-ConnectionGUID: cwSN99nbSq+pREGEli4Q0Q==
+X-CSE-MsgGUID: g9/ijGsFSJKcDzs2j/F8JQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="155849228"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.213])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 06:48:44 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 24 Apr 2025 16:48:41 +0300 (EEST)
+To: Antheas Kapenekakis <lkml@antheas.dev>
+cc: platform-driver-x86@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+    linux-doc@vger.kernel.org, linux-pm@vger.kernel.org, 
+    Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, 
+    Jonathan Corbet <corbet@lwn.net>, 
+    Joaquin Ignacio Aramendia <samsagax@gmail.com>, 
+    Derek J Clark <derekjohn.clark@gmail.com>, 
+    Kevin Greenberg <kdgreenberg234@protonmail.com>, 
+    Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>, 
+    Eileen <eileen@one-netbook.com>, LKML <linux-kernel@vger.kernel.org>, 
+    sre@kernel.org, linux@weissschuh.net, Hans de Goede <hdegoede@redhat.com>, 
+    mario.limonciello@amd.com
+Subject: Re: [PATCH v9 14/15] platform/x86: oxpec: Add charge threshold and
+ behaviour to OneXPlayer
+In-Reply-To: <20250417175310.3552671-15-lkml@antheas.dev>
+Message-ID: <5423a653-01ac-95d2-fa52-31d849df65ef@linux.intel.com>
+References: <20250417175310.3552671-1-lkml@antheas.dev> <20250417175310.3552671-15-lkml@antheas.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: de3be7a2-2b30-4e53-6536-08dd8336b758
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2025 13:48:38.3379
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR02MB9825
+Content-Type: multipart/mixed; boundary="8323328-327762574-1745502521=:944"
 
-From: Naman Jain <namjain@linux.microsoft.com> Sent: Wednesday, April 23, 2=
-025 10:35 PM
->=20
-> Hi,
-> This patch series aims to address the sysfs creation issue for the ring
-> buffer by reorganizing the code. Additionally, it updates the ring sysfs
-> size to accurately reflect the actual ring buffer size, rather than a
-> fixed static value.
->=20
-> PFB change logs:
->=20
-> Changes since v5:
-> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microso=
-ft.com/
-> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
->   commit msg of both patches.
-> * Missed to remove check for "primary_channel->device_obj->channels_kset"=
- in
->   hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
->   now.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Ah, OK :-) I thought you had decided to leave the test in, and I wasn't goi=
-ng to
-argue further, as it didn't hurt anything. But the test is superfluous, so =
-the
-code is better without it. It won't mislead a future someone into thinking
-that it solves a synchronization problem.
+--8323328-327762574-1745502521=:944
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-Michael
+On Thu, 17 Apr 2025, Antheas Kapenekakis wrote:
 
-> * Changed type for declaring bin_attrs due to changes introduced by
->   commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") whic=
-h
->   merged recently. Did not use bin_attrs_new since another change is in
->   the queue to change usage of bin_attrs_new to bin_attrs
->   (sysfs: finalize the constification of 'struct bin_attribute').
+> With the X1 (AMD), OneXPlayer added a charge limit and charge inhibit
+> feature to their devices. Charge limit allows for choosing an arbitrary
+> battery charge setpoint in percentages. Charge ihibit allows to instruct
+> the device to stop charging either when it is awake or always.
 >=20
+> This feature was then extended for the F1Pro as well. OneXPlayer also
+> released BIOS updates for the X1 Mini, X1 (Intel), and F1 devices that
+> add support for this feature. Therefore, enable it for all F1 and
+> X1 devices.
+>=20
+> Reviewed-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
+> Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
+>  drivers/platform/x86/Kconfig |   1 +
+>  drivers/platform/x86/oxpec.c | 155 ++++++++++++++++++++++++++++++++++-
+>  2 files changed, 155 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index 739740c4bb535..6c9e64a03aaef 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1204,6 +1204,7 @@ config SEL3350_PLATFORM
+>  config OXP_EC
+>  =09tristate "OneXPlayer EC platform control"
+>  =09depends on ACPI_EC
+> +=09depends on ACPI_BATTERY
+>  =09depends on HWMON
+>  =09depends on X86
+>  =09help
+> diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
+> index f0b9fff704de2..ce20bf70027df 100644
+> --- a/drivers/platform/x86/oxpec.c
+> +++ b/drivers/platform/x86/oxpec.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/processor.h>
+> +#include <acpi/battery.h>
+> =20
+>  /* Handle ACPI lock mechanism */
+>  static u32 oxp_mutex;
+> @@ -60,6 +61,7 @@ enum oxp_board {
+>  };
+> =20
+>  static enum oxp_board board;
+> +static struct device *oxp_dev;
+> =20
+>  /* Fan reading and PWM */
+>  #define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 register=
+s long */
+> @@ -93,6 +95,23 @@ static enum oxp_board board;
+>  #define OXP_X1_TURBO_LED_OFF           0x01
+>  #define OXP_X1_TURBO_LED_ON            0x02
+> =20
+> +/* Battery extension settings */
+> +#define EC_CHARGE_CONTROL_BEHAVIOURS=09(BIT(POWER_SUPPLY_CHARGE_BEHAVIOU=
+R_AUTO)             | \
+> +=09=09=09=09=09 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)    | \
+
+Please change the endings to:
+
+=2E..) | <tabs>\
+
+> +=09=09=09=09=09 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE))
+> +
+> +#define OXP_X1_CHARGE_LIMIT_REG      0xA3 /* X1 charge limit (%) */
+> +#define OXP_X1_CHARGE_INHIBIT_REG     0xA4 /* X1 bypass charging */
+
+Please use tabs for aligning the values (there were a few other defines=20
+in the earlier patches with spaces too). (I know the earlier ones used=20
+space but they don't seem to be in the same group so lets just move to=20
+tabs with new stuff, optionally, you can add a patch to change also the=20
+pre-existing ones to use space).
+
+> +
+> +#define OXP_X1_CHARGE_INHIBIT_MASK_AWAKE 0x01
+> +/*
+> + * X1 Mask is 0x0A, OneXFly F1Pro is just 0x02
+> + * but the extra bit on the X1 does nothing.
+
+Reflow to fill 80 chars.
+
+> + */
+> +#define OXP_X1_CHARGE_INHIBIT_MASK_OFF 0x02
+> +#define OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS (OXP_X1_CHARGE_INHIBIT_MASK_AW=
+AKE | \
+> +=09OXP_X1_CHARGE_INHIBIT_MASK_OFF)
+
+Align to (.
+
+--=20
+ i.
+
+> +
+>  static const struct dmi_system_id dmi_table[] =3D {
+>  =09{
+>  =09=09.matches =3D {
+> @@ -507,6 +526,129 @@ static ssize_t tt_led_show(struct device *dev,
+> =20
+>  static DEVICE_ATTR_RW(tt_led);
+> =20
+> +/* Callbacks for charge behaviour attributes */
+> +static bool oxp_psy_ext_supported(void)
+> +{
+> +=09switch (board) {
+> +=09case oxp_x1:
+> +=09case oxp_fly:
+> +=09=09return true;
+> +=09default:
+> +=09=09break;
+> +=09}
+> +=09return false;
+> +}
+> +
+> +static int oxp_psy_ext_get_prop(struct power_supply *psy,
+> +=09=09=09=09       const struct power_supply_ext *ext,
+> +=09=09=09=09       void *data,
+> +=09=09=09=09       enum power_supply_property psp,
+> +=09=09=09=09       union power_supply_propval *val)
+> +{
+> +=09long raw_val;
+> +=09int ret;
+> +
+> +=09switch (psp) {
+> +=09case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
+> +=09=09ret =3D read_from_ec(OXP_X1_CHARGE_LIMIT_REG, 1, &raw_val);
+> +=09=09if (ret)
+> +=09=09=09return ret;
+> +=09=09if (raw_val < 0 || raw_val > 100)
+> +=09=09=09return -EINVAL;
+> +=09=09val->intval =3D raw_val;
+> +=09=09return 0;
+> +=09case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
+> +=09=09ret =3D read_from_ec(OXP_X1_CHARGE_INHIBIT_REG, 1, &raw_val);
+> +=09=09if (ret)
+> +=09=09=09return ret;
+> +=09=09if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS) =3D=3D
+> +=09=09    OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS)
+> +=09=09=09val->intval =3D POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
+> +=09=09else if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_AWAKE) =3D=3D
+> +=09=09=09 OXP_X1_CHARGE_INHIBIT_MASK_AWAKE)
+> +=09=09=09val->intval =3D POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AW=
+AKE;
+> +=09=09else
+> +=09=09=09val->intval =3D POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
+> +=09=09return 0;
+> +=09default:
+> +=09=09return -EINVAL;
+> +=09}
+> +}
+> +
+> +static int oxp_psy_ext_set_prop(struct power_supply *psy,
+> +=09=09=09=09       const struct power_supply_ext *ext,
+> +=09=09=09=09       void *data,
+> +=09=09=09=09       enum power_supply_property psp,
+> +=09=09=09=09       const union power_supply_propval *val)
+> +{
+> +=09long raw_val;
+> +
+> +=09switch (psp) {
+> +=09case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
+> +=09=09if (val->intval > 100)
+> +=09=09=09return -EINVAL;
+> +=09=09return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval);
+> +=09case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
+> +=09=09switch (val->intval) {
+> +=09=09case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
+> +=09=09=09raw_val =3D 0;
+> +=09=09=09break;
+> +=09=09case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE:
+> +=09=09=09raw_val =3D OXP_X1_CHARGE_INHIBIT_MASK_AWAKE;
+> +=09=09=09break;
+> +=09=09case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
+> +=09=09=09raw_val =3D OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS;
+> +=09=09=09break;
+> +=09=09default:
+> +=09=09=09return -EINVAL;
+> +=09=09}
+> +
+> +=09=09return write_to_ec(OXP_X1_CHARGE_INHIBIT_REG, raw_val);
+> +=09default:
+> +=09=09return -EINVAL;
+> +=09}
+> +}
+> +
+> +static int oxp_psy_prop_is_writeable(struct power_supply *psy,
+> +=09=09=09=09=09    const struct power_supply_ext *ext,
+> +=09=09=09=09=09    void *data,
+> +=09=09=09=09=09    enum power_supply_property psp)
+> +{
+> +=09return true;
+> +}
+> +
+> +static const enum power_supply_property oxp_psy_ext_props[] =3D {
+> +=09POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
+> +=09POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
+> +};
+> +
+> +static const struct power_supply_ext oxp_psy_ext =3D {
+> +=09.name=09=09=09=3D "oxp-charge-control",
+> +=09.properties=09=09=3D oxp_psy_ext_props,
+> +=09.num_properties=09=09=3D ARRAY_SIZE(oxp_psy_ext_props),
+> +=09.charge_behaviours=09=3D EC_CHARGE_CONTROL_BEHAVIOURS,
+> +=09.get_property=09=09=3D oxp_psy_ext_get_prop,
+> +=09.set_property=09=09=3D oxp_psy_ext_set_prop,
+> +=09.property_is_writeable=09=3D oxp_psy_prop_is_writeable,
+> +};
+> +
+> +static int oxp_add_battery(struct power_supply *battery, struct acpi_bat=
+tery_hook *hook)
+> +{
+> +=09return power_supply_register_extension(battery, &oxp_psy_ext, oxp_dev=
+, NULL);
+> +}
+> +
+> +static int oxp_remove_battery(struct power_supply *battery, struct acpi_=
+battery_hook *hook)
+> +{
+> +=09power_supply_unregister_extension(battery, &oxp_psy_ext);
+> +=09return 0;
+> +}
+> +
+> +static struct acpi_battery_hook battery_hook =3D {
+> +=09.add_battery=09=3D oxp_add_battery,
+> +=09.remove_battery=09=3D oxp_remove_battery,
+> +=09.name=09=09=3D "OneXPlayer Battery",
+> +};
+> +
+>  /* PWM enable/disable functions */
+>  static int oxp_pwm_enable(void)
+>  {
+> @@ -847,11 +989,22 @@ static int oxp_platform_probe(struct platform_devic=
+e *pdev)
+>  {
+>  =09struct device *dev =3D &pdev->dev;
+>  =09struct device *hwdev;
+> +=09int ret;
+> =20
+> +=09oxp_dev =3D dev;
+>  =09hwdev =3D devm_hwmon_device_register_with_info(dev, "oxp_ec", NULL,
+>  =09=09=09=09=09=09     &oxp_ec_chip_info, NULL);
+> =20
+> -=09return PTR_ERR_OR_ZERO(hwdev);
+> +=09if (IS_ERR(hwdev))
+> +=09=09return PTR_ERR(hwdev);
+> +
+> +=09if (oxp_psy_ext_supported()) {
+> +=09=09ret =3D devm_battery_hook_register(dev, &battery_hook);
+> +=09=09if (ret)
+> +=09=09=09return ret;
+> +=09}
+> +
+> +=09return 0;
+>  }
+> =20
+>  static struct platform_driver oxp_platform_driver =3D {
+>=20
+--8323328-327762574-1745502521=:944--
