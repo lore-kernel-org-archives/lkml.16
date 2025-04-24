@@ -1,45 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E207D529;
-	Thu, 24 Apr 2025 08:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pokefinder.org (pokefinder.org [135.181.139.117])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6FBB19CCEA;
+	Thu, 24 Apr 2025 08:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=135.181.139.117
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745482731; cv=none; b=dooVYtbaMdwtMVxuH3M81tbIZUm4SYRujNBzsLwgmIDEW7XhfdAF4/Hd2l1vVOT42vIA39HwTzuGvNlEfCVvBeQ/ezwSPjUYex0BsG11EEE5jq8Xlk+TYe50l6OidQhm1AsLUGPed+VDXjdCCBkdjIHm9lsoiSFrqar6C6U7zAA=
+	t=1745482805; cv=none; b=WZF42kKyAeKWwhu8CQslmAgsAPL1GoCxvIV4NxoLpNzK6adywlMDkClXHEQJ2d9hHpI+pNG3AXWWJbCacjQAv98PtbNw1pASjPTmkAvoKp4FV6WJhqJVsprD6xIScLnPLSHCiVBBYIi1PmGobQDXUAwnZUleL2bZk+zvyesk1RQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745482731; c=relaxed/simple;
-	bh=luBO6reS1AIHdLD0ocQc2V2sYxCZNmU96oc6vvsTJUc=;
+	s=arc-20240116; t=1745482805; c=relaxed/simple;
+	bh=RrjENBwGBydfJ3wNE3Qb/aLC0QcnJGiP9/DanmF+4TY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cV+55cf7NDgcwQ5FJOC6zAaLvH4Ms50fdYpklfyrbZzuC+ZCRgNFevx6b1XtbZTyYUb5RyD67ruv2f1ufpAPuz/UMvj9+rDdiEu9eS82WpqGNk/H/2FziymfkwbckWbFzVRR6m7dKaRTJMuy+9ILqLb7s7MVpxwbut7OP6hHDG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTBJb7/s; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTBJb7/s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43241C4CEEA;
-	Thu, 24 Apr 2025 08:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745482730;
-	bh=luBO6reS1AIHdLD0ocQc2V2sYxCZNmU96oc6vvsTJUc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QTBJb7/sOtgibfbZQZRPmB3NDzGuw8WXFuKDiYfD9jo9Tfl1ZSBHPmhHPrqPDbTsi
-	 PqHif8L8cHGYTe8i0k8oHy+9uqiBj85SewJiQ4iGUtwfYZjyZd1tNMsd4bN3MDeI7e
-	 /SLvoq1G4PZmF38YakZaiBvQ9p1SJePpeM0w30Kqbr+NCJoYj+0/E9wlUbYt37+qNU
-	 A3Q3oyisKdK3emcymdrL5r4xLHUSYwn0bOWZDKBHJi1kJVfkos9N8MlFNPNRGtv+xK
-	 HsjFxwezNty60QqB1PXzwj43UxVrbtToJYEG5xxN47QII5bt2SyzZx44/6CeXdgBQM
-	 3ZSjc2+P4yDXA==
-Date: Thu, 24 Apr 2025 10:18:47 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Guodong Xu <guodong@riscstar.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
-	dlan@gentoo.org, p.zabel@pengutronix.de, drew@pdp7.com, inochiama@gmail.com, 
-	geert+renesas@glider.be, heylenay@4d2.org, tglx@linutronix.de, hal.feng@starfivetech.com, 
-	unicorn_wang@outlook.com, duje.mihanovic@skole.hr, elder@riscstar.com, 
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, spacemit@lists.linux.dev
-Subject: Re: [PATCH v2 3/6] riscv: dts: spacemit: add PWM support for K1 SoC
-Message-ID: <kftfye2zn2ogyvuv7diuyrv5qkp43csbpkcqfcms2xp5lsuubm@z2kocdzkb7qk>
-References: <20250420070251.378950-1-guodong@riscstar.com>
- <20250420070251.378950-4-guodong@riscstar.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=G37Lpd0L0N1aocnWOLm5DRt8dmRnQfkYPP8viOwMWQwvcf62zMbU5BZSCi+INh9FaS9nN5UYDaQKUz3fNr8STxsh8HRjogQeE7QDNHhf2mlkU1p/RugWM0llizvpele6ux54Y8uNUW1csyp+42WYG87vwIB60hHOCRbSk3TOglE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de; spf=pass smtp.mailfrom=the-dreams.de; arc=none smtp.client-ip=135.181.139.117
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=the-dreams.de
+Received: from localhost (p5486c924.dip0.t-ipconnect.de [84.134.201.36])
+	by pokefinder.org (Postfix) with UTF8SMTPSA id 8CF42A400EE;
+	Thu, 24 Apr 2025 10:10:41 +0200 (CEST)
+Date: Thu, 24 Apr 2025 10:10:40 +0200
+From: Wolfram Sang <wsa@the-dreams.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Peter Rosin <peda@axentia.se>, Andi Shyti <andi.shyti@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] i2c: mux: ltc4306: use new GPIO line value setter
+ callbacks
+Message-ID: <aAnyAASQID8SK107@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Michael Hennerich <michael.hennerich@analog.com>,
+	Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250407-gpiochip-set-rv-i2c-mux-v1-1-7330a0f4df1a@linaro.org>
+ <16b14e5e-e5eb-5203-4cdf-44fbde9a5688@axentia.se>
+ <CAMRc=MeYs0W31Kj-o530_8+EvhoDNzyZunk4xu6PbwK8N1OE4Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,62 +43,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rfmkfp7kn4uz32vk"
+	protocol="application/pgp-signature"; boundary="wOEuWl4I5xqqjUrR"
 Content-Disposition: inline
-In-Reply-To: <20250420070251.378950-4-guodong@riscstar.com>
+In-Reply-To: <CAMRc=MeYs0W31Kj-o530_8+EvhoDNzyZunk4xu6PbwK8N1OE4Q@mail.gmail.com>
 
 
---rfmkfp7kn4uz32vk
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--wOEuWl4I5xqqjUrR
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Subject: Re: [PATCH v2 3/6] riscv: dts: spacemit: add PWM support for K1 SoC
-MIME-Version: 1.0
 
-Hello,
 
-On Sun, Apr 20, 2025 at 03:02:48PM +0800, Guodong Xu wrote:
-> diff --git a/arch/riscv/boot/dts/spacemit/k1.dtsi b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> index c0cc4b99c935..e7dba623e877 100644
-> --- a/arch/riscv/boot/dts/spacemit/k1.dtsi
-> +++ b/arch/riscv/boot/dts/spacemit/k1.dtsi
-> @@ -556,5 +556,185 @@ sec_uart1: serial@f0612000 {
->  			reg-io-width = <4>;
->  			status = "reserved"; /* for TEE usage */
->  		};
-> +
-> +		pwm0: pwm@d401a000 {
-> +			compatible = "spacemit,k1-pwm", "marvell,pxa910-pwm";
-> +			reg = <0x0 0xd401a000 0x0 0x10>;
-> +			#pwm-cells = <1>;
+> I just realized their emails didn't pop up in b4 --auto-to-cc. Cc'ed
+> now. Wolfram, Andi: do you want to pick it up or should I take it via
+> the GPIO tree?
 
-I want to make all pwms use #pwm-cells = <3> in the long run. Can you
-please use that for the new binding? (Of course this needs adaption in
-the binding doc, the code should already be prepared for that.)
+If there is no dependency in your tree, then I prefer to pick it myself.
 
-> +			clocks = <&syscon_apbc CLK_PWM0>;
-> +			resets = <&syscon_apbc RESET_PWM0>;
-> +			status = "disabled";
-> +		};
 
-The error that the build bot reports happens (I think) because CLK_PWM0
-isn't known.
-
-Best regards
-Uwe
-
---rfmkfp7kn4uz32vk
+--wOEuWl4I5xqqjUrR
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgJ8+QACgkQj4D7WH0S
-/k6SQQf9F+et5yXHz1s66Oocx6PAunCNSR5NsrxqTGCCJsG7A5Xj5ihj4O5WEUCh
-g1KnQp9haUQ+FUcC6sjHIcs3Mh2V31LduY6wsvyw9etzsVoFtQx6NwojEH+fLNOC
-15oZnNgyhsYlrRS7uY0DHuhPikTq2DezMV5I+3LwvFkcwzTcn6d7D0WOR3PP35OV
-gVJM6w9bTiftCEH7lmCm//w26e2WI1csVZINIcYDe7PY5rnEkuvOcXeqyy+5YNnO
-yjjmRrqptnX7/M5Yk3oekuPEJ/hTPAhIjKlsC8E7QIy5iTWmj6IFzC2Zy5mDAgrn
-ii3bv4Z4tHAYiVyefKztz66LwfcOWg==
-=PFuz
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgJ8f0ACgkQFA3kzBSg
+Kbb2ORAApGJ1FGxEhKM7cqNVETbPYWu4LnFSMldEADzZTfDj0OoYrLg+CAuFKdwE
+spNDQiLi0INKL5ldauQ/c8NoeS8hadkLt3WR50O9/PTQrOO0Qf9iEJAi5yXwT7P0
+hl/lbU2UXE7CIFateJVGygip7S6zA8fX8LQtzn2DR2oMkqA5FnAumCCNae2o2LI8
+m4zTu93KjvtdOugKgatkGS0BllpuhxxWJOTTRwKcEa9QJdU6/rmmp/5GCP40RlnE
+kyJAIAnk/CM+2b/GEWDQYKYTPfMYvn1hTDZw7v5p7/YqZ6tRsi0alompjEWfbnpc
+Q12EbzS5D2U+cTg5KLFdhFESCHeFqRrsjQyVWi6lCvXSvovB7h1F8JG/FsDQK79d
+ytIif5tEriAOMKzcJ1/z8X0/BCFT0KjhMAgOFp16rP4+ZI7mCEAq3s2OuhXnCFUR
+h0X8n35Q2y2RYTRKwm+CyY4JTck1frJR0vz/oLFO7hE50ruW+z8YZP3XcOE9sYM2
+zjx7tFUUeVoM/C0xL2lDQjboZQ+Z6DgITFo/C0d9c5ETnSkwbQF1PrDVNrBdMXd9
+cFedWmv3ujOtYtidRDDglywAoJfMtUBXD4h+sqFlkEPVxQnVuFTm2w3pLiaKL1Mp
+Cs8kKEWODT0vq5zDvQBVUKXEagBM5a6dvo7bFLl9HX+1m3ue9xs=
+=hxPe
 -----END PGP SIGNATURE-----
 
---rfmkfp7kn4uz32vk--
+--wOEuWl4I5xqqjUrR--
