@@ -1,112 +1,191 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFE51EA84;
-	Thu, 24 Apr 2025 22:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02CF21FF5D;
+	Thu, 24 Apr 2025 22:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745533527; cv=none; b=I4aEcUBWtINBEXrHx4KbFbMyNh8bRI3EY4eOFnbcCJIOSN+EZbXa5yVydooscTjzt4FRxBF/EJxFH2fRMagqWUI60jgwabIA6OMTP9fhI+AY2drHIJrnnDmV/9mJLGAwvJLd3Ri5Jra2M9AWo8YuvfqzGrZslmDRfiKIaUQN1G0=
+	t=1745533565; cv=none; b=mUAMcD5Vtj2uThXYc7jiVHbFTUJznMA3FWdQGoILexjVytDtzDpaBwfIvD2+g4NZNQGGjKU/eV2iWCjlBF1E5EAyZc3MGGa4kMUhSLlekX64ingTU6OHM4bieSsfPHTbyr3X7l8PKw2Panhpc3wDVFbuTN0Poml8FU9JwXHMr8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745533527; c=relaxed/simple;
-	bh=geVdAODQa5LNlip0NptpinhwFwtWBxWKaCUmeLAWNLw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SV5P2FlPNmBJWUkgLr8+UQJh1wU/30sy+pcoGkocGBYTKH18PH1pj95m7smEjHXh6RjuBDcw7IwpQecQ4dGJejYfwl/eXbGGBw3sq4yTApgytwq21e4TGLNYLGA0/jUkXHz16IGwcDSAdCoVRHLEKNvdGcUfKyGubnW1QRBFgeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=aIcpLSsA; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1745533565; c=relaxed/simple;
+	bh=x1JeXYDycyPhhRDzf9nOC3JYpKenBeAbMMf4ArIJVw8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ssPKGEdFT4wdwWF+T6I4gfnZBGODv54wMc0bDGqv3Y96IB9lPONkSIRvi3wZY2w5yUuJQIJZOJwiXMny/gQM1ZIjs5u8xVgJ8TZMBQUSS11lBsqZ5kN+0MY1iWfwFswbSrRJ25OEZqGwtB4shLFQpmQYrNYAhgt4wx0DNkke/bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZT76fwMM; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aIcpLSsA"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53OMORWG1692289
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 24 Apr 2025 15:24:28 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53OMORWG1692289
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745533472;
-	bh=G5UVXicyTBIPs6yn0Aol/9aUmVhDamNK2RBM6HiC8ec=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aIcpLSsAz7DGTiM9hjhLHyD03dBWLKbzaB0V7WrZg3rVc8ktBSYGZKS94ZpxkPHnw
-	 CsFJQCtr1TeOAu7k8gJdRylK+VYPpFazuWZNgwVB32EqC/nJxAiobWbnAqdHF65XG2
-	 +FO7dAWYnt93+w+yiJ8iigZ28z1jIOGv0wAmPXqKWpxUUG4KtkHHdonr86KgEl9+fD
-	 7Y9QDxWWLyY4HpxDsapGfWsbm1L0xMFDZR8rHZtRI58j1lRq1WnC1HJADQJGBgpjyn
-	 A0jWqTb6KjE+o3MzIzTtJ2zwLsjRHOlx4VenrIMKzRUYWNwBX4y23nDAjPzb2IQV56
-	 EdGEcpRBEmJvg==
-Message-ID: <7649416e-1955-4c9c-a851-8b0c4da34c6f@zytor.com>
-Date: Thu, 24 Apr 2025 15:24:27 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZT76fwMM"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-476a304a8edso19118091cf.3;
+        Thu, 24 Apr 2025 15:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745533563; x=1746138363; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hskQ1ynJFkhkNXvLvezLv/sYveihSvby6bDVtKjx3Vg=;
+        b=ZT76fwMMLoHBte6fGCzZesYooFPEvvd7YC7b00UpG4ifrAhitKQpkWkgsbCLl4SCtz
+         lMjUuhgXUu8RzzOnvuAObgHhYi9YkNjrdNF/5Bi7uAwF+8lu2K/DQM2mIBxTdefFoBdk
+         gD6wbMNQchxMCxNEYnVP8EzM4fjF7Z1BKyVoj/EiawkcDkeEKnH7A4hTjEaAW1grJFRV
+         /my3/1ajbKpYTbO7Pdfasl+iPhlRA2Xk1R3bmPuM/MLAkr2fAxGttz+11DW17Xpk3Rtw
+         ejQ8S1DpOsQIhDg5GC9X3gm5bXQfaSL5GNn3hNXY/wQNESdn/9rMs160WaIrWmU+L6BF
+         eflw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745533563; x=1746138363;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hskQ1ynJFkhkNXvLvezLv/sYveihSvby6bDVtKjx3Vg=;
+        b=WJmgxN3nUbKbIJO/+TfjWAP7dr5gKd0DnzS4tmInwMXYbpucQpyMYHHMOmhqK3rNYx
+         SK3n4ZFnQ9K7L71XyLf5pf0p3S3R1bdG1hX55iZm5XcghJ/sOKMrK6ZYELSCcZEU2q/9
+         cuKzXSV/rUqwID2425HWInuuJcOiD4pZUpK33Cm12meUqOIhFcw8mbMAxz5D/D/b2B/Q
+         n+PGJBglNvOcpDayZhN6ulGeSfVnr0UOZunALZIAFyYlf2GtHF9OVI73sZFuzCN6ERQn
+         tu8mFbVS+ccFuHvuhz94/lbsxnJOGImHl6yH8NwM9sF7NXwgC4Wp1A3Vt6lpFZQIefin
+         XLCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQ/3Scxv7xqoes2n19bMVzzBOpPCmi/ZLZfJPQ1pClWKBXk5Q6BgkwFJC1/qqGK0nSgsdNtiWlR6fUYEor@vger.kernel.org, AJvYcCXjUQIB9eAMGlY2dmVJlo+367Xt4sF08V1vZ8oBsHhPV9b+VJcvsMYYsj1yYbvAL6AltNWuqtYnOn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGbXxc5K+vVbJ7jpb/6+cS9Qni8du+5PUyJOJv8x27xAoXj0va
+	ABvHa9B6/ogXUcSDYmNQdjgAvq7fyj/4n8Vc3kFA6gfx3b+tUZMqvOnTUHX33X4kNyKh6Uj2Jnc
+	ggP82d0okv1x3tSbxflZWS4veLe8=
+X-Gm-Gg: ASbGncu6dgV60qSAx2O5K9yyRQjKP1zA2iFJpCvaFOB2VtpjXDMkd/fVY7TJm/ZFXjE
+	NJmb8c8DwM7yr30dBnO8QL30dCYTsOppAAtY5aqbRgNi52lHjkJsFt8yhchufRgOUliSFHpXZcP
+	qkoyzt0+8UWsS3pd7369yrwGXHqhP+MbITAMQCbGr7bEXQP0Nm61jXcQ==
+X-Google-Smtp-Source: AGHT+IFjSFl/xi4ItiZrw0T45ArRRtekfyoiPWNkdF1dxtevOLykqT+7muP77ZbSHM73ktdY/vnuknex42pfIFNB9Lg=
+X-Received: by 2002:a05:622a:203:b0:477:64dd:575b with SMTP id
+ d75a77b69052e-4801eada7b1mr1841381cf.45.1745533562732; Thu, 24 Apr 2025
+ 15:26:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
-To: "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?=
- <jgross@suse.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, acme@kernel.org,
-        andrew.cooper3@citrix.com, peterz@infradead.org, namhyung@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-13-xin@zytor.com>
- <8944b510-6d70-472c-99a2-52a60517733d@suse.com>
- <ca088501-2fbe-4a32-b191-04f7be6a2713@zytor.com>
- <018705C7-35CF-406A-85DA-360FF7BCB072@zytor.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <018705C7-35CF-406A-85DA-360FF7BCB072@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250420175419.889544-1-gshahrouzi@gmail.com> <20250420175419.889544-3-gshahrouzi@gmail.com>
+ <20250421123728.1564039d@jic23-huawei>
+In-Reply-To: <20250421123728.1564039d@jic23-huawei>
+From: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+Date: Thu, 24 Apr 2025 18:25:51 -0400
+X-Gm-Features: ATxdqUFwcTzPdHn9XuiewQEmXMXyqrRqiIsLo1lnCsCOfLX_uZgjCo5No3ZV5uc
+Message-ID: <CAKUZ0zKXg4KLpHPLtpkywPLp8+xxwAMSpNAgUmP34pfVZDv7Aw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] staging: iio: ad9832: Refactor powerdown control
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: gregkh@linuxfoundation.org, lars@metafoo.de, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev, 
+	Michael.Hennerich@analog.com, skhan@linuxfoundation.org, 
+	linux-kernel-mentees@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> By the way, this patch should have "xen" in its subject tag.
-> 
-
-Right, I should add it.
+On Mon, Apr 21, 2025 at 7:37=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Sun, 20 Apr 2025 13:54:18 -0400
+> Gabriel Shahrouzi <gshahrouzi@gmail.com> wrote:
+>
+> > Replace custom implementation with out_altvoltage_powerdown ABI. The
+> > attribute's logic is inverted (1 now enables powerdown) to match the
+> > standard. Modernize driver by using the standard IIO interface.
+> >
+> > Signed-off-by: Gabriel Shahrouzi <gshahrouzi@gmail.com>
+> > ---
+> >  drivers/staging/iio/frequency/ad9832.c | 44 ++++++++++++++++++--------
+> >  1 file changed, 30 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/i=
+io/frequency/ad9832.c
+> > index 0872ff4ec4896..a8fc20379efed 100644
+> > --- a/drivers/staging/iio/frequency/ad9832.c
+> > +++ b/drivers/staging/iio/frequency/ad9832.c
+> > @@ -167,6 +167,34 @@ static int ad9832_write_phase(struct ad9832_state =
+*st,
+> >       return spi_sync(st->spi, &st->phase_msg);
+> >  }
+> >
+> > +static ssize_t ad9832_write_powerdown(struct device *dev, struct devic=
+e_attribute *attr,
+> > +                                   const char *buf, size_t len)
+> > +{
+> > +     struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
+> > +     struct ad9832_state *st =3D iio_priv(indio_dev);
+> > +     int ret;
+> > +     unsigned long val;
+> > +
+> > +     ret =3D kstrtoul(buf, 10, &val);
+> > +     if (ret)
+> > +             goto error_ret;
+> > +
+> > +     mutex_lock(&st->lock);
+>
+> Look at how guard(mutex)(&st->lock);
+> can be used in this driver to simplify things considerably.
+Noted, added into new version.
+> May make sense to do that before introducing this new code.
+Not sure whether to have made it its own patch or not. I grouped it
+together with the new code since it also uses locking.
+>
+> > +     if (val)
+> > +             st->ctrl_src |=3D AD9832_SLEEP;
+> > +     else
+> > +             st->ctrl_src &=3D ~(AD9832_RESET | AD9832_SLEEP |
+> > +                              AD9832_CLR);
+> > +
+> > +     st->data =3D cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_SHIFT) |
+> > +                             st->ctrl_src);
+> > +     ret =3D spi_sync(st->spi, &st->msg);
+> > +     mutex_unlock(&st->lock);
+> > +
+> > +error_ret:
+> > +     return ret ? ret : len;
+> > +}
+> > +
+> >  static ssize_t ad9832_write(struct device *dev, struct device_attribut=
+e *attr,
+> >                           const char *buf, size_t len)
+> >  {
+> > @@ -227,17 +255,6 @@ static ssize_t ad9832_write(struct device *dev, st=
+ruct device_attribute *attr,
+> >                                       st->ctrl_fp);
+> >               ret =3D spi_sync(st->spi, &st->msg);
+> >               break;
+> > -     case AD9832_OUTPUT_EN:
+> > -             if (val)
+> > -                     st->ctrl_src &=3D ~(AD9832_RESET | AD9832_SLEEP |
+> > -                                     AD9832_CLR);
+> > -             else
+> > -                     st->ctrl_src |=3D AD9832_SLEEP;
+> > -
+> > -             st->data =3D cpu_to_be16((AD9832_CMD_SLEEPRESCLR << CMD_S=
+HIFT) |
+> > -                                     st->ctrl_src);
+> > -             ret =3D spi_sync(st->spi, &st->msg);
+> > -             break;
+> >       default:
+> >               ret =3D -ENODEV;
+> >       }
+> > @@ -266,8 +283,7 @@ static IIO_CONST_ATTR_PHASE_SCALE(0, "0.0015339808"=
+); /* 2PI/2^12 rad*/
+> >
+> >  static IIO_DEV_ATTR_PINCONTROL_EN(0, 0200, NULL,
+> >                               ad9832_write, AD9832_PINCTRL_EN);
+> > -static IIO_DEV_ATTR_OUT_ENABLE(0, 0200, NULL,
+> > -                             ad9832_write, AD9832_OUTPUT_EN);
+> > +static IIO_DEVICE_ATTR(out_altvoltage_powerdown, 0200, NULL, ad9832_wr=
+ite_powerdown, 0);
+>
+> Take a look at the use of extended attributes used for this like we see
+> in ad5064.c
+> That will need an actual channel though so is a more significant rework.
+Got it.
+>
+> >
+> >  static struct attribute *ad9832_attributes[] =3D {
+> >       &iio_dev_attr_out_altvoltage0_frequency0.dev_attr.attr,
+> > @@ -281,7 +297,7 @@ static struct attribute *ad9832_attributes[] =3D {
+> >       &iio_dev_attr_out_altvoltage0_pincontrol_en.dev_attr.attr,
+> >       &iio_dev_attr_out_altvoltage0_frequencysymbol.dev_attr.attr,
+> >       &iio_dev_attr_out_altvoltage0_phasesymbol.dev_attr.attr,
+> > -     &iio_dev_attr_out_altvoltage0_out_enable.dev_attr.attr,
+> > +     &iio_dev_attr_out_altvoltage_powerdown.dev_attr.attr,
+> >       NULL,
+> >  };
+> >
+>
