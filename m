@@ -1,301 +1,206 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB071F4E57
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745480188; cv=none; b=Lvf1eQpKWcJqoRYaBnxWS2hMet4e8pPEXfUxknxbVFKLkCtk1HDG1+MVikszHWUZCdow0TqdRoOkNjthLywc1QSPEIivh2+W3oGiHVcFnxnZMXrWDjCX3xqHos4bWI8VP5QroHAb8IVjD4HAR8C8ci37MQIzWjOPa/wHNA1XjCQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745480188; c=relaxed/simple;
-	bh=Kq3s++rgvtQWtgsslDUakCjoW1pmvc8YL7a3KpKjKak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sb+o2zrvAm4tEwkUOVsB4Bur/sJ32g5eOfO9rUPMixSl40jWElHdfZjH/LA+rVT8m5/FNIMRb8aKpZgpwirVIrlhrN/cD8EcE0md5RRPhvUcgpspK609LPjOWqQ76rbCbGEjVnhVaZppy+ImWLRyzzITXUH77yEX+xA3nQupF+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SKkxg7KQ; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C49C1F1506
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745480264; cv=fail; b=pvj5BPzyYb0fsEJcX066No815u2LzCQ29fmTgK92U+MG/G+TBkRuZycYpOAXgI3Jg7x0EDiZAsVyBbrWC5hno2t6ey1o8CmmQGWgW9ymx7CJd1x9AtY62C/HyyDPBHK5w55MpIM0Qj1Wn6IrpHTEh2prAJ//CusLCcrFUl0FKtA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745480264; c=relaxed/simple;
+	bh=wkW+y2mh3IwxvVIFizf9stY+4L1uhjRiSkEQHJ9xJco=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=XhAOzOMltb4tuFasC4QaGSA0oPiGCqPgpG7aeXfv8zIpubN1nuBVZ6bqOqCkIR3k7UDUDbah4Qp137Z6WDToNn1qvQX9cIt4rM+5KnHQkSmUg9X5recSpVky8UWWiCbJCB4eaeI3XCjg8tOcviWzUJERpnc6ly8XhtRWZY7Fncw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QhYtVzbH; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SKkxg7KQ"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so4018645e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745480184; x=1746084984; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n3PlX1g3WvkTquEDOT/3KP8Qz93IfG3BoXc8zl+KOuQ=;
-        b=SKkxg7KQN+GUipELtbxQmRGodx225okkFsHYCn300iw74w+SpPcsjztqDbAuOgFMR7
-         Ip+Q8od6yiUW1qXTwi/p1bMDJ8qd9PTEinec+102rvBfHWF4Xvu+PuFBcNLeZEWGUJtf
-         o2mynkOCYkKXH2260PKGYvZIhe8ORDZiqUSZBfeK6e7sAQ/F3+qpkRgHMMHhTiQDMyei
-         K3EXnOBMHV46BaybzRHDkG4gp3IC8O6LKGqNMNRJz18XPMqjkdWTdTsSaW3KCNOrYSaW
-         E7Aowq9EvzK8exNLMCy7TyNX/lz9qtoRf+t96phPeJYf+AxO4shMOIpIMJfc/7y+QBlF
-         XfaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745480184; x=1746084984;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=n3PlX1g3WvkTquEDOT/3KP8Qz93IfG3BoXc8zl+KOuQ=;
-        b=QA6MiLTqTrQrSnCVc0DhXdfkER0EZ2HUQ5SKx4HlbQkG9pGvvkHP/aco4DkVNqT4Ok
-         wtUS4ym3SgcqBz+0+anZuMgC+zQhPtBcgO50AxxEhrVqAguMmpvUj1OwOerexfmMEn7j
-         5lmuhX+KnF7W5VL3Lpoh+/OrNzygQcmLfFVDNnXCtyYuEpv2T0dYIGJa3CE87E2/dZBn
-         YmAikcmELISepc7pH1PsPmrfgpgMbUdZmMooASPiOTXgmzNiW+sdHlfvIOqiBUhn8H59
-         36T9bOlSwEIHwcb4DT1wjRWe8RKgQk0tccBHJKyz2WWq8weRQ53aKCFOJA0NeTH/j2qS
-         +PxA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcO9EfMlRXR+U1wMZn9CFCr6WW8jzsjEvQyLkC6csdwZRBAsq56d+3u5UJXp+Ndu8ASlFZVRydwAdUXtw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhGpmff2M5qy+4T5pNULhhgs21rbUn9eoXnIG7XQ+DaqxA3THo
-	0XQLuB2smkkEkTyIwcjbipd5UjN916SrHfskf2GxhzYwHVAytf744y+FFKLRi8U=
-X-Gm-Gg: ASbGncvuiyjT9SLPRM80qftK0To4/FAF+UVe+EcqK8tgF8TwFBuduzrX8TC+fAl2lCc
-	aT7R2CMiMG0/5uAbkGuq365FX4/0GLDEVO+nsSqXx6eDSXXwOFm86A/iE3Z/4zLitGztXFQH6d0
-	K3OVCxep8YKggikQCrjy6fjAKUoQzn4SUnZKzE/oM7L3DgTFeymif6JNVJWP/dVI6X6OO/SPc8W
-	vZBU9mj/ALr/P2ntMkOZAe+5QWvzFbeg9wPjpxpkvCO3SHWtjDE0564l1DfhHio1wqNgZ99IrY0
-	sv/HsjRRUkE1z/vQ8Zk5/z6Gc3tow0iNQvLSwYHvrr8=
-X-Google-Smtp-Source: AGHT+IFcPSZIM/Eb6N3TfSme3U2cKw8HuWV8KenlAUgSdFXWQVEoFGprh1v+S+HeojSEe2tWbMSH1A==
-X-Received: by 2002:a05:600c:a403:b0:43d:7413:cb3f with SMTP id 5b1f17b1804b1-4409c81864fmr8893135e9.5.1745480184382;
-        Thu, 24 Apr 2025 00:36:24 -0700 (PDT)
-Received: from pathway.suse.cz ([176.114.240.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8976sm9253195e9.27.2025.04.24.00.36.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 00:36:23 -0700 (PDT)
-Date: Thu, 24 Apr 2025 09:36:22 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: Bert Karwatzki <spasswolf@web.de>,
-	"Aithal, Srikanth" <sraithal@amd.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>,
-	Mateusz Guzik <mjguzik@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	linux-kernel@vger.kernel.org,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
-Message-ID: <aAnp9rdPhRY52F7N@pathway.suse.cz>
-References: <20250423115409.3425-1-spasswolf@web.de>
- <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
- <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
- <5a4a3d0d-a2e1-4fd3-acd2-3ae12a2ac7b0@amd.com>
- <82ff38fc-b295-472c-bde5-bd96f0d144fb@paulmck-laptop>
- <1509f29e04b3d1ac899981e0adaad98bbc0ee61a.camel@web.de>
- <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QhYtVzbH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745480262; x=1777016262;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=wkW+y2mh3IwxvVIFizf9stY+4L1uhjRiSkEQHJ9xJco=;
+  b=QhYtVzbHAt4i0Q4nEI0u4AIqO/rO0a1CeM9x7YQjnNSmu2BGU4w47hbs
+   8GkzfRkMNjGCZOVe3Ohhma/h4UuUflMpMcdc7slcso3Hsues6V+EmLejn
+   f1w1CPCyYid2csl7gy5iEL0aE27dqWHpiNosx6eermIkLACqubprUaHGb
+   rcaQd+nb9rueHieOH/CSLGYd0QkDYZt2L3hc8MdUmLc0TXkYI+JPRjIRr
+   UwmgIW0EtETsROXMPPpP2XEHQPq/ElrjyMK3wXzeSFhzUjSrmaINb+OM8
+   4T2koMggaPZ8SGxJ2kVUxUJ8krMxAQxlsoP8VqHeOJT8enYic8ooXqutU
+   g==;
+X-CSE-ConnectionGUID: owpkpd5hTL2Ny7K1x4PQFg==
+X-CSE-MsgGUID: lchbBsu1RM2NxMt4tM90bQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="46806264"
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="46806264"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 00:37:41 -0700
+X-CSE-ConnectionGUID: dZY+cCMnTXmmYak0I2Angg==
+X-CSE-MsgGUID: nAXaLRRfTwWYwmEQJJPY9Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="155770125"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 00:37:41 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 24 Apr 2025 00:37:40 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 24 Apr 2025 00:37:40 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.46) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 24 Apr 2025 00:37:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=T/AmSoD9KnpuFlM7EQeF+NkzFDf0RNwm7hPN8FV360KkzUVVLEOs4VRNPHLh/VMpMw1GqlqXzYG+VgOjcepzzRi//WKuWTv2ELI0SD6WBqEaW2BJHODP/ZaSCGM7CeNn+SOPsFfzOqL1B4irjPzRuX/iAyRws0/G9SfTaAtY7YVa+UerHrNIV3Q2a23gZfI6pocj7u3UI/icEJIPLKID+TZOfulCL1z4tGGC16riV304S7jey8rbq6ZOAjYCFpGyJg5mIM7aE0oOCPcddznLO2Reu+OIqa9C5i9hV5gf5N3cwHwh3UM6o0PfO8CmYxXmgvU0q0+Ff2bbp13hKswUcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5DyJ5a2ryYt9WJQKkT1AihkconaBcZbzkR8uqLOFwug=;
+ b=n+XSgNYHglKo3ykqPsQiNWz7lQZNSxCa56mm7LqX7HOKCoJ8d8Aa6NJdkeJHngnQuSV1htztAVTnWVRAI31VGLJrUIaOL04/7MF3lNArrOY4HQzAq2w+Zu1LFTykfE/XuW/98Z4t7KCoZaMpOADRxRDpuST8f2Mf4YKm0kfrYLMppyrOgfNltLY8WYAqttqe+VoXAGf1vpy42RbgWg8dVVpw1xrXNch9Ese8ldzkrpGzky4EPhokc23Vubvz9LPE3Ly3uiFgYfy6D6jvV368x+O3sgjeyU4mMvozb9Wppf5cvMHPgtildqryuc0LwSZrW0+ZQ5J5NBWLz4QNT5Vn7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by IA1PR11MB8801.namprd11.prod.outlook.com (2603:10b6:208:599::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.38; Thu, 24 Apr
+ 2025 07:37:16 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%6]) with mapi id 15.20.8678.021; Thu, 24 Apr 2025
+ 07:37:16 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, "Will
+ Deacon" <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, "Jason
+ Gunthorpe" <jgg@ziepe.ca>
+CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/3] iommu/vt-d: Use ida to manage domain id
+Thread-Topic: [PATCH 1/3] iommu/vt-d: Use ida to manage domain id
+Thread-Index: AQHbs/00mkoEpAB1GUqfy7dQi2swobOybihQ
+Date: Thu, 24 Apr 2025 07:37:16 +0000
+Message-ID: <BN9PR11MB527656492CD69CA4EA0EC7338C852@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20250423031020.2189546-1-baolu.lu@linux.intel.com>
+ <20250423031020.2189546-2-baolu.lu@linux.intel.com>
+In-Reply-To: <20250423031020.2189546-2-baolu.lu@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|IA1PR11MB8801:EE_
+x-ms-office365-filtering-correlation-id: f9b15c1d-0023-45aa-f524-08dd8302d67e
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?7I5LVfIuq1VrmoAY7WWMCz4Osd3cuC76Ejfay79XlbIoVRLielUWJgbrrHGq?=
+ =?us-ascii?Q?z0fKoY9LNQ60FHmuSKJXsS5wiOFwPB27Vgxs6F5gOfkS96IAFOMsOIi5KzoF?=
+ =?us-ascii?Q?Jgv9pJTHHbsepwZVplxL2pD46jEVPAfKrYidyfx+gyuW5GK4gSoe8P1LZdkL?=
+ =?us-ascii?Q?wDcSkseVb5sK/grqVLc4lkBmiPfHVtfKK+YNPHm+mWOsRgV29s4DV/imia/q?=
+ =?us-ascii?Q?ppYqgAp0ZhusZUepaqz/OO19HAkooh+KtB4TRr02o2NS4ojHvYdFhJ2YvmNG?=
+ =?us-ascii?Q?MDo6SedyOu93cI6P3Gu2CXZkmSsefgElRulu600fk5Yyy4LSNaz/RIW5U69G?=
+ =?us-ascii?Q?EKScndMUrLdgsIy4ZWKY9PGvL2JvjU7aF/2PL1CDs9rlpqrlBd0hoZFbvCSU?=
+ =?us-ascii?Q?D2J94NaaZySp6OsMR3nXqmRStjR/xVHAY8yQmFQlnrLiIRzBl3TxexeUIUT+?=
+ =?us-ascii?Q?4iXq5zI4vqFWadHkzjaC0+cBsxqdzaoZWMZ7uMFrHad7hq61yyxIHcsPJGB/?=
+ =?us-ascii?Q?lFlZGKqUxRQ7xUndGa/hdd5sLRJX7F1Sd1eadVtxLLfSV8tqQHR1tWrhtzHV?=
+ =?us-ascii?Q?VbbfYjxLE9JcLtEWuRVVXfsPLKyxEPI/sbeYhCqpuvLx/8/ztD6fOjfsSpF7?=
+ =?us-ascii?Q?KvaqHEf1GYam1lM9Laxc3FHWZi1TK50T6B/JuOFspexweYyLPSPrz8nRWpS8?=
+ =?us-ascii?Q?OFJwxsE4ojr8q1tlKA1jJBjxDjllYB/NEW24JdD4lomPLZLVKMJSgMkCVYJD?=
+ =?us-ascii?Q?xr3XKzxaER102eWGMzs28jAWJmWKvy6vQGlWepc4SA4c/g1kK01wrSPSFjwH?=
+ =?us-ascii?Q?18nUr9ZaRYXrvNi56qBGgJ8+OnFshq/jrhxb8yK0TwPEjdmx1es2e5Kz620K?=
+ =?us-ascii?Q?XH1/M/OB1RQrQ11JZO6E5zzL4wwgrjWKRB8qmyUp/oFHxF8ujci8gwb+vWmL?=
+ =?us-ascii?Q?Lt2OckKAbqa7695zB9qsUsdMuZPWrFdNyzrvQ39b089oXIXR0mAuY7VarMuF?=
+ =?us-ascii?Q?+wXeovToyv2vCCtD11vlfRelxph5xapoWhwb1a1SMplteaQ+wUbgVBxHNY+e?=
+ =?us-ascii?Q?oJngI8BWGjyPeS4MX+m89Z4TGh68gf0S4k5M3LeV40RWLnSpNXTtDMjQ2GKB?=
+ =?us-ascii?Q?xnbLkXNRbnFidcUkVlOBMWwu0qmCFhy/rX3YRIu1DNI6a7suFB7GdIAgzpd9?=
+ =?us-ascii?Q?8ixLb0uZj95JzuH3m/9md+2JIkpIgalThb8vTh2VDJxAdiwNuhD9Kd4NeyPv?=
+ =?us-ascii?Q?a7tpMpBuPj8o1g4pZvwM7pvkV08cVyXO1QGtaEZZHXKjcugPvBwiLdfLL4F6?=
+ =?us-ascii?Q?nxtWRuBbcgiqRglVKC7jUSjwOIE0AuUQkl02zYksbUCjON6UGFQ6tKiNOOeA?=
+ =?us-ascii?Q?KWgrV68ZBnywbVtaS+iRU74uVBlZhE/NnRfec60mFCh++alZ6GWMsC25SjAn?=
+ =?us-ascii?Q?BkE7CHiamY3s7E9qe+3kfYmUT7B2Tzsg+QnM8hHW6q/knsYe/d/jB/ehP4Ku?=
+ =?us-ascii?Q?HgZtsCBUrg9Bw0E=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?lvfJTNLQ+Ezc3H5wzx5Wwp+qZdBIjrt0aKnF/5VjydMbRbnTyhJhxUOC+0pX?=
+ =?us-ascii?Q?+DMs2GLky27MiI3pzqjBjmGRP/g2Bdnc+Pdfip8iJHqAvCCOoI1qm7G/0mlS?=
+ =?us-ascii?Q?RmPMaRrKRfR95hnNk+VlZWW2yZbdkWgmUTdMOKj14Oc8f0vvNalmwlgbuPBQ?=
+ =?us-ascii?Q?PlrD8Y3GEKvAsTtrwxfa5YOqPUodRxpSzvIeKKLbRQIaorcwqu0DkcFny0NR?=
+ =?us-ascii?Q?fW9P1H4Nxix841uZnU3ZgnEq2DvM79t0aVo5dd7NcxbpvLhnzp5QPEireiyB?=
+ =?us-ascii?Q?D2/5TqgI3Q4p3T8KJ4LTMHo5SeplFiurT6peFFQp/Gdb6bc9ye4cus1k6DCd?=
+ =?us-ascii?Q?Y51CBGhJ8tBOxVkyf+UfhhsjSPYfExgD+wKBJConKOG2P4UBPvj7qUg5eIel?=
+ =?us-ascii?Q?rIdX0ivWUvMIfJDb/2QAObvTYdRDBwAVsvIyjTPJalOqF0MoXqhSZs52LstB?=
+ =?us-ascii?Q?o3hIqwDGb7Dc/EBiFeIcTHVhMN7oSQG/yVVbqS8M1HtBpKFm6uTmBgVIHwYc?=
+ =?us-ascii?Q?ShCRSd8sJbiIn7Gm/mjwcsizPE5RHUShknsub9O03CaKF0GN/Et6BUTWsy1A?=
+ =?us-ascii?Q?16h2RJ+jvB0BN2qDK7WNE7geTv+UdhoBTFFkzhJjFrsfrfU2+R+NTqa5q6Us?=
+ =?us-ascii?Q?xEFgnTe+NJfj+ZGfY6ic3y47qt74h5ecCWuwJ+wk4UD2XSwDdjy6LWOUvtCR?=
+ =?us-ascii?Q?qRGqZDbZ2o6tyMY6QdKlDqU1w+nzx0HCaYlyMVh+Zd5iwk/Jlz4d5ybt1st2?=
+ =?us-ascii?Q?PnD/u6zotEOB7rgJAUSAOmXyrMzjRxsDur3ubPFZG6TZoDWZTOksM9tzBv05?=
+ =?us-ascii?Q?5/dd31pw8dGUmlOBWKBecZxI/geJDOICXoOKi9NIrbDUSpywiRQ9ZdZvAPkl?=
+ =?us-ascii?Q?aqMGCfzrRHIhj9Bq70dGVG7YZ/W+aacz69o2Kg+ZQ5Ku0tr8kGSOGUqsmr05?=
+ =?us-ascii?Q?dOmmURiN1spEigiEczsnUUnBCnjlo93H9slz0XKYSKS+EylB0h+JmmibpYeN?=
+ =?us-ascii?Q?q1Doe+a0FLeUQwHAajk28jYI79E55XDjN5M0Cj5bUD9Z75H8GD9JfNrIaaPz?=
+ =?us-ascii?Q?DvA4qZT4E+W99uXamJjkLXI6bN5nZ7JN9ibUbUH+ZF7gznqBl9X2n28idU20?=
+ =?us-ascii?Q?Pe9DpNd+gH9J2huCeUkkcFqpkgwREaTfcPboPjg0b91SG3VTeXqK2ryn8O0l?=
+ =?us-ascii?Q?zt/V6lpRYRXqIFpUjw6zwLr5R7atEDdOVFqsUoOwfSJcfH9RoEGEykdgEhHT?=
+ =?us-ascii?Q?eI7IGaQ36ZDU6dZx8EXfQqLRn1Rb5VKjyzAnCR8XXiI9PKLLu2PRfxMJ0ofQ?=
+ =?us-ascii?Q?cKYtD3gFEwo4v9DJZYFxm1YlpT+EPISW9dBI151AY1BJKQA7aQZlBa2hpvm+?=
+ =?us-ascii?Q?gKYqzosY9jFz9TG160H52OR5YHMn4IJMCDtE8pNQs/EFbv5sq18PY0+hG5hY?=
+ =?us-ascii?Q?wgXopYeTQ/dJvQu+SB0sC1YIdRzIlLvCV+YY8KZbn+LvG9HF6rQWUhwLKO/t?=
+ =?us-ascii?Q?ejB5kn9yscFgIxJ1HtNFVX+rUxnxRqtaFTMP/P7+D0QRsFDiPQ0HUQ9A2C3J?=
+ =?us-ascii?Q?l1JvGD/gn+Sd4IPvwFRztHqC/DUHFrW9oVWHRedp?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9b15c1d-0023-45aa-f524-08dd8302d67e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2025 07:37:16.8183
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: D+xuBPkcP+YoWxo9RIL6RgLiEWnG8g9aHDn/uvGKl6flIMBXWY0LIUZewQtLnKoI/asw2vP4bOaZOXyGzqVhtA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB8801
+X-OriginatorOrg: intel.com
 
-On Wed 2025-04-23 12:56:53, Paul E. McKenney wrote:
-> On Wed, Apr 23, 2025 at 09:19:56PM +0200, Bert Karwatzki wrote:
-> > Am Mittwoch, dem 23.04.2025 um 11:07 -0700 schrieb Paul E. McKenney:
-> > > On Wed, Apr 23, 2025 at 08:49:08PM +0530, Aithal, Srikanth wrote:
-> > > > On 4/23/2025 7:48 PM, Paul E. McKenney wrote:
-> > > > > On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
-> > > > > > On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
-> > > > > > > Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
-> > > > > > > debian sid. When booting kernel message appear on screen but no messages from
-> > > > > > > init (systemd). There are also no logs written even thought emergency sync
-> > > > > > > via magic sysrq works (a message is printed on screen), presumably because
-> > > > > > > / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
-> > > > > > > commit dd4cf8c9e1f4 as the first bad commit.
-> > > > > > > Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
-> > > > > > 
-> > > > > > 
-> > > > > > Hello,
-> > > > > > 
-> > > > > > On AMD platform as well boot failed starting next-20250422, bisecting the
-> > > > > > issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
-> > > > > > logs.
-> > > > > 
-> > > > > Thank you all for the bisection and the report!
-> > > > > 
-> > > > > Please check out the predecessor of commit dd4cf8c9e1f4 ("ratelimit:
-> > > > > Force re-initialization when rate-limiting re-enabled"):
-> > > > > 
-> > > > > 13fa70e052dd ("ratelimit: Allow zero ->burst to disable ratelimiting")
-> > > > > 
-> > > > > Then please apply the patch shown below, and let me know what happens?
-> > > > > (Yes, I should have split that commit up...)
-> > > > > 
-> > > > > 							Thanx, Paul
-> > > > > 
-> > > > > ------------------------------------------------------------------------
-> > > > > 
-> > > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > > > index 04f16b8e24575..13ed636642270 100644
-> > > > > --- a/lib/ratelimit.c
-> > > > > +++ b/lib/ratelimit.c
-> > > > > @@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > > > >   	unsigned long flags;
-> > > > >   	int ret;
-> > > > > -	if (!interval || !burst)
-> > > > > +	if (interval <= 0 || burst <= 0)
-> > > > >   		return 1;
-> > > > >   	/*
-> > > > 
-> > > > 
-> > > > I applied above patch on top of 13fa70e052dd ("ratelimit: Allow zero ->burst
-> > > > to disable ratelimiting") [linux-20250423]. This is fixing the boot issue.
-> > > > 
-> > > > Tested-by: Srikanth Aithal <sraithal@amd.com>
-> > > 
-> > > Thank you both, and to Bert for intuiting the correct -next commit!
-> > > 
-> > > Could you please try the next increment, which is this patch, again
-> > > on top of 24ff89c63355 ("ratelimit: Allow zero ->burst to > disable
-> > > ratelimiting")?
-> > > 
-> > > In the meantime, I will expose the version you two just tested to
-> > > -next.
-> > > 
-> > > 							Thanx, Paul
-> > > 
-> > > ------------------------------------------------------------------------
-> > > 
-> > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > > index 04f16b8e24575..8f6c54f719ef2 100644
-> > > --- a/lib/ratelimit.c
-> > > +++ b/lib/ratelimit.c
-> > > @@ -35,8 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> > >  	unsigned long flags;
-> > >  	int ret;
-> > >  
-> > > -	if (!interval || !burst)
-> > > +	if (interval <= 0 || burst <= 0) {
-> > > +		ret = burst > 0;
-> > >  		return 1;
-> > > +	}
-> > >  
-> > >  	/*
-> > >  	 * If we contend on this state's lock then just check if
-> > 
-> > If you set "ret = burst > 0", but "return 1" this will make no difference
-> > (except in the case of a major compiler bug, probably), as I wrote in my other
-> > email which overlapped yours, this fixes the issue in next-20250422:
-> > 
-> > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> > index b5c727e976d2..fc28f6cf8269 100644
-> > --- a/lib/ratelimit.c
-> > +++ b/lib/ratelimit.c
-> > @@ -40,7 +40,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
-> >          * interval says never limit.
-> >          */
-> >         if (interval <= 0 || burst <= 0) {
-> > -               ret = burst > 0;
-> > +               ret = 1;
-> >                 if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
-> >                     !raw_spin_trylock_irqsave(&rs->lock, flags))
-> >                         return ret;
-> 
-> You are quite right, your patch does fix the issue that you three say.
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Wednesday, April 23, 2025 11:10 AM
+>=20
+>  static void free_dmar_iommu(struct intel_iommu *iommu)
+>  {
+> -	if (iommu->domain_ids) {
+> -		bitmap_free(iommu->domain_ids);
+> -		iommu->domain_ids =3D NULL;
+> -	}
+> +	ida_destroy(&iommu->domain_ida);
 
-Honestly, I do not understand what a ratelimit user could cause this
-issue. And I am not able to reproduce it on my test system (x86_64,
-kvm). I mean that my system boots and I see the systemd meesages.
+since ida_init() is in alloc_iommu() now, the destroy can be
+moved to free_iommu().
 
-> Unfortunately, it prevents someone from completely suppressing output
-> by setting burst to zero.  Could you please try the patch below?
+> @@ -1399,14 +1356,13 @@ int domain_attach_iommu(struct dmar_domain
+> *domain, struct intel_iommu *iommu)
+>  		return 0;
+>  	}
+>=20
+> -	ndomains =3D cap_ndoms(iommu->cap);
+> -	num =3D find_first_zero_bit(iommu->domain_ids, ndomains);
+> -	if (num >=3D ndomains) {
+> +	num =3D ida_alloc_range(&iommu->domain_ida, FLPT_DEFAULT_DID +
+> 1,
+> +			      cap_ndoms(iommu->cap) - 1, GFP_ATOMIC);
 
-I wondered whether some code used a non-initialized struct ratelimit_state.
-I tried the following patch:
+let's define a macro e.g. FIRST_DID for min.
 
-diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index b5c727e976d2..f949a18e9c2b 100644
---- a/lib/ratelimit.c
-+++ b/lib/ratelimit.c
-@@ -35,6 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 	unsigned long flags;
- 	int ret;
- 
-+	WARN_ONCE(interval <= 0 || burst <= 0,
-+		  "Possibly using a non-initilized ratelimit struct with interval:%d, burst:%d\n",
-+		  interval, burst);
-+
- 	/*
- 	 * Non-positive burst says always limit, otherwise, non-positive
- 	 * interval says never limit.
-
-
-And it triggered:
-
-[    2.874504] ------------[ cut here ]------------
-[    2.875552] Possibly using a non-initilized ratelimit struct with interval:0, burst:0
-[    2.876990] WARNING: CPU: 2 PID: 1 at lib/ratelimit.c:38 ___ratelimit+0x1e8/0x200
-[    2.878435] Modules linked in:
-[    2.879045] CPU: 2 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.15.0-rc3-next-20250422-default+ #22 PREEMPT(full)  f5d77f8de4aec34e420e26410c34bcb56f692aae
-[    2.881287] Tainted: [W]=WARN
-[    2.882010] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
-[    2.886452] RIP: 0010:___ratelimit+0x1e8/0x200
-[    2.888405] Code: 00 00 e9 b5 fe ff ff 41 bc 01 00 00 00 e9 f2 fe ff ff 89 ea 44 89 e6 48 c7 c7 f8 40 eb 92 c6 05 b5 4d 0f 01 01 e8 28 a0 de fe <0f> 0b e9 71 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 80 00 00
-[    2.891223] RSP: 0000:ffffcf1340013bd8 EFLAGS: 00010282
-[    2.892033] RAX: 0000000000000000 RBX: ffff8a8cc2bfbaf0 RCX: 0000000000000000
-[    2.893091] RDX: 0000000000000002 RSI: 00000000ffff7fff RDI: 00000000ffffffff
-[    2.894158] RBP: 0000000000000000 R08: 00000000ffff7fff R09: ffff8a8d3fe3ffa8
-[    2.895168] R10: 00000000ffff8000 R11: 0000000000000001 R12: 0000000000000000
-[    2.896150] R13: ffffffff92e08d38 R14: ffff8a8cc369e400 R15: ffff8a8cc2e39f00
-[    2.897138] FS:  0000000000000000(0000) GS:ffff8a8da6f3c000(0000) knlGS:0000000000000000
-[    2.898224] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.899181] CR2: 0000000000000000 CR3: 0000000153256001 CR4: 0000000000370ef0
-[    2.901865] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    2.903516] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    2.906593] Call Trace:
-[    2.907143]  <TASK>
-[    2.907582]  __ext4_msg+0x6e/0xa0
-[    2.908132]  ? lock_is_held_type+0xd8/0x130
-[    2.908755]  ext4_check_feature_compatibility+0x15e/0x2c0
-[    2.909427]  __ext4_fill_super+0x543/0x1480
-[    2.910049]  ext4_fill_super+0xcc/0x280
-[    2.910641]  ? setup_bdev_super+0xfc/0x200
-[    2.911265]  ? __pfx_ext4_fill_super+0x10/0x10
-[    2.911882]  get_tree_bdev_flags+0x13e/0x1e0
-[    2.912485]  vfs_get_tree+0x29/0xe0
-[    2.912958]  ? capable+0x3a/0x60
-[    2.913407]  do_new_mount+0x176/0x360
-[    2.913920]  init_mount+0x5a/0x90
-[    2.914389]  do_mount_root+0xa2/0x130
-[    2.914923]  mount_root_generic+0xdd/0x270
-[    2.916127]  ? mount_root+0x147/0x190
-[    2.917989]  prepare_namespace+0x1e0/0x230
-[    2.919124]  kernel_init_freeable+0x1ec/0x200
-[    2.920907]  ? __pfx_kernel_init+0x10/0x10
-[    2.922113]  kernel_init+0x1a/0x130
-[    2.922616]  ret_from_fork+0x31/0x50
-[    2.923093]  ? __pfx_kernel_init+0x10/0x10
-[    2.923612]  ret_from_fork_asm+0x1a/0x30
-[    2.924110]  </TASK>
-[    2.924433] irq event stamp: 1696665
-[    2.924955] hardirqs last  enabled at (1696675): [<ffffffff913fa54e>] __up_console_sem+0x5e/0x70
-[    2.926072] hardirqs last disabled at (1696686): [<ffffffff913fa533>] __up_console_sem+0x43/0x70
-[    2.927149] softirqs last  enabled at (1696612): [<ffffffff9135134e>] handle_softirqs+0x32e/0x400
-[    2.928221] softirqs last disabled at (1696591): [<ffffffff91351509>] __irq_exit_rcu+0xd9/0x150
-[    2.929167] ---[ end trace 0000000000000000 ]---
-[    3.003162] EXT4-fs (vda2): mounted filesystem 587ae802-e330-4059-9b48-d5b845e1075a ro with ordered data mode. Quota mode: none.
-
-I guess that it happens because the structure is initialized too late,
-see:
-
-static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
-{
-
-	[ ... skipping a lot of initialization code ... ]
-
-	/* Enable message ratelimiting. Default is 10 messages per 5 secs. */
-	ratelimit_state_init(&sbi->s_err_ratelimit_state, 5 * HZ, 10);
-	ratelimit_state_init(&sbi->s_warning_ratelimit_state, 5 * HZ, 10);
-	ratelimit_state_init(&sbi->s_msg_ratelimit_state, 5 * HZ, 10);
-
-	[...]
-}
-
-I guess that it is on purpose. They most likely do not want to
-ratelimit the _very initial messages_ printed when the initialization
-fails.
-
-Maybe, it is not a good idea to allow to disable the ratelimit by
-zero burst.
-
-Best Regards,
-Petr
+Reviewed-by: Kevin Tian <kevin.tian@intel.com>
