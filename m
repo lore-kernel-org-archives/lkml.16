@@ -1,185 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E66F0221712;
-	Thu, 24 Apr 2025 22:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0159D19DF7D;
+	Thu, 24 Apr 2025 22:58:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745535486; cv=none; b=CRUretaoMiCA5kp78krv9e/eZayb3KaQ+A8kFhCK/FdUn9zPCWNA6H2fRlPcaPIUNsx+ppVGZMJcmsxExybqsfdt5m5rCtx4TO82hCP2T0JzjMQCK9Vo2wv1EDoZFj6JLdrrRgubjIhjkdQxiBhJxyq7dMIwRraqIuZKsNGWdtk=
+	t=1745535521; cv=none; b=I13T5ucPXgqcquLB2tHNLyRccbX3UBtuiyb/lV72rO+xXhNaGaE+uV7aJWnQBEMa/i556BaFgYUevZKPT5HxUUKTXjRshQ3j/TezxzVQVf/Q21rasgOvov4yobRL5we1KhHvbyoVMlqM40obSgIlTXB9RULHYm9iV/uUKv+0Wy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745535486; c=relaxed/simple;
-	bh=731nWIyt9OFN6kxXt/6KA+nv44zep6jyOw5FxNS1B/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TaoAnS3WFc+4zZiRVBdXlvkUEmzCRM2nac8x7NPrRYjfvlQq8aoT0SezSZjAk0FhqKIIIgmX2cdna2kxtG0EvSOmyQPCbc6x8FAog6F9kgTOng+uupu21in0PQYMZ2iYLUHcMrw37qSev92jf9MVdViqz4uYEEEhApW4s4U41Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E369D2F;
-	Thu, 24 Apr 2025 15:57:57 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A76533F59E;
-	Thu, 24 Apr 2025 15:58:00 -0700 (PDT)
-Date: Thu, 24 Apr 2025 23:56:58 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Yixun Lan <dlan@gentoo.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Samuel Holland
- <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, Andrew Lunn
- <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- clabbe.montjoie@gmail.com
-Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
- board
-Message-ID: <20250424235658.0c662e67@minigeek.lan>
-In-Reply-To: <4643958.LvFx2qVVIh@jernej-laptop>
-References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
-	<4ba3e7b8-e680-40fa-b159-5146a16a9415@lunn.ch>
-	<20250424150037.0f09a867@donnerap.manchester.arm.com>
-	<4643958.LvFx2qVVIh@jernej-laptop>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1745535521; c=relaxed/simple;
+	bh=ACYjDi6CjEq4j64VIpcmIebNQmYUwCOsuVNTD3r9n0c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lsCjVmPPwPWtN+TrAHP1rWwtGXk7osKR4lYFX62LNlsEfG8F9NK14HeIkXTMQ6U/v8Y8mlqmL4UdesBFwWkqRs7jYhqZRuH1Y3eB3kZUqGsRru1MgkxdDkKrOiHjFtEyepcC2mRP182vr4CLN02XIUL35JLTalBpPfafMcwJWXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KB/Seoi3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KB/Seoi3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C9CFC4CEE3;
+	Thu, 24 Apr 2025 22:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745535520;
+	bh=ACYjDi6CjEq4j64VIpcmIebNQmYUwCOsuVNTD3r9n0c=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KB/Seoi3vbdDi3cFSxoKq/l2fqizN/rCTQ+No8ys6oQrpHwnCBSuOMCFabvu5AmI4
+	 /vtl0g53m8E+Y9Rf4fuoF0roVhWRp9/0Eqe6rN8BbdlQ7Dj65nGmcTQnG5P6RU0mpw
+	 4uSWLKLXhW7BvJ+/5Rc6XeZWxKJJs1VOiiEuT2ailAsYw80VeqxpIvzCxxYa6oKzGK
+	 yc0zRfZdn6ICNM7Mhd8Krhn7cO8acIq9jz3XzgdjelcXHLqnTyfdbHWOWSODf8DUiS
+	 HITkNgdofuhjKeMljOeN1U+Hwl1iuKRyg0daOyOlmEpbrXwamrwkKNID69jJ/rrIs1
+	 rPqU4IYtfZQBA==
+Message-ID: <bedaa79b-721b-488f-b69f-f1bc5b6d166d@kernel.org>
+Date: Thu, 24 Apr 2025 17:58:38 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] EDAC/altera: Set DDR and SDMMC interrupt mask
+ before registration
+To: Matthew Gerlach <matthew.gerlach@altera.com>, bp@alien8.de,
+ tony.luck@intel.com, james.morse@arm.com, mchehab@kernel.org,
+ rric@kernel.org, tthayer@opensource.altera.com, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>, stable@kernel.org
+References: <20250421161447.41886-1-matthew.gerlach@altera.com>
+ <20250421161447.41886-3-matthew.gerlach@altera.com>
+Content-Language: en-US
+From: Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <20250421161447.41886-3-matthew.gerlach@altera.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 24 Apr 2025 20:38:34 +0200
-Jernej =C5=A0krabec <jernej.skrabec@gmail.com> wrote:
+On 4/21/25 11:14, Matthew Gerlach wrote:
+> From: Niravkumar L Rabara <niravkumar.l.rabara@altera.com>
+> 
+> Mask DDR and SDMMC in probe function to avoid spurious irq before
+> registration.  Removed invalid register write to system manager.
+> 
+> Fixes: 1166fde93d5b1 ("EDAC, altera: Add Arria10 ECC memory init functions")
 
-> cc: Corentin LABBE
->=20
-> Dne =C4=8Detrtek, 24. april 2025 ob 16:00:37 Srednjeevropski poletni =C4=
-=8Das je Andre Przywara napisal(a):
-> > On Thu, 24 Apr 2025 14:57:27 +0200
-> > Andrew Lunn <andrew@lunn.ch> wrote:
-> >=20
-> > Hi Andrew,
-> >  =20
-> > > > > Just to be clear, you tried it with "rgmii-id" and the same <300>=
- and
-> > > > > <400> values?   =20
-> > > >=20
-> > > > Yes, sorry, I wasn't clear: I used rgmii-id, then experimented with=
- those
-> > > > values.   =20
-> > >=20
-> > > O.K, great.
-> > >=20
-> > > I do suspect the delays are not actually in pico seconds. But without
-> > > a data sheet, it is hard to know.
-> > >=20
-> > >        if (!of_property_read_u32(node, "allwinner,rx-delay-ps", &val)=
-) {
-> > >                 if (val % 100) {
-> > >                         dev_err(dev, "rx-delay must be a multiple of =
-100\n");
-> > >                         return -EINVAL;
-> > >                 }
-> > >                 val /=3D 100;
-> > >                 dev_dbg(dev, "set rx-delay to %x\n", val);
-> > >                 if (val <=3D gmac->variant->rx_delay_max) {
-> > >                         reg &=3D ~(gmac->variant->rx_delay_max <<
-> > >                                  SYSCON_ERXDC_SHIFT);
-> > >                         reg |=3D (val << SYSCON_ERXDC_SHIFT);
-> > >=20
-> > > So the code divides by 100 and writes it to a register. But:
-> > >=20
-> > > static const struct emac_variant emac_variant_h3 =3D {
-> > >         .rx_delay_max =3D 31,
-> > >=20
-> > >=20
-> > > static const struct emac_variant emac_variant_r40 =3D {
-> > >         .rx_delay_max =3D 7,
-> > > };
-> > >=20
-> > > With the change from 7 to 31, did the range get extended by a factor
-> > > of 4, or did the step go down by a factor of 4, and the / 100 should
-> > > be / 25? I suppose the git history might have the answer in the commit
-> > > message, but i'm too lazy to go look. =20
-> >=20
-> > IIRC this picosecond mapping was somewhat made up, to match common DT
-> > properties. The manual just says:
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > 12:10  R/W  default: 0x0 ETXDC: Configure EMAC Transmit Clock Delay Cha=
-in.
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >=20
-> > So the unit is really unknown, but is probably some kind of internal cy=
-cle count.
-> > The change from 7 to 31 is purely because the bitfield grew from 3 to 5
-> > bits. We don't know if the underlying unit changed on the way.
-> > Those values are just copied from whatever the board vendor came up wit=
-h,
-> > we then multiply them by 100 and put them in the mainline DT. Welcome to
-> > the world of Allwinner ;-) =20
->=20
-> IIRC Corentin asked Allwinner about units and their response was in 100 p=
-s.
->=20
-> In my experience, vendor DT has proper delays specified, just 7 instead of
-> 700, for example. What they get wrong, or better said, don't care, is phy
-> mode. It's always set to rgmii because phy driver most of the time ignores
-> this value and phy IC just uses mode set using resistors.
+Please just use 12-digits
 
-Ah, right, I dimly remembered there was some hardware setting, but your
-mentioning of those strap resistors now tickled my memory!
-
-So according to the Radxa board schematic, RGMII0-RXD0/RXDLY is pulled
-up to VCCIO via 4.7K, while RGMII0-RXD1/TXDLY is pulled to GND (also via
-4K7). According to the Motorcom YT8531 datasheet this means that RX
-delay is enabled, but TX delay is not.
-The Avaota board uses the same setup, albeit with an RTL8211F-CG PHY,
-but its datasheet confirms it uses the same logic.
-
-So does this mean we should say rgmii-rxid, so that the MAC adds the TX
-delay? Does the stmmac driver actually support this? I couldn't find
-this part by quickly checking the code.
-
-Cheers,
-Andre
-
-> Proper way here
-> would be to check schematic and set phy mode according to that. This meth=
-od
-> always works, except for one board, which had resistors set wrong and
-> phy mode configured over phy driver was actually fix for it.
->=20
-> Best regards,
-> Jernej
->=20
-> >=20
-> > And git history doesn't help, it's all already in the first commit for =
-this
-> > driver. I remember some discussions on the mailing list, almost 10 years
-> > ago, but this requires even more digging ...
-> >=20
-> > Cheers,
-> > Andre
-> >=20
-> >=20
-> >  =20
-> > >=20
-> > > I briefly tried "rgmii", and I couldn't get a lease, so I quite =20
-> > > > confident it's rgmii-id, as you said. The vendor DTs just use "rgmi=
-i", but
-> > > > they might hack the delay up another way (and I cannot be asked to =
-look at
-> > > > that awful code).
-> > > >=20
-> > > > Cheers,
-> > > > Andre   =20
-> >=20
-> >  =20
->=20
->=20
->=20
->=20
->=20
+Dinh
 
