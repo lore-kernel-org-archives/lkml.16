@@ -1,121 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED5917A2EA;
-	Thu, 24 Apr 2025 18:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FCEB17A2EA
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745519659; cv=none; b=XFoHDOmvfXXoz0Ut6rnbIZq9aFSV4itURQ9gy6LtJEWVWA17m5FH2wxb/I3sCqCPQZeNhVRn+YQy3W+3wc/uSo8evmFgoAWT0BcT6dg4D3+Jkdrppw2owOHineW2Ji9X2tW6HxHQ12WnoRHsTA4Toax7ICxsHIWLn38lV2+dncg=
+	t=1745519755; cv=none; b=TWVz7hJQQ+irdS1X/wfhM8DQbFjUc5WNTSZO4W26aZyP+/ODxpHg3fFQtKDwa0Gm6Tc2+JwQRtousVj7G/Ei5UE5VCgLaSCgXaTOO8Bb3jVVG1LuG4MQHokGgHpa0UK/gdS9JHLVMV8jzDbFYRZ1thTu2DsZ55ohxxpVBUVt18c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745519659; c=relaxed/simple;
-	bh=39IgTCoRmuwSBhN8pXGBMrTZGCajKZKYCqn0HyEFy5U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=F69gZWd9hR403CCS+yKk4UHHzp0nQICUYqHTOpDB3mFw7+Hb7SJzF7Jl2NgKtq+e22H9vJQytGFFKXGzBnPuhzawjYk8CZR3xyetNQZ3xGUy/m/BPLCNoEpRqiLpv3rVJwKRo2SZjmMJ/w0rpSy02xmbtgh4iwmNCvacjHZiAHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B1qj+Li7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745519755; c=relaxed/simple;
+	bh=WzzRwbVxwU4Sg9QhOUPRQ+o57o2byuloGKZZsxSfWSA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kINvfiIpzvneSHotTZEl7/s4Cny5yhMH6C6qfPMhoSOYN8cOHib5Hw9yrxBU66Lb4+GzQBdPfop4jU/+ggBrCdWUQEhXBu6Z/4pZAiikzaIRW76B3/QDOh7N88Yx9OrG1MUpdLvzxmaUPuGBlH4QbekmNt/yG6qp7QB7R/uswFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRY5UPwF; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B1qj+Li7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 411BEC4AF09;
-	Thu, 24 Apr 2025 18:34:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745519655;
-	bh=39IgTCoRmuwSBhN8pXGBMrTZGCajKZKYCqn0HyEFy5U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=B1qj+Li7s/BjjdVgE52QnZmfPkuPkbHDAX01eV5TpkavST1t6/sP/ybj6wCUNkDHe
-	 NJaIodkm93Wq1eu/ItimduYJAWuN3t7pRYNsUvspJvhUSTjGqCEM5acgGZsgSANkRz
-	 eQTlC2QAKiXyziIQ4HF0eoma+BBIZdZibnqWPRG1ZaehlzaAt/8hGwsgTZN+qvTERg
-	 3ozb/R7v961WmeiSh9THOSPJT2NOU3MywSa+/B0eJ9l7sO+pCJgrc7jM7KuZJnjeit
-	 AoYpShFJpLymWgBOXR7/01vHHlfwMjxwyQyIIQKdFGznF1OdKSpSfrp2u2bCR+/R6V
-	 c4un9LUOfwMHw==
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5f4ca707e31so2285075a12.2;
-        Thu, 24 Apr 2025 11:34:15 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVL5DygTyDeFrk/97JKTd2QJrSTMox0oQ7T4NMk2XMTK0zqttUxMkk8cXW5RwPDxngid/jyo11jlBKNaoU=@vger.kernel.org, AJvYcCWC289LVlaJjKotZYrz4sH2kzx34UQJrZKbHsabZZ+I+aq6382wgOnf3ixuHj2pq6dgvPdRsAnBJMUoMlFM@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/i5HQewHaE9i1QvMAhqNSmKsLEk7JLzSwY9H1xyzLNXc84Trr
-	INNgw3EXIE3XnhfCnsTMzgUJDIKODWSJIqMtRknCkcK7+PTCMFf6tPwk7uHd8SLgBnCBLONTzOR
-	Fv8IXYiNnrnPAi8WyeQPqSWsLKA==
-X-Google-Smtp-Source: AGHT+IETA7koFRPQpCNgF9bB+lBmBatuYMkCAvFK0AhyzDFySWaXfC2Y30MblCgtSC39xMK1leTosTnJknluZ8y8Yh8=
-X-Received: by 2002:a05:6402:51d1:b0:5f3:7f32:3919 with SMTP id
- 4fb4d7f45d1cf-5f6fabdaecamr384013a12.16.1745519653832; Thu, 24 Apr 2025
- 11:34:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRY5UPwF"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so986811a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745519753; x=1746124553; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NBc764gAPY6I6oAij8+pGrrMrHEcf79TkE2/AX5UIgA=;
+        b=VRY5UPwF7MsJBVhIp7B9eNNOUcJBRPEVGrmlYpKr9l3XUst+iYCcybr087ossRMuBS
+         zbCHDgJodEyCwLEaK8Yb+hTg1/NtLlhN7XW+SImsLOWDab/NbXIT4FfZOM0vfqr2tf10
+         ovohb5o6ANGo7f6BjNrY9itVCbK3TyGaTryROza9qxCO/WyUc5oQlaOasAOJlGgnNBF+
+         ucGbdQ1OdX+Nb+iW4JmFduIt1ueWSQ01dxsszzGEYHyFtGeYSUa60v3kAX6t1sOGI57r
+         GUYSqZl9T8tah1wkg2I4Z1T5QaQuzrOJTA2aqn0tf2Cv7zAC3IqgWmRd9D4Xkh8/bT1P
+         Ir5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745519753; x=1746124553;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NBc764gAPY6I6oAij8+pGrrMrHEcf79TkE2/AX5UIgA=;
+        b=Ebq/RKC6pZQMRFdVAR20EtHPrpAViei6YF1UTvPMlUMQ96hNDnYBxNXOeTI+otV2MA
+         OorZzCg9xXr2zI9EdyraFv+U3ERol6EjkCMTwskLQBEDEXUk6Q9O0kxppiT2WwnPzHuh
+         DO4TCoU1cI5X+Ucef5E8D2TXloUN1BpW21t5ITkS7T+t/MNY0X86idI4F95W7b46pMUt
+         plJTLcaPczjTcjOzwv5MhjgQD3SL19kXNivvGi+nfEgvdgMmPiWd0oi24H1d2xEvRZfT
+         faEdUsgEABuYgeSqUH8ERBik+MYVSVqMmU+/BmogImLmk7yndxo9Pk+tT6LG1Jgh/aUp
+         IvbA==
+X-Gm-Message-State: AOJu0YxZH3l8MkL3B2068T2VdMQzZ07xCeqaLs/dgvnVH8ZezyP14uKu
+	O2zF2E8Jk4If6bfFiJcinK9ikUpLcsfpPYMheadV+2Klcx5Nvm1d
+X-Gm-Gg: ASbGncuqkiAOWW7H/bDzdXxd7Y19caX1muiJtvpND6NvXhZ9emusaW1P/Th3e8mxRG+
+	G90IhDGkIkNnVvlaqU8XAbfsP2lHBnF8OFiBtSVYDU+EwG2//OhcRjegtns49akiNW4jqOeT8GR
+	gsm83rcLm//1lMPYoR9HYpCIlTrCB82QkUaKOgyTaoBcPXENgfx0kzxi/O7lL0I95I4OFRYcUEw
+	keIQhQTopY47JUsYfaqMqopV2PwEZjI5EvWLxqWITkszd7M2R7dz0ovPkO74ns94VLW8OhXHxsi
+	iscMs7dKdb76FNPgFv1rylekVmBCFzs2lqclDnL2FtAttWFjLeG0
+X-Google-Smtp-Source: AGHT+IGSak3MroUglM9OJGaj6RDbJwkqMh1opcovTUID/RG97drpXY17L9YbCNB99D0OP9MNtTfw2A==
+X-Received: by 2002:a17:90b:270d:b0:2fe:afa7:eaf8 with SMTP id 98e67ed59e1d1-309ed27d219mr5532677a91.13.1745519753252;
+        Thu, 24 Apr 2025 11:35:53 -0700 (PDT)
+Received: from NB-GIGA003.letovo.school ([5.194.95.139])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef0b9df8sm1744660a91.35.2025.04.24.11.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 11:35:52 -0700 (PDT)
+From: Alexey Charkov <alchark@gmail.com>
+Subject: [PATCH 0/5] irqchip: vt8500: Cleanups and fixes for the irq-vt8500
+ driver
+Date: Thu, 24 Apr 2025 22:35:41 +0400
+Message-Id: <20250424-vt8500-intc-updates-v1-0-4ab7397155b3@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424-fix_serdev-v2-0-a1226ed77435@quicinc.com> <20250424-fix_serdev-v2-2-a1226ed77435@quicinc.com>
-In-Reply-To: <20250424-fix_serdev-v2-2-a1226ed77435@quicinc.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 24 Apr 2025 13:34:02 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqKs=5Uf1rJy3iBROL5ZZVo62cTbNq+yzKr2DXU+Nhabbg@mail.gmail.com>
-X-Gm-Features: ATxdqUHFJ4GtQopsA6kBZicfwSwvYKcPW-wwVym6ikDdQEIuuuMK-FbLj2TOWQo
-Message-ID: <CAL_JsqKs=5Uf1rJy3iBROL5ZZVo62cTbNq+yzKr2DXU+Nhabbg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] serdev: Remove repeated device name in
- dev_(err|dbg) messages
-To: Zijun Hu <zijun_hu@icloud.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Zijun Hu <quic_zijuhu@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAH2ECmgC/x3MQQqAIBBA0avErBswtaiuEi0Gm2o2FmoSRHdPW
+ r7F/w9EDsIRxuqBwFmiHL6gqStwO/mNUZZi0Eq3ymqLOfWtUig+ObzOhRJHdKazZBoyHQ1QyjP
+ wKvd/neb3/QD0R0jxZQAAAA==
+X-Change-ID: 20250424-vt8500-intc-updates-c364a31a36a9
+To: Thomas Gleixner <tglx@linutronix.de>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ Alexey Charkov <alchark@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745519768; l=1132;
+ i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
+ bh=WzzRwbVxwU4Sg9QhOUPRQ+o57o2byuloGKZZsxSfWSA=;
+ b=+hqUgicjwuEpZL3HXzOsh/RoNZKxU+jDbd1zr3Uh/hKjekwV+nwr+AJJSjsYNyvjgTelkhsSU
+ sJtPdTkrq1OCsgR10uKQcOeWMBaYDqNYQNKAYlGIBe9JfsiCAHlx5QP
+X-Developer-Key: i=alchark@gmail.com; a=ed25519;
+ pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-On Thu, Apr 24, 2025 at 7:24=E2=80=AFAM Zijun Hu <zijun_hu@icloud.com> wrot=
-e:
->
-> From: Zijun Hu <quic_zijuhu@quicinc.com>
->
-> There are serval dev_err() and dev_dbg() usages shown below:
->
-> dev_dbg(dev, "...%s...", dev_name(dev))
->
-> The device name is repeated since dev_dbg() also prints device
-> name as prefix.
->
-> Fix by optimizing the messages printed.
->
-> Signed-off-by: Zijun Hu <quic_zijuhu@quicinc.com>
-> ---
->  drivers/tty/serdev/core.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index 971651b8e18dcbb5b7983cdfa19e7d60d4cd292b..f00106de76a0f1e547310c7d2=
-1cc2fe3d5869e28 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -118,12 +118,12 @@ int serdev_device_add(struct serdev_device *serdev)
->
->         err =3D device_add(&serdev->dev);
->         if (err < 0) {
-> -               dev_err(&serdev->dev, "Can't add %s, status %pe\n",
-> -                       dev_name(&serdev->dev), ERR_PTR(err));
-> +               dev_err(&serdev->dev, "Can't add serdev, status %pe\n",
-> +                       ERR_PTR(err));
->                 goto err_clear_serdev;
->         }
->
-> -       dev_dbg(&serdev->dev, "device %s registered\n", dev_name(&serdev-=
->dev));
-> +       dev_dbg(&serdev->dev, "serdev registered successfully\n");
->
->         return 0;
->
-> @@ -783,8 +783,8 @@ int serdev_controller_add(struct serdev_controller *c=
-trl)
->                 goto err_rpm_disable;
->         }
->
-> -       dev_dbg(&ctrl->dev, "%s registered: dev:%p\n",
-> -               dev_name(&ctrl->dev), &ctrl->dev);
+Fix the logic of ack/mask functions to actually do what their semantics
+implies instead of lumping both actions into one. Also rework the chained
+interrupts handling using common kernel infrastructure, while getting rid
+of a boot-time WARN_ON due to a misplaced call to enable_irq.
 
-I don't understand why you add dev_name() and then turn around and
-remove it in the next patch. Just squash the patches.
+Apparently neither edge-triggered interrupts nor chained interrupts had
+any users, so nobody complained in 15 years.
 
-> +       dev_dbg(&ctrl->dev, "serdev controller registered: dev:%p\n",
-> +               &ctrl->dev);
->         return 0;
->
->  err_rpm_disable:
->
-> --
-> 2.34.1
->
+Signed-off-by: Alexey Charkov <alchark@gmail.com>
+---
+Alexey Charkov (5):
+      irqchip: vt8500: Split up ack/mask functions
+      irqchip: vt8500: Drop redundant copy of the device node pointer
+      irqchip: vt8500: Don't require 8 interrupts from a chained controller
+      irqchip: vt8500: Use a dedicated chained handler function
+      irqchip: vt8500: Use fewer global variables and add error handling
+
+ drivers/irqchip/irq-vt8500.c | 149 +++++++++++++++++++++++--------------------
+ 1 file changed, 80 insertions(+), 69 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250424-vt8500-intc-updates-c364a31a36a9
+
+Best regards,
+-- 
+Alexey Charkov <alchark@gmail.com>
+
