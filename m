@@ -1,119 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19071F75A9;
-	Thu, 24 Apr 2025 08:46:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABCA62701AB
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484392; cv=none; b=pL9DsDAkCX/fxLcXEJxof8o9OgwUfHfuBYY6ZPZS4okvKofoHWnXxbbTudwOx9yKStz+nl/1B/bnLPyTqiXPECu/YLMiVoet7M61JIeA5a+fxiMzuhItLS366x1L8moLq3kNNXI/9srDg5U8ENc2K2HCwM+D1xBlyxp77Fnc8Mo=
+	t=1745484412; cv=none; b=c2Bx9OOqRBlQg9jJ2ZUu7sst0U1uUowANBnluPtn3KaiYalUZBNTdWEc8WnpZqdemHdZOXfrNQtKxpIq4yCZjuo4NVzIuLrF1yJ37QX06xLK3L4zrG+ILmfx5PUsHjUkgmDV9juGPAhcztQnr2lUbg5K+rgjG3u2w5lNCC2lS3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484392; c=relaxed/simple;
-	bh=ki3q6dIyPVLY9OlwYT9gx2mvHOve0ih8UQqOIXQy4sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jwQxNc/ZuT3VuulgzV2KYPEtABJ4/9dQc8PpG6UTr1vR0kb0kMiATqo2p3awTQc/Lj1BdgDs5Zc6nTeeDU+WbrtfK5NK8Ui8Wc3i9tx6jmv3oiUNM/5ZS1H5bvCWjH+LYA+dq+1zbZJVB2IN/BC6oHREtYldPLccPYer0w+CZ7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uSR+lBTu; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uSR+lBTu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F4A0C4CEED;
-	Thu, 24 Apr 2025 08:46:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745484392;
-	bh=ki3q6dIyPVLY9OlwYT9gx2mvHOve0ih8UQqOIXQy4sw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uSR+lBTuzs9lAfUp6ETUwd/e83HDQBPN+bi2x6d+WcXRuXqISLxR1KnZmPcANDNPl
-	 XcusVwWrcgl5ZwxaQMTClZZp6wv04VyBadsXr0ChBep2yGTn0yT6aRBkv0qe3YHnsu
-	 Xbfy/GOWPkZiF5ouAX9EAiGXmE23jYsBtArkcpCT8edU46pm2SHyttUmmiowtlF9le
-	 jBdsLZ0dV8tCc+abgC1OkQo4yqWtl296bgiFLL3P131EcMwOFukXU6T1YRIKWY0DCS
-	 vfhRiecYS5EGzJ47VScGPAGcWrDrAIXqhECCrbNzQ/i5dx+Y8dYPFcg8gKvkI2s3k1
-	 MO9hwaOX8jurQ==
-Date: Thu, 24 Apr 2025 11:46:26 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>,
-	Mika =?iso-8859-1?Q?Penttil=E4?= <mpenttil@redhat.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
-	Jake Edge <jake@lwn.net>, Jonathan Corbet <corbet@lwn.net>,
-	Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 10/24] mm/hmm: let users to tag specific PFN with DMA
- mapped bit
-Message-ID: <20250424084626.GQ48485@unreal>
-References: <cover.1745394536.git.leon@kernel.org>
- <0a7c1e06269eee12ff8912fe0da4b7692081fcde.1745394536.git.leon@kernel.org>
- <7185c055-fc9e-4510-a9bf-6245673f2f92@redhat.com>
- <20250423181706.GT1213339@ziepe.ca>
- <36891b0e-d5fa-4cf8-a181-599a20af1da3@redhat.com>
- <20250423233335.GW1213339@ziepe.ca>
- <20250424080744.GP48485@unreal>
- <20250424081101.GA22989@lst.de>
+	s=arc-20240116; t=1745484412; c=relaxed/simple;
+	bh=5QtXLIvhmNW4Lth8Wnr6Zyf9AWSPfQeyw78ET8cJPfY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TFmtPDiKU3mvBVLuVGsYjjbYKoG4UfRRrb29auPFyvyurKMAAQJ5+xsak9kMzzTZb1RzRKnPrHGgb+Wt0333lLDTyTsYY/gEb6Fwl6XqorOMFxOH55HI6TeSVSYBR17kHtfycaj8jPIgQoWJAxsFkPcDtIwBjweUfFHQEpen2Yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F6131063;
+	Thu, 24 Apr 2025 01:46:38 -0700 (PDT)
+Received: from [10.163.49.106] (unknown [10.163.49.106])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B5463F59E;
+	Thu, 24 Apr 2025 01:46:38 -0700 (PDT)
+Message-ID: <038a4c10-14c6-4671-8db1-fd38dc73bccf@arm.com>
+Date: Thu, 24 Apr 2025 14:16:34 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424081101.GA22989@lst.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight: trbe: Save/restore state across CPU low power
+ state
+To: Yabin Cui <yabinc@google.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Leo Yan <leo.yan@arm.com>, Jie Gan <quic_jiegan@quicinc.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250423230046.1134389-1-yabinc@google.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250423230046.1134389-1-yabinc@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 10:11:01AM +0200, Christoph Hellwig wrote:
-> On Thu, Apr 24, 2025 at 11:07:44AM +0300, Leon Romanovsky wrote:
-> > > I see, so yes order occupies 5 bits [-4,-5,-6,-7,-8] and the
-> > > DMA_MAPPED overlaps, it should be 9 not 7 because of the backwardness.
-> > 
-> > Thanks for the fix.
+On 4/24/25 04:30, Yabin Cui wrote:
+> Similar to ETE, TRBE may lose its context when a CPU enters low
+> power state. To make things worse, if ETE state is restored without
+> restoring TRBE state, it can lead to a stuck CPU due to an enabled
+> source device with no enabled sink devices.
 > 
-> Maybe we can use the chance to make the scheme less fragile?  i.e.
-> put flags in the high bits and derive the first valid bit from the
-> pfn order?
+> This patch introduces support for "arm,coresight-loses-context-with-cpu"
+
+But could "arm,coresight-loses-context-with-cpu" device tree property
+be associated wit TRBE devices ? OR this state save and restore needs
+to be handled in the firmware.
+
+> in the TRBE driver. When present, TRBE registers are saved before
+> and restored after CPU low power state. To prevent CPU hangs, TRBE
+> state is always saved after ETE state and restored after ETE state.
 > 
-
-It can be done too. This is what I got:
-
-   38 enum hmm_pfn_flags {
-   39         /* Output fields and flags */
-   40         HMM_PFN_VALID = 1UL << (BITS_PER_LONG - 1),
-   41         HMM_PFN_WRITE = 1UL << (BITS_PER_LONG - 2),
-   42         HMM_PFN_ERROR = 1UL << (BITS_PER_LONG - 3),
-   43         /*
-   44          * Sticky flags, carried from input to output,
-   45          * don't forget to update HMM_PFN_INOUT_FLAGS
-   46          */
-   47         HMM_PFN_DMA_MAPPED = 1UL << (BITS_PER_LONG - 4),
-   48         HMM_PFN_P2PDMA     = 1UL << (BITS_PER_LONG - 5),
-   49         HMM_PFN_P2PDMA_BUS = 1UL << (BITS_PER_LONG - 6),
-   50
-   51         HMM_PFN_ORDER_SHIFT = (BITS_PER_LONG - 11),
-   52
-   53         /* Input flags */
-   54         HMM_PFN_REQ_FAULT = HMM_PFN_VALID,
-   55         HMM_PFN_REQ_WRITE = HMM_PFN_WRITE,
-   56
-   57         HMM_PFN_FLAGS = ~((1UL << HMM_PFN_ORDER_SHIFT) - 1),
-   58 };
-
-So now, we just need to move HMM_PFN_ORDER_SHIFT if we add new flags
-and HMM_PFN_FLAGS will be updated automatically.
-
-Thanks
+> Signed-off-by: Yabin Cui <yabinc@google.com>
+> ---
+>  .../coresight/coresight-etm4x-core.c          | 13 ++++-
+>  drivers/hwtracing/coresight/coresight-trbe.c  | 53 +++++++++++++++++++
+>  include/linux/coresight.h                     |  6 +++
+>  3 files changed, 71 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> index e5972f16abff..1bbaa1249206 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
+> @@ -1863,6 +1863,7 @@ static int __etm4_cpu_save(struct etmv4_drvdata *drvdata)
+>  static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+>  {
+>  	int ret = 0;
+> +	struct coresight_device *sink;
+>  
+>  	/* Save the TRFCR irrespective of whether the ETM is ON */
+>  	if (drvdata->trfcr)
+> @@ -1871,8 +1872,14 @@ static int etm4_cpu_save(struct etmv4_drvdata *drvdata)
+>  	 * Save and restore the ETM Trace registers only if
+>  	 * the ETM is active.
+>  	 */
+> -	if (coresight_get_mode(drvdata->csdev) && drvdata->save_state)
+> +	if (coresight_get_mode(drvdata->csdev) && drvdata->save_state) {
+>  		ret = __etm4_cpu_save(drvdata);
+> +		if (ret == 0) {
+> +			sink = coresight_get_percpu_sink(drvdata->cpu);
+> +			if (sink && sink_ops(sink)->percpu_save)
+> +				sink_ops(sink)->percpu_save(sink);
+> +		}
+> +	}
+>  	return ret;
+>  }
+>  
+> @@ -1977,6 +1984,10 @@ static void __etm4_cpu_restore(struct etmv4_drvdata *drvdata)
+>  
+>  static void etm4_cpu_restore(struct etmv4_drvdata *drvdata)
+>  {
+> +	struct coresight_device *sink = coresight_get_percpu_sink(drvdata->cpu);
+> +
+> +	if (sink && sink_ops(sink)->percpu_restore)
+> +		sink_ops(sink)->percpu_restore(sink);
+>  	if (drvdata->trfcr)
+>  		write_trfcr(drvdata->save_trfcr);
+>  	if (drvdata->state_needs_restore)
+> diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
+> index fff67aac8418..38bf46951a82 100644
+> --- a/drivers/hwtracing/coresight/coresight-trbe.c
+> +++ b/drivers/hwtracing/coresight/coresight-trbe.c
+> @@ -115,6 +115,13 @@ static int trbe_errata_cpucaps[] = {
+>   */
+>  #define TRBE_WORKAROUND_OVERWRITE_FILL_MODE_SKIP_BYTES	256
+>  
+> +struct trbe_save_state {
+> +	u64 trblimitr;
+> +	u64 trbbaser;
+> +	u64 trbptr;
+> +	u64 trbsr;
+> +};
+> +
+>  /*
+>   * struct trbe_cpudata: TRBE instance specific data
+>   * @trbe_flag		- TRBE dirty/access flag support
+> @@ -123,6 +130,9 @@ static int trbe_errata_cpucaps[] = {
+>   * @cpu			- CPU this TRBE belongs to.
+>   * @mode		- Mode of current operation. (perf/disabled)
+>   * @drvdata		- TRBE specific drvdata
+> + * @state_needs_save	- Need to save trace registers when entering cpu idle
+> + * @state_needs_restore	- Need to restore trace registers when exiting cpu idle
+> + * @save_state		- Saved trace registers
+>   * @errata		- Bit map for the errata on this TRBE.
+>   */
+>  struct trbe_cpudata {
+> @@ -133,6 +143,9 @@ struct trbe_cpudata {
+>  	enum cs_mode mode;
+>  	struct trbe_buf *buf;
+>  	struct trbe_drvdata *drvdata;
+> +	bool state_needs_save;
+> +	bool state_needs_restore;
+> +	struct trbe_save_state save_state;
+>  	DECLARE_BITMAP(errata, TRBE_ERRATA_MAX);
+>  };
+>  
+> @@ -1187,12 +1200,49 @@ static irqreturn_t arm_trbe_irq_handler(int irq, void *dev)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static void arm_trbe_cpu_save(struct coresight_device *csdev)
+> +{
+> +	struct trbe_cpudata *cpudata = dev_get_drvdata(&csdev->dev);
+> +	struct trbe_save_state *state = &cpudata->save_state;
+> +
+> +	if (cpudata->mode == CS_MODE_DISABLED || !cpudata->state_needs_save)
+> +		return;
+> +
+> +	state->trbbaser = read_sysreg_s(SYS_TRBBASER_EL1);
+> +	state->trbptr = read_sysreg_s(SYS_TRBPTR_EL1);
+> +	state->trblimitr = read_sysreg_s(SYS_TRBLIMITR_EL1);
+> +	state->trbsr = read_sysreg_s(SYS_TRBSR_EL1);
+> +	cpudata->state_needs_restore = true;
+> +}
+> +
+> +static void arm_trbe_cpu_restore(struct coresight_device *csdev)
+> +{
+> +	struct trbe_cpudata *cpudata = dev_get_drvdata(&csdev->dev);
+> +	struct trbe_save_state *state = &cpudata->save_state;
+> +
+> +	if (cpudata->state_needs_restore) {
+> +		/*
+> +		 * To avoid disruption of normal tracing, restore trace
+> +		 * registers only when TRBE lost power (TRBLIMITR == 0).
+> +		 */
+> +		if (read_sysreg_s(SYS_TRBLIMITR_EL1) == 0) {
+> +			write_sysreg_s(state->trbbaser, SYS_TRBBASER_EL1);
+> +			write_sysreg_s(state->trbptr, SYS_TRBPTR_EL1);
+> +			write_sysreg_s(state->trbsr, SYS_TRBSR_EL1);
+> +			set_trbe_enabled(cpudata, state->trblimitr);
+> +		}
+> +		cpudata->state_needs_restore = false;
+> +	}
+> +}
+> +
+>  static const struct coresight_ops_sink arm_trbe_sink_ops = {
+>  	.enable		= arm_trbe_enable,
+>  	.disable	= arm_trbe_disable,
+>  	.alloc_buffer	= arm_trbe_alloc_buffer,
+>  	.free_buffer	= arm_trbe_free_buffer,
+>  	.update_buffer	= arm_trbe_update_buffer,
+> +	.percpu_save	= arm_trbe_cpu_save,
+> +	.percpu_restore	= arm_trbe_cpu_restore,
+>  };
+>  
+>  static const struct coresight_ops arm_trbe_cs_ops = {
+> @@ -1358,6 +1408,9 @@ static void arm_trbe_probe_cpu(void *info)
+>  	cpudata->trbe_flag = get_trbe_flag_update(trbidr);
+>  	cpudata->cpu = cpu;
+>  	cpudata->drvdata = drvdata;
+> +	cpudata->state_needs_save = coresight_loses_context_with_cpu(
+> +		&drvdata->pdev->dev);
+> +	cpudata->state_needs_restore = false;
+>  	return;
+>  cpu_clear:
+>  	cpumask_clear_cpu(cpu, &drvdata->supported_cpus);
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index d79a242b271d..fec375d02535 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -362,6 +362,10 @@ enum cs_mode {
+>   * @alloc_buffer:	initialises perf's ring buffer for trace collection.
+>   * @free_buffer:	release memory allocated in @get_config.
+>   * @update_buffer:	update buffer pointers after a trace session.
+> + * @percpu_save:	saves state when CPU enters idle state.
+> + *			Only set for percpu sink.
+> + * @percpu_restore:	restores state when CPU exits idle state.
+> + *			only set for percpu sink.
+>   */
+>  struct coresight_ops_sink {
+>  	int (*enable)(struct coresight_device *csdev, enum cs_mode mode,
+> @@ -374,6 +378,8 @@ struct coresight_ops_sink {
+>  	unsigned long (*update_buffer)(struct coresight_device *csdev,
+>  			      struct perf_output_handle *handle,
+>  			      void *sink_config);
+> +	void (*percpu_save)(struct coresight_device *csdev);
+> +	void (*percpu_restore)(struct coresight_device *csdev);
+>  };
+>  
+>  /**
