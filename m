@@ -1,133 +1,139 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D45E1E00A0;
-	Thu, 24 Apr 2025 06:29:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFFF1A2564;
+	Thu, 24 Apr 2025 06:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745476164; cv=none; b=otQsge5FpXJoEDTkN2J1BApJoxtzT5ZufCDEa3yPsgU7+n2WOGc2LYNgb3Zlm9aNas54pbOTJIdudzgERUPQFs8ONC53v3LJ+AU4afM+GwRf6LRe5eaKOETyeGTfqWrlGZFMv7mNBHpKaoiyQHBfnZcvEJec+BGJszz0e66xVH4=
+	t=1745476350; cv=none; b=RsnXpOISgR2JF1i8bGPhqmCZ0xOmim/80yNpEqjJSy9hM8BBA+C8HAphz0MBfGz5C39WChMvhNs9au8sI+8DQoYfMqULUxrhkZot3sHO0nbWSpkystHdNa7pfOKLm36vXZDTtMf7zgUnrIOXBFCeo/TKt4zqWks+NpkdZN1WjO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745476164; c=relaxed/simple;
-	bh=vEqzcRu9m5qvff9QwwVv02gneCqRAe5hs49ok24uYks=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GmUtvVpVqlAxIlRN7iDQOVJ263SX0Lm5SejJWY4ODSEQrY0RA/zTxPU51dNjYy4aizVWEI3c758pIKoer1B6P4cOxuvsASdhZSgFOtMvk2KotGOs5VqnI/qE7F0jP5Ee/9ACfJT6XOGwfsFKFDlO2t7DTqRq8USwoN/dOHH4mdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e3cCKNQ3; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1745476350; c=relaxed/simple;
+	bh=liyLOHEfidVTyWtRf+MLB60Y1iLLOVmBw2oiN28abxY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O7li+0Z8ufPrS7IsLkoPIf6AYiItJyXI+YLCnGk0GhWh4sDHdlvDuvxDHrj6vTWVD0UzOJKcZIE2iKCj52YKotDW7FJNM+CnJBJGpDpy9dbk16+Sl98JTSNeGlGEQxVoyFWSIGAXoZmMeD8Y2ktcN/cEZyQFrxwzyPUp1EUu+vg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=J0WOX4ef; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e3cCKNQ3"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0FEm6010648;
-	Thu, 24 Apr 2025 06:29:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=iFHSC3ADFpg
-	QSR1BRPKVYViSqg10EkYFgqiZUGXGuu8=; b=e3cCKNQ3JxuZ9hPX6tF5kSqaJV4
-	2nqVy5Spja42DGkAyYJWOSlxZT5NO0sRHC0vhOdO4L3SCTo6nZVkEW39rrcNwmAM
-	UbEudzzFH8umDFws1G25KJO8xAqosMVTlL2cJtzIJNdHug8tGTd2fQti83iSmXQv
-	kdNV5WDKkwoF4Sm0dcEWQwKcL1BD1wRUzD5r0I7lajrw41mtESEhTJmWaX81vFcj
-	ZyXCh9z5Z8069D+qbgROzdKGNtF35zSnDh8/v5h2+l0iDFo04Zax4ZttDRkmdH1w
-	yGZxeUtoAbpW+lYMaaeMY7of/lYCtOqcilGS0MCN9Ae81AaCnfkURX94sBg==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0cg8k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 06:29:10 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53O6OZq0003918;
-	Thu, 24 Apr 2025 06:29:06 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4644wn021j-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 06:29:06 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53O6OarF003972;
-	Thu, 24 Apr 2025 06:24:36 GMT
-Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53O6OZlo003943
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 06:24:36 +0000
-Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
-	id D05C859E; Thu, 24 Apr 2025 11:54:33 +0530 (+0530)
-From: Ayushi Makhija <quic_amakhija@quicinc.com>
-To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
-        dmitry.baryshkov@oss.qualcomm.com, sean@poorly.run,
-        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
-        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
-        conor+dt@kernel.org, andrzej.hajda@intel.com,
-        neil.armstrong@linaro.org, rfoss@kernel.org,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
-        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
-        quic_jesszhan@quicinc.com
-Subject: [PATCH v5 09/11] drm/bridge: anx7625: fix drm_bridge ops flags to support hot-plugging
-Date: Thu, 24 Apr 2025 11:54:29 +0530
-Message-Id: <20250424062431.2040692-10-quic_amakhija@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
-References: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="J0WOX4ef"
+Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 93EE59CE;
+	Thu, 24 Apr 2025 08:32:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745476344;
+	bh=liyLOHEfidVTyWtRf+MLB60Y1iLLOVmBw2oiN28abxY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=J0WOX4efldDHhA54s9NegRnXYRg4BEGkNNnyX3Ki6WBkH6IfYCP4iJeQMQgTbf3ZN
+	 1haGrB6KgxZ1q+oLXFeaeRNG99mHtD3RCbc+DF9KYGo4kQ9gM1iOtTdVPeBFf/oy98
+	 Emgkqk5Pag9o6Yg8m4loaLH9EffMIOLCJbwdPh6c=
+Message-ID: <9cd0c3cc-9f3c-4a3e-9080-c832def8f317@ideasonboard.com>
+Date: Thu, 24 Apr 2025 09:32:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: rqTerOt6rprXIZ-kTCerwmgAj_nBPuRX
-X-Proofpoint-ORIG-GUID: rqTerOt6rprXIZ-kTCerwmgAj_nBPuRX
-X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=6809da36 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=IFNFO8iCMOh0I8FUMx0A:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA0MCBTYWx0ZWRfX+8MyAGETbyC0 Wf2UNkBaWzeCpZ2h2RgDhx5jRvoyraUT9XD/qD7FqozaZmom702XuFao8K5sFD6gnhIPaVleLLX lEgqj+ilvZ1RV8iK6ztfkolLCz+16ERSitOr+eJksPH2foXJDUHhERCBLIInxpMsSlo01hTaTCY
- rH+khpsPccOWmMUxZf6+4sqaMEhtMEYHYwR9zUowNd6L0gM2o4Zb5WcaEOvM5BhvZdaU5gbQxNm np3d6au/8Orhr/ZaK3mMdF3bv2QxSrDnwi2VXUlaMDjS9YhXUDYquYEFrtxQ8KZruugATF+j3Db rTU3NoGizn0D08eknfGTod8AkKArpg/sXal37i/+oj2oFbtxoR+eAuGeWAG5aqyG5zboDK1ajNz
- MDB5VRW3VDmH6EL/7CIvsslYhqCJYVr59g99MtKe+ucDGf84I762eMyO79iY99ae60Fc2TKt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_02,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240040
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] i2c: Fix end of loop test in
+ i2c_atr_find_mapping_by_addr()
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Romain Gantois <romain.gantois@bootlin.com>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <aAii_iawJdptQyCt@stanley.mountain> <2427370.em1n7HOibB@fw-rgant>
+ <a22d74b9-06b1-4a4b-9c06-4b0ff7f9b6c2@stanley.mountain>
+Content-Language: en-US
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
+ 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
+In-Reply-To: <a22d74b9-06b1-4a4b-9c06-4b0ff7f9b6c2@stanley.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The anx7625_link_bridge() checks if a device is not a panel
-bridge and add DRM_BRIDGE_OP_HPD and DRM_BRIDGE_OP_DETECT
-flags to the drm_bridge->ops. However, on port 1 of the anx7625
-bridge, any device added is always treated as a panel bridge,
-preventing connector_detect() from being called. To resolve
-this, instead of just checking if it is a panel bridge, verify
-the type of device based on aux whether it is a DisplayPort or
-eDP panel. If the device is not of the eDP type, add
-DRM_BRIDGE_OP_HPD and DRM_BRIDGE_OP_DETECT flags to the to
-the drm_bridge->ops.
+Hi,
 
-Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
----
- drivers/gpu/drm/bridge/analogix/anx7625.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+On 23/04/2025 20:29, Dan Carpenter wrote:
+> On Wed, Apr 23, 2025 at 05:25:44PM +0200, Romain Gantois wrote:
+>> Hello Dan,
+>>
+>> On Wednesday, 23 April 2025 10:21:18 CEST Dan Carpenter wrote:
+>>> When the list_for_each_entry_reverse() exits without hitting a break
+>>> then the list cursor points to invalid memory.  So this check for
+>>> if (c2a->fixed) is checking bogus memory.  Fix it by using a "found"
+>>> variable to track if we found what we were looking for or not.
+>>
+>> IIUC the for loop ending condition in list_for_each_entry_reverse() is
+>> "!list_entry_is_head(pos, head, member);", so even if the loop runs to
+>> completion, the pointer should still be valid right?
+>>
+> 
+> head is &chan->alias_pairs.  pos is an offset off the head.  In this
+> case, the offset is zero.  So it's &chan->alias_pairs minus zero.
+> 
+> So we exit the list with c2a = (void *)&chan->alias_pairs.
+> 
+> If you look how struct i2c_atr_chan is declareted the next struct member
+> after alias_pairs is:
+> 
+> 	struct i2c_atr_alias_pool *alias_pool;
+> 
+> So if (c2a->fixed) is poking around in the alias_pool pointer.  It's not
+> out of bounds but it's not valid either.
 
-diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-index 99ef3f27ae42..a32ebe1fa0cd 100644
---- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-+++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-@@ -2608,9 +2608,8 @@ static int anx7625_link_bridge(struct drm_dp_aux *aux)
- 	platform->bridge.of_node = dev->of_node;
- 	if (!anx7625_of_panel_on_aux_bus(dev))
- 		platform->bridge.ops |= DRM_BRIDGE_OP_EDID;
--	if (!platform->pdata.panel_bridge)
--		platform->bridge.ops |= DRM_BRIDGE_OP_HPD |
--					DRM_BRIDGE_OP_DETECT;
-+	if (!platform->pdata.panel_bridge || !anx7625_of_panel_on_aux_bus(dev))
-+		platform->bridge.ops |= DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_DETECT;
- 	platform->bridge.type = platform->pdata.panel_bridge ?
- 				    DRM_MODE_CONNECTOR_eDP :
- 				    DRM_MODE_CONNECTOR_DisplayPort;
--- 
-2.34.1
+Maybe it's just me, but I had hard time following that explanation. So 
+here's mine:
+
+The list head (i2c_atr_chan.alias_pairs) is not a full entry, it's just 
+a struct list_head. When the for loop runs to completion, c2a doesn't 
+point to a struct i2c_atr_alias_pair, so you can't access c2a->fixed.
+
+For the patch:
+
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+
+  Tomi
 
