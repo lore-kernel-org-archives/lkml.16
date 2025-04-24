@@ -1,116 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E46221FAA;
-	Thu, 24 Apr 2025 13:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E91D38382;
+	Thu, 24 Apr 2025 13:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745500603; cv=none; b=QcgNo7UjrzaS2+t/h2jAAjlIPGZrdeUITnASBGZb3rY5gr1C6IOiHFmAIbyf1glwPnMykJlEqeHdAeQ8YPyYM4wQ3uxtKKyBdCBhQ2MvHHLJD64b6TBKH6e/+fM7klYHLZOVewnHjq/DrvswLKmlbPtoFsfR9SSM7G1gFhfOlEA=
+	t=1745500725; cv=none; b=JbbQXwi6agVwe2TqQPFcSmhs7BE2iY+gFsLZl4JAE8EeXyisaL2HLby0l205BHdq/dQmeYTN6pbzCf4T4Y/pEvIpvYU10bU7pO7FwIFUXKYdW1J86X7zrur7EXKgurXo/ML5BLkZBwRyQnEmPzTuk1JyRriuW9BLXWfu2NWashg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745500603; c=relaxed/simple;
-	bh=FoS91EweKjkPkrPYIt/JPpjGNtuk+G6YDWUkr6+gAtI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VVjicuLlA8WS+kDMBf/9qREZjViaQobECVWXdmd2xEhefqO8fCXP30nK0YrpZzdQJY0q5lL1ZQuA7u9ez4mR0yATFDsXeE5yZISIkZ90sW0QR41/oRxDoNIGB1YluJZbk7Xnxl0hN+862XO3Mr0W0/Fij12laAQ2h894PSXHI4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QK1Rt7Pi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745500725; c=relaxed/simple;
+	bh=2XhD6FqDd1wiqzdkb+ZgjHdldAfhS+YW3cSP47HMoSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nrgCex4dpJz8yDwKB1XAlrscdPsZx8RtgaQq3jmgcx37ctXP0FRB/jfdDmzHy2BK57IfIY51B+TIAI68TH3jsQ2/f1POjH76mImm1ZvJx+OiAIpQYflRX7/BpIzeKhsjluXjHUjYK6NdhXH1o7PkGyhy7DNkT350ZTgAyTY2rgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=pjExi7N8; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QK1Rt7Pi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC8FEC4CEE3;
-	Thu, 24 Apr 2025 13:16:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745500603;
-	bh=FoS91EweKjkPkrPYIt/JPpjGNtuk+G6YDWUkr6+gAtI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QK1Rt7Pi8fP/SxHbOhnp1Cn5bLQgbVXpW7bkFYM9cPuoYW7EhjbPh8PP15X31wEyH
-	 QqE4G1IBzKFCF2wn6fy/lvbYRT+GfnzYjyQ5bIFBeSrs7+kuup4A8k6TnTjuvXEcrv
-	 xZwHy8w7Am5vxR27JRjQ0fhTjPfd/71Pv5qBtRWtfop+Lf7DPldjvQmvUbhNzMguE5
-	 l/ZPiDYwit9I894ycUVpeZqebMzu6IvY5kk2N1qoaXkw7KokYNE7ygknKrz/iAjsa6
-	 ImMYzBYtlJ4wQPqfqOQ6iTBz+bTGCGM/sqiVsYjpN8KkHFFI0YEB3U0OWUdBRGItZP
-	 PDctgGJPM8D0w==
-Message-ID: <2d01bcd6-80e1-4c15-ab23-b5ea5b90f2b1@kernel.org>
-Date: Thu, 24 Apr 2025 15:16:37 +0200
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="pjExi7N8"
+Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7C41F16A;
+	Thu, 24 Apr 2025 15:18:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745500704;
+	bh=2XhD6FqDd1wiqzdkb+ZgjHdldAfhS+YW3cSP47HMoSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pjExi7N81OEXV0a7N+aD6ffr0TUUO5vCH4zqVtZWh/UHOqj22wyHSbn9kQ3TIMnzF
+	 +i6P+W0kk+q0tbJGFIRPr/Td8KNeEvzwfzO5IRZjpqbIYB1Bq8kfxhfvUUsZS5eLe8
+	 +6tmQHrRzlf4UkgDLv2r5dLhbsHapCyndLwKRMMw=
+Date: Thu, 24 Apr 2025 15:18:23 +0200
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v7 5/5] media: vsp1: Add VSPX support
+Message-ID: <wjdbgsasdvocglz3qbqnp3rc6tedlxuxlqsv3rhlad2u2y56ll@5irs2bu2647k>
+References: <20250401-v4h-iif-v7-0-cc547c0bddd5@ideasonboard.com>
+ <20250401-v4h-iif-v7-5-cc547c0bddd5@ideasonboard.com>
+ <20250423211035.GA5879@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 10/10] arm64: defconfig: Add M31 eUSB2 PHY config
-To: Melody Olvera <melody.olvera@oss.qualcomm.com>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250421-sm8750_usb_master-v5-0-25c79ed01d02@oss.qualcomm.com>
- <20250421-sm8750_usb_master-v5-10-25c79ed01d02@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250421-sm8750_usb_master-v5-10-25c79ed01d02@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250423211035.GA5879@pendragon.ideasonboard.com>
 
-On 22/04/2025 00:00, Melody Olvera wrote:
-> The SM8750 SoCs use an eUSB2 PHY driver different from the
+Hi Laurent
 
-Qualcomm SM8750
+On Thu, Apr 24, 2025 at 12:10:35AM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
+>
+> Thank you for the patch.
+>
+> On Tue, Apr 01, 2025 at 04:22:05PM +0200, Jacopo Mondi wrote:
+> > Add support for VSPX, a specialized version of the VSP2 that
+> > transfer data to the ISP. The VSPX is composed by two RPF units
+>
+> It seems you forgot to take comments from v2 into account.
+>
 
-That's a defconfig for all vendors.
+Are you referring to the commit message alone ? Or is there anything
+else ?
 
-> already existing M31 USB driver because it requires a connection
-> to an eUSB2 repeater. Thus, for USB to probe and work properly on
-> SM8750, enable the additional driver.
+> > to read data from external memory and an IIF instance that performs
+> > transfer towards the ISP.
+> >
 
-Commit msg should mention which board uses it.
+[snip]
 
-Best regards,
-Krzysztof
+>
+> > + *		 buffer CPU-mapped address and the bus address
+> > + *
+> > + * Return: %0 on success or a negative error code on failure
+> > + */
+> > +int vsp1_isp_alloc_buffers(struct device *dev, size_t size,
+> > +			   struct vsp1_isp_buffer_desc *buffer_desc)
+> > +{
+> > +	struct device *bus_master = vsp1_isp_get_bus_master(dev);
+> > +
+> > +	if (IS_ERR_OR_NULL(bus_master))
+> > +		return -ENODEV;
+> > +
+> > +	buffer_desc->cpu_addr = dma_alloc_coherent(bus_master, size,
+> > +						   &buffer_desc->dma_addr,
+> > +						   GFP_KERNEL);
+> > +	if (IS_ERR_OR_NULL(buffer_desc->cpu_addr))
+> > +		return -EINVAL;
+>
+> As commented by Alok, this should be
+>
+> 	if (!buffer_desc->cpu_addr)
+> 		return -ENOMEM;
+
+Done, thanks Alok for the comment
+
+>
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(vsp1_isp_alloc_buffers);
+>
+> Where is the buffer freed ?
+>
+
+Right, I presume a call to dma_free_coherent() is needed in the
+vb2 buf_cleanup() operation call path ?
+
