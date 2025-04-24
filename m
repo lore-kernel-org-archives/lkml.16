@@ -1,245 +1,260 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012000.outbound.protection.outlook.com [52.101.71.0])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FB0F510;
-	Thu, 24 Apr 2025 04:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.0
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745470516; cv=fail; b=ZOhAy847Ul6UziYmO+xRst9JDrVM/kn6n8VTKsTET1g7b5Ib+9O7KjmzSFbYOnkcWnVfq5BiIfGPNfW5cSJ3hlLxs1TE76kmVtvlamlEp8Qlo8DHUSRmQQEySuGqra9kkpF7u9SkUF+zG2VwSyh6Bq1e6r2iZw2WFEv6QIaSK+s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745470516; c=relaxed/simple;
-	bh=mNiyeKphsVWbEel8rQpSfINi25jQznxsAwvFGfexoCU=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=XgHTkYsifV68mgb2XmaX8P96CcWDtlGwCj1r8Ppt2HeB+/WuvVuItOFK5j3r3U424srcTYmFj25Ev3uyo0qSwa6h+DClqyXCErcZ4UzkKdWTeNLIZfGpf2MwQyBLINZ2p3Qqy+i6EFPklsMCBWBfo9tq8N4gD3U7KPa/kCGAmRc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=gDMR6fTj; arc=fail smtp.client-ip=52.101.71.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDD3F510;
+	Thu, 24 Apr 2025 04:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745470706; cv=none; b=Y3JggFUL57YcUgpWoHc58eqD3rYIKd4Lb0sTAFSs2SbHDnUb7b0V5eGsH4C21QwCgklNd9tKYXnXOWUdHPtQ8tBdDvdXBAMlmSG75NIbSPb8Uu33olWi2OwDpGtVbfadfgAeEQY0yJ+nndYfKPwjb4OXBVbBUMxeZQ4xyI3gPwo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745470706; c=relaxed/simple;
+	bh=NKzNdaluXSVs1xuyl2Bc99askplP/dBRdcoKIu9xMcE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=lTZZSAOKDYoRLcjqDo0SL10nyQHV26Jv7mAr6lEc8nU/N/czHW57wJhLo96Bt0mA8IvvVM3d6wbtPojKfKLOyEzUBPeEawguMBc33iNCy9vUpFrRFToZn1Q/ZLi0T+fnA1RbesSEWDKzcAaFTBoUgM+q3c0qzP9jjBg9PlKQcJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ge90cB5+; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="gDMR6fTj"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HUPB8iUlpRG6qaG81ezzLj5l9qZLgqw6iQosid7aaK/wpFg9dx4SE8dQdomLFGYJwYKKlMVhl6W3SJukRZ6i/6MlrIJf5Nw2a7N+xzYhXQIWMSFqMQPjVpUCQdm9umFoB/x6JsXd5hGF4O8IGQPGN0wOL22LzCxXWDExEjs1J91ioQytazWtkXGsqEOfWRtlZYH74ShgEu/wP8aCA/a3GaDvIFbbspbS2u0T66P/PniUD47f3UR9bUFLQMBW/bxb4zAZZwugLQn9C5Vw4P9PRxiVtwzA634ShjJl4P6Zqgv8FP4shpH3YPgJEyI1eG/yUDtP1+QO7uP4pLONDyu5nA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uQudHJP7t72S3+jEvwc6vXFDbWD7W1EJyMFmTyiew6E=;
- b=YDmBTNz5n4L/t7bchIufew6waa0rlKPLpMPtWX5bVXPh3sH0IivhFdkytSc90cpdNbuaRSKJGKwhsQKxiP6lvajOAjbfyVyBmXHMyTdQZLoyb7U8kMXcpcTQNGxHo+3kX80PVUoKO4NAEzmlkR0nOFJuBx+FwhxdErXgqzKlGXUfXJWAp//0YmmG36B17uz++KOz0DVinjCNWHC2arMe8H72PoalZn23B4TDfXOUlwdn5Y8bnGIQNucOYRpDyYd30pMsGrY5/1/MRFbz5FiAaWgVZ4zaXs2SJ6A1TRj63vv0L3kGnKkWTdT/YnCbMJyA15H6eOc+yp79HqsZPIeJ6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uQudHJP7t72S3+jEvwc6vXFDbWD7W1EJyMFmTyiew6E=;
- b=gDMR6fTjEGRL3zsMW31Lw1Lp4ERE/kwzkcje5j39dYGXQFjHz1IwN1uDNSRs1Fr0rlKC2VjcYUbRAn+M/xyguL4qD2zWwbHgilfQKVYhSf3HwQVBI4/C/TwEOKBMM6r41xvqdw0M9RXQZBiHzmOJvR/1RPG012V67eyjAFA76hn8+LvxmWUub46nDxSEEjcvJ2mbcHXRy7YrhW2RQ27I5cZso65zRb+B2iCBXQvHD3fSumnWMRQPDL/DpH5ZKgUKJSjuEhFK8mCy308Qkb6RTXVFFNP+GPCH9NpCRw/S9O4Nm+7tDhrt/d4RLg87wTD/Ar/rWzPU9odirqM9L8ljWg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7557.eurprd04.prod.outlook.com (2603:10a6:20b:294::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.25; Thu, 24 Apr
- 2025 04:55:12 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%2]) with mapi id 15.20.8678.021; Thu, 24 Apr 2025
- 04:55:11 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: Srinivas Kandagatla <srini@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH 1/1] dt-bindings: nvmem: convert vf610-ocotp.txt to yaml format
-Date: Thu, 24 Apr 2025 00:54:47 -0400
-Message-Id: <20250424045448.3876201-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: PH7P220CA0093.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:510:32d::16) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ge90cB5+"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F5Yq016949;
+	Thu, 24 Apr 2025 04:58:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hOTTS59x6n2u6ZmixLAUeuTlKIUgYNhY+0VoqIpfdCc=; b=Ge90cB5+uJI3MgvB
+	WAyLwLu3ulqcBBgFGIw14E/0DDchvv/UGZMx3axRjmfRyNRmDmGpVxCEnGqCMWY4
+	vyvaqAcaLaQBf7T5WeuD7J2UluQamsHPWdi8kjMLFe3pkueo12OzQgTQslpN7Yyn
+	IJSaWqxuup72mf/knNwpGeLxtOXzKXJyp5ue7I6SB5o1nUdNiYXBkNjlgUSdIZQE
+	VNIp1z+ldFuSEWNOQlOJ7/zsdxvjCLTjdNQi0r/scJCROImnljm06KcjhmHvJCG3
+	Kv4D2QRMRjFG6X5hJqMbKBoZWGeTzHDuuGYSGPCyANLFJNtdkXGSXFe4f8fe4EMk
+	ghTNuA==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh147ep-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 04:58:20 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O4wJBr014408
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 04:58:19 GMT
+Received: from [10.217.217.202] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 23 Apr
+ 2025 21:58:16 -0700
+Message-ID: <e5cdf1e6-5a02-4271-92d3-42093a8e5bec@quicinc.com>
+Date: Thu, 24 Apr 2025 10:28:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7557:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00f433a9-0e4e-4762-8f79-08dd82ec31dc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|1800799024|52116014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?gXuU0Pra9f9LE4QnzWdWXPPtHu7Xs7M29UG3oLpPuuvGWxeT/bouJpT0G0JL?=
- =?us-ascii?Q?rkUR3bjv+cYWhiF92Gy3wec4qdmtfZcRmtEJhkoVMRYdmMqQXvcEksTpdVZ2?=
- =?us-ascii?Q?G8wQWSLz6JR+IdFJAYCCZeDIumIoo9Jdad92eG5jrVvgrN/yVz8MxyVyHDh/?=
- =?us-ascii?Q?4Y2fQB6UY9KJJfEIakg7jFcE2CcJZ9u3GDUdTWs7x4yMF6j03OfYEyZuoUjj?=
- =?us-ascii?Q?Q5Yh1ozy8GQJy/YpWoFYbmQFFQd9+ykplJNTmlg1GAFddSjo8KioDfi6v360?=
- =?us-ascii?Q?ie7rjUbG7FAe+63Uw3LZIN9b1IIU0BFTrGRqJCCsz7GbIoS++fp5pDhCDInV?=
- =?us-ascii?Q?V2bv6VTq/IXqdAQ8rg81/yVUudzGEkH6whzhpxuYYBsNPmLACe0JV6f9UOmt?=
- =?us-ascii?Q?2yHeAVIjboM+9xx2dQhGP5O7P86el+VMND8J12+kILP1l/ulK9Abr9KlYy9o?=
- =?us-ascii?Q?A1CvD9h+icsY+5XexsS58m7f9MkHRirkNCGZC+843nT+uisq3xCAMH8UF7K3?=
- =?us-ascii?Q?y0Of+nHl2bwWSvLYpzbAcifuL/aRdWotYEm1V/hLrAiP9xhRsCPb0GKmpwni?=
- =?us-ascii?Q?ouEbZr4KvSl/HNgg6aiu+OyoY0F8i3gipfyqVcwxOx/Vr/n0Em9Toq3VlNOr?=
- =?us-ascii?Q?ABMB4y6bGdoieFydSdfuRrmDZfouSDvEE9ldRTy/06hVqxMoeHzWOqsPazpY?=
- =?us-ascii?Q?B9esxmigljNAqc7/GGMEZeqOZuAsbdRZzTIri990LkpSGypZOFdpe1I7p5Gx?=
- =?us-ascii?Q?vr83QrnW/3gWxUNobLeXrsFaaS/lIUT+e2pxn3+GbeBemH4TRrVWO1Wqt7No?=
- =?us-ascii?Q?zEMpd7zlG/ldrT7Xf9CT7o3DUowp/rGTTjsHjm7RqdudZrF1gmLAgBsPgmbV?=
- =?us-ascii?Q?E6bMjH9eBK/qdYbNZqjEjL8UPziN7qjFUvUj2mUTivshQU45B8WCSjog7x0R?=
- =?us-ascii?Q?y6M47ZX+y5IeuG4SHHZaarX0zZTA/D1nyC6nM4TeNExR8hQFibCswCpZAhzD?=
- =?us-ascii?Q?gzk+ENzGAKeYT6zhvJrL8YB++40VWjXmcIAqMSstwV3VGHps94RdFN8wLoJe?=
- =?us-ascii?Q?Td84Qg7YCBcsVpNI2BHjNIqPivHJWOZAqEZxcEfpN2Rwm4lI++LOajUbE7aE?=
- =?us-ascii?Q?kaon8sffq/sFjj6Sq4Q1PMvN52myRAKCxjAXD8NnfEZWKzVQ1TeU08AOgb8U?=
- =?us-ascii?Q?vfJUjdfabC9CuvfLItkqIICKwuszjjJfiS842u0rFzvJtoBSthdp3pdn8POi?=
- =?us-ascii?Q?Ae1eiddi23yPlMkqYEmM8B1T2R5ihO43zN/W8wqfRBrOLKZ6qOopNjbohOoh?=
- =?us-ascii?Q?/NO+6cTk4db9j64rLgi78VP5DPsBkTPrK5ytgaL/V2EsBHnV1M30FyiI/9UL?=
- =?us-ascii?Q?UKVXNL4qBVdYGkOghCxOaiITw4pBLudwW7Gi4A66vaFErMUu6VyNiUIi66au?=
- =?us-ascii?Q?PzUNkgGhpco=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(52116014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Hc2qcFTftK1HnMzm/zQihIpselxud1El/Q9efKOsRR1/HF6pi9UFm//SR7hi?=
- =?us-ascii?Q?tz5tfUDjV4FQJGDfF+Os9VQ5YoazqekKuMho+2cvwhk6h8PG1jPMdse1E+ya?=
- =?us-ascii?Q?xyRk0mLFHCY3o5c7jSTGP4S9II9EkbNEe7+ICLDFyKfOMjYReZRqtHYoPFm9?=
- =?us-ascii?Q?4SBD1I/O7Z4wC7Wyl+SuQerknpEbt/GzJN6VsSkYvtE7R/itsS9049VdUBln?=
- =?us-ascii?Q?8myJK3KiaWSO8AKdgLubdQCUHuL/qq4JOcx1ig6lZPawk3rK6llJ5iR0A6iY?=
- =?us-ascii?Q?zsEH1sOYM1bjJxViutdPyWaq7jArmu5QF7Mluz+2hZC0VWYZ2gBNy971MJDJ?=
- =?us-ascii?Q?ZfWi1bUVG6MpKU/18KaH011rVQwk0iNUrcpCxiqjoplHg+p4paRhb0XLA98X?=
- =?us-ascii?Q?nJ4UJ83aBU833DA2K3nlMVjd1eW9rpez+ktl/Y5hEQA7duNmNW923zD6uwRY?=
- =?us-ascii?Q?E2vaMtDiLMo4Nz0ymfDkMrHMt42YPoDfPZdY7nzGAiU+ug5X+hhY5ksR8HT6?=
- =?us-ascii?Q?UmhlQOSbjnrClv4YxqXrv8c1k5OFMOUjKCsCb7T1CbVw35s9XB/7iGVAlnJZ?=
- =?us-ascii?Q?l26UmQSA2BqbxOqtcKomV3S337G8FYtyFj2j1g3RKi1ET0kSF34SAV4108qu?=
- =?us-ascii?Q?9Zvq3V1dxjXlYaThfoE/SQmayap8tZtjOOJ5Z7muQp6YT4rNm5qxHLDVQ5E9?=
- =?us-ascii?Q?tyTBBr6toDLUswDF2ZM5pBDUQOf/zrzsizb/jgLf2kTHLVNjXePfxHVXVGZq?=
- =?us-ascii?Q?yXCnaAIc5r+8aR1Z9RfayaBT6Dl+TktRNaoj/WULrJDFqzeFypjEwP4L3NKZ?=
- =?us-ascii?Q?lPQCMPQGpo5y7qnCmvANUb3dtZyjuCPGK9NE/zrVqZFQTt4evn0oLYZlcGme?=
- =?us-ascii?Q?rht7GKz006YiN9bj9M7qKXspOJ4z2OztQfdG9umkp0DquNrOh7BJVxhEMf2K?=
- =?us-ascii?Q?XyviRUrxDcCXm2EQQjvSQzJmcxdZoDcCShxXv/Y/knJhaAew5w5Xa3Bp11N6?=
- =?us-ascii?Q?Kn2m0+RzWwWgWpvgqC7mZ/RaXTBgsG/B+OHMgAOJdsNZQ6i0RdaU+ke/gmtV?=
- =?us-ascii?Q?0d/+NY2YBz3MoyY9fkYUZk8MnD8/H2fcctzthhug80XT7jzn82s8h7r86lss?=
- =?us-ascii?Q?folOuQ8L/GIvUu8defAsY9tTP/LGcqM5xTD3KI7qjg3gdcs5/vLjlgHXztzB?=
- =?us-ascii?Q?Xs9ozJU/DmPqzXY361r5/VDch2fnWKbq1ifx27Qjms+rzl/xXn+ur8AcF9PE?=
- =?us-ascii?Q?cJkMMSSEukL5hwefjrz5fgcfX1kczIUDMR/Sg1LdivOQxnsLLNOX3R9jh1ZZ?=
- =?us-ascii?Q?HvOtMvVgiFvr2BczwOs9whcVEbfoO5MJEs5785cqvKZjjIUdtcEqRRwxwHqY?=
- =?us-ascii?Q?uAd4H+DPw5xaEnhiSx9hh1ayoNQrUAVHteUgrwpUUMiEkzPzymGjIzakJQnf?=
- =?us-ascii?Q?d6xMeYbwLt/iL5tP+J6iUyBe5yLNyFLnjj3jonlIl+3fgHxy0oPbG9IyYzEY?=
- =?us-ascii?Q?jcN/y2LFGxlvwIcg2gI/EYFy3h9P29XpjppRy/DEbzDZf677Cf1lCoTN4uQq?=
- =?us-ascii?Q?orsuymqKfpcOUHin/fLYSNW8KlNeAaVFzgILhIio?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00f433a9-0e4e-4762-8f79-08dd82ec31dc
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 04:55:11.8947
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3oWwKHjk0qdAUFPR2MABRoGxx27mpj+R8vcUq2bAmwPWHKt113gT1dgEa5u/Yw4Dk+FhQTCH/xOLrOUPpuP5TQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7557
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] arm64: dts: qcom: add initial support for qcom
+ sa8255p-ride
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Deepti Jaggi <quic_djaggi@quicinc.com>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <quic_psodagud@quicinc.com>,
+        <quic_ptalari@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250422231249.871995-1-quic_djaggi@quicinc.com>
+ <0482cd6b-53ca-41eb-8721-a83ce8a7c733@quicinc.com>
+ <agbftnk7uqj6e2zyw3igxlp3cctl6xhk6ix4gp6u5dot7nf3fm@cipkx222ffo5>
+Content-Language: en-US
+From: Shazad Hussain <quic_shazhuss@quicinc.com>
+In-Reply-To: <agbftnk7uqj6e2zyw3igxlp3cctl6xhk6ix4gp6u5dot7nf3fm@cipkx222ffo5>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: ATL_-RxtzVD2Wrmd9qf9FPAsNsXmgdp_
+X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=6809c4ec cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=CfkQHp0pE3PK7BQ2rswA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: ATL_-RxtzVD2Wrmd9qf9FPAsNsXmgdp_
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDAyOSBTYWx0ZWRfX8D1a3H9LED6N YM3kPb85jjivBng3geQfSLIjxzyVGAhqLdsRr2OHmi44mjHGKfYPdaaFecvYzzkWO9Pl3tLvEe2 C1qzlFsH+Jw7iHX3jEjppFP/ycKA1cp9mzDT5DwcACsy4Di91nooOJzFyOjalkY93Dl/bs8asHf
+ 4Of2GuX+Zt8T4yaTopAAn6VbOamyj9TBxbDAp+Qk4ybknoFAlOV2v6cPYRUR8sF8Iwq9F1avtPe XWj+8kftEGG22jhkEKOqDI2OtCGxbvvxWHTPGw3K1aJ9mppSfG1El9wyn2unWj/m2A1v7Xj7TJr yl8e9LukRJVRL8+UdfYPhsvtyC7RBl85/7zr1AjpSazqK/a5/zbc/BcIjhgPUOszjXeb69KZHf9
+ bYOmg15ZgaVnzdXIFSRFMrDpaxNZQIe07l/wMweGmenf+aE1O0o5tkWWVIAIsD2IJwI7th81
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_01,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240029
 
-Convert vf610-ocotp.txt to yaml format.
 
-Additional changes:
-- Remove label in examples.
-- Add include file in examples.
-- Move reg just after compatible in examples.
-- Add ref: nvmem.yaml and nvmem-deprecated-cells.yaml
-- Remove #address-cells and #size-cells from required list to match existed
-dts file.
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
- .../bindings/nvmem/fsl,vf610-ocotp.yaml       | 52 +++++++++++++++++++
- .../devicetree/bindings/nvmem/vf610-ocotp.txt | 19 -------
- 2 files changed, 52 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/nvmem/fsl,vf610-ocotp.yaml
- delete mode 100644 Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
+On 4/23/2025 7:32 PM, Dmitry Baryshkov wrote:
+> On Wed, Apr 23, 2025 at 10:16:57AM +0530, Shazad Hussain wrote:
+>>
+>>
+>> On 4/23/2025 4:42 AM, Deepti Jaggi wrote:
+>>> From: Nikunj Kela <quic_nkela@quicinc.com>
+>>>
+>>> This adds basic support for the Qualcomm sa8255p platform and the
+>>> reference board: sa8255p-ride. The dt files describe the basics of the
+>>> SoC and enable booting to shell with ramdisk.
+>>>
+>>> The Qualcomm automotive sa8255p SoC utilizes firmware to configure platform
+>>> resources such as clocks, interconnects, and TLMM. Device drivers request
+>>> these resources through the SCMI power and performance protocols. The SCMI
+>>> platform supports resource aggregation and handles parallel requests from
+>>> agents, with each driver having a dedicated SCMI channel for communication.
+>>>
+>>> Co-developed-by: Shazad Hussain <quic_shazhuss@quicinc.com>
+>>> Signed-off-by: Shazad Hussain <quic_shazhuss@quicinc.com>
+>>> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
+>>> Signed-off-by: Deepti Jaggi <quic_djaggi@quicinc.com>
+>>> ---
+>>> This patch is dependent on [2] for booting to shell and DT bindings.
+>>>
+>>> Changes in v3:
+>>>           Removed the patches from original series [1].
+>>>           Added arm,max-msg and arm,max-msg-size DT property in scmi nodes.
+>>>           Changed max-rx-timeout-ms to arm,max-rx-timeout-ms in scmi nodes.
+>>>           Updated commit text.
+>>>           Reordered range property for qupv3_id_0, qupv3_id_1 and qupv3_id_3 nodes.
+>>>           Reordered vendor property(#qcom,sensors) for tsens* nodes.
+>>>           Changed cache labels to lower case.
+>>>           Removed unused i2c,spi and tlmm nodes.
+>>>           Updated reserved memory nodes.
+>>>
+>>> Changes in v2:
+>>>           Removed scmichannels label and alias
+>>>           Modified scmi node name to conform to schema
+>>>           Moved status property to be the last one in scmi instances
+>>>           Changed to lower case for cpu labels
+>>>           Added fallback compatible for tlmm node
+>>>
+>>> [1]: https://lore.kernel.org/all/20240903220240.2594102-1-quic_nkela@quicinc.com/
+>>> [2]: https://lore.kernel.org/all/20250418151235.27787-1-quic_ptalari@quicinc.com/
+>>> ---
+>>>    arch/arm64/boot/dts/qcom/Makefile           |    1 +
+>>>    arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi |   80 +
+>>>    arch/arm64/boot/dts/qcom/sa8255p-ride.dts   |   94 +
+>>>    arch/arm64/boot/dts/qcom/sa8255p-scmi.dtsi  | 2440 +++++++++++++++++++
+>>>    arch/arm64/boot/dts/qcom/sa8255p.dtsi       | 2075 ++++++++++++++++
+>>>    5 files changed, 4690 insertions(+)
+>>>    create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi
+>>>    create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-ride.dts
+>>>    create mode 100644 arch/arm64/boot/dts/qcom/sa8255p-scmi.dtsi
+>>>    create mode 100644 arch/arm64/boot/dts/qcom/sa8255p.dtsi
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+>>> index adb4d026bcc4..7437e51e5849 100644
+>>> --- a/arch/arm64/boot/dts/qcom/Makefile
+>>> +++ b/arch/arm64/boot/dts/qcom/Makefile
+>>> @@ -134,6 +134,7 @@ qrb5165-rb5-vision-mezzanine-dtbs	:= qrb5165-rb5.dtb qrb5165-rb5-vision-mezzanin
+>>>    dtb-$(CONFIG_ARCH_QCOM)	+= qrb5165-rb5-vision-mezzanine.dtb
+>>>    dtb-$(CONFIG_ARCH_QCOM)	+= qru1000-idp.dtb
+>>>    dtb-$(CONFIG_ARCH_QCOM)	+= sa8155p-adp.dtb
+>>> +dtb-$(CONFIG_ARCH_QCOM)	+= sa8255p-ride.dtb
+>>>    dtb-$(CONFIG_ARCH_QCOM)	+= sa8295p-adp.dtb
+>>>    dtb-$(CONFIG_ARCH_QCOM)	+= sa8540p-ride.dtb
+>>>    dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride.dtb
+>>> diff --git a/arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi b/arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi
+>>> new file mode 100644
+>>> index 000000000000..b00c2b05cef7
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/qcom/sa8255p-pmics.dtsi
+>>> @@ -0,0 +1,80 @@
+>>> +// SPDX-License-Identifier: BSD-3-Clause
+>>> +/*
+>>> + * Copyright (c) 2024-2025, Qualcomm Innovation Center, Inc. All rights reserved.
+>>> + */
+>>> +
+>>> +/ {
+>>> +	thermal-zones {
+>>> +		pmm8654au_0_thermal: pm8255-0-thermal {
+>>> +			polling-delay-passive = <100>;
+>>> +
+>>> +			trips {
+>>> +				trip0 {
+>>> +					temperature = <105000>;
+>>> +					hysteresis = <0>;
+>>> +					type = "passive";
+>>> +				};
+>>> +
+>>> +				trip1 {
+>>> +					temperature = <125000>;
+>>> +					hysteresis = <0>;
+>>> +					type = "critical";
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +
+>>> +		pmm8654au_1_thermal: pm8255-1-thermal {
+>>> +			polling-delay-passive = <100>;
+>>> +
+>>> +			trips {
+>>> +				trip0 {
+>>> +					temperature = <105000>;
+>>> +					hysteresis = <0>;
+>>> +					type = "passive";
+>>> +				};
+>>> +
+>>> +				trip1 {
+>>> +					temperature = <125000>;
+>>> +					hysteresis = <0>;
+>>> +					type = "critical";
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +
+>>> +		pmm8654au_2_thermal: pm8255-2-thermal {
+>>> +			polling-delay-passive = <100>;
+>>> +
+>>> +			trips {
+>>> +				trip0 {
+>>> +					temperature = <105000>;
+>>> +					hysteresis = <0>;
+>>> +					type = "passive";
+>>> +				};
+>>> +
+>>> +				trip1 {
+>>> +					temperature = <125000>;
+>>> +					hysteresis = <0>;
+>>> +					type = "critical";
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +
+>>> +		pmm8654au_3_thermal: pm8255-3-thermal {
+>>> +			polling-delay-passive = <100>;
+>>> +
+>>> +			trips {
+>>> +				trip0 {
+>>> +					temperature = <105000>;
+>>> +					hysteresis = <0>;
+>>> +					type = "passive";
+>>> +				};
+>>> +
+>>> +				trip1 {
+>>> +					temperature = <125000>;
+>>> +					hysteresis = <0>;
+>>> +					type = "critical";
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +};
+>>
+>> PMIC is handled by firmware on this SoC and in my openion we do not need
+>> to have a dedicated sa8255p-pmics.dtsi only to have thermal zones nodes.
+>> Can we keep these pmic thermal zones to sa8255p.dtsi with other thermal
+>> zones nodes ?
+> 
+> For the PMIC? No, they are not a part of the SoC.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/fsl,vf610-ocotp.yaml b/Documentation/devicetree/bindings/nvmem/fsl,vf610-ocotp.yaml
-new file mode 100644
-index 0000000000000..c37069f4f27f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/fsl,vf610-ocotp.yaml
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/fsl,vf610-ocotp.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: On-Chip OTP Memory for Freescale Vybrid
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+allOf:
-+  - $ref: nvmem.yaml#
-+  - $ref: nvmem-deprecated-cells.yaml
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - fsl,vf610-ocotp
-+      - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 1
-+
-+  clocks:
-+    items:
-+      - description: ipg clock we associate with the OCOTP peripheral
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/vf610-clock.h>
-+
-+    ocotp@400a5000 {
-+        compatible = "fsl,vf610-ocotp", "syscon";
-+        reg = <0x400a5000 0xcf0>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        clocks = <&clks VF610_CLK_OCOTP>;
-+    };
-diff --git a/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt b/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
-deleted file mode 100644
-index 72ba628f6d0b0..0000000000000
---- a/Documentation/devicetree/bindings/nvmem/vf610-ocotp.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--On-Chip OTP Memory for Freescale Vybrid
--
--Required Properties:
--  compatible:
--  - "fsl,vf610-ocotp", "syscon" for VF5xx/VF6xx
--  #address-cells : Should be 1
--  #size-cells : Should be 1
--  reg : Address and length of OTP controller and fuse map registers
--  clocks : ipg clock we associate with the OCOTP peripheral
--
--Example for Vybrid VF5xx/VF6xx:
--
--	ocotp: ocotp@400a5000 {
--		compatible = "fsl,vf610-ocotp", "syscon";
--		#address-cells = <1>;
--		#size-cells = <1>;
--		reg = <0x400a5000 0xCF0>;
--		clocks = <&clks VF610_CLK_OCOTP>;
--	};
--- 
-2.34.1
+Thanks Dmitry for the clarification !
+
+-Shazad
+
+> 
+
 
