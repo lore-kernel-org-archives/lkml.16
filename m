@@ -1,148 +1,114 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8914A288C8D
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:28:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7006A502BE
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745515721; cv=none; b=dAM0L1CaIuRdR7yH7F2DB5uuA6gZzRKvSLabhtLv5M+thkvwv/RThinCRviO8mbQa8bCwp+K72TOoAaerox6UhXXkOLveJeFXNIGjjzHnT5m6f0/gyjR29+WGZKjhnYc5HE7DtakzezQwlCZgOqSqM2sqlgGsWFKZSKg+EbmzwU=
+	t=1745515773; cv=none; b=AgULnBpOotCXrRznRjtDhighbWn0V0ZMUo8NPuTuSH3tAklCTNfBj4rfv2H3J/ubzTNNKcJwrOmcT/4UyxwGXYWKWIRqEhs6c2cbtZ7suwQC79BIeePEuob3/7EJyn9bhZ58HDort0srXTULGL8/g24fowObHg7sEruO4BBOnaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745515721; c=relaxed/simple;
-	bh=1HqLQ3YZh70ZNkGmU2mK9InfcNAWorDdlkXLec74Sqk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nO3Z/MjKG1VocpNZxVfab2YfBMHzzXQYtHbwdxaMMkLUZ2ztibKJ2XswEB59q7lU2JPrYCbjr8nLBMYvZ3VtFXbdoZNYRSUGTf6m5pPKK5j7pFny4dVVsFOHKP6peJGHYvNJJainDTf7zFNdsHtO2i2m5nsooLvxMQ2vMtwZTWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=anS+6W0Q; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745515773; c=relaxed/simple;
+	bh=zDw7BMwmQ7Zzhu3em6h7WuB+uJk8Ll8pW5o+G0j0JPw=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YG3NsooDe9LPESiHnbfXs+0f2OrgGR/hJeQv0/KN32GL/ceo9DFp66kPVTxXJX/ZAMFLyfWqK44lAdiPjoc7l4ki7ilHfsr6JHT7hEn27RR7TdBWioO0QtmXstqWA/bcYfTtuyqP/Z4Y3VlnpdjX8te8cZ/8Oa6aMLGwG0jT7PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=sl8qK1og; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="anS+6W0Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745515718;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9ZG9YrbKiFItvh1cWxjw3CM1aJWpjuP1SdA+uk1qv0I=;
-	b=anS+6W0QwYvLYI+Zyxy6Y/z5NTCG5umSG8Ek09oAP0EbgleK9hmHLr0xi2NIAVm7AJHVyT
-	tOGaDZEK6edcqVDSvCHMjHG9VUe3dWN1iE95pVPdmnGXnmdNn6YbhcpqhP4nccnZv4OzUc
-	kI7AdbY6z/vWrjQRJ7l5VAwer4srpJ4=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-303--wJBHBPbP0WIvcChOE1VOQ-1; Thu,
- 24 Apr 2025 13:28:35 -0400
-X-MC-Unique: -wJBHBPbP0WIvcChOE1VOQ-1
-X-Mimecast-MFC-AGG-ID: -wJBHBPbP0WIvcChOE1VOQ_1745515714
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E6E8D1800879;
-	Thu, 24 Apr 2025 17:28:33 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 367381800374;
-	Thu, 24 Apr 2025 17:28:33 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Cc: seanjc@google.com,
-	oliver.upton@linux.dev
-Subject: [PATCH v2] KVM: arm64, x86: make kvm_arch_has_irq_bypass() inline
-Date: Thu, 24 Apr 2025 13:28:32 -0400
-Message-ID: <20250424172832.401651-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="sl8qK1og"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso2438352a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jacekk.info; s=g2024; t=1745515770; x=1746120570; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JLHhBvGwHoD14XYoD4WUPVU9+Bb1BKcDzuKit79fgsI=;
+        b=sl8qK1ogUFiW0mh44xZ/byXLtlKD8jF7YnW6TxN9yYdK+oIVfj8CMBGuv1c6S/kv2J
+         E7ahCstLKU4EhFw2AuSSRofJ9PwLCOcz0X82W7loZTXSr8BPFvCOdafiR8n+a3OXEgTM
+         HxqTSoamY8Z8Pb8h/toZh9V7Pbk4yKgNxYSdycN1fkbT2cxHEwUY9UHdUuEofwylNjZ+
+         czVHmpS8o7qjpbyExSqKVNV1MFXuSDKllNwdmsxPym1tCn/O75aqsTG4vcnOdhUtMivH
+         TThXNbDb7j9pUUEKtvuX5qiaBQM+FAVKHFTJugLaP0YStsoOYvjfXUfMbeSNKDjWeg0j
+         98aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745515770; x=1746120570;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JLHhBvGwHoD14XYoD4WUPVU9+Bb1BKcDzuKit79fgsI=;
+        b=oqOOBZZWak+2+m3DX/nQTpAwNwQW12x5GQ0hF0nLaADxlQTQjjdQ67Pw5o94112mrl
+         /SbkWdZfOc7eWvCyQiSaC94I2Gg1pPuof/vnzkp0AwSGNx78ftyMacTAzs8yHv+5uK4F
+         F0CAGKY/J5vlEdCEKakytKrIIiJzPYboNG7fWXKBZig3rhZ1hsmuUTGrLnov7S63/aqd
+         Y48tqO3I+OzX/Hhp9F7hv5rLDXoYAZf1DwZegA5xiGIcKxaqJL4GtR2DxyyDZKB7a/z3
+         WHN6vCpbJo+85Uq+x1VwAmt1/lZvFmxBfg6KpIW2kPasQirtKakTBmpod/INU6idzZSm
+         4Pzw==
+X-Forwarded-Encrypted: i=1; AJvYcCVlc5B00UUD2HHtNcs+7/+hDgsu9i6fkfaMHRhzPUVa/uVAVaV3ySZLfzlI50OdXOMTJIJxbPvr3HqimMs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9nY/4sAaU2GNYq8jHeoSXfP8hltJTcM+JQeUaaz4Ch3RO9yRv
+	7dEI+gibOLVpENng5KHvZHNUB02FxKsQOrzhSCGRmRmJO4TQKsAn7895UJwpeA==
+X-Gm-Gg: ASbGncumx+0CYp54d1ObEVtmV4KrJl7Xbg+Je/77idGi25kR1kmk0kK0NtnfZLH5/BV
+	EBBxcSj0UfOkbt6TSCnnrq4RNZZdAgp9ZoRlxW0Duns4LKB4b5P0G5uR88HqR1DF3kWRhwtuUtO
+	mlOrrdHMqw+KQaZvPid7Kj7q1400hugb2/Vm7O6PAYKgVn8uKXudBQo3ZI4zPTthSFutdS1TWRW
+	JcV9wofWKmcprNGISTu5gNBzCNIqN8GvuhlKOtBygw5FdaUFieXx98f7Tt4vKAxWsxWvVa/SmX0
+	fWtEDDGX6NPLHVHnADLXqgJXw2iU9tvMnx1OHGY=
+X-Google-Smtp-Source: AGHT+IE2ovPWtaSR1CwyZflNLkJWQlZGCejIdOULuu/FjYId4ZaicaBupsaFG9P4tzlR01R9OMB2kQ==
+X-Received: by 2002:a05:6402:845:b0:5f3:4194:187 with SMTP id 4fb4d7f45d1cf-5f6de6980d6mr3197899a12.18.1745515769548;
+        Thu, 24 Apr 2025 10:29:29 -0700 (PDT)
+Received: from [10.2.1.132] ([194.53.194.238])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f6eb32368bsm1383533a12.10.2025.04.24.10.29.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 10:29:29 -0700 (PDT)
+From: Jacek Kowalski <jacek@jacekk.info>
+X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
+Message-ID: <e6899d87-9ec4-42aa-9952-11653bc27092@jacekk.info>
+Date: Thu, 24 Apr 2025 19:29:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Intel-wired-lan] [PATCH] e1000e: disregard NVM checksum on tgp
+ when valid checksum mask is not set
+To: "Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
+ Simon Horman <horms@kernel.org>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <5555d3bd-44f6-45c1-9413-c29fe28e79eb@jacekk.info>
+ <20250424162444.GH3042781@horms.kernel.org>
+ <879abd6b-d44b-5a3d-0df6-9de8d0b472a3@intel.com>
+Content-Language: en-US
+In-Reply-To: <879abd6b-d44b-5a3d-0df6-9de8d0b472a3@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-kvm_arch_has_irq_bypass() is a small function and even though it does
-not appear in any *really* hot paths, it's also not entirely rare.
-Make it inline---it also works out nicely in preparation for using it in
-kvm-intel.ko and kvm-amd.ko, since the function is not currently exported.
+Hi,
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Acked-by: Oliver Upton <oliver.upton@linux.dev>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
-v1->v2: leave extern declaration in place and don't touch arch/powerpc [Sean]
+>>> Because it is impossible to determine whether the NVM write would finish
+>>> correctly or hang (see https://bugzilla.kernel.org/show_bug.cgi?id=213667)
+>>> it makes sense to skip the validation completely under these conditions.
 
- arch/arm64/include/asm/kvm_host.h | 5 +++++
- arch/arm64/kvm/arm.c              | 5 -----
- arch/x86/include/asm/kvm_host.h   | 6 ++++++
- arch/x86/kvm/x86.c                | 5 -----
- 4 files changed, 11 insertions(+), 10 deletions(-)
+> It is not completely accurate. All the NVMs starting from Tiger Lake are locked for writes, so NVM writes will always result in a failure.
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index e98cfe7855a6..08ba91e6fb03 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -1588,4 +1588,9 @@ void kvm_set_vm_id_reg(struct kvm *kvm, u32 reg, u64 val);
- #define kvm_has_s1poe(k)				\
- 	(kvm_has_feat((k), ID_AA64MMFR3_EL1, S1POE, IMP))
- 
-+static inline bool kvm_arch_has_irq_bypass(void)
-+{
-+	return true;
-+}
-+
- #endif /* __ARM64_KVM_HOST_H__ */
-diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-index 68fec8c95fee..19ca57def629 100644
---- a/arch/arm64/kvm/arm.c
-+++ b/arch/arm64/kvm/arm.c
-@@ -2743,11 +2743,6 @@ bool kvm_arch_irqchip_in_kernel(struct kvm *kvm)
- 	return irqchip_in_kernel(kvm);
- }
- 
--bool kvm_arch_has_irq_bypass(void)
--{
--	return true;
--}
--
- int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
- 				      struct irq_bypass_producer *prod)
- {
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 3bdae454a959..7bc174a1f1cb 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -35,6 +35,7 @@
- #include <asm/mtrr.h>
- #include <asm/msr-index.h>
- #include <asm/asm.h>
-+#include <asm/irq_remapping.h>
- #include <asm/kvm_page_track.h>
- #include <asm/kvm_vcpu_regs.h>
- #include <asm/reboot.h>
-@@ -2423,4 +2424,9 @@ int memslot_rmap_alloc(struct kvm_memory_slot *slot, unsigned long npages);
-  */
- #define KVM_EXIT_HYPERCALL_MBZ		GENMASK_ULL(31, 1)
- 
-+static inline bool kvm_arch_has_irq_bypass(void)
-+{
-+	return enable_apicv && irq_remapping_cap(IRQ_POSTING_CAP);
-+}
-+
- #endif /* _ASM_X86_KVM_HOST_H */
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 3712dde0bf9d..c1fdd527044c 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -13556,11 +13556,6 @@ bool kvm_arch_has_noncoherent_dma(struct kvm *kvm)
- }
- EXPORT_SYMBOL_GPL(kvm_arch_has_noncoherent_dma);
- 
--bool kvm_arch_has_irq_bypass(void)
--{
--	return enable_apicv && irq_remapping_cap(IRQ_POSTING_CAP);
--}
--
- int kvm_arch_irq_bypass_add_producer(struct irq_bypass_consumer *cons,
- 				      struct irq_bypass_producer *prod)
- {
+Check my message in a thread of an earlier patch:
+
+Message-ID: <1c4b00b6-f6e3-4b04-a129-24452df60903@jacekk.info>
+https://lists.osuosl.org/pipermail/intel-wired-lan/Week-of-Mon-20250407/047551.html
+
+On my laptop NVM write operation *does not fail* (nor hangs), driver loads and ethtool shows corrected checksum.
+
+This lasts only until module reload (rmmod/insmod) or reboot.
+
+I guess only shadow RAM is updated (or something like that) and not the non-volatile memory, but the operation itself does not error out.
+
+It might also be because I've disabled Secure Boot...
+
 -- 
-2.43.5
+Best regards,
+   Jacek Kowalski
 
