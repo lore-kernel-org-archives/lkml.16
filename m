@@ -1,221 +1,86 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6217B2206BE
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ACBA2206BE
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487657; cv=none; b=NXYHxBZfS5YpKVWRY7TGZHvvHYawGHbBeERiIVYQWxdtdBxKgS2HD/WaYl3CMVtR5GSxbvJH453As99pcXuITvb5518f6K2wPxMPStyd90MPYmkvkHOK/SVMOtPeQMN1FBrAS2MdOiC+7WqMmM4g28loZsOFlF4ySPqEJ9P3dME=
+	t=1745487661; cv=none; b=JPSMGFJWRlQVEL7HEfOqe6bjId2Rs+1+XghxWjt0PVmGF96qlxeZbDpWRaF3dG7w+HOO/Kb0Ep6BhgNgzPlyqK60FJ4orD4Kax97tlbsRxDkh0mdjoRuGgo3lG99fSWXDqK+HJCqq++Ec2sAZp2Y8+74fxdvm6tgM9DgWOZGCvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487657; c=relaxed/simple;
-	bh=rwsA2JE1/+UvvFybJG5UJ9J/kmWAeTtT6lSY2toq4Bo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b7XW5sNIsIMxk+5ODtOOdPNFK1ZIG3xJQ6lwLwHR3D6edLf21NO3oduQ3x7/pChVqG4m/ai24CvN7jg5xKXRu9wsvkddUnd+334LKoKPyWYYbsv6y7L88AdQqCxXNmBiRnBIEKFHjHSDbGgoYCkyvD6y0rWgcmDL+thXQmwMcSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AEEA1063;
-	Thu, 24 Apr 2025 02:40:49 -0700 (PDT)
-Received: from [10.163.49.106] (unknown [10.163.49.106])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FC063F66E;
-	Thu, 24 Apr 2025 02:40:49 -0700 (PDT)
-Message-ID: <1e148263-1155-411b-9b1d-16599bd875cd@arm.com>
-Date: Thu, 24 Apr 2025 15:10:46 +0530
+	s=arc-20240116; t=1745487661; c=relaxed/simple;
+	bh=Zj4rZc/o0d+mPGfyouleH+pLFelBv74hCt+szCNjbKg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VlbvCFcytvWxRZEkwainuqQF3STgcEV0M1CqcsYqOuQsDuIyZa790apqtUwo7afB/xHv5cQKXOGS/Pz1kUkTjGwg6xcfzmsrEfgDGFLxAxZPdgSHPA+J9vGdDNKYHyZtLOzE4UbAZmuuDgT/glCSQ4NfY61lWiQJzr0pdacJscM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lj4V+1BE; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lj4V+1BE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=V52SN0rAjrBhAIoaJ+IUA3O9fZi2COSECdESbmwo4T0=; b=lj4V+1BE89nBZi3fMhYGM2l/MC
+	ss6cg5XA9Q/WfsDiVGX/uNzbY9LQVnycOCtv8YqYohaCr0XwLO8xU2GozFR4CsHstHv6678KLNrBr
+	bSa/LAly5CMxlexxSHXWRfVhjGS5wA2NAxjEEcrY8yE4VNL038Xr8GfxPwzvmS3VLjEGEj4MxZaef
+	mplMK023ifHSr/EL51wWWJ9cbVKDVeoKQlvshIr/AqOS2t6bHvVLPEPEBFT4jQzI3qu5XUYXCYnLw
+	IQA3GS/P+zP/2WVI5giAS//n14B1bpxdLKNxDnmWwuKtFjiRWG/OvEmbL0oUuuFhFPNxdBTxgiHXa
+	qZzA7cwg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1u7t4d-0000000Bh2J-2hVJ;
+	Thu, 24 Apr 2025 09:40:51 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 0432730057E; Thu, 24 Apr 2025 11:40:51 +0200 (CEST)
+Date: Thu, 24 Apr 2025 11:40:50 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: kan.liang@linux.intel.com
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	irogers@google.com, linux-kernel@vger.kernel.org,
+	Luo Gengkun <luogengkun@huaweicloud.com>
+Subject: Re: [PATCH 1/2] perf/x86/intel: Only check the group flag for X86
+ leader
+Message-ID: <20250424094050.GE19534@noisy.programming.kicks-ass.net>
+References: <20250423221015.268949-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/11] arm64: hugetlb: Use __set_ptes_anysz() and
- __ptep_get_and_clear_anysz()
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
- David Hildenbrand <david@redhat.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti
- <alexghiti@rivosinc.com>, Kevin Brodsky <kevin.brodsky@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <20250422081822.1836315-1-ryan.roberts@arm.com>
- <20250422081822.1836315-6-ryan.roberts@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250422081822.1836315-6-ryan.roberts@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423221015.268949-1-kan.liang@linux.intel.com>
 
+On Wed, Apr 23, 2025 at 03:10:14PM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> A warning in intel_pmu_lbr_counters_reorder() may be triggered by below
+> perf command.
+> 
+> perf record -e "{cpu-clock,cycles/call-graph="lbr"/}" -- sleep 1
+> 
+> It's because the group is mistakenly treated as a branch counter group.
+> 
+> The hw.flags of the leader are used to determine whether a group is a
+> branch counters group. However, the hw.flags is only available for a
+> hardware event. The field to store the flags is a union type. For a
+> software event, it's a hrtimer. The corresponding bit may be set if the
+> leader is a software event.
+> 
+> For a branch counter group and other groups that have a group flag
+> (e.g., topdown, PEBS counters snapshotting, and ACR), the leader must
+> be a X86 event. Check the X86 event before checking the flag.
+> 
+> There may be an alternative way to fix the issue by moving the hw.flags
+> out of the union type. It should work for now. But it's still possible
+> that the flags will be used by other types of events later. As long as
+> that type of event is used as a leader, a similar issue will be
+> triggered. So the alternative way is dropped.
+> 
+> Reported-by: Luo Gengkun <luogengkun@huaweicloud.com>
+> Closes: https://lore.kernel.org/lkml/20250412091423.1839809-1-luogengkun@huaweicloud.com/
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
+Can I get a Fixes tag for this such that I can stick it in urgent?
 
-On 4/22/25 13:48, Ryan Roberts wrote:
-> Refactor the huge_pte helpers to use the new common __set_ptes_anysz()
-> and __ptep_get_and_clear_anysz() APIs.
-> 
-> This provides 2 benefits; First, when page_table_check=on, hugetlb is
-> now properly/fully checked. Previously only the first page of a hugetlb
-> folio was checked. Second, instead of having to call __set_ptes(nr=1)
-> for each pte in a loop, the whole contiguous batch can now be set in one
-> go, which enables some efficiencies and cleans up the code.
-> 
-> One detail to note is that huge_ptep_clear_flush() was previously
-> calling ptep_clear_flush() for a non-contiguous pte (i.e. a pud or pmd
-> block mapping). This has a couple of disadvantages; first
-> ptep_clear_flush() calls ptep_get_and_clear() which transparently
-> handles contpte. Given we only call for non-contiguous ptes, it would be
-> safe, but a waste of effort. It's preferable to go straight to the layer
-> below. However, more problematic is that ptep_get_and_clear() is for
-> PAGE_SIZE entries so it calls page_table_check_pte_clear() and would not
-> clear the whole hugetlb folio. So let's stop special-casing the non-cont
-> case and just rely on get_clear_contig_flush() to do the right thing for
-> non-cont entries.
-> 
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
-> ---
->  arch/arm64/mm/hugetlbpage.c | 53 +++++++------------------------------
->  1 file changed, 10 insertions(+), 43 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> index 087fc43381c6..d34703846ef4 100644
-> --- a/arch/arm64/mm/hugetlbpage.c
-> +++ b/arch/arm64/mm/hugetlbpage.c
-> @@ -159,12 +159,11 @@ static pte_t get_clear_contig(struct mm_struct *mm,
->  	pte_t pte, tmp_pte;
->  	bool present;
->  
-> -	pte = __ptep_get_and_clear(mm, addr, ptep);
-> +	pte = __ptep_get_and_clear_anysz(mm, ptep, pgsize);
->  	present = pte_present(pte);
->  	while (--ncontig) {
->  		ptep++;
-> -		addr += pgsize;
-> -		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
-> +		tmp_pte = __ptep_get_and_clear_anysz(mm, ptep, pgsize);
->  		if (present) {
->  			if (pte_dirty(tmp_pte))
->  				pte = pte_mkdirty(pte);
-> @@ -208,7 +207,7 @@ static void clear_flush(struct mm_struct *mm,
->  	unsigned long i, saddr = addr;
->  
->  	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
-> -		__ptep_get_and_clear(mm, addr, ptep);
-> +		__ptep_get_and_clear_anysz(mm, ptep, pgsize);
->  
->  	__flush_hugetlb_tlb_range(&vma, saddr, addr, pgsize, true);
->  }
-> @@ -219,32 +218,20 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
->  	size_t pgsize;
->  	int i;
->  	int ncontig;
-> -	unsigned long pfn, dpfn;
-> -	pgprot_t hugeprot;
->  
->  	ncontig = num_contig_ptes(sz, &pgsize);
->  
->  	if (!pte_present(pte)) {
->  		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
-> -			__set_ptes(mm, addr, ptep, pte, 1);
-> +			__set_ptes_anysz(mm, ptep, pte, 1, pgsize);
->  		return;
->  	}
->  
-> -	if (!pte_cont(pte)) {
-> -		__set_ptes(mm, addr, ptep, pte, 1);
-> -		return;
-> -	}
-> -
-> -	pfn = pte_pfn(pte);
-> -	dpfn = pgsize >> PAGE_SHIFT;
-> -	hugeprot = pte_pgprot(pte);
-> -
->  	/* Only need to "break" if transitioning valid -> valid. */
-> -	if (pte_valid(__ptep_get(ptep)))
-> +	if (pte_cont(pte) && pte_valid(__ptep_get(ptep)))
->  		clear_flush(mm, addr, ptep, pgsize, ncontig);
->  
-> -	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> +	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
->  }
->  
->  pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
-> @@ -434,11 +421,9 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->  			       unsigned long addr, pte_t *ptep,
->  			       pte_t pte, int dirty)
->  {
-> -	int ncontig, i;
-> +	int ncontig;
->  	size_t pgsize = 0;
-> -	unsigned long pfn = pte_pfn(pte), dpfn;
->  	struct mm_struct *mm = vma->vm_mm;
-> -	pgprot_t hugeprot;
->  	pte_t orig_pte;
->  
->  	VM_WARN_ON(!pte_present(pte));
-> @@ -447,7 +432,6 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->  		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
->  
->  	ncontig = num_contig_ptes(huge_page_size(hstate_vma(vma)), &pgsize);
-> -	dpfn = pgsize >> PAGE_SHIFT;
->  
->  	if (!__cont_access_flags_changed(ptep, pte, ncontig))
->  		return 0;
-> @@ -462,19 +446,14 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
->  	if (pte_young(orig_pte))
->  		pte = pte_mkyoung(pte);
->  
-> -	hugeprot = pte_pgprot(pte);
-> -	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> -
-> +	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
->  	return 1;
->  }
->  
->  void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  			     unsigned long addr, pte_t *ptep)
->  {
-> -	unsigned long pfn, dpfn;
-> -	pgprot_t hugeprot;
-> -	int ncontig, i;
-> +	int ncontig;
->  	size_t pgsize;
->  	pte_t pte;
->  
-> @@ -487,16 +466,11 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
->  	}
->  
->  	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
-> -	dpfn = pgsize >> PAGE_SHIFT;
->  
->  	pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
->  	pte = pte_wrprotect(pte);
->  
-> -	hugeprot = pte_pgprot(pte);
-> -	pfn = pte_pfn(pte);
-> -
-> -	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
-> -		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
-> +	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
->  }
->  
->  pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
-> @@ -505,13 +479,6 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
->  	struct mm_struct *mm = vma->vm_mm;
->  	size_t pgsize;
->  	int ncontig;
-> -	pte_t pte;
-> -
-> -	pte = __ptep_get(ptep);
-> -	VM_WARN_ON(!pte_present(pte));
-> -
-> -	if (!pte_cont(pte))
-> -		return ptep_clear_flush(vma, addr, ptep);
->  
->  	ncontig = num_contig_ptes(huge_page_size(hstate_vma(vma)), &pgsize);
->  	return get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
