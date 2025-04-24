@@ -1,205 +1,185 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12705146D6A;
-	Thu, 24 Apr 2025 14:45:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E13C1A23B7
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:46:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505960; cv=none; b=JqSz5rh4EJjiou6LLBrhCUxCpp1Dw1GUqkwacKIlJp1KTKOyn7w2Zg+xcYx8tEx8PBMwq4GJkqjWq9cGA+1bjGVVWzWoDrsPg+wCaho6ec1Mquea9ObGDhdeooWiKdK+KNCo1IPOa0rRxCa14aotYaf1QD0O/cRZiOlAcauqrrE=
+	t=1745505965; cv=none; b=mHwww+QHk9ouNnGDKYgBWJ0ocqlGSonon8VRMc3+NqUZwOaMlPORZoj9Dyg/YZnUKQE/7Mdu3xF9oQl0kcJXtz0Ryjf6748s+ag7Ytbyu0l+gFgVm8x59oGYA6OED2fOIcZErrnlUotN5cor4feUlimQO7CMAFY726VE44nuuP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505960; c=relaxed/simple;
-	bh=oF6ZNTQYzF5wP50g9xs0e8/oXcBOMKj3NPuH+sGnPZk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XF1dfujq04pXKYGJ3/M1z82H0M7JWiRq3fE8i/DJa643qUgo3yx28pIv0px4gqFvfOQSsTi0folIrrnLPtlrX0/X5b8l5/7SNUmg/RD6j7CtGivnrCAv58/6OLTJ+d/rDBaRQIppmnE+BTi9rqCZL8wh+Gdk+jQLsl3ItQ3EikA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGRnqjoZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745505965; c=relaxed/simple;
+	bh=o2RBZVSwwymoOwOHsr7X7tY2TYV6PDEU88LDFFfByo4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=At+2LT6T/rShBxu6f4xVhNwpMXGsiUgU4tUDlBEDH5r7rdOCx/qDloB6Y2TV1Ebv6DpJvnT6iDw5j6uSELJOVuG/3V+HMYpmLZ10vJA5Qy0WdM87SDXczOM/47ild3wv17dyUV40ivMPAe3p+Zby2Jr4cJiLgFw3f7cPdLYK8mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eMrlDXwC; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGRnqjoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E980C4CEE3;
-	Thu, 24 Apr 2025 14:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745505959;
-	bh=oF6ZNTQYzF5wP50g9xs0e8/oXcBOMKj3NPuH+sGnPZk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=DGRnqjoZ3tgw0kyQOhOioT+fKR+ls/DfAgNumGpln9wXAgnQCBKzrSqztS3VxDUtw
-	 +yt0EacLoqHkbRHJ1O8PiZPtG1ZzC7TaJ+TvhES21W/rIPO5geU8yMw/XmoWdv2+lK
-	 h/Iaw2/2+YQUGFh9C327y5kEs2BXHAi3COGdAxPUbxq12MHH3EdKu1PIEPidLyuuVk
-	 7/eoAs+E7rkmj5/v5gt6ogeIDghxLbzE3dXf0sRpiUIFM+ZXOwmpPiCjpc1OBHmAsc
-	 cIn6GhiyfUEOFGDSoM+tsWVJYMTvGf45jDFLa3sy5D/TuH+BUBVe9NJqVmb1q86/Do
-	 p+qvj7K956Pbg==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	Pavel Machek <pavel@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org
-Cc: jacek.anaszewski@gmail.com
-Subject: [PATCH 1/1] leds: Provide skeleton KUnit testing for the LEDs framework
-Date: Thu, 24 Apr 2025 15:45:38 +0100
-Message-ID: <20250424144544.1438584-1-lee@kernel.org>
-X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMrlDXwC"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47691d82bfbso24042951cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745505962; x=1746110762; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=djiw2uRfK6UBOIy5EO9pfxKm7dpOiSpJC1m5A7rq/I0=;
+        b=eMrlDXwCIiMNIYtT3VYlNi9r8ZDyzobMzhf9h6DIivmSuzSZipbYKD8BCPeqjAZEg7
+         rzp9khL02r6ktGzVGakGktZ1sdQ/s2R4BmmqQ7RO7Q2RUTmWFB8erXTeOEx1Er4FAtI5
+         Dojo5sExewqXvSG8MoQq80FNUOsrq7SLnBSWCOYxKr82Oi96Rp1TRpigqiAjjbCqVLc6
+         9HH3RV+1Hd1xCu+pRJtWFLYc8W0XRVH7yLgCNZHzUT9sa7NvaNf32/9GuxUdezx2tZVT
+         q1jdKOocmhlHQMA8D19lgVL1N/25G669RB9xrO1hKvmY0a0lvZL+CCKSFvX0enLubTgo
+         yvNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745505962; x=1746110762;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=djiw2uRfK6UBOIy5EO9pfxKm7dpOiSpJC1m5A7rq/I0=;
+        b=qc44Kh4wPiPSMMyJV8pqS+C9sWU3leVVsqP1KxkYZR+TDQ3v9BWQiqMSQ+8n5iNWuF
+         zBJdFHPPkXjaoaQjCyvVxBa52rgU4iI4bD89VukKwrWRBliPeBkhyu4Wpb6SbyJRnjTL
+         PWdsgi1ZgdNnNT5VUHs15y6URcHWpKed5cg9rh6/1K6Uc4eFPLAgMDlsbzyxjJmcMqOD
+         nzoBtxCGNeWgMLT/w9cBtYbnE0gztdfOBANgy7h7n2BQesFRQ8voKG3wyNZBkXJvIIa6
+         3jyne7TWTVtQYhbXbhE6gVoAWRPHxS0f1t47/zL0Nco6Iqq5ggxaxmpxj94kWIvVDpFS
+         6QXg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHbmc8Lp2K5Q7JHgp9vSwYAVAhPe8+ZaroD1kQlvY8xuCnzkbvn+stz5Ds5Z4oODWomeU4+DQJtWKg9As=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGxQ6uPmPJgdIfgbnI07VXo48AF070xqhXoGp5DjUFC3gajOk7
+	CFjs6qeiwdDesMKng+KikyVgGaYBBMBP54pXC2upvCbh17qHaHPiwMMRTPLHMtXz5F9Qz42sWzt
+	MHxJa+lYBi7PnyCzWjoBYJGxV8BU=
+X-Gm-Gg: ASbGncuGxiasfypa+gRZflBUGsaHghzpTRixJoDEKDno2/RLDYts0+VVY/rLuP3NhDL
+	WPIJ5ABYXzMYhSUNi6wY1omKfleWJrBwJMAiqpXZ1oHn+8KLDHhDw9QjlmlXdCKDXVaoSFXZ2vK
+	6E/eIUu7LaPxeS2U2jl5wwjrI=
+X-Google-Smtp-Source: AGHT+IFGaPkE6RL+WHWDWAL5vZOpOKCCFkUXuZ2C29tV+pt/3ETbhcrTI+CSd8av3dhQsiIAjaNy5GTuFsD83soT7nU=
+X-Received: by 2002:a05:6214:4015:b0:6e8:f99c:7939 with SMTP id
+ 6a1803df08f44-6f4bfcb0542mr41311646d6.44.1745505962215; Thu, 24 Apr 2025
+ 07:46:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250423174634.3009657-1-edumazet@google.com>
+In-Reply-To: <20250423174634.3009657-1-edumazet@google.com>
+From: Yafang Shao <laoar.shao@gmail.com>
+Date: Thu, 24 Apr 2025 22:45:26 +0800
+X-Gm-Features: ATxdqUF-ovgbBxduQnEu1wue-NNLCVb2y0ggWdAMR61_FYb2MQzImAQcwI8q970
+Message-ID: <CALOAHbDT=z4xYQq0WXqGzAQycNhaBdCfZDs5mB5Rvyx9iK4JbQ@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: reduce false sharing on sched_balance_running
+To: Eric Dumazet <edumazet@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	Eric Dumazet <eric.dumazet@gmail.com>, Sean Christopherson <seanjc@google.com>, 
+	Josh Don <joshdon@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Apply a very basic implementation of KUnit LED testing.
+On Thu, Apr 24, 2025 at 1:46=E2=80=AFAM Eric Dumazet <edumazet@google.com> =
+wrote:
+>
+> rebalance_domains() can attempt to change sched_balance_running
+> more than 350,000 times per second on our servers.
+>
+> If sched_clock_irqtime and sched_balance_running share the
+> same cache line, we see a very high cost on hosts with 480 threads
+> dealing with many interrupts.
 
-More tests / use-cases will be added steadily over time.
+CONFIG_IRQ_TIME_ACCOUNTING is enabled on your systems, right?
+Have you observed any impact on task CPU utilization measurements due
+to this configuration? [0]
 
-CMD:
-  tools/testing/kunit/kunit.py run --kunitconfig drivers/leds
+If cache misses on sched_clock_irqtime are indeed the bottleneck,  why
+not align it to improve performance?
 
-OUTPUT:
-  [15:34:19] Configuring KUnit Kernel ...
-  [15:34:19] Building KUnit Kernel ...
-  Populating config with:
-  $ make ARCH=um O=.kunit olddefconfig
-  Building with:
-  $ make all compile_commands.json scripts_gdb ARCH=um O=.kunit --jobs=20
-  [15:34:22] Starting KUnit Kernel (1/1)...
-  [15:34:22] ============================================================
-  Running tests with:
-  $ .kunit/linux kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
-  [15:34:23] ===================== led (1 subtest) ======================
-  [15:34:23] [PASSED] led_test_class_register
-  [15:34:23] ======================= [PASSED] led =======================
-  [15:34:23] ============================================================
-  [15:34:23] Testing complete. Ran 1 tests: passed: 1
-  [15:34:23] Elapsed time: 4.268s total, 0.001s configuring, 3.048s building, 1.214s running
+[0]. https://lore.kernel.org/all/20250103022409.2544-1-laoar.shao@gmail.com=
+/
 
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- drivers/leds/.kunitconfig |  4 +++
- drivers/leds/Kconfig      |  7 ++++
- drivers/leds/Makefile     |  1 +
- drivers/leds/led-test.c   | 76 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 88 insertions(+)
- create mode 100644 drivers/leds/.kunitconfig
- create mode 100644 drivers/leds/led-test.c
+>
+> This patch only acquires sched_balance_running when sd->last_balance
+> is old enough.
+>
+> It also moves sched_balance_running into a dedicated cache line on SMP.
+>
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Cc: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Sean Christopherson <seanjc@google.com>
+> Cc: Josh Don <joshdon@google.com>
+> ---
+>  kernel/sched/fair.c | 28 ++++++++++++++--------------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index e43993a4e5807eaffcacaf761c289e8adb354cfd..460008d0dc459b3ca60209565=
+e89c419ea32a4e2 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -12144,7 +12144,7 @@ static int active_load_balance_cpu_stop(void *dat=
+a)
+>   *   execution, as non-SD_SERIALIZE domains will still be
+>   *   load-balanced in parallel.
+>   */
+> -static atomic_t sched_balance_running =3D ATOMIC_INIT(0);
+> +static __cacheline_aligned_in_smp atomic_t sched_balance_running =3D ATO=
+MIC_INIT(0);
+>
+>  /*
+>   * Scale the max sched_balance_rq interval with the number of CPUs in th=
+e system.
+> @@ -12220,25 +12220,25 @@ static void sched_balance_domains(struct rq *rq=
+, enum cpu_idle_type idle)
+>
+>                 interval =3D get_sd_balance_interval(sd, busy);
+>
+> +               if (!time_after_eq(jiffies, sd->last_balance + interval))
+> +                       goto out;
+> +
+>                 need_serialize =3D sd->flags & SD_SERIALIZE;
+>                 if (need_serialize) {
+>                         if (atomic_cmpxchg_acquire(&sched_balance_running=
+, 0, 1))
+>                                 goto out;
+>                 }
+> -
+> -               if (time_after_eq(jiffies, sd->last_balance + interval)) =
+{
+> -                       if (sched_balance_rq(cpu, rq, sd, idle, &continue=
+_balancing)) {
+> -                               /*
+> -                                * The LBF_DST_PINNED logic could have ch=
+anged
+> -                                * env->dst_cpu, so we can't know our idl=
+e
+> -                                * state even if we migrated tasks. Updat=
+e it.
+> -                                */
+> -                               idle =3D idle_cpu(cpu);
+> -                               busy =3D !idle && !sched_idle_cpu(cpu);
+> -                       }
+> -                       sd->last_balance =3D jiffies;
+> -                       interval =3D get_sd_balance_interval(sd, busy);
+> +               if (sched_balance_rq(cpu, rq, sd, idle, &continue_balanci=
+ng)) {
+> +                       /*
+> +                        * The LBF_DST_PINNED logic could have changed
+> +                        * env->dst_cpu, so we can't know our idle
+> +                        * state even if we migrated tasks. Update it.
+> +                        */
+> +                       idle =3D idle_cpu(cpu);
+> +                       busy =3D !idle && !sched_idle_cpu(cpu);
+>                 }
+> +               sd->last_balance =3D jiffies;
+> +               interval =3D get_sd_balance_interval(sd, busy);
+>                 if (need_serialize)
+>                         atomic_set_release(&sched_balance_running, 0);
+>  out:
+> --
+> 2.49.0.805.g082f7c87e0-goog
+>
 
-diff --git a/drivers/leds/.kunitconfig b/drivers/leds/.kunitconfig
-new file mode 100644
-index 000000000000..5180f77910a1
---- /dev/null
-+++ b/drivers/leds/.kunitconfig
-@@ -0,0 +1,4 @@
-+CONFIG_KUNIT=y
-+CONFIG_NEW_LEDS=y
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_KUNIT_TEST=y
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index a104cbb0a001..c3684b148f18 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -55,6 +55,13 @@ config LEDS_BRIGHTNESS_HW_CHANGED
- 
- 	  See Documentation/ABI/testing/sysfs-class-led for details.
- 
-+config LEDS_KUNIT_TEST
-+	tristate "KUnit tests for LEDs"
-+	depends on KUNIT && LEDS_CLASS
-+	default KUNIT_ALL_TESTS
-+	help
-+	  Say Y here to enable KUnit testing for the LEDs framework.
-+
- comment "LED drivers"
- 
- config LEDS_88PM860X
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 2f170d69dcbf..9a0333ec1a86 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_LEDS_CLASS)		+= led-class.o
- obj-$(CONFIG_LEDS_CLASS_FLASH)		+= led-class-flash.o
- obj-$(CONFIG_LEDS_CLASS_MULTICOLOR)	+= led-class-multicolor.o
- obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
-+obj-$(CONFIG_LEDS_KUNIT_TEST)		+= led-test.o
- 
- # LED Platform Drivers (keep this sorted, M-| sort)
- obj-$(CONFIG_LEDS_88PM860X)		+= leds-88pm860x.o
-diff --git a/drivers/leds/led-test.c b/drivers/leds/led-test.c
-new file mode 100644
-index 000000000000..068c9d0eb683
---- /dev/null
-+++ b/drivers/leds/led-test.c
-@@ -0,0 +1,76 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2025 Google LLC
-+ *
-+ * Author: Lee Jones <lee@kernel.org>
-+ */
-+
-+#include <kunit/device.h>
-+#include <kunit/test.h>
-+#include <linux/device.h>
-+#include <linux/leds.h>
-+
-+struct led_test_ddata {
-+	struct led_classdev cdev;
-+	struct device *dev;
-+};
-+
-+static void led_test_class_register(struct kunit *test)
-+{
-+	struct led_test_ddata *ddata = test->priv;
-+	struct led_classdev *cdev = &ddata->cdev;
-+	struct device *dev = ddata->dev;
-+	int ret;
-+
-+	cdev->name = "led-test";
-+
-+	ret = devm_led_classdev_register(dev, cdev);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+	if (ret)
-+		return;
-+}
-+
-+static struct kunit_case led_test_cases[] = {
-+	KUNIT_CASE(led_test_class_register),
-+	{ }
-+};
-+
-+static int led_test_init(struct kunit *test)
-+{
-+	struct led_test_ddata *ddata;
-+	struct device *dev;
-+
-+	ddata = kunit_kzalloc(test, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	test->priv = ddata;
-+
-+	dev = kunit_device_register(test, "led_test");
-+	if (IS_ERR(dev))
-+		return PTR_ERR(dev);
-+
-+	ddata->dev = get_device(dev);
-+
-+	return 0;
-+}
-+
-+static void led_test_exit(struct kunit *test)
-+{
-+	struct led_test_ddata *ddata = test->priv;
-+
-+	if (ddata && ddata->dev)
-+		put_device(ddata->dev);
-+}
-+
-+static struct kunit_suite led_test_suite = {
-+	.name = "led",
-+	.init = led_test_init,
-+	.exit = led_test_exit,
-+	.test_cases = led_test_cases,
-+};
-+kunit_test_suite(led_test_suite);
-+
-+MODULE_AUTHOR("Lee Jones <lee@kernel.org>");
-+MODULE_DESCRIPTION("KUnit tests for the LED framework");
-+MODULE_LICENSE("GPL");
--- 
-2.49.0.901.g37484f566f-goog
 
+--=20
+Regards
+Yafang
