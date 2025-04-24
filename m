@@ -1,338 +1,156 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2073.outbound.protection.outlook.com [40.107.236.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFDE1FECBD;
-	Thu, 24 Apr 2025 20:22:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745526173; cv=fail; b=d4lacU8L8QZzrxZQMyCs50SaE3B7/b2CoN7xKVVmv+pQ65qw5Zf9IogOgp4Q14cOoZHTmKmGY4+nUAK66xkiBxY2hAalNDWDh4qt+/+Syxj5qZZ/U3EUo+V3LTt8OrnAIs8swylT9jJMtjVudJsrG1u2geMh8wBh5esVo+1+uok=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745526173; c=relaxed/simple;
-	bh=Hi9wwhMAQT1Q5R2xIPvocztNztKrjCK9d80W7s2YLvI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=CgCp/NQg7PZWCk5de+ntHqnZYoHrK4PiqGSaasnDAhJYBQDAdTugTnZRjzxOscDLjlZvD51TV7gY16gDyGGioUx268gGtGWgCvH0tKvJJtge9DPSv3cdUojp070nZINM+iIS8dPiUn6PJFXCq0jcRzkngEy/DQlfNdi9Akg6uLo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=VdEpEVIK; arc=fail smtp.client-ip=40.107.236.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F5A21CC5B
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745526316; cv=none; b=UV1M+0lL4u3OAgpwCU0jYJkatzbXjmNV8DwVlcua7zy1jr8rfx9tRmgi+B8mI72rfMZnTnLjHvHZcJT7vXnbSlnW3FA7fwOM+/+nD7AcBrYOGKfzvjPeaoGDX4bppCULfGU6Q9XVoPAbtdiV9rwFkNQMVOn248Hht3hCm11ujUU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745526316; c=relaxed/simple;
+	bh=fafVTpiamEHy/uMqhecPP6xoPwLgHu181eBWDrBjYPY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=rTBrTsLQ/h5v1JFuIl1nOuRYLFbmhqSobQlNg8z+rRM167m4VupZIV++0z9+Hemv+8+0yLwzHSrbcUl7InqYrBLCSI3Ec3/PHRrm7L7EBuujVaFFTNZas+BRzpqg/3ItlUAXbW9wIn7eMtNjuoku4KOj4n4Te1g8143taMIC3Sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rhsY8quE; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="VdEpEVIK"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZWuwRNkvyAgidhbEedD7Kw7KOeWVs+28Wg+platN5nYMHSSbZCwQMqXUxs9N0fo8FrTrOPaiZmQV/8nZ2zD2b1IcL0oJusrm0SAktqDtTd3xIx5ohsRlP95ok6EIjYorWZjQt63yGzqJRfF7HpnT5Qu5Php/blYGJpzUquHRZ54DGwWqMuru2HcL+xvdJUHRpXtvlEIxwb2dvOB+mIyQj/FJhaoYZcZv9grYzBE0KUsw2sLQUR8QjW1TeQxUMpGm7axTpXKckfpIXVMAivLiTeSEU0+RN+2opU71NdCSOTLqdRkmlDJD7sqFxCG+9URFKamI4k9oQKiheCZezqdFOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rbh/k+l2WscQat/XMYxtHhv0ilU//rB2LJnOc2BNRs0=;
- b=QDqlz6q0jjrkWg8G0mx3n5CaI4qQ/tS+Ck+Z1alvM0Zq/TwkBI+fad86RlhDWi+yxsrYlG34wp3vbRBnmjAtpV7qe3gU0owslegGG8YeqqDbgb/tadgGKJq6zk7i1mkLtrlGiW7+nLeSJS6KUY5b7ktkU/7XPJFpsHJ/n87aByZRQHnWV//AMSgPcGcCToS7LeupALkpQcWV60lpoYeKBu3Cu+A3RSsWsh9rItfViWeKEU/i7kzqCLdWFn9TY/15pDm0NKAnnjZMO6HylZydvZ02sQBKyfa0jguykybiSZZ88JjzA/sE9Uf1tWYIrXoJNWsaZ4GIHodJ92KCRV6DTA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rbh/k+l2WscQat/XMYxtHhv0ilU//rB2LJnOc2BNRs0=;
- b=VdEpEVIKUC6OJIvyswm0WI+E9QOuRB0GuHB6DQWOy3Ut/t9mQ8My2E37d1XkpmoWaf+dCRrUbNu7RvvV/yL/ae1X/Vwr2IXhtKKWwdyW3EsEe+yt4wxP06GOuuYfAyKo9IIoVYcsY9DGDHHp1rQMuCNxBGdGLWGIcPts6SYACf6uEjJHw9TSGIqTyLjItCto/DzI5ZHG5ZIGttDhFEF2F8AWOTWgjyfo5H8+W4l4Ci1fgkULsSAeQ4UMCwXT7TcTHQcMVv/HQ26R95hEFWobtljBgz09vpXlATPbDX7uPWmXluqbNVGsweFygTo4VcveqXr4lgY+IIqRxDnI6O0M6Q==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from DS0PR12MB8044.namprd12.prod.outlook.com (2603:10b6:8:148::14)
- by CH3PR12MB7739.namprd12.prod.outlook.com (2603:10b6:610:151::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.36; Thu, 24 Apr
- 2025 20:22:47 +0000
-Received: from DS0PR12MB8044.namprd12.prod.outlook.com
- ([fe80::f250:7fd7:ce23:a0fb]) by DS0PR12MB8044.namprd12.prod.outlook.com
- ([fe80::f250:7fd7:ce23:a0fb%6]) with mapi id 15.20.8678.025; Thu, 24 Apr 2025
- 20:22:47 +0000
-Message-ID: <aa540122-6a6a-4fd0-9005-5a4061f8eb6f@nvidia.com>
-Date: Thu, 24 Apr 2025 16:22:44 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/16] gpu: nova-core: Add support for VBIOS ucode
- extraction for boot
-To: Danilo Krummrich <dakr@kernel.org>,
- Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Jonathan Corbet <corbet@lwn.net>, John Hubbard <jhubbard@nvidia.com>,
- Ben Skeggs <bskeggs@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
- Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
-References: <20250420-nova-frts-v1-0-ecd1cca23963@nvidia.com>
- <20250420-nova-frts-v1-13-ecd1cca23963@nvidia.com> <aAjz2CYTsAhidiEU@pollux>
-Content-Language: en-US
-From: Joel Fernandes <joelagnelf@nvidia.com>
-In-Reply-To: <aAjz2CYTsAhidiEU@pollux>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BN9P223CA0011.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:408:10b::16) To DS0PR12MB8044.namprd12.prod.outlook.com
- (2603:10b6:8:148::14)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rhsY8quE"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so3125ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745526312; x=1746131112; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1CCui5nQ+UD3eYDY+CSYEAL46oUEZP2/pCYzQHZplJA=;
+        b=rhsY8quE+x6XCcUMEvyYo2kBnHIjwJ4zDJguPSukBp0zoSdxZHNVt7r1jXCQpKlXKg
+         vzbN6BcBC5JEex9hHBj2jiWOrfJcpv1ll1ly6nZJecAztvMThUFNpDxzXvQeOEWLQLrR
+         FKKr/ynrfg8rMaHxXYgI97QRjlWpVQ8HwSxpkSSwuIeN3g+jGzJht3YNhCBA0ggWwYWC
+         rxbjGEs4o1tYWvN888ZDjknagwODLBx0ReimvwAl6YaqfoCQcslPc+otNbhB+BHn9B5P
+         adc2X6DhK9O9lmM9GXWhw4YoejUVwefUYlBeCiIxP2D14ASjZrvQCm5eCEG3nbyVrTgo
+         u1Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745526312; x=1746131112;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1CCui5nQ+UD3eYDY+CSYEAL46oUEZP2/pCYzQHZplJA=;
+        b=Trb5WzLnqISbpWKaNDBAIPojBkqHCEiByqQO37HVJk80QYyhIauvQD7QLKGoeN/jas
+         dFI6+Qq1isF923s5ofZ/wLlbWgrk+7euX6556MXGY9GOtlcRmmotm8ZfQVzNrUy4vwLb
+         YrRnufrpswoIciPDj0z/cGgEYLGWPAhkjgcqNON77n+9jF59Y6VrbHwvA65LuKJtY4d/
+         Ck5gfHM3kXXBRxyAdDzxGSj8eR2vT+zI5KvrgZAjfkKualz/4vXBdjgS3Mi1gJmhZObs
+         hfwEaOmuGT4d2mSkSVvadvtPFCWjmTMLNvtnDXdlKZ7srzwXI4NCVJOQluZ7OciUvWJV
+         tbqg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7L5S/BTHO2WRa6Vf3VGZrM5ojy4mn7la5KweOtYfqT44XIlFkGG00LiH0q63E9/QEOhX/itwWs1ZoXmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwS2xFE0Kf4jukLwSvaKuOFOHrqngZ7/rzo3lL/o4xI1aAEPpXr
+	PKvnF66UqXb9ygeAi9HWXIaLenjgrf6wwIZK3ynZxJLEzOPzv20puIj95z/2oO/rTePOliDvefm
+	KpwPnasYXEnWJqjr0XT9NfGRXgv5Qr7v7Ni6u
+X-Gm-Gg: ASbGncte8iqd7eUpT1uBkDLHdKuuz2uvmTI9jlY/fGrONt4MQE5SxqarVfXDP1E5/IE
+	libUiTqVRibO0Zqg9Hu5vBOpfVdIDGlZXm/eHI9R/Uz0nU/HuSt9jPz2TGh7h65TpJJMeRENUPu
+	O5nBJGo61y8U9tKiRgDLogXdaUAXpA93sy7BD83TET+nfLE1eCLU0=
+X-Google-Smtp-Source: AGHT+IE/sZKvnBNnWmKMWKbj4vT6Y3NTAhyE5RSAQ8RfFq17ESLSBVd85E820ZoDdX0XVKsiJSHpcAtlqZT6XpX1ED8=
+X-Received: by 2002:a05:6e02:19cf:b0:3d9:2a76:94be with SMTP id
+ e9e14a558f8ab-3d939823ce2mr714415ab.14.1745526312287; Thu, 24 Apr 2025
+ 13:25:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR12MB8044:EE_|CH3PR12MB7739:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb88fc99-63e2-43e1-8d67-08dd836dc72c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?L2pkQk1ITERFb3ZEaUltbHJ3NmRvREY0UC96eVlhK0VBazg0RkwxM2pLaE9k?=
- =?utf-8?B?RVlsdGhDcFRZSDRxMFQ4cXNRaVVYMThGU0xOY1ZnNmJ4SUpUdi8zbXZqdTRS?=
- =?utf-8?B?dStUcWtJNW9RdFh6M3BTUk03ekNSY0xUN2xWa0Ywd3U2eEdtLzVTUS80T25W?=
- =?utf-8?B?ZytQYVNsM0xyVGU1dFFBTW5sU2FhRldFSklpSVhrZlhnMGpKTEU4SGlTVlh4?=
- =?utf-8?B?ZVU5b0U5a0dPNm00Tm4xSVlYaWs3YnhVVWpuYytMR2xNdlhkTVMxRHEzR3Rp?=
- =?utf-8?B?dGtaQkpEajF3YmZHb21pWksveS9pZjVCVXpYV2laTzIrV0dGMjVTeExpYlZ6?=
- =?utf-8?B?UUlXaGQyeExSWFQyN1lNZE92S1BUOWF5YXNIS2E3NjhzSmhyTUFmVm9IUmRF?=
- =?utf-8?B?elM0WGRZZzFYNm5sbHAwb0RGNDdlR2pqZnRxTWk2cEVVVmZ5VzEwN2lSOFV6?=
- =?utf-8?B?Y3RWTGFUU1VlRjZtL3hJck51VE0wa2s1VGlBMDZMYTNJVUhUZTZYN1d0dU9j?=
- =?utf-8?B?WWZoSDIzK0c0K0pEWXFoeERFWUN0b3o0SWJvd3FyTU1UZmRDVHEwMkFkSnFm?=
- =?utf-8?B?SnZjK3dnWTFyRXVlOFUvZVhrczlYYnVzTlRrd1FPT2tGaDZtanZJYUtxUUVG?=
- =?utf-8?B?YUlTdVpjclhYVVB1TzIxV0ZOa0VTUGxXSlIwbkJocldxbnZnT0F2cVNpSzI2?=
- =?utf-8?B?ckZoeHVwdG9rNkw3WUZlT2V1QVdxajRPRlMzdFJTb2hQMVFTVXhPOUdHc01v?=
- =?utf-8?B?VzNEa0w0Y0Zab3FmWU1NMWc5YzFOWTk3V0NOOW9lMXlxdUJqckdUT2hEanVX?=
- =?utf-8?B?QUxWUG92YnRnY3hTU0xCQXFhZUEzdXJpNFZPTEp0QzR2Tkc0WktjZGpvWC92?=
- =?utf-8?B?WURsZXRzaUd4RkhKSXVuWlBDU2xUdzlwS2ZZT1hhVHJSVnJGZWdOYVl2bURB?=
- =?utf-8?B?WnJub3pvMGl6ZU50YWFSemJQU3V5MHQ4M1RFUm42WHZXUE5jZ0g3T1ROZ0Jx?=
- =?utf-8?B?a1NCT3JTbmRiVDE5eEtYK2NRbUtrRFFUNDl6ZVMxRWNIUUtGMkVLSVc4NFVD?=
- =?utf-8?B?REFZOWp5ZHRudXBtR29Jb3Y2ak16SWFEdjNnQkZJT1VNc09XaDU1cmE0L2Nj?=
- =?utf-8?B?UUNNNkZhZVZHcitOS0dSU2xiaFZhSW1yRU5ieXlQQVY3ZUlqNFVGcXZpaDRH?=
- =?utf-8?B?bUUvMkNLbkRZRXdTaG9jL0RVdE9lVnhjZzlVbUN3L0VzZG5lVXJIdjdUUjFG?=
- =?utf-8?B?NWdyOFllZDRJVjB0S0NzOWJGMG1kVXEzZFJWcERWNU9yZ2FSRGZ0Yk51b2Nh?=
- =?utf-8?B?YXB2V0pYN2YzY1RROTlVd0MxYnNyczVtN1NXTUpwWktCWDVoRlJHMzBkL1BW?=
- =?utf-8?B?MTRqc2IxSHBsOG5hc25tTExNcEhIY3ZoZ1YxOEJNdzZJbk9HVTdySStEVUwx?=
- =?utf-8?B?WCtiRDE1R2dhQWtIMXpxYmZKVEZZK2pYU2RTUVB6d3Njd1Y5YkxpL2Jub3pK?=
- =?utf-8?B?WW4yaTg2d0RQSk13MjBjRjFZOGZyRFRYck9BaUUzck5XbHkxM1RXSlJvN0NH?=
- =?utf-8?B?YmpJbnhiSmNVLy8rellzejZyRkwwSlp4N3drMVUvUEp3aGFPTjR1VFg0OHhs?=
- =?utf-8?B?cGNxT2FwcncwNjQ3bjUwOG5jbnpFVkVpcjJ1ejdUQVdpajlyRE41ek1nN3Jw?=
- =?utf-8?B?dDdNOTJJRndyWmhocnNHdXJZK3U2ZVFISENrRzA3U0xQcXh2UXlXemtVVVZO?=
- =?utf-8?B?MXNRTGI1cnpjak04Z0VKMEJpSnluWjNBRVREVVBjNjQxRVpjeEhubHhWekZu?=
- =?utf-8?B?UGxqVVgxYndHSXFSaXAyOVpjR3B4bTZJaFBDa1pGeG40V3V4b0xYdHlWVG05?=
- =?utf-8?B?VkVwR3lLSW45TFdZUUhPMjlRN29uTVBGT29qa0ZuV3Y1UWcyQUMvdituZXpL?=
- =?utf-8?Q?3ZS77bF8dmU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB8044.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bGFtU1NTcWhVZ1lPTnpBWUtXT2xCSHpxUlJtUXB6U081OFlXNUV1Rlk2d3A5?=
- =?utf-8?B?NkFvL1MweGJOVUtTRE9ycW1YK1VkWVJCbnIyTTYyZzlReFB3M3pCVS9qdTV6?=
- =?utf-8?B?MGpHQTNVa1dISWs3WWo2K095ZW5PZUk0VmxBOGNNWUtGcjVORzhha0hsREE2?=
- =?utf-8?B?U3hEeGljU2dxSDFtTTlCaUJHTkFpSURHbS9NdktkUnM2V2g4cnNrR2gvdzJv?=
- =?utf-8?B?MGtFMmtrbTdETUVlb2xXRkREUElVS1dEMjBidzIxVHM2L1pSZmUzRnRCU01i?=
- =?utf-8?B?NE5XR0hBc2hQUGFBeThWT0Vyc21wSkNld09NaW1QU000VkRlVDB0VktBS093?=
- =?utf-8?B?Q2pTWjhqT1p4L2ZBcFZvcUZuQjhXMnJ0K29hUkFaeW4xWFY5elpjbEFYQ2N6?=
- =?utf-8?B?R1VtSVQ5R2pqNk5PNnZka1Z3Y1NVNTNwenZBdnFkd2xkaUkydUl4S3R5SFd6?=
- =?utf-8?B?S0M1Tkd6NnIzZGJaUVlCZEFTUzFkUWxidkJnWXFXL3I0UitsbFJpZlVGQlNy?=
- =?utf-8?B?bUNiZE5RRFcraW5Tci9QNjlRbjNrMG00cTkvclBEZVQ2TUJqQnpJK1huR05w?=
- =?utf-8?B?cy9Dbm8rVjJobDFLN0dLSTlseExrVUxERE5JS3hzeXF2OEVLdUZIb3cxL3Y5?=
- =?utf-8?B?alROU1R2SmdocUJRdHdaRmdTRjdET2JzRzRHQjNvZ282aXNkYVlLOFhFTkpL?=
- =?utf-8?B?M2MyVlNlVXFJVWQ4OG5wRmo3eVU2ZjEyYVFGUzZMQjR3VGpqTWl3VVJpSDAy?=
- =?utf-8?B?bnBYaUg2NERrcDlIWjVVZmtSKytNRUQvaUtKMmJUYVJWb0plVXRjcHR1eGlW?=
- =?utf-8?B?YngxYUxqVFdkbndxM0NadDJIR05tNDVQeXVBWDRjTGNicnkwRFpRTThuMDVI?=
- =?utf-8?B?b0VLWXRaZXhtd3oydEVwb05KUVdzeTdSK1JXeTdCSUZTN1d6bHB1UW94NXpG?=
- =?utf-8?B?SXFDN2xLd21kQWt1TjF3V3c1cEFoNGFCYlFFbFRCL3g2UmF3c3BEOHFKYStz?=
- =?utf-8?B?dUhlMTVySGFrTVhXdCtObnc4RE5GUFlTQzFqa0IzeGNHd3R2MnJrb1dTZFJ6?=
- =?utf-8?B?bXpEN240TmFWOUxleC9zbnY3OGlWT2RrQTVlSVlTR0FBaS9jWE1uOUVhZVpy?=
- =?utf-8?B?b0svUkFER3hZWVFaWjUvNmVXcUgza3V6a1NKMXZNTmNpWTROUkFuLzVXVXZk?=
- =?utf-8?B?c1hvaFNOdzRtdUEzWU0rZnlGSVMySWJESWFQako3cGUvKzNyRU9xazBMVlA3?=
- =?utf-8?B?UVEzenpYSDVBQjBWS25nUlFDMjMzT0xORmNDNFRXVkpyTlR5RWxYVUh5dGVC?=
- =?utf-8?B?SnVGSUVSVTJPWDV4Vy9QMHAyWmVTK251cTRtR0p6eG5tV29jdC9WT1RpQzlL?=
- =?utf-8?B?VkpwZFhIMjQrQTZGOU85VVlJTXJxN1JOWFFXU2JJNDA4VVEwQ04rYVF1TTJ1?=
- =?utf-8?B?V0R0SW9oWitPcklXdWV0a0FXdW95UTBqTzlFZGZ3aWlkZnNtK1NrSDdSbXNv?=
- =?utf-8?B?aGxCL3ZqTnI1WmNMaGhaYjJxZmUwcHlFdklxSHlaMkFuWENKWFBNcTFEdUpv?=
- =?utf-8?B?ODd5M0Z3QXdQSjF0Nlc0eFBTTWNGV1ZJYUx5QmFmT3lpSDlVQ0hxR3F4cWgw?=
- =?utf-8?B?TWc3SUJvaTJGQitMZkJBbEpieHArem5MeWN2aS9VVEI5ZXVjSEM2UGN5YVg5?=
- =?utf-8?B?bmdaK3hrWENScjVJa1BBV1ZycWFsNlBPbllQWTZ1WHZZZ1JNSUQ4d1h3bEYy?=
- =?utf-8?B?Vi82VWFsRHppZFhDZXcwQWU0TWJ4a2pzVEZWZnVqUmZweEFMSjdtSEZIKzR0?=
- =?utf-8?B?UEdsa1J5eFdWNWJyZzBTNWY1UEFCbHhLeEw0ZFVlRHdFZE55MnRMdm5zMnFH?=
- =?utf-8?B?K3owWkdEU3NQMVhJaEFseldVV1o0UGtuMEhrQWhldEYyQitvVDlXVTBCRlBr?=
- =?utf-8?B?bWZiRllRVjRhNU1FUnhnbWNhSHhydVczVFRJRVJ1WXJXY0pzZ0JGUFlnOGlO?=
- =?utf-8?B?dDhCOWtoKzhqbEE4ZzlWZDlTUTdDdys2R3UxQ3ZOUko0QllrWTB5K3dFM0F2?=
- =?utf-8?B?bEkyeko4aEI4bHErM2pmTU0yT3dVWkc3QUN0UnA0cVh4NnUzaEw1ZEJ0NFg0?=
- =?utf-8?Q?jL6PFtsmO0qyIQNq+J56Ze+v1?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb88fc99-63e2-43e1-8d67-08dd836dc72c
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB8044.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 20:22:47.4698
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: g0BdCoxlChsI6o941JfElWSu0Wz8IArKI8TnEnIsjetPTgJokzBIPyKpoJ10zVJlPZZ4w7eRnwEfuOi5P8tB7A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7739
+References: <20250410173631.1713627-1-irogers@google.com>
+In-Reply-To: <20250410173631.1713627-1-irogers@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 24 Apr 2025 13:25:00 -0700
+X-Gm-Features: ATxdqUH0pzpE_olqwsX6H8de4juHukePstPSl5KesBuzVOEbeWOE41P_uOGuzjE
+Message-ID: <CAP-5=fUM7TgwehAPb3e1_v_-R4h4eeetrSpYAGLP=aEXzchNAw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] Move uid filtering to BPF filters
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@linaro.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>, 
+	Howard Chu <howardchu95@gmail.com>, Weilin Wang <weilin.wang@intel.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, "Dr. David Alan Gilbert" <linux@treblig.org>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Apr 10, 2025 at 10:36=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> Rather than scanning /proc and skipping PIDs based on their UIDs, use
+> BPF filters for uid filtering. The /proc scanning in thread_map is
+> racy as the PID may exit before the perf_event_open causing perf to
+> abort. BPF UID filters are more robust as they avoid the race. Add a
+> helper for commands that support UID filtering and wire up. Remove the
+> non-BPF UID filtering support given it doesn't work.
+>
+> v2: Add a perf record uid test (Namhyung) and force setting
+>     system-wide for perf trace and perf record (Namhyung). Ensure the
+>     uid filter isn't set on tracepoint evsels.
+>
+> v1: https://lore.kernel.org/lkml/20250111190143.1029906-1-irogers@google.=
+com/
 
+Ping.
 
-On 4/23/2025 10:06 AM, Danilo Krummrich wrote:
-> On Sun, Apr 20, 2025 at 09:19:45PM +0900, Alexandre Courbot wrote:
->> From: Joel Fernandes <joelagnelf@nvidia.com>
->>
->> Add support for navigating and setting up vBIOS ucode data required for
->> GSP to boot. The main data extracted from the vBIOS is the FWSEC-FRTS
->> firmware which runs on the GSP processor. This firmware runs in high
->> secure mode, and sets up the WPR2 (Write protected region) before the
->> Booter runs on the SEC2 processor.
->>
->> Also add log messages to show the BIOS images.
->>
->> [102141.013287] NovaCore: Found BIOS image at offset 0x0, size: 0xfe00, type: PciAt
->> [102141.080692] NovaCore: Found BIOS image at offset 0xfe00, size: 0x14800, type: Efi
->> [102141.098443] NovaCore: Found BIOS image at offset 0x24600, size: 0x5600, type: FwSec
->> [102141.415095] NovaCore: Found BIOS image at offset 0x29c00, size: 0x60800, type: FwSec
->>
->> Tested on my Ampere GA102 and boot is successful.
->>
->> [applied changes by Alex Courbot for fwsec signatures]
->> [applied feedback from Alex Courbot and Timur Tabi]
->>
->> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
->> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
->> ---
->>  drivers/gpu/nova-core/firmware.rs  |    2 -
->>  drivers/gpu/nova-core/gpu.rs       |    5 +
->>  drivers/gpu/nova-core/nova_core.rs |    1 +
->>  drivers/gpu/nova-core/vbios.rs     | 1103 ++++++++++++++++++++++++++++++++++++
->>  4 files changed, 1109 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/nova-core/firmware.rs b/drivers/gpu/nova-core/firmware.rs
->> index 4ef5ba934b9d255635aa9a902e1d3a732d6e5568..58c0513d49e9a0cef36917c8e2b25c414f6fc596 100644
->> --- a/drivers/gpu/nova-core/firmware.rs
->> +++ b/drivers/gpu/nova-core/firmware.rs
->> @@ -44,7 +44,6 @@ pub(crate) fn new(
->>  }
->>  
->>  /// Structure used to describe some firmwares, notable fwsec-frts.
->> -#[allow(dead_code)]
->>  #[repr(C)]
->>  #[derive(Debug, Clone)]
->>  pub(crate) struct FalconUCodeDescV3 {
->> @@ -64,7 +63,6 @@ pub(crate) struct FalconUCodeDescV3 {
->>      _reserved: u16,
->>  }
->>  
->> -#[allow(dead_code)]
->>  impl FalconUCodeDescV3 {
->>      pub(crate) fn size(&self) -> usize {
->>          ((self.hdr & 0xffff0000) >> 16) as usize
->> diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
->> index ec4c648c6e8b4aa7d06c627ed59c0e66a08c679e..2344dfc69fe4246644437d70572680a4450b5bd7 100644
->> --- a/drivers/gpu/nova-core/gpu.rs
->> +++ b/drivers/gpu/nova-core/gpu.rs
->> @@ -11,6 +11,7 @@
->>  use crate::regs;
->>  use crate::timer::Timer;
->>  use crate::util;
->> +use crate::vbios::Vbios;
->>  use core::fmt;
->>  
->>  macro_rules! define_chipset {
->> @@ -157,6 +158,7 @@ pub(crate) struct Gpu {
->>      fw: Firmware,
->>      sysmem_flush: DmaObject,
->>      timer: Timer,
->> +    bios: Vbios,
->>  }
->>  
->>  #[pinned_drop]
->> @@ -237,12 +239,15 @@ pub(crate) fn new(
->>  
->>          let _sec2_falcon = Sec2Falcon::new(pdev, spec.chipset, &bar, true)?;
->>  
->> +        let bios = Vbios::probe(&bar)?;
->> +
->>          Ok(pin_init!(Self {
->>              spec,
->>              bar,
->>              fw,
->>              sysmem_flush,
->>              timer,
->> +            bios,
->>          }))
->>      }
->>  }
->> diff --git a/drivers/gpu/nova-core/nova_core.rs b/drivers/gpu/nova-core/nova_core.rs
->> index 4dde8004d24882c60669b5acd6af9d6988c66a9c..2858f4a0dc35eb9d6547d5cbd81de44c8fc47bae 100644
->> --- a/drivers/gpu/nova-core/nova_core.rs
->> +++ b/drivers/gpu/nova-core/nova_core.rs
->> @@ -29,6 +29,7 @@ macro_rules! with_bar {
->>  mod regs;
->>  mod timer;
->>  mod util;
->> +mod vbios;
->>  
->>  kernel::module_pci_driver! {
->>      type: driver::NovaCore,
->> diff --git a/drivers/gpu/nova-core/vbios.rs b/drivers/gpu/nova-core/vbios.rs
->> new file mode 100644
->> index 0000000000000000000000000000000000000000..534107b708cab0eb8d0accf7daa5718edf030358
->> --- /dev/null
->> +++ b/drivers/gpu/nova-core/vbios.rs
->> @@ -0,0 +1,1103 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +
->> +// To be removed when all code is used.
->> +#![allow(dead_code)]
-> 
-> Please not, use 'expect' and and only where needed. If it would be too much,
-> it's probably a good indicator that we want to reduce the size of the patch for
-> now.
+Thanks,
+Ian
 
-Done.
-
-[..]
-
->> +
->> +        // loop till break
-> 
-> This comment seems unnecessary, better explain what we loop over and why.
-
-Done.
-
->> +        loop {
->> +            // Try to parse a BIOS image at the current offset
->> +            // This will now check for all valid ROM signatures (0xAA55, 0xBB77, 0x4E56)
->> +            let image_size =
->> +                Self::read_bios_image_at_offset(bar0, &mut data, cur_offset, BIOS_READ_AHEAD_SIZE)
->> +                    .and_then(|image| image.image_size_bytes())
->> +                    .inspect_err(|e| {
->> +                        pr_err!(
->> +                            "Failed to parse initial BIOS image headers at offset {:#x}: {:?}\n",
->> +                            cur_offset,
->> +                            e
->> +                        );
->> +                    })?;
->> +
->> +            // Create a new BiosImage with the full image data
->> +            let full_image =
->> +                Self::read_bios_image_at_offset(bar0, &mut data, cur_offset, image_size)
->> +                    .inspect_err(|e| {
->> +                        pr_err!(
->> +                            "Failed to parse full BIOS image at offset {:#x}: {:?}\n",
->> +                            cur_offset,
->> +                            e
->> +                        );
->> +                    })?;
->> +
->> +            // Determine the image type
->> +            let image_type = full_image.image_type_str();
->> +
->> +            pr_info!(
-> 
-> I think this should be a debug print.
-
-Done.
-
-Will continue looking into the feedback on the rest of the items and reply. Thanks!
-
- - Joel
-
+> Ian Rogers (12):
+>   perf tests record: Cleanup improvements
+>   perf bench evlist-open-close: Reduce scope of 2 variables
+>   perf parse-events filter: Use evsel__find_pmu
+>   perf target: Separate parse_uid into its own function
+>   perf parse-events: Add parse_uid_filter helper
+>   perf record: Switch user option to use BPF filter
+>   perf tests record: Add basic uid filtering test
+>   perf top: Switch user option to use BPF filter
+>   perf trace: Switch user option to use BPF filter
+>   perf bench evlist-open-close: Switch user option to use BPF filter
+>   perf target: Remove uid from target
+>   perf thread_map: Remove uid options
+>
+>  tools/perf/bench/evlist-open-close.c        | 76 ++++++++++++---------
+>  tools/perf/builtin-ftrace.c                 |  1 -
+>  tools/perf/builtin-kvm.c                    |  2 -
+>  tools/perf/builtin-record.c                 | 27 +++++---
+>  tools/perf/builtin-stat.c                   |  4 +-
+>  tools/perf/builtin-top.c                    | 22 +++---
+>  tools/perf/builtin-trace.c                  | 27 +++++---
+>  tools/perf/tests/backward-ring-buffer.c     |  1 -
+>  tools/perf/tests/event-times.c              |  8 +--
+>  tools/perf/tests/keep-tracking.c            |  2 +-
+>  tools/perf/tests/mmap-basic.c               |  2 +-
+>  tools/perf/tests/openat-syscall-all-cpus.c  |  2 +-
+>  tools/perf/tests/openat-syscall-tp-fields.c |  1 -
+>  tools/perf/tests/openat-syscall.c           |  2 +-
+>  tools/perf/tests/perf-record.c              |  1 -
+>  tools/perf/tests/perf-time-to-tsc.c         |  2 +-
+>  tools/perf/tests/shell/record.sh            | 36 ++++++++--
+>  tools/perf/tests/switch-tracking.c          |  2 +-
+>  tools/perf/tests/task-exit.c                |  1 -
+>  tools/perf/tests/thread-map.c               |  2 +-
+>  tools/perf/util/bpf-filter.c                |  2 +-
+>  tools/perf/util/evlist.c                    |  3 +-
+>  tools/perf/util/parse-events.c              | 33 ++++++---
+>  tools/perf/util/parse-events.h              |  1 +
+>  tools/perf/util/python.c                    | 10 +--
+>  tools/perf/util/target.c                    | 54 ++-------------
+>  tools/perf/util/target.h                    | 15 +---
+>  tools/perf/util/thread_map.c                | 32 +--------
+>  tools/perf/util/thread_map.h                |  6 +-
+>  tools/perf/util/top.c                       |  4 +-
+>  tools/perf/util/top.h                       |  1 +
+>  31 files changed, 178 insertions(+), 204 deletions(-)
+>
+> --
+> 2.49.0.604.gff1f9ca942-goog
+>
