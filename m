@@ -1,115 +1,119 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815A721C9F1;
-	Thu, 24 Apr 2025 09:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C9621C9F1
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:38:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487485; cv=none; b=a039DRthmka7m6HcnZN8HT4r5f8ejfZ2ZW9q/7OVEAQPgysgwVO0eNsDYKTEDN87o6QXjMtdPfVz1cWxIGuf/6K9Wmo1/q5vPAYdF5n5sFUKRY5Avyqvfp1DVqXTc1iSY5tpsccIWt+mLDCayN7S6Y9VSypB2Ja6oONw7i/S0FA=
+	t=1745487496; cv=none; b=IJTsscU8GKd8voCBr7lJgFF8xwF2l7caznwjXVuH8GEzbpaE8Qa+6wkAfthuUQ74fAIX2XDRUTSrzwlQaKdICjrxTKOrQ0kGa31E2ANXuYLQaRJJpyM1XLRlHH4/sStyZN5paIKBTdhjcLEk4dW+t51a0ZTcXnK+0NDpecFkaGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487485; c=relaxed/simple;
-	bh=9kwF46iJORcY9TFOIlZtjm/YNpS0T5SJximkUDFlW60=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=NcyGq/btqzqEBFN9320zCLOpjwJohhf7Ga75TBFEUKzcM7JSMLESBuZ+DPA0sDOPPOTnkKijnsOwJ3jrAWHppagsM8aNM6FC9TKtXunvEgRFffqdE3WLZdFczor+Gbo0PrnnO7gMvqfFsNw+RI5uo3YZJQR4MvfHb+BK2tArLnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=USjHibLV; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1745487496; c=relaxed/simple;
+	bh=FuJlduOQyXCFyeF3mH4fN6Q/13fmq7kiMrRfBbJMj7o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UIcpzVDbIrVklrvWfzlN/a8tVcUlF78pjBj18iHorHpnyY4MzFiCZhgj6c/xM2De/tBOt//0n7XsRcf9ClYsnpgdJ+W/kSdTUiKECVjC1y6hgxUyAIB4mI75fNUW93d7iaWQ/ef/IHGXo8ZhJPHsTtR8BQfl4vccckjuJHz0kKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W/zvold2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="USjHibLV"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A828840E01ED;
-	Thu, 24 Apr 2025 09:37:54 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id XNyt89XR2037; Thu, 24 Apr 2025 09:37:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745487470; bh=dzIiNMjy0H4E0Jt/t7PcVoUSltod6To/hbE5oCVaQ8E=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=USjHibLVo3pFcy3R9wI9oTDCVXEZuDWfA+B6EXabjE8FArtrbas5oKoAI+L60Izvy
-	 gY1UqWwwzQLeRjTlu/vmnmJdsWAM3aCa22Al3sLbBPIDqpOCza5SN9zsjgzTAAxwLQ
-	 3WZd9F3Hn+27SUey24ZrxmkvqW7oVnEgUur7mWVo5Pr/rKlHg/BcuW3trgR5PPGzFZ
-	 jF2kBkPnWGm/Gnl91KTLejxm4HdEL+BB0KY8dgQ0p+B3uK6miQGqiq6MW85iVlq29l
-	 4e+wpm24sJkqwxmPXNqB1pv9Di1gHqa39Zetp18F6BQLi6OpvmI9rSk4CIqil9qkZO
-	 jvQGqeEdjWrjKwGfpK0LEWAwSEXG532YHiIUDQJlmST04tm/eZn0ZKB9XCtfiB0AMD
-	 r5ZB8fsqd6ABsy09UFOOxAxOS05OIgXo5q8P57UMmcmBn9daIU274nin8EIQpdCOX3
-	 ldJEdddi6cY5nrABYTx2s4Y98DAEa9W2Dn9NEAcJh7JVdoKXkJM3OGeCRFgqB4MzhX
-	 jcTBhmiifs65vBuLJGcFL0xmfR0wusB89itmTRK3zBAR85ZY5Isf+D+um+2BNYkhVs
-	 NzSbqONuz5EgNeiG52eQXf3TO7yndT2X1fOIIeqX7qEpf/N1HyMACq/V95DsrS0xYg
-	 7wo9DlxYbIOIwLfDy1dbqZ18=
-Received: from [127.0.0.1] (unknown [78.130.214.207])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 87E5640E021A;
-	Thu, 24 Apr 2025 09:37:41 +0000 (UTC)
-Date: Thu, 24 Apr 2025 12:37:38 +0300
-From: Borislav Petkov <bp@alien8.de>
-To: Ard Biesheuvel <ardb@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>
-CC: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
- linux-efi@vger.kernel.org, x86@kernel.org, mingo@kernel.org,
- Dionna Amalie Glaze <dionnaglaze@google.com>,
- Kevin Loughlin <kevinloughlin@google.com>
-Subject: Re: [PATCH v5 3/6] x86/sev: Split off startup code from core code
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAMj1kXGDyM-W1umDsBGO17+UqczhODBcb73StPELfOAQN2_V2A@mail.gmail.com>
-References: <20250418141253.2601348-8-ardb+git@google.com> <20250418141253.2601348-11-ardb+git@google.com> <cf878810-81ed-3017-52c6-ce6aa41b5f01@amd.com> <CAMj1kXGDyM-W1umDsBGO17+UqczhODBcb73StPELfOAQN2_V2A@mail.gmail.com>
-Message-ID: <C8291B70-FC38-43DF-B0DE-EF20DA769ABA@alien8.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W/zvold2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26349C4CEE3;
+	Thu, 24 Apr 2025 09:38:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745487495;
+	bh=FuJlduOQyXCFyeF3mH4fN6Q/13fmq7kiMrRfBbJMj7o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=W/zvold2hOQtPOLzBYH20bFl1T+MtgX/UQe2LtCH++T+9ar262StTYb9OL/3PR4GA
+	 0dMsr72npxUQh59NwP0HEFMVW8nMsspoXbo78HnrIGTN9ZfrG00KdfL2bmFJM9Bzj1
+	 TVDzaEMwijMcKNY337b7KjPbVcEqOMCxeyvcJwCnONrgIorpY2Q/qT0S8PxnYUAMr6
+	 sr51RYfc8KK4rUyurniWI1bbWrt9do+s/SqDCS8pOPE6y5g8Xr4odnPRQ7iFgugjiv
+	 AKqhN2kok21jQxiwS/zW3ULDWi5zLHu7Ivfy9///lL6P3vHegqZCAu0J5BlzFgod/y
+	 KSSKEE3UrRMtw==
+Date: Thu, 24 Apr 2025 11:38:08 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Jiayuan Chen <jiayuan.chen@linux.dev>, linux-kernel@vger.kernel.org, 
+	mrpre@163.com, mkoutny@suse.com, 
+	syzbot+adcaa842b762a1762e7d@syzkaller.appspotmail.com, syzbot+fab52e3459fa2f95df57@syzkaller.appspotmail.com, 
+	syzbot+0718f65353d72efaac1e@syzkaller.appspotmail.com, Andrew Morton <akpm@linux-foundation.org>, 
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+	Suren Baghdasaryan <surenb@google.com>, Wei Yang <richard.weiyang@gmail.com>, 
+	David Hildenbrand <david@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Mateusz Guzik <mjguzik@gmail.com>, Joel Granados <joel.granados@kernel.org>, 
+	Jens Axboe <axboe@kernel.dk>, Wei Liu <wei.liu@kernel.org>, 
+	Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: [PATCH v1] pid: annotate data-races around pid_ns->pid_allocated
+Message-ID: <20250424-marsch-radio-fb7bf6484c05@brauner>
+References: <20250423115542.7081-1-jiayuan.chen@linux.dev>
+ <20250423135101.GA28646@redhat.com>
+ <25a402bb9ddfecba22b5b24684d950494fc7410d@linux.dev>
+ <20250423163818.GB28646@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250423163818.GB28646@redhat.com>
 
-On April 23, 2025 6:50:00 PM GMT+03:00, Ard Biesheuvel <ardb@kernel=2Eorg> =
-wrote:
->On Wed, 23 Apr 2025 at 17:22, Tom Lendacky <thomas=2Elendacky@amd=2Ecom> =
-wrote:
->>
->> On 4/18/25 09:12, Ard Biesheuvel wrote:
->> > From: Ard Biesheuvel <ardb@kernel=2Eorg>
->> >
->> > Disentangle the SEV core code and the SEV code that is called during
->> > early boot=2E The latter piece will be moved into startup/ in a subse=
-quent
->> > patch=2E
->> >
->> > Signed-off-by: Ard Biesheuvel <ardb@kernel=2Eorg>
->>
->> This patch breaks SNP guests=2E The SNP guest boots, but no longer has
->> access to the VMPCK keys needed to communicate with the ASP, which is
->> used, for example, to obtain an attestation report=2E
->>
->> It looks like the secrets_pa is defined as static in both startup=2Ec a=
-nd
->> core=2Ec=2E It is set by a function in startup=2Ec and so when used in =
-core=2Ec
->> its value will be 0=2E
->>
->> The following fixed the issue for me=2E Let me know if it can be squash=
-ed
->> in or a full patch is needed=2E Although, it likely should be named
->> sev_secrets_pa since it is no longer static=2E
->>
->
->Thanks for the fix, and apologies for using you as a guinea pig - I've
->been struggling to get access to SEV-SNP capable hardware, although a
->suitable EPYC based machine should be arriving in a month or 2=2E
->
->I'd assume a proper patch is better, and renaming it to sev_secrets_pa
->doesn't seem that intrusive=2E But it is ultimately Ingo's call=2E
+On Wed, Apr 23, 2025 at 06:38:18PM +0200, Oleg Nesterov wrote:
+> On 04/23, Jiayuan Chen wrote:
+> >
+> > April 23, 2025 at 21:51, "Oleg Nesterov" <oleg@redhat.com> wrote:
+> >
+> >
+> >
+> > >
+> > > On 04/23, Jiayuan Chen wrote:
+> > >
+> > > >
+> > > > Suppress syzbot reports by annotating these accesses using
+> > > >
+> > > >  READ_ONCE() / WRITE_ONCE().
+> > > >
+> > >
+> > > ...
+> > >
+> > > >
+> > > > --- a/kernel/pid.c
+> > > >
+> > > >  +++ b/kernel/pid.c
+> > > >
+> > > >  @@ -122,7 +122,8 @@ void free_pid(struct pid *pid)
+> > > >
+> > > >  for (i = 0; i <= pid->level; i++) {
+> > > >
+> > > >  struct upid *upid = pid->numbers + i;
+> > > >
+> > > >  struct pid_namespace *ns = upid->ns;
+> > > >
+> > > >  - switch (--ns->pid_allocated) {
+> > > >
+> > > >  + WRITE_ONCE(ns->pid_allocated, READ_ONCE(ns->pid_allocated) - 1);
+> > > >
+> > > >  + switch (READ_ONCE(ns->pid_allocated)) {
+> > > >
+> > >
+> > > I keep forgetting how kcsan works, but we don't need
+> > >
+> > > READ_ONCE(ns->pid_allocated) under pidmap_lock?
+> > >
+> > > Same for other functions which read/modify ->pid_allocated with
+> > >
+> > > this lock held.
+> > >
+> > > Oleg.
+> > >
+> >
+> > However, not all places that read/write pid_allocated are locked,
+> > for example:
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/kernel/pid_namespace.c#n271
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/kernel/fork.c#n2602
+> >
+> > So, in fact, the pidmap_lock is not effective. And if we were to add locks
+> > to all these places, it would be too heavy.
+> 
+> It seems you misunderstood me. I didn't argue with the lockless READ_ONCE()s
+> outside of pidmap_lock.
 
-Those patches should be applied *after* they have been tested=2E mingo kno=
-ws that but does it anyway=2E :-(
-
-This rushed patch application and hurried testing and sticking fixes ontop=
- is completely counterproductive and annoying=2E
-
---=20
-Sent from a small device: formatting sucks and brevity is inevitable=2E 
+Agreed. We should only add those annotations where they're really
+needed (someone once taught me ;).
