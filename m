@@ -1,210 +1,220 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1B21DEFC8
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8863143C69;
+	Thu, 24 Apr 2025 12:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745498235; cv=none; b=J2Ns0Q+pFoZ9SwvDS/zOaiYENsQebDjiP/C7Cs1dMi3Xl52XegYpQs2G5erd5L7HPAj2Huq1Oyg3yq7Y4dUXNZS0GxS+yW9BLw3iiSQTEdpN+FEmATPZwOk/CYV8eLfkLRfVWKk/ES7h9UjmvL0m59ZEbH53yI18A6p3SX9GmTQ=
+	t=1745498265; cv=none; b=YjBMYGC5289TsnGRWz6+4WmTWziBGrVvsuaax4sb5Lldh+5K8jiaNqUOgCkG7H0zshy1ztg90qRz3pSG1FhECR6RJ7fahmYDzmdyPeD4iaL1VM0zt/WJOlRWntJaQ2w/cEmk+ym/iqG5UDzQ5UwsbG1sjJojflw0Xu2otjX8QNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745498235; c=relaxed/simple;
-	bh=RtF0Ii7968sqtIEiSOoOHmfF6UJG7nfCpDcEL14f2h0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m2qoZvbAzFgBNTZldB+WqrUMHAoWXMt0JfHDqKda0/WL0q+zc7PmHlDoWuVnS3N9osFaA/e4xKMn28Laif6YWQmkOp4HLt61Qfdcvxu7nKJf5iaPMYbWvi4f29j6QE3idnK+aN18Q6Q3LVu4VbvpTLJ5mwbihVyrgSQv0EPSSCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=O7BVL9J0; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1745498265; c=relaxed/simple;
+	bh=bF3H3hOH42YD0B47rASRpI1vOYUHGGiQQArnmjXuqmI=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=oOkYu+dHfaVImdMcan2wbDSwcv8OulW430eDwU2k2UEN31s7GTBs4dKYGEjormZvGijrTTpLUv4UeaI7uce/l5Gnsx40Hy7Eg0E8/tYwY0gFeTkgu3OTnuUkfB4Vgu5fF7oSNTzj0Ydkx6IJaxd9Yhdq2g9fGTPsMEvpVqnXgYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GCMQmLAM; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="O7BVL9J0"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39129fc51f8so784038f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745498232; x=1746103032; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mXBQ/2qXvZB57eFvN07u42A0vH9tPCFMfppvAtJvXGM=;
-        b=O7BVL9J0y6luUTGtyNRrQ+tsxebF2HkhxkgKSpGAY7xQoaVwcq9Pl2s3BKJt3W3P7A
-         wrJ3W7zkl2iFLH74pOv6watRy0SsK1b2hLGVQ09DL5mf6HP/3DYmgiuEta3WP87Lh6PX
-         O45YZcjhvX0JMiFJJCYlKz0afof5jBVQp1rpdkIokeQ+q04Hv9VtsEIpsntNlNsaDSIG
-         tLwup6sV5AR3xtOAEckVeW479kbfQteBQSAArAnxrmpMt89rR+Gr9ofNdSb4dJ/7+7Ec
-         H25LlR8BJAEnmL5hmw18OD0qUicNhf54+438iE5w/CtZ0dj/0QoPlF3A2vbpO7sqp+Mq
-         U6WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745498232; x=1746103032;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mXBQ/2qXvZB57eFvN07u42A0vH9tPCFMfppvAtJvXGM=;
-        b=D8Ql+k8oKtUgzFXxLuAPApvP+b5eVYxY2MwTWDcRd3ZN+y4cBukDJgRDSvmpUqUUYq
-         c6VevS46XbWN1aNw2j9aVdqFr2T7nRGiOM35n08F1MwVJ4GzoMvUSaHhiESHnu3dq7EW
-         P3tKGYGaeKHwCfSSxuoK+65X+zetnZw9xwc8aBC0+nvigfGARbLosWtgSw6Le2fF3sRZ
-         thUbXFFWo84AsROzLovjATj7w/pvd6iaQeUBaNCtDtFQ8LPIlGZsa5hRe1bh/+Or5Bvi
-         rr+Ogl5mZxN5tiN9jhHvkPjjxWQBjLdP4usmo7IaucZN+Zl/7c1k+FSS2v3q8iS+gvjX
-         +pgw==
-X-Forwarded-Encrypted: i=1; AJvYcCUp1Y65AgD0e/M8FFKIRUnoi2WmW+AiTpj2KDTyfGDMWYkgPqnKXDdI/gbr97PO6mVR/joz/XZZN7hTf30=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+vjSKHWPh2pFVzE+DS9RVs8b4WjkeUorS/4v/MBYqSNuV6Beo
-	HdzU6OsuvJ4q3yd6LOwT3i8a43G19MN19RYfgfct/FyE6ti4B02A5WIB5CO7EiU=
-X-Gm-Gg: ASbGncugKH4PkYZZTx9zuc2fgSLvEzJgKS5TsjbHo+HFexjx7CA/A1XidO10I+3064n
-	T6PP9j3iiho0hQ8dI22UA9rrA5azG4he8dvNFjlNbNqT8gKcHixwaLpNwbtUyOsI/U2v5UwHDMa
-	V5Otubc3TKdNhwPHBBXLkYyu25y44Z9XrL9IhuAzb963TCKfgfWnWhYhnc3Anej6qBioebcHbr4
-	U3JTLAyjfVYYKM2f8bbZXR0UAvPe8meHR9kDvsEP3ZdlUaHIobnQvIrdVMbZGH0YzOP9kWz8P5T
-	Xoq373DyH2HXTThF4zX1aGQJlJ0Gc/Eaj6ZTM2WNCJGSuRg0SyKE4BzUf0Frl9xX4sSOocn7JE2
-	6RutH/qNEOA==
-X-Google-Smtp-Source: AGHT+IFQHcJdwFRaXmEWb0g3t5DToUnDgaUuyc1wuadZLcOAY6FK4EOtEA/saYPalIta+MsOsrAKYA==
-X-Received: by 2002:a05:6000:18a8:b0:391:241d:a13e with SMTP id ffacd0b85a97d-3a06cfab52fmr1726627f8f.48.1745498232082;
-        Thu, 24 Apr 2025 05:37:12 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d532551sm2004598f8f.65.2025.04.24.05.37.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 05:37:11 -0700 (PDT)
-Message-ID: <ddd4ba8a-27cf-4174-a578-b28961bdf1a5@rivosinc.com>
-Date: Thu, 24 Apr 2025 14:37:11 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GCMQmLAM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745498264; x=1777034264;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=bF3H3hOH42YD0B47rASRpI1vOYUHGGiQQArnmjXuqmI=;
+  b=GCMQmLAMJE2zl4rhJrDzu2Hj1fjDH63wxb5dGxE013bMsQMshw5vBrw1
+   BBitf1/vVd6oHJpdh3wkth9tlLxIO2B0gRa8zn93+grTqocu0mTV1UoCp
+   6uBDfAxKnYVwPK/LmPFYAcfWC8JFKYfhAR8LtTBHpROCvCRRwcUU76NGP
+   2A8/yVRYt91BwgtIrMBXcW9DcH03CpxmOPI2H9wh09yFYH2OeIm99ZYiU
+   3zAjFIMB/Obw/r8f5EHYYZAJ8GqopjpUt0DSg7VhIuUYS4g+lryTreapx
+   Uc9qJ5Ex61cOqsv387XwNBsKu3B64rn2H/3wLXpDU5k7sXp/DNTETHMzd
+   Q==;
+X-CSE-ConnectionGUID: HJJ5ZZteQM+/S1AB/L6THw==
+X-CSE-MsgGUID: CmUIVRf9QVe1yubzizGWAQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47222929"
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="47222929"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 05:37:43 -0700
+X-CSE-ConnectionGUID: mGXoVyZjQX26jryo/cdSMg==
+X-CSE-MsgGUID: iYQw3aeCRYyS033If6fEwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
+   d="scan'208";a="155834211"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.213])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 05:37:40 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 24 Apr 2025 15:37:38 +0300 (EEST)
+To: Lukas Wunner <lukas@wunner.de>
+cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, 
+    "Maciej W. Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN
+ flag
+In-Reply-To: <aAnOOj91-N6rwt2x@wunner.de>
+Message-ID: <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
+References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com> <aAi734h55l7g6eXH@wunner.de> <87631533-312f-fee9-384e-20a2cc69caf0@linux.intel.com> <aAnOOj91-N6rwt2x@wunner.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 13/13] RISC-V: KVM: add support for
- SBI_FWFT_MISALIGNED_DELEG
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-kselftest@vger.kernel.org, Samuel Holland <samuel.holland@sifive.com>,
- Deepak Gupta <debug@rivosinc.com>
-References: <20250417122337.547969-1-cleger@rivosinc.com>
- <20250417122337.547969-14-cleger@rivosinc.com>
- <20250424-ae24464169f7143c509cbab5@orel>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250424-ae24464169f7143c509cbab5@orel>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; BOUNDARY="8323328-2068462078-1745492541=:944"
+Content-ID: <061b0f46-dd6d-a2a0-2ff6-4d30007ca801@linux.intel.com>
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323328-2068462078-1745492541=:944
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <62369947-c1c3-1f73-2cd4-4aaf0d84bf13@linux.intel.com>
 
-On 24/04/2025 13:34, Andrew Jones wrote:
-> On Thu, Apr 17, 2025 at 02:20:00PM +0200, Clément Léger wrote:
->> SBI_FWFT_MISALIGNED_DELEG needs hedeleg to be modified to delegate
->> misaligned load/store exceptions. Save and restore it during CPU
->> load/put.
->>
->> Signed-off-by: Clément Léger <cleger@rivosinc.com>
->> Reviewed-by: Deepak Gupta <debug@rivosinc.com>
->> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
->> ---
->>  arch/riscv/kvm/vcpu.c          |  3 +++
->>  arch/riscv/kvm/vcpu_sbi_fwft.c | 36 ++++++++++++++++++++++++++++++++++
->>  2 files changed, 39 insertions(+)
->>
->> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
->> index 542747e2c7f5..d98e379945c3 100644
->> --- a/arch/riscv/kvm/vcpu.c
->> +++ b/arch/riscv/kvm/vcpu.c
->> @@ -646,6 +646,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->>  {
->>  	void *nsh;
->>  	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
->> +	struct kvm_vcpu_config *cfg = &vcpu->arch.cfg;
->>  
->>  	vcpu->cpu = -1;
->>  
->> @@ -671,6 +672,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->>  		csr->vstval = nacl_csr_read(nsh, CSR_VSTVAL);
->>  		csr->hvip = nacl_csr_read(nsh, CSR_HVIP);
->>  		csr->vsatp = nacl_csr_read(nsh, CSR_VSATP);
->> +		cfg->hedeleg = nacl_csr_read(nsh, CSR_HEDELEG);
->>  	} else {
->>  		csr->vsstatus = csr_read(CSR_VSSTATUS);
->>  		csr->vsie = csr_read(CSR_VSIE);
->> @@ -681,6 +683,7 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->>  		csr->vstval = csr_read(CSR_VSTVAL);
->>  		csr->hvip = csr_read(CSR_HVIP);
->>  		csr->vsatp = csr_read(CSR_VSATP);
->> +		cfg->hedeleg = csr_read(CSR_HEDELEG);
->>  	}
->>  }
->>  
->> diff --git a/arch/riscv/kvm/vcpu_sbi_fwft.c b/arch/riscv/kvm/vcpu_sbi_fwft.c
->> index b0f66c7bf010..237edaefa267 100644
->> --- a/arch/riscv/kvm/vcpu_sbi_fwft.c
->> +++ b/arch/riscv/kvm/vcpu_sbi_fwft.c
->> @@ -14,6 +14,8 @@
->>  #include <asm/kvm_vcpu_sbi.h>
->>  #include <asm/kvm_vcpu_sbi_fwft.h>
->>  
->> +#define MIS_DELEG (BIT_ULL(EXC_LOAD_MISALIGNED) | BIT_ULL(EXC_STORE_MISALIGNED))
->> +
->>  struct kvm_sbi_fwft_feature {
->>  	/**
->>  	 * @id: Feature ID
->> @@ -68,7 +70,41 @@ static bool kvm_fwft_is_defined_feature(enum sbi_fwft_feature_t feature)
->>  	return false;
->>  }
->>  
->> +static bool kvm_sbi_fwft_misaligned_delegation_supported(struct kvm_vcpu *vcpu)
->> +{
->> +	return misaligned_traps_can_delegate();
->> +}
->> +
->> +static long kvm_sbi_fwft_set_misaligned_delegation(struct kvm_vcpu *vcpu,
->> +					struct kvm_sbi_fwft_config *conf,
->> +					unsigned long value)
->> +{
->> +	if (value == 1)
->> +		csr_set(CSR_HEDELEG, MIS_DELEG);
->> +	else if (value == 0)
->> +		csr_clear(CSR_HEDELEG, MIS_DELEG);
->> +	else
->> +		return SBI_ERR_INVALID_PARAM;
->> +
->> +	return SBI_SUCCESS;
->> +}
->> +
->> +static long kvm_sbi_fwft_get_misaligned_delegation(struct kvm_vcpu *vcpu,
->> +					struct kvm_sbi_fwft_config *conf,
->> +					unsigned long *value)
->> +{
->> +	*value = (csr_read(CSR_HEDELEG) & MIS_DELEG) != 0;
-> 
-> This should be
-> 
->   (csr_read(CSR_HEDELEG) & MIS_DELEG) == MIS_DELEG;
+On Thu, 24 Apr 2025, Lukas Wunner wrote:
 
-Hum yeah indeed, I didn't thought that someone would ony delegate load
-or stores.
+> On Wed, Apr 23, 2025 at 02:37:11PM +0300, Ilpo J=E4rvinen wrote:
+> > On Wed, 23 Apr 2025, Lukas Wunner wrote:
+> > > On Tue, Apr 22, 2025 at 02:55:47PM +0300, Ilpo J=E4rvinen wrote:
+> > > > +void pcie_reset_lbms(struct pci_dev *port)
+> > > >  {
+> > > > -=09struct pcie_bwctrl_data *data;
+> > > > -
+> > > > -=09guard(rwsem_read)(&pcie_bwctrl_lbms_rwsem);
+> > > > -=09data =3D port->link_bwctrl;
+> > > > -=09if (data)
+> > > > -=09=09atomic_set(&data->lbms_count, 0);
+> > > > -=09else
+> > > > -=09=09pcie_capability_write_word(port, PCI_EXP_LNKSTA,
+> > > > -=09=09=09=09=09   PCI_EXP_LNKSTA_LBMS);
+> > > > +=09clear_bit(PCI_LINK_LBMS_SEEN, &port->priv_flags);
+> > > > +=09pcie_capability_write_word(port, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA=
+_LBMS);
+> > > >  }
+> > >=20
+> > > Hm, previously the LBMS bit was only cleared in the Link Status regis=
+ter
+> > > if the bandwith controller hadn't probed yet.  Now it's cleared
+> > > unconditionally.  I'm wondering if this changes the logic somehow?
+> >=20
+> > Hmm, that's a good question and I hadn't thought all the implications.
+> > I suppose leaving if (!port->link_bwctrl) there would retain the existi=
+ng=20
+> > behavior better allowing bwctrl to pick the link speed changes more=20
+> > reliably.
+>=20
+> I think the only potential issue with clearing the LBMS bit in the regist=
+er
+> is that the bandwidth controller's irq handler won't see the bit and may
+> return with IRQ_NONE.
+>=20
+> However, looking at the callers of pcie_reset_lbms(), that doesn't seem
+> to be a real issue.  There are only two of them:
+>=20
+> - pcie_retrain_link() calls the function after the link was retrained.
+>   I guess the LBMS bit in the register may be set as a side-effect of
+>   the link retraining?
 
-I'll fix that,
+Retraining does set LBMS, whether the speed was same before doesn't=20
+matter. I think it's because LTSSM-wise, retraining transitions through=20
+Recovery.
+=20
+(I don't know why, but in most tests I've done LBMS is actually asserted=20
+not only once but twice with only one Link Retraining event).
 
-Thanks,
+>   The only concern here is whether the cached
+>   link speed is updated.  pcie_bwctrl_change_speed() does call
+>   pcie_update_link_speed() after calling pcie_retrain_link(), so that
+>   looks fine.  But there's a second caller of pcie_retrain_link():
+>   pcie_aspm_configure_common_clock().  It doesn't update the cached
+>   link speed after calling pcie_retrain_link().  Not sure if this can
+>   lead to a change in link speed and therefore the cached link speed
+>   should be updated?  The Target Link Speed isn't changed, but maybe
+>   the link fails to retrain to the same speed for electrical reasons?
 
-Clément
+I've never seen that to happen but it would seem odd if that is forbidden=
+=20
+(as the alternative is probably that the link remains down).
 
-> 
->> +
->> +	return SBI_SUCCESS;
->> +}
->> +
->>  static const struct kvm_sbi_fwft_feature features[] = {
->> +	{
->> +		.id = SBI_FWFT_MISALIGNED_EXC_DELEG,
->> +		.supported = kvm_sbi_fwft_misaligned_delegation_supported,
->> +		.set = kvm_sbi_fwft_set_misaligned_delegation,
->> +		.get = kvm_sbi_fwft_get_misaligned_delegation,
->> +	},
->>  };
->>  
->>  static struct kvm_sbi_fwft_config *
->> -- 
->> 2.49.0
->>
-> 
+Perhaps pcie_reset_lbms() should just call pcie_update_link_speed() as the=
+=20
+last step, then the irq handler returning IRQ_NONE doesn't matter.
+
+> - pciehp's remove_board() calls the function after bringing down the slot
+>   to avoid a stale PCI_LINK_LBMS_SEEN flag.  No real harm in clearing the
+>   bit in the register at this point I guess.  But I do wonder, is the lin=
+k
+>   speed updated somewhere when a new board is added?  The replacement
+>   device may not support the same speeds as the previous device.
+
+The supported speeds are always recalculated using dev->supported_speeds.=
+=20
+A new board implies a new pci_dev structure with newly read supported=20
+speeds. Also, bringing the link up with the replacement device will also=20
+trigger LBMS so the new Link Speed should be picked up by that.
+
+Racing LBMS reset from remove_board() with LBMS due to the replacement=20
+board shouldn't result in stale Link Speed because of:
+
+board_added()
+  pciehp_check_link_status()
+    __pcie_update_link_speed()
+
+> > Given this flag is only for the purposes of the quirk, it seems very mu=
+ch=20
+> > out of proportions.
+>=20
+> Yes, let's try to minimize the amount of locking, flags and code to suppo=
+rt
+> the quirk.  Keep it as simple as possible.  So in that sense, the solutio=
+n
+> you've chosen is probably fine.
+>=20
+>=20
+> > > >  static bool pcie_lbms_seen(struct pci_dev *dev, u16 lnksta)
+> > > >  {
+> > > > -=09unsigned long count;
+> > > > -=09int ret;
+> > > > -
+> > > > -=09ret =3D pcie_lbms_count(dev, &count);
+> > > > -=09if (ret < 0)
+> > > > -=09=09return lnksta & PCI_EXP_LNKSTA_LBMS;
+> > > > +=09if (test_bit(PCI_LINK_LBMS_SEEN, &dev->priv_flags))
+> > > > +=09=09return true;
+> > > > =20
+> > > > -=09return count > 0;
+> > > > +=09return lnksta & PCI_EXP_LNKSTA_LBMS;
+> > > >  }
+> > >=20
+> > > Another small logic change here:  Previously pcie_lbms_count()
+> > > returned a negative value if the bandwidth controller hadn't
+> > > probed yet or wasn't compiled into the kernel.
+> > > Only in those two cases was the LBMS flag in the lnksta variable=20
+> > > returned.
+> > >=20
+> > > Now the LBMS flag is also returned if the bandwidth controller
+> > > is compiled into the kernel and has probed, but its irq handler
+> > > hasn't recorded a seen LBMS bit yet.
+> > >=20
+> > > I'm guessing this can happen if the quirk races with the irq
+> > > handler and wins the race, so this safety net is needed?
+> >=20
+> > The main reason why this check is here is for the boot when bwctrl is n=
+ot=20
+> > yet probed when the quirk runs. But the check just seems harmless, or=
+=20
+> > even somewhat useful, in the case when bwctrl has already probed. LBMS=
+=20
+> > being asserted should result in PCI_LINK_LBMS_SEEN even if the irq=20
+> > handler has not yet done its job to transfer it into priv_flags.
+>=20
+> Okay I'm convinced that the logic change in pcie_lbms_seen() is fine.
+>=20
 > Thanks,
-> drew
+>=20
+> Lukas
+>=20
 
+--=20
+ i.
+--8323328-2068462078-1745492541=:944--
