@@ -1,118 +1,98 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D164127B4F1;
-	Thu, 24 Apr 2025 12:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF872143C69;
+	Thu, 24 Apr 2025 12:41:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745498399; cv=none; b=SoK0v//hYYPqdONzmVquUFLb5Q7UQK1iObSpyrXTh8ZT4CF/Bf2wU7APNSYepsXX8DlyoFFWsL66/ZE7aFqeFwmoxLjZLiwkyeIJyJIyK99Rwu595dgZqTUc4ftYPfXD59j65WHbgw0gVyvfDKyNhHkaEtlTz5X2iLo7Jw53mTk=
+	t=1745498471; cv=none; b=koW69w6BpGf/wB0s7p3lw+b4sXpWoVYA0+EbnW2EdUcaD2jz2IDevvZLYm+CljHvy1UahSgrFKe1DJPEgXVl2EMsifTmcyVr45BVqLsuapML/Lb7sm5tnpHjSrp0EQsBT1aSuSt2GPKM58OjA/EcVZdRESqdbsIln4DrdQvF/hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745498399; c=relaxed/simple;
-	bh=GL49SwagciBhjZAgGvJsSCEwYTAcOPyR2cVZwCzteR4=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=nZ0uNy0p0HL78OpR1eGrecJN+leqXLUwtBSnhLElxfTkIb7KvbBs6+cjpTMQcSNQs6GLMZm3z0jEUJ50wrYnvCJdSpg65+5AV+oEU2zzh7IzsUDeS16BTbM5dPZjCVBhmhkUoqUrtbZt6Or2ldshLRDsW3patzL7ggMAjbjoygs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VqOX2bLW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xLES6g2y; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VqOX2bLW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xLES6g2y"
-Date: Thu, 24 Apr 2025 12:39:54 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745498395;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j4K2QztoPtPnIxSPMSBlWDGSgEtOt16Y2wtVdjYyRAk=;
-	b=VqOX2bLW8057P6wf1BREb1CndzVE/O2xfzitVrfUoHn3zh0ONqLHQqOaDg2CxtG3dd9cGQ
-	guA8CnMxEn3isHjkmW3ZIGhjBJBogB/DC0Rg+xwAFiEh7q01ao9q6OnGYkSUGFb2dgmYG5
-	M3VykSLgjTP4UqAQBzD1cDjonJzJ5VroYpN8IcLR5jS5+gGH7PDEdDXeU2EoV9mcdtQ1tG
-	xqXPrKb1hCvNl6sIPMCqfnRohMAOZP3IUlOPoXkcqFo2xo3/gapybzZG+CbvHY2BCOasS4
-	ZrsFw3UjmQmmYJZ9ur1mUV6PYWke2FmaDe6UHJUBKBm7F9X24SEsuPP2SJZUvQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745498395;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=j4K2QztoPtPnIxSPMSBlWDGSgEtOt16Y2wtVdjYyRAk=;
-	b=xLES6g2yF0e9hvEkdFLxtoGWoK4XfA7KBON/Ox6lC+scssGv2BtskYE7Y7jZ93enVHcTEO
-	g71PkBa54DR7fPBA==
-From: "tip-bot2 for Suzuki K Poulose" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/gic-v2m: Prevent use after free of
- gicv2m_get_fwnode()
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
- Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <maz@kernel.org>,
- linux-stable@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <68053cf43bb54_7205294cc@dwillia2-xfh.jf.intel.com.notmuch>
-References: <68053cf43bb54_7205294cc@dwillia2-xfh.jf.intel.com.notmuch>
+	s=arc-20240116; t=1745498471; c=relaxed/simple;
+	bh=3vzDDu7OwP6S6+fBr+nhlCKhneY3lwT02jKazU0DDI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=buL3pkm1l2oHhgf5WzxOkI9C6S8kW6j1r/GStkCEFOXdCAb2K3bZ7+CH4oBY4QPu+C+DrGFcqOFs1LWOWQO7rcdiz/M3xxDkJck7gLl6jR7iC250JeI/eOjq/cPYcs4zC4M9HXUPGruhZIEoGMcN+UWQrozfEezGtUv+KNdzIlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 569A51063;
+	Thu, 24 Apr 2025 05:41:04 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F21163F59E;
+	Thu, 24 Apr 2025 05:41:06 -0700 (PDT)
+Date: Thu, 24 Apr 2025 13:41:04 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu
+ Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
+ Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, Andrew
+ Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
+ board
+Message-ID: <20250424134104.18031a70@donnerap.manchester.arm.com>
+In-Reply-To: <835b58a3-82a0-489e-a80f-dcbdb70f6f8d@lunn.ch>
+References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
+	<20250423-01-sun55i-emac0-v1-4-46ee4c855e0a@gentoo.org>
+	<aa38baed-f528-4650-9e06-e7a76c25ec89@lunn.ch>
+	<20250424014120.0d66bd85@minigeek.lan>
+	<835b58a3-82a0-489e-a80f-dcbdb70f6f8d@lunn.ch>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174549839417.31282.16646755501789289739.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the irq/urgent branch of tip:
+On Thu, 24 Apr 2025 14:16:16 +0200
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-Commit-ID:     be5413232123b7700df856cbfd20cfa528b4f132
-Gitweb:        https://git.kernel.org/tip/be5413232123b7700df856cbfd20cfa528b4f132
-Author:        Suzuki K Poulose <suzuki.poulose@arm.com>
-AuthorDate:    Tue, 22 Apr 2025 17:16:16 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 24 Apr 2025 14:28:52 +02:00
+> On Thu, Apr 24, 2025 at 01:42:41AM +0100, Andre Przywara wrote:
+> > On Wed, 23 Apr 2025 18:58:37 +0200
+> > Andrew Lunn <andrew@lunn.ch> wrote:
+> > 
+> > Hi,
+> >   
+> > > > +&emac0 {
+> > > > +	phy-mode = "rgmii";    
+> > > 
+> > > Does the PCB have extra long clock lines in order to provide the
+> > > needed 2ns delay? I guess not, so this should be rgmii-id.  
+> > 
+> > That's a good point, and it probably true.
+> >   
+> > >   
+> > > > +	phy-handle = <&ext_rgmii_phy>;
+> > > > +
+> > > > +	allwinner,tx-delay-ps = <300>;
+> > > > +	allwinner,rx-delay-ps = <400>;    
+> > > 
+> > > These are rather low delays, since the standard requires 2ns. Anyway,
+> > > once you change phy-mode, you probably don't need these.  
+> > 
+> > Those go on top of the main 2ns delay  
+> 
+> Which 2ns delay? "rgmii" means don't add 2ns delay, the PCB is doing
+> it. So if there is a 2ns delay, something is broken by not respecting
+> "rgmii".
+> 
+> > I just tried, it also works with some variations of those values, but
+> > setting tx-delay to 0 stops communication.  
+> 
+> Just to be clear, you tried it with "rgmii-id" and the same <300> and
+> <400> values?
 
-irqchip/gic-v2m: Prevent use after free of gicv2m_get_fwnode()
+Yes, sorry, I wasn't clear: I used rgmii-id, then experimented with those
+values. I briefly tried "rgmii", and I couldn't get a lease, so I quite
+confident it's rgmii-id, as you said. The vendor DTs just use "rgmii", but
+they might hack the delay up another way (and I cannot be asked to look at
+that awful code).
 
-With ACPI in place, gicv2m_get_fwnode() is registered with the pci
-subsystem as pci_msi_get_fwnode_cb(), which may get invoked at runtime
-during a PCI host bridge probe. But, the call back is wrongly marked as
-__init, causing it to be freed, while being registered with the PCI
-subsystem and could trigger:
-
- Unable to handle kernel paging request at virtual address ffff8000816c0400
-  gicv2m_get_fwnode+0x0/0x58 (P)
-  pci_set_bus_msi_domain+0x74/0x88
-  pci_register_host_bridge+0x194/0x548
-
-This is easily reproducible on a Juno board with ACPI boot.
-
-Retain the function for later use. 
-
-Fixes: 0644b3daca28 ("irqchip/gic-v2m: acpi: Introducing GICv2m ACPI support")
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Cc: linux-stable@vger.kernel.org
-Link: https://lkml.kernel.org/all/20250422161616.1584405-1-suzuki.poulose@arm.com
-Link: https://lkml.kernel.org/r/68053cf43bb54_7205294cc@dwillia2-xfh.jf.intel.com.notmuch
----
- drivers/irqchip/irq-gic-v2m.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/irqchip/irq-gic-v2m.c b/drivers/irqchip/irq-gic-v2m.c
-index c698948..dc98c39 100644
---- a/drivers/irqchip/irq-gic-v2m.c
-+++ b/drivers/irqchip/irq-gic-v2m.c
-@@ -421,7 +421,7 @@ static int __init gicv2m_of_init(struct fwnode_handle *parent_handle,
- #ifdef CONFIG_ACPI
- static int acpi_num_msi;
- 
--static __init struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
-+static struct fwnode_handle *gicv2m_get_fwnode(struct device *dev)
- {
- 	struct v2m_data *data;
- 
+Cheers,
+Andre
