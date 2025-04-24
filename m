@@ -1,73 +1,74 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 115E52701AA
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28CD207A2B
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487030; cv=none; b=BV/LxWqODQhv05z4sDR+hOT7bmBpNVvwQ95tKVXQiiaGGLFzETO6ynNWj9lgXyFHSA+DlTgpjj7Ppfs80VPq7dV1eCFpGfLAcX0PuJJDlIlI/OnySjw+pR2X/XbcifJDeIENwK319FSqNIc1YIM9tDnotiWLxyBj4aEYpgH5S8M=
+	t=1745487034; cv=none; b=ZKPj0xqdpxZ+qqEn9Utw6KsmjvWrsejjkDDdhT+Xo9rQ4fUqkoeiTdlhhTWpQX7qdib6gxhNzrXFmyborEuozVm2zYawW7xADcCUHAyZc7T6CKspRPC9+KbUxEIToRKjGATnB5HXb4bJ6qPM/UkQldygUXSBJhS0TwNJlGkDVko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487030; c=relaxed/simple;
-	bh=JiostKcDkuFpLVkmdxK7KpMiLzBVDWiqnJ02K1ix9Zw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PJqE7nPEvXuJBIR94lxzYxEWnu8a9v+oH2NMX7VU++APKWP5zyb2XAMIIdi1CoaDui29bKknDqzT5TkmC/W6s+JGYg0r1AyaIRsj2z5z+Y5QrGB6NLSGL9GxIS66MEp4gUUh1KPsxWiQMxsLqR04OVSuInChZAiJU7/Fu8AOmYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MH9YFkf2; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1745487034; c=relaxed/simple;
+	bh=F7g9BzAAbozmHaA6qYlbtrmbTeJi2EDpYk1ZIzA3gYs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=nHPhAnpM+tMCfJobKlZ0JTSugL9x6vWNdNt7gGrUkhQyZ7SVLSFGGkO5zo7jS/+8fJk9zuQnGdDshFF3EqB6I3OSY4GUfVQflmZyWuBTXFcOKCUCeutm6VRYsK/+9KOIMLVxzM4uKKJFQEu0VsrVB+9SLg/J7P0af45V+Ew1lYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WbROGqVF; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MH9YFkf2"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F6El016968
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:27 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WbROGqVF"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F8DZ010276
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=mdFKARTvqJRU85VFGASTX/
-	BrjRGA7KGz7eyZkROJh74=; b=MH9YFkf2PNBe1nCT64lYHUMC94AgftSO+8aaz5
-	ysRVGD9YRrBvM89V/7o5eiGq0CWxJmwQARgAgdMO9Gx/slZUP3iiEQAvSQ00bCZk
-	gJXOSoh5h2qvRA5trcj8OQT/jM151RQB3u+9plb6S+06J30Zez5ilSrPT8xn/NEG
-	REsKn+by/DDB4TC1/HiWnID+XChlxKXwy9RN8iQ2Tz1LO8Xxf2c3JSuZa1Jb3dkr
-	0gLLCwhEUV3b1AajpyrrQ7nD6/tQRmrg3LA+VpWekKkpC/SX26RujJPbX/DJZIeV
-	yobjD6GSLKltH5CZtuPM9rOv2UgCKZxrWPLkNaKEb34hSdwQ==
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	yyPCpdExNHYyCfka5wJ1DgOakGmSWlxEKnN0dB+rNyA=; b=WbROGqVFtURaoPkN
+	ygMGXjhv6pg9g7Synyob1P3lBLQWdMdvpapaV9zrO8NAQR7Zj3T7jkiYIFAHKn4I
+	whM5KuXGXa2nLI88y+spPYIczCTQSsmIbAMfSa5bzCEA0CIcm+NwBsDmk5izQ5g1
+	huMROmEUqlsHpxl8wszj4t5Fq9PSfMm0D9bxkr58RyPAGsMjL0hT/7DdMZPxNDFv
+	5ZLV8Cl68OoFqZm8JVvrTNRDgWJHl5vKUGeJBUpA7BCrnq0YozvAUe4i1mnM3GyA
+	woGzxE2TK2ns7xTGp8KO5orjLkUgMFghbbCq4rPJ+Ehx8mVA81RS6y2ynj5g52Ir
+	hOAuZQ==
 Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh14y25-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3mym2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:27 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c790dc38b4so151354885a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:30:27 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:31 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5f3b8b1a1so128915085a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:30:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745487027; x=1746091827;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mdFKARTvqJRU85VFGASTX/BrjRGA7KGz7eyZkROJh74=;
-        b=koUT+2YXofdgp0F3df9oHfgqtRddhBA0oWrph2RHUbqovhbYrCnIt5JAsK++pBtBA5
-         8iVybbfUmZkn4+oiBa9mjiF+z5ajDSL9jENKLOMQlaluoak/ZE0RyjZMro4odxJ/rkcX
-         5nqLqjOJcuMH32TJabGy2kPk6SrAi11/b8hpVonrro4ZSu1HV8TlePi9CJR74MXZw8FD
-         7hdggh8xdhePx6MKQsQwcbU9jUkZmdICgQ+wjV1JJ/14Iv3MCSvOj+AeQ+erJ+oYQW3O
-         mE0PRW9pofAIgfNU/KKkrS72D/XlSvr9h8tvqUacaL2odKpi60jgaMfCt5iUKPiz3Zxh
-         CMIg==
-X-Forwarded-Encrypted: i=1; AJvYcCULMN49nkGQ7q94C6l6XUcvOZlJGw47xMTlLUB9YldcmT4JhrtIeETnee3iR8C8yUtLhXeR/TLduFtFUGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJr+HYe6Z6FfdK8bqC/mAQY9Mg0sHb1hTz50dyfq9zblrrlTV6
-	F0JE9enOrT78SzRdqSYcsMEwhs6jaEJbNqvZNI2KU1OxiBLsgwdKP+5TzHVHEAoh9Nt4B69YJyW
-	y8kAwUFAdQVtvPrYgOkvwWbjyAEN0vLWw9Uoslpdwl2tJU7gfu3/F/uW3ObkWkEo=
-X-Gm-Gg: ASbGncstOo8D44T41XtzWdccn7Th2td4ZQsWHf2U8WnCzu328/i1PfU5nsHVMIt9rM9
-	c3cZw9k+VwL8T1MpeBWq3syx6yqGXJlRwNcpG2JYgYVDmXHchJIRPnbL80NKhLM5MeLUOM5hHt2
-	5wifyutysPxmWB8mU5ZC93MmK6F9vUJzOMRM4bXcdQ8aYG7DTNtY+Eb2iVaHFO8MPyO/8ohGRPx
-	Y0FIWzOtiK/bMsX4xFE4vfDxV/s9TcUvBpMglIszfQKZxRS4nzqPqQxBSuHA8w7ThptTqCZYiUo
-	LanebzhSdzKavvOOdPoBGkVo4jgUrdl4CH5J2dSS4ILPV6kQ/bE1UYfZYHbSeYq3j/wDL+/UyUw
-	U2Rh6n5O0TRWL+e3THRPMf364
-X-Received: by 2002:a05:620a:d8d:b0:7c2:3f1f:1a15 with SMTP id af79cd13be357-7c9585c3627mr231813285a.8.1745487026890;
-        Thu, 24 Apr 2025 02:30:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFi+hIk13tP7X3JFysQYRZL9wzlB0PYuK3MY4tcZkB00aOZ+nhueoTS5+WGo2UG0/XyfGtNZw==
-X-Received: by 2002:a05:620a:d8d:b0:7c2:3f1f:1a15 with SMTP id af79cd13be357-7c9585c3627mr231808085a.8.1745487026402;
-        Thu, 24 Apr 2025 02:30:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745487031; x=1746091831;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yyPCpdExNHYyCfka5wJ1DgOakGmSWlxEKnN0dB+rNyA=;
+        b=eKtgx+j1ghwyZvOgZytmF9hkxKumeaRurYYDHPKYa5UfC/4Hq7KAYPmGmqC8WKjM1v
+         1vbWne7j8Y4j3d1bNrwiMS3ZPSts6AUSkh0vcQf+Y9VZBTLt2sGbShwyHHWfsTCewMSc
+         ijKG6SX5CsW2jJK2EbLu1HScEwInXoFKhn0xmeCLL8JoktK9YnIj+w8HRF4mcl5CRT+O
+         t0ZwQpwQuc6a86mZ88Gq0GMien3gzCI4Lvo/Yqcm8aSfxP6DkN1v1XJtkMIcIX9A3pOC
+         w0rOLZ1LpPvi274LOEGuBjs5rFKoTvCcCtNNkU6jdfkbC4jHBV4SLqAxqWEDGNC4j0L8
+         7fng==
+X-Forwarded-Encrypted: i=1; AJvYcCWd74AuHn4y34Gkkn/ffj2sWUjse6YN88+ujfctwPd9O+iD8KwvvbW2SDU7hBMm0LG3A8MVQhFlcc0AVes=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHFumO+cNsYXOs15t0XixSVnqk5/Mofa5HGruy7OxgtwPz6nIR
+	y3OhDnanQO942C6O4nZDbDCuQwnYINBTLAyiimANccqNnzjkxl2FKnbffEeJNWmXRwl0I5XGKlv
+	XsVj+zAe7QzMj3l+mGa4vAlPlB29vf5JIzSM3cowUs5E4gySKvcSo8bLVD+wddCs=
+X-Gm-Gg: ASbGnctuY3YczvHM+DzxkTFlAaMlGOKupBmOLU69Ic6wbnoAEVZfYc2kc96iM4l5jyJ
+	eHZwADwLmc1BRgB9xvesLYxyTW9K8W9soLMi6bl2ZZSG8Er80EKsT+bVRJ7S3qz5A0IiEleu9/L
+	bs5XBkYaTXIP4xUs0ObFB7VoDXxgpe8tKe1GPmwdcdzsFA4GIrQgSgwIuNKRJYUrGt72ziWUMDG
+	wUWeOyLExYtExPrupWBvnkkbOdkx3jEwCxo0aFP0nR84Q5FUf4ZB+uW2UYyKTF+ZV1rHKSOMGPM
+	G/hoxwQIwp2ef3Fz2gx59BIJPK1JaAvvr0ABoDb5tfm6/KB0V/jCoVz/HC6178EzTajf4jwyrZt
+	KxC4U03aqvNHFNpSDnH9HqYWE
+X-Received: by 2002:a05:620a:240c:b0:7c8:b141:29a with SMTP id af79cd13be357-7c956f434e9mr295633185a.53.1745487030631;
+        Thu, 24 Apr 2025 02:30:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEx9uaadwaX8bJYGxUDegggO2ScWj1v+mzcXVJ3LgUY++bid1Lg/SAxfptX6bTexPiMslZnTA==
+X-Received: by 2002:a05:620a:240c:b0:7c8:b141:29a with SMTP id af79cd13be357-7c956f434e9mr295629685a.53.1745487030283;
+        Thu, 24 Apr 2025 02:30:30 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b9a304sm1820461fa.99.2025.04.24.02.30.25
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b9a304sm1820461fa.99.2025.04.24.02.30.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 02:30:25 -0700 (PDT)
+        Thu, 24 Apr 2025 02:30:29 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Subject: [PATCH v3 00/33] drm/msm/dpu: rework HW block feature handling
-Date: Thu, 24 Apr 2025 12:30:04 +0300
-Message-Id: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
+Date: Thu, 24 Apr 2025 12:30:07 +0300
+Subject: [PATCH v3 03/33] drm/msm/dpu: inline _setup_ctl_ops()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,11 +77,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJwECmgC/23NSwqDMBCA4atI1o3kYaN25T2Ki5iMGlBjEw0t4
- t0bBXduBv6B+WZDHpwBj17JhhwE442dYvBHglQvpw6w0bERIyyjjHKs5xVrZ2fcglxWBx7ngnC
- tOAAtShTvZget+Z7mu47dG79Y9ztfBHpsLy270QLFBJdF0RIhmGpyqAYzSWdT6zp0cIFdxJNk7
- JZgkSCylELIvOGSVdb79LPKQdlxTONA9b7vf9f6s/v8AAAA
-X-Change-ID: 20241213-dpu-drop-features-7603dc3ee189
+Message-Id: <20250424-dpu-drop-features-v3-3-cdaca81d356f@oss.qualcomm.com>
+References: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
+In-Reply-To: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
         Sean Paul <sean@poorly.run>,
         Marijn Suijten <marijn.suijten@somainline.org>,
@@ -90,147 +89,162 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6188;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5798;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=JiostKcDkuFpLVkmdxK7KpMiLzBVDWiqnJ02K1ix9Zw=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCgSpodNnZJlAQgkh/BQjO+u7z3laPoN93JfS0
- 8WDe4JNGh2JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAoEqQAKCRCLPIo+Aiko
- 1dJEB/9AAt/j8uVEKrAglDLjeuHt49Lp/OZwd2I6iRCvII6no5twwQZPXOt8iV3UBbG0EX56+Xw
- tZliLyVS5xQUh81mBdVopL8VpjrWQ/LUI1e+61qm6iHwUh5n1PAVhK89djM1UkMpOjQi0jljdDm
- MgTViTwylecK7eXZtEAdlv2nWhcQ4uucgofk7hnjTybB1Xl0HExsBoUDG729fLTqz1wTfUd23ZS
- 5QGcPWfQqbMbmQXr+osTEIbETws7m94p79F84sLLFx2zUaaO49kJhKBNQAfdZzg+an3mZxbzQXC
- fS9Grki2yAjYHHzs2ahEksXgzr6Jv+NV8FeEU+C8P07iFz2z
+ bh=6nM57vgHQs62/wjwRtInuGG9vKrODBr++a+KVt2bcP8=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCgSqaDbO1cyuYOI8GY2KGOace+EMYeHMZnN4M
+ 8YTpevhqVKJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAoEqgAKCRCLPIo+Aiko
+ 1ZzKCACc/Fqq3vdDRKnSwfbFcgQLxFyD9c/N04fCkEkisVRf1/kEa4lDji6r27tOe0LWjEAj7eG
+ P+VqwUVMg9mNZmvpeWfRfnYcX60FxVk6WyiAocC3uh+WQco8rtSBtHALHqz4g/w1UKYsu+QLtXE
+ LxQbEPx+5PJ+MOTz9XrcX7S1lp7PvafCYFDWW7DxJNl9hOxwehH3/0fVR+BLbrBb2g3dRAVHHAJ
+ w+Uk5G9fN/NtZATLDFOzJ3+4HxVD15GSqCY1YmhXeEx5feUZSUKYF+GKYHA1r0aLKrTBtzaDYU7
+ SMzVcqzF+eX7lrmMR6Flji9l2BH4LBken36gXJqA0pd3aonX
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-GUID: jh4_Ov5yvBTTIj_XjGmJiSg18M3Rc1pe
-X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=680a04b3 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=t8tNeZB39Io7CcBQPAcA:9 a=QEXdDO2ut3YA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: jh4_Ov5yvBTTIj_XjGmJiSg18M3Rc1pe
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MiBTYWx0ZWRfX6r99pLQR7Y3l WchHoHeYm32ShW6Yyx1e2JwcuWgvxNRs5Cv+zWJmbj0FX1IahzkC4Que53+2SgTYa9etTsRzCdR D+bDkcXblJBQjWzUUKifucw/VA+KYJ22tWJDNUq8Ha7raAPDBXrxkrugNWU/MSYPkS5Xv7RHpr7
- BTtu6UU87DQHSpL/Bb5pPqn6IqOo4Gn4r/0k25xkB5dDdZz9rirnzoq1BsDL8PCy2FNMhGS5dgf xiJXiGL0AoJM5pCMSHdwHC8Fh6sERimaqmGCg8nWSDXbxb4NvmUNEVH85oO+U/rytyl+ZadYWg1 QUnfKoIAcfbw4UaEQLfWhXu02lRCJP3K8DDX42Jtlg1x1yfZSG0w8yGOxuwA9+75WlNCUwfUMoP
- pxrAq1YDDlKmdKODVc4LZhP0mYFWIKSvJyRQHWqFMWUtPa1BPtUvfUv4jqk1bIK/Vn9/QMEA
+X-Proofpoint-ORIG-GUID: _sIIIepx7x3myGTssBVPiNlXPBW0G4TA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MiBTYWx0ZWRfX/eceCr9gEacg AbeGYy2Qn5K8oWrSAOe5r7AIOCaj0DwqEmZIOdI7j+9gFb9fG+SKVQoFyUSrnPE7gQTueglsbry 4hoTimcAcPcwg/DKi5Wm/6KLCpYJ3PhE/XF9Y/gWJi7+u4PIAPzubyeW4y9RG5rKJj7zTcptKSq
+ sXjJn87E1OIp2JG7RP4OT+txkUlDmOXfA9jmpDGCt1kflJNhTMT+ZNv9h5sFZvK+vsK/w302aMh SoAsv7Vxlb2HqqepesXC/OH7niS/4G6xjpjs00Dff2o/00UVQa8YtEnptl5zMSNTuewuw5x9mkL +J01I/rmVV48legj5QQNcdE6xWinwUryQRB3ef00R1l7yn6jRdmdeVzN/iz+4u0KzAgEmw9Da0s
+ lSLCMwPDvYYYt42EnCtaZ0YiUVFxAwX52AdnWuFqrnule++SAc4WVv2xnpPgvwBFffRgSQKq
+X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=680a04b7 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=RpF703knbOfOEe3tTfUA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: _sIIIepx7x3myGTssBVPiNlXPBW0G4TA
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
- mlxlogscore=999 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504240062
 
-Some time ago we started the process of converting HW blocks to use
-revision-based checks instead of having feature bits (which are easy to
-miss or to set incorrectly). Then the process of such a conversion was
-postponed. (Mostly) finish the conversion. The only blocks which still
-have feature bits are SSPP, WB and VBIF. In the rare cases where
-behaviour actually differs from platform to platform (or from block to
-block) use unsigned long bitfields, they have simpler syntax to be
-checked and don't involve test_bit() invocation.
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Inline the _setup_ctl_ops() function, it makes it easier to handle
+different conditions involving CTL configuration.
+
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
-Changes in v3:
-- Repost, fixing email/author issues caused by b4 / mailmap interaction
-- Link to v2: https://lore.kernel.org/r/20250424-dpu-drop-features-v2-0-0a9a66a7b3a2@oss.qualcomm.com
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c | 98 ++++++++++++++----------------
+ 1 file changed, 47 insertions(+), 51 deletions(-)
 
-Changes in v2:
-- Rebased on top of the current msm-next
-- Link to v1: https://lore.kernel.org/r/20241214-dpu-drop-features-v1-0-988f0662cb7e@linaro.org
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+index 411a7cf088eb72f856940c09b0af9e108ccade4b..466bfee3db52d980877a5cdc4eeb739cae250afc 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
+@@ -714,56 +714,6 @@ static void dpu_hw_ctl_set_fetch_pipe_active(struct dpu_hw_ctl *ctx,
+ 	DPU_REG_WRITE(&ctx->hw, CTL_FETCH_PIPE_ACTIVE, val);
+ }
+ 
+-static void _setup_ctl_ops(struct dpu_hw_ctl_ops *ops,
+-		unsigned long cap)
+-{
+-	if (cap & BIT(DPU_CTL_ACTIVE_CFG)) {
+-		ops->trigger_flush = dpu_hw_ctl_trigger_flush_v1;
+-		ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
+-		ops->reset_intf_cfg = dpu_hw_ctl_reset_intf_cfg_v1;
+-		ops->update_pending_flush_intf =
+-			dpu_hw_ctl_update_pending_flush_intf_v1;
+-
+-		ops->update_pending_flush_periph =
+-			dpu_hw_ctl_update_pending_flush_periph_v1;
+-
+-		ops->update_pending_flush_merge_3d =
+-			dpu_hw_ctl_update_pending_flush_merge_3d_v1;
+-		ops->update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb_v1;
+-		ops->update_pending_flush_cwb = dpu_hw_ctl_update_pending_flush_cwb_v1;
+-		ops->update_pending_flush_dsc =
+-			dpu_hw_ctl_update_pending_flush_dsc_v1;
+-		ops->update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm_v1;
+-	} else {
+-		ops->trigger_flush = dpu_hw_ctl_trigger_flush;
+-		ops->setup_intf_cfg = dpu_hw_ctl_intf_cfg;
+-		ops->update_pending_flush_intf =
+-			dpu_hw_ctl_update_pending_flush_intf;
+-		ops->update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb;
+-		ops->update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm;
+-	}
+-	ops->clear_pending_flush = dpu_hw_ctl_clear_pending_flush;
+-	ops->update_pending_flush = dpu_hw_ctl_update_pending_flush;
+-	ops->get_pending_flush = dpu_hw_ctl_get_pending_flush;
+-	ops->get_flush_register = dpu_hw_ctl_get_flush_register;
+-	ops->trigger_start = dpu_hw_ctl_trigger_start;
+-	ops->is_started = dpu_hw_ctl_is_started;
+-	ops->trigger_pending = dpu_hw_ctl_trigger_pending;
+-	ops->reset = dpu_hw_ctl_reset_control;
+-	ops->wait_reset_status = dpu_hw_ctl_wait_reset_status;
+-	ops->clear_all_blendstages = dpu_hw_ctl_clear_all_blendstages;
+-	ops->setup_blendstage = dpu_hw_ctl_setup_blendstage;
+-	ops->update_pending_flush_sspp = dpu_hw_ctl_update_pending_flush_sspp;
+-	ops->update_pending_flush_mixer = dpu_hw_ctl_update_pending_flush_mixer;
+-	if (cap & BIT(DPU_CTL_DSPP_SUB_BLOCK_FLUSH))
+-		ops->update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp_sub_blocks;
+-	else
+-		ops->update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp;
+-
+-	if (cap & BIT(DPU_CTL_FETCH_ACTIVE))
+-		ops->set_active_pipes = dpu_hw_ctl_set_fetch_pipe_active;
+-};
+-
+ /**
+  * dpu_hw_ctl_init() - Initializes the ctl_path hw driver object.
+  * Should be called before accessing any ctl_path register.
+@@ -789,7 +739,53 @@ struct dpu_hw_ctl *dpu_hw_ctl_init(struct drm_device *dev,
+ 	c->hw.log_mask = DPU_DBG_MASK_CTL;
+ 
+ 	c->caps = cfg;
+-	_setup_ctl_ops(&c->ops, c->caps->features);
++
++	if (c->caps->features & BIT(DPU_CTL_ACTIVE_CFG)) {
++		c->ops.trigger_flush = dpu_hw_ctl_trigger_flush_v1;
++		c->ops.setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
++		c->ops.reset_intf_cfg = dpu_hw_ctl_reset_intf_cfg_v1;
++		c->ops.update_pending_flush_intf =
++			dpu_hw_ctl_update_pending_flush_intf_v1;
++
++		c->ops.update_pending_flush_periph =
++			dpu_hw_ctl_update_pending_flush_periph_v1;
++
++		c->ops.update_pending_flush_merge_3d =
++			dpu_hw_ctl_update_pending_flush_merge_3d_v1;
++		c->ops.update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb_v1;
++		c->ops.update_pending_flush_cwb = dpu_hw_ctl_update_pending_flush_cwb_v1;
++		c->ops.update_pending_flush_dsc =
++			dpu_hw_ctl_update_pending_flush_dsc_v1;
++		c->ops.update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm_v1;
++	} else {
++		c->ops.trigger_flush = dpu_hw_ctl_trigger_flush;
++		c->ops.setup_intf_cfg = dpu_hw_ctl_intf_cfg;
++		c->ops.update_pending_flush_intf =
++			dpu_hw_ctl_update_pending_flush_intf;
++		c->ops.update_pending_flush_wb = dpu_hw_ctl_update_pending_flush_wb;
++		c->ops.update_pending_flush_cdm = dpu_hw_ctl_update_pending_flush_cdm;
++	}
++	c->ops.clear_pending_flush = dpu_hw_ctl_clear_pending_flush;
++	c->ops.update_pending_flush = dpu_hw_ctl_update_pending_flush;
++	c->ops.get_pending_flush = dpu_hw_ctl_get_pending_flush;
++	c->ops.get_flush_register = dpu_hw_ctl_get_flush_register;
++	c->ops.trigger_start = dpu_hw_ctl_trigger_start;
++	c->ops.is_started = dpu_hw_ctl_is_started;
++	c->ops.trigger_pending = dpu_hw_ctl_trigger_pending;
++	c->ops.reset = dpu_hw_ctl_reset_control;
++	c->ops.wait_reset_status = dpu_hw_ctl_wait_reset_status;
++	c->ops.clear_all_blendstages = dpu_hw_ctl_clear_all_blendstages;
++	c->ops.setup_blendstage = dpu_hw_ctl_setup_blendstage;
++	c->ops.update_pending_flush_sspp = dpu_hw_ctl_update_pending_flush_sspp;
++	c->ops.update_pending_flush_mixer = dpu_hw_ctl_update_pending_flush_mixer;
++	if (c->caps->features & BIT(DPU_CTL_DSPP_SUB_BLOCK_FLUSH))
++		c->ops.update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp_sub_blocks;
++	else
++		c->ops.update_pending_flush_dspp = dpu_hw_ctl_update_pending_flush_dspp;
++
++	if (c->caps->features & BIT(DPU_CTL_FETCH_ACTIVE))
++		c->ops.set_active_pipes = dpu_hw_ctl_set_fetch_pipe_active;
++
+ 	c->idx = cfg->id;
+ 	c->mixer_count = mixer_count;
+ 	c->mixer_hw_caps = mixer;
 
----
-Dmitry Baryshkov (33):
-      drm/msm/dpu: stop passing mdss_ver to setup_timing_gen()
-      drm/msm/dpu: drop INTF_SC7280_MASK
-      drm/msm/dpu: inline _setup_ctl_ops()
-      drm/msm/dpu: inline _setup_dsc_ops()
-      drm/msm/dpu: inline _setup_dspp_ops()
-      drm/msm/dpu: inline _setup_mixer_ops()
-      drm/msm/dpu: remove DSPP_SC7180_MASK
-      drm/msm/dpu: get rid of DPU_CTL_HAS_LAYER_EXT4
-      drm/msm/dpu: get rid of DPU_CTL_ACTIVE_CFG
-      drm/msm/dpu: get rid of DPU_CTL_FETCH_ACTIVE
-      drm/msm/dpu: get rid of DPU_CTL_DSPP_SUB_BLOCK_FLUSH
-      drm/msm/dpu: get rid of DPU_CTL_VM_CFG
-      drm/msm/dpu: get rid of DPU_DATA_HCTL_EN
-      drm/msm/dpu: get rid of DPU_INTF_STATUS_SUPPORTED
-      drm/msm/dpu: get rid of DPU_INTF_INPUT_CTRL
-      drm/msm/dpu: get rid of DPU_PINGPONG_DSC
-      drm/msm/dpu: get rid of DPU_PINGPONG_DITHER
-      drm/msm/dpu: get rid of DPU_MDP_VSYNC_SEL
-      drm/msm/dpu: get rid of DPU_MDP_PERIPH_0_REMOVED
-      drm/msm/dpu: get rid of DPU_MDP_AUDIO_SELECT
-      drm/msm/dpu: get rid of DPU_MIXER_COMBINED_ALPHA
-      drm/msm/dpu: get rid of DPU_DIM_LAYER
-      drm/msm/dpu: get rid of DPU_DSC_HW_REV_1_2
-      drm/msm/dpu: get rid of DPU_DSC_OUTPUT_CTRL
-      drm/msm/dpu: get rid of DPU_WB_INPUT_CTRL
-      drm/msm/dpu: get rid of DPU_SSPP_QOS_8LVL
-      drm/msm/dpu: drop unused MDP TOP features
-      drm/msm/dpu: drop ununused PINGPONG features
-      drm/msm/dpu: drop ununused MIXER features
-      drm/msm/dpu: get rid of DPU_MIXER_SOURCESPLIT
-      drm/msm/dpu: get rid of DPU_DSC_NATIVE_42x_EN
-      drm/msm/dpu: get rid of DPU_CTL_SPLIT_DISPLAY
-      drm/msm/dpu: move features out of the DPU_HW_BLK_INFO
-
- .../drm/msm/disp/dpu1/catalog/dpu_10_0_sm8650.h    |  53 +++-----
- .../drm/msm/disp/dpu1/catalog/dpu_1_14_msm8937.h   |   4 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_15_msm8917.h   |   3 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_16_msm8953.h   |   4 -
- .../drm/msm/disp/dpu1/catalog/dpu_1_7_msm8996.h    |  15 +--
- .../drm/msm/disp/dpu1/catalog/dpu_3_0_msm8998.h    |  19 +--
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_2_sdm660.h |  19 +--
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_3_3_sdm630.h |  12 +-
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_4_0_sdm845.h |  21 +---
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_4_1_sdm670.h |  11 +-
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h |  43 ++-----
- .../drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h    |  45 ++-----
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h |  31 ++---
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h |  19 +--
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h |  16 +--
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h |  42 ++-----
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h |  14 +--
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h |   5 -
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h |  16 +--
- .../drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h    |   5 -
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h |   6 -
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_7_0_sm8350.h |  44 ++-----
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_7_2_sc7280.h |  22 +---
- .../drm/msm/disp/dpu1/catalog/dpu_8_0_sc8280xp.h   |  50 ++------
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_8_1_sm8450.h |  47 ++------
- .../drm/msm/disp/dpu1/catalog/dpu_8_4_sa8775p.h    |  53 ++------
- .../gpu/drm/msm/disp/dpu1/catalog/dpu_9_0_sm8550.h |  47 ++------
- .../drm/msm/disp/dpu1/catalog/dpu_9_2_x1e80100.h   |  52 ++------
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c   |   2 +-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_vid.c   |   3 +-
- .../gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c    |   7 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c     |  51 +-------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h     | 134 ++-------------------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c         | 108 ++++++++---------
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.h         |   4 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.c         |  21 ++--
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc.h         |   3 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dsc_1_2.c     |   7 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c        |  10 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c        |  14 +--
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.h        |   5 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.c          |  28 ++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_lm.h          |   3 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_merge3d.c     |   5 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_pingpong.c    |   4 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c        |   5 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h        |   2 +
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_top.c         |  11 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_wb.c          |   2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c            |   4 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c             |  17 ++-
- 51 files changed, 304 insertions(+), 864 deletions(-)
----
-base-commit: a4efc119e8149503e5fe9e9f7828b79af2fe77c6
-change-id: 20241213-dpu-drop-features-7603dc3ee189
-
-Best regards,
 -- 
-Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+2.39.5
 
