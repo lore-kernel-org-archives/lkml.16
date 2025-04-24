@@ -1,43 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDF03FC2;
-	Thu, 24 Apr 2025 00:14:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE78625;
+	Thu, 24 Apr 2025 00:16:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745453673; cv=none; b=r6NCrQS2xturA6yhg3zEglMkTr75HfOstHA7SKZ1krNL/a6Zx02FdLxqp3BwHfs8wNPdSIu0SoZ6o4eBeFG8DFKNefpqg/o9BKCPLeyAjZCDInv0gbpGfj193MEKQZEAxQ4SJk6bAQbt18SjbTaFIIgzhMl9GbAwTr4ub+psGPQ=
+	t=1745453799; cv=none; b=V1jhDJXWKZhro9KLsS4Gn3jCskm9oBNS5avEO6561ayjR16/dLk4EcTfMDMY4kYI+HiG3qRWnMMRXsxdveIHfc57Y+NdugvlphMV3y5HwMi+VfsH9FSbqXBNqwhjw/y1xngXhNJKb7+lWQL9z6b0BHMW5QuWMSWhxOD39/07x0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745453673; c=relaxed/simple;
-	bh=n0TSJLKak1tuBbaz0EWuvr3Cm4M4taXFEVBdU8emlyc=;
+	s=arc-20240116; t=1745453799; c=relaxed/simple;
+	bh=IFTrO0iIkqqipDsOems/BeJlcz4nbbFBbkODkt4C7TA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kfT9dhHt0FeO5rTBpWhXuwiBHH+1sauLGu7MfdjmGl+mBa5IJ0qnWUK3l4KtOXfnNdkT75XhkmTV5VJjoi3KKVBDnBnEWPXSV/uGYJ04gsxlS61+ynLvxoN3Pey23ijfHxERfoo+dqevbjX5cWqFegb9PHwz7bONHHQNe2o3fqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcm4O7yd; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcm4O7yd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2EEFC4CEE2;
-	Thu, 24 Apr 2025 00:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745453673;
-	bh=n0TSJLKak1tuBbaz0EWuvr3Cm4M4taXFEVBdU8emlyc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rcm4O7ydQT4lc96jG+a4lIofuzg6LA5ARUz8yLVSWh1DgytbaWGmbD2lfndX/Yzz1
-	 +o8o4LmNud0AN+34Qujb6fIIhsO+I9km0YmXThIPxDwYL3bh07Am7UUWhG0QPwxBqn
-	 NYeOjeAByZbv9QwA9073SfP+uP1lAvQU+2fAssqJ7rYyC6T+anWn941YNYLWm2Vyrt
-	 M5r1zG/1uORp6m+wnCWMuinlXwOqwYC4NLOL8kaSJchy5crHl9rOt0cF75KLL7DEFN
-	 BeCCECYc4M4laPRGILZ+3ok7EqArrJreKCM8oCnspwrABvub4HWlPz7oqal2hjbbxi
-	 DUZXSsF8iN0LA==
-Date: Wed, 23 Apr 2025 17:14:31 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Harshitha Ramamurthy <hramamurthy@google.com>
-Cc: netdev@vger.kernel.org, jeroendb@google.com, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
- pkaligineedi@google.com, willemb@google.com, ziweixiao@google.com,
- shailend@google.com, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH net] gve: Add adminq lock for creating and destroying
- multiple queues
-Message-ID: <20250423171431.2cd8ca21@kernel.org>
-In-Reply-To: <20250417204323.3902669-1-hramamurthy@google.com>
-References: <20250417204323.3902669-1-hramamurthy@google.com>
+	 MIME-Version:Content-Type; b=OZnge4WDxFTf9y9gaaoYT9GNgyWGNBsIniRJkvReqWpkRFsI2KBA1ZvbKNnc4SfUisgIHeRzMzCqDk+6EU5S0gaUrIt00CnsQd3O9pJBdK8Xbwm0VRbtNR2JBKXNbylbW1YrFKsC0jx+U196dKU+WJIlW/KboLy1FWLJNY9mFfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D03C4CEE2;
+	Thu, 24 Apr 2025 00:16:36 +0000 (UTC)
+Date: Wed, 23 Apr 2025 20:18:29 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Libo Chen <libo.chen@oracle.com>
+Cc: akpm@linux-foundation.org, peterz@infradead.org, mgorman@suse.de,
+ mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+ tj@kernel.org, llong@redhat.com, sraithal@amd.com, venkat88@linux.ibm.com,
+ kprateek.nayak@amd.com, raghavendra.kt@amd.com, yu.c.chen@intel.com,
+ tim.c.chen@intel.com, vineethr@linux.ibm.com, chris.hyser@oracle.com,
+ daniel.m.jordan@oracle.com, lorenzo.stoakes@oracle.com, mkoutny@suse.com,
+ linux-mm@kvack.org, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] sched/numa: Add tracepoint that tracks the
+ skipping of numa balancing due to cpuset memory pinning
+Message-ID: <20250423201829.17d4c382@gandalf.local.home>
+In-Reply-To: <20250424000146.1197285-3-libo.chen@oracle.com>
+References: <20250424000146.1197285-1-libo.chen@oracle.com>
+	<20250424000146.1197285-3-libo.chen@oracle.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,32 +40,49 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 17 Apr 2025 20:43:23 +0000 Harshitha Ramamurthy wrote:
-> Also this patch cleans up the error handling code of
-> gve_adminq_destroy_tx_queue.
+On Wed, 23 Apr 2025 17:01:46 -0700
+Libo Chen <libo.chen@oracle.com> wrote:
 
->  static int gve_adminq_destroy_tx_queue(struct gve_priv *priv, u32 queue_index)
->  {
->  	union gve_adminq_command cmd;
-> -	int err;
->  
->  	memset(&cmd, 0, sizeof(cmd));
->  	cmd.opcode = cpu_to_be32(GVE_ADMINQ_DESTROY_TX_QUEUE);
-> @@ -808,11 +820,7 @@ static int gve_adminq_destroy_tx_queue(struct gve_priv *priv, u32 queue_index)
->  		.queue_id = cpu_to_be32(queue_index),
->  	};
->  
-> -	err = gve_adminq_issue_cmd(priv, &cmd);
-> -	if (err)
-> -		return err;
-> -
-> -	return 0;
-> +	return gve_adminq_issue_cmd(priv, &cmd);
->  }
+> +++ b/include/trace/events/sched.h
+> @@ -745,6 +745,37 @@ TRACE_EVENT(sched_skip_vma_numa,
+>  		  __entry->vm_end,
+>  		  __print_symbolic(__entry->reason, NUMAB_SKIP_REASON))
+>  );
+> +
+> +TRACE_EVENT(sched_skip_cpuset_numa,
+> +
+> +	TP_PROTO(struct task_struct *tsk, nodemask_t *mem_allowed_ptr),
+> +
+> +	TP_ARGS(tsk, mem_allowed_ptr),
+> +
+> +	TP_STRUCT__entry(
+> +		__array( char,		comm,		TASK_COMM_LEN		)
+> +		__field( pid_t,		pid					)
+> +		__field( pid_t,		tgid					)
+> +		__field( pid_t,		ngid					)
+> +		__array( unsigned long, mem_allowed, BITS_TO_LONGS(MAX_NUMNODES))
+> +	),
+> +
+> +	TP_fast_assign(
+> +		memcpy(__entry->comm, tsk->comm, TASK_COMM_LEN);
+> +		__entry->pid		 = task_pid_nr(tsk);
+> +		__entry->tgid		 = task_tgid_nr(tsk);
+> +		__entry->ngid		 = task_numa_group_id(tsk);
+> +		memcpy(__entry->mem_allowed, mem_allowed_ptr->bits,
+> +		       sizeof(__entry->mem_allowed));
 
-You mean this cleanup? That's not appropriate for a stable fix...
+Is mem_allowed->bits guaranteed to be the size of BITS_TO_LONGS(MAX_NUM_NODES)
+in size? If not, then memcpy will read beyond that size.
 
-Could you also explain which callers of this core are not already
-under rtnl_lock and/pr the netdev instance lock?
--- 
-pw-bot: cr
+-- Steve
+
+
+> +	),
+> +
+> +	TP_printk("comm=%s pid=%d tgid=%d ngid=%d mem_nodes_allowed=%*pbl",
+> +		  __entry->comm,
+> +		  __entry->pid,
+> +		  __entry->tgid,
+> +		  __entry->ngid,
+> +		  MAX_NUMNODES, __entry->mem_allowed)
+> +);
