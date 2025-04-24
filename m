@@ -1,117 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 987181386DA;
-	Thu, 24 Apr 2025 05:38:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E35F139B;
+	Thu, 24 Apr 2025 05:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745473115; cv=none; b=rrhMZJZ9CeAizoZEcyjQNckkcyBVA4NYjnE5WKVeXVsBj5se9IfA2cIi7ec1fo0aaYAl7eDPnUnlLy1uVjvHlqZSn62D5R0Eu1vc7WP2k5CIMQ5jjYe3Qr3wxUh12pQHYeB23COzOiiW6//HOmFdFdwKwdV15f+UcqCn9htyEq4=
+	t=1745473448; cv=none; b=E2VdK1cYX5O3E+ksbADO3FhoaUTN9dIxMUsG3XgZqIvjMmVpH0sw3p6nI34J/u3+917edI23F1sKeE4/aHj07dNwaxVSw9bGp4zIRyX4jP9yFX/XL7hP/bsgjGwFfbh3whkmAqoK2m6pyoWo3g0h0x3Q8FVAMaYNwJXbVtV5lA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745473115; c=relaxed/simple;
-	bh=iXmhH7LEvP+a3WzJpLspoqdnHe3eFZ45TzT0/aJEZqY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DObrNCo6PvBTg4Bb1ML2bsLcuyiBa/Qmr/H7SUjSWnC5SkbhTAzl8viZaHi0HzJgyF7R0hX3uwdpMKBK8/aDN46IjeoEi6aiJPkZ5tml/7TF9sy559e5c905wrCRIyHsOegtFTjlaTxQV7p8dHg6CO9rhu4BhUjNzVDWXDFzVLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B2xSENkG; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745473448; c=relaxed/simple;
+	bh=Ei5s8CyZRPbJiS3A9xmW0b8dJC52Fb4Ssy01YhH/pU4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=McBm156tt8UmtDHkFArerGk3ppkxHlNJ93fAQVIGxbLA+UQ7LpIyUobSuK1+IJLfnnU84gjlY3wo6opSLn6ehHnq0hfKnGX/5JVyox0hc7QrGIqQOmwRP6PJb9abvwpknOguXT3Jsv6jxo0QcpNRHkAAlJ8a65WY8ZjN+R4hN2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYzltdpk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B2xSENkG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745473113; x=1777009113;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=iXmhH7LEvP+a3WzJpLspoqdnHe3eFZ45TzT0/aJEZqY=;
-  b=B2xSENkGE6mJH1T70rAiIBABc+kmNn4ADd992hTzJnnPFi0QgeeXyKAu
-   XDXlCHGOmDB7RrJTcBna/92AXgUFzAaYR9MBY58gQ1vJZfynR4XZDfaiH
-   i5bsbM6rX+oBMgltJI2fccMb1r46wmcE/s5IVNJ+7upjfl49RLN15lpVZ
-   G6IzbBHz2M0rL1lJzJneAOQbzSBiZ6kkxRK4yjgkGfB7Q6GaeMhBplG5x
-   GlggIAnzWGLeuyiUWv9ADu6B1UG9BTEX7OKGLymZNl79OKc7dVDnLu16s
-   PedryFHiYGTdLbpEtdB1vuapv0nfXjDSyIkkoMMQMH9LcI/j/7nqnymy0
-   A==;
-X-CSE-ConnectionGUID: RearEhf4TYWZS8aDKUhHgA==
-X-CSE-MsgGUID: BSI/i4dGQYS7Q7qLcofHTw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47103881"
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="47103881"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 22:38:32 -0700
-X-CSE-ConnectionGUID: rLXYlPurRbSNNVVcMG7GdA==
-X-CSE-MsgGUID: pFfJjTHSToCtKd/oQDNncA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="132350680"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 22:38:29 -0700
-Date: Thu, 24 Apr 2025 08:38:26 +0300
-From: Raag Jadav <raag.jadav@intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: mahesh@linux.ibm.com, oohall@gmail.com, bhelgaas@google.com,
-	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ilpo.jarvinen@linux.intel.com, lukas@wunner.de,
-	aravind.iddamsetty@linux.intel.com
-Subject: Re: [PATCH v2] PCI/PM: Avoid suspending the device with errors
-Message-ID: <aAnOUouuqOC3-Yb8@black.fi.intel.com>
-References: <20250422135341.2780925-1-raag.jadav@intel.com>
- <CAJZ5v0gBxkFF-BTTsAM_LHSGq9uuWF2Fq3-jDYPkOhWK4b+qaw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYzltdpk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CF4C4CEE3;
+	Thu, 24 Apr 2025 05:44:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745473447;
+	bh=Ei5s8CyZRPbJiS3A9xmW0b8dJC52Fb4Ssy01YhH/pU4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=iYzltdpk7IueGGSpT5MNjvG559ELui5w27k8lJxseWyyFA6j7DJvkQUCMCR1s/bcI
+	 QnSWnaKVVBhPg3FS3rbk2zKzgakyrQKpm94/kRrnpAZbBGImZc5L7TraVI/RRM6C4y
+	 fjHzb80NgjrCFrqeL/jEYmm7XJ4FWSvJXsXvPIZJ7Tjg27f5LTXEzCQjTolfNzrKMS
+	 9bViFtBYeBU+rTcKP+r3g2OGanILAyE6hH3qYailYa1vUyib2ZkLjqFNj+QsT5R+75
+	 aQ7JMjLm1jsBt+K+A4OILvUSMIi8lTqtH2NGl3Dbp1EDCIKLJryYRnDeA4V8fWAx9M
+	 wEVC3YrKY2liQ==
+Message-ID: <62cfcebc-3280-448c-9fe6-ef6df0b3fcb0@kernel.org>
+Date: Thu, 24 Apr 2025 14:44:06 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gBxkFF-BTTsAM_LHSGq9uuWF2Fq3-jDYPkOhWK4b+qaw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drive
+To: Mikko Juhani Korhonen <mjkorhon@gmail.com>,
+ Niklas Cassel <cassel@kernel.org>, linux-ide@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <CAAZ0mTfQ+feHUeRjC3aH9z=sM92XmXASY+3ELzwXJLfk30h_6A@mail.gmail.com>
+Content-Language: en-US
+From: Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <CAAZ0mTfQ+feHUeRjC3aH9z=sM92XmXASY+3ELzwXJLfk30h_6A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 02:41:52PM +0200, Rafael J. Wysocki wrote:
-> On Tue, Apr 22, 2025 at 3:55 PM Raag Jadav <raag.jadav@intel.com> wrote:
-> >
-> > If an error is triggered before or during system suspend, any bus level
-> > power state transition will result in unpredictable behaviour by the
-> > device with failed recovery. Avoid suspending such a device and leave
-> > it in its existing power state.
-> >
-> > This only covers the devices that rely on PCI core PM for their power
-> > state transition.
-> >
-> > Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-> > ---
-> >
-> > v2: Synchronize AER handling with PCI PM (Rafael)
-> >
-> > More discussion on [1].
-> > [1] https://lore.kernel.org/all/CAJZ5v0g-aJXfVH+Uc=9eRPuW08t-6PwzdyMXsC6FZRKYJtY03Q@mail.gmail.com/
-> >
-> >  drivers/pci/pci-driver.c |  3 ++-
-> >  drivers/pci/pcie/aer.c   | 11 +++++++++++
-> >  include/linux/aer.h      |  2 ++
-> >  3 files changed, 15 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> > index f57ea36d125d..289a1fa7cb2d 100644
-> > --- a/drivers/pci/pci-driver.c
-> > +++ b/drivers/pci/pci-driver.c
-> > @@ -884,7 +884,8 @@ static int pci_pm_suspend_noirq(struct device *dev)
-> >                 }
-> >         }
-> >
-> > -       if (!pci_dev->state_saved) {
-> > +       /* Avoid suspending the device with errors */
-> > +       if (!pci_aer_in_progress(pci_dev) && !pci_dev->state_saved) {
+On 4/24/25 02:21, Mikko Juhani Korhonen wrote:
+> Make WDC WD20EFAX-68FB5N0 hard drive work again
+> after regression in 6.9.0 when LPM was enabled,
+> so disable it for this model.
 > 
-> Apart from the potential raciness mentioned by Bjorn, doing it just
-> here is questionable because this is not the only place where the PCI
-> device power state can change.
+> Signed-off-by: Mikko Korhonen <mjkorhon@gmail.com>
 > 
-> It would be better to catch this in pci_set_low_power_state() IMO.
+> diff -u linux-6.14.3/drivers/ata/libata-core.c
+> linux-6.14.3-mk/drivers/ata/libata-core.c
+> --- linux-6.14.3/drivers/ata/libata-core.c      2025-04-20
+> 11:23:22.000000000 +0300
+> +++ linux-6.14.3-mk/drivers/ata/libata-core.c   2025-04-22
+> 16:53:52.341934384 +0300
+> @@ -4238,6 +4238,11 @@
+>        { "WDC WD2500JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
+>        { "WDC WD3000JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
+>        { "WDC WD3200JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
+> +
+> +       /*
+> +        * This specific WD SATA-3 model has problems with LPM.
+> +        */
+> +       { "WDC WD20EFAX-68FB5N0",       NULL,   ATA_QUIRK_NOLPM },
+> 
+>        /*
+>         * This sata dom device goes on a walkabout when the ATA_LOG_DIRECTORY
 
-I'm not sure if we should prevent power state transition for the users
-that explicitly want to transition.
+This looks OK but the patch seems broken (missing separator after sign-off so
+this does not apply.
+Please use "git format-patch" to generate proper patches.
+Also please change the patch title to:
 
-Also, the device state can potentially be corrupted because of the errors,
-so we'd probably want to avoid pci_save_state() as well, which is what
-I attempted here.
+ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drives
 
-Raag
+-- 
+Damien Le Moal
+Western Digital Research
