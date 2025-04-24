@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E64733DF
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E8201A316A
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745486756; cv=none; b=TODbBXjJr3dufRJLcHVsmedyo7qK2OhBgpoOaTNahDbkQzXs/jLOE4MyOnWEijHV6xQMMn3JVhoQ87TmA/Y7x52O2zCqHTgza9VbHDiZIuI02rkan23OEJQhkxt2L/n/3ssEqs6FbenMp+t4qMy4s7oJ1lINaVXyaAA8NQoFI4g=
+	t=1745486804; cv=none; b=nLT0tf1xqOI5cZoSq5+oKOZCYvewJH60raF/yBktQmr3WDGocEVwIIjSeLdP5qI9hh1t+wmAX8VqBnKyiOlJJONHQMAMUkx2L+4GR4qB3B2Ap9fezUUJioKsT3BkQNcAZfhnvETtsNqqSTMDW8cds56+SIDXtUhD2PxGxV5Dia0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745486756; c=relaxed/simple;
-	bh=6jZCz2w0VQxxoz5O79hQB7M5/zbIGmGvaYbGVrSnxBA=;
+	s=arc-20240116; t=1745486804; c=relaxed/simple;
+	bh=lrHXu8JMi5imTFN7e5DKhmGiw9OaDmEYUxvHp6Nu0Rk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ip6dnohIrrc3FmAvSLb1EwGRipPVlTkZOMm8PQA/2BztGFGVrjtfrlwMu1utV+tyUS6QgLFX3OPNXy5cxnxszUdyMRFOjVp10COQQwJJzZR3geOwxFJIUqEXd1CyuRYUPblPZSTw0msg7oUWDPVmb5l0INzbE3iVt3WCDGihPtI=
+	 In-Reply-To:Content-Type; b=DKhhw3RtYoEE3N7qC5IQt77TBlC6kApALng3LkZxA6q6Bi2Rp23XEc70cirBFz8W2yo2kNaAGKxHVI/RPbC3TGMumsgGQuNk23eRoRM0RzwfzeEiVJ+QUABDfYxFKDPUn038zMP+RC+qsosJ2Qor/O7CzWV57NXN6XndB3Gx4j0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B56D41063;
-	Thu, 24 Apr 2025 02:25:48 -0700 (PDT)
-Received: from [10.1.196.43] (eglon.cambridge.arm.com [10.1.196.43])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 830CA3F66E;
-	Thu, 24 Apr 2025 02:25:50 -0700 (PDT)
-Message-ID: <250f8ff8-8576-4280-a9aa-9939090b4d31@arm.com>
-Date: Thu, 24 Apr 2025 10:25:49 +0100
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 774711063;
+	Thu, 24 Apr 2025 02:26:37 -0700 (PDT)
+Received: from [10.163.49.106] (unknown [10.163.49.106])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7F0C3F66E;
+	Thu, 24 Apr 2025 02:26:36 -0700 (PDT)
+Message-ID: <dbe04199-51e9-4339-8522-cb440092ab33@arm.com>
+Date: Thu, 24 Apr 2025 14:56:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,96 +27,209 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 12/21] x86/resctrl: Move the filesystem bits to headers
- visible to fs/resctrl
-To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+Subject: Re: [PATCH v4 04/11] arm64/mm: Refactor __set_ptes() and
+ __ptep_get_and_clear()
+To: Ryan Roberts <ryan.roberts@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Uladzislau Rezki <urezki@gmail.com>, Christoph Hellwig <hch@infradead.org>,
+ David Hildenbrand <david@redhat.com>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alexandre Ghiti
+ <alexghiti@rivosinc.com>, Kevin Brodsky <kevin.brodsky@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
- Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
- D Scott Phillips OS <scott@os.amperecomputing.com>,
- carl@os.amperecomputing.com, lcherian@marvell.com,
- bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
- baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
- Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
- dfustini@baylibre.com, amitsinght@marvell.com,
- David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
- Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com,
- Shaopeng Tan <tan.shaopeng@jp.fujitsu.com>, Tony Luck <tony.luck@intel.com>
-References: <20250411164229.23413-1-james.morse@arm.com>
- <20250411164229.23413-13-james.morse@arm.com>
- <b87f4c98-ef7b-44e7-ad25-8b2003bea5c3@intel.com>
-Content-Language: en-GB
-From: James Morse <james.morse@arm.com>
-In-Reply-To: <b87f4c98-ef7b-44e7-ad25-8b2003bea5c3@intel.com>
+References: <20250422081822.1836315-1-ryan.roberts@arm.com>
+ <20250422081822.1836315-5-ryan.roberts@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250422081822.1836315-5-ryan.roberts@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Reinette,
-
-On 17/04/2025 23:46, Reinette Chatre wrote:
->> diff --git a/arch/x86/include/asm/resctrl.h b/arch/x86/include/asm/resctrl.h
->> index 7a39728b0743..6eb7d5c94c7a 100644
->> --- a/arch/x86/include/asm/resctrl.h
->> +++ b/arch/x86/include/asm/resctrl.h
->> @@ -210,6 +210,9 @@ int resctrl_arch_measure_l2_residency(void *_plr);
->>  int resctrl_arch_measure_l3_residency(void *_plr);
->>  void resctrl_cpu_detect(struct cpuinfo_x86 *c);
->>  
->> +bool resctrl_arch_get_cdp_enabled(enum resctrl_res_level l);
->> +int resctrl_arch_set_cdp_enabled(enum resctrl_res_level l, bool enable);
-
-> I noticed this while reading through the telemetry work ... the custom
-> appears to be for all arch helpers to be declared in include/linux/resctrl.h
-> making these two stand out. What motivated their inclusion into
-> arch/x86/include/asm/resctrl.h?
-
-Doing some archaeology ... it looks like this dates from the era when MPAM had stub
-versions of these because it didn't support/emulate CDP. Having these in the arch code's
-header meant the static-inline stubs could be inlined into resctrl. x86 has an inline
-version before this patch, but I moved it out of line to avoid exposing the array of all
-resources. (which in turn would suggest changing the name, which isn't worth the churn)
-
-I was assuming only x86 would ever support CDP, but since then, emulating CDP using the
-separate I/D PARTID values MPAM has proved feasible.
-
-I'll move them.
 
 
-> If they move to include/linux/resctrl.h it looks like enum resctrl_res_level is
-> no longer required to be in include/linux/resctrl_types.h.
+On 4/22/25 13:48, Ryan Roberts wrote:
+> Refactor __set_ptes(), set_pmd_at() and set_pud_at() so that they are
+> all a thin wrapper around a new common __set_ptes_anysz(), which takes
+> pgsize parameter. Additionally, refactor __ptep_get_and_clear() and
+> pmdp_huge_get_and_clear() to use a new common
+> __ptep_get_and_clear_anysz() which also takes a pgsize parameter.
+> 
+> These changes will permit the huge_pte API to efficiently batch-set
+> pgtable entries and take advantage of the future barrier optimizations.
+> Additionally since the new *_anysz() helpers call the correct
+> page_table_check_*_set() API based on pgsize, this means that huge_ptes
+> will be able to get proper coverage. Currently the huge_pte API always
+> uses the pte API which assumes an entry only covers a single page.
+> 
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
+> ---
+>  arch/arm64/include/asm/pgtable.h | 114 ++++++++++++++++++++-----------
+>  1 file changed, 73 insertions(+), 41 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+> index d3b538be1500..d80aa9ba0a16 100644
+> --- a/arch/arm64/include/asm/pgtable.h
+> +++ b/arch/arm64/include/asm/pgtable.h
+> @@ -423,23 +423,6 @@ static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
+>  	return pfn_pte(pte_pfn(pte) + nr, pte_pgprot(pte));
+>  }
+>  
+> -static inline void __set_ptes(struct mm_struct *mm,
+> -			      unsigned long __always_unused addr,
+> -			      pte_t *ptep, pte_t pte, unsigned int nr)
+> -{
+> -	page_table_check_ptes_set(mm, ptep, pte, nr);
+> -	__sync_cache_and_tags(pte, nr);
+> -
+> -	for (;;) {
+> -		__check_safe_pte_update(mm, ptep, pte);
+> -		__set_pte(ptep, pte);
+> -		if (--nr == 0)
+> -			break;
+> -		ptep++;
+> -		pte = pte_advance_pfn(pte, 1);
+> -	}
+> -}
+> -
+>  /*
+>   * Hugetlb definitions.
+>   */
+> @@ -649,30 +632,62 @@ static inline pgprot_t pud_pgprot(pud_t pud)
+>  	return __pgprot(pud_val(pfn_pud(pfn, __pgprot(0))) ^ pud_val(pud));
+>  }
+>  
+> -static inline void __set_pte_at(struct mm_struct *mm,
+> -				unsigned long __always_unused addr,
+> -				pte_t *ptep, pte_t pte, unsigned int nr)
+> +static inline void __set_ptes_anysz(struct mm_struct *mm, pte_t *ptep,
+> +				    pte_t pte, unsigned int nr,
+> +				    unsigned long pgsize)
+>  {
+> -	__sync_cache_and_tags(pte, nr);
+> -	__check_safe_pte_update(mm, ptep, pte);
+> -	__set_pte(ptep, pte);
+> +	unsigned long stride = pgsize >> PAGE_SHIFT;
+> +
+> +	switch (pgsize) {
+> +	case PAGE_SIZE:
+> +		page_table_check_ptes_set(mm, ptep, pte, nr);
+> +		break;
+> +	case PMD_SIZE:
+> +		page_table_check_pmds_set(mm, (pmd_t *)ptep, pte_pmd(pte), nr);
+> +		break;
+> +#ifndef __PAGETABLE_PMD_FOLDED
+> +	case PUD_SIZE:
+> +		page_table_check_puds_set(mm, (pud_t *)ptep, pte_pud(pte), nr);
+> +		break;
+> +#endif
+> +	default:
+> +		VM_WARN_ON(1);
+> +	}
+> +
+> +	__sync_cache_and_tags(pte, nr * stride);
+> +
+> +	for (;;) {
+> +		__check_safe_pte_update(mm, ptep, pte);
+> +		__set_pte(ptep, pte);
+> +		if (--nr == 0)
+> +			break;
+> +		ptep++;
+> +		pte = pte_advance_pfn(pte, stride);
+> +	}
+> +}
+> +
+> +static inline void __set_ptes(struct mm_struct *mm,
+> +			      unsigned long __always_unused addr,
+> +			      pte_t *ptep, pte_t pte, unsigned int nr)
+> +{
+> +	__set_ptes_anysz(mm, ptep, pte, nr, PAGE_SIZE);
+>  }
+>  
+> -static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+> -			      pmd_t *pmdp, pmd_t pmd)
+> +static inline void __set_pmds(struct mm_struct *mm,
+> +			      unsigned long __always_unused addr,
+> +			      pmd_t *pmdp, pmd_t pmd, unsigned int nr)
+>  {
+> -	page_table_check_pmd_set(mm, pmdp, pmd);
+> -	return __set_pte_at(mm, addr, (pte_t *)pmdp, pmd_pte(pmd),
+> -						PMD_SIZE >> PAGE_SHIFT);
+> +	__set_ptes_anysz(mm, (pte_t *)pmdp, pmd_pte(pmd), nr, PMD_SIZE);
+>  }
+> +#define set_pmd_at(mm, addr, pmdp, pmd) __set_pmds(mm, addr, pmdp, pmd, 1)
+>  
+> -static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+> -			      pud_t *pudp, pud_t pud)
+> +static inline void __set_puds(struct mm_struct *mm,
+> +			      unsigned long __always_unused addr,
+> +			      pud_t *pudp, pud_t pud, unsigned int nr)
+>  {
+> -	page_table_check_pud_set(mm, pudp, pud);
+> -	return __set_pte_at(mm, addr, (pte_t *)pudp, pud_pte(pud),
+> -						PUD_SIZE >> PAGE_SHIFT);
+> +	__set_ptes_anysz(mm, (pte_t *)pudp, pud_pte(pud), nr, PUD_SIZE);
+>  }
+> +#define set_pud_at(mm, addr, pudp, pud) __set_puds(mm, addr, pudp, pud, 1)
+>  
+>  #define __p4d_to_phys(p4d)	__pte_to_phys(p4d_pte(p4d))
+>  #define __phys_to_p4d_val(phys)	__phys_to_pte_val(phys)
+> @@ -1301,16 +1316,37 @@ static inline int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+>  }
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_ARCH_HAS_NONLEAF_PMD_YOUNG */
+>  
+> -static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
+> -				       unsigned long address, pte_t *ptep)
+> +static inline pte_t __ptep_get_and_clear_anysz(struct mm_struct *mm,
+> +					       pte_t *ptep,
+> +					       unsigned long pgsize)
+>  {
+>  	pte_t pte = __pte(xchg_relaxed(&pte_val(*ptep), 0));
+>  
+> -	page_table_check_pte_clear(mm, pte);
+> +	switch (pgsize) {
+> +	case PAGE_SIZE:
+> +		page_table_check_pte_clear(mm, pte);
+> +		break;
+> +	case PMD_SIZE:
+> +		page_table_check_pmd_clear(mm, pte_pmd(pte));
+> +		break;
+> +#ifndef __PAGETABLE_PMD_FOLDED
+> +	case PUD_SIZE:
+> +		page_table_check_pud_clear(mm, pte_pud(pte));
+> +		break;
+> +#endif
+> +	default:
+> +		VM_WARN_ON(1);
+> +	}
+>  
+>  	return pte;
+>  }
+>  
+> +static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
+> +				       unsigned long address, pte_t *ptep)
+> +{
+> +	return __ptep_get_and_clear_anysz(mm, ptep, PAGE_SIZE);
+> +}
+> +
+>  static inline void __clear_full_ptes(struct mm_struct *mm, unsigned long addr,
+>  				pte_t *ptep, unsigned int nr, int full)
+>  {
+> @@ -1347,11 +1383,7 @@ static inline pte_t __get_and_clear_full_ptes(struct mm_struct *mm,
+>  static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+>  					    unsigned long address, pmd_t *pmdp)
+>  {
+> -	pmd_t pmd = __pmd(xchg_relaxed(&pmd_val(*pmdp), 0));
+> -
+> -	page_table_check_pmd_clear(mm, pmd);
+> -
+> -	return pmd;
+> +	return pte_pmd(__ptep_get_and_clear_anysz(mm, (pte_t *)pmdp, PMD_SIZE));
+>  }
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  
 
-Yes. I'll add a patch move it, but it feels like churn.
-
-
-> Looking further, from commit f16adbaf9272 ("x86/resctrl: Move resctrl types to a separate header")
-> the motivation for including enum resctrl_event_id is to support 
-> resctrl_arch_mon_ctx_alloc() and resctrl_arch_mon_ctx_free(), but looking
-> at their definitions in arch/x86/include/asm/resctrl.h they are using "int evtid"
-> instead of enum resctrl_event_id. Looks like their definitions need to
-> change?
-
-Bother. The MPAM definition of those has the enum type, I'd missed that the x86 stub
-swallowed the type. I'll fix that.
-
-
-> I assume the pseudo-locking arch helpers are placed in arch/x86/include/asm/resctrl.h
-> with the implicit knowledge that only x86 will set CONFIG_RESCTRL_FS_PSEUDO_LOCK so
-> avoiding that extra handling in include/linux/resctrl.h?
-
-Given how specific that is to x86, I think it will only ever be enabled there.
-For arm, things like the prefetcher can't be disabled by linux. I would assume risc-v is
-structurally the same.
-
-Those definitions went into the arch header so that some architectures could inline the
-stubs to let the compiler remove code that will never run.
-
-I guess these could be defined both ways round in linux/resctrl.h depending on the Kconfig
-symbol. At this point its churn, but this saves a third architecture having to define the
-same list of stubs. (I reckon that is likely for risc-v).
-
-
-Thanks,
-
-James
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
