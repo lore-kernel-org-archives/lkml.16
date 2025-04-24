@@ -1,110 +1,79 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360F028F507;
-	Thu, 24 Apr 2025 18:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9651A5B82;
+	Thu, 24 Apr 2025 18:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745517659; cv=none; b=TsiIczQ86RjKzbmC+XvpkCbsFZi0NjpY8SnjDMFC9ADxtiJ/D//urW5cmFnhwXjP28EfE3ZowxHJ7MqcO9X+Gj2pQECS4KDLSP1pFCD2RKT+CCMuQ8rFLtYCuucey4WZ6asYsV2sZkvvZfUBNXyQVuB8CB5qNibrGu7HhIK0450=
+	t=1745517704; cv=none; b=LueUOw++tHRKQPq0AZj2+fRYkcoK/faFANYpFOuwWhVyJsdGuvinrTFw8+/YA2DZNc8miibohDI7wkNgDHw3ZGWkW3Q6TSTk7V9wGnIe9tfi2IUPfd+y7BoA8f4HgWWbfPTczLLY0OMMbFnGgk9Gi6CqFLwwiOXGEySOUKE1eKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745517659; c=relaxed/simple;
-	bh=K/yMHVvsMsYWBKNwbEHWLz10n1sEmxNndpQcj++yOM0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mG+8QHCm9J7yqw02TxkVUCraR0n175mF3H9At/1L2wcSN0YvcNPapbC9IhZ+REHP1imdjxS3V1zQOL86pXzr+rUVKu66dIu642EnDD8pL38tadwHXvopIzK95bXmVYMc0HbRqOKO+Gk2ltXa72mMzeh2w0TiFqpvuVUKl9NPv6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tmyZLkYq; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1745517704; c=relaxed/simple;
+	bh=1UzqVogGL3LmH9d4R4wP/lOW2RL5bF/zoPL9eg44mVk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JK9LzEySc70oRUNnKWjy3yIAqw4+EsI5ov9+Vn2hgcyxu8TyyEcXisQykjwGhIRYqytaYziM49ICVmdAsd3HPCiRUlTivd+wMmXDiTScLEiVUZkPIleivuBIUk/bGvekZuU6QdeMlp5UOZsuAk623nFVd9saPRc1W24iBlRA49E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Di8Auxp0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tmyZLkYq"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53OI0a0Z2714438
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 13:00:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745517636;
-	bh=ByzxuZNtZvGBiMEU1x+258op4v/yxzWgvRbeyPhuoc4=;
-	h=From:To:CC:Subject:Date;
-	b=tmyZLkYqvIJXDSZpvbbgqGUvwt8sxZR0RdnF79hi6Gf2uURPiqrPdPvUWXMip/CDT
-	 acurUJfdefq/rT5CY8yigkCjyM328Kr2ENye9OlNsEABoxPg9wqyjtjQLRVweAcyR7
-	 WkY77AmhKztD0WJKs6IE23xcnKIrMhJsgO9tDaX4=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53OI0a4Z114985
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 24 Apr 2025 13:00:36 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 24
- Apr 2025 13:00:36 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 24 Apr 2025 13:00:36 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53OI0ac8054845;
-	Thu, 24 Apr 2025 13:00:36 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf
- Hansson <ulf.hansson@linaro.org>
-CC: Josua Mayer <josua@solid-run.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>,
-        Francesco Dolcini
-	<francesco@dolcini.it>,
-        Hiago De Franco <hiagofranco@gmail.com>, Moteen Shah
-	<m-shah@ti.com>
-Subject: [PATCH v4 0/2] Add SDHCI_QUIRK2_SUPPRESS_V1P8_ENA
-Date: Thu, 24 Apr 2025 13:00:34 -0500
-Message-ID: <20250424180036.1541568-1-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Di8Auxp0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89FDEC4CEE3;
+	Thu, 24 Apr 2025 18:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745517704;
+	bh=1UzqVogGL3LmH9d4R4wP/lOW2RL5bF/zoPL9eg44mVk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Di8Auxp0PFt+QYUVd68e5bxQhwlqwWHun1bpXlYJfNpumVCakhDueyYfAxAoxruBO
+	 nAfWiC56BxHXFFnZ12X5L3TyyxEnZKSNpMk+pbimrvsKJKb0YlX4yHTd0YSVr+rwc6
+	 7R7wcAoRyglL9ZU8BuU4SoVA/xtVO7tNIP1kFSK0PeknizuQB3PHczHst4MVMPadrO
+	 G1jToK2eaDnfkptNYKA9RhRu0YJYIxvMJx0OmexXc7iCUc4N07ukYo9rWqTbkCyi5N
+	 ACJ/79IAPe5/DV4XOBP867DL1nEzMLuTEat9X3F1dd3XPZKMUph5eIXFzegTd6Os8k
+	 xRHjEdYropK3A==
+Date: Thu, 24 Apr 2025 20:01:39 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+	kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+	John Stultz <jstultz@google.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Stephen Boyd <sboyd@kernel.org>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 0/15] x86: Remove support for TSC-less and CX8-less
+ CPUs
+Message-ID: <aAp8gyKY1YJqIOXL@gmail.com>
+References: <202504211553.3ba9400-lkp@intel.com>
+ <59198081-15e2-4b02-934f-c34dd1a0ac93@app.fastmail.com>
+ <aAmeJmL0hUx2kcXC@xsang-OptiPlex-9020>
+ <f1ccb8b4-bbe2-42bc-bb86-c2bf3f9c557d@app.fastmail.com>
+ <CAHk-=wi6k0wk89u+8vmOhcLHPmapK13DDsL2m+xeqEwR9iTd9A@mail.gmail.com>
+ <aAp6u9ylKCpvMJRF@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-
-There are MMC boot failures seen with V1P8_SIGNAL_ENA on Kingston eMMC and
-Microcenter/Patriot SD cards on am62* Sitara K3 boards due to the HS200
-initialization sequence involving V1P8_SIGNAL_ENA. Since V1P8_SIGNAL_ENA
-is optional for eMMC and only affects timing for host controllers using
-ti,am62-sdhci compatible so far, add a new platform data structure for am62
-compatible and append the new SDHCI_QUIRK2_SUPPRESS_V1P8_ENA quirk.
-
-This fix was previously merged in the kernel, but was reverted due
-to the "heuristics for enabling the quirk"[0]. This issue is adressed
-in this patch series by adding the quirk based on compatible string,
-ensuring the quirk is never applied to devices with internal LDOs, then
-V1P8_SIGNAL_ENA also has a voltage component tied to it.
-
-Changes since v3 RESEND:
-- apply the quirk based on compatible string instead of based on bus
-  width or DT property
-- rephrase commit descriptions and cover-letter descriptions based on
-  new implementation.
-
-Link to v3 RESEND:
-https://lore.kernel.org/linux-mmc/8678d284-db12-451a-b789-2b75f9932f9f@ti.com
-Link to v2:
-https://lore.kernel.org/linux-mmc/20250417182652.3521104-1-jm@ti.com/
-Link to v1:
-https://lore.kernel.org/linux-mmc/20250407222702.2199047-1-jm@ti.com/
-
-[0] https://lore.kernel.org/linux-mmc/20250127-am654-mmc-regression-v2-1-9bb39fb12810@solid-run.com/
-
-Judith Mendez (2):
-  mmc: sdhci: Add a quirk for suppressing V1P8_SIGNAL_ENA
-  mmc: sdhci_am654: Add SDHCI_QUIRK2_SUPPRESS_V1P8_ENA quirk to am62
-    compatible
-
- drivers/mmc/host/sdhci.c       |  8 +++++---
- drivers/mmc/host/sdhci.h       |  2 ++
- drivers/mmc/host/sdhci_am654.c | 14 +++++++++++++-
- 3 files changed, 20 insertions(+), 4 deletions(-)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAp6u9ylKCpvMJRF@gmail.com>
 
 
-base-commit: 1be38f81251f6d276713c259ecf4414f82f22c29
--- 
-2.49.0
+* Ingo Molnar <mingo@kernel.org> wrote:
 
+> The patches most relevant to this discussion should be:
+> 
+>       x86/cpu: Remove M486/M486SX/ELAN support
+>       ...
+>       x86/cpu: Remove TSC-less CONFIG_M586 support
+>       x86/cpu: Make CONFIG_X86_TSC unconditional
+>       x86/cpu: Make CONFIG_X86_CX8 unconditional
+>       x86/percpu: Remove !CONFIG_X86_CX8 methods
+>       x86/atomics: Remove !CONFIG_X86_CX8 methods
+
+also:
+
+>       x86/cpu: Remove TSC-less CONFIG_M586 support
+
+Thanks,
+
+	Ingo
