@@ -1,202 +1,121 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F951F153C
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2D7E20B1E8;
+	Thu, 24 Apr 2025 07:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479413; cv=none; b=EC+bBYP5LXJKB8ZCWkDPxbT4qI6CJ+f9o8ZDfgqgyqwdH2cLZKyIh/yNP/+TAqlxNPomoH9wzcVG/nzOJpOOnnXs1S3myKd/0LokHYWVmmMGFzLWHDc4DMwXNxdt+ABUHnw1pGMktiMkek6gwh72oyiE2JEbVOFRjPtMLt+YW7s=
+	t=1745479416; cv=none; b=DfPPu1l0c91oksX50y0Rh2grscX+8h5vEPkIvBDPeZ8t1RNfdKy5Dz0/0wzwT9R8AWc2k1sxR6VsT40kKar9RROuOmC+Rl5hlmVSNu0qWcFDR8i1NJtFXF6tgpMdJO7Qj3UoNd8/UC6ZLaVXHv7KUqAv0h+/HbLVDjVQESkXS/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745479413; c=relaxed/simple;
-	bh=5NT6kWcIz4H9m0zVWfgV4bUPCBkkH2fpP69Ik4K3HPc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QppGwF4urxM0fgCW6zyi/zCIcPTuiu305WMi/R9Zq6uPqfGStFPeSgbH9qPn/VTM3i9BPVM2etMTLhISGbDxAF5Mbo7pTrm163Jc9zhJdpsoB/lp16Rkabq8ifza29SqaYsow6zPWNIPwOrzFmKuyz0rk9TzHGjrt7sK5/BBEh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AhHzssur; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8gd5MMwf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AhHzssur; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8gd5MMwf; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AhHzssur";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8gd5MMwf";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AhHzssur";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8gd5MMwf"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id C9CD71F38C;
-	Thu, 24 Apr 2025 07:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745479409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wcud0PH08x8fmB63EBVvjnChXUAuJs8O5JHkRmWvXx0=;
-	b=AhHzssurAVQKGr57SWusajemDZp1JCVKusWIkm85IGdSX+ZglWTahk66k089r3F2QXH3Y7
-	bjyPX6H1TuATz47f8BzlEhJD0APkNxBibbvPFWSbQFh/J0uBEns+X3gh7fQHUAKt+9ng6r
-	0izKXM36FXbkheHzaqNDTwc1k0sX2KE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745479409;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wcud0PH08x8fmB63EBVvjnChXUAuJs8O5JHkRmWvXx0=;
-	b=8gd5MMwfsnl1fsJAznYvWqnrRXUNUYRw5J/YEnYMIbB6IExTZyl/J/zrqCebn1L4gstpEi
-	MAFv7ZBimvB/lRCw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=AhHzssur;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=8gd5MMwf
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745479409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wcud0PH08x8fmB63EBVvjnChXUAuJs8O5JHkRmWvXx0=;
-	b=AhHzssurAVQKGr57SWusajemDZp1JCVKusWIkm85IGdSX+ZglWTahk66k089r3F2QXH3Y7
-	bjyPX6H1TuATz47f8BzlEhJD0APkNxBibbvPFWSbQFh/J0uBEns+X3gh7fQHUAKt+9ng6r
-	0izKXM36FXbkheHzaqNDTwc1k0sX2KE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745479409;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wcud0PH08x8fmB63EBVvjnChXUAuJs8O5JHkRmWvXx0=;
-	b=8gd5MMwfsnl1fsJAznYvWqnrRXUNUYRw5J/YEnYMIbB6IExTZyl/J/zrqCebn1L4gstpEi
-	MAFv7ZBimvB/lRCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5CB5F1393C;
-	Thu, 24 Apr 2025 07:23:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LWtqFfHmCWgBcwAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Thu, 24 Apr 2025 07:23:29 +0000
-Date: Thu, 24 Apr 2025 09:23:28 +0200
-Message-ID: <8734dy3tvz.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Philipp Stanner <phasta@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Jaya Kumar <jayakumar.alsa@gmail.com>,
-	Clemens Ladisch <clemens@ladisch.de>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Mark Brown <broonie@kernel.org>,
-	liujing <liujing@cmss.chinamobile.com>,
-	Andres Urian Florez <andres.emb.sys@gmail.com>,
-	Oswald Buddenhagen <oswald.buddenhagen@gmx.de>,
-	Thorsten Blum <thorsten.blum@linux.dev>,
-	David Rhodes <drhodes@opensource.cirrus.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 00/28] ALSA: Phase out hybrid PCI devres API
-In-Reply-To: <20250423075346.45907-1-phasta@kernel.org>
-References: <20250423075346.45907-1-phasta@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	s=arc-20240116; t=1745479416; c=relaxed/simple;
+	bh=sCE3zOKQu+v4U8QbYK2c41yXFWGS4hqC53keo15tqbI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=WxcOar5VGvZh/GkYhMB5jQ0IplF5BGwzgf5L240T59Z7TY7rLs1L96f5yqOZqFPNm8eXxicKtlAM1Gs169jVWUOVOO9OIoH9KPJEcp9ZXyCx2ultJkIEQXBEADBNC32XuHw+lRRA33/gsuAFA++FKfhq4f1wcMjMXPfkm/H1wjs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.238])
+	by gateway (Coremail) with SMTP id _____8Bxlmny5gloTibFAA--.64495S3;
+	Thu, 24 Apr 2025 15:23:30 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.238])
+	by front1 (Coremail) with SMTP id qMiowMDxfRur5glo5CaTAA--.5456S5;
+	Thu, 24 Apr 2025 15:23:24 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Yanteng Si <si.yanteng@linux.dev>,
+	Feiyang Chen <chris.chenfeiyang@gmail.com>,
+	loongarch@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Huacai Chen <chenhuacai@loongson.cn>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Henry Chen <chenx97@aosc.io>,
+	Biao Dong <dongbiao@loongson.cn>,
+	Baoqi Zhang <zhangbaoqi@loongson.cn>
+Subject: [PATCH net-next V3 3/3] net: stmmac: dwmac-loongson: Add new GMAC's PCI device ID support
+Date: Thu, 24 Apr 2025 15:22:09 +0800
+Message-ID: <20250424072209.3134762-4-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250424072209.3134762-1-chenhuacai@loongson.cn>
+References: <20250424072209.3134762-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Rspamd-Queue-Id: C9CD71F38C
-X-Spam-Score: -2.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[18];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	FREEMAIL_CC(0.00)[perex.cz,suse.com,gmail.com,ladisch.de,linux.intel.com,baylibre.com,kernel.org,cmss.chinamobile.com,gmx.de,linux.dev,opensource.cirrus.com,linutronix.de,vger.kernel.org];
-	RCVD_COUNT_TWO(0.00)[2];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:url,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxfRur5glo5CaTAA--.5456S5
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxJrWrtrykCrW8Kw48Cr45Jwc_yoW8KFWxpr
+	W5ZasFgrZ3GF45Cw4vqrWDWry5ZFZxG3srCF42yw4UWF93J342q3sF9Fs8Aw17ur45XFy2
+	vrWkCw48CFs8GwbCm3ZEXasCq-sJn29KB7ZKAUJUUUUD529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3
+	AwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI4
+	8JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j
+	6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwV
+	AFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv2
+	0xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4
+	v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AK
+	xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0XdjtUUUUU==
 
-On Wed, 23 Apr 2025 09:53:18 +0200,
-Philipp Stanner wrote:
-> 
-> Changes in v2:
->   - Add RB from Andy
->   - Remove ASoC patches, branch out this series for Alsa. (Andy)
-> 
-> Hi,
-> 
-> a year ago we spent quite some work trying to get PCI into better shape.
-> Some pci_ functions can be sometimes managed with devres, which is
-> obviously bad. We want to provide an obvious API, where pci_ functions
-> are never, and pcim_ functions are always managed.
-> 
-> Thus, everyone enabling his device with pcim_enable_device() must be
-> ported to pcim_ functions. Porting all users will later enable us to
-> significantly simplify parts of the PCI subsystem. See here [1] for
-> details.
-> 
-> This patch series does that for sound.
-> 
-> Feel free to squash the commits as you see fit.
-> 
-> P.
-> 
-> [1] https://elixir.bootlin.com/linux/v6.14-rc4/source/drivers/pci/devres.c#L18
-> 
-> Philipp Stanner (28):
->   ALSA: sonicvibes: Use pure devres PCI
->   ALSA: rme96: Use pure devres PCI
->   ALSA: rme32: Use pure devres PCI
->   ALSA: ens1370: Use pure devres PCI
->   ALSA: cmipci: Use pure devres PCI
->   ALSA: via82: Use pure devres PCI
->   ALSA: sis7019: Use pure devres PCI
->   ALSA: intel8x: Use pure devres PCI
->   ALSA: fm801: Use pure devres PCI
->   ALSA: es19x8: Use pure devres PCI
->   ALSA: azt3328: Use pure devres PCI
->   ALSA: als: Use pure devres PCI
->   ALSA: oxygen: Use pure devres PCI
->   ALSA: lx6464es: Use pure devres PCI
->   ALSA: vx222: Use pure devres PCI
->   ALSA: trident: Use pure devres PCI
->   ALSA: rme9652: Use pure devres PCI
->   ALSA: ymfpci: Use pure devres PCI
->   ALSA: riptide: Use pure devres PCI
->   ALSA: nm256: Use pure devres PCI
->   ALSA: ice: Use pure devres PCI
->   ALSA: emu10k1: Use pure devres PCI
->   ALSA: echoaudio: Use pure devres PCI
->   ALSA: cs5535: Use pure devres PCI
->   ALSA: cs46xx: Use pure devres PCI
->   ALSA: ca0106: Use pure devres PCI
->   ALSA: ali5451: Use pure devres PCI
->   ALSA: maestro3: Use pure devres PCI
+Add a new GMAC's PCI device ID (0x7a23) support which is used in
+Loongson-2K3000/Loongson-3B6000M. The new GMAC device use external PHY,
+so it reuses loongson_gmac_data() as the old GMAC device (0x7a03), and
+the new GMAC device still doesn't support flow control now.
 
-Applied to for-next branch now.  Thanks.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+Tested-by: Henry Chen <chenx97@aosc.io>
+Tested-by: Biao Dong <dongbiao@loongson.cn>
+Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+index 57917f26ab4d..e1591e6217d4 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-loongson.c
+@@ -66,7 +66,8 @@
+ 					 DMA_STATUS_TPS | DMA_STATUS_TI  | \
+ 					 DMA_STATUS_MSK_COMMON_LOONGSON)
+ 
+-#define PCI_DEVICE_ID_LOONGSON_GMAC	0x7a03
++#define PCI_DEVICE_ID_LOONGSON_GMAC1	0x7a03
++#define PCI_DEVICE_ID_LOONGSON_GMAC2	0x7a23
+ #define PCI_DEVICE_ID_LOONGSON_GNET	0x7a13
+ #define DWMAC_CORE_MULTICHAN_V1	0x10	/* Loongson custom ID 0x10 */
+ #define DWMAC_CORE_MULTICHAN_V2	0x12	/* Loongson custom ID 0x12 */
+@@ -371,7 +372,7 @@ static struct mac_device_info *loongson_dwmac_setup(void *apriv)
+ 	/* Loongson GMAC doesn't support the flow control. Loongson GNET
+ 	 * without multi-channel doesn't support the half-duplex link mode.
+ 	 */
+-	if (pdev->device == PCI_DEVICE_ID_LOONGSON_GMAC) {
++	if (pdev->device != PCI_DEVICE_ID_LOONGSON_GNET) {
+ 		mac->link.caps = MAC_10 | MAC_100 | MAC_1000;
+ 	} else {
+ 		if (ld->multichan)
+@@ -659,7 +660,8 @@ static SIMPLE_DEV_PM_OPS(loongson_dwmac_pm_ops, loongson_dwmac_suspend,
+ 			 loongson_dwmac_resume);
+ 
+ static const struct pci_device_id loongson_dwmac_id_table[] = {
+-	{ PCI_DEVICE_DATA(LOONGSON, GMAC, &loongson_gmac_pci_info) },
++	{ PCI_DEVICE_DATA(LOONGSON, GMAC1, &loongson_gmac_pci_info) },
++	{ PCI_DEVICE_DATA(LOONGSON, GMAC2, &loongson_gmac_pci_info) },
+ 	{ PCI_DEVICE_DATA(LOONGSON, GNET, &loongson_gnet_pci_info) },
+ 	{}
+ };
+-- 
+2.47.1
 
-Takashi
