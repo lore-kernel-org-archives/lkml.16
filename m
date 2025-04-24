@@ -1,102 +1,152 @@
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5F61E633C
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:28:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15D531F473C;
+	Thu, 24 Apr 2025 07:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479708; cv=none; b=NnnzDEKQtjMCX1YfcCi+JUzlnJHaCnbJt6HKRYndBOL0NNMe103/n6w+lL1z7vyWdSKXv42jw7pz7HvqFH0jQncLgU5DEfU7ZYUf95zE0UEbfv13msdABRB+kpud61eoJhS9lKhnKM1TMAbCeB7B2memyNy+60Qge6WX+6FWMLU=
+	t=1745479708; cv=none; b=fg7fR2rQqCDzJ0J3L8fnY0yshflkp7cO5RTCzVFl7jTMOpuREcPAmdKbdL2u4A/fi051IM4C0scgTeQOFznKXjtkJf/6feBr//vSU/lkUc1tv4A61mRM12Mx3t82gRuRLGwmkoCuR91112ZqnN2pyZvtK6U6efhvgU90izCyabw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745479708; c=relaxed/simple;
-	bh=rrafsmQRgHakfZDjK1w6FolouhAo42wX9rjQTJYVUM4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XX61mk4hAsOpC4daVSl/ocGBwPxXhyUA6t6AYEwjxKtmawcqunjQHsNJiozPk8gKSyMsCQliEbyRvVHBr7Z11XGFVWNa6jqQ9qeByJSlf3LLWPrvO5nw2ym2a8zSzt4ucwPBFAhIEccTfdpzkw3l/ajhYIp4ioK5+xiHcZsrQ/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-5241abb9761so319333e0c.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:28:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745479704; x=1746084504;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9seCpacsNWkUEqB++ORNCS6Ujo5QbBvcFa4UL8hXrKk=;
-        b=JO+xgWJjlVLE4RY9mqXfpIuqerdyB+hc9M8MAx3VJlBvRQ4ecic12kG50JxAQKFUIT
-         QfKlxrCrygI4faXe95p9y10Ino0iAwww8YAZbq74o3WAQ8j2Id0cVlgY1p2BnMDLY/NU
-         2BPRa8Zq8Caw/N91CloKn0wVwrT/fdYNu7Em3M1mhVnoNYpeZ6SZVxU7CySOCoBYNcRn
-         KPeoeKMLqPX016EROcMOGRQnLlh8eRRS7ctDsLcIjfjYb2Lj2pr5FnZzIeYaEQCCgmiI
-         fxWVHB2C0aHctk2QVvkXsTPY8jiIb8E7mkUrKlpsvQ6z0gWPS0oU/zv93zFSRfqSEeM0
-         FW9w==
-X-Forwarded-Encrypted: i=1; AJvYcCWGSzB1h2aKBKXwWMZCjGysNiLy88GuI7oPQVcDZPrSVW2hTb+Z+R6HAMW8pTl4mHN3X6SyLwjls8eDfto=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7UTbLImuggzr72esUrJfqhBOhzAx3XYTCP8SpRzk9jsUliN6b
-	KngXkUK84BbDm6MNoRb9SRTTzhM8I2olvcmMvpiYNG0A5ujwYEVC9pdRavQj
-X-Gm-Gg: ASbGncu7hUcCQ02gqBubVcX4BRo6Ts8FmrBHw1Q9scxEKwBnIGv9/WOtZtn83H5iKb+
-	8HbswpFI0WeiQQNOVQGksZrAvYJtcmsXUMcwM3TRtYR9zbc3Ez2QqwTddFM/YPCEQS30+g4Rjpz
-	yt2jZSL3JhoF0jSIJeVUOFZmOqCN8IesH0IULba8jQwGwwFbqFdrGzZMMaOpNH+s7oUecgRAs18
-	ZTYPAF6mi7gwcQhmgLztuhk0PigVgRMX+qTgV/zfpQ/5PyHQJf0Iib773VtknytG/4oDfc1dHJP
-	vcMmvGXUqW3XVG4niBx8giLnbdlwj07VLIoJGxdrwxDRwUSdpyVlBoxpre2ksIU02v6G1MUuC4w
-	3+FA=
-X-Google-Smtp-Source: AGHT+IHhgZawk5Y3crT6l9NQ7aX+wSZieSsnIAXyuHkKbhGsDyx1dpzk61/t9/NwGrSDiz6ID2Y5IQ==
-X-Received: by 2002:a05:6122:325:b0:52a:79fd:d05e with SMTP id 71dfb90a1353d-52a79fdd0aemr367805e0c.2.1745479704202;
-        Thu, 24 Apr 2025 00:28:24 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52a79f93e90sm152165e0c.22.2025.04.24.00.28.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 00:28:23 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-86feb848764so293897241.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:28:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU7p4drdHoplzvWk9OjlVw0SekHvY7SL1rUOd2E0Vp9Kw6cnvtq5//9hL7PtJJJOmRDJx5Krrk622DonBk=@vger.kernel.org
-X-Received: by 2002:a05:6102:94d:b0:4c3:9b0:9e6b with SMTP id
- ada2fe7eead31-4d38d2231b4mr1364322137.10.1745479703504; Thu, 24 Apr 2025
- 00:28:23 -0700 (PDT)
+	bh=nliS1Ryu/AxQ/4yWmTsDpDQMJcLmVzKWX2wq+Fp7DoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UZl8N6cRj3yvA0zwgLiU1efAoDvRvT2ykQcQQVY9hwBaCc4STipgGEIyi3Vl32/5VyQbGptu1ysKtnO6IXtZN+8Ko/mTPYa6pju5oC4Rcq12b8AWBGLpJd8UpE/Cw9VmT2CWWYULuA1qWhQWfTsnz7P/oojWhxYns4tRWsoSNkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=qv4c6mkf; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="qv4c6mkf"
+Received: from ideasonboard.com (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 01D0A16A;
+	Thu, 24 Apr 2025 09:28:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1745479703;
+	bh=nliS1Ryu/AxQ/4yWmTsDpDQMJcLmVzKWX2wq+Fp7DoA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qv4c6mkfm5c6GOYW5AS8B/ndWYH9W4JwszyDoz8Fn7kH5IN91spPzCI57SGzOBDmA
+	 BRRh2HkDDqSLrfo7YFV8nLBxBReUKMyHzb3NLFe4wKxqYFQwf9xcDaRAb4D+4m8p3t
+	 AFHJw7MdTBl633EkN26JIGz6IcDqEhIVDYHgz/6o=
+Date: Thu, 24 Apr 2025 09:28:21 +0200
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, 
+	Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, 
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Subject: Re: [PATCH v7 0/5] media: renesas: vsp1: Add support for VSPX and IIF
+Message-ID: <tvrgn7umc2boqnyecpjijbbnxrtaqbtp5xe4lxngcmxhwkbdjp@hgutqpstyhqc>
+References: <20250401-v4h-iif-v7-0-cc547c0bddd5@ideasonboard.com>
+ <20250423211409.GB5879@pendragon.ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <d0f30a551064ca4810b1c48d5a90954be80634a9.1745453246.git.fthain@linux-m68k.org>
-In-Reply-To: <d0f30a551064ca4810b1c48d5a90954be80634a9.1745453246.git.fthain@linux-m68k.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 24 Apr 2025 09:28:11 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWD6GXLiKeOQRUT9BSPzXcMKYyk-YonvodZvTia2VEzHA@mail.gmail.com>
-X-Gm-Features: ATxdqUHeMyl0vXyqZGyuC_hoFBTwBf9LswSSeAvstppnbqazV4KiNo1iFAwzm_o
-Message-ID: <CAMuHMdWD6GXLiKeOQRUT9BSPzXcMKYyk-YonvodZvTia2VEzHA@mail.gmail.com>
-Subject: Re: [PATCH] m68k/mac: Fix macintosh_config for Mac II
-To: Finn Thain <fthain@linux-m68k.org>
-Cc: Joshua Thompson <funaho@jurai.org>, linux-m68k@lists.linux-m68k.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250423211409.GB5879@pendragon.ideasonboard.com>
 
-On Thu, 24 Apr 2025 at 02:13, Finn Thain <fthain@linux-m68k.org> wrote:
-> When booted on my Mac II, the kernel prints this:
+Hi Laurent
+
+On Thu, Apr 24, 2025 at 12:14:09AM +0300, Laurent Pinchart wrote:
+> Hi Jacopo,
 >
->     Detected Macintosh model: 6
->     Apple Macintosh Unknown
+> Thank you for the patches.
 >
-> The catch-all entry ("Unknown") is mac_data_table[0] which is only needed
-> in the unlikely event that the bootinfo model ID can't be matched.
-> When model ID is 6, the search should begin and end at mac_data_table[1].
-> Fix the off-by-one error that causes this problem.
+> On Tue, Apr 01, 2025 at 04:22:00PM +0200, Jacopo Mondi wrote:
+> > The VSPX is a VSP2 function that reads data from
+> > external memory using two RPF instances and feed it to the ISP.
+> >
+> > The VSPX includes an IIF unit (ISP InterFace) modeled in the vsp1 driver
+> > as a new, simple, entity type.
+> >
+> > IIF is part of VSPX, a version of the VSP2 IP specialized for ISP
+> > interfacing. To prepare to support VSPX, support IIF first by
+> > introducing a new entity and by adjusting the RPF/WPF drivers to
+> > operate correctly when an IIF is present.
 >
-> Cc: Joshua Thompson <funaho@jurai.org>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+> I think patches 1/5 to 4/5 are ready to be merged, but 5/5 needs more
+> work. Please let me know if I can take the first four patches in my tree
+> already.
 
-Nice catch!
+I think so, yes.
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-i.e. will queue in the m68k tree for v6.16.
+If we later find out we need to modify anything, we could do that on
+top, but at the moment I think all changes will be in the VSPX driver
+itself, which I will re-send separately.
 
-Gr{oetje,eeting}s,
+Thanks
+  j
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>
+> > Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+> > ---
+> > Changes in v7:
+> > - Include VSPX driver in the series
+> > - Use existing VSP1 formats and remove patches extending formats on RPF
+> > - Rework VSPX driver to split jobs creation and scheduling in two
+> >   different API entry points
+> > - Fix VSPX stride using the user provided bytesperline and using the
+> >   buffer size for ConfigDMA buffers
+> > - Link to v6: https://lore.kernel.org/r/20250321-v4h-iif-v6-0-361e9043026a@ideasonboard.com
+> >
+> > Changes in v6:
+> > - Little cosmetic change as suggested by Laurent
+> > - Collect tags
+> > - Link to v5: https://lore.kernel.org/r/20250319-v4h-iif-v5-0-0a10456d792c@ideasonboard.com
+> >
+> > Changes in v5:
+> > - Drop additional empty line 5/6
+> > - Link to v4: https://lore.kernel.org/r/20250318-v4h-iif-v4-0-10ed4c41c195@ideasonboard.com
+> >
+> > Changes in v4:
+> > - Fix SWAP bits for RAW10, RAW12 and RAW16
+> > - Link to v3: https://lore.kernel.org/r/20250317-v4h-iif-v3-0-63aab8982b50@ideasonboard.com
+> >
+> > Changes in v3:
+> > - Drop 2/6 from v2
+> > - Add 5/7 to prepare for a new implementation of 6/7
+> > - Individual changelog per patch
+> > - Add 7/7
+> > - Link to v2: https://lore.kernel.org/r/20250224-v4h-iif-v2-0-0305e3c1fe2d@ideasonboard.com
+> >
+> > Changes in v2:
+> > - Collect tags
+> > - Address review comments from Laurent, a lot of tiny changes here and
+> >   there but no major redesign worth an entry in the patchset changelog
+> >
+> > ---
+> > Jacopo Mondi (5):
+> >       media: vsp1: Add support IIF ISP Interface
+> >       media: vsp1: dl: Use singleshot DL for VSPX
+> >       media: vsp1: wpf: Propagate vsp1_rwpf_init_ctrls()
+> >       media: vsp1: rwpf: Support operations with IIF
+> >       media: vsp1: Add VSPX support
+> >
+> >  drivers/media/platform/renesas/vsp1/Makefile      |   3 +-
+> >  drivers/media/platform/renesas/vsp1/vsp1.h        |   4 +
+> >  drivers/media/platform/renesas/vsp1/vsp1_dl.c     |   7 +-
+> >  drivers/media/platform/renesas/vsp1/vsp1_drv.c    |  24 +-
+> >  drivers/media/platform/renesas/vsp1/vsp1_entity.c |   8 +
+> >  drivers/media/platform/renesas/vsp1/vsp1_entity.h |   1 +
+> >  drivers/media/platform/renesas/vsp1/vsp1_iif.c    | 121 +++++
+> >  drivers/media/platform/renesas/vsp1/vsp1_iif.h    |  29 ++
+> >  drivers/media/platform/renesas/vsp1/vsp1_pipe.c   |   1 +
+> >  drivers/media/platform/renesas/vsp1/vsp1_pipe.h   |   1 +
+> >  drivers/media/platform/renesas/vsp1/vsp1_regs.h   |   9 +
+> >  drivers/media/platform/renesas/vsp1/vsp1_rpf.c    |   9 +-
+> >  drivers/media/platform/renesas/vsp1/vsp1_vspx.c   | 604 ++++++++++++++++++++++
+> >  drivers/media/platform/renesas/vsp1/vsp1_vspx.h   |  86 +++
+> >  drivers/media/platform/renesas/vsp1/vsp1_wpf.c    |  24 +-
+> >  include/media/vsp1.h                              |  73 +++
+> >  16 files changed, 991 insertions(+), 13 deletions(-)
+> > ---
+> > base-commit: f2151613e040973c868d28c8b00885dfab69eb75
+> > change-id: 20250123-v4h-iif-a1dda640c95d
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
