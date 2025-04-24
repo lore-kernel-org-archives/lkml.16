@@ -1,152 +1,112 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2772284681
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:27:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E85D502BE;
+	Thu, 24 Apr 2025 17:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745515660; cv=none; b=t3WgVU54qdu6eoWJKzAxyzRiJpb1PJfhJ2xKop9nTgjDSsHXGrYBP5u3CDPS1lBsepzGiyJfBnqlR6Dh/UtLcBe88Js9jvyQWx/uQhpKQ8dGuGmNkA2jcdKFwjiyidWN3uxKgQ0RQUbvvqsQiG2vNBcbg3m0wsshstGJXC+jMWQ=
+	t=1745515692; cv=none; b=MOaXQwrv5Jhr3hd+uY2yfj9MqtPBLPGE9ZxWZNJLkd3KTsotzo8Mr8w4+Uvi7X+OBx2iogn7pr4tbmOX099EUscfjm7k2poVfoZH4KBmu2yU0CHLUNAQXkkxp5nLZRGYlN7Uh5fPYvd+ocXLLKoiv2blLrJlchYHo+mPMDnu85s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745515660; c=relaxed/simple;
-	bh=q5I+xTsja6/+NAMFo4t3Ik87fK6qI8eX8c59YtHm0FA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f9i5hYGniI3kxU+w4GGO/WcjX9/3eaxjRTada1v3+JniX0x1QBG60ZURTJoC38DPQ0zE4pMLSLjnYwRL/AnaPllPhwIrufYtxPkhlLS8gn7yWTqTAGt/YxGr1ETHyCk0ylCKQ/dUhxuCu4a5o7d73EFOHGY224gaatwklxcWQ70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PJPn2V7f; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745515692; c=relaxed/simple;
+	bh=2kjHhC3dxG5BHNkLf48Njg6bM4No+8qiawuMt1tj/nE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ilzN9NlpEOOlF3+4W808oK7K68s/AjvXDBuFKpavVKPsix5EOeaIhKmpH4FyaOWKs8+DMPr6IVedIPYfrVunn5v+TLR0GIRKJ0sR3CsTJ5xz+K4XxI2yo2K5V1wP/UJHirXm8f7pLs5AIXPBSdKcmjZBfvicLmVLrQjHigG163g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vt9WYs58; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PJPn2V7f"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so1357711b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:27:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745515658; x=1746120458; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VbeLnI23O/2RXZovesa/I0oinrI/iA9H2L6qN8Jup2k=;
-        b=PJPn2V7flntDsS4Dkj6AGOb5MxswTH/gb2hc0hFAoe3YglA24TIiHqtf7mF3MzZNU5
-         niTtZTuN0/Q6QcfleeJuNYCzOC7xzob3449fP33myDLa766dB5ez1YB/+BqsD7v+EiyW
-         BFkioNF7AMpOgb+t/A5mrqIDNUrWTitZQHbpBNtYRNpav/Ok539Hypq2Uvp7eN4eIF6b
-         pJ18p9P0JWp2O+YzUThyaz0drMshIYS4h/eVRK2TTLAtinE86EzaDHFAtxDFCZBxQ1t5
-         B3Ul/IG6S2ZxdOgmrTanmNNo3TdqvnMoUrt9eTuYgAXmB2nwUQyuEBRZGsEPeTe2hLox
-         +4yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745515658; x=1746120458;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VbeLnI23O/2RXZovesa/I0oinrI/iA9H2L6qN8Jup2k=;
-        b=VC9dzXrUqRJyInA/CCbyboNTrUaATOKTnOPgkHEAnR0Mw8T5J12Z4X5dLxfyZiUyOG
-         v2Q5U8w0TcYBydcRTa3TrZsEYkYtN/CqaX9v+1r32RXwZufVpotp6QxBW0ZUsh4w1aP4
-         HMRJvKKHP8Cy+kAOpjJqk0rHy/OxoLlk30URslXQgwyQ+Sf1Q8qL8MBzWXd5kLQXTV3M
-         V7N3LE0XZBCvzuFxP4XyJEsrlNwd9gToDte4oqJUIkFxoETXHkQahLqSeGnoOWIXWQTr
-         O6JNh+LSZbqJt8fZFea7cwCinaNWpTVFnPZLU0hJprB8Z9xXDSG2hXp3kwN9iC+fgJiv
-         x20w==
-X-Forwarded-Encrypted: i=1; AJvYcCW4MYF71aSK/Pn4mAJdMF1j1naBACrbT4OEM6972AJXEyPGrQcbgHTQiBtxP3lgkMZQqQMPugGH5hmboOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxblPLo19aprNWd+Ef+5+PBP5+5kMdnG/CPXBsFjuIdXRhbiZKu
-	9X/yjEYZBJa6clH218ba5Ykf2mUO8141PRFQrDfY+cQLbmSc7R96M87g+vmajiXvbVmYtsykT0y
-	q7HE3chIhQGxnVS+uMGX7dAKZLWpPprgGiZxFxw==
-X-Gm-Gg: ASbGnct/7OIF4IBt50f1wCbsk8RnFG1JS2OXRJ/Mi5QbyxtT24tHFeQL7s3Mkk/ctZR
-	2fHIyN6J3OeZGndKg6fP62TTrK5bLx4oSPOSg+cj6BemJRUQvvyT0b8WGTnw2+hc8fr5lubn/PK
-	vzGV4Qd9o+hYMCiq2F0ooTPOvVjc0lDDwlyfr4ALA9B8f5e2brUUkezle8QUv81HEPRA==
-X-Google-Smtp-Source: AGHT+IEC4h+n6V+A3Wkh5EyBqD0wTFX3L2FNrC/0h1SWeKXUdUnLiYu48vedhleXRiwH7v+CaXpMm7cUsFfYX6TKBn0=
-X-Received: by 2002:a05:6a00:80d:b0:736:34ff:be7 with SMTP id
- d2e1a72fcca58-73e24acafe4mr4147250b3a.15.1745515658003; Thu, 24 Apr 2025
- 10:27:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vt9WYs58"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E64C4CEE3;
+	Thu, 24 Apr 2025 17:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745515691;
+	bh=2kjHhC3dxG5BHNkLf48Njg6bM4No+8qiawuMt1tj/nE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Vt9WYs58G+zD+pVPzuTfYiH3UACzBDZu9vmwRBwBMJCXEQ6Y6w7htIBy4O1Uy0wmi
+	 NxMD9T+UM7lfumJDZNm9VLQVIn3CZHgc6smqZDZgJ46BBxjRc3iaac0wFq0TfaNTcT
+	 cCfOpgEyO++cXAXadJ0l/bMIUJ/wWDCy2Hq/VfSzJ3QK56/Li6Vz83pw0MgdVT4P1e
+	 teZkNVzoKDJbW5K4Zc2xeQ6+20kVY49RDfg4kJR9XBCVJgtFprUFJ0RaZ/48kYPzbJ
+	 QGFgkwWy43NYJ61QAetemj4FGqkg2eTjPa59946BwJXTkvRxw4fGMixrmbaQp9ITO/
+	 1vyuNv8T0Yj8g==
+Date: Thu, 24 Apr 2025 12:28:09 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Karolina Stolarek <karolina.stolarek@oracle.com>,
+	"Shen, Yijun" <Yijun.Shen@dell.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	Jon Pan-Doh <pandoh@google.com>,
+	Terry Bowman <terry.bowman@amd.com>, Len Brown <lenb@kernel.org>,
+	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ben Cheatham <Benjamin.Cheatham@amd.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Shuai Xue <xueshuai@linux.alibaba.com>,
+	Liu Xinpeng <liuxp11@chinatelecom.cn>,
+	Darren Hart <darren@os.amperecomputing.com>,
+	Dan Williams <dan.j.williams@intel.com>, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/AER: Consolidate CXL, ACPI GHES and native AER
+ reporting paths
+Message-ID: <20250424172809.GA492728@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250401180708.385396-1-leo.yan@arm.com> <20250401180708.385396-6-leo.yan@arm.com>
- <CAJ9a7VgTyKfebbYhEG5cGH4HyzU+4FavDXsAxGncXLsDtHSUHA@mail.gmail.com> <20250402155841.GO115840@e132581.arm.com>
-In-Reply-To: <20250402155841.GO115840@e132581.arm.com>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Thu, 24 Apr 2025 18:27:27 +0100
-X-Gm-Features: ATxdqUGBFz5B9fpLBwG1Cv3FoCD1MAVXU7_kEqsKCNI9bWn99Dnw_J5zgIlpHr4
-Message-ID: <CAJ9a7VjDe9U9RufKfuBAW9gAUdiWHyErxqsV=3gL=oaj7uS12Q@mail.gmail.com>
-Subject: Re: [PATCH v4 5/7] coresight: tmc: Re-enable sink after buffer update
-To: Leo Yan <leo.yan@arm.com>
-Cc: James Clark <james.clark@linaro.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, coresight@lists.linaro.org, 
-	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5a92a75f-4348-4578-9b61-45682edaa514@oracle.com>
 
-On Wed, 2 Apr 2025 at 16:58, Leo Yan <leo.yan@arm.com> wrote:
->
-> Hi Mike,
->
-> On Wed, Apr 02, 2025 at 04:05:10PM +0100, Mike Leach wrote:
->
-> [...]
->
-> > > @@ -482,6 +482,7 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
-> > >         unsigned long offset, to_read = 0, flags;
-> > >         struct cs_buffers *buf = sink_config;
-> > >         struct tmc_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-> > > +       struct perf_event *event = handle->event;
-> > >
-> > >         if (!buf)
-> > >                 return 0;
-> > > @@ -586,6 +587,14 @@ static unsigned long tmc_update_etf_buffer(struct coresight_device *csdev,
-> > >          * is expected by the perf ring buffer.
-> > >          */
-> > >         CS_LOCK(drvdata->base);
-> > > +
-> > > +       /*
-> > > +        * If the event is active, it is triggered during an AUX pause.
-> > > +        * Re-enable the sink so that it is ready when AUX resume is invoked.
-> > > +        */
-> > > +       if (!event->hw.state)
-> > > +               __tmc_etb_enable_hw(drvdata);
-> > > +
-> >
-> > Think that the  refcnt should be checked here too.
->
-> No, ETF driver uses spinlock to guard the entire region for checking
-> refcnt and updating buffer, here it is still in the same critical
-> region.  This is why the checking refcnt is not needed.
->
-> > Does the  ETB case need to be handled? - somewhat confusingly the
-> > coresight-tmc-etf.c file handles both ETF and ETB.
->
-> ETF is for the link mode, and ETB is for sink.  Updating buffer is only
-> for sink mode, this is why here I use __tmc_etb_enable_hw().  Does it
-> make sense?
->
-> I also have a question for the paired operations (this is applied for
-> both ETF and ETR drivers).
->
-> Now the flow is:
->
->   tmc_update_etf_buffer()  {
->
->     tmc_flush_and_stop();
->
->     update buffer;
->
->     __tmc_etb_enable_hw();
->   }
->
-> The operations are not paired between tmc_flush_and_stop() and
-> __tmc_etb_enable_hw().
->
-> The tmc_flush_and_stop() function only controls the TMC_FFCR register.
-> I'm not sure whether I need to extract the TMC_FFCR operations from
-> __tmc_etb_enable_hw() to use them for recovery in the update buffer.
-> Or do you think re-enabling the hardware in this patch is the safer
-> approach?
->
-> Thanks,
-> Leo
+[+to Yijun @Dell in case there's some testing opportunity, thread at
+https://lore.kernel.org/r/81c040d54209627de2d8b150822636b415834c7f.1742900213.git.karolina.stolarek@oracle.com]
 
-Looks OK to me.
+On Thu, Apr 24, 2025 at 11:01:11AM +0200, Karolina Stolarek wrote:
+> On 23/04/2025 22:31, Bjorn Helgaas wrote:
+> > On Wed, Apr 23, 2025 at 03:52:27PM +0200, Karolina Stolarek wrote:
+> > > 
+> > > I wasn't able to produce logs for the CXL path (that is, Restricted CXL
+> > > Device, as CXL1.1 devices not supported by the driver due to a missing
+> > > functionality; confirmed by Terry) and faced issues when trying to inject
+> > > errors via GHES. Is the lack of logs a blocker for this patch? I tested
+> > > other CXL scenarios and my changes didn't cause regression, as far as I
+> > > know.
+> > 
+> > Yes, I do think we need to say something about the output format
+> > changes.
+> 
+> I understand.
+> 
+> > I assume you're trying GHES on machines that actually do
+> > firmware-first error handling, right?  I found several GHES logs by
+> > searching the web for "APEI Generic Hardware Error Source" "PCIe
+> > error".  The majority were Dell boxes.
+> 
+> The only way to inject GHES errors I'm aware of is Mauro's patch for
+> qemu[1], so I went down the virtualization path. As for working with the
+> actual hardware, I'd need to ask around and learn more about the platform.
 
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+I'd be surprised if the qemu firmware supports firmware-first
+handling, so I wouldn't expect to be able to exercise this path that
+way.  I think there are some bits in HEST and similar tables that tell
+us about this, e.g., ACPI r6.5, sec 18.3.2.4.
 
+Unfortunately there are some typos in the spec (FIRMWARE_FIRST,
+FIRMWAREFIRST in 18.4), so it's a little hard to find all the
+references.
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+It's a long shot, but I added Yijun as a Dell contact that who might
+have a pointer to someone who could possibly test GHES logging on a
+Dell box with and without your patch so we could have a concrete
+comparison of the dmesg log differences.
+
+> > If you can't produce actual logs for comparison, I think we can take
+> > info from a sample log somebody has posted and synthesize what the
+> > changes would be after this patch.
+> 
+> I also found some logs at some point, mostly from 2021 and 2023, but I felt
+> bad about mocking up the messages and tried to produce actual logs. If I
+> can't find a way to get this working in two weeks, I'll revisit this idea.
+> 
+> All the best,
+> Karolina
+> 
+> -------------------------------------------------------------
+> [1] - https://lore.kernel.org/lkml/76824dfc6bb5dd23a9f04607a907ac4ccf7cb147.1740653898.git.mchehab+huawei@kernel.org/
