@@ -1,134 +1,163 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB44423ED74
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E09242D73;
+	Thu, 24 Apr 2025 10:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745490357; cv=none; b=Aw15ZSQmo09Cfi6ZnmFqa++zFyMzoXCwN3Wzw8EgYv85pvuhRzW9LooylBxdrZXIxkCitjCnxfhHjYMlQ7qy5sBFhG8kzPjv/PW23dlPH2gub9LRYGte36eYBaXxB0IJiBnrPcpCG4on+ugCxPgvF03N8vbdaiPh3hxI3CCJZgw=
+	t=1745490360; cv=none; b=WVMG9uCh+OsMWSpVVOnKsUUtEwPNs1DeOa4B1MqWiLteDmwp8s0ehbzV+DZVtxxAo9J4COTHNvJD2Jiledxh1ZjVhExi6uaYZhJqRfkBASWzlqObE05CszenXfTe6WyW8BxmaUhI6/B7zXxZ4uHgLIe30IClK4jO6xLHr8AohRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745490357; c=relaxed/simple;
-	bh=v4fkIWZlRlBlwcudSsMGRFd1gy1KN6jxgz3zZ2PYfv0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KbatVnoLPJaRxHkaigrb2lil2iMt5EOlaV+soIVWpxtbn5EM+F1K/1Uc0e+KqMUjaW9F6wR/nHglo4KFJoC3RfUHj7OfY1SbeiexqO5m3Jig+W19p6/bUZCEehaxzdTyhemyUIBAm1gu8dxnJPFr9f/PFWrwWNfUElbh1Arx+YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EL6uNv5m; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745490360; c=relaxed/simple;
+	bh=TEy69hatB9WvAQZk1Qj5SRXNdR02N3m6osQeJAFrqRk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YqFsrsW/qttHpCdh/vWOcVhlXrMKCk4EMdU8TxkkkgCJ+a4L0z7CEBo5jT55GprAfeS+dSSEwxMku22UOlyJZYQgV/fiPaWMvuAnswCH2KtJ+ifUw5r1fZwAUwTROSFJ7OBHgMFBjHG4dPnzK5Ez/bDCJGpUgekQemXjPU7gpSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KA15Nqno; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EL6uNv5m"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-227b828de00so8282915ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745490355; x=1746095155; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aSScOVwhUO+K0/3KqN7maXbkfUTR6/cC4fz9TlS9l30=;
-        b=EL6uNv5m3QW1X/b7SX9m4M4lIslDnX9Y+xejcBfq+KqM24ImmxwfKeUABLnxl50UZF
-         QZN2TR5j7p9j3XzWAJiQvxuGTjWqGiMKgMHNuKxxgwvdfBiSMN2s1ZptGv68RGvt8VcZ
-         lQTp4E3fjxN//eSjSAoLN8xQJs/gSmlSDhL2w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745490355; x=1746095155;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aSScOVwhUO+K0/3KqN7maXbkfUTR6/cC4fz9TlS9l30=;
-        b=gsNEOLpk4ssPl/p0DorjtpCjvAialR0zs8kkhhqIKpXtxJ5n9BzFaCiF5yNXV0kzn3
-         whb7Btu1nA3H4W4FunDR2ej4yNl9xHBXl+MUBkuh+fq9hcfIzCYCCVKAG3tr3U3brsy8
-         EkW6I10ws6TdHEYia6zX0J6X9qdMOAXbMwM3GjvmWL/UwkZLVncFXMAeXNTMOaojXs6C
-         UlpO7M5r75st3SQRyl+WtrydJoPSSLOQAuH0WhDC2Nb9mskqV4FTODNrgF4+qmUfw5+m
-         LQ1CIwHpZKx0Sp+CO3XlGBq7qeTvOSuTUCHM2XuIXT+nEA1+0oXtu6Y0GbNIiuPWn5uC
-         bkoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVraBL2XOc+7WhQBZl3I3W+X08ieNufhEdDi8bb0PjrPo+4+4S5cgz0WKWW6TQ8eJ3T5+SJd42hL0LnAx8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvYN3YaLC2wDQMpkTOUGeQ5wug1niZCOs1ikCrB6UAIFt8Yq2S
-	D2AcZIgxB3crZaqS1vTaRKcBfTnN5nDGcKGtQNSVB0WFWypAkx2Lav607DcV+w==
-X-Gm-Gg: ASbGncs6jqHdRWZp4/8BiT+BKQnWpJnG6ZTyD9pf1+68NL1p9tg/9L71665SOoU8+iG
-	96cBWeS7FK8Wu54ha7NE8QHsbi5vZo5N8PcPC0wFmXX/0+1zpWTnaAspNEuoi9gt9t+Eyty3XXi
-	xMWIogl06VIv2csPs3MTb/9VAfIdfd+KdxOXoCXm0jtvIsEZpBJe2Qvjr7EG1S9HohijNlamMsu
-	QnYijHtUHzwVUDzbC8WXNOpxQSzwvBPiwg00hOMieY7DHV0Y5noLMy1DsXcfNxMTS7XNYPqh3uX
-	Q4xLEzNHENwJlLJDfvOFvVv6EceGSVwyshssP5Xhb8wnOqiUsbixuVmTZA==
-X-Google-Smtp-Source: AGHT+IGVWgP+9f44cPO1R7mfB5z1uFUey5yQnac/oTnGNxfAaOr9FFOdDrHbUFBI3ie8mEMC8Jfp1w==
-X-Received: by 2002:a17:903:17ce:b0:223:5e76:637a with SMTP id d9443c01a7336-22db3c0e722mr27960035ad.23.1745490355124;
-        Thu, 24 Apr 2025 03:25:55 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:fa13:e633:684b:257])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dda40fsm9680305ad.104.2025.04.24.03.25.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 03:25:54 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Jiaxin Yu <jiaxin.yu@mediatek.com>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 11/13] arm64: dts: mediatek: mt8183-kukui: Reserve memory for audio frontend
-Date: Thu, 24 Apr 2025 18:25:05 +0800
-Message-ID: <20250424102509.1083185-12-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-In-Reply-To: <20250424102509.1083185-1-wenst@chromium.org>
-References: <20250424102509.1083185-1-wenst@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KA15Nqno"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B441C4CEE3;
+	Thu, 24 Apr 2025 10:25:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745490359;
+	bh=TEy69hatB9WvAQZk1Qj5SRXNdR02N3m6osQeJAFrqRk=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=KA15NqnoNNLGZtHty+zT0MAYmtgI5unjRVmOAGYqnksi1yMeeNx9GSiTjCtMn5G+I
+	 IRzm7DNRDbqV/Tz6J9SGnym0Sq/979QXWvLieyvMJ51i00iWlo8ngTNg11sLq6SEyO
+	 mUhk12TWZPlbTetukKFeD+Rx71DQWTUXqN+VxVqFTV13JJoowCvjjZSBEY8o7j8MmE
+	 gVXEkXXKqN8TN8JkNX0+hWfXHSc4TpsmnnfkiszxWTeCx138BdET27Cm6ADlStS9rZ
+	 2GffQxptAbfH2il6DAiH9dxjUEe/tYNB7VXxlGBnAslLhxDyEaOqxFuzE6r+EoWFKW
+	 NFbKm3dAcdFrw==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Thu, 24 Apr 2025 12:25:14 +0200
+Subject: [PATCH v2 03/22] arm64/sysreg: Add ICC_PPI_PRIORITY<n>_EL1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250424-gicv5-host-v2-3-545edcaf012b@kernel.org>
+References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+In-Reply-To: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.14.2
 
-Some MediaTek platforms already reserve a small block of memory for the
-audio frontend. These platforms reserve it at a fixed address, though it
-is unclear if that is due to hardware access restrictions or simply
-compacting the reserved memory blocks together.
+Add ICC_PPI_PRIORITY<n>_EL1 sysreg description.
 
-Reserve the same size of memory on the MT8183 Kukui & Jacuzzi families
-as well, to align with the other MediaTek-based ChromeOS platforms. This
-also helps with memory starvation as these devices commonly end up in
-low memory conditions.
-
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/tools/sysreg | 83 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-index 0fe9f2d1b912..00b97cfa0eec 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183-kukui.dtsi
-@@ -85,6 +85,13 @@ reserved_memory: reserved-memory {
- 		#size-cells = <2>;
- 		ranges;
+diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+index 06e1fb5e126b41b7e41fffa0a00553d73197ac3c..0cc1268c0bfad8266da47b441e80c603e46c00ae 100644
+--- a/arch/arm64/tools/sysreg
++++ b/arch/arm64/tools/sysreg
+@@ -2310,6 +2310,89 @@ Field	31	C
+ Field	30:0	P
+ EndSysreg
  
-+		afe_dma_mem: audio-dma-pool {
-+			compatible = "shared-dma-pool";
-+			size = <0 0x100000>;
-+			alignment = <0 0x10>;
-+			no-map;
-+		};
++SysregFields	ICC_PPI_PRIORITYRx_EL1
++Res0	63:61
++Field	60:56	Priority7
++Res0	55:53
++Field	52:48	Priority6
++Res0	47:45
++Field	44:40	Priority5
++Res0	39:37
++Field	36:32	Priority4
++Res0	31:29
++Field	28:24	Priority3
++Res0	23:21
++Field	20:16	Priority2
++Res0	15:13
++Field	12:8	Priority1
++Res0	7:5
++Field	4:0	Priority0
++EndSysregFields
 +
- 		scp_mem_reserved: memory@50000000 {
- 			compatible = "shared-dma-pool";
- 			reg = <0 0x50000000 0 0x2900000>;
-@@ -198,6 +205,10 @@ tboard_thermistor2: thermal-sensor2 {
- 	};
- };
- 
-+&afe {
-+	memory-region = <&afe_dma_mem>;
-+};
++Sysreg	ICC_PPI_PRIORITYR0_EL1	3	0	12	14	0
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
 +
- &auxadc {
- 	status = "okay";
- };
++Sysreg	ICC_PPI_PRIORITYR1_EL1	3	0	12	14	1
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR2_EL1	3	0	12	14	2
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR3_EL1	3	0	12	14	3
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR4_EL1	3	0	12	14	4
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR5_EL1	3	0	12	14	5
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR6_EL1	3	0	12	14	6
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR7_EL1	3	0	12	14	7
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR8_EL1	3	0	12	15	0
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR9_EL1	3	0	12	15	1
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR10_EL1	3	0	12	15	2
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR11_EL1	3	0	12	15	3
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR12_EL1	3	0	12	15	4
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR13_EL1	3	0	12	15	5
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR14_EL1	3	0	12	15	6
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
++Sysreg	ICC_PPI_PRIORITYR15_EL1	3	0	12	15	7
++Fields	ICC_PPI_PRIORITYRx_EL1
++EndSysreg
++
+ Sysreg	PMSELR_EL0	3	3	9	12	5
+ Res0	63:5
+ Field	4:0	SEL
+
 -- 
-2.49.0.805.g082f7c87e0-goog
+2.48.0
 
