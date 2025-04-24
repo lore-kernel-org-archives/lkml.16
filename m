@@ -1,178 +1,175 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1132E1B414E
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0102D1A2381;
+	Thu, 24 Apr 2025 15:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745509226; cv=none; b=GE9dVMmOE0rse7fADkj+nfxACggT2avRTi6fKGoSzsryDhXHm04Z7bvOqQ6MOw/1aHkA84xcehQor4UFoi7tyw4gxYjdYKMU95Uxy4gCVkqTQzzU2wnTRFHJ4sDw6sI7VxDcVmHA4xFcbx0hEUOVdhqZVVOiqgc74v1IAPGGOM8=
+	t=1745509273; cv=none; b=SuWqb0yCX6at18LQ+0S5zwcuixfw4hXT9BUTsBV+wrIHuwHt08Fohn6IQ9fOr2YFD2VLOL3iOwyk92OKLH5SBHw3DtdwBUV1RSq6/ODkGSQmHyzcPvanE2cCq6LfcKrteYRUNJighj6KYPtOi360+v9nImoV6et11iKgOip2MZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745509226; c=relaxed/simple;
-	bh=2kU4zcvrL7YbCjnkq7n+jO3UxoN5TmVVEjgW6RQAS3I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 Cc:Content-Type; b=rGeATBeNUIiLKQ2O31zmywhDt9qceR4zWEViVJSilhVyDfhWAT6xH6TZiXao/hb8DeDULKosNW8eOqm8nC/ws8gvib1a/4HKa9jUWwkb9JJm0J8DWyiZNtQySw6I2pUZN1Vci+YH765USNhFJFFOPrCP/86Rxgktlti1xjXy02Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LMBwdwf6; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745509273; c=relaxed/simple;
+	bh=BUsfWyugC4fOI4dbDRGKFEho2nEDDQ1VSW+SJy2dCBE=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=hrxSLwcRrcycoCgRR1GYViIRG9sJ4HQhU1SK3F7OrHgIDtge9cXQ8+bbuy5yeAVcFCm/OBaPMli0Yn7RLDZoGv0X2r7s5j9AGhvMRMX0NRgBN+IzxzfJ21bVxKPiTNWiYpM74bajJTTAJdreMztwF8muROoKxzOgAqT4VVKAqIA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f41d19ZA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=D5Xu5OGB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMBwdwf6"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736a7e126c7so1142352b3a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745509224; x=1746114024; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pElVRnbM8O/DhK/o5KfXpu3krpqXcfDKNkQNvTEfW/E=;
-        b=LMBwdwf6eKrFzDglb1kzXnPXxONx0B/bqXqb5AQebsMxlyWDJLC1QQh7JwHqsg+1t+
-         B3LTZJ4E5Ia5M2o6cpbd9VoJBm8mQHcyqxNZoRC4848OodgC6pPxRli5wFm7ZPMjc+/N
-         9CJO9z5a5OjiWdSM8Yb9rQ4XdZuJ/DxRrL+VY2jsTqVlPiBqusITYXJ9u/o/gwGHnkAm
-         +aSh5SUueUsAnzNCs76db2sQXfY2VB3EuJ0M5yyr8cVXFMPpGyJGtvAcszZhhUvROCNd
-         k1u6CWZAA3Ng+U4DnsPFu+FF/yx8uPUO+V3YKpXVtFvCdFcSlRtzo/PTzaTakI4T+6x/
-         RbHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745509224; x=1746114024;
-        h=content-transfer-encoding:cc:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pElVRnbM8O/DhK/o5KfXpu3krpqXcfDKNkQNvTEfW/E=;
-        b=FJBL1XZFq+nkc/KNzvVUuwCXxt1GfyxZtupCz0yEqLYkyj6HYxJm3ZgjdqH5ocj7oz
-         z3hXl46gSNX6KjA4OfVg6ib+y8uJdYimjPE1elWk4LOxlOLE8u+eTkbS6EnUeT1+JPDs
-         kzbZ8kVKKLJe/Szi2ZuXDbxc5IdF0rhKNebFds0DZnoiDTlX8UpIoJ+K6lTGeSdX9syr
-         Kgz3cOaZS/wkpypVJzL7AlsJTuc+F0MZGJulMJheINTKwFOJMp8wqd73zErTG3I4YpIf
-         F60VAXhC96rKG7+/DE73wOMzggMPvtA+3SDChym29DazDQ9HxwGiphuZyWh0TRmu7Ne+
-         x9Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWTImh+Q9cDeleDmL7B+tVQlMSQxY/5pLt0/UmRWpdZTs5LVSqSeTUn5jXfBIU1RZ1CiBit5q2pCQ5shM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzihUdPxp3+Y7ruNRKNn7I+sS7PwdYb2RL4a2SHEt0vRCItMVBb
-	1xjx5lZNCKFlCoCwSZkueFZ0uCdkd3OgVoWi9avv7mgaiAYkSrf22DH+s8j6LvOJuu8wIAAM85X
-	fJINLviu+swCCjT72QDlLZmLP2BY=
-X-Gm-Gg: ASbGnctLFzO6isUU8SQ8dGrGQRU8rGGgRQjYAAftXTZJZJvS9/Y06I7UTner540Kzmb
-	OvJ4cOnLuBR9xU87txn0iL1TkTnZPXojeGtg5KOFayRUFB3AT7PeaKVOrwjTuQausyopXyeFL1i
-	3IedTZV9jvmDi0xJkCOJ0/Pw==
-X-Received: by 2002:a05:6a00:1c92:b0:736:34ca:deee with SMTP id
- d2e1a72fcca58-73e32fb2b6fmt232027b3a.7.1745509224234; Thu, 24 Apr 2025
- 08:40:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f41d19ZA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="D5Xu5OGB"
+Date: Thu, 24 Apr 2025 15:41:03 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745509269;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PuqbTaAzURsbYcqcz+do/Cu2Srz5dw7WWCHXR3VUQys=;
+	b=f41d19ZAZbMeqcWjS5SkjjoxO1YI5LLZK3wh+BSpUPFicpg0chxjYJXZcAwHKyAEZVYL6A
+	m3Ni2xP/vCCrHhF3Sy+bQLCNhaa8sivJvS0opFg/008/op5hcAIrVgMDt0dhs1TlHjoenR
+	u31fRVN5Yal0fpUIj0vOncetahdctWcD2DkiDFKbZuS9KLABo5LlGvvnq9EIIHvxzdohC+
+	lctX4+bDdEjA1A+EJSdYfVpXxKUrYSVNgd7whAbGaMpXTzkPfL1Q/G1wiOHsZapS7XCjFm
+	SmGlFzJmH1OBc7n6AdDHslr7uXrwjU+Pi0DEPgNEdWDF+E/nOFFX902ixxs8Cw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745509269;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=PuqbTaAzURsbYcqcz+do/Cu2Srz5dw7WWCHXR3VUQys=;
+	b=D5Xu5OGBSIpfC4GVhKnVVa5zHjqGlhMdY8yfmOs5oq3m+dlj3KuZLBCVfa7udpTXWHB9oh
+	iMwGwUoS48KYbzCw==
+From: "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/boot] x86/sev: Share the sev_secrets_pa value again
+Cc: Tom Lendacky <thomas.lendacky@amd.com>, Ingo Molnar <mingo@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ Kevin Loughlin <kevinloughlin@google.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <cf878810-81ed-3017-52c6-ce6aa41b5f01@amd.com>
+References: <cf878810-81ed-3017-52c6-ce6aa41b5f01@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
-In-Reply-To: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-Date: Thu, 24 Apr 2025 11:40:13 -0400
-X-Gm-Features: ATxdqUG3sr40DXPqU7DwPGb7IBjfQ5iQvZE5Wbb_bSEPGq081PqgLufaGeVqmLk
-Message-ID: <CAEjxPJ6V8aApDHaiU2+8pfDzf7S-bpgdFO3X6UHjRdCNFUNhXw@mail.gmail.com>
-Subject: Re: [PATCH] fs/xattr.c: fix simple_xattr_list to always include
- security.* xattrs
-Cc: paul@paul-moore.com, omosnace@redhat.com, selinux@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174550926387.31282.8024498782812144912.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 11:28=E2=80=AFAM Stephen Smalley
-<stephen.smalley.work@gmail.com> wrote:
->
-> The vfs has long had a fallback to obtain the security.* xattrs from the
-> LSM when the filesystem does not implement its own listxattr, but
-> shmem/tmpfs and kernfs later gained their own xattr handlers to support
-> other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
-> filesystems like sysfs no longer return the synthetic security.* xattr
-> names via listxattr unless they are explicitly set by userspace or
-> initially set upon inode creation after policy load. coreutils has
-> recently switched from unconditionally invoking getxattr for security.*
-> for ls -Z via libselinux to only doing so if listxattr returns the xattr
-> name, breaking ls -Z of such inodes.
->
-> Before:
-> $ getfattr -m.* /run/initramfs
-> <no output>
-> $ getfattr -m.* /sys/kernel/fscaps
-> <no output>
-> $ setfattr -n user.foo /run/initramfs
-> $ getfattr -m.* /run/initramfs
-> user.foo
->
-> After:
-> $ getfattr -m.* /run/initramfs
-> security.selinux
-> $ getfattr -m.* /sys/kernel/fscaps
-> security.selinux
-> $ setfattr -n user.foo /run/initramfs
-> $ getfattr -m.* /run/initramfs
-> security.selinux
-> user.foo
->
-> Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=3DiOawX4y77ph=
-0EcfcqcUUj+T87FKyA@mail.gmail.com/
-> Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.small=
-ey.work@gmail.com/
-> Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+The following commit has been merged into the x86/boot branch of tip:
 
-Fixes: b09e0fa4b4ea66266058ee ("tmpfs: implement generic xattr support")
+Commit-ID:     18ea89eae404d119ced26d80ac3e62255ce15409
+Gitweb:        https://git.kernel.org/tip/18ea89eae404d119ced26d80ac3e62255ce15409
+Author:        Tom Lendacky <thomas.lendacky@amd.com>
+AuthorDate:    Wed, 23 Apr 2025 10:22:31 -05:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 24 Apr 2025 17:20:52 +02:00
 
-> ---
->  fs/xattr.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/fs/xattr.c b/fs/xattr.c
-> index 02bee149ad96..2fc314b27120 100644
-> --- a/fs/xattr.c
-> +++ b/fs/xattr.c
-> @@ -1428,6 +1428,15 @@ static bool xattr_is_trusted(const char *name)
->         return !strncmp(name, XATTR_TRUSTED_PREFIX, XATTR_TRUSTED_PREFIX_=
-LEN);
->  }
->
-> +static bool xattr_is_maclabel(const char *name)
-> +{
-> +       const char *suffix =3D name + XATTR_SECURITY_PREFIX_LEN;
-> +
-> +       return !strncmp(name, XATTR_SECURITY_PREFIX,
-> +                       XATTR_SECURITY_PREFIX_LEN) &&
-> +               security_ismaclabel(suffix);
-> +}
-> +
->  /**
->   * simple_xattr_list - list all xattr objects
->   * @inode: inode from which to get the xattrs
-> @@ -1460,6 +1469,17 @@ ssize_t simple_xattr_list(struct inode *inode, str=
-uct simple_xattrs *xattrs,
->         if (err)
->                 return err;
->
-> +       err =3D security_inode_listsecurity(inode, buffer, remaining_size=
-);
-> +       if (err < 0)
-> +               return err;
-> +
-> +       if (buffer) {
-> +               if (remaining_size < err)
-> +                       return -ERANGE;
-> +               buffer +=3D err;
-> +       }
-> +       remaining_size -=3D err;
-> +
->         read_lock(&xattrs->lock);
->         for (rbp =3D rb_first(&xattrs->rb_root); rbp; rbp =3D rb_next(rbp=
-)) {
->                 xattr =3D rb_entry(rbp, struct simple_xattr, rb_node);
-> @@ -1468,6 +1488,10 @@ ssize_t simple_xattr_list(struct inode *inode, str=
-uct simple_xattrs *xattrs,
->                 if (!trusted && xattr_is_trusted(xattr->name))
->                         continue;
->
-> +               /* skip MAC labels; these are provided by LSM above */
-> +               if (xattr_is_maclabel(xattr->name))
-> +                       continue;
-> +
->                 err =3D xattr_list_one(&buffer, &remaining_size, xattr->n=
-ame);
->                 if (err)
->                         break;
-> --
-> 2.49.0
->
+x86/sev: Share the sev_secrets_pa value again
+
+This commits breaks SNP guests:
+
+  234cf67fc3bd ("x86/sev: Split off startup code from core code")
+
+The SNP guest boots, but no longer has access to the VMPCK keys needed
+to communicate with the ASP, which is used, for example, to obtain an
+attestation report.
+
+The secrets_pa value is defined as static in both startup.c and
+core.c. It is set by a function in startup.c and so when used in
+core.c its value will be 0.
+
+Share it again and add the sev_ prefix to put it into the global
+SEV symbols namespace.
+
+[ mingo: Renamed to sev_secrets_pa ]
+
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Dionna Amalie Glaze <dionnaglaze@google.com>
+Cc: Kevin Loughlin <kevinloughlin@google.com>
+Link: https://lore.kernel.org/r/cf878810-81ed-3017-52c6-ce6aa41b5f01@amd.com
+---
+ arch/x86/boot/startup/sev-startup.c | 4 ++--
+ arch/x86/coco/sev/core.c            | 7 ++-----
+ arch/x86/include/asm/sev-internal.h | 1 +
+ 3 files changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/boot/startup/sev-startup.c b/arch/x86/boot/startup/sev-startup.c
+index 36a75c5..f901ce9 100644
+--- a/arch/x86/boot/startup/sev-startup.c
++++ b/arch/x86/boot/startup/sev-startup.c
+@@ -55,7 +55,7 @@ struct ghcb *boot_ghcb __section(".data");
+ u64 sev_hv_features __ro_after_init;
+ 
+ /* Secrets page physical address from the CC blob */
+-static u64 secrets_pa __ro_after_init;
++u64 sev_secrets_pa __ro_after_init;
+ 
+ /* For early boot SVSM communication */
+ struct svsm_ca boot_svsm_ca_page __aligned(PAGE_SIZE);
+@@ -1367,7 +1367,7 @@ bool __head snp_init(struct boot_params *bp)
+ 		return false;
+ 
+ 	if (cc_info->secrets_phys && cc_info->secrets_len == PAGE_SIZE)
+-		secrets_pa = cc_info->secrets_phys;
++		sev_secrets_pa = cc_info->secrets_phys;
+ 	else
+ 		return false;
+ 
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index 617988a..ac40052 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -80,9 +80,6 @@ static const char * const sev_status_feat_names[] = {
+ 	[MSR_AMD64_SNP_SMT_PROT_BIT]		= "SMTProt",
+ };
+ 
+-/* Secrets page physical address from the CC blob */
+-static u64 secrets_pa __ro_after_init;
+-
+ /*
+  * For Secure TSC guests, the BSP fetches TSC_INFO using SNP guest messaging and
+  * initializes snp_tsc_scale and snp_tsc_offset. These values are replicated
+@@ -109,7 +106,7 @@ static u64 __init get_snp_jump_table_addr(void)
+ 	void __iomem *mem;
+ 	u64 addr;
+ 
+-	mem = ioremap_encrypted(secrets_pa, PAGE_SIZE);
++	mem = ioremap_encrypted(sev_secrets_pa, PAGE_SIZE);
+ 	if (!mem) {
+ 		pr_err("Unable to locate AP jump table address: failed to map the SNP secrets page.\n");
+ 		return 0;
+@@ -1599,7 +1596,7 @@ struct snp_msg_desc *snp_msg_alloc(void)
+ 	if (!mdesc)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	mem = ioremap_encrypted(secrets_pa, PAGE_SIZE);
++	mem = ioremap_encrypted(sev_secrets_pa, PAGE_SIZE);
+ 	if (!mem)
+ 		goto e_free_mdesc;
+ 
+diff --git a/arch/x86/include/asm/sev-internal.h b/arch/x86/include/asm/sev-internal.h
+index e54847a..a78f972 100644
+--- a/arch/x86/include/asm/sev-internal.h
++++ b/arch/x86/include/asm/sev-internal.h
+@@ -5,6 +5,7 @@
+ extern struct ghcb boot_ghcb_page;
+ extern struct ghcb *boot_ghcb;
+ extern u64 sev_hv_features;
++extern u64 sev_secrets_pa;
+ 
+ /* #VC handler runtime per-CPU data */
+ struct sev_es_runtime_data {
