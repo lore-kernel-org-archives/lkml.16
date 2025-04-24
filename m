@@ -1,420 +1,324 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96F1204680;
-	Thu, 24 Apr 2025 09:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BE6214A7D
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745485729; cv=none; b=RWQALYPUFD2IpK368AZfupsqsKiY4s+DRts68S9FoPu9BPXPOC3taHlupkIYkkfip1419n3ah7b9pJbwBrueHhIPQFJb6zkKHJ4PM938WvD4Wp/kTHGw6srEff3FYjx7NptZI7Ex3InRtTirkhNLnyRWLS+vY6Kxb/TLi/izMYE=
+	t=1745485742; cv=none; b=kT1CUzkB1qdf+Fl+jljOFkrUBNf+B+TE5sL8mEi2fF41dzfhacTY0f7JOwQdXgnr/a4DTMKQUw42C5DvIZXniC/20evWK46WT2bQ99gh+lYDAnC2cwOzWApdNWFYGTPieEeBS/9cGrLQHN7w1BvA5Uxbk6iHF+nWFDHq4yhbuyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745485729; c=relaxed/simple;
-	bh=xy34Cyx0NXocheH5er62qckwL15DF0wpanlMyZ27a7E=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f/M4w3ZZORhA/9wBhLOyxqUTtSt5N48nnzwnXtPkAHfNKE7dTEqAwxBLrHhnwU0LHZ2ZgRJgr9daIkSrV6INSCP9nR2JUYOKM/TCaVsVFbNhHQNwcR87K5oHhWM6q9F+K3wZnuyE1aIl4ZhR74Nl+Y79JEUtShOdVM97RUlh5h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=qNswB0y1; arc=none smtp.client-ip=210.61.82.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1745485742; c=relaxed/simple;
+	bh=UAsSnCZGsDqQTiTpVbn0ixPBpHqio4DIzSXgqkSakzY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rn/Yl2K+CffzlPU7tc3QZYfdEPI5J/RoVkarMCuzNQSRLJ8PBNxMmW538ugU8c5ajGDhniVktCDf0k/x6nLDc0L4/+w0Tt5N9rleLhd3diyAPYnRkhoQNEzc1zAepi6XsZFDxq+Sye+A4XO16n88gB3FSBpeUBebWU6G1C/2E8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YpV0sqbe; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=YpV0sqbe; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="qNswB0y1"
-X-UUID: b653b89420eb11f09b6713c7f6bde12e-20250424
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=PZtjPUC9P1m6QBav8LccA+qS1GiRRWEFEzzsGhqBncM=;
-	b=qNswB0y17vmqv3PTFm1y6348hhVi5qPFpodkN2cwWJdYSC4XLq7SanT+Ai9Whq4+LBcwNUnTXmphO8/hBjhRN1SHnDyjIegW43pNuFBfstQVFRjGdtg55hhnbrF2hy/wcucxe7H5pcYzcyzJ2ecNTHKJD+yiOiN+k5ASO2+cIYU=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.2.1,REQID:d5bd5e58-16d1-41d8-b03f-8720c5679434,IP:0,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
-	elease,TS:0
-X-CID-META: VersionHash:0ef645f,CLOUDID:e574d26f-e08c-41ab-89e8-3ba0a33da853,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:-3,IP:ni
-	l,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
-	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: b653b89420eb11f09b6713c7f6bde12e-20250424
-Received: from mtkmbs14n1.mediatek.inc [(172.21.101.75)] by mailgw02.mediatek.com
-	(envelope-from <jianhua.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1654757453; Thu, 24 Apr 2025 17:08:39 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Thu, 24 Apr 2025 17:08:38 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Thu, 24 Apr 2025 17:08:37 +0800
-From: Jianhua Lin <jianhua.lin@mediatek.com>
-To: <angelogioacchino.delregno@collabora.com>,
-	<sebastian.fricke@collabora.com>, <daniel.almeida@collabora.com>,
-	<mchehab@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jianhua Lin
-	<jianhua.lin@mediatek.com>
-Subject: [PATCH v8 1/1] media: mediatek: jpeg: support 34bits
-Date: Thu, 24 Apr 2025 17:08:24 +0800
-Message-ID: <20250424090824.5309-1-jianhua.lin@mediatek.com>
-X-Mailer: git-send-email 2.46.0
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YpV0sqbe";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="YpV0sqbe"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4F8C71F38C;
+	Thu, 24 Apr 2025 09:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745485737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UAsSnCZGsDqQTiTpVbn0ixPBpHqio4DIzSXgqkSakzY=;
+	b=YpV0sqbe2x7nb/576c0zEvJ6PxAv709DbUEyGvmPoYk55JlhxAy/vcQKJp4Vyc6ewneVCH
+	xeaeCPHrlXaKwflFLLqgiVx6YF9r1du6UlllAyp4lNKXqoif5CMg5FHKCxrlJqMIFtIHlj
+	31q4nhQgoDk/rz2AZR1FTBYZkI/KdrI=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1745485737; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=UAsSnCZGsDqQTiTpVbn0ixPBpHqio4DIzSXgqkSakzY=;
+	b=YpV0sqbe2x7nb/576c0zEvJ6PxAv709DbUEyGvmPoYk55JlhxAy/vcQKJp4Vyc6ewneVCH
+	xeaeCPHrlXaKwflFLLqgiVx6YF9r1du6UlllAyp4lNKXqoif5CMg5FHKCxrlJqMIFtIHlj
+	31q4nhQgoDk/rz2AZR1FTBYZkI/KdrI=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 789B5139D0;
+	Thu, 24 Apr 2025 09:08:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id HPTLG6j/CWgMFAAAD6G6ig
+	(envelope-from <jgross@suse.com>); Thu, 24 Apr 2025 09:08:56 +0000
+Message-ID: <f7fe0d58-c6a0-4d25-8c5f-73f7b747970f@suse.com>
+Date: Thu, 24 Apr 2025 11:08:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 00/21] KVM: TDX huge page support for private memory
+To: "Kirill A. Shutemov" <kirill@shutemov.name>,
+ Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com,
+ dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com,
+ ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com,
+ david@redhat.com, vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de,
+ thomas.lendacky@amd.com, pgonda@google.com, zhiquan1.li@intel.com,
+ fan.du@intel.com, jun.miao@intel.com, ira.weiny@intel.com,
+ chao.p.peng@intel.com
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <e735cpugrs3k5gncjcbjyycft3tuhkm75azpwv6ctwqfjr6gkg@rsf4lyq4gqoj>
+ <aAn3SSocw0XvaRye@yzhao56-desk.sh.intel.com>
+ <6vdj4mfxlyvypn743klxq5twda66tkugwzljdt275rug2gmwwl@zdziylxpre6y>
+Content-Language: en-US
+From: Juergen Gross <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <6vdj4mfxlyvypn743klxq5twda66tkugwzljdt275rug2gmwwl@zdziylxpre6y>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------UZ8TilJqpfLBedWDbrv00s83"
+X-Spam-Level: 
+X-Spamd-Result: default: False [-5.19 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SIGNED_PGP(-2.00)[];
+	MIME_BASE64_TEXT_BOGUS(1.00)[];
+	NEURAL_HAM_LONG(-0.99)[-0.992];
+	MIME_GOOD(-0.20)[multipart/signed,multipart/mixed,text/plain];
+	NEURAL_HAM_SHORT(-0.20)[-0.998];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_UNKNOWN(0.10)[application/pgp-keys];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:+,3:+,4:~,5:~];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:mid,imap1.dmz-prg2.suse.org:helo];
+	HAS_ATTACHMENT(0.00)[]
+X-Spam-Score: -5.19
+X-Spam-Flag: NO
 
-The HW iommu is able to support a 34-bit iova address-space (16GB),
-enable this feature for the encoder/decoder driver by shifting the
-address by two bits and setting the extended address registers.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------UZ8TilJqpfLBedWDbrv00s83
+Content-Type: multipart/mixed; boundary="------------OeOH79kSNo1j1oTSQ3Rt6NOY";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>,
+ Yan Zhao <yan.y.zhao@intel.com>
+Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com,
+ dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com,
+ ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com,
+ david@redhat.com, vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de,
+ thomas.lendacky@amd.com, pgonda@google.com, zhiquan1.li@intel.com,
+ fan.du@intel.com, jun.miao@intel.com, ira.weiny@intel.com,
+ chao.p.peng@intel.com
+Message-ID: <f7fe0d58-c6a0-4d25-8c5f-73f7b747970f@suse.com>
+Subject: Re: [RFC PATCH 00/21] KVM: TDX huge page support for private memory
+References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+ <e735cpugrs3k5gncjcbjyycft3tuhkm75azpwv6ctwqfjr6gkg@rsf4lyq4gqoj>
+ <aAn3SSocw0XvaRye@yzhao56-desk.sh.intel.com>
+ <6vdj4mfxlyvypn743klxq5twda66tkugwzljdt275rug2gmwwl@zdziylxpre6y>
+In-Reply-To: <6vdj4mfxlyvypn743klxq5twda66tkugwzljdt275rug2gmwwl@zdziylxpre6y>
 
-Signed-off-by: Jianhua Lin <jianhua.lin@mediatek.com>
----
-Changes compared with v7:
-- Fix reviewer's comments
-	- Add lower_32_bits() to explicity write the lower 32bits address
+--------------OeOH79kSNo1j1oTSQ3Rt6NOY
+Content-Type: multipart/mixed; boundary="------------nvtTbheBbcELWQCP8HZ2WejF"
 
- .../platform/mediatek/jpeg/mtk_jpeg_core.c    |  5 +-
- .../platform/mediatek/jpeg/mtk_jpeg_core.h    |  4 +
- .../platform/mediatek/jpeg/mtk_jpeg_dec_hw.c  | 73 ++++++++++++++-----
- .../platform/mediatek/jpeg/mtk_jpeg_dec_hw.h  |  1 +
- .../platform/mediatek/jpeg/mtk_jpeg_dec_reg.h |  8 ++
- .../platform/mediatek/jpeg/mtk_jpeg_enc_hw.c  | 33 +++++++--
- .../platform/mediatek/jpeg/mtk_jpeg_enc_hw.h  |  7 +-
- 7 files changed, 104 insertions(+), 27 deletions(-)
+--------------nvtTbheBbcELWQCP8HZ2WejF
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
-index 7dd652e5b6d4..23692cd91e2c 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.c
-@@ -1026,6 +1026,7 @@ static void mtk_jpeg_dec_device_run(void *priv)
- 	spin_lock_irqsave(&jpeg->hw_lock, flags);
- 	mtk_jpeg_dec_reset(jpeg->reg_base);
- 	mtk_jpeg_dec_set_config(jpeg->reg_base,
-+				jpeg->variant->support_34bit,
- 				&jpeg_src_buf->dec_param,
- 				jpeg_src_buf->bs_size,
- 				&bs,
-@@ -1570,7 +1571,8 @@ static irqreturn_t mtk_jpeg_enc_done(struct mtk_jpeg_dev *jpeg)
- 	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
- 	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
- 
--	result_size = mtk_jpeg_enc_get_file_size(jpeg->reg_base);
-+	result_size = mtk_jpeg_enc_get_file_size(jpeg->reg_base,
-+						 jpeg->variant->support_34bit);
- 	vb2_set_plane_payload(&dst_buf->vb2_buf, 0, result_size);
- 
- 	buf_state = VB2_BUF_STATE_DONE;
-@@ -1770,6 +1772,7 @@ static void mtk_jpegdec_worker(struct work_struct *work)
- 	ctx->total_frame_num++;
- 	mtk_jpeg_dec_reset(comp_jpeg[hw_id]->reg_base);
- 	mtk_jpeg_dec_set_config(comp_jpeg[hw_id]->reg_base,
-+				jpeg->variant->support_34bit,
- 				&jpeg_src_buf->dec_param,
- 				jpeg_src_buf->bs_size,
- 				&bs,
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h
-index 8877eb39e807..02ed0ed5b736 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_core.h
-@@ -34,6 +34,8 @@
- 
- #define MTK_JPEG_MAX_EXIF_SIZE	(64 * 1024)
- 
-+#define MTK_JPEG_ADDR_MASK GENMASK(1, 0)
-+
- /**
-  * enum mtk_jpeg_ctx_state - states of the context state machine
-  * @MTK_JPEG_INIT:		current state is initialized
-@@ -62,6 +64,7 @@ enum mtk_jpeg_ctx_state {
-  * @cap_q_default_fourcc:	capture queue default fourcc
-  * @multi_core:		mark jpeg hw is multi_core or not
-  * @jpeg_worker:		jpeg dec or enc worker
-+ * @support_34bit:	flag to check support for 34-bit DMA address
-  */
- struct mtk_jpeg_variant {
- 	struct clk_bulk_data *clks;
-@@ -78,6 +81,7 @@ struct mtk_jpeg_variant {
- 	u32 cap_q_default_fourcc;
- 	bool multi_core;
- 	void (*jpeg_worker)(struct work_struct *work);
-+	bool support_34bit;
- };
- 
- struct mtk_jpeg_src_buf {
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c
-index 2c5d74939d0a..e78e1d11093c 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.c
-@@ -5,6 +5,8 @@
-  *         Rick Chang <rick.chang@mediatek.com>
-  */
- 
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -279,23 +281,43 @@ static void mtk_jpeg_dec_set_brz_factor(void __iomem *base, u8 yscale_w,
- 	writel(val, base + JPGDEC_REG_BRZ_FACTOR);
- }
- 
--static void mtk_jpeg_dec_set_dst_bank0(void __iomem *base, u32 addr_y,
--				       u32 addr_u, u32 addr_v)
-+static void mtk_jpeg_dec_set_dst_bank0(void __iomem *base, bool support_34bit,
-+				       dma_addr_t addr_y, dma_addr_t addr_u, dma_addr_t addr_v)
- {
-+	u32 val;
-+
- 	mtk_jpeg_verify_align(addr_y, 16, JPGDEC_REG_DEST_ADDR0_Y);
--	writel(addr_y, base + JPGDEC_REG_DEST_ADDR0_Y);
-+	writel(lower_32_bits(addr_y), base + JPGDEC_REG_DEST_ADDR0_Y);
- 	mtk_jpeg_verify_align(addr_u, 16, JPGDEC_REG_DEST_ADDR0_U);
--	writel(addr_u, base + JPGDEC_REG_DEST_ADDR0_U);
-+	writel(lower_32_bits(addr_u), base + JPGDEC_REG_DEST_ADDR0_U);
- 	mtk_jpeg_verify_align(addr_v, 16, JPGDEC_REG_DEST_ADDR0_V);
--	writel(addr_v, base + JPGDEC_REG_DEST_ADDR0_V);
-+	writel(lower_32_bits(addr_v), base + JPGDEC_REG_DEST_ADDR0_V);
-+	if (support_34bit) {
-+		val = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(addr_y));
-+		writel(val, base + JPGDEC_REG_DEST_ADDR0_Y_EXT);
-+		val = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(addr_u));
-+		writel(val, base + JPGDEC_REG_DEST_ADDR0_U_EXT);
-+		val = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(addr_v));
-+		writel(val, base + JPGDEC_REG_DEST_ADDR0_V_EXT);
-+	}
- }
- 
--static void mtk_jpeg_dec_set_dst_bank1(void __iomem *base, u32 addr_y,
--				       u32 addr_u, u32 addr_v)
-+static void mtk_jpeg_dec_set_dst_bank1(void __iomem *base, bool support_34bit,
-+				       dma_addr_t addr_y, dma_addr_t addr_u, dma_addr_t addr_v)
- {
--	writel(addr_y, base + JPGDEC_REG_DEST_ADDR1_Y);
--	writel(addr_u, base + JPGDEC_REG_DEST_ADDR1_U);
--	writel(addr_v, base + JPGDEC_REG_DEST_ADDR1_V);
-+	u32 val;
-+
-+	writel(lower_32_bits(addr_y), base + JPGDEC_REG_DEST_ADDR1_Y);
-+	writel(lower_32_bits(addr_u), base + JPGDEC_REG_DEST_ADDR1_U);
-+	writel(lower_32_bits(addr_v), base + JPGDEC_REG_DEST_ADDR1_V);
-+	if (support_34bit) {
-+		val = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(addr_y));
-+		writel(val, base + JPGDEC_REG_DEST_ADDR1_Y_EXT);
-+		val = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(addr_u));
-+		writel(val, base + JPGDEC_REG_DEST_ADDR1_U_EXT);
-+		val = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(addr_v));
-+		writel(val, base + JPGDEC_REG_DEST_ADDR1_V_EXT);
-+	}
- }
- 
- static void mtk_jpeg_dec_set_mem_stride(void __iomem *base, u32 stride_y,
-@@ -322,18 +344,30 @@ static void mtk_jpeg_dec_set_dec_mode(void __iomem *base, u32 mode)
- 	writel(mode & 0x03, base + JPGDEC_REG_OPERATION_MODE);
- }
- 
--static void mtk_jpeg_dec_set_bs_write_ptr(void __iomem *base, u32 ptr)
-+static void mtk_jpeg_dec_set_bs_write_ptr(void __iomem *base, bool support_34bit, dma_addr_t ptr)
- {
-+	u32 val;
-+
- 	mtk_jpeg_verify_align(ptr, 16, JPGDEC_REG_FILE_BRP);
--	writel(ptr, base + JPGDEC_REG_FILE_BRP);
-+	writel(lower_32_bits(ptr), base + JPGDEC_REG_FILE_BRP);
-+	if (support_34bit) {
-+		val = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(ptr));
-+		writel(val, base + JPGDEC_REG_FILE_BRP_EXT);
-+	}
- }
- 
--static void mtk_jpeg_dec_set_bs_info(void __iomem *base, u32 addr, u32 size,
--				     u32 bitstream_size)
-+static void mtk_jpeg_dec_set_bs_info(void __iomem *base, bool support_34bit,
-+				     dma_addr_t addr, u32 size, u32 bitstream_size)
- {
-+	u32 val;
-+
- 	mtk_jpeg_verify_align(addr, 16, JPGDEC_REG_FILE_ADDR);
- 	mtk_jpeg_verify_align(size, 128, JPGDEC_REG_FILE_TOTAL_SIZE);
--	writel(addr, base + JPGDEC_REG_FILE_ADDR);
-+	writel(lower_32_bits(addr), base + JPGDEC_REG_FILE_ADDR);
-+	if (support_34bit) {
-+		val = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(addr));
-+		writel(val, base + JPGDEC_REG_FILE_ADDR_EXT);
-+	}
- 	writel(size, base + JPGDEC_REG_FILE_TOTAL_SIZE);
- 	writel(bitstream_size, base + JPGDEC_REG_BIT_STREAM_SIZE);
- }
-@@ -404,6 +438,7 @@ static void mtk_jpeg_dec_set_sampling_factor(void __iomem *base, u32 comp_num,
- }
- 
- void mtk_jpeg_dec_set_config(void __iomem *base,
-+			     bool support_34bits,
- 			     struct mtk_jpeg_dec_param *cfg,
- 			     u32 bitstream_size,
- 			     struct mtk_jpeg_bs *bs,
-@@ -413,8 +448,8 @@ void mtk_jpeg_dec_set_config(void __iomem *base,
- 	mtk_jpeg_dec_set_dec_mode(base, 0);
- 	mtk_jpeg_dec_set_comp0_du(base, cfg->unit_num);
- 	mtk_jpeg_dec_set_total_mcu(base, cfg->total_mcu);
--	mtk_jpeg_dec_set_bs_info(base, bs->str_addr, bs->size, bitstream_size);
--	mtk_jpeg_dec_set_bs_write_ptr(base, bs->end_addr);
-+	mtk_jpeg_dec_set_bs_info(base, support_34bits, bs->str_addr, bs->size, bitstream_size);
-+	mtk_jpeg_dec_set_bs_write_ptr(base, support_34bits, bs->end_addr);
- 	mtk_jpeg_dec_set_du_membership(base, cfg->membership, 1,
- 				       (cfg->comp_num == 1) ? 1 : 0);
- 	mtk_jpeg_dec_set_comp_id(base, cfg->comp_id[0], cfg->comp_id[1],
-@@ -432,9 +467,9 @@ void mtk_jpeg_dec_set_config(void __iomem *base,
- 				    cfg->mem_stride[1]);
- 	mtk_jpeg_dec_set_img_stride(base, cfg->img_stride[0],
- 				    cfg->img_stride[1]);
--	mtk_jpeg_dec_set_dst_bank0(base, fb->plane_addr[0],
-+	mtk_jpeg_dec_set_dst_bank0(base, support_34bits, fb->plane_addr[0],
- 				   fb->plane_addr[1], fb->plane_addr[2]);
--	mtk_jpeg_dec_set_dst_bank1(base, 0, 0, 0);
-+	mtk_jpeg_dec_set_dst_bank1(base, support_34bits, 0, 0, 0);
- 	mtk_jpeg_dec_set_dma_group(base, cfg->dma_mcu, cfg->dma_group,
- 				   cfg->dma_last_mcu);
- 	mtk_jpeg_dec_set_pause_mcu_idx(base, cfg->total_mcu);
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.h b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.h
-index 8c31c6b12417..2948c9c300a4 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.h
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_hw.h
-@@ -71,6 +71,7 @@ int mtk_jpeg_dec_fill_param(struct mtk_jpeg_dec_param *param);
- u32 mtk_jpeg_dec_get_int_status(void __iomem *dec_reg_base);
- u32 mtk_jpeg_dec_enum_result(u32 irq_result);
- void mtk_jpeg_dec_set_config(void __iomem *base,
-+			     bool support_34bits,
- 			     struct mtk_jpeg_dec_param *cfg,
- 			     u32 bitstream_size,
- 			     struct mtk_jpeg_bs *bs,
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_reg.h b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_reg.h
-index 27b7711ca341..e94f52de7c69 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_reg.h
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_dec_reg.h
-@@ -46,5 +46,13 @@
- #define JPGDEC_REG_INTERRUPT_STATUS	0x0274
- #define JPGDEC_REG_STATUS		0x0278
- #define JPGDEC_REG_BIT_STREAM_SIZE	0x0344
-+#define JPGDEC_REG_DEST_ADDR0_Y_EXT	0x0360
-+#define JPGDEC_REG_DEST_ADDR0_U_EXT	0x0364
-+#define JPGDEC_REG_DEST_ADDR0_V_EXT	0x0368
-+#define JPGDEC_REG_DEST_ADDR1_Y_EXT	0x036c
-+#define JPGDEC_REG_DEST_ADDR1_U_EXT	0x0370
-+#define JPGDEC_REG_DEST_ADDR1_V_EXT	0x0374
-+#define JPGDEC_REG_FILE_ADDR_EXT	0x0378
-+#define JPGDEC_REG_FILE_BRP_EXT		0x037c
- 
- #endif /* _MTK_JPEG_REG_H */
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c
-index f8fa3b841ccf..9ab27aee302a 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.c
-@@ -5,6 +5,8 @@
-  *
-  */
- 
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
- #include <linux/clk.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-@@ -62,9 +64,9 @@ void mtk_jpeg_enc_reset(void __iomem *base)
- }
- EXPORT_SYMBOL_GPL(mtk_jpeg_enc_reset);
- 
--u32 mtk_jpeg_enc_get_file_size(void __iomem *base)
-+u32 mtk_jpeg_enc_get_file_size(void __iomem *base, bool support_34bit)
- {
--	return readl(base + JPEG_ENC_DMA_ADDR0) -
-+	return (readl(base + JPEG_ENC_DMA_ADDR0) << ((support_34bit) ? 2 : 0)) -
- 	       readl(base + JPEG_ENC_DST_ADDR0);
- }
- EXPORT_SYMBOL_GPL(mtk_jpeg_enc_get_file_size);
-@@ -84,14 +86,24 @@ void mtk_jpeg_set_enc_src(struct mtk_jpeg_ctx *ctx,  void __iomem *base,
- {
- 	int i;
- 	dma_addr_t dma_addr;
-+	u32 addr_ext;
-+	bool support_34bit = ctx->jpeg->variant->support_34bit;
- 
- 	for (i = 0; i < src_buf->num_planes; i++) {
- 		dma_addr = vb2_dma_contig_plane_dma_addr(src_buf, i) +
- 			   src_buf->planes[i].data_offset;
--		if (!i)
--			writel(dma_addr, base + JPEG_ENC_SRC_LUMA_ADDR);
-+		if (i == 0)
-+			writel(lower_32_bits(dma_addr), base + JPEG_ENC_SRC_LUMA_ADDR);
- 		else
--			writel(dma_addr, base + JPEG_ENC_SRC_CHROMA_ADDR);
-+			writel(lower_32_bits(dma_addr), base + JPEG_ENC_SRC_CHROMA_ADDR);
-+
-+		if (support_34bit) {
-+			addr_ext = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(dma_addr));
-+			if (i == 0)
-+				writel(addr_ext, base + JPEG_ENC_SRC_LUMA_ADDR_EXT);
-+			else
-+				writel(addr_ext, base + JPEG_ENC_SRC_CHRO_ADDR_EXT);
-+		}
- 	}
- }
- EXPORT_SYMBOL_GPL(mtk_jpeg_set_enc_src);
-@@ -103,6 +115,8 @@ void mtk_jpeg_set_enc_dst(struct mtk_jpeg_ctx *ctx, void __iomem *base,
- 	size_t size;
- 	u32 dma_addr_offset;
- 	u32 dma_addr_offsetmask;
-+	u32 addr_ext;
-+	bool support_34bit = ctx->jpeg->variant->support_34bit;
- 
- 	dma_addr = vb2_dma_contig_plane_dma_addr(dst_buf, 0);
- 	dma_addr_offset = ctx->enable_exif ? MTK_JPEG_MAX_EXIF_SIZE : 0;
-@@ -113,6 +127,12 @@ void mtk_jpeg_set_enc_dst(struct mtk_jpeg_ctx *ctx, void __iomem *base,
- 	writel(dma_addr_offsetmask & 0xf, base + JPEG_ENC_BYTE_OFFSET_MASK);
- 	writel(dma_addr & ~0xf, base + JPEG_ENC_DST_ADDR0);
- 	writel((dma_addr + size) & ~0xf, base + JPEG_ENC_STALL_ADDR0);
-+
-+	if (support_34bit) {
-+		addr_ext = FIELD_PREP(MTK_JPEG_ADDR_MASK, upper_32_bits(dma_addr));
-+		writel(addr_ext, base + JPEG_ENC_DEST_ADDR0_EXT);
-+		writel(addr_ext + size, base + JPEG_ENC_STALL_ADDR0_EXT);
-+	}
- }
- EXPORT_SYMBOL_GPL(mtk_jpeg_set_enc_dst);
- 
-@@ -278,7 +298,8 @@ static irqreturn_t mtk_jpegenc_hw_irq_handler(int irq, void *priv)
- 	if (!(irq_status & JPEG_ENC_INT_STATUS_DONE))
- 		dev_warn(jpeg->dev, "Jpg Enc occurs unknown Err.");
- 
--	result_size = mtk_jpeg_enc_get_file_size(jpeg->reg_base);
-+	result_size = mtk_jpeg_enc_get_file_size(jpeg->reg_base,
-+						 ctx->jpeg->variant->support_34bit);
- 	vb2_set_plane_payload(&dst_buf->vb2_buf, 0, result_size);
- 	buf_state = VB2_BUF_STATE_DONE;
- 	v4l2_m2m_buf_done(src_buf, buf_state);
-diff --git a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.h b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.h
-index 61c60e4e58ea..31ec9030ae88 100644
---- a/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.h
-+++ b/drivers/media/platform/mediatek/jpeg/mtk_jpeg_enc_hw.h
-@@ -68,6 +68,11 @@
- #define JPEG_ENC_DCM_CTRL		0x300
- #define JPEG_ENC_CODEC_SEL		0x314
- #define JPEG_ENC_ULTRA_THRES		0x318
-+#define JPEG_ENC_SRC_LUMA_ADDR_EXT      0x584
-+#define JPEG_ENC_SRC_CHRO_ADDR_EXT      0x588
-+#define JPEG_ENC_Q_TBL_ADDR_EXT         0x58C
-+#define JPEG_ENC_DEST_ADDR0_EXT         0x590
-+#define JPEG_ENC_STALL_ADDR0_EXT        0x594
- 
- /**
-  * struct mtk_jpeg_enc_qlt - JPEG encoder quality data
-@@ -80,7 +85,7 @@ struct mtk_jpeg_enc_qlt {
- };
- 
- void mtk_jpeg_enc_reset(void __iomem *base);
--u32 mtk_jpeg_enc_get_file_size(void __iomem *base);
-+u32 mtk_jpeg_enc_get_file_size(void __iomem *base, bool support_34bit);
- void mtk_jpeg_enc_start(void __iomem *enc_reg_base);
- void mtk_jpeg_set_enc_src(struct mtk_jpeg_ctx *ctx,  void __iomem *base,
- 			  struct vb2_buffer *src_buf);
--- 
-2.46.0
+T24gMjQuMDQuMjUgMTE6MDUsIEtpcmlsbCBBLiBTaHV0ZW1vdiB3cm90ZToNCj4gT24gVGh1
+LCBBcHIgMjQsIDIwMjUgYXQgMDQ6MzM6MTNQTSArMDgwMCwgWWFuIFpoYW8gd3JvdGU6DQo+
+PiBPbiBUaHUsIEFwciAyNCwgMjAyNSBhdCAxMDozNTo0N0FNICswMzAwLCBLaXJpbGwgQS4g
+U2h1dGVtb3Ygd3JvdGU6DQo+Pj4gT24gVGh1LCBBcHIgMjQsIDIwMjUgYXQgMTE6MDA6MzJB
+TSArMDgwMCwgWWFuIFpoYW8gd3JvdGU6DQo+Pj4+IEJhc2ljIGh1Z2UgcGFnZSBtYXBwaW5n
+L3VubWFwcGluZw0KPj4+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+
+Pj4gLSBURCBidWlsZCB0aW1lDQo+Pj4+ICAgIFRoaXMgc2VyaWVzIGVuZm9yY2VzIHRoYXQg
+YWxsIHByaXZhdGUgbWFwcGluZ3MgYmUgNEtCIGR1cmluZyB0aGUgVEQgYnVpbGQNCj4+Pj4g
+ICAgcGhhc2UsIGR1ZSB0byB0aGUgVERYIG1vZHVsZSdzIHJlcXVpcmVtZW50IHRoYXQgdGRo
+X21lbV9wYWdlX2FkZCgpLCB0aGUNCj4+Pj4gICAgU0VBTUNBTEwgZm9yIGFkZGluZyBwcml2
+YXRlIHBhZ2VzIGR1cmluZyBURCBidWlsZCB0aW1lLCBvbmx5IHN1cHBvcnRzIDRLQg0KPj4+
+PiAgICBtYXBwaW5ncy4gRW5mb3JjaW5nIDRLQiBtYXBwaW5ncyBhbHNvIHNpbXBsaWZpZXMg
+dGhlIGltcGxlbWVudGF0aW9uIG9mDQo+Pj4+ICAgIGNvZGUgZm9yIFREIGJ1aWxkIHRpbWUs
+IGJ5IGVsaW1pbmF0aW5nIHRoZSBuZWVkIHRvIGNvbnNpZGVyIG1lcmdpbmcgb3INCj4+Pj4g
+ICAgc3BsaXR0aW5nIGluIHRoZSBtaXJyb3IgcGFnZSB0YWJsZSBkdXJpbmcgVEQgYnVpbGQg
+dGltZS4NCj4+Pj4gICAgDQo+Pj4+ICAgIFRoZSB1bmRlcmx5aW5nIHBhZ2VzIGFsbG9jYXRl
+ZCBmcm9tIGd1ZXN0X21lbWZkIGR1cmluZyBURCBidWlsZCB0aW1lDQo+Pj4+ICAgIHBoYXNl
+IGNhbiBzdGlsbCBiZSBsYXJnZSwgYWxsb3dpbmcgZm9yIHBvdGVudGlhbCBtZXJnaW5nIGlu
+dG8gMk1CDQo+Pj4+ICAgIG1hcHBpbmdzIG9uY2UgdGhlIFREIGlzIHJ1bm5pbmcuDQo+Pj4N
+Cj4+PiBJdCBjYW4gYmUgZG9uZSBiZWZvcmUgVEQgaXMgcnVubmluZy4gVGhlIG1lcmdpbmcg
+aXMgYWxsb3dlZCBvbiBURCBidWlsZA0KPj4+IHN0YWdlLg0KPj4+DQo+Pj4gQnV0LCB5ZXMs
+IGZvciBzaW1wbGljaXR5IHdlIGNhbiBza2lwIGl0IGZvciBpbml0aWFsIGVuYWJsaW5nLg0K
+Pj4gWWVzLCB0byBhdm9pZCBjb21wbGljYXRpbmcga3ZtX3RkeC0+bnJfcHJlbWFwcGVkIGNh
+bGN1bGF0aW9uLg0KPj4gSSBhbHNvIGRvbid0IHNlZSBhbnkgYmVuZWZpdCB0byBhbGxvdyBt
+ZXJnaW5nIGR1cmluZyBURCBidWlsZCBzdGFnZS4NCj4+DQo+Pj4NCj4+Pj4gUGFnZSBzcGxp
+dHRpbmcgKHBhZ2UgZGVtb3Rpb24pDQo+Pj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLQ0KPj4+PiBQYWdlIHNwbGl0dGluZyBvY2N1cnMgaW4gdHdvIHBhdGhzOg0KPj4+PiAo
+YSkgd2l0aCBleGNsdXNpdmUga3ZtLT5tbXVfbG9jaywgdHJpZ2dlcmVkIGJ5IHphcHBpbmcg
+b3BlcmF0aW9ucywNCj4+Pj4NCj4+Pj4gICAgICBGb3Igbm9ybWFsIFZNcywgaWYgemFwcGlu
+ZyBhIG5hcnJvdyByZWdpb24gdGhhdCB3b3VsZCBuZWVkIHRvIHNwbGl0IGENCj4+Pj4gICAg
+ICBodWdlIHBhZ2UsIEtWTSBjYW4gc2ltcGx5IHphcCB0aGUgc3Vycm91bmRpbmcgR0ZOcyBy
+YXRoZXIgdGhhbg0KPj4+PiAgICAgIHNwbGl0dGluZyBhIGh1Z2UgcGFnZS4gVGhlIHBhZ2Vz
+IGNhbiB0aGVuIGJlIGZhdWx0ZWQgYmFjayBpbiwgd2hlcmUgS1ZNDQo+Pj4+ICAgICAgY2Fu
+IGhhbmRsZSBtYXBwaW5nIHRoZW0gYXQgYSA0S0IgbGV2ZWwuDQo+Pj4+DQo+Pj4+ICAgICAg
+VGhlIHJlYXNvbiB3aHkgVERYIGNhbid0IHVzZSB0aGUgbm9ybWFsIFZNIHNvbHV0aW9uIGlz
+IHRoYXQgemFwcGluZw0KPj4+PiAgICAgIHByaXZhdGUgbWVtb3J5IHRoYXQgaXMgYWNjZXB0
+ZWQgY2Fubm90IGVhc2lseSBiZSByZS1mYXVsdGVkLCBzaW5jZSBpdA0KPj4+PiAgICAgIGNh
+biBvbmx5IGJlIHJlLWZhdWx0ZWQgYXMgdW5hY2NlcHRlZC4gU28gS1ZNIHdpbGwgaGF2ZSB0
+byBzb21ldGltZXMgZG8NCj4+Pj4gICAgICB0aGUgcGFnZSBzcGxpdHRpbmcgYXMgcGFydCBv
+ZiB0aGUgemFwcGluZyBvcGVyYXRpb25zLg0KPj4+Pg0KPj4+PiAgICAgIFRoZXNlIHphcHBp
+bmcgb3BlcmF0aW9ucyBjYW4gb2NjdXIgZm9yIGZldyByZWFzb25zOg0KPj4+PiAgICAgIDEu
+IFZNIHRlYXJkb3duLg0KPj4+PiAgICAgIDIuIE1lbXNsb3QgcmVtb3ZhbC4NCj4+Pj4gICAg
+ICAzLiBDb252ZXJzaW9uIG9mIHByaXZhdGUgcGFnZXMgdG8gc2hhcmVkLg0KPj4+PiAgICAg
+IDQuIFVzZXJzcGFjZSBkb2VzIGEgaG9sZSBwdW5jaCB0byBndWVzdF9tZW1mZCBmb3Igc29t
+ZSByZWFzb24uDQo+Pj4+DQo+Pj4+ICAgICAgRm9yIGNhc2UgMSBhbmQgMiwgc3BsaXR0aW5n
+IGJlZm9yZSB6YXBwaW5nIGlzIHVubmVjZXNzYXJ5IGJlY2F1c2UNCj4+Pj4gICAgICBlaXRo
+ZXIgdGhlIGVudGlyZSByYW5nZSB3aWxsIGJlIHphcHBlZCBvciBodWdlIHBhZ2VzIGRvIG5v
+dCBzcGFuDQo+Pj4+ICAgICAgbWVtc2xvdHMuDQo+Pj4+ICAgICAgDQo+Pj4+ICAgICAgQ2Fz
+ZSAzIG9yIGNhc2UgNCByZXF1aXJlcyBzcGxpdHRpbmcsIHdoaWNoIGlzIGFsc28gZm9sbG93
+ZWQgYnkgYQ0KPj4+PiAgICAgIGJhY2tlbmQgcGFnZSBzcGxpdHRpbmcgaW4gZ3Vlc3RfbWVt
+ZmQuDQo+Pj4+DQo+Pj4+IChiKSB3aXRoIHNoYXJlZCBrdm0tPm1tdV9sb2NrLCB0cmlnZ2Vy
+ZWQgYnkgZmF1bHQuDQo+Pj4+DQo+Pj4+ICAgICAgU3BsaXR0aW5nIGluIHRoaXMgcGF0aCBp
+cyBub3QgYWNjb21wYW5pZWQgYnkgYSBiYWNrZW5kIHBhZ2Ugc3BsaXR0aW5nDQo+Pj4+ICAg
+ICAgKHNpbmNlIGJhY2tlbmQgcGFnZSBzcGxpdHRpbmcgbmVjZXNzaXRhdGVzIGEgc3BsaXR0
+aW5nIGFuZCB6YXBwaW5nDQo+Pj4+ICAgICAgIG9wZXJhdGlvbiBpbiB0aGUgZm9ybWVyIHBh
+dGgpLiAgSXQgaXMgdHJpZ2dlcmVkIHdoZW4gS1ZNIGZpbmRzIHRoYXQgYQ0KPj4+PiAgICAg
+IG5vbi1sZWFmIGVudHJ5IGlzIHJlcGxhY2luZyBhIGh1Z2UgZW50cnkgaW4gdGhlIGZhdWx0
+IHBhdGgsIHdoaWNoIGlzDQo+Pj4+ICAgICAgdXN1YWxseSBjYXVzZWQgYnkgdkNQVXMnIGNv
+bmN1cnJlbnQgQUNDRVBUIG9wZXJhdGlvbnMgYXQgZGlmZmVyZW50DQo+Pj4+ICAgICAgbGV2
+ZWxzLg0KPj4+DQo+Pj4gSG0uIFRoaXMgc291bmRzIGxpa2UgZnVua3kgYmVoYXZpb3VyIG9u
+IHRoZSBndWVzdCBzaWRlLg0KPj4+DQo+Pj4gWW91IG9ubHkgc2F3IGl0IGluIGEgc3ludGhl
+dGljIHRlc3QsIHJpZ2h0PyBObyByZWFsIGd1ZXN0IE9TIHNob3VsZCBkbw0KPj4+IHRoaXMu
+DQo+PiBSaWdodC4gSW4gc2VsZnRlc3Qgb25seS4NCj4+IEFsc28gaW4gY2FzZSBvZiBhbnkg
+Z3Vlc3QgYnVncy4NCj4+DQo+Pj4gSXQgY2FuIG9ubHkgYmUgcG9zc2libGUgaWYgZ3Vlc3Qg
+aXMgcmVja2xlc3MgZW5vdWdoIHRvIGJlIGV4cG9zZWQgdG8NCj4+PiBkb3VibGUgYWNjZXB0
+IGF0dGFja3MuDQo+Pj4NCj4+PiBXZSBzaG91bGQgY29uc2lkZXIgcHV0dGluZyBhIHdhcm5p
+bmcgaWYgd2UgZGV0ZWN0IHN1Y2ggY2FzZSBvbiBLVk0gc2lkZS4NCj4+IElzIGl0IGFjY2Vw
+dGFibGUgdG8gcHV0IHdhcm5pbmdzIGluIGhvc3Qga2VybmVsIGluIGNhc2Ugb2YgZ3Vlc3Qg
+YnVncyBvcg0KPj4gYXR0YWNrcz8NCj4gDQo+IHByX3dhcm5fb25jZSgpIHNob3VsZG4ndCBi
+ZSBhIGJpZyBkZWFsLg0KDQpTaG91bGRuJ3Qgc3VjaCBhIHdhcm5pbmcgYmUgb25jZSBwZXIg
+Z3Vlc3Q/DQoNClNvIGVpdGhlciB3ZSBuZWVkIGEgcGVyIGd1ZXN0IGZsYWcsIG9yIHdlIGNv
+dWxkIHVzZSBwcl93YXJuX3JhdGVsaW1pdGVkKCkuDQoNCg0KSnVlcmdlbg0K
+--------------nvtTbheBbcELWQCP8HZ2WejF
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------nvtTbheBbcELWQCP8HZ2WejF--
+
+--------------OeOH79kSNo1j1oTSQ3Rt6NOY--
+
+--------------UZ8TilJqpfLBedWDbrv00s83
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgJ/6cFAwAAAAAACgkQsN6d1ii/Ey9e
+xggAlJDAvofSl3cnDEsF0qZ5PDDp8B2JGDuhg/9mL8GOzyHmbBIDM4/kCgYtm0JNKe4op2YxORmz
+u2c71CY+lfsOG9gKAAIegrQDlxeGX8u+lD6yeLApfeZumyWuBqvWppz83z7EO7G21YkQjxmW8knc
+F/hWphHqU+HGj205GrjW37MeZ5qwEZxBYBV+WQkU4cTtRh4cmgcFdD8H0iWDa4PstgCDr7X3bPfJ
+E4X34InObIwYCkvZ3XkMNS7WbhGZHQKx6ysKqhtsREC04vFXIU8Z7Vg3hXlPR++ZUsCkWWBNZDuT
+LIy8tT8gv9hD/a7sA9zmf5qG7y0jHbTDG927scw76w==
+=Ug5P
+-----END PGP SIGNATURE-----
+
+--------------UZ8TilJqpfLBedWDbrv00s83--
