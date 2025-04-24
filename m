@@ -1,96 +1,323 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2582187FE4
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFFC214A91
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:35:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508924; cv=none; b=i1w23IiL7C/hvoCnvavDJu/3/rH5RsN5QjOMcVV53iIoXw9xjHWAEpoC9UspnrSjYqIwesxRnOukUAWpGv/wjgHp1CCwE2+NskoIeAWiFxdM5AQ1Mp7COzl5ZtjdSm4j0h4565QHXicx5eDTc+2zSknlR1tDrbILWmOEMdbYdLU=
+	t=1745508928; cv=none; b=JsTdLdVQOyGt6Y5XXE9z1svXYsqqUhOJLF8EVlXW3RoDBluY71yNtMWFonddqf2knaPkuOOELqTzZ4NiedFno4iATiBeNLlflbP1VdjpM7lggPw7NmYaOCytDRjrT+PHxlE9zOeA7PEgSesoA+sjbopMeoI4paIcz9uJxZY2dE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508924; c=relaxed/simple;
-	bh=JnnJiDGwNig+VJDSU2cyGVNNE8jT8igWXXznUgHTtzs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dGI5R3kTFE00+z5Jm0bIR+ZDu2l/XIato174XMAEQ2bFKw2/5YD0v/EPczoIIrDmYMPVg5PLkoVyIsYOma8ANusg0bwZvssORjBSvR7F1caAjvNBLrDPgoLD0KMF/jH/Dg/Iubzid8M8nlsIL7SvvuFzpt2wNC/lsBtee0KrbsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=uPlvWy8m; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745508928; c=relaxed/simple;
+	bh=uulvpoNlf0v9TkT+QqAhQUPMpAvCv5DHfTKEnGdy3Xk=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=YrCRfHnDyDS9ZVoE5efUZ4V0PkcXBVaMDHdN+hn2k5Oo2qiWIeDEcbz7NXYYd48zKr7Xt3sSWMy5XAt6BpfWladbFJ6natuGGL909p86oTkVq7kByj77cK6qMsTEXjBEMDevTCpV7fRgUGD0BzW5po9Z0PLrunCMsIGZpM7UJCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nyO9uZeT; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="uPlvWy8m"
-Date: Thu, 24 Apr 2025 08:34:50 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745508918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=56D9mlZ7M1G0UnSJJ2M8dPTg3+XAXsTfHIm3FcS4+KU=;
-	b=uPlvWy8mqcGR38PBfc5+PqGpUgQvemUopmsCBqLVIoh839eUhODfU/26KLKzoSaLttPLvb
-	gz7zKbif6GXHNzHYVSixNwTvM02m6fCFHtG9RXkVn/9kR5KcNgxYlVK2zrbq78l4qXykvi
-	NmVcZf0rqKXbNPdrMCYklhj0ccawDR4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Karim Manaouil <karim.manaouil@linaro.org>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, Alexander Graf <graf@amazon.com>,
-	Alex Elder <elder@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Fuad Tabba <tabba@google.com>, Joey Gouly <joey.gouly@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
-	Quentin Perret <qperret@google.com>, Rob Herring <robh@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
-	Will Deacon <will@kernel.org>,
-	Haripranesh S <haripran@qti.qualcomm.com>,
-	Carl van Schaik <cvanscha@qti.qualcomm.com>,
-	Murali Nalajala <mnalajal@quicinc.com>,
-	Sreenivasulu Chalamcharla <sreeniva@qti.qualcomm.com>,
-	Trilok Soni <tsoni@quicinc.com>,
-	Stefan Schmidt <stefan.schmidt@linaro.org>
-Subject: Re: [RFC PATCH 00/34] Running Qualcomm's Gunyah Guests via KVM in EL1
-Message-ID: <aApaGnFPhsWBZoQ2@linux.dev>
-References: <20250424141341.841734-1-karim.manaouil@linaro.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nyO9uZeT"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so6106145e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745508923; x=1746113723; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=90J0ZmCW6/hQg6wXxjTUSHJn5hh8V/UVJ5EmPQBXgjk=;
+        b=nyO9uZeT1fMNSZXHYB+9r/+zALrzN90bowsjaarRRUTy41DuFZS+BW0B4Z9NtF4kM1
+         cWVeXKvR2+mI75l5Kcht8YusBx/VGB5AiRoPSWOqwNkAfZ7IWLTQYuzw78LInbBiYJMP
+         Lh0VMrG1pVw5LjhpOgbnt7WaO1AxXPu5MHU4OgeAhmSPuMVzSXwSkxVTgvSGQRFHbwHU
+         xv6Qu1PAKmzgRwb1hF0W3tUkP4EPsP8nfY5E0YPfrXbg8Cuyn7TRTP2qj+57RPTHf+Uq
+         gFSRtIgBVe/KZcrVcfsrt/6q66vB7CB417APG17asVot1C51BD25qEaqaadY6OxWYrNp
+         wgQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745508923; x=1746113723;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=90J0ZmCW6/hQg6wXxjTUSHJn5hh8V/UVJ5EmPQBXgjk=;
+        b=EFLz/mOStD8BjcemrwawCUJ1RQIUPUOeUJVcBJEzFqGjGj7eqhlp8OZb0mOzMhjxh3
+         YbqcpAO1egXySoNbXUt6XPGRCilj4mthzLf18gIWMPO6pqwTCV+XRguumHmwG64H3Ons
+         DK5UkZLcrGXYadCljCspAXlB7CP8CBofBXvCcRfFy/WWGLKf51PbTcFo3RtaGv2AwEEj
+         kg9NzGyi/w1pKjvLl/rr9v8Nh6z/jy3/pfcom72MLpDx8GPCCPKMvnhQzY+45ibsUH96
+         hRAKLZ9F2hcwyAoWK8j3762IlxZbgtwJn2NHBn/l+lh+joxwW6xEUpJqwSlvyaj4Hwe6
+         VyxA==
+X-Forwarded-Encrypted: i=1; AJvYcCXW2dg/pU02FmsCA1OkltcdMncFHT9xRBLYPxSRm2LrVTx2istwr2JHBjhYQGRSS7AdTXavxakcDjWr5KE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YymBHEqZ5vZEso2R+VKaGbZB78meLHCT6NfAMFqska/503fycnr
+	rtu5Kb24iADb0Tqap1D0W09tFIQNHKy1Ji1/1hV51kBKLZUcYs6XXP5nK0uRPW0=
+X-Gm-Gg: ASbGnctfKoSg422nlu5Ick7P9f4sP5XQgbpllkXyJO1Sy4FUpVyv+LD/1euWZmeTny9
+	tDm5IF6gf0ie3LKmJRKs2KXHWIRTHzWLCg16PU5krb79R0yk6v7pWb5P9yhxj15JjpRSbJoc79D
+	+ewikiOnpFICMDcWFUClxier5BbQWNf2cq2Dvwy/mxvGhVrWbMJ6ant+TJXvVlO1TV26l/vkARf
+	t1NqvPyWmMdwFEp0Xt6vy0Z0EFlaprnuKIKBYF1JebPudaF35dRZRmGeWWkwqd6Erxz3W5ql2NM
+	iEZY5eMmrL6Ji12w2BWMDqLIlw6EhfTc3CtFm5a/25DeZdtrCAzqiALiNRo9j5d/9pkQJZk5BCl
+	CCRpBjYUbRl31hqdC0Q==
+X-Google-Smtp-Source: AGHT+IGTwz+l2hU3W5oB/SMKYK5pobundB5Y5e3EUt8oWYelt7IXQZcpTS1d1RGvuuIScs225N7JYQ==
+X-Received: by 2002:a05:600c:4e14:b0:43c:fe15:41d4 with SMTP id 5b1f17b1804b1-4409bd324ffmr33081305e9.18.1745508923253;
+        Thu, 24 Apr 2025 08:35:23 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:a24a:bfda:f031:720d? ([2a01:e0a:3d9:2080:a24a:bfda:f031:720d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d29b990sm27036615e9.4.2025.04.24.08.35.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 08:35:22 -0700 (PDT)
+Message-ID: <c7f2476a-943a-4d73-ad80-802c91e5f880@linaro.org>
+Date: Thu, 24 Apr 2025 17:35:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424141341.841734-1-karim.manaouil@linaro.org>
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v5 5/8] scsi: ufs: core: Enable multi-level gear scaling
+To: Ziqi Chen <quic_ziqichen@quicinc.com>, quic_cang@quicinc.com,
+ bvanassche@acm.org, mani@kernel.org, beanhuo@micron.com,
+ avri.altman@wdc.com, junwoo80.lee@samsung.com, martin.petersen@oracle.com,
+ quic_nguyenb@quicinc.com, quic_nitirawa@quicinc.com,
+ peter.wang@mediatek.com, quic_rampraka@quicinc.com
+Cc: linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Andrew Halaney <ahalaney@redhat.com>,
+ open list <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20250213080008.2984807-1-quic_ziqichen@quicinc.com>
+ <20250213080008.2984807-6-quic_ziqichen@quicinc.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250213080008.2984807-6-quic_ziqichen@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 03:13:07PM +0100, Karim Manaouil wrote:
-> This series introduces the capability of running Gunyah guests via KVM on
-> Qualcomm SoCs shipped with Gunyah hypervisor [1] (e.g. RB3 Gen2).
+Hi,
+
+On 13/02/2025 09:00, Ziqi Chen wrote:
+> From: Can Guo <quic_cang@quicinc.com>
 > 
-> The goal of this work is to port the existing Gunyah hypervisor support from a
-> standalone driver interface [2] to KVM, with the aim of leveraging as much of the
-> existing KVM infrastructure as possible to reduce duplication of effort around
-> memory management (e.g. guest_memfd), irqfd, and other core components.
+> With OPP V2 enabled, devfreq can scale clocks amongst multiple frequency
+> plans. However, the gear speed is only toggled between min and max during
+> clock scaling. Enable multi-level gear scaling by mapping clock frequencies
+> to gear speeds, so that when devfreq scales clock frequencies we can put
+> the UFS link at the appropriate gear speeds accordingly.
 > 
-> In short, Gunyah is a Type-1 hypervisor, meaning that it runs independently of any
-> high-level OS kernel such as Linux and runs in a higher CPU privilege level than VMs.
-> Gunyah is shipped as firmware and guests typically talk with Gunyah via hypercalls.
-> KVM is designed to run as Type-2 hypervisor. This port allows KVM to run in EL1 and
-> serve as the interface for VM lifecycle management,while offloading virtualization
-> to Gunyah.
+> Signed-off-by: Can Guo <quic_cang@quicinc.com>
+> Co-developed-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> Reviewed-by: Bean Huo <beanhuo@micron.com>
+> Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+> 
+> v1 -> v2:
+> Rename the lable "do_pmc" to "config_pwr_mode".
+> 
+> v2 -> v3:
+> Use assignment instead memcpy() in function ufshcd_scale_gear().
+> 
+> v3 -> v4:
+> Typo fixed for commit message.
+> 
+> v4 -> v5:
+> Change the data type of "new_gear" from 'int' to 'u32'.
+> ---
+>   drivers/ufs/core/ufshcd.c | 44 ++++++++++++++++++++++++++++++---------
+>   1 file changed, 34 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+> index 8d295cc827cc..9908c0d6a1e1 100644
+> --- a/drivers/ufs/core/ufshcd.c
+> +++ b/drivers/ufs/core/ufshcd.c
+> @@ -1308,16 +1308,26 @@ static int ufshcd_wait_for_doorbell_clr(struct ufs_hba *hba,
+>   /**
+>    * ufshcd_scale_gear - scale up/down UFS gear
+>    * @hba: per adapter instance
+> + * @target_gear: target gear to scale to
+>    * @scale_up: True for scaling up gear and false for scaling down
+>    *
+>    * Return: 0 for success; -EBUSY if scaling can't happen at this time;
+>    * non-zero for any other errors.
+>    */
+> -static int ufshcd_scale_gear(struct ufs_hba *hba, bool scale_up)
+> +static int ufshcd_scale_gear(struct ufs_hba *hba, u32 target_gear, bool scale_up)
+>   {
+>   	int ret = 0;
+>   	struct ufs_pa_layer_attr new_pwr_info;
+>   
+> +	if (target_gear) {
+> +		new_pwr_info = hba->pwr_info;
+> +		new_pwr_info.gear_tx = target_gear;
+> +		new_pwr_info.gear_rx = target_gear;
+> +
+> +		goto config_pwr_mode;
+> +	}
+> +
+> +	/* Legacy gear scaling, in case vops_freq_to_gear_speed() is not implemented */
+>   	if (scale_up) {
+>   		memcpy(&new_pwr_info, &hba->clk_scaling.saved_pwr_info,
+>   		       sizeof(struct ufs_pa_layer_attr));
+> @@ -1338,6 +1348,7 @@ static int ufshcd_scale_gear(struct ufs_hba *hba, bool scale_up)
+>   		}
+>   	}
+>   
+> +config_pwr_mode:
+>   	/* check if the power mode needs to be changed or not? */
+>   	ret = ufshcd_config_pwr_mode(hba, &new_pwr_info);
+>   	if (ret)
+> @@ -1408,15 +1419,19 @@ static void ufshcd_clock_scaling_unprepare(struct ufs_hba *hba, int err, bool sc
+>   static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long freq,
+>   				bool scale_up)
+>   {
+> +	u32 old_gear = hba->pwr_info.gear_rx;
+> +	u32 new_gear = 0;
+>   	int ret = 0;
+>   
+> +	new_gear = ufshcd_vops_freq_to_gear_speed(hba, freq);
+> +
+>   	ret = ufshcd_clock_scaling_prepare(hba, 1 * USEC_PER_SEC);
+>   	if (ret)
+>   		return ret;
+>   
+>   	/* scale down the gear before scaling down clocks */
+>   	if (!scale_up) {
+> -		ret = ufshcd_scale_gear(hba, false);
+> +		ret = ufshcd_scale_gear(hba, new_gear, false);
+>   		if (ret)
+>   			goto out_unprepare;
+>   	}
+> @@ -1424,13 +1439,13 @@ static int ufshcd_devfreq_scale(struct ufs_hba *hba, unsigned long freq,
+>   	ret = ufshcd_scale_clks(hba, freq, scale_up);
+>   	if (ret) {
+>   		if (!scale_up)
+> -			ufshcd_scale_gear(hba, true);
+> +			ufshcd_scale_gear(hba, old_gear, true);
+>   		goto out_unprepare;
+>   	}
+>   
+>   	/* scale up the gear after scaling up clocks */
+>   	if (scale_up) {
+> -		ret = ufshcd_scale_gear(hba, true);
+> +		ret = ufshcd_scale_gear(hba, new_gear, true);
+>   		if (ret) {
+>   			ufshcd_scale_clks(hba, hba->devfreq->previous_freq,
+>   					  false);
+> @@ -1723,6 +1738,8 @@ static ssize_t ufshcd_clkscale_enable_store(struct device *dev,
+>   		struct device_attribute *attr, const char *buf, size_t count)
+>   {
+>   	struct ufs_hba *hba = dev_get_drvdata(dev);
+> +	struct ufs_clk_info *clki;
+> +	unsigned long freq;
+>   	u32 value;
+>   	int err = 0;
+>   
+> @@ -1746,14 +1763,21 @@ static ssize_t ufshcd_clkscale_enable_store(struct device *dev,
+>   
+>   	if (value) {
+>   		ufshcd_resume_clkscaling(hba);
+> -	} else {
+> -		ufshcd_suspend_clkscaling(hba);
+> -		err = ufshcd_devfreq_scale(hba, ULONG_MAX, true);
+> -		if (err)
+> -			dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
+> -					__func__, err);
+> +		goto out_rel;
+>   	}
+>   
+> +	clki = list_first_entry(&hba->clk_list_head, struct ufs_clk_info, list);
+> +	freq = clki->max_freq;
+> +
+> +	ufshcd_suspend_clkscaling(hba);
+> +	err = ufshcd_devfreq_scale(hba, freq, true);
+> +	if (err)
+> +		dev_err(hba->dev, "%s: failed to scale clocks up %d\n",
+> +				__func__, err);
+> +	else
+> +		hba->clk_scaling.target_freq = freq;
+> +
+> +out_rel:
+>   	ufshcd_release(hba);
+>   	ufshcd_rpm_put_sync(hba);
+>   out:
 
-If you're keen on running your own hypervisor then I'm sorry, you get to
-deal with it soup to nuts. Other hypervisors (e.g. mshv) have their own
-kernel drivers for managing the host / UAPI parts of driving VMs.
+This change causes UFS crash on the RB3gen2, after UFS successfully probe and scan:
 
-The KVM arch interface is *internal* to KVM, not something to be
-(ab)used for cramming in a non-KVM hypervisor. KVM and other hypervisors
-can still share other bits of truly common infrastructure, like
-guest_memfd.
+[    9.383728] ufshcd-qcom 1d84000.ufshc: pwr ctrl cmd 0x2 with mode 0x11 completion timeout
+[    9.393272] ufshcd-qcom 1d84000.ufshc: UFS Host state=1
+[    9.403126] msm_dpu ae01000.display-controller: [drm:adreno_request_fw [msm]] *ERROR* failed to load a660_sqe.fw
+[    9.408484] ufshcd-qcom 1d84000.ufshc: 0 outstanding reqs, tasks=0x0
+[    9.425577] ufshcd-qcom 1d84000.ufshc: saved_err=0x0, saved_uic_err=0x0
+[    9.432433] ufshcd-qcom 1d84000.ufshc: Device power mode=1, UIC link state=1
+[    9.439716] ufshcd-qcom 1d84000.ufshc: PM in progress=0, sys. suspended=0
+[    9.446742] ufshcd-qcom 1d84000.ufshc: Auto BKOPS=0, Host self-block=0
+[    9.453468] ufshcd-qcom 1d84000.ufshc: Clk gate=1
+...
+[   10.529259] ufshcd-qcom 1d84000.ufshc: ufshcd_change_power_mode: power mode change failed -110
+[   10.538102] ufshcd-qcom 1d84000.ufshc: ufshcd_scale_gear: failed err -110, old gear: (tx 1 rx 1), new gear: (tx 4 rx 4)
+[   10.542841] WARNING: CPU: 0 PID: 274 at drivers/ufs/core/ufshcd.c:5504 ufshcd_sl_intr+0x64c/0x6a4
+...
 
-I understand the value in what you're trying to do, but if you want it
-to smell like KVM you may as well just let the user run it at EL2.
+CI Run sample: https://git.codelinaro.org/linaro/qcomlt/ci/staging/cdba-tester/-/jobs/233352#L1479
+
+Bisect run log:
+# bad: [0af2f6be1b4281385b618cb86ad946eded089ac8] Linux 6.15-rc1
+# good: [38fec10eb60d687e30c8c6b5420d86e8149f7557] Linux 6.14
+git bisect start 'v6.15-rc1' 'v6.14'
+# bad: [fd71def6d9abc5ae362fb9995d46049b7b0ed391] Merge tag 'for-6.15-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+git bisect bad fd71def6d9abc5ae362fb9995d46049b7b0ed391
+# good: [fb1ceb29b27cda91af35851ebab01f298d82162e] Merge tag 'platform-drivers-x86-v6.15-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+git bisect good fb1ceb29b27cda91af35851ebab01f298d82162e
+# good: [1952e19c02ae8ea0c663d30b19be14344b543068] Merge tag 'wireless-next-2025-03-20' of https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next
+git bisect good 1952e19c02ae8ea0c663d30b19be14344b543068
+# bad: [1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95] Merge tag 'net-next-6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+git bisect bad 1a9239bb4253f9076b5b4b2a1a4e8d7defd77a95
+# good: [22093997ac9220d3c606313efbf4ce564962d095] Merge tag 'ata-6.15-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/libata/linux
+git bisect good 22093997ac9220d3c606313efbf4ce564962d095
+# bad: [336b4dae6dfecc9aa53a3a68c71b9c1c1d466388] Merge tag 'iommu-updates-v6.15' of git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux
+git bisect bad 336b4dae6dfecc9aa53a3a68c71b9c1c1d466388
+# bad: [0711f1966a523d77d4c5f00776a7bd073d56251a] scsi: mpt3sas: Fix buffer overflow in mpt3sas_send_mctp_passthru_req()
+git bisect bad 0711f1966a523d77d4c5f00776a7bd073d56251a
+# good: [369552fd03f296261023872b8fc983d1fc55c8e9] Merge patch series "mpt3sas driver udpates"
+git bisect good 369552fd03f296261023872b8fc983d1fc55c8e9
+# bad: [42273e893157501ae119ea5459f3a7d2420c56d6] Merge patch series "scsi: scsi_debug: Add more tape support"
+git bisect bad 42273e893157501ae119ea5459f3a7d2420c56d6
+# bad: [7e72900272b61c11f2fd4020d4f186124d0d171b] Merge patch series "Support Multi-frequency scale for UFS"
+git bisect bad 7e72900272b61c11f2fd4020d4f186124d0d171b
+# good: [c02fe9e222d16bed8c270608c42f77bc62562ac3] scsi: ufs: qcom: Implement the freq_to_gear_speed() vop
+git bisect good c02fe9e222d16bed8c270608c42f77bc62562ac3
+# bad: [eff26ad4c34fc78303c14be749e10ca61c4d211f] scsi: ufs: core: Check if scaling up is required when disable clkscale
+git bisect bad eff26ad4c34fc78303c14be749e10ca61c4d211f
+# bad: [129b44c27c8a51cb74b2f68fde57f2a2e7f5696b] scsi: ufs: core: Enable multi-level gear scaling
+git bisect bad 129b44c27c8a51cb74b2f68fde57f2a2e7f5696b
+# first bad commit: [129b44c27c8a51cb74b2f68fde57f2a2e7f5696b] scsi: ufs: core: Enable multi-level gear scaling
+
+#regzbot introduced 129b44c27c8a51cb74b2f68fde57f2a2e7f5696b
 
 Thanks,
-Oliver
+Neil
+
