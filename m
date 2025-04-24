@@ -1,240 +1,151 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A024D284681
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0D081AC43A
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745516345; cv=none; b=k/8Gi4ny1Z8JiYpMkzltp/qkgWtXgsErPRzEYtD2/POUXGBVvkPPy8ldT5uN9OkkP0vvA4Zk3qUPTLm/NYFNXCXvfxXzJcTVPXGbbA3+pNCAASQB9W6X6o/rVddXXt2sDwXkOXOt/NW4eVIo4K3P01RqcXTjgFhmgH6TeU/jUDc=
+	t=1745516497; cv=none; b=c7qjK0f+nrIcXh3JeuGIJnKcmWaoiD3nnwnLZ8j9S//yq/UA+oZtyDpCT1dbhMrmfGpKv+Vx8iuXYmETef+oJCOHv8jbKxdeGSQOo250sVwqOlb71jxoO4jVXxFZ9x/y4IPYBqxl4AD0vtcOuRQdRD3HPzoefyNby3cwl+XXYbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745516345; c=relaxed/simple;
-	bh=778C7L6jHkuS9sL9E7t1piWeaUfftWC+i44EveEJyWg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=tyhknqg0uFY4luKc3tGjK2pk6AhvKG4y1ki0CH5MJ9/YsAMKLSTqG7AG+ESCK6SnCiYpy+oCI3L6DIE++eEixlsjd/JIYlz9czMQU6rfvqkw8zq4wVANf0S0t5hTcHiFqxWEDhNngs0hDj5+Ma9kHUk0GoGYJEKzqv6ky9QRZ7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pYnBL/zS; arc=none smtp.client-ip=209.85.160.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pYnBL/zS"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4774611d40bso22911cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745516342; x=1746121142; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AQve8Z1vW/P2YOkExAreJok4GWtTgHefYj/Q8y+Ff4I=;
-        b=pYnBL/zSIYqy9Sse3HvCyIqFQ2uctO9G9wxJVgR+0lid9MuT6p0IntTRBYANzZIoIi
-         rjA8xdTXcqL7K2LSm+R4LW/1o305PZP0u9qvZ6moqQp4ML8XG8PDUhBSvO7WIe+d1B2p
-         PhlR7PQTt1WGnl7xV76tAjHxqGCwX76ZS6vaMoTqau4UqJJUrTaQaZR5ncqEcDUR2zCN
-         YJGFwO9y+NCzndYbTf0HA2PafUBaSp4CnKspAzSMMhC+PR0ZIU0ehDMGYTJgJ5RAAxRF
-         XRbXcNqhMm8mMBxe1EPYyPuvsOSI4B6OxRNar8iUKzwQqr4GQcEAkB/JX0X9bSG9AxPC
-         3yMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745516342; x=1746121142;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AQve8Z1vW/P2YOkExAreJok4GWtTgHefYj/Q8y+Ff4I=;
-        b=lpMZW0kFVLdkEtxsKwtpRd241HjAPUxYEq9aW8DgpW0yFcWaZkPYgkT8JWPNDDvoWl
-         QbTW6JhhBgqWvGcNFsRcfFR64Lo8QUQRgRyhzyfawcMwBB3w+62DvBMZ15kafAn4ITNU
-         2pbHfxs6t5MSpzIjaBUxcU+l9/guHwb4F49rm4foyfHauuEejI4Ild1iM/5VTg3sVshW
-         kDabd+TOKFfn9tFwSZdtXdLh1R2jVpXcisS2e6C+MJuoELXjQvqPzISK6urzCdPGLiTu
-         yyQ+pmd0fn+KmZg6PEJT5+YDLVtjj1tuQYUzkmb9PH8/H7OGRVxjv+VUVefA/6sD4WKI
-         HCwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWt23NOh8YZHTO/Ms2F0Xw0nZ/xV780uG+u5etv0nf02u3CgVz82Qd/vwVkByfzBV6VqcfJAtN+GPa8hvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyg/csdOvzzD7Sf3QlQ4Aohf92MXVmq4U2V5vzKbxPYBhhb6LxQ
-	eOgHLvxdKIz+2Fu1KVWO8orZrNqOdwEBxJBUQdpZ2ci2tDTCT+Ns+GZBhWru/R+/pmHXnfzNvwp
-	zn4yGsYwwCXhjDyntjm1M1fP9NLF1Lud29Hvs
-X-Gm-Gg: ASbGncszZ28STQWvJyVT48rEjBMqevXclQ6MD+rabo8lb+BJzSLHhXKBXRAbW3WLE7Q
-	TzQ9DSsfhkUnRg6wUV9s7WbMhCcFGiTwomSSXeHLzp+ZPmS60HBKsfsjewjEhIjWBjFlmmuib1c
-	Yi5HzVJ9d+JpNdnHryQn/Z0CZoyT37huvTPfTmjs3BXZ1DTq+3wfps
-X-Google-Smtp-Source: AGHT+IEaeLExckdIth/b7h0UkPH6TCrtID8z1DnhzMSXKNMJB5xFB7I7YwWnciAgMdM0WUca1IkmZJFJkD5T7GZBSZ8=
-X-Received: by 2002:a05:622a:5a95:b0:47d:cd93:5991 with SMTP id
- d75a77b69052e-47ea4e482fcmr4499751cf.21.1745516342030; Thu, 24 Apr 2025
- 10:39:02 -0700 (PDT)
+	s=arc-20240116; t=1745516497; c=relaxed/simple;
+	bh=fXCjcwkEtcDQ7QCB1IGaY0tTIBvn8gLp0aN7PhKhDnc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YB0/LtgkZLAN10IL6R2fSYQX9HMow0tHPseKnjTMk/Ng0ky25aQm6lkIf4F+4VWyg4C6cUZGBGVOwNEmoG8YyoPLUNmneZ6GjThLTn5AiAA9AFB8cl76MuGi9DOmzPx7JzyCJJmfUaMDzNX29zYKmzo+M8Xcq0qGLeJ5gmEj8SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22FE61063;
+	Thu, 24 Apr 2025 10:41:30 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.40])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C4253F5A1;
+	Thu, 24 Apr 2025 10:41:34 -0700 (PDT)
+From: Robin Murphy <robin.murphy@arm.com>
+To: joro@8bytes.org,
+	will@kernel.org
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan@kernel.org>
+Subject: [PATCH] iommu: Handle yet another race around registration
+Date: Thu, 24 Apr 2025 18:41:28 +0100
+Message-Id: <88d54c1b48fed8279aa47d30f3d75173685bb26a.1745516488.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.39.2.101.g768bb238c484.dirty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418174959.1431962-1-surenb@google.com> <20250418174959.1431962-8-surenb@google.com>
- <CAEf4BzYuA3ZRCwPsAxhQZDOOpjSTrphKEsgPAqgRP8Ly7+fTWw@mail.gmail.com>
- <CAJuCfpE_jJ0Xq5T0HcLpquRzO+NdvN3T3_JXEwSjt2NG9Ryy5g@mail.gmail.com>
- <CAEf4BzYctDuS4DRTzdRQyyhCYvFTggOz=wcbizXEYvC_z_SSng@mail.gmail.com>
- <6ay37xorr35nw4ljtptnfqchuaozu73ffvjpmwopat42n4t6vr@qnr6xvralx2o>
- <CAJuCfpGc-23xpEYZQQevkzx+iN3AAqXXzbyqJAQjd4TQP9j9Dg@mail.gmail.com>
- <CAEf4BzYBdG95Zhi0M0CDTHAU6V9sF+kGSLB+346dq0Aa4Timmg@mail.gmail.com> <by4pd6zomtvo64vjddthqu3ps2n7fqzaeqttinmy5nzttxjjd6@ch2uxmy2bgks>
-In-Reply-To: <by4pd6zomtvo64vjddthqu3ps2n7fqzaeqttinmy5nzttxjjd6@ch2uxmy2bgks>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Thu, 24 Apr 2025 10:38:50 -0700
-X-Gm-Features: ATxdqUHNYGXmEC72FqW87V5mUP50xMoSw_i6A76PXBjs9grB8Rv_KLgtJdCe72k
-Message-ID: <CAJuCfpEAJGwCTUcQx1wjKkE2PJTf_EtX=xAwxLSdVqWn-cQTGw@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] mm/maps: read proc/pid/maps under RCU
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Suren Baghdasaryan <surenb@google.com>, akpm@linux-foundation.org, lorenzo.stoakes@oracle.com, 
-	david@redhat.com, vbabka@suse.cz, peterx@redhat.com, jannh@google.com, 
-	hannes@cmpxchg.org, mhocko@kernel.org, paulmck@kernel.org, shuah@kernel.org, 
-	adobriyan@gmail.com, brauner@kernel.org, josef@toxicpanda.com, 
-	yebin10@huawei.com, linux@weissschuh.net, willy@infradead.org, 
-	osalvador@suse.de, andrii@kernel.org, ryan.roberts@arm.com, 
-	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 9:42=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracl=
-e.com> wrote:
->
-> * Andrii Nakryiko <andrii.nakryiko@gmail.com> [250424 12:04]:
-> > On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Suren Baghdasaryan <surenb@goog=
-le.com> wrote:
-> > >
-> > > On Wed, Apr 23, 2025 at 5:24=E2=80=AFPM Liam R. Howlett <Liam.Howlett=
-@oracle.com> wrote:
-> > > >
-> > > > * Andrii Nakryiko <andrii.nakryiko@gmail.com> [250423 18:06]:
-> > > > > On Wed, Apr 23, 2025 at 2:49=E2=80=AFPM Suren Baghdasaryan <suren=
-b@google.com> wrote:
-> > > > > >
-> > > > > > On Tue, Apr 22, 2025 at 3:49=E2=80=AFPM Andrii Nakryiko
-> > > > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > > > >
-> > > > > > > On Fri, Apr 18, 2025 at 10:50=E2=80=AFAM Suren Baghdasaryan <=
-surenb@google.com> wrote:
-> > > > > > > >
-> > > > > > > > With maple_tree supporting vma tree traversal under RCU and=
- vma and
-> > > > > > > > its important members being RCU-safe, /proc/pid/maps can be=
- read under
-> > > > > > > > RCU and without the need to read-lock mmap_lock. However vm=
-a content
-> > > > > > > > can change from under us, therefore we make a copy of the v=
-ma and we
-> > > > > > > > pin pointer fields used when generating the output (current=
-ly only
-> > > > > > > > vm_file and anon_name). Afterwards we check for concurrent =
-address
-> > > > > > > > space modifications, wait for them to end and retry. While =
-we take
-> > > > > > > > the mmap_lock for reading during such contention, we do tha=
-t momentarily
-> > > > > > > > only to record new mm_wr_seq counter. This change is design=
-ed to reduce
-> > > > > > >
-> > > > > > > This is probably a stupid question, but why do we need to tak=
-e a lock
-> > > > > > > just to record this counter? uprobes get away without taking =
-mmap_lock
-> > > > > > > even for reads, and still record this seq counter. And then d=
-etect
-> > > > > > > whether there were any modifications in between. Why does thi=
-s change
-> > > > > > > need more heavy-weight mmap_read_lock to do speculative reads=
-?
-> > > > > >
-> > > > > > Not a stupid question. mmap_read_lock() is used to wait for the=
- writer
-> > > > > > to finish what it's doing and then we continue by recording a n=
-ew
-> > > > > > sequence counter value and call mmap_read_unlock. This is what
-> > > > > > get_vma_snapshot() does. But your question made me realize that=
- we can
-> > > > > > optimize m_start() further by not taking mmap_read_lock at all.
-> > > > > > Instead of taking mmap_read_lock then doing drop_mmap_lock() we=
- can
-> > > > > > try mmap_lock_speculate_try_begin() and only if it fails do the=
- same
-> > > > > > dance we do in the get_vma_snapshot(). I think that should work=
-.
-> > > > >
-> > > > > Ok, yeah, it would be great to avoid taking a lock in a common ca=
-se!
-> > > >
-> > > > We can check this counter once per 4k block and maintain the same
-> > > > 'tearing' that exists today instead of per-vma.  Not that anyone sa=
-id
-> > > > they had an issue with changing it, but since we're on this road an=
-yways
-> > > > I'd thought I'd point out where we could end up.
-> > >
-> > > We would need to run that check on the last call to show_map() right
-> > > before seq_file detects the overflow and flushes the page. On
-> > > contention we will also be throwing away more prepared data (up to a
-> > > page worth of records) vs only the last record. All in all I'm not
-> > > convinced this is worth doing unless increased chances of data tearin=
-g
-> > > is identified as a problem.
-> > >
-> >
-> > Yep, I agree, with filling out 4K of data we run into much higher
-> > chances of conflict, IMO. Not worth it, I'd say.
->
-> Sounds good.
->
-> If this is an issue we do have a path forward still.  Although it's less
-> desirable.
->
-> >
-> > > >
-> > > > I am concerned about live locking in either scenario, but I haven't
-> > > > looked too deep into this pattern.
-> > > >
-> > > > I also don't love (as usual) the lack of ensured forward progress.
-> > >
-> > > Hmm. Maybe we should add a retry limit on
-> > > mmap_lock_speculate_try_begin() and once the limit is hit we just tak=
-e
-> > > the mmap_read_lock and proceed with it? That would prevent a
-> > > hyperactive writer from blocking the reader's forward progress
-> > > indefinitely.
-> >
-> > Came here to say the same. I'd add a small number of retries (3-5?)
-> > and then fallback to the read-locked approach. The main challenge is
-> > to keep all this logic nicely isolated from the main VMA
-> > search/printing logic.
-> >
-> > For a similar pattern in uprobes, we don't even bother to rety, we
-> > just fallback to mmap_read_lock and proceed, under the assumption that
-> > this is going to be very rare and thus not important from the overall
-> > performance perspective.
->
-> In this problem space we are dealing with a herd of readers caused by
-> writers delaying an ever-growing line of readers, right?
+Next up on our list of race windows to close is another one during
+iommu_device_register() - it's now OK again for multiple instances to
+run their bus_iommu_probe() in parallel, but an iommu_probe_device() can
+still also race against a running bus_iommu_probe(). As Johan has
+managed to prove, this has now become a lot more visible on DT platforms
+wth driver_async_probe where a client driver is attempting to probe in
+parallel with its IOMMU driver - although commit b46064a18810 ("iommu:
+Handle race with default domain setup") resolves this from the client
+driver's point of view, this isn't before of_iommu_configure() has had
+the chance to attempt to "replay" a probe that the bus walk hasn't even
+tried yet, and so still cause the out-of-order group allocation
+behaviour that we're trying to clean up (and now warning about).
 
-I don't know if we have a herd of readers. The problem statement was
-for a low-priority reader (monitors) blocking a high-priority writer.
-Multiple readers are of course possible, so I think as long as we can
-guarantee forward progress we should be ok. Is that reasonable?
+The most reliable thing to do here is to explicitly keep track of the
+"iommu_device_register() is still running" state, so we can then
+special-case the ops lookup for the replay path (based on dev->iommu
+again) to let that think it's still waiting for the IOMMU driver to
+appear at all. This still leaves the longstanding theoretical case of
+iommu_bus_notifier() being triggered during bus_iommu_probe(), but it's
+not so simple to defer a notifier, and nobody's ever reported that being
+a visible issue, so let's quietly kick that can down the road for now...
 
->
-> Assuming there is a backup caused by a writer, then I don't know if the
-> retry is going to do anything more than heat the data centre.
->
-> The readers that take the read lock will get the data, while the others
-> who arrive during read locked time can try lockless, but will most
-> likely have a run time that extends beyond the readers holding the lock
-> and will probably be interrupted by the writer.
->
-> We can predict the new readers will also not make it through in time
-> because the earlier ones failed.  The new readers will then take the
-> lock and grow the line of readers.
->
-> Does that make sense?
+Reported-by: Johan Hovold <johan@kernel.org>
+Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/iommu/iommu.c | 26 ++++++++++++++++++--------
+ include/linux/iommu.h |  2 ++
+ 2 files changed, 20 insertions(+), 8 deletions(-)
 
-Yeah. I guess we could guarantee forward progress if the readers would
-take mmap_read_lock on contention and produce one page worth of output
-under that lock before dropping it and continuing with speculation
-again. If contention happens again it grabs the mma_read_lock and
-repeats the dance. IOW, we start with speculation, on contention we
-grab the lock to produce one page and go back to speculation. Repeat
-until all vmas are reported. OTOH I guess Paul's benchmark would show
-some regression though... Can't have everything :)
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 264383b507bc..2605dab818a0 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -277,6 +277,8 @@ int iommu_device_register(struct iommu_device *iommu,
+ 		err = bus_iommu_probe(iommu_buses[i]);
+ 	if (err)
+ 		iommu_device_unregister(iommu);
++	else
++		WRITE_ONCE(iommu->ready, true);
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(iommu_device_register);
+@@ -2832,31 +2834,39 @@ bool iommu_default_passthrough(void)
+ }
+ EXPORT_SYMBOL_GPL(iommu_default_passthrough);
+ 
+-const struct iommu_ops *iommu_ops_from_fwnode(const struct fwnode_handle *fwnode)
++static const struct iommu_device *iommu_from_fwnode(const struct fwnode_handle *fwnode)
+ {
+-	const struct iommu_ops *ops = NULL;
+-	struct iommu_device *iommu;
++	const struct iommu_device *iommu, *ret = NULL;
+ 
+ 	spin_lock(&iommu_device_lock);
+ 	list_for_each_entry(iommu, &iommu_device_list, list)
+ 		if (iommu->fwnode == fwnode) {
+-			ops = iommu->ops;
++			ret = iommu;
+ 			break;
+ 		}
+ 	spin_unlock(&iommu_device_lock);
+-	return ops;
++	return ret;
++}
++
++const struct iommu_ops *iommu_ops_from_fwnode(const struct fwnode_handle *fwnode)
++{
++	const struct iommu_device *iommu = iommu_from_fwnode(fwnode);
++
++	return iommu ? iommu->ops : NULL;
+ }
+ 
+ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode)
+ {
+-	const struct iommu_ops *ops = iommu_ops_from_fwnode(iommu_fwnode);
++	const struct iommu_device *iommu = iommu_from_fwnode(iommu_fwnode);
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 
+-	if (!ops)
++	if (!iommu)
+ 		return driver_deferred_probe_check_state(dev);
++	if (!dev->iommu && !READ_ONCE(iommu->ready))
++		return -EPROBE_DEFER;
+ 
+ 	if (fwspec)
+-		return ops == iommu_fwspec_ops(fwspec) ? 0 : -EINVAL;
++		return iommu->ops == iommu_fwspec_ops(fwspec) ? 0 : -EINVAL;
+ 
+ 	if (!dev_iommu_get(dev))
+ 		return -ENOMEM;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index ccce8a751e2a..cbb1520005c3 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -750,6 +750,7 @@ struct iommu_domain_ops {
+  * @dev: struct device for sysfs handling
+  * @singleton_group: Used internally for drivers that have only one group
+  * @max_pasids: number of supported PASIDs
++ * @ready: set once iommu_device_register() has completed successfully
+  */
+ struct iommu_device {
+ 	struct list_head list;
+@@ -758,6 +759,7 @@ struct iommu_device {
+ 	struct device *dev;
+ 	struct iommu_group *singleton_group;
+ 	u32 max_pasids;
++	bool ready;
+ };
+ 
+ /**
+-- 
+2.39.2.101.g768bb238c484.dirty
 
->
-> Thanks,
-> Liam
->
->
