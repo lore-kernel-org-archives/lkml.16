@@ -1,74 +1,74 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F6E242D62
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE43242D71
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:31:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487079; cv=none; b=nyT1yj+KE+AFfDhoAADyj8SLgga1RGetatR2UhqmSE7w14VNSOwMf14WF/Yeq7F+GHxEzGOLxb+tz1M33GYmefWalEliWHZ9KbMQzjeXLIIKHk2qvXgr7v9ysuNM7ljj8d9FS7IAZgA5einl703GYg5LX0+rBWclirUU1QIiEVA=
+	t=1745487080; cv=none; b=VyG+89+N7zBRW7iKdmwAW3rBXo7Jj8A2p9qmvlJtzpz2HUH4gxkQvlHCkMTopgCStIg5iOm7lGa2kvfScqCiCfj9FikD5Ju/hdXlFdbGrK82AKvBivrpeXY656ocOxWifBkqCo83Ew2EZ0O19VORdkHuOd1OhZdN7+6xlod3QfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487079; c=relaxed/simple;
-	bh=RoacreTEMFn9/+AgadLU7Bc5airyr1KCWBHPP03RBuw=;
+	s=arc-20240116; t=1745487080; c=relaxed/simple;
+	bh=WHnH4u7CToI9+YcbwmPKzSr4/S0NqPJ62h/AKSWsURU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=V9TIlD69mcCzjI51dAA0K3D/lUJwWriaPyT/K6HXWfaQJ4RrobuU3ZCs+rnpx30LPOm1252OHNDI0e35oSTQHNyuHNSpbOkDVXPMd9i9/qmrsF0t+AkFIZ0CtKAOlpbz5AnVr3bBqCA00wro1EAgTMhT9i5sh0DLNUdfyZJTlwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cpRlpmjk; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=BtY+2kFs48Y3hzaISwdNyJyQjw+my6IsnSUh4PwvTLbsUrd+UmMcJJrN3hHf5NA2ouS69aAOJFy2IEKPryB38URXOgfh1xjU+sBi4p+7K/GPNBc0NkhvMmp+ov66z87ZlG3V0yHeGNblnzdEmY88wAyqYiL5YyUXMaF+zFYlVTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lU1fROQD; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cpRlpmjk"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F6kW003397
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:31:16 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lU1fROQD"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0FoUZ007114
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:31:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	wrHE1bOaB3NiekNvDO5+9u9GO4wap7dKxyNQIc6R/uI=; b=cpRlpmjkKG9kcZ4c
-	iEJUgOR8r5BAuIrtJsnFEW3UIzJ6TOUzEOaurxQNi1bfZfWdHiJijXzRsBHRIgOb
-	H4pC6cY6wLF94+9aaPXCJs/lo6SNhw2pbii4hI+Yp98nmrJRTl5BSVekEShmr36w
-	M6F13hHd2tqv3eCtewzC4nXrXrNNR07/VnZ+mb6f7oU/zuWPyfgSU7pu0DhF6qS4
-	/XXOPVjphl0x29onQUsK7SHSqw15VkIvqsJqDVcLPrSiIpugpt92PFd9nEYUytkT
-	sJ4Cy2ypGYz7WQUXWP2F+ZxtRHdAtKW1LCrf/oJ6ynoN6f15aHUasHXcHmzZ/jAj
-	CgL7EA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0myc4-1
+	nMj4nXb+FNu6Q2Juv9wtWeinh7kszmTJRVSM9T4R8Nc=; b=lU1fROQD7IA0YtY/
+	PVDZZzpgrSfPXrqoOmJjOkMNPX+2GY2ZmoSFjgXQOJFQccsA+BmgvevLw6CXBBjY
+	gXmjkhU8yzf+wjBGwBPYz4l+HwbiYmy+5XX3YxLCU1DPX0C+HLkR+dl3LnLR7NZ4
+	plxlDKkECNxT02/qaU9Uyx6GR2EebEv1Hneo6Fw+JjGAiYDJ4kN31BBB7GyA3X97
+	qMdDCLdF2nDUy+POGik2xnSzrrtMGt40K9MviT/ZmdzC3KBBrHl9YRAkhA+lygo6
+	0nyIJzVhVIEe3UUD98inH6VbViEue9nV22GaJoru1lyoMd5bpxtSv13lNx75gQ06
+	/5J2yg==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh05079-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:31:16 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5f876bfe0so133950285a.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:31:16 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:31:17 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6eb2480028cso13601576d6.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:31:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745487075; x=1746091875;
+        d=1e100.net; s=20230601; t=1745487077; x=1746091877;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wrHE1bOaB3NiekNvDO5+9u9GO4wap7dKxyNQIc6R/uI=;
-        b=jFRvtf67qJ4crfx//pBNI8hrHiNmAxnUU62Lde0VZgAoqxzHHMEhZl5nZGjqnZr2mm
-         8mxN7PR8t+BPLo2F5ah3vkWj3L4LeVJ3mR075b/DDirYR7p+yiUobkVg9/jtnqqzN/1X
-         q1IDNcsUz03F04xZrDMzIOEoIhrQEcnJV7VlLlMWCemLID9hZIwuj+LGJc4HIMDOo5J1
-         3RAAXEIbOTC9zW9ehSoDZLhVZWPznYTXBNUiLlFjQkIpLYCDGeZi8CVKN1qjcoyQEI1Z
-         FzppD8A6pOCTYL4BxzyC/ibgVSC2H8RSyh6SnI64elIcwEc1mE59ZADBxhKdEahIgJg1
-         e09A==
-X-Forwarded-Encrypted: i=1; AJvYcCVOsflJSe1CH7/QF81TVnYgUSqAWoIub4Ob366KTqlwdb371KidJKHilBl3ZXwvLXVdCk77U3hTmEMr0ts=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywy1wF12SxigoEzc452jzmdytUmznOnfXTgIbIcqJVZfqzH84tD
-	zBdplKSGnQ272RVHFbRSKKFFiLZN4DD7j+r5FXJeNJ64Jv6h2YKvrnYgaUs71RJbN5dHPXVTUoh
-	GAhQVm6kjWn6lo82jVdhoYP/pMqcEhRmLb7sZyS5nzVxWlHYqpg5q11tK8x56IpA=
-X-Gm-Gg: ASbGncuyf3caUSSd+VLdtSvGixIb8q4D8V8GWwkyvEz12FjLChlgetSQuYNnrSDF0l2
-	PpMcYCu1LLfk9pILElOfwhUEHoGSUed+vopAbtyI38ifyHgyCB1dhUMcdIaUg0FDA8U+UwnMQw8
-	AOR+9CmjNPCLrPC4w9ii6Upx/7pcq2BTZDemls7gtFM8hb34iXMeshWh7IHHZBoojCULsROcXb/
-	/BC0ntHwdyYx72i8qogGNGUVSywQRo64iAAobNIKjalIZaSrJyyyjm7Vn1wvHi0Hyw5gCU0RrMX
-	uPsAI/FG3SWHu2AS3Em2FJrJK/ayrcwPYmwIZzti60q+i/wfNvRIYpXttJYGHiVillzw81KUKb9
-	IuRa/5h+MLOWrie0Hu0Ga+RMj
-X-Received: by 2002:a05:620a:44c8:b0:7c5:4caa:21af with SMTP id af79cd13be357-7c956f88f3cmr289575485a.53.1745487075637;
-        Thu, 24 Apr 2025 02:31:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHzIFg1zDeiIX8vbuG/puPSsm0w6YxIMJS6CwQB6kTZP4GzarC7rZpOw7DNXg9ofkifNfCrzA==
-X-Received: by 2002:a05:620a:44c8:b0:7c5:4caa:21af with SMTP id af79cd13be357-7c956f88f3cmr289570085a.53.1745487075134;
-        Thu, 24 Apr 2025 02:31:15 -0700 (PDT)
+        bh=nMj4nXb+FNu6Q2Juv9wtWeinh7kszmTJRVSM9T4R8Nc=;
+        b=C45t5DulqaQagm8MLNtYfWAB3II/8hibbpXMmZr8OGs3vcjGEj67hcAqPNyhDMPfql
+         E+zlIbJh/w2IdGgjc3mF0GYI2m+q+vFnUjSOV/B4ozR9XlhraEyuzxeozJcoyi9Rwa+S
+         4r+RyHOc+Y9VIP+Dp7DeV2ChEaA3rMupIBLG6FUe+LD9DS2cbMcFO2H7iCr/7JWbhhFx
+         BwgpHzlOh04kNWdoOwLQaAEINOWMAGNv7jEPQJeCf8u2wkfGhwHvphrfqdFMUagvxMo6
+         K/fv6DAd9EOu2JW+51ppUaUnfsBf0yxQmxfGdrPMubHtEbWC5BKJ8A7J3alQHLe6Nxlt
+         ir1A==
+X-Forwarded-Encrypted: i=1; AJvYcCW/ZtqJKsktyLjXVDba6KWAtwGtvwq2ALE4HSjKFrYGKCOjw5OimJ39SgunQy0tmqkAagU+nbBXvmjpd7k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQX0gj0cYmJ2vimQWMe8+4cI9V9XdJ3m8MjtaPA5F1r0Cz6W1z
+	wKcH1KursneKdJXbiFlk4F0NgT/JULd//FWlJiBCuPzZNnd7hXNk09Uv67EjNa6KPRrU/YZMrOb
+	9b/CzPR6/G9rC6QSF/fXk59i5JUs2sH/6aV83FKyfmijSo55sXdMESkmPbjs9ejA=
+X-Gm-Gg: ASbGnctzj7FCzvs3aO0tc50jTEtP3aDl34Ov83Ss29jUxNgFjZhtsnnuOB+f3betAC1
+	wuoLyMdg0xW/as1WAE6vmdbtIzh6jQym1WfEQQeymr2hlj3hG3+RimQ1CKGN/zRaO7aI8eykrh2
+	l7cW3jIKsxxro64D4zlZ+qsleg5B5ejeJ34Lik+YMEkFHGsaTUiY0ady7/hjz/8cBQogw9QOeKe
+	lumqZlMSUmP+PcRpV/KwNcGmI+aVMOl2pDDVb4X+RXE6lMjMohmUJALsk0sWg9qlNWGSFni6kPP
+	SlwUZaznPpjmHMsoPP2VL/mZlUQpzi+ddbVdk44JnWQWSb9IoFIYWRijGfQr4bKg4QY4+jdLov0
+	YCiFLRXZhWOt1CXnD/6+e92LA
+X-Received: by 2002:ad4:5d6c:0:b0:6e4:3ddc:5d33 with SMTP id 6a1803df08f44-6f4bfbcff8cmr27765656d6.13.1745487076966;
+        Thu, 24 Apr 2025 02:31:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH1W5a+5gc6B7AlIvLZnfYHMfxB9iNdzMWs0zrgULP7xrYOYblEfMRe+GXwsC4GjPCz78vlVQ==
+X-Received: by 2002:ad4:5d6c:0:b0:6e4:3ddc:5d33 with SMTP id 6a1803df08f44-6f4bfbcff8cmr27765316d6.13.1745487076645;
+        Thu, 24 Apr 2025 02:31:16 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b9a304sm1820461fa.99.2025.04.24.02.31.12
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b9a304sm1820461fa.99.2025.04.24.02.31.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 02:31:12 -0700 (PDT)
+        Thu, 24 Apr 2025 02:31:15 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Thu, 24 Apr 2025 12:30:30 +0300
-Subject: [PATCH v3 26/33] drm/msm/dpu: get rid of DPU_SSPP_QOS_8LVL
+Date: Thu, 24 Apr 2025 12:30:31 +0300
+Subject: [PATCH v3 27/33] drm/msm/dpu: drop unused MDP TOP features
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-dpu-drop-features-v3-26-cdaca81d356f@oss.qualcomm.com>
+Message-Id: <20250424-dpu-drop-features-v3-27-cdaca81d356f@oss.qualcomm.com>
 References: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
 In-Reply-To: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
@@ -89,132 +89,68 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3942;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1025;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=rblN28s9WApGRvSdgwWOoAg2/8R6bFt84IMaWAtpt4E=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCgSv0gl9OlrXtLqzN0AezOXYOY6txxUCsh9LH
- CWulThU4cOJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAoErwAKCRCLPIo+Aiko
- 1TJbCACh7guP2wcixkRto0VBCiA2LpayBzP+xMAujF2Y7DwSW0zKJ5lLv5PbFQLXqVz3P7S4Imq
- Bri1XMVdY3LEImpBDWpojCK+MKl4FLBpEpM/mGKpY1JDLRVnZWJyJczAneAXt5LK8Fd+6X1YVlv
- QIhtbBS5Ggs2/isbefFAj1PU1WljaHs/aXhhUkXpoDPErtb5JNbKMsHvRn8sNrDfYy4MnLO6OBX
- 6ydBR0+9/qkV9GFejoxwRUvWQogVKQ9jmKujXxW9PCR+n12XjLf4lbjDd4tN3PKgLWz7wn0wz7a
- 3FM0DTLPiHv52kc0XYAk5HzSftk1JUAcvXX6O1UHq+YCRq9F
+ bh=Rp2b7HkiPFY5uR85fuuwlCMt0ynxuJbG+1cuM8N4RUw=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCgSwjwuCAQPtAtKCggMXBPwUBGbkT7v7GHf+a
+ Z9r2u+vdYWJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAoEsAAKCRCLPIo+Aiko
+ 1YWgCACFeezcUqdWJOjr5b9efrq41SoCRN+Gl3gbB3ibrA7vRHOKAhyutBCN0y/vk2IOE2GRDzC
+ qkud11KikADnf22r+/abp0uHrRWrLvISbb9aHl3QLsy79fH2HgN1kxYqhLpvx/udJTnqARkyAmW
+ sJXnmAKArZllViW/LmxbDDJFHNy3GwT4PXvanCV5a05EQDmPu8ArtgpagqAauykLpJbhnKTtt3m
+ 3AsKQj6T5dpauSOMmC03gTNpc2gXuzi2r02mPVECpfz9hnsvbGvpf8yOJkIBqJlbR/BNRoeEsgf
+ SohlW13/BA3b04T0rthak5t+q76AbJ6J0jhPZCcKytBiuQHE
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-ORIG-GUID: 1cSRR6jmz3wNsbrjoBvjSXQpCDzGFaD0
-X-Authority-Analysis: v=2.4 cv=ftfcZE4f c=1 sm=1 tr=0 ts=680a04e4 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=8GrYFQBjgVhM5uvzyoMA:9 a=QEXdDO2ut3YA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MyBTYWx0ZWRfX20tAHZXQHk/Q QgseKW5Iq10RQlWiBO+NM+cy4NJ5fRErPECTNSl9hY3mRbZ7j61jSKZh8YteFjrbyTMW1sx1sp0 o/PJEtwrdikQgyHIoKpVUJl9WJq5CY1vU0HaatyeQmkeDGf35yzEIktfFxikM/WQCwg33LLa7dn
+ 2zqigwTT5Vo42zNu70xndtoLHR0igK5tYbO5Ko1/Ch1OLPxN3OMNuXzqA6ZTbYsao5DP4ETSo+X YBmiGJcnIFHsUMvSYgM6tu+ay8Z5dEndR6bJldC0RLxxGIhPmycAeSPYo1uVrJXyENRUgOTSwID 0/aa3FPKq3+YiO105ZJFMpSGW80neiaiyh1JfhIQtCgBb90ak0+dozT7eR/GkWR4sThR0YJ84gH
+ L1fX4mtfqVBGdCPPCKL7jsb9ouW0Q5aOqIokYNeL5kXU1FrMdcGRuQ5YQifhAWlxY2Nen4VY
+X-Proofpoint-GUID: si2_rc-ncfy-XzmKkh7-kxZP1a_GDXBw
+X-Authority-Analysis: v=2.4 cv=ZuTtK87G c=1 sm=1 tr=0 ts=680a04e5 cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=8brcGD95nZB0FecW0AkA:9 a=QEXdDO2ut3YA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
  a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: 1cSRR6jmz3wNsbrjoBvjSXQpCDzGFaD0
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MyBTYWx0ZWRfX090qqh5hL5l8 sumg0B7vNJF9ig+Sxddbt0bMY2iP9FPjGpl94NciipefXG8Nurk7cXmMc+4MFAJsacmkt2hsF3E 6JPS374aVytI309NkW992j9rAmAGSgdjHAf9tQwKUvDEDC9LzbIRiunDPNl6pl1nPUnTJyP9cXE
- T1Jy+71cgDZJiEWdk6LbNop315ujqm2lhC0LFfshZZAiCUzJmnwqGHJpUtJ3U4YJtj7xFS9CHYJ b2Fxlkv1WbJRn5D6CT0ePjOI3Pcsk/UG1UIk7Php1OG/LO4dK5118Sbpwo/eJtu3KQiCKSe9KmH 8S2lHaTX2mscjJ13kqhi6Sgmeh1VMQLhJ34bCNf/0NlCia07/pyb4UzaMuJFB+mRRBbBpEphZUr
- bzGAiNXtz+zA7RMgPHVLaAbaru2sX8DT3EXSRiB13dZxTInWRDFi6WLu55GNf8NhRa8mmsvX
+X-Proofpoint-ORIG-GUID: si2_rc-ncfy-XzmKkh7-kxZP1a_GDXBw
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
- malwarescore=0 impostorscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ impostorscore=0 bulkscore=0 mlxscore=0 adultscore=0 lowpriorityscore=0
+ mlxlogscore=726 priorityscore=1501 malwarescore=0 suspectscore=0
+ spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504240063
 
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Continue migration to the MDSS-revision based checks and replace
-DPU_SSPP_QOS_8LVL feature bit with the core_major_ver >= 4 check.
+Drop unused MDP TOP features from the current codebase.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 6 +++---
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h | 2 --
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c    | 5 ++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h    | 2 ++
- 4 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 6a96fa529508673493712d7cb72846c29d0f5a07..8496a44e2f04edeec884e1bac029c513022bf79a 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -35,12 +35,12 @@
- 	(VIG_MASK | BIT(DPU_SSPP_SCALER_QSEED3_COMPATIBLE))
- 
- #define VIG_SDM845_MASK \
--	(VIG_MASK | BIT(DPU_SSPP_QOS_8LVL) | BIT(DPU_SSPP_SCALER_QSEED3_COMPATIBLE))
-+	(VIG_MASK | BIT(DPU_SSPP_SCALER_QSEED3_COMPATIBLE))
- 
- #define VIG_SDM845_MASK_SDMA \
- 	(VIG_SDM845_MASK | BIT(DPU_SSPP_SMART_DMA_V2))
- 
--#define VIG_QCM2290_MASK (VIG_BASE_MASK | BIT(DPU_SSPP_QOS_8LVL))
-+#define VIG_QCM2290_MASK (VIG_BASE_MASK)
- 
- #define DMA_MSM8953_MASK \
- 	(BIT(DPU_SSPP_QOS))
-@@ -60,7 +60,7 @@
- 	(VIG_SC7280_MASK | BIT(DPU_SSPP_SMART_DMA_V2))
- 
- #define DMA_SDM845_MASK \
--	(BIT(DPU_SSPP_QOS) | BIT(DPU_SSPP_QOS_8LVL) |\
-+	(BIT(DPU_SSPP_QOS) | \
- 	BIT(DPU_SSPP_TS_PREFILL) | BIT(DPU_SSPP_TS_PREFILL_REC1) |\
- 	BIT(DPU_SSPP_CDP) | BIT(DPU_SSPP_EXCL_RECT))
- 
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index e0efa65afd0b734234f1080baf2d91e348882dcf..01763e0bf1359527b0c441ca36b27264dad636c0 100644
+index 01763e0bf1359527b0c441ca36b27264dad636c0..4b6af58429361c49b71f6067dce8ca1daa6493fa 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -50,7 +50,6 @@ enum {
-  * @DPU_SSPP_CSC_10BIT,      Support of 10-bit Color space conversion
-  * @DPU_SSPP_CURSOR,         SSPP can be used as a cursor layer
-  * @DPU_SSPP_QOS,            SSPP support QoS control, danger/safe/creq
-- * @DPU_SSPP_QOS_8LVL,       SSPP support 8-level QoS control
-  * @DPU_SSPP_EXCL_RECT,      SSPP supports exclusion rect
-  * @DPU_SSPP_SMART_DMA_V1,   SmartDMA 1.0 support
-  * @DPU_SSPP_SMART_DMA_V2,   SmartDMA 2.0 support
-@@ -68,7 +67,6 @@ enum {
- 	DPU_SSPP_CSC_10BIT,
- 	DPU_SSPP_CURSOR,
- 	DPU_SSPP_QOS,
--	DPU_SSPP_QOS_8LVL,
- 	DPU_SSPP_EXCL_RECT,
- 	DPU_SSPP_SMART_DMA_V1,
- 	DPU_SSPP_SMART_DMA_V2,
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
-index 32c7c80845533d720683dbcde3978d98f4972cce..7dfd0e0a779535e1f6b003f48188bc90d29d6853 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c
-@@ -543,7 +543,7 @@ static void dpu_hw_sspp_setup_qos_lut(struct dpu_hw_sspp *ctx,
- 		return;
+@@ -28,19 +28,6 @@
  
- 	_dpu_hw_setup_qos_lut(&ctx->hw, SSPP_DANGER_LUT,
--			      test_bit(DPU_SSPP_QOS_8LVL, &ctx->cap->features),
-+			      ctx->mdss_ver->core_major_ver >= 4,
- 			      cfg);
- }
+ #define MAX_XIN_COUNT 16
  
-@@ -703,6 +703,9 @@ struct dpu_hw_sspp *dpu_hw_sspp_init(struct drm_device *dev,
- 	hw_pipe->ubwc = mdss_data;
- 	hw_pipe->idx = cfg->id;
- 	hw_pipe->cap = cfg;
-+
-+	hw_pipe->mdss_ver = mdss_rev;
-+
- 	_setup_layer_ops(hw_pipe, hw_pipe->cap->features, mdss_rev);
- 
- 	return hw_pipe;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
-index 56a0edf2a57c6dcef7cddf4a1bcd6f6df5ad60f6..ed90e78d178a497ae7e2dc12b09a37c8a3f79621 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h
-@@ -314,6 +314,8 @@ struct dpu_hw_sspp {
- 	enum dpu_sspp idx;
- 	const struct dpu_sspp_cfg *cap;
- 
-+	const struct dpu_mdss_version *mdss_ver;
-+
- 	/* Ops */
- 	struct dpu_hw_sspp_ops ops;
- };
+-/**
+- * MDP TOP BLOCK features
+- * @DPU_MDP_PANIC_PER_PIPE Panic configuration needs to be done per pipe
+- * @DPU_MDP_10BIT_SUPPORT, Chipset supports 10 bit pixel formats
+- * @DPU_MDP_MAX            Maximum value
+-
+- */
+-enum {
+-	DPU_MDP_PANIC_PER_PIPE = 0x1,
+-	DPU_MDP_10BIT_SUPPORT,
+-	DPU_MDP_MAX
+-};
+-
+ /**
+  * SSPP sub-blocks/features
+  * @DPU_SSPP_SCALER_QSEED2,  QSEED2 algorithm support
 
 -- 
 2.39.5
