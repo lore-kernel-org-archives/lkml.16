@@ -1,244 +1,233 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D671C1F12
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745469857; cv=none; b=iKPoCOsa3rRFyvLfBvrtHanu4oPdiJpgrSZ7TXblvS95LFCpihFN5/8H1coos854YLXG5Bfnh7o8bjKJ95ItBcoLmi6jO36cJiJuJn1Uq9dn7Fo6MLbjvKHgaIiy+p6zOFAqZx2LrG5MdirSmS2APFLv5rkmL2wkyq1/1+B8b78=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745469857; c=relaxed/simple;
-	bh=scumeHQ1EWeXtDCiWxXsvS1GGnP6lxnjhn7+ttz3yqE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hImJ9thTI2uB/1ptqm5treYT4tE0pBKo1D5SiUGQb2QLRIvKpLL0x7WjUixEXt1BmYpvXK5ahMOBNO2ANAK64c9S2i0NvU25wxt3G/kEQNGoMmlaMCtTzJ3Yd+LBKIzWZQQLpTL4ZBfRl9aNnvyyrbrZ8P/n7c2vB6schttWaKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ZjA4nAE5; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90FD74A23;
+	Thu, 24 Apr 2025 04:45:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745469953; cv=pass; b=KZx008p1qbKVG5QLnpNCRPrZ8VfbnvjsvI5YlQkWcowJYv+2Ke9PHTa3Z1aP6X0MSkOZKb++EPdbsv6UnszlovfGHWfmGpAXdgrcZfe1oRW1ELdQI9MWjf3+lG4bnUDCbmiaH5lAnNsv865bvQg9quD1M4uJQ9HVdnPD0Bj2khM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745469953; c=relaxed/simple;
+	bh=yx9bia+2OjSoSR4sMmX/f7s/jQ4LRHYaWdLHTFLDJaw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bg2Z2BWbA8/yDhQYSLn1EHz+ZGLfIcEgAO0GZjkWspr6K6+BgpgLSAfplWdqPd7kVRZFTl8kWVwKawq2qGNruLkyjcPdB2uoTSsopc8NRJddOiVdBNIzDgoMsQUtLUf9jthA8FGzU7TCBB/3ZJdXOGhtNz5jdBywijxVWJP5Xgg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=OhFshwA6; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ZjA4nAE5"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-7376e311086so668602b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 21:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745469854; x=1746074654; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=d8Qiq1brGqi76YM1jZPx/K29TOoSYoqtc1NwyaTJxB8=;
-        b=ZjA4nAE5C43SKeMg2lonMk0udTssP7uWcQGLa0ByW/qtijdIvBtCJFJykP47pThHrl
-         uhmqJuWDfESGeJPodQLWjKUthkZOQQrTNvFswyRpSC+FNa2D8pbwV0i+vj1Sr3wkBFuE
-         tmgnibOExIPfmGIgP/GatTadLh+QQUvKpZ8JMfhHOi6ub8spvTqyUB36pZAq2SD1lFrS
-         a6MidcIQmCSwxDs+xz2fQ9mXiKkysadTbj1iycRBhjX+W56deBL3vIW4LM7EnWxb54RR
-         pWXRq9oudnEw4nKJCH0Gh5JgtcRaapN2llz645Waw8/wZhztoYZ2M0bXJ9vU7uMO/MfJ
-         6ZmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745469854; x=1746074654;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d8Qiq1brGqi76YM1jZPx/K29TOoSYoqtc1NwyaTJxB8=;
-        b=fHgQOimTQt2vha0cTGPfK+tAx0PN2T19w9fvUyRaed8D33IKEYm5UhiFTexCKGssk5
-         mafmqhDJ12Yz3UGP7pCQeniX34Fu5dG+PyXlfUp1fL6xoEOi3wWSBkJjz7qVpBoEoMrW
-         8ks5V6HdDyXa/jVNTgHemLPFhOhFEuHUDQgaARbR9vD3fE8FPutXK+xWOThNjDqyxceh
-         GMWx9MDhAlRu80ekBZqXKd/B6ZSUrZtmhFMrz1mD+M64J1gdoTOcJbMVTX7Ton86d61i
-         w3pYosgSZdZsbIE0WrGmbX4jKREYPOZPlrF5C7h38Yn/KFctsVsugp5JTjgNEQu4XGwW
-         mG5w==
-X-Forwarded-Encrypted: i=1; AJvYcCVd5Eqc4dRF8EG+tsHUO33nPMZcwkRKw+NmFIqoLlt/stgYMOEa3IJYI1PcwAnwRIt7uHWI8HBaZ/3tTY0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2iU03YvgHT38AX4X2iMXU4bUxwo842ho73eh2bR02yU51Tfa6
-	zF1UGzWvT0PPm4H6rTj/G76F+7u8WN6uJ7TX2E2JJjvbx/GtWYHn/OlG4Y7Tows=
-X-Gm-Gg: ASbGnctFMN1xuHW3g4owVdHTy+1yukLtR1kuDmpYj2X5Eg/MHGH3ICXeshiMNa8TjDH
-	lmGhY1V4Z6+uOb7PurbOyvd8UZ1mDndm1xczjrVL0xCO22TtPUVM/lTUxe/Xe9Lc3GvTMfwv6oF
-	OlqDZq7im8CFWtNGuoZiw7EWIVxmij09B1dxFyNcl101QjmORlSNGEcgKsJ0ZZHkAv6F0UJ5dF1
-	/YH7eqtrWJ9Un1N1zT+WnFQp9u11Mu+KUMvjpgrpUndQh/eEgs1G1VLVTrPfO8WF8dGQBuovYld
-	0UAYH2z9+CPhtkNc5D9tKtuQqrF/0d7XCpkdhcoqXO8I+309fPM=
-X-Google-Smtp-Source: AGHT+IEitFVHRTgSCgRhWMe9hU5oQbZR2x7Kpm268qxNcn6QnDdeucUqxqlmgTha+1K/W91b8N7XWQ==
-X-Received: by 2002:a05:6a00:2182:b0:736:73ad:365b with SMTP id d2e1a72fcca58-73e246647e4mr1767338b3a.14.1745469854052;
-        Wed, 23 Apr 2025 21:44:14 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25a6aa52sm463483b3a.94.2025.04.23.21.44.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 21:44:13 -0700 (PDT)
-Date: Wed, 23 Apr 2025 21:44:09 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com,
-	linux-riscv <linux-riscv-bounces@lists.infradead.org>
-Subject: Re: [PATCH v12 12/28] riscv: Implements arch agnostic shadow stack
- prctls
-Message-ID: <aAnBmexbL4XmVxQk@debug.ba.rivosinc.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
- <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="OhFshwA6"
+ARC-Seal: i=1; a=rsa-sha256; t=1745469929; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=H4VGPCw8nTAWwtwdbAtBTE/Mo5u2WDp5C9tMV0DMF81Ckn1mJsqxoIs8DpyBmsZFWKqFJ5s5JavcTuX77LPzEjqYs4bh1JuTCXHNcbSAhWYam6wqR4uuHDLssFCQClrs/iV61hpdT4At0xyzA6TO+pyk7I+GiCrODJeFkMH5pK0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745469929; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=1Einm1/iIrnFazLd9EPpQGtzJH6JLy7QJYdzKbUdRw4=; 
+	b=IB5khyDdmXcKXSWn1GUGHlQ93rl+Qqe1OuvhoCvBbXHGDwZ/63c9GMHr5E06+Ty3c8QYjv8C4OPqFlHwL/j1hTSczRUP5sz2eicZu1fpnVB0KFoHHDapYJNCmF9cRfBjvFt9zs1Eym7i1e2neOHBp6tX2zOsJtOQIfY8/rl8gTc=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745469929;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=1Einm1/iIrnFazLd9EPpQGtzJH6JLy7QJYdzKbUdRw4=;
+	b=OhFshwA6NrQnnveB09b6WlcRsspO/edxEoDcNepooEapPoSKkR62BbU0fIWa61/+
+	3LADMDY+kQqVw+SGDftIJQK22QZQONstbf9NrAWG9QGBWFAhOkqGDm5MDY0zhxPhpv0
+	R5kv8n0/0jn1oZ9LE57uSSeu/O+DLWMwaYWAOO8Q=
+Received: by mx.zohomail.com with SMTPS id 1745469925816636.275804169616;
+	Wed, 23 Apr 2025 21:45:25 -0700 (PDT)
+Message-ID: <0dfa628a-b7b2-4aba-885b-a28b7a9b66d4@collabora.com>
+Date: Thu, 24 Apr 2025 09:45:19 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] wifi: ath11k: Fix memory reuse logic
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Baochen Qiang <quic_bqiang@quicinc.com>, Jeff Johnson <jjohnson@kernel.org>,
+ Kalle Valo <kvalo@kernel.org>, Anilkumar Kolli <quic_akolli@quicinc.com>
+Cc: kernel@collabora.com, linux-wireless@vger.kernel.org,
+ ath11k@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250423065931.4017574-1-usama.anjum@collabora.com>
+ <f98ed1af-e190-404f-a2d2-aa64a712e7c2@quicinc.com>
+ <228546c4-a4b5-4f21-950d-2623a48f60a6@oss.qualcomm.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <228546c4-a4b5-4f21-950d-2623a48f60a6@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
+X-ZohoMailClient: External
 
-On Thu, Apr 10, 2025 at 11:45:58AM +0200, Radim Krčmář wrote:
->2025-03-14T14:39:31-07:00, Deepak Gupta <debug@rivosinc.com>:
->> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
->> @@ -14,7 +15,8 @@ struct kernel_clone_args;
->>  struct cfi_status {
->>  	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
->> -	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 1);
->> +	unsigned long ubcfi_locked : 1;
->> +	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
->
->The rsvd field shouldn't be necessary as the container for the bitfield
->is 'unsigned long' sized.
->
->Why don't we use bools here, though?
->It might produce a better binary and we're not hurting for struct size.
+On 4/23/25 7:28 PM, Jeff Johnson wrote:
+> On 4/23/2025 1:15 AM, Baochen Qiang wrote:
+>> On 4/23/2025 2:59 PM, Muhammad Usama Anjum wrote:
+> 
+> For starters, can we make the subject a bit more specific, i.e.
+> Fix MHI target memory reuse logic
+Will do.
 
-If you remember one of the previous patch discussion, this goes into
-`thread_info` Don't want to bloat it. Even if we end shoving into task_struct,
-don't want to bloat that either. I can just convert it into bitmask if
-bitfields are an eyesore here.
+> 
+>>> Firmware requests 2 segments at first. The first segment is of 6799360
+>>> whose allocation fails due to dma remapping not available. The success
+> 
+> the memory allocation succeeds but the remapping fails? that seems like some
+> specific information that actually isn't very useful. From the perspective of
+> the driver all we really care about is that dma_alloc_coherent() fails, not
+> why it fails.
+I'm explaining the code flow here to define what's wrong. If I hadn't
+mentioned this, I would have been asked how this bug gets triggered.
 
->
->> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
->> @@ -24,6 +24,16 @@ bool is_shstk_enabled(struct task_struct *task)
->> +bool is_shstk_allocated(struct task_struct *task)
->> +{
->> +	return task->thread_info.user_cfi_state.shdw_stk_base ? true : false;
->
->I think that the following is clearer:
->
->  return task->thread_info.user_cfi_state.shdw_stk_base
->
->(Similar for all other implicit conversion ternaries.)
+> 
+>>> is returned to firmware. Then firmware asks for 22 smaller segments
+>>> instead of 2 big ones. Those get allocated successfully. At suspend/
+>>> hibernation time, these segments aren't freed as they will be reused
+>>> by firmware after resuming.
+>>>
+>>> After resume the firmware asks for 2 segments again with first segment
+>>> of 6799360 and vaddr is not NULL. We compare the type and size with
+>>
+>> suggest to rephrase as:
+>>
+>> After resume the firmware asks for 2 segments again with first segment
+>> of 6799360. Since chunk->vaddr is not NULL, we compare the type and size with
+>>
+>>> previous type and size to know if it can be reused or not.
+>>> Unfortunately, we detect that it cannot be reuses and this first smaller
+>>
+>> s/reuses/reused/
+>>
+>>> segment is freed. Then we continue to allocate 6799360 size memory from
+>>> dma which fails and we call ath11k_qmi_free_target_mem_chunk() which
+>>
+>> it is odd with 'from dma' ...
+>>
+>> I think just say 'allocate 6799360 size memory' is good enough.
+>>
+>>> frees the second smaller segment as well. Later success is returned to
+>>> firmware which asks for 22 smaller segments again. But as we had freed 2
+>>> segments already, we'll allocate the first 2 new smaller segments again
+>>> and reuse the remaining 20. Hence we aren't reusing the all 22 small
+>>> segments, but only 20.
+>>>
+>>> This patch is correcting the skip logic when vaddr is set, but size/type
+> 
+> see
+> <https://www.kernel.org/doc/html/latest/process/submitting-patches.html#describe-your-changes>
+> 
+> Specifically:
+> Describe your changes in imperative mood, e.g. “make xyzzy do frotz” instead
+> of “[This patch] makes xyzzy do frotz” or “[I] changed xyzzy to do frotz”, as
+> if you are giving orders to the codebase to change its behaviour.
+> 
+>>> don't match. In this case, we should use the same skip and success logic
+> 
+> who is "we"? the driver is performing the action. As part of changing the text
+> to be in imperative mood this should go away.
+> 
+>>> as used when dma_alloc_coherent fails without freeing the memory area.
+> 
+> add () to function references
+> 
+Will do
 
-Hmm... noted.
+>>>
+>>> We had got reports that memory allocation in this function failed at
+>>> resume [1] which made us debug why the reuse logic is wrong. Those
+>>
+>> The link is just v1 of this patch, it is not the report. If there is no public report,
+>> just don't mention it.
+>>
+>>> failures weren't because of the bigger chunk allocation failure as they
+>>> are skipped. Rather these failures were because of smaller chunk
+>>> allocation failures. This issue is in the kernel side as because of
+>>> memory pressure or fragmentation, the dma memory allocation fails. This
+>>> patch fixes freeing and allocation of 2 smaller chunks.
+>>
+>> I know you are describing why you start to debug this issue. But I don't think it is
+>> needed in the commit message. No matter kernel allocation fails or succeeds, the issue is
+>> there, and the description above is sufficient to make the issue clear.
+> 
+> Concur with this.
+> 
+>>
+>>>
+>>> Tested-on: WCN6855 WLAN.HSP.1.1-03926.13-QCAHSPSWPL_V2_SILICONZ_CE-2.52297.6
+>>
+>> blank line needed.
+>>
+>>> [1] https://lore.kernel.org/all/b30bc7f6-845d-4f9d-967e-c04a2b5f13f5@collabora.com
+>>>
+>>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+>>> ---
+>>> Changes since v1:
+>>> - Update description
+>>>
+>>> Fixes: 5962f370ce41 ("ath11k: Reuse the available memory after firmware reload")
+>>> I think we should keep fixes tag as ^ claimed that its adding reuse
+>>> support. But it left a bug in reuse which we are fixing.
+>>>
+>>> Feel free to add it or leave it as it is.
+>>
+>> Jeff, what do you think?
+> 
+> I would drop the tag. As I understand it, the issue described is due to memory
+> fragmentation/starvation, and not due to the fact that ath11k does not
+> actually reuse the first two segments.
+Ath11k not reusing the segment is also an logical issue. The patch
+adding reuse logic claims that it added reuse logic. But it had missed
+this use case.
 
->
->> @@ -42,6 +52,26 @@ void set_active_shstk(struct task_struct *task, unsigned long shstk_addr)
->> +void set_shstk_status(struct task_struct *task, bool enable)
->> +{
->> +	if (!cpu_supports_shadow_stack())
->> +		return;
->> +
->> +	task->thread_info.user_cfi_state.ubcfi_en = enable ? 1 : 0;
->> +
->> +	if (enable)
->> +		task->thread.envcfg |= ENVCFG_SSE;
->> +	else
->> +		task->thread.envcfg &= ~ENVCFG_SSE;
->> +
->> +	csr_write(CSR_ENVCFG, task->thread.envcfg);
->
->There is a new helper we could reuse for this:
->
->  envcfg_update_bits(task, ENVCFG_SSE, enable ? ENVCFG_SSE : 0);
+Anyways not a blocker for me. I just wanted this patch to get backported
+to stable kernels as its fixing the reuse logic and of course issue
+arising from fragmentation.
 
-Yeah it's in switch_to.h header. I'll think about it.
+> 
+>>
+>>> ---
+>>>  drivers/net/wireless/ath/ath11k/qmi.c | 10 +++++++++-
+>>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/wireless/ath/ath11k/qmi.c b/drivers/net/wireless/ath/ath11k/qmi.c
+>>> index 47b9d4126d3a9..3c26f4dcf5d29 100644
+>>> --- a/drivers/net/wireless/ath/ath11k/qmi.c
+>>> +++ b/drivers/net/wireless/ath/ath11k/qmi.c
+>>> @@ -1990,8 +1990,16 @@ static int ath11k_qmi_alloc_target_mem_chunk(struct ath11k_base *ab)
+>>>  		 */
+>>>  		if (chunk->vaddr) {
+>>>  			if (chunk->prev_type == chunk->type &&
+>>> -			    chunk->prev_size == chunk->size)
+>>> +			    chunk->prev_size == chunk->size) {
+> 
+> please don't change this...
 
->
->> +}
->> @@ -262,3 +292,83 @@ void shstk_release(struct task_struct *tsk)
->> +int arch_set_shadow_stack_status(struct task_struct *t, unsigned long status)
->> +{
->> +	/* Request is to enable shadow stack and shadow stack is not enabled already */
->> +	if (enable_shstk && !is_shstk_enabled(t)) {
->> +		/* shadow stack was allocated and enable request again
->> +		 * no need to support such usecase and return EINVAL.
->> +		 */
->> +		if (is_shstk_allocated(t))
->> +			return -EINVAL;
->> +
->> +		size = calc_shstk_size(0);
->> +		addr = allocate_shadow_stack(0, size, 0, false);
->
->Why don't we use the userspace-allocated stack?
->
->I'm completely missing the design idea here...  Userspace has absolute
->over the shadow stack pointer CSR, so we don't need to do much in Linux:
->
->1. interface to set up page tables with -W- PTE and
->2. interface to control senvcfg.SSE.
->
->Userspace can do the rest.
+> 
+>>>  				continue;
+>>> +			} else if (ab->qmi.mem_seg_count <= ATH11K_QMI_FW_MEM_REQ_SEGMENT_CNT) {
+> 
+> ...instead just use if here. we normally don't use else after a statement that
+> changes the code flow (return, goto, continue, etc.)
+Will send v3.
 
-Design is like following:
+> 
+> 
+>>> +				ath11k_dbg(ab, ATH11K_DBG_QMI,
+>>> +					   "size/type mismatch (current %d %u) (prev %d %u), try later with small size\n",
+>>> +					    chunk->size, chunk->type,
+>>> +					    chunk->prev_size, chunk->prev_type);
+>>> +				ab->qmi.target_mem_delayed = true;
+>>> +				return 0;
+>>> +			}
+>>>  
+>>>  			/* cannot reuse the existing chunk */
+>>>  			dma_free_coherent(ab->dev, chunk->prev_size,
+>>
+>>
+> 
 
-When a user task wants to enable shadow stack for itself, it has to issue
-a syscall to kernel (like this prctl). Now it can be done independently by
-user task by first issuing `map_shadow_stack`, then asking kernel to light
-up envcfg bit and eventually when return to usermode happens, it can write
-to CSR. It is no different from doing all of the above together in single
-`prctl` call. They are equivalent in that nature.
 
-Background is that x86 followed this because x86 had workloads/binaries/
-functions with (deep)recursive functions and thus by default were forced
-to always allocate shadow stack to be of the same size as data stack. To
-reduce burden on userspace for determining and then allocating same size
-(size of data stack) shadow stack, prctl would do the job of calculating
-default shadow stack size (and reduce programming error in usermode). arm64
-followed the suite. I don't want to find out what's the compatiblity issues
-we will see and thus just following the suite (given that both approaches
-are equivalent). Take a look at static `calc_shstk_size(unsigned long size)`.
-
-Coming back to your question of why not allowing userspace to manage its
-own shadow stack. Answer is that it can manage its own shadow stack. If it
-does, it just have to be aware of size its allocating for shadow stack.
-
-There is already a patch series going on to manage this using clone3.
-https://lore.kernel.org/all/20250408-clone3-shadow-stack-v15-4-3fa245c6e3be@kernel.org/
-
-I fully expect green thread implementations in rust/go or swapcontext
-based thread management doing this on their own.
-
-Current design is to ensure existing apps dont have to change a lot in
-userspace and by default kernel gives compatibility. Anyone else wanting
-to optimize the usage of shadow stack can do so with current design.
-
-- 
->
->> +int arch_lock_shadow_stack_status(struct task_struct *task,
->> +				  unsigned long arg)
->> +{
->> +	/* If shtstk not supported or not enabled on task, nothing to lock here */
->> +	if (!cpu_supports_shadow_stack() ||
->> +	    !is_shstk_enabled(task) || arg != 0)
->> +		return -EINVAL;
->
->The task might want to prevent shadow stack from being enabled?
-
-But Why would it want to do that? Task can simply not issue the prctl. There
-are glibc tunables as well using which it can be disabled.
-
->
->Thanks.
+-- 
+Regards,
+Usama
