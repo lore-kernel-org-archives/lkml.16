@@ -1,143 +1,167 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a8-smtp.messagingengine.com (fout-a8-smtp.messagingengine.com [103.168.172.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25DC215078
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D682B226CFC
 	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484490; cv=none; b=rr91Q2c9zLDWvLQrfSLZv/gfj7C9Y/kq35Z+ZBsdPONdYk3adZTy514lAQck8fYke96k85LgOBfh3yWMI43mM36g1TGO5RvHZxcLNpC3R1zx/zkLTLMReUoYdMhSlRyfGfNiUcLSdXsYfivkjau6RcYRJvsynpjabbj6BjLaJtQ=
+	t=1745484491; cv=none; b=b8EtFtHkKQ1vwDBct5GRUB9tzJyWxbj4kBbm1eR4Py6+8CvsinW/UM7X/aUX1hS/Ny12KLOiLIzpTGOL0Ciub0xlGSTmTyU2f1kAUr4BE/WJMYPEdbw5OMmmKvrIWd9ajdv0fRxNS+wuIlSfP4I2Lf9ThWkTde+HxBFXEKyTj0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484490; c=relaxed/simple;
-	bh=vXjz4hOLTpgU5jbVh6VigWCb9ovYngyk2paVsl+ClIE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CRMH5rr8BCe8HEK4fP1dLIjTqdvcpkCBfVjnwKsmQYdTgE4VP5d4s1g7vuZ4okXU8Dod3XXo6GibSALU1kYLJ3sNR62fQMzHKbYMxPl1PhHN1KbMLbzZXr0ThmgsiYys94N5MMJR2Jc0zTwJup4R6YhamBm93I078KQbRZR3UXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eW1kquGS; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745484491; c=relaxed/simple;
+	bh=MtgIwWbIPn87IvPj1gJ/fUK8oXePhz8hnN/c5xubQ7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ejQx3cp+Vd0a3mb+pCN0njpkb7BcA1r5VLGYlJA998z7kwGnUsibztXN52t1VUrRMbNeCWOZxjXfxCzFFKlcRS8Uh80HhUlcfKmqap4aA86e+ybXsvSvJAkYz+hpoF2+1C2tvrLGGIn4NjFI1PFkA3EW/tFxU8R3pk5ADPmO45Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com; spf=pass smtp.mailfrom=invisiblethingslab.com; dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b=ZsmY+OzE; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=lHGhLUpZ; arc=none smtp.client-ip=103.168.172.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=invisiblethingslab.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=invisiblethingslab.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eW1kquGS"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f4aee67d24so80679a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:48:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745484487; x=1746089287; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XlI4MSNJQrAzEP1cSUjdjx1DigpO/B9fZ6xgtIKJgwY=;
-        b=eW1kquGSZOR54+twA4GPa7xfl1h4z4Uwri/GeAuQzvxao3OCRiApBlh51usW3W1uqq
-         5IeXqlcpBfINKVbkFbQBwWWqzhJrkf0e4DOQcDn3aNqTAsYEBJ37rkMhZf6tBiptc7jN
-         dCwGvYU1JvPUiGQve6PKH4uwLyalvIUVGNSYEpgZeHdyF31wIwg3BGahOeR7S46nY5/2
-         tJmQhaWpHkrJh6febaNxIDmlLjZDIfEm9dNLMUBAbpfv9+/cD11gvvvElqsvXfbaxbTU
-         cpiG8fgZxlotlicWuuOiS4k2MhjldB+T+kAsd5DnJfWBx5V2JivliI3tjLHZe70bro8o
-         678g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745484487; x=1746089287;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XlI4MSNJQrAzEP1cSUjdjx1DigpO/B9fZ6xgtIKJgwY=;
-        b=fkSlyo1oCafmm7N/9AMLfIVa7QGj2tp3H6uHT40PjajOKGamqel9Wg1DlcSU46FzfT
-         iVqFF7cqMq/mlgF99Wj+u3IstV+0Y7QrK8Xf4te53ywKgfHmPX4IbA/lKR9ax1SAWIx3
-         /aVk/z8LY96ZM1qeFgqNtJttS1UKU5FUvcWhQMOAhKZXgdfDoff4ur8JA2XaI54/Xmwf
-         fMElCt+PaF7m6ggxarLhgUtLtv78ZRgwNx7XZDsNzgu3yZAcIkTCMgx2ZMZZuctLluX8
-         zgapSJSOcMUZPXxdVucx8DFU+gHJb39BOUe0a4fLV/XrTL1YCa6CGScjGZwKDXJ8mz+i
-         zxrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVt3g+Xvj2M9BqvybpwV3sCL3BadBl/5YL81WsW0FvyZ58GyBWrRuouj/JTc77MgXMCMMQQ4G9CIPBdXYA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxjg7+abKBy0jUZJ9RjXJjRLDoWNEemAvCAaUo5trcehoFf6WCZ
-	PjTJDHhdb+N1XC12HAfTRt7oKjeu0cP8+xecFvYclBi+WQhNR+J/DDncQVzts0Q=
-X-Gm-Gg: ASbGncuHIqEbvCXxG+nKUowGSwHtfL1Ne/XhGy2ANp4NIowRSy1SRx2bfUoZPRXSvyV
-	zI/qZ+tGIcWLCl2EcADmQHZWJVwTESh5GKzr3xu12JPXSOEuLURqQzNxJY21CuiXDyMkr6M/wKa
-	Q3MSiNsB2V5hAXi5PmQPp9j6JykBBEc87E1CFb9y+PVSAUa0Ww7Cwq57qPt0ocxIEl7Zwi4FpjK
-	IDuVkeuGtRb+rqldQyLYOEElQmXuJA+PGTj8lpcUkqKgSuaPgeV7gY4LN38mQlr85V3wBh4Yzip
-	Fob5E7TtYJZEBMzhyLHRfrd4FK+AlRk6JGm1hLuDCdRCRS2t9w==
-X-Google-Smtp-Source: AGHT+IG88LOYVsDqLk364RnZfDnVj+T3Ptml8aT8MgM2ZSYv7HiItMyaObLOH5qjcMxgbUE4cd3WrQ==
-X-Received: by 2002:a05:6402:1d48:b0:5f6:d491:20ca with SMTP id 4fb4d7f45d1cf-5f6ddcf7f3bmr612417a12.2.1745484487068;
-        Thu, 24 Apr 2025 01:48:07 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f6f45fd3c1sm118998a12.3.2025.04.24.01.48.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 01:48:06 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Christoph Niedermaier <cniedermaier@dh-electronics.com>,
-	Marek Vasut <marex@denx.de>,
-	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kernel@dh-electronics.com
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] ARM: dts: nxp: Align wifi node name with bindings
-Date: Thu, 24 Apr 2025 10:48:00 +0200
-Message-ID: <20250424084800.105300-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250424084800.105300-1-krzysztof.kozlowski@linaro.org>
-References: <20250424084800.105300-1-krzysztof.kozlowski@linaro.org>
+	dkim=pass (2048-bit key) header.d=invisiblethingslab.com header.i=@invisiblethingslab.com header.b="ZsmY+OzE";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lHGhLUpZ"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id CAB27138076D;
+	Thu, 24 Apr 2025 04:48:07 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 24 Apr 2025 04:48:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745484487;
+	 x=1745570887; bh=moUx0r6Zq8JwwGRRoRpEamtclvFlhO2+mjvAHef9WeQ=; b=
+	ZsmY+OzEb1pQg4GiC4JG4Sh5g+Ip+k6fuayHtkGVKQ+IjcAqVxY/D+FAS3CVT9FB
+	bg29pfm41Lck3qQ0nffQ9xF94B1iZA4/5xt3cwjzEo7tkMc3i+haiyiXmfPPuWLf
+	I9QHoVUY/Bhn795UHXTMVgVXG8nzaix/igvDa79xsIv++E+SWUZHpsUwmm06VBhw
+	E2SHliyjCtS7CGWkP0gEBedsT+nvNY01YWL+BSLCqKgkzdmbp9l04pOAdw0iiRgO
+	LMgJxWjdyO820kBGpJoqJuA2UnB35x1uLKDuoLpPPKsrCciLTKO5wupwYfd4MyiY
+	E48ZjxUYOxysFpM8N8tTlg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1745484487; x=1745570887; bh=moUx0r6Zq8JwwGRRoRpEamtclvFlhO2+mjv
+	AHef9WeQ=; b=lHGhLUpZQ9XRUW06rGYsOJZ+OA+9JUUWyUfWkkz2DjS0HftXE7s
+	Puk7F8F5vbVFydidVwxpmpEhnfr09aPPoQOJXcLVDpD36eZWskRdyV/MPYBPw7QU
+	IXgt9CGIk5eNG5vI5hp1BfJ+zBD6EpsCgC6z51fOVGnXZzmpLW9/DwxHaH4OId6F
+	QhaeIG9lJVAL+moq4p1G/i0J7x1X2fzRlUMfsMg57qlnnz8xyLKFQHIpSi/l4Vij
+	cVD/wLO2sQ+S9gtU2Bwh50YfPNLuJQ+9btw1HUJUqbbECMegks3lhTlbLw564bol
+	bM5rHHEt/4oA6Tv55AC2g4roroZCiT2RrJg==
+X-ME-Sender: <xms:x_oJaDotSKYiM2R2_3OoS3yD-5pJrI8bx9yPpKJRzJ9rk8LvGtoCsQ>
+    <xme:x_oJaNp5y-pgrTNpg7MxfBTkwBvTfsIc5fO_MXizIXALjBzgVAtItlU2HlP7Eb-oZ
+    qlwFI6y1jQCiw>
+X-ME-Received: <xmr:x_oJaAMWdSCNpaQpUnwW9sv5MKsuG3e3IgR2fZfNdrGQTZWjTshkHFl_cudhZbN1g7Z84lj3JH00ZnuuyfagnH8ZduTFO_ipNg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeeltdefucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesghdtreertddt
+    jeenucfhrhhomhepofgrrhgvkhcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuc
+    eomhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecu
+    ggftrfgrthhtvghrnhepgfduleetfeevhfefheeiteeliefhjefhleduveetteekveettd
+    dvgeeuteefjedunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhf
+    rhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
+    dpnhgspghrtghpthhtohepuddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehs
+    ohihvghrsehirhhlrdhhuhdprhgtphhtthhopegusggrrhihshhhkhhovhesghhmrghilh
+    drtghomhdprhgtphhtthhopehluhhmrghgsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pehrvghgrhgvshhsihhonhhssehlihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoh
+    epughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopegrmhguqdhgfhigsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhg
+    pdhrtghpthhtohephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhope
+    grlhgvgigrnhguvghrrdguvghutghhvghrsegrmhgurdgtohhm
+X-ME-Proxy: <xmx:x_oJaG59SC0ie0iwmzaqx2MElZOGTcF7BgPvDNKXGsdCK7sCX-ycxg>
+    <xmx:x_oJaC4AOqptvFe75JzIIoHYAJ4tciwEHu3v3woNbQtHFavZlhfHkQ>
+    <xmx:x_oJaOgDKiZ4-XDkuT9cjxeo_C-MqFqlP0gtyAaXlUaA24pN0XO7Eg>
+    <xmx:x_oJaE6r4zv8apJtEI8fuJtpJJFQK3epsNsNk0JdcXsdfcpXpWDqdA>
+    <xmx:x_oJaBD3p2rjIbttTnFuS0qHrVsa-1zlCddRfvwQxDaC1fvlSEaINl1l>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 24 Apr 2025 04:48:05 -0400 (EDT)
+Date: Thu, 24 Apr 2025 10:48:02 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Gergo Koteles <soyer@irl.hu>
+Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
+	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>
+Subject: Re: amdgpu_dm_connector_mode_valid regression
+Message-ID: <aAn6wsnJ-6mqK4vR@mail-itl>
+References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
+ <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu>
+ <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
+ <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu>
+ <Z_jodBrNFdEpJRKA@mail-itl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="0nQ5TDnVhV5gn1bQ"
+Content-Disposition: inline
+In-Reply-To: <Z_jodBrNFdEpJRKA@mail-itl>
 
-Since commit 3c3606793f7e ("dt-bindings: wireless: bcm4329-fmac: Use
-wireless-controller.yaml schema"), bindings expect 'wifi' as node name:
 
-  imx7d-remarkable2.dtb: bcrmf@1: $nodename:0: 'bcrmf@1' does not match '^wifi(@.*)?$'
+--0nQ5TDnVhV5gn1bQ
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 24 Apr 2025 10:48:02 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Gergo Koteles <soyer@irl.hu>
+Cc: Dmitry Baryshkov <dbaryshkov@gmail.com>,
+	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Harry Wentland <harry.wentland@amd.com>
+Subject: Re: amdgpu_dm_connector_mode_valid regression
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- arch/arm/boot/dts/nxp/imx/imx6qp-prtwd3.dts     | 2 +-
- arch/arm/boot/dts/nxp/imx/imx7d-remarkable2.dts | 2 +-
- arch/arm/boot/dts/nxp/mxs/imx28-btt3.dtsi       | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On Fri, Apr 11, 2025 at 12:01:28PM +0200, Marek Marczykowski-G=C3=B3recki w=
+rote:
+>=20
+> Hi,
+>=20
+> On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
+> > Hi Dmitry,
+> >=20
+> > But the code would start to become quite untraceable.
+> > duplicate mode in amdgpu_dm_connector_mode_valid()
+> > call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
+> > duplicate mode in create_stream_for_sink()
+> > overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
+> > if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
+> > create_stream_for_sink()=20
+>=20
+> FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
+> Ryzen 5 4500U). And the patch quoted below fixes it for me too.
 
-diff --git a/arch/arm/boot/dts/nxp/imx/imx6qp-prtwd3.dts b/arch/arm/boot/dts/nxp/imx/imx6qp-prtwd3.dts
-index fbe260c9872e..cad985e341a1 100644
---- a/arch/arm/boot/dts/nxp/imx/imx6qp-prtwd3.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx6qp-prtwd3.dts
-@@ -384,7 +384,7 @@ &usdhc2 {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
- 
--	brcmf: bcrmf@1 {
-+	brcmf: wifi@1 {
- 		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 	};
-diff --git a/arch/arm/boot/dts/nxp/imx/imx7d-remarkable2.dts b/arch/arm/boot/dts/nxp/imx/imx7d-remarkable2.dts
-index eec526a96311..ff9d50942884 100644
---- a/arch/arm/boot/dts/nxp/imx/imx7d-remarkable2.dts
-+++ b/arch/arm/boot/dts/nxp/imx/imx7d-remarkable2.dts
-@@ -374,7 +374,7 @@ &usdhc2 {
- 	cap-power-off-card;
- 	status = "okay";
- 
--	brcmf: bcrmf@1 {
-+	brcmf: wifi@1 {
- 		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 	};
-diff --git a/arch/arm/boot/dts/nxp/mxs/imx28-btt3.dtsi b/arch/arm/boot/dts/nxp/mxs/imx28-btt3.dtsi
-index 2c52e67e5c14..a6903ef2b093 100644
---- a/arch/arm/boot/dts/nxp/mxs/imx28-btt3.dtsi
-+++ b/arch/arm/boot/dts/nxp/mxs/imx28-btt3.dtsi
-@@ -299,7 +299,7 @@ &ssp1 {
- 	keep-power-in-suspend;
- 	status = "okay";
- 
--	wlan@1 {
-+	wifi@1 {
- 		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
- 	};
--- 
-2.45.2
+I've re-tested it with 6.15-rc3 and the issue is still there. Is there
+something I can do to help fixing it before final 6.15 is out?
 
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--0nQ5TDnVhV5gn1bQ
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmgJ+sIACgkQ24/THMrX
+1yzQtwf/V1Kwj5a1YqzIurMPiJsNiEryIIzzNggnyRm78T9GwN33DU6aKpvdbcwH
+q4Iz18yFSH2T8suYaXLjan3o4HkwIh6shkMRJ1S+J8KRP1vinn9Olq0pDu7bCxrl
+98+lRYOQpl7n1s8Ne2Mw/z2aaUuE4rd2lKym9YrkkPhvijC7A3XeUqRSS8mkdydw
+gkx4Up1lc0hp0X1o90fc7UJYaxM231XjnT+HqVEYNsnt/8bsaj2FN09SJwsBmVTk
+481dT17Ts2ffRRAw+4lp6ecY3Y+RIbKkvC0rra+y5XFaFzd6O7hQ9MrKxqkLH4xK
+WyLBwwfno2qFjv2Y2lzONmiSwS2YGw==
+=x2tm
+-----END PGP SIGNATURE-----
+
+--0nQ5TDnVhV5gn1bQ--
