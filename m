@@ -1,80 +1,69 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2068.outbound.protection.outlook.com [40.107.220.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2779D22B8D2
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745496713; cv=none; b=D7PG2fo3o8NPjDMSlvF7CzmjF9GFBNyvyESa2xpVYesxP9PPLMiAFF1EWf/Ak2Jz82ZOZUK5jwA0ad++tY6oeL9juJm3lUZVYhKPW4f7cIDznQmXfPwYlHZmLS+fqI0++9wkVVmTvW75Z6hyTYLifTcamcdvDNkbugq/jgQVHVA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745496713; c=relaxed/simple;
-	bh=K/aNIRvzEVig/olSE8zUcxcdUeVADyIxUVY144kzk7M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ARKBb8u7IfAHgjhlEJOJLYdVXjLIoMYJgEAkGL6HoQe9OY1NUKCVEo5N9y1ddxtEKgLEo+yCGYf2ffXtj7oHAJl5YuWPVoZ8pBA8MlodqTZsBoBy4p3aCazrUbVMPLOoQbikX/TpjCTMG3JI5Ztun8AxeYO2nZPj8Al+KXMAifo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lcsva0cc; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F421E7640;
+	Thu, 24 Apr 2025 12:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745496870; cv=fail; b=R4PmKRsroipiH8WbzFc2JUrLyiYbetY42jqlvp8tkKQAbC7YZe8h5EW5vT1yZKHLazoGkPA1owkvXg/igUBMpnodys/6J5r6r2fj+chnrgV+8vmaZsIWVl3CP0T4vw4AhAmV7b8Sm1P0bR9Kuj65x1MsYuX+yK8+XNi/Q9Ko7QI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745496870; c=relaxed/simple;
+	bh=iB0WAz/oKrQVn2GtKmds3TzW4DBEkUEvJDPCB2gZE7A=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=AB0YEz9fVfVtEqt2MEKjI49LPQYeg1KChZLfKfIWmVfp8932VTtf97YaUs75Sx+8X1Xn2v+O2EiGlQLVk1Hr6o3QleoujVtyLGoG9ROcdcasmWvgtZpTHPRVH9MtgzR+FHAI60SRIlnCEquS/sBz80q6CGVaek07pdjGmqsD3pc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=jhEevd0F; arc=fail smtp.client-ip=40.107.220.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lcsva0cc"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OC3B0N006841
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:11:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=ysPHr0oxErNRxpL2VqwsL629gPUNXWu017Q
-	QhNrJas4=; b=lcsva0ccwmsI2kGh00uo1KpvRIxUV7pjP2/h0CqO375BO9MOW6A
-	iK/8uGaDZRKpr+xgN89e6xJBafev+fECm9h7CY5bak7qtvYS/Qo09YjKoA4Dua9q
-	lRNUiD7jFbKmm0VIreoDkBnB4UfbV7Q3NwQ6Ubq2TdZcNe/rvvNtWpi1w6IaYIAn
-	w1CIU/AL7uOCeCM0jpcFK+SO0ZLq6IMDhs4oDahnjdPOH+iiR6onzkSELtl8pJ9Y
-	FfcLg9bMlybUOdVLQlgofJefYZbslBov+EGlo7SX0maPr1w47jcjsWu4lpsn5dLf
-	MKP2Dlf2ZfhbeMOFZdgKPzGXbbwxuEIFvAQ==
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5dgu0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:11:50 +0000 (GMT)
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-73c09e99069so956874b3a.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:11:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745496709; x=1746101509;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ysPHr0oxErNRxpL2VqwsL629gPUNXWu017QQhNrJas4=;
-        b=Q4aRIBJXVKxXeug46rXiVWUtHAdi9CUFIXSmdVYavDJJIDjoxO6ovf2ek38F4WMY2M
-         cs1Z1C1tepn8x5YjraPuhwP7QhTaolRJvhUB0oyX/3a9WAI/pDF87ZIt1KmNNKwRM6V1
-         QlyeZdRTJkZyUQEn4Lf1v3pxFzpFtuhU0HeAU0p0iwTyPJql9mCCW4RJ85JOTFVk5DcB
-         6qiGo5pGECBhsUKacb8BHw+rp76NHyVjPEULER4Ev9wauWVPvSwbkv4vAM4Wlw495vhr
-         9vs76dsyTiHXTErfAXvxluCHE9nfyacpXqd7Nk5rmm926xx59RWXbS/fUc4TMmbLt32f
-         KUDw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9ua0NHTHGos5yNbSMqwJyCutAAGUSBEVdcJi0sGHTqtE44KQ/Tx8PSQ7jd0vFLyjLi1D4IIrDACMFKS4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5AMqG+5Pc8LFtXT59Brtm6GBrrm9NUmMlKd8hTRporBGfgi5/
-	jQM8y8MQTcDOnh+GARtOnwY0lRU91Ouqzd6PzdtH/QfnhhvNwMF3YWV4WszzBnDIqc7mNNAOxdH
-	39Uj0nwqO+N5CU3V5LYlTP9c84eWIf4iIP+kSsTCk5e/pr2g7BiEgdQQ+RmrEUXY=
-X-Gm-Gg: ASbGncsHEM0+NZ0tfG1BKJ4vvDdeBHpwq3qEQKjYHIhC6d9R6mrYwKvtG+7ejqbogKc
-	wuJtzru+OcNawy04U6y93UKMVop2DjMNbDSIPgv+EkOKctE7DcgMnB3BolXwy2/Nnrs+5+QK/wZ
-	Lv1Uypnn51/AcWlfLTUWu/yYh9tUdnsx+TdllCyUModI2h+F1hrjBjJ2Moq8mNOgcXGLS78wyLy
-	JZAPxPiNnc0d7lq/hJHIEiamSU5MEqQZ3a9ZyUo2/Xq0isGigKCwOd9grW/N6C4TKr8C0gOHW8P
-	znbYB2hdTFRlquFLG9KiTfbGoHxzQQQuQcqnJsrc
-X-Received: by 2002:a05:6a20:431e:b0:1f3:486c:8509 with SMTP id adf61e73a8af0-20444f0e2c8mr3750350637.25.1745496709345;
-        Thu, 24 Apr 2025 05:11:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF0Jc5QAJOW0a8314p+AABfN5ecVt6FL9OxrqvMvwq7E3oY3+jyOyXnww3hGQO3KFo9b80TSA==
-X-Received: by 2002:a05:6a20:431e:b0:1f3:486c:8509 with SMTP id adf61e73a8af0-20444f0e2c8mr3750321637.25.1745496709009;
-        Thu, 24 Apr 2025 05:11:49 -0700 (PDT)
-Received: from hu-prashk-hyd.qualcomm.com ([202.46.22.19])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25912c5asm1226788b3a.6.2025.04.24.05.11.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:11:48 -0700 (PDT)
-From: Prashanth K <prashanth.k@oss.qualcomm.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-        Michael Walle <mwalle@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prashanth K <prashanth.k@oss.qualcomm.com>
-Subject: [PATCH] usb: gadget: u_serial: Implement remote wakeup capability
-Date: Thu, 24 Apr 2025 17:41:42 +0530
-Message-Id: <20250424121142.4180241-1-prashanth.k@oss.qualcomm.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="jhEevd0F"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=DrQnIpWiMRssoJ+D/a1nNF/0c3jRJIrZUUoQ74onprCBSzu1AV1/mVodmcrEOY6Y6Sx9BdfZopT0D0PgLIkT4Th31KR1W+A0SqfM+zwqS1SXAwud1sfTaoVRec2cQ35htFONPZF18ySqC9C/pf9NwAq5jzWTRvN1ZF9RGyE/A9iMWp11oimU1YKyy3CdcKRQF0hft8Z5LW0i87GaLoKgTvkmJuDjUT9eWMt+Z3GoIpYVV/hifJVK3QEPzoHtAOXb+i96yB1iehFoiyMMVPQJeSyzyuEwYstU3A7KMNfzYWzrJG0g3D736dM0v8YGYdbWXKV77JlEWqLccf4gBBs4sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q93s1ZIUZJ5GAsqUoQE7cBflAXJ3ChSZnowpWTLLl3c=;
+ b=t+S40bGKxZatMr4VQ96+7pTppiGaAf7TmP7Si8qAJQx4xCZauR2/VBsKrf4SJ3HvI3S26YN9xwvDlDUK3jGUrGlSPISgNGgVZIioQKIB11jhJu7WodiWo0RlFFPnBQfvpn3gOV75drV4YGger++cG5237ynxzxEoE5tz4+gzEK/JKi5J7q9nYY5Bcjh7DUPn7LAKqe3iA6qAk4XPnypv80nDyf2eoOfXv94IloYWCvvYbkJF6o1sXY4m36iEl9m7soGxJjOE4bOiPWeMNhbzxRsbAKzG8acnlALY+RfSIuJcVY3QyOHHrWtOjEgJ4EpkNCe50DrQRCZRw+U+W7ok2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q93s1ZIUZJ5GAsqUoQE7cBflAXJ3ChSZnowpWTLLl3c=;
+ b=jhEevd0F4blNpx4i7GgLtoLtJIl8HkIocIxXl5hMT1bePivrOt0XlqNRkMpu+3ZAhybdtEoZRll2hEzQicH5MXv9XeR4YG7EXbVUUbI5tdSJzUyJlIvmAeKQdB3o9RK7M/q6s2pMNumjsWWTZ0apIlfSEzgnM9A1P0wAYmmksIM=
+Received: from BN9PR03CA0288.namprd03.prod.outlook.com (2603:10b6:408:f5::23)
+ by PH7PR12MB5709.namprd12.prod.outlook.com (2603:10b6:510:1e0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.22; Thu, 24 Apr
+ 2025 12:14:21 +0000
+Received: from BL02EPF00021F69.namprd02.prod.outlook.com
+ (2603:10b6:408:f5:cafe::18) by BN9PR03CA0288.outlook.office365.com
+ (2603:10b6:408:f5::23) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Thu,
+ 24 Apr 2025 12:14:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF00021F69.mail.protection.outlook.com (10.167.249.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 12:14:21 +0000
+Received: from airavat.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
+ 2025 07:14:18 -0500
+From: Raju Rangoju <Raju.Rangoju@amd.com>
+To: <broonie@kernel.org>
+CC: <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<miquel.raynal@bootlin.com>, Raju Rangoju <Raju.Rangoju@amd.com>,
+	Krishnamoorthi M <krishnamoorthi.m@amd.com>, Akshata MukundShetty
+	<akshata.mukundshetty@amd.com>
+Subject: [PATCH] spi: spi-mem: Add fix to avoid divide error
+Date: Thu, 24 Apr 2025 17:43:33 +0530
+Message-ID: <20250424121333.417372-1-Raju.Rangoju@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,144 +71,180 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA4MiBTYWx0ZWRfX1h08EHECt1If wgCrUzSyLS2hFYFEq9R7HP0OQaqyTFxngU97Dnpgixmffeb8RYNfmHtiHDQhG/EvhIPpNLClblN IGckr/K0y8Rc3ISnmDnay94gKaQNrCKMToGFBrraIgyAX/lT+z7JIydFZV5f7T3rtteVWi0STTz
- zLoFUI2I7QIzsmV7A4ncFKsSGGWTd5L1+SqJnIUnaKUgEa7nD1Oan9Mb5rNkNSfCt3WCPM7Z6H4 t5qowOm+6/CpGfKCkUwXZbTuZS2M8oUjcge3cy8qd2qLBb2eBK/KuANJr/qT0v87TNl7a+RNrSU MraFnQOttwUWet6S5Hc8axva1g6bTmGfFQCSNRwPpUZ+qzNfPcffQ8RVrcy1UVSt0Q6QoPfGg1P
- JfbkHbvOGh8G5crYJgldf6OtlDxFJ+OVbghXPmrmC8YBcLDJbFu7nnWBUi/TXvaI2x9Qj37C
-X-Proofpoint-GUID: AoHBjZV9PoHRrTyIgGIpr6ATe6U4IQ9-
-X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=680a2a86 cx=c_pps a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=9gX2OuH4G143YozJX2wA:9 a=2VI0MkxyNR6bbpdq8BZq:22
-X-Proofpoint-ORIG-GUID: AoHBjZV9PoHRrTyIgGIpr6ATe6U4IQ9-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_05,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240082
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF00021F69:EE_|PH7PR12MB5709:EE_
+X-MS-Office365-Filtering-Correlation-Id: 899b565e-2187-4f16-1153-08dd83298b5e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?K4dEXhl47HNsEh011dLqe0OUtq+fphGmcAbNZZV9lF1zDuVt6eeW36kElyUf?=
+ =?us-ascii?Q?XE1bDX6aIEBVmtWNYFfYnF0888sfP4+5iIS0L7m4bSBwfbuU0CT0JxK0Lexo?=
+ =?us-ascii?Q?zM3W5tPSgeh3CfB2jTVlJ0/BtabRMXUcMlORCUQywQ+Wevmg1p7QECvoT7hM?=
+ =?us-ascii?Q?4JnJaVvlaVVFX2mBxxTbN+I2Op97Zz7gRrr6PU2SoM5giJ6ZLBsGbZdbk6oN?=
+ =?us-ascii?Q?HfrtwFdQbfFwCkmjB18EAnib2FlNAyQG+JWv41x4WwfDVBY8GgAnsDfF96yl?=
+ =?us-ascii?Q?lYxQ8bUSj6Ic0LYbqAuyQrBHAMWnX+m7R8N5w/8vYg1FOhyAyXgmRUBahdmZ?=
+ =?us-ascii?Q?xtVCbSKNYVuSHyhQrc8VIdhNI0WVYVt19dNpHeOZrGo3+S88O0EMehb8vAxU?=
+ =?us-ascii?Q?1xzL0HHfZdgE3p0IypavYbNqV8aOI+9rETafhbClPcuALKJLBxA84F0Tk66T?=
+ =?us-ascii?Q?jRC8ZQhMw7B2MjuiQclPUR28NIMQcQ+EUlr26r8OKBhV+CgQkkKhzxiAM3EO?=
+ =?us-ascii?Q?s4ZGTzc1PTiILiCvFB1S4k1aigmyjaMT98zyN9FmdYaaKEnmzP3Z237Ralyp?=
+ =?us-ascii?Q?8LGrLNh4vRYdDYqFy0jm1Ypqt8QS9lpFDRAv/hctM6Rqqnp0CJsiqHp/pD9S?=
+ =?us-ascii?Q?tM3qKi4YldzGkGT6/IuEGqHBh3lBTMYSmnD7zq2qhrHZw2wewPg1za5nAnDj?=
+ =?us-ascii?Q?ZAsNQWD0K0rjh04SiQsUGqXhf2i3D15msntP4b4K3aVxC3W9eyrvMBFbbtlT?=
+ =?us-ascii?Q?D+9HRIrtxFBPwzuJQTK5GGMBwTaBBMziXHcrc/KCd2TXL4iUJwpQqMgQ2ypp?=
+ =?us-ascii?Q?Pr40MQmd5H1pjFG4+1bddkxdo6oojD3j4WKSLc9hoM9o9SvY94biBOVBSYei?=
+ =?us-ascii?Q?4WFSk8BFg2S+52hA9DXfql3uk5m1DBjM4X5WRtb9eOqBy4rGZ9rn0TjBZPaK?=
+ =?us-ascii?Q?pk3BTyWJa76USOtDiXSHG8M8KAZn1Q97fvsdGbQVEPQ+rUV8fYLNXrLfFXLD?=
+ =?us-ascii?Q?ue3R8A5kW0g64LLr0qjsPwBKDGb2bhshRgmkOF6TzcdTo70DEGHsJPGIfow4?=
+ =?us-ascii?Q?vUQ5eqU3OUlfmsoWWQJAgh5XW0D5cS5/FwOUGCrl7xc/MfrP4v9pMeDkooWf?=
+ =?us-ascii?Q?AjOQCyju0nWY3ZxJ4hQ3F0t2piDvYttFXYML15roGAJ9Pm91llzBIN53B4c0?=
+ =?us-ascii?Q?5b2GJ6v9bTBRUs68RJPd/RvjBRk5x/0uuAObVbdkg8Svh/fl/RUD3QiOa2CI?=
+ =?us-ascii?Q?R0A9CAi+zaD3A8B+JUzrnr5hQRC3yXQLpm66mLtBVVnvCC6vQON58ufrMZnh?=
+ =?us-ascii?Q?DmQ0x5pqF3NVsfE4W9eyrbe4Uy8T7p80MjsbZHlwRnNsgspuV7sXlnb8O7gE?=
+ =?us-ascii?Q?yVXuA6PoZdz32w4LTK8+FCNCktygWCCmVO9n+nIJ6wIwmVs3E4jBntX8kbWS?=
+ =?us-ascii?Q?5T359NYAih0tvtHKgiY6HcvooW5FkBosFKOtHMaTT9C3bk7hs/ds7yDrDmxf?=
+ =?us-ascii?Q?X03Kra8MsIsfU8nipbyC8ql8gs1rd4S84/VP?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 12:14:21.1144
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 899b565e-2187-4f16-1153-08dd83298b5e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF00021F69.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5709
 
-Implement the remote wakeup capability for u_serial. The newly added
-function gserial_wakeup_host() wakes up the host when there is some
-data to be sent while the device is suspended. Add gser_get_status()
-callbacks to advertise f_serial interface as function wakeup capable.
+For some SPI flash memory operations, dummy bytes are not mandatory. For
+example, in Winbond SPINAND flash memory devices, the `write_cache` and
+`update_cache` operation variants have zero dummy bytes. Calculating the
+duration for SPI memory operations with zero dummy bytes causes
+a divide error when `ncycles` is calculated in the
+spi_mem_calc_op_duration().
 
-Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
+Add changes to skip the 'ncylcles' calculation for zero dummy bytes.
+
+Following divide error is fixed by this change:
+
+ Oops: divide error: 0000 [#1] PREEMPT SMP NOPTI
+ CPU: 15 UID: 0 PID: 1872 Comm: modprobe Not tainted 6.14.0-rc7-zero-day-+ #7
+ Hardware name: AMD FOX/Lilac-RMB, BIOS RFE1007A_SPI2_11112024. 10/17/2024
+ RIP: 0010:spi_mem_calc_op_duration+0x56/0xb0
+ Code: 47 08 0f b6 7f 09 c1 e0 03 99 f7 ff 0f b6 51 0a 83 e2 01 8d 7a 01 99 f7 ff 0f b6 79 19 48 98 48 01 c6 0f b6 41 18 c1 e0 03 99 <f7> ff 0f b6 51 1a 83 e2 01 8d 7a 01 99 f7 ff 0f b6 79 20 31 d2 48
+ RSP: 0018:ffffb6638416b3d0 EFLAGS: 00010256
+ RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffb6638416b3f0
+ RDX: 0000000000000000 RSI: 0000000000000018 RDI: 0000000000000000
+ RBP: ffffb6638416b460 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: 0000000000000000 R12: ffff9d98d476b828
+ R13: 0000000000000000 R14: 0000000000000040 R15: ffffffffc0f5a3b0
+ FS:  00007ed599a0dc40(0000) GS:ffff9d9c25180000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007d798ce9cff0 CR3: 0000000111506000 CR4: 0000000000750ef0
+ PKRU: 55555554
+ Call Trace:
+  <TASK>
+  ? show_regs+0x71/0x90
+  ? die+0x38/0xa0
+  ? do_trap+0xdb/0x100
+  ? do_error_trap+0x75/0xb0
+  ? spi_mem_calc_op_duration+0x56/0xb0
+  ? exc_divide_error+0x3b/0x70
+  ? spi_mem_calc_op_duration+0x56/0xb0
+  ? asm_exc_divide_error+0x1b/0x20
+  ? spi_mem_calc_op_duration+0x56/0xb0
+  ? spinand_select_op_variant+0xee/0x190 [spinand]
+  spinand_match_and_init+0x13e/0x1a0 [spinand]
+  spinand_manufacturer_match+0x6e/0xa0 [spinand]
+  spinand_probe+0x357/0x7f0 [spinand]
+  ? kernfs_activate+0x87/0xd0
+  spi_mem_probe+0x7a/0xb0
+  spi_probe+0x7d/0x130
+  ? driver_sysfs_add+0x66/0xd0
+  really_probe+0xf7/0x3b0
+  __driver_probe_device+0x8a/0x180
+  driver_probe_device+0x23/0xd0
+  __device_attach_driver+0xc5/0x160
+  ? __pfx___device_attach_driver+0x10/0x10
+  bus_for_each_drv+0x89/0xf0
+  __device_attach+0xc1/0x200
+  device_initial_probe+0x13/0x20
+  bus_probe_device+0x9f/0xb0
+  device_add+0x64f/0x870
+  __spi_add_device+0x187/0x390
+  spi_new_device+0x13a/0x1f0
+  spinand_drv_init+0xe4/0xff0 [spinand]
+  ? __pfx_spinand_drv_init+0x10/0x10 [spinand]
+  do_one_initcall+0x49/0x330
+  do_init_module+0x6a/0x290
+  load_module+0x2522/0x2620
+  init_module_from_file+0x9c/0xf0
+  ? init_module_from_file+0x9c/0xf0
+  idempotent_init_module+0x178/0x270
+  __x64_sys_finit_module+0x77/0x100
+  x64_sys_call+0x1f0b/0x26f0
+  do_syscall_64+0x70/0x130
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? mmap_region+0x67/0xe0
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? do_mmap+0x52b/0x650
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? vm_mmap_pgoff+0x152/0x200
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? ksys_mmap_pgoff+0x191/0x250
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? syscall_exit_to_user_mode+0x53/0x1c0
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? do_syscall_64+0x7c/0x130
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? syscall_exit_to_user_mode+0x18c/0x1c0
+  ? srso_alias_return_thunk+0x5/0xfbef5
+  ? do_syscall_64+0x7c/0x130
+  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+ RIP: 0033:0x7ed59911e88d
+ Code: 5b 41 5c c3 66 0f 1f 84 00 00 00 00 00 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 73 b5 0f 00 f7 d8 64 89 01 48
+ RSP: 002b:00007ffd5c54e7f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+ RAX: ffffffffffffffda RBX: 000060eff3d62f50 RCX: 00007ed59911e88d
+ RDX: 0000000000000000 RSI: 000060efdbd38cd2 RDI: 0000000000000006
+ RBP: 0000000000040000 R08: 0000000000000000 R09: 0000000000000002
+ R10: 0000000000000006 R11: 0000000000000246 R12: 000060efdbd38cd2
+ R13: 000060eff3d63080 R14: 000060eff3d629e0 R15: 000060eff3d63780
+  </TASK>
+
+Fixes: 226d6cb3cb79 ("spi: spi-mem: Estimate the time taken by operations")
+Suggested-by: Krishnamoorthi M <krishnamoorthi.m@amd.com>
+Co-developed-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+Signed-off-by: Akshata MukundShetty <akshata.mukundshetty@amd.com>
+Signed-off-by: Raju Rangoju <Raju.Rangoju@amd.com>
 ---
- drivers/usb/gadget/function/f_serial.c |  7 +++++
- drivers/usb/gadget/function/u_serial.c | 43 ++++++++++++++++++++++++++
- 2 files changed, 50 insertions(+)
+ drivers/spi/spi-mem.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/f_serial.c b/drivers/usb/gadget/function/f_serial.c
-index 8f7e7a2b2ff2..0f266bc067f5 100644
---- a/drivers/usb/gadget/function/f_serial.c
-+++ b/drivers/usb/gadget/function/f_serial.c
-@@ -364,6 +364,12 @@ static void gser_suspend(struct usb_function *f)
- 	gserial_suspend(&gser->port);
- }
- 
-+static int gser_get_status(struct usb_function *f)
-+{
-+	return (f->func_wakeup_armed ? USB_INTRF_STAT_FUNC_RW : 0) |
-+		USB_INTRF_STAT_FUNC_RW_CAP;
-+}
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index a31a1db07aa4..5db0639d3b01 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -596,7 +596,11 @@ u64 spi_mem_calc_op_duration(struct spi_mem_op *op)
+ 	ns_per_cycles = 1000000000 / op->max_freq;
+ 	ncycles += ((op->cmd.nbytes * 8) / op->cmd.buswidth) / (op->cmd.dtr ? 2 : 1);
+ 	ncycles += ((op->addr.nbytes * 8) / op->addr.buswidth) / (op->addr.dtr ? 2 : 1);
+-	ncycles += ((op->dummy.nbytes * 8) / op->dummy.buswidth) / (op->dummy.dtr ? 2 : 1);
 +
- static struct usb_function *gser_alloc(struct usb_function_instance *fi)
- {
- 	struct f_gser	*gser;
-@@ -387,6 +393,7 @@ static struct usb_function *gser_alloc(struct usb_function_instance *fi)
- 	gser->port.func.free_func = gser_free;
- 	gser->port.func.resume = gser_resume;
- 	gser->port.func.suspend = gser_suspend;
-+	gser->port.func.get_status = gser_get_status;
- 
- 	return &gser->port.func;
- }
-diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index 36fff45e8c9b..41dee7c8cc7c 100644
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -592,6 +592,17 @@ static int gs_start_io(struct gs_port *port)
- 	return status;
- }
- 
-+static int gserial_wakeup_host(struct gserial *gser)
-+{
-+	struct usb_function	*func = &gser->func;
-+	struct usb_gadget	*gadget = func->config->cdev->gadget;
++	/* Dummy bytes are optional for some SPI flash memory operations */
++	if (op->dummy.nbytes)
++		ncycles += ((op->dummy.nbytes * 8) / op->dummy.buswidth) / (op->dummy.dtr ? 2 : 1);
 +
-+	if (func->func_suspended)
-+		return usb_func_wakeup(func);
-+	else
-+		return usb_gadget_wakeup(gadget);
-+}
-+
- /*-------------------------------------------------------------------------*/
+ 	ncycles += ((op->data.nbytes * 8) / op->data.buswidth) / (op->data.dtr ? 2 : 1);
  
- /* TTY Driver */
-@@ -746,6 +757,8 @@ static ssize_t gs_write(struct tty_struct *tty, const u8 *buf, size_t count)
- {
- 	struct gs_port	*port = tty->driver_data;
- 	unsigned long	flags;
-+	int ret = 0;
-+	struct gserial  *gser = port->port_usb;
- 
- 	pr_vdebug("gs_write: ttyGS%d (%p) writing %zu bytes\n",
- 			port->port_num, tty, count);
-@@ -753,6 +766,17 @@ static ssize_t gs_write(struct tty_struct *tty, const u8 *buf, size_t count)
- 	spin_lock_irqsave(&port->port_lock, flags);
- 	if (count)
- 		count = kfifo_in(&port->port_write_buf, buf, count);
-+
-+	if (port->suspended) {
-+		spin_unlock_irqrestore(&port->port_lock, flags);
-+		ret = gserial_wakeup_host(gser);
-+		if (ret) {
-+			pr_debug("ttyGS%d: Remote wakeup failed:%d\n", port->port_num, ret);
-+			return count;
-+		}
-+		spin_lock_irqsave(&port->port_lock, flags);
-+	}
-+
- 	/* treat count == 0 as flush_chars() */
- 	if (port->port_usb)
- 		gs_start_tx(port);
-@@ -781,10 +805,22 @@ static void gs_flush_chars(struct tty_struct *tty)
- {
- 	struct gs_port	*port = tty->driver_data;
- 	unsigned long	flags;
-+	int ret = 0;
-+	struct gserial  *gser = port->port_usb;
- 
- 	pr_vdebug("gs_flush_chars: (%d,%p)\n", port->port_num, tty);
- 
- 	spin_lock_irqsave(&port->port_lock, flags);
-+	if (port->suspended) {
-+		spin_unlock_irqrestore(&port->port_lock, flags);
-+		ret = gserial_wakeup_host(gser);
-+		if (ret) {
-+			pr_debug("ttyGS%d: Remote wakeup failed:%d\n", port->port_num, ret);
-+			return;
-+		}
-+		spin_lock_irqsave(&port->port_lock, flags);
-+	}
-+
- 	if (port->port_usb)
- 		gs_start_tx(port);
- 	spin_unlock_irqrestore(&port->port_lock, flags);
-@@ -1464,6 +1500,13 @@ void gserial_suspend(struct gserial *gser)
- 		return;
- 	}
- 
-+	if (port->write_busy || port->write_started) {
-+		/* Wakeup to host if there are ongoing transfers */
-+		spin_unlock_irqrestore(&serial_port_lock, flags);
-+		if (!gserial_wakeup_host(gser))
-+			return;
-+	}
-+
- 	spin_lock(&port->port_lock);
- 	spin_unlock(&serial_port_lock);
- 	port->suspended = true;
+ 	return ncycles * ns_per_cycles;
 -- 
-2.25.1
+2.34.1
 
