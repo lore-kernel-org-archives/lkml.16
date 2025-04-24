@@ -1,181 +1,241 @@
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0DF14D2BB;
-	Thu, 24 Apr 2025 13:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA6001581E1
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745501795; cv=none; b=LXBtii82UQ8ydHsMCOblf2CcBnhuLGLE+7AOYtcjvTEY6gEG8cXQ8PcGOi0GZzt33Rv+DXbNamerlKiVRhVlk2Szy8kTXZqna26HjhVLCWzcTMCaKsmNx9K9fEsxxFs4CUE0ZHN3OX7m57UB/znCbweUyetfAZL4XdfgJ1rcBv4=
+	t=1745501820; cv=none; b=bRWJwL+b7u76bsyNeHxmUcw+8lw0RwgemUzMv7NFwKWCuJ/RPknRev89iSZ3dcHpltwWSb2CHeTNjuKF37YblwU+Lm4RvAwlsMQTp+kDp2yq2A9caQ+u97Ga6iSu2kOa1ib/Kj0fG1haoje+bQCmJ5RYMpxxCEChmfm55IcJwPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745501795; c=relaxed/simple;
-	bh=uCeRjKrNszoDsuDluZfk9z97zS3/7HkYO5u/BsabRMA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N/YudHQnE7VeEuU+rlUuGD0/8qyOS9BzF9OTN7X2s9LstlDgZ/B+uvoZavT7ekuzu0kaqNCiwk92jKmJgw+cLip10QCRDutvPDeuT32Dv+rZ/0GawYtOwIlgDQ3JqALuZF90op2Gc8TNgqoyUMF0i3kD69M0BGg9csOapvpE/Pw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Le4NUkR+; arc=none smtp.client-ip=209.85.219.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745501820; c=relaxed/simple;
+	bh=mJgp6Mchv4iv2by+fPTrmWpvDmstqIj/vVuuTYwKWrc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=SdOUKYmVsJAbV67s0IU6C5iKVuHQkkfelqBvx7hqsFYg3eHduGUstmynugHhlPEPrzvb5krrWUXT3xYM09yr4dDN4Vqw0+Epzb+cYFSdnxGQGWoN1VGXy6b04TUBVFbaJpRyCo7CyV23OT9GOhNVWOnTO6LXB+rblmP7hL9nzOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=STPhnhl3; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Le4NUkR+"
-Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6f0c30a1ca3so12301126d6.1;
-        Thu, 24 Apr 2025 06:36:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="STPhnhl3"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ab85402c9so37080f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:36:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745501793; x=1746106593; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+        d=ventanamicro.com; s=google; t=1745501816; x=1746106616; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hkJxVV06yY27kTZiZeUJeDmjXXy8wFJOvQPrpJ12MGw=;
-        b=Le4NUkR+B+hluItuv7lC/EkU3O9mGe78O2zwO9j1NLWaS3PeWwpFnTQydNB1viTUxR
-         XbQ4kd3ZL/qd/1JOq7FdIMLFtYR/o/il+kNkMIKNyyh7wHZ8048ngixNmeV6SmCIV3om
-         8Et2mYorbB4xzpM5zYtgYFm0VdlYL4XusIoIqW1zvDMXWgRj5cpPWkkj+0gGkdYNwXFn
-         bGO4IzB1BxvIUEKPJATI+lXAlnb+iqWQGGAq+uAGww9Uk7bnYvaRoqqc62T7cUjL4Rv8
-         NerZXOTZ9V/dsLPxzvueyciKs3IBVDTEZn/Cy8kUP0FHMYhYqyl8Tn27Ebev3V9lDS8Y
-         1GEw==
+        bh=u72nfMy9zYS5aW9xBcDq6LESieHcry02Dg/8XEt7OSw=;
+        b=STPhnhl3MTSastFv/OTSfSJnvslCvjVFt8jQhYjLvJcAvNTMw2P95yoTCq7JNMH3oB
+         ZiHZePSZTKb8HQPOF2FZj7lJcheeYAM9TZI4ywWPoJDKd+qnWzhYDa3b6brXchZ2gz1A
+         iOds1IBKHaBEtEMgAZHyp7VnSGreB1libYVDSk0VW24DaFN57lhhD4mNPToS/FGOySVe
+         OBCN8JXd+nYE3DmFRwi/qQAIjBWxS9rSeLtljz+7N0EWc5IgDelmDHVKWrdW+BDfo+fC
+         NEF2idC69hqasCOrs8POBpnilmFdiY2QJvnVbXouIESH4LHz2D50/QSNyQ8cimsa/YYW
+         tMmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745501793; x=1746106593;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hkJxVV06yY27kTZiZeUJeDmjXXy8wFJOvQPrpJ12MGw=;
-        b=iyB62JMlxvD4N/5dx3foeVQfBAT0swsAStnVnA1M/5jhiRRA49dRmsHjFQcQh+xkZa
-         9kSNst/RU5+OVnTN1GVNVS8lZDhAlWS6ih/pATHoSUUU0poil24SJMRbzG8P5nosm0xW
-         a46zYQkCLDzyhmE5rrB77v/A1jYwUh0/bT9NF8uXqNA4cGOT2YVkbLFtnlZXoAOcH1TD
-         O6xwoPMJtPFQIxJ1jNmi7WWh6zHZjH/aM7QQx4EJy+WTlgfiAmwCH6drt1c9cMiEg10Y
-         DxSaUw51n0EpfYpVz0SaeRZ6m27ly8L6RvfKpA3xPALRO6vSzjwEW9gsEiLGX6fBRAzD
-         wGHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBcFWWNPzi5uJ4pOL7k6+ExWvshVBgtTzNg/0ufJGesW/z75euAouoeO/KTn9M+JbQNCj2rXg4hfMG5bTCmjU=@vger.kernel.org, AJvYcCVTzx6zJfKzm3+DqQo+R/XM1cMh8Qw8p1WNw/OuNDfXbAGRKOuo6pKjHiA21HPN13wZwGciS6V+Eh9JBO4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaWI7AytzbHwdD7qlfPuvmrKXfhPSwQN6jR2YxoRJOMj46FpCe
-	MLqB14PyR5r98NH5nKj4XhknB3U1NgYfrcCM0CmXIw6F1MXPqgpM
-X-Gm-Gg: ASbGncuTyaUuM0SEWXaDm+Df6xFnK8M1sb1JF9X8JVPLzD12QGFi15EgP22gvTLor3v
-	klgVZ1UzGZnRP3hNfSsIebMTYUEPjyJV5A72E1J3WbVOEbj81SXBmlquQ2qWlNVNL9R9OJXtXs2
-	7ASKRXqu7yQ2dWG9pcCONpGGViCnXCaXqsQCk7GTej6ljJWxnAUMBJBhCa/beXwl/5PhvlsUUxb
-	luc7N/+TZ+D7DLbcIk521T3/+KXSA8h2UnOh7MaCTgsQBJVbZ5SkJ3o20zUWrpbH6CHvgAbOO73
-	/2xZYdw8c/yKYJaThnW/rFEcAz2d2c0TgEpxLMb2Ix4aRaFvGPXmAkSkH0Olb8RhGF4EcqaKgyw
-	a5w62fT9goDHCx5OQTgqUv9QvEE279rs=
-X-Google-Smtp-Source: AGHT+IFwNJHUJKtKfWWtTrBiCi5HOAvowxBi6jOI6M67oMZKzu3DBZ8RlvpKnfgkdtNWAsp1n8Qh9Q==
-X-Received: by 2002:ad4:5b85:0:b0:6e8:f4e2:26e1 with SMTP id 6a1803df08f44-6f4bfc0a1e5mr45384856d6.20.1745501793020;
-        Thu, 24 Apr 2025 06:36:33 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0968a44sm9429506d6.60.2025.04.24.06.36.32
+        d=1e100.net; s=20230601; t=1745501816; x=1746106616;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=u72nfMy9zYS5aW9xBcDq6LESieHcry02Dg/8XEt7OSw=;
+        b=ajHa1d47PjH82BGKazcEOOGQllE/NuYSPxfxX4UKgvzm3sfbtrX+U44vG0io+vsb1f
+         OpctlnB06LlCdCrSJRs0FwkpXwL7G+FKyurnrW7Boma5GPO1XSoY0ZJ6IqB8kB7jj7FZ
+         HR3Cl/jOtrmdDEwKEzyvg2oTBTdpQuo7L9Ea0SvZ3koBa8CaRe0VlHuTqvFxc/k7Zgw8
+         iKB5sq5nK0x0wg7S62L95CyXP9UYqYH8YcqR4EJwtydNGUUnfxPlDwS89bzQyx6lMVpd
+         4Slb9LjN2yg3zXG8n4Gs6XGFvxEKTdB0L8ocRkf6NC7gO6ZGh9MQ+CPJ+nHBI6CCkbss
+         hqpw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdMx37vfbb4cHimvRMBXeAPLpuXs2BsGqtxwXYQb6/SIscW9gdr7q0qf35xbCGZrh5YRD0iOCGQhAB2NE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaMRz30JkvN/e78tvsFFBvqASAasH3uoJ2EMkePL3SxuOn+SZ9
+	vBfaxUx4TFfrEUwTsQuLKcokQ3oT1bMQ/7L+aLy/woHgixi+uON/XgW+RQy93zQ=
+X-Gm-Gg: ASbGncv1rs6d9IUQW/+g6JblXDpy5lAAE2k5I7kfRkmaWPiCKPT7m/PAWH79yzfmm4k
+	v0BGOu506OP470XzaNo0NJp3Q0C1vq2R3yBAKksR4ITnIdWy9KLBClrVk50ndeLk3fshUYEN6P+
+	Iaba2VTziFyYII7nW8WYuml33eFtaCc/pK2ARPb4VpqOPxTqG8HcpcA5GGQ23wE1w6XqooO7oUi
+	JMYjrWHB2uZgmNUL0732cDEfDxf/3i+PZj0QigQPBEl0x5Lh8g7wwxF66Myrch4cN8O4UNGzXsP
+	AezycYFf1FiFAEWtby0TuTaeensAYb5lIQF4Gozi7zPm+PTI
+X-Google-Smtp-Source: AGHT+IEvTiSK1Lb+RPBdQ/DuDmeOaJEszTrN5CFCiZtbJdEyNkpwKicv/xW9sGpiPTRfU1AmU+RxSg==
+X-Received: by 2002:a05:6000:2483:b0:3a0:65ab:89d5 with SMTP id ffacd0b85a97d-3a06cfaf02fmr812129f8f.15.1745501815962;
+        Thu, 24 Apr 2025 06:36:55 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200:b30c:ee4d:9e10:6a46])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4c30d7sm2135597f8f.44.2025.04.24.06.36.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 06:36:32 -0700 (PDT)
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C4D021200069;
-	Thu, 24 Apr 2025 09:36:31 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Thu, 24 Apr 2025 09:36:31 -0400
-X-ME-Sender: <xms:Xz4KaOdiRETb2q2s3B9d21x-3ncqbWLfCxSM4g4Z0ncC_CvZ8Gt-Dg>
-    <xme:Xz4KaIPC40iZbQfD2EnByqZhNMw5CzrbhVt2NDKc6Xy3FkpiHmySNsOjoHwYPc19Q
-    XpozzMedEDjoLzETA>
-X-ME-Received: <xmr:Xz4KaPjb34tN9p5kdubwQF2VoR5IRj0nP69gnPq8QQP8WNxGnJEP37hH>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeelieduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
-    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
-    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudehpdhm
-    ohguvgepshhmthhpohhuthdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvg
-    drtghomhdprhgtphhtthhopegrtghouhhrsghothesnhhvihguihgrrdgtohhmpdhrtghp
-    thhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehojhgvuggrsehkvg
-    hrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgt
-    ohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhnvghtpdhrtghpthhtohepsg
-    hjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpdhrtghpthhtohepsggvnhhn
-    ohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthhtoheprgdrhhhinhgusghorh
-    hgsehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:Xz4KaL_kdMuRQa0vH1GyKf-YtXY4a_geOfJ28yv_UjEwNMxj6p01eQ>
-    <xmx:Xz4KaKvDoGR4xYwHMhf_YACPNiPCXAPjF9Rf0AiuGJJuP1TYHtBxig>
-    <xmx:Xz4KaCGOyXSpOIJ0y_X_FDiWJ4AregjOawnkxyBb1AzlPtuALqeAgg>
-    <xmx:Xz4KaJO7jOaYjJGBu_AqElPPQ-dclzrHAPnBvIPbZprquswI6KV-og>
-    <xmx:Xz4KaHO8pgh_u4q9IbBSCOIfRmA1p4XoFM3wig1TcNvWvgRE1eE-kyKI>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 24 Apr 2025 09:36:31 -0400 (EDT)
-Date: Thu, 24 Apr 2025 06:36:30 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>,
-	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] rust: alloc: implement `extend` for `Vec`
-Message-ID: <aAo-XiP-OHA_4itj@Mac.home>
-References: <20250406-vec_extend-v3-1-ec5c5c0acf2a@nvidia.com>
- <Z_OwmEKHgsZlt2cs@pollux>
- <D91AOKOTDXWC.7R5K5DI87QU4@nvidia.com>
- <D9C61DDI99JX.31T59XPQGYBB1@nvidia.com>
- <aAfL-e6qA9oBce5t@cassiopeiae>
- <D9DM3AR3FUAF.6JSNSB9WAJ4T@nvidia.com>
- <aAiqCXB9sJe_v6Yc@google.com>
- <D9DX39CF2RB7.IM219BZLVMCY@nvidia.com>
- <aAkPXBHNDugnXrhc@Mac.home>
- <aAollRd0-SnirG2a@google.com>
+        Thu, 24 Apr 2025 06:36:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAollRd0-SnirG2a@google.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 24 Apr 2025 15:36:54 +0200
+Message-Id: <D9EWR3RQK0FD.3GF55KNS53YSR@ventanamicro.com>
+Subject: Re: [PATCH v12 12/28] riscv: Implements arch agnostic shadow stack
+ prctls
+Cc: "Thomas Gleixner" <tglx@linutronix.de>, "Ingo Molnar"
+ <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>, "Dave Hansen"
+ <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H. Peter Anvin"
+ <hpa@zytor.com>, "Andrew Morton" <akpm@linux-foundation.org>, "Liam R.
+ Howlett" <Liam.Howlett@oracle.com>, "Vlastimil Babka" <vbabka@suse.cz>,
+ "Lorenzo Stoakes" <lorenzo.stoakes@oracle.com>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, "Conor Dooley" <conor@kernel.org>, "Rob
+ Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
+ "Arnd Bergmann" <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>,
+ "Eric Biederman" <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>,
+ "Jonathan Corbet" <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann
+ Horn" <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+ <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
+ <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
+ <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
+ <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
+ <broonie@kernel.org>, <rick.p.edgecombe@intel.com>, "linux-riscv"
+ <linux-riscv-bounces@lists.infradead.org>
+To: "Deepak Gupta" <debug@rivosinc.com>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-12-e51202b53138@rivosinc.com>
+ <D92V2NPNZYV0.136MJ2HOK48HE@ventanamicro.com>
+ <aAnBmexbL4XmVxQk@debug.ba.rivosinc.com>
+In-Reply-To: <aAnBmexbL4XmVxQk@debug.ba.rivosinc.com>
 
-On Thu, Apr 24, 2025 at 11:50:45AM +0000, Alice Ryhl wrote:
-> On Wed, Apr 23, 2025 at 09:03:40AM -0700, Boqun Feng wrote:
-> > On Wed, Apr 23, 2025 at 06:40:07PM +0900, Alexandre Courbot wrote:
-> > > On Wed Apr 23, 2025 at 5:51 PM JST, Alice Ryhl wrote:
-> > > > On Wed, Apr 23, 2025 at 10:02:58AM +0900, Alexandre Courbot wrote:
-> > > > The stdlib alloc crate relies on specialization to speed up methods
-> > > > related to iterators. We can't use specialization, so losing these
-> > > > optimizations is simply a cost of not using the upstream alloc library
-> > > > that we have to accept.
-> > > 
-> > > Yeah I was surprised to see
-> > > 
-> > >   impl<T, I, A: Allocator> SpecExtend<T, I> for Vec<T, A>
-> > >   where
-> > >       I: Iterator<Item = T>
-> > > 
-> > > and
-> > > 
-> > >   impl<T, I, A: Allocator> SpecExtend<T, I> for Vec<T, A>
-> > >   where
-> > >       I: TrustedLen<Item = T>
-> > > 
-> > > in the standard library, which clearly looks like an overlap. Didn't
-> > > know it was relying on a non-standard feature.
-> > > 
-> > > That's going to limit what we can do in the kernel, but nonetheless if
-> > > we can support only the cases that can be optimized I think we would
-> > > have our bases covered.
-> > 
-> > I think if it's a critical path and we really need the performance, we
-> > can use a non-standard/non-stable feature or get that stabilized.
-> 
-> We should not expect that we can just stabilize even a minimum form of
-> specialization. It's a very non-trivial feature.
-> 
+2025-04-23T21:44:09-07:00, Deepak Gupta <debug@rivosinc.com>:
+> On Thu, Apr 10, 2025 at 11:45:58AM +0200, Radim Kr=C4=8Dm=C3=A1=C5=99 wro=
+te:
+>>2025-03-14T14:39:31-07:00, Deepak Gupta <debug@rivosinc.com>:
+>>> diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/=
+usercfi.h
+>>> @@ -14,7 +15,8 @@ struct kernel_clone_args;
+>>>  struct cfi_status {
+>>>  	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
+>>> -	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 1);
+>>> +	unsigned long ubcfi_locked : 1;
+>>> +	unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);
+>>
+>>The rsvd field shouldn't be necessary as the container for the bitfield
+>>is 'unsigned long' sized.
+>>
+>>Why don't we use bools here, though?
+>>It might produce a better binary and we're not hurting for struct size.
+>
+> If you remember one of the previous patch discussion, this goes into
+> `thread_info` Don't want to bloat it. Even if we end shoving into task_st=
+ruct,
+> don't want to bloat that either. I can just convert it into bitmask if
+> bitfields are an eyesore here.
 
-Maybe I should have worded differently, the point is we should not limit
-ourselves to "a cost of not using the upstream alloc library that we
-have to accept", so yeah specialization is a non-trivial feature, but
-what we can do is presenting the problem to the Rust community and
-seeking for a solution for our problem. Similar to `CoercePointee`,
-unsize coerce in general is a feature that is hard to be stabilized, but
-for a specific problem that we care, we found a solution.
+  "unsigned long rsvd : ((sizeof(unsigned long) * 8) - 2);"
 
-The Linux kernel needs should be one of the sources that push new
-features in Rust language, don't you agree?
+is an eyesore that defines exactly the same as the two lines alone
 
-Regards,
-Boqun
+  unsigned long ubcfi_en : 1;
+  unsigned long ubcfi_locked : 1;
 
-> Alice
+That one should be removed.
+
+If we have only 4 bits in 4/8 bytes, then bitfields do generate worse
+code than 4 bools and a 0/4 byte hole.  The struct size stays the same.
+
+I don't care much about the switch to bools, though, because this code
+is not called often.
+
+>>> @@ -262,3 +292,83 @@ void shstk_release(struct task_struct *tsk)
+>>> +int arch_set_shadow_stack_status(struct task_struct *t, unsigned long =
+status)
+>>> +{
+>>> +	/* Request is to enable shadow stack and shadow stack is not enabled =
+already */
+>>> +	if (enable_shstk && !is_shstk_enabled(t)) {
+>>> +		/* shadow stack was allocated and enable request again
+>>> +		 * no need to support such usecase and return EINVAL.
+>>> +		 */
+>>> +		if (is_shstk_allocated(t))
+>>> +			return -EINVAL;
+>>> +
+>>> +		size =3D calc_shstk_size(0);
+>>> +		addr =3D allocate_shadow_stack(0, size, 0, false);
+>>
+>>Why don't we use the userspace-allocated stack?
+>>
+>>I'm completely missing the design idea here...  Userspace has absolute
+>>over the shadow stack pointer CSR, so we don't need to do much in Linux:
+>>
+>>1. interface to set up page tables with -W- PTE and
+>>2. interface to control senvcfg.SSE.
+>>
+>>Userspace can do the rest.
+>
+> Design is like following:
+>
+> When a user task wants to enable shadow stack for itself, it has to issue
+> a syscall to kernel (like this prctl). Now it can be done independently b=
+y
+> user task by first issuing `map_shadow_stack`, then asking kernel to ligh=
+t
+> up envcfg bit and eventually when return to usermode happens, it can writ=
+e
+> to CSR. It is no different from doing all of the above together in single
+> `prctl` call. They are equivalent in that nature.
+>
+> Background is that x86 followed this because x86 had workloads/binaries/
+> functions with (deep)recursive functions and thus by default were forced
+> to always allocate shadow stack to be of the same size as data stack. To
+> reduce burden on userspace for determining and then allocating same size
+> (size of data stack) shadow stack, prctl would do the job of calculating
+> default shadow stack size (and reduce programming error in usermode). arm=
+64
+> followed the suite. I don't want to find out what's the compatiblity issu=
+es
+> we will see and thus just following the suite (given that both approaches
+> are equivalent). Take a look at static `calc_shstk_size(unsigned long siz=
+e)`.
+>
+> Coming back to your question of why not allowing userspace to manage its
+> own shadow stack. Answer is that it can manage its own shadow stack. If i=
+t
+> does, it just have to be aware of size its allocating for shadow stack.
+
+It's just that userspace cannot prevent allocation of the default stack
+when enabling it, which is the weird part to me.
+The allocate and enable syscalls could have been nicely composable.
+
+> There is already a patch series going on to manage this using clone3.
+> https://lore.kernel.org/all/20250408-clone3-shadow-stack-v15-4-3fa245c6e3=
+be@kernel.org/
+
+A new ioctl does seem to solve most of the practical issues, thanks.
+
+> I fully expect green thread implementations in rust/go or swapcontext
+> based thread management doing this on their own.
+>
+> Current design is to ensure existing apps dont have to change a lot in
+> userspace and by default kernel gives compatibility. Anyone else wanting
+> to optimize the usage of shadow stack can do so with current design.
+
+Right, changing rlimit_stack around shadow stack allocation is not the
+most elegant way, but it does work.
+
+>>> +int arch_lock_shadow_stack_status(struct task_struct *task,
+>>> +				  unsigned long arg)
+>>> +{
+>>> +	/* If shtstk not supported or not enabled on task, nothing to lock he=
+re */
+>>> +	if (!cpu_supports_shadow_stack() ||
+>>> +	    !is_shstk_enabled(task) || arg !=3D 0)
+>>> +		return -EINVAL;
+>>
+>>The task might want to prevent shadow stack from being enabled?
+>
+> But Why would it want to do that? Task can simply not issue the prctl. Th=
+ere
+> are glibc tunables as well using which it can be disabled.
+
+The task might do it as some last resort to prevent a buggy code from
+enabling shadow stacks that would just crash.  Or whatever complicated
+reason userspace can think of.
+
+It's more the other way around.  I wonder why we're removing this option
+when we don't really care what userspace does to itself.
+I think it's complicating the kernel without an obvious gain.
