@@ -1,65 +1,81 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B9A1E9B32
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE078634F
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745489839; cv=none; b=sV1t/Th8ztKYHOdUrKSUpaMssHefoE8U1D1iKi0ZAQhbFUOVodT23rkYMsi1MM2j02M5cZi7A7WzccxwFKLrY0+1Ly44LYYeDqTtF3qIZNzVviNnXStrkI7f7npnPboXG9hAq8E3+3c1oIIwkZnsZ9m9HQLswyOU5zUJA8grSyg=
+	t=1745489856; cv=none; b=APZa4o6DnHMA5v4SYCAvM/8TuzxsxbVhd5WyjnlhGAyBVT3qmina+JJs1gAmyyZNNm0hLWFBLR4a9G/gqomVbRqe1zB/0XMP9YMM5wweAEfR92/1gJBaypADjvAkJX2gbDmHsDrEV136uRk+Xbzj8tz6u3EX0/qKfm2f94Kl+fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745489839; c=relaxed/simple;
-	bh=JgxDASSoJfH/+WDmK4aXcaHmUCS+QeddplH3cTE41pw=;
+	s=arc-20240116; t=1745489856; c=relaxed/simple;
+	bh=qjrrvqL4xavkYZUv+Xj+svdFXWyb2dWNxM1kho/LnJ4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oxDXuCfQE73sVJUVqJTwC6aMQ3JtgTZNhpkhHN1HP3iiXhFUm3L6OxzMbHtIYWrPioKdasdD20aVj6ocz1ugZyP0IFMXd9nctrgcexKWdhetc3CenefWeEMliJSnXLqQUdXypr3b6+Yiqbw9O/Oq8E6E2XrHlUN+qJaQDAnoB8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dPLs56kN; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=AgjceJzSm7+YAGEjWEfE/8AfWja4W7CCYtRoSeLt70PJwmMJfXUa8iuEzjEnbwOv5XrxVXJ/asX4BK9uLZHcgiOESaI6FITN568TlcMd1cN4naBltgsDWeQLKE8juIwaIgHqIVb1feUVvUJkNzixNTOiit1ZLMHt0pDfwfMRkr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=s4nSWQtC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uBmBj3A6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=s4nSWQtC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uBmBj3A6; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dPLs56kN"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3913958ebf2so646389f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:17:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745489835; x=1746094635; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/+Imx+wQAU0QKY64/Iw1K/RWq1pYJ8SS5BPHHrm4NL8=;
-        b=dPLs56kNFzFtqwTzhQ5o+f6TXMXFNBEloI4mq5ZKZI0I5To4D2sdhXUfcbeeRgIClv
-         fpJC4b0qYMvsabyA0xoVLE4s24eOCjfsCnvYUMjNUvABFPfKkizXg8WnzTzRzFyz08yQ
-         s8NG4lmNdLWxUmrwYlFUVoB3P40gX+7NNO90al6zGyluLuyD0fzhf9QL9rItHyapQ2Lw
-         AT97Iux7cKO7YfLK2Ncmqk5qOqsZiFJvc1r3/KG2BImRiEBO91KO6llASFCRNJtqKZWO
-         4fkLjmDwiMDn8DfZzRdasODuFH1S7AiW4ja3SxMGOLLSwKpOnKxl3ilbzBZe/1zS+1jo
-         Fw4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745489835; x=1746094635;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/+Imx+wQAU0QKY64/Iw1K/RWq1pYJ8SS5BPHHrm4NL8=;
-        b=uoWC2/znatJzRTZ2M+hShlDD4mzKZfLQsFS/w/orIPqYI71VycmnpzlfqsSvmnKguk
-         Dz+yTuCEJZ99O0VgQLjyHYWNj1MG5oG9bKKa/Gz9Tq0DivhaLHvEX6mChSNM5W8r7ax8
-         FfJHGpI7bVCKfYbCPmGV5iNgD/CVzfHBMSFv+0AXLvoOen2aPInU6beqGYgBlVJsXELe
-         u4PPjrMnSICeFqWmg6Ncvtq6kXaIjuPoiv5iTN2tsKUR2asTh2tqhhziVIMVNvFaJ3vn
-         /YEv0bcZ2fQSBhwJC+XFOgN4H3LbY9QhaUTCMjtcgdVVazoBW8+GOYGe3xnB0E6JZAmF
-         8Mbw==
-X-Forwarded-Encrypted: i=1; AJvYcCUyBKzA0sYFttseQtkbF3Kv7p6tru0a3hyQU0pYp42/DplrlBW+JfzKbU49yw5Y+wv/otR9lh1VnNZ79Rs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yysa8R8N5XSvGupld15P8gNfALdVBigj4eT/+OuouIcp1zYJs53
-	KZhFEEjB9F84P0kcoRAkgcUb1FVoDov9hL9mnRg27CTwYcxiFobxdxH+66kyJp8=
-X-Gm-Gg: ASbGncsIT/3tB8hCNVvkKql619CZqcZGLzlFmdoqENfZnIf96ur/RaSfs1ef3lHVjQ9
-	8TvqLMwiti+3XdBXQCjJDnMiTgEsYN4SML1KeHacncCTtfzv1DNYUvVHPUzRruoUBkME8eRqJNE
-	gJUb43sidNOFlZM+f9k+LbkKmTnrhXBffY+gGi1NTvk94/8WIKuXdp/7Ijb8BZRrsUnP/Kdau03
-	+tcvCvTDYbrss8vdcHPRh0XCianAubGtbD8PmovR/Ovww5tLaz+WlpBRfROKX3mAtJktKZrynrp
-	39LQaUBzi+rSuXXXVOayVFTyYiiMtcZZbueswjFOOX8MotNN3O0PulYX8smJl4aFv7U+fU1j3NW
-	6r7JnvA==
-X-Google-Smtp-Source: AGHT+IEC5Ceql13E4xaaL3vBXjhyhbINkr5oD2t6MLRnBCK5ExF8s71Axb37L5Qr5Iw6ung4pwT7lg==
-X-Received: by 2002:a05:6000:400f:b0:390:ff25:79c8 with SMTP id ffacd0b85a97d-3a06cf5996amr1872460f8f.20.1745489834980;
-        Thu, 24 Apr 2025 03:17:14 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d54c246sm1571967f8f.86.2025.04.24.03.17.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 03:17:14 -0700 (PDT)
-Message-ID: <36feffed-4558-4e59-97db-2f0e916dbfc7@linaro.org>
-Date: Thu, 24 Apr 2025 11:17:13 +0100
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="s4nSWQtC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uBmBj3A6";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="s4nSWQtC";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uBmBj3A6"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 1F4AF1F399;
+	Thu, 24 Apr 2025 10:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745489853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oXu0xToKAPO25fLhe2rMHBfxuHS/THmrVmv/bkCC9KY=;
+	b=s4nSWQtCo6+QGjsRUDwCGwwpQ/fpa53Eh8lU/LstcikM8KFwYcQ9AMWJhaHh1+jE9GdA4d
+	5ZPOIiDJ2/kFlniRZy1sIHrLG1+Oxj2FA78Pn2mFfcTNaYapxssjre7rKMTIQxHzuhkPab
+	WoZUgcnLztL1IfQaRel/8N9IlHU3nOI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745489853;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oXu0xToKAPO25fLhe2rMHBfxuHS/THmrVmv/bkCC9KY=;
+	b=uBmBj3A6z5PZfg79qv/WL/gZE5Q/6V6mRY5TBcET26WLX+N/oeOMFdfjxMaGtJ7zamJy8w
+	mdqIV88re7KEV6DQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=s4nSWQtC;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uBmBj3A6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745489853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oXu0xToKAPO25fLhe2rMHBfxuHS/THmrVmv/bkCC9KY=;
+	b=s4nSWQtCo6+QGjsRUDwCGwwpQ/fpa53Eh8lU/LstcikM8KFwYcQ9AMWJhaHh1+jE9GdA4d
+	5ZPOIiDJ2/kFlniRZy1sIHrLG1+Oxj2FA78Pn2mFfcTNaYapxssjre7rKMTIQxHzuhkPab
+	WoZUgcnLztL1IfQaRel/8N9IlHU3nOI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745489853;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oXu0xToKAPO25fLhe2rMHBfxuHS/THmrVmv/bkCC9KY=;
+	b=uBmBj3A6z5PZfg79qv/WL/gZE5Q/6V6mRY5TBcET26WLX+N/oeOMFdfjxMaGtJ7zamJy8w
+	mdqIV88re7KEV6DQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA92A139D0;
+	Thu, 24 Apr 2025 10:17:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id rFqzMrwPCmjTJwAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 24 Apr 2025 10:17:32 +0000
+Message-ID: <10fec246-82a6-40bf-a522-ea3de7fa0624@suse.de>
+Date: Thu, 24 Apr 2025 12:17:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,105 +83,161 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/5] dt-bindings: media: Add qcom,x1e80100-camss
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Robert Foss <rfoss@kernel.org>,
- Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
- <mchehab@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
-References: <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-0-edcb2cfc3122@linaro.org>
- <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-2-edcb2cfc3122@linaro.org>
- <3ec3fd62-bf21-47e7-873c-ce151589d743@linaro.org>
- <54eeb470-cd90-4bc2-b415-6dea1ce2321d@linaro.org>
- <0ab31397-580f-4e5a-b9ad-d9bf79d29106@linaro.org>
+Subject: Re: [PATCH v5 08/14] nvmet-fcloop: prevent double port deletion
+To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
+ <20250423-nvmet-fcloop-v5-8-3d7f968728a5@kernel.org>
 Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <0ab31397-580f-4e5a-b9ad-d9bf79d29106@linaro.org>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250423-nvmet-fcloop-v5-8-3d7f968728a5@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 1F4AF1F399
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On 24/04/2025 11:07, Krzysztof Kozlowski wrote:
-> On 24/04/2025 11:34, Bryan O'Donoghue wrote:
->> On 24/04/2025 07:40, Krzysztof Kozlowski wrote:
->>>> +  vdd-csiphy-0p8-supply:
->>> Same comment as other series on the lists - this is wrong name. There
->>> are no pins named like this and all existing bindings use different name.
->>
->> The existing bindings are unfortunately not granular enough.
->>
->> I'll post s series to capture pin-names per the SoC pinout shortly.
-> How are the pins/supplies actually called?
+On 4/23/25 15:21, Daniel Wagner wrote:
+> The delete callback can be called either via the unregister function or
+> from the transport directly. Thus it is necessary ensure resources are
+> not freed multiple times.
 > 
-> Best regards,
-> Krzysztof
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>   drivers/nvme/target/fcloop.c | 19 +++++++++++++++++++
+>   1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
+> index 9adaee3c7129f7e270842c5d09f78de2e108479a..014cc66f92cb1db0a81a79d2109eae3fff5fd38a 100644
+> --- a/drivers/nvme/target/fcloop.c
+> +++ b/drivers/nvme/target/fcloop.c
+> @@ -215,6 +215,9 @@ struct fcloop_lport_priv {
+>   	struct fcloop_lport *lport;
+>   };
+>   
+> +/* The port is already being removed, avoid double free */
+> +#define PORT_DELETED	0
+> +
+>   struct fcloop_rport {
+>   	struct nvme_fc_remote_port	*remoteport;
+>   	struct nvmet_fc_target_port	*targetport;
+> @@ -223,6 +226,7 @@ struct fcloop_rport {
+>   	spinlock_t			lock;
+>   	struct list_head		ls_list;
+>   	struct work_struct		ls_work;
+> +	unsigned long			flags;
+>   };
+>   
+>   struct fcloop_tport {
+> @@ -233,6 +237,7 @@ struct fcloop_tport {
+>   	spinlock_t			lock;
+>   	struct list_head		ls_list;
+>   	struct work_struct		ls_work;
+> +	unsigned long			flags;
+>   };
+>   
+>   struct fcloop_nport {
+> @@ -1067,14 +1072,20 @@ static void
+>   fcloop_remoteport_delete(struct nvme_fc_remote_port *remoteport)
+>   {
+>   	struct fcloop_rport *rport = remoteport->private;
+> +	bool delete_port = true;
+>   	unsigned long flags;
+>   
+>   	flush_work(&rport->ls_work);
+>   
+>   	spin_lock_irqsave(&fcloop_lock, flags);
+> +	if (test_and_set_bit(PORT_DELETED, &rport->flags))
+> +		delete_port = false;
+>   	rport->nport->rport = NULL;
+>   	spin_unlock_irqrestore(&fcloop_lock, flags);
+>   
+> +	if (!delete_port)
+> +		return;
+> +
 
-I don't think strictly algning to pin-names is what we want.
+The double negation is hard to follow. Can't you
+rename it to 'put_port' or somesuch and invert the logic?
 
-Here are the input pins
+>   	fcloop_nport_put(rport->nport);
+>   }
+>   
+> @@ -1082,14 +1093,20 @@ static void
+>   fcloop_targetport_delete(struct nvmet_fc_target_port *targetport)
+>   {
+>   	struct fcloop_tport *tport = targetport->private;
+> +	bool delete_port = true;
+>   	unsigned long flags;
+>   
+>   	flush_work(&tport->ls_work);
+>   
+>   	spin_lock_irqsave(&fcloop_lock, flags);
+> +	if (test_and_set_bit(PORT_DELETED, &tport->flags))
+> +		delete_port = false;
+>   	tport->nport->tport = NULL;
+>   	spin_unlock_irqrestore(&fcloop_lock, flags);
+>   
+> +	if (!delete_port)
+> +		return;
+> +
+Same here.
 
-VDD_A_CSI_0_1_1P2
-VDD_A_CSI_2_4_1P2
-VDD_A_CSI_0_1_0P9
-VDD_A_CSI_2_4_0P9
+>   	fcloop_nport_put(tport->nport);
+>   }
+>   
+> @@ -1433,6 +1450,7 @@ fcloop_create_remote_port(struct device *dev, struct device_attribute *attr,
+>   	rport->nport = nport;
+>   	rport->lport = nport->lport;
+>   	nport->rport = rport;
+> +	rport->flags = 0;
+>   	spin_lock_init(&rport->lock);
+>   	INIT_WORK(&rport->ls_work, fcloop_rport_lsrqst_work);
+>   	INIT_LIST_HEAD(&rport->ls_list);
+> @@ -1530,6 +1548,7 @@ fcloop_create_target_port(struct device *dev, struct device_attribute *attr,
+>   	tport->nport = nport;
+>   	tport->lport = nport->lport;
+>   	nport->tport = tport;
+> +	tport->flags = 0;
+>   	spin_lock_init(&tport->lock);
+>   	INIT_WORK(&tport->ls_work, fcloop_tport_lsrqst_work);
+>   	INIT_LIST_HEAD(&tport->ls_list);
+> 
+Cheers,
 
-I think the right way to represent this
-
-yaml:
-csiphy0-1p2-supply
-csiphy1-1p2-supply
-csiphy2-1p2-supply
-csiphy3-1p2-supply
-
-dts:
-
-vdd-csiphy0-0p9-supply = <&vreg_l2c_0p8>;
-vdd-csiphy1-0p9-supply = <&vreg_l2c_0p8>;
-
-etc
-
-vdda-csiphy0-1p2-supply = <&vreg_l1c_1p2>;
-
-because that captures the fact we could have separate lines for each 
-phy, names it generically and then leaves it up to the dts 
-implementation to represent what actually happened on the PCB.
-
-That would also work for qcm2290 and sm8650.
-
-https://lore.kernel.org/linux-arm-msm/20250423221954.1926453-2-vladimir.zapolskiy@linaro.org/
-
-So for sm8650 instead of
-
-+  vdda-csi01-0p9-supply:
-+
-+  vdda-csi24-0p9-supply:
-+
-+  vdda-csi35-0p9-supply:
-+
-+  vdda-csi01-1p2-supply:
-+
-+  vdda-csi24-1p2-supply:
-+
-+  vdda-csi35-1p2-supply:
-
-you would have
-
-+  vdda-csiphy0-0p9-supply:
-+
-+  vdda-csiphy1-0p9-supply:
-
-+  vdda-csiphy0-1p2-supply:
-+
-+  vdda-csiphy1-1p2-supply:
-
-Which would then be consistent across SoCs for as long as 0p9 and 1p2 
-are the power-domains used by these PHYs.
-
----
-bod
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
