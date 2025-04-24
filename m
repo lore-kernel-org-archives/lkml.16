@@ -1,120 +1,160 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E90221DB2;
-	Thu, 24 Apr 2025 10:09:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 618BC221725
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:09:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745489387; cv=none; b=qi/ouIXiHV1B+CFc5PUabSLyp7yJknE+YhVosfx98SfWvfnv5ZEZlGPc0yobPhZeLHUZaTA/EymLRCTDxpab7laebOat+BXHmZ6dkukydFymwgikxzEsnmxPd/G3oeIfOk/ztBLyyQhEcYcBfF3qaKlzjFvE/To91740Sbo/xEI=
+	t=1745489385; cv=none; b=B+X+0mt8MrMV3ZYXxD5A3oZlo4fysp/ETpLn4UfZDrAC07kmJSezzm5JfbfYc8qGzsBWuP5/Mnl/lFnpm+TWT1UiUC5B7QEMtvmfmrIzg8pkKp0IBrj0mgx3IdvBli4K26BNPoHvLh3cmDjEwG6XZssd0LvFuI32m/F7NmFEVGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745489387; c=relaxed/simple;
-	bh=+NlsYWBT81OiKiPSY+YWQO3B5u/NpVPaPxCCQFXhMuU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XkfD/8eWZ0KQjbNJZB2NlALHW4oqw0POQH+23EBUo9Tj0zthlQ0CK9ehKlebjt+Cf5bEJ6JrrUBYU/QYqSECHkXGUyu8azuXiJf/3eGNAEL4DJTACV+Xrmr4RXG1NplhoOFmqT9gKG7kVafCOagYrohg6DWMcRVXx8eu225s0Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [116.232.18.95])
+	s=arc-20240116; t=1745489385; c=relaxed/simple;
+	bh=uoI9/tbLI89XxL8JgtO04TSXnXn0TTxeeGUwIzlQGOA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=agfomgGFk1IQJ4g6d9okR5ZlNHIryEIbYtuG71gn314d2J1emBpGj949KZIldRcoTVdr95/jJer+TTEgnx/zagDyhQpT3KmQwe6KVt5QQO9k/6avl7QVx8L2gAYoR+JC8oh4DzOKcXs3dNyjfQRq9B0QBi+zUng0Me5UMHk7Qfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=P8fTghRS; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aIROMciQ; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=AhSsGbjN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=u4NOdAuN; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="P8fTghRS";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aIROMciQ";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="AhSsGbjN";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="u4NOdAuN"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id 77E40343016;
-	Thu, 24 Apr 2025 10:09:40 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Thu, 24 Apr 2025 18:08:42 +0800
-Subject: [PATCH v2 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
- board
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EA91121187;
+	Thu, 24 Apr 2025 10:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745489382; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CPJD9tr4PRr6ns76wa1hzi/fcA1+SfKGNcMXIo1EFfw=;
+	b=P8fTghRSrJtE6VileRjNLFsSEwwWVF88UU/7TXLRU4CK+EjpRlwRLxdK6ZYFthE39H7Nvh
+	SP31j4zVxX0wAcVCRhk8sQg4AnazOXLelP2oXW2CJkD6jc4lKWPGB8R1b+GHrZuraOh1QX
+	JUmIJ99hwfF7hsWK9D42KsjRzBOBKtk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745489382;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CPJD9tr4PRr6ns76wa1hzi/fcA1+SfKGNcMXIo1EFfw=;
+	b=aIROMciQoTMW3CPwXMwF3nEZWmGy868trZCvVSWQ326zofp54y4QBTdnsQWoBU/8cZrD7D
+	OPin2sptFvrEKLBQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=AhSsGbjN;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=u4NOdAuN
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745489381; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CPJD9tr4PRr6ns76wa1hzi/fcA1+SfKGNcMXIo1EFfw=;
+	b=AhSsGbjN/jknstQ3YCfPt3Zlhhi0yanEoWClPgYkKjc4cciv9AW612QTtwBH4ly4aLWwiG
+	Zcv+StlFEatrPyCOh4tZffOXrwHAuwPNhHFACwEYnXPC3f1ELbOCqkhM4k+DmvnCkmXIEi
+	FuUejidtcrMt1GA6Y2aWnEBUH4UcgdY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745489381;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=CPJD9tr4PRr6ns76wa1hzi/fcA1+SfKGNcMXIo1EFfw=;
+	b=u4NOdAuNgzQcK4BnbKgr0o0W1918YRkUR0mR4DCSQhjK5SlDqDuom2ZWxWa3xa4rVymgBJ
+	9cFyhTGVGoQ0QQBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D22631393C;
+	Thu, 24 Apr 2025 10:09:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xxxQMuUNCmhzJQAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 24 Apr 2025 10:09:41 +0000
+Message-ID: <cb781689-422b-4439-a6e4-8c4b98d9238a@suse.de>
+Date: Thu, 24 Apr 2025 12:09:41 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-01-sun55i-emac0-v2-4-833f04d23e1d@gentoo.org>
-References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
-In-Reply-To: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, 
- Corentin Labbe <clabbe.montjoie@gmail.com>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1360; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=+NlsYWBT81OiKiPSY+YWQO3B5u/NpVPaPxCCQFXhMuU=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoCg3DeFF+Lod5Sp4RF40iamQgTlUVUaHaoQ8RN
- NdermzD1/CJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaAoNw18UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277eLND/9ysWatZ1XvVsDrzi
- lC4N7NPUNozYOG7M2jBPgSJ6LmyzMG/VbCrpp/tI5sAAeZntM910Kdi4Jh2e4Ywml5ocAihIPRH
- dnyn166K75K8W/X9ouYXBxnLIm8xNLC5SinPbwisXjgglAre9u9KKpIJAveifvU2k6/0l4Wjdxg
- 4JCVNRf55Wc5E/eNR3FEQSnMwvP3nSgKRBhaTqdeqpV1FNvTeF+u9pKFkxsa/4KF12LxcAer/SL
- cHM1ji9JXFnKXzJEC8e4K0b33ymwKMLnNVgHyVnGTjhmRBJDAJtI3VZ42bDmwLGHLmZRdMlOYoQ
- eM5mZNoGvILg+/HO1vV+5byj48sr6JJzbjGN8SVq9IA2bJ3vjHfhWqWNLgasPb8EVXpj+YGTvhF
- 6/MIqFG9JYhewYyklri4rqEo3Fx9anPVR7WujXH/fLT8ffXH+A/u1NQpP6RcHaL6Uvb3DBL2vdK
- TqVXRMeHXnRwJyHtylpk8pvTNXYoOGJxlE4uoVAbdXem1727d5jYXFRlYDjylQrSrRDfJ6oX5Qr
- OSRdQ0o3kCxDenoj1iOoKcfFDeVfec3Q4tqRKApeYRargtxXN1spG5GSX8eh4APmlK80Wg39+nb
- P/oS3PF9heMj5bYB95cOQnxo9eztBD2MoIoq7JhJIn4nWod1pIiG9KaDmP280GSe52Wg==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 03/14] nvmet-fcloop: refactor fcloop_nport_alloc and
+ track lport
+To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
+ <20250423-nvmet-fcloop-v5-3-3d7f968728a5@kernel.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250423-nvmet-fcloop-v5-3-3d7f968728a5@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: EA91121187
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Radxa A5E board, the EMAC0 connect to an external YT8531C PHY,
-which features a 25MHz crystal, and using PH8 pin as PHY reset.
+On 4/23/25 15:21, Daniel Wagner wrote:
+> The checks for a valid input values are mixed with the logic to insert a
+> newly allocated nport. Refactor the function so that first the checks
+> are done.
+> 
+> This allows to untangle the setup steps into a more linear form which
+> reduces the complexity of the functions.
+> 
+> Also start tracking lport when a lport is assigned to a nport. This
+> ensures, that the lport is not going away as long it is still referenced
+> by a nport.
+> 
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>   drivers/nvme/target/fcloop.c | 107 ++++++++++++++++++++++++++-----------------
+>   1 file changed, 64 insertions(+), 43 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Tested on A5E board with schematic V1.20.
+Cheers,
 
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
----
- .../boot/dts/allwinner/sun55i-a527-radxa-a5e.dts      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts b/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
-index 912e1bda974ce5f64c425e371357b1a78b7c13dd..4ba01ea6f0db793b08fb0645226126535d91c43b 100644
---- a/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun55i-a527-radxa-a5e.dts
-@@ -12,6 +12,7 @@ / {
- 	compatible = "radxa,cubie-a5e", "allwinner,sun55i-a527";
- 
- 	aliases {
-+		ethernet0 = &emac0;
- 		serial0 = &uart0;
- 	};
- 
-@@ -54,6 +55,24 @@ &ehci1 {
- 	status = "okay";
- };
- 
-+&emac0 {
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_cldo3>;
-+
-+	allwinner,tx-delay-ps = <300>;
-+	allwinner,rx-delay-ps = <400>;
-+
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_cldo3>;
- 	cd-gpios = <&pio 5 6 (GPIO_ACTIVE_LOW | GPIO_PULL_DOWN)>; /* PF6 */
-
+Hannes
 -- 
-2.49.0
-
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
