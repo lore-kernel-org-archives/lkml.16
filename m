@@ -1,118 +1,152 @@
-Received: from smtpbguseast2.qq.com (smtpbguseast2.qq.com [54.204.34.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 327D984FAD;
-	Thu, 24 Apr 2025 06:51:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.204.34.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2976D84FAD
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745477468; cv=none; b=uk2ARcr7GXGzt44mL/TXk5MOCpnAXEHa00hoa8d06Z4ZQ8wht2syCuOS7SGsXHJ3oIJFxBDsAHHx2JqJeIuziW6dZUAqaUjZ4NsfIslqUyMZMzfmoGJq1OpkSH/MJI+q+O5YwkCPd6XJVHvi5/bIdEnperdsKf34EXXSUr//IHM=
+	t=1745477508; cv=none; b=YcydHW0TnkZ8tGNxtTwQWDgH0f8uGAvjAJZ7DSJuOYWodCx5rPkCuvBQZgzBov6wm9QfFRzSwhMQ2/UrkdAGC80ET/XE2exsHOfFFBrvmhmYpjDcffTuuM1U6Rq25tuO3eGtR53xoHTfurnvYUoKAxSkKWBfVoBuC+nEKqN/4jg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745477468; c=relaxed/simple;
-	bh=YUqFaolK70tIHze1raSHxQx+MPArt1jaLflfVUTlO30=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aKOxbKkiTfYytXpEx2hyHjZ4kwzDA7ImYYKrjdeaJ4Yht30H0vr3+EgohoVH56RwVP/0lGK2wGntVHLOVixYRcYaT0u6A8NRsoxO8u2lVZa34KzUfMO/Rpn1sYVjaoVysxeFcdsyxwhuR4E7UTvmQ1uW/P90TE5hvpZ4Nm1SND8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=cQ44cNcI; arc=none smtp.client-ip=54.204.34.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1745477508; c=relaxed/simple;
+	bh=Ag3AWLUDndS0X7tDtdLw2MCcWUiP9y71LnjMPVxxiLs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QPOTrMLsTKLf+rPG55vlGAiTP5Ve6d/vZR5dM9XPmpBTzbEVsYqzcdLBhtsd+PeHnRwlywJoE7Hx/JZGOp+jPReAPMZ0HEiL9do3JCib7xvDPeqj1LioCQfio4GtmI+TjsYpyyJbHUqTjifmG1m69f57vQEr8oFCEI/hAeps9h8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sl0KBnba; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="cQ44cNcI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1745477439;
-	bh=mYBn+g5OVFQvnrqXuqJ2ckhmMkHq01v5baNBySf9l+c=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=cQ44cNcIi0gikJNhh+h6NswImRKzy6jRCZc0GQPKe8phWppwmzSNay4b87JFZtM8a
-	 gGdIzjrNQSk67RZwoydCiAeY5m4pZpx5qCgwF+pfeyQK4Rhk9xycCzuJd9gjcS321b
-	 Cjn5eQ8o6UQYvU6nQnBJ9IQ3E3yPkPgbsuZ/TOwg=
-X-QQ-mid: zesmtpsz6t1745477398td90f47ac
-X-QQ-Originating-IP: JNaxm3TXiwarxAdKo0WTzxy7CGkqoS9/BuXUfdnuaho=
-Received: from localhost.localdomain ( [113.57.152.160])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Thu, 24 Apr 2025 14:49:56 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 17841742583809714878
-EX-QQ-RecipientCnt: 8
-From: Wentao Guan <guanwentao@uniontech.com>
-To: brauner@kernel.org,
-	linux-fsdevel@vger.kernel.org
-Cc: viro@zeniv.linux.org.uk,
-	linux-kernel@vger.kernel.org,
-	wangyuli@uniontech.com,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH] fs/locks: optimize locks_remove_posix
-Date: Thu, 24 Apr 2025 14:48:32 +0800
-Message-Id: <20250424064832.347177-1-guanwentao@uniontech.com>
-X-Mailer: git-send-email 2.20.1
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sl0KBnba"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aca99fc253bso96427666b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:51:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745477504; x=1746082304; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UCdBlRSLitkZVgraqiDyH6sqV6PnXuRYUb+hiEOC3cY=;
+        b=sl0KBnbaknSDEFtm9LY6TIFJ1DpZYXR894X43cL7XKb61gkRmH1tuoYgR2ED1WAB/Q
+         TXx1gJAyp11z1c+9Dhy3xxx155o+W6+Fym8Ej7UJsItBNp95K3A7nEX2ZjQJf6+wLTyH
+         XLW/Q9a8t+opJjvrFYdGtH2SeX9Wdr32C4+5uzj++3y1F5rEC8Wbd3p0r878K/Q30s6W
+         WjEff+SFbnNrJxFpH6kKPNLo97AQftwdg60nz894mEo5Ny1H+EVSsj1E4ljf2JFSvpPS
+         DFEytZhZU8zUJbpQJtVLfxL//59SZDnhP/jcABSZ0PjI2HLirVj2oCRfzgHKmUANbSyB
+         YmWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745477504; x=1746082304;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UCdBlRSLitkZVgraqiDyH6sqV6PnXuRYUb+hiEOC3cY=;
+        b=HHLp4oT9QEcvE5SddeA0eLizWuajtZ/1K+fpJFWYQnpmsXrYRB7U9msNT+BQHrqgcN
+         VLSmNLQpvi2qKwjWrU63fdOwnSRde3JYJtjVVBIws48uuls7snIQD+VjXAxdM7UXejAP
+         F2RDteFuXyXqTnon0u1LP1hmtHp5pgSWKBI925qqp1DfioTTPx1kYz35irsWtwSmEnbT
+         djZAkLIXssWVuTD0P5jIHowoneg11+3JNx6j0IIQhZcBVUxKElKsTwrJuVPMyyZnHX2z
+         T2QpTri2XcbA2JgCL1zm2vSOYgv1tpa+UR7Gxv8OOBL06EdReRwLWdGxmJR2RrtaDDcS
+         ocrw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYuWu3yh4ZtnVsahR4tzXO1f3xd+S/XVwkBGqpBqMaKf16z4eb4xyQeW2RjKwygHwSmG8goHaO7DRh+ao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjHq/UyeKCXYf+K7S5mUqCj+F9z2uKMVhDPtQpnL9kRwFuwhz8
+	ISV44C313aQUEtRBTk2OhJifBckh8nstqGUFf1WsPm0FhfboqIYSpp2GgsuWPA4EAoX/k4R0Q5S
+	nU+7Ky8pH8zjEN7qceICoE1CjOSrZFgIgu2bu
+X-Gm-Gg: ASbGncu/EFYXvosAS5EOBz5I2QeLk//VJ/Rpq60cBMulLHuhfSVbdY7UImSdRc+J48V
+	loxyVV8o/xWsz4SM7pfmF2NKqxxp1tJvnr5RSPYfBpqxBbZTg/5go2DsPDEW74tv/zeDDLyaYkq
+	WRxAJkvMHC3W3CFJuTXFrsuw==
+X-Google-Smtp-Source: AGHT+IHGeyS5GzF1KKHBmTnr0KgYda4bVKubCtgIBqB6yIp5B87N5sZptbz4fHrf3oRXVpVpYibPEFrx+l9TaWOdLT0=
+X-Received: by 2002:a17:907:7e8f:b0:acb:86f0:fed8 with SMTP id
+ a640c23a62f3a-ace5721fe68mr130762666b.12.1745477504191; Wed, 23 Apr 2025
+ 23:51:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: zesmtpsz:uniontech.com:qybglogicsvrgz:qybglogicsvrgz5a-0
-X-QQ-XMAILINFO: MgQY1K25Ph0mG5SsRP/buSuG0EKL3kCyJosiUgNr7W7XQVi2S3sIbBdV
-	L90dilNLyUXYWKD+DWlcRn9X7qadqhtFjMtFmdmyCIR42k+AHlcgxHWlOwwBVQSYMj/apHS
-	mAjIHOYX7JkbRkxF/dh6EjR+oPvs7u+JcInmRq95DwNE/exyapVZn3dNlvcE5dCxIO0s0vS
-	+eDwiY8aFrqvi07Ow+EnATaTFEM4eftnDK1g+w+t2qtyietJxjagdTl0A5b5BCqbmGA5a7k
-	dm4GaH4Gu4LpctfvkvUwBEPsRpLp3ZFlOeM6OaHYAXRIC699TEHgg1ThRg7A0y8KBT2DMPo
-	4YieVxYCRvjo5wfkX3CsXW4R/2RAdyrPJ6lMRkvcg9tU7tx+jrJyCzOIEP3UGe6YSSwEvQ8
-	6Ddzbz4FaTJ6PEWoqDGQ9paheoI+sVTdnMQCXVixH07hndqnSikejEwkQlXTE/Wqmg3sHXV
-	woWG9RgsF/f9ouhPMB2EwEcXgR7sUj+iqXDylcKnQieO6lGy6ymQFYlYBX7XRnTYi4ML+rc
-	8DMzXuYig4iS87u+A4dOPOVm1JMjmawurP5YoHyxkYSCUEVsOvCHjxA48/HODNYdOuauRjo
-	oxXyERCDw3jY8iT1wqUhzV34wbraf0ceh02A0qJXgHRZn3xJgmrNY7cHaYWFOjx5/wQDbEG
-	4tMVfx2eeDx+03EndwjrdrHjFBU+aCTzjPShKc9RNipibuzeJjOVT/6EALM4WRDe1OKp3OE
-	fNv4sRmwBDDMwUSgD2weWWbiUokaG02SnuKnyJkJ1rXWX/3wZnoae1XABd0jUL40jWIFTfb
-	FyUjDkw1DuhiuMI+42uTSgg8DBjjtDCfwjVpPAbNqdDNkgWHt/2WZxcExTUzufm72qVm1Gv
-	s4RWRCGXU2U4rGr0pOIJBcFKZ5wa0+tETs+SK6JX1A63ckxUXpfElHuTmvhTHgybs/BLVr3
-	3dOldcJOrAmBi97wVE5Krgg3qjz3DLr1alh/tTtiTfBcqXFRGkPDkbrlbvBj2Nr6YquFuai
-	3tLoQhj1gr2F8I4wFX9n+ko2UWm1wjMXEKKc9KEav5KgreSeSHOQNsAz1edPY=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-X-QQ-RECHKSPAM: 0
+References: <50dc6bdc-ee62-41f1-b8e5-be64defb07c6@huawei.com>
+In-Reply-To: <50dc6bdc-ee62-41f1-b8e5-be64defb07c6@huawei.com>
+From: Sandeep Dhavale <dhavale@google.com>
+Date: Wed, 23 Apr 2025 23:51:31 -0700
+X-Gm-Features: ATxdqUFCZEOg52wqG1DDPFBO0bciOIAyOiGm-f5J3gO3y1YmMicJ7X_BAGWYg7g
+Message-ID: <CAB=BE-R4uPFeBSt6Z4Khv6_OjAu9=WoJR-VGG8eG0spAaovE1w@mail.gmail.com>
+Subject: Re: Maybe update the minextblks in wrong way?
+To: Hongbo Li <lihongbo22@huawei.com>
+Cc: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML <linux-kernel@vger.kernel.org>, 
+	linux-erofs mailing list <linux-erofs@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Found by reading the gdb disassemble func,
-remove the three lines in the hot path,
-and locks_init_lock init them by memset0:
-lock.fl_start = 0;
-lock.fl_ops = NULL;
-lock.fl_lmops = NULL;
+On Wed, Apr 23, 2025 at 6:50=E2=80=AFPM Hongbo Li <lihongbo22@huawei.com> w=
+rote:
+>
+> Hi Sandeep,
+>    The consecutive chunks will be merged if possible, but after commit
+> 545988a65131 ("erofs-utils: lib: Fix calculation of minextblks when
+> working with sparse files"), the @minextblks will be updated into a
+> smaller value even the chunks are consecutive by blobchunks.c:379. I
+> think maybe the last operation that updates @minextblks is unnecessary,
+> since this value would have already been adjusted earlier when handling
+> discontinuous chunks. Likes:
+>
+> ```
+> --- a/lib/blobchunk.c
+> +++ b/lib/blobchunk.c
+> @@ -376,7 +376,6 @@ int erofs_blob_write_chunked_file(struct erofs_inode
+> *inode, int fd,
+>                  *(void **)idx++ =3D chunk;
+>                  lastch =3D chunk;
+>          }
+> -       erofs_update_minextblks(sbi, interval_start, pos, &minextblks);
+>          inode->datalayout =3D EROFS_INODE_CHUNK_BASED;
+>          free(chunkdata);
+>          return erofs_blob_mergechunks(inode, chunkbits,
+>
+> ```
+> This way can reduces the chunk index array's size. And what about your
+> opinion?
+>
+> Thanks,
+> Hongbo
 
-Tested in unixbench syscall mircobench mark,
-and perf locks_remove_posix from 1.32% to 1%.
-Improve the syscall bench from 1858 to 1873.
-call path:
-99.08% main
-- 17.07% __close
-...
-- 4.85% __arm64_sys_close
-- 2.74% filp_flush
-- 1.00$ locks_remove_posix
+Hi Hongbo,
+I think the last call is necessary to handle the tail end which is not
+handled in the for loop. But I understand that if the file is
+contiguous then the last call can reduce minextblks.
 
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
----
- fs/locks.c | 3 ---
- 1 file changed, 3 deletions(-)
+Does the below patch address your concern to conditionally call the
+last erofs_update_minextblks()?
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 44715c43460a1..14b6ee5e82ed4 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -2554,13 +2554,10 @@ void locks_remove_posix(struct file *filp, fl_owner_t owner)
- 	locks_init_lock(&lock);
- 	lock.fl_type = F_UNLCK;
- 	lock.fl_flags = FL_POSIX | FL_CLOSE;
--	lock.fl_start = 0;
- 	lock.fl_end = OFFSET_MAX;
- 	lock.fl_owner = owner;
- 	lock.fl_pid = current->tgid;
- 	lock.fl_file = filp;
--	lock.fl_ops = NULL;
--	lock.fl_lmops = NULL;
- 
- 	error = vfs_lock_file(filp, F_SETLK, &lock, NULL);
- 
--- 
-2.20.1
+Thanks,
+Sandeep.
 
+diff --git a/lib/blobchunk.c b/lib/blobchunk.c
+index de9150f..47fe923 100644
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -303,6 +303,7 @@ int erofs_blob_write_chunked_file(struct
+erofs_inode *inode, int fd,
+        lastch =3D NULL;
+        minextblks =3D BLK_ROUND_UP(sbi, inode->i_size);
+        interval_start =3D 0;
++       bool is_contiguous =3D true;
+
+        for (pos =3D 0; pos < inode->i_size; pos +=3D len) {
+ #ifdef SEEK_DATA
+@@ -332,6 +333,7 @@ int erofs_blob_write_chunked_file(struct
+erofs_inode *inode, int fd,
+                                erofs_update_minextblks(sbi, interval_start=
+,
+                                                        pos, &minextblks);
+                                interval_start =3D pos;
++                               is_contiguous =3D false;
+                        }
+                        do {
+                                *(void **)idx++ =3D &erofs_holechunk;
+@@ -365,7 +367,8 @@ int erofs_blob_write_chunked_file(struct
+erofs_inode *inode, int fd,
+                *(void **)idx++ =3D chunk;
+                lastch =3D chunk;
+        }
+-       erofs_update_minextblks(sbi, interval_start, pos, &minextblks);
++       if (!is_contiguous)
++               erofs_update_minextblks(sbi, interval_start, pos, &minextbl=
+ks);
+        inode->datalayout =3D EROFS_INODE_CHUNK_BASED;
+        free(chunkdata);
+        return erofs_blob_mergechunks(inode, chunkbits,
