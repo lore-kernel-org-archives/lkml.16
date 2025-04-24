@@ -1,120 +1,159 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AE9231A21
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B72322129E
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745490946; cv=none; b=oeqvgV/KyjhI5cuMZLxzevEFNuecozR+pFdATK+OpsDAud6MDXX2SLnFbXvvHWCPrExyUtJoKR5m/WgBcPllHfMZdojUtB0hdtWO9eA7hKm04nI7pYXfvfQfOk1GorvpNzima6gClQ/VvsnIl0IZUJ7rBU7eT1G1AElfM4kufVE=
+	t=1745490971; cv=none; b=Rk/vEHPvKW7fOx31Km0uEt/+4qKxU6d6lLNkjFm9U0S6pykX8lpGqoyQ8omWrxu4Utpt/xzPlPI+eDkq3S7W/oFC20Z3fFBstHhndc680ymL1REtPFsHi3Z+PuzY7h2DtYH7/pEmn8HWNeZ4cvaXb7p6zyLDbqeWc0eDxx3qeMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745490946; c=relaxed/simple;
-	bh=B0ZiRolrSfi+H6wyYXiznygVH1gb8LyA5qmriNgEOfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SBi752BHcQ9RpLFiE/6eePgZBbqWhD7MEGh3OA1kClyP4As3ZvFr72NhoGTcqmQaknN+FTZ/BGZnq6pC27dkrzDHWsb/xM8fDC6zkLHX0zguxGjJIs1OWHqclWQtnrd7EpwQ1EET/HoiGUoxmDHuih9Co6erKFpCKTFMULZqUxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ZFQbXmZ2; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1745490971; c=relaxed/simple;
+	bh=o9S3xS6x/7ltvjnbA8prO8mDFGuFdVAzu8uNbExAUYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bvpIBa9VVBZf/fn0pIjl5VC9fYHPjSlNf29TfOe+rPza76TH6YPEQJu5gQCycDV4w6W1H5X+5oXN9+wrFwz/b7hZ4z88ELAHOT4TFMry1NJJn7y8y8coWb7Vmz+RmK3002yhWDwUtZ9sGfLHRo7f8DskILhhTdIRyB0N3fclJgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RCIVoVZr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wmiYlx81; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RCIVoVZr; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=wmiYlx81; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ZFQbXmZ2"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39149bccb69so772189f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745490943; x=1746095743; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IUR+h4PX+3NwGH8BQZC0fWxB3CoxerSbNXDHvlU8Qy0=;
-        b=ZFQbXmZ2pgZiTTwC8vIgEVrWdleenTd89g3orkew/QSipa8UVf+VNYI3jl31pjpW28
-         8Kxt/6F+GF+cvHEZ5nRUZ4oWcvhHAiDxfSXvv9FeEQ12bVYudrbcCZ9hp8zBIRF3AXYg
-         BFHApXv65WomT6OKxDoHcdfW6tia9GmZ56JUWZ+Coek9/DqcQA+3RSn+z9u1WjgQYHkQ
-         VmFF8bPKvrncxBmPf5+DkeBbIzihTKqvIEhdwTVDfXC6zg4pYSveQNVSV7F38U3C0gbt
-         53ELJ6sMijN1ZrzRHNp8u8Mn4BwCkwxph+YAgrKb1bRAZgOEsZOiwQTsz3dS19lpLsYr
-         txDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745490943; x=1746095743;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IUR+h4PX+3NwGH8BQZC0fWxB3CoxerSbNXDHvlU8Qy0=;
-        b=f8x2YHjTpnoL4+9Cy8sd1ubVlGyFumthQ82H7FAZVtfpN2y8qlTgxpCRqFMBaPnMIl
-         1OkRIj1DSkqn7nYWU8GygQBVnBkpXAj4P5cSs5PRvLFRPz2zuqemYPRRZr0jrJflPC7Q
-         FkZDPQ6Y0jD7umbPwE4WPgVmVjHXPyGkPAvFqKhFP/D1HXDjf5YnCSGgaOx/7yDDbmRf
-         b5QeKhuVBxZi2Laiqkz7+aC6SshM+OGb02mJmg4s1npy7raJ9qKiOiumBLF9Lfy/i5HZ
-         ucXvqwRhj/voWHfsAZNvhAFnEk3ROrAphaEt9x1BU/Ng9iGFJsATlupKp2kg4UuICzKl
-         HQ9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXCPUyD9d9shBUrUSi695mcAVwYLlZAzAET44j4JWcJAvjj6uFiiPk0lkVQD2lb1183RQr3/TSXapLT7xY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTEiHn/HENDO5QULDhFLyTGVX+L2JmL5jmZ9BRuJJIrMsjIacX
-	DjaebdnRosu6Sr+Aa2v0mcl3NMCwBYfr+snOwwPEUClr85BI8/ZF2uEtvdRNvik=
-X-Gm-Gg: ASbGncsCa0pH6W7RsHhO+pEhx2CQODmnTmaHKd7yT4MjkBxgPoxukGdI5iyLcmY+hAS
-	yPSdjDTLSz5dHUc9iWWSyl8Eb6xX4TyEJGQ2/SuPBeW5D50gPIMiSv2Wn8uHvsN2KrCc0v8TR1U
-	CJ1sPqT/qOWZORneUEDxVYmz1I0YQSaArh2fE28WKap0OR0LAMnm0VR/eyysJExC1aDwm2ePv6q
-	PEEtOxIKVnqzXeY644mWtEYVO+8jroqwVtj/vRtfeK2bsEre2pw5mgfFrQEy0DR4wXVriFmkU+s
-	JHNbVyRBaW4Hce1CZDC1UbLQjyqD
-X-Google-Smtp-Source: AGHT+IEMMNUAVFSZJW72EDWo3VFnQwnHK3P23aJgYipjy3Fyv7YBKouXm/RCEBGe7MUaHxg7wn5VXw==
-X-Received: by 2002:a05:6000:4022:b0:39c:1f11:bb2 with SMTP id ffacd0b85a97d-3a06cf5ee5amr1527452f8f.22.1745490942932;
-        Thu, 24 Apr 2025 03:35:42 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::f716])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4c30ccsm1653633f8f.49.2025.04.24.03.35.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 03:35:42 -0700 (PDT)
-Date: Thu, 24 Apr 2025 12:35:41 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org
-Subject: Re: [PATCH 1/3] riscv: Fix typo EXRACT -> EXTRACT
-Message-ID: <20250424-93c64fdbb15c142ee458d857@orel>
-References: <20250422082545.450453-1-alexghiti@rivosinc.com>
- <20250422082545.450453-2-alexghiti@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RCIVoVZr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wmiYlx81";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RCIVoVZr";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="wmiYlx81"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 68F8B1F44E;
+	Thu, 24 Apr 2025 10:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745490960; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
+	b=RCIVoVZrHp1ewBFK6UtPQC80lU88rn3AkqYuU78L0WwpRUtcIWoOlDZZfI/qWUL4q8CRfi
+	2J+hSQ5aHX/hIc0BJ87M9eSdZF9pzRztzIGVsei6MT77TeleukgUMgdqW5YaDXuRHOk1Kf
+	mkfitFTVm07aiAq3KJyXOz4pv0gmDsA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745490960;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
+	b=wmiYlx8144vEFING7hgW1LPApBpDO7uI4wUqLgrBaBmZbHl6M3bMIMtKwzKCXZ60XQxxuN
+	OJsP6XxL0+cx3xCg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=RCIVoVZr;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=wmiYlx81
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745490960; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
+	b=RCIVoVZrHp1ewBFK6UtPQC80lU88rn3AkqYuU78L0WwpRUtcIWoOlDZZfI/qWUL4q8CRfi
+	2J+hSQ5aHX/hIc0BJ87M9eSdZF9pzRztzIGVsei6MT77TeleukgUMgdqW5YaDXuRHOk1Kf
+	mkfitFTVm07aiAq3KJyXOz4pv0gmDsA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745490960;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMsTwHgoOwVW/cg0h8z/MHHeXCOyNAgrsW4S8mz0gNI=;
+	b=wmiYlx8144vEFING7hgW1LPApBpDO7uI4wUqLgrBaBmZbHl6M3bMIMtKwzKCXZ60XQxxuN
+	OJsP6XxL0+cx3xCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5322D139D0;
+	Thu, 24 Apr 2025 10:36:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id n97RExAUCmg3LQAAD6G6ig
+	(envelope-from <hare@suse.de>); Thu, 24 Apr 2025 10:36:00 +0000
+Message-ID: <7162ce42-9992-4005-b1fc-6763366f91dd@suse.de>
+Date: Thu, 24 Apr 2025 12:35:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250422082545.450453-2-alexghiti@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] nvme-tcp: select tls config when tcp tls is enabled
+To: Alistair Francis <alistair23@gmail.com>, hch@lst.de, sagi@grimberg.me,
+ kch@nvidia.com, linux-nvme@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Alistair Francis <alistair.francis@wdc.com>
+References: <20250424101333.2908504-1-alistair.francis@wdc.com>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250424101333.2908504-1-alistair.francis@wdc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 68F8B1F44E
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[7];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,lst.de,grimberg.me,nvidia.com,lists.infradead.org];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Tue, Apr 22, 2025 at 10:25:43AM +0200, Alexandre Ghiti wrote:
-> Simply fix a typo.
+On 4/24/25 12:13, Alistair Francis wrote:
+> Ensure that TLS support is enabled in the kernel when
+> NVME_TARGET_TCP_TLS is enabled. This allows TLS secure channels to be
+> used out of the box.
 > 
-> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> Signed-off-by: Alistair Francis <alistair.francis@wdc.com>
 > ---
->  arch/riscv/include/asm/insn.h | 2 +-
->  arch/riscv/kernel/vector.c    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>   drivers/nvme/target/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/riscv/include/asm/insn.h b/arch/riscv/include/asm/insn.h
-> index 09fde95a5e8f..2a589a58b291 100644
-> --- a/arch/riscv/include/asm/insn.h
-> +++ b/arch/riscv/include/asm/insn.h
-> @@ -352,7 +352,7 @@ static __always_inline bool riscv_insn_is_c_jalr(u32 code)
->  	({typeof(x) x_ = (x); RV_X(x_, RVFDQ_FL_FS_WIDTH_OFF, \
->  				   RVFDQ_FL_FS_WIDTH_MASK); })
->  
-> -#define RVV_EXRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
-> +#define RVV_EXTRACT_VL_VS_WIDTH(x) RVFDQ_EXTRACT_FL_FS_WIDTH(x)
->  
->  /*
->   * Get the immediate from a J-type instruction.
-> diff --git a/arch/riscv/kernel/vector.c b/arch/riscv/kernel/vector.c
-> index 184f780c932d..901e67adf576 100644
-> --- a/arch/riscv/kernel/vector.c
-> +++ b/arch/riscv/kernel/vector.c
-> @@ -93,7 +93,7 @@ bool insn_is_vector(u32 insn_buf)
->  		return true;
->  	case RVV_OPCODE_VL:
->  	case RVV_OPCODE_VS:
-> -		width = RVV_EXRACT_VL_VS_WIDTH(insn_buf);
-> +		width = RVV_EXTRACT_VL_VS_WIDTH(insn_buf);
->  		if (width == RVV_VL_VS_WIDTH_8 || width == RVV_VL_VS_WIDTH_16 ||
->  		    width == RVV_VL_VS_WIDTH_32 || width == RVV_VL_VS_WIDTH_64)
->  			return true;
-> -- 
-> 2.39.2
->
+> diff --git a/drivers/nvme/target/Kconfig b/drivers/nvme/target/Kconfig
+> index fb7446d6d682..4c253b433bf7 100644
+> --- a/drivers/nvme/target/Kconfig
+> +++ b/drivers/nvme/target/Kconfig
+> @@ -98,6 +98,7 @@ config NVME_TARGET_TCP_TLS
+>   	bool "NVMe over Fabrics TCP target TLS encryption support"
+>   	depends on NVME_TARGET_TCP
+>   	select NET_HANDSHAKE
+> +	select TLS
+>   	help
+>   	  Enables TLS encryption for the NVMe TCP target using the netlink handshake API.
+>   
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
