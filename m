@@ -1,69 +1,109 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1530221FD4;
-	Thu, 24 Apr 2025 10:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A131E9B32;
+	Thu, 24 Apr 2025 10:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745491244; cv=none; b=rQmoxGiQ3q/hOWF4bxApjMlafBUI0xzzbB4QhXTlX4IrDSg3Ygwb5XlcfxXnJ6lkBduOfqST0yIUnKOHTu+0afa1PP4yoiq6DnSCcc797dOy4P3DkNv+AHeUQxnM7ZiPGO+6ycR20E6+6zKVRxCLFOINxPBY6OFuYWbQH4/8T+4=
+	t=1745491291; cv=none; b=ikaLszrJrMGyaVE9mMiUEQhjWAoZCU8O8+rtIlxnbBS245ThK5wRx5CYDF1mYAXlOfEDW+gYKiTjXPXNx6UiRyB/tfq7MxLgB/1G3ynqC2NXNt/90v3vgUBiGptbelT6EmLI7rf+oG0aDrrqLoyxLzBGW/gcRHpPWalkVLtGhHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745491244; c=relaxed/simple;
-	bh=VfgAF5tdFF9XvVPd4mOHkk9ukH3mDa8hX3KuZyWTvrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CfjwTofH/LCDXpHDz2nWcfFontXv9tI1/cmgXXcuNZ7HH7Jd8Ud57oRglI/OdmHOFfL/lumYtpMMtV+prZEMqzFi6zjNJ854QiB6d17XnZlXMIuecC9uowv09pFcc5Q0QmBAt2v5LghCsQ5tVPQzv9UfyN0Y1aUPycdy13MLFLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=b5ckuwSX; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745491291; c=relaxed/simple;
+	bh=N8UDuFHOEh0XzlBT1eZgpa0OPW9H6oATlwJO+txihuI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DWDhnnwfghCXWjqm0sCWD+smuEp4m1DJvxUo9EviY8ibdq4XZFNRR8xsSWAYV2Uv0i7rmawWnnH9BQWlfEjCCh/N/x20zPKSq+wBHSNYWipMFu0sGHXP9AsHG9P0Hp4aw5fy0xBhmAh82+ztXCAcQrReSNqC8LGRirp4gFrbjDQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H1oARq36; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b5ckuwSX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=VfgAF5tdFF9XvVPd4mOHkk9ukH3mDa8hX3KuZyWTvrQ=; b=b5ckuwSXgvEOn919rq9fQqALbl
-	dM+/bmsvO9CxaXpneQ/2p+OFVo9x/wtgn32Gt0ICw4SKpaLqh7gSD1W5e5WST7NL3QDlnktrVj6uY
-	f/amEGkIFYSp+KUpXoC5esbwmft3fohEEvDFZrhyBsLjULoklw4KLzjn9bXyGPFmK7AjtYlQlBuaM
-	SW9Va9uxdrf2l/FNfmlH/frKmqZhAZCpaInPgvtC/O+FwPxAO3GGq7RIHDGx+CHBIkiW6Ge62RCdl
-	dvzS9JSla0yBDKG7hV4OMa9WyR/mGCp2lVew1XbZkyC4T2cwL1/h3Or10OZcw0xQCEJKupn/LKfgZ
-	xw3+ow3w==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1u7u0K-0000000BkTg-1D0W;
-	Thu, 24 Apr 2025 10:40:28 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C4B283002CE; Thu, 24 Apr 2025 12:40:27 +0200 (CEST)
-Date: Thu, 24 Apr 2025 12:40:27 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Baisheng Gao <baisheng.gao@unisoc.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"reviewer:PERFORMANCE EVENTS SUBSYSTEM" <kan.liang@linux.intel.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>,
-	cixi.geng@linux.dev, hao_hao.wang@unisoc.com
-Subject: Re: [PATCH] perf/core: Handling the race between exit_mmap and perf
- sample
-Message-ID: <20250424104027.GG19534@noisy.programming.kicks-ass.net>
-References: <20250424025429.10942-1-baisheng.gao@unisoc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H1oARq36"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30db3f3c907so9147101fa.1;
+        Thu, 24 Apr 2025 03:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745491288; x=1746096088; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N8UDuFHOEh0XzlBT1eZgpa0OPW9H6oATlwJO+txihuI=;
+        b=H1oARq36SUS1+ow2BoYitBNZ67Ih3gxOC06HQ8euHkCeyDE+eLD/Tq3AotbpL/a7Xg
+         thbAbtwZ6fShaxUyUpLyaCv6Y/w4sgwZS3waS/sjff+wV/3G4/9mpv3U6qO7zVAVd9mr
+         6FEW9NW37wq65lUatWZ6eIP0qb8TKCMDxC2mNrLG0NZdJPwUpLLS75nzaslIeYsR+VwU
+         dp3ZyjlXg1KgKMvdKzmgRciJAsS/8nmTb7zmPV9AaKmwQ8Bx2bzdav49sKfTlJ01/1BL
+         T58eAKB1eVbudBf0LlLs1fyf4R2FC/nXU2jfpcAs7O5NOZuet+PhMGEy1H5a9QFpGNaB
+         wtqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745491288; x=1746096088;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N8UDuFHOEh0XzlBT1eZgpa0OPW9H6oATlwJO+txihuI=;
+        b=VtrHRt5Tw4AhRrnEeQk2NqsW4QgejcfoBuYtfarrfA6CjuMNRCn0IWyD60hoZ9/nmy
+         vgcQTTIRkeVokDjYAi568RfmZZMSJ7m1aq7mCkX8AvimcDLBcsyjQK026BIAbYd/uTwS
+         ude5kKm8jvOAqmeiXh1K2YvTLlqkrffCGrqx/RsW3PmMDQSAm2yg0YZZ1xDe113kDqUz
+         N1NmPG8BBUrgaZreCP9+OlSz9l5CNunlkrR7bQo6nNutly7Ui2KyGYFgfcujaZmKWTzy
+         Fo2bNz4oNMwWuhuy6+l+rN9TafgZsk64hOtbUfT4S8jii2Pcg0IAWrli5gJgQl/gIeFP
+         KoxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWw4PCqN9W/2v5capM6GmfD4u5LyvkZkzOyuBm66CTEX+2/jGtS92Bv3PMKMpEmtUAPeUkMJwahJm3hpy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsDyi+s795+BnbHiePywVlTZyVit1wKTsRN9cEQFnAql2Zl1ou
+	pwHNmgGMp/R5Fp19pJjNT5SZQKV5OzSISzCHaPSZPm0174QkT0ZnDbTVWsUFnyVjGULEHTpi9tZ
+	q4uw+cFE7RI5DccUha9woMgOWnAs=
+X-Gm-Gg: ASbGncsydYW0kqj9T4GFZJK4tcBIlZh4eRMkBJVl9CxJITmeRtiILxDohBJCRNPzfo0
+	VZWLEEEzzwjJSY5mgRs0y9g+eeHIB3Yeuqd5kw3OV6dj5IJGTQUOy9L949WGRTCSJ6jSLyNJ4kZ
+	sEAvPUHzqM189Fdz3MUPJ/mCrPAhgNBBU9aL7AzTYBW7hFln56NUWQsINW1Nt4FyEiK7M=
+X-Google-Smtp-Source: AGHT+IHCQm69ACOCi6XQWBLDmVIq0B3Y7P+pOzf0ce1qFtYSxrOjbr6mMggv0a9jwDNVzblaaX5akoJowTeUEt3dkYQ=
+X-Received: by 2002:a2e:bd16:0:b0:30b:cceb:1e71 with SMTP id
+ 38308e7fff4ca-3179e5e7e78mr7250851fa.9.1745491287881; Thu, 24 Apr 2025
+ 03:41:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424025429.10942-1-baisheng.gao@unisoc.com>
+References: <20250408-rust-remove-compiler-builtins-deps-v1-1-4fda4f187190@gmail.com>
+In-Reply-To: <20250408-rust-remove-compiler-builtins-deps-v1-1-4fda4f187190@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 24 Apr 2025 06:40:52 -0400
+X-Gm-Features: ATxdqUF6Dpx4LSF9v5DB4Ydr_rK2CEFA3gkF09xNTMeSeySgU5slu4-4LmC4ci0
+Message-ID: <CAJ-ks9m+5WSCbe=Lt=HXYeuV9pWtRx-rOhi8V57=A7Y-4U7LZA@mail.gmail.com>
+Subject: Re: [PATCH] rust: remove spurious compiler_builtins dependents
+To: Miguel Ojeda <ojeda@kernel.org>, Lukas Fischer <kernel@o1oo11oo.de>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 10:54:29AM +0800, Baisheng Gao wrote:
-> In order to fix the race condition between exit_mmap and
-> perf_output_sample below, forbidding to copy the user stack
-> of an exiting process.
+On Tue, Apr 8, 2025 at 2:52=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+> The dependency on `compiler_builtins.o` was first added in commit
+> 2f7ab1267dc9 ("Kbuild: add Rust support") to `alloc` which matches the
+> standard library[0] but was copied to other targets in:
+> - commit ecaa6ddff2fd ("rust: add `build_error` crate")
+> - commit d072acda4862 ("rust: use custom FFI integer types")
+> - commit 4e1746656839 ("rust: uapi: Add UAPI crate")
+> - commit d7659acca7a3 ("rust: add pin-init crate build infrastructure")
+>
+> The alloc crate was removed in commit 392e34b6bc22 ("kbuild: rust:
+> remove the `alloc` crate and `GlobalAlloc`"). As fas as I can tell none
+> of the other dependencies are required; it is only required that
+> compiler_builtins be linked into the rust-enabled kernel. In the
+> standard library, compiler_builtins is a dependency of std[1].
+>
+> Remove these dependency edges. Add a dependency edge from
+> `compiler_builtins` to `core` to `scripts/generate_rust_analyzer.py` to
+> match `rust/Makefile`. This has been incorrect since commit 8c4555ccc55c
+> ("scripts: add `generate_rust_analyzer.py`")
+>
+> Link: https://github.com/rust-lang/rust/blob/f820b75feef00654924c9351a2fa=
+ca8d34818339/library/alloc/Cargo.toml#L19 [0]
+> Link: https://github.com/rust-lang/rust/blob/f820b75feef00654924c9351a2fa=
+ca8d34818339/library/std/Cargo.toml#L21 [1]
+> Link: https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General=
+/topic/rust-analyzer.20improvements/near/510200959
+> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
 
-You cannot say "the race" and not describe the race. A stack dump is not
-a description of a race.
+@Miguel do you have opinions on this?
