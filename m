@@ -1,89 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB7C84FAD;
-	Thu, 24 Apr 2025 06:47:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F09F1D799D
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745477263; cv=none; b=WmrV8z0gY9c5Zi2t4lKfkw/Ukf6sUqVhX3fpRtYUMpHX0SqL0a8nMkqLWpA3mrekJJKS6fFO5idNoARPHJ8PpvtcDvSkWx6p8b462l5m9nZtASAiNyD7H5kR0ewmLnrdEAO/RGumuY2ZEkJF+rF5PhI5ubvaXNumhFgxMu6dgwY=
+	t=1745477371; cv=none; b=G0o3aJvkHtXF0tHvg0fR3YlioJxnwERWKDNfSI9Qa3squc6wxh1LvAp0qHXceg3l/vWa8EI37Sgmih0oS+OIkqeppy85iocVmGsE7BXSdzqCGhqtVdBwsiiNL8ySYdOlvEgET2aQ5UoKr1Gz3gn9Mu/6z2g67nqvajXCuaq81Dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745477263; c=relaxed/simple;
-	bh=ET5XGuXWot7j4ph0bPMc5LmHK6iblfnXB0dSje/G3v4=;
+	s=arc-20240116; t=1745477371; c=relaxed/simple;
+	bh=YY05EULblqpqOJ20Ca2qJAkFfKoRl4Lnom2DVdns5cI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h+IK4GwdaejxMiwXHQESCrRu6Z9BzSO498TRXMiT7C/pxZe9fAS7hUwO/uJBl+8R1DLgPHl/f4WF1Dbiuy0y878Ug2bFYsOa3gZkjNDnIcRWfNANgchAPzJq4iHJJHMoIAONGH6HKyPO78CpRE71dLp7oGl0JqWdXtT/qHgj4zQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+lMwYXF; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=bCGUEGnOJr3S8QT8pq58eWf3LMnG65nialu+b55vFZlpCzqOQhKLQ+yVb1mLNPabAIrgoWD+5GRyVimrDcQNGdEg622yaTpLMt1Jxi8/NcyWNPIBLyogGOHmlt4VPLB7XjxV0XfiEja9o+3x7y7vcIgwfctluMAnH4I9IQQHCNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ohRDjLKo; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+lMwYXF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 274A2C4CEEA;
-	Thu, 24 Apr 2025 06:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745477260;
-	bh=ET5XGuXWot7j4ph0bPMc5LmHK6iblfnXB0dSje/G3v4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E+lMwYXF0U4Drvo1iKXxccYk9NdGznYEi7EBKiXmaFQvzKBCfC/be+F+gCG4Sayi1
-	 C8LpFh6Mu8z51/KJ3ZUxs8x1zjz9SIayZqk7bkAjwc+PKHwiTTWrLpOU3FoOaeoGVL
-	 b3iB3uuXYgbGQBeOsxNfmtabIxtP3SpRKX6aHDMA9i3dHQ3+lVzL96Q1d2QaBWVT4Q
-	 dj4BQzvyXwcPHTU+x0OHDlZ7EPxwf02FoRaaosk+1yH9pznPPXcsumPAb7YfwEze2h
-	 R9ZqJB1+jFnbdBfYvOjjHWvyaKd3x1epLJWpufgfM2en3FjSUjpv1qDyqPcWm6j8Oj
-	 NfEVq/ZES2c0g==
-Date: Thu, 24 Apr 2025 08:47:38 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Longbin Li <looong.bin@gmail.com>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Chen Wang <unicorn_wang@outlook.com>, 
-	Inochi Amaoto <inochiama@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	sophgo@lists.linux.dev, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: pwm: sophgo: add pwm controller for
- SG2044
-Message-ID: <20250424-bright-vague-finch-57fc38@kuoka>
-References: <20250424012335.6246-1-looong.bin@gmail.com>
- <20250424012335.6246-2-looong.bin@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ohRDjLKo"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5f4d0da2d2cso1232662a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:49:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745477367; x=1746082167; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FO96JtbCvJe3mUseWa0OQALrV8LUqckkiAryhK/dOSI=;
+        b=ohRDjLKoZHrt860xcyNcRM6ef7aY/SfxsNBLLKF08fD8KNCh8idbIfQvUHp3wO8gwQ
+         S98QC6TTnRRvc3o4JzKbpAwKdux4Go5riFQxnKm3mry9CeGkdHqbtJmUdTXzFJdS9CxZ
+         eGZPRYD+6rLhnYkSHx9+/07//pIViq2NszbbDxrlHwNTl5CeEwgZuQC/9uld1voGxxJj
+         9Kar10lAE6M9j5mVkjqOFVum48tP400eacu2ixJSENA+lDK4Um07RYR3WmFWkAT5waDo
+         /HJ8H7CQhWZ/V7kG4EPT/ib1mRgNzfd4wX6jKFxa5VXJtViAeAJQG/zCCoHzaxP+YNVK
+         TwNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745477367; x=1746082167;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FO96JtbCvJe3mUseWa0OQALrV8LUqckkiAryhK/dOSI=;
+        b=LJEZCGvYkXRO8DsbCW+LFLZr9cmBO8O5Xnlro5ByGeGaPvrUgS/oOVm3LrceQQOCBZ
+         VgtSa6ab0DGR8LdC6rVx7pk7dWObBZADnHy3RoDu8TCEzlZTkBqmQWmrKJzGp8jE0q3j
+         4G/AdaaQ50C6qCSU/7xhJIJeavA3/8gWgbH5pXvkATsDdzA15wm82h9SJp5ZgxzVDQKN
+         BvEJPtINfD1H4tpr3ThdqGz8/qOM4Vt4Bg4g4OstLm1wjRewdwkkINSAZALPgckjnS9R
+         bGeeWGbWEufk3P4l8XtFa+XSqe1k8a90jTT4OAP8b5QuZGFOHxRIgi/N6o5MAVpbv+zS
+         50ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiyy5Ge/BDjSbF6VsqM1YXlxZXW4CLUBKaQA25SgJQz3cApW+vDp2ZfQXfiXV0jhtG5jTTH3Txh7QC7mc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwINhLZ9pS13BtNvYk3ImhLIp62TyTHXFlC23cgkOWyJMVNWCKd
+	lTn43BZz+0wK7p75/n43wvP3l6s8WH9U87nI2jK8CqAwyfCahIvr3cU/l7XsrjA=
+X-Gm-Gg: ASbGnctLZANDX/37tf3rdrHE3JJ0bZnsj9qNuKxauKjmfhrrTfIK2eHKml+pMUW2Gq5
+	kO5EJWZjY03fql29f7oY4oQuGuZBTIbIxh9xEbPJ8nOZfSGGvazGlY4wJzgJekE7BkSPAMrFRfX
+	Z3vcsV452YbxAXMxGy25RFPAkqJ4x2JxnrKcT1i+G0mBuV5oHs44P3kcBxQ/2czq2Fdg0zPCrVJ
+	oWV2zkJ/o8Y/Ok3A27jLK4q4cazGyYHGjyDcu/DNzdQZDCxK5TiHB1N4gcO+Y5nQYIplM7uwIWy
+	/kmexPSqZbtie8e0CW2s3JH8T4TvCnW4ExDQGA==
+X-Google-Smtp-Source: AGHT+IEfj/5HzaH2h358gMY8v05hd2yzGKyunuo5psGHsXusc1uw2LNAuC+EPj7nse1eDky0duEC/Q==
+X-Received: by 2002:a17:907:1b08:b0:aca:c7c6:b218 with SMTP id a640c23a62f3a-ace570e0d55mr131378866b.1.1745477367496;
+        Wed, 23 Apr 2025 23:49:27 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace59c261f4sm56013866b.146.2025.04.23.23.49.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 23:49:26 -0700 (PDT)
+Date: Thu, 24 Apr 2025 09:49:24 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Sibi Sankar <quic_sibis@quicinc.com>, Marc Zyngier <maz@kernel.org>,
+	Xilin Wu <wuxilin123@gmail.com>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 0/6] arm64: dts: qcom: x1*: Fix vreg_l2j_1p2 voltage
+Message-ID: <aAne9K79PNfdQc8h@linaro.org>
+References: <20250423-x1e-vreg-l2j-voltage-v1-0-24b6a2043025@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424012335.6246-2-looong.bin@gmail.com>
+In-Reply-To: <20250423-x1e-vreg-l2j-voltage-v1-0-24b6a2043025@linaro.org>
 
-On Thu, Apr 24, 2025 at 09:23:26AM GMT, Longbin Li wrote:
-> Add compatible string for PWM controller on SG2044.
+On 25-04-23 09:30:06, Stephan Gerhold wrote:
+> Several of the Qualcomm X1* device trees upstream specify the wrong voltage
+> for the L2J regulator. In the ACPI DSDT table, PPP_RESOURCE_ID_LDO2_J is
+> configured with 1256000 uV instead of the 1200000 uV. Change all affected
+> device trees to use the same for consistency and correctness.
 > 
-> Signed-off-by: Longbin Li <looong.bin@gmail.com>
-> Reviewed-by: Chen Wang <unicorn_wang@outlook.com>
-> ---
->  Documentation/devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> In the other device trees upstream, the voltage is already correct:
+>  - x1e78100-lenovo-thinkpad-t14s.dtsi
+>  - x1e80100-dell-xps13-9345.dts
+>  - x1e80100-microsoft-romulus.dtsi
 > 
+> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
 
-<form letter>
-This is a friendly reminder during the review process.
-
-It looks like you received a tag and forgot to add it.
-
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions of patchset, under or above your Signed-off-by tag, unless
-patch changed significantly (e.g. new properties added to the DT
-bindings). Tag is "received", when provided in a message replied to you
-on the mailing list. Tools like b4 can help here. However, there's no
-need to repost patches *only* to add the tags. The upstream maintainer
-will do that for tags received on the version they apply.
-
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
-
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
