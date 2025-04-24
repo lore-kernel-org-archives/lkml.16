@@ -1,43 +1,57 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DF672701AC;
-	Thu, 24 Apr 2025 21:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4053E1EDA35;
+	Thu, 24 Apr 2025 21:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745530344; cv=none; b=C8HEvwhrMPrACzd0ta3A7IU2RM9Tj9uvaX+Qo5eicli/HIGkXhAkZzstiEzX+fNsTEjnOdw/tmWKqpHZI1CufKPy5FK9giOS8p75eS8Myr1HA29Mgwi2V9LuKjZgZ5oyUV3r8mfUKKvubxF27Brh3ARqtuCkDVGiCiaOpWIBHwI=
+	t=1745530515; cv=none; b=n7e2bBjsnFf+qEd6AcLnqdLpDLNMwMCdlrpUmPD5S/R6AGJsUjLcqqv4Om9i4BiSQylRxSt+gEfO2iacKpAQWb6mjcWiDIq5hlkDpMAzSWrDK0kbrvTPkZ0Z0XV+bHj+HQ5emzQrMu0XEy2kl5tfaXWrha5PM824oR4ay/rRvBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745530344; c=relaxed/simple;
-	bh=F9Jv4GJ3j0VXb2ogXxDFAGRTm9u7zm0uKbOes1xYM2w=;
+	s=arc-20240116; t=1745530515; c=relaxed/simple;
+	bh=PrKkYRIlJvWKFYZLmBouuUGmii3H5YdNfIXLlJe7XtE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kh/mo+dk/pm+98sRzKMIiKY6VH4TLHyuHDrQYz+JKAlASUGT2kcKm/HQoKH6MGShXStanNK57oTtVp8BqEw6dm3nkUtxz+3b5z7PCQSTEld8HW0QHvhtHNTyAbA9gdwVZMsS8jPuf5039IcidZfpv1QVL9diAFMRxa3FtPTFRnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=JvLMt4bI; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=f6YoT17StGuRq38Zfio+wQXGqtnjMXIV79gJw6Mc+sOYvehGGdzKqRreTc//74XdyU8P/vIaqKpIyPrKD12ZtRIY22lLgox1hy447jtBcenn0GzaRtcS9vYMAwgXQDSfac3PvojYmV/vFvZjlIEVtGO9FZHMdxJ1nHeHtE3c7fI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlH2uCVt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="JvLMt4bI"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=BBDzFFL9rZVzREy0qETSrAqtD3sLRPAv+48jROirht8=; b=JvLMt4bIVJ61LUC5hRtAm852o9
-	Tm5EsPu7k/wZYWiVIlTgT1EfbijSRBoVLFGfyZGot23N/OSmQGnLn7z4HKCTV82FeL1iJB0t3OlO/
-	276TZae6ABbZxB6Uh70LdMzl85PZMGzeR5KxF2IWfJ5Ah8MJqh0GtLGC1o6Fe1UmpSY0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u84B2-00AW1O-32; Thu, 24 Apr 2025 23:32:12 +0200
-Date: Thu, 24 Apr 2025 23:32:12 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: David Howells <dhowells@redhat.com>
-Cc: Jedrzej Jagielski <jedrzej.jagielski@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Paulo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: Is it possible to undo the ixgbe device name change?
-Message-ID: <7b468f16-f648-4432-aa59-927d37a411a7@lunn.ch>
-References: <3452224.1745518016@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlH2uCVt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33505C4CEE3;
+	Thu, 24 Apr 2025 21:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745530514;
+	bh=PrKkYRIlJvWKFYZLmBouuUGmii3H5YdNfIXLlJe7XtE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HlH2uCVtbAaYIeTfClE3ZdZYv2SBl4wO/cVxZBShZrgUrvToaxWkzEaUqEgvj/ORV
+	 gprqxHogthQhrIPwDzRUR6602qSvGwEs4cL9rnxPE+LuCC2RNbtqBnprpnrDGD6aRd
+	 mhYK8UC1gWppjllQEmyjcsG/JpqSxa+HDTkTQb14Qk206r9wgq6r0uXPOQJZkHyB4K
+	 49S9+7xJWfCqc2S1TOZUG1XbbUKNQDPttR8mLAjHhIe+oIdIMXhEjDI+3Okk9tSq8m
+	 4Z5jiJdMAn1xVIugT3N3ibi4/tljj5tU4JxpPyUOKUKekJhg8fevI/6DE2HDECLK6G
+	 yed/q1anDYnww==
+Date: Thu, 24 Apr 2025 18:35:11 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Veronika Molnarova <vmolnaro@redhat.com>, Hao Ge <gehao@kylinos.cn>,
+	Howard Chu <howardchu95@gmail.com>,
+	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Xu Yang <xu.yang_2@nxp.com>, Tengda Wu <wutengda@huaweicloud.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH v2 06/12] perf record: Switch user option to use BPF
+ filter
+Message-ID: <aAquj31djneyTwLG@x1>
+References: <20250410173631.1713627-1-irogers@google.com>
+ <20250410173631.1713627-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,40 +60,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3452224.1745518016@warthog.procyon.org.uk>
+In-Reply-To: <20250410173631.1713627-7-irogers@google.com>
 
-On Thu, Apr 24, 2025 at 07:06:56PM +0100, David Howells wrote:
-> [resent with mailing list addresses fixes]
+On Thu, Apr 10, 2025 at 10:36:25AM -0700, Ian Rogers wrote:
+> Finding user processes by scanning /proc is inherently racy and
+> results in perf_event_open failures. Use a BPF filter to drop samples
+> where the uid doesn't match. Ensure adding the BPF filter forces
+> system-wide.
+
+Since the BPF filter is not introduced in this patch, can you please
+provide, in the commit log message or in the patch itself, some
+commentary as to how this is accomplished thru a BPF filter?
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-record.c | 27 ++++++++++++++++-----------
+>  1 file changed, 16 insertions(+), 11 deletions(-)
 > 
-> Hi,
-> 
-> With commit:
-> 
-> 	a0285236ab93fdfdd1008afaa04561d142d6c276
-> 	ixgbe: add initial devlink support
-> 
-> the name of the device that I see on my 10G ethernet card changes from enp1s0
-> to enp1s0np0.
-
-Are you sure this patch is directly responsible? Looking at the patch
-i see:
-
-@@ -11617,6 +11626,11 @@ static int ixgbe_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
-        }
-        strcpy(netdev->name, "eth%d");
-        pci_set_drvdata(pdev, adapter);
-+
-+       devl_lock(adapter->devlink);
-+       ixgbe_devlink_register_port(adapter);
-+       SET_NETDEV_DEVLINK_PORT(adapter->netdev, &adapter->devlink_port);
-+
-
-Notice the context, not the change. The interface is being called
-eth%d, which is normal. The kernel will replace the %d with a unique
-number. So the kernel will call it eth42 or something. You should see
-this in dmesg.
-
-It is systemd which later renames it to enp1s0 or enp1s0np0. If you
-ask me, you are talking to the wrong people.
-
-	Andrew
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index ba20bf7c011d..202c917fd122 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -173,6 +173,7 @@ struct record {
+>  	bool			timestamp_boundary;
+>  	bool			off_cpu;
+>  	const char		*filter_action;
+> +	const char		*uid_str;
+>  	struct switch_output	switch_output;
+>  	unsigned long long	samples;
+>  	unsigned long		output_max_size;	/* = 0: unlimited */
+> @@ -3460,8 +3461,7 @@ static struct option __record_options[] = {
+>  		     "or ranges of time to enable events e.g. '-D 10-20,30-40'",
+>  		     record__parse_event_enable_time),
+>  	OPT_BOOLEAN(0, "kcore", &record.opts.kcore, "copy /proc/kcore"),
+> -	OPT_STRING('u', "uid", &record.opts.target.uid_str, "user",
+> -		   "user to profile"),
+> +	OPT_STRING('u', "uid", &record.uid_str, "user", "user to profile"),
+>  
+>  	OPT_CALLBACK_NOOPT('b', "branch-any", &record.opts.branch_stack,
+>  		     "branch any", "sample any taken branches",
+> @@ -4196,19 +4196,24 @@ int cmd_record(int argc, const char **argv)
+>  		ui__warning("%s\n", errbuf);
+>  	}
+>  
+> -	err = target__parse_uid(&rec->opts.target);
+> -	if (err) {
+> -		int saved_errno = errno;
+> +	if (rec->uid_str) {
+> +		uid_t uid = parse_uid(rec->uid_str);
+>  
+> -		target__strerror(&rec->opts.target, err, errbuf, BUFSIZ);
+> -		ui__error("%s", errbuf);
+> +		if (uid == UINT_MAX) {
+> +			ui__error("Invalid User: %s", rec->uid_str);
+> +			err = -EINVAL;
+> +			goto out;
+> +		}
+> +		err = parse_uid_filter(rec->evlist, uid);
+> +		if (err)
+> +			goto out;
+>  
+> -		err = -saved_errno;
+> -		goto out;
+> +		/* User ID filtering implies system wide. */
+> +		rec->opts.target.system_wide = true;
+>  	}
+>  
+> -	/* Enable ignoring missing threads when -u/-p option is defined. */
+> -	rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX || rec->opts.target.pid;
+> +	/* Enable ignoring missing threads when -p option is defined. */
+> +	rec->opts.ignore_missing_thread = rec->opts.target.pid;
+>  
+>  	evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cpu_list);
+>  
+> -- 
+> 2.49.0.604.gff1f9ca942-goog
