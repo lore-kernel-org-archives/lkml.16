@@ -1,153 +1,105 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDC02747B;
-	Thu, 24 Apr 2025 12:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD04027B4F8;
+	Thu, 24 Apr 2025 12:32:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745497946; cv=none; b=fjBWiE+pKw7glnWm7CQhfl6f1/NaygU3CcFNosduVyMEaC8lHqNrx4lBRb02NMMkhTqslf8ZkuxJNY7hgVXLdiL/eiBeczIio+r8vsREks4+ultd+MhJgnawv8eIXLMU+Jl765w6AvOeBGZpo7V9QrR2vnV459kL/ixlKCtelfI=
+	t=1745497956; cv=none; b=Zsnw9ajH0+56SeOz4Cc+r/jOr7Fp9x2mlbj7ANLKKVSG9SOnXha2++8qu8e8SQq5fKZBvn1PRn93Wz7enhbM2Z+jvVpLrqww+DFwCByMs2qrFuoOcieepXs0ppY9r5995dh18zDU+pvIR32zfX1/i7yjWinIs7EV2C/pApAPbsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745497946; c=relaxed/simple;
-	bh=k6X76+6Yj5XPf8BgLpcVSb0Kgc+ov+XYavWDj16lJWE=;
+	s=arc-20240116; t=1745497956; c=relaxed/simple;
+	bh=bAj2Cd6zSpAtHOLS56DF0jN59+JpDSzxAkHJE1Atm/U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1Ur0CvLxbrPJAhjBanEUl+9DT51Xs+kLHlYQGr8jk/XzAs5bN5RSG8CHPuC4Ro/tLlfRyQGBsSDHxS09ENR4I6MtvLePiw3vmWt4K3dIqAhA9s2XTzCDDqv9x1bDIwb742uwDEGAGXCO6QrLqSqn6Wr5xnzh/BUVe9HTKg9iT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=M34qZugq; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=JgibCXImK9u5WSJUL0iL8gAsSNRHpqLQ57A6XjyNx9il1tEQ+JarLDYWN3wyfJVHO28lVfRdpWhL05XukrgShw/pwXD8Qn6QyfIzVZwvHLUa2LMUAkQ8VbzY5Vu0r+1/r1xVIiYbvmEedKvdnnj5zK/4pSGtRHjiFLzH8dIgCYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2gTDhWO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="M34qZugq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=R7E0igRN0goWZT53emNsgMknLEdpCU0Z3PHf0cpn4M4=; b=M34qZugqYq7x6S26YtmcPCqPio
-	KuZCRgcANW1O/zmu9txnWc/YLvQN/nqtoLgXeJd4f+LegtaBStGFX/csqPrJVBh12ei7nywbk6UXg
-	fbRBYUKIqedh4axwO40A94m7GYV3fU2H/6tBF+D80hFG4I9Q8n8zHX2y/jEdmztulzaEfyWhugqsL
-	AX6GZ23Abwl1o+To2QruXtMYavNx3xHhZZ1beN/SoG+ZMHy3u/s1BPzmihD+53DIi4zdAdYmdAhbZ
-	2M6mCZFbF6TRkS0KhJBMX+7RS+V1AwRdvz8SyRqRjfsUjw4Hy3DUFc9f0zabaLP5+gHC3aRRGiKIQ
-	n+OGfgyg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39516)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u7vkY-0007Mr-0A;
-	Thu, 24 Apr 2025 13:32:18 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u7vkU-00015d-0J;
-	Thu, 24 Apr 2025 13:32:14 +0100
-Date: Thu, 24 Apr 2025 13:32:13 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Boon Khai Ng <boon.khai.ng@altera.com>, netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Furong Xu <0x1207@gmail.com>,
-	Matthew Gerlach <matthew.gerlach@altera.com>,
-	Tien Sung Ang <tien.sung.ang@altera.com>,
-	Mun Yew Tham <mun.yew.tham@altera.com>,
-	G Thomas Rohan <rohan.g.thomas@altera.com>
-Subject: Re: [PATCH net-next v4 1/2] net: stmmac: Refactor VLAN implementation
-Message-ID: <aAovTY6Q-4S__0Mh@shell.armlinux.org.uk>
-References: <20250421162930.10237-1-boon.khai.ng@altera.com>
- <20250421162930.10237-2-boon.khai.ng@altera.com>
- <43ef6713-9ae1-468c-bc43-2c7e463e04f4@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2gTDhWO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD242C4CEE3;
+	Thu, 24 Apr 2025 12:32:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745497956;
+	bh=bAj2Cd6zSpAtHOLS56DF0jN59+JpDSzxAkHJE1Atm/U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=s2gTDhWO1lj7SAOlBxu3URZgjwWr76VzZrsEug0xRBdbsleFBAoKC7OSDwJs7GiSU
+	 MUmg+ycYCjWuZFh1qem2stq0lu8i0AK+T+jdbVkimV7X9dqYIofSebXhN3RitOUZbH
+	 duGERiWF3n5P/e5eXZhNXSqYLldidEf5AXKXoeooHLNkm7Q7z/6qctZsprSiPgMmHP
+	 QhP8H38dZreTelphhSYUSBEqG1pLDCQlraLlv3631B6wixr173CRgpQlAOt8RLm/XN
+	 IIxKQeSTGU88XvFNSWKW5xGAoJzQi9sMHqaHe4rSZbVW2q6mG2Qmu9x1KdejqAuNCu
+	 n/jnOVbYlT0vA==
+Date: Thu, 24 Apr 2025 14:32:33 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Alexey Charkov <alchark@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: pwm: vt8500-pwm: Convert to YAML
+Message-ID: <eydewrcn4tviu6fbqmmvhoc2zao3uzrxwwlc55tuxuhfrexk5k@7xg5fdeu7wun>
+References: <20250418-via_pwm_binding-v2-1-17545f4d719e@gmail.com>
+ <yscledgclp2v4p7djwrszbc3dnqifkcofky7rugkcip7o2rmof@xljfd2kfyzzs>
+ <CABjd4YxK+4kEeS_tKBi9zhj85y6U1Dgi3nJNuQ8hfkeoY+iK1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="3zgtjqow4ustrybx"
 Content-Disposition: inline
-In-Reply-To: <43ef6713-9ae1-468c-bc43-2c7e463e04f4@redhat.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <CABjd4YxK+4kEeS_tKBi9zhj85y6U1Dgi3nJNuQ8hfkeoY+iK1w@mail.gmail.com>
 
-On Thu, Apr 24, 2025 at 02:04:04PM +0200, Paolo Abeni wrote:
-> On 4/21/25 6:29 PM, Boon Khai Ng wrote:
-> > Refactor VLAN implementation by moving common code for DWMAC4 and
-> > DWXGMAC IPs into a separate VLAN module. VLAN implementation for
-> > DWMAC4 and DWXGMAC differs only for CSR base address, the descriptor
-> > for the VLAN ID and VLAN VALID bit field.
-> > 
-> > The descriptor format for VLAN is not moved to the common code due
-> > to hardware-specific differences between DWMAC4 and DWXGMAC.
-> > 
-> > For the DWMAC4 IP, the Receive Normal Descriptor 0 (RDES0) is
-> > formatted as follows:
-> >     31                                                0
-> >       ------------------------ -----------------------
-> > RDES0| Inner VLAN TAG [31:16] | Outer VLAN TAG [15:0] |
-> >       ------------------------ -----------------------
-> > 
-> > For the DWXGMAC IP, the RDES0 format varies based on the
-> > Tunneled Frame bit (TNP):
-> > 
-> > a) For Non-Tunneled Frame (TNP=0)
-> > 
-> >     31                                                0
-> >       ------------------------ -----------------------
-> > RDES0| Inner VLAN TAG [31:16] | Outer VLAN TAG [15:0] |
-> >       ------------------------ -----------------------
-> > 
-> > b) For Tunneled Frame (TNP=1)
-> > 
-> >      31                   8 7                3 2      0
-> >       --------------------- ------------------ -------
-> > RDES0| VNID/VSID           | Reserved         | OL2L3 |
-> >       --------------------- ------------------ ------
-> > 
-> > The logic for handling tunneled frames is not yet implemented
-> > in the dwxgmac2_wrback_get_rx_vlan_tci() function. Therefore,
-> > it is prudent to maintain separate functions within their
-> > respective descriptor driver files
-> > (dwxgmac2_descs.c and dwmac4_descs.c).
-> > 
-> > Signed-off-by: Boon Khai Ng <boon.khai.ng@altera.com>
-> > Reviewed-by: Matthew Gerlach <matthew.gerlach@altera.com>
-> 
-> This patch does IMHO too many things together, and should be split in
-> several ones, i.e.:
-> - just moving the code in a separate file
-> - rename functions and simbols.
-> - other random changes...
-> 
-> > -	ret = readl_poll_timeout(ioaddr + GMAC_VLAN_TAG, val,
-> > -				 !(val & GMAC_VLAN_TAG_CTRL_OB),
-> > -				 1000, 500000);
-> > -	if (ret) {
-> > -		netdev_err(dev, "Timeout accessing MAC_VLAN_Tag_Filter\n");
-> > -		return -EBUSY;
-> > -	}
-> 
-> > +	for (i = 0; i < timeout; i++) {
-> > +		val = readl(ioaddr + VLAN_TAG);
-> > +		if (!(val & VLAN_TAG_CTRL_OB))
-> > +			return 0;
-> > +		udelay(1);
-> > +	}
-> > +
-> > +	netdev_err(dev, "Timeout accessing MAC_VLAN_Tag_Filter\n");
-> > +
-> > +	return -EBUSY;
-> 
-> ... like the above on (which looks unnecessary?!?)
 
-Also looks like a backward step, because we ask people to use the helper
-macros where possible.
+--3zgtjqow4ustrybx
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] dt-bindings: pwm: vt8500-pwm: Convert to YAML
+MIME-Version: 1.0
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Hello Alexey,
+
+On Thu, Apr 24, 2025 at 12:07:03PM +0400, Alexey Charkov wrote:
+> On Thu, Apr 24, 2025 at 10:35=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@=
+kernel.org> wrote:
+> > I saw you signed your patch using PGP, which is great. However I didn't
+> > find your key. I recommend to make it available on keys.openpgp.org like
+> > this:
+> >
+> >         gpg --export alchark@gmail.com | curl -T - https://keys.openpgp=
+=2Eorg
+> >
+> > and then verify your identities using the link in the output of this
+> > command. Still better, (additionally) add your key to the kernel keyring
+> > (which however requires you to be in Linus Torvalds WoT, see
+> > https://korg.docs.kernel.org/pgpkeys.html for the details).
+>=20
+> Hmm, I used b4's built-in patatt functionality with a dedicated
+> ed25519 key, not a gpg managed one. Looks like keys.openpgp.org
+> doesn't understand those directly, or am I missing something?
+
+No, I wasn't aware that patatt also uses signature algos other than PGP.
+Without your key known, using ed25519 is kind of useless because it
+cannot be verified. I would recommend switching to PGP because for that
+the key distribution is a (somewhat) solved problem.
+
+Nevertheless I'll play a bit with patatt and your key.
+
+Best regards
+Uwe
+
+--3zgtjqow4ustrybx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgKL14ACgkQj4D7WH0S
+/k7x4gf+KZW663SLHY9am5ym6AsnEOLVcgLLWvHMtblGN1bWaspUumkIB6cu+0hL
+LFL/526WNp0l6FVL1VlQvE6paqhwVOFQT5+H0y2WvngSFE9iiaFQV7DNYAQmV+mz
+T+kVdkfEZuB6+hs+bsDeoYPjS1eQ5gxJWXOW3GBPmQaPC2QpalRv8+OfXLoXxXTL
+b73qrkO6WxzioMZIzRTt/kJF5KDBCi8nZTmG0PTctVHYj79KxtvAe8rFQy/Pw8j0
+egilgOCIZtsftsYTiMZ8GojlxsTM3ZL/k2qo7SVnOyo0YfX8h2CzydcEKhxPSQWS
+gyyVg34D3Fpkjfozq2a/CXZhmSM2Bg==
+=TfcH
+-----END PGP SIGNATURE-----
+
+--3zgtjqow4ustrybx--
