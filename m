@@ -1,117 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1252701BF;
-	Thu, 24 Apr 2025 00:31:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17706B66E
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745454700; cv=none; b=a12943dyPNley1qGKB6ANoNHWlg1JS/+YIM3AbZ4seunq5l7PhRHiX1o7HM46pIXXOl3Q+9De73t7zCn7dPQ4Uh37VDDJUBkPXMCCJO0MpOjDgY3kNKaBSz4ITiazYJ+LQcZIZ0ZccHM0KgMYgirR/oyQuwimfzULzxFvMvzqEI=
+	t=1745454715; cv=none; b=QpMlQwHuQIQyO4U6n+rJeAaRvSXFkyKYukNasZbwWwEXSbx83bXXOpQsc42ylAivAnaXyg5B8EQ7/jre1CTZhvvXf0OeIz94i36BygP41CnvPRfteHaP3JkNlPUVSUZ9YWcbd9tWUzA1Qn1jzMtvzB3leIJRD3XKAZ7fZWhADEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745454700; c=relaxed/simple;
-	bh=Ga4t6ugV8zqmuUfvWiT3IWeSKoulLQekoUS3Y/ImDnw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rhDNu5t9RdhWLsocDd11Q9AoO9Uq+UVcsfqZWdmimIi25BCxKJf+Ldlhjs04rvxse11I8fisseEvYPhP7ZD8mBstcZtJM0vUB2j7qooM3o1jYy0Z5qg2zaqzTQUE3ADz2GnHESq1jPs9GHQ06r/PPTpz8bQsN+oo3UXQYGGN7Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GnazM4dL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745454715; c=relaxed/simple;
+	bh=VLW7rBF7OlF7e/px/+IecU1Xk9kQQNky3ILVr24wr4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CPZDeNl4lfL0a0avoYMGkILuOSymxBYOHotswiMICcrUbV+VSUMeYcbnSn0+J7Lr6qjlvEG9vxsKYwTPaNKa6Hzjt48vSwn9pLtpo4K5vnpS0R36DMMwo648j0uu09bM6j0xl+BYNkaEMON9Hbi9IHWojRrS3rNhHPoBsrR1cqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=F87wFOOL; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GnazM4dL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39655C4CEE2;
-	Thu, 24 Apr 2025 00:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745454699;
-	bh=Ga4t6ugV8zqmuUfvWiT3IWeSKoulLQekoUS3Y/ImDnw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GnazM4dLMIjk4TycpzjmVcI8buSnuluUwvELckUC+JcLXF4FJp9NN8Q19dYGaAKfh
-	 F6nSySL6sJVbyKsO3wEAjDckE2Mu4HwUunCv23iHZE4G2cACYXkJtypWqXGk2tb3FV
-	 VgwLCTDQbAg2u2Vxp5403v3d/v8XhUSqJ2pkZJP6aImJQJ2m2gk253fpguC1wF1RRH
-	 IWrJ2vvM1zyCur3ESuqbHIoib7LW04pNhuqrMoNOPy3D+d6iCUVIrWsVPaSsFX53/U
-	 KSCffp0OUuZG37aY5Pvih6Z/dS4fwnZWXaeUdDCkxGOCmRZF7tiCzi8q3H8Ivoh1Fu
-	 mXhAzMRnlNZTw==
-Date: Thu, 24 Apr 2025 08:31:25 +0800
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Linux Doc Mailing
- List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, Andy
- Shevchenko <andriy.shevchenko@intel.com>, David Airlie <airlied@gmail.com>,
- Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
- Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
- <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org
-Subject: Re: [PATCH v3 0/2] Don't create Python bytecode when building the
- kernel
-Message-ID: <20250424083125.1c8a0d24@sal.lan>
-In-Reply-To: <87bjspzd4e.fsf@trenco.lwn.net>
-References: <cover.1744789777.git.mchehab+huawei@kernel.org>
-	<4k2arpghozy5fjrjove6nrh24qth3yp4educuso4y47gk7gycd@ol27dzrba55d>
-	<87bjspzd4e.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="F87wFOOL"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745454704; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=c8ZCQX8M22/L+jhRyOZyyKQ/yi6W0hwrq83O3s9SBSE=;
+	b=F87wFOOLeJaVqSJx5rG4X36jq+snQTgDUxxSDehLC3CvoFZqb1nKE6RVvmODcMBpv1/zDLrnAOo+l7lKDEymylmru/GbR60Qmu4CksSAH41UdOhcQZd/9urIiOxbVQA0N94XRDnrqG28ynPZKm9j6sYdVO+UD3jqOjW+RXaJWbs=
+Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WXw4zKR_1745454703 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Apr 2025 08:31:43 +0800
+Message-ID: <94c702b9-cad5-4727-a7f1-16de1827841e@linux.alibaba.com>
+Date: Thu, 24 Apr 2025 08:31:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
+ hotplug hooks
+To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
+ Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
+Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
+References: <20250423061023.131354-1-dhavale@google.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20250423061023.131354-1-dhavale@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Em Mon, 21 Apr 2025 10:35:29 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> writes:
+
+On 2025/4/23 14:10, Sandeep Dhavale wrote:
+> Currently, when EROFS is built with per-CPU workers, the workers are
+> started and CPU hotplug hooks are registered during module initialization.
+> This leads to unnecessary worker start/stop cycles during CPU hotplug
+> events, particularly on Android devices that frequently suspend and resume.
 > 
-> > On Wed, Apr 16, 2025 at 03:51:03PM +0800, Mauro Carvalho Chehab wrote:  
-> >> 
-> >> As reported by Andy, the Kernel build system runs kernel-doc script for DRM,
-> >> when W=1. Due to Python's normal behavior, its JIT compiler will create
-> >> a bytecode and store it under scripts/lib/*/__pycache__. 
-> >> 
-> >> As one may be using O= and even having the sources on a read-only mount
-> >> point, disable its creation during build time.  
-> >
-> > Would it be possible to properly support O= and create pyc / pycache
-> > inside the object/output dir?  
+> This change defers the initialization of per-CPU workers and the
+> registration of CPU hotplug hooks until the first EROFS mount. This
+> ensures that these resources are only allocated and managed when EROFS is
+> actually in use.
 > 
-> I have to confess, I've been wondering if we should be treating the .pyc
-> files like we treat .o files or other intermediate products.  Rather
-> than trying to avoid their creation entirely, perhaps we should just be
-> sure they end up in the right place and are properly cleaned up...?
-
-I sent a v4 of the series disabling *.pyc creation, basically placing
-*.pyc at the right place on .gitignore.
-
-That's said, I agree that the best would be to use PYTHONPYCACHEPREFIX,
-placing the intermediate products altogether with O= results. There is
-however something we need to deal with. To follow our building system
-to the letter, if we have *.py files at scripts/lib/kdoc, the intermediate
-files should be at: either:
-
-	- {outdir}/scripts/lib/kdoc; or: 
-	- {outdir}/scripts/lib/kdoc/__pycache__ 
-
-The same shall happen for all other places including Documentation/sphinx.
-In the specific case of Sphinx extensions, it would mean that it would
-produce *.pyc for both scripts/lib/*/*.py and Documentation/sphinx.
-No idea how to make Python to do that without doing some horrible tricks.
-
-An alternate approach would be to store all of them at the same place, like:
-
-	- {outdir}/__pycache__ 
-
-The problem is that, if we end having two scripts with the same name, and
-using PYTHONPYCACHEPREFIX would place both of them at the same place, we'll
-have troubles.
-
-IMO, let's apply this series first, and then see if we can replace patch 3
-with another one using PYTHONPYCACHEPREFIX, after we're sure that there's
-a way for it to do the right thing.
-
+> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
+> still occurs during z_erofs_exit_subsystem(), but only if they were
+> initialized.
 > 
-> To answer Dmitry's question, it seems that setting PYTHONPYCACHEPREFIX
-> should do the trick?
+> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
 
-Regards,
-Mauro
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+
+> ---
+
+...
+
+>   int z_erofs_init_super(struct super_block *sb)
+>   {
+> -	struct inode *const inode = new_inode(sb);
+> +	struct inode *inode;
+> +	int err;
+>   
+> +	err = z_erofs_init_pcpu_workers();
+> +	if (err)
+> +		return err;
+> +
+> +	inode = new_inode(sb);
+>   	if (!inode)
+>   		return -ENOMEM;
+> +
+
+I think the new blank line is redundant, the setup part
+should be next to new_inode().
+
+I could fix up this part manually if you don't have strong
+opinion on this.
+
+Thanks,
+Gao Xiang
