@@ -1,79 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF681DDA14;
-	Thu, 24 Apr 2025 01:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089E71DDA14
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:50:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745459412; cv=none; b=JgPuXn7g/5UMQrE2JdfoeTmUY3rfAGUa1VogDT+xZEN42kty1PjbcdOp8CXZhyuGO0VZLvc4x1jz7kuq6xsAVnB3xD+6HRvXJucb4aN/9ypJujgL3nyNwuUB4TIbICvJIR7KK62OUGA4TBmaCbTP8Nal3+RSvcRvwlCHupviuyU=
+	t=1745459419; cv=none; b=XFi7Paq/R47GclRJcLr6P1KcYNn0vXmFoYtmJkzcFpAmE5GfWy8JXycTGZUFnPAOHr1Rd+iL3yLHW3afF4KhjeXGSkv6FmPUzAA1s3QFKns7gREoLsGHZBNvOLAYpdHKG0fTyjTFuW7kYI6FM31humGKg9T5avJHsa2HAFX1G9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745459412; c=relaxed/simple;
-	bh=SGnBAo1AC0EKZj7K2iz2ohBGdPq4rA3kL/ltg9HTzmU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Rh8jnHSyNgMLS3blODnukXmfOrvDgMHNGp1v8ckfIje9NwlQrNGX7B7gxTVzRc32jH3a3ZFmIW9NgqWnsZyd0hzjqcVIn8G8+HXnUAooM415/a3TLWWqKYxwk1m3+zNFx9dN/rZV2b8qNGs1zkV92LF6Ws5tt/Ppjf9o80QrwiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tVo/a5qa; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tVo/a5qa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF6AAC4CEEA;
-	Thu, 24 Apr 2025 01:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745459411;
-	bh=SGnBAo1AC0EKZj7K2iz2ohBGdPq4rA3kL/ltg9HTzmU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=tVo/a5qaxy/WYiEouDfeQi5Ei9A94G9cj8hGb39zey8rEjqNpIVRBgkFrPpg+HYW1
-	 hjeyECy3/zW9ORZtXWVcyQ4MxiP1hAWetnJiUYE45P39j/58HWznhNgQ8nKPjegtQs
-	 tmF1nXQ6VngIo6qH36PHHmfLVhUYVONcf3m4srA2czs74Lnij8EPJEUWh2Dv+5L/kB
-	 gK3se7usNYVxd6AnUozjD9RoVVkkDQw4A/+tih1lyDLCVql/9xdwqFvCU0zl7fx08j
-	 kZRBBytQmTiTG69pny5dowuXwWvUcu//uHmxBmGmmYX5SqP4nPDhz7LgwxibwCtYon
-	 vUeSHBOnXZwiQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD5A380CED9;
-	Thu, 24 Apr 2025 01:50:51 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1745459419; c=relaxed/simple;
+	bh=JmXm4Zk6MSSEwTYRosPuxA4NnDKVNSA1ONFH3qB3bV4=;
+	h=Message-ID:Date:MIME-Version:To:CC:From:Subject:Content-Type; b=t7rbCSoeOQ0GknhcOYLAt0cdDTdUNgzr9c/eVFKpFUBDKMB1M2v2/ZYAOoMX1oipHntfFv/vwQgbS2qwXcd3KLr+XZEWBYqiG/oPu7d+myaY6sSU5KuCVlfEulOFkV2zUWFYthyLqRQ6lBn1hnxksZrixrgkx85TLEAyhYKwAQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Zjf5W14hSznfVp;
+	Thu, 24 Apr 2025 09:48:47 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0CF831402C3;
+	Thu, 24 Apr 2025 09:50:08 +0800 (CST)
+Received: from [10.67.111.104] (10.67.111.104) by
+ kwepemo500009.china.huawei.com (7.202.194.199) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Thu, 24 Apr 2025 09:50:07 +0800
+Message-ID: <50dc6bdc-ee62-41f1-b8e5-be64defb07c6@huawei.com>
+Date: Thu, 24 Apr 2025 09:50:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next PATCH] octeontx2-pf: AF_XDP: code clean up
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174545945025.2829412.5574764696344129535.git-patchwork-notify@kernel.org>
-Date: Thu, 24 Apr 2025 01:50:50 +0000
-References: <20250420032350.4047706-1-hkelam@marvell.com>
-In-Reply-To: <20250420032350.4047706-1-hkelam@marvell.com>
-To: Hariprasad Kelam <hkelam@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- sgoutham@marvell.com, gakula@marvell.com, sbhatta@marvell.com,
- bbhushan2@marvell.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, ast@kernel.org,
- daniel@iogearbox.net, hawk@kernel.org, john.fastabend@gmail.com
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Sandeep Dhavale <dhavale@google.com>
+CC: Gao Xiang <hsiangkao@linux.alibaba.com>, LKML
+	<linux-kernel@vger.kernel.org>, linux-erofs mailing list
+	<linux-erofs@lists.ozlabs.org>
+From: Hongbo Li <lihongbo22@huawei.com>
+Subject: Re: Maybe update the minextblks in wrong way?
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
-Hello:
+Hi Sandeep,
+   The consecutive chunks will be merged if possible, but after commit 
+545988a65131 ("erofs-utils: lib: Fix calculation of minextblks when 
+working with sparse files"), the @minextblks will be updated into a 
+smaller value even the chunks are consecutive by blobchunks.c:379. I 
+think maybe the last operation that updates @minextblks is unnecessary, 
+since this value would have already been adjusted earlier when handling 
+discontinuous chunks. Likes:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+```
+--- a/lib/blobchunk.c
++++ b/lib/blobchunk.c
+@@ -376,7 +376,6 @@ int erofs_blob_write_chunked_file(struct erofs_inode 
+*inode, int fd,
+                 *(void **)idx++ = chunk;
+                 lastch = chunk;
+         }
+-       erofs_update_minextblks(sbi, interval_start, pos, &minextblks);
+         inode->datalayout = EROFS_INODE_CHUNK_BASED;
+         free(chunkdata);
+         return erofs_blob_mergechunks(inode, chunkbits,
 
-On Sun, 20 Apr 2025 08:53:50 +0530 you wrote:
-> The current API, otx2_xdp_sq_append_pkt, verifies the number of available
-> descriptors before sending packets to the hardware.
-> 
-> However, for AF_XDP, this check is unnecessary because the batch value
-> is already determined based on the free descriptors.
-> 
-> This patch introduces a new API, "otx2_xsk_sq_append_pkt" to address this.
-> 
-> [...]
+```
+This way can reduces the chunk index array's size. And what about your 
+opinion?
 
-Here is the summary with links:
-  - [net-next] octeontx2-pf: AF_XDP: code clean up
-    https://git.kernel.org/netdev/net-next/c/b5cdb9b3113e
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Thanks,
+Hongbo
