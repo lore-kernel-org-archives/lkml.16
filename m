@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33A6F289368;
-	Thu, 24 Apr 2025 16:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 107BC28B507;
+	Thu, 24 Apr 2025 16:24:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511877; cv=none; b=rcVSkAlyesrzOcnpZ/eE7zMO7cGnRg6GEmPLM0Ny/NfwwCCIwYi3QPeXvtV7Cz+n8A5kHhaN9brxbbXO3/yy4IyoB3ye5UXRx6Afp6PH/VZYdGCRlZ9FmR/Z5ob8Zr6ZZcUjizf+I9pC3Lip9FlMEkKxceeV/ZbfpA2EKwL+FoQ=
+	t=1745511878; cv=none; b=RgepjDOxtMqgvfTdxianvNYWmqcJMNReoPecG0298dKx76Zjw82/7lNuL5rujXhiGYgfc2eUQ8+APc8xWOrXiGUif3th/1fcD5R+qlSAjEVx7GRd/VViCgoEuc2ypeXmnjTtzozs/zV12of8knwXP/36hpPN91p689z5/QpGG8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511877; c=relaxed/simple;
-	bh=2Sqq0bl5H4O9BedasVfX3C2gLm22jhWqlwCry6RWenU=;
+	s=arc-20240116; t=1745511878; c=relaxed/simple;
+	bh=VcxOh3mOnIXjHWm2qqnllSh0bi7tu4jE843+0n9nFa4=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=U6b8wL8z/NoLWVFGG4kIXtL84/WdY9sWrY9xttAr5DQpaovmAmvt1HQNNb652MYUNXs8v7+Ra/aa5e6zH+CJIzw7xpo59m0ttahoxgykpo+n4cQra7EzvhFntGEboxS+NOHNCOyji16eM8DIQVuiigmw65ensMsz9hRn7dluAfg=
+	 Content-Type; b=gfLFB+KuYLZVb2cCenkAPcMJ4iQTJvJ8ys1NA3JdWIDAya3bds8ORtqnvnZtZW4yaFwKQzikGJjm1h9IaeR0lmq8BkCFdi2IzTa+xng9Kdy9YLfw+XAdSmhTSnIX/4AglswkCl8V5G4TZxLDxvXXxmDtoF4C1IqxtGLcT7ISP4A=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D3FC4CEE3;
-	Thu, 24 Apr 2025 16:24:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E04E4C4CEEF;
+	Thu, 24 Apr 2025 16:24:37 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1u7zPD-0000000GyVi-1zYA;
-	Thu, 24 Apr 2025 12:26:31 -0400
-Message-ID: <20250424162631.327216594@goodmis.org>
+	id 1u7zPF-0000000Gycf-3iJj;
+	Thu, 24 Apr 2025 12:26:33 -0400
+Message-ID: <20250424162633.732923210@goodmis.org>
 User-Agent: quilt/0.68
-Date: Thu, 24 Apr 2025 12:25:30 -0400
+Date: Thu, 24 Apr 2025 12:25:44 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -52,7 +52,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Blake Jones <blakejones@google.com>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>
-Subject: [PATCH v5 01/17] unwind_user: Add user space unwinding API
+Subject: [PATCH v5 15/17] perf record: Enable defer_callchain for user callchains
 References: <20250424162529.686762589@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -62,213 +62,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
 
-Introduce a generic API for unwinding user stacks.
+And add the missing feature detection logic to clear the flag on old
+kernels.
 
-In order to expand user space unwinding to be able to handle more complex
-scenarios, such as deferred unwinding and reading user space information,
-create a generic interface that all architectures can use that support the
-various unwinding methods.
+  $ perf record -g -vv true
+  ...
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    size                             136
+    config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CALLCHAIN|PERIOD
+    read_format                      ID|LOST
+    disabled                         1
+    inherit                          1
+    mmap                             1
+    comm                             1
+    freq                             1
+    enable_on_exec                   1
+    task                             1
+    sample_id_all                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+    defer_callchain                  1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 162755  cpu 0  group_fd -1  flags 0x8
+  sys_perf_event_open failed, error -22
+  switching off deferred callchain support
 
-This is an alternative method for handling user space stack traces from
-the simple stack_trace_save_user() API. This does not replace that
-interface, but this interface will be used to expand the functionality of
-user space stack walking.
-
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v4: https://lore.kernel.org/all/cd54347d26967427bc831f473d76e424ba3eba95.1737511963.git.jpoimboe@kernel.org/
+ tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
+ tools/perf/util/evsel.h |  1 +
+ 2 files changed, 25 insertions(+)
 
-- Removed unused variables from unwind_user_next() (Jens Remus)
-
-- Added "return" to unwind_user_next() (Andrii Nakryiko)
-
- MAINTAINERS                       |  8 +++++
- arch/Kconfig                      |  3 ++
- include/linux/unwind_user.h       | 15 +++++++++
- include/linux/unwind_user_types.h | 31 +++++++++++++++++
- kernel/Makefile                   |  1 +
- kernel/unwind/Makefile            |  1 +
- kernel/unwind/user.c              | 55 +++++++++++++++++++++++++++++++
- 7 files changed, 114 insertions(+)
- create mode 100644 include/linux/unwind_user.h
- create mode 100644 include/linux/unwind_user_types.h
- create mode 100644 kernel/unwind/Makefile
- create mode 100644 kernel/unwind/user.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 74667f36b013..237e642df25a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -25278,6 +25278,14 @@ F:	Documentation/driver-api/uio-howto.rst
- F:	drivers/uio/
- F:	include/linux/uio_driver.h
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index b872236a2413..669e585dedee 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1076,6 +1076,14 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 		}
+ 	}
  
-+USERSPACE STACK UNWINDING
-+M:	Josh Poimboeuf <jpoimboe@kernel.org>
-+M:	Steven Rostedt <rostedt@goodmis.org>
-+S:	Maintained
-+F:	include/linux/unwind*.h
-+F:	kernel/unwind/
-+
-+
- UTIL-LINUX PACKAGE
- M:	Karel Zak <kzak@redhat.com>
- L:	util-linux@vger.kernel.org
-diff --git a/arch/Kconfig b/arch/Kconfig
-index b0adb665041f..ccbcead9fac0 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -435,6 +435,9 @@ config HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	  It uses the same command line parameters, and sysctl interface,
- 	  as the generic hardlockup detectors.
- 
-+config UNWIND_USER
-+	bool
-+
- config HAVE_PERF_REGS
- 	bool
- 	help
-diff --git a/include/linux/unwind_user.h b/include/linux/unwind_user.h
-new file mode 100644
-index 000000000000..aa7923c1384f
---- /dev/null
-+++ b/include/linux/unwind_user.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_UNWIND_USER_H
-+#define _LINUX_UNWIND_USER_H
-+
-+#include <linux/unwind_user_types.h>
-+
-+int unwind_user_start(struct unwind_user_state *state);
-+int unwind_user_next(struct unwind_user_state *state);
-+
-+int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries);
-+
-+#define for_each_user_frame(state) \
-+	for (unwind_user_start((state)); !(state)->done; unwind_user_next((state)))
-+
-+#endif /* _LINUX_UNWIND_USER_H */
-diff --git a/include/linux/unwind_user_types.h b/include/linux/unwind_user_types.h
-new file mode 100644
-index 000000000000..6ed1b4ae74e1
---- /dev/null
-+++ b/include/linux/unwind_user_types.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_UNWIND_USER_TYPES_H
-+#define _LINUX_UNWIND_USER_TYPES_H
-+
-+#include <linux/types.h>
-+
-+enum unwind_user_type {
-+	UNWIND_USER_TYPE_NONE,
-+};
-+
-+struct unwind_stacktrace {
-+	unsigned int	nr;
-+	unsigned long	*entries;
-+};
-+
-+struct unwind_user_frame {
-+	s32 cfa_off;
-+	s32 ra_off;
-+	s32 fp_off;
-+	bool use_fp;
-+};
-+
-+struct unwind_user_state {
-+	unsigned long ip;
-+	unsigned long sp;
-+	unsigned long fp;
-+	enum unwind_user_type type;
-+	bool done;
-+};
-+
-+#endif /* _LINUX_UNWIND_USER_TYPES_H */
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 434929de17ef..5a2b2be2a32d 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -55,6 +55,7 @@ obj-y += rcu/
- obj-y += livepatch/
- obj-y += dma/
- obj-y += entry/
-+obj-y += unwind/
- obj-$(CONFIG_MODULES) += module/
- 
- obj-$(CONFIG_KCMP) += kcmp.o
-diff --git a/kernel/unwind/Makefile b/kernel/unwind/Makefile
-new file mode 100644
-index 000000000000..349ce3677526
---- /dev/null
-+++ b/kernel/unwind/Makefile
-@@ -0,0 +1 @@
-+ obj-$(CONFIG_UNWIND_USER) += user.o
-diff --git a/kernel/unwind/user.c b/kernel/unwind/user.c
-new file mode 100644
-index 000000000000..ddf68750b3cb
---- /dev/null
-+++ b/kernel/unwind/user.c
-@@ -0,0 +1,55 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+* Generic interfaces for unwinding user space
-+*/
-+#include <linux/kernel.h>
-+#include <linux/sched.h>
-+#include <linux/sched/task_stack.h>
-+#include <linux/unwind_user.h>
-+
-+int unwind_user_next(struct unwind_user_state *state)
-+{
-+	/* no implementation yet */
-+	return -EINVAL;
-+}
-+
-+int unwind_user_start(struct unwind_user_state *state)
-+{
-+	struct pt_regs *regs = task_pt_regs(current);
-+
-+	memset(state, 0, sizeof(*state));
-+
-+	if (!current->mm || !user_mode(regs)) {
-+		state->done = true;
-+		return -EINVAL;
++	if (param->record_mode == CALLCHAIN_FP && !attr->exclude_callchain_user) {
++		/*
++		 * Enable deferred callchains optimistically.  It'll be switched
++		 * off later if the kernel doesn't support it.
++		 */
++		attr->defer_callchain = 1;
 +	}
 +
-+	state->type = UNWIND_USER_TYPE_NONE;
+ 	if (function) {
+ 		pr_info("Disabling user space callchains for function trace event.\n");
+ 		attr->exclude_callchain_user = 1;
+@@ -2123,6 +2131,8 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 
+ static void evsel__disable_missing_features(struct evsel *evsel)
+ {
++	if (perf_missing_features.defer_callchain)
++		evsel->core.attr.defer_callchain = 0;
+ 	if (perf_missing_features.inherit_sample_read && evsel->core.attr.inherit &&
+ 	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ))
+ 		evsel->core.attr.inherit = 0;
+@@ -2397,6 +2407,15 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
+ 
+ 	/* Please add new feature detection here. */
+ 
++	attr.defer_callchain = true;
++	attr.sample_type = PERF_SAMPLE_CALLCHAIN;
++	if (has_attr_feature(&attr, /*flags=*/0))
++		goto found;
++	perf_missing_features.defer_callchain = true;
++	pr_debug2("switching off deferred callchain support\n");
++	attr.defer_callchain = false;
++	attr.sample_type = 0;
 +
-+	state->ip = instruction_pointer(regs);
-+	state->sp = user_stack_pointer(regs);
-+	state->fp = frame_pointer(regs);
+ 	attr.inherit = true;
+ 	attr.sample_type = PERF_SAMPLE_READ;
+ 	if (has_attr_feature(&attr, /*flags=*/0))
+@@ -2508,6 +2527,11 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
+ 	errno = old_errno;
+ 
+ check:
++	if (evsel->core.attr.defer_callchain &&
++	    evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN &&
++	    perf_missing_features.defer_callchain)
++		return true;
 +
-+	return 0;
-+}
-+
-+int unwind_user(struct unwind_stacktrace *trace, unsigned int max_entries)
-+{
-+	struct unwind_user_state state;
-+
-+	trace->nr = 0;
-+
-+	if (!max_entries)
-+		return -EINVAL;
-+
-+	if (!current->mm)
-+		return 0;
-+
-+	for_each_user_frame(&state) {
-+		trace->entries[trace->nr++] = state.ip;
-+		if (trace->nr >= max_entries)
-+			break;
-+	}
-+
-+	return 0;
-+}
+ 	if (evsel->core.attr.inherit &&
+ 	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ) &&
+ 	    perf_missing_features.inherit_sample_read)
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index aae431d63d64..7ded99c774c7 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -211,6 +211,7 @@ struct perf_missing_features {
+ 	bool branch_counters;
+ 	bool aux_action;
+ 	bool inherit_sample_read;
++	bool defer_callchain;
+ };
+ 
+ extern struct perf_missing_features perf_missing_features;
 -- 
 2.47.2
 
