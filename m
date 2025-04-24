@@ -1,74 +1,74 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D982367D9
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0A0238C04
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745491035; cv=none; b=unTuuT5AnM3DraAPi+aKEZVhxegNQZXucWrbTQNtkFAuRlDc4VZd5v0lqvClLxcZL06NnhMQLw5y38liAAgKzmvU6OFPb1Ioq79nEXRZZLPMCHwJlXDKs/+3/dOgkgIIGT7ANqFsJpZDBvoa5QyAZZElyFBsiuINZrnIiI07PVY=
+	t=1745491038; cv=none; b=Eo4p5THSARrU0Q88S1tXdkdNb4UmXP7S4KfR4oV3I0s2nB3p1AgffqVQV6DZWigySeG981fe8TXOGOMyQIts1dq55ygD6eOvYTyXxAoBoUOKMvtFGIuK2euamUkJHfL7tfz1WYYQCHlrcFi7Gq49UTArZ1IHVFmvhV+4jK9nMzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745491035; c=relaxed/simple;
-	bh=NeVKdcw8OCf4gupfY3nEEQyeD5Av5HUkByu8eDlPENE=;
+	s=arc-20240116; t=1745491038; c=relaxed/simple;
+	bh=VOa1T0aKJkkd4ubCM8nPBYNfRfmMW9NmHBOvyIP9zM8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qYltZJGbKt9TGm3CdFZDP6jSI+oHbxTS6n+ikVpuRKqeGXADDVOdQzo3avgryXfRMF7xiIoQyOCblCIOoCu9Ah8Lr7WBRfz+gqHNE8Dym0ZGV89Rlj5t2/fUsDspm6l9DMnhqCnfrOFh1hxG3ugcXe5DbG7K7BUkL/oqx5SoBuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i03xX/0c; arc=none smtp.client-ip=209.85.210.181
+	 MIME-Version; b=DQPV7UmEORBRhoaNTAKLJs8kddh4ZDDNALJRDsL1Bh3AxTRKs7T4L4L157QYfQnkwYXSgh3qp2DrdBhvFf68ypLIg0bM8SXnlSmrAwVcdtY059lVkGZ9dUzq7zVXZBr4yH4FhEyuiVnh/zc6rdLUiQDzPHEdDfefOqZTLQoG//s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o+RKelrJ; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i03xX/0c"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7399a2dc13fso1080590b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:37:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o+RKelrJ"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2260c91576aso6461475ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:37:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745491032; x=1746095832; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745491036; x=1746095836; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vscvGKi8aZQ4AtwM5RonL3qnlEsuOoWo+Mhs+nOpbME=;
-        b=i03xX/0cbq5zQVf+tCHpDlvx9PLpM9Q1lStx+3clg+CMSTzi/fq34+L891nfwfXObW
-         pJ1II6byoKqGQJCOdt9E7mBhoDv6ezILDu4T/aLImuo2zK0prKrVNU/6rWFqT6BLcgP3
-         j8kjAiqrUomXw6p+cbO1Oc3Td4hIBN7K2qB2QcoX/yqvbx4mgoY8FUm45v4FD/cuhi7j
-         7kSz0DdCY0rmM7NKHLswQIicCVP/HWB5vOBafo/wDWOBiec2OQBd5FuS3ZxW1zSkYLqh
-         YX+XWHjoASa/EZl49iiFwM6OCtHthgQ8UdonZUT1xZMC48Q2X1ecsl9NY9UYeoTuY9mi
-         aaJQ==
+        bh=YnM7BGuhRXgKktziblZErpXUgiY+CFGwBppN4UGtJmo=;
+        b=o+RKelrJSB0Hcm/82QHhpHUV/kOnwmEBGQXXoaWYXFG+YO+UkNXSFYV+UPFed5AFBu
+         NXCtLEu2TZtL5pUpB4LosL+UvvfYULrOQfo9w6TxUhbPTaHgLqUzUCCi6mK0gScBRm0l
+         NWdM9mA+NTEjz5wahG2+vjIRDOJ2J2B1KCPcsUt1bPMQzucDWEBWVCPB9eU5aepjRlDy
+         i6DUd4zigbVH5dJYpqWR5dh+mp4jh0JNSZ0423yffi1B7FB2eUhJMtUOl2c5QGzvbl2r
+         YopOMzlxYmUf8cYBIqq2yb6zTWox749rSuOO3iwZkk0Iw6verOv7fxvFCmx6KVDir0bK
+         8Vrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745491032; x=1746095832;
+        d=1e100.net; s=20230601; t=1745491036; x=1746095836;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vscvGKi8aZQ4AtwM5RonL3qnlEsuOoWo+Mhs+nOpbME=;
-        b=SRi/hlMQb84hbfu1qqV8jaBI3Qvsc09HEcQ4GCoNqVspm7No4bFwV102JoRqFrWGgC
-         G8WCq1AIchxwrg77O0x/XVWsZlTUZP4pMSyr6CTrQhbbjgYmoUmSWNuAMG4vGyuYIRlR
-         MdEp1my+DolQv7IXOlRtDnw7red6rOdPW8++Y6VN4jyLEPCHuP+q0v0L62bt0TWADhTO
-         SWApZFjlKXusQt9MrMO+yPc+uTrjzWZ2XSPeO1cVora8QPeLLFSCbScIyqDTRfkyMnfi
-         sN9gNOvM+wW6Zlt1n16OwYBu1MNNM6oH2lpZ5pE/PHyVLT+/y5lJ7hu1jUodUL8X3Qd0
-         vMlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU1aidhZ6snjuE5m8/x8fbEi5I8nxXZ70VA2fdrDNZ2Hwb5LpbEK1wwn0ZUYx6mJyPn+U1qlZJ28R+iFts=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoKs261fSsxTNjVpbPW/nslh+pdbHsSwtn8R6kVye/B7L3LZja
-	vJft1PQ8Sb631SJ2v5XqyhpYrUU15V6gAEnIAoCWYfLeVsBb86twzCWZ6WBzJlQ=
-X-Gm-Gg: ASbGnctJ5Rak0pAIsY8DB0mlETCeNi+b3k7daWTPAIo2jVI0ImyiPF0Ec36wYHaCfZu
-	XarIQccVdwLDDvcjy4/MwLCmL4rCde27kMQxI83VkZSehMFw+4NPxUHvh5YWaF27uH/7Z+jw8P7
-	ThXLkm1KwA9/yBI+5AqVD+m49QdH/Z+CnxJlvHynRQB8W1Nw7OvWKMC7bjsWgGzeGYzG+PgW0/t
-	bZTNnWeHQJBotgRySSvsmnjhqQIZAJd2mXz/7tAoyqkoPv4OIpKyWP7QWVCZf+mrV7aa5/IpSYA
-	+9Kq3UR+EEMb5cUmm6bQ5uJYNO5QevFoPLEHswXw6w==
-X-Google-Smtp-Source: AGHT+IG2u1pypaLFiO4fsom7dy5KA1qvfxkw47AsY/FMtzeMJ0wlTMGgmr1u6k36FoY0kYO6FF+lXw==
-X-Received: by 2002:a05:6a00:179e:b0:73e:359:1c86 with SMTP id d2e1a72fcca58-73e247d7cb6mr2816818b3a.18.1745491032617;
-        Thu, 24 Apr 2025 03:37:12 -0700 (PDT)
+        bh=YnM7BGuhRXgKktziblZErpXUgiY+CFGwBppN4UGtJmo=;
+        b=A2MGFYd0yjL1AhHqmahqWB3P5+fn1wjgVNOliy/4liQLRlXbyNETaMQBimSEm8dZlu
+         wlxjcCBEjcjCvQv+Rjz+yh7d2dvz3i9TOvo2J7ZDJfZ9Cwfb/yeRPiaiWcRcANJ/KVky
+         xq9q0B2lQDiNBgNXBQUvq7s7XtjvLdBtd9db84gm3RK0N5xGmzD3kdSUQ3P1zjFi/3Sd
+         X7wdCslxMHh6z224dhp2Vf5GOtbMRiFUtLkE/EaKpXGR2jdeW8WpNC/76APcczxp3Qmj
+         rLmtqZ0ilN07w/Mj/5As1YfVrE5+X4bbX3QOTNYxzn+VBOWHW+h9A5sUtpA7JXevOdQE
+         6xaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUuvV2m4vIAxt2BYamb3dh3YPApCYIy0T1/244bRddnNpQvlsHYhRDoxK3aLmMZrar1HPp6bQeX/lVQszE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzfFMuviqSKkFxPWc8ngVi0fl4cBe1TO/6XWIbPcMf2P/bnppd
+	yI8nOlw6LK/TbY+l1CUIMu4AuIoU6MnByrj6cZm9Q/Bb+jH+IWdUUzAUSyiExDc=
+X-Gm-Gg: ASbGnct/WIRthyQ4nk+7/lcFTgWuDOFfmYzVNsd5w8zPcRyOaiLiIG7auooOrkZwYHw
+	ZpFEMYbv7BxxOmJdRAwgxWlurjb+VV6IQBpQbMr/sAox8u7H4cFTNxMdgJGOp1iJAmRD5MZN8ka
+	UdAB6FcL+HkrWqs0rMbQ3z6TMzwAuHMHDmN/8biBcVBfnvZMF8wkbcA5EeqFczzNUb65UM/ZTBQ
+	PBuk1PRkYxZABwVNIIHf6jk2uX5r/VWIK/5rWkcuIrMuInOZZ5k86QgUxEFe/sMK6rNSeCoNKTH
+	7S7hqEPinQn23JPpw8w32v/6h5MbVy40ThmJwijkPphRHJQio0NS
+X-Google-Smtp-Source: AGHT+IH07Yj9Qvao1dL/i/uJ11l1+IF+hLKC6pC8RZiwmzbA3oxsha39/3dVJTGMAck9cT2f2/d5Tw==
+X-Received: by 2002:a17:903:1b23:b0:223:53fb:e1dd with SMTP id d9443c01a7336-22db3bb2ce3mr29840195ad.9.1745491036240;
+        Thu, 24 Apr 2025 03:37:16 -0700 (PDT)
 Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e259414d3sm1050286b3a.47.2025.04.24.03.37.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51021a8sm9782395ad.172.2025.04.24.03.37.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 03:37:12 -0700 (PDT)
+        Thu, 24 Apr 2025 03:37:15 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: Viresh Kumar <vireshk@kernel.org>,
 	Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
+	Stephen Boyd <sboyd@kernel.org>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>,
 	linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/6] OPP: Return opp_table from dev_pm_opp_get_opp_table_ref()
-Date: Thu, 24 Apr 2025 16:06:46 +0530
-Message-Id: <ead694941686345bfd3f95100d889191cb9e3cda.1745490980.git.viresh.kumar@linaro.org>
+Subject: [PATCH 4/6] OPP: Use scope-based OF cleanup helpers
+Date: Thu, 24 Apr 2025 16:06:47 +0530
+Message-Id: <f95c855306fe47e809ca7ad6b4f330535f8b34fb.1745490980.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1745490980.git.viresh.kumar@linaro.org>
 References: <cover.1745490980.git.viresh.kumar@linaro.org>
@@ -80,101 +80,414 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For convenience of users, return back the pointer to the opp_table from
-dev_pm_opp_get_opp_table_ref(), so they can do:
-
-	opp_table = dev_pm_opp_get_opp_table_ref(tmp_table);
+Use the OF scope-based cleanup helpers for the OPP core.
 
 No intentional functional impact.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/opp/core.c     | 9 ++++-----
- drivers/opp/of.c       | 9 +++------
- include/linux/pm_opp.h | 7 +++++--
- 3 files changed, 12 insertions(+), 13 deletions(-)
+ drivers/opp/of.c | 111 +++++++++++++++++------------------------------
+ 1 file changed, 40 insertions(+), 71 deletions(-)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 150439a18b87..14fb0f43cc77 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -58,10 +58,8 @@ static struct opp_table *_find_opp_table_unlocked(struct device *dev)
- 	struct opp_table *opp_table;
- 
- 	list_for_each_entry(opp_table, &opp_tables, node) {
--		if (_find_opp_dev(dev, opp_table)) {
--			dev_pm_opp_get_opp_table_ref(opp_table);
--			return opp_table;
--		}
-+		if (_find_opp_dev(dev, opp_table))
-+			return dev_pm_opp_get_opp_table_ref(opp_table);
- 	}
- 
- 	return ERR_PTR(-ENODEV);
-@@ -1687,9 +1685,10 @@ static void _opp_table_kref_release(struct kref *kref)
- 	kfree(opp_table);
- }
- 
--void dev_pm_opp_get_opp_table_ref(struct opp_table *opp_table)
-+struct opp_table *dev_pm_opp_get_opp_table_ref(struct opp_table *opp_table)
- {
- 	kref_get(&opp_table->kref);
-+	return opp_table;
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_table_ref);
- 
 diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 87cb6aeb49ed..c240acc81a8d 100644
+index c240acc81a8d..aa43fbfa3e50 100644
 --- a/drivers/opp/of.c
 +++ b/drivers/opp/of.c
-@@ -60,10 +60,8 @@ struct opp_table *_managed_opp(struct device *dev, int index)
- 			 * But the OPPs will be considered as shared only if the
- 			 * OPP table contains a "opp-shared" property.
- 			 */
--			if (opp_table->shared_opp == OPP_TABLE_ACCESS_SHARED) {
--				dev_pm_opp_get_opp_table_ref(opp_table);
--				managed_table = opp_table;
--			}
-+			if (opp_table->shared_opp == OPP_TABLE_ACCESS_SHARED)
-+				managed_table = dev_pm_opp_get_opp_table_ref(opp_table);
+@@ -45,7 +45,7 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_get_opp_desc_node);
+ struct opp_table *_managed_opp(struct device *dev, int index)
+ {
+ 	struct opp_table *opp_table, *managed_table = NULL;
+-	struct device_node *np;
++	struct device_node *np __free(device_node);
  
- 			break;
+ 	np = _opp_of_get_opp_desc_node(dev->of_node, index);
+ 	if (!np)
+@@ -67,8 +67,6 @@ struct opp_table *_managed_opp(struct device *dev, int index)
  		}
-@@ -405,8 +403,7 @@ static void lazy_link_required_opp_table(struct opp_table *new_table)
- 				continue;
- 			}
+ 	}
  
--			required_opp_tables[i] = new_table;
--			dev_pm_opp_get_opp_table_ref(new_table);
-+			required_opp_tables[i] = dev_pm_opp_get_opp_table_ref(new_table);
- 
- 			/* Link OPPs now */
- 			ret = lazy_link_required_opps(opp_table, new_table, i);
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index 5e4c3428b139..0deddfa91aca 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -100,7 +100,7 @@ struct dev_pm_opp_data {
- #if defined(CONFIG_PM_OPP)
- 
- struct opp_table *dev_pm_opp_get_opp_table(struct device *dev);
--void dev_pm_opp_get_opp_table_ref(struct opp_table *opp_table);
-+struct opp_table *dev_pm_opp_get_opp_table_ref(struct opp_table *opp_table);
- void dev_pm_opp_put_opp_table(struct opp_table *opp_table);
- 
- unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, bool peak, int index);
-@@ -207,7 +207,10 @@ static inline struct opp_table *dev_pm_opp_get_opp_table_indexed(struct device *
- 	return ERR_PTR(-EOPNOTSUPP);
+-	of_node_put(np);
+-
+ 	return managed_table;
  }
  
--static inline void dev_pm_opp_get_opp_table_ref(struct opp_table *opp_table) {}
-+static inline struct opp_table *dev_pm_opp_get_opp_table_ref(struct opp_table *opp_table)
-+{
-+	return opp_table;
-+}
+@@ -102,16 +100,13 @@ static struct device_node *of_parse_required_opp(struct device_node *np,
+ /* The caller must call dev_pm_opp_put_opp_table() after the table is used */
+ static struct opp_table *_find_table_of_opp_np(struct device_node *opp_np)
+ {
++	struct device_node *opp_table_np __free(device_node);
+ 	struct opp_table *opp_table;
+-	struct device_node *opp_table_np;
  
- static inline void dev_pm_opp_put_opp_table(struct opp_table *opp_table) {}
+ 	opp_table_np = of_get_parent(opp_np);
+ 	if (!opp_table_np)
+ 		goto err;
  
+-	/* It is safe to put the node now as all we need now is its address */
+-	of_node_put(opp_table_np);
+-
+ 	mutex_lock(&opp_table_lock);
+ 	list_for_each_entry(opp_table, &opp_tables, node) {
+ 		if (opp_table_np == opp_table->np) {
+@@ -161,7 +156,7 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
+ 					     struct device_node *opp_np)
+ {
+ 	struct opp_table **required_opp_tables;
+-	struct device_node *required_np, *np;
++	struct device_node *np __free(device_node);
+ 	bool lazy = false;
+ 	int count, i, size;
+ 
+@@ -169,30 +164,32 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
+ 	np = of_get_next_available_child(opp_np, NULL);
+ 	if (!np) {
+ 		dev_warn(dev, "Empty OPP table\n");
+-
+ 		return;
+ 	}
+ 
+ 	count = of_count_phandle_with_args(np, "required-opps", NULL);
+ 	if (count <= 0)
+-		goto put_np;
++		return;
+ 
+ 	size = sizeof(*required_opp_tables) + sizeof(*opp_table->required_devs);
+ 	required_opp_tables = kcalloc(count, size, GFP_KERNEL);
+ 	if (!required_opp_tables)
+-		goto put_np;
++		return;
+ 
+ 	opp_table->required_opp_tables = required_opp_tables;
+ 	opp_table->required_devs = (void *)(required_opp_tables + count);
+ 	opp_table->required_opp_count = count;
+ 
+ 	for (i = 0; i < count; i++) {
++		struct device_node *required_np __free(device_node);
++
+ 		required_np = of_parse_required_opp(np, i);
+-		if (!required_np)
+-			goto free_required_tables;
++		if (!required_np) {
++			_opp_table_free_required_tables(opp_table);
++			return;
++		}
+ 
+ 		required_opp_tables[i] = _find_table_of_opp_np(required_np);
+-		of_node_put(required_np);
+ 
+ 		if (IS_ERR(required_opp_tables[i]))
+ 			lazy = true;
+@@ -208,19 +205,12 @@ static void _opp_table_alloc_required_tables(struct opp_table *opp_table,
+ 		list_add(&opp_table->lazy, &lazy_opp_tables);
+ 		mutex_unlock(&opp_table_lock);
+ 	}
+-
+-	goto put_np;
+-
+-free_required_tables:
+-	_opp_table_free_required_tables(opp_table);
+-put_np:
+-	of_node_put(np);
+ }
+ 
+ void _of_init_opp_table(struct opp_table *opp_table, struct device *dev,
+ 			int index)
+ {
+-	struct device_node *np, *opp_np;
++	struct device_node *np __free(device_node), *opp_np;
+ 	u32 val;
+ 
+ 	/*
+@@ -241,8 +231,6 @@ void _of_init_opp_table(struct opp_table *opp_table, struct device *dev,
+ 
+ 	/* Get OPP table node */
+ 	opp_np = _opp_of_get_opp_desc_node(np, index);
+-	of_node_put(np);
+-
+ 	if (!opp_np)
+ 		return;
+ 
+@@ -296,15 +284,13 @@ void _of_clear_opp(struct opp_table *opp_table, struct dev_pm_opp *opp)
+ static int _link_required_opps(struct dev_pm_opp *opp,
+ 			       struct opp_table *required_table, int index)
+ {
+-	struct device_node *np;
++	struct device_node *np __free(device_node);
+ 
+ 	np = of_parse_required_opp(opp->np, index);
+ 	if (unlikely(!np))
+ 		return -ENODEV;
+ 
+ 	opp->required_opps[index] = _find_opp_of_np(required_table, np);
+-	of_node_put(np);
+-
+ 	if (!opp->required_opps[index]) {
+ 		pr_err("%s: Unable to find required OPP node: %pOF (%d)\n",
+ 		       __func__, opp->np, index);
+@@ -368,19 +354,22 @@ static int lazy_link_required_opps(struct opp_table *opp_table,
+ static void lazy_link_required_opp_table(struct opp_table *new_table)
+ {
+ 	struct opp_table *opp_table, *temp, **required_opp_tables;
+-	struct device_node *required_np, *opp_np, *required_table_np;
+ 	struct dev_pm_opp *opp;
+ 	int i, ret;
+ 
+ 	mutex_lock(&opp_table_lock);
+ 
+ 	list_for_each_entry_safe(opp_table, temp, &lazy_opp_tables, lazy) {
++		struct device_node *opp_np __free(device_node);
+ 		bool lazy = false;
+ 
+ 		/* opp_np can't be invalid here */
+ 		opp_np = of_get_next_available_child(opp_table->np, NULL);
+ 
+ 		for (i = 0; i < opp_table->required_opp_count; i++) {
++			struct device_node *required_np __free(device_node) = NULL;
++			struct device_node *required_table_np __free(device_node) = NULL;
++
+ 			required_opp_tables = opp_table->required_opp_tables;
+ 
+ 			/* Required opp-table is already parsed */
+@@ -391,9 +380,6 @@ static void lazy_link_required_opp_table(struct opp_table *new_table)
+ 			required_np = of_parse_required_opp(opp_np, i);
+ 			required_table_np = of_get_parent(required_np);
+ 
+-			of_node_put(required_table_np);
+-			of_node_put(required_np);
+-
+ 			/*
+ 			 * Newly added table isn't the required opp-table for
+ 			 * opp_table.
+@@ -414,8 +400,6 @@ static void lazy_link_required_opp_table(struct opp_table *new_table)
+ 			}
+ 		}
+ 
+-		of_node_put(opp_np);
+-
+ 		/* All required opp-tables found, remove from lazy list */
+ 		if (!lazy) {
+ 			list_del_init(&opp_table->lazy);
+@@ -430,16 +414,18 @@ static void lazy_link_required_opp_table(struct opp_table *new_table)
+ 
+ static int _bandwidth_supported(struct device *dev, struct opp_table *opp_table)
+ {
+-	struct device_node *np, *opp_np;
++	struct device_node *opp_np __free(device_node) = NULL;
++	struct device_node *np __free(device_node) = NULL;
+ 	struct property *prop;
+ 
+ 	if (!opp_table) {
++		struct device_node *np __free(device_node);
++
+ 		np = of_node_get(dev->of_node);
+ 		if (!np)
+ 			return -ENODEV;
+ 
+ 		opp_np = _opp_of_get_opp_desc_node(np, 0);
+-		of_node_put(np);
+ 	} else {
+ 		opp_np = of_node_get(opp_table->np);
+ 	}
+@@ -450,15 +436,12 @@ static int _bandwidth_supported(struct device *dev, struct opp_table *opp_table)
+ 
+ 	/* Checking only first OPP is sufficient */
+ 	np = of_get_next_available_child(opp_np, NULL);
+-	of_node_put(opp_np);
+ 	if (!np) {
+ 		dev_err(dev, "OPP table empty\n");
+ 		return -EINVAL;
+ 	}
+ 
+ 	prop = of_find_property(np, "opp-peak-kBps", NULL);
+-	of_node_put(np);
+-
+ 	if (!prop || !prop->length)
+ 		return 0;
+ 
+@@ -468,7 +451,7 @@ static int _bandwidth_supported(struct device *dev, struct opp_table *opp_table)
+ int dev_pm_opp_of_find_icc_paths(struct device *dev,
+ 				 struct opp_table *opp_table)
+ {
+-	struct device_node *np;
++	struct device_node *np __free(device_node) = of_node_get(dev->of_node);
+ 	int ret, i, count, num_paths;
+ 	struct icc_path **paths;
+ 
+@@ -478,15 +461,13 @@ int dev_pm_opp_of_find_icc_paths(struct device *dev,
+ 	else if (ret <= 0)
+ 		return ret;
+ 
+-	ret = 0;
+-
+-	np = of_node_get(dev->of_node);
+ 	if (!np)
+ 		return 0;
+ 
++	ret = 0;
++
+ 	count = of_count_phandle_with_args(np, "interconnects",
+ 					   "#interconnect-cells");
+-	of_node_put(np);
+ 	if (count < 0)
+ 		return 0;
+ 
+@@ -1303,8 +1284,8 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_cpumask_add_table);
+ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev,
+ 				   struct cpumask *cpumask)
+ {
+-	struct device_node *np, *tmp_np, *cpu_np;
+-	int cpu, ret = 0;
++	struct device_node *np __free(device_node);
++	int cpu;
+ 
+ 	/* Get OPP descriptor node */
+ 	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+@@ -1317,9 +1298,12 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev,
+ 
+ 	/* OPPs are shared ? */
+ 	if (!of_property_read_bool(np, "opp-shared"))
+-		goto put_cpu_node;
++		return 0;
+ 
+ 	for_each_possible_cpu(cpu) {
++		struct device_node *cpu_np __free(device_node) = NULL;
++		struct device_node *tmp_np __free(device_node) = NULL;
++
+ 		if (cpu == cpu_dev->id)
+ 			continue;
+ 
+@@ -1327,29 +1311,22 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev,
+ 		if (!cpu_np) {
+ 			dev_err(cpu_dev, "%s: failed to get cpu%d node\n",
+ 				__func__, cpu);
+-			ret = -ENOENT;
+-			goto put_cpu_node;
++			return -ENOENT;
+ 		}
+ 
+ 		/* Get OPP descriptor node */
+ 		tmp_np = _opp_of_get_opp_desc_node(cpu_np, 0);
+-		of_node_put(cpu_np);
+ 		if (!tmp_np) {
+ 			pr_err("%pOF: Couldn't find opp node\n", cpu_np);
+-			ret = -ENOENT;
+-			goto put_cpu_node;
++			return -ENOENT;
+ 		}
+ 
+ 		/* CPUs are sharing opp node */
+ 		if (np == tmp_np)
+ 			cpumask_set_cpu(cpu, cpumask);
+-
+-		of_node_put(tmp_np);
+ 	}
+ 
+-put_cpu_node:
+-	of_node_put(np);
+-	return ret;
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_of_get_sharing_cpus);
+ 
+@@ -1366,9 +1343,9 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_of_get_sharing_cpus);
+  */
+ int of_get_required_opp_performance_state(struct device_node *np, int index)
+ {
+-	struct dev_pm_opp *opp;
+-	struct device_node *required_np;
++	struct device_node *required_np __free(device_node);
+ 	struct opp_table *opp_table;
++	struct dev_pm_opp *opp;
+ 	int pstate = -EINVAL;
+ 
+ 	required_np = of_parse_required_opp(np, index);
+@@ -1379,13 +1356,13 @@ int of_get_required_opp_performance_state(struct device_node *np, int index)
+ 	if (IS_ERR(opp_table)) {
+ 		pr_err("%s: Failed to find required OPP table %pOF: %ld\n",
+ 		       __func__, np, PTR_ERR(opp_table));
+-		goto put_required_np;
++		return PTR_ERR(opp_table);
+ 	}
+ 
+ 	/* The OPP tables must belong to a genpd */
+ 	if (unlikely(!opp_table->is_genpd)) {
+ 		pr_err("%s: Performance state is only valid for genpds.\n", __func__);
+-		goto put_required_np;
++		return -EINVAL;
+ 	}
+ 
+ 	opp = _find_opp_of_np(opp_table, required_np);
+@@ -1401,10 +1378,6 @@ int of_get_required_opp_performance_state(struct device_node *np, int index)
+ 	}
+ 
+ 	dev_pm_opp_put_opp_table(opp_table);
+-
+-put_required_np:
+-	of_node_put(required_np);
+-
+ 	return pstate;
+ }
+ EXPORT_SYMBOL_GPL(of_get_required_opp_performance_state);
+@@ -1421,7 +1394,7 @@ EXPORT_SYMBOL_GPL(of_get_required_opp_performance_state);
+  */
+ bool dev_pm_opp_of_has_required_opp(struct device *dev)
+ {
+-	struct device_node *opp_np, *np;
++	struct device_node *np __free(device_node) = NULL, *opp_np __free(device_node);
+ 	int count;
+ 
+ 	opp_np = _opp_of_get_opp_desc_node(dev->of_node, 0);
+@@ -1429,14 +1402,12 @@ bool dev_pm_opp_of_has_required_opp(struct device *dev)
+ 		return false;
+ 
+ 	np = of_get_next_available_child(opp_np, NULL);
+-	of_node_put(opp_np);
+ 	if (!np) {
+ 		dev_warn(dev, "Empty OPP table\n");
+ 		return false;
+ 	}
+ 
+ 	count = of_count_phandle_with_args(np, "required-opps", NULL);
+-	of_node_put(np);
+ 
+ 	return count > 0;
+ }
+@@ -1513,8 +1484,8 @@ _get_dt_power(struct device *dev, unsigned long *uW, unsigned long *kHz)
+ int dev_pm_opp_calc_power(struct device *dev, unsigned long *uW,
+ 			  unsigned long *kHz)
+ {
++	struct device_node *np __free(device_node);
+ 	struct dev_pm_opp *opp;
+-	struct device_node *np;
+ 	unsigned long mV, Hz;
+ 	u32 cap;
+ 	u64 tmp;
+@@ -1525,7 +1496,6 @@ int dev_pm_opp_calc_power(struct device *dev, unsigned long *uW,
+ 		return -EINVAL;
+ 
+ 	ret = of_property_read_u32(np, "dynamic-power-coefficient", &cap);
+-	of_node_put(np);
+ 	if (ret)
+ 		return -EINVAL;
+ 
+@@ -1581,8 +1551,8 @@ static bool _of_has_opp_microwatt_property(struct device *dev)
+  */
+ int dev_pm_opp_of_register_em(struct device *dev, struct cpumask *cpus)
+ {
++	struct device_node *np __free(device_node) = NULL;
+ 	struct em_data_callback em_cb;
+-	struct device_node *np;
+ 	int ret, nr_opp;
+ 	u32 cap;
+ 
+@@ -1617,7 +1587,6 @@ int dev_pm_opp_of_register_em(struct device *dev, struct cpumask *cpus)
+ 	 * user about the inconsistent configuration.
+ 	 */
+ 	ret = of_property_read_u32(np, "dynamic-power-coefficient", &cap);
+-	of_node_put(np);
+ 	if (ret || !cap) {
+ 		dev_dbg(dev, "Couldn't find proper 'dynamic-power-coefficient' in DT\n");
+ 		ret = -EINVAL;
 -- 
 2.31.1.272.g89b43f80a514
 
