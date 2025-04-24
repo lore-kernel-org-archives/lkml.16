@@ -1,63 +1,63 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A131B3939
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79AAF2036EC
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504033; cv=none; b=cchJ1KYt0aYz/KU/YTrI+/WEoVeIfAdTTlDChKXxv5B1sIOeCVI7GmXtz2m6Pj6IAAdYj4sbBeVw3AYjly9PwRdQm4UdSnwGIrv0RSi9Cukr/kH62O034CCxWqU2QgMP6wrHcm1yfQ0wXGJu7yycH1xKUPmeIjs+7SfmShw5o9M=
+	t=1745504034; cv=none; b=ebj88A630ReoiPzj4m+4U0f/vnvqwFCOqgPJFuouIQFXFQuUhIZmjwy1eYQ5HXeKhYCIwYaBHuSMO22hYaK7ud7EnDnxYiS9Y/QPnTJ2VYCQItViAlsQ+OF5wRW/wKYzuEr74QBkf7bcUZeP4x2krrdhv+wLJDgjnX2T+mgLJIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745504033; c=relaxed/simple;
-	bh=wzaNO/FV98NvOhVwcurDeWV9o2lzkiDEMgzO9vOQkfc=;
+	s=arc-20240116; t=1745504034; c=relaxed/simple;
+	bh=yHQVbNXozVjVHt5pOWEf6CFk11nfYNM4wHopdbI5gbI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CpBk0g0oplUdurWgbEkY/mkONqs1c3MMl8bIGjfvOtNFaA1QmwyRArN8bWtzz9VlsgW8BHY1BIRY+9APjdSOiRg3/sqwgV2J+kLZ0oXVSYqtE+GXHsgvfEhk6qNIQiqkLtxnUEboZ2aMerhAM+cZ9bgRObSHdIeI7CxSHLwoupY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AJZId15e; arc=none smtp.client-ip=209.85.221.52
+	 MIME-Version; b=r+lOvLYC7PSVNfBL2pSu3FXXwc6412t2X+396qiNGNaH96bXrlqPXwlQ6QmQl39xzFGIcLi1Rho7x97z6XqqlTDAX/nsgFnNSv1U/WQA8evdw/Zd6pBEN3mDIXlqyIOQyqTvD8tSBbRsH3wn7nF7exQ52z5Yzr4fq4QAhPdPRSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TMpYcwLk; arc=none smtp.client-ip=209.85.221.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AJZId15e"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso840340f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:13:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TMpYcwLk"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so989121f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:13:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745504029; x=1746108829; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745504030; x=1746108830; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9Hk5UBQTvuxPsQW0619Tu3I4qsqkftwTtmBE5Ybb85g=;
-        b=AJZId15e7pdgeqWr+FMAv4lLCiYL8lS9X4n246zeYuB5IaR/DGRrpcovPDeJif1ult
-         pCCP+lQCy1PBuRRsue4enbNhuItViUP50zrTPxmT0nYVJuKw/mn8cCZ5OQlhg6eDHW9M
-         a05wR8Ubv3dLoceKbyhzZ/riusaGcx+r9eKtqhXZP/YlnDIR6V5OqRyMhOR7PXfzMpu9
-         bd39oniRh5fAZXnOSJ6Smcyyg/jnOY7Ep8YHqXr5Ac8Lg6Ki8jPdYS6b+DDfyDjPiHA+
-         KmVtSGfJ5KzOQuk2U26Ugg9Q5sqD/HC/WlFq2brgPR9T1soyDON1tKSxraJ1r6NZZ3nr
-         p44Q==
+        bh=AlljNambtbwwvkzAI4LjAz2eo7Ti1KUJrgs8M2UB6Bg=;
+        b=TMpYcwLkfLTj/ATVziMuksWaNsV3xs053pw6b7Tre2eq7ME2fqLNfMFtBGsCfJ0eLv
+         YaiXKTnIikVyMFLz6c8RFczV2dxEuTPlqUn0VbE8hvXxjTAi2mOelNzXjdxPAmnkSCfd
+         3LifOZSqAm46lqRHFyEjsJsmzn/kOOCCpL0PCLxtWs3mOsRWSy+t7/E8RaWNKpD4LyWW
+         QEM8MkS1ukD7WBR9ph7HvsZQWjM1KNmig+Vr6IRoe9cSARPdbP8NtrVV38KehoUVsO5h
+         vE9r4xl6/rZ+05p1xaciTkPpWpp6a1HaUXeVGrmcWltf1wygu6Br9SLBLSbQuwtYg8jY
+         0m/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745504029; x=1746108829;
+        d=1e100.net; s=20230601; t=1745504030; x=1746108830;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9Hk5UBQTvuxPsQW0619Tu3I4qsqkftwTtmBE5Ybb85g=;
-        b=DaSRSYTj2VWKIR7S/KegRfvkW+YQeUO1YhtlEO83SJRLIfPjjRTs8+HPUi5oGwuU/L
-         lBP3ubLpLYf321eEXa+oE67MEapdR9IybnsYyyYKiikaT4IcG1rN+hl3Ry8OUcCK7iQW
-         Tf8l2DqaCs4EmfGd4IIwkiyQpiKN+XUwKU/XC/JJaizWqjzUe5fF34IfYqThMleK4471
-         iJIUIaXiB0cmPuqYGYS/9UhOBTjEt40P1uhCL7Km/R7yHpU3alHUCYo/4VBJjisLZ8hg
-         0nyS02/jgWq51O/pGJBqEPtKy+KhJgWmwDhlCL0/OkJ3YCABi5P1H+Nheb7t3iLenDs3
-         DS7Q==
-X-Gm-Message-State: AOJu0YyPFRBXyeNBYm3EwrJ+K0JtIIfDGvvtQrims9lSfpqeiJHO/A9H
-	CfDcl9snSAYfA3Yf606pOGCaoTupokirct8qA7W/h/pPs8sr5Taq8jIyJ89nIVNH+WBplbTZ17W
-	HSA0=
-X-Gm-Gg: ASbGnctj5EClpKDHkAlRtHsoiWrdHBd9weYJ4gpAtbWb4HyTpRkjNUF62tNknmmIgOG
-	FZCsWa4r+b7pTMBvTch/wXtN0sA0//o6918DFON/el1AjV6GdLLPtWzVvGASofZaRCsuc/SR0mf
-	Mnr5PhPYYnr7x4GiHmhPBCoql/RZoOIpjOdwGgJOaivTkFbi8rK+uaJ5ULyAtht5Qeatetrc0S7
-	l8OtjMa1S2AndEiEYdGUujYTkJ2RpUU0xY+xqrYasGcBW0yJxmRX+xcS6C0fuKFhReL3V0ekXG8
-	sRFZZc/HB9WBclvB306O42lbAykDpLgRiF4/bCuQ1aB7gHgngIFJCArZqVQv7ksij7H3qfhY6XD
-	wag2StZAOFF6y/gxX/uzus+5a5t4=
-X-Google-Smtp-Source: AGHT+IEX65fw+AuwIbm8DfCqVPIwMLBPu7X4mEmOAObvmlxgMqJT5rSe8ZZGCXBt4CgJFkEQIJbeNw==
-X-Received: by 2002:a05:6000:1a85:b0:391:39fb:59c8 with SMTP id ffacd0b85a97d-3a06cf61418mr2487543f8f.25.1745504029007;
-        Thu, 24 Apr 2025 07:13:49 -0700 (PDT)
+        bh=AlljNambtbwwvkzAI4LjAz2eo7Ti1KUJrgs8M2UB6Bg=;
+        b=UlTyR3yzgg99lAK7eOblPjZZ9vSiR8FgfF5Xc5YFfQSGDYZfNqSIih8YKZZLU2dTw0
+         MnvFXGMRW0niFEuWLDgYi3Z8kjs4SuyBz+QZ5anhSG4WhL/MRSH5I0Nzr09ewQgOtfTc
+         E5zRpHP8wpo0X4BNnJHLDIzzQXcS15en57zT9d+/gpf7YsCABIxsNNfnc4/XI5E4J3Cm
+         bcQV7pMmKdod3RIkvrlWUUL9Nft4uVSxgP8tMvBBvsUeDu0baKIyFx7EgF5RRHJT9oAe
+         B14Y8+FHAOrY80HCQd+nKA74emdKeJyj+2Zgcb2JG/3K35sRoRLm972jUG5N2NRVboaQ
+         ShCw==
+X-Gm-Message-State: AOJu0YxZ/XbY/P0a6r+JOGwj7Xsew2vXiR5omZthJQHcyh23NL3O1dBN
+	omuGnsFr2rhLiehgc4ijvWn6uU/cShUuiB9QLmjSue5DYE3pspW9wbvdOAKDZbxu2AXYIQCikGX
+	prA0=
+X-Gm-Gg: ASbGncsp/EPNfoIjHud8OVGkDWdsreKUZ6uIXi9B2Ac64EzEVOp0zAo1QsiZajmW+qi
+	3Pb1UvVSAhxIkgswMrj8HjHGInHGNvVJdncYbXcB3eRIQbZCl+tpBco+B5FIV4N+SbTsfdW06OI
+	sdONfYf4LqvMM9jOAERFz1ZHUYuPWZ+xUvEq5iHhYcx9JZHeNnWH+PA3x4flC2iq51CQ0rTtNQ2
+	WNVQbQozFvkIhDW9tSn/LM4dBel2sz9tnkRU7HsDX4TJasDT0HHjjqwFZVPpmXkAKWVK4bmXl6i
+	2VRXX/vzD2Dpl4s9t1UPAO9/qb2i666tIorMEBaShi6kOI2bv5rdFTbq+2JU/TKnnB9wUi8OcPQ
+	iTKfRP0RVj8RYO6yh
+X-Google-Smtp-Source: AGHT+IGjTSYHUF3tyGvvpZJy9ttFB+SjTk/OBEoax4K5qs9LZf6N8lXayXTA0lInN+EeJy++KbQTNQ==
+X-Received: by 2002:a05:6000:18a2:b0:391:47d8:de2d with SMTP id ffacd0b85a97d-3a06cf5ed4cmr2481988f8f.23.1745504030257;
+        Thu, 24 Apr 2025 07:13:50 -0700 (PDT)
 Received: from seksu.systems-nuts.com (stevens.inf.ed.ac.uk. [129.215.164.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.13.47
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.13.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:13:48 -0700 (PDT)
+        Thu, 24 Apr 2025 07:13:49 -0700 (PDT)
 From: Karim Manaouil <karim.manaouil@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
@@ -88,9 +88,9 @@ Cc: Karim Manaouil <karim.manaouil@linaro.org>,
 	Sreenivasulu Chalamcharla <sreeniva@qti.qualcomm.com>,
 	Trilok Soni <tsoni@quicinc.com>,
 	Stefan Schmidt <stefan.schmidt@linaro.org>
-Subject: [RFC PATCH 03/34] KVM: irqfd: Allow KVM backends to override IRQ injection via set_irq callback
-Date: Thu, 24 Apr 2025 15:13:10 +0100
-Message-Id: <20250424141341.841734-4-karim.manaouil@linaro.org>
+Subject: [RFC PATCH 04/34] KVM: Add weak stubs for irqchip-related functions for Gunyah builds
+Date: Thu, 24 Apr 2025 15:13:11 +0100
+Message-Id: <20250424141341.841734-5-karim.manaouil@linaro.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250424141341.841734-1-karim.manaouil@linaro.org>
 References: <20250424141341.841734-1-karim.manaouil@linaro.org>
@@ -102,52 +102,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some KVM backends, such as Gunyah, require custom mechanisms to inject
-interrupts into the guest. For example, Gunyah performs IRQ injection
-through a hypercall to the underlying hypervisor.
+The generic KVM core code (e.g., kvm_main.c and eventfd.c) calls into
+irqchip-specific helpers such as kvm_set_irq(), kvm_irq_map_gsi(), and
+kvm_irq_map_chip_pin(). These functions are defined in kvm_irqchip.c,
+which is not required or compiled when porting KVM to run on top of the
+Gunyah hypervisor.
 
-To support such use case, this patch introduces a new optional callback
-field `set_irq` in `struct kvm_kernel_irqfd`. If this callback is set,
-irqfd injection will use the provided function instead of calling
-kvm_set_irq() directly.
+To allow building the KVM core code without linking errors in such
+configurations, provide weak stub implementations of these functions
+in eventfd.c. These stubs return appropriate default values (e.g., -ENXIO
+or -1) to indicate that the functionality is not available.
 
-The default behavior is unchanged for existing users that do not override
-the `set_irq` field.
+This allows the KVM core to build successfully for platforms that do
+not use the in-kernel irqchip support, such as Gunyah.
 
 Signed-off-by: Karim Manaouil <karim.manaouil@linaro.org>
 ---
- include/linux/kvm_irqfd.h | 1 +
- virt/kvm/eventfd.c        | 5 +++++
- 2 files changed, 6 insertions(+)
+ virt/kvm/eventfd.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
-index e8d21d443c58..7d54bc12c4bf 100644
---- a/include/linux/kvm_irqfd.h
-+++ b/include/linux/kvm_irqfd.h
-@@ -46,6 +46,7 @@ struct kvm_kernel_irqfd {
- 	/* Used for level IRQ fast-path */
- 	int gsi;
- 	struct work_struct inject;
-+	int (*set_irq)(struct kvm_kernel_irqfd *);
- 	/* The resampler used by this irqfd (resampler-only) */
- 	struct kvm_kernel_irqfd_resampler *resampler;
- 	/* Eventfd notified on resample (resampler-only) */
 diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
-index 5f3776a1b960..d6702225e7f2 100644
+index d6702225e7f2..2a658d8277ed 100644
 --- a/virt/kvm/eventfd.c
 +++ b/virt/kvm/eventfd.c
-@@ -63,6 +63,11 @@ irqfd_inject(struct work_struct *work)
- 		container_of(work, struct kvm_kernel_irqfd, inject);
- 	struct kvm *kvm = irqfd->kvm;
+@@ -56,6 +56,26 @@ kvm_arch_irqfd_allowed(struct kvm *kvm, struct kvm_irqfd *args)
+ 	return true;
+ }
  
-+	if (irqfd->set_irq) {
-+		irqfd->set_irq(irqfd);
-+		return;
-+	}
++int __attribute__((weak))
++kvm_set_irq(struct kvm *kvm, int irq_source_id, u32 irq, int level,
++		bool line_status)
++{
++	return -ENXIO;
++}
 +
- 	if (!irqfd->resampler) {
- 		kvm_set_irq(kvm, KVM_USERSPACE_IRQ_SOURCE_ID, irqfd->gsi, 1,
- 				false);
++int __attribute__((weak))
++kvm_irq_map_gsi(struct kvm *kvm,
++		struct kvm_kernel_irq_routing_entry *entries, int gsi)
++{
++	return 0;
++}
++
++int __attribute__((weak))
++kvm_irq_map_chip_pin(struct kvm *kvm, unsigned irqchip, unsigned pin)
++{
++	return -1;
++}
++
+ static void
+ irqfd_inject(struct work_struct *work)
+ {
 -- 
 2.39.5
 
