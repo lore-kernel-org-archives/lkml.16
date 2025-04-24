@@ -1,145 +1,240 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B29119E7F9;
-	Thu, 24 Apr 2025 16:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3370B27F75B
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511029; cv=none; b=ZAfkm2hX1BxCv7OB9X7z50F4JKOQr7eDiSZKOPbmKoDbc7WQfp3C5Sfg74BTknYYHDqlr+W8P8hfRUgegIVlP/9aBECmyiBDRAtMV9Pdurh3Ga2GY8UAzra4Q+a9IBwpcwr3pIofB+d3JPVfhJ4okjKRwVDxo4FSs0yaxXifduw=
+	t=1745511094; cv=none; b=Exj/AJ/DChH1slDVm7L/hcfqVW+TPGh7n7bYP5kudNy+T1xpQ6/fxn3SAw/GoSJVyuYJHIpiHEYA9iui7Zw0fetwBb03sV7YBFdLGDIfysHe+jbLvCj0v7M+1Ukat2vFDLTdaY5OiCc9Ay0ucpGlJ2y2cI0k9QD8yb4T5CWAlfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511029; c=relaxed/simple;
-	bh=xS/c2OWjF/odcrpnrmcuWM+KrdapIB6JqW1w7ffcSTM=;
-	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DA5kX1cDd87AbsDvUwBgcADgRNmYZaVjIaOUF5SeB6u5knrI+bdVSMV4pU544os3LWCi8mBZbiJSg5k8Xe1xL4kAQQSdO1SrguxiGXqLtngq1/JJGHPk3Wkc3eaQRSob0frZi5c+C+Kj59gPyDafmpj3P7cL9IXNo8wG37PeJiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=lkcNnvNv; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1745511094; c=relaxed/simple;
+	bh=NdkqoKf1d1JEdx5XewadhXF1HsV4BHe8OdRH9zZMPSc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V6byblP2Ag9RlC9OFb8oeG+9pGr0u4PdGHGpPNZ2hsGdazTbaana5YMwnRHXSGqitRWNktUt71Ur+lPlF5iKFbS1PWC6C0XZRlyfSw7rDFb1uYqsgGelTdiyUBdNJ0LpBFbnmj/5ZD4RmXOtk97r5wAF6h3/8TCfic6dWV2Timo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OgKHJI9H; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="lkcNnvNv"
-Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OCIEXH002237;
-	Thu, 24 Apr 2025 18:09:41 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	xS/c2OWjF/odcrpnrmcuWM+KrdapIB6JqW1w7ffcSTM=; b=lkcNnvNvH3Y4ByzV
-	2xdkf8jvnuqm2xAX5NncjVhbS9sPbbWDkWN+8PNPuw1Jb2yDcLBl5/X1OBw+Gbi+
-	yL6UK0ojK5xWIg9O67qKpFOrIBH+lL7wj73r0lpR+2nzoedKVwqlTOV3+4AAqM1t
-	XH2yszQ9E985pznh7VRPbuKcl4HTWPceHELiyEs8oLieQdwI1TwLKR8/PlI4B24a
-	bKkm8tK7+aTLc7lVPrgkW6PdrBrW/C7kZwntzuRuy2CWDHXgDtXoa2D5b2ukbpG6
-	BheCKxuJtGgK+iY9E9wtURIBQXlCSfy5jlpxKF6/oxTsti3RrWTOMazcJUHQTCuf
-	k45zIQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jjygjeu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 18:09:41 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5168940082;
-	Thu, 24 Apr 2025 18:07:05 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 345169D0185;
-	Thu, 24 Apr 2025 18:04:50 +0200 (CEST)
-Received: from [192.168.8.15] (10.48.86.132) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
- 2025 18:04:48 +0200
-Message-ID: <b768bd1b6bfe3bef28278b85ace87230a67b904e.camel@foss.st.com>
-Subject: Re: [Linux-stm32] [PATCH 05/12] pinctrl: stm32: use new GPIO line
- value setter callbacks
-From: Antonio Borneo <antonio.borneo@foss.st.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Basavaraj Natikar
-	<Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Andreas =?ISO-8859-1?Q?F=E4rber?=
-	<afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Steen Hegelund
-	<Steen.Hegelund@microchip.com>,
-        Daniel Machon <daniel.machon@microchip.com>,
-        <UNGLinuxDriver@microchip.com>,
-        "Ludovic Desroches"
-	<ludovic.desroches@microchip.com>,
-        Nicolas Ferre
-	<nicolas.ferre@microchip.com>,
-        Alexandre Belloni
-	<alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Krzysztof Kozlowski
-	<krzk@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar
-	<alim.akhtar@samsung.com>
-CC: <linux-samsung-soc@vger.kernel.org>,
-        Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>,
-        <linux-actions@lists.infradead.org>, <linux-mips@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date: Thu, 24 Apr 2025 18:04:47 +0200
-In-Reply-To: <20250424-gpiochip-set-rv-pinctrl-part2-v1-5-504f91120b99@linaro.org>
-References: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
-	 <20250424-gpiochip-set-rv-pinctrl-part2-v1-5-504f91120b99@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OgKHJI9H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745511091;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8xsE74yKYPMH+2VlPy+Ra90/yb4WgqS6fEIO1+kVqG4=;
+	b=OgKHJI9H5noil+8helMA03ido6cCbv25EiwCG3mZZ+PezcV5yzlKIMUoP5qA0iceUuYDJ5
+	kVC2izdt58zIxYUcif9Pc5I+VTZxAOXS1aKsFPzMj3xzzfRX+2jiuqAkyOiShQubT+Qz9r
+	unLMuQSo4f4+Dzz+FrCSy42cA7KdUfs=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-352-uE0Oxc6qMnC7JkEe6vmqhA-1; Thu, 24 Apr 2025 12:11:29 -0400
+X-MC-Unique: uE0Oxc6qMnC7JkEe6vmqhA-1
+X-Mimecast-MFC-AGG-ID: uE0Oxc6qMnC7JkEe6vmqhA_1745511089
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6f2c7056506so22313736d6.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:11:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745511089; x=1746115889;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8xsE74yKYPMH+2VlPy+Ra90/yb4WgqS6fEIO1+kVqG4=;
+        b=pty5ePHPo1YjCb0X6Sn6ZcwP8MjFzZp8kiEGM446bf3EcfzoVQY6EwEIMsUCNDjvqS
+         sMbEj9mEHUV1BOoRfUzyP+3idyT4rVIzK5TAR3NThRECylgOovT127pHXrCpuXGvr4P1
+         Z9a/RAMK6BblJKy6raUJegG76/qRS/59gP6h25mv87kTCspc4e34j88bWDQBdtUNgr/m
+         BgoPhS6sM0wcPTj213NzinXmPestVTGww6aXfL4y30AbTlImCApWMUvTT74AYLWDJkwc
+         1dqgc6aFXFSterfBZ535MJPGOinTAZhPF8fZSbFhaYFdTcerIlDHPGbqohLLdM7swPIe
+         h4ew==
+X-Forwarded-Encrypted: i=1; AJvYcCXiba5RT35r8xOgan/4HGdmVCtxSqXgMfykyllbltwjujy2qS4VuyjorcGSgsmYcGtefgw8mUsNp7rCNxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyIqUgef4y34d0L31Zod5xNmMzShdox/5+VSs+wojrf0PAkO7el
+	nQ0RfUhs655CW+3ekLhMX0NVhyX126XlFhLTtrBfdNPCiOMTS44qhud1pafNaj2RyOnGNJZaSEO
+	5yoI/JhSLL+mYM3jdXmRtmRCYU2PuwfE4xlIzE00gWlzKnPqJZ4FSA3fr1luAuQ==
+X-Gm-Gg: ASbGncvgyyBTu6wM74+2Fk1/NWVV/lksPh7tOjkt7d66vyktmirhblIcN36ygoHDn6G
+	7zjGB/OnUypclfs3DBWJEj96EO//6KfvTlD1WXyb4AanVFIjfuuXRDAv7JwJL1MRerDdnTMwap5
+	OtrE5LXO2cxnm/ChpN1hLfULoityMuB4cq7/qWFo1LonIzLRnCdDUvEgq+w+/bybDdBYUm4aA09
+	e+WsGT8C84TV23Se6zw5zXK3962gJZcj5JNNrBZ0/CbwdU+2ayTa2yg+rX7b3BkHlCKRoFHuZJj
+	H8QIXdfcjDVRO0DMV7CJZd6mR2+wG+kYgak650cia3g=
+X-Received: by 2002:a05:6214:2b56:b0:6f4:c824:9d4a with SMTP id 6a1803df08f44-6f4c824a12emr9235776d6.13.1745511088976;
+        Thu, 24 Apr 2025 09:11:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGpF/KPHX3XupnXyOW//4CbII7OI3Fx0Pl8hvYFBhQZabQLo2Ocev5iqYKgDBjH6eF1US/txw==
+X-Received: by 2002:a05:6214:2b56:b0:6f4:c824:9d4a with SMTP id 6a1803df08f44-6f4c824a12emr9235276d6.13.1745511088411;
+        Thu, 24 Apr 2025 09:11:28 -0700 (PDT)
+Received: from jkangas-thinkpadp1gen3.rmtuswa.csb ([2601:1c2:4301:5e20:98fe:4ecb:4f14:576b])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4c0aaf5e9sm10784096d6.99.2025.04.24.09.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 09:11:28 -0700 (PDT)
+Date: Thu, 24 Apr 2025 09:11:24 -0700
+From: Jared Kangas <jkangas@redhat.com>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: sumit.semwal@linaro.org, benjamin.gaignard@collabora.com,
+	Brian.Starkey@arm.com, jstultz@google.com, tjmercier@google.com,
+	christian.koenig@amd.com, linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] dma-buf: heaps: Give default CMA heap a fixed name
+Message-ID: <aApirJb9P-LOOB8j@jkangas-thinkpadp1gen3.rmtuswa.csb>
+References: <20250422191939.555963-1-jkangas@redhat.com>
+ <20250422191939.555963-3-jkangas@redhat.com>
+ <20250424-sassy-cunning-pillbug-ffde51@houat>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_07,2025-04-24_01,2025-02-21_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250424-sassy-cunning-pillbug-ffde51@houat>
 
-T24gVGh1LCAyMDI1LTA0LTI0IGF0IDEwOjM1ICswMjAwLCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdy
-b3RlOgo+IEZyb206IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJhcnRvc3ouZ29sYXN6ZXdza2lAbGlu
-YXJvLm9yZz4KPiAKPiBzdHJ1Y3QgZ3Bpb19jaGlwIG5vdyBoYXMgY2FsbGJhY2tzIGZvciBzZXR0
-aW5nIGxpbmUgdmFsdWVzIHRoYXQgcmV0dXJuCj4gYW4gaW50ZWdlciwgYWxsb3dpbmcgdG8gaW5k
-aWNhdGUgZmFpbHVyZXMuIENvbnZlcnQgdGhlIGRyaXZlciB0byB1c2luZwo+IHRoZW0uCj4gCj4g
-U2lnbmVkLW9mZi1ieTogQmFydG9zeiBHb2xhc3pld3NraSA8YmFydG9zei5nb2xhc3pld3NraUBs
-aW5hcm8ub3JnPgoKUmV2aWV3ZWQtYnk6IEFudG9uaW8gQm9ybmVvIDxhbnRvbmlvLmJvcm5lb0Bm
-b3NzLnN0LmNvbT4KCj4gLS0tCj4gwqBkcml2ZXJzL3BpbmN0cmwvc3RtMzIvcGluY3RybC1zdG0z
-Mi5jIHwgNyArKysrKy0tCj4gwqAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCAyIGRl
-bGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvc3RtMzIvcGluY3Ry
-bC1zdG0zMi5jIGIvZHJpdmVycy9waW5jdHJsL3N0bTMyL3BpbmN0cmwtc3RtMzIuYwo+IGluZGV4
-IGNjMGI0ZDFkN2NmZi4uYmE0OWQ0OGMzYTFkIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvcGluY3Ry
-bC9zdG0zMi9waW5jdHJsLXN0bTMyLmMKPiArKysgYi9kcml2ZXJzL3BpbmN0cmwvc3RtMzIvcGlu
-Y3RybC1zdG0zMi5jCj4gQEAgLTIyOCwxMSArMjI4LDE0IEBAIHN0YXRpYyBpbnQgc3RtMzJfZ3Bp
-b19nZXQoc3RydWN0IGdwaW9fY2hpcCAqY2hpcCwgdW5zaWduZWQgb2Zmc2V0KQo+IMKgwqDCoMKg
-wqDCoMKgwqByZXR1cm4gISEocmVhZGxfcmVsYXhlZChiYW5rLT5iYXNlICsgU1RNMzJfR1BJT19J
-RFIpICYgQklUKG9mZnNldCkpOwo+IMKgfQo+IMKgCj4gLXN0YXRpYyB2b2lkIHN0bTMyX2dwaW9f
-c2V0KHN0cnVjdCBncGlvX2NoaXAgKmNoaXAsIHVuc2lnbmVkIG9mZnNldCwgaW50IHZhbHVlKQo+
-ICtzdGF0aWMgaW50IHN0bTMyX2dwaW9fc2V0KHN0cnVjdCBncGlvX2NoaXAgKmNoaXAsIHVuc2ln
-bmVkIGludCBvZmZzZXQsCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBpbnQgdmFsdWUpCj4gwqB7Cj4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBzdG0z
-Ml9ncGlvX2JhbmsgKmJhbmsgPSBncGlvY2hpcF9nZXRfZGF0YShjaGlwKTsKPiDCoAo+IMKgwqDC
-oMKgwqDCoMKgwqBfX3N0bTMyX2dwaW9fc2V0KGJhbmssIG9mZnNldCwgdmFsdWUpOwo+ICsKPiAr
-wqDCoMKgwqDCoMKgwqByZXR1cm4gMDsKPiDCoH0KPiDCoAo+IMKgc3RhdGljIGludCBzdG0zMl9n
-cGlvX2RpcmVjdGlvbl9vdXRwdXQoc3RydWN0IGdwaW9fY2hpcCAqY2hpcCwKPiBAQCAtMzA4LDcg
-KzMxMSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZ3Bpb19jaGlwIHN0bTMyX2dwaW9fdGVtcGxh
-dGUgPSB7Cj4gwqDCoMKgwqDCoMKgwqDCoC5yZXF1ZXN0wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqA9IHN0bTMyX2dwaW9fcmVxdWVzdCwKPiDCoMKgwqDCoMKgwqDCoMKgLmZyZWXCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoD0gcGluY3RybF9ncGlvX2ZyZWUsCj4g
-wqDCoMKgwqDCoMKgwqDCoC5nZXTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgPSBzdG0zMl9ncGlvX2dldCwKPiAtwqDCoMKgwqDCoMKgwqAuc2V0wqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoD0gc3RtMzJfZ3Bpb19zZXQsCj4gK8KgwqDCoMKgwqDC
-oMKgLnNldF9ydsKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA9IHN0bTMyX2dwaW9f
-c2V0LAo+IMKgwqDCoMKgwqDCoMKgwqAuZGlyZWN0aW9uX2lucHV0wqDCoMKgwqDCoMKgwqDCoD0g
-cGluY3RybF9ncGlvX2RpcmVjdGlvbl9pbnB1dCwKPiDCoMKgwqDCoMKgwqDCoMKgLmRpcmVjdGlv
-bl9vdXRwdXTCoMKgwqDCoMKgwqDCoD0gc3RtMzJfZ3Bpb19kaXJlY3Rpb25fb3V0cHV0LAo+IMKg
-wqDCoMKgwqDCoMKgwqAudG9faXJxwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoD0g
-c3RtMzJfZ3Bpb190b19pcnEsCj4gCgo=
+Hi Maxime,
+
+On Thu, Apr 24, 2025 at 10:33:58AM +0200, Maxime Ripard wrote:
+> Hi Jared,
+> 
+> Thanks for working on this
+> 
+> On Tue, Apr 22, 2025 at 12:19:39PM -0700, Jared Kangas wrote:
+> > The CMA heap's name in devtmpfs can vary depending on how the heap is
+> > defined. Its name defaults to "reserved", but if a CMA area is defined
+> > in the devicetree, the heap takes on the devicetree node's name, such as
+> > "default-pool" or "linux,cma". To simplify naming, just name it
+> > "default_cma", and keep a legacy node in place backed by the same
+> > underlying structure for backwards compatibility.
+> > 
+> > Signed-off-by: Jared Kangas <jkangas@redhat.com>
+> > ---
+> >  Documentation/userspace-api/dma-buf-heaps.rst | 11 +++++++----
+> >  drivers/dma-buf/heaps/Kconfig                 | 10 ++++++++++
+> >  drivers/dma-buf/heaps/cma_heap.c              | 14 +++++++++++++-
+> >  3 files changed, 30 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/userspace-api/dma-buf-heaps.rst b/Documentation/userspace-api/dma-buf-heaps.rst
+> > index 535f49047ce64..577de813ba461 100644
+> > --- a/Documentation/userspace-api/dma-buf-heaps.rst
+> > +++ b/Documentation/userspace-api/dma-buf-heaps.rst
+> > @@ -19,7 +19,10 @@ following heaps:
+> >   - The ``cma`` heap allocates physically contiguous, cacheable,
+> >     buffers. Only present if a CMA region is present. Such a region is
+> >     usually created either through the kernel commandline through the
+> > -   `cma` parameter, a memory region Device-Tree node with the
+> > -   `linux,cma-default` property set, or through the `CMA_SIZE_MBYTES` or
+> > -   `CMA_SIZE_PERCENTAGE` Kconfig options. Depending on the platform, it
+> > -   might be called ``reserved``, ``linux,cma``, or ``default-pool``.
+> > +   ``cma`` parameter, a memory region Device-Tree node with the
+> > +   ``linux,cma-default`` property set, or through the ``CMA_SIZE_MBYTES`` or
+> > +   ``CMA_SIZE_PERCENTAGE`` Kconfig options. The heap's name in devtmpfs is
+> > +   ``default_cma``. For backwards compatibility, when the
+> > +   ``DMABUF_HEAPS_CMA_LEGACY`` Kconfig option is set, a duplicate node is
+> > +   created following legacy naming conventions; the legacy name might be
+> > +   ``reserved``, ``linux,cma``, or ``default-pool``.
+> 
+> It looks like, in addition to documenting the new naming, you also
+> changed all the backticks to double backticks. Why did you do so? It
+> seems mostly unrelated to that patch, so it would be better in a
+> separate patch.
+
+Ah, I thought that since it was touching the immediate area and it's a
+small fix it would be suitable for this patch. Thanks for the catch,
+I'll extract this in v3.
+
+As for the rationale: as I understand it, the single backticks here are
+semantically incorrect, at least in general reST -- they're mainly used
+for links and roles. In this instance, the syntax is interpreted as the
+default role:
+
+    https://docutils.sourceforge.io/docs/ref/rst/roles.html
+
+I believe double backticks are what the doc is looking for here, used
+for code and rendered as monospaced text. Although there are a number of
+places around existing documentation that use single backticks (which
+happens to render as italics because the default role is
+:title-reference: if not configured in conf.py), a look through doc
+history points to double backticks being treated as correct for code,
+such as f6314b76d826 ("docs: kbuild/kconfig: reformat/cleanup") or
+2f0e2a39bbab ("docs/kbuild/makefiles: unify quoting").
+
+> 
+> > diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
+> > index a5eef06c42264..83f3770fa820a 100644
+> > --- a/drivers/dma-buf/heaps/Kconfig
+> > +++ b/drivers/dma-buf/heaps/Kconfig
+> > @@ -12,3 +12,13 @@ config DMABUF_HEAPS_CMA
+> >  	  Choose this option to enable dma-buf CMA heap. This heap is backed
+> >  	  by the Contiguous Memory Allocator (CMA). If your system has these
+> >  	  regions, you should say Y here.
+> > +
+> > +config DMABUF_HEAPS_CMA_LEGACY
+> > +	bool "DMA-BUF CMA Heap"
+> > +	default y
+> > +	depends on DMABUF_HEAPS_CMA
+> > +	help
+> > +	  Add a duplicate CMA-backed dma-buf heap with legacy naming derived
+> > +	  from the CMA area's devicetree node, or "reserved" if the area is not
+> > +	  defined in the devicetree. This uses the same underlying allocator as
+> > +	  CONFIG_DMABUF_HEAPS_CMA.
+> > diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
+> > index e998d8ccd1dc6..cd742c961190d 100644
+> > --- a/drivers/dma-buf/heaps/cma_heap.c
+> > +++ b/drivers/dma-buf/heaps/cma_heap.c
+> > @@ -22,6 +22,7 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/vmalloc.h>
+> >  
+> > +#define DEFAULT_CMA_NAME "default_cma"
+> 
+> I appreciate this is kind of bikeshed-color territory, but I think "cma"
+> would be a better option here. There's nothing "default" about it.
+
+I'm a little uncertain about plain "cma"; John mentioned the possibility
+of other CMA regions, suggesting that if we used "cma", we'd need to
+rename it again in the future to disambiguate. It doesn't sound
+guaranteed that other regions will be added, so I can see starting with
+"cma" and adjusting later if needed, but "default_cma" seemed
+inoffensive enough because it's consistent with current wording (e.g.,
+"linux,cma-default", "default-pool"), and has a lower chance of changing
+if other CMA regions/heaps were added. Let me know what you think.
+
+> 
+> >  struct cma_heap {
+> >  	struct dma_heap *heap;
+> > @@ -394,15 +395,26 @@ static int __init __add_cma_heap(struct cma *cma, const char *name)
+> >  static int __init add_default_cma_heap(void)
+> >  {
+> >  	struct cma *default_cma = dev_get_cma_area(NULL);
+> > +	const char *legacy_cma_name;
+> >  	int ret;
+> >  
+> >  	if (!default_cma)
+> >  		return 0;
+> >  
+> > -	ret = __add_cma_heap(default_cma, cma_get_name(default_cma));
+> > +	ret = __add_cma_heap(default_cma, DEFAULT_CMA_NAME);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > +	legacy_cma_name = cma_get_name(default_cma);
+> > +
+> > +	if (IS_ENABLED(CONFIG_DMABUF_HEAPS_CMA_LEGACY) &&
+> > +	    strcmp(legacy_cma_name, DEFAULT_CMA_NAME)) {
+> > +		ret = __add_cma_heap(default_cma, legacy_cma_name);
+> > +		if (ret)
+> > +			pr_warn("cma_heap: failed to add legacy heap: %pe\n",
+> > +				ERR_PTR(-ret));
+> > +	}
+> > +
+> 
+> It would also simplify this part, since you would always create the legacy heap.
+
+By "always", do you mean removing the strcmp? I added this to guard
+against cases where the devicetree node's name clashed with the default
+name, given that the DT name isn't necessarily restricted to one of the
+current names in use ("linux,cma" or "default-pool"). It seems like the
+strcmp would be relevant regardless of the naming choice, but if this is
+overly cautious, I can remove it in v3.
+
+Jared
+
+> 
+> Maxime
+
 
