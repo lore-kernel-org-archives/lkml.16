@@ -1,82 +1,37 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 366491A8F8A;
-	Thu, 24 Apr 2025 03:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 611E81A316A
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745464000; cv=none; b=rQ349uMj75sfFMPsR4dL2E/TkowqEuSKDvYKSqQxbf+I2NBemeWj8e1UpdYJyFncMFEAxMbdnxP0gbdSaAD03JqsfL48GIFgdPrdpdGcPxqXWgo6kUG4VctucYdairEzeLVjeOfbTW///1lbKzUP4gifl+CqDpXUQTT9Uv0Ej8U=
+	t=1745464013; cv=none; b=BDJfH929HSKymBNtUwpDrV29uT8P/WzgC/ilpUwFUx9h0zhd1uTXNi8cVRwspOZHd50XG5s5LY/vB0YGz2CwtqYa6e6iHEdT1PURRgwd4JYmpYu+0tG9ZxjAppwUHh7kRs1Y4uiyFMpsRlZnGGfSqzchwgNXZjlEXiE4ObvxRxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745464000; c=relaxed/simple;
-	bh=PfVFd7JLz5IXS7WUKb/plfNE0+8ZFcg3O3M4av8SGOg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tw7BCfuQQO9zZZ4ddYNeapkHwu/6/HZZyt7eALXmsuo3HjIiOos7/jrGRJQ4664xBZqs+/owEaMTFZhDDebPLQK4DhtScO21QKeT5X+SuqZ/wtmdl4kStLfiLMVaRkHrDZtdDDSDXmdz2zej/TRjIUjAIcEAu1HxH4Nm2NdI99Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JndJfV4K; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JndJfV4K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745463998; x=1776999998;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PfVFd7JLz5IXS7WUKb/plfNE0+8ZFcg3O3M4av8SGOg=;
-  b=JndJfV4KSK+/Kph4o2wGiLuRjZrySVAZPY5x2tl8cFv3v40XSQOuZsKr
-   1K1bR0EdsGArk5oafYhNH7QWaxTDT/jMFmR5RdHVX+uFRNuXT3vyLm1US
-   17trnnRnIbe1mWzEd+3EGXk0aPjKOJZ9H2L3soze0nO2x/k/3cdOrzalv
-   JN8lILBZwteBEPEvU3pTkfSEbHa9LNXqetjDupZ6BfUXpqxIPGsODVrJo
-   +CnbfxduD6xDdMff45DcgjKmmo3HkfdtWZz0Ezyts11S7vY6bTSBjdb2H
-   ONlxfvoHm2kWhgMQDDRbNfevEOKo5IlBBNt4AMFCy5dj3cVXdcwXoWvyP
-   Q==;
-X-CSE-ConnectionGUID: KwdD0Sn1RTmlKRtyjkFQ5A==
-X-CSE-MsgGUID: PEV58hqBSmWdki16dq+qkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="47205567"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="47205567"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:06:38 -0700
-X-CSE-ConnectionGUID: vGIPgGa/TgCJjZUv3jDSPA==
-X-CSE-MsgGUID: 4QNwRSLpSqmO/KJE+PsO6g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="133383716"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:06:31 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	x86@kernel.org,
-	rick.p.edgecombe@intel.com,
-	dave.hansen@intel.com,
-	kirill.shutemov@intel.com,
-	tabba@google.com,
-	ackerleytng@google.com,
-	quic_eberman@quicinc.com,
-	michael.roth@amd.com,
-	david@redhat.com,
-	vannapurve@google.com,
-	vbabka@suse.cz,
-	jroedel@suse.de,
-	thomas.lendacky@amd.com,
-	pgonda@google.com,
-	zhiquan1.li@intel.com,
-	fan.du@intel.com,
-	jun.miao@intel.com,
-	ira.weiny@intel.com,
-	isaku.yamahata@intel.com,
-	xiaoyao.li@intel.com,
-	binbin.wu@linux.intel.com,
-	chao.p.peng@intel.com,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [RFC PATCH 03/21] x86/virt/tdx: Add SEAMCALL wrapper tdh_mem_page_demote()
-Date: Thu, 24 Apr 2025 11:04:45 +0800
-Message-ID: <20250424030445.32704-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20250424030033.32635-1-yan.y.zhao@intel.com>
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+	s=arc-20240116; t=1745464013; c=relaxed/simple;
+	bh=dXbTaXGA2+mh4hdsOfSK2/s+3Cy/CYav9P4Gah+Lc9s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gQ2uaSfgqCCteeqzwT5U1CWeAjfYG39ccG1bqKehID8cVYhhKTFPf7Pheu6a4UM6DmKshIj640x6s4Q7Lq6Q6FVOZwEWUjhv9dRW8VGwnVC1Dlz5+JeQCfvYFrk8V2WdoJRWaxo6Cipxq89Kna4kn1UBFDm+SwZusCT0GJAhOTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Zjgkd1XJ5zvWq5;
+	Thu, 24 Apr 2025 11:02:33 +0800 (CST)
+Received: from kwepemo500009.china.huawei.com (unknown [7.202.194.199])
+	by mail.maildlp.com (Postfix) with ESMTPS id AF639180B45;
+	Thu, 24 Apr 2025 11:06:42 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemo500009.china.huawei.com
+ (7.202.194.199) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 24 Apr
+ 2025 11:06:42 +0800
+From: Hongbo Li <lihongbo22@huawei.com>
+To: <xiang@kernel.org>, <chao@kernel.org>, <huyue2@coolpad.com>,
+	<jefflexu@linux.alibaba.com>
+CC: <dhavale@google.com>, <linux-erofs@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <lihongbo22@huawei.com>
+Subject: [PATCH] MAINTAINERS: erofs: add myself as reviewer
+Date: Thu, 24 Apr 2025 11:06:53 +0800
+Message-ID: <20250424030653.3308358-1-lihongbo22@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,96 +39,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemo500009.china.huawei.com (7.202.194.199)
 
-From: Xiaoyao Li <xiaoyao.li@intel.com>
+I have a solid background in file systems and since much of my
+recent work has focused on EROFS, I am familiar with it. Now I
+have the time and am willing to help review EROFS patches.
 
-Add a wrapper tdh_mem_page_demote() to invoke SEAMCALL TDH_MEM_PAGE_DEMOTE
-to demote a huge leaf entry to a non-leaf entry in S-EPT. Currently, the
-TDX module only supports demotion of a 2M huge leaf entry. After a
-successful demotion, the old 2M huge leaf entry in S-EPT is replaced with a
-non-leaf entry, linking to the newly-added page table page. The newly
-linked page table page then contains 512 leaf entries, pointing to the 2M
-guest private pages.
+I hope my participation can be helpful to the EROFS patch review
+process.
 
-The "gpa" and "level" direct the TDX module to search and find the old
-huge leaf entry.
-
-As the new non-leaf entry points to a page table page, callers need to
-pass in the page table page in parameter "page".
-
-In case of S-EPT walk failure, the entry, level and state where the error
-was detected are returned in ext_err1 and ext_err2.
-
-On interrupt pending, SEAMCALL TDH_MEM_PAGE_DEMOTE returns error
-TDX_INTERRUPTED_RESTARTABLE.
-
-[Yan: Rebased and split patch, wrote changelog]
-
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Signed-off-by: Hongbo Li <lihongbo22@huawei.com>
 ---
- arch/x86/include/asm/tdx.h  |  2 ++
- arch/x86/virt/vmx/tdx/tdx.c | 20 ++++++++++++++++++++
- arch/x86/virt/vmx/tdx/tdx.h |  1 +
- 3 files changed, 23 insertions(+)
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
-index 26ffc792e673..08eff4b2f5e7 100644
---- a/arch/x86/include/asm/tdx.h
-+++ b/arch/x86/include/asm/tdx.h
-@@ -177,6 +177,8 @@ u64 tdh_mng_key_config(struct tdx_td *td);
- u64 tdh_mng_create(struct tdx_td *td, u16 hkid);
- u64 tdh_vp_create(struct tdx_td *td, struct tdx_vp *vp);
- u64 tdh_mng_rd(struct tdx_td *td, u64 field, u64 *data);
-+u64 tdh_mem_page_demote(struct tdx_td *td, u64 gpa, int level, struct page *page,
-+			u64 *ext_err1, u64 *ext_err2);
- u64 tdh_mr_extend(struct tdx_td *td, u64 gpa, u64 *ext_err1, u64 *ext_err2);
- u64 tdh_mr_finalize(struct tdx_td *td);
- u64 tdh_vp_flush(struct tdx_vp *vp);
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index a66d501b5677..5699dfe500d9 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -1684,6 +1684,26 @@ u64 tdh_mng_rd(struct tdx_td *td, u64 field, u64 *data)
- }
- EXPORT_SYMBOL_GPL(tdh_mng_rd);
- 
-+u64 tdh_mem_page_demote(struct tdx_td *td, u64 gpa, int level, struct page *page,
-+			u64 *ext_err1, u64 *ext_err2)
-+{
-+	struct tdx_module_args args = {
-+		.rcx = gpa | level,
-+		.rdx = tdx_tdr_pa(td),
-+		.r8 = page_to_phys(page),
-+	};
-+	u64 ret;
-+
-+	tdx_clflush_page(page);
-+	ret = seamcall_ret(TDH_MEM_PAGE_DEMOTE, &args);
-+
-+	*ext_err1 = args.rcx;
-+	*ext_err2 = args.rdx;
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(tdh_mem_page_demote);
-+
- u64 tdh_mr_extend(struct tdx_td *td, u64 gpa, u64 *ext_err1, u64 *ext_err2)
- {
- 	struct tdx_module_args args = {
-diff --git a/arch/x86/virt/vmx/tdx/tdx.h b/arch/x86/virt/vmx/tdx/tdx.h
-index 82bb82be8567..b4dc6b86d40a 100644
---- a/arch/x86/virt/vmx/tdx/tdx.h
-+++ b/arch/x86/virt/vmx/tdx/tdx.h
-@@ -24,6 +24,7 @@
- #define TDH_MNG_KEY_CONFIG		8
- #define TDH_MNG_CREATE			9
- #define TDH_MNG_RD			11
-+#define TDH_MEM_PAGE_DEMOTE		15
- #define TDH_MR_EXTEND			16
- #define TDH_MR_FINALIZE			17
- #define TDH_VP_FLUSH			18
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fa1e04e87d1d..f286c96ea7db 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8719,6 +8719,7 @@ M:	Chao Yu <chao@kernel.org>
+ R:	Yue Hu <zbestahu@gmail.com>
+ R:	Jeffle Xu <jefflexu@linux.alibaba.com>
+ R:	Sandeep Dhavale <dhavale@google.com>
++R:	Hongbo Li <lihongbo22@huawei.com>
+ L:	linux-erofs@lists.ozlabs.org
+ S:	Maintained
+ W:	https://erofs.docs.kernel.org
 -- 
-2.43.2
+2.34.1
 
