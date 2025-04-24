@@ -1,74 +1,74 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC23822170B
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA1C225402
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487046; cv=none; b=lxq5Ur69T5KI+VuP11hw4KLS4+uQFitP3Ylj/Q5i2seueTbA2aIPCuMQOdOh3izWh290wx4itpWsWU3crZlZHjeq8jFcL3B1MrixQ5I4q2ljus6tuF8snh02elXfEBb5YR5/vLhiin8PrnVPJ/Pgo4ju74qn1YLmhvQ4zAxIo3Y=
+	t=1745487053; cv=none; b=jIvf9Z7tUuBFAXmena2f10SmXy9cskcIjS1Vhdc/f++RUj36NxVaj7f8kJvcHyercAMeS7IPhZ2ltKT8V6FiWwLFl9b+Xlbv5ZBWmX0w7zYZZk1WVyywd6M06OV5mlrCgwXRIq9/HCWx0fBfHi5EYeP0k5ICWqbhufSpERuyDAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487046; c=relaxed/simple;
-	bh=FPpQXhCAtJWD+llxzmofIq+g2UnjKxY9klTU0N29QSk=;
+	s=arc-20240116; t=1745487053; c=relaxed/simple;
+	bh=Uacr3JGWYtukIhw8R5JPc/xlbl+xhhFg6HvK7EGKgqM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HEI9TdNGLwHJs84FlbQ2zMH0KkMWkmKHZowAnufqgYY7w/S4qloY0GC0gbmaKn5ohrBgylffH8SD6kf1tkfMNLZkkvIO2Pz5nmmF+HeFHWQzaHnMM09HFLm0E1omFhg6GW9ybzvqjUky+jwNXUwta0rK3ekatzeMxrtM2pnOVbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PXgW6Phg; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:To:Cc; b=J+pRZpFBHf65gDRXJSwlrIrSZZTHxdpE5hXEDb0Uqnu2AZk9l/2772bYm3NO7OaTsGJYEUyfJHi0XMn4zbx3Jp3I+FNfnq/NVV0cwwqUHQEF6zgtI/7aZkrNuAEtHpRhe4vrJse+4v8mxaQj8PMWZ+9FndzDTzHGCvcmW68qEyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Nonq8wif; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PXgW6Phg"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0FD65031157
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:42 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Nonq8wif"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F7rL010242
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	P7GEUOgJ+d3VgJMqSPmtGJC0ytCJzVLRSBncAB0gqgM=; b=PXgW6PhgQpmypCzi
-	L3kfKXCnXbgokTFYTnAPu1HPCRZ7flZ3O+wWEHxRn9CQOs3M9uNLVUX47+RFQN44
-	in6TLjD2TKztv5D/LtSwmqppMihRSxAdOftDmiQeTkl6QBhW6la/U3SNg9XcrR3I
-	h2PiuecQEb9omTafjClauZzF4q5fXReEFQUdzfaOaLirXDuquKBRWDaahGYfGS5M
-	FaHxfoqhLkLad86kkhzQzg5hOOJRxyeCEyAhIvLODLzx5GgdWc+8PUmOERyBcPr1
-	vrxSDtgr3U0EcgS87o48LORvVUqwVDNLeknPOvYxPXq9cO0SvG16ASh2r2uJ5WGs
-	uMIlug==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5cyx9-1
+	mJipZcZZWH1q+GPZjyCUn13cwL4q5wMDd8S9OaXiPQE=; b=Nonq8wifbCmkLCqr
+	E4UJ4AsWLcoudxwqiP4aRkSOfnjqjTWLPYtKaCH20w45oAIuuUhqAcQxaH4+eVDc
+	WmKFgQyBfbrjPM1TYd1pTXSHgEhcKOU/CWXyClM7SADQ05ud2/iYIXTUGdShModZ
+	XVhl/2qAZCnV8caTPO7FP4i4du36UaCpHgHCtsMqzl3ed7smU6JPMGO3Sc4mx2un
+	H6GXaG8hhv4sKTmz1om9MFbNyKnhs7XA6gvsW5CMfFRRws6RLz2XpKtrGqAX6HQu
+	3mhUuy3lNGomgL32187YruD9bhAT84/3HyMDDXq4OGDoukXGP+WYfq8i2fLK0sXC
+	EigGaA==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3mypt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:42 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c5e2a31f75so254072685a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:30:42 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:30:49 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c791987cf6so169192285a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:30:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745487041; x=1746091841;
+        d=1e100.net; s=20230601; t=1745487049; x=1746091849;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P7GEUOgJ+d3VgJMqSPmtGJC0ytCJzVLRSBncAB0gqgM=;
-        b=HDqrUJQfN6URoyZC9EEGrronFlabLPEW5yYEtpS8/RsqpYqrdFmyIXdMfTCOqW05vw
-         GOKT1FMedUT1Dov2FJaDhZm4Hep/JBiztxRujNzOa7xOGXUbmvH66Yv/Ip05E+12q42n
-         ELDtHOwNX3KuXQYNnvbd6mYqd0lQ/+e6cSFbQbWoId9ksu+Yxi0q4DGuPCJSres+5KxK
-         t3OGsvztraL5bHs//5tJvVGoTTlGjdkRBb/xPkLSqjXJl9rovOlydwab+tmMTPKFTfg4
-         ML79FQbKrAx/qFaVQy2wu0yuUoowopN1H/0fG0DgaaVOqX8AYRFnFWXYda+HSA8Uhxs3
-         hZ8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUfFmdkAAYuZ8u6Dt8p43Lt+zoaii5GMU/GpDRl7aQXvfpz2Iag99XeVzMlyQemQ6tUUGjJLZo/9DKSkWM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKhi7aUAOn0U/0gJ5RyXIoOkNmOb20d7odC88kgYr4+nSMQJXJ
-	Vk826hqcSuxaNxM4+NIJ0b+rnx7h7Ukw4QW/PqZKN68WrXA0wcjOjXzQUoeAq100SAKzoz94DSs
-	XY9lk6yMITiFk2d7dAQIre1VruuWOCn1AZqTCMu+luxSfxGzduTgKO+Bn+nMF1kQ=
-X-Gm-Gg: ASbGncvWmEhNPlgokAHE4HSADCGhmuC859kGf2by2dce1hnI1Bzak7qL1IcZnBw6WYG
-	oI125z8gn/zH/cnnX+W4cS9A3PWF8lelD3/uz+If8ZzKc8cFVXdA0wtTrVXJe7Fl0FRNPhsJv2J
-	az/orDkq8i4moWTeeW/j0zlqv7B4vilTWKGxZICQ8ecWun1WH2X+yK55QkZwR+lyFyZhuQFSMuV
-	spjhCLJTX9ov3f88hwvNUE6+ZE2+8YzWY70XjTVDItosr3BD9+a4qfo7O1Vh246ZVgvl+AAuYIj
-	0JRZSpWfkdv1BcXEyQoa8CUMVNP0XUGHMwFfZnbmHypI02Fdqiy6FU5R0fOEtbcLRnow9gXNzL0
-	spWDNG28tdpusNfV0diBucwzq
-X-Received: by 2002:a05:620a:4054:b0:7c7:af68:b6f3 with SMTP id af79cd13be357-7c956edf04cmr286423585a.33.1745487041320;
-        Thu, 24 Apr 2025 02:30:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEw7xllsK8s5mAWFwEYYUORkTQn8WDPEjG0mLr6qzjcim2dQzKtXcFBiadW7v+N0cGLXouGAQ==
-X-Received: by 2002:a05:620a:4054:b0:7c7:af68:b6f3 with SMTP id af79cd13be357-7c956edf04cmr286419385a.33.1745487040879;
-        Thu, 24 Apr 2025 02:30:40 -0700 (PDT)
+        bh=mJipZcZZWH1q+GPZjyCUn13cwL4q5wMDd8S9OaXiPQE=;
+        b=fSo95uYYYe2gf+bIuvxAJb8qKq3L9kdmjW+wAyHg/b2zhtXApYnd0pCysCZxCYnOQr
+         A/DrKTkf7Gk7gMLoXGsE0LsJ5ruleTZbTC0zt7hdP8A+VBrB/YvsLPPqkiLaZym6Gp4C
+         vODKX8cqdwDZJt3o0azirz1zG1CUFpzIPc7kf8sd8FFGf+fhjw+ro0xYW70rbunQtBNP
+         y3Pe4D8r/ls8IVejLTvDBP0uXQm1fDqJ+01qn+LXz1wcKR12c1crHdufZrUzhyYQDcjz
+         ZLIZAWKP9yxeRsH9YuKSQOPuXJSUcn0V9zoMlThLM1QMFuwXWxOVaVYuTrK0MAz/qAkl
+         q8cQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9KOZsKM7tRmf0ux1HY6uY8so9s7SKZRjSooO4mUnHHwRNkgrq8Uz62DgjfMzUHAQjLwPFUYJyl2lDlnQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/O7PAXMhuTG6oYTbYschmp7mceyHJydL3R8e9kfGo5WyZWOdT
+	XcBAv7/k+Hny4qbmrYUbDTAKjG3F1zO6Ag0dWi4XbA9VyKQi0EjtrwM0ml1L8U20B/34pQ0DcSf
+	ik9bfmPBvwfUrOf/8ZI5id8Q4ZzCK3S9mUiZUscXU/BGfc5UWbaXIGj0gokfxqGw=
+X-Gm-Gg: ASbGncsWRRahGg2w2ibyd1AI4dOJggCzCqqIzw2OIH6QZrWfUR2J4Mn8DGzaWVL+j9h
+	iW3qdGIa/6qPAct9zqmvzouSAZky8ZAkfjAMMbqABo3HfmYufz+o4s/Ouk9idyJLepvB73/yJKJ
+	Fglu+UCZMj/Am43PMLyqhKs+P6oc8yi58pz2G21axsqS4pceaYPBabQvcyH0r7iDdzgihzQ/NGm
+	tJ8mYP1dhHaJz4Mio27/tdE/9/q8VYH2eeHaOgUpRQFhenfw4WKvfChpAYWuEtZgqyEhrStB/e3
+	+Mrhtbcqip0/kKK24U6tq4qqf8OxRZAfwAFQq0pPsoLc/+n2Bx4hmYe9nmqaYGQv28bjPY33ej6
+	KzU2CZtJ9pMIe+qhbYtjgBn1d
+X-Received: by 2002:a05:620a:1794:b0:7c5:5909:18e5 with SMTP id af79cd13be357-7c956e7d446mr326878485a.3.1745487049292;
+        Thu, 24 Apr 2025 02:30:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFBQmRn7SKcjUSTbGIjxqsPY4wEMu/CWMSRP8MryisNW1tohurPxko9cDIUFwhuJlclwe9QsQ==
+X-Received: by 2002:a05:620a:1794:b0:7c5:5909:18e5 with SMTP id af79cd13be357-7c956e7d446mr326875185a.3.1745487048943;
+        Thu, 24 Apr 2025 02:30:48 -0700 (PDT)
 Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b9a304sm1820461fa.99.2025.04.24.02.30.37
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-317d1b9a304sm1820461fa.99.2025.04.24.02.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 02:30:37 -0700 (PDT)
+        Thu, 24 Apr 2025 02:30:46 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Thu, 24 Apr 2025 12:30:13 +0300
-Subject: [PATCH v3 09/33] drm/msm/dpu: get rid of DPU_CTL_ACTIVE_CFG
+Date: Thu, 24 Apr 2025 12:30:18 +0300
+Subject: [PATCH v3 14/33] drm/msm/dpu: get rid of DPU_INTF_STATUS_SUPPORTED
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-dpu-drop-features-v3-9-cdaca81d356f@oss.qualcomm.com>
+Message-Id: <20250424-dpu-drop-features-v3-14-cdaca81d356f@oss.qualcomm.com>
 References: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
 In-Reply-To: <20250424-dpu-drop-features-v3-0-cdaca81d356f@oss.qualcomm.com>
 To: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
@@ -89,469 +89,94 @@ Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=18958;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2459;
  i=dmitry.baryshkov@oss.qualcomm.com; h=from:subject:message-id;
- bh=ZNJ38EuFTkNMEqkAwQ+8h/9Btpclakp0rdOuryipKi8=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBoCgSrUxIl2eJQUKijaqvks56+j4jD1gXOCNeZa
- JHaXJgi5qqJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAoEqwAKCRCLPIo+Aiko
- 1XhTB/wJnjR1o/jYSmOTpqts17OKPZraFAGAInwS8ckcOyCSHyCSSqPy0R/k0nk81GovExq8OB5
- X8tlyab8AK+R3a2vk65IncXHAiWzpnXANEmLfnFeymlIDwukqhHhPbDJpOSxBRpWfsx8bgQ95Ea
- kAj4Sww2icrvcDu9Jw6vGrQsQovta71FZBC9qdkwpG8mh/iRn++SWnyETpjsUB4hXttZy/Npj+f
- BYKsaZuRnihpw1HKWOckSLTCCSpSW9cg5q1LSxBlNI9/n8sLO4uc9HygkguM6XYLTZkRsApdsNJ
- qrvU/7Ypsew5nSNC+HwI9yBeAIbUo0rkd+Voiojtz7GJIx3y
+ bh=Nt4QhnpHTNYrhzhqV0xbi5+n74LJmsNMY4VbVunyJu8=;
+ b=owEBbAGT/pANAwAKAYs8ij4CKSjVAcsmYgBoCgSt5uuV1bwUk5DQ4vQkc/FrwRESt2DWna1p0
+ zQoy8eeh6GJATIEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCaAoErQAKCRCLPIo+Aiko
+ 1UZUB/dSUNDw61C3xWnyNFZGuOISsMOOeIDbwgFQ1wDsmxaKY820q07g40rgZ/jKh0prEf7XsmO
+ C84OnR0tvenNeIvXZm8sZsdkRJNU020kjboki6Vqkmsax4Ep3wq7AO1EKashj7zmJlOD5iUXmGC
+ /fM7entgLttcNsyxwhK515VCsxvazBjGD69tk/9xPDmrje/LPtvt7APsgR6AvjHuWBpTVV9A+wS
+ kLTvq1xTz5KU/ZlLtsOgAB+A1tgJytgfIvqL929trBGoE+no6fM4G9YMEE3PIyLBT9xAbDw7PDg
+ 0gMgrV1By9pnPaoOvSuU61HaZ0ap1pb0iPeLu43FByx4Vto=
 X-Developer-Key: i=dmitry.baryshkov@oss.qualcomm.com; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MyBTYWx0ZWRfX4oijHwg5t/D2 ODIAQ/lFS82v2OoJ1vX1OMaoCuo8mQJ2AoJmh5GobbRnDE40g9vd9Mj95RFsGM5w8MHywdjdDZK 9eXFUbFA1MfcjRuGPY9zf/cFVLSTxuDyzjX0uiNayeOht5m18g/TgyBpCOrtLhUpXpT2bSpXMqV
- zqEzcqOMROJvedx/q+8ExjlWY+X/2a2sY5cdloRgxxsBOUdg0VDR9WwvpCKHWcUIxNYBIGrvM3O KSCGRl3xdGY2vFu4KhKn2sEqVpoLckJqR+oaATpzOv3cVFiI1WxbJQ/5MSgXk13H803CmgHVxZH rryZlaYGCiv2V4GjWRsF238QCCI88JKUdIXRS63zAi4KUcy0Ygc7D0AII+6zffpCBnjXwE+H+fl
- HkQ/EQvpaL4Vov/HcpNALNk7KRFo4e6HRfp2sXuD2H6erAKDWrJDMpcKy4s49pQkuTrpBpGX
-X-Proofpoint-GUID: bhPKLObBrB1nUiVf9Ga_CHJ7UoLk-Kdx
-X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=680a04c2 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=QkM7UoOa6lEXaYzOGzoA:9 a=QEXdDO2ut3YA:10
- a=IoWCM6iH3mJn3m4BftBB:22 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: bhPKLObBrB1nUiVf9Ga_CHJ7UoLk-Kdx
+X-Proofpoint-ORIG-GUID: V1mC5egB3csfzY7faimiNTI3lx38ViWv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MiBTYWx0ZWRfX1Apy0ZFfKfmG 288RXV3RU3qEKUwHiR8yl8jI6P7rRGW1Ya/JRKbxqEJaclTEDrIJ4/qTMSqxth8WonNwdrXwmtZ XIiCooIa4eFcqZoX87XG6rZcx+Y5ERJ1HutUxZIbSq6t4HaWKxeBs46dsfqu4ebiGaBXimhxnR4
+ vP4NON0L6v9kdT5DjTyl0P4hf+QYGW0zvV0ngb1Tbk5EAoGB/qeialqeNNU6ZxDsFQ7ua/YAbr7 sN/TkUn3omNHgGgjEijHRKSimgP0q5URt85U1zOkZCYa+vvHUPLE9BykY/bRDsT2AwHZGaCznmM 7Zq3JJUnSRMbuM6tvuwxtGpn62ddoLKoioPEFgU36x6GwDXx0uOyRw1KAc+E7SeZUBnhGMi+iWL
+ stVfi1VhQ8xQ2aQXyVCF0bbmuyzOl2wtt3h70fHWxMoQlhsT4dSEQqOUEKbU5OVTMjhq4qMS
+X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=680a04ca cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=z6iiZyybfqEMMI01lysA:9 a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: V1mC5egB3csfzY7faimiNTI3lx38ViWv
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240063
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240062
 
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 Continue migration to the MDSS-revision based checks and replace
-DPU_CTL_ACTIVE_CFG feature bit with the core_major_ver >= 5 check.
+DPU_INTF_STATUS_SUPPORTED feature bit with the core_major_ver >= 5
+check.
 
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h  | 8 ++------
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h | 8 ++------
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h  | 8 ++------
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h  | 6 ------
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h  | 6 ------
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h  | 8 ++------
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h  | 3 ---
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h  | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h  | 4 ----
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h | 1 -
- drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h  | 1 -
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c    | 2 +-
- drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c     | 7 ++-----
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c          | 3 +--
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h          | 1 -
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c              | 2 +-
- 16 files changed, 13 insertions(+), 56 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c | 3 +--
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h | 2 --
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c    | 3 +--
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
-index 7731bd79c135f1f28cc3e5a53bf05097cc9f70e9..3bb0749f931d7417f8e90bfe3736ce77dafccb57 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_0_sm8150.h
-@@ -42,32 +42,28 @@ static const struct dpu_ctl_cfg sm8150_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG) | BIT(DPU_CTL_SPLIT_DISPLAY),
-+		.features = BIT(DPU_CTL_SPLIT_DISPLAY),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	}, {
- 		.name = "ctl_1", .id = CTL_1,
- 		.base = 0x1200, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG) | BIT(DPU_CTL_SPLIT_DISPLAY),
-+		.features = BIT(DPU_CTL_SPLIT_DISPLAY),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
- 	}, {
- 		.name = "ctl_2", .id = CTL_2,
- 		.base = 0x1400, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 11),
- 	}, {
- 		.name = "ctl_3", .id = CTL_3,
- 		.base = 0x1600, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 12),
- 	}, {
- 		.name = "ctl_4", .id = CTL_4,
- 		.base = 0x1800, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 13),
- 	}, {
- 		.name = "ctl_5", .id = CTL_5,
- 		.base = 0x1a00, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 23),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
-index 899a5502229f1321403a27c4431c10bdbfeeeda8..84114df5f072af16aeedd3aada8a106ca4369ddb 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_1_sc8180x.h
-@@ -41,32 +41,28 @@ static const struct dpu_ctl_cfg sc8180x_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG) | BIT(DPU_CTL_SPLIT_DISPLAY),
-+		.features = BIT(DPU_CTL_SPLIT_DISPLAY),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	}, {
- 		.name = "ctl_1", .id = CTL_1,
- 		.base = 0x1200, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG) | BIT(DPU_CTL_SPLIT_DISPLAY),
-+		.features = BIT(DPU_CTL_SPLIT_DISPLAY),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
- 	}, {
- 		.name = "ctl_2", .id = CTL_2,
- 		.base = 0x1400, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 11),
- 	}, {
- 		.name = "ctl_3", .id = CTL_3,
- 		.base = 0x1600, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 12),
- 	}, {
- 		.name = "ctl_4", .id = CTL_4,
- 		.base = 0x1800, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 13),
- 	}, {
- 		.name = "ctl_5", .id = CTL_5,
- 		.base = 0x1a00, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 23),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
-index 830f416c0b5183cb764b2d6381bdc4a74df0ab0c..7a04eacb108bea33573cf75fb5537b80e8273039 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_2_sm7150.h
-@@ -38,32 +38,28 @@ static const struct dpu_ctl_cfg sm7150_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG) | BIT(DPU_CTL_SPLIT_DISPLAY),
-+		.features = BIT(DPU_CTL_SPLIT_DISPLAY),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	}, {
- 		.name = "ctl_1", .id = CTL_1,
- 		.base = 0x1200, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG) | BIT(DPU_CTL_SPLIT_DISPLAY),
-+		.features = BIT(DPU_CTL_SPLIT_DISPLAY),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
- 	}, {
- 		.name = "ctl_2", .id = CTL_2,
- 		.base = 0x1400, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 11),
- 	}, {
- 		.name = "ctl_3", .id = CTL_3,
- 		.base = 0x1600, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 12),
- 	}, {
- 		.name = "ctl_4", .id = CTL_4,
- 		.base = 0x1800, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 13),
- 	}, {
- 		.name = "ctl_5", .id = CTL_5,
- 		.base = 0x1a00, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 23),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
-index dc6d8fd05c2e3afbe5182b1ae8dd9fea8b6543e5..d44db988a6e2f443803a422846f817779d382b2a 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_3_sm6150.h
-@@ -35,32 +35,26 @@ static const struct dpu_ctl_cfg sm6150_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	}, {
- 		.name = "ctl_1", .id = CTL_1,
- 		.base = 0x1200, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
- 	}, {
- 		.name = "ctl_2", .id = CTL_2,
- 		.base = 0x1400, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 11),
- 	}, {
- 		.name = "ctl_3", .id = CTL_3,
- 		.base = 0x1600, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 12),
- 	}, {
- 		.name = "ctl_4", .id = CTL_4,
- 		.base = 0x1800, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 13),
- 	}, {
- 		.name = "ctl_5", .id = CTL_5,
- 		.base = 0x1a00, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 23),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
-index 14ecf429e7695c167e85f500b113952ebdbc3aa6..ba631cdbbff0cec7453685bc1028791eadbbb2d4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_5_4_sm6125.h
-@@ -35,32 +35,26 @@ static const struct dpu_ctl_cfg sm6125_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	}, {
- 		.name = "ctl_1", .id = CTL_1,
- 		.base = 0x1200, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
- 	}, {
- 		.name = "ctl_2", .id = CTL_2,
- 		.base = 0x1400, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 11),
- 	}, {
- 		.name = "ctl_3", .id = CTL_3,
- 		.base = 0x1600, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 12),
- 	}, {
- 		.name = "ctl_4", .id = CTL_4,
- 		.base = 0x1800, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 13),
- 	}, {
- 		.name = "ctl_5", .id = CTL_5,
- 		.base = 0x1a00, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 23),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h
-index 8dab7f63928bb708c79080b139395c3410fd45bf..5f7bee25a7a4f80d1f2fb86f126863b721c41281 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_0_sm8250.h
-@@ -40,32 +40,28 @@ static const struct dpu_ctl_cfg sm8250_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG) | BIT(DPU_CTL_SPLIT_DISPLAY),
-+		.features = BIT(DPU_CTL_SPLIT_DISPLAY),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	}, {
- 		.name = "ctl_1", .id = CTL_1,
- 		.base = 0x1200, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG) | BIT(DPU_CTL_SPLIT_DISPLAY),
-+		.features = BIT(DPU_CTL_SPLIT_DISPLAY),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
- 	}, {
- 		.name = "ctl_2", .id = CTL_2,
- 		.base = 0x1400, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 11),
- 	}, {
- 		.name = "ctl_3", .id = CTL_3,
- 		.base = 0x1600, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 12),
- 	}, {
- 		.name = "ctl_4", .id = CTL_4,
- 		.base = 0x1800, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 13),
- 	}, {
- 		.name = "ctl_5", .id = CTL_5,
- 		.base = 0x1a00, .len = 0x1e0,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 23),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h
-index f648d19123fa95a1c20074abd4dd0bda5147ed29..0ede8223a3a85414f271de11b601b648ca865fbe 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_2_sc7180.h
-@@ -32,17 +32,14 @@ static const struct dpu_ctl_cfg sc7180_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	}, {
- 		.name = "ctl_1", .id = CTL_1,
- 		.base = 0x1200, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
- 	}, {
- 		.name = "ctl_2", .id = CTL_2,
- 		.base = 0x1400, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 11),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h
-index f8164950a0f7721643eabf5cb2bb7a5e3bcdfbfa..01e398add3c45a8bc504da5ca268df0487462113 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_3_sm6115.h
-@@ -29,7 +29,6 @@ static const struct dpu_ctl_cfg sm6115_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h
-index ddf05cb3954e12e6689cb579f20b20e1d220156c..da04822327975aa70cab679f5e53d53f65fb749c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_4_sm6350.h
-@@ -35,22 +35,18 @@ static const struct dpu_ctl_cfg sm6350_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	}, {
- 		.name = "ctl_1", .id = CTL_1,
- 		.base = 0x1200, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 10),
- 	}, {
- 		.name = "ctl_2", .id = CTL_2,
- 		.base = 0x1400, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 11),
- 	}, {
- 		.name = "ctl_3", .id = CTL_3,
- 		.base = 0x1600, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 12),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-index 6d424a4fd60bd94ddc0374466d86770138b2831f..94dc8726199a3a48a64c7dff58bc62e6fd097c99 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_5_qcm2290.h
-@@ -29,7 +29,6 @@ static const struct dpu_ctl_cfg qcm2290_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h
-index aaf4b270f20dcc5fb91fbcb783c6d3bc673894f5..2b2b9417e23950425a72f6dd44baf824b5a00061 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/catalog/dpu_6_9_sm6375.h
-@@ -30,7 +30,6 @@ static const struct dpu_ctl_cfg sm6375_ctl[] = {
- 	{
- 		.name = "ctl_0", .id = CTL_0,
- 		.base = 0x1000, .len = 0x1dc,
--		.features = BIT(DPU_CTL_ACTIVE_CFG),
- 		.intr_start = DPU_IRQ_IDX(MDP_SSPP_TOP0_INTR2, 9),
- 	},
- };
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-index da9994a79ca293ec0265680c438835742102db2a..9d0b6397acbd41cc7c93df040be5c248b7ad3c05 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-@@ -67,7 +67,7 @@ static void _dpu_encoder_phys_cmd_update_intf_cfg(
- 	ctl->ops.setup_intf_cfg(ctl, &intf_cfg);
- 
- 	/* setup which pp blk will connect to this intf */
--	if (test_bit(DPU_CTL_ACTIVE_CFG, &ctl->caps->features) && phys_enc->hw_intf->ops.bind_pingpong_blk)
-+	if (phys_enc->hw_intf->ops.bind_pingpong_blk)
- 		phys_enc->hw_intf->ops.bind_pingpong_blk(
- 				phys_enc->hw_intf,
- 				phys_enc->hw_pp->idx);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-index 849fea580a4ca55fc4a742c6b6dee7dfcdd788e4..c8f3516ae4faa709e3eda4c0efb050ca18b675e4 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_wb.c
-@@ -218,7 +218,6 @@ static void dpu_encoder_phys_wb_setup_fb(struct dpu_encoder_phys *phys_enc,
- static void dpu_encoder_phys_wb_setup_ctl(struct dpu_encoder_phys *phys_enc)
- {
- 	struct dpu_hw_wb *hw_wb;
--	struct dpu_hw_ctl *ctl;
- 	struct dpu_hw_cdm *hw_cdm;
- 
- 	if (!phys_enc) {
-@@ -227,10 +226,9 @@ static void dpu_encoder_phys_wb_setup_ctl(struct dpu_encoder_phys *phys_enc)
- 	}
- 
- 	hw_wb = phys_enc->hw_wb;
--	ctl = phys_enc->hw_ctl;
- 	hw_cdm = phys_enc->hw_cdm;
- 
--	if (test_bit(DPU_CTL_ACTIVE_CFG, &ctl->caps->features) &&
-+	if (phys_enc->dpu_kms->catalog->mdss_ver->core_major_ver >= 5 &&
- 		(phys_enc->hw_ctl &&
- 		 phys_enc->hw_ctl->ops.setup_intf_cfg)) {
- 		struct dpu_hw_intf_cfg intf_cfg = {0};
-@@ -534,7 +532,6 @@ static void dpu_encoder_phys_wb_enable(struct dpu_encoder_phys *phys_enc)
- static void dpu_encoder_phys_wb_disable(struct dpu_encoder_phys *phys_enc)
- {
- 	struct dpu_hw_wb *hw_wb = phys_enc->hw_wb;
--	struct dpu_hw_ctl *hw_ctl = phys_enc->hw_ctl;
- 
- 	DPU_DEBUG("[wb:%d]\n", hw_wb->idx - WB_0);
- 
-@@ -556,7 +553,7 @@ static void dpu_encoder_phys_wb_disable(struct dpu_encoder_phys *phys_enc)
- 	 * WB support is added to those targets will need to add
- 	 * the legacy teardown sequence as well.
- 	 */
--	if (hw_ctl->caps->features & BIT(DPU_CTL_ACTIVE_CFG))
-+	if (phys_enc->dpu_kms->catalog->mdss_ver->core_major_ver >= 5)
- 		dpu_encoder_helper_phys_cleanup(phys_enc);
- 
- 	phys_enc->enable_state = DPU_ENC_DISABLED;
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index c3b659a12d58e18aaba65ba88ff5de131d712412..0fcc9fb975c0955f459ba4264b6a114a4b17af52 100644
+index 20f4700ef9969003cfa4728049b9737cb9eb6229..8808be27593b303a2a199a740827c92ea5339b0d 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
 @@ -111,8 +111,7 @@
  	(BIT(DPU_PINGPONG_DITHER) | BIT(DPU_PINGPONG_DSC))
  
- #define CTL_SC7280_MASK \
--	(BIT(DPU_CTL_ACTIVE_CFG) | \
--	 BIT(DPU_CTL_FETCH_ACTIVE) | \
-+	(BIT(DPU_CTL_FETCH_ACTIVE) | \
- 	 BIT(DPU_CTL_VM_CFG) | \
- 	 BIT(DPU_CTL_DSPP_SUB_BLOCK_FLUSH))
+ #define INTF_SC7180_MASK \
+-	(BIT(DPU_INTF_INPUT_CTRL) | \
+-	 BIT(DPU_INTF_STATUS_SUPPORTED))
++	(BIT(DPU_INTF_INPUT_CTRL))
  
+ #define WB_SDM845_MASK (BIT(DPU_WB_LINE_MODE) | \
+ 			 BIT(DPU_WB_UBWC) | \
 diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-index 81592cbdd5d234dacc154778492382faecfddb39..b6c45ed4fa3d18ed21c2a2547b0d5af4debd974e 100644
+index 36100e21135fba09fcafdd5d36ac919cd17f63c0..858fd73e0ac3a92fe402001d4796eb86945f61b0 100644
 --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
 +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.h
-@@ -141,7 +141,6 @@ enum {
+@@ -145,12 +145,10 @@ enum {
+  * INTF sub-blocks
+  * @DPU_INTF_INPUT_CTRL             Supports the setting of pp block from which
+  *                                  pixel data arrives to this INTF
+- * @DPU_INTF_STATUS_SUPPORTED       INTF block has INTF_STATUS register
+  * @DPU_INTF_MAX
   */
  enum {
- 	DPU_CTL_SPLIT_DISPLAY = 0x1,
--	DPU_CTL_ACTIVE_CFG,
- 	DPU_CTL_FETCH_ACTIVE,
- 	DPU_CTL_VM_CFG,
- 	DPU_CTL_DSPP_SUB_BLOCK_FLUSH,
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-index 8a7408801bb59e8799e67115ee00cdfe87eba668..c63a6cbd07d94acae04b6edf534b1a7f5d4119b1 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_ctl.c
-@@ -743,7 +743,7 @@ struct dpu_hw_ctl *dpu_hw_ctl_init(struct drm_device *dev,
- 	c->caps = cfg;
- 	c->mdss_ver = mdss_ver;
+ 	DPU_INTF_INPUT_CTRL = 0x1,
+-	DPU_INTF_STATUS_SUPPORTED,
+ 	DPU_INTF_MAX
+ };
  
--	if (c->caps->features & BIT(DPU_CTL_ACTIVE_CFG)) {
-+	if (mdss_ver->core_major_ver >= 5) {
- 		c->ops.trigger_flush = dpu_hw_ctl_trigger_flush_v1;
- 		c->ops.setup_intf_cfg = dpu_hw_ctl_intf_cfg_v1;
- 		c->ops.reset_intf_cfg = dpu_hw_ctl_reset_intf_cfg_v1;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+index 8f9733aad2dec3a9b5464d55b00f350348842911..54c2e984ef0ce604e3eda49595d2816ea41bd7fd 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_intf.c
+@@ -308,9 +308,8 @@ static void dpu_hw_intf_get_status(
+ 		struct dpu_hw_intf_status *s)
+ {
+ 	struct dpu_hw_blk_reg_map *c = &intf->hw;
+-	unsigned long cap = intf->cap->features;
+ 
+-	if (cap & BIT(DPU_INTF_STATUS_SUPPORTED))
++	if (intf->mdss_ver->core_major_ver >= 5)
+ 		s->is_en = DPU_REG_READ(c, INTF_STATUS) & BIT(0);
+ 	else
+ 		s->is_en = DPU_REG_READ(c, INTF_TIMING_ENGINE_EN);
 
 -- 
 2.39.5
