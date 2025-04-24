@@ -1,52 +1,28 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200691E9B00
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D8910F9;
+	Thu, 24 Apr 2025 07:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478484; cv=none; b=ftdr28NiSCO2ymKbU0vEw/ZA0oCdKIjPOhG61NUfQppWHjUkw+j3bqi0bk3qezeVdDQbXW0e3IVNAjDtscosFz1nDC5kEKkIgoHP5YaZr94hThm0jhK8mAUyja9bFk6QVeEkXAZkfYyeG+Vuw2i2IRyePtnk4pO/7Q83Ols+doI=
+	t=1745478577; cv=none; b=p6S3VEod8VTXncZc27nnfOv1k3z42ACBXShXYi44ZjTV1A7v2nJL9C8rxECeQVGIBt147+vQGWvWy/bgD4r/Hv443kXIwnQWfy8wil9XykgpVOqnLMeAj6e7F6JUKMwqDFDzy/Vfsyv4N4wBDX1ZDObkgnzlzljLtjJdlIs2vLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478484; c=relaxed/simple;
-	bh=dY0ycV638kiMVJP20CNVdFwPOC7SHIrX0pWvD46fLRs=;
+	s=arc-20240116; t=1745478577; c=relaxed/simple;
+	bh=sLp3VTmXFwFdL/QtxIAmgPlUiMfX9n7GBJMrj4i3iU8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kvnfg5na9amxf4T1AaHnjVpSqPKJnqJcfkJgEuYi3tmWl8dEGfr6tlKSaJZlt8GbjCyiU82BsOZmzz7C7yP+x/bQX/zz7jW8HVVB1J8E8Nw2LaENwqEZr89pn/V/mu8fcVb1x2+1Fdph74xO8shbmag5+d2G+dfJad89TKWHmWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=4NPThwSw; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="4NPThwSw"
-Received: from eig-obgw-5004a.ext.cloudfilter.net ([10.0.29.221])
-	by cmsmtp with ESMTPS
-	id 7pmjufadNzZPa7qgcu2PhG; Thu, 24 Apr 2025 07:07:54 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 7qgauWucWjrgq7qgbumtZd; Thu, 24 Apr 2025 07:07:54 +0000
-X-Authority-Analysis: v=2.4 cv=PK7E+uqC c=1 sm=1 tr=0 ts=6809e34a
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xRiTxlWwWsYXxK0NcaUbZc337pZVsMgdD2pL+vGmhMU=; b=4NPThwSwsh9+6UHFs+UDl9nnZZ
-	pGX/Qg0aHK9V5pb71NIZ0HEzTNSOI4Om7MwF7LV2o8FNk8TAzQMLs2eJMnsTeNQnlmJ3ErV0gksFS
-	QThZhqXuyYISggtFN2gy9cqlWHWHJbtN727E6z0T6JKERDtquY13m26VbzyKow5UrxBVzeG2L0rxM
-	sACJdwvxIw4ca08x/W0NPAajmbRsu7gXKz8YlFonPb3XK/Ddaoez2i4ZXdP0MBLurNQCr0OrID1S4
-	t0EDK2WsKuRR9giSLhokNSymzFDJJX0auD26VspK8zRbT2hppukFj0WhX2OwPIGm56i2Ast4VZ3ok
-	bRg43bjw==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:58930 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1u7qgZ-00000002n6G-0CTm;
-	Thu, 24 Apr 2025 01:07:51 -0600
-Message-ID: <f942a79e-5c7d-4b62-8393-8dafd0d8af16@w6rz.net>
-Date: Thu, 24 Apr 2025 00:07:47 -0700
+	 In-Reply-To:Content-Type; b=Z7CC46yuftte70G/orSHYHc5YZqYKLkxkq4ulR9Klpy9dzLcQRnx/Sqzky5xTf52/TCY+usD/Be8f7dOK/LGdhHWpcvRqQRj4bmAxY0T43TTkffp2E19Pa5zp2Rf9yOPXhwfbFlOEOnC73c+VTu4xtaNIG9ZFi0xB4QVdSsGIho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
+Received: from [192.168.0.192] (unknown [95.90.241.25])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id E266B61E64788;
+	Thu, 24 Apr 2025 09:09:10 +0200 (CEST)
+Message-ID: <990a6a3c-bc1e-4b42-b3ae-1ec849d48f5e@molgen.mpg.de>
+Date: Thu, 24 Apr 2025 09:09:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,61 +30,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.14 000/241] 6.14.4-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250423142620.525425242@linuxfoundation.org>
+Subject: Re: r8169: MAC address programmed by coreboot to onboard RTL8111F
+ does not persist
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: netdev@vger.kernel.org, nic_swsd@realtek.com,
+ LKML <linux-kernel@vger.kernel.org>, Keith Hui <buurin@gmail.com>
+References: <49df3c73-f253-4b48-b86d-fa8ec3a20d2c@molgen.mpg.de>
+ <065dabff-dfcc-4a86-ba0e-e3d6de2d21fc@gmail.com>
 Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250423142620.525425242@linuxfoundation.org>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <065dabff-dfcc-4a86-ba0e-e3d6de2d21fc@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1u7qgZ-00000002n6G-0CTm
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:58930
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 16
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJdZs77RlFUQWfwT0XpDIl2rUdEdg9Mh5GMh2kZ+nH5zAITJ5nc69+yDGT1jSo0We5TMCAX2z8O/6kwqrAbFNVPWEmkvZKP7mbbVYHOeR6fFYnxohtD8
- D1S26Kf8ziIGbOZsK7E0YE9HkmRr32WDjJ46hdEH40bBf/sLc0krfM2w6qRRSyHdktmmzTmoN028dYxlKzXOZqA7f6j5QWnyMyc=
+Content-Transfer-Encoding: 8bit
 
-On 4/23/25 07:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.4 release.
-> There are 241 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Dear Heiner,
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Tested-by: Ron Economos <re@w6rz.net>
+Thank you for your reply.
 
+Am 22.03.25 um 14:04 schrieb Heiner Kallweit:
+> On 22.03.2025 09:50, Paul Menzel wrote:
+
+>> Keith Hui reported the issue *MAC address programmed by coreboot
+>> to onboard RTL8111F does not persist* [1] below when using
+>> coreboot:
+>
+> Why do you consider this a bug? IOW: Where is it specified otherwise?
+
+Good question. I do not have the documentation or specification. On 
+other boards the current coreboot – a FLOSS firmware – implementation 
+worked. coreboot’s driver name is r8168 though, but I guess that is due 
+to historical reasons.
+
+>>> I am producing a coreboot port on Asus P8Z77-V LE PLUS on which this
+>>> issue is observed. It has a RTL8111F ethernet controller without
+>>> EEPROM for vital product data.
+>>>
+>>> I enabled the rtl8168 driver in coreboot so I can configure the LEDs
+>>> and MAC address. Lights work great, but the MAC address always
+>>> revert to 00:00:00:00:00:05 by the Linux r8169 kernel module. I
+>>> would then have to reassign its proper MAC address using ip link
+>>> change eno0 address <mac>.
+>
+> r8169 in a first place reads the factory-programmed MAC from the chip.
+> If this is 00:00:00:00:00:05, then this seems to be an issue with your
+> board.
+> 
+>>> The device appears to be taking the address I programmed, but r8169
+>>> reverts it both on init and teardown, insisting that
+>>> 00:00:00:00:00:05 is its permanent MAC address.
+>>>
+>>> Survival of coreboot programmed MAC address before r8169 driver is
+>>> confirmed by a debug read back I inserted in the coreboot rtl81xx
+>>> driver, as well as by temporarily blacklisting r8169.
+>>>
+>>> Vendor firmware is unaffected.
+>>
+> What do you mean with this? What vendor firmware are you referring to?
+
+“vendor firmware” was meant to be the firmware shipped by Asus, that 
+comes with the board. coreboot (and the payload) replaces this firmware, 
+by flashing the coreboot image to the flash ROM chip.
+
+>> Do you have an idea, where in the Linux driver that happens?
+>
+> See rtl_init_mac_address() in r8169, and rtl8168_get_mac_address()
+> in Realtek's r8168 driver.
+
+Thank you. Keith found a fix for the issue [2]:
+
+> On mainboard/asus/p8z77-v_le_plus, programmed MAC address is being
+> reverted with controller resets done at loading and unloading of Linux
+> r8169 kernel module.
+> 
+> Ghidra examination of vendor BIOS reveals an additional sequence to
+> program the MAC address into its ERI register block. This patch
+> adds code to replicate that sequence, gated by a Kconfig so it's
+> only included where necessary.
+
+As stated in the beginning, I do not have have the datasheet, so cannot 
+say, if this solution is how it’s supposed to work. (Why program it in 
+too places?)
+
+Thank you for you time again, and the pointers.
+
+
+Kind regards,
+
+Paul
+
+
+>> [1]: https://ticket.coreboot.org/issues/579#change-2029
+[2]: https://review.coreboot.org/c/coreboot/+/87436
