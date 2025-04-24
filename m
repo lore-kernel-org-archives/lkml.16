@@ -1,114 +1,134 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9DD1E1041
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24A4CA52;
+	Thu, 24 Apr 2025 07:15:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478930; cv=none; b=VtAmQtiyiDrsKuYP/Y9/0LOy4wFAC6rLxFalnk4hqjhZ0xADXum17CPkwm1/lHkEnBWyWRBS7tjkz+I8TacB51kvL8yIHKfns+FMgfrvCMfZfZT9bNhOEc3zewztRiY2JcPc6XDOHhXOxImjDMfYRW91LdAwGHlZhe+DXey6F4c=
+	t=1745478952; cv=none; b=FI24Nzb+mhsuzug8076nMp2QNckg//CvQoVQcBZh+4/EvpVxky1v3j+It1Vjc9qokbAIPf5MZ2sjnQ/rL5tUVbchDjNFdoKywslJpRpAp2nt4szoVqh/bE7KcjOOz+xclykMGshC2vpZzHYz/BogMMICj6meOq5rpm2ZZpbdCRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478930; c=relaxed/simple;
-	bh=iD4kGIwclU4+/EfwQJoURKmsYnXw02hy0AHD+6ErLUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bnTKDE8NlCamCH99Gsp82YEsvTNFse1dMgemjWafGEOtiaA1OHQBbzqNW1FEIKkFuXhB/Qz0QW8Aedaj6VOU7obCpBpGNNH0Es/xoo4SQ2iGqwEUPx3UU0SLx8PYvoVlicXvIx0SF0p+fQgu85WwSf7RXjOIpKM3kswZUJzeGkQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=F/KHw3Jp; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1745478952; c=relaxed/simple;
+	bh=pTkF/OxNxP3a5nhNTZxPZtH9LiokbdzIPY4lcClh0Q0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LkL6ZRu6rZ1q2KFRUROFPShUq/68RaF++pKn22XR0HrQZdXhA8ee0sA0NHs0scmQHpCkmqaI63RdnDV8f3h03CdqO4fD+7Vvn2A8Ht1kAB3WbpTQeSvLGmjWk62GEqr2iO+vHu0ojDnZjxr4k8PNpOQAPCzgxBIame0w5jEciTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aBTgU71u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="F/KHw3Jp"
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-	by cmsmtp with ESMTPS
-	id 7SVfufkHeMETl7qnpuYXrT; Thu, 24 Apr 2025 07:15:21 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id 7qnouD2QGW4jO7qnpuZVUb; Thu, 24 Apr 2025 07:15:21 +0000
-X-Authority-Analysis: v=2.4 cv=UNHbHjfy c=1 sm=1 tr=0 ts=6809e509
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FIwVkz7rpymhvBS7w2y2r7WbeCWcuoUnG44jIo3M8qg=; b=F/KHw3Jp/zicfMfmDxm8jku8yt
-	CQzJaqwBU9NY0wTKYnHy+OoPjQxZSXivl1k0CjwJafeHrtnMJjKgFLDvoUmLvBGishBYwWfMgZUW0
-	kSRfhq1z11nAf4VQeHQIt3HEaUAWdg3FSeKwQXf0x/Iv8ut3jFReudv6PbVKFaHuAKVTbyehMDCZw
-	jjNfWoV1qNgbrbSOZ1mLMYPLVk4T1A4fnvhHUKD63suCCfWWXvRg7iDaUfEsQC2Zqsv6k3XDnIjxC
-	F7kco9ZZYEe5BDQRGjutD1FAXDD69wwLfRHGVQVdKN6AKZnaS2HeHnYp+9sj8aDSQjKZZgsVYQ6TG
-	+sqgqA1w==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:39532 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1u7qnm-00000002qKD-3zY3;
-	Thu, 24 Apr 2025 01:15:18 -0600
-Message-ID: <e1f56764-88fd-49be-8be7-9fea79c697f7@w6rz.net>
-Date: Thu, 24 Apr 2025 00:15:15 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aBTgU71u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B8E3C4CEE3;
+	Thu, 24 Apr 2025 07:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745478951;
+	bh=pTkF/OxNxP3a5nhNTZxPZtH9LiokbdzIPY4lcClh0Q0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aBTgU71uDQ76gGQRWfJMAVuYX3A0QbPaLJvEVuFRBRrxPSIlRhqbBqclL9MgN42Mz
+	 mOyKpbfujbO9d4jcdRZl8T1Go5m+UqQxIRaX0tVYAWP8gY0N23/sDzG80Ns8/xrjOx
+	 yRFGVRmXxsj5fmUE6A3mSSt4ikS5jl7uqbR1Q9jdp7zW3uELJvckJZvlrjbWQLAFMI
+	 rlKfp1i/mcS2aG+fPOR4bIoU7h9FpaLggeY2LHT/xOyqKlGS/6YJVHuNgwdRNVVRsH
+	 wu0LFFiidEyDynwIeD0OFcSLI8I/quvZGtTqBj02iqPtvdHAUsLiUcS2TnnGA7c1LM
+	 7VSAaFBMPFnUw==
+Date: Thu, 24 Apr 2025 10:15:45 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
+	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Yishai Hadas <yishaih@nvidia.com>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
+	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
+	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Kanchan Joshi <joshi.k@samsung.com>,
+	Chaitanya Kulkarni <kch@nvidia.com>
+Subject: Re: [PATCH v9 11/24] mm/hmm: provide generic DMA managing logic
+Message-ID: <20250424071545.GM48485@unreal>
+References: <cover.1745394536.git.leon@kernel.org>
+ <3abc42885831f841dd5dfe78d7c4e56c620670ea.1745394536.git.leon@kernel.org>
+ <20250423172856.GM1213339@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/223] 6.12.25-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250423142617.120834124@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250423142617.120834124@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1u7qnm-00000002qKD-3zY3
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:39532
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 35
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfE2lKLpnUbLuefg2qn9kDjyZsMleGHMYshDlkasjk4/TTRzT81WbJFi6COEkUTO57mF5YTc6LwOUBab74H2MTxzxqPOGQexDHhscOD7DJaAei0/rIwsm
- eO+ga0z7XbKP9ImgcuckXM4sVDnqywpGKhJ2PsHe3ntURDJjP35jO9voa1ndHyEJ2DoFJnC1ElJRdndbzQMgSL7DhEqYVi+ahSM=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250423172856.GM1213339@ziepe.ca>
 
-On 4/23/25 07:41, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.25 release.
-> There are 223 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.25-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Wed, Apr 23, 2025 at 02:28:56PM -0300, Jason Gunthorpe wrote:
+> On Wed, Apr 23, 2025 at 11:13:02AM +0300, Leon Romanovsky wrote:
+> > From: Leon Romanovsky <leonro@nvidia.com>
+> > 
+> > HMM callers use PFN list to populate range while calling
+> > to hmm_range_fault(), the conversion from PFN to DMA address
+> > is done by the callers with help of another DMA list. However,
+> > it is wasteful on any modern platform and by doing the right
+> > logic, that DMA list can be avoided.
+> > 
+> > Provide generic logic to manage these lists and gave an interface
+> > to map/unmap PFNs to DMA addresses, without requiring from the callers
+> > to be an experts in DMA core API.
+> > 
+> > Tested-by: Jens Axboe <axboe@kernel.dk>
+> 
+> I don't think Jens tested the RDMA and hmm parts :)
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+I know, but he posted his Tested-by tag on cover letter and b4 picked it
+for whole series. I decided to keep it as is.
 
-Tested-by: Ron Economos <re@w6rz.net>
+> 
+> > +	/*
+> > +	 * The HMM API violates our normal DMA buffer ownership rules and can't
+> > +	 * transfer buffer ownership.  The dma_addressing_limited() check is a
+> > +	 * best approximation to ensure no swiotlb buffering happens.
+> > +	 */
+> 
+> This is a bit unclear, HMM inherently can't do cache flushing or
+> swiotlb bounce buffering because its entire purpose is to DMA directly
+> and coherently to a mm_struct's page tables. There are no sensible
+> points we could put the required flushing that wouldn't break the
+> entire model.
+> 
+> FWIW I view that fact that we now fail back to userspace in these
+> cases instead of quietly malfunction to be a big improvement.
+> 
+> > +bool hmm_dma_unmap_pfn(struct device *dev, struct hmm_dma_map *map, size_t idx)
+> > +{
+> > +	struct dma_iova_state *state = &map->state;
+> > +	dma_addr_t *dma_addrs = map->dma_list;
+> > +	unsigned long *pfns = map->pfn_list;
+> > +	unsigned long attrs = 0;
+> > +
+> > +#define HMM_PFN_VALID_DMA (HMM_PFN_VALID | HMM_PFN_DMA_MAPPED)
+> > +	if ((pfns[idx] & HMM_PFN_VALID_DMA) != HMM_PFN_VALID_DMA)
+> > +		return false;
+> > +#undef HMM_PFN_VALID_DMA
+> 
+> If a v10 comes I'd put this in a const function level variable:
+> 
+>           const unsigned int HMM_PFN_VALID_DMA = HMM_PFN_VALID | HMM_PFN_DMA_MAPPED;
+> 
+> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
+I have no idea if v10 is needed. DMA API is stable for a long time and
+only DMA part should go in shared branch. Everything else will need to
+go through relevant subsystems anyway.
+
+Thanks
+
+> 
+> Jason
