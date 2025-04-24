@@ -1,273 +1,220 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4226627FD55;
-	Thu, 24 Apr 2025 16:37:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 742D728A1DE;
+	Thu, 24 Apr 2025 16:37:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745512675; cv=none; b=GdKWvUucr85nnvduyvBTq388UhwiAo2PXWh/+uWWcTV2v6piZxCPoGC83GvV7RZTD5ddShyuDl88jHnlW6khBF7IwV4E15rg2KPRcK8zH2v1rDuuY0JubexNjXbgsQTy3rbTey9RxWcTSmZYcqCo7qjrtNS5YZxxWxt3NzfhCRw=
+	t=1745512678; cv=none; b=Myma/DVjQYjWl404R+VGpL5uumzloadyhuscDWhmOtOyQpdsGJDO5aV2jyd0oAdVasMvNWnjwOCxkFOqfXUUVVXnsOskMMokekGKmrxl86RKPrj643bSw4smYjqRxxVpG4CKm1tAXYvjMs8xBvDV9Z+vauTYAguKT4lezT3HoX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745512675; c=relaxed/simple;
-	bh=Z5Mejh+oE5Ke6erKkFueD4BD0r8tI1KZOEe1fs6TDZs=;
+	s=arc-20240116; t=1745512678; c=relaxed/simple;
+	bh=75jln6LEMO03hVH9iAYUgykLezto+kBXZ6oxvXwQCyc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GMScsTibojqDcu8V1v2aJwzSxUoYpTZ2Yjf2C6sM06zW0ftSoy2KunbsbBaL8ywNPTUebXh62HzQASltKV1RMXUqi01gTo7oW+ZpI5XYjFkAqX8pHjzA0W5AxmmGn6YWDTxolx9d+kAmTFvonmHjT94/QaFqgDNwlIGTTH9ZRhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AB78RJvU; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=Wfg9GHXUCmYe1x3XEzIozrlb+sKNQwCOgpEDxFiPC9NutI4VPDZieOrLoaAA8tWjpMmsa9BIwVBE38YFICZxOvhLh9f6FOhE+K4ybyKbNQSiPg0o3imP6wjzknhsaV55q939wHhXWbL8u/XFoQrvzCbaOof7oNPbDORuGUYrVVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QLe4Mxhr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AB78RJvU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B93B0C4AF0B;
-	Thu, 24 Apr 2025 16:37:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QLe4Mxhr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0ED0C4AF0D;
+	Thu, 24 Apr 2025 16:37:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745512673;
-	bh=Z5Mejh+oE5Ke6erKkFueD4BD0r8tI1KZOEe1fs6TDZs=;
+	s=k20201202; t=1745512678;
+	bh=75jln6LEMO03hVH9iAYUgykLezto+kBXZ6oxvXwQCyc=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=AB78RJvUAT+czyJewthUei0e/xLR+rnlqpcWxBpMQG+q73WLOE/UJsPX67ELkeA3m
-	 IIEc3gntDS6ObyolLFWmbaY0GbFJRPRQlp72jx5f+227U8ChKwOPRX5oM/YegAnDVM
-	 uemGsjIK73BSJK2h9IRYm8hrfILWdIHGOy4G8y9LW1dwqTp1d53AiAin6nPExgFrN6
-	 TzSlppfh8Ig/k7Nj278lULiQ0qcTWc1w6EpK9DVdi+zDxfAr9JAybP+1Q4qN49yrKl
-	 9p2WGmv+q6eDOEHILvTjoUhlwuZkqXYPxN1NwbF3WCzDpa+1p5KA/+qF18dC4IlGxL
-	 y5bblvD3mWMZA==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-54d3ee30af1so1344646e87.0;
-        Thu, 24 Apr 2025 09:37:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU5FB2fTdZBwVgAyDkWj58uhehwBcuXsVmTcyvzds53ekIrOt3g9TngAwDyCpNCT89Xk3OjLAPxga54bV8n@vger.kernel.org, AJvYcCWi41PrY4P72Sr50ZJLRwSxdtC03hfww0DQjhqFPBfwzZ5LmHcqd5ps+9sC6a8GO+yAQJukN/2jSnk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuJ0w+UFisoQmJcr80bW3NDN71Jr9VK/Cz991I5TOMWFXBypNI
-	+fZxSOYYi6KpkuT+OG4CMUQYiB5/Ye4BwocNHEhwpZStxJWyw9xR69xl50DINV45w80qV7eT4/G
-	j6pHKmZWMTHhfRp8LSpN0/ID9J+Y=
-X-Google-Smtp-Source: AGHT+IEeDmPYQCfPVgY5Ydme7GUd1G2XmW0StrBFinM9VM0MCOMuZoT/OILlCHPstOmP5SeFd3CRSQP5ANHTq4w5LiQ=
-X-Received: by 2002:a05:6512:1107:b0:549:8db6:9366 with SMTP id
- 2adb3069b0e04-54e7c3fcbf1mr1320656e87.28.1745512672053; Thu, 24 Apr 2025
- 09:37:52 -0700 (PDT)
+	b=QLe4MxhrV+PoRvaSjlnZbkHpTk3oAGaVl0HQxVNTAdZFo6KWRVwL2C9eb9/uyunLO
+	 1bC4A+C5ZwPZYqOm1k2Jf2vug11Hkyk4IIZTEC6slvOubTsLdqN4EJTPbW0kze+alr
+	 DmSuLXQwtpotQlyZ/v9WH0KrG8sIM+E+dUaZEMIoTHcMV0JhMtcaNrOgAPqve8LQGu
+	 A3r0/x1BB/FA8o2kEWxYsnQBCdxzc5L0wYF/1er/r0D7KU0LDlDEWqVRJPjOgWSqt0
+	 Q3Zq6ACNeQvkVvfl8xDFy1sFRxBG0vn21/F3FsPVB7MtnrpEVveaP7X5dAeksPK9f1
+	 bdnn67kC5WFNA==
+Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-2c759bf1b2eso727858fac.1;
+        Thu, 24 Apr 2025 09:37:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVr40Ttng4mhuth2jCgeafJ6mF/hZTtcOT2Swc8usTgPHA2TByXFJ9rUtAF4YYlqAChsntenCygTCE=@vger.kernel.org, AJvYcCVwNdB2rFjbGxwUPPp6kC6P6QFKjjODViyIpxFG4OnJzYhc/Se74wh5/qbd1VLc0z9apgSapnMZeFpUA/w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxP3+vkBHql0k06j32vFknGxNijhl0PVK+Xpl3Gl7XZ3hE4DuR7
+	ftWeeb39CmqWbomLs+5D5zuCfnHv4Ecb3+mQQJ7vN7t7fbxd7EunJUdGCE1UmA68Sx24l/YT8sW
+	GLNEbxBc7f3jl8GHFbYueuK+rKv4=
+X-Google-Smtp-Source: AGHT+IEg1J5xXm9XOkaHWMAYzrmv33gOLU3mzP0WDBnJLhDt0R6tb2NbVVIcbImspZHlJ5HflQfWMBci+tJa/An5b3U=
+X-Received: by 2002:a05:6870:3922:b0:2c2:588a:70a3 with SMTP id
+ 586e51a60fabf-2d9944a79c2mr277187fac.24.1745512677229; Thu, 24 Apr 2025
+ 09:37:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424080950.289864-1-vkuznets@redhat.com> <20250424080950.289864-2-vkuznets@redhat.com>
-In-Reply-To: <20250424080950.289864-2-vkuznets@redhat.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 24 Apr 2025 18:37:39 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHqmOiNX_DH+8uSsTROzR+hgvZ5DyE=3wVE7-dQ+2BW=Q@mail.gmail.com>
-X-Gm-Features: ATxdqUHhiPMKVw_j3AGCvu_wJ4JwfoyH2ecF1fk3MjUiBOsPPk_MmQ6HO-CIRLo
-Message-ID: <CAMj1kXHqmOiNX_DH+8uSsTROzR+hgvZ5DyE=3wVE7-dQ+2BW=Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] efi/libstub: zboot specific mechanism for embedding
- SBAT section
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: x86@kernel.org, linux-efi@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, 
-	Emanuele Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi <bluca@debian.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+References: <5907080.DvuYhMxLoT@rjwysocki.net> <aAplED3IA_J0eZN0@linaro.org>
+In-Reply-To: <aAplED3IA_J0eZN0@linaro.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 24 Apr 2025 18:37:46 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0i7-LuBX5VCwn_LhyT=RkmQMn6qv3duc+RViXxJBwk2LA@mail.gmail.com>
+X-Gm-Features: ATxdqUGAHUK_pyq-9k1XpMPUGY7m0PyuBYwh8znLEMssnOVhN3IZGJ2kqSWcPkw
+Message-ID: <CAJZ5v0i7-LuBX5VCwn_LhyT=RkmQMn6qv3duc+RViXxJBwk2LA@mail.gmail.com>
+Subject: Re: [PATCH v3] cpufreq: Avoid using inconsistent policy->min and policy->max
+To: Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	Christian Loehle <christian.loehle@arm.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Mario Limonciello <mario.limonciello@amd.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Sultan Alsawaf <sultan@kerneltoast.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>, regressions@lists.linux.dev, 
+	Johan Hovold <johan@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Vitaly,
+Hi,
 
-On Thu, 24 Apr 2025 at 10:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+On Thu, Apr 24, 2025 at 6:21=E2=80=AFPM Stephan Gerhold
+<stephan.gerhold@linaro.org> wrote:
 >
-> SBAT is a mechanism which improves SecureBoot revocations of UEFI binaries
-> by introducing a generation-based technique. Compromised or vulnerable UEFI
-> binaries can be prevented from booting by bumping the minimal required
-> generation for the specific component in the bootloader. More information
-> on the SBAT can be obtained here:
+> Hi Rafael,
 >
-> https://github.com/rhboot/shim/blob/main/SBAT.md
+> On Wed, Apr 16, 2025 at 04:12:37PM +0200, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Since cpufreq_driver_resolve_freq() can run in parallel with
+> > cpufreq_set_policy() and there is no synchronization between them,
+> > the former may access policy->min and policy->max while the latter
+> > is updating them and it may see intermediate values of them due
+> > to the way the update is carried out.  Also the compiler is free
+> > to apply any optimizations it wants both to the stores in
+> > cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
+> > which may result in additional inconsistencies.
+> >
+> > To address this, use WRITE_ONCE() when updating policy->min and
+> > policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
+> > them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
+> > in cpufreq_set_policy() to avoid storing intermediate values in
+> > policy->min and policy->max with the help of the observation that
+> > their new values are expected to be properly ordered upfront.
+> >
+> > Also modify cpufreq_driver_resolve_freq() to take the possible reverse
+> > ordering of policy->min and policy->max, which may happen depending on
+> > the ordering of operations when this function and cpufreq_set_policy()
+> > run concurrently, into account by always honoring the max when it
+> > turns out to be less than the min (in case it comes from thermal
+> > throttling or similar).
+> >
+> > Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
+> > Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >
+> > This replaces the last 3 patches in
+> >
+> > https://lore.kernel.org/linux-pm/6171293.lOV4Wx5bFT@rjwysocki.net/
+> >
+> > v2 -> v3:
+> >    * Fold 3 patches into one.
+> >    * Drop an unrelated white space fixup change.
+> >    * Fix a typo in a comment (Christian).
+> >
+> > v1 -> v2: Cosmetic changes
+> >
+> > ---
+> >  drivers/cpufreq/cpufreq.c |   32 +++++++++++++++++++++++++-------
+> >  1 file changed, 25 insertions(+), 7 deletions(-)
+> >
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -495,8 +495,6 @@
+> >  {
+> >       unsigned int idx;
+> >
+> > -     target_freq =3D clamp_val(target_freq, policy->min, policy->max);
+> > -
+> >       if (!policy->freq_table)
+> >               return target_freq;
+> >
+> > @@ -520,7 +518,22 @@
+> >  unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *policy=
+,
+> >                                        unsigned int target_freq)
+> >  {
+> > -     return __resolve_freq(policy, target_freq, CPUFREQ_RELATION_LE);
+> > +     unsigned int min =3D READ_ONCE(policy->min);
+> > +     unsigned int max =3D READ_ONCE(policy->max);
+> > +
+> > +     /*
+> > +      * If this function runs in parallel with cpufreq_set_policy(), i=
+t may
+> > +      * read policy->min before the update and policy->max after the u=
+pdate
+> > +      * or the other way around, so there is no ordering guarantee.
+> > +      *
+> > +      * Resolve this by always honoring the max (in case it comes from
+> > +      * thermal throttling or similar).
+> > +      */
+> > +     if (unlikely(min > max))
+> > +             min =3D max;
+> > +
+> > +     return __resolve_freq(policy, clamp_val(target_freq, min, max),
+> > +                           CPUFREQ_RELATION_LE);
+> >  }
+> >  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
+> >
+> > @@ -2338,6 +2351,7 @@
+> >       if (cpufreq_disabled())
+> >               return -ENODEV;
+> >
+> > +     target_freq =3D clamp_val(target_freq, policy->min, policy->max);
+> >       target_freq =3D __resolve_freq(policy, target_freq, relation);
+> >
+> >       pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kH=
+z\n",
+> > @@ -2631,11 +2645,15 @@
+> >        * Resolve policy min/max to available frequencies. It ensures
+> >        * no frequency resolution will neither overshoot the requested m=
+aximum
+> >        * nor undershoot the requested minimum.
+> > +      *
+> > +      * Avoid storing intermediate values in policy->max or policy->mi=
+n and
+> > +      * compiler optimizations around them because they may be accesse=
+d
+> > +      * concurrently by cpufreq_driver_resolve_freq() during the updat=
+e.
+> >        */
+> > -     policy->min =3D new_data.min;
+> > -     policy->max =3D new_data.max;
+> > -     policy->min =3D __resolve_freq(policy, policy->min, CPUFREQ_RELAT=
+ION_L);
+> > -     policy->max =3D __resolve_freq(policy, policy->max, CPUFREQ_RELAT=
+ION_H);
+> > +     WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUF=
+REQ_RELATION_H));
+> > +     new_data.min =3D __resolve_freq(policy, new_data.min, CPUFREQ_REL=
+ATION_L);
+> > +     WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max =
+: new_data.min);
 >
-> Upstream Linux kernel does not currently participate in any way in SBAT as
-> there's no existing policy in how SBAT generation number should be
-> defined. Keep the status quo and provide a mechanism for distro vendors and
-> anyone else who signs their kernel for SecureBoot to include their own SBAT
-> data. This leaves the decision on the policy to the vendor. Basically, each
-> distro implementing SecureBoot today, will have an option to inject their
-> own SBAT data during kernel build and before it gets signed by their
-> SecureBoot CA. Different distro do not need to agree on the common SBAT
-> component names or generation numbers as each distro ships its own 'shim'
-> with their own 'vendor_cert'/'vendor_db'
+> I've tested the cpufreq throttling again in 6.15-rc3 to check your fix
+> for the schedutil CPUFREQ_NEED_UPDATE_LIMITS regression I reported [1].
+> The CPU frequency is now being throttled correctly when reaching high
+> temperatures. Thanks for fixing this!
 >
-> Implement support for embedding SBAT data for architectures using
-> zboot (arm64, loongarch, riscv). Build '.sbat' section along with libstub
-> so it can be reused by x86 implementation later.
+> Unfortunately, the opposite case has now regressed with this patch:
+> After the CPU frequency has been throttled due to high temperature and
+> the device cools down again, the CPU frequency is stuck at minimum until
+> you reboot. policy->max will never restore to the maximum frequency.
 >
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->  drivers/firmware/efi/Kconfig                | 25 +++++++++++++++++++++
->  drivers/firmware/efi/libstub/Makefile       |  7 ++++++
->  drivers/firmware/efi/libstub/Makefile.zboot |  3 ++-
->  drivers/firmware/efi/libstub/sbat.S         |  7 ++++++
->  drivers/firmware/efi/libstub/zboot-header.S | 14 ++++++++++++
->  drivers/firmware/efi/libstub/zboot.lds      | 17 ++++++++++++++
->  6 files changed, 72 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/firmware/efi/libstub/sbat.S
+> I've confirmed that this causes unexpected slowness after temperature
+> throttling on a Qualcomm X1E laptop, and Johan has confirmed that e.g.
+> the ThinkPad X13s is also affected. I would expect that most devices
+> using cpufreq cooling in the kernel are affected.
 >
-> diff --git a/drivers/firmware/efi/Kconfig b/drivers/firmware/efi/Kconfig
-> index 5fe61b9ab5f9..2edb0167ba49 100644
-> --- a/drivers/firmware/efi/Kconfig
-> +++ b/drivers/firmware/efi/Kconfig
-> @@ -281,6 +281,31 @@ config EFI_EMBEDDED_FIRMWARE
->         bool
->         select CRYPTO_LIB_SHA256
->
-> +config EFI_SBAT
-> +       bool "Embed SBAT section in the kernel"
-> +       depends on EFI_ZBOOT
-> +       help
-> +         SBAT section provides a way to improve SecureBoot revocations of UEFI
-> +         binaries by introducing a generation-based mechanism. With SBAT, older
-> +         UEFI binaries can be prevented from booting by bumping the minimal
-> +         required generation for the specific component in the bootloader.
-> +
-> +         Note: SBAT information is distribution specific, i.e. the owner of the
-> +         signing SecureBoot certificate must define the SBAT policy. Linux
-> +         kernel upstream does not define SBAT components and their generations.
-> +
-> +         See https://github.com/rhboot/shim/blob/main/SBAT.md for the additional
-> +         details.
-> +
-> +         If unsure, say N.
-> +
-> +config EFI_SBAT_FILE
-> +       string "Embedded SBAT section file path"
-> +       depends on EFI_SBAT
-> +       help
-> +         Specify a file with SBAT data which is going to be embedded as '.sbat'
-> +         section into the kernel.
-> +
+> Looking at the code, I think the problem is that __resolve_freq() ->
+> cpufreq_frequency_table_target() -> cpufreq_table_find_index*() and
+> cpufreq_is_in_limits() are still using the old policy->min/max value.
+> In this patch, you have only moved the clamp_val() usage directly in
+> __resolve_freq().
 
-Can we simplify this? CONFIG_EFI_SBAT makes no sense if
-CONFIG_EFI_SBAT_FILE is left empty. If you really need both symbols,
-set EFI_SBAT automatically based on whether EFI_SBAT_FILE is
-non-empty.
+You are right, that's the problem.
 
->  endmenu
->
->  config UEFI_CPER
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index d23a1b9fed75..5113cbdadf9a 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -105,6 +105,13 @@ lib-$(CONFIG_UNACCEPTED_MEMORY) += unaccepted_memory.o bitmap.o find.o
->  extra-y                                := $(lib-y)
->  lib-y                          := $(patsubst %.o,%.stub.o,$(lib-y))
->
-> +extra-$(CONFIG_EFI_SBAT)       += sbat.o
-> +$(obj)/sbat.o: $(obj)/sbat.bin
-> +targets += sbat.bin
-> +filechk_sbat.bin = cat $(or $(real-prereqs), /dev/null)
-> +$(obj)/sbat.bin: $(CONFIG_EFI_SBAT_FILE) FORCE
-> +       $(call filechk,sbat.bin)
-> +
+The fix is basically straightforward, pass min and max to
+cpufreq_frequency_table_target() and propagate downward, but making
+that change may be somewhat error-prone.
 
-Please get rid of all of this, and move the .incbin into zboot-header.S
+I'll try to cut a patch to test tomorrow.
 
-
->  # Even when -mbranch-protection=none is set, Clang will generate a
->  # .note.gnu.property for code-less object files (like lib/ctype.c),
->  # so work around this by explicitly removing the unwanted section.
-> diff --git a/drivers/firmware/efi/libstub/Makefile.zboot b/drivers/firmware/efi/libstub/Makefile.zboot
-> index 48842b5c106b..3d2d0b326f7c 100644
-> --- a/drivers/firmware/efi/libstub/Makefile.zboot
-> +++ b/drivers/firmware/efi/libstub/Makefile.zboot
-> @@ -44,7 +44,8 @@ AFLAGS_zboot-header.o += -DMACHINE_TYPE=IMAGE_FILE_MACHINE_$(EFI_ZBOOT_MACH_TYPE
->  $(obj)/zboot-header.o: $(srctree)/drivers/firmware/efi/libstub/zboot-header.S FORCE
->         $(call if_changed_rule,as_o_S)
->
-> -ZBOOT_DEPS := $(obj)/zboot-header.o $(objtree)/drivers/firmware/efi/libstub/lib.a
-> +ZBOOT_DEPS := $(obj)/zboot-header.o $(objtree)/drivers/firmware/efi/libstub/lib.a \
-> +          $(if $(CONFIG_EFI_SBAT),$(objtree)/drivers/firmware/efi/libstub/sbat.o)
->
-
-Drop this too
-
->  LDFLAGS_vmlinuz.efi.elf := -T $(srctree)/drivers/firmware/efi/libstub/zboot.lds
->  $(obj)/vmlinuz.efi.elf: $(obj)/vmlinuz.o $(ZBOOT_DEPS) FORCE
-> diff --git a/drivers/firmware/efi/libstub/sbat.S b/drivers/firmware/efi/libstub/sbat.S
-> new file mode 100644
-> index 000000000000..4e99a1bac794
-> --- /dev/null
-> +++ b/drivers/firmware/efi/libstub/sbat.S
-> @@ -0,0 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Embed SBAT data in the kernel.
-> + */
-> +       .pushsection ".sbat","a",@progbits
-> +       .incbin "drivers/firmware/efi/libstub/sbat.bin"
-> +       .popsection
-> diff --git a/drivers/firmware/efi/libstub/zboot-header.S b/drivers/firmware/efi/libstub/zboot-header.S
-> index fb676ded47fa..f2df24504fc5 100644
-> --- a/drivers/firmware/efi/libstub/zboot-header.S
-> +++ b/drivers/firmware/efi/libstub/zboot-header.S
-> @@ -135,6 +135,20 @@ __efistub_efi_zboot_header:
->                         IMAGE_SCN_MEM_READ | \
->                         IMAGE_SCN_MEM_WRITE
->
-> +#ifdef CONFIG_EFI_SBAT
-> +       .ascii          ".sbat\0\0\0"
-> +       .long           __sbat_size
-> +       .long           _edata - .Ldoshdr
-> +       .long           __sbat_size
-> +       .long           _edata - .Ldoshdr
-> +
-> +       .long           0, 0
-> +       .short          0, 0
-> +       .long           IMAGE_SCN_CNT_INITIALIZED_DATA | \
-> +                       IMAGE_SCN_MEM_READ | \
-> +                       IMAGE_SCN_MEM_DISCARDABLE
-
-You can put the pushsection/popsection right here.
-
-> +#endif
-> +
->         .set            .Lsection_count, (. - .Lsection_table) / 40
->
->  #ifdef PE_DLL_CHAR_EX
-> diff --git a/drivers/firmware/efi/libstub/zboot.lds b/drivers/firmware/efi/libstub/zboot.lds
-> index 9ecc57ff5b45..2cd5015c70ce 100644
-> --- a/drivers/firmware/efi/libstub/zboot.lds
-> +++ b/drivers/firmware/efi/libstub/zboot.lds
-> @@ -31,10 +31,24 @@ SECTIONS
->
->         .data : ALIGN(4096) {
->                 *(.data* .init.data*)
-> +#ifndef CONFIG_EFI_SBAT
->                 _edata = ALIGN(512);
-> +#else
-> +               /* Avoid gap between '.data' and '.sbat' */
-> +               _edata = ALIGN(4096);
-> +#endif
-
-Just use 4096 in all cases.
-
->                 . = _edata;
->         }
->
-> +#ifdef CONFIG_EFI_SBAT
-> +        .sbat : ALIGN(4096) {
-> +               _sbat = . ;
-> +               *(.sbat)
-> +               _esbat = ALIGN(512);
-> +               . = _esbat;
-> +       }
-> +#endif
-> +
->         .bss : {
->                 *(.bss* .init.bss*)
->                 _end = ALIGN(512);
-> @@ -52,3 +66,6 @@ PROVIDE(__efistub__gzdata_size =
->
->  PROVIDE(__data_rawsize = ABSOLUTE(_edata - _etext));
->  PROVIDE(__data_size = ABSOLUTE(_end - _etext));
-> +#ifdef CONFIG_EFI_SBAT
-> +PROVIDE(__sbat_size = ABSOLUTE(_esbat - _sbat));
-> +#endif
-
-This can be unconditional - it is only evaluated when a reference to it exists.
-
-> --
-> 2.49.0
->
+Thanks!
