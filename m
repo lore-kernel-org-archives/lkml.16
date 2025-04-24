@@ -1,80 +1,74 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1841722A7FF
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2124322F769
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484468; cv=none; b=Bk3/amzze+6iU2QFYARUFdVeIdIoojxyLpR4QqAckA5aYyV4tP/IIKSgr8JplB5e3nazTyds5zOO30EmStATomKqWtyzxicif2bY3EjXGGddskcNxqz98n+HRyG94Wm8yYyQ+L8uOnJq03D5Jy+TEt6ByObvZx2sil0yZF1jY88=
+	t=1745484477; cv=none; b=FPl12jKfaHYZfpzFlgGAYOibAZ+fWDC5mfZYNtXvb9O4+/SsXmjHR5SutQU13IuuL0iUDgaBMCO/stt42ME+Le54cmCEKHjUFZquyBD3fYsOS4BuGOxeK5Hd9+bW/bfhhfXwLnUAhEqcouL3YVAdz/c0ehHUBbdYtlPtZLit37o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484468; c=relaxed/simple;
-	bh=/Zg+SvYYhV8lAw93gW64NAyn68dIsXhG9VArVA4Apio=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IiY7bPLgI5Cw7Snmqe1/ohhqTAaKxum2gnTAy98pCc6NzkGNrPwLjBFf6QXtdC30n33iC8IlE99V2dFguWCP8kvDSxkdzSejNkAj4qEAHpSfb7J88fZCZ/5FNXqFWyYf9qveCJtRQg64hrp/iaKk6rUuuJpjgvFTUBnQE7sXBwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BtRZ9VF6; arc=none smtp.client-ip=209.85.218.52
+	s=arc-20240116; t=1745484477; c=relaxed/simple;
+	bh=v9NulOKFzzn4VjJSv/C3GeIHdwxmdTo/iASPuVTpKQY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pQMPhDK7q8mDvEfS2nwNWSuZSkCrtkbB/QZ1lJleDm5Ucs75bNqTKd6FATzd+OsW+fbk6tekAinWQXgJIqiLG4OopVbOIU2F4YiYuPnmQM5tlirHYglNd9IQes6SqwQ2BoKko5ksfpGSsZmBF3mxRlMOl4a/uKxtYCOZGl+Y/1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SE8ksqsK; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BtRZ9VF6"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-acb5cf13996so8963766b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:47:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SE8ksqsK"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac3123c0ef9so7677366b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:47:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745484464; x=1746089264; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x0naMJuU9gAe+qN+udfyQSJ+gDe9HTRKDpMwSOS1Ylc=;
-        b=BtRZ9VF6V0lnt/F1WQsdL0UfWKzbmyIiQAwmUWQL6wfMLHIxClka6+9IKjIwFataZ3
-         viodzhQdcCJ0COS4M8byMpYpqmj1wl2opo/RQPLJJn+TDPfYkpqPQmxJQkNesdIccIy/
-         hkvqDJZMuhOdJE9djcfHhbhby1lwtdGx5xHyT7MLOQEKgRYd1+M81KmoJRdRLRgn1sL9
-         aFLo7blAjmAA4SDfDDsgevu/P3e6adNkjIESpA+at7J/uDyQy2Ex2b6MYWHggyT8dTHZ
-         weInL9bovxR4cVFErDrCLYC70xLpf7bw7ZiywCaexu+qxXYBTYa5xtxNv+EJEahzrger
-         vvpA==
+        d=linaro.org; s=google; t=1745484472; x=1746089272; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cCBG5OKG/N3lD91xNoXYGEZyIt+oU9U/CB++e5u2IUo=;
+        b=SE8ksqsK0lfxE7OVNW/efLYXcmjlAf+PKG6/MmtpFYaX2kiBcunEJykFPWxqrbVN2i
+         1IT75nxdPLKlfuasFUqfjlZLcqU6KNGwK7564WO23CI7kmEdtB6Po2AcoUaWef70Xmaq
+         OehLDwjJpNhLaS9ZcK0sA47vNMQMTtY9CTWGjBBmw4igIKzyxLI5ytBk7sJNsefil5zc
+         KizOGMRHJSJ1gpKqdSqZr6dH+3Ez4IYXqEp3m1I8eIpq0t0HsrxO2wLSECKyfHZh8CjI
+         l9kHIh1sJ/hyI1oAFDoD1wYAnLBUycL5NnsBjMeOITIKHMDYt9BxqwfdBpjtN+hqMMM4
+         IMXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745484464; x=1746089264;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x0naMJuU9gAe+qN+udfyQSJ+gDe9HTRKDpMwSOS1Ylc=;
-        b=E1BB0tGPECc1FYWwH3dd3ukzLcWebRO1IIwf1B/oX/Ump1axToJvSlFUBxctMC7A2A
-         RcEPY6a/7//SFDSAccl/n2pqn4Sek4QkNP6fYwjDbwkQsHL1Dw7ABJTG3y6eACCssWzQ
-         lxcDgKIAChLxN3sKbXfHclBBEXsvk+c1ZOz7LGXSg67VIoeFN1iTaVTdS94vnaCdlqSG
-         F8T1B0gu7sYLExf1QLQgfBgDFh0qW4da1xMkWVT52CdK/p7Za0GXKN3zW/KaW2UEotiA
-         z7mGi4XtUlYkV8Ocn0xCQStnh+KbjQoVDOOLuLXlc2nIDBgOWavssDqjOVK7gbca88zP
-         eyrw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOrHSXzdWLi886mBotOryX5ZB68UxyJ1y0PmnZpQY7w75vC/1jq4LVW6+Am7CwOx4dHkMVtadwEf4Ajdk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/cgLKtgoHrCjjUi8rTMRmQkUmk4JDDmebndn3myLGHhX8Q+LW
-	m7dmS1yEMHZAbtWNPTa2CXWH2Ut7fYZsw8HhhHdZesMCZkODSWboLUN9w+jsJfk=
-X-Gm-Gg: ASbGncvfmjyNalO+qVUuSKHsVGelDWTIF/26qLxjcoAyKf2Z8E4CB9D9TgpjLX06EDo
-	uhwLcKCA3/rRYT2sUwS64kMRVYZRjqQVHio2UU0mvjcDIaxKpaDaxOpXs7DEvTsH+uBxzxibEyT
-	Z6WW24pyuUsEcfaBqeeyBaC1Tlc6p2Q/WuWXZ4Sq+2EncJ/Ng8bN+1cXdYtrlLVr1xYGNwG1g75
-	a1QFW7Iiskd6iDZISzzIxV5nJ7AdVrW2b3P46Z40nQ3rvgG1jAnxvytlaZ/QaD7vP5CwiWn8miv
-	8wwLNCLyfFbfqZyKs0HJBlzarmh8evJgh6dhWsIChgHX/NDkaA==
-X-Google-Smtp-Source: AGHT+IEqtIDEk3bgbvlxAZRptnb7L3v+POmbybrom8KtYglKCBdm5DoZlFBkTfsuHhG8/g5OHyFgfg==
-X-Received: by 2002:a17:907:3f0f:b0:acb:6464:5f9f with SMTP id a640c23a62f3a-ace57220445mr58086466b.3.1745484464256;
-        Thu, 24 Apr 2025 01:47:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745484472; x=1746089272;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cCBG5OKG/N3lD91xNoXYGEZyIt+oU9U/CB++e5u2IUo=;
+        b=eKf0XtLedjlXbdayMeZ8V+xD9eeVS1FGCCukgZYrx+N8OAarPCFkhvRBiJ3tu2t+0v
+         uZhPB4ZMalX+eNAq2k6HCwMBoT4YNw+UCrenW2hbpeVgTAuM5QHXZyX65+iDP7l9Z9zy
+         uOTQT+unynAotb0gOsycCmGIYssl8qxTBFYVZvqvo1nCGSXM4zNBdAsDg0HSrjF2ug7M
+         ldz5sYYj/7x9g+yUwuXQ9o/JmcRsSQH/0WcDs4w5OROtZ5aZ1o1iUPdvOB8YKIrjVOrA
+         83rznA/74lppRIpoax47or1kvs+LBo2Xp+CKBvixEdPnR1UrtPAoJ3yES82SbZN60tp/
+         nPGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHiXhJ38nuD2d9/7tATXKENj54WOSFZuIQIUc50V8ZlGSfAbxutcASE7lujphLDvWyPvKyFlFzFNtbKLM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxiwody4KZE34bWZ2pOWEcQI/oy0BvKBGRY+Pmgmx3vkJhDojMz
+	FUCUsLpE5wYOXU0uZpQ58mysGaEKWoryceGmZwN3Gx74V3bmG4aINO+JIAluno8=
+X-Gm-Gg: ASbGncsiWPMA8nxRr5A4x/mPhlvrsB/zKcFapMiLENFBdlP9CaONxvXwUFvV3/KZRV+
+	QBhNHkfQdNEs6H3Dp657ooIkbINs2ZfHmPUGkv3UKgG2ZmDW6nTKWSa0KWjCIZYkGrHq8cxKOeW
+	RnplAgG5GOPeN+ImNOzbjcZMcg9S4RZ352g80N+fuzb37A4ZGYuMuxzZn11w1p4VzcjrqWGTEEA
+	dXf355g3TYgCLYfQli5zNYO1lukfz74+iDEPmLxS6UrPHtZLLHnmsGCaZAUw+CFjP5nXs7c7J/0
+	0kb1IEQaaxo8OWXi4q8pXZ0sO7pShoBLaQVy2/agUv3DFxHLxw==
+X-Google-Smtp-Source: AGHT+IGYMQ2nZIejb29IR4qkaCq3mrCgC2opvXN3m7rH6EYZg1uUUZwVfU4xVuZHISo6zU7Qmm70ZQ==
+X-Received: by 2002:a17:907:72d4:b0:abf:7a26:c45a with SMTP id a640c23a62f3a-ace573b05c2mr52344766b.11.1745484472280;
+        Thu, 24 Apr 2025 01:47:52 -0700 (PDT)
 Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace59830ff3sm71378866b.7.2025.04.24.01.47.43
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace59c25bdbsm71213966b.141.2025.04.24.01.47.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 01:47:43 -0700 (PDT)
+        Thu, 24 Apr 2025 01:47:51 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Rob Herring <robh@kernel.org>,
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
+	linux-renesas-soc@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] ARM: dts: allwinner: Align wifi node name with bindings
-Date: Thu, 24 Apr 2025 10:47:37 +0200
-Message-ID: <20250424084737.105215-2-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH] arm64: dts: renesas: Align wifi node name with bindings
+Date: Thu, 24 Apr 2025 10:47:48 +0200
+Message-ID: <20250424084748.105255-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250424084737.105215-1-krzysztof.kozlowski@linaro.org>
-References: <20250424084737.105215-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,26 +80,26 @@ Content-Transfer-Encoding: 8bit
 Since commit 3c3606793f7e ("dt-bindings: wireless: bcm4329-fmac: Use
 wireless-controller.yaml schema"), bindings expect 'wifi' as node name:
 
-  sun8i-h3-nanopi-neo-air.dtb: bcrmf@1: $nodename:0: 'bcrmf@1' does not match '^wifi(@.*)?$'
+  r8a774a1-beacon-rzg2m-kit.dtb: bcrmf@1: $nodename:0: 'bcrmf@1' does not match '^wifi(@.*)?$'
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- arch/arm/boot/dts/allwinner/sun8i-h3-nanopi-neo-air.dts | 2 +-
+ arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/allwinner/sun8i-h3-nanopi-neo-air.dts b/arch/arm/boot/dts/allwinner/sun8i-h3-nanopi-neo-air.dts
-index 6d85370e04f1..9a2742363cd0 100644
---- a/arch/arm/boot/dts/allwinner/sun8i-h3-nanopi-neo-air.dts
-+++ b/arch/arm/boot/dts/allwinner/sun8i-h3-nanopi-neo-air.dts
-@@ -94,7 +94,7 @@ &mmc1 {
- 	non-removable;
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
+index 1489bc8d2f4e..d40a7224f9c3 100644
+--- a/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/beacon-renesom-som.dtsi
+@@ -300,7 +300,7 @@ &sdhi2 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
  
 -	brcmf: bcrmf@1 {
 +	brcmf: wifi@1 {
  		reg = <1>;
  		compatible = "brcm,bcm4329-fmac";
- 		interrupt-parent = <&pio>;
+ 		interrupts-extended = <&gpio1 27 IRQ_TYPE_LEVEL_LOW>;
 -- 
 2.45.2
 
