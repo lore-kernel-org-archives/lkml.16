@@ -1,185 +1,167 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E13C1A23B7
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F38612CDA5;
+	Thu, 24 Apr 2025 14:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505965; cv=none; b=mHwww+QHk9ouNnGDKYgBWJ0ocqlGSonon8VRMc3+NqUZwOaMlPORZoj9Dyg/YZnUKQE/7Mdu3xF9oQl0kcJXtz0Ryjf6748s+ag7Ytbyu0l+gFgVm8x59oGYA6OED2fOIcZErrnlUotN5cor4feUlimQO7CMAFY726VE44nuuP8=
+	t=1745506029; cv=none; b=SZtTuGSqwSeOAgkazdEtnypL3/69ofMqk3HxtkQhuxOYTNhoOErzQf4z5QwhXFd/NB57g8E9yDgHbUINTtx3M9KUJDta7CYEyf/28xwV1YFYbylqWCzj63HIyMZeACtKL8115h5iy9JM3jx8q5AkD0R4mTIhfI4cFwp6DOlMraE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505965; c=relaxed/simple;
-	bh=o2RBZVSwwymoOwOHsr7X7tY2TYV6PDEU88LDFFfByo4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=At+2LT6T/rShBxu6f4xVhNwpMXGsiUgU4tUDlBEDH5r7rdOCx/qDloB6Y2TV1Ebv6DpJvnT6iDw5j6uSELJOVuG/3V+HMYpmLZ10vJA5Qy0WdM87SDXczOM/47ild3wv17dyUV40ivMPAe3p+Zby2Jr4cJiLgFw3f7cPdLYK8mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eMrlDXwC; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745506029; c=relaxed/simple;
+	bh=Bn7qKgmVirMnL4HSoD6+ySbU242thJzaLTltDmOvM9c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YOHyrghSLKMSGgPUJ9casVPkVL8lEYrVzGLY8Bd5cU663iCxks4Gv4GeaHbM7fZTqY2ElfuAV3H7cF8pX102Kh5d/9iKpVlZeO3elRVdPhJwD47DQndKt0J3N7/lNdEWzIsnCy5oG4j30KVKWt375MxVhn0jLlskUWCReFy46As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=UiBzdblN; arc=none smtp.client-ip=212.227.126.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eMrlDXwC"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47691d82bfbso24042951cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745505962; x=1746110762; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=djiw2uRfK6UBOIy5EO9pfxKm7dpOiSpJC1m5A7rq/I0=;
-        b=eMrlDXwCIiMNIYtT3VYlNi9r8ZDyzobMzhf9h6DIivmSuzSZipbYKD8BCPeqjAZEg7
-         rzp9khL02r6ktGzVGakGktZ1sdQ/s2R4BmmqQ7RO7Q2RUTmWFB8erXTeOEx1Er4FAtI5
-         Dojo5sExewqXvSG8MoQq80FNUOsrq7SLnBSWCOYxKr82Oi96Rp1TRpigqiAjjbCqVLc6
-         9HH3RV+1Hd1xCu+pRJtWFLYc8W0XRVH7yLgCNZHzUT9sa7NvaNf32/9GuxUdezx2tZVT
-         q1jdKOocmhlHQMA8D19lgVL1N/25G669RB9xrO1hKvmY0a0lvZL+CCKSFvX0enLubTgo
-         yvNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745505962; x=1746110762;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=djiw2uRfK6UBOIy5EO9pfxKm7dpOiSpJC1m5A7rq/I0=;
-        b=qc44Kh4wPiPSMMyJV8pqS+C9sWU3leVVsqP1KxkYZR+TDQ3v9BWQiqMSQ+8n5iNWuF
-         zBJdFHPPkXjaoaQjCyvVxBa52rgU4iI4bD89VukKwrWRBliPeBkhyu4Wpb6SbyJRnjTL
-         PWdsgi1ZgdNnNT5VUHs15y6URcHWpKed5cg9rh6/1K6Uc4eFPLAgMDlsbzyxjJmcMqOD
-         nzoBtxCGNeWgMLT/w9cBtYbnE0gztdfOBANgy7h7n2BQesFRQ8voKG3wyNZBkXJvIIa6
-         3jyne7TWTVtQYhbXbhE6gVoAWRPHxS0f1t47/zL0Nco6Iqq5ggxaxmpxj94kWIvVDpFS
-         6QXg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHbmc8Lp2K5Q7JHgp9vSwYAVAhPe8+ZaroD1kQlvY8xuCnzkbvn+stz5Ds5Z4oODWomeU4+DQJtWKg9As=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGxQ6uPmPJgdIfgbnI07VXo48AF070xqhXoGp5DjUFC3gajOk7
-	CFjs6qeiwdDesMKng+KikyVgGaYBBMBP54pXC2upvCbh17qHaHPiwMMRTPLHMtXz5F9Qz42sWzt
-	MHxJa+lYBi7PnyCzWjoBYJGxV8BU=
-X-Gm-Gg: ASbGncuGxiasfypa+gRZflBUGsaHghzpTRixJoDEKDno2/RLDYts0+VVY/rLuP3NhDL
-	WPIJ5ABYXzMYhSUNi6wY1omKfleWJrBwJMAiqpXZ1oHn+8KLDHhDw9QjlmlXdCKDXVaoSFXZ2vK
-	6E/eIUu7LaPxeS2U2jl5wwjrI=
-X-Google-Smtp-Source: AGHT+IFGaPkE6RL+WHWDWAL5vZOpOKCCFkUXuZ2C29tV+pt/3ETbhcrTI+CSd8av3dhQsiIAjaNy5GTuFsD83soT7nU=
-X-Received: by 2002:a05:6214:4015:b0:6e8:f99c:7939 with SMTP id
- 6a1803df08f44-6f4bfcb0542mr41311646d6.44.1745505962215; Thu, 24 Apr 2025
- 07:46:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="UiBzdblN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1745506020; x=1746110820; i=christian@heusel.eu;
+	bh=BiYoI3t07zEC8MRuyXYTtYuABNrGYYjjjTp7cv/tN5k=;
+	h=X-UI-Sender-Class:From:Date:Subject:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding:Message-Id:To:Cc:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=UiBzdblNx8SwoBGVxvk9jjILOoLWahs1kH+IM9Jg1GoFjDtyCk7d6VMXlArVRrCV
+	 cImoPPph4TrSVxDGFE4IFj2DND54y/B6fE6KDxDealrOQ8kNrQq1/YvHSSPLMxZ9I
+	 xyk6DtjWUJEpcJV3O9PZPKmD0QBFd0KESuAK0mAVObJyNaehAL43rmKHkIgsC6GQl
+	 DAYR2elgIPK/3EdTRx5hyUD4BgpERUy+gRW35H43fpfG00yTsJNKg5kEuBpcJNqEu
+	 JLz6g3bh9yLkh4i+UQrKViu6W8HiUfsubgDPrBUJ4K26vux5YRRwkMWJ0FCbbYIOV
+	 QdVGVxbZY82aIH5o/Q==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from meterpeter.localdomain ([80.187.66.147]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1M7auL-1uBYB23HSf-0093Pm; Thu, 24 Apr 2025 16:01:06 +0200
+From: Christian Heusel <christian@heusel.eu>
+Date: Thu, 24 Apr 2025 16:00:28 +0200
+Subject: [PATCH] Revert "rndis_host: Flag RNDIS modems as WWAN devices"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423174634.3009657-1-edumazet@google.com>
-In-Reply-To: <20250423174634.3009657-1-edumazet@google.com>
-From: Yafang Shao <laoar.shao@gmail.com>
-Date: Thu, 24 Apr 2025 22:45:26 +0800
-X-Gm-Features: ATxdqUF-ovgbBxduQnEu1wue-NNLCVb2y0ggWdAMR61_FYb2MQzImAQcwI8q970
-Message-ID: <CALOAHbDT=z4xYQq0WXqGzAQycNhaBdCfZDs5mB5Rvyx9iK4JbQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: reduce false sharing on sched_balance_running
-To: Eric Dumazet <edumazet@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	Eric Dumazet <eric.dumazet@gmail.com>, Sean Christopherson <seanjc@google.com>, 
-	Josh Don <joshdon@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <20250424-usb-tethering-fix-v1-1-b65cf97c740e@heusel.eu>
+X-B4-Tracking: v=1; b=H4sIAPtDCmgC/x2MywqAIBAAf0X23ELZA+tXokPmpnux0Iog+veWj
+ jMw80CmxJRhUA8kujjzFgWqQsES5ugJ2QmDLnVbNrrBM1s86AiSRY8r31j3pjPG1trNDqTbE4n
+ +n+P0vh/8VO0nYwAAAA==
+X-Change-ID: 20250424-usb-tethering-fix-398688b32dad
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org, 
+ regressions@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, 
+ Christian Heusel <christian@heusel.eu>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2318; i=christian@heusel.eu;
+ h=from:subject:message-id; bh=uCmWJ08d3T6sqzruRhhWDBmrpAmhzZjpMdT+4kKwQso=;
+ b=owEBbQKS/ZANAwAIAcBH1PMotSWFAcsmYgBoCkQYdLRPMzkf+QHfzbvX3tEyVNKkXCfmnJZ2b
+ F3yPlBdc5+JAjMEAAEIAB0WIQRvd5reJHprig9yzBPAR9TzKLUlhQUCaApEGAAKCRDAR9TzKLUl
+ hbkUEADVFJTdIYmV70vJOafWG6Q0MJ2+D744VIi72htiDZaU5KXXnhjhgcCkc7ERzzc6EPBdfvh
+ fT0tSm0OSj5EmPxftgKRfnKpuSzgUf3JrqszWBjc3b1VS116beAeKyBSL3CDxn410Qgefxq6ONN
+ Snx4HfR6mmQMdYskMAmBfXcnhZumZbOs6E79j4Rgo9aGyhn8e5br9Wjydvdaha6ofhalKG4/noI
+ 3V1sxjlLAtItMZN6x8K/Sw//g6oOpKeUarSXzINs2jE1KE+KM9iEL0ao23V7D/Abvx5j8uIOnsH
+ Zd3XTbOumKO9MwGhRFcWscVXtTbwcwE4l08BvhjLrNQcx1CCXK4r1NDkqEvmCEQPkEs5gOCKe2s
+ KcH2umRSOXY3MdEFn6MfOaswwA9qB3GYfklyjZJ5sFsZ7B/CYK5taj4ZBdF2B2mJN+n8ZZJNOTa
+ GRQh2SZ5wcR4TfSt/UO8xGbvngKYeHzj1PVMBar79KJNDpwolwDF4Q12CUTfP0aPs2kCuWFaeTA
+ qSq8esVlTmrAYmpstcqq5ggZHK12aTwAgzo137jYyjctXFMGjwAMeHZ2/tAEHRQKYF/x0xp1J8l
+ rQvN2uVtySCduj5BGS8ibjNrLYHIy+QSEWgpYxK7DTRpQcR+TXmmojhXCma6F4AKINd9+Xit5sO
+ aVMbYywjdZ0p1AQ==
+X-Developer-Key: i=christian@heusel.eu; a=openpgp;
+ fpr=6F779ADE247A6B8A0F72CC13C047D4F328B52585
+X-Provags-ID: V03:K1:inbTguRCRiMzNvBapqeKfvNgoRAp4ykFIM+J2mJo0gamsw0VmE2
+ SCWeqUtxg/rShR/rwfRc771bqCWDaQuMi2EiSCFU/1U7cbNqcuOcfj6n03OKFnTz8PoT3Xy
+ cj3rVVGs0Lo8CPxQbCb3CxFRkiY/ojr9BH/QlvXlUFPFXIBABy3qJl/IsDYJqUiFt5Q2FTk
+ /8AdAL1xp0bS9+MPHtEHw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:PflABPEdXXQ=;RPRrPH81t1zq5AQlBJjAPtNrmDf
+ z1ri80UOQmYc4dRQUCwE5PDe/i4AuVyT68lf9t4FuUdxaA6OqAOMueSuojh8tubI4CHNBcRW7
+ 6jAjlC3xrBbdKpr26g06tMgBOivVL0NfE2FXD5NK5f4pUUFRSVczL34JXwwY2GsRLERxgRZvr
+ Xwf0Jb6vgkwENptVDqO8r7I5CZBayJBwgfnRtdvarmas+9hzEMs8sNtBMRzvwyyUQadp95qQc
+ ZjmGS9cHnh9nrzr/vfbCu5v1MNbbxhEawVbH+dNpjxl7A7hG6YUVXLGy7QjBP3XNDyC6JZnLu
+ CoTVuxEs/3aLm+6vTqVhbTO2MyCNQqvbONprbOhfckBCsJ7fLHuNdMogxphtbiCUKJ4FhuDpc
+ tfcbRormUhfG15NRrOY2pdX7iTXliAvZPdBOPJZfXehfsssLtv7VrQNcKtkecnKxc6gH2ivFd
+ DY1XrrOMyEJcVCZf6lZGyXr5BrI3xbSvCkWUwCOPHugWzsrNtLrTyw8xO9v6HJNpCx7DH4ayd
+ yKtxvKjcXLrUkyCrQoULoM2CGNamwCtEXdvpUDCfonqww/ED4jio9nURsWRRkBjcbzebweZ0H
+ /qYqskUX9VQpXLidBVBZhdirQLm5Ex049Vb50Iv+8w5fxCoWx7uMi0hRhJxKoRsu5//Zqp3/x
+ hYJMaVFao/MPUPXdId7ujlm48QFsxT7ALMXmTJtMy+1MHBoJ+u8FB12OXdmQ1lsvjoEqxb/TL
+ 8ix9TaULacjJ7hw+sWq3GDtHmZMwH81/ekfIA1SkbmwJ88ixv7HJ2Bq5H8aurUKBGDWK5s20y
+ yfrbNkEKuhlzI3Lqa/ZSTjYEJy6i/hT0DAY2xznOO4kLF5BgbJQQ38Cl+xq7Rl/0IEJmAwkKm
+ eLGCYYpUt3vXzKKMhh7eGl0j7i1uFHzfcLm0AG+6e6yAxmm0M+C/THAZg2GxZGqcowO4p2IF7
+ wsBJShEbeaBWPmfd9Jy+MJtMYboksE+8moo2SUTuPyzBFwvQFBHRNChAmt+vKXlVbw+wG3wPS
+ 1GxyDcFvAk2QbjjiTIm2pG9hrUHCLkzyXZ2COmHf787pNwXQO3oP+2w2DKA8xKxaNveeozQEo
+ ebEriHEf+7+pL2Ih0kZmk5xvpRh3GBw4FNf7WdP6z8NGsOL+fv0HdGFDtHWH4PsYq3ww/Co5i
+ CDbZuHM40lxEAIeMWLr8XzPzMzxW5GW5l/3a8Ol3TZucCEEmcI571WTcuG9Or5Jrl8BGvP/dy
+ 93ZYovJGafW889NA9VXP4Gvp9hJITNjbnLnjxMrF9UePt8x5PiIGgyBmFrNUHieqWpUZe06No
+ /q3t2GI+gAXepIrMOGveVwcKBQrjL7+gTtItIBFrZXs94+JSNsSP78Gf3Hce63EOyIYWsKe4R
+ 33jLZG0aF7F35D1DYAYsjHW+kq43b0ci7QzcE=
 
-On Thu, Apr 24, 2025 at 1:46=E2=80=AFAM Eric Dumazet <edumazet@google.com> =
-wrote:
->
-> rebalance_domains() can attempt to change sched_balance_running
-> more than 350,000 times per second on our servers.
->
-> If sched_clock_irqtime and sched_balance_running share the
-> same cache line, we see a very high cost on hosts with 480 threads
-> dealing with many interrupts.
+This reverts commit 67d1a8956d2d62fe6b4c13ebabb57806098511d8. Since this
+commit has been proven to be problematic for the setup of USB-tethered
+ethernet connections and the related breakage is very noticeable for
+users it should be reverted until a fixed version of the change can be
+rolled out.
 
-CONFIG_IRQ_TIME_ACCOUNTING is enabled on your systems, right?
-Have you observed any impact on task CPU utilization measurements due
-to this configuration? [0]
+Closes: https://lore.kernel.org/all/e0df2d85-1296-4317-b717-bd757e3ab928@h=
+eusel.eu/
+Link: https://chaos.social/@gromit/114377862699921553
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D220002
+Link: https://bugs.gentoo.org/953555
+Link: https://bbs.archlinux.org/viewtopic.php?id=3D304892
+Cc: stable@vger.kernel.org
+Acked-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Christian Heusel <christian@heusel.eu>
+=2D--
+ drivers/net/usb/rndis_host.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
 
-If cache misses on sched_clock_irqtime are indeed the bottleneck,  why
-not align it to improve performance?
+diff --git a/drivers/net/usb/rndis_host.c b/drivers/net/usb/rndis_host.c
+index bb0bf1415872745aea177ce0ba7d6eb578cb4a47..7b3739b29c8f72b7b108c5f4ae=
+11fdfcf243237d 100644
+=2D-- a/drivers/net/usb/rndis_host.c
++++ b/drivers/net/usb/rndis_host.c
+@@ -630,16 +630,6 @@ static const struct driver_info	zte_rndis_info =3D {
+ 	.tx_fixup =3D	rndis_tx_fixup,
+ };
+=20
+-static const struct driver_info	wwan_rndis_info =3D {
+-	.description =3D	"Mobile Broadband RNDIS device",
+-	.flags =3D	FLAG_WWAN | FLAG_POINTTOPOINT | FLAG_FRAMING_RN | FLAG_NO_SET=
+INT,
+-	.bind =3D		rndis_bind,
+-	.unbind =3D	rndis_unbind,
+-	.status =3D	rndis_status,
+-	.rx_fixup =3D	rndis_rx_fixup,
+-	.tx_fixup =3D	rndis_tx_fixup,
+-};
+-
+ /*-----------------------------------------------------------------------=
+=2D-*/
+=20
+ static const struct usb_device_id	products [] =3D {
+@@ -676,11 +666,9 @@ static const struct usb_device_id	products [] =3D {
+ 	USB_INTERFACE_INFO(USB_CLASS_WIRELESS_CONTROLLER, 1, 3),
+ 	.driver_info =3D (unsigned long) &rndis_info,
+ }, {
+-	/* Mobile Broadband Modem, seen in Novatel Verizon USB730L and
+-	 * Telit FN990A (RNDIS)
+-	 */
++	/* Novatel Verizon USB730L */
+ 	USB_INTERFACE_INFO(USB_CLASS_MISC, 4, 1),
+-	.driver_info =3D (unsigned long)&wwan_rndis_info,
++	.driver_info =3D (unsigned long) &rndis_info,
+ },
+ 	{ },		// END
+ };
 
-[0]. https://lore.kernel.org/all/20250103022409.2544-1-laoar.shao@gmail.com=
-/
+=2D--
+base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+change-id: 20250424-usb-tethering-fix-398688b32dad
 
->
-> This patch only acquires sched_balance_running when sd->last_balance
-> is old enough.
->
-> It also moves sched_balance_running into a dedicated cache line on SMP.
->
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Cc: Yafang Shao <laoar.shao@gmail.com>
-> Cc: Sean Christopherson <seanjc@google.com>
-> Cc: Josh Don <joshdon@google.com>
-> ---
->  kernel/sched/fair.c | 28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index e43993a4e5807eaffcacaf761c289e8adb354cfd..460008d0dc459b3ca60209565=
-e89c419ea32a4e2 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -12144,7 +12144,7 @@ static int active_load_balance_cpu_stop(void *dat=
-a)
->   *   execution, as non-SD_SERIALIZE domains will still be
->   *   load-balanced in parallel.
->   */
-> -static atomic_t sched_balance_running =3D ATOMIC_INIT(0);
-> +static __cacheline_aligned_in_smp atomic_t sched_balance_running =3D ATO=
-MIC_INIT(0);
->
->  /*
->   * Scale the max sched_balance_rq interval with the number of CPUs in th=
-e system.
-> @@ -12220,25 +12220,25 @@ static void sched_balance_domains(struct rq *rq=
-, enum cpu_idle_type idle)
->
->                 interval =3D get_sd_balance_interval(sd, busy);
->
-> +               if (!time_after_eq(jiffies, sd->last_balance + interval))
-> +                       goto out;
-> +
->                 need_serialize =3D sd->flags & SD_SERIALIZE;
->                 if (need_serialize) {
->                         if (atomic_cmpxchg_acquire(&sched_balance_running=
-, 0, 1))
->                                 goto out;
->                 }
-> -
-> -               if (time_after_eq(jiffies, sd->last_balance + interval)) =
-{
-> -                       if (sched_balance_rq(cpu, rq, sd, idle, &continue=
-_balancing)) {
-> -                               /*
-> -                                * The LBF_DST_PINNED logic could have ch=
-anged
-> -                                * env->dst_cpu, so we can't know our idl=
-e
-> -                                * state even if we migrated tasks. Updat=
-e it.
-> -                                */
-> -                               idle =3D idle_cpu(cpu);
-> -                               busy =3D !idle && !sched_idle_cpu(cpu);
-> -                       }
-> -                       sd->last_balance =3D jiffies;
-> -                       interval =3D get_sd_balance_interval(sd, busy);
-> +               if (sched_balance_rq(cpu, rq, sd, idle, &continue_balanci=
-ng)) {
-> +                       /*
-> +                        * The LBF_DST_PINNED logic could have changed
-> +                        * env->dst_cpu, so we can't know our idle
-> +                        * state even if we migrated tasks. Update it.
-> +                        */
-> +                       idle =3D idle_cpu(cpu);
-> +                       busy =3D !idle && !sched_idle_cpu(cpu);
->                 }
-> +               sd->last_balance =3D jiffies;
-> +               interval =3D get_sd_balance_interval(sd, busy);
->                 if (need_serialize)
->                         atomic_set_release(&sched_balance_running, 0);
->  out:
-> --
-> 2.49.0.805.g082f7c87e0-goog
->
+Best regards,
+=2D-=20
+Christian Heusel <christian@heusel.eu>
 
-
---=20
-Regards
-Yafang
