@@ -1,100 +1,157 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F07190664
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:10:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39152820BD
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745518205; cv=none; b=UBBhIpK2+vS0AQThH4wtuuzVJ5R5k9xX00nMnjfCUO+bPDU/1bTsaBuJo1n+4C2aR4ijVHpij1YGuSyuYTOE3bRtcBfrr0DywPupQCx3W7il6vINAUfy7h3vhc0oYdLhGnAepVfF4TN1LVlpXmjJ+jCL+JBHUtKiuXFmmRvdBco=
+	t=1745518268; cv=none; b=n2jsXbBpyUUfSa55ixEzZEzqFkpcV/5f6KamgNyaNZPybiiRy+xYo6nImknT+XZDEmJOycXB98jqSUQcP+7ZBFHB+Gzth3BY+AJDyddyk70kGr9j0i/qqw3h/8VbSgeiFrAnKmbme9puENYeMMOF1CjXVo4izQbk5WGPKhB1AuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745518205; c=relaxed/simple;
-	bh=Wr8Howp6YUBHFQ5IXcbrHAh69nUeNbi1WwiX/cJv9UA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pw7hawetXGPJZdQq77zn54XKmkNEDlZWWC1PKPy8CIiAzRxaKo6SZAEdl2Dz1tgmfIgSEGs+pB4SowNGBFIRQKF6HvR9PiGub+PfHj4et2276omcdY15j+qbceVDdytg9/oLo0GcW9ey2V/8o3x3fWVwHfKAdZQpv79899eGbNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=bKZu2i/+; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
+	s=arc-20240116; t=1745518268; c=relaxed/simple;
+	bh=/bcV79/hrYhuCYZ9AGewlfKYBwHxoJx9OcEIMx8nyzw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=JlaS4ooahyMWTeW0FIUK6p9KiBeIlS+S09EIF3PYEd++hMr7EF6Z4SvPiN7tw1k6quXJeKvZRu7ueLCB0MogePHX8uu4DpUNWNuSzURrC4ybYYlJ+OeNSQ9myJu8o11ov/VXrgFlBDFerzywWoHtsbf5vcHrvov0KrUPFgdkVuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=U9c5Jk3Y; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="bKZu2i/+"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de12bso21202815ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:10:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1745518203; x=1746123003; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+UKNt0lCLDr2VLT9kOvLTb2AuOQOpzIZeg4tCrvuwj0=;
-        b=bKZu2i/+MrIu2KWaD9cKAvnwOtvxeCXthuKHF+RSMnLrA28adNRkceF7FVKDQdVdOb
-         Nvq6c/Jj8r4Z19qC5Pwd3i793T8SUDrsgwkz5e/def9SNCHPVg8SYZ/nlELW5/MxEspu
-         3fkd6+cWdFheKMYW0CgmG5pGFUhTOq8OacB+G/Fubs4yQGoQoLNEiYqTUzGTeokFEQd5
-         o/G3Qe0xBpy2OFfQtwTjMjZfVpJgERu7ftw5jiMl+1hFlOiK+BFkFdUYxKr+kHfXTMN9
-         aP9osERILIZ6wsDW+OtIUr30RDevAJkzjjvHS0+p9M9XRYNWLF4ncQkUdhN2Pc/3Bius
-         9adQ==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="U9c5Jk3Y"
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 7729E3FE3F
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1745518262;
+	bh=/bcV79/hrYhuCYZ9AGewlfKYBwHxoJx9OcEIMx8nyzw=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type;
+	b=U9c5Jk3YF5QpLUfn+1eDdVifmCYqPCbDkB7jNMXACB6E56SBzBc3JChZqNY1zi0hp
+	 yiZpKV+m3pirxG8N5aDVkV7CkwjY5JH3gBCdHPmx8+Xxj8IeO2UvGaE3QkZxOjE+D1
+	 ZnVSJFGQ2OdZynEyMHLnHrf8J/dmnwC7GzkjGL3W44qBztZlkbUMU2f5E1owH5gXa4
+	 b1j8Zdfk8hruo4HgJdiGXnbNzuOetvvbFn2bktNWsXLXFCo7eEo7PQ4uf6bWPNadJp
+	 AeiUJxP4r8mrv2fETLEjx3C4kMU1bvRaw+3q+tAZu/MElmZift36HjwgVpq0HwDuAu
+	 ZbDprTW+ZNnvQ==
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5eb80d465b7so1464786a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:11:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745518203; x=1746123003;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+UKNt0lCLDr2VLT9kOvLTb2AuOQOpzIZeg4tCrvuwj0=;
-        b=dZLIlSTCjxOTawRBKolzc+HpXnjf3LzJfByJInWKnQRFzwIO1a2aeLXqA3bVuZkUfj
-         2p/SlaNzIshyUSEyRQf2CwRrsthw+AifYde+zEFZJSMa17lbQIaVSRg76CvnhmYnjZE7
-         n8ts5FPVt7+zzq8AVfnV6/XbAbjACS9JpHt8MotITNkwT5Jb6KbT/7D8/dbphFcVbg84
-         Vps+6JyAzSaqiAxYiU9dVKmYDeZ+vBnYkXFojDfSRyBycd/zBGQmWcr2OmsfxWdejr5W
-         QqQkyOZ+hLoL99kh5i5y8anOKUU22RYAz0kihj9HMtWtMQz7CwGjFl0rfSLt9qMrT/B8
-         ROfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUatCcXhT03qGL/4iUShD+RIPQ34UMbR3Sfbwc7GSzV+VVjs5ggNck0WaeGy/PYOJBOti42cRmyO0PH0/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw8KksMLNYO09yjSin2R3rLMVSVZ6cqucN8tz4nfltWrRj0pA26
-	dCouidHLQmGUVgn4XAtvxOuOE4C7cR5WrDCDirmQcZ/LfWoicFWmlgtcNZfZ/00=
-X-Gm-Gg: ASbGnctq9+ysskNnvjhmsAZ4cqny1IsCRZOeG5PNYvtCK+SqNTbmCRihqwSvjpUNXjT
-	gaJ5JzjT1MtUVqh5j6h8LU1fcT2sYKuiATHaB7jUp8azhf1VgKDYcEGXFdSkuvUesJVsDn8rGoe
-	DCzE8PBEc3EcXBhpAp9eT+OFzdKQgOGbkiUQ7VzUOb6Mwo5t1+Z9NxuFSRGp1gUnzxEv1Yl36G5
-	d1mmqRuSgoZAvJWeR510S/7ih0PtdUzs+lh2NzHF4NBL7A8wA9/nron/NQMDrFEU0kbWdzM+oP5
-	cl4XbFBnSTDa0PN2Tx3ExtQbea1V1FjOAHCQjBAczeeU8whpMqHHsgYU2NknjxoOi2xQP20AeqQ
-	rgH6UN/qQnrTXojz/iF8=
-X-Google-Smtp-Source: AGHT+IHnCaTt/PjXgficrL39pGhcE2L6yyJvkQieKK32vsywiH1L2LBk23RuW6NeWGc4L/G8Ur3ipA==
-X-Received: by 2002:a17:902:d50e:b0:22c:33b2:e420 with SMTP id d9443c01a7336-22dbd401ed7mr5490555ad.7.1745518202886;
-        Thu, 24 Apr 2025 11:10:02 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1156:1:1cf1:8569:9916:d71f? ([2620:10d:c090:500::6:c802])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e751dsm16782485ad.142.2025.04.24.11.10.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 11:10:02 -0700 (PDT)
-Message-ID: <6d9d6ad1-71cc-47f2-b7a8-d61f5ecdfa55@davidwei.uk>
-Date: Thu, 24 Apr 2025 11:09:59 -0700
+        d=1e100.net; s=20230601; t=1745518262; x=1746123062;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/bcV79/hrYhuCYZ9AGewlfKYBwHxoJx9OcEIMx8nyzw=;
+        b=bEYghBza3Mg/ZW1Qs4DRfxtIC7hWwP5MXOKwrLATxMUIVqM3FKAAmSahgjMkGtrXU8
+         JJ2hsU0UPNnHvetAxnOiBfqzK3Si0KWv5I+Yn0E7nD922Q22Pr//bOsXUK4BfLpxuPpQ
+         dlmkvc65YzMv+ffC+yFhn+asW1Ib3F3uV/LErivnq5ul00TH2mb5H02ii5pDfL1vHZ/S
+         Urf4Cdw6uFV4PwAJc044nsoMu+ISYWeqr4i9HjtUxkmC4NyOfAAz57v8jmNTxQYqnKvl
+         y6NRfR+qt6osp1Pmay1QEQC4RrKtXJSL4jALRfPPC1G3Eg9O23PfnAUs8lnPiWepR2Zv
+         8zVg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2Xfc0LGqBMT3SMs5tBoCh0mX8KINOZKTLbyWAPW6p+N28KNEKWD+LVtLGCqIRd7XgIKwelovwpspDHys=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/tk38xwVmdjVKdTBgcnwinCC1hGtIIOeSv5TuO1UjXQYD2OID
+	tuzf0iWvIkrq+2x2TS+U1DjyD2xkiHFxVJwRtVpOpNXOvr9lcan1t4CRrXS0clM4/vEvQ3ekaJN
+	kMBOSNCcPPmTEhW49Gfev+yavsZ4fCapGlFW+lVGJ6MLscDAtCJ26GQASIp/aDX30C0mHg3X0Vq
+	HUieE1cNcd0LHkzNHrIB9bumk2V6SnGWqN2/vjLqa1GcoMZk/CEWeU
+X-Gm-Gg: ASbGnctv9zmKlVRysxy0/Dat34nOfCcqtHksbt9iKSPXVZVHwqpMsHOZAEMjR0Bk0qS
+	buL39V62GQvvrCS9zqEiqqFtXSCuTvHj0MutJWfmJOyVzBjYdfLWhGzAMqE8M7u76qDReWPQLyD
+	wQYjBWz0Qz2miX8MIp/jllRp11Skk=
+X-Received: by 2002:a05:6402:3546:b0:5f6:c4ed:e24e with SMTP id 4fb4d7f45d1cf-5f6df2334aemr3811589a12.27.1745518261833;
+        Thu, 24 Apr 2025 11:11:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEeT56dfdwXZU9gyfAf1ipXvg9DLJW0BhXvsj463JP8ntSevyGeDPQEmobu4iu7JFqk/KgJMMBCuNsi437xIOY=
+X-Received: by 2002:a05:6402:3546:b0:5f6:c4ed:e24e with SMTP id
+ 4fb4d7f45d1cf-5f6df2334aemr3811537a12.27.1745518261303; Thu, 24 Apr 2025
+ 11:11:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] selftests: iou-zcrx: Get the page size at runtime
-To: Simon Horman <horms@kernel.org>, Haiyue Wang <haiyuewa@163.com>
-Cc: io-uring@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Shuah Khan <shuah@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20250419141044.10304-1-haiyuewa@163.com>
- <20250424135559.GG3042781@horms.kernel.org>
-Content-Language: en-GB
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <20250424135559.GG3042781@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Mitchell Augustin <mitchell.augustin@canonical.com>
+Date: Thu, 24 Apr 2025 13:10:49 -0500
+X-Gm-Features: ATxdqUFujSrsGNEgNvqrB8juFL36ME4oAr4i3skXtmwLE55l7TtL157IXwsVQaI
+Message-ID: <CAHTA-uav+jc9WKr+Ye0zoR+niczZLbTKdX1LisR3YSLtoLJ5Dw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] khugepaged: Asynchronous mTHP collapse
+To: akpm@linux-foundation.org, 
+	20250211152341.3431089327c5e0ec6ba6064d@linux-foundation.org
+Cc: 21cnbao@gmail.com, aneesh.kumar@kernel.org, anshuman.khandual@arm.com, 
+	apopple@nvidia.com, baohua@kernel.org, catalin.marinas@arm.com, cl@gentwo.org, 
+	dave.hansen@linux.intel.com, david@redhat.com, dev.jain@arm.com, 
+	haowenchao22@gmail.com, hughd@google.com, ioworker0@gmail.com, jack@suse.cz, 
+	jglisse@google.com, John Hubbard <jhubbard@nvidia.com>, kirill.shutemov@linux.intel.com, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com, 
+	npache@redhat.com, Peter Xu <peterx@redhat.com>, ryan.roberts@arm.com, 
+	srivatsa@csail.mit.edu, surenb@google.com, vbabka@suse.cz, 
+	vishal.moola@gmail.com, wangkefeng.wang@huawei.com, will@kernel.org, 
+	willy@infradead.org, yang@os.amperecomputing.com, zhengqi.arch@bytedance.com, 
+	Zi Yan <ziy@nvidia.com>, zokeefe@google.com, 
+	Jacob Martin <jacob.martin@canonical.com>, 
+	=?UTF-8?Q?Vanda_Hendrychov=C3=A1?= <vanda.hendrychova@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2025-04-24 06:55, Simon Horman wrote:
-> On Sat, Apr 19, 2025 at 10:10:15PM +0800, Haiyue Wang wrote:
->> Use the API `sysconf()` to query page size at runtime, instead of using
->> hard code number 4096.
->>
->> And use `posix_memalign` to allocate the page size aligned momory.
->>
->> Signed-off-by: Haiyue Wang <haiyuewa@163.com>
-> 
-> Reviewed-by: Simon Horman <horms@kernel.org>
-> 
+Hello,
 
-Thanks Simon. I'll apply the patch and run the selftest to make sure it
-still works.
+I realize this is an older version of the series, but @Vanda
+Hendrychov=C3=A1 and I started on a benchmark effort of this version prior
+to the most recent revision's introduction and wanted to provide our
+results as feedback for this discussion.
+
+For context, my team and I previously identified that some of the
+benchmarks outlined in this phoronix benchmark suite [0] perform more
+poorly with thp=3Dmadvise than thp=3Dalways - so I suspected that the
+THP=3Ddefer and khugepaged collapse functionality outlined in this
+article [6] might yield performance in between madvise and always for
+the following benchmarks from that suite:
+- GraphicsMagick (all tests), which were substantially improved when
+switching from thp=3Dmadvise to thp=3Dalways
+- 7-Zip Compression rating, which was substantially improved when
+switching from thp=3Dmadvise to thp=3Dalways
+- Compilation time tests, which were slightly improved when switching
+from thp=3Dmadvise to thp=3Dalways
+
+There were more benchmarks in this suite, but these three were the
+ones we had previously identified as being significantly impacted by
+the thp setting, and thus are the primary focus of our results.
+
+To analyze this, we ran the benchmarks outlined in this article on the
+upstream 6.14 kernel with the following configurations:
+- linux v6.14 thp=3Ddefer-v1: Transparent Huge Pages: defer
+- linux v6.14 thp=3Ddefer-v2: Transparent Huge Pages: defer
+- linux v6.14 thp=3Dalways: Transparent Huge Pages: always
+- linux v6.14 thp=3Dnever: Transparent Huge Pages: never
+- linux v6.14 thp=3Dmadvise: Transparent Huge Pages: madvise
+
+"defer-v1" refers to the thp collapse implementation by Nico Pache
+[3], and "defer-v2" refers to the implementation in this thread [4].
+Both use defer as implemented by series [5].
+
+
+Ultimately, we did observe that some of the GraphicsMagick tests
+performed marginally better with Nico Pache's khugepaged collapse
+implementation and thp=3Ddefer than with just thp=3Dmadvise, which aligns
+a bit with my theory - however, these improvements unfortunately did
+not appear to be statistically significant and gained only marginal
+ground in the performance gap between thp=3Dmadvise and thp=3Dalways in
+our workloads of interest.
+
+Results for other benchmarks in this set also did not show any
+conclusive performance gains from mTHP=3Ddefer (however I was not
+expecting those to change significantly with this series, since they
+weren=E2=80=99t heavily impacted by thp settings in my prior tests).
+
+I can't speak for the impact of this series on other workloads - I
+just wanted to share results for the ones we were aware of and
+interested in.
+
+Full results from our tests on the DGX A100 [1] and Lenovo SR670v2 [2]
+are linked below.
+
+[0]: https://www.phoronix.com/review/linux-os-ampereone/5
+[1]: https://pastebin.ubuntu.com/p/SDSSj8cr6k/
+[2]: https://pastebin.ubuntu.com/p/nqbWxyC33d/
+[3]: https://lwn.net/ml/all/20250211003028.213461-1-npache@redhat.com
+[4]: https://lwn.net/ml/all/20250211111326.14295-1-dev.jain@arm.com
+[5]: https://lwn.net/ml/all/20250211004054.222931-1-npache@redhat.com
+[6]: https://lwn.net/Articles/1009039/
+--=20
+Mitchell Augustin
+Software Engineer - Ubuntu Partner Engineering
