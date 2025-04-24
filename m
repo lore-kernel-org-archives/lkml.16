@@ -1,203 +1,142 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A092D17F7
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:28:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F3B18EB0
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745454489; cv=none; b=UjM82RGffckD7IFNQmPDEEpvQQhHFcOoe6CSE1lVRDwIRIkJ3iL3atag3d8yrd+FE80xV7JVFUUlJX5MZpVzgaDUW7y3uYAC7i50rcaDo0z4ooB9rWpRQdE4asuAPxxZcDfNHWrbsEyY9atWwM8ay383MoiYHj8CLs5udq05AQI=
+	t=1745454495; cv=none; b=QaKQLMFTLfKjAY7Nl+ciy5SCDMgvzcORzqEcGmbRP0OXvN9xUvMLnZ77Y27LajUN7PfnYCQOfolZUTWtobrmlJHwD2qwnjaMdjjwYXe+jVtUFRWuU1J18Z+2kx3vf4xQRnnrts8Vs8aaBg9NLjJfz2Okd/1hmmcSLKFbLuTXCvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745454489; c=relaxed/simple;
-	bh=OFSnTDstLNCA40+74rLNXib5Y+YQDqR9VC7j5XzjQQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SLnAFkN7VzBkhzWoobGEW0u5DPuD40k9dqPIyLI5Bf9vDQXIYJ026kUimj9Cb1vnTsaNXRfb4YjaLfG4oVIIvTfkjcCDv1CBa+Mjh2a/ReE3s/Qz6ojNbWDnJdbz43wyzC1RWV//B8s+MSSoq/htiaoHnfA0In8kQ2BrkX99PQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=JugQ9Q48; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1745454495; c=relaxed/simple;
+	bh=h8wAY7qtIy5UrHIDhwmDC5fKfwUd64U5Lep9H+J6vLU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eIDwFVJi3mu4+/7/wZA2GOiJQ98+/9PY/wvsvUhC28ZrX8a99n1K0XTL8j+4fXbx5lcCoSIXAdaDVyPR33VeOe8S7Ph9rOcioh0HyziEe9X8y9/jhHSWyTuHFPI/Mata4OZvczQkWq5gYBeW39lKUeGz+A/VjvTk7+ixbqbCvgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=Irk3iess; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="JugQ9Q48"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4769aef457bso6282301cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:28:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="Irk3iess"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30332dfc820so522690a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 17:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745454486; x=1746059286; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m8xiHmz6l58Zf9juB6tacJsT8mDdcuOlMyNOhcDtbek=;
-        b=JugQ9Q48YB2cNSLvMNgGy3HI+lcHt+kuu2EUt+3/YJ3cO4lOUTqrvUGNGMIbOBD2ac
-         Y8OHB0bCxmYoHqMZ013SDUis4kX2iOR51GVWEjzp2mmD+D/bczSylevz84m+cHbDIMoJ
-         6Bi93gUaHEr+gDKBCf0rU+Lnu99sX8+kITcqR4cDNoq7Owl4GG+SPFLOVRPVymQSujB4
-         Sc0obg+AQLWxIFLPa7OPfhng6abXK9wpE9w9eUZd5IoeoVlEYEuNg2jNmKAERuaV24Ah
-         n5oeth54E1b6lL3tlGgbBDg5c55qsIhGkE02OyuGnkSH0KxSsHphXL9YUIyyOHC+W+Jc
-         Pf7w==
+        d=fastly.com; s=google; t=1745454493; x=1746059293; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KIHmcKmXhg69DmaElnA5LLW3gaVd1eMpD/hTU28A/HE=;
+        b=Irk3iess1ZWp76vpIqY5KPFENe546uefn8gu0FUv4zFwws9WeEWpYwLJhVFzmtGIJ/
+         9NymRvz3kZ2/UGxkxTyOq7NsHOel9Bexar/PuFA6mjIMCKul9TJzb8r7CaSm5jS0HWOl
+         sa8u4cOsXO8vdoSuPh/cq2Izhdy+ZBT2rXb+o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745454486; x=1746059286;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m8xiHmz6l58Zf9juB6tacJsT8mDdcuOlMyNOhcDtbek=;
-        b=cQRfjEQINGCOK0q3m28x/Vplg5cCtgMKfTe1go1l2/Ga2NmMMM71zoMhU5s4eCT2hu
-         pbj26vVg5Jiv9jFYnsbUPUzmbceF+IGJ7XSEgysUaGF0E1latXNH4WYqO7+XAlvN+JwA
-         hl/n1kZc7+q1drqNV5hk/x8gJRbYPzkxD4bDX5h2i4USFmIyV/Mm+AeuPCvYcskl3knb
-         FoCAFnmV3q76LYVTu5+emJ7x6DggQzler6E/LC+ReBYxQ70GGIyiPrDTxKGatcCHk0+f
-         YRCHZM+9M5tjdjlAgnGxoGGeJ986y24YuiYyaRFVhhe7Yl1xWSZIuO774EzCaHjbJYTE
-         uRgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXn2LMnA5U8oTrlUP4Cknll/WgCee5S0xNRwpUG3+mWKRZcLbypZxcueouk30R4OB+MR4z7OKK9Pgtg1q4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3Xb98gqEPh59w+Cuw41sNPh7vQbBXJgli56XHq8P/RtJhiwAZ
-	1wLWewh8ADfjSZ3rGya2sBlVTME5sc+4fl3aIoa1TWOTA6B4zaPF+zdOAylHy0M=
-X-Gm-Gg: ASbGncuRidY9bcueVsHKOEeCwWMP60LwahmImDTVtu5FkCMFpUBz9TeUKr+29LMyKqT
-	r2VB5CUxm5grIMsSknpZsHUIhiejK37/5yRw6Wp7akTpO2n31NHo5NhqgRAvvO+cZCahfDpxa/g
-	ydteJ/GtJbqvknZAIlfVtwZBaVO6Ttjo3T1axHdwT1l6f6shLaDnYYv76CKn26qBYy9dxrdtb6P
-	NTABtgcJ9o7qFxuvB31oEeeoN5/GbkDsbhpGzHB2W/dFZ/petjPFwyk9W2I3fc1D2jbtNk3BG1v
-	23k89ZZBGIqv7+FZ/hZ3dd9PjHw3vscOX9cTHC2hQjfbvaLBwBz33Rs7GzsUhFCjr8Y6FBTa5J1
-	DT5salKNhAantKwob2g/hiY0=
-X-Google-Smtp-Source: AGHT+IGnByHDgMG45Gdl1zjy6uCSmDPBy2o/HP/BPYo2mmBMn7Umr+TeI+0fJtWBOGffWKptPVhA0w==
-X-Received: by 2002:a05:622a:199a:b0:477:ea0:1b27 with SMTP id d75a77b69052e-47eb33a68afmr6741001cf.26.1745454486518;
-        Wed, 23 Apr 2025 17:28:06 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47ea1d8f8edsm3229831cf.80.2025.04.23.17.28.05
+        d=1e100.net; s=20230601; t=1745454493; x=1746059293;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KIHmcKmXhg69DmaElnA5LLW3gaVd1eMpD/hTU28A/HE=;
+        b=pCMs6wkVVFeNRF/brQUduQKCB8vNDp0Bj5WGvl74reBVXbuN5LKnvC8BrIPlR37ssx
+         jnXVvDZ3ggc9Zi4zUrzA5g66DFe4Htb/MG0Gjy5mTc+0FhwUlZr/+efKU9LLS3hrnTol
+         oFJ/mJSI6/kzNgkcWKf5YtvjoAiEOHoQr+k75wpLOwTPSUH34Uv5aRfDrgEtjKpejUuu
+         bYS6YhG+t4IE5MmxFuToo8A7YKKIWDF5d2oQy/DO8EXro8wuYTaoMiYAosrhL9P7w1kF
+         LMAK54yYSSPuneW/I5ToxLwvuxhM79u8fiEEK42iTQoS182rqAQQ79fzDJcrm9+ie5ye
+         qr/A==
+X-Forwarded-Encrypted: i=1; AJvYcCWFbODiZUZGekjJUPo5dxKbWuflDSOS+QHlVoM9BF3mAn1n0DgDvBFFB4IaL44lX8bIRMFMYSygDJIz6mU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5MY7rSh1uNnwrqLjcj93zZruGvrD9Rv43VpJ3QR65YFKcAElb
+	Xn1nOrwXP5RZ2NSB1oiBsmZElSvilo/NFW6gvA6cw3jY4zWc3v25rN+ltaWxSG4=
+X-Gm-Gg: ASbGncv+vt+3Z1bc5v7SN+gHdZYwn0Y6TRQ6e6c0+YhYDy6E70m+LczWCksDrHKJ44a
+	kdciK6vyVsa1AeehL/QwSYemJxMzDo5NPy5n+bvkmGkIvIpcO2MZWxQKl+j/SdGBveuMVzAdowx
+	02mAz/YCvnzOvsBH2DWsSxBo2XPfkAC4HZvDs/fS2hSlBl3xDAhfzXCqA3B9yNDK6G0wBJd0dy8
+	vlTbRwHQ3UWvFduRGhB4nx6NNSf+NEG/LBoSmmRHfgAV3OLjJNhadGolow3cBcKYbb0gbt62NkF
+	tIeYleU/9FmnPbhbtZspytYcozgNxUrSleLNH9f+yCCGwexa
+X-Google-Smtp-Source: AGHT+IETblWxuoSuSV8+WUwaLohHsvmGk7SHFO08yaKEGr+w9ecMqwtPnCysdbaJTuia4bAV484exQ==
+X-Received: by 2002:a17:90b:584c:b0:2ff:53ad:a0ec with SMTP id 98e67ed59e1d1-309ed2821damr1082565a91.21.1745454492678;
+        Wed, 23 Apr 2025 17:28:12 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ee7c4054sm83013a91.23.2025.04.23.17.28.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 17:28:05 -0700 (PDT)
-Date: Wed, 23 Apr 2025 20:28:03 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>, linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>,
-	Terry Bowman <terry.bowman@amd.com>
-Subject: Re: [PATCH v2 06/15] cxl/region: Use endpoint's HPA range to find
- the port's decoder
-Message-ID: <aAmFk1iQcS7UpslQ@gourry-fedora-PF4VCD3F>
-References: <20250218132356.1809075-1-rrichter@amd.com>
- <20250218132356.1809075-7-rrichter@amd.com>
+        Wed, 23 Apr 2025 17:28:12 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: kuba@kernel.org,
+	shaw.leon@gmail.com,
+	pabeni@redhat.com,
+	Joe Damato <jdamato@fastly.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	bpf@vger.kernel.org (open list:XDP (eXpress Data Path):Keyword:(?:\b|_)xdp(?:\b|_)),
+	Daniel Borkmann <daniel@iogearbox.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	linux-kernel@vger.kernel.org (open list),
+	linux-kselftest@vger.kernel.org (open list:KERNEL SELFTEST FRAMEWORK),
+	Shuah Khan <shuah@kernel.org>
+Subject: [PATCH net-next v4 0/3] Fix netdevim to correctly mark NAPI IDs
+Date: Thu, 24 Apr 2025 00:27:30 +0000
+Message-ID: <20250424002746.16891-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250218132356.1809075-7-rrichter@amd.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Feb 18, 2025 at 02:23:47PM +0100, Robert Richter wrote:
-> diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-> index d898c9f51113..5048511f9de5 100644
-> --- a/drivers/cxl/core/region.c
-> +++ b/drivers/cxl/core/region.c
-> @@ -906,7 +905,7 @@ cxl_find_decoder_early(struct cxl_port *port,
->  		return &cxled->cxld;
->  
->  	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
-> -		dev = device_find_child(&port->dev, &cxlr->params,
-> +		dev = device_find_child(&port->dev, &cxled->cxld.hpa_range,
->  					match_auto_decoder);
+Greetings:
 
-This semantic has now changed because of the linear caching set.
+Welcome to v4.
 
-Working around this with something like this hack for now
+This series fixes netdevsim to correctly set the NAPI ID on the skb.
+This is helpful for writing tests around features that use
+SO_INCOMING_NAPI_ID.
 
-Probably we want to pull the range out of the resource and put it right
-in the params instead of the local variable, but just getting it working
-for testing for now
+In addition to the netdevsim fix in patch 1, patches 2 & 3 do some self
+test refactoring and add a test for NAPI IDs. The test itself (patch 3)
+introduces a C helper because apparently python doesn't have
+socket.SO_INCOMING_NAPI_ID.
 
-~Gregory
+Thanks,
+Joe
 
----
+v4:
+  - Updated the macro guard in patch 2
+  - Removed the remote deploy from patch 3
 
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index eac873125e6d..c8d38ce55045 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -833,7 +833,8 @@ static int match_free_decoder(struct device *dev, const void *data)
- }
+v3: https://lore.kernel.org/netdev/20250418013719.12094-1-jdamato@fastly.com/
+  - Dropped patch 3 from v2 as it is no longer necessary.
+  - Patch 3 from this series (which was patch 4 in the v2)
+    - Sorted .gitignore alphabetically
+    - added cfg.remote_deploy so the test supports real remote machines
+    - Dropped the NetNSEnter as it is unnecessary
+    - Fixed a string interpolation issue that Paolo hit with his Python
+      version
 
- static bool region_res_match_cxl_range(const struct cxl_region_params *p,
--				       struct range *range)
-+				       const struct range *range1,
-+				       const struct range *range2)
- {
- 	if (!p->res)
- 		return false;
-@@ -843,8 +844,8 @@ static bool region_res_match_cxl_range(const struct cxl_region_params *p,
- 	 * to be fronted by the DRAM range in current known implementation.
- 	 * This assumption will be made until a variant implementation exists.
- 	 */
--	return p->res->start + p->cache_size == range->start &&
--		p->res->end == range->end;
-+	return range1->start + p->cache_size == range2->start &&
-+		range1->end == range2->end;
- }
+v2: https://lore.kernel.org/netdev/20250417013301.39228-1-jdamato@fastly.com/
+  - No longer an RFC
+  - Minor whitespace change in patch 1 (no functional change).
+  - Patches 2-4 new in v2
 
- static int cxl_port_calc_hpa(struct cxl_port *port, struct cxl_decoder *cxld,
-@@ -885,11 +886,15 @@ static int cxl_port_calc_hpa(struct cxl_port *port, struct cxl_decoder *cxld,
- 	return 1;
- }
+rfcv1: https://lore.kernel.org/netdev/20250329000030.39543-1-jdamato@fastly.com/
 
-+struct mad_context {
-+	struct cxl_region_params *p;
-+	struct range *r;
-+};
- static int match_auto_decoder(struct device *dev, const void *data)
- {
--	const struct cxl_region_params *p = data;
-+	const struct range *r;
- 	struct cxl_decoder *cxld;
--	struct range *r;
-+	const struct mad_context *ctx = data;
 
- 	if (!is_switch_decoder(dev))
- 		return 0;
-@@ -897,7 +902,7 @@ static int match_auto_decoder(struct device *dev, const void *data)
- 	cxld = to_cxl_decoder(dev);
- 	r = &cxld->hpa_range;
+Joe Damato (3):
+  netdevsim: Mark NAPI ID on skb in nsim_rcv
+  selftests: drv-net: Factor out ksft C helpers
+  selftests: drv-net: Test that NAPI ID is non-zero
 
--	if (region_res_match_cxl_range(p, r))
-+	if (region_res_match_cxl_range(ctx->p, ctx->r, r))
- 		return 1;
+ drivers/net/netdevsim/netdev.c                |  2 +
+ .../testing/selftests/drivers/net/.gitignore  |  1 +
+ tools/testing/selftests/drivers/net/Makefile  |  6 +-
+ tools/testing/selftests/drivers/net/ksft.h    | 56 +++++++++++++
+ .../testing/selftests/drivers/net/napi_id.py  | 23 +++++
+ .../selftests/drivers/net/napi_id_helper.c    | 83 +++++++++++++++++++
+ .../selftests/drivers/net/xdp_helper.c        | 49 +----------
+ 7 files changed, 172 insertions(+), 48 deletions(-)
+ create mode 100644 tools/testing/selftests/drivers/net/ksft.h
+ create mode 100755 tools/testing/selftests/drivers/net/napi_id.py
+ create mode 100644 tools/testing/selftests/drivers/net/napi_id_helper.c
 
- 	return 0;
-@@ -916,13 +921,14 @@ cxl_find_decoder_early(struct cxl_port *port,
- 		       struct cxl_region *cxlr)
- {
- 	struct device *dev;
-+	struct mad_context mad = { .p = &cxlr->params,
-+				   .r =&cxled->cxld.hpa_range };
 
- 	if (port == cxled_to_port(cxled))
- 		return &cxled->cxld;
+base-commit: cd7276ecac9c64c80433fbcff2e35aceaea6f477
+-- 
+2.43.0
 
- 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags))
--		dev = device_find_child(&port->dev, &cxlr->params,
--					match_auto_decoder);
-+		dev = device_find_child(&port->dev, &mad, match_auto_decoder);
- 	else
- 		dev = device_find_child(&port->dev, NULL, match_free_decoder);
- 	if (!dev)
-@@ -1363,6 +1369,7 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 	struct cxl_decoder *cxld = cxl_rr->decoder;
- 	struct cxl_switch_decoder *cxlsd;
- 	struct cxl_port *iter = port;
-+	struct range r;
- 	u16 eig, peig;
- 	u8 eiw, peiw;
-
-@@ -1488,10 +1495,12 @@ static int cxl_port_setup_targets(struct cxl_port *port,
- 		return -ENXIO;
- 	}
-
-+	r.start = p ? p->res->start : 0;
-+	r.end = p ? p->res->end : 0;
- 	if (test_bit(CXL_REGION_F_AUTO, &cxlr->flags)) {
- 		if (cxld->interleave_ways != iw ||
- 		    cxld->interleave_granularity != ig ||
--		    !region_res_match_cxl_range(p, &cxld->hpa_range) ||
-+		    !region_res_match_cxl_range(p, &r, &cxld->hpa_range) ||
- 		    ((cxld->flags & CXL_DECODER_F_ENABLE) == 0)) {
- 			dev_err(&cxlr->dev,
- 				"%s:%s %s expected iw: %d ig: %d %pr\n",
