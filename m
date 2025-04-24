@@ -1,220 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8863143C69;
-	Thu, 24 Apr 2025 12:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DD527A936
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745498265; cv=none; b=YjBMYGC5289TsnGRWz6+4WmTWziBGrVvsuaax4sb5Lldh+5K8jiaNqUOgCkG7H0zshy1ztg90qRz3pSG1FhECR6RJ7fahmYDzmdyPeD4iaL1VM0zt/WJOlRWntJaQ2w/cEmk+ym/iqG5UDzQ5UwsbG1sjJojflw0Xu2otjX8QNM=
+	t=1745498279; cv=none; b=QGPt2pamUPMB4Lex1jjCck+GXNTzpd8nXHDwbbShTE/Ya/XYJ6Mt+dKESXsGJJ/cqhdh15bCcKHzTtI12lIFUyM4ZAr+qY9JhUTwBI4f0coioNt8iWseEL7BoaTSOS9u+SJUkjZivR5i2SJxvb6oxTb91HKB+wbDKz1/gv7uR4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745498265; c=relaxed/simple;
-	bh=bF3H3hOH42YD0B47rASRpI1vOYUHGGiQQArnmjXuqmI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=oOkYu+dHfaVImdMcan2wbDSwcv8OulW430eDwU2k2UEN31s7GTBs4dKYGEjormZvGijrTTpLUv4UeaI7uce/l5Gnsx40Hy7Eg0E8/tYwY0gFeTkgu3OTnuUkfB4Vgu5fF7oSNTzj0Ydkx6IJaxd9Yhdq2g9fGTPsMEvpVqnXgYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GCMQmLAM; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745498279; c=relaxed/simple;
+	bh=y6xwBroK6Cw33bDi3/bZVR2AEIsdxRcF2bY256Tok1M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HQ2umeAeT8xWDI4Z/qKdsbnL95jB/vJoi0ptjbtAyceECLnjhATNVbfUUR/FLT2KXaqxaGUvgMaJYV+tmtQIyZDBKbGn2qekJpGH+0Pw7non3H06EZPfEAhJVOqjnwN7uR76hBsrrSkJAwBkZ4BhxVbcm1rPJR/qfX7K5NS+aj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=bnZx/hXq; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GCMQmLAM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745498264; x=1777034264;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=bF3H3hOH42YD0B47rASRpI1vOYUHGGiQQArnmjXuqmI=;
-  b=GCMQmLAMJE2zl4rhJrDzu2Hj1fjDH63wxb5dGxE013bMsQMshw5vBrw1
-   BBitf1/vVd6oHJpdh3wkth9tlLxIO2B0gRa8zn93+grTqocu0mTV1UoCp
-   6uBDfAxKnYVwPK/LmPFYAcfWC8JFKYfhAR8LtTBHpROCvCRRwcUU76NGP
-   2A8/yVRYt91BwgtIrMBXcW9DcH03CpxmOPI2H9wh09yFYH2OeIm99ZYiU
-   3zAjFIMB/Obw/r8f5EHYYZAJ8GqopjpUt0DSg7VhIuUYS4g+lryTreapx
-   Uc9qJ5Ex61cOqsv387XwNBsKu3B64rn2H/3wLXpDU5k7sXp/DNTETHMzd
-   Q==;
-X-CSE-ConnectionGUID: HJJ5ZZteQM+/S1AB/L6THw==
-X-CSE-MsgGUID: CmUIVRf9QVe1yubzizGWAQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47222929"
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="47222929"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 05:37:43 -0700
-X-CSE-ConnectionGUID: mGXoVyZjQX26jryo/cdSMg==
-X-CSE-MsgGUID: iYQw3aeCRYyS033If6fEwg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="155834211"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.213])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 05:37:40 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Thu, 24 Apr 2025 15:37:38 +0300 (EEST)
-To: Lukas Wunner <lukas@wunner.de>
-cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v2 1/1] PCI/bwctrl: Replace lbms_count with PCI_LINK_LBMS_SEEN
- flag
-In-Reply-To: <aAnOOj91-N6rwt2x@wunner.de>
-Message-ID: <e639b361-785e-d39b-3c3f-957bcdc54fcd@linux.intel.com>
-References: <20250422115548.1483-1-ilpo.jarvinen@linux.intel.com> <aAi734h55l7g6eXH@wunner.de> <87631533-312f-fee9-384e-20a2cc69caf0@linux.intel.com> <aAnOOj91-N6rwt2x@wunner.de>
+	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="bnZx/hXq"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af590aea813so2064356a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl.com; s=google; t=1745498277; x=1746103077; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nZpWL/S+NSRUlk5wqUBhROOnOk/3l0ze67ok0V8c+5I=;
+        b=bnZx/hXq9gufBDxFRSjWWlE8eXGiDjYZkH/Ld19kan4qYmTI7pU0XWIzsVWHjyPHyL
+         +53YM5Se7ERnCws1NgbmtFvSH55a5K0pJm2z/N2HsRRHnziyXtBRRhX4+iuLEgIB1vUT
+         FbF4lRFx7DiI6XVBriy7KJ6raavuEr0/ysnG8+zEkl8LYe9GKpWzAJmtdlH+YnuACnVU
+         hF1Qn/JtzEZI0TnxKWTDdY4KoBDD5uH4mZYrWg2d3Sz3wxgwvrtv2Otm7d/O9TpBLYRg
+         1Ah9vrtcDdBQ/lU3m2T67pw6s6ZbkFSdd5j9eW5UCFkJ1Cgva2Ln03dn5lpXGdFq/aHP
+         RAmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745498277; x=1746103077;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nZpWL/S+NSRUlk5wqUBhROOnOk/3l0ze67ok0V8c+5I=;
+        b=vnioRgqoAckNfxVJInRbcSSjIbYOjrYVCMMzd7GUSyjGtTHDqq8s1Z7IT+47s1xpH3
+         SAET8peMP3axGIEQqy/piDi40ySHFnQ2WsxQmwuJFrSJZsuwWz9S4jCBVNE4nszlB66B
+         FGkdyS39OunCbtXFbzEC+lasj+CJcwajnhfn3dRnZXxzwpVMTQNA80wBN2o/IDSETxgN
+         goLhSNs+T0HznUoH5P+nwgXxoGmoA1uhmpGc/rYEaMoGMkU4+yRgsb1FnWp1+jXLyZ4C
+         25KbXjyJ4EJ9kBo1GOp0k0L09A+ao2Nr5nFg/4wjUl+X2TTyNaGMSooKq6OaEjT6XWtI
+         qYMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXdFnIjD1Xhs9SiJTKLy0e3L+eF7i29fKHykg6MYq0LsPbz9bfK4Dp1RKi2Y+SKnixcIlOgC5WWeMBdR6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6oyBj89M3+Je+6RJRW1SrhgEsKw0MoVTNEUo/HdLueqRrrI50
+	YkSNdYi6K0DQsKP4j6gwCjDPyZ/tIruMAyh+CmY/XbXvGYNHdc8uoS4bsCCDY/RgkgT2PPX8jLT
+	jXR1VSZ/VdLpbfHNxfoEtgX3T7/kPQsFc9kq17w==
+X-Gm-Gg: ASbGncsCh7t90SypuxDIr986pWecoMbGqtldzuzDHjbElazZNA1v5h6m8hH92KqXC7L
+	GWKQBVBax9uQUMnTxUvdVV5btugFQY+mCGz+rHZFKtPbP76345Eg5LPCVEp5e17hQY4l6nHXzi9
+	sihF2fmGw0BI9wlrO9/ygNTjXgRcf8FZtu
+X-Google-Smtp-Source: AGHT+IFZiMB6j3ycGd0+0mt1gFr0C5pjE8ZeKmh2QCQ+qpdXY6INn1eOuR8jJhehu9q6wu/xF32MCcHREH5Z2qVs7zo=
+X-Received: by 2002:a17:90b:28cf:b0:2fa:2133:bc87 with SMTP id
+ 98e67ed59e1d1-309ee37b4f8mr3286435a91.6.1745498277298; Thu, 24 Apr 2025
+ 05:37:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-2068462078-1745492541=:944"
-Content-ID: <061b0f46-dd6d-a2a0-2ff6-4d30007ca801@linux.intel.com>
+References: <20250423142620.525425242@linuxfoundation.org>
+In-Reply-To: <20250423142620.525425242@linuxfoundation.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Thu, 24 Apr 2025 21:37:40 +0900
+X-Gm-Features: ATxdqUG7SveaxlChrXmWKmEOOPp12zjRNih3IrQJPBkjwP-JegqpOJKeUEoj8_k
+Message-ID: <CAKL4bV4AZY_8WmQv25XC5EiuRzTS4gfCoo_DDq0evfFkMmHZqQ@mail.gmail.com>
+Subject: Re: [PATCH 6.14 000/241] 6.14.4-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi Greg
 
---8323328-2068462078-1745492541=:944
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <62369947-c1c3-1f73-2cd4-4aaf0d84bf13@linux.intel.com>
+On Wed, Apr 23, 2025 at 11:47=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.14.4 release.
+> There are 241 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.14.4-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-On Thu, 24 Apr 2025, Lukas Wunner wrote:
+6.14.4-rc1 tested.
 
-> On Wed, Apr 23, 2025 at 02:37:11PM +0300, Ilpo J=E4rvinen wrote:
-> > On Wed, 23 Apr 2025, Lukas Wunner wrote:
-> > > On Tue, Apr 22, 2025 at 02:55:47PM +0300, Ilpo J=E4rvinen wrote:
-> > > > +void pcie_reset_lbms(struct pci_dev *port)
-> > > >  {
-> > > > -=09struct pcie_bwctrl_data *data;
-> > > > -
-> > > > -=09guard(rwsem_read)(&pcie_bwctrl_lbms_rwsem);
-> > > > -=09data =3D port->link_bwctrl;
-> > > > -=09if (data)
-> > > > -=09=09atomic_set(&data->lbms_count, 0);
-> > > > -=09else
-> > > > -=09=09pcie_capability_write_word(port, PCI_EXP_LNKSTA,
-> > > > -=09=09=09=09=09   PCI_EXP_LNKSTA_LBMS);
-> > > > +=09clear_bit(PCI_LINK_LBMS_SEEN, &port->priv_flags);
-> > > > +=09pcie_capability_write_word(port, PCI_EXP_LNKSTA, PCI_EXP_LNKSTA=
-_LBMS);
-> > > >  }
-> > >=20
-> > > Hm, previously the LBMS bit was only cleared in the Link Status regis=
-ter
-> > > if the bandwith controller hadn't probed yet.  Now it's cleared
-> > > unconditionally.  I'm wondering if this changes the logic somehow?
-> >=20
-> > Hmm, that's a good question and I hadn't thought all the implications.
-> > I suppose leaving if (!port->link_bwctrl) there would retain the existi=
-ng=20
-> > behavior better allowing bwctrl to pick the link speed changes more=20
-> > reliably.
->=20
-> I think the only potential issue with clearing the LBMS bit in the regist=
-er
-> is that the bandwidth controller's irq handler won't see the bit and may
-> return with IRQ_NONE.
->=20
-> However, looking at the callers of pcie_reset_lbms(), that doesn't seem
-> to be a real issue.  There are only two of them:
->=20
-> - pcie_retrain_link() calls the function after the link was retrained.
->   I guess the LBMS bit in the register may be set as a side-effect of
->   the link retraining?
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
 
-Retraining does set LBMS, whether the speed was same before doesn't=20
-matter. I think it's because LTSSM-wise, retraining transitions through=20
-Recovery.
-=20
-(I don't know why, but in most tests I've done LBMS is actually asserted=20
-not only once but twice with only one Link Retraining event).
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
 
->   The only concern here is whether the cached
->   link speed is updated.  pcie_bwctrl_change_speed() does call
->   pcie_update_link_speed() after calling pcie_retrain_link(), so that
->   looks fine.  But there's a second caller of pcie_retrain_link():
->   pcie_aspm_configure_common_clock().  It doesn't update the cached
->   link speed after calling pcie_retrain_link().  Not sure if this can
->   lead to a change in link speed and therefore the cached link speed
->   should be updated?  The Target Link Speed isn't changed, but maybe
->   the link fails to retrain to the same speed for electrical reasons?
+[    0.000000] Linux version 6.14.4-rc1rv-g86c135e93323
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.2.1 20250207, GNU ld (GNU
+Binutils) 2.44) #1 SMP PREEMPT_DYNAMIC Thu Apr 24 21:12:13 JST 2025
 
-I've never seen that to happen but it would seem odd if that is forbidden=
-=20
-(as the alternative is probably that the link remains down).
+Thanks
 
-Perhaps pcie_reset_lbms() should just call pcie_update_link_speed() as the=
-=20
-last step, then the irq handler returning IRQ_NONE doesn't matter.
-
-> - pciehp's remove_board() calls the function after bringing down the slot
->   to avoid a stale PCI_LINK_LBMS_SEEN flag.  No real harm in clearing the
->   bit in the register at this point I guess.  But I do wonder, is the lin=
-k
->   speed updated somewhere when a new board is added?  The replacement
->   device may not support the same speeds as the previous device.
-
-The supported speeds are always recalculated using dev->supported_speeds.=
-=20
-A new board implies a new pci_dev structure with newly read supported=20
-speeds. Also, bringing the link up with the replacement device will also=20
-trigger LBMS so the new Link Speed should be picked up by that.
-
-Racing LBMS reset from remove_board() with LBMS due to the replacement=20
-board shouldn't result in stale Link Speed because of:
-
-board_added()
-  pciehp_check_link_status()
-    __pcie_update_link_speed()
-
-> > Given this flag is only for the purposes of the quirk, it seems very mu=
-ch=20
-> > out of proportions.
->=20
-> Yes, let's try to minimize the amount of locking, flags and code to suppo=
-rt
-> the quirk.  Keep it as simple as possible.  So in that sense, the solutio=
-n
-> you've chosen is probably fine.
->=20
->=20
-> > > >  static bool pcie_lbms_seen(struct pci_dev *dev, u16 lnksta)
-> > > >  {
-> > > > -=09unsigned long count;
-> > > > -=09int ret;
-> > > > -
-> > > > -=09ret =3D pcie_lbms_count(dev, &count);
-> > > > -=09if (ret < 0)
-> > > > -=09=09return lnksta & PCI_EXP_LNKSTA_LBMS;
-> > > > +=09if (test_bit(PCI_LINK_LBMS_SEEN, &dev->priv_flags))
-> > > > +=09=09return true;
-> > > > =20
-> > > > -=09return count > 0;
-> > > > +=09return lnksta & PCI_EXP_LNKSTA_LBMS;
-> > > >  }
-> > >=20
-> > > Another small logic change here:  Previously pcie_lbms_count()
-> > > returned a negative value if the bandwidth controller hadn't
-> > > probed yet or wasn't compiled into the kernel.
-> > > Only in those two cases was the LBMS flag in the lnksta variable=20
-> > > returned.
-> > >=20
-> > > Now the LBMS flag is also returned if the bandwidth controller
-> > > is compiled into the kernel and has probed, but its irq handler
-> > > hasn't recorded a seen LBMS bit yet.
-> > >=20
-> > > I'm guessing this can happen if the quirk races with the irq
-> > > handler and wins the race, so this safety net is needed?
-> >=20
-> > The main reason why this check is here is for the boot when bwctrl is n=
-ot=20
-> > yet probed when the quirk runs. But the check just seems harmless, or=
-=20
-> > even somewhat useful, in the case when bwctrl has already probed. LBMS=
-=20
-> > being asserted should result in PCI_LINK_LBMS_SEEN even if the irq=20
-> > handler has not yet done its job to transfer it into priv_flags.
->=20
-> Okay I'm convinced that the logic change in pcie_lbms_seen() is fine.
->=20
-> Thanks,
->=20
-> Lukas
->=20
-
---=20
- i.
---8323328-2068462078-1745492541=:944--
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
