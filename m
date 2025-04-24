@@ -1,422 +1,349 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2082.outbound.protection.outlook.com [40.107.100.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A5B2140E30;
-	Thu, 24 Apr 2025 15:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745506871; cv=none; b=QHdaCXiyGlCkh5Zkk1jOppFGW1oa14oMV4QFnGAdjZ0oNpEyMq94xFy5hvLVg42FzA9KYLFYNwBcMTJyZsZTDuI2X3qtqGO3nQ4z+UONF5J4j2+NvVukIvMpUnM5TGI2tQRf2H2qCP1s8YpQe4ur85vw0vBaQY5iTklwIksms74=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745506871; c=relaxed/simple;
-	bh=WZrbqKmAg0FD/XTF9P5yyPYVGajEsFNFsxowH+/If6Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=STjk7ECxEfPJ3zQ24hFdh6jtVqXO2rHh2NR5cI6adXvSD5Ej+wU/fyzDdHUwo64yALhpPtTLk93iY/BMs1fRIioN7xwNQkkqZ/VxsgivwuaLE5A0WTJHaxj2UpGHoKmAvyo1PhR4XLv4rNI2K/dzVUKVS/qeUY8bPZEFjS6+vow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K2By85Dh; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3662701C1;
+	Thu, 24 Apr 2025 15:03:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745507022; cv=fail; b=HSQ88dGfk/QWs/OEHAKVma7OSiaxwlrHQyuT/iCP9GUXMX+akaEuz0kNwi4HHFfNMkVx/XffKsK7A0eW3yLM8ENPQKhzJtgm6hh3I+7aFq13n+euqkW76y5AukFwhwNZY5zfXhT0GmjyTp3+8qooIERY29nQJaV3MiL49Sa+O7w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745507022; c=relaxed/simple;
+	bh=FX3pvY0ANxIGB1Qau0Iwv8v3A2oNTW39YUZdlc57Sto=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PqF6YpA+/0B+I/xq2PmJKQWXs65kKGcouR53JteUMw7hexQa7JT4InOy9YI/MYyz5wXZtTbstog/kpg2Wk/cjYXnWKB/3FUrmUKv2KyGKwTycTvh93bukBPyZA9ACKirVg3HdGGAHnaRKt4eSjMD5q0t1xt2qQN4pB8Y3tcsW4A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=vGxkfWhN; arc=fail smtp.client-ip=40.107.100.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2By85Dh"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso1843439a12.1;
-        Thu, 24 Apr 2025 08:01:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745506867; x=1746111667; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=It4ml5Ru4yl9+22otEEIPtTHR6OFPl3zqIaTbe137T8=;
-        b=K2By85DhQ+LjQq3vTqP705LFUN9+OUHiJGdTxwR4OljX6OXdsXqMYh8PS9FNimcnlG
-         97jIuKZVB5hIRZa3x1inNxVJ+wl3UeZoAHhfvFO16Iu3Nzlu+wzKnUhgYnQsj8ylzsEx
-         vUem9zsOUsT1MbsoHtp1FGGaFxHyzRAV4DW3r1BjksIPnRn9Okoo6Xje/N3+X0YoglrV
-         cqt2sl3T1oc2e2Hlqkoch0PTC2H1C98enJXT9WC+dtB64gB75iy6i1l2serRBVGl+JML
-         l/DD8SNJkKdLNyD1iOKyWqX/ZM3YTntIrueXbolCKpSGiUK+7NAKDDSlXm3b0K7Lj4/d
-         +qvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745506867; x=1746111667;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=It4ml5Ru4yl9+22otEEIPtTHR6OFPl3zqIaTbe137T8=;
-        b=EsvYDLcl7z8+OjFcujUZgR4rh8kb6rGhbn7XAfh+i9RnBHudbb81OmusSEjOkhihFh
-         OHJzvapdX0hlzFbvue+bP0HUzAXmFULpK/b1+HRCrkh41787qm9NL+DlxrCa9mrpzpyq
-         YHLFo+dZdrPaarL356qU24obu6//9Ca0IO/Qp/3XgckyhzzCrO4SgZ8eX6zY2pwIvp97
-         JLA00LFisd7oGfbBAb7bdMcJLK0JA4uOqMmb12s60z0D7nlq2kEqzof1nTvptJxmjaFQ
-         XRMdEbVQ+wbi/WPMQfJzeZXW7zn4k2HWLet2oOHRvH7BuF40SfwI2AnFCj26TLKkqZLm
-         vi4g==
-X-Forwarded-Encrypted: i=1; AJvYcCWrqwZFwRAVmiR5uScXRECtTgA6VZrCCoY+xiwdQ89XAEdN4WH1VL9gvVHRtYyjnNm2xhQb4QLZ@vger.kernel.org, AJvYcCXTBtjsj9CYOUimiKu+oRLprPhuDLzdoP/QF/HGGOlKOALJ7iqQ1NqmA3pMFm07SNrTqDlbaSTzalR26k8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzsd1bRsVvDls6Wi5ggzF2sDTBtR3uS/vnsLXwlUGMcpc0tSxSA
-	y8zTmMXCnpFj0mIKrMlYbx2dFPSeMRkBJ9Oz9ssSg5BvH7N5MyifIzw27wXiCTUiR5a9BvzfbaH
-	WefGebWzacOUnY6y8uWyXMGwkzro=
-X-Gm-Gg: ASbGncu3V//vv+MVat0Z5ev4WOOyjrun3URkY4WF412O3UXisAR1pCNfnHlUHw3B8dp
-	rkJyGb7s3pYRpJXnPsGuhPkygmT8ihmhv3UY+Xz6nDD8omOqEO2XTcbqV5L/ZRsAVAq3q30jTDV
-	IZj88on24cCQxhRQzSpBuatb78U1VhTfI=
-X-Google-Smtp-Source: AGHT+IFOZdGs4ZPLLFxxxmPcGD72nqmhCo7aJSTf0O+vREAfssfxzx/8+wnND9t7Do6b9RCL1AcbNeTyQ5cQGze8LvA=
-X-Received: by 2002:a05:6402:40c5:b0:5f1:6a55:3941 with SMTP id
- 4fb4d7f45d1cf-5f6de2b5e36mr3010326a12.14.1745506866412; Thu, 24 Apr 2025
- 08:01:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="vGxkfWhN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=mGhYapIzTuGMS6Yh+pNsW2Nwr9tqx5GppCN8DpiqdDIoVcziT3dIDGsHe0d3Z9EJjuJI7wSa1T/g1c9t7VNxRMZ4xacFptl+8K7vV/wl0Mw+P/MTDELN2XTSmTwFL9iln6nzO1vk/CP+U7XX1OONXmp8+ahZcMM7aIkhIXHayVBlsL0+Ul9ZAKwS/do72N/bSVOvykX81Otay01bpw9k4dHS+AH4RUGb0SG7iN6XOC/1o+i7MDPFNxFIplnURmex/Bt6/IsenmDdiQ2IQkiDoVXA3QGop1b9zGTIhqlY5I22H3XpOQon+ZZf1DA+Jm5De9mj7KrdlIufY5TZICuFmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UooQFhtokQnRxkeXSNMalEddp93mvipXw1u8FPMmuN0=;
+ b=RFSYFEuPdIZ6sKlzMRmxPjhXd5jSRYWdxYZ7NlswVppue41KKtQJXITukPwmkzaWh13ge7oN3jw0H+43Uk4ffg3RSqPY+gs4UW/zBhIebMrL3ZNa4AfTNmCPArQvX75H6+kY8lAJ6VMrsy2ZIkXBy9k6yR6uDV9mhZtGxT4e2KZKmUqZsW1zlPlS7SLRRf1ff2o/Ywo4kvKiaq/8S6K6Pmp4Jrkz+E9u9zlz7IA20peX5DT6bSkaQ5WCa9ka9yvV6JSXKC7yRxysjrJHrCkuFi/Yr8w7LWLetpDMZRh9hMnyRRfCOlP1af3oUEKyvsbAZQOCuWHo+AL/tC9FCVvbRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UooQFhtokQnRxkeXSNMalEddp93mvipXw1u8FPMmuN0=;
+ b=vGxkfWhNXqTfuf668O3cyA+ks487nTWkt9UHaZ4kHzWMIcCY2Qya7Cfxju3/pkPW+g6CyBNUpDAblpd3AzScRcUrIU/nU3IQhB9nJY3/Dlj8E2HJesOCgZ1oMUb8zC4KdZTPdbWTHOsK/WouHZlrR7ii+6AePWt9u4LqFpDT1Uc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com (2603:10b6:8:ce::7) by
+ SA5PPF3C36BFCB5.namprd12.prod.outlook.com (2603:10b6:80f:fc04::8c7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Thu, 24 Apr
+ 2025 15:03:35 +0000
+Received: from DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f]) by DS0PR12MB6390.namprd12.prod.outlook.com
+ ([fe80::38ec:7496:1a35:599f%5]) with mapi id 15.20.8655.033; Thu, 24 Apr 2025
+ 15:03:35 +0000
+Message-ID: <1a355946-8a5f-46b3-a8bb-37391fab304b@amd.com>
+Date: Thu, 24 Apr 2025 10:03:31 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 05/16] PCI/AER: CXL driver dequeues CXL error forwarded
+ from AER service driver
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org, nifan.cxl@gmail.com, dave@stgolabs.net,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ dan.j.williams@intel.com, bhelgaas@google.com, mahesh@linux.ibm.com,
+ ira.weiny@intel.com, oohall@gmail.com, Benjamin.Cheatham@amd.com,
+ rrichter@amd.com, nathan.fontenot@amd.com,
+ Smita.KoralahalliChannabasappa@amd.com, lukas@wunner.de,
+ ming.li@zohomail.com, PradeepVineshReddy.Kodamati@amd.com
+References: <20250327014717.2988633-1-terry.bowman@amd.com>
+ <20250327014717.2988633-6-terry.bowman@amd.com>
+ <20250423172842.00002c40@huawei.com>
+Content-Language: en-US
+From: "Bowman, Terry" <terry.bowman@amd.com>
+In-Reply-To: <20250423172842.00002c40@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0190.namprd04.prod.outlook.com
+ (2603:10b6:806:126::15) To DS0PR12MB6390.namprd12.prod.outlook.com
+ (2603:10b6:8:ce::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424080755.272925-1-harry.yoo@oracle.com> <CAGudoHGkNn032RVuJdwYqpzfQgAB8pv=hEzdR1APsFOOSQnq1Q@mail.gmail.com>
- <aAoLKVwC5JCe7fbv@harry>
-In-Reply-To: <aAoLKVwC5JCe7fbv@harry>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 24 Apr 2025 17:00:53 +0200
-X-Gm-Features: ATxdqUFzA1rL1TZWpr6MKEHlQUoRakmY4xujufZPSd0_mGNjt5Zn2ri1WsM848o
-Message-ID: <CAGudoHFaQHn4X+C9GLDt5sTVD=2=PgWX-KvtBKSdqNJSD_p1sA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] Reviving the slab destructor to tackle the percpu
- allocator scalability problem
-To: Harry Yoo <harry.yoo@oracle.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
-	Jiri Pirko <jiri@resnulli.us>, Vlad Buslov <vladbu@nvidia.com>, 
-	Yevgeny Kliteynik <kliteyn@nvidia.com>, Jan Kara <jack@suse.cz>, Byungchul Park <byungchul@sk.com>, 
-	linux-mm@kvack.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Apr 24, 2025 at 11:58=E2=80=AFAM Harry Yoo <harry.yoo@oracle.com> w=
-rote:
->
-> On Thu, Apr 24, 2025 at 11:29:13AM +0200, Mateusz Guzik wrote:
-> > On Thu, Apr 24, 2025 at 10:08=E2=80=AFAM Harry Yoo <harry.yoo@oracle.co=
-m> wrote:
-> > >
-> > > Overview
-> > > =3D=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > > The slab destructor feature existed in early days of slab allocator(s=
-).
-> > > It was removed by the commit c59def9f222d ("Slab allocators: Drop sup=
-port
-> > > for destructors") in 2007 due to lack of serious use cases at that ti=
-me.
-> > >
-> > > Eighteen years later, Mateusz Guzik proposed [1] re-introducing a sla=
-b
-> > > constructor/destructor pair to mitigate the global serialization poin=
-t
-> > > (pcpu_alloc_mutex) that occurs when each slab object allocates and fr=
-ees
-> > > percpu memory during its lifetime.
-> > >
-> > > Consider mm_struct: it allocates two percpu regions (mm_cid and rss_s=
-tat),
-> > > so each allocate=E2=80=93free cycle requires two expensive acquire/re=
-lease on
-> > > that mutex.
-> > >
-> > > We can mitigate this contention by retaining the percpu regions after
-> > > the object is freed and releasing them only when the backing slab pag=
-es
-> > > are freed.
-> > >
-> > > How to do this with slab constructors and destructors: the constructo=
-r
-> > > allocates percpu memory, and the destructor frees it when the slab pa=
-ges
-> > > are reclaimed; this slightly alters the constructor=E2=80=99s semanti=
-cs,
-> > > as it can now fail.
-> > >
-> > > This series is functional (although not compatible with MM debug
-> > > features yet), but still far from perfect. I=E2=80=99m actively refin=
-ing it and
-> > > would appreciate early feedback before I improve it further. :)
-> > >
-> >
-> > Thanks for looking into this.
->
-> You're welcome. Thanks for the proposal.
->
-> > The dtor thing poses a potential problem where a dtor acquiring
-> > arbitrary locks can result in a deadlock during memory reclaim.
->
-> AFAICT, MM does not reclaim slab memory unless we register shrinker
-> interface to reclaim it. Or am I missing something?
->
-> Hmm let's say it does anyway, then is this what you worry about?
->
-> someone requests percpu memory
-> -> percpu allocator takes a lock (e.g., pcpu_alloc_mutex)
-> -> allocates pages from buddy
-> -> buddy reclaims slab memory
-> -> slab destructor calls pcpu_alloc_mutex (deadlock!)
->
-> > So for this to be viable one needs to ensure that in the worst case
-> > this only ever takes leaf-locks (i.e., locks which are last in any
-> > dependency chain -- no locks are being taken if you hold one).
->
-> Oh, then you can't allocate memory while holding pcpu_lock or
-> pcpu_alloc_mutex?
->
-
-It should be perfectly fine to allocate memory with pcpu_alloc_mutex
-as it is not an inherent part of reclaim.
-
-The part used by dtor would be the spinlock already present in the
-percpu allocator.
-
-The idea would be the mutex-protected area preps everything as needed,
-but synchronisation with freeing the pcpu areas would only need the
-leaf spinlock.
-
-So issues there provided some care is employed.
-
-> > This
-> > needs to demonstrate the percpu thing qualifies or needs to refactor
-> > it to that extent.
-> >
-> > > This series is based on slab/for-next [2].
-> > >
-> > > Performance Improvement
-> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > > I measured the benefit of this series for two different users:
-> > > exec() and tc filter insertion/removal.
-> > >
-> > > exec() throughput
-> > > -----------------
-> > >
-> > > The performance of exec() is important when short-lived processes are
-> > > frequently created. For example: shell-heavy workloads and running ma=
-ny
-> > > test cases [3].
-> > >
-> > > I measured exec() throughput with a microbenchmark:
-> > >   - 33% of exec() throughput gain on 2-socket machine with 192 CPUs,
-> > >   - 4.56% gain on a desktop with 24 hardware threads, and
-> > >   - Even 4% gain on a single-threaded exec() throughput.
-> > >
-> > > Further investigation showed that this was due to the overhead of
-> > > acquiring/releasing pcpu_alloc_mutex and its contention.
-> > >
-> > > See patch 7 for more detail on the experiment.
-> > >
-> > > Traffic Filter Insertion and Removal
-> > > ------------------------------------
-> > >
-> > > Each tc filter allocates three percpu memory regions per tc_action ob=
-ject,
-> > > so frequently inserting and removing filters contend heavily on the s=
-ame
-> > > mutex.
-> > >
-> > > In the Linux-kernel tools/testing tc-filter benchmark (see patch 4 fo=
-r
-> > > more detail), I observed a 26% reduction in system time and observed
-> > > much less contention on pcpu_alloc_mutex with this series.
-> > >
-> > > I saw in old mailing list threads Mellanox (now NVIDIA) engineers car=
-ed
-> > > about tc filter insertion rate; these changes may still benefit
-> > > workloads they run today.
-> > >
-> > > Feedback Needed from Percpu Allocator Folks
-> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > > As percpu allocator is directly affected by this series, this work
-> > > will need support from the percpu allocator maintainers, and we need =
-to
-> > > address their concerns.
-> > >
-> > > They will probably say "This is a percpu memory allocator scalability
-> > > issue and we need to make it scalable"? I don't know.
-> > >
-> > > What do you say?
-> > >
-> > > Some hanging thoughts:
-> > > - Tackling the problem on the slab side is much simpler, because the =
-slab
-> > >   allocator already caches objects per CPU. Re-creating similar logic
-> > >   inside the percpu allocator would be redundant.
-> > >
-> > >   Also, since this is opt-in per slab cache, other percpu allocator
-> > >   users remain unaffected.
-> > >
-> > > - If fragmentation is a concern, we could probably allocate larger pe=
-rcpu
-> > >   chunks and partition them for slab objects.
-> > >
-> > > - If memory overhead becomes an issue, we could introduce a shrinker
-> > >   to free empty slabs (and thus releasing underlying percpu memory ch=
-unks).
-> > >
-> > > Patch Sequence
-> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > > Patch #1 refactors freelist_shuffle() to allow the slab constructor t=
-o
-> > > fail in the next patch.
-> > >
-> > > Patch #2 allows the slab constructor fail.
-> > >
-> > > Patch #3 implements the slab destructor feature.
-> > >
-> > > Patch #4 converts net/sched/act_api to use the slab ctor/dtor pair.
-> > >
-> > > Patch #5, #6 implements APIs to charge and uncharge percpu memory and
-> > > percpu counter.
-> > >
-> > > Patch #7 converts mm_struct to use the slab ctor/dtor pair.
-> > >
-> > > Known issues with MM debug features
-> > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > >
-> > > The slab destructor feature is not yet compatible with KASAN, KMEMLEA=
-K,
-> > > and DEBUG_OBJECTS.
-> > >
-> > > KASAN reports an error when a percpu counter is inserted into the
-> > > percpu_counters linked list because the counter has not been allocate=
-d
-> > > yet.
-> > >
-> > > DEBUG_OBJECTS and KMEMLEAK complain when the slab object is freed, wh=
-ile
-> > > the associated percpu memory is still resident in memory.
-> > >
-> > > I don't expect fixing these issues to be too difficult, but I need to
-> > > think a little bit to fix it.
-> > >
-> > > [1] https://urldefense.com/v3/__https://lore.kernel.org/linux-mm/CAGu=
-doHFc*Km-3usiy4Wdm1JkM*YjCgD9A8dDKQ06pZP070f1ig@mail.gmail.com__;Kys!!ACWV5=
-N9M2RV99hQ!K8JHFp0DM1nkYDDnSbJNnwLOl-6PSEXnUlekFs6paI9bGha34XCp9q9wKF6E8S1I=
-4ZHZKpnI6wgKqLM$
-> > >
-> > > [2] https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/=
-kernel/git/vbabka/slab.git/log/?h=3Dslab*for-next__;Lw!!ACWV5N9M2RV99hQ!K8J=
-HFp0DM1nkYDDnSbJNnwLOl-6PSEXnUlekFs6paI9bGha34XCp9q9wKF6E8S1I4ZHZKpnIGu8Tha=
-A$
-> > >
-> > > [3] https://urldefense.com/v3/__https://lore.kernel.org/linux-mm/2023=
-0608111408.s2minsenlcjow7q3@quack3__;!!ACWV5N9M2RV99hQ!K8JHFp0DM1nkYDDnSbJN=
-nwLOl-6PSEXnUlekFs6paI9bGha34XCp9q9wKF6E8S1I4ZHZKpnIN_ctSTM$
-> > >
-> > > [4] https://urldefense.com/v3/__https://lore.kernel.org/netdev/vbfmun=
-ui7dm.fsf@mellanox.com__;!!ACWV5N9M2RV99hQ!K8JHFp0DM1nkYDDnSbJNnwLOl-6PSEXn=
-UlekFs6paI9bGha34XCp9q9wKF6E8S1I4ZHZKpnIDPKy5XU$
-> > >
-> > > Harry Yoo (7):
-> > >   mm/slab: refactor freelist shuffle
-> > >   treewide, slab: allow slab constructor to return an error
-> > >   mm/slab: revive the destructor feature in slab allocator
-> > >   net/sched/act_api: use slab ctor/dtor to reduce contention on pcpu
-> > >     alloc
-> > >   mm/percpu: allow (un)charging objects without alloc/free
-> > >   lib/percpu_counter: allow (un)charging percpu counters without
-> > >     alloc/free
-> > >   kernel/fork: improve exec() throughput with slab ctor/dtor pair
-> > >
-> > >  arch/powerpc/include/asm/svm.h            |   2 +-
-> > >  arch/powerpc/kvm/book3s_64_mmu_radix.c    |   3 +-
-> > >  arch/powerpc/mm/init-common.c             |   3 +-
-> > >  arch/powerpc/platforms/cell/spufs/inode.c |   3 +-
-> > >  arch/powerpc/platforms/pseries/setup.c    |   2 +-
-> > >  arch/powerpc/platforms/pseries/svm.c      |   4 +-
-> > >  arch/sh/mm/pgtable.c                      |   3 +-
-> > >  arch/sparc/mm/tsb.c                       |   8 +-
-> > >  block/bdev.c                              |   3 +-
-> > >  drivers/dax/super.c                       |   3 +-
-> > >  drivers/gpu/drm/i915/i915_request.c       |   3 +-
-> > >  drivers/misc/lkdtm/heap.c                 |  12 +--
-> > >  drivers/usb/mon/mon_text.c                |   5 +-
-> > >  fs/9p/v9fs.c                              |   3 +-
-> > >  fs/adfs/super.c                           |   3 +-
-> > >  fs/affs/super.c                           |   3 +-
-> > >  fs/afs/super.c                            |   5 +-
-> > >  fs/befs/linuxvfs.c                        |   3 +-
-> > >  fs/bfs/inode.c                            |   3 +-
-> > >  fs/btrfs/inode.c                          |   3 +-
-> > >  fs/ceph/super.c                           |   3 +-
-> > >  fs/coda/inode.c                           |   3 +-
-> > >  fs/debugfs/inode.c                        |   3 +-
-> > >  fs/dlm/lowcomms.c                         |   3 +-
-> > >  fs/ecryptfs/main.c                        |   5 +-
-> > >  fs/efs/super.c                            |   3 +-
-> > >  fs/erofs/super.c                          |   3 +-
-> > >  fs/exfat/cache.c                          |   3 +-
-> > >  fs/exfat/super.c                          |   3 +-
-> > >  fs/ext2/super.c                           |   3 +-
-> > >  fs/ext4/super.c                           |   3 +-
-> > >  fs/fat/cache.c                            |   3 +-
-> > >  fs/fat/inode.c                            |   3 +-
-> > >  fs/fuse/inode.c                           |   3 +-
-> > >  fs/gfs2/main.c                            |   9 +-
-> > >  fs/hfs/super.c                            |   3 +-
-> > >  fs/hfsplus/super.c                        |   3 +-
-> > >  fs/hpfs/super.c                           |   3 +-
-> > >  fs/hugetlbfs/inode.c                      |   3 +-
-> > >  fs/inode.c                                |   3 +-
-> > >  fs/isofs/inode.c                          |   3 +-
-> > >  fs/jffs2/super.c                          |   3 +-
-> > >  fs/jfs/super.c                            |   3 +-
-> > >  fs/minix/inode.c                          |   3 +-
-> > >  fs/nfs/inode.c                            |   3 +-
-> > >  fs/nfs/nfs42xattr.c                       |   3 +-
-> > >  fs/nilfs2/super.c                         |   6 +-
-> > >  fs/ntfs3/super.c                          |   3 +-
-> > >  fs/ocfs2/dlmfs/dlmfs.c                    |   3 +-
-> > >  fs/ocfs2/super.c                          |   3 +-
-> > >  fs/openpromfs/inode.c                     |   3 +-
-> > >  fs/orangefs/super.c                       |   3 +-
-> > >  fs/overlayfs/super.c                      |   3 +-
-> > >  fs/pidfs.c                                |   3 +-
-> > >  fs/proc/inode.c                           |   3 +-
-> > >  fs/qnx4/inode.c                           |   3 +-
-> > >  fs/qnx6/inode.c                           |   3 +-
-> > >  fs/romfs/super.c                          |   3 +-
-> > >  fs/smb/client/cifsfs.c                    |   3 +-
-> > >  fs/squashfs/super.c                       |   3 +-
-> > >  fs/tracefs/inode.c                        |   3 +-
-> > >  fs/ubifs/super.c                          |   3 +-
-> > >  fs/udf/super.c                            |   3 +-
-> > >  fs/ufs/super.c                            |   3 +-
-> > >  fs/userfaultfd.c                          |   3 +-
-> > >  fs/vboxsf/super.c                         |   3 +-
-> > >  fs/xfs/xfs_super.c                        |   3 +-
-> > >  include/linux/mm_types.h                  |  40 ++++++---
-> > >  include/linux/percpu.h                    |  10 +++
-> > >  include/linux/percpu_counter.h            |   2 +
-> > >  include/linux/slab.h                      |  21 +++--
-> > >  ipc/mqueue.c                              |   3 +-
-> > >  kernel/fork.c                             |  65 +++++++++-----
-> > >  kernel/rcu/refscale.c                     |   3 +-
-> > >  lib/percpu_counter.c                      |  25 ++++++
-> > >  lib/radix-tree.c                          |   3 +-
-> > >  lib/test_meminit.c                        |   3 +-
-> > >  mm/kfence/kfence_test.c                   |   5 +-
-> > >  mm/percpu.c                               |  79 ++++++++++------
-> > >  mm/rmap.c                                 |   3 +-
-> > >  mm/shmem.c                                |   3 +-
-> > >  mm/slab.h                                 |  11 +--
-> > >  mm/slab_common.c                          |  43 +++++----
-> > >  mm/slub.c                                 | 105 ++++++++++++++++----=
---
-> > >  net/sched/act_api.c                       |  82 +++++++++++------
-> > >  net/socket.c                              |   3 +-
-> > >  net/sunrpc/rpc_pipe.c                     |   3 +-
-> > >  security/integrity/ima/ima_iint.c         |   3 +-
-> > >  88 files changed, 518 insertions(+), 226 deletions(-)
-> > >
-> > > --
-> > > 2.43.0
-> > >
-> >
-> >
-> > --
-> > Mateusz Guzik <mjguzik gmail.com>
->
-> --
-> Cheers,
-> Harry / Hyeonggon
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB6390:EE_|SA5PPF3C36BFCB5:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1864af04-b7c9-400d-ddb9-08dd83412f5c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?R1BjUU1vbnZoYU9WU3o3RStzNWxZbEEvYlp4YU9ndk90eHRaeS81bk5BTms1?=
+ =?utf-8?B?azk3WTd0cXdkbklOZXdnM2k2WWFwRXNmYlFSYXI1VUltMXNKaGc2VW1mUGR5?=
+ =?utf-8?B?V1ozMVVTV25RWFVqcG1XZXhSUFpzc0pMTFJ5NVpMV3FhaytoZ3hUZ3l4OWk0?=
+ =?utf-8?B?bXlKVGZkSTNjL2N1ZTVuVlkzVzJ6cllLbHowQndJaUYvM2ZsWStuTnFwb3Yy?=
+ =?utf-8?B?TE1pZmRGbHBRVWliS1dlcVZkNDVNTkNZZkhtYXZ4QS9Nbm5ETVVVN2JVMlgy?=
+ =?utf-8?B?YVRrVkFYUHdZOHFLZTkrQytzNzErZExWQTJrU2Zhb3FpTWx1SE9IeGNybnBE?=
+ =?utf-8?B?WWtvdElZRmg3QWFqTUdkMU1sam9TL0xDN3R1cUFpQ0luWWdybFNkazQzOGEz?=
+ =?utf-8?B?akVnQXViYlR0Z0RBNGhOVDV6b0YvRjFCdzJVd0o0K0dpOHJpYnZTbXcvYnJr?=
+ =?utf-8?B?MUdBWDlEN2FBUXB5YnRRU3hZcThqUjU1R21aYzF3WVFvU3dMN3FVbHBLa3pr?=
+ =?utf-8?B?R3p6K1l5UGxOdGZ3ZFhCTng4ZTZ0NFpjQXlFc1l2RzRJN2dKbkc4dW9VT3J2?=
+ =?utf-8?B?dG5TNmZVTEtzbWhqYXVXMk9ycXE4WUNoNzBJcTIzVXBaaVF3bm1HT3BjVThF?=
+ =?utf-8?B?WW5Qa25Bd2xEQUhvOGgwNzlIMUFpNWtSNUNFRDZPajF3VllLNWFUaVQwRE1P?=
+ =?utf-8?B?TXpxdTNKYmY1R0x5ZEpxaVRIOGxYa2xrOVBOMEtuMzhjWG9xNUNzWkFiS21m?=
+ =?utf-8?B?NllZUGpVaWk1K3lQektqejluRlFIZFo0UGRUUStxZ0FQM2g4U0Jrd21lQVZT?=
+ =?utf-8?B?VXNoaHBtdWVGbVg5U1FGeXdMQzMrSWRIMjRnRUdab201c29SMmV4N0l4OTJC?=
+ =?utf-8?B?Um45NDZQRkwzMG5QbVlvUysya1V3U2xKRFlhR0dBdGVRTWk3bXlkLzlsYzBV?=
+ =?utf-8?B?MWlSQzY1UHQ1NFNlY1luUzhiUnJXSDVyRGFwc1ZSVXFqRGFwcEhCbzdhbHNs?=
+ =?utf-8?B?ZXZvdGxuTHFEOUY4bzU4UEcyc3dubjlLaS9PQUVTVXZES1BqcEpxZWg1REJz?=
+ =?utf-8?B?aGx1S01ZSkZDd3JjTFZQWjNYQVAvSk9aeks3ZFRGVUR4cXFtalRCWmZ4TmdN?=
+ =?utf-8?B?UG5rQVZqV0pWNHJQSHpCUmZtVlJYY2tsdE95OUxYT1lEYytob1lmUEVtbzJx?=
+ =?utf-8?B?NWxqWDBmZEFmSDVKaGgrSTBuUnY0bHhtRXBNcVJjcHZZUTMxOFhBdVJ3UmRr?=
+ =?utf-8?B?ZjBaNUNHaEFNeUV0Q1J0WmpOUzQxa1AzYVhpMmxTeGdueitQZ3Z4cFplSFBt?=
+ =?utf-8?B?dzRWSS91ajA4R1EvZUR1aVN3bkNKSTdmU3hkL3VvM0oyQzJ0TjJxTDU2STE4?=
+ =?utf-8?B?ZjlGdTZjVjd5L3dVa3NhdzNnWElqWWRDZU9qRFJtSGNGYWZ2d1IwdXcxcVB3?=
+ =?utf-8?B?eG8rZy8xS3hyWXF4dGttbTlYTzREdlVKc0N6VUdMUTUrakN0eTFSRFNhL1dE?=
+ =?utf-8?B?RXR1RVI2QUI3WHJZaFBBa0NKNUNUcUJjeXNDNVpmQUh4MCt1QmwrTWptaExF?=
+ =?utf-8?B?TGxwRGV5R0k0ZEJ0dGo4OFBSV0gzZmdXYTdTajUrYyswNWZsamJrT2N3RmFU?=
+ =?utf-8?B?UjZJeUxsNTA5NEg4KzRsZkZDby90cjkweHdmSWV1cXNrdjMzcmpnRCtVR1NZ?=
+ =?utf-8?B?T2JYL0Vka2wvSDJkaVpnZGZoT2N1cHpvK1pxZVZqZ25QVVB2RU9uNFpjL1c2?=
+ =?utf-8?B?WGFOZHpzOWdzdlREWFFDczVrZlMwM280VFlMWHZuN1k1SVJ1WERIcDVsUzQ4?=
+ =?utf-8?B?QjZOV0lKdElBbWR2QXRLTzFQNWdaaGVRZ0tMU1liZHdwSEEvQlhCem1vclZu?=
+ =?utf-8?B?V3ljSFE0RTJEdFZsUWtteCtSdUhEWHVxTEhMREZBQVQ3dHdoSDNRa0NNWjlO?=
+ =?utf-8?Q?r8njlcxzj9c=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB6390.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UWlZZjl1dHZ6NitsWFpWM3l6UnhSZVQrbnYrcmM0WEsrOXgyUTJXN2JYTXdV?=
+ =?utf-8?B?a3V6NTRIdTVHNVVVd1FrQ0FOL0U2WlNYQ0ladVBFS2V6NnVrUFpxTzJCUllq?=
+ =?utf-8?B?MCtOek5jN2p5Um9nU0FZeFZyWDE5UkIwYXlFSm5IU0lHL1Bydi9lWmttQXVJ?=
+ =?utf-8?B?Ly9EbzBpWXUxd3VYNGdueVVaTTlvbkxXaWVmZXE2amdoSGs1SUpwTlZYK3RC?=
+ =?utf-8?B?RHlOSHpBdmt1bXo3Z3piUGp0WlJ5RVdwUVZLT2ZtQnpwU05SUFlCOGprRTJ6?=
+ =?utf-8?B?TkJpQVlXRk9iTkhTTUdObWpVck9qQUlZVzQydkdQL2g5SkNhMlBTbGhNdzg4?=
+ =?utf-8?B?UVJxUXFUUjR2MUZlOUVMUE5jdE1tb3hwOHA3cGhRZW9oTWFmUkNpZnhyM1Jl?=
+ =?utf-8?B?YXdFS0FFODlweFdnUG5zTWtEb1BiUHFYZEorN3l4ZkwwYzJpTlQ1NGtoMjRs?=
+ =?utf-8?B?SDlSNUhZVENZeFZ2dzYyUTMvMXZPVzBlbmVRTVFLWmI3Mkxoc3hFenhRVXp6?=
+ =?utf-8?B?R0VJamZTcVVNbkthSDQ4c09POWkzT3o2cWowaVNCc2N4VFVPUjExR1BQRmV2?=
+ =?utf-8?B?amxLY2h0amsxTUJOV1NNOGRFdW5BdW4rUlZYcVBaUCsrSllLR001elJ6V1JG?=
+ =?utf-8?B?TExhaU9BSmlhVTZJY3FBSS83anYrT1RSb24rV044SXYxalRtV2VWVm1kVTBx?=
+ =?utf-8?B?SXN2ZFlDNmlTd3Nlei82TERNMFpXSzNEdlduQmIzUUZNVkRkbmRJeXEvNzNU?=
+ =?utf-8?B?YmVEenpaOFdUbDF0SXk5QVJWQndZTC9qeEJyK3NBcDdaK2ZEdWQxNU8ySmJl?=
+ =?utf-8?B?b2pqMWswRGlhalRhREdBQXVBdlF3RXJCZzJxZHA1YjZiS082R1p4UG1mOGc0?=
+ =?utf-8?B?MnRWSjVPZHlac3lCbTZLbHc4VGdpQU9QS3ZwVERSOFl4VHRVVnpNeXAvMUds?=
+ =?utf-8?B?M2pRY2g1ZHpOV3ovRmorZG9vM2dUQ3pTNk1pcE5MZ0t5cmkvaDE1V0NTZkdM?=
+ =?utf-8?B?cFFWeWRqSHdPYWo0ZFdvOEVFd01rNXpLMnVBWStPQm1VZ3NTVlR5WXUxaTBp?=
+ =?utf-8?B?OGc0WWVRcUNRQ3BBSVAvWHdxcll0ZlVobndab2xFeVV0VldCUUkrRTJMWFo1?=
+ =?utf-8?B?bThUemFET1liaGNqblBxTUlvTnBweElJajQyOEJSY2JPSUZrM3ZndjZDL05l?=
+ =?utf-8?B?NUxReFpKS3kva1lQSFgwMWptUk5MRDhXWEdjeDR3NndZc2ppOXFmdHdBblRJ?=
+ =?utf-8?B?Um5QU0dneEVQMis0WnN4c1dDSE5pazRYUE9jUHVBbjhlTHlmZFBJOGNraUQr?=
+ =?utf-8?B?YnMvRkdFQWFqUTZUcUJOYzhqNnNnVnVKUERmTjM4SmJZR2hSdTlkS2lOTXl2?=
+ =?utf-8?B?OFFFdlRWVzNEKzZURkpZeHpibFdoeTJuOVpEQytNYUtpR2t5VVhOQnY5S2tK?=
+ =?utf-8?B?TXVvWG83Vk1vMzVqenY0bHp2SlZPK1NNTlE3K2NNMENvZ1hrR1dyZXRQbG90?=
+ =?utf-8?B?dWticE1xeUZ5aXQ4V1lLK2M1NUNmczdXcFZCRGdKK01hWTh3SEdWNXo1ZEd1?=
+ =?utf-8?B?K2ZoTGZGZ0U1YnN1MTc2OUhxYjkxcEJjMmpud0hVVTc1Z2k0RDU3YnY4ZzZB?=
+ =?utf-8?B?MStVTzE4QWhSNE83V3JGZW4wMHJzUG1qRjRlcjdOak5oNXJDbGVDTm1tM1gy?=
+ =?utf-8?B?ZFppQW9CSXlLMXJ6bVlNN1hzQklic1VIbUNwckdPNDBaeFV1Q0cyWlN0Z0h5?=
+ =?utf-8?B?aWxpMFJqZm0vTHFiaEIraWZneEtJcXBObUpKWU5QMisrMHFmaXJ1aktlY0Y5?=
+ =?utf-8?B?bDR0aklUSnVUZGlRc2NLbUlTdVdKQmZLS0lpRnlNUVptT2JWcXV1S0JUNHcz?=
+ =?utf-8?B?MTZLcU15SC9iV0ZyaEZEc2FOVlN1Wkx2MVRTakxoMDlLamRNb3EyUlJNdDNT?=
+ =?utf-8?B?bUp5WlZ4eWpPYWlqcit3Tythb1ZUZ2dHbU1vQmJQZU9hNGx5di83SzAyKyt4?=
+ =?utf-8?B?bW0vMzZob2NETkQraVg4Z01XV2xKZjNDVnB0UDdwcC8rYk9tbWprUGovZEV6?=
+ =?utf-8?B?ZjRWeFZXRWs4UE9iRjBLbkhSaDlMcnZpT1RaOUNTWFllRG5idGNpYytrc2xU?=
+ =?utf-8?Q?Jpf6sDUT+VVytTpiGowIweTnV?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1864af04-b7c9-400d-ddb9-08dd83412f5c
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB6390.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 15:03:35.1005
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RJW02N1F1OJnR0+88GHTCnWIXhJaM3grgCzaRMeUjmDYOqVhMbFP6JsD9JNG7B4JcPMG5GKsLyQAhjWzDC3nUQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA5PPF3C36BFCB5
 
 
 
---=20
-Mateusz Guzik <mjguzik gmail.com>
+On 4/23/2025 11:28 AM, Jonathan Cameron wrote:
+> On Wed, 26 Mar 2025 20:47:06 -0500
+> Terry Bowman <terry.bowman@amd.com> wrote:
+>
+>> The AER driver is now designed to forward CXL protocol errors to the CXL
+>> driver. Update the CXL driver with functionality to dequeue the forwarded
+>> CXL error from the kfifo. Also, update the CXL driver to process the CXL
+>> protocol errors using CXL protocol error handlers.
+>>
+>> First, move cxl_rch_handle_error_iter() from aer.c to cxl/core/ras.c.
+>> Remove and drop the cxl_rch_handle_error() in aer.c as it is not needed.
+>>
+>> Introduce function cxl_prot_err_work_fn() to dequeue work forwarded by the
+>> AER service driver. This will begin the CXL protocol error processing
+>> with the call to cxl_handle_prot_error().
+>>
+>> Introduce cxl_handle_prot_error() to differntiate between Restricted CXL
+>> Host (RCH) protocol errors and CXL virtual host (VH) protocol errors.
+>> RCH errors will be processed with a call to walk the associated Root
+>> Complex Event Collector's (RCEC) secondary bus looking for the Root Complex
+>> Integrated Endpoint (RCiEP) to handle the RCH error. Export pcie_walk_rcec()
+>> so the CXL driver can walk the RCEC's downstream bus, searching for
+>> the RCiEP.
+>>
+>> VH correctable error (CE) processing will call the CXL CE handler if
+>> present. VH uncorrectable errors (UCE) will call cxl_do_recovery(),
+>> implemented as a stub for now and to be updated in future patch. Export
+>> pci_aer_clean_fatal_status() and pci_clean_device_status() used to clean up
+>> AER status after handling.
+>>
+>> Create cxl_driver::error_handler structure similar to
+>> pci_driver::error_handlers. Add handlers for CE and UCE CXL.io errors. Add
+>> 'struct cxl_prot_error_info' as a parameter to the CXL CE and UCE error
+>> handlers.
+>>
+>> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+>> ---
+>>  drivers/cxl/core/ras.c  | 102 +++++++++++++++++++++++++++++++++++++++-
+>>  drivers/cxl/cxl.h       |  17 +++++++
+>>  drivers/pci/pci.c       |   1 +
+>>  drivers/pci/pci.h       |   6 ---
+>>  drivers/pci/pcie/aer.c  |  42 +----------------
+>>  drivers/pci/pcie/rcec.c |   1 +
+>>  include/linux/aer.h     |   2 +
+>>  include/linux/pci.h     |  10 ++++
+>>  8 files changed, 133 insertions(+), 48 deletions(-)
+>>
+>> diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+>> index ecb60a5962de..eca8f11a05d9 100644
+>> --- a/drivers/cxl/core/ras.c
+>> +++ b/drivers/cxl/core/ras.c
+>> @@ -139,8 +139,108 @@ int cxl_create_prot_err_info(struct pci_dev *_pdev, int severity,
+>>  
+>>  	return 0;
+>>  }
+>> +EXPORT_SYMBOL_NS_GPL(cxl_create_prot_err_info, "CXL");
+>>  
+>> -struct work_struct cxl_prot_err_work;
+>> +static void cxl_do_recovery(struct pci_dev *pdev) { }
+>> +
+>> +static int cxl_rch_handle_error_iter(struct pci_dev *pdev, void *data)
+>> +{
+>> +	struct cxl_prot_error_info *err_info = data;
+>> +	const struct cxl_error_handlers *err_handler;
+>> +	struct device *dev = err_info->dev;
+>> +	struct cxl_driver *pdrv;
+>> +
+>> +	/*
+>> +	 * The capability, status, and control fields in Device 0,
+>> +	 * Function 0 DVSEC control the CXL functionality of the
+>> +	 * entire device (CXL 3.0, 8.1.3).
+>> +	 */
+>> +	if (pdev->devfn != PCI_DEVFN(0, 0))
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * CXL Memory Devices must have the 502h class code set (CXL
+>> +	 * 3.0, 8.1.12.1).
+>> +	 */
+>> +	if ((pdev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+>> +		return 0;
+>> +
+>> +	if (!is_cxl_memdev(dev) || !dev->driver)
+>> +		return 0;
+>> +
+>> +	pdrv = to_cxl_drv(dev->driver);
+>> +	if (!pdrv || !pdrv->err_handler)
+>> +		return 0;
+>> +
+>> +	err_handler = pdrv->err_handler;
+>> +	if (err_info->severity == AER_CORRECTABLE) {
+>> +		if (err_handler->cor_error_detected)
+>> +			err_handler->cor_error_detected(dev, err_info);
+>> +	} else if (err_handler->error_detected) {
+>> +		cxl_do_recovery(pdev);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void cxl_handle_prot_error(struct pci_dev *pdev, struct cxl_prot_error_info *err_info)
+>> +{
+>> +	if (!pdev || !err_info)
+> Are these real potential conditions?  If so can we have a comment on why.
+> If this is defensive only, do we need it? 
+> Looks like the caller below checked pdev already.
+Yes, these checks can be removed.
+
+>> +		return;
+>> +
+>> +	/*
+>> +	 * Internal errors of an RCEC indicate an AER error in an
+>> +	 * RCH's downstream port. Check and handle them in the CXL.mem
+>> +	 * device driver.
+>> +	 */
+>> +	if (pci_pcie_type(pdev) == PCI_EXP_TYPE_RC_EC)
+>> +		return pcie_walk_rcec(pdev, cxl_rch_handle_error_iter, err_info);
+>> +
+>> +	if (err_info->severity == AER_CORRECTABLE) {
+>> +		struct device *dev __free(put_device) = get_device(err_info->dev);
+> Similar question around lifetimes. The caller already got this. Why again?
+Not necessary. I'll remove.
+>> +		struct cxl_driver *pdrv;
+> calling a cxl driver pdrv seems odd.  cdrv maybe?
+Ok. I'll rename cdrv.
+
+>> +		int aer = pdev->aer_cap;
+>> +
+>> +		if (!dev || !dev->driver)
+>> +			return;
+>> +
+>> +		if (aer) {
+>> +			int ras_status;
+>> +
+>> +			pci_read_config_dword(pdev, aer + PCI_ERR_COR_STATUS, &ras_status);
+> If we get multiple bits set in this register, can this wipe out ones we haven't noticed
+> anywhere else in the handling?  Bad tlp etc.  Maybe we need to ensure this only clears
+> the internal error bit?
+Good point. I'll fix. I'm going to rename 'ras_status' to 'aer_status' as well.
+
+>> +			pci_write_config_dword(pdev, aer + PCI_ERR_COR_STATUS,
+>> +					       ras_status);
+>> +		}
+>> +
+>> +		pdrv = to_cxl_drv(dev->driver);
+>> +		if (!pdrv || !pdrv->err_handler ||
+>> +		    !pdrv->err_handler->cor_error_detected)
+>> +			return;
+>> +
+>> +		pdrv->err_handler->cor_error_detected(dev, err_info);
+>> +		pcie_clear_device_status(pdev);
+>> +	} else {
+>> +		cxl_do_recovery(pdev);
+>> +	}
+>> +}
+>> +
+>> +static void cxl_prot_err_work_fn(struct work_struct *work)
+>> +{
+>> +	struct cxl_prot_err_work_data wd;
+>> +
+>> +	while (cxl_prot_err_kfifo_get(&wd)) {
+>> +		struct cxl_prot_error_info *err_info = &wd.err_info;
+>> +		struct device *dev __free(put_device) = get_device(err_info->dev);
+>> +		struct pci_dev *pdev __free(pci_dev_put) = pci_dev_get(err_info->pdev);
+>> +
+>> +		if (!dev || !pdev)
+>> +			continue;
+>> +
+>> +		cxl_handle_prot_error(pdev, err_info);
+>> +	}
+>> +}
+>> +
+>> +static DECLARE_WORK(cxl_prot_err_work, cxl_prot_err_work_fn);
+> Ah! Here it is... I think this can be in patch 3. With a stub of the function
+> (which is what the patch 3 description claims is there).
+I'll move it.
+>>  
+> Jonathan
+>
+-Terry
+
