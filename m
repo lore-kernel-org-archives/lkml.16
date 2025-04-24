@@ -1,185 +1,147 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1869B225779;
-	Thu, 24 Apr 2025 10:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745492079; cv=fail; b=oZlf+PTHS3F+IowaYoMa3Hof/195PE9M3rKph5/Rb4AmtQSct5P1nzhjRLB+kkUirI6/MfnaMqQcCBndkSqTp3I9oO+fcMw1WOJAI8xYN16dGaIKsYBBTlrtAKjQ4oOTs+sI47y8ISugRc7SCJ2DsMU+/tPmYNTtLHmAGvf8BOc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745492079; c=relaxed/simple;
-	bh=CwvAOKJ/1CSOts9iQODEaXYeLjv1UWy3+NPB6vx7pMI=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=QWtgsC7BNUywq6ZSjqiESsfc/g/xGirIDDMs884GUZPnTjjBNE1LvdioqSWgvfAwhMHMZd5ZTJAZBQ5RRj7yUnt1djEBngdn8GOCnY6IdYr0p05ciyAvni0VjGt/4vRCAnUT2pGtRfsVTRIyP+Lggadan0l9nshd15N0jV4xCrk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qkjp4If1; arc=fail smtp.client-ip=40.107.243.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B198D215771
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745492095; cv=none; b=KHgQh4w24y1G+92CD4zURUUZ3qvUtKvNtgOubI5V9vlBOrUtIb2q3SHXjv2iasQtyGT46lGJlprSQEKNV0V57uD4y7TC+e71qd0tXgR3zsZWjk21ktnGyEBRnK0M0BOgWV1ningICMjxbgOdo/cF7D3jmtpKdLWMKWgJWlnOhEk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745492095; c=relaxed/simple;
+	bh=8XJGloc6+qKwSd8AJG65ICcDoijGpZxvac+voCzkNQY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CDNZak/YKf5nSSrTfyuMPoG0+TtNpKE4TfiUrrFPqdwWRGhmUacwqR5yYWOVUGufJ4a9CX5r+Fm8IXfd+nTEkL9AkwlpG/iUOSgj+Kw/A7vx6dHO9S918y0aP2v/lDkj7wZwDIYtz4zbvW9dJm6eH9h6Fyl66BaxBblITv0Ihr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qlQAOeQ9; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qkjp4If1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ym1xyExIRzcbG84haqu4QVRQ0y/CrHJ9Z2sGt6/kzf03UTXsgNiSs13BKQi6Sgkpxg41dJaztc37PXDWQFAog+1FNWHYxBKwj3kRfHw9IXNVY8VAdatvw7QCYSD8mLDT+8s5BLHb/5jYKbuUNINEAYRPXWdJp7DuHl3z+cREenA8CbT6bhRcHojdztOkwyUNR3YjK4fmdgxoKnYvVCjkyk1TYL2OtvzrPo8l7dx5iyjymHolgqVHWYZEoSbb4o/dLNtcAsyBA4RdPsYSRlGPNW2WW1tVKa807dGk7hQvYFPSJEzIlI5dfNKdRZJ2MIqo+LbYwNDRtHGAorJwhvI2RA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FWVIQAie1CkA45rsu/cm5AYP5wAYs/nGtpxHJOpN+aw=;
- b=EcfZtSfkh1lKJ6sjyVbYJS45JG6K5+qF31B2Q1dWdUXzhzB4zusUqyvytGqSYUDL9LoiKkhOheurXogCmjcsV1Aupo6PA6EwesWeas7KaKfiCmSHl5m62psPf1wHhqhxwEfLtUBuXfpM/b27MNapAcRqOQmXbhNbQC6IA6k02MBGcDYJzG2ZOPzY/0fjf2UsQYwCPVU1hstZhDTjCnxr1Xg+MU1kZJ+5Lyi/rDZp5oXpO346EDN1o6LrgAuQAasFxWHj3MBeAbrtKA49pJtJlJgdWvWBbPr0HWvMpxtAzRU9jLDZemtG3OAmOqRpvLYvH3yhjDsfqj4MUbIP31bEOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FWVIQAie1CkA45rsu/cm5AYP5wAYs/nGtpxHJOpN+aw=;
- b=qkjp4If19+UtC12QFgr96Etwlrscl8H7zHwVnPG0JmKSgoetiD22sEuc1B9UZHHHH/2Gr8ziKBar4kyiSX58YFo4oDWxcSnTIs4G17waWDXpnvHU05XXiGndUnFwgzJHDbjk9T+MmIkhb3d1HwX/TtiDFpgBjC8z//KYZpGt4y6BKsGncEa1ciHeQ6uhN3ETzhw12ajHlmjs1AVtES6rVJXM2/5o467fyT7OHwi/7p4uYim++CvUOlBYUW3V1/CIMC3jbKgLPbHSqLZQlwBX/3svkZYJjAGi06fxvPwMBRYQtHSb+brrsrcZF76ufLTVPsSkC9XdIobx4PV89zvTCA==
-Received: from BY5PR17CA0053.namprd17.prod.outlook.com (2603:10b6:a03:167::30)
- by IA0PR12MB8374.namprd12.prod.outlook.com (2603:10b6:208:40e::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Thu, 24 Apr
- 2025 10:54:34 +0000
-Received: from SJ1PEPF0000231E.namprd03.prod.outlook.com
- (2603:10b6:a03:167:cafe::b5) by BY5PR17CA0053.outlook.office365.com
- (2603:10b6:a03:167::30) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.33 via Frontend Transport; Thu,
- 24 Apr 2025 10:54:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- SJ1PEPF0000231E.mail.protection.outlook.com (10.167.242.230) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 10:54:34 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 24 Apr
- 2025 03:54:23 -0700
-Received: from drhqmail203.nvidia.com (10.126.190.182) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 24 Apr 2025 03:54:22 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Thu, 24 Apr 2025 03:54:22 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.12 000/223] 6.12.25-rc1 review
-In-Reply-To: <20250423142617.120834124@linuxfoundation.org>
-References: <20250423142617.120834124@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qlQAOeQ9"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53OAsYHa2607782
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 24 Apr 2025 05:54:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1745492074;
+	bh=h2NgmqrTEbwp6SY8hoLczRXrNeN3OfGG5+RHp+y4Dxs=;
+	h=From:To:CC:Subject:Date;
+	b=qlQAOeQ9vqTxtOxQ5pzddoz2ZVfo9KW4NqEKL/w8OeLuBqcdyA8inkuXyWmTif87D
+	 +4uS5pV+LJVCJY1Hn83o+9SmFGyYafQ61agvWlyhuJClC+eR4SdOOUB3hAdlEBhYYc
+	 tGr4ezEdID4e2lEqJof0UKZeHJO2pK0wIhPQxFJM=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53OAsYuN001262
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 24 Apr 2025 05:54:34 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 24
+ Apr 2025 05:54:34 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 24 Apr 2025 05:54:34 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53OAsXNI073675;
+	Thu, 24 Apr 2025 05:54:33 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <dianders@chromium.org>, <andrzej.hajda@intel.com>,
+        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ideasonboard.com>
+CC: <jonas@kwiboo.se>, <jernej.skrabec@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>, <j-choudhary@ti.com>
+Subject: [RFC PATCH] drm/bridge: ti-sn65dsi86: Enable HPD functionality
+Date: Thu, 24 Apr 2025 16:24:32 +0530
+Message-ID: <20250424105432.255309-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <717dd414-2c81-4446-a2f3-b0c9b131161e@drhqmail203.nvidia.com>
-Date: Thu, 24 Apr 2025 03:54:22 -0700
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF0000231E:EE_|IA0PR12MB8374:EE_
-X-MS-Office365-Filtering-Correlation-Id: b066bcc1-0780-4bd8-30ca-08dd831e660c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|7416014|36860700013|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dDMvSWlXcGxaWm9LU0NWcjlvNm5YSTI0cThlVGVyUExQOTFwblQ4aVRNd25K?=
- =?utf-8?B?eGVLeDVTeStET0E1Q2h2elZmQlYwY2U5ZXJ4cjRjUXpFc2tmWDFuUkN5bC80?=
- =?utf-8?B?UFBMakxzOW9lcWI5ZTdlOHdCYldaTHdGUnNtWFBERmxCSCtwaCs2Y0ZhRmJZ?=
- =?utf-8?B?N2xJT2d6YnQ5WWpXUEtyN2gwL0puM1JvSWU4RkI3R1ROZGlSM21aekxOa2Zj?=
- =?utf-8?B?ZnEwNUNYU3hwR2JyTytrYnNTUFF3ZGhBMXlDWmhBdXFjd0dSOFhQNXV3bWR0?=
- =?utf-8?B?QUdkWnRPeW4vK2FKUmRMQkZZVG5LVFFsV3hjOWpDTXBzSWZ6NWduMmlqcnBi?=
- =?utf-8?B?bzdEZkZ5eGFaTkFOc3RSbjNuT1lOdVpsREdKTnAzeVVCdk92T0IvWlJRdUVC?=
- =?utf-8?B?aWp6ZGpKdlBua0t4dkcxSG5lWHkyemVFdCtyMXBZS3JObnRleUVSRVdmTGU3?=
- =?utf-8?B?WTRaR2RhOERoWmwyYmdQdXJFaXV6akExNDRlUW9abmtheVB2eGg4N2dzZGk3?=
- =?utf-8?B?anBWVDBsSkNKYnppdEdlVHRja3A4WVp1RU1DZDdkSVk2RkkyNDIyZEptTm9Q?=
- =?utf-8?B?OFJsMDNmb051dlZSa0hNUE9YRlBKZUhqRGJzbkw0anF5eGYvc1VCLzdUNDBs?=
- =?utf-8?B?NGh5OWdhVjBWM3VodklBTGs5T21ESXBSaVJPa0FsR3VnTmF6akZ6bFNXa083?=
- =?utf-8?B?dEZKSHVvZHFVNjRTRDluamV3eFFHSUlFRHBwcnp2VlhUSTJVRWl1Yy9Zc1B6?=
- =?utf-8?B?NUxIY01od2pJekQ3Z0t6UkxXZGdGWEVBUnRNQjlUSzlWZVNhRHp2R2JJOFcx?=
- =?utf-8?B?UEljcUNTYlBMTHVZK3dyTUdRYWdzS29jc1E0Q1E0QUNwNmNlaEE1QmM5UlNx?=
- =?utf-8?B?Nk8rSC8zTEc4MldjaHdiR3E5NU1vVHpUMDBsbkF0eTBnMVFQZU1uZGJvN3Uw?=
- =?utf-8?B?OEw5V3pLS1QxbEMxKzhtM1k3UlBweCswSTBiVnVHRi9wai9yVzZLRzBHZk9j?=
- =?utf-8?B?NG5MUTZKb1ovVHJiY1IzckVXYXp4VUt0TVQyZ2g1L1ZLdERjcUl6WjJzTlRP?=
- =?utf-8?B?S3lXUXIrY283Ulp3OXF0Vmtqdm9yMm44Nk9GUkdyNW50VWZuSDNEdUdpM0VW?=
- =?utf-8?B?QVBpOWI2cGtMZjdacWhhaHY3elBTUnAyVTN6cGEweDh5bnVubVpYQy9LdXJt?=
- =?utf-8?B?SS9idFJ2NHdzaWlQY2xyVTE0aWwxbkNiM0cwNFg5T2dROUtJcEhkbXhZcXVw?=
- =?utf-8?B?aG1Fb0FQZG9aYTlmSnlyWk9Fd0huSEtUYnpSWVVPbmFrUjU4bGdyRFpUZ3BL?=
- =?utf-8?B?RW9VU2NmMnhBZG5LRTZhejZsdi9sei9Mc3BKMm56R045YTEwM2ZmaDRFR1By?=
- =?utf-8?B?bDZkUFlrakt1d01rcUdhd3o2Q2pYWEhXZWVoSFBQOHBFRXJiTS9zM1U1YXk3?=
- =?utf-8?B?dWdWK2REaGFBamltRm1uU1hpYTdpVm52bEpkUlp3MlZySG1CMzQ4M3I4Mkkz?=
- =?utf-8?B?Uyt2QmpaRzRmY2I1TzZBdlpZb0dHc3pzd3FQRVZGVWw0Um1jZVFVYWZtT2VP?=
- =?utf-8?B?RHl4M1lsQnJmYW9WcEYyZE9rVHBHWTY4M1ltOVdKY2Z5QW1IdWtZV2JkbGxn?=
- =?utf-8?B?MitoTXBWaDUvK3hBeGRGbWh4cHFQRThmemh4eE5hczBDT2dSYzVxZGx1Yk9a?=
- =?utf-8?B?OTVqUmpjbENwZjZFZWQrTVpCNXVlVk5UUStrNXB3V1ZUMW8wSnpvbjlDU3Rl?=
- =?utf-8?B?MUw0SS9IVFdIWGNiL3ByU2pJZi85Y0N5U0YwUWtaNTJ5Vzh5eTZOR1lweGhK?=
- =?utf-8?B?TTd2cXFWRW1SK0FMTlkrdHFaUEl2RkphWmJaWnMzVmFlOEQramNtc1EvWjV6?=
- =?utf-8?B?VENvRXdSNHczWHRaV25TVkwzRTREeHNYS3lZazR5djRRbjY5SVROaks4Z3pR?=
- =?utf-8?B?OGNqUGpIQ0VrZW14Wnc4Y2N1MEVmeC96ODZ0aWRYUjlTUjhjSldaUGNzZm5W?=
- =?utf-8?B?cXluR0pCTU1JV1NPSDdMQUYwVHI5VlJTaXA1VkRGMUdBcU5pYkhJakM5NDVT?=
- =?utf-8?B?RkdKVVhJcmxZUGxwWXgxYWszWjJnRkdrbFkwUT09?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(82310400026)(7416014)(36860700013)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 10:54:34.0185
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b066bcc1-0780-4bd8-30ca-08dd831e660c
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF0000231E.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8374
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, 23 Apr 2025 16:41:12 +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.25 release.
-> There are 223 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.25-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+For TI SoC J784S4, the display pipeline looks like:
+TIDSS -> CDNS-DSI -> SN65DSI86 -> DisplayConnector -> DisplaySink
+This requires HPD to detect connection form the connector.
+By default, the HPD is disabled for eDP. So enable it conditionally
+based on a new flag 'keep-hpd' as mentioned in the comments in the
+driver.
 
-All tests passing for Tegra ...
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
 
-Test results for stable-v6.12:
-    10 builds:	10 pass, 0 fail
-    28 boots:	28 pass, 0 fail
-    116 tests:	116 pass, 0 fail
+Hello All,
 
-Linux version:	6.12.25-rc1-g56d2398227a2
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
-                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
+Sending this RFC patch to get some thoughts on hpd for sn65dsi86.
 
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Now that we have a usecase for hpd in sn65dsi86, I wanted to get
+some comments on this approach to "NOT DISABLE" hpd in the bridge.
+As the driver considers the eDP case, it disables hpd by default.
+So I have added another property in the binding for keeping hpd
+functionality (the name used is still debatable) and used it in
+the driver.
 
-Jon
+Is this approach okay?
+Also should this have a "Fixes" tag?
+
+ .../bindings/display/bridge/ti,sn65dsi86.yaml      |  6 ++++++
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c              | 14 +++++++++-----
+ 2 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+index c93878b6d718..5948be612849 100644
+--- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
++++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+@@ -34,6 +34,12 @@ properties:
+       Set if the HPD line on the bridge isn't hooked up to anything or is
+       otherwise unusable.
+ 
++  keep-hpd:
++    type: boolean
++    description:
++      HPD is disabled in the bridge by default. Set it if HPD line makes
++      sense and is used.
++
+   vccio-supply:
+     description: A 1.8V supply that powers the digital IOs.
+ 
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index f72675766e01..4081cc957c6c 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -191,6 +191,7 @@ struct ti_sn65dsi86 {
+ 	u8				ln_polrs;
+ 	bool				comms_enabled;
+ 	struct mutex			comms_mutex;
++	bool				keep_hpd;
+ 
+ #if defined(CONFIG_OF_GPIO)
+ 	struct gpio_chip		gchip;
+@@ -348,12 +349,15 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata,
+ 	 * 200 ms.  We'll assume that the panel driver will have the hardcoded
+ 	 * delay in its prepare and always disable HPD.
+ 	 *
+-	 * If HPD somehow makes sense on some future panel we'll have to
+-	 * change this to be conditional on someone specifying that HPD should
+-	 * be used.
++	 * If needed, use 'keep-hpd' property in the hardware description in
++	 * board file as a conditional specifying that HPD should be used.
+ 	 */
+-	regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
+-			   HPD_DISABLE);
++
++	pdata->keep_hpd = of_property_read_bool(pdata->dev->of_node, "keep-hpd");
++
++	if (!pdata->keep_hpd)
++		regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
++				   HPD_DISABLE);
+ 
+ 	pdata->comms_enabled = true;
+ 
+-- 
+2.34.1
+
