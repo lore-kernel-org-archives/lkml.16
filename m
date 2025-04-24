@@ -1,266 +1,299 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF375221FAA
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62E6620D509
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:15:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745493259; cv=none; b=ENJsyrKm7xL1pSdIwcmxkpUo7QWgjH++RP3ofHaI1+oVWUaG1yYpnBcyPQTKv9MSk8velXvtui8Mf75HUmlfFNLmBwryVnZbq6BT2GhJJzTNGa35rffDp9QUHGIWW4yCrjViwo66qUKK3hQBjVcOojo7IBg7dDcMAPvAUqQT3W0=
+	t=1745493344; cv=none; b=s8A6VkifpJc9ucJt+Pp4Z2076O+67Obfel+X+fEZA/cwZ/N2OY9KB4dwhNPzkcm1hFJnqGPY1jkFwV60iry/iDO7jSw5AOQf8PxVTkHqOtb5lQFsnUzWp5yi3hpnmtyRcAkDb1RO/7k32Y0ovPw1n7FlxOnqGRylf4RNxm26w7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745493259; c=relaxed/simple;
-	bh=u78bBw8PGW/PPJwhMQVogINCFXJeS29B2iDyf63kgi0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GobLeKxH5BgzfDMKd+dAj0zFVbIR0cVi2xTToBaLkeurazuaZAHrkboYJYzGHbPIkwyo1WCyK7V4vG90NKpcIYH8u3Xhq804dm47WDhWXPqky6EfWlXZAZuy0V1ScHfgxcM9WFHOiy+Xux4XmmV3XUO193sf4KJrGH8u5U6URBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=NU0rUEcC; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="NU0rUEcC"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so606966f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:14:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1745493255; x=1746098055; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=D4mU1T1rDk6z4pxFiDA5HYk4vYtaLPU9FhiecEK1MtY=;
-        b=NU0rUEcCwDTn/Oj/PtK9pRuOlBbuCs8Chtp8xKgTC7rRfg/wBeM7WmQysstFId81PT
-         qwovDO9GN7s0ngE6aV/YTNGyQKdN71EXnzjk1FKe2EkgGfJlQyoIVl8k+bRpGxasNXUF
-         tOoLDTPW1efwD2ug5RywAVrOfwe1ziCwc63uZERYcZT61ig8ecl1KXBT8NFPo4Qk0qOM
-         jNhajOeUhRJn7syf0qFNHlbVsvsIcv4qKf7CXeoKKeFhrhLyY67FwDjezYlWkraxdNvY
-         PEdIAmto9bof6Ti0GVrT0Fe7ZoVcRDND9o56BjvqQ7jUVaroaKI8t7gD83+0VZxybPL+
-         4jUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745493255; x=1746098055;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D4mU1T1rDk6z4pxFiDA5HYk4vYtaLPU9FhiecEK1MtY=;
-        b=TwAnXsaDPw8G8P4bx29kI+TIFFBnOTfesn+Ser6vbiXM82vhLNngOB1Dp1RNpsx8yn
-         Zr/mSVw8+Gobhi8iTEJMKdt/gha0rBTAtP3FZFAcrDhjWx4MDOwQeBrUl90dxKFwWsbI
-         1l5QF2YyCxJ8wEc611wkgqheFA49JgMScf5bRFkru3FOcNpIHltqhi717BqzLPEueoo9
-         gKxwhGw6vroqlwHLIobRBKNf/HD7uilAXDoAregL+o3JqhmNkOL/IbWat8PuA+jFeTXN
-         Q2Wp6oVnQME6boncuhtjINMzOh0q9tw1hOWjQnA19u06pPnnHT60f2V3pQB1KIfhJ/dq
-         P4aA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ0HYUV8m9xVrnZJwGRdb4eIWuzDCQEusp0sXKsDXTTzLDW5KCZsO8NXnDKRZrVzIdylWGT7mZ4guP0AU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/H8lWWSxGuGRvcuLPNSwcsto9VDmvxWvybUBwpICtvmWR5F2W
-	1mWhX1TmC/D1oyAN7uk3E6f4TiMNvh37yuBN56LJJFvHai8UgocYnhS5kyrYIdM=
-X-Gm-Gg: ASbGnctPBpsF1+hQBdB05WHRfOQgMBfac8lprjW1oRSpisbXSjLHKHe1j9auDIJE2rP
-	aN5O6q8juO05BlputozhF4B4yImB8E1TGbyjQ+KJ8CbK/zhdjaloliG8k2UrBez6+y8w84Fdtbe
-	0a8iBH1wp6xHM4IOxSAqoKRCgvhjUtJOtEoF5H6NBMv49XwjjZ7nGYHXdCVD33Oqlpoe+HRWAir
-	LMuckqIDB2+83DwltjxvQM/hzTiw2pe6Ol7dyDZQkvno5LO9UI+I5ropboTkIZNgIxUlh9wXuoE
-	DF/BrTIGRrKfaMs1qzvIAj00Sd55
-X-Google-Smtp-Source: AGHT+IHbSyOOi5/yit6BfiuuY0FmW2s/FlFU8x3sL1VvFlP3l8fAUyFn4SseT8fosFzbmlvobKvRQA==
-X-Received: by 2002:a05:6000:438a:b0:39e:e3fa:a66b with SMTP id ffacd0b85a97d-3a06cf6bc1cmr1687080f8f.34.1745493255239;
-        Thu, 24 Apr 2025 04:14:15 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::f716])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2b87b1sm17134325e9.28.2025.04.24.04.14.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 04:14:14 -0700 (PDT)
-Date: Thu, 24 Apr 2025 13:14:14 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-kselftest@vger.kernel.org, 
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH v5 05/13] riscv: misaligned: request misaligned exception
- from SBI
-Message-ID: <20250424-763a7a1d90537ecee5bfa717@orel>
-References: <20250417122337.547969-1-cleger@rivosinc.com>
- <20250417122337.547969-6-cleger@rivosinc.com>
+	s=arc-20240116; t=1745493344; c=relaxed/simple;
+	bh=Jl1oeMziLY0u5/EJ9v3+j0f+if9NVh82NSWVbKKa/hE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=D65CfiTtaLSFwmio7t9j+YFIY1kKMkssTc23mD6PKZDAQ2jhAHVKTeN/LtmaDh5OBegmuiv3hpBx2nNRvJolTgAtHF36BEJ1pJgbDe4oqPdR8mOw6kWmc9lb9qaPgqR7zZRECjg105T3tTFbPMqStg0mGJF7NsOeN6Cf0tHovns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E98C1063;
+	Thu, 24 Apr 2025 04:15:35 -0700 (PDT)
+Received: from [10.1.196.43] (eglon.cambridge.arm.com [10.1.196.43])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37C843F59E;
+	Thu, 24 Apr 2025 04:15:36 -0700 (PDT)
+Message-ID: <a9008c2d-e83d-4bc6-8197-0753666a7ec2@arm.com>
+Date: Thu, 24 Apr 2025 12:15:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250417122337.547969-6-cleger@rivosinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 08/21] x86/resctrl: Expand the width of dom_id by
+ replacing mon_data_bits
+To: Reinette Chatre <reinette.chatre@intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, fenghuay@nvidia.com,
+ Tony Luck <tony.luck@intel.com>
+References: <20250411164229.23413-1-james.morse@arm.com>
+ <20250411164229.23413-9-james.morse@arm.com>
+ <26402d7f-3da8-4e6d-8503-04e7161e6a5d@intel.com>
+Content-Language: en-GB
+From: James Morse <james.morse@arm.com>
+In-Reply-To: <26402d7f-3da8-4e6d-8503-04e7161e6a5d@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 17, 2025 at 02:19:52PM +0200, Clément Léger wrote:
-> Now that the kernel can handle misaligned accesses in S-mode, request
-> misaligned access exception delegation from SBI. This uses the FWFT SBI
-> extension defined in SBI version 3.0.
+Hi Reinette,
+
+On 16/04/2025 01:34, Reinette Chatre wrote:
+> There is no occurence of "dom_id" in patch other than subject.
+
+Fixed.
+
+
+> On 4/11/25 9:42 AM, James Morse wrote:
+>> MPAM platforms retrieve the cache-id property from the ACPI PPTT table.
+>> The cache-id field is 32 bits wide. Under resctrl, the cache-id becomes
+>> the domain-id, and is packed into the mon_data_bits union bitfield.
+>> The width of cache-id in this field is 14 bits.
+>>
+>> Expanding the union would break 32bit x86 platforms as this union is
+>> stored as the kernfs kn->priv pointer. This saved allocating memory
+>> for the priv data storage.
+>>
+>> The firmware on MPAM platforms have used the PPTT cache-id field to
+>> expose the interconnect's id for the cache, which is sparse and uses
+>> more than 14 bits. Use of this id is to enable PCIe direct cache
+>> injection hints. Using this feature with VFIO means the value provided
+>> by the ACPI table should be exposed to user-space.
+>>
+>> To support cache-id values greater than 14 bits, convert the
+>> mon_data_bits union to a structure. These are shared between control
+>> and monitor groups, and are allocated on first use. The list of
+>> allocated struct mon_data is free'd when the filesystem is umount()ed.
+
+>> diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+>> index 0a0ac5f6112e..159972c3fe73 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+>> @@ -676,17 +676,22 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+>>  		goto out;
+>>  	}
+>>  
+>> -	md.priv = of->kn->priv;
+>> -	resid = md.u.rid;
+>> -	domid = md.u.domid;
+>> -	evtid = md.u.evtid;
+>> +	md = of->kn->priv;
+>> +	if (WARN_ON_ONCE(!md)) {
+>> +		ret = -EIO;
+>> +		goto out;
+>> +	}
+>> +
+>> +	resid = md->rid;
+>> +	domid = md->domid;
+>> +	evtid = md->evtid;
 > 
-> Signed-off-by: Clément Léger <cleger@rivosinc.com>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
-> ---
->  arch/riscv/include/asm/cpufeature.h        |  3 +-
->  arch/riscv/kernel/traps_misaligned.c       | 71 +++++++++++++++++++++-
->  arch/riscv/kernel/unaligned_access_speed.c |  8 ++-
->  3 files changed, 77 insertions(+), 5 deletions(-)
+> What is not visible in this hunk is the types of these variables, which is:
+> 	u32 resid, evtid, domid;
 > 
-> diff --git a/arch/riscv/include/asm/cpufeature.h b/arch/riscv/include/asm/cpufeature.h
-> index f56b409361fb..dbe5970d4fe6 100644
-> --- a/arch/riscv/include/asm/cpufeature.h
-> +++ b/arch/riscv/include/asm/cpufeature.h
-> @@ -67,8 +67,9 @@ void __init riscv_user_isa_enable(void);
->  	_RISCV_ISA_EXT_DATA(_name, _id, _sub_exts, ARRAY_SIZE(_sub_exts), _validate)
->  
->  bool __init check_unaligned_access_emulated_all_cpus(void);
-> +void unaligned_access_init(void);
-> +int cpu_online_unaligned_access_init(unsigned int cpu);
->  #if defined(CONFIG_RISCV_SCALAR_MISALIGNED)
-> -void check_unaligned_access_emulated(struct work_struct *work __always_unused);
->  void unaligned_emulation_finish(void);
->  bool unaligned_ctl_available(void);
->  DECLARE_PER_CPU(long, misaligned_access_speed);
-> diff --git a/arch/riscv/kernel/traps_misaligned.c b/arch/riscv/kernel/traps_misaligned.c
-> index 97c674d7d34f..058a69c30181 100644
-> --- a/arch/riscv/kernel/traps_misaligned.c
-> +++ b/arch/riscv/kernel/traps_misaligned.c
-> @@ -16,6 +16,7 @@
->  #include <asm/entry-common.h>
->  #include <asm/hwprobe.h>
->  #include <asm/cpufeature.h>
-> +#include <asm/sbi.h>
->  #include <asm/vector.h>
->  
->  #define INSN_MATCH_LB			0x3
-> @@ -629,7 +630,7 @@ bool __init check_vector_unaligned_access_emulated_all_cpus(void)
->  
->  static bool unaligned_ctl __read_mostly;
->  
-> -void check_unaligned_access_emulated(struct work_struct *work __always_unused)
-> +static void check_unaligned_access_emulated(struct work_struct *work __always_unused)
->  {
->  	int cpu = smp_processor_id();
->  	long *mas_ptr = per_cpu_ptr(&misaligned_access_speed, cpu);
-> @@ -640,6 +641,13 @@ void check_unaligned_access_emulated(struct work_struct *work __always_unused)
->  	__asm__ __volatile__ (
->  		"       "REG_L" %[tmp], 1(%[ptr])\n"
->  		: [tmp] "=r" (tmp_val) : [ptr] "r" (&tmp_var) : "memory");
-> +}
-> +
-> +static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
-> +{
-> +	long *mas_ptr = per_cpu_ptr(&misaligned_access_speed, cpu);
-> +
-> +	check_unaligned_access_emulated(NULL);
->  
->  	/*
->  	 * If unaligned_ctl is already set, this means that we detected that all
-> @@ -648,9 +656,10 @@ void check_unaligned_access_emulated(struct work_struct *work __always_unused)
->  	 */
->  	if (unlikely(unaligned_ctl && (*mas_ptr != RISCV_HWPROBE_MISALIGNED_SCALAR_EMULATED))) {
->  		pr_crit("CPU misaligned accesses non homogeneous (expected all emulated)\n");
-> -		while (true)
-> -			cpu_relax();
-> +		return -EINVAL;
->  	}
-> +
-> +	return 0;
->  }
->  
->  bool __init check_unaligned_access_emulated_all_cpus(void)
-> @@ -682,4 +691,60 @@ bool __init check_unaligned_access_emulated_all_cpus(void)
->  {
->  	return false;
->  }
-> +static int cpu_online_check_unaligned_access_emulated(unsigned int cpu)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
-> +#ifdef CONFIG_RISCV_SBI
-> +
-> +static bool misaligned_traps_delegated;
-> +
-> +static int cpu_online_sbi_unaligned_setup(unsigned int cpu)
-> +{
-> +	if (sbi_fwft_set(SBI_FWFT_MISALIGNED_EXC_DELEG, 1, 0) &&
-> +	    misaligned_traps_delegated) {
-> +		pr_crit("Misaligned trap delegation non homogeneous (expected delegated)");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void unaligned_access_init(void)
+> These types support the previously used bitfields well but now that the
+> data is provided via a struct it should be possible to use appropriate
+> types and avoid this unnecessary switch between types (more below).
 
-__init
+Sure, I left them alone as they were already mismatched...
 
-> +{
-> +	int ret;
-> +
-> +	ret = sbi_fwft_local_set(SBI_FWFT_MISALIGNED_EXC_DELEG, 1, 0);
-> +	if (ret)
-> +		return;
-> +
-> +	misaligned_traps_delegated = true;
-> +	pr_info("SBI misaligned access exception delegation ok\n");
-> +	/*
-> +	 * Note that we don't have to take any specific action here, if
-> +	 * the delegation is successful, then
-> +	 * check_unaligned_access_emulated() will verify that indeed the
-> +	 * platform traps on misaligned accesses.
-> +	 */
-> +}
-> +#else
-> +void unaligned_access_init(void) {}
 
-__init
+>>  	r = resctrl_arch_get_resource(resid);
+>>  
+>> -	if (md.u.sum) {
+>> +	if (md->sum) {
+>>  		/*
+>>  		 * This file requires summing across all domains that share
+>>  		 * the L3 cache id that was provided in the "domid" field of the
+>> -		 * mon_data_bits union. Search all domains in the resource for
+>> +		 * struct mon_data. Search all domains in the resource for
+>>  		 * one that matches this cache id.
+>>  		 */
+>>  		list_for_each_entry(d, &r->mon_domains, hdr.list) {
+>> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+>> index 36a862a4832f..d932dd1eaa74 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/internal.h
+>> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+>> @@ -103,27 +103,26 @@ struct mon_evt {
+>>  };
+>>  
+>>  /**
+>> - * union mon_data_bits - Monitoring details for each event file.
+>> - * @priv:              Used to store monitoring event data in @u
+>> - *                     as kernfs private data.
+>> - * @u.rid:             Resource id associated with the event file.
+>> - * @u.evtid:           Event id associated with the event file.
+>> - * @u.sum:             Set when event must be summed across multiple
+>> - *                     domains.
+>> - * @u.domid:           When @u.sum is zero this is the domain to which
+>> - *                     the event file belongs. When @sum is one this
+>> - *                     is the id of the L3 cache that all domains to be
+>> - *                     summed share.
+>> - * @u:                 Name of the bit fields struct.
+>> + * struct mon_data - Monitoring details for each event file.
+>> + * @list:            Member of list of all allocated structures.
 
-> +
-> +static int cpu_online_sbi_unaligned_setup(unsigned int cpu __always_unused)
-> +{
-> +	return 0;
-> +}
->  #endif
-> +
-> +int cpu_online_unaligned_access_init(unsigned int cpu)
-> +{
-> +	int ret;
-> +
-> +	ret = cpu_online_sbi_unaligned_setup(cpu);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return cpu_online_check_unaligned_access_emulated(cpu);
-> +}
-> diff --git a/arch/riscv/kernel/unaligned_access_speed.c b/arch/riscv/kernel/unaligned_access_speed.c
-> index 585d2dcf2dab..a64d51a8da47 100644
-> --- a/arch/riscv/kernel/unaligned_access_speed.c
-> +++ b/arch/riscv/kernel/unaligned_access_speed.c
-> @@ -236,6 +236,11 @@ arch_initcall_sync(lock_and_set_unaligned_access_static_branch);
->  
->  static int riscv_online_cpu(unsigned int cpu)
->  {
-> +	int ret = cpu_online_unaligned_access_init(cpu);
-> +
-> +	if (ret)
-> +		return ret;
-> +
->  	/* We are already set since the last check */
->  	if (per_cpu(misaligned_access_speed, cpu) != RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN) {
->  		goto exit;
-> @@ -248,7 +253,6 @@ static int riscv_online_cpu(unsigned int cpu)
->  	{
->  		static struct page *buf;
->  
-> -		check_unaligned_access_emulated(NULL);
->  		buf = alloc_pages(GFP_KERNEL, MISALIGNED_BUFFER_ORDER);
->  		if (!buf) {
->  			pr_warn("Allocation failure, not measuring misaligned performance\n");
-> @@ -439,6 +443,8 @@ static int __init check_unaligned_access_all_cpus(void)
->  {
->  	int cpu;
->  
-> +	unaligned_access_init();
-> +
->  	if (unaligned_scalar_speed_param == RISCV_HWPROBE_MISALIGNED_SCALAR_UNKNOWN &&
->  	    !check_unaligned_access_emulated_all_cpus()) {
->  		check_unaligned_access_speed_all_cpus();
-> -- 
-> 2.49.0
->
+> To help readers this can mention the name of the list. Can simply be
+> 	@list:          Entry in @listname.
+
+Sure,
+| Member of the global @mon_data_kn_priv_list list.
+
+I was curious how kernel-doc would resolves references like that - turns out its just
+formatting.
+
+
+>> + * @rid:             Resource id associated with the event file.
+>> + * @evtid:           Event id associated with the event file.
+>> + * @sum:             Set when event must be summed across multiple
+>> + *                   domains.
+>> + * @domid:           When @sum is zero this is the domain to which
+>> + *                   the event file belongs. When @sum is one this
+>> + *                   is the id of the L3 cache that all domains to be
+>> + *                   summed share.
+>> + *
+>> + * Stored in the kernfs kn->priv field, readers and writers must hold
+>> + * rdtgroup_mutex.
+> 
+> "Stored in the kernfs kn->priv field" can be made more specific with, for example,
+> "Pointed to by kernfs kn->priv field of monitoring event file"
+
+Sure,
+
+
+>>   */
+>> -union mon_data_bits {
+>> -	void *priv;
+>> -	struct {
+>> -		unsigned int rid		: 10;
+>> -		enum resctrl_event_id evtid	: 7;
+>> -		unsigned int sum		: 1;
+>> -		unsigned int domid		: 14;
+>> -	} u;
+>> +struct mon_data {
+>> +	struct list_head list;
+>> +	unsigned int rid;
+>> +	enum resctrl_event_id evtid;
+>> +	unsigned int sum;
+>> +	unsigned int domid;
+>>  };
+> 
+> The usage of the unsigned int was in support for the bitfield, but now
+> the most appropriate types can be used instead? rid can be int, or even enum
+> resctrl_res_level, domid can be int, and sum can be bool.
+
+Yup. This was just left as is as its the existing behaviour.
+
+
+> Also, every struct in this file follows the custom as documented in
+> maintainer-tip.rst: "Struct declarations should align the struct member
+> names in a tabular fashion". This struct should follow custom.
+
+Fixed.
+
+
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index c69ed978aa50..aa0bc57e1c7f 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> @@ -45,6 +45,12 @@ LIST_HEAD(rdt_all_groups);
+>>  /* list of entries for the schemata file */
+>>  LIST_HEAD(resctrl_schema_all);
+>>  
+>> +/*
+>> + * List of struct mon_data 'priv' structures for rdtgroup_mondata_show().
+> 
+> "struct mon_data 'priv' structures" seems redundant use of struct/structures?
+
+Heh, this is because I go back and add 'struct' before structure names as a second pass.
+
+
+> How about:
+> "List of struct mon_data containing private data of event files for use by rdtgroup_mondata_show()."
+
+Done!
+
+
+>> + * Protected by rdtgroup_mutex.
+>> + */
+>> +static LIST_HEAD(kn_priv_list);
+> 
+> Considering all the different "kn" involved in resctrl I find this name
+> very generic for a global variable. I am not sure if something like
+> "mon_data_kn_priv_list" would be considered too long? Open to recommendations.
+
+Its suitably descriptive and doesn't cause a line length problems. Done.
+
+
+>> +
+>>  /* The filesystem can only be mounted once. */
+>>  bool resctrl_mounted;
+>>  
+>> @@ -3089,6 +3095,62 @@ static void rmdir_all_sub(void)
+>>  	kernfs_remove(kn_mondata);
+>>  }
+>>  
+>> +/**
+>> + * mon_get_kn_priv() - Get the mon_data priv data for this event.
+>> + *
+>> + * The same values are used in multiple directories. Keep a list
+> 
+> "The same values are used in multiple directories." is vague.
+> How about "The same values are used across the mon_data directories
+> of all control and monitor groups." Please feel free to improve.
+
+I've tacked "for the same event in the same domain" on the end, otherwise
+it reads like there is a single set of values.
+
+
+>> + * of allocated structures and re-use an existing one with the same
+>> + * list of values for rid, domain, etc.
+> 
+> "list of values" -> "values"?
+
+Fixed,
+
+
+> Also, if using "rid", which is parameter name, why use "domain" instead
+> of "domid"? If using parameter names the kernel-doc "@" can be used
+> for highlighting.
+
+Done,
+
+
+> With the many usages of "event type being created" below the above description
+> will be helpful if it could define what is meant with an "event type".
+
+I'll change these to 'event file', which at least matches the earlier comments.
+
+
+>> + *
+>> + * @rid:    The resource id for the event type being created.
+>> + * @domid:  The domain id for the event type being created.
+>> + * @mevt:   The event type being created.
+>> + * @do_sum: Whether SNC summing monitors are being created.
+>> + */
+>> +static struct mon_data *mon_get_kn_priv(int rid, int domid,
+>> +					struct mon_evt *mevt,
+>> +					bool do_sum)
+
 
 Thanks,
-drew
+
+James
