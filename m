@@ -1,93 +1,82 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2736F1DFDBB
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8752518E1F;
+	Thu, 24 Apr 2025 06:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745477806; cv=none; b=QUnfG14xTuaTehHRC2W1wsMCM7DMxKJYhEI7cUAR/CqtavnjH6vkJL5D5jJSDiR1WOa4wCHrKWotbDk/KF0BNdl2ihrkaoVph28Ce/4N26uKq1AL1jdGfrEtpWLG/bk00sN8KIYc2QxJv6kINxIDAUveceXd5igjQn5xutP/EWM=
+	t=1745477824; cv=none; b=quHtxiGN9CxqiYMrBAHjyERyROoKcO6MYTelDRjNlT1H1+v1vpjkYmId8fXBsksn2ufeq07DBX8RrN6YEulktdEuE3zCGLCdc4HX7esMqIY1OWWTPTgi5ZBGc8Mtwc7dv+SOmqzYHVBF3cZNvULB2ETwS90qCfiYrEBooTDfxfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745477806; c=relaxed/simple;
-	bh=KaDurauswI188KUjZ3KNQvsryIeiaUhlpIHOyWF2O0o=;
+	s=arc-20240116; t=1745477824; c=relaxed/simple;
+	bh=zPnLokL9Enz6v0drdyRj8ySVfYvqIPvXAh+2WZuW1zc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OtoE6Q0IopyjkW+NiUBTIJJMJwxwR9XYvZFcBVGr4B8jFW4N3LCGc//Id7cCkwOUKhAyplI6f50VvBdD4+uzXBMQ2UgaNbZ7V9tRS/fsnv49xVWqwFs81rJ4X3rzOeuKp/r5MqLY9/wp8JzWM41uqFFNtEMBbovsC9uJtJ5sL+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QpAcP0ul; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZY7H61mwBALnpZKIqBZNV0NLqGkRHYy02LvzFvD07LNNZib8G8h55OpgQNZ3TTLezTHxMfnUF2lB3+9WQQosR314H0Y8ogIsFt9XhpEBa09idvvh3MYpr04qPqi6ljVNKXHOGJ6S0t+NFgQC+fdV9aa2CyE+ZEh4cnXqabpWGxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kSnIxFI1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpAcP0ul"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso1166547a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745477802; x=1746082602; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7kzVv79whvRhzEeD6JG5Yuqa4/y4qdCf+2FXelQG1Yg=;
-        b=QpAcP0ull37osyzz0lwmfHbM6xwEU6yYa1hORanq77BXJc36z1RgOTaQPsXD2k8122
-         bO9/CqpUcrK07DTpAeexhlaDBbeOJyKUw+CkmrSztl0By8FCn28+32swlC6BAzjGd3uK
-         Ju36Alpzn+KeDeAWQQSpT1vF9VInhuMsLBu6BhSXifDq9h+wT9J5Ve+UDwg+9WWiP4mQ
-         3wucdPs4KneMVdSxlJ6/VilaaWKpUrutOSJdEjVu8dZA+zPVsSPTpCSx5/hN759fXjyx
-         Aq6TqNJWgzbWmJK7s6fRO1BFovKuMhhfCobqB6YeJ1JWgGul3Mk2vZ+i91oQU8wPqLyi
-         DJCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745477802; x=1746082602;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7kzVv79whvRhzEeD6JG5Yuqa4/y4qdCf+2FXelQG1Yg=;
-        b=sUbDxD/xKtm7x+oDV5NXitEdCxB/y7FaSjR17w5v0UFBNaJ/XlSIsui+EF72/S/mDF
-         AZsBNxfKq9qs1nEhDaISaRQTUVHhL0x7p7IT917troKrV9ahpH8qdQuAcSSuiUWs8x+j
-         Sdeh7zHeeXUARXbKHo4AQ5fag8jbu/oM8c4oSggtzRaQ/hqCEP5ixvxDMx5x4oz/JVxO
-         HmlzsEbYtK2lcU1jCJuLeIVUOSJkwocIqNDCKs46wnM9n16JKbQchRkqaDKQcx3k75Yz
-         rgeq4Hc1OgArDaHeY39v4RQTvl9HJfaGgyTJUQeaomiPnqcdUbZrlsTcT1vftVfhJK+8
-         olrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUuZ7fpIViFDaXZ6LHQfrsVTioDFPWXqu2Zz7rwr2vN5c0jOyGH7FQ9UyJBMv0gsDfpdMUVz3Atif7WB6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywwrdb0w5qGZtReY9aqJjPNjKjBmwvAVms4c87pb/Kq4hfsYMcp
-	R8hqsnEZVmXf8qUuA+QUxlBcMmdWHOWlhvyEvMah8axhKH2VrFNXywRoKkK7QHo=
-X-Gm-Gg: ASbGnctGQsZFy38khHVFTRu6TdVc/tYhwUH4tsJ2NaKbABosC5h1PRjR+q3vyK6ulMS
-	zJzy/NcoITd/ga5fLEoZTc+hpHnEIvKShx/y93NEQBkWiXfFBToh7t2Eia960T24QDE+p/xjj7N
-	5blV4x2JSnovwuOmb/woxvevw5CIGjzNZlLujzZIXL7A1g0cvLnf3Na+XL30TOwe1yXBZDLoRRk
-	5LuIRltE21W2xbE1aw5hTD2iE4odQ/ixGKEBMXdZ/NhUg168w8kJPz3Yp0gd614Me4xHite18ps
-	s7UpUyeSviUTYpF46GfyxIP1t8dqGjMu+03FIQ==
-X-Google-Smtp-Source: AGHT+IHGr9cBdHuxjSZWLqVT9rmChGPepYhM4CQE7w0ih4cdp+SrjuSnVfBVqnG9DIEOEXWf/Vdtbw==
-X-Received: by 2002:a05:6402:254b:b0:5f4:c499:54e8 with SMTP id 4fb4d7f45d1cf-5f6de697effmr1551743a12.15.1745477802488;
-        Wed, 23 Apr 2025 23:56:42 -0700 (PDT)
-Received: from linaro.org ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f6ed9e0936sm674611a12.71.2025.04.23.23.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 23:56:41 -0700 (PDT)
-Date: Thu, 24 Apr 2025 09:56:40 +0300
-From: Abel Vesa <abel.vesa@linaro.org>
-To: Maulik Shah <maulik.shah@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Melody Olvera <melody.olvera@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: Fix PINGROUP defination for sm8750
-Message-ID: <aAngqFUPUxJfHhXJ@linaro.org>
-References: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kSnIxFI1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BC9CC4CEE3;
+	Thu, 24 Apr 2025 06:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745477824;
+	bh=zPnLokL9Enz6v0drdyRj8ySVfYvqIPvXAh+2WZuW1zc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kSnIxFI1GokV4V+fVsJxeGyERS251Gwh6yUmDRa5Ougu/R0xkaB0lMiwcyIAGt0OA
+	 /s5RDb5WGAcsouwzDoe5hdBVb2xf5O2NlM6HF9xEHKeJs1Wei2IH2bgr8qvgwVXQ0L
+	 pkkUgy0EH/FZbqo1VlO4uPWXsGaHxvqJEzD5qWEAHFnFygMcxsA0SKBosSwZOZOoUu
+	 IqbMlBOa9aqIslVymBzcqpzevDepPN8QQk+0s/cmEXi0v8sPcbAsxBZnoIm+cA9A9l
+	 8Kxzk5N9/ZenwLSN4Q1sWSeN1W23eiVrVVEh5NaO4zzyr7F7IrRJJVGEGt/7w/ezzW
+	 eedfsGbE8EQOA==
+Date: Thu, 24 Apr 2025 08:57:01 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
+Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
+	dianders@google.com, hsinyi@google.com, angelogioacchino.delregno@collabora.com, 
+	matthias.bgg@gmail.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	knoxchiou@google.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v11 1/2] dt-bindings: arm: mediatek: Add MT8186 Ponyta
+ Chromebook
+Message-ID: <20250424-echidna-of-unreal-youth-9ac5b1@kuoka>
+References: <20250424010850.994288-1-cengjianeng@huaqin.corp-partner.google.com>
+ <20250424010850.994288-2-cengjianeng@huaqin.corp-partner.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
+In-Reply-To: <20250424010850.994288-2-cengjianeng@huaqin.corp-partner.google.com>
 
-On 25-04-24 10:17:10, Maulik Shah wrote:
-> On newer SoCs intr_target_bit position is at 8 instead of 5. Fix it.
+On Thu, Apr 24, 2025 at 09:08:49AM GMT, Jianeng Ceng wrote:
+> Ponyta is a custom label Chromebook based on MT8186. It is a
+> self-developed project of Huaqin and has no fixed OEM.
 > 
-> Also add missing intr_wakeup_present_bit and intr_wakeup_enable_bit which
-> enables forwarding of GPIO interrupts to parent PDC interrupt controller.
-> 
-> Fixes: afe9803e3b82 ("pinctrl: qcom: Add sm8750 pinctrl driver")
-> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
+> Signed-off-by: Jianeng Ceng <cengjianeng@huaqin.corp-partner.google.com>
+> ---
 
-Nitpick: in commit subject, fix spelling of definition.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-With that fixed, LGTM:
+---
 
-Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+<form letter>
+This is an automated instruction, just in case, because many review tags
+are being ignored. If you know the process, you can skip it (please do
+not feel offended by me posting it here - no bad intentions intended).
+If you do not know the process, here is a short explanation:
+
+Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+versions of patchset, under or above your Signed-off-by tag, unless
+patch changed significantly (e.g. new properties added to the DT
+bindings). Tag is "received", when provided in a message replied to you
+on the mailing list. Tools like b4 can help here. However, there's no
+need to repost patches *only* to add the tags. The upstream maintainer
+will do that for tags received on the version they apply.
+
+https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+</form letter>
+
+Best regards,
+Krzysztof
+
