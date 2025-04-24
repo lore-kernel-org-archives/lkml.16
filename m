@@ -1,121 +1,183 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924FA221733
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F305F2206BE
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487590; cv=none; b=aLqRyMbicjQwjQ5c7JOxNtslOF2gYvIuQ+QXkSnFj3BqVlAHeNAGxW4spI7/nber2gAOle42XTlrj+Dk9FyydrL9OQ6GZTzXiGwG66uSR7Pq8r7ae+XoDFBezf66iLaPdjUm1Z3WdiRMQZYCx2YkDnVvyu55JA/XhkKAAolcG/c=
+	t=1745487614; cv=none; b=TPJD0MfZvsFF1WTqe+T4SY1FiPB9wMrUVCZOP+Asp67Y1yG4rPRcv1ODitOZI4luw0EA113s1s+7jj5VGKqUX3YHA0I/PkTm0rUtiNA0kK6dFDoEWWgX4OrPkShpAnqpN1X1YjHPsPUsx4egWNbKMMLuFZk0pydHnvD8LyYyDx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487590; c=relaxed/simple;
-	bh=uLu5qq+fu6nJOObQPQvzr891FiZ0IVNq6dpcmUuw9EE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PZvQDwXesaenCD7PDhOKZbwqMGwxLvD94LN6oJ/fM3T2GZcv7MC8rSw/Mpm0yFncH/UUEBVmbaZ0Pn+Ga0oH18rLr/kw3tk5EvJidZCuJdMzWFWzxzl5LcDfSr/x/pgKFSQ/atezfZiL8V8u2GR07xU0v3dfqqHw85KyHt5dhpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=L20d0vEn; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745487614; c=relaxed/simple;
+	bh=nGD9BVz8j2OotRq+XBALzjc133ysWi7LIJQYFknwE3A=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=BOtlGBGY40jK8/CQ++o2Y8NnsIxBHmDggJhe/u5UxGKykKRIREULxr3bD26gKi+ou4qehwIXjMm+Rr+u+8pE+ew4Loq5loxTFmQVbbSg9jrPLqKmWNLoDu7Jo0vk27SCFDZERfEOF9uiYtZxl7RujFSTOI9+UiGfpcEOUxS58yM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=t7WLsYj3; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="L20d0vEn"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F9B6031031
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:39:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=4dGjO56yZ5rnlYsrCbSawbQj
-	IoRYwOqdiOvRK7aRuDw=; b=L20d0vEn2+o/Mnh5N8rHWG+UItlv3JpyyEfm3y5y
-	L5NTKIamb1n0+cI1PM6aPf1kpqx+p5BsI007OV/mAyj2ITqZ0BMP71qCMEQ3C6En
-	V99lBkho+oJ1v0pw2rbpXCjiPNL4WP/ChzZGyyWmc8jXyl7xX04yLUz8ugdnee28
-	W+8RYTUeMeqeKemcceYT9eAxUQQPN9kpNRLM3ZWgfysOWQjDoOfY1Nt7kb4iuzNS
-	ZuUDFQCWPHTcrtFq6/7eWYZv2Qu8yvDu26VmxYVI63Y2QhDwikInXLVrZNfe32t/
-	/F46b1emKn/0xgBJXOYiX27VfPn8cXXOuISwlts4wFdm4A==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5d0wr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:39:47 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c0b0cf53f3so117302785a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:39:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="t7WLsYj3"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso3903715e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:40:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745487611; x=1746092411; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GsdYiir2/QPJiZE91FucRo493WTjvg2844/jPSOuFnc=;
+        b=t7WLsYj3U0SF8Fk5dgfUfFRWc4OzO2Vc5Vn5qCFXrHLzFOLjqi/q8jvnbT0CWAB0bA
+         QZ2moCV/3lkl13eT6XjDb4Yjn3fUd1HnCJO/Ekbd+gGJHahxdyChhnH4n7BQGXJLC/Do
+         Nzmb6jChSR5nAgb3DCI6P6fbyW1ShbfyiIkNx/V2PeCcFrcpZdIdvJpa20EuCFpY8cIT
+         GiUlrxuJKBq6eVcJ3yLzjIHjCkObTcGHwjK0+qMppKyjzqzHu7pOnM3nhCDIT2KBu4dC
+         Bri5fKBs6qlEAnBdLhuJrF/CLuzC5l/c/y39+zhobNuFElWtftN/NjkjSXNyRLcEaslM
+         8Xvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745487586; x=1746092386;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4dGjO56yZ5rnlYsrCbSawbQjIoRYwOqdiOvRK7aRuDw=;
-        b=Iat0Y8PbWm7uVpPFDVdIGi7SVgUbWGlvHvnT4QSu7+ai7qPQRNy2wuf54DIHDDf6h+
-         Acp/7kxn3xyXvDoayNEtKvZiam2Qmc/lUe17/dWyNHV7cZl9l+eP8p4lWAJkRFpRmBr4
-         ofwh7LlYt12AKPEaH+BwWcbieXJj+xAP2f0DOENLD7i2HxsE4OkeHjmAl0x1wjNqyyWF
-         nf4G4BNXHyr/bI6356m85QwZURB8YmgnqrAZXQ1WLZ/3g4saqzf3KkzEZ+pOxLMXVsZx
-         J00nCiouJP02M9Odd1rDgMXVrhpk/FDnLyp3HSQJNz1+HHWoouVrbx/vL1Nor7kfOQ3E
-         KZmg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6mVUafWBhVbnwLC1SbQZMnyHnBi5p7qh6ayrmF+Ve0Colh3xR/wWHSbg93vPQT7TUN5VjjTYPuv6dqck=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx6lTDf+J93udlJ6xv/o+XEv5ZBDqAFc+Rr6sTKWLG8NXJi0Rs
-	ziuSiAeeFnwwN1n62nkywtWvIgP8xE3F1Pj89dhYPXNgdxpz+5l2KMLlgOPS/VUl+XnKdjen+P3
-	ZgpJ9wF4wEcDMGX1MfWQYFuqSkYTgo4kl/RrdfjT25hbJGWGmYZTbPrZ+3h/52oM=
-X-Gm-Gg: ASbGncs2uqJzgpm4mMkf6FKHpowqTzwJvMoAbUgVD/x1LuH+uVLQcN+VOcKXViKaTNx
-	3NTUR1XCf0ZwRgCILYForlcZY7F4uQDRHNgTuUrRMKOo+Kutt++oiMR/viqI1B87L+RPkQ8QRfp
-	IvPI5+Y4Sa3tt57w2ygAL+I6/0pnafbPvC3fJsttHf0dShufSz77YXzwHgsF0CIX1J1nMiUxSqQ
-	eqm12OkAW/xaGiyNG5eOy5UnfrN03dM5d+sDM5vbS4n/f1Ya/FsHkowreJ+/RqJhtcQe/LGkwh7
-	oV/Cm+yTpCkD8BM9aIrjyPh2/JNkLfv9p5LXrLBMCOp7ro5XrBmmQhLgCEgPCUILvhQWN0dUSOo
-	=
-X-Received: by 2002:a05:620a:438e:b0:7c5:53ab:a74c with SMTP id af79cd13be357-7c956e7a968mr299385485a.10.1745487586710;
-        Thu, 24 Apr 2025 02:39:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH8jnKxL7E7dGye9CmktSI0DSfoKsAN0FjpOYzJxhooQSxBRnV8KWWUfkIDlgbYRG+Pw0Rmdw==
-X-Received: by 2002:a05:620a:438e:b0:7c5:53ab:a74c with SMTP id af79cd13be357-7c956e7a968mr299383785a.10.1745487586416;
-        Thu, 24 Apr 2025 02:39:46 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb7f1asm169674e87.237.2025.04.24.02.39.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 02:39:45 -0700 (PDT)
-Date: Thu, 24 Apr 2025 12:39:44 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Maulik Shah <maulik.shah@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Melody Olvera <melody.olvera@oss.qualcomm.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: Fix PINGROUP defination for sm8750
-Message-ID: <r542y5lcoymvykl5fdayjocvysrvzli6xlhcqjrwlpszucmaoa@ewwbbpynggnl>
-References: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
+        d=1e100.net; s=20230601; t=1745487611; x=1746092411;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GsdYiir2/QPJiZE91FucRo493WTjvg2844/jPSOuFnc=;
+        b=axlkG8IfYigqE0m8u8Zto1Enqx/caWb4ZDLuMXz1BaWsojw3bEAEN+uY5S83hqbxqY
+         ZjpUfjQb1iCXkXkt00r+Y7+awLu1ERgGZ2hy600dybDnOCJdEYXidRNoFjqTQ4Xn7XK+
+         UrKgoywsxbhMbS9XQYCerxY3A5A2GtfjA7S3cVhanX+oRJkgqHFdDbmH5FgxTuLjQrso
+         dxNQyMAqoUM3D4I7Boq7uwjw8SIu+3OyXLeMbfcWkzN9xisElx8aoM6q4UNtuJeRPEF9
+         INX8Ywv45rBmFpzx5aW3N3QoF7rQHluL0/KQdKJxxehOgnB8QG3aBMlyp1NCOkqEtMBv
+         1dIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXio5GsM+QyzqX1rgqf3iynuwBVnaoKGVCmT5k8MXs5l63+HZZz96deabTlHQermMCPtvyBWUgP66J9KQQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl78YYgU+2MYJ8a0T3GL6kayfIjepGQFaOXrGcAXN5B7udmXsC
+	X3zQublh6iRIorJ8z8Fo47bM4U14Fjn/eOEdsOI5zDAqdbywg/LvuddhQn+rLLw=
+X-Gm-Gg: ASbGncvY4ozjlOOflzvjuY71SCF+IP1rg+Tz5m9atqp2aZFBDVkp8MApeBaSF8ZZRls
+	OD80cR09c/l/HA+IcIy0LLKgsrBmQLD3C8m7FsfpXDuDXIABp+xnSrfQW2SczyZ9oZYHiP8QBUg
+	qvODdNiJEfAf1/AOXAkkr0X8xuv6IIY+2fCUuMjqttMka1DY3nokOCt5JJV430cI42YBZzVDJMk
+	NFDd96QBLkHcNSNLWBtDDzi5c2qq/r2A9ShTlkoAlCO13TOpfA75Qpjz68yJsXNDEGykZ3Tha6b
+	9bpEHLbrYXXS6DherfYa1FZjs9pZMBemx/Dhx6HvsKpOQGwEd46+KPYPLJeU5ENCQKZdYtr4lfI
+	OvQbJ4qhk1txMr0mHtg==
+X-Google-Smtp-Source: AGHT+IGbKzH+UdHoa8Vh4y2Ra8BSslqvY1MacnDBCVBoNcCm+y48fIa9KnJUakAXtxUbplXif8s16w==
+X-Received: by 2002:a05:600c:3482:b0:43d:94:2d1e with SMTP id 5b1f17b1804b1-4409bd23196mr21055935e9.13.1745487611286;
+        Thu, 24 Apr 2025 02:40:11 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:a24a:bfda:f031:720d? ([2a01:e0a:3d9:2080:a24a:bfda:f031:720d])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2b77f9sm13631535e9.25.2025.04.24.02.40.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 02:40:10 -0700 (PDT)
+Message-ID: <094c0d7e-7b24-405d-8e44-c981100383f1@linaro.org>
+Date: Thu, 24 Apr 2025 11:40:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424-pinctrl_sm8750-v1-1-b070790ccbce@oss.qualcomm.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MyBTYWx0ZWRfX1GARRbmFMNu5 MGdIGOLt7vyz0ccQ60NwLIBjCfppmzMq4p/E06/wvF3P3GlSH37Z1hGxgt0mMo0bld/VvfEeY5k LGq91iE/jDMoF9hQ/W0KIcOtOxc5IsZpq1r4gKIC/VGTScJgtBQM8xmcLCVCdlLIlQiz0zDJFfK
- pvI1H2J1Nw3+pmOn89CPxzvVdYe+m6jpovCKkXTKr6OVc1PG9SlWDLVhZ1VLvI7fRYDY8k9JYw6 WTbyhvSGQTN2Op+DI60MDcbAEnm44ld0AXcCDTCui5n6XswWku4RgKEiV/ciO7glbenWoTb2MlU blsIkZ3UzumnJ8DjcmmQiqeR12ouEWNyLPCSGfwkzd4lZ0Dmaj7dq1EBhklDDqaCwT1u6h8u50V
- AMAwnaEb5XSZKGZ2JtIFV2RZ3gA3vp6L3PMB355JOpd7TwFeQOLsTfikGVBl+E9X0XcSE2Oi
-X-Proofpoint-GUID: eXM6c8XCYIaA8h1aNjzd00CNS5ZvmzpK
-X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=680a06e3 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=hy4lFNwNYWihUDc_pIEA:9 a=CjuIK1q_8ugA:10 a=bTQJ7kPSJx9SKPbeHEYW:22
-X-Proofpoint-ORIG-GUID: eXM6c8XCYIaA8h1aNjzd00CNS5ZvmzpK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=630
- lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240063
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v6 0/3] Add support for Amlogic A4/A5 Reset
+To: Kelvin Zhang <kelvin.zhang@amlogic.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Zelong Dong <zelong.dong@amlogic.com>,
+ Conor Dooley <conor.dooley@microchip.com>
+References: <20250411-a4-a5-reset-v6-0-89963278c686@amlogic.com>
+ <ef1ac07a-09c5-4f8a-89d5-44d232f8ae41@amlogic.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <ef1ac07a-09c5-4f8a-89d5-44d232f8ae41@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 10:17:10AM +0530, Maulik Shah wrote:
-> On newer SoCs intr_target_bit position is at 8 instead of 5. Fix it.
+Hi,
+
+On 24/04/2025 10:32, Kelvin Zhang wrote:
+> Hi Neil,
 > 
-> Also add missing intr_wakeup_present_bit and intr_wakeup_enable_bit which
-> enables forwarding of GPIO interrupts to parent PDC interrupt controller.
+> Are there any improvements needed for this patchset?
+> Thank you for your review!
+
+No, waiting for Philipp to pick patch 1.
+
+Thanks,
+Neil
+
 > 
-> Fixes: afe9803e3b82 ("pinctrl: qcom: Add sm8750 pinctrl driver")
-> Signed-off-by: Maulik Shah <maulik.shah@oss.qualcomm.com>
-> ---
->  drivers/pinctrl/qcom/pinctrl-sm8750.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> On 2025/4/11 19:38, Kelvin Zhang via B4 Relay wrote:
+>>
+>> Add dt-binding compatibles and device nodes for Amlogic A4/A5 reset.
+>>
+>> Imported from f20240918074211.8067-1-zelong.dong@amlogic.com
+>>
+>> Changes in v6:
+>> - Rebased onto the latest v6.16/arm64-dt.
+>> - Link to v5: https://lore.kernel.org/r/20250320-a4-a5-reset-v5-0-296f83bf733d@amlogic.com
+>>
+>> Changes in v5:
+>> - Rebasing on top of the latest upstream changes.
+>> - Link to v4: https://lore.kernel.org/r/20250313-a4-a5-reset-v4-0-8076f684d6cf@amlogic.com
+>>
+>> Changes in v4:
+>> - Remove the superfluous 'items' in the dt-binding.
+>> - Rebasing due to recent upstream changes.
+>> - Link to v3: https://lore.kernel.org/all/20240918074211.8067-1-zelong.dong@amlogic.com/
+>>
+>> Changes in v3:
+>> - rebase on 'amlogic,t7-reset' patchset
+>> - Link to v2: https://lore.kernel.org/all/20240715051217.5286-1-zelong.dong@amlogic.com/
+>>
+>> Changes in v2:
+>> - remove 'amlogic,t7-reset'
+>> - move 'amlogic,c3-reset' to the other enum list
+>> - move reset node from amlogic-a4-common.dtsi to
+>>    amlogic-a4.dtsi/amlogic-a5.dtsi
+>> - Link to v1: https://lore.kernel.org/all/20240703061610.37217-1-zelong.dong@amlogic.com/
+>>
+>> ---
+>> Zelong Dong (3):
+>>        dt-bindings: reset: Add compatible for Amlogic A4/A5 Reset Controller
+>>        arm64: dts: amlogic: Add A4 Reset Controller
+>>        arm64: dts: amlogic: Add A5 Reset Controller
+>>
+>>   .../bindings/reset/amlogic,meson-reset.yaml        | 22 +++--
+>>   arch/arm64/boot/dts/amlogic/amlogic-a4-reset.h     | 93 +++++++++++++++++++++
+>>   arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi        |  8 ++
+>>   arch/arm64/boot/dts/amlogic/amlogic-a5-reset.h     | 95 ++++++++++++++++++++++
+>>   arch/arm64/boot/dts/amlogic/amlogic-a5.dtsi        |  8 ++
+>>   5 files changed, 218 insertions(+), 8 deletions(-)
+>> ---
+>> base-commit: 4bc28af2da876531e5183d25ae807e608c816d18
+>> change-id: 20250313-a4-a5-reset-6696e5b18e10
+>>
+>> Best regards,
+>> -- 
+>> Kelvin Zhang <kelvin.zhang@amlogic.com>
+>>
+>>
 > 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
--- 
-With best wishes
-Dmitry
