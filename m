@@ -1,35 +1,35 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 104FD1B0435;
-	Thu, 24 Apr 2025 07:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FDB1E8837;
+	Thu, 24 Apr 2025 07:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478762; cv=none; b=NOCmOopLFgCfXQYhQjgulQh+Kc0lrENPXAi4r173vFukC9bQauuO60IT2k12TSycwDk3OITLP54xf0Z0heNqqtqFAL1GDlH4ZOwqal1OK6Ccg+8ZgxE+MiYUDYWzIDZ291UbyMQM27enYUtd7RIf1lem/87VTtI3aIzVOmT/4pk=
+	t=1745478764; cv=none; b=kcOE9DA56b+Ov32qncJ/9YPhgmA5+iwD4hW5f+xvBuIJqj7mnpdJkmldsE9gVXCwdSnnDJxQYxTjUGxPILmwdyueJXDEx+RfRhI57a83pu2Et1t3+cHi12rxdXGEY9tbv7rblfFeVc9M082498bhUFZK2afuQF6RyEYettoSIzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478762; c=relaxed/simple;
-	bh=6tjEakqv5fsD7Ej9NDKa72pjoet5ozkAR8oFhxZBnmo=;
+	s=arc-20240116; t=1745478764; c=relaxed/simple;
+	bh=Nket0V+2rHL7XX8pB1qYdHZxQcoaPLfZHv8WxRVn1SE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AXdwnM2FxhwHL2m1zsMKbigib9kMWIFdlhiYTxTo1ySWVJQBNZrU31VE0FRLQwJZ+RNk2l/zqPafEU6Few2jQ+trbzjKRQ+5PwJ/xRmO43SezkLV4DSwhA4GwHm94MAuHZj8zkJ4sYGOdNo1D46cMGO7ONycvyfJ34K/74uY/hY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=eBft+tOC; arc=none smtp.client-ip=217.70.183.197
+	 MIME-Version; b=rV/g2uHgku6601kseD0ZX6obqTjR4/C5SpdwNxYQxI8u5Q12depXC4APBnOCPnqr5G+hQD7bbtKiA6/qunDLyHOFY/pN9DJqoPq8SMrOCP1jSkW0uIrcTUPI/dyEtu3TfHQX9i66BJXfJF7/nESCvhYplx6LBLmPzEzEZr0v/Ok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QVxFnV4n; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="eBft+tOC"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E87E043A53;
-	Thu, 24 Apr 2025 07:12:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QVxFnV4n"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 950CD43A3B;
+	Thu, 24 Apr 2025 07:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745478751;
+	t=1745478753;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Yf9IdbuXbTrGB+Jor2tK9mk/PmZX/yXtOromeytnBF8=;
-	b=eBft+tOCa2YXhCv05v4dwM3bKfKD6lWPPPnA2h7zJ0Gj8ZrCNoc4Av1+xvB2Qyan5X7fu2
-	JygaDBWuYgEdUg9Bky5hrTVPpi40dK0SjRxqpQuw72HTmhV9OEGKQd0ayMM8/02LhiwL7a
-	sH2/ECIq4RIZKe/W26EKxpx3QvA+N3WkjeNA1ZHkqJ+S2JKUj4DBpfTS0hKBeP8GIOyuYg
-	L/8hkxvlb4L07/n0hEe/yDTDcwFu8o1RZ8OJzMVVZ50I6gOeUNluHk6jz2+JrBF6nqO2/z
-	0qikMOCHd8c0nkmJapxw4MgulPupvmK+/pS40jKrNvp1s8o+pE0VG2hnrzxboQ==
+	bh=ycgJR5zEjmvD8nS6gQ3Tfwq4cma6r3cAZuNgLAzZkLY=;
+	b=QVxFnV4nnmjm0W6PgA89ziic6glf/WhsXppf1wp5l1jwnTD/c5TE9YqEwMubYbqUSQsGSk
+	zpfgnzEklh2h+PVnY22d6I2CGvXRkzNBtlKRkfnyLCkBCklpc0rksJndomBtmWzi8q0TBi
+	Xk2xQbWFN+j5W74mLv+rkcnnM7/pvW0rHiEaQWwgnTYudMfVtqJRjPXRaKTYXgNCAhh/xG
+	TtSBHudzUsIImDHnZmUBMpVItw643TnfefToCCZEXW/NYO48mohjF2OQoS20SN+RbSzUAC
+	bqia88SdKtqM1kFLNOm31LIdpZhB6+Mi0AXAnu2Kd0bOxK7AD4AhYmX9eDXLGA==
 From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 To: davem@davemloft.net,
 	Andrew Lunn <andrew@lunn.ch>,
@@ -46,9 +46,9 @@ Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-arm-kernel@lists.infradead.org,
 	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH net-next v3 1/3] net: stmmac: socfpga: Enable internal GMII when using 1000BaseX
-Date: Thu, 24 Apr 2025 09:12:20 +0200
-Message-ID: <20250424071223.221239-2-maxime.chevallier@bootlin.com>
+Subject: [PATCH net-next v3 3/3] net: stmmac: socfpga: Remove unused pcs-mdiodev field
+Date: Thu, 24 Apr 2025 09:12:22 +0200
+Message-ID: <20250424071223.221239-4-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
 References: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
@@ -65,31 +65,32 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekkeegucetufdoteggode
  hepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
 X-GND-Sasl: maxime.chevallier@bootlin.com
 
-Dwmac Socfpga may be used with an instance of a Lynx / Altera TSE PCS,
-in which case it gains support for 1000BaseX.
+When dwmac-socfpga was converted to using the Lynx PCS (previously
+referred to in the driver as the Altera TSE PCS), the
+lynx_pcs_create_mdiodev() was used to create the pcs instance.
 
-It appears that the PCS is wired to the MAC through an internal GMII
-bus. Make sure that we enable the GMII_MII mode for the internal MAC when
-using 1000BaseX.
+As this function didn't exist in the early versions of the series, a
+local mdiodev object was stored for PCS creation. It was never used, but
+still made it into the driver, so remove it.
 
 Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index 59f90b123c5b..027356033e5e 100644
+index c832a41c1747..72b50f6d72f4 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -256,6 +256,7 @@ static int socfpga_set_phy_mode_common(int phymode, u32 *val)
- 	case PHY_INTERFACE_MODE_MII:
- 	case PHY_INTERFACE_MODE_GMII:
- 	case PHY_INTERFACE_MODE_SGMII:
-+	case PHY_INTERFACE_MODE_1000BASEX:
- 		*val = SYSMGR_EMACGRP_CTRL_PHYSEL_ENUM_GMII_MII;
- 		break;
- 	case PHY_INTERFACE_MODE_RMII:
+@@ -59,7 +59,6 @@ struct socfpga_dwmac {
+ 	void __iomem *sgmii_adapter_base;
+ 	bool f2h_ptp_ref_clk;
+ 	const struct socfpga_dwmac_ops *ops;
+-	struct mdio_device *pcs_mdiodev;
+ };
+ 
+ static void socfpga_dwmac_fix_mac_speed(void *bsp_priv, int speed,
 -- 
 2.49.0
 
