@@ -1,171 +1,92 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11F54315C;
-	Thu, 24 Apr 2025 15:28:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1F64315C;
+	Thu, 24 Apr 2025 15:28:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508519; cv=none; b=a1clfs6i6WCOzZCpWHo12ewEQwukM6aX10HkzOHpYa3fUZoaCGTu5lo8sJzA6/IuRdpXjOfcwFqtF4n+mGkicvAnQC5KeXuRau5x/ncN2gRBhSLkyHdp9+omt9kzHYBO1nv7zqs/pq7GS+fqPGl3tlpoeWeM/2GJ0TELryfqJjc=
+	t=1745508524; cv=none; b=czLOCSpFEIFWnBkq3z34i1nigDVvWps5UhUDZiqLm9FSdnqrn/vwgm3OxgT8uGyhLNim9mw6AFYkSCel5/4MB8xoC7aeG4KMjwQdtF1UQFfIbh457iERJVKwUS/+ZKL9f5noJyF2xKSMSflZEzSmWY2L1D3rdtMkacehFBDJ+E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508519; c=relaxed/simple;
-	bh=7i67DHTTp0mD9qhweNExe/vd7EB2jhk7sH0q8SWYgGQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EBcRSsMTyZByVnKMzHlx3nQHEeY5mR5Zyh01FU/NR4ZdBvyeVAWcn7YgQEPAxJGGrySVePs85/mDkUt75zyKBTEYbA/9mjxIUz70G5O5FPnsCR7jyWU96VgeA3UcS7z46aLBQeQ2EhtznUWWEfztFvzVflKvOTR+gT5IRnc/vgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UZa6MpPp; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745508524; c=relaxed/simple;
+	bh=Euv6tom3fZIqVEpTEjRQbUyHhU+/a5Q3E4Z5AiMuBNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kj02iGamtPcQ9Jyvyw3BZyg61oEcJFvinIotyAVzXCLfTJKYHJ8gtusWtF/Kd6INfGmRTQNg45Ft+cRFVrlAuakubDV6grSd2dxHLF06o/0x42vlXuKBEWP2PQP6dXWGOtH5tyIzEwNanfkfSBnSnbCFNaRhYpkT03TRn1tkorI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GrxRqP8P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZa6MpPp"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c55500d08cso123660785a.0;
-        Thu, 24 Apr 2025 08:28:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745508516; x=1746113316; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hxUaLc+eAAOlr10PhVJK/e76IalwRfvS586Oa3BeZcE=;
-        b=UZa6MpPpUUf6CIAP4OUYJFTU/f15c4LyeVd2hqjsLeh32z9mLIXFOa2PoFsDS837I+
-         8z+/ST40n7WO4+JupU3tPVcjStWzrqOtX5xbzFQ3KAnHXKJYgzDVLU9cnNBvrYsoTtsB
-         +dkxNVx3QNZPK35FGvMFbl2JA+iit2SpRPkxRimQevq8BYQMss7mnRf9VjlZnsNcEoG/
-         krPcUNJRX6JIJKbKiQliKg+3WDVXFLQcoYNIyO3fgzOd58KE07IQWWVoJw8OQz5//dN6
-         bbSczN6whInWa4KX4okQgG5llhXnSQM7Lfascwa1ddcgcIl8vPanI8rPAx/zQ8GIFPUl
-         QQTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745508516; x=1746113316;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hxUaLc+eAAOlr10PhVJK/e76IalwRfvS586Oa3BeZcE=;
-        b=gjPeW38+gNkwqOUvAN15hUG3MS4mvVNBHorpEXXLj2P3L4qbm3CnXnXt4ATkAHjrHQ
-         RcC5k8zYdL2q8A4eXAKLbbBNG6RyppXBeYsboI+wpI+BGZJZiCIPTQNSwM2t4SyErtrX
-         HXkff+Ngd55oF4O8W8bNKyZwdF7CznmK6c3EMGnZk/RaHlICdKM9oijVwNiqek710JP/
-         e4FeLYGlQbO25APVfoq8c4tEvSzC3zC6AB1TAeQWufDlG6PMvsnAOqdYWUSoxpLW5I7u
-         XTNYtZlZZsjiuPiHUTKoD9OnBuMVpDVcHzKWPzev1d5/sQJ5DxhiRcQjYHdgsIq1iGoa
-         ktHw==
-X-Forwarded-Encrypted: i=1; AJvYcCU/uPFP2jF2RunWORcbSnoS4KIvS49qQJ3Z92eG5r2RmNlrpavZmY8x3kDDyURRU+zNT7GpXYR33lDh4fY2@vger.kernel.org, AJvYcCUVRVuLYOPGmk1fjrdboznUSYsLx0z7RY8rv2e7MIM6GBT86rUgKlFxQddEu7Jl07wyqfqCvLrVOeKRBdT2@vger.kernel.org, AJvYcCX7K1AqMOnDaE/OBJLd7nyIrNnAoukq2xOBCJyKrNYjiRRbXWrwWD6kYJf4u9mss50sdSItbs+t2A==@vger.kernel.org, AJvYcCXUZqhgWaThiDghSHjo2w+UxRCK+bGv+nCCoy7AZZG8LNPNQze62aDdRbzDm3wQ70KS0Bm70aN2C9K7y5KmhTAIXgculxa1@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPHlBb/OMzWHXRoqgUN3OeHOCiCDF5LAtKmCgu79jcD1PwZCDw
-	V0wajeP8HGDuteiWtV1rLVl6FXuyeluA3dBnX14jdme8erjwB+5OhVow02Q+
-X-Gm-Gg: ASbGncuXhfFqvSKIniVs4W4fLw5mslHRaNaukx3t935ZBgboiv1dhTZRSH6gs+/+VJp
-	DDb0MWAu6s3O9epxWUt/qZ0mfxAq2DQ4xucsFuHU4Ws9ADzNDg9/mK+xZNKsP2fu86/4kR1AuHd
-	MKw6AKlIGAv5Z99dAWi2rtpYdJ5Voo/SMW5dXIFuMtIpkeD7CiAgDCgss31SgkHOJmi9/aHtijv
-	eBAFz29P8sn30HKzHxrctogLA3AgYV4Izf5x2OxWtN1ptZmTmRFa3nXHMO1XlwEyuMqqRFJlJh6
-	YBT3kpV+w7JgkdGMt1lPBOnBoSLAJ7Zci7ToPiGs+h0wAxlqdtzXR72K6xIIRKCqDWiFhtwOHOA
-	VAi1g+5G/3/d5FUq7eNHRSK8gBy52rmLzMJxHX4um15768hTNjJ4HTUJEQiEwvz5WyzhI
-X-Google-Smtp-Source: AGHT+IHuVep7wcdvkBt64FmXooKgNcSCpYuvYwk+/ttIsu2FF0Lr5ouXgL7PRcjfHKFl1Bw+Ee36aA==
-X-Received: by 2002:a05:620a:4382:b0:7c9:50a6:8595 with SMTP id af79cd13be357-7c956f0026fmr485281385a.28.1745508516460;
-        Thu, 24 Apr 2025 08:28:36 -0700 (PDT)
-Received: from fuse-fed34-svr.evoforge.org (ec2-52-70-167-183.compute-1.amazonaws.com. [52.70.167.183])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958c948a6sm99295085a.18.2025.04.24.08.28.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 08:28:36 -0700 (PDT)
-From: Stephen Smalley <stephen.smalley.work@gmail.com>
-To: 
-Cc: paul@paul-moore.com,
-	omosnace@redhat.com,
-	selinux@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] fs/xattr.c: fix simple_xattr_list to always include security.* xattrs
-Date: Thu, 24 Apr 2025 11:28:20 -0400
-Message-ID: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GrxRqP8P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6117CC4CEE3;
+	Thu, 24 Apr 2025 15:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1745508523;
+	bh=Euv6tom3fZIqVEpTEjRQbUyHhU+/a5Q3E4Z5AiMuBNQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GrxRqP8PlUoaiYbRXy4O7PJv2OfyiR2e4+i4zK0vKA+0iymFhjn9CPp5sM/mmx7WV
+	 wfnMR8dDwpxcrrbOhWSbGV6i1SJ4+oKsrHiHwhZISaNczapcZR+6ODAW0ZSieSPvlZ
+	 37Chbr+LQvH4/ttgnpq3ApNGBgp44iJca7zST2wc=
+Date: Thu, 24 Apr 2025 17:28:41 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: He Zhe <zhe.he@windriver.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Guenter Roeck <linux@roeck-us.net>, shuah <shuah@kernel.org>,
+	patches@kernelci.org, lkft-triage@lists.linaro.org,
+	Pavel Machek <pavel@denx.de>, Jon Hunter <jonathanh@nvidia.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+	Slade Watkins <srw@sladewatkins.net>, rwarsow@gmx.de,
+	Conor Dooley <conor@kernel.org>, hargar@microsoft.com,
+	Mark Brown <broonie@kernel.org>, Netdev <netdev@vger.kernel.org>,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 6.1 000/291] 6.1.135-rc1 review
+Message-ID: <2025042404-playhouse-manual-85bd@gregkh>
+References: <20250423142624.409452181@linuxfoundation.org>
+ <CA+G9fYu+FEZ-3ye30Hk2sk1+LFsw7iO5AHueUa9H1Ub=JO-k2g@mail.gmail.com>
+ <2025042443-ibuprofen-scavenger-c4df@gregkh>
+ <e77b24ce-e91b-4c90-82d6-0fa91fcce163@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e77b24ce-e91b-4c90-82d6-0fa91fcce163@app.fastmail.com>
 
-The vfs has long had a fallback to obtain the security.* xattrs from the
-LSM when the filesystem does not implement its own listxattr, but
-shmem/tmpfs and kernfs later gained their own xattr handlers to support
-other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
-filesystems like sysfs no longer return the synthetic security.* xattr
-names via listxattr unless they are explicitly set by userspace or
-initially set upon inode creation after policy load. coreutils has
-recently switched from unconditionally invoking getxattr for security.*
-for ls -Z via libselinux to only doing so if listxattr returns the xattr
-name, breaking ls -Z of such inodes.
+On Thu, Apr 24, 2025 at 04:34:04PM +0200, Arnd Bergmann wrote:
+> On Thu, Apr 24, 2025, at 15:41, Greg Kroah-Hartman wrote:
+> > On Thu, Apr 24, 2025 at 07:01:02PM +0530, Naresh Kamboju wrote:
+> >> 
+> >> ## Build error:
+> >> net/sched/act_mirred.c:265:6: error: variable 'is_redirect' is used
+> >> uninitialized whenever 'if' condition is true
+> >> [-Werror,-Wsometimes-uninitialized]
+> >>   265 |         if (unlikely(!(dev->flags & IFF_UP)) ||
+> >> !netif_carrier_ok(dev)) {
+> >>       |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Odd this isn't showing up in newer releases, as this is an old commit
+> > and nothing has changed in this file since then (it showed up in 6.8.)
+> >
+> > Is there some follow-up commit somewhere that I'm missing that resolved
+> > this issue?
+> 
+> I think the difference is commit 16085e48cb48 ("net/sched: act_mirred:
+> Create function tcf_mirred_to_dev and improve readability") from 
+> v6.8, which adds the initialization that 166c2c8a6a4d ("net/sched:
+> act_mirred: don't override retval if we already lost the skb")
+> relies on.
 
-Before:
-$ getfattr -m.* /run/initramfs
-<no output>
-$ getfattr -m.* /sys/kernel/fscaps
-<no output>
-$ setfattr -n user.foo /run/initramfs
-$ getfattr -m.* /run/initramfs
-user.foo
+Ok, that didn't apply cleanly either, so I'm just going to drop this
+backported patch and wait for the submitter to fix it up and resend it.
 
-After:
-$ getfattr -m.* /run/initramfs
-security.selinux
-$ getfattr -m.* /sys/kernel/fscaps
-security.selinux
-$ setfattr -n user.foo /run/initramfs
-$ getfattr -m.* /run/initramfs
-security.selinux
-user.foo
+thanks,
 
-Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=iOawX4y77ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
-Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.smalley.work@gmail.com/
-Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
----
- fs/xattr.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/fs/xattr.c b/fs/xattr.c
-index 02bee149ad96..2fc314b27120 100644
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -1428,6 +1428,15 @@ static bool xattr_is_trusted(const char *name)
- 	return !strncmp(name, XATTR_TRUSTED_PREFIX, XATTR_TRUSTED_PREFIX_LEN);
- }
- 
-+static bool xattr_is_maclabel(const char *name)
-+{
-+	const char *suffix = name + XATTR_SECURITY_PREFIX_LEN;
-+
-+	return !strncmp(name, XATTR_SECURITY_PREFIX,
-+			XATTR_SECURITY_PREFIX_LEN) &&
-+		security_ismaclabel(suffix);
-+}
-+
- /**
-  * simple_xattr_list - list all xattr objects
-  * @inode: inode from which to get the xattrs
-@@ -1460,6 +1469,17 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
- 	if (err)
- 		return err;
- 
-+	err = security_inode_listsecurity(inode, buffer, remaining_size);
-+	if (err < 0)
-+		return err;
-+
-+	if (buffer) {
-+		if (remaining_size < err)
-+			return -ERANGE;
-+		buffer += err;
-+	}
-+	remaining_size -= err;
-+
- 	read_lock(&xattrs->lock);
- 	for (rbp = rb_first(&xattrs->rb_root); rbp; rbp = rb_next(rbp)) {
- 		xattr = rb_entry(rbp, struct simple_xattr, rb_node);
-@@ -1468,6 +1488,10 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
- 		if (!trusted && xattr_is_trusted(xattr->name))
- 			continue;
- 
-+		/* skip MAC labels; these are provided by LSM above */
-+		if (xattr_is_maclabel(xattr->name))
-+			continue;
-+
- 		err = xattr_list_one(&buffer, &remaining_size, xattr->name);
- 		if (err)
- 			break;
--- 
-2.49.0
-
+greg k-h
