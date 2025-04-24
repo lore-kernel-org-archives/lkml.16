@@ -1,176 +1,197 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B8EF290BC9
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 22:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8579C14E2E2;
+	Thu, 24 Apr 2025 22:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745534313; cv=none; b=d30VGwZwrvRDXXcnSYwqcFBA5U5BshYosfMXAs67Uut3IkQiA+6qMiWaq8O1/Vc6d4MN/LgiLJ73kvGMa0geTrCtsEpqjq2JE0feMcV5t/ExSk3JV43HCcpG5QlLhkKX6hzDBU97BA6hBKWgxhTNKtM+VPioaafxzW2r+754+RA=
+	t=1745534435; cv=none; b=MQTQvJyChBoiCmW1JDotdnuYfru7Jg9ckN97bO8Pr4cu4p3l+82bjxrMmHvGDhaW6PJQntWsUFTiPqnfGQRP23OtIMAlgHkxOb7GfTwSbrb6Q53d8jO9LoWwT/tGBa+mbc9UpXF8ik88LsoZeYsoQ7W4APpKuIHw0FkPq1R5i0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745534313; c=relaxed/simple;
-	bh=SuVGuLPWXRTw2XBo3wLqRg4mWBMzlan/Fdd/ceeK+m0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uVBfituQkcbNx+c9y3IDmw2VyR+0wt67ypG/1yQZnwBeaVPh57+vvX6Aa5UlGaZEVAsl0ih+Mt1aPysYRqhltRFYBDjzYGQxaPMN3JaUsYRAGCM7dxJK7lIqEmlk8ZZJMEbdbySEZjCPdrGly7Y84K5OFdflOcTW7b+nPCaAqDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DjF4h2bx; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745534435; c=relaxed/simple;
+	bh=v5/+UAKc9qT69qSy9qPG/eu0NlxYHHKNbbJhCwkRNsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=feswkFn+DWzbMjjYMYVdsc9IrJIWbMHBt/NZwVxRMG3KeqgidQzwsi3A/rcMUDy7rSA5p4PI+wB4c0eTfzQIK7zZkCogG/jlys4uU6j1XMdCoijuSoaIlsP4BJj0QfQFMmzll82wbDiBokBH97O6vvcDY1U3Viye6jtP58TBON4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iZmh21Gm; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DjF4h2bx"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2bdea5a38so250612666b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745534309; x=1746139109; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wZs76uIchCrwsJqCT+S4BB1Qj4mv/z4p+yQgfmNcgZA=;
-        b=DjF4h2bxiQf7IzaFxoAzQ/OxMmKrJyXftVIgMGXX5e3e7SQd69cF/4CL7dfmS6Cfpa
-         bnE2aitQ8hOlcB6Lsy4QuFkAevTRF/T3jk4cIeF5nk4ZPRLlakvfRcxbeZQsQms9ZwM9
-         FA4zkcykZO3qjt3sJCcuTUp9b9UCEX8QXapTihakX3fHtfQuEBT92AXlHDAez9BfErUO
-         fJzvTIuVCagTeJPfT6PDO2MFJpX3gXWsUy0HljG3nHeoqcRpa533b7IqL9oZflyarAu2
-         OCT5illL6FIjPj11B6mgq5iHFEw0/sljgXxM3fLbNFw6Sm1t1gZvJNbMqcVNSP2G5rHY
-         quJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745534309; x=1746139109;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wZs76uIchCrwsJqCT+S4BB1Qj4mv/z4p+yQgfmNcgZA=;
-        b=oQjt5kvknLz+ohBdwezLCAU55FujJTD23Dk3ezWZtLaY0NacNkeiZaMNpaFQu9efqQ
-         cVDl7wbHc8oP1LP2YL+50rss+AntPHZQLbnVGtbsMw+DHlIUb9ITY6HkqR8AIDE4KXrW
-         RDTq5XGhh/h26Fh54vHHZR8eJ52z73+rOU1ROE4hDMgYAGaClKog7T9wS5lesmf/9eO8
-         BfoaO7xF7eyPf1P7UT/jLedxnVudb5noIhMI2F3ebvd449T7Wdr/OXVIA8aARbK7LMK+
-         Y/IQUp8vVImsm0rk6DsUCWQle60uibMddknUhl+hnU+XFtHGXA1ZsHskXHAXxQjyNSVZ
-         zxVA==
-X-Forwarded-Encrypted: i=1; AJvYcCUtMHnd+W7q/2GOqV3EeLXp5iFrqTMohlq1r+KWrcPKUXIviNi0jBe9NsjUr8tWeVMeeqvvvgdhArRHqNk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwI1UO3cyO94AsHw4+KulWVUvW745tYXlGvT0Jx0sQUV38TKA9b
-	Cj4AyAyf2uLO8Ko+EQZAZbPBhvjPYys/zXZgj80R47fC5kV86+P1kjMeuICJ+etOOUrwE0VypF6
-	EDnCl4AU3DOvrWH6TSzon2vcoMZYJbGxAGKUTbJz3dMDibFmX8Are
-X-Gm-Gg: ASbGncu+gmPwuNgkUv6UYPUuQf2fhlPU2Z5fN9EyNXfPs2UR1mofC0ccsY9sqwbuux7
-	ZgsC+hv1IyJzAjvNxnwoTppjaczbCBqPdEUctGM6QU9nJH2TrOjrCn8vWdw2XgbHnDMytXQsQau
-	uocntfCAJ5BPgs01/C01nwM4JuL87KSBoMpBCebj9PH22Z9Cc=
-X-Google-Smtp-Source: AGHT+IG3MnYI0bmjFs1Ub5SgzwgKFOkJr0O/+0+ozMNFTj0WeOHAT3DtP/7YoC7pgKXf1I2Z6zt0Gnvi3S4GULDzMcw=
-X-Received: by 2002:a17:907:1c29:b0:aca:95e7:9977 with SMTP id
- a640c23a62f3a-ace7113336fmr17668566b.28.1745534309428; Thu, 24 Apr 2025
- 15:38:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iZmh21Gm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745534434; x=1777070434;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=v5/+UAKc9qT69qSy9qPG/eu0NlxYHHKNbbJhCwkRNsM=;
+  b=iZmh21GmZzTJPSHtrqtqV/YVSjJFOpRN/4z96x+0xt5Dc4BQFngNVfM3
+   RrvnxT3bZhrZmwe9dqp3eXEiYapotTP08eKIFBLlkppllmiOKuVD2iesS
+   rUT6JvYtR4/07xbBaN4rUbaN2kpnHI4pgDjt2FkwHrgESJSALHZvMiLaJ
+   Lc+2Bk6EmTG7eEFrr5u/nZQy616ldM3Q2TgFpNUv3/4WiRxFUUbXCZhcU
+   RhGCjVynN6SgBOYC9EFHuyQBhOCzqqUmb+SzGnECN3KAhIv4F5MxvQLfP
+   dy+VS7xwUVk/5NVb8cBIMokfkufs4cdzggAPFJ5dowAdAy7JCHLZtTBs8
+   Q==;
+X-CSE-ConnectionGUID: VL7W81txTHeYAU/lVYX3Kg==
+X-CSE-MsgGUID: FJj/6U6aTWWvuCkiqQ1hNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="47204980"
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="47204980"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 15:40:33 -0700
+X-CSE-ConnectionGUID: 4TX2q2ACSeq1fI3IZjbhwg==
+X-CSE-MsgGUID: /ZpJP2SFRXunevsJLKTCAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,237,1739865600"; 
+   d="scan'208";a="132482508"
+Received: from puneetse-mobl.amr.corp.intel.com (HELO [10.125.108.124]) ([10.125.108.124])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 15:40:32 -0700
+Message-ID: <a6e386bf-c9d4-4b3c-ad6e-dd1689330782@intel.com>
+Date: Thu, 24 Apr 2025 15:40:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250414173921.2905822-1-ctshao@google.com> <CAP-5=fUJip8odShuUVCnwQg9MrMLVdCWjGdSFfUxWubfQYBy1g@mail.gmail.com>
- <CAJpZYjV1Z_A08A1GSTLZwo7BCaJNGGD+Q06w2A1Uc9p1ihT=Tg@mail.gmail.com> <aAo0IoT0xV4HysKk@x1>
-In-Reply-To: <aAo0IoT0xV4HysKk@x1>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Thu, 24 Apr 2025 15:38:15 -0700
-X-Gm-Features: ATxdqUGxnFHYMdiH6QdyUK2sRPf3xTXG6-Dub1uKAhq18MriPRC1xMgHBDQMQVA
-Message-ID: <CAJpZYjUrScM=zh8yTu5GV8AK3zG6wVCa_9OYXmsfk10HYpgaTA@mail.gmail.com>
-Subject: Re: [PATCH v4] perf report: Skip unsupported new event types
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, 
-	Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org, mingo@redhat.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, dvyukov@google.com, 
-	ben.gainey@arm.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/1] iommu: Allow attaching static domains in
+ iommu_attach_device_pasid()
+To: Jack Vogel <jack.vogel@oracle.com>, Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Kevin Tian <kevin.tian@intel.com>,
+ Jason Gunthorpe <jgg@nvidia.com>,
+ "shangsong2@lenovo.com" <shangsong2@lenovo.com>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250424034123.2311362-1-baolu.lu@linux.intel.com>
+ <4764ACC2-6D38-4CAE-8A6B-451AB3DAF3E0@oracle.com>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <4764ACC2-6D38-4CAE-8A6B-451AB3DAF3E0@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Thank you Arnaldo!
 
--CT
 
-On Thu, Apr 24, 2025 at 5:52=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Wed, Apr 23, 2025 at 03:46:21PM -0700, Chun-Tse Shao wrote:
-> > Ping.
->
-> Thanks for the ping, I just applied it with these changes, please check,
->
-> Thanks,
->
-> - Arnaldo
->
-> =E2=AC=A2 [acme@toolbox perf-tools-next]$ git diff
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index ba32f8461a4b6438..81cc56503a2d0f51 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1645,7 +1645,7 @@ static s64 perf_session__process_event(struct perf_=
-session *session,
->                         return -EINVAL;
->
->                 /* This perf is outdated and does not support the latest =
-event type. */
-> -               ui__warning("Unsupported type %u, please considering upda=
-te perf.\n",
-> +               ui__warning("Unsupported header type %u, please consider =
-updating perf.\n",
->                             event->header.type);
->                 /* Skip unsupported event by returning its size. */
->                 return event->header.size;
-> =E2=AC=A2 [acme@toolbox perf-tools-next]$
->
-> > Thanks,
-> > CT
-> >
-> >
-> > On Mon, Apr 14, 2025 at 10:43=E2=80=AFAM Ian Rogers <irogers@google.com=
-> wrote:
-> > >
-> > > On Mon, Apr 14, 2025 at 10:39=E2=80=AFAM Chun-Tse Shao <ctshao@google=
-.com> wrote:
-> > > >
-> > > > `perf report` currently halts with an error when encountering
-> > > > unsupported new event types (`event.type >=3D PERF_RECORD_HEADER_MA=
-X`).
-> > > > This patch modifies the behavior to skip these samples and continue
-> > > > processing the remaining events. Additionally, stops reporting if t=
-he
-> > > > new event size is not 8-byte aligned.
-> > > >
-> > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > > Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> > >
-> > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > >
-> > > Thanks,
-> > > Ian
-> > >
-> > > > ---
-> > > >  tools/perf/util/session.c | 13 +++++++++++--
-> > > >  1 file changed, 11 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> > > > index 60fb9997ea0d..ba32f8461a4b 100644
-> > > > --- a/tools/perf/util/session.c
-> > > > +++ b/tools/perf/util/session.c
-> > > > @@ -1639,8 +1639,17 @@ static s64 perf_session__process_event(struc=
-t perf_session *session,
-> > > >         if (session->header.needs_swap)
-> > > >                 event_swap(event, evlist__sample_id_all(evlist));
-> > > >
-> > > > -       if (event->header.type >=3D PERF_RECORD_HEADER_MAX)
-> > > > -               return -EINVAL;
-> > > > +       if (event->header.type >=3D PERF_RECORD_HEADER_MAX) {
-> > > > +               /* perf should not support unaligned event, stop he=
-re. */
-> > > > +               if (event->header.size % sizeof(u64))
-> > > > +                       return -EINVAL;
-> > > > +
-> > > > +               /* This perf is outdated and does not support the l=
-atest event type. */
-> > > > +               ui__warning("Unsupported type %u, please considerin=
-g update perf.\n",
-> > > > +                           event->header.type);
-> > > > +               /* Skip unsupported event by returning its size. */
-> > > > +               return event->header.size;
-> > > > +       }
-> > > >
-> > > >         events_stats__inc(&evlist->stats, event->header.type);
-> > > >
-> > > > --
-> > > > 2.49.0.604.gff1f9ca942-goog
-> > > >
+On 4/24/25 3:34 PM, Jack Vogel wrote:
+> I am having test issues with this patch, test system is running OL9, basically RHEL 9.5, the kernel boots ok, and the dmesg is clean… but the tests in accel-config dont pass. Specifically the crypto tests, this is due to vfio_pci_core not loading.  Right now I’m not sure if any of this is my mistake, but at least it’s something I need to keep looking at.
+> 
+> Also, since I saw that issue on the latest I did a backport to our UEK8 kernel which is 6.12.23, and on that kernel it still exhibited  these messages on boot:
+> 
+> *idxd*0000:6a:01.0: enabling device (0144 -> 0146)
+> 
+> [   21.112733] *idxd*0000:6a:01.0: failed to attach device pasid 1, domain type 4
+> 
+> [   21.120770] *idxd*0000:6a:01.0: No in-kernel DMA with PASID. -95
+> 
+> 
+> Again, maybe an issue in my backporting… however I’d like to be sure.
+
+Can you verify against latest upstream kernel plus the patch and see if you still see the error?
+
+DJ
+
+> 
+> Cheers,
+> 
+> Jack
+> 
+> 
+>> On Apr 23, 2025, at 20:41, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>
+>> The idxd driver attaches the default domain to a PASID of the device to
+>> perform kernel DMA using that PASID. The domain is attached to the
+>> device's PASID through iommu_attach_device_pasid(), which checks if the
+>> domain->owner matches the iommu_ops retrieved from the device. If they
+>> do not match, it returns a failure.
+>>
+>>        if (ops != domain->owner || pasid == IOMMU_NO_PASID)
+>>                return -EINVAL;
+>>
+>> The static identity domain implemented by the intel iommu driver doesn't
+>> specify the domain owner. Therefore, kernel DMA with PASID doesn't work
+>> for the idxd driver if the device translation mode is set to passthrough.
+>>
+>> Generally the owner field of static domains are not set because they are
+>> already part of iommu ops. Add a helper domain_iommu_ops_compatible()
+>> that checks if a domain is compatible with the device's iommu ops. This
+>> helper explicitly allows the static blocked and identity domains associated
+>> with the device's iommu_ops to be considered compatible.
+>>
+>> Fixes: 2031c469f816 ("iommu/vt-d: Add support for static identity domain")
+>> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220031
+>> Cc: stable@vger.kernel.org
+>> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+>> Link: https://lore.kernel.org/linux-iommu/20250422191554.GC1213339@ziepe.ca/
+>> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+>> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+>> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>> drivers/iommu/iommu.c | 21 ++++++++++++++++++---
+>> 1 file changed, 18 insertions(+), 3 deletions(-)
+>>
+>> Change log:
+>> v3:
+>> - Convert all places checking domain->owner to the new helper.
+>> v2: https://lore.kernel.org/linux-iommu/20250423021839.2189204-1-baolu.lu@linux.intel.com/
+>> - Make the solution generic for all static domains as suggested by
+>>   Jason.
+>> v1: https://lore.kernel.org/linux-iommu/20250422075422.2084548-1-baolu.lu@linux.intel.com/
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 4f91a740c15f..b26fc3ed9f01 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -2204,6 +2204,19 @@ static void *iommu_make_pasid_array_entry(struct iommu_domain *domain,
+>> return xa_tag_pointer(domain, IOMMU_PASID_ARRAY_DOMAIN);
+>> }
+>>
+>> +static bool domain_iommu_ops_compatible(const struct iommu_ops *ops,
+>> +struct iommu_domain *domain)
+>> +{
+>> +if (domain->owner == ops)
+>> +return true;
+>> +
+>> +/* For static domains, owner isn't set. */
+>> +if (domain == ops->blocked_domain || domain == ops->identity_domain)
+>> +return true;
+>> +
+>> +return false;
+>> +}
+>> +
+>> static int __iommu_attach_group(struct iommu_domain *domain,
+>> struct iommu_group *group)
+>> {
+>> @@ -2214,7 +2227,8 @@ static int __iommu_attach_group(struct iommu_domain *domain,
+>> return -EBUSY;
+>>
+>> dev = iommu_group_first_dev(group);
+>> -if (!dev_has_iommu(dev) || dev_iommu_ops(dev) != domain->owner)
+>> +if (!dev_has_iommu(dev) ||
+>> +   !domain_iommu_ops_compatible(dev_iommu_ops(dev), domain))
+>> return -EINVAL;
+>>
+>> return __iommu_group_set_domain(group, domain);
+>> @@ -3435,7 +3449,8 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
+>>    !ops->blocked_domain->ops->set_dev_pasid)
+>> return -EOPNOTSUPP;
+>>
+>> -if (ops != domain->owner || pasid == IOMMU_NO_PASID)
+>> +if (!domain_iommu_ops_compatible(ops, domain) ||
+>> +   pasid == IOMMU_NO_PASID)
+>> return -EINVAL;
+>>
+>> mutex_lock(&group->mutex);
+>> @@ -3511,7 +3526,7 @@ int iommu_replace_device_pasid(struct iommu_domain *domain,
+>> if (!domain->ops->set_dev_pasid)
+>> return -EOPNOTSUPP;
+>>
+>> -if (dev_iommu_ops(dev) != domain->owner ||
+>> +if (!domain_iommu_ops_compatible(dev_iommu_ops(dev), domain) ||
+>>    pasid == IOMMU_NO_PASID || !handle)
+>> return -EINVAL;
+>>
+>> -- 
+>> 2.43.0
+>>
+> 
+
