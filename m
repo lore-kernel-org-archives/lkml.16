@@ -1,273 +1,393 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4FF235BF1
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8221C236A88;
+	Thu, 24 Apr 2025 10:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745490348; cv=none; b=NAKHlY9hDrtnSoJaiDnE7QxKNgu2vPhGV75jKgTXiodhGKPMkugZYWXFApv/QFB/EUn07ygbKQpFFeolHS3sqavWyeXu4l4VI52EouFBBfxnPi9M+yeXeDuGT7BzIQfjse/V8qdUJxndBg5eZrqXInwL7rh5yTcrgCWqrjuKG7g=
+	t=1745490349; cv=none; b=cg07AobY7RzBuHOA5nseZxD5sgzi+JTJgg41DCSCLSjoo9TOFe1vj+2AjVgrq8pWgBA519Fc3uvgAEZYGc+ncnTeCD+S+CyiOJaJi0xyuXdduZNDFusOmpprFTxzEtIBBNItPTR/pe4Evo8rh+Sc44vLGAAjemkduNLabr5BYOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745490348; c=relaxed/simple;
-	bh=gnsNUIE5fVMgm1yzsatCfzS1CVhAuzl2OFSf1bbgvqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lG6iDj2ISA3Msn6zY45K7IHvNqk2fy8wk2cciVYjngZKHAofKsQlIwM/Sw1zrI/1tOnoa7oMDRrtW/6ZFS5r7R1WguR0l1q/p2cGWMswWjUE6s/3oL6lDEsyQkCpcZWz4bfwWMDSRQsr2dYzYVlu+udVVNVCKfo8b3RSfqOXMbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gZwqnAhL; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745490349; c=relaxed/simple;
+	bh=KrpKnZNnP5S3kNqOj3SU9Sk96zavEOtbkPyDMRv2nfs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=YujizF3ugKXV1yPryan4qFXGgmCpksEdGe3UPks1Sp1xkmUVXckui9brnnUIygJCy46hU7E67xJmGM8SUl9AI1uvhsUDfk3UPzGMdvygT3Cs+36QIvI4UZzDhd+VBoGpc5P2KHOtPlomlzppyZ61+H+k+sIny3awIRk6fOHAaGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkKOKn/0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gZwqnAhL"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so800241a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745490346; x=1746095146; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IE7aKSxABLvt9Zl1mpyqzpBOR0S+DjSniaX8iFCPAyw=;
-        b=gZwqnAhLXhyO4Xis3QTZdVMCx4pp3/qI8adTIraxc88BY2vZUaUEA/ZFfel+ajb736
-         7MktRFF5SArRt1a40MLr5wYLub3TteKeSlJhZqw7DG64zcsp2IIUCBy/7TeC9qwtsVY5
-         IMBpHBQR2wheUkg/flK6P5Dk9gGYiK1S8Fu8U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745490346; x=1746095146;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IE7aKSxABLvt9Zl1mpyqzpBOR0S+DjSniaX8iFCPAyw=;
-        b=oGcDzNNkGJLf8cpZPYx0HhVoQx6zggt2559QkFHTiT84gVwFQgLZ9it2XBTspfZP0m
-         +mg/LZanCq443RiGg6YIUwJtJ39v1dTUXeDOZO1vYC4qCscjX0qMlnbW/bdh6DGTpjJ6
-         4+IDcvsFdKu5+ON/TUGc7vcNAHL1qsSTrzZLZSsUkDjj5I0UiqrRUT6O3pus7ytm4rji
-         7dH2X4Ubc1EpgfhoJCsefyv5UkRXUoYp+ckmpvCMmpxDttjSm8nHlDhWnnhY1zH12pN9
-         gVxeX0O95on1hlB64LdlyHZ7kDA2O6iJF7HsE2VopQ7pHgGNQOqjgjDPPltzT2u661jH
-         813A==
-X-Forwarded-Encrypted: i=1; AJvYcCW03KQP+4TPWk+ur/lAdIw4ziPmWZ5qXmvoomE7vXmGL7XiE9tshCb2ODVv+bns62XAsR456pypgcdJCEc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0YzGyY99Nc83FyrcBdtVI+h0r0B6o3xlTep9tt6DzvIY5efad
-	OOS2JrL7D/rz5f41fEr3tB85OGLnBh7l1eDF7H7AIGT/T5KVbQIZ7n9zG3gX9Q==
-X-Gm-Gg: ASbGncv+1xOb7Co4sUOm5NQnerwUwYEGJbwxyU5u76YhCko8tu8eATvRbv9ffLLyvuJ
-	qypRPPJ9b3Z0MtpPWvrPL6ZeMuoP9w12ugzbj+dVD7V98WYFqe6EPdetyOf//VZDielkFuBpA1v
-	EPLMUdyRyfQAil1rGtt8fpko55UeqtkLWMR5shiS0bqSeNN7TCDQ2E7yTbbiuqzfyoS+g+vjpI0
-	y+b3yg9o0mUFAOn0OXAEacf4i3zQoOF5i/wazLXdz5JJxtsGpDZSpX6D7u3DqeVLfgsBjrBN/Nj
-	LPkDjirg2wK3OVOGvOrQ+WNZfX7zNL9qgsjEeySILxBguhsNcYDtv3t1tg==
-X-Google-Smtp-Source: AGHT+IEXiipgjpnZjo9b641rUil17G3O4+rk2vLeF36iNimZzjzuklvaviqehXQCV3mCF6B2BIqVZg==
-X-Received: by 2002:a17:90b:224a:b0:2fe:d766:ad8e with SMTP id 98e67ed59e1d1-309ed24bc78mr3343313a91.4.1745490345566;
-        Thu, 24 Apr 2025 03:25:45 -0700 (PDT)
-Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:fa13:e633:684b:257])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dda40fsm9680305ad.104.2025.04.24.03.25.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 03:25:45 -0700 (PDT)
-From: Chen-Yu Tsai <wenst@chromium.org>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: Chen-Yu Tsai <wenst@chromium.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Jiaxin Yu <jiaxin.yu@mediatek.com>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/13] ASoC: mediatek: mt8173-afe-pcm: use local `dev` pointer in driver callbacks
-Date: Thu, 24 Apr 2025 18:25:02 +0800
-Message-ID: <20250424102509.1083185-9-wenst@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
-In-Reply-To: <20250424102509.1083185-1-wenst@chromium.org>
-References: <20250424102509.1083185-1-wenst@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkKOKn/0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 288BFC4CEEB;
+	Thu, 24 Apr 2025 10:25:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745490348;
+	bh=KrpKnZNnP5S3kNqOj3SU9Sk96zavEOtbkPyDMRv2nfs=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=nkKOKn/0avpacY5wwrq6VzMcSwrsoupqdHxV/qbsO2pR/SgHQE5vZzpXu/QMjZn7o
+	 sd/i9Kpalz6LO32pI34x/pn1u+uAx3tza5CY4Jf+SFLvTH8QpSQKtXwWQ9UYVqDjMj
+	 erPFl8jnxFUVCBUlXhYfJSUj3V2V3E50VegBvvsp2+0qB6hwXUiHEB6uQcr+uFBBaP
+	 0WpO/mTzXChVOasiUuVEAkI9o5XR0GXcz9JX/hkVZY/4aI49R2XCfHJT6EL6tUs3Q6
+	 VoOKVaWKqa9/uNbrHv5pAo8fDSKxkQkCMMQVXamjxDM6u0AnlXd397nEAMsngQqFWq
+	 cBsFlac01JQVA==
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Date: Thu, 24 Apr 2025 12:25:12 +0200
+Subject: [PATCH v2 01/22] dt-bindings: interrupt-controller: Add Arm GICv5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250424-gicv5-host-v2-1-545edcaf012b@kernel.org>
+References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+In-Reply-To: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+To: Marc Zyngier <maz@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, 
+ Sascha Bischoff <sascha.bischoff@arm.com>, 
+ Timothy Hayes <timothy.hayes@arm.com>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>
+X-Mailer: b4 0.14.2
 
-The probe and remove functions in the mt8183-afe-pcm driver repeatedly uses
-`&pdev->dev` for |struct device *|, but then assigns this value to
-`afe->dev` and uses that in other places in the same function.
+The GICv5 interrupt controller architecture is composed of:
 
-Store `&pdev->dev` in a local pointer and use that exclusively to avoid
-the numerous dereferences and to make the code more consistent. Lines
-are reflowed where it makes sense.
+- one or more Interrupt Routing Service (IRS)
+- zero or more Interrupt Translation Service (ITS)
+- zero or more Interrupt Wire Bridge (IWB)
 
-Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Describe a GICv5 implementation by specifying a top level node
+corresponding to the GICv5 system component.
+
+IRS nodes are added as GICv5 system component children.
+
+An ITS is associated with an IRS so ITS nodes are described
+as IRS children - use the hierarchy explicitly in the device
+tree to define the association.
+
+IWB nodes are described as a separate schema.
+
+An IWB is connected to a single ITS, the connection is made explicit
+through the msi-parent property and therefore is not required to be
+explicit through a parent-child relationship in the device tree.
+
+Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Conor Dooley <conor+dt@kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
 ---
- sound/soc/mediatek/mt8173/mt8173-afe-pcm.c | 63 +++++++++++-----------
- 1 file changed, 32 insertions(+), 31 deletions(-)
+ .../interrupt-controller/arm,gic-v5-iwb.yaml       |  76 ++++++++
+ .../bindings/interrupt-controller/arm,gic-v5.yaml  | 196 +++++++++++++++++++++
+ MAINTAINERS                                        |   7 +
+ 3 files changed, 279 insertions(+)
 
-diff --git a/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c b/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
-index f93d6348fdf8..c0fa623e0b17 100644
---- a/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
-+++ b/sound/soc/mediatek/mt8173/mt8173-afe-pcm.c
-@@ -1054,26 +1054,26 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 	struct mtk_base_afe *afe;
- 	struct mt8173_afe_private *afe_priv;
- 	struct snd_soc_component *comp_pcm, *comp_hdmi;
-+	struct device *dev = &pdev->dev;
- 
--	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(33));
-+	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(33));
- 	if (ret)
- 		return ret;
- 
--	afe = devm_kzalloc(&pdev->dev, sizeof(*afe), GFP_KERNEL);
-+	afe = devm_kzalloc(dev, sizeof(*afe), GFP_KERNEL);
- 	if (!afe)
- 		return -ENOMEM;
- 
--	afe->platform_priv = devm_kzalloc(&pdev->dev, sizeof(*afe_priv),
--					  GFP_KERNEL);
-+	afe->platform_priv = devm_kzalloc(dev, sizeof(*afe_priv), GFP_KERNEL);
- 	afe_priv = afe->platform_priv;
- 	if (!afe_priv)
- 		return -ENOMEM;
- 
--	afe->dev = &pdev->dev;
-+	afe->dev = dev;
- 
--	ret = of_reserved_mem_device_init(&pdev->dev);
-+	ret = of_reserved_mem_device_init(dev);
- 	if (ret) {
--		dev_info(&pdev->dev, "no reserved memory found, pre-allocating buffers instead\n");
-+		dev_info(dev, "no reserved memory found, pre-allocating buffers instead\n");
- 		afe->preallocate_buffers = true;
- 	}
- 
-@@ -1085,27 +1085,27 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 	if (IS_ERR(afe->base_addr))
- 		return PTR_ERR(afe->base_addr);
- 
--	afe->regmap = devm_regmap_init_mmio(&pdev->dev, afe->base_addr,
--		&mt8173_afe_regmap_config);
-+	afe->regmap = devm_regmap_init_mmio(dev, afe->base_addr,
-+					    &mt8173_afe_regmap_config);
- 	if (IS_ERR(afe->regmap))
- 		return PTR_ERR(afe->regmap);
- 
- 	/* initial audio related clock */
- 	ret = mt8173_afe_init_audio_clk(afe);
- 	if (ret) {
--		dev_err(afe->dev, "mt8173_afe_init_audio_clk fail\n");
-+		dev_err(dev, "mt8173_afe_init_audio_clk fail\n");
- 		return ret;
- 	}
- 
- 	/* memif % irq initialize*/
- 	afe->memif_size = MT8173_AFE_MEMIF_NUM;
--	afe->memif = devm_kcalloc(afe->dev, afe->memif_size,
-+	afe->memif = devm_kcalloc(dev, afe->memif_size,
- 				  sizeof(*afe->memif), GFP_KERNEL);
- 	if (!afe->memif)
- 		return -ENOMEM;
- 
- 	afe->irqs_size = MT8173_AFE_IRQ_NUM;
--	afe->irqs = devm_kcalloc(afe->dev, afe->irqs_size,
-+	afe->irqs = devm_kcalloc(dev, afe->irqs_size,
- 				 sizeof(*afe->irqs), GFP_KERNEL);
- 	if (!afe->irqs)
- 		return -ENOMEM;
-@@ -1124,9 +1124,9 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, afe);
- 
--	pm_runtime_enable(&pdev->dev);
--	if (!pm_runtime_enabled(&pdev->dev)) {
--		ret = mt8173_afe_runtime_resume(&pdev->dev);
-+	pm_runtime_enable(dev);
-+	if (!pm_runtime_enabled(dev)) {
-+		ret = mt8173_afe_runtime_resume(dev);
- 		if (ret)
- 			goto err_pm_disable;
- 	}
-@@ -1136,13 +1136,12 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 	afe->runtime_resume = mt8173_afe_runtime_resume;
- 	afe->runtime_suspend = mt8173_afe_runtime_suspend;
- 
--	ret = devm_snd_soc_register_component(&pdev->dev,
--					 &mtk_afe_pcm_platform,
--					 NULL, 0);
-+	ret = devm_snd_soc_register_component(dev, &mtk_afe_pcm_platform,
-+					      NULL, 0);
- 	if (ret)
- 		goto err_pm_disable;
- 
--	comp_pcm = devm_kzalloc(&pdev->dev, sizeof(*comp_pcm), GFP_KERNEL);
-+	comp_pcm = devm_kzalloc(dev, sizeof(*comp_pcm), GFP_KERNEL);
- 	if (!comp_pcm) {
- 		ret = -ENOMEM;
- 		goto err_pm_disable;
-@@ -1150,7 +1149,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 
- 	ret = snd_soc_component_initialize(comp_pcm,
- 					   &mt8173_afe_pcm_dai_component,
--					   &pdev->dev);
-+					   dev);
- 	if (ret)
- 		goto err_pm_disable;
- 
-@@ -1164,7 +1163,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_pm_disable;
- 
--	comp_hdmi = devm_kzalloc(&pdev->dev, sizeof(*comp_hdmi), GFP_KERNEL);
-+	comp_hdmi = devm_kzalloc(dev, sizeof(*comp_hdmi), GFP_KERNEL);
- 	if (!comp_hdmi) {
- 		ret = -ENOMEM;
- 		goto err_cleanup_components;
-@@ -1172,7 +1171,7 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 
- 	ret = snd_soc_component_initialize(comp_hdmi,
- 					   &mt8173_afe_hdmi_dai_component,
--					   &pdev->dev);
-+					   dev);
- 	if (ret)
- 		goto err_cleanup_components;
- 
-@@ -1186,30 +1185,32 @@ static int mt8173_afe_pcm_dev_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_cleanup_components;
- 
--	ret = devm_request_irq(afe->dev, irq_id, mt8173_afe_irq_handler,
-+	ret = devm_request_irq(dev, irq_id, mt8173_afe_irq_handler,
- 			       0, "Afe_ISR_Handle", (void *)afe);
- 	if (ret) {
--		dev_err(afe->dev, "could not request_irq\n");
-+		dev_err(dev, "could not request_irq\n");
- 		goto err_cleanup_components;
- 	}
- 
--	dev_info(&pdev->dev, "MT8173 AFE driver initialized.\n");
-+	dev_info(dev, "MT8173 AFE driver initialized.\n");
- 	return 0;
- 
- err_cleanup_components:
--	snd_soc_unregister_component(&pdev->dev);
-+	snd_soc_unregister_component(dev);
- err_pm_disable:
--	pm_runtime_disable(&pdev->dev);
-+	pm_runtime_disable(dev);
- 	return ret;
- }
- 
- static void mt8173_afe_pcm_dev_remove(struct platform_device *pdev)
- {
--	snd_soc_unregister_component(&pdev->dev);
-+	struct device *dev = &pdev->dev;
- 
--	pm_runtime_disable(&pdev->dev);
--	if (!pm_runtime_status_suspended(&pdev->dev))
--		mt8173_afe_runtime_suspend(&pdev->dev);
-+	snd_soc_unregister_component(dev);
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5-iwb.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5-iwb.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..b3eb89567b3457e91b93588d7db1cef69b6b9813
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5-iwb.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/arm,gic-v5-iwb.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	pm_runtime_disable(dev);
-+	if (!pm_runtime_status_suspended(dev))
-+		mt8173_afe_runtime_suspend(dev);
- }
++title: ARM Generic Interrupt Controller, version 5 Interrupt Wire Bridge (IWB)
++
++maintainers:
++  - Lorenzo Pieralisi <lpieralisi@kernel.org>
++  - Marc Zyngier <maz@kernel.org>
++
++description: |
++  The GICv5 architecture defines the guidelines to implement GICv5
++  compliant interrupt controllers for AArch64 systems.
++
++  The GICv5 specification can be found at
++  https://developer.arm.com/documentation/aes0070
++
++  GICv5 has zero or more Interrupt Wire Bridges (IWB) that are responsible
++  for translating wire signals into interrupt messages to the GICv5 ITS.
++
++allOf:
++  - $ref: /schemas/interrupt-controller.yaml#
++
++properties:
++  compatible:
++    const: arm,gic-v5-iwb
++
++  interrupt-controller: true
++
++  "#address-cells":
++    const: 0
++
++  "#interrupt-cells":
++    description: |
++      The 1st cell corresponds to the IWB wire.
++
++      The 2nd cell is the flags, encoded as follows:
++      bits[3:0] trigger type and level flags.
++
++      1 = low-to-high edge triggered
++      2 = high-to-low edge triggered
++      4 = active high level-sensitive
++      8 = active low level-sensitive
++
++    const: 2
++
++  reg:
++    items:
++      - description: IWB control frame
++
++  msi-parent:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - msi-parent
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller@2f000000 {
++      compatible = "arm,gic-v5-iwb";
++      #address-cells = <0>;
++
++      interrupt-controller;
++      #interrupt-cells = <2>;
++
++      reg = <0x2f000000 0x10000>;
++
++      msi-parent = <&its0 64>;
++    };
++...
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..1ba0a2088e6d15bacae22c9fc9eebc4ce5c51b0b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml
+@@ -0,0 +1,196 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/arm,gic-v5.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ARM Generic Interrupt Controller, version 5
++
++maintainers:
++  - Lorenzo Pieralisi <lpieralisi@kernel.org>
++  - Marc Zyngier <maz@kernel.org>
++
++description: |
++  The GICv5 architecture defines the guidelines to implement GICv5
++  compliant interrupt controllers for AArch64 systems.
++
++  The GICv5 specification can be found at
++  https://developer.arm.com/documentation/aes0070
++
++  The GICv5 architecture is composed of multiple components:
++    - one or more IRS (Interrupt Routing Service)
++    - zero or more ITS (Interrupt Translation Service)
++
++  The architecture defines:
++    - PE-Private Peripheral Interrupts (PPI)
++    - Shared Peripheral Interrupts (SPI)
++    - Logical Peripheral Interrupts (LPI)
++
++allOf:
++  - $ref: /schemas/interrupt-controller.yaml#
++
++properties:
++  compatible:
++    const: arm,gic-v5
++
++  interrupt-controller: true
++
++  "#address-cells":
++    enum: [ 1, 2 ]
++
++  "#size-cells":
++    enum: [ 1, 2 ]
++
++  ranges: true
++
++  "#interrupt-cells":
++    description: |
++      The 1st cell corresponds to the INTID.Type field in the INTID; 1 for PPI,
++      3 for SPI. LPI interrupts must not be described in the bindings since
++      they are allocated dynamically by the software component managing them.
++
++      The 2nd cell contains the interrupt INTID.ID field.
++
++      The 3rd cell is the flags, encoded as follows:
++      bits[3:0] trigger type and level flags.
++
++        1 = low-to-high edge triggered
++        2 = high-to-low edge triggered
++        4 = active high level-sensitive
++        8 = active low level-sensitive
++
++    const: 3
++
++  interrupts:
++    description:
++      The VGIC maintenance interrupt.
++    maxItems: 1
++
++required:
++  - compatible
++
++patternProperties:
++  "^irs@[0-9a-f]+$":
++    type: object
++    description:
++      GICv5 has one or more Interrupt Routing Services (IRS) that are
++      responsible for handling IRQ state and routing.
++
++    additionalProperties: false
++
++    properties:
++      compatible:
++        const: arm,gic-v5-irs
++
++      "#address-cells":
++        enum: [ 1, 2 ]
++
++      "#size-cells":
++        enum: [ 1, 2 ]
++
++      ranges: true
++
++      dma-noncoherent:
++        description:
++          Present if the GIC IRS permits programming shareability and
++          cacheability attributes but is connected to a non-coherent
++          downstream interconnect.
++
++      reg:
++        minItems: 1
++        items:
++          - description: IRS control frame
++          - description: IRS setlpi frame
++
++      cpus:
++        description:
++          CPUs managed by the IRS.
++
++      arm,iaffids:
++        $ref: /schemas/types.yaml#/definitions/uint16-array
++        description:
++          Interrupt AFFinity ID (IAFFID) associated with the CPU whose
++          CPU node phandle is at the same index in the cpus array.
++
++    patternProperties:
++      "^msi-controller@[0-9a-f]+$":
++        type: object
++        description:
++          GICv5 has zero or more Interrupt Translation Services (ITS) that are
++          used to route Message Signalled Interrupts (MSI) to the CPUs. Each
++          ITS is connected to an IRS.
++        additionalProperties: false
++
++        properties:
++          compatible:
++            const: arm,gic-v5-its
++
++          dma-noncoherent:
++            description:
++              Present if the GIC ITS permits programming shareability and
++              cacheability attributes but is connected to a non-coherent
++              downstream interconnect.
++
++          msi-controller: true
++
++          "#msi-cells":
++            description:
++              The single msi-cell is the DeviceID of the device which will
++              generate the MSI.
++            const: 1
++
++          reg:
++            items:
++              - description: ITS control frame
++              - description: ITS translate frame
++
++        required:
++          - compatible
++          - msi-controller
++          - "#msi-cells"
++          - reg
++
++    required:
++      - compatible
++      - reg
++      - cpus
++      - arm,iaffids
++
++additionalProperties: false
++
++examples:
++  - |
++    interrupt-controller {
++      compatible = "arm,gic-v5";
++      #interrupt-cells = <3>;
++      #address-cells = <1>;
++      #size-cells = <1>;
++      ranges;
++
++      interrupt-controller;
++
++      interrupts = <1 25 4>;
++
++      irs@2f1a0000 {
++        compatible = "arm,gic-v5-irs";
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges;
++
++        reg = <0x2f1a0000 0x10000>;  // IRS_CONFIG_FRAME for NS
++
++        arm,iaffids = /bits/ 16 <0 1 2 3 4 5 6 7>;
++        cpus = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>, <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
++
++        msi-controller@2f120000 {
++          compatible = "arm,gic-v5-its";
++
++          msi-controller;
++          #msi-cells = <1>;
++
++          reg = <0x2f120000 0x10000    // ITS_CONFIG_FRAME for NS
++                 0x2f130000 0x10000>;  // ITS_TRANSLATE_FRAME
++        };
++      };
++    };
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 96b82704950184bd71623ff41fc4df31e4c7fe87..f3ed84466da19906953b5396a5f4b50e878c376e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1901,6 +1901,13 @@ F:	drivers/irqchip/irq-gic*.[ch]
+ F:	include/linux/irqchip/arm-gic*.h
+ F:	include/linux/irqchip/arm-vgic-info.h
  
- static const struct of_device_id mt8173_afe_pcm_dt_match[] = {
++ARM GENERIC INTERRUPT CONTROLLER V5 DRIVERS
++M:	Lorenzo Pieralisi <lpieralisi@kernel.org>
++M:	Marc Zyngier <maz@kernel.org>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	Documentation/devicetree/bindings/interrupt-controller/arm,gic-v5.yaml
++
+ ARM HDLCD DRM DRIVER
+ M:	Liviu Dudau <liviu.dudau@arm.com>
+ S:	Supported
+
 -- 
-2.49.0.805.g082f7c87e0-goog
+2.48.0
 
