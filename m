@@ -1,61 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7688E27F744;
-	Thu, 24 Apr 2025 16:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EE0C281501;
+	Thu, 24 Apr 2025 16:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745512477; cv=none; b=K3TDwJzSZt60mBD2f20Fl68W4sDNfwDrR3ZcGQ1Z5oYfxIyrROL+up09tfC9wm/Pg3EP09h241VGD2pTJVzv8bZAQTLqLfwz92MzcWusaIwvBWZVMQk2e6tsf7KOvh64PMPwAeVNh3HgUbQbiQKkCb+dhHw7SeCuG0UzytJxbiU=
+	t=1745512490; cv=none; b=VKMqNqT6aW6gOXHfyPPFXPBxRo8CuxqkOyTZFNQMF7/iUCRSyWX6JDaOUaW/cLn6pT7Aq6lsk2bm9e77FQ3DbER1t/IF8q14KKKdBAqBRjYQmUflqngRU/UhOPRGFacs8UJ2gSL+07s2NbTN0M7o14Bl4ZwY0mFlIeNj2QLvrUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745512477; c=relaxed/simple;
-	bh=/2+v4MrrIX1tru3YRH21EcKXQRarr69zuxlHYYHXpdg=;
+	s=arc-20240116; t=1745512490; c=relaxed/simple;
+	bh=M96IPY+EzvacNuH4fX06Yqiasq5DmKyDBU3sulBRIEg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JBaGbcB1L6jATEAkkxqbLbbq2c4BGyunTYRNCjIE5bXdOG/KcUeruQHrX1rw52z7a5Zt3u++U4GLtYCQWAm6SiHL4RUqeCsc8r/jWJApwIJIVjSenTG2y1ZCTaAUHgx+kjuOqqwPZ6loh9Jc2c6obLk3haS2eDdC1krvvx7r/d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hVWrs69h; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=k2y99kvzSc17kwPww16emjE7WPKQcnbN7u6+gLwCRgLqW3+hk8uglOFIj4G7UTaL1KUIJFdJTpgC7TNmHH6lasAzLeomo6RafSkPeCNPM1nyg5VKs8waxV2f951Hfi+0Y+JBZ8Gp2+BGBxQRwqSbTfbglzg2NUFaI5wAzduOzBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=QsjEl7Qn; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hVWrs69h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745512474; x=1777048474;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/2+v4MrrIX1tru3YRH21EcKXQRarr69zuxlHYYHXpdg=;
-  b=hVWrs69hUF5iUmu//q/dWbz8PiOHlomNt7M/G2aT5ekGdbj6xivahQhk
-   7vbFEf6xA3IM7Rc1qehxa8JRXuSnWV1hyOno1UYug2vU2kvb06zFNxtxZ
-   9Tf9c7qTOIXJ9u3Ejwdu4UjJTCw/dJ/mxh4qArvMXurP4GePqg+TwPpmA
-   kIMaRWVqTfqga76SuLvKwYOyzP6DMjjF4DwbuyB5UxzZk0aHIqbINeoOd
-   7G1kOV0XoGP06Nn17OpofWHb9WAHeYVVAWZzRM4oeZ3Xq2qLs2FuvLvMj
-   vSSs7dxi+X/meBXJlyES2DZALYCACKw82+rCOAEVtCnzU7byYfC1xZAqc
-   A==;
-X-CSE-ConnectionGUID: H0IhJmdLQ1aoQFWf+td8og==
-X-CSE-MsgGUID: lwNAOs58Rnm1sj6XPSHWxw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="49815010"
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="49815010"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 09:34:34 -0700
-X-CSE-ConnectionGUID: riyFq7+hRgmuldfE9BonoQ==
-X-CSE-MsgGUID: 5sAVUh6aTpOxttr8Kgxhsw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="132657353"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 24 Apr 2025 09:34:30 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 9D4FC1AC; Thu, 24 Apr 2025 19:34:29 +0300 (EEST)
-Date: Thu, 24 Apr 2025 19:34:29 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Zhenhua Huang <quic_zhenhuah@quicinc.com>
-Cc: cl@linux.com, rientjes@google.com, vbabka@suse.cz,
-	roman.gushchin@linux.dev, harry.yoo@oracle.com, surenb@google.com,
-	pasha.tatashin@soleen.com, akpm@linux-foundation.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	quic_tingweiz@quicinc.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm, slab: clean up slab->obj_exts always
-Message-ID: <aApoFXmDE-k2KFFV@black.fi.intel.com>
-References: <20250421075232.2165527-1-quic_zhenhuah@quicinc.com>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="QsjEl7Qn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=3QlHbCdvw1igkueMu0uSmIH5VRamgRx4CVaOzdfiVtg=; b=QsjEl7QnZLPAkblIny2Svryot3
+	SmK4EZuoXbaFk/lxyKlSSbueICIHUO1WA6eTa0DcLQQzcorRJQvHpE7HkN8nVfJV1dcyjYJd+oB0c
+	ZIOtiefozx3M8H9vonepHByBs0OzBZyiLv3SisEgV/wxLhYl5aT24kJwh4X6SyEnGqw4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1u7zWv-00AURZ-SC; Thu, 24 Apr 2025 18:34:29 +0200
+Date: Thu, 24 Apr 2025 18:34:29 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Ivan Vecera <ivecera@redhat.com>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Schmidt <mschmidt@redhat.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH net-next v4 3/8] mfd: Add Microchip ZL3073x support
+Message-ID: <4fae1a96-ac19-46b8-8eff-2a38d28414fc@lunn.ch>
+References: <20250424154722.534284-1-ivecera@redhat.com>
+ <20250424154722.534284-4-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,26 +53,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250421075232.2165527-1-quic_zhenhuah@quicinc.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250424154722.534284-4-ivecera@redhat.com>
 
-On Mon, Apr 21, 2025 at 03:52:32PM +0800, Zhenhua Huang wrote:
-> When memory allocation profiling is disabled at runtime or due to an
-> error, shutdown_mem_profiling() is called: slab->obj_exts which
-> previously allocated remains.
-> It won't be cleared by unaccount_slab() because of
-> mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
-> should always be cleaned up in unaccount_slab() to avoid following error:
-> 
-> [...]BUG: Bad page state in process...
-> ..
-> [...]page dumped because: page still charged to cgroup
+> +++ b/drivers/mfd/zl3073x-regs.h
+> @@ -0,0 +1,74 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef __ZL3073X_REGS_H
+> +#define __ZL3073X_REGS_H
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +
+> +/*
+> + * Register address structure:
+> + * ===========================
+> + *  25        19 18   16 15     7 6           0
+> + * +-------------------------------------------+
+> + * | max_offset | width |  page  | page_offset |
+> + * +-------------------------------------------+
+> + *
+> + * page_offset ... <0x00..0x7F>
+> + * page .......... HW page number
+> + * size .......... register byte size (1, 2, 4 or 6)
+> + * max_offset .... maximal offset for indexed registers
+> + *                 (for non-indexed regs max_offset == page_offset)
+> + */
 
-Please, always compile test with `make W=1`. Since CONFIG_WERROR=y this
-effectively breaks the build with Clang.
+Something i missed earlier. This does not really describe
+hardware. The upper half is meta data about the register, which you
+encode into the register number.
 
--- 
-With Best Regards,
-Andy Shevchenko
+How many other Linux drivers do you know about which does this?
 
+Also width vs size.
 
+	Andrew
