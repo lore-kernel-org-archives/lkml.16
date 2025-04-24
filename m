@@ -1,175 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A195221275;
-	Thu, 24 Apr 2025 07:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBD222155F
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479851; cv=none; b=SEGfFaASqwxXuJH3WLlAaXCRGF8flhZwfXwA5VP0OhRsaLvQarLh/OfeftmWP0ZN7d1vO/eOo2PgW7g9YYTZPrnaKsOnQGc8TJ+jotb9m92mNPzysK4aUy1vGtiQZIw6q9GcpO3gw7eBHipxp9cEngcVuwscVCTcOfu1NnYylYc=
+	t=1745479858; cv=none; b=NsUsUmRPpS2Z8IvBt5vDNInc0jvRmBUNzdtqkzsxhQMvViahVFjQd1V7GKcShI41xyxQ0M/dbOrK/r7lgRGneidoHVhXn6J6rEJst/g/6+FyBzB1giFzOrF/m/dTixM0203y2V67EAQt/ttrtIPCFWE8ygFPiFYIxc2v1g4c3xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745479851; c=relaxed/simple;
-	bh=5pu5utthE6h9IbcDSytc6jmqH+VEZNH56iXjmxeE4eI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FWl/hcVLWZOuJI+fbFWQgPYI0SRwB4yBjwEOGAu5OVgD5Lr4Ta2x4idOlNuPM6WiuCfK32Pd/nBGjecMEUbHmRRPYzw8tq1Q3QRKQUF2NC/pR3SfJheLIg6oE5cJS7UxVAEWD9FqXC7Lg2/xvcTP/Nw5kFGJkV8BrsOjVo0zBOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G3JH8gzL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745479858; c=relaxed/simple;
+	bh=Yqw2vfhhpRsy+rECEl7DVl3puCqPe4a8UIiVe6FSIO4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=bbzpmCQ5JYl6x8hBrIp9tBBCl4xT7Aa6QZKhdveiTkuPbrhYVKDg5Txv/1SGeavpWDb6+U9LA1ArxFcwIhnbM/JHfM9TocuKvBxVbhqoIecx5zAHT02HcyqO+vuBMFJM+fOJ4qUc4Yj2F7vSUi/gWGmUe/cj8RFxoRQgNvrx74o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bKHYEG/W; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G3JH8gzL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59924C4CEEA;
-	Thu, 24 Apr 2025 07:30:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745479850;
-	bh=5pu5utthE6h9IbcDSytc6jmqH+VEZNH56iXjmxeE4eI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G3JH8gzLvkWoRojiIZRAGpAJ6A3P5yH8YCyCu66APW2Sx9m6ftHdKxhzUE+ZLpxZv
-	 3aOCjbdcjvxW1fsjOjIEDcmiOfiN149b0TYrlLSl0XXapchFnegLiUZqC1QRRqtmTj
-	 2kjCy+ApKHgiMF3NzxgauzvRT4LxTrbclQY0d3GZzmj6qdfVcgJz2Z8pF6Nmkq94T2
-	 LPYdC39b8yj/RIlcItkORhJH2mZvUK//mNXDGwpZNrn8JeP9isZ4E7qlca30wC9J/o
-	 7kd1++SaVxDJffhEAGPsLkyiQX9W4XKOJYphsrY08Wpd49IkEHF5Q9OO3qKpCUU6/j
-	 aYoSKxLQOqeQQ==
-Date: Thu, 24 Apr 2025 08:30:46 +0100
-From: Simon Horman <horms@kernel.org>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	linux-cve-announce@vger.kernel.org,
-	Dan Carpenter <error27@gmail.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	netdev@vger.kernel.org
-Subject: Re: CVE-2024-49995: tipc: guard against string buffer overrun
-Message-ID: <20250424073046.GA3047450@horms.kernel.org>
-References: <2024102138-CVE-2024-49995-ec59@gregkh>
- <1eb55d16-071a-4e86-9038-31c9bb3f23ed@oracle.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bKHYEG/W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745479856; x=1777015856;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Yqw2vfhhpRsy+rECEl7DVl3puCqPe4a8UIiVe6FSIO4=;
+  b=bKHYEG/W9wyqU2E/Ni8FYUHpOAgmzHSrCXhDAa9qwOv36Vf1pqJ1PGLo
+   ARtO+QQr6ksSw8LbpDrIpTKFaNEYGLFMsMbPY4rP1c5dMwVKPJp/h7TQz
+   v0JgpzikIDKB4vaZfljL5l3EVmfCG4tlikIPOm1AYPVkqHCfPLM+md3aU
+   Jy7tTe/tNz3SnibTSaJLXqEKafGgQCaT9v4Mji5TmYDLfE8MpriY99lvr
+   QO9X9nsUvLCegfiU71vF2CoXubnIr2lYN4tgcINSMb9oDte9MK/gCHCYg
+   stcpbd+A1h4dSqxWFZdPR4Jvxo053VZ6uQADzdv0oSXPjoIqnooqBz70R
+   A==;
+X-CSE-ConnectionGUID: 8MI1Fk7FQKa6+ra/EGXL5A==
+X-CSE-MsgGUID: YBFemRE5TVuUB6CxcqPLpQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="64510586"
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="64510586"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 00:30:55 -0700
+X-CSE-ConnectionGUID: Z/ypjmu4Tzy++aj7ce+k7g==
+X-CSE-MsgGUID: HiLuNSIdSeCcq5hltUSTdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
+   d="scan'208";a="137709000"
+Received: from mwiniars-desk2.ger.corp.intel.com (HELO localhost) ([10.245.246.243])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 00:30:51 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Junxiao Chang
+ <junxiao.chang@intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi
+ <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, David
+ Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Clark
+ Williams <clrkwllms@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev
+Subject: Re: [PATCH] drm/i915/gsc: mei interrupt top half should be in irq
+ disabled context
+In-Reply-To: <20250424071553.yT9-dWWM@linutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250424065609.624457-1-junxiao.chang@intel.com>
+ <20250424071553.yT9-dWWM@linutronix.de>
+Date: Thu, 24 Apr 2025 10:30:47 +0300
+Message-ID: <87zfg6yq1k.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1eb55d16-071a-4e86-9038-31c9bb3f23ed@oracle.com>
+Content-Type: text/plain
 
-- me at corigine.com
-+ netdev
+On Thu, 24 Apr 2025, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> On 2025-04-24 14:56:08 [+0800], Junxiao Chang wrote:
+>> MEI GSC interrupt comes from i915. It has top half and bottom half.
+>> Top half is called from i915 interrupt handler. It should be in
+>> irq disabled context.
+>> 
+>> With RT kernel, by default i915 IRQ handler is in threaded IRQ. MEI GSC
+>> top half might be in threaded IRQ context. In this case, local IRQ
+>> should be disabled for MEI GSC interrupt top half.
+>> 
+>> This change fixes A380/A770 GPU boot hang issue with RT kernel.
+>
+> This should have a Fixes when generic_handle_irq() was introduced. 
+>
+>> Signed-off-by: Junxiao Chang <junxiao.chang@intel.com>
+>> ---
+>>  drivers/gpu/drm/i915/gt/intel_gsc.c | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>> 
+>> diff --git a/drivers/gpu/drm/i915/gt/intel_gsc.c b/drivers/gpu/drm/i915/gt/intel_gsc.c
+>> index 1e925c75fb080..9c72117263f78 100644
+>> --- a/drivers/gpu/drm/i915/gt/intel_gsc.c
+>> +++ b/drivers/gpu/drm/i915/gt/intel_gsc.c
+>> @@ -270,6 +270,9 @@ static void gsc_init_one(struct drm_i915_private *i915, struct intel_gsc *gsc,
+>>  static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
+>>  {
+>>  	int ret;
+>> +#ifdef CONFIG_PREEMPT_RT
+>> +	int irq_disabled_flag;
+>> +#endif
+>>  
+>>  	if (intf_id >= INTEL_GSC_NUM_INTERFACES) {
+>>  		gt_warn_once(gt, "GSC irq: intf_id %d is out of range", intf_id);
+>> @@ -284,7 +287,18 @@ static void gsc_irq_handler(struct intel_gt *gt, unsigned int intf_id)
+>>  	if (gt->gsc.intf[intf_id].irq < 0)
+>>  		return;
+>>  
+>> +#ifdef CONFIG_PREEMPT_RT
+>> +	/* mei interrupt top half should run in irq disabled context */
+>> +	irq_disabled_flag = irqs_disabled();
+>> +	if (!irq_disabled_flag)
+>> +		local_irq_disable();
+>> +#endif
+>>  	ret = generic_handle_irq(gt->gsc.intf[intf_id].irq);
+>
+> What about generic_handle_irq_safe() instead the whole ifdef show?
 
-On Thu, Apr 24, 2025 at 11:41:01AM +0530, Harshit Mogalapalli wrote:
-> Hi,
-> 
-> On 21/10/24 23:33, Greg Kroah-Hartman wrote:
-> > Description
-> > ===========
-> > 
-> > In the Linux kernel, the following vulnerability has been resolved:
-> > 
-> > tipc: guard against string buffer overrun
-> > 
-> > Smatch reports that copying media_name and if_name to name_parts may
-> > overwrite the destination.
-> > 
-> >   .../bearer.c:166 bearer_name_validate() error: strcpy() 'media_name' too large for 'name_parts->media_name' (32 vs 16)
-> >   .../bearer.c:167 bearer_name_validate() error: strcpy() 'if_name' too large for 'name_parts->if_name' (1010102 vs 16)
-> > 
-> > This does seem to be the case so guard against this possibility by using
-> > strscpy() and failing if truncation occurs.
-> > 
-> > Introduced by commit b97bf3fd8f6a ("[TIPC] Initial merge")
-> > 
-> > Compile tested only.
-> > 
-> > The Linux kernel CVE team has assigned CVE-2024-49995 to this issue.
-> > 
-> > 
-> 
-> Looking at the fix commit with more lines around the fix:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=6555a2a9212be6983d2319d65276484f7c5f431a&context=30
-> 
-> 
->  	/* validate component parts of bearer name */
->  	if ((media_len <= 1) || (media_len > TIPC_MAX_MEDIA_NAME) ||
->  	    (if_len <= 1) || (if_len > TIPC_MAX_IF_NAME))
->  		return 0;
-> 
->  	/* return bearer name components, if necessary */
->  	if (name_parts) {
-> -		strcpy(name_parts->media_name, media_name);
-> -		strcpy(name_parts->if_name, if_name);
-> +		if (strscpy(name_parts->media_name, media_name,
-> +			    TIPC_MAX_MEDIA_NAME) < 0)
-> +			return 0;
-> +		if (strscpy(name_parts->if_name, if_name,
-> +			    TIPC_MAX_IF_NAME) < 0)
-> +			return 0;
->  	}
->  	return 1;
-> 
-> 
-> 
-> both media_len and if_len have validation checks above the if(name_parts)
-> check. So I think this patch just silences the static checker warnings.
-> 
-> Simon/Dan , could you please help confirming that ?
+Anything without the ifdefs would be welcome.
 
-Thanks Harshit,
+BR,
+Jani.
 
-Looking over this with fresh eyes this morning I agree with your analysis.
+>
+>> +#ifdef CONFIG_PREEMPT_RT
+>> +	if (!irq_disabled_flag)
+>> +		local_irq_enable();
+>> +#endif
+>> +
+>>  	if (ret)
+>>  		gt_err_ratelimited(gt, "error handling GSC irq: %d\n", ret);
+>>  }
+>
+> Sebastian
 
-I can't be sure what I was thinking regarding this being a bug when I
-posted the patch in August. But that it was for net-next, rather than net,
-and had no Fixes tag, indicates that I did not feel that it was a bug fix at
-the time.
-
-https://lore.kernel.org/netdev/20240801-tipic-overrun-v2-1-c5b869d1f074@kernel.org/
-
-In any case, I don't think it is a bug fix now.
-
-
-> 
-> Thanks,
-> Harshit
-> 
-> > Affected and fixed versions
-> > ===========================
-> > 
-> > 	Fixed in 5.10.227 with commit e2b2558971e0
-> > 	Fixed in 5.15.168 with commit 54dae0e9063e
-> > 	Fixed in 6.1.113 with commit 80c0be7bcf94
-> > 	Fixed in 6.6.55 with commit 12d26aa7fd3c
-> > 	Fixed in 6.10.14 with commit 2ed7f42dfd3e
-> > 	Fixed in 6.11.3 with commit a18c7b239d02
-> > 	Fixed in 6.12-rc1 with commit 6555a2a9212b
-> > 
-> > Please see https://www.kernel.org for a full list of currently supported
-> > kernel versions by the kernel community.
-> > 
-> > Unaffected versions might change over time as fixes are backported to
-> > older supported kernel versions.  The official CVE entry at
-> > 	https://cve.org/CVERecord/?id=CVE-2024-49995
-> > will be updated if fixes are backported, please check that for the most
-> > up to date information about this issue.
-> > 
-> > 
-> > Affected files
-> > ==============
-> > 
-> > The file(s) affected by this issue are:
-> > 	net/tipc/bearer.c
-> > 
-> > 
-> > Mitigation
-> > ==========
-> > 
-> > The Linux kernel CVE team recommends that you update to the latest
-> > stable kernel version for this, and many other bugfixes.  Individual
-> > changes are never tested alone, but rather are part of a larger kernel
-> > release.  Cherry-picking individual commits is not recommended or
-> > supported by the Linux kernel community at all.  If however, updating to
-> > the latest release is impossible, the individual changes to resolve this
-> > issue can be found at these commits:
-> > 	https://git.kernel.org/stable/c/e2b2558971e02ca33eb637a8350d68a48b3e8e46
-> > 	https://git.kernel.org/stable/c/54dae0e9063ed23c9acf8d5ab9b18d3426a8ac18
-> > 	https://git.kernel.org/stable/c/80c0be7bcf940ce9308311575c3aff8983c9b97a
-> > 	https://git.kernel.org/stable/c/12d26aa7fd3cbdbc5149b6e516563478d575026e
-> > 	https://git.kernel.org/stable/c/2ed7f42dfd3edb387034128ca5b0f639836d4ddd
-> > 	https://git.kernel.org/stable/c/a18c7b239d02aafb791ae2c45226f6bb40641792
-> > 	https://git.kernel.org/stable/c/6555a2a9212be6983d2319d65276484f7c5f431a
-> 
+-- 
+Jani Nikula, Intel
