@@ -1,302 +1,235 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2066.outbound.protection.outlook.com [40.107.100.66])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E00A4414;
-	Thu, 24 Apr 2025 04:30:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745469051; cv=fail; b=MNxFeNhViF/vUknqEu8StO4Sv4eYaJaRaeIHb0DubJAmVbK6xg1+QId4mISjEiTZY/UpGe1DkXAzUcV/ujJbtWQxXW7sUU4SsEGao3+3xCW1d3hIVYwYhp3Nbm/sVpT+chU+57v8kfE/yNxZxtmwq/nhOlnLO9EidZPeSBlgNhI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745469051; c=relaxed/simple;
-	bh=y/NJBn3T8tuHcf0J4it0P0ZHxOavrB+bB+bjFA+YV1c=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cvb0Amelc8603I1yIDpGdqw5aXp976AKY4iMe9ilm65SO1+gl7orndL8zSKXAd+P6fx91nuzqxQxPEdksC2cv5h8ThzIHOQWpwUUZTDIj1Fai4wsMOcjeeBaqv9tgGaN2AItAz1EGqJvkEPV8VcDkQ9D2PFPz4HD7WO/Rbz0jtU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=lJPG4IZo; arc=fail smtp.client-ip=40.107.100.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D798198A11
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:33:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745469227; cv=none; b=R+YxmCoBkovmfLxbsmU5nl/iJcV+5gX3rwkciiiuMFwa0uyM42Ddjh7HLk6EUzdZoXcJDtimxQu7Ed4+HupzEIMszOAjGuh1cSTk2YLvaq3ObFX69R35k4R18XJQUpxOdAE3Ie+VQbgKBmn1L5EO5zfpl1Ue6tstZoUdUi1Dy9s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745469227; c=relaxed/simple;
+	bh=7L7H1m7WTMw2rrNFw2qugvrsnLMboVo2KxA6ogCXw+M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C2NHRJGfO6aKlAeFok1GCNnfCV2AmlJOhPW4pRfAzVYMRg7XITCiwJl6NFRCHYkWKCTiRD6W9Ffz8lAHQ4nx7qIDxp/em1mqxO7rT7eY1TPJZB8+AoPhzCGgGplCdYDDGDKfamLUcP1rbGW6N5+jPbkt28+SLj67g3xDHnZzp1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=L0bEFV6U; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="lJPG4IZo"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X7wu8N9otdFwHIzAWOAXLjqT/1UlGQ9i04ubUWf0P8rwO5KIvaMX2U98iXw2GNNtq5Yb/9Mhr1rN3nXYSpR7Lo1Siw7f8pWiXMU5BpPvBK3Yyd3kPX48Zk5CeukR/tfqn2qOeOQCCI5Utj2ctgw8ugazjDXJCpOh/ijzJu68RAUtf7iRqsUQCjxTcEhk0xqLSSoGAta1fV2Z64Cq9l3fDtth5/R/X4TuZev8ecTRJG3QAD7RxLYsYoUsdO1RGfZAY8yMSQqMU5jaT3VsitCwgiggi7jNe/MC7rFgYaAVzreQGyqb55/D4soLxkIzZUU4/Mu+1v9JafDLv8fgt/gIww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=N1Mk1B2BLZ8y7Fb6toJR0WNcPMhxoGq7/b6BQ3ESKZE=;
- b=F4pY8H0fQCNokFvZj/ESDnbcUYek00OP6gJ2c4HN+P3tfdkgUjlLxLr6ANuhzt2zb+jD6LCOuLIR5SaZszV2zp+5uJyT8SI3Cap6xn9WhHHF0YznUNesGw0+qerEcMjcTg+f2oxRNFFFK+eKtQfruBx0gqgfLdmdUer1beHQ7rgt6CwzlfOp2OEx+e/+XOEkDmVOBJIsvL+hPuExx/zua6/pLl/Ply6cVWC15rBQG1g2pUII0RVio8X8BMJUPNZ3/B5f5swqdp68ojTH8tFHhns0SEpHC0SeSA+lObcb8SDIQUkcWfmdclQJQd/rTtbCweB0MM4jpMRW9IbMSQ59lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N1Mk1B2BLZ8y7Fb6toJR0WNcPMhxoGq7/b6BQ3ESKZE=;
- b=lJPG4IZoJy34az98MO/nnPpvsX59YbYZuQHP5BfWUFoUyD6hgnajw8fEDq3dG0pGWSTT5RaHHr/BXtvwZMyZgonNjg+/Vvjzn2Nd9FEwjIJ9BubKX33kGmNVkuZ9xtDwCwsOPtie+ZnJxeqfCY65jVOhwQrUWM02NWN1mgcegNM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com (2603:10b6:208:3a8::13)
- by DM4PR12MB7695.namprd12.prod.outlook.com (2603:10b6:8:101::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.37; Thu, 24 Apr
- 2025 04:30:43 +0000
-Received: from IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::c819:8fc0:6563:aadf]) by IA1PR12MB6460.namprd12.prod.outlook.com
- ([fe80::c819:8fc0:6563:aadf%4]) with mapi id 15.20.8655.033; Thu, 24 Apr 2025
- 04:30:43 +0000
-Message-ID: <5dbe2246-fb9d-4bc8-82a2-8cbffa913b6e@amd.com>
-Date: Thu, 24 Apr 2025 10:00:36 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
-To: paulmck@kernel.org, Bert Karwatzki <spasswolf@web.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Mateusz Guzik <mjguzik@gmail.com>,
- Petr Mladek <pmladek@suse.com>, Steven Rostedt <rostedt@goodmis.org>,
- John Ogness <john.ogness@linutronix.de>,
- Sergey Senozhatsky <senozhatsky@chromium.org>, linux-kernel@vger.kernel.org,
- Linux-Next Mailing List <linux-next@vger.kernel.org>
-References: <20250423115409.3425-1-spasswolf@web.de>
- <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
- <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
- <5a4a3d0d-a2e1-4fd3-acd2-3ae12a2ac7b0@amd.com>
- <82ff38fc-b295-472c-bde5-bd96f0d144fb@paulmck-laptop>
- <1509f29e04b3d1ac899981e0adaad98bbc0ee61a.camel@web.de>
- <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
-Content-Language: en-US
-From: "Aithal, Srikanth" <sraithal@amd.com>
-In-Reply-To: <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN4P287CA0110.INDP287.PROD.OUTLOOK.COM
- (2603:1096:c01:2ad::11) To IA1PR12MB6460.namprd12.prod.outlook.com
- (2603:10b6:208:3a8::13)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="L0bEFV6U"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745469222;
+	bh=7L7H1m7WTMw2rrNFw2qugvrsnLMboVo2KxA6ogCXw+M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L0bEFV6UMB8hLMAI11I3XcynyhDIXwOYBFDn3Ib3gNHaNiLu1CQ0frBGYKjxXDtL3
+	 phsVMRmjr3s5VeQMi29pJ5hee225wT6AUZ0VO6a1NICs7gijN9OVklu2SExcyAxi3e
+	 MyYoYyjVCc3nrXplOLtJo7WkkQyax/J65JbL1YSweXMjWcF5LzSxL2KU1xqvr7buhc
+	 m80ySLYi2PfY+GZ+w3mqN7Cu9JSnYMaB59wQR265wQL+uT2dN3+fOk+7B1TmvccKdR
+	 2Q6X595nU8kiIX9W+UHVzR3Q/VIS7PHH/zlUgpgmMYq4shzKz7IFRvEA9Uzdez0xFt
+	 UATHXIdqU9mfA==
+Received: from [192.168.8.5] (unknown [137.59.78.166])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id A321517E088C;
+	Thu, 24 Apr 2025 06:33:35 +0200 (CEST)
+Message-ID: <f8e4932c-0bdd-44e0-9b1d-72c37024a400@collabora.com>
+Date: Thu, 24 Apr 2025 10:03:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6460:EE_|DM4PR12MB7695:EE_
-X-MS-Office365-Filtering-Correlation-Id: 416ee452-60f9-4d6d-d87c-08dd82e8c617
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bnVpR3JNLzU3OTV1TE5MVUhqZEw5ZGRxVHBPOGJzZDBGbTRQa1lpZ0FkTmRV?=
- =?utf-8?B?VER3NUFmTDdSODVHenJiLzRoUll1QjRHYTJFQjcwcEQvd21qcVRrRVU2a3d0?=
- =?utf-8?B?d0VucHM2d1hVWGN1Nk8zQWFhYldvODJlYzliR25RYm0vTUNObzZZd2NWMWJu?=
- =?utf-8?B?MUpsMVo1eXlQcHJXcFFBWC8weFJZSUVpL2NEeWhBQUF5a3BCSFRhK0lTYS9w?=
- =?utf-8?B?ZnM3RTdkTDJHcXlYUTR4QWF0d2FmOTdKL0pvWG5TNlNKRjlQaVdLakJPSWxH?=
- =?utf-8?B?MXhmbHMyMzNkcFI3a3ROenJPYjR2cXFlQldHcTFIVHRMMkFsczU4d2RLUnJj?=
- =?utf-8?B?WXVyUzMwVnRLWStqMlhtaVRQWWdLdGlva0hqRGl2eml3TlJCR3dJTFVTTTAx?=
- =?utf-8?B?ejZtWWRKdG1CZ2dLNjJQdGlMS1FzUjdLc3U5b3liT1AwUlVLMVBPVTc0bkNz?=
- =?utf-8?B?WGl1dGVzUy9YSDF6UnlJbmh4d0hwVVhMZXBrandsRXlIbGoxQnYzTXNZaWVq?=
- =?utf-8?B?TDlBS1ZiLzRoTHV5UVorei95VEJrWW10VlIydlVmYUxqZWpvazM1WGc0UlNX?=
- =?utf-8?B?THJqMXh1cng1eTUyKzBjeGtjcTNmT095REN6TUd0Zk5xUHJ3NFVQTmlLaktl?=
- =?utf-8?B?UmtzSE5YOVNYMXV4anhMbW5oMTN3ZGZVR2FxYjVScXVteTBDR2NIeWtGVmFy?=
- =?utf-8?B?bEQwY0RFdzYwbVEzZHZSVDhKMmlveXJWSS9qclIxTlBKZTNrazRiYU03SHUw?=
- =?utf-8?B?SzA4SkdGUE9pNmlaMnBQVEFoc0FFUnVpNHZTeTBKcEIrUzJXenY5d1oxMGMx?=
- =?utf-8?B?cktkWUFwcjJUN2ZvWmxuTUs0QTFDOUc4TGdQUnN2RVBzN2trck55Z1kwRWdn?=
- =?utf-8?B?b1c3bXJ6aFZHUW1PYzFOYnNxUDNwQjdaanZQNFpZNmZ4RVRocWdhazZLTjVv?=
- =?utf-8?B?TzlCMHZBTksyMlF5U2dsVllNcTVFTHRpWklqb1hodlg0cnB0WWF4a01uc2Fz?=
- =?utf-8?B?YmpQT29jVTdVT1A5S3ZKQWJuaENkMUZtdmEyY2QvYlM4Nm1TSUVxazladGpm?=
- =?utf-8?B?VThkOVlzSnlzRVpSSkpJbE1tdldrbnJrc2E4VXJJckd1dDBSWUpseGx5ZmVB?=
- =?utf-8?B?VWh3MWFJbmY5VEt6WGtIYVJhenBocTNEZHFOc0lSMytieTZYMEo2WmthZ1lR?=
- =?utf-8?B?eWxsSHRXdFA3VE5wbVExZ3R0TzhKOXRKU2R2bTZIRFdmNXVRcGRab1ZuTzNt?=
- =?utf-8?B?Sk5HcWpvK1V4MG11ZWQxbWpEcTV5aFRyOWw3Y2dBVXN2QlZnSjRucHlXYXFD?=
- =?utf-8?B?QTJWMHVIUXRJcHlwcHduNDltczhXS3lEQXFpZkt0RXZqN3lEbm9nbzdXSzRK?=
- =?utf-8?B?aGRnNGNRZXRzMHNQVDc3ZGFLb3UvdFJUNnBMUi9RQVJVTk5aNlk2YmVDdndN?=
- =?utf-8?B?bXNUWFNpVDhobnlpOHlIMFNXejlSUWlJeEpyeGxWVno0L1pIZVgrVnVad3Rt?=
- =?utf-8?B?VDhmNjNWaHJTVHNScjREVXByTHBCYktaRHBMR1VwMXRybk5acjNUbVI3bWdy?=
- =?utf-8?B?UTNMYXNQMWgxUlQvdStGVnc4VkxmUktuLzBnVjBwN3FhRktoK3ZCZS83cWIw?=
- =?utf-8?B?ZVYvRVgwK3Y0OXMxVndicEdtanh0VFBaV0I0eVR0U2t0Q3B5bkVvVC94Umtj?=
- =?utf-8?B?SkI0Z09FcUtNRjh0VUhZbXZoQUxxajd5cUNObVBTdDl1Zlp2aEMwcmx1QlFz?=
- =?utf-8?B?QXVuc1BGYlhIUWY4K3B3Y3FHMTViZUJia2VCbWhLMG5DWFZvTytZcGtvc1E1?=
- =?utf-8?B?bHhRS0hmTFBzQ0swSTJUSzFmaFBySkh5NU91MGlrWE1wYndrbGZRaHg4UE5M?=
- =?utf-8?B?TUkweHJhY29oS0cwS1p6LzdYSzN6MndBRmRJU2Y5TnJtQ3dWLzNZeDZYVjZq?=
- =?utf-8?Q?lgFXGRJnGlM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6460.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NWhXZjhBNXJHeitQa0ZNNlVqdVJWaGJIZStwbU1XbHNjMm5FemUyM0s1R3Zz?=
- =?utf-8?B?Qi9BVDZpWTlNem5Fakd6Mkh0MUZUMk5hRm5DUzBhcURXTXBzbXhGRHlvNkZa?=
- =?utf-8?B?QzMrc3B1SGVpSWRTdEdaTU5sODdmdUJIM3NjY3c3VHlhTmx5cGxKc3E3YjMw?=
- =?utf-8?B?cW9Na28vc0p6SURsTWVtaVhvb3U5N0RwMlYwdEdpcnlrMVFTaWFSM3ZmRVY3?=
- =?utf-8?B?ei85SEdkRDNDekJVWWU1VXhISEVkM2x5dDdxMWh0VlcxdHZXcENwZitlY3hD?=
- =?utf-8?B?bndndEpQdUZNdWxqb3Q5V241MXdNa0dRUktuUnkvMVhxbHNUMzMwNmkzK0M5?=
- =?utf-8?B?ck8xTlZYSS9TRUlxOWlBUUxYcGR6Znoybm9kbmFUWFEzL2Q2bkZYU1hNamhI?=
- =?utf-8?B?OXpjTmxWMFcrWjByM1B0ODFwc2RDNXBsQjl0VTRGelNjYk81Q1JBNU9qS2p3?=
- =?utf-8?B?RkwyLzk3T2o2VXhBUTVaY0NIRkFRK20wMzhNMkVZQWFUa05EOWJ4bWtsbFN3?=
- =?utf-8?B?ck9BYVluVFpSN0dIa3dFYmNwNEF3ekZyd05CbGUxS0ZrcDRTYmJ1ZmFjd0pU?=
- =?utf-8?B?bnM3dnpYUCs5YW8xenpHVHMvQ0pxQnpQK3F1Q05QZ1J6V2ZPSitqNHpoU1FL?=
- =?utf-8?B?NWcwV215YzFLMk9WaU5EMTZuSmZ3SC9pV1YxbUJsN1c0UjhBd2t0ejR5MExZ?=
- =?utf-8?B?MHRjY2FrVXpwUmdMbklWRGo5Mks5ZHBOOW4zRDRhZ3RVZVU3Mlh0M0x2algz?=
- =?utf-8?B?VlNkMWRhZFN3QkZ0N3h2SVBEcVBsWThUN2wrc2puV0NZaFkyTjc4c1Vza1ND?=
- =?utf-8?B?SU5nY0pPMm1yd29WM1dUTmllWFJJVTZDZmNSam5QYXhFYXBOcFM0UmZ1K29n?=
- =?utf-8?B?bVE2eUJWdjNOZEF4WW1aeVJOQzFlVUdYQUVDRThHMzhsYUVCbVpkTjE1Ymtw?=
- =?utf-8?B?a2VtcGgxY2syQVRPSklPK3FzTEZWUzI3OHR2RDRYajZqWHV0MXA4dzlqR1lu?=
- =?utf-8?B?UllRa0ljSEJQRWNGS0hTNU5tVVdqSElyT1EyaGFjRHJ3YjdwOUc0VDNxaHMz?=
- =?utf-8?B?WWRHN3ptS2haZkp3enBEbk1MUEJqaEp2MFNuSHBpRnJibjVuZGtjY2pxVE1K?=
- =?utf-8?B?TTBLeTFyY1paOWJ4ZGtJeEdSQlNFcC9XdGhOWWNQM1ZhMEV0Rjh4bkZMYWVW?=
- =?utf-8?B?ODJPWHpOQ25kNk1mRW44enZMSW0rQWZxc2xJR3FySEhZRmJJS2hMai9uOXpH?=
- =?utf-8?B?eDllUHFZWjNaMHN4aHYzc0psSVY2VGZpZkdTbmtyTEFkc0svcllxSEt5NUc5?=
- =?utf-8?B?SmpndU9Va0c2UFZxanRoTVF2RGZtVzFxUjgyaktYVmtBWHZHZmpEMERIdHFu?=
- =?utf-8?B?YklIY0diQ1ViYkMyZk5OUjhPNHljempBeTU2M0U2RDNkajRPcDRrYW4yZ2JJ?=
- =?utf-8?B?RTdqQXFWU2dzYTJpUkROUzZDS2cwRktGRkRHdWZZWnU2ZVFhZnpBVEJqd3Bw?=
- =?utf-8?B?ajl4K1p2QUQzKzNlZGtvN1ZLYW91M1dDdVptUk1xTHBNdW1OZjg2TnYxa1JH?=
- =?utf-8?B?V1R2UGR3UEwrZmlzYlcrbXFvOFhXdFRaSEVMejFjRTNrZU94WWFkS0Z0dmY2?=
- =?utf-8?B?NEpMTUxNT3pROUJ3aGwyZXZtSTNTWVFvSlVlejFJWVErcTRDb3hjQ09yZjJy?=
- =?utf-8?B?VDIyZEFZYXdoMzU1dUh0ZjRnL05rTUFNdWY4MlhWK1RXS1IxSzNoZ2JZYm9C?=
- =?utf-8?B?MjErWktsQUxQalZZcFRqeGJaVkkxajJUSDgzbTZjRDkweWMxdEFxYUVXNEg2?=
- =?utf-8?B?SWhKbi9WbXlPUFRxaG45L1BVSE5HSjczQm9id2RGRE5Xb3R1L2wrcjNLSmUr?=
- =?utf-8?B?OE5USlljdnFxS0cvazNEZWthUjIyKzhPSlcycndIL05DZUNXVUhyS1ZPOUVQ?=
- =?utf-8?B?OWVpQnpCS0dDaFQ1NlVIazRjTno1WVlzQkx4VjJaK3VuQ1IxdTNwc1Zsb09o?=
- =?utf-8?B?UVRhVmhBNTc5NlRaT21Gb1VNQmdkLzMvdlpPVDY4SzA1QnJ2WklGb0c0Q2NZ?=
- =?utf-8?B?aEtVWStvK0dlYW5EYmFGTUpRUzFxN1IrWGl0THFHeDhJQmRLYWZqKzczR1hD?=
- =?utf-8?Q?tSiYOhdCfK0PS2fxRzf31EV/N?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 416ee452-60f9-4d6d-d87c-08dd82e8c617
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6460.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 04:30:42.7357
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: pi5QCyuQtcZv92WOGNIS4vaavpotQqca57oBYFKV4u0lDqaruaVVfCwIA8wGv8YySV2GSfavu1nMS6BEng81xQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7695
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] drm/ci: Add jobs to validate devicetrees
+To: Helen Koike <koike@igalia.com>, dri-devel@lists.freedesktop.org
+Cc: daniels@collabora.com, daniel@fooishbar.org, helen.fornazier@gmail.com,
+ airlied@gmail.com, simona.vetter@ffwll.ch, robdclark@gmail.com,
+ guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
+ valentine.burley@collabora.com, lumag@kernel.org,
+ dmitry.baryshkov@oss.qualcomm.com, quic_abhinavk@quicinc.com,
+ mripard@kernel.org, maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+ linux-kernel@vger.kernel.org
+References: <20250417030439.737924-1-vignesh.raman@collabora.com>
+ <20250417030439.737924-2-vignesh.raman@collabora.com>
+ <089fbd77-43ec-4ed5-8bcf-168a502c5270@igalia.com>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <089fbd77-43ec-4ed5-8bcf-168a502c5270@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 4/24/2025 1:26 AM, Paul E. McKenney wrote:
-> On Wed, Apr 23, 2025 at 09:19:56PM +0200, Bert Karwatzki wrote:
->> Am Mittwoch, dem 23.04.2025 um 11:07 -0700 schrieb Paul E. McKenney:
->>> On Wed, Apr 23, 2025 at 08:49:08PM +0530, Aithal, Srikanth wrote:
->>>> On 4/23/2025 7:48 PM, Paul E. McKenney wrote:
->>>>> On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
->>>>>> On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
->>>>>>> Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
->>>>>>> debian sid. When booting kernel message appear on screen but no messages from
->>>>>>> init (systemd). There are also no logs written even thought emergency sync
->>>>>>> via magic sysrq works (a message is printed on screen), presumably because
->>>>>>> / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
->>>>>>> commit dd4cf8c9e1f4 as the first bad commit.
->>>>>>> Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
->>>>>>
->>>>>>
->>>>>> Hello,
->>>>>>
->>>>>> On AMD platform as well boot failed starting next-20250422, bisecting the
->>>>>> issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
->>>>>> logs.
->>>>>
->>>>> Thank you all for the bisection and the report!
->>>>>
->>>>> Please check out the predecessor of commit dd4cf8c9e1f4 ("ratelimit:
->>>>> Force re-initialization when rate-limiting re-enabled"):
->>>>>
->>>>> 13fa70e052dd ("ratelimit: Allow zero ->burst to disable ratelimiting")
->>>>>
->>>>> Then please apply the patch shown below, and let me know what happens?
->>>>> (Yes, I should have split that commit up...)
->>>>>
->>>>> 							Thanx, Paul
->>>>>
->>>>> ------------------------------------------------------------------------
->>>>>
->>>>> diff --git a/lib/ratelimit.c b/lib/ratelimit.c
->>>>> index 04f16b8e24575..13ed636642270 100644
->>>>> --- a/lib/ratelimit.c
->>>>> +++ b/lib/ratelimit.c
->>>>> @@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
->>>>>    	unsigned long flags;
->>>>>    	int ret;
->>>>> -	if (!interval || !burst)
->>>>> +	if (interval <= 0 || burst <= 0)
->>>>>    		return 1;
->>>>>    	/*
->>>>
->>>>
->>>> I applied above patch on top of 13fa70e052dd ("ratelimit: Allow zero ->burst
->>>> to disable ratelimiting") [linux-20250423]. This is fixing the boot issue.
->>>>
->>>> Tested-by: Srikanth Aithal <sraithal@amd.com>
->>>
->>> Thank you both, and to Bert for intuiting the correct -next commit!
->>>
->>> Could you please try the next increment, which is this patch, again
->>> on top of 24ff89c63355 ("ratelimit: Allow zero ->burst to > disable
->>> ratelimiting")?
->>>
->>> In the meantime, I will expose the version you two just tested to
->>> -next.
->>>
->>> 							Thanx, Paul
->>>
->>> ------------------------------------------------------------------------
->>>
->>> diff --git a/lib/ratelimit.c b/lib/ratelimit.c
->>> index 04f16b8e24575..8f6c54f719ef2 100644
->>> --- a/lib/ratelimit.c
->>> +++ b/lib/ratelimit.c
->>> @@ -35,8 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
->>>   	unsigned long flags;
->>>   	int ret;
->>>   
->>> -	if (!interval || !burst)
->>> +	if (interval <= 0 || burst <= 0) {
->>> +		ret = burst > 0;
->>>   		return 1;
->>> +	}
->>>   
->>>   	/*
->>>   	 * If we contend on this state's lock then just check if
+Hi Helen,
+
+On 24/04/25 00:26, Helen Koike wrote:
+> 
+> 
+> On 17/04/2025 00:04, Vignesh Raman wrote:
+>> Add jobs to run dt_binding_check and dtbs_check. If warnings are seen,
+>> exit with a non-zero error code while configuring them as warning in
+>> the GitLab CI pipeline.
 >>
->> If you set "ret = burst > 0", but "return 1" this will make no difference
->> (except in the case of a major compiler bug, probably), as I wrote in my other
->> email which overlapped yours, this fixes the issue in next-20250422:
+>> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
+>> Reviewed-by: Maxime Ripard <mripard@kernel.org>
+>> Acked-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+>> ---
 >>
->> diff --git a/lib/ratelimit.c b/lib/ratelimit.c
->> index b5c727e976d2..fc28f6cf8269 100644
->> --- a/lib/ratelimit.c
->> +++ b/lib/ratelimit.c
->> @@ -40,7 +40,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
->>           * interval says never limit.
->>           */
->>          if (interval <= 0 || burst <= 0) {
->> -               ret = burst > 0;
->> +               ret = 1;
->>                  if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
->>                      !raw_spin_trylock_irqsave(&rs->lock, flags))
->>                          return ret;
+>> v3:
+>>    - Add dt-binding-check and dtbs-check jobs to the static-checks stage.
+>>
+>> v2:
+>>    - Use LLVM/Clang instead of GCC to avoid architecture-specific
+>>      toolchains for cross-compiling.
+>>
+>> ---
+>>   drivers/gpu/drm/ci/check-devicetrees.yml | 44 ++++++++++++++++++++++++
+>>   drivers/gpu/drm/ci/dt-binding-check.sh   | 16 +++++++++
+>>   drivers/gpu/drm/ci/dtbs-check.sh         | 19 ++++++++++
+>>   drivers/gpu/drm/ci/gitlab-ci.yml         |  2 ++
+>>   4 files changed, 81 insertions(+)
+>>   create mode 100644 drivers/gpu/drm/ci/check-devicetrees.yml
+>>   create mode 100755 drivers/gpu/drm/ci/dt-binding-check.sh
+>>   create mode 100755 drivers/gpu/drm/ci/dtbs-check.sh
+>>
+>> diff --git a/drivers/gpu/drm/ci/check-devicetrees.yml b/drivers/gpu/ 
+>> drm/ci/check-devicetrees.yml
+>> new file mode 100644
+>> index 000000000000..75c9b009da1f
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/ci/check-devicetrees.yml
+>> @@ -0,0 +1,44 @@
+>> +.dt-check-base:
+>> +  stage: static-checks
+>> +  timeout: "30m"
+>> +  variables:
+>> +    FF_USE_NEW_BASH_EVAL_STRATEGY: 'true'
+>> +    SCHEMA: "display"
 > 
-> You are quite right, your patch does fix the issue that you three say.
-> Unfortunately, it prevents someone from completely suppressing output
-> by setting burst to zero.  Could you please try the patch below?
-> 
-> 							Thanx, Paul
+> Shouldn't we also check for gpu ?
 
+Yes, it would be good to check gpu as well. I will send v4 with these 
+update.
 
-I have tested the below patch on top of 13fa70e052dd ("ratelimit: Allow 
-zero ->burst to disable ratelimiting") [linux-20250423].
-This is fixing the boot issue. Thanks again!
-
-Tested-by: Srikanth Aithal <sraithal@amd.com>
-
+Regards,
+Vignesh
 
 > 
-> ------------------------------------------------------------------------
+> Regards,
+> Helen
 > 
-> diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-> index 04f16b8e24575..d6531e5c6ec4e 100644
-> --- a/lib/ratelimit.c
-> +++ b/lib/ratelimit.c
-> @@ -35,8 +35,8 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
->   	unsigned long flags;
->   	int ret;
->   
-> -	if (!interval || !burst)
-> -		return 1;
-> +	if (interval <= 0 || burst <= 0)
-> +		return interval == 0 || burst > 0;
->   
->   	/*
->   	 * If we contend on this state's lock then just check if
+>> +  before_script:
+>> +    - apt-get update -qq
+>> +    - apt-get install -y --no-install-recommends clang lld llvm 
+>> python3-pip yamllint
+>> +    - pip3 install dtschema
+>> +  script:
+>> +    - drivers/gpu/drm/ci/${SCRIPT_NAME}
+>> +  artifacts:
+>> +    when: on_failure
+>> +    paths:
+>> +      - ${ARTIFACT_FILE}
+>> +  allow_failure:
+>> +    exit_codes:
+>> +      - 102
+>> +
+>> +dtbs-check:arm32:
+>> +  extends:
+>> +    - .build:arm32
+>> +    - .dt-check-base
+>> +  variables:
+>> +    SCRIPT_NAME: "dtbs-check.sh"
+>> +    ARTIFACT_FILE: "dtbs-check.log"
+>> +
+>> +dtbs-check:arm64:
+>> +  extends:
+>> +    - .build:arm64
+>> +    - .dt-check-base
+>> +  variables:
+>> +    SCRIPT_NAME: "dtbs-check.sh"
+>> +    ARTIFACT_FILE: "dtbs-check.log"
+>> +
+>> +dt-binding-check:
+>> +  extends:
+>> +    - .build
+>> +    - .use-debian/x86_64_build
+>> +    - .dt-check-base
+>> +  variables:
+>> +    SCRIPT_NAME: "dt-binding-check.sh"
+>> +    ARTIFACT_FILE: "dt-binding-check.log"
+>> diff --git a/drivers/gpu/drm/ci/dt-binding-check.sh b/drivers/gpu/drm/ 
+>> ci/dt-binding-check.sh
+>> new file mode 100755
+>> index 000000000000..5e9a439c48a4
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/ci/dt-binding-check.sh
+>> @@ -0,0 +1,16 @@
+>> +#!/bin/bash
+>> +# SPDX-License-Identifier: MIT
+>> +
+>> +set -euxo pipefail
+>> +
+>> +if ! make -j"${FDO_CI_CONCURRENT:-4}" dt_binding_check \
+>> +        DT_SCHEMA_FILES="${SCHEMA:-}" 2>dt-binding-check.log; then
+>> +    echo "ERROR: 'make dt_binding_check' failed. Please check dt- 
+>> binding-check.log for details."
+>> +    exit 1
+>> +fi
+>> +
+>> +if [[ -s dt-binding-check.log ]]; then
+>> +    echo "WARNING: dt_binding_check reported warnings. Please check 
+>> dt-binding-check.log" \
+>> +         "for details."
+>> +    exit 102
+>> +fi
+>> diff --git a/drivers/gpu/drm/ci/dtbs-check.sh b/drivers/gpu/drm/ci/ 
+>> dtbs-check.sh
+>> new file mode 100755
+>> index 000000000000..91212f19fb98
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/ci/dtbs-check.sh
+>> @@ -0,0 +1,19 @@
+>> +#!/bin/bash
+>> +# SPDX-License-Identifier: MIT
+>> +
+>> +set -euxo pipefail
+>> +
+>> +: "${KERNEL_ARCH:?ERROR: KERNEL_ARCH must be set}"
+>> +
+>> +make LLVM=1 ARCH="${KERNEL_ARCH}" defconfig
+>> +
+>> +if ! make -j"${FDO_CI_CONCURRENT:-4}" ARCH="${KERNEL_ARCH}" LLVM=1 
+>> dtbs_check \
+>> +        DT_SCHEMA_FILES="${SCHEMA:-}" 2>dtbs-check.log; then
+>> +    echo "ERROR: 'make dtbs_check' failed. Please check dtbs- 
+>> check.log for details."
+>> +    exit 1
+>> +fi
+>> +
+>> +if [[ -s dtbs-check.log ]]; then
+>> +    echo "WARNING: dtbs_check reported warnings. Please check dtbs- 
+>> check.log for details."
+>> +    exit 102
+>> +fi
+>> diff --git a/drivers/gpu/drm/ci/gitlab-ci.yml b/drivers/gpu/drm/ci/ 
+>> gitlab-ci.yml
+>> index 65adcd97e06b..ac2f498cfe5a 100644
+>> --- a/drivers/gpu/drm/ci/gitlab-ci.yml
+>> +++ b/drivers/gpu/drm/ci/gitlab-ci.yml
+>> @@ -108,6 +108,7 @@ include:
+>>     - drivers/gpu/drm/ci/static-checks.yml
+>>     - drivers/gpu/drm/ci/build.yml
+>>     - drivers/gpu/drm/ci/test.yml
+>> +  - drivers/gpu/drm/ci/check-devicetrees.yml
+>>     - 'https://gitlab.freedesktop.org/gfx-ci/lab-status/-/raw/main/ 
+>> lab-status.yml'
+>> @@ -117,6 +118,7 @@ stages:
+>>     - git-archive
+>>     - build-for-tests
+>>     - build-only
+>> +  - static-checks
+>>     - code-validation
+>>     - amdgpu
+>>     - i915
+> 
 
