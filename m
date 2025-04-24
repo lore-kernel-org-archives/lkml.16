@@ -1,196 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23D2214211
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E8720B808;
+	Thu, 24 Apr 2025 08:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745483826; cv=none; b=ZrqCzu4nzaBqw8+bedSignilrab0+f/Fo0d8DqVHJjpY2sxTIMT7jZsj91AJen/Z7RogBA5P3S6a5UtimfJcxpO64g2bqYHmrdSukLqhSPLoEYBVnjgFCPLmVpkwVMwoE0nk+DC36/16SzUYtsm8K3X4jlauTbsCsNDBspHoOGc=
+	t=1745483931; cv=none; b=kFA1TTXNKrIwV803bloZicOBVaFJpHjovBQDNqAnw3MBHCFwFSM+KLUSxgJjfJrJNFPtc4EuM85nKLSMk+ULV/c2kegRnkhjAKXQf8b4HYQHXtK+rOMTVWTa4rFV6009HmPjW2lMl22KX9nPaMmDpt0gecm+4o7rXFENBVQiv+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745483826; c=relaxed/simple;
-	bh=fPeja0QKwMSDRTJx03tZ5pM4veCCSXRBmgYEmRDUSpA=;
+	s=arc-20240116; t=1745483931; c=relaxed/simple;
+	bh=YyV98+YaQfjZFxXDCixDSke2btG2skL0Xh5MEJ/fPDM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s1ppX9NnGkoOTlhc9E/CD+zYK5E78eo34eC7VHsLbR03yVpuUqU9tozhrcu0jymkpVaNiHSQntgtN69vQ51/BfQhirSpJKN7lC9Ztcml9Ftzh50gevqIOeVAZx6CPB+jN8huwHq9iSKGV++9F7LWLhywgKwcCC4K6me9tV3vRQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h6kx5pfI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h6kx5pfI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745483823;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6fmlstr9ginyDig4RAQsNh+6aO603AT1tDfj5LgGrKc=;
-	b=h6kx5pfI0J/DnXenjy2KATMKzTR3WWelyQqChV41c+o5MNYnNz/4OPlBo11XMZERJydFzy
-	2z/n7nycriFPLxg26g/CUf3Ex6Uh19zpsq3/6OoNHP+SvUht3DOSRqABcLPZnqdMsXIUnx
-	SwwAtWoa7n7+s+moNDgaa+iBhhZmPaI=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-428-k_NRwWS_Mf-d_yeLexodbw-1; Thu, 24 Apr 2025 04:37:01 -0400
-X-MC-Unique: k_NRwWS_Mf-d_yeLexodbw-1
-X-Mimecast-MFC-AGG-ID: k_NRwWS_Mf-d_yeLexodbw_1745483821
-Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e54d9b54500so1024994276.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 01:37:01 -0700 (PDT)
+	 To:Cc:Content-Type; b=QI48jl+xCYKjZaUkKRdnbMtlznqrsgWrjmbKypViLmwP/BZE91mVl7kURHGeIoHMjfXUo2k7EoXIanCasFaC082vWT1pqYuu3iveQkt1Jl0YkvgZhOnWUstsfYJ1H48wO6+pKA14FZKkQ3+7zRr4Q778sLgW3+8vHtii53eUzgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86d6ac4d5a9so369991241.1;
+        Thu, 24 Apr 2025 01:38:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745483821; x=1746088621;
+        d=1e100.net; s=20230601; t=1745483927; x=1746088727;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=6fmlstr9ginyDig4RAQsNh+6aO603AT1tDfj5LgGrKc=;
-        b=Wmvx4/yZBvTdiLoNI1ZkMSffldxYR3hd25hMoUEQnSwgcUW6/xid6yOhBqRVXaVogi
-         n+vAOWWKpcqgCmaBZ7P8venjUK2aW+g7NDL2ZPC0aT7B6VKcN5+15WtUkF4CRI3HUC84
-         dhhy/ve1dASZA0GEuBLVGrh8dKzV+qoSpRwwkQH9vTOwKlIxXLeHbJjAxzDLW+A/57GI
-         FRqwA5uezf8LZqae6MsWyjhNpdJ6kf/k/t1dGQUwi1T+rIyYN9TBADxEUqnlBxY6kq8z
-         51G8t4Mqt1pn9G6Pi4iMQCHYIlMiSHS4ykFMwF3VcqZWHx5Y51bLW6prozvnF7pxscLQ
-         w6lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXOQBgc4FcJRI/UQSz9/7R8n6UuDgcrB/swrSzV9jlP3cQn53+Hl7PChsQsFBJ6zIDeklPKb8AooB6zqU8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiTxGsJMEdz6MFfvkqHzQD2hx7fjx4S0BTDPseDGkVHj5Xc5Fx
-	CvWzZM3VHfhpBU4/16aVujSxOm6FnSFUqJcQ2VYrYfsRgsDxVpnOn0wybXgRZm3eobmx5lkgZpl
-	dya/BgCwzLkBm0QamH5Y+rsxzrXg/rCHVPC7GlnjaNd26HF7vpLPwiWu/nMyHFEFurdTuxZsVnC
-	PEiqXiWSlLYLgzXNK0FA5P8iJ0HgX6QtV6PzA2
-X-Gm-Gg: ASbGncuocCPGaPvzmFDuFUFeKD6TT/c7soaQAQH973QfvsOnj6PF5e8Weluw4QjPTSZ
-	wku2KNxMwCM5Yd1FxP3hXmpwkhWcv4+Cjtzh5dld9uJEv8oz1w6TEvdCj51EN2JgJFiaFF9c=
-X-Received: by 2002:a05:6902:2186:b0:e72:9693:7b36 with SMTP id 3f1490d57ef6-e73036372e0mr2271542276.42.1745483821380;
-        Thu, 24 Apr 2025 01:37:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHUfymtjS1vLei+DBOMXzLqv89tvpRz1tTcENml/8LK4mc8Ke+xAHKIP1Qw42phxCq+/NuBAxZdcPmq6bth+u8=
-X-Received: by 2002:a05:6902:2186:b0:e72:9693:7b36 with SMTP id
- 3f1490d57ef6-e73036372e0mr2271517276.42.1745483821066; Thu, 24 Apr 2025
- 01:37:01 -0700 (PDT)
+        bh=NXX4mFHnm6kuIK55cjNxrp5WN6Ftx90SWsXCFruZ40w=;
+        b=DU7L0oKnGPui540rhFmFTWnt2lC9/vfBlg/t/j9Y6RxDNz5zwpuSaduZgNMJnDrdah
+         McdKqOFmxNAoQztjGN53phzagnl9wG2Yl8z/CjYNrPDo3fWgFXpVHbTwigwswXls40NB
+         qloX8qFvnRZAs3XUzvpYga2XV1bNg9pGZWHgtrpbntO+JuF6r4ZW/rV1ZlG/Zm0vPRKu
+         T18nWeXReojxEcIqrADDwqcNL7zNX5PU/f7qTwtdKsIiYeJo17wRTJzjhNzPoSJrtlaO
+         8fGLulPGqykJmMRvwYyy4sUPongSCW4aEbVcve86nOvJVjT0OFC8XzIwpvoL9pFrscTF
+         UlMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVXdazKI+e944hRbfn4e2GhSu5yL+6gnYge+PI0BtWBeh1pmbsZz/3ukGkRhdDK3kvZm0AqqFj7ciITy3/m@vger.kernel.org, AJvYcCWGOdGdpeG/X1P8Uih0X/KPIRNSDdtnd2JjTQ1NNOUOrJmuTSfXn0RPDAWgIxW5Lu0m6QWK4plNzyIR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzai+gISlV6ZaYGkDP+PhdRJTWD+L0/kJkCqKTQz1iEee2BQiwI
+	0L/+asyWhHH+lh6KNgQF9c823x6b/xdD3dRZAVWmSho6TaKSX8mu5ePh8i4H
+X-Gm-Gg: ASbGncuGxaNldn6K8pFXlhRXNb4YTDyADXVEZQYwME1cq0G3VhpyIekEOmgf2JjO5zA
+	m4sVKPrqTN6e1ptmKo7IRjkN3kqE2dRDlslNFhujZcaWcO4Fytisa822zVwcPAu8TOBzXuj0nWW
+	3qPgXXdee63GoY9mRHfbHWnqUk00KboWidBkWjODzbWsGSrZdLp2xtMAYODr7ao96wrS+zMerKT
+	u+enKI9DbjIb/4SuOrM7dr2SIwaYwyywANn0M3UnVmovI8fi3X7AsDejybPNYjzTOkPpFAco4Uk
+	zesrvionS13yH7Dy8I27plhSraW2/hCmsarbGAG0lt3CPitN6R8m1giug/z3VqwMawshvNx9X2+
+	+OQc=
+X-Google-Smtp-Source: AGHT+IExsTLlB8u9JhAiK1iS5nNtCNUwSoc3hXxsiQTNyRIFSlujlNMTBdv9qypfLs0zn8z99GqzHA==
+X-Received: by 2002:a05:6102:1524:b0:4c5:1c2e:79f5 with SMTP id ada2fe7eead31-4d38ebec5d7mr1345017137.16.1745483926673;
+        Thu, 24 Apr 2025 01:38:46 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4d3d4da039esm169240137.7.2025.04.24.01.38.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 01:38:46 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d5e3ddb66so335326241.2;
+        Thu, 24 Apr 2025 01:38:45 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUExZj93gH1Ni3XJDLoNF4kyxuWEXCC4u6AquUCtiEojcjYPL+E3RAiPzJ1y3r+f8G88guhBNjX1t3v@vger.kernel.org, AJvYcCUNgK7O1t1mHzgnNjtl3nnD7u/KlNuAFTHbhXTqCjgHJ8to8kpHyX8KX3MmsShozgH70kAJPCF1e5teG0rg@vger.kernel.org
+X-Received: by 2002:a05:6102:dcf:b0:4c1:9cb2:8389 with SMTP id
+ ada2fe7eead31-4d38cb318ddmr1379456137.2.1745483925657; Thu, 24 Apr 2025
+ 01:38:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421-vsock-linger-v2-0-fe9febd64668@rbox.co>
- <20250421-vsock-linger-v2-1-fe9febd64668@rbox.co> <km2nad6hkdi3ngtho2xexyhhosh4aq37scir2hgxkcfiwes2wd@5dyliiq7cpuh>
- <k47d2h7dwn26eti2p6nv2fupuybabvbexwinvxv7jnfbn6o3ep@cqtbaqlqyfrq>
- <ee09df9b-9804-49de-b43b-99ccd4cbe742@rbox.co> <wnonuiluxgy6ixoioi57lwlixfgcu27kcewv4ajb3k3hihi773@nv3om2t3tsgo>
- <5a4f8925-0e4d-4e4c-9230-6c69af179d3e@rbox.co>
-In-Reply-To: <5a4f8925-0e4d-4e4c-9230-6c69af179d3e@rbox.co>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Thu, 24 Apr 2025 10:36:49 +0200
-X-Gm-Features: ATxdqUF_58noK2_e9QPMXCT-pjwdIdBihMopt3yWeIxTGLAFMTKaBY4Kl-orunU
-Message-ID: <CAGxU2F6YSwrpV4wXH=mWSgK698sjxfQ=zzXS8tVmo3D84-bBqw@mail.gmail.com>
-Subject: Re: [PATCH net-next v2 1/3] vsock: Linger on unsent data
-To: Michal Luczaj <mhal@rbox.co>
-Cc: Luigi Leonardi <leonardi@redhat.com>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+References: <20250423-st7571-v6-0-e9519e3c4ec4@gmail.com> <20250423-st7571-v6-2-e9519e3c4ec4@gmail.com>
+In-Reply-To: <20250423-st7571-v6-2-e9519e3c4ec4@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 24 Apr 2025 10:38:33 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUsP5gcTyvqJM4OUFL3VutzDrX-V23uYRfnfgzotD8+rg@mail.gmail.com>
+X-Gm-Features: ATxdqUF2fRyGRvlnt9SP-qLlayAWLqGWTfteEXH26oVsrKfobO2Jdb0dn21RKE0
+Message-ID: <CAMuHMdUsP5gcTyvqJM4OUFL3VutzDrX-V23uYRfnfgzotD8+rg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/3] drm/st7571-i2c: add support for Sitronix ST7571
+ LCD controller
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Thomas Zimmermann <tzimmrmann@suse.de>, 
+	Javier Martinez Canillas <javierm@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 24 Apr 2025 at 09:53, Michal Luczaj <mhal@rbox.co> wrote:
->
-> On 4/24/25 09:28, Stefano Garzarella wrote:
-> > On Wed, Apr 23, 2025 at 11:06:33PM +0200, Michal Luczaj wrote:
-> >> On 4/23/25 18:34, Stefano Garzarella wrote:
-> >>> On Wed, Apr 23, 2025 at 05:53:12PM +0200, Luigi Leonardi wrote:
-> >>>> Hi Michal,
-> >>>>
-> >>>> On Mon, Apr 21, 2025 at 11:50:41PM +0200, Michal Luczaj wrote:
-> >>>>> Currently vsock's lingering effectively boils down to waiting (or timing
-> >>>>> out) until packets are consumed or dropped by the peer; be it by receiving
-> >>>>> the data, closing or shutting down the connection.
-> >>>>>
-> >>>>> To align with the semantics described in the SO_LINGER section of man
-> >>>>> socket(7) and to mimic AF_INET's behaviour more closely, change the logic
-> >>>>> of a lingering close(): instead of waiting for all data to be handled,
-> >>>>> block until data is considered sent from the vsock's transport point of
-> >>>>> view. That is until worker picks the packets for processing and decrements
-> >>>>> virtio_vsock_sock::bytes_unsent down to 0.
-> >>>>>
-> >>>>> Note that such lingering is limited to transports that actually implement
-> >>>>> vsock_transport::unsent_bytes() callback. This excludes Hyper-V and VMCI,
-> >>>>> under which no lingering would be observed.
-> >>>>>
-> >>>>> The implementation does not adhere strictly to man page's interpretation of
-> >>>>> SO_LINGER: shutdown() will not trigger the lingering. This follows AF_INET.
-> >>>>>
-> >>>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
-> >>>>> ---
-> >>>>> net/vmw_vsock/virtio_transport_common.c | 13 +++++++++++--
-> >>>>> 1 file changed, 11 insertions(+), 2 deletions(-)
-> >>>>>
-> >>>>> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> >>>>> index 7f7de6d8809655fe522749fbbc9025df71f071bd..aeb7f3794f7cfc251dde878cb44fdcc54814c89c 100644
-> >>>>> --- a/net/vmw_vsock/virtio_transport_common.c
-> >>>>> +++ b/net/vmw_vsock/virtio_transport_common.c
-> >>>>> @@ -1196,12 +1196,21 @@ static void virtio_transport_wait_close(struct sock *sk, long timeout)
-> >>>>> {
-> >>>>>   if (timeout) {
-> >>>>>           DEFINE_WAIT_FUNC(wait, woken_wake_function);
-> >>>>> +         ssize_t (*unsent)(struct vsock_sock *vsk);
-> >>>>> +         struct vsock_sock *vsk = vsock_sk(sk);
-> >>>>> +
-> >>>>> +         /* Some transports (Hyper-V, VMCI) do not implement
-> >>>>> +          * unsent_bytes. For those, no lingering on close().
-> >>>>> +          */
-> >>>>> +         unsent = vsk->transport->unsent_bytes;
-> >>>>> +         if (!unsent)
-> >>>>> +                 return;
-> >>>>
-> >>>> IIUC if `unsent_bytes` is not implemented, virtio_transport_wait_close
-> >>>> basically does nothing. My concern is that we are breaking the
-> >>>> userspace due to a change in the behavior: Before this patch, with a
-> >>>> vmci/hyper-v transport, this function would wait for SOCK_DONE to be
-> >>>> set, but not anymore.
-> >>>
-> >>> Wait, we are in virtio_transport_common.c, why we are talking about
-> >>> Hyper-V and VMCI?
-> >>>
-> >>> I asked to check `vsk->transport->unsent_bytes` in the v1, because this
-> >>> code was part of af_vsock.c, but now we are back to virtio code, so I'm
-> >>> confused...
-> >>
-> >> Might your confusion be because of similar names?
-> >
-> > In v1 this code IIRC was in af_vsock.c, now you pushed back on virtio
-> > common code, so I still don't understand how
-> > virtio_transport_wait_close() can be called with vmci or hyper-v
-> > transports.
-> >
-> > Can you provide an example?
->
-> You're right, it was me who was confused. VMCI and Hyper-V have their own
-> vsock_transport::release callbacks that do not call
-> virtio_transport_wait_close().
->
-> So VMCI and Hyper-V never lingered anyway?
+Hi Marcus,
 
-I think so.
-
-Indeed I was happy with v1, since I think this should be supported by
-the vsock core and should not depend on the transport.
-But we can do also later.
-
-Stefano
-
+On Wed, 23 Apr 2025 at 21:04, Marcus Folkesson
+<marcus.folkesson@gmail.com> wrote:
+> Sitronix ST7571 is a 4bit gray scale dot matrix LCD controller.
+> The controller has a SPI, I2C and 8bit parallel interface, this
+> driver is for the I2C interface only.
 >
-> >> vsock_transport::unsent_bytes != virtio_vsock_sock::bytes_unsent
-> >>
-> >> I agree with Luigi, it is a breaking change for userspace depending on a
-> >> non-standard behaviour. What's the protocol here; do it anyway, then see if
-> >> anyone complains?
-> >>
-> >> As for Hyper-V and VMCI losing the "lingering", do we care? And if we do,
-> >> take Hyper-V, is it possible to test any changes without access to
-> >> proprietary host/hypervisor?
-> >>
-> >
-> > Again, how this code can be called when using vmci or hyper-v
-> > transports?
->
-> It cannot, you're right.
->
-> > If we go back on v1 implementation, I can understand it, but with this
-> > version I really don't understand the scenario.
-> >
-> > Stefano
-> >
->
+> Reviewed-by: Thomas Zimmermann <tzimmrmann@suse.de>
+> Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
+> Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
 
+Thanks for your patch, which is now commit 4b35f0f41ee29505
+("drm/st7571-i2c: add support for Sitronix ST7571 LCD controller")
+in drm-misc-next.
+
+> --- /dev/null
+> +++ b/drivers/gpu/drm/tiny/st7571-i2c.c
+
+> +static int st7571_fb_update_rect_grayscale(struct drm_framebuffer *fb, struct drm_rect *rect)
+> +{
+> +       struct st7571_device *st7571 = drm_to_st7571(fb->dev);
+> +       u32 format = fb->format->format;
+> +       char *row = st7571->row;
+> +       int x1;
+> +       int x2;
+> +
+> +       /* Align y to display page boundaries */
+> +       rect->y1 = round_down(rect->y1, ST7571_PAGE_HEIGHT);
+> +       rect->y2 = min_t(unsigned int, round_up(rect->y2, ST7571_PAGE_HEIGHT), st7571->nlines);
+> +
+> +       switch (format) {
+> +       case DRM_FORMAT_XRGB8888:
+> +               /* Threated as monochrome (R1) */
+> +               fallthrough;
+> +       case DRM_FORMAT_R1:
+> +               x1 = rect->x1;
+> +               x2 = rect->x2;
+> +               break;
+> +       case DRM_FORMAT_R2:
+> +               x1 = rect->x1 * 2;
+> +               x2 = rect->x2 * 2;
+> +               break;
+> +       }
+> +
+> +       for (int y = rect->y1; y < rect->y2; y += ST7571_PAGE_HEIGHT) {
+> +               for (int x = x1; x < x2; x++)
+> +                       row[x] = st7571_transform_xy(st7571->hwbuf, x, y);
+> +
+> +               st7571_set_position(st7571, rect->x1, y);
+> +
+> +               /* TODO: Investige why we can't write multiple bytes at once */
+> +               for (int x = x1; x < x2; x++) {
+> +                       regmap_bulk_write(st7571->regmap, ST7571_DATA_MODE, row + x, 1);
+> +
+> +                       /*
+> +                        * As the display supports grayscale, all pixels must be written as two bits
+> +                        * even if the format is monochrome.
+> +                        *
+> +                        * The bit values maps to the following grayscale:
+> +                        * 0 0 = White
+> +                        * 0 1 = Light gray
+> +                        * 1 0 = Dark gray
+> +                        * 1 1 = Black
+
+That is not R2, but D2?
+include/uapi/drm/drm_fourcc.h:
+
+    /* 2 bpp Red (direct relationship between channel value and brightness) */
+    #define DRM_FORMAT_R2             fourcc_code('R', '2', ' ', ' ')
+/* [7:0] R0:R1:R2:R3 2:2:2:2 four pixels/byte */
+
+    /* 2 bpp Darkness (inverse relationship between channel value and
+brightness) */
+    #define DRM_FORMAT_D2             fourcc_code('D', '2', ' ', ' ')
+/* [7:0] D0:D1:D2:D3 2:2:2:2 four pixels/byte */
+
+So the driver actually supports D1 and D2, and XRGB8888 should be
+inverted while converting to monochrome (and grayscale, which is not
+yet implemented).
+
+> +                        *
+> +                        * For monochrome formats, write the same value twice to get
+> +                        * either a black or white pixel.
+> +                        */
+> +                       if (format == DRM_FORMAT_R1 || format == DRM_FORMAT_XRGB8888)
+> +                               regmap_bulk_write(st7571->regmap, ST7571_DATA_MODE, row + x, 1);
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
