@@ -1,39 +1,31 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 684F61AB530;
-	Thu, 24 Apr 2025 07:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118101AB530;
+	Thu, 24 Apr 2025 07:51:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745481106; cv=none; b=GSz7O1+szhcIe5+QioJuZLwjZu3t+BAcxwfjbA8xDoOPz0Yi3QoQj96FgT7rrXBU8EcQxA6p9DCzXeQQjmdkGtKaMmjZvnJiuvk00n0hx2W/fgQKGazt6RmpEPpYRmAA2SXiGpj9HHkpUo+8gc560gKwSkOHjHYPpichl6uUBM4=
+	t=1745481118; cv=none; b=OxmCNZJm0eHP9eYXDtyrAkFhA+evtoH6S7Hq7D3ezqi2cbrvetovupD0bacHw7/uot2c7BDf90Khi3k3yY4oJjpH0b8jb5MB8JE+C00nZURyBZ8137KNwD1rt/nGOk1MzPnHkFUmsvo1cFqG+ZBPO5f/dyUImpCoCXtCy4Ggg/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745481106; c=relaxed/simple;
-	bh=7hQKfoI8brTvc968M0/2fCuMOAxvohLcq5efGDsVPv8=;
+	s=arc-20240116; t=1745481118; c=relaxed/simple;
+	bh=4AZFZSmc3tQJqAQh2QZKQ7f5PRHrwE+6Rtqt+watsHQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nDDBomEtmGefpC6iZO7fU4gOsuKrmmD5lOcTntMfi0PnrciIZs2n4p860NRI36XbZf2lyWaL3R54Xqa+FyioVy5zRh1GimJfkCE96SfhAX4kF+4ozTlgGjECgAZpPoPGR4IWw40hMechji5reNyXyPbgT2YtT8g0zPzV0WHgYXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=HHQVgllf; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	 In-Reply-To:Content-Type; b=V81qqbOm5KuWn+tYHBxjaNxh0LiheBIlyqnea3cHuTWcsHQIiyXpEidnO0g7o7E6toTfWcqPWgRSNaVF585kw/3BRX9o7au1zVxGIpLMVrTME/ZaAbQHmBT0HMLx+FC/oMNAY/HWqQa9j1BeUzHIsD5fPyspr3rBkd1KGiRLd1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KSXnKJVh; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HHQVgllf"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53O7ol73715410
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 24 Apr 2025 00:50:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53O7ol73715410
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1745481052;
-	bh=7hQKfoI8brTvc968M0/2fCuMOAxvohLcq5efGDsVPv8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HHQVgllfbBgTU8HpLd8YZoVvIwcgL/kOSRt4qdiUm5wj/uJtOGXaMBcpMCnwKbEF9
-	 rG2estbhWXCsJa81wxO7BDezD81YoepsQLWPz0FadakNwpvwpNH3bAN/wIw2h1kwT1
-	 XOreUorDjfaGzeHD4n8vPeiL9yC6tVs91R1ZiwGY2Fzo7dgNYxzGAp5Lhj+plOPcwS
-	 JyWCZfR55+mA5Di7zo/a1t+g+QvX6CHHkVSiWEXyL06p66bw2FbQf379OEyv/e0oeD
-	 S4rpgqUTn5Yxq97NCc2Ns/61Xf5EyFy7FXTRn6rJLWh/sWLE2NM1er+SCkbgBAJWqH
-	 5gggmVYYw0CGA==
-Message-ID: <f207c797-567f-426c-9fa5-27792d3478a8@zytor.com>
-Date: Thu, 24 Apr 2025 00:50:46 -0700
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KSXnKJVh"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745481112; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=66EBE6//T4b858PvX3WkhRuMXFKHkqm2EIhR70lCzm0=;
+	b=KSXnKJVhdwjcVdeKBS6o76b2k45HK1cM5ZObJKC/Gu6b6x5nzGGTaZv2o2g10CYKlKflxv9PoZncbVhtRMzS6tjPDfJOoLwbYDLPxvLX+5tMY+TCu8Lahj7TwzwEE1ninOjIVHmcPYDwsvmgAa2iGfrzbRB5/Av1o0H/TEtI0mY=
+Received: from 30.74.146.225(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WXyHI1o_1745481108 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Apr 2025 15:51:49 +0800
+Message-ID: <5187c3fb-bf2a-41a0-902d-2661f1b3a2c9@linux.alibaba.com>
+Date: Thu, 24 Apr 2025 15:51:48 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,73 +33,192 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 12/34] x86/msr: Remove pmu_msr_{read,write}()
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, virtualization@lists.linux.dev,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, netdev@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com
-References: <20250422082216.1954310-1-xin@zytor.com>
- <20250422082216.1954310-13-xin@zytor.com>
- <7c44da88-72bb-4d1f-9f38-bf0e7e79b7a0@linux.intel.com>
- <45f95d01-4b98-457c-8272-c396a52b3844@zytor.com>
- <02689dad-a10a-41a8-ad7e-e92d0a8d7e76@linux.intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <02689dad-a10a-41a8-ad7e-e92d0a8d7e76@linux.intel.com>
+Subject: Re: [PATCH v4 10/12] khugepaged: improve tracepoints for mTHP orders
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
+ peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org
+References: <20250417000238.74567-1-npache@redhat.com>
+ <20250417000238.74567-11-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250417000238.74567-11-npache@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 4/24/2025 12:43 AM, Mi, Dapeng wrote:
-> These 2 patches are not complicated, it won't be difficult to review if
-> merging them into one as long as the commit message mentions it clearly.
-> Anyway I'm fine if you hope to keep them into two patches.
 
-Simple Small Steps...
+
+On 2025/4/17 08:02, Nico Pache wrote:
+> Add the order to the tracepoints to give better insight into what order
+> is being operated at for khugepaged.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
+
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
+> ---
+>   include/trace/events/huge_memory.h | 34 +++++++++++++++++++-----------
+>   mm/khugepaged.c                    | 10 +++++----
+>   2 files changed, 28 insertions(+), 16 deletions(-)
+> 
+> diff --git a/include/trace/events/huge_memory.h b/include/trace/events/huge_memory.h
+> index 9d5c00b0285c..ea2fe20a39f5 100644
+> --- a/include/trace/events/huge_memory.h
+> +++ b/include/trace/events/huge_memory.h
+> @@ -92,34 +92,37 @@ TRACE_EVENT(mm_khugepaged_scan_pmd,
+>   
+>   TRACE_EVENT(mm_collapse_huge_page,
+>   
+> -	TP_PROTO(struct mm_struct *mm, int isolated, int status),
+> +	TP_PROTO(struct mm_struct *mm, int isolated, int status, int order),
+>   
+> -	TP_ARGS(mm, isolated, status),
+> +	TP_ARGS(mm, isolated, status, order),
+>   
+>   	TP_STRUCT__entry(
+>   		__field(struct mm_struct *, mm)
+>   		__field(int, isolated)
+>   		__field(int, status)
+> +		__field(int, order)
+>   	),
+>   
+>   	TP_fast_assign(
+>   		__entry->mm = mm;
+>   		__entry->isolated = isolated;
+>   		__entry->status = status;
+> +		__entry->order = order;
+>   	),
+>   
+> -	TP_printk("mm=%p, isolated=%d, status=%s",
+> +	TP_printk("mm=%p, isolated=%d, status=%s order=%d",
+>   		__entry->mm,
+>   		__entry->isolated,
+> -		__print_symbolic(__entry->status, SCAN_STATUS))
+> +		__print_symbolic(__entry->status, SCAN_STATUS),
+> +		__entry->order)
+>   );
+>   
+>   TRACE_EVENT(mm_collapse_huge_page_isolate,
+>   
+>   	TP_PROTO(struct page *page, int none_or_zero,
+> -		 int referenced, bool  writable, int status),
+> +		 int referenced, bool  writable, int status, int order),
+>   
+> -	TP_ARGS(page, none_or_zero, referenced, writable, status),
+> +	TP_ARGS(page, none_or_zero, referenced, writable, status, order),
+>   
+>   	TP_STRUCT__entry(
+>   		__field(unsigned long, pfn)
+> @@ -127,6 +130,7 @@ TRACE_EVENT(mm_collapse_huge_page_isolate,
+>   		__field(int, referenced)
+>   		__field(bool, writable)
+>   		__field(int, status)
+> +		__field(int, order)
+>   	),
+>   
+>   	TP_fast_assign(
+> @@ -135,27 +139,31 @@ TRACE_EVENT(mm_collapse_huge_page_isolate,
+>   		__entry->referenced = referenced;
+>   		__entry->writable = writable;
+>   		__entry->status = status;
+> +		__entry->order = order;
+>   	),
+>   
+> -	TP_printk("scan_pfn=0x%lx, none_or_zero=%d, referenced=%d, writable=%d, status=%s",
+> +	TP_printk("scan_pfn=0x%lx, none_or_zero=%d, referenced=%d, writable=%d, status=%s order=%d",
+>   		__entry->pfn,
+>   		__entry->none_or_zero,
+>   		__entry->referenced,
+>   		__entry->writable,
+> -		__print_symbolic(__entry->status, SCAN_STATUS))
+> +		__print_symbolic(__entry->status, SCAN_STATUS),
+> +		__entry->order)
+>   );
+>   
+>   TRACE_EVENT(mm_collapse_huge_page_swapin,
+>   
+> -	TP_PROTO(struct mm_struct *mm, int swapped_in, int referenced, int ret),
+> +	TP_PROTO(struct mm_struct *mm, int swapped_in, int referenced, int ret,
+> +			int order),
+>   
+> -	TP_ARGS(mm, swapped_in, referenced, ret),
+> +	TP_ARGS(mm, swapped_in, referenced, ret, order),
+>   
+>   	TP_STRUCT__entry(
+>   		__field(struct mm_struct *, mm)
+>   		__field(int, swapped_in)
+>   		__field(int, referenced)
+>   		__field(int, ret)
+> +		__field(int, order)
+>   	),
+>   
+>   	TP_fast_assign(
+> @@ -163,13 +171,15 @@ TRACE_EVENT(mm_collapse_huge_page_swapin,
+>   		__entry->swapped_in = swapped_in;
+>   		__entry->referenced = referenced;
+>   		__entry->ret = ret;
+> +		__entry->order = order;
+>   	),
+>   
+> -	TP_printk("mm=%p, swapped_in=%d, referenced=%d, ret=%d",
+> +	TP_printk("mm=%p, swapped_in=%d, referenced=%d, ret=%d, order=%d",
+>   		__entry->mm,
+>   		__entry->swapped_in,
+>   		__entry->referenced,
+> -		__entry->ret)
+> +		__entry->ret,
+> +		__entry->order)
+>   );
+>   
+>   TRACE_EVENT(mm_khugepaged_scan_file,
+> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+> index 738dd9c5751d..67da0950b833 100644
+> --- a/mm/khugepaged.c
+> +++ b/mm/khugepaged.c
+> @@ -721,13 +721,14 @@ static int __collapse_huge_page_isolate(struct vm_area_struct *vma,
+>   	} else {
+>   		result = SCAN_SUCCEED;
+>   		trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
+> -						    referenced, writable, result);
+> +						    referenced, writable, result,
+> +						    order);
+>   		return result;
+>   	}
+>   out:
+>   	release_pte_pages(pte, _pte, compound_pagelist);
+>   	trace_mm_collapse_huge_page_isolate(&folio->page, none_or_zero,
+> -					    referenced, writable, result);
+> +					    referenced, writable, result, order);
+>   	return result;
+>   }
+>   
+> @@ -1097,7 +1098,8 @@ static int __collapse_huge_page_swapin(struct mm_struct *mm,
+>   
+>   	result = SCAN_SUCCEED;
+>   out:
+> -	trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, result);
+> +	trace_mm_collapse_huge_page_swapin(mm, swapped_in, referenced, result,
+> +						order);
+>   	return result;
+>   }
+>   
+> @@ -1318,7 +1320,7 @@ static int collapse_huge_page(struct mm_struct *mm, unsigned long address,
+>   	*mmap_locked = false;
+>   	if (folio)
+>   		folio_put(folio);
+> -	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result);
+> +	trace_mm_collapse_huge_page(mm, result == SCAN_SUCCEED, result, order);
+>   	return result;
+>   }
+>   
