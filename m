@@ -1,274 +1,265 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD70129A78;
-	Thu, 24 Apr 2025 16:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C1019CCF5
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:34:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745512427; cv=none; b=AQ+ONxWorq+ddwUFa9ua0lH+BI6fUkiFOSF7k1f3apwHEMOc7/yqq7HOoG5okCbc1a0aKHzmcqUHr24dLkRh28HKGim0QqNK6AJ1zof2xtZH5xGy+cKKz+Xgl7Dn55u4GCipoDis/Wb3mL6daC9ACHdw97v1OlB8mbEWyOSdOig=
+	t=1745512472; cv=none; b=DEFnEMfSzWkTMmO4gjG6l4LQhquRkkNMPL6CCUE+Pn2Utl2VCPVS7WuLiUH6aGT+hoVHA781n/kRwa9pwc9hp7qbqj9SFwJuNB6ZtAynU2JdDV/Jwtjy1UZsx0nXbb9D5IozBVtAuKe10Bm3Eu3iqq4aVeDY+L4Xhrk/Acbbq5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745512427; c=relaxed/simple;
-	bh=Cc1ATLCnb/pHo2K2A2o4Rx+P547SogdMvoQSABkDYho=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=EJJj7WWbuRIn3vVkxnL7pWOsc1meZuef+OzQlqhv1hwDs7S62FaeiY766HVS/TEdqMLnL70U5Uj8pVN9ErVI/hY5/n53OSQNmFkeyKs/5RakR+cUN6+2iMh4QA5MTbC7MFgOIcN7oKJmgFG89F4ojv/iaigD/aY4A5O+aGLLfCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sfmQPev0; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1745512472; c=relaxed/simple;
+	bh=6Xk1ui9+E7DJcvJT2ltCpJoEPEx5tYoC2IQm2iSv90Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=atukgVHCOIPN2sRFkspiQ+BQGEB1rpGIJszDL7yc9Mk1If7DndeNMC+kBxIuiRUTMbMBaaL8h02Jtxa7z614/mxUXIhax19bN66Hs5jnxP0IjKgi8ZnXnSqxr+M3FjfO06erhbrfUpOMHgavZM9SQZW1z0EwCNTGb5NiJ3gAR48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KFEBLdEp; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sfmQPev0"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OAf4in021206;
-	Thu, 24 Apr 2025 16:33:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=gWtAZR
-	/jnBq/VyPLwWAf4XcuOEpRIGhhrjkM4yqKPPY=; b=sfmQPev0Nw71z+l3F91iEl
-	h6XjQ6/IrEHm1yrIvQMt2U9Bqliw/4VhjkscEQnrJ8anyl5riqGMOkdNEMBhVUhm
-	MZM3BUyoQDX0FIwKQw4y0t7vLANhK2I8m5EmxacAtQNaoLDCHzVkqFTuNNsWRieT
-	EoAqjZUIm477SEAn2V37SoKGgGeNRJWgWPlGM62saD1ztUrBPQOaBrnbA1fNC9Cb
-	9CT5wl/KbWNqc5KIoBLF7E3V6HsIKavVhFew5zuNjY5K9pPKh7FGT3UVPP9R+wD2
-	Vhz7CyDRLjHQRDaWaq5Baqa9K56KvFZIMo+tuKEOLaGWIoQGgK3+5s+yyyuGMDFg
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 467krssrge-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 16:33:28 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53OFa8Ck005829;
-	Thu, 24 Apr 2025 16:33:27 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfxh1my-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 16:33:27 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53OGXNnZ28377660
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 24 Apr 2025 16:33:23 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BC7F920040;
-	Thu, 24 Apr 2025 16:33:23 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 506CE20043;
-	Thu, 24 Apr 2025 16:33:19 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.61.255.99])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Thu, 24 Apr 2025 16:33:18 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KFEBLdEp"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d0618746bso9740725e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:34:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745512469; x=1746117269; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UDKIG63pMe9JrjXuqom4a/B+XzcczRC3B2PjeIPhZck=;
+        b=KFEBLdEpKeuZToAti0TJZ3TQJ36dc8Hrzhubzyddrxgqr/xJbZ6zLdhKOQBPXFmXJT
+         okINVs9oTsdbK6b1+7u88rJFOx8spDE7PP1P+Lfcr4l7MwDc0M1NST4605noax7inAV6
+         4kEmR/lG231zYld9RvBj2zbUOf6qQA5juMenNCmthh0DWD2vo+VrHqqaE/87alYHZAIt
+         37n9RBuY5UghU6ohxlUXQjAtsZlRgnpt2rUV8h+qZ7y1gd1vPkx20qP6dyJiU0yNulkx
+         UrIprxoQsejhNWIVumksD25rqrG1QiJfKAYZbYV64uSN6qugFCYJyRQpSLJCiSq9OSqF
+         ntSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745512469; x=1746117269;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UDKIG63pMe9JrjXuqom4a/B+XzcczRC3B2PjeIPhZck=;
+        b=Ii2LbSxJ4mJ34T+8KJ5f6EWhEvBCm8y4YO5Zguckg8mohBi0JQ9F1e6N1MQgxFSR6L
+         0rpjqgMNRgtwspnLhLOmALMPUjiPEgRR3eUsON2970VlfePzCQGbajPYdVI477vzG5Kb
+         AOY507Z+LoZswMpt3y/Sw0LhVxejypGc4A8Ye4AYtvWJRUvgelpEumsRJFXoRfCt+aA0
+         U+kUbMCTBV3to/bsJXxdmgUrw507EG2J80OelFuFMcmdKvgdrpHVgYSRlc7Jrq4wC86H
+         4ZwuqHMxB6vfPlaw7EBaFBXRHdQ6ouF27xQ6fszoSxo65g/bSBtsUZ0WEWzm4n2lor0b
+         ibEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVITo/DoFZxF411odFjORK5odstllx1spGyngTTkeM1sQbmr3ATUtwccY6JDfuy+cnigJhEfjIfn6573WM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCc389UNAno6LP6asJ7PfeQGJ2GysGJzCgbs5jC1uTGvfkt5qy
+	RjjOD9HYdHPPdhzYXNVASIxEFyryzHC+mAULBWwv9WaXeRo0C+F3DGWbwKrpEKM=
+X-Gm-Gg: ASbGncvWtw701aE/moasi5eF6QO3t9y0Pb97x9C6tHJLDo9HBzz0Spy5uaBo4pyr/ap
+	+8fbgkrTBFVGYKXVp4BAxErwqIBeT3WzkTcobsDZxHFMQ3+kgofuKm/k8+xtJdC7kEUxVO4tJLN
+	/zvmo2ECV4N13XUcv8dkUWREZz22kaoHBXI8Y7a7C6p7cNSsl/MZVUjm/lrA3CWg2TJ1l7a2bC9
+	7tyx96mH9HXEuL3skjwwSVm7eKCaCNAG43zNRcqH2xYoLAVRL3D9O/iN/gr9bRvjwqu6RiEfHXQ
+	jE28v3Pcxg/NTq9ZkiCOLc9SEq9W/444FpT23Q4Z9Mq0BwqjyIbZywEKWgMr5w==
+X-Google-Smtp-Source: AGHT+IFM5/p+5Zp0/4hLItu/km4mjpQcCf+kBAkpy1FIu7zh/mDE4JhBoWgwbCPltpq5KFnnno1CfQ==
+X-Received: by 2002:a05:600c:3b95:b0:43d:fa5d:9314 with SMTP id 5b1f17b1804b1-440a31c2c42mr1463045e9.32.1745512469277;
+        Thu, 24 Apr 2025 09:34:29 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:3d9:2080:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8842sm26916885e9.31.2025.04.24.09.34.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 09:34:28 -0700 (PDT)
+From: neil.armstrong@linaro.org
+Date: Thu, 24 Apr 2025 18:34:28 +0200
+Subject: [PATCH v3] arm64: dts: qcom: sm8550: add iris DT node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3776.700.51\))
-Subject: Re: linux-next: build failure after merge of the tip tree
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <D66D1529-714C-4700-BD74-AC6AFA7C97A8@linux.ibm.com>
-Date: Thu, 24 Apr 2025 22:03:05 +0530
-Cc: Ingo Molnar <mingo@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F5AD4FED-338E-4DC6-97BF-396F7EB73CA1@linux.ibm.com>
-References: <20250415133518.2c8d4325@canb.auug.org.au>
- <20250417134959.37204d48@canb.auug.org.au>
- <20250422163502.02ceeb0d@canb.auug.org.au>
- <bb1f2928-617f-4943-bdd0-dfa74904ffb3@linux.ibm.com>
- <D66D1529-714C-4700-BD74-AC6AFA7C97A8@linux.ibm.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Venkat Rao Bagalkote <venkat88@linux.ibm.com>
-X-Mailer: Apple Mail (2.3776.700.51)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDExMCBTYWx0ZWRfX4KJZ7vxa0TZi lY95SNvrfU0x+7+AzMMZbVw17WNmGh/b8sMQbipbWipNdJvt/9NGFM1XWRwTlVte3XRH+K0x33z WE1oJMU3gCqqGkMv+y/ZR2jD/vG+9GL7LTD+ekZQd9MZacOCJL+v1oRdDmepaQaX9JJU0dUpsRa
- Ix0FIp2g9mQR0Gis3i47EyJtaptzNGGjH3v6yRYQ/uh01bhCwVVJw2d52oMKRa26EsHuSjJLLIk cyEbRaGEvlFQVEjahhxIV6MDF+tX7eY/HTnVompgTbXNRbEAjAy+Uj212vdKUSDC0bHlM5lgLJZ xlVhj8rQRAbO2GiS1/v8BU6PeBc47TVe8cGyOJHv+YJ1zEGacsoY1Snl8PobGebPH1HgKpm3Y+P
- iq10+PUVZgqlqyTSfnxU2P7OU5YQN2jLDEQp9dQOBixqPBv3OvPTjrT0L15lxeQ0UTOc5Wus
-X-Proofpoint-GUID: B_LXCOA_Mm1YJE4pyVpY6p0Y0p_UXgG1
-X-Authority-Analysis: v=2.4 cv=IciHWXqa c=1 sm=1 tr=0 ts=680a67d8 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8 a=rOUgymgbAAAA:8 a=zd2uoN0lAAAA:8
- a=NJDCJ7G7kdQ2-YEoexwA:9 a=QEXdDO2ut3YA:10 a=MP9ZtiD8KjrkvI0BhSjB:22
-X-Proofpoint-ORIG-GUID: B_LXCOA_Mm1YJE4pyVpY6p0Y0p_UXgG1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0 impostorscore=0
- phishscore=0 bulkscore=0 clxscore=1015 spamscore=0 priorityscore=1501
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240110
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250424-topic-sm8x50-upstream-iris-8550-dt-v3-1-92f6b692bd52@linaro.org>
+X-B4-Tracking: v=1; b=H4sIABNoCmgC/5XNvQ6CMBwE8Fchna3pN8XJ9zAOhRb4J0JJWwmG8
+ O4WJt00N90Nv1tRdAFcRJdiRcHNEMGPufBTgZrejJ3DYHNHjDBJBClx8hM0OA56kQQ/p5iCMwO
+ GABFrmSebMNNC1aLiTkmGMjQF18JynNzuufcQkw+v43Om+/oXP1Oc05am5kTzVlTXB4wm+LMPH
+ dr9mX2YVP9ksmxWjGrFlWlqa7/MbdverfXpNCkBAAA=
+X-Change-ID: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dikshita Agarwal <quic_dikshita@quicinc.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5010;
+ i=neil.armstrong@linaro.org; h=from:subject:message-id;
+ bh=oqGWaMVxclYfnPuI4Xsljnhx/oZ/DFjZ/i1yFIJPDaQ=;
+ b=owEBbQKS/ZANAwAKAXfc29rIyEnRAcsmYgBoCmgUw/mAhHsfm5Tqixbt87gR6+IRaCujSwK2mGvv
+ 1W77CT+JAjMEAAEKAB0WIQQ9U8YmyFYF/h30LIt33NvayMhJ0QUCaApoFAAKCRB33NvayMhJ0alSD/
+ 0WLdC10wY2tzYV50AZd8fH/x/JIBCy5x0QWojXugcq5/wZMlEMT+GPESicvPagBIQ54SDzvw9U8LEh
+ igcys9W7X/MpehpKwD2B9QXOHyZoz7BiTg557HI/FwNnzJ045yaCHTMroLVF++vyb7qtsqJ4GfJHbO
+ YATXJcDEztCGKLjk7d1al/B8Fz8SjqREj1SK1NLwaNJKlho0Vvyj6EqpuNZjLMWhfU/SyMS+jlrMsw
+ W8qfP2Pz1bj6pPiUsnaey+WgUpJn2PRUiwhVwTwRtYXfzMu8hspTqYWjKb2eCiRMf9Eg1HF3mLhjKR
+ juiHAgkmpOhliXAlUvNWf6CDLVTPN9Xue92aXiqZ8ORY7/8phHYNbFUeTkT2sOERgjdwGaJugnMCAR
+ 1yqt+CQOUBXFe0NeMlH2dMbOi5maNBSalV6bSyP4tCFg1zgPWgMfRexD+h+mNx/USy89qOm54ASNvl
+ /d2GsNafoX6Z1gNmTuQxAMhRpBkDbifvGsuZx33F5FQmgCh4z6FyXjq9BsfKP7Yb2aIdlrOmcEqCq8
+ 1kAMkLgCTVbDkuzkIRUXHfA3KcJ1Tp58KdlvfrvnILCd0PhLrqM6kra4ND2jC3D8OY/H6sTgQaIil3
+ plXxU65jCG+UViLk6pbK5m7uZUVNxVciLApyw+Cu5dTYHdtsDivMnAkNqZsA==
+X-Developer-Key: i=neil.armstrong@linaro.org; a=openpgp;
+ fpr=89EC3D058446217450F22848169AB7B1A4CFF8AE
 
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
 
+Add DT entries for the sm8550 iris decoder.
 
-> On 24 Apr 2025, at 8:07=E2=80=AFPM, Athira Rajeev =
-<atrajeev@linux.ibm.com> wrote:
->=20
->=20
->=20
->> On 22 Apr 2025, at 3:26=E2=80=AFPM, Shrikanth Hegde =
-<sshegde@linux.ibm.com> wrote:
->>=20
->>=20
->>=20
->> On 4/22/25 12:05, Stephen Rothwell wrote:
->>> Hi all,
->>=20
->> Hi Ingo, Stephen.
->>=20
->>> On Thu, 17 Apr 2025 13:49:59 +1000 Stephen Rothwell =
-<sfr@canb.auug.org.au> wrote:
->>>>=20
->>>> On Tue, 15 Apr 2025 13:35:18 +1000 Stephen Rothwell =
-<sfr@canb.auug.org.au> wrote:
->>>>>=20
->>>>> After merging the tip tree, today's linux-next build (native perf)
->>>>> failed like this:
->>>>>=20
->>>>> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or =
-directory
->>>>> In file included from util/amd-sample-raw.c:12:
->>>>> tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: fatal =
-error: asm/msr-index.h: No such file or directory
->>>>>   10 | #include <asm/msr-index.h>
->>>>>      |          ^~~~~~~~~~~~~~~~~
->>>>> compilation terminated.
->>>>>=20
->>>>> Maybe caused by commit
->>>>>=20
->>>>>  3846389c03a8 ("x86/platform/amd: Move the <asm/amd-ibs.h> header =
-to <asm/amd/ibs.h>")
->>>>> or associated commits?
->>>>>=20
->>=20
->> Even i am running into this error when building tools/perf on =
-ppc64le. perf build works in 6.15-rc3,
->> but failed with tip/master.
->>=20
->> Did git bisect
->> good: [9c32cda43eb78f78c73aee4aa344b777714e259b] Linux 6.15-rc3
->> bad: [1a11b5b80f46e4dff0b21cb07efab43dee049d61] Merge branch into tip =
-master: 'x86/sev'
->> ...
->> # first bad commit: [3846389c03a8518884f09056611619bd1461ffc7] =
-x86/platform/amd: Move the <asm/amd-ibs.h> header to <asm/amd/ibs.h>
->=20
-> Before this commit, msr-index.h was present in =
-tools/arch/x86/include/asm/msr-index.h
-> amd-ibs.h was present in tools/arch/x86/include/asm/amd-ibs.h
->=20
-> =46rom amd-ibs.h , it picks mss-index.h from :
->=20
-> # grep msr-index tools/arch/x86/include/asm/amd-ibs.h
-> #include "msr-index.h=E2=80=9D
->=20
-> After the commit,=20
-> make initial logs shows missing =
-=E2=80=9Ctools/arch/x86/include/asm/amd/ibs.h=E2=80=9D
->=20
-> # make
->  BUILD:   Doing 'make -j24' parallel build
-> diff: tools/arch/x86/include/asm/amd/ibs.h: No such file or directory  =
-                                =20
-> Warning: Kernel ABI header differences:
->  diff -u tools/include/uapi/linux/bits.h include/uapi/linux/bits.h
->  diff -u tools/include/linux/bits.h include/linux/bits.h
->  diff -u tools/include/vdso/unaligned.h include/vdso/unaligned.h
->  diff -u tools/arch/x86/include/asm/cpufeatures.h =
-arch/x86/include/asm/cpufeatures.h
->  diff -u tools/arch/x86/include/asm/msr-index.h =
-arch/x86/include/asm/msr-index.h
->  diff -u tools/arch/x86/include/asm/amd/ibs.h =
-arch/x86/include/asm/amd/ibs.h
->  diff -u tools/arch/arm64/include/asm/cputype.h =
-arch/arm64/include/asm/cputype.h
->=20
-> Build failure here is:
->=20
-> In file included from util/amd-sample-raw.c:12:0:
-> =
-/root/bug/tip/tools/include/../../arch/x86/include/asm/amd/ibs.h:10:10: =
-fatal error: asm/msr-index.h: No such file or directory
-> #include <asm/msr-index.h>
->          ^~~~~~~~~~~~~~~~~
-> compilation terminated.
-Hi,
+Since the firmware is required to be signed, only enable
+on Qualcomm development boards where the firmware is
+publicly distributed.
 
-Posted the fix in mailing here: =
-https://lore.kernel.org/linux-perf-users/20250424163033.6601-1-atrajeev@li=
-nux.ibm.com/T/#u
-Please share feedback if it fixes the compilation issue.
+Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+---
+Changes in v3:
+- remove useless firmware-name
+- Link to v2: https://lore.kernel.org/r/20250418-topic-sm8x50-upstream-iris-8550-dt-v2-1-9218636acbdd@linaro.org
 
-Thanks
-Athira
->=20
->=20
-> To fix, this needs change to add tools/arch/x86/include/asm/amd/ibs.h =
-and also update the msr-index.h like below:
->=20
-> diff --git a/tools/arch/x86/include/asm/amd/ibs.h =
-b/tools/arch/x86/include/asm/amd/ibs.h
-> index 3ee5903982c2..bcca5dcb9148 100644
-> --- a/tools/arch/x86/include/asm/amd/ibs.h
-> +++ b/tools/arch/x86/include/asm/amd/ibs.h
-> @@ -7,7 +7,7 @@
->  * 55898 Rev 0.35 - Feb 5, 2021
->  */
->  -#include <asm/msr-index.h>
-> +#include <../msr-index.h>
->   /* IBS_OP_DATA2 DataSrc */
-> #define IBS_DATA_SRC_LOC_CACHE                  2
->=20
-> Similar change was done for tools/arch/x86/include/asm/amd-ibs.h as =
-well. Reference commit below:
->=20
-> commit dde994dd54fbf84f8fd14230de3477d552e42470
-> Author: Kim Phillips <kim.phillips@amd.com>
-> Date:   Tue Aug 17 17:15:08 2021 -0500
->=20
->    perf report: Add tools/arch/x86/include/asm/amd-ibs.h
->         This is a tools/-side patch for the patch that adds the =
-original copy
->    of the IBS header file, in arch/x86/include/asm/.
->         We also add an entry to check-headers.sh, so future changes =
-continue
->    to be copied.
->         Committer notes:
->         Had to add this
->           -#include <asm/msr-index.h>
->      +#include "msr-index.h"
->         And change the check-headers.sh entry to ignore this line when =
-diffing
->    with the original kernel header.
->=20
-> Shirkanth, Stephen, Venkat
->=20
-> I will be sending a separate fix patch for this.
->=20
-> Thanks
-> Athira
->=20
->>=20
->>=20
->> It isn't able to find the file after rename. I did the below hack so =
-that ibs.h finds the msr-index.h
->> Likely there is better way. for me, this helps to build tools/perf.
->>=20
->> ---
->>=20
->> diff --git a/arch/x86/include/asm/amd/ibs.h =
-b/arch/x86/include/asm/amd/ibs.h
->> index 3ee5903982c2..ac3a36fc08b1 100644
->> --- a/arch/x86/include/asm/amd/ibs.h
->> +++ b/arch/x86/include/asm/amd/ibs.h
->> @@ -7,7 +7,7 @@
->> * 55898 Rev 0.35 - Feb 5, 2021
->> */
->> -#include <asm/msr-index.h>
->> +#include "../../asm/msr-index.h"
->> /* IBS_OP_DATA2 DataSrc */
->> #define IBS_DATA_SRC_LOC_CACHE                  2
+Changes in v2:
+- Only enable on qcom dev boards
+- Link to v1: https://lore.kernel.org/r/20250407-topic-sm8x50-upstream-iris-8550-dt-v1-1-1f7ab3083f49@linaro.org
+---
+ arch/arm64/boot/dts/qcom/sm8550-hdk.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8550-qrd.dts |  4 ++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi    | 76 +++++++++++++++++++++++++++++++++
+ 4 files changed, 88 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+index 29bc1ddfc7b25f203c9f3b530610e45c44ae4fb2..9dfb248f9ab52b354453cf42c09d93bbee99214f 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-hdk.dts
+@@ -945,6 +945,10 @@ &ipa {
+ 	status = "okay";
+ };
+ 
++&iris {
++	status = "okay";
++};
++
+ &gpi_dma1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+index 5648ab60ba4c4bfaf5baa289969898277ee57cef..fdcecd41297d6ebc81c5088472e4731ca0782fcb 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+@@ -672,6 +672,10 @@ fsa4480_sbu_mux: endpoint {
+ 	};
+ };
+ 
++&iris {
++	status = "okay";
++};
++
+ &lpass_tlmm {
+ 	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
+ 		pins = "gpio17";
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+index 3a6cb279130489168f8d20a6e27808647debdb41..49438a7e77ceaab9506158855b6262206bca94ec 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-qrd.dts
+@@ -779,6 +779,10 @@ &ipa {
+ 	status = "okay";
+ };
+ 
++&iris {
++	status = "okay";
++};
++
+ &gpi_dma1 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+index f78d5292c5dd5ec88c8deb0ca6e5078511ac52b7..dbe01392b436d03ef58733a59f60c3021bac3e6b 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+@@ -3220,6 +3220,82 @@ opp-202000000 {
+ 			};
+ 		};
+ 
++		iris: video-codec@aa00000 {
++			compatible = "qcom,sm8550-iris";
++
++			reg = <0 0x0aa00000 0 0xf0000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++
++			power-domains = <&videocc VIDEO_CC_MVS0C_GDSC>,
++					<&videocc VIDEO_CC_MVS0_GDSC>,
++					<&rpmhpd RPMHPD_MXC>,
++					<&rpmhpd RPMHPD_MMCX>;
++			power-domain-names = "venus", "vcodec0", "mxc", "mmcx";
++			operating-points-v2 = <&iris_opp_table>;
++
++			clocks = <&gcc GCC_VIDEO_AXI0_CLK>,
++				 <&videocc VIDEO_CC_MVS0C_CLK>,
++				 <&videocc VIDEO_CC_MVS0_CLK>;
++			clock-names = "iface", "core", "vcodec0_core";
++
++			interconnects = <&gem_noc MASTER_APPSS_PROC QCOM_ICC_TAG_ACTIVE_ONLY
++					 &config_noc SLAVE_VENUS_CFG QCOM_ICC_TAG_ACTIVE_ONLY>,
++					<&mmss_noc MASTER_VIDEO QCOM_ICC_TAG_ALWAYS
++					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
++			interconnect-names = "cpu-cfg", "video-mem";
++
++			/* FW load region */
++			memory-region = <&video_mem>;
++
++			resets = <&gcc GCC_VIDEO_AXI0_CLK_ARES>;
++			reset-names = "bus";
++
++			iommus = <&apps_smmu 0x1940 0x0000>,
++				 <&apps_smmu 0x1947 0x0000>;
++			dma-coherent;
++
++			/*
++			 * IRIS firmware is signed by vendors, only
++			 * enable in boards where the proper signed firmware
++			 * is available.
++			 */
++			status = "disabled";
++
++			iris_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp-240000000 {
++					opp-hz = /bits/ 64 <240000000>;
++					required-opps = <&rpmhpd_opp_svs>,
++							<&rpmhpd_opp_low_svs>;
++				};
++
++				opp-338000000 {
++					opp-hz = /bits/ 64 <338000000>;
++					required-opps = <&rpmhpd_opp_svs>,
++							<&rpmhpd_opp_svs>;
++				};
++
++				opp-366000000 {
++					opp-hz = /bits/ 64 <366000000>;
++					required-opps = <&rpmhpd_opp_svs_l1>,
++							<&rpmhpd_opp_svs_l1>;
++				};
++
++				opp-444000000 {
++					opp-hz = /bits/ 64 <444000000>;
++					required-opps = <&rpmhpd_opp_turbo>,
++							<&rpmhpd_opp_turbo>;
++				};
++
++				opp-533333334 {
++					opp-hz = /bits/ 64 <533333334>;
++					required-opps = <&rpmhpd_opp_turbo_l1>,
++							<&rpmhpd_opp_turbo_l1>;
++				};
++			};
++		};
++
+ 		videocc: clock-controller@aaf0000 {
+ 			compatible = "qcom,sm8550-videocc";
+ 			reg = <0 0x0aaf0000 0 0x10000>;
+
+---
+base-commit: 2bdde620f7f2bff2ff1cb7dc166859eaa0c78a7c
+change-id: 20250407-topic-sm8x50-upstream-iris-8550-dt-2846b493e652
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
 
