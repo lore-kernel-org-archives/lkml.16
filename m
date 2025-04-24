@@ -1,53 +1,52 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68AA41DFDBB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05E6F1DFDAE;
 	Thu, 24 Apr 2025 06:24:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745475899; cv=none; b=cDD1A+pxwpzXl03Tag5AM/wHMtiTX/SXnU/euRbOiN9mebzsN6IpfKe1047flMSVEv/634R77MT3yTyMAxSFwdv+ePQKUAvvEfUCgvel2X4eZx5FwzcVC5mbY8v914BqscwtzjZBknUmgVYzcj9sNX40YnLAQIH/WX8cvEWlwrs=
+	t=1745475900; cv=none; b=NGQ9RzRrRPsuF9X66JvQ3tFl1/IVa3GD4Ftet61VPMzLL1Vd+VcRTy1kSZ5foXZQLt2bULQdAjx59giP9aMc8sJrBeZ1p+RCYRugrdI3OT5w4y2hkAVk43Mm/V8C3QfwTFGcXIfOgYQFOwh0SVsAxd7OzYLY+wLSaZqIxdHmMvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745475899; c=relaxed/simple;
-	bh=NabmCJW4D+6rQEiPgQ9+DJrM4B8eKF6WeOaO76+T72w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=qEJ3aixmqnSnHkKDI3NoUvh2DNx9bB4DiHB/+c2HRrEhp0NVwXlMCxzdvjACz4oSgxzHaNtQLg6ZzCERFJVfq8UgJwk7vtwQcDEX9jHMRPS3JjDKAKGkIVDBl/g1qYDnA6IAf5awZLp7PkXYaHufiz9AqhQUdAVrYy8VHwAEl2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bH9gpwQx; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1745475900; c=relaxed/simple;
+	bh=zErjwYmbcfTiWvcfHYV7gxpjLWAItK7ULJXWnl2tS4g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kLCqfJ6KdSiUwHP3OqHXzdp/ps9dBavwckowR1GgaFRIcgz4yrkwhLmNU+htbgv2XsLdOld+CFAa80orBUNuvptOd5JjTCtSnUco82roe4rRKXVQEkY3rGp2vOpDSZYNV94UIazjn9r/lxjYed0ZyzJfQATKTdqzjzzguOEpJrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BnjCh7e7; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bH9gpwQx"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F72T028374;
-	Thu, 24 Apr 2025 06:24:40 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BnjCh7e7"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0GluF019260;
+	Thu, 24 Apr 2025 06:24:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=u8M2UTNNJYb
-	bq2yNPP9wBqPGuGRhApujM1NpOhagFZs=; b=bH9gpwQx0oqjkCO1Fp6VMkcXLqo
-	jygJUSXhZrfji98hfoaV6ktAZjglh077t5UOk0BquJCEjffoUzv5gXS98AjxxHV3
-	ZO8I5O469xwo3bdB49BE+DgOm3JnhZznt+lXbHWokvmTbnM+t5K1I6m8+2jeHoKJ
-	gWmAMcVodZrK3GVBvinEFEDsDU2/wm1pnLFBVNX4q7QaGhlrr+8zE3Z6XzLkcWIk
-	6V9N8k3+LsBzi4YDaTaIjpYoOQnC2hYVS2RBpQTFZ9MWdOICuaPce58HuoatD4pr
-	9FkytLojMxmtIY8wYwIwqgxyvTTv/qtwlRzhtUMj0PzXF7AE10jbugfs//A==
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=8Wr71upjEl92b9ZVT6Y5+xPPUi6/ofplBhW
+	wFJE8hsQ=; b=BnjCh7e77CdfHNJdO4pVcUjR9WzM5EKhI5fn3LqXFtVnrscj+po
+	NLHAoJvVM0suuiGK7sWpbKx10ze4sjalNYj6+GlIsijSQc7uMaiSJzZUFdDIqEx3
+	l/qC53jc3uPEAnA/BKCmN9kEZuIUPvKUSZv9bGmah+7gfAJlJ8EwV16QlDSjji2f
+	WIGbGkOOT1aR/D+hoLH4FTWOSh6NSL3Ez0Vp7kUOPFoxi9l/F4fNAPYr0iDyKpwz
+	a1QTLdxuQJ9clAbvA4zcEJ2sz5YJRNdNjcp/pwk/7G/gruzHHqUVuiiH0DruoQgS
+	6wifEd6U6ciEgrAEFTKcVgFI24KhVEnxzyA==
 Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jgy4epu-1
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh14dtx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 06:24:39 +0000 (GMT)
+	Thu, 24 Apr 2025 06:24:38 +0000 (GMT)
 Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53O6Oa12004007;
-	Thu, 24 Apr 2025 06:24:36 GMT
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53O6OZ2J003909;
+	Thu, 24 Apr 2025 06:24:35 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4644wn010c-1
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4644wn00ye-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 06:24:36 +0000
+	Thu, 24 Apr 2025 06:24:35 +0000
 Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53O6Oaa3003957;
-	Thu, 24 Apr 2025 06:24:36 GMT
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53O6OZpI003868;
+	Thu, 24 Apr 2025 06:24:35 GMT
 Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53O6OZH7003944
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53O6OYAs003863
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 06:24:36 +0000
+	Thu, 24 Apr 2025 06:24:35 +0000
 Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
-	id D618859F; Thu, 24 Apr 2025 11:54:33 +0530 (+0530)
+	id 9FF3F58E; Thu, 24 Apr 2025 11:54:33 +0530 (+0530)
 From: Ayushi Makhija <quic_amakhija@quicinc.com>
 To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
         freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
@@ -62,12 +61,10 @@ Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
         jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
         quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
         quic_jesszhan@quicinc.com
-Subject: [PATCH v5 10/11] drm/bridge: anx7625: fix anx7625_sink_detect() to return correct hpd status
-Date: Thu, 24 Apr 2025 11:54:30 +0530
-Message-Id: <20250424062431.2040692-11-quic_amakhija@quicinc.com>
+Subject: [PATCH v5 00/11] Add DSI display support for SA8775P target
+Date: Thu, 24 Apr 2025 11:54:20 +0530
+Message-Id: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
-References: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,57 +76,115 @@ X-QCInternal: smtphost
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA0MCBTYWx0ZWRfX5eRPfmYuC0nB fA6H2NEb4MUECwdk8xkzLfjaD9hmbTtQrxogd2uQSw1MJ38tf4gUaWt8DJ9kcI/jV35/wsLYSkI OnF45FtYjesooo3fomPrPByLItFf37qQwF/azAGkvOElvyMi9c3qAAXbPAvacaX3hr2j4zysgiU
- GtWiSsgIlser3Ku49NO5CvpC02HLuKIQBPumsG+Ga/DSBJoz9G3WjAvIuPHtwJY6GaLNZrxt+kj f/B22t/SYWu1e5lG6i1uR+isukscwnoMf+Lbw+KUBlCXx4odh4tEqsiCqDvt+B6fAKV+NkFvGAv /iJPj31r3lvQIBISfHcfXbIvcM6cvq7odCsmEgLDQiKmnku7OFUt3F8K+76KrciwzyLG+Tmv4G2
- P2BhR+gwtT5sPlIZj/2oWjDLS1slByyidzA9j/3R+yU4oQ/SgWTSz4ZpK5Nr/2MBaTDeUhTH
-X-Proofpoint-GUID: LvTVjJHAIm3iuLteua8bO_UD8sFVghoU
-X-Proofpoint-ORIG-GUID: LvTVjJHAIm3iuLteua8bO_UD8sFVghoU
-X-Authority-Analysis: v=2.4 cv=M5VNKzws c=1 sm=1 tr=0 ts=6809d927 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=9-1pPbMvnaAu_OxZ4bUA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: 7yHgHAqZ9HESfAoxzD-JE3FhjaUrAq31
+X-Authority-Analysis: v=2.4 cv=OY6YDgTY c=1 sm=1 tr=0 ts=6809d927 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=dOa0ubpHghBcgs2qjvoA:9
+ a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 7yHgHAqZ9HESfAoxzD-JE3FhjaUrAq31
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA0MCBTYWx0ZWRfX0+Zuz8o8u1Pn RkYqLwDvrJ5mvCOfwigrc/cK7/sGXRCwQpkskljczLpO/POZDRo1/lmPwD4fG0jthkvJeOIkLLv dclESOO5CwGTac/Y4XWvSSL6lgYsqtbrDZ1AtBWjQ4Xd7XzPMa1xQLaMQJwqLWJNNMrshOVJ54y
+ 6DEkrZbfZNo6xOE9g0JFvJSYHPhNnDn468hE9rsvdtYzyQuGHM0Rv3DCCUo38GvZYfzEhzMaiU9 Gp72guc5xtEhIp8YvF78RNbW4fYlboPoxyDgw7UGWUebTp+7WBUWbFE4Ro1cSDncvjSsPCljQ/O Xws+cRzAGtEZvfPkQZdEmUjBxoUT1Rk2z/smxvHGEX9LR0RQ3ukGLlSnf9+qfmopKZT0C1f9udp
+ 9lEWmNQx711EUlwsl+gn7bjwYqr8341/yd0lhykQP5eDdA+fnHT7QKhylDVT9EFj4Jmm5YhH
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
  definitions=2025-04-24_02,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 priorityscore=1501 mlxscore=0
- mlxlogscore=999 malwarescore=0 impostorscore=0 clxscore=1015
- suspectscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 phishscore=0 priorityscore=1501 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2504240040
 
-In the anx7625_sink_detect(), the device is checked to see
-if it is a panel bridge, and it always sends a "connected"
-status to the connector. When adding the DP port on port 1 of the
-anx7625, it incorrectly treats it as a panel bridge and sends an
-always "connected" status. Instead of checking the status on the
-panel bridge, it's better to check the hpd_status for connectors
-that supports hot-plugging. This way, it verifies the hpd_status
-variable before sending the status to the connector.
+This series enables the support for DSI to DP bridge ports
+(labled as DSI0 and DSI1) of the Qualcomm's SA8775P Ride platform.
 
-In case of eDP, anx7625_bridge_detect() will not get called because
-the bridge->ops condition in anx7625_link_bridge() will not be
-satisfied. Since anx7625_sink_detect() is called from
-anx7625_bridge_detect(), this results in the sink_detect logic not
-being executed for eDP.
+SA8775P SoC has DSI controller v2.5.1 and DSI PHY v4.2.
+The Ride platform is having ANX7625 DSI to DP bridge chip from Analogix.
 
-Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 ---
- drivers/gpu/drm/bridge/analogix/anx7625.c | 3 ---
- 1 file changed, 3 deletions(-)
+This patch depends on following series:
+https://lore.kernel.org/linux-arm-msm/20250127-dts-qcom-dsi-phy-clocks-v1-0-9d8ddbcb1c7f@linaro.org/
+(ARM / arm64: dts: qcom: Use the header with DSI phy clock IDs)
 
-diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
-index a32ebe1fa0cd..365d1c871028 100644
---- a/drivers/gpu/drm/bridge/analogix/anx7625.c
-+++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
-@@ -1814,9 +1814,6 @@ static enum drm_connector_status anx7625_sink_detect(struct anx7625_data *ctx)
- 
- 	DRM_DEV_DEBUG_DRIVER(dev, "sink detect\n");
- 
--	if (ctx->pdata.panel_bridge)
--		return connector_status_connected;
--
- 	return ctx->hpd_status ? connector_status_connected :
- 				     connector_status_disconnected;
- }
+Changes in v5: Fixed review comments from Dmitry
+    - Added reset gpio for io_expander(tca9539) in patch 7. [Dmitry]
+    - Updated the commit text of patch 10 for eDP configuration. [Dmitry]
+    - Link to v4 : https://lore.kernel.org/all/20250417053909.1051416-1-amakhija@qti.qualcomm.com/
+
+Changes in v4: Fixed review comments from Dmirty, Krzysztof and konard
+    - Add only single compatible string in dsi ctrl pattern properties
+      in patch 3. [Krzysztof/Dmitry]
+    - Move the io_expander RESET and INTR pinctrls from i2c18 node to
+      io_expander node in patch 7. [Dmitry]
+    - Remove the gpio-hogs from io_expander node, as we are already
+      configuring them under anx7625 bridge nodes. [Dmitry/Konard]
+    - Updated the commit message based on hpd_enable() and
+      hpd_disabled() recommendation in patch 8. [Dmitry]
+    - Split the patch 9 of vesrion 3 into two separate patches. [Dmirty]
+    - Updated the commit message and commit text in patch 9 and 
+      patch 10.
+    - Link to v3 : https://lore.kernel.org/all/20250404115539.1151201-1-quic_amakhija@quicinc.com/
+
+Changes in v3: Fixed review comments from Dmitry and Krzysztof
+    - Added qcom,sa8775p-dsi-ctrl compatible based on the set of clocks
+      which are associated with it in patch 2. [Krzysztof]
+    - Drop the blank line and add contains instead of items in pattern
+      properties of dsi ctrl and phy in patch 3. [Krzysztof]
+    - Updated the node name from anx7625@58 to bridge@58 for anx7625
+      dsi-dp bridge in patch 7. [Dmitry/Krzysztof]
+    - Updated endpoint label name for input output ports of analogix bridge chip in patch 7. 
+    - Check the DP or eDP confiuration based on the aux node in patch 9. [Dmitry]
+    - Link to v2 : https://lore.kernel.org/all/20250311122445.3597100-1-quic_amakhija@quicinc.com/
+
+Changes in v2: Fixed review comments from Rob, konard, Dmitry and Krzysztof
+    - Added additionalProperities in dsi and phy patternProperties in patch 3. [Rob's bot]
+    - Updated example in qcom,sa8775p-mdss.yaml of patch 3:
+        - Added port1 and port2 inside mdss0 ports.
+        - Renamed dsi ports from mdss_dsi0_in to mdss0_dsi0_in and mdss_dsi1_in to mdss0_dsi1_in.
+    - Updated the init load value for vdds supply of DSI PHY from
+      150000uA to 48000uA as per chipset power grid in patch 4. [Dmitry]
+    - Updated the init load value for vdda supply for DSI ctrl
+      from 30100uA to 8300uA as per chipset power grid in patch 5.[Dmitry]
+    - Rebase the series to use the header with DSI phy clock IDs to make code more
+      readable in patch 6. [konard]
+    - Added the interrupts-extended in patch 7. [konard]
+    - Fixed the warning from DT checker against DT binding in patch 7. [Krzysztof]
+    - Changed the connector node name from dsi0-connector to dp-dsi0-connector and dsi1-connector to dp-dsi1-connector
+      respectively in patch 7. [Dmitry]
+    - Added the vph_pwr for anx7625 vdda10, vdds18 and vdda33 supply to fix the warnings from DT checker in
+      patch 7. [Rob's bot]
+    - Addressed device tree comments in patch 7. [Konard]
+    - Squash the DT patch 8 into DT patch 7. [Dmitry]
+    - Added hpd_enable() and hpd_disable() bridge funcs in patch 9. [Dmitry]
+    - Update hpd detection bridge op flags logic based on eDP connector in patch 10. [Dmitry]
+    - Link to v1 : https://lore.kernel.org/linux-arm-msm/20250225121824.3869719-1-quic_amakhija@quicinc.com/
+
+---
+Ayushi Makhija (11):
+  dt-bindings: display: msm-dsi-phy-7nm: document the SA8775P DSI PHY
+  dt-bindings: msm: dsi-controller-main: document the SA8775P DSI CTRL
+  dt-bindings: display: msm: document DSI controller and phy on SA8775P
+  drm/msm/dsi: add DSI PHY configuration on SA8775P
+  drm/msm/dsi: add DSI support for SA8775P
+  arm64: dts: qcom: sa8775p: add Display Serial Interface device nodes
+  arm64: dts: qcom: sa8775p-ride: add anx7625 DSI to DP bridge nodes
+  drm/bridge: anx7625: enable HPD interrupts
+  drm/bridge: anx7625: fix drm_bridge ops flags to support hot-plugging
+  drm/bridge: anx7625: fix anx7625_sink_detect() to return correct hpd
+    status
+  drm/bridge: anx7625: change the gpiod_set_value API
+
+ .../display/msm/dsi-controller-main.yaml      |   2 +
+ .../bindings/display/msm/dsi-phy-7nm.yaml     |   1 +
+ .../display/msm/qcom,sa8775p-mdss.yaml        | 181 ++++++++++++++++-
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi    | 181 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 186 +++++++++++++++++-
+ drivers/gpu/drm/bridge/analogix/anx7625.c     |  34 +++-
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c             |  18 ++
+ drivers/gpu/drm/msm/dsi/dsi_cfg.h             |   1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c         |   2 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.h         |   1 +
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c     |  27 +++
+ 11 files changed, 622 insertions(+), 12 deletions(-)
+
 -- 
 2.34.1
 
