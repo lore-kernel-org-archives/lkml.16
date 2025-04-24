@@ -1,65 +1,50 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0362701C1;
-	Thu, 24 Apr 2025 15:03:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E042701C1;
+	Thu, 24 Apr 2025 15:05:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745507037; cv=none; b=kNAx9pZzTMCFvPwZymW2BEGs/E9MXEVkJbqJCOv1lmtLi18AxeWWMtJ5gpc9HP0QCtc4GjFPb+JZBI+3jAZLvK3MM84osj3JkcoMYhpzwLbgJf0BVJtfiQg8kLYl0myOPe79gZNUXF7Dw2d2Z5+PLVuuGEjzcn9wcV/9BSj2K0A=
+	t=1745507128; cv=none; b=YNed1wQUxbFy4MYyJArjfss69djIlCIAu2vkq61pEF/LQqzmAoOkRLjyaHL1B+fVCl2cNXaZ2QCaKMFRYY7Uq5kvjXd4sZJHbY+7bMtDjgHzJG6qUY4ocbZR0tgNT2DZDT67HrzuqdT1MOGbDLfddpLs9EYJklSueE4xTzvBCNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745507037; c=relaxed/simple;
-	bh=kvI7kjUwXN7aMCUd/KqC+XSsxo1YD9LUHguUFe5g3nU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L/P6o0ltqUrJNjKio02JdUG4NmE1TzrzJPSxZcp/dkWnGI7b5pcOEZjMbl5E8IENQzwacFiZ1UTVjgQiKVEIj0ga3qshrnOTIcUjzd9C5cPDVZHnRB4F8FKvxKVWpGbIPY2hKV4BRH9PXZbY9jQjG/bFGtsboldLBP4UHPr2gXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tn64V9hA; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745507128; c=relaxed/simple;
+	bh=DZadV4dYY/zC+SdX3Ciq88DCbQxa2Avy7+9rB/BkoX0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MgAgUIeqzR8MVBKcpLxYXzcgwuBhfoIBeB3XxfoyNYhBw8R0xvonUanCpOljlUGio5Er/0wRnJm93ntd4DjtoerXdcixSAAYyXRmJXVys6kAsRCE8bvpXTjrIFiPZaFn0Z6l0ZCCZCMX3vVtYHAJIVgAZ1b1e5BPFO0RvsNkFNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bGNZrkbg; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tn64V9hA"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac34257295dso195140266b.2;
-        Thu, 24 Apr 2025 08:03:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745507034; x=1746111834; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5chFS9OMORzLKORouVhOFOBJ5V69Jo/Whb7Bt9/v68A=;
-        b=Tn64V9hAt7oZpveFNmO1YXDvDMGpv722v4TZiu4f6iX8vKdJT0ARoWpTWxMSyZ+s3p
-         /qSv3RlYQedlTQXTawyD+1/gQQ8ICXnrE79W3P42Yeb+QRtLsvt+GVPhrkgrzGZOnxsD
-         6Dvu+TYmOBbV0888JEdwaWWUCLpgyk0Bmd3H8m+nOATl79FFqoqqYHuVwUuoTmMThGHS
-         K2XxXqDWCIj0xc4HYeYLWUTebv8rHWcy2+xnyfG9Zexva/NPCxw/NVGlgfiOCSAp3bMO
-         PPOS107sQ7iV2zAMYWSAuVAT7eUZY5eibZj9Oio4ddiI5NalxHFS4obHrY5cPhB00pC+
-         bOVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745507034; x=1746111834;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5chFS9OMORzLKORouVhOFOBJ5V69Jo/Whb7Bt9/v68A=;
-        b=TGVWLUbtq58AixEo/onDSF8qVrxBXipI19r90osXyei9ldPhKfRLo0JkeYr4UMxtfm
-         EAVdQvsM34L6l1Rp6zEkxi6ZPgui5uJgloGMERnjbUcU5M+Tvun4vjppT3rXwi3+3qPH
-         X7tLbUYBCF8A5YvX2ymtEuANum5r5GulB1Tymyxpp/tlkBX923WLbOavU4gR3XQT3oez
-         AyiLg0HuhZpvJDAZeQRiyQwwRyTktIp7tJEv12OkMSlcO2ufr8mNNXFQgh6FAlpP4mcF
-         loeog7DIZQmyzH18wmBkoSAk6JC0ZyG9hiqkzi8Ma9N65zeDiJvqH0R89+LDhl/ydol7
-         yPxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUa6e13co8nxuk8FFHqrXORdd+uwfkqwoub/5J2z3b78qTzIAr4TLwiPgP56sJznPTdbxDztCZtb5Rw0Q+B@vger.kernel.org, AJvYcCV86v7X1z6vr3QWTVoJ9OMIFtYKV7T2N+s+rGHQJM5dZVcvEMdvsx1goOhPvGAeqdKvCcGxCWHL3b0nuY/Pkmm9PM+N@vger.kernel.org, AJvYcCXchajTP83ra7eeXxy33oBQ3Fg1tFoJxv2BrlaZPk5M90mLvyWsM/cJiDx0gSEoAKqT/hpLj9UYuxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrCx97ZxEhO1yUS1c6EIK5K2KwhWHdP/iC8XNhlQU7d8mBHMIx
-	n5MYbJvolwcmKFQxwvo1l3N7xBg55+SaMUjckHGS2dEkyHldlafr
-X-Gm-Gg: ASbGnctiAGxOn3i5K3o/DpUrwCuPK+SKaFJUNVpvErGaQX1lr/lSjzeB9ErYl5CAlbE
-	Sz8IXzCVmxe7P+irse0wjT3wmsNzg/fZ2S6n8udrK3NlFN8VE94Izxc1VS5jAuW4ijaXE2rQ+MZ
-	GGwMf3BRhKjCBPgPbyAGTeIW406N/+d5tS0wbn2Ifc1WJ6ItruYHEHKCsLRix3Fw0pgvLIj9ath
-	1u926+yz3VhTvYFovwKNa7rUhIoUqWslGqjWthce4YG1VGKjrzcSx3YYDwk7v7l6tfYM0UhUTn0
-	aXDGIrggmCE/v860dgHlldYYkRjfjEdKjO9rMRLFn8UTDyWumkifINGbVAarvwWO4aRIIlPwMlc
-	2vu3N15/UiOfu
-X-Google-Smtp-Source: AGHT+IEco8mssxoawhcAhtRNlPLqlID5zUq0vN72hKI33kZSrx4fa3BkNkpoQ0Lld1zoeiMfeTtTrw==
-X-Received: by 2002:a17:907:3c93:b0:ac2:9093:6856 with SMTP id a640c23a62f3a-ace573a6e8cmr320455066b.54.1745507033210;
-        Thu, 24 Apr 2025 08:03:53 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1126:4:1cca:202:d408:3819? ([2620:10d:c092:500::5:5042])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace59c260d2sm120633666b.145.2025.04.24.08.03.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 08:03:51 -0700 (PDT)
-Message-ID: <b22e222f-1d6a-4685-871c-1aaee319b744@gmail.com>
-Date: Thu, 24 Apr 2025 16:03:49 +0100
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bGNZrkbg"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OBPMk1019163;
+	Thu, 24 Apr 2025 17:04:24 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	EbzdNbMuPcQgyg/32v679V2kcITSnqgFdSJKF+onCu4=; b=bGNZrkbgM7hP0A4d
+	0huWCtfENxlTtZ2hD9QWgmb98DIFXK5fBmBupMzY6axYs0FrA/0LWmfz0WhsStka
+	AUXFj0pYsKuCM2wNw3Noz8aYCKXGStw8mUCIHn1PU8SS3MuLYegugGWwOdnCglQS
+	so57zD+/Q1kPH+lUcNiN2fR6/+s7xU5O1AjiWYlDUID34TOZerwOJJCOsxm/73wD
+	AKWfN54uWLHEgaWECt+7UHmgOfzc5a9lH3nXnAz3hT37RZh9W27f0QUDHzBg/F3h
+	2H+eskpgY2tz9SOoLS7XLLDm437GAqrqDrmqZ4wiJvlEm8NsT0+VsUGPYke1l5R3
+	kW1R0Q==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 466jjvg1q7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 17:04:21 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 7BB1040046;
+	Thu, 24 Apr 2025 17:01:47 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A4E6D9C40B5;
+	Thu, 24 Apr 2025 16:59:49 +0200 (CEST)
+Received: from [10.48.86.196] (10.48.86.196) by SHFDAG1NODE3.st.com
+ (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
+ 2025 16:59:48 +0200
+Message-ID: <fe3323d0-161c-498d-92e8-7a723f8d9780@foss.st.com>
+Date: Thu, 24 Apr 2025 16:59:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,79 +52,118 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 12/12] Documentation: mm: update the admin guide for
- mTHP collapse
-To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
- mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
- baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com,
- willy@infradead.org, peterx@redhat.com, ziy@nvidia.com,
- wangkefeng.wang@huawei.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
- thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
- kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
- dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
- tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
- cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
- hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
- rdunlap@infradead.org
-References: <20250417000238.74567-1-npache@redhat.com>
- <20250417000238.74567-13-npache@redhat.com>
+Subject: Re: [Linux-stm32] [PATCH 03/12] pinctrl: stmfx: use new GPIO line
+ value setter callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Basavaraj Natikar
+	<Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?=
+	<afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Steen Hegelund
+	<Steen.Hegelund@microchip.com>,
+        Daniel Machon <daniel.machon@microchip.com>,
+        <UNGLinuxDriver@microchip.com>,
+        Ludovic Desroches
+	<ludovic.desroches@microchip.com>,
+        Nicolas Ferre
+	<nicolas.ferre@microchip.com>,
+        Alexandre Belloni
+	<alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Krzysztof Kozlowski
+	<krzk@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar
+	<alim.akhtar@samsung.com>
+CC: <linux-samsung-soc@vger.kernel.org>,
+        Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>,
+        <linux-actions@lists.infradead.org>, <linux-mips@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
+ <20250424-gpiochip-set-rv-pinctrl-part2-v1-3-504f91120b99@linaro.org>
 Content-Language: en-US
-From: Usama Arif <usamaarif642@gmail.com>
-In-Reply-To: <20250417000238.74567-13-npache@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+From: Amelie Delaunay <amelie.delaunay@foss.st.com>
+In-Reply-To: <20250424-gpiochip-set-rv-pinctrl-part2-v1-3-504f91120b99@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE3.st.com
+ (10.75.129.71)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
 
 
 
-On 17/04/2025 01:02, Nico Pache wrote:
-> Now that we can collapse to mTHPs lets update the admin guide to
-> reflect these changes and provide proper guidence on how to utilize it.
+On 4/24/25 10:35, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Signed-off-by: Nico Pache <npache@redhat.com>
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Reviewed-by: Amelie Delaunay <amelie.delaunay@foss.st.com>
+
 > ---
->  Documentation/admin-guide/mm/transhuge.rst | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
+>   drivers/pinctrl/pinctrl-stmfx.c | 13 ++++++++-----
+>   1 file changed, 8 insertions(+), 5 deletions(-)
 > 
-> diff --git a/Documentation/admin-guide/mm/transhuge.rst b/Documentation/admin-guide/mm/transhuge.rst
-> index dff8d5985f0f..06814e05e1d5 100644
-> --- a/Documentation/admin-guide/mm/transhuge.rst
-> +++ b/Documentation/admin-guide/mm/transhuge.rst
-> @@ -63,7 +63,7 @@ often.
->  THP can be enabled system wide or restricted to certain tasks or even
->  memory ranges inside task's address space. Unless THP is completely
->  disabled, there is ``khugepaged`` daemon that scans memory and
-> -collapses sequences of basic pages into PMD-sized huge pages.
-> +collapses sequences of basic pages into huge pages.
->  
->  The THP behaviour is controlled via :ref:`sysfs <thp_sysfs>`
->  interface and using madvise(2) and prctl(2) system calls.
-> @@ -144,6 +144,14 @@ hugepage sizes have enabled="never". If enabling multiple hugepage
->  sizes, the kernel will select the most appropriate enabled size for a
->  given allocation.
->  
-> +khugepaged uses max_ptes_none scaled to the order of the enabled mTHP size to
-> +determine collapses. When using mTHPs it's recommended to set max_ptes_none
-> +low-- ideally less than HPAGE_PMD_NR / 2 (255 on 4k page size). This will
-> +prevent undesired "creep" behavior that leads to continuously collapsing to a
-> +larger mTHP size. max_ptes_shared and max_ptes_swap have no effect when
-> +collapsing to a mTHP, and mTHP collapse will fail on shared or swapped out
-> +pages.
-> +
-
-Hi Nico,
-
-Could you add a bit more explanation of the creep behaviour here in documentation.
-I remember you explained in one of the earlier versions that if more than half of the
-collapsed mTHP is zero-filled, it for some reason becomes eligible for collapsing to
-larger order, but if less than half is zero-filled its not eligible? I cant exactly
-remember what the reason was :) Would be good to have it documented more if possible.
-
-Thanks
-
->  It's also possible to limit defrag efforts in the VM to generate
->  anonymous hugepages in case they're not immediately free to madvise
->  regions or to never try to defrag memory and simply fallback to regular
-
+> diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
+> index aae01120dc52..f4fdcaa043e6 100644
+> --- a/drivers/pinctrl/pinctrl-stmfx.c
+> +++ b/drivers/pinctrl/pinctrl-stmfx.c
+> @@ -115,14 +115,14 @@ static int stmfx_gpio_get(struct gpio_chip *gc, unsigned int offset)
+>   	return ret ? ret : !!(value & mask);
+>   }
+>   
+> -static void stmfx_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+> +static int stmfx_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
+>   {
+>   	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
+>   	u32 reg = value ? STMFX_REG_GPO_SET : STMFX_REG_GPO_CLR;
+>   	u32 mask = get_mask(offset);
+>   
+> -	regmap_write_bits(pctl->stmfx->map, reg + get_reg(offset),
+> -			  mask, mask);
+> +	return regmap_write_bits(pctl->stmfx->map, reg + get_reg(offset),
+> +				 mask, mask);
+>   }
+>   
+>   static int stmfx_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+> @@ -161,8 +161,11 @@ static int stmfx_gpio_direction_output(struct gpio_chip *gc,
+>   	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
+>   	u32 reg = STMFX_REG_GPIO_DIR + get_reg(offset);
+>   	u32 mask = get_mask(offset);
+> +	int ret;
+>   
+> -	stmfx_gpio_set(gc, offset, value);
+> +	ret = stmfx_gpio_set(gc, offset, value);
+> +	if (ret)
+> +		return ret;
+>   
+>   	return regmap_write_bits(pctl->stmfx->map, reg, mask, mask);
+>   }
+> @@ -694,7 +697,7 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
+>   	pctl->gpio_chip.direction_input = stmfx_gpio_direction_input;
+>   	pctl->gpio_chip.direction_output = stmfx_gpio_direction_output;
+>   	pctl->gpio_chip.get = stmfx_gpio_get;
+> -	pctl->gpio_chip.set = stmfx_gpio_set;
+> +	pctl->gpio_chip.set_rv = stmfx_gpio_set;
+>   	pctl->gpio_chip.set_config = gpiochip_generic_config;
+>   	pctl->gpio_chip.base = -1;
+>   	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
+> 
