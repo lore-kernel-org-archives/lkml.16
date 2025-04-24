@@ -1,163 +1,147 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A57A2918E6
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB552973B1
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:14:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504074; cv=none; b=LVa/PVxTjcKqE0iK7A6maU56cj/hdqC/XxpeWeDdib6q+tIZ+YLFmSsWlGq8LCUmGXXoFZrOa+2K9NU9k8ggSrDZ7DXRC9yi7NtpL9j8hlNIA9BP2PWf1MvNHh79DZldSKhthRGUclKHHR41nWSRk+QDEWM9Gvs6wftZyMAxxvY=
+	t=1745504076; cv=none; b=thWvIa60jo3zZBD+ERqmQiK8bDLeTakUQg9Z08vO7cJmrnZt89sVKo0S8oDBHsqwpP426BIicpx0FPWcwiMUoOxsggsE1E4Qlxir0x2vnG9UF7QwEEqTp22Dl91KQqJNzKmqHwnF7GCNxFu2Opp6a0fOL/kXDQA9AbgHmsTs+c8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745504074; c=relaxed/simple;
-	bh=N53i4bFiZ0PwECXO+3O9PEZg7KbhghQli4Mhy0f7goE=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=KbEsX9wB7s3VmUoKVl/JES/4gLp2OoO1+y3xK0ZNCpupiIc4SAUc/XeF8ch8SpCwtsLNJ2qmmebnShHPEHI2iOWMvw9M1qKY8qlwbGQbBSHux8FwV3MfTOoLKt8Io6HNQ/iIUu4ML9iW9UDeJgLkf1zQTLSSdV4t2CcHZ4xQzsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=A/BNi9dr; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1745504076; c=relaxed/simple;
+	bh=hc3NuIx//WjHKdboDZgQCca1SVN0OX6YOp4RVVhyM/A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RQQq3hAa+nf557oGUGchTP7qfAfX0TkYuzTZrg8n89L7HgEYwlQBwvqYmInPyfzGTq3RlolMn6PNwjryc5cL5WvWTt8oc1IePPERITr3B9HbS62DTxjiW0eVenRm/ZckijyDJou2IhAFU9c7p6I/7xfPY7kHISV2RWr7Z4/32uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UwUk0Yat; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A/BNi9dr"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39efc1365e4so559777f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:14:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UwUk0Yat"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso9592341fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745504070; x=1746108870; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3i+gLyWtr6XPiioNUTryX7U5TAHJs0bj5+QGltLz/R0=;
-        b=A/BNi9drAEtZYzDLWDDHNkbHoLQ7G/rSzO6lWtT9wJBxxPLNRLXjqG2CV9Xf5QbQBT
-         Sd9zeNztMZUVOCRA5OflPbZpQ0GAQKMtgYOZVkl6AYSf1iMSjRA5bELWM2/2Ro5G2jLp
-         uJnN4FsqDjPExjGbLQI6o4GhGLVBgLi7/xUjnivg4y9khXjgA3Dmmzsi1UOyqNBUNBT8
-         MVi1QC4XXmiTDjqog5ZbsG6l9kZaoZlE4hgdKAohqlGXx7MczFhDs/rVxT/XoUHclq03
-         v+rEjUJ0/gcda3IVfMtpZfSgpUg8mpRx1XLX5Yctye5hH+r06rdmsphQr+bWu8Cqrz5t
-         eCpQ==
+        d=linaro.org; s=google; t=1745504072; x=1746108872; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DIIOezRQ1iEeyh6wP7pxRulzkeF5lSrui5rZPEB2VUc=;
+        b=UwUk0YatGqkihCHcRF0WXCpJdbvOfbr19WV0vXckF6HbEABibwa4CVO/OAXrn8LE2K
+         Qtjqr5hysn2lIIyCIbEd5tzTWUcvnhXssACBU8hiMTKhl2J5LLVCZGtbFLxJtiWb+eED
+         Noss6jgFurG+cW6ZtrPOZmAPuVNyz8dStIMOjOVs2YWBcPdCrPnXPZApCqUEhrbkesAt
+         fstmM6LzmJnQRrT/dYOSxgc757S5707GF+imQNkxH+KX9Rtap0GeOZL3ZoyqE2ZSDvYy
+         ui8SWR5ZIkhASTH78Z+6DVD5xKKG6a7Jds3Z3YM+E/Aiq+tnEfHCHgAvk3UBmwW0rjTs
+         gTmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745504070; x=1746108870;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3i+gLyWtr6XPiioNUTryX7U5TAHJs0bj5+QGltLz/R0=;
-        b=sozN6x0vsAinNR+xpuD17+oDm0cvd71FWROMvDQu3bd48sAL8RS7pi+mHI6GJzGVbT
-         sUzuucNuBdYT5bBQoS+EtCTleDE9Hnyn+kbyxEoAWHoK906voPTsT2Scz2//E5S6O+oK
-         Ml/4s0EM6L6sWztNGYwIaZOswVeQzvJNW2HLw8vLdXRvoeXObylazv8m4cKfi6VqwrRc
-         3MaCObkCLq8dki0qZkzLdE/EgnnWg00nNl6+tYKIbMW18rQyJcNOJXboNxjNs2tKoVNj
-         cRgsALST/wvaqRLeu0nNp9UHkPec21NriWE/PXY58LMX2OGKFVmCBSdhQVBtjx554LMP
-         74XA==
-X-Gm-Message-State: AOJu0YwbykbSqiCRSKv0V9WvrmWSW8miPOKo1MhVR5tsHSpLWiAEL1/b
-	DaOouEwDidYefkx7miGS8q+R/+wU1sk4mITaPOFxBinFlndR+ldTEDx/3vWs2PhI2/9O0V/jpWs
-	Y
-X-Gm-Gg: ASbGncvcdemTnpYoYZ6f8YngAsz02lke/BISbMF0pwpAalHZnieRxvaAYaVPDHy8EBk
-	VJ/+05RECiIvBvCM1qVQtMKMM39GVduJTnTBWl6HqLeXVcjt3x5r3dr6lx2sS8y5b7GpnP0GtaI
-	pfZcaivWfKiJg+E+5IJINUjoAx+/7wasFUpWWR5+taTSLbLu0k+1AQf0j4Y4VC1WvMT7tZc5xEx
-	B2cRK8o6JF+aQtbDYOzaw0M3ijfQB/0varULR2pqgJ+6/V/o55Q+h1DbyPIH7r4Vah0ULZ3OQL0
-	V7A1S7DvkQLZrfmr0LoZC4tcHbwIWOwP954FssLjyojAe0dKfTDxsLhb+MwWoHZN9Z+LAj3GwsL
-	rj/G4WkGC7uaK8Btk
-X-Google-Smtp-Source: AGHT+IFOk65S5hPF/j31g7Of/aiN0lBptA3ImD/zObUzEDJUJE+zLunCG1fROxNheO7aYYEMJ9HW0A==
-X-Received: by 2002:a5d:5f87:0:b0:38d:b325:471f with SMTP id ffacd0b85a97d-3a06cf5ac50mr2557177f8f.15.1745504070317;
-        Thu, 24 Apr 2025 07:14:30 -0700 (PDT)
-Received: from seksu.systems-nuts.com (stevens.inf.ed.ac.uk. [129.215.164.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:14:29 -0700 (PDT)
-From: Karim Manaouil <karim.manaouil@linaro.org>
-To: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev
-Cc: Karim Manaouil <karim.manaouil@linaro.org>,
-	Alexander Graf <graf@amazon.com>,
-	Alex Elder <elder@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Fuad Tabba <tabba@google.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Marc Zyngier <maz@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
-	Quentin Perret <qperret@google.com>,
-	Rob Herring <robh@kernel.org>,
-	Srinivas Kandagatla <srini@kernel.org>,
-	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
-	Will Deacon <will@kernel.org>,
-	Haripranesh S <haripran@qti.qualcomm.com>,
-	Carl van Schaik <cvanscha@qti.qualcomm.com>,
-	Murali Nalajala <mnalajal@quicinc.com>,
-	Sreenivasulu Chalamcharla <sreeniva@qti.qualcomm.com>,
-	Trilok Soni <tsoni@quicinc.com>,
-	Stefan Schmidt <stefan.schmidt@linaro.org>
-Subject: [RFC PATCH 34/34] KVM: gunyah: enable KVM for Gunyah
-Date: Thu, 24 Apr 2025 15:13:41 +0100
-Message-Id: <20250424141341.841734-35-karim.manaouil@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250424141341.841734-1-karim.manaouil@linaro.org>
-References: <20250424141341.841734-1-karim.manaouil@linaro.org>
+        d=1e100.net; s=20230601; t=1745504072; x=1746108872;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DIIOezRQ1iEeyh6wP7pxRulzkeF5lSrui5rZPEB2VUc=;
+        b=pBXfPRHX2Fm7fGCwU7Hum8ormL5GhZbZVnNdznLS/0GFTLVL8S7SuLgN/RqF2YilXp
+         k0Pm//rG7KNyueLdWKapiqygEKgo/1qTMsnA/Rftx+S7/aaOCYWMLjkenApPi6M1i6F1
+         vuijojORQxVNqdJK30VbzuBFZnx4RqjmxWjfV7o9mYQ4YEn29fRXAUPaRlxApjluXWif
+         1ihN2d09aWQALT/JpQhgxl1Lc8PueNulaPrNF5sdwBFZNDbgFVHuUA11vGRp+BDRNHLW
+         bxA3NhHOR9xm3PB//1eg7z9EBYijlnhrzUw6BNrJC+jG3QKK2wHKrurEgKTUXfh2/qwZ
+         6YeA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgoqYdJ/oD5QciZr6QJUO2czz0G6/pl8yEa5xRfEHlAz2ZGFe6REgsJ4VNMw4gP7wgjM7ZOVEt7Hw3hBM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXbvZ/CG7THWiVXbU1JBKtIZENsty9G+BgpTWB31AUtZT88ULD
+	NAV/l2SVWo1N1x0xFG/bH47wDan2S6Kj+kByaHEt/pBv34+AJhSmURz8I7+qCvjB5Ul7U48OelQ
+	5XR+DdWDKih6O73pibxKoewKMgDyRgVuufNp8GA==
+X-Gm-Gg: ASbGncuIutxDyalkBd+gbJtJfW2Kj7RAzncrHtTUuKiXm1fupRGcsjtw4Byw9mClG9o
+	BrD3+ztJR/7S5EuDY7dJwARQ+GbpRqY7KLaJ8JJCLdL3Y1YH9k2E0c5z6PFmV1oIzYwV2tWgTk9
+	otAQXDAkupi6ctGROt77tl486weMKHEhHKlRl2vDUHK7SKQrpdIfcqPAAf
+X-Google-Smtp-Source: AGHT+IGTSgfmE4C9KUY01cBQCa6U+zujjBr3JQn5JFHu87otSRTtbM+9TibC6Ub/YfaplbG5HQdBpJHJtYPG69/HM40=
+X-Received: by 2002:a05:651c:885:b0:30d:e104:cd56 with SMTP id
+ 38308e7fff4ca-3179ffc1202mr10727731fa.39.1745504072212; Thu, 24 Apr 2025
+ 07:14:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250423-dt-memory-region-v2-v2-0-2fbd6ebd3c88@kernel.org>
+In-Reply-To: <20250423-dt-memory-region-v2-v2-0-2fbd6ebd3c88@kernel.org>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Date: Thu, 24 Apr 2025 08:14:20 -0600
+X-Gm-Features: ATxdqUEG7UgU0b-fYJDsj-X6YeibPATP71Sc8xsrfndaXkHmANCAN6IFo1WtuOI
+Message-ID: <CANLsYkxKHhCHYrbAGzQ48QGpL_DbuLnX3=ppmpyu0vjuuvvODg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] of: Common "memory-region" parsing
+To: "Rob Herring (Arm)" <robh@kernel.org>, Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>, 
+	Daniel Baluta <daniel.baluta@nxp.com>, Iuliana Prodan <iuliana.prodan@nxp.com>, 
+	"Andrew F. Davis" <afd@ti.com>, "Shah, Tanmay" <tanmay.shah@amd.com>
+Cc: Saravana Kannan <saravanak@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Chen-Yu Tsai <wens@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 
-Enable KVM to act as the interface to create and manage Qualcomm's
-Gunyah-based virtual machines [1].
+Arnaud, Daniel, Iuliana, Andrew and Tanmay - please test this patchset
+on the platforms you are working on.
 
-[1] https://www.qualcomm.com/developer/blog/2024/08/learn-about-gunyah--qualcomm-s-open-source--lightweight-hypervis
+Thanks,
+Mathieu
 
-Signed-off-by: Karim Manaouil <karim.manaouil@linaro.org>
----
- arch/arm64/kvm/gunyah.c      | 12 ++++++++++++
- drivers/virt/gunyah/gunyah.c |  3 +++
- include/linux/gunyah.h       |  1 +
- 3 files changed, 16 insertions(+)
-
-diff --git a/arch/arm64/kvm/gunyah.c b/arch/arm64/kvm/gunyah.c
-index 23b9128bf5b1..91f0260ef3f5 100644
---- a/arch/arm64/kvm/gunyah.c
-+++ b/arch/arm64/kvm/gunyah.c
-@@ -2071,3 +2071,15 @@ void kvm_arch_free_vm(struct kvm *kvm)
- 
- 	kfree(ghvm);
- }
-+
-+int kvm_gunyah_init(void)
-+{
-+	int err;
-+
-+	err = kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kvm_gunyah_init);
-diff --git a/drivers/virt/gunyah/gunyah.c b/drivers/virt/gunyah/gunyah.c
-index 3e795e3ba881..629c812fbac0 100644
---- a/drivers/virt/gunyah/gunyah.c
-+++ b/drivers/virt/gunyah/gunyah.c
-@@ -28,6 +28,9 @@ static int gunyah_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	if (!kvm_gunyah_init())
-+		pr_info("KVM for Gunyah is available!\n");
-+
- 	return devm_of_platform_populate(&pdev->dev);
- }
- 
-diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
-index 26fdfa3174da..7d43449c4547 100644
---- a/include/linux/gunyah.h
-+++ b/include/linux/gunyah.h
-@@ -421,4 +421,5 @@ enum gunyah_error
- gunyah_hypercall_vcpu_run(u64 capid, unsigned long *resume_data,
- 			  struct gunyah_hypercall_vcpu_run_resp *resp);
- 
-+int kvm_gunyah_init(void);
- #endif
--- 
-2.39.5
-
+On Wed, 23 Apr 2025 at 13:42, Rob Herring (Arm) <robh@kernel.org> wrote:
+>
+> While there's a common function to parse "memory-region" properties for
+> DMA pool regions, there's not anything for driver private regions. As a
+> result, drivers have resorted to parsing "memory-region" properties
+> themselves repeating the same pattern over and over. To fix this, this
+> series adds 2 functions to handle those cases:
+> of_reserved_mem_region_to_resource() and of_reserved_mem_region_count().
+>
+> I've converted the whole tree, but just including remoteproc here as
+> it has the most cases. I intend to apply the first 3 patches for 6.16
+> so the driver conversions can be applied for 6.17.
+>
+> A git tree with all the drivers converted is here[1].
+>
+> v2:
+> - Fix of_dma_set_restricted_buffer() to maintain behavior on warning msg
+> - Export devm_ioremap_resource_wc()
+> - Rework handling of resource name to drop unit-address from name as it
+>   was before.
+> - Link to v1:
+>   https://lore.kernel.org/all/20250317232426.952188-1-robh@kernel.org
+>
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt/memory-region
+>
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+> Rob Herring (Arm) (4):
+>       of: reserved_mem: Add functions to parse "memory-region"
+>       of: Simplify of_dma_set_restricted_buffer() to use of_for_each_phandle()
+>       devres: Export devm_ioremap_resource_wc()
+>       remoteproc: Use of_reserved_mem_region_* functions for "memory-region"
+>
+>  drivers/of/device.c                       | 31 +++++-------
+>  drivers/of/of_reserved_mem.c              | 80 +++++++++++++++++++++++++++++++
+>  drivers/remoteproc/imx_dsp_rproc.c        | 45 +++++++----------
+>  drivers/remoteproc/imx_rproc.c            | 68 +++++++++++---------------
+>  drivers/remoteproc/qcom_q6v5_adsp.c       | 24 ++++------
+>  drivers/remoteproc/qcom_q6v5_mss.c        | 60 ++++++++---------------
+>  drivers/remoteproc/qcom_q6v5_pas.c        | 69 ++++++++++----------------
+>  drivers/remoteproc/qcom_q6v5_wcss.c       | 25 ++++------
+>  drivers/remoteproc/qcom_wcnss.c           | 23 ++++-----
+>  drivers/remoteproc/rcar_rproc.c           | 36 ++++++--------
+>  drivers/remoteproc/st_remoteproc.c        | 41 ++++++++--------
+>  drivers/remoteproc/stm32_rproc.c          | 44 ++++++++---------
+>  drivers/remoteproc/ti_k3_dsp_remoteproc.c | 28 +++++------
+>  drivers/remoteproc/ti_k3_m4_remoteproc.c  | 28 +++++------
+>  drivers/remoteproc/ti_k3_r5_remoteproc.c  | 28 +++++------
+>  drivers/remoteproc/xlnx_r5_remoteproc.c   | 51 ++++++++------------
+>  include/linux/of_reserved_mem.h           | 26 ++++++++++
+>  lib/devres.c                              |  1 +
+>  18 files changed, 339 insertions(+), 369 deletions(-)
+> ---
+> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+> change-id: 20250423-dt-memory-region-v2-a2b15caacc63
+>
+> Best regards,
+> --
+> Rob Herring (Arm) <robh@kernel.org>
+>
