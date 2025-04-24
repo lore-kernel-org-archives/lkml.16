@@ -1,108 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE87288C93
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4F4289342
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:41:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745512766; cv=none; b=J8D2Izn290vw761a+SzPgxy0+A9BVhtCeouc/En+9w7EmasgocGXI8yweN3w6SH8VUXhELaM5WqY8XY/5KZFPthhFbPFOoyFBTnEujbAvD6oUnnpRHE9XBkK6UMEKTTfCZVCibWHhYe1FDlsrLk5O6ls4TKKsRknZQOSU/avSWY=
+	t=1745512919; cv=none; b=JCT0k9BcpqVzj0uwv0GHzyy9CSIPpgbCZJl7G57dWs1OjXIKB7ogUunKKJLe9sMAaHbB8ZaDRZrJefmYONNDi+kFvGNpRrNuxRT2Eolr+5i7/WIky4+k/1O1cyj1f+i+7pSSoq4cnjb9kd4IUcsYEiOk7AeVEl/02pJI0NN30SQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745512766; c=relaxed/simple;
-	bh=aSPeKLdpWqfF1kKLUZBV4vvyYbxDPCi/o6vS5c45bcY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TQEk2lP8Ror+hpIqviBUYCA0iI1ADXX2j4136vhhyb9D5g6UPOf78TNtfCbV+Wj3AmeVCRFAsDKB06OQtB7iCWbO8s1Yp1iE12oyfw5v6IZOQ6+05kANPAiV78K4E47sRAT2gPDz64Qum5IQHCSsN3TARuNipjHaqAy8pb3eTbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nv0UPKhn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745512919; c=relaxed/simple;
+	bh=vye0Q+xd1G2Olnf5Qkr8nib/GWDRlQm+UGeZYjZUyDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WbPSmNtEh04Mrnc7Az/o7QMt5cPAfob1PYyz9pwE9uo3iXY2d3C6scVYF46b242FnmBzDwYgJaoVZ9kW/NFBtwvHBBYj273sEdJG7h4u+onpsRJl4dAgxwXxB72tKeoABUy0jGBc0gwAX6+EK/Navqve3I/A5Sf4AFrhrLLiowg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=vt7T0uzd; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nv0UPKhn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8807C4CEE3
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745512765;
-	bh=aSPeKLdpWqfF1kKLUZBV4vvyYbxDPCi/o6vS5c45bcY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Nv0UPKhnGHFEEeVu4o6fjtQfp2Ypq5aKPalsLLdTciKEVivNo7nBtQYW9xR7SZqJv
-	 y69uve3fdbPrGywOP0ycL+pz9KOMjNLZBV/7d5jMScpWpwf3W/z7PCmYSZzCHonbEE
-	 uSGNuI65RQ/Kj+cGkZ7nGP14GXn8o6rcsvafPMsjCvHOgXMItIdygiTmfdswJLRqZq
-	 +hp54ylGg+OyaOTdG6GvXWOTWqbXzPA1dgzUW79QoEBQGg4std3+6i0+KjkI578mwS
-	 aZ3Iun9hL53smkAJ7wGWvL8Cim7RPmxLB5FkDh7JK0XAXTRlSkEqATglp/jsG/9llm
-	 kgylqbU3PupHw==
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-549b116321aso1528894e87.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:39:25 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVr+5+CiVECLFqID9l1YvMEM/YndnDFpBWJI5eDxR+FblDwc1rAAtuCnDrEtwh9aSQZJBL19PkyAqf/5+0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMdVPw78ZXkQio5yYyUSS+SyOR7rarAlr8V14pw2kZ/75hSQNQ
-	5gyzIgZaEPPEB3mbRzomdPQleHiU+lRovSdsLnURzLxgWX/0YSnHpaFeHf3UqwP88MVKMwr+u4M
-	xaDdKVpNXVnmkip3pKefjdX4T3NA=
-X-Google-Smtp-Source: AGHT+IFIc9lYheUFVWYolX7FAxS6dEQNzEm40f1yzUwKSy9Vh4u9OhH6huouej2Ff2b0L0hl/4aHx+P/5bzVb7xxz2w=
-X-Received: by 2002:a05:6512:12ce:b0:549:8ed4:fb5c with SMTP id
- 2adb3069b0e04-54e7c3fcd69mr1193305e87.31.1745512764131; Thu, 24 Apr 2025
- 09:39:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="vt7T0uzd"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-7376dd56f60so940790b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:41:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745512916; x=1746117716; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=k6m4QSCkOjvBeG8/Kperh6wZuRGbtha7PIChY6FuIlM=;
+        b=vt7T0uzd3xCze3Zzyzjt6oEBKu5b2AaMF+bEL0x1WfJmo4ncPEEJHxQG9zfcis/Kwx
+         xahjvt8L0fz/GsUWvTYMadKC40Y3zgw5Vj/Bg/B+E9IfGRpYntx5JPA6qXHyXJywlCbw
+         biLB7vMtyYOyIxwfNlsW2xGWIxIU7Mq8SCI1F/1SnDyWqTzKzLDLl3U6wnksQ8jZfj77
+         3YYI4PhAenG/mAaDMYSsi4PkpMu/k1Hi7XbYXadK3K3CXlDrvFtQjLVaFQ/APbqalqcZ
+         uGCMIyBp0jytuhdm4FN+sbkfo2YPgMosChYFZjXIJ7F2OiHQNGi0YRlu1TUMK5rxwd2g
+         fGkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745512916; x=1746117716;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k6m4QSCkOjvBeG8/Kperh6wZuRGbtha7PIChY6FuIlM=;
+        b=jhbdaE9AUqo8bd4d8hn2Ks55+EWATUdgD2HLG/YWTxy2S1hQ4G8rtKrPdwjH4R7lQI
+         t4q09pofPf6C921GHDBBZg5yz+mPnqWzHvF5lvcoXdn21egIVjLpClY13yG1iGKLK+Gt
+         q8Op1nqH9RaGprP2QBlNyu8ZrGkE1jc7c2s2eGKvn2CBYkD/JfY4ME6f5bYl9GgHWF6i
+         xe1lGdVNwS8/hEDJv3AyTJ8fQwcowAnd0KmgIN2/syO/o1GX1JuS9+/B7PwYyWEtxTXo
+         D0llW9fdcGw2hl0zpvhW0+j0sACVIPnX1mS+aQmLcYV8tHNe4/I/NyB/kqojNBX+HiBe
+         x3Cw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3onp8Sa+kW4yg1zjelM9aN9WtfqE1zG7Amgv3zdiZAP5J2th5Gkai5+oy75WMAg3C5HHN/5pwlojPmZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy8ApzEUhiBEBrzqdx4iaBXEnxSOCxhkaFzZLq+4wmiKaYteMjb
+	dSglYD5OfRRr8N8YfKfMRNSy5nC2HDkC6/9y+p0ModSYplweQobjRMG0vi9pjjA=
+X-Gm-Gg: ASbGncsHD1HnE2aaChV3VO8e6RkYt4hp98qzT+Jm+WQ47JAeVq+vbmvOKTD11eN1rPd
+	LE0rxmlhNlRYKdScfusEf9t3M+fClU3vLCDEEDgwnzowK5ckWJIPDvsxZVpmwi7Bi3SgAHGGojZ
+	jglTlRDvdN1eQL23UAPg+yd+nsQPWmZJ6c3zf5RDNxSmIgLzP34G+P8p9m4A4iAdnNGZ848PtaB
+	GhHIsxtiwj7go88ObrnN6xgNv4un6p9X5sBk1+Ll8/tGwPupuUQyO14jsnH3cSJabWWjQR3Ecgr
+	PcwREuXw2F29qK7JyG55Cxb6Czor6rer+97ACOkLrrNZ/w3iXzc=
+X-Google-Smtp-Source: AGHT+IGxyp+KENwVEkLGrt7S8pn2vlKD8bBJVWEd1Iv8ULUIPojD/9R2kqNR1Mge6+txkrxVbJHCXA==
+X-Received: by 2002:a05:6a21:6d8e:b0:1f5:8072:d7f3 with SMTP id adf61e73a8af0-20444fc0e44mr4794400637.30.1745512916109;
+        Thu, 24 Apr 2025 09:41:56 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f48b2sm1462741a12.8.2025.04.24.09.41.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 09:41:55 -0700 (PDT)
+Date: Thu, 24 Apr 2025 09:41:51 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Miquel =?iso-8859-1?Q?Sabat=E9_Sol=E0?= <mikisabate@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Christian Brauner <brauner@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	alistair.francis@wdc.com, richard.henderson@linaro.org,
+	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
+	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
+	cleger@rivosinc.com, alexghiti@rivosinc.com,
+	samitolvanen@google.com, broonie@kernel.org,
+	rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org,
+	Zong Li <zong.li@sifive.com>
+Subject: Re: [PATCH v13 20/28] riscv/hwprobe: zicfilp / zicfiss enumeration
+ in hwprobe
+Message-ID: <aAppz5o2i4SQKU2z@debug.ba.rivosinc.com>
+References: <20250424-v5_user_cfi_series-v13-0-971437de586a@rivosinc.com>
+ <20250424-v5_user_cfi_series-v13-20-971437de586a@rivosinc.com>
+ <680a0cd4.050a0220.296475.3867@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424101917.1552527-2-ardb+git@google.com> <aApm-lvBjREPOW47@gmail.com>
-In-Reply-To: <aApm-lvBjREPOW47@gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 24 Apr 2025 18:39:13 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH7Vi8ruqohvRrPM+Dk2vPtyaMUkNRzi0Ak77aq6Q_peg@mail.gmail.com>
-X-Gm-Features: ATxdqUFH3wsxvjBAoP-it9usqh5iuqPO6ZrIu_OlypSEG5GJMDGd3jx1QDJFavQ
-Message-ID: <CAMj1kXH7Vi8ruqohvRrPM+Dk2vPtyaMUkNRzi0Ak77aq6Q_peg@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: Work around broken busybox truncate tool
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	phasta@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <680a0cd4.050a0220.296475.3867@mx.google.com>
 
-On Thu, 24 Apr 2025 at 18:29, Ingo Molnar <mingo@kernel.org> wrote:
+On Thu, Apr 24, 2025 at 12:05:04PM +0200, Miquel Sabaté Solà wrote:
+>On dj., d’abr. 24 2025, Deepak Gupta wrote:
 >
+>Hello,
 >
-> * Ard Biesheuvel <ardb+git@google.com> wrote:
+>> Adding enumeration of zicfilp and zicfiss extensions in hwprobe syscall.
+>>
+>> Reviewed-by: Zong Li <zong.li@sifive.com>
+>> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>> ---
+>>  arch/riscv/include/uapi/asm/hwprobe.h | 2 ++
+>>  arch/riscv/kernel/sys_hwprobe.c       | 2 ++
+>>  2 files changed, 4 insertions(+)
+>>
+>> diff --git a/arch/riscv/include/uapi/asm/hwprobe.h b/arch/riscv/include/uapi/asm/hwprobe.h
+>> index c3c1cc951cb9..c1b537b50158 100644
+>> --- a/arch/riscv/include/uapi/asm/hwprobe.h
+>> +++ b/arch/riscv/include/uapi/asm/hwprobe.h
+>> @@ -73,6 +73,8 @@ struct riscv_hwprobe {
+>>  #define		RISCV_HWPROBE_EXT_ZCMOP		(1ULL << 47)
+>>  #define		RISCV_HWPROBE_EXT_ZAWRS		(1ULL << 48)
+>>  #define		RISCV_HWPROBE_EXT_SUPM		(1ULL << 49)
+>> +#define		RISCV_HWPROBE_EXT_ZICFILP	(1ULL << 50)
+>> +#define		RISCV_HWPROBE_EXT_ZICFISS	(1ULL << 51)
 >
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > The GNU coreutils version of truncate, which is the original, accepts a
-> > % prefix for the -s size argument which means the file in question
-> > should be padded to a multiple of the given size. This is currently used
-> > to pad the setup block of bzImage to a multiple of 4k before appending
-> > the decompressor.
-> >
-> > busybux reimplements truncate but does not support this idiom, and
-> > therefore fails the build since commit
-> >
-> >   9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
-> >
-> > Work around this by avoiding truncate altogether, and relying on dd to
-> > perform the padding.
-> >
-> > Reported-by: <phasta@kernel.org>
-> > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > ---
-> > I personally think using a busybox environment for building the kernel
-> > is a terrible idea, and does not satisfy the build tool requirements
-> > listed in the documentation. But apparently, it used to work and now it
-> > doesn't, and the workaround is rather straight-forward.
-> >
-> > IOW, I don't care whether this gets applied or not, so I will leave it
-> > to others to make the argument.
->
-> >  quiet_cmd_image = BUILD   $@
-> > -      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
-> > +      cmd_image = (dd if=$< bs=4k conv=sync status=none; cat $(filter-out $<,$(real-prereqs))) >$@
->
-> So the workaround isn't too terrible, and since someone did trigger the
-> bug, debugged it and reported it to us, it costs us very little to
-> apply the workaround and (re-)enable someone's Linux build environment.
->
+>Notice that, as it stands in Linux v6.15-rc, this will conflict with the
+>values for Zicntr and Zihpm. See 4458b8f68dc7 ("riscv: hwprobe: export
+>Zicntr and Zihpm extensions"). I'd say that you should update these
+>values.
 
-Indeed.
+Got it. Noted for next version.
 
-> Also there's almost no existing usage of 'truncate' within the kernel
-> build system. Found one only:
 >
->    drivers/firmware/efi/libstub/Makefile.zboot:                  truncate -s $$(hexdump -s16 -n4 -e '"%u"' $<) $@
+>>  #define RISCV_HWPROBE_KEY_CPUPERF_0	5
+>>  #define		RISCV_HWPROBE_MISALIGNED_UNKNOWN	(0 << 0)
+>>  #define		RISCV_HWPROBE_MISALIGNED_EMULATED	(1 << 0)
+>> diff --git a/arch/riscv/kernel/sys_hwprobe.c b/arch/riscv/kernel/sys_hwprobe.c
+>> index bcd3b816306c..d802ff707913 100644
+>> --- a/arch/riscv/kernel/sys_hwprobe.c
+>> +++ b/arch/riscv/kernel/sys_hwprobe.c
+>> @@ -108,6 +108,8 @@ static void hwprobe_isa_ext0(struct riscv_hwprobe *pair,
+>>  		EXT_KEY(ZCB);
+>>  		EXT_KEY(ZCMOP);
+>>  		EXT_KEY(ZICBOZ);
+>> +		EXT_KEY(ZICFILP);
+>> +		EXT_KEY(ZICFISS);
+>>  		EXT_KEY(ZICOND);
+>>  		EXT_KEY(ZIHINTNTL);
+>>  		EXT_KEY(ZIHINTPAUSE);
 >
+>Greetings,
+>Miquel
 
-Yeah, and it was me who added that one too :-)
+
