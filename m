@@ -1,100 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CD71F1506;
-	Thu, 24 Apr 2025 20:07:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBB31F1506;
+	Thu, 24 Apr 2025 20:08:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745525249; cv=none; b=mGssooqlfDDseOP68uTaQsHiPTowKOs69aKEMT6Te8FYY+YO/+FgqP5vB8YKzX8yBKREXyHiIuwCdAsHDXkTZZEHXPf3o8iz/CEI55VxOQEiK4Vx/5xGuYSDMlUPLUYY6YCmTkPXmxe2LL4JQD0eadLZ8RMvzejSG9HCQIg1fw0=
+	t=1745525300; cv=none; b=cVuQCG90wbMBJyJ5xyTeaYCCuFipuOvMBS9tPYehRdTpPlX/8hfFqU/iLib39VipLHGmLi+SfQhag//xd7TZuQZq/Gw/xwe1Kcs31kX2oqdueui/6nMPvAWo3IXOEKHvaUp5v8HM4vMaCbE7l69md/+99Nd4CE+KaaeS8B2/gDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745525249; c=relaxed/simple;
-	bh=BPlGUdAvgy5fBp3EvTahCBC87J07KFgQ28UtMg7GY4Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IYXMP+8HGGBuz83npg13zZ7G4/+mnoTBYrDUEOGMDL7YNgdBrryDyz/9BvwcAIMDiTkd4DDLGnrXFa41ARX0H+JG9e63rHRtZEcdoYQ7pjR88A+CaNMrYzALFUQphWMEVq8UrrY2FvEQcWYhgl+hIbZ8NtmjRVORNOIE6zMa4CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H0qocti7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745525300; c=relaxed/simple;
+	bh=F3xCUpL0ZTFZb19pbmsWjZpM3nvfQcP1w9Xz79H2OOs=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=P59PpQbL4cfRn15X6NF3PkotEEf3sG/W2MUHholioPnqkJX2JKD7ckLwYZUvsoAG6vUu4xTZGoL8dBh5duqvNdbb1Vlv8wGnSXqOC5JXSVlzk4REqnYfiMTopySX8LFo0I8hV/tMMfF/8GtEwR+dUuRbrP4sUBaBrp4VKeIh1Ps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vQK97TxO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H0qocti7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D47AFC4CEEE;
-	Thu, 24 Apr 2025 20:07:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vQK97TxO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAAD1C4CEE3;
+	Thu, 24 Apr 2025 20:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745525248;
-	bh=BPlGUdAvgy5fBp3EvTahCBC87J07KFgQ28UtMg7GY4Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=H0qocti7sESBvC3NbB3e+klkIbndIr+8q6xfCBqtqFXRJRAjL7RcnCBG+taYxUzMx
-	 oNwZoBwNN3qVDhPofh78J2m2w1/Gotw/OsxBVTSUNE1she0FbMPtXPCF6JL2KVn5gI
-	 AGm6JAbVsPKpP9TVmc+KA8uDCh9DS8NDePsQVfkwgqZIJi9OPYzIC9kl/EFapYkDXp
-	 oCyjaYMySZjI3s/1OCplnJZszZcMwhy7Y2/M2ROSzQRZdBoMU/Y5yAScpFls3k0Qtk
-	 YGUfnQ6DAzTcyKJT0IuNecVhOl76bOesntsmzYO66u+nMJe3ghwwtRuH9617pm4LiH
-	 wAkLU3OgAJ09A==
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2d4f832069cso631999fac.0;
-        Thu, 24 Apr 2025 13:07:28 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVkmQcC/Chnuc8Kk6P1BN+ls7F+B5wVG/GYug+wlifUYPUtGrXEhGP/WlvYzymvJbr6gQxK7sCmGUc5@vger.kernel.org, AJvYcCX4mtaIpjaj3Dp87lRvr6tm9bVyaYP+SFT7mpRnb/coAfcij6uWUyKh6UxPbNkB278K/b4HU1jtnSrbp+9k@vger.kernel.org, AJvYcCXjqEumN9lzFOD0LsVmfsWyZm7pTHQtsHeIQgz/hWSteIbDhX9gghcvL6afZJDBtAYV9XDY7p//spewig==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOAqhQyVjiWqv+2aA4pdkqXTFOytLtgHIHvEpgOcK+tK/ecEVD
-	eWpGwOXfbrpTJd+L2CQkM6Hwl8PTCxGpraucOE7o1xTuTD0BIkm45xNE9eBd2rFH0QBKfuOcbJ3
-	RRIoYm0CXFiSNFzg8KReo6B1Z20E=
-X-Google-Smtp-Source: AGHT+IHMFH/3VMozmSuKcnowp+L6a8+y0WbFfnuXRwz4lHBlZiYm4u90Z/rVueWp58hplBY85ZfYJ4k9+ZHu/7CSjq4=
-X-Received: by 2002:a05:6870:e99a:b0:2d4:d9d6:c8cf with SMTP id
- 586e51a60fabf-2d99415a073mr815306fac.5.1745525248167; Thu, 24 Apr 2025
- 13:07:28 -0700 (PDT)
+	s=k20201202; t=1745525299;
+	bh=F3xCUpL0ZTFZb19pbmsWjZpM3nvfQcP1w9Xz79H2OOs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=vQK97TxOPXCFHTJJKj4U9I1vCwBhBhY2yPKRXTmDdU4Gq8oK3Xh8prclSzlR36nrY
+	 S5Sm/NT+dd3G6fGH4hz0p5xxTZLflOIO1+DJ83XCbhPDp+zGk/yWfmv8TB6n1xy5e5
+	 z9xyCKmmLF/69lVW+1oY+c0MbfBzU0aT6Uk2V6iEQPZO2m4NIqRAmTYAWyBMxhchdy
+	 j1LXOKV4JCBODqi4uwpX335uRH/z3oFtn/O7BihiAyPQJtx0N5k9uqeB9euwA/J7pX
+	 2giMLqluzX9cWPE+J0TtmYc6hxp32OMw/OIlnvJZQrO2JIX+69PznsfBCPWPwCKI6a
+	 XzKHTzEpH32Ug==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE13E380CFD9;
+	Thu, 24 Apr 2025 20:08:59 +0000 (UTC)
+Subject: Re: [GIT PULL] SCSI fixes for 6.15-rc3
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <b574ba430d181f9fa53a6a7bd76e42911c50d899.camel@HansenPartnership.com>
+References: <b574ba430d181f9fa53a6a7bd76e42911c50d899.camel@HansenPartnership.com>
+X-PR-Tracked-List-Id: <linux-scsi.vger.kernel.org>
+X-PR-Tracked-Message-Id: <b574ba430d181f9fa53a6a7bd76e42911c50d899.camel@HansenPartnership.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+X-PR-Tracked-Commit-Id: b0b7ee3b574a72283399b9232f6190be07f220c0
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 02ddfb981de88a2c15621115dd7be2431252c568
+Message-Id: <174552533820.3476198.12624986481727542420.pr-tracker-bot@kernel.org>
+Date: Thu, 24 Apr 2025 20:08:58 +0000
+To: James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds <torvalds@linux-foundation.org>, linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250414203551.779320-1-superm1@kernel.org> <CACRpkdaHru55wo5MdVsRKRbfPS9Hv3vGxgXNi8eXGvAOQzyDww@mail.gmail.com>
- <CAJZ5v0h_Qc2xukPMmwHr-E1HvMwSoLT4TM96aV0e9QKfeRSGGQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0h_Qc2xukPMmwHr-E1HvMwSoLT4TM96aV0e9QKfeRSGGQ@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Thu, 24 Apr 2025 22:07:16 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0iGsjCtbbXm8XaHw8qRe_4KJ2TNO1pDGhmL-aYB4r1Xqg@mail.gmail.com>
-X-Gm-Features: ATxdqUEMlCRABQ_ekM-JpQbzSWUWfAd4aod57r5gz-oZxKr8LeISYBOouRgjTM4
-Message-ID: <CAJZ5v0iGsjCtbbXm8XaHw8qRe_4KJ2TNO1pDGhmL-aYB4r1Xqg@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: amd: Fix use of undeclared identifier 'pinctrl_amd_s2idle_dev_ops'
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
-	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	linux-acpi@vger.kernel.org, Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 15, 2025 at 3:37=E2=80=AFPM Rafael J. Wysocki <rafael@kernel.or=
-g> wrote:
->
-> On Tue, Apr 15, 2025 at 3:34=E2=80=AFPM Linus Walleij <linus.walleij@lina=
-ro.org> wrote:
-> >
-> > On Mon, Apr 14, 2025 at 10:35=E2=80=AFPM Mario Limonciello <superm1@ker=
-nel.org> wrote:
-> >
-> > > From: Mario Limonciello <mario.limonciello@amd.com>
-> > >
-> > > `pinctrl_amd_s2idle_dev_ops` is hidden under both `CONFIG_ACPI` and
-> > > `CONFIG_PM_SLEEP` so the functions that use it need the same scope.
-> > >
-> > > Adjust checks to look for both, and while updating make it CONFIG_SUS=
-PEND
-> > > instead as that's what the acpi header uses.
-> > >
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Closes: https://lore.kernel.org/oe-kbuild-all/202504100420.88UPkUTU-l=
-kp@intel.com/
-> > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> > > ---
-> > > v2:
-> > >  Use CONFIG_SUSPEND instead of CONFIG_PM_SLEEP
-> >
-> > This seems to be based on the previous fixes merged by Rafael?
-> >
-> > Do I need to rebase on -rc2 or something to merge this patch?
-> >
-> > Or can Rafael queue this too?
->
-> I can.
->
-> > In that case:
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+The pull request you sent on Thu, 24 Apr 2025 15:29:10 -0400:
 
-Applied as 6.16 material, thanks!
+> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/02ddfb981de88a2c15621115dd7be2431252c568
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
