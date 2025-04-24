@@ -1,190 +1,111 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC0841D61A3
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DBC1C84A6
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:04:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745517845; cv=none; b=kxp1Gr8CyQ3iwkR4I66eBAu4x9V5P3PEw17kLPXldhbonniMgTdXuF7PPLELCDhEeKZsJvfeToPYd8VhJq7Tfcm0RivIWVpcPUSS3+8+l/SB3gY1rSNvO2kOYWMW0qYsiWGqHbSNY08fxjTbG7H2NuBfbemsgJ80RuDfZ7HICoY=
+	t=1745517884; cv=none; b=rea5N+7vDv+Q8KTANo9tCMM+jvde5KpgGb22Bm8lbvQCQFNVNWjTc7FaTDNFiJ6lZ6UvEhAZhBz76iGTcErfltKb42C273RbtLNqCrq3wHTv5QFhFzp5i8PaE/sAYvrlLk5oB3mA2YRB0pTQbYq+hZ08svP65hQQmlJgarHpOPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745517845; c=relaxed/simple;
-	bh=uPn6plOz3AG5jrEfFpRZaDs6P0aP85UrPumlULvK+r8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KEZfw+HGaD6SK2ap55QVjPFqMQt5gC2q3iNb8N1olRFl1Fsl8ILz9uAydTMQnLvnJYJ39ZmmQaGhtLnCRD9v3aVGwC5GK/j7LeKWcFxzYhTKGwUFzKxgdb6wvHAoO0hQSpRgcfOIqsau2YnVQP8M8we7uiJ7Z54ouhY2FryUIyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BrzPX+ns; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1745517884; c=relaxed/simple;
+	bh=SDpYS5ZWknMpckF1EiWnoZUkPjoTca1oTO5sjKUafB0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=MmLVDyQjPVeYFRYufabgDk1hQqmwlwTFysgqd5gaHxmpF7PPFkTGCILmuhKVe3QEBHAbNLHSKKXCP5iUoBre7Gp7y3ZBg8M0A20iGKqT4LEYa5KGlKx9LdkwhKBt4HtwBl0Q8h7e0SFIoxM0Mkp8Iz2WRmlZ/Vgnr6iZyvblz9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oaeFyGsI; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--willmcvicker.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BrzPX+ns"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-224191d92e4so15804715ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:04:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oaeFyGsI"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af2f03fcc95so1351732a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:04:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745517843; x=1746122643; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=R+2ifGTP7Zuk1f3PGxpKoh8D1eRLE/ZHAefBGZIpiLo=;
-        b=BrzPX+nsbBbhPpijNsceUyyDomfenzy/7GbMN64AroqKTxoylv2ovD6hn0CRWqBlxs
-         ulrrWRaiMYzHEdGqjtf/3RqjjwY6kRG5bEvpPsloj2x6unflxrvd7OZeFcolPB3CVKBE
-         eupWPZWQUEaGbsD7rKhdEueNm0qf1/qtRRW05uUzXnvTB3AKt5nuHzXOrHtTr5XnD6Ri
-         jXZraAzv+36aPvl7LB8SMNA+JU/JJaS+pw30Qwz7cznpfAC76YlfziI4Qwx4v8iXAy2a
-         O6FSsZL5LpnN3TihyjvB5S0s3dnYShOd4bWtKX7O65OT7pbg3b2/Gk0NB+qX7HIv4Jmr
-         bHKg==
+        d=google.com; s=20230601; t=1745517882; x=1746122682; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=V/zEUaD7XALmrEdJtQ+W7mbWtOiJSP/MzvvsaVR7LPI=;
+        b=oaeFyGsI92GgoYmgl7mDw6xkfz0sJtK7HeqH/fwYbxYytc96Bt5IQz50TJJb1WDG9R
+         Jp5O4pD6EZ3kgTYOdm+pfQCqMOFv+dXbjQPzPpC2UK5vgrnPqxRUP4+uFNJ52yvNOQvp
+         1oHXpN4Mg7WmXJvmzGd990WeaWtkhMdcQ6MLjT3EZ2piR/4g5lqA6wAEFHKpyNQxEMnh
+         whMif9/QN4IRVcAtK2mSCU6fRwVwQA93EwVsPcTnQ3HHX38rLShYyZLl0JZwe4Ao0kTh
+         77C8t5bskfLMLJLXP1gzl22SLYPXZczliosS3DDu100cLWIDle5A2KE8QrUhQPEmgg9v
+         8snQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745517843; x=1746122643;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R+2ifGTP7Zuk1f3PGxpKoh8D1eRLE/ZHAefBGZIpiLo=;
-        b=m0XwVPEfLkeyGDK/EmvXJCulJ6jF6XRxwDV9GhsMoQuHcuTE/tgzLGaALyOb3vce5s
-         6Wevmf7AMk4ZHjz16vfhkVK1+kzKIntKhoTOLZLMYf0Hq0S8TgZobkeFzs5V0dfmfoAP
-         KME8ylhjIcGc1P3J1W5KoB+cpsh7TC6nGfi+6aMPC/n0tEIEJejY10ALk7eW84hUgVyJ
-         QFLhVDiw9RaXEBvQaaiI/DLJDdzdUhVfl9TPmVhaNSObepdoPmyCOiAkthPwkIeecrYO
-         V6pg4triKYxDvhnuTiFBRPQlvi9Djs4rpsEVYjDZPOc6Q4ten6m3BKWbWSfB/lpIQiDr
-         3vIg==
-X-Forwarded-Encrypted: i=1; AJvYcCX0BDQJH1XlO1J9vwVn9VcC/jrGuovUX7U7XgmQ6YXiOtixWlgiJj2vHBMjNxremPSS60DCmq8NsrdAExQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUndtz3K5twbeJkXUuhdbkXh8TowHBurx2vVKnQ+WajUK7q825
-	tL3nROPke5yYKG3LPCP9n500tb0DcWLFxjRxcmOYtUUgh96Q5aid44LI6nWEi5M=
-X-Gm-Gg: ASbGncvI7KkoTBhXEJOaGqeyLRfitBKtmu8ReeF+MM9PiWVz7xCkk8Nli8ck8kmHiC5
-	dZnT8XS2D/Ma22F0CEbMyiV746QcUzTfgIVkA3SjQV6EXGD4Ir+UKU6NffizBoN1+pvjxvGMKab
-	O8+ai9E8fX0HGh0Oaeb1H8AkH4v2BSfKXUscC0WK71gzx1rZrdNojUDnwKrIsdifGyiRofkbw2G
-	Q5eAxTqOY1Z3A/p+tMCEeF/u54V9Nd+ZCDWMSsmBYN5oHeJnnxPaCvtZ2FhSLTfy4bGoKRxFguH
-	BZU2msBJG0c6Lf8hgkKsljKeoys7+BdEE7PKENvR2xWidvlIRRfoIORHq+nTuw==
-X-Google-Smtp-Source: AGHT+IEwApZFffChVQ3IgP8GwvBv+BNm7qJFv/s7tyP4mivow/7aAesEdu2H5hIh83xgouvcI3whKA==
-X-Received: by 2002:a17:902:cec8:b0:21f:4c8b:c514 with SMTP id d9443c01a7336-22dbd46edccmr5459035ad.45.1745517843026;
-        Thu, 24 Apr 2025 11:04:03 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f7ec0bb2sm1513897a12.18.2025.04.24.11.04.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 11:04:02 -0700 (PDT)
-Date: Thu, 24 Apr 2025 11:03:59 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Christian Brauner <brauner@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	alistair.francis@wdc.com, richard.henderson@linaro.org,
-	jim.shu@sifive.com, andybnac@gmail.com, kito.cheng@sifive.com,
-	charlie@rivosinc.com, atishp@rivosinc.com, evan@rivosinc.com,
-	cleger@rivosinc.com, alexghiti@rivosinc.com,
-	samitolvanen@google.com, broonie@kernel.org,
-	rick.p.edgecombe@intel.com, Zong Li <zong.li@sifive.com>,
-	linux-riscv <linux-riscv-bounces@lists.infradead.org>
-Subject: Re: [PATCH v12 05/28] riscv: usercfi state for task and save/restore
- of CSR_SSP on trap entry/exit
-Message-ID: <aAp9D7txw8y9WL5m@debug.ba.rivosinc.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-5-e51202b53138@rivosinc.com>
- <D92WQWAUQYY4.2ED8JAFBDHGRN@ventanamicro.com>
- <aAmEnK0vSgZZOORL@debug.ba.rivosinc.com>
- <D9EV1K8ZQQJR.20CRTYLQBN9UE@ventanamicro.com>
+        d=1e100.net; s=20230601; t=1745517882; x=1746122682;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V/zEUaD7XALmrEdJtQ+W7mbWtOiJSP/MzvvsaVR7LPI=;
+        b=IbGAyZ4XESEvpBxmzb8UtfGfiZyN8Gv4bZ4Ty5BTPKuQfu41Cu7WDvdBR6prSMp/q/
+         mSwCy19/TLobf+yhOjUZhhXKrkaaTG558PKb42P0FfHmZzFJPe+n87ZmhHMCECXwK/Cr
+         A95ZO+8UWnniG7DFPpbN+dZhV1MzXgE3kNq2dkH9H4c6fIWpLwFVT1TLdGUimWf4Kye0
+         vMQY8DxZX6c/TVwynBbN0Pmv6SDol8cTKD7/Lz2uenDGAM3P4r7Qcg8vPKyXtxYwCvVO
+         8RWyccoubmlnH6cwsSOxwsuGSNXYG2QMvA9GQakBAxI491/RMm00415XkkknQYDusmQ4
+         XRrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUpuMdQlAjrG3eZKeTojnKLkQZH+69BL/rZ+07YnwwJBBj4NRqa1qUpVctwtHf8bdDMUGZG87j5+OPIXYM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzE16kClU66q9oKDHD/XHWHe3bkr8bpqvinLCPKv8g/vFQviwFR
+	d6Y7IH4YuWjsDZxJVMPlG21AeP/WkBiZlIaUZrC/0K7uNbYo+ZrwObnV7Zxk/Cg/Pw5YnQRLEUN
+	yn/jRTjWXz1+7a5ez5s4qnh8AvA==
+X-Google-Smtp-Source: AGHT+IFCD6wSkeShiUGYpxhZbZBv0/y9w0T1IIc3HNt1hkQLFgJDBQEO5h7Bli2VPrTT5E5MwlpXd85RSXZDpW3dVvA=
+X-Received: from pfblm19.prod.google.com ([2002:a05:6a00:3c93:b0:73e:655:5bee])
+ (user=willmcvicker job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6300:218b:b0:1f5:8e54:9f07 with SMTP id adf61e73a8af0-2045661ffaamr416057637.24.1745517882289;
+ Thu, 24 Apr 2025 11:04:42 -0700 (PDT)
+Date: Thu, 24 Apr 2025 11:04:19 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D9EV1K8ZQQJR.20CRTYLQBN9UE@ventanamicro.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.850.g28803427d3-goog
+Message-ID: <20250424180420.3928523-1-willmcvicker@google.com>
+Subject: [PATCH v2] platform: Fix race condition during DMA configure at IOMMU
+ probe time
+From: Will McVicker <willmcvicker@google.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <jroedel@suse.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, "Rob Herring (Arm)" <robh@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>
+Cc: iommu@lists.linux.dev, Saravana Kannan <saravanak@google.com>, 
+	Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Apr 24, 2025 at 02:16:32PM +0200, Radim Krčmář wrote:
->2025-04-23T17:23:56-07:00, Deepak Gupta <debug@rivosinc.com>:
->> On Thu, Apr 10, 2025 at 01:04:39PM +0200, Radim Krčmář wrote:
->>>2025-03-14T14:39:24-07:00, Deepak Gupta <debug@rivosinc.com>:
->>>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
->>>> @@ -147,6 +147,20 @@ SYM_CODE_START(handle_exception)
->>>>
->>>>  	REG_L s0, TASK_TI_USER_SP(tp)
->>>>  	csrrc s1, CSR_STATUS, t0
->>>> +	/*
->>>> +	 * If previous mode was U, capture shadow stack pointer and save it away
->>>> +	 * Zero CSR_SSP at the same time for sanitization.
->>>> +	 */
->>>> +	ALTERNATIVE("nop; nop; nop; nop",
->>>> +				__stringify(			\
->>>> +				andi s2, s1, SR_SPP;	\
->>>> +				bnez s2, skip_ssp_save;	\
->>>> +				csrrw s2, CSR_SSP, x0;	\
->>>> +				REG_S s2, TASK_TI_USER_SSP(tp); \
->>>> +				skip_ssp_save:),
->>>> +				0,
->>>> +				RISCV_ISA_EXT_ZICFISS,
->>>> +				CONFIG_RISCV_USER_CFI)
->>>
->>>(I'd prefer this closer to the user_sp and kernel_sp swap, it's breaking
->>> the flow here.  We also already know if we've returned from userspace
->>> or not even without SR_SPP, but reusing the information might tangle
->>> the logic.)
->>
->> If CSR_SCRATCH was 0, then we would be coming from kernel else flow goes
->> to `.Lsave_context`. If we were coming from kernel mode, then eventually
->> flow merges to `.Lsave_context`.
->>
->> So we will be saving CSR_SSP on all kernel -- > kernel trap handling. That
->> would be unnecessary. IIRC, this was one of the first review comments in
->> early RFC series of these patch series (to not touch CSR_SSP un-necessarily)
->>
->> We can avoid that by ensuring when we branch by determining if we are coming
->> from user to something like `.Lsave_ssp` which eventually merges into
->> ".Lsave_context". And if we were coming from kernel then we would branch to
->> `.Lsave_context` and thus skipping ssp save logic. But # of branches it
->> introduces in early exception handling is equivalent to what current patches
->> do. So I don't see any value in doing that.
->>
->> Let me know if I am missing something.
->
->Right, it's hard to avoid the extra branches.
->
->I think we could modify the entry point (STVEC), so we start at
->different paths based on kernel/userspace trap and only jump once to the
->common code, like:
->
->  SYM_CODE_START(handle_exception_kernel)
->    /* kernel setup magic */
->    j handle_exception_common
->  SYM_CODE_START(handle_exception_user)
->    /* userspace setup magic */
->  handle_exception_common:
+To avoid a race between the IOMMU probing thread and the device driver
+async probing thread during configuration of the platform DMA, update
+`platform_dma_configure()` to read `dev->driver` once and test if it's
+NULL before using it. This ensures that we don't de-reference an invalid
+platform driver pointer if the device driver is asynchronously bound
+while configuring the DMA.
 
-Hmm... This can be done. But then it would require to constantly modify `stvec`
-When you're going back to user mode, you would have to write `stvec` with addr
-of `handle_exception_user`. But then you can easily get a NMI. It can become
-ugly. Needs much more thought and on first glance feels error prone.
+Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+Signed-off-by: Will McVicker <willmcvicker@google.com>
+---
+ drivers/base/platform.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Only if we have an extension that allows different trap address depending on
-mode you're coming from (arm does that, right?, I think x86 FRED also does
-that)
->
->This is not a suggestion for this series.  I would be perfectly happy
->with just a cleaner code.
->
->Would it be possible to hide the ALTERNATIVE ugliness behind a macro and
->move it outside the code block that saves pt_regs?
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 1813cfd0c4bd..cfccf3ff36e7 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -1440,7 +1440,7 @@ static void platform_shutdown(struct device *_dev)
+ 
+ static int platform_dma_configure(struct device *dev)
+ {
+-	struct platform_driver *drv = to_platform_driver(dev->driver);
++	struct device_driver *drv = READ_ONCE(dev->driver);
+ 	struct fwnode_handle *fwnode = dev_fwnode(dev);
+ 	enum dev_dma_attr attr;
+ 	int ret = 0;
+@@ -1451,8 +1451,8 @@ static int platform_dma_configure(struct device *dev)
+ 		attr = acpi_get_dma_attr(to_acpi_device_node(fwnode));
+ 		ret = acpi_dma_configure(dev, attr);
+ 	}
+-	/* @drv may not be valid when we're called from the IOMMU layer */
+-	if (ret || !dev->driver || drv->driver_managed_dma)
++	/* @dev->driver may not be valid when we're called from the IOMMU layer */
++	if (ret || !drv || to_platform_driver(drv)->driver_managed_dma)
+ 		return ret;
+ 
+ 	ret = iommu_device_use_default_domain(dev);
+-- 
+2.49.0.850.g28803427d3-goog
 
-Sure, I'll do something about it.
-
->
->Thanks.
