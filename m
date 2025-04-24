@@ -1,97 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF0D23D29D;
-	Thu, 24 Apr 2025 09:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487503; cv=none; b=aB/GreKzkXBvZBZPhzKMKCU0RrBqb5YaHc1K9+VftJN8TvhJ1hI9pi91A/Uio8AkYUg0cnSZ9BD6uAEnoO1ntsSY7XN68mbbsNDU2Y0gszMMl41jNYrT+515EayPydyS5Z2oowgUByb8fcfHkU+Nrtru4YfpWOI5ndtOAZxONGM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487503; c=relaxed/simple;
-	bh=JID61eSxQsJgBmkqNJZMZpjUO6Kl5+UYlI+ISdEz/PQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kfKaAJmZfK2nGqEyIQj1D+rQfBnPNNebFhaq++/awhruXoi7FbOzT6KUcVUvfcF1jM5o3YyYAj4tVQECs0l5MpShDksMlvuBp24J8It4/l+mHs81CK8XBg1bJFI2ovsr28mXTE/gnGbET7TWRrWFxpmGlfen+vPam0J4rRBAqEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mbl2UA5Z; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DDC221FC2;
+	Thu, 24 Apr 2025 09:38:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745487533; cv=pass; b=NX/BoiD75iDcxvqUltN/rXLPqG3FsRHkwbs0t5Z9v/Am6/LTG/dwgmu7SeAjKCD71ukG7JKo+YY80DwvwSD9jFvPE5z/sp7fxtcuNM15kYc9L+khqyL4e0xRJDbnTOIea7kdbzYlmE6zsujw5oSd8CKQvrnB70khAFfBJ87QhvI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745487533; c=relaxed/simple;
+	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZGOH46mWuHZYpdivGEW2tTxg+WDr4tE9aNuO5PdoO2CQi7LHhYGkp6FOHgbnDRzGfadRS/u8PAxDwvqiVeGfgJpOGTdSyBqGd1kp2TXsx/jcBw29oFAU17XrVPFJbvpgdLxtr2oLxCl/gcnvO05pHjY/f6ZFIVkGZfYVMsxJQag=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=qfXoCEr7; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mbl2UA5Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80DC1C4CEEB;
-	Thu, 24 Apr 2025 09:38:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745487502;
-	bh=JID61eSxQsJgBmkqNJZMZpjUO6Kl5+UYlI+ISdEz/PQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Mbl2UA5Zy8sM2dQjwd3BZF/dMugS44M8jxov0KzeVUi167r5mEMqwQZ+soCWkbhhZ
-	 ulfJtzY9d59Tymo6ay43VtiSdKIy1kBhDVTW3SfMWPfab7B3D0rUlnzgOpxUvBNYoC
-	 h9Z0TpGherjzv9luL5nF79Ra6VU2aiJLY0TsiuUZSVNL2iXnQhYCmLSV3r9eRGlsFr
-	 RxU1KJxDb9T2yy23KT1R8vpOh0aiL2Llf6XSy5mNZy80SGn/ADcjlUnyQ/TvJNDDxB
-	 VkyEwWWMn/RAGbkJcF+/GZCwS2TXTRj7suXByiJv8ya8/GMpyH8O7M0LS2aqBv1+4r
-	 xEQBY8zpB7jgA==
-Date: Thu, 24 Apr 2025 10:38:16 +0100
-From: Simon Horman <horms@kernel.org>
-To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
-Cc: Jakub Kicinski <kuba@kernel.org>,
-	Stephen Hemminger <stephen@networkplumber.org>, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	pabeni@redhat.com, longli@microsoft.com, kotaranov@microsoft.com,
-	kent.overstreet@linux.dev, brett.creeley@amd.com,
-	schakrabarti@linux.microsoft.com, shradhagupta@linux.microsoft.com,
-	ssengar@linux.microsoft.com, rosenp@gmail.com,
-	paulros@microsoft.com, linux-hyperv@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-rdma@vger.kernel.org
-Subject: Re: [PATCH 2/3] net: mana: Add sched HTB offload support
-Message-ID: <20250424093816.GD3042781@horms.kernel.org>
-References: <1744876630-26918-1-git-send-email-ernis@linux.microsoft.com>
- <1744876630-26918-3-git-send-email-ernis@linux.microsoft.com>
- <20250417081053.5b563a92@hermes.local>
- <20250417194727.GB10777@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20250417170052.76e52039@kernel.org>
- <20250418165324.GA29127@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="qfXoCEr7"
+ARC-Seal: i=1; a=rsa-sha256; t=1745487507; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=eWHXAzgrAP0yaKWz/ozs7h3vD4xkghAbBCljuFxWvbfTHCg8bB7O20Wj5Cey7zbwD83bKeATVCQmrgXoymM6Lya2UtsQN7MVx4CMPE2jlMOq7qxFfYhlsV1o2l6RCHhvsRBHLBCJ0YL+0XggR/jwNUTdVAwcSBp5SQRIQEIOGPE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745487507; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=; 
+	b=DHSi6PJJSSdsBNx8Q6gcPlWkCrtC3eJ270kQ1qKiOVODN/qZtPTjqsNtaLHCu1bespcQIaemquGNuv6PKmes98e9jPAOOG1Sgb/ASy2rlDQS0Ubm47nHswRiTtaTHOkv6sUDhR4nh7WSmK9T9NmvTnPXoGtJ8y2MVKmPH9s7E7o=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745487507;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=;
+	b=qfXoCEr7FQ9msjMMk+80tOQFcRYAJOkVcDSabeIUZoB/V4FpBb26CTdSda4LE0yK
+	fo9HylKuV1bD8f3fcPUrREMovKRdpXoD0SZQvglA489xMwzcX53UPrSxIX0CFg6WP0R
+	InG3nz1h5fZPfi7kHS7WEdueULDPnUm1RVrr3hVHIRicF9XBKTIBdgEAEexu1nBDC27
+	aJ0P7cJfdzmwXm1ETWv9rcb/Vsd9WbLzUiT55gu9M7m7ZUzDuF9bZCPvg5oITGjvRnx
+	k2U+NrEc1kWJKSqgl+ClkD2WXgVaPMyEPvMhSNqNQaQxHZs07iRaqH3R3Wo9/4iOHTA
+	G6TModPKfA==
+Received: by mx.zohomail.com with SMTPS id 1745487504141154.190763735755;
+	Thu, 24 Apr 2025 02:38:24 -0700 (PDT)
+Message-ID: <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
+ PAD_INTERNAL_* virtual pins
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
+ <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+Date: Thu, 24 Apr 2025 17:38:16 +0800
+In-Reply-To: <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
+References: <20250424062017.652969-1-uwu@icenowy.me>
+	 <20250424062017.652969-2-uwu@icenowy.me>
+	 <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
+Organization: Anthon Open-Source Community
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250418165324.GA29127@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+X-ZohoMailClient: External
 
-On Fri, Apr 18, 2025 at 09:53:24AM -0700, Erni Sri Satya Vennela wrote:
-> On Thu, Apr 17, 2025 at 05:00:52PM -0700, Jakub Kicinski wrote:
-> > On Thu, 17 Apr 2025 12:47:27 -0700 Erni Sri Satya Vennela wrote:
-> > > > A single leaf is just Token Bucket Filter (TBF).
-> > > > Are you just trying to support some vendor config?  
-> > > TBF does not support hardware offloading.
-> > 
-> > Did you take a look at net_shapers? Will it not let you set a global
-> > config the way you intend?
-> Yes, Jakub. I have reviewed net-shapers and noted that it is not
-> integrated into the kernel like tc. I mean there isn't a standard,
-> general-purpose command for net-shaper in Linux. It is used by other
-> tools or potentially device-specific drivers that want to leverage the
-> NIC's hardware shaping capabilities.
-> 
-> To configure shaping with net-shapers, users would need to execute a
-> command similar to:
-> 
-> ./tools/net/ynl/cli.py --spec Documentation/netlink/specs/shaper.yaml
-> --do set --json '{"ifindex":'$IFINDEX', 
-> 		  "shaper": {"handle": 
-> 			    {"scope": "node", "id":'$NODEID' },
-> 		  "bw-max": 2000000}}'
-> 
-> Ref: https://lore.kernel.org/all/cover.1722357745.git.pabeni@redhat.com/
-> 
-> Given the simplicity of code implementation and ease of use for users in
-> writing commands, I opted for tc-htb.
+=E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:51 +0200=EF=BC=
+=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
+> On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> wr=
+ote:
+>=20
+> > The JH7110 SoC could support internal GPI signals to be routed to
+> > not
+> > external GPIO but internal low/high levels.
+> >=20
+> > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
+> > virtual
+> > "pads" to represent internal GPI sources with fixed low/high
+> > levels.
+> >=20
+> > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+>=20
+> As per my other reply in the previous post, I think this should be
+> handled internal in the kernel instead using a tighter integration
+> between
+> the GPIO and pin control parts of the driver and utilizing the
+> gpio-specific struct pinmux_ops callbacks.
 
-Hi Erni,
+Well I cannot understand this -- these signals are not GPIOs, totally
+not related to the GPIO subsystem (because they're only pinmux, not
+related to GPIOs). This is described in my previous mail.
 
-As someone who was involved with the design of net-shapers, I think it is
-reasonable to instead use the Kernel API which appears to have been
-designed specifically for this purpose: to control HW TX rate limiting.
+The pin mux of JH7110 strictly route its inputs to its outputs. For
+signals from other SoC blocks (to external pins), the registers define
+how OUT/OEn of IO buffers *are driven by* the signals; however for
+signals to other SoC blocks (from external pins), the registers define
+how IN of IO buffers *drive* the signals. (This follows the generic
+signal-driving rule that one signal can drive multiple signals but
+cannot be multi-driven).
 
-If tooling isn't intuitive or otherwise doesn't meet user's needs
-then that is something that can be addressed. But it's not a Kernel issue.
+In addition the situation I am trying to handle here is an addition to
+the latter part of the previous paragraph -- in addition to 64 inputs
+corresponding to 64 GPIOs, two extra inputs, one always 0 and another
+always 1 are available to the pin controller for driving other SoC
+blocks' input (as output of pin controller).
+
+In fact this is why there is ` + 2` when calculating ival in
+jh7110_set_gpiomux() -- the first two possible values are for always 0
+and always 1, 3 represents the IN of GPIO0, etc.
+
+>=20
+> This solution looks like software configuration disguised as hardware
+> configuration.
+
+Well this solution handles these internal wires in the same way as
+signals from external GPIOs, excepting specifying special GPIO numbers.
+If you are against the principle, maybe the current already-included
+GPIOMUX system of the StarFive pinctrl is to be blamed instead of my
+small extension to it.
+
+I must admit that the current GPIOMUX system isn't a faithful
+representation of the hardware because it's a pad-centric setup instead
+of a register-field-centric one, which isn't very natural for input
+signals. However configurating the mux in such a way is against people
+reading, and we're not able to break the system because it's already
+there.
+
+Well in the situation that one GPIO used as input drives multiple
+internal signals the pinmux looks a little confusing too, e.g. the I2S
+clock situation I mentioned in my reply in the previous revision of the
+patchset.
+
+>=20
+> Yours,
+> Linus Walleij
+
