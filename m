@@ -1,96 +1,109 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FDB1E8837;
-	Thu, 24 Apr 2025 07:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C5DF1EB5D4
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478764; cv=none; b=kcOE9DA56b+Ov32qncJ/9YPhgmA5+iwD4hW5f+xvBuIJqj7mnpdJkmldsE9gVXCwdSnnDJxQYxTjUGxPILmwdyueJXDEx+RfRhI57a83pu2Et1t3+cHi12rxdXGEY9tbv7rblfFeVc9M082498bhUFZK2afuQF6RyEYettoSIzQ=
+	t=1745478908; cv=none; b=G8GGQerHSjw2EtPCvoSr9uUuFczQl/AJCEjWLQtRfxW7wyuZDnplkeYorJlweqo7G54aLX3Id8w2ZeH/aaXOa6Q485m/Ue9H6djjcIS/uSp7i7mC1dD2j1gKeEO5MG5ECZ3R4Yz9+o3PbPaRjiTl24dsAWpD7b4usZ100/c0FcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478764; c=relaxed/simple;
-	bh=Nket0V+2rHL7XX8pB1qYdHZxQcoaPLfZHv8WxRVn1SE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rV/g2uHgku6601kseD0ZX6obqTjR4/C5SpdwNxYQxI8u5Q12depXC4APBnOCPnqr5G+hQD7bbtKiA6/qunDLyHOFY/pN9DJqoPq8SMrOCP1jSkW0uIrcTUPI/dyEtu3TfHQX9i66BJXfJF7/nESCvhYplx6LBLmPzEzEZr0v/Ok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QVxFnV4n; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745478908; c=relaxed/simple;
+	bh=HLF6aCv6C5wEiEROOgDMQe1Qv0eWgRpHCqlfkMScl2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CYo2ucQzHuKyxZhn2xr2Je9y1mI+X0T4qWL+xbxFfC5+2NSOn1seoVnEylQ+3wWrCcso7J1o0VNI7dnhf17S55ay4STh2qQg5i6jRBGyYn7/D133EMMtMrSh/73uZ9Xqb5oe1+uW1NESYJjlR+o574SgLzbwRgEG0XOIrROW7oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TssHAO+Y; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QVxFnV4n"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 950CD43A3B;
-	Thu, 24 Apr 2025 07:12:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745478753;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ycgJR5zEjmvD8nS6gQ3Tfwq4cma6r3cAZuNgLAzZkLY=;
-	b=QVxFnV4nnmjm0W6PgA89ziic6glf/WhsXppf1wp5l1jwnTD/c5TE9YqEwMubYbqUSQsGSk
-	zpfgnzEklh2h+PVnY22d6I2CGvXRkzNBtlKRkfnyLCkBCklpc0rksJndomBtmWzi8q0TBi
-	Xk2xQbWFN+j5W74mLv+rkcnnM7/pvW0rHiEaQWwgnTYudMfVtqJRjPXRaKTYXgNCAhh/xG
-	TtSBHudzUsIImDHnZmUBMpVItw643TnfefToCCZEXW/NYO48mohjF2OQoS20SN+RbSzUAC
-	bqia88SdKtqM1kFLNOm31LIdpZhB6+Mi0AXAnu2Kd0bOxK7AD4AhYmX9eDXLGA==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>,
-	Russell King <linux@armlinux.org.uk>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Simon Horman <horms@kernel.org>,
-	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH net-next v3 3/3] net: stmmac: socfpga: Remove unused pcs-mdiodev field
-Date: Thu, 24 Apr 2025 09:12:22 +0200
-Message-ID: <20250424071223.221239-4-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
-References: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TssHAO+Y"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22438c356c8so6967425ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:15:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745478906; x=1746083706; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=g4hIW6QfieiutszXA0t3nPv2ey02o7qfmGs6Yu69D7U=;
+        b=TssHAO+Yp3AwbOyRs8yXet7o+JeUsxAibiR0+TPvxmwMCsjku9/L0fTRXiEQggaPPq
+         Uu3I34TibIyvkn9dOrk6anPVh4U9Df8DyFKozDLnevQs/75c86Fe6tXstL/BJb/iPz44
+         Zk+eA/J1qu9NUEpdczNXrQYTXza3618Iz3vT5CVPpw1GQKNk9etnmMuBeP7a58ni5Dby
+         JLpSSwHpaU4K+5VZY3i+vBvv05VhETzA6Yon3uI3Jpo4XsJTK+JR0HsTtbwlTsw8r5Mj
+         2DlZel958CQU5c/zfEkdGkz6GBEgvUBNeY8AwBC0PY1fX9+eTx0CxFNh+XEWImFYFAPu
+         vMAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745478906; x=1746083706;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g4hIW6QfieiutszXA0t3nPv2ey02o7qfmGs6Yu69D7U=;
+        b=RbH7bO29hkzIMPzvI8fegmTTlKE/Oyu1JhLL+0RAJ3iRNSrfkQvSU7N0TWsOs5t3+8
+         g0LROdaf+5ny4Jx8ZPp2f4fCXSduHchRahobzOq11QryHwmqCV30/OC11nydwo5Tjedh
+         aKRh8tHXAPsKubjesiYQ5QVN21oNr77J7mRKdskdt4VlMkPiarqPhlWPSMpizdBR6R+u
+         /UFxxLhmXhkW8EH3teLzm0MePmTauE6kfTTtWa3VRRy8ziB0qpfu9aaODr6P/FyW2Q/h
+         KVxLqKe2xRaWueg8WGpkokYNMIi1nNBG2jOq4kwSi8QbfMuKFCqkJfPeOehcyDgaAKFG
+         uOlg==
+X-Forwarded-Encrypted: i=1; AJvYcCV28ql6qbUQQEWBx+drYxXyejm6xx1B1WWYGTkhM6UZeBzTOx9cI3dp8Eg9BZTUQyanHS6MV0W/mdRXHgo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCDYEufR5SZ8MTKBri15VfDowwYo4TiDxeuSZ8f+M1A/6bUfYa
+	UOMkxtAwuZLahtHG9WBJXBppP+npH1es+tgt5acvzyxcQUJwgqDnFRwOnnfeOx4=
+X-Gm-Gg: ASbGnctETBa4kapbHHyLpHhGT4WHXhDyYGCWKDJGzt+3A4I7SGLVmdsz4SLQM8+GFuU
+	b1FfnWCyW+M4VzvoPbz9Ty1vFsUeW8eoc4EPmWYLSHBk9dNMQiXD4A/j9mqgsw1qLO6oCozTsFp
+	pFqZ0pae8FeeVv/Aiz4+Ih+mABXcu83wYLCgt2zR1YoYRk8VQbx6N+5fJMp7lotbh7NjPMbw8gk
+	LkBAwCPkkfJ+Di+jMXTOL/fYUfaQAwpN7dhum5W1ZFPoPg53K+mrDM/I/zpCWe42l8oG2i2Ojiw
+	MoAdn/GK9XKx+zB64aw8dNOR8fOSIkoI/dAYU5leXafeBru3ZfQI
+X-Google-Smtp-Source: AGHT+IFUA3CFU1cnWJg1SQjByjtnMsCuSRrIGtPclWuY/yN5NfiaQKwIcJo9x+tWDpK+DYGspM41Mw==
+X-Received: by 2002:a17:902:db05:b0:224:249f:9734 with SMTP id d9443c01a7336-22db3bd4cd5mr23000755ad.4.1745478906561;
+        Thu, 24 Apr 2025 00:15:06 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db510219bsm6148735ad.165.2025.04.24.00.15.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 00:15:05 -0700 (PDT)
+Date: Thu, 24 Apr 2025 12:45:03 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Lifeng Zheng <zhenglifeng1@huawei.com>, linux-pm@vger.kernel.org,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Nicholas Chin <nic.c3.14@gmail.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] cpufreq: acpi: Don't enable boost on policy exit
+Message-ID: <20250424071503.2uhc4k3jxy7x5mo2@vireshk-i7>
+References: <cover.1745315548.git.viresh.kumar@linaro.org>
+ <7ce4ffb166beef83cf1bd703a41bf91622011585.1745315548.git.viresh.kumar@linaro.org>
+ <CAJZ5v0iCrQeKs=4S-x83Fgf-W4u=2JYLA5VmgKPaLCvYAkNpig@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehlihhnuhigsegrrhhmlhhinhhugidrohhrghdruhhkpdhrtghpthhto
- hepkhhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0iCrQeKs=4S-x83Fgf-W4u=2JYLA5VmgKPaLCvYAkNpig@mail.gmail.com>
 
-When dwmac-socfpga was converted to using the Lynx PCS (previously
-referred to in the driver as the Altera TSE PCS), the
-lynx_pcs_create_mdiodev() was used to create the pcs instance.
+On 23-04-25, 16:14, Rafael J. Wysocki wrote:
+> Even after commit 2b16c631832d, the code removed by this patch does a
+> useful thing.  Namely, it clears the boost-disable bit in the MSR so
+> that the offline CPU doesn't prevent online CPUs from getting the
+> boost (in case the boost settings change after it has been taken
+> offline).
 
-As this function didn't exist in the early versions of the series, a
-local mdiodev object was stored for PCS creation. It was never used, but
-still made it into the driver, so remove it.
+I didn't understand this part earlier (and even now). How does a CPU
+with boost-disabled, prevents others from boosting ? I have tried
+looking at git logs, and still don't understand it :(
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 1 -
- 1 file changed, 1 deletion(-)
+Also, IIUC this and the boost-enabling at init() only happens for one
+CPU in a policy, as init() and exit() are only called for the first
+and last CPU of a policy. So if a policy has multiple CPUs, we aren't
+touching boost states of other CPUs at init/exit.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index c832a41c1747..72b50f6d72f4 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -59,7 +59,6 @@ struct socfpga_dwmac {
- 	void __iomem *sgmii_adapter_base;
- 	bool f2h_ptp_ref_clk;
- 	const struct socfpga_dwmac_ops *ops;
--	struct mdio_device *pcs_mdiodev;
- };
- 
- static void socfpga_dwmac_fix_mac_speed(void *bsp_priv, int speed,
+And yes, this patch isn't mandatory at all for the 
+
+> Moreover, without the $subject patch, the change made by the next one
+> will cause the boost setting in the MSR to get back in sync with
+> policy->boost_enabled during online AFAICS, so why exactly is the
+> $subject patch needed?
+
+Right, this is merely a cleanup patch and isn't really required for
+the next patch to make it work.
+
 -- 
-2.49.0
-
+viresh
