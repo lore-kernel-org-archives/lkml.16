@@ -1,112 +1,114 @@
-Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+Received: from omta38.uswest2.a.cloudfilter.net (omta38.uswest2.a.cloudfilter.net [35.89.44.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA6C1F3BA3
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:23:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EF21F1936
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:24:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479438; cv=none; b=fQJYNv/s1GZr2NWb8wBKvOR9ZCFjMOvLV0c7FmdlB+PtbLs+Nw38EkZsKfr515mrkkgPgAwQAkWPQek9oTpg2Z6ZWMYJc3cKvod7J6TDF2lDmP23S5tFUXTaOIKTa+++rsrADjaN1WJXnZe6iWSHq8a+XsoZ9Kpl91AP2ZjlTHE=
+	t=1745479471; cv=none; b=Tb7xG4YhchdmQ891Ufjb5r8QV4Es+nrejJgpqA7wnlgTCvY7kBH87I43DkJoH8yxb+nelOFNY/DrAcDMSYpqyCQsiod/8Xt48ypyzaFQiVgkUK4qIL0H0KypaTW6HvH8ivVjFK1FvN6fnuQuNJTZwGCl8JxkbripSMNW9JUhYdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745479438; c=relaxed/simple;
-	bh=18ICa3vI58dM0qDe75yctcopTR/UnLzuwYeVLptThgg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=YMLXOtqqmiCgr8gBBT9pm5/g8UHVYS75Vpp3d8QTdAwuwaTxmO09GaqKvwbv6991Pzh6AVc7hWEb0pXmczR9m9cItqXLIRpnd1AuiKcPiAaBxNIo3TTzBt/ltB2wFsHvWReV6K91BuNDyuW7Mw2S/+fWsaJhBVhfY9knvktQ9ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HPCmVUph; arc=none smtp.client-ip=91.218.175.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745479471; c=relaxed/simple;
+	bh=SUiXSBVTodsrxvc8tpfjLeU3KmNzaV31IvgnMHDrvC0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M4HWGqCcYeMoOV33ACAgp7aU+3FsUpjViJ4OpCjpHQLx0EhOgGdoqKz4V4dRlBVyrG/+jGwj/uRnRDL9Tjs/ukz2QqG8f4hLZYKLy24ruiLgnvpy27daqSluV3X/0iIi6Y0ADCe0fWKRCvn658V4kcmh0sXNEqBwsXbA7LSkCWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=JEertdZn; arc=none smtp.client-ip=35.89.44.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HPCmVUph"
-Message-ID: <b9814fec-a9b6-4cd5-a0b1-1c2ddb214a03@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745479433;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dEOx6KONvXmNWax6EDI3+Zvv3tm8dvdgjEx8wQxaCaI=;
-	b=HPCmVUphENqglFaZwSxEirHJmCjBUI2OAE6jcjz+bA4iJ56y6KT6UX/y0D25nt0rlrGmIG
-	6IwEPvUj5YiWMfKLD9JnBiCOZn8auJsZPmImRIAYRyBDuVRkexeWYCyshKZ0tEm/XwwC3u
-	9Abg0QV7BMkHy3T8WF482j3K7pXTvIg=
-Date: Thu, 24 Apr 2025 15:23:40 +0800
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="JEertdZn"
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+	by cmsmtp with ESMTPS
+	id 7qHZu50i4Afjw7qweuCncp; Thu, 24 Apr 2025 07:24:28 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id 7qweuvDBRRlrs7qweuvcDV; Thu, 24 Apr 2025 07:24:28 +0000
+X-Authority-Analysis: v=2.4 cv=Qamtvdbv c=1 sm=1 tr=0 ts=6809e72c
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=X0g7uYtjAU900BSEm/gH4H5kkUda235ZpSk8sDLp9FU=; b=JEertdZn1xU8EIvEHfORzbQfYl
+	Ssz0j4gC+phdcnVPUbgBp+Wjcq/e0o4nTzpqJzHmbt3VI+WCTNrIYrAOYdiUHhyjNw9Uxa/k7ilLH
+	ucxTvAsA9gG8E6pNoeCgPYGx9TTn+LNYHssLvaetB8bzGOr88sKGeq7JD5d/kPZR2TMcY41s8XJIa
+	7gLouEGTxOvNUcnEK+zdLXCAohAfoihSoXtBwSF9qWea7eyCOgPg6mwASy6Xn5zRKRyrRaIBBzhz0
+	Yx9d2VjcETuRPmVH5zefh754mZgJb4fr5nHVEN0Y359fnxZMIK16KhPr93wq9L8IyRfvgt3VyNj22
+	WMW0csXw==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:41186 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1u7qwc-00000002ukl-0vxZ;
+	Thu, 24 Apr 2025 01:24:26 -0600
+Message-ID: <dbf52b63-df88-40a7-9a7d-2cde88d62ba9@w6rz.net>
+Date: Thu, 24 Apr 2025 00:24:22 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 02/12] sched_ext: Avoid NULL scx_root deref through
- SCX_HAS_OP()
-To: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>,
- Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>,
- linux-kernel@vger.kernel.org
-References: <20250423234542.1890867-1-tj@kernel.org>
- <20250423234542.1890867-3-tj@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20250423234542.1890867-3-tj@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/393] 6.6.88-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250423142643.246005366@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250423142643.246005366@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1u7qwc-00000002ukl-0vxZ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:41186
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 54
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfFbKZaeGDBbHWRNmTdWUbUjO8MqLD55oHcdXlHxTRj2s2Yn6xkQIxTTJl6KRUVJvZYe6iTK9+47DXviqgcbDNwyluOLyatUlnb/UYdtCs7m4dNR4wsU0
+ BfpKGGFPqVGY3hRlUgkIb3L3bcdacc/aBzVhqh3Pa5IzrSw8SOqf/dmkACfZ4Qeqx+p+9h6UP5BDZFWtMIfHv129Sy8oXjVHq00=
 
-On 2025/4/24 07:44, Tejun Heo wrote:
-> SCX_HAS_OP() tests scx_root->has_op bitmap. The bitmap is currently in a
-> statically allocated struct scx_sched and initialized while loading the BPF
-> scheduler and cleared while unloading, and thus can be tested anytime.
-> However, scx_root will be switched to dynamic allocation and thus won't
-> always be deferenceable.
-> 
-> Most usages of SCX_HAS_OP() are already protected by scx_enabled() either
-> directly or indirectly (e.g. through a task which is on SCX). However, there
-> are a couple places that could try to dereference NULL scx_root. Update them
-> so that scx_root is guaranteed to be valid before SCX_HAS_OP() is called.
-> 
-> - In handle_hotplug(), test whether scx_root is NULL before doing anything
->    else. This is safe because scx_root updates will be protected by
->    cpus_read_lock().
-> 
-> - In scx_tg_offline(), test scx_cgroup_enabled before invoking SCX_HAS_OP(),
->    which should guarnatee that scx_root won't turn NULL. This is also in line
->    with other cgroup operations. As the code path is synchronized against
->    scx_cgroup_init/exit() through scx_cgroup_rwsem, this shouldn't cause any
->    behavior differences.
-> 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> ---
->   kernel/sched/ext.c | 11 ++++++++++-
->   1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-> index 975f6963a01b..ad392890d2dd 100644
-> --- a/kernel/sched/ext.c
-> +++ b/kernel/sched/ext.c
-> @@ -3498,6 +3498,14 @@ static void handle_hotplug(struct rq *rq, bool online)
->   
->   	atomic_long_inc(&scx_hotplug_seq);
->   
-> +	/*
-> +	 * scx_root updates are protected by cpus_read_lock() and will stay
-> +	 * stable here. Note that we can't depend on scx_enabled() test as the
-> +	 * hotplug ops need to be enabled before __scx_enabled is set.
-> +	 */
-> +	if (!scx_root)
-> +		return;
-> +
->   	if (scx_enabled())
->   		scx_idle_update_selcpu_topology(&scx_root->ops);
+On 4/23/25 07:38, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.88 release.
+> There are 393 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.88-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Just be curious, does the comments added above mean we shouldn't
-check scx_enabled() here anymore?
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Thanks!
+Tested-by: Ron Economos <re@w6rz.net>
 
->   
-> @@ -3994,7 +4002,8 @@ void scx_tg_offline(struct task_group *tg)
->   
->   	percpu_down_read(&scx_cgroup_rwsem);
->   
-> -	if (SCX_HAS_OP(scx_root, cgroup_exit) && (tg->scx_flags & SCX_TG_INITED))
-> +	if (scx_cgroup_enabled && SCX_HAS_OP(scx_root, cgroup_exit) &&
-> +	    (tg->scx_flags & SCX_TG_INITED))
->   		SCX_CALL_OP(SCX_KF_UNLOCKED, cgroup_exit, NULL, tg->css.cgroup);
->   	tg->scx_flags &= ~(SCX_TG_ONLINE | SCX_TG_INITED);
->   
