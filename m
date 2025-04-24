@@ -1,196 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A7228E600
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B80F27FD72;
+	Thu, 24 Apr 2025 17:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745516714; cv=none; b=hA0/YmxQwb9CMgHot65d5DZe/yVg/VMSJ1HCDM3bLFKanj+dvgg9OSH84Iq8W6OrIAx1GFTZLE4Enul/C+Pd3adMJpmhO3cbTdebwiaRrk94zG+m/KEWub3o7G3SfbYA0KkM7b00vRvxgDTK4/4T5bDkla0T4NtPalAqFZDM62M=
+	t=1745516735; cv=none; b=nUmJSGlSzfzlUHRzWG50l3qjNocafiDDp+3yw2UVJd0YqYMVdNFE+ngEyvPbTmfEshBkeQHUIyc1fWZOSa7YutuASD30A6kKzuKENo2JOm6iYm0SeNXaiJUR8OYkfCLb8gPEqEgUQa0w8OEWd8YCUenWEeoLwg68gxkmWx+Fm0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745516714; c=relaxed/simple;
-	bh=nuhY4mNQtbqLil9CN9WkICD/oYDC6db0CLuLTFGNXWw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FxMebVNErpd+UslKFm/RA5Sntfeb/KUcNPQIiNltY5b2onA8mzzAhPNS82Pl8rV1YUE5pyJJV/GYv67FFwRlVNGC/vlvU9/0nj4rliethaPlVwBtTXrQwJaIwgjD35PmE8H3BilO+jI7Un5dmW+Ev3F4tea5c9DozYNFbgygmV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=an/xVS7j; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="an/xVS7j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745516711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JSMzO6fx79vdlfqdO8dlMyzHm6+/LG9Oml+3X61fg04=;
-	b=an/xVS7j6EwyHG3LmIL6j2+DtJAsAThNylH1GGZj6KjbGaII7K38BOBooxJjXnXZzAGMGU
-	dPXg1uYZ7HZFAwmRaV9SruWMQlv2mniP2hwHwjTJaUPYtfEOu2QFRoVD4LCjLQw4b6l9br
-	8+uRDxoAuUQIJ79T7ajAWIaaxhl8Xy0=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-537-9DavIti8MHOWJ0TQ90_wBw-1; Thu, 24 Apr 2025 13:45:10 -0400
-X-MC-Unique: 9DavIti8MHOWJ0TQ90_wBw-1
-X-Mimecast-MFC-AGG-ID: 9DavIti8MHOWJ0TQ90_wBw_1745516709
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5f628f5f9e3so1217944a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:45:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745516709; x=1746121509;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JSMzO6fx79vdlfqdO8dlMyzHm6+/LG9Oml+3X61fg04=;
-        b=wNjwAOycLb7EkdymK7gpVWpVRs4g/gERy4/f6jpJVL+maUi5UgxfARnQ7HyiV28iGt
-         zl45On4RS/ZG8wZ/SV+tLgoWgnNgjxMJNwoTuNd9JxLyCB/jFnHYXPosnm+jJ4S0TV+s
-         GS7kOITAJFPuIXuYIqC3pJeBh5qWBBnjGAaEjYsVuzeUtxevR44b4yfgSg6jUMQJhR1P
-         GZvjPegIYcuLwsO2oozDWlkDtYNaAdsCFWj6Ukr/naZeqayuD9Kfa2nkjkNJT0Ewnwdk
-         KH/3TKSq59E18dym2N07zWawtkgIadmQARsNBTncw+sXDXezSfhhG6ews4riwSZrVAfU
-         rU3g==
-X-Forwarded-Encrypted: i=1; AJvYcCX/Ry2kM6y5Y0s+QX19BOykpDJoNlKKlLvJWz1DAUeE8iwumD6i/DU5vKcYHX0eRQYPRwNt0OPhjgq1hW4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzdh/4Pd5l3s9tJyH5lg6/tsmg+T35Cxdfe8QXol6tAVW/cUkn5
-	qIeQbauAjZlBj0dZeCHjXxp9/zdKWRQpFgKF5U7LsqVIEuRL+QutMjulxciNjzFEpijxxFXltD3
-	6+6EDJBE8UPrL6g7YNPIjDpVisaaa0qKqDiKC98o3cr3lA9JOwikB13eQ1ha1
-X-Gm-Gg: ASbGncvbIS1xmRKZOe5FkHjSMZlRi8tfywICQWEcTmH8oAkIE0LMwXlu6iCymwOmuF2
-	2Q9JeJm+w/CXXfBsh745cyJq88/oWV4V7GWs18Ez9rJXZrf/T8AVRbUuJnUThCXm3CUYFTQ/U5P
-	dSKubitd+P0RBAvrlfnugHbyCnQBXTpCYT/dpvqLYXeiX7xHiEWsc1mcO0/gXkJPg4aU/FVDszl
-	+JK93PRiLhRFAExeayKvrKxq2LHf+PtamF0Ki8wVOI7lqCRjD8Pbyg+ndXRl/y16KJb0QBIc4FQ
-	YdX3xpJS9qEH41lpOOdBp0ZWkMXOFuw=
-X-Received: by 2002:a17:907:9412:b0:acb:3a0d:8a82 with SMTP id a640c23a62f3a-ace6b450a49mr51591066b.32.1745516708683;
-        Thu, 24 Apr 2025 10:45:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFTh+3uHoEBQ4GmOFk2Iro9cQNDST88N03Da5siOmOBhQ6S/NryZGUQ9nV3zdizG2WhZyWkCg==
-X-Received: by 2002:a17:907:9412:b0:acb:3a0d:8a82 with SMTP id a640c23a62f3a-ace6b450a49mr51586866b.32.1745516708167;
-        Thu, 24 Apr 2025 10:45:08 -0700 (PDT)
-Received: from thinky (ip-217-030-074-039.aim-net.cz. [217.30.74.39])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace5989b173sm140418466b.59.2025.04.24.10.45.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 10:45:07 -0700 (PDT)
-Date: Thu, 24 Apr 2025 19:45:06 +0200
-From: Andrey Albershteyn <aalbersh@redhat.com>
-To: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] fs: introduce getfsxattrat and setfsxattrat
- syscalls
-Message-ID: <oprhbm2vcqpveaf6smetfl2zacntntzqlakysys73zx3gnougi@zy7bo43bh5ef>
-References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
- <20250321-xattrat-syscall-v4-3-3e82e6fb3264@kernel.org>
- <20250422-abbekommen-begierde-bcf48dd74a2e@brauner>
- <rbzlwvecvrp4xawwp5nywdq6wp5hgjhrtrabpszv74xmfqbj4f@x7v6eqfc5gcd>
- <20250424-zuspielen-luxus-3d49b600c3bf@brauner>
+	s=arc-20240116; t=1745516735; c=relaxed/simple;
+	bh=OjvIsPkYeiGOVCMaQkPn+Dv3j9wFmvWUJG1fV1TTiqw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=g4p/rYulW1/X1YVZmEFTKOADm7Bp8lTWf3/PzUDQp0Rqd0OqWArUnYcjVcd7ALmJA6YImq3cc+cVjPWufNeQb72F5DzYNqNUWfVzT6KsdJvHFnf0xOH/CJlTG22qEQymMwpz5FF1qPKrxVMVj7soxJTIht3nOyns3zV94hux0Yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B3BC4CEE3;
+	Thu, 24 Apr 2025 17:45:31 +0000 (UTC)
+Date: Thu, 24 Apr 2025 13:47:27 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org, Ingo Molnar <mingo@kernel.org>, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Indu Bhagat <indu.bhagat@oracle.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
+ Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, Mark
+ Brown <broonie@kernel.org>, linux-toolchains@vger.kernel.org, Jordan Rome
+ <jordalgo@meta.com>, Sam James <sam@gentoo.org>, Andrii Nakryiko
+ <andrii.nakryiko@gmail.com>, Jens Remus <jremus@linux.ibm.com>, Florian
+ Weimer <fweimer@redhat.com>, Andy Lutomirski <luto@kernel.org>, Weinan Liu
+ <wnliu@google.com>, Blake Jones <blakejones@google.com>, Beau Belgrave
+ <beaub@linux.microsoft.com>, "Jose E. Marchesi" <jemarch@gnu.org>
+Subject: Re: [PATCH v5 11/17] perf: Simplify get_perf_callchain() user logic
+Message-ID: <20250424134727.0e8fd0ce@gandalf.local.home>
+In-Reply-To: <2fe98d8a-1165-45ac-b539-d597dd1bbcaa@efficios.com>
+References: <20250424162529.686762589@goodmis.org>
+	<20250424162633.048002581@goodmis.org>
+	<20250424163607.GE18306@noisy.programming.kicks-ass.net>
+	<20250424132800.49160c2e@gandalf.local.home>
+	<2fe98d8a-1165-45ac-b539-d597dd1bbcaa@efficios.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424-zuspielen-luxus-3d49b600c3bf@brauner>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 2025-04-24 11:06:07, Christian Brauner wrote:
-> On Wed, Apr 23, 2025 at 11:53:25AM +0200, Jan Kara wrote:
-> > On Tue 22-04-25 16:59:02, Christian Brauner wrote:
-> > > On Fri, Mar 21, 2025 at 08:48:42PM +0100, Andrey Albershteyn wrote:
-> > > > From: Andrey Albershteyn <aalbersh@redhat.com>
-> > > > 
-> > > > Introduce getfsxattrat and setfsxattrat syscalls to manipulate inode
-> > > > extended attributes/flags. The syscalls take parent directory fd and
-> > > > path to the child together with struct fsxattr.
-> > > > 
-> > > > This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
-> > > > that file don't need to be open as we can reference it with a path
-> > > > instead of fd. By having this we can manipulated inode extended
-> > > > attributes not only on regular files but also on special ones. This
-> > > > is not possible with FS_IOC_FSSETXATTR ioctl as with special files
-> > > > we can not call ioctl() directly on the filesystem inode using fd.
-> > > > 
-> > > > This patch adds two new syscalls which allows userspace to get/set
-> > > > extended inode attributes on special files by using parent directory
-> > > > and a path - *at() like syscall.
-> > > > 
-> > > > CC: linux-api@vger.kernel.org
-> > > > CC: linux-fsdevel@vger.kernel.org
-> > > > CC: linux-xfs@vger.kernel.org
-> > > > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
-> > > > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> > ...
-> > > > +		struct fsxattr __user *, ufsx, size_t, usize,
-> > > > +		unsigned int, at_flags)
-> > > > +{
-> > > > +	struct fileattr fa = {};
-> > > > +	struct path filepath;
-> > > > +	int error;
-> > > > +	unsigned int lookup_flags = 0;
-> > > > +	struct filename *name;
-> > > > +	struct fsxattr fsx = {};
-> > > > +
-> > > > +	BUILD_BUG_ON(sizeof(struct fsxattr) < FSXATTR_SIZE_VER0);
-> > > > +	BUILD_BUG_ON(sizeof(struct fsxattr) != FSXATTR_SIZE_LATEST);
-> > > > +
-> > > > +	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	if (!(at_flags & AT_SYMLINK_NOFOLLOW))
-> > > > +		lookup_flags |= LOOKUP_FOLLOW;
-> > > > +
-> > > > +	if (at_flags & AT_EMPTY_PATH)
-> > > > +		lookup_flags |= LOOKUP_EMPTY;
-> > > > +
-> > > > +	if (usize > PAGE_SIZE)
-> > > > +		return -E2BIG;
-> > > > +
-> > > > +	if (usize < FSXATTR_SIZE_VER0)
-> > > > +		return -EINVAL;
-> > > > +
-> > > > +	name = getname_maybe_null(filename, at_flags);
-> > > > +	if (!name) {
-> > > 
-> > > This is broken as it doesn't handle AT_FDCWD correctly. You need:
-> > > 
-> > >         name = getname_maybe_null(filename, at_flags);
-> > >         if (IS_ERR(name))
-> > >                 return PTR_ERR(name);
-> > > 
-> > >         if (!name && dfd >= 0) {
-> > > 		CLASS(fd, f)(dfd);
-> > 
-> > Ah, you're indeed right that if dfd == AT_FDCWD and filename == NULL, the
-> > we should operate on cwd but we'd bail with error here. I've missed that
-> > during my review. But as far as I've checked the same bug is there in
-> > path_setxattrat() and path_getxattrat() so we should fix this there as
-> > well?
-> 
-> Yes, please!
-> 
+On Thu, 24 Apr 2025 13:42:16 -0400
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Thanks for the review, Christian. I will fix issues you noticed as
-suggested. I see that Jan already sent fix for path_[s|g]etxattrat()
-so won't do anything here.
+> The case I'd be careful about is if the code can nest over exit_mm()
+> (e.g. interrupt) after it sets current->mm = NULL.
 
--- 
-- Andrey
+Then probably we should always check if current->mm is non-NULL before
+using it then, and not rely on just task->flags.
 
+-- Steve
