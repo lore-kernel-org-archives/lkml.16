@@ -1,148 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FED1210F5A;
-	Thu, 24 Apr 2025 09:06:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1696C1DED49;
+	Thu, 24 Apr 2025 09:07:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745485582; cv=none; b=DVkg+p5KTiuu7hbo0J270jYBlHaaA5sQLXR2MSAqbbf+iPojEN1KXE5nz2m0KdlloqR3Az+1k9+n50cVr/PwRqHvIRZ1RbYGsAH3fm04jJxyDspoNijz+7xs78TCwjS2U1CfuvyqGHDmGgHf0RGHKchBbReRSXp1ioPk0m54Q/U=
+	t=1745485635; cv=none; b=SZjUZd1JdANDwsPzOKoMWbd7iqKfCg9/fgGJtHwemOepFWN+E6kps3Si05dRxJBqMisMQGK9qacR5Z3gpYItONnKuwvWP0/YWXC8w75eja5edN4zega/NMoeqe4FP+OWITMkjAGxrdOhi26iUdZngHNs5DeuaExDvhKipeVGZpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745485582; c=relaxed/simple;
-	bh=g6bxeBGFz+ZfAiISf78nYF5d6OuqVi+zKYMYmkzuYww=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HK3T3zdIGDpGO/TCXAxWRf0iQ/zar0OLW4YFttAblOUqXirChYvfmI8uemjkoQnmB6Vb3JnpDDLRlHt/MQVAv4OdHrWLF9sIeVyQmLcJCpCAkh54AH3oLhumaQtjEc8H20yVMyUPIJyfy3E+2mYHzKTMOazaBeYbpRqxd4/g8Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPzQ2EtO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745485635; c=relaxed/simple;
+	bh=jy5nIM0xDOaEX66JTTYxCCobpJsKJNujNJcgUZv6rNA=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mp3ahpF/vuCKIoBcAIRcmU37EJ8Jkp/IQIRplAbFBWUzJQQEcDkIVonQIJO9Ob29S7KDlzqDV4b/x7z4KBebDiV0fXdCdTWQ7q9+UeeKNBsQDHsZrzMTkolw1MunVx19Iwi+ObbKMOBEXGQygU0soktWqfAxGf9eTy1m/tZifQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=fSWX5IUp; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPzQ2EtO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF029C4CEEB;
-	Thu, 24 Apr 2025 09:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745485581;
-	bh=g6bxeBGFz+ZfAiISf78nYF5d6OuqVi+zKYMYmkzuYww=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qPzQ2EtOhRHjvqeIqmfEs41n41+fPOpo5wVb0WXRA0Y64JK63Z0piOH/6q1TuKDwD
-	 WTI9c9BorspnKyVAu3DQkYsACDPHLJTqVVPTN6kTMVKEScUaCBv3GdtHESuUO5NqC6
-	 pqjqzGFZkOK5FpMLm1+UNv77/mYGep1Zag5d47x0b6vZpoHTEkoNH1VrlBp4U0AaKU
-	 qsF/Vn2vnRvvp1Kn7/YXcOkrtYa0w4Ynlqq5gkE0B8hjxnGwh/iyaywzNfxrIZA9z+
-	 2pzSBGKxX+TFKn8wOJih4WXcFzFXNu3Sjb1AkS/krSZea9kudjKkOe+16Pk7titbWK
-	 ch3/3zyDdzWnA==
-Date: Thu, 24 Apr 2025 11:06:07 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Jan Kara <jack@suse.cz>
-Cc: Andrey Albershteyn <aalbersh@redhat.com>, 
-	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
-	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
-	Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, 
-	linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
-	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
-	linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] fs: introduce getfsxattrat and setfsxattrat
- syscalls
-Message-ID: <20250424-zuspielen-luxus-3d49b600c3bf@brauner>
-References: <20250321-xattrat-syscall-v4-0-3e82e6fb3264@kernel.org>
- <20250321-xattrat-syscall-v4-3-3e82e6fb3264@kernel.org>
- <20250422-abbekommen-begierde-bcf48dd74a2e@brauner>
- <rbzlwvecvrp4xawwp5nywdq6wp5hgjhrtrabpszv74xmfqbj4f@x7v6eqfc5gcd>
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="fSWX5IUp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+	:References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=nF7FqQ9YbgPgZLoKxSaHIjMaq3vAjDNUtoKXyw0MY2k=; b=fSWX5IUpWvN6LgO3R5dGBmFcXJ
+	DK3oKRmFAKXqHq5AgRfWCjgNBGnXGfug+Pd4wEG0aBeV316a+EAhWfJ1GdEt2YicCidqpnQHL5mp8
+	dhJwH1WXrzAuvlFM6087Kdi8DHlCGA8bi63+YEXGFd+w0tudeK4zHSM4a6kXZJ5qK++3zurnn4iyO
+	902G+gxxoREXi5/HT2BffwGGlrdd7JXO+kR4z+tcpIpxI5jl+H0isHHoHqIJx/Hw50icytOy+pvEm
+	6v6QPgxJnenPhlSNeIUVkNe/Q8NDn9I8N0O1Nneunf17c5T21/foyQMAOrlq7A4TDacmSORbcO7Zi
+	ADTRMc6g==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u7sXt-000djE-0p;
+	Thu, 24 Apr 2025 17:07:02 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 24 Apr 2025 17:07:01 +0800
+Date: Thu, 24 Apr 2025 17:07:01 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Subject: [GIT PULL] Crypto Fixes for 6.15
+Message-ID: <aAn_NWZjdX-wYHxR@gondor.apana.org.au>
+References: <ZUNIBcBJ0VeZRmT9@gondor.apana.org.au>
+ <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
+ <ZbstBewmaIfrFocE@gondor.apana.org.au>
+ <ZgFIP3x1w294DIxQ@gondor.apana.org.au>
+ <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
+ <ZvDbn6lSNdWG9P6f@gondor.apana.org.au>
+ <Z11ODNgZwlA9vhfx@gondor.apana.org.au>
+ <Z-ofAGzvFfuGucld@gondor.apana.org.au>
+ <Z_CUFE0pA3l6IwfC@gondor.apana.org.au>
+ <Z_89K7tSzQVKRqr6@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <rbzlwvecvrp4xawwp5nywdq6wp5hgjhrtrabpszv74xmfqbj4f@x7v6eqfc5gcd>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_89K7tSzQVKRqr6@gondor.apana.org.au>
 
-On Wed, Apr 23, 2025 at 11:53:25AM +0200, Jan Kara wrote:
-> On Tue 22-04-25 16:59:02, Christian Brauner wrote:
-> > On Fri, Mar 21, 2025 at 08:48:42PM +0100, Andrey Albershteyn wrote:
-> > > From: Andrey Albershteyn <aalbersh@redhat.com>
-> > > 
-> > > Introduce getfsxattrat and setfsxattrat syscalls to manipulate inode
-> > > extended attributes/flags. The syscalls take parent directory fd and
-> > > path to the child together with struct fsxattr.
-> > > 
-> > > This is an alternative to FS_IOC_FSSETXATTR ioctl with a difference
-> > > that file don't need to be open as we can reference it with a path
-> > > instead of fd. By having this we can manipulated inode extended
-> > > attributes not only on regular files but also on special ones. This
-> > > is not possible with FS_IOC_FSSETXATTR ioctl as with special files
-> > > we can not call ioctl() directly on the filesystem inode using fd.
-> > > 
-> > > This patch adds two new syscalls which allows userspace to get/set
-> > > extended inode attributes on special files by using parent directory
-> > > and a path - *at() like syscall.
-> > > 
-> > > CC: linux-api@vger.kernel.org
-> > > CC: linux-fsdevel@vger.kernel.org
-> > > CC: linux-xfs@vger.kernel.org
-> > > Signed-off-by: Andrey Albershteyn <aalbersh@redhat.com>
-> > > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> ...
-> > > +		struct fsxattr __user *, ufsx, size_t, usize,
-> > > +		unsigned int, at_flags)
-> > > +{
-> > > +	struct fileattr fa = {};
-> > > +	struct path filepath;
-> > > +	int error;
-> > > +	unsigned int lookup_flags = 0;
-> > > +	struct filename *name;
-> > > +	struct fsxattr fsx = {};
-> > > +
-> > > +	BUILD_BUG_ON(sizeof(struct fsxattr) < FSXATTR_SIZE_VER0);
-> > > +	BUILD_BUG_ON(sizeof(struct fsxattr) != FSXATTR_SIZE_LATEST);
-> > > +
-> > > +	if ((at_flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
-> > > +		return -EINVAL;
-> > > +
-> > > +	if (!(at_flags & AT_SYMLINK_NOFOLLOW))
-> > > +		lookup_flags |= LOOKUP_FOLLOW;
-> > > +
-> > > +	if (at_flags & AT_EMPTY_PATH)
-> > > +		lookup_flags |= LOOKUP_EMPTY;
-> > > +
-> > > +	if (usize > PAGE_SIZE)
-> > > +		return -E2BIG;
-> > > +
-> > > +	if (usize < FSXATTR_SIZE_VER0)
-> > > +		return -EINVAL;
-> > > +
-> > > +	name = getname_maybe_null(filename, at_flags);
-> > > +	if (!name) {
-> > 
-> > This is broken as it doesn't handle AT_FDCWD correctly. You need:
-> > 
-> >         name = getname_maybe_null(filename, at_flags);
-> >         if (IS_ERR(name))
-> >                 return PTR_ERR(name);
-> > 
-> >         if (!name && dfd >= 0) {
-> > 		CLASS(fd, f)(dfd);
-> 
-> Ah, you're indeed right that if dfd == AT_FDCWD and filename == NULL, the
-> we should operate on cwd but we'd bail with error here. I've missed that
-> during my review. But as far as I've checked the same bug is there in
-> path_setxattrat() and path_getxattrat() so we should fix this there as
-> well?
+Hi Linus:
 
-Yes, please!
+The following changes since commit b2e689baf220408aff8ee5dfb4edb0817e1632bb:
+
+  crypto: ahash - Disable request chaining (2025-04-12 09:33:09 +0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.15-p5
+
+for you to fetch changes up to 8006aff15516a170640239c5a8e6696c0ba18d8e:
+
+  crypto: atmel-sha204a - Set hwrng quality to lowest possible (2025-04-23 09:32:57 +0800)
+
+----------------------------------------------------------------
+This push fixes the following issues:
+
+- Revert acomp multibuffer tests which were buggy.
+- Fix off-by-one regression in new scomp code.
+- Lower quality setting on atmel-sha204a as it may not be random.
+----------------------------------------------------------------
+
+Herbert Xu (2):
+      Revert "crypto: testmgr - Add multibuffer acomp testing"
+      crypto: scomp - Fix off-by-one bug when calculating last page
+
+Marek Behún (1):
+      crypto: atmel-sha204a - Set hwrng quality to lowest possible
+
+ crypto/scompress.c             |  10 +--
+ crypto/testmgr.c               | 145 ++++++++++++++++++-----------------------
+ drivers/crypto/atmel-sha204a.c |   6 ++
+ 3 files changed, 74 insertions(+), 87 deletions(-)
+
+Thanks,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
