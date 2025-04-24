@@ -1,113 +1,65 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAD2C218AC7;
-	Thu, 24 Apr 2025 08:09:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82FD619CCEA
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:10:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745482159; cv=none; b=AX0OVxywWeVLCrE83r2tmxahHur5hBvKEh7mBz58fBKv7+2lasy+XnjArUpRWJPRcoMJ30434k4ST3M+6Y6CsQlkUCRnulTo2mNBX29LPdlZZx3Rft3R296xwbpVXp2h5mYsBbRqHyaJXuN1DmZO0C89WbMqOCsoWNgL1/Z/emE=
+	t=1745482204; cv=none; b=h8EvFFix5aF/8JS6MZfPSKs06HmJjdu8TSkVNt6+6FWInG1VIT85V0Mihbao+4G6Pm+lDVcCr2TxLbKG9eZJo4oz8hISJr3cjW0vYnSlf9OwyK9g/1oerdhXSO+ca9tLHPO3Y+6Fseve4agMnPsYE93mcj9l7eT3fPdcRTHuGcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745482159; c=relaxed/simple;
-	bh=yYFzfcjodjsPyIwDbrK08y/kZInkd8p6kN31M6oYBs0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=E98Ekw2Q7KWEQ9mFncuSvv9pu3yyL9kPc/7mEIrd4cOnooDtlbVeKb9QXBzFv5Kp+EzyPGmgb+yjyVQPfNsMhgfjTABmmGnnlVOkdUH7YpYH0zx3ve9qyRFb8vvXeZ+xlN88C/UUVRdW7rQsvZU4Kfq0wlAZcsW2Gjp4+l4cC7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=e7qrCW0+; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1745482204; c=relaxed/simple;
+	bh=FUSF6dmhuuTU8raDy8wQzUQyI+F+nNdK7RweTlozMxc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lPlwoJNZXgIs7wfPoopyucwOvE3DMBEZ6t6Pa5rWEfwkXayT8SO7a6QVOlZP2+pqBEGgZf9RgOeQNgTlSU3/w6UOSLJMAWjn186dQPc1twIrTU3pxIISbrqbwWwmKZcZwK7+vqlQ8prRc/IGqgw8nnNrjGUe0HR165YZuEV6U78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IObR2D6p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="e7qrCW0+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1745482157; x=1777018157;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:to:cc;
-  bh=yYFzfcjodjsPyIwDbrK08y/kZInkd8p6kN31M6oYBs0=;
-  b=e7qrCW0+OzIbcujHt48tSq5NHeEeVH9HS3zi70XQA5n7wWMbOJCCvnaf
-   FgwxMDr0NQBF2b4dMHDeTpiLIklAbHA5/WB5ZScZpACDTOUZKMYOAoQ0W
-   6eL+0PyE8WNOVjCGzpA6rxubAZ5ZgFdwDI8/6yyUNmunGC2jNF4zQS+Er
-   k/6s5/ysTQE8W/mVesp10KdPTq0C/JUgkhiQ/PskoAmno74d58xUcH/8W
-   q6eQVxLo1YSSM3rlHByxiCQwjciLqwtwVJUQdhr8b26CA8L6g5cGFRwKV
-   GNJdomSUAhj9SMw8wyxo/tkA26hbNCzhOqEP06eehiCaIFgBK6PZrQ8VP
-   w==;
-X-CSE-ConnectionGUID: YoMONp9cSnibtW5FCExXWQ==
-X-CSE-MsgGUID: qc/OFvpzTSSGALLCmEblvQ==
-X-IronPort-AV: E=Sophos;i="6.15,235,1739862000"; 
-   d="scan'208";a="45417227"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Apr 2025 01:09:10 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 24 Apr 2025 01:08:49 -0700
-Received: from marius-VM.mshome.net (10.10.85.11) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Thu, 24 Apr 2025 01:08:47 -0700
-From: Marius Cristea <marius.cristea@microchip.com>
-Date: Thu, 24 Apr 2025 11:06:33 +0300
-Subject: [PATCH] iio: adc: PAC1934: fix typo in documentation link
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IObR2D6p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C291C4CEEB;
+	Thu, 24 Apr 2025 08:10:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745482204;
+	bh=FUSF6dmhuuTU8raDy8wQzUQyI+F+nNdK7RweTlozMxc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IObR2D6pKLpVpEB7jtcJyvFaesOQGUAEp90przdD74Cetq6B8w47sI2W7iuthQAF0
+	 C9FKXzJlS8QZ956UI8l3Qvy4PVSD8X42gjJ25fsL5zs1NXFBuDFn/wwlpjZhrgPsNw
+	 HYeWLwno/Y+5Xs6xLFNTxHUyuxz7Rn0/bL86ZBpo56EqBjzNoGZBfiLGaOKqjV3OK+
+	 0Jpiym+fG6PAg86ERCjh+J3o17Zu0YLoYrMm4kjPhu/xbreiFlir66xGrBGoD8NmcW
+	 Rjdc3moTDk512AvxKuMV7CyboKmDQCZKYjetpoUrQTlxDV0dB+AMh75U4/sJu9JmpB
+	 zJIfGUPKtc1EQ==
+Message-ID: <bd36327b-53e0-43d8-95c9-b26c2905720e@kernel.org>
+Date: Thu, 24 Apr 2025 10:10:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/6] Additional documentation for nova-core
+To: Alexandre Courbot <acourbot@nvidia.com>,
+ Joel Fernandes <joelagnelf@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, nouveau@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, John Hubbard <jhubbard@nvidia.com>,
+ Shirish Baskaran <sbaskaran@nvidia.com>, Alistair Popple
+ <apopple@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
+ Ben Skeggs <bskeggs@nvidia.com>
+References: <20250423225405.139613-1-joelagnelf@nvidia.com>
+ <D9EH7958IAJZ.1R6EJXUR5H3NB@nvidia.com>
+From: Danilo Krummrich <dakr@kernel.org>
+Content-Language: en-US
+In-Reply-To: <D9EH7958IAJZ.1R6EJXUR5H3NB@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250424-pac1934-doc_link-v1-1-9832445cb270@microchip.com>
-X-B4-Tracking: v=1; b=H4sIAAjxCWgC/x3MTQqAIBBA4avErBN0NPq5SkSYTjUUFgoRRHdPW
- n6L9x5IFJkSdMUDkS5OfIQMVRbgVhsWEuyzASVW0iCK0zrVaiP84cadwya0q301ecIGCXJ2Rpr
- 5/pf98L4fHyuhZWIAAAA=
-X-Change-ID: 20250422-pac1934-doc_link-3c7d5bde282e
-To: Jonathan Cameron <jic23@kernel.org>, David Lechner
-	<dlechner@baylibre.com>, =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, "Andy
- Shevchenko" <andy@kernel.org>
-CC: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	<linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Matteo Martelli
-	<matteomartelli3@gmail.com>, Marius Cristea <marius.cristea@microchip.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1682;
- i=marius.cristea@microchip.com; h=from:subject:message-id;
- bh=yYFzfcjodjsPyIwDbrK08y/kZInkd8p6kN31M6oYBs0=;
- b=owGbwMvMwCW2tbSTZa7u0x2Mp9WSGDI4PzYbb73v2eBwcoJ2cu5PV9frcw/btct1uDElKf4sb
- bN/vrO+o5SFQYyLQVZMkWXFWz+1qrUfLiuJZerAzGFlAhnCwMUpABNZ/Jrhn9VahiOFrdbJf6ZN
- WKovsber9+52t71+YrekIp88b/8W8YKRoclRKKwqakpB4/M+h/wnn8+IfErW8GNenXB+cZq27WY
- fHgA=
-X-Developer-Key: i=marius.cristea@microchip.com; a=openpgp;
- fpr=E32F8D4396E72E463E8CCD91446DE0ABD9140C3E
 
-Fix a typo,(PAC1934 -> PAC193X), into the link from an application note
-related to the ACPI device definition.
+On 4/24/25 3:25 AM, Alexandre Courbot wrote:
+> Thanks a lot for doing this, this was severely missing from the
+> WPR2 patchset.
+> 
+> Due to the strong focus on documentation, and in order to ease merging,
+> I think it makes sense to keep this separate from the WPR2 patchset and
+> merge it on top of it. Danilo, would that work for you?
 
-Fixes: 0fb528c8255b ("iio: adc: adding support for PAC193x")
-Reported-by: Matteo Martelli <matteomartelli3@gmail.com>
-Closes: https://patch.msgid.link/172794015844.2520.11909797050797595912@njaxe.localdomain
-Signed-off-by: Marius Cristea <marius.cristea@microchip.com>
----
-Fix a typo,(PAC1934 -> PAC193X), into the link from an application note
-related to the ACPI device definition.
----
- drivers/iio/adc/pac1934.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Perfectly fine for me!
 
-diff --git a/drivers/iio/adc/pac1934.c b/drivers/iio/adc/pac1934.c
-index 20802b7f49ea84c00dd6e8c717d956cb20448f4a..09fe88eb3fb04578137403a020d9befaa75610a6 100644
---- a/drivers/iio/adc/pac1934.c
-+++ b/drivers/iio/adc/pac1934.c
-@@ -1081,7 +1081,7 @@ static int pac1934_chip_identify(struct pac1934_chip_info *info)
- 
- /*
-  * documentation related to the ACPI device definition
-- * https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ApplicationNotes/ApplicationNotes/PAC1934-Integration-Notes-for-Microsoft-Windows-10-and-Windows-11-Driver-Support-DS00002534.pdf
-+ * https://ww1.microchip.com/downloads/aemDocuments/documents/OTH/ApplicationNotes/ApplicationNotes/PAC193X-Integration-Notes-for-Microsoft-Windows-10-and-Windows-11-Driver-Support-DS00002534.pdf
-  */
- static int pac1934_acpi_parse_channel_config(struct i2c_client *client,
- 					     struct pac1934_chip_info *info)
-
----
-base-commit: 3159d40a2ca0ae14e69e1cae8b12f04c933d0445
-change-id: 20250422-pac1934-doc_link-3c7d5bde282e
-
-Best regards,
--- 
-Marius Cristea <marius.cristea@microchip.com>
-
+@Joel: Thanks a lot for this work, appreciate it!
