@@ -1,89 +1,119 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B96610F9
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745474712; cv=none; b=HlT1Ru6py52OAsV1BPTNJuKnQ1pwaOKAY+k5Iu5Hh/fNa0chdbpiL78TzPt9/2tpEH2TvdntmPFrGlmErfGAAnGKFCGHHKfxRsDd1uJIznacsisL9fMDwxbQJYk7kfhL8VdKlp75/lPrrkyrW9oLhTdbj/eZFe6InsdDROrK8lY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745474712; c=relaxed/simple;
-	bh=FgLcY9UoJi4Lz6XopnViT8Ecbt0JoHdDYBsvaCncXhQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RJ6V9NDcOO63mkLqIJTEoaMYpFUyua3FG10nOlQH0IKhjh2a9LKg5wAD4lZEF417EuYzg4eGaLOhCOhwpRHMT0Zhib9U63QRasV5jNkZFQdYrBWJUef/DIxLGzdMArnZ6Oyswsf7HAMhxhwlQYc63CjOYTVDY2k2iT8uGbCMg6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3cMGFz1p; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC96B188CCA;
+	Thu, 24 Apr 2025 06:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745474798; cv=pass; b=tLu6TvRcPHFqO1FzTbmJQC5c+Gd2nDO96HX0uPuRJqdjdO65sBHz8uJcGYWC0bvM9TYIE7xccNf0hDL0SYQO6YPFziVd2vemZUQN4UJAqZMkGxpovFGXU9lXNhiDUbh0yxIK+TvqqxbEG0W6QGLT6xUKLzGhKpmlJWu6XxnB9ng=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745474798; c=relaxed/simple;
+	bh=RDBl8Eso7VZJ5p6yF/4/C9RsSsHeGXWjIet4QinhUWc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IK4VShElyuaTLtU6J71SbdpKWkl/K4u57fHgkm6W43JDaxNdmWal9sP/4ZkQczPIkJDTsbLNHMUVLRX7LuoCCcgVZHKplUzwKoE5Awwg0MakKyHO1W5ySZ7BSRM7OXNYcmLQi3duztOLCoLI24hd7ClNZaYgze777rDxJgqFTSM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=g76/UJ27; arc=pass smtp.client-ip=136.143.188.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3cMGFz1p"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so902448a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:05:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745474707; x=1746079507; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FgLcY9UoJi4Lz6XopnViT8Ecbt0JoHdDYBsvaCncXhQ=;
-        b=3cMGFz1p5fPDHahw+F5ASxmeWGx4wE1mjz+g2wf6o2/DdLzPBKkbSQbgWbPmDl0AAR
-         2+Yk3P8ug86GPrJyN1r7UUP9ThDQ8LO+BXoa6PK7haF3AZK/JteknL+pvANh6ip3bQi7
-         HFZ28tMm91iSQxhn4v3namOmMd85QIeTXIqJBZ4bVVUSa73MSU9jwa1/SjZoym3WXgKY
-         Y/yaUtPnT3u39Th9SaNylwSG05IQb3tfnYnV5QyMgJwwBdVVpnBpvR7q6zKIsxCtV1DQ
-         pIOu3/SvqdLlofjlbKlj0zOs0a7nmav5eFqhtWKweoIaGqskdVfas2aRPqd2KTKLPlxc
-         gf2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745474707; x=1746079507;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FgLcY9UoJi4Lz6XopnViT8Ecbt0JoHdDYBsvaCncXhQ=;
-        b=ZT4XcI0T/Gb1SblMwM9IgM2D+dXRVQ86qtJm26iB1E+lQp/grlCDZ+9PTdj/GNijBa
-         9WQgTQomSUPMiKx8Rl+xJupyxM0ab++Qp0iB6iMOMUcz+SaAPCQefSw2yRiX3qiH+pSk
-         b2rODkHayjy+yrPpk4sWL4ZTpS+rEk8JGDYAZYzwFQxBhpcA2ZRBJItUx1y51uZCJO/B
-         5HVNQmd4gdYc0h2of2zHJy/CGRJ1GxvR7lbQgj2A+dYg+HvERQvkZrLrDgCck1KcuVqm
-         i2H9SyfSrDpu9Zz4nwikNt0ESJIMqP1ER4Nz+zY5tZAAvtKiEvvCtdtyO/v4fBFJVtAm
-         /BPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUWP/GEyYD5rxEy1ZEnRbE4VOCYZqsX2aBMqVTfSPVkvUwx5oDPIP4sAlfN3u75it7aU9xG3OeSkdexI24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjcbFLhFPMfHYswhIuJT/PqPXkVeirAL3rtJht5pRhD+R5g0WZ
-	7Nre1fm0NnFeWLkXOdXMgNEx5JaJXpFc2DvCKmFowX7asT75garcvaM0EdGjmaS6LxsavSMp46M
-	23XF5y7ITLBUP+9JiUpRXcuoMbDu7nXC+GsIX
-X-Gm-Gg: ASbGncuKAZEQArzrPiZhkW+dHeNWDqZao/d3MtGor7wtkIZpomYt9Oly46MLch3LKt7
-	Yf2HQi401L3K5GQzyuhjdCeiH/B2fkVgta96VG2JACamKAi4LhfwSHMjiCPbsYJOFR8kiLZnJBi
-	ie7q2QGfR0n1kwmt8MIDozxQ==
-X-Google-Smtp-Source: AGHT+IGY004qp6xO5hpjOrDdxnAVM0lG2ykMQcFg2nQh/uVt+HQBW4bobGq43stu5J/Kmy7rjJ4V4FN8UhJ7Tau1rYc=
-X-Received: by 2002:a17:907:6d1e:b0:acb:8492:fe with SMTP id
- a640c23a62f3a-ace5748b945mr131046766b.52.1745474707507; Wed, 23 Apr 2025
- 23:05:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="g76/UJ27"
+ARC-Seal: i=1; a=rsa-sha256; t=1745474783; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=iHwLhqCIKTsbFBMHt8WQhB9xzazFvx/+zbVNfPsl08dwSzbuFFd/tljjsYebEwE9w71rBIP9Qzs3rVt/TF/uZKSbwV8L713XpMd6gnmHYf0KcmhXWSZImwCC7grDLkcL6nz7WbhcCtTTmlfhLC8+pdAesv3KoCqvXItIgyUgmj0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745474783; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Ix1Q4sGKAg9a8w65SPXpLATi5/wlpy8wAjzQzuX0MDc=; 
+	b=e111KMAzfGCF+86Qn1ywIPwyU153D7k8U25bq62JpQoUZJwqkH72P5JvUTcKtnbmLbWCxYUDN5bJQAAxE+yT6eAV9nhLAxvwgaKQ2t6TQfr1rbfAj+EBUfc1ODcMmtbZR3iOcUU9b+cOcrkryX47sekrhPPPA8DfL2Bz4GEH8fk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745474783;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=Ix1Q4sGKAg9a8w65SPXpLATi5/wlpy8wAjzQzuX0MDc=;
+	b=g76/UJ27I76sdVUUsUdwNX33SvRjtR6SzLjaG+iOL2ym7hQZyNSzbTimUIn4q1IZ
+	RzP3oKOh0RL6AA9whACWA9hI1pJPoKMI+FiT6TuO5gG8DTG8P6Z4T/fzs05+m+QIaQl
+	CByTUX57VqKqbc7bnOHOzRDPEydxzsc0E206NouPSVedl9ZntDov8X9GrlJ4fHsIOtr
+	KgnzCowrjxtsn03b1EQrDvnxgkVOP7deCAQVEg6ndQAPshQ92K8VJEo5GSLV1NQs3dr
+	TyfeXgIWCVrB0rO0GrmjIC32MtvrO/pef3NoC3ngGfl3z8SQ531MI+o3rK/EJt1mts6
+	uqdlNymSyA==
+Received: by mx.zohomail.com with SMTPS id 1745474779881209.53571103315892;
+	Wed, 23 Apr 2025 23:06:19 -0700 (PDT)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Emil Renner Berthing <kernel@esmil.dk>,
+	Conor Dooley <conor@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH] riscv: dts: starfive: jh7110-common: use macros for MMC0 pins
+Date: Thu, 24 Apr 2025 14:06:05 +0800
+Message-ID: <20250424060605.638678-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423061023.131354-1-dhavale@google.com> <94c702b9-cad5-4727-a7f1-16de1827841e@linux.alibaba.com>
-In-Reply-To: <94c702b9-cad5-4727-a7f1-16de1827841e@linux.alibaba.com>
-From: Sandeep Dhavale <dhavale@google.com>
-Date: Wed, 23 Apr 2025 23:04:55 -0700
-X-Gm-Features: ATxdqUGZy1kQsEX662y0kBBC-fBrdY3CPiMMq1EptitRYRNGrcUwldc7K2xvlN0
-Message-ID: <CAB=BE-SwcvC0sDXAVoK+C9V8Ags+1VanWY_n1hgg8k+UmKH+0A@mail.gmail.com>
-Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: linux-erofs@lists.ozlabs.org, Gao Xiang <xiang@kernel.org>, 
-	Chao Yu <chao@kernel.org>, Yue Hu <zbestahu@gmail.com>, 
-	Jeffle Xu <jefflexu@linux.alibaba.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-> I could fix up this part manually if you don't have strong
-> opinion on this.
->
+The pin names of MMC0 pinmux is defined in the pinctrl dt binding header
+associated with starfive,jh7110-pinctrl .
 
-Hi Gao,
-I don't have any objection to styling as it is subjective. I am ok
-with the fixup.
+Include the header file and use these names instead of raw numbers for
+defining MMC0 pinmux.
 
-Thanks,
-Sandeep.
+Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
+---
+This is only a prettying commit. The resulting DTB files have the same
+content with or without this patch (verified by doing sha256sum on
+arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2-v1.3b.dtb).
 
-> Thanks,
-> Gao Xiang
->
+ .../boot/dts/starfive/jh7110-common.dtsi      | 21 ++++++++++---------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+index c2f70f5e2918f..a2c72b385a905 100644
+--- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
++++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
+@@ -8,6 +8,7 @@
+ #include "jh7110.dtsi"
+ #include "jh7110-pinfunc.h"
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/starfive,jh7110-pinctrl.h>
+ 
+ / {
+ 	aliases {
+@@ -428,16 +429,16 @@ GPOEN_ENABLE,
+ 		};
+ 
+ 		mmc-pins {
+-			pinmux = <PINMUX(64, 0)>,
+-				 <PINMUX(65, 0)>,
+-				 <PINMUX(66, 0)>,
+-				 <PINMUX(67, 0)>,
+-				 <PINMUX(68, 0)>,
+-				 <PINMUX(69, 0)>,
+-				 <PINMUX(70, 0)>,
+-				 <PINMUX(71, 0)>,
+-				 <PINMUX(72, 0)>,
+-				 <PINMUX(73, 0)>;
++			pinmux = <PINMUX(PAD_SD0_CLK, 0)>,
++				 <PINMUX(PAD_SD0_CMD, 0)>,
++				 <PINMUX(PAD_SD0_DATA0, 0)>,
++				 <PINMUX(PAD_SD0_DATA1, 0)>,
++				 <PINMUX(PAD_SD0_DATA2, 0)>,
++				 <PINMUX(PAD_SD0_DATA3, 0)>,
++				 <PINMUX(PAD_SD0_DATA4, 0)>,
++				 <PINMUX(PAD_SD0_DATA5, 0)>,
++				 <PINMUX(PAD_SD0_DATA6, 0)>,
++				 <PINMUX(PAD_SD0_DATA7, 0)>;
+ 			bias-pull-up;
+ 			drive-strength = <12>;
+ 			input-enable;
+-- 
+2.49.0
+
