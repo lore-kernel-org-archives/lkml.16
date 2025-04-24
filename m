@@ -1,111 +1,149 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8721D63C3
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37C3B1E47BA;
+	Thu, 24 Apr 2025 18:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745520571; cv=none; b=AaGZ1RgfNIoyTJJ4MI+cRUZSbw+5Fk7dE7OuJ/z0QCtLAMhAFFrEL15n8d7P1h/C8EyoKUqNc96ocsoi148CxCANgeya/cdxWgZQ5hmSGr6XsU1whs5RHpy0TWhKPkXGP8yZij1FNoZmm0jWPHIFt7Z4uMA6MReuj39gYyXmmNg=
+	t=1745520572; cv=none; b=O35PRCF0FdG1Dk1c/ogp4XcwqXnM3mxjov3ZKGj4juuciu79JuyXTXwGD7YMcLmhzaMJu+E3oDUYQ9YEvb4vvibqLXrQGFYbWn0CPtCa5kg7V37JuoG4syPRLX7D0q4gzl/3IcBj7HeRt8jjVAnVzaWsln6NrEDJdL75pVWpyio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745520571; c=relaxed/simple;
-	bh=YJThV8OU+yLTh48RfiUdm+OTToDHsoL5U/oCrdFEqDQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hBOaEcWCAhZd+9osiz235Da4BwYzd3FAeLCthz1HfOqzpcVY+HJbGobo57hKxE+nCXhwru7MmP1h2pD7rSN4kiHft5CICfSaPnCOFYic5MI7QmV8BBdE8GmU3hHE8MPIkueAqaVWddXpXB+9vRFCRQIMBcqcVKWD9vhu4J4ZlCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ylzR3I28; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745520572; c=relaxed/simple;
+	bh=Y8Zj4Ot+xJLtfDZRdM1wwri1rHBunTzwWrzpp4WjAD0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TY03upw5S8k5L3U0iGWpGW7BpxOWXJiVL5tsUmuL1dHWwl9m/fF7wxRxhVhNbgro+yXerCOaXbX6TxiVvsSU9MUrsNFJFD+IThpYA/FlgPJNCfFLChY5gBQsxOl2YtGjfgayzLJwgFo6ynpPTLwK/eVTMsGVDa9D6xfHk2zw4WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GqnKcjOM; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ylzR3I28"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2240aad70f2so22995ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:49:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GqnKcjOM"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54998f865b8so1369053e87.3;
+        Thu, 24 Apr 2025 11:49:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745520569; x=1746125369; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YJThV8OU+yLTh48RfiUdm+OTToDHsoL5U/oCrdFEqDQ=;
-        b=ylzR3I28/yHFuETRVx8TQjGviT85wGYNO9xhZfMuqph6DIlhaSNwaWlvkbtPK+qs6B
-         ElMVBnjACjOFiHTrBVLwYd0Ca2Bvc55SIR11MRMKQdqC8pWDQ02LcBDNfeiyTRnZ5NNU
-         VMrctS6S7a6mrVAt0zxIvDmckXP/ME542w8bOGeXP/yi/f+pdH6jDv3F/FZqfds1HJIy
-         CmMS680r1gfHpGVYwT3Dpz2TINkurECqb7m/VPrDGvlHQ8N/F80q96LKwbu+ATbjBkLf
-         pAIcJXHi1I9IhYCmVJiTMIOvpxgVkg4KgEzzvZCM1nspYuccVgdk/hS2G9SO+thvSb9j
-         Wi/A==
+        d=gmail.com; s=20230601; t=1745520568; x=1746125368; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5MDA9eeZLBxjehbLj9Wx1j9aP1a1OT/E8TcC4HDqSQ4=;
+        b=GqnKcjOMBRcxStU0TX4XwqH3ib/jqAVhJZCDpCSCugRiRHCqG/RMVTbNUlJCTXaNoN
+         ns9ufi5tsvUVjR8piueqlmHJFjaF9Yw4MFB7biom6aYxbFu5MwL6b+/ZBYepnC/buVPw
+         Kcc41jhbM5FWdiY1c2anJA24K9LMapb7mpgLDixpIroV5OTgZD60zu1l4bMxS4IZwWIs
+         bbr8k1VmbacXmjckFQgqoHJNIs9tDJ1wr+nFHfguqGsuuIgFSlSS3Gpk9uo9ndsAvuPN
+         VzEK7CztDEyalU3Y6ewgKSDX0Q2CGDopobBNXOiga+iPkEBk1yzdmOvgxR9Okn9flDjl
+         8sEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745520569; x=1746125369;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YJThV8OU+yLTh48RfiUdm+OTToDHsoL5U/oCrdFEqDQ=;
-        b=RSFNH9LeD6wQi27CPayviwp21/lszncHl/00Aa4gWuL+q3zNQ8P0mrzln/yFffB/ED
-         DW43UT2PQh+F/5BmgKI826L0bkg5jBOZrP9oD4w4rwjbS/EukttyA9FSWpyolz6cv4nq
-         4ZigG0y+9H14IJf3+wd+Vx+EUp0Q1DRDmLgsZS+4D8A/nrWnbpEN4MnRKFYtIaTQ0RJS
-         LF4wOyhJGByx3kw93UhRieYQMwYviWl/1mxeVetJAjrLG5qljPs2+tYetmCdL6ecKq9X
-         t2Rp78gMdy/BrWli/6nNx46Jvmi051S5z/kftJLcKfXsyhhVJrwnBeTyrCWNzlPElG3/
-         2cmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVeJjG056KFl0tTjF2TnQO4xvVBH/JOzKUqFmKqjKHcws98pj2Vuti8+h2eL6FaDQ3ma/B6AADXS9jRwY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDBp2RB/e7qHiC5QxgClRCsaSUUdKul47ou9gbERMnK3DXxeoD
-	KC8cw6oKsCiUY2WumgwMfQo6QVRRIeSNfkftihGMC0OMSakJsjQ9L4cYCvPiEDLECatkOnPQj8z
-	uikoHdzveAtTyT5iNCBiPF16EW0x0dAY/BAAP
-X-Gm-Gg: ASbGncsJdAu5ssnfnNXqlkC5O/1RqqwjzLvD2HqTZFcJqiK9Bm5gyKZI0l3uJu3SkPo
-	Cu5qZtC8quenqANNwtkcelLcoMYnOBLvf2oT2Hdr3ka79Y5HwxGMmacgBERVuEZYa34N5IrAaG1
-	i+cd0ZM1zRTTrIJBE4EXoeSF7MoVkGb8p6MPI3pGuLcama88O8yVya
-X-Google-Smtp-Source: AGHT+IG7TvFiypkSdm6cFL8QXv7Geze56CiuyUqiMCDjIy5B3tjxrLsMvkElYIkhtHnXIN1qIRY0zGBcPAIono1A5h0=
-X-Received: by 2002:a17:903:2053:b0:220:ce33:6385 with SMTP id
- d9443c01a7336-22dbdb49fd4mr181535ad.9.1745520568724; Thu, 24 Apr 2025
- 11:49:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745520568; x=1746125368;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5MDA9eeZLBxjehbLj9Wx1j9aP1a1OT/E8TcC4HDqSQ4=;
+        b=LYzuycAWVDT7e9LBN3g3wVEfLcWf5l0C6GWItw1I/o73z+cj0GGAgJyqNEVoGNw1Ab
+         m480a2OUB3jUyyRN4uQzBjlJjft833ZuAwn8P0v9yM64oY6OICUIYL2N/0TsjVSBd9+q
+         J3m/9+D5+wK+o1a0gjC+dwFq1/YVlPZ3uy3qNMls0LCSEl92TGDJpz8A4oMAW4fyvtt+
+         /o5tnFiXFPKfScIEX9VPa9vEcyLaFhcx+Oy7VQZc1NyUk3t1RsQfzHGH87n6BG1TBQYj
+         dCzx0cfMCcusexQDEG1b0C8aKRYot/Ul5jAwCEf+oh/TLOt8aSGujIEILFv/HBkZk5ps
+         JX8w==
+X-Forwarded-Encrypted: i=1; AJvYcCV17x5BrMk3UvnCnHvG7Q0tLr9BwT241Nksw4bWkESOktFcpQPVdWOut3NCmQqHB07yajYFn1oNZpCj+dY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFNqTm7ZjgyECrpO7y7HOYsgo8NRToEoMhk83ioYC7rVVINCiT
+	fksiSu3kBWlWfG9EX9ax64ABRIWSrr1n624I6sq65FN/miSWpOQ8
+X-Gm-Gg: ASbGncvY7EOMBjXMGWE+9AZxN7ZPn2ulVJRStu65WNTfYGgP8Rgu1vnkyxSf1e/GoU6
+	BLCXBV9kPLj5c8t0BAMarLed9ORNL2n9RenIWuBm1ueJCO0Fxl2SPjq2wI8l9eaxq3pOmywjhVI
+	r3gr50TYKgnvtDIdD0LrDBmcxXU2RRQeR0ovfcJWNE0l3iWlJa3UDN7DZMwTw9ZNxXaXQGFW0LG
+	s52lvk6ppCyK537fDCC05e7pgVkEG9nTfeycBNku7dTKVKVJ5unpZsf3KMWYp5XhXqDmMQ+Sf9w
+	mRQ5uuWRN9ni6Owf+xqqnNMnuppPluExTBEIL0t2pttJoo3dVC4g9dr/zBr7ZTKGKKr7A/8oMK0
+	DbQuDX3xBF+GgRdjKSx7OhcQcUYCJjPXy8hIO
+X-Google-Smtp-Source: AGHT+IG2zEkQ101UPCaITffZzJVHlNfgWRLjsy/2HRlTDffLmWDXqwzDq9QA1YpUVY3g0jXmiiSqTA==
+X-Received: by 2002:a05:6512:3e0e:b0:549:86c8:1133 with SMTP id 2adb3069b0e04-54e7c416661mr1243785e87.12.1745520567831;
+        Thu, 24 Apr 2025 11:49:27 -0700 (PDT)
+Received: from ?IPV6:2001:678:a5c:1202:4fb5:f16a:579c:6dcb? (soda.int.kasm.eu. [2001:678:a5c:1202:4fb5:f16a:579c:6dcb])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7ccb7f1asm321999e87.237.2025.04.24.11.49.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 11:49:27 -0700 (PDT)
+Message-ID: <b94e18b9-7e47-4237-8e43-261307c44d8e@gmail.com>
+Date: Thu, 24 Apr 2025 20:49:26 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424040301.2480876-1-almasrymina@google.com>
-In-Reply-To: <20250424040301.2480876-1-almasrymina@google.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 24 Apr 2025 11:49:16 -0700
-X-Gm-Features: ATxdqUGSuXy2A5TP0CkyPakNQ5S2ontOlQJJboyrRu9J3Ao5kJdPZ2OrP3y4P5Q
-Message-ID: <CAHS8izOT38_nGbPnvxaqxV-y-dUcUkqEEjfSAutd0oqsYrB4RQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v11 0/8] Device memory TCP TX
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, io-uring@vger.kernel.org, 
-	virtualization@lists.linux.dev, kvm@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Donald Hunter <donald.hunter@gmail.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
-	Willem de Bruijn <willemb@google.com>, Jens Axboe <axboe@kernel.dk>, 
-	Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>, 
-	Neal Cardwell <ncardwell@google.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>, 
-	Victor Nogueira <victor@mojatatu.com>, Pedro Tammela <pctammela@mojatatu.com>, 
-	Samiullah Khawaja <skhawaja@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] btrfs: put all allocated extent buffer folios in
+ failure case
+To: Daniel Vacek <neelx@suse.com>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250422125701.3939257-1-neelx@suse.com>
+ <20250424150809.4170099-1-neelx@suse.com>
+Content-Language: en-US, sv-SE
+From: Klara Modin <klarasmodin@gmail.com>
+In-Reply-To: <20250424150809.4170099-1-neelx@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 9:03=E2=80=AFPM Mina Almasry <almasrymina@google.co=
-m> wrote:
->
-> v11: https://lore.kernel.org/netdev/20250423031117.907681-1-almasrymina@g=
-oogle.com/
->
-> Addressed a couple of nits and collected Acked-by from Harshitha
-> (thanks!)
->
+Hi,
 
-Hello,
+On 2025-04-24 17:08, Daniel Vacek wrote:
+> When attaching a folio fails, for example if another one is already mapped,
+> we need to put all newly allocated folios. And as a consequence we do not
+> need to flag the eb UNMAPPED anymore.
+> 
+> Signed-off-by: Daniel Vacek <neelx@suse.com>
 
-I made a slight mistake sending this iteration and accidentally
-dropped patch 9, which contains the selftest. There is nothing wrong
-with the selftest in this iteration, I just accidentally cropped the
-series 1 patch too early.
+This version did not trigger an oops for me.
 
-I'll repost after the cooldown, and if this happens to get merged I'll
-just send the selftest as a follow up patch, it's an independent
-change anyway.
-
---=20
 Thanks,
-Mina
+Tested-by: Klara Modin <klarasmodin@gmail.com>
+
+> ---
+>   fs/btrfs/extent_io.c | 32 ++++++++++++++------------------
+>   1 file changed, 14 insertions(+), 18 deletions(-)
+> 
+> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> index 197f5e51c4744..7023dd527d3e7 100644
+> --- a/fs/btrfs/extent_io.c
+> +++ b/fs/btrfs/extent_io.c
+> @@ -3385,30 +3385,26 @@ struct extent_buffer *alloc_extent_buffer(struct btrfs_fs_info *fs_info,
+>   	 * we'll lookup the folio for that index, and grab that EB.  We do not
+>   	 * want that to grab this eb, as we're getting ready to free it.  So we
+>   	 * have to detach it first and then unlock it.
+> -	 *
+> -	 * We have to drop our reference and NULL it out here because in the
+> -	 * subpage case detaching does a btrfs_folio_dec_eb_refs() for our eb.
+> -	 * Below when we call btrfs_release_extent_buffer() we will call
+> -	 * detach_extent_buffer_folio() on our remaining pages in the !subpage
+> -	 * case.  If we left eb->folios[i] populated in the subpage case we'd
+> -	 * double put our reference and be super sad.
+>   	 */
+> -	for (int i = 0; i < attached; i++) {
+> -		ASSERT(eb->folios[i]);
+> -		detach_extent_buffer_folio(eb, eb->folios[i]);
+> -		folio_unlock(eb->folios[i]);
+> -		folio_put(eb->folios[i]);
+> +	for (int i = 0; i < num_extent_pages(eb); i++) {
+> +		struct folio *folio = eb->folios[i];
+> +
+> +		if (i < attached) {
+> +			ASSERT(folio);
+> +			detach_extent_buffer_folio(eb, folio);
+> +			folio_unlock(folio);
+> +		} else if (!folio)
+> +			continue;
+> +
+> +		ASSERT(!folio_test_private(folio));
+> +		folio_put(folio);
+>   		eb->folios[i] = NULL;
+>   	}
+> -	/*
+> -	 * Now all pages of that extent buffer is unmapped, set UNMAPPED flag,
+> -	 * so it can be cleaned up without utilizing folio->mapping.
+> -	 */
+> -	set_bit(EXTENT_BUFFER_UNMAPPED, &eb->bflags);
+> -
+>   	btrfs_release_extent_buffer(eb);
+> +
+>   	if (ret < 0)
+>   		return ERR_PTR(ret);
+> +
+>   	ASSERT(existing_eb);
+>   	return existing_eb;
+>   }
