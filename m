@@ -1,78 +1,151 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282DE2820B2
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E05F2820B9;
+	Thu, 24 Apr 2025 14:25:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=167.235.159.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504734; cv=none; b=SFJQihPgesYSQ5gBTnedcQisPQ2Hdw00i8Mzd2nL2qVsCWaQmOHpTgL0lr5jsAHe2GL/UaeFjKWBwAr4ZWoV27TtfdnJwdwTTyLrZoBfoAULhEuDMVu1SgT62fiscaYv7oPs3KrlW4NgCDm7Qc17MdDkLlfBAT+Hu0N3DuykMps=
+	t=1745504735; cv=none; b=DrZdIcsLCYms9UnKnftUJiA4YT17g6Ei+8DxQY/3Lmv58cfC2HqDLivkjCH7BK1GEEdPkf5k10LYYs6443lJq6AT5NZRDBM7GgXZlGqSDdtrU+OFQmraSTaZEg8JW33adH/pu336iYuZDcnyXNZ5JNinNbuS5b0eIVnbZ54N6KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745504734; c=relaxed/simple;
-	bh=HAka5rOzVpCS8q7vpplGKyTDTODjckTdLRGRpQ+SCiQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U0yVw98O2BDGksnolU3Fv4XXD9bqeNeoW5pLsMXY0Jyl5hsEwMa81JfvMiLRUaxP9TB+ze21OmL/KvjNJmGO/eSCRUF4kxcHFYDjtnarntNRy7i/LcL4wa5x2NMxG0UpZBGM+gqtdvP1n51effuCu5yBavebDmttZ4Q6cPRchnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AKLdDUuZ; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1745504735; c=relaxed/simple;
+	bh=ctJUQqsDIJ4N/zUvhphAU/Viu/T5q5vuPpSV4mT1pBU=;
+	h=Message-ID:From:To:Cc:Subject:In-Reply-To:References:Date:
+	 MIME-Version:Content-Type; b=tlPSqi/szTJmuwLyRFFDIxG6NHdRrouoeCcW3jWGCyJKyFebaySGJMT6GvvSZwM/HlGwIX/biO+MN0xMTlKZ7XHjMz9a5EUvdYULowzUusc+um1NyZHP7fPWuLB9BRYES7lF5Z7jZKD9uIJfUTxsJHRvZcBcNQzhHaxqm1xxsaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com; spf=pass smtp.mailfrom=manguebit.com; dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b=LAVTvL+j; arc=none smtp.client-ip=167.235.159.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manguebit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manguebit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AKLdDUuZ"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=YhUGVMn+gYsuzVe+LwY4qcf+SYACtR+3fDwRizcgA/o=; b=AKLdDUuZG6TBELeEKPWIFXak++
-	PyZrlnU0fiJkDjONXVS65x9eFsQ3/wvwmiqnERU4dBE+EhMGH6ixbgBmoTaFopdby76uRvUJwXFRG
-	kw8R3Hy7aSrPKsknc7Nb407QL7XWQhCoK5T3qMB47P+wA/lPILsODb3EfluGMeIJmnfObEgidbQbJ
-	OBR6NgA221wg00r6o8eMPNwAq86zvW+ZXdnTWtjJjBbofHrF603yswYR7tAmYyju8r7OMmkAOzqJS
-	TvWnC0YgY4/w8/x5pzkRywu4HI/kon044aYVhMZ9qre37hV6iLtySiNH5loAWLZvDHVZMzaKp+PR8
-	GiT1k4Jw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1u7xW5-0000000CeHg-1ZdH;
-	Thu, 24 Apr 2025 14:25:29 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E0FB0300642; Thu, 24 Apr 2025 16:25:28 +0200 (CEST)
-Date: Thu, 24 Apr 2025 16:25:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: kan.liang@linux.intel.com
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	irogers@google.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 0/5] Several fixes for group flag and
- counters-snapshotting
-Message-ID: <20250424142528.GD1166@noisy.programming.kicks-ass.net>
-References: <20250424134718.311934-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=manguebit.com header.i=@manguebit.com header.b="LAVTvL+j"
+Message-ID: <e0b7f4902af6c758b5cdb7c2b7892b43@manguebit.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
+	s=dkim; t=1745504731;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qihysb7F6c8dcZhnGNX5LEKZVBHLri51T3P5qA9Nth0=;
+	b=LAVTvL+jyTLTPukfCmxmlAI8/KfahgZ8acBCNWtG4W4vhzl2tzxe960o92gZA+UHXfG/yM
+	PkJNUvgy2LKhSb9Mn2TBhJUNMp7yWXAkI4NBsnNRwtp2Ru+QsiP01TkmRMcbpnxOtdyHJG
+	n4b5xfKG+d1ZSrA9y8gcZUvXsQ1pTPrb2ntNQu4gEafcbYq8wb/wVYTuO6STUgsGpKkjgK
+	A92DW93VNKQxlFlJxkjpULpOcGAkJwDpgmr9wohl+/3FpDNzMczteV2y421ThuyuGr7uLx
+	0EpX3r2ojdnXvtdtjezNeTd73Qv3IgQ7G3Nw9wgUUH1zESStEXu4G2nCWYqRkw==
+From: Paulo Alcantara <pc@manguebit.com>
+To: Nicolas Baranger <nicolas.baranger@3xo.fr>
+Cc: Christoph Hellwig <hch@infradead.org>, hch@lst.de, David Howells
+ <dhowells@redhat.com>, netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Steve French
+ <smfrench@gmail.com>, Jeff Layton <jlayton@kernel.org>, Christian Brauner
+ <brauner@kernel.org>
+Subject: Re: [netfs/cifs - Linux 6.14] loop on file cat + file copy when
+ files are on CIFS share
+In-Reply-To: <a25811b8d4f245173f672bdfa8f81506@3xo.fr>
+References: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
+ <35940e6c0ed86fd94468e175061faeac@3xo.fr> <Z-Z95ePf3KQZ2MnB@infradead.org>
+ <48685a06c2608b182df3b7a767520c1d@3xo.fr>
+ <F89FD4A3-FE54-4DB2-BA08-3BCC8843C60E@manguebit.com>
+ <5087f9cb3dc1487423de34725352f57c@3xo.fr>
+ <f12973bcf533a40ca7d7ed78846a0a10@manguebit.com>
+ <e63e7c7ec32e3014eb758fd6f8679f93@3xo.fr>
+ <53697288e2891aea51061c54a2e42595@manguebit.com>
+ <bb5f1ed84df1686aebdba5d60ab0e162@3xo.fr>
+ <af401afc7e32d9c0eeb6b36da70d2488@3xo.fr>
+ <a25811b8d4f245173f672bdfa8f81506@3xo.fr>
+Date: Thu, 24 Apr 2025 11:25:26 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250424134718.311934-1-kan.liang@linux.intel.com>
+Content-Type: text/plain
 
-On Thu, Apr 24, 2025 at 06:47:13AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> The patch series includes several fixes for the new Intel features.
-> 
-> The first 4 patches are to fix the group flag issue which impacts the
-> branch counters, PEBS counters-snapshotting and ACR.
-> The V1 can be found at
-> https://lore.kernel.org/lkml/20250423221015.268949-1-kan.liang@linux.intel.com/
-> 
-> The last patch is to fix an issue of counters-snapshotting.
-> The V1 can be found at
-> https://lore.kernel.org/lkml/20250204210514.4089680-1-kan.liang@linux.intel.com/
-> 
-> Kan Liang (5):
->   perf/x86/intel: Only check the group flag for X86 leader
->   perf/x86/intel: Check the X86 leader for pebs_counter_event_group
->   perf/x86/intel: Check the X86 leader for ACR group
->   perf/x86: Optimize the is_x86_event
->   perf/x86/intel/ds: Fix counter backwards of non-precise events
->     counters-snapshotting
+Hi Nicolas,
 
-It didn't apply cleanly, but I stomped on it and pushed out new
-perf/urgent and perf/core branches that contain these patches. Hopefully
-I didn't mess it up ;-)
+Thanks for the very detailed information and testing.
+
+Nicolas Baranger <nicolas.baranger@3xo.fr> writes:
+
+> In fact, I think there is somethings wrong:
+>
+> After a remount, I sucessfully get the good buffers size values in 
+> /proc/mounts (those defined in /etc/fstab).
+>
+> grep cifs /proc/mounts
+> //10.0.10.100/FBX24T /mnt/fbx/FBX-24T cifs 
+> rw,nosuid,nodev,noexec,relatime,vers=3.1.1,cache=none,upcall_target=app,username=*****,domain=*****,uid=0,noforceuid,gid=0,noforcegid,addr=10.0.10.100,file_mode=0666,dir_mode=0755,iocharset=utf8,soft,nounix,serverino,mapposix,mfsymlinks,reparse=nfs,rsize=4194304,wsize=4194304,bsize=16777216,retrans=1,echo_interval=60,actimeo=1,closetimeo=1 
+> 0 0
+
+Interesting.  When you do 'mount -o remount ...' but don't pass rsize=
+and wsize=, the client is suppposed to reuse the existing values of
+rsize and wsize set in the current superblock.  The above values of
+rsize, wsize and bsize are also the default ones in case you don't pass
+them at all.
+
+I'll look into that when time allows it.
+
+> But here is what I constat: a 'dd' with a block size smaller than 65536 
+> is working fine:
+> LANG=en_US.UTF-8
+>
+> dd if=/dev/urandom of=/mnt/fbx/FBX-24T/dd.test3 bs=65536 status=progress 
+> conv=notrunc oflag=direct count=128
+> 128+0 records in
+> 128+0 records out
+> 8388608 bytes (8.4 MB, 8.0 MiB) copied, 0.100398 s, 83.6 MB/s
+>
+>
+>
+> But a 'dd' with a block size bigger than 65536 is not working:
+> LANG=en_US.UTF-8
+>
+> dd if=/dev/urandom of=/mnt/fbx/FBX-24T/dd.test3 bs=65537 status=progress 
+> conv=notrunc oflag=direct count=128
+> dd: error writing '/mnt/fbx/FBX-24T/dd.test3'
+> dd: closing output file '/mnt/fbx/FBX-24T/dd.test3': Invalid argument
+>
+> And kernel report:
+> Apr 24 10:01:37 14RV-SERVER.14rv.lan kernel: CIFS: VFS: \\10.0.10.100 
+> Error -32 sending data on socket to server
+
+This seems related to unaligned DIO reads and writes.  With O_DIRECT,
+the client will set FILE_NO_INTERMEDIATE_BUFFERING when opening the
+file, telling the server to not do any buffering when reading from or
+writing to the file.  Some servers will fail the read or write request
+if the file offset or length isn't a multiple of block size, where the
+block size is >= 512 && <= PAGE_SIZE, as specified in MS-FSA 2.1.5.[34].
+
+Since you're passing bs= with a value that is not multiple of block
+size, then the server is failing the request with
+STATUS_INVALID_PARAMETER as specified in MS-FSA.
+
+I've tested it against Windows Server 2022 and it seems to enforce the
+alignment only for DIO reads.  While samba doesn't enforce it at all.
+
+win2k22:
+
+$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=65536
+$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=65537
+dd: error reading '/mnt/1/foo': Invalid argument
+$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=$((65536+512))
+
+$ xfs_io -d -f -c "pread 0 4096" /mnt/1/foo
+read 4096/4096 bytes at offset 0
+4 KiB, 1 ops; 0.0009 sec (4.260 MiB/sec and 1090.5125 ops/sec)
+$ xfs_io -d -f -c "pread 1 4096" /mnt/1/foo
+pread: Invalid argument
+
+samba:
+
+$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=65536
+$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=65537
+$ dd if=/mnt/1/foo of=/dev/null status=none iflag=direct count=128 bs=$((65536+512))
+
+$ xfs_io -d -f -c "pread 0 4096" /mnt/1/foo
+read 4096/4096 bytes at offset 0
+4 KiB, 1 ops; 0.0071 sec (557.880 KiB/sec and 139.4700 ops/sec)
+$ xfs_io -d -f -c "pread 1 4096" /mnt/1/foo
+read 4096/4096 bytes at offset 1
+4 KiB, 1 ops; 0.0010 sec (3.864 MiB/sec and 989.1197 ops/sec)
+
+Note that the netfslib fix is for short DIO reads, so this bug is
+related to unaligned DIO reads and writes and need to be fixed in the
+client.  I'll let you know when I have patches for that.
