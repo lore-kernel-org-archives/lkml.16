@@ -1,128 +1,81 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C3B327BF6F
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:58:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A5D27BF8A
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745499520; cv=none; b=iXyfqfgnXKvZZrDCwbje8KsnXvvqzkkz4nfF/CiC9piL1TqKDu+jBgr9OscQHFdyZYOeU5rHnOXNnVV3r/kCu1Lo6hKoI3yRwwLpkVWTmOzSOj1WRnLJqplpLUCI2bbmoZZlLx7KMm1dreTol/7Z1fc2U0m75zt+338vuFmhnoI=
+	t=1745499547; cv=none; b=VJjd8NdlLNWAEyg+htTQJDChcZxsINQBz1h1Dd61l0Bp4WQNniUR7vtuzSV9kBv0nM0D3m0AgYXJi51aMIyzA/2yl0IU5poUCXHABYcw78PeZSBAQzFoVXzwqWLsSoE1u1AhlWK0eDb/vq6z6QzK0WVJzi4Rdf1dhENuHl1Lcq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745499520; c=relaxed/simple;
-	bh=9Pck/qOkeoVbLpDjN5c3w8O28U47VhX4gvzlwejs/vw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nOl36/pz/hk4TpP8W6IXgQhPN0hf8hxqnm9D5VgCwlSS6R4mlWfAS1mGC9KWC0rEQsle4fdmUNTX04qxBb3YpdwtTZUjnzu3XIqTqDTbDQseUMjTCy9DmEayHn3nSYr+F9kYT4gBDZNPk1ficaFw4wCkL+9KZ8CivaeJ0yCeWZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83EDA1063;
-	Thu, 24 Apr 2025 05:58:32 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8AC73F66E;
-	Thu, 24 Apr 2025 05:58:36 -0700 (PDT)
-Message-ID: <841c417b-c61a-4c3a-a9ed-236634d78331@arm.com>
-Date: Thu, 24 Apr 2025 13:58:34 +0100
+	s=arc-20240116; t=1745499547; c=relaxed/simple;
+	bh=tJdKg0AM7bnavIX4fjpcO9tgoXWYFgs3Zwbw1mNNCAM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N4hMp2u9fTxypqVEvaSV4s9z+/pmI4CPhVm+eHprvQIBtpHCXEGh3FfFl+IC0PZ7AKnBe78tx06t34eEn/dGipWwSHpBRo7OaWiYoj58hIMXkpapcdqXJoR+mczuu5Bn4q2JcWOCWLJ24jUiEp/ge7lA6oTnle3QBm+sIw7S1NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A859A1F445;
+	Thu, 24 Apr 2025 12:59:03 +0000 (UTC)
+Authentication-Results: smtp-out2.suse.de;
+	none
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8BEB2139D0;
+	Thu, 24 Apr 2025 12:59:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 65bLH5c1Cmg+VgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 24 Apr 2025 12:59:03 +0000
+Date: Thu, 24 Apr 2025 14:58:58 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 10/14] nvmet-fcloop: don't wait for lport cleanup
+Message-ID: <11c9e291-b7dd-453c-82d8-09d068b6b69c@flourine.local>
+References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
+ <20250423-nvmet-fcloop-v5-10-3d7f968728a5@kernel.org>
+ <05ac9a81-66a9-4bbc-92e0-6ff47a6dc7ad@suse.de>
+ <c1f207f3-6657-4803-90df-a059353ba6da@flourine.local>
+ <8a3093b6-d5b2-496d-828a-0667abbf1670@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] swiotlb: Make IO_TLB_SEGSIZE Configurable
-To: "Li, Hua Qian" <HuaQian.Li@siemens.com>,
- "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>
-Cc: "Kiszka, Jan" <jan.kiszka@siemens.com>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "Su, Bao Cheng" <baocheng.su@siemens.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CGME20250422063734eucas1p2561ad6f847f6824c9c79a842fa458e41@eucas1p2.samsung.com>
- <20250422063719.121636-1-huaqian.li@siemens.com>
- <fc2e30eb-2ec7-4795-a2a4-077b7fde7fd5@samsung.com>
- <dc6f299b18f7870c7bffecca25cee9e436a32c7b.camel@siemens.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <dc6f299b18f7870c7bffecca25cee9e436a32c7b.camel@siemens.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8a3093b6-d5b2-496d-828a-0667abbf1670@suse.de>
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.00 / 50.00];
+	REPLY(-4.00)[]
+X-Spam-Score: -4.00
+X-Spam-Flag: NO
+X-Rspamd-Queue-Id: A859A1F445
+X-Rspamd-Pre-Result: action=no action;
+	module=replies;
+	Message is reply to one we originated
+X-Rspamd-Action: no action
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
 
-On 24/04/2025 6:12 am, Li, Hua Qian wrote:
-> On Tue, 2025-04-22 at 15:36 +0200, Marek Szyprowski wrote:
->> On 22.04.2025 08:37, huaqian.li@siemens.com wrote:
->>> From: Li Hua Qian <huaqian.li@siemens.com>
->>>
->>> This patchset introduces a change to make the IO_TLB_SEGSIZE
->>> parameter
->>> configurable via a new kernel configuration option
->>> (CONFIG_SWIOTLB_SEGSIZE).
->>>
->>> In certain applications, the default value of IO_TLB_SEGSIZE (128)
->>> may
->>> not be sufficient for memory allocation, leading to runtime errors.
->>> By
->>> making this parameter configurable, users can adjust the segment
->>> size to
->>> better suit their specific use cases, improving flexibility and
->>> system
->>> stability.
->>
->> Could You elaborate a bit more what are those certain applications
->> that
->> require increasing IO_TLB_SEGSIZE? I'm not against it, but such
->> change
->> should be well justified and described, while the above cover-letter
->> doesn't provide anything more than is written in the patch
->> description.
-> Thank you for your feedback, Marek.
-> 
-> To provide more context, one specific application that requires
-> increasing IO_TLB_SEGSIZE is the Hailo 8 PCIe AI card. This card uses
-> dma_alloc_coherent to allocate descriptor lists, as seen in the Hailo
-> driver implementation here:
-> https://github.com/hailo-ai/hailort-drivers/blob/7161f9ee5918029bd4497f590003c2f87ec32507/linux/vdma/memory.c#L322
-> The maximum size (nslots) for these allocations can reach 160, which
-> exceeds the current default value of IO_TLB_SEGSIZE (128).
-> 
-> Since IO_TLB_SEGSIZE is defined as a constant in the kernel:
-> 
-> `#define IO_TLB_SEGSIZE 128`
-> 
-> 
-> this limitation causes swiotlb_search_pool_area,
-> https://github.com/torvalds/linux/blame/v6.15-rc2/kernel/dma/swiotlb.c#L1085,
-> (or swiotlb_do_find_slots in older kernels) to fail when attempting to
-> allocate contiguous physical memory (CMA). This results in runtime
-> errors and prevents the Hailo 8 card from functioning correctly in
-> certain configurations.
+On Thu, Apr 24, 2025 at 02:10:20PM +0200, Hannes Reinecke wrote:
+> My point was more: you call kmem_cache_destroy() unconditionally upon
+> exit. But the boilerplate says that you have to free all allocations
+> from the kmem_cache before that call.
+> Yet the exit function doesn't do that.
+> Question is: what are the guarantees that the cache is empty upon exit?
 
-Hmm, dma_alloc_coherent() should really not be trying to allocate from 
-SWIOTLB in the first place - how is that happening?
-
-If you're using restricted DMA for a device which wants significant 
-coherent allocations, then it wants to have it's own shared-dma-pool for 
-those *as well* as the restricted-dma-pool for bouncing streaming DMA.
-
-Thanks,
-Robin.
-
-> By making IO_TLB_SEGSIZE configurable via a kernel configuration option
-> (CONFIG_SWIOTLB_SEGSIZE), users can adjust the segment size to
-> accommodate such use cases. This change improves flexibility and
-> ensures that systems can be tailored to meet the requirements of
-> specific hardware, such as the Hailo 8 PCIe AI card, without requiring
-> kernel source modifications.
-> 
-> I hope this example clarifies the need for this change. Please let me
-> know if further details or additional examples are required.
-> 
-> Best Regards,
-> Li Hua Qian
->>
->>
->>> Li Hua Qian (1):
->>>     swiotlb: Make IO_TLB_SEGSIZE configurable
->>>
->>>    include/linux/swiotlb.h | 2 +-
->>>    kernel/dma/Kconfig      | 7 +++++++
->>>    2 files changed, 8 insertions(+), 1 deletion(-)
->>>
->> Best regards
-> 
+The first loop will only terminate when all request have been freed,
+thus it is safe to destroy the cache afterwards.
