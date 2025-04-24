@@ -1,117 +1,120 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8396A18FC86
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:39:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D9B1714C0;
+	Thu, 24 Apr 2025 13:40:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745501981; cv=none; b=G7xTMAXznm+GYDSYuTjY6B8uNyVoDB8TiB7ORYTNAftjvc1E/8RvHbRt+U6i+DYPbtMbuTnayTmZSTAZh7aLjeSuer1qi0WmERsxWJgVd6beDQVaPlyTZsdtkklsNzO5mDCHe4neBJsARUI0E5JBy1o/4lSfTcNdbDG2DBJJnJU=
+	t=1745502013; cv=none; b=gqvGUy69TIyMJhDyEQ4LxpveR2ANj2oM1q5HB7d1aH7uYLgyfHrBCKnNS9Q1e+E4dofzIX1B/XGAJjILbPkAYsWHTWhOnrHjp6daq1SLK3S9lCAdl/o0+Pl337dR72Ouh22OaTg6JUf1kuCxuDWjjXAS9tzXL5MJUVuYEkcOtZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745501981; c=relaxed/simple;
-	bh=tup9ty6E85TqqyX4LCy5mGsqmAz3JKnWrm9yplFxREs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QsKF/P0n78fkFvslJTpaDdOcTf3dSnaOA/LPl6bJneg8/BSlANxty/zNGVx0pdaaUKlBCd0A2N9tWzS4dYuOLPP+jciP1C0ewU+wG677YfxVxFTDuTstGXKQTfP7gWnj2LfqlddWea9TkSdGEB7nZNNXzYHCjWME7gYJCs5Eq2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hefring.com; spf=none smtp.mailfrom=hefring.com; dkim=pass (2048-bit key) header.d=hefring-com.20230601.gappssmtp.com header.i=@hefring-com.20230601.gappssmtp.com header.b=RkcTqaFL; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=hefring.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=hefring.com
+	s=arc-20240116; t=1745502013; c=relaxed/simple;
+	bh=WNVh7tygfoiFgZaCQgWgFAS/qPKxHBo6D2riBfing+s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KeD+0hmF63cp6ygFYt4UpPSdBoXtTIikNZ2biWRgzAG3lyjx0VqURY5mqJ8Ps1wWlJJSt5L46tOaYmhPSQohv8b1WwfE7l6fG1dnbMjSn2aXwY4xOpSKohiHlqFJ0Y1AjTa9E3jPVp4ALLUkbhyVgJCtcbZqBhvCSArrXZCoxBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=dma4GDPQ; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hefring-com.20230601.gappssmtp.com header.i=@hefring-com.20230601.gappssmtp.com header.b="RkcTqaFL"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c59e7039eeso151106685a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:39:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hefring-com.20230601.gappssmtp.com; s=20230601; t=1745501978; x=1746106778; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YWMfkI1WRY3cYf9FnHsr+03ZRcmNsaavRSb0tETeg20=;
-        b=RkcTqaFLlKfIMClVvKHUFRqYE1s6UAF1PYLqIRcpssd0Q0dPvphfiK2UinAGdEQ5kj
-         iVtGK29SfsS1M7J+Yyje5dYe7Oz0KhImyfnCIAyREkY+90AqQPjDwNLdSNWPyTIRiN17
-         xiKmrJCDGwJmpvr43edyppNT0HC03S9Uvif3T8nLgzKKxua7PCV2uGCfLwGSlBw+zbaC
-         ZaRncUTqGAIeFkZdSbpy1Tj8H9JcNGYAuRRRho1jcuDofkeOy2CgpepaYDncUmE/AvIY
-         Uum1mdEMvX5c1p7ZlVzNvsO/2cmElIxsOsV9fOeuWOsso3945xE16uY4TEytIzM3dfWi
-         7C2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745501978; x=1746106778;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YWMfkI1WRY3cYf9FnHsr+03ZRcmNsaavRSb0tETeg20=;
-        b=K8k20MeYJ0CTCdd8UBbLSXIm+RIphtMiMbqstntXpd4GFKfj0pk6UXBwVdNKansqTp
-         Q25UkExE1bV3fwMh/WbTnk3IK1pIOyJqZ37EM74FPmpSbk/X0fCJwnzcZv2gDn0bPR27
-         0eZASoOlad04rnPtFrYL8fY5ZIlBlmxhMutUwRuE+D9I3wpfwG7tNsabAv6Iddp34VhI
-         SvALgkYbRt4Xyj3c9B7bn/evKUil1mD1U3EeF23ODCrkTS46bosVEOB2P6OtA4jSzlfB
-         PUrQM9VQyCiLR0YNBpmhhyjqCGMIU+5RhwxWANdiByViSa+Opni8X6Pqpc2mkuS31Db7
-         +rKA==
-X-Forwarded-Encrypted: i=1; AJvYcCW04t+UErjEaNsmQfcAcCBjXtWd20yVrhRA5+hrmZrN7ZCDsTbL9MnldRcMXr5n7HwSuzxuc5XTzj7r3hc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKl3MVCtYUIXSM2s771X16+4IcYejy/4R5qxWbFpELfw7mgV+c
-	tvR5gxJO2NQGyoO+w358FenWMRhxNZgMnLYFKWnZOtK/Llo/qKucduV4SgZ6WxA=
-X-Gm-Gg: ASbGnctBL/vzGgc/LJgeHloeQmXn0f357tWTC9YGa9GDm1YIknY/Ppr0WK0A5Uk+drx
-	EqSpdiVu+nlCgONNcUZrehgniDziCfg7i/qxt6qqf63dkMsgo3S4dd7F2rvQaJN/qxJcC1yF+kA
-	QRlfn+o2RzZUEZKAwkukDOyYL8CvCP7MRuZqbojRHDeqlrmVAmJXHqIMS9eZq44aKEZzRfjur6V
-	i4IO0UvZ1sWJJQFfWjq2sSLH45uZU5ASCWI/Ctjp4wDt3IQ68n50RX4DxjW7VE2p72f/K2xBP0v
-	DTdTbUqqXr9ydjrZeTak+A+afXJmOv6we1K4Jd40JmYwLYLFynpgM2o8TQ==
-X-Google-Smtp-Source: AGHT+IGBbcE518ngciGGF0+eLjyFAC+mlK6EuUeB14SDh6Nm7kNgxryaWfeo2bDtyypKwASpBUSZdQ==
-X-Received: by 2002:a05:620a:1a07:b0:7c5:4c6d:7fa9 with SMTP id af79cd13be357-7c956f4aadcmr432561485a.49.1745501978313;
-        Thu, 24 Apr 2025 06:39:38 -0700 (PDT)
-Received: from dell-precision-5540 ([50.212.55.90])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c9589cc670sm89847585a.0.2025.04.24.06.39.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 06:39:37 -0700 (PDT)
-Date: Thu, 24 Apr 2025 09:39:35 -0400
-From: Ben Wolsieffer <ben.wolsieffer@hefring.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Christian Schrrefl <chrisi.schrefl@gmail.com>,
-	Russell King <rmk+kernel@armlinux.org.uk>,
-	Rudraksha Gupta <guptarud@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>, Ard Biesheuvel <ardb@kernel.org>,
-	anders.roxell@linaro.org, arnd@arndb.de, dan.carpenter@linaro.org,
-	laura.nao@collabora.com, linux-kernel@vger.kernel.org,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	rust-for-linux@vger.kernel.org, torvalds@linux-foundation.org,
-	Nick Clifton <nickc@redhat.com>,
-	Richard Earnshaw <richard.earnshaw@arm.com>,
-	Ramana Radhakrishnan <ramanara@nvidia.com>
-Subject: Re: Build: arm rustgcc unknown argument '-mno-fdpic'
-Message-ID: <aAo_F_UP1Gd4jHlZ@dell-precision-5540>
-References: <CA+G9fYvOanQBYXKSg7C6EU30k8sTRC0JRPJXYu7wWK51w38QUQ@mail.gmail.com>
- <20250407183716.796891-1-ojeda@kernel.org>
- <CA+G9fYt4otQK4pHv8pJBW9e28yHSGCDncKquwuJiJ_1ou0pq0w@mail.gmail.com>
- <CANiq72napRCGp3Z-xZJaA9zcgREe3Xy5efW8VW=NEZ13DAy+Xw@mail.gmail.com>
- <aAKrq2InExQk7f_k@dell-precision-5540>
- <CANiq72nPtr1FE_SBU_+wHVptfjnoSGaxjP4LWMzVbOF0M6LvnA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="dma4GDPQ"
+Received: from pps.filterd (m0431383.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O9tPm3013233;
+	Thu, 24 Apr 2025 06:39:50 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=CU0d/r5e/U6sSuIGXRTfQaz
+	KLqe5aduPx61hXTT7Ohs=; b=dma4GDPQnvLLgunjRHJvPfycf4pXdk9W8x3odmM
+	ubq1Fvy9lLO2ex2HKTHq/QmWvhkJBrM+lWjjDj9HIWrxZkxxHlkpUAElNq5SQFBW
+	CRlKjia5GIQetLu8SA2qxrqvSUX6FkSZwgYN0YBPBiWP42GxKZDbs+BxrEiPWayt
+	BKzE+ro+Euo+ryPLdKhvHZVc8mgHeg6mNVBTZkB4AgdkxT5fhitpRMLeBMHIvy/1
+	bGkz3sYOF66YwDV+JgKP4qGYLDfPwGOLq0YptdatrL8lReUb4djRSO8IhPhh9Ad+
+	Id7pguEXBpY+XFT+yZ/sdby5NOGjm22+bUAtrE+N33WLqTQ==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 466jk34p9f-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 06:39:50 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Thu, 24 Apr 2025 06:39:49 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Thu, 24 Apr 2025 06:39:49 -0700
+Received: from sburla-PowerEdge-T630.sclab.marvell.com (unknown [10.106.27.217])
+	by maili.marvell.com (Postfix) with ESMTP id 3EB3C3F7062;
+	Thu, 24 Apr 2025 06:39:49 -0700 (PDT)
+From: Sathesh B Edara <sedara@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <hgani@marvell.com>, <vimleshk@marvell.com>,
+        Veerasenareddy Burru
+	<vburru@marvell.com>,
+        Sathesh Edara <sedara@marvell.com>,
+        Shinas Rasheed
+	<srasheed@marvell.com>,
+        Satananda Burla <sburla@marvell.com>,
+        Andrew Lunn
+	<andrew+netdev@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric
+ Dumazet" <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+	<pabeni@redhat.com>
+Subject: [PATCH net v4] octeon_ep_vf: Resolve netdevice usage count issue
+Date: Thu, 24 Apr 2025 06:39:44 -0700
+Message-ID: <20250424133944.28128-1-sedara@marvell.com>
+X-Mailer: git-send-email 2.36.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72nPtr1FE_SBU_+wHVptfjnoSGaxjP4LWMzVbOF0M6LvnA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA5MiBTYWx0ZWRfXzk+oDn7YhG+s rpFC4rbhkdC+BrN26/XidEhVof13JYdztNqhAOblWbStET8AW1CeXE1dcv6pthCrbdX1TW4BGgz 71iRlW1FPXQ10vvkQukMr8O7hiB1MP2UqvNubv84cIPterbBdrc7KDVHtVA9eGpbaNqdvvScQHq
+ 0JMYqs0fwb96FF6t7EiKCCBaSdMwsxgVl+GM6JBK8Cnpn0m2uaTcohCvs5g1FMho+zCeLKgsA/2 Z+e1UyYUjRIVSSDjlNgV3lGJNPOU8mxrOsmPBU8MRjobFWBMALU6hm3JmwG+ZQ6vDJaByyk6C++ D1NQUcu8SHn0+DntcRa4raOJ+O9VS+a3y5VnCmEtR1P/wy1A1XjAKT7RpwExTk9FMngn8poYyyv
+ dhJ2NCcoaYX/pguqexFAkmNaH0Gbt6Z/g/kmdHUBTWnO2o0UpE4U8b/vuTd84e0fsnkD5AGD
+X-Proofpoint-GUID: RhaOVkOi8xXBppFtaO4kQRGTV8EeHCVa
+X-Proofpoint-ORIG-GUID: RhaOVkOi8xXBppFtaO4kQRGTV8EeHCVa
+X-Authority-Analysis: v=2.4 cv=M89NKzws c=1 sm=1 tr=0 ts=680a3f26 cx=c_pps a=rEv8fa4AjpPjGxpoe8rlIQ==:117 a=rEv8fa4AjpPjGxpoe8rlIQ==:17 a=XR8D0OoHHMoA:10 a=M5GUcnROAAAA:8 a=KvRRDgbPbzo2wF1RERMA:9 a=OBjm3rFKGHvpk9ecZwUJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
 
-On Sat, Apr 19, 2025 at 12:30:01AM +0200, Miguel Ojeda wrote:
-> Thanks a lot for the details!
-> 
-> To clarify, this is for GCC kernel builds: skipping the flag is done
-> for libclang under GCC builds (because `bindgen` always uses libclang,
-> and `bindgen` is used by Rust to understand C headers).
-> 
-> So GCC will get the flag for the C side of the kernel builds, but
-> libclang will not get the flag because Clang doesn't recognize it.
-> Thus, if Clang vs. GCC differ in how they compute the layout of some
-> type, then we would have an issue "mixing" them.
-> 
-> As you can imagine, GCC kernel builds with Rust enabled are a hack due
-> to that, and it would be ideal to get `bindgen` to somehow be able to
-> understand C headers as GCC does:
-> 
->     https://github.com/rust-lang/rust-bindgen/issues/1949
+The netdevice usage count increases during transmit queue timeouts
+because netdev_hold is called in ndo_tx_timeout, scheduling a task
+to reinitialize the card. Although netdev_put is called at the end
+of the scheduled work, rtnl_unlock checks the reference count during
+cleanup. This could cause issues if transmit timeout is called on
+multiple queues.
 
--mno-fdpic disables a GCC feature that we don't want for kernel builds.
-clang does not support this feature, so it always behaves as though
--mno-fdpic is passed. Therefore, it should be fine to mix the two, at
-least as far as FDPIC is concerned.
+Fixes: cb7dd712189f ("octeon_ep_vf: Add driver framework and device initialization")
+Signed-off-by: Sathesh B Edara <sedara@marvell.com>
+---
+Changes:
+V4:
+  - use schedule_work() return value to put back netdevice usage count
+V3:
+  - Added more description to commit message
+V2:
+  - Removed redundant call
 
-Ben
+ drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+index 18c922dd5fc6..ccb69bc5c952 100644
+--- a/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
++++ b/drivers/net/ethernet/marvell/octeon_ep_vf/octep_vf_main.c
+@@ -835,7 +835,9 @@ static void octep_vf_tx_timeout(struct net_device *netdev, unsigned int txqueue)
+ 	struct octep_vf_device *oct = netdev_priv(netdev);
+ 
+ 	netdev_hold(netdev, NULL, GFP_ATOMIC);
+-	schedule_work(&oct->tx_timeout_task);
++	if (!schedule_work(&oct->tx_timeout_task))
++		netdev_put(netdev, NULL);
++
+ }
+ 
+ static int octep_vf_set_mac(struct net_device *netdev, void *p)
+-- 
+2.36.0
 
