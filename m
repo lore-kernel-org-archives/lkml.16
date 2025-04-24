@@ -1,104 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A830D284673;
-	Thu, 24 Apr 2025 17:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F06928466C
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745515166; cv=none; b=dpsD2o0pgZKf5c7hQb4phxEQVCF3uAMgrzldcHlDYfyn1LJJOA/3Vc9JYS6JsiBEyC+NHPYUxbUuNB5AjwMFyQLtkidFDO+U6t97XiZQxv7BbqpbUDxZZ+ZIj6K44ToRGy+QJ2sMfcQhTLhq+t2Prb+y1yxvsvmAHhaNNh9R/Sw=
+	t=1745515191; cv=none; b=X6ElMfP5dqVcM5ifgi8lS+KcHlHCggn6WW3URLT8DpCpnO1CO8Yz5nmm7dML+jEx7dm1Lhs+5VTPFqkGfGj+pxJSyslaqE958OsU/zu2YUJUsQlnwdtmUqcnge1cYMsUPONdBU9OFKOoRO/Gjo7wf5HKewFCFojW0lCqMflhVfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745515166; c=relaxed/simple;
-	bh=ItVrLqgKGeOUFRj5iB6zphXpB+2yCMawqMR3Hb/E/W4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WVHahgbSQH2u/GuJCgEf/KDmg+lVklT97n1Ke1Iqv6E9ULGya4uH067rQGMml4kngs/dax1SKqv7RjXGw9DbLxB9VSp23Ns/lJYAEdoLa4ENQHSCEcI1xr3NRFF6DwA7NUA9pyQKiOP0wsTZBzFR8Pc5G93RLXU9SxhIwhhQzfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PySRH5SH; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745515191; c=relaxed/simple;
+	bh=JVBnOQ9xAjAhJk4tb6qYtQR9ClPu0ADEpQ8AVHwSdFA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BoPouCn5y+pk/Y9s/h5/j/u2SUHIRG997vqlgVMpKGoeFrquWggOx/LI39gXvew2Bn+TTmblzo+OWAhXeuCMXyR7Czn/nuHM/xeOzQ4Paqf0DhYNV9AhPbCNF0KzD8drAywqltrJMbsWv1+epBHckRJp+jObhR81piSigG4G/4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Aefb8nBV; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PySRH5SH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745515165; x=1777051165;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ItVrLqgKGeOUFRj5iB6zphXpB+2yCMawqMR3Hb/E/W4=;
-  b=PySRH5SHNMwvHqLmAq8SbnZhhOb2/TLcwEdG3JBn2WAUNz0YysPK6/hl
-   SEJFPYZZI0dh/cWU4iE0lM9WWRczu+ith4DMAaZIcA+pTs9/3fDR3l3eV
-   vEimlijzBItehTd3d6WjtmjTZl+LtmSQ1cnDLlECMnLHkokb5+qnZ1PDE
-   +NEZB3aHAL3cddnzG+xyjJ7IfVi5hJBXCxISmSSpm85YEWLes2y565IhP
-   1ik0J8hQ4WgMoehfmgxV0Gp6nFCTT8J53iUJTsb+9APD9/Ny869IIf1PF
-   X1k8LDCSFMINNUWGYUWhcIf+mT+Sd0AdJ2s9A/f01bRwbndjkDi+wcvDH
-   A==;
-X-CSE-ConnectionGUID: dP9ug0ItSQWIvOWG/GJvfA==
-X-CSE-MsgGUID: O+7ijbfhTWugORlGGAE9/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="57802002"
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="57802002"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 10:19:24 -0700
-X-CSE-ConnectionGUID: YQmfbH4uQ+a3WDn2GGMy8Q==
-X-CSE-MsgGUID: lO9HtIHSQPO+InIyvQlNWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="137526823"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 10:19:20 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1u80EG-000000003GS-3pQ2;
-	Thu, 24 Apr 2025 20:19:16 +0300
-Date: Thu, 24 Apr 2025 20:19:16 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Zhenhua Huang <quic_zhenhuah@quicinc.com>, cl@linux.com,
-	rientjes@google.com, roman.gushchin@linux.dev, harry.yoo@oracle.com,
-	surenb@google.com, pasha.tatashin@soleen.com,
-	akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, quic_tingweiz@quicinc.com,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm, slab: clean up slab->obj_exts always
-Message-ID: <aApylNvOXzNdYRaN@smile.fi.intel.com>
-References: <20250421075232.2165527-1-quic_zhenhuah@quicinc.com>
- <aApoFXmDE-k2KFFV@black.fi.intel.com>
- <da89dcd6-9369-4a87-9794-a0bf5772509b@suse.cz>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Aefb8nBV"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2240a960f9cso10063825ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745515189; x=1746119989; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zS7mLx09ed02H6nWW+H10gzfXoHG9CX0nooepJ8lNJM=;
+        b=Aefb8nBV+bSSsdkhke2zvufh+BxL2tRZ06B2a7n9wxUN3uUjrpJAN7PHeXWlOF1K+b
+         YBVPp79l3CAnSEH0AAMUOUVJTqGzE+whKg5vS+KHKtktqiCxuYExVaINcFdc19R1t6kn
+         tyQkDzVxO5RpVxZK43Lij1kwh5muEf4SVQ3Ocn5LJXvMUFgUgrnFbLJEzsPJu5gl6FIo
+         sZLDu0Ccsmy9RpUg5sldBvbRgOdIo/Tzvd29SbY1gIHw+GbZfpmNTfjVYzLtCmHoMtzE
+         yDuOzhb9qAoLFLOKdDNXMLUseQPV9lkzvjYkrmouByEGnJczG069Dr9TY4iqwTK5O81M
+         1dag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745515189; x=1746119989;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zS7mLx09ed02H6nWW+H10gzfXoHG9CX0nooepJ8lNJM=;
+        b=mAM4NW0dQmlckmUeYoq3m/X2I3eYBIrQzFYgYhctoCibJrE9DaDzaPRc+1ODP3DvVr
+         o3jltyEqt3Eb++tOxKiXdCXbmSU+O+W2DsJTYtdiObUpkj6g94nR3SriEzomYIj0qJKd
+         Z3K/viHMbIVMhXv0BOlOxvpKF9tIvliFU8a7RNzIdFJHTsVTaEg6b/f0gmkUFJra6O/V
+         XgXB1jHdjXIX6RisQ+rFq8Kc2a4giwpVBmHjpV+j3RoHn9+zssizWXs1nM+SgYiifGCK
+         EltZmVYB9mV460XcUdRjwgWFOjQImEs0MRy5x0NkOqk6uBSrstv/iG53XmG48RtbtERQ
+         U3gA==
+X-Forwarded-Encrypted: i=1; AJvYcCXonXSAAd/ql7LDJMNoPwySwq4c7NamFDFHoSQRZgb6YDgK0QvDEcAuWpUPT3wb3kmqnKec1azvBJiLacI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+eLj7vkMMWEnXxWqxx2rIQeB0HKD+II6vAaTEPDN6ikxhrYUs
+	bfys/RigSIxUIXW4wZ/kBIa5SODFU/yecXBZCgd32rnR/KsLRJf5G7l6bTVJn0uGUEYOSX0znUV
+	AMg==
+X-Google-Smtp-Source: AGHT+IFqfzV489qEdKPM2O9o/56y2nwngmw5PlV3K25e1femb8zjlBkssXel189bbTlNQyL8vwxpsQ5rK6A=
+X-Received: from pjh8.prod.google.com ([2002:a17:90b:3f88:b0:308:64ce:7274])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5830:b0:2ee:f677:aa14
+ with SMTP id 98e67ed59e1d1-309f552ae9dmr680098a91.13.1745515188862; Thu, 24
+ Apr 2025 10:19:48 -0700 (PDT)
+Date: Thu, 24 Apr 2025 10:19:47 -0700
+In-Reply-To: <DM8PR11MB5750D373790399E324B98A18E7852@DM8PR11MB5750.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <da89dcd6-9369-4a87-9794-a0bf5772509b@suse.cz>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Mime-Version: 1.0
+References: <20250415115213.291449-1-elena.reshetova@intel.com>
+ <20250415115213.291449-3-elena.reshetova@intel.com> <aAJn8tgubjT5t7DB@google.com>
+ <f5cb3c37589791b2004a100ca3ea3deb9e1ae708.camel@intel.com>
+ <aAefmNVRFc3me6QQ@google.com> <DM8PR11MB5750B37305B3B1FAE4F42D3AE7852@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <aAo_2MPGOkOciNuM@google.com> <DM8PR11MB5750D373790399E324B98A18E7852@DM8PR11MB5750.namprd11.prod.outlook.com>
+Message-ID: <aApgOqHvsYNd-yht@google.com>
+Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+From: Sean Christopherson <seanjc@google.com>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: "jarkko@kernel.org" <jarkko@kernel.org>, Kai Huang <kai.huang@intel.com>, 
+	Dave Hansen <dave.hansen@intel.com>, 
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, 
+	Vincent R Scarlata <vincent.r.scarlata@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	Vishal Annapurve <vannapurve@google.com>, Chong Cai <chongc@google.com>, 
+	Asit K Mallick <asit.k.mallick@intel.com>, Erdem Aktas <erdemaktas@google.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "bondarn@google.com" <bondarn@google.com>, 
+	"dionnaglaze@google.com" <dionnaglaze@google.com>, Scott Raynor <scott.raynor@intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Apr 24, 2025 at 06:48:46PM +0200, Vlastimil Babka wrote:
-> On 4/24/25 18:34, Andy Shevchenko wrote:
-> > On Mon, Apr 21, 2025 at 03:52:32PM +0800, Zhenhua Huang wrote:
-> >> When memory allocation profiling is disabled at runtime or due to an
-> >> error, shutdown_mem_profiling() is called: slab->obj_exts which
-> >> previously allocated remains.
-> >> It won't be cleared by unaccount_slab() because of
-> >> mem_alloc_profiling_enabled() not true. It's incorrect, slab->obj_exts
-> >> should always be cleaned up in unaccount_slab() to avoid following error:
-> >> 
-> >> [...]BUG: Bad page state in process...
-> >> ..
-> >> [...]page dumped because: page still charged to cgroup
-> > 
-> > Please, always compile test with `make W=1`. Since CONFIG_WERROR=y this
-> > effectively breaks the build with Clang.
+On Thu, Apr 24, 2025, Elena Reshetova wrote:
+> > On Thu, Apr 24, 2025, Elena Reshetova wrote:
+> > +void sgx_dec_usage_count(void)
+> > +{
+> > +	if (atomic_dec_return(&sgx_usage_count))
+> > +		return;
+> > +
+> > +	guard(mutex)(&sgx_svn_lock);
+> > +
+> > +	if (atomic_read(&sgx_usage_count))
+> > +		return;
+> > +
+> > +	sgx_update_svn();
 > 
-> I don't see why, nor observe any W=1 warnings, can you be more specific? Thanks.
+> Why do we want to try to execute this on release also?  I would think that
+> doing this in sgx_inc_usage_count() is enough.
 
-Specifics are in the fix I sent. Just a relatively new Clang and
-relatively recent enabling of warning for unused static inline functions
-in the C code. If you are insisting in seeing the exact kernel
-configuration I have, tell me where to send, I'll send it privately
-to avoid noise here.
+I assume an actual SVN update takes some amount of time?
 
--- 
-With Best Regards,
-Andy Shevchenko
+If that's correct, then doing the work upon destroying the last enclave is desirable,
+as it's less likely to introduce delay that negatively affects userspace.  Userspace
+generally won't care about a 10us delay when destroying a process, but a 10us delay
+to launch an enclave could be quite problematic, e.g. in the TDX use case where
+enclaves may be launched on-demand in response to a guest attestation request.
 
-
+If the update time is tiny, then I agree that hooking release would probably do
+more harm than good.
