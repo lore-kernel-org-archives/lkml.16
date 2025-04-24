@@ -1,353 +1,71 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C8051BC07B;
-	Thu, 24 Apr 2025 05:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC60E1953BB;
+	Thu, 24 Apr 2025 05:36:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745472945; cv=none; b=sghfPKnQ5p2AXnxN1COWjux6DqN5kPWJjh4SX2ZrbP5s77FNe7qNDXJoAo6BI4LcjT5iCCcKeS4lQcrryUS8ysxTosnIOZpWZSj1OvR0rhgBSZcK7ktiVIevkfyoC8j/5IE4ZTMuJ4Yg9Mx/qjYA055FVTZeOjxg5lEeYZFl9lo=
+	t=1745473017; cv=none; b=sY5LGCcv/FToUP7dzFJjJxkwO4G/YrjwkavzZJrav72UhPElBOfpLd0bm6o5RbtAClBeNICfmozsCN2x8rmQD6DR5bxS+qPaGwOpIUZYIHbHTvtNDuHPQIUWCvFnobTRvkT2paxaMHk8Jm0/fpc5K7PjIziRe9KL5kTxNpFzzVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745472945; c=relaxed/simple;
-	bh=a+Sk+u2/ShthrJDx2D3O3g1WPBS2bfGjsH8rJPj44bY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Iciq0BWbAhk4t22qw+2My4j5VFsTGiAxqzvdQBbuNjAM7tMJ0oOSlSq4RorKe56gyxNVj6rnAVWzEsxwC2N0zNv19mLxxBHQ1NdPUlIxUXiTyVteh6Wqq3PKOtSxD7c4x6dMElAO1w3P6OFy3Sjr37dO+Q2Vqdp7NNFQt9zVZ74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=JS/Tkula; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1745473017; c=relaxed/simple;
+	bh=ABXHbVwLQcuJdhcmr+KvmkNayeZgHJI6vYnH8pSInZk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=pDm94Pl9KV6Q9L/Ke3U6DpMKSW/VRzwqqG9cDmAPSlsoNZeUfaL/COIcu/bvMdqCsEI/vigwZobd3Eh6REiI+ZXv4slYmJ7vTagRo2XdoRJWilkt8ILQmHphgT37hHEA6pOh8uLjhmqAARUJfi7lGTjHRE0ZM/uSJjWrhV0Ym5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZdRnFw1U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JS/Tkula"
-Received: from namjain-Virtual-Machine.mshome.net (unknown [167.220.238.203])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E2B842113096;
-	Wed, 23 Apr 2025 22:35:34 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E2B842113096
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1745472938;
-	bh=qIw273KRGO+qizIecODnML6CHC1I1EaUpzmhD57+7E0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JS/TkulaFGDHujP9FQX5nG0URlrDdQptC0uPPXb1/JU1UGsMfkJS9NyXZPE2lTKxH
-	 z0ZzVsZkfQNGhTQ5v8bHPBIfRuZiHBLrBcdnM/uJ6XRy5yb9fG+wMcJepL6CUwQYDl
-	 YJz5nGAXrs0gDuAo10+Fz1FUdEY8XNAI1gFeBpr4=
-From: Naman Jain <namjain@linux.microsoft.com>
-To: "K . Y . Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Stephen Hemminger <stephen@networkplumber.org>
-Cc: linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@kernel.org,
-	Saurabh Sengar <ssengar@linux.microsoft.com>,
-	Michael Kelley <mhklinux@outlook.com>,
-	Naman Jain <namjain@linux.microsoft.com>
-Subject: [PATCH v6 1/2] uio_hv_generic: Fix sysfs creation path for ring buffer
-Date: Thu, 24 Apr 2025 11:05:23 +0530
-Message-Id: <20250424053524.1631-2-namjain@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250424053524.1631-1-namjain@linux.microsoft.com>
-References: <20250424053524.1631-1-namjain@linux.microsoft.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZdRnFw1U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADC2C4CEE3;
+	Thu, 24 Apr 2025 05:36:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745473017;
+	bh=ABXHbVwLQcuJdhcmr+KvmkNayeZgHJI6vYnH8pSInZk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=ZdRnFw1U4X+JULTVPLk0DVyljEjUvmcT2ItgugX7qm9xS9sPYIz4gJdOBr554eALd
+	 j+4av0+YaoM7oTlrpoMegQLy9/rsJQ4U3PW39VeCkAMYOZoW5Kg1ZGMLX7msb9Q7YX
+	 8/ObCYsYaqMh5nKJTo4td1HqftSsJV8Sv5IFAKS938ZZ3y3JTMu/l0U4xUcYu2XbEF
+	 AFgucCU2c3TN+dh6brkmkxyyw/lA57iw1f9DeTHn3iC8nKJyyF5EZN+9RDJyD0Dw8L
+	 4piHM2rI4/0f9qKv7NGA4SzL7n3GCo0XEvvBj0rzBR2mXP5SGh7lccD3ilyX2rgHPS
+	 9O+OEWxGfGL+w==
+From: Vinod Koul <vkoul@kernel.org>
+To: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+ manivannan.sadhasivam@linaro.org, miquel.raynal@bootlin.com, richard@nod.at, 
+ vigneshr@ti.com, andersson@kernel.org, konradybcio@kernel.org, 
+ agross@kernel.org, Kaushal Kumar <quic_kaushalk@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-mtd@lists.infradead.org
+In-Reply-To: <20250423063054.28795-1-quic_kaushalk@quicinc.com>
+References: <20250423063054.28795-1-quic_kaushalk@quicinc.com>
+Subject: Re: (subset) [PATCH v3 0/5] Enable QPIC BAM and QPIC NAND support
+ for SDX75
+Message-Id: <174547301233.316124.15937980058360184263.b4-ty@kernel.org>
+Date: Thu, 24 Apr 2025 11:06:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On regular bootup, devices get registered to VMBus first, so when
-uio_hv_generic driver for a particular device type is probed,
-the device is already initialized and added, so sysfs creation in
-hv_uio_probe() works fine. However, when the device is removed
-and brought back, the channel gets rescinded and the device again gets
-registered to VMBus. However this time, the uio_hv_generic driver is
-already registered to probe for that device and in this case sysfs
-creation is tried before the device's kobject gets initialized
-completely.
 
-Fix this by moving the core logic of sysfs creation of ring buffer,
-from uio_hv_generic to HyperV's VMBus driver, where the rest of the
-sysfs attributes for the channels are defined. While doing that, make
-use of attribute groups and macros, instead of creating sysfs
-directly, to ensure better error handling and code flow.
+On Wed, 23 Apr 2025 12:00:49 +0530, Kaushal Kumar wrote:
+> This series adds and enables devicetree nodes for QPIC BAM and QPIC NAND
+> for Qualcomm SDX75 platform.
+> 
+> This patch series depends on the below patches:
+> https://lore.kernel.org/linux-spi/20250410100019.2872271-1-quic_mdalam@quicinc.com/
+> 
 
-Problematic path:
-vmbus_process_offer (A new offer comes for the VMBus device)
-  vmbus_add_channel_work
-    vmbus_device_register
-      |-> device_register
-      |     |...
-      |     |-> hv_uio_probe
-      |           |...
-      |           |-> sysfs_create_bin_file (leads to a warning as
-      |                 the primary channel's kobject, which is used to
-      |                 create the sysfs file, is not yet initialized)
-      |-> kset_create_and_add
-      |-> vmbus_add_channel_kobj (initialization of the primary
-                                  channel's kobject happens later)
+Applied, thanks!
 
-Above code flow is sequential and the warning is always reproducible in
-this path.
+[2/5] dt-bindings: dma: qcom,bam: Document dma-coherent property
+      commit: 5965fd614b18e77c56cfefbd2d747b6b1edf1497
 
-Fixes: 9ab877a6ccf8 ("uio_hv_generic: make ring buffer attribute for primary channel")
-Cc: stable@kernel.org
-Suggested-by: Saurabh Sengar <ssengar@linux.microsoft.com>
-Suggested-by: Michael Kelley <mhklinux@outlook.com>
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
-Tested-by: Michael Kelley <mhklinux@outlook.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
-Signed-off-by: Naman Jain <namjain@linux.microsoft.com>
----
- drivers/hv/hyperv_vmbus.h    |   6 +++
- drivers/hv/vmbus_drv.c       | 100 ++++++++++++++++++++++++++++++++++-
- drivers/uio/uio_hv_generic.c |  39 ++++++--------
- include/linux/hyperv.h       |   6 +++
- 4 files changed, 128 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 29780f3a7478..0b450e53161e 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -477,4 +477,10 @@ static inline int hv_debug_add_dev_dir(struct hv_device *dev)
- 
- #endif /* CONFIG_HYPERV_TESTING */
- 
-+/* Create and remove sysfs entry for memory mapped ring buffers for a channel */
-+int hv_create_ring_sysfs(struct vmbus_channel *channel,
-+			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
-+						    struct vm_area_struct *vma));
-+int hv_remove_ring_sysfs(struct vmbus_channel *channel);
-+
- #endif /* _HYPERV_VMBUS_H */
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 8d3cff42bdbb..e2827079da89 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1802,6 +1802,27 @@ static ssize_t subchannel_id_show(struct vmbus_channel *channel,
- }
- static VMBUS_CHAN_ATTR_RO(subchannel_id);
- 
-+static int hv_mmap_ring_buffer_wrapper(struct file *filp, struct kobject *kobj,
-+				       const struct bin_attribute *attr,
-+				       struct vm_area_struct *vma)
-+{
-+	struct vmbus_channel *channel = container_of(kobj, struct vmbus_channel, kobj);
-+
-+	/*
-+	 * hv_(create|remove)_ring_sysfs implementation ensures that mmap_ring_buffer
-+	 * is not NULL.
-+	 */
-+	return channel->mmap_ring_buffer(channel, vma);
-+}
-+
-+static struct bin_attribute chan_attr_ring_buffer = {
-+	.attr = {
-+		.name = "ring",
-+		.mode = 0600,
-+	},
-+	.size = 2 * SZ_2M,
-+	.mmap = hv_mmap_ring_buffer_wrapper,
-+};
- static struct attribute *vmbus_chan_attrs[] = {
- 	&chan_attr_out_mask.attr,
- 	&chan_attr_in_mask.attr,
-@@ -1821,6 +1842,11 @@ static struct attribute *vmbus_chan_attrs[] = {
- 	NULL
- };
- 
-+static const struct bin_attribute *const vmbus_chan_bin_attrs[] = {
-+	&chan_attr_ring_buffer,
-+	NULL
-+};
-+
- /*
-  * Channel-level attribute_group callback function. Returns the permission for
-  * each attribute, and returns 0 if an attribute is not visible.
-@@ -1841,9 +1867,24 @@ static umode_t vmbus_chan_attr_is_visible(struct kobject *kobj,
- 	return attr->mode;
- }
- 
-+static umode_t vmbus_chan_bin_attr_is_visible(struct kobject *kobj,
-+					      const struct bin_attribute *attr, int idx)
-+{
-+	const struct vmbus_channel *channel =
-+		container_of(kobj, struct vmbus_channel, kobj);
-+
-+	/* Hide ring attribute if channel's ring_sysfs_visible is set to false */
-+	if (attr ==  &chan_attr_ring_buffer && !channel->ring_sysfs_visible)
-+		return 0;
-+
-+	return attr->attr.mode;
-+}
-+
- static const struct attribute_group vmbus_chan_group = {
- 	.attrs = vmbus_chan_attrs,
--	.is_visible = vmbus_chan_attr_is_visible
-+	.bin_attrs = vmbus_chan_bin_attrs,
-+	.is_visible = vmbus_chan_attr_is_visible,
-+	.is_bin_visible = vmbus_chan_bin_attr_is_visible,
- };
- 
- static const struct kobj_type vmbus_chan_ktype = {
-@@ -1851,6 +1892,63 @@ static const struct kobj_type vmbus_chan_ktype = {
- 	.release = vmbus_chan_release,
- };
- 
-+/**
-+ * hv_create_ring_sysfs() - create "ring" sysfs entry corresponding to ring buffers for a channel.
-+ * @channel: Pointer to vmbus_channel structure
-+ * @hv_mmap_ring_buffer: function pointer for initializing the function to be called on mmap of
-+ *                       channel's "ring" sysfs node, which is for the ring buffer of that channel.
-+ *                       Function pointer is of below type:
-+ *                       int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
-+ *                                                  struct vm_area_struct *vma))
-+ *                       This has a pointer to the channel and a pointer to vm_area_struct,
-+ *                       used for mmap, as arguments.
-+ *
-+ * Sysfs node for ring buffer of a channel is created along with other fields, however its
-+ * visibility is disabled by default. Sysfs creation needs to be controlled when the use-case
-+ * is running.
-+ * For example, HV_NIC device is used either by uio_hv_generic or hv_netvsc at any given point of
-+ * time, and "ring" sysfs is needed only when uio_hv_generic is bound to that device. To avoid
-+ * exposing the ring buffer by default, this function is reponsible to enable visibility of
-+ * ring for userspace to use.
-+ * Note: Race conditions can happen with userspace and it is not encouraged to create new
-+ * use-cases for this. This was added to maintain backward compatibility, while solving
-+ * one of the race conditions in uio_hv_generic while creating sysfs.
-+ *
-+ * Returns 0 on success or error code on failure.
-+ */
-+int hv_create_ring_sysfs(struct vmbus_channel *channel,
-+			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
-+						    struct vm_area_struct *vma))
-+{
-+	struct kobject *kobj = &channel->kobj;
-+
-+	channel->mmap_ring_buffer = hv_mmap_ring_buffer;
-+	channel->ring_sysfs_visible = true;
-+
-+	return sysfs_update_group(kobj, &vmbus_chan_group);
-+}
-+EXPORT_SYMBOL_GPL(hv_create_ring_sysfs);
-+
-+/**
-+ * hv_remove_ring_sysfs() - remove ring sysfs entry corresponding to ring buffers for a channel.
-+ * @channel: Pointer to vmbus_channel structure
-+ *
-+ * Hide "ring" sysfs for a channel by changing its is_visible attribute and updating sysfs group.
-+ *
-+ * Returns 0 on success or error code on failure.
-+ */
-+int hv_remove_ring_sysfs(struct vmbus_channel *channel)
-+{
-+	struct kobject *kobj = &channel->kobj;
-+	int ret;
-+
-+	channel->ring_sysfs_visible = false;
-+	ret = sysfs_update_group(kobj, &vmbus_chan_group);
-+	channel->mmap_ring_buffer = NULL;
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(hv_remove_ring_sysfs);
-+
- /*
-  * vmbus_add_channel_kobj - setup a sub-directory under device/channels
-  */
-diff --git a/drivers/uio/uio_hv_generic.c b/drivers/uio/uio_hv_generic.c
-index 5c017860d380..b75eae624e8a 100644
---- a/drivers/uio/uio_hv_generic.c
-+++ b/drivers/uio/uio_hv_generic.c
-@@ -151,15 +151,12 @@ static void hv_uio_rescind(struct vmbus_channel *channel)
- 	vmbus_device_unregister(channel->device_obj);
- }
- 
--/* Sysfs API to allow mmap of the ring buffers
-+/* Function used for mmap of ring buffer sysfs interface.
-  * The ring buffer is allocated as contiguous memory by vmbus_open
-  */
--static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
--			    const struct bin_attribute *attr,
--			    struct vm_area_struct *vma)
-+static int
-+hv_uio_ring_mmap(struct vmbus_channel *channel, struct vm_area_struct *vma)
- {
--	struct vmbus_channel *channel
--		= container_of(kobj, struct vmbus_channel, kobj);
- 	void *ring_buffer = page_address(channel->ringbuffer_page);
- 
- 	if (channel->state != CHANNEL_OPENED_STATE)
-@@ -169,15 +166,6 @@ static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
- 			       channel->ringbuffer_pagecount << PAGE_SHIFT);
- }
- 
--static const struct bin_attribute ring_buffer_bin_attr = {
--	.attr = {
--		.name = "ring",
--		.mode = 0600,
--	},
--	.size = 2 * SZ_2M,
--	.mmap = hv_uio_ring_mmap,
--};
--
- /* Callback from VMBUS subsystem when new channel created. */
- static void
- hv_uio_new_channel(struct vmbus_channel *new_sc)
-@@ -198,8 +186,7 @@ hv_uio_new_channel(struct vmbus_channel *new_sc)
- 	/* Disable interrupts on sub channel */
- 	new_sc->inbound.ring_buffer->interrupt_mask = 1;
- 	set_channel_read_mode(new_sc, HV_CALL_ISR);
--
--	ret = sysfs_create_bin_file(&new_sc->kobj, &ring_buffer_bin_attr);
-+	ret = hv_create_ring_sysfs(new_sc, hv_uio_ring_mmap);
- 	if (ret) {
- 		dev_err(device, "sysfs create ring bin file failed; %d\n", ret);
- 		vmbus_close(new_sc);
-@@ -370,10 +357,18 @@ hv_uio_probe(struct hv_device *dev,
- 		goto fail_close;
- 	}
- 
--	ret = sysfs_create_bin_file(&channel->kobj, &ring_buffer_bin_attr);
--	if (ret)
--		dev_notice(&dev->device,
--			   "sysfs create ring bin file failed; %d\n", ret);
-+	/*
-+	 * This internally calls sysfs_update_group, which returns a non-zero value if it executes
-+	 * before sysfs_create_group. This is expected as the 'ring' will be created later in
-+	 * vmbus_device_register() -> vmbus_add_channel_kobj(). Thus, no need to check the return
-+	 * value and print warning.
-+	 *
-+	 * Creating/exposing sysfs in driver probe is not encouraged as it can lead to race
-+	 * conditions with userspace. For backward compatibility, "ring" sysfs could not be removed
-+	 * or decoupled from uio_hv_generic probe. Userspace programs can make use of inotify
-+	 * APIs to make sure that ring is created.
-+	 */
-+	hv_create_ring_sysfs(channel, hv_uio_ring_mmap);
- 
- 	hv_set_drvdata(dev, pdata);
- 
-@@ -395,7 +390,7 @@ hv_uio_remove(struct hv_device *dev)
- 	if (!pdata)
- 		return;
- 
--	sysfs_remove_bin_file(&dev->channel->kobj, &ring_buffer_bin_attr);
-+	hv_remove_ring_sysfs(dev->channel);
- 	uio_unregister_device(&pdata->info);
- 	hv_uio_cleanup(dev, pdata);
- 
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 675959fb97ba..d6ffe01962c2 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -1002,6 +1002,12 @@ struct vmbus_channel {
- 
- 	/* The max size of a packet on this channel */
- 	u32 max_pkt_size;
-+
-+	/* function to mmap ring buffer memory to the channel's sysfs ring attribute */
-+	int (*mmap_ring_buffer)(struct vmbus_channel *channel, struct vm_area_struct *vma);
-+
-+	/* boolean to control visibility of sysfs for ring buffer */
-+	bool ring_sysfs_visible;
- };
- 
- #define lock_requestor(channel, flags)					\
+Best regards,
 -- 
-2.34.1
+~Vinod
+
 
