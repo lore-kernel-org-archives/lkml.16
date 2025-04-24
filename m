@@ -1,80 +1,88 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9182820DB
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C43028A1F3
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745512933; cv=none; b=kk4WiNFxFljoiuy808k69ET24Hq5gS/W2xks0RJOfYBptpyYOmPH/YvV/FonhqMkhlLDWqfMWMrJ2Wk+pGCrgiHd2YGLv76zBZqjbxAw29WiCrq8HkpthSPVNmzPUtKc0ZhFy5owC0stjXjlaayFf8NojrKMIMQaS/RL/mWjidY=
+	t=1745513007; cv=none; b=IMH0azCWLPb6bh5L46ZD/W0+OESlUE65EJ6fvuwMHDTFq9QwC4UxwIsb09lU8LEECB4B1/hRWOJUw0bVhqDGhsx0UwTO+H4R+mrGWUy9MSPUMezv0uaBeGgdZEv4xEk/ybwErkB7TIRj4eoxE170lFDo8+ndQVuMXD7mN3GCnMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745512933; c=relaxed/simple;
-	bh=JeRt1GjyfAtswwCrV7oqxoxM6m1xqly/Nd6SBN4t56Y=;
+	s=arc-20240116; t=1745513007; c=relaxed/simple;
+	bh=90CWwwHEFJv30peHy5c0A+eq76UrWGSZRoZ6Mg3LII0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rIyl1UHYS2L4oohJEngbfPLVuc8NTWclcGY47nU90z2+mtlhBDMJ0znHbIZu1RteQ9XCE6J1ihSLHtra+Jq/DsTs6pt1MBDwUyUVHGreA2W7xYe7juqSf8KRaFEtp6E6V1Gpqd0MAA5XYKLMbMdy0yHGhWuXUUqeG9WVeFM5tQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=WHj6CB8b; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vt0cS4sV8B6QDdJBhhfthFk3hY3KhOX+vb91f1LWInuz//TbYhknhGjvYeFcmzro86toVUZ8T44k/g9rZHVY+HsGacM14jNk3t11yauwIIN/JGbJirRt1UbzQoMxhyPj+hdTnn07KyxZSNjA5fjh9HgNEYe8n0nWvEcxT18Z3t4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rVSZUf1F; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="WHj6CB8b"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-22401f4d35aso16052645ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:42:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rVSZUf1F"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3913b539aabso694331f8f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:43:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1745512931; x=1746117731; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DdeGo1ClxSoX72okoFEyRfcK08keDtWUfesWE0Wuy7E=;
-        b=WHj6CB8b9o3TcipQkg5zNKjnK63fmwIi5v6tYQzgdLpquoLFKWuYch1/s2CJWAwC7e
-         FNa10rGdpVBkrPew8ZLNt2REwMU1w3WixFw80RCpF8+xN0TwpXdNZiDyFqiS2SffOLBv
-         FtQqO/EwX3r1McFB35zKaaem0t8SvKQaysrKM=
+        d=linaro.org; s=google; t=1745513002; x=1746117802; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WSuNi6jgd7WcC/uM9d2T2xs48Ig9Zxtluh/Uj+qej/g=;
+        b=rVSZUf1FO5nmQO6dWvkfKEgbeS8dnkhWyv4ssm/4OyQQ5jCSQBjLikDdU6Gr4LSA2H
+         SIANwuvQ5WplGjIAHr1zX9K8wwn0laBk9tgvccwgJyK44BTxrMQndGvX5TqJNAa4jFne
+         YpzK5U4hcXBUyhnpDxh+7USrWHOd+qzfTWT2I+m92W5gwsiEBNHmVnJr5QxV+lQzAwKe
+         zfxtBF995bSayCzwialATpHVcr3NSMDPM+eztVTtqKpz36/4kxpd+PbxonuGjmL2ssF7
+         kcrJYGKQCYoNovRW2EkDjt6i3si5zuYtO22C44U6RKMcoYceiADheRxNzptHOknA+2jg
+         0qfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745512931; x=1746117731;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DdeGo1ClxSoX72okoFEyRfcK08keDtWUfesWE0Wuy7E=;
-        b=sOeCzMoUqMAfv7JbdKlJxccNga7b2UqSXAs0khC5Wo9gxbX0edEpIaS0FGzLWz5RMP
-         KlT215sDEAoAulJ9ikahENfp5NwGazYAawS/JMcA74VedmETmwhUuGTa7V9xI4bsaS7+
-         azvNnahNqhHiP1G//HqGpsVlZr5FkPxO9nzl/ACdwBUVLyu1mhKUc3SIZ2SrKCGxjOKQ
-         6Ajfy9coAHGoGG4Rqs9oK91iwb72o4OWSRZM3tCVgu0BFl1Yv8VpeKN9fXr/igHd6esX
-         NVfWFNwOEIOxE8V7w4AmzxCfdyAUFjFaMKPDRpnDZbJdwVMGpEHV1FoRpkdH6I2SbA2R
-         fLQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNeZ0ndxQYOmBL1KsPstjGdnRZstZIaCNWAqlU/OdU8GvQJ79LZneIvt7MfOy2pE3TFKeLuEMKtyx0O+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSYSGUOt7RY3foRl7T1o/mhBTXvpHC3LeMwCHyK/h784IegYh6
-	teNYIvERSCKiDg0q6cWUwW85QwQEcdKx0xtKnHDjIFg6SWJuxI85nMF5RTYpwuY=
-X-Gm-Gg: ASbGncubuG+LiYA+KDtzFZq4RIPn7HysgE3O4wBwFLTGcqgwcp/8rGEldT3ycUVrtI0
-	33+ta9WwdPt2irb/cjxgY76VdNBlcY7Wi8xd1sv8pRljIdj3JIE0+wabTvIRnOm8pB3/R2HQ1/4
-	ZfmK+H2VAfM7a3Y8DTOrE5tpIy2ugKsUqmhiRmB+MNHtclfR+Hp9LsIc0DGbiyAGKqx4XFOSa4E
-	Lr9P75wBmSAqz6OeoEkdUUT0yb579HvnZZMXTYm1AtI652g2t46l/E88I4opTLPs1sPkmTdyoYJ
-	T/DKado94Cley64PCWq24FOc8oJO2AgP0ZpeTvFRU9PwoQ6LltftUZp2TmDHFMVB+zCgVyLrdSr
-	WyLDi1iTh89Pr
-X-Google-Smtp-Source: AGHT+IEa/leTTXpHP/P8tSsO/GzMgau+ZpxBmyYg6Pl64hRilNRa+l3k2UxWj9/OLHG4D1p4FcHJlQ==
-X-Received: by 2002:a17:902:cf03:b0:223:62f5:fd44 with SMTP id d9443c01a7336-22db3d77712mr48516315ad.40.1745512930792;
-        Thu, 24 Apr 2025 09:42:10 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db50e79f7sm15673385ad.155.2025.04.24.09.42.09
+        d=1e100.net; s=20230601; t=1745513002; x=1746117802;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WSuNi6jgd7WcC/uM9d2T2xs48Ig9Zxtluh/Uj+qej/g=;
+        b=n2f53zuIbAeI/6kANmXkFKrsYH+2sDwtIC7SYB8rp6gHinosHdetqTB8EMhFxvJ71z
+         QRYugYStwbUVk2nuqlQmIYTMpcQ7tcsfGscgHDhSWy80KMOF4NDYSxWsdg9xfoQykZAg
+         WIrMVJTGtxjXgmNq95MRd3u5vVxh/IDQeKTo4FPG7FXytS07wRtsbVLEKCuL7UalZ4sp
+         N42gPY1CrzY/y6fMEBSGVoZhcgGe8KeTr3jj3cyT09FkQx3/qENsWS8KlaaIArh1yJVs
+         i7V7KAOn/J5pbmRfm9+aqD6lJtw9/EIFPdnMN2wItx5e7B7CdKjrfJxv8ESgxRrrYJ+v
+         cLhA==
+X-Gm-Message-State: AOJu0YzqiPZK7QNYg0+b7LSdGNCBM1rs0uXTGqvW6+K4adXEGHiDD3h0
+	dtCvcsMdcRd9BptCJdJYweKO7IPcL3aTC6UI1fWk1I3Joo0JxfNs8zBSxb2uykw=
+X-Gm-Gg: ASbGncuQVkWN6chQ/kku49AjdyVDakysVCOAFegSBj1QqasuGToesBLfh5YeD91gBMH
+	Z28TCzZqS16C1wEEHqdofzK5oF8cVRhKoJuzDcA/a9mRVQP6h+f1pA6WJcTAADIDEJgLdE1Jzdg
+	ZJ9N2tuh7SVry2loDBMe/p+tUudwB9lKcWy5lyxsxJ69R7NAo++y/Tcl+YwxtP3owxSpQSUOxbK
+	FfPOkmxNeWTr/SCHrG9LO301KePRCO/Q/7XRVpGOf5KLXcpDSQl0D0Pji6aZTxG3G8q+GcWb4tX
+	lbQ4LwXlUQ3mTlitQnq+RPLCPTHVymMO3vm/5cwnJ01oFA==
+X-Google-Smtp-Source: AGHT+IHYTqxFiUW0T1o5BtOdgRWCYlL7vEIbg3oFVcl1woXhmq4i0bj5/vY1/MFeshm4lNN8UbGb1g==
+X-Received: by 2002:a05:6000:1a8b:b0:391:4095:49b7 with SMTP id ffacd0b85a97d-3a072ac3e07mr50047f8f.25.1745513002496;
+        Thu, 24 Apr 2025 09:43:22 -0700 (PDT)
+Received: from linaro.org ([2001:630:3c1:90:97e6:f326:b9e:1a85])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4c30e2sm2611539f8f.48.2025.04.24.09.43.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 09:42:10 -0700 (PDT)
-Date: Thu, 24 Apr 2025 09:42:07 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: netdev@vger.kernel.org, kuba@kernel.org,
-	Jianfeng Liu <liujianfeng1994@gmail.com>,
-	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
-	Hao Luo <haoluo@google.com>, Tejun Heo <tj@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tools/Makefile: Add ynl target
-Message-ID: <aApp31D9sCcLQG50@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Donald Hunter <donald.hunter@gmail.com>, netdev@vger.kernel.org,
-	kuba@kernel.org, Jianfeng Liu <liujianfeng1994@gmail.com>,
-	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
-	Hao Luo <haoluo@google.com>, Tejun Heo <tj@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	open list <linux-kernel@vger.kernel.org>
-References: <20250423204647.190784-1-jdamato@fastly.com>
- <m2selxsw1t.fsf@gmail.com>
+        Thu, 24 Apr 2025 09:43:22 -0700 (PDT)
+Date: Thu, 24 Apr 2025 17:43:19 +0100
+From: Karim Manaouil <karim.manaouil@linaro.org>
+To: Oliver Upton <oliver.upton@linux.dev>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, Alexander Graf <graf@amazon.com>,
+	Alex Elder <elder@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Fuad Tabba <tabba@google.com>, Joey Gouly <joey.gouly@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, Marc Zyngier <maz@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Prakruthi Deepak Heragu <quic_pheragu@quicinc.com>,
+	Quentin Perret <qperret@google.com>, Rob Herring <robh@kernel.org>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>,
+	Will Deacon <will@kernel.org>,
+	Haripranesh S <haripran@qti.qualcomm.com>,
+	Carl van Schaik <cvanscha@qti.qualcomm.com>,
+	Murali Nalajala <mnalajal@quicinc.com>,
+	Sreenivasulu Chalamcharla <sreeniva@qti.qualcomm.com>,
+	Trilok Soni <tsoni@quicinc.com>,
+	Stefan Schmidt <stefan.schmidt@linaro.org>
+Subject: Re: [RFC PATCH 00/34] Running Qualcomm's Gunyah Guests via KVM in EL1
+Message-ID: <20250424164319.p7a4qgmzn7jb7txz@linaro.org>
+References: <20250424141341.841734-1-karim.manaouil@linaro.org>
+ <aApaGnFPhsWBZoQ2@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,68 +91,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <m2selxsw1t.fsf@gmail.com>
+In-Reply-To: <aApaGnFPhsWBZoQ2@linux.dev>
 
-On Thu, Apr 24, 2025 at 11:17:34AM +0100, Donald Hunter wrote:
-> Joe Damato <jdamato@fastly.com> writes:
+On Thu, Apr 24, 2025 at 08:34:50AM -0700, Oliver Upton wrote:
+> On Thu, Apr 24, 2025 at 03:13:07PM +0100, Karim Manaouil wrote:
+> > This series introduces the capability of running Gunyah guests via KVM on
+> > Qualcomm SoCs shipped with Gunyah hypervisor [1] (e.g. RB3 Gen2).
+> > 
+> > The goal of this work is to port the existing Gunyah hypervisor support from a
+> > standalone driver interface [2] to KVM, with the aim of leveraging as much of the
+> > existing KVM infrastructure as possible to reduce duplication of effort around
+> > memory management (e.g. guest_memfd), irqfd, and other core components.
+> > 
+> > In short, Gunyah is a Type-1 hypervisor, meaning that it runs independently of any
+> > high-level OS kernel such as Linux and runs in a higher CPU privilege level than VMs.
+> > Gunyah is shipped as firmware and guests typically talk with Gunyah via hypercalls.
+> > KVM is designed to run as Type-2 hypervisor. This port allows KVM to run in EL1 and
+> > serve as the interface for VM lifecycle management,while offloading virtualization
+> > to Gunyah.
 > 
-> > Add targets to build, clean, and install ynl headers, libynl.a, and
-> > python tooling.
-> >
-> > Signed-off-by: Joe Damato <jdamato@fastly.com>
-> > ---
-> >  tools/Makefile | 16 +++++++++++++---
-> >  1 file changed, 13 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/tools/Makefile b/tools/Makefile
-> > index 5e1254eb66de..c31cbbd12c45 100644
-> > --- a/tools/Makefile
-> > +++ b/tools/Makefile
-> > @@ -41,6 +41,7 @@ help:
-> >  	@echo '  mm                     - misc mm tools'
-> >  	@echo '  wmi			- WMI interface examples'
-> >  	@echo '  x86_energy_perf_policy - Intel energy policy tool'
-> > +	@echo '  ynl			- ynl headers, library, and python tool'
-> >  	@echo ''
-> >  	@echo 'You can do:'
-> >  	@echo ' $$ make -C tools/ <tool>_install'
-> > @@ -118,11 +119,14 @@ freefall: FORCE
-> >  kvm_stat: FORCE
-> >  	$(call descend,kvm/$@)
-> >  
-> > +ynl: FORCE
-> > +	$(call descend,net/ynl)
-> > +
-> >  all: acpi counter cpupower gpio hv firewire \
-> >  		perf selftests bootconfig spi turbostat usb \
-> >  		virtio mm bpf x86_energy_perf_policy \
-> >  		tmon freefall iio objtool kvm_stat wmi \
-> > -		debugging tracing thermal thermometer thermal-engine
-> > +		debugging tracing thermal thermometer thermal-engine ynl
-> >  
-> >  acpi_install:
-> >  	$(call descend,power/$(@:_install=),install)
-> > @@ -157,13 +161,16 @@ freefall_install:
-> >  kvm_stat_install:
-> >  	$(call descend,kvm/$(@:_install=),install)
-> >  
-> > +ynl_install:
-> > +	$(call descend,net/$(@:_install=),install)
+> If you're keen on running your own hypervisor then I'm sorry, you get to
+> deal with it soup to nuts. Other hypervisors (e.g. mshv) have their own
+> kernel drivers for managing the host / UAPI parts of driving VMs.
 > 
-> nit: I'm not sure there's any merit in the $(@:_install=) construct,
-> when it's only really needed when there are multiple targets in the same
-> rule. For ynl_install, $(call descend,net/ynl,install) would be just
-> fine. It's funny that the existing convention in this Makefile is to
-> mostly use substitution for the _install rules, but literals for the
-> _clean rules.
-
-That's right, I was trying to follow convention. I agree with what
-you said. If the maintainer of whichever tree this goes into would
-prefer that I re-spin this, I am happy to do so. I was mostly trying
-to keep it consistent with the existing targets.
-
-> Either way:
+> The KVM arch interface is *internal* to KVM, not something to be
+> (ab)used for cramming in a non-KVM hypervisor. KVM and other hypervisors
+> can still share other bits of truly common infrastructure, like
+> guest_memfd.
 > 
-> Reviewed-by: Donald Hunter <donald.hunter@gmail.com>
+> I understand the value in what you're trying to do, but if you want it
+> to smell like KVM you may as well just let the user run it at EL2.
 
-Thanks!
+Hi Oliver,
+
+Thanks for your reply! I very much expected this take and my discussion
+with Qauclomm engineers also more or less had the same conclusion. There
+was a previous effort to go into this direction, but it never got
+implemented, so this was my (no bullshit) attempt at doing that!
+
+I believe that Qcom are more interested in having their own driver,
+instead (as Trilok pointed out in another thread). But this port could
+still be interesting for those who wanted to see KVM in EL1.
+
+On the positive side, you get all the userspace tools (Qemu, Crosvm,
+kvmtool, cloud-hypervisor, firecracker) working with minimal effort.
+
+Cheers
+Karim
