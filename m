@@ -1,82 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86B0214226;
-	Thu, 24 Apr 2025 12:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229D6214226;
+	Thu, 24 Apr 2025 12:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745496480; cv=none; b=G+YOikD+/nJM4yoeu/bRtkP9c1rTb6gmnj0LkYA1gayG9siVzHYB9R6isOI9EXiikz3iOGd5HvBozWmM51gF72mdkExBu9k4wOQbWFv78prN8G4bHhrbUalW57HdpQqs0rINpdSTvDWI2lIQP7axQseev9LtKX6Ga16QTcvzy5w=
+	t=1745496570; cv=none; b=MeN9LJg0J0hHjsNB/59qZW89duB1oEZj9PuEugZQZFy/ZgN24hyABtlqLq4ZAxyVAKIu96okbzj7dTe56WyZY8dVO/djfvgnh0jp5gPIy5En+f2bfvEJdxB+H3IzIKFpQuS3nn55sVGYfPNj24Tn45vqxv+1IBI5NokqMzj6eeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745496480; c=relaxed/simple;
-	bh=GlRuJmmQf3lAEIYkrp8Y18uixuSGL2Mp48b1XN0uRwA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qke8TtDu5Kkc9v2tqo2xu/7PPhNarq4yBT1im7fJDvVddx2lyteedCDwOLgwPHWOhwRd3LBq5lkGSBV5tWHB2GaltAUOTPbWGx90VyBZxeSLL0RzSCO9b+8d6YXweYHoKBq5p9nZ7GAmSVVOClaKpjzN6NeVhQc07+s674FxiAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h0cZOUer; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745496570; c=relaxed/simple;
+	bh=mhvQAy4PwAusFJNPxPQDFwPrFvhTyyBHabTJwdC0aUU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jamtRNGm9V6aISTpMH+Fu6ajn9nb5EZNLy53STVn/To+rq2a4bgGUgk0YfOykXmhjqnL+jGoy53XPUNXTRSYS8g40VlS9oT+4x5EyYEIlWmNFSl7jlXoEv2br1jeKK4b5t+0LwKoJWbHfucaRo8RDAh5nBpICGlvRKHg8GHNyEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=bQLeMiOT; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h0cZOUer"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC6A8C4CEE3;
-	Thu, 24 Apr 2025 12:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745496480;
-	bh=GlRuJmmQf3lAEIYkrp8Y18uixuSGL2Mp48b1XN0uRwA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h0cZOUerRdZH7CLkHRq+De+ZFxWc/hPC+PCFBYNBXo2pVRYCkwtUz8TAW1+IWwOrz
-	 /nmpUrD8YIkl3cBnBFIZuraN6TgPVpN1DTsk3Jzahcqtuie/KD6thd7BxxAYz2XeFI
-	 YMJao9qPwlNMVu2z9X9vJz6TpR3Vdm01gBWUboJSXQFFEZlExSlbyQd4rpuuHhEduN
-	 h+iQC00FfR3FEvDhKoPm7gviO2eZTblR0D2882vKMlrd6yDrgBXEyeDmXpOGo4pO8q
-	 UKMVfaTmEOQttPAcGg/ZJXjB9AssRBj7VXD8HRAHv+/VohS5jUF/PsHEktikiQKA3V
-	 5/uUQupNCseBQ==
-Date: Thu, 24 Apr 2025 13:07:54 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com
-Subject: Re: [PATCH 6.14 000/241] 6.14.4-rc1 review
-Message-ID: <85a2b452-df67-40d0-bb13-61c1a1636bfb@sirena.org.uk>
-References: <20250423142620.525425242@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="bQLeMiOT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=mhvQAy4PwAusFJNPxPQDFwPrFvhTyyBHabTJwdC0aUU=;
+	t=1745496569; x=1746706169; b=bQLeMiOTL/CLn6kVXjUmypjR6zOeND/9JQJU+Mrlbe30Tei
+	hlO6P2tM5Em2SBXGNkFROFXie/L1SSd9hyzF2LiJ8aA0DtIf1MQ/ul5ja05UAOUiCWcG3+MMr/U2I
+	cW1gEs+swyKT2uK1uXIYYvI3aODHrARtUL1u/4XJtO1aFuKdwaDtT9v69g5ADIoh4ADgkAeVviBNP
+	2V1iv4PJexVTwRsP8bTzJr+SgONslwJpcyByKqsKQ4CSYHmXlW5Ugdoh8zy2FqDHcsXLQ8b/ksIto
+	dn6wcfkn9OZXluWbEgcQcCpmWTXLJB3sDCfkSRQSe0JjNaLpTSfiWQX+I102x67Q==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.1)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1u7vOJ-0000000H4Oc-2vQj;
+	Thu, 24 Apr 2025 14:09:20 +0200
+Message-ID: <4b040936baa8fa8669b34e36fe9dff6e08aeede9.camel@sipsolutions.net>
+Subject: Re: [PATCH v5 3/5] dt-bindings: wireless: bcm4329-fmac: Use
+ wireless-controller.yaml schema
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Krzysztof Kozlowski <krzk@kernel.org>, david@ixit.cz, Andrew Lunn	
+ <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet	 <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni	 <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Mailing List	 <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
+ Lorenzo Bianconi	 <lorenzo@kernel.org>, van Spriel <arend@broadcom.com>, 
+ =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller	 <jerome.pouiller@silabs.com>, Bjorn
+ Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
+ Andy Gross <agross@kernel.org>, Mailing List	
+ <devicetree-spec@vger.kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, Janne Grunau <j@jannau.net>
+Date: Thu, 24 Apr 2025 14:09:18 +0200
+In-Reply-To: <57701e2e-0005-4a8a-a3f5-ba098c97b480@kernel.org>
+References: <20250324-dt-bindings-network-class-v5-0-f5c3fe00e8f0@ixit.cz>
+	 <20250324-dt-bindings-network-class-v5-3-f5c3fe00e8f0@ixit.cz>
+	 <d8619ab4-3a91-467f-a3d4-f23b4e0383a4@kernel.org>
+	 <57701e2e-0005-4a8a-a3f5-ba098c97b480@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Pq1YIdaxbQ/0Rf6e"
-Content-Disposition: inline
-In-Reply-To: <20250423142620.525425242@linuxfoundation.org>
-X-Cookie: Star Trek Lives!
+X-malware-bazaar: not-scanned
 
+On Thu, 2025-04-24 at 10:28 +0200, Krzysztof Kozlowski wrote:
+> On 24/04/2025 10:20, Krzysztof Kozlowski wrote:
+> > On 24/03/2025 18:41, David Heidelberg via B4 Relay wrote:
+> > > From: Janne Grunau <j@jannau.net>
+> > >=20
+> > > The wireless-controller schema specifies local-mac-address as
+> > > used in the bcm4329-fmac device nodes of Apple silicon devices
+> > > (arch/arm64/boot/dts/apple).
+> > >=20
+> > > Fixes `make dtbs_check` for those devices.
+> > >=20
+> > > Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> > > Signed-off-by: Janne Grunau <j@jannau.net>
+> > > Signed-off-by: David Heidelberg <david@ixit.cz>
+> >=20
+> > This introduced several new dtbs_check warnings. Including on platforms
+> > which were warnings free. It is nice to fix these warnings when you mak=
+e
+> > such changes.
 
---Pq1YIdaxbQ/0Rf6e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Heh, especially since it said it should _fix_ things there.
 
-On Wed, Apr 23, 2025 at 04:41:04PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.4 release.
-> There are 241 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> I will send the patches for them, except for Apple SoCs.
 
-Tested-by: Mark Brown <broonie@kernel.org>
+Thanks, I guess I'll hold the pull request for that. And I guess the
+Apple ones are on David then.
 
---Pq1YIdaxbQ/0Rf6e
-Content-Type: application/pgp-signature; name="signature.asc"
+Knew it was a mistake for me to ever do anything with DT stuff ;-)
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgKKZkACgkQJNaLcl1U
-h9Bn5AgAgMVKqz9C4FWYmE6SrrZwRwIg4OEliMB9LsBH4mm0qA5bJiKnm8j8qz6J
-grMR1mByMim7fFC/itkliQ5CMcRh6xyKokk96fGtB7siG09dkFLmXtVBxOiEclyh
-hX/vBlaBl+LpbN9wCoJFtezjOOBKmsMitRB0WkFzl7I4a3C5eKZ2hfOis0UqqZ3z
-3fWLSLw5mTkedhObT1CHvzWcnGSgIQQHvfb6KS6qJ380ncldmwPsoAYBZBgV4qz2
-f8lPYJcbgBdytg6vVTbed9tVyvT1o6a1W9owub0MO4527ulcwmiUcKTQaBBd8WWU
-FXTe5/ZRLcugbySFO7sq70uvAZUngg==
-=OQQr
------END PGP SIGNATURE-----
-
---Pq1YIdaxbQ/0Rf6e--
+johannes
