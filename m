@@ -1,74 +1,74 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0012C2356C7
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C52235BF0
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:37:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745491028; cv=none; b=a3NdBxDDS/+i/aC1z9JmvSFtOw5S9Bi3MQVq2WWPkfejBKmQLcdUo+xB5BeghHjg0JCiwiULGlk2yaog52zhBV/yOHWgCEHcmj4lu9m8J92+ckSV+uCeTFHkfSdXYXeisVNHeKJ0nk9v95ekUlxNsmhVIezpODGLhhGC8wNdo8g=
+	t=1745491031; cv=none; b=oixg/yeFEWHYp4Onfo9BlnGnf47FimOSRHDzQoZ3h+nD/xRiTeqZx/y6lWl/FpKj+dqcAkUwvOOsr0RoxYxKPRm3qeFq8hClZBi4bhCgcTatrTZyZ5xBD+HqTQA2zpyFSNYwpGirpA8R77LBjwliZ3/jdxnQfj6Ex04O9HhLjZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745491028; c=relaxed/simple;
-	bh=TmyMfVSZePGbf+pWUXHYOQIK/ZRvODD/YG8yNgg3Q9M=;
+	s=arc-20240116; t=1745491031; c=relaxed/simple;
+	bh=XV8ObqiVVogtjO5N873sKSFmTsTaRcd1IBSPiFBNL38=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fXdtSZtMOCZJD4WzhOE46/s2UA6K2AtCNGff4jEMz2BA5GgV6yqVGy0srw0BNMmqsKoThaaZ2bnFiDk1nZX/ANbBkff/DfmcF6F/c6CZJ5WEcBVnuMXLxme4D1a5dWRyBxNlOVe2eXAxX9WjCa7VwpsMXOyjwkZXZHfjSzh537Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Cp5Y7h2G; arc=none smtp.client-ip=209.85.216.46
+	 MIME-Version; b=VqAj4VkhV715DkDCD/upTiQyoOw6EUGDJx721h9JkmJl8BR4kV3vWJfaRWr5QIWJ+ZoTUbdvep4N+Xu2fNnUa2ArNjLnPuKMqnG0Q9el1mpvXtpIjmmoQTh5KNCQq/F+6yLnA+Qzi7roc6uJIpKVtpyGTPCrlBm1dYD98GXIIfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AiOEEFyg; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cp5Y7h2G"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-301302a328bso1144121a91.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:37:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AiOEEFyg"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22409077c06so12562695ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:37:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745491025; x=1746095825; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745491029; x=1746095829; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vb0kshWFEdfqSwCojCAxnGSpz+cJLNiZV1M7W+IRDC4=;
-        b=Cp5Y7h2GxkpjrgXRzFMOBTzp1lSRycew8uUsbpHj1B3ROGv4lV/ncm3TL0hv+5o0BE
-         ymGlHI3Ikm6WseiGvuUFyJV3Tw3qfQrXDuc0NqM9LI6LN/o1zP5zxnlmmJHdEbbh8mpe
-         6PzWVq3uIn3pTtC+BTpoekbgINR2fBToumDdEI1QvhaLNoA/0MrH6KNK8DN/3E17ZRro
-         RuOAIKRtFFNrXDV0WCfAxXpzmyuHooJyQt4hWFpRVZ2k0yDRpvG5x8f2iaT6kYjqbDyL
-         donVxSG3DCxO/9w3VWS16bCuEiCE9I9cQYjxFCyl4U5SQ+LbGD59sabuYDFnIzrlQwuj
-         qndQ==
+        bh=XiIG8WEszkc/dlu2pYPwLwPCyzJuamBVIXLOR35LVRk=;
+        b=AiOEEFygzlPo0eLE6UUqd/uIuZaUZxcwFIR8mf/BpHB/flO+IF3k66YIuhIeABrUEq
+         vgk4gd5/62JzimuXwtL0sMXNE6ZVxvuMcclxdq/1kWcLqkfv5IgcuNc0ajnzro5344Em
+         tPvt6ZJmOFP+ynyEMmh9XjdQtNQYMc72RVUA1+aKYLeaimpE7X3+guyArJ6/3i/uQuD0
+         H7EzrhbyMOxL8XkiesLsRTtwX3lbMzG7vGSCxAikYDeGCO/R8XK3VlnHkXdUYCFBjmZf
+         s2lbU0zfqrUGETZpRmwXkn3OMvAi/zPFSeBkJFkQ69toXFL461VCTzqM7C1m4yKB9ikn
+         Ctdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745491025; x=1746095825;
+        d=1e100.net; s=20230601; t=1745491029; x=1746095829;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vb0kshWFEdfqSwCojCAxnGSpz+cJLNiZV1M7W+IRDC4=;
-        b=O/xdvBEqosbI8Ztz34Svyzth618PlHUOp9+/uUWSCLFVfYklRw01UmLPfPL+PcEbbi
-         Nwx/vtGmm6eufUNMsPTM9xhKpSEL9ooBRhM4aWV73bon6K8qO4sXm7qX6PeM6CDqfKGY
-         RTND/yu8ahFoIxi+sJhe3PN4mclpw5DKOvQOTlyfBuIKmXv18YOsV3FNS/kJPbYf2tiu
-         eK+m7wHDDUeEIZZ3j48OfRHagIxhnN04ybaPkauy05i+Tjh20km4DkK8m3G/Csa2sLZ0
-         /mqoHzNJpTJk9YJg5m7fKJrT6AvTlSq2XfYNlDgYc2sHk5Km9FpDXBZAkNRL+LrXG6P9
-         Z9xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWt8WUU/yIcpAMBgIVrjYGIO2TOc5s2EbHd3iOm/qKSrQ2kfBfTCp0a9mk5V/bow2WNIhaW+zDK03efJno=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDbCPQ7LyD0BEbMR7vfHNrv+CsnUK/92Q1keQQch3m8zThod9w
-	Q8qT1dhWebR8m2aDmrcexPFA/ynQFeZz8jdVDfu1mZQQ+w6OYNh9/zyiYIgc4A4=
-X-Gm-Gg: ASbGncsG286XtKFaBz2WKBP5a8ZgRcZV56asHY8V0PHXbKY/lUkQTvmn3CiQXGKHk5k
-	gBgcKKWpyrogDp6R1VL5k2YlrDtD9+CxwivOpOXxPAOFXhjdiWZENvt1Gpt75BuhJ2MC8TAP0EW
-	V3pp28EtCCdn7LSrRMcbrYqjKRQ+mhJjEPqzvQC71iUVDXiYFhb+JtQADBjdw1ZOUyvAQsJL9mZ
-	5tZkYqToC7h4uXXN1OAhW9PCqLV7DSm5g01UJTER/TRgC6QdxtL27O0fEzPEV3aSBxy8Gj/PktG
-	nxMh48YYdUVHnuJhMQUakw7MhlRpKK3BdP6WewLN1w==
-X-Google-Smtp-Source: AGHT+IFZZsVLcW4BUe+ZrSM6uW6Wa2ikYA0R9RA3RPc1tiMPNWk4codtXgnN6tMcSgjrfAqGLXPdIA==
-X-Received: by 2002:a17:90a:f945:b0:2f6:be57:49d2 with SMTP id 98e67ed59e1d1-309ed29c8d8mr3487943a91.17.1745491025233;
-        Thu, 24 Apr 2025 03:37:05 -0700 (PDT)
+        bh=XiIG8WEszkc/dlu2pYPwLwPCyzJuamBVIXLOR35LVRk=;
+        b=qSafDb9vzm4Ig15W4/JxEWTR9y1Wr8ZBsWNRXxu65QfcSwlS7s12HxYxT1BAfYGiQX
+         76oTANXWCpxZEvv4qZZTYBjZQhU51R7GYO49EJy+04jjm5kJwV4rV3kDksInttQRWAst
+         QTCMjvd+Z4tAXsV1aO8wT31JquRnyQnPMDcGn38XQtI9dYzoOmV0HrIcWrqqVW6WxFD+
+         bBA5HHytbCmCGnoVR/CVgBJ81y/aLYbZBGt3I1AOLikypiKIYHvjAeAqxFhrOIkwrMD/
+         e4K1ldk2J4Kjm9K7YLo2M5M9M04e5yJwvcLR9DlvCDQkOD6/h9Au6LaiP17sWcaU85QS
+         /uKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXQDN1+G3NxP0cLS+7a3KW7vmoHdFHOcb5AeLNKAInUpVacaFqmcu6BHLbTkBCKz//BuzldfsOX+w7rDLk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlW4teiw5QG8SF2V7jaoiE0h6Qad9tbmf4NUzz1AouV+oiH/Lz
+	1XiNW4Ig2iaQuPXs4gsEPkuekAj/2o/WiF31FTBXn2gCtxuiVgzTipv1TdlC5a8=
+X-Gm-Gg: ASbGncuGzma/O1o2s/nI+jd8Tp1zFt1dNcIFDWttlSwsr8N3pZcSNaJobAlot5zPQr5
+	kaMSmvvj7kls6hcD5OCVeO8HAuvzi/Ks3X1PxxdN9i49yNLDIUobwcDi4GN72Fjxitym2Zmy3Kr
+	A5iJAi9WBKFwE04WfmcagUUru4cldEDbPRwQLKNP60ieqA7Hargg0OLJokop0eVyJ/QpL7uZ4Hj
+	CKWlDyA1AuXP+vi12+O0SfWHkD4RjUhSugC/oOzjv3ki+z2usl6IAoHldSrDTeVYBWd6039BkT6
+	BhB37q0O3nlqdil1ELZmiF2g1p+dzJMR5nVifNCNeA==
+X-Google-Smtp-Source: AGHT+IEg3HiY1hRFa0sd4VmP7cYuftC34v8NrLnxhQq8aERPS7VCcuo9i6ofali9iKtAnB6B35F9CQ==
+X-Received: by 2002:a17:902:e5c6:b0:224:1219:934b with SMTP id d9443c01a7336-22db3de966dmr28392755ad.50.1745491028769;
+        Thu, 24 Apr 2025 03:37:08 -0700 (PDT)
 Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309ef0d5c72sm987560a91.43.2025.04.24.03.37.04
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d77ee3sm9945165ad.2.2025.04.24.03.37.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 03:37:04 -0700 (PDT)
+        Thu, 24 Apr 2025 03:37:08 -0700 (PDT)
 From: Viresh Kumar <viresh.kumar@linaro.org>
 To: Viresh Kumar <vireshk@kernel.org>,
 	Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
 Cc: Viresh Kumar <viresh.kumar@linaro.org>,
 	linux-pm@vger.kernel.org,
 	Vincent Guittot <vincent.guittot@linaro.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/6] OPP: Remove _get_opp_table_kref()
-Date: Thu, 24 Apr 2025 16:06:44 +0530
-Message-Id: <4cb1383f9522a3d2f5e26b70688417187c7d48e4.1745490980.git.viresh.kumar@linaro.org>
+Subject: [PATCH 2/6] OPP: Return opp from dev_pm_opp_get()
+Date: Thu, 24 Apr 2025 16:06:45 +0530
+Message-Id: <7a3be00771aa9786c7bb4cdb0ee36fee45f67d69.1745490980.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 In-Reply-To: <cover.1745490980.git.viresh.kumar@linaro.org>
 References: <cover.1745490980.git.viresh.kumar@linaro.org>
@@ -80,89 +80,91 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use dev_pm_opp_get_opp_table_ref() directly instead.
+For convenience of users, return back the pointer to the opp from
+dev_pm_opp_get(), so they can do:
+
+	opp = dev_pm_opp_get(tmp_opp);
 
 No intentional functional impact.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/opp/core.c | 9 ++-------
- drivers/opp/of.c   | 6 +++---
- drivers/opp/opp.h  | 1 -
- 3 files changed, 5 insertions(+), 11 deletions(-)
+ drivers/opp/core.c     | 13 ++++++-------
+ include/linux/pm_opp.h |  7 +++++--
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 73e9a3b2f29b..e63a9b009df1 100644
+index e63a9b009df1..150439a18b87 100644
 --- a/drivers/opp/core.c
 +++ b/drivers/opp/core.c
-@@ -59,7 +59,7 @@ static struct opp_table *_find_opp_table_unlocked(struct device *dev)
- 
- 	list_for_each_entry(opp_table, &opp_tables, node) {
- 		if (_find_opp_dev(dev, opp_table)) {
--			_get_opp_table_kref(opp_table);
-+			dev_pm_opp_get_opp_table_ref(opp_table);
- 			return opp_table;
- 		}
+@@ -1188,8 +1188,8 @@ static void _find_current_opp(struct device *dev, struct opp_table *opp_table)
+ 	 */
+ 	if (IS_ERR(opp)) {
+ 		mutex_lock(&opp_table->lock);
+-		opp = list_first_entry(&opp_table->opp_list, struct dev_pm_opp, node);
+-		dev_pm_opp_get(opp);
++		opp = dev_pm_opp_get(list_first_entry(&opp_table->opp_list,
++						      struct dev_pm_opp, node));
+ 		mutex_unlock(&opp_table->lock);
  	}
-@@ -1688,14 +1688,9 @@ static void _opp_table_kref_release(struct kref *kref)
- 	kfree(opp_table);
+ 
+@@ -1329,8 +1329,7 @@ static int _set_opp(struct device *dev, struct opp_table *opp_table,
+ 	dev_pm_opp_put(old_opp);
+ 
+ 	/* Make sure current_opp doesn't get freed */
+-	dev_pm_opp_get(opp);
+-	opp_table->current_opp = opp;
++	opp_table->current_opp = dev_pm_opp_get(opp);
+ 
+ 	return ret;
+ }
+@@ -1724,9 +1723,10 @@ static void _opp_kref_release(struct kref *kref)
+ 	kfree(opp);
  }
  
--void _get_opp_table_kref(struct opp_table *opp_table)
--{
--	kref_get(&opp_table->kref);
--}
--
- void dev_pm_opp_get_opp_table_ref(struct opp_table *opp_table)
+-void dev_pm_opp_get(struct dev_pm_opp *opp)
++struct dev_pm_opp *dev_pm_opp_get(struct dev_pm_opp *opp)
  {
--	_get_opp_table_kref(opp_table);
-+	kref_get(&opp_table->kref);
+ 	kref_get(&opp->kref);
++	return opp;
  }
- EXPORT_SYMBOL_GPL(dev_pm_opp_get_opp_table_ref);
+ EXPORT_SYMBOL_GPL(dev_pm_opp_get);
  
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index a24f76f5fd01..87cb6aeb49ed 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -61,7 +61,7 @@ struct opp_table *_managed_opp(struct device *dev, int index)
- 			 * OPP table contains a "opp-shared" property.
- 			 */
- 			if (opp_table->shared_opp == OPP_TABLE_ACCESS_SHARED) {
--				_get_opp_table_kref(opp_table);
-+				dev_pm_opp_get_opp_table_ref(opp_table);
- 				managed_table = opp_table;
+@@ -2706,8 +2706,7 @@ struct dev_pm_opp *dev_pm_opp_xlate_required_opp(struct opp_table *src_table,
+ 
+ 			list_for_each_entry(opp, &src_table->opp_list, node) {
+ 				if (opp == src_opp) {
+-					dest_opp = opp->required_opps[i];
+-					dev_pm_opp_get(dest_opp);
++					dest_opp = dev_pm_opp_get(opp->required_opps[i]);
+ 					break;
+ 				}
  			}
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index c247317aae38..5e4c3428b139 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -161,7 +161,7 @@ struct dev_pm_opp *dev_pm_opp_find_bw_ceil(struct device *dev,
+ struct dev_pm_opp *dev_pm_opp_find_bw_floor(struct device *dev,
+ 					   unsigned int *bw, int index);
  
-@@ -117,7 +117,7 @@ static struct opp_table *_find_table_of_opp_np(struct device_node *opp_np)
- 	mutex_lock(&opp_table_lock);
- 	list_for_each_entry(opp_table, &opp_tables, node) {
- 		if (opp_table_np == opp_table->np) {
--			_get_opp_table_kref(opp_table);
-+			dev_pm_opp_get_opp_table_ref(opp_table);
- 			mutex_unlock(&opp_table_lock);
- 			return opp_table;
- 		}
-@@ -406,7 +406,7 @@ static void lazy_link_required_opp_table(struct opp_table *new_table)
- 			}
+-void dev_pm_opp_get(struct dev_pm_opp *opp);
++struct dev_pm_opp *dev_pm_opp_get(struct dev_pm_opp *opp);
+ void dev_pm_opp_put(struct dev_pm_opp *opp);
  
- 			required_opp_tables[i] = new_table;
--			_get_opp_table_kref(new_table);
-+			dev_pm_opp_get_opp_table_ref(new_table);
+ int dev_pm_opp_add_dynamic(struct device *dev, struct dev_pm_opp_data *opp);
+@@ -345,7 +345,10 @@ static inline struct dev_pm_opp *dev_pm_opp_find_bw_floor(struct device *dev,
+ 	return ERR_PTR(-EOPNOTSUPP);
+ }
  
- 			/* Link OPPs now */
- 			ret = lazy_link_required_opps(opp_table, new_table, i);
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index 5c7c81190e41..9eba63e01a9e 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -251,7 +251,6 @@ struct opp_table {
+-static inline void dev_pm_opp_get(struct dev_pm_opp *opp) {}
++static inline struct dev_pm_opp *dev_pm_opp_get(struct dev_pm_opp *opp)
++{
++	return opp;
++}
  
- /* Routines internal to opp core */
- bool _opp_remove_all_static(struct opp_table *opp_table);
--void _get_opp_table_kref(struct opp_table *opp_table);
- int _get_opp_count(struct opp_table *opp_table);
- struct opp_table *_find_opp_table(struct device *dev);
- struct opp_device *_add_opp_dev(const struct device *dev, struct opp_table *opp_table);
+ static inline void dev_pm_opp_put(struct dev_pm_opp *opp) {}
+ 
 -- 
 2.31.1.272.g89b43f80a514
 
