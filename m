@@ -1,310 +1,206 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16123481C4;
-	Thu, 24 Apr 2025 14:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFFF51991B2;
+	Thu, 24 Apr 2025 14:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504976; cv=none; b=HDgP5wh+ESqhckPcFBIYKSS6K4f/4kbwVcyGSvo/pgc1kJ5la04pf/Y4iSzL5vMzI2ywa6h2E+a1nkx8TaL3LBhIa4YY4mQqF6ioxWEmTPM3de6fbdFusPgUOlNWztfVVJb1/hea9fDiYhi8s3pQDj3pwlWOvXackm73grGXLqM=
+	t=1745505024; cv=none; b=EnjCkhv23w4gzYk/5I+dXlIoPY85WS+tXchY3Wg/KoavZ+8riGRQnNm6jICXuhYZzODRSkC85ynjkIERf7ni8+rKQeh94KWmW8MpBw3EJI7LuTlH+Ds2pRfK5mDpeLU2LO2lyh94JI03jWqDR4zob7yNSJAdWj18pmc6iWe1Cro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745504976; c=relaxed/simple;
-	bh=AaGa2b/kIYDOXhLk2pmLast9z8OAHL6xxNsv6bKJU60=;
+	s=arc-20240116; t=1745505024; c=relaxed/simple;
+	bh=1whdVZV9lMiBX4UD7o/X13mkpVB75MtHtuHctYsLOyQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LaKOo+ySZDXF7gJeSd9qXomReVtbP5plBFqzkU3fmeGt/fviGkvG0K1qwjnag5HtJ73StaZBkTi6SWP5i2pkhXieyhzI0fCEMyvfyr2sUUM0Yv9Z+l4OniG9MQt03zZmetemKr/dk7scTCFzGTD5Sjq4m1AdKp+KblO6mQ/2U9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=DptcNXRi; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=LyXsXKM1IjyuAbW6SC7PbG78f5ZpykwWcFjUTVtxEOL0TtUpxFkE/BmBsBh2olq8yd7JngmvQUiBZI3VJwu09aOXHVOhANQPglm99jZiNhY7JoPtewcFPVg4mehqO6wHktZSXUj1EZDSwgEnACyAquuwhzOD6SZnEF/FfEqH0iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TeyoiUMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="DptcNXRi"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=9KjGj3KS94OtlAiXjq8wdZ7IRHQBz06ZQi2NkwD9hIo=; b=DptcNXRij7bpz8+P
-	NIKIm3M8zT1WVQLI6pET3XzjYBlM0bk3/2M7bXisQO4H8MT/nCOSTTdFJFQ8KW21dawBQbAaWOXF2
-	BRXyjedYoUfpbn4KZUKtKiPGgzeOKeHAHJbJpFYlyiIttPtjLfmrKuEBUM06YlP3yF709AFDk2dB8
-	qGQ+ogGu29LuoVivmMLRGl+D8t5Re72DygUsZJmw6g2XyR9776AGaTdwcHL4UvNd0qxSXD3YEB6Zj
-	qC+un7Keer/sahOar8dN5yt4CyY6bvjSy/I2FMtTanrKTQeFKweYeLXKsSN1heZqBhJJP066FthHK
-	QbX2sDKJL1IeOAdglQ==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1u7xZw-00DdLx-2t;
-	Thu, 24 Apr 2025 14:29:28 +0000
-Date: Thu, 24 Apr 2025 14:29:28 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Cc: andersson@kernel.org, mathieu.poirier@linaro.org, corbet@lwn.net,
-	linux-remoteproc@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rpmsg: core: Remove deadcode
-Message-ID: <aApKyI9Tt6ckhhK7@gallifrey>
-References: <20250420204146.154807-1-linux@treblig.org>
- <60e77932-9be7-443d-aed9-2b54945fdce6@foss.st.com>
- <aAjL-1rB3YHMnr9F@gallifrey>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TeyoiUMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A3E4C4CEE3;
+	Thu, 24 Apr 2025 14:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745505023;
+	bh=1whdVZV9lMiBX4UD7o/X13mkpVB75MtHtuHctYsLOyQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=TeyoiUMJScN2qui5/zPMO8u0xwWMFpFKP9154khubjJvno5jpDty0CjoSvzeWwxAd
+	 ScWMJD88G8o+aUFSNzlnvWbqv8D0diBVg89h6618e9YY4F6rNyoXsP4w+TlCkoM8zF
+	 iVx78rwjRRtTKHgI3DpmUQY4Cey3gquDSM+VmIgCiQ1N5SQHMduSengUCzMTVu27Aq
+	 86u66qS2+JnmligsNLShhPBMHnr+JG7wqs+qB52TSaMxb45Z7OH0jTruaPuag1UU5+
+	 iMWkmggWrcs1x2h4iid6Z1Un9O8b8IxyjADQdpM3hh5tDl8z2H5bx4ydwthnB75zIB
+	 MKahr+o1UQbqg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 0869FCE076F; Thu, 24 Apr 2025 07:30:23 -0700 (PDT)
+Date: Thu, 24 Apr 2025 07:30:23 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Bert Karwatzki <spasswolf@web.de>
+Cc: "Aithal, Srikanth" <sraithal@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>, Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
+Message-ID: <c5c7d5b8-f1a7-4485-a238-e7c523e742a6@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250423115409.3425-1-spasswolf@web.de>
+ <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
+ <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
+ <5a4a3d0d-a2e1-4fd3-acd2-3ae12a2ac7b0@amd.com>
+ <82ff38fc-b295-472c-bde5-bd96f0d144fb@paulmck-laptop>
+ <1509f29e04b3d1ac899981e0adaad98bbc0ee61a.camel@web.de>
+ <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
+ <0b5a918ba68e9e696329ed9894d7d93d2d71cc6e.camel@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAjL-1rB3YHMnr9F@gallifrey>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
-X-Uptime: 14:29:08 up 351 days,  1:43,  1 user,  load average: 0.00, 0.01,
- 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+In-Reply-To: <0b5a918ba68e9e696329ed9894d7d93d2d71cc6e.camel@web.de>
 
-* Dr. David Alan Gilbert (linux@treblig.org) wrote:
-> * Arnaud POULIQUEN (arnaud.pouliquen@foss.st.com) wrote:
-> > Hello,
-> > 
-> > On 4/20/25 22:41, linux@treblig.org wrote:
-> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Thu, Apr 24, 2025 at 02:40:25PM +0200, Bert Karwatzki wrote:
+> Am Mittwoch, dem 23.04.2025 um 12:56 -0700 schrieb Paul E. McKenney:
+> > On Wed, Apr 23, 2025 at 09:19:56PM +0200, Bert Karwatzki wrote:
+> > > Am Mittwoch, dem 23.04.2025 um 11:07 -0700 schrieb Paul E. McKenney:
+> > > > On Wed, Apr 23, 2025 at 08:49:08PM +0530, Aithal, Srikanth wrote:
+> > > > > On 4/23/2025 7:48 PM, Paul E. McKenney wrote:
+> > > > > > On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
+> > > > > > > On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
+> > > > > > > > Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
+> > > > > > > > debian sid. When booting kernel message appear on screen but no messages from
+> > > > > > > > init (systemd). There are also no logs written even thought emergency sync
+> > > > > > > > via magic sysrq works (a message is printed on screen), presumably because
+> > > > > > > > / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
+> > > > > > > > commit dd4cf8c9e1f4 as the first bad commit.
+> > > > > > > > Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
+> > > > > > > 
+> > > > > > > 
+> > > > > > > Hello,
+> > > > > > > 
+> > > > > > > On AMD platform as well boot failed starting next-20250422, bisecting the
+> > > > > > > issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
+> > > > > > > logs.
+> > > > > > 
+> > > > > > Thank you all for the bisection and the report!
+> > > > > > 
+> > > > > > Please check out the predecessor of commit dd4cf8c9e1f4 ("ratelimit:
+> > > > > > Force re-initialization when rate-limiting re-enabled"):
+> > > > > > 
+> > > > > > 13fa70e052dd ("ratelimit: Allow zero ->burst to disable ratelimiting")
+> > > > > > 
+> > > > > > Then please apply the patch shown below, and let me know what happens?
+> > > > > > (Yes, I should have split that commit up...)
+> > > > > > 
+> > > > > > 							Thanx, Paul
+> > > > > > 
+> > > > > > ------------------------------------------------------------------------
+> > > > > > 
+> > > > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+> > > > > > index 04f16b8e24575..13ed636642270 100644
+> > > > > > --- a/lib/ratelimit.c
+> > > > > > +++ b/lib/ratelimit.c
+> > > > > > @@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+> > > > > >   	unsigned long flags;
+> > > > > >   	int ret;
+> > > > > > -	if (!interval || !burst)
+> > > > > > +	if (interval <= 0 || burst <= 0)
+> > > > > >   		return 1;
+> > > > > >   	/*
+> > > > > 
+> > > > > 
+> > > > > I applied above patch on top of 13fa70e052dd ("ratelimit: Allow zero ->burst
+> > > > > to disable ratelimiting") [linux-20250423]. This is fixing the boot issue.
+> > > > > 
+> > > > > Tested-by: Srikanth Aithal <sraithal@amd.com>
+> > > > 
+> > > > Thank you both, and to Bert for intuiting the correct -next commit!
+> > > > 
+> > > > Could you please try the next increment, which is this patch, again
+> > > > on top of 24ff89c63355 ("ratelimit: Allow zero ->burst to > disable
+> > > > ratelimiting")?
+> > > > 
+> > > > In the meantime, I will expose the version you two just tested to
+> > > > -next.
+> > > > 
+> > > > 							Thanx, Paul
+> > > > 
+> > > > ------------------------------------------------------------------------
+> > > > 
+> > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+> > > > index 04f16b8e24575..8f6c54f719ef2 100644
+> > > > --- a/lib/ratelimit.c
+> > > > +++ b/lib/ratelimit.c
+> > > > @@ -35,8 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+> > > >  	unsigned long flags;
+> > > >  	int ret;
+> > > >  
+> > > > -	if (!interval || !burst)
+> > > > +	if (interval <= 0 || burst <= 0) {
+> > > > +		ret = burst > 0;
+> > > >  		return 1;
+> > > > +	}
+> > > >  
+> > > >  	/*
+> > > >  	 * If we contend on this state's lock then just check if
 > > > 
-> > > rpmsg_send_offchannel() and rpmsg_trysend_offchannel() have been
-> > > unused since they were added in 2011's
-> > > commit bcabbccabffe ("rpmsg: add virtio-based remote processor messaging
-> > > bus")
+> > > If you set "ret = burst > 0", but "return 1" this will make no difference
+> > > (except in the case of a major compiler bug, probably), as I wrote in my other
+> > > email which overlapped yours, this fixes the issue in next-20250422:
 > > > 
-> > > Remove them and associated docs.
-> > > 
-> > > I suspect this means the trysend_offchannel and send_offchannel
-> > > member function pointers and the virtio implementation of them can be
-> > > removed as well, but haven't yet gone that far.
+> > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+> > > index b5c727e976d2..fc28f6cf8269 100644
+> > > --- a/lib/ratelimit.c
+> > > +++ b/lib/ratelimit.c
+> > > @@ -40,7 +40,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+> > >          * interval says never limit.
+> > >          */
+> > >         if (interval <= 0 || burst <= 0) {
+> > > -               ret = burst > 0;
+> > > +               ret = 1;
+> > >                 if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
+> > >                     !raw_spin_trylock_irqsave(&rs->lock, flags))
+> > >                         return ret;
 > > 
-> > It seems to me that this API is not safe as it allows an endpoint to usurp the
-> > identity of another one thanks to the source address.
+> > You are quite right, your patch does fix the issue that you three say.
+> > Unfortunately, it prevents someone from completely suppressing output
+> > by setting burst to zero.  Could you please try the patch below?
 > > 
-> > So, +1 to remove it.
+> > 							Thanx, Paul
 > > 
-> > That said, to complete the remove it would be nice to also remove associated ops
-> > declared in rpmsg_endpoint_ops and implemented in virtio_rpmsg_bus.c.
+> > ------------------------------------------------------------------------
+> > 
+> > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+> > index 04f16b8e24575..d6531e5c6ec4e 100644
+> > --- a/lib/ratelimit.c
+> > +++ b/lib/ratelimit.c
+> > @@ -35,8 +35,8 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+> >  	unsigned long flags;
+> >  	int ret;
+> >  
+> > -	if (!interval || !burst)
+> > -		return 1;
+> > +	if (interval <= 0 || burst <= 0)
+> > +		return interval == 0 || burst > 0;
+> >  
+> >  	/*
+> >  	 * If we contend on this state's lock then just check if
 > 
-> OK, yes I was thinking that but wasn't sure - I'll cut some follow up patches
+> This patch will make no difference for me as I've monitored every call to
+> ___ratelimit() with "printk(KERN_INFO "%s: interval = %d burst = %d\n",
+> __func__, interval, burst)" and at least for me burst == 0 is always acompanied
+> by intervall == 0.
 
-Sent, see v2 series starting with message 20250424142746.79062-1-linux@treblig.org.
+You lost me on this one.
 
-Thanks!
+With my previous "burst > 0", if both are zero, it would set ret to
+false, right?
 
-Dave
+With the new "interval == 0 || burst > 0", if both are zero, then interval
+must be zero, so the result would instead be true, correct?
 
-> Dave
-> 
-> > Regards,
-> > Arnaud
-> > 
-> > 
-> > > 
-> > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > > ---
-> > >  Documentation/staging/rpmsg.rst | 46 ------------------------
-> > >  drivers/rpmsg/rpmsg_core.c      | 63 ---------------------------------
-> > >  include/linux/rpmsg.h           | 22 ------------
-> > >  3 files changed, 131 deletions(-)
-> > > 
-> > > diff --git a/Documentation/staging/rpmsg.rst b/Documentation/staging/rpmsg.rst
-> > > index 3713adaa1608..40282cca86ca 100644
-> > > --- a/Documentation/staging/rpmsg.rst
-> > > +++ b/Documentation/staging/rpmsg.rst
-> > > @@ -110,31 +110,6 @@ or a timeout of 15 seconds elapses. When the latter happens,
-> > >  The function can only be called from a process context (for now).
-> > >  Returns 0 on success and an appropriate error value on failure.
-> > >  
-> > > -::
-> > > -
-> > > -  int rpmsg_send_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
-> > > -							void *data, int len);
-> > > -
-> > > -
-> > > -sends a message across to the remote processor, using the src and dst
-> > > -addresses provided by the user.
-> > > -
-> > > -The caller should specify the endpoint, the data it wants to send,
-> > > -its length (in bytes), and explicit source and destination addresses.
-> > > -The message will then be sent to the remote processor to which the
-> > > -endpoint's channel belongs, but the endpoint's src and channel dst
-> > > -addresses will be ignored (and the user-provided addresses will
-> > > -be used instead).
-> > > -
-> > > -In case there are no TX buffers available, the function will block until
-> > > -one becomes available (i.e. until the remote processor consumes
-> > > -a tx buffer and puts it back on virtio's used descriptor ring),
-> > > -or a timeout of 15 seconds elapses. When the latter happens,
-> > > --ERESTARTSYS is returned.
-> > > -
-> > > -The function can only be called from a process context (for now).
-> > > -Returns 0 on success and an appropriate error value on failure.
-> > > -
-> > >  ::
-> > >  
-> > >    int rpmsg_trysend(struct rpmsg_endpoint *ept, void *data, int len);
-> > > @@ -173,27 +148,6 @@ return -ENOMEM without waiting until one becomes available.
-> > >  The function can only be called from a process context (for now).
-> > >  Returns 0 on success and an appropriate error value on failure.
-> > >  
-> > > -::
-> > > -
-> > > -  int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
-> > > -							void *data, int len);
-> > > -
-> > > -
-> > > -sends a message across to the remote processor, using source and
-> > > -destination addresses provided by the user.
-> > > -
-> > > -The user should specify the channel, the data it wants to send,
-> > > -its length (in bytes), and explicit source and destination addresses.
-> > > -The message will then be sent to the remote processor to which the
-> > > -channel belongs, but the channel's src and dst addresses will be
-> > > -ignored (and the user-provided addresses will be used instead).
-> > > -
-> > > -In case there are no TX buffers available, the function will immediately
-> > > -return -ENOMEM without waiting until one becomes available.
-> > > -
-> > > -The function can only be called from a process context (for now).
-> > > -Returns 0 on success and an appropriate error value on failure.
-> > > -
-> > >  ::
-> > >  
-> > >    struct rpmsg_endpoint *rpmsg_create_ept(struct rpmsg_device *rpdev,
-> > > diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> > > index 207b64c0a2fe..6ee36adcbdba 100644
-> > > --- a/drivers/rpmsg/rpmsg_core.c
-> > > +++ b/drivers/rpmsg/rpmsg_core.c
-> > > @@ -193,38 +193,6 @@ int rpmsg_sendto(struct rpmsg_endpoint *ept, void *data, int len, u32 dst)
-> > >  }
-> > >  EXPORT_SYMBOL(rpmsg_sendto);
-> > >  
-> > > -/**
-> > > - * rpmsg_send_offchannel() - send a message using explicit src/dst addresses
-> > > - * @ept: the rpmsg endpoint
-> > > - * @src: source address
-> > > - * @dst: destination address
-> > > - * @data: payload of message
-> > > - * @len: length of payload
-> > > - *
-> > > - * This function sends @data of length @len to the remote @dst address,
-> > > - * and uses @src as the source address.
-> > > - * The message will be sent to the remote processor which the @ept
-> > > - * endpoint belongs to.
-> > > - * In case there are no TX buffers available, the function will block until
-> > > - * one becomes available, or a timeout of 15 seconds elapses. When the latter
-> > > - * happens, -ERESTARTSYS is returned.
-> > > - *
-> > > - * Can only be called from process context (for now).
-> > > - *
-> > > - * Return: 0 on success and an appropriate error value on failure.
-> > > - */
-> > > -int rpmsg_send_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
-> > > -			  void *data, int len)
-> > > -{
-> > > -	if (WARN_ON(!ept))
-> > > -		return -EINVAL;
-> > > -	if (!ept->ops->send_offchannel)
-> > > -		return -ENXIO;
-> > > -
-> > > -	return ept->ops->send_offchannel(ept, src, dst, data, len);
-> > > -}
-> > > -EXPORT_SYMBOL(rpmsg_send_offchannel);
-> > > -
-> > >  /**
-> > >   * rpmsg_trysend() - send a message across to the remote processor
-> > >   * @ept: the rpmsg endpoint
-> > > @@ -301,37 +269,6 @@ __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
-> > >  }
-> > >  EXPORT_SYMBOL(rpmsg_poll);
-> > >  
-> > > -/**
-> > > - * rpmsg_trysend_offchannel() - send a message using explicit src/dst addresses
-> > > - * @ept: the rpmsg endpoint
-> > > - * @src: source address
-> > > - * @dst: destination address
-> > > - * @data: payload of message
-> > > - * @len: length of payload
-> > > - *
-> > > - * This function sends @data of length @len to the remote @dst address,
-> > > - * and uses @src as the source address.
-> > > - * The message will be sent to the remote processor which the @ept
-> > > - * endpoint belongs to.
-> > > - * In case there are no TX buffers available, the function will immediately
-> > > - * return -ENOMEM without waiting until one becomes available.
-> > > - *
-> > > - * Can only be called from process context (for now).
-> > > - *
-> > > - * Return: 0 on success and an appropriate error value on failure.
-> > > - */
-> > > -int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
-> > > -			     void *data, int len)
-> > > -{
-> > > -	if (WARN_ON(!ept))
-> > > -		return -EINVAL;
-> > > -	if (!ept->ops->trysend_offchannel)
-> > > -		return -ENXIO;
-> > > -
-> > > -	return ept->ops->trysend_offchannel(ept, src, dst, data, len);
-> > > -}
-> > > -EXPORT_SYMBOL(rpmsg_trysend_offchannel);
-> > > -
-> > >  /**
-> > >   * rpmsg_set_flow_control() - request remote to pause/resume transmission
-> > >   * @ept:	the rpmsg endpoint
-> > > diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
-> > > index 90d8e4475f80..fb7ab9165645 100644
-> > > --- a/include/linux/rpmsg.h
-> > > +++ b/include/linux/rpmsg.h
-> > > @@ -184,13 +184,9 @@ struct rpmsg_endpoint *rpmsg_create_ept(struct rpmsg_device *,
-> > >  
-> > >  int rpmsg_send(struct rpmsg_endpoint *ept, void *data, int len);
-> > >  int rpmsg_sendto(struct rpmsg_endpoint *ept, void *data, int len, u32 dst);
-> > > -int rpmsg_send_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
-> > > -			  void *data, int len);
-> > >  
-> > >  int rpmsg_trysend(struct rpmsg_endpoint *ept, void *data, int len);
-> > >  int rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data, int len, u32 dst);
-> > > -int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
-> > > -			     void *data, int len);
-> > >  
-> > >  __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
-> > >  			poll_table *wait);
-> > > @@ -271,15 +267,6 @@ static inline int rpmsg_sendto(struct rpmsg_endpoint *ept, void *data, int len,
-> > >  
-> > >  }
-> > >  
-> > > -static inline int rpmsg_send_offchannel(struct rpmsg_endpoint *ept, u32 src,
-> > > -					u32 dst, void *data, int len)
-> > > -{
-> > > -	/* This shouldn't be possible */
-> > > -	WARN_ON(1);
-> > > -
-> > > -	return -ENXIO;
-> > > -}
-> > > -
-> > >  static inline int rpmsg_trysend(struct rpmsg_endpoint *ept, void *data, int len)
-> > >  {
-> > >  	/* This shouldn't be possible */
-> > > @@ -297,15 +284,6 @@ static inline int rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
-> > >  	return -ENXIO;
-> > >  }
-> > >  
-> > > -static inline int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
-> > > -					   u32 dst, void *data, int len)
-> > > -{
-> > > -	/* This shouldn't be possible */
-> > > -	WARN_ON(1);
-> > > -
-> > > -	return -ENXIO;
-> > > -}
-> > > -
-> > >  static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
-> > >  				      struct file *filp, poll_table *wait)
-> > >  {
-> -- 
->  -----Open up your eyes, open up your mind, open up your code -------   
-> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-> \        dave @ treblig.org |                               | In Hex /
->  \ _________________________|_____ http://www.treblig.org   |_______/
-> 
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+So what am I missing here?
+
+							Thanx, Paul
