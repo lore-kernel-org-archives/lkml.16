@@ -1,235 +1,442 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
+Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE7520F070;
-	Thu, 24 Apr 2025 19:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745522873; cv=fail; b=B/Ub9IWb8CFcOHehtII4ckunSVBQR7VOteQdYAuy6plnHkr83+hG2w78KoxEHaRcHkTGZclLZBM6SoPhDolgksysj0yMiVdWUqN2/Hm6/cMf+zzdFvrBCt91ugxWccPYGoyjF55w5rADrUyuxUg1wnPrbvUzPy9I2wvWYy70Wyo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745522873; c=relaxed/simple;
-	bh=brnsf2igjTvmDrYeMOJYTSYt3x8Ngq4mdg2HwHqy6Yo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=UUEt1Ujri7DsUPtQbLhSvolJr1MTq0ljptR8iaZVR24XsKi7HkvzfWmr6+FAdHtFKvszBAbLw8wq6XVZWkpK1YXlesW7oMBqwiFiLgfGOv5BZmn+JpkKheV86AXFP7qmKM1XFN9BnXkdLeHTSx62pdLw37ZvSBjxpwezJb7OlhU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=b7PORn30; arc=fail smtp.client-ip=40.107.92.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A09927BF78;
+	Thu, 24 Apr 2025 19:29:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745522955; cv=none; b=r2Xbe4pPgZS0y4dm4vxl65zxQrv7+TA/mNCy86kbLkD+RgvQ4beiNaGmt0FqJiZQ714eroPUWl5qFPzyaYzVDSy3YMPPPOtcbe9qMzJXaA0198vYWQkE7RdGd1YNMnvE/DsnmjfFIs8aMUh+ei9ifI/3tkcrVGd9KgDs+wGYo7Q=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745522955; c=relaxed/simple;
+	bh=0qifbnWRlYW0Nn3J7ah2cJcMtGKeozh2QNokmEtCmLo=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=M3mqPu/5FHbSWIJej9eX2ckcXb9nVn/GbSvsKmLZnPkq1dqFXxkXo+0JRJzp3FIKPsFd0tASTXcNIxNTeHWXtE3bOBg/YbJkqFxh5JT9AVwaxXTyEgM/lFXKAzjCjA5YrN/+LyYWXL3h/0KXICN/cQYrdy42fUVSB6SK4t04FFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=Q/Q2UnV8; arc=none smtp.client-ip=198.37.111.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="b7PORn30"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oWo8B4rWYUBquEnTTuSKVZ9/ClFWL0tuh4abv5IWDJlQ+G1O7M5Jgk5fJ7/JmRYl22NxqfFUmptudNE1PzzhCGO/2S03kCNvWaG9F9H4SjgGr7OUN9WxzMkEggrWn12LaDSlJtYMEa9CU5sLfuzwE/QgZREzm78UhIcJGpD/hXBJmGIWDfs31ygwj8waXf7/ESmS/Mtsx6ryjvhGGjavniEYo+6tmGvCzobepRUoUM/P3IxPM50+uf941+15dI91iuWGRYDwG1ul6g++YXvneUDjHFhWUSeKsaVgYItNDjpENzzyl1c271LKdy6+dzSqF3DfgVNmmrUpEDjL0KHTvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ky/OJG+7ZLU7tFhG9sZ1NExnIARuoIGHNfZxtZBMYxc=;
- b=JYBxh1ieyUz0HCOBBB5Vgoty0Mh7rE25XcUu70o0Ft8uq4LrsZym5VNfBB8+5ImNK3J7VhXCFVaL0uI5KQYIamtZccxg2doMNMpk4QLHIxZWjmuQY3kxCCZk4kK3eppN0JToNiPFnTJch+2g6bTFWkrGNGhVnEayvfAOMewgxvcgQldLX9zpN6dbMO63vz7Ld3/QzIiz6sMdMUjnxHHS6nvt3EnDUSZ1xWHLZRtwmTvSInWZ+Lml+yLhGcZ1SIHTL709j3Rs6U4hJBEoe6qtmEEZoLPIsdSWPHQYajbTDXJjcoowO+XcToirPx3RcK4NyAaVeEfyjeQzOvVDMgDs3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ky/OJG+7ZLU7tFhG9sZ1NExnIARuoIGHNfZxtZBMYxc=;
- b=b7PORn30pN8HsHARqBCTydwUAJ2/DumVIOmn2xqwnRgKspCf0HXQ0TiHtOmpOcHXiOVLoM4EMr29apIc5T2iiYT5icdN7qiFbZ3i3QXPYNz5gAceQG25wKHxp7dO+fUiIxrkwfctzgWEvUgbr3N861ThDHKlRhqTmM+0O8jBL8I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL3PR12MB9049.namprd12.prod.outlook.com (2603:10b6:208:3b8::21)
- by BL3PR12MB6426.namprd12.prod.outlook.com (2603:10b6:208:3b5::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Thu, 24 Apr
- 2025 19:27:48 +0000
-Received: from BL3PR12MB9049.namprd12.prod.outlook.com
- ([fe80::c170:6906:9ef3:ecef]) by BL3PR12MB9049.namprd12.prod.outlook.com
- ([fe80::c170:6906:9ef3:ecef%5]) with mapi id 15.20.8655.033; Thu, 24 Apr 2025
- 19:27:48 +0000
-Message-ID: <0238d607-3fd7-4deb-92ac-c01aca2090fa@amd.com>
-Date: Thu, 24 Apr 2025 14:27:44 -0500
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] x86/sev: Fix making shared pages private during kdump
-To: Tom Lendacky <thomas.lendacky@amd.com>, tglx@linutronix.de,
- mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
- hpa@zytor.com
-Cc: michael.roth@amd.com, nikunj@amd.com, seanjc@google.com, ardb@kernel.org,
- stable@vger.kernel.org, linux-kernel@vger.kernel.org,
- kexec@lists.infradead.org, linux-coco@lists.linux.dev
-References: <20250424142739.673666-1-Ashish.Kalra@amd.com>
- <4311dbc7-efb5-ab6e-046c-87e833119236@amd.com>
-Content-Language: en-US
-From: "Kalra, Ashish" <ashish.kalra@amd.com>
-In-Reply-To: <4311dbc7-efb5-ab6e-046c-87e833119236@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR16CA0061.namprd16.prod.outlook.com
- (2603:10b6:805:ca::38) To BL3PR12MB9049.namprd12.prod.outlook.com
- (2603:10b6:208:3b8::21)
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Q/Q2UnV8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1745522951;
+	bh=0qifbnWRlYW0Nn3J7ah2cJcMtGKeozh2QNokmEtCmLo=;
+	h=Message-ID:Subject:From:To:Date:From;
+	b=Q/Q2UnV8saa/oP6gRV41tNMsHoWFt5HFh9BBZY5+LkP6ad5DNZXfqSNcxWAxZDNtI
+	 5IbzQm6KV1JZlHAJGuf+ac2MX3ZiyE0wG6PWHFWAEkg8jhrlL21xoQHokllREFIsRm
+	 EL0bFeBOO7B0szmiWi1Wy56DIggGwfvNnITUfTx0=
+Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id E08141C0332;
+	Thu, 24 Apr 2025 15:29:10 -0400 (EDT)
+Message-ID: <b574ba430d181f9fa53a6a7bd76e42911c50d899.camel@HansenPartnership.com>
+Subject: [GIT PULL] SCSI fixes for 6.15-rc3
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds
+	 <torvalds@linux-foundation.org>
+Cc: linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel
+	 <linux-kernel@vger.kernel.org>
+Date: Thu, 24 Apr 2025 15:29:10 -0400
+Autocrypt: addr=James.Bottomley@HansenPartnership.com;
+ prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL3PR12MB9049:EE_|BL3PR12MB6426:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cb2f446-0382-4466-65a9-08dd836618a5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZDVGbmlSNXROTkZkSG5aTkd0cE5jZTJxYW1pVy9MaUl1TU50cUZhVzR2WVh5?=
- =?utf-8?B?K3hhc2hldE8zbVhObW5IRzNNN3JLMjlsV05qYjJtQVJsNUphMFdIRzRkMDJy?=
- =?utf-8?B?ek5LSmhNTFlaMjNvNHFzOEFDRVhWVW9xbnp4QWgyS0x2QzhQQ01SUW9sTXhx?=
- =?utf-8?B?NEFiV1NXbkRkajV3Q1lTWGhWZWVaZVBrSldNbCt5SHpIVXk2NFNrZlI4dWhz?=
- =?utf-8?B?aFAvY2ptMkZKRzB4aGxOMDNDT2RrUFRxdStDVWEyeHl1dVdjNkVQN096ZTIz?=
- =?utf-8?B?N0hQUGIxZjdvbUp3TmR4a0dhcTZZY1ZqWFcvQkdzTERiN1dWQjR0WUxZRFcx?=
- =?utf-8?B?dDVKeWJmOHNTZXhXLzZMeUJvN2VGb0hINVhaSXNObWpSbUEybDFuNlZxcWYw?=
- =?utf-8?B?Q2gvUnZLMEdxWFNEVnpSZlZGT1pCWDJWa1ZWcEs4QkVkV2szTmUwNFNpRUkw?=
- =?utf-8?B?Q3VaVWJmSWtOeVA2S1NLVE0wOXJDR2pLNDEzUXo2WWczYW93NVZoNWFMOG1w?=
- =?utf-8?B?OUtHQURKNkcxSTVGaFZ1MktuNnE2Y1FqdjRDWnZBbGdjM1cyaStmaWdOZjJ1?=
- =?utf-8?B?dGFuS2pOdFpUVHNnalk5bGlORHhmWlVwOWd3WEdZelArNVFZY2ZVQzhLdURo?=
- =?utf-8?B?OXBxU2ZlaFlmV0gweUJsVUpWdFd0RTRBeGZlN0RGZlBiRnVzWnJhbGNBQ2tw?=
- =?utf-8?B?NS9OLzNPQzR5QXZDWUNIMnVkZzYyVzM1c3BkS1k3NzVUdHZ1eGhPdGthSkVF?=
- =?utf-8?B?dWJHZDgvSk80am9yR0sxV0prSUJ1UXBVbmdWSGEvekNQemF1MDZndkMrL2gx?=
- =?utf-8?B?Q3NHQURNWUpSRWtJZTFUaXJiOWg3eVNaSmVRV2hXMkRmWWdvNndVRmdiZ3VG?=
- =?utf-8?B?bk5KTkhiZzNmVVV5ejcxb2J4QjBRSFluOExSZzRRQWEyMXNCc2FoaW03L0M5?=
- =?utf-8?B?dldSeWRBdDR5UWcvNHJTbG13Y1ZOTk9GWXduVkNURi9Wem9uL0syRldudWNQ?=
- =?utf-8?B?eFRCejRHNzlEUGdxZXY1d210VmhSd1hEZVZGNUwvQ2M1Q0pLaE41Tkt0dk1V?=
- =?utf-8?B?ZCtqNUhSM1JVWHR2SC9YbjBsL2gzUWc4SzN5Z1pkK0NNdXNZVDJRSWNjWHky?=
- =?utf-8?B?Z2MyeGFMM1F5S1FBWUFEYzFjOEh0c21LR0ViMmYzdytrQTEyNnNwRC8vanI1?=
- =?utf-8?B?TWVWUFY3ZGJBK2dBanhLby9vUEtCZWZPNFZnYm9pUlhNTWdXSTc1TEZldTNy?=
- =?utf-8?B?dCtrd0VMaktXaDFhVmVMLy9oU3B0RWkySHp6cVVTaFNBN1NjbFpSQTAxcDBs?=
- =?utf-8?B?VDhZVkZBYjNJMjFKd3BUczF0b0RvcWlaemlMZTladkJ2TjNDaUtLenVTK2Ev?=
- =?utf-8?B?bnY3Ly80bEhwWG1LSVpkMzBOSkt4ODZTdHU2Y25SRWRRb0RKYUFwcXVoOC9F?=
- =?utf-8?B?RW5EK29ST0lUV3hRZlcxSHhWMUVCR3NXNDJOcmU5YXlVQ29GOWlna3d0Uyt2?=
- =?utf-8?B?cmpTMnJnbWl1RFlEaWluc2FuK0pvWnZHd04xNTcyNHpDdG5EMVAxNUxydFRt?=
- =?utf-8?B?RVArTjV5ckV4VnJVYUNOK3hDbGNreVpTYk9xOWkwWjVXc1pEc3IxY0Zmendx?=
- =?utf-8?B?dUVLNDBzYWwwWWV0SmwyS1hRU0toaWtNaFNETGRNNHlWakZGc3FTZ2lkV0ZV?=
- =?utf-8?B?NEJlUTFIOXl5alhaMnNTbk9iZ1hieDl0a2hIcDV4dUlBcG0vUDdYbmlPSDlm?=
- =?utf-8?B?Z1ZEY1VpMDB3Mi83b3JrcjZxcDcxSC90TFp5VEpOUVdWS3VTYmx5WDhEaUFi?=
- =?utf-8?B?NXJ3bHJGczJ6emQxVldSMHlXcGlvT2Z0L0VZTUM0eHhPamNwbS9uakQwczhi?=
- =?utf-8?B?My9IQUR6VEl0LytEVEZpVWNLWTNRbVJZNW9nUGhoeCtNL3JJZDlhZXQ4bzE1?=
- =?utf-8?Q?MBvZX6FM4/k=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB9049.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SnJReGgrZ0xZTmZVT2FpWWtORXhDaWZ5d1NyT2NQRnZEQWN1dW5INUxDclQ2?=
- =?utf-8?B?bFYyNWd1V3pHYktWaHMxRGxzNEF5alhnZWh4cjc0M0d1RzBLdVdWb3k2TmhZ?=
- =?utf-8?B?c0oza0xNT1FXSUJBRDBteWZ5N204bEQyRENQOGFnYkYrYXJ2Z21YNVBRYVUx?=
- =?utf-8?B?NHZDUnBGWENSSzZoUFQ5Z2hJSFRpVlo3MHZJRkt0citiN3pBUnJRQXQyc0tB?=
- =?utf-8?B?bkkwRVRoZTEwUnlEdlRzRHlPdVFOL3MwWFl2RkoxTDhEbkxuUFZVYUNHNzky?=
- =?utf-8?B?T3ZXWEhlc2Z2UDFCcHFiRGExZVdBbnZVU21idUVXNGdOK0NHTkRneUp1elJz?=
- =?utf-8?B?RG00Vnp4OWdaOStxSm1BeWhzNkVWNUVtNklmQkdCUFFyQkh3V3dINDZVanJP?=
- =?utf-8?B?dnd0T2FaSlloRkRZc1V5bG5hNnc1TjRjQlM0dlBRTDFnWXNmcm0yMHVLVk4z?=
- =?utf-8?B?aU9qam10R2xOVnVtZ2FubHZDNy9Udng4QW9LVEtXeVRQUU0wUmY1alVUUndk?=
- =?utf-8?B?SS92WkdrV256SlBDZWtjWHgrdHFxNWRhOWUvVkxtV1FDeGZ5SU8xS2dwN3Q4?=
- =?utf-8?B?TVppbHhxNWl4a3Z3Nmw0Mk16a243Y3ZMdzRkeUlsbDZyZmdyZnl4Y0k1ampy?=
- =?utf-8?B?cHpoRmFNbnpYcFYrSk5KYWNmT3hOTGMzRjFncUk4UUlncmhSUEVQeVJFcm1H?=
- =?utf-8?B?eTFIdjEyajdrTklpS1RSQmpCeTVBRW9oSzYxTlFDT3pXeVFQY3ZEUkVua3VQ?=
- =?utf-8?B?QTRyWDNZYlNDMlYrR2Z5cDFLc0V0WGRTQkFFcHRrZmJGZUlIS2xUSXpBdmdm?=
- =?utf-8?B?Uk9UelY4dzdXN1RNMlpJeUhMY1lUSG4wbTlBbHFUNWVyMWxvS252NzFzYVlU?=
- =?utf-8?B?STVhUVFjM29kRzdHWFZ4dVB5WnFkNFVRK09TK1Nxc21KWnJtVXFkSS9VYWhk?=
- =?utf-8?B?aVJxOFp4YzVoRzR3eU5Dc1Q2OWIrSEV6S3A5RENXN2xtK0dJZWcwQkhsbkJD?=
- =?utf-8?B?enpkdUxBOG9yRWs4VFMzbXZ6dExFQndITkp3R3dFbEJSRU9pR082emUvM25G?=
- =?utf-8?B?M2plYyszeGV6SkNURGc4RkNCYlBHeUVSdGFjaW9IRjBodFNCMUV6cXE4d0No?=
- =?utf-8?B?VnpnQS9sSnhLNHlSMkFiTHdwRitNbDdoRlB0RWlidDczamxTRWFOMWN5RXJo?=
- =?utf-8?B?WmsyaHo0aERFNzNNQm1WcGZTT0tySDlSUW9md1ZTY3JTcTNKU1pubUxQTWxP?=
- =?utf-8?B?T3YvV0VsS0puZDBHR1l1SzVrV1lFSWllMThxYnBQck13VTB5TmJadVBuOGQ2?=
- =?utf-8?B?Rm1Cd3dOS0gzWnBVZmhDcVJBdFNQZEpqZE9oL3ZpMnA0SEZvM3VFOXY5VXdu?=
- =?utf-8?B?YnFrdFRqNlk3Qm1LQ2dySjUzQ2RRWWo2Szd3aG8yTUZSRlRGendrMExTdWVo?=
- =?utf-8?B?YnQ1TlBoNmxGQzR6N01FWlRoWFkrRHlaTVF4QjBVY3N1VXBkSGhuTjBFQlFi?=
- =?utf-8?B?NWtrU2VWMkFhbHlwL1o4d0h4cUdzOEFrbjJWbXV1Mnp1SGxlUGc1a0VTOGo5?=
- =?utf-8?B?czE4ZWswVFU0czZEbklTZERvME0xMDRCZVh3NEhldFg1N01ZaEZua25ubVQ5?=
- =?utf-8?B?SmtGME1kd2Q2bGtjUFZJaVV2VW9YTzB0MDRsbElSREFNUXJ2alVXUmhmVmI5?=
- =?utf-8?B?SituZi8wSWVHKzhmY0hDTU1EVUhVZUtzZTk4UzFwOXdQSkk1eGE3bE8zMlZv?=
- =?utf-8?B?bjg1VEEweXdaUjlSVC9xZHh4Q1lSSEk4anJMbEhnTUJEQ2tvcGROM25TaEtu?=
- =?utf-8?B?K0tLSGhpS2N0akJzdEF0RGJ2cExJQ2ZBK09pWnYxSkpycTV3YkRKMkNzOWFh?=
- =?utf-8?B?MUpUWElnSUE2eUNJVVJVTHp2WnVsT3FOcXZidSthRVBOZmRYNjF1MS9XamNQ?=
- =?utf-8?B?QTFSUUNGZHpRdUE5SUdqRkR3eEJEN1BwR1R4WWEzUUIvU2RBejNkK1dodVIv?=
- =?utf-8?B?WWVHSlpWYmJJZUtSc3pPYUlPbFhRWGQxUEJVSzJkWS9BMkpyVUlzSUJ4VS9q?=
- =?utf-8?B?eHJDV1FIMFZNcWxRVVJnTm9FTWIwRENYUUhZN21NT01JRFQ3ZlhGMlBFVDZr?=
- =?utf-8?Q?kdSCT++x+5zjHefoPzUjeVt8H?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cb2f446-0382-4466-65a9-08dd836618a5
-X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB9049.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 19:27:48.2015
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fWy7SUE0M6ywC0dgoIPCL2by+AWFcHBeTIiG7HW57c0Rx1uaVt6KccHu3uHwEw7eO76yi32LugKDN4Qs+DGXMQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6426
 
-Hello Tom,
+The single core change is an obvious bug fix (and falls within the LF
+guidelines for patches from sanctioned entities).  The other driver
+changes are a bit larger but likewise pretty obvious.
 
-On 4/24/2025 10:29 AM, Tom Lendacky wrote:
-> On 4/24/25 09:27, Ashish Kalra wrote:
->> From: Ashish Kalra <ashish.kalra@amd.com>
->>
->> When the shared pages are being made private during kdump preparation
->> there are additional checks to handle shared GHCB pages.
->>
->> These additional checks include handling the case of GHCB page being
->> contained within a 2MB page.
->>
->> There is a bug in this additional check for GHCB page contained
->> within a 2MB page which causes any shared page just below the
->> per-cpu GHCB getting skipped from being transitioned back to private
->> before kdump preparation which subsequently causes a 0x404 #VC
->> exception when this shared page is accessed later while dumping guest
->> memory during vmcore generation via kdump. 
->>
->> Correct the detection and handling of GHCB pages contained within
->> a 2MB page.
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
->> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
->> ---
->>  arch/x86/coco/sev/core.c | 11 ++++++++++-
->>  1 file changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
->> index 2c27d4b3985c..16d874f4dcd3 100644
->> --- a/arch/x86/coco/sev/core.c
->> +++ b/arch/x86/coco/sev/core.c
->> @@ -926,7 +926,13 @@ static void unshare_all_memory(void)
->>  			data = per_cpu(runtime_data, cpu);
->>  			ghcb = (unsigned long)&data->ghcb_page;
->>  
->> -			if (addr <= ghcb && ghcb <= addr + size) {
->> +			/* Handle the case of 2MB page containing the GHCB page */
-> 
-> s/2MB page/a huge page/
-> 
->> +			if (level == PG_LEVEL_4K && addr == ghcb) {
->> +				skipped_addr = true;
->> +				break;
->> +			}
->> +			if (level > PG_LEVEL_4K && addr <= ghcb &&
->> +			    ghcb < addr + size) {
->>  				skipped_addr = true;
->>  				break;
->>  			}
->> @@ -1106,6 +1112,9 @@ void snp_kexec_finish(void)
->>  		ghcb = &data->ghcb_page;
->>  		pte = lookup_address((unsigned long)ghcb, &level);
->>  		size = page_level_size(level);
->> +		/* Handle the case of 2MB page containing the GHCB page */
->> +		if (level > PG_LEVEL_4K)
->> +			ghcb = (struct ghcb *)((unsigned long)ghcb & PMD_MASK);
-> 
-> For safety, shouldn't the mask be based on the level/size that is returned?
->
+The patch is available here:
 
-Yes that makes sense and i will fix it accordingly.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
 
-Thanks,
-Ashish
- 
-> Thanks,
-> Tom
-> 
->>  		set_pte_enc(pte, level, (void *)ghcb);
->>  		snp_set_memory_private((unsigned long)ghcb, (size / PAGE_SIZE));
->>  	}
+The short changelog is:
+
+Anastasia Kovaleva (1):
+      scsi: core: Clear flags for scsi_cmnd that did not complete
+
+Chenyuan Yang (2):
+      scsi: ufs: core: Add NULL check in ufshcd_mcq_compl_pending_transfer(=
+)
+      scsi: ufs: mcq: Add NULL check in ufshcd_mcq_abort()
+
+Dmitry Bogdanov (1):
+      scsi: target: iscsi: Fix timeout on deleted connection
+
+Manish Pandey (2):
+      scsi: ufs: Introduce quirk to extend PA_HIBERN8TIME for UFS devices
+      scsi: ufs: qcom: Add quirks for Samsung UFS devices
+
+Ranjan Kumar (3):
+      scsi: mpi3mr: Add level check to control event logging
+      scsi: mpi3mr: Reset the pending interrupt flag
+      scsi: mpi3mr: Fix pending I/O counter
+
+And the diffstat:
+
+ drivers/scsi/mpi3mr/mpi3mr_fw.c     |  8 ++++++-
+ drivers/scsi/scsi_lib.c             |  6 +++++-
+ drivers/target/iscsi/iscsi_target.c |  2 +-
+ drivers/ufs/core/ufs-mcq.c          | 12 +++++------
+ drivers/ufs/core/ufshcd.c           | 31 ++++++++++++++++++++++++++
+ drivers/ufs/host/ufs-qcom.c         | 43 +++++++++++++++++++++++++++++++++=
+++++
+ drivers/ufs/host/ufs-qcom.h         | 18 ++++++++++++++++
+ include/ufs/ufs_quirks.h            |  6 ++++++
+ 8 files changed, 116 insertions(+), 10 deletions(-)
+
+
+With full diff below.
+
+James
+
+---
+
+diff --git a/drivers/scsi/mpi3mr/mpi3mr_fw.c b/drivers/scsi/mpi3mr/mpi3mr_f=
+w.c
+index 3fcb1ad3b070..1d7901a8f0e4 100644
+--- a/drivers/scsi/mpi3mr/mpi3mr_fw.c
++++ b/drivers/scsi/mpi3mr/mpi3mr_fw.c
+@@ -174,6 +174,9 @@ static void mpi3mr_print_event_data(struct mpi3mr_ioc *=
+mrioc,
+ 	char *desc =3D NULL;
+ 	u16 event;
+=20
++	if (!(mrioc->logging_level & MPI3_DEBUG_EVENT))
++		return;
++
+ 	event =3D event_reply->event;
+=20
+ 	switch (event) {
+@@ -451,6 +454,7 @@ int mpi3mr_process_admin_reply_q(struct mpi3mr_ioc *mri=
+oc)
+ 		return 0;
+ 	}
+=20
++	atomic_set(&mrioc->admin_pend_isr, 0);
+ 	reply_desc =3D (struct mpi3_default_reply_descriptor *)mrioc->admin_reply=
+_base +
+ 	    admin_reply_ci;
+=20
+@@ -565,7 +569,7 @@ int mpi3mr_process_op_reply_q(struct mpi3mr_ioc *mrioc,
+ 		WRITE_ONCE(op_req_q->ci, le16_to_cpu(reply_desc->request_queue_ci));
+ 		mpi3mr_process_op_reply_desc(mrioc, reply_desc, &reply_dma,
+ 		    reply_qidx);
+-		atomic_dec(&op_reply_q->pend_ios);
++
+ 		if (reply_dma)
+ 			mpi3mr_repost_reply_buf(mrioc, reply_dma);
+ 		num_op_reply++;
+@@ -2925,6 +2929,7 @@ static int mpi3mr_setup_admin_qpair(struct mpi3mr_ioc=
+ *mrioc)
+ 	mrioc->admin_reply_ci =3D 0;
+ 	mrioc->admin_reply_ephase =3D 1;
+ 	atomic_set(&mrioc->admin_reply_q_in_use, 0);
++	atomic_set(&mrioc->admin_pend_isr, 0);
+=20
+ 	if (!mrioc->admin_req_base) {
+ 		mrioc->admin_req_base =3D dma_alloc_coherent(&mrioc->pdev->dev,
+@@ -4653,6 +4658,7 @@ void mpi3mr_memset_buffers(struct mpi3mr_ioc *mrioc)
+ 	if (mrioc->admin_reply_base)
+ 		memset(mrioc->admin_reply_base, 0, mrioc->admin_reply_q_sz);
+ 	atomic_set(&mrioc->admin_reply_q_in_use, 0);
++	atomic_set(&mrioc->admin_pend_isr, 0);
+=20
+ 	if (mrioc->init_cmds.reply) {
+ 		memset(mrioc->init_cmds.reply, 0, sizeof(*mrioc->init_cmds.reply));
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 0d29470e86b0..1b43013d72c0 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1253,8 +1253,12 @@ EXPORT_SYMBOL_GPL(scsi_alloc_request);
+  */
+ static void scsi_cleanup_rq(struct request *rq)
+ {
++	struct scsi_cmnd *cmd =3D blk_mq_rq_to_pdu(rq);
++
++	cmd->flags =3D 0;
++
+ 	if (rq->rq_flags & RQF_DONTPREP) {
+-		scsi_mq_uninit_cmd(blk_mq_rq_to_pdu(rq));
++		scsi_mq_uninit_cmd(cmd);
+ 		rq->rq_flags &=3D ~RQF_DONTPREP;
+ 	}
+ }
+diff --git a/drivers/target/iscsi/iscsi_target.c b/drivers/target/iscsi/isc=
+si_target.c
+index 1244ef3aa86c..620ba6e0ab07 100644
+--- a/drivers/target/iscsi/iscsi_target.c
++++ b/drivers/target/iscsi/iscsi_target.c
+@@ -4263,8 +4263,8 @@ int iscsit_close_connection(
+ 	spin_unlock(&iscsit_global->ts_bitmap_lock);
+=20
+ 	iscsit_stop_timers_for_cmds(conn);
+-	iscsit_stop_nopin_response_timer(conn);
+ 	iscsit_stop_nopin_timer(conn);
++	iscsit_stop_nopin_response_timer(conn);
+=20
+ 	if (conn->conn_transport->iscsit_wait_conn)
+ 		conn->conn_transport->iscsit_wait_conn(conn);
+diff --git a/drivers/ufs/core/ufs-mcq.c b/drivers/ufs/core/ufs-mcq.c
+index 240ce135bbfb..f1294c29f484 100644
+--- a/drivers/ufs/core/ufs-mcq.c
++++ b/drivers/ufs/core/ufs-mcq.c
+@@ -677,13 +677,6 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
+ 	unsigned long flags;
+ 	int err;
+=20
+-	if (!ufshcd_cmd_inflight(lrbp->cmd)) {
+-		dev_err(hba->dev,
+-			"%s: skip abort. cmd at tag %d already completed.\n",
+-			__func__, tag);
+-		return FAILED;
+-	}
+-
+ 	/* Skip task abort in case previous aborts failed and report failure */
+ 	if (lrbp->req_abort_skip) {
+ 		dev_err(hba->dev, "%s: skip abort. tag %d failed earlier\n",
+@@ -692,6 +685,11 @@ int ufshcd_mcq_abort(struct scsi_cmnd *cmd)
+ 	}
+=20
+ 	hwq =3D ufshcd_mcq_req_to_hwq(hba, scsi_cmd_to_rq(cmd));
++	if (!hwq) {
++		dev_err(hba->dev, "%s: skip abort. cmd at tag %d already completed.\n",
++			__func__, tag);
++		return FAILED;
++	}
+=20
+ 	if (ufshcd_mcq_sqe_search(hba, hwq, tag)) {
+ 		/*
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 44156041d88f..5cb6132b8147 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -278,6 +278,7 @@ static const struct ufs_dev_quirk ufs_fixups[] =3D {
+ 	  .model =3D UFS_ANY_MODEL,
+ 	  .quirk =3D UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM |
+ 		   UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE |
++		   UFS_DEVICE_QUIRK_PA_HIBER8TIME |
+ 		   UFS_DEVICE_QUIRK_RECOVERY_FROM_DL_NAC_ERRORS },
+ 	{ .wmanufacturerid =3D UFS_VENDOR_SKHYNIX,
+ 	  .model =3D UFS_ANY_MODEL,
+@@ -5677,6 +5678,8 @@ static void ufshcd_mcq_compl_pending_transfer(struct =
+ufs_hba *hba,
+ 			continue;
+=20
+ 		hwq =3D ufshcd_mcq_req_to_hwq(hba, scsi_cmd_to_rq(cmd));
++		if (!hwq)
++			continue;
+=20
+ 		if (force_compl) {
+ 			ufshcd_mcq_compl_all_cqes_lock(hba, hwq);
+@@ -8470,6 +8473,31 @@ static int ufshcd_quirk_tune_host_pa_tactivate(struc=
+t ufs_hba *hba)
+ 	return ret;
+ }
+=20
++/**
++ * ufshcd_quirk_override_pa_h8time - Ensures proper adjustment of PA_HIBER=
+N8TIME.
++ * @hba: per-adapter instance
++ *
++ * Some UFS devices require specific adjustments to the PA_HIBERN8TIME par=
+ameter
++ * to ensure proper hibernation timing. This function retrieves the curren=
+t
++ * PA_HIBERN8TIME value and increments it by 100us.
++ */
++static void ufshcd_quirk_override_pa_h8time(struct ufs_hba *hba)
++{
++	u32 pa_h8time;
++	int ret;
++
++	ret =3D ufshcd_dme_get(hba, UIC_ARG_MIB(PA_HIBERN8TIME), &pa_h8time);
++	if (ret) {
++		dev_err(hba->dev, "Failed to get PA_HIBERN8TIME: %d\n", ret);
++		return;
++	}
++
++	/* Increment by 1 to increase hibernation time by 100 =C2=B5s */
++	ret =3D ufshcd_dme_set(hba, UIC_ARG_MIB(PA_HIBERN8TIME), pa_h8time + 1);
++	if (ret)
++		dev_err(hba->dev, "Failed updating PA_HIBERN8TIME: %d\n", ret);
++}
++
+ static void ufshcd_tune_unipro_params(struct ufs_hba *hba)
+ {
+ 	ufshcd_vops_apply_dev_quirks(hba);
+@@ -8480,6 +8508,9 @@ static void ufshcd_tune_unipro_params(struct ufs_hba =
+*hba)
+=20
+ 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE)
+ 		ufshcd_quirk_tune_host_pa_tactivate(hba);
++
++	if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_HIBER8TIME)
++		ufshcd_quirk_override_pa_h8time(hba);
+ }
+=20
+ static void ufshcd_clear_dbg_ufs_stats(struct ufs_hba *hba)
+diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
+index 1b37449fbffc..c0761ccc1381 100644
+--- a/drivers/ufs/host/ufs-qcom.c
++++ b/drivers/ufs/host/ufs-qcom.c
+@@ -33,6 +33,10 @@
+ 	((((c) >> 16) & MCQ_QCFGPTR_MASK) * MCQ_QCFGPTR_UNIT)
+ #define MCQ_QCFG_SIZE	0x40
+=20
++/* De-emphasis for gear-5 */
++#define DEEMPHASIS_3_5_dB	0x04
++#define NO_DEEMPHASIS		0x0
++
+ enum {
+ 	TSTBUS_UAWM,
+ 	TSTBUS_UARM,
+@@ -795,6 +799,23 @@ static int ufs_qcom_icc_update_bw(struct ufs_qcom_host=
+ *host)
+ 	return ufs_qcom_icc_set_bw(host, bw_table.mem_bw, bw_table.cfg_bw);
+ }
+=20
++static void ufs_qcom_set_tx_hs_equalizer(struct ufs_hba *hba, u32 gear, u3=
+2 tx_lanes)
++{
++	u32 equalizer_val;
++	int ret, i;
++
++	/* Determine the equalizer value based on the gear */
++	equalizer_val =3D (gear =3D=3D 5) ? DEEMPHASIS_3_5_dB : NO_DEEMPHASIS;
++
++	for (i =3D 0; i < tx_lanes; i++) {
++		ret =3D ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(TX_HS_EQUALIZER, i),
++				     equalizer_val);
++		if (ret)
++			dev_err(hba->dev, "%s: failed equalizer lane %d\n",
++				__func__, i);
++	}
++}
++
+ static int ufs_qcom_pwr_change_notify(struct ufs_hba *hba,
+ 				enum ufs_notify_change_status status,
+ 				const struct ufs_pa_layer_attr *dev_max_params,
+@@ -846,6 +867,11 @@ static int ufs_qcom_pwr_change_notify(struct ufs_hba *=
+hba,
+ 						dev_req_params->gear_tx,
+ 						PA_INITIAL_ADAPT);
+ 		}
++
++		if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_TX_DEEMPHASIS_TUNING)
++			ufs_qcom_set_tx_hs_equalizer(hba,
++					dev_req_params->gear_tx, dev_req_params->lane_tx);
++
+ 		break;
+ 	case POST_CHANGE:
+ 		if (ufs_qcom_cfg_timers(hba, false)) {
+@@ -893,6 +919,16 @@ static int ufs_qcom_quirk_host_pa_saveconfigtime(struc=
+t ufs_hba *hba)
+ 			    (pa_vs_config_reg1 | (1 << 12)));
+ }
+=20
++static void ufs_qcom_override_pa_tx_hsg1_sync_len(struct ufs_hba *hba)
++{
++	int err;
++
++	err =3D ufshcd_dme_peer_set(hba, UIC_ARG_MIB(PA_TX_HSG1_SYNC_LENGTH),
++				  PA_TX_HSG1_SYNC_LENGTH_VAL);
++	if (err)
++		dev_err(hba->dev, "Failed (%d) set PA_TX_HSG1_SYNC_LENGTH\n", err);
++}
++
+ static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hba)
+ {
+ 	int err =3D 0;
+@@ -900,6 +936,9 @@ static int ufs_qcom_apply_dev_quirks(struct ufs_hba *hb=
+a)
+ 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_PA_SAVECONFIGTIME)
+ 		err =3D ufs_qcom_quirk_host_pa_saveconfigtime(hba);
+=20
++	if (hba->dev_quirks & UFS_DEVICE_QUIRK_PA_TX_HSG1_SYNC_LENGTH)
++		ufs_qcom_override_pa_tx_hsg1_sync_len(hba);
++
+ 	return err;
+ }
+=20
+@@ -914,6 +953,10 @@ static struct ufs_dev_quirk ufs_qcom_dev_fixups[] =3D =
+{
+ 	{ .wmanufacturerid =3D UFS_VENDOR_WDC,
+ 	  .model =3D UFS_ANY_MODEL,
+ 	  .quirk =3D UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE },
++	{ .wmanufacturerid =3D UFS_VENDOR_SAMSUNG,
++	  .model =3D UFS_ANY_MODEL,
++	  .quirk =3D UFS_DEVICE_QUIRK_PA_TX_HSG1_SYNC_LENGTH |
++		   UFS_DEVICE_QUIRK_PA_TX_DEEMPHASIS_TUNING },
+ 	{}
+ };
+=20
+diff --git a/drivers/ufs/host/ufs-qcom.h b/drivers/ufs/host/ufs-qcom.h
+index d0e6ec9128e7..05d4cb569c50 100644
+--- a/drivers/ufs/host/ufs-qcom.h
++++ b/drivers/ufs/host/ufs-qcom.h
+@@ -122,8 +122,11 @@ enum {
+ 				 TMRLUT_HW_CGC_EN | OCSC_HW_CGC_EN)
+=20
+ /* QUniPro Vendor specific attributes */
++#define PA_TX_HSG1_SYNC_LENGTH	0x1552
+ #define PA_VS_CONFIG_REG1	0x9000
+ #define DME_VS_CORE_CLK_CTRL	0xD002
++#define TX_HS_EQUALIZER		0x0037
++
+ /* bit and mask definitions for DME_VS_CORE_CLK_CTRL attribute */
+ #define CLK_1US_CYCLES_MASK_V4				GENMASK(27, 16)
+ #define CLK_1US_CYCLES_MASK				GENMASK(7, 0)
+@@ -141,6 +144,21 @@ enum {
+ #define UNIPRO_CORE_CLK_FREQ_201_5_MHZ         202
+ #define UNIPRO_CORE_CLK_FREQ_403_MHZ           403
+=20
++/* TX_HSG1_SYNC_LENGTH attr value */
++#define PA_TX_HSG1_SYNC_LENGTH_VAL	0x4A
++
++/*
++ * Some ufs device vendors need a different TSync length.
++ * Enable this quirk to give an additional TX_HS_SYNC_LENGTH.
++ */
++#define UFS_DEVICE_QUIRK_PA_TX_HSG1_SYNC_LENGTH		BIT(16)
++
++/*
++ * Some ufs device vendors need a different Deemphasis setting.
++ * Enable this quirk to tune TX Deemphasis parameters.
++ */
++#define UFS_DEVICE_QUIRK_PA_TX_DEEMPHASIS_TUNING	BIT(17)
++
+ /* ICE allocator type to share AES engines among TX stream and RX stream *=
+/
+ #define ICE_ALLOCATOR_TYPE 2
+=20
+diff --git a/include/ufs/ufs_quirks.h b/include/ufs/ufs_quirks.h
+index 41ff44dfa1db..f52de5ed1b3b 100644
+--- a/include/ufs/ufs_quirks.h
++++ b/include/ufs/ufs_quirks.h
+@@ -107,4 +107,10 @@ struct ufs_dev_quirk {
+  */
+ #define UFS_DEVICE_QUIRK_DELAY_AFTER_LPM        (1 << 11)
+=20
++/*
++ * Some ufs devices may need more time to be in hibern8 before exiting.
++ * Enable this quirk to give it an additional 100us.
++ */
++#define UFS_DEVICE_QUIRK_PA_HIBER8TIME          (1 << 12)
++
+ #endif /* UFS_QUIRKS_H_ */
 
