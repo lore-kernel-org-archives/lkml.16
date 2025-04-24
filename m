@@ -1,191 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20B6F510;
-	Thu, 24 Apr 2025 10:49:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD501E5B6A;
+	Thu, 24 Apr 2025 10:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745491759; cv=none; b=n/4w2S6/HjKOhAJDIdQubB2SMQpya/qW0h43PXLkKBDkl4nfCt2Dm9NwFDYn8c/AuxpXsvasXSE5YJq3MXYv7ISVx+pwxZTOBCOXNIYFtx+5Qg19Ie94ilMcCqGX4ptmamFc+1W68DuU77seAMhFFsDk0/iJHqxbxhGV9YaM4lA=
+	t=1745491790; cv=none; b=dhBnWGQEng5GscqGZt//yj471Gxiek9bVrZO5poyuweKM3SNXgC8CvCeISYCKK0xM/p3DO2ZCoFZizVoxiArLRk+X3/iNJSOGBz0elL/kVUGM0r9P4EHPOgY/gSs5rpbGmGf6Sd0FCYLr5bbrRG60THt0Yy9vm74hn9m/Ks+gE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745491759; c=relaxed/simple;
-	bh=mqWPrwTyWntUN2VetXvoc4/yqzcGd25/TQDIPFZscK0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZvV9Tf4qI+px1JoD+M9zXsNakHhlrLPY1nlfJBMdoQKvW00JWaI6iUYUjLFdRiZqq0UOzNYFC+qxnr0xyM0ONfsb5CqJ1HYDiIK/4zKXxwMyX7CqNkvgbRknTSasPE9loDfF6tei8b8P/XkQ4ATFZJQFwkfAs8FlRxDjkkED7Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BH0J527G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745491790; c=relaxed/simple;
+	bh=y5UC+0QaHNVuSZ7b7lcARL6lAthFtXPgUV/0j6xkD/M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Nt1pr5HyGq6kQEYP68vUfPd0d/rQX3Qh9o/JWo0C8Js+hdHahydXyLJqlyhmhKufdPUgKvwQfANU+GOcs0k3zuu3mrvJepNmo2rEwz2Y7XvgzCK5r8BGlW2zmfNFY9Kf8qnDj2xypNlYOHL/4GJ1YxKXLF5yb3GVFv1ULRviFTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XmDIVKYl; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BH0J527G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73357C4CEE4;
-	Thu, 24 Apr 2025 10:49:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745491758;
-	bh=mqWPrwTyWntUN2VetXvoc4/yqzcGd25/TQDIPFZscK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BH0J527GnzV00glYPFQKqBPecciMw4nWolX9ixxuZw+IXKKIh6WaRWECI84/KmVGt
-	 cwcpEUhwekxaCDH8MztWHBXkG7nwdbI8lVoeZHm3+db4lHZqYzdzTRPpJLq2zLDToP
-	 2woe3GLnozM2yL9CS8fTHHI/tnG01Xr09hKOOxB8Kk81mkXim96TDTrpjwOjISBUd4
-	 rucKmQ9loaYWfhdrI4voitdtzW2ug4kh++koWa53+fK0y1PrjbXxu4BdSzd1wc1oRQ
-	 FefFhGTwtM5yOKoRH+0hAqk6rcgV3QTdYZta4iD2radSkuhMIpElszYZAW86tP8bk2
-	 fX002j0O8dXuQ==
-Date: Thu, 24 Apr 2025 13:49:12 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Shiraz Saleem <shirazsaleem@microsoft.com>
-Cc: Konstantin Taranov <kotaranov@linux.microsoft.com>,
-	Konstantin Taranov <kotaranov@microsoft.com>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	KY Srinivasan <kys@microsoft.com>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	Dexuan Cui <decui@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	Long Li <longli@microsoft.com>, "jgg@ziepe.ca" <jgg@ziepe.ca>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH rdma-next 4/4] net: mana: Add support for auxiliary
- device servicing events
-Message-ID: <20250424104912.GR48485@unreal>
-References: <1744655329-13601-1-git-send-email-kotaranov@linux.microsoft.com>
- <1744655329-13601-5-git-send-email-kotaranov@linux.microsoft.com>
- <20250420105309.GC10635@unreal>
- <BL1PR21MB3089EF4639B5CC2AD5E70B96C9852@BL1PR21MB3089.namprd21.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XmDIVKYl"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7398d65476eso657210b3a.1;
+        Thu, 24 Apr 2025 03:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745491788; x=1746096588; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=y+02iLfKsjMgHXk7NErynQYY2k7PwcNHBpBTjscdThQ=;
+        b=XmDIVKYlmMijk4uAyaWTLOPcbfBfvdkiLcUhkkdB5ULsolaPpyDBZ2EH9Gw3YfjdZN
+         aWJ+izD/vbvP3/bgQJ2obUT2Lj5NJbnxsSCv87lXv6qMLquRCsvQtl9+1iHA1Y3OGqob
+         AW1z25GcFjfcyosRgrfpDgFnj4O6WYjyfRyQw6dn3vAgMD0qg2thiFAxHDXYgX6pt+OY
+         kJTxaLtM3m/WgKLdUT7ELNZhfx2xGFBLlvbIbMuKoJAxKKty6Knqx1EopgsQRnRfZjct
+         OiD39Xzy7N5VpCoG+f3s0Pq48rwCbwfmyUf3Dtv+e5+KAxL/uqN2cWGsaFHUQ0xs8Ut4
+         2UQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745491788; x=1746096588;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=y+02iLfKsjMgHXk7NErynQYY2k7PwcNHBpBTjscdThQ=;
+        b=oCP1bIWLXE0sXrwXkQ1YURSjys6463KjIslBBwzZL0ZOHRQlxsOKQd2Vnf0xE1Z2Nq
+         9CT7QAEZ9eT2/beSjegUiRZBXS2IN7EYQ+KeevZWpeK5w3Eq8K0Hfh9PYqAU9bayThAk
+         rU3XYqjlVz8hi/pfiIypX7BDTKAqjE09KN0d3fvKGNusvQ0GjtXTDuSavYDrHVdOcwG8
+         tCklBg//bMVOamuBynQrVFHBZ3++k6ZcW89qUcv8x+Adh0Olwm6Gj/9s/O7nDbNHL9vN
+         hzNNFM5zGyF5tFJirEhYqHKUBlBhf/9yJoFh/u/FSm8gJY9BVvdeqfzS7Q6F/a1FQ17U
+         gHzA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6BcTAxccT3Z3wZlm9YdReozlZj1Hn31fAulxDzkf92NVVBY4FJa79AXpwVMIq8afgONHdIiWb@vger.kernel.org, AJvYcCVT9w1pukLmWg8ULVFJ9IUhIBSlrkHqLNIiw5ZTGXZCKCR9H4hCpdDrPytN+/ecpKUG0X8=@vger.kernel.org, AJvYcCVlvjiAbh2RG98o8AK5b7EfgmIZk+ZAI4euVw4MaBLRNtZGhNaG9csOFxMt4/xGqHeRkY09hpaQIhMdkb4b@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5qlqanShV94sOG4MjvnQgxyICC44jpN2Z3hCcN9AI+PxHyLjI
+	zNg31T4wlPbbK7R8eI5P/OlyKeoXLJjg7MVji3XHM0qmzZ24gGTw
+X-Gm-Gg: ASbGncuwUW+r9dSjLFAYgz8QhjAJnfaYoNCIaVIgYg1YCAX8c7bFqf63F0b5aZpu7cD
+	x/GY9GGoot97/4jxFO9vzND75Zc71umR2NpQQLyrK7HiX7mL2sK7q6NY+QLsoHd6YWZdmpm8t8G
+	EyPCBy5BbnfrZQVjnOHcbU++Vcme3fnko+4pdFNVYOSXbU7iCO2DhZHqT3pSCNqEk4lyfPYohQ8
+	uo0D1HNbn7QmW5egrxCavBxMLmfAG3k6EntL0mbtHsBgzLwtSSpp7VRHO3LvjScN7IIEZODGgNO
+	MGaj80hC5+JrTQJSI1duxVuzIbEi13N68d8C6FcjWO1dZbccJTcb85AS
+X-Google-Smtp-Source: AGHT+IGZl/Ps7N6nQdKZ4AknXdjfnXgB0PEOrC9xf1nO1gV083gjQZJge/dA5JrgWqsmo/D7YV3B/Q==
+X-Received: by 2002:a05:6a00:6c98:b0:737:cd8:2484 with SMTP id d2e1a72fcca58-73e267e25dfmr3221332b3a.6.1745491788482;
+        Thu, 24 Apr 2025 03:49:48 -0700 (PDT)
+Received: from minh.192.168.1.1 ([2001:ee0:4f0e:fb30:f632:6238:46f4:702e])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73e25941bbbsm1120138b3a.65.2025.04.24.03.49.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 03:49:48 -0700 (PDT)
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+To: virtualization@lists.linux.dev
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	Bui Quang Minh <minhquangbui99@gmail.com>
+Subject: [PATCH v5 0/3] virtio-net: disable delayed refill when pausing rx
+Date: Thu, 24 Apr 2025 17:47:13 +0700
+Message-ID: <20250424104716.40453-1-minhquangbui99@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL1PR21MB3089EF4639B5CC2AD5E70B96C9852@BL1PR21MB3089.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 02:33:24AM +0000, Shiraz Saleem wrote:
-> > Subject: [EXTERNAL] Re: [PATCH rdma-next 4/4] net: mana: Add support for
-> > auxiliary device servicing events
-> > 
-> > On Mon, Apr 14, 2025 at 11:28:49AM -0700, Konstantin Taranov wrote:
-> > > From: Shiraz Saleem <shirazsaleem@microsoft.com>
-> > >
-> > > Handle soc servcing events which require the rdma auxiliary device
-> > > resources to be cleaned up during a suspend, and re-initialized during a
-> > resume.
-> > >
-> > > Signed-off-by: Shiraz Saleem <shirazsaleem@microsoft.com>
-> > > Signed-off-by: Konstantin Taranov <kotaranov@microsoft.com>
-> > > ---
-> > >  .../net/ethernet/microsoft/mana/gdma_main.c   | 11 +++-
-> > >  .../net/ethernet/microsoft/mana/hw_channel.c  | 19 ++++++
-> > > drivers/net/ethernet/microsoft/mana/mana_en.c | 60
-> > +++++++++++++++++++
-> > >  include/net/mana/gdma.h                       | 18 ++++++
-> > >  include/net/mana/hw_channel.h                 |  9 +++
-> > >  5 files changed, 116 insertions(+), 1 deletion(-)
-> > 
-> > <...>
-> > 
-> > > @@ -1474,6 +1481,8 @@ static void mana_gd_cleanup(struct pci_dev
-> > *pdev)
-> > >  	mana_hwc_destroy_channel(gc);
-> > >
-> > >  	mana_gd_remove_irqs(pdev);
-> > > +
-> > > +	destroy_workqueue(gc->service_wq);
-> > >  }
-> > 
-> > <...>
-> > 
-> > > +static void mana_handle_rdma_servicing(struct work_struct *work) {
-> > > +	struct mana_service_work *serv_work =
-> > > +		container_of(work, struct mana_service_work, work);
-> > > +	struct gdma_dev *gd = serv_work->gdma_dev;
-> > > +	struct device *dev = gd->gdma_context->dev;
-> > > +	int ret;
-> > > +
-> > > +	switch (serv_work->event) {
-> > > +	case GDMA_SERVICE_TYPE_RDMA_SUSPEND:
-> > > +		if (!gd->adev || gd->is_suspended)
-> > > +			break;
-> > > +
-> > > +		remove_adev(gd);
-> > > +		gd->is_suspended = true;
-> > > +		break;
-> > > +
-> > > +	case GDMA_SERVICE_TYPE_RDMA_RESUME:
-> > > +		if (!gd->is_suspended)
-> > > +			break;
-> > > +
-> > > +		ret = add_adev(gd, "rdma");
-> > > +		if (ret)
-> > > +			dev_err(dev, "Failed to add adev on resume: %d\n",
-> > ret);
-> > > +		else
-> > > +			gd->is_suspended = false;
-> > > +		break;
-> > > +
-> > > +	default:
-> > > +		dev_warn(dev, "unknown adev service event %u\n",
-> > > +			 serv_work->event);
-> > > +		break;
-> > > +	}
-> > > +
-> > > +	kfree(serv_work);
-> > 
-> > The series looks ok to me, except one question. Are you sure that it is safe to
-> > have not-connected and not-locked general work while
-> > add_adev/remove_adev can be called in parallel from different thread? For
-> > example getting event GDMA_SERVICE_TYPE_RDMA_SUSPEND while
-> > mana_gd_probe() fails or some other intervention with PCI
-> > (GDMA_SERVICE_TYPE_RDMA_SUSPEND and PCI shutdown).
-> > 
-> > What type of protection do you have here?
-> > 
-> Hi Leon,
-> 
-> Thanks for spotting this.
-> 
-> There are two cases.
-> 
-> -Probe / Resume
-> add_adev() stores gd->adev only after auxiliary_device_add() succeeds.
-> While gd->adev is still NULL the worker drops any GDMA_SERVICE_TYPE_RDMA_SUSPEND event, so an early suspend that arrives during probe is harmless and cannot race with the later add_adev().
-> 
-> -Remove / Suspend / Shutdown
-> During teardown the worker may still be inside add_adev()/remove_adev() while the PCI thread starts its own remove_adev(). 
-> 
-> In v2 I ll serialize them with flag + flush pattern.
-> 
-> void mana_rdma_remove(struct gdma_dev *gd)
-> {
-> [....]
->         WRITE_ONCE(gd->rdma_teardown, true);   /* block new events      */
->         flush_workqueue(gc->service_wq);       /* wait running worker   */
-> 
->         if (gd->adev)
->                 remove_adev(gd);
-> 
-> [....]
-> }
-> i.e. during teardown, we stop the producer and drain the queue
-> 
-> and,
-> 
-> static void mana_handle_rdma_servicing(struct work_struct *work)
-> {
-> [....]
-> 	if (READ_ONCE(gd->rdma_teardown))
-> 		goto out;
-> [.....]
-> }
-> The flag blocks any new work, and flush_workqueue() waits for anything already running. This serialises the two paths and removes
-> the race you pointed out.
+Hi everyone,
 
-Yes, I also think that it solves, so let's post v2 please.
+This only includes the selftest for virtio-net deadlock bug. The fix
+commit has been applied already.
 
-Just remember that WRITE_ONCE/READ_ONCE is not a replacement for locks.
+Link: https://lore.kernel.org/virtualization/174537302875.2111809.8543884098526067319.git-patchwork-notify@kernel.org/T/
 
-Thanks
+Version 5 changes:
+- Refactor the selftest
 
-> 
-> Shiraz
-> 
+Version 4 changes:
+- Add force zerocopy mode to xdp_helper
+- Make virtio_net selftest use force zerocopy mode
+- Move virtio_net selftest to drivers/net/hw
+
+Version 3 changes:
+- Patch 1: refactor to avoid code duplication
+
+Version 2 changes:
+- Add selftest for deadlock scenario
+
+Thanks,
+Quang Minh.
+
+Bui Quang Minh (3):
+  selftests: net: move xdp_helper to net/lib
+  selftests: net: add flag to force zerocopy mode in xdp_helper
+  selftests: net: add a virtio_net deadlock selftest
+
+ tools/testing/selftests/drivers/net/Makefile  |  2 -
+ .../testing/selftests/drivers/net/hw/Makefile |  1 +
+ .../selftests/drivers/net/hw/xsk_reconfig.py  | 68 +++++++++++++++++++
+ tools/testing/selftests/drivers/net/queues.py |  4 +-
+ tools/testing/selftests/net/lib/.gitignore    |  1 +
+ tools/testing/selftests/net/lib/Makefile      |  1 +
+ .../{drivers/net => net/lib}/xdp_helper.c     | 19 +++++-
+ 7 files changed, 90 insertions(+), 6 deletions(-)
+ create mode 100755 tools/testing/selftests/drivers/net/hw/xsk_reconfig.py
+ rename tools/testing/selftests/{drivers/net => net/lib}/xdp_helper.c (90%)
+
+-- 
+2.43.0
+
