@@ -1,119 +1,134 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC96B188CCA;
-	Thu, 24 Apr 2025 06:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745474798; cv=pass; b=tLu6TvRcPHFqO1FzTbmJQC5c+Gd2nDO96HX0uPuRJqdjdO65sBHz8uJcGYWC0bvM9TYIE7xccNf0hDL0SYQO6YPFziVd2vemZUQN4UJAqZMkGxpovFGXU9lXNhiDUbh0yxIK+TvqqxbEG0W6QGLT6xUKLzGhKpmlJWu6XxnB9ng=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745474798; c=relaxed/simple;
-	bh=RDBl8Eso7VZJ5p6yF/4/C9RsSsHeGXWjIet4QinhUWc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IK4VShElyuaTLtU6J71SbdpKWkl/K4u57fHgkm6W43JDaxNdmWal9sP/4ZkQczPIkJDTsbLNHMUVLRX7LuoCCcgVZHKplUzwKoE5Awwg0MakKyHO1W5ySZ7BSRM7OXNYcmLQi3duztOLCoLI24hd7ClNZaYgze777rDxJgqFTSM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=g76/UJ27; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7096E2701B8;
+	Thu, 24 Apr 2025 06:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745474877; cv=none; b=TdEGD9wv1Pfnw0FOht7seKch1SAEqW+P4sFCFtmO/2nItGY3sl7ZfpyE8pVuPrNRV5GTtS1lDjqlS8NdGwIS+OrolF3G8LZ4npYW8dc0dXKMlvvkIPH1P9ipT4F5X6UNH+SQmxDsdQCDtn+FHq0D1BtHDpq8q2Yy9wr7MeNgzqM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745474877; c=relaxed/simple;
+	bh=5osYtgNZqYJ3oPCPLcOb3dhOi+jBurB8qngiR9eNzKs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qx4Jx3Hdv/hKe4SVDeZlpm4JZFetycP8sKcuKejkh5PA9ei8+SaprZGJIK5dQX8tvm/x/4a1lfbdkKEwYpGSIF1FS3YIVkP4XWKdUKYa2teBDLovmyMNdjo+FMy//PKTM9nJY41GXgEDgPkPxcfhF2C5jqfBkMzbLnNd2Qm+hSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A77Dnssm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="g76/UJ27"
-ARC-Seal: i=1; a=rsa-sha256; t=1745474783; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=iHwLhqCIKTsbFBMHt8WQhB9xzazFvx/+zbVNfPsl08dwSzbuFFd/tljjsYebEwE9w71rBIP9Qzs3rVt/TF/uZKSbwV8L713XpMd6gnmHYf0KcmhXWSZImwCC7grDLkcL6nz7WbhcCtTTmlfhLC8+pdAesv3KoCqvXItIgyUgmj0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745474783; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Ix1Q4sGKAg9a8w65SPXpLATi5/wlpy8wAjzQzuX0MDc=; 
-	b=e111KMAzfGCF+86Qn1ywIPwyU153D7k8U25bq62JpQoUZJwqkH72P5JvUTcKtnbmLbWCxYUDN5bJQAAxE+yT6eAV9nhLAxvwgaKQ2t6TQfr1rbfAj+EBUfc1ODcMmtbZR3iOcUU9b+cOcrkryX47sekrhPPPA8DfL2Bz4GEH8fk=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745474783;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Ix1Q4sGKAg9a8w65SPXpLATi5/wlpy8wAjzQzuX0MDc=;
-	b=g76/UJ27I76sdVUUsUdwNX33SvRjtR6SzLjaG+iOL2ym7hQZyNSzbTimUIn4q1IZ
-	RzP3oKOh0RL6AA9whACWA9hI1pJPoKMI+FiT6TuO5gG8DTG8P6Z4T/fzs05+m+QIaQl
-	CByTUX57VqKqbc7bnOHOzRDPEydxzsc0E206NouPSVedl9ZntDov8X9GrlJ4fHsIOtr
-	KgnzCowrjxtsn03b1EQrDvnxgkVOP7deCAQVEg6ndQAPshQ92K8VJEo5GSLV1NQs3dr
-	TyfeXgIWCVrB0rO0GrmjIC32MtvrO/pef3NoC3ngGfl3z8SQ531MI+o3rK/EJt1mts6
-	uqdlNymSyA==
-Received: by mx.zohomail.com with SMTPS id 1745474779881209.53571103315892;
-	Wed, 23 Apr 2025 23:06:19 -0700 (PDT)
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Emil Renner Berthing <kernel@esmil.dk>,
-	Conor Dooley <conor@kernel.org>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Icenowy Zheng <uwu@icenowy.me>
-Subject: [PATCH] riscv: dts: starfive: jh7110-common: use macros for MMC0 pins
-Date: Thu, 24 Apr 2025 14:06:05 +0800
-Message-ID: <20250424060605.638678-1-uwu@icenowy.me>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A77Dnssm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6E27C4CEE3;
+	Thu, 24 Apr 2025 06:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745474876;
+	bh=5osYtgNZqYJ3oPCPLcOb3dhOi+jBurB8qngiR9eNzKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A77DnssmFDqKpKFZlg9xu3nTuC0itF5FyohwGnHStHqBIazQnIOAgHcjZ7apjXdQk
+	 SkPBH/3YKJLHEHM+jg4HUe7Pp07KoulvsJZa2v21uM2q6sQJb2i/Yz9eQW3dknaEkK
+	 vw3S+sCcWKmdYImWcvtUEgtWKF2xL+tb3hv5arYn9ZMS8adK48TJHIipW4i9lzvt/j
+	 nqK7+psrEtWWNNmIfFdqztrsUeoNIyhiSAW3+bjgFcAAwAsCHJFfK1S/FxZG3FHVIR
+	 MVHGuqWAdICrTrXDyT9/EDwzI8HuKKxCZGq7Mw99P7jgC2bOG2lafEE6flKEmuOyOv
+	 tMLP6HSFjTIWg==
+Date: Thu, 24 Apr 2025 14:07:48 +0800
+From: "Peter Chen (CIX)" <peter.chen@kernel.org>
+To: Pawel Laszczak <pawell@cadence.com>
+Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH] usb: cdnsp: fix L1 resume issue for RTL_REVISION_NEW_LPM
+ version
+Message-ID: <20250424060748.GA3601935@nchen-desktop>
+References: <20250423111535.3894417-1-pawell@cadence.com>
+ <PH7PR07MB9538D15B4511A76BF9EE49DEDDBA2@PH7PR07MB9538.namprd07.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR07MB9538D15B4511A76BF9EE49DEDDBA2@PH7PR07MB9538.namprd07.prod.outlook.com>
 
-The pin names of MMC0 pinmux is defined in the pinctrl dt binding header
-associated with starfive,jh7110-pinctrl .
+On 25-04-23 11:43:03, Pawel Laszczak wrote:
+> The controllers with rtl version greeter than
+less than?
 
-Include the header file and use these names instead of raw numbers for
-defining MMC0 pinmux.
+> RTL_REVISION_NEW_LPM (0x00002700) has bug which causes that controller
+> doesn't resume from L1 state. It happens if after receiving LPM packet
+> controller starts transitioning to L1 and in this moment the driver force
+> resuming by write operation to PORTSC.PLS.
+> It's corner case and happens when write operation to PORTSC occurs during
+> device delay before transitioning to L1 after transmitting ACK
+> time (TL1TokenRetry).
+> 
+> Forcing transition from L1->L0 by driver for revision greeter than
 
-Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
----
-This is only a prettying commit. The resulting DTB files have the same
-content with or without this patch (verified by doing sha256sum on
-arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-2-v1.3b.dtb).
+%s/greeter/larger
 
- .../boot/dts/starfive/jh7110-common.dtsi      | 21 ++++++++++---------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+> RTL_REVISION_NEW_LPM is not needed, so driver can simply fix this issue
+> through block call of cdnsp_force_l0_go function.
+> 
+> Fixes: 3d82904559f4 ("usb: cdnsp: cdns3 Add main part of Cadence USBSSP DRD Driver")
+> cc: stable@vger.kernel.org
+> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+> ---
+>  drivers/usb/cdns3/cdnsp-gadget.c | 2 ++
+>  drivers/usb/cdns3/cdnsp-gadget.h | 3 +++
+>  drivers/usb/cdns3/cdnsp-ring.c   | 3 ++-
+>  3 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/cdns3/cdnsp-gadget.c b/drivers/usb/cdns3/cdnsp-gadget.c
+> index 7f5534db2086..4824a10df07e 100644
+> --- a/drivers/usb/cdns3/cdnsp-gadget.c
+> +++ b/drivers/usb/cdns3/cdnsp-gadget.c
+> @@ -1793,6 +1793,8 @@ static void cdnsp_get_rev_cap(struct cdnsp_device *pdev)
+>  	reg += cdnsp_find_next_ext_cap(reg, 0, RTL_REV_CAP);
+>  	pdev->rev_cap  = reg;
+>  
+> +	pdev->rtl_revision = readl(&pdev->rev_cap->rtl_revision);
+> +
+>  	dev_info(pdev->dev, "Rev: %08x/%08x, eps: %08x, buff: %08x/%08x\n",
+>  		 readl(&pdev->rev_cap->ctrl_revision),
+>  		 readl(&pdev->rev_cap->rtl_revision),
+> diff --git a/drivers/usb/cdns3/cdnsp-gadget.h b/drivers/usb/cdns3/cdnsp-gadget.h
+> index 87ac0cd113e7..fa02f861217f 100644
+> --- a/drivers/usb/cdns3/cdnsp-gadget.h
+> +++ b/drivers/usb/cdns3/cdnsp-gadget.h
+> @@ -1360,6 +1360,7 @@ struct cdnsp_port {
+>   * @rev_cap: Controller Capabilities Registers.
+>   * @hcs_params1: Cached register copies of read-only HCSPARAMS1
+>   * @hcc_params: Cached register copies of read-only HCCPARAMS1
+> + * @rtl_revision: Cached controller rtl revision.
+>   * @setup: Temporary buffer for setup packet.
+>   * @ep0_preq: Internal allocated request used during enumeration.
+>   * @ep0_stage: ep0 stage during enumeration process.
+> @@ -1414,6 +1415,8 @@ struct cdnsp_device {
+>  	__u32 hcs_params1;
+>  	__u32 hcs_params3;
+>  	__u32 hcc_params;
+> +	#define RTL_REVISION_NEW_LPM 0x00002701
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-index c2f70f5e2918f..a2c72b385a905 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-@@ -8,6 +8,7 @@
- #include "jh7110.dtsi"
- #include "jh7110-pinfunc.h"
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/starfive,jh7110-pinctrl.h>
- 
- / {
- 	aliases {
-@@ -428,16 +429,16 @@ GPOEN_ENABLE,
- 		};
- 
- 		mmc-pins {
--			pinmux = <PINMUX(64, 0)>,
--				 <PINMUX(65, 0)>,
--				 <PINMUX(66, 0)>,
--				 <PINMUX(67, 0)>,
--				 <PINMUX(68, 0)>,
--				 <PINMUX(69, 0)>,
--				 <PINMUX(70, 0)>,
--				 <PINMUX(71, 0)>,
--				 <PINMUX(72, 0)>,
--				 <PINMUX(73, 0)>;
-+			pinmux = <PINMUX(PAD_SD0_CLK, 0)>,
-+				 <PINMUX(PAD_SD0_CMD, 0)>,
-+				 <PINMUX(PAD_SD0_DATA0, 0)>,
-+				 <PINMUX(PAD_SD0_DATA1, 0)>,
-+				 <PINMUX(PAD_SD0_DATA2, 0)>,
-+				 <PINMUX(PAD_SD0_DATA3, 0)>,
-+				 <PINMUX(PAD_SD0_DATA4, 0)>,
-+				 <PINMUX(PAD_SD0_DATA5, 0)>,
-+				 <PINMUX(PAD_SD0_DATA6, 0)>,
-+				 <PINMUX(PAD_SD0_DATA7, 0)>;
- 			bias-pull-up;
- 			drive-strength = <12>;
- 			input-enable;
+0x2700?
+
+> +	__u32 rtl_revision;
+>  	/* Lock used in interrupt thread context. */
+>  	spinlock_t lock;
+>  	struct usb_ctrlrequest setup;
+> diff --git a/drivers/usb/cdns3/cdnsp-ring.c b/drivers/usb/cdns3/cdnsp-ring.c
+> index 46852529499d..fd06cb85c4ea 100644
+> --- a/drivers/usb/cdns3/cdnsp-ring.c
+> +++ b/drivers/usb/cdns3/cdnsp-ring.c
+> @@ -308,7 +308,8 @@ static bool cdnsp_ring_ep_doorbell(struct cdnsp_device *pdev,
+>  
+>  	writel(db_value, reg_addr);
+>  
+> -	cdnsp_force_l0_go(pdev);
+> +	if (pdev->rtl_revision < RTL_REVISION_NEW_LPM)
+> +		cdnsp_force_l0_go(pdev);
+
+Pawel, it may not solve all issues for controllers which RTL version
+is less than 0x2700, do you have any other patches for it?
+
 -- 
-2.49.0
 
+Best regards,
+Peter
