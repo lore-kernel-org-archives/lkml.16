@@ -1,104 +1,105 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8537C8BE8
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16CBD8BE8;
+	Thu, 24 Apr 2025 07:12:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478712; cv=none; b=NqY0+K3m5jXv0vtGYDCnY/tt4KG46UeCb+KEOg5Qt20flQBOWknFqBNgA/ZFyxwKrhNPwjB+nIqWQ8NgzRH/+jDYqtwN5S99fGxJ59oq0q7knLonu8VverWD+055fl9X/NKsUykxloNFNexpy3pGtm5QBR/CKw8ZpB6/+rNTB1M=
+	t=1745478761; cv=none; b=Ew9MZSzwJd3TKNEZnammKr4UI5kPLvnRP7lQPLHRMAVl1Xfos7YHXBZDmZRNhjhP0GoLcbu0SJN+jAC448IUOLglRluC7SHmZEnLHWUdrnfW4TumsX27SwNQlL2zj0wM6u7LmFFPupy+e+ZLkXNgn/7Slog+tAYIz3XX0rzWFTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478712; c=relaxed/simple;
-	bh=ELnWAAwy11jE8ZnzkqC405qgjyNG6RzhfzEZehEIh1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lVG1904lmdhnX+MEkvOChfaUISz7TopHD7oj9eFA1OJuwXGKmMBZ/BFCMtoZXzZmQmoF6JQ+Fo45pgaiGjmIrbbBuyOONFZ3ojLpRV/Gelo+7Kcmy+MTbPGz79zRJGtZd4ywlBfjRH0/TvDOAtHTHwO9UWiWOakTh8fSkto5nlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cyJYDaK9; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745478761; c=relaxed/simple;
+	bh=lHcMVN6gR3huhb4HD/G2e6A5kirMHkpsrZdynPaOKYU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h8zRW3giHqhrzFIlurxtMQaWpKN/fSJ1xyNDwFU0lgST7IGse6GUjpti2YLw4CTDXI8TDD2lSk+jh/t1+b5n92znQIFJIOBjOoXH2I31r4GgmUJmn/WyRUeLx5QVlXZTu63qjnhonH/1ft/7aDzaWVZxkk8K8kT7eNt1+DulRwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CbCZT+Rd; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cyJYDaK9"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af51596da56so415240a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745478711; x=1746083511; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vhVSGwrY4UGgX/xUA4xUKHWZLDX+i5rGUGqwbp9t1mo=;
-        b=cyJYDaK9YG3xrxKRpotVUPP+1Asek9wnwZvIhEJgrqlVrsHLfsbEN6lzx0bacALz5e
-         bfFeqC/09bvqdAEb2gLdo8nBpvhh3gQyMdjMfGdS/4bNluRanLOfEwv4ASG0/w/S/7G3
-         ZImygMpnsxoGl7/kwPqGEGO1PupmvX9xpiuG8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745478711; x=1746083511;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vhVSGwrY4UGgX/xUA4xUKHWZLDX+i5rGUGqwbp9t1mo=;
-        b=GJxZZfAqYILDeQ0cweWjRkEVDblfqqDEOZkjEr2GSebrA1LdsThO6mllgaBMrNCSxQ
-         gytQPSG2iHMa8MfC0N9Ag2KPg9eh/wHkE0CUeS3dchKGJ2MRMjUZ1vOMRKxRIPcZd2Uz
-         h7r0eG5VUD7/wRba+1rq0XHfhEDbEThVRQ75ogdJfMrLLdwnlbXlRWD141EUJtKHCSwT
-         ftHiwecb4qYnAVfeeI6LZdR23cgPsrAA0LSoLSn4ucUcBVFXBNfmjEcsBMHjPpXrKRJg
-         0Rq8LoDYa2URs3p1AGo7bm7hpD6Xs1ZqCrG4+Us7NHvS49HUWc6uulJjKZhI2nL4x0ei
-         qIKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUg4JZ9nFl9SxGOUMwGUuUKxh6VQC9nQwstlCoKGqfyonVovzY/0WkZeFexCswB0aQkZIF4yPve8OU81Js=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiVOknxMa/Gqx6+BxoVLFIauxgV1Yym8UJguQn3W71VT+hzdUE
-	1n6T6I7/gtGGeTLECh5JhFlnlMwv3ggkNagOKryg7gUuCt7q/hEWzyvNop8pOw==
-X-Gm-Gg: ASbGncvYMB+5F/ZD9ub711LUp4J4oJv0fx7llOHTpb2GOMnpfNo7M2sX838NMNMdHmX
-	fH7IHizPzEUjjTZAn+bqmIqWKVReXlVFHIY4/r4KXwvU8rnoSZRhXVFkTsyoOMprPT8+XCURyiZ
-	DIOLpchUFOZBerVUChn9/nD3aQ3tx5+zpwazhIvx45n/bHyMrK1/OpQUVH5CJKBKdMNRDMZhPJH
-	65j4A5Pnjz9BbK0B7PJAtdBYSeVKwpKdy2MGX2JOi5UJ0gtzgDNPtwxBo0huaT0KCL0938QRtxR
-	jQt352M8W5wybeGolgbpUO9oCsFyktEeme2pkPzpDLpu
-X-Google-Smtp-Source: AGHT+IEMawr2WqzSq4Nh72R9XrA0V8XpQWHisF1IuwxsJBzLTffeW5m/UWTzJMWbsn4RSmK8zQDANA==
-X-Received: by 2002:a17:90b:3a05:b0:2fe:dd2c:f8e7 with SMTP id 98e67ed59e1d1-309ed2703c9mr2572217a91.10.1745478710640;
-        Thu, 24 Apr 2025 00:11:50 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:63eb:6b38:399c:5ad7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309eef7c59fsm582420a91.0.2025.04.24.00.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 00:11:50 -0700 (PDT)
-Date: Thu, 24 Apr 2025 16:11:44 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
-	Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] sched: add sched_show_task() variant that accepts log level
-Message-ID: <xkd6ztswqkzbg5d2crhcg72gzmuuwiq36y2gyhxjnfmfkk6sli@awptl5aiukl6>
-References: <miliiyxmqko6hx66yhdv4nkkopbm73wbz6kxxlzpts53mscqzy@dpfa6y3wnspv>
- <CAAFQd5AYA=7rQjdQ4AS1vjb0Z3zHec6bdbhrA2cW706DHZyhKg@mail.gmail.com>
- <CAAFQd5DgDHLhQUv=Bw0Thd41Di740A_yv+7wxDErE_YpN4CqBQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CbCZT+Rd"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3975143A4E;
+	Thu, 24 Apr 2025 07:12:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1745478750;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=CGBKQP0ozZgi8SSFu8gigr2mI4CbgnOZryTHhEPMZd8=;
+	b=CbCZT+Rdeqcs/wB6DjINTQ7gct4Pv/v0ovBacHSLBoggDrnVKL9cYb9y0QYiK/Jj0UjGi5
+	j1k6aEKBDyY4DXp+Oeg9rEQjQr7qUYQb0eaPp3ceSnBB4+b9OL8jewRrWX7KCjDKJNqTNt
+	+nJnLE02xC7P36rwG0DJJnc4KWUvtlIJydXrw8O8LO4SkT/poQoDS1IyTu6NF7ycoy6u9S
+	G6LmCYrXwkSxOPeXGTRukAqfQk9RPkkCNDxwpWu4U2MtB8TQGVjL/zapprBDBiBFOuJUYc
+	SZ/z0c+VSTQ2t8Ve0QcaEIir5dFn2k7Y46HPt/RlgW00qkVU14t89GVMXkyWNg==
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: davem@davemloft.net,
+	Andrew Lunn <andrew@lunn.ch>,
+	Russell King <linux@armlinux.org.uk>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com,
+	Simon Horman <horms@kernel.org>,
+	=?UTF-8?q?Alexis=20Lothor=C3=A9?= <alexis.lothore@bootlin.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH net-next v3 0/3] net: stmmac: socfpga: 1000BaseX support and cleanups
+Date: Thu, 24 Apr 2025 09:12:19 +0200
+Message-ID: <20250424071223.221239-1-maxime.chevallier@bootlin.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAFQd5DgDHLhQUv=Bw0Thd41Di740A_yv+7wxDErE_YpN4CqBQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjefhleeihefgffeiffdtffeivdehfeetheekudekgfetffetveffueeujeeitdevnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejpdhhvghlohepfhgvughorhgrrdhhohhmvgdpmhgrihhlfhhrohhmpehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedugedprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtoheplhhinhhugiesrghrmhhli
+ hhnuhigrdhorhhgrdhukhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On (25/04/24 13:34), Tomasz Figa wrote:
-> > > Is there any reason why hung-task watchdog prints error header
-> > > with KERN_ERR log level while task's backtrace is printed with
-> > > KERN_INFO?  Will it make sense to unify log levels and introduce
-> > > sched_show_task() variant that accept log level param so that
-> > > everything that hung-task watchdog prints becomes KERN_ERR?
-> >
-> > Thanks a lot for looking into this.
-> >
-> > Let me just add that I've been looking into ways to automatically
-> > analyze kernel crash reports and I noticed that when I filter out
-> > KERN_INFO and higher log levels, I end up losing useful information
-> > for hung-task watchdog-kind of problems. This change would greatly
-> > help in filtering out unnecessary noise from the logs.
-> >
-> > By the way, if having it as KERN_INFO by default would still be
-> > desirable, I suppose we could add a KConfig option to set the desired
-> > log level?
-> 
-> Gentle ping on this patch.
+Hi everyone,
 
-Yeah, sorry.
-Gentle `git send-email $1` on this.
+This V3 is simply a re-send of V2, targeting net-next instead of net as
+the V2 did by mistake.
 
-$1 https://lore.kernel.org/linux-kernel/20250424070436.2380215-1-senozhatsky@chromium.org
+No other changes besides a rebase on net-next were made.
+
+This small series sorts-out 1000BaseX support and does a bit of cleanup
+for the Lynx conversion.
+
+Patch 1 makes sure that we set the right phy_mode when working in
+1000BaseX mode, so that the internal GMII is configured correctly.
+
+Patch 2 removes a check for phy_device upon calling fix_mac_speed(). As
+the SGMII adapter may be chained to a Lynx PCS, checking for a
+phy_device to be attached to the netdev before enabling the SGMII
+adapter doesn't make sense, as we won't have a downstream PHY when using
+1000BaseX.
+
+Patch 3 cleans an unused field from the PCS conversion.
+
+Changes in V3:
+ - None besides targeting net-next instead of net
+
+Changes in V2: 
+ - Added Russell's review tags
+ - Reworked patch 2 to check for phy_interface when configuring the
+   adapter, as suggested by Russell.
+
+V1: https://lore.kernel.org/netdev/20250422094701.49798-1-maxime.chevallier@bootlin.com/
+V2: https://lore.kernel.org/netdev/20250423104646.189648-1-maxime.chevallier@bootlin.com/
+
+Maxime Chevallier (3):
+  net: stmmac: socfpga: Enable internal GMII when using 1000BaseX
+  net: stmmac: socfpga: Don't check for phy to enable the SGMII adapter
+  net: stmmac: socfpga: Remove unused pcs-mdiodev field
+
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c   | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
+
+-- 
+2.49.0
+
