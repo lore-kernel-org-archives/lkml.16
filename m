@@ -1,137 +1,104 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5659510F9;
-	Thu, 24 Apr 2025 07:10:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8537C8BE8
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478649; cv=none; b=cRbzJAyCmBaE15ZbceoUVU3eVCkPFA3+o6d5NMgSj3n+2pMCu3kOcPXX4i5kFV0d3WOYe4PMEjQanovpCcaXz/dGhM7XNV11YfOYHCIGdzW0QwXD38mVp5HoEJG9PTaWqYnWiU2SSw9kESJwL5WpcWrAa5NgAmsw5YXSl2hfZjw=
+	t=1745478712; cv=none; b=NqY0+K3m5jXv0vtGYDCnY/tt4KG46UeCb+KEOg5Qt20flQBOWknFqBNgA/ZFyxwKrhNPwjB+nIqWQ8NgzRH/+jDYqtwN5S99fGxJ59oq0q7knLonu8VverWD+055fl9X/NKsUykxloNFNexpy3pGtm5QBR/CKw8ZpB6/+rNTB1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478649; c=relaxed/simple;
-	bh=t+K0ESiXzCsl44QHMLJtE1n+4hg/PkQFOPFvd9iGyuc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LvQXhNELiZCGjEvlOSsdLDU6OmrMzve0awBIJSwCPy95dXMlh2mdJLCSXJB8cvRMgjPhcX8XPZzlLw+Ny9pq2rL/7XP+pmzQyLkuD4ICyem/vxBw6Ra0lPaV3vM1M26vVpGzuJ0OaHRDNP3SZlOOnRelX8LUFyRkRkHv5tcL+Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RRBIE2FG; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745478712; c=relaxed/simple;
+	bh=ELnWAAwy11jE8ZnzkqC405qgjyNG6RzhfzEZehEIh1s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lVG1904lmdhnX+MEkvOChfaUISz7TopHD7oj9eFA1OJuwXGKmMBZ/BFCMtoZXzZmQmoF6JQ+Fo45pgaiGjmIrbbBuyOONFZ3ojLpRV/Gelo+7Kcmy+MTbPGz79zRJGtZd4ywlBfjRH0/TvDOAtHTHwO9UWiWOakTh8fSkto5nlE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=cyJYDaK9; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RRBIE2FG"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BEA6743A57;
-	Thu, 24 Apr 2025 07:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745478644;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ls6ZOwr4X07+mFxbErQdmry+CO4o/SQ2lrx34X9QQTE=;
-	b=RRBIE2FGJdwYRYGLOTx1+qCnf8F/EKYhYO66/Phh3rBBsU7Sm7K3d4FwxTzxfu3pEaP8zA
-	N1LaVgnsNvsX5eSgFrkjccYzmxUWQ0tVj7ubeBRvVq2E8rUMVgsf+qHk/SbkIb1oGRkrcf
-	36aRsLbmScl4x3KCQCny5ulOX84AI924X01GPoReJDQuPHyKR54IhOatvaOMeG2C96IAsC
-	pzh5oR9CuACWcJF35qS9rJTXFVzC2ZGePcT3FKKHQqujSfo7WP/0+0ZadxcyYIRda8XlAd
-	ZdiI8dTQM/UvG5r3k2yAr2kx/f3VENswIkuLQVvvf2XXAKuxE9iyTzW9MAOQxg==
-From: Romain Gantois <romain.gantois@bootlin.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- Andi Shyti <andi.shyti@kernel.org>, linux-i2c@vger.kernel.org,
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject:
- Re: [PATCH next] i2c: Fix end of loop test in i2c_atr_find_mapping_by_addr()
-Date: Thu, 24 Apr 2025 09:10:43 +0200
-Message-ID: <2778486.mvXUDI8C0e@fw-rgant>
-In-Reply-To: <9cd0c3cc-9f3c-4a3e-9080-c832def8f317@ideasonboard.com>
-References:
- <aAii_iawJdptQyCt@stanley.mountain>
- <a22d74b9-06b1-4a4b-9c06-4b0ff7f9b6c2@stanley.mountain>
- <9cd0c3cc-9f3c-4a3e-9080-c832def8f317@ideasonboard.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="cyJYDaK9"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af51596da56so415240a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:11:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1745478711; x=1746083511; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vhVSGwrY4UGgX/xUA4xUKHWZLDX+i5rGUGqwbp9t1mo=;
+        b=cyJYDaK9YG3xrxKRpotVUPP+1Asek9wnwZvIhEJgrqlVrsHLfsbEN6lzx0bacALz5e
+         bfFeqC/09bvqdAEb2gLdo8nBpvhh3gQyMdjMfGdS/4bNluRanLOfEwv4ASG0/w/S/7G3
+         ZImygMpnsxoGl7/kwPqGEGO1PupmvX9xpiuG8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745478711; x=1746083511;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vhVSGwrY4UGgX/xUA4xUKHWZLDX+i5rGUGqwbp9t1mo=;
+        b=GJxZZfAqYILDeQ0cweWjRkEVDblfqqDEOZkjEr2GSebrA1LdsThO6mllgaBMrNCSxQ
+         gytQPSG2iHMa8MfC0N9Ag2KPg9eh/wHkE0CUeS3dchKGJ2MRMjUZ1vOMRKxRIPcZd2Uz
+         h7r0eG5VUD7/wRba+1rq0XHfhEDbEThVRQ75ogdJfMrLLdwnlbXlRWD141EUJtKHCSwT
+         ftHiwecb4qYnAVfeeI6LZdR23cgPsrAA0LSoLSn4ucUcBVFXBNfmjEcsBMHjPpXrKRJg
+         0Rq8LoDYa2URs3p1AGo7bm7hpD6Xs1ZqCrG4+Us7NHvS49HUWc6uulJjKZhI2nL4x0ei
+         qIKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUg4JZ9nFl9SxGOUMwGUuUKxh6VQC9nQwstlCoKGqfyonVovzY/0WkZeFexCswB0aQkZIF4yPve8OU81Js=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiVOknxMa/Gqx6+BxoVLFIauxgV1Yym8UJguQn3W71VT+hzdUE
+	1n6T6I7/gtGGeTLECh5JhFlnlMwv3ggkNagOKryg7gUuCt7q/hEWzyvNop8pOw==
+X-Gm-Gg: ASbGncvYMB+5F/ZD9ub711LUp4J4oJv0fx7llOHTpb2GOMnpfNo7M2sX838NMNMdHmX
+	fH7IHizPzEUjjTZAn+bqmIqWKVReXlVFHIY4/r4KXwvU8rnoSZRhXVFkTsyoOMprPT8+XCURyiZ
+	DIOLpchUFOZBerVUChn9/nD3aQ3tx5+zpwazhIvx45n/bHyMrK1/OpQUVH5CJKBKdMNRDMZhPJH
+	65j4A5Pnjz9BbK0B7PJAtdBYSeVKwpKdy2MGX2JOi5UJ0gtzgDNPtwxBo0huaT0KCL0938QRtxR
+	jQt352M8W5wybeGolgbpUO9oCsFyktEeme2pkPzpDLpu
+X-Google-Smtp-Source: AGHT+IEMawr2WqzSq4Nh72R9XrA0V8XpQWHisF1IuwxsJBzLTffeW5m/UWTzJMWbsn4RSmK8zQDANA==
+X-Received: by 2002:a17:90b:3a05:b0:2fe:dd2c:f8e7 with SMTP id 98e67ed59e1d1-309ed2703c9mr2572217a91.10.1745478710640;
+        Thu, 24 Apr 2025 00:11:50 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:63eb:6b38:399c:5ad7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-309eef7c59fsm582420a91.0.2025.04.24.00.11.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 00:11:50 -0700 (PDT)
+Date: Thu, 24 Apr 2025 16:11:44 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Tomasz Figa <tfiga@chromium.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] sched: add sched_show_task() variant that accepts log level
+Message-ID: <xkd6ztswqkzbg5d2crhcg72gzmuuwiq36y2gyhxjnfmfkk6sli@awptl5aiukl6>
+References: <miliiyxmqko6hx66yhdv4nkkopbm73wbz6kxxlzpts53mscqzy@dpfa6y3wnspv>
+ <CAAFQd5AYA=7rQjdQ4AS1vjb0Z3zHec6bdbhrA2cW706DHZyhKg@mail.gmail.com>
+ <CAAFQd5DgDHLhQUv=Bw0Thd41Di740A_yv+7wxDErE_YpN4CqBQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart12651876.O9o76ZdvQC";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekkeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhggtgesghdtreertddtjeenucfhrhhomheptfhomhgrihhnucfirghnthhoihhsuceorhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeikeekffdvuefgkeejgeefhfdvteeuhfdtleeiudehieeludelvdetleeggfffffenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghlohepfhifqdhrghgrnhhtrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrohhmrghinhdrghgrnhhtohhishessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopegurghnrdgtrghrphgvnhhtvghrsehlihhnrghrohdrohhrghdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtoheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghnghdqvghnghhinhgvvghrihhnghdrt
- ghomhdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehkvghrnhgvlhdqjhgrnhhithhorhhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5DgDHLhQUv=Bw0Thd41Di740A_yv+7wxDErE_YpN4CqBQ@mail.gmail.com>
 
---nextPart12651876.O9o76ZdvQC
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Thu, 24 Apr 2025 09:10:43 +0200
-Message-ID: <2778486.mvXUDI8C0e@fw-rgant>
-In-Reply-To: <9cd0c3cc-9f3c-4a3e-9080-c832def8f317@ideasonboard.com>
-MIME-Version: 1.0
-
-On Thursday, 24 April 2025 08:32:22 CEST Tomi Valkeinen wrote:
-> Hi,
+On (25/04/24 13:34), Tomasz Figa wrote:
+> > > Is there any reason why hung-task watchdog prints error header
+> > > with KERN_ERR log level while task's backtrace is printed with
+> > > KERN_INFO?  Will it make sense to unify log levels and introduce
+> > > sched_show_task() variant that accept log level param so that
+> > > everything that hung-task watchdog prints becomes KERN_ERR?
+> >
+> > Thanks a lot for looking into this.
+> >
+> > Let me just add that I've been looking into ways to automatically
+> > analyze kernel crash reports and I noticed that when I filter out
+> > KERN_INFO and higher log levels, I end up losing useful information
+> > for hung-task watchdog-kind of problems. This change would greatly
+> > help in filtering out unnecessary noise from the logs.
+> >
+> > By the way, if having it as KERN_INFO by default would still be
+> > desirable, I suppose we could add a KConfig option to set the desired
+> > log level?
 > 
-> On 23/04/2025 20:29, Dan Carpenter wrote:
-> > On Wed, Apr 23, 2025 at 05:25:44PM +0200, Romain Gantois wrote:
-> >> Hello Dan,
-> >> 
-> >> On Wednesday, 23 April 2025 10:21:18 CEST Dan Carpenter wrote:
-> >>> When the list_for_each_entry_reverse() exits without hitting a break
-> >>> then the list cursor points to invalid memory.  So this check for
-> >>> if (c2a->fixed) is checking bogus memory.  Fix it by using a "found"
-> >>> variable to track if we found what we were looking for or not.
-> >> 
-> >> IIUC the for loop ending condition in list_for_each_entry_reverse() is
-> >> "!list_entry_is_head(pos, head, member);", so even if the loop runs to
-> >> completion, the pointer should still be valid right?
-> > 
-> > head is &chan->alias_pairs.  pos is an offset off the head.  In this
-> > case, the offset is zero.  So it's &chan->alias_pairs minus zero.
-> > 
-> > So we exit the list with c2a = (void *)&chan->alias_pairs.
-> > 
-> > If you look how struct i2c_atr_chan is declareted the next struct member
-> > 
-> > after alias_pairs is:
-> > 	struct i2c_atr_alias_pool *alias_pool;
-> > 
-> > So if (c2a->fixed) is poking around in the alias_pool pointer.  It's not
-> > out of bounds but it's not valid either.
-> 
-> Maybe it's just me, but I had hard time following that explanation. So
-> here's mine:
-> 
-> The list head (i2c_atr_chan.alias_pairs) is not a full entry, it's just
-> a struct list_head. When the for loop runs to completion, c2a doesn't
-> point to a struct i2c_atr_alias_pair, so you can't access c2a->fixed.
+> Gentle ping on this patch.
 
-Ah I see, in that case thanks for the fix Dan!
+Yeah, sorry.
+Gentle `git send-email $1` on this.
 
-Reviewed-by: Romain Gantois <romain.gantois@bootlin.com>
-
---nextPart12651876.O9o76ZdvQC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEYFZBShRwOvLlRRy+3R9U/FLj284FAmgJ4/MACgkQ3R9U/FLj
-286FVQ/8DWmGsioZ0zngygJdrvQPd3X3Sf3Kd/9u0lB5kzV4sTCbc3yY5dug60Jm
-ol0peHRedrLQCyudxFWTnjkM/LTgdZ7plaUtOJox8tvPD1lyvcfGLwzl67xM+7Re
-PMqhyZNB2tClFQpUC7/buQjJdo5MzOZSmbl3TtLzz0+NB0sCeVw6XwIqvc+KWz92
-QfP7Ni8X65mdqWuT4faAAV0PCkZeBknh8v1He6MnKsjXxOaJ0yO/6IUYUl8COJS/
-22CIjOHNI3ZgfDzg11bEDI/qaHbuuWv7Ke1np6wLyOhD26sqoCP5TQUGA7Fw/c+H
-V0TQB/08nW13SDHdtB6LgbnCvri59paDJM5gMyUwVMxYOLHPN3u+VXIxSpRc/6aC
-1N62+xZ7SRf/TkoEfxeZILnQib5m8GyvjR1PRhMi7QIgdXFfbH+g2j/BTNQmup/0
-1o7Q+Z90Hi3OSoR5Bviktk8eLh00C0H+pPk7V03b0oh4xx7KVzGXYikeIV9jp/+U
-gkzeLCCVAFjM2wm/DYwGos+Ys2zNWUjb1C7KJlCP2Fl/JGCQO9txPO1BZ3pRrRyf
-/oXcI5tpTj3x5oZpuIdPZzpOZjS4LvHojFkvUBNFP3JO9r8GHaLeoA4X+UknqN1r
-gH73eOfSbUFAPDwDiuOG3hxte9WOdKiIZ8Fcb6pRgk+p9HnCDHs=
-=pYya
------END PGP SIGNATURE-----
-
---nextPart12651876.O9o76ZdvQC--
-
-
-
+$1 https://lore.kernel.org/linux-kernel/20250424070436.2380215-1-senozhatsky@chromium.org
