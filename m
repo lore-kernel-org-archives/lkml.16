@@ -1,94 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D532701CE;
-	Thu, 24 Apr 2025 00:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1252701BF;
+	Thu, 24 Apr 2025 00:31:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745454538; cv=none; b=riHTteP+dAqa5a9aism2XAtL1w+kn0P9PrgjAmcTFV/5g8Soqo3rwGZJQbJuwCH52CLvUGjTXFJNxQTAPHvGrUZfXI5hopykvk5NBvpGyTI7ObDqsxSYA6h/t9boITNTIeYp7pGSTiRVxRS3WjZ7u29XDeLcdgt4EtPCOgvUE8U=
+	t=1745454700; cv=none; b=a12943dyPNley1qGKB6ANoNHWlg1JS/+YIM3AbZ4seunq5l7PhRHiX1o7HM46pIXXOl3Q+9De73t7zCn7dPQ4Uh37VDDJUBkPXMCCJO0MpOjDgY3kNKaBSz4ITiazYJ+LQcZIZ0ZccHM0KgMYgirR/oyQuwimfzULzxFvMvzqEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745454538; c=relaxed/simple;
-	bh=FCwThLR2mzTnoWJzKwd6wHQjmDFO8JlE7d1Mot5SddM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ubk5cZrEjf7U/AZPTxebW5Zj5wdM1cR/Z3Uwp0cH5yXMDJ5FurKpM+lq9YFaSfbByuv1S/qN2Gr1ZRVLPITIuWtmWZ4Xi0+CO4EfidDmMWL5J9wmAd4A8J/Lj43Ou8hcFylwNgYV+D7l9zXOZVUO1uNFx5OqmWzS8qEDdMCXE+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ds9mYSuN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745454700; c=relaxed/simple;
+	bh=Ga4t6ugV8zqmuUfvWiT3IWeSKoulLQekoUS3Y/ImDnw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rhDNu5t9RdhWLsocDd11Q9AoO9Uq+UVcsfqZWdmimIi25BCxKJf+Ldlhjs04rvxse11I8fisseEvYPhP7ZD8mBstcZtJM0vUB2j7qooM3o1jYy0Z5qg2zaqzTQUE3ADz2GnHESq1jPs9GHQ06r/PPTpz8bQsN+oo3UXQYGGN7Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GnazM4dL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ds9mYSuN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1909C4CEE2;
-	Thu, 24 Apr 2025 00:28:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GnazM4dL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39655C4CEE2;
+	Thu, 24 Apr 2025 00:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745454537;
-	bh=FCwThLR2mzTnoWJzKwd6wHQjmDFO8JlE7d1Mot5SddM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Ds9mYSuNFdSDPOSvzWg04Kf0eh9Qg4axXsn2fhAovBufCucmjL7CoaTlQzC/XaiAl
-	 JatmLE3jC8J51qJRjdzEBFi5/2V64wrWjyugTxS5FVxCoyTucN3RVNRXtMcaDH2kfT
-	 PppbZqa649oy7zbkDBpaEkfjaC18IcZwtyaaW0ioLmYAhVK3vthGwaf5kQB54JFXHA
-	 +6R2OjV1YQ2l3iyQ06g69jyU9cJ39Nj3Xg6x1BtivijtxEFc0YyGOdidv5KPQatFie
-	 a23gxYo51v9HoJry//hQ/aR92P/kuBwK3LicWJHmKmchjSlkIbGcXgkXT7V+vokPBS
-	 RhvEw2Qkxlpkw==
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-86d75f4e9a1so199874241.3;
-        Wed, 23 Apr 2025 17:28:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUwjjMsbVeTykYoN5bGXZ3tx/F6iB1yqtc3MmEuVoumrZeGUOgrVYMvYy9U2/4Qt/QWS9HmeuozKFiuCZs=@vger.kernel.org, AJvYcCW3OS3z+i/81SwemZvfjc9LqIWhqqYh6IwRAaS041PQMk2fTOdE1ylr7iOei0d4ccADHcFxZJodV2QgAts=@vger.kernel.org, AJvYcCWzAX+I96zuf2gTdw91ZDVaWNG/6xlcJ3tOeDHFZ3Aq7ACs1S+f3RqZtz0HgBqxUEsUgq6MFdjeS8OaNA0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/v3uvRYi4EuA2fkS1bZ8NinfXFUF3b7ExSpInty6VZGWIJwAB
-	4gD4gH9qsKA0xikupq7t9YnLbGv2wxmfV/FOiwHbplnvb84PLrLGuvf07uv10+mcoGnzAVTzd43
-	lg6uuXKkO0O8Ek+zs+eOMcyc15ww=
-X-Google-Smtp-Source: AGHT+IG1vCsGHbCso1wuq9MLYFXMOzqQdLzb3zNLaNBfG124jYdNNIqaE9q8ZRAuFr0JT5thAUpczpoTBf/XhaGN6do=
-X-Received: by 2002:a05:6102:4187:b0:4c4:edfa:9634 with SMTP id
- ada2fe7eead31-4d38cb318e8mr932901137.1.1745454536814; Wed, 23 Apr 2025
- 17:28:56 -0700 (PDT)
+	s=k20201202; t=1745454699;
+	bh=Ga4t6ugV8zqmuUfvWiT3IWeSKoulLQekoUS3Y/ImDnw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GnazM4dLMIjk4TycpzjmVcI8buSnuluUwvELckUC+JcLXF4FJp9NN8Q19dYGaAKfh
+	 F6nSySL6sJVbyKsO3wEAjDckE2Mu4HwUunCv23iHZE4G2cACYXkJtypWqXGk2tb3FV
+	 VgwLCTDQbAg2u2Vxp5403v3d/v8XhUSqJ2pkZJP6aImJQJ2m2gk253fpguC1wF1RRH
+	 IWrJ2vvM1zyCur3ESuqbHIoib7LW04pNhuqrMoNOPy3D+d6iCUVIrWsVPaSsFX53/U
+	 KSCffp0OUuZG37aY5Pvih6Z/dS4fwnZWXaeUdDCkxGOCmRZF7tiCzi8q3H8Ivoh1Fu
+	 mXhAzMRnlNZTw==
+Date: Thu, 24 Apr 2025 08:31:25 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Linux Doc Mailing
+ List <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, Andy
+ Shevchenko <andriy.shevchenko@intel.com>, David Airlie <airlied@gmail.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Masahiro Yamada
+ <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
+ intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] Don't create Python bytecode when building the
+ kernel
+Message-ID: <20250424083125.1c8a0d24@sal.lan>
+In-Reply-To: <87bjspzd4e.fsf@trenco.lwn.net>
+References: <cover.1744789777.git.mchehab+huawei@kernel.org>
+	<4k2arpghozy5fjrjove6nrh24qth3yp4educuso4y47gk7gycd@ol27dzrba55d>
+	<87bjspzd4e.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415-imx214_ccs_pll-v1-0-d3d7748e5fbd@apitzsch.eu>
-In-Reply-To: <20250415-imx214_ccs_pll-v1-0-d3d7748e5fbd@apitzsch.eu>
-From: Ricardo Ribalda Delgado <ribalda@kernel.org>
-Date: Thu, 24 Apr 2025 08:28:40 +0800
-X-Gmail-Original-Message-ID: <CAPybu_0VwOTNOgLg3967fzBArg6tPTdWvHFMo6xBjjdnmx_+dQ@mail.gmail.com>
-X-Gm-Features: ATxdqUEu__NyR5A6-EkCW4KJVHGAMQzXMgTPQnIq0buwTb8inxA2lStdrU6cz0w
-Message-ID: <CAPybu_0VwOTNOgLg3967fzBArg6tPTdWvHFMo6xBjjdnmx_+dQ@mail.gmail.com>
-Subject: Re: [PATCH 0/4] media: i2c: imx214: Add support for more clock frequencies
-To: git@apitzsch.eu
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, ~postmarketos/upstreaming@lists.sr.ht, 
-	phone-devel@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 16, 2025 at 5:22=E2=80=AFAM Andr=C3=A9 Apitzsch via B4 Relay
-<devnull+git.apitzsch.eu@kernel.org> wrote:
->
-> The imx214 driver currently supports only a 24 MHz external clock. But
-> there are devices, like Qualcomm-MSM8916-based phones, which cannot
-> provide this frequency. To make the sensor usable by those devices, add
-> support for additional clock frequencies.
->
-> This series supersedes
-> https://lore.kernel.org/linux-media/20250308-imx214_clk_freq-v1-0-467a4c0=
-83c35@apitzsch.eu/
->
-> Signed-off-by: Andr=C3=A9 Apitzsch <git@apitzsch.eu>
-Acked-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
-> Andr=C3=A9 Apitzsch (4):
->       media: i2c: imx214: Reorder imx214_parse_fwnode call
->       media: i2c: imx214: Prepare for variable clock frequency
->       media: i2c: imx214: Make use of CCS PLL calculator
->       media: i2c: imx214: Read clock frequency from device tree
->
->  drivers/media/i2c/Kconfig  |   1 +
->  drivers/media/i2c/imx214.c | 262 +++++++++++++++++++++++++++++++++++----=
-------
->  2 files changed, 205 insertions(+), 58 deletions(-)
-> ---
-> base-commit: 5b37f7bfff3b1582c34be8fb23968b226db71ebd
-> change-id: 20250406-imx214_ccs_pll-e4aed0e9e532
->
-> Best regards,
-> --
-> Andr=C3=A9 Apitzsch <git@apitzsch.eu>
->
->
+Em Mon, 21 Apr 2025 10:35:29 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> writes:
+> 
+> > On Wed, Apr 16, 2025 at 03:51:03PM +0800, Mauro Carvalho Chehab wrote:  
+> >> 
+> >> As reported by Andy, the Kernel build system runs kernel-doc script for DRM,
+> >> when W=1. Due to Python's normal behavior, its JIT compiler will create
+> >> a bytecode and store it under scripts/lib/*/__pycache__. 
+> >> 
+> >> As one may be using O= and even having the sources on a read-only mount
+> >> point, disable its creation during build time.  
+> >
+> > Would it be possible to properly support O= and create pyc / pycache
+> > inside the object/output dir?  
+> 
+> I have to confess, I've been wondering if we should be treating the .pyc
+> files like we treat .o files or other intermediate products.  Rather
+> than trying to avoid their creation entirely, perhaps we should just be
+> sure they end up in the right place and are properly cleaned up...?
+
+I sent a v4 of the series disabling *.pyc creation, basically placing
+*.pyc at the right place on .gitignore.
+
+That's said, I agree that the best would be to use PYTHONPYCACHEPREFIX,
+placing the intermediate products altogether with O= results. There is
+however something we need to deal with. To follow our building system
+to the letter, if we have *.py files at scripts/lib/kdoc, the intermediate
+files should be at: either:
+
+	- {outdir}/scripts/lib/kdoc; or: 
+	- {outdir}/scripts/lib/kdoc/__pycache__ 
+
+The same shall happen for all other places including Documentation/sphinx.
+In the specific case of Sphinx extensions, it would mean that it would
+produce *.pyc for both scripts/lib/*/*.py and Documentation/sphinx.
+No idea how to make Python to do that without doing some horrible tricks.
+
+An alternate approach would be to store all of them at the same place, like:
+
+	- {outdir}/__pycache__ 
+
+The problem is that, if we end having two scripts with the same name, and
+using PYTHONPYCACHEPREFIX would place both of them at the same place, we'll
+have troubles.
+
+IMO, let's apply this series first, and then see if we can replace patch 3
+with another one using PYTHONPYCACHEPREFIX, after we're sure that there's
+a way for it to do the right thing.
+
+> 
+> To answer Dmitry's question, it seems that setting PYTHONPYCACHEPREFIX
+> should do the trick?
+
+Regards,
+Mauro
