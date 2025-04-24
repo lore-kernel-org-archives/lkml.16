@@ -1,123 +1,89 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from forward102d.mail.yandex.net (forward102d.mail.yandex.net [178.154.239.213])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE66B290BCF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52C7290BC0;
 	Thu, 24 Apr 2025 18:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745520779; cv=pass; b=BMNNGnYR3d6bRd2twRNXSoHFkjcbOlTgOP4aBPrUw1aixggONnWeKXktKUtg/BEJ7h7eelHL3R7ZuYLvnSDKPZTioFJZtTwEjSaRijPbXXmxhn/R3fOATN2E0Pu9GCo962dRoJg+CMqGoZmulZx3/9IqHdnZZ4tsrW4foRkh4ZE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745520779; c=relaxed/simple;
-	bh=Sg+eDpGcEpQdkzE7TxWgzlH0ZwatzsoX6GOqGOsS+1Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AvfUAfBgdgeWsZCo54jU19HkV0PVZYhgmZHp2FiKkpigfxRq7xcFngAYhXm6XlaweV2cL+tdcXo3/26Ges9w8KYomvnbj1CgTnBub4XoHLcNQ307UceKVB9jyWIXQuOq7cOu0kdEJeqDbFbhZcYpmaKq645vr9S9vd5u5ThRV8A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=GLoPQ0qk; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.213
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745520781; cv=none; b=f43VPU0lXBRD7g5Xh2e92j4rNJQwnN0yJyyV5rrakFBLI75ZFZRQriCMulQ+YFdRHriS9w8Yhkz5BatdWzCrlwQldx27/2Z+Bpqp1EcG9b+iFQL4bEeIYHhnpi+qclLoVqwZu6Qs7Zpjju99EJbGZ+vSPnVCJB8Lp4vVhH6BHdI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745520781; c=relaxed/simple;
+	bh=OygmFMPByzJxZQZ/STA64KpZbimdRAppuLQsI9S0AGM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=izdCf0/eDERdiZPv/A5YrFEIo+CAfeKnNvQb4x85nK643ZpSTPkry6HHy3GZ4AC0hiYyKo8pVLGVcsNF+8wMD8ANpPzzpSZq6kggBPjwpgc7kVwAzcwfzb4wIqVKHeoy6LM89n8F3V/l+8xWYO+YRhaaja6rM02+Q/57q1we2aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru; spf=pass smtp.mailfrom=rosa.ru; dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b=NQaIx+3H; arc=none smtp.client-ip=178.154.239.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosa.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosa.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="GLoPQ0qk"
-ARC-Seal: i=1; a=rsa-sha256; t=1745520759; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=f67g/KglThRw5wVky3xH3nsJxM3eoPm5hIn3wIWY4iOPe5HwXKP1RHzKfGVh0C3M/XQkben49bhPSSOTFNw/G8IzA55lJXiyiVE7iZXchD9/+vuFo/GP2HRzN4I0H0pSS3SF5IaOaVB6E4PD5mQ3ILEs+5AxTQX9yIKYnNVxQ2k=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745520759; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=/9frCnYTMVTpm5V5w18G/k5cDEAONcnNNbo6wTNm04s=; 
-	b=hP8WLG6fOselEXBQxz0BWOU/y2Ut31m2VmH5SkMA6r6STNkJ1qDrpwOYruqna2dFLvluRyG4zGJ1yFMhKzZRJnkEda0uptTmrnV7ltB2okFT0wbY8JVOXxMRBVQMWMWGhwWWw65LGEZeJABa/7SteN5WwN4lZC0TQPv/v1G5ims=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745520759;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=/9frCnYTMVTpm5V5w18G/k5cDEAONcnNNbo6wTNm04s=;
-	b=GLoPQ0qk1WjR+1lIkWWUByBXveFgWAkJUxbLRBc+5cA6tt8Jf6BHMFNWLzrpuvd4
-	dPTcaH2V+S5yJUjlogYeDPuiATLZJKZK292R9CZtoN4Vrvkk8jRRANml9FBBmXbiqwP
-	yqU4qcC/IMeL4aOoQNteksUTtZT0ugMpYZjCMUMA=
-Received: by mx.zohomail.com with SMTPS id 1745520756849524.09816512909;
-	Thu, 24 Apr 2025 11:52:36 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Thu, 24 Apr 2025 20:52:23 +0200
-Subject: [PATCH 2/2] arm64: dts: rockchip: add SATA nodes to RK3576
+	dkim=pass (1024-bit key) header.d=rosa.ru header.i=@rosa.ru header.b="NQaIx+3H"
+Received: from mail-nwsmtp-smtp-production-main-73.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-73.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:bca8:0:640:45be:0])
+	by forward102d.mail.yandex.net (Yandex) with ESMTPS id E49B860983;
+	Thu, 24 Apr 2025 21:52:48 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-73.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id kqV2ll1LoCg0-foSXLjIP;
+	Thu, 24 Apr 2025 21:52:48 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosa.ru; s=mail;
+	t=1745520768; bh=eUvSEcjM3P32iq/WojbrYA0IxejTJGbUaeImRlzSclk=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=NQaIx+3H/okY2atnyMu/dUv32bXBU42WHY0TqPoEtI0QKqKM7F3Odw+FQWp5HAGP6
+	 ZBAvJn6f8+pj2lYidSh1sQvnQfLx+lIlahix+d3S1hqxecKxU2QdhvbrLawUMkm1uH
+	 iP7xJkGEjh2ox33wGR52SZk9Q6JftyrFHnOSesUA=
+Authentication-Results: mail-nwsmtp-smtp-production-main-73.iva.yp-c.yandex.net; dkim=pass header.i=@rosa.ru
+From: Alexei Safin <a.safin@rosa.ru>
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Alexei Safin <a.safin@rosa.ru>,
+	Kalle Valo <kvalo@kernel.org>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org
+Subject: [PATCH v2] iwlegacy: 4965: fix possible out-of-bounds access in il4965_tx_cmd_build_rate()
+Date: Thu, 24 Apr 2025 21:52:44 +0300
+Message-Id: <20250424185244.3562-1-a.safin@rosa.ru>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-rk3576-sata-v1-2-23ee89c939fe@collabora.com>
-References: <20250424-rk3576-sata-v1-0-23ee89c939fe@collabora.com>
-In-Reply-To: <20250424-rk3576-sata-v1-0-23ee89c939fe@collabora.com>
-To: Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
- Serge Semin <fancer.lancer@gmail.com>
-Cc: kernel@collabora.com, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- linux-ide@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- linux-kernel@vger.kernel.org, 
- Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 8bit
 
-The Rockchip RK3576 features two SATA nodes. The first, sata0, is behind
-combphy0, which muxes between pcie0 and sata0.
+Prevent out-of-bounds access in il4965_tx_cmd_build_rate() by rejecting
+rate_idx values greater than or equal to RATE_COUNT_LEGACY.
 
-The second, sata1, is behind combphy1, which muxes between pcie1, sata1
-and usb_drd1_dwc3.
+Use a correct bounds check to avoid accessing il_rates[] with
+an invalid index. The previous comparison allowed rate_idx to become
+equal to RATE_COUNT_LEGACY, which exceeds the array limit.
 
-I've only been able to test sata0 on my board, but it appears to work
-just fine.
+Replace the check 'rate_idx > RATE_COUNT_LEGACY' with
+'rate_idx >= RATE_COUNT_LEGACY' to ensure memory safety.
 
-Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: 7ac9a364c172 ("iwlegacy: move under intel directory")
+Signed-off-by: Alexei Safin <a.safin@rosa.ru>
 ---
- arch/arm64/boot/dts/rockchip/rk3576.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+v2: change reciepent
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-index ebb5fc8bb8b1363127b9d3782801c4a79b678a92..6e27d744acad2111616eaf4807aea1eac4f00c7f 100644
---- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-@@ -1334,6 +1334,36 @@ gmac1_mtl_tx_setup: tx-queues-config {
- 			};
- 		};
- 
-+		sata0: sata@2a240000 {
-+			compatible = "rockchip,rk3576-dwc-ahci", "snps,dwc-ahci";
-+			reg = <0x0 0x2a240000 0x0 0x1000>;
-+			clocks = <&cru ACLK_SATA0>, <&cru CLK_PMALIVE0>,
-+				 <&cru CLK_RXOOB0>;
-+			clock-names = "sata", "pmalive", "rxoob";
-+			interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&power RK3576_PD_SUBPHP>;
-+			phys = <&combphy0_ps PHY_TYPE_SATA>;
-+			phy-names = "sata-phy";
-+			ports-implemented = <0x1>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata1: sata@2a250000 {
-+			compatible = "rockchip,rk3576-dwc-ahci", "snps,dwc-ahci";
-+			reg = <0x0 0x2a250000 0x0 0x1000>;
-+			clocks = <&cru ACLK_SATA1>, <&cru CLK_PMALIVE1>,
-+				 <&cru CLK_RXOOB1>;
-+			clock-names = "sata", "pmalive", "rxoob";
-+			interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&power RK3576_PD_SUBPHP>;
-+			phys = <&combphy1_psu PHY_TYPE_SATA>;
-+			phy-names = "sata-phy";
-+			ports-implemented = <0x1>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
- 		ufshc: ufshc@2a2d0000 {
- 			compatible = "rockchip,rk3576-ufshc";
- 			reg = <0x0 0x2a2d0000 0x0 0x10000>,
-
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index 78dee8ccfebf..f60d9b9798c1 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -1572,7 +1572,7 @@ il4965_tx_cmd_build_rate(struct il_priv *il,
+ 	 */
+ 	rate_idx = info->control.rates[0].idx;
+ 	if ((info->control.rates[0].flags & IEEE80211_TX_RC_MCS) || rate_idx < 0
+-	    || rate_idx > RATE_COUNT_LEGACY)
++	    || rate_idx >= RATE_COUNT_LEGACY)
+ 		rate_idx = rate_lowest_index(&il->bands[info->band], sta);
+ 	/* For 5 GHZ band, remap mac80211 rate indices into driver indices */
+ 	if (info->band == NL80211_BAND_5GHZ)
 -- 
-2.49.0
+2.39.5 (Apple Git-154)
 
