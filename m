@@ -1,118 +1,121 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D6C18FDA5
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 636F427C17E;
+	Thu, 24 Apr 2025 13:12:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745500347; cv=none; b=Wtx1w3P6alhxB7VZPTPIRGqz6rqTBpBlqCNUuBr23M2PH2Bhno3hh/pshcDoQK1dA+pN2nPfs5orIgY9+0JTQnhXV967lx9HBvpKRmeHlJ2XxmcLsekPkX60SXbRrs7GtQ2L1S9O1pqC1WIhtqyspTuNr2WyPaW9NexzNDnC5xo=
+	t=1745500375; cv=none; b=EFMH/XSEoJQ15RgPCvxeutq9yT1zzL7BB1pEKXPMn1RMe6ijiaKOl8H7lJJ7rJHCUqcfxxkH9Nkdf4pmfNLmFC+ZL9Dm2QXCvHUEm3QVjIx9r7MNtc/y9Oa0II+VVL6gIktP6ebZ99+76Xi9J0AVBfeTctLD1mUJsvin55SsAE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745500347; c=relaxed/simple;
-	bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rdPiRoXo8WbgyOoLB+mykFB33NFgPZdC/mQHO7USp2jGLXwFl31CEh93cvjsyDk5iwFMbQ/KftKrIFiiatb1G2P1H4OoRgKV8iyQDnpvyNQ57U45HFJuLGRvSVFZpvMe8qDydIbsm7gQPMvN478qMMVXXf62Vsac55od9DU66bU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SD773NUJ; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745500375; c=relaxed/simple;
+	bh=74kMUmmh63Pt08J6ShCVCMsVK4mDwK70M+Gmhu/tpYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IsHJ6ZLJPG3Enk2Ukb98qxuDLn/4Fk7tZxLz+U6Yg2aVO6fc5GT2YEI33iyRy19+hjA4AJYQsHnBw5xX6WrXSlgPijAjqAgTWDTXKb+eNMQ4lwEuYQ78V4Lha3jqgMumFaXIjDp70tAbI9XbYE9TZCMhMwfuc3zA8kt41TL7Aas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNC5a0xZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SD773NUJ"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-301a8b7398cso160481a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745500345; x=1746105145; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
-        b=SD773NUJaH/sq3yBiEzz2t3oAqmxcc675wcaZHVArwYviP6Hm1E+hQX21rL0XUZezR
-         mZYoMiwT5WM8anNrmuLyxix+CHZBSmTKql0+bOqBho+5RwGK3AUhcUCQPsvqfXdNBGvi
-         0TZME91qXDsVhoTBmBtx41A41mWLBpHWzw50ghQoO/FuAfMghPSUCyJ9zvE7CrDDnK4B
-         79QOr5gI0sALV1Gwjy1/Mx0NpDfmHC8p26bSaCj2oERAAkIUIcnTAJNPWYFy0FzV7nKj
-         R3+g+hMJ3mXeAIoHPGVxFlQdlh+ZrM2hfwQQwNCVOCloiMRirPp+TNhzUqQXTkR+pAZC
-         m4eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745500345; x=1746105145;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eA7Xuy6k9ONAPkP6AgSuyk9zFim9A6uFvmLfDwCH8vs=;
-        b=Gixw1hap6GmX1v7uGXgCHTTKx/Ysa0Ro1tcnByWyKzakOnYGO0gf3eXzM7ZdC06yr3
-         8O63tzNO1pmQtV4ETuF1m+IAC62MA2HtwIVSZhaE79/3O8k6w3THG6uy/w5lJqJqT6fB
-         G96WHrhrBP4zo80c+52poqxFh8LSu6fQCVNmWqA1ZataRkotSiMbnIapncK7tuGGgskR
-         SSlIAZXg2Q8bGF204CylHH5lvUFjzUrnnTUzQyVf/Yl/G6yOS73/KVtFV+LqHdb9ISEc
-         QwuwTTy9aMkR4S43leMwzPpPU/UofozIp424+S5NGkHN01eCny8cC+/sWYXmFAFnMAAf
-         lXvw==
-X-Forwarded-Encrypted: i=1; AJvYcCXOfvFqMlyTElcUgbp4xvP0I8d6a6p3YE7iH/kUcESIfmlZkB18qryuDUtlFpFJMKL13GXNhjz9ZSj1KGo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfE40xzR5JZWMSAX3vxAa6/xugJ80Cu80BNZzrQRsckSAD4erW
-	s2N5Hlv0IDuNu+DgX7ODJwlVHCdTO5o/6gXuQZpQNYAgfLToATKkjhASHf9JCC6QcZ2+yY2tsm+
-	bAalgsphPbqoD/NLM26Sh5g16NGo=
-X-Gm-Gg: ASbGncvOrmbeD7IJbiqYGrc5HAjwfmhoqv+vYDLpm+oYUy9w2IPiqhtJoe4pCBI6szc
-	dvgHeDi2tQXRyNpPF0q6uYJklgn30rQycJhKwKwi0Pf+0ZOlYytUv/lU1o4ZmSuHvvHqsE5C21z
-	IKrhSmsd7cNWhG2euG9RReOg==
-X-Google-Smtp-Source: AGHT+IEFvo9XYRtQEvgfEvNW3YyXCDl9i/8QVWCKx/TXGNL9aOOZJwdPzKvHZ6KZW7h65cYldr4AhFdLlL3QAZqAS3M=
-X-Received: by 2002:a17:90b:3906:b0:2ff:5759:549a with SMTP id
- 98e67ed59e1d1-309ed24cc88mr1706401a91.1.1745500345346; Thu, 24 Apr 2025
- 06:12:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNC5a0xZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F69DC4CEE3;
+	Thu, 24 Apr 2025 13:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745500374;
+	bh=74kMUmmh63Pt08J6ShCVCMsVK4mDwK70M+Gmhu/tpYk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=CNC5a0xZDt9z8ukrvoEWLLOgvBOU5pMnQRJNyRwZ2ekba6Mp9+DhAPcqavk+aVlzP
+	 XHVNLcPZ6Lg2wGESCX4tiYJKFwciA91vPpdAlJg3WbCY9NTqY1ejC0g3ldBNwKMJws
+	 +NvEbFF8qnQGgYxjYSVBOVmyijOhNWP6R7RmOxHeteNsFUMI2DpabH6lU3az/UUhIY
+	 4z63GztLl7dAtpiZ1XQfks0pIvtEPFdGe015j7JrZL2uX4kZFn/1j2rNXbQnom1JYt
+	 AUhctaIP7gJqjnkL9JOh0UyUIXT5KKdP28zbaGJi/5+mrm2BvyTnLLaNW5f+xp3O+H
+	 fn/mz8i2eJGVw==
+Message-ID: <05ad5e49-9c03-4750-a1c3-775579b2479d@kernel.org>
+Date: Thu, 24 Apr 2025 15:12:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ed09edb167e74167a694f4854102a3de6d2f1433.camel@irl.hu>
- <8963a409dd575e040e5f07e4ad5e9c1d26b421f2.camel@irl.hu> <CALT56yPd-xfd=47xRxrCk4F3jib4Ti7kg8pRXy-gVAQpbOc=pw@mail.gmail.com>
- <e323219b52cda1891a55d12ad77a2b34edc8688b.camel@irl.hu> <Z_jodBrNFdEpJRKA@mail-itl>
- <aAn6wsnJ-6mqK4vR@mail-itl>
-In-Reply-To: <aAn6wsnJ-6mqK4vR@mail-itl>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 24 Apr 2025 09:12:13 -0400
-X-Gm-Features: ATxdqUFwuh2Liv704M5KwrRa6klhoiIfTdC591MnFCPLJIk1C-iKiwHLYfgFHos
-Message-ID: <CADnq5_Ptzieevwysn1Qz5yxTOujMtEDW=Rbwqpvmd_3o2Gd--Q@mail.gmail.com>
-Subject: Re: amdgpu_dm_connector_mode_valid regression
-To: =?UTF-8?Q?Marek_Marczykowski=2DG=C3=B3recki?= <marmarek@invisiblethingslab.com>
-Cc: Gergo Koteles <soyer@irl.hu>, Dmitry Baryshkov <dbaryshkov@gmail.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, regressions@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	amd-gfx@lists.freedesktop.org, Hans de Goede <hdegoede@redhat.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Alex Hung <alex.hung@amd.com>, Harry Wentland <harry.wentland@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 09/10] arm64: dts: qcom: sm8750: Add USB support for
+ SM8750 QRD platform
+To: Melody Olvera <melody.olvera@oss.qualcomm.com>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Wesley Cheng <quic_wcheng@quicinc.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Dmitry Baryshkov <lumag@kernel.org>
+References: <20250421-sm8750_usb_master-v5-0-25c79ed01d02@oss.qualcomm.com>
+ <20250421-sm8750_usb_master-v5-9-25c79ed01d02@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250421-sm8750_usb_master-v5-9-25c79ed01d02@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 4:49=E2=80=AFAM Marek Marczykowski-G=C3=B3recki
-<marmarek@invisiblethingslab.com> wrote:
->
-> On Fri, Apr 11, 2025 at 12:01:28PM +0200, Marek Marczykowski-G=C3=B3recki=
- wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Apr 02, 2025 at 04:35:05PM +0200, Gergo Koteles wrote:
-> > > Hi Dmitry,
-> > >
-> > > But the code would start to become quite untraceable.
-> > > duplicate mode in amdgpu_dm_connector_mode_valid()
-> > > call drm_mode_set_crtcinfo() in amdgpu_dm_connector_mode_valid()
-> > > duplicate mode in create_stream_for_sink()
-> > > overwrite ctrc in decide_crtc_timing_for_drm_display_mode()
-> > > if crtc_clock =3D=3D 0 call drm_mode_set_crtcinfo() again in
-> > > create_stream_for_sink()
-> >
-> > FWIW I'm affected by the same issue (on HP ProBook 445 G7, with AMD
-> > Ryzen 5 4500U). And the patch quoted below fixes it for me too.
->
-> I've re-tested it with 6.15-rc3 and the issue is still there. Is there
-> something I can do to help fixing it before final 6.15 is out?
+On 22/04/2025 00:00, Melody Olvera wrote:
+> From: Wesley Cheng <quic_wcheng@quicinc.com>
+> 
+> Enable USB support on SM8750 QRD variant.  The current definition
+> will start the USB controller in peripheral mode by default until
+> dependencies are added, such as USB role detection.
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Tested-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
+> Signed-off-by: Melody Olvera <melody.olvera@oss.qualcomm.com>
+> ---
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-I believe this should be fixed in this patch which is already in this
-week's -fixes PR:
-https://gitlab.freedesktop.org/agd5f/linux/-/commit/b316727a27d0dac1e6b7ae5=
-1204df4d0f241fcc2
-
-Alex
-
->
-> --
-> Best Regards,
-> Marek Marczykowski-G=C3=B3recki
-> Invisible Things Lab
+Best regards,
+Krzysztof
