@@ -1,63 +1,63 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8B127A919
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08DD28936E
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:14:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745504053; cv=none; b=hiMDixOxaby/xif2DeoVG2VchvZT1FORpHhEx6HWxo7ru0D9txcW0gB9giC/FsB75tRRBtDpwp+pOAZHpnwW9YW5GxfCk/y3v0Di+VqUkPcJpUyajNAjQe51JtT13q4zpmxy7ifJNNgxAGdg23amCbdPg2aDJ6rcBjRQkujwasw=
+	t=1745504049; cv=none; b=b+aR+3gT6oRc+MPBUDOKeXEfFr3CjdmCIdlxS+Y203DTMNQmFOWGWvjTJdFJRFeqJ3iJd8Am7z5XV957an9pKWxLNs7+uTUaDxLckFHIOe/QL62w2fKOHle9kYxXaskeiO6abwrAgctcXL34+aMYRfvpMvOtzkfu5adNQa/Tcj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745504053; c=relaxed/simple;
-	bh=S+aezV66gXf4D+s9yS2EKNbYmZv94XHap0Nf+ZRRUHk=;
+	s=arc-20240116; t=1745504049; c=relaxed/simple;
+	bh=m+fPEAqeKx8MI3a+lqdiH9/ulP+VSGYzhW8y82AELSw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Qq+oLS4Mq9AdCdZnIbtyyCTm5pwzS5HOTXx7J835U7tNewBUEn678j0mTRW4oky+IiDrTbg6+cE1c1XkdXW4B0PoaoizbhcZDlLPy8RYpUz53BvaK6jy+oKU1yBKQrMA+1RqfgqW+NOs/OtNw7N3KH8OBkHbJpuwwS/WO+yHpD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZVrYkVnP; arc=none smtp.client-ip=209.85.221.48
+	 MIME-Version; b=GU5az0BY3FLKOXauP+uJVDVyxPm09ORxyBZq11OdaYiLYzwhWNzOLoiZfoqKGDdJabDuXYwQ34lzePcBsbSwRlIthcTtbOW6CpJ+rAJ+xEheMDTnxQW0mrE+XbtfBxOWffJ6Xq8P4w5CBF1vyTfUJTUqsiS+VYYr+rnqjut6yEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QSVzhmLG; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZVrYkVnP"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3913d129c1aso753472f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:14:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QSVzhmLG"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39c266c1389so744934f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:14:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745504048; x=1746108848; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1745504044; x=1746108844; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=98GtKQowyHwUXJ3/oi0BeOIZGrWAP4CATPU0kL4zC8c=;
-        b=ZVrYkVnPnl9Ys6EiWjO0nW/ZKL9GZPhxZM8Jdq4yhpWJfZHOL7zyEOxMrBZQgE4ywb
-         S/dHcmgPS1jkO5i8DXxJ+fn8JUsYf3LS8ffoJXnN9Obvw7bF4KK95uYdIdxYSk3FOog7
-         4gZdjcJDvoxbNYrVrTnD6TfC3gXwFj0Q7fKu28uJZMdpJQQ9WazFoPCxhnuMNwow6cLm
-         SwXd2GQgnZH64avWP2TPUZEJ5EEpzYL2FwLsoeVkaOXNR0FrskyMcsvHbDAlTyEBhCCH
-         fBNLGXr2xfE/z7LpOxCBiHFnskchBvSkkplqymZ6IXk/VkZsoT4gAZf1MYFXX32dFOmo
-         V/hA==
+        bh=+XE4xl5smx9gWubImYnQvAwnhzC9G4S+d/giF3voQDM=;
+        b=QSVzhmLG80Fx0P05gKPq2TWi04hwkFYKyLuhUtoU4bhDSfHBBssAdoNA1EsFtqRqMb
+         krd4u2GshbDYbYBaOEvxEIh/a3rYMWfdSym4kAhgTHT9hbzXRC+cWulnVsKu9l9xe7fN
+         pwfo/P5YhTjdzA6a0BH8jCZEuKy+4NkyumE4WtXIoY6vGSZfVuyfqGJlq7+QqyWpX5aU
+         Vq6y+p72perGggywfEZRwaHYBC3pRyljQ6h/CBeyoONmdVAkrSzBqN1cZzIC35vbYd+t
+         ns1rQajDhaC1yX+Zuowhp4FtD8MgA2+69cQmTHE9dQzuSZ2EqeM+fLsiCI/ov9l77cdD
+         b7lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745504048; x=1746108848;
+        d=1e100.net; s=20230601; t=1745504044; x=1746108844;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=98GtKQowyHwUXJ3/oi0BeOIZGrWAP4CATPU0kL4zC8c=;
-        b=YI09iL+EGmE6kIw/nftAcGmRbisRe3GdSpd52rE9SbGNRXweveiDStF5csNtF7JKJc
-         btkJv5D3buAtsAPvcUNRv+g8EF8ePglVBIYwGP7Ijn0E0lvxZry0Oxj9K5y4R54N5wXC
-         7HU+hBbWTH709lFE1MPS7DuigrS3nrk3M4j2R9JFfJL2vcmg0dUMI9a3TIpohtFVokx+
-         K1Cf/B3DfdEEfwkkgPW4+Jp2HoPWyESQ6IgSL1Ccj2dvHzkgMAttSN1317+ljUy6MabS
-         YE1IVvb63qEyQmEh0nYtzqcZ2ZvSeDUi31Z/eKJF6Te1UG4Bjxgnd8SG2U8dKojRQn2q
-         RGUQ==
-X-Gm-Message-State: AOJu0YyagTMwalhC3zp8eWH83RoOIsFPN1QFraAMMrbrss5wE06IS2sl
-	LUnBGrw6/hSN37G6Und+2sVvpRGkp04s166RszbkLu0qCgYuE+YJJjy46Af8J9REMR+gmuRjz/v
-	F
-X-Gm-Gg: ASbGncs0KRckg0tj83wvpWexGKlbDR6y4F7YRrJ1ahWhJpO86gUBhY1V7Ls7IJ6PYCA
-	r+s12CMnkIVb+bW7UboEmyjdOvOzqik7OKP2ywyktcRps4WniTHUeriwE24K026JyHWfcG3fQ2O
-	3T168/SQ3TgJnkJ9wrbciJ1zBLpkHDPFvxVJLKqNNZcKSRJlPV1U0RNRrvTeuNvuz5Y3vjyP+sO
-	i2gHMUr+kIIap5uMmsbFZLs2VtbvPzjbUnYfoOjc/R19O1dXqAzEwUOU711TPB0Rpize/R0M8J1
-	L4yhlCq2a6d13NMUMqDZdaQVeLFAn2M1dR0foBA4GXllTk2al3w27usCcdDr7Qh27S6Ee3lbMv3
-	Nc8eBcgX72hgJ9eYE
-X-Google-Smtp-Source: AGHT+IFQAg02MXbpqUbddZDz1Nf5W/i1x6IwVsYQPoOcChQDsuxBB7Db2uzIfhJZTYe0HZGVw3TbTg==
-X-Received: by 2002:a05:6000:18ae:b0:39f:cd2:1fa1 with SMTP id ffacd0b85a97d-3a06d647026mr2922759f8f.3.1745504048036;
-        Thu, 24 Apr 2025 07:14:08 -0700 (PDT)
+        bh=+XE4xl5smx9gWubImYnQvAwnhzC9G4S+d/giF3voQDM=;
+        b=sMyCwij/YKPVR4j5U26MunBZe6oClVkk7UFgjHVlXea0XN7gRiA/2e+Sg3hrJSP4B/
+         PwwaBtbKo1sRg7Wri7ur6ohMRtWFJLC5N8gayA/McLs1ILorTb2952VEDJaN2eHyT0J4
+         WCvRzhvqLpSl6+xFwvnU3o1p4dNzMihcbk5ohrxbM7bSf74oozkB5OL0/c98NQrnIqj3
+         XJaiPIPIQnfRomZlecMP9ZEfM9Q+f+Wwcrb7IK1yryFv/wLDhvxmYGRGxPIxWds4c+qb
+         uGAQ+LUsftJaxiK5o8GtsuKmqxeYx7ES18R62roingJOP6AaIij8drS97w5lW+zgwNpM
+         N9vQ==
+X-Gm-Message-State: AOJu0Yz3lqyVatHwMUVXOjLN5mTlsljWwuEKcjGGNrQ4Mh4kaq1KREsl
+	BgdHkOnRe7XoENS53ed5dg7e1a6jR9XbQN2lkxN97o20S1iFDcKPMV3EGmTh+k38i1ALJfQ6nIr
+	L
+X-Gm-Gg: ASbGncswX8NbcKGXnPmlbdh2dAMRqOpLKqM64uTm4z92RilX0hOPz5DRt/QauYgvB8O
+	iTiUcHQaKhCg1kiRaNzJLJEUVy9nKsCCK5FXX5//vA5ptskHa8Exm5OSmfhhz8g0VBOxcGfSJz0
+	A71TpVdlNkvDWEzvDFSCbSbKotFhqIsHQWULFs1mLVkX2CwYSap52/hV/HQ8GJoFlKsBlkHd2oF
+	OQ5QlPkfD/zLPjrgRRv371YKbxHU3kbRo/6CdcC/ovdi0S9IDJINbNW5YW68LYbdkbzPKbj32JJ
+	xwLLiEE57SvFIKoH+9aKpHSFpbtkBsgtUHvQOtF0wXNaF6paI5zckbpq+PEdnCeyNHNduxfjgm3
+	yZzr8h1g4n03CxKAF
+X-Google-Smtp-Source: AGHT+IE3uJouYJ/7M/rrSd1eFvrf/qS5HF+61EQrttb/wpTbAdACHBohOTrf1XeLM5WbZ4ptiBZEjw==
+X-Received: by 2002:a5d:5985:0:b0:391:2ab1:d4c2 with SMTP id ffacd0b85a97d-3a06cfabac2mr2257224f8f.37.1745504043594;
+        Thu, 24 Apr 2025 07:14:03 -0700 (PDT)
 Received: from seksu.systems-nuts.com (stevens.inf.ed.ac.uk. [129.215.164.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.14.06
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d4a8150sm2199951f8f.7.2025.04.24.07.14.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 07:14:07 -0700 (PDT)
+        Thu, 24 Apr 2025 07:14:03 -0700 (PDT)
 From: Karim Manaouil <karim.manaouil@linaro.org>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org,
@@ -89,9 +89,9 @@ Cc: Karim Manaouil <karim.manaouil@linaro.org>,
 	Trilok Soni <tsoni@quicinc.com>,
 	Stefan Schmidt <stefan.schmidt@linaro.org>,
 	Elliot Berman <quic_eberman@quicinc.com>
-Subject: [RFC PATCH 17/34] gunyah: Translate gh_rm_hyp_resource into gunyah_resource
-Date: Thu, 24 Apr 2025 15:13:24 +0100
-Message-Id: <20250424141341.841734-18-karim.manaouil@linaro.org>
+Subject: [RFC PATCH 14/34] gunyah: Add resource manager RPC core
+Date: Thu, 24 Apr 2025 15:13:21 +0100
+Message-Id: <20250424141341.841734-15-karim.manaouil@linaro.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250424141341.841734-1-karim.manaouil@linaro.org>
 References: <20250424141341.841734-1-karim.manaouil@linaro.org>
@@ -105,212 +105,804 @@ Content-Transfer-Encoding: 8bit
 
 From: Elliot Berman <quic_eberman@quicinc.com>
 
-When booting a Gunyah virtual machine, the host VM may gain capabilities
-to interact with resources for the guest virtual machine. Examples of
-such resources are vCPUs or message queues. To use those resources, we
-need to translate the RM response into a gunyah_resource structure which
-are useful to Linux drivers. Presently, Linux drivers need only to know
-the type of resource, the capability ID, and an interrupt.
+The resource manager is a special virtual machine which is always
+running on a Gunyah system. It provides APIs for creating and destroying
+VMs, secure memory management, sharing/lending of memory between VMs,
+and setup of inter-VM communication. Calls to the resource manager are
+made via message queues.
 
-On ARM64 systems, the interrupt reported by Gunyah is the GIC interrupt
-ID number and always a SPI or extended SPI.
+This patch implements the basic probing and RPC mechanism to make those
+API calls. Request/response calls can be made with gh_rm_call.
+Drivers can also register to notifications pushed by RM via
+gh_rm_register_notifier
+
+Specific API calls that resource manager supports will be implemented in
+subsequent patches.
 
 Signed-off-by: Elliot Berman <quic_eberman@quicinc.com>
-Reviewed-by: Srivatsa Vaddagiri <quic_svaddagi@quicinc.com>
 Signed-off-by: Karim Manaouil <karim.manaouil@linaro.org>
 ---
- arch/arm64/include/asm/gunyah.h | 35 +++++++++++++++++
- drivers/virt/gunyah/rsc_mgr.c   | 68 +++++++++++++++++++++++++++++++++
- include/linux/gunyah.h          |  2 +
- include/linux/gunyah_rsc_mgr.h  |  4 ++
- 4 files changed, 109 insertions(+)
- create mode 100644 arch/arm64/include/asm/gunyah.h
+ drivers/virt/gunyah/Makefile   |   4 +-
+ drivers/virt/gunyah/rsc_mgr.c  | 724 +++++++++++++++++++++++++++++++++
+ include/linux/gunyah_rsc_mgr.h |  27 ++
+ 3 files changed, 754 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/virt/gunyah/rsc_mgr.c
+ create mode 100644 include/linux/gunyah_rsc_mgr.h
 
-diff --git a/arch/arm64/include/asm/gunyah.h b/arch/arm64/include/asm/gunyah.h
+diff --git a/drivers/virt/gunyah/Makefile b/drivers/virt/gunyah/Makefile
+index 34f32110faf9..c2308389f551 100644
+--- a/drivers/virt/gunyah/Makefile
++++ b/drivers/virt/gunyah/Makefile
+@@ -1,3 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-obj-$(CONFIG_GUNYAH) += gunyah.o
++gunyah_rsc_mgr-y += rsc_mgr.o
++
++obj-$(CONFIG_GUNYAH) += gunyah.o gunyah_rsc_mgr.o
+diff --git a/drivers/virt/gunyah/rsc_mgr.c b/drivers/virt/gunyah/rsc_mgr.c
 new file mode 100644
-index 000000000000..29079d1a4df2
+index 000000000000..75fc86887868
 --- /dev/null
-+++ b/arch/arm64/include/asm/gunyah.h
-@@ -0,0 +1,35 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/drivers/virt/gunyah/rsc_mgr.c
+@@ -0,0 +1,724 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
 + */
-+#ifndef _ASM_GUNYAH_H
-+#define _ASM_GUNYAH_H
 +
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
++#include <linux/completion.h>
++#include <linux/gunyah.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/notifier.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
 +
-+static inline int arch_gunyah_fill_irq_fwspec_params(u32 virq,
-+						 struct irq_fwspec *fwspec)
++#include <linux/gunyah_rsc_mgr.h>
++
++/* clang-format off */
++#define RM_RPC_API_VERSION_MASK		GENMASK(3, 0)
++#define RM_RPC_HEADER_WORDS_MASK	GENMASK(7, 4)
++#define RM_RPC_API_VERSION		FIELD_PREP(RM_RPC_API_VERSION_MASK, 1)
++#define RM_RPC_HEADER_WORDS		FIELD_PREP(RM_RPC_HEADER_WORDS_MASK, \
++						(sizeof(struct gunyah_rm_rpc_hdr) / sizeof(u32)))
++#define RM_RPC_API			(RM_RPC_API_VERSION | RM_RPC_HEADER_WORDS)
++
++#define RM_RPC_TYPE_CONTINUATION	0x0
++#define RM_RPC_TYPE_REQUEST		0x1
++#define RM_RPC_TYPE_REPLY		0x2
++#define RM_RPC_TYPE_NOTIF		0x3
++#define RM_RPC_TYPE_MASK		GENMASK(1, 0)
++
++#define GUNYAH_RM_MAX_NUM_FRAGMENTS		62
++#define RM_RPC_FRAGMENTS_MASK		GENMASK(7, 2)
++/* clang-format on */
++
++struct gunyah_rm_rpc_hdr {
++	u8 api;
++	u8 type;
++	__le16 seq;
++	__le32 msg_id;
++} __packed;
++
++struct gunyah_rm_rpc_reply_hdr {
++	struct gunyah_rm_rpc_hdr hdr;
++	__le32 err_code; /* GUNYAH_RM_ERROR_* */
++} __packed;
++
++#define GUNYAH_RM_MSGQ_MSG_SIZE 240
++#define GUNYAH_RM_PAYLOAD_SIZE \
++	(GUNYAH_RM_MSGQ_MSG_SIZE - sizeof(struct gunyah_rm_rpc_hdr))
++
++/* RM Error codes */
++enum gunyah_rm_error {
++	/* clang-format off */
++	GUNYAH_RM_ERROR_OK			= 0x0,
++	GUNYAH_RM_ERROR_UNIMPLEMENTED		= 0xFFFFFFFF,
++	GUNYAH_RM_ERROR_NOMEM			= 0x1,
++	GUNYAH_RM_ERROR_NORESOURCE		= 0x2,
++	GUNYAH_RM_ERROR_DENIED			= 0x3,
++	GUNYAH_RM_ERROR_INVALID			= 0x4,
++	GUNYAH_RM_ERROR_BUSY			= 0x5,
++	GUNYAH_RM_ERROR_ARGUMENT_INVALID	= 0x6,
++	GUNYAH_RM_ERROR_HANDLE_INVALID		= 0x7,
++	GUNYAH_RM_ERROR_VALIDATE_FAILED		= 0x8,
++	GUNYAH_RM_ERROR_MAP_FAILED		= 0x9,
++	GUNYAH_RM_ERROR_MEM_INVALID		= 0xA,
++	GUNYAH_RM_ERROR_MEM_INUSE		= 0xB,
++	GUNYAH_RM_ERROR_MEM_RELEASED		= 0xC,
++	GUNYAH_RM_ERROR_VMID_INVALID		= 0xD,
++	GUNYAH_RM_ERROR_LOOKUP_FAILED		= 0xE,
++	GUNYAH_RM_ERROR_IRQ_INVALID		= 0xF,
++	GUNYAH_RM_ERROR_IRQ_INUSE		= 0x10,
++	GUNYAH_RM_ERROR_IRQ_RELEASED		= 0x11,
++	/* clang-format on */
++};
++
++/**
++ * struct gunyah_rm_message - Represents a complete message from resource manager
++ * @payload: Combined payload of all the fragments (msg headers stripped off).
++ * @size: Size of the payload received so far.
++ * @msg_id: Message ID from the header.
++ * @type: RM_RPC_TYPE_REPLY or RM_RPC_TYPE_NOTIF.
++ * @num_fragments: total number of fragments expected to be received.
++ * @fragments_received: fragments received so far.
++ * @reply: Fields used for request/reply sequences
++ */
++struct gunyah_rm_message {
++	void *payload;
++	size_t size;
++	u32 msg_id;
++	u8 type;
++
++	u8 num_fragments;
++	u8 fragments_received;
++
++	/**
++	 * @ret: Linux return code, there was an error processing message
++	 * @seq: Sequence ID for the main message.
++	 * @rm_error: For request/reply sequences with standard replies
++	 * @seq_done: Signals caller that the RM reply has been received
++	 */
++	struct {
++		int ret;
++		u16 seq;
++		enum gunyah_rm_error rm_error;
++		struct completion seq_done;
++	} reply;
++};
++
++/**
++ * struct gunyah_rm - private data for communicating w/Gunyah resource manager
++ * @dev: pointer to RM platform device
++ * @tx_ghrsc: message queue resource to TX to RM
++ * @rx_ghrsc: message queue resource to RX from RM
++ * @active_rx_message: ongoing gunyah_rm_message for which we're receiving fragments
++ * @call_xarray: xarray to allocate & lookup sequence IDs for Request/Response flows
++ * @next_seq: next ID to allocate (for xa_alloc_cyclic)
++ * @recv_msg: cached allocation for Rx messages
++ * @send_msg: cached allocation for Tx messages. Must hold @send_lock to manipulate.
++ * @send_lock: synchronization to allow only one request to be sent at a time
++ * @send_ready: completed when we know Tx message queue can take more messages
++ * @nh: notifier chain for clients interested in RM notification messages
++ */
++struct gunyah_rm {
++	struct device *dev;
++	struct gunyah_resource tx_ghrsc;
++	struct gunyah_resource rx_ghrsc;
++	struct gunyah_rm_message *active_rx_message;
++
++	struct xarray call_xarray;
++	u32 next_seq;
++
++	unsigned char recv_msg[GUNYAH_RM_MSGQ_MSG_SIZE];
++	unsigned char send_msg[GUNYAH_RM_MSGQ_MSG_SIZE];
++	struct mutex send_lock;
++	struct completion send_ready;
++	struct blocking_notifier_head nh;
++};
++
++/* Global resource manager instance */
++struct gunyah_rm *gunyah_rm;
++EXPORT_SYMBOL_GPL(gunyah_rm);
++
++/**
++ * gunyah_rm_error_remap() - Remap Gunyah resource manager errors into a Linux error code
++ * @rm_error: "Standard" return value from Gunyah resource manager
++ */
++static inline int gunyah_rm_error_remap(enum gunyah_rm_error rm_error)
 +{
-+	/* Assume that Gunyah gave us an SPI or ESPI; defensively check it */
-+	if (WARN(virq < 32, "Unexpected virq: %d\n", virq)) {
++	switch (rm_error) {
++	case GUNYAH_RM_ERROR_OK:
++		return 0;
++	case GUNYAH_RM_ERROR_UNIMPLEMENTED:
++		return -EOPNOTSUPP;
++	case GUNYAH_RM_ERROR_NOMEM:
++		return -ENOMEM;
++	case GUNYAH_RM_ERROR_NORESOURCE:
++		return -ENODEV;
++	case GUNYAH_RM_ERROR_DENIED:
++		return -EPERM;
++	case GUNYAH_RM_ERROR_BUSY:
++		return -EBUSY;
++	case GUNYAH_RM_ERROR_INVALID:
++	case GUNYAH_RM_ERROR_ARGUMENT_INVALID:
++	case GUNYAH_RM_ERROR_HANDLE_INVALID:
++	case GUNYAH_RM_ERROR_VALIDATE_FAILED:
++	case GUNYAH_RM_ERROR_MAP_FAILED:
++	case GUNYAH_RM_ERROR_MEM_INVALID:
++	case GUNYAH_RM_ERROR_MEM_INUSE:
++	case GUNYAH_RM_ERROR_MEM_RELEASED:
++	case GUNYAH_RM_ERROR_VMID_INVALID:
++	case GUNYAH_RM_ERROR_LOOKUP_FAILED:
++	case GUNYAH_RM_ERROR_IRQ_INVALID:
++	case GUNYAH_RM_ERROR_IRQ_INUSE:
++	case GUNYAH_RM_ERROR_IRQ_RELEASED:
 +		return -EINVAL;
-+	} else if (virq <= 1019) {
-+		fwspec->param_count = 3;
-+		fwspec->param[0] = 0; /* GIC_SPI */
-+		fwspec->param[1] = virq - 32; /* virq 32 -> SPI 0 */
-+		fwspec->param[2] = IRQ_TYPE_EDGE_RISING;
-+	} else if (WARN(virq < 4096, "Unexpected virq: %d\n", virq)) {
-+		return -EINVAL;
-+	} else if (virq < 5120) {
-+		fwspec->param_count = 3;
-+		fwspec->param[0] = 2; /* GIC_ESPI */
-+		fwspec->param[1] = virq - 4096; /* virq 4096 -> ESPI 0 */
-+		fwspec->param[2] = IRQ_TYPE_EDGE_RISING;
-+	} else {
-+		WARN(1, "Unexpected virq: %d\n", virq);
-+		return -EINVAL;
++	default:
++		return -EBADMSG;
 +	}
++}
++
++static int gunyah_rm_init_message_payload(struct gunyah_rm_message *message,
++					  const void *msg, size_t hdr_size,
++					  size_t msg_size)
++{
++	const struct gunyah_rm_rpc_hdr *hdr = msg;
++	size_t max_buf_size, payload_size;
++
++	if (msg_size < hdr_size)
++		return -EINVAL;
++
++	payload_size = msg_size - hdr_size;
++
++	message->num_fragments = FIELD_GET(RM_RPC_FRAGMENTS_MASK, hdr->type);
++	message->fragments_received = 0;
++
++	/* There's not going to be any payload, no need to allocate buffer. */
++	if (!payload_size && !message->num_fragments)
++		return 0;
++
++	if (message->num_fragments > GUNYAH_RM_MAX_NUM_FRAGMENTS)
++		return -EINVAL;
++
++	max_buf_size = payload_size +
++		       (message->num_fragments * GUNYAH_RM_PAYLOAD_SIZE);
++
++	message->payload = kzalloc(max_buf_size, GFP_KERNEL);
++	if (!message->payload)
++		return -ENOMEM;
++
++	memcpy(message->payload, msg + hdr_size, payload_size);
++	message->size = payload_size;
 +	return 0;
 +}
-+#endif
-diff --git a/drivers/virt/gunyah/rsc_mgr.c b/drivers/virt/gunyah/rsc_mgr.c
-index 75fc86887868..2d34b0ba98b2 100644
---- a/drivers/virt/gunyah/rsc_mgr.c
-+++ b/drivers/virt/gunyah/rsc_mgr.c
-@@ -9,8 +9,10 @@
- #include <linux/mutex.h>
- #include <linux/notifier.h>
- #include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/platform_device.h>
- 
-+#include <asm/gunyah.h>
- #include <linux/gunyah_rsc_mgr.h>
- 
- /* clang-format off */
-@@ -118,6 +120,7 @@ struct gunyah_rm_message {
-  * @send_lock: synchronization to allow only one request to be sent at a time
-  * @send_ready: completed when we know Tx message queue can take more messages
-  * @nh: notifier chain for clients interested in RM notification messages
-+ * @parent_fwnode: Parent IRQ fwnode to translate Gunyah hwirqs to Linux irqs
-  */
- struct gunyah_rm {
- 	struct device *dev;
-@@ -133,6 +136,8 @@ struct gunyah_rm {
- 	struct mutex send_lock;
- 	struct completion send_ready;
- 	struct blocking_notifier_head nh;
 +
-+	struct fwnode_handle *parent_fwnode;
- };
- 
- /* Global resource manager instance */
-@@ -177,6 +182,53 @@ static inline int gunyah_rm_error_remap(enum gunyah_rm_error rm_error)
- 	}
- }
- 
-+struct gunyah_resource *
-+gunyah_rm_alloc_resource(struct gunyah_rm *rm,
-+			 struct gunyah_rm_hyp_resource *hyp_resource)
++static void gunyah_rm_abort_message(struct gunyah_rm *rm)
 +{
-+	struct gunyah_resource *ghrsc;
++	kfree(rm->active_rx_message->payload);
++
++	switch (rm->active_rx_message->type) {
++	case RM_RPC_TYPE_REPLY:
++		rm->active_rx_message->reply.ret = -EIO;
++		complete(&rm->active_rx_message->reply.seq_done);
++		break;
++	case RM_RPC_TYPE_NOTIF:
++		fallthrough;
++	default:
++		kfree(rm->active_rx_message);
++	}
++
++	rm->active_rx_message = NULL;
++}
++
++static inline void gunyah_rm_try_complete_message(struct gunyah_rm *rm)
++{
++	struct gunyah_rm_message *message = rm->active_rx_message;
++
++	if (!message || message->fragments_received != message->num_fragments)
++		return;
++
++	switch (message->type) {
++	case RM_RPC_TYPE_REPLY:
++		complete(&message->reply.seq_done);
++		break;
++	case RM_RPC_TYPE_NOTIF:
++		blocking_notifier_call_chain(&rm->nh, message->msg_id,
++					     message->payload);
++
++		kfree(message->payload);
++		kfree(message);
++		break;
++	default:
++		dev_err_ratelimited(rm->dev,
++				    "Invalid message type (%u) received\n",
++				    message->type);
++		gunyah_rm_abort_message(rm);
++		break;
++	}
++
++	rm->active_rx_message = NULL;
++}
++
++static void gunyah_rm_process_notif(struct gunyah_rm *rm, const void *msg,
++				    size_t msg_size)
++{
++	const struct gunyah_rm_rpc_hdr *hdr = msg;
++	struct gunyah_rm_message *message;
 +	int ret;
 +
-+	ghrsc = kzalloc(sizeof(*ghrsc), GFP_KERNEL);
-+	if (!ghrsc)
-+		return NULL;
-+
-+	ghrsc->type = hyp_resource->type;
-+	ghrsc->capid = le64_to_cpu(hyp_resource->cap_id);
-+	ghrsc->irq = IRQ_NOTCONNECTED;
-+	ghrsc->rm_label = le32_to_cpu(hyp_resource->resource_label);
-+	if (hyp_resource->virq) {
-+		struct irq_fwspec fwspec;
-+
-+
-+		fwspec.fwnode = rm->parent_fwnode;
-+		ret = arch_gunyah_fill_irq_fwspec_params(le32_to_cpu(hyp_resource->virq), &fwspec);
-+		if (ret) {
-+			dev_err(rm->dev,
-+				"Failed to translate interrupt for resource %d label: %d: %d\n",
-+				ghrsc->type, ghrsc->rm_label, ret);
-+		}
-+
-+		ret = irq_create_fwspec_mapping(&fwspec);
-+		if (ret < 0) {
-+			dev_err(rm->dev,
-+				"Failed to allocate interrupt for resource %d label: %d: %d\n",
-+				ghrsc->type, ghrsc->rm_label, ret);
-+			kfree(ghrsc);
-+			return NULL;
-+		}
-+		ghrsc->irq = ret;
++	if (rm->active_rx_message) {
++		dev_err(rm->dev,
++			"Unexpected new notification, still processing an active message");
++		gunyah_rm_abort_message(rm);
 +	}
 +
-+	return ghrsc;
++	message = kzalloc(sizeof(*message), GFP_KERNEL);
++	if (!message)
++		return;
++
++	message->type = RM_RPC_TYPE_NOTIF;
++	message->msg_id = le32_to_cpu(hdr->msg_id);
++
++	ret = gunyah_rm_init_message_payload(message, msg, sizeof(*hdr),
++					     msg_size);
++	if (ret) {
++		dev_err(rm->dev,
++			"Failed to initialize message for notification: %d\n",
++			ret);
++		kfree(message);
++		return;
++	}
++
++	rm->active_rx_message = message;
++
++	gunyah_rm_try_complete_message(rm);
 +}
 +
-+void gunyah_rm_free_resource(struct gunyah_resource *ghrsc)
++static void gunyah_rm_process_reply(struct gunyah_rm *rm, const void *msg,
++				    size_t msg_size)
 +{
-+	irq_dispose_mapping(ghrsc->irq);
-+	kfree(ghrsc);
++	const struct gunyah_rm_rpc_reply_hdr *reply_hdr = msg;
++	struct gunyah_rm_message *message;
++	u16 seq_id;
++
++	seq_id = le16_to_cpu(reply_hdr->hdr.seq);
++	message = xa_load(&rm->call_xarray, seq_id);
++
++	if (!message || message->msg_id != le32_to_cpu(reply_hdr->hdr.msg_id))
++		return;
++
++	if (rm->active_rx_message) {
++		dev_err(rm->dev,
++			"Unexpected new reply, still processing an active message");
++		gunyah_rm_abort_message(rm);
++	}
++
++	if (gunyah_rm_init_message_payload(message, msg, sizeof(*reply_hdr),
++					   msg_size)) {
++		dev_err(rm->dev,
++			"Failed to alloc message buffer for sequence %d\n",
++			seq_id);
++		/* Send message complete and error the client. */
++		message->reply.ret = -ENOMEM;
++		complete(&message->reply.seq_done);
++		return;
++	}
++
++	message->reply.rm_error = le32_to_cpu(reply_hdr->err_code);
++	rm->active_rx_message = message;
++
++	gunyah_rm_try_complete_message(rm);
 +}
 +
- static int gunyah_rm_init_message_payload(struct gunyah_rm_message *message,
- 					  const void *msg, size_t hdr_size,
- 					  size_t msg_size)
-@@ -676,6 +728,7 @@ static int gunyah_rm_probe_rx_msgq(struct gunyah_rm *rm,
- 
- static int gunyah_rm_probe(struct platform_device *pdev)
- {
-+	struct device_node *parent_irq_node;
- 	int ret;
- 
- 	gunyah_rm = devm_kzalloc(&pdev->dev, sizeof(*gunyah_rm), GFP_KERNEL);
-@@ -695,6 +748,21 @@ static int gunyah_rm_probe(struct platform_device *pdev)
- 	ret = gunyah_rm_probe_tx_msgq(gunyah_rm, pdev);
- 	if (ret)
- 		return ret;
++static void gunyah_rm_process_cont(struct gunyah_rm *rm,
++				   struct gunyah_rm_message *message,
++				   const void *msg, size_t msg_size)
++{
++	const struct gunyah_rm_rpc_hdr *hdr = msg;
++	size_t payload_size = msg_size - sizeof(*hdr);
 +
-+	parent_irq_node = of_irq_find_parent(pdev->dev.of_node);
-+	if (!parent_irq_node) {
-+		dev_err(&pdev->dev,
-+			"Failed to find interrupt parent of resource manager\n");
-+		return -ENODEV;
++	if (!rm->active_rx_message)
++		return;
++
++	/*
++	 * hdr->fragments and hdr->msg_id preserves the value from first reply
++	 * or notif message. To detect mishandling, check it's still intact.
++	 */
++	if (message->msg_id != le32_to_cpu(hdr->msg_id) ||
++	    message->num_fragments !=
++		    FIELD_GET(RM_RPC_FRAGMENTS_MASK, hdr->type)) {
++		gunyah_rm_abort_message(rm);
++		return;
 +	}
 +
-+	gunyah_rm->parent_fwnode = of_node_to_fwnode(parent_irq_node);
-+	if (!gunyah_rm->parent_fwnode) {
-+		dev_err(&pdev->dev,
-+			"Failed to find interrupt parent domain of resource manager\n");
-+		return -ENODEV;
++	memcpy(message->payload + message->size, msg + sizeof(*hdr),
++	       payload_size);
++	message->size += payload_size;
++	message->fragments_received++;
++
++	gunyah_rm_try_complete_message(rm);
++}
++
++static irqreturn_t gunyah_rm_rx(int irq, void *data)
++{
++	enum gunyah_error gunyah_error;
++	struct gunyah_rm_rpc_hdr *hdr;
++	struct gunyah_rm *rm = data;
++	void *msg = &rm->recv_msg[0];
++	size_t len;
++	bool ready;
++
++	do {
++		gunyah_error = gunyah_hypercall_msgq_recv(rm->rx_ghrsc.capid,
++							  msg,
++							  sizeof(rm->recv_msg),
++							  &len, &ready);
++		if (gunyah_error != GUNYAH_ERROR_OK) {
++			if (gunyah_error != GUNYAH_ERROR_MSGQUEUE_EMPTY)
++				dev_warn(rm->dev,
++					 "Failed to receive data: %d\n",
++					 gunyah_error);
++			return IRQ_HANDLED;
++		}
++
++		if (len < sizeof(*hdr)) {
++			dev_err_ratelimited(
++				rm->dev,
++				"Too small message received. size=%ld\n", len);
++			continue;
++		}
++
++		hdr = msg;
++		if (hdr->api != RM_RPC_API) {
++			dev_err(rm->dev, "Unknown RM RPC API version: %x\n",
++				hdr->api);
++			return IRQ_HANDLED;
++		}
++
++		switch (FIELD_GET(RM_RPC_TYPE_MASK, hdr->type)) {
++		case RM_RPC_TYPE_NOTIF:
++			gunyah_rm_process_notif(rm, msg, len);
++			break;
++		case RM_RPC_TYPE_REPLY:
++			gunyah_rm_process_reply(rm, msg, len);
++			break;
++		case RM_RPC_TYPE_CONTINUATION:
++			gunyah_rm_process_cont(rm, rm->active_rx_message, msg,
++					       len);
++			break;
++		default:
++			dev_err(rm->dev,
++				"Invalid message type (%lu) received\n",
++				FIELD_GET(RM_RPC_TYPE_MASK, hdr->type));
++			return IRQ_HANDLED;
++		}
++	} while (ready);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t gunyah_rm_tx(int irq, void *data)
++{
++	struct gunyah_rm *rm = data;
++
++	complete(&rm->send_ready);
++
++	return IRQ_HANDLED;
++}
++
++static int gunyah_rm_msgq_send(struct gunyah_rm *rm, size_t size, bool push)
++{
++	const u64 tx_flags = push ? GUNYAH_HYPERCALL_MSGQ_TX_FLAGS_PUSH : 0;
++	enum gunyah_error gunyah_error;
++	void *data = &rm->send_msg[0];
++	bool ready;
++
++	lockdep_assert_held(&rm->send_lock);
++
++again:
++	wait_for_completion(&rm->send_ready);
++	gunyah_error = gunyah_hypercall_msgq_send(rm->tx_ghrsc.capid, size,
++						  data, tx_flags, &ready);
++
++	/* Should never happen because Linux properly tracks the ready-state of the msgq */
++	if (WARN_ON(gunyah_error == GUNYAH_ERROR_MSGQUEUE_FULL))
++		goto again;
++
++	if (ready)
++		complete(&rm->send_ready);
++
++	return gunyah_error_remap(gunyah_error);
++}
++
++static int gunyah_rm_send_request(struct gunyah_rm *rm, u32 message_id,
++				  const void *req_buf, size_t req_buf_size,
++				  struct gunyah_rm_message *message)
++{
++	size_t buf_size_remaining = req_buf_size;
++	const void *req_buf_curr = req_buf;
++	struct gunyah_rm_rpc_hdr *hdr =
++		(struct gunyah_rm_rpc_hdr *)&rm->send_msg[0];
++	struct gunyah_rm_rpc_hdr hdr_template;
++	void *payload = hdr + 1;
++	u32 cont_fragments = 0;
++	size_t payload_size;
++	bool push;
++	int ret;
++
++	if (req_buf_size >
++	    GUNYAH_RM_MAX_NUM_FRAGMENTS * GUNYAH_RM_PAYLOAD_SIZE) {
++		dev_warn(
++			rm->dev,
++			"Limit (%lu bytes) exceeded for the maximum message size: %lu\n",
++			GUNYAH_RM_MAX_NUM_FRAGMENTS * GUNYAH_RM_PAYLOAD_SIZE,
++			req_buf_size);
++		dump_stack();
++		return -E2BIG;
 +	}
 +
- 	/* assume RM is ready to receive messages from us */
- 	complete(&gunyah_rm->send_ready);
- 
-diff --git a/include/linux/gunyah.h b/include/linux/gunyah.h
-index 1f4389eb21fb..40ea21b17195 100644
---- a/include/linux/gunyah.h
-+++ b/include/linux/gunyah.h
-@@ -35,6 +35,8 @@ struct gunyah_resource {
- 	enum gunyah_resource_type type;
- 	u64 capid;
- 	unsigned int irq;
++	if (req_buf_size)
++		cont_fragments = (req_buf_size - 1) / GUNYAH_RM_PAYLOAD_SIZE;
 +
-+	u32 rm_label;
- };
- 
- /**
++	hdr_template.api = RM_RPC_API;
++	hdr_template.type = FIELD_PREP(RM_RPC_TYPE_MASK, RM_RPC_TYPE_REQUEST) |
++			    FIELD_PREP(RM_RPC_FRAGMENTS_MASK, cont_fragments);
++	hdr_template.seq = cpu_to_le16(message->reply.seq);
++	hdr_template.msg_id = cpu_to_le32(message_id);
++
++	ret = mutex_lock_interruptible(&rm->send_lock);
++	if (ret)
++		return ret;
++
++	do {
++		*hdr = hdr_template;
++
++		/* Copy payload */
++		payload_size = min(buf_size_remaining, GUNYAH_RM_PAYLOAD_SIZE);
++		memcpy(payload, req_buf_curr, payload_size);
++		req_buf_curr += payload_size;
++		buf_size_remaining -= payload_size;
++
++		/* Only the last message should have push flag set */
++		push = !buf_size_remaining;
++		ret = gunyah_rm_msgq_send(rm, sizeof(*hdr) + payload_size,
++					  push);
++		if (ret)
++			break;
++
++		hdr_template.type =
++			FIELD_PREP(RM_RPC_TYPE_MASK, RM_RPC_TYPE_CONTINUATION) |
++			FIELD_PREP(RM_RPC_FRAGMENTS_MASK, cont_fragments);
++	} while (buf_size_remaining);
++
++	mutex_unlock(&rm->send_lock);
++	return ret;
++}
++
++/**
++ * gunyah_rm_call: Achieve request-response type communication with RPC
++ * @rm: Pointer to Gunyah resource manager internal data
++ * @message_id: The RM RPC message-id
++ * @req_buf: Request buffer that contains the payload
++ * @req_buf_size: Total size of the payload
++ * @resp_buf: Pointer to a response buffer
++ * @resp_buf_size: Size of the response buffer
++ *
++ * Make a request to the Resource Manager and wait for reply back. For a successful
++ * response, the function returns the payload. The size of the payload is set in
++ * resp_buf_size. The resp_buf must be freed by the caller when 0 is returned
++ * and resp_buf_size != 0.
++ *
++ * req_buf should be not NULL for req_buf_size >0. If req_buf_size == 0,
++ * req_buf *can* be NULL and no additional payload is sent.
++ *
++ * Context: Process context. Will sleep waiting for reply.
++ * Return: 0 on success. <0 if error.
++ */
++int gunyah_rm_call(struct gunyah_rm *rm, u32 message_id, const void *req_buf,
++		   size_t req_buf_size, void **resp_buf, size_t *resp_buf_size)
++{
++	struct gunyah_rm_message message = { 0 };
++	u32 seq_id;
++	int ret;
++
++	/* message_id 0 is reserved. req_buf_size implies req_buf is not NULL */
++	if (!rm || !message_id || (!req_buf && req_buf_size))
++		return -EINVAL;
++
++	message.type = RM_RPC_TYPE_REPLY;
++	message.msg_id = message_id;
++
++	message.reply.seq_done =
++		COMPLETION_INITIALIZER_ONSTACK(message.reply.seq_done);
++
++	/* Allocate a new seq number for this message */
++	ret = xa_alloc_cyclic(&rm->call_xarray, &seq_id, &message, xa_limit_16b,
++			      &rm->next_seq, GFP_KERNEL);
++	if (ret < 0)
++		return ret;
++	message.reply.seq = lower_16_bits(seq_id);
++
++	/* Send the request to the Resource Manager */
++	ret = gunyah_rm_send_request(rm, message_id, req_buf, req_buf_size,
++				     &message);
++	if (ret < 0) {
++		dev_warn(rm->dev, "Failed to send request. Error: %d\n", ret);
++		goto out;
++	}
++
++	/*
++	 * Wait for response. Uninterruptible because rollback based on what RM did to VM
++	 * requires us to know how RM handled the call.
++	 */
++	wait_for_completion(&message.reply.seq_done);
++
++	/* Check for internal (kernel) error waiting for the response */
++	if (message.reply.ret) {
++		ret = message.reply.ret;
++		goto out;
++	}
++
++	/* Got a response, did resource manager give us an error? */
++	if (message.reply.rm_error != GUNYAH_RM_ERROR_OK) {
++		dev_warn(rm->dev, "RM rejected message %08x. Error: %d\n",
++			 message_id, message.reply.rm_error);
++		ret = gunyah_rm_error_remap(message.reply.rm_error);
++		kfree(message.payload);
++		goto out;
++	}
++
++	/* Everything looks good, return the payload */
++	if (resp_buf_size)
++		*resp_buf_size = message.size;
++
++	if (message.size && resp_buf) {
++		*resp_buf = message.payload;
++	} else {
++		/* kfree in case RM sent us multiple fragments but never any data in
++		 * those fragments. We would've allocated memory for it, but message.size == 0
++		 */
++		kfree(message.payload);
++	}
++
++out:
++	xa_erase(&rm->call_xarray, message.reply.seq);
++	return ret;
++}
++
++int gunyah_rm_notifier_register(struct gunyah_rm *rm, struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&rm->nh, nb);
++}
++EXPORT_SYMBOL_GPL(gunyah_rm_notifier_register);
++
++int gunyah_rm_notifier_unregister(struct gunyah_rm *rm,
++				  struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&rm->nh, nb);
++}
++EXPORT_SYMBOL_GPL(gunyah_rm_notifier_unregister);
++
++static int gunyah_platform_probe_capability(struct platform_device *pdev,
++					    int idx,
++					    struct gunyah_resource *ghrsc)
++{
++	int ret;
++
++	ghrsc->irq = platform_get_irq(pdev, idx);
++	if (ghrsc->irq < 0) {
++		dev_err(&pdev->dev, "Failed to get %s irq: %d\n",
++			idx ? "rx" : "tx", ghrsc->irq);
++		return ghrsc->irq;
++	}
++
++	ret = of_property_read_u64_index(pdev->dev.of_node, "reg", idx,
++					 &ghrsc->capid);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to get %s capid: %d\n",
++			idx ? "rx" : "tx", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int gunyah_rm_probe_tx_msgq(struct gunyah_rm *rm,
++				   struct platform_device *pdev)
++{
++	int ret;
++
++	rm->tx_ghrsc.type = GUNYAH_RESOURCE_TYPE_MSGQ_TX;
++	ret = gunyah_platform_probe_capability(pdev, 0, &rm->tx_ghrsc);
++	if (ret)
++		return ret;
++
++	enable_irq_wake(rm->tx_ghrsc.irq);
++
++	return devm_request_irq(rm->dev, rm->tx_ghrsc.irq, gunyah_rm_tx, 0,
++				"gunyah_rm_tx", rm);
++}
++
++static int gunyah_rm_probe_rx_msgq(struct gunyah_rm *rm,
++				   struct platform_device *pdev)
++{
++	int ret;
++
++	rm->rx_ghrsc.type = GUNYAH_RESOURCE_TYPE_MSGQ_RX;
++	ret = gunyah_platform_probe_capability(pdev, 1, &rm->rx_ghrsc);
++	if (ret)
++		return ret;
++
++	enable_irq_wake(rm->rx_ghrsc.irq);
++
++	return devm_request_threaded_irq(rm->dev, rm->rx_ghrsc.irq, NULL,
++					 gunyah_rm_rx, IRQF_ONESHOT,
++					 "gunyah_rm_rx", rm);
++}
++
++static int gunyah_rm_probe(struct platform_device *pdev)
++{
++	int ret;
++
++	gunyah_rm = devm_kzalloc(&pdev->dev, sizeof(*gunyah_rm), GFP_KERNEL);
++	if (!gunyah_rm)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, gunyah_rm);
++	gunyah_rm->dev = &pdev->dev;
++
++	mutex_init(&gunyah_rm->send_lock);
++	init_completion(&gunyah_rm->send_ready);
++	BLOCKING_INIT_NOTIFIER_HEAD(&gunyah_rm->nh);
++	xa_init_flags(&gunyah_rm->call_xarray, XA_FLAGS_ALLOC);
++
++	device_init_wakeup(&pdev->dev, true);
++
++	ret = gunyah_rm_probe_tx_msgq(gunyah_rm, pdev);
++	if (ret)
++		return ret;
++	/* assume RM is ready to receive messages from us */
++	complete(&gunyah_rm->send_ready);
++
++	ret = gunyah_rm_probe_rx_msgq(gunyah_rm, pdev);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static const struct of_device_id gunyah_rm_of_match[] = {
++	{ .compatible = "gunyah-resource-manager" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, gunyah_rm_of_match);
++
++static struct platform_driver gunyah_rm_driver = {
++	.probe = gunyah_rm_probe,
++	.driver = {
++		.name = "gunyah_rsc_mgr",
++		.of_match_table = gunyah_rm_of_match,
++	},
++};
++module_platform_driver(gunyah_rm_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Gunyah Resource Manager Driver");
 diff --git a/include/linux/gunyah_rsc_mgr.h b/include/linux/gunyah_rsc_mgr.h
-index 294e847c27ed..c0fe516d54a8 100644
---- a/include/linux/gunyah_rsc_mgr.h
+new file mode 100644
+index 000000000000..87e919cc1e28
+--- /dev/null
 +++ b/include/linux/gunyah_rsc_mgr.h
-@@ -97,6 +97,10 @@ struct gunyah_rm_hyp_resources {
- 
- int gunyah_rm_get_hyp_resources(struct gunyah_rm *rm, u16 vmid,
- 				struct gunyah_rm_hyp_resources **resources);
-+struct gunyah_resource *
-+gunyah_rm_alloc_resource(struct gunyah_rm *rm,
-+			 struct gunyah_rm_hyp_resource *hyp_resource);
-+void gunyah_rm_free_resource(struct gunyah_resource *ghrsc);
- 
- int gunyah_rm_call(struct gunyah_rm *rsc_mgr, u32 message_id,
- 		   const void *req_buf, size_t req_buf_size, void **resp_buf,
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (c) 2022-2024 Qualcomm Innovation Center, Inc. All rights reserved.
++ */
++#ifndef __GUNYAH_RSC_MGR_H
++#define __GUNYAH_RSC_MGR_H
++
++#include <linux/notifier.h>
++#include <linux/types.h>
++
++#define GUNYAH_VMID_INVAL U16_MAX
++
++struct gunyah_rm;
++
++extern struct gunyah_rm *gunyah_rm;
++
++int gunyah_rm_notifier_register(struct gunyah_rm *rm,
++				struct notifier_block *nb);
++int gunyah_rm_notifier_unregister(struct gunyah_rm *rm,
++				  struct notifier_block *nb);
++
++
++int gunyah_rm_call(struct gunyah_rm *rsc_mgr, u32 message_id,
++		   const void *req_buf, size_t req_buf_size, void **resp_buf,
++		   size_t *resp_buf_size);
++
++#endif
 -- 
 2.39.5
 
