@@ -1,243 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EA219DF4A;
-	Thu, 24 Apr 2025 22:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83B514900B;
+	Thu, 24 Apr 2025 22:57:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745535370; cv=none; b=Sa/eo32bB+PEeqo64RWAyBcfA13TD4JfEqrI5xv7JeoJvVMWIBFl89vXwr/7AtS1dJ9Zr++WCleLsT5N2RVNx0U9zhRY6ikIXZwEBhRlNvJow42z/EDbruuZ0kzYsZUWAyMqWPQZJhW7SKQdOTGpryEtx8WOhjhXMdAmvAbX6TU=
+	t=1745535466; cv=none; b=scQiIVHijDWODOC5a8+k2n+pa52DDMnd3ZCoqwtDCzeha45Rvw8UXay1h2qwnabphMYj0LZ9rDgYDYjLPt3x2AJNT8kJYjzgng4XqsSQUstnIoxm+DqRNeC2oD5xcjSexf++ozi5aWZkpgmkuIf9MoQ5wMbNLJOfwvEe6bWUtK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745535370; c=relaxed/simple;
-	bh=rONlSTV9KsUzMXsWImgBgWL3p1SN2kaztMqBtsBDXbQ=;
+	s=arc-20240116; t=1745535466; c=relaxed/simple;
+	bh=I9GLLHXNevi/4S5O0gi610ywDg9g4cLrTCrLugcDduI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nqWaY7sHX/rMGHjlv91RNSL1PHOHpYbqRkOJN1JbtL8xNTNR4RzNi50+ZGS/fPo5eUr7+8gGdB1BHfuA6tcf7t955KYqbXbERW57Fm4Eeii91S7SgF034m5vgnkwzwvPYmwdSU76hMXPSWmYdJstc0o8kIai8qF2iPXmth7pH3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g12+dwYs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=cA6xrb+s2E4qs3nRCoy7zxj5GVhRYynGpvB9NWXLvYtAJWg5Exy5NRVMstQeS6Y+sz3hxC92bAVOZs9pn6/TnVvx/EPsIr4ZYVmpZlS9nLFpT/S0Vmhft9iV1hPqX8teQCXLGu8+S3us3Qc+jyokSJ51/FL5tIh4K8oKtXNtJw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AX0Kg4UR; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g12+dwYs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE87C4CEE3;
-	Thu, 24 Apr 2025 22:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745535370;
-	bh=rONlSTV9KsUzMXsWImgBgWL3p1SN2kaztMqBtsBDXbQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=g12+dwYsHbx2EXPghRdnJGqXrtjQJJ45JP81rkiNmfmCy6l3wzihx0uHZqbEGYBIp
-	 Km0d06Vx+zRg4a18en4g9J6vYjmkfcWiZnGZ9RxhpgJACh9FTd2Jxgs19BuA+ytriL
-	 ji/upc0HaRlMScQYr5CSh3Q4KAxqbsGV2iEysciyVfqRb/tD31Z4SpET5/rt/eBdQr
-	 vzuY1iuClmMjE1WqYIIQNlIQdlNQQwhqco1HhgX2yOP6Tmvbj7IcObBq3Q+PyUcE2V
-	 LBDr0lqzHqw9Z6QwC5jKQpdoWttSJ5iNjwa45qWZE4cDDEe072HUqoy8docruDomv6
-	 qF9HSI37AkQVA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id D2821CE191C; Thu, 24 Apr 2025 15:56:09 -0700 (PDT)
-Date: Thu, 24 Apr 2025 15:56:09 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
-	Joel Fernandes <joelagnelf@nvidia.com>,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AX0Kg4UR"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf7c2c351so1530325e9.0;
+        Thu, 24 Apr 2025 15:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745535462; x=1746140262; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Tt3wakvDIHzIQYo4afILWwjn2SUWyuaONXXdhw9MFGc=;
+        b=AX0Kg4URbUOB5mKq+Sv4q4D8wE8in03Q3W/3YcQ45DVjlmFT6z4l2uvcbluw4poWkk
+         gwXGVPUTtr0+9j5AYlQxwHSss1lcUFSO0lBjpzpV0F7l7AgWoFwhvBUnuTYD/dxDMMYS
+         +Tj4CfCYoSLhZ4oY5Pnc5ruFSctvEMUnNXhP83TDjKbGS4Ntf5SeDuWgs9nX0BgZUR+m
+         IPFdWuCXcDsw5khSG6lDrEC9ENDaEh7f25BPoDPww7CTkjQphRrxVWEUb4Dzvc2fSCqW
+         WFko2jWmaqT6Mmv1MN3hObGXke3I++wf/16VLdbRpLY60ZlHNZ64jNGnUQKnlqJVDcr/
+         CwQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745535462; x=1746140262;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Tt3wakvDIHzIQYo4afILWwjn2SUWyuaONXXdhw9MFGc=;
+        b=qWErYJIZ1CY5+xtw7dbiYeuaOJ7b29A2ijTx+7MzXkJQXhjHGNlX1hzYlnV0Uaa1sm
+         mkXIe8zKvB8huZZV2mq/lYsv0OrfboNb+bxA6CXQw29nbdpcKacAA57tYXmVyeheWGti
+         WPrK5rbiW4FKAvbRPUK6YnUAjiv42CXP/AhmMvOlwpcqNGVt4WfXKU+i/9eBkQchZ4/f
+         4Er4PK0cuHMDpKSeK/fdSptAZDfaOPUak0oz/bLRU4QgZPLOEvisAEtCo8grpomtuy74
+         k39b6LojZ1PhowAXFqg7szLUtVbwruWyTrqeY07mXFLttVzxRxdOFBbeXjHhhNB09GKw
+         VdFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVU1YquO2a3e3yxZe79qV/r0aA2T/E9Fe85TzsdKHOaMeg612vc6iXwD/KAwVkgNoX32fEnub1R@vger.kernel.org, AJvYcCW1nmeeSwxPIRY2rOwUEjRDJs9TTcLvsrhfhbP9MYYQYRn3HChMjRpzc4ja9si0zdMXUKEdRAuRPc65cJg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzT4ffdunYaI912e2jDPdS3fTPJQmlAQn4hcxdXrk/SsVJ6RC+K
+	oQBuYJsldFLTpFqYfGYPUoot+dezBjcbwRSLuH2LuWTJJhF9ezwV
+X-Gm-Gg: ASbGnct3CReBZNhRV1Lr69HVxMY8dSiZkxudV4BT6TFG8AyNe9xVnFFZNwq3cq2OZoc
+	Z+nHHUNoTussbH4IBIm03kJW7kFPl1S9C10sQ7pMKW6hieSXXA+wEcCxG3s4TENoBjzCIUr3nke
+	Z720+fRFVMwiVEpq6NbsJppaM8D3TolepqPg9IQ4rplQpX2PhlaAEKH73fIL2t8rBnriuczjgxt
+	193NKIFzXNK2HSk/dBOVHJBDPbIt4Mh2DTwRYS4t8917e8jyN2GObrRqtxF8gGSR7EvM8eYZ/9K
+	LndKAYiidHoHoaep4Oy7dHcKwpul
+X-Google-Smtp-Source: AGHT+IGGTdiMBQwmNpdRAXt++I8DcOe06hDEC6vJgeQcv6JXKGjqLOk5vlJ4oHfQrRVHt+/NiHS00w==
+X-Received: by 2002:a05:600c:4e01:b0:439:9a1f:d73d with SMTP id 5b1f17b1804b1-440a66bdd1emr9635e9.8.1745535461520;
+        Thu, 24 Apr 2025 15:57:41 -0700 (PDT)
+Received: from skbuf ([188.25.50.178])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46c23sm528105f8f.75.2025.04.24.15.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 15:57:40 -0700 (PDT)
+Date: Fri, 25 Apr 2025 01:57:38 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: Jonas Gorski <jonas.gorski@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [linux-next:master] [rcutorture]  ddd062f753:
- WARNING:at_kernel/rcu/rcutorture.c:#rcu_torture_updown[rcutorture]
-Message-ID: <7f32b085-c9e9-4686-9a93-539080cee9ab@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <202504211513.23f21a0-lkp@intel.com>
- <9db0175d-eb50-4534-969f-35afaa677927@paulmck-laptop>
- <aAcixqijvHL2ihHS@xsang-OptiPlex-9020>
- <4d8dd409-259c-4775-baf9-e272cc5238e7@paulmck-laptop>
- <aAmYzAsE6fPz5uaB@xsang-OptiPlex-9020>
- <5863ed5d-81b4-452a-a929-d68c26d6d028@paulmck-laptop>
+Subject: Re: [PATCH net] net: dsa: fix VLAN 0 filter imbalance when toggling
+ filtering
+Message-ID: <20250424225738.7xr36vll3vg4irzf@skbuf>
+References: <20250422184913.20155-1-jonas.gorski@gmail.com>
+ <20250424102509.65u5zmxhbjsd5vun@skbuf>
+ <04ac4aec-e6cd-4432-a31d-73088e762565@gmail.com>
+ <CAOiHx==5p2O6wVa42YtR-d=Sufbb2Ljy64mFSHavX2bguVXPWg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5863ed5d-81b4-452a-a929-d68c26d6d028@paulmck-laptop>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOiHx==5p2O6wVa42YtR-d=Sufbb2Ljy64mFSHavX2bguVXPWg@mail.gmail.com>
 
-On Wed, Apr 23, 2025 at 08:05:53PM -0700, Paul E. McKenney wrote:
-> On Thu, Apr 24, 2025 at 09:50:04AM +0800, Oliver Sang wrote:
-> > hi, Paul,
-> > 
-> > On Tue, Apr 22, 2025 at 10:54:10AM -0700, Paul E. McKenney wrote:
-> > 
-> > [...]
-> > 
-> > > > > > 
-> > > > > > If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> > > > > > the same patch/commit), kindly add following tags
-> > > > > > | Reported-by: kernel test robot <oliver.sang@intel.com>
-> > > > > > | Closes: https://lore.kernel.org/oe-lkp/202504211513.23f21a0-lkp@intel.com
-> > > > > > 
-> > > > > > 
-> > > > > > The kernel config and materials to reproduce are available at:
-> > > > > > https://download.01.org/0day-ci/archive/20250421/202504211513.23f21a0-lkp@intel.com
-> > > > > 
-> > > > > Good catch, and thank you for your testing efforts!
-> > > > > 
-> > > > > Does the patch at the end of this email help?
-> > > > 
-> > > > sorry but the patch does not help. one dmesg is attached.
-> > > 
-> > > And idiot here failed to check for the exact same problem at the point
-> > > where the timer is queued, so thank you for bearing with me.
-> > > 
-> > > Does the patch at the end of this email (in addition to the previous
-> > > patch) get the job done?
-> > 
-> > unfortunately, it still doesn't fix, one dmesg is attached. part of is as [2]
-> > 
-> > but I applied your two patches directly upon ddd062f753, like below:
-> > 
-> > * 1c91d0bd4809f (linux-devel/fixup-1539a7e7b61a9) further patch for ddd062f753 from Paul
-> > * 1539a7e7b61a9 (linux-devel/fixup-ddd062f753) fix for ddd062f753 from Paul E. McKenney
-> > * ddd062f7536cc rcutorture: Complain if an ->up_read() is delayed more than 10 seconds
-> > * 1b983c34d5695 rcutorture: Comment invocations of tick_dep_set_task()
-> > 
-> > 
-> > I noticed there are some conflicts while applying your second patch, the
-> > 1c91d0bd4809f looks like [1]. there is no "int rtorsu_cpu;" before line:
-> > +	ktime_t rtorsu_kt;
-> > 
-> > seems your patch has a different base? I worried if my applyment has
-> > problems. if so, could you tell me the correct base? thanks!
+On Thu, Apr 24, 2025 at 03:58:50PM +0200, Jonas Gorski wrote:
+> On Thu, Apr 24, 2025 at 2:34 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> > On 4/24/2025 12:25 PM, Vladimir Oltean wrote:
+> > > On Tue, Apr 22, 2025 at 08:49:13PM +0200, Jonas Gorski wrote:
+> > >> When a net device has NETIF_F_HW_VLAN_CTAG_FILTER set, the 8021q code
+> > >> will add VLAN 0 when enabling the device, and remove it on disabling it
+> > >> again.
+> > >>
+> > >> But since we are changing NETIF_F_HW_VLAN_CTAG_FILTER during runtime in
+> > >> dsa_user_manage_vlan_filtering(), user ports that are already enabled
+> > >> may end up with no VLAN 0 configured, or VLAN 0 left configured.
+> > >>
+> > >> E.g.the following sequence would leave sw1p1 without VLAN 0 configured:
+> > >>
+> > >> $ ip link add br0 type bridge vlan_filtering 1
+> > >> $ ip link set br0 up
+> > >> $ ip link set sw1p1 up (filtering is 0, so no HW filter added)
+> > >> $ ip link set sw1p1 master br0 (filtering gets set to 1, but already up)
+> > >>
+> > >> while the following sequence would work:
+> > >>
+> > >> $ ip link add br0 type bridge vlan_filtering 1
+> > >> $ ip link set br0 up
+> > >> $ ip link set sw1p1 master br0 (filtering gets set to 1)
+> > >> $ ip link set sw1p1 up (filtering is 1, HW filter is added)
+> > >>
+> > >> Likewise, the following sequence would leave sw1p2 with a VLAN 0 filter
+> > >> enabled on a vlan_filtering_is_global dsa switch:
+> > >>
+> > >> $ ip link add br0 type bridge vlan_filtering 1
+> > >> $ ip link set br0 up
+> > >> $ ip link set sw1p1 master br0 (filtering set to 1 for all devices)
+> > >> $ ip link set sw1p2 up (filtering is 1, so VLAN 0 filter is added)
+> > >> $ ip link set sw1p1 nomaster (filtering is reset to 0 again)
+> > >> $ ip link set sw1p2 down (VLAN 0 filter is left configured)
+> > >>
+> > >> This even causes untagged traffic to break on b53 after undoing the
+> > >> bridge (though this is partially caused by b53's own doing).
+> > >>
+> > >> Fix this by emulating 8021q's vlan_device_event() behavior when changing
+> > >> the NETIF_F_HW_VLAN_CTAG_FILTER flag, including the printk, so that the
+> > >> absence of it doesn't become a red herring.
+> > >>
+> > >> While vlan_vid_add() has a return value, vlan_device_event() does not
+> > >> check its return value, so let us do the same.
+> > >>
+> > >> Fixes: 06cfb2df7eb0 ("net: dsa: don't advertise 'rx-vlan-filter' when not needed")
+> > >> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> > >> ---
+> > >
+> > > Why does the b53 driver depend on VID 0? CONFIG_VLAN_8021Q can be
+> > > disabled or be an unloaded module, how does it work in that case?
+> >
+> > This is explained in this commit:
+> >
+> > https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=64a81b24487f0d2fba0f033029eec2abc7d82cee
+> >
+> > however the case of starting up with CONFIG_VLAN_8021Q and then loading
+> > the 8021q module was not thought about, arguably I am not sure what sort
+> > of notification or event we can hook onto in order to react properly to
+> > that module being loaded. Do you know?
 > 
-> It looks correct to me.  I will rebase at my end to make it apply cleanly
-> by the end of my tomorrow at the latest.  Attempting it now would likely
-> just make a mess.  :-/
+> config BRIDGE_VLAN_FILTERING
+>         bool "VLAN filtering"
+>         depends on BRIDGE
+>         depends on VLAN_8021Q
 > 
-> And thank you very much for your help with this because...
+> without 8021Q there is no vlan filtering bridge, so filtering can
+> never be 1, so NETIF_F_HW_VLAN_CTAG_FILTER is never set, so HW filters
+> for VLAN 0 are never installed or removed, therefore the issue can
+> never happen.
+
+nitpick: except for ds->needs_standalone_vlan_filtering (which b53 does not set though).
+
 > 
-> > [1]
-> > commit 1c91d0bd4809f9f12e61f25d881a02f25c473702 (linux-devel/fixup-1539a7e7b61a9)
-> > Author: 0day robot <lkp@intel.com>
-> > Date:   Wed Apr 23 10:27:51 2025 +0800
-> > 
-> >     further patch for ddd062f753 from Paul
-> > 
-> >     Signed-off-by: 0day robot <lkp@intel.com>
-> > 
-> > diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> > index e7b5811e0e456..14cc67d436c97 100644
-> > --- a/kernel/rcu/rcutorture.c
-> > +++ b/kernel/rcu/rcutorture.c
-> > @@ -2438,6 +2438,7 @@ rcu_torture_reader(void *arg)
-> >  struct rcu_torture_one_read_state_updown {
-> >         struct hrtimer rtorsu_hrt;
-> >         bool rtorsu_inuse;
-> > +       ktime_t rtorsu_kt;
-> >         unsigned long rtorsu_j;
-> >         struct torture_random_state rtorsu_trs;
-> >         struct rcu_torture_one_read_state rtorsu_rtors;
-> > @@ -2522,12 +2523,14 @@ static void rcu_torture_updown_one(struct rcu_torture_one_read_state_updown *rto
-> >                 schedule_timeout_idle(HZ);
-> >                 return;
-> >         }
-> > -       rtorsup->rtorsu_j = jiffies;
-> >         smp_store_release(&rtorsup->rtorsu_inuse, true);
-> >         t = torture_random(&rtorsup->rtorsu_trs) & 0xfffff; // One per million.
-> >         if (t < 10 * 1000)
-> >                 t = 200 * 1000 * 1000;
-> >         hrtimer_start(&rtorsup->rtorsu_hrt, t, HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
-> > +       smp_mb(); // Sample jiffies after posting hrtimer.
-> > +       rtorsup->rtorsu_j = jiffies;  // Not used by hrtimer handler.
-> > +       rtorsup->rtorsu_kt = t;
-> >  }
-> > 
-> >  /*
-> > @@ -2548,7 +2551,9 @@ rcu_torture_updown(void *arg)
-> >                                 break;
-> >                         j = smp_load_acquire(&jiffies); // Time before ->rtorsu_inuse.
-> >                         if (smp_load_acquire(&rtorsup->rtorsu_inuse)) {
-> > -                               WARN_ON_ONCE(time_after(j, rtorsup->rtorsu_j + 10 * HZ));
-> > +                               WARN_ONCE(time_after(j, rtorsup->rtorsu_j + 1 + HZ * 10),
-> > +                                         "hrtimer queued at jiffies %lu for %lld ns took %lu jiffies\n", rtorsup->rtorsu_j, rtorsup->rtorsu_kt, j - rtorsup->rtorsu_j);
-> >                                 continue;
-> >                         }
-> >                         rcu_torture_updown_one(rtorsup);
-> > 
-> > 
-> > 
-> > [2]
-> > 
-> > [  168.048387][  T796] ------------[ cut here ]------------
-> > [  168.049342][  T796] hrtimer queued at jiffies 4294952214 for 200000000 ns took 1502 jiffies
-> 
-> ... I am quite surprised by the 1502 jiffies.  On a HZ=1000 system,
-> I would have expected this value to be at least 10,000.  I clearly need
-> to dig into this code much more carefully.
+> The issue is only if a vlan filtering bridge was there, and now isn't
+> anymore, and a previously VLAN 0 HW filter is left intact. This causes
+> an incomplete vlan entry left programmed in the vlan table of the chip
+> with just this port as a member, which breaks forwarding for that
+> VLAN, which is incidentally also the VLAN used for untagged traffic in
+> the non filtering case.
 
-And upon looking at the dmesg.xz that you attached, I see that HZ=100.
-So there really is a 15-second delay, which is intended to trip this
-10-second timeout.
+Ok, so let's say b53_default_pvid() is 0, and b53_setup() ->
+b53_apply_config() -> b53_configure_vlan() calls b53_set_vlan_entry() on
+it to set it up, independently of the 8021q layer. So far so good.
 
-So I guess is it no more Mr. Nice Guy for hrtimers, and therefore
-HRTIMER_MODE_HARD it is!  ;-)
+But then, the 8021q layer can modify VID 0 on the device from the way in
+which it was set up by the driver for VLAN-unaware operation, namely it
+can remove it, and this breaks VLAN-unaware reception.
 
-Once again, thank you for your testing efforts!
+One needs to wonder why would the b53 driver even permit changes coming
+from .port_vlan_add() and .port_vlan_del() to a VID it has reserved for
+special use. There's nothing to gain from reacting to these operations,
+only to lose.
 
-I also rebased my fixup patches to the bottom of my development stack,
-so the combined patch shown below should apply cleanly.  Here is hoping
-that the third time is a charm.  ;-)
+I'm trying to think whether switchdev drivers in general have anything
+to benefit from commit ad1afb003939 ("vlan_dev: VLAN 0 should be treated
+as "no vlan tag" (802.1p packet)"). I'm tempted to say "thanks for the
+well-intended hint about VID 0, but a switchdev's data path is so
+complicated that we'd rather manage VID 0 ourselves". Not only do many
+drivers reserve VID 0 and thus need to be independent of the 8021q layer
+even for VLAN-unaware operation, but also think of this: the bridge may
+have vlan_filtering 1 and vlan_default_pvid 0. What will happen if the
+8021q layer decides to add VID 0 to the RX filtering table? My logic and
+testing with the software data path says that VID 0 traffic should not
+be forwarded. My intuition is that it will make b53 accept this kind of
+traffic.
 
-							Thanx, Paul
+Here's a self test I posted exactly for this scenario, if you don't
+mind, please let me know what happens, and we'll see where to go from
+there. On ocelot, which has commit 9323ac367005 ("net: mscc: ocelot:
+ignore VID 0 added by 8021q module"), it passes (but fails elsewhere,
+sadly - I've sent a patch also for that).
+https://lore.kernel.org/netdev/20250424223734.3096202-2-vladimir.oltean@nxp.com/T/#u
 
-------------------------------------------------------------------------
+That being said, I don't think we are quite prepared to adopt my
+solution (of ignoring VID 0) DSA-wide (especially not as a bug fix),
+because it is driver-dependent whether VID 0 is in a conflict with a
+VLAN ID reserved for private use or not. Even though adding VID 0 to the
+RX filtering table possibly allows its forwarding even when it shouldn't
+(and that isn't desirable), there might be some positive benefits as
+well - like permitting VID 0 reception when it _should_ be received.
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 88d9f5298c3d8..1ebeef8019b86 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -2445,6 +2445,7 @@ rcu_torture_reader(void *arg)
- struct rcu_torture_one_read_state_updown {
- 	struct hrtimer rtorsu_hrt;
- 	bool rtorsu_inuse;
-+	ktime_t rtorsu_kt;
- 	unsigned long rtorsu_j;
- 	unsigned long rtorsu_ndowns;
- 	unsigned long rtorsu_nups;
-@@ -2488,7 +2489,7 @@ static int rcu_torture_updown_init(void)
- 	for (i = 0; i < n_up_down; i++) {
- 		init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors, rand);
- 		hrtimer_setup(&updownreaders[i].rtorsu_hrt, rcu_torture_updown_hrt, CLOCK_MONOTONIC,
--			      HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
-+			      HRTIMER_MODE_REL | HRTIMER_MODE_HARD);
- 		torture_random_init(&updownreaders[i].rtorsu_trs);
- 		init_rcu_torture_one_read_state(&updownreaders[i].rtorsu_rtors,
- 						&updownreaders[i].rtorsu_trs);
-@@ -2539,12 +2540,14 @@ static void rcu_torture_updown_one(struct rcu_torture_one_read_state_updown *rto
- 		schedule_timeout_idle(HZ);
- 		return;
- 	}
--	rtorsup->rtorsu_j = jiffies;
- 	smp_store_release(&rtorsup->rtorsu_inuse, true);
- 	t = torture_random(&rtorsup->rtorsu_trs) & 0xfffff; // One per million.
- 	if (t < 10 * 1000)
- 		t = 200 * 1000 * 1000;
--	hrtimer_start(&rtorsup->rtorsu_hrt, t, HRTIMER_MODE_REL | HRTIMER_MODE_SOFT);
-+	hrtimer_start(&rtorsup->rtorsu_hrt, t, HRTIMER_MODE_REL | HRTIMER_MODE_HARD);
-+	smp_mb(); // Sample jiffies after posting hrtimer.
-+	rtorsup->rtorsu_j = jiffies;  // Not used by hrtimer handler.
-+	rtorsup->rtorsu_kt = t;
- }
- 
- /*
-@@ -2555,6 +2558,7 @@ static void rcu_torture_updown_one(struct rcu_torture_one_read_state_updown *rto
- static int
- rcu_torture_updown(void *arg)
- {
-+	unsigned long j;
- 	struct rcu_torture_one_read_state_updown *rtorsup;
- 
- 	VERBOSE_TOROUT_STRING("rcu_torture_updown task started");
-@@ -2562,8 +2566,10 @@ rcu_torture_updown(void *arg)
- 		for (rtorsup = updownreaders; rtorsup < &updownreaders[n_up_down]; rtorsup++) {
- 			if (torture_must_stop())
- 				break;
-+			j = smp_load_acquire(&jiffies); // Time before ->rtorsu_inuse.
- 			if (smp_load_acquire(&rtorsup->rtorsu_inuse)) {
--				WARN_ON_ONCE(time_after(jiffies, rtorsup->rtorsu_j + 10 * HZ));
-+				WARN_ONCE(time_after(j, rtorsup->rtorsu_j + 1 + HZ * 10),
-+					  "hrtimer queued at jiffies %lu for %lld ns took %lu jiffies\n", rtorsup->rtorsu_j, rtorsup->rtorsu_kt, j - rtorsup->rtorsu_j);
- 				continue;
- 			}
- 			rcu_torture_updown_one(rtorsup);
+It's a pretty tricky situation, I guess we should first establish what
+are the tests that need to pass, then assess on a per-driver basis where
+we are. We don't have nearly as much coverage as we would need.
