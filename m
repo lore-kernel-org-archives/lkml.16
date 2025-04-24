@@ -1,135 +1,180 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-177.mta0.migadu.com (out-177.mta0.migadu.com [91.218.175.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914C4502BE;
-	Thu, 24 Apr 2025 17:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A2627F74D
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 17:27:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745515613; cv=none; b=UJQKnlzO+L7EcgFBDclKUZyqDYA1P8DPnrAzGZUzDwomI5qSVoOH7tn0nG7sJXM6n/gSsVc8b6QtEHRKHSBI7J4s5CUo5iHLSKCLHingXh4I1+ZHV58I+g7RcrZ8aVXtcWE24MtXPjsO7C9EtT3iM7UFHj7ljjma/2ILa/CvoQw=
+	t=1745515652; cv=none; b=Q/IhzJrhm1DelEZKiQofLPopRb/pzQAC/9MCoK1MQpz6OEg5HstpETglj/jbnxQFws6Yx+9EJu94cjmmgSAKPROwyZ8tfpuQppody93PtibqSNut3ISQJLjDwSDtuOwucjdpJLcLkvQkMz9v9E4uxyIWKpZbwY3zj8jVEsGBX6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745515613; c=relaxed/simple;
-	bh=wIiZhFy3LxuX7Gvw4Izh6ggx4TutWUOG1hKDXZ1mM30=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kMvVCc0UoGKfNIqwOEG3Pyvt9m7Yb5tJelf6cG0KW+PXWsw2cQA/0bm8/5repnLL7ZDNKyqvHsgWq54jk5uQA0NYmItS7G/7GC0AYN9n9LZme98yLbt6LFerwnY50AkaRSl46HxAnVCv7UZUL9SVrYZEZUG1uvTUda1lXn8DBK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NHZcHJye; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745515652; c=relaxed/simple;
+	bh=pWlA5i0QwU5KSfSiQESYA+X0ALKKyDdQ6BF4SmpmQeI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WSFCGJQ8NfJ2O23EDARAtP8SxlOezUWpjkxX6vEVrBwysHME05sTZwVWGIA9li36phiL1FGQ55tG4of3xUPaIm1ak3SZotd7itxjMjIV/OwZtanfoBvt2PwLhLhnZgMT7R0w/1ZoF+10ZPwpwRseuoJ+WhfrxUpCbs62HiNblLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=kndgtCGk; arc=none smtp.client-ip=91.218.175.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NHZcHJye"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so2100936a12.0;
-        Thu, 24 Apr 2025 10:26:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745515610; x=1746120410; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wIiZhFy3LxuX7Gvw4Izh6ggx4TutWUOG1hKDXZ1mM30=;
-        b=NHZcHJyeqniorBZlit2SQACoEV8Ir1pbqUaFQdLL/35PPKuW10RyJR0wMv4LRScSux
-         kC7DoYoxaeGuCzY3DryV11xNDfBdLXxlmVxPEIx8kur2zOSXP0J0OW2fKOQkEiodbh02
-         1YdivbQFzGLN7phvDa75ngT6IKWMGyCIw6dL7nCOayUuPYeXbD65DG9ZVItnnFJsj2u9
-         pKiebW4XrhcLfy+oSmT8EZea/YP/xx5K32n6GkIuDi9T8O+lTaMYxjD+pgpmLdh73Xn5
-         X8q36tnIDQey5actCIEfsqkjrMZguvEZK0eYElm7Q5CZBzN27pg7xkkXQCZIzH35E4in
-         ggJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745515610; x=1746120410;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wIiZhFy3LxuX7Gvw4Izh6ggx4TutWUOG1hKDXZ1mM30=;
-        b=bEEI7EGJKXNKAcal3ANFrXfrpKQPFDpk72FVjoyIatLvYmf6XTqItsFPxcesLjX2ua
-         FIYr3bVsXgE5AU6ZYVXpi4Gxs5wyXMT591B1niXFkjOs72h7DHrVER8OIaczXw0XWL8H
-         JVp4sFkfZk5UkmwAnCZeV9ce64NkYELCDfF9lS5QvrfwhIbNWRdy2ucdPvnqwqA3pR7v
-         lxIbxdkQvHhTIh9RzLHzcIIrIiuH8QLfGXflJtVArg/z+MGftVMR/J3174K3iZVsUTtS
-         73Ga6p4E4IMLymSi0YNKvFrJMQP+Pmy2MF22aoUfV68uLh1Kt0LzFQw2LRlgxbDuPqY4
-         yb+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWct6hSpHlud7f/rgGQH6BxGUQmwPEJ2NfCGjnlNwAF3Z36BIPgCuynUsJbhrYJisJnetEv0Uve@vger.kernel.org, AJvYcCXQdT7q3AFUsuG6D1yQjwlByaHnoUAJZ3Mr7qmjKuoKrBlkYtYjr0AE1R8jyLelv9Yn99oBnt/QTeqIdm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0eD3UOq3B0c2HkOlSY9S7GFMBsoTtWb3ncOgJ4O/EW1jUOlRA
-	IcLv4AewcdrgThzb+HD4KCmnOqfDkh9Fs9TNSwqJx6Nrz9VVCYy/IQv6kaJjQTQg8czEAQ6/+h2
-	JpBAmYV28nYn1768SaQQaqGhJM6A=
-X-Gm-Gg: ASbGncsmynenVOKdmH0CQwqhG5sSveOUtfExOZE5+90wXI4slDmj+RVos6dqjktQJdN
-	nlvzlFYernkRTYU+vRj0d5us+h+dp6QGNGCVbkXqFrW+RZg+eAFCGddv5vLWSxGUgl6LB3LOGUQ
-	GImSeTp5i41OnYkTZm/uK9
-X-Google-Smtp-Source: AGHT+IEGOMR+vkqbrr1aAnKdjcsgbPhgb/w0LxGlhNTkXPi4SgqxARsBt3AVG3NQTKJE+6WeiTKNkw4pRe9SmtykSJM=
-X-Received: by 2002:a05:6402:3481:b0:5ec:939e:a60e with SMTP id
- 4fb4d7f45d1cf-5f6fab0aa66mr249451a12.0.1745515609608; Thu, 24 Apr 2025
- 10:26:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="kndgtCGk"
+Message-ID: <f5464e26-faa0-48f1-8585-9ce52c8c9f5f@iencinas.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
+	s=key1; t=1745515637;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=gE3Ny+oVXXm4XaEkguFbKK9ma/30w0nfPWxX9kbduWE=;
+	b=kndgtCGkFmDA6AIZSKwk7aZ9bcFQjmka74EYzotDUPhQOhGmQdqfvcxhJOxbkPnjNGszk6
+	S5l10hZQKQQUrgUSJ2bwOeAb25zZDIbVkC45SIoK+EhpviV+6vaWtMiPuB483HZF9UPsva
+	a8sxlaHQu/ZqdgzcnnB7ok2bcH/qTI4+tOqX9sJPb//Xt31EH1MMMfGbNOM2sGy1V6K5g7
+	54My6MtEokc1ylIB/s1GXrR+echHNjIM89oWRUpFifmxJmaaL+c5NyGF5veS7BkPNuM/Te
+	fzPZDf+z4izbFJ6/EuquIZ7QeLmuc4LkjiR4dUzWcTj8yuPCt+kBdCkOucLkOg==
+Date: Thu, 24 Apr 2025 19:27:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424080755.272925-1-harry.yoo@oracle.com> <80208a6c-ec42-6260-5f6f-b3c5c2788fcd@gentwo.org>
- <CAGudoHEwfYpmahzg1NsurZWe5Of-kwX3JJaWvm=LA4_rC-CdKQ@mail.gmail.com> <cd7de95e-96b6-b957-2889-bf53d0a019e2@gentwo.org>
-In-Reply-To: <cd7de95e-96b6-b957-2889-bf53d0a019e2@gentwo.org>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 24 Apr 2025 19:26:35 +0200
-X-Gm-Features: ATxdqUFYWN-cd_DMErkV7CJkSwlUQKtICdN_JoevuiBqeeRvsQR6ZYn-MTzoDb0
-Message-ID: <CAGudoHHbSKLxHgXfFYFdz5nXFBOQPh5EkCX8C7770vfMH-SLeA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/7] Reviving the slab destructor to tackle the percpu
- allocator scalability problem
-To: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-Cc: Harry Yoo <harry.yoo@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	David Rientjes <rientjes@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Jamal Hadi Salim <jhs@mojatatu.com>, 
-	Cong Wang <xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, 
-	Vlad Buslov <vladbu@nvidia.com>, Yevgeny Kliteynik <kliteyn@nvidia.com>, Jan Kara <jack@suse.cz>, 
-	Byungchul Park <byungchul@sk.com>, linux-mm@kvack.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 2/2] riscv: introduce asm/swab.h
+To: Alexandre Ghiti <alex@ghiti.fr>, Arnd Bergmann <arnd@arndb.de>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
+ Shuah Khan <skhan@linuxfoundation.org>,
+ Zhihang Shao <zhihang.shao.iscas@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>
+References: <20250403-riscv-swab-v3-0-3bf705d80e33@iencinas.com>
+ <20250403-riscv-swab-v3-2-3bf705d80e33@iencinas.com>
+ <c6efcdca-5739-42b6-8cb4-f4d8cc85b6af@app.fastmail.com>
+ <b3f8e641-9690-4792-974c-c895d2e4531a@iencinas.com>
+ <66a5aba9-2a32-4ef9-a839-a389b975757d@ghiti.fr>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ignacio Encinas Rubio <ignacio@iencinas.com>
+Autocrypt: addr=ignacio@iencinas.com; keydata=
+ xjMEZgaZEBYJKwYBBAHaRw8BAQdAYZxeXU5yoeLYkQpvN+eE3wmAF4V0JUzIlpm/DqiSeBnN
+ LElnbmFjaW8gRW5jaW5hcyBSdWJpbyA8aWduYWNpb0BpZW5jaW5hcy5jb20+wo8EExYIADcW
+ IQSXV5vKYfM26lUMmYnH3J3Ka8TsNgUCZgaZEAUJBaOagAIbAwQLCQgHBRUICQoLBRYCAwEA
+ AAoJEMfcncprxOw21F4BAJe+mYh3sIdSvydyDdDXLFqtVkzrFB8PVNSU9eZpvM0mAP9996LA
+ N0gyY7Obnc3y59r9jOElOn/5fz5mOEU3nE5lCc44BGYGmRESCisGAQQBl1UBBQEBB0CVC5o6
+ qnsTzmmtKY1UWa/GJE53dV/3UPJpZu42p/F0OAMBCAfCfgQYFggAJhYhBJdXm8ph8zbqVQyZ
+ icfcncprxOw2BQJmBpkRBQkFo5qAAhsMAAoJEMfcncprxOw2N8ABAPcrkHouJPn2N8HcsL4S
+ SVgqxNLVOpsMX9kAYgIMqM0WAQCA40v0iYH1q7QHa2IfgkrBzX2ZLdXdwoxfUr8EY5vtAg==
+In-Reply-To: <66a5aba9-2a32-4ef9-a839-a389b975757d@ghiti.fr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, Apr 24, 2025 at 6:39=E2=80=AFPM Christoph Lameter (Ampere)
-<cl@gentwo.org> wrote:
->
-> On Thu, 24 Apr 2025, Mateusz Guzik wrote:
->
-> > > You could allocate larger percpu areas for a batch of them and
-> > > then assign as needed.
-> >
-> > I was considering a mechanism like that earlier, but the changes
-> > needed to make it happen would result in worse state for the
-> > alloc/free path.
-> >
-> > RSS counters are embedded into mm with only the per-cpu areas being a
-> > pointer. The machinery maintains a global list of all of their
-> > instances, i.e. the pointers to internal to mm_struct. That is to say
-> > even if you deserialized allocation of percpu memory itself, you would
-> > still globally serialize on adding/removing the counters to the global
-> > list.
-> >
-> > But suppose this got reworked somehow and this bit ceases to be a probl=
-em.
-> >
-> > Another spot where mm alloc/free globally serializes (at least on
-> > x86_64) is pgd_alloc/free on the global pgd_lock.
-> >
-> > Suppose you managed to decompose the lock into a finer granularity, to
-> > the point where it does not pose a problem from contention standpoint.
-> > Even then that's work which does not have to happen there.
-> >
-> > General theme is there is a lot of expensive work happening when
-> > dealing with mm lifecycle (*both* from single- and multi-threaded
-> > standpoint) and preferably it would only be dealt with once per
-> > object's existence.
->
-> Maybe change the lifecyle? Allocate a batch nr of entries initially from
-> the slab allocator and use them for multiple mm_structs as the need
-> arises.
->
-> Do not free them to the slab allocator until you
-> have too many that do nothing around?
->
-> You may also want to avoid counter updates with this scheme if you only
-> count the batchees useed. It will become a bit fuzzy but you improve scal=
-ability.
->
 
-If I get this right this proposal boils down to caching all the state,
-but hiding the objects from reclaim?
 
-If going this kind of route, perhaps it would be simpler to prevent
-direct reclaim on mm objs and instead if there is memory shortage, let
-a different thread take care of them?
---=20
-Mateusz Guzik <mjguzik gmail.com>
+Hello!
+
+On 23/4/25 13:08, Alexandre Ghiti wrote:
+> Hi Ignacio,
+> 
+> On 04/04/2025 19:35, Ignacio Encinas wrote:
+>>
+>> On 4/4/25 7:58, Arnd Bergmann wrote:
+>>> On Thu, Apr 3, 2025, at 22:34, Ignacio Encinas wrote:
+>>>> +#define ARCH_SWAB(size) \
+>>>> +static __always_inline unsigned long __arch_swab##size(__u##size value) \
+>>>> +{                                    \
+>>>> +    unsigned long x = value;                    \
+>>>> +                                    \
+>>>> +    if (riscv_has_extension_likely(RISCV_ISA_EXT_ZBB)) {            \
+>>>> +        asm volatile (".option push\n"                \
+>>>> +                  ".option arch,+zbb\n"            \
+>>>> +                  "rev8 %0, %1\n"                \
+>>>> +                  ".option pop\n"                \
+>>>> +                  : "=r" (x) : "r" (x));            \
+>>>> +        return x >> (BITS_PER_LONG - size);            \
+>>>> +    }                                                               \
+>>>> +    return  ___constant_swab##size(value);                \
+>>>> +}
+>> Hello Arnd!
+>>
+>>> I think the fallback should really just use the __builtin_bswap
+>>> helpers instead of the ___constant_swab variants. The output
+>>> would be the same, but you can skip patch 1/2.
+>> I tried, but that change causes build errors:
+>>
+>> ```
+>> undefined reference to `__bswapsi2'
+>>
+>> [...]
+>>
+>> undefined reference to `__bswapdi2
+>> ```
+>>
+>> I tried working around those, but couldn't find a good solution. I'm a
+>> bit out of my depth here, but I "summarized" everything here [1]. Let me
+>> know if I'm missing something.
+>>
+>> [1] https://lore.kernel.org/linux-riscv/b3b59747-0484-4042-bdc4-c067688e3bfe@iencinas.com/
+> 
+> Note that I only encountered those issues in the purgatory.
+> 
+> So to me we have 3 solutions:
+> 
+> - either implementing both __bswapsi2 and __bswapdi2
+
+Which would be fine but seems a bit pointless to me: these __bswapsi2
+and __bswapdi2 implementations will be ___constant_swab with a different
+name: same code or hardcoded (and equivalent) assembly
+
+> - or linking against libgcc
+>
+> - or merging patch 1.
+>
+> Given the explanation in commit d67703a8a69e ("arm64: kill off the libgcc dependency"), I would not use libgcc.
+> 
+> The less intrusive solution (for us riscv) is merging patch 1.
+
+I also think this seems the best solution. I'll send a v4 taking the
+tips that were pointed during review (and fixing the issue pointed out
+by the kernel test robot) keeping patch 1.
+
+> But please let me know if I missed another solution or if I'm wrong.
+> 
+> Thanks,
+> 
+> Alex
+> 
+> 
+>>
+>>> I would also suggest dumbing down the macro a bit so you can
+>>> still find the definition with 'git grep __arch_swab64'. Ideally
+>>> just put the function body into a macro but leave the three
+>>> separate inline function definitions.
+>> Good point, thanks for bringing it up. Just to be sure, is this what you
+>> had in mind? (Give or take formatting + naming of variables)
+>>
+>> #define arch_swab(size, value)                         \
+>> ({                                              \
+>>     unsigned long x = value;                    \
+>>                                     \
+>>     if (riscv_has_extension_likely(RISCV_ISA_EXT_ZBB)) {            \
+>>         asm volatile (".option push\n"                \
+>>                   ".option arch,+zbb\n"            \
+>>                   "rev8 %0, %1\n"                \
+>>                   ".option pop\n"                \
+>>                   : "=r" (x) : "r" (x));            \
+>>         x = x >> (BITS_PER_LONG - size);            \
+>>     } else {                                                        \
+>>         x = ___constant_swab##size(value);                      \
+>>     }                                \
+>>     x;                                \
+>> })
+>>
+>> static __always_inline unsigned long __arch_swab64(__u64 value) {
+>>     return arch_swab(64, value);
+>> }
+>>
+>> Thanks!
+>>
+>> _______________________________________________
+>> linux-riscv mailing list
+>> linux-riscv@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-riscv
+
