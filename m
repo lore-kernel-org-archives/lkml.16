@@ -1,126 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F5C1917C2
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF95C186294;
+	Thu, 24 Apr 2025 13:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745502469; cv=none; b=ngeVd5JlxmILUaCOrl8RbR8Dw+QGS4Lm5EvbxQSkwmmZUPZ4pokWJfKNOVd5EjqGgg7JcmfalwQ+4znhp2dtO4jIDJbyrM0M1EguT7Cga1Y7srgO1iWY3o4NUQcxqvfULjkSbniHxIoMWY23fHGwS/PZ+1lRbsRcNXgZUVbCm64=
+	t=1745502512; cv=none; b=F5WDIbnXVjaDjOfuEUpgK1FbCStHYuTilVZicHkJBVvTj1v8u2aR+O7d2oah+K5DizcaXy5B9Ni5JOGEFWHZIT1ayn/1Nz4dyQQY4U5DwsRNzgLqJ2j4LItJV3Ra2URie78Yw4AVdjQ+cG+W2zkTJRd+uhRhwyW6TdrVcMdEIQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745502469; c=relaxed/simple;
-	bh=xmC+569+8AF2+9YjjAU1ncRPqd/+A4Q4tbSC+zlSkTA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XS76N/s+MOsy2hFlm0c702WJW114dVo3PSiQyX7FkGNBgPp9O3Z3hvo2nQCwZ8KE4549a6q9Qp6u5U13euRtSPu3aYaCcRf14tpfUOxX4V58sOum98GMUKjAhG+Mso3CO4Xhf0IBFEld5QS+awQlDTS+27Z8XO2SzSHJc+Bgnys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k5/nUQGs; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1745502512; c=relaxed/simple;
+	bh=qvIve6pwWQ5C2gYqgC67Nyk4ECh/prYFjYyaen8N8ME=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qnZG+MBTnbc3HtM/nwn8lJf0oOtthEwltCYdenNa7hSTZxgPzW8N66Lzcd0PM6NAz7GjSI1sJaYL3Ffl4LYXfuMsnedMRKYUe1CekZAK8qIRBsZUFpfn/aI3JxWqzpyy6y20KKvGVC+zYnkxn2RD5+oVFMAja4tmeN2a2zTqx9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=foryxtg2; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k5/nUQGs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745502468; x=1777038468;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xmC+569+8AF2+9YjjAU1ncRPqd/+A4Q4tbSC+zlSkTA=;
-  b=k5/nUQGsv3v306nY4P2i2X8HSvXbuPdzNSAfM/G0ZJp5feS/6q0SgSHo
-   9zQevawJhoRMEXXOUl5D2w2Ew2uGmoApzB3ZKKOgeFypH+jXtAGaBNS33
-   TaKM/NPMeKI2Q0U0ftTHuQmUh44GCxVz+LWz1xsa12Jp0rJxveRFs9wRe
-   RdCujcX8L/oRFhbJziy2pHGUCv8cNEliBHouTSv3bvbZwhzaTT3w4Kk3k
-   VpgJ0vJGosPLLJTTWvrojNO9JvkMfb5rlzYjXWC294jEQOWkm2moANdua
-   FWzIzK4QtlP7734eSN9ZIZ8R6ZPyCsTKz+7g5wmP4Cl7TtoPiM18TH/T+
-   Q==;
-X-CSE-ConnectionGUID: qPlZ19QoQC+CPeuO5Q8MjQ==
-X-CSE-MsgGUID: DpLqQ+NGS1SeZzF8P0sD7w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11413"; a="58508220"
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="58508220"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 06:47:45 -0700
-X-CSE-ConnectionGUID: JySRxCZ3SvmiqKVATCXWIA==
-X-CSE-MsgGUID: iFtgBmQYTRKQZUZoXprd2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,236,1739865600"; 
-   d="scan'208";a="137718967"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa004.fm.intel.com with ESMTP; 24 Apr 2025 06:47:45 -0700
-From: kan.liang@linux.intel.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	linux-kernel@vger.kernel.org
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 5/5] perf/x86/intel/ds: Fix counter backwards of non-precise events counters-snapshotting
-Date: Thu, 24 Apr 2025 06:47:18 -0700
-Message-Id: <20250424134718.311934-6-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20250424134718.311934-1-kan.liang@linux.intel.com>
-References: <20250424134718.311934-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foryxtg2"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so9757051fa.2;
+        Thu, 24 Apr 2025 06:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745502509; x=1746107309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0RwzVTwG8nmHSDimraa9LWFea9Cdtru6px1wsv7MBh4=;
+        b=foryxtg2kpRKFvTGfnNZojtHm2DZ4BqHY/NAYRtORxOaCJ8rjSC3taa4yCNBlAXMb8
+         Lwx62tXS+pA2VFaFr//HfPxs5uZc+biDs4KqMnLvAXEf5qSvb08prIMXoZdwzmLuNHW3
+         SE0fIAGLw3uCJ1ageNUZRX3RcVWPn39izyqnMTfAuTtJfDR/rr0RmT2/yMVoJu2asBgy
+         KphtCQMomuc8rCDEwq/e4agQFLblnbqxFaibLxrumzRg3iD+6o3HToqafcRWXqjTyczt
+         cN5/GELn4y4Hrim7vRR75dzjc83Vj4rp0G3/ZMsPBbXgv2n1L91JmKHk4uTfJGYkvNYa
+         7roA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745502509; x=1746107309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0RwzVTwG8nmHSDimraa9LWFea9Cdtru6px1wsv7MBh4=;
+        b=plaeue5v77OcJ1vHgp7Cbjk18cFpM2rwRZ8K8u75fXbQ5nfLveZ3qiZYwkQ8FwMlwx
+         7kD0WAilX6QgZ32upnFNhcjbNyJlP2PRUKNH1AN5v7kWko9Yjyum+YloGnzVajXq5Q10
+         NCWmxhMPtlD3TWaTkMeYqK4G85zpQc7z8RyA+af2gADObQQBDQ7Vbt8oXtSpVDlBFVZn
+         QxHmnGBxKrDP3NvUDICVl6u7b5/vOyGohjQf7t9Va0I+qG2SzLWMbaX22n7HxUJyE4NX
+         mfZdhHU2YN2Igjxef585glzSMbVR2xuwTMoC2qY4EgMIeNyjwzmFrfGHuq3MdN1l64s/
+         86qg==
+X-Forwarded-Encrypted: i=1; AJvYcCULZIwzR2NNacGqwQaYluoVh7aKssw7T/YgZMPgwvOGlcyFLIGeERYWan2gT8H/512YvNSpUxoOPDLoxJE=@vger.kernel.org, AJvYcCWTtbcruru/gc3Qg/ShoYPaO4G1kpIjL/UJ0TFxk3izt5hHkHF+i7RmC+F2tfyuFyvuvwQKIcXIG32eKaceNR4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNAkE4R+okomvjHGRB+M5tWcY+p/S62A18O57IOobOnNfvp2lT
+	qJYujUhEpKdZjkgl9FPthkmop/yi1bK3nftDssnUMdw+bsPpkX5HKiOh81p11VkK1Iwei8I2ECW
+	AJunPcAM27kHo0uLrDdMlP5ddDLs=
+X-Gm-Gg: ASbGnctsGaN1Gb/cMVfPYrz+W74jsB8BIdq3Twm0IoU8OGF3fDzfu7byd7DxJynlH7j
+	Hfv10zEAiCvULRTIsj5Lf/Uh2LArJWNEc9Hww9wQ/1G6Fg+p7MVr9kBSx8d7FCr6nWKObF1532r
+	QoUJWKBzAT6eWVA+UPzrW+vcJ0ltXNb20e7pQz6g==
+X-Google-Smtp-Source: AGHT+IGfYtqtqnEQUmVVtVkr9ACHBDu7yCTF+ZijzmAOFXGQaNxtgq89CZsSs5L3NcdakGMOgFAKoAOhJbpVJkpsElg=
+X-Received: by 2002:a2e:a588:0:b0:30c:177c:9e64 with SMTP id
+ 38308e7fff4ca-3179ffc89aemr9631721fa.35.1745502508531; Thu, 24 Apr 2025
+ 06:48:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250423-b4-container-of-type-check-v3-1-7994c56cf359@gmail.com> <aAomRMzyu3EX5Xal@google.com>
+In-Reply-To: <aAomRMzyu3EX5Xal@google.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Thu, 24 Apr 2025 09:47:52 -0400
+X-Gm-Features: ATxdqUEyShDrMfzYO0ZcV0Cacwz0kfxfITOaTr0jwTwMEZmEjiAEwXlZ4uo-zMg
+Message-ID: <CAJ-ks9nMqjj85rK6LsSnTPqsTHmMUDJsQxqJ7n2+r4oSZqBibA@mail.gmail.com>
+Subject: Re: [PATCH v3] rust: check type of `$ptr` in `container_of!`
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Thu, Apr 24, 2025 at 7:53=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
+rote:
+>
+> On Wed, Apr 23, 2025 at 01:40:10PM -0400, Tamir Duberstein wrote:
+> > Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*`=
+.
+> > Rename those placeholders for clarity.
+> >
+> > Given the incorrect usage:
+> >
+> > > diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
+> > > index 8d978c896747..6a7089149878 100644
+> > > --- a/rust/kernel/rbtree.rs
+> > > +++ b/rust/kernel/rbtree.rs
+> > > @@ -329,7 +329,7 @@ fn raw_entry(&mut self, key: &K) -> RawEntry<'_, =
+K, V> {
+> > >          while !(*child_field_of_parent).is_null() {
+> > >              let curr =3D *child_field_of_parent;
+> > >              // SAFETY: All links fields we create are in a `Node<K, =
+V>`.
+> > > -            let node =3D unsafe { container_of!(curr, Node<K, V>, li=
+nks) };
+> > > +            let node =3D unsafe { container_of!(curr, Node<K, V>, ke=
+y) };
+> > >
+> > >              // SAFETY: `node` is a non-null node so it is valid by t=
+he type invariants.
+> > >              match key.cmp(unsafe { &(*node).key }) {
+> >
+> > this patch produces the compilation error:
+> >
+> > > error[E0308]: mismatched types
+> > >    --> rust/kernel/lib.rs:207:25
+> > >     |
+> > > 207 |             [field_ptr, container_field_ptr]; // typeof(`$field=
+_ptr`) =3D=3D typeof(`$Container.$($fields)*`)
+> > >     |                         ^^^^^^^^^^^^^^^^^^^ expected `*mut rb_n=
+ode`, found `*mut K`
+> > >     |
+> > >    ::: rust/kernel/rbtree.rs:270:6
+> > >     |
+> > > 270 | impl<K, V> RBTree<K, V>
+> > >     |      - found this type parameter
+> > > ...
+> > > 332 |             let node =3D unsafe { container_of!(curr, Node<K, V=
+>, key) };
+> > >     |                                 -------------------------------=
+----- in this macro invocation
+> > >     |
+> > >     =3D note: expected raw pointer `*mut bindings::rb_node`
+> > >                found raw pointer `*mut K`
+> > >     =3D note: this error originates in the macro `container_of` (in N=
+ightly builds, run with -Z macro-backtrace for more info)
+> > >
+> > > error: aborting due to 1 previous error
+> >
+> > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> > Link: https://lore.kernel.org/all/CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP5=
+wBuGPYh9ZTAiww@mail.gmail.com/
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+>
+> >  rust/kernel/lib.rs | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> > index 1df11156302a..d14ed86efb68 100644
+> > --- a/rust/kernel/lib.rs
+> > +++ b/rust/kernel/lib.rs
+> > @@ -198,9 +198,15 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
+> >  /// ```
+> >  #[macro_export]
+> >  macro_rules! container_of {
+> > -    ($ptr:expr, $type:ty, $($f:tt)*) =3D> {{
+> > -        let offset: usize =3D ::core::mem::offset_of!($type, $($f)*);
+> > -        $ptr.byte_sub(offset).cast::<$type>()
+> > +    ($field_ptr:expr, $Container:ty, $($fields:tt)*) =3D> {{
+>
+> It's rather unusual to use an uppercase C in the name of this parameter.
 
-The counter backwards may be observed in the PMI handler when
-counters-snapshotting some non-precise events in the freq mode.
-
-For the non-precise events, it's possible the counters-snapshotting
-records a positive value for an overflowed PEBS event. Then the HW
-auto-reload mechanism reset the counter to 0 immediately. Because the
-pebs_event_reset is cleared in the freq mode, which doesn't set the
-PERF_X86_EVENT_AUTO_RELOAD.
-In the PMI handler, 0 will be read rather than the positive value
-recorded in the counters-snapshotting record.
-
-The counters-snapshotting case has to be specially handled. Since the
-event value has been updated when processing the counters-snapshotting
-record, only needs to set the new period for the counter via
-x86_pmu_set_period().
-
-Fixes: e02e9b0374c3 ("perf/x86/intel: Support PEBS counters snapshotting")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/ds.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 486881fe162e..83ffbfdf4982 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -2376,8 +2376,25 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
- 			 */
- 			intel_pmu_save_and_restart_reload(event, count);
- 		}
--	} else
--		intel_pmu_save_and_restart(event);
-+	} else {
-+		/*
-+		 * For a non-precise event, it's possible the
-+		 * counters-snapshotting records a positive value for the
-+		 * overflowed event. Then the HW auto-reload mechanism
-+		 * reset the counter to 0 immediately, because the
-+		 * pebs_event_reset is cleared if the PERF_X86_EVENT_AUTO_RELOAD
-+		 * is not set. The counter backwards may be observed in a
-+		 * PMI handler.
-+		 *
-+		 * Since the event value has been updated when processing the
-+		 * counters-snapshotting record, only needs to set the new
-+		 * period for the counter.
-+		 */
-+		if (is_pebs_counter_event_group(event))
-+			static_call(x86_pmu_set_period)(event);
-+		else
-+			intel_pmu_save_and_restart(event);
-+	}
- }
- 
- static __always_inline void
--- 
-2.38.1
-
+I took the parameter name from `offset_of`:
+https://doc.rust-lang.org/stable/std/mem/macro.offset_of.html.
