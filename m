@@ -1,163 +1,133 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DA31C5D55
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5139C20C47A
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745495626; cv=none; b=KMT05Doyxrt2UwNea+3zWs2vs/+38v6lFp19u64ikz6mY+nJ2qPtlFwschKZMPXNP8Lc0i2+j0PGKmzz9Hd9/O52k9jdaVHdYrwXMDDIrM4j4wROxUXeMkN7SL7Otp8smlbjQKN0G1EEtD7POQhMzN5KU5+5CE7Ap1kC0dVEhjk=
+	t=1745495627; cv=none; b=dNQyH8opeKSUxX52GDZETSlYN3Aw75xl+tYgGr6BrS/ajLbYD5PAvXQ8dNHo29pkGNAocz336gMwJgXsbGdgxfEU2J3o/UNuj+9dnU9VVB355BST7lPKuvj5ko1S8JPnNrX2hlSwOX2T0Cf/8C8lyrCruwvAxFZhg49hIdVpqeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745495626; c=relaxed/simple;
-	bh=rCIB3s1YMCAjZ2yHxxGRAupIU11mjpbmp0sA7XGhhSU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=g28Jo1BJAMHOMeHYsA4VOej2W04lBtJcHctoV5JDkxcYQYjk6nSLZP0pVJf1ME/6ktIK0y9gdt3vIxQEs8SCuBJN68tvB9XkEr98zkj1bZ5sZ0F/S+AfKHOQvxhwlQ3YiqFI6beF02Ds88MNfMxd7iev0iVN4FEnYzwgkuCj0ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dxkC/T0N; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1745495627; c=relaxed/simple;
+	bh=Fpd73RRnHn/l4PYVjhLh24iJQjof1gdaW83Nyo/GhgU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j16B+A/BNpCvUyuDqF9gmPgmFUdooFhTfQ7IQpQqEpItu3l5pvc1xBD3+nIbx2Iqfw3rp6Japfi7ZJXBWTPL0f/tW7F85PcSA4DMCpnmlsgpDF1O/4kvZDOUDiH5mtAZIceF5RbugR/YaEFZakvcd9MNLVpI75K7eWScAPtRm4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=U0x6VSFZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dxkC/T0N"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ceb011ea5so5596745e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745495623; x=1746100423; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7r7+1msfSNKtwI+7TAuSvOOZwjo66YqGQOnUawD+nm4=;
-        b=dxkC/T0NxZhMX+3mkOIvZTHweEWrJZp/qraW4xPy4wX7gcyufdwBxijzmAUjIFGQYD
-         d0uUv4pVfgVW9bebySGMIf0Ou2bgTxli3ThQPRqjSCn3L6LEf0dzokmkxNlLwwonMiHb
-         4QxGqTpycXwYEuoyCNFpoWxkb8XAW0H9guTGipa90gWgrhV2I2pDkkB22t33SgwD1rSp
-         vIlPyY3TdSYOWW+sNEoDo0beB/H864SlpYCBX2iOVGym5HSbMKVqyLGmz6jg4Zff+H7V
-         7FAkPJW16H30HuEITTCheNJjMwkMGsO5xATa+3uG7y6/0iPWQa0EdpPZJsTyqT7ZDOxX
-         oExg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U0x6VSFZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745495624;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7O71wS6omUP4Za+qu8KkJ9Z+HYsi5jrXQRVuEjbLS/Y=;
+	b=U0x6VSFZpsG194wzvpvDS5puCDW1O4c6T2wxbF4VaeOkTqTz8aUnoZ8dIdiCV/bFQlsJSZ
+	B23RuiJbzuIAYP2Xey7gg9+hQdr3WC79uHcoQquf/Fi6bzAfYF2wBwlEraZgplsbU8nYh0
+	NP2+iAKn90MetYoSuwWcWga6M4nmHfA=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-128-1N7Uj2yvN2CJWOwmjR7pLA-1; Thu, 24 Apr 2025 07:53:43 -0400
+X-MC-Unique: 1N7Uj2yvN2CJWOwmjR7pLA-1
+X-Mimecast-MFC-AGG-ID: 1N7Uj2yvN2CJWOwmjR7pLA_1745495622
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43efa869b0aso5598945e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:53:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745495623; x=1746100423;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7r7+1msfSNKtwI+7TAuSvOOZwjo66YqGQOnUawD+nm4=;
-        b=MbLXldbnULQvUvM2FvCsbDntc7f8xuZujb7jsl8msWeiiVvqdZrn/SctrIulcdQhEL
-         GVgCln5xd4L3yVmLVlcicEOMgvZMHEZxgwRL1LVNlAOKqTiucvfYHRJ/PZb2HC2jJrdE
-         4YNfFoaOokydNrTb4n6b+ZCZrpTH8IH5ZubItgJc2xD5XNpwS8gGyUo4EUzJfBW6dCSO
-         p6msqsH+NyNZ7MW0IZzh6GAc5jZ+G2RbsJFAvu8FJ31j0RX63/5tHrsNmZQbWz7wx5at
-         bg+JaNlOBhVj8QeN9919NtL/diOIIWdeDA8BTfvGkh29NSYPZwoY4XVscn74pKjlBOKm
-         Rqtw==
-X-Forwarded-Encrypted: i=1; AJvYcCU0cKXjo7XS7auqHOtHAu53wNqarzWah0CaSpRtDC/9dKqPvN1Z3A+0KkBXYX6dj2Q00vFCwP6yPJr2EzQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzK9Qh5NFG+1Rnu8m+Qn6mSOxNo4FKGTAj1g0d6U+ZqA94Cm51e
-	J+gQW01PZT3BfP4a70X1emPrt/kdkR6faxChd9Fg50s45Oedesc0okdFIRU+1R78bxcE+eeRFyZ
-	yflvY6LGKUIsqHw==
-X-Google-Smtp-Source: AGHT+IFfglV76zUc9U0P4XV3F76n+fUoIUnMtt/qjmVfgTe265a7D4yiy8/xlJBe4DvMyGg4z4bTuwcjwvuy+M0=
-X-Received: from wmrn37.prod.google.com ([2002:a05:600c:5025:b0:43b:c7e5:66e0])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3d0c:b0:43d:224:86b5 with SMTP id 5b1f17b1804b1-4409bcfb42cmr23146005e9.4.1745495622833;
- Thu, 24 Apr 2025 04:53:42 -0700 (PDT)
-Date: Thu, 24 Apr 2025 11:53:40 +0000
-In-Reply-To: <20250423-b4-container-of-type-check-v3-1-7994c56cf359@gmail.com>
+        d=1e100.net; s=20230601; t=1745495622; x=1746100422;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7O71wS6omUP4Za+qu8KkJ9Z+HYsi5jrXQRVuEjbLS/Y=;
+        b=wYc5eUfWD50F7/L/F/QCxzLx77W20xOZQ7moPWl+nrrGI1QGfFB2i+MMk8wE0x+rnz
+         oopARyaVcYTiGFlj+B5Jns+20Huq/KZtizZZ90wwj3u35mrax8gAWYu2i4Lxn4PE+jwj
+         Jtq7cQXNA9se8gDPH2IBURoIzYQOkjZ8Snh+P1s6OdafTUdFSIILQgPbuuraPRIvF/O1
+         vqg/5jRsNIPwJKjHRXvukrs0nydqFXpxf7aU8C1Gxddzq3SV3jjbsvMKZvdGYtuLAoZi
+         5t5p2vpeMdIIq3Qjvy2PVWs9Z0D/HjI50o1sm+Itx9RO8B9kZNhhSoue7sjVwHbbR7SX
+         2iCA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6XTry+CzDMlTS+sStT44lXz4BhxHN+wrsMz2QP8eEcqQLMoAIQmiKl9bB2zQ53NXrBwhoOyzTEQuLapY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0VDMf5ezALvce5gF2rTHZ0xBFrts1NFgSYC+5QasXKnchNT4Z
+	EF1uy9Ue70dVNck3VSANHA54mSHUaz7R+bg1kZx8ndIZNSqECEiF2KxeH4dIl5qzNytVFbk6ICk
+	Ekatg+XwfpsHfHX/xJKwpOK3c1sZN1Uj8SigAyzmwk2otHFPvF+N/9DB0QsGelA==
+X-Gm-Gg: ASbGnctiIigdGqpg2w4wlgCwgqwLa34awHOBoHNIHQETnnfi0QuDS0FME8Dn4U/M89D
+	t3xKCYLmgY8bom/XiggMax4Ue3WhtSA/q/Jkg/0SrJxb3VwrNIypqWtGukg+FgQU3xnP6jDnOLA
+	sp/hWwT0JBpfnvC6sRCSKcJtTyDUcYj+GKwwdhpnMkbTkfP+LkSV7+9MIzd2rZWsWpsO5FDxvFv
+	49dxElSt2+RDQxiES1XL+F5D3mDuEiLjyj5n0D5Qc/yXwy6J+K11uCpd1UIST/GUxcLpXOb/Anh
+	g12DDAP7NHhdDTBsQXN2u2KEl4zheQV2k05Ymt8=
+X-Received: by 2002:a05:600c:4e0a:b0:43c:f513:9585 with SMTP id 5b1f17b1804b1-4409bd210eemr25352645e9.13.1745495621866;
+        Thu, 24 Apr 2025 04:53:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEUAI2NQUKhz4qnOoSRg3Qvi8tq8xdza5SLA8RiijZXZRu9gfA8tceguZucQbwMmFsJdyoLyg==
+X-Received: by 2002:a05:600c:4e0a:b0:43c:f513:9585 with SMTP id 5b1f17b1804b1-4409bd210eemr25352255e9.13.1745495621516;
+        Thu, 24 Apr 2025 04:53:41 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-7-183.dyn.eolo.it. [146.241.7.183])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a06d54c246sm1831740f8f.86.2025.04.24.04.53.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 04:53:40 -0700 (PDT)
+Message-ID: <edfa1585-c10c-4211-a985-ebfcb8e671d5@redhat.com>
+Date: Thu, 24 Apr 2025 13:53:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250423-b4-container-of-type-check-v3-1-7994c56cf359@gmail.com>
-Message-ID: <aAomRMzyu3EX5Xal@google.com>
-Subject: Re: [PATCH v3] rust: check type of `$ptr` in `container_of!`
-From: Alice Ryhl <aliceryhl@google.com>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 2/2] net: stmmac: dwxgmac2: Add support for
+ HW-accelerated VLAN stripping
+To: Boon Khai Ng <boon.khai.ng@altera.com>, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Russell King <linux@armlinux.org.uk>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, Furong Xu <0x1207@gmail.com>,
+ Matthew Gerlach <matthew.gerlach@altera.com>,
+ Tien Sung Ang <tien.sung.ang@altera.com>,
+ Mun Yew Tham <mun.yew.tham@altera.com>,
+ G Thomas Rohan <rohan.g.thomas@altera.com>
+References: <20250421162930.10237-1-boon.khai.ng@altera.com>
+ <20250421162930.10237-3-boon.khai.ng@altera.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250421162930.10237-3-boon.khai.ng@altera.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 23, 2025 at 01:40:10PM -0400, Tamir Duberstein wrote:
-> Add a compile-time check that `*$ptr` is of the type of `$type->$($f)*`.
-> Rename those placeholders for clarity.
-> 
-> Given the incorrect usage:
-> 
-> > diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
-> > index 8d978c896747..6a7089149878 100644
-> > --- a/rust/kernel/rbtree.rs
-> > +++ b/rust/kernel/rbtree.rs
-> > @@ -329,7 +329,7 @@ fn raw_entry(&mut self, key: &K) -> RawEntry<'_, K, V> {
-> >          while !(*child_field_of_parent).is_null() {
-> >              let curr = *child_field_of_parent;
-> >              // SAFETY: All links fields we create are in a `Node<K, V>`.
-> > -            let node = unsafe { container_of!(curr, Node<K, V>, links) };
-> > +            let node = unsafe { container_of!(curr, Node<K, V>, key) };
-> >
-> >              // SAFETY: `node` is a non-null node so it is valid by the type invariants.
-> >              match key.cmp(unsafe { &(*node).key }) {
-> 
-> this patch produces the compilation error:
-> 
-> > error[E0308]: mismatched types
-> >    --> rust/kernel/lib.rs:207:25
-> >     |
-> > 207 |             [field_ptr, container_field_ptr]; // typeof(`$field_ptr`) == typeof(`$Container.$($fields)*`)
-> >     |                         ^^^^^^^^^^^^^^^^^^^ expected `*mut rb_node`, found `*mut K`
-> >     |
-> >    ::: rust/kernel/rbtree.rs:270:6
-> >     |
-> > 270 | impl<K, V> RBTree<K, V>
-> >     |      - found this type parameter
-> > ...
-> > 332 |             let node = unsafe { container_of!(curr, Node<K, V>, key) };
-> >     |                                 ------------------------------------ in this macro invocation
-> >     |
-> >     = note: expected raw pointer `*mut bindings::rb_node`
-> >                found raw pointer `*mut K`
-> >     = note: this error originates in the macro `container_of` (in Nightly builds, run with -Z macro-backtrace for more info)
-> >
-> > error: aborting due to 1 previous error
-> 
-> Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Link: https://lore.kernel.org/all/CAH5fLgh6gmqGBhPMi2SKn7mCmMWfOSiS0WP5wBuGPYh9ZTAiww@mail.gmail.com/
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-
->  rust/kernel/lib.rs | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 1df11156302a..d14ed86efb68 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -198,9 +198,15 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
->  /// ```
->  #[macro_export]
->  macro_rules! container_of {
-> -    ($ptr:expr, $type:ty, $($f:tt)*) => {{
-> -        let offset: usize = ::core::mem::offset_of!($type, $($f)*);
-> -        $ptr.byte_sub(offset).cast::<$type>()
-> +    ($field_ptr:expr, $Container:ty, $($fields:tt)*) => {{
-
-It's rather unusual to use an uppercase C in the name of this parameter.
-
-Alice
-
-> +        let offset: usize = ::core::mem::offset_of!($Container, $($fields)*);
-> +        let field_ptr = $field_ptr;
-> +        let container_ptr = field_ptr.byte_sub(offset).cast::<$Container>();
-> +        if false {
-> +            let container_field_ptr = ::core::ptr::addr_of!((*container_ptr).$($fields)*).cast_mut();
-> +            [field_ptr, container_field_ptr]; // typeof(`$field_ptr`) == typeof(`$Container.$($fields)*`)
-> +        }
-> +        container_ptr
->      }}
+On 4/21/25 6:29 PM, Boon Khai Ng wrote:
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+> index 389aad7b5c1e..55921c88efd0 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+> @@ -4,6 +4,7 @@
+>   * stmmac XGMAC support.
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/stmmac.h>
+>  #include "common.h"
+>  #include "dwxgmac2.h"
+> @@ -69,6 +70,21 @@ static int dwxgmac2_get_tx_ls(struct dma_desc *p)
+>  	return (le32_to_cpu(p->des3) & XGMAC_RDES3_LD) > 0;
 >  }
 >  
-> 
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250411-b4-container-of-type-check-06af1c204f59
-> prerequisite-change-id: 20250409-container-of-mutness-b153dab4388d:v1
-> prerequisite-patch-id: 53d5889db599267f87642bb0ae3063c29bc24863
-> 
-> Best regards,
-> -- 
-> Tamir Duberstein <tamird@gmail.com>
-> 
+> +static u16 dwxgmac2_wrback_get_rx_vlan_tci(struct dma_desc *p)
+> +{
+> +	return (le32_to_cpu(p->des0) & XGMAC_RDES0_VLAN_TAG_MASK);
+> +}
+> +
+> +static inline bool dwxgmac2_wrback_get_rx_vlan_valid(struct dma_desc *p)
+
+Please, avoid 'inline' function in .c files, especially for functions
+that will land into function pointer like this one.
+
+Thanks,
+
+Paolo
+
