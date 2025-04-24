@@ -1,83 +1,138 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.2])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6184335957;
-	Thu, 24 Apr 2025 02:34:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.2
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837D22701BA;
+	Thu, 24 Apr 2025 02:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745462046; cv=none; b=XOGNTdnJM21/zTZ8F2yW7yW4R/h/CdgFBP7OKuHPc5C2G6Ox/LpM5qgnPCDnyvRVepLnvrZJvHzNym+12DIgii8jpTntiWJ7axvBMe+XESfEYQ3JNkuT9dxBqXyrHRogpf+k7OSGXDCKouG7KjB88YkTZrGHqZqFK7WAfMtdHMs=
+	t=1745462125; cv=none; b=f0v6cVG1BLDRephgVkIXPGqRxnXiYFeihuL2GDu6hq4lMrTL668RQvJMTpnJJ7juH0XIs7r9979TWC64Jo5+VL3r7PBhzuMildRSL/WPzA4Nv/H6oPnlgg5iB4K7fPv1CUp2LwDVN/wawoqWrpJkRfT2lHypsipgV2TRhj6g4GE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745462046; c=relaxed/simple;
-	bh=SuJTF1bzmxMi+NcU7iuruI5TglhqOE44junnmgMQryE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SaBKMz/2H6xdord2EXe3U9+swO7bWHgMnQUWHNEVV+JJ3k20Re8m44xfEX/SbmzS7Z6aTjaGAPZYRzgWRQaKu6wHGI9cbxvtroOWjNu1jxZAUfWsj4rgVe1sIFrxnPLd/VOk1FLS+eVl2hnpYqB1TVNu79XgOyKiQjqxwXHLKGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=JIChhbBM; arc=none smtp.client-ip=117.135.210.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="JIChhbBM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=/qHdb
-	A/SsKmSVbxALImyuT2U+gPSzBFsItLJqVnqFQg=; b=JIChhbBMKSrqIerR2Oeca
-	jdo9HRpJJaxmUw9/1RAwwKy5G0POQdMWz70jyU8dxsxJHdedT8R4Zryoi8lHQ+Qn
-	JRLjr2QBpwWMD8RgoGRFnaT7J8pHp8P+vI5I5jB/no+OJIT2MxAQKrigCTc3w+ZC
-	A0Zk8PPOvNTAHTT2F0eyMk=
-Received: from icess-ProLiant-DL380-Gen10.. (unknown [])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wBXvlQBowlogHeXCA--.20626S4;
-	Thu, 24 Apr 2025 10:33:39 +0800 (CST)
-From: Haoxiang Li <haoxiang_li2024@163.com>
-To: lucas.demarchi@intel.com,
-	thomas.hellstrom@linux.intel.com,
-	rodrigo.vivi@intel.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	badal.nilawar@intel.com,
-	himal.prasad.ghimiray@intel.com,
-	matthew.brost@intel.com
-Cc: intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Haoxiang Li <haoxiang_li2024@163.com>,
-	stable@vger.kernel.org
-Subject: [PATCH RESEND] drm/xe: Add check for alloc_ordered_workqueue()
-Date: Thu, 24 Apr 2025 10:33:35 +0800
-Message-Id: <20250424023335.3497842-1-haoxiang_li2024@163.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1745462125; c=relaxed/simple;
+	bh=l5VhaPblEjCMuhNE8DZY2F3Srkk0u7b+ljx3T5DrYMQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=OJi+gSnu+f2Kc29m10rbbKaAtXOBRxls5el7tf6jO+0JZIYDXudQ624vCIItF0ACKFVj0eZpE/QNiRNEUvzK+B4bT3Z5oEK+mwNkgc0eQW8uM9GcLJcJTSAT0rNaqOyCfDfA5BnvPGRgWLIfNzKbtiimRYfyfrLxwPyoSKCXY+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Zjg6g1sPWz4f3lDK;
+	Thu, 24 Apr 2025 10:34:51 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id BF1A41A0359;
+	Thu, 24 Apr 2025 10:35:16 +0800 (CST)
+Received: from [10.174.179.143] (unknown [10.174.179.143])
+	by APP4 (Coremail) with SMTP id gCh0CgAXe19iowloxAWRKQ--.43174S3;
+	Thu, 24 Apr 2025 10:35:16 +0800 (CST)
+Subject: Re: 10x I/O await times in 6.12
+To: Matt Fleming <mfleming@cloudflare.com>, Yu Kuai <yukuai1@huaweicloud.com>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-team <kernel-team@cloudflare.com>,
+ "yukuai (C)" <yukuai3@huawei.com>
+References: <CAGis_TVSAPjYwVjUyur0_NFsDi9jmJ_oWhBHrJ-bEknG-nJO9Q@mail.gmail.com>
+ <dd2db843-843f-db15-c54f-f2c44548dee3@huaweicloud.com>
+ <CAGis_TWtWMK93nVBa_D_Y2D3Su8x_dDNwNw9h=v=8zoaHuAXBA@mail.gmail.com>
+From: Yu Kuai <yukuai1@huaweicloud.com>
+Message-ID: <2bb4f6ef-c25a-887f-6a0b-434fc8e1e54e@huaweicloud.com>
+Date: Thu, 24 Apr 2025 10:35:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <CAGis_TWtWMK93nVBa_D_Y2D3Su8x_dDNwNw9h=v=8zoaHuAXBA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wBXvlQBowlogHeXCA--.20626S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Jr18tr4kAr4DArWfGryUJrb_yoWfZFc_CF
-	WxXrn7XFs8CF1qvF1SkrWfZFyayryrua97uF15K3s3try7WrW2v39Fvr98ZFyxXa17uFnr
-	Z3W8W3ZIvwnrWjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7sRNyxRDUUUUU==
-X-CM-SenderInfo: xkdr5xpdqjszblsqjki6rwjhhfrp/xtbBkA05bmgJnX3o1QAAs2
+X-CM-TRANSID:gCh0CgAXe19iowloxAWRKQ--.43174S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ar15Cw1xAw48ur1fXrWUurg_yoW8uF15pr
+	W5Ja1Ykrs5JrW0ga1Iqa1UWFyrKw4Utry7Gr4Dta1rCwn0gry3KF1F9w4j9rWxArs5uw47
+	ZF4Y9asrX3ZxKrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+	Y487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
+	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
+	73UjIFyTuYvjfUYCJmUUUUU
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-Add check for the return value of alloc_ordered_workqueue()
-in xe_gt_alloc() to catch potential exception.
+Hi, Jens!
 
-Fixes: e2d84e5b2205 ("drm/xe: Mark GT work queue with WQ_MEM_RECLAIM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Haoxiang Li <haoxiang_li2024@163.com>
-Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
----
- drivers/gpu/drm/xe/xe_gt.c | 2 ++
- 1 file changed, 2 insertions(+)
+在 2025/04/23 18:51, Matt Fleming 写道:
+> On Mon, 21 Apr 2025 at 13:21, Yu Kuai <yukuai1@huaweicloud.com> wrote:
+>>
+>> Can you drop this expensive bpftrace script which might affect IO
+>> performance, and replace __submit_bio directly to __blk_flush_plug? If
+>> nsecs - plug->cur_ktime is still milliseconds, can you check if the
+>> following patch can fix your problem?
+> 
+> Yep, the below patch fixes the regression and restores I/O wait times
+> that are comparable to 6.6. Thanks!
 
-diff --git a/drivers/gpu/drm/xe/xe_gt.c b/drivers/gpu/drm/xe/xe_gt.c
-index 10a9e3c72b36..1f50f26fb657 100644
---- a/drivers/gpu/drm/xe/xe_gt.c
-+++ b/drivers/gpu/drm/xe/xe_gt.c
-@@ -81,6 +81,8 @@ struct xe_gt *xe_gt_alloc(struct xe_tile *tile)
- 	gt->tile = tile;
- 	gt->ordered_wq = alloc_ordered_workqueue("gt-ordered-wq",
- 						 WQ_MEM_RECLAIM);
-+	if (!gt->ordered_wq)
-+		return ERR_PTR(-ENOMEM);
- 
- 	err = drmm_add_action_or_reset(&gt_to_xe(gt)->drm, gt_fini, gt);
- 	if (err)
--- 
-2.25.1
+Thanks for the test.
+
+Do you have any suggestions? For now, I can think of two different
+fixes:
+
+1) clear time for the preempt case. On the one hand, preempt can be
+frequent, cauing performance degradation; On the other hand, this can't
+solve all the problems, for example, lots of interrupt or lots of BIO
+issued into one round of plug.
+
+2) delay setting rq start time to flush plug, however, the latency value
+is still not accurate, and will be slightly smaller instead of greater.
+
+Thanks,
+Kuai
+
+> 
+>> diff --git a/block/blk-mq.c b/block/blk-mq.c
+>> index ae8494d88897..37197502147e 100644
+>> --- a/block/blk-mq.c
+>> +++ b/block/blk-mq.c
+>> @@ -1095,7 +1095,9 @@ static inline void blk_account_io_start(struct
+>> request *req)
+>>                   return;
+>>
+>>           req->rq_flags |= RQF_IO_STAT;
+>> -       req->start_time_ns = blk_time_get_ns();
+>> +
+>> +       if (!current->plug)
+>> +               req->start_time_ns = blk_time_get_ns();
+>>
+>>           /*
+>>            * All non-passthrough requests are created from a bio with one
+>> @@ -2874,6 +2876,7 @@ void blk_mq_flush_plug_list(struct blk_plug *plug,
+>> bool from_schedule)
+>>    {
+>>           struct request *rq;
+>>           unsigned int depth;
+>> +       u64 now;
+>>
+>>           /*
+>>            * We may have been called recursively midway through handling
+>> @@ -2887,6 +2890,10 @@ void blk_mq_flush_plug_list(struct blk_plug
+>> *plug, bool from_schedule)
+>>           depth = plug->rq_count;
+>>           plug->rq_count = 0;
+>>
+>> +       now = ktime_get_ns();
+>> +       rq_list_for_each(&plug->mq_list, rq)
+>> +               rq->start_time_ns = now;
+>> +
+>>           if (!plug->multiple_queues && !plug->has_elevator &&
+>> !from_schedule) {
+>>                   struct request_queue *q;
+>>
+> 
+> .
+> 
 
