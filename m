@@ -1,44 +1,42 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 997CC8C0B;
-	Thu, 24 Apr 2025 00:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660BB1CD1F;
+	Thu, 24 Apr 2025 00:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745455430; cv=none; b=VguE8+iR2sSOYpYKroH+q2uwPe4rI4CtCo+zYAgO5EE4RRUToRLzGtiLj7euOcjeSGg2hm3AKdFudRVVrmWq/YlpzJ4CbkFUBfvJiJ3LZQLZU9IgSW0YjnSpk2OiAa88YVpxCsMfIdCzwl3TMdomehg6Q9EFVJLKTMuwq48wU9E=
+	t=1745455449; cv=none; b=Zc9ybV9gGQ1DUu3YiA9dQR43JTXjRywar4zu3+DZr4u7YMDPBVd/Mg/7hWm93xiiuNtIpvMN9sjy0ENZqZqIWrbJfU9A6PbXQAnU76Bapf5ZpqbrXGVV1qgs1CqSQC70rJDn7vFo2fYrTDORj6nfBDtxAZ80jGYvHnCNiGHvTYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745455430; c=relaxed/simple;
-	bh=5lr0hOvFVjHbpvGJ32EF8//6WgWpW8Y7H3GFs+lXUho=;
+	s=arc-20240116; t=1745455449; c=relaxed/simple;
+	bh=9RqTBVvafFjbkjBVSdY6jeYYwZvIr/H3q0ESUZUpBEE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bx2RTVUxIgcev48EeukRGyTWsJzc1kr8S6rk70zrdTpwy4qtHutCnjaBUJ6H5IHI8IeouaFNpXPzjk3RHFC+n0Z69Sov3cquw3+vHESTnRGZ9EhuQMD+IZ5iw0gKkE5aQZ79aVcUgGwBJOumJoYCAfccYugIOVIvZ1vbPVl02q8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 073311063;
-	Wed, 23 Apr 2025 17:43:43 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 812703F59E;
-	Wed, 23 Apr 2025 17:43:45 -0700 (PDT)
-Date: Thu, 24 Apr 2025 01:42:41 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Yixun Lan <dlan@gentoo.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu
- Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
- Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, Andrew
- Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa A5E
- board
-Message-ID: <20250424014120.0d66bd85@minigeek.lan>
-In-Reply-To: <aa38baed-f528-4650-9e06-e7a76c25ec89@lunn.ch>
-References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
-	<20250423-01-sun55i-emac0-v1-4-46ee4c855e0a@gentoo.org>
-	<aa38baed-f528-4650-9e06-e7a76c25ec89@lunn.ch>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	 MIME-Version:Content-Type; b=G51eJIX1B/gaG2Ryfnxs3dPf35KtaaxAl1fTHFSXE2WMf7unGNxxsF8NRs2a3WNZtrGMdQgCRVji8U50+OwUyWYv70RhFECK0MmcI3HXQRS0sO49rgZmdka4ng5+y2Ks1Kx+IS0pIajwA2I1mSh3FtdCiCqQC/S8t0WFcWiv9X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTb24ePK; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTb24ePK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57FEDC4CEEA;
+	Thu, 24 Apr 2025 00:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745455448;
+	bh=9RqTBVvafFjbkjBVSdY6jeYYwZvIr/H3q0ESUZUpBEE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YTb24ePKqA7OB68SC3BHkiV/rJR69IaSgpfyXzwBwGzwTSvm4yNuY+e8TbHTLKwZK
+	 f22XqAwdfvoQHJbz4WDrRpCI5GL+S7nVrUWYXcHcF/twsMwS+0iI6pT55KKIUopox3
+	 mU8RDYAlYonHIbvd4sLKlu6v+tOIbminefcraDL2YEYzGb1PJd4EedNg+XZaFo0fow
+	 zr+l/k+sBwiCfXc1kZPAMYM7RZm9PDjqVecI8F1t3+OQKqvpbuT1Cz+NDJ2hBB8CBK
+	 tKBgRtv5HDDHRGPzfvWCYDNqOtrEvGUHAW9tEiQVZ2qXF98WDZQbJ1gffplNsFOUqT
+	 a/k2AdeDVTIjw==
+Date: Thu, 24 Apr 2025 08:43:58 +0800
+From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] Improve Sphinx kerneldoc extension
+Message-ID: <20250424084358.1cfc1455@sal.lan>
+In-Reply-To: <87jz7dxvgu.fsf@trenco.lwn.net>
+References: <cover.1744685912.git.mchehab+huawei@kernel.org>
+	<87jz7dxvgu.fsf@trenco.lwn.net>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,35 +46,84 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Wed, 23 Apr 2025 18:58:37 +0200
-Andrew Lunn <andrew@lunn.ch> wrote:
+Em Mon, 21 Apr 2025 11:42:09 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Hi,
-
-> > +&emac0 {
-> > +	phy-mode = "rgmii";  
+> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
 > 
-> Does the PCB have extra long clock lines in order to provide the
-> needed 2ns delay? I guess not, so this should be rgmii-id.
-
-That's a good point, and it probably true.
-
+> > Hi Jon,
+> >
+> > As promised, this series improves the Sphinx kerneldoc extension making it using the
+> > kernel-doc.py classes directly if available.
+> >
+> > The script still supports excecuting kernel-doc via shell, and, in verbose mode, it will
+> > show the command line arguments to run kernel-doc manually, even when the Python
+> > classes are used. The idea is that the command line verbose will help to eventually
+> > debug issues if one needs to run kernel-doc.py manually. 
+> >
+> > On other words, after this series, if one does:
+> >
+> > 	make htmldocs KERNELDOC=scripts/kernel-doc.py
+> >
+> > Or, simply (as internally KERNELDOC is set to scripts/kernel-doc.py):
+> >
+> > 	make htmldocs
+> >
+> > It will use the Python classes instead of running a subprocess.
+> >
+> > If one uses, instead:
+> >
+> > 	make htmldocs KERNELDOC=scripts/kernel-doc
+> > or:
+> > 	make htmldocs KERNELDOC=scripts/kernel-doc.pl
+> >
+> > As the file extension doesn't end with .py, it will excecute the Python or the Perl
+> > version of kernel-doc via a subprocess.
+> >
+> > On this version, I opted to re-create the Python objects for every single kernel-doc
+> > line, so no caches from past runs are used. I'm working on a version that will cache
+> > results, but it is currently causing some regressions. So, let's do the changes
+> > step-by-step, applying first this improvement patch series.
+> >
+> > PS.: the first patches on this series are addressing some some bugs and one
+> > improvement that I noticed while debugging the patch changing kerneldoc
+> > Sphinx extension.
+> >
+> > Mauro Carvalho Chehab (4):
+> >   scripts/lib/kdoc/kdoc_files.py: don't try to join None
+> >   scripts/lib/kdoc/kdoc_parser.py: move states to a separate class
+> >   scripts:kdoc_files.py: use glob for export_file seek
+> >   docs: sphinx: kerneldoc: Use python class if available
+> >
+> >  Documentation/sphinx/kerneldoc.py | 138 ++++++++++++++++++++++++++++--
+> >  scripts/lib/kdoc/kdoc_files.py    |  11 ++-
+> >  scripts/lib/kdoc/kdoc_parser.py   | 119 ++++++++++++++------------
+> >  3 files changed, 200 insertions(+), 68 deletions(-)  
 > 
-> > +	phy-handle = <&ext_rgmii_phy>;
-> > +
-> > +	allwinner,tx-delay-ps = <300>;
-> > +	allwinner,rx-delay-ps = <400>;  
+> I've applied the series.
 > 
-> These are rather low delays, since the standard requires 2ns. Anyway,
-> once you change phy-mode, you probably don't need these.
+> I do note that the default "make htmldocs" build time is reliably slower
+> than with KERNELDOC=scripts/kernel-doc, I'd be curious to understand
+> why.
+> 
+>         External kdoc:  170s
+>         w/classes:	186s
 
-Those go on top of the main 2ns delay, I guess to accommodate some skew
-between the RX and TX lines, or to account for extra some PCB delay
-between clock and data? The vendor BSP kernels/DTs program those board
-specific values, so we have been following suit for a while, for the
-previous SoCs as well.
-I just tried, it also works with some variations of those values, but
-setting tx-delay to 0 stops communication.
+I noticed that. My guess is that this has to do with Python's big lock
+(GIL). When it uses processes, there won't be any internal locks, as
+kernel-doc will run independently. There is an effort for Python to get
+rid of GIL, but it seems GIL-less threads won't be default on version 3.14.
 
-Cheers,
-Andre
+-
+
+That's said, please notice that I intend to work on some patches that
+will optimize that. Right now, on some places, the same file is processed
+multiple times. By using the classes, we can cache the processing results
+the first time and then re-use them every time a kernel-doc tag for the
+same file is found within Documentation.
+
+This is easier said than done. I did one attempt to do that, but it ended
+causing troubles. So, I'm working on a new version of it.
+
+Regards,
+Mauro
