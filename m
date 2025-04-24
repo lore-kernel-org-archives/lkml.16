@@ -1,65 +1,31 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396212147EA;
-	Thu, 24 Apr 2025 13:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F3B27C14A;
+	Thu, 24 Apr 2025 13:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745500501; cv=none; b=ae7MfISw0uYorT0fsvT0q295sneYL831hpJxSZ1FnlDkHFiIqjZkGlxOlCmZ1G6HLqNEfZt9i4JPqxfDE+EFV1T0qm5Gy39AN5XyOxoppYePacF8epmRSJevSxgEq+Ss83HdXVUBfgs1n/aXDnmVnDQv7Qwv4B6RVeyC4SKSVuU=
+	t=1745500524; cv=none; b=smGU6lWMjjMd5Q5ygGELCdz5ocKrikgUWtZj2Ygnci7a9pia5Ym9qhaBco+2x0a0ZrY9S5gTNQ7/dTSro978wQaqnG6n4rF3x8g9+MDtLqYSePpTATQN+EO4cI+Y/mfz36eqyFnmPFugjTqn2pkgSSE/JBi+UL6M47T/mfG94Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745500501; c=relaxed/simple;
-	bh=MmQivaCAg8tEYXM2sdUm+aQHV2kEz8YdbukVCtw/GE8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SB1y9PgM2bMkIfJlYntb+dBKtCa2MqM7226SVGG1tFTOLZ95bFaUkqh904kohGEohDRUncMEqM3YNfe6tIjAdt437MRlXmv/YnuXOBGyFoYyY9CRm2ySr2ittjhWeV50sVnFByUbGIxki214G8D3wtlglwkIL3PECLMB3DnhM1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I7Au82d7; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7Au82d7"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-603f3d42ae8so676990eaf.3;
-        Thu, 24 Apr 2025 06:14:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745500499; x=1746105299; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=VNC2IbAuUZF0DyOzLAp8UCmn1hn6sr2yALf7UEBez+Q=;
-        b=I7Au82d7wTtRrFae/tkEANIZ0aA9gamsS+kQ3EzM78i7jYRSOGK6Je5bMiYjXCuWeC
-         QYHDuuZkRxMkDa/5/unPFgDNcbhsDvzPk8Uta49EhLeT7dE3OBGOwj1kl7rvP1TajQwx
-         9FBlTAzk1QQu64x8FrftOB4KpdLDTzqPO7yqV8cUEKA06XaSEXWkDTx/arldk8oUxjGB
-         DZFwAkbzTtz56rV9We9vY8Tosbm+u4VQixps+sBTw3surTX1nB5Iy5Y7OXXzE7iP3/Q6
-         R+YbtH+u3xmHxI9hx0/mjg575TqALaOjVxAJTdO7EGhyMIEzu4AMDrNOGm0rV4sXcDQR
-         L2LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745500499; x=1746105299;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VNC2IbAuUZF0DyOzLAp8UCmn1hn6sr2yALf7UEBez+Q=;
-        b=qWLZiicwk75ePxhOJxAH1cfh22rVKixpcIin3SQKw8h6R8i3HWR/FINEID6p1d1M+T
-         oDR95XjXRUG9rdW9ebtdOQD1DXAKY/t1dH3Wvxh0CDl3UVN5RsOedOMvIWcg6RCyPgpx
-         fRTvHEmtqS6cywXLK4kxhyPvzHuLo9BIbfQ72tN8k0FhOxL+2ITDq24qQooz7FFP/VXA
-         VdCUId86bSGuvfiu3NMbrWonim/r3Dm2xCGDggLFcKJEAzHbQIGsFx7wqQYJ0aL4Pi7r
-         GIuH3lZG8PWQgIdrnjPUUcI0BVY4xD/9GJMAzX4UqZyrIhaSi5XZZT1gt8B73UydLcRr
-         rzQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVuzIT0dfLDJbf4lQ4bF9VIPukvH2bs1homvQcKBSAy8x+AoS9s5MRHCp3gPVR+1t6/mVkDJX/9AA9AiAw=@vger.kernel.org, AJvYcCWAJ/XYVd6bRQVS98SL7PvWtGM0k4guRTakuhLdOQ+9bCzzTa8b28aG48VL91feqgzWhw/dEca5@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf3QZBYZycWvFnZEwQBylwKdVYDQE9LafBNfgTF/smkwoSlQYr
-	qn/cvt8G8RnS6ku6TfAvTUpPDM0bI2sI3PFX63I0BWJY/4AFaRHI
-X-Gm-Gg: ASbGnctlpyalLuKDBxWFNtIB6fcQ5y942NpN+uKPpp5HaMZBSYy1G768qPE6C0E7C1E
-	7c8CVM9HY0JyfY+KwyygqCQt7TSYqOno8c2zymWVS/zr6Wczn8dIxVsnWEQEtNt/9a4xAWoNaYW
-	AAy85L6aAh2RnFCnuinUGbXbgn4YXlv1vGrlEq5hCyy+TPAH/KK7xYNsiMINy8HkGAGGiWmbCF9
-	XlymkTS5Azp0eH3M7KE3lF3W6lH3bYMD2c9y7LsOHB3EC0/xX+zytrgsE1k0imvnDyPwvEI1myG
-	ERIw4EmapIkL3QgTX7uIFKeZ5H2anbxuceej/ZKIzvA1QdLLkYHQpFiUCABISYM=
-X-Google-Smtp-Source: AGHT+IHE/s2a7c2zWEABf/xYQWKbn3D/rSgONQX1WTfw/F/9R5F4TTHzfMd/Qz/dBw7n0HSIazvesQ==
-X-Received: by 2002:a05:6820:1e03:b0:603:f526:ce1 with SMTP id 006d021491bc7-60645673438mr1285447eaf.8.1745500499183;
-        Thu, 24 Apr 2025 06:14:59 -0700 (PDT)
-Received: from [10.54.6.12] ([89.207.171.92])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-606468a04fasm253901eaf.20.2025.04.24.06.14.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Apr 2025 06:14:58 -0700 (PDT)
-Message-ID: <1a05e32d-ec5c-4cc5-ac38-92741a4f5221@gmail.com>
-Date: Thu, 24 Apr 2025 15:14:50 +0200
+	s=arc-20240116; t=1745500524; c=relaxed/simple;
+	bh=MNVkVSCEZTSB+cgGONYkHkO3xBVyotsiAWdk0ztyIq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KjembB90BrgzIJ65P/nqoRhMwI9M5Kovq1fFbrD+SJhr+zgkRAR2lrr+I2/7kF+zXw1zQOFIyGZqrHjzunneRb+PFVHVBlRI/0RgC9z9pjW3bwlLyp+P3BDG6HPNPEj52FMU5ZJhW9uP347F9oQGOqVa79swAmR/L8EqoO+mL74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZjxDq03xJzvWrP;
+	Thu, 24 Apr 2025 21:11:07 +0800 (CST)
+Received: from kwepemh100008.china.huawei.com (unknown [7.202.181.93])
+	by mail.maildlp.com (Postfix) with ESMTPS id A71DA140154;
+	Thu, 24 Apr 2025 21:15:16 +0800 (CST)
+Received: from [10.67.121.90] (10.67.121.90) by kwepemh100008.china.huawei.com
+ (7.202.181.93) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 24 Apr
+ 2025 21:15:16 +0800
+Message-ID: <435855f8-7c92-4fc3-be07-8856772e729f@huawei.com>
+Date: Thu, 24 Apr 2025 21:15:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,79 +33,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/223] 6.12.25-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250423142617.120834124@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250423142617.120834124@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/6] cpufreq: acpi: Don't enable boost on policy exit
+To: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar
+	<viresh.kumar@linaro.org>
+CC: <linux-pm@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Nicholas Chin <nic.c3.14@gmail.com>, "Rafael J. Wysocki"
+	<rafael.j.wysocki@intel.com>, <linux-kernel@vger.kernel.org>
+References: <cover.1745315548.git.viresh.kumar@linaro.org>
+ <7ce4ffb166beef83cf1bd703a41bf91622011585.1745315548.git.viresh.kumar@linaro.org>
+ <CAJZ5v0iCrQeKs=4S-x83Fgf-W4u=2JYLA5VmgKPaLCvYAkNpig@mail.gmail.com>
+ <20250424071503.2uhc4k3jxy7x5mo2@vireshk-i7>
+ <CAJZ5v0hLBE0vLvpw6k8E7KxiUGqXbH7wEZwFhEziJNYqfxJbyA@mail.gmail.com>
+From: "zhenglifeng (A)" <zhenglifeng1@huawei.com>
+In-Reply-To: <CAJZ5v0hLBE0vLvpw6k8E7KxiUGqXbH7wEZwFhEziJNYqfxJbyA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemh100008.china.huawei.com (7.202.181.93)
 
+On 2025/4/24 19:26, Rafael J. Wysocki wrote:
 
-
-On 4/23/2025 4:41 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.25 release.
-> There are 223 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> On Thu, Apr 24, 2025 at 9:15 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>>
+>> On 23-04-25, 16:14, Rafael J. Wysocki wrote:
+>>> Even after commit 2b16c631832d, the code removed by this patch does a
+>>> useful thing.  Namely, it clears the boost-disable bit in the MSR so
+>>> that the offline CPU doesn't prevent online CPUs from getting the
+>>> boost (in case the boost settings change after it has been taken
+>>> offline).
+>>
+>> I didn't understand this part earlier (and even now). How does a CPU
+>> with boost-disabled, prevents others from boosting ? I have tried
+>> looking at git logs, and still don't understand it :(
 > 
-> Responses should be made by Fri, 25 Apr 2025 14:25:27 +0000.
-> Anything received after that time might be too late.
+> At the HW level, this is certainly possible.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.25-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> Say two (or more) cores are driven by the same VR.  Boost typically
+> (always?) requires a separate OPP with a higher voltage and this
+> applies to all cores sharing the VR, so if one of them says it doesn't
+> want that (which is what the bit in the boost-disable MSR effectively
+> means), they all won't get it.
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
+IIUC, this means that if one sets unboost to policy A, another core in
+policy B (but sharing the same VR with core in policy A) will not be able
+to achieve boost freq too. Then if policy A goes exit, the core in policy B
+will get back to boost freq (without patch 1). And then core in B will be
+unboosted again after core in A goes online/resume (because of patch 2).
+But in the entire process, the boost flag in policy B is always enabled.
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+Please tell me I misunderstood because it looks really weird.😥
+
+> 
+> They arguably should belong to the same cpufreq policy, but this
+> information is often missing from the ACPI tables, sometimes on
+> purpose (for instance, the firmware may want to be in charge of the
+> frequency coordination between the cores).
+> 
+>> Also, IIUC this and the boost-enabling at init() only happens for one
+>> CPU in a policy, as init() and exit() are only called for the first
+>> and last CPU of a policy. So if a policy has multiple CPUs, we aren't
+>> touching boost states of other CPUs at init/exit.
+> 
+> But there may be a policy per CPU.
+> 
+>> And yes, this patch isn't mandatory at all for the
+>>
+>>> Moreover, without the $subject patch, the change made by the next one
+>>> will cause the boost setting in the MSR to get back in sync with
+>>> policy->boost_enabled during online AFAICS, so why exactly is the
+>>> $subject patch needed?
+>>
+>> Right, this is merely a cleanup patch and isn't really required for
+>> the next patch to make it work.
+> 
+> So I'd rather not make this change.
+> 
+> Evidently, someone made the effort to put in a comment explaining the
+> purpose of the code in question, so it looks like they had a reason
+> for adding it.
+> 
 
