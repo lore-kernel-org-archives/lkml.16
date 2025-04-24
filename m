@@ -1,189 +1,125 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A580223DF9;
-	Thu, 24 Apr 2025 15:43:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F8B223DF9
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:43:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745509405; cv=none; b=JmQp+GxBJd8gRopnaEVR81FJbvPpTF8zedRJFWQfPbiB2agU3SZx0VHRoocAtq7TAKO/QKjC/hUt2aG/bbUGD42MMvpSAO4QTBpmdKqtNlzPaOdScd4HLaJT7q0xU+7u/y684U8NE6vSTK7dSLLT2z2UXucsusIqYzPEC+Hii3w=
+	t=1745509440; cv=none; b=q5ZjfDg/RN6JdUPfGUTzDhvO7SFKAaOn2L/rxNXzhqE39g97b4G4dyWrsrN3z5MnfM0Kh0NVWqgBhp8ZX3zbWpQJ2Oewz1msGKdpzOje6ggi7DpqGEOSXHuKuQGACQa4M891HKxjUXB+jz8tz91piT491+/CmVxV5DS2Dnvtj58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745509405; c=relaxed/simple;
-	bh=T3OMY9jrDvAQaIJkvH3xyQkyOZBkShFE0i3amndbQ0Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UqFt19EQ5Dj+xW6Qqy3HzyIVhJT+5FLe0pU5vu28MkNS60KZKZBmPwcNiZDP6C2ymHj1r1RoM4JH8WNUogBVR8RESjg7sQSKCVYAS7sVHNDA7JEQcQ0c4scVd0DMU2ACYdCpc6lV1m4/TV82SATJgpCzq2f04qqoHs7eJIFKtcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lK/QryIi; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2M6vSdvp; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745509440; c=relaxed/simple;
+	bh=PrIt9cti1YTt57yyhwhu+yoL+H0Pauq0wEpWZElruNg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=PLp9Y7dZPrut6Y0uTTCpsUEpZEpzDr5PGtAEmxlpOW7+1TTfR3cbjhNjBhbmc72xx/O7X4fhtwiVKObs8VLS63dgLRD7nzQBF13gSUspWRBAnAefFoQxzkgsOI4h8fOCly9d6BpynrstBPYHF0iGKLhnXsM1o47ByGpZfW+E22M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca; spf=none smtp.mailfrom=ndufresne.ca; dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b=t+p7faQV; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ndufresne.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ndufresne.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lK/QryIi";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2M6vSdvp"
-Date: Thu, 24 Apr 2025 17:43:19 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745509401;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nDo39tt+n8ATYguGedpesmJZxZJLtDSDAKicoCO2cI8=;
-	b=lK/QryIiV998Da/Rm919TzKOYxMOJx62tzbf+B+2e6sDZ6HfuEIr7nmMyICIJlvXLJGrSx
-	EJFEso6phLHBprXv1tluC3gRUAmPLUBwoEiSt1hYoXjVg38TTfXv9TANLhUfnZv/ISg6a1
-	Bn44d2bh/6y3Yn7pqBmkB+Ru9qpmiTtzE5h1UE8cjtRNtg63LPCOYNypxU2jIdTUxbAEG9
-	WUan0+TuDsYhyZ69GSqI3Wj4ekINOeGLpIcIiUeYKRuEO5VFVHS+iP4aediB64wTBHliqD
-	KG55Vr+C+5idEzISLVT8PzdA9d3RNjZnN3ZfcI5PWVLp9t/iVkc9RHRvMxuEtQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745509401;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=nDo39tt+n8ATYguGedpesmJZxZJLtDSDAKicoCO2cI8=;
-	b=2M6vSdvpglYLR21147amU66kDvqCzLdGxNK0wSXT0/szoFczg5Yrh111Vgpo7OOJT/82rR
-	K7u6DAGFSh65nTBw==
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-To: Jan Stancek <jstancek@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
-	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
-	linux-arch@vger.kernel.org, Nam Cao <namcao@linutronix.de>
-Subject: Re: [PATCH 08/19] vdso/gettimeofday: Prepare do_hres_timens() for
- introduction of struct vdso_clock
-Message-ID: <20250424173908-ffca1ea2-e292-4df3-9391-24bfdaab33e7@linutronix.de>
-References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
- <20250303-vdso-clock-v1-8-c1b5c69a166f@linutronix.de>
- <aApGPAoctq_eoE2g@t14ultra>
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20230601.gappssmtp.com header.i=@ndufresne-ca.20230601.gappssmtp.com header.b="t+p7faQV"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4774d68c670so19781141cf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:43:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20230601.gappssmtp.com; s=20230601; t=1745509438; x=1746114238; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PxG91MvO3mEZmIhtAaDJXqnva49Kcev69TBhblsIWrY=;
+        b=t+p7faQVjB+XtCOkcmZXBFDP3t3+pPIiPbFUCVPjTnTU8FQA8gTcLxKVD0nrwQGSp4
+         oVgM865DLG7XB4fV0U3+82gwY9p5fHIw6si6KftvrZyH2psdwC3u1a0veYN8PjobmaH1
+         BCDuJmaYrG2g8XoQ2WzyUErbJQ0aefE/Mr5xrfuKs4Kx3zcemNlYHJUglxmqrO0ZfKWY
+         lsLyyzopjF6esf5XfXLJBcwSHemXrLlXqCnciNpBivIWO770U+0sL9+9mkudfs9MdIYV
+         SQtmci8SZwjUf9rBHWPpt8voxqbhrT6//UIa5FGc4Y+i0dkGNXQZ5rfIMEaLvz0lbAgZ
+         sBCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745509438; x=1746114238;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PxG91MvO3mEZmIhtAaDJXqnva49Kcev69TBhblsIWrY=;
+        b=P633NJ4Pp2xOGPwcngtd14uWgKgcx5YYj47g1K46Raw+XoLWL6p0bk8C43jzUoHeLL
+         KBWYVFyOv4Jjt4Cc7oF/g/P4gDOGOrJLtCpqj493bkg18Dx8ga9pn2yGcdOLbGDUPHTt
+         xDLI6uK/8GE9HneaQtBuAhIph9wQMWMx2RVo5dTA7gfHRzxvPGAwQD8AHse2ygY4HuUZ
+         NEhN3TAnmCMwLpGVFW5RonB0DHnXTSr/vQqVOsBsqT605tRontT0DDQm8HsG3zkhR53s
+         doWYZwNjoaQeb0HML1LSC7OZZf8t8yeId8f0H+v0xBt89GjyIwpTcsP4DD9CHMAjfX8k
+         A5jA==
+X-Forwarded-Encrypted: i=1; AJvYcCVETKwYPpgrlWKBB7Wb+THNzoGDROMT69wlh9vXo5TRlvUuGLnUlhj7yhhtQJqFthR5dK8jFBWOwKp6XaE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJckR1qtE4RJQL6CIGdIdPaCIDgnj9jFpt+f0nvIW6lk/pMopc
+	WXwmwN932enpiUqBRCZXPOyUIQGZx90nX52DLLvRb9a61AUrj3KKWP2fYWf4tQ0=
+X-Gm-Gg: ASbGncsNnBKDdiLI8EuNbU/lvDaNxHJDT3HjuFfO/fVmq+YnLFM5H0fS133XidfrSfX
+	slvg6U+hOpwSdEUxw1v80pnI/NegfkzspCu8BPbI5IdEjpzctJO9wLXVlUuyHrPkV6YZ2R7YO2m
+	02izRIoKeAjjw4UY8VEjW2C6kAmAnNXrzf9vOKhESNiwX6l6qrqW/DCSNbqqt2x9Slc2kdixfwY
+	XhtJCVOluSgYx8G4tQveZxP8r37xtq4BCEoXO6mnvVDJzUguybYufzw7vCMlukfqXYFvsjUzVM8
+	SmX9Fwq8LTflefwF4gBah+snB9/0AoMlXzN40fnKIQyZmw==
+X-Google-Smtp-Source: AGHT+IGA+IIOug/obYsp2byfQYiQAcdnJn27C+FPUJJIN+Z+DBmj+uagyzwdTCFBqechz7yf+kP/FA==
+X-Received: by 2002:a05:622a:153:b0:476:b7cf:4d42 with SMTP id d75a77b69052e-47fba39b562mr2788641cf.27.1745509437827;
+        Thu, 24 Apr 2025 08:43:57 -0700 (PDT)
+Received: from ?IPv6:2606:6d00:15:9913::5ac? ([2606:6d00:15:9913::5ac])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9eaf2086sm12964521cf.8.2025.04.24.08.43.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 08:43:57 -0700 (PDT)
+Message-ID: <6148110c513d2177d886469c2276c6810eb93c34.camel@ndufresne.ca>
+Subject: Re: [PATCH v2 1/8] media: v4l2-common: Add YUV24 format info
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+To: Nas Chung <nas.chung@chipsnmedia.com>, mchehab@kernel.org, 
+	hverkuil@xs4all.nl, sebastian.fricke@collabora.com, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-imx@nxp.com, marex@denx.de, 
+	jackson.lee@chipsnmedia.com, lafley.kim@chipsnmedia.com
+Date: Thu, 24 Apr 2025 11:43:56 -0400
+In-Reply-To: <20250422093119.595-2-nas.chung@chipsnmedia.com>
+References: <20250422093119.595-1-nas.chung@chipsnmedia.com>
+	 <20250422093119.595-2-nas.chung@chipsnmedia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aApGPAoctq_eoE2g@t14ultra>
 
-On Thu, Apr 24, 2025 at 04:10:04PM +0200, Jan Stancek wrote:
-> On Mon, Mar 03, 2025 at 12:11:10PM +0100, Thomas Weiﬂschuh wrote:
-> > From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> > 
-> > To support multiple PTP clocks, the VDSO data structure needs to be
-> > reworked. All clock specific data will end up in struct vdso_clock and in
-> > struct vdso_time_data there will be array of it. By now, vdso_clock is
-> > simply a define which maps vdso_clock to vdso_time_data.
-> > 
-> > Prepare for the rework of these structures by adding struct vdso_clock
-> > pointer argument to do_hres_timens(), and replace the struct vdso_time_data
-> > pointer with the new pointer arugment whenever applicable.
-> > 
-> > No functional change.
-> > 
-> > Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> > Signed-off-by: Nam Cao <namcao@linutronix.de>
-> > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
-> > ---
-> > lib/vdso/gettimeofday.c | 35 ++++++++++++++++++-----------------
-> > 1 file changed, 18 insertions(+), 17 deletions(-)
-> > 
-> 
-> starting with this patch, I'm seeing user-space crashes when using clock_gettime():
->   BAD  -> 83a2a6b8cfc5 vdso/gettimeofday: Prepare do_hres_timens() for introduction of struct vdso_clock
->   GOOD -> 64c3613ce31a vdso/gettimeofday: Prepare do_hres() for introduction of struct vdso_clock
-> 
-> It appears to be unique to aarch64 with 64k pages, and can be reproduced with
-> LTP clock_gettime03 [1]:
->   command: clock_gettime03   tst_kconfig.c:88: TINFO: Parsing kernel config '/lib/modules/6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k/build/.config'
->   tst_test.c:1903: TINFO: LTP version: 20250130-231-gd02c2aea3
->   tst_test.c:1907: TINFO: Tested kernel: 6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k #1 SMP PREEMPT_DYNAMIC Wed Apr 23 23:23:54 UTC 2025 aarch64
->   tst_kconfig.c:88: TINFO: Parsing kernel config '/lib/modules/6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k/build/.config'
->   tst_test.c:1720: TINFO: Overall timeout per run is 0h 05m 24s
->   clock_gettime03.c:121: TINFO: Testing variant: vDSO or syscall with libc spec
->   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct 10000ms
->   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct 0ms
->   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct 10000ms
->   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0ms
->   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct -10000ms
->   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct 0ms
->   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct -10000ms
->   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0ms
->   tst_test.c:438: TBROK: Child (233649) killed by signal SIGSEGV
-> 
-> or with:
-> --------------------- 8< ----------------------
-> #define _GNU_SOURCE
-> #include <sched.h>
-> #include <time.h>
-> #include <unistd.h>                                                                                                                                                                                                                          #include <sys/wait.h>
-> 
-> int main(void)
-> {
->         struct timespec tp;
->         pid_t child;
->         int status;
-> 
->         unshare(CLONE_NEWTIME);
-> 
->         child = fork();
->         if (child == 0) {
->                 clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
->         }
-> 
->         wait(&status);
->         return status;
-> }
-> 
-> # ./a.out ; echo $?
-> 139
-> --------------------- >8 ----------------------
-> 
-> RPMs and configs can be found at Fedora koji, latest build is at [2] (look for kernel-64k).
+Hi,
 
-Hi Jan,
+Le mardi 22 avril 2025 =C3=A0 18:31 +0900, Nas Chung a =C3=A9crit=C2=A0:
+> The YUV24 format is missing an entry in the v4l2_format_info().
+> The YUV24 format is the packed YUV 4:4:4 formats with 8 bits
+> per component.
+>=20
+> Fixes: 0376a51fbe5e ("media: v4l: Add packed YUV444 24bpp pixel format")
+> Signed-off-by: Nas Chung <nas.chung@chipsnmedia.com>
 
-Thanks for the great error report.
+Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 
-Can you try the following change (on top of v6.15-rc1, should also work with current master)?
-
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 93ef801a97ef..867ce53cca94 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -85,14 +85,18 @@ static __always_inline
- int do_hres_timens(const struct vdso_time_data *vdns, const struct vdso_clock *vcns,
- 		   clockid_t clk, struct __kernel_timespec *ts)
- {
--	const struct vdso_time_data *vd = __arch_get_vdso_u_timens_data(vdns);
- 	const struct timens_offset *offs = &vcns->offset[clk];
--	const struct vdso_clock *vc = vd->clock_data;
-+	const struct vdso_time_data *vd;
-+	const struct vdso_clock *vc;
- 	const struct vdso_timestamp *vdso_ts;
- 	u64 cycles, ns;
- 	u32 seq;
- 	s64 sec;
- 
-+	vd = vdns - (clk == CLOCK_MONOTONIC_RAW ? CS_RAW : CS_HRES_COARSE);
-+	vd = __arch_get_vdso_u_timens_data(vd);
-+	vc = vd->clock_data;
-+
- 	if (clk != CLOCK_MONOTONIC_RAW)
- 		vc = &vc[CS_HRES_COARSE];
- 	else
-
-
-I'll do some proper testing tomorrow.
-
-
-Thomas
-
-> [1] https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/syscalls/clock_gettime/clock_gettime03.c
-> [2] https://koji.fedoraproject.org/koji/buildinfo?buildID=2704401
+> ---
+> =C2=A0drivers/media/v4l2-core/v4l2-common.c | 1 +
+> =C2=A01 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-c=
+ore/v4l2-common.c
+> index 0a2f4f0d0a07..de3636f1cdf1 100644
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -269,6 +269,7 @@ const struct v4l2_format_info *v4l2_format_info(u32 f=
+ormat)
+> =C2=A0		{ .format =3D V4L2_PIX_FMT_Y212,=C2=A0=C2=A0=C2=A0 .pixel_enc =3D=
+ V4L2_PIXEL_ENC_YUV, .mem_planes =3D 1, .comp_planes =3D 1, .bpp =3D { 4, 0=
+, 0, 0 }, .bpp_div =3D { 1, 1, 1, 1 }, .hdiv =3D 2, .vdiv =3D 1 },
+> =C2=A0		{ .format =3D V4L2_PIX_FMT_Y216,=C2=A0=C2=A0=C2=A0 .pixel_enc =3D=
+ V4L2_PIXEL_ENC_YUV, .mem_planes =3D 1, .comp_planes =3D 1, .bpp =3D { 4, 0=
+, 0, 0 }, .bpp_div =3D { 1, 1, 1, 1 }, .hdiv =3D 2, .vdiv =3D 1 },
+> =C2=A0		{ .format =3D V4L2_PIX_FMT_YUV48_12, .pixel_enc =3D V4L2_PIXEL_EN=
+C_YUV, .mem_planes =3D 1, .comp_planes =3D 1, .bpp =3D { 6, 0, 0, 0 }, .bpp=
+_div =3D { 1, 1, 1, 1 }, .hdiv =3D 1, .vdiv =3D 1 },
+> +		{ .format =3D V4L2_PIX_FMT_YUV24,=C2=A0=C2=A0 .pixel_enc =3D V4L2_PIXE=
+L_ENC_YUV, .mem_planes =3D 1, .comp_planes =3D 1, .bpp =3D { 3, 0, 0, 0 }, =
+.bpp_div =3D { 1, 1, 1, 1 }, .hdiv =3D 1, .vdiv =3D 1 },
+> =C2=A0		{ .format =3D V4L2_PIX_FMT_MT2110T, .pixel_enc =3D V4L2_PIXEL_ENC=
+_YUV, .mem_planes =3D 2, .comp_planes =3D 2, .bpp =3D { 5, 10, 0, 0 }, .bpp=
+_div =3D { 4, 4, 1, 1 }, .hdiv =3D 2, .vdiv =3D 2,
+> =C2=A0		=C2=A0 .block_w =3D { 16, 8, 0, 0 }, .block_h =3D { 32, 16, 0, 0 =
+}},
+> =C2=A0		{ .format =3D V4L2_PIX_FMT_MT2110R, .pixel_enc =3D V4L2_PIXEL_ENC=
+_YUV, .mem_planes =3D 2, .comp_planes =3D 2, .bpp =3D { 5, 10, 0, 0 }, .bpp=
+_div =3D { 4, 4, 1, 1 }, .hdiv =3D 2, .vdiv =3D 2,
