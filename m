@@ -1,94 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C421EB5D4
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C394421FF44
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:07:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745489248; cv=none; b=mJnS8+/UqZxlYjYux3ZB7Pk3oOEDjcm1reUJgE8gXfshLtKJC3dA3yF6XOCyqvZp79FDPvFQ/xrrxP6VKVUlteDmqQa+Yv+El/G8TEmP9VFRx3tWTt5UbegkP8nSWHN1TqTLq5MCss6UqH6OhprND2UJaL2M9QYQJRteaBOM4Cg=
+	t=1745489273; cv=none; b=JcedGBVVfQiGFhnhEp4m1KtoCk5fFc1PryQLuza2DwhVrmY1Y6YZKpZwos6lt3TbfloJRPsOphVKGzkODkc8nW2XHiGra98bGVe2Mpip91Pk3AeXZZBKW5IrLymrEHT0W7wCTvY9lpDCcgJ6sFfc9NrqBE4gNLZ/0TTMV/8HJJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745489248; c=relaxed/simple;
-	bh=yyLeyUNGU3/8laij0GGzuu+0DqJYDKth3Y/kTZOEoas=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g+E7VCIvWNE6f/YHXkv3ThoHidfU5vV/kaZO542UaV/Ozl9Q6Fbh7aJTzKXHBMgmtOmuPc/81KQii31j4J5hD2SpoCOWvHB0hAQ+rvC1It9DuYWW+AJ8wSRF9m6b0gWo3Mcm0L4MEB3sdN4UZFotp5gFuBX3gNn6G236iUB1Cok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpTRX8fe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745489273; c=relaxed/simple;
+	bh=qceSy5hmLa/hFRUfKhQk/prU9fcYlktOzA420wPj8Uc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GC4cdY2osEqzCi3KqldD/AE2eA7eEXkFzWSmnnk7d7pPM/JWHUNUEKWF00eTepIiGfLjKorQ2iJkU6xOzKbzpJHYdVYDq5JNhh0kEKvXIyu56cj/FiMgFP4Z+HpOQ/BVAa0aLxk86akVEVRBWd+aNMBJLcp3dmz0LmlkcTY3sCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BcKhbaev; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpTRX8fe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0D91C4CEE3;
-	Thu, 24 Apr 2025 10:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745489248;
-	bh=yyLeyUNGU3/8laij0GGzuu+0DqJYDKth3Y/kTZOEoas=;
-	h=From:To:Cc:Subject:Date:From;
-	b=kpTRX8fem3VQJrSxMeffzEim00JBHw8UJs77oRTkMGX/99bxinghB8PPJqlnkvzlZ
-	 4Wz6TpqeAwdBvqjjLexDvTfm69hgSf7KqJimkMSysEuaccvDgg/XStYmcah4EJ47SY
-	 yLeGAllRpteDUMecFlfeLuucELmDdN0PiVhDoxEJs+SdoLM58p91+/g2IgN+NRGk6u
-	 rQhVn8oMT2nul0bf7fs3yJOm8dze4PwStB1ARF07XctJ0quvyFVVtNZl+pWy1Wn7q6
-	 m734bm/orBcbfJT0rhUh2tcce1V3e/1nZJ5MjAVVL3+oIC2HW6JYRegUPkXkcV/7BB
-	 91vVPS8yT69+Q==
-From: Philipp Stanner <phasta@kernel.org>
-To: Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Philipp Stanner <phasta@kernel.org>
-Subject: [PATCH v2] drm/nouveau: Remove surplus accel_done
-Date: Thu, 24 Apr 2025 12:07:19 +0200
-Message-ID: <20250424100718.27651-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BcKhbaev"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5f4aee67d24so90410a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745489270; x=1746094070; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zi5+9wwSGNxwIY+5Uc5lT+h4faQt9l/26HLQUV9AlUM=;
+        b=BcKhbaev5FtRcf9ugsn9VnujpHRqLooBOHdhgrOor2yPfzjSYGuTtX62A8qa/3jaF+
+         9Idc+HtYZXLDDposmv5kaXD39a0dRWIBItuj8YJo8spADB9Eqi3QFcsdg8KLcuAPqRnr
+         Jfq1xxNf+SHf/QL4tgMcQDyV6yBovRuY8X5DP1z9rpkwauto4FX+OaicJtszYTmxM8ep
+         x00tfsfDGu6HzUTyjUBpO7N1UYRE9/TLEzDcaAWxEW8UvlILc9Az0t18zrjBX8AYJMZp
+         PYxTagHp8hVMk+bRa4p1hUP1Oh8yHnsKMThtxPYRvqfDS/DZw0oXXlklLx22Z8fbCV6T
+         kevA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745489270; x=1746094070;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zi5+9wwSGNxwIY+5Uc5lT+h4faQt9l/26HLQUV9AlUM=;
+        b=oxkEqIhSGDkfBOejkrcPTwhlkijVbrO1LwgdMOUxjAwoUpVlA2OHRDSRhm+zG1DA6x
+         B3bn6dlVO8OfeYkT2zlsdTtO4ETxYIhAW4ln25Z7JD2w7YwsVV+JR56/74LnFOW3C3Wy
+         En5yAicYlBJKfFh8UGi7Tyhzr6rq8AJifIdn3pR5wpbauQuWQqxSwUTNAPoCwZhpkOFV
+         /jmPHveMC71w9DyyAZXrQgmkFBNgm5QbpJgBo5LdUZ7A409Ri0osXEZG5lTwIVoLjnxh
+         mE0SM7NVFa01UrKjXYbEChOlEtjxIWBfSExR5qJMm5Br2Ci10jQ6YQxOY5MJVj+mO7xU
+         itCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXYUrSVmk5/A9NJhJQPUMGbTI2rIpGA0DYXnPeVWG3dAth44AiYRWGY7H4lUfVLGpWmVgtxTQ28SfQiSbg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzih8HP4DmKfgBdQehJvXGPMaQECwXEU/4gpG0I0aCl5COIkPT3
+	mDmFdzG9dxmfvFFrhYROVssTqAK7EFc7AuAdRMipB8OVgmyjQ57hbkue3qaujqM=
+X-Gm-Gg: ASbGncuOt5jbFWeYxi3Gjg8paiiG8fT/p9Mhwduun8MoQUgq7eTQ8XEB8gYIYYFSBpU
+	06oGAYg61ZJNZOK84g9vglE5GMX9YQ3YWCR63/GigzZn1smUeEpCJRv36Lwwhfg53eyChBFMsQh
+	tu9vyIE5sN8erhYdlB7fQVJc/PbagNS39I5hRK+n8S7/tjrfyiU/Y4LujgkoBunam7RQgBZ70PG
+	C99kblxaFN4oewRrkER0YNB6eVkppc+XM44+gVmRAaawP8DPnABxX4YIiQ1A+oX1aXv1Ct6h4ka
+	SvU6u7QxW6aqXiH7H/ZKeSsWJgKEvI52HeWe81vg1UdGozeqj+KjRaLbQCH2mihERQMI8Q==
+X-Google-Smtp-Source: AGHT+IEP7t1FvQx4F+O6KQ/WXWxyD6s+fSt4oVkVTE6GiGr0seR86AplpqbJ3BP0je5FP4UsutB6bw==
+X-Received: by 2002:a17:906:c110:b0:ac7:3911:250f with SMTP id a640c23a62f3a-ace57537e8dmr63626366b.14.1745489270099;
+        Thu, 24 Apr 2025 03:07:50 -0700 (PDT)
+Received: from [192.168.1.29] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace59bbe0efsm82887266b.115.2025.04.24.03.07.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 03:07:49 -0700 (PDT)
+Message-ID: <0ab31397-580f-4e5a-b9ad-d9bf79d29106@linaro.org>
+Date: Thu, 24 Apr 2025 12:07:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/5] dt-bindings: media: Add qcom,x1e80100-camss
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Robert Foss <rfoss@kernel.org>,
+ Todor Tomov <todor.too@gmail.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org,
+ Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>
+References: <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-0-edcb2cfc3122@linaro.org>
+ <20250314-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v6-2-edcb2cfc3122@linaro.org>
+ <3ec3fd62-bf21-47e7-873c-ce151589d743@linaro.org>
+ <54eeb470-cd90-4bc2-b415-6dea1ce2321d@linaro.org>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <54eeb470-cd90-4bc2-b415-6dea1ce2321d@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-commit ebb945a94bba ("drm/nouveau: port all engines to new engine module
-format") introduced a TODO to nouveau_chan.h, stating that an
-unspecified rework would take place in the "near future".
+On 24/04/2025 11:34, Bryan O'Donoghue wrote:
+> On 24/04/2025 07:40, Krzysztof Kozlowski wrote:
+>>> +  vdd-csiphy-0p8-supply:
+>> Same comment as other series on the lists - this is wrong name. There
+>> are no pins named like this and all existing bindings use different name.
+> 
+> The existing bindings are unfortunately not granular enough.
+> 
+> I'll post s series to capture pin-names per the SoC pinout shortly.
+How are the pins/supplies actually called?
 
-This seems to mean the variable 'accel_done' below which is never read
-and, therefore, must be a relict forgotten in a previous cleanup.
-
-Remove the TODO and accel_done.
-
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
-Changes in v2:
-  - Remove accel_done, too. (Danilo)
----
- drivers/gpu/drm/nouveau/nouveau_chan.h | 2 --
- drivers/gpu/drm/nouveau/nouveau_dma.h  | 1 -
- 2 files changed, 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_chan.h b/drivers/gpu/drm/nouveau/nouveau_chan.h
-index 016f668c0bc1..7133e4a03504 100644
---- a/drivers/gpu/drm/nouveau/nouveau_chan.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_chan.h
-@@ -33,8 +33,6 @@ struct nouveau_channel {
- 		u64 addr;
- 	} push;
- 
--	/* TODO: this will be reworked in the near future */
--	bool accel_done;
- 	void *fence;
- 	struct {
- 		int max;
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dma.h b/drivers/gpu/drm/nouveau/nouveau_dma.h
-index c52cda82353e..790045ff5fff 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dma.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_dma.h
-@@ -92,7 +92,6 @@ FIRE_RING(struct nouveau_channel *chan)
- {
- 	if (chan->dma.cur == chan->dma.put)
- 		return;
--	chan->accel_done = true;
- 
- 	if (chan->dma.ib_max) {
- 		nv50_dma_push(chan, chan->push.addr + (chan->dma.put << 2),
--- 
-2.48.1
-
+Best regards,
+Krzysztof
