@@ -1,176 +1,86 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75B46F510
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:59:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE821FC0FA;
+	Thu, 24 Apr 2025 09:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745488781; cv=none; b=auwugS5kyHzmyDMjdw4aOim3OgA4g5k3Zasfa/gZR5HJAzIGpyRhkCBGLT2W1yA2cakZgwUzJWKT+sKdLVceURcz1f5E05HviQjCqyxLYb27En942dqfoNDBPsW/moP5zBY5iZ7ZXReOYSxf76ta20Y43c5v7jo6zUeZae+9gHU=
+	t=1745488793; cv=none; b=Kf/k+rhHCp0XNWlld0LET7KgUfJs67vNleDeoUiS5eAlq59GB/sHLwwmH78k3PbHtFxrbK4+A3NrTu5RuggC95cenzsDMcRlY9RWztLNGM0ftaix5q8d0unN+qoXzNvHSgiULzhFZTDrDWZBpfD+aHPeQDinnZRPllflb7lstBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745488781; c=relaxed/simple;
-	bh=DsHDOHAiyweGE3xuJo6sPKz7K38kwOQr+Pj0SGAOu6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M8f4x6j4sh+qH3kZsD/E7RTlrKSMlgzO9EyyAh86W1nwd+Btk1WQjN30lKIQpMpAMkgYHPDag9qJko33qdmmy78VkEhuLUMmyHkBwoEXG9sYByPxPVZ328dv/gZn7mvYBj8LH58ftAcqvJ4Kt6TbfXOjLw0TlzSLC+7dvTx1ZvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=NS5lSPsV; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1745488793; c=relaxed/simple;
+	bh=0tvvSnk8ULXJWC8UVXdj328qfDMVzDjjl0icK/+r8Pg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=MBhGKfKan20f72tEUFreK11hX0PjyTD8gx0RJO/mNZmLRTp9j82+Zo0wHj3jhMo3Vt4KALrjqSx1lu+wOicenP1TIk37U9wJ4le7Nc+r/bE6SY9J0Jl/XIBR4ICniZyP5t8LcICre79jw4Y5vx2GAx3gqi44pr2P9IGuzi1ER+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1zDvKUJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="NS5lSPsV"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5eb92df4fcbso1477292a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1745488778; x=1746093578; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oFqdPI0c6cw77F7CtZwPzPYgrloBfIhlMVBW0aHPkRc=;
-        b=NS5lSPsVennaxXxgZfWkyju1lohanR8ODKlwgq+sr3mRlCB3O0/EaFDwruodnIk0ie
-         vI1Z5qZfpvy8XriyzlKaGlYff72O5HjjRBH8KuxbA1nJ40Hmtw+yQc8UNsjDV7d074xA
-         DZ7n7DCuf2kLGI1aEY8/DQVl73F8WE0R0J8Wp5MKrkp9cOrOu57I6OMiMJvOHSECnAD4
-         dH0Zn/JRfBCXZLA2HxVmAlehAriXvmgj8lNEom2jGKiHzJPHoshERW7Hx2tPVD2M+ai+
-         HepQs430mM+nDHlmBemsQnyUp8I8a9YNVGDXKUfWnJZ24SAg6OFL7xsKF56zmxqEkJX7
-         ucKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745488778; x=1746093578;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oFqdPI0c6cw77F7CtZwPzPYgrloBfIhlMVBW0aHPkRc=;
-        b=DKFCZm7JXM1NMaVzpcZw66MY0s4LVSyuIMlznu26/1bhquR730p96b6/J0IQHVWW9w
-         3kdfkS27IdAqkVRDHhMzhsxC5CPcW++Uv2htUCjxwCNOz7rXNbfAOHMy8647U/OcOqFe
-         SUJxifnUDQlhBbkRj4nNlHkrm06O2JcRXsh0gtHACCcNi4MLtJB6WJkkwoYLZYaDjMC7
-         0AyEEpzwKxPki/7bHh9bxy779uPEJblfF7878AS+K+h/N+O9Sajh9fIqOXgEsVJS9lop
-         Go5gekyhNsDqvCtZQncAHAerfPhOgrLcEbggC+r3CMlmL7oWs9TNi4eWZxlRmsEDw6XK
-         0aDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWSokVEdh+CWpVs0e1L+SOzexP2YEXDp2F49nCD+DQUiZw+ibbQirKeJLhOIzZmDOrGgrXo84ZPVolk47U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyU3dKanFplrbdGEB/Jt2qw/lGlZdegA/uDUdZthpHw4O4rZtpv
-	ss9R0qv+1irZHbsafwS+7RuyK9aJnHVhi4ie1IWVSf22C/LUtziFiExg/XnWpCw=
-X-Gm-Gg: ASbGncvgP7Oulrppa4d/cqpdvHjRH/twzUAKgxrh4CB+IghC9dYtZDvQbSeYnScwGvu
-	pH+cS6sc0ylFv7eVLHOw7ENMT1Lf3Jx2HpRpVIzJaxe/2cFw++uuzD2hZieYWsLexlK+7Z1IbMx
-	aToi8FNjH+SpocyNXg6zmsIr6tpvro3rWjO6+ZnVftGT/pXakqshrQqfnGpp3jeWMa5GYQiPeER
-	cmKKCYxP74looC/V2aODhBZ4bk1vb1zAj3mEBU77NHfyRX3OyBfL27I7KOIK61OTk2gjHHK1BAF
-	M+byjynIbK+saKar3ZyuiUp+3t1pdd/t4HTeLBuv4wRGToETy1oPLw==
-X-Google-Smtp-Source: AGHT+IFlfureBgxWcdI92vxd5ZQQxmkpTShw2FAfhABanJ/v1G26JEAvpTJM8UL5S48yrJUiOSoSrA==
-X-Received: by 2002:a05:6402:90b:b0:5f6:4a5b:9305 with SMTP id 4fb4d7f45d1cf-5f6df53e64emr1890257a12.33.1745488777705;
-        Thu, 24 Apr 2025 02:59:37 -0700 (PDT)
-Received: from localhost (109-81-85-148.rct.o2.cz. [109.81.85.148])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-5f6ebbfa7c2sm891711a12.43.2025.04.24.02.59.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 02:59:37 -0700 (PDT)
-Date: Thu, 24 Apr 2025 11:59:35 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	linux-cve-announce@vger.kernel.org
-Subject: Re: CVE-2024-56705: media: atomisp: Add check for rgby_data memory
- allocation failure
-Message-ID: <aAoLh_l-cEI4fDTa@tiehlicka>
-References: <2024122837-CVE-2024-56705-049b@gregkh>
- <aAicoAmxX0B_O3Ok@tiehlicka>
- <2025042301-flammable-masculine-ec48@gregkh>
- <aAiwaM5ru-FJG2fI@tiehlicka>
- <2025042329-mystify-dramatic-dcb9@gregkh>
- <aAjOK_f-GPFHIdWK@tiehlicka>
- <2025042355-hypnotize-relight-789f@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1zDvKUJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 926ADC4CEE3;
+	Thu, 24 Apr 2025 09:59:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745488792;
+	bh=0tvvSnk8ULXJWC8UVXdj328qfDMVzDjjl0icK/+r8Pg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=h1zDvKUJt1IfwS1/Fel+frXyQnAD1Gj5eHUh89C36XTplozRDivahhNeTqKdzqEPa
+	 ZSjVpW6cWkBwey63ozOw7bxm/Ym/CcE0GOkIyEX4q7d/0wYugu3WDN1uu0+2hXoxN+
+	 M99VZ5T2p2OAJp1oscN7ckbOZTB2TY/HcQByBv/zICFNxwPKv+kk0EooORq3+jmRdZ
+	 H7e7R53US23RIlqOTCpV5xV8MOYhRTvgzVTnNPDOULdZ6BzYEaUQPlrNPv2xxyF5dT
+	 TPzn3rlGq/wKOurcyXUweMyCbHcoMvLrqSw9sZxP0WiFtdSnb5jczuAZ7dyJD9Hrhk
+	 n1fNf1vds2BYw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70EC5380CFD9;
+	Thu, 24 Apr 2025 10:00:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025042355-hypnotize-relight-789f@gregkh>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 0/2] net: stmmac: fix timestamp snapshots on
+ dwmac1000
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174548883125.3289294.6660302727268151005.git-patchwork-notify@kernel.org>
+Date: Thu, 24 Apr 2025 10:00:31 +0000
+References: <20250423-stmmac_ts-v2-0-e2cf2bbd61b1@bootlin.com>
+In-Reply-To: <20250423-stmmac_ts-v2-0-e2cf2bbd61b1@bootlin.com>
+To: =?utf-8?q?Alexis_Lothor=C3=A9_=3Calexis=2Elothore=40bootlin=2Ecom=3E?=@aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com,
+ alexandre.torgue@foss.st.com, richardcochran@gmail.com,
+ daniel.machon@microchip.com, maxime.chevallier@bootlin.com,
+ thomas.petazzoni@bootlin.com, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux@armlinux.org.uk
 
-On Wed 23-04-25 16:50:48, Greg KH wrote:
-> On Wed, Apr 23, 2025 at 01:25:31PM +0200, Michal Hocko wrote:
-> > On Wed 23-04-25 12:20:47, Greg KH wrote:
-[...]
-> > > 	In ia_css_3a_statistics_allocate(), there is no check on the allocation
-> > > 	result of the rgby_data memory. If rgby_data is not successfully
-> > > 	allocated, it may trigger the assert(host_stats->rgby_data) assertion in
-> > > 	ia_css_s3a_hmem_decode(). Adding a check to fix this potential issue.
-> > 
-> > I do understand this statement.
+Hello:
+
+This series was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Wed, 23 Apr 2025 09:12:08 +0200 you wrote:
+> Hello,
 > 
-> That is the commit information, and as such we deemed it a
-> vulnerability.
+> this is the v2 of a small series containing two small fixes for the
+> timestamp snapshot feature on stmmac, especially on dwmac1000 version.
+> Those issues have been detected on a socfpga (Cyclone V) platform. They
+> kind of follow the big rework sent by Maxime at the end of last year to
+> properly split this feature support between different versions of the
+> DWMAC IP.
 > 
-> > 
-> > > That has not changed here at all.  It's just that the ranges of git
-> > > versions for when Linux was vulnerable to this issue has been "tightened
-> > > up" to only reflect when it was possible for this to be a problem (i.e.
-> > > we now do not count the range of releases where the driver was not
-> > > present at all in the kernel tree.)
-> > 
-> > But I fail to follow this. The commit itself says Fixes: a49d25364dfb
-> > ("staging/atomisp: Add support for the Intel IPU v2") which makes it
-> > clear since when the issue has been introduced. If this tag was not
-> > present then there is CVE-$FOO.vulnerable which can specify the same
-> > thing. I do not understand how 51b8dc5163d2 is related as it has a
-> > different implementation of ia_css_3a_statistics_allocate that doesn't
-> > have any unchecked kernel allocations AFAICS.
-> 
-> Ah, ok, that changes things.  The person who said that we should count
-> the previous version of the driver said it was vulnerable at that point
-> when it was in the kernel tree.  If this isn't the case, we will be glad
-> to change this CVE to reflect that.
+> [...]
 
-OK, so I have dived into this deeper just to be sure 
-	- fix ed61c5913950 merged v6.13-rc1
-	- breaker: the commit says Fixes: a49d25364dfb merged v4.12-rc1 which
-	  indeed adds  ia_css_3a_statistics_allocate and uses it in atomisp_alloc_3a_output_buf
-	- now we have 51b8dc5163d2 ("media: staging: atomisp: Remove driver")
-	  merged 4.18 mentioned in .sha1 file which drops the whole
-	  driver. The driver was later reintroduced by ad85094b293e in v5.8-rc1
-	- that being said the kernel has been vulnerable since 4.12
-	  until 4.18 and 5.8 until 6.13. There is a gap when the code
-	  was not there and the kernel was therefore not affected. 
-All that being said I do understand the second entry now but considering
-the first entry and its Fixes tag I believe the second entry is simply
-redundant.
+Here is the summary with links:
+  - [net,v2,1/2] net: stmmac: fix dwmac1000 ptp timestamp status offset
+    https://git.kernel.org/netdev/net/c/73fa4597bdc0
+  - [net,v2,2/2] net: stmmac: fix multiplication overflow when reading timestamp
+    https://git.kernel.org/netdev/net/c/7b7491372f8e
 
-CVE-2024-53204, CVE-2024-53205 are the same situation.
-
-CVE-2025-40364 is different. Both of the sha1 entries are stable
-specific commits (same change) with a references to Fixes: c7fb19428d67d
-merged in v5.19-rc1. This one has a follow up fix merged in fc9375e3f763
-v5.19-rc3. 
-So this CVE seems like stable specific (probably a misbackport?) or is this
-a mistake?
-
-> > > > > > 2) What is the process when a CVE is altered? have I missed any email
-> > > > > >    notification?
-> > > > > 
-> > > > > We do not do email notifications when CVEs are altered.  You have to
-> > > > > watch the cve.org json feed for that.  Otherwise the email list would
-> > > > > just be too confusing.  Think about every new stable update that happens
-> > > > > which causes 10+ different CVEs to be updated showing where they are now
-> > > > > resolved.  That does not come across well in an email feed, but the json
-> > > > > feed shows it exactly.
-> > > > 
-> > > > I do understand you do not want to send notifications for that. Would it
-> > > > make sense to announce a new upstream commit added to the CVE, though? This
-> > > > would make it much easier to see that we might be missing a fix that is
-> > > > considered related to a particular CVE.
-> > > 
-> > > As this has only happened 2 times so far, it's a pretty rare occurance
-> > > given us allocating over 6000 CVEs.  And how exactly would that email
-> > > look like?
-> > 
-> > We have identified that CVE-$FOO fix has been incomplete so far and
-> > extended list of fixes required for this CVE. Please make sure that
-> > those are appplied.
-> > 
-> > Or something in those lines.
-> 
-> Again, that would happen every stable release, and every -rc release,
-> could you really keep up with such an email flow in a way that wouldn't
-> just mirror watching the json feed instead?
-
-AFAICS there usually are no updates to CVE-$FOO.sha1 file and that is what
-really matters to us to identify all the commits that are associated
-with the specific CVE.
-
+You are awesome, thank you!
 -- 
-Michal Hocko
-SUSE Labs
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
