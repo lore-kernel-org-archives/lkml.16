@@ -1,540 +1,246 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2088.outbound.protection.outlook.com [40.107.243.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA862853F3;
-	Thu, 24 Apr 2025 19:36:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745523405; cv=none; b=eXqtEkewGtZTvRhLVXFoCSH99XIQLWBkggJNXHTHG3N2O1z/UYge3FsETc5PfK/kIhjawTxAUlClrhvDE8Dx9Xf/x4znZ0rxA7XavZ/40Pacca2v4Fdrk43KlJQz/EZea5M61Ao/oHZhfNsxLi/sduLpqLhKnVUgkeRzozoK5rs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745523405; c=relaxed/simple;
-	bh=eXnj+KAXnFSZnb5V3g6/iPdGT5cf4dZCvLTmLpj+qAI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gc2Lz6u5A0aCg8KrSHLH7g0yYg5+rGAl/D3RPat6xDjBYLRdiTrmuH8pFxlN9HNmwP3c6tDxZPzlm3tQlepEJKU3Ww7DP8y+3/a6eoepsBoDVh+B5/xncHamduUj2bpSNnELyTRAwAdVDoOtj6dm9l9MYhyUkd8s1MWrsfByLg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=vxY1Rxo7; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D692820A3
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 19:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745523526; cv=fail; b=GveSZvVT/88Nnixgk0FuLb0kJjy+wb+iCAUdO0J4wTkXaLn9wSbrEei0NLvpYPgncf4f4k/x8qod2fboru+h6jNqcJZy2oLOwNNc8w9RSVmMxuTH6jLdvFjpdlwWWY+uDGsws0wuse7WCmF8zPFjrOMJwDglO2NTsj6iyXaT1R0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745523526; c=relaxed/simple;
+	bh=Mdxi4llgSVVCk2AD9eI2Iy3Hj2o9rWT0Se4Mc6JoDgo=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:To:From:References:
+	 In-Reply-To:MIME-Version; b=PJNSowOZxaD2OWNcrbrqqqvAQFMG3y1ggw8Oz0BNcNQ/eO7IYhcccQiwWjNI/Nv6eN/7IJtT17cGpaC0mJ5Dx9xOPzYngLyo2yu6/oj0jyyZRMPWI3GvGhYFidMSbeS67oS+p6vqk4JhSYJLZSu7RpmdBAHrqlJ1P/UK1At9TIs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=E7FG5ZXl; arc=fail smtp.client-ip=40.107.243.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="vxY1Rxo7"
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id BDE55662FA9;
-	Thu, 24 Apr 2025 21:36:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1745523400;
-	bh=eXnj+KAXnFSZnb5V3g6/iPdGT5cf4dZCvLTmLpj+qAI=;
-	h=From:Subject:Date;
-	b=vxY1Rxo7I5U0M7rWeqxALZYW/8DukLKZIwckqL1VgdrwjGo8baMBL6Nj3QbDBm3Nj
-	 wUcCWByDoDyJU1N5H2RYisjFoI23zSb5cIsGQ8Oa8HQxjbiYi01RXDvAGup/CHT776
-	 Fi+wSjkOzXQGuQKF6xF37wjZvTrL0kjQgZO98s7TbIqUF01/Fn48FhzeDBRgtjDnSl
-	 V9ie9tQWJctZljhLv0X1jYWfSzMccK0ywivsN2G8JxhmL75dyyPM+o/HW44D/O3Gw7
-	 x+oTqzEudQ5RRyANz6NeaSPZug14CEPVG6SpXs7ivI6dt+tscepcDBDl4pMQI9YYD8
-	 V65gggjGxqc3w==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Stephan Gerhold <stephan.gerhold@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
- Linux PM <linux-pm@vger.kernel.org>,
- Christian Loehle <christian.loehle@arm.com>,
- LKML <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Vincent Guittot <vincent.guittot@linaro.org>,
- Sultan Alsawaf <sultan@kerneltoast.com>,
- Peter Zijlstra <peterz@infradead.org>,
- Valentin Schneider <vschneid@redhat.com>, Ingo Molnar <mingo@redhat.com>,
- regressions@lists.linux.dev, Johan Hovold <johan@kernel.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject:
- Re: [PATCH v3] cpufreq: Avoid using inconsistent policy->min and policy->max
-Date: Thu, 24 Apr 2025 21:36:39 +0200
-Message-ID: <12665363.O9o76ZdvQC@rjwysocki.net>
-In-Reply-To:
- <CAJZ5v0i7-LuBX5VCwn_LhyT=RkmQMn6qv3duc+RViXxJBwk2LA@mail.gmail.com>
-References:
- <5907080.DvuYhMxLoT@rjwysocki.net> <aAplED3IA_J0eZN0@linaro.org>
- <CAJZ5v0i7-LuBX5VCwn_LhyT=RkmQMn6qv3duc+RViXxJBwk2LA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="E7FG5ZXl"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cBF3so2GUnJUPfyXMT3tfhXsj2uLMoYnQI2ueq13WlkKuZUcl1KUYH5662U9X9XS8d0VzQlhluu012ZPaos8O/NMW3dPQn9dfZ/g056qRWzeAkpaltD2CIo7Mhz53XyTg8/rmqU7gpngbpu/4V7itN6W8E0r2gK54OtvjeCpGFMNPqmgDcPg4CcH7Tj81+JtCuTtMUllSP7kheyn40x6XVlzBALHlr9MYbTkVo9fx3vuuERHFKHKlEE2t3hQDdS62gdImlTX13ABFHQggLV9yXGunEXd6JBesB6dQTSvbu388xhNxroNcCcV4jbgnWC0FSYPSYGf8jS+unNToHtZbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PyjLQkzkc1ZqqGKPhjryiBA7YHceuzQzuVY1eF2oM9M=;
+ b=LOBWGSRFvZxkLkPvBCNFsG149odutLFwFd2YBwb9k4FtKlfGvCEzbqgTPXIEeTqlhmX1tmVsBkAfbGB81dyFkBJO3Kvr6GFihkzZsso3Y6RrNfnyFa+36gaHLS5aWK0Q1BR/cu6FrrR9aN3YLGTDYromsY/SitAWq92aoLGM2crkAeooqKcQepeBYSbTdl7/6hPt17f0dESQq3kgDz+uwsdIEmvGeRW/3z1ITDYuSO0fJ/wMPBSSsGQri1A5K+3sqbhxHF5QiyUWQHrbKNYP9OCT5og0sHLPgYpybSJg66lT9smf54OEQSXcJt4jspri0tKEqY+qb9FTyK2ftSVdiQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PyjLQkzkc1ZqqGKPhjryiBA7YHceuzQzuVY1eF2oM9M=;
+ b=E7FG5ZXlC+lmSp8KJ0QbkkGiztC+B/us+0vMo/fOQuiz8dWCwz3WpYeC+a1YfFvBF6VmTX9gdxr/P0m7j/ZQf8KtHI7U/+JA6pXk/2HKvHONyw3Ju5IMN01z0OJdXDEFbBDWh/NHbqhjrPNk/nH9g1ARwYZp/ADTsd4iAourbaTzP+7iqUEifB932dgGyTSdk9hzw2rgn4/CksGtVQYWjHgICMCNKuy6MKzD1YQ0RhJyGnknl1UrVLmLMJkYaOSo/c7K0+rl0WwGXb6SGYg5/z+Rn01ayU/A1m+lt86pXL0IuaBHCDcuZsBsCcJBiJtEtnUN+ajUGZM8WCovCZpP3w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com (2603:10b6:8:252::5) by
+ LV3PR12MB9236.namprd12.prod.outlook.com (2603:10b6:408:1a5::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Thu, 24 Apr
+ 2025 19:38:41 +0000
+Received: from DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a]) by DS7PR12MB9473.namprd12.prod.outlook.com
+ ([fe80::5189:ecec:d84a:133a%5]) with mapi id 15.20.8678.025; Thu, 24 Apr 2025
+ 19:38:41 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 24 Apr 2025 15:38:39 -0400
+Message-Id: <D9F4G2PS9ACB.20J8ON7DQU7GK@nvidia.com>
+Subject: Re: [PATCH] MAINTAINERS: add mm THP section
+Cc: "Andrew Morton" <akpm@linux-foundation.org>, "Zi Yan" <ziy@nvidia.com>,
+ "Baolin Wang" <baolin.wang@linux.alibaba.com>, "Liam R . Howlett"
+ <Liam.Howlett@oracle.com>, "Nico Pache" <npache@redhat.com>, "Ryan Roberts"
+ <ryan.roberts@arm.com>, <linux-mm@kvack.org>,
+ <linux-kernel@vger.kernel.org>
+To: "David Hildenbrand" <david@redhat.com>, "Lorenzo Stoakes"
+ <lorenzo.stoakes@oracle.com>, "Matthew Wilcox" <willy@infradead.org>
+From: "Zi Yan" <ziy@nvidia.com>
+X-Mailer: aerc 0.20.1-60-g87a3b42daac6-dirty
+References: <20250424111632.103637-1-lorenzo.stoakes@oracle.com>
+ <aAp7ggknCytUyAXd@casper.infradead.org>
+ <40e69993-e83b-4019-943f-ab90a43eb0de@lucifer.local>
+ <bc0b7131-ae02-4675-9a21-23d432c20f19@redhat.com>
+In-Reply-To: <bc0b7131-ae02-4675-9a21-23d432c20f19@redhat.com>
+X-ClientProxiedBy: BN8PR04CA0054.namprd04.prod.outlook.com
+ (2603:10b6:408:d4::28) To DS7PR12MB9473.namprd12.prod.outlook.com
+ (2603:10b6:8:252::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvhedtfedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtqhertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepkeeileehffelfefggfdtjedvkeettdejfeevueegfedvhffgudeuteeigfeileetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeduiedprhgtphhtthhopehsthgvphhhrghnrdhgvghrhhholhgusehlihhnrghrohdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghhrhhishhtihgrnhdrlhhovghhlhgvsegrrhhmrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhg
-X-DCC--Metrics: v370.home.net.pl 1024; Body=16 Fuz1=16 Fuz2=16
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB9473:EE_|LV3PR12MB9236:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e357473-dbce-4cb0-33c0-08dd83679de2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NXcwRFhUNUdZaGU4ZDcvaEQ5N0pqRDBsVlZWR0NhYnBXenRkUkQrZmJ0bThk?=
+ =?utf-8?B?Z3d4aVl2WjV0dkErYlRsMC9ISWVaR2IxemhRYzZVeDg4d0I4WGYyMjNjaFZM?=
+ =?utf-8?B?cUZuRHgva2Y3R3VSenlieFNkZ2FFVEdYeExGb2ZhTHZXdGxhU1dRb2JXSU81?=
+ =?utf-8?B?NFc2dDl3YUZ4NHRlVG9NMzNucmpQeEZ3bkp6OUlTT1dtbFA3Q0pwRU1YeDVn?=
+ =?utf-8?B?dFljd0E5T1Q2bExsc3JPR0hFYnZoa3pRRElNc3BPTTFsSE8wSm83TEZFZjFS?=
+ =?utf-8?B?dVFKVmFLRUM4cWlwTUFPY05TSlhWYTFBQnJjZmkvYmJka3pUKy9xTzZWcHRK?=
+ =?utf-8?B?ZGpzRE1ROXFyU3FHUExLSExNdWFFeTJ2VG9Vc3dKVDFJTWxrZXcvVnA2cHBx?=
+ =?utf-8?B?dHV6VTVUTUdCTGhxNjRkTEFtZmZob2pxRzhQTlBOOXFOUUZOTkpGb2VMQmxF?=
+ =?utf-8?B?aWVhdXZBU05KMXlDNE1XbnpkbDN2WTZZYmxmRzMyUWhrVXg5bjFNL0hhcVYz?=
+ =?utf-8?B?ZXVDWDVSU1d2RitCbkU2SDRaWVBncS9tUmhXTnAxZHNQTm9qUCtKVHE4ZTA5?=
+ =?utf-8?B?cXFKbWUrRVJBZ3gyWTZXbkdRTlpWVzAxcnhUbEEzZDZYQzA0eUg1L3M5U1U4?=
+ =?utf-8?B?dnJFMngvcjFURGtJc1JHUUFuaU5yWWZaSWd5S1BGU3ljUWpHd3hGWWhSR1VP?=
+ =?utf-8?B?NmJZUWFnejUvQWRxUU9sbWJNSHVKRkIwTW56d00rYitpZm1YMHNKTFZOMXRh?=
+ =?utf-8?B?NFBucSs2RWFoNUZ4Qzc2eVJXNEZXNFhJWW54ODlFM2RFZ1lsbUJ3Mzk2aTdx?=
+ =?utf-8?B?L04wbDE4SytyeHM3cFBQeTdrRTludE9QazFZdnN4OHZUNG80bzFOck9WU01r?=
+ =?utf-8?B?eTgxaDE1SkNhdlJ4YXpxa3NCelZIdmgxc2hrcktWeDVEOEJEamlNdDdmN2FF?=
+ =?utf-8?B?T2hSRW5SdGUwTEV0LzlZWjBobmVHNGZhWGZIUHJ6QVVYTkNQUmdTMFNVTVFI?=
+ =?utf-8?B?V3diWHdkT0ZOMk93SmovRjA2aUdIcWxVaG9RQ1dSRTRWcWdWRDg5VlQ0cWRB?=
+ =?utf-8?B?bDZoZjA1VzE4ZTR3elJobGQreUY5UDBsdkNYNWlvNW5RS2VFQXY0bXEwR3Bt?=
+ =?utf-8?B?T1NmdGFmeHpGTnNkTVczRzJtRkhBQWxucTFHaVhOR0pLQWUxVzllUCtXODhn?=
+ =?utf-8?B?Rk5OWjRLaXF0SUxQQ0E5UDNHcGtucjhsOWhNb2IwRXJIQlZBNk5NbFZ3TFlw?=
+ =?utf-8?B?TFM1TTZFc3ZuZ1FIR2RkY2NpZENZSFo1WjhtLzFxeUhwbmdOWXBMa1F3Njlv?=
+ =?utf-8?B?TC9yamFBMjd2UHlsRXJtcVA4cExkZGs3bXlSRDl5NmRBQzFXZW42RUk1N05X?=
+ =?utf-8?B?aVZ1T3pqR3dQcTliMTRYWkd0Tm4vM0lWekJGNTJKU2lHNk1CcWgvQ0ZCQis3?=
+ =?utf-8?B?NkI4eWdoRTdxTG5GTit1NWZjVWNEOTBvcjNQcXlsN1BnRmM1cytQYlhZWU9J?=
+ =?utf-8?B?Smd2TUowb0RSU012QmQ4L0FPVFpTVmE3b3ZreFV6dVZwNU1ZbVRzY2lqY2k4?=
+ =?utf-8?B?Z0wvM3VaTjRrbVlNS3p4Q2ZYd1VoVmZxeFpvZ0p1MHgrRThNZm0wbkpZSktK?=
+ =?utf-8?B?WERJYTVzTm1oY0doNjZFcFJ0aG1ZZXpWcUxBUkpyd3JTbEpzWlp5d0N0ajRP?=
+ =?utf-8?B?RnBTR0pOaU1Hd0p6NzZHMGYzc3pIdkRtT3d4cHZrdnI4TEdmYWVCd0x5SzZ6?=
+ =?utf-8?B?eHV3c2hCMzhRdldRckpEdUdmV3FlOGlzZmFBNnh3NEo0eFM3NXk5YkhpU1ZP?=
+ =?utf-8?B?WDBSdUpxR2J6SWZnd3hLZklTbFd5NFhSVG5zS3I4azVJejdhNVlUN1B5RUtS?=
+ =?utf-8?B?d2hQK0x4NnRkUHJvNFVkQjlLVFgzeFlwZ3NYdlpocWVwK09EcXEzOHlTVzRs?=
+ =?utf-8?Q?5L4dK1m90mc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB9473.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?T2drVGRJZHhCU0loRHRxdjYzVDhzdENnOW8yc3QrN0JXWk5Oa3kwYnpEaU5E?=
+ =?utf-8?B?QkV3RTRsUzZYcVBuMzJqT0JOdEFJWE5PdDE5UGtYN00rMjRaalJFRkdMQ0FD?=
+ =?utf-8?B?ekZvSFFhZjhSYkRoektBM1U0VEsyY3RzczNzcHVHVGZnaXg2QmxiR2kwUktm?=
+ =?utf-8?B?WHQwMVVjcVVpQVR5M2VlbEh4aXVvT3E2VXp3c0tGRVgwYnh4clBiVmk2bmJQ?=
+ =?utf-8?B?dWtaejJUOTVQb3RCUHpYOHg4bDhMNkpET2grbjZQcWU1V3E0dUR1R3YrWkV1?=
+ =?utf-8?B?bDIzRHprWncrOTVaMXExakZ4N3Qxd2VvZTEwQmRnS0srRzljYTBqRW9uL0t2?=
+ =?utf-8?B?YkJvaDVvclBpbUNxKzRqNEcrZ1MzUXJnay9OallkMWZ0TEdFeVRJTmJoK1RG?=
+ =?utf-8?B?eUwyR1N5dU0wK241aG8vNEk2dGZjUUdmODREc09ZTGhsL05FbHFJWXZTRzR4?=
+ =?utf-8?B?WkRkRjVOM3AzZUp3QUZPcDVPeVhDNXhDQWY5RFBHcStmdnBPTWY5VmtuZmNH?=
+ =?utf-8?B?bldPelJLL0JDSnpETUtBbURRak9kSy9qN2xDQkR2L3RENXE0ck9KaXk0WjFn?=
+ =?utf-8?B?RFF2Q2N6V1dFUW00QlhBdW5wV3JZQVBQaDRQcUpRUlhiMkhJdjVwcldjalJK?=
+ =?utf-8?B?c2ZiSE1hdjJnd0lrWC9iZDV1Ukc2VEF4T0JHeXp0ZUJhVXBVOWNvdEIzWGZj?=
+ =?utf-8?B?ODg3WUtQMGgwOHFOQlJRU3B1ZUw5akNnRG84M0tHNUVTaDZpR3hnRXNCUFho?=
+ =?utf-8?B?ZTFyck1LYXZiaXJVbUNiamZ1cVRPK29JWlcveHlLcTYyZmFNYzZML2paUmpn?=
+ =?utf-8?B?ek5TZjJQT09EUzFNcUUzSHF3SWgzenlZYi8xVVBTaFVMWGlNMFB5NktsRWZs?=
+ =?utf-8?B?M1BEdXBKbHVJL3VPUW0zeEpZQVNodE5iRkZKeERvMGJ6OU1ROG1UNWNjNGFP?=
+ =?utf-8?B?ejQwOWtIa0svNlg0QWNDbzhOaW8zdk5rUkpMc3dKcERHZkNhMXUrUWdpNDNC?=
+ =?utf-8?B?U3pYcWF6YndsOW9PZ3I1YmdSNTNtKzNGM1NyekFzS2x4bkJQc2VTbDYwTjNs?=
+ =?utf-8?B?RlZlbHlkRmYwRjRaZ0ZaTEpHdzByT0I1Rzl3NWY1RTFGRWUzd09QSytXL2Jz?=
+ =?utf-8?B?SVlLRnc4VDQ4bGd3eUVKby85Mlp2R2xuWmw1M1lneHM1ZW50K3gvQWp0bWdB?=
+ =?utf-8?B?TCtEU21kOHdiL1IzWmJKTnorV0p2K2ZibzZwLytXZGV4a0s4V3grNGhvRFRi?=
+ =?utf-8?B?V2NPbzhpTUJUcUc1NXRMRkZVWVgzMWt4ZWkvUTViR0d1M1A4eVV5NFplUjNB?=
+ =?utf-8?B?MVd4WkRnajUxalJUb1JXR0o4YTB1L09rVWYyaStLYXJBd0U1ZVZrdzZUSi9T?=
+ =?utf-8?B?ZGFtODVPcG1FWU1RNm5FcUhKWk05Vk9wbzdFRUVsVHlDeWJyY2JEU21Yb3lk?=
+ =?utf-8?B?ZFJBVlhOSDNsNTVqVnN6LzQvRk96a2dnQ1hUdXlubDl2aUQydVRJdU56dWVv?=
+ =?utf-8?B?aXgxZXozVUdXVE5nV0FrMnBoYk00ZFpVVU9QTlgzY1RvMVpYMDhVMFcwVlJ3?=
+ =?utf-8?B?SUx5OXJRUmJXaWFWRlZrSGNCUzJwK0JkNUNuZThnNktNUjlHOXlDNVIyb0ZE?=
+ =?utf-8?B?T2JjOEc5OFhHaFU1cnlORFZ1N0xsMjJTWEtXVmhKTDhLM0x4WWF2WWprc2Zm?=
+ =?utf-8?B?aGE3MHBvUWN6SGVpOFlqTE9EMC9mcDZBV05mVXlpOGFXN2FkT081ejN1K3BK?=
+ =?utf-8?B?NURnOEg1ODZCOEVHVDNsVVFicHZNZ1RTNXBPZkN6cktIR1U2VTFjYUg2dEZP?=
+ =?utf-8?B?bWIyYXlhdFlyVll4akVTNHdHZGRGSFpHQmFVUHhjMVNDZ2dmc3FDQTZoUmJV?=
+ =?utf-8?B?WFIxc2ZiQUlOeHJqN2IxdDd6eUZHcGlUTXhCT2ZFUm04eDYvQTcrUGhwdEpv?=
+ =?utf-8?B?Vlg4cnBxRmExRFJYWnUycWFMM3ZjOUp0YVBVc0Ftd05yeHlVaU42NEdTYUJ2?=
+ =?utf-8?B?VHRVb2k3UldQbm5lYUlPaFRkRWlKTE9idVFmNUFOVnh2Wk9WTHNLVE9ZYTZx?=
+ =?utf-8?B?ZkZrQVJnWW5XZjd2U0JueTBwQlJqTnZGOWRpYWZqMXd6VTMvODZDUVRWWnNC?=
+ =?utf-8?Q?fGltxZ4+/41MrkOiIQHqFAEcj?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e357473-dbce-4cb0-33c0-08dd83679de2
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB9473.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 19:38:41.1194
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: h70ql2P1LTd7AXKh2sGtW/4fXBht58wgNAjzGxhDHX5fypWdjc5iPsbpYxYwUYkj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR12MB9236
 
-On Thursday, April 24, 2025 6:37:46 PM CEST Rafael J. Wysocki wrote:
-> Hi,
->=20
-> On Thu, Apr 24, 2025 at 6:21=E2=80=AFPM Stephan Gerhold
-> <stephan.gerhold@linaro.org> wrote:
-> >
-> > Hi Rafael,
-> >
-> > On Wed, Apr 16, 2025 at 04:12:37PM +0200, Rafael J. Wysocki wrote:
-> > > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > >
-> > > Since cpufreq_driver_resolve_freq() can run in parallel with
-> > > cpufreq_set_policy() and there is no synchronization between them,
-> > > the former may access policy->min and policy->max while the latter
-> > > is updating them and it may see intermediate values of them due
-> > > to the way the update is carried out.  Also the compiler is free
-> > > to apply any optimizations it wants both to the stores in
-> > > cpufreq_set_policy() and to the loads in cpufreq_driver_resolve_freq()
-> > > which may result in additional inconsistencies.
-> > >
-> > > To address this, use WRITE_ONCE() when updating policy->min and
-> > > policy->max in cpufreq_set_policy() and use READ_ONCE() for reading
-> > > them in cpufreq_driver_resolve_freq().  Moreover, rearrange the update
-> > > in cpufreq_set_policy() to avoid storing intermediate values in
-> > > policy->min and policy->max with the help of the observation that
-> > > their new values are expected to be properly ordered upfront.
-> > >
-> > > Also modify cpufreq_driver_resolve_freq() to take the possible reverse
-> > > ordering of policy->min and policy->max, which may happen depending on
-> > > the ordering of operations when this function and cpufreq_set_policy()
-> > > run concurrently, into account by always honoring the max when it
-> > > turns out to be less than the min (in case it comes from thermal
-> > > throttling or similar).
-> > >
-> > > Fixes: 151717690694 ("cpufreq: Make policy min/max hard requirements")
-> > > Cc: 5.16+ <stable@vger.kernel.org> # 5.16+
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >
-> > > This replaces the last 3 patches in
-> > >
-> > > https://lore.kernel.org/linux-pm/6171293.lOV4Wx5bFT@rjwysocki.net/
-> > >
-> > > v2 -> v3:
-> > >    * Fold 3 patches into one.
-> > >    * Drop an unrelated white space fixup change.
-> > >    * Fix a typo in a comment (Christian).
-> > >
-> > > v1 -> v2: Cosmetic changes
-> > >
-> > > ---
-> > >  drivers/cpufreq/cpufreq.c |   32 +++++++++++++++++++++++++-------
-> > >  1 file changed, 25 insertions(+), 7 deletions(-)
-> > >
-> > > --- a/drivers/cpufreq/cpufreq.c
-> > > +++ b/drivers/cpufreq/cpufreq.c
-> > > @@ -495,8 +495,6 @@
-> > >  {
-> > >       unsigned int idx;
-> > >
-> > > -     target_freq =3D clamp_val(target_freq, policy->min, policy->max=
-);
-> > > -
-> > >       if (!policy->freq_table)
-> > >               return target_freq;
-> > >
-> > > @@ -520,7 +518,22 @@
-> > >  unsigned int cpufreq_driver_resolve_freq(struct cpufreq_policy *poli=
-cy,
-> > >                                        unsigned int target_freq)
-> > >  {
-> > > -     return __resolve_freq(policy, target_freq, CPUFREQ_RELATION_LE);
-> > > +     unsigned int min =3D READ_ONCE(policy->min);
-> > > +     unsigned int max =3D READ_ONCE(policy->max);
-> > > +
-> > > +     /*
-> > > +      * If this function runs in parallel with cpufreq_set_policy(),=
- it may
-> > > +      * read policy->min before the update and policy->max after the=
- update
-> > > +      * or the other way around, so there is no ordering guarantee.
-> > > +      *
-> > > +      * Resolve this by always honoring the max (in case it comes fr=
-om
-> > > +      * thermal throttling or similar).
-> > > +      */
-> > > +     if (unlikely(min > max))
-> > > +             min =3D max;
-> > > +
-> > > +     return __resolve_freq(policy, clamp_val(target_freq, min, max),
-> > > +                           CPUFREQ_RELATION_LE);
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
-> > >
-> > > @@ -2338,6 +2351,7 @@
-> > >       if (cpufreq_disabled())
-> > >               return -ENODEV;
-> > >
-> > > +     target_freq =3D clamp_val(target_freq, policy->min, policy->max=
-);
-> > >       target_freq =3D __resolve_freq(policy, target_freq, relation);
-> > >
-> > >       pr_debug("target for CPU %u: %u kHz, relation %u, requested %u =
-kHz\n",
-> > > @@ -2631,11 +2645,15 @@
-> > >        * Resolve policy min/max to available frequencies. It ensures
-> > >        * no frequency resolution will neither overshoot the requested=
- maximum
-> > >        * nor undershoot the requested minimum.
-> > > +      *
-> > > +      * Avoid storing intermediate values in policy->max or policy->=
-min and
-> > > +      * compiler optimizations around them because they may be acces=
-sed
-> > > +      * concurrently by cpufreq_driver_resolve_freq() during the upd=
-ate.
-> > >        */
-> > > -     policy->min =3D new_data.min;
-> > > -     policy->max =3D new_data.max;
-> > > -     policy->min =3D __resolve_freq(policy, policy->min, CPUFREQ_REL=
-ATION_L);
-> > > -     policy->max =3D __resolve_freq(policy, policy->max, CPUFREQ_REL=
-ATION_H);
-> > > +     WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CP=
-UFREQ_RELATION_H));
-> > > +     new_data.min =3D __resolve_freq(policy, new_data.min, CPUFREQ_R=
-ELATION_L);
-> > > +     WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->ma=
-x : new_data.min);
-> >
-> > I've tested the cpufreq throttling again in 6.15-rc3 to check your fix
-> > for the schedutil CPUFREQ_NEED_UPDATE_LIMITS regression I reported [1].
-> > The CPU frequency is now being throttled correctly when reaching high
-> > temperatures. Thanks for fixing this!
-> >
-> > Unfortunately, the opposite case has now regressed with this patch:
-> > After the CPU frequency has been throttled due to high temperature and
-> > the device cools down again, the CPU frequency is stuck at minimum until
-> > you reboot. policy->max will never restore to the maximum frequency.
-> >
-> > I've confirmed that this causes unexpected slowness after temperature
-> > throttling on a Qualcomm X1E laptop, and Johan has confirmed that e.g.
-> > the ThinkPad X13s is also affected. I would expect that most devices
-> > using cpufreq cooling in the kernel are affected.
-> >
-> > Looking at the code, I think the problem is that __resolve_freq() ->
-> > cpufreq_frequency_table_target() -> cpufreq_table_find_index*() and
-> > cpufreq_is_in_limits() are still using the old policy->min/max value.
-> > In this patch, you have only moved the clamp_val() usage directly in
-> > __resolve_freq().
->=20
-> You are right, that's the problem.
->=20
-> The fix is basically straightforward, pass min and max to
-> cpufreq_frequency_table_target() and propagate downward, but making
-> that change may be somewhat error-prone.
->=20
-> I'll try to cut a patch to test tomorrow.
+On Thu Apr 24, 2025 at 2:44 PM EDT, David Hildenbrand wrote:
+> On 24.04.25 20:11, Lorenzo Stoakes wrote:
+>> On Thu, Apr 24, 2025 at 06:57:22PM +0100, Matthew Wilcox wrote:
+>>> On Thu, Apr 24, 2025 at 12:16:32PM +0100, Lorenzo Stoakes wrote:
+>>>> As part of the ongoing efforts to sub-divide memory management
+>>>> maintainership and reviewership, establish a section for Transparent H=
+uge
+>>>> Page support and add appropriate maintainers and reviewers.
+>>>
+>>> I'm quite queasy about this.  I'm doing my best to make "THP" disappear
+>>> as a concept.  How would you define what THP is?  Originally, it was
+>>> PMD-sized-and-aligned allocations, and some of the way we expose it to
+>>> userspace, that's still the interpretation.  But we also have folios wh=
+ich
+>>> are of some hardware-defined magic sizes, as well as (for filesystems,
+>>> at least) random other non-zero orders.
+>>>
+>>> Memory is just managed in variously sized quantities.  There should be
+>>> nothing magic about "THP", and I'm still annoyed at the anon-mem people
+>>> for baking various magic sizes into user-visible APIs.
+>>=20
+>> Right, but as it stands, we already separate out handling for a whole ho=
+st
+>> of different THP things by file, which get_maintainers.pl knows nothing
+>> about.
+>>=20
+>> For:
+>>=20
+>> 	include/linux/huge_mm.h
+>> 	include/linux/khugepaged.h
+>> 	include/trace/events/huge_memory.h
+>> 	mm/huge_memory.c
+>> 	mm/khugepaged.c
+>> 	tools/testing/selftests/mm/khugepaged.c
+>> 	tools/testing/selftests/mm/split_huge_page_test.c
+>> 	tools/testing/selftests/mm/transhuge-stress.c
+>>=20
+>> This is not a philosophical position as to where we _might go_ in future=
+,
+>> or how we might decide to treat varying folio sizes going forward, but
+>> rather a purely practical step so these files get seen by people and the
+>> de-facto maintainer is ack'ed as such.
+>>=20
+>> When we get to the point where we can simply treat all as the same, we c=
+an
+>> reflect as much in MAINTAINERS too, this is not set in stone.
+>
+> Yeah, I think we all share the same long-term goal of not even having=20
+> huge_memory.c anymore; it's simply not going to be special anymore.
+>
+> My hope is that with the planned "auto" mode for anon (m)THP we'd be=20
+> able to switch in the future as default to a "let MM manage all that,=20
+> it's now smart enough", to slowly phase manual control it out. We still=20
+> have to deal with the legacy Huge/PMD-mapped stats that keep annoying me.
 
-Actually, I have it already, so please find appended.
+I agree that we should not have per-order knobs like now, but letting
+kernel to figure out everything might be a stretch since it might
+requires a lot of profiling to get some information about user program
+behaviors. Some hints like madvise(MADV_{NO}HUGEPAGE) could save a lot
+of profilings. Maybe your auto mode includes such hints.
 
-Please give it a go as soon as you reasonably can.
+But pagecache does not have such hints, maybe file accesses gives good
+hints already. Matthew, what is your take on this? Hints or no hints?
+Or anon mem is different for this aspect?
 
-Thanks!
+>
+> Personally, I wouldn't mind moving it under MM core already, but for now=
+=20
+> this might be better to find the right reviewers. As you say, we can=20
+> always adjust -- especially once huge_memory.c goes away because it will=
+=20
+> simply be memory.c, or whatever that file will be called then.
 
-=2D--
-=46rom: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Subject: [PATCH v1] cpufreq: Fix setting policy limits when frequency table=
-s are used
-
-Commit 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and
-policy->max") overlooked the fact that policy->min and policy->max were
-accessed directly in cpufreq_frequency_table_target() and in the
-functions called by it and the changes made by that commit led to
-problems with setting policy limits.
-
-Address this by passing the target frequency limits to __resolve_freq()
-and cpufreq_frequency_table_target() and propagating them to the
-functions called by the latter.
-
-=46ixes: 7491cdf46b5c ("cpufreq: Avoid using inconsistent policy->min and p=
-olicy->max")
-Reported-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-=2D--
- drivers/cpufreq/cpufreq.c          |   22 ++++++----
- drivers/cpufreq/cpufreq_ondemand.c |    3 -
- drivers/cpufreq/freq_table.c       |    6 +-
- include/linux/cpufreq.h            |   81 ++++++++++++++++++++++++--------=
-=2D----
- 4 files changed, 72 insertions(+), 40 deletions(-)
-
-=2D-- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -491,14 +491,18 @@
- EXPORT_SYMBOL_GPL(cpufreq_disable_fast_switch);
-=20
- static unsigned int __resolve_freq(struct cpufreq_policy *policy,
-=2D		unsigned int target_freq, unsigned int relation)
-+				   unsigned int target_freq,
-+				   unsigned int min, unsigned int max,
-+				   unsigned int relation)
- {
- 	unsigned int idx;
-=20
- 	if (!policy->freq_table)
- 		return target_freq;
-=20
-=2D	idx =3D cpufreq_frequency_table_target(policy, target_freq, relation);
-+	target_freq =3D clamp_val(target_freq, min, max);
-+
-+	idx =3D cpufreq_frequency_table_target(policy, target_freq, min, max, rel=
-ation);
- 	policy->cached_resolved_idx =3D idx;
- 	policy->cached_target_freq =3D target_freq;
- 	return policy->freq_table[idx].frequency;
-@@ -532,8 +536,7 @@
- 	if (unlikely(min > max))
- 		min =3D max;
-=20
-=2D	return __resolve_freq(policy, clamp_val(target_freq, min, max),
-=2D			      CPUFREQ_RELATION_LE);
-+	return __resolve_freq(policy, target_freq, min, max, CPUFREQ_RELATION_LE);
- }
- EXPORT_SYMBOL_GPL(cpufreq_driver_resolve_freq);
-=20
-@@ -2351,8 +2354,8 @@
- 	if (cpufreq_disabled())
- 		return -ENODEV;
-=20
-=2D	target_freq =3D clamp_val(target_freq, policy->min, policy->max);
-=2D	target_freq =3D __resolve_freq(policy, target_freq, relation);
-+	target_freq =3D __resolve_freq(policy, target_freq, policy->min,
-+				     policy->max, relation);
-=20
- 	pr_debug("target for CPU %u: %u kHz, relation %u, requested %u kHz\n",
- 		 policy->cpu, target_freq, relation, old_target_freq);
-@@ -2650,8 +2653,11 @@
- 	 * compiler optimizations around them because they may be accessed
- 	 * concurrently by cpufreq_driver_resolve_freq() during the update.
- 	 */
-=2D	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max, CPUFREQ_RE=
-LATION_H));
-=2D	new_data.min =3D __resolve_freq(policy, new_data.min, CPUFREQ_RELATION_=
-L);
-+	WRITE_ONCE(policy->max, __resolve_freq(policy, new_data.max,
-+					       new_data.min, new_data.max,
-+					       CPUFREQ_RELATION_H));
-+	new_data.min =3D __resolve_freq(policy, new_data.min, new_data.min,
-+				      new_data.max, CPUFREQ_RELATION_L);
- 	WRITE_ONCE(policy->min, new_data.min > policy->max ? policy->max : new_da=
-ta.min);
-=20
- 	trace_cpu_frequency_limits(policy);
-=2D-- a/drivers/cpufreq/cpufreq_ondemand.c
-+++ b/drivers/cpufreq/cpufreq_ondemand.c
-@@ -76,7 +76,8 @@
- 		return freq_next;
- 	}
-=20
-=2D	index =3D cpufreq_frequency_table_target(policy, freq_next, relation);
-+	index =3D cpufreq_frequency_table_target(policy, freq_next, policy->min,
-+					       policy->max, relation);
- 	freq_req =3D freq_table[index].frequency;
- 	freq_reduc =3D freq_req * od_tuners->powersave_bias / 1000;
- 	freq_avg =3D freq_req - freq_reduc;
-=2D-- a/drivers/cpufreq/freq_table.c
-+++ b/drivers/cpufreq/freq_table.c
-@@ -115,8 +115,8 @@
- EXPORT_SYMBOL_GPL(cpufreq_generic_frequency_table_verify);
-=20
- int cpufreq_table_index_unsorted(struct cpufreq_policy *policy,
-=2D				 unsigned int target_freq,
-=2D				 unsigned int relation)
-+				 unsigned int target_freq, unsigned int min,
-+				 unsigned int max, unsigned int relation)
- {
- 	struct cpufreq_frequency_table optimal =3D {
- 		.driver_data =3D ~0,
-@@ -147,7 +147,7 @@
- 	cpufreq_for_each_valid_entry_idx(pos, table, i) {
- 		freq =3D pos->frequency;
-=20
-=2D		if ((freq < policy->min) || (freq > policy->max))
-+		if (freq < min || freq > max)
- 			continue;
- 		if (freq =3D=3D target_freq) {
- 			optimal.driver_data =3D i;
-=2D-- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -788,8 +788,8 @@
- int cpufreq_generic_frequency_table_verify(struct cpufreq_policy_data *pol=
-icy);
-=20
- int cpufreq_table_index_unsorted(struct cpufreq_policy *policy,
-=2D				 unsigned int target_freq,
-=2D				 unsigned int relation);
-+				 unsigned int target_freq, unsigned int min,
-+				 unsigned int max, unsigned int relation);
- int cpufreq_frequency_table_get_index(struct cpufreq_policy *policy,
- 		unsigned int freq);
-=20
-@@ -852,12 +852,12 @@
- 	return best;
- }
-=20
-=2D/* Works only on sorted freq-tables */
-=2Dstatic inline int cpufreq_table_find_index_l(struct cpufreq_policy *poli=
-cy,
-=2D					     unsigned int target_freq,
-=2D					     bool efficiencies)
-+static inline int find_index_l(struct cpufreq_policy *policy,
-+			       unsigned int target_freq,
-+			       unsigned int min, unsigned int max,
-+			       bool efficiencies)
- {
-=2D	target_freq =3D clamp_val(target_freq, policy->min, policy->max);
-+	target_freq =3D clamp_val(target_freq, min, max);
-=20
- 	if (policy->freq_table_sorted =3D=3D CPUFREQ_TABLE_SORTED_ASCENDING)
- 		return cpufreq_table_find_index_al(policy, target_freq,
-@@ -867,6 +867,14 @@
- 						   efficiencies);
- }
-=20
-+/* Works only on sorted freq-tables */
-+static inline int cpufreq_table_find_index_l(struct cpufreq_policy *policy,
-+					     unsigned int target_freq,
-+					     bool efficiencies)
-+{
-+	return find_index_l(policy, target_freq, policy->min, policy->max, effici=
-encies);
-+}
-+
- /* Find highest freq at or below target in a table in ascending order */
- static inline int cpufreq_table_find_index_ah(struct cpufreq_policy *polic=
-y,
- 					      unsigned int target_freq,
-@@ -920,12 +928,12 @@
- 	return best;
- }
-=20
-=2D/* Works only on sorted freq-tables */
-=2Dstatic inline int cpufreq_table_find_index_h(struct cpufreq_policy *poli=
-cy,
-=2D					     unsigned int target_freq,
-=2D					     bool efficiencies)
-+static inline int find_index_h(struct cpufreq_policy *policy,
-+			       unsigned int target_freq,
-+			       unsigned int min, unsigned int max,
-+			       bool efficiencies)
- {
-=2D	target_freq =3D clamp_val(target_freq, policy->min, policy->max);
-+	target_freq =3D clamp_val(target_freq, min, max);
-=20
- 	if (policy->freq_table_sorted =3D=3D CPUFREQ_TABLE_SORTED_ASCENDING)
- 		return cpufreq_table_find_index_ah(policy, target_freq,
-@@ -935,6 +943,14 @@
- 						   efficiencies);
- }
-=20
-+/* Works only on sorted freq-tables */
-+static inline int cpufreq_table_find_index_h(struct cpufreq_policy *policy,
-+					     unsigned int target_freq,
-+					     bool efficiencies)
-+{
-+	return find_index_h(policy, target_freq, policy->min, policy->max, effici=
-encies);
-+}
-+
- /* Find closest freq to target in a table in ascending order */
- static inline int cpufreq_table_find_index_ac(struct cpufreq_policy *polic=
-y,
- 					      unsigned int target_freq,
-@@ -1005,12 +1021,12 @@
- 	return best;
- }
-=20
-=2D/* Works only on sorted freq-tables */
-=2Dstatic inline int cpufreq_table_find_index_c(struct cpufreq_policy *poli=
-cy,
-=2D					     unsigned int target_freq,
-=2D					     bool efficiencies)
-+static inline int find_index_c(struct cpufreq_policy *policy,
-+			       unsigned int target_freq,
-+			       unsigned int min, unsigned int max,
-+			       bool efficiencies)
- {
-=2D	target_freq =3D clamp_val(target_freq, policy->min, policy->max);
-+	target_freq =3D clamp_val(target_freq, min, max);
-=20
- 	if (policy->freq_table_sorted =3D=3D CPUFREQ_TABLE_SORTED_ASCENDING)
- 		return cpufreq_table_find_index_ac(policy, target_freq,
-@@ -1020,7 +1036,17 @@
- 						   efficiencies);
- }
-=20
-=2Dstatic inline bool cpufreq_is_in_limits(struct cpufreq_policy *policy, i=
-nt idx)
-+/* Works only on sorted freq-tables */
-+static inline int cpufreq_table_find_index_c(struct cpufreq_policy *policy,
-+					     unsigned int target_freq,
-+					     bool efficiencies)
-+{
-+	return find_index_c(policy, target_freq, policy->min, policy->max, effici=
-encies);
-+}
-+
-+static inline bool cpufreq_is_in_limits(struct cpufreq_policy *policy,
-+					unsigned int min, unsigned int max,
-+					int idx)
- {
- 	unsigned int freq;
-=20
-@@ -1029,11 +1055,13 @@
-=20
- 	freq =3D policy->freq_table[idx].frequency;
-=20
-=2D	return freq =3D=3D clamp_val(freq, policy->min, policy->max);
-+	return freq =3D=3D clamp_val(freq, min, max);
- }
-=20
- static inline int cpufreq_frequency_table_target(struct cpufreq_policy *po=
-licy,
- 						 unsigned int target_freq,
-+						 unsigned int min,
-+						 unsigned int max,
- 						 unsigned int relation)
- {
- 	bool efficiencies =3D policy->efficiencies_available &&
-@@ -1044,21 +1072,18 @@
- 	relation &=3D ~CPUFREQ_RELATION_E;
-=20
- 	if (unlikely(policy->freq_table_sorted =3D=3D CPUFREQ_TABLE_UNSORTED))
-=2D		return cpufreq_table_index_unsorted(policy, target_freq,
-=2D						    relation);
-+		return cpufreq_table_index_unsorted(policy, target_freq, min,
-+						    max, relation);
- retry:
- 	switch (relation) {
- 	case CPUFREQ_RELATION_L:
-=2D		idx =3D cpufreq_table_find_index_l(policy, target_freq,
-=2D						 efficiencies);
-+		idx =3D find_index_l(policy, target_freq, min, max, efficiencies);
- 		break;
- 	case CPUFREQ_RELATION_H:
-=2D		idx =3D cpufreq_table_find_index_h(policy, target_freq,
-=2D						 efficiencies);
-+		idx =3D find_index_h(policy, target_freq, min, max, efficiencies);
- 		break;
- 	case CPUFREQ_RELATION_C:
-=2D		idx =3D cpufreq_table_find_index_c(policy, target_freq,
-=2D						 efficiencies);
-+		idx =3D find_index_c(policy, target_freq, min, max, efficiencies);
- 		break;
- 	default:
- 		WARN_ON_ONCE(1);
-@@ -1066,7 +1091,7 @@
- 	}
-=20
- 	/* Limit frequency index to honor policy->min/max */
-=2D	if (!cpufreq_is_in_limits(policy, idx) && efficiencies) {
-+	if (!cpufreq_is_in_limits(policy, min, max, idx) && efficiencies) {
- 		efficiencies =3D false;
- 		goto retry;
- 	}
+Yeah, I guess we want to be able to distribute patches to different
+sets of experts, otherwise all patches will be sent to a large group
+of the same people. That might be inefficient.
 
 
+--=20
+Best Regards,
+Yan, Zi
 
