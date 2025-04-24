@@ -1,442 +1,195 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2069.outbound.protection.outlook.com [40.107.92.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B06E620102D
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:40:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 377DF21D3EB
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 08:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.69
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745484010; cv=fail; b=ik6UORlVtUI1UdLr7FFhVxF1JOdW/D9zsiHLnEnR5BwV/vxg53tMQMI5s4E334yfZGUEuPQf8ZMFUs1xd5Ta7r6qrK94rHg6S3JyfEkOdP5nuFtvrqwS0KIW+SvGU3YxuocngXzGUoQbvDi55RpLUSWyWDR5i6P/kGKHuG1SCKo=
+	t=1745484015; cv=fail; b=s/tE39E6kMCamq35qqIEln1AKkogNsCW3ltipmtmQGoyUh9/RxfSkSARf3XAubAl4YT4smmjFAngwonaRpiWMBDTGz8RMWrHXwEDq4RYTMRkRy7ZRU+E30ZpLkifSZTm7SnWR/GcevzZtieLpVA7ygiaCliEUbNmb5fYJinwOYo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745484010; c=relaxed/simple;
-	bh=ENQiZQk79A38nr8ItmjaxLdMXluYIUJA/VmbA0YRCEw=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:MIME-Version; b=C8is1sW8uG1TMZeunLAO5Bl0x0wpP22joyc3DFVpR+emCeivkSy/fOXc/FBE7AirWJLZLmhvBCOjS73l858WNPcXIpmmv+tDDg+7/bzVIZKZ31OtIveIXz7EN+FAMfCN+1cfQ1hkAzU+WeQx5kSQTD82212oHVHdSqx1ff7XD2k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PA3U4NOB; arc=fail smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745484015; c=relaxed/simple;
+	bh=vjmDnSkdlZt/DhCTho+/Avo1f7AVJwHzyIdzmT9zBKs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VMzz0fVmuR3m6xZEWE0DFfJwsGnM4ISHaHJ/A/Ur7VlVoEsKQZcebC1KALSYi2IddsBb5ywnot1B9m7k6b0Ohm16xjl7wc2UZc3sadcTBo5VRHudHbVf0OGmZqF60CxtzvfzzBjflpx2DWsc+hlaSHS2Nax/U2JNKwcxfdGP0fc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fcXhxTZl; arc=fail smtp.client-ip=40.107.92.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PA3U4NOB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745484007; x=1777020007;
-  h=date:from:to:cc:subject:message-id:
-   content-transfer-encoding:mime-version;
-  bh=ENQiZQk79A38nr8ItmjaxLdMXluYIUJA/VmbA0YRCEw=;
-  b=PA3U4NOBMyD4ctB8CAPAtQe8kbqBcCydaDTnQeoiV2IjbjncNc0qrZwB
-   so5QmqzUwx4NTggoCQtp9UruxvP2tjXrUvs34L4B8Cpgi+UdtuSegBhgP
-   p+zKnLTOFJ7IVnUmqJq+yQBhMZKsn76DCzsL2RTbV4Cx27F8YXDLU3Iuo
-   NQXfZv1aBQfOoeIbj8/x5RgeHqsha/OvLD0jgh/etsvoMdnFnnKJvT7NB
-   FMEFHzCd3GWMycqgwbArZyjlcrSq7yYUvH3JtYu0qTUczzfiAcrduOQss
-   v+hB8t4Bowqr4UxmnH6n+knEyP19XWUyf1K6JkzR2KJPQoi0qERlYy5x9
-   g==;
-X-CSE-ConnectionGUID: ifnWihozRAG+9mFkvx6oRg==
-X-CSE-MsgGUID: 5Vd3ho7PSNSJMGvl3M4fEg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="58476159"
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="58476159"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 01:40:03 -0700
-X-CSE-ConnectionGUID: eQ2ESeX5SsmtEObLyu7e5Q==
-X-CSE-MsgGUID: 40VMldNNTvSo1in1e/IABQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,235,1739865600"; 
-   d="scan'208";a="163531772"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Apr 2025 01:40:01 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 24 Apr 2025 01:40:01 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 24 Apr 2025 01:40:01 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.48) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 24 Apr 2025 01:39:59 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fcXhxTZl"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=v2Dhhds98WUB9Ymwt2GNkt2TBD6txAamTUmZr9anzKBsB3KHr0bKGr3nYnDGlcBl/HdUmqstxldD8j9G3tA0RJZ4m0fROwiE1s95WJaUik/IKXALNJv4uce1Ol3X5dDu+4pL1GpVn6U6jRndyfmMp8bs4nqfmpkgusPzhzE3dBFvsS1UQZxXJp3Oc6k4geG94akCJ45aRHExqGKegBQ7syExsopDjT4IjSzSkJx3mTTVu08IdQIKg3iazTQG8KxLIaNrWwqU5fqCh1x8csz+bhOKjm91X6Z0TBLGqH2gw7RQ940qmW6auYNj8O35bVlQRAJOODV7ftp63ByumJGgBg==
+ b=SHNEdIk4x1nfCpqcRS9Yya4d2nHfKG7xvI619FuDGWok6B6/64V2xfNYwh9h+A5YCN7t9RIsV+ZDOtrMKvaLHKBwd/BUBE3FtDCJhhyTjzHi8sPU/7e8cm3R1Nl6lPo4gHscJIx64QYNvzHcW+giQ5IqKUJLad/7rP91OSPlhQIFXzjxCjUYwtV9arbwUgS5bM/8+4lXdCXjbwPUa6cPXVdVsv9iZWsAbuCMtVhfFINxsC6v98DVvB+8PzqXGQsNMZcqnSFeahza79KWCvBKDBN9CJvMlk8qmhAmKA/MtRTUEPU8gjezzIp0gBDViNZdxlxN6vLRcr/2d/3G4JDndA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WqTi/SUlq+JjE2WSO4S2TNHe8kuCEszC65mbTxCocH0=;
- b=Gf1n5Q7/1VXXhMkx8djISHJRrWsmnZy74AV15e9dlDFnu0DlLnGY033Ikji3tNFJ5c1sryFu+Y4foEuk185dFllcTOTGMZlgkUfOnby6KW8rt5CEFnC8RcfRVKTbSKSgQ3jyKVElmVC+h3kDRV69gI2grbQAxiH8jO7PrQ/j8g7r45BEVc/n25WXCpP9yWzi2DxwuIyc6zF0+XX+/OOp6yGoc45IfsXy7k647w0Mk9sHkSPIDUzuO1TYFa0SqEkYb4fYRS/Wx4QOS05O4oAuUwqmaF5aB11LjYbiRc1GcVrxNshy6b5EEP8QhSYy4H9bmHRiQwQo9BJ9SgamjHHFuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by DM6PR11MB4594.namprd11.prod.outlook.com (2603:10b6:5:2a0::12) with
+ bh=YExrLBNmjk0Jky++4o/V4jEROgJRqTpVnrXzJ5VrY0A=;
+ b=ReBNLYDVisgK7tJrl5kHUX1DruSk6/LzbbJFSR25pzOeQKadjs/+CknwTMxcWaBxdcsY/tewZOZRrokjohHr6OBRRyk7Rof+wihmrG0hexjASaDq6bm8qnqIpqhG/UkF5oWIQk5/e3S/3icahvCRxGKcs8Og/BGoGfa2WQaG3QCzxLHlZcHm3uhDb92NWZN3gKc9/ohZY+tMSINlIbCp2VHPin6JJBqgvFzj3hKBNQVS3N6NcblHgf2hRaqkqP5U+XfnPZRwybvnbM+VnCTTRat4ZSSh7WHx0y09BMpPz5hRa8F59N8PPTjXXRBdWgls4jR8Rd0J8PtBfpm7egbdtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YExrLBNmjk0Jky++4o/V4jEROgJRqTpVnrXzJ5VrY0A=;
+ b=fcXhxTZlXO6JVb59zl0TBecGz93jvJ7voJ/vIXMkjzPsuOmKJZnqIxASSLSL2qYpaRWj3AF0KMWMQpohXzO7dLdbqdpUtfX0KHcmHeKfRDREOKNB/09ohDyjKJwvtk1MJ9nh5XpXeq5fuzbhLMSEatR/jT9af/ouGPHEdtf4dB8=
+Received: from DM6PR03CA0070.namprd03.prod.outlook.com (2603:10b6:5:100::47)
+ by PH8PR12MB6721.namprd12.prod.outlook.com (2603:10b6:510:1cc::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.22; Thu, 24 Apr
- 2025 08:39:56 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%4]) with mapi id 15.20.8678.025; Thu, 24 Apr 2025
- 08:39:55 +0000
-Date: Thu, 24 Apr 2025 16:39:43 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: Kairui Song <kasong@tencent.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, <linux-kernel@vger.kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>, Baoquan He <bhe@redhat.com>,
-	Barry Song <v-songbaohua@oppo.com>, Hugh Dickens <hughd@google.com>,
-	"Johannes Weiner" <hannes@cmpxchg.org>, Kalesh Singh
-	<kaleshsingh@google.com>, Nhat Pham <nphamcs@gmail.com>, Ryan Roberts
-	<ryan.roberts@arm.com>, Yosry Ahmed <yosryahmed@google.com>,
-	<linux-mm@kvack.org>, <oliver.sang@intel.com>
-Subject: [linus:master] [mm, swap]  7277433096:  swapin.throughput 33.0%
- regression
-Message-ID: <202504241621.f27743ec-lkp@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI1PR02CA0032.apcprd02.prod.outlook.com
- (2603:1096:4:1f6::12) To LV3PR11MB8603.namprd11.prod.outlook.com
- (2603:10b6:408:1b6::9)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Thu, 24 Apr
+ 2025 08:40:09 +0000
+Received: from CH3PEPF00000011.namprd21.prod.outlook.com
+ (2603:10b6:5:100:cafe::fb) by DM6PR03CA0070.outlook.office365.com
+ (2603:10b6:5:100::47) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Thu,
+ 24 Apr 2025 08:40:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CH3PEPF00000011.mail.protection.outlook.com (10.167.244.116) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8699.1 via Frontend Transport; Thu, 24 Apr 2025 08:40:08 +0000
+Received: from FRAPPELLOUX01.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 24 Apr
+ 2025 03:40:06 -0500
+From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
+CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 01/10] drm/debugfs: output client_id in in drm_clients_info
+Date: Thu, 24 Apr 2025 10:38:13 +0200
+Message-ID: <20250424083834.15518-2-pierre-eric.pelloux-prayer@amd.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250424083834.15518-1-pierre-eric.pelloux-prayer@amd.com>
+References: <20250424083834.15518-1-pierre-eric.pelloux-prayer@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|DM6PR11MB4594:EE_
-X-MS-Office365-Filtering-Correlation-Id: 330ec4c2-2294-4e2f-2cf2-08dd830b96d7
+X-MS-TrafficTypeDiagnostic: CH3PEPF00000011:EE_|PH8PR12MB6721:EE_
+X-MS-Office365-Filtering-Correlation-Id: c92efeee-3118-4f41-9a69-08dd830b9eb9
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?7X/deGGNaplAujv15pcgRyE0hxF3wRmV6tyufGLaPszoz87hx9pG2/O7si?=
- =?iso-8859-1?Q?Ao/rqJl5QKgng9xDhP+27PAluiS067voR/33HyBNxuSBQLbb6oHloq4qjd?=
- =?iso-8859-1?Q?+yorCbKVfo1gP8I0WDnWAJLJBZYoegXLDFigFCDGAFzLH9ZLQurVPTAd1F?=
- =?iso-8859-1?Q?SC+knE+hFHK1mttlyPxFWgXPy84MaIJgSPybiZ7EhmWHyjV/t2IvpVMlvB?=
- =?iso-8859-1?Q?IMUxwOwCdyAEz3o4ypqPT/KJXi4VdbivWw592pmFOy+z6frZgNgT30C7a0?=
- =?iso-8859-1?Q?Am6BaoIzmwEiEALhrX1pK9AjOCYhibesPnX3axz+MP+OmN6lIfiORXkPsf?=
- =?iso-8859-1?Q?VM0di+6PP1oM8m4l/SeuGjyDYCed07qfgcrWZc/qhgCOTyqnmarFZhIrHq?=
- =?iso-8859-1?Q?P6jcEzEK7d6f1DIcnyx21MFfE8zwtBeAYuOcPowX05Lxp2uFs/9mirJwQn?=
- =?iso-8859-1?Q?i8cl6QAnN7mLiV+bZ3YWXYZDPqZJPDgucCQzzo4Es+k6v9gMPbQlYv9lLA?=
- =?iso-8859-1?Q?0L9C5tA8vcweuig/bOGpSlStqPDuLqaYy/kplgnWEg/jwJep9NAwxZdgoF?=
- =?iso-8859-1?Q?QNQgQIPosdITH2PZpiYNL5eivVO3noUuk0VRuJnRuJ88TkuPuo94OYtiaJ?=
- =?iso-8859-1?Q?cJeAEoOt0nU/loe3mHfVBPi9/YMzPftdUjnD4npXz6dpXnaIXkVLTEw0yt?=
- =?iso-8859-1?Q?wdFNc1zy5PaQMaLFPoVAKyMBw6rGKCHcYsa8aPtfV8YO2D9SDCQJq6pnVi?=
- =?iso-8859-1?Q?EA5H7cU8E5RFRmK7m2C1jT7hIO2/1bz3P4wQB4/wbUMJtr1iOiNPK8daRq?=
- =?iso-8859-1?Q?omEsnWqkCXrXP2/KoorBGxDVv+47ZdB7cRYOL2EYsA/kE6XR36BoKdlO7F?=
- =?iso-8859-1?Q?OQnJHqZD1Fem/RodwkEhbrYW4bq8fg1paARgbMaXd5ISnTqQyTlWvK5Gdb?=
- =?iso-8859-1?Q?PqA5rup2pU3cTuyoMt08c81U7kJXSt0BrCddO1o6rYjL1FCPuSwGCq6Qwv?=
- =?iso-8859-1?Q?h/o9xZZsu/yf9Nvo5l1pbI3LmXOHhhkePoQJijGtF/aifrhc2DrweUqBYP?=
- =?iso-8859-1?Q?75IX1gbrGvk9IrSjnmtca1PPgOk8+TDSeYIZLVe0DpglccjpMehqOUa398?=
- =?iso-8859-1?Q?o6X2EIelWCWO/Cc9U4rGQvW/2Pf33tKYdi3fg9QIcEwD0eV/1/pROa6kGu?=
- =?iso-8859-1?Q?rBJBPDTCcKqOd7rGVM3C5/nGlFGkd+dkSxuEV3gSRC3H9jNSOk8EWeoFAB?=
- =?iso-8859-1?Q?6w4pSPXealWM2AzTn0WKBadHQiuddSiac+x2KqHrF+FjDlJ1xbAggHISsL?=
- =?iso-8859-1?Q?9fcSKwosYywYhdH+wW6nu7Z82c6wnk/grKNlXkL0gfSX97jyq7zTZB16F9?=
- =?iso-8859-1?Q?X6HARdbkS18msmLU/biAiBzPlcFVi4o8SN9QLbXD7GNy/ulFHoJr1vB2H+?=
- =?iso-8859-1?Q?/FPeZ8vfo6/DU0Ds?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?+m8WznKTzTqH8JnWAV/C5X332wwl8gRGuvXgJUh55te3iIlHXF2R3AqVJe?=
- =?iso-8859-1?Q?HUjo8EN277Kfj13PZHonUCjO1rvmWnss6XGrvJOTGWy5N+xnWeub7UQFVO?=
- =?iso-8859-1?Q?Sr+3QJAvSijDszFzcufIrfiuVrLVdjV9yuQA3iJ2NumQAvjJ7rGkQZhlPA?=
- =?iso-8859-1?Q?eTna3cGCxnApLMWypHd69KXkkOwBLQgnLsUIXiKs/gXN8rCB2/K+5oRcKb?=
- =?iso-8859-1?Q?uJzxSenuqRFkdqyfKSQtbdLpjcklVszW9QXysmx5ZHg3XNf+c7GnKhrhq1?=
- =?iso-8859-1?Q?s8OpV/4eiL/sb3xSy/uNLFTf4lr6ZhQ12D63sLGPGKoRdDQG2su39p7Xz4?=
- =?iso-8859-1?Q?tPdunx+MXhDVBLfcWwOko5CSafClYOYcYrrdk2aveAk/3fpYHj4glz2WRb?=
- =?iso-8859-1?Q?Wnz3n7PmfNcgT5/sSNZU+XsSWYvLH87Fsz8rCro7tx7lcbl48Fa6RPTSWm?=
- =?iso-8859-1?Q?Aahsx5SvcLzc0H7u0iTXrEyouvORjEqtY4dyDfMbE56ZdzmoMsK7YVVqmK?=
- =?iso-8859-1?Q?S9os59LCymQf2KzGUFkwDmTbehtixXWiyA3nJkbhBQ6+kNW1RBz/haSKbb?=
- =?iso-8859-1?Q?9eTwBrCogSKgDM2TxMtUx4iWmwQ7olEQ0qShNArIx8kevrulzY8SKPeAUd?=
- =?iso-8859-1?Q?gb1DLtQ6OC1L/5Osmr0YV5SHf8JszWuXuyQFHaGyc+lB7snJNYa5fX2rna?=
- =?iso-8859-1?Q?SRaXeSNY+qwScpm5/0DzDlpfWFrZIg5SR9cz7QV+CUGcAVwZgi1aaD+d6F?=
- =?iso-8859-1?Q?E8Ap+5VyXrZ3U4HYWH+lZAv8VsD0OfbjgkCabQpX6SxhSzpp8Hphr1Lzdt?=
- =?iso-8859-1?Q?mPA1j12YCmFtkcjrxRKIhw0biLNyRwa0mcs08WD5ntSQjC61cDPG+xCYaY?=
- =?iso-8859-1?Q?Bg8SzlvYiesQABneqO7JLP+VeXcm0unDb+Poenl1+5qZbde2G7XQg+vQ8/?=
- =?iso-8859-1?Q?O84FQgPyyZr+sS/CQKVxO0gGpO9ngzEJ9R17fjU6mYuPAOxofgYKI0zztm?=
- =?iso-8859-1?Q?vuy5gA/nzXY2+KVFVjo9OQU+fxJaW5z6C/E4kEEdN6rz5WQtZtFYTWL3IT?=
- =?iso-8859-1?Q?TdqIah6sLtwdVdIHrKnVaDksA48l6IGJapnjWkxYWgi03QvcQJi5izeg82?=
- =?iso-8859-1?Q?ChWumB78SUHmd2ID66utJJ0CEPjtSTTEDVIBa9XWhtPUJjLnmuPLwLgvUp?=
- =?iso-8859-1?Q?ushWJzScA+mUNwLNREfRx8/qzJupJJ+UrkXs8/B3PVXUKdM3ApF2sj5ElJ?=
- =?iso-8859-1?Q?OeNa/YfT2yTDxFJ6n9qQGx5COrLIWZVWt6Gig7by9rkH3YwnGs2ONe0Jj2?=
- =?iso-8859-1?Q?kAuAQoqPvSJgn0202IItN9luRjg36870BcASH9i9Vpqq7kmS0jka/rNMm6?=
- =?iso-8859-1?Q?7f6cR16Oow9gNZaS8MrFqBuTHN23hBDXX8STQEU0Tc2tJN1R4OGYiEYPUI?=
- =?iso-8859-1?Q?lCoMkB0oiTmd+mMGXli1br1PRRbkXH5T0z7Uvbbym5Q0cN+nPX3dvaCLbG?=
- =?iso-8859-1?Q?6oaDsoKWiUBmSM1ACUbRY0xWXS6F+nwm6mbEESTWP0T45ssUA+RY3SUSh2?=
- =?iso-8859-1?Q?Lx2lEY887wOY1dDpR34RrTbkjDJ952MkuWcJESpyeXd4AIbLMWDdo8VQqu?=
- =?iso-8859-1?Q?WYDRg4svwxGtvvjLR5LgIeNCh43WUOakIieFtzw+yFffXPD1TP1WA2Nw?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 330ec4c2-2294-4e2f-2cf2-08dd830b96d7
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 08:39:55.9214
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?YjV2UnV3TlR0emEyV3pyUXljM2dCS2lpbldUckxUNTBDZnV3aXdVSmpPbmN2?=
+ =?utf-8?B?Uis4K2llTk10VzY0aFQ0M2k1NDA5ZS9ja1lTa3BTWDhETS9BM1p3MVFFcktn?=
+ =?utf-8?B?WS84QlFYVG40ajB0ZGZROWN6Nngzajg5RjVoNmN0VlFuc0hLTFg1SitWUk9E?=
+ =?utf-8?B?aG5LU09Rd3VkUVFYQ1ZJWFNGQVVlSVc2S0IrS2tod2Jwc25OcTRNVG96c1Zs?=
+ =?utf-8?B?dTFBRm9za3dqOFdjTzJBQmw3bHRBVlIvaGJ2S2V4cWd6eGVXY0RITTlLVHdR?=
+ =?utf-8?B?TldaV1JrRFB0MXVUWGtqZzhDMnduOHhwdm9OUTVta3k3QjNwdWd5Sy9iS1dp?=
+ =?utf-8?B?eitkMXliUWxhQ1pDZHlqRlF0WVZxOWtuRVIybUF2eURMdytVZ3FjOHIwdWdx?=
+ =?utf-8?B?ZGJYbW53S2s4SjVwMFk2VUJoem5GcXkwbFZzVEwwV1NIZy9obFpuZTNBclp2?=
+ =?utf-8?B?ci83S3NuZ0hPd0dzRWVFTEpPSm85dnY3cS82N2dNanNPdEF0NzB0V08rcWRR?=
+ =?utf-8?B?SXRJc1RLN3I5NDNiU1BEa3ZlOE9MQlM2czVTZG91aE5Zc0FpOExaZmtTVndX?=
+ =?utf-8?B?NWlRYnpEL3A0MEZWNW9abUFpOWx0THduVDE0NHNqRDZUUEFmZUJ1ZkNTR0RT?=
+ =?utf-8?B?QkFhZU5tZ2FYNWN5L0NUZnpRRTQ5RmJ3NG5BV29jTEVSVzFyNE5NL3BtTTJR?=
+ =?utf-8?B?RndHV01FM0RvUmk5QTNYREF6UzlWUDJ3cXRkWnQySHRycXYrdUdveWcwRXJF?=
+ =?utf-8?B?clRFQzZaS0xFMExhT2ltRFBicFk3N3k4UVlWb1FuNFlXTnhDWXY0ek8wcDhB?=
+ =?utf-8?B?UVJWdGR2T3YwcERUbWRFZ2tBcDVac1hVOHpGdXAwTmFSOEdXMm1rVDU0Qklu?=
+ =?utf-8?B?Z3RZVC8rS0tJUDFaTEJLZUg5K3RqZ2Z3K05vSXoycFp2YWo0bnlkZ3hnaFMz?=
+ =?utf-8?B?QzF1VGtuSlFZVUVmemkxaCt3VVFQOWxtQWE3d1NMRUpKR0J2VVBwMDI3azFn?=
+ =?utf-8?B?UmJsNExvUXFTTURJc0dlZjY5UWtoNTlWWmIzeURza3Z0Z2RjMy9GcHJsV2Jl?=
+ =?utf-8?B?R3pyeTd0NDZnRWJ2TFg2Z1pxOThhWHMyVW50LzF1SXk0c3JHT1B5Ukk3dmtz?=
+ =?utf-8?B?cm1BSG9sQVZ1TnhWSENsNjA1YllkWmhaMll1TVJKMjB3TEFZcXQ5UXUxWDN4?=
+ =?utf-8?B?T0NYZlY5Qkk3ME80UHJDZW1UUWdDOXhXcWtrY1UrY0VSNVA2RmpENmpYUnha?=
+ =?utf-8?B?RWZtNjhKV0tTNXZjRWRSVXBEb3FNVFNTNzYwSTJCUjFVaXdWMXpjVEdwWnlF?=
+ =?utf-8?B?QkdVMDh0OW9IR0N0TkZvNlliMlVMK241NCs0VGkwZ1BOMUtVWjh5cUlYMFNR?=
+ =?utf-8?B?ZFc2Qi84WVlyMmlqcmpkV0I5azhmbWJlUms4dExIU0RXR2lMTDAzTmFUeDdm?=
+ =?utf-8?B?N0IvTjE2cWdqQzltQnJpbVhRUlFPNW5TaXRuOVc0dzJGR2JJZW5GRlkxcldH?=
+ =?utf-8?B?WFl5UkJyRThDcGQ3N3hTMU45Q3JGWUtnOWRDQTFha0txcEhTa1dQNDczNkFk?=
+ =?utf-8?B?YUpOdHFRdWZqQ0lOa2RpeHBsbFJaNGlaNDFjNk00NitUOWN5bEEvUG5uV2ZI?=
+ =?utf-8?B?Z3NMellLai9taXhna2szdmRLUit4bVEzTURPM3RIYWhwbEIrU0trZDFGSUxR?=
+ =?utf-8?B?R0J5NUdZTzM2VHpzUzcxSWNTNDEyTWo5dmhIM0R3RVJMSlc3V0xkY2dyc1hk?=
+ =?utf-8?B?WnhqblNJa3FDN25WZTYyMUtXanQ4TVZkSVVHMmliVzZRcXhYWkV4RVFiTHU5?=
+ =?utf-8?B?TC9za1gzYVVCajJWM3Z2dVBNNHRCNFNkQkNCOUlncWFJK2ptSW9EaXZjNGRK?=
+ =?utf-8?B?K2lmekNBTXdmd2pPMnFJbG5pTkU2TXVGa1M3aUI2b0tPZ2NiL1pJOFVDVzJ6?=
+ =?utf-8?B?SFJobmpFS29nK0JkTG1tdDFaL0ZzUlQ2K25FRm05SStNWU4zZUxaRDgvZTFu?=
+ =?utf-8?B?UnJRUUQrQktlckpPYzNWUFU3bUE4UHNBTzFsNW45cy9iTU5yUlFjUUZTRkNk?=
+ =?utf-8?Q?5naasE?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 08:40:08.6662
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +2wXpgUjQMHo7qFYeEbwfegKn68zkKieRTLh7jXusDvX8M9mGifvLkVgxIMpmy4bEhmAP4Faxhl8uzaNKvWwDg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4594
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c92efeee-3118-4f41-9a69-08dd830b9eb9
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF00000011.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6721
 
+client_id is a unique id used by fdinfo. Having it listed in 'clients'
+output means a userspace application can correlate the fields, eg:
+given a fdinfo id get the fdinfo name.
 
+Geiven that client_id is a uint64_t, we use a %20llu printf format to
+keep the output aligned (20 = digit count of the biggest uint64_t).
 
-Hello,
+Reviewed-by: Christian Kรถnig <christian.koenig@amd.com>
+Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
+---
+ drivers/gpu/drm/drm_debugfs.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-
-note:
-from commit message, this regression should be expected. we still make out this
-report FYI what's the possible impact of this change.
-
-below details just FYI.
-
-
-kernel test robot noticed a 33.0% regression of swapin.throughput on:
-
-
-commit: 7277433096f6ce4a84a1620529ac4ba3e1041ee1 ("mm, swap: remove old allocation path for HDD")
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-
-[still regression on linus/master      bc3372351d0c8b2726b7d4229b878342e3e6b0e8]
-[still regression on linux-next/master 6ac908f24cd7ddae52c496bbc888e97ee7b033ac]
-
-testcase: swapin
-config: x86_64-rhel-9.4
-compiler: gcc-12
-test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake-E) with 32G memory
-parameters:
-
-	disk: 1HDD
-	size: 8G
-	nr_task: 8
-	cpufreq_governor: performance
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202504241621.f27743ec-lkp@intel.com
-
-
-Details are as below:
--------------------------------------------------------------------------------------------------->
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250424/202504241621.f27743ec-lkp@intel.com
-
-=========================================================================================
-compiler/cpufreq_governor/disk/kconfig/nr_task/rootfs/size/tbox_group/testcase:
-  gcc-12/performance/1HDD/x86_64-rhel-9.4/8/debian-12-x86_64-20240206.cgz/8G/lkp-cfl-e1/swapin
-
-commit: 
-  e027ec414f ("mm, swap: fold swap_info_get_cont in the only caller")
-  7277433096 ("mm, swap: remove old allocation path for HDD")
-
-e027ec414fe8f540 7277433096f6ce4a84a1620529a 
----------------- --------------------------- 
-         %stddev     %change         %stddev
-             \          |                \  
- 5.409e+09           +51.8%  8.212e+09 ฑ  5%  cpuidle..time
-   1037299           +18.5%    1228926 ฑ 12%  cpuidle..usage
-     68.75            +9.2%      75.07 ฑ  2%  iostat.cpu.idle
-     30.53 ฑ  2%     -19.8%      24.47 ฑ  8%  iostat.cpu.iowait
-    797.42 ฑ  4%     +22.0%     972.57 ฑ  7%  uptime.boot
-      9703 ฑ  4%     +26.4%      12265 ฑ  8%  uptime.idle
-     20243 ฑ 57%    +248.6%      70559 ฑ 30%  meminfo.Inactive
-     20238 ฑ 57%    +248.6%      70559 ฑ 30%  meminfo.Inactive(anon)
-     24668           +11.3%      27444        meminfo.Shmem
-      0.01 ฑ 14%     +33.3%       0.02 ฑ  5%  perf-sched.sch_delay.avg.ms.__x64_sys_pause.do_syscall_64.entry_SYSCALL_64_after_hwframe.[unknown]
-      7023 ฑ  3%     -13.1%       6105 ฑ  8%  perf-sched.total_wait_and_delay.count.ms
-      4615 ฑ  4%     -18.8%       3747 ฑ 12%  perf-sched.wait_and_delay.count.io_schedule.folio_wait_bit_common.__folio_lock_or_retry.do_swap_page
-     68.63            +6.4       75.02 ฑ  2%  mpstat.cpu.all.idle%
-     30.66 ฑ  2%      -6.1       24.54 ฑ  8%  mpstat.cpu.all.iowait%
-      0.09            -0.0        0.06 ฑ  4%  mpstat.cpu.all.irq%
-      0.05            -0.0        0.04 ฑ  3%  mpstat.cpu.all.soft%
-      0.28            -0.1        0.20 ฑ  5%  mpstat.cpu.all.sys%
-      0.29 ฑ 21%      -0.1        0.15 ฑ  4%  mpstat.cpu.all.usr%
-      0.09 ฑ 12%      -8.7%       0.08        swapin.free_time
-      3435 ฑ  2%     -33.7%       2277 ฑ  5%  swapin.median
-     47.13 ฑ  6%      +8.4       55.50 ฑ  7%  swapin.stddev%
-     26855 ฑ  2%     -33.0%      18001 ฑ  5%  swapin.throughput
-    339.27           +51.6%     514.32 ฑ  5%  swapin.time.elapsed_time
-    339.27           +51.6%     514.32 ฑ  5%  swapin.time.elapsed_time.max
-     12785           +51.4%      19352 ฑ  5%  swapin.time.minor_page_faults
-     68.81            +9.1%      75.06 ฑ  2%  vmstat.cpu.id
-     30.57 ฑ  2%     -19.6%      24.56 ฑ  8%  vmstat.cpu.wa
-     24857           -33.8%      16465 ฑ  5%  vmstat.io.bi
-      1.30 ฑ  5%      -7.1%       1.21 ฑ  5%  vmstat.procs.r
-     24857           -33.8%      16465 ฑ  5%  vmstat.swap.si
-      7.12 ฑ  7%     -31.6%       4.87 ฑ 14%  vmstat.swap.so
-      2401           -28.3%       1721 ฑ  3%  vmstat.system.cs
-      2399           -24.5%       1811 ฑ  2%  vmstat.system.in
-    936464            +6.4%     996818        proc-vmstat.nr_active_anon
-    922127            +8.3%     998395        proc-vmstat.nr_anon_pages
-    612143            -1.2%     605002        proc-vmstat.nr_dirty_background_threshold
-   1225784            -1.2%    1211485        proc-vmstat.nr_dirty_threshold
-   1803299            +3.7%    1869638        proc-vmstat.nr_file_pages
-   6195937            -1.2%    6124422        proc-vmstat.nr_free_pages
-      5059 ฑ 57%    +248.6%      17639 ฑ 30%  proc-vmstat.nr_inactive_anon
-      5486            -1.4%       5410        proc-vmstat.nr_page_table_pages
-      6172           +11.2%       6866        proc-vmstat.nr_shmem
-     14607            +5.3%      15384        proc-vmstat.nr_slab_unreclaimable
-    920671            +7.1%     986314 ฑ  2%  proc-vmstat.nr_swapcached
-   4413040            +1.8%    4493858        proc-vmstat.nr_vmscan_write
-    936464            +6.4%     996818        proc-vmstat.nr_zone_active_anon
-      5059 ฑ 57%    +248.6%      17639 ฑ 30%  proc-vmstat.nr_zone_inactive_anon
-   2535302            +5.8%    2682756        proc-vmstat.numa_hit
-   2535395            +5.8%    2681644        proc-vmstat.numa_local
-   2543613            +5.9%    2694193        proc-vmstat.pgalloc_normal
-   2629484            +8.0%    2838539        proc-vmstat.pgfault
-   2520197            +6.0%    2672439        proc-vmstat.pgfree
-    293008            -6.8%     273047        proc-vmstat.pgmajfault
-     25587 ฑ  2%     +41.3%      36143 ฑ  5%  proc-vmstat.pgreuse
-    933820            +8.8%    1015820        proc-vmstat.swap_ra
-    919094            +9.8%    1008935        proc-vmstat.swap_ra_hit
-     16587            -4.3%      15880        proc-vmstat.workingset_nodes
-   1088601            +7.4%    1169575        proc-vmstat.workingset_refault_anon
- 2.328e+08 ฑ 24%     -43.2%  1.323e+08 ฑ 30%  sched_debug.cfs_rq:/.avg_vruntime.max
-  62177217 ฑ 36%     -43.0%   35460373 ฑ 30%  sched_debug.cfs_rq:/.avg_vruntime.stddev
- 2.328e+08 ฑ 24%     -43.2%  1.323e+08 ฑ 30%  sched_debug.cfs_rq:/.min_vruntime.max
-  62177217 ฑ 36%     -43.0%   35460373 ฑ 30%  sched_debug.cfs_rq:/.min_vruntime.stddev
-    210.52 ฑ 63%    +130.6%     485.44 ฑ 32%  sched_debug.cfs_rq:/.removed.load_avg.max
-      4.68 ฑ 79%    +185.3%      13.36 ฑ 37%  sched_debug.cfs_rq:/.removed.runnable_avg.avg
-     69.33 ฑ 72%    +195.8%     205.12 ฑ 38%  sched_debug.cfs_rq:/.removed.runnable_avg.max
-     17.15 ฑ 74%    +192.5%      50.18 ฑ 38%  sched_debug.cfs_rq:/.removed.runnable_avg.stddev
-      4.58 ฑ 84%    +188.0%      13.19 ฑ 37%  sched_debug.cfs_rq:/.removed.util_avg.avg
-     67.72 ฑ 77%    +200.5%     203.49 ฑ 37%  sched_debug.cfs_rq:/.removed.util_avg.max
-     16.76 ฑ 79%    +196.5%      49.70 ฑ 37%  sched_debug.cfs_rq:/.removed.util_avg.stddev
-     35.31 ฑ 24%     -40.4%      21.03 ฑ 31%  sched_debug.cfs_rq:/.runnable_avg.min
-    167.49 ฑ  2%     -23.7%     127.74 ฑ 12%  sched_debug.cfs_rq:/.util_avg.avg
-    602113 ฑ  5%     +16.6%     702121 ฑ  8%  sched_debug.cpu.clock.avg
-    602114 ฑ  5%     +16.6%     702121 ฑ  8%  sched_debug.cpu.clock.max
-    602112 ฑ  5%     +16.6%     702120 ฑ  8%  sched_debug.cpu.clock.min
-    601358 ฑ  5%     +16.6%     701428 ฑ  8%  sched_debug.cpu.clock_task.avg
-    601962 ฑ  5%     +16.6%     701955 ฑ  8%  sched_debug.cpu.clock_task.max
-    597107 ฑ  5%     +16.9%     698032 ฑ  8%  sched_debug.cpu.clock_task.min
-      1227 ฑ  5%     -16.4%       1026 ฑ 10%  sched_debug.cpu.clock_task.stddev
-      4030 ฑ  3%     +33.1%       5364 ฑ  2%  sched_debug.cpu.curr->pid.max
-      1037 ฑ  5%     +28.9%       1336 ฑ  3%  sched_debug.cpu.curr->pid.stddev
-     46279 ฑ  5%     -19.9%      37088 ฑ  2%  sched_debug.cpu.nr_switches.avg
-    602113 ฑ  5%     +16.6%     702121 ฑ  8%  sched_debug.cpu_clk
-    601390 ฑ  5%     +16.6%     701418 ฑ  8%  sched_debug.ktime
-    602514 ฑ  5%     +16.6%     702513 ฑ  8%  sched_debug.sched_clk
-     50.92 ฑ  3%     +13.3%      57.67 ฑ  2%  perf-stat.i.MPKI
-  96852867 ฑ 12%     -41.7%   56470262 ฑ  4%  perf-stat.i.branch-instructions
-      3.59 ฑ  2%      -0.2        3.39        perf-stat.i.branch-miss-rate%
-   4517791 ฑ 19%     -46.8%    2401426 ฑ  4%  perf-stat.i.branch-misses
-     45.08            +3.6       48.70        perf-stat.i.cache-miss-rate%
-  11444503           -25.3%    8552014 ฑ  5%  perf-stat.i.cache-misses
-  26646448           -30.4%   18535433 ฑ  3%  perf-stat.i.cache-references
-      2380           -28.5%       1703 ฑ  3%  perf-stat.i.context-switches
-      1.99 ฑ  2%      +4.4%       2.08        perf-stat.i.cpi
- 6.453e+08 ฑ  7%     -36.1%  4.124e+08 ฑ  4%  perf-stat.i.cpu-cycles
-     37.44 ฑ  3%     -29.0%      26.60 ฑ  3%  perf-stat.i.cpu-migrations
-     74.34 ฑ  4%     -18.6%      60.51 ฑ  4%  perf-stat.i.cycles-between-cache-misses
- 4.335e+08 ฑ 14%     -42.5%  2.493e+08 ฑ  4%  perf-stat.i.instructions
-      0.56 ฑ  3%      -7.2%       0.52        perf-stat.i.ipc
-    865.19           -38.4%     532.92 ฑ  5%  perf-stat.i.major-faults
-      6605           -27.4%       4795 ฑ  3%  perf-stat.i.minor-faults
-      7470           -28.7%       5328 ฑ  4%  perf-stat.i.page-faults
-      4.62 ฑ  6%      -1.1        3.55 ฑ 44%  perf-stat.overall.branch-miss-rate%
-     56.43 ฑ  6%     -28.5%      40.36 ฑ 44%  perf-stat.overall.cycles-between-cache-misses
-      0.67 ฑ  6%     -24.7%       0.50 ฑ 44%  perf-stat.overall.ipc
-  96637819 ฑ 12%     -51.6%   46743598 ฑ 45%  perf-stat.ps.branch-instructions
-   4506778 ฑ 19%     -55.9%    1988844 ฑ 45%  perf-stat.ps.branch-misses
-  11410417           -38.1%    7059671 ฑ 45%  perf-stat.ps.cache-misses
-  26570647           -42.3%   15341807 ฑ 44%  perf-stat.ps.cache-references
-      2373           -40.5%       1411 ฑ 44%  perf-stat.ps.context-switches
- 6.442e+08 ฑ  7%     -47.0%  3.417e+08 ฑ 44%  perf-stat.ps.cpu-cycles
-     37.34 ฑ  3%     -41.0%      22.03 ฑ 44%  perf-stat.ps.cpu-migrations
- 4.326e+08 ฑ 14%     -52.3%  2.064e+08 ฑ 45%  perf-stat.ps.instructions
-    862.62           -49.0%     440.19 ฑ 45%  perf-stat.ps.major-faults
-      6586           -39.8%       3967 ฑ 44%  perf-stat.ps.minor-faults
-      7449           -40.8%       4407 ฑ 44%  perf-stat.ps.page-faults
-      6.51 ฑ  7%      -1.2        5.26 ฑ  5%  perf-profile.calltrace.cycles-pp.do_access
-      5.54 ฑ  6%      -1.0        4.54 ฑ  5%  perf-profile.calltrace.cycles-pp.asm_exc_page_fault.do_access
-      4.94 ฑ  5%      -0.9        4.03 ฑ  6%  perf-profile.calltrace.cycles-pp.exc_page_fault.asm_exc_page_fault.do_access
-      4.90 ฑ  5%      -0.9        4.02 ฑ  6%  perf-profile.calltrace.cycles-pp.do_user_addr_fault.exc_page_fault.asm_exc_page_fault.do_access
-      4.62 ฑ  6%      -0.9        3.74 ฑ  7%  perf-profile.calltrace.cycles-pp.handle_mm_fault.do_user_addr_fault.exc_page_fault.asm_exc_page_fault.do_access
-      4.46 ฑ  6%      -0.8        3.62 ฑ  7%  perf-profile.calltrace.cycles-pp.__handle_mm_fault.handle_mm_fault.do_user_addr_fault.exc_page_fault.asm_exc_page_fault
-      4.33 ฑ  7%      -0.8        3.54 ฑ  8%  perf-profile.calltrace.cycles-pp.do_swap_page.__handle_mm_fault.handle_mm_fault.do_user_addr_fault.exc_page_fault
-      2.25 ฑ 11%      -0.4        1.86 ฑ 10%  perf-profile.calltrace.cycles-pp.handle_edge_irq.__common_interrupt.common_interrupt.asm_common_interrupt.cpuidle_enter_state
-      2.26 ฑ 11%      -0.4        1.87 ฑ 10%  perf-profile.calltrace.cycles-pp.__common_interrupt.common_interrupt.asm_common_interrupt.cpuidle_enter_state.cpuidle_enter
-      2.20 ฑ 12%      -0.4        1.83 ฑ 10%  perf-profile.calltrace.cycles-pp.handle_irq_event.handle_edge_irq.__common_interrupt.common_interrupt.asm_common_interrupt
-      0.82 ฑ 13%      -0.1        0.69 ฑ  7%  perf-profile.calltrace.cycles-pp.ahci_handle_port_intr.ahci_single_level_irq_intr.__handle_irq_event_percpu.handle_irq_event.handle_edge_irq
-      4.14 ฑ  3%      +0.2        4.39        perf-profile.calltrace.cycles-pp.cpuidle_idle_call.do_idle.cpu_startup_entry.rest_init.start_kernel
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.calltrace.cycles-pp.cpu_startup_entry.rest_init.start_kernel.x86_64_start_reservations.x86_64_start_kernel
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.calltrace.cycles-pp.rest_init.start_kernel.x86_64_start_reservations.x86_64_start_kernel.common_startup_64
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.calltrace.cycles-pp.start_kernel.x86_64_start_reservations.x86_64_start_kernel.common_startup_64
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.calltrace.cycles-pp.x86_64_start_kernel.common_startup_64
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.calltrace.cycles-pp.x86_64_start_reservations.x86_64_start_kernel.common_startup_64
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.calltrace.cycles-pp.do_idle.cpu_startup_entry.rest_init.start_kernel.x86_64_start_reservations
-      3.73 ฑ  5%      +0.3        4.05 ฑ  2%  perf-profile.calltrace.cycles-pp.cpuidle_enter.cpuidle_idle_call.do_idle.cpu_startup_entry.rest_init
-     83.48            +1.2       84.68        perf-profile.calltrace.cycles-pp.do_idle.cpu_startup_entry.start_secondary.common_startup_64
-     83.50            +1.2       84.74        perf-profile.calltrace.cycles-pp.start_secondary.common_startup_64
-     83.50            +1.2       84.74        perf-profile.calltrace.cycles-pp.cpu_startup_entry.start_secondary.common_startup_64
-     87.73            +1.5       89.22        perf-profile.calltrace.cycles-pp.common_startup_64
-      7.69 ฑ  7%      -1.4        6.28 ฑ  6%  perf-profile.children.cycles-pp.do_access
-      6.07 ฑ  5%      -1.0        5.08 ฑ  3%  perf-profile.children.cycles-pp.asm_exc_page_fault
-      5.40 ฑ  5%      -0.9        4.52 ฑ  3%  perf-profile.children.cycles-pp.exc_page_fault
-      5.37 ฑ  5%      -0.9        4.50 ฑ  3%  perf-profile.children.cycles-pp.do_user_addr_fault
-      4.44 ฑ  7%      -0.8        3.60 ฑ  7%  perf-profile.children.cycles-pp.do_swap_page
-      5.05 ฑ  6%      -0.8        4.22 ฑ  4%  perf-profile.children.cycles-pp.handle_mm_fault
-      4.88 ฑ  6%      -0.8        4.07 ฑ  5%  perf-profile.children.cycles-pp.__handle_mm_fault
-      3.56 ฑ  6%      -0.6        2.95 ฑ  7%  perf-profile.children.cycles-pp.common_interrupt
-      3.56 ฑ  6%      -0.6        2.96 ฑ  7%  perf-profile.children.cycles-pp.asm_common_interrupt
-      2.48 ฑ 11%      -0.5        1.97 ฑ 10%  perf-profile.children.cycles-pp.handle_edge_irq
-      2.49 ฑ 11%      -0.5        1.98 ฑ 10%  perf-profile.children.cycles-pp.__common_interrupt
-      2.42 ฑ 11%      -0.5        1.93 ฑ 10%  perf-profile.children.cycles-pp.handle_irq_event
-      2.39 ฑ 12%      -0.5        1.91 ฑ  9%  perf-profile.children.cycles-pp.__handle_irq_event_percpu
-      2.37 ฑ 13%      -0.5        1.90 ฑ  9%  perf-profile.children.cycles-pp.ahci_single_level_irq_intr
-      1.17 ฑ 12%      -0.3        0.90 ฑ 11%  perf-profile.children.cycles-pp.__schedule
-      0.74 ฑ  8%      -0.2        0.49 ฑ 14%  perf-profile.children.cycles-pp.__folio_lock_or_retry
-      0.78 ฑ 13%      -0.2        0.55 ฑ 12%  perf-profile.children.cycles-pp.schedule
-      0.64 ฑ  9%      -0.2        0.43 ฑ 15%  perf-profile.children.cycles-pp.io_schedule
-      0.68 ฑ  7%      -0.2        0.47 ฑ 15%  perf-profile.children.cycles-pp.folio_wait_bit_common
-      0.93 ฑ 12%      -0.2        0.74 ฑ  5%  perf-profile.children.cycles-pp.ahci_handle_port_intr
-      0.89 ฑ  9%      -0.2        0.74 ฑ  7%  perf-profile.children.cycles-pp.scsi_end_request
-      0.89 ฑ  9%      -0.1        0.74 ฑ  8%  perf-profile.children.cycles-pp.scsi_io_completion
-      0.44 ฑ 21%      -0.1        0.30 ฑ 13%  perf-profile.children.cycles-pp.blk_mq_dispatch_rq_list
-      0.20 ฑ 20%      -0.1        0.09 ฑ 33%  perf-profile.children.cycles-pp.xas_load
-      0.20 ฑ 24%      -0.1        0.10 ฑ 29%  perf-profile.children.cycles-pp.filemap_get_entry
-      0.25 ฑ 14%      -0.1        0.16 ฑ 19%  perf-profile.children.cycles-pp.ahci_handle_port_interrupt
-      0.24 ฑ 12%      -0.1        0.15 ฑ 17%  perf-profile.children.cycles-pp.sata_async_notification
-      0.23 ฑ 12%      -0.1        0.14 ฑ 17%  perf-profile.children.cycles-pp.ahci_scr_read
-      0.20 ฑ 21%      -0.1        0.11 ฑ 25%  perf-profile.children.cycles-pp.ata_scsi_queuecmd
-      0.20 ฑ 24%      -0.1        0.12 ฑ 23%  perf-profile.children.cycles-pp.scsi_dispatch_cmd
-      0.22 ฑ 22%      -0.1        0.14 ฑ 27%  perf-profile.children.cycles-pp.seq_read_iter
-      0.21 ฑ 11%      +0.1        0.29 ฑ 19%  perf-profile.children.cycles-pp.__mmput
-      0.17 ฑ 15%      +0.1        0.26 ฑ 15%  perf-profile.children.cycles-pp.do_pte_missing
-      0.14 ฑ 20%      +0.1        0.23 ฑ 20%  perf-profile.children.cycles-pp.filemap_map_pages
-      0.20 ฑ 13%      +0.1        0.29 ฑ 19%  perf-profile.children.cycles-pp.exit_mmap
-      0.20 ฑ 18%      +0.1        0.29 ฑ 14%  perf-profile.children.cycles-pp.leave_mm
-      0.15 ฑ 18%      +0.1        0.24 ฑ 23%  perf-profile.children.cycles-pp.do_read_fault
-      0.24 ฑ 25%      +0.1        0.39 ฑ 19%  perf-profile.children.cycles-pp.rb_next
-      0.40 ฑ 35%      +0.2        0.57 ฑ 22%  perf-profile.children.cycles-pp.ret_from_fork_asm
-      0.63 ฑ 11%      +0.2        0.86 ฑ 12%  perf-profile.children.cycles-pp.__hrtimer_next_event_base
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.children.cycles-pp.rest_init
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.children.cycles-pp.start_kernel
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.children.cycles-pp.x86_64_start_kernel
-      4.22 ฑ  3%      +0.3        4.49        perf-profile.children.cycles-pp.x86_64_start_reservations
-     83.50            +1.2       84.74        perf-profile.children.cycles-pp.start_secondary
-     85.97            +1.4       87.32        perf-profile.children.cycles-pp.cpuidle_idle_call
-     87.73            +1.5       89.22        perf-profile.children.cycles-pp.common_startup_64
-     87.73            +1.5       89.22        perf-profile.children.cycles-pp.cpu_startup_entry
-     87.72            +1.5       89.22        perf-profile.children.cycles-pp.do_idle
-      2.06 ฑ  6%      -0.3        1.71 ฑ 12%  perf-profile.self.cycles-pp.do_access
-      0.23 ฑ 12%      -0.1        0.14 ฑ 17%  perf-profile.self.cycles-pp.ahci_scr_read
-      0.12 ฑ 29%      -0.1        0.04 ฑ101%  perf-profile.self.cycles-pp.xas_load
-      0.22 ฑ 17%      +0.1        0.28 ฑ 12%  perf-profile.self.cycles-pp.update_rq_clock_task
-      0.24 ฑ 26%      +0.1        0.38 ฑ 19%  perf-profile.self.cycles-pp.rb_next
-
-
-
-
-Disclaimer:
-Results have been estimated based on internal Intel analysis and are provided
-for informational purposes only. Any difference in system hardware or software
-design or configuration may affect actual performance.
-
-
+diff --git a/drivers/gpu/drm/drm_debugfs.c b/drivers/gpu/drm/drm_debugfs.c
+index 3dfd8b34dceb..abceb28b23fc 100644
+--- a/drivers/gpu/drm/drm_debugfs.c
++++ b/drivers/gpu/drm/drm_debugfs.c
+@@ -77,14 +77,15 @@ static int drm_clients_info(struct seq_file *m, void *data)
+ 	kuid_t uid;
+ 
+ 	seq_printf(m,
+-		   "%20s %5s %3s master a %5s %10s %*s\n",
++		   "%20s %5s %3s master a %5s %10s %*s %20s\n",
+ 		   "command",
+ 		   "tgid",
+ 		   "dev",
+ 		   "uid",
+ 		   "magic",
+ 		   DRM_CLIENT_NAME_MAX_LEN,
+-		   "name");
++		   "name",
++		   "id");
+ 
+ 	/* dev->filelist is sorted youngest first, but we want to present
+ 	 * oldest first (i.e. kernel, servers, clients), so walk backwardss.
+@@ -100,7 +101,7 @@ static int drm_clients_info(struct seq_file *m, void *data)
+ 		pid = rcu_dereference(priv->pid);
+ 		task = pid_task(pid, PIDTYPE_TGID);
+ 		uid = task ? __task_cred(task)->euid : GLOBAL_ROOT_UID;
+-		seq_printf(m, "%20s %5d %3d   %c    %c %5d %10u %*s\n",
++		seq_printf(m, "%20s %5d %3d   %c    %c %5d %10u %*s %20llu\n",
+ 			   task ? task->comm : "<unknown>",
+ 			   pid_vnr(pid),
+ 			   priv->minor->index,
+@@ -109,7 +110,8 @@ static int drm_clients_info(struct seq_file *m, void *data)
+ 			   from_kuid_munged(seq_user_ns(m), uid),
+ 			   priv->magic,
+ 			   DRM_CLIENT_NAME_MAX_LEN,
+-			   priv->client_name ? priv->client_name : "<unset>");
++			   priv->client_name ? priv->client_name : "<unset>",
++			   priv->client_id);
+ 		rcu_read_unlock();
+ 		mutex_unlock(&priv->client_name_lock);
+ 	}
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
 
