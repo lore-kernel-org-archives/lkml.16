@@ -1,305 +1,369 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8548214A6F
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 897962153E1
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479259; cv=none; b=h+lxdv6FXP4RP+jWDacsXGg+yHrlHdNPCb49WWlRmfMBSZvuNhNeEW3ml8IRkjAcoRIa6/y9BYC3iA4adG+EWtaS34AZEC/+jgW8afXTZrNj1ScJouu+sCuPKLjCAWcBbA7NRnP5RJ6OQ39Btee/eVwy6/JlNNroRI8kmRzEkwQ=
+	t=1745479260; cv=none; b=VB0NgZxN/xgIYWUiTs62eD8+7InteDv1Gexx262xXfI+VgSEe8ZltKg4DAnMB/FST+FNkiqhkcWiyX2dQdwo43L9SG682LevqtEUBJVp9VuzWJAb7am6jALjRILhj+WrMdpOZtVtzYbPshf/p1FlZpAXkHpeJkthixZeKvEqJg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745479259; c=relaxed/simple;
-	bh=PFaPJW6WbKpaphdDjGJTGVYm4CBQjgl3CqLs6bFrP7w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=P7swup4z1G1/IObHjKPBu4ZXdbxziDMn/RXlHHQ8F2Sgpu4a0M7/IaxCi+xVxHOoslBdFk3dRGnTq4IUCLbA654vjifgNH/rk4gVE9zyIAj7GTl39y6caoo9Mfjx+74p5ggtBCI5TZ0a3Em24kJQXmJIlJhVjOnAGqpSKmWpTEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tUeeFOjd; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1745479260; c=relaxed/simple;
+	bh=6QlYqUZhATrUYcNbaaQ5RSjIgXJNxXqyvJOgKMLTbP4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Jcadlz/hNqp3VvthIGBAU2pxu+NTQOfGJp6xybsNXzTPdVlxEmmJatqZX+knTEfySTHiZKyhyFUcYgXiIibG0CAOsDcAz/z3APYf+5ZCql3KGpaG2ZKcagvev9IfPGEKEkyu2skI1KB9SRakFNTDOHQVPNK1V1lr3yjFhEZ8J7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=QuJIEykk; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tUeeFOjd"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so174325ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:20:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="QuJIEykk"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22d95f0dda4so10247745ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:20:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1745479256; x=1746084056; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KdXVRWu1cWa5yFS/BktSM31ONwJYqjrvHb1KL6pTjnw=;
-        b=tUeeFOjdl9/ApKD4yEV7oZXKTzNUlAGtv/8Xm9AW86rBeNrdQaUlGLAM7WPQz17VDg
-         5HVHtPaOXskdSvPD0/wrgMetaDfz+D9CBTwxU6du4uJk/h2mCp38geZrQVIVA4WK+TSP
-         bHWe2w3qri1J0vPnjEdmmurC2KZJk64SEtgF/xODyzdiaF6bYeW2Sdkyz8GWDL/ZcZMj
-         IakLXGjCa9jpphgVJSZG3khkBKBtVVqNAJ5kXyoLy5YcLm9Cqg1WgpdHw45+ERcEM8+i
-         yjc2wbzyp6uJfBpXk8n+jGbzXQdC0XbvcuaI48zO/YSvFgvi4lekqbzhhR7kf+z2ah5q
-         jcHw==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745479258; x=1746084058; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BaFRY6ryKsob2C1lE8CFq+8EQ03GEwQNpCxXbwlyayw=;
+        b=QuJIEykkH5XNra/t1kyeGk87YBZTSZ8bFc+ksLEbCbD6uQ2F+nEv25f8EQxlKCnwOo
+         wI9oT7Ev3ULqJOUv9Rzi7qwVgsqa/CzwqlcEt0RBjkBi0hgWou+e6qWoKgkkPFTxLZlc
+         vKn7kgyCas4oXF26EHupocGexnCeruzAbcxcTw0nt5lVLsPXzRNc4b1Zwn50TsN4Huma
+         cgq6ilRmXFGJinyK2F6k1S1jkVFLwaLcazJ60VdHl6R48pQlR0wF3kDGF4S6bNi0Jmgz
+         fBvVBc7I9DD2bpuwRlP5ZGk59KzxhvtnYEt2pWZUupRkZkzXE6IwQDPPVb7AorM0SqA+
+         S3pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745479256; x=1746084056;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1745479258; x=1746084058;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KdXVRWu1cWa5yFS/BktSM31ONwJYqjrvHb1KL6pTjnw=;
-        b=getH8FAcR4staopBBr0FHyLfo8SlmE5IZXEipb06HtsigW4Fli85o/S5mSNnP7rwzZ
-         kOUOcaRqzjP8rAxSY0kZUVnJj0aTYo5rxM+qFE7XEeU02ksZ4H76K6G/DnA7VXESk2LS
-         OdzdRkL5hcdFuS49kMAsaGly7teeyI6A+uS1ga/13eZ8JkV0ebUr+6fNv9e9RRNt4V97
-         KOJfvZN4QmXATnucUQY3/qRd6hqlJ3G3gg/p2MODo0JC6pea3qtIJsZK4/harkYxknmD
-         yjhjgTShcsismN64OvZP3f8GnVW6eqIQ0RkNsCwySVrtmUc2YuYcWxKGbgrbxucwGf/P
-         HAhg==
-X-Forwarded-Encrypted: i=1; AJvYcCULButIixhfmPYU3QKu1ZE43Vylc4Y9k1eViRr8IK5dFX91aM8FgPjBpqZs7ktvn84R4llYJDKS8pigcYs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysjY1VlfZASrCYLd5U+2H2jFePM24+VICW1j+D+6Dkvrj2kDKB
-	ii9gmxWpAWhdRBLqjirJXNkPWOHhaCMErofclcxOTU67o+5sd8j1TbHge8ky9dwXrV9B0bOPMuL
-	kZsv3wBCqQL65uK4tGyohKXRX71LNGwQ9pcsn
-X-Gm-Gg: ASbGncsozakB3zujgSWSSMCAxSqq18JP/jdmWqWqErNbH9zt0xqsZ/1adIGWLtI2Dqh
-	ask3Iu13U+e7oI0mBN+SQWfDhamFxs7aWgFNrRuDibyGBbSXWN7dN313JTnjIT16avoyRUCQMx8
-	p5zSxqgKiLqA9R0k0FeDGqCTY=
-X-Google-Smtp-Source: AGHT+IEpBptf66jSOD/k1VjkSt/DcKFRh42zBUPLdQXqMg7qrD6+Zv8DAqrIIwqhqqSAJAw8zZkOZeHHV+YhgfOdErU=
-X-Received: by 2002:a05:6e02:3c86:b0:3d4:2362:9fbc with SMTP id
- e9e14a558f8ab-3d9303bbbbdmr1910165ab.27.1745479255440; Thu, 24 Apr 2025
- 00:20:55 -0700 (PDT)
+        bh=BaFRY6ryKsob2C1lE8CFq+8EQ03GEwQNpCxXbwlyayw=;
+        b=J7Le+fnt/rT82lyLoGtsxCXYbW1mqHtGAKW1LlUuLASbWkIhzd3/SniB/sOFuexDQX
+         WOJ298ZyQc6YcE9HycSFqDzjC/JcY2q+bUGJPvx7JccXa8P+maKpXX30mXSUl4kAr5KT
+         byWnA1odhrCq4QgIjEjYGK69HIhFz0yUEHaJQO94gBobzBkabRmrz2rgrd0p+jpZLZcv
+         T5u/IXN1bk45xtxWj5oV2PKNLVsOWFdTSOp/bJ5itEnjHXNBKEbsh9b+xgS6wcqF4qQY
+         UCuK4Lq57d4NJkbMvoVTZ3miXIHDmy5C+XGpeMtUDC8E2fXGD7prUsLSwXoDUd2WSB+2
+         I7hw==
+X-Gm-Message-State: AOJu0YzLb58ZJMUT0VGQDG7mpIdiSblEpbf+DIklzZLOEaIXa39XFEcY
+	/ct3KbAx/LRn2Ukbm0ajeN8FF+zg+y2d3JMULbOb5Xjgk/eo+HtWF0wBTOz9y2w=
+X-Gm-Gg: ASbGnct3UEXOSnlj/gQ90W9xFiwT1I28MpnmsreAP4F9EhA7IgkD/bvsbj/WBXAB5Dt
+	pmqn9VYz66zj6Y5v2ii7wnbfyjhW0zvwTPkp+Mgs/XkWJWRG08gC5zM2fwmWK3NGcYphjsFkaCA
+	0JKkWd6T1TjGs0kgpCNgXs/1uK5ts/WLwDH9kJWMYNe2hcpXSwPcd8+cL5/uLC/CWkP8xgdfLXN
+	umK0jWlvZqi2Yfm1mZDMqiU+EmmsV24NG78D2Cv5fcG0EptrCVuhfCovtfOPF/86U7Z2+DkF9sr
+	uFj4jFlZZ3KSvNqFFkm+RZ1WGd1341vQVOGaMz/qQgDJvBQFUD0=
+X-Google-Smtp-Source: AGHT+IHsY90btGW74hzI+1pMLlZfb1jxs7ej1Mym99m1FGWgLF7IGShYTq7hbpXZcVv3LzhhraNaLg==
+X-Received: by 2002:a17:902:dac9:b0:223:635d:3e38 with SMTP id d9443c01a7336-22db3bdb5c9mr23701665ad.15.1745479257820;
+        Thu, 24 Apr 2025 00:20:57 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db52163d6sm6240765ad.214.2025.04.24.00.20.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 00:20:57 -0700 (PDT)
+From: Deepak Gupta <debug@rivosinc.com>
+Date: Thu, 24 Apr 2025 00:20:26 -0700
+Subject: [PATCH v13 11/28] riscv/shstk: If needed allocate a new shadow
+ stack on clone
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424061943.1321025-1-irogers@google.com> <20250424061943.1321025-6-irogers@google.com>
-In-Reply-To: <20250424061943.1321025-6-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 24 Apr 2025 00:20:44 -0700
-X-Gm-Features: ATxdqUHbvDTReF8oer7yYmxaK6piTc5lulDTad5CJ_WnpQIjCkfaH5FP3w14a-c
-Message-ID: <CAP-5=fXHay1Qn7c3JUe4nH-cTw8zPhPv6-XWMZdPKpwwT=9n2w@mail.gmail.com>
-Subject: Re: [PATCH v1 5/5] perf record: Make --buildid-mmap the default
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	Kajol Jain <kjain@linux.ibm.com>, Li Huafei <lihuafei1@huawei.com>, 
-	"Steinar H. Gunderson" <sesse@google.com>, Stephen Brennan <stephen.s.brennan@oracle.com>, 
-	James Clark <james.clark@linaro.org>, Andi Kleen <ak@linux.intel.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Zhongqiu Han <quic_zhonhan@quicinc.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Michael Petlan <mpetlan@redhat.com>, 
-	=?UTF-8?Q?Krzysztof_=C5=81opatowski?= <krzysztof.m.lopatowski@gmail.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Leo Yan <leo.yan@arm.com>, 
-	Steve Clevenger <scclevenger@os.amperecomputing.com>, Zixian Cai <fzczx123@gmail.com>, 
-	Thomas Falcon <thomas.falcon@intel.com>, Martin Liska <martin.liska@hey.com>, 
-	=?UTF-8?Q?Martin_Li=C5=A1ka?= <m.liska@foxlink.cz>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250424-v5_user_cfi_series-v13-11-971437de586a@rivosinc.com>
+References: <20250424-v5_user_cfi_series-v13-0-971437de586a@rivosinc.com>
+In-Reply-To: <20250424-v5_user_cfi_series-v13-0-971437de586a@rivosinc.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
+ Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com, 
+ andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com, 
+ atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
+ alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
+ rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org, 
+ Zong Li <zong.li@sifive.com>, Deepak Gupta <debug@rivosinc.com>
+X-Mailer: b4 0.13.0
 
-On Wed, Apr 23, 2025 at 11:19=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> Support for build IDs in mmap2 perf events has been present since
-> Linux v5.12:
-> https://lore.kernel.org/lkml/20210219194619.1780437-1-acme@kernel.org/
-> Build ID mmap events avoid the need to inject build IDs for DSO
-> touched by samples when perf record completes and can avoid some cases
-> of symbol mis-resolution.
->
-> Unlike the --buildid-mmap option, this doesn't disable the build ID
-> cache but it does disable the processing of samples looking for DSOs
-> to inject build IDs for. To disable the build ID cache the -N
-> (--no-buildid-cache) option is necessary.
->
-> Making this option the default was raised on the list in:
-> https://lore.kernel.org/linux-perf-users/CAP-5=3DfXP7jN_QrGUcd55_QH5J-Y-F=
-CaJ6=3DNaHVtyx0oyNh8_-Q@mail.gmail.com/
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-record.c        | 35 +++++++++++++++++++-----------
->  tools/perf/util/symbol_conf.h      |  2 +-
->  tools/perf/util/synthetic-events.c | 16 +++++++-------
->  3 files changed, 31 insertions(+), 22 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index ba20bf7c011d..0fcb0f469488 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -169,6 +169,7 @@ struct record {
->         bool                    no_buildid_cache_set;
->         bool                    buildid_all;
->         bool                    buildid_mmap;
-> +       bool                    buildid_mmap_set;
->         bool                    timestamp_filename;
->         bool                    timestamp_boundary;
->         bool                    off_cpu;
-> @@ -1795,7 +1796,8 @@ record__finish_output(struct record *rec)
->                         data->dir.files[i].size =3D lseek(data->dir.files=
-[i].fd, 0, SEEK_CUR);
->         }
->
-> -       if (!rec->no_buildid) {
-> +       /* Buildid scanning disabled or build ID in kernel and synthesize=
-d map events. */
-> +       if (!rec->no_buildid && !rec->buildid_mmap) {
+Userspace specifies CLONE_VM to share address space and spawn new thread.
+`clone` allow userspace to specify a new stack for new thread. However
+there is no way to specify new shadow stack base address without changing
+API. This patch allocates a new shadow stack whenever CLONE_VM is given.
 
-So I think this is wrong. It matches current behaviors, but it is
-wrong. If we don't process the kernel's mmap events the DSOs won't be
-loaded and the build ID cache won't contain the DSOs. There is also
-the bug that the sample processing to find maps to find DSOs, doesn't
-handle call chains. Given the broken nature of the build ID cache I'm
-not sure it makes any sense for perf record to be by default
-populating it. I think it probably makes sense to consider the default
-population a legacy feature and make -N the default along with
---buildid-mmap.
+In case of CLONE_VFORK, parent is suspended until child finishes and thus
+can child use parent shadow stack. In case of !CLONE_VM, COW kicks in
+because entire address space is copied from parent to child.
 
-Thanks,
-Ian
+`clone3` is extensible and can provide mechanisms using which shadow stack
+as an input parameter can be provided. This is not settled yet and being
+extensively discussed on mailing list. Once that's settled, this commit
+will adapt to that.
 
->                 process_buildids(rec);
->
->                 if (rec->buildid_all)
-> @@ -2966,6 +2968,8 @@ static int perf_record_config(const char *var, cons=
-t char *value, void *cb)
->                         rec->no_buildid =3D true;
->                 else if (!strcmp(value, "mmap"))
->                         rec->buildid_mmap =3D true;
-> +               else if (!strcmp(value, "no-mmap"))
-> +                       rec->buildid_mmap =3D false;
->                 else
->                         return -1;
->                 return 0;
-> @@ -3349,6 +3353,7 @@ static struct record record =3D {
->                 .ctl_fd_ack          =3D -1,
->                 .synth               =3D PERF_SYNTH_ALL,
->         },
-> +       .buildid_mmap =3D true,
->  };
->
->  const char record_callchain_help[] =3D CALLCHAIN_RECORD_HELP
-> @@ -3514,8 +3519,8 @@ static struct option __record_options[] =3D {
->                    "file", "vmlinux pathname"),
->         OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
->                     "Record build-id of all DSOs regardless of hits"),
-> -       OPT_BOOLEAN(0, "buildid-mmap", &record.buildid_mmap,
-> -                   "Record build-id in map events"),
-> +       OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.=
-buildid_mmap_set,
-> +                       "Legacy record build-id in map events option whic=
-h is now the default. Behaves indentically to --no-buildid. Disable with --=
-no-buildid-mmap"),
->         OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
->                     "append timestamp to output filename"),
->         OPT_BOOLEAN(0, "timestamp-boundary", &record.timestamp_boundary,
-> @@ -4042,19 +4047,23 @@ int cmd_record(int argc, const char **argv)
->                 record.opts.record_switch_events =3D true;
->         }
->
-> +       if (!rec->buildid_mmap) {
-> +               pr_debug("Disabling build id in synthesized mmap2 events.=
-\n");
-> +               symbol_conf.no_buildid_mmap2 =3D true;
-> +       } else if (rec->buildid_mmap_set) {
-> +               /*
-> +                * Explicitly passing --buildid-mmap disables buildid pro=
-cessing
-> +                * and cache generation.
-> +                */
-> +               rec->no_buildid =3D true;
-> +       }
-> +       if (rec->buildid_mmap && !perf_can_record_build_id()) {
-> +               pr_warning("Missing support for build id in kernel mmap e=
-vents. Disable this warning with --no-buildid-mmap\n");
-> +               rec->buildid_mmap =3D false;
-> +       }
->         if (rec->buildid_mmap) {
-> -               if (!perf_can_record_build_id()) {
-> -                       pr_err("Failed: no support to record build id in =
-mmap events, update your kernel.\n");
-> -                       err =3D -EINVAL;
-> -                       goto out_opts;
-> -               }
-> -               pr_debug("Enabling build id in mmap2 events.\n");
-> -               /* Enable mmap build id synthesizing. */
-> -               symbol_conf.buildid_mmap2 =3D true;
->                 /* Enable perf_event_attr::build_id bit. */
->                 rec->opts.build_id =3D true;
-> -               /* Disable build id cache. */
-> -               rec->no_buildid =3D true;
->         }
->
->         if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.=
-h
-> index cd9aa82c7d5a..7a80d2c14d9b 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -43,7 +43,7 @@ struct symbol_conf {
->                         report_individual_block,
->                         inline_name,
->                         disable_add2line_warn,
-> -                       buildid_mmap2,
-> +                       no_buildid_mmap2,
->                         guest_code,
->                         lazy_load_kernel_maps,
->                         keep_exited_threads,
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 8fb2ea544d3a..f48109c14235 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -532,7 +532,7 @@ int perf_event__synthesize_mmap_events(const struct p=
-erf_tool *tool,
->                 event->mmap2.pid =3D tgid;
->                 event->mmap2.tid =3D pid;
->
-> -               if (symbol_conf.buildid_mmap2)
-> +               if (!symbol_conf.no_buildid_mmap2)
->                         perf_record_mmap2__read_build_id(&event->mmap2, m=
-achine, false);
->
->                 if (perf_tool__process_synth_event(tool, event, machine, =
-process) !=3D 0) {
-> @@ -690,7 +690,7 @@ static int perf_event__synthesize_modules_maps_cb(str=
-uct map *map, void *data)
->                 return 0;
->
->         dso =3D map__dso(map);
-> -       if (symbol_conf.buildid_mmap2) {
-> +       if (!symbol_conf.no_buildid_mmap2) {
->                 size =3D PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u=
-64));
->                 event->mmap2.header.type =3D PERF_RECORD_MMAP2;
->                 event->mmap2.header.size =3D (sizeof(event->mmap2) -
-> @@ -734,9 +734,9 @@ int perf_event__synthesize_modules(const struct perf_=
-tool *tool, perf_event__han
->                 .process =3D process,
->                 .machine =3D machine,
->         };
-> -       size_t size =3D symbol_conf.buildid_mmap2
-> -               ? sizeof(args.event->mmap2)
-> -               : sizeof(args.event->mmap);
-> +       size_t size =3D symbol_conf.no_buildid_mmap2
-> +               ? sizeof(args.event->mmap)
-> +               : sizeof(args.event->mmap2);
->
->         args.event =3D zalloc(size + machine->id_hdr_size);
->         if (args.event =3D=3D NULL) {
-> @@ -1124,8 +1124,8 @@ static int __perf_event__synthesize_kernel_mmap(con=
-st struct perf_tool *tool,
->                                                 struct machine *machine)
->  {
->         union perf_event *event;
-> -       size_t size =3D symbol_conf.buildid_mmap2 ?
-> -                       sizeof(event->mmap2) : sizeof(event->mmap);
-> +       size_t size =3D symbol_conf.no_buildid_mmap2 ?
-> +                       sizeof(event->mmap) : sizeof(event->mmap2);
->         struct map *map =3D machine__kernel_map(machine);
->         struct kmap *kmap;
->         int err;
-> @@ -1159,7 +1159,7 @@ static int __perf_event__synthesize_kernel_mmap(con=
-st struct perf_tool *tool,
->                 event->header.misc =3D PERF_RECORD_MISC_GUEST_KERNEL;
->         }
->
-> -       if (symbol_conf.buildid_mmap2) {
-> +       if (!symbol_conf.no_buildid_mmap2) {
->                 size =3D snprintf(event->mmap2.filename, sizeof(event->mm=
-ap2.filename),
->                                 "%s%s", machine->mmap_name, kmap->ref_rel=
-oc_sym->name) + 1;
->                 size =3D PERF_ALIGN(size, sizeof(u64));
-> --
-> 2.49.0.805.g082f7c87e0-goog
->
+Reviewed-by: Zong Li <zong.li@sifive.com>
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+---
+ arch/riscv/include/asm/mmu_context.h |   7 ++
+ arch/riscv/include/asm/usercfi.h     |  25 ++++++++
+ arch/riscv/kernel/process.c          |   9 +++
+ arch/riscv/kernel/usercfi.c          | 120 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 161 insertions(+)
+
+diff --git a/arch/riscv/include/asm/mmu_context.h b/arch/riscv/include/asm/mmu_context.h
+index 8c4bc49a3a0f..dbf27a78df6c 100644
+--- a/arch/riscv/include/asm/mmu_context.h
++++ b/arch/riscv/include/asm/mmu_context.h
+@@ -48,6 +48,13 @@ static inline unsigned long mm_untag_mask(struct mm_struct *mm)
+ }
+ #endif
+ 
++#define deactivate_mm deactivate_mm
++static inline void deactivate_mm(struct task_struct *tsk,
++				 struct mm_struct *mm)
++{
++	shstk_release(tsk);
++}
++
+ #include <asm-generic/mmu_context.h>
+ 
+ #endif /* _ASM_RISCV_MMU_CONTEXT_H */
+diff --git a/arch/riscv/include/asm/usercfi.h b/arch/riscv/include/asm/usercfi.h
+index 5f2027c51917..82d28ac98d76 100644
+--- a/arch/riscv/include/asm/usercfi.h
++++ b/arch/riscv/include/asm/usercfi.h
+@@ -8,6 +8,9 @@
+ #ifndef __ASSEMBLY__
+ #include <linux/types.h>
+ 
++struct task_struct;
++struct kernel_clone_args;
++
+ #ifdef CONFIG_RISCV_USER_CFI
+ struct cfi_status {
+ 	unsigned long ubcfi_en : 1; /* Enable for backward cfi. */
+@@ -17,6 +20,28 @@ struct cfi_status {
+ 	unsigned long shdw_stk_size; /* size of shadow stack */
+ };
+ 
++unsigned long shstk_alloc_thread_stack(struct task_struct *tsk,
++				       const struct kernel_clone_args *args);
++void shstk_release(struct task_struct *tsk);
++void set_shstk_base(struct task_struct *task, unsigned long shstk_addr, unsigned long size);
++unsigned long get_shstk_base(struct task_struct *task, unsigned long *size);
++void set_active_shstk(struct task_struct *task, unsigned long shstk_addr);
++bool is_shstk_enabled(struct task_struct *task);
++
++#else
++
++#define shstk_alloc_thread_stack(tsk, args) 0
++
++#define shstk_release(tsk)
++
++#define get_shstk_base(task, size) 0UL
++
++#define set_shstk_base(task, shstk_addr, size)
++
++#define set_active_shstk(task, shstk_addr)
++
++#define is_shstk_enabled(task) false
++
+ #endif /* CONFIG_RISCV_USER_CFI */
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index 7c244de77180..99acb6342a37 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -29,6 +29,7 @@
+ #include <asm/vector.h>
+ #include <asm/cpufeature.h>
+ #include <asm/exec.h>
++#include <asm/usercfi.h>
+ 
+ #if defined(CONFIG_STACKPROTECTOR) && !defined(CONFIG_STACKPROTECTOR_PER_TASK)
+ #include <linux/stackprotector.h>
+@@ -211,6 +212,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 	unsigned long clone_flags = args->flags;
+ 	unsigned long usp = args->stack;
+ 	unsigned long tls = args->tls;
++	unsigned long ssp = 0;
+ 	struct pt_regs *childregs = task_pt_regs(p);
+ 
+ 	/* Ensure all threads in this mm have the same pointer masking mode. */
+@@ -229,11 +231,18 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ 		p->thread.s[0] = (unsigned long)args->fn;
+ 		p->thread.s[1] = (unsigned long)args->fn_arg;
+ 	} else {
++		/* allocate new shadow stack if needed. In case of CLONE_VM we have to */
++		ssp = shstk_alloc_thread_stack(p, args);
++		if (IS_ERR_VALUE(ssp))
++			return PTR_ERR((void *)ssp);
++
+ 		*childregs = *(current_pt_regs());
+ 		/* Turn off status.VS */
+ 		riscv_v_vstate_off(childregs);
+ 		if (usp) /* User fork */
+ 			childregs->sp = usp;
++		/* if needed, set new ssp */
++		ssp ? set_active_shstk(p, ssp) : 0;
+ 		if (clone_flags & CLONE_SETTLS)
+ 			childregs->tp = tls;
+ 		childregs->a0 = 0; /* Return value of fork() */
+diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
+index 0b3bbb41490a..ec3d78efd6f3 100644
+--- a/arch/riscv/kernel/usercfi.c
++++ b/arch/riscv/kernel/usercfi.c
+@@ -19,6 +19,41 @@
+ 
+ #define SHSTK_ENTRY_SIZE sizeof(void *)
+ 
++bool is_shstk_enabled(struct task_struct *task)
++{
++	return task->thread_info.user_cfi_state.ubcfi_en;
++}
++
++void set_shstk_base(struct task_struct *task, unsigned long shstk_addr, unsigned long size)
++{
++	task->thread_info.user_cfi_state.shdw_stk_base = shstk_addr;
++	task->thread_info.user_cfi_state.shdw_stk_size = size;
++}
++
++unsigned long get_shstk_base(struct task_struct *task, unsigned long *size)
++{
++	if (size)
++		*size = task->thread_info.user_cfi_state.shdw_stk_size;
++	return task->thread_info.user_cfi_state.shdw_stk_base;
++}
++
++void set_active_shstk(struct task_struct *task, unsigned long shstk_addr)
++{
++	task->thread_info.user_cfi_state.user_shdw_stk = shstk_addr;
++}
++
++/*
++ * If size is 0, then to be compatible with regular stack we want it to be as big as
++ * regular stack. Else PAGE_ALIGN it and return back
++ */
++static unsigned long calc_shstk_size(unsigned long size)
++{
++	if (size)
++		return PAGE_ALIGN(size);
++
++	return PAGE_ALIGN(min_t(unsigned long long, rlimit(RLIMIT_STACK), SZ_4G));
++}
++
+ /*
+  * Writes on shadow stack can either be `sspush` or `ssamoswap`. `sspush` can happen
+  * implicitly on current shadow stack pointed to by CSR_SSP. `ssamoswap` takes pointer to
+@@ -141,3 +176,88 @@ SYSCALL_DEFINE3(map_shadow_stack, unsigned long, addr, unsigned long, size, unsi
+ 
+ 	return allocate_shadow_stack(addr, aligned_size, size, set_tok);
+ }
++
++/*
++ * This gets called during clone/clone3/fork. And is needed to allocate a shadow stack for
++ * cases where CLONE_VM is specified and thus a different stack is specified by user. We
++ * thus need a separate shadow stack too. How does separate shadow stack is specified by
++ * user is still being debated. Once that's settled, remove this part of the comment.
++ * This function simply returns 0 if shadow stack are not supported or if separate shadow
++ * stack allocation is not needed (like in case of !CLONE_VM)
++ */
++unsigned long shstk_alloc_thread_stack(struct task_struct *tsk,
++				       const struct kernel_clone_args *args)
++{
++	unsigned long addr, size;
++
++	/* If shadow stack is not supported, return 0 */
++	if (!cpu_supports_shadow_stack())
++		return 0;
++
++	/*
++	 * If shadow stack is not enabled on the new thread, skip any
++	 * switch to a new shadow stack.
++	 */
++	if (!is_shstk_enabled(tsk))
++		return 0;
++
++	/*
++	 * For CLONE_VFORK the child will share the parents shadow stack.
++	 * Set base = 0 and size = 0, this is special means to track this state
++	 * so the freeing logic run for child knows to leave it alone.
++	 */
++	if (args->flags & CLONE_VFORK) {
++		set_shstk_base(tsk, 0, 0);
++		return 0;
++	}
++
++	/*
++	 * For !CLONE_VM the child will use a copy of the parents shadow
++	 * stack.
++	 */
++	if (!(args->flags & CLONE_VM))
++		return 0;
++
++	/*
++	 * reaching here means, CLONE_VM was specified and thus a separate shadow
++	 * stack is needed for new cloned thread. Note: below allocation is happening
++	 * using current mm.
++	 */
++	size = calc_shstk_size(args->stack_size);
++	addr = allocate_shadow_stack(0, size, 0, false);
++	if (IS_ERR_VALUE(addr))
++		return addr;
++
++	set_shstk_base(tsk, addr, size);
++
++	return addr + size;
++}
++
++void shstk_release(struct task_struct *tsk)
++{
++	unsigned long base = 0, size = 0;
++	/* If shadow stack is not supported or not enabled, nothing to release */
++	if (!cpu_supports_shadow_stack() || !is_shstk_enabled(tsk))
++		return;
++
++	/*
++	 * When fork() with CLONE_VM fails, the child (tsk) already has a
++	 * shadow stack allocated, and exit_thread() calls this function to
++	 * free it.  In this case the parent (current) and the child share
++	 * the same mm struct. Move forward only when they're same.
++	 */
++	if (!tsk->mm || tsk->mm != current->mm)
++		return;
++
++	/*
++	 * We know shadow stack is enabled but if base is NULL, then
++	 * this task is not managing its own shadow stack (CLONE_VFORK). So
++	 * skip freeing it.
++	 */
++	base = get_shstk_base(tsk, &size);
++	if (!base)
++		return;
++
++	vm_munmap(base, size);
++	set_shstk_base(tsk, 0, 0);
++}
+
+-- 
+2.43.0
+
