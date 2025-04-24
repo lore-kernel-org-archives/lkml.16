@@ -1,204 +1,339 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2064.outbound.protection.outlook.com [40.107.243.64])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9FC11FC0F3;
-	Thu, 24 Apr 2025 09:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745488301; cv=fail; b=kQRrkRuDJ/nSJwsASHuifj/AKkGI1U/iN+jIpeiFpP/lO1ujsBp+UpeYMj1xvRs75DsSXXtEmUmqUs+hX6BvWKsxKN9SwQRiIFau2hkwGCkWOjRwB0Wbi04jHZ/Bjxwne8KMZK5AgQE+ebpyyqPOpj8CIF/+OyvGY2N1GYKdzME=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745488301; c=relaxed/simple;
-	bh=mVwOIFIJ8rW8zpcfQ2N1xyPXnRzZOa/YWfkoQtvAXTw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=tQwtbhK2ExoOmjkhDFAaKRlzXBmPmA7pH9jXlF0VYfAQp2e95Dz8B0/B7XvslqGwtMEpOrzcb4np4IHq6p0A7sGzgGPRQXF75dHrzetajBxoCF1/f9hP6EuW1YZc1ecUkm9D3dQf8D5erEF9ACp5vcOZ7T8qc9PA0r39C//7Cdc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NLsEqIly; arc=fail smtp.client-ip=40.107.243.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9FBE56A;
+	Thu, 24 Apr 2025 09:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745488371; cv=none; b=HAwGld/48IBBjmTLgD6sjcxS8Rpwd9c3rZLnO6LoUpbz68hgF/BUyq4DqI0pA1SAkuvf0yXxGwzjclGehUE/quVuk025oVmwjUSJ9lZjsqht4o7aREQG6RPWzsT40W+Lc1omHFs8VVt5ufLEJYjK9bxwAl4+DZ6bxoqk/8xi9t4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745488371; c=relaxed/simple;
+	bh=mppaSWq3J3VdfDI8xG8v0YglZKH1xKtJeoCNdPIaf9E=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rG9V7XFuDZoaGpww0cYoB1I2cX/Nl6Rp7PZqAqGhAhXFvNVq6v5bRsCkde0SMgYP5m1Vf9GpQCBYd5ZIp9sNlB/74dZYs5b/1+vXostgWtfh302+zAuBSVksTs2dvKYAMZPUYC/f7lFqOEH8oy3h1hyjC06mNdAf5IRnlU6J0Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=EdWsowNo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NLsEqIly"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=f5hqW2FlpEzW5Xu73P0Drqf6Va3APXtdsU0bBNsKFXJbihO5XejR5RszQ/+HcAnTS+zt39nTcrE1lmWmSCX+dPGV4x3mtO47eE7GdFIByuUIfv9Bx4wsXy15aQPSjZv9a+6sIJMNcBfPoGpojE54NVTLMRGAmtVdsbg+uLh527EAyKu8FQKIogbRUnalkKarDxPXvwrCRd/aUGKx3UxRSVxtT0hCx3a568QoZ4fr6XqLcOCdeN7ih24NrupbcTyu+L+KN8iL2IlcrkGfgA0+AJlS0eBDn/LCraiSt6HNpPlkzmQaFZtyRcEUZ2APxK+D9o6mo/3p0EWuhOTU6WAAcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=xnT+Fjtz2O1P84JBxWoMmma7K+gxw0/IfuvCjN4oT2Q=;
- b=bxZxhJ9IO3bHSyDJBPV+ZC4pYyOsfG5tDox/NbB+Od3RqX+Vcund6aRc5kjihYmKG4LzXVo7ZQIg1Cy0ifUiTHSa2pjBdSik8wPT3hVE0kGXn2we2fuc7PJgXbWGBpaihVePEEEjNrCeCODHCTAc01oqI129lgRuhaLZfFv4nZfOpPPmzh+Qn3bzFLWtjcRnl0Z2Pi+XX3bFv93/9akQ/UuPU3UrbSZrjQAja16KzDaXzPkgUawNi1f1X0A/uhIlqroHdYC5hWdorxTdT+csxuywLfZM215We2N/KLUOE1CYgFFQbtzTOFv84Ndt7xgWAPjUGnZvaFkZJxPoK7aiaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xnT+Fjtz2O1P84JBxWoMmma7K+gxw0/IfuvCjN4oT2Q=;
- b=NLsEqIlyG0Rw3Fkbi3sVXZKqoeWisunGThjnhpYaPb96pPJsb0443aD8inUZGh9PwaRJZVASCcBwXOaRWx0nqzmio62nROou7dMVq2ZpJ5hs5pFV/GRnnsXdQA0Xx0Z8v60BLshr5fmYT/erfJYyyWZsCgTd1yBcv2o72YTaouk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
- by CY8PR12MB7585.namprd12.prod.outlook.com (2603:10b6:930:98::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.35; Thu, 24 Apr
- 2025 09:51:37 +0000
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::a3dc:7ea1:9cc7:ce0f]) by DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::a3dc:7ea1:9cc7:ce0f%4]) with mapi id 15.20.8678.021; Thu, 24 Apr 2025
- 09:51:37 +0000
-Message-ID: <db1d95be-e92a-4328-b43e-8214a0b520be@amd.com>
-Date: Thu, 24 Apr 2025 15:21:30 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/1] HID: amd_sfh: Add support for tablet mode
-To: Jiri Kosina <jikos@kernel.org>, Denis Benato <benato.denis96@gmail.com>,
- Basavaraj Natikar <basavaraj.natikar@amd.com>
-Cc: Benjamin Tissoires <bentiss@kernel.org>, "Luke D. Jones"
- <luke@ljones.dev>, Ivan Dovgal <iv.dovg@gmail.com>,
- Adrian Freund <adrian@freund.io>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250309194934.1759953-1-benato.denis96@gmail.com>
- <19norq05-rp74-9qrr-382r-40q9r59p1pnn@xreary.bet>
-Content-Language: en-US
-From: Basavaraj Natikar <bnatikar@amd.com>
-In-Reply-To: <19norq05-rp74-9qrr-382r-40q9r59p1pnn@xreary.bet>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0042.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:22::17) To DM4PR12MB5040.namprd12.prod.outlook.com
- (2603:10b6:5:38b::19)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="EdWsowNo"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0FC2b000748;
+	Thu, 24 Apr 2025 09:52:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=pV/Z9wGZFxUl69J88AuYO+
+	GtJEVdC8YMT5c0F2+WDx0=; b=EdWsowNo1xGU78gUkus2zsBQB9lOlkk5h/ccRh
+	p/DjVAaShzOjxytoAhuYUgjvypbbjWDolfDs11xB0lyaZi3M9eW2VTGz5SaT4Req
+	rU33FSVAi0Hrv8ySR3qsfj0RtINALZ6TUCQgVJymp2dzSMaaZdusfyvjhewpn2F7
+	KGCc4oszHawRZ7z+YhwGN4L3pED8DOWcy8H+o6kHkEkDSFmCZPsaKqVbk1IAJKIk
+	qyqmcv5Fv4gvJhyRNsYhGCFae25bF4I75Kosx5yRQ+VNZTHpkIB/llDXNIsMzgAQ
+	4lYiMDx271wvGhu7IEF6XSlGZl6WTNs+iLKtZvdncgE7XLCA==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3d22r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 09:52:45 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53O9qjxt029946
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 09:52:45 GMT
+Received: from zhonhan-gv.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 24 Apr 2025 02:52:43 -0700
+From: Zhongqiu Han <quic_zhonhan@quicinc.com>
+To: <rafael@kernel.org>, <pavel@kernel.org>, <len.brown@intel.com>
+CC: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_zhonhan@quicinc.com>
+Subject: [PATCH] PM: QoS: Add support for CPU affinity mask-based CPUs latency QoS
+Date: Thu, 24 Apr 2025 17:52:28 +0800
+Message-ID: <20250424095228.1112558-1-quic_zhonhan@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5040:EE_|CY8PR12MB7585:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8c90ba54-7639-44f1-c4ee-08dd83159a73
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NThxNmp6SzlHdGVCT0xkUm5oMjNEY0VNNDQ5eGpIbXhnTkQrSGhMQmoxNC9v?=
- =?utf-8?B?Z0FaaVJzeDY1cnpmY2NZSmtCZUtTN1I0NXJyaSszMFFuSldWaTJIOG5JN21L?=
- =?utf-8?B?dEdLM2lSM1ZlVUFmMi9EV2taWHRkTzVaM2FXRCszQ28ybjFNT3VmWWZBSVQ2?=
- =?utf-8?B?cXFzWk5ycS9rb3VpaTRlYkhIVWowWXBQQTlhMkwzNlRnaTRKMm1KTXBQaXRC?=
- =?utf-8?B?TFhWQlRWd0szK0hTbG8wQzY4SWVnNTJHU1ZLaGZwYXlibG5qNkVtbXhPVTBM?=
- =?utf-8?B?L2s5cGhWbkRkOWxNbUVMVldGdU9YNmlYWlgyeExQMXdoWTM5T0FMdTJlZDVT?=
- =?utf-8?B?MEp0QlRndnlwUXBZUFR6ak5UalVaUGd0SkJCNnFVdEtUdkUyVWdnM3NiVmkx?=
- =?utf-8?B?ZnBubUJaMDFyV0Jnak5KL2tlSTRsV2ZZeFJ5YS9qZkY0Yk5VZGlBNVY4R21V?=
- =?utf-8?B?TUZYa2h1Rm9iazNrZ0JJVzBDKzJocm9halBJSWZ5S3VBWkZ3WVY1bk1hTVFR?=
- =?utf-8?B?d09EcUtqSDVUZzFQWWZhbXdIZnppZHRZSzhPeW1RbjZRQkEvbnRlSHdndGZE?=
- =?utf-8?B?K2FGamtNVFNYTDRsS1QzMzRDUlFLajFTNUVLTEE0ZXhJMmp1cFE3RWpDaDNK?=
- =?utf-8?B?WnZ0cktNMmF2aW11NTBjOFBNWGwzbXJHaHk0NGZrM05Uc0pJWnBTUkl0a2w5?=
- =?utf-8?B?Z0FtQWJTMnlHVExKd3hNWTRPMzl0Ri9CcGhkYXRHd2IvM3BUZGdyTisyR241?=
- =?utf-8?B?a2gzZ2ExOEdZRzFhRTZzcXl1NDJDK0pmeFZidGtIcDZpOUIrcFNQUHFNT2hk?=
- =?utf-8?B?N2xiSERXVzNsZGxEcEUrQjZXVlduMm5CZHI1VEdyTkFCU3VWTzJCRkxoN3k0?=
- =?utf-8?B?ak1OOGE3RnBQa1ZDQlZQdFlDVmJOcjNhRWIyZjFhRkYzVUxhQldocWViUDF5?=
- =?utf-8?B?Wk1yYXk5UHJXZE5SWFJBM2VOZDdzZFhRMUx2bUtmbjIxdDVNZER4eDQyYVBk?=
- =?utf-8?B?YzZjQXRacUhNU0pNY2l0aVlHcXpBYWFQYk1DR25TaVR1WjlBdWNrNjl1QVhw?=
- =?utf-8?B?MmtEbHoyNm9RN25GTDVPZkdIcXBUQzl1M3J5UGxmaHNoUHFTL3hhQjVUcFFI?=
- =?utf-8?B?VzdVSTdVNm5tSXZrYXZZK3MvMllPc3dCaHdzTDIvaGZjdWptTFhPQjh3Y2Qw?=
- =?utf-8?B?bU5qTVl3LzVOell2amovQ00zOHdqakhVWFZLeVA1RU1Lb0NSNTNIQ05DZGd6?=
- =?utf-8?B?c3hNNVJlMElKeVNwbDN0QnZxMmFHVWp5bHFiV282MnlaK1B1KzJtdFZnbGNY?=
- =?utf-8?B?ZDNsL0xzQ0t5T1crcW1pZ0xDdGt6ZUlBb2x3UzFMRjZSSGs3N2o0OStOcjk4?=
- =?utf-8?B?UEJWVzR1N01MWmdZUGZxaUJCZTZYS0k2bUdPWDJ6bmg3WlJ3RGthTHZQL0xw?=
- =?utf-8?B?SWpadWRraEd4NFdZdmRDSS90cnpRUVVwem5nWXRMcmZvU3c5aFpFSURoR3du?=
- =?utf-8?B?RWFPY2pTU3BZRUkrMHFmbjBRZEc0ZnprM3lWVCtYQm84MVRYL2pTbHYyd0Fv?=
- =?utf-8?B?ZFpFMklYWkxrR2NXaDIybXRwdUtIbTFydGczWVVvR3hGMXhZVk1mbnRMbUV0?=
- =?utf-8?B?alJXZW9FeFRhK3F5REtGRmtDd081dXllVzVPd0tXL2NIWThaM2tNVE1ienF0?=
- =?utf-8?B?RzF5ODZwOEJETDBjYlBCZDg1cUtvQmFQSkJuV1NoSWZYR2F5QUJVQmpMSWUv?=
- =?utf-8?B?aFdWWUl4ZGVieXZNem51QzNuRHFYdnFUR1VXMUZxQUd5V2tUenE3VTk2QVd2?=
- =?utf-8?B?QnpBQk5OcVdFeTJZMVR1aFlId3RoQkRDS1I3dE01OWVRbnVEWmEvcy8wTGVy?=
- =?utf-8?B?Q2lzazM3NHcySVVrV0RCcmNlaVFDWm1iWTRzZFdMTEsrVXpBYW00Wmdtb1VR?=
- =?utf-8?Q?BWZLqa3fKw8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?alN5MlJvRldVYnZrSFBXdjFiMEdmLzVOYjFvYmFrVzY3YSs0R1d4bklKUmRx?=
- =?utf-8?B?azFXc0MvV1dlZi9pSis3cm5zeWhBNC9obStxK2wyOGtmeGpmdE9ZRDVacEhR?=
- =?utf-8?B?QnhEdURXbkErZ2s2ZWw1bkdsOFJEWDZ1VGpHS0ZTdnJFVkRaTXVGZnJVWjhY?=
- =?utf-8?B?ZHlwUHlZcU1rVFQvZG8zanB6V0tqSUhtdEZCNmRXYXFrYS9lK0puck9yeHh5?=
- =?utf-8?B?bkYranVSN3h5UkR1Nk1QaE5LN0Fkc3BvVnpjNVlwbnBCV0dJY01RSUgzMTh1?=
- =?utf-8?B?SmNFTnlWMjF2WktTNWdzUEFwRGNHUjMwUmpTcnI3ZG16eEtWblpBQmR1SkdU?=
- =?utf-8?B?dzBRVG1CWXRFUnhqaGxMNm1pc1A5WjNmaXlsaFQwM3dydDc1ZUdZRUtvdHdJ?=
- =?utf-8?B?d2hyZG5rKzZESDFXNXpNTDlXbThVQ1dYUkhJYUFZaDRlcXhxUGdvaVFYaU9T?=
- =?utf-8?B?RHR6RktzMGQ2bjV6N2cwSGl1TDRWZytmQzlIQmxDb056UlNTS3N0SDQ5ajV3?=
- =?utf-8?B?eWgzWWFtQlFINDd1U1JZaEdGNUFJd21QSU1rN2lnTW1MWFdMUVZPa2E0YzBj?=
- =?utf-8?B?NHVUMFVSWWlXR3VBZzY0ZUswWXFHSXkvb3p0ZHB3UjZTaDFodGdTQ1p0Z3Z2?=
- =?utf-8?B?bVJMT2ZzeHlwL0J2bjdITzREZ0JoUVJ1dS9nRE1iaUtZSGlZV2o2clJ0QXRF?=
- =?utf-8?B?TllWMzVub0xBRHVTdHo1NXhHNWl5a1NxR2NnaWZVQmVDc2taVk5FNXN2MEls?=
- =?utf-8?B?N2xDTkowbGZuakdxbzdVTzQ4Q1JsSzFCbHRGSDVsU0hXK3dJMVgzejk4RHY2?=
- =?utf-8?B?YmN0YWFOTWZnTjJpbmdzZm9weUUzTXc1NFNzWXFCd1JlVUliQTE5QXppUDJx?=
- =?utf-8?B?MnNFc1hkOEZmblpTSy83emlHSkp4WHJxUS9OY3lSclJvSDhpaFh2OWg3bklX?=
- =?utf-8?B?bE1BS01EVE1pbWZUbDdPWk54QkJhbFFUK2xUdjRtbGhUanNnVXBCOEJ1OExm?=
- =?utf-8?B?REFvWmh2SnFQYkptQVhUei9FdEQwYWZzSTd6ZWU2RWJaRVdEcGFGZi9tWWtq?=
- =?utf-8?B?U2pMM1RwMVN1MXZESkxqR1VCU3BJMUE5SEhsMy9SQ3FSbjk4S05mTksyTnZv?=
- =?utf-8?B?ZExJTHpvUlRhTXp3OS80bFJhY3BUVVVHUDFQS0l3bUFYTDhLYk8zQ2dLVTd2?=
- =?utf-8?B?QmVibW54clh6UVpZaGYra3dqN1lJb0tjYlUzV1ZDaXgySjM2NjlDZU04cG55?=
- =?utf-8?B?NE5MdWNyK2plU1FnUlFORWZMMDluYVFxNnN5Wk5pTW5QY3ZTU3lYclpxS3pn?=
- =?utf-8?B?VUQ2STJOVjJLNG1oeXpKQUhSZlFTeW1LUGhWUVVhVExWdzZIYThEanpzUWFY?=
- =?utf-8?B?cDBSRERjaEk3R0VINFB3RjJQQTdCZEtNMlZVNXFjTjZIRy9md2JxVnkwUVVt?=
- =?utf-8?B?SDBCMnIwWTNYTyt5UzIvY0NGQy8yc0xER3k5QWpZL251eVNLc2graC9zai9w?=
- =?utf-8?B?T1phZjJMMjhscXVIMDZwMTRZclpVazdxaFZTOTVySkh2SnVDc0ZnUE95Q2M3?=
- =?utf-8?B?ODlPcGJZNVpZbDBlQUJOZVhXMWR5dVdtMzRYUjdxMWZWQ1NTaE9vR1ZGbUxh?=
- =?utf-8?B?MW9xTHBIdmVZYUxpUGZxZmYvOVUvWjlsMGVJb29xWHgxeDVwUzBmblpmZXdW?=
- =?utf-8?B?eWt3Q2RsS1BFL3dvRjVyNTZvQnE0QXR3S0daUVJKRzRyMmhFd3ppNnhxTkVH?=
- =?utf-8?B?cGZXbWRTeElDVE9JcUlOVTFCbXM2b2xLdmRPNHF6anc2MXFBMFFKZm8xU1ZI?=
- =?utf-8?B?bEdEcGFJeVhJSTBVSXltN3lzdENNSzN0S2tXck1kNFZjY2NvQkRkeWpHa0Nv?=
- =?utf-8?B?QnFpYUxhWGNtckNVekErRHhndVBmQ2JnTWMwWjFjc1VudEN3SjY0dTBjeURI?=
- =?utf-8?B?VzFIUnN4L0V0RWtJaVE1S09uajBBeERMblNCRG5lbEZ1bTVockY3U3F5S3F6?=
- =?utf-8?B?MFVmQmt4WmE4aFc4YVBWVFB4ZHlTMklrWXhTRUx6M0NISUhIVGJSZ0VuTzlT?=
- =?utf-8?B?R2lOelhGcE1yN1ZBOE5zQXEyVkZveWlyRTdhQ0lJVDVsRUpRbjNzbWdqSEFa?=
- =?utf-8?Q?cGYlg83sxkA+d1d3MGZWrjfXT?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c90ba54-7639-44f1-c4ee-08dd83159a73
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 09:51:37.0680
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hmauYUM7RLChJZrk0biAcKLD2oHOHgwjmzNcwh48UWbzuyvZy5gS/DEpd4NDGRWF4EtxDHwOem2TDfkqDcQzqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7585
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2NSBTYWx0ZWRfXyksk9yROW65I 3kEnKUtYKGmdD+bqD3gN04f5dR4l700UClJc+Gt/0en06Od8gzhLB+0SMHV7STPUFN7PdKZFOV8 NAxbSITgLUXbFD57UIXwD9IEeLRE0J0Zx8PenmUsgIgeQp9+Y7rUYS00Y2B+ENo4s5+CpwwbYm/
+ N/bbSXo5iyJ4Uerro6ROcn8a8PmZUqvQtC1VejlBADMpsceCtSGGQw2vgCCz0pEnDIYYyISnIS8 j5vbwbUcGaVhNugURGaosRcU9qc4rbjNcjNCkgQ0OgTGcnJLJhYTXSsBzbdc3cscHZiGBuyQcLi LiOyxm/ZraJ4mS9H7A2BsPRZpyMHHu09BB49up/esSc93MjBG8HeTW6sjrXW22yN2Cx60UOg7qG
+ z1qtvf7OUOYvTdH3AZ88+My9oifcdjJZ/3laUNihgh++6uUAEEz/Lz/uTXxE+tYGyxlCB5M1
+X-Authority-Analysis: v=2.4 cv=bs1MBFai c=1 sm=1 tr=0 ts=680a09ee cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=k6c9-4DSoN7O16MBcjIA:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: SQU2GTdi5DmKfeu1xsFQd8NyPlARo1yj
+X-Proofpoint-GUID: SQU2GTdi5DmKfeu1xsFQd8NyPlARo1yj
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0
+ lowpriorityscore=0 bulkscore=0 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240065
 
+Currently, the PM QoS framework supports global CPU latency QoS and
+per-device CPU latency QoS requests. An example of using global CPU
+latency QoS is a commit 2777e73fc154 ("scsi: ufs: core: Add CPU latency
+QoS support for UFS driver") that improved random io performance by 15%
+for ufs on specific device platform.
 
-On 4/24/2025 2:57 PM, Jiri Kosina wrote:
-> On Sun, 9 Mar 2025, Denis Benato wrote:
->
->> Recently there has been a renewed interest in this patch: ASUS has launched a new z13 model
->> and many more users requested tablet mode support for previous models.
->>
->> I have made required adjustments to apply cleanly on top of linux-next:
->> nothing substantial, a macro has been changed from 5 to 6 upstream as
->> the previous patch also did and a few line changed their position.
->>
->> Given there were no functional changes at all I took
->> the liberty to retain previous tags.
->>
->> Denis Benato (1):
->>    HID: amd_sfh: Add support for tablet mode switch sensors
->>
->>   drivers/hid/amd-sfh-hid/amd_sfh_client.c      |  2 ++
->>   drivers/hid/amd-sfh-hid/amd_sfh_pcie.c        |  4 +++
->>   drivers/hid/amd-sfh-hid/amd_sfh_pcie.h        |  1 +
->>   .../hid_descriptor/amd_sfh_hid_desc.c         | 27 +++++++++++++++++++
->>   .../hid_descriptor/amd_sfh_hid_desc.h         |  8 ++++++
->>   .../hid_descriptor/amd_sfh_hid_report_desc.h  | 20 ++++++++++++++
->>   6 files changed, 62 insertions(+)
-> Basavaraj, could you please provide your Acked-by/Reviewed-by: for this
-> (or any other sort of feedback)?
+However, this prevents all CPUs in the system from entering C states.
+Typically, some threads or drivers know which specific CPUs they are
+interested in. For example, drivers with IRQ affinity only want interrupts
+to wake up and be handled on specific CPUs. Similarly, kernel thread bound
+to specific CPUs through affinity only care about the latency of those
+particular CPUs.
 
-Sure, Jiri, I will get back to this patch soon.
+This patch introduces support for partial CPUs PM QoS using a CPU affinity
+mask, allowing flexible and more precise latency QoS settings for specific
+CPUs. This can help save power, especially on heterogeneous platforms with
+big and little cores, as well as some power-conscious embedded systems for
+example:
 
-We are reviewing similar features and related issues,
-and we may need some more time to investigate them internally.
+                  driver A       rt kthread B      module C
+QoS cpu mask:       0-3              2-5              6-7
+target latency:     20               30               50
+                    |                |                |
+                    v                v                v
+                    +---------------------------------+
+                    |        PM  QoS  Framework       |
+                    +---------------------------------+
+                    |                |                |
+                    v                v                v
+cpu mask:          0-3            2-3,4-5            6-7
+actual latency:    20             20, 30             50
 
-Therefore, I would like to hold off on this patch for a little longer
-before providing feedback.
+Implement this support based on per-device CPU latency PM QoS.
 
-Thanks,
---
-Basavaraj
+Signed-off-by: Zhongqiu Han <quic_zhonhan@quicinc.com>
+---
+ include/linux/pm_qos.h |  35 +++++++++
+ kernel/power/qos.c     | 158 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 193 insertions(+)
 
->
-> Thanks,
->
+diff --git a/include/linux/pm_qos.h b/include/linux/pm_qos.h
+index 4a69d4af3ff8..59139e5a0a30 100644
+--- a/include/linux/pm_qos.h
++++ b/include/linux/pm_qos.h
+@@ -131,6 +131,11 @@ enum pm_qos_req_action {
+ 	PM_QOS_REMOVE_REQ	/* Remove an existing request */
+ };
+ 
++struct cpu_affinity_qos_req {
++	struct list_head list;
++	struct dev_pm_qos_request req;
++};
++
+ static inline int dev_pm_qos_request_active(struct dev_pm_qos_request *req)
+ {
+ 	return req->dev != NULL;
+@@ -317,3 +322,33 @@ int freq_qos_remove_notifier(struct freq_constraints *qos,
+ 			     struct notifier_block *notifier);
+ 
+ #endif
++
++#if defined(CONFIG_CPU_IDLE) && defined(CONFIG_PM)
++int cpu_latency_qos_affinity_add(struct cpu_affinity_qos_req *pm_req,
++			const cpumask_t *affinity_mask, s32 latency_value);
++int cpu_latency_qos_affinity_update(struct cpu_affinity_qos_req *pm_req,
++			s32 new_value);
++int cpu_latency_qos_affinity_remove(struct cpu_affinity_qos_req *pm_req);
++int cpu_latency_qos_affinity_release(struct list_head *pm_reqs);
++void wakeup_qos_affinity_idle_cpu(int cpu);
++#else
++int cpu_latency_qos_affinity_add(struct cpu_affinity_qos_req *pm_req,
++			const cpumask_t *affinity_mask, s32 latency_value)
++{
++	return 0;
++}
++int cpu_latency_qos_affinity_update(struct cpu_affinity_qos_req *pm_req,
++			s32 new_value)
++{
++	return 0;
++}
++int cpu_latency_qos_affinity_remove(struct cpu_affinity_qos_req *pm_req)
++{
++	return 0;
++}
++int cpu_latency_qos_affinity_release(struct list_head *pm_reqs)
++{
++	return 0;
++}
++void wakeup_qos_affinity_idle_cpu(int cpu) {}
++#endif
+diff --git a/kernel/power/qos.c b/kernel/power/qos.c
+index 4244b069442e..b9b814ee670f 100644
+--- a/kernel/power/qos.c
++++ b/kernel/power/qos.c
+@@ -335,6 +335,164 @@ void cpu_latency_qos_remove_request(struct pm_qos_request *req)
+ }
+ EXPORT_SYMBOL_GPL(cpu_latency_qos_remove_request);
+ 
++#ifdef CONFIG_PM
++
++/**
++ * wakeup_qos_affinity_idle_cpu - break one specific cpu out of idle.
++ */
++void wakeup_qos_affinity_idle_cpu(int cpu)
++{
++	preempt_disable();
++	if (cpu != smp_processor_id() && cpu_online(cpu))
++		wake_up_if_idle(cpu);
++	preempt_enable();
++}
++
++/**
++ * cpu_latency_qos_affinity_add - Add new CPU affinity latency QoS request.
++ * @pm_req : Pointer to a preallocated handle.
++ * @affinity_mask: Mask to determine which CPUs need latency QoS.
++ * @new_value: New requested constraint value.
++ *
++ * Use @latency_value to initialize the request handle pointed to by @pm_req,
++ * insert it as a new entry to the CPU latency QoS list and recompute the
++ * effective QoS constraint for that list, @affinity_mask determine which CPUs
++ * need the latency QoS.
++ *
++ * Callers need to save the handle for later use in updates and removal of the
++ * QoS request represented by it.
++ */
++int cpu_latency_qos_affinity_add(struct cpu_affinity_qos_req *pm_req,
++				 const cpumask_t *affinity_mask,
++				 s32 latency_value)
++{
++	int cpu;
++	cpumask_t actual_mask;
++	struct cpu_affinity_qos_req *cpu_pm_req;
++	int ret = 0;
++
++	if (!pm_req)
++		pr_err("%s: invalid PM Qos request\n", __func__);
++
++	INIT_LIST_HEAD(&pm_req->list);
++
++	if (!affinity_mask || cpumask_empty(affinity_mask) ||
++	    latency_value < 0) {
++		pr_err("%s: invalid PM Qos request value\n", __func__);
++		return -EINVAL;
++	}
++
++	for_each_cpu(cpu, affinity_mask) {
++		cpu_pm_req = kzalloc(sizeof(struct cpu_affinity_qos_req),
++				     GFP_KERNEL);
++		if (!cpu_pm_req) {
++			ret = -ENOMEM;
++			goto out_err;
++		}
++		ret = dev_pm_qos_add_request(get_cpu_device(cpu),
++					     &cpu_pm_req->req,
++					     DEV_PM_QOS_RESUME_LATENCY,
++					     latency_value);
++		if (ret < 0) {
++			pr_err("failed to add latency req for cpu%d", cpu);
++			kfree(cpu_pm_req);
++			goto out_err;
++		} else if (ret > 0) {
++			wakeup_qos_affinity_idle_cpu(cpu);
++		}
++
++		cpumask_set_cpu(cpu, &actual_mask);
++		list_add(&cpu_pm_req->list, &pm_req->list);
++	}
++
++	pr_info("PM Qos latency: %d added on cpus %*pb\n", latency_value,
++		cpumask_pr_args(&actual_mask));
++
++	return ret;
++
++out_err:
++	cpu_latency_qos_affinity_release(&pm_req->list);
++	pr_err("failed to add PM QoS latency req, removed all added requests\n");
++	return ret;
++}
++EXPORT_SYMBOL_GPL(cpu_latency_qos_affinity_add);
++
++/**
++ * cpu_latency_qos_affinity_update - Modify existing CPU affinity latency QoS.
++ * @pm_req : QoS request to update for CPUs with affinity masks.
++ * @new_value: New requested constraint value.
++ *
++ * Use @new_value to update the QoS request represented by @pm_req in the CPU
++ * latency QoS list along with updating the effective constraint value for that
++ * list.
++ */
++int cpu_latency_qos_affinity_update(struct cpu_affinity_qos_req *pm_req,
++				    s32 new_value)
++{
++	struct cpu_affinity_qos_req *cpu_pm_req, *next;
++	int ret = 0;
++
++	if (!pm_req || new_value < 0 || list_empty(&pm_req->list)) {
++		pr_err("%s: invalid PM Qos request value\n", __func__);
++		return -EINVAL;
++	}
++
++	list_for_each_entry_safe(cpu_pm_req, next, &pm_req->list, list) {
++		ret = dev_pm_qos_update_request(&cpu_pm_req->req, new_value);
++		if (ret < 0) {
++			pr_err("PM QoS qos update failed for %s\n",
++			       dev_name(cpu_pm_req->req.dev));
++		} else if (ret > 0) {
++			wakeup_qos_affinity_idle_cpu(cpu_pm_req->req.dev->id);
++		}
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(cpu_latency_qos_affinity_update);
++
++/**
++ * cpu_latency_qos_affinity_remove - Remove existing CPU affinity latency QoS.
++ * @pm_req: QoS request to update for CPUs with affinity masks.
++ *
++ * Remove the CPU latency QoS request represented by @pm_req from the CPU latency
++ * QoS list.
++ */
++int cpu_latency_qos_affinity_remove(struct cpu_affinity_qos_req *pm_req)
++{
++	if (!pm_req || list_empty(&pm_req->list)) {
++		pr_err("%s: invalid PM Qos request value\n", __func__);
++		return -EINVAL;
++	}
++
++	return cpu_latency_qos_affinity_release(&pm_req->list);
++}
++EXPORT_SYMBOL_GPL(cpu_latency_qos_affinity_remove);
++
++/**
++ * cpu_latency_qos_affinity_release - Release pm_reqs latency QoS resource.
++ * @pm_req: QoS request to remove.
++ *
++ * Release pm_reqs managed CPU affinity latency QoS resource.
++ */
++int cpu_latency_qos_affinity_release(struct list_head *pm_reqs)
++{
++	int ret = 0;
++	struct cpu_affinity_qos_req *cpu_pm_req, *next;
++
++	list_for_each_entry_safe(cpu_pm_req, next, pm_reqs, list) {
++		ret = dev_pm_qos_remove_request(&cpu_pm_req->req);
++		if (ret < 0)
++			pr_err("failed to remove qos request for %s\n",
++			       dev_name(cpu_pm_req->req.dev));
++		list_del(&cpu_pm_req->list);
++		kfree(cpu_pm_req);
++	}
++
++	return ret;
++}
++#endif /* CONFIG_PM */
++
+ /* User space interface to the CPU latency QoS via misc device. */
+ 
+ static int cpu_latency_qos_open(struct inode *inode, struct file *filp)
+-- 
+2.25.1
 
