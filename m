@@ -1,209 +1,184 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E4E2701C3
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414962701C3;
+	Thu, 24 Apr 2025 07:06:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745478292; cv=none; b=LLtUPRvU90y7C+2oCxBcc7WJ7El8kfbia64NaR+meVf38QE1hBG+CCBtobqk0Y/lfT8xrG+wxyLK/Rk2WOqZUq8QacM5XoRUUcyebcr0diCvxEnYAw5mASGCKGuPUKrdzP/luPDXIrGedGa0TaHrCcRuMTNsvG6ZBi6jFOOFsOg=
+	t=1745478382; cv=none; b=plcSpy6fsoypeo6ZxkU1759H50FM+nKw/q1CLbei8/3mZneZLAwpiXYvJqoEAzyDZoGj3C66FJuV+J9Mmvlhl2Yp9oH6MXgM+BB2P8Hb6RDZqAw9W6j3hnFaG1x/YH51xsuTU/lHA3pdxHM+tzRmVqwbAz21oMBBa7dLKJ/bOKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745478292; c=relaxed/simple;
-	bh=qNH4t9eG2CLNTL3eDk/F7+ms7mC2E/+0Kc61bZYFLgY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U1MIx7/0ua0je6tNGNK8gnuqemXDeldFQQKhEuRiCQDSm+Z49t4bilLbKvhr3NBtEXLvYgld446AxxWQcl+m9xWWrEUElpYjyDJVoXMVKpqIER8O449U2Q5n5tRUY9U08Ox9XDYVjO46SlD+7VxUTOj28NKrahoMuBNAadaY5Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=R/v3jPd6; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1745478382; c=relaxed/simple;
+	bh=9u3a03ICmRscWiMZiaIaFAv3eqEtn2iaf0EClD28sxE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s2WYzQGveWKeSFKNhYa/fLpPaxq4qYU2uPiD/Rqo+n1tN8ajvFanOayn0PBBuS+P5SJYlLyHgW42edeS7fxT24oKMvEipRaRJm2wFN+foBgFZxrFWkiD4DaGKt+/TeeYZGemdhgGDdDThcHEFirSwifaC261lNmfuXKdinNSrBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gud8syDm; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="R/v3jPd6"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22435603572so7422205ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1745478290; x=1746083090; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=WCK1VDbTpYWs4fLQMxD1y8TWj5o2Az5CqghWjMcs5ZI=;
-        b=R/v3jPd6uWGG10UsLJjgCJonY1vxJBPfAvPbHElrII9JyBU+EGYHRQGU5a4/U8VZgD
-         Q9YCKHWvDtcCkXduZczBIXBuogw9Hx090oHU6m4l9c4PB+GUUzr6hhgTlbD3fBURQvzZ
-         Pky517RlDmy0KV+OaHgbyBwuxVyoZsfdYPqRY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745478290; x=1746083090;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WCK1VDbTpYWs4fLQMxD1y8TWj5o2Az5CqghWjMcs5ZI=;
-        b=tndAPYK4WLh9LWDaxG+dCmfQMCbZ0f1J+G1hnW9NqVyTbip8a9Y/z3ygVZw6ziDMBe
-         HLhuEasMpneOSiTURPt9iSnVCFcMqeqSFkt2vTviYRP10vF6ikD5fwfyA0t2g95mWZef
-         C53J7xEudvBIy5nV856UEBG5XzXP1EejX8kuBUvuZqjlZd6DiHDVQrA3jDWjLPE7BxA0
-         hcwKdtF6fi5UzXjSEKJe99pPUGuE7YqJLNmyPN8cK8mMFzGtRtXDAMGWtJ79r6ZCtYl3
-         W/F6RksupBYPlYO98+Hc2+TtyvN1hJPr5yXIZC+kffOrUgtEX5kA2lfCAulPzf7uV3WJ
-         PfSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWF5PIdBtS1gnJfKxz1ic3U56j20Mk+aGama3aysjnoFJnWq1FDQNdQeY1nImJNp/OfBWrPhzF6olXBl5o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynGjDcL+bzhVp7/ncZoScGysN3xx3ghMU0ZhWkzB7iRlBqON0O
-	TicdGBlfh2BVoy+Wsko/oihN379mUts1zgpR5VXXHYE3ZUWVF8JyXsmsSSU73g==
-X-Gm-Gg: ASbGncs4m7/9zzkQa/9ChuIf7ENc1uD5VP4s9EBql/kx4V/yGp8XgbsooWH6AqY+ay1
-	4VUDsLTZwRPxFsMunvRepfOjNVMAqwjCpJuYvmD+YOuMTDGG8z23huWrBvWpvOqytay7SZqypNS
-	2Ca2+SONByNASjiBReLzOO+wRY8cS4R7TWGAuAohtkzYYcoZJDjCSq4Be1cyr62G4TA1rPZAoD/
-	RokK+muXW03nsHygE4rncDNdomr4qrBZ7Vsnk4YCfoNt+c/ZkILGiPCaEHPtDu4OVSdnYChRIqJ
-	WEJcHdlzzCDkNqZXXE4ddja+kV18Mv8m4cTefjey4P0eZyPjjXQh/dePvlHYQRnKaXE=
-X-Google-Smtp-Source: AGHT+IEKl/rHf/wX/Rw7PguqNixe9Lyyac7D9EbeN9OaZPbTzu37q0zQNk6SXavakM90zItgiThP8g==
-X-Received: by 2002:a17:902:c401:b0:224:2a6d:55ae with SMTP id d9443c01a7336-22db3db6f02mr21659045ad.48.1745478290186;
-        Thu, 24 Apr 2025 00:04:50 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:63eb:6b38:399c:5ad7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76c80sm6010555ad.51.2025.04.24.00.04.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 00:04:49 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>,
-	Mel Gorman <mgorman@suse.de>,
-	Tomasz Figa <tfiga@chromium.org>,
-	Petr Mladek <pmladek@suse.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-kernel@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCH] hung_task: configurable hung-task stacktrace loglevel
-Date: Thu, 24 Apr 2025 16:02:43 +0900
-Message-ID: <20250424070436.2380215-1-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.49.0.805.g082f7c87e0-goog
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gud8syDm"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53NL3Mn1010659;
+	Thu, 24 Apr 2025 07:05:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=eiiUtS
+	CuRGYYjkG0GYgwAQhmsCQCr7/NSudYGV+4b7A=; b=gud8syDmCqT2Q0rMzkSOF8
+	RNsITnbvEDBJFwbLZRRGTmye+QCbWoV+ST9JnHap0pgOv9RzZNdzOGsBWvSzsq1k
+	kPBtq3SrYDj08wThMi84JM4Rm5q2pvTZZTpqvCi8b0eWpNYBDNaw7u0fjSH+IT5Z
+	iWIbubCX+nXVzkz4E1kkTtMeY1J0DqRY74gmSttQe5GCnhqohtqI8xtiy61Q9Wiv
+	k8MfBY6fMF3Z/ZF+r5nxaGOJMUalrvoHfc0DlzdgBnnBRh2p/L7GGGwWk6oN05QW
+	62NQX6fcH7ogj2pK+bmSadjrpk+D5Zmc0uzmNE9bQH+saBROBab3/jxbQ8/5jQwA
+	==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4677sm231f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 07:05:54 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53O2l7PK028447;
+	Thu, 24 Apr 2025 07:05:52 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 466jfvpyd7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 07:05:52 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53O75paN14484202
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 24 Apr 2025 07:05:52 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DDE4358068;
+	Thu, 24 Apr 2025 07:05:51 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8614758069;
+	Thu, 24 Apr 2025 07:05:42 +0000 (GMT)
+Received: from [9.61.250.107] (unknown [9.61.250.107])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 24 Apr 2025 07:05:40 +0000 (GMT)
+Message-ID: <57892439-7683-43b7-9b03-4553737273b7@linux.ibm.com>
+Date: Thu, 24 Apr 2025 12:35:36 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 0/2] sched/numa: Skip VMA scanning on memory pinned to
+ one NUMA node via cpuset.mems
+Content-Language: en-GB
+To: Libo Chen <libo.chen@oracle.com>, akpm@linux-foundation.org,
+        rostedt@goodmis.org, peterz@infradead.org, mgorman@suse.de,
+        mingo@redhat.com, juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        tj@kernel.org, llong@redhat.com
+Cc: sraithal@amd.com, kprateek.nayak@amd.com, raghavendra.kt@amd.com,
+        yu.c.chen@intel.com, tim.c.chen@intel.com, vineethr@linux.ibm.com,
+        chris.hyser@oracle.com, daniel.m.jordan@oracle.com,
+        lorenzo.stoakes@oracle.com, mkoutny@suse.com, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250424024523.2298272-1-libo.chen@oracle.com>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <20250424024523.2298272-1-libo.chen@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA0MiBTYWx0ZWRfX7aSpWUfcpGQK Grsmq2TPz74F6uGuWD5Hizcvf/dm1gpr4Nx7WIfeHiUIgBWnwsHHxdnW64s0SoJRHIfkv2oGZCM BgeArVA3iv7k+lPrBae49v+2SRjI3676aMUbb+Iu676gp1gowonVI/avl0WNQv0e7CjoMoKiQSa
+ RuViIwX/Nk90kwQWuJfkMFPwhjvc/lyRrTwR+NpDPQq4DDd5c0gj8QFdSsnhYvcXw5aM4GIJXbS yoa/iLvM6a7f7Yrj7W5k79jmgqOv3wQ02p/PwI9tLE5abAwpXcROqROzJ7IMQwdoqxi1hKt1+O+ 4dUy1Pn0ATf23A9+g2hwAB9242yNktsiL4HsLAxcUa4myuMIcObnz/1YtMFKLGpCJ28VCH7t0r9
+ +n2OtfLTwD2bQ38xjCAhL/ATyW9Mbbvz//+6vSv0l01ZPm2fbx5QRv2ZS1nzAcyXDFq7Dzuh
+X-Proofpoint-GUID: s25T2sYloqrekRMlvi3K0t_Unia1aQfj
+X-Proofpoint-ORIG-GUID: s25T2sYloqrekRMlvi3K0t_Unia1aQfj
+X-Authority-Analysis: v=2.4 cv=CcMI5Krl c=1 sm=1 tr=0 ts=6809e2d2 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=rOUgymgbAAAA:8 a=yPCof4ZbAAAA:8 a=QyXUC8HyAAAA:8 a=zd2uoN0lAAAA:8
+ a=EkCr6PPAZoFWUTBO02gA:9 a=QEXdDO2ut3YA:10 a=MP9ZtiD8KjrkvI0BhSjB:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_02,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ clxscore=1011 mlxlogscore=999 adultscore=0 priorityscore=1501 mlxscore=0
+ suspectscore=0 bulkscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240042
 
-Currently, hung-task watchdog uses two different loglevels
-to report hung-tasks: a) KERN_INFO for all the important task
-information (e.g. sched_show_task()) and b)  KERN_ERR for the
-rest.  This makes it a little inconvenient, especially for
-automated kernel logs parsing.
 
-Introduce CONFIG_HUNG_TASK_STACKTRACE_LOGLEVEL so that (a)
-becomes configurable.
+On 24/04/25 8:15 am, Libo Chen wrote:
+> v1->v2:
+> 1. add perf improvment numbers in commit log. Yet to find perf diff on
+> will-it-scale, so not included here. Plan to run more workloads.
+> 2. add tracepoint.
+> 3. To peterz's comment, this will make it impossible to attract tasks to
+> those memory just like other VMA skippings. This is the current
+> implementation, I think we can improve that in the future, but at the
+> moment it's probabaly better to keep it consistent.
+>
+> v2->v3:
+> 1. add enable_cpuset() based on Mel's suggestion but again I think it's
+> redundant.
+> 2. print out nodemask with %*p.. format in the tracepoint.
+>
+> v3->v4:
+> 1. fix an unsafe dereference of a pointer to content not on ring buffer,
+> namely mem_allowed_ptr in the tracepoint.
+>
+> v4->v5:
+> 1. add BUILD_BUG_ON() in TP_fast_assign() to guard against future
+> changes (particularly in size) in nodemask_t.
+>
+> Libo Chen (2):
+>    sched/numa: Skip VMA scanning on memory pinned to one NUMA node via
+>      cpuset.mems
+>    sched/numa: Add tracepoint that tracks the skipping of numa balancing
+>      due to cpuset memory pinning
+>
+>   include/trace/events/sched.h | 33 +++++++++++++++++++++++++++++++++
+>   kernel/sched/fair.c          |  9 +++++++++
+>   2 files changed, 42 insertions(+)
+>
+Hello Libo,
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
----
- include/linux/sched/debug.h |  1 +
- kernel/hung_task.c          |  6 ++++--
- kernel/sched/core.c         | 19 +++++++++++++------
- lib/Kconfig.debug           |  8 ++++++++
- 4 files changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/sched/debug.h b/include/linux/sched/debug.h
-index 35ed4577a6cc..80c17cdd35a8 100644
---- a/include/linux/sched/debug.h
-+++ b/include/linux/sched/debug.h
-@@ -34,6 +34,7 @@ extern void show_stack(struct task_struct *task, unsigned long *sp,
- 		       const char *loglvl);
- 
- extern void sched_show_task(struct task_struct *p);
-+extern void sched_show_task_log_lvl(struct task_struct *p, const char *lvl);
- 
- struct seq_file;
- extern void proc_sched_show_task(struct task_struct *p,
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index d2432df2b905..8817016fd45b 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -26,6 +26,8 @@
- 
- #include <trace/events/sched.h>
- 
-+#define PR_LEVEL KERN_SOH __stringify(CONFIG_HUNG_TASK_STACKTRACE_LOGLEVEL)
-+
- /*
-  * The number of tasks checked:
-  */
-@@ -153,7 +155,7 @@ static void debug_show_blocker(struct task_struct *task)
- 			       task->comm, task->pid, t->comm, t->pid);
- 			break;
- 		}
--		sched_show_task(t);
-+		sched_show_task_log_lvl(t, PR_LEVEL);
- 		return;
- 	}
- }
-@@ -221,7 +223,7 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 			pr_err("      Blocked by coredump.\n");
- 		pr_err("\"echo 0 > /proc/sys/kernel/hung_task_timeout_secs\""
- 			" disables this message.\n");
--		sched_show_task(t);
-+		sched_show_task_log_lvl(t, PR_LEVEL);
- 		debug_show_blocker(t);
- 		hung_task_show_lock = true;
- 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 54e7d63f7785..e9033b049092 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7751,7 +7751,7 @@ void __sched io_schedule(void)
- }
- EXPORT_SYMBOL(io_schedule);
- 
--void sched_show_task(struct task_struct *p)
-+void sched_show_task_log_lvl(struct task_struct *p, const char *lvl)
- {
- 	unsigned long free;
- 	int ppid;
-@@ -7759,7 +7759,8 @@ void sched_show_task(struct task_struct *p)
- 	if (!try_get_task_stack(p))
- 		return;
- 
--	pr_info("task:%-15.15s state:%c", p->comm, task_state_to_char(p));
-+	printk("%stask:%-15.15s state:%c", lvl,
-+	       p->comm, task_state_to_char(p));
- 
- 	if (task_is_running(p))
- 		pr_cont("  running task    ");
-@@ -7773,12 +7774,18 @@ void sched_show_task(struct task_struct *p)
- 		free, task_pid_nr(p), task_tgid_nr(p),
- 		ppid, p->flags, read_task_thread_flags(p));
- 
--	print_worker_info(KERN_INFO, p);
--	print_stop_info(KERN_INFO, p);
--	print_scx_info(KERN_INFO, p);
--	show_stack(p, NULL, KERN_INFO);
-+	print_worker_info(lvl, p);
-+	print_stop_info(lvl, p);
-+	print_scx_info(lvl, p);
-+	show_stack(p, NULL, lvl);
- 	put_task_stack(p);
- }
-+EXPORT_SYMBOL_GPL(sched_show_task_log_lvl);
-+
-+void sched_show_task(struct task_struct *p)
-+{
-+	sched_show_task_log_lvl(p, KERN_INFO);
-+}
- EXPORT_SYMBOL_GPL(sched_show_task);
- 
- static inline bool
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 3e40f68a4a4f..6cd266651447 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1290,6 +1290,14 @@ config DETECT_HUNG_TASK_BLOCKER
- 	  This will add overhead a bit but shows suspicious tasks and
- 	  call trace if it comes from waiting a mutex.
- 
-+config HUNG_TASK_STACKTRACE_LOGLEVEL
-+	int "Log-level for hung task stacktrace (1-7)"
-+	depends on DETECT_HUNG_TASK
-+	default "6"
-+	help
-+	  This option controls the log-level used to print the stacktrace
-+	  of the hung task. The default is 6 (KERN_INFO).
-+
- config WQ_WATCHDOG
- 	bool "Detect Workqueue Stalls"
- 	depends on DEBUG_KERNEL
--- 
-2.49.0.805.g082f7c87e0-goog
+For some reason I am not able to apply this patch. I am trying to test 
+the boot warning[1].
+
+I am trying to apply on top of next-20250423. Below is the error. Am I 
+missing anything?
+
+[1]: https://lore.kernel.org/all/20250422205740.02c4893a@canb.auug.org.au/
+
+Error:
+
+git am -i 
+v5_20250423_libo_chen_sched_numa_skip_vma_scanning_on_memory_pinned_to_one_numa_node_via_cpuset_mems.mbx
+Commit Body is:
+--------------------------
+sched/numa: Skip VMA scanning on memory pinned to one NUMA node via 
+cpuset.mems
+
+When the memory of the current task is pinned to one NUMA node by cgroup,
+there is no point in continuing the rest of VMA scanning and hinting page
+faults as they will just be overhead. With this change, there will be no
+more unnecessary PTE updates or page faults in this scenario.
+
+We have seen up to a 6x improvement on a typical java workload running on
+VMs with memory and CPU pinned to one NUMA node via cpuset in a two-socket
+AARCH64 system. With the same pinning, on a 18-cores-per-socket Intel
+platform, we have seen 20% improvment in a microbench that creates a
+30-vCPU selftest KVM guest with 4GB memory, where each vCPU reads 4KB
+pages in a fixed number of loops.
+
+Signed-off-by: Libo Chen <libo.chen@oracle.com>
+Tested-by: Chen Yu <yu.c.chen@intel.com>
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+--------------------------
+Apply? [y]es/[n]o/[e]dit/[v]iew patch/[a]ccept all: a
+Applying: sched/numa: Skip VMA scanning on memory pinned to one NUMA 
+node via cpuset.mems
+error: patch failed: kernel/sched/fair.c:3329
+error: kernel/sched/fair.c: patch does not apply
+Patch failed at 0001 sched/numa: Skip VMA scanning on memory pinned to 
+one NUMA node via cpuset.mems
+
+
+Regards,
+
+Venkat.
+
+
 
