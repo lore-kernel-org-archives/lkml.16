@@ -1,139 +1,113 @@
-Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DDC221FC2;
-	Thu, 24 Apr 2025 09:38:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487533; cv=pass; b=NX/BoiD75iDcxvqUltN/rXLPqG3FsRHkwbs0t5Z9v/Am6/LTG/dwgmu7SeAjKCD71ukG7JKo+YY80DwvwSD9jFvPE5z/sp7fxtcuNM15kYc9L+khqyL4e0xRJDbnTOIea7kdbzYlmE6zsujw5oSd8CKQvrnB70khAFfBJ87QhvI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487533; c=relaxed/simple;
-	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZGOH46mWuHZYpdivGEW2tTxg+WDr4tE9aNuO5PdoO2CQi7LHhYGkp6FOHgbnDRzGfadRS/u8PAxDwvqiVeGfgJpOGTdSyBqGd1kp2TXsx/jcBw29oFAU17XrVPFJbvpgdLxtr2oLxCl/gcnvO05pHjY/f6ZFIVkGZfYVMsxJQag=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=qfXoCEr7; arc=pass smtp.client-ip=136.143.188.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86D45222564
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745487542; cv=none; b=uDg3eB1YXXZ49C2FSuHyK3Bdhcad48x7cJmJhqUrq1YccBwk4FR/XZKKaAIyTZdSe9oHIqGbJSwCjEwxrjcjC9KQMHHfmx9/l0Smcd2C6CYUqpqm6dK4xPc+KauBrB86cTwCgjL9xtQ1c0TdAFFUH4uT8W1IGZm8N3zuPcXEK0M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745487542; c=relaxed/simple;
+	bh=NB2oNOCnxG85GWEANUQdzI220Wn03rrzKWljOGrWZgs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m3rMAbdhLk4JP1fLNrxIjGJJng0noJsyLNHLlsrHeG2ka6HvDBL3vgd8LacNECrYirIkt6n7bBCdvJhgQ2InrrNLPpLl9Pn8nR8TEMFCUmbaGNHUFg8A7ki41hscy//Q+qV0TQ+06/ujuk8HtxLgkWfD4SSWridedhpas5O+lz8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mexL5FXw; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="qfXoCEr7"
-ARC-Seal: i=1; a=rsa-sha256; t=1745487507; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=eWHXAzgrAP0yaKWz/ozs7h3vD4xkghAbBCljuFxWvbfTHCg8bB7O20Wj5Cey7zbwD83bKeATVCQmrgXoymM6Lya2UtsQN7MVx4CMPE2jlMOq7qxFfYhlsV1o2l6RCHhvsRBHLBCJ0YL+0XggR/jwNUTdVAwcSBp5SQRIQEIOGPE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745487507; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=; 
-	b=DHSi6PJJSSdsBNx8Q6gcPlWkCrtC3eJ270kQ1qKiOVODN/qZtPTjqsNtaLHCu1bespcQIaemquGNuv6PKmes98e9jPAOOG1Sgb/ASy2rlDQS0Ubm47nHswRiTtaTHOkv6sUDhR4nh7WSmK9T9NmvTnPXoGtJ8y2MVKmPH9s7E7o=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=icenowy.me;
-	spf=pass  smtp.mailfrom=uwu@icenowy.me;
-	dmarc=pass header.from=<uwu@icenowy.me>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745487507;
-	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=enVte3lTiHlJmRqVD73bg+H5H0csB3a1mMrL205Arz8=;
-	b=qfXoCEr7FQ9msjMMk+80tOQFcRYAJOkVcDSabeIUZoB/V4FpBb26CTdSda4LE0yK
-	fo9HylKuV1bD8f3fcPUrREMovKRdpXoD0SZQvglA489xMwzcX53UPrSxIX0CFg6WP0R
-	InG3nz1h5fZPfi7kHS7WEdueULDPnUm1RVrr3hVHIRicF9XBKTIBdgEAEexu1nBDC27
-	aJ0P7cJfdzmwXm1ETWv9rcb/Vsd9WbLzUiT55gu9M7m7ZUzDuF9bZCPvg5oITGjvRnx
-	k2U+NrEc1kWJKSqgl+ClkD2WXgVaPMyEPvMhSNqNQaQxHZs07iRaqH3R3Wo9/4iOHTA
-	G6TModPKfA==
-Received: by mx.zohomail.com with SMTPS id 1745487504141154.190763735755;
-	Thu, 24 Apr 2025 02:38:24 -0700 (PDT)
-Message-ID: <7e62e720ccc51fb5c7d023adae3eab35aecf0bba.camel@icenowy.me>
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-From: Icenowy Zheng <uwu@icenowy.me>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang
- <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org,
- linux-riscv@lists.infradead.org
-Date: Thu, 24 Apr 2025 17:38:16 +0800
-In-Reply-To: <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
-References: <20250424062017.652969-1-uwu@icenowy.me>
-	 <20250424062017.652969-2-uwu@icenowy.me>
-	 <CACRpkdaX0hTJSsZN6YNXASY3noZw=JsOSXzFBbxKegJ6A+2usA@mail.gmail.com>
-Organization: Anthon Open-Source Community
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mexL5FXw"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-30bfc8faef9so8890611fa.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:39:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745487539; x=1746092339; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NB2oNOCnxG85GWEANUQdzI220Wn03rrzKWljOGrWZgs=;
+        b=mexL5FXwkVk6ZCT3PHNvquF/XJMY+abzirVAT9TFiEjpv7FrgzHXU/Eowns2X3iDON
+         M+Gmm7vH7ayY1tdRynNUsp5Xg6R4A/bbW2gMJ42YjaBWxXsNi8/emnHqcvDijNecEBUh
+         gvjqZBi7yGKiBNoXMgo5zMfpUW2ZAdh0VF/tAeT6rJZr5uGMgXtKBL8Keb56AR2urjiR
+         /5au8IcGkFTNrprm1XG+pkHpW750tT31F0VUuo/hn0UyAzuI01gDPl78EpEHnYrw4dXg
+         6eQ3kz+A874s/P3CEQuy43mBtyBknzql8UlmO/eKSgqI8dzSZMv1/a+wZaRPOWZBs4VU
+         DOnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745487539; x=1746092339;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NB2oNOCnxG85GWEANUQdzI220Wn03rrzKWljOGrWZgs=;
+        b=JlmVXHZgFHtaGNT6QJaI9e0uAPVLMhu+jc5Vg0+KtNIDBKyvqAFODpM3SimXEpE8I8
+         HX+1oKGKaa83lPua+hDvEeU2/TxX1dhOJgVsEmmrtYuej1LB25aX4hat4Ltwu605rrZH
+         QgBj0XElfOsGSS2t/8lG1mGpuim3/8NlZ8iju8us2mCvUQHKPcjwc9RJ+9TwMGPTvuOB
+         ALSFcBOTsyW1odH7fRv6gBegEYNIGUg31Cz4yyEPspUuqnRJPr86/UkIxnq0h9ZUpds8
+         FWnraPI6Vs5UbcvtoMI9NvZHNd4Eud3VbJqq9XfLX0xvQEhAH6I+kiiruL5gxpJAaLDV
+         lTvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVLB0gvxE84d//X+sBywZ6ZiDxG/Kp1FMXzROk/i4t0lWhjFdO4dOagiNJAdbOBglc3pMr5SgSFDGizMvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzc+in7VAop9rsJ9EeGhpzpfPo2edFlsSi5XqK28LPfoVRCcmbJ
+	S9/64hxOgolb79OL9SRPU0hlieSXLt6cY0fKsC9CsV0zbZaiiQXHKGEoHkuWbmGJjXI/3UqVi/B
+	r0ET06iFR98n8B3BoQP88Kbs3PNc=
+X-Gm-Gg: ASbGncvbAqLcrsRCpsDpPhoj7p18v19n2VzH8a1T40Na4GeUT3tFVp0MVc5nSkJ+0EY
+	HJBtQWl/xXQM7E0t5QwxJIL0S55+oepRcH85nH8zt8gzM8pfc3GmMJFo8YR4BR/2pc4M0hz3UAl
+	iG6ewUCLri5tJNQmcvSVmpyA==
+X-Google-Smtp-Source: AGHT+IGxVjnHtPNegbr3C7Imfp6iB6vUgpa+DyLIQKc23y3BGS5YQua6rG4/E/4fQIRZ0NImjw5iKW4U3PoyKnwuILY=
+X-Received: by 2002:a05:651c:1614:b0:30d:62c1:3bdd with SMTP id
+ 38308e7fff4ca-3179eaf48d1mr7393771fa.23.1745487538397; Thu, 24 Apr 2025
+ 02:38:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+References: <202504241621.f27743ec-lkp@intel.com>
+In-Reply-To: <202504241621.f27743ec-lkp@intel.com>
+From: Kairui Song <ryncsn@gmail.com>
+Date: Thu, 24 Apr 2025 17:38:41 +0800
+X-Gm-Features: ATxdqUEbFuGWETRbMvxzKfov8XBuQuSyhGaBkFQpEJHsk77t9tC6s3UekgRaWuw
+Message-ID: <CAMgjq7AHR9zg+-BRhMeE_06endOP1dno0=rKZjU2CUmUzbh0ow@mail.gmail.com>
+Subject: Re: [linus:master] [mm, swap] 7277433096: swapin.throughput 33.0% regression
+To: kernel test robot <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org, 
+	Andrew Morton <akpm@linux-foundation.org>, Chris Li <chrisl@kernel.org>, 
+	"Huang, Ying" <ying.huang@linux.alibaba.com>, Baoquan He <bhe@redhat.com>, 
+	Barry Song <v-songbaohua@oppo.com>, Hugh Dickens <hughd@google.com>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Kalesh Singh <kaleshsingh@google.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Ryan Roberts <ryan.roberts@arm.com>, 
+	Yosry Ahmed <yosryahmed@google.com>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-=E5=9C=A8 2025-04-24=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:51 +0200=EF=BC=
-=8CLinus Walleij=E5=86=99=E9=81=93=EF=BC=9A
-> On Thu, Apr 24, 2025 at 8:20=E2=80=AFAM Icenowy Zheng <uwu@icenowy.me> wr=
-ote:
->=20
-> > The JH7110 SoC could support internal GPI signals to be routed to
-> > not
-> > external GPIO but internal low/high levels.
-> >=20
-> > Add two macros, PAD_INTERNAL_LOW and PAD_INTERNAL_HIGH, as two
-> > virtual
-> > "pads" to represent internal GPI sources with fixed low/high
-> > levels.
-> >=20
-> > Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
->=20
-> As per my other reply in the previous post, I think this should be
-> handled internal in the kernel instead using a tighter integration
-> between
-> the GPIO and pin control parts of the driver and utilizing the
-> gpio-specific struct pinmux_ops callbacks.
+On Thu, Apr 24, 2025 at 4:40=E2=80=AFPM kernel test robot <oliver.sang@inte=
+l.com> wrote:
+>
+>
+>
+> Hello,
+>
+>
+> note:
+> from commit message, this regression should be expected. we still make ou=
+t this
+> report FYI what's the possible impact of this change.
+>
+> below details just FYI.
 
-Well I cannot understand this -- these signals are not GPIOs, totally
-not related to the GPIO subsystem (because they're only pinmux, not
-related to GPIOs). This is described in my previous mail.
+Hi,
 
-The pin mux of JH7110 strictly route its inputs to its outputs. For
-signals from other SoC blocks (to external pins), the registers define
-how OUT/OEn of IO buffers *are driven by* the signals; however for
-signals to other SoC blocks (from external pins), the registers define
-how IN of IO buffers *drive* the signals. (This follows the generic
-signal-driving rule that one signal can drive multiple signals but
-cannot be multi-driven).
+For most workloads with random swap io, there shouldn't be any
+regression. I checked the test and it's doing a sequential swapout
+with 8 workers (after a fresh swapon?). I was expecting
+bae8a4ef3efb56bb7e83bafd3c0856845aeaf605 ("mm, swap: use a global swap
+cluster for non-rotation devices") to optimize it. Seems that's not
+enough?
 
-In addition the situation I am trying to handle here is an addition to
-the latter part of the previous paragraph -- in addition to 64 inputs
-corresponding to 64 GPIOs, two extra inputs, one always 0 and another
-always 1 are available to the pin controller for driving other SoC
-blocks' input (as output of pin controller).
+I guess we might also need to disable the cluster shuffle in
+setup_clusters for HDD. The shuffle was meant to reduce lock
+contention on swap cache, the contention is clearly not an issue for
+HDD, the bottleneck for this test is IO, that might be making the IO
+more randomized. Or maybe clusters will better be sorted by offset for
+HDD.
 
-In fact this is why there is ` + 2` when calculating ival in
-jh7110_set_gpiomux() -- the first two possible values are for always 0
-and always 1, 3 represents the IN of GPIO0, etc.
-
->=20
-> This solution looks like software configuration disguised as hardware
-> configuration.
-
-Well this solution handles these internal wires in the same way as
-signals from external GPIOs, excepting specifying special GPIO numbers.
-If you are against the principle, maybe the current already-included
-GPIOMUX system of the StarFive pinctrl is to be blamed instead of my
-small extension to it.
-
-I must admit that the current GPIOMUX system isn't a faithful
-representation of the hardware because it's a pad-centric setup instead
-of a register-field-centric one, which isn't very natural for input
-signals. However configurating the mux in such a way is against people
-reading, and we're not able to break the system because it's already
-there.
-
-Well in the situation that one GPIO used as input drives multiple
-internal signals the pinmux looks a little confusing too, e.g. the I2S
-clock situation I mentioned in my reply in the previous revision of the
-patchset.
-
->=20
-> Yours,
-> Linus Walleij
-
+It seems this test can be easily reproduced with `$USEMEM -n $nr_task
+-W -d -p $TMP/pidfile $((size / nr_task))`, I think it's not a real
+problem in productions, but I'll try fix this if have time.
