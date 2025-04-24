@@ -1,119 +1,133 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916711F3BB5
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D45E1E00A0;
+	Thu, 24 Apr 2025 06:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745476155; cv=none; b=tGKrF9g4OLLTcJXcOJ38glxOPNKqqZ4fxhY+gHmouuglx7xzjCOvaKlP0DwYtjlPv/JMPZpF7Zb5KKWa99mZNMqO6cYKR6nTJk5tz59I6VOzgcbogb/R1YU7C0PzwFIjwGCJVNxCq9D3CxFkSf54vqcbWksHjWPl3B/y3UHRx/o=
+	t=1745476164; cv=none; b=otQsge5FpXJoEDTkN2J1BApJoxtzT5ZufCDEa3yPsgU7+n2WOGc2LYNgb3Zlm9aNas54pbOTJIdudzgERUPQFs8ONC53v3LJ+AU4afM+GwRf6LRe5eaKOETyeGTfqWrlGZFMv7mNBHpKaoiyQHBfnZcvEJec+BGJszz0e66xVH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745476155; c=relaxed/simple;
-	bh=VzNBfcDTVF6ejyO5VLYxI2spzN4W68Bo1JJlXy3O86o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZFUsqcU+hMxccAtYoBxXVK2N+gpRKhm9wzypsLrgWvScisAfJ5HxUc/AId9zNS+ZBy8L3fUC5hpvrHFHBS7Qq+luBiovFrG/0DPo/ZmOuifDlMAIM8WA/EvBW/YRckDsdCj5VyjTbfVU9WMDdzsAgTn+0Zv+MdB186UhiUzcNQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hxPM+mhx; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745476164; c=relaxed/simple;
+	bh=vEqzcRu9m5qvff9QwwVv02gneCqRAe5hs49ok24uYks=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GmUtvVpVqlAxIlRN7iDQOVJ263SX0Lm5SejJWY4ODSEQrY0RA/zTxPU51dNjYy4aizVWEI3c758pIKoer1B6P4cOxuvsASdhZSgFOtMvk2KotGOs5VqnI/qE7F0jP5Ee/9ACfJT6XOGwfsFKFDlO2t7DTqRq8USwoN/dOHH4mdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=e3cCKNQ3; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hxPM+mhx"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22401f4d35aso7518725ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745476153; x=1746080953; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=prlT14wP1pGTt4ARZ3fH6f2MCxYwQQ9VDBvp9E5OskU=;
-        b=hxPM+mhx3XkalLJEerW2xTB7vY+sMv6DcvKmOyiQV8q1BBdn3WIZ0M7Jp8FVEHF/Mb
-         sYGyswUSFMEMLgask5auSKrRRI+DQZlXdvco3jzJv7jomMYcb5XagCPl00MHLugwAlMz
-         q3lHIBAbGCo/868bZ+AaAxNcJaq9HcOuOn9UlRV0HFVtWw8PwdcRqCfPVGOv6q4o31jr
-         xQmCIASFhNhV0RVnZZ3JKgGZDw9R6jiOm3ItxvHEQfd8URmY2KrQaNceakgbu9X38Q4k
-         2tYzRjJluIDpBt26i5Gixx+Xatyd2lIojtM+rJoY/+b/mhUk8llJYvYdiOamnl4TT19E
-         VwCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745476153; x=1746080953;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=prlT14wP1pGTt4ARZ3fH6f2MCxYwQQ9VDBvp9E5OskU=;
-        b=JH24g13bwNZFK3BmX+5GkB+EfYdsoakivnCMhJfooMCPYrEkkSuo780zUp60fNKIMq
-         BRnQ2NQrAZkD6ilniWtk+P/6oWUARST+cHlYvW8t/axo+9toOqTvWsVs30EnVLVMG3t8
-         6hHw/gF8XiyndbJtodrowqu6tD/yCT/wkNT3LR8atOkZHiAzf+xE1K9jtTfY90dV5KHl
-         Mm/2gQ0BaZKayijPM728sxYA+QA0Q+iBLoD7rJ1o4mdKeKiBIjWduJC3HChIVIZ48QKR
-         MwfKmxUkVC0Z5FShph4WLVMTiNvrsEgzCBgdWRHucngso3HlBPnvFoV/NN5rlmvow9i7
-         nPYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXANpmAPNIz9VTDokawm2Jahc+ZLZbgiHjI8NL23ljyRhAGDy7ZjdlthH5yEZ2FLrxckzRbDT9Gtcx+f18=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4URwY7PPsUphkFH2yyHDFSh79jm1Zy0nO+EkNtu7wDGihXxId
-	x1+W4kXNPWkyNgpBaLJZRH8FrXyfvSdbpF7NQ2ZMv4MUrOftovFaBs74Hrz4xCs=
-X-Gm-Gg: ASbGncs+P5Zm1YKYTvSY+dmRuBIKUXbfySwgiCPUbEWYDlxnGuKC8wPWSShOyjYkMir
-	1+A5G6GGK8TsUl4xDs9xMJ+8xd+wDIEwVSAyWt82yke70qRprjAshDpmc49FmpQ5qUYpKqP5uRd
-	qnaQsuiDzpUA/nhtitrJJssa8Clzx1hqjMyeIFhMdTwI4Ve/qPlC1oM3R/zborNuZeYHTiwKIx4
-	+qKyqCDwuqA1vQKrBrnviCqZFlWlW7A0MxrE9GurBg1UU20PRxUS+jTSUS354riAqCd+xVuafty
-	6/6yiqWGQS/qpfdavBjtYuv6aKRYGQpTjd8AQdvAEA==
-X-Google-Smtp-Source: AGHT+IEzqMdZbqFLHMFvtB332RXvrr8S6rMpD3KuOB1cS9hqVDk7lUxe6pCjWGcu6CgYu10Wj15uvg==
-X-Received: by 2002:a17:902:e883:b0:226:38ff:1d6a with SMTP id d9443c01a7336-22db3baf373mr16890825ad.7.1745476152853;
-        Wed, 23 Apr 2025 23:29:12 -0700 (PDT)
-Received: from localhost ([122.172.83.32])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76c22sm5346605ad.24.2025.04.23.23.29.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 23:29:12 -0700 (PDT)
-Date: Thu, 24 Apr 2025 11:59:10 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Yury Norov <yury.norov@gmail.com>, Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V11 13/15] rust: cpufreq: Extend abstractions for driver
- registration
-Message-ID: <20250424062910.6zk7amxq4gjxtw66@vireshk-i7>
-References: <cover.1745218975.git.viresh.kumar@linaro.org>
- <a14f6927488b5c7d15930c37a3069f46a5c888a2.1745218976.git.viresh.kumar@linaro.org>
- <6fc3e178-60f9-4b0f-9c56-6d983e4d1eed@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="e3cCKNQ3"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0FEm6010648;
+	Thu, 24 Apr 2025 06:29:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=iFHSC3ADFpg
+	QSR1BRPKVYViSqg10EkYFgqiZUGXGuu8=; b=e3cCKNQ3JxuZ9hPX6tF5kSqaJV4
+	2nqVy5Spja42DGkAyYJWOSlxZT5NO0sRHC0vhOdO4L3SCTo6nZVkEW39rrcNwmAM
+	UbEudzzFH8umDFws1G25KJO8xAqosMVTlL2cJtzIJNdHug8tGTd2fQti83iSmXQv
+	kdNV5WDKkwoF4Sm0dcEWQwKcL1BD1wRUzD5r0I7lajrw41mtESEhTJmWaX81vFcj
+	ZyXCh9z5Z8069D+qbgROzdKGNtF35zSnDh8/v5h2+l0iDFo04Zax4ZttDRkmdH1w
+	yGZxeUtoAbpW+lYMaaeMY7of/lYCtOqcilGS0MCN9Ae81AaCnfkURX94sBg==
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0cg8k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 06:29:10 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 53O6OZq0003918;
+	Thu, 24 Apr 2025 06:29:06 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 4644wn021j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 06:29:06 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 53O6OarF003972;
+	Thu, 24 Apr 2025 06:24:36 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-amakhija-hyd.qualcomm.com [10.213.99.91])
+	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 53O6OZlo003943
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 24 Apr 2025 06:24:36 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4090850)
+	id D05C859E; Thu, 24 Apr 2025 11:54:33 +0530 (+0530)
+From: Ayushi Makhija <quic_amakhija@quicinc.com>
+To: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc: Ayushi Makhija <quic_amakhija@quicinc.com>, robdclark@gmail.com,
+        dmitry.baryshkov@oss.qualcomm.com, sean@poorly.run,
+        marijn.suijten@somainline.org, andersson@kernel.org, robh@kernel.org,
+        robh+dt@kernel.org, krzk+dt@kernel.org, konradybcio@kernel.org,
+        conor+dt@kernel.org, andrzej.hajda@intel.com,
+        neil.armstrong@linaro.org, rfoss@kernel.org,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@gmail.com, quic_abhinavk@quicinc.com,
+        quic_rajeevny@quicinc.com, quic_vproddut@quicinc.com,
+        quic_jesszhan@quicinc.com
+Subject: [PATCH v5 09/11] drm/bridge: anx7625: fix drm_bridge ops flags to support hot-plugging
+Date: Thu, 24 Apr 2025 11:54:29 +0530
+Message-Id: <20250424062431.2040692-10-quic_amakhija@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
+References: <20250424062431.2040692-1-quic_amakhija@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6fc3e178-60f9-4b0f-9c56-6d983e4d1eed@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: rqTerOt6rprXIZ-kTCerwmgAj_nBPuRX
+X-Proofpoint-ORIG-GUID: rqTerOt6rprXIZ-kTCerwmgAj_nBPuRX
+X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=6809da36 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=IFNFO8iCMOh0I8FUMx0A:9 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA0MCBTYWx0ZWRfX+8MyAGETbyC0 Wf2UNkBaWzeCpZ2h2RgDhx5jRvoyraUT9XD/qD7FqozaZmom702XuFao8K5sFD6gnhIPaVleLLX lEgqj+ilvZ1RV8iK6ztfkolLCz+16ERSitOr+eJksPH2foXJDUHhERCBLIInxpMsSlo01hTaTCY
+ rH+khpsPccOWmMUxZf6+4sqaMEhtMEYHYwR9zUowNd6L0gM2o4Zb5WcaEOvM5BhvZdaU5gbQxNm np3d6au/8Orhr/ZaK3mMdF3bv2QxSrDnwi2VXUlaMDjS9YhXUDYquYEFrtxQ8KZruugATF+j3Db rTU3NoGizn0D08eknfGTod8AkKArpg/sXal37i/+oj2oFbtxoR+eAuGeWAG5aqyG5zboDK1ajNz
+ MDB5VRW3VDmH6EL/7CIvsslYhqCJYVr59g99MtKe+ucDGf84I762eMyO79iY99ae60Fc2TKt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_02,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240040
 
-On 23-04-25, 14:08, Danilo Krummrich wrote:
-> On 4/21/25 9:22 AM, Viresh Kumar wrote:
-> >
-> > +    /// Same as [`Registration::new`], but does not return a [`Registration`] instance.
-> > +    ///
-> > +    /// Instead the [`Registration`] is owned by [`Devres`] and will be revoked / dropped, once the
-> > +    /// device is detached.
-> > +    pub fn new_foreign_owned(dev: &Device) -> Result<()> {
-> > +        Devres::new_foreign_owned(dev, Self::new()?, GFP_KERNEL)
-> > +    }
-> 
-> Btw. if you take it for v6.16-rc1, expect a conflict with [1].
-> 
-> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/driver-core/driver-core.git/commit/?h=driver-core-next&id=f720efda2db5e609b32100c25d9cf383f082d945
+The anx7625_link_bridge() checks if a device is not a panel
+bridge and add DRM_BRIDGE_OP_HPD and DRM_BRIDGE_OP_DETECT
+flags to the drm_bridge->ops. However, on port 1 of the anx7625
+bridge, any device added is always treated as a panel bridge,
+preventing connector_detect() from being called. To resolve
+this, instead of just checking if it is a panel bridge, verify
+the type of device based on aux whether it is a DisplayPort or
+eDP panel. If the device is not of the eDP type, add
+DRM_BRIDGE_OP_HPD and DRM_BRIDGE_OP_DETECT flags to the to
+the drm_bridge->ops.
 
-Thanks for pointing this out. I believe this branch is immutable and
-so I can rebase over f720efda and send my pull request after yours is
-merged ?
+Signed-off-by: Ayushi Makhija <quic_amakhija@quicinc.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ drivers/gpu/drm/bridge/analogix/anx7625.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/bridge/analogix/anx7625.c
+index 99ef3f27ae42..a32ebe1fa0cd 100644
+--- a/drivers/gpu/drm/bridge/analogix/anx7625.c
++++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+@@ -2608,9 +2608,8 @@ static int anx7625_link_bridge(struct drm_dp_aux *aux)
+ 	platform->bridge.of_node = dev->of_node;
+ 	if (!anx7625_of_panel_on_aux_bus(dev))
+ 		platform->bridge.ops |= DRM_BRIDGE_OP_EDID;
+-	if (!platform->pdata.panel_bridge)
+-		platform->bridge.ops |= DRM_BRIDGE_OP_HPD |
+-					DRM_BRIDGE_OP_DETECT;
++	if (!platform->pdata.panel_bridge || !anx7625_of_panel_on_aux_bus(dev))
++		platform->bridge.ops |= DRM_BRIDGE_OP_HPD | DRM_BRIDGE_OP_DETECT;
+ 	platform->bridge.type = platform->pdata.panel_bridge ?
+ 				    DRM_MODE_CONNECTOR_eDP :
+ 				    DRM_MODE_CONNECTOR_DisplayPort;
 -- 
-viresh
+2.34.1
+
