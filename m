@@ -1,183 +1,142 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8ECA221FA5;
-	Thu, 24 Apr 2025 11:25:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C532F221FBD
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745493940; cv=none; b=AdLj3G14tj60eEVObbu7r74WtNaKViDxN1X2/Um1jv63xn1Z4T2JEFiqS4kEJTdEnNOg9HxoEvB9bydOF2pOaN0HAn1FbEuhUOBpSTPVl3IfQefjdhg3FAnrxP5Ub/jpBq8K/b6gaD5F7Wim2UgoLDT+IkU06yIZkQT7LZ1g/As=
+	t=1745493977; cv=none; b=kwAcsH/zlpbtm2H9VXHA3jeu5VfEbPIznMngvbnvtJMs90gXeXaChpHZJLv1MQPSsm7gnui+DUmqehYjx34eRolQfj5mar2kpin6IEkTi3hm4l0Tn2phSc178i4ecJLonUED0Naw6Q4LibHJwa5Mn8ll198nHNcoerr2iAEAESc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745493940; c=relaxed/simple;
-	bh=T6vlT/iufvMVBJdh00gNIO67VTiPTNMihGurbSdPLaQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=poi8sN7hZuN0MI56tCAL/pIbOUVfXzhjwYkaBW5Q2INM7/yrqbuf3NU3xCYQS0eGL4tDqHvOkLri+tM6ffnftXB5wBCnEY0LVjuLXngLmhep07D5N+4cU74gcL/IAkq+UtENGvXGcRd4nA9NB+PDHEiclo3dWqVlxEAn41ofcvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev; spf=pass smtp.mailfrom=buenzli.dev; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=buenzli.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=buenzli.dev
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	s=arc-20240116; t=1745493977; c=relaxed/simple;
+	bh=DxWPNEYePRHJk+mrrlZ9LGFtuXks7s/MsOJehVi659w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NIel+cheiuId7tbKG8yYWm0m6mK3ClSvJnev2MVuSX+6M2sVi4hrk7h2jDiGeagDO7X2taLekqlP25wMJAJ4tOvbqVhQkKmGSRN003/860nG11OJrGmqRTZqtzhFlhDxtfltU1r2knmQk3FVZM5rI8AP3tpzjqdvwJjFWfgXggI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Y6dGXbMw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TBR+T+nc; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Y6dGXbMw; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TBR+T+nc; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Y6dGXbMw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TBR+T+nc";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Y6dGXbMw";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TBR+T+nc"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4Zjtv10yLzz9sm9;
-	Thu, 24 Apr 2025 13:25:33 +0200 (CEST)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DDE4921171;
+	Thu, 24 Apr 2025 11:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745493973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oe37kHa6OjABHOtp27KFBj6FfYXoBY4b396xoyxnzoo=;
+	b=Y6dGXbMwS9heb+/Fs+KWsMOpwCIjZapSKWgunkd7LFXKvpvmrxnf5jwRz0gf9HzIl+KaoG
+	72g0ZBXio+JFpCwfRXbkCAlBre+pQvocNH3qWabNaB/764VJKDy05yIVQPS0ZGIkDvvmBZ
+	Rm+ak4vHXgE4jKoCh67xR4t18J62pqE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745493973;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oe37kHa6OjABHOtp27KFBj6FfYXoBY4b396xoyxnzoo=;
+	b=TBR+T+ncVgireaKgoU8ClVbRIp/p6cLFPKGf3ZzzqNIq8casg0ygGQbFPRk+skOx7hwhNF
+	ZhEBiBO6Y/Uf5fCw==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745493973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oe37kHa6OjABHOtp27KFBj6FfYXoBY4b396xoyxnzoo=;
+	b=Y6dGXbMwS9heb+/Fs+KWsMOpwCIjZapSKWgunkd7LFXKvpvmrxnf5jwRz0gf9HzIl+KaoG
+	72g0ZBXio+JFpCwfRXbkCAlBre+pQvocNH3qWabNaB/764VJKDy05yIVQPS0ZGIkDvvmBZ
+	Rm+ak4vHXgE4jKoCh67xR4t18J62pqE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745493973;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oe37kHa6OjABHOtp27KFBj6FfYXoBY4b396xoyxnzoo=;
+	b=TBR+T+ncVgireaKgoU8ClVbRIp/p6cLFPKGf3ZzzqNIq8casg0ygGQbFPRk+skOx7hwhNF
+	ZhEBiBO6Y/Uf5fCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BCCE81393C;
+	Thu, 24 Apr 2025 11:26:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id dmuxK9UfCmiTOwAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 24 Apr 2025 11:26:13 +0000
+Date: Thu, 24 Apr 2025 13:26:08 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 06/14] nvmet-fcloop: add missing
+ fcloop_callback_host_done
+Message-ID: <44b6159a-a86f-4b76-bcef-35f267e69835@flourine.local>
+References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
+ <20250423-nvmet-fcloop-v5-6-3d7f968728a5@kernel.org>
+ <89289452-3647-4d94-baf9-529d145b652f@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 24 Apr 2025 13:25:28 +0200
-Message-Id: <D9ETYGX6RS7R.1LLJX3WDZI4QY@buenzli.dev>
-Cc: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v2 2/5] rust: Add bindings for reading device properties
-From: "Remo Senekowitsch" <remo@buenzli.dev>
-To: "Dirk Behme" <dirk.behme@de.bosch.com>, "Rob Herring" <robh@kernel.org>,
- "Saravana Kannan" <saravanak@google.com>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
- <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20250326171411.590681-1-remo@buenzli.dev>
- <20250414152630.1691179-1-remo@buenzli.dev>
- <20250414152630.1691179-3-remo@buenzli.dev>
- <d179848e-63e1-4921-891e-455834f3733e@de.bosch.com>
-In-Reply-To: <d179848e-63e1-4921-891e-455834f3733e@de.bosch.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <89289452-3647-4d94-baf9-529d145b652f@suse.de>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-8.30 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,flourine.local:mid]
+X-Spam-Score: -8.30
+X-Spam-Flag: NO
 
-Hi Dirk,
+On Thu, Apr 24, 2025 at 12:13:10PM +0200, Hannes Reinecke wrote:
+> > +	if (!tfcp_req) {
+> >   		/* abort has already been called */
+> > -		return;
+> > +		goto out_host_done;
+> > +	}
+> Sure this is correct?
+> If the abort has been called I would have expected that all resources
+> are cleaned up by the abort, so we wouldn't need to do that here...
 
-On Wed Apr 23, 2025 at 2:29 PM CEST, Dirk Behme wrote:
-> Hi Remo,
->
-> On 14/04/2025 17:26, Remo Senekowitsch wrote:
->> The device property API is a firmware agnostic API for reading
->> properties from firmware (DT/ACPI) devices nodes and swnodes.
->>=20
->> While the C API takes a pointer to a caller allocated variable/buffer,
->> the rust API is designed to return a value and can be used in struct
->> initialization. Rust generics are also utilized to support different
->> types of properties where appropriate.
->>=20
->> The PropertyGuard is a way to force users to specify whether a property
->> is supposed to be required or not. This allows us to move error
->> logging of missing required properties into core, preventing a lot of
->> boilerplate in drivers.
->>=20
->> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
->> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
->> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
->> ---
->>  rust/kernel/property.rs | 385 +++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 383 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/rust/kernel/property.rs b/rust/kernel/property.rs
->> index f6e6c980d..0d4ea3168 100644
->> --- a/rust/kernel/property.rs
->> +++ b/rust/kernel/property.rs
-> ...
->> +    /// helper used to display name or path of a fwnode
->> +    ///
->> +    /// # Safety
->> +    ///
->> +    /// Callers must provide a valid format string for a fwnode.
->> +    unsafe fn fmt(&self, f: &mut core::fmt::Formatter<'_>, fmt_str: &CS=
-tr) -> core::fmt::Result {
->> +        let mut buf =3D [0; 256];
->> +        // SAFETY: `buf` is valid and `buf.len()` is its length. `self.=
-as_raw()` is
->> +        // valid because `self` is valid.
->> +        let written =3D unsafe {
->> +            bindings::scnprintf(buf.as_mut_ptr(), buf.len(), fmt_str.as=
-_ptr(), self.as_raw())
->> +        };
->> +        // SAFETY: `written` is smaller or equal to `buf.len()`.
->> +        let b: &[u8] =3D unsafe { core::slice::from_raw_parts(buf.as_pt=
-r(), written as usize) };
->> +        write!(f, "{}", BStr::from_bytes(b))
->> +    }
->> +
->> +    /// Returns an object that implements [`Display`](core::fmt::Displa=
-y) for
->> +    /// printing the name of a node.
->> +    pub fn display_name(&self) -> impl core::fmt::Display + use<'_> {
->
->
-> I don't know about the details but with rustc 1.81 [1] I'm getting [2].
-> Just doing what is proposed seems to "fix" it:
->
-> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-> index 3b1af034e902e..eadf7501d499b 100644
-> --- a/rust/kernel/lib.rs
-> +++ b/rust/kernel/lib.rs
-> @@ -26,6 +26,7 @@
->  #![feature(const_mut_refs)]
->  #![feature(const_ptr_write)]
->  #![feature(const_refs_to_cell)]
-> +#![feature(precise_capturing)]
->
->  // Ensure conditional compilation based on the kernel configuration work=
-s;
->  // otherwise we may silently break things like initcall handling.
->
-> Just want to mention it because I think the minimal rustc version we
-> have to support is 1.78.
+Yes, it is still necessary to call fcpreq->done for this particular request.
 
-Thanks for catching this! I'll make sure to compile with 1.78 from now
-on. Luckily we don't need to activate an unstable feature, there is an
-"older" capturing syntax that works here. (`'_` instead of `use<'_>`)
+> > @@ -983,7 +984,7 @@ fcloop_fcp_abort(struct nvme_fc_local_port *localport,
+> >   	default:
+> >   		spin_unlock_irqrestore(&tfcp_req->reqlock, flags);
+> >   		WARN_ON(1);
+> > -		return;
+> > +		goto out_host_done;
+> 
+> Do we still need the WARN_ON()? We can now gracefully recover, so a
+> simple log message would be sufficient here, no?
 
-> Best regards
->
-> Dirk
->
-> P.S.: Many thanks for working on this! :)
->
-> [1]
->
-> $ rustc --version
-> rustc 1.81.0 (eeb90cda1 2024-09-04)
->
-> [2]
->
-> error[E0658]: precise captures on `impl Trait` are experimental
->    --> rust/kernel/property.rs:256:61
->     |
-> 256 |     pub fn display_name(&self) -> impl core::fmt::Display + use<'_>=
- {
->     |                                                             ^^^
->     |
->     =3D note: see issue #123432
-> <https://github.com/rust-lang/rust/issues/123432> for more information
->     =3D help: add `#![feature(precise_capturing)]` to the crate attribute=
-s
-> to enable
->     =3D note: this compiler was built on 2024-09-04; consider upgrading i=
-t
-> if it is out of date
->
-> error[E0658]: precise captures on `impl Trait` are experimental
->    --> rust/kernel/property.rs:271:61
->     |
-> 271 |     pub fn display_path(&self) -> impl core::fmt::Display + use<'_>=
- {
->     |                                                             ^^^
->     |
->     =3D note: see issue #123432
-> <https://github.com/rust-lang/rust/issues/123432> for more information
->     =3D help: add `#![feature(precise_capturing)]` to the crate attribute=
-s
-> to enable
->     =3D note: this compiler was built on 2024-09-04; consider upgrading i=
-t
-> if it is out of date
->
-> error: aborting due to 2 previous errors
-
---
-Best regards,
-Remo
+The WARN_ON is there because it catches when tfcp_req is in an wrong
+state. It should be either in INI_IO_START, INI_IO_ACTIVE or
+INI_IO_COMPLETED but never INI_IO_ABORT.
