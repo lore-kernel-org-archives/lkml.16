@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9702927FD48
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:47:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC413283C94
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 15:48:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745509680; cv=none; b=joBz9m05D3j/A74FfVtBBWOhNfTB2w1BThfZVBzf25YxtIYJpd8mxCoPO89k/GROeMp0VT0AfdhJBqnshyvlH0vIhke2mnRFy6sjS77OCxwmlBp6MigAidfTklCs9Cl4c5NZ4XgYTv182grBSlH+gNU30JDMlvYPa4D5ARs1pXE=
+	t=1745509684; cv=none; b=mtTLZyM1XUzrPavkwZ5Gm+ruXPOZSN943o2rRhgrGc+IlSk7zoE4yDHHQWzNjT4Fm8oU02IVeSKD6HnWv32BjWLtfd/hbH182gopCUs5rro6I2aDnjXCzJaYYIDR7Fw4Byoc4Ob5HHmdef1ySLgg6x4+kRklC7qnZtWLtCns8eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745509680; c=relaxed/simple;
-	bh=rrJAzzGcm6dvhStHbR93Ry7iEYKNCoS+XMY/6U/9Nvk=;
+	s=arc-20240116; t=1745509684; c=relaxed/simple;
+	bh=pGCJNjFX43DOIZcHYmxMg8MB5H1sM+AcLGk4aaCjZSI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Hnl5iyifsLyuFdqnwveQTDRWhYWnNCvIigI2SO/BrAIVeRccnaIo70Y5XiFvw91G7Q3uJcg9dSAil/rSRzuJixsd8Fz1JBud3M3z0HP8XFkMxr9zBIrIPkb/zGpEVBqCtQdhFRdlctRzSbzX3Ift2cg1PCkLT2YoXANXgm7Uv9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ctq+zI4g; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=sMUrLBumCekG0vem7PdnwcIrQCiapWRJOqbmkPWwNEA3MZETXxXQ7JnFLH9DW8JgdPHdSg5G2ilme87Bv16Go7MDeoSQq6FlTlyhWxu1lCtR3l/CGdsrylSDyIE8gLXAkGjGfEMGG2uRvzky7AYzowdfXwwlaILYVUA4Kl7BKAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Uwy86FZo; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ctq+zI4g"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uwy86FZo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745509676;
+	s=mimecast20190719; t=1745509679;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=woiudwhOKEfJ+0SMhoKqZeZpODpvWpCP6xR0Uvj4/zA=;
-	b=ctq+zI4gKvq/408oDLNXOStImwCRwp5QCqrjjeziMn1IZqspChCE0xxGRt8sWmn8wCPzGy
-	/Vfrj8LAq4CQ8CykjgNFjnR7khpifMHLWPwAKlMFPGzYA1oNp08DbzB5Wl+E4Dqw3kOQ6G
-	khdvd5h9FlLVgwON12BnGNfUlV1aLSs=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=AeZAuaUbsEZsEighUA+i235fIzMNwZ6c32yrokrquO0=;
+	b=Uwy86FZorcdN+1OTWmAJTL61l5ATnx3wlDmRI3a4USToubCKwbM81tij59xpNlqVNNoWWW
+	YzzYTCaXQZGm/GJB16rr5Y+2SiD7oY3f5/W0A64zzASdLUxlTLfORaLNCFk2CmzBhyE44c
+	HFCXnBtRv1zbbf2+lDX1O90+zwP+/sA=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-244-nJaqPfmuPuGFIgLWT3m8TA-1; Thu,
- 24 Apr 2025 11:47:48 -0400
-X-MC-Unique: nJaqPfmuPuGFIgLWT3m8TA-1
-X-Mimecast-MFC-AGG-ID: nJaqPfmuPuGFIgLWT3m8TA_1745509665
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-372-FXaAvGhUOd-c2zxzPM-F-Q-1; Thu,
+ 24 Apr 2025 11:47:58 -0400
+X-MC-Unique: FXaAvGhUOd-c2zxzPM-F-Q-1
+X-Mimecast-MFC-AGG-ID: FXaAvGhUOd-c2zxzPM-F-Q_1745509675
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0DFFE1800876;
-	Thu, 24 Apr 2025 15:47:45 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A0AEB1956089;
+	Thu, 24 Apr 2025 15:47:55 +0000 (UTC)
 Received: from p16v.luc.cera.cz (unknown [10.44.32.28])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 0FC2519560A3;
-	Thu, 24 Apr 2025 15:47:39 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id AB67A19560A3;
+	Thu, 24 Apr 2025 15:47:50 +0000 (UTC)
 From: Ivan Vecera <ivecera@redhat.com>
 To: netdev@vger.kernel.org
 Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
@@ -59,9 +59,9 @@ Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH net-next v4 3/8] mfd: Add Microchip ZL3073x support
-Date: Thu, 24 Apr 2025 17:47:17 +0200
-Message-ID: <20250424154722.534284-4-ivecera@redhat.com>
+Subject: [PATCH net-next v4 5/8] mfd: zl3073x: Add functions to work with register mailboxes
+Date: Thu, 24 Apr 2025 17:47:19 +0200
+Message-ID: <20250424154722.534284-6-ivecera@redhat.com>
 In-Reply-To: <20250424154722.534284-1-ivecera@redhat.com>
 References: <20250424154722.534284-1-ivecera@redhat.com>
 Precedence: bulk
@@ -73,287 +73,49 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Add base MFD driver for Microchip Azurite ZL3073x chip family.
-These chips provide DPLL and PHC (PTP) functionality and can
-be connected over I2C or SPI bus.
+Registers located on page 10 and above are called mailbox-type
+registers. Each page represents a mailbox and is used to read from
+and write to configuration of a specific object (DPLL, output,
+reference or synth).
 
-The MFD driver handles basic communication and synchronization
-over the bus, as well as common functionality that are used by
-the DPLL driver (part 2) and by the PTP driver (to be added later).
+Each mailbox page contains a mask register, which selects an index of
+the target object to interact with and a semaphore register, which
+indicates the requested operation.
 
-The chip family has the following characteristics:
-* up to 5 separate DPLL units (channels)
-* 5 synthesizers
-* 10 input pins (references)
-* 10 outputs
-* 20 output pins (output pin pair shares one output)
-* Each reference and output can operate in either differential or
-  single-ended mode (differential mode uses 2 pins)
-* Each output is connected to one of the synthesizers
-* Each synthesizer is driven by one of the DPLL unit
+The remaining registers within the page are latch registers, which are
+populated by the firmware during read operations or by the driver prior
+to write operations.
 
-The device uses 7-bit addresses and 8-bits values. It exposes 8-, 16-,
-32- and 48-bits registers in address range <0x000,0x77F>. Due to 7bit
-addressing, the range is organized into pages of 128 bytes, with each
-page containing a page selector register at address 0x7F.
-For reading/writing multi-byte registers, the device supports bulk
-transfers.
+Define structures for sending and receiving mailbox content for each
+supported object types, along with functions to handle reading and
+writing.
+
+Currently, no locking is required, as only MFD driver accesses these
+registers. This will change in future.
 
 Signed-off-by: Ivan Vecera <ivecera@redhat.com>
 ---
 v3->v4:
-* zl3073x_regs.h moved to drivers/mfd/
-* maple as regcache
-* added and used general helper to read 16bit registers
-* removed mailbox mutex for now
-* removed parentheses in zl3073x_is_volatile_reg()
-* used dev_err_probe() in probe path
-* dropped <linux/device.h> inclusion
-* dropped unneccessary i2c_set_clientdata() and spi_set_drvdata()
+* completely reworked mailbox access
 
-v2->v3:
-* added chip_info with valid chip ids and num of DPLLs for compatibles
-* regmap is using implicit locking
-* mailbox registers requires extra mutex to be held
-* added helpers to access registers
-* report device firmware and config version using dev_dbg
-* fixed regmap ranges
-* enabled rbtree regcache for page selector
-
-v1->v2:
-* fixed header issues
-* removed usage of of_match_ptr
-* added check for devm_mutex_init
-* removed commas after sentinels
-* removed variable initialization in zl3073x_i2c_probe()
-* moved device tables closer to their users
-* renamed zl3073x_dev_alloc() to zl3073x_devm_alloc()
-* removed empty zl3073x_dev_exit()
-* spidev renamed to spi
-* squashed together with device DT bindings
-* used dev_err_probe() instead of dev_err() during probe
-* added some function documentation
-DT bindings:
-* spliced to separate files for i2c and spi
-* fixed property order in DT bindings' examples
-* added description
+v1->v3:
+* dropped ZL3073X_MB_OP macro usage
 ---
- MAINTAINERS                 |   9 ++
- drivers/mfd/Kconfig         |  30 ++++
- drivers/mfd/Makefile        |   5 +
- drivers/mfd/zl3073x-core.c  | 264 ++++++++++++++++++++++++++++++++++++
- drivers/mfd/zl3073x-i2c.c   |  66 +++++++++
- drivers/mfd/zl3073x-regs.h  |  74 ++++++++++
- drivers/mfd/zl3073x-spi.c   |  66 +++++++++
- drivers/mfd/zl3073x.h       |  31 +++++
- include/linux/mfd/zl3073x.h |  21 +++
- 9 files changed, 566 insertions(+)
- create mode 100644 drivers/mfd/zl3073x-core.c
- create mode 100644 drivers/mfd/zl3073x-i2c.c
- create mode 100644 drivers/mfd/zl3073x-regs.h
- create mode 100644 drivers/mfd/zl3073x-spi.c
- create mode 100644 drivers/mfd/zl3073x.h
- create mode 100644 include/linux/mfd/zl3073x.h
+ drivers/mfd/zl3073x-core.c  | 420 ++++++++++++++++++++++++++++++++++++
+ drivers/mfd/zl3073x-regs.h  |  64 ++++++
+ include/linux/mfd/zl3073x.h | 141 ++++++++++++
+ 3 files changed, 625 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b815e02987f3c..0f6492ba50d68 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15998,6 +15998,15 @@ L:	linux-wireless@vger.kernel.org
- S:	Supported
- F:	drivers/net/wireless/microchip/
- 
-+MICROCHIP ZL3073X DRIVER
-+M:	Ivan Vecera <ivecera@redhat.com>
-+M:	Prathosh Satish <Prathosh.Satish@microchip.com>
-+L:	netdev@vger.kernel.org
-+S:	Supported
-+F:	Documentation/devicetree/bindings/dpll/microchip,zl3073x*.yaml
-+F:	drivers/mfd/zl3073x*
-+F:	include/linux/mfd/zl3073x.h
-+
- MICROSEMI MIPS SOCS
- M:	Alexandre Belloni <alexandre.belloni@bootlin.com>
- M:	UNGLinuxDriver@microchip.com
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 22b9363100394..7d7902ec1d89a 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -2422,5 +2422,35 @@ config MFD_UPBOARD_FPGA
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called upboard-fpga.
- 
-+config MFD_ZL3073X_CORE
-+	tristate
-+	select MFD_CORE
-+
-+config MFD_ZL3073X_I2C
-+	tristate "Microchip Azurite DPLL/PTP/SyncE with I2C"
-+	depends on I2C
-+	select MFD_ZL3073X_CORE
-+	select REGMAP_I2C
-+	help
-+	  Say Y here if you want to build I2C support for the Microchip
-+	  Azurite DPLL/PTP/SyncE chip family.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called zl3073x_i2c and you will also get zl3073x for
-+	  the core module.
-+
-+config MFD_ZL3073X_SPI
-+	tristate "Microchip Azurite DPLL/PTP/SyncE with SPI"
-+	depends on SPI
-+	select MFD_ZL3073X_CORE
-+	select REGMAP_SPI
-+	help
-+	  Say Y here if you want to build SPI support for the Microchip
-+	  Azurite DPLL/PTP/SyncE chip family.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called zl3073x_spi and you will also get zl3073x for
-+	  the core module.
-+
- endmenu
- endif
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 948cbdf42a18b..76e2babc1538f 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -290,3 +290,8 @@ obj-$(CONFIG_MFD_RSMU_I2C)	+= rsmu_i2c.o rsmu_core.o
- obj-$(CONFIG_MFD_RSMU_SPI)	+= rsmu_spi.o rsmu_core.o
- 
- obj-$(CONFIG_MFD_UPBOARD_FPGA)	+= upboard-fpga.o
-+
-+zl3073x-y			:= zl3073x-core.o
-+obj-$(CONFIG_MFD_ZL3073X_CORE)	+= zl3073x.o
-+obj-$(CONFIG_MFD_ZL3073X_I2C)	+= zl3073x-i2c.o
-+obj-$(CONFIG_MFD_ZL3073X_SPI)	+= zl3073x-spi.o
 diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
-new file mode 100644
-index 0000000000000..f30091ae48eca
---- /dev/null
+index 28cc25b7412e9..4f7c915f17980 100644
+--- a/drivers/mfd/zl3073x-core.c
 +++ b/drivers/mfd/zl3073x-core.c
-@@ -0,0 +1,264 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/array_size.h>
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/export.h>
-+#include <linux/mfd/zl3073x.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/unaligned.h>
-+#include "zl3073x.h"
-+#include "zl3073x-regs.h"
-+
-+/* Chip IDs for zl30731 */
-+static const u16 zl30731_ids[] = {
-+	0x0E93,
-+	0x1E93,
-+	0x2E93,
-+};
-+
-+/* Chip IDs for zl30732 */
-+static const u16 zl30732_ids[] = {
-+	0x0E30,
-+	0x0E94,
-+	0x1E94,
-+	0x1F60,
-+	0x2E94,
-+	0x3FC4,
-+};
-+
-+/* Chip IDs for zl30733 */
-+static const u16 zl30733_ids[] = {
-+	0x0E95,
-+	0x1E95,
-+	0x2E95,
-+};
-+
-+/* Chip IDs for zl30734 */
-+static const u16 zl30734_ids[] = {
-+	0x0E96,
-+	0x1E96,
-+	0x2E96,
-+};
-+
-+/* Chip IDs for zl30735 */
-+static const u16 zl30735_ids[] = {
-+	0x0E97,
-+	0x1E97,
-+	0x2E97,
-+};
-+
-+const struct zl3073x_chip_info zl3073x_chip_info[] = {
-+	[ZL30731] = {
-+		.ids = zl30731_ids,
-+		.num_ids = ARRAY_SIZE(zl30731_ids),
-+		.num_channels = 1,
-+	},
-+	[ZL30732] = {
-+		.ids = zl30732_ids,
-+		.num_ids = ARRAY_SIZE(zl30732_ids),
-+		.num_channels = 2,
-+	},
-+	[ZL30733] = {
-+		.ids = zl30733_ids,
-+		.num_ids = ARRAY_SIZE(zl30733_ids),
-+		.num_channels = 3,
-+	},
-+	[ZL30734] = {
-+		.ids = zl30734_ids,
-+		.num_ids = ARRAY_SIZE(zl30734_ids),
-+		.num_channels = 4,
-+	},
-+	[ZL30735] = {
-+		.ids = zl30735_ids,
-+		.num_ids = ARRAY_SIZE(zl30735_ids),
-+		.num_channels = 5,
-+	},
-+};
-+EXPORT_SYMBOL_NS_GPL(zl3073x_chip_info, "ZL3073X");
-+
-+#define ZL_RANGE_OFFSET		0x80
-+#define ZL_PAGE_SIZE		0x80
-+#define ZL_NUM_PAGES		15
-+#define ZL_NUM_SIMPLE_PAGES	10
-+#define ZL_PAGE_SEL		0x7F
-+#define ZL_PAGE_SEL_MASK	GENMASK(3, 0)
-+#define ZL_NUM_REGS		(ZL_NUM_PAGES * ZL_PAGE_SIZE)
-+
-+/* Regmap range configuration */
-+static const struct regmap_range_cfg zl3073x_regmap_range = {
-+	.range_min	= ZL_RANGE_OFFSET,
-+	.range_max	= ZL_RANGE_OFFSET + ZL_NUM_REGS - 1,
-+	.selector_reg	= ZL_PAGE_SEL,
-+	.selector_mask	= ZL_PAGE_SEL_MASK,
-+	.selector_shift	= 0,
-+	.window_start	= 0,
-+	.window_len	= ZL_PAGE_SIZE,
-+};
-+
-+static bool
-+zl3073x_is_volatile_reg(struct device *dev __maybe_unused, unsigned int reg)
-+{
-+	/* Only page selector is non-volatile */
-+	return reg != ZL_PAGE_SEL;
-+}
-+
-+static const struct regmap_config zl3073x_regmap_config = {
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+	.max_register	= ZL_RANGE_OFFSET + ZL_NUM_REGS - 1,
-+	.ranges		= &zl3073x_regmap_range,
-+	.num_ranges	= 1,
-+	.cache_type	= REGCACHE_MAPLE,
-+	.volatile_reg	= zl3073x_is_volatile_reg,
-+};
-+
+@@ -170,6 +170,426 @@ zl3073x_read_reg(struct zl3073x_dev *zldev, unsigned int reg, void *val)
+ 	return rc;
+ }
+ 
 +static int
-+zl3073x_read_reg(struct zl3073x_dev *zldev, unsigned int reg, void *val)
++zl3073x_write_reg(struct zl3073x_dev *zldev, unsigned int reg, const void *val)
 +{
 +	unsigned int len;
 +	u8 buf[6];
@@ -368,424 +130,643 @@ index 0000000000000..f30091ae48eca
 +		return -EINVAL;
 +	}
 +
-+	/* Get register size */
 +	len = ZL_REG_SIZE(reg);
++	switch (len) {
++	case 1:
++		buf[0] = *(u8 *)val;
++		break;
++	case 2:
++		put_unaligned_be16(*(u16 *)val, buf);
++		break;
++	case 4:
++		put_unaligned_be32(*(u32 *)val, buf);
++		break;
++	case 6:
++		put_unaligned_be48(*(u64 *)val, buf);
++		break;
++	default:
++		dev_err(zldev->dev, "Invalid reg-width %u for reg 0x%04lx\n",
++			len, ZL_REG_ADDR(reg));
++		return -EINVAL;
++	}
 +
 +	/* Map the register address to virtual range */
 +	reg = ZL_REG_ADDR(reg) + ZL_RANGE_OFFSET;
 +
-+	rc = regmap_bulk_read(zldev->regmap, reg, buf, len);
++	rc = regmap_bulk_write(zldev->regmap, reg, buf, len);
 +	if (rc) {
-+		dev_err(zldev->dev, "Failed to read reg 0x%04x: %pe\n", reg,
++		dev_err(zldev->dev, "Failed to write reg 0x%04x: %pe\n", reg,
 +			ERR_PTR(rc));
 +		return rc;
-+	}
-+
-+	switch (len) {
-+	case 1:
-+		*(u8 *)val = buf[0];
-+		break;
-+	case 2:
-+		*(u16 *)val = get_unaligned_be16(buf);
-+		break;
-+	case 4:
-+		*(u32 *)val = get_unaligned_be32(buf);
-+		break;
-+	case 6:
-+		*(u64 *)val = get_unaligned_be48(buf);
-+		break;
-+	default:
-+		dev_err(zldev->dev, "Invalid reg-width %u for reg 0x%04x\n",
-+			len, reg);
-+		return -EINVAL;
 +	}
 +
 +	return rc;
 +}
 +
-+/**
-+ * zl3073x_devm_alloc - allocates zl3073x device structure
-+ * @dev: pointer to device structure
-+ *
-+ * Allocates zl3073x device structure as device resource.
-+ *
-+ * Return: pointer to zl3073x device on success, error pointer on error
-+ */
-+struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev)
++static int
++zl3073x_wait_reg_zero_bits(struct zl3073x_dev *zldev, unsigned int reg, u8 mask)
 +{
-+	struct zl3073x_dev *zldev;
++	/* Register polling sleep & timeout */
++#define ZL_POLL_SLEEP_US   10
++#define ZL_POLL_TIMEOUT_US 2000000
++	unsigned int val;
 +
-+	zldev = devm_kzalloc(dev, sizeof(*zldev), GFP_KERNEL);
-+	if (!zldev)
-+		return ERR_PTR(-ENOMEM);
++	/* Only 8bit registers are supported */
++	BUILD_BUG_ON(ZL_REG_SIZE(reg) != 1);
 +
-+	zldev->dev = dev;
-+	dev_set_drvdata(zldev->dev, zldev);
++	/* Map the register address to virtual range for polling */
++	reg = ZL_REG_ADDR(reg) + ZL_RANGE_OFFSET;
 +
-+	return zldev;
++	return regmap_read_poll_timeout(zldev->regmap, reg, val, !(val & mask),
++					ZL_POLL_SLEEP_US, ZL_POLL_TIMEOUT_US);
 +}
-+EXPORT_SYMBOL_NS_GPL(zl3073x_devm_alloc, "ZL3073X");
 +
-+/**
-+ * zl3073x_dev_init_regmap_config - initialize regmap config
-+ * @regmap_cfg: regmap_config structure to fill
-+ *
-+ * Initializes regmap config common for I2C and SPI.
-+ */
-+void zl3073x_dev_init_regmap_config(struct regmap_config *regmap_cfg)
++static int
++zl3073x_mb_cmd_do(struct zl3073x_dev *zldev, unsigned int cmd_reg, u8 cmd,
++		  unsigned int mask_reg, u16 mask)
 +{
-+	*regmap_cfg = zl3073x_regmap_config;
-+}
-+EXPORT_SYMBOL_NS_GPL(zl3073x_dev_init_regmap_config, "ZL3073X");
-+
-+/**
-+ * zl3073x_dev_probe - initialize zl3073x device
-+ * @zldev: pointer to zl3073x device
-+ * @chip_info: chip info based on compatible
-+ *
-+ * Common initialization of zl3073x device structure.
-+ *
-+ * Returns: 0 on success, <0 on error
-+ */
-+int zl3073x_dev_probe(struct zl3073x_dev *zldev,
-+		      const struct zl3073x_chip_info *chip_info)
-+{
-+	u16 id, revision, fw_ver;
-+	unsigned int i;
-+	u32 cfg_ver;
 +	int rc;
 +
-+	/* Read chip ID */
-+	rc = zl3073x_read_reg(zldev, ZL_REG_ID, &id);
++	rc = zl3073x_write_reg(zldev, mask_reg, &mask);
 +	if (rc)
 +		return rc;
 +
-+	/* Check it matches */
-+	for (i = 0; i < chip_info->num_ids; i++) {
-+		if (id == chip_info->ids[i])
-+			break;
-+	}
-+
-+	if (i == chip_info->num_ids) {
-+		return dev_err_probe(zldev->dev, -ENODEV,
-+				     "Unknown or non-match chip ID: 0x%0x\n",
-+				     id);
-+	}
-+
-+	/* Read revision, firmware version and custom config version */
-+	rc = zl3073x_read_reg(zldev, ZL_REG_REVISION, &revision);
-+	if (rc)
-+		return rc;
-+	rc = zl3073x_read_reg(zldev, ZL_REG_FW_VER, &fw_ver);
-+	if (rc)
-+		return rc;
-+	rc = zl3073x_read_reg(zldev, ZL_REG_CUSTOM_CONFIG_VER, &cfg_ver);
++	rc = zl3073x_write_reg(zldev, cmd_reg, &cmd);
 +	if (rc)
 +		return rc;
 +
-+	dev_dbg(zldev->dev, "ChipID(%X), ChipRev(%X), FwVer(%u)\n", id,
-+		revision, fw_ver);
-+	dev_dbg(zldev->dev, "Custom config version: %lu.%lu.%lu.%lu\n",
-+		FIELD_GET(GENMASK(31, 24), cfg_ver),
-+		FIELD_GET(GENMASK(23, 16), cfg_ver),
-+		FIELD_GET(GENMASK(15, 8), cfg_ver),
-+		FIELD_GET(GENMASK(7, 0), cfg_ver));
-+
-+	return 0;
++	/* Wait for the command to finish */
++	return zl3073x_wait_reg_zero_bits(zldev, cmd_reg, cmd);
 +}
-+EXPORT_SYMBOL_NS_GPL(zl3073x_dev_probe, "ZL3073X");
 +
-+MODULE_AUTHOR("Ivan Vecera <ivecera@redhat.com>");
-+MODULE_DESCRIPTION("Microchip ZL3073x core driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/zl3073x-i2c.c b/drivers/mfd/zl3073x-i2c.c
-new file mode 100644
-index 0000000000000..da8bbd702d76c
---- /dev/null
-+++ b/drivers/mfd/zl3073x-i2c.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/dev_printk.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/mfd/zl3073x.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include "zl3073x.h"
-+
-+static int zl3073x_i2c_probe(struct i2c_client *client)
++/**
++ * zl3073x_mb_dpll_read - read given DPLL configuration to mailbox
++ * @zldev: pointer to device structure
++ * @index: DPLL index
++ * @fields: mask of the mailbox fields to be filled
++ * @mb: DPLL mailbox
++ *
++ * Reads selected configuration of given reference into output mailbox.
++ *
++ * Return: 0 on success, <0 on error
++ */
++int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			 struct zl3073x_mb_dpll *mb)
 +{
-+	struct regmap_config regmap_cfg;
-+	struct device *dev = &client->dev;
-+	struct zl3073x_dev *zldev;
++	int i, rc;
 +
-+	zldev = zl3073x_devm_alloc(dev);
-+	if (IS_ERR(zldev))
-+		return PTR_ERR(zldev);
++	rc = zl3073x_mb_cmd_do(zldev, ZL_REG_DPLL_MB_SEM, ZL_DPLL_MB_SEM_RD,
++			       ZL_REG_DPLL_MB_MASK, BIT(index));
++	if (rc)
++		return rc;
 +
-+	zl3073x_dev_init_regmap_config(&regmap_cfg);
-+
-+	zldev->regmap = devm_regmap_init_i2c(client, &regmap_cfg);
-+	if (IS_ERR(zldev->regmap)) {
-+		dev_err_probe(dev, PTR_ERR(zldev->regmap),
-+			      "Failed to initialize regmap\n");
-+		return PTR_ERR(zldev->regmap);
++	for (i = 0; i < ARRAY_SIZE(mb->ref_prio); i++) {
++		if (fields & BIT(i)) {
++			rc = zl3073x_read_reg(zldev, ZL_REG_DPLL_REF_PRIO(i),
++					      &mb->ref_prio[i]);
++			if (rc)
++				break;
++		}
 +	}
 +
-+	return zl3073x_dev_probe(zldev, i2c_get_match_data(client));
++	return rc;
 +}
++EXPORT_SYMBOL_NS_GPL(zl3073x_mb_dpll_read, "ZL3073X");
 +
-+static const struct i2c_device_id zl3073x_i2c_id[] = {
-+	{ "zl30731", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30731] },
-+	{ "zl30732", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30732] },
-+	{ "zl30733", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30733] },
-+	{ "zl30734", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30734] },
-+	{ "zl30735", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30735] },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, zl3073x_i2c_id);
++/**
++ * zl3073x_mb_dpll_write - write given DPLL configuration from mailbox
++ * @zldev: pointer to device structure
++ * @index: DPLL index
++ * @fields: mask of the mailbox fields to be written
++ * @mb: DPLL channel mailbox
++ *
++ * Writes selected fields from the mailbox into device.
++  *
++ * Return: 0 on success, <0 on error
++ */
++int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			  struct zl3073x_mb_dpll *mb)
++{
++	int i, rc;
 +
-+static const struct of_device_id zl3073x_i2c_of_match[] = {
-+	{ .compatible = "microchip,zl30731", .data = &zl3073x_chip_info[ZL30731] },
-+	{ .compatible = "microchip,zl30732", .data = &zl3073x_chip_info[ZL30732] },
-+	{ .compatible = "microchip,zl30733", .data = &zl3073x_chip_info[ZL30733] },
-+	{ .compatible = "microchip,zl30734", .data = &zl3073x_chip_info[ZL30734] },
-+	{ .compatible = "microchip,zl30735", .data = &zl3073x_chip_info[ZL30735] },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, zl3073x_i2c_of_match);
++	for (i = 0; i < ARRAY_SIZE(mb->ref_prio); i++) {
++		if (fields & BIT(i)) {
++			rc = zl3073x_write_reg(zldev, ZL_REG_DPLL_REF_PRIO(i),
++					       &mb->ref_prio[i]);
++			if (rc)
++				break;
++		}
++	}
 +
-+static struct i2c_driver zl3073x_i2c_driver = {
-+	.driver = {
-+		.name = "zl3073x-i2c",
-+		.of_match_table = zl3073x_i2c_of_match,
-+	},
-+	.probe = zl3073x_i2c_probe,
-+	.id_table = zl3073x_i2c_id,
-+};
-+module_i2c_driver(zl3073x_i2c_driver);
++	return zl3073x_mb_cmd_do(zldev, ZL_REG_DPLL_MB_SEM, ZL_DPLL_MB_SEM_WR,
++				 ZL_REG_DPLL_MB_MASK, BIT(index));
++}
++EXPORT_SYMBOL_NS_GPL(zl3073x_mb_dpll_write, "ZL3073X");
 +
-+MODULE_AUTHOR("Ivan Vecera <ivecera@redhat.com>");
-+MODULE_DESCRIPTION("Microchip ZL3073x I2C driver");
-+MODULE_IMPORT_NS("ZL3073X");
-+MODULE_LICENSE("GPL");
++/**
++ * zl3073x_mb_output_read - read given output configuration to mailbox
++ * @zldev: pointer to device structure
++ * @index: output index
++ * @fields: mask of the mailbox fields to be filled
++ * @mb: output mailbox
++ *
++ * Reads selected configuration of given reference into output mailbox.
++ *
++ * Return: 0 on success, <0 on error
++ */
++int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			   struct zl3073x_mb_output *mb)
++{
++	int rc;
++
++	rc = zl3073x_mb_cmd_do(zldev, ZL_REG_OUTPUT_MB_SEM, ZL_OUTPUT_MB_SEM_RD,
++			       ZL_REG_OUTPUT_MB_MASK, BIT(index));
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_MODE))
++		rc = zl3073x_read_reg(zldev, ZL_REG_OUTPUT_MODE, &mb->mode);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_DIV))
++		rc = zl3073x_read_reg(zldev, ZL_REG_OUTPUT_DIV, &mb->div);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_WIDTH))
++		rc = zl3073x_read_reg(zldev, ZL_REG_OUTPUT_WIDTH, &mb->width);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_ESYNC_PERIOD))
++		rc = zl3073x_read_reg(zldev, ZL_REG_OUTPUT_ESYNC_PERIOD,
++				      &mb->esync_period);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_ESYNC_WIDTH))
++		rc = zl3073x_read_reg(zldev, ZL_REG_OUTPUT_ESYNC_WIDTH,
++				      &mb->esync_width);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_PHASE_COMP))
++		rc = zl3073x_read_reg(zldev, ZL_REG_OUTPUT_PHASE_COMP,
++				      &mb->phase_comp);
++
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(zl3073x_mb_output_read, "ZL3073X");
++
++/**
++ * zl3073x_mb_output_write - write given output configuration from mailbox
++ * @zldev: pointer to device structure
++ * @index: output index
++ * @fields: mask of the mailbox fields to be written
++ * @mb: output mailbox
++ *
++ * Writes selected fields from the mailbox into device.
++ *
++ * Return: 0 on success, <0 on error
++ */
++int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			    const struct zl3073x_mb_output *mb)
++{
++	int rc = 0;
++
++	if (fields & ZL3073X_MB_OUTPUT_MODE)
++		rc = zl3073x_write_reg(zldev, ZL_REG_OUTPUT_MODE, &mb->mode);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_DIV))
++		rc = zl3073x_write_reg(zldev, ZL_REG_OUTPUT_DIV, &mb->div);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_WIDTH))
++		rc = zl3073x_write_reg(zldev, ZL_REG_OUTPUT_WIDTH, &mb->width);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_ESYNC_PERIOD))
++		rc = zl3073x_write_reg(zldev, ZL_REG_OUTPUT_ESYNC_PERIOD,
++				       &mb->esync_period);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_ESYNC_WIDTH))
++		rc = zl3073x_write_reg(zldev, ZL_REG_OUTPUT_ESYNC_WIDTH,
++				       &mb->esync_width);
++
++	if (!rc && (fields & ZL3073X_MB_OUTPUT_PHASE_COMP))
++		rc = zl3073x_write_reg(zldev, ZL_REG_OUTPUT_PHASE_COMP,
++				       &mb->phase_comp);
++	if (rc)
++		return rc;
++
++	return zl3073x_mb_cmd_do(zldev,
++				 ZL_REG_OUTPUT_MB_SEM, ZL_OUTPUT_MB_SEM_WR,
++				 ZL_REG_OUTPUT_MB_MASK, BIT(index));
++}
++EXPORT_SYMBOL_NS_GPL(zl3073x_mb_output_write, "ZL3073X");
++
++/**
++ * zl3073x_mb_ref_read - read given reference configuration to mailbox
++ * @zldev: pointer to device structure
++ * @index: reference index
++ * @fields: mask of the mailbox fields to be filled
++ * @mb: reference mailbox
++ *
++ * Reads selected configuration of given reference into ref mailbox.
++ *
++ * Return: 0 on success, <0 on error
++ */
++int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			struct zl3073x_mb_ref *mb)
++{
++	int rc;
++
++	rc = zl3073x_mb_cmd_do(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_RD,
++			       ZL_REG_REF_MB_MASK, BIT(index));
++
++	if (!rc && (fields & ZL3073X_MB_REF_FREQ_BASE))
++		rc = zl3073x_read_reg(zldev, ZL_REG_REF_FREQ_BASE,
++				      &mb->freq_base);
++
++	if (!rc && (fields & ZL3073X_MB_REF_FREQ_MULT))
++		rc = zl3073x_read_reg(zldev, ZL_REG_REF_FREQ_MULT,
++				      &mb->freq_mult);
++
++	if (!rc && (fields & ZL3073X_MB_REF_RATIO_M))
++		rc = zl3073x_read_reg(zldev, ZL_REG_REF_RATIO_M, &mb->ratio_m);
++
++	if (!rc && (fields & ZL3073X_MB_REF_RATIO_N))
++		rc = zl3073x_read_reg(zldev, ZL_REG_REF_RATIO_N, &mb->ratio_n);
++
++	if (!rc && (fields & ZL3073X_MB_REF_CONFIG))
++		rc = zl3073x_read_reg(zldev, ZL_REG_REF_CONFIG, &mb->config);
++
++	if (!rc && (fields & ZL3073X_MB_REF_PHASE_OFFSET_COMP))
++		rc = zl3073x_read_reg(zldev, ZL_REG_REF_PHASE_OFFSET_COMP,
++				      &mb->phase_offset_comp);
++
++	if (!rc && (fields & ZL3073X_MB_REF_SYNC_CTRL))
++		rc = zl3073x_read_reg(zldev, ZL_REG_REF_SYNC_CTRL,
++				      &mb->sync_ctrl);
++
++	if (!rc && (fields & ZL3073X_MB_REF_ESYNC_DIV))
++		rc = zl3073x_read_reg(zldev, ZL_REG_REF_ESYNC_DIV,
++				      &mb->esync_div);
++
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(zl3073x_mb_ref_read, "ZL3073X");
++
++/**
++ * zl3073x_mb_ref_write - write given reference configuration from mailbox
++ * @zldev: pointer to device structure
++ * @index: reference index
++ * @fields: mask of the mailbox fields to be written
++ * @mb: reference mailbox
++ *
++ * Writes selected fields from the mailbox into device.
++ *
++ * Return: 0 on success, <0 on error
++ */
++int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			 const struct zl3073x_mb_ref *mb)
++{
++	int rc = 0;
++
++	if (fields & ZL3073X_MB_REF_FREQ_BASE)
++		rc = zl3073x_write_reg(zldev, ZL_REG_REF_FREQ_BASE,
++				       &mb->freq_base);
++
++	if (!rc && (fields & ZL3073X_MB_REF_FREQ_MULT))
++		rc = zl3073x_write_reg(zldev, ZL_REG_REF_FREQ_MULT,
++				       &mb->freq_mult);
++
++	if (!rc && (fields & ZL3073X_MB_REF_RATIO_M))
++		rc = zl3073x_write_reg(zldev, ZL_REG_REF_RATIO_M,
++				       &mb->ratio_m);
++
++	if (!rc && (fields & ZL3073X_MB_REF_RATIO_N))
++		rc = zl3073x_write_reg(zldev, ZL_REG_REF_RATIO_N,
++				       &mb->ratio_n);
++
++	if (!rc && (fields & ZL3073X_MB_REF_CONFIG))
++		rc = zl3073x_write_reg(zldev, ZL_REG_REF_CONFIG, &mb->config);
++
++	if (!rc && (fields & ZL3073X_MB_REF_PHASE_OFFSET_COMP))
++		rc = zl3073x_write_reg(zldev, ZL_REG_REF_PHASE_OFFSET_COMP,
++				       &mb->phase_offset_comp);
++
++	if (!rc && (fields & ZL3073X_MB_REF_SYNC_CTRL))
++		rc = zl3073x_write_reg(zldev, ZL_REG_REF_SYNC_CTRL,
++				       &mb->sync_ctrl);
++
++	if (!rc && (fields & ZL3073X_MB_REF_ESYNC_DIV))
++		rc = zl3073x_write_reg(zldev, ZL_REG_REF_ESYNC_DIV,
++				       &mb->esync_div);
++
++	if (rc)
++		return rc;
++
++	return zl3073x_mb_cmd_do(zldev, ZL_REG_REF_MB_SEM, ZL_REF_MB_SEM_WR,
++				 ZL_REG_REF_MB_MASK, BIT(index));
++}
++EXPORT_SYMBOL_NS_GPL(zl3073x_mb_ref_write, "ZL3073X");
++
++/**
++ * zl3073x_mb_synth_read - read given synth configuration to mailbox
++ * @zldev: pointer to device structure
++ * @index: synth index
++ * @fields: mask of the mailbox fields to be filled
++ * @mb: synth mailbox
++ *
++ * Reads selected configuration of given reference into synth mailbox.
++ *
++ * Return: 0 on success, <0 on error
++ */
++int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			  struct zl3073x_mb_synth *mb)
++{
++	int rc;
++
++	rc = zl3073x_mb_cmd_do(zldev, ZL_REG_SYNTH_MB_SEM, ZL_SYNTH_MB_SEM_RD,
++			       ZL_REG_SYNTH_MB_MASK, BIT(index));
++
++	if (!rc && (fields & ZL3073X_MB_SYNTH_FREQ_BASE))
++		rc = zl3073x_read_reg(zldev, ZL_REG_SYNTH_FREQ_BASE,
++				      &mb->freq_base);
++
++	if (!rc && (fields & ZL3073X_MB_SYNTH_FREQ_MULT))
++		rc = zl3073x_read_reg(zldev, ZL_REG_SYNTH_FREQ_MULT,
++				      &mb->freq_mult);
++
++	if (!rc && (fields & ZL3073X_MB_SYNTH_FREQ_M))
++		rc = zl3073x_read_reg(zldev, ZL_REG_SYNTH_FREQ_M, &mb->freq_m);
++
++	if (!rc && (fields & ZL3073X_MB_SYNTH_FREQ_N))
++		rc = zl3073x_read_reg(zldev, ZL_REG_SYNTH_FREQ_N, &mb->freq_n);
++
++	return rc;
++}
++EXPORT_SYMBOL_NS_GPL(zl3073x_mb_synth_read, "ZL3073X");
++
++/**
++ * zl3073x_mb_synth_write - write given synth configuration from mailbox
++ * @zldev: pointer to device structure
++ * @index: synth index
++ * @fields: mask of the mailbox fields to be written
++ * @mb: synth mailbox
++ *
++ * Writes selected fields from the mailbox into device.
++ *
++ * Return: 0 on success, <0 on error
++ */
++int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			   struct zl3073x_mb_synth *mb)
++{
++	int rc = 0;
++
++	if (fields & ZL3073X_MB_SYNTH_FREQ_BASE)
++		rc = zl3073x_write_reg(zldev, ZL_REG_SYNTH_FREQ_BASE,
++				       &mb->freq_base);
++
++	if (!rc && (fields & ZL3073X_MB_SYNTH_FREQ_MULT))
++		rc = zl3073x_write_reg(zldev, ZL_REG_SYNTH_FREQ_MULT,
++				       &mb->freq_mult);
++
++	if (!rc && (fields & ZL3073X_MB_SYNTH_FREQ_M))
++		rc = zl3073x_write_reg(zldev, ZL_REG_SYNTH_FREQ_M, &mb->freq_m);
++
++	if (!rc && (fields & ZL3073X_MB_SYNTH_FREQ_N))
++		rc = zl3073x_write_reg(zldev, ZL_REG_SYNTH_FREQ_N, &mb->freq_n);
++
++	if (rc)
++		return rc;
++
++	return zl3073x_mb_cmd_do(zldev, ZL_REG_SYNTH_MB_SEM, ZL_SYNTH_MB_SEM_WR,
++				 ZL_REG_SYNTH_MB_MASK, BIT(index));
++}
++EXPORT_SYMBOL_NS_GPL(zl3073x_mb_synth_write, "ZL3073X");
++
+ /**
+  * zl3073x_devlink_info_get - Devlink device info callback
+  * @devlink: devlink structure pointer
 diff --git a/drivers/mfd/zl3073x-regs.h b/drivers/mfd/zl3073x-regs.h
-new file mode 100644
-index 0000000000000..3a8fcc860a6ea
---- /dev/null
+index 3a8fcc860a6ea..a19f04c813cc6 100644
+--- a/drivers/mfd/zl3073x-regs.h
 +++ b/drivers/mfd/zl3073x-regs.h
-@@ -0,0 +1,74 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
+@@ -71,4 +71,68 @@
+ #define ZL_REG_FW_VER				ZL_REG(0, 0x05, 2)
+ #define ZL_REG_CUSTOM_CONFIG_VER		ZL_REG(0, 0x07, 4)
+ 
++/*******************************
++ * Register Page 10, Ref Mailbox
++ *******************************/
 +
-+#ifndef __ZL3073X_REGS_H
-+#define __ZL3073X_REGS_H
++#define ZL_REG_REF_MB_MASK			ZL_REG(10, 0x02, 2)
 +
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
++#define ZL_REG_REF_MB_SEM			ZL_REG(10, 0x04, 1)
++#define ZL_REF_MB_SEM_WR			BIT(0)
++#define ZL_REF_MB_SEM_RD			BIT(1)
 +
++#define ZL_REG_REF_FREQ_BASE			ZL_REG(10, 0x05, 2)
++#define ZL_REG_REF_FREQ_MULT			ZL_REG(10, 0x07, 2)
++#define ZL_REG_REF_RATIO_M			ZL_REG(10, 0x09, 2)
++#define ZL_REG_REF_RATIO_N			ZL_REG(10, 0x0b, 2)
++#define ZL_REG_REF_CONFIG			ZL_REG(10, 0x0d, 1)
++#define ZL_REG_REF_PHASE_OFFSET_COMP		ZL_REG(10, 0x28, 6)
++#define ZL_REG_REF_SYNC_CTRL			ZL_REG(10, 0x2e, 1)
++#define ZL_REG_REF_ESYNC_DIV			ZL_REG(10, 0x30, 4)
++
++/********************************
++ * Register Page 12, DPLL Mailbox
++ ********************************/
++
++#define ZL_REG_DPLL_MB_MASK			ZL_REG(12, 0x02, 2)
++
++#define ZL_REG_DPLL_MB_SEM			ZL_REG(12, 0x04, 1)
++#define ZL_DPLL_MB_SEM_WR			BIT(0)
++#define ZL_DPLL_MB_SEM_RD			BIT(1)
++
++#define ZL_REG_DPLL_REF_PRIO(_idx)					\
++	ZL_REG_IDX(_idx, 12, 0x52, 1, ZL3073X_NUM_INPUTS / 2, 1)
++
++/*********************************
++ * Register Page 13, Synth Mailbox
++ *********************************/
++
++#define ZL_REG_SYNTH_MB_MASK			ZL_REG(13, 0x02, 2)
++
++#define ZL_REG_SYNTH_MB_SEM			ZL_REG(13, 0x04, 1)
++#define ZL_SYNTH_MB_SEM_WR			BIT(0)
++#define ZL_SYNTH_MB_SEM_RD			BIT(1)
++
++#define ZL_REG_SYNTH_FREQ_BASE			ZL_REG(13, 0x06, 2)
++#define ZL_REG_SYNTH_FREQ_MULT			ZL_REG(13, 0x08, 4)
++#define ZL_REG_SYNTH_FREQ_M			ZL_REG(13, 0x0c, 2)
++#define ZL_REG_SYNTH_FREQ_N			ZL_REG(13, 0x0e, 2)
++
++/**********************************
++ * Register Page 14, Output Mailbox
++ **********************************/
++
++#define ZL_REG_OUTPUT_MB_MASK			ZL_REG(14, 0x02, 2)
++
++#define ZL_REG_OUTPUT_MB_SEM			ZL_REG(14, 0x04, 1)
++#define ZL_OUTPUT_MB_SEM_WR			BIT(0)
++#define ZL_OUTPUT_MB_SEM_RD			BIT(1)
++
++#define ZL_REG_OUTPUT_MODE			ZL_REG(14, 0x05, 1)
++#define ZL_REG_OUTPUT_DIV			ZL_REG(14, 0x0c, 4)
++#define ZL_REG_OUTPUT_WIDTH			ZL_REG(14, 0x10, 4)
++#define ZL_REG_OUTPUT_ESYNC_PERIOD		ZL_REG(14, 0x14, 4)
++#define ZL_REG_OUTPUT_ESYNC_WIDTH		ZL_REG(14, 0x18, 4)
++#define ZL_REG_OUTPUT_PHASE_COMP		ZL_REG(14, 0x20, 4)
++
+ #endif /* __ZL3073X_REGS_H */
+diff --git a/include/linux/mfd/zl3073x.h b/include/linux/mfd/zl3073x.h
+index ad5344a84b320..352cd0f2f64a4 100644
+--- a/include/linux/mfd/zl3073x.h
++++ b/include/linux/mfd/zl3073x.h
+@@ -8,6 +8,13 @@
+ struct device;
+ struct regmap;
+ 
 +/*
-+ * Register address structure:
-+ * ===========================
-+ *  25        19 18   16 15     7 6           0
-+ * +-------------------------------------------+
-+ * | max_offset | width |  page  | page_offset |
-+ * +-------------------------------------------+
-+ *
-+ * page_offset ... <0x00..0x7F>
-+ * page .......... HW page number
-+ * size .......... register byte size (1, 2, 4 or 6)
-+ * max_offset .... maximal offset for indexed registers
-+ *                 (for non-indexed regs max_offset == page_offset)
++ * Hardware limits for ZL3073x chip family
 + */
++#define ZL3073X_NUM_INPUTS	10
++#define ZL3073X_NUM_OUTPUTS	10
++#define ZL3073X_NUM_SYNTHS	5
 +
-+#define ZL_REG_OFFSET_MASK	GENMASK(6, 0)
-+#define ZL_REG_PAGE_MASK	GENMASK(15, 7)
-+#define ZL_REG_SIZE_MASK	GENMASK(18, 16)
-+#define ZL_REG_MAX_OFFSET_MASK	GENMASK(25, 19)
-+#define ZL_REG_ADDR_MASK	GENMASK(15, 0)
-+
-+#define ZL_REG_OFFSET(_reg)	FIELD_GET(ZL_REG_OFFSET_MASK, _reg)
-+#define ZL_REG_MAX_OFFSET(_reg)	FIELD_GET(ZL_REG_MAX_OFFSET_MASK, _reg)
-+#define ZL_REG_SIZE(_reg)	FIELD_GET(ZL_REG_SIZE_MASK, _reg)
-+#define ZL_REG_ADDR(_reg)	FIELD_GET(ZL_REG_ADDR_MASK, _reg)
+ /**
+  * struct zl3073x_dev - zl3073x device
+  * @dev: pointer to device
+@@ -18,4 +25,138 @@ struct zl3073x_dev {
+ 	struct regmap		*regmap;
+ };
+ 
++/*************************
++ * DPLL mailbox operations
++ *************************/
 +
 +/**
-+ * ZL_REG_IDX - define indexed register
-+ * @_idx: index of register to access
-+ * @_page: register page
-+ * @_offset: register offset in page
-+ * @_size: register byte size (1, 2, 4 or 6)
-+ * @_items: number of register indices
-+ * @_stride: stride between items in bytes
-+ *
-+ * All parameters except @_idx should be constant.
++ * struct zl3073x_mb_dpll - DPLL channel mailbox
++ * @ref_prio: array of input reference priorities
 + */
-+#define ZL_REG_IDX(_idx, _page, _offset, _size, _items, _stride)	\
-+	(FIELD_PREP(ZL_REG_OFFSET_MASK,					\
-+		    (_offset) + (_idx) * (_stride))		|	\
-+	 FIELD_PREP_CONST(ZL_REG_PAGE_MASK, _page)		|	\
-+	 FIELD_PREP_CONST(ZL_REG_SIZE_MASK, _size)		|	\
-+	 FIELD_PREP_CONST(ZL_REG_MAX_OFFSET_MASK,			\
-+			  (_offset) + ((_items) - 1) * (_stride)))
++struct zl3073x_mb_dpll {
++	u8	ref_prio[ZL3073X_NUM_INPUTS / 2]; /* 4bits per ref */
++#define ZL_DPLL_REF_PRIO_REF_P			GENMASK(3, 0)
++#define ZL_DPLL_REF_PRIO_REF_N			GENMASK(7, 4)
++#define ZL_DPLL_REF_PRIO_MAX			14
++#define ZL_DPLL_REF_PRIO_NONE			15
++};
++#define ZL3073X_MB_DPLL_REF_PRIO(_ref_pair)	BIT(_ref_pair)
++
++int zl3073x_mb_dpll_read(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			 struct zl3073x_mb_dpll *mb);
++int zl3073x_mb_dpll_write(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			  struct zl3073x_mb_dpll *mb);
++
++/***************************
++ * Output mailbox operations
++ ***************************/
 +
 +/**
-+ * ZL_REG - define simple (non-indexed) register
-+ * @_page: register page
-+ * @_offset: register offset in page
-+ * @_size: register byte size (1, 2, 4 or 6)
-+ *
-+ * All parameters should be constant.
++ * struct zl3073x_mb_output - output mailbox
++ * @mode: output mode
++ * @div: output divisor
++ * @width: output width
++ * @esync_period: embedded sync period
++ * @esync_width: embedded sync width
++ * @phase_comp: phase compensation
 + */
-+#define ZL_REG(_page, _offset, _size)					\
-+	ZL_REG_IDX(0, _page, _offset, _size, 1, 0)
++struct zl3073x_mb_output {
++	u8	mode;				/* page 14, offset 0x05 */
++#define ZL_OUTPUT_MODE_CLOCK_TYPE		GENMASK(2, 0)
++#define ZL_OUTPUT_MODE_CLOCK_TYPE_NORMAL	0
++#define ZL_OUTPUT_MODE_CLOCK_TYPE_ESYNC		1
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT		GENMASK(7, 4)
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_DISABLED	0
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_LVDS	1
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_DIFF	2
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_LOWVCM	3
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_2		4
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_1P		5
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_1N		6
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_2_INV	7
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_2_NDIV	12
++#define ZL_OUTPUT_MODE_SIGNAL_FORMAT_2_NDIV_INV	15
++	u32	div;				/* page 14, offset 0x0c */
++	u32	width;				/* page 14, offset 0x10 */
++	u32	esync_period;			/* page 14, offset 0x14 */
++	u32	esync_width;			/* page 14, offset 0x18 */
++	u32	phase_comp;			/* page 14, offset 0x20 */
++};
++#define ZL3073X_MB_OUTPUT_MODE			BIT(0)
++#define ZL3073X_MB_OUTPUT_DIV			BIT(1)
++#define ZL3073X_MB_OUTPUT_WIDTH			BIT(2)
++#define ZL3073X_MB_OUTPUT_ESYNC_PERIOD		BIT(3)
++#define ZL3073X_MB_OUTPUT_ESYNC_WIDTH		BIT(4)
++#define ZL3073X_MB_OUTPUT_PHASE_COMP		BIT(5)
++
++int zl3073x_mb_output_read(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			   struct zl3073x_mb_output *output);
++int zl3073x_mb_output_write(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			    const struct zl3073x_mb_output *output);
++
++/************************************
++ * Input reference mailbox operations
++ ************************************/
++
++/**
++ * struct zl3073x_mb_ref - input reference mailbox
++ * @freq_base: frequency base
++ * @freq_mult: frequency multiplier
++ * @ratio_m: FEC ratio numerator
++ * @ratio_n: FEC ratio denominator
++ * @config: reference configuration
++ * @phase_offset_comp: phase offset compensation
++ * @sync_ctrl: synchronization control
++ * @esync_div: embedded sync divisor
++ */
++struct zl3073x_mb_ref {
++	u16	freq_base;			/* page 10, offset 0x05 */
++	u16	freq_mult;			/* page 10, offset 0x07 */
++	u16	ratio_m;			/* page 10, offset 0x09 */
++	u16	ratio_n;			/* page 10, offset 0x0b */
++	u8	config;				/* page 10, offset 0x0d */
++#define ZL_REF_CONFIG_ENABLE			BIT(0)
++#define ZL_REF_CONFIG_DIFF_EN			BIT(2)
++	u64	phase_offset_comp;		/* page 10, offset 0x28 */
++	u8	sync_ctrl;			/* page 10, offset 0x2e */
++#define ZL_REF_SYNC_CTRL_MODE			GENMASK(2, 0)
++#define ZL_REF_SYNC_CTRL_MODE_REFSYNC_PAIR_OFF	0
++#define ZL_REF_SYNC_CTRL_MODE_50_50_ESYNC_25_75	2
++	u32	esync_div;			/* page 10, offset 0x30 */
++#define ZL_REF_ESYNC_DIV_1HZ			0
++};
++#define ZL3073X_MB_REF_FREQ_BASE		BIT(0)
++#define ZL3073X_MB_REF_FREQ_MULT		BIT(1)
++#define ZL3073X_MB_REF_RATIO_M			BIT(2)
++#define ZL3073X_MB_REF_RATIO_N			BIT(3)
++#define ZL3073X_MB_REF_CONFIG			BIT(4)
++#define ZL3073X_MB_REF_PHASE_OFFSET_COMP	BIT(5)
++#define ZL3073X_MB_REF_SYNC_CTRL		BIT(6)
++#define ZL3073X_MB_REF_ESYNC_DIV		BIT(7)
++
++int zl3073x_mb_ref_read(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			struct zl3073x_mb_ref *ref);
++int zl3073x_mb_ref_write(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			 const struct zl3073x_mb_ref *ref);
 +
 +/**************************
-+ * Register Page 0, General
++ * Synth mailbox operations
 + **************************/
 +
-+#define ZL_REG_ID				ZL_REG(0, 0x01, 2)
-+#define ZL_REG_REVISION				ZL_REG(0, 0x03, 2)
-+#define ZL_REG_FW_VER				ZL_REG(0, 0x05, 2)
-+#define ZL_REG_CUSTOM_CONFIG_VER		ZL_REG(0, 0x07, 4)
-+
-+#endif /* __ZL3073X_REGS_H */
-diff --git a/drivers/mfd/zl3073x-spi.c b/drivers/mfd/zl3073x-spi.c
-new file mode 100644
-index 0000000000000..962b6845c0325
---- /dev/null
-+++ b/drivers/mfd/zl3073x-spi.c
-@@ -0,0 +1,66 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/dev_printk.h>
-+#include <linux/err.h>
-+#include <linux/mfd/zl3073x.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/spi/spi.h>
-+#include "zl3073x.h"
-+
-+static int zl3073x_spi_probe(struct spi_device *spi)
-+{
-+	struct regmap_config regmap_cfg;
-+	struct device *dev = &spi->dev;
-+	struct zl3073x_dev *zldev;
-+
-+	zldev = zl3073x_devm_alloc(dev);
-+	if (IS_ERR(zldev))
-+		return PTR_ERR(zldev);
-+
-+	zl3073x_dev_init_regmap_config(&regmap_cfg);
-+
-+	zldev->regmap = devm_regmap_init_spi(spi, &regmap_cfg);
-+	if (IS_ERR(zldev->regmap)) {
-+		dev_err_probe(dev, PTR_ERR(zldev->regmap),
-+			      "Failed to initialize regmap\n");
-+		return PTR_ERR(zldev->regmap);
-+	}
-+
-+	return zl3073x_dev_probe(zldev, spi_get_device_match_data(spi));
-+}
-+
-+static const struct spi_device_id zl3073x_spi_id[] = {
-+	{ "zl30731", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30731] },
-+	{ "zl30731", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30732] },
-+	{ "zl30731", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30733] },
-+	{ "zl30731", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30734] },
-+	{ "zl30731", .driver_data = (kernel_ulong_t)&zl3073x_chip_info[ZL30735] },
-+	{ /* sentinel */ }
++struct zl3073x_mb_synth {
++	u16	freq_base;			/* page 13, offset 0x06 */
++	u32	freq_mult;			/* page 13, offset 0x08 */
++	u16	freq_m;				/* page 13, offset 0x0c */
++	u16	freq_n;				/* page 13, offset 0x0e */
 +};
-+MODULE_DEVICE_TABLE(spi, zl3073x_spi_id);
++#define ZL3073X_MB_SYNTH_FREQ_BASE		BIT(0)
++#define ZL3073X_MB_SYNTH_FREQ_MULT		BIT(1)
++#define ZL3073X_MB_SYNTH_FREQ_M			BIT(2)
++#define ZL3073X_MB_SYNTH_FREQ_N			BIT(3)
 +
-+static const struct of_device_id zl3073x_spi_of_match[] = {
-+	{ .compatible = "microchip,zl30731", .data = &zl3073x_chip_info[ZL30731] },
-+	{ .compatible = "microchip,zl30732", .data = &zl3073x_chip_info[ZL30732] },
-+	{ .compatible = "microchip,zl30733", .data = &zl3073x_chip_info[ZL30733] },
-+	{ .compatible = "microchip,zl30734", .data = &zl3073x_chip_info[ZL30734] },
-+	{ .compatible = "microchip,zl30735", .data = &zl3073x_chip_info[ZL30735] },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, zl3073x_spi_of_match);
++int zl3073x_mb_synth_read(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			   struct zl3073x_mb_synth *mb);
++int zl3073x_mb_synth_write(struct zl3073x_dev *zldev, u8 index, u32 fields,
++			   struct zl3073x_mb_synth *mb);
 +
-+static struct spi_driver zl3073x_spi_driver = {
-+	.driver = {
-+		.name = "zl3073x-spi",
-+		.of_match_table = zl3073x_spi_of_match,
-+	},
-+	.probe = zl3073x_spi_probe,
-+	.id_table = zl3073x_spi_id,
-+};
-+module_spi_driver(zl3073x_spi_driver);
-+
-+MODULE_AUTHOR("Ivan Vecera <ivecera@redhat.com>");
-+MODULE_DESCRIPTION("Microchip ZL3073x SPI driver");
-+MODULE_IMPORT_NS("ZL3073X");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/zl3073x.h b/drivers/mfd/zl3073x.h
-new file mode 100644
-index 0000000000000..3a2fea61cf579
---- /dev/null
-+++ b/drivers/mfd/zl3073x.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __ZL3073X_CORE_H
-+#define __ZL3073X_CORE_H
-+
-+struct device;
-+struct regmap_config;
-+struct zl3073x_dev;
-+
-+enum zl3073x_chip_type {
-+	ZL30731,
-+	ZL30732,
-+	ZL30733,
-+	ZL30734,
-+	ZL30735,
-+};
-+
-+struct zl3073x_chip_info {
-+	const u16	*ids;
-+	size_t		num_ids;
-+	int		num_channels;
-+};
-+
-+extern const struct zl3073x_chip_info zl3073x_chip_info[];
-+
-+struct zl3073x_dev *zl3073x_devm_alloc(struct device *dev);
-+void zl3073x_dev_init_regmap_config(struct regmap_config *regmap_cfg);
-+int zl3073x_dev_probe(struct zl3073x_dev *zldev,
-+		      const struct zl3073x_chip_info *chip_info);
-+
-+#endif /* __ZL3073X_CORE_H */
-diff --git a/include/linux/mfd/zl3073x.h b/include/linux/mfd/zl3073x.h
-new file mode 100644
-index 0000000000000..ad5344a84b320
---- /dev/null
-+++ b/include/linux/mfd/zl3073x.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __LINUX_MFD_ZL3073X_H
-+#define __LINUX_MFD_ZL3073X_H
-+
-+#include <linux/mutex.h>
-+
-+struct device;
-+struct regmap;
-+
-+/**
-+ * struct zl3073x_dev - zl3073x device
-+ * @dev: pointer to device
-+ * @regmap: regmap to access device registers
-+ */
-+struct zl3073x_dev {
-+	struct device		*dev;
-+	struct regmap		*regmap;
-+};
-+
-+#endif /* __LINUX_MFD_ZL3073X_H */
+ #endif /* __LINUX_MFD_ZL3073X_H */
 -- 
 2.49.0
 
