@@ -1,175 +1,81 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749351DEFC8;
-	Thu, 24 Apr 2025 12:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC3D22D798
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:42:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745498494; cv=none; b=B2RI0euhPpuONhvvGqYji0dk7wUkcDnk1zKvATSFcMHeBwxcGo3iJBlfdzG6eZBrlj8Afa5blh2bljjAFK4Se0Tr5rXJxpchIdP/JUe60hoytFi/F8k4Odr7lDkWswRXomPDtsygRJqogEypVbZauJU1S2rXKWeS4/wjHpgMV0g=
+	t=1745498555; cv=none; b=LixyEoVUeJhV6uQPz9+qNQfzNba6YepSAYnEN2p/zQa5fClq5Q5kHQO39jOD6tnKlS/gzfihFbh3HEJ9aTf8e2EWWpNbvcHdN0T6RJ9s0kpIW2hHo+4gXQpJD1TJdO9kMTyHuQmPiDklUgfW3C+962qsO4+IdBLzOpQilEpXLes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745498494; c=relaxed/simple;
-	bh=Ao0dg1JtVGrD54HmD0TeUgV+jkCOoUQZVd9T++hcFMQ=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=efrB8Icekbp81URw28z615OQSORgGBQv2aaJtQm9FCI0sw0lJrc1Gxwh2W9OizlRKCHDgTrhY/n2qqDexUESVCcVorwk+BGCntKOl/MN1rtIx8vu8JCZBwAJLytj9q/G2wTSpas2KW5dhpmlgLx7xgnBmg9GGjK51vTm9Bn7JPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rh5AZas8; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qJAbNOyN; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745498555; c=relaxed/simple;
+	bh=bMUPawVVEjbF79zo+i8e/G9oQm/E1z7PfhxO6IAIp3Y=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FdGL8LgsHZ5N8Qa3Kr+9TRjMEIhWixD8pAqNeN2QSPBFmSwqHsLrdjW7Bemf40GbmuLaUU2x4D65w6lfodq8Tija75+ZdzFLgFo+Aae0hV15F17Gsk1Zy2s6KGcC4xd9fTpxcvSiQvo+QIunVC4Jp8oZbEJhe4tbcN8RVa8zbhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aAQEiS4/; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rh5AZas8";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qJAbNOyN"
-Date: Thu, 24 Apr 2025 12:41:29 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745498490;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1K02YRnYXcFgHWzTd2Acww7Rvsxw9kJk0oAf3uzO/kU=;
-	b=rh5AZas8BVaaWs6IIldQWUPhD6gdGybk+V733fNXYZhx7x6GWIQS9P24BHauz1Ns9ff8wG
-	SKjYzsL61UFQbo4EQnNmaQYI2Pxj2DHA+I6a/N7A0ciBX7tO4vzXBp7MANtWjGQSF8ElFm
-	O52a4et3Is++9AsjF6IJy3dl0xxPL0IitMyxQgbdkgxgg9YAHR6TrJiwTju9DN2kEJLl5F
-	v5dhd/SOQ3Jn294oBdsE397ImDZ2fOeu1ANYXUOupWs6GzWt62RXZgpRA1lUZGSeLV8W2M
-	3JNXjDz7g0l4Nt7SRPST/7fzrK6ZCgKhNT0/w7wKr+LRjOWKkTxY+2rlvEYyvg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745498490;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1K02YRnYXcFgHWzTd2Acww7Rvsxw9kJk0oAf3uzO/kU=;
-	b=qJAbNOyNLv64WB4SaK5TQ+hd27i/xldfZJm+8vE1YY6nJBB5bDvsHkXprYT6btA3Oz8lDu
-	2jZbEF4n5ffPclDA==
-From: "tip-bot2 for Dr. David Alan Gilbert" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] timers: Remove unused __round_jiffies(_up)
-Cc: "Dr. David Alan Gilbert" <linux@treblig.org>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250418200803.427911-1-linux@treblig.org>
-References: <20250418200803.427911-1-linux@treblig.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aAQEiS4/"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso5510605e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745498552; x=1746103352; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pkiVBLuG8XqT3hphgZF0hV/7DodmP7PFwnCD2xq7o9k=;
+        b=aAQEiS4/66WQ/Gk8iEyEn6+lOn87aapjBmnCoDnkd2DsrknR/ULvUHEukMWnVorbbf
+         gZtYJCDaf756HlFqVspMYAhyUYS5ICedzQvB7EZLBSEp/bFaT4i4jCG5fn7fydR8EVZj
+         3p9DRxSBScf9DKmVokyPyOj/amkcI1c1NLvDCF268vgKo31r6rz/Bs5G7u/+WI/yRHHZ
+         zavXdP595tkdB4vF3qSyOsE1MSEqUQqdVFYhZocjbgwX4QSJs406Yg74cmAbHoQFoLsP
+         c4gcYqoWwqaLRzC9GaI6HYF2IfQ+q0fvkNrkgxrSloqWnQHs+7kDUKE81njrRH9ef2+H
+         /tgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745498552; x=1746103352;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pkiVBLuG8XqT3hphgZF0hV/7DodmP7PFwnCD2xq7o9k=;
+        b=FuGas+vv2NtvGTvUpDDrUjwwMq0UkeV0sptO9xNUEgmu6S4bA74cKwPAUq19hH+tMy
+         isk8mHISU4RB4eaLbLudUu2CyPBlghqSWwcaxCMTPyo50GnN9fj+jggXA1OTLgn2euZJ
+         /cD9h+o+RC8a1AxyuMG22a9NgnlZmCQSeaEUUAcdGap8hLGArxM3kPyd8ac7GEykS7A8
+         8LPp+5zBH3x60tTQECA+FsS2XGLjxaydQiiOwey/dMydiOPHhtWON5ZRKr0B8UaXHcWy
+         TlLXE2RtWVKpcAdbIlOUqM+fRxr0u3191JGrBXefdo5Rqxqp7li044DNz34AaIAX8Uux
+         rMgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVPni1FFvi1x2PKn9MLCwH/B5hHC7OMtwgflD+iEMdjj2RMnYtGJYVJebeiJtEwCXcRflHjyz0xCzU4Xzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycxAmaDGBH9FE7CJ1ZFJRQ7oxrtSoahounDA5oTxNIbecYvg2j
+	GBAmaLzu8RvJc0gx8yw66KH7mWkYL4fJxxtuN8BZ5BoObUrmVnbD5EJn4+xl5mO+jh8+3huxf9y
+	vwBNhPAZzQN8/WA==
+X-Google-Smtp-Source: AGHT+IHUeUoQ0ejG3/JHvwn7Rj1k7fCZD7HnZJ6v+sIjXJoqZ3Sw032FWqzu554ZEj2HUTDpr+mjqYHNg+k+EDY=
+X-Received: from wmbdz10.prod.google.com ([2002:a05:600c:670a:b0:43c:f60a:4c59])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3b09:b0:43c:eea9:f438 with SMTP id 5b1f17b1804b1-4409bd2f657mr21512285e9.15.1745498551878;
+ Thu, 24 Apr 2025 05:42:31 -0700 (PDT)
+Date: Thu, 24 Apr 2025 12:42:29 +0000
+In-Reply-To: <20250423134344.3888205-6-bqe@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <174549848950.31282.3516934679529036592.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
+Mime-Version: 1.0
+References: <20250423134344.3888205-2-bqe@google.com> <20250423134344.3888205-6-bqe@google.com>
+Message-ID: <aAoxtUXWq4fdnt8F@google.com>
+Subject: Re: [PATCH v7 4/5] rust: add find_bit_benchmark_rust module.
+From: Alice Ryhl <aliceryhl@google.com>
+To: Burak Emir <bqe@google.com>
+Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 
-The following commit has been merged into the timers/core branch of tip:
+On Wed, Apr 23, 2025 at 01:43:36PM +0000, Burak Emir wrote:
+> +    loop {
+> +        cnt += 1;
+> +        if let Some(index) = bitmap.next_bit(i) {
 
-Commit-ID:     49916e22d9530d6cf027e635a5d824c7d698d67f
-Gitweb:        https://git.kernel.org/tip/49916e22d9530d6cf027e635a5d824c7d698d67f
-Author:        Dr. David Alan Gilbert <linux@treblig.org>
-AuthorDate:    Fri, 18 Apr 2025 21:08:03 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 24 Apr 2025 14:31:35 +02:00
+You can use a while let loop here ;)
 
-timers: Remove unused __round_jiffies(_up)
-
-Remove two trivial but long unused functions.
-
-__round_jiffies() has been unused since 2008's
-commit 9c133c469d38 ("Add round_jiffies_up and related routines")
-
-__round_jiffies_up() has been unused since 2019's
-commit 7ae3f6e130e8 ("powerpc/watchdog: Use hrtimers for per-CPU
-heartbeat")
-
-Remove them.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250418200803.427911-1-linux@treblig.org
-
----
- include/linux/timer.h |  2 +--
- kernel/time/timer.c   | 42 +------------------------------------------
- 2 files changed, 44 deletions(-)
-
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 10596d7..e17aac7 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -172,12 +172,10 @@ extern void init_timers(void);
- struct hrtimer;
- extern enum hrtimer_restart it_real_fn(struct hrtimer *);
- 
--unsigned long __round_jiffies(unsigned long j, int cpu);
- unsigned long __round_jiffies_relative(unsigned long j, int cpu);
- unsigned long round_jiffies(unsigned long j);
- unsigned long round_jiffies_relative(unsigned long j);
- 
--unsigned long __round_jiffies_up(unsigned long j, int cpu);
- unsigned long __round_jiffies_up_relative(unsigned long j, int cpu);
- unsigned long round_jiffies_up(unsigned long j);
- unsigned long round_jiffies_up_relative(unsigned long j);
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 4d915c0..1b2a884 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -386,32 +386,6 @@ static unsigned long round_jiffies_common(unsigned long j, int cpu,
- }
- 
- /**
-- * __round_jiffies - function to round jiffies to a full second
-- * @j: the time in (absolute) jiffies that should be rounded
-- * @cpu: the processor number on which the timeout will happen
-- *
-- * __round_jiffies() rounds an absolute time in the future (in jiffies)
-- * up or down to (approximately) full seconds. This is useful for timers
-- * for which the exact time they fire does not matter too much, as long as
-- * they fire approximately every X seconds.
-- *
-- * By rounding these timers to whole seconds, all such timers will fire
-- * at the same time, rather than at various times spread out. The goal
-- * of this is to have the CPU wake up less, which saves power.
-- *
-- * The exact rounding is skewed for each processor to avoid all
-- * processors firing at the exact same time, which could lead
-- * to lock contention or spurious cache line bouncing.
-- *
-- * The return value is the rounded version of the @j parameter.
-- */
--unsigned long __round_jiffies(unsigned long j, int cpu)
--{
--	return round_jiffies_common(j, cpu, false);
--}
--EXPORT_SYMBOL_GPL(__round_jiffies);
--
--/**
-  * __round_jiffies_relative - function to round jiffies to a full second
-  * @j: the time in (relative) jiffies that should be rounded
-  * @cpu: the processor number on which the timeout will happen
-@@ -483,22 +457,6 @@ unsigned long round_jiffies_relative(unsigned long j)
- EXPORT_SYMBOL_GPL(round_jiffies_relative);
- 
- /**
-- * __round_jiffies_up - function to round jiffies up to a full second
-- * @j: the time in (absolute) jiffies that should be rounded
-- * @cpu: the processor number on which the timeout will happen
-- *
-- * This is the same as __round_jiffies() except that it will never
-- * round down.  This is useful for timeouts for which the exact time
-- * of firing does not matter too much, as long as they don't fire too
-- * early.
-- */
--unsigned long __round_jiffies_up(unsigned long j, int cpu)
--{
--	return round_jiffies_common(j, cpu, true);
--}
--EXPORT_SYMBOL_GPL(__round_jiffies_up);
--
--/**
-  * __round_jiffies_up_relative - function to round jiffies up to a full second
-  * @j: the time in (relative) jiffies that should be rounded
-  * @cpu: the processor number on which the timeout will happen
+Alice
