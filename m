@@ -1,200 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76630280CE0
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 19:21:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0D91A5BB6;
+	Thu, 24 Apr 2025 19:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745522508; cv=none; b=RygQsck89NYSjJ0Zea2jQZX8X1caGSUXnBqu27MWS1hRzqCdZubYcOC7vTghO+NRzTvDPvi5bJtVTePbeRmrwO4v9YrnFVmO3eckSuB6QmyMtn2oYH2lJurHH0142EgnG5WAIbfdSel6FbothKOff+jQtpIVF5iketgLAs7QqbM=
+	t=1745522656; cv=none; b=Y9emyMouWdv3g2zKhPFt0FS/Q7J7iCaSgUvRUmfb7oTFL9Lgj/NtncO6GyG0/HllcukpaVW/+12hMWq40gOreTnFPDdOJWCbLqSG53BrNGLNyLevj3XZ2xO7w0N7XFWWgytLAU/RFnZwQ5MeF3E566asY7/vZHnQ75LqG8WnOy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745522508; c=relaxed/simple;
-	bh=GhdbNQqm5Mo0SBjik8a+TZCQ4tcJfPyU15uycDKJe+I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R57GSY7EwoQcWpQ3IHbxWmjmv8q1WPocyFMae4/4w1UosI5t0Hh9ymW/VnwWJ7F1lN0wrzhf9ogHauu33kR/JcWrNz4EKUgM3jtC5la2mtgS+r0NTP75T1sWzphM7rQsTJSUQQspxxIyZTlOOV3h9wRuiLwLbfv8L7cA4JeFEsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kkk/fRpn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kkk/fRpn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA9AFC4CEE3;
-	Thu, 24 Apr 2025 19:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745522507;
-	bh=GhdbNQqm5Mo0SBjik8a+TZCQ4tcJfPyU15uycDKJe+I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kkk/fRpnyVIZuC8XW1BNl+GeAiHGvQiP5wFA9U+P0w1U8GPcrEWw0/96xqshVHKeA
-	 tg6z7OOpWYKREYVPVGuoU5eSaV8N/xU5VkkCnRbKCshzeHN5cFNs+kccmEhjnDsU5F
-	 PHrVsHnfXHYNbcN45hS24ZrwTbF9VGEbMM5cxg6YemiDGkDCCrwNw9XIPnmWR5DLKd
-	 rmeyeMsLuY2r1I97h4IccM2ryI+MfC2gw+geMGhy6Thv/cvdbQrX17s6ccnFXgyoBz
-	 gG8BEIZya3g51i820hoLPoCvWCheYL8Yy9kVAdWBGlh4NbEz/P9eXnDQLPAmCPbPrP
-	 mUvE/4E4NSrGg==
-Date: Thu, 24 Apr 2025 22:21:38 +0300
-From: Mike Rapoport <rppt@kernel.org>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Changyuan Lyu <changyuanl@google.com>,
-	Arnd Bergmann <arnd@arndb.de>, David Hildenbrand <david@redhat.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Ryan Roberts <ryan.roberts@arm.com>, Barry Song <baohua@kernel.org>,
-	Jeff Xu <jeffxu@chromium.org>, Wei Yang <richard.weiyang@gmail.com>,
-	Baoquan He <bhe@redhat.com>, Suren Baghdasaryan <surenb@google.com>,
-	Frank van der Linden <fvdl@google.com>,
-	York Jasper Niebuhr <yjnworkstation@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] memblock: mark init_deferred_page as __init_memblock
-Message-ID: <aAqPQgjgkPNtOElr@kernel.org>
-References: <20250423160824.1498493-1-arnd@kernel.org>
- <aApm344CnIwy4s2d@kernel.org>
+	s=arc-20240116; t=1745522656; c=relaxed/simple;
+	bh=bR9QjNDkqqz5zsC3ePNRX3ghEJgOc1RRAoHjTmY7UHg=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=T4+lcpd8+F3+wyMrgC+Rs8FkqKRYLU834mmLEkIlpSmGajKwRbCzuFanx/6d5tNHrcluvrrQbPRJRDCeZwc7asDvp0VyLdYpO3gFecIKgWbU08mspW70k9sU7bKoOJCwmhlk1q7JtjuZKVQWPRjiQA92zCEDnmlwrQrlSY92HEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E08AC4CEE4;
+	Thu, 24 Apr 2025 19:24:16 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1u82D6-0000000H2OC-1zk4;
+	Thu, 24 Apr 2025 15:26:12 -0400
+Message-ID: <20250424192456.851953422@goodmis.org>
+User-Agent: quilt/0.68
+Date: Thu, 24 Apr 2025 15:24:56 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org,
+ Mark Brown <broonie@kernel.org>,
+ linux-toolchains@vger.kernel.org,
+ Jordan Rome <jordalgo@meta.com>,
+ Sam James <sam@gentoo.org>,
+ Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Florian Weimer <fweimer@redhat.com>,
+ Andy Lutomirski <luto@kernel.org>,
+ Weinan Liu <wnliu@google.com>,
+ Blake Jones <blakejones@google.com>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Alexander Aring <aahringo@redhat.com>
+Subject: [PATCH v5 0/9] tracing: Deferred unwinding of user space stack traces
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aApm344CnIwy4s2d@kernel.org>
 
-On Thu, Apr 24, 2025 at 07:29:29PM +0300, Mike Rapoport wrote:
-> On Wed, Apr 23, 2025 at 06:08:08PM +0200, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> > 
-> > On architectures that set CONFIG_ARCH_KEEP_MEMBLOCK, memmap_init_kho_scratch_pages
-> > is not discarded but calls a function that is:
-> > 
-> > WARNING: modpost: vmlinux: section mismatch in reference: memmap_init_kho_scratch_pages+0x120 (section: .text) -> init_deferred_page (section: .init.text)
-> > ERROR: modpost: Section mismatches detected.
-> > Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.
-> > 
-> > Mark init_deferred_page the same way as memmap_init_kho_scratch_pages
-> > to avoid that warning. Unfortunately this requires marking additional
-> > functions the same way to have them stay around as well.
-> > 
-> > Ideally memmap_init_kho_scratch_pages would become __meminit instead
-> > of __init_memblock, but I could not convince myself that this is safe.
-> 
-> It should be __init even, as well as a few other kho-memblock
-> functions.
-> I'll run some builds to make sure I'm not missing anything.
 
-Yeah, it looks like everything inside CONFIG_MEMBLOCK_KHO_SCRATCH can be
-just __init unconditionally:
+I'm currently working on getting sframe support from the kernel.
+Josh Poimboeuf did a lot of the hard work already, but he told me he doesn't
+have time to continue it so I'm picking it up where he left off.
 
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 44d3bacf86a0..994792829ebe 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -942,17 +942,17 @@ int __init_memblock memblock_physmem_add(phys_addr_t base, phys_addr_t size)
- #endif
- 
- #ifdef CONFIG_MEMBLOCK_KHO_SCRATCH
--__init_memblock void memblock_set_kho_scratch_only(void)
-+__init void memblock_set_kho_scratch_only(void)
- {
- 	kho_scratch_only = true;
- }
- 
--__init_memblock void memblock_clear_kho_scratch_only(void)
-+__init void memblock_clear_kho_scratch_only(void)
- {
- 	kho_scratch_only = false;
- }
- 
--void __init_memblock memmap_init_kho_scratch_pages(void)
-+__init void memmap_init_kho_scratch_pages(void)
- {
- 	phys_addr_t start, end;
- 	unsigned long pfn;
-  
-> > Fixes: 1b7936623970 ("memblock: introduce memmap_init_kho_scratch()")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > ---
-> >  mm/internal.h | 7 ++++---
-> >  mm/mm_init.c  | 8 ++++----
-> >  2 files changed, 8 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/mm/internal.h b/mm/internal.h
-> > index 838f840ded83..40464f755092 100644
-> > --- a/mm/internal.h
-> > +++ b/mm/internal.h
-> > @@ -9,6 +9,7 @@
-> >  
-> >  #include <linux/fs.h>
-> >  #include <linux/khugepaged.h>
-> > +#include <linux/memblock.h>
-> >  #include <linux/mm.h>
-> >  #include <linux/mm_inline.h>
-> >  #include <linux/pagemap.h>
-> > @@ -543,7 +544,7 @@ extern int defrag_mode;
-> >  
-> >  void setup_per_zone_wmarks(void);
-> >  void calculate_min_free_kbytes(void);
-> > -int __meminit init_per_zone_wmark_min(void);
-> > +int __init_memblock init_per_zone_wmark_min(void);
-> >  void page_alloc_sysctl_init(void);
-> >  
-> >  /*
-> > @@ -1532,9 +1533,9 @@ static inline bool pte_needs_soft_dirty_wp(struct vm_area_struct *vma, pte_t pte
-> >  	return vma_soft_dirty_enabled(vma) && !pte_soft_dirty(pte);
-> >  }
-> >  
-> > -void __meminit __init_single_page(struct page *page, unsigned long pfn,
-> > +void __init_memblock __init_single_page(struct page *page, unsigned long pfn,
-> >  				unsigned long zone, int nid);
-> > -void __meminit __init_page_from_nid(unsigned long pfn, int nid);
-> > +void __init_memblock __init_page_from_nid(unsigned long pfn, int nid);
-> >  
-> >  /* shrinker related functions */
-> >  unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
-> > diff --git a/mm/mm_init.c b/mm/mm_init.c
-> > index 7bb5f77cf195..31cf8bc31cc2 100644
-> > --- a/mm/mm_init.c
-> > +++ b/mm/mm_init.c
-> > @@ -578,7 +578,7 @@ static void __init find_zone_movable_pfns_for_nodes(void)
-> >  	node_states[N_MEMORY] = saved_node_state;
-> >  }
-> >  
-> > -void __meminit __init_single_page(struct page *page, unsigned long pfn,
-> > +void __init_memblock __init_single_page(struct page *page, unsigned long pfn,
-> >  				unsigned long zone, int nid)
-> >  {
-> >  	mm_zero_struct_page(page);
-> > @@ -669,7 +669,7 @@ static inline void fixup_hashdist(void) {}
-> >  /*
-> >   * Initialize a reserved page unconditionally, finding its zone first.
-> >   */
-> > -void __meminit __init_page_from_nid(unsigned long pfn, int nid)
-> > +void __init_memblock __init_page_from_nid(unsigned long pfn, int nid)
-> >  {
-> >  	pg_data_t *pgdat;
-> >  	int zid;
-> > @@ -744,7 +744,7 @@ defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
-> >  	return false;
-> >  }
-> >  
-> > -static void __meminit __init_deferred_page(unsigned long pfn, int nid)
-> > +static void __init_memblock __init_deferred_page(unsigned long pfn, int nid)
-> >  {
-> >  	if (early_page_initialised(pfn, nid))
-> >  		return;
-> > @@ -769,7 +769,7 @@ static inline void __init_deferred_page(unsigned long pfn, int nid)
-> >  }
-> >  #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
-> >  
-> > -void __meminit init_deferred_page(unsigned long pfn, int nid)
-> > +void __init_memblock init_deferred_page(unsigned long pfn, int nid)
-> >  {
-> >  	__init_deferred_page(pfn, nid);
-> >  }
-> > -- 
-> > 2.39.5
-> > 
-> 
-> -- 
-> Sincerely yours,
-> Mike.
+His last series of v4 is here:
 
--- 
-Sincerely yours,
-Mike.
+  https://lore.kernel.org/all/cover.1737511963.git.jpoimboe@kernel.org/
+
+It covers a lot of topics as he found issues with other aspects of
+the kernel that needed to be fixed for sframes to work properly.
+
+This series focuses on implementing the deferred unwinding for ftrace
+(and LTTng could use it).
+
+This implements the three API functions that Josh had in his series:
+
+  unwind_deferred_init()
+  unwind_deferred_request()
+  unwind_deferred_cancel()
+
+The difference is that it does not add the task_work to the tracer's
+unwind_work structure. Instead, it uses a global bitmask where each
+registered tracer gets a bit. That means it can have at most 32 tracers
+registered at a time on a 32 bit system, and 64 tracers on a 64 bit
+system. Ideally, there should not be more than 10, and that is a lot.
+
+This is also why perf does not use this method, as it would register
+a callback for pretty much every event or task or CPU, and that goes
+into the hundreds.
+
+But for generic tracers that have a single entity tracing multiple
+tasks, this works out well.
+
+When a tracer registers with unwind_deferred_init(), a avaliable bit
+in the global mask is assigned to that tracer. If there are no more
+bits available, -EBUSY is returned.
+
+When a tracer requests a stacktrace on task exit back to user space,
+it is given a cookie that is associated to that stacktrace. The tracer
+can save that cookie into its buffer and use it to attach the stacktrace
+when it gets back. It's bit is set in the task structures unwind_mask
+and when the task returns back to user space, it will iterate all
+the tracers that are registered, and if their corresponding bit is
+set it will call its callback and clear the bit.
+
+The last patches implement the tracing subsystem to use this for
+its global user space stack tracing per event (individual events is
+not supported yet). It creates a two new events, where one is to
+record the cookie when the stack trace is requested, and the other is
+for the user space stacktrace itself.
+
+Since the callback is called in faultable context, it uses this opportunity
+to look at the addresses in the stacktrace and convert them to where
+they would be in the executable file (if found). It also records
+the inode and device major/minor numbers into the trace, so that post
+processing can find the exact location where the stacks are.
+
+Josh Poimboeuf (3):
+      unwind_user/deferred: Add deferred unwinding interface
+      unwind_user/deferred: Make unwind deferral requests NMI-safe
+      mm: Add guard for mmap_read_lock
+
+Steven Rostedt (6):
+      unwind deferred: Use bitmask to determine which callbacks to call
+      tracing: Do not bother getting user space stacktraces for kernel threads
+      tracing: Rename __dynamic_array() to __dynamic_field() for ftrace events
+      tracing: Implement deferred user space stacktracing
+      tracing: Have deferred user space stacktrace show file offsets
+      tracing: Show inode and device major:minor in deferred user space stacktrace
+
+----
+ include/linux/entry-common.h          |   2 +-
+ include/linux/mmap_lock.h             |   2 +
+ include/linux/sched.h                 |   1 +
+ include/linux/unwind_deferred.h       |  23 ++-
+ include/linux/unwind_deferred_types.h |   4 +
+ kernel/trace/trace.c                  | 138 +++++++++++++++++
+ kernel/trace/trace.h                  |  14 +-
+ kernel/trace/trace_entries.h          |  38 ++++-
+ kernel/trace/trace_export.c           |  25 +++-
+ kernel/trace/trace_output.c           |  99 ++++++++++++
+ kernel/unwind/deferred.c              | 275 +++++++++++++++++++++++++++++++++-
+ 11 files changed, 610 insertions(+), 11 deletions(-)
