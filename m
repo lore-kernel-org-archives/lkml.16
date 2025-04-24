@@ -1,248 +1,112 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29B6223DD7
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 21:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0DB01B040B
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 21:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745531846; cv=none; b=UaDwizDKdUPNWA6x7kIcyooGYRhvOmZ3sP/34Doth2jHwZyPkX+Oe1HlXmc0G4KQXo4cyRjAU0ZNgPr/CR5l4EG5vGhz+s/o/B/DfSw5kNy9miuemGbzJJqWV9BklIB0VsRLYac/obC8L3fl47o49Ys6nbPvIaLDi28hZQQhGIE=
+	t=1745531858; cv=none; b=W7n41+H6s43V2ytpRR4m3UYfuaif5o7wJODX6SWhbmbSL+RLYeg9l0ejGaEDLj4F2nDlwXcnUZ9wPoevfIzMGE7y3EvvCJFKZT0Q+e80fMnRhr1/Mq4lXB2nsd5tHK63cQUId586tJx8pYmecsRF1mXYs0ITBs9jqxy0tcCl+os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745531846; c=relaxed/simple;
-	bh=F/cy9qGnJBDdoAEPSSERWZIHq7qLgf/M0k7Ldr6L/6k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MHHp7mP9Whp0wostMPu8aaw3/SCGgnymzM9FwoP6Sebad4AnoeW+j8FG8EWeOheuPLhCQC+3hCy/V/jpM3B+JpnTEzi9htGOlTQRiTzL/hSXZJnaFJmefJVmrDrJIsZzkDWF6RmivmZDtGIJXlD2XGkFHDuQvCo/01iazOwHDv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Uen+WLSx; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1745531858; c=relaxed/simple;
+	bh=8bsHjJkOJJtj+B5EgE1uZlSkjoCjt3dk18SxFPupzsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=qC3l/9ku2Bk56YU47zY5UGud/LQIdRiP6oSGV1FHZt4cH/1m6FSj4waff3kXBzzR1nThfTAdfFMQwLy2fARhaAIB0uA8KXi29lVNiqBhbvO2vQSfpS7otIPWe+XKGyv5NXJ9jyehgpPseSSxFLl5YLXeFQnwglDFZXpQZDNXXKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KaIhiQAP; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Uen+WLSx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KaIhiQAP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745531843;
+	s=mimecast20190719; t=1745531855;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xpoZPfro0SHj9mPJ6mKU/fbkIbH6rl7Ujv7LCLlYPNY=;
-	b=Uen+WLSxRqBmCBACU6UgZoXbPsvjR3FdjdJsT/baxVHYhj7vXpR20psFyg5EwTGAz9Plt3
-	GdnozljDcmrlTAZLLXmBEPUMkeYkA0swareNLGOz+Fcxgtz445GHwsIhwsXT2PXaXvlBDy
-	c+t84BYoLsmfYEWD7z9Pqrp6UBz/O7M=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gNFAAkwdWRBtpRVBQdWenlqFkFWJNty+/AexJPWj//I=;
+	b=KaIhiQAP+bjlL+ppI8YNP/sV3mAbQvFISOhj/XRHcEzAi2q8vbAU/hh/snqSeGleB9aYPH
+	ZnuuEtxyC7RCAqa6aJkWQXYHftp//7zax9jVdSAe8rsP2Dz+w89BU3kBKtHHixTddKJFzX
+	2H920JY+sjdwTtJK2AAjluF8nzIWhsM=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-433-BW42_Gh_MCaNuVBj7dOr0Q-1; Thu, 24 Apr 2025 17:57:21 -0400
-X-MC-Unique: BW42_Gh_MCaNuVBj7dOr0Q-1
-X-Mimecast-MFC-AGG-ID: BW42_Gh_MCaNuVBj7dOr0Q_1745531840
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39ee57e254aso754311f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:57:21 -0700 (PDT)
+ us-mta-522-2dMnsshlOiSTGgvizffEjw-1; Thu, 24 Apr 2025 17:57:34 -0400
+X-MC-Unique: 2dMnsshlOiSTGgvizffEjw-1
+X-Mimecast-MFC-AGG-ID: 2dMnsshlOiSTGgvizffEjw_1745531854
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c0c1025adbso327180285a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:57:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745531840; x=1746136640;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xpoZPfro0SHj9mPJ6mKU/fbkIbH6rl7Ujv7LCLlYPNY=;
-        b=M/fYpbzBDsOmnxgkBWUILu0amkhDlMTrIdfS5ap3cB6WSLJxaiUwiqG8HIpYfpEuA8
-         QyywzIizn+0A7iah1cwRfL/N9ca08/U4YFHBrGpv0GYqVtjLs4du7OKh3tV1tpe4O0U9
-         KOYCf6DHe3Q/nONopgjnYuiz68f/y7U64pbKY5NbYRqAsnROvKEFquM/6bMn7vFpyfqm
-         jWNK10iwd9pF+wTDNFDCh9maCdxYN8ytfwVIAB4hIvTZW7kWl7+U3izzF2KrigKDofM1
-         bA/4S1jbKLuoLh4hNYwSdqhEn6FbKRT7lYW60eVRx2xejTBj7/XdEJyGY5Sqi6G4mMN7
-         sXnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvSdSjJ54gE7cQFh8LBN6yR+SQlfSLSRyev3Bk9oZdPC8FlkiBr4y6inmFwfY1174wPPiGJTqFn5ZUtOE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyphWGBlFeqchKg8alIWXtwyZUHMWh6Kk5VvmBXCcW8BCU3qTaZ
-	oxcxBKZ2am9mFJ5GlMnXZd0GEXBIOqKSD03YefdvCU/Md8DU7YnNpVcPnOJedkI4rH/sCfqAOLJ
-	iQDYOk3oTjgiVltLMn4yY5fQEvAnjnWL8bQREajpQjnWFS5Tq/uVfikMV5bp1UAEk6b0xtt4dUs
-	UKiQMunNF2PtcA6Ho+ghTG93+kqZbSGeVzHkkI
-X-Gm-Gg: ASbGncuqRbCK5V+lkinnn5h+JudE1O4dqbdT5Dpl6QMIMg9ln4cHfrXGB+/iae8RIjr
-	iuUrgnohTA/AGbRDl/RchjE58VpxKlK2PocyJ0v0zlCqM9/vgysWer+yASpEIpUUJAws=
-X-Received: by 2002:a05:6000:420f:b0:39f:b604:4691 with SMTP id ffacd0b85a97d-3a06cfad4demr3613289f8f.58.1745531840406;
-        Thu, 24 Apr 2025 14:57:20 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEeKzKsojxPFQjf2qyPC/jLCrBU0TIGuJgSXSwemHUuTZespuYvxujkus4uQUh01e60jmTuxs45QJiRsX3qQ8A=
-X-Received: by 2002:a05:6000:420f:b0:39f:b604:4691 with SMTP id
- ffacd0b85a97d-3a06cfad4demr3613274f8f.58.1745531839898; Thu, 24 Apr 2025
- 14:57:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745531853; x=1746136653;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gNFAAkwdWRBtpRVBQdWenlqFkFWJNty+/AexJPWj//I=;
+        b=inMZzcRMXYXAS09C2qJDJPybhplOMuJ5dx2WrLj2c46p9ZH8ukuXenZjTBb+x5dEOZ
+         6N8zb9uTHcixGnT4RuU+GkTFEuEphA8G1Pz+spBtlLGj9gBJvc52WsYS7d5pfBJ60i5C
+         I7o2ptPx8ugTCt6pF96WLpMCm11frYGqboF3KJhGjc+cHQ4Rc8JvxuVEtahyboKx+1/Z
+         Ew5pCwuT/pcRs9ZhJPMZyaam/QzjpRDzgwLMonlNqB2ooJKK259Ai9XLRaCdzxoBqsSY
+         AFbSujb1sVcEeaxScZCg7Se36NNl4LDRbMgKbnu97JzOObuih431m1ITp9Y9x6uy02cE
+         4FZQ==
+X-Gm-Message-State: AOJu0YzxvW0P6Sk3snL698BroUs8+gaRd0IYJNrqdZ/RPjCUrd6w+C6V
+	U+sdez8lxg/14Jes4NWj/wuNPW8xwmWullaci7Ykvf1A5eitTR+MAElE8Y798jq6Kqkn2oOnZxh
+	avFlyFVjTyZML+2ORZNJnulhQcFvTKRrE8RtvKmbW+eB5DDNOkFXcEJBtahT8znwu01xgAuiGdR
+	fdHkuH909bNu/22jy20po4J2gprDu97xT5ox1hI0OjFgo=
+X-Gm-Gg: ASbGncuUE1o96osCdiZ9RLFPjoWWanpmR6+ehHpSCvDZR+96LTX2LF4ingTjgrAjdf5
+	MI3JnqbS6bKc8T5BasKYBN4DPcB8Pbyx8gv+5vMGG+T96GCuaDlfNyk4YDh3aBJ1Ukqzt5TMaK3
+	/v/cVJXi+FhQLqrNdFINtKQ/DuowU76iTl/v97u1vZr78tSuksniqSTDkZM5SJjykrKiLaGGFT9
+	diOXhMI8Ym5RG/kEsvCOYMGYWQDFxPySAIN8x2yGSEsWLlrGoYBxb2wNoAypH/UUGCfeIyNFki3
+X-Received: by 2002:a05:620a:191d:b0:7c7:b5dc:2e36 with SMTP id af79cd13be357-7c9606e271amr25350185a.18.1745531853294;
+        Thu, 24 Apr 2025 14:57:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEUqIBKqRuM+uilYhLKP9IyuG1SpIIrfP8BP6vvhC+iiiesMUlQ1uhvKuEqA1nOvdsUhaf/w==
+X-Received: by 2002:a05:620a:191d:b0:7c7:b5dc:2e36 with SMTP id af79cd13be357-7c9606e271amr25346385a.18.1745531852845;
+        Thu, 24 Apr 2025 14:57:32 -0700 (PDT)
+Received: from x1.com ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958ea2a6dsm138737085a.106.2025.04.24.14.57.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 14:57:32 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Cc: Mike Rapoport <rppt@kernel.org>,
+	James Houghton <jthoughton@google.com>,
+	David Hildenbrand <david@redhat.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	peterx@redhat.com
+Subject: [PATCH 0/2] mm/userfaultfd: Fix uninitialized output field for -EAGAIN race
+Date: Thu, 24 Apr 2025 17:57:27 -0400
+Message-ID: <20250424215729.194656-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.48.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303-vdso-clock-v1-0-c1b5c69a166f@linutronix.de>
- <20250303-vdso-clock-v1-8-c1b5c69a166f@linutronix.de> <aApGPAoctq_eoE2g@t14ultra>
- <20250424173908-ffca1ea2-e292-4df3-9391-24bfdaab33e7@linutronix.de>
-In-Reply-To: <20250424173908-ffca1ea2-e292-4df3-9391-24bfdaab33e7@linutronix.de>
-From: Jan Stancek <jstancek@redhat.com>
-Date: Thu, 24 Apr 2025 23:57:02 +0200
-X-Gm-Features: ATxdqUEI0uDThPwtIXkgDnYksB6HJCT6szRwp_ZXnbL9vPXmguxH9v8pzuTDM2Y
-Message-ID: <CAASaF6xsMOWkhPrzKQWNz5SXaROSpxzFVBz+MOA-MNiEBty7gQ@mail.gmail.com>
-Subject: Re: [PATCH 08/19] vdso/gettimeofday: Prepare do_hres_timens() for
- introduction of struct vdso_clock
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Anna-Maria Behnsen <anna-maria@linutronix.de>, 
-	Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-arch@vger.kernel.org, 
-	Nam Cao <namcao@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Apr 24, 2025 at 5:49=E2=80=AFPM Thomas Wei=C3=9Fschuh
-<thomas.weissschuh@linutronix.de> wrote:
->
-> On Thu, Apr 24, 2025 at 04:10:04PM +0200, Jan Stancek wrote:
-> > On Mon, Mar 03, 2025 at 12:11:10PM +0100, Thomas Wei=C3=9Fschuh wrote:
-> > > From: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> > >
-> > > To support multiple PTP clocks, the VDSO data structure needs to be
-> > > reworked. All clock specific data will end up in struct vdso_clock an=
-d in
-> > > struct vdso_time_data there will be array of it. By now, vdso_clock i=
-s
-> > > simply a define which maps vdso_clock to vdso_time_data.
-> > >
-> > > Prepare for the rework of these structures by adding struct vdso_cloc=
-k
-> > > pointer argument to do_hres_timens(), and replace the struct vdso_tim=
-e_data
-> > > pointer with the new pointer arugment whenever applicable.
-> > >
-> > > No functional change.
-> > >
-> > > Signed-off-by: Anna-Maria Behnsen <anna-maria@linutronix.de>
-> > > Signed-off-by: Nam Cao <namcao@linutronix.de>
-> > > Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de=
->
-> > > ---
-> > > lib/vdso/gettimeofday.c | 35 ++++++++++++++++++-----------------
-> > > 1 file changed, 18 insertions(+), 17 deletions(-)
-> > >
-> >
-> > starting with this patch, I'm seeing user-space crashes when using cloc=
-k_gettime():
-> >   BAD  -> 83a2a6b8cfc5 vdso/gettimeofday: Prepare do_hres_timens() for =
-introduction of struct vdso_clock
-> >   GOOD -> 64c3613ce31a vdso/gettimeofday: Prepare do_hres() for introdu=
-ction of struct vdso_clock
-> >
-> > It appears to be unique to aarch64 with 64k pages, and can be reproduce=
-d with
-> > LTP clock_gettime03 [1]:
-> >   command: clock_gettime03   tst_kconfig.c:88: TINFO: Parsing kernel co=
-nfig '/lib/modules/6.15.0-0.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+6=
-4k/build/.config'
-> >   tst_test.c:1903: TINFO: LTP version: 20250130-231-gd02c2aea3
-> >   tst_test.c:1907: TINFO: Tested kernel: 6.15.0-0.rc3.20250423gitbc3372=
-351d0c.30.eln147.aarch64+64k #1 SMP PREEMPT_DYNAMIC Wed Apr 23 23:23:54 UTC=
- 2025 aarch64
-> >   tst_kconfig.c:88: TINFO: Parsing kernel config '/lib/modules/6.15.0-0=
-.rc3.20250423gitbc3372351d0c.30.eln147.aarch64+64k/build/.config'
-> >   tst_test.c:1720: TINFO: Overall timeout per run is 0h 05m 24s
-> >   clock_gettime03.c:121: TINFO: Testing variant: vDSO or syscall with l=
-ibc spec
-> >   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct 1000=
-0ms
-> >   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct 0ms
-> >   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct 10000=
-ms
-> >   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0ms
-> >   clock_gettime03.c:76: TPASS: Offset (CLOCK_MONOTONIC) is correct -100=
-00ms
-> >   clock_gettime03.c:86: TPASS: Offset (CLOCK_MONOTONIC) is correct 0ms
-> >   clock_gettime03.c:76: TPASS: Offset (CLOCK_BOOTTIME) is correct -1000=
-0ms
-> >   clock_gettime03.c:86: TPASS: Offset (CLOCK_BOOTTIME) is correct 0ms
-> >   tst_test.c:438: TBROK: Child (233649) killed by signal SIGSEGV
-> >
-> > or with:
-> > --------------------- 8< ----------------------
-> > #define _GNU_SOURCE
-> > #include <sched.h>
-> > #include <time.h>
-> > #include <unistd.h>                                                    =
-                                                                           =
-                                                                           =
-                #include <sys/wait.h>
-> >
-> > int main(void)
-> > {
-> >         struct timespec tp;
-> >         pid_t child;
-> >         int status;
-> >
-> >         unshare(CLONE_NEWTIME);
-> >
-> >         child =3D fork();
-> >         if (child =3D=3D 0) {
-> >                 clock_gettime(CLOCK_MONOTONIC_RAW, &tp);
-> >         }
-> >
-> >         wait(&status);
-> >         return status;
-> > }
-> >
-> > # ./a.out ; echo $?
-> > 139
-> > --------------------- >8 ----------------------
-> >
-> > RPMs and configs can be found at Fedora koji, latest build is at [2] (l=
-ook for kernel-64k).
->
-> Hi Jan,
->
-> Thanks for the great error report.
->
-> Can you try the following change (on top of v6.15-rc1, should also work w=
-ith current master)?
->
-> diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-> index 93ef801a97ef..867ce53cca94 100644
-> --- a/lib/vdso/gettimeofday.c
-> +++ b/lib/vdso/gettimeofday.c
-> @@ -85,14 +85,18 @@ static __always_inline
->  int do_hres_timens(const struct vdso_time_data *vdns, const struct vdso_=
-clock *vcns,
->                    clockid_t clk, struct __kernel_timespec *ts)
->  {
-> -       const struct vdso_time_data *vd =3D __arch_get_vdso_u_timens_data=
-(vdns);
->         const struct timens_offset *offs =3D &vcns->offset[clk];
-> -       const struct vdso_clock *vc =3D vd->clock_data;
-> +       const struct vdso_time_data *vd;
-> +       const struct vdso_clock *vc;
->         const struct vdso_timestamp *vdso_ts;
->         u64 cycles, ns;
->         u32 seq;
->         s64 sec;
->
-> +       vd =3D vdns - (clk =3D=3D CLOCK_MONOTONIC_RAW ? CS_RAW : CS_HRES_=
-COARSE);
-> +       vd =3D __arch_get_vdso_u_timens_data(vd);
-> +       vc =3D vd->clock_data;
-> +
->         if (clk !=3D CLOCK_MONOTONIC_RAW)
->                 vc =3D &vc[CS_HRES_COARSE];
->         else
->
->
-> I'll do some proper testing tomorrow.
+When discussing some userfaultfd issues with Andrea, Andrea pointed out an
+ABI issue with userfaultfd that existed for years.  Luckily the issue
+should only be a very corner case one, and the fix (even if changing the
+kernel ABI) should only be in the good way, IOW there should have no risk
+breaking any userapp but only fixing.
 
-That does seem to work for the 2 reproducers I have.
-But why is this change needed? Isn't 'vdns' here equal to 'vdso_u_time_data=
-'?
+This issue also should not matter if the userapp didn't enable any of the
+UFFD_FEATURE_EVENT_* feature.
 
->
->
-> Thomas
->
-> > [1] https://github.com/linux-test-project/ltp/blob/master/testcases/ker=
-nel/syscalls/clock_gettime/clock_gettime03.c
-> > [2] https://koji.fedoraproject.org/koji/buildinfo?buildID=3D2704401
->
+The first patch contains more information on the issue and the fix.  The
+2nd patch is a test case I added which would fail on old kernels (including
+current latest branches) but will start working after patch 1 applied.
+
+Thanks,
+
+Peter Xu (2):
+  mm/userfaultfd: Fix uninitialized output field for -EAGAIN race
+  mm/selftests: Add a test to verify mmap_changing race with -EAGAIN
+
+ fs/userfaultfd.c                             |  28 ++-
+ tools/testing/selftests/mm/uffd-unit-tests.c | 203 +++++++++++++++++++
+ 2 files changed, 225 insertions(+), 6 deletions(-)
+
+-- 
+2.48.1
 
