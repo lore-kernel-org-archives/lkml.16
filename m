@@ -1,219 +1,188 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFC427A926;
-	Thu, 24 Apr 2025 16:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7148522127E
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:07:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745510789; cv=none; b=R+7vNNtdIiaRVIVdWGmfn4oYfenHzO4hPgZT5NENgUNb6as3FxrWNHnjer5afHLtXFQqHfmxt+YbURB0ZEWNS9RgG0jV/bQ0mnklNdBDO9LEV6TPGuuYWNlfqOW3vHdtnBaionIcLmljYHPKJ5ber6m5pQUQSPqxx/L1uWn77J8=
+	t=1745510853; cv=none; b=Hu2rlN/ZZ0bp56vgEgxuRW7lky2FmXouFQoHtt8W8FweIh46T59VsS6H6mBVRQnS6rtjgXuS4wvhhGzUH/Z83lZJuRAIsrBJ80ukIRW1AxRl17XGHggq7SOnvy102rGTIcRzG/A2fpZPkwYTQ4oQkYsR2PMbO6wOWwx6DGI8aCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745510789; c=relaxed/simple;
-	bh=axC1Drsdf6J/ulltERHu0PyDLxHJYOxdK7BsvDX195A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u2YYXUgFEScxgUENCIhBGvhxZP6iTKUjopsyX+db8QOs1jWMfgXb7Ccm+zVJerYaNNHySvRTkXFMqiaANt2Gzw88Go9ClvQ/YwPovHQ4TSkClY2AXprYcfmPN0Hzo9b2SzhX8upYS0GrGqruq/IHhb5aU8+qHS+ib+HT4JnhV0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HDZwJHF/; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745510853; c=relaxed/simple;
+	bh=0Px7jvGhuJRiflMflGOKgJJn7q3qCKBYZy5iMa70b04=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Li9U4lcIcF8saMArHfavhizzCLsvMYKAvCnCtNQaAChJlaUaxRssBpUAetYHYNsPoLRsDKuZz+ntY6LuH/BQblednluxySTT1oHKdLQKH+DfYSHVjeFzUBqU0TfwfENHsGYr7XX8q2kyAG0mspZnvU6xFG8rIfsz35iKHvayKlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dZPqWYlK; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HDZwJHF/"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7398d65476eso1021657b3a.1;
-        Thu, 24 Apr 2025 09:06:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dZPqWYlK"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-227a8cdd241so16580885ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:07:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745510787; x=1746115587; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iOia9kBWQgn3uL8bpE/5viJ+HAfruuVuzNZxkiZ9nvY=;
-        b=HDZwJHF/mtetSsxChQ3i5lUaC5XfXatVx7vUpTjELwvM+wn6B5aqx06WSQNlp8bt4t
-         +ysxftBkJIlzHUWWyf0F703PJ6M++L5gNCHCQAWUYsPpmmGsDeV0JnIEBKBSDbs7mfGs
-         a6xh65rSF2UlthecoFHrK1McwxO5Pz5dHyO5Zw5hnrPFZ8RY2jFoGsgJxJJ+a5gSH/4C
-         tyYGUMYiAVdYcTeWy1NFallcG1j6kPJkGaQtY+RAJsVoWFxS3QClsrb69yS01rtfOEId
-         2Cz4aoyYKPin+uqNFxTitEZEop5TMRlux7PNflcBd65hccXjsnp7sJZyJLYWtQSsXSEX
-         1GcA==
+        d=linaro.org; s=google; t=1745510851; x=1746115651; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ztM6ZhwbBzqofjKNReosW9oAapXnNeASiHQKoNm3Vc=;
+        b=dZPqWYlKWVPgLCUMHvDxknlfp3vYBqrqa4qtrSEbn2Ehx1qWrqHMh8q8FeDByfZrZy
+         duMK3/3IF5pjV/18OVb2IunKvvFMdfKG7qGOfR4xynUB3MFZL7odf8M4hIy+kJ91MPxl
+         S320QPIZiC0CYHvL1iMdMj5Q2Z6dIsgEwPQa4mep+Ul8QiomgxCwER4TI57hmwWSEQqp
+         zYq4c6fGEAx3KlZsDmGfxS0R3qSPhR96iQ0+AZhlPZODWOIPIDnpci3h56eG0chN3wyI
+         0d5pOihxT6ezzMDewvRyqDbL0qxuL9Rk6Wy4RwKoe8KMKkJ4YsalNDN0OFdl9afBy+TP
+         XgQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745510787; x=1746115587;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iOia9kBWQgn3uL8bpE/5viJ+HAfruuVuzNZxkiZ9nvY=;
-        b=lRko7eEXJNWpXzgVmhQERyMoEdsSfKAI9MUjWn95B/JtjeSTMLAagrO+a8HrFDBD8O
-         4GhnkNa2JhbJC4rkZcZgw9Kqaun9EoGr1dMI6UYE9BF5T4YOEMl/V3B3fBcA7Z9Ix0Qa
-         IBR4JdDzzv02ww6Ag8EF/EqwTUWc4kaWJt81JuAdlXScIXTacI9hu0AdpTrZuOwqdnMT
-         MHniKxXjJbUCA2OpAwzmhlvij3ESJiH/jMY+imIXRSIGoqjx6Tdbp/8OgvUrxsKQ9IeO
-         YrN5HxkDFE991fsb337XRspOAEPrY7kRS0wd1m2RUi1trNmlgr5Ym/mK102bMEBpJqGz
-         zo2g==
-X-Forwarded-Encrypted: i=1; AJvYcCX8YP9EigIpMR41jpa5F1pjta/8s6oVOZeHbsrngo/fgAdMbxETizScNpZnU5ZiZrDOwTwK/0mjlgqlV+NI@vger.kernel.org, AJvYcCXgZHpfcNwD3oL9xJS2AQn+l+Zl075AOlw7+O0FqFgv/gtoCrfom85kKsUt4UGWIx+J7ukWc4ymBE62ZZFp/F15xR+t@vger.kernel.org, AJvYcCXyg10x4kTOtcCvafrkboOkd9aNQcshsCaBmqN43uKBGCMLYRt/QsxGaI/R9hrJ5W8HyvI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx28AOalVUPCPFHOd/gUuW+LY/URmSQVgGD5zpnL/oUwkbesvwS
-	L3X6GoTNbO9por20Lis5hX/SJTlhbA5XNzDRmKgp2DuPHFHClSYLZs3nyyuqU/h3DKUxF2O8nho
-	UszJBL84czAfUltwD7JUZ+vmTVIM=
-X-Gm-Gg: ASbGnctv6fvXAhOUSPqa5DpZUNnNPgA/lIf4J9NR1J3OTcmhZ6D0Q9FADYT4FtzPWdy
-	0vBYHT7f0BC3DDzhVoT6AitFfzO+V+9/eGP1PIE87RF377RFeaoOc4I43p+FI0aEzn+ZUYQxBQI
-	o27H8OLYYRr+ipDb+ovn8zK98JikAYyD9jyH4bNw==
-X-Google-Smtp-Source: AGHT+IHGR37EkkIQxFfsBPhwH7utQC1kdcjQdTTcQP1nKCAJZROgLM1/WKVjGNjYPqtRd2aD6oXvNQQkZPEV3ifFvy8=
-X-Received: by 2002:a05:6a00:6f26:b0:736:bced:f4cf with SMTP id
- d2e1a72fcca58-73e2661a103mr4376993b3a.0.1745510786669; Thu, 24 Apr 2025
- 09:06:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745510851; x=1746115651;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3ztM6ZhwbBzqofjKNReosW9oAapXnNeASiHQKoNm3Vc=;
+        b=npHvgqzrDsge4VO+L3PXhi1LNnutHV+xCVbL3VqlKVAL6pYVdCpdPMY7tnvB0MEZqi
+         tSgcQyYKhLwb8kq4i3io4pkCtsyHFu68KBA3x7r1nCBrGrBWfgN2BrM6d/upzoMA0cVm
+         DbIs3XlyJjAoo+DaYj5nYuT6QHZBpsz5QjF/3NGISGNFU2DrMZ0ILO4VTVuLXJLy0fsn
+         1XyO+4EdvSlTSR+c1Z/bSwjed9XWdXxF58HTePy94oTCFzTPrCqQZgmSP9dRultP8LSU
+         4BPQph7N8AT/14n7WuKwTvyYrlHJHGnAHel18Y4wS0r+xP3JIXB6zMbUKzt1WpSwwGXT
+         hHBA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2LG/rJ2QhnYDld6kxEqnXxXBUlWJSSHIuwGD54CzIHS2NOyyjy6IvgjA/EZbsRtDXrx2kKUoYzf2mAGc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlkaSSdLPaFMDubrETDV/lSxPLmgRyr2OAsixPbBAOtAcZbm0v
+	04XunEe9DkVn8hhJ3GuCattakAZwh6s6SlDW+A2A3Hub9K4rotUc/5n5IMIaoP2RY34sQ2Zm3n0
+	=
+X-Gm-Gg: ASbGnctmtoTEWgXuk/9domTghz+nR2Zrw7VOlwUJctuV6tfqCkK1pPykpw07px7GBY9
+	/eVSIWjw26ESix2SBwGWrATAXnwlyi0vdiytix+J0hjURLEdM2IDbJY1bBKgLcWJswEDn5/qAmD
+	b9+Q/MffpyqJe9IaLw7cLvw7xt2zlnfYoBrpcepoJm25oUJP1aBsIpx8a2LYtYzLb3fQhIdTavR
+	KzIYBOmxgIsnBkU69/5g5oG0Zg6ya8X+xAqsi7UBQxaHDdWAXnDJvDnDuGYedx5rCcnl8vNmfmv
+	VEE9r9al8PcQ4dQD4kGtpjZlsWWv+NY+69xLWi57Ok6lOeFwhQrtRbE=
+X-Google-Smtp-Source: AGHT+IEBGkJA01XOR5juVSwEwgYSL2iayGzzvTy9VnE5/0UWjwW9zVp7Des8tZPmxJhpSTd3lAmX8g==
+X-Received: by 2002:a17:902:e54f:b0:21f:1bd:efd4 with SMTP id d9443c01a7336-22db3be36b8mr49102425ad.19.1745510850701;
+        Thu, 24 Apr 2025 09:07:30 -0700 (PDT)
+Received: from [127.0.1.1] ([120.60.77.160])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5221656sm15262275ad.252.2025.04.24.09.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 09:07:30 -0700 (PDT)
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/4] PCI: Add PTM debugfs support
+Date: Thu, 24 Apr 2025 21:37:15 +0530
+Message-Id: <20250424-pcie-ptm-v3-0-c929ebd2821c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421214423.393661-1-jolsa@kernel.org> <20250421214423.393661-11-jolsa@kernel.org>
- <CAEf4BzbJJuKY+eTaDvwhgmp9jBqYXoLWinBY8vK0oYh0irC07Q@mail.gmail.com> <aAozSky7pIIGIB4s@krava>
-In-Reply-To: <aAozSky7pIIGIB4s@krava>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 24 Apr 2025 09:06:14 -0700
-X-Gm-Features: ATxdqUF_G37AKhAjZlbvpmyy_G5E0q7k3jFMDWPUt73VVWEZQQyUXYRq3uUihX0
-Message-ID: <CAEf4Bzak2rmSXQyTynRu3XPBemqbEmaxdUAFOQ-F5XRfZ7yOLg@mail.gmail.com>
-Subject: Re: [PATCH perf/core 10/22] uprobes/x86: Add support to optimize uprobes
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, 
-	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Hao Luo <haoluo@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Alan Maguire <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, 
-	=?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALNhCmgC/23MQQ7CIBCF4as0sxZDgFp11XuYLoAO7SQKBBqia
+ bi72LXL/+Xl2yFjIsxw73ZIWChT8C3kqQO7ar8go7k1CC56LoVi0RKyuL0YDr25GeGcdQbaPSZ
+ 09D6ox9R6pbyF9DnkIn7rH6QIxpkd5quVF6WM0uOTvE7hHNICU631C8KwCH+hAAAA
+X-Change-ID: 20250324-pcie-ptm-e75b9b2ffcfb
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+ Jingoo Han <jingoohan1@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3677;
+ i=manivannan.sadhasivam@linaro.org; h=from:subject:message-id;
+ bh=0Px7jvGhuJRiflMflGOKgJJn7q3qCKBYZy5iMa70b04=;
+ b=owEBbQGS/pANAwAKAVWfEeb+kc71AcsmYgBoCmG+CKMLlQHtFHJTVixNZ7ukdMa0FsFzKc+qh
+ 4qGb57vvxGJATMEAAEKAB0WIQRnpUMqgUjL2KRYJ5dVnxHm/pHO9QUCaAphvgAKCRBVnxHm/pHO
+ 9Q/+B/0bm65cttTnyoDield/0CiSmBJ764HbXm0MKPCvBvVRSFVsN1BG3LvQrr8MmvBiLks7yIk
+ vlb00IomkkH63L5oLmeHC4XroaRk4V13luz7xBaUJ1ouMI1IgN2wk5tdgRhPS2SWsKukpM5I2vZ
+ I/9HPtUPMjpK6ahCJGc2pWkSdkBrJnPZF+uC8hUQhGhPE4sc8GvXBddv1sTYvONR/a4KT6XDIwX
+ U/NlxK2n8Xl2UHWZDIPMAYu2EmNBvGBYMX5vXQ4+jVlSN0kjUnVhqnzMMKeqBPNqH5Nj4lgpIbq
+ VegBAQwXMxpOHOEqdBEDJmRmTUnXwJy5m3IqikhugMNIvAsi
+X-Developer-Key: i=manivannan.sadhasivam@linaro.org; a=openpgp;
+ fpr=C668AEC3C3188E4C611465E7488550E901166008
 
-On Thu, Apr 24, 2025 at 5:49=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Tue, Apr 22, 2025 at 05:04:03PM -0700, Andrii Nakryiko wrote:
->
-> SNIP
->
-> > >  arch/x86/include/asm/uprobes.h |   7 +
-> > >  arch/x86/kernel/uprobes.c      | 281 +++++++++++++++++++++++++++++++=
-+-
-> > >  include/linux/uprobes.h        |   6 +-
-> > >  kernel/events/uprobes.c        |  15 +-
-> > >  4 files changed, 301 insertions(+), 8 deletions(-)
-> > >
-> >
-> > just minor nits, LGTM
-> >
-> > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> >
-> > > +int set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma=
-,
-> > > +            unsigned long vaddr)
-> > > +{
-> > > +       if (should_optimize(auprobe)) {
-> > > +               bool optimized =3D false;
-> > > +               int err;
-> > > +
-> > > +               /*
-> > > +                * We could race with another thread that already opt=
-imized the probe,
-> > > +                * so let's not overwrite it with int3 again in this =
-case.
-> > > +                */
-> > > +               err =3D is_optimized(vma->vm_mm, vaddr, &optimized);
-> > > +               if (err || optimized)
-> > > +                       return err;
-> >
-> > IMO, this is a bit too clever, I'd go with plain
-> >
-> > if (err)
-> >     return err;
-> > if (optimized)
-> >     return 0; /* we are done */
-> >
->
-> ok
->
-> > (and mirror set_orig_insn() structure, consistently)
->
-> set_orig_insn does that already, right?
->
+Hi,
 
-right, and that was my point
+This series adds debugfs support to expose the PTM context available in the
+capable PCIe controllers. Support for enabling PTM in the requester/responder is
+already available in drivers/pci/pcie.c and this series expands that file to
+add debugfs support for the PTM context info.
 
-> >
-> >
-> > > +       }
-> > > +       return uprobe_write_opcode(vma, vaddr, UPROBE_SWBP_INSN, true=
-);
-> > > +}
-> > > +
-> > > +int set_orig_insn(struct arch_uprobe *auprobe, struct vm_area_struct=
- *vma,
-> > > +                 unsigned long vaddr)
-> > > +{
-> > > +       if (test_bit(ARCH_UPROBE_FLAG_CAN_OPTIMIZE, &auprobe->flags))=
- {
-> > > +               struct mm_struct *mm =3D vma->vm_mm;
-> > > +               bool optimized =3D false;
-> > > +               int err;
-> > > +
-> > > +               err =3D is_optimized(mm, vaddr, &optimized);
-> > > +               if (err)
-> > > +                       return err;
-> > > +               if (optimized)
-> > > +                       WARN_ON_ONCE(swbp_unoptimize(auprobe, vma, va=
-ddr));
-> > > +       }
-> > > +       return uprobe_write_opcode(vma, vaddr, *(uprobe_opcode_t *)&a=
-uprobe->insn, false);
-> > > +}
-> > > +
-> > > +static int __arch_uprobe_optimize(struct mm_struct *mm, unsigned lon=
-g vaddr)
-> > > +{
-> > > +       struct uprobe_trampoline *tramp;
-> > > +       struct vm_area_struct *vma;
-> > > +       int err =3D 0;
-> > > +
-> > > +       vma =3D find_vma(mm, vaddr);
-> > > +       if (!vma)
-> > > +               return -1;
-> >
-> > this is EPERM, will be confusing to debug... why not -EINVAL?
-> >
-> > > +       tramp =3D uprobe_trampoline_get(vaddr);
-> > > +       if (!tramp)
-> > > +               return -1;
-> >
-> > ditto
->
-> so the error value is not exposed to user space in this case,
-> we try to optimize in the first hit with:
->
->         handle_swbp()
->         {
->                 arch_uprobe_optimize()
->                 {
->
->                         if (__arch_uprobe_optimize(mm, vaddr))
->                                 set_bit(ARCH_UPROBE_FLAG_OPTIMIZE_FAIL, &=
-auprobe->flags);
->
->                 }
->         }
->
-> and set ARCH_UPROBE_FLAG_OPTIMIZE_FAIL flags bit in case of error,
-> plus there's WARN for swbp_optimize which should pass in case we
-> get that far
+The controller drivers are expected to call pcie_ptm_create_debugfs() with
+'pcie_ptm_ops' callbacks populated to create the debugfs entries and call
+pcie_ptm_destroy_debugfs() to destroy them.
 
-yeah, I know, but I don't think we should deviate from kernel-wide
--Exxx convention for returning errors from functions just because this
-error doesn't make it all the way to user space
+Patch 1 adds the necessary code in the drivers/pci/pcie.c to expose PTM
+context over debugfs and patch 2 adds PTM support in the DWC drivers (host and
+endpoint). Finally, patch 3 masks the PTM_UPDATING interrupt in the pcie-qcom-ep
+driver to avoid processing the interrupt for each PTM context update.
 
->
-> thanks,
-> jirka
->
-> >
-> > > +       err =3D swbp_optimize(vma, vaddr, tramp->vaddr);
-> > > +       if (WARN_ON_ONCE(err))
-> > > +               uprobe_trampoline_put(tramp);
-> > > +       return err;
-> > > +}
-> > > +
-> >
-> > [...]
+Testing
+=======
+
+This series is tested on Qcom SA8775p Ride Mx platform where one SA8775p acts as
+RC and another as EP with following instructions:
+
+RC
+--
+
+$ echo 1 > /sys/kernel/debug/pcie_ptm_1c10000.pcie/context_valid
+
+EP
+--
+
+$ echo auto > /sys/kernel/debug/pcie_ptm_1c10000.pcie-ep/context_update
+
+$ cat /sys/kernel/debug/pcie_ptm_1c10000.pcie-ep/local_clock
+159612570424
+
+$ cat /sys/kernel/debug/pcie_ptm_1c10000.pcie-ep/master_clock
+159609466232
+
+$ cat /sys/kernel/debug/pcie_ptm_1c10000.pcie-ep/t1
+159609466112
+
+$ cat /sys/kernel/debug/pcie_ptm_1c10000.pcie-ep/t4
+159609466518
+
+NOTE: To make use of the PTM feature, the host PCIe client driver has to call
+'pci_enable_ptm()' API during probe. This series was tested with enabling PTM in
+the MHI host driver with a local change (which will be upstreamed later).
+Technically, PTM could also be enabled in the pci_endpoint_test driver, but I
+didn't add the change as I'm not sure we'd want to add random PCIe features in
+the test driver without corresponding code in pci-epf-test driver.
+
+Changes in v3:
+- Switched to debugfs interface based on comments from Bjorn
+- Added locking for context read/writes
+- Rebased on top of v6.15-rc1
+- Link to v2: https://lore.kernel.org/r/20250324-pcie-ptm-v2-0-c7d8c3644b4a@linaro.org
+
+Changes in v2:
+
+* Dropped the VSEC changes that got merged
+* Moved the PTM sysfs code from drivers/pci/controller/dwc to
+  drivers/pci/pcie/ptm.c to make it generic so that other controller drivers could
+  also benefit from it.
+* Rebased on top of pci/controller/dwc
+
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+Manivannan Sadhasivam (4):
+      PCI: Add debugfs support for exposing PTM context
+      PCI: dwc: Pass DWC PCIe mode to dwc_pcie_debugfs_init()
+      PCI: dwc: Add debugfs support for PTM context
+      PCI: qcom-ep: Mask PTM_UPDATING interrupt
+
+ Documentation/ABI/testing/debugfs-pcie-ptm         |  70 +++++
+ MAINTAINERS                                        |   1 +
+ .../pci/controller/dwc/pcie-designware-debugfs.c   | 252 ++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-designware-ep.c    |   2 +-
+ drivers/pci/controller/dwc/pcie-designware-host.c  |   2 +-
+ drivers/pci/controller/dwc/pcie-designware.c       |   6 +
+ drivers/pci/controller/dwc/pcie-designware.h       |  24 +-
+ drivers/pci/controller/dwc/pcie-qcom-ep.c          |   8 +
+ drivers/pci/pcie/ptm.c                             | 300 +++++++++++++++++++++
+ include/linux/pci.h                                |  45 ++++
+ include/linux/pcie-dwc.h                           |   8 +
+ 11 files changed, 713 insertions(+), 5 deletions(-)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250324-pcie-ptm-e75b9b2ffcfb
+
+Best regards,
+-- 
+Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
