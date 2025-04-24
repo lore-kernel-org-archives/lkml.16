@@ -1,83 +1,63 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-op-o12.zoho.com (sender4-op-o12.zoho.com [136.143.188.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC181E1E19
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745475754; cv=none; b=m5Pyq8+I7trjRx/+DE+sWaBY1hCLhIZmSuf9eu+db+Ee9Sxw5qd/t2Ux0ffg+wS/FHMFCCLUiMgIWK+36gZzj/iAqwxEJ8g4EzycC7UgztCud/JvHHyIzBrRIUvo6/VCHfAPsrekllIy5pWhDi8JQ6Rf8HJ0b8NiH+xZ/ua5kKo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745475754; c=relaxed/simple;
-	bh=gzAb8Vev7F0m4l48I407MYxa8qXR/pteEzI03GTE0HY=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58409207DFE;
+	Thu, 24 Apr 2025 06:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745475756; cv=pass; b=AvaGCkM411bL6anUYAkA/QGSZ6gEmvDLw2kYzLc4Wfk+vxmTAUY6GfnGTWLcoaOljiFpsxkarzLCFJZ6xaNHZuWa2ssypdATPJ0L9T4BtJcIifQsvzd9KgSAGOe0RkcGpGFCRYbqUkFlO8k/XVB3YUEwBcnDsMXTDxlZlygipNI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745475756; c=relaxed/simple;
+	bh=Hsya3hwoUK8Ds+oFmJkETUofzArkqVuMq/FiU0wxbT0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aGp5cQgyTI88RHzDFLBtYXZwvDoL8pBltwhDB4h5b4RqoEM/Lu7M7xqCwBwjc6/9qCxP92rNmOYOIOBApL/ALjfqUOQEpzzmdqm2SwtO5g0rcSXr7D+/oIDrwxTFgfg3L5HtfAy3xxDKfBXFY9gxxXRJxCV4f/o4m46mzcLJgkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com; spf=pass smtp.mailfrom=amarulasolutions.com; dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b=qdnk3ZNh; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amarulasolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amarulasolutions.com
+	 MIME-Version; b=MvhrRn4PSs/RA9KSZLGC1NU/9HID8GBtpUUxVRrr5ypQ2DZeQzPgtVTfkYvqwhSG2JP/GiW6epaWhS12N8CUul50i5A8iuPa3MP1TaTk4LHgXZh4qXumaCq9HugaKV/JmfyfBpa0vbSBqFpku2SmLl4cs1OqOBB/9oEa0gnspdA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me; spf=pass smtp.mailfrom=icenowy.me; dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b=aTmw7cA0; arc=pass smtp.client-ip=136.143.188.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=icenowy.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icenowy.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="qdnk3ZNh"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so5574795e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google; t=1745475751; x=1746080551; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FS59gZd32BjVBMnl0y8BuCd7aMfa22x1ZHu9pei4qQQ=;
-        b=qdnk3ZNhfHNDmHfwW83Fo64a5QPPraalVN88oJFk6WunAe1dz0Yu8Rw2f0q6GcN63x
-         WEbubBAMvoaDIeCZMlJZqEtneUj+8zwqo6A+dAsD456uvl/2vMjZH1yhWPxG53RSTnIs
-         TQX42zafA9/xSf5NSm2fscfJqAq6CSIr4Zhc8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745475751; x=1746080551;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FS59gZd32BjVBMnl0y8BuCd7aMfa22x1ZHu9pei4qQQ=;
-        b=EpRu/MWjv99C6+uQRHSrzsisKAcy4wvqr1sVYpCEm8VqVhqjWzxLisIcDibCiWh2Gx
-         wqCY4ogjF1vbRvADOhGIVqK3ujcfXPOKNWDNcXs8kZ2li0mt5FZnCyQLws1cbd+RJWvq
-         9nym/T/pGFCvFUBjRgPo2w4D/P69p5jr3jII7w0rrvn1FbKQ2tSX7yojWS+jept0OeDv
-         iWGaITvibnSDdOnI88z1REEl2yZZvrRN7ol5VTs4JjC/boeUIunaTrZ8jV7TJRyckT9d
-         syiv+80TqroMQBfxbnPawUbgVScAXCa6qejMfdomRk95wCf6QWmvMUNGYCuLFmRcevDK
-         3RdQ==
-X-Gm-Message-State: AOJu0Yx79XeYu6PSpNWqGfhR7HiUDnHbqgwVZgiEvxZOB4WMNrI6naMR
-	NFH2oof/Syt0at+dfPbnnr0bK9Ix1VphlFm8P9rv6uN0rLI0YpLiL/XWDTdXBc640EJsCgjQS/d
-	H
-X-Gm-Gg: ASbGncuvBTd/CUfBYyDuqn1j8ooB/ZzKlke6OJWPQiI8MVZOMTBju76HWIt7IHfm7lb
-	KPsn+LMcegMk3+nsZPE3aRjh8rFzbUZ5D5zCrjeJuYeBT/geqOSVqhefjaWocc0lAEiYirLgBLZ
-	xnacVGQc3aG135MBZ3QzdJnGmUKW2wzhesWXr1d+USnolsQxGNaR17MQk1F6afWcF0yY4hhH1Uq
-	LNt4HBVYQ+Plot0LAU3HQa9HdDi41UuZgTrFxdMbT/2cqUJ1TTEgZu3wVtOTeA/3aNndX74xfCq
-	d8EC1Tf+bccgfTh+Az1HRgqJiI28km42uPiTNJhyJZOgYUt4BUbzhIoYFKQCTsp+0AKXMqbcxiD
-	OFIun
-X-Google-Smtp-Source: AGHT+IERMp+XWsY4F0x3mSBeRwTvbYJcZ3M/RXSGGiprl/mRX85K/4aqN6WtoEv+WLusrd9qS8Cjww==
-X-Received: by 2002:a05:600c:3553:b0:43c:f63c:babb with SMTP id 5b1f17b1804b1-4409bcfc11fmr8017185e9.1.1745475750966;
-        Wed, 23 Apr 2025 23:22:30 -0700 (PDT)
-Received: from dario-ThinkPad-T14s-Gen-2i.. ([2.196.40.65])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2bf8dbsm7243435e9.35.2025.04.23.23.22.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 23:22:30 -0700 (PDT)
-From: Dario Binacchi <dario.binacchi@amarulasolutions.com>
-To: linux-kernel@vger.kernel.org
-Cc: Peng Fan <peng.fan@nxp.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	linux-amarula@amarulasolutions.com,
-	Abel Vesa <abelvesa@kernel.org>,
-	Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Fabio Estevam <festevam@gmail.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	dkim=pass (2048-bit key) header.d=icenowy.me header.i=uwu@icenowy.me header.b="aTmw7cA0"
+ARC-Seal: i=1; a=rsa-sha256; t=1745475729; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kDArssAjro99bi32ehmZfpQjev/z2RBPR3f4PwgXnYPpQjWPxuGrhX2gTQhwX6DeyIm9kTYxhi/klXB+pi+hwHPBx17ODPMIw2JS3r/E7K+0LtlLu9aknopkwB8NM2b3Fs1Sdr9sJFOlq9XbgsFP/+w9pC7SYN1eNwg6/zDSF2A=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745475729; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=xVNOvXEvdW6leQE28c3jHe0aUAqH+GUjgXBsNd/0dtY=; 
+	b=Xbqexsx+Y827fYArushI327qEhT+N+Q32WMJPDdq94wAAWWWujOiHtONtYGU1LAP49Lp00f08EpXOVPkZwAnRrBaY+M2iNNlg+wtf1KJEm90dI+wdMo0Em49jYrE7Fx2c7FPOhFxJsanfBRvai6C+f7N+NgD0hZtSSmD3EeN7HU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=icenowy.me;
+	spf=pass  smtp.mailfrom=uwu@icenowy.me;
+	dmarc=pass header.from=<uwu@icenowy.me>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745475729;
+	s=zmail2; d=icenowy.me; i=uwu@icenowy.me;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=xVNOvXEvdW6leQE28c3jHe0aUAqH+GUjgXBsNd/0dtY=;
+	b=aTmw7cA0A0R7yGwvidNysZ7lVbcK8j3iS0tYCpm6FjiTxXMnaR9ptnsGRb1kzUMC
+	V3JtyIIZ1XuzwEuN7Gz0sHdJYzzGQb5T65nideQk+BM00P1mp292UrO9bVXvF9cwB5y
+	Ihuc7dxMXSGibLBQJZpmBEV/2bXLS487kXHyYbj9P03roC7UYmkuxzU8Ji3dJsz9MCl
+	uRogeAoqAEEvn6mBfxWIJTIgH3wm3VpcZakcs6QmT6gvhqVAlgalOYQy+EVWwCTELyI
+	HhCyx1COuaqz6odjBcY9ScWA0CZEMssyVF1ylHqaI/Jf5TYtrqwKSgezprny/F0I7Qh
+	bdIfjBFarA==
+Received: by mx.zohomail.com with SMTPS id 1745475727228758.2441586398901;
+	Wed, 23 Apr 2025 23:22:07 -0700 (PDT)
+From: Icenowy Zheng <uwu@icenowy.me>
+To: Emil Renner Berthing <kernel@esmil.dk>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
 	Rob Herring <robh@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
 	devicetree@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v12 17/19] arm64: dts: imx8mm: add PLLs to clock controller module (CCM)
-Date: Thu, 24 Apr 2025 08:21:47 +0200
-Message-ID: <20250424062154.2999219-18-dario.binacchi@amarulasolutions.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
-References: <20250424062154.2999219-1-dario.binacchi@amarulasolutions.com>
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Icenowy Zheng <uwu@icenowy.me>
+Subject: [PATCH v2 3/3] riscv: dts: starfive: jh7110-pine64-star64: force no USB overcurrent
+Date: Thu, 24 Apr 2025 14:21:54 +0800
+Message-ID: <20250424062154.655128-1-uwu@icenowy.me>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250424062017.652969-1-uwu@icenowy.me>
+References: <20250424062017.652969-1-uwu@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,43 +65,42 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Add the PLLs generated by anatop to the clock list of the Clock
-Controller Module (CCM) node.
+The Star64 board has no GPIOs to indicate USB overcurrent, however the
+USB controller would stop to work if the overcurrent_n signal it gets is
+low (which means overcurrent situations happening because of the _n).
 
-Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>
+Use the pin controller to force the overcurrent_n signal to be high in
+order to ensure stable behavior of the USB controller.
 
+Signed-off-by: Icenowy Zheng <uwu@icenowy.me>
 ---
+This patch depends on [1] for including the necessary header file.
 
-(no changes since v4)
+[1] https://lore.kernel.org/linux-riscv/20250424060605.638678-1-uwu@icenowy.me/T/#u
 
-Changes in v4:
-- New
+ arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- arch/arm64/boot/dts/freescale/imx8mm.dtsi | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-index 597041a05073..79f4c1ae7d8b 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-@@ -642,9 +642,14 @@ clk: clock-controller@30380000 {
- 					     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 				#clock-cells = <1>;
- 				clocks = <&osc_32k>, <&osc_24m>, <&clk_ext1>, <&clk_ext2>,
--					 <&clk_ext3>, <&clk_ext4>;
-+					 <&clk_ext3>, <&clk_ext4>,
-+					 <&anatop IMX8MM_ANATOP_AUDIO_PLL1>,
-+					 <&anatop IMX8MM_ANATOP_AUDIO_PLL2>,
-+					 <&anatop IMX8MM_ANATOP_DRAM_PLL>,
-+					 <&anatop IMX8MM_ANATOP_VIDEO_PLL>;
- 				clock-names = "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
--					      "clk_ext3", "clk_ext4";
-+					      "clk_ext3", "clk_ext4", "audio_pll1", "audio_pll2",
-+					      "dram_pll", "video_pll";
- 				assigned-clocks = <&clk IMX8MM_CLK_A53_SRC>,
- 						<&clk IMX8MM_CLK_A53_CORE>,
- 						<&clk IMX8MM_CLK_NOC>,
+diff --git a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
+index 31e825be2065a..4fb522d127e21 100644
+--- a/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
++++ b/arch/riscv/boot/dts/starfive/jh7110-pine64-star64.dts
+@@ -91,6 +91,13 @@ GPOEN_ENABLE,
+ 			input-schmitt-disable;
+ 			slew-rate = <0>;
+ 		};
++
++		overcurrent-pins {
++			pinmux = <GPIOMUX(PAD_INTERNAL_HIGH,
++					  GPOUT_LOW,
++					  GPOEN_DISABLE,
++					  GPI_SYS_USB_OVERCURRENT)>;
++		};
+ 	};
+ };
+ 
 -- 
-2.43.0
+2.49.0
 
