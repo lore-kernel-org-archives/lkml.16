@@ -1,156 +1,225 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D87122F775
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:11:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2779D22B8D2
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745496675; cv=none; b=EQ0znhbUY4Stf8ZhIu7nCN3VrHwP5fHBkgE3QJWOWonjJDBH5OK8PkTdoKhoB597VjJFr1Rph8MrPYEHzE6H0xPuwkArtIXVob+/YtkCs7XcGM8vJ6XJPvwx48oFpGAIMeljVyCgsmyHL4h2ZMxvSIE5ft6ENrrm5KkbA7ibKyI=
+	t=1745496713; cv=none; b=D7PG2fo3o8NPjDMSlvF7CzmjF9GFBNyvyESa2xpVYesxP9PPLMiAFF1EWf/Ak2Jz82ZOZUK5jwA0ad++tY6oeL9juJm3lUZVYhKPW4f7cIDznQmXfPwYlHZmLS+fqI0++9wkVVmTvW75Z6hyTYLifTcamcdvDNkbugq/jgQVHVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745496675; c=relaxed/simple;
-	bh=bz4+/X497RFI15mRxsIqRhNBIwSZjCmNalMcue3pcXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Em8RwWAJBtDOeUC6Xb+Os4n2w6pr0fW6xZ3WEZh21fFlcjMveP7Qh+Vtp3LFHpNVjVmxH+6EZpavFZ0pZ/+uuxzZ/j7HzZJ11eMH0J0HZQcplwNRpSrbdvccq07qgoC5yKnhi7iTQ6GH97YCdUyokjK9kwAXfAWlwqnHDhj12S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dECc4yBA; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745496713; c=relaxed/simple;
+	bh=K/aNIRvzEVig/olSE8zUcxcdUeVADyIxUVY144kzk7M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ARKBb8u7IfAHgjhlEJOJLYdVXjLIoMYJgEAkGL6HoQe9OY1NUKCVEo5N9y1ddxtEKgLEo+yCGYf2ffXtj7oHAJl5YuWPVoZ8pBA8MlodqTZsBoBy4p3aCazrUbVMPLOoQbikX/TpjCTMG3JI5Ztun8AxeYO2nZPj8Al+KXMAifo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lcsva0cc; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dECc4yBA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745496671;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J+iBi7KEPHVPdl78TuinUFRyNTsFrvN4I3oDOUPKzwc=;
-	b=dECc4yBAK2Q3Ny4QcaGaquISrQBsBZB6BvVlYm5MGNH4M7Ki/RZQ39avYm09k7Y1gGNlkI
-	qAqnLyivqOgqAiDW+ooUlap4M46db4RpRjEt9bQbyAOgZHkij8Jdd8O9sJwH0LInA8PHDr
-	0fC8+3kx+Vtx3W4D5Ip3AbtHxGgujPI=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-586-bIBYUiSaNsCk1AV9ww0WGg-1; Thu, 24 Apr 2025 08:11:09 -0400
-X-MC-Unique: bIBYUiSaNsCk1AV9ww0WGg-1
-X-Mimecast-MFC-AGG-ID: bIBYUiSaNsCk1AV9ww0WGg_1745496668
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-44059976a1fso3526635e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:11:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lcsva0cc"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OC3B0N006841
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:11:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=ysPHr0oxErNRxpL2VqwsL629gPUNXWu017Q
+	QhNrJas4=; b=lcsva0ccwmsI2kGh00uo1KpvRIxUV7pjP2/h0CqO375BO9MOW6A
+	iK/8uGaDZRKpr+xgN89e6xJBafev+fECm9h7CY5bak7qtvYS/Qo09YjKoA4Dua9q
+	lRNUiD7jFbKmm0VIreoDkBnB4UfbV7Q3NwQ6Ubq2TdZcNe/rvvNtWpi1w6IaYIAn
+	w1CIU/AL7uOCeCM0jpcFK+SO0ZLq6IMDhs4oDahnjdPOH+iiR6onzkSELtl8pJ9Y
+	FfcLg9bMlybUOdVLQlgofJefYZbslBov+EGlo7SX0maPr1w47jcjsWu4lpsn5dLf
+	MKP2Dlf2ZfhbeMOFZdgKPzGXbbwxuEIFvAQ==
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh5dgu0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 12:11:50 +0000 (GMT)
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-73c09e99069so956874b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 05:11:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745496668; x=1746101468;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J+iBi7KEPHVPdl78TuinUFRyNTsFrvN4I3oDOUPKzwc=;
-        b=fG+FTtfpX5ubGr55FeIewaVPiWQVl3yNGE7a2H11bwWCySLBVET2TBoO7p5CPnnJ9V
-         bKju6q/2uOpKCn3Z/jH+m/eI9qq1v8QIfE4sfpcFpCpVfb6JT2/AF3Xz7skr5uNCUcxt
-         Bh3jL/A8WKZCDQrHnlE/OZfaHGiHcUf1vKyFQwsBvJy+WtlFpy19W4kyPgV7G7IDxDh6
-         3q1ebQb5WapZZJPuUMghM+K33zK6JDgiIHLd/UAnv5N38NQacj4kptLwx9wj48RzyMPq
-         h30MaZ0IwZaJF/Sj4WdkilQvzc4l+8R5PvfpLRoA0dZDwAOme2A2eCwhvQcsL4J7hEKj
-         ZAWw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+zUdCuNBFp6V1MLm9pEELLngyfRORZ0UJKaYakEMX6MNAw4nIZHu49ojWsyj6/AWIqRbM2SsxOQFZIl0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6cfBQJIfnHCV9wjsGn8T5oQa2LJ3N1nc6xaww5kgdRhOuhUgK
-	uR4rFBjsQRV6lf+fRMRnmhwzGX9CqjTu1mQCRpG/6yjuQ6XHCaECQBGdXR5I7NBZlHqMW7xfohQ
-	/4vVvqAoVzuIQ4UIXU+13bJGdVhG0WZPuEMbFsETh8fRC1+ymWX387O49sqXcqg==
-X-Gm-Gg: ASbGncsxqehHP/w/3Z0LUIE14iSykcY/8fpDDYppxrxSKgoB9IvJryY9La9+EXDbolJ
-	yCG2AemdI5fUEnPaZZvNlCBP1Pq5QcFwVVA/Sj05hYPTZfg5i9a0C8R4DIb7Z3vPGWVbU8CSprW
-	6yojAJEh5lL0IbTP2AMp/7I+JdWGGawi5EoxcRpfHkPxM8zGnJZ9tpRT2NSSe1PKvXHFGognFyJ
-	nlpsifzty+xRUGOSXINAEm/ywCE1uHXR2RsGD8m/bekjvpL/z/HSlx8hEqE2Ux0lqj0cAALIbTm
-	fa9ImA==
-X-Received: by 2002:a05:600c:1395:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-4409bd17dfdmr21734075e9.8.1745496668280;
-        Thu, 24 Apr 2025 05:11:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE9n0roJbpJf5HRR05saKucJsNpfjrLxCLOXtUJbPRGicV0Zxwyv2cOdsaG6FPN2tpgup02FQ==
-X-Received: by 2002:a05:600c:1395:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-4409bd17dfdmr21733875e9.8.1745496667950;
-        Thu, 24 Apr 2025 05:11:07 -0700 (PDT)
-Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2b77f9sm18718025e9.25.2025.04.24.05.11.05
+        d=1e100.net; s=20230601; t=1745496709; x=1746101509;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ysPHr0oxErNRxpL2VqwsL629gPUNXWu017QQhNrJas4=;
+        b=Q4aRIBJXVKxXeug46rXiVWUtHAdi9CUFIXSmdVYavDJJIDjoxO6ovf2ek38F4WMY2M
+         cs1Z1C1tepn8x5YjraPuhwP7QhTaolRJvhUB0oyX/3a9WAI/pDF87ZIt1KmNNKwRM6V1
+         QlyeZdRTJkZyUQEn4Lf1v3pxFzpFtuhU0HeAU0p0iwTyPJql9mCCW4RJ85JOTFVk5DcB
+         6qiGo5pGECBhsUKacb8BHw+rp76NHyVjPEULER4Ev9wauWVPvSwbkv4vAM4Wlw495vhr
+         9vs76dsyTiHXTErfAXvxluCHE9nfyacpXqd7Nk5rmm926xx59RWXbS/fUc4TMmbLt32f
+         KUDw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9ua0NHTHGos5yNbSMqwJyCutAAGUSBEVdcJi0sGHTqtE44KQ/Tx8PSQ7jd0vFLyjLi1D4IIrDACMFKS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5AMqG+5Pc8LFtXT59Brtm6GBrrm9NUmMlKd8hTRporBGfgi5/
+	jQM8y8MQTcDOnh+GARtOnwY0lRU91Ouqzd6PzdtH/QfnhhvNwMF3YWV4WszzBnDIqc7mNNAOxdH
+	39Uj0nwqO+N5CU3V5LYlTP9c84eWIf4iIP+kSsTCk5e/pr2g7BiEgdQQ+RmrEUXY=
+X-Gm-Gg: ASbGncsHEM0+NZ0tfG1BKJ4vvDdeBHpwq3qEQKjYHIhC6d9R6mrYwKvtG+7ejqbogKc
+	wuJtzru+OcNawy04U6y93UKMVop2DjMNbDSIPgv+EkOKctE7DcgMnB3BolXwy2/Nnrs+5+QK/wZ
+	Lv1Uypnn51/AcWlfLTUWu/yYh9tUdnsx+TdllCyUModI2h+F1hrjBjJ2Moq8mNOgcXGLS78wyLy
+	JZAPxPiNnc0d7lq/hJHIEiamSU5MEqQZ3a9ZyUo2/Xq0isGigKCwOd9grW/N6C4TKr8C0gOHW8P
+	znbYB2hdTFRlquFLG9KiTfbGoHxzQQQuQcqnJsrc
+X-Received: by 2002:a05:6a20:431e:b0:1f3:486c:8509 with SMTP id adf61e73a8af0-20444f0e2c8mr3750350637.25.1745496709345;
+        Thu, 24 Apr 2025 05:11:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF0Jc5QAJOW0a8314p+AABfN5ecVt6FL9OxrqvMvwq7E3oY3+jyOyXnww3hGQO3KFo9b80TSA==
+X-Received: by 2002:a05:6a20:431e:b0:1f3:486c:8509 with SMTP id adf61e73a8af0-20444f0e2c8mr3750321637.25.1745496709009;
+        Thu, 24 Apr 2025 05:11:49 -0700 (PDT)
+Received: from hu-prashk-hyd.qualcomm.com ([202.46.22.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25912c5asm1226788b3a.6.2025.04.24.05.11.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 05:11:07 -0700 (PDT)
-Date: Thu, 24 Apr 2025 08:11:03 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Jon Kohler <jon@nutanix.com>, Jason Wang <jasowang@redhat.com>,
-	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
-	kvm@vger.kernel.org, virtualization@lists.linux.dev,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2] vhost/net: Defer TX queue re-enable until
- after sendmsg
-Message-ID: <20250424080749-mutt-send-email-mst@kernel.org>
-References: <20250420010518.2842335-1-jon@nutanix.com>
- <a0894275-6b23-4cff-9e36-a635f776c403@redhat.com>
+        Thu, 24 Apr 2025 05:11:48 -0700 (PDT)
+From: Prashanth K <prashanth.k@oss.qualcomm.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Michael Walle <mwalle@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prashanth K <prashanth.k@oss.qualcomm.com>
+Subject: [PATCH] usb: gadget: u_serial: Implement remote wakeup capability
+Date: Thu, 24 Apr 2025 17:41:42 +0530
+Message-Id: <20250424121142.4180241-1-prashanth.k@oss.qualcomm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a0894275-6b23-4cff-9e36-a635f776c403@redhat.com>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA4MiBTYWx0ZWRfX1h08EHECt1If wgCrUzSyLS2hFYFEq9R7HP0OQaqyTFxngU97Dnpgixmffeb8RYNfmHtiHDQhG/EvhIPpNLClblN IGckr/K0y8Rc3ISnmDnay94gKaQNrCKMToGFBrraIgyAX/lT+z7JIydFZV5f7T3rtteVWi0STTz
+ zLoFUI2I7QIzsmV7A4ncFKsSGGWTd5L1+SqJnIUnaKUgEa7nD1Oan9Mb5rNkNSfCt3WCPM7Z6H4 t5qowOm+6/CpGfKCkUwXZbTuZS2M8oUjcge3cy8qd2qLBb2eBK/KuANJr/qT0v87TNl7a+RNrSU MraFnQOttwUWet6S5Hc8axva1g6bTmGfFQCSNRwPpUZ+qzNfPcffQ8RVrcy1UVSt0Q6QoPfGg1P
+ JfbkHbvOGh8G5crYJgldf6OtlDxFJ+OVbghXPmrmC8YBcLDJbFu7nnWBUi/TXvaI2x9Qj37C
+X-Proofpoint-GUID: AoHBjZV9PoHRrTyIgGIpr6ATe6U4IQ9-
+X-Authority-Analysis: v=2.4 cv=B/S50PtM c=1 sm=1 tr=0 ts=680a2a86 cx=c_pps a=rEQLjTOiSrHUhVqRoksmgQ==:117 a=fChuTYTh2wq5r3m49p7fHw==:17 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=9gX2OuH4G143YozJX2wA:9 a=2VI0MkxyNR6bbpdq8BZq:22
+X-Proofpoint-ORIG-GUID: AoHBjZV9PoHRrTyIgGIpr6ATe6U4IQ9-
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
+ definitions=2025-04-24_05,2025-04-22_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ priorityscore=1501 phishscore=0 malwarescore=0 spamscore=0 clxscore=1015
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240082
 
-On Thu, Apr 24, 2025 at 01:48:53PM +0200, Paolo Abeni wrote:
-> On 4/20/25 3:05 AM, Jon Kohler wrote:
-> > diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-> > index b9b9e9d40951..9b04025eea66 100644
-> > --- a/drivers/vhost/net.c
-> > +++ b/drivers/vhost/net.c
-> > @@ -769,13 +769,17 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-> >  			break;
-> >  		/* Nothing new?  Wait for eventfd to tell us they refilled. */
-> >  		if (head == vq->num) {
-> > +			/* If interrupted while doing busy polling, requeue
-> > +			 * the handler to be fair handle_rx as well as other
-> > +			 * tasks waiting on cpu
-> > +			 */
-> >  			if (unlikely(busyloop_intr)) {
-> >  				vhost_poll_queue(&vq->poll);
-> > -			} else if (unlikely(vhost_enable_notify(&net->dev,
-> > -								vq))) {
-> > -				vhost_disable_notify(&net->dev, vq);
-> > -				continue;
-> >  			}
-> > +			/* Kicks are disabled at this point, break loop and
-> > +			 * process any remaining batched packets. Queue will
-> > +			 * be re-enabled afterwards.
-> > +			 */
-> >  			break;
-> >  		}
-> 
-> It's not clear to me why the zerocopy path does not need a similar change.
+Implement the remote wakeup capability for u_serial. The newly added
+function gserial_wakeup_host() wakes up the host when there is some
+data to be sent while the device is suspended. Add gser_get_status()
+callbacks to advertise f_serial interface as function wakeup capable.
 
-It can have one, it's just that Jon has a separate patch to drop
-it completely. A commit log comment mentioning this would be a good
-idea, yes.
+Signed-off-by: Prashanth K <prashanth.k@oss.qualcomm.com>
+---
+ drivers/usb/gadget/function/f_serial.c |  7 +++++
+ drivers/usb/gadget/function/u_serial.c | 43 ++++++++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
 
-> > @@ -825,7 +829,14 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
-> >  		++nvq->done_idx;
-> >  	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
-> >  
-> > +	/* Kicks are still disabled, dispatch any remaining batched msgs. */
-> >  	vhost_tx_batch(net, nvq, sock, &msg);
-> > +
-> > +	/* All of our work has been completed; however, before leaving the
-> > +	 * TX handler, do one last check for work, and requeue handler if
-> > +	 * necessary. If there is no work, queue will be reenabled.
-> > +	 */
-> > +	vhost_net_busy_poll_try_queue(net, vq);
-> 
-> This will call vhost_poll_queue() regardless of the 'busyloop_intr' flag
-> value, while AFAICS prior to this patch vhost_poll_queue() is only
-> performed with busyloop_intr == true. Why don't we need to take care of
-> such flag here?
-
-Hmm I agree this is worth trying, a free if possibly small performance
-gain, why not. Jon want to try?
-
-
-> @Michael: I assume you prefer that this patch will go through the
-> net-next tree, right?
-> 
-> Thanks,
-> 
-> Paolo
-
-I don't mind and this seems to be what Jon wants.
-I could queue it too, but extra review  it gets in the net tree is good.
-
+diff --git a/drivers/usb/gadget/function/f_serial.c b/drivers/usb/gadget/function/f_serial.c
+index 8f7e7a2b2ff2..0f266bc067f5 100644
+--- a/drivers/usb/gadget/function/f_serial.c
++++ b/drivers/usb/gadget/function/f_serial.c
+@@ -364,6 +364,12 @@ static void gser_suspend(struct usb_function *f)
+ 	gserial_suspend(&gser->port);
+ }
+ 
++static int gser_get_status(struct usb_function *f)
++{
++	return (f->func_wakeup_armed ? USB_INTRF_STAT_FUNC_RW : 0) |
++		USB_INTRF_STAT_FUNC_RW_CAP;
++}
++
+ static struct usb_function *gser_alloc(struct usb_function_instance *fi)
+ {
+ 	struct f_gser	*gser;
+@@ -387,6 +393,7 @@ static struct usb_function *gser_alloc(struct usb_function_instance *fi)
+ 	gser->port.func.free_func = gser_free;
+ 	gser->port.func.resume = gser_resume;
+ 	gser->port.func.suspend = gser_suspend;
++	gser->port.func.get_status = gser_get_status;
+ 
+ 	return &gser->port.func;
+ }
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index 36fff45e8c9b..41dee7c8cc7c 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -592,6 +592,17 @@ static int gs_start_io(struct gs_port *port)
+ 	return status;
+ }
+ 
++static int gserial_wakeup_host(struct gserial *gser)
++{
++	struct usb_function	*func = &gser->func;
++	struct usb_gadget	*gadget = func->config->cdev->gadget;
++
++	if (func->func_suspended)
++		return usb_func_wakeup(func);
++	else
++		return usb_gadget_wakeup(gadget);
++}
++
+ /*-------------------------------------------------------------------------*/
+ 
+ /* TTY Driver */
+@@ -746,6 +757,8 @@ static ssize_t gs_write(struct tty_struct *tty, const u8 *buf, size_t count)
+ {
+ 	struct gs_port	*port = tty->driver_data;
+ 	unsigned long	flags;
++	int ret = 0;
++	struct gserial  *gser = port->port_usb;
+ 
+ 	pr_vdebug("gs_write: ttyGS%d (%p) writing %zu bytes\n",
+ 			port->port_num, tty, count);
+@@ -753,6 +766,17 @@ static ssize_t gs_write(struct tty_struct *tty, const u8 *buf, size_t count)
+ 	spin_lock_irqsave(&port->port_lock, flags);
+ 	if (count)
+ 		count = kfifo_in(&port->port_write_buf, buf, count);
++
++	if (port->suspended) {
++		spin_unlock_irqrestore(&port->port_lock, flags);
++		ret = gserial_wakeup_host(gser);
++		if (ret) {
++			pr_debug("ttyGS%d: Remote wakeup failed:%d\n", port->port_num, ret);
++			return count;
++		}
++		spin_lock_irqsave(&port->port_lock, flags);
++	}
++
+ 	/* treat count == 0 as flush_chars() */
+ 	if (port->port_usb)
+ 		gs_start_tx(port);
+@@ -781,10 +805,22 @@ static void gs_flush_chars(struct tty_struct *tty)
+ {
+ 	struct gs_port	*port = tty->driver_data;
+ 	unsigned long	flags;
++	int ret = 0;
++	struct gserial  *gser = port->port_usb;
+ 
+ 	pr_vdebug("gs_flush_chars: (%d,%p)\n", port->port_num, tty);
+ 
+ 	spin_lock_irqsave(&port->port_lock, flags);
++	if (port->suspended) {
++		spin_unlock_irqrestore(&port->port_lock, flags);
++		ret = gserial_wakeup_host(gser);
++		if (ret) {
++			pr_debug("ttyGS%d: Remote wakeup failed:%d\n", port->port_num, ret);
++			return;
++		}
++		spin_lock_irqsave(&port->port_lock, flags);
++	}
++
+ 	if (port->port_usb)
+ 		gs_start_tx(port);
+ 	spin_unlock_irqrestore(&port->port_lock, flags);
+@@ -1464,6 +1500,13 @@ void gserial_suspend(struct gserial *gser)
+ 		return;
+ 	}
+ 
++	if (port->write_busy || port->write_started) {
++		/* Wakeup to host if there are ongoing transfers */
++		spin_unlock_irqrestore(&serial_port_lock, flags);
++		if (!gserial_wakeup_host(gser))
++			return;
++	}
++
+ 	spin_lock(&port->port_lock);
+ 	spin_unlock(&serial_port_lock);
+ 	port->suspended = true;
 -- 
-MST
+2.25.1
 
