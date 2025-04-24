@@ -1,83 +1,75 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274AB2144B6
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 212021F4613;
+	Thu, 24 Apr 2025 07:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745480130; cv=none; b=olteuAmMY96EvLh/jn/wGYMCakcPV/nFEgYGn6Kl+61w/k1UtwNSNAuIxm/+YY8zETcQYP5wTuzdyLXMk/gCB82es9dNtBHcLxkfhIR1JfsDkEP6ZRyz6qn7alLsxtbsvr4JnN6wMFv30k2bG8+ZwT0tsanRBaZjeH5q1V3VzQo=
+	t=1745480136; cv=none; b=P2wPEHRVuWrqa7hRieXOQ2nDmbpgxRh98LD1S159Y3lw/V3eLMIVsylQ7SQe0aWxjaMWWEtvYe3X7ysmZAxnlDNgQ6d8p9u2JqDIJ7H9B39sPeSfq8chX7r3nzIm0tuS9siULu04HhZ1RT520ElC9YV9q+BJ86vmPicodJggJVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745480130; c=relaxed/simple;
-	bh=T0kwBGjxljasHaaepEeFq7C9uTMkSN2h2iiLB3v6ask=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nSDwOxC2SDTQY7kHWE8OoOSBvQVuDReRkym2A+59lXrTkgI7/iLM+tKTgtgLbdrh1TtRbThxJN6uZiENVUjWKzGfkF6lDpNdEbeYBQO9AQMrv9KoQEdBb62DfIZE1QW5Nk1dZBniICrsDIKFbjMQaG46fBuiL23XgkLD+L7yQa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=SGIdEUv8; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1745480136; c=relaxed/simple;
+	bh=sV/Yr3t57Hh/fnbj2+R1XyIyQYmRB7215HEEUpCxgYs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jezRYsi8id1Olk0fgRLPtqVHC9ZweHdqkJUL4TWKm/tC3hedncIjzU6Ht9rUmwR4mQwn314gtul8aEtdlguw3BlOF/6eNHCg9FsUhQxsq8ARufGijTt7Wuq5t2kANXUNoc/678Wfrw5Gul72KTYNvak50ydfKErdnhq3+E9q4Vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ELlU6AYu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="SGIdEUv8"
-Message-ID: <b2651b9a-694d-4417-ae90-00a4256f9611@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1745480124;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=T0kwBGjxljasHaaepEeFq7C9uTMkSN2h2iiLB3v6ask=;
-	b=SGIdEUv8ixPZp7SJPeHj00XJWK5dX4df6qcw+dvgwU5WLKqtNwbeGLyNbJbKAJ08flmTOk
-	TdkOPOj6GklqJF1f3tYIgxvabWGeHksCAJctFe5sMWcjU76qWFqMhTstffeef5NXTe9cj9
-	D9p/cACXtMvKw+47m3OGBb/u+RJPzC0=
-Date: Thu, 24 Apr 2025 15:35:07 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ELlU6AYu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68DD2C4CEE3;
+	Thu, 24 Apr 2025 07:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745480136;
+	bh=sV/Yr3t57Hh/fnbj2+R1XyIyQYmRB7215HEEUpCxgYs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ELlU6AYusnI8ir3dVO55soTQNJSzVBOn/7GbD/RxuNat+/E45JAoE6sKxpq1PbBMU
+	 itGPjl+465sDgV94/T4xi1geU3PT+VT4FvrPiapx7lVmnv94NsDyMXuNUDnh6rZRV7
+	 QVv6cuYPx7O/HHrJie6gbNvZ8fhaAkTqMO9UXgwYqylF11+mCpIRbsXXi1y3OWM6RD
+	 icfkLOJ/+1f+w5TV7+qm1bAj7goVryAtGeY+e4EQQMP7It/makIhEHnodHMgdqeCKl
+	 n9w+OIKzh8VOE9OH7bxSg/jTCw259zNDWlOy0tr8Z0r//x0RV0RYGYoLKDIhQrlWkG
+	 zOgABwaEMMYSg==
+Date: Thu, 24 Apr 2025 09:35:33 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Chunfeng Yun <chunfeng.yun@mediatek.com>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Frank Wunderlich <frank-w@public-files.de>, 
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Daniel Golle <daniel@makrotopia.org>, 
+	Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-phy@lists.infradead.org
+Subject: Re: [PATCH v4 5/8] dt-bindings: mfd: syscon: Add mt7988-topmisc
+Message-ID: <20250424-cornflower-waxbill-of-promotion-4e24a7@kuoka>
+References: <20250422132438.15735-1-linux@fw-web.de>
+ <20250422132438.15735-6-linux@fw-web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH net-next V3 2/3] net: stmmac: dwmac-loongson: Add new
- multi-chan IP core support
-To: Huacai Chen <chenhuacai@loongson.cn>, Huacai Chen
- <chenhuacai@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Feiyang Chen <chris.chenfeiyang@gmail.com>, loongarch@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andrew Lunn <andrew@lunn.ch>, Henry Chen <chenx97@aosc.io>,
- Biao Dong <dongbiao@loongson.cn>, Baoqi Zhang <zhangbaoqi@loongson.cn>
-References: <20250424072209.3134762-1-chenhuacai@loongson.cn>
- <20250424072209.3134762-3-chenhuacai@loongson.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yanteng Si <si.yanteng@linux.dev>
-In-Reply-To: <20250424072209.3134762-3-chenhuacai@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250422132438.15735-6-linux@fw-web.de>
 
+On Tue, Apr 22, 2025 at 03:24:28PM GMT, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Add compatible for Mediatek mt7988 topmisc syscon.
+> This hardware block contains 2 functional blocks
+> 
+> - a powercontroller which is not needed (switched by atf)
+> - a multiplexer for high-speed Combo-Phy
+> 
+> This compatible is only for the multiplexer part.
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 
-在 4/24/25 3:22 PM, Huacai Chen 写道:
-> Add a new multi-chan IP core (0x12) support which is used in Loongson-
-> 2K3000/Loongson-3B6000M. Compared with the 0x10 core, the new 0x12 core
-> reduces channel numbers from 8 to 4, but checksum is supported for all
-> channels.
->
-> Add a "multichan" flag to loongson_data, so that we can simply use a
-> "if (ld->multichan)" condition rather than the complicated condition
-> "if (ld->loongson_id == DWMAC_CORE_MULTICHAN_V1 || ld->loongson_id ==
-> DWMAC_CORE_MULTICHAN_V2)".
->
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-> Tested-by: Henry Chen <chenx97@aosc.io>
-> Tested-by: Biao Dong <dongbiao@loongson.cn>
-> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
-> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
-
-
-Thanks,
-
-Yanteng
-
+Best regards,
+Krzysztof
 
