@@ -1,62 +1,62 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FBF1CD1F
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 847FD7E9
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745463447; cv=none; b=ONYbvNTulJ4KH3TncqXnUgx0jbl8C+lgc0YZv/0Q1RPAWLRgvpDsOeuGS1nJRppJBfk6MvFpcPoSmnc/hx+THH2hNU4g68AAFGrvwmAWb2YnWw8y05vebtxzein2U/68hnwgQKGNjCgE7O4Eyl08NLj7ULF3+8TWcvyWucFEF3I=
+	t=1745463544; cv=none; b=DBsEw4TA84u5hYz0DjqnTiQ7ZrPsnv+HdQhw0p4hcAHKBZcHnkU/14gHshC5dDI1OLwPlhq4bh9KA635cJrElggVGlALmuKNJP33/jNIMTlBpLr2WuufpxISwMoKcjKeSKB9yuyV38aL3rwAgs7X5uxB2fUcsbb27vXyLAkGjWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745463447; c=relaxed/simple;
-	bh=iYfFY3LX3VGGJrfzXL0mjgtvqfghi4OJtmrers18SMw=;
+	s=arc-20240116; t=1745463544; c=relaxed/simple;
+	bh=sGms0WWK4oa5fpICIpSbc1v28ZbLrbL38cfxN/FjHGI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sdiWkfvwCrDEOmbWMFH3Pcma2FlgANIwMQIc7UpAdQ1Fd1b6nmYHkdimjMfolkV5xjNhkCdjfZ+a/ESLuHb6RwawTFtmnfMWwF8Nv30cAlEjWy0sLkzlOaMg5GbmDTMWWpjfNHUpxPyXTLtEiRlLl3R6BcGQgb3DBmQfqDD7KhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GyZuoiDW; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLmQ/NK868ChvXuKXaHyWrwYrKQJ9N4PKjyL+VlBcv7ksMC0/+XCsvJLLh25rX3AiUjNwZSS86H+P+JBvTfGPbGHxck1/ap8sRCVUbDp5SsU41zZFXCPL/K/Jo9cHo90L/pExHJsKs5YqqYYiwp+H5HGU2zU+F3rWYt8acob9kQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=if3J+lkU; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GyZuoiDW"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-227a8cdd241so6132135ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 19:57:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="if3J+lkU"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-223fd89d036so5926625ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 19:59:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745463445; x=1746068245; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745463542; x=1746068342; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fWmRzbYfNddyjBJLZVPENIF9TuDPr2eV0WK5hTPyUWw=;
-        b=GyZuoiDWCxC8I/d0agolWXUTi1foAPFNUP3vrX6Xa+/+pQR7ZV0agnk8bWQOCg7vNv
-         tFS9wd9vGtKveP4Dq1NJ+anheDXRwe2KIT2VmXLTGCfKDaQx2aElDfIhclb6i84sVF78
-         FH0Xca6TyIBdk/Pcud9UpRtFMuLSAQOuqH3MNsJeGIMtw6rG1dpaX0Q7nhz77QYHt0Km
-         i26OYO9tPutQfiCm2pNLv+UYyRTIPGLd8g/c6pp9jVexaxMbO0uenZtDQTXKFYjPqGJQ
-         B32yzupqmQi6Iv+Tnz/dN5NmKk325BTVfNg3lTScL6SYiGSvGQZeugo4M7i50Ycs0rhn
-         RSZw==
+        bh=/kDtHEfZOWiEW4MRlsj/MijM5zlmmGBAeNJajP1J6VU=;
+        b=if3J+lkU7p9F5DHmh466MiMNJWFL0u87guKeDmj+dLPZcAw1U9iqMJytq7ChlvRG4K
+         N2Cvhm02sHwzrBBRhO46vVo96kCytJEFELa4tUW0O0ND2iT9/T1GofU/z41ybsKTIMbF
+         F6oypmHRyVb4cvXbXVKx+1JZOkZVAjlRAQ3dE10CFTqZJm/ouhRSV7w5bChRjuXK4uOl
+         EkiWwIhwboN8KnC/LPbdlm9+gJxII7epi2FKFz7vQBA/u193x9w63ENQ2cCJVNgPpx55
+         BJAB8fuRRAx+MPZBonQ8sslPjC44QzEdsCp5/gpfb2uAJa9KtlkTI6e9nfEvDFI5HKrw
+         4dNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745463445; x=1746068245;
+        d=1e100.net; s=20230601; t=1745463542; x=1746068342;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fWmRzbYfNddyjBJLZVPENIF9TuDPr2eV0WK5hTPyUWw=;
-        b=eWFDu5WTMm0+J48BGbD1ZUGv7YIkjHBWmb0z6bKfXFkAgCjItoZDBH63BTwWKDHzoj
-         AexQM7Ftucl2J9aDoeyNnqal4fRS1M9pAaTs6XDzvUN5tiYPtfFjEjvyj2Lj5dMlIzWy
-         QyO1Ii8cUY/YQ0m6zkmenxs1AmmR6+RrxKL7PC9USemo3FEGbFGp00ujUDCCioouUNK/
-         CjuXdsJRvZVMAKh4zecS+t51Abip3pV36+hfTCOfKUtgnQLrBOgyEY4FDcaCzMmyGGQT
-         qVdYE+mHHsaJB4IAMuy/WkWEkpua/LZfq4v/4ZCZ+r9VcLNIO9Lh1rdkynH7RzhicI6F
-         60iA==
-X-Forwarded-Encrypted: i=1; AJvYcCWD++gHVdSGqfUKOkJ9qoZYDMqPN0HIvkMKJRVG1NRvPIQT/T6q/vKhxYwNUlM0xHXasseoZVVDKz3+HiQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyYveYFB5RN1qDybYSqx1HB17WvUPMn6xg8uH6JIu8yNQzx4u5r
-	IY7mvjs2RXZ3n3BrdkblsgSikT+GjAi8KsbR4ppJenq3tBC2kclt
-X-Gm-Gg: ASbGncvo6Z77EZOkqvdk7NnMpjBHjuFYNUNBFCs0enGmdLGG+uVIkb+VePEiCuJaD4p
-	84WxAxAGmt9fjFTeE2/jorMbqvkG+AOukhB0LTK4LnmGeT/knGXXtqkU3BBwKflb5ADEd/8lqK5
-	qFUgDbVqtluMcPN4YXNXi0d6rJuoK96jaYLRJ8TBuk+0w/kjpXO+VVc/I9l2bMNo/UQyEY4SQWq
-	k2QfqikXZNuFs7wszvD+FQKvFv/NtuLPKvtSQAN1ICW9/SAjo02KkdCyFqVbAfmWsT368bn7MLK
-	vgeQRdRIM6nF5MN+NOcdAOYMYJuUV2WfOXrA6sMOdTdnt1ZOZdk=
-X-Google-Smtp-Source: AGHT+IGWaKESnK18NLzUxZc+73taW8JAQkYYI8G9NUiDRHBigHW6w5Hh8wTVME0SWV6skLoPMmzKyA==
-X-Received: by 2002:a17:903:94c:b0:223:6180:1bea with SMTP id d9443c01a7336-22db3d71fd6mr12740205ad.37.1745463445242;
-        Wed, 23 Apr 2025 19:57:25 -0700 (PDT)
+        bh=/kDtHEfZOWiEW4MRlsj/MijM5zlmmGBAeNJajP1J6VU=;
+        b=Cj+aGppwCNc8IrhM/EbbHhHWOQ74Ex7lfyhHr+/VzfyCGsUc6JVkW3yRAQ3X+yldW0
+         NCVYL6+UqWre8yrBfPjtyNVbETSA7cNn7zTkjw4WSvQVAuHI7Oe+2BUVN3cTVQSREdy0
+         ohj9DLlAHixIn9rtmnDMguqE5sFuGyrZ7R/V+RNOEQA9eOYRvPPqW28PYkrCE4N/mLkU
+         Jn7iA+hp7fAO3VHdv9A1amrOCNN30MSNpJV9ij3jyDbJpMUQRtQBDD1gF18gsKHyXKvD
+         SvRuZpg61ckE+bq6IR81MuLeCHg1SwrBIw1Moay2luaET/6B3+kv8hcJn8BOwS+gzV6J
+         g9KA==
+X-Forwarded-Encrypted: i=1; AJvYcCVEhmTu8efO+o0SSP7zTZrGFtVZ3Lbi0p0ER/C3TWl8B//5OgtgqrNTU+wVXEq0KFYvrPl27HuR3QT9f9Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoKuDiVKpVYxX/CAC5gQqWSn7vBZMLvbgVY4/zs8n45lv4B1eD
+	cLLpNvs+44xQbUEYvwM0i5sC5m85+cN0tIUGBERUYoI/MmbSlLUs
+X-Gm-Gg: ASbGncsgnxVQsP6WthnRjU6wdrypJhgQ04GiUPBflj/NLOokXVrBlSAZFnw99VJmAxR
+	RomKtuTp+e5CwUJZGch8ZsRJDDQjpzkK9QBdrfPjFlyZMmKzi0ZLWH3dQqjQu3wd9OP+1R2NGaf
+	b60t3aH8Ri1nN8YyjI96CLYpxxvHUiFtl/fa2WP1Ncq5LtQtBeMLI4tMnnPuQLLGmnkcFzaecrv
+	6f1rZxLGyRUlXUetZpBYryDvWpuilwrT2u+3xUo2nm/QJkOKux+fl4Pj8Ljjba1OpsomXTPRJgw
+	j6aNva+ym+6MrWR1blf42krIaelxuM0s4alxYrSE
+X-Google-Smtp-Source: AGHT+IE8g58lYbzIxi+v1soz9/bzHCeIMiQFFKTqJy5j+WC13t+77YqhHhRu9h37/CXavLtG642Vyw==
+X-Received: by 2002:a17:903:1aae:b0:224:1c95:451e with SMTP id d9443c01a7336-22db3d71b46mr11375775ad.33.1745463541572;
+        Wed, 23 Apr 2025 19:59:01 -0700 (PDT)
 Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15f76f48a7sm228098a12.9.2025.04.23.19.57.24
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51021a8sm2080865ad.172.2025.04.23.19.59.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Apr 2025 19:57:24 -0700 (PDT)
-Date: Wed, 23 Apr 2025 22:57:22 -0400
+        Wed, 23 Apr 2025 19:59:01 -0700 (PDT)
+Date: Wed, 23 Apr 2025 22:58:59 -0400
 From: Yury Norov <yury.norov@gmail.com>
 To: Reinette Chatre <reinette.chatre@intel.com>
 Cc: Tony Luck <tony.luck@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
@@ -65,11 +65,11 @@ Cc: Tony Luck <tony.luck@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
 	"H. Peter Anvin" <hpa@zytor.com>,
 	Rasmus Villemoes <linux@rasmusvillemoes.dk>, x86@kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] find: add find_first_andnot_bit()
-Message-ID: <aAmokt3PBX8LzbwJ@yury>
+Subject: Re: [PATCH 3/4] cpumask: add cpumask_{first,next}_andnot() API
+Message-ID: <aAmo83SnYBGv7zRu@yury>
 References: <20250407153856.133093-1-yury.norov@gmail.com>
- <20250407153856.133093-3-yury.norov@gmail.com>
- <062e5e61-e2c3-418e-987b-33fd9009d03f@intel.com>
+ <20250407153856.133093-4-yury.norov@gmail.com>
+ <c96bade5-200a-4812-8df6-d6dcf2984a01@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,68 +78,65 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <062e5e61-e2c3-418e-987b-33fd9009d03f@intel.com>
+In-Reply-To: <c96bade5-200a-4812-8df6-d6dcf2984a01@intel.com>
 
-On Wed, Apr 23, 2025 at 02:28:26PM -0700, Reinette Chatre wrote:
+On Wed, Apr 23, 2025 at 02:28:38PM -0700, Reinette Chatre wrote:
 > Hi Yury,
 > 
 > On 4/7/25 8:38 AM, Yury Norov wrote:
-> > From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> > 
-> > The function helps to implement cpumask_andnot() APIs.
-> > 
-> > Signed-off-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-> > ---
-> >  include/linux/find.h | 25 +++++++++++++++++++++++++
-> >  lib/find_bit.c       | 11 +++++++++++
-> >  2 files changed, 36 insertions(+)
-> > 
-> > diff --git a/include/linux/find.h b/include/linux/find.h
-> > index 68685714bc18..d1578cfb667c 100644
-> > --- a/include/linux/find.h
-> > +++ b/include/linux/find.h
-> > @@ -29,6 +29,8 @@ unsigned long __find_nth_and_andnot_bit(const unsigned long *addr1, const unsign
-> >  					unsigned long n);
-> >  extern unsigned long _find_first_and_bit(const unsigned long *addr1,
-> >  					 const unsigned long *addr2, unsigned long size);
-> > +unsigned long _find_first_andnot_bit(const unsigned long *addr1, const unsigned long *addr2,
-> > +				 unsigned long size);
-> >  unsigned long _find_first_and_and_bit(const unsigned long *addr1, const unsigned long *addr2,
-> >  				      const unsigned long *addr3, unsigned long size);
-> >  extern unsigned long _find_first_zero_bit(const unsigned long *addr, unsigned long size);
-> > @@ -347,6 +349,29 @@ unsigned long find_first_and_bit(const unsigned long *addr1,
+> 
+> ...
+> 
+> > @@ -284,6 +297,25 @@ unsigned int cpumask_next_and(int n, const struct cpumask *src1p,
+> >  		small_cpumask_bits, n + 1);
 > >  }
-> >  #endif
 > >  
 > > +/**
-> > + * find_first_andnot_bit - find the first bit set in 1st memory region and unset in 2nd
-> > + * @addr1: The first address to base the search on
-> > + * @addr2: The second address to base the search on
-> > + * @size: The bitmap size in bits
+> > + * cpumask_next_andnot - get the next cpu in *src1p & ~*src2p
+> > + * @n: the cpu prior to the place to search (i.e. return will be > @n)
+> > + * @src1p: the first cpumask pointer
+> > + * @src2p: the second cpumask pointer
 > > + *
-> > + * Returns the bit number for the matched bit
-> > + * If no bits are set, returns >= @size.
+> > + * Return: >= nr_cpu_ids if no further cpus set in both.
+> > + */
+> > +static __always_inline
+> > +unsigned int cpumask_next_andnot(int n, const struct cpumask *src1p,
+> > +				 const struct cpumask *src2p)
 > 
-> Should this be "If no bits are set, returns @size." to match similar document
-> snippets as well as what the code does?
+> Looks like the custom followed here is to name parameter that can have
+> -1 as value "n" and let it have type "int". Should this also apply to
+> cpumask_andnot_any_but(), cpumask_any_but(), and cpumask_any_and_but()
+> modified/introduced in this series?
 > 
-> I am not familiar with the customs of this area but I did notice that
-> this patch triggers some checkpatch.pl warnings about alignment not
-> matching open parenthesis ... but looking at the existing content of this
-> file this custom does not seem to apply here.
+> > +{
+> > +	/* -1 is a legal arg here. */
+> > +	if (n != -1)
+> > +		cpumask_check(n);
+> > +	return find_next_andnot_bit(cpumask_bits(src1p), cpumask_bits(src2p),
+> > +		small_cpumask_bits, n + 1);
+> > +}
+> > +
+> >  /**
+> >   * cpumask_next_and_wrap - get the next cpu in *src1p & *src2p, starting from
+> >   *			   @n+1. If nothing found, wrap around and start from
+> > @@ -458,6 +490,33 @@ unsigned int cpumask_any_and_but(const struct cpumask *mask1,
+> >  	return cpumask_next_and(cpu, mask1, mask2);
+> >  }
+> >  
+> > +/**
+> > + * cpumask_andnot_any_but - pick an arbitrary cpu from *mask1 & ~*mask2, but not this one.
+> > + * @mask1: the first input cpumask
+> > + * @mask2: the second input cpumask
+> > + * @cpu: the cpu to ignore
+> > + *
+> > + * If @cpu == -1, the function returns the first matching cpu.
+> > + * Returns >= nr_cpu_ids if no cpus set.
+> > + */
+> > +static __always_inline
+> > +unsigned int cpumask_andnot_any_but(const struct cpumask *mask1,
+> > +				    const struct cpumask *mask2,
+> > +				    unsigned int cpu)
+> 
+> Since -1 is legal argument I expect "cpu" to be int.
 
-It was a really unclever decision to make find_bit() API returning
-the size exactly, because this ends up with a few extra instructions
-that we can avoid. For example, in FIND_FIRST_BIT() we have to return
-
-        min(idx * BITS_PER_LONG + __ffs(MUNGE(val)), sz);
-
-instead of just
-
-        idx * BITS_PER_LONG + __ffs(MUNGE(val)
-
-Unfortunately, the existing codebase relies on this overly strict
-guarantee. For the new API, I encourage people to guarantee '>= size',
-not '== size'. There's no difference from practical perspective. But
-if one day somebody will decide to clean this up, there will be less 
-burden to rework.
+Yes, you're right. I overlooked this. Will fix in v2
