@@ -1,143 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A0919CC3A;
-	Thu, 24 Apr 2025 07:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A5F1DCB09;
+	Thu, 24 Apr 2025 07:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745481338; cv=none; b=GNvhKm/6lITibq13hcBah+vuUrRE6Q4jBrHfzgyho4Ug72TIGYslbwHMIdrzG38DUuYRJWeSgi4ADN2caJyT/k29UKmlnrrXaB+X/89WtCk3ua84xyWPWNhebPIZwbaQS5gTDO3aLULUYP8BkSKYglCbAM/iUH+DhmoNLR2cHz8=
+	t=1745481346; cv=none; b=GTAHWPwUZv6yYS7wqI0PGcrxiW4yw8IzSm1b2qAPN+VQtW47GjnHQMCCQfZkPm9Y39Bk3xjhhBzVMh1gGJBAp+vip+QXXf+ow3gDjev15njbtzPMrZq75bTLbYMc5aEfMLBsP5v8prfIRD5laJFr3OgSz3CIj3dzDO9XqJrM43s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745481338; c=relaxed/simple;
-	bh=eZB03wlWn20hlMjq44G4y2WHS0oF7M3JiBoS6ve+Nmc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t/Q519Efp2IMchBNsD9fdrZ8z+DLDR3ORuW50ZfVXxUhWriY9b5r1BJnFrB7ss/G7y9rjkPaDt4GiURleQF4zdhUF4cjFSVexElqUAgSaO8XDu94DFO6Zu1Y2OLgvW5bCqwfDtJ7Y1Ba8NXV8fHIcpCdZPQSsZL0YOQdQweHspg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NosDI+x4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745481346; c=relaxed/simple;
+	bh=aAvQCc0R298w7RYGrKPrriQWJO7VY/0/BcobWu2OJn8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HGdrKkY/jzmZSxSUYE4gsWMpw8W1MuByElw2NOxEeBmuosAoJAQDDQ2YddKc93pFlNn7zAKDbnLrFmlFAPJ95dJxAFHejUbplXbvEpF1H1/Eho+KrguZ0dqArC1mJ6aU9jTAls3aOuiF/qAFbFbLphqvLreceK8wJ5yv8kbHyiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=i3YNG1ie; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=pERHcMbu reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NosDI+x4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7605C4CEE3;
-	Thu, 24 Apr 2025 07:55:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745481337;
-	bh=eZB03wlWn20hlMjq44G4y2WHS0oF7M3JiBoS6ve+Nmc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NosDI+x4cvbYgNU24M08GNHc6d7pJ4hl5/qxuZCxf+xwL2RBZRrJJUhOnFprAFHAp
-	 uMXuNxDsAPF8h8GL3TMV0/p3zy00XpDJUj1Mc5rlsuJvcv+Nh4bTlPohNQGuUY4EuN
-	 YdeQRGTfUzW8sL2ypAalBBGrL4iwWbiNeslamejqORQdHrhgX8L3E8sStLGQsqijej
-	 pyQJVsd0fCj3iAMLYy/oXTlGqfTe/wKosof0Q4BTawzUGoCVJidUnxK+0FFEnz2fZ7
-	 9cHCcUgloCY9p7vNTJA50fE41QpG2My1P6zfNwh4v++zjtZTJG0F4JLP9YIeCN29iU
-	 73C7zFzzL2JzQ==
-Date: Thu, 24 Apr 2025 10:55:32 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-	Keith Busch <kbusch@kernel.org>, Jake Edge <jake@lwn.net>,
-	Jonathan Corbet <corbet@lwn.net>, Zhu Yanjun <zyjzyj2000@gmail.com>,
-	Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Logan Gunthorpe <logang@deltatee.com>,
-	Yishai Hadas <yishaih@nvidia.com>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	=?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org, linux-rdma@vger.kernel.org,
-	iommu@lists.linux.dev, linux-nvme@lists.infradead.org,
-	linux-pci@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Kanchan Joshi <joshi.k@samsung.com>,
-	Chaitanya Kulkarni <kch@nvidia.com>
-Subject: Re: [PATCH v9 17/24] vfio/mlx5: Enable the DMA link API
-Message-ID: <20250424075532.GO48485@unreal>
-References: <cover.1745394536.git.leon@kernel.org>
- <b7a11f0e93a4b244523e07b82475a7616ba739c9.1745394536.git.leon@kernel.org>
- <20250423180941.GS1213339@ziepe.ca>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="i3YNG1ie";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="pERHcMbu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1745481344; x=1777017344;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ziXtyaZN5bmoBDmr/R61NXBEs5KsMcbVvQqVoZIm3Nk=;
+  b=i3YNG1iezNdsMmjhSqBi854HeRBcLSTcn3VA2NmcCAGBRCEgtej0QB5m
+   22N9xiVwIHrdPPPabiqWTPEl/KMKJEUJcAIqA5x/r3jkJOT6LegO6PMr+
+   q7VAWDAIViPkAsfOBv/YZ2MfVZT0YoxkGCWDYxUNs+opprPegUI+51Qju
+   Baj6SmvSyC7uDE0V0wrVajz2gZEYEej4BgCMOqpUH56ckGLEyNXAxSZW4
+   Se/8L0t4m9rS800S5vju8Ae3vjCwWnt1HbH0OSmv2UAwEWbDe1WBSJ1ju
+   yeAUTW9bP120xEc6ksHZXxPi2kZxLzP+vUwiUi5XO54dBOmmk1lEsZagj
+   A==;
+X-CSE-ConnectionGUID: 8Fe9Dkv8QgOz+fFRgcfRoA==
+X-CSE-MsgGUID: U06klpP9SjavAFBgeWvsbg==
+X-IronPort-AV: E=Sophos;i="6.15,235,1739833200"; 
+   d="scan'208";a="43691655"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 24 Apr 2025 09:55:41 +0200
+X-CheckPoint: {6809EE7D-6-2417938-F0170C2B}
+X-MAIL-CPID: 70C2A69BD9BA4968A346425B2DD05DE9_2
+X-Control-Analysis: str=0001.0A006371.6809EE7E.0070,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 11AAC16117A;
+	Thu, 24 Apr 2025 09:55:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1745481336;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ziXtyaZN5bmoBDmr/R61NXBEs5KsMcbVvQqVoZIm3Nk=;
+	b=pERHcMbugIBYZirMjTG3JOmUw/cYZ9K7rko1CiSmwZZn6eaJQ3RDNXmAvs3gpj7YiR74ws
+	SPxXvUkuO7Dg/fcow7b8q1FrnlUzpWvQcsLFVNU3iFoT0eKoAKxX6B7F1+2ZCEQTNm5Jtu
+	ECGS0S+MMOZUxdVLmmFxSO29VZWPLlN3iNx6yREJyrqOSAR5ecBO8oWUKOx38wnMa0vNQX
+	SFRVpZwtOJA8OTyubF/LugRhcirZpkxPRCz2Xxrq3eOKEN4z7C4OuumsBROvBVs1mH4j1M
+	gvUavv4eXCMTrMoyf0wkA9DLeBj5+H/bB6XFdiH37rdl2yQQT1O2exn5klgQYQ==
+From: Alexander Stein <alexander.stein@ew.tq-group.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: Markus Niebel <Markus.Niebel@tq-group.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux@ew.tq-group.com,
+	linux-renesas-soc@vger.kernel.org,
+	Alexander Stein <alexander.stein@ew.tq-group.com>
+Subject: [PATCH v2 1/2] dt-bindings: arm: add TQMa8XxS boards
+Date: Thu, 24 Apr 2025 09:55:29 +0200
+Message-ID: <20250424075533.1266435-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250423180941.GS1213339@ziepe.ca>
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Wed, Apr 23, 2025 at 03:09:41PM -0300, Jason Gunthorpe wrote:
-> On Wed, Apr 23, 2025 at 11:13:08AM +0300, Leon Romanovsky wrote:
-> > From: Leon Romanovsky <leonro@nvidia.com>
-> > 
-> > Remove intermediate scatter-gather table completely and
-> > enable new DMA link API.
-> > 
-> > Tested-by: Jens Axboe <axboe@kernel.dk>
-> > Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
-> > ---
-> >  drivers/vfio/pci/mlx5/cmd.c  | 298 ++++++++++++++++-------------------
-> >  drivers/vfio/pci/mlx5/cmd.h  |  21 ++-
-> >  drivers/vfio/pci/mlx5/main.c |  31 ----
-> >  3 files changed, 147 insertions(+), 203 deletions(-)
-> 
-> Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
-> 
-> > +static int register_dma_pages(struct mlx5_core_dev *mdev, u32 npages,
-> > +			      struct page **page_list, u32 *mkey_in,
-> > +			      struct dma_iova_state *state,
-> > +			      enum dma_data_direction dir)
-> > +{
-> > +	dma_addr_t addr;
-> > +	size_t mapped = 0;
-> > +	__be64 *mtt;
-> > +	int i, err;
-> >  
-> > -	return mlx5_core_create_mkey(mdev, mkey, mkey_in, inlen);
-> > +	WARN_ON_ONCE(dir == DMA_NONE);
-> > +
-> > +	mtt = (__be64 *)MLX5_ADDR_OF(create_mkey_in, mkey_in, klm_pas_mtt);
-> > +
-> > +	if (dma_iova_try_alloc(mdev->device, state, 0, npages * PAGE_SIZE)) {
-> > +		addr = state->addr;
-> > +		for (i = 0; i < npages; i++) {
-> > +			err = dma_iova_link(mdev->device, state,
-> > +					    page_to_phys(page_list[i]), mapped,
-> > +					    PAGE_SIZE, dir, 0);
-> > +			if (err)
-> > +				goto error;
-> > +			*mtt++ = cpu_to_be64(addr);
-> > +			addr += PAGE_SIZE;
-> > +			mapped += PAGE_SIZE;
-> > +		}
-> 
-> This is an area I'd like to see improvement on as a follow up.
-> 
-> Given we know we are allocating contiguous IOVA we should be able to
-> request a certain alignment so we can know that it can be put into the
-> mkey as single mtt. That would eliminate the double translation cost in
-> the HW.
-> 
-> The RDMA mkey builder is able to do this from the scatterlist but the
-> logic to do that was too complex to copy into vfio. This is close to
-> being simple enough, just the alignment is the only problem.
+From: Markus Niebel <Markus.Niebel@tq-group.com>
 
-I saw this improvement as well, but there is a need to generalize this 
-"if (dma_iova_try_alloc) ... else ..." code first, as it will be used
-by all vfio HW drivers.
+TQMa8XxS is a SOM series featuring NXP i.MX8X SoC.
+They are called TQMa8XQPS and TQMa8XDPS respectively.
+MB-SMARC-2 is a carrier reference design.
 
-So the plan is:
-1. Merge the code as is.
-2. Convert second vfio HW to the new API.
-3. Propose something like dma_map_pages(..., struct page **page_list, ...)
-   to map array of pages.
-4. Optimize mlx5 vfio MTT creation.
+Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
+Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Changes in v2:
+* Collected Rob's A-b
 
-Thanks
+ Documentation/devicetree/bindings/arm/fsl.yaml | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-> 
-> Jason
-> 
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index a6fd347de03fe..1c5fcd69e93e6 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -1333,6 +1333,22 @@ properties:
+               - const: tq,imx8qxp-tqma8xqp     # TQ-Systems GmbH TQMa8XQP SOM (with i.MX8QXP)
+               - const: fsl,imx8qxp
+ 
++      - description:
++          TQMa8XxS is a series of SOM featuring NXP i.MX8X system-on-chip
++          variants. It has the SMARC-2.0 form factor and is designed to be placed on
++          different carrier boards. MB-SMARC-2 is a carrier reference design.
++        oneOf:
++          - items:
++              - enum:
++                  - tq,imx8qxp-tqma8xqps-mb-smarc-2 # TQ-Systems GmbH TQMa8QXPS SOM on MB-SMARC-2
++              - const: tq,imx8qxp-tqma8xqps         # TQ-Systems GmbH TQMa8QXPS SOM
++              - const: fsl,imx8qxp
++          - items:
++              - enum:
++                  - tq,imx8dxp-tqma8xdps-mb-smarc-2 # TQ-Systems GmbH TQMa8XDPS SOM on MB-SMARC-2
++              - const: tq,imx8dxp-tqma8xdps         # TQ-Systems GmbH TQMa8XDPS SOM
++              - const: fsl,imx8dxp
++
+       - description: i.MX8ULP based Boards
+         items:
+           - enum:
+-- 
+2.43.0
+
