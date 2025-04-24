@@ -1,212 +1,201 @@
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2040.outbound.protection.outlook.com [40.107.20.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87CC11CACF3;
-	Thu, 24 Apr 2025 06:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.110
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745475115; cv=none; b=dMVPfMyXaCgDa/zqqVmFAn/iZCjlx4HM3g1zVW6mq0uSLhVjcyx+b4PUmCk5ctv6FPudrt2bfgrxY41Iv3Oe3rm1KSo0qmCc28DDIHRqcZfRmk4PJ6mJnOMlBxbjqwHNaLxwEniCgaMtB2R0MILXLga6PYadwsE+raka3iV/2/o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745475115; c=relaxed/simple;
-	bh=cYiXjwGvEhwwGNts7rU4fJxYBQxNuqvF1+3TYnXe6jA=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=upNbCnUOw0Na9P517Of7oxVD8fX4DleuoYSJ9qXoWOWONt1uQ/iQk7Xg0u7jk76MirgVK0vGj2WHrGhwRPWsLc9rFoE+GBNMuMHLzN/TBpizJmUL9gMsrgQfeKQv7VeAsp2lS5OxW0XNdGXmHP7AqSDkdohSQEYijKUM2RMPxGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=EyhYpOGO; arc=none smtp.client-ip=115.124.30.110
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D04B2701B8;
+	Thu, 24 Apr 2025 06:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745475387; cv=fail; b=l76QyrH010p3TKU42wRceJemaECLkBE8Bv9XUpvSkcmxRVfuqcFH92DS9mrvfQTzmO7jIFWk2iwznJXAEglVGrYN6s/oKngfgnqdp8yqu9eOoEo1/2p7HzW06xYZtiMwSANRLR6YV/6Th3KNhVLCP+As7JsZXZTJRzFHTPhbi/s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745475387; c=relaxed/simple;
+	bh=PDZYHzl320JyG6SXQyIpRMMX48e0YyJTDy84g/yLgmY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=CJj4nUBpgXcXSg3BDxt5+d6cqRFumHlRQuhRY6eWsctTaErSCgVd514qg8yIMz9DO62Iu15uz2/z7rHOpzcqR1quebI9kOQ3Yl4EtySH8UpH/DqQUK7MPxr1ToHYcIHPlsHkc0F0+1L0UynN34pwh41h9YPItO8v4AJlx2xkx5Y=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=fail smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=RRpb0REB; arc=fail smtp.client-ip=40.107.20.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="EyhYpOGO"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745475106; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
-	bh=B8UeD7v1vXILLjfH1z55eWZ1C2nwwAVb05LzkSMjifM=;
-	b=EyhYpOGOsSqEEi0shVh08cMmCaFktp+77Lk80TEjgLHG367X2MYginP6y/pGJJcyTQu3rAUn5K0LPo8mG4MkxO9ejKKB/RefKl/mMUWdqv4EOrX3hA2sY19z3L+gkSOk3x7E9BItZ7YxxTehQlq8S7t/awjoxlaqZmD2SrHdEfo=
-Received: from 30.246.162.65(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WXxbIj._1745475104 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 24 Apr 2025 14:11:46 +0800
-Message-ID: <53559fb5-669b-4fbb-b323-2c9f792d8ead@linux.alibaba.com>
-Date: Thu, 24 Apr 2025 14:11:44 +0800
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="RRpb0REB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zNdAzoyMX0aNsrB6CzA+kLTngYU+FqTIItOJqO0r61fTb9gsm6YR6XiBIDi/iI2GTmgNRy4ZU6u0APlzwcwhuTE/GcLjRBWcXzC/rA+PvCkzzxMTjeQRui+loQVtxXFQaIZFaNPHl0jXURnL2z61PI9K1h+ig3g2+T/LlYW7bfRJQE13CbfRXiWL8o8tzK+jprMqhC1vbR5/RvVdVYh1h6c0qUYhaME/2cGefWlIO0rhKfL5fsdNdlKLwWe2J6mNm5hK6GXdsl/8u9z98ggP92am94o7EIho/+oSETckuNApnJymJcjSpnYitLKc1hrMJ665ywfDGgTVyeJCWLMRMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Klj8mxS4l2I6l9KVTxd0YIp5f8NRu+DgZUjtDztw6rY=;
+ b=Vu8Gor+r0ht4aEpfK8GOdT7JTB9+G7eUE0yfIUtfdltFl/netfGzCCBvNeGiLt/wM6KA5vuUXCNIsTncSSg/e44IhrYEi/BYPCo0H6qB8YdyhSOdeNAuHUiSUbFdPBBW5vI8a5lEKC+D70a/7yy4twPHodU08RGOS/Hj/6VCRVo3/E3QsEjesidcO+9MSRESxMn7zwqj2/JpJ1bg1lNYK8nl64zp8t5cmqWjqJ1UF78w+iLGTFVQBMFF+a6EppGlQWED7OAcOucjFo6EvpeWG+YUmnyGP00qPgD0mhQnx2KJ/ozcFgCameL+wbNu9eoWLThF7rP+kjKLYWJcTOTqtg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Klj8mxS4l2I6l9KVTxd0YIp5f8NRu+DgZUjtDztw6rY=;
+ b=RRpb0REB3fsQJSKrYqENyuxk90zQKjmYMISYRLH+ZGTeQIcjNWLVi1BiHssqn/ijQVuf+uc7s01d0DzwnZnckWRkdUjx5H0dj/OHYrcquZ8g47XrGtOSqKUfEd+xlaj0QROUIq4JK1aJdpQ2DEW4MFlyLK2nCqeFIOlysNzXy2jjIN2rpZc1p+TucaWdVaw6yxn+K4hDguo+2La9afRfS/LOu8XinrOZNZ/AM6jYb5sckmDWofuDPsD1Hkcr3wELimLLn3KOy6Ovp1cc/SqaXadPRWQtEJOHTs+iCXpfkQHlpqOJGCHPOxOmpMvIgugc2uB9qhZ/9R/hRmo/LW7WJg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from DB7PR03MB3723.eurprd03.prod.outlook.com (2603:10a6:5:6::24) by
+ DU0PR03MB8440.eurprd03.prod.outlook.com (2603:10a6:10:3b4::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.33; Thu, 24 Apr 2025 06:16:21 +0000
+Received: from DB7PR03MB3723.eurprd03.prod.outlook.com
+ ([fe80::c4b9:3d44:256f:b068]) by DB7PR03MB3723.eurprd03.prod.outlook.com
+ ([fe80::c4b9:3d44:256f:b068%4]) with mapi id 15.20.8678.021; Thu, 24 Apr 2025
+ 06:16:21 +0000
+Date: Thu, 24 Apr 2025 08:16:11 +0200
+From: Wojciech Dubowik <Wojciech.Dubowik@mt.com>
+To: Philippe Schenker <philippe.schenker@impulsing.ch>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: EXTERNAL - [PATCH v3] arm64: dts: imx8mm-verdin: Link
+ reg_usdhc2_vqmmc to usdhc2
+Message-ID: <aAnXK0sAXqfTNaXg@mt.com>
+References: <20250422140200.819405-1-Wojciech.Dubowik@mt.com>
+ <20250423095309.GA93156@francesco-nb>
+ <222ce25ee0bb1545583ad7a04f621bac2617893c.camel@impulsing.ch>
+ <aAi_PPaZRF26pv_d@gaggiata.pivistrello.it>
+ <9eb7b15068eb8a4337ad0ea2512d02141afd491c.camel@impulsing.ch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9eb7b15068eb8a4337ad0ea2512d02141afd491c.camel@impulsing.ch>
+X-ClientProxiedBy: ZR2P278CA0044.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:47::6) To DB7PR03MB3723.eurprd03.prod.outlook.com
+ (2603:10a6:5:6::24)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] selftests/pidfd: align stack to fix SP alignment
- exception
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-To: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org,
- Catalin Marinas <catalin.marinas@arm.com>,
- Mark Rutland <mark.rutland@arm.com>, baolin.wang@linux.alibaba.com,
- tianruidong@linux.alibaba.com, brauner@kernel.org, shuah@kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <20250312061557.28532-1-xueshuai@linux.alibaba.com>
- <0a70f4ab-cd83-434d-8dd2-486d58e5599a@linux.alibaba.com>
- <20250404121759.GA28692@willie-the-truck>
- <3af36c30-48e9-4182-ad09-bd28d3e4acb4@linux.alibaba.com>
-In-Reply-To: <3af36c30-48e9-4182-ad09-bd28d3e4acb4@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB7PR03MB3723:EE_|DU0PR03MB8440:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3a04b9a4-f297-4e5e-1594-08dd82f7888b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|7416014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?lZ0RsDZ1Eb2G9aGKSTIZYKuh1voaBq01cLJ46VvRHQKFtV1QW4SpdxzjnSDv?=
+ =?us-ascii?Q?Bu1znYkUHINPiz7o1Y2t457m/J7kZzO2nSGj1kaq7eyS0+vGanNn0yCIiZbO?=
+ =?us-ascii?Q?5TZBE4PsePefy1o/iNish/A41TNVTNrC+nlhM5ahyW/40YvrQx1DcLiCvHsB?=
+ =?us-ascii?Q?bJtrttDcZzvD2wOtup4SC8bzfWIugEDVLJX4DDuD3N6uGZ4CwfVElsUvoLSu?=
+ =?us-ascii?Q?y1vzLR0poC0QXWSD183C8iSTe1OeHzgZCF2noPlUz4brSIlsTmGuEn4fPk4g?=
+ =?us-ascii?Q?nipAAzccSqKRt7ZA5ZG8mHTlrdtU+vvhTpbH1ZUzlSFi5N/sOh7MeU4xu627?=
+ =?us-ascii?Q?jOv297gy3Z2Qnz5O75JfAZnivrIJPCGCpxSPTqB2blK1lg3U+CPaqi2NgCdX?=
+ =?us-ascii?Q?dUo4Lo3rpRMeu6z8X/5vOt7hdXvKog94SPw0S4l48WvHFuxPOcbBSVh+uus9?=
+ =?us-ascii?Q?p3hwjNPC5ywUW4gGdVzfjlois36dCK7jVUePyOw5bnNNeks0FV566n+tU6XS?=
+ =?us-ascii?Q?N8ZvSSBEyPXWUa9MIR8wevfCJn7PcknMoBFZWwC1NrhAu0HKbx2vl0xH/5Cm?=
+ =?us-ascii?Q?ApSMQEyWP0k71B+CKUAjuuAOOb7xv2jwaaLKk/prhFpP3EHtfq1hAj+3BzHY?=
+ =?us-ascii?Q?0LZJaQ0mR2GRiyzXPKF2ex7hpjfLaJ5t11cqVCN6KVLsPk92B4pamvuqwPPt?=
+ =?us-ascii?Q?ivl8eU7bH3z9s6rKkcewLLB5SvNkBLYbhFbOVymshQR9x6CpLP7So8UUENlH?=
+ =?us-ascii?Q?TWmgChek9AbjI+HU+SEcFZmczmcJbSC7tSfDY5p8rGScUTplIQ/aj3QNrxzw?=
+ =?us-ascii?Q?kAtlenVqk5WAZ7dnyAdkcZxyjJGAEtSZJRlrBmZO/vfGg5i98FO5cs49BDDz?=
+ =?us-ascii?Q?DgdQvrANlBOENt7clgoRulgh8Q+3eEynFcg9nxtpl0+f0/bdg4w+VQnm0Ks0?=
+ =?us-ascii?Q?/8+yZQMPu6zaCBwbz9zDfn0/RQt7cBWLt1W2nkvoSI+m6mQUrz9DzLodlbKR?=
+ =?us-ascii?Q?OEhz+kCzs7AUyykdd4xbMVkxBNg70UGS3Qh6WLdNahHR0P5kl4azyCjYbizw?=
+ =?us-ascii?Q?PAgf4IR8UAi38so3LmxnT6MBJ07ioFD0YAXyNXI9NPPVEcxLEmdcXEN/f7GM?=
+ =?us-ascii?Q?kYwl6IJ9RIFThaM0HJGho979SxBQ0iJvXX8Efnu+Zpa67Hr2gOqyrpnAc3nR?=
+ =?us-ascii?Q?ZdKRDg6cATL+Bf5LaeLn1Ugqt8VhrF575OLOOIEPbEmdmVDuWEKBFY/mC+Zc?=
+ =?us-ascii?Q?0GlJlNLx/1GhN/A+trQeQ5oKNCLer15J3nXS/Y9neMMDaQ1is+W0oLJC5ybM?=
+ =?us-ascii?Q?i23kt1LxN75TE6oBCSe07UW0FFOO2VK/McBUxcG2HNm+lZWlqjlyThYmEsig?=
+ =?us-ascii?Q?Mi685QXKZM9GtIYLcvNRchA+nj1Vm2SaUbP+sLH5BB+8JzGUSIB22ab57Jfd?=
+ =?us-ascii?Q?ihYibkF/mgOW3OmLJsNl+LOn44zOV0NpBt5DayWnz7Vy3/MdCJ6nnw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR03MB3723.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(7416014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?TgoxNHCdtIjhod9ZtENgKbvytUuXvyOOSVM5MO12vbeLJNQA/jQLdV+5Q768?=
+ =?us-ascii?Q?XbTShjdPygDv4OuEbHD72HDeL/UXFyR7kEpUCilznuVYwa6WmX8nt8iKd0pA?=
+ =?us-ascii?Q?GQuiEP5auRZAL5bPF4NzdYkz7hepLlJsRVs/37CoQadauDMIUEfSV0N62GMT?=
+ =?us-ascii?Q?IMP68OfOxCGsyGdBcuGAZo9ZHsahOSVnza4ZJk6RjGBUSfzGKJnrjMkonNH6?=
+ =?us-ascii?Q?miyyEfGbUHgRftJFYnO1rTRwxCnYUm6Bpui+38be6sNYv8/v1uuJzIE/b2YT?=
+ =?us-ascii?Q?SCLLPvf0iy2t/WMC3QpVYeRXWeM5LhlWHGjeuPC1Bpd0kxynXYU3LtKzgcsd?=
+ =?us-ascii?Q?8NAMLOnZhDB2zm2KG9bAqUYRvP00E8a2Ogprepk8yTkgUX6W8scxDzDR08dK?=
+ =?us-ascii?Q?PGZxQUOR6aOx4H6718rSgBRQdDX5Kbj/x6jjbs5na2nz87BPDR+SPVCrTtcm?=
+ =?us-ascii?Q?+67srUb10YgWWs2Y/bcDjVgzlHs5pYs9GnvE2/ngCO0bSDF9RMLxiTTN025k?=
+ =?us-ascii?Q?QfcFMK3AnFFAbvKyRaeCsvO1iBHr6r/Uvjqb63KmtugsJCPpfuH7+W0biviV?=
+ =?us-ascii?Q?Q3oeMb20hYsssq7RExji1Y8DMt8k4/lNAbroJEfYBbl62dFct4bM3fV6AHt1?=
+ =?us-ascii?Q?G4wnMvFSniTKRmSmhrw3knyYVepWat62+DLu4kpnMs3FEB3f162T8ML0ZKoS?=
+ =?us-ascii?Q?2EzweuRcJ93i6EMikIXacKYzPakQkc4qIhbDlblnFiL2ZIQx7gFXOZ9SM7OS?=
+ =?us-ascii?Q?4PTxr5jJj/lSWkGN9is0Fa01ytvN190NQCdz+h8ngrRjHL3V5tEjRuMa2vOE?=
+ =?us-ascii?Q?jRrKWDJVYvERhwbx3NtwFIYLLTCa81z+YgfO6zj5L6T5quMKxAdWlCNqf5YS?=
+ =?us-ascii?Q?HQXG8swf9uVq8DB49SpkXQ61qCXrgpiuklbOUCP6FKWELT7iJzyz6LakfDfQ?=
+ =?us-ascii?Q?wyAlALgL+wc+MZgsqwFJkcWG4NOLXxWX7B4897wQGQG+t1xxVKwmC9bNaz/A?=
+ =?us-ascii?Q?JYHpc2bIjeEV/XI0kPe0Wt89kgpg/wItLZ10OqMGvIgpNLkrnGGIZgb8hWrN?=
+ =?us-ascii?Q?XVI7H+uHJCPmVrKgpP4890d5LIZBRL+QRnuNvaIqMV0jaLxdJWvkhF77+DRv?=
+ =?us-ascii?Q?bZIpvBL84bcYXFdxEoRtE9p6tIrz+iuMA6Fgis0USaksOlbCvwxLzDXv3YqJ?=
+ =?us-ascii?Q?AVCZ5tfjpXr72dntQVTixqZubaU1/ZjcytEZcnf4/6INRW/nGEh6VJstdPIU?=
+ =?us-ascii?Q?zjw1ALzS1MmMZUoMB18j9V+nS7UpVzJjQ4xitpWsYFzfehG937FL20LkkNNy?=
+ =?us-ascii?Q?0FMTEUEjE4TiDHg18k9jxDNtZpExgY4alQFOxFcdjcdwWSjMvXyMsu8HYkJl?=
+ =?us-ascii?Q?ECxpWOJS/DwLL8TSC0/X3Z+r0fS7U1J52gPo4GmxXzLNA6nn7WRiyxkxGVdb?=
+ =?us-ascii?Q?GEyQOZLOrSEfg8RDZ99CXsU8MehzHyOx9TOnK1tzcScOA/IkgRkau1Fop1Wg?=
+ =?us-ascii?Q?szR7YO9PHNPr40E/yuv1P9ODhsBW8Vq5iU3YQrrBKHA3oiCatDEPoTdgKphr?=
+ =?us-ascii?Q?4gM/ycoYegKiDC4V2tnQrj+mwVJeGf8q+ZbbBpAb?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3a04b9a4-f297-4e5e-1594-08dd82f7888b
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR03MB3723.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 06:16:21.8360
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Xqd5CbHSuyNt6DNYtt0eQTkdialpa6olfMLAEzKX9cgDZb2jS5vuBKJTe5a/U1rGKmi6osjYqBu+vb+AB8mzEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR03MB8440
+
+On Wed, Apr 23, 2025 at 11:23:09AM +0000, Philippe Schenker wrote:
+> On Wed, 2025-04-23 at 12:21 +0200, Francesco Dolcini wrote:
+> > > > 
+> > > > I would backport this to also older kernel, so to me
+> > > > 
+> > > > Fixes: 6a57f224f734 ("arm64: dts: freescale: add initial support
+> > > > for
+> > > > verdin imx8m mini")
+> > > 
+> > > NACK for the proposed Fixes, this introduces a new Kconfig which
+> > > could
+> > > have side-effects in users of current stable kernels.
+> > 
+> > The driver for "regulator-gpio" compatible? I do not agree with your
+> > argument,
+> > sorry. 
+> > 
+> > The previous description was not correct. There was an unused
+> > regulator in the DT that was not switched off just by chance.
+> > 
+> > Francesco
+> > 
+> My previous reasoning about the driver is one point. The other is that
+> the initial implementation in 6a57f224f734 ("arm64: dts: freescale: add
+> initial support for verdin imx8m mini") was not wrong at all it was
+> just different.
+> 
+> My concern is for existing users of stable kernels that you change the
+> underlying implementation of how the SD voltage gets switched. And
+> adding the tag
+> 
+> 
+> Fixes: 6a57f224f734 ("arm64: dts: freescale: add initial support for
+> verdin imx8m mini")
+> 
+> to this patch would get this new implementation also to stable kernels
+> not affected by the issue introduced in f5aab0438ef1 ("regulator:
+> pca9450: Fix enable register for LDO5")
+
+I will wait a day and send V4 with what I beleive was result of this
+discussion.
+
+Wojtek
+
+> 
+> Philippe
 
 
-
-在 2025/4/6 19:57, Shuai Xue 写道:
-> 
-> 
-> 在 2025/4/4 20:18, Will Deacon 写道:
->> On Wed, Mar 19, 2025 at 10:59:57AM +0800, Shuai Xue wrote:
->>> + ARM maintainers for review.
->>>
->>> 在 2025/3/12 14:15, Shuai Xue 写道:
->>>> The pidfd_test fails on the ARM64 platform with the following error:
->>>>
->>>>       Bail out! pidfd_poll check for premature notification on child thread exec test: Failed
->>>>
->>>> When exception-trace is enabled, the kernel logs the details:
->>>>
->>>>       #echo 1 > /proc/sys/debug/exception-trace
->>>>       #dmesg | tail -n 20
->>>>       [48628.713023] pidfd_test[1082142]: unhandled exception: SP Alignment, ESR 0x000000009a000000, SP/PC alignment exception in pidfd_test[400000+4000]
->>>>       [48628.713049] CPU: 21 PID: 1082142 Comm: pidfd_test Kdump: loaded Tainted: G        W   E      6.6.71-3_rc1.al8.aarch64 #1
->>>>       [48628.713051] Hardware name: AlibabaCloud AliServer-Xuanwu2.0AM-1UC1P-5B/AS1111MG1, BIOS 1.2.M1.AL.P.157.00 07/29/2023
->>>>       [48628.713053] pstate: 60001800 (nZCv daif -PAN -UAO -TCO -DIT +SSBS BTYPE=-c)
->>>>       [48628.713055] pc : 0000000000402100
->>>>       [48628.713056] lr : 0000ffff98288f9c
->>>>       [48628.713056] sp : 0000ffffde49daa8
->>>>       [48628.713057] x29: 0000000000000000 x28: 0000000000000000 x27: 0000000000000000
->>>>       [48628.713060] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
->>>>       [48628.713062] x23: 0000000000000000 x22: 0000000000000000 x21: 0000000000400e80
->>>>       [48628.713065] x20: 0000000000000000 x19: 0000000000402650 x18: 0000000000000000
->>>>       [48628.713067] x17: 00000000004200d8 x16: 0000ffff98288f40 x15: 0000ffffde49b92c
->>>>       [48628.713070] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
->>>>       [48628.713072] x11: 0000000000001011 x10: 0000000000402100 x9 : 0000000000000010
->>>>       [48628.713074] x8 : 00000000000000dc x7 : 3861616239346564 x6 : 000000000000000a
->>>>       [48628.713077] x5 : 0000ffffde49daa8 x4 : 000000000000000a x3 : 0000ffffde49daa8
->>>>       [48628.713079] x2 : 0000ffffde49dadc x1 : 0000ffffde49daa8 x0 : 0000000000000000
->>>>
->>>> According to ARM ARM D1.3.10.2 SP alignment checking:
->>>>
->>>>> When the SP is used as the base address of a calculation, regardless of
->>>>> any offset applied by the instruction, if bits [3:0] of the SP are not
->>>>> 0b0000, there is a misaligned SP.
->>>>
->>>> To fix it, align the stack with 16 bytes.
->>>>
->>>> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->>>> ---
->>>>    tools/testing/selftests/pidfd/pidfd_test.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
->>>> index c081ae91313a..ec161a7c3ff9 100644
->>>> --- a/tools/testing/selftests/pidfd/pidfd_test.c
->>>> +++ b/tools/testing/selftests/pidfd/pidfd_test.c
->>>> @@ -33,7 +33,7 @@ static bool have_pidfd_send_signal;
->>>>    static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
->>>>    {
->>>>        size_t stack_size = 1024;
->>>> -    char *stack[1024] = { 0 };
->>>> +    char *stack[1024] __attribute__((aligned(16))) = {0};
->>>>    #ifdef __ia64__
->>>>        return __clone2(fn, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
->>
->> The arm64 alignment requirement is correct, but I don't really grok what
->> this code is trying to do. If it's not using CLONE_VM, why bother passing
->> a separate stack? If it _is_ using CLONE_VM, then surely the stack needs
->> to be allocated somewhere other than the caller stack?
->>
-> 
-> Hi, Will,
-> 
-> Thank for you reply.
-> 
->> https://man7.org/linux/man-pages/man2/clone3.2.html
-> clone3()
->         The stack for the child process is specified via cl_args.stack,
->         which points to the lowest byte of the stack area, and
->         cl_args.stack_size, which specifies the size of the stack in
->         bytes.  In the case where the CLONE_VM flag (see below) is
->         specified, a stack must be explicitly allocated and specified.
->         * Otherwise, these two fields can be specified as NULL and 0 *, which
->         causes the child to use the same stack area as the parent (in the
->         child's own virtual address space).
-> 
->  From man-pages for clone3, I think you are right.
-> As you pointed out, without CLONE_VM, the stack can indeed be set to NULL.
-> However, when running the pidfd_test, issues arise:
-> 
-> #./pidfd_test
-> TAP version 13
-> 1..8
-> # Parent: pid: 125004
-> Bail out! pidfd_poll check for premature notification on child thread exec test: pidfd_clone failed (ret -1, errno 22)
-> # Planned tests != run tests (8 != 0)
-> # Totals: pass:0 fail:0 xfail:0 xpass:0 skip:0 error:0
-> 
-> 
-> Upon examining the git diff:
-> 
-> #git diff
-> diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
-> index 9a2d64901d59..c5991c0712c8 100644
-> --- a/tools/testing/selftests/pidfd/pidfd_test.c
-> +++ b/tools/testing/selftests/pidfd/pidfd_test.c
-> @@ -32,13 +32,10 @@ static bool have_pidfd_send_signal;
-> 
->   static pid_t pidfd_clone(int flags, int *pidfd, int (*fn)(void *))
->   {
-> -       size_t stack_size = 1024;
-> -       char *stack[1024] = { 0 };
-> -
->   #ifdef __ia64__
->          return __clone2(fn, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
->   #else
-> -       return clone(fn, stack + stack_size, flags | SIGCHLD, NULL, pidfd);
-> +       return clone(fn, NULL, flags | SIGCHLD, NULL, pidfd);
->   #endif
->   }
-> 
-> 
-> Also from man-pages of clone3, https://man7.org/linux/man-pages/man2/clone3.2.html
-> 
->     The clone() wrapper function
-> 
->         The stack argument specifies the location of the stack used by the
->         child process.  Since the child and calling process may share
->         memory, it is not possible for the child process to execute in the
->         same stack as the calling process.  *The calling process must
->         therefore set up memory space for the child stack and pass a
->         pointer to this space to clone()*.  Stacks grow downward on all
->         processors that run Linux (except the HP PA processors), so stack
->         usually points to the topmost address of the memory space set up
->         for the child stack.  Note that clone() does not provide a means
->         whereby the caller can inform the kernel of the size of the stack
->         area.
-> 
-> Now, I am confused about the rules :(
-> 
-> Upon reviewing the glibc code for handling this:
-> https://elixir.bootlin.com/glibc/glibc-2.41.9000/source/sysdeps/unix/sysv/linux/aarch64/clone.S#L52
-> 
-> It's evident that when the stack pointer is set to NULL, the aligned stack
-> pointer remains zero, leading __clone to perform a syscall error,
-> returning -EINVAL due to an invalid argument.
-> 
-> In summary, memory space for the child's stack must be explicitly allocated,
-> and a valid pointer must be passed to clone() regardless of the use of
-> CLONE_VM.
-> 
->> Will
-> 
-> Thanks.
-> Shuai
-> 
-
-Hi, Will,
-
-Gentle ping. Any feedback?
-
-Thanks.
-Shuai
