@@ -1,95 +1,82 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17706B66E
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6ED634;
+	Thu, 24 Apr 2025 00:32:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745454715; cv=none; b=QpMlQwHuQIQyO4U6n+rJeAaRvSXFkyKYukNasZbwWwEXSbx83bXXOpQsc42ylAivAnaXyg5B8EQ7/jre1CTZhvvXf0OeIz94i36BygP41CnvPRfteHaP3JkNlPUVSUZ9YWcbd9tWUzA1Qn1jzMtvzB3leIJRD3XKAZ7fZWhADEA=
+	t=1745454753; cv=none; b=K6YrLRPrDYAiQn1Z2QieQ2g98JUgYZDE4ReNn4PPEGX/6fguANC2dZMgBOLu4JtXXOR/NTXpfrIrkynH5X0FPIfmgNRtbzBNYO6YsIAyUauvq5PdpbqBE5xCAD15Keh0ccjyK/XNilkooecVjqw2mNoMj/3KmZcsN35A5o4fuAk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745454715; c=relaxed/simple;
-	bh=VLW7rBF7OlF7e/px/+IecU1Xk9kQQNky3ILVr24wr4U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CPZDeNl4lfL0a0avoYMGkILuOSymxBYOHotswiMICcrUbV+VSUMeYcbnSn0+J7Lr6qjlvEG9vxsKYwTPaNKa6Hzjt48vSwn9pLtpo4K5vnpS0R36DMMwo648j0uu09bM6j0xl+BYNkaEMON9Hbi9IHWojRrS3rNhHPoBsrR1cqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=F87wFOOL; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1745454753; c=relaxed/simple;
+	bh=cR3TCvLS3jMlfbS0rKdZV7/VIl42dYXU2s5/UI/x3QI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=br2gWyj9aq1TtIKruD4El/lbc+Caq/XFCB70U/r5syqJDmdeitxoTeO0rCGteI/ItUjQqA0r0TIZHKjYcWUwojrsbzVMcp+6ozY3S2nEIaa41T9bKxP2y0tx05VHRf5jvwfXpUP5MixxwDa34F65KMEf6n8v7PGb0eNF2/6c730=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ayaEoUD5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="F87wFOOL"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1745454704; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=c8ZCQX8M22/L+jhRyOZyyKQ/yi6W0hwrq83O3s9SBSE=;
-	b=F87wFOOLeJaVqSJx5rG4X36jq+snQTgDUxxSDehLC3CvoFZqb1nKE6RVvmODcMBpv1/zDLrnAOo+l7lKDEymylmru/GbR60Qmu4CksSAH41UdOhcQZd/9urIiOxbVQA0N94XRDnrqG28ynPZKm9j6sYdVO+UD3jqOjW+RXaJWbs=
-Received: from 30.134.100.0(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WXw4zKR_1745454703 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Thu, 24 Apr 2025 08:31:43 +0800
-Message-ID: <94c702b9-cad5-4727-a7f1-16de1827841e@linux.alibaba.com>
-Date: Thu, 24 Apr 2025 08:31:42 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ayaEoUD5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C23C2C4CEE2;
+	Thu, 24 Apr 2025 00:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745454752;
+	bh=cR3TCvLS3jMlfbS0rKdZV7/VIl42dYXU2s5/UI/x3QI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ayaEoUD5+uornete260/fxlWq3b/tvUsHFY7rXlMSrgK993/YFetwx91JlQcUeYo/
+	 7+aMLEkO1ELL5s4VvZ6GQZ4krrj4Cjqk5y8DU4d3YoqSGMvJTDr2nQZUPbbUfb2Bv0
+	 96dDUdhNNsiYnDAIi0PX6zc/5O0eCQa3E3LnezZgDJzkhQMeD7zs0QUldHx4jwGsRt
+	 d7UamGYYHvzEpOx1h53iSzX+BH1m3cdnY6Kmf2oehN9NEvEnw4KmANVbCkBc4lz6YJ
+	 Y6QTISSkIjHdHgXsSTRv0kUSSuYiUTAGz0uDg6jmZG1QGcfqtR/7MRRBZ54RnvszMw
+	 uYljnw2l50JKg==
+Date: Wed, 23 Apr 2025 17:32:31 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, "David S. Miller"	
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni	
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Kuniyuki Iwashima	
+ <kuniyu@amazon.com>, Qasim Ijaz <qasdev00@gmail.com>, Nathan Chancellor	
+ <nathan@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v4 7/7] net: register debugfs file for net_device refcnt
+ tracker
+Message-ID: <20250423173231.5c61af5b@kernel.org>
+In-Reply-To: <a07cd1c64b16b074d8e1ec2e8c06d31f4f27d5e5.camel@kernel.org>
+References: <20250418-reftrack-dbgfs-v4-0-5ca5c7899544@kernel.org>
+	<20250418-reftrack-dbgfs-v4-7-5ca5c7899544@kernel.org>
+	<20250423165323.270642e3@kernel.org>
+	<a07cd1c64b16b074d8e1ec2e8c06d31f4f27d5e5.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] erofs: lazily initialize per-CPU workers and CPU
- hotplug hooks
-To: Sandeep Dhavale <dhavale@google.com>, linux-erofs@lists.ozlabs.org,
- Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>
-Cc: kernel-team@android.com, linux-kernel@vger.kernel.org
-References: <20250423061023.131354-1-dhavale@google.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20250423061023.131354-1-dhavale@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-
-
-On 2025/4/23 14:10, Sandeep Dhavale wrote:
-> Currently, when EROFS is built with per-CPU workers, the workers are
-> started and CPU hotplug hooks are registered during module initialization.
-> This leads to unnecessary worker start/stop cycles during CPU hotplug
-> events, particularly on Android devices that frequently suspend and resume.
+On Wed, 23 Apr 2025 20:04:58 -0400 Jeff Layton wrote:
+> On Wed, 2025-04-23 at 16:53 -0700, Jakub Kicinski wrote:
+> > Names are not unique and IIUC debugfs is not namespaced.
+> > How much naming the objects in a "user readable" fashion actually
+> > matter? It'd be less churn to create some kind of "object class"
+> > with a directory level named after what's already passed to
+> > ref_tracker_dir_init() and then id the objects by the pointer value 
+> > as sub-dirs of that?  
 > 
-> This change defers the initialization of per-CPU workers and the
-> registration of CPU hotplug hooks until the first EROFS mount. This
-> ensures that these resources are only allocated and managed when EROFS is
-> actually in use.
+> That sounds closer to what I had done originally. Andrew L. suggested
+> the flat directory that this version represents. I'm fine with whatever
+> hierarchy, but let's decide that before I respin again.
+
+Sorry about that :(
+
+> When I was tracking down net namespace leaks recently, it was very nice
+> to have the inode number of the leaked netns's in the filenames. I
+> would have probably had to grovel around with drgn to figure out the
+> address if that weren't embedded in the name. I think we probably ought
+> to leave it up to each subsystem how it names its files. The
+> discriminators between different types of objects can vary wildly.
 > 
-> The tear down of per-CPU workers and unregistration of CPU hotplug hooks
-> still occurs during z_erofs_exit_subsystem(), but only if they were
-> initialized.
-> 
-> Signed-off-by: Sandeep Dhavale <dhavale@google.com>
+> One thing that might be simpler is to make ref_tracker_dir_debugfs() a
+> varargs function and allow passing in a format string and set of
+> arguments for it. That might make things simpler for the callers.
 
-Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
-
-> ---
-
-...
-
->   int z_erofs_init_super(struct super_block *sb)
->   {
-> -	struct inode *const inode = new_inode(sb);
-> +	struct inode *inode;
-> +	int err;
->   
-> +	err = z_erofs_init_pcpu_workers();
-> +	if (err)
-> +		return err;
-> +
-> +	inode = new_inode(sb);
->   	if (!inode)
->   		return -ENOMEM;
-> +
-
-I think the new blank line is redundant, the setup part
-should be next to new_inode().
-
-I could fix up this part manually if you don't have strong
-opinion on this.
-
-Thanks,
-Gao Xiang
+Yes, cutting out the formatting in the callers would definitely 
+be a win. Maybe that'd make the whole thing sufficiently palatable :)
