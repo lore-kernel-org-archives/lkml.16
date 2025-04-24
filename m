@@ -1,138 +1,142 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7421E00A0
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21781E22FC
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:17:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745493411; cv=none; b=LbZmtIhKT/py24HJaja+JjXZSO3kltb0LwPSQyeSSUGRLVXMCOlZ8vONfb5OuCNJLds2XZ2zl9/YooLAdVNa37WtdDNqUuwTeDpVqKYA9q3kjK0IHtAghXNzuvlUagliHENfhaHiDjuCsvMuePeiUfy9DlNRyNpX0YKYNJ9fsSE=
+	t=1745493424; cv=none; b=jHc07z101mde0TIw/B8PDXTM72qIPmEbpXjIrlPpqRG/nr8126b8PyKTdg9SnxuDvV94FpSGtiM27c5u2NMpsf7uQvGdbo1epOxxA84Lpsb26zAFdRL4BeA7++xwnoYMsPQ3Ec7GMfZFVlFTgxeV/arXoC+8+BST6PriUcceEmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745493411; c=relaxed/simple;
-	bh=OtYc4R1i7QhpKlXAlIJIGNLOsc88gNaQq0hXB3PqtXA=;
+	s=arc-20240116; t=1745493424; c=relaxed/simple;
+	bh=rN3a+r+F4cWlZfEv6k0ufewQddliyCSPmPGBw6orybU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcxyYTY7ZQGjigSK6zbq673H2vXXRZhZISAn1DKD9DG0NNB2avtxWcYSUFThId/SzYMPmSHdrgG0IHIwfMt1YCGTEiLb7JTIeb0L4MTcbzweS6EhDvghHF1WpduV6trUpIju1DnDo7K/Rz6rff+kdzWRaOTJVoDH5d711v0ilhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=S7p8klQg; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=McCJDpkDkDr31QiixsUHNf6p4lFg9M4ZCtrw8X3OWi0kFOol2AQLqugwU8vCQoPO4ihjevpL1/rP/SetcoI0mR8VIWgnsEkdz17T+fSW8HWiMhpnlAZNq4VMxRvDX344ZkGL2wkjQF7HUlJaykoTxpFoYQIbbjKT5K3lW7OCg/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Qquh4YNp; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FCc8tN1m; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=1OiekEMZ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=QhMbUUAC; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="S7p8klQg"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OALxZ7011348
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:16:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	WOKsQBmb9gnp/skbN3gn5eJi+/fYb+YE/EuKIQjxIOQ=; b=S7p8klQglPFT+XC5
-	wNLR3glxPoVg6dWxxEUO7GYFII2cSXH2sB9hYPhbuXLzyRnrmDOe+XPlvrsf6MDV
-	7F/LqWgMzmdFCk+pjI1wTHFAT9gxLKBYK4LZDf3IClUzeF7rpy/TR169XJwcCz3z
-	V3Wiv96OAs0tsR/bCit8TUmJgydLx8lWwLCtAaHXXOrZr5hJXoEoHQRrOYCZW+Bw
-	fDPSB2AohWQmzxwTv2ouBT7n7Swuognn3Xp++XEs4kbLoGJ5sm1LGWBSoVrs0Swg
-	nbX/xYiL/BpXOA/YH05gNQBRVh26iTtJNfE7ioPvEp0R2W72vCqnFwuA8ZGjgu7z
-	PiwHuA==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3day3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:16:49 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c3c8f8ab79so133985985a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:16:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745493408; x=1746098208;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WOKsQBmb9gnp/skbN3gn5eJi+/fYb+YE/EuKIQjxIOQ=;
-        b=ODu2SR5QqsgUvt5funBtJhwCOmZaVFGFAYqAubadRcFFjX8h+kt4EsnPd42J8X1O69
-         UkgRB7mJnjWw/OVEIir2ZxTtx0hWDxA/hpbAlv7uZQcddVQMaqrzoK/bQj46LvydQt/+
-         YyyF5TOoq2HAq1i7OX9tSa/5w2zcCKgqNlh2vdY02iXM2ey73GZenTL1QASpdn9Ry2Wx
-         YyGXiObs1DMwHOS5f2bzHV89BBMWFQwrmX3NRkG0uk2v6NeHe/p7qjAFsY7nP6Kg4VBU
-         VkvAi4gvPJOBL3Blq15qrPWnhO4267KzHXRSEBuZk9FrRNk5AaLdvhvICP392nQwhzNJ
-         /kZw==
-X-Forwarded-Encrypted: i=1; AJvYcCW2P1uYfUDHqhocOLuNTuCVHnzPlZO7KcxQ1Bwvhv2jn1sJE+sAabdv3sqT7BCso4DPVAhNbTP9WtAA95Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCWioatHv7TwwYEf5ki/Tuh3xz/+9SFom1bcE8WVQRdi0uZStA
-	hBMKYtcDaKTUugh4FN3kyFsWdAHdRSjO2imM9RhNrgxU4ZCVYn8sECgADQoCAQovhHAp7TKzIyb
-	2NVHl+L629+DAXMj6K8IKPWlbGXDACQNsD8+jjkLWY1z520dOd3sJSj+MtfWyyRI=
-X-Gm-Gg: ASbGnctvyHfs80P7TRtMuUTL19Mo3AcFOwKctnGQbFbcJQ11qp990CLIOk7OdA40J/J
-	2MYFG7YaOgFxkAPyO6zuVBHg1Vx9ehH+18yfKXhs0y+kl3jQ8r/o6e4PNfn1aw/IGJZQaTlZ7Y2
-	FnD7Mni3aH4j16fOBjbVQEmoBjzXVjv1DgGTdnTZWYyYeblh9ELUP6jsKaux1hR3qrQ9iSkL5U5
-	dAhxLvzOj1QzKqcYtinwPfxi1BUAXhcrr3/htKRX0lQXdTeXYbHH1qqlr15RD97njtvxhwvxhhD
-	W2Vy7c092SlflcdHOrtVcKUW9hxOU1MmbpdqvkrT0mtl2yOCYtp6hk7sG46qVpKp55l0ruBQYfA
-	=
-X-Received: by 2002:a05:620a:3197:b0:7c5:a5cc:bcb9 with SMTP id af79cd13be357-7c956f89ca1mr358021385a.56.1745493407889;
-        Thu, 24 Apr 2025 04:16:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFlzMsXCtRP2FCd2KVZJ1BcD6CsMFbJbX5AT192JW0OJoNvHLjBDhAGLiy+F/Q5XQhhqENkxw==
-X-Received: by 2002:a05:620a:3197:b0:7c5:a5cc:bcb9 with SMTP id af79cd13be357-7c956f89ca1mr358018185a.56.1745493407489;
-        Thu, 24 Apr 2025 04:16:47 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cb3b60esm198002e87.86.2025.04.24.04.16.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 04:16:46 -0700 (PDT)
-Date: Thu, 24 Apr 2025 14:16:45 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: barnabas.czeman@mainlining.org
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Luca Weiss <luca@lucaweiss.eu>
-Subject: Re: [PATCH 1/2] rpmsg: qcom_smd: Fix fallback to qcom,ipc parse
-Message-ID: <nnkct4fjzfmx2y3s6oziurn3kqzymo2nsedmlvcreekgvcnr5r@jdhvwavvbt4a>
-References: <20250421-fix-qcom-smd-v1-0-574d071d3f27@mainlining.org>
- <20250421-fix-qcom-smd-v1-1-574d071d3f27@mainlining.org>
- <viki5krjvs3vs5jf2lrhah6v5rziqju7jv5kbwz7yyvdfjwhh5@6gieypw5owfp>
- <114814a2fc59b0fa3dd5a2863394c0f2@mainlining.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Qquh4YNp";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FCc8tN1m";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="1OiekEMZ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="QhMbUUAC"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id D01F421125;
+	Thu, 24 Apr 2025 11:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745493421; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=INeTkgOjLN0k/r+yDqIW8EZ9muScBYK5kQVQV9iDXQw=;
+	b=Qquh4YNpgV0bV9f0IxlCpUZbdvmAiRsyWsLtCoBNqVqW1wDNLQhffiqGN0rywCi59O6qZ4
+	yQg8IreGtW6Q7W+N12mToj/LGPGyRiYvtMJgQnDajTm2Ot26hUgPwJjP92y6sj9aElYXYR
+	yMzBHFm1kkFFdbEEm7CS5NFIsSuYS8o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745493421;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=INeTkgOjLN0k/r+yDqIW8EZ9muScBYK5kQVQV9iDXQw=;
+	b=FCc8tN1m8rrCgPI1vFd0qb/JFaI2e0b04ExJS1M0Xwmc111dY2c//IjncmEFTCblqKbBgf
+	xLSsRmlbfDcICBDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=1OiekEMZ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=QhMbUUAC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745493420; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=INeTkgOjLN0k/r+yDqIW8EZ9muScBYK5kQVQV9iDXQw=;
+	b=1OiekEMZK8RjqmQwWMPuhdIEsyPX+1+STSYlWFat+eIOp308AXKEAnxOC2N/AjWoda1Lyv
+	zbz2PBNgszKzSrisIvKnm2uo3pHHEPmA12zMAHnnAeny0/lZdo1WuLIkYCB14gPPCUGeww
+	hANpX5CO0NUimxBsouj1/i9TqJwUpVo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745493420;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=INeTkgOjLN0k/r+yDqIW8EZ9muScBYK5kQVQV9iDXQw=;
+	b=QhMbUUACzZWpLIOalWiAMF5XC1rMUrCX4yo+n/TAnMtlpy1Sxv5plS68X47/wzzaBT+BUR
+	ykk71evEPga5czAA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id B68D41393C;
+	Thu, 24 Apr 2025 11:17:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ngsuKqwdCmgaOQAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Thu, 24 Apr 2025 11:17:00 +0000
+Date: Thu, 24 Apr 2025 13:16:52 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Hannes Reinecke <hare@suse.de>
+Cc: Daniel Wagner <wagi@kernel.org>, 
+	James Smart <james.smart@broadcom.com>, Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>, 
+	Chaitanya Kulkarni <kch@nvidia.com>, Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 04/14] nvmet-fcloop: refactor fcloop_delete_local_port
+Message-ID: <80fd88ea-50e8-4692-ad15-c18cd45191dd@flourine.local>
+References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
+ <20250423-nvmet-fcloop-v5-4-3d7f968728a5@kernel.org>
+ <0c04b345-152b-4bbe-b9b7-7796211b8547@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <114814a2fc59b0fa3dd5a2863394c0f2@mainlining.org>
-X-Proofpoint-ORIG-GUID: ngfkif7j6Vr6UTLJnAGcIenzscMZL1x3
-X-Proofpoint-GUID: ngfkif7j6Vr6UTLJnAGcIenzscMZL1x3
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA3NSBTYWx0ZWRfX4YzehuW5+91p o2x6mChKXXxmNpYanCgOtN/hbWF0KyMDDQHSulqb11q/Rn4E4FeoqLEaYxDPUhxjOZMWmIWHvd7 iCyWpt+ga9atgD9pgmBkeoOlv5RsFQtC4XJKzfVSgCXxEKOnn0xF6qqoxZli2qcMu3hI7UwLF9b
- 2VHW0e5/yFpXZQ1G/xwGQznCmLzy0hakcpDgXPewInEtth556rYJlrkwsI1+XQbEGqnHQEBFPX2 We+NIxXIuc8uz5PKe1UFTiksC3cGBaDDQPLwNGWeWD0I20GXH3YuAJ32KJGk7B/UTbqqevJzAoF DsxBrf4hrwHwO4rwrZaZsVkcyiVEaxN05XpkL++C+sCad53ppQQ2aswnIT6guQLRKOBACX+xF23
- td1chaFAxw4qjToC+PZgPwVIbZUVZnLbqMP20utx6pLnzRDZuPeXy7Zi7eJrOjSI8rfLnHd+
-X-Authority-Analysis: v=2.4 cv=Mepsu4/f c=1 sm=1 tr=0 ts=680a1da1 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=OuZLqq7tAAAA:8 a=EUspDBNiAAAA:8 a=IuHD8Sb6Hs6KMzQ_MtUA:9 a=3ZKOabzyN94A:10
- a=wPNLvfGTeEIA:10 a=bTQJ7kPSJx9SKPbeHEYW:22 a=AKGiAy9iJ-JzxKVHQNES:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_05,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 clxscore=1015
- mlxlogscore=810 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240075
+In-Reply-To: <0c04b345-152b-4bbe-b9b7-7796211b8547@suse.de>
+X-Rspamd-Queue-Id: D01F421125
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,flourine.local:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Mon, Apr 21, 2025 at 01:40:50PM +0200, barnabas.czeman@mainlining.org wrote:
-> On 2025-04-21 12:38, Dmitry Baryshkov wrote:
-> > On Mon, Apr 21, 2025 at 04:04:16AM +0200, Barnabás Czémán wrote:
-> > > mbox_request_channel() returning value was changed in case of error.
-> > > It uses returning value of of_parse_phandle_with_args().
-> > > It is returning with -ENOENT instead of -ENODEV when no mboxes
-> > > property
-> > > exists.
+On Thu, Apr 24, 2025 at 12:10:46PM +0200, Hannes Reinecke wrote:
+> On 4/23/25 15:21, Daniel Wagner wrote:
+> > Use the newly introduced fcloop_lport_lookup instead
+> > of the open coded version.
 > > 
-> > Why? What is the rationale?
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/of/base.c#n1390
-> mailbox: use error ret code of of_parse_phandle_with_args() this commit was
-> changed the return value
-> from ENODEV to use retrun value of of_parse_phandle_with_args what is
-> returnung with EINVAL or ENOENT.
-> It makes skipping fallback path to parse qcom,ipc if there is no mboxes
-> property defined.
-> As far as I know qcom,ipc now only needed for rpm smd-edge on some SoCs like
-> 8939, 8916, 8976, 8917.
-> arm64: dts: qcom: msm8939: revert use of APCS mbox for RPM
+> > Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> > ---
+> >   drivers/nvme/target/fcloop.c | 30 +++++++++++++++---------------
+> >   1 file changed, 15 insertions(+), 15 deletions(-)
 > > 
+> You could merge it with the previous patch, but I guess that's
+> personal preference.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
--- 
-With best wishes
-Dmitry
+I've decided to split this out, so the previous patch is simpler to
+read but I merge it if this is better.
