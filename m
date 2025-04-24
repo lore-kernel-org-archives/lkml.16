@@ -1,178 +1,145 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157981922E7;
-	Thu, 24 Apr 2025 13:59:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90339191F91
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745503145; cv=none; b=rlglJT4zbSeV6I7q1hel8+t3ykXojud1tuXt3JdkPWJgiSPlNaJxPlXwPIBkrewjr+b/BMRjJ9xUUzVku+5agJZJSDuPMXW2gfVczxkQhM3RVUu5N8BDznfNs5JaMf+PDrB2VULD8XSoT6ti76Jog30OjKvN5mkaKSv2FZ0EEG4=
+	t=1745503149; cv=none; b=HKfAXltbMIr8HS3X2/Y7QrCbXQLLNy8Rg5kAx7m7NPostm5UbnjoXjBvqImHjEOckBfhA/AOE1jTwhuNiB0TYrrPIdTn5aRok56C5oAxaNeE/W2+xOhbMlKk1nc0cq/9YjM6B8ivTtynLuKLyyvMggY9EDqYEIoAxvFSVMAY2ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745503145; c=relaxed/simple;
-	bh=/wS2qyfeKJ1g5QmVsC2qtA6t6KVTFxjhV6QUtMMGuSY=;
+	s=arc-20240116; t=1745503149; c=relaxed/simple;
+	bh=81QYWiV601/NOg7KUW9KuMYqMF4efK5FBVmKsbYti3M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a+vqshbuAA+B6s2ZitplPg7PcSSJgu+W7rhS/7Ic/iBLeOkvTSDgv0ngPM/F/3AqMunjl7hODQQTYpLk/Ia8DT04UwRCB2YHadMChfv1aLvMRgCyeSV53beVyK5r9wLnYOQq2H0E/57ZdB0q4aeqk7a5TPzZb/GfWh0G9xDdPV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBTDBoPs; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=RcJr86zT07nNaxHu/mLLJujxXxHqiLprHjJdLDPKJSY8Drb8QfvG0MflSKk5YAiw2Z7nAo0D1WrUQCOTBnucexN1MpfkhBZ0qzawjoVsPGKKT3w2hyRKY3LMyt9xg3DWom5XLgagz7QtS3HUhgckSPxaI/KOrX1xsS88aMF/APY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Hdeacznj; arc=none smtp.client-ip=209.85.219.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBTDBoPs"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-7082e46880eso10981857b3.1;
-        Thu, 24 Apr 2025 06:59:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Hdeacznj"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e8f6970326so11962716d6.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:59:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745503142; x=1746107942; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZO12YFKzi4KoiVvc7xW76x/LCsQTlzuhTcAROt1KEG0=;
-        b=IBTDBoPsjOyGWcTlLp5U+fbqnYKLxTQNNnjRE0eBxjjgTGnNgGBPInJWjUKUbe+dZa
-         R1c1E/VI+hbz/RMo/H6wEasgoEl/qay4B6hZpgu1Npt/qoA7T1gp6MrHNNklOBy5cgmx
-         1L3nebbg+Hl49vFNIuW9Rr7W3KL+ojSy0TminPp+238hXB9qFYM2JoXlCFlu8jTObVh/
-         o+1mKm9ds9ESs4GIeo3ifBIY51LQwfWnF+2yo5Zyhy8jN5VfKzSsu81Xd1rFFYj0d217
-         mNwoZcyrC6Vo7ZHq4YspDM7AGykoXNOt46o+rfAvmsswcbnApiP58OZm3/ilgp5dPBZ7
-         zgSg==
+        d=google.com; s=20230601; t=1745503146; x=1746107946; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Pto+LbylSLjB1C6LlqbFL+yEYLFcjU7iIt4pqlTAkNc=;
+        b=Hdeacznjr6wmL5pRXruRkjcfj+ChD7UoZTqJNlU/UiLINon+0RGW7jl3U8wQI1DZ9K
+         C3DP2jSaxBd5zmoI+OgFNrO3106nuZMbvxqQWfgVJdWu0UXvCW7X1zOgvzQ1thQyuM8s
+         5Trq+Q0tcrX1+ijsdpRZMmQq9oTSbZIWPTCDBPJlRSsinGGptl5Nd1AFSxwwRGmb6ASk
+         3t5nNzA5Xfy8bMEF0AvJ3SyVcj3E+pcov3Lg73JkI0+E8aFwjWiWrCD8EGbE2Qem7M0a
+         JZwpSdEaIvUmbUg8O/ENim9VGNU9G1GO+4LGiOQwATbDsr2mNM+NjVRZqHTMwinQY57i
+         CPtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745503142; x=1746107942;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZO12YFKzi4KoiVvc7xW76x/LCsQTlzuhTcAROt1KEG0=;
-        b=eb8mu0LFSdMkjQ1/95YQmVa/HgmaZCeUvTk9Tte/TVHGlOIEfoWuBDOmdaJT++eTeG
-         HKEdp+fNf/1BVfAdSNw4UnFEhubZnlW9pOzNTdh2v+I6gwjIFz3fIVZ604nGMaub38Nu
-         8EqanctzDJS81UrWFinUVxNUiwnja+Dd1F9VhSh1JdFuiVXTok2L73ie8O+JtYJ07MTi
-         YPr/NXWZI6reNRXCLalr2MZHQOmEivw+dBQQ+hXCBQXxZE6VRtupP40U2itJKUI3NXza
-         nCqkyGg2Etq3uRfhEWdH+pSsfR4RvCH6RhrYhZCIqnqIrpVTXUBQhHqsONUcfFdeVkOm
-         10Zg==
-X-Forwarded-Encrypted: i=1; AJvYcCX/nwF/cEXFUcb6sU5kVf0ksCnhPa+U5sW8d6FZd3YISE2ckFMQwjRZjwv+bh3BVoW9jwX14TuL+MafwxI=@vger.kernel.org, AJvYcCXLB3bD20csF79Eb/a4tTP8RIVWwxp26kpAz+9blbdwL1hklMnHFSpig71BtK19nBZtKuZGe1uw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzt0KOwDcD4aun1k7a9miBUnEQ+ns/eMmFrGVNcYCAiJXtj8xxv
-	OaAHK+U5/JQTrcGEx5QLSZoL0rbpcpNhmCnd481UT1jLflIV4twoqz66c++iTHoAlXWtr7z6DtC
-	BlsomRObofQFhSqN8MT2E62+dx6g=
-X-Gm-Gg: ASbGnctRUwc7JJk5N4ZVgoPB852gAdWjj8p6ouNgTUDM6rd2rGZYkMtt8rLkNjLM+XS
-	FEiLQaFSlXA6HiCnWd87CJ7SWGns85Mw4hZ+WuPliGBM7K+iniKHqi5ztRVQqYgjNTWc02fzVaV
-	hx8LWJCeLhnOaWE8+IQmE=
-X-Google-Smtp-Source: AGHT+IHwqpgOt9Q26PQFQWtRKmrYV8P1gwnc5VvyJ5FcB0TIN01J8+K9ePxG06lYnAm+fqtwRLaYCH3Rpl74fZ4E9Sw=
-X-Received: by 2002:a05:690c:488a:b0:705:750d:c359 with SMTP id
- 00721157ae682-7083eda4894mr44030517b3.32.1745503141818; Thu, 24 Apr 2025
- 06:59:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745503146; x=1746107946;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Pto+LbylSLjB1C6LlqbFL+yEYLFcjU7iIt4pqlTAkNc=;
+        b=OzteYvTSa/yvqErE8jObOM4w53XLFAOmVw/dhEtTn8jDAp4MY7BGf3WvN6Wgy4zIE0
+         H+hSFJCzH96d2+oC0c+cavQHejQw95IpqlOomlmR3RdfksqVSB8JlNV/aH23cShSnORU
+         29+iApK/2MlpI5kkr4no/0iS/4lv62McLVDJmQOxisXZaVj64OMEpCyxAmMsiWhmsO1m
+         VJWifH+EKgQHWUE//qnYE8FxlXmBYNSNdaIag3uQrOo7Cs4kAedywslMdcZHw9tXfnCZ
+         eTHSXosQasaZNOeshe85x6uNtgedo3sjI1BSR+dgcypmPXU84/A7NwrcrMf+7oNx2ZNC
+         YCsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHVtq6tuoUYhBJwvPnKG7aiLBm1iwJrtH1Mis51djXH8LEbaUMcao6K4/F2b2DA6bICFxas4EeHDCZjkA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcMZjjfj7YJodvP8eacl/kRDc5GpU6efBa1/aWntEMdqwvKnCn
+	JcbMILZcDqtIZjcfRF4j5kK+YGbcFoqZhEBVR3nCMNshvnZdgHXvCwIZtcHjdL0fXWGHGKf0AQ3
+	E7B69g4ESAmnS6xnrBAVVGWEBpWtQjNXf5UVD
+X-Gm-Gg: ASbGnctWPE6CpkBhUCmtSNvEk/0YKWul8F3urGuJXTreUUXYEiJBnrEpFKZ6e0h5oIf
+	FoPtJ3XLCJ1x9BN7fd2LCTMT0Jd3V1ANpjUaridLIrppfxNjDA+mbRicfwrhMeJ1ZzJ/zVEdZng
+	AHjm74Zqm+M7s+JqgYuX+tijxLOu4h+GSeZ2fu9tvgRMZx40rj3NCF
+X-Google-Smtp-Source: AGHT+IE3ItXbV1+kTVfVtATpq+WTeREEehkFTAAzkn1NkN9ZtuVOvJniNI/Uy0ukgh7nK1TAUBfoEGtSKTLQKyJtO1Y=
+X-Received: by 2002:a05:6214:2a45:b0:6f4:b265:261 with SMTP id
+ 6a1803df08f44-6f4bfbbbb5emr48222186d6.8.1745503146206; Thu, 24 Apr 2025
+ 06:59:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422184913.20155-1-jonas.gorski@gmail.com>
- <20250424102509.65u5zmxhbjsd5vun@skbuf> <04ac4aec-e6cd-4432-a31d-73088e762565@gmail.com>
-In-Reply-To: <04ac4aec-e6cd-4432-a31d-73088e762565@gmail.com>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Thu, 24 Apr 2025 15:58:50 +0200
-X-Gm-Features: ATxdqUGxE8RDK8LuHitstkRn3GpB3QidAJNNw7_xvXz_vuRnG-LEtKIfyuVz_5Y
-Message-ID: <CAOiHx==5p2O6wVa42YtR-d=Sufbb2Ljy64mFSHavX2bguVXPWg@mail.gmail.com>
-Subject: Re: [PATCH net] net: dsa: fix VLAN 0 filter imbalance when toggling filtering
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Vladimir Oltean <vladimir.oltean@nxp.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20250416085446.480069-1-glider@google.com> <20250416085446.480069-4-glider@google.com>
+ <CANpmjNNmyXd9YkYSTpWrKRqBzJp5bBaEZEuZLHK9Tw-D6NDezQ@mail.gmail.com>
+In-Reply-To: <CANpmjNNmyXd9YkYSTpWrKRqBzJp5bBaEZEuZLHK9Tw-D6NDezQ@mail.gmail.com>
+From: Alexander Potapenko <glider@google.com>
+Date: Thu, 24 Apr 2025 15:58:28 +0200
+X-Gm-Features: ATxdqUEAntNIADHuPo_njoWHouU5ml7tSeW27VNL67TCm3kup8bcUf3veAU30Yo
+Message-ID: <CAG_fn=UBVzq3V4EHQ94zOUwdFLd_awwkQUPLb5XjnMmgBoXpgg@mail.gmail.com>
+Subject: Re: [PATCH 3/7] kcov: x86: introduce CONFIG_KCOV_ENABLE_GUARDS
+To: Marco Elver <elver@google.com>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, x86@kernel.org, 
+	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2025 at 2:34=E2=80=AFPM Florian Fainelli <f.fainelli@gmail.=
-com> wrote:
+> > --- a/arch/x86/kernel/vmlinux.lds.S
+> > +++ b/arch/x86/kernel/vmlinux.lds.S
+> > @@ -390,6 +390,7 @@ SECTIONS
+> >                 . = ALIGN(PAGE_SIZE);
+> >                 __bss_stop = .;
+> >         }
+> > +       SANCOV_GUARDS_BSS
 >
+> Right now this will be broken on other architectures, right?
+
+Right. I'm going to make it depend on X86_64 for now.
+
+
+> > - * Entry point from instrumented code.
+> > - * This is called once per basic-block/edge.
+> > - */
+> > -void notrace __sanitizer_cov_trace_pc(void)
+> > +static void sanitizer_cov_write_subsequent(unsigned long *area, int size,
 >
+> notrace is missing.
+Ack.
+> Can we give this a more descriptive name? E.g. "kcov_append" ?
+I'll rename it to kcov_append_to_buffer().
+
+
+> > +
+> > +/*
+> > + * Entry point from instrumented code.
+> > + * This is called once per basic-block/edge.
+> > + */
+> > +#ifndef CONFIG_KCOV_ENABLE_GUARDS
 >
-> On 4/24/2025 12:25 PM, Vladimir Oltean wrote:
-> > On Tue, Apr 22, 2025 at 08:49:13PM +0200, Jonas Gorski wrote:
-> >> When a net device has NETIF_F_HW_VLAN_CTAG_FILTER set, the 8021q code
-> >> will add VLAN 0 when enabling the device, and remove it on disabling i=
-t
-> >> again.
-> >>
-> >> But since we are changing NETIF_F_HW_VLAN_CTAG_FILTER during runtime i=
-n
-> >> dsa_user_manage_vlan_filtering(), user ports that are already enabled
-> >> may end up with no VLAN 0 configured, or VLAN 0 left configured.
-> >>
-> >> E.g.the following sequence would leave sw1p1 without VLAN 0 configured=
-:
-> >>
-> >> $ ip link add br0 type bridge vlan_filtering 1
-> >> $ ip link set br0 up
-> >> $ ip link set sw1p1 up (filtering is 0, so no HW filter added)
-> >> $ ip link set sw1p1 master br0 (filtering gets set to 1, but already u=
-p)
-> >>
-> >> while the following sequence would work:
-> >>
-> >> $ ip link add br0 type bridge vlan_filtering 1
-> >> $ ip link set br0 up
-> >> $ ip link set sw1p1 master br0 (filtering gets set to 1)
-> >> $ ip link set sw1p1 up (filtering is 1, HW filter is added)
-> >>
-> >> Likewise, the following sequence would leave sw1p2 with a VLAN 0 filte=
-r
-> >> enabled on a vlan_filtering_is_global dsa switch:
-> >>
-> >> $ ip link add br0 type bridge vlan_filtering 1
-> >> $ ip link set br0 up
-> >> $ ip link set sw1p1 master br0 (filtering set to 1 for all devices)
-> >> $ ip link set sw1p2 up (filtering is 1, so VLAN 0 filter is added)
-> >> $ ip link set sw1p1 nomaster (filtering is reset to 0 again)
-> >> $ ip link set sw1p2 down (VLAN 0 filter is left configured)
-> >>
-> >> This even causes untagged traffic to break on b53 after undoing the
-> >> bridge (though this is partially caused by b53's own doing).
-> >>
-> >> Fix this by emulating 8021q's vlan_device_event() behavior when changi=
-ng
-> >> the NETIF_F_HW_VLAN_CTAG_FILTER flag, including the printk, so that th=
-e
-> >> absence of it doesn't become a red herring.
-> >>
-> >> While vlan_vid_add() has a return value, vlan_device_event() does not
-> >> check its return value, so let us do the same.
-> >>
-> >> Fixes: 06cfb2df7eb0 ("net: dsa: don't advertise 'rx-vlan-filter' when =
-not needed")
-> >> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
-> >> ---
+> Negation makes it harder to read - just #ifdef, and swap the branches below.
+
+I thought I'd better keep the default hook above, but maybe you are right.
+Will do in v2.
+
+
 > >
-> > Why does the b53 driver depend on VID 0? CONFIG_VLAN_8021Q can be
-> > disabled or be an unloaded module, how does it work in that case?
+> > +config KCOV_ENABLE_GUARDS
 >
-> This is explained in this commit:
+> The "ENABLE" here seems redundant.
+> Just KCOV_GUARDS should be clear enough.
+
+I am already renaming this config to KCOV_UNIQUE per Dmitry's request :)
+
 >
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
-mmit/?id=3D64a81b24487f0d2fba0f033029eec2abc7d82cee
+> > +       depends on KCOV
+> > +       depends on CC_HAS_SANCOV_TRACE_PC_GUARD
+> > +       bool "Use fsanitize-coverage=trace-pc-guard for kcov"
 >
-> however the case of starting up with CONFIG_VLAN_8021Q and then loading
-> the 8021q module was not thought about, arguably I am not sure what sort
-> of notification or event we can hook onto in order to react properly to
-> that module being loaded. Do you know?
+> The compiler option is an implementation detail - it might be more
+> helpful to have this say "Use coverage guards for kcov".
 
-config BRIDGE_VLAN_FILTERING
-        bool "VLAN filtering"
-        depends on BRIDGE
-        depends on VLAN_8021Q
+Ack.
 
-without 8021Q there is no vlan filtering bridge, so filtering can
-never be 1, so NETIF_F_HW_VLAN_CTAG_FILTER is never set, so HW filters
-for VLAN 0 are never installed or removed, therefore the issue can
-never happen.
+> > --- a/scripts/Makefile.kcov
+> > +++ b/scripts/Makefile.kcov
+> > @@ -1,5 +1,9 @@
+> >  # SPDX-License-Identifier: GPL-2.0-only
+> > +ifeq ($(CONFIG_KCOV_ENABLE_GUARDS),y)
+> > +kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC_GUARD) += -fsanitize-coverage=trace-pc-guard
+>
+> This can just be kcov-flags-y, because CONFIG_KCOV_ENABLE_GUARDS
+> implies CONFIG_CC_HAS_SANCOV_TRACE_PC_GUARD.
+>
 
-The issue is only if a vlan filtering bridge was there, and now isn't
-anymore, and a previously VLAN 0 HW filter is left intact. This causes
-an incomplete vlan entry left programmed in the vlan table of the chip
-with just this port as a member, which breaks forwarding for that
-VLAN, which is incidentally also the VLAN used for untagged traffic in
-the non filtering case.
-
-There are a several issues currently in how b53 handles VLANs,
-especially on non filtering bridges. E.g. switchdev.rst says all vlan
-configuration should be ignored, but currently it isn't, as b53
-dutifully configures any vlans to the hardware passed on from DSA. I
-will attempt to fix at a later time, but first I wanted to make sure
-that switchdev/dsa/vlan/etc subsystems are working correctly.
-
-Best regards,
-Jonas
+Agreed.
