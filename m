@@ -1,43 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF13F17A2EA;
-	Thu, 24 Apr 2025 18:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C921F09B4;
+	Thu, 24 Apr 2025 18:43:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745520162; cv=none; b=YzUwzyuSUdJr43oludvv0HleypN1egw13xecF4BNrPnyZAK2M/dMi4b13g00sro7jQVWfaHZIIQ3wPggnoJ9v0m4fa29UyktRdKcGTpvphwxW5hDqh070V6U06ONPVv7TTlIVS7WhgTgYyA3M1cei3Yn8qfptaGqygjb1kAGf6g=
+	t=1745520198; cv=none; b=rXfQWCs6TJD0KziWAfrg4OTKYXBml7/+tmZexRoqG2rn3yH8PY0ZKO/FAF0W5iyygZCeS1pKu0FIMHjtW/AqyKxy7SxmyOdEJIaFcYxGgpUPOc/13Uk3Z6YMYwhJhbvgjJRvAtq2kGSauSqY+rBw4gDgbcf4GYVj2t84RWN39jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745520162; c=relaxed/simple;
-	bh=2qdkE4x2W0dSoJvO6MDB0Uk8zlBi3N+zDnj/Znpt48Y=;
+	s=arc-20240116; t=1745520198; c=relaxed/simple;
+	bh=e0MSzpfeZC3u0OgpBJaU+o20GeKZiZpJAI9t5/+pTns=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r7MjRP6MHuldFbc/Bat4fGFUFOZDfwageTwsZlI6sJ5JNlEpMgw7WdrabQaruC3Z7S4TfWf6a3PvI3BtXzz0B2eaC4d+vV+AgyaJ9bEbaLqtyGHqm3wc/F5S68NQsPa0UoHLP/wjHD+cbu0UP2jm24ZdNlWpUA15JtF3VFgNYzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTMSNTZX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BdtYNKGqkM16IMTdPpFurI5OwAEBZubPi5McTuIFz47EGdsxh6aMlVmXBQEsQLGHi5LN4JmAK7Vw3F5Hsf76zi0+jsxYh+zN3JbeDUOpxMcQtcX2wayuvjjbTiC1QNLMLWuoCscsTAy+G0Lq106kKwloqsOtZr9syMpzZqx6HIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z4K1d5z2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTMSNTZX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 232CAC4CEE3;
-	Thu, 24 Apr 2025 18:42:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z4K1d5z2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85CE9C4CEE3;
+	Thu, 24 Apr 2025 18:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745520162;
-	bh=2qdkE4x2W0dSoJvO6MDB0Uk8zlBi3N+zDnj/Znpt48Y=;
+	s=k20201202; t=1745520196;
+	bh=e0MSzpfeZC3u0OgpBJaU+o20GeKZiZpJAI9t5/+pTns=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FTMSNTZX8kORLzAsEEIX5Ti4RgZXoKJwhdVWVtI24hgp01OaWheb1weeKKyJB23KW
-	 Xhd3E/Fc4yQ0NGYhb7tJLVAKCA3URPXG7P0GRbu61HCzOtTcFTDpzXS7X6TyRQFd3y
-	 TkdoRkHvUUMIv2z6tgsqktbcAXoqCmXQprReq1EQLidWND6DDcuktfmKGXxu26drCl
-	 wTv1+CoLP6os8Nz4YJYlZlj48ok4+TXIgtIkObA0JuvMI29TtKGWdqkHmR9EdIO5WC
-	 ClmhduuEkBYFznTm3FstgsRQVbs3AtVUGyI8S7bm//qcehRJxMumicZbIKpfCH+QqU
-	 oDXvRl5ppTFdQ==
-Date: Thu, 24 Apr 2025 11:42:39 -0700
-From: Kees Cook <kees@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Erhard Furtner <erhard_f@mailbox.org>,
-	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Uladzislau Rezki <urezki@gmail.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] mm: vmalloc: Support more granular vrealloc() sizing
-Message-ID: <202504241136.8B4E729@keescook>
-References: <20250424023119.work.333-kees@kernel.org>
- <aAoAU4vhrpxiXaLF@pollux>
+	b=Z4K1d5z2cVAWYRQuDmGg4VfmJIxPQ1MXczD7on+t4QRic41MaX0ABN0CH+8pHP7zJ
+	 u6/dNxHsQiy2MT3hX7M+fni8jNGzFyWsNCU1gd4srDlXdQtxT7LQIhkWFHO6TNvpOl
+	 Ajfy0ck5+T/Q+TWz25umNhwixgWG8QjSX4ccVikYXMzjiumeRjnQSXfGkoYu9aQ2DJ
+	 b2yPsrUoFgnmFRIeYU21CJlbWC0gyG1Ya4aPoQgCI8ev1nWzKe5OCfIh0Ilv0DEnR4
+	 eE49muGXrVDxVaio6NWhxgZ91cC0dqjxvAD83gWnopvHPlnszERNmm0tCFH3ksc/f5
+	 2dijTq4Fa2RIQ==
+Date: Thu, 24 Apr 2025 19:43:11 +0100
+From: Simon Horman <horms@kernel.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH net-next v3] net: ethernet: mtk_eth_soc: convert cap_bit
+ in mtk_eth_muxc struct to u64
+Message-ID: <20250424184311.GM3042781@horms.kernel.org>
+References: <ded98b0d716c3203017a7a92151516ec2bf1abee.1745369249.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,80 +52,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAoAU4vhrpxiXaLF@pollux>
+In-Reply-To: <ded98b0d716c3203017a7a92151516ec2bf1abee.1745369249.git.daniel@makrotopia.org>
 
-On Thu, Apr 24, 2025 at 11:11:47AM +0200, Danilo Krummrich wrote:
-> On Wed, Apr 23, 2025 at 07:31:23PM -0700, Kees Cook wrote:
-> > Introduce struct vm_struct::requested_size so that the requested
-> > (re)allocation size is retained separately from the allocated area
-> > size. This means that KASAN will correctly poison the correct spans
-> > of requested bytes. This also means we can support growing the usable
-> > portion of an allocation that can already be supported by the existing
-> > area's existing allocation.
-> > 
-> > Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-> > Closes: https://lore.kernel.org/all/20250408192503.6149a816@outsider.home/
-> > Fixes: 3ddc2fefe6f3 ("mm: vmalloc: implement vrealloc()")
-> > Signed-off-by: Kees Cook <kees@kernel.org>
+On Wed, Apr 23, 2025 at 01:48:02AM +0100, Daniel Golle wrote:
+> From: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
 > 
-> Good catch!
+> With commit 51a4df60db5c2 ("net: ethernet: mtk_eth_soc: convert caps in
+> mtk_soc_data struct to u64") the capabilities bitfield was converted to
+> a 64-bit value, but a cap_bit in struct mtk_eth_muxc which is used to
+> store a full bitfield (rather than the bit number, as the name would
+> suggest) still holds only a 32-bit value.
 > 
-> One question below, otherwise
+> Change the type of cap_bit to u64 in order to avoid truncating the
+> bitfield which results in path selection to not work with capabilities
+> above the 32-bit limit.
 > 
-> 	Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> The values currently stored in the cap_bit field are
+> MTK_ETH_MUX_GDM1_TO_GMAC1_ESW:
+>  BIT_ULL(18) | BIT_ULL(5)
 > 
-> > @@ -4088,14 +4093,27 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-> >  	 * would be a good heuristic for when to shrink the vm_area?
-> >  	 */
-> >  	if (size <= old_size) {
-> > -		/* Zero out spare memory. */
-> > -		if (want_init_on_alloc(flags))
-> > +		/* Zero out "freed" memory. */
-> > +		if (want_init_on_free())
-> >  			memset((void *)p + size, 0, old_size - size);
-> > +		vm->requested_size = size;
-> >  		kasan_poison_vmalloc(p + size, old_size - size);
-> >  		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
-> >  		return (void *)p;
-> >  	}
-> >  
-> > +	/*
-> > +	 * We already have the bytes available in the allocation; use them.
-> > +	 */
-> > +	if (size <= alloced_size) {
-> > +		kasan_unpoison_vmalloc(p, size, KASAN_VMALLOC_PROT_NORMAL);
-> > +		/* Zero out "alloced" memory. */
-> > +		if (want_init_on_alloc(flags))
-> > +			memset((void *)p + old_size, 0, size - old_size);
-> > +		vm->requested_size = size;
-> > +		kasan_poison_vmalloc(p + size, alloced_size - size);
+> MTK_ETH_MUX_GMAC2_GMAC0_TO_GEPHY:
+>  BIT_ULL(19) | BIT_ULL(5) | BIT_ULL(6)
 > 
-> Do we need this? We know that old_size < size <= alloced_size. And since
-> previously [p + old_size, p + alloced_size) must have been poisoned,
-> [p + size, p + alloced_size) must be poisoned already?
+> MTK_ETH_MUX_U3_GMAC2_TO_QPHY:
+>  BIT_ULL(20) | BIT_ULL(5) | BIT_ULL(6)
 > 
-> Maybe there was a reason, since in the above (size <= old_size) case
-> kasan_unpoison_vmalloc() seems unnecessary too.
+> MTK_ETH_MUX_GMAC1_GMAC2_TO_SGMII_RGMII:
+>  BIT_ULL(20) | BIT_ULL(5) | BIT_ULL(7)
+> 
+> MTK_ETH_MUX_GMAC12_TO_GEPHY_SGMII:
+>  BIT_ULL(21) | BIT_ULL(5)
+> 
+> While all those values are currently still within 32-bit boundaries,
+> the addition of new capabilities of MT7988 as well as future SoC's
+> like MT7987 will exceed them. Also, the use of a 32-bit 'int' type to
+> store the result of a BIT_ULL(...) is misleading.
+> 
+> Signed-off-by: Bo-Cun Chen <bc-bocun.chen@mediatek.com>
+> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+> ---
+> v3: don't use Fixes: tag
+> v2: improve commit message
 
-Honestly I was just copying the logic from the prior case. But yeah, it
-should be possible (in both cases) to just apply the changed span. For
-the "size <= old_size" case, it would just be:
+Thanks for the updates.
 
-	kasan_poison_vmalloc(p + size, old_size - size);
-
-(i.e. the kasan_unpoison_vmalloc() call isn't needed at all, as you say.)
-
-And in the "size <= alloced_size" case, it would just be:
-
-	kasan_unpoison_vmalloc(p + old_size, size - old_size, KASAN_VMALLOC_PROT_NORMAL);
-
-and no kasan_poison_vmalloc() should be needed.
-
-Do the KASAN folks on CC have any opinion on best practices here?
-
-Thanks for looking it over!
-
--Kees
-
--- 
-Kees Cook
+Reviewed-by: Simon Horman <horms@kernel.org>
