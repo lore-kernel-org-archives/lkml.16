@@ -1,94 +1,129 @@
-Received: from pokefinder.org (pokefinder.org [135.181.139.117])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFF611F2BB5;
-	Thu, 24 Apr 2025 08:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=135.181.139.117
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8001F2BB5;
+	Thu, 24 Apr 2025 08:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745483269; cv=none; b=KxXOoyJ6lXEwUyuVjveO1u7tQNbejNmcSedAoAvWysnyv4jZOIbJDYrc9Pp0PMntjgE7M7KN/FxRWE1P6DFS/HY9ZJn2J0Drex3oWy7wz7/gCW5wzyDPqpAIK0MoVHzMyfeEdLPEm3JtSF9vpPzvEqt+kQjJfOfZqdWctp5fRBc=
+	t=1745483307; cv=none; b=YrnrrRvCIJOWBWrNje8XM1eQQ0wkWLA4qKAj35azfdP2E8aejcglbtse9ydZOvsrWyZ7pD66pE8x7QdfJYMx286v5xo5qnjyjJJE7V4z7BsHdi1BSppAxoruwYb6UI8Ou+Gain+nkvU6JQHOJeErPbrckg7JTfJne7T6wzE7gv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745483269; c=relaxed/simple;
-	bh=Bjn3JWZQBUn+D4yw5VVxGddLhIebdHNjWM7dgu1Hj/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RqFfl0JgjsUpM8lcwwo6f2sZdrO0ucyto2RkQIREaZq1WozNXy1FqCQUrgvhm09weM6KDY6y7a53JuZCLQyb++DWUDryyg+W759wlUyHFGpLZumalro9nEXULrorMQIfxgphwH+k8KCi05qZMGMU1uORGggaepKMuxKy8PkULbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de; spf=pass smtp.mailfrom=the-dreams.de; arc=none smtp.client-ip=135.181.139.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=the-dreams.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=the-dreams.de
-Received: from localhost (p5486c924.dip0.t-ipconnect.de [84.134.201.36])
-	by pokefinder.org (Postfix) with UTF8SMTPSA id 81809A41FA1;
-	Thu, 24 Apr 2025 10:27:44 +0200 (CEST)
-Date: Thu, 24 Apr 2025 10:27:43 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Peter Rosin <peda@axentia.se>, Andi Shyti <andi.shyti@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] i2c: mux: ltc4306: use new GPIO line value setter
- callbacks
-Message-ID: <aAn1_-Wuel-CaUIn@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@the-dreams.de>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Michael Hennerich <michael.hennerich@analog.com>,
-	Linus Walleij <linus.walleij@linaro.org>, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250407-gpiochip-set-rv-i2c-mux-v1-1-7330a0f4df1a@linaro.org>
- <16b14e5e-e5eb-5203-4cdf-44fbde9a5688@axentia.se>
- <CAMRc=MeYs0W31Kj-o530_8+EvhoDNzyZunk4xu6PbwK8N1OE4Q@mail.gmail.com>
+	s=arc-20240116; t=1745483307; c=relaxed/simple;
+	bh=ShwC8obxmb4CNtiPkaiML3y0noOhyOD0NrJ6HWSDH74=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=uw/sfFDHiwCl2F1+arr0CAyJek8sbunuzHF24uWH5QHwmHFYgvYifsHu3uhSeGgGtCO7P9lENslK/2NtgwFB3VYrudp5b2DO8kZaIbBic9Y8IVgd0GqVswwpIgJ6n8fl+ojYUAHwoWo1/TrrwWgeP6qD0W4OuNql5ZcWr7ZwsJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/IuBGXw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/IuBGXw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 207BAC4CEEC;
+	Thu, 24 Apr 2025 08:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745483306;
+	bh=ShwC8obxmb4CNtiPkaiML3y0noOhyOD0NrJ6HWSDH74=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=A/IuBGXwFx60b3FI8hbt/SKfrDZDZn6pcwRAPQtx2zb03JBzQVpzpTqRzgndkR9MV
+	 5xCMImIEVzUQinjv0BUwhOwNjFqIrFLs8syv0a5fPbUu/9H7bPBbQ6UFTzfoSUyf2i
+	 4W1+kyuCj+3QgGOksk9w7ph/p4dDisYltEUfYnAutQQU8r/vYwnq8tpYvxQ6/gPEBg
+	 b0o4g3gBS4dXxbQXSnVjsFwbkRUMf0hFgIXGxeAEkBdlCo5GjMSwYleWjGtGb4khr0
+	 BwN0w0+DRtOnjMeSzHgn/0cofW7sSkPuszeoKmdj2TpNUlQJGRb0BakD6cZLZcNfxC
+	 H+xD4pREvYDAA==
+Message-ID: <57701e2e-0005-4a8a-a3f5-ba098c97b480@kernel.org>
+Date: Thu, 24 Apr 2025 10:28:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="V/cTdx4ZqfhhtzD1"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MeYs0W31Kj-o530_8+EvhoDNzyZunk4xu6PbwK8N1OE4Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 3/5] dt-bindings: wireless: bcm4329-fmac: Use
+ wireless-controller.yaml schema
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: david@ixit.cz, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Mailing List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Lorenzo Bianconi <lorenzo@kernel.org>, van Spriel <arend@broadcom.com>,
+ =?UTF-8?B?SsOpcsO0bWUgUG91aWxsZXI=?= <jerome.pouiller@silabs.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Andy Gross <agross@kernel.org>,
+ Mailing List <devicetree-spec@vger.kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, Janne Grunau <j@jannau.net>
+References: <20250324-dt-bindings-network-class-v5-0-f5c3fe00e8f0@ixit.cz>
+ <20250324-dt-bindings-network-class-v5-3-f5c3fe00e8f0@ixit.cz>
+ <d8619ab4-3a91-467f-a3d4-f23b4e0383a4@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <d8619ab4-3a91-467f-a3d4-f23b4e0383a4@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 24/04/2025 10:20, Krzysztof Kozlowski wrote:
+> On 24/03/2025 18:41, David Heidelberg via B4 Relay wrote:
+>> From: Janne Grunau <j@jannau.net>
+>>
+>> The wireless-controller schema specifies local-mac-address as
+>> used in the bcm4329-fmac device nodes of Apple silicon devices
+>> (arch/arm64/boot/dts/apple).
+>>
+>> Fixes `make dtbs_check` for those devices.
+>>
+>> Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+>> Signed-off-by: Janne Grunau <j@jannau.net>
+>> Signed-off-by: David Heidelberg <david@ixit.cz>
+> 
+> This introduced several new dtbs_check warnings. Including on platforms
+> which were warnings free. It is nice to fix these warnings when you make
+> such changes.
 
 
---V/cTdx4ZqfhhtzD1
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I will send the patches for them, except for Apple SoCs.
 
-On Thu, Apr 24, 2025 at 09:16:48AM +0200, Bartosz Golaszewski wrote:
-> On Mon, Apr 7, 2025 at 10:08=E2=80=AFAM Peter Rosin <peda@axentia.se> wro=
-te:
-> >
-> > Hi!
-> >
-> > 2025-04-07 at 09:17, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > >
-> > > struct gpio_chip now has callbacks for setting line values that return
-> > > an integer, allowing to indicate failures. Convert the driver to using
-> > > them.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-Applied to for-next, thanks!
-
-
---V/cTdx4ZqfhhtzD1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgJ9f8ACgkQFA3kzBSg
-KbZs+w/7BpHPAQ+RaFXl40JiYlKbBHeigtBqppoPaS83FpQl8J3FG2wZCKkHwEqO
-t+MvnlH5Lbn1Y2mXmMJN/7tFbkGbEXExmYf9i7QDocHPg3irRo7TTJyvITFYcfhT
-btLfINAwWAd41nGPPLkqHGp3O8m9rehwTgegIExNZ8auXwbtbHsG4bgUDpY/JnSq
-ZUWQEfw7DGkwRpJif28COS3KIKcA3IXjIGoe/lvFP5HAAmsTsjyfyzGcB9vhAWTl
-6RJdmcX/7CTfvetWp98cpf1L3kW8SGHaEGqQR84cu+qrSsbc4CC1BgUNaFEWNiBh
-Z4oCcwM7hWfdhQR9vjiCUTQ0/PWZ0mvaiW38lTclqluOTckEFDYz/SEj3ml6CVwJ
-0AcnDppOdAqHfz0pW6mI61FbY6dT7oQR0/SZMDuXws4/Kj7Krv6zY0R87seVBNR7
-Mwb/76xUu9HRNYxsX9rPJJjMClKo+0I1eW4kwb4clqcxIQzTl91Xph6/6ivV12yY
-swsMZgCIZ33PPjVdP3075L800Ligqqyc8tEFiYciylpmJo0rXPCgqITlRz++9u2B
-OuV0NeE+HKK48IDwl31eJIVXgN+XCDZiO5MjmW0cWyj+HYjl9nMesokb+wTpnXaF
-VaE0LFKLoUPWA0oj2ZcVBYyDVBI/pbCcbKPKJ6xICO7/xEgONis=
-=iSX0
------END PGP SIGNATURE-----
-
---V/cTdx4ZqfhhtzD1--
+Best regards,
+Krzysztof
