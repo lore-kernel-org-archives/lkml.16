@@ -1,157 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8FEE18AE2;
-	Thu, 24 Apr 2025 00:44:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 022F417F7
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745455459; cv=none; b=de8FZwQBz0OC//bOC/BOrp5FeAV3CagbEGoBayHziDF+AUwDeJ91dWvKukx1tjJ+O0M4xMSoJ/YowMKEreoM5V7rgO/6evW9AZTnRuyh/dulSP5G+5tMecJPm1/UEQUiHGTOQCrrTWNA0/Tdq+U5BJ8DLbiqd4gmW2oOA1h4QRg=
+	t=1745455471; cv=none; b=cnJebp8j1b9sJO60Kqh779JIo/QwD8autvDOKR0iDAlzH87zlQW9g4MffTrzW6gy1QKPD7PM1yW+K5XiUwUfwWbH6Hr11g0N26+aITKPn18QPU3tusLEQ11OLSFmf8Z/ZvkIgmpkaBQogml3lFOR0xlg7rtxQsdclLqoS28fhg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745455459; c=relaxed/simple;
-	bh=dcuOAJR3RzXjILHwlij2pVe8ISZbOyZg+wgmmxRGDGo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DBMvSmA5QaL58rxDaCilw86qFujQWQcGy1XsRJvyhpA1EOkYnuNWC9OR5b5ikVDoGI+Te+mNQV5SfOsKmdAXsDnWlxupADIGLormaycJWW8tyu5z0LLLnTsnyxu7X1wk5zlqCRgEAJtC+EXlGecovmdkCzdijJmRJ55eaEIVn2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3ED171063;
-	Wed, 23 Apr 2025 17:44:12 -0700 (PDT)
-Received: from minigeek.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B84733F59E;
-	Wed, 23 Apr 2025 17:44:14 -0700 (PDT)
-Date: Thu, 24 Apr 2025 01:43:14 +0100
-From: Andre Przywara <andre.przywara@arm.com>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>,
- Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 3/5] arm64: dts: allwinner: a523: Add EMAC0 ethernet MAC
-Message-ID: <20250424014314.146e088f@minigeek.lan>
-In-Reply-To: <20250423-01-sun55i-emac0-v1-3-46ee4c855e0a@gentoo.org>
-References: <20250423-01-sun55i-emac0-v1-0-46ee4c855e0a@gentoo.org>
-	<20250423-01-sun55i-emac0-v1-3-46ee4c855e0a@gentoo.org>
-Organization: Arm Ltd.
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
+	s=arc-20240116; t=1745455471; c=relaxed/simple;
+	bh=83mcjUifPIfk/6ORujgQWzGN58qZCqIJuR06Usw8ypw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=HUEiBO3BL3mhklTRuBZIzGdcy/z61oZ8Bjy58mk6xPlbk1xoFO9IxihBk838qOx4F8Fl2OMzhQwFfdFQ7PC8Je8/C6pBxPydlM7qOra5VPMqglEgs4auZvmRY0ED4iF0ccV4jDEjsvR7RniyQqoopRcRkpgv7PXWoqXw23lQpGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=mYxNlMXl reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="mYxNlMXl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=QTVmIoV8bT7TS1J/bHn0cF9ZcR5e5MVRDdBrhghGq8c=; b=m
+	YxNlMXlspOe81pr+rfZ922TXq7NPZVFz2l/cr9hGOHCmECkeuqrNXH+or4V2+NQk
+	hZuLwwMjC6S1sQdRE8ZdnCPit5RfJutnbss/kSCvxmZLU0NUs5WRDtXFXdZwpI9g
+	ZJdiSQ9ZaHzk9kWFAXg7ytfzoXuzf3+hr3OFCu4ZyI=
+Received: from andyshrk$163.com ( [58.22.7.114] ) by
+ ajax-webmail-wmsvr-40-102 (Coremail) ; Thu, 24 Apr 2025 08:42:47 +0800
+ (CST)
+Date: Thu, 24 Apr 2025 08:42:47 +0800 (CST)
+From: "Andy Yan" <andyshrk@163.com>
+To: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
+Cc: "Arnd Bergmann" <arnd@kernel.org>, "Sandy Huang" <hjc@rock-chips.com>,
+	=?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+	"Andy Yan" <andy.yan@rock-chips.com>,
+	"Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+	"Maxime Ripard" <mripard@kernel.org>,
+	"Thomas Zimmermann" <tzimmermann@suse.de>,
+	"David Airlie" <airlied@gmail.com>,
+	"Simona Vetter" <simona@ffwll.ch>,
+	"Dmitry Baryshkov" <lumag@kernel.org>,
+	"Douglas Anderson" <dianders@chromium.org>,
+	"Damon Ding" <damon.ding@rock-chips.com>,
+	"Arnd Bergmann" <arnd@arndb.de>,
+	"Heiko Stuebner" <heiko.stuebner@cherry.de>,
+	"Geert Uytterhoeven" <geert+renesas@glider.be>,
+	"Cristian Ciocaltea" <cristian.ciocaltea@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re:Re: [PATCH] drm/rockchip: add CONFIG_OF dependency
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <a4tcrxepuvvxixpab3txz6tdbh6janiedjqddl2ybfo6plhjcl@r5bxdabuhjep>
+References: <20250423164422.2793634-1-arnd@kernel.org>
+ <a4tcrxepuvvxixpab3txz6tdbh6janiedjqddl2ybfo6plhjcl@r5bxdabuhjep>
+X-NTES-SC: AL_Qu2fB/ieukst4SadbekfmkcVgOw9UcO5v/Qk3oZXOJF8jCzp8D4yf1JTEnDy1fCDKg+MkAiHYjpJ8Pt0f7d2fYwuVF/Ep8+wUnGXRqnQ58Y+5g==
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Message-ID: <13627027.772.196653f45f1.Coremail.andyshrk@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:ZigvCgAXfIYHiQlo2ESdAA--.63259W
+X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/1tbiqBU5XmgJh6IglgABsp
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Wed, 23 Apr 2025 22:03:24 +0800
-Yixun Lan <dlan@gentoo.org> wrote:
-
-Hi Yixun,
-
-thanks for sending those patches!
-
-> Add EMAC0 ethernet MAC support which found on A523 variant SoCs,
-> including the A527/T527 chips.
-
-maybe add here that MAC0 is compatible to the A64, and requires an
-external PHY. And that we only add the RGMII pins for now.
-
-> Signed-off-by: Yixun Lan <dlan@gentoo.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 42 ++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> index ee485899ba0af69f32727a53de20051a2e31be1d..c3ba2146c4b45f72c2a5633ec434740d681a21fb 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-> @@ -126,6 +126,17 @@ pio: pinctrl@2000000 {
->  			interrupt-controller;
->  			#interrupt-cells = <3>;
->  
-> +			emac0_pins: emac0-pins {
-
-Both the alias and the node name should contain rgmii instead of emac0,
-as the other SoCs do, I think:
-			rgmii0_pins: rgmii0-pins {
-
-> +				pins = "PH0", "PH1", "PH2", "PH3",
-> +					"PH4", "PH5", "PH6", "PH7",
-> +					"PH9", "PH10","PH13","PH14",
-> +					"PH15","PH16","PH17","PH18";
-
-I think there should be a space behind each comma, and the
-first quotation marks in each line should align.
-
-PH13 is EPHY-25M, that's the (optional) 25 MHz output clock pin, for
-PHYs without a crystal. That's not controlled by the MAC, so I would
-leave it out of this list, as also both the Avaota and the Radxa don't
-need it. If there will be a user, they can add this separately.
-
-> +				allwinner,pinmux = <5>;
-> +				function = "emac0";
-> +				drive-strength = <40>;
-> +				bias-pull-up;
-
-Shouldn't this be push-pull, so no pull-up?
-
-The rest looks correct, when compared to the A523 manual.
-
-Cheers,
-Andre
-
-> +			};
-> +
->  			mmc0_pins: mmc0-pins {
->  				pins = "PF0" ,"PF1", "PF2", "PF3", "PF4", "PF5";
->  				allwinner,pinmux = <2>;
-> @@ -409,6 +420,15 @@ i2c5: i2c@2503400 {
->  			#size-cells = <0>;
->  		};
->  
-> +		syscon: syscon@3000000 {
-> +			compatible = "allwinner,sun55i-a523-system-control",
-> +				     "allwinner,sun50i-a64-system-control";
-> +			reg = <0x03000000 0x1000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +		};
-> +
->  		gic: interrupt-controller@3400000 {
->  			compatible = "arm,gic-v3";
->  			#address-cells = <1>;
-> @@ -521,6 +541,28 @@ ohci1: usb@4200400 {
->  			status = "disabled";
->  		};
->  
-> +		emac0: ethernet@4500000 {
-> +			compatible = "allwinner,sun55i-a523-emac0",
-> +				     "allwinner,sun50i-a64-emac";
-> +			reg = <0x04500000 0x10000>;
-> +			clocks = <&ccu CLK_BUS_EMAC0>;
-> +			clock-names = "stmmaceth";
-> +			resets = <&ccu RST_BUS_EMAC0>;
-> +			reset-names = "stmmaceth";
-> +			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "macirq";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&emac0_pins>;
-> +			syscon = <&syscon>;
-> +			status = "disabled";
-> +
-> +			mdio0: mdio {
-> +				compatible = "snps,dwmac-mdio";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +			};
-> +		};
-> +
->  		r_ccu: clock-controller@7010000 {
->  			compatible = "allwinner,sun55i-a523-r-ccu";
->  			reg = <0x7010000 0x250>;
-> 
-
+SGksIAoKQXQgMjAyNS0wNC0yNCAwMToxODo0NSwgIkRtaXRyeSBCYXJ5c2hrb3YiIDxkbWl0cnku
+YmFyeXNoa292QG9zcy5xdWFsY29tbS5jb20+IHdyb3RlOgo+T24gV2VkLCBBcHIgMjMsIDIwMjUg
+YXQgMDY6NDQ6MTZQTSArMDIwMCwgQXJuZCBCZXJnbWFubiB3cm90ZToKPj4gRnJvbTogQXJuZCBC
+ZXJnbWFubiA8YXJuZEBhcm5kYi5kZT4KPj4gCj4+IERSTV9ESVNQTEFZX0RQX0FVWF9CVVMgY2Fu
+bm90IGJlIHNlbGVjdGVkIHdoZW4gQ09ORklHX09GIGlzIGRpc2FibGVkOgo+PiAKPj4gV0FSTklO
+RzogdW5tZXQgZGlyZWN0IGRlcGVuZGVuY2llcyBkZXRlY3RlZCBmb3IgRFJNX0RJU1BMQVlfRFBf
+QVVYX0JVUwo+PiAgIERlcGVuZHMgb24gW25dOiBIQVNfSU9NRU0gWz15XSAmJiBEUk0gWz15XSAm
+JiBPRiBbPW5dCj4+ICAgU2VsZWN0ZWQgYnkgW3ldOgo+PiAgIC0gRFJNX1JPQ0tDSElQIFs9eV0g
+JiYgSEFTX0lPTUVNIFs9eV0gJiYgRFJNIFs9eV0gJiYgUk9DS0NISVBfSU9NTVUgWz15XSAmJiBS
+T0NLQ0hJUF9BTkFMT0dJWF9EUCBbPXldCj4+IAo+PiBSb2NrY2hpcCBwbGF0Zm9ybXMgYWxsIGRl
+cGVuZCBvbiBPRiBhbnl3YXksIHNvIGFkZCB0aGUgZGVwZW5kZW5jeSBoZXJlCj4+IGZvciBjb21w
+aWxlIHRlc3RpbmcuCj4+IAo+PiBGaXhlczogZDdiNDkzNmIyYmMwICgiZHJtL3JvY2tjaGlwOiBh
+bmFsb2dpeF9kcDogQWRkIHN1cHBvcnQgdG8gZ2V0IHBhbmVsIGZyb20gdGhlIERQIEFVWCBidXMi
+KQo+PiBTaWduZWQtb2ZmLWJ5OiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPgoKICAgIEFj
+a2VkLWJ5OiBBbmR5IFlhbiA8YW5keS55YW5Acm9jay1jaGlwcy5jb20+Cgo+PiAtLS0KPj4gIGRy
+aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnIHwgMSArCj4+ICAxIGZpbGUgY2hhbmdlZCwg
+MSBpbnNlcnRpb24oKykKPj4gCj4KPlJldmlld2VkLWJ5OiBEbWl0cnkgQmFyeXNoa292IDxkbWl0
+cnkuYmFyeXNoa292QG9zcy5xdWFsY29tbS5jb20+Cj4KPi0tIAo+V2l0aCBiZXN0IHdpc2hlcwo+
+RG1pdHJ5Cg==
