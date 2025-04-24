@@ -1,134 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B94622DF9B;
-	Thu, 24 Apr 2025 11:49:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD4322D793;
+	Thu, 24 Apr 2025 11:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745495348; cv=none; b=SyofkH2Z4gHhaSseVdeo+vJYJxTNiFkoCooirNB1xfE19XlM8isPjhKWySV7eywrJtqVPs63mDeh8nfObCYiY4BbQUty5tvoCTJH3lC5SkrAau2A/EzoggDVH+vKCAHuDoSpKpdyM7iwufqgwx3Ccs8wiyKAbdG7CWUVF40P/Gk=
+	t=1745495351; cv=none; b=KeUr4EGrzpVf6mC2xOtH9T67qJnGSWzaxFj2M52edobqRsEU0qT2+ORasrXXQIftcAyxlMWNraEVGY97k0LvyP2gY48bg61XbuwZurvBT1y4H4a3RL6x8txDgH52PWkPCjsI9h7ZvtWlnmBHwpNXvtM3TD0Qi1Ock1ZSHBHPolo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745495348; c=relaxed/simple;
-	bh=YszgFMEifreBpsMwGircv5QIeLTFD0j7nAEcYCOWvVQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rEm3yVhe3A06iNtZJoelPJP5/+cgtNQ43Nyhqmg9RHritj/QVG2o6RF3/qZFt9V+2BEIqZ5FgTCxv7J6o84mdN5jgADKrCU61Ff6JQKdQ42nLwVCpJ3yb97nmn846Jdue4ZYWLtOIICd+p0JRGzwPmS3G0U9CbDZ3xNTIhKJQJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mleqz8TQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745495351; c=relaxed/simple;
+	bh=+b3iW2ysAZx8jNrvMtsp4DTDofLqBwY1FfDTQqqkE/w=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=j4VhdLbiHZgtZFCPLUV5h3KiPCDr2Grjq+pPIM+UClRTUdwJ5vTD2Nxeyixbgnv05i/GkdZwmtBRPhWBGnKCQV5kdKxXMNC1koo02PSGzQT3Ml0Djsd0KAXTeEMA+MC3NdKhAf1eZrmSIjSM+0rEnaSdoNKIE9wATAy2Gox9fQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=BLIegG1s; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mleqz8TQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A7F0C4CEE3;
-	Thu, 24 Apr 2025 11:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745495348;
-	bh=YszgFMEifreBpsMwGircv5QIeLTFD0j7nAEcYCOWvVQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Mleqz8TQ7U+Pi7a+4PHn/kY69ycMeNpkNmBUap9Ga1d1SCv8s3mILXeDsn/QM3hQJ
-	 bz0qvaxDERfv8wAN5oceaCVpoDAQtlI9nlbdDjDyHzHB4UU3iSKanSfnh8yomtNEUM
-	 qwZrsEAy65mmP8b3rjrigMxDFgVuHkCb0++t1IxPpqkw/7/HbL5wIwdF2nxBKM1I/H
-	 poPlG96nqwUCZHYzS01lINcyP5w1j/3MFFu9htKhAZ9qyCVaov2FTHQAJkQ+Lxk7sM
-	 6Nyf7OmGjBVF/HSVBm+LsQZzcYcqm3pR2AqFaFa/+Ms0efyWZ+tny8G6dumRFkxv5t
-	 oP0mmvToo9VwQ==
-From: Philipp Stanner <phasta@kernel.org>
-To: schalla@marvell.com,
-	vattunuru@marvell.com,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Shijith Thotton <sthotton@marvell.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Philipp Stanner <phasta@kernel.org>,
-	Satha Rao <skoteshwar@marvell.com>
-Cc: virtualization@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3] vdpa/octeon_ep: Control PCI dev enabling manually
-Date: Thu, 24 Apr 2025 13:48:51 +0200
-Message-ID: <20250424114850.34045-2-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="BLIegG1s"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1745495339; h=Message-ID:Date:MIME-Version:Subject:From:To:Content-Type;
+	bh=qs4/QnFg9rNhrfOh3L9B6LkK0j0hm6vYUMcuTxooLVc=;
+	b=BLIegG1sS3L5UgRQ3YukmLaki7gcEhOR6mX8dL7TUGPWTmoYrmXdflbuXnBmEDqomQZ9B6DnIGQ/FZXL+dUmN3VhPBfyCeG27MWVcdT7RLEj+Qwm6IubwUxfrFm/WLL1i4fh6mRsmFFgxZ7ttCR8P1z7Pzo9DwyM7l193zgk6OA=
+Received: from 30.246.162.65(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0WXzJaco_1745495338 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 24 Apr 2025 19:48:59 +0800
+Message-ID: <7f6c49d5-e11e-488b-bb67-4051abcb02f4@linux.alibaba.com>
+Date: Thu, 24 Apr 2025 19:48:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] PCI/AER: Report fatal errors of RCiEP and EP if
+ link recoverd
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+To: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com, kbusch@kernel.org
+Cc: mahesh@linux.ibm.com, oohall@gmail.com, Jonathan.Cameron@huawei.com,
+ terry.bowman@amd.com, tianruidong@linux.alibaba.com
+References: <20250217024218.1681-1-xueshuai@linux.alibaba.com>
+ <20250217024218.1681-4-xueshuai@linux.alibaba.com>
+ <8a833aaf-53aa-4e56-a560-2b84a6e9c28c@linux.intel.com>
+ <1dea64ef-3c9f-4bff-820f-34d8f3a6a1d4@linux.alibaba.com>
+ <362fcb01-8d9c-49e6-be83-5a784c1e5f3e@linux.alibaba.com>
+In-Reply-To: <362fcb01-8d9c-49e6-be83-5a784c1e5f3e@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-PCI region request functions such as pci_request_region() currently have
-the problem of becoming sometimes managed functions, if
-pcim_enable_device() instead of pci_enable_device() was called. The PCI
-subsystem wants to remove this deprecated behavior from its interfaces.
 
-octeopn_ep enables its device with pcim_enable_device() (for AF. PF uses
-manual management), but does so only to get automatic disablement. The
-driver wants to manage its PCI resources for AF manually, without devres.
 
-The easiest way not to use automatic resource management at all is by
-also handling device enable- and disablement manually.
+在 2025/3/17 14:02, Shuai Xue 写道:
+> 
+> 
+> 在 2025/3/3 12:33, Shuai Xue 写道:
+>>
+>>
+>> 在 2025/3/3 11:43, Sathyanarayanan Kuppuswamy 写道:
+>>>
+>>> On 2/16/25 6:42 PM, Shuai Xue wrote:
+>>>> The AER driver has historically avoided reading the configuration space of
+>>>> an endpoint or RCiEP that reported a fatal error, considering the link to
+>>>> that device unreliable. Consequently, when a fatal error occurs, the AER
+>>>> and DPC drivers do not report specific error types, resulting in logs like:
+>>>>
+>>>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>>>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>>>    nvme nvme0: frozen state error detected, reset controller
+>>>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>>>
+>>>> AER status registers are sticky and Write-1-to-clear. If the link recovered
+>>>> after hot reset, we can still safely access AER status of the error device.
+>>>> In such case, report fatal errors which helps to figure out the error root
+>>>> case.
+>>>>
+>>>> After this patch, the logs like:
+>>>>
+>>>>    pcieport 0000:30:03.0: EDR: EDR event received
+>>>>    pcieport 0000:30:03.0: DPC: containment event, status:0x0005 source:0x3400
+>>>>    pcieport 0000:30:03.0: DPC: ERR_FATAL detected
+>>>>    pcieport 0000:30:03.0: AER: broadcast error_detected message
+>>>>    nvme nvme0: frozen state error detected, reset controller
+>>>>    pcieport 0000:30:03.0: waiting 100 ms for downstream link, after activation
+>>>>    nvme 0000:34:00.0: ready 0ms after DPC
+>>>>    nvme 0000:34:00.0: PCIe Bus Error: severity=Uncorrectable (Fatal), type=Data Link Layer, (Receiver ID)
+>>>>    nvme 0000:34:00.0:   device [144d:a804] error status/mask=00000010/00504000
+>>>>    nvme 0000:34:00.0:    [ 4] DLP                    (First)
+>>>>    pcieport 0000:30:03.0: AER: broadcast slot_reset message
+>>>
+>>> IMO, above info about device error details is more of a debug info. Since the
+>>> main use of this info use to understand more details about the recovered
+>>> DPC error. So I think is better to print with debug tag. Lets see what others
+>>> think.
+>>>
+>>> Code wise, looks fine to me.
+>>
+>> thanks, looking forward to more feedback.
+>>>
+>>>
+> 
+> Hi, all,
+> 
+> Gentle ping.
+> 
+> Thanks.
+> Shuai
+> 
 
-Replace pcim_enable_device() with pci_enable_device(). Add the necessary
-calls to pci_disable_device().
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
-Changes in v3:
-  - Only call pci_disable_device() for the PF version. For AF it would
-    cause a WARN_ON because pcim_enable_device()'s callback will also
-    try to disable.
----
- drivers/vdpa/octeon_ep/octep_vdpa_main.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/vdpa/octeon_ep/octep_vdpa_main.c b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-index f3d4dda4e04c..9b49efd24391 100644
---- a/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-+++ b/drivers/vdpa/octeon_ep/octep_vdpa_main.c
-@@ -454,6 +454,9 @@ static void octep_vdpa_remove_pf(struct pci_dev *pdev)
- 		octep_iounmap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
- 
- 	octep_vdpa_pf_bar_expand(octpf);
-+
-+	/* The pf version does not use managed PCI. */
-+	pci_disable_device(pdev);
- }
- 
- static void octep_vdpa_vf_bar_shrink(struct pci_dev *pdev)
-@@ -825,7 +828,7 @@ static int octep_vdpa_probe_pf(struct pci_dev *pdev)
- 	struct octep_pf *octpf;
- 	int ret;
- 
--	ret = pcim_enable_device(pdev);
-+	ret = pci_enable_device(pdev);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable device\n");
- 		return ret;
-@@ -834,15 +837,17 @@ static int octep_vdpa_probe_pf(struct pci_dev *pdev)
- 	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64));
- 	if (ret) {
- 		dev_err(dev, "No usable DMA configuration\n");
--		return ret;
-+		goto disable_pci;
- 	}
- 	octpf = devm_kzalloc(dev, sizeof(*octpf), GFP_KERNEL);
--	if (!octpf)
--		return -ENOMEM;
-+	if (!octpf) {
-+		ret = -ENOMEM;
-+		goto disable_pci;
-+	}
- 
- 	ret = octep_iomap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
- 	if (ret)
--		return ret;
-+		goto disable_pci;
- 
- 	pci_set_master(pdev);
- 	pci_set_drvdata(pdev, octpf);
-@@ -856,6 +861,8 @@ static int octep_vdpa_probe_pf(struct pci_dev *pdev)
- 
- unmap_region:
- 	octep_iounmap_region(pdev, octpf->base, OCTEP_HW_MBOX_BAR);
-+disable_pci:
-+	pci_disable_device(pdev);
- 	return ret;
- }
- 
--- 
-2.48.1
-
+Hi, all,
+  
+Gentle ping.
+  
+Thanks.
+Shuai
