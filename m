@@ -1,80 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39F9627A91B;
-	Thu, 24 Apr 2025 12:44:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332B627A926;
+	Thu, 24 Apr 2025 12:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745498667; cv=none; b=q9pQa6rrL0nLbFYKzD6E2aHJ9rxIH1Q+MMSnrkon6acxCBt41Qf+wMeMXzIEZueYXh2c/IduYloIsPCeRrzo7FjEmgU57b8q4TJ1XklUTppgjTi/yn+BhmoMVc9sPvAGdgJMZNN8W4FJzNImaFQ0rG4OY+3Xedh6DRCoeimch2A=
+	t=1745498681; cv=none; b=DD4cL124tRS/KYv4JjFE2RgEXxhtG2lnYibO2kCKKSnbH58dbj50anBvAI1BKQRJlXeWnsG92KuL02kK3N9GGYL4DeWcPdphjBwqY1fiVy74pfvKkKnhEhSPiCNEIDG+WB3l15wOMb7j1elIWMNq7THEleZC6qgXFzo8p0wVNCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745498667; c=relaxed/simple;
-	bh=FjKNpcQc9BxoQrc8qLiybgg9bV0aMoIQoFX5+p7pPcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=W1HFHBORJpaA3Yr3RG/Cl+nBIEm5wDGmhfET9TKtwcpIQhMf+Z7O2t+yIJnebtFg3cXfbIPEWkU33pzp+RMK1VL8mez+sahE3PXJPFp5iMlzVZYT8nDNP6w9k4vCUjNOxtl7WqmsXPF+c8ubn+zgiWwVA0v0BQx9PVWU+bbHOWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZ5Bi8SJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745498681; c=relaxed/simple;
+	bh=7Ltb0P0T/p13f9Ik10z0acW2tEdNURIaj8Y/bKnt3lU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=UG4W46NMyCOuuH2ae7xRQKQjTlgoINXD+7wdTb+93ErFIJ3cHcCECoJI/jS/jvVyZ7qcfGB6Uwxf3ZG5WEpM5tlAbh0IsIzfdC2Rq/bXmg52837DpIYjy34beZL9UK8Fqm2CFKr1AIEeEEQe7tk7n7vB5w9EppCobd4ORbamlOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readahead.eu; spf=pass smtp.mailfrom=readahead.eu; dkim=pass (2048-bit key) header.d=readahead.eu header.i=@readahead.eu header.b=gjI6fAtm; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hZvVtmnh; arc=none smtp.client-ip=202.12.124.144
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readahead.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=readahead.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZ5Bi8SJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63668C4CEEB;
-	Thu, 24 Apr 2025 12:44:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745498666;
-	bh=FjKNpcQc9BxoQrc8qLiybgg9bV0aMoIQoFX5+p7pPcg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cZ5Bi8SJI3zD7ZDiBbeAdyBfvmmRCjTGuuP5Eq/zS4E9WpNvu1K6W2oQpe60/ij6f
-	 dlQ6I+amaFMBeezKGWPYL4c+PJ3vRC8YCervOJv5D4ghTZI6v5kYSJnoYAzPWfl2ty
-	 FJM3NFBzj7YrgFS7nQWEuE4J3KVW+qvp+LshRPI5uXEE86DhAfWjo0XTWCVg7mnENa
-	 euDi/TSufCWTDx4IqS/yDuWJ+18cgcIPE2kO3V/COkao0VyIjAN4GA4nMmohvPIc+/
-	 sHlqHMOnqVy66cmZM28WcOaJLjMrIouVZ23flxvcCa1+C1HzoegiLKyvPToPbTELGP
-	 x/8VqZiynaLwQ==
-Date: Thu, 24 Apr 2025 13:44:22 +0100
-From: Mark Brown <broonie@kernel.org>
-To: "Rangoju, Raju" <raju.rangoju@amd.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	miquel.raynal@bootlin.com,
-	Krishnamoorthi M <krishnamoorthi.m@amd.com>,
-	Akshata MukundShetty <akshata.mukundshetty@amd.com>
-Subject: Re: [PATCH] spi: spi-mem: Add fix to avoid divide error
-Message-ID: <a8f7bcf3-c2c8-4bea-b33a-af0afd46a0eb@sirena.org.uk>
-References: <20250424121333.417372-1-Raju.Rangoju@amd.com>
- <8e9af5cf-0098-4b76-a945-f8a96b75e163@sirena.org.uk>
- <7166d32d-1172-4f43-8539-199791a1f82b@amd.com>
+	dkim=pass (2048-bit key) header.d=readahead.eu header.i=@readahead.eu header.b="gjI6fAtm";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hZvVtmnh"
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfout.stl.internal (Postfix) with ESMTP id 7D62A1140230;
+	Thu, 24 Apr 2025 08:44:35 -0400 (EDT)
+Received: from phl-imap-08 ([10.202.2.84])
+  by phl-compute-02.internal (MEProxy); Thu, 24 Apr 2025 08:44:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=readahead.eu; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1745498675;
+	 x=1745585075; bh=P6aDXOzwfsUnkNloFebsWwC3WTiLNzsId1SEYLxZLUM=; b=
+	gjI6fAtmShaUzCLuZWKm+0H9DwH3BEsgke5uu8sRtB+X1KmfJo4qupEP+vIMcw25
+	/nnx1Ziq7pK9O3OxzFebBTgy+ZUESapjWFRS1E0vSyMlPFvv4npwJL3iP4K8aXPX
+	xcgcwbQZO85G1KsH4ejPjGY9bMx3GWthWLOJP1v+fDQdtJy3WPUQ6oO9mKOZRPJy
+	nwlQtYyFvdFNR97WMCJcGCRtl0ioF4RG/btIUrqaoYHqqRVz0SS8mfTd3bpCknUA
+	HvH5P1TZzLBuyzC4qCN3S4xhm5NQ2Yd/wdRetJ/D0dBix0B6vK2JD0AEdTGNp0gp
+	HfYMF2azwdmFDVAVbhXcQQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1745498675; x=
+	1745585075; bh=P6aDXOzwfsUnkNloFebsWwC3WTiLNzsId1SEYLxZLUM=; b=h
+	ZvVtmnhAKsf+lJgCFQKecmp/PsIEzk7Hssrx7G3itJgyN91f6CZwOJB0BWcAQra7
+	6TSLhvtx2dIypSu8lEBHKxDzb6OUfJP2ZkrjDAqTe6aRbimJyNHTleTy1PL69eA4
+	Rx+WtVaQNO0Xuk2bfAbirZh2iQpNwoL1yOQ7PyLn9vDkSSmCBUVD1uJQTdYURIUq
+	5kvCvx7BNoqSEEtGv3D3cB7Y06tmkmLv1Z/HBtSt0aOXBRSbffx/v3sGzXaBjnGH
+	bw/D+dTGfVRzwrXj526OIAzPCS3OH5KVWMs4UsNoTwGTJckwuW0lbydE+5OYh/c8
+	pzsEWO3PvIZnP7SsjLeXQ==
+X-ME-Sender: <xms:MjIKaMbhhkdI-NXbQcX3oX4rMIdBEQGiiBticGgGSGcDPEFf7HRpsQ>
+    <xme:MjIKaHYhxMGGodPrHWrwBuERGWbwkOWCaXsF-1XFucGn2XHtlZYf7KXEc1RHzKDQj
+    41RGFna9ZI7d8ewZUQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeelhedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedfffgrvhhiugcutfhhvghinhhssggvrhhgfdcuoegurghvihguse
+    hrvggruggrhhgvrggurdgvuheqnecuggftrfgrthhtvghrnhepueekteduueejkeehheel
+    vdefleeivdeugfekvdfffefgkeefuedvtdfftddvveeknecuffhomhgrihhnpehkvghrnh
+    gvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
+    ohhmpegurghvihgusehrvggruggrhhgvrggurdgvuhdpnhgspghrtghpthhtohepudejpd
+    hmohguvgepshhmthhpohhuthdprhgtphhtthhopehkuhhnihihuhesrghmrgiiohhnrdgt
+    ohhmpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtth
+    hopegslhhutggrseguvggsihgrnhdrohhrghdprhgtphhtthhopegurggrnhdrjhdruggv
+    mhgvhigvrhesghhmrghilhdrtghomhdprhgtphhtthhopegvughumhgriigvthesghhooh
+    hglhgvrdgtohhmpdhrtghpthhtohepsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtohephhhorhhmsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhusggrse
+    hkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgigrnhguvghrsehmihhhrghlihgt
+    hihnrdgtohhm
+X-ME-Proxy: <xmx:MjIKaG-butq-hwKt-54QBobV3JRjgepWUpTsEwNDcxQWKuJOGOKUCA>
+    <xmx:MjIKaGpUUZoWqfdCVvjRiMgzcBSvqPA4-WDckm9gEEFX8oDnHCCXtA>
+    <xmx:MjIKaHrxc8BbX5zU4BxjN2bKGsNfD0CxaA62KuefvNfSOsA36cGKtw>
+    <xmx:MjIKaEQJsAUqE7_jK4Fw-RkL-0LcLudYY7bNHr2R5LnU9oetNXTPXw>
+    <xmx:MzIKaKYZDwdnNCoSUzgelQCncNKew6_h2mL2tXuwoeZfNFvbKqhZRoi7>
+Feedback-ID: id2994666:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 33FB418A006E; Thu, 24 Apr 2025 08:44:34 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="H3c/q0mBaEmQz18u"
-Content-Disposition: inline
-In-Reply-To: <7166d32d-1172-4f43-8539-199791a1f82b@amd.com>
-X-Cookie: Star Trek Lives!
+X-ThreadId: Ta1cb5089883f0698
+Date: Thu, 24 Apr 2025 14:44:13 +0200
+From: "David Rheinsberg" <david@readahead.eu>
+To: "Christian Brauner" <brauner@kernel.org>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Kuniyuki Iwashima" <kuniyu@amazon.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>, "Simon Horman" <horms@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ netdev@vger.kernel.org, "Jan Kara" <jack@suse.cz>,
+ "Alexander Mikhalitsyn" <alexander@mihalicyn.com>,
+ "Luca Boccassi" <bluca@debian.org>,
+ "Lennart Poettering" <lennart@poettering.net>,
+ "Daan De Meyer" <daan.j.demeyer@gmail.com>, "Mike Yuan" <me@yhndnzj.com>
+Message-Id: <c4a2468b-f6b1-4549-8189-ec2f72bef45e@app.fastmail.com>
+In-Reply-To: <20250424-work-pidfs-net-v1-2-0dc97227d854@kernel.org>
+References: <20250424-work-pidfs-net-v1-0-0dc97227d854@kernel.org>
+ <20250424-work-pidfs-net-v1-2-0dc97227d854@kernel.org>
+Subject: Re: [PATCH RFC 2/4] net, pidfs: prepare for handing out pidfds for reaped
+ sk->sk_peer_pid
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
+Hi
 
---H3c/q0mBaEmQz18u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Apr 24, 2025, at 2:24 PM, Christian Brauner wrote:
+[...]
+> Link: 
+> https://lore.kernel.org/lkml/20230807085203.819772-1-david@readahead.eu 
+> [1]
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
 
-On Thu, Apr 24, 2025 at 05:57:38PM +0530, Rangoju, Raju wrote:
+Very nice! Highly appreciated!
 
-> Sure Mark. I'll respin V2 keeping just the relevant part of call trace and
-> discarding rest of it.
+> ---
+>  net/unix/af_unix.c | 90 
+> +++++++++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 79 insertions(+), 11 deletions(-)
+>
+> diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> index f78a2492826f..83b5aebf499e 100644
+> --- a/net/unix/af_unix.c
+> +++ b/net/unix/af_unix.c
+> @@ -100,6 +100,7 @@
+>  #include <linux/splice.h>
+>  #include <linux/string.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/pidfs.h>
+>  #include <net/af_unix.h>
+>  #include <net/net_namespace.h>
+>  #include <net/scm.h>
+> @@ -643,6 +644,14 @@ static void unix_sock_destructor(struct sock *sk)
+>  		return;
+>  	}
+> 
+> +	if (sock_flag(sk, SOCK_RCU_FREE)) {
+> +		pr_info("Attempting to release RCU protected socket with sleeping 
+> locks: %p\n", sk);
+> +		return;
+> +	}
 
-It's fine - I cut a bunch of it out locally.
+unix-sockets do not use `SOCK_RCU_FREE`, but even if they did, doesn't this flag imply that the destructor is delayed via `call_rcu`, and thus *IS* allowed to sleep? And then, sleeping in the destructor is always safe, isn't it? `SOCK_RCU_FREE` just guarantees that it is delayed for at least an RCU grace period, right? Not sure, what you are getting at here, but I might be missing something obvious as well.
 
---H3c/q0mBaEmQz18u
-Content-Type: application/pgp-signature; name="signature.asc"
+Regardless, wouldn't you want WARN_ON_ONCE() rather than pr_info?
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgKMiUACgkQJNaLcl1U
-h9AjFQf5Aa7BdpcxfkpemuUS7ylZ4VueiJZN/KTFC6EomJ2jTIUqsMrJ6sNdAY0J
-kkmewdlfottcxAKzwt1EnOh8jSB+VlMQ545PRNxgWXA10SXK5HiYZCP2P17DtXIC
-ILI9ARG2BpTS5m4xYgH+h07Gxm26PvNMtD8na69KL8auLgn6x1FZ9XBhiRkzVVJy
-Eq5ovL2WNbQvVf04R7eI06H5qhCUbGabuugXCOVMZcTotb2AxppSAAeImd+QMZsu
-48xYp2S5Bjb2AdOvpX/noXVX75JVq8qCVMsIfq0GF3XpE81InKQMG5T0xMCJwUl0
-euRV2WJ9XI0KgF1ToEHluHuHo2Kwrw==
-=stLT
------END PGP SIGNATURE-----
-
---H3c/q0mBaEmQz18u--
+Otherwise looks good to me!
+David
