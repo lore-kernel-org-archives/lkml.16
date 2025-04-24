@@ -1,75 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8571DF988
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:55:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C511929009A
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 18:55:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745520942; cv=none; b=d9atnfi6T4y06sbDvAqNIp8KuQuHcX5Nr16dTWQpTOZpZhtuejrRuCZm731JYVWbXsW5o80poLhLb3mZ9kzEfU4y3CLqs14Sf3xt6XLTPMHU1dex4J0PaS7Im99huQgqu9RYsGbQH+eB/uPH4kyIFGKWHMuao55fhjoSjxEDmmc=
+	t=1745520948; cv=none; b=iWaPc4WRpU+VJv8sLcObn36uv8WBsS17nUrxgbpSl4bueveMsDxIf8uOSWFdeVnW1GmW+Aw8jGRAE1t/hlgzqDM9SYcc1w+KYALdDWNrLrodgnrt07BQN0bmTiFOMQSbBiO0L1Z3ti+xcCawFTPfcQkqCdPd+ZtCkYvM4hMblv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745520942; c=relaxed/simple;
-	bh=9luXPkAfWQZEy9kxCGlTJcgTCyTtaWkQiVmo6ICzOE8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lxsrpLnrp60VGcOGIOgRi67wTmn23nk/HhNKYAo2tqg6PqzDrdX8PTBmU+LQdtTnYPKybDWh/pw9JJ6RSxSxwCqscuX84rIaV0JZr3wwA6XOrgG77ZpV0QidF5/ky151m8Qejbn3+OVre9eSQUEvHADDicqX4hn7lOV4s4f3Gmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/3JMN4v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745520948; c=relaxed/simple;
+	bh=rZUxyELSfnVXwreNQjwJQoaXQJWZ9fkMyqWksLWMfUI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S+0pE9RI8TuAENw1WQzXJn4TLVEMt2x4fFrXJPGVvMoQfCMTNGZZpdn9kKAjytERV31Mae57Wt9YHO8PL2sICCZHcwdN9QRiKapwqY9Mq4zX8Q2XWYEofUyGBHT5uiQI+H/GjDyFX0WDCeqJ90PGkJC+YrxyfbQjLi1Yr2TBHQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oOadD6Sr; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/3JMN4v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CE7CC4CEE3;
-	Thu, 24 Apr 2025 18:55:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745520941;
-	bh=9luXPkAfWQZEy9kxCGlTJcgTCyTtaWkQiVmo6ICzOE8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q/3JMN4vSPiEN59Sp3vsLVx8PHKp7jVTWlN1epERz91MJYGvmHhQdD9BAZbIhKkbO
-	 rwITqK05hQuIYlh5v6M2T+7MUeYcxQfHQtXWZxGNZNlDvBbJHjUIGPPVocq4/fD+hs
-	 KiXNmB5lJC4TuRRcB/1Yj53P9yV5AP2R5jx536CHjs4QizP+FzrCsIWXm/T5DqveZ/
-	 BjpklVBizxNq6/8vOcvE+aPWCXxMRsKfLndQE/T/Yb/g9cLHgcwmoJ8u53g53H3yKe
-	 jR6CFJc8kldHfJBofG+sKn5RlducYUiqUbdKAr13gPUa7OyxgGu1+bd4ww74hhvzck
-	 Bmb8MikF0he0Q==
-Date: Thu, 24 Apr 2025 08:55:40 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Chengming Zhou <chengming.zhou@linux.dev>
-Cc: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/12] sched_ext: Avoid NULL scx_root deref through
- SCX_HAS_OP()
-Message-ID: <aAqJLMbmNpnisNcN@slm.duckdns.org>
-References: <20250423234542.1890867-1-tj@kernel.org>
- <20250423234542.1890867-3-tj@kernel.org>
- <b9814fec-a9b6-4cd5-a0b1-1c2ddb214a03@linux.dev>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oOadD6Sr"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30ddad694c1so16137011fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:55:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1745520945; x=1746125745; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pvz3PmaQFn+0EBBAKUfs2w07bVJpHkRF9qQc8oVPxCg=;
+        b=oOadD6SrYOVFwX3+5Y/nBEQ75lMAcd2yH7FAWOvxmqnt72wQttKx3za/ShKG8zuUtu
+         +BgZ+4D2eYfAWxZUZKLcQ07UDxHZNaSzgtPHMo9wniXRY+5aLY29WVQF8yXW8Wz+XXm7
+         FObeRCk94n07XxsX+kH1KoyVJYtSOomeFCt+P92tN6yjta8ZvbMlq3p/GuV/JMS8l/UV
+         Hk9EyJHxZ1NmBDZvJkcoDjBpmCEc/Y+7CW1JN2fMMRObLvMv5GTWeBeD0iPjbTiiDp1z
+         MQ1KVB+3w0TcD2ScrARSQgzuzMnOu0zfLEarYO/SrPVZKs/D6DYjLtaDs6hdCrfMrKvl
+         Waig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745520945; x=1746125745;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pvz3PmaQFn+0EBBAKUfs2w07bVJpHkRF9qQc8oVPxCg=;
+        b=gd+JhnEF3EObztFE77aEJmBJChFq2uUTEM72+PEWNCx5M36DU8XlmnaOWQQCIIHnny
+         U+qhAkzVSlRPhJ3qwmxA+v06qtRG3stvXfOvCdRxix1DKvDWfdY28qY5W1o+FrHWT0YI
+         zdcVO9VYk98Rzovhxyj+OHEzrW2xinDfnpKm5ykDE+t+ELpR3Vv5fCpLMC+Iy6F8HOsM
+         RBBcA9287geC2Z0Glk+MuZ+VBY7mLuXzrsVzwPvoH35KsBHQGNsT0N+w1YdEhBxqi8aK
+         Jzv0hc+5FX63ZEiLJljJEGpk0AlVXuA1WF5h0lFs73WluVr+yWxlEcXq0pDTDEbLLpnm
+         csCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVkz/HDsycydpAIJcycaGKXaeiOwzwfwjimCuY2WR2jjtuoMyrTkGQDOMmCUPgdK9ejSceu3YhsOxNujPU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXR+Sr15fgNuZOjdk5SLmqcbT/uW8nXPdgxId3R2x5nZvKMuSQ
+	0IuT48vPjEcQaKPa8Dh1gXCr9Sr1US3NYrh1Rgcw5luirrpy4E0zd1puw+dhvCiiFLMLauqYMqk
+	Crtlb4Doxqr2l1rra3KNB1gYTlI5609CWO3AH1A==
+X-Gm-Gg: ASbGnctIfCyYw0B7gyWlyAhLGuo4hjGBKdxCjsqFuYirJmyawHzGJi5ch7WFrvsRBZJ
+	Mmq6Nb2mKCvt06dYeGGwjlKjVqoCEs7l4N78ggPPo18ZZ3YZ7KFL7bsW/1jGDRcU1JI7lEn9oDQ
+	ScuLAX8nQYlAN7B/KiChbehtaXsdxTiRQHE3QREt4O6N273QJF8iUKTA==
+X-Google-Smtp-Source: AGHT+IE0c8VGEk3/LwHw0m2axs8IZ9HjpeBp8o188g75mkoErRBNX5c5KptrxgTjbE1qe+vTvqn/BpVZsaupGVwBUJc=
+X-Received: by 2002:a05:651c:210f:b0:30b:bfca:bbf2 with SMTP id
+ 38308e7fff4ca-318a7b0b7f5mr2808701fa.7.1745520944675; Thu, 24 Apr 2025
+ 11:55:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9814fec-a9b6-4cd5-a0b1-1c2ddb214a03@linux.dev>
+References: <20250424-gpiochip-set-rv-pinctrl-part2-v1-0-504f91120b99@linaro.org>
+ <20250424-gpiochip-set-rv-pinctrl-part2-v1-2-504f91120b99@linaro.org> <CAGb2v67jH2G_i51fg3T7qu2dDtj7FqUO7q9pBJJw_uKhdGV6uQ@mail.gmail.com>
+In-Reply-To: <CAGb2v67jH2G_i51fg3T7qu2dDtj7FqUO7q9pBJJw_uKhdGV6uQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 24 Apr 2025 20:55:33 +0200
+X-Gm-Features: ATxdqUGQRJTk1Y9jikLuWRcOSvqi5BIyaHo-9YdHMReWW67MF95w4__wq5ceBqw
+Message-ID: <CAMRc=McmRB8iNPrTztoSLbEXX2WxNp5d3t5--AAqzqU2LQ+FGw@mail.gmail.com>
+Subject: Re: [PATCH 02/12] pinctrl: axp209: use new GPIO line value setter callbacks
+To: wens@csie.org
+Cc: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Paul Cercueil <paul@crapouillou.net>, 
+	Steen Hegelund <Steen.Hegelund@microchip.com>, Daniel Machon <daniel.machon@microchip.com>, 
+	UNGLinuxDriver@microchip.com, 
+	Ludovic Desroches <ludovic.desroches@microchip.com>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, 
+	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, 
+	linux-mips@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Apr 24, 2025 at 7:43=E2=80=AFPM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Thu, Apr 24, 2025 at 4:35=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> >
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > struct gpio_chip now has callbacks for setting line values that return
+> > an integer, allowing to indicate failures. Convert the driver to using
+> > them.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>
+> >         /* AXP209 has GPIO3 status sharing the settings register */
+> >         if (offset =3D=3D 3) {
+> > -               regmap_update_bits(pctl->regmap, AXP20X_GPIO3_CTRL,
+> > -                                  AXP20X_GPIO3_FUNCTIONS,
+> > -                                  value ? AXP20X_GPIO3_FUNCTION_OUT_HI=
+GH :
+> > -                                  AXP20X_GPIO3_FUNCTION_OUT_LOW);
+> > -               return;
+> > +               return regmap_update_bits(pctl->regmap, AXP20X_GPIO3_CT=
+RL,
+> > +                                         AXP20X_GPIO3_FUNCTIONS,
+> > +                                         value ?
+> > +                                               AXP20X_GPIO3_FUNCTION_O=
+UT_HIGH :
+> > +                                               AXP20X_GPIO3_FUNCTION_O=
+UT_LOW);
+> >         }
+>
+> I guess you could also drop the curly braces, but otherwise
+>
+> Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+>
 
-On Thu, Apr 24, 2025 at 03:23:40PM +0800, Chengming Zhou wrote:
-> > +	/*
-> > +	 * scx_root updates are protected by cpus_read_lock() and will stay
-> > +	 * stable here. Note that we can't depend on scx_enabled() test as the
-> > +	 * hotplug ops need to be enabled before __scx_enabled is set.
-> > +	 */
-> > +	if (!scx_root)
-> > +		return;
-> > +
-> >   	if (scx_enabled())
-> >   		scx_idle_update_selcpu_topology(&scx_root->ops);
-> 
-> Just be curious, does the comments added above mean we shouldn't
-> check scx_enabled() here anymore?
+Right. Linus: can you remove them while applying?
 
-There are two things happening in the function - calling the idle topology
-update function and calling ops.cpu_on/offline(). The former needs both
-scx_root and scx_enabled(). The latter only scx_root, so we still need the
-additional scx_enabled() check for the former.
-
-Thanks.
-
--- 
-tejun
+Bart
