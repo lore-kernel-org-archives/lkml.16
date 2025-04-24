@@ -1,100 +1,92 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B2A28EB;
-	Thu, 24 Apr 2025 19:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E77ADDC1;
+	Thu, 24 Apr 2025 19:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745522155; cv=none; b=hUzoyGx7aAmzAsuyN93jSpp0/mwaiGeYOva25qaEMj5zO6RA8bcQLGxfcgPzEZkhh5FiwYvkQq6fBQql+uE+egCEIIwtWXmAe3d1T2ioH54cuBN8fzl7jpTQbScaIiy6aPSYBuR3l37ot/EYz6i6maskCoqUJ6EC6f8yvTpWkkc=
+	t=1745522205; cv=none; b=kpEjU+4zeIPs9QSf1ixRgqOgbJFvqV/A71rzMfTHs1dvIzLMH59CAIyeGpBkcelBVvK2ncwVvwqhf67ctels7td8UqXZbH1fVlEZYEY7ZyNqkKD3v+uvtK+dvhJmzKkeMIiYoDFuyMuFbTr+MJhXz0+rTgPZUcnkAQLwKUyC2xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745522155; c=relaxed/simple;
-	bh=xaX9GfEYK9n44mlY1Zl6aj7j0/jFobvrb6dPwXaxJfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lD6DHUFa732MOSdBLBFfhiMehPTG+fVFBvVsJpRMhiAiskV6CPzm6rCrdJ5OkPP+8/ll90rE5plGAlnbDA+mWuXbn1Pq7XEj3O5h51jC1pOsk/BEuN94mj5G8v9XyeDitNbpzBjCQIhmNxr9jXfvMSSAx8WIkuMqCcc3m+yP8J8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S/i4MmGm; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745522205; c=relaxed/simple;
+	bh=BeGRHNVg6BvIeAlm3dPnlkLRvWWekhEyXNNMSQVYXzQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uNPiqGVHSY7Z/R4y3ODBiKqgV8NkjtZr2OWBYrN4YvrUXs2H6K5oVCiEAwXAB/kovVDxvYTDPzhoYrao6XfeokhrEz8xMnXwxoNQ+wr/IR1HcgFxsTiet13Ql+kviYVDfllnwS1YzMTu38b25mz+i4iAUa7miNfvbycfO9D6OcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WsBvaANT; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S/i4MmGm"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39bf44be22fso1044988f8f.0;
-        Thu, 24 Apr 2025 12:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745522152; x=1746126952; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fg/5CSYGx8pustO7TFATB5SoThu17c6gLk2jPxapenA=;
-        b=S/i4MmGmZ3x33iKRapuN7SIfMHh3t1hvxsS/elwur8GpyRzx9Z07FXZAXrzfgm7z7F
-         qeuPB6FZsC7dQfo1x1+5z7UG4Q5Wz2CTlapvSs492AYCfTLgsZyH9seAF3g7nzcSzEfU
-         f4U7zS42OKn/HMnawgX4UnUrtORBn+zgstwpgdbm1jft1TT9cNSXUan6ZYuFUnGF4aFV
-         lTWOT/UzbmJla/6lyYkj4zbQABns3eo7bJfIicof8z38jsWGwkJerCR9NJTm4eAuEYHV
-         2CFtCUMghSUo0ti2DVUWOOsMGgyOPkL37MgCqPdmF8eSzF0HwYgTbIelnJKzmuh9WkMM
-         Ewew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745522152; x=1746126952;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fg/5CSYGx8pustO7TFATB5SoThu17c6gLk2jPxapenA=;
-        b=bD6ypI1hs51k5v1jSok+KqOD4unnWELWcuP2LQH7fAiG6HIRbBVzQehUdJSDfxARf7
-         P3fYbpLPfdlJsOVYnTyo/fayAgXMIrpRPqTLy3efX4YMmuFsF6tC/0SgdeWe8EirzU+d
-         bgQM6rwHViQdDHnl43uDxeWRTxGj4OBfRCVRRAGvO168jr7vbH292LGCUKCE0UASVfzC
-         qAU2jAjacssmTuO6sEnnDRWdZmlbwMxE1ZSEP6xmUXt2RH1E/QC+GCoWKm3tjUUVluNl
-         HKbWU0G4dfJZNbbfY657Cth8SDmInmJhUaimcRSuGQm/CGzgWFZpz6CF7H0CdfndhVp+
-         m7qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCHgb5LanxMjAbs92QGYBEKg/qdtugoVe2BU5KP+vPZk/pbyRG2Akoq56xVhhziUr3I8VQpRRz@vger.kernel.org, AJvYcCVMHr4O0wp9oagfTQE7CF93Vo7Z9XSdNaEtJCl7SZewdzFm5jzvFFRVwEM1NidhuiuYVds2m1vVFJ2g@vger.kernel.org, AJvYcCXirzdz4vR39f/aEgWgM/aYneHPG3kknOW1yXyLnCzs4DDVZZDpj2KudiQkhZeBFHTz6HJfFkdYW2YObanC@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2IMPDVXUuhtY5aSH8DNm8eNapWTudl7rv6mWvlJj7TZekC9lE
-	lm8YkLAAWLXvPkfJCrdSfSdd1cLiVOcBn4Btcu6OGGwvJRKt4tAj
-X-Gm-Gg: ASbGncsSJ6Sg0DfHjR/oNVAMZARaKWCUClke9NMG9WvZECw0pSLz9CmwWJTmcq8jmEm
-	mGFQCgtysoCPcU26pSlNN3bzngCw4+2qtHLqH5vDPXjR0ZjAV8xnfiJvHc/eN252ZlDcjnGMVcy
-	gXS5EXauD4TwaN2bklpxHFNvYUFpamqv1Vj4xep7DxzoSpblxo0z7T62imWtPYjno5uZ+QDBf3S
-	QP1DOQwTSUpFx5i0HSO6p1GdNrchbg2hrLc67KrZMEba9PoiGi1Yl5f2iauJt4ibC3zhd4olvvi
-	YIb/3jwOa/lUAjH8TP19y3rf6CfEiPFQuzT/f2envgYbtVmarCAo
-X-Google-Smtp-Source: AGHT+IGDtJkWxzHCs3qBzGx1s0jq+yB7NCM4c9k0cZ/pHOBdBV+p+7aYjAospsSGtI/LXj666TeSig==
-X-Received: by 2002:a05:6000:1ac6:b0:390:f6aa:4e80 with SMTP id ffacd0b85a97d-3a06cfb24abmr3545024f8f.53.1745522152219;
-        Thu, 24 Apr 2025 12:15:52 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073c8ca99sm161810f8f.20.2025.04.24.12.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 12:15:51 -0700 (PDT)
-Date: Thu, 24 Apr 2025 21:15:49 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Yixun Lan <dlan@gentoo.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Maxime Ripard <mripard@kernel.org>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andre Przywara <andre.przywara@arm.com>, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] arm64: dts: allwinner: a527: add EMAC0 to Radxa
- A5E board
-Message-ID: <aAqN5cKdDr_D10LX@Red>
-References: <20250424-01-sun55i-emac0-v2-0-833f04d23e1d@gentoo.org>
- <20250424-01-sun55i-emac0-v2-4-833f04d23e1d@gentoo.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WsBvaANT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745522201;
+	bh=BeGRHNVg6BvIeAlm3dPnlkLRvWWekhEyXNNMSQVYXzQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WsBvaANTHgbnS3+9c5su2ftn0YjtROxchfOZzyFaP0OViUemYI5shQEMQmVffBzVt
+	 PmZ1MDn9UmcJ/gFKtl2U8lfYMtj01Gt9COqI5kqweExVTk3aMT1FwVND/4YfW6Hmba
+	 y2t6w4FPZOUbhTdXwGAAe9gbe5AVCNKJQMf8jZqJBo5Oj1YEOqtWoFpDevbw1eFUdo
+	 sY0IjJmv+TO0YtHLQYbptz8R5Ek6CyGZYRJEk9cyJci7Uj/10jM8vZaMY20SFaguo9
+	 PIkIVhmRyfnbns6cTEHyX6nNZOkHygBUCY42F9sn/DC4Re3KRdIjGG5cBIITsgLPOv
+	 Rp1VkPawFdPjg==
+Received: from [192.168.1.90] (unknown [82.76.59.226])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: cristicc)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 708F717E0402;
+	Thu, 24 Apr 2025 21:16:39 +0200 (CEST)
+Message-ID: <25de7fc3-2628-42c9-8d66-b1cab2896c3d@collabora.com>
+Date: Thu, 24 Apr 2025 22:16:38 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250424-01-sun55i-emac0-v2-4-833f04d23e1d@gentoo.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 11/34] drm/bridge: dw-hdmi: convert to
+ devm_drm_bridge_alloc() API
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Andrzej Hajda <andrzej.hajda@intel.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Jagan Teki <jagan@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Douglas Anderson
+ <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Anusha Srivatsa <asrivats@redhat.com>,
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>,
+ Hui Pu <Hui.Pu@gehealthcare.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ dri-devel@lists.freedesktop.org, asahi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <20250424-drm-bridge-convert-to-alloc-api-v2-11-8f91a404d86b@bootlin.com>
+Content-Language: en-US
+From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+In-Reply-To: <20250424-drm-bridge-convert-to-alloc-api-v2-11-8f91a404d86b@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Le Thu, Apr 24, 2025 at 06:08:42PM +0800, Yixun Lan a écrit :
-> On Radxa A5E board, the EMAC0 connect to an external YT8531C PHY,
-> which features a 25MHz crystal, and using PH8 pin as PHY reset.
+On 4/24/25 9:59 PM, Luca Ceresoli wrote:
+> This is the new API for allocating DRM bridges.
 > 
-> Tested on A5E board with schematic V1.20.
+> Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 > 
+> ---
+> 
+> Cc: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 
-Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
-
-Thanks
+Reviewed-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
