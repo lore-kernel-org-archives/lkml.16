@@ -1,131 +1,129 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA32F1D2F42;
-	Thu, 24 Apr 2025 20:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1041F3BA3
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745526642; cv=none; b=F+QDncOn/CntH9so4nLw2RjrGpAMk9+7PXCJwgQJfGse6Q35aXwb2y7iKduvrEBtj/jE891Vl0Mtfkt2xBaX8tsvOWEXCecERA3Zf/nV8lqeqFwEL4qQFzZpaRVMfjLyhvPKmtnPqQkQTbJAWtZgWC8GUUMf0zazBQVGNmZ+OFk=
+	t=1745526656; cv=none; b=j9j0iTI1EzrKUHKicPro3oqa3dUBY/DVFICHqybtytqrvOhtw/zJQjshKaukJ3n0U7hybOHXbegA2aPnpG3OvhXuLMrtjGlzeiMbefJAu7vjDgMbosB382eTVnem1nSw/QEsZeH7bEfomEtTI0mBl/SR+2Ai6TpQIkkW8oTTyqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745526642; c=relaxed/simple;
-	bh=gAKWSAUQ7FLOWukceix3heMfrJNXJb1HPXDD4pZrSX0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hKUt+OaiUGO2mkeV7qsRa/+XvQPCz/wBuHz70WpsstEqrlaGQTqjY1kHg01635x/uVLkwi1CcrgqeSU363SokoWtmaSo9BI/bM3YxgTOuXIILA6r2oiCvfW8JxLbboJaZp2XVoN8q6Y1mqt00bH2FK1jI3k91LygHs9uue1MBjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=bQsFBvl+; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1745526656; c=relaxed/simple;
+	bh=11+oZqY3yPlj1UCXYYlzVbHujQ3EtK+Zuk1U8d/56t0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=urrGEdmWReOmol/9UItReta25PA8XNDFb42QLo/+DLoK72mUJZEDU36+vOxtjf8rcEPiSEjLE/TLN/wEWS7muweBPs9+Rj8gSFjrenbuiAU/aqzjUOTkb6Ebl7uXXLd/k9XvMLXJCE5oUwJFHKPS3ktAUpXBJcPitPKraIissh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Z7+mfPAG; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="bQsFBvl+"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 941A240E0219;
-	Thu, 24 Apr 2025 20:30:37 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WiFye442yIhk; Thu, 24 Apr 2025 20:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1745526631; bh=Ib1wSk3a9DIy+unIt6p2W4sLFO/o2s9rqJW+y1qXwcY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bQsFBvl+AkSM4x7SBRcn+dKyr57ofnWcEz0uqeBqaXKbiq01y1Seu0XuRLRuMi9dy
-	 epOk8CxYLES0MwOmFnLCojwU3jWOURQ+RaCQqlIbTcs9wzEMfin9zdVFCqj1319uKK
-	 Q0IwA0bTi7+Qnoj+ObkAunMvEzIMG8WTA9sDTCfLqUpm2Q0oygJx3ctm0uNQGZ6ScJ
-	 bbdsPowBejEQf1ldO50BEU3HEMX6KfEyLxFOTzQuaSQuUh4WLWm8DvIS2BzPdB76eR
-	 8XjdKbe7vJ3A7WbEIaZHbOPuMsMUUT8EokXL3dJijXuCTMzj/FGNST1w8/j5qN8eP9
-	 5GCKTzzJSiZj42vZlF6P0ga0mfRMsw6+lR0UUidUjUoaw94PsEpnjfsKxuFe+8B4Ij
-	 bG/4Avr9+ZbrUZ7vEOqAYoqoQDwnnKaV+WrSRVkgsnocEwarvFZsF80KsQti1LmQwR
-	 saidlImrtAqHPKOpHF1P4YgIoXZc/GoGv0YEO7wvhZkWoMTHCdzrolVZucrznBDmff
-	 +QCggn8pxoFwrwA1KZq0Txx5XrmyzeF++NcX14gWjykwQPR2jvBB2fqMEBjpCsNl4r
-	 UpeQMjNtMkTZwvmayyTX1DIi8b999aMkcmrxXr70yxbqZHC40HOJBDYoUt9+5pCdxR
-	 2ZCqsg3CVN5hR74hLKyx3TCQ=
-Received: from rn.tnic (unknown [IPv6:2a02:3031:201:2677:b4a0:48b8:e35c:ca37])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with UTF8SMTPSA id 010D440E01FF;
-	Thu, 24 Apr 2025 20:30:12 +0000 (UTC)
-Date: Thu, 24 Apr 2025 22:31:10 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Pavel Machek <pavel@denx.de>, Sasha Levin <sashal@kernel.org>,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Max Grobecker <max@grobecker.info>, Ingo Molnar <mingo@kernel.org>,
-	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
-	x86@kernel.org, thomas.lendacky@amd.com, perry.yuan@amd.com,
-	mario.limonciello@amd.com, riel@surriel.com, mjguzik@gmail.com,
-	darwi@linutronix.de, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: CONFIG_X86_HYPERVISOR (was: Re: [PATCH AUTOSEL 5.10 2/6]
- x86/cpu: Don't clear X86_FEATURE_LAHF_LM flag in init_amd_k8() on AMD when
- running in a virtual machine)
-Message-ID: <20250424203110.GCaAqfjnr-fogRgnt7@renoirsky.local>
-References: <20250418173643.GEaAKNq_1Nq9PAYf4_@fat_crate.local>
- <aAKaf1liTsIA81r_@google.com>
- <20250418191224.GFaAKkGBnb01tGUVhW@fat_crate.local>
- <aAfQbiqp_yIV3OOC@google.com>
- <20250422173355.GDaAfTA8GqnGBfDk7G@renoirsky.local>
- <aAfynEK3wcfQa1qQ@google.com>
- <20250423072017.GAaAiUsYzDOdt7cmp2@renoirsky.local>
- <aAj0ySpCnHf_SX2J@google.com>
- <20250423184326.GCaAk0zinljkNHa_M7@renoirsky.local>
- <aAqOmjQ_bNy8NhDh@google.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Z7+mfPAG"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53OJml1w011701
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:30:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	OrVdlXQhwAviji/junUKUi6SBanWhUpShBjAwIaBg80=; b=Z7+mfPAGnR09NHFV
+	KLkeeJm3ChXIVqJ8GC/yJbRe990eCzUB1qJpd9v8c+nWi/1FsHZ4wOfPfqhy26Op
+	uCOj/giDN/qRtDNuO4KZt0RMAu+JwCuHxGRpOAfMXi5vSYZEtyO4Pjrtg9y05FaG
+	FjvX6OAc9Irx9xhguvLbAuxcIFPNo5XS1DVtmklYE1xg29kgwLa54Nhrfv9wJ6ly
+	QZpOMSL1m5P4/Ad1eQ4hCLTPeone40T3t4hiVCnSwccx2oHZPfC+/VfCH4+x/Ss6
+	ZkYswBq+ntvtLu3Sw/kMFBAzUc0F6LwmxCN32qto3ZWyGDJlISQpYyUYbULX6MAu
+	zRPxyQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh0eyfv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 20:30:54 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c545ac340aso19958385a.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 13:30:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745526653; x=1746131453;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OrVdlXQhwAviji/junUKUi6SBanWhUpShBjAwIaBg80=;
+        b=QlDcxyc7fiMqI5XMwQYOqDFU5t3DvgdoUAcy7Pg62n4kJFOze0P5uEqZQyBcLiq378
+         XUQA1+LprjWfSQdbEWQQvwn6IMXGUq/B7SjABHtMk1DG5C7ptx/wyHYXCLmVk7dKL5CL
+         ia7HNQlqnafNK0XdzsOf/Fg3eH+QXPofJ/AAWuN6hx5bweaylYxR8Je6s1h2558m0Dmx
+         ePBM7hQfdbfHGroHjE00UCDtkhOQEFGuBkh4gllhFGdm4fntohfOBRnpyEucV2GWebg1
+         3wRVFIhkKp12yjB6G7Aj+H4mV1ToHFiLcQwuRfkZFOZgEtypIgXo/i7dmYCDUyfmc19u
+         8H1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUqZnSMXyFncoItV4AzziP/cZitn7aO9ckQJVcs0syg5PXWqwFWzlkGXWNs/srGazHHB/uoHTzlF2zB/is=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPFXooDUo25UNrZjaKrcsosLksDSceqkboXQeZ9GuQOzEKIRbV
+	PzatlNSh01cp83UC71rcyKDgVhy8rIPpnA46xNLlNgAcamvd/wFEHxhS7g5URu/tkgmJJqgXnxu
+	jadtmApQ0sG4UHnvzcXQaU0a/QRpSIiGcPeJ+sHUZcwg9sU+w4uxoMcYYuTH7fU4=
+X-Gm-Gg: ASbGncs034Xka3hsaOf0/StyKYvUVbhwQyV3jBU6myQrvZspexQfHmIjdjSlPhij9yE
+	fiAXFSVPsoQ4tLAGBgIdLHqJUulcmdTl+QdfzvlykuUgQ2YIMtWKEKDi/ogSSd5dT8UezplxUWO
+	GGIsBAuacJFriVnRx9gXvI9VeplFW7qmpy9LNX6q2h3/OkieHE1yx055PFMYQqYBr/WXgO5pmmA
+	KWQW55vhyWZ8ASRGCl1Wu8leaVbQ0FU4bDsVXodNMlIiKNaxe+29RkSqBQbLHVEtijVQaIwMV30
+	Uc18Jv2tax1XLHYLvtfVwjK62cPMBLyCu8R93H2Imqf42zFqz7DMrIJXEjGO7xSm4s4=
+X-Received: by 2002:a05:620a:258d:b0:7c0:cc94:46c4 with SMTP id af79cd13be357-7c956e829b0mr246689285a.2.1745526653218;
+        Thu, 24 Apr 2025 13:30:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRa8MtoW+3I01aUlFs+8CuH59Beo6wFJpbOz4qs/fVt4IP/6FFeT/Y8XMq6k6m3P0kyt9hcQ==
+X-Received: by 2002:a05:620a:258d:b0:7c0:cc94:46c4 with SMTP id af79cd13be357-7c956e829b0mr246688085a.2.1745526652896;
+        Thu, 24 Apr 2025 13:30:52 -0700 (PDT)
+Received: from [192.168.65.221] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf9a47sm14437366b.104.2025.04.24.13.30.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Apr 2025 13:30:52 -0700 (PDT)
+Message-ID: <6b286132-1c56-43c1-a61e-0e067a73b615@oss.qualcomm.com>
+Date: Thu, 24 Apr 2025 22:30:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aAqOmjQ_bNy8NhDh@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/5] dt-bindings: arm: Add CoreSight QMI component
+ description
+To: Mao Jinlong <quic_jinlmao@quicinc.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach
+ <mike.leach@linaro.org>,
+        James Clark <james.clark@linaro.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250424115854.2328190-1-quic_jinlmao@quicinc.com>
+ <20250424115854.2328190-2-quic_jinlmao@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250424115854.2328190-2-quic_jinlmao@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 9d_2UNPIlLpWak9WXQF6BS1pKxLDBnlr
+X-Proofpoint-ORIG-GUID: 9d_2UNPIlLpWak9WXQF6BS1pKxLDBnlr
+X-Authority-Analysis: v=2.4 cv=Fv0F/3rq c=1 sm=1 tr=0 ts=680a9f7e cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=7qhtKZ1Szi6igWG7shAA:9 a=QEXdDO2ut3YA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDE0NCBTYWx0ZWRfX93qkPPLA14La f3S/6HNLXd9zlEu+iMyzYt+D0av1al8b8hnv1doxAMGQWhUrB/qDEFXVIWxKsRH0CJQPm3PkYYu q+pb2KuOdVcfERa6aaINTVVe5ISgCuOe8PvhUwySLXdbU2rXIq4Pv3RTksG7xC0oAZkEMyzTa+h
+ +Du7z4NSIS13Z4fy5dqS5HikULD4SOIsuS+Jr+04MD/RXHhb5YSOEL3gGqsyelu6oxHdW9l4zUw sy6sBq9X2hpkd6d5O0cvC8glt7VAj+ThqH8Gb/6GtVb6Q73NoKk0bY4W5HVF3Niv2cpqDvpSnuw MxeXll+gsSAAQ9Yar5i7Sz/e8fZcDHO8VBCsQxvuxvMeJ0y+8zV4Yji2VNtryzRa8AmczdiWQJ3
+ lhAmJd26nC7sdyEYkfP9HaYIXEdtp/HL2l7hR12g4lSRMz0BnXnv+4+r6i1l0mrAJoLL6ZGw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-24_09,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=809 priorityscore=1501 suspectscore=0
+ adultscore=0 bulkscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504240144
 
-On Thu, Apr 24, 2025 at 12:18:50PM -0700, Sean Christopherson wrote:
-> Not quite.  KVM supports all of those seamlessly, with some caveats.  E.g. if
-> host userspace and guest kernel are trying to use the same DRx, the guest will
-> "lose" and not get its #DBs.
-
-Pff, so cloud providers have big fat signs over their workstations
-saying: you're not allowed to use breakpoints on production systems?
-
-With my silly thinking, I'd prefer to reglement this more explicitly and
-actually have the kernel enforce policy:
-
-HV userspace has higher prio with #DB or guests do. But the "losing" bit
-sounds weird and not nice.
-
-> Definitely not.  All I was thinking was something like:
+On 4/24/25 1:58 PM, Mao Jinlong wrote:
+> Add new coresight-qmi.yaml file describing the bindings required
+> to define qmi node in the device trees.
 > 
-> diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
-> index fdbbbfec745a..a218c5170ecd 100644
-> --- a/arch/x86/include/asm/debugreg.h
-> +++ b/arch/x86/include/asm/debugreg.h
-> @@ -121,7 +121,7 @@ static __always_inline unsigned long local_db_save(void)
->  {
->         unsigned long dr7;
->  
-> -       if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
-> +       if (static_cpu_has(X86_FEATURE_DRS_MAY_VMEXIT) && !hw_breakpoint_active())
->                 return 0;
->  
->         get_debugreg(dr7, 7);
-> 
-> Where X86_FEATURE_DRS_MAY_VMEXIT is set if HYPERVISOR is detected, but then
-> cleared by SEV-ES+ and TDX guests with guaranteed access to DRs.  That said,
-> even that much infrastructure probably isn't worth the marginal benefits.
+> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+> ---
 
-Btw you can replace that X86_FEATURE_DRS_MAY_VMEXIT with a cc_platform
-flag which gets properly set on all those coco guest types as those
-flags are exactly for that stuff.
+Is the service-id hardcoded/well-known? If so, we can drop
+this devicetree node and create a new platform device (& probe the
+related driver) based on the presence of qcom,qmi-id that you add
+in patch 3
 
-In any case, I don't see why not. It is easy enough and doesn't make
-things worse, API-wise.
+Konrad
 
-Care to send a proper patch with rationale why?
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
