@@ -1,317 +1,170 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2073.outbound.protection.outlook.com [40.107.93.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9ACF27BF9B;
-	Thu, 24 Apr 2025 15:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745509918; cv=none; b=ZEkl3ZBLlpn0ERUupfxxpybKVglMbFzlGK9yBUfZa40JffQ1w7Ww+OkvJalZmuY4MQt2lFe3/R5Lj0HZZRn/axWK9qnndLUfp0v2Su3Aea/mxeCpS5Cmde0txf9tQPAb/Gd/z6UmtKQ4voz9TeWGHM+1peuKREZHqHG3CcEv9sw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745509918; c=relaxed/simple;
-	bh=UUS2CpCf+wFg/VS7Ww7nDSjeKSbHn5zDmmVibeywhkg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fsyfmNcsaPq+4VuM5pKTAdQiayV0wrfWrHq8ujnx4g+GRsCbh7sE1f36Xef2h2BytSiRi090z6NiTrbp2m09mbTzmqUZM81NrEQ9nfd9i5GqGBQcBEzdxAMv7iY2srXFzj2GUPVd6ZprGlhE61X08B4a0l4Tjj4tFcMtF1B9yL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E/HyI6ik; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A98130AC8;
+	Thu, 24 Apr 2025 15:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.73
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745510076; cv=fail; b=qgOrUeE8y0+JqdF46BWp66aLHS3sB8nS/ood1NjjPsHLZrpAj1s/IWOI9+kh7xJgouVL+BoWLq7zzS0anxLOCljGyLro5hGqFO2eiy7Ne8kECVsjL3fSP+uBwRQ7OB9Yqc6Zxo52Go1xkEy2PRlFSlUGGQaUMLF55SctyCU1svM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745510076; c=relaxed/simple;
+	bh=9bMnmoKButLreF2/P0L5NwfzD+IUXmnSX5zSpR8Bkxk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MusAeOZafohAc5YLNjKVAtKwd+rrW8c2C1RPl/TaDC6F+WLCdJVoDR7hMU5IN+uTP1JBALFrS1bXeLEdH19zepHp6HfE4HCvMrP7lZYlLeqaAeTZHSSg87Dhie+R4F+wakaMfNc0MkTRv3dGqpYI5AHXe3Sf/tUzheOkz8i/eBg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=IkJgtpaP; arc=fail smtp.client-ip=40.107.93.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/HyI6ik"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2c7f876b321so360373fac.1;
-        Thu, 24 Apr 2025 08:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745509916; x=1746114716; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XdQtNzKuShUDMjNR2bXSL9wLmA61bL7syi+/zL+gQm4=;
-        b=E/HyI6ikvhfCsWYoLJ2Papt3sA+KPSdPsH85KkBG0KIszoorB13OnjuK39sR0eAlUF
-         qxEixUg5dGllWxsmm/XtZ8jh0UoZQqhW4RfVHh9zZZz8/oTSslWAbPSnDeN6IMQW+4sg
-         UowgcrNOl3JFprbeIHtQa4+mmpAJeTVfwAe20I3TQ8Ubd3qFKvmwh2CV00y3CQdLydE/
-         6U00jChnyLZHAeNrq7MR0njZtJYFIF9M34Ja2t1PMI6WvdIwDtgekYRLRXxZjrsIHoGo
-         KweXRqG9vuT6DIpwqDYi5omxCNBpi/Vsszx2wsHriU/SHi9cn/K6hNmhU+BWiifaTwEm
-         Tc5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745509916; x=1746114716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XdQtNzKuShUDMjNR2bXSL9wLmA61bL7syi+/zL+gQm4=;
-        b=fjV/89N89ieR45N36JxoPSlbeumbG/ITe5vVFQ9aKjLpAb4zV0rgH+YXTffnXHBbwf
-         ClUDq6EgMGvSGe+b1/kh5h7rKcC2l+u2veNb1X2ZHTpwq7CecbfsUwq29sKwLbWAGzTx
-         1IzbN5bION64T7ihTclnYa/+I8DUC6UGTUp52X8yLDyL5j8DPQZ4vfCZwbmCV09jTFEQ
-         PDNPYV4xUgdQ9hmCxE3mF/WFLNcG43JwRO8FcO7D8DhFEimZSxlRLeFTb8ELxpDhCjp5
-         rqqJhIDZAdLGw6jQVR6zyFg1/Ji8wRUhNSI0LqTdnTrvAOnuavqsVvzcd7PioUIUoJYp
-         49qQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVtAoXP2Bazv7sEeHUPzVAjAYkFOUEubcYcrcadUeUDduDU/0hdvyWIqwSzZqs4+hOVC8ajrzAVaImto+l1@vger.kernel.org, AJvYcCWqxvWXRw/tKmlhSZHEW/uQM8pjmj7PMSeQfi2pKttmQgAYC77yfYW3YWEGT5Ae9dpxQS4mzeZcEw==@vger.kernel.org, AJvYcCXRPHld5MGRYTJ9a4M3kAl7bgdvLdC0iacTiDd+LJXGb1FPY+2J0HSGjvBfQ65UG/de6ZX7wVOGyc6mE3jgYQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbFriC/40yepGuNWqgv0BxsOFIrFy6Pa3x1m+QHHtCxwPeRHeW
-	kouuIWyfc1KDzqNQ93r8OznkKxRctcEQe/2oc8QCMCNZ2Oi0xlcGja07zrHXUZiu2LNLMMQwKyh
-	oJyAqjW3vxmJjvvQoIp4drgnRRYY=
-X-Gm-Gg: ASbGnctppu0Uu4YDVINjKjG6t77y8SaNpACtbVbIHY9llzZLxt9U+nxUWwCqXnwqTMs
-	sNQI4C9XAAx5S2dyVQrsLIh+DfMt3ACpwVu5AgU84xwdUto9V+lL50Y9cNHjzQpaIQ574rpV5Bm
-	TbFCQO3c5I7eKFX44gm20eoaY=
-X-Google-Smtp-Source: AGHT+IEy3LkES11D0FSg2kVcEOvymyrRXJM3cmutJBvoQQi6r8APkqvxnavi1IF3y6ntmIVBeMG1p+uppWv0fpFNyqo=
-X-Received: by 2002:a05:6870:80cb:b0:2d8:957a:5176 with SMTP id
- 586e51a60fabf-2d994154d14mr207023fac.5.1745509915594; Thu, 24 Apr 2025
- 08:51:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="IkJgtpaP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Ti+XylLkXDIzdbeP6RWe1qygFw5RHwsDLiKP2EdJ9geOMJjvbv6udksNy1tKbZeXljP5sD9Xg5Y0muRUKl1H1+4DhXcGyULk2uGonBxa1yEoBA8U6cX40soZC0AfnvtFuCJR+xtGRr6mz9BNS2B0MN5wwWE2JOuMY0q4k6hd4MF/hFSPg351pQJhLDtJgDMj/gXi33jZnQBLEENsPDqmdo5ZoJqeaJ+Qz3i3Js0hH2kWvxAuoJueP0QkxBjxcDOFs5J6PhBf3lRPe31DvGjOtsxssqgpcLgFa3m32YaCUszh+6kIT9fEJuPVDuH7hb7lr0KIj8pML/2IgN8UMeabfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K8p4Q93VuGjMMJlzt6Z+FMJBOH/YNHCIj/0ylEP8gwQ=;
+ b=VeZ07c0YrL8Lde65swEDBNUteM4SnP4CSgnaXSbgZnRe1r6lNR4s4suFmXkZqAiI2LY7ReS93TzWOVwzqo7+T7Reeftk5Hlt8Fb5k4+2JOcC9m+d9tb8nzWUNBC5kcpBClVEa6b7VY/l6jazcE4YmfcBdPKus2V5DmCf3tKsmZXHPHeNkGb+QN3UAunjUdWJSYfyLcZuNljjS/LS843ohDNfCBIwOftG0CpYII8UG4Hf3TkXT1EK4KMUPJE1g9HIbDrLBJE1UoZ5u4gzQwaoYmzCc2z6WMbjiFyNVfDaa11huVIKSu2r73jTNL7uNtsCwPyLcqBedcltw9TlByQIqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K8p4Q93VuGjMMJlzt6Z+FMJBOH/YNHCIj/0ylEP8gwQ=;
+ b=IkJgtpaPJATT9HVcGuz8XI+BajbyRyohnP3g/L0Ho13bz7bP5avXwyPy7epDWj5NGNunqK0fKEXp8/ofxb7e4w4FSpDPhLwSTPsbemjFOpK7kYmCdPFhGRHGGUIxKWtEmwVpPdG216H+JJPklwXX++2RgtyvAfQxim7rms5vEAPZF8VC6ryKsrmenNvlI1sVz2dICxg6buaiZxgHpnMVo1CmNy3F0D8Mak2UKjTWhqXAu3euEKdd2KWLoGfAYKlUdDVfxF1mo+YzAOnlIK7unBjQOiKYrtUZhyRWf+mGMqIO9sCE7dRjZ37Q9FhW6c57kd7te1BJzBSqgdIg+bdK8g==
+Received: from BN9PR03CA0044.namprd03.prod.outlook.com (2603:10b6:408:fb::19)
+ by DS0PR12MB7996.namprd12.prod.outlook.com (2603:10b6:8:14f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Thu, 24 Apr
+ 2025 15:54:30 +0000
+Received: from BL6PEPF0001AB4A.namprd04.prod.outlook.com
+ (2603:10b6:408:fb:cafe::83) by BN9PR03CA0044.outlook.office365.com
+ (2603:10b6:408:fb::19) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Thu,
+ 24 Apr 2025 15:54:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ BL6PEPF0001AB4A.mail.protection.outlook.com (10.167.242.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 15:54:30 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 24 Apr
+ 2025 08:54:17 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 24 Apr 2025 08:54:17 -0700
+Received: from Asurada-Nvidia (10.127.8.12) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Thu, 24 Apr 2025 08:54:15 -0700
+Date: Thu, 24 Apr 2025 08:54:13 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"will@kernel.org" <will@kernel.org>, "robin.murphy@arm.com"
+	<robin.murphy@arm.com>, "joro@8bytes.org" <joro@8bytes.org>,
+	"thierry.reding@gmail.com" <thierry.reding@gmail.com>, "vdumpa@nvidia.com"
+	<vdumpa@nvidia.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+	"shuah@kernel.org" <shuah@kernel.org>, "praan@google.com" <praan@google.com>,
+	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
+	"jsnitsel@redhat.com" <jsnitsel@redhat.com>, "mshavit@google.com"
+	<mshavit@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
+	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
+	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
+	<patches@lists.linux.dev>
+Subject: Re: [PATCH v1 00/16] iommufd: Add vIOMMU infrastructure (Part-4
+ vCMDQ)
+Message-ID: <aApepRZrZhywKqo6@Asurada-Nvidia>
+References: <cover.1744353300.git.nicolinc@nvidia.com>
+ <BN9PR11MB52761DAB62D3A4D3F6B53F698C852@BN9PR11MB5276.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422162913.1242057-1-qq282012236@gmail.com>
- <20250422162913.1242057-2-qq282012236@gmail.com> <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
- <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
- <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk> <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
- <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk> <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
- <cac3a5c9-e798-47f2-81ff-3c6003c6d8bb@kernel.dk> <CANHzP_uJft1FPJ0W++0Zp5rUjayaULEdpAQRn1VuuqDVq3DmJA@mail.gmail.com>
- <5c20b5ca-ce41-43c4-870a-c50206ab058d@kernel.dk> <CANHzP_u2SA3uSoG-4LQ-e9BvW6t-Zo1wn8qnKM0xYGoekL74bA@mail.gmail.com>
- <1ed67bb5-5d3d-4af8-b5a7-4f644186708b@kernel.dk> <CANHzP_vi1SaC+jP_UZqsjFA=Gu=Q3ST0XR_ECm=4O-5G8Jmqqg@mail.gmail.com>
- <fdcb66e3-e99a-49f9-8874-00110b06bb3d@kernel.dk>
-In-Reply-To: <fdcb66e3-e99a-49f9-8874-00110b06bb3d@kernel.dk>
-From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
-Date: Thu, 24 Apr 2025 23:51:42 +0800
-X-Gm-Features: ATxdqUF4IfbaOT1v-BFzWeGT5-1nonybxlASGLo3cp33mnyxTu1ThjM9BkIJOmQ
-Message-ID: <CANHzP_vws+MPqt4u3pvWebM_ZObz_FZ2P2Zz20fPpWon8Kxxhg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault scenarios
-To: Jens Axboe <axboe@kernel.dk>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB52761DAB62D3A4D3F6B53F698C852@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4A:EE_|DS0PR12MB7996:EE_
+X-MS-Office365-Filtering-Correlation-Id: d22c8039-7c04-41d9-e96f-08dd83484ca0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?pIGQMmoaeTTbl/FHtrxVb1LL3AKztrOXLGq5KKzpX7iP8RID67Jp0xTfUBIJ?=
+ =?us-ascii?Q?MfeYr+Ha58XtUmRZo2OIe0n7lLoPS48drwCpYabsDp+3Fuw2YYIfL8QUw6kF?=
+ =?us-ascii?Q?nXHfX+oSXt1qu3hXsDdgrj7xT4yjGmGwza/D9AEwCbsa7p5kbxZJEGde+DlD?=
+ =?us-ascii?Q?aiXHeLaxiDWuGs05HtuwodSV5AlKOxFA4gJEq1O2kDIQJAtlo+GT2Pd9RIGV?=
+ =?us-ascii?Q?XLmIi8ah+kfdkIqBmkgYQ+1pr+X5Th7gCflgI8yfU6XfJzsXDahvSPCiRUI0?=
+ =?us-ascii?Q?Z6uXMoOC0HggvQKbTufTy+GB0QsrFVSRK3cgNQMCRziaeiJDsVffoIslyxt9?=
+ =?us-ascii?Q?IqeMlGZe2CxedhM/wMuQshRLk0hn2ECEj5Ib9kdC1SQnrgWnUI41A0SZZY3t?=
+ =?us-ascii?Q?yL9jxAvJ710tRgD0layaeiHH+bT1sLz76oefHA0nj0/Nq5xlObm3Aq9lvjT5?=
+ =?us-ascii?Q?/aHUrlhkNCyDu+HVgiGoWNl8+aH0HXeeoLM9xBB4dsM8VKV4OkU92NV6Dahe?=
+ =?us-ascii?Q?T4EubHb6hxmCPMI9kYtLw7XVxFXucAzXV899dQ8xWvlr+sZ8iT6ffYl6kaJH?=
+ =?us-ascii?Q?6qjO4b1WLtCqDVTolY7MwRUoHNWbl63o4IvsQx4dEFE1jHnvc3NszCodnqLo?=
+ =?us-ascii?Q?7p5kntsp6eVuFk9UQ27WfUEhikJCpWnG59gadUtY6zgjb0mS9KLCyTsC89Je?=
+ =?us-ascii?Q?rRu25PoizNtU3DvKpBLrC6mBJE4y1f1VnKyFZ0Oe4J5laswCyw48UosM5Do8?=
+ =?us-ascii?Q?+GMk1dQBHrULIUEDOgdEnwjShGl1ugjBAgO4O5LToY3whXutW6u3h0etoUTs?=
+ =?us-ascii?Q?gxUH8zGpzJJj05alumIZKDg8rMuCiTL0ile8+7aCidLB2jAEnBe8QBXgGlMF?=
+ =?us-ascii?Q?JpE+VqX5qFuzX5rCo9YDGFOGCuE7vFQiTR635I8MAOHPFt3ikz1DxDGzrSDX?=
+ =?us-ascii?Q?b02lFJJuJsfPESUyfnCE7+kwNXb4hbtri6Nz2VWCuP44mKFfnAnqMI4yLkxy?=
+ =?us-ascii?Q?OydmbP7Q81LviCXxo6ao0Eh56NA3Em7tP2RbZ3SipEdanduPg0sHI1rw2Zks?=
+ =?us-ascii?Q?WAlmGg4mbPwUgGTIcM1PdMVECTWlT0Ac16p4ybYfzD/i/unc/EpyHNR95qId?=
+ =?us-ascii?Q?nHOULcHcORAiMe9KGFWHclikVzPkbmneQxLIhJLpmKH2/1XyA2v9YCTPnaiF?=
+ =?us-ascii?Q?9lEJ29eUqncVHrpZ0051vwTeM1X5RUKNTTZGtBaGR2AaHxDHPkHYMGRqLpfa?=
+ =?us-ascii?Q?qTWHbeVQEgiE/n3vJkfYx5H97uWHfafNUwk9QD6FVbsPOgCz2nRTO7Br0hXh?=
+ =?us-ascii?Q?f1yWu3xFsrTu44uSyiOEDMD7nmzY+HOfvr34pBZyEX39wOUvouD/GYVSH5DE?=
+ =?us-ascii?Q?beJ+lj6P1YS0WIDXnynYRBEXJ56Wa7o5HUUUv36Sy+jUl24/5tDQZyNgjYFZ?=
+ =?us-ascii?Q?QfULIeMNd6sb0WP+bYH5ePxvU7kyDUu7fp0suJzi4tDP6Wi02lynqi4AJREs?=
+ =?us-ascii?Q?yuBFtdTP2Bd4Rz9ndFyoxdLzWidwt6jynyPU?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 15:54:30.0944
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d22c8039-7c04-41d9-e96f-08dd83484ca0
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB4A.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7996
 
-Jens Axboe <axboe@kernel.dk> =E4=BA=8E2025=E5=B9=B44=E6=9C=8824=E6=97=A5=E5=
-=91=A8=E5=9B=9B 23:21=E5=86=99=E9=81=93=EF=BC=9A
->
-> On 4/24/25 9:12 AM, ??? wrote:
-> > Jens Axboe <axboe@kernel.dk> ?2025?4?24??? 22:53???
-> >>
-> >> On 4/24/25 8:45 AM, ??? wrote:
-> >>> Jens Axboe <axboe@kernel.dk> ?2025?4?24??? 22:13???
-> >>>>
-> >>>> On 4/24/25 8:08 AM, ??? wrote:
-> >>>>> Jens Axboe <axboe@kernel.dk> ?2025?4?24??? 06:58???
-> >>>>>>
-> >>>>>> On 4/23/25 9:55 AM, Jens Axboe wrote:
-> >>>>>>> Something like this, perhaps - it'll ensure that io-wq workers ge=
-t a
-> >>>>>>> chance to flush out pending work, which should prevent the loopin=
-g. I've
-> >>>>>>> attached a basic test case. It'll issue a write that will fault, =
-and
-> >>>>>>> then try and cancel that as a way to trigger the TIF_NOTIFY_SIGNA=
-L based
-> >>>>>>> looping.
-> >>>>>>
-> >>>>>> Something that may actually work - use TASK_UNINTERRUPTIBLE IFF
-> >>>>>> signal_pending() is true AND the fault has already been tried once
-> >>>>>> before. If that's the case, rather than just call schedule() with
-> >>>>>> TASK_INTERRUPTIBLE, use TASK_UNINTERRUPTIBLE and schedule_timeout(=
-) with
-> >>>>>> a suitable timeout length that prevents the annoying parts busy lo=
-oping.
-> >>>>>> I used HZ / 10.
-> >>>>>>
-> >>>>>> I don't see how to fix userfaultfd for this case, either using io_=
-uring
-> >>>>>> or normal write(2). Normal syscalls can pass back -ERESTARTSYS and=
- get
-> >>>>>> it retried, but there's no way to do that from inside fault handli=
-ng. So
-> >>>>>> I think we just have to be nicer about it.
-> >>>>>>
-> >>>>>> Andrew, as the userfaultfd maintainer, what do you think?
-> >>>>>>
-> >>>>>> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> >>>>>> index d80f94346199..1016268c7b51 100644
-> >>>>>> --- a/fs/userfaultfd.c
-> >>>>>> +++ b/fs/userfaultfd.c
-> >>>>>> @@ -334,15 +334,29 @@ static inline bool userfaultfd_must_wait(str=
-uct userfaultfd_ctx *ctx,
-> >>>>>>         return ret;
-> >>>>>>  }
-> >>>>>>
-> >>>>>> -static inline unsigned int userfaultfd_get_blocking_state(unsigne=
-d int flags)
-> >>>>>> +struct userfault_wait {
-> >>>>>> +       unsigned int task_state;
-> >>>>>> +       bool timeout;
-> >>>>>> +};
-> >>>>>> +
-> >>>>>> +static struct userfault_wait userfaultfd_get_blocking_state(unsig=
-ned int flags)
-> >>>>>>  {
-> >>>>>> +       /*
-> >>>>>> +        * If the fault has already been tried AND there's a signa=
-l pending
-> >>>>>> +        * for this task, use TASK_UNINTERRUPTIBLE with a small ti=
-meout.
-> >>>>>> +        * This prevents busy looping where schedule() otherwise d=
-oes nothing
-> >>>>>> +        * for TASK_INTERRUPTIBLE when the task has a signal pendi=
-ng.
-> >>>>>> +        */
-> >>>>>> +       if ((flags & FAULT_FLAG_TRIED) && signal_pending(current))
-> >>>>>> +               return (struct userfault_wait) { TASK_UNINTERRUPTI=
-BLE, true };
-> >>>>>> +
-> >>>>>>         if (flags & FAULT_FLAG_INTERRUPTIBLE)
-> >>>>>> -               return TASK_INTERRUPTIBLE;
-> >>>>>> +               return (struct userfault_wait) { TASK_INTERRUPTIBL=
-E, false };
-> >>>>>>
-> >>>>>>         if (flags & FAULT_FLAG_KILLABLE)
-> >>>>>> -               return TASK_KILLABLE;
-> >>>>>> +               return (struct userfault_wait) { TASK_KILLABLE, fa=
-lse };
-> >>>>>>
-> >>>>>> -       return TASK_UNINTERRUPTIBLE;
-> >>>>>> +       return (struct userfault_wait) { TASK_UNINTERRUPTIBLE, fal=
-se };
-> >>>>>>  }
-> >>>>>>
-> >>>>>>  /*
-> >>>>>> @@ -368,7 +382,7 @@ vm_fault_t handle_userfault(struct vm_fault *v=
-mf, unsigned long reason)
-> >>>>>>         struct userfaultfd_wait_queue uwq;
-> >>>>>>         vm_fault_t ret =3D VM_FAULT_SIGBUS;
-> >>>>>>         bool must_wait;
-> >>>>>> -       unsigned int blocking_state;
-> >>>>>> +       struct userfault_wait wait_mode;
-> >>>>>>
-> >>>>>>         /*
-> >>>>>>          * We don't do userfault handling for the final child pid =
-update
-> >>>>>> @@ -466,7 +480,7 @@ vm_fault_t handle_userfault(struct vm_fault *v=
-mf, unsigned long reason)
-> >>>>>>         uwq.ctx =3D ctx;
-> >>>>>>         uwq.waken =3D false;
-> >>>>>>
-> >>>>>> -       blocking_state =3D userfaultfd_get_blocking_state(vmf->fla=
-gs);
-> >>>>>> +       wait_mode =3D userfaultfd_get_blocking_state(vmf->flags);
-> >>>>>>
-> >>>>>>          /*
-> >>>>>>           * Take the vma lock now, in order to safely call
-> >>>>>> @@ -488,7 +502,7 @@ vm_fault_t handle_userfault(struct vm_fault *v=
-mf, unsigned long reason)
-> >>>>>>          * following the spin_unlock to happen before the list_add=
- in
-> >>>>>>          * __add_wait_queue.
-> >>>>>>          */
-> >>>>>> -       set_current_state(blocking_state);
-> >>>>>> +       set_current_state(wait_mode.task_state);
-> >>>>>>         spin_unlock_irq(&ctx->fault_pending_wqh.lock);
-> >>>>>>
-> >>>>>>         if (!is_vm_hugetlb_page(vma))
-> >>>>>> @@ -501,7 +515,11 @@ vm_fault_t handle_userfault(struct vm_fault *=
-vmf, unsigned long reason)
-> >>>>>>
-> >>>>>>         if (likely(must_wait && !READ_ONCE(ctx->released))) {
-> >>>>>>                 wake_up_poll(&ctx->fd_wqh, EPOLLIN);
-> >>>>>> -               schedule();
-> >>>>>> +               /* See comment in userfaultfd_get_blocking_state()=
- */
-> >>>>>> +               if (!wait_mode.timeout)
-> >>>>>> +                       schedule();
-> >>>>>> +               else
-> >>>>>> +                       schedule_timeout(HZ / 10);
-> >>>>>>         }
-> >>>>>>
-> >>>>>>         __set_current_state(TASK_RUNNING);
-> >>>>>>
-> >>>>>> --
-> >>>>>> Jens Axboe
-> >>>>> I guess the previous io_work_fault patch might have already address=
-ed
-> >>>>> the issue sufficiently. The later patch that adds a timeout for
-> >>>>> userfaultfd might
-> >>>>
-> >>>> That one isn't guaranteed to be safe, as it's not necessarily a safe
-> >>>> context to prune the conditions that lead to a busy loop rather than=
- the
-> >>>> normal "schedule until the condition is resolved". Running task_work
-> >>>> should only be done at the outermost point in the kernel, where the =
-task
-> >>>> state is known sane in terms of what locks etc are being held. For s=
-ome
-> >>>> conditions the patch will work just fine, but it's not guaranteed to=
- be
-> >>>> the case.
-> >>>>
-> >>>>> not be necessary  wouldn?t returning after a timeout just cause the
-> >>>>> same fault to repeat indefinitely again? Regardless of whether the
-> >>>>> thread is in UN or IN state, the expected behavior should be to wai=
-t
-> >>>>> until the page is filled or the uffd resource is released to be wok=
-en
-> >>>>> up, which seems like the correct logic.
-> >>>>
-> >>>> Right, it'll just sleep timeout for a bit as not to be a 100% busy l=
-oop.
-> >>>> That's unfortunately the best we can do for this case... The expecte=
-d
-> >>>> behavior is indeed to schedule until we get woken, however that just
-> >>>> doesn't work if there are signals pending, or other conditions that =
-lead
-> >>>> to TASK_INTERRUPTIBLE + schedule() being a no-op.
-> >>>>
-> >>>> --
-> >>>> Jens Axboe
-> >>> In my testing, clearing the NOTIFY flag in the original io_work_fault
-> >>> ensures that the next schedule correctly waits. However, adding a
-> >>
-> >> That's symptom fixing again - the NOTIFY flag is the thing that trigge=
-rs
-> >> for io_uring, but any legitimate signal (or task_work added with
-> >> signaling) will cause the same issue.
-> >>
-> >>> timeout causes the issue to return to multiple faults again.
-> >>> Also, after clearing the NOTIFY flag in handle_userfault,
-> >>> it?s possible that some task work hasn?t been executed.
-> >>> But if task_work_run isn?t added back, tasks might get lost?
-> >>> It seems like there isn?t an appropriate place to add it back.
-> >>> So, do you suggest adjusting the fault frequency in userfaultfd
-> >>> to make it more rhythmic to alleviate the issue?
-> >>
-> >> The task_work is still there, you just removed the notification
-> >> mechanism that tells the kernel that there's task_work there. For this
-> >> particular case, you could re-set TIF_NOTIFY_SIGNAL at the end after
-> >> schedule(), but again it'd only fix that specific one case, not the
-> >> generic issue.
-> >>
-> >> What's the objection to the sleep approach? If the task is woken by th=
-e
-> >> fault being filled, it'll still wake on time, no delay. If not, then i=
-t
-> >> prevents a busy loop, which is counterproductive.
-> >>
-> >> --
-> >> Jens Axboe
-> > OK Thanks .and i?m curious about what exactly is meant by a
-> > 'specific one case 'and what qualifies as a 'generic issue' with re-set
-> > TIF_NOTIFY_SIGNAL.
->
-> I already outlined that in earlier replies, find the email that states
-> the various conditions that can lead to schedule() w/TASK_INTERRUPTIBLE
-> to return immediately rather than sleeping. TIF_NOTIFY_SIGNAL is _one_
-> such condition, it's not _all_ conditions.
->
-> > So, in your final opinion, do you think the code in io_uring is not
-> > suitable for modification, should focus on making adjustments in
-> > userfaultfd to mitigate the issue?
->
-> The problem isn't in io_uring in the first place, you just happened to
-> trip over it via that path. I even sent out a test case that
-> demonstrates how to trigger this without io_uring as well. I'm a bit
-> puzzled as to why all of this isn't clear already.
->
-> --
-> Jens Axboe
-Thank you. I think the final solution for my scenario might involve the
-user-space monitoring of the uffd business thread to ensure that it can
-unregister the uffd memory, allowing the fault process to exit the loop
-in IOU via an error return, which would further help exit the VM
-process's D state.
+On Thu, Apr 24, 2025 at 08:21:08AM +0000, Tian, Kevin wrote:
+> > From: Nicolin Chen <nicolinc@nvidia.com>
+> > Sent: Friday, April 11, 2025 2:38 PM
+> > 
+> [...]
+> > This is a big
+> > improvement since there is no VM Exit during an invalidation, compared to
+> > the traditional invalidation pathway by trapping a guest-own invalidation
+> > queue and forwarding those commands/requests to the host kernel that will
+> > eventually fill a HW-owned queue to execute those commands.
+> > 
+> 
+> any data to show how big the improvements could be in major
+> IOMMU usages (kernel dma, user dma and sva)?
+
+I thought I mentioned about the percentage of the gain somewhere
+but seemingly not in this series.. Will add.
+
+Thanks!
+Nicolin
