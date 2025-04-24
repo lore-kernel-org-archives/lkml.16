@@ -1,85 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013026.outbound.protection.outlook.com [40.107.162.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E35F139B;
-	Thu, 24 Apr 2025 05:44:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745473448; cv=none; b=E2VdK1cYX5O3E+ksbADO3FhoaUTN9dIxMUsG3XgZqIvjMmVpH0sw3p6nI34J/u3+917edI23F1sKeE4/aHj07dNwaxVSw9bGp4zIRyX4jP9yFX/XL7hP/bsgjGwFfbh3whkmAqoK2m6pyoWo3g0h0x3Q8FVAMaYNwJXbVtV5lA0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745473448; c=relaxed/simple;
-	bh=Ei5s8CyZRPbJiS3A9xmW0b8dJC52Fb4Ssy01YhH/pU4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=McBm156tt8UmtDHkFArerGk3ppkxHlNJ93fAQVIGxbLA+UQ7LpIyUobSuK1+IJLfnnU84gjlY3wo6opSLn6ehHnq0hfKnGX/5JVyox0hc7QrGIqQOmwRP6PJb9abvwpknOguXT3Jsv6jxo0QcpNRHkAAlJ8a65WY8ZjN+R4hN2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYzltdpk; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CABA53FE7;
+	Thu, 24 Apr 2025 05:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.26
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745473686; cv=fail; b=ZUMZxqVoCXxRdoCMRJAFkO6J4SNP7OOY6IXDghaenyYKhnhWpqh54cc8Vug2AkTd+zihYvCWdKb/fb0+tCsf2jr87Q4VTusbmgrmw6p5yGzVGC0Kw5DMlOqb5yx80zwrrtK3zHTSnOHfAy2QUrElJbfzeA8F9N5c9p/MGVqcY6g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745473686; c=relaxed/simple;
+	bh=x57ZSiyvyd3/Qs8s+gYV6VjG3nZXWEOD8oBTBSrhh14=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=OGE3RhIu2Ly430uug6LnQFi+ZpA7zJhmCoKwY7rCTpEit0fQx417QKGeEGNux1NLTrx35Qp5QYhmwYztZgvjx23FixI5IOr3/UIKT+hTbOkIjrh2CcsY7paMLeug2m+DJ3iHT4gu3fsPdKR2k3eh5LsjTeJL5rQo/EBUn8aOca4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=cq3SZJP+; arc=fail smtp.client-ip=40.107.162.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYzltdpk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14CF4C4CEE3;
-	Thu, 24 Apr 2025 05:44:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745473447;
-	bh=Ei5s8CyZRPbJiS3A9xmW0b8dJC52Fb4Ssy01YhH/pU4=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=iYzltdpk7IueGGSpT5MNjvG559ELui5w27k8lJxseWyyFA6j7DJvkQUCMCR1s/bcI
-	 QnSWnaKVVBhPg3FS3rbk2zKzgakyrQKpm94/kRrnpAZbBGImZc5L7TraVI/RRM6C4y
-	 fjHzb80NgjrCFrqeL/jEYmm7XJ4FWSvJXsXvPIZJ7Tjg27f5LTXEzCQjTolfNzrKMS
-	 9bViFtBYeBU+rTcKP+r3g2OGanILAyE6hH3qYailYa1vUyib2ZkLjqFNj+QsT5R+75
-	 aQ7JMjLm1jsBt+K+A4OILvUSMIi8lTqtH2NGl3Dbp1EDCIKLJryYRnDeA4V8fWAx9M
-	 wEVC3YrKY2liQ==
-Message-ID: <62cfcebc-3280-448c-9fe6-ef6df0b3fcb0@kernel.org>
-Date: Thu, 24 Apr 2025 14:44:06 +0900
+	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="cq3SZJP+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ULFzB+cqYRpSDpPOTiQkx/dQRte1Xeb1qy5kxBnrtqky7s/TdUUh7D93/iu8qcqJ2eILzz+ccEyFrcD/QAXuX+r6oQIZBMIU1FpIOtn6hii1tH+T1cJlnP8WeiIUG6a3wzSq6MjtbOjqQQ2vA1hqj6JadPyeQaFY64cPJhwtJl9bQLcG3jBKvRoXIHxQ5syqtwOaU1ts2OlcN06r1KwMP4SInb8vOvWikQx3R8Zva0i2Y2rL1IfpLqzNddeT27FwDEpkFCaKE3DUeHLEGEEIrEnFrA6YpC6nL+NxP/n/7m921PU8JSBesF70wOOyd7iPY5c4QGoRWq8VrGZJfi3QFg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sVYT/gKDmVndH9BNl3sr2BoI0AVXQO8NB9jPjFRLOV0=;
+ b=mj2e+9wj4vvDxvLASZtdJiscGBaD/2+M+CdjeFzrjHNVy/6WKOCA9QI+KrI0HV1MZjwtLI9XpLgt6QwpQAKDenZBpD/v+SJ8sg1upLQDX8T6+1994jMQxNZsOS7IMmQL6LxVrCfckB074ViglCXye7+F16YkfqcPN4McmDXjIMRH2+qLNdQZUOif7UQXYmog1ttHLf8vECLLb0/sAXA2wAbb9XT0XJkdRH8xbiJ6O/niILjXxnIX4hQ6RpnOouxJtSqv0QLyZFkP8E5l+MYL7OAhIOVIN0GI4Czp/IkSSAdQzl+BWT4I/qvAsNkAKhSiY9eScQLwQvFBVX2nN4OwYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 139.15.153.205) smtp.rcpttodomain=buenzli.dev smtp.mailfrom=de.bosch.com;
+ dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sVYT/gKDmVndH9BNl3sr2BoI0AVXQO8NB9jPjFRLOV0=;
+ b=cq3SZJP+rKMVLLoX5MTRsKPUa2B8MytDRCUzIy9keGIQPBHGOnhHNOY0YjgBJ0t5R25uG40aZPw1NPW+QScT9qW+U0qyGDzICNsL5IFo2+l9wmiXzlxMcIKHY5/V/crmiGk1DLTwR0Xh9ad42nZ6/SYs4RO2TeIY6t+VriiRk3Y227VorFbsRfPKlB6L9/lMEKgWfKeLOx6xVBDCJWcPi+uLYV4Qs/vPzy+/sZqgszi1F2Wk0RxoMrbkJocKMP0UTNPwLUN9ETQ7zAAwA6eaDF1zOMIw+63aA67y0Q2F7+dNguPU91a60Uk072HcLL6RRw8XgGiFKjsJElgN/dhQEw==
+Received: from CWLP265CA0532.GBRP265.PROD.OUTLOOK.COM (2603:10a6:400:18d::14)
+ by DB9PR10MB5883.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:397::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.22; Thu, 24 Apr
+ 2025 05:47:58 +0000
+Received: from AMS0EPF000001B0.eurprd05.prod.outlook.com
+ (2603:10a6:400:18d:cafe::cd) by CWLP265CA0532.outlook.office365.com
+ (2603:10a6:400:18d::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Thu,
+ 24 Apr 2025 05:47:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.205)
+ smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=de.bosch.com;
+Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
+ 139.15.153.205 as permitted sender) receiver=protection.outlook.com;
+ client-ip=139.15.153.205; helo=eop.bosch-org.com; pr=C
+Received: from eop.bosch-org.com (139.15.153.205) by
+ AMS0EPF000001B0.mail.protection.outlook.com (10.167.16.164) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8655.12 via Frontend Transport; Thu, 24 Apr 2025 05:47:57 +0000
+Received: from FE-EXCAS2001.de.bosch.com (10.139.217.200) by eop.bosch-org.com
+ (139.15.153.205) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 24 Apr
+ 2025 07:47:50 +0200
+Received: from [10.34.219.93] (10.139.217.196) by FE-EXCAS2001.de.bosch.com
+ (10.139.217.200) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.43; Thu, 24 Apr
+ 2025 07:47:49 +0200
+Message-ID: <9f08de79-4550-4b85-ba36-9615a300e32a@de.bosch.com>
+Date: Thu, 24 Apr 2025 07:47:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drive
-To: Mikko Juhani Korhonen <mjkorhon@gmail.com>,
- Niklas Cassel <cassel@kernel.org>, linux-ide@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <CAAZ0mTfQ+feHUeRjC3aH9z=sM92XmXASY+3ELzwXJLfk30h_6A@mail.gmail.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <CAAZ0mTfQ+feHUeRjC3aH9z=sM92XmXASY+3ELzwXJLfk30h_6A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v2 5/5] samples: rust: platform: Add property read
+ examples
+From: Dirk Behme <dirk.behme@de.bosch.com>
+To: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	"Alex Gaynor" <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+	<bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Trevor
+ Gross" <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+	<rafael@kernel.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<rust-for-linux@vger.kernel.org>
+References: <20250326171411.590681-1-remo@buenzli.dev>
+ <20250414152630.1691179-1-remo@buenzli.dev>
+ <20250414152630.1691179-6-remo@buenzli.dev>
+ <cc50edea-08b2-4507-9410-935f8aac6f62@de.bosch.com>
+Content-Language: en-GB
+In-Reply-To: <cc50edea-08b2-4507-9410-935f8aac6f62@de.bosch.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF000001B0:EE_|DB9PR10MB5883:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1595a157-2af6-4c9c-170b-08dd82f39119
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|36860700013|1800799024|7053199007|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OVVrVjAreEdBaUlCRllPakZWMXIvWGRKNzRpYlRQMGRLVU5oUGIvR1h6dHRk?=
+ =?utf-8?B?ajFNb0pBZ3lZMGZ4UEJkV1RvbmRMajF2QW1yVUMrTFk5VEcrWWhZcmVvYkNk?=
+ =?utf-8?B?bDBSYmNQM1JUY1dIOE9nNkR6VmNEWnhjL3lVN2M2N2dSOWtMOEwvOW5BOFYz?=
+ =?utf-8?B?UmZRSkVoemdHOHppVll6Sk5nNmVRKytWSjNRNkJydHVMTGtwRHVQaTlqZFA4?=
+ =?utf-8?B?WHNBNEhFMStOcUg2SVA1amFSZU1oNFI5WS8vSUZaR0xzZlZHOW5yQWRnWFhD?=
+ =?utf-8?B?VzZ0djZLK3hlZTZoT043bkVJODZJcmxqUWVmL2pWdTNTQ0J0RGJ5cTFYVnpj?=
+ =?utf-8?B?TDJQUlU4Mzh1Ull0QjNsbkpHTnFtY1E4eE5lRWlNSlF2VG5CajlieXNhRitI?=
+ =?utf-8?B?L1ZSbTZ6TkZrRzY4TWFCN2hiL0VRZ2VVY2pxQlp5SXBHRjVqMjlQTjc5UjVl?=
+ =?utf-8?B?NEsxSmRJa0U4RWZtRW0wTEFLdlYvVHVkZU9jdTZvUjh3SFljNWJGUzV0eS9Z?=
+ =?utf-8?B?d1BjZzdJNnl6NkRyNE16QWFhcE5JSGEwMFFpYzNUMitOOWswSnNKcnBlSWVj?=
+ =?utf-8?B?cnY2WGpCUGE4TjIvZkhCa1Vac28xRldZaW9EdE9mM2VvRjhGS2JQV29ON2RS?=
+ =?utf-8?B?WWQzejNzeHQwbkZ1bTQzNWp3bEQ0TVBGanpicG1wZi9EZ0VGMDFrUm04bHow?=
+ =?utf-8?B?S2J0MGl5TC95V3BTeEJBK3ZZczhiMzN3aGI0TnFJTWsyV0ZZQW05QWVmeFlv?=
+ =?utf-8?B?TXNPR3RJUkg0L3RBeTR0dEZrckVpRlI2UFQxU3hxK25HMnZaK2FoRWQyLzkv?=
+ =?utf-8?B?NDZ1bi8vQW9PK2lJQWQvVUFzanRMQ2JCbDRHcG5wVGNGQ2pJaXFuazBWVUVi?=
+ =?utf-8?B?VmVVNm1aNitKSjNXMDhtK3QwWWxSanIrb0RJczF0WiswVEh3T1ZTZEcvMlcv?=
+ =?utf-8?B?b1A3Z3RjWkcwM2tIb3N5QWs4VWlaL2VUVDd4NEV3N1RtRTVIYy9ld3FmZEpz?=
+ =?utf-8?B?VU5XZ252Rms5Q2Y2RFlLeWpsZ2hxUUZCQnN2UnczUmhmUUdPeHl2aWZYWjNE?=
+ =?utf-8?B?MTM0cGkyYkFUYUR3RmdZbmR0T3RMb0RaM0hrWEsyVWc3SGRWRWFHMTAxRzdQ?=
+ =?utf-8?B?d3YxSWlKWWQ2anJORktsL1J0RE1FTmYrMThibDlzVkZMZWpmRUl3N2tOYnJp?=
+ =?utf-8?B?QTFmVGprckhpM2RXVU96Nzc0WHNqcElvRXg0WjRkYXV0V2NUbnFNVXVyQVRk?=
+ =?utf-8?B?UkxsTHUycUo2c2NNd2pjdG0xb1BtVFBwZ0RaUnhRUUI5RldpUnNnUk56MDA1?=
+ =?utf-8?B?OC9iOW8rMVVwcExUanRUOENZMHRJdjZ4WmN2NXIyU0pNQllhN3Zld1htUjZQ?=
+ =?utf-8?B?TFA0OENaclErWjBTVk5UbkEvL3R3dUY0aFVERjRpOEE3ZW5oaU1lOEI1VW10?=
+ =?utf-8?B?OG5JVElQNldZMDd6cU1jUEtjdVNZSW94UnNrZ1lhTXJTUHZyZlRzaG1ESndx?=
+ =?utf-8?B?T1JkU09aR1prVkRBNVVLdkl3YlNXeWRxeUNGZFlRSW5yeWJyT1pSTGt6b0sx?=
+ =?utf-8?B?MWM3K2dEMzBCaTRYQm01T21rVGlZdWEwNHRLR24rb0tpaktqSUNNei9FYzQy?=
+ =?utf-8?B?amxnYkk2OFhHcmh3YjV2QWVIMTZvZ2F1WFVVRkF2dVhlSjQwemNaaDhlNTha?=
+ =?utf-8?B?akpEdHJjRVZ3OURvNmFHTVRGeUxzeXFQZGxZRTNPSDc2SmorL3lyWVJJOHJI?=
+ =?utf-8?B?YW56SUEyenZHSE5BVC9SZ05kb3h2MTJoMmxaaXVrVDd1anA1bG9kVjJFOXZS?=
+ =?utf-8?B?REtuWDhPOWwrY01neTVnTVZ1ZjIwRUpEWkViUExvTytBREc1Vng3NGNFakJr?=
+ =?utf-8?B?VEVHMmwxY09mZTRnMUFLUkdSZmJGZ25SNDdwd3dSckRHbHlJVTBPT0xrZDI5?=
+ =?utf-8?B?QUJMbEhOa1VhYU1Wcng4bDJOWXFhUlExZDM3WkwrYUNZRmJKS1RNN3FHelNj?=
+ =?utf-8?B?N3VodUdORXdNMllXR0tER2cwWUp4ZGZ2UTlKanliaHVtRlNlNDZ2WnZuamFt?=
+ =?utf-8?B?QXIvaU5VTG5oYmJOblJiZlFwamFRS2pyNDBZdz09?=
+X-Forefront-Antispam-Report:
+	CIP:139.15.153.205;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(36860700013)(1800799024)(7053199007)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: de.bosch.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 05:47:57.8857
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1595a157-2af6-4c9c-170b-08dd82f39119
+X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.205];Helo=[eop.bosch-org.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF000001B0.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR10MB5883
 
-On 4/24/25 02:21, Mikko Juhani Korhonen wrote:
-> Make WDC WD20EFAX-68FB5N0 hard drive work again
-> after regression in 6.9.0 when LPM was enabled,
-> so disable it for this model.
+On 23/04/2025 14:39, Dirk Behme wrote:
+> Hi Remo,
 > 
-> Signed-off-by: Mikko Korhonen <mjkorhon@gmail.com>
+> On 14/04/2025 17:26, Remo Senekowitsch wrote:
+>> Add some example usage of the device property read methods for
+>> DT/ACPI/swnode properties.
+>>
+>> Co-developed-by: Rob Herring (Arm) <robh@kernel.org>
+>> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+>> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
+>> ---
+>>  drivers/of/unittest-data/tests-platform.dtsi |  3 +
+>>  samples/rust/rust_driver_platform.rs         | 69 +++++++++++++++++++-
+>>  2 files changed, 69 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
+>> index 4171f43cf..50a51f38a 100644
+>> --- a/drivers/of/unittest-data/tests-platform.dtsi
+>> +++ b/drivers/of/unittest-data/tests-platform.dtsi
+>> @@ -37,6 +37,9 @@ dev@100 {
+>>  			test-device@2 {
+>>  				compatible = "test,rust-device";
+>>  				reg = <0x2>;
+>> +
+>> +				test,u32-prop = <0xdeadbeef>;
+>> +				test,i16-array = /bits/ 16 <1 2 (-3) (-4)>;
 > 
-> diff -u linux-6.14.3/drivers/ata/libata-core.c
-> linux-6.14.3-mk/drivers/ata/libata-core.c
-> --- linux-6.14.3/drivers/ata/libata-core.c      2025-04-20
-> 11:23:22.000000000 +0300
-> +++ linux-6.14.3-mk/drivers/ata/libata-core.c   2025-04-22
-> 16:53:52.341934384 +0300
-> @@ -4238,6 +4238,11 @@
->        { "WDC WD2500JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
->        { "WDC WD3000JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
->        { "WDC WD3200JD-*",             NULL,   ATA_QUIRK_WD_BROKEN_LPM },
-> +
-> +       /*
-> +        * This specific WD SATA-3 model has problems with LPM.
-> +        */
-> +       { "WDC WD20EFAX-68FB5N0",       NULL,   ATA_QUIRK_NOLPM },
 > 
->        /*
->         * This sata dom device goes on a walkabout when the ATA_LOG_DIRECTORY
+> Is "test,u32-required-prop" missing here? See below ...
 
-This looks OK but the patch seems broken (missing separator after sign-off so
-this does not apply.
-Please use "git format-patch" to generate proper patches.
-Also please change the patch title to:
+Ah, no, sorry, "test,u32-required-prop" isn't there intentionally to
+demonstrate the error handling on missing required properties. In this
+case I would propose to just remove the '?' to make the sample code not
+exit on this intended error:
 
-ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drives
+diff --git a/samples/rust/rust_driver_platform.rs
+b/samples/rust/rust_driver_platform.rs
+index 01902956e1ca7..b6cbd721a8882 100644
+--- a/samples/rust/rust_driver_platform.rs
++++ b/samples/rust/rust_driver_platform.rs
+@@ -75,7 +75,7 @@ fn properties_parse(dev: &kernel::device::Device) ->
+Result<()> {
+         // Missing property without a default will print an error
+         let _ = dev
+             .property_read::<u32>(c_str!("test,u32-required-prop"))
+-            .required()?;
++            .required();
 
--- 
-Damien Le Moal
-Western Digital Research
+         let prop: u32 =
+dev.property_read(c_str!("test,u32-prop")).required()?;
+         dev_info!(dev, "'test,u32-prop' is {:#x}\n", prop);
+
+Best regards
+
+Dirk
