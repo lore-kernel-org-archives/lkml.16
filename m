@@ -1,95 +1,235 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE15221FDE
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CAC433A8
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745494111; cv=none; b=JYcRKNWCAsiLcNup64GS0NReFzpOrPArtuQ55ER0Snef73Xdt3DHLkF3gl6P6wa0iFVjQYfKfvZ3UqsmQtfKRCEUitSEuQMchfPxliQXkb56GMK6oxVw+Ycw1h96HpUDiMK8GdAlsJ5QW2RVfpQ8ca3KbW959qr6kb8KPqt9PFg=
+	t=1745494139; cv=none; b=IrQQdnEOB8eWV5b7iAWfTwApU3wHuTQj1ffqO8idFS9fNczyjxu+EZAjUFxA1gpUP24If9KkFrjvaLv1Dt/kigY3GYwMW/4AscQWb2E3/lTeuByAoB03dhullIJ3cRygkQ20tMrxbODKqW/q8QThkUpZdEh2vGEbs81pQDT6xwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745494111; c=relaxed/simple;
-	bh=wrr6iKvTJh4nKQN21VKqRjWOK2sb/czCDBemrxckoUY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ifsLUklMnbt/CRojuk6DQ+ZLP+GJILIJtkVZuhraoBZrvlQU1c+IY6u7gq1jgOaYmvZZ0tkKzukSKS/d40F1RZPX/vd+VWULhEpy+uJU3x6eqY79BMR5ISismBHy7/U/gIZniauPQuf16EPvlIP/KF5I8+JC1t0hoZhlbYbpHgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E5FC1063;
-	Thu, 24 Apr 2025 04:28:23 -0700 (PDT)
-Received: from [10.163.78.97] (unknown [10.163.78.97])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7CE1C3F59E;
-	Thu, 24 Apr 2025 04:28:24 -0700 (PDT)
-Message-ID: <45a10934-f8af-49c5-8d8f-dbd97193158d@arm.com>
-Date: Thu, 24 Apr 2025 16:58:20 +0530
+	s=arc-20240116; t=1745494139; c=relaxed/simple;
+	bh=zB60+alblbYHMwKWew7Y71SuhpY9yTWh/4rUgG11Qo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t7VFELghh+gxtBH1y0Uwx1sBzNHvg671TCY5ijz2NEj+oJ13bXZaPv7AjdIoZOU2Omev6S5g2A5d2nhAvTY4Oguz+9OW2WRHkragD6V4AVGMovQb8sAJJHNXiG4KqvzmBl5Z8fVK9Q2GFy8diwJ1uOqYwT/ZcBW204OqWoq/7QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rNb3xYDo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w7YLHNPW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=rNb3xYDo; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=w7YLHNPW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rNb3xYDo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w7YLHNPW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="rNb3xYDo";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="w7YLHNPW"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 803A021171;
+	Thu, 24 Apr 2025 11:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745494135; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KBfxIUFb6Wi4ZOUmIf9v+/3evFqDQIaD4Xx97OscEQs=;
+	b=rNb3xYDod78VKRHrk8rmwtaUQLD47juZn8PUyBzJCwBldOcjD5kvY2SFu7zAYM/q6hyUy6
+	o/s4mgWSuCWQqzbni3gT/Q37Oo7AUVijFPfua7padGYZfZHe5EqM5FI22Vwjav3o0igXsJ
+	6Uf49ES99/kbFwElIntDzQsl7p2S+a0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745494135;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KBfxIUFb6Wi4ZOUmIf9v+/3evFqDQIaD4Xx97OscEQs=;
+	b=w7YLHNPWOfe51DKNAJbmpwK3kIk2SpQB1ADESOyNZagDetijisf0c/AyfVdBSRuBVsAgOX
+	8gNwFI0fLw7s5KBg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745494135; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KBfxIUFb6Wi4ZOUmIf9v+/3evFqDQIaD4Xx97OscEQs=;
+	b=rNb3xYDod78VKRHrk8rmwtaUQLD47juZn8PUyBzJCwBldOcjD5kvY2SFu7zAYM/q6hyUy6
+	o/s4mgWSuCWQqzbni3gT/Q37Oo7AUVijFPfua7padGYZfZHe5EqM5FI22Vwjav3o0igXsJ
+	6Uf49ES99/kbFwElIntDzQsl7p2S+a0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745494135;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KBfxIUFb6Wi4ZOUmIf9v+/3evFqDQIaD4Xx97OscEQs=;
+	b=w7YLHNPWOfe51DKNAJbmpwK3kIk2SpQB1ADESOyNZagDetijisf0c/AyfVdBSRuBVsAgOX
+	8gNwFI0fLw7s5KBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4886E1393C;
+	Thu, 24 Apr 2025 11:28:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id uK0iDXYgCmhiPAAAD6G6ig
+	(envelope-from <pfalcato@suse.de>); Thu, 24 Apr 2025 11:28:54 +0000
+Date: Thu, 24 Apr 2025 12:28:37 +0100
+From: Pedro Falcato <pfalcato@suse.de>
+To: Harry Yoo <harry.yoo@oracle.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@gentwo.org>, 
+	David Rientjes <rientjes@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, Vlad Buslov <vladbu@nvidia.com>, 
+	Yevgeny Kliteynik <kliteyn@nvidia.com>, Jan Kara <jack@suse.cz>, Byungchul Park <byungchul@sk.com>, 
+	linux-mm@kvack.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/7] Reviving the slab destructor to tackle the
+ percpu allocator scalability problem
+Message-ID: <lr2nridih62djx5ccdijiyacdz2hrubsh52tj6bivr6yfgajsj@mgziscqwlmtp>
+References: <20250424080755.272925-1-harry.yoo@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] MAINTAINERS: add mm THP section
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
- <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250424111632.103637-1-lorenzo.stoakes@oracle.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <20250424111632.103637-1-lorenzo.stoakes@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250424080755.272925-1-harry.yoo@oracle.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[suse.cz,gentwo.org,google.com,linux-foundation.org,kernel.org,gmail.com,mojatatu.com,resnulli.us,nvidia.com,sk.com,kvack.org,vger.kernel.org];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
+X-Spam-Score: -2.30
+X-Spam-Flag: NO
 
-
-
-On 24/04/25 4:46 pm, Lorenzo Stoakes wrote:
-> As part of the ongoing efforts to sub-divide memory management
-> maintainership and reviewership, establish a section for Transparent Huge
-> Page support and add appropriate maintainers and reviewers.
+On Thu, Apr 24, 2025 at 05:07:48PM +0900, Harry Yoo wrote:
+> Overview
+> ========
 > 
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-If you don't mind, I'd also like to be added as reviewer, I am primarily
-active in THP stuff : )
-
-> ---
->   MAINTAINERS | 23 +++++++++++++++++++++++
->   1 file changed, 23 insertions(+)
+> The slab destructor feature existed in early days of slab allocator(s).
+> It was removed by the commit c59def9f222d ("Slab allocators: Drop support
+> for destructors") in 2007 due to lack of serious use cases at that time.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 4015227645cc..85cd47a28a0a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15563,6 +15563,29 @@ S:	Maintained
->   F:	include/linux/secretmem.h
->   F:	mm/secretmem.c
->   
-> +MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
-> +M:	Andrew Morton <akpm@linux-foundation.org>
-> +M:	David Hildenbrand <david@redhat.com>
-> +R:	Zi Yan <ziy@nvidia.com>
-> +R:	Baolin Wang <baolin.wang@linux.alibaba.com>
-> +R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> +R:	Liam R. Howlett <Liam.Howlett@oracle.com>
-> +R:	Nico Pache <npache@redhat.com>
-> +R:	Ryan Roberts <ryan.roberts@arm.com>
-> +L:	linux-mm@kvack.org
-> +S:	Maintained
-> +W:	http://www.linux-mm.org
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-> +F:	Documentation/admin-guide/mm/transhuge.rst
-> +F:	include/linux/huge_mm.h
-> +F:	include/linux/khugepaged.h
-> +F:	include/trace/events/huge_memory.h
-> +F:	mm/huge_memory.c
-> +F:	mm/khugepaged.c
-> +F:	tools/testing/selftests/mm/khugepaged.c
-> +F:	tools/testing/selftests/mm/split_huge_page_test.c
-> +F:	tools/testing/selftests/mm/transhuge-stress.c
-> +
->   MEMORY MANAGEMENT - USERFAULTFD
->   M:	Andrew Morton <akpm@linux-foundation.org>
->   R:	Peter Xu <peterx@redhat.com>
+> Eighteen years later, Mateusz Guzik proposed [1] re-introducing a slab
+> constructor/destructor pair to mitigate the global serialization point
+> (pcpu_alloc_mutex) that occurs when each slab object allocates and frees
+> percpu memory during its lifetime.
+> 
+> Consider mm_struct: it allocates two percpu regions (mm_cid and rss_stat),
+> so each allocate–free cycle requires two expensive acquire/release on
+> that mutex.
+> 
+> We can mitigate this contention by retaining the percpu regions after
+> the object is freed and releasing them only when the backing slab pages
+> are freed.
+> 
+> How to do this with slab constructors and destructors: the constructor
+> allocates percpu memory, and the destructor frees it when the slab pages
+> are reclaimed; this slightly alters the constructor’s semantics,
+> as it can now fail.
+> 
 
+I really really really really don't like this. We're opening a pandora's box
+of locking issues for slab deadlocks and other subtle issues. IMO the best
+solution there would be, what, failing dtors? which says a lot about the whole
+situation...
+
+Case in point:
+What happens if you allocate a slab and start ->ctor()-ing objects, and then
+one of the ctors fails? We need to free the ctor, but not without ->dtor()-ing
+everything back (AIUI this is not handled in this series, yet). Besides this
+complication, if failing dtors were added into the mix, we'd be left with a
+half-initialized slab(!!) in the middle of the cache waiting to get freed,
+without being able to.
+
+Then there are obviously other problems like: whatever you're calling must
+not ever require the slab allocator (directly or indirectly) and must not
+do direct reclaim (ever!), at the risk of a deadlock. The pcpu allocator
+is a no-go (AIUI!) already because of such issues.
+
+Then there's the separate (but adjacent, particularly as we're considering
+this series due to performance improvements) issue that the ctor() and
+dtor() interfaces are terrible, in the sense that they do not let you batch
+in any way shape or form (requiring us to lock/unlock many times, allocate
+many times, etc). If this is done for performance improvements, I would prefer
+a superior ctor/dtor interface that takes something like a slab iterator and
+lets you do these things.
+
+The ghost of 1992 Solaris still haunts us...
+
+> This series is functional (although not compatible with MM debug
+> features yet), but still far from perfect. I’m actively refining it and
+> would appreciate early feedback before I improve it further. :)
+> 
+> This series is based on slab/for-next [2].
+> 
+> Performance Improvement
+> =======================
+> 
+> I measured the benefit of this series for two different users:
+> exec() and tc filter insertion/removal.
+> 
+> exec() throughput
+> -----------------
+> 
+> The performance of exec() is important when short-lived processes are
+> frequently created. For example: shell-heavy workloads and running many
+> test cases [3].
+> 
+> I measured exec() throughput with a microbenchmark:
+>   - 33% of exec() throughput gain on 2-socket machine with 192 CPUs,
+>   - 4.56% gain on a desktop with 24 hardware threads, and
+>   - Even 4% gain on a single-threaded exec() throughput.
+> 
+> Further investigation showed that this was due to the overhead of
+> acquiring/releasing pcpu_alloc_mutex and its contention.
+> 
+> See patch 7 for more detail on the experiment.
+> 
+> Traffic Filter Insertion and Removal
+> ------------------------------------
+> 
+> Each tc filter allocates three percpu memory regions per tc_action object,
+> so frequently inserting and removing filters contend heavily on the same
+> mutex.
+> 
+> In the Linux-kernel tools/testing tc-filter benchmark (see patch 4 for
+> more detail), I observed a 26% reduction in system time and observed
+> much less contention on pcpu_alloc_mutex with this series.
+> 
+> I saw in old mailing list threads Mellanox (now NVIDIA) engineers cared
+> about tc filter insertion rate; these changes may still benefit
+> workloads they run today.
+> 
+
+The performance improvements are obviously fantastic, but I do wonder
+if things could be fixed by just fixing the underlying problems, instead
+of tapering over them with slab allocator magic and dubious object lifecycles.
+
+In this case, the big issue is that the pcpu allocator does not scale well.
+
+-- 
+Pedro
