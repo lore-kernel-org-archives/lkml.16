@@ -1,37 +1,55 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30237139B
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:06:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1705625
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745453199; cv=none; b=Vr7NLH+oycCoMjjnPCBGWOD9BKecmb19bEVgOVGD9KjSGwSE3uMjJGDJLEicojNP3UJWsmyNL1APc/tYYa1z55QS7nbagShCm1kODPWr6BPM0cO3MZyRJ8YfByEnuBYGvOB+S985Woe4FrSlVUcDfSKZhHYssQXzp+8zKMRfkpI=
+	t=1745453307; cv=none; b=uJyvGf/ojkcht4cpnIqg6dDJ5P6hRqzGONvDbv7PNUUBnBa2q2aD8A2aJ2Ei/fpTNdxKrX3RIprR662anp8TfEYCHk/ydI9pUkczTCNyz9J/fGUNlrOPFLOyJhXIzSSBoD99YoHlGPziTRwzYQoUiXAwPMoTvJwpPg9BuCGttTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745453199; c=relaxed/simple;
-	bh=uYeUPhaJO0VFRnUYEiHGuqeBCchIBnETBBTTmOK0m+Y=;
+	s=arc-20240116; t=1745453307; c=relaxed/simple;
+	bh=pntiiw4yG1RuPMTSRoxZvtxa1aWvBAbMHKY3Z9snog4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z72jjWu0ggK8xqRB8bw9SNu6FMOqOA/sUnzhlmattKb9QINfam+QUD6HsCEi++lUKtO6hsVigLj4q0S9c1B2NuA4Au7wf0+vtTue+//SafpmFmfkarFBR+aIbUTpakLPGEiBkIhJk1YiUG4mxvS0LDr7Pm8VqFQqPFbP9Y3IQAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from macsyma.thunk.org ([204.26.30.8])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 53O06J30011107
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 23 Apr 2025 20:06:20 -0400
-Received: by macsyma.thunk.org (Postfix, from userid 15806)
-	id 79619345A1E; Wed, 23 Apr 2025 19:05:34 -0500 (CDT)
-Date: Wed, 23 Apr 2025 19:05:34 -0500
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Alejandro Colomar <alx@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-man@vger.kernel.org
-Subject: Re: newlines in filenames; POSIX.1-2024
-Message-ID: <20250424000534.GB765145@mit.edu>
-References: <iezzxq25mqdcapusb32euu3fgvz7djtrn5n66emb72jb3bqltx@lr2545vnc55k>
- <20250422222131.GE569616@mit.edu>
- <3wpydsib5maytq4m4ve4b7wfbfkxwzd5m6u5woqr43qr6mickk@gw4ww6vvgyo5>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZIsMGvky4K7Sx/FZSEiVhQc77E1YSalAaGR98e1MV00rSdkrATDebUkgkivQAwxJvxYR8zaSRafm67a/94ZZXXg4r4wOXNuyKC8D4cJv1tJEJ1IbDW0gn+E8D9G//DBoglLGbmMrxtizI9mfesQnViU34gzhmuPr/ePvnnsLcvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=crNJkd1m; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="crNJkd1m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745453303;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dOkTAG7rDCrI4h+SXECSRWbl/N8iWgru3VS8SSYRxFA=;
+	b=crNJkd1mQRF7B+Oab10ENF83iD1pWt4ztdzOQgBBm6gCfRQWCePlK6cKq14uKI1zC3T4BI
+	YQ0OE4n8NZCrhPz8zKYqSkH8AA+nD8I1jct32nnmYkK6pjuFwSTAFi/3rWm8Kg8aULhEHk
+	cL625jvFxc0H5AhAuum+lZp/ZvJhz68=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-60-QGbGuUtGO0a0ny6jxi4-Qg-1; Wed,
+ 23 Apr 2025 20:08:21 -0400
+X-MC-Unique: QGbGuUtGO0a0ny6jxi4-Qg-1
+X-Mimecast-MFC-AGG-ID: QGbGuUtGO0a0ny6jxi4-Qg_1745453300
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 99E2519560BB;
+	Thu, 24 Apr 2025 00:08:20 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.12])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C46DC195608D;
+	Thu, 24 Apr 2025 00:08:16 +0000 (UTC)
+Date: Thu, 24 Apr 2025 08:08:10 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] selftests: ublk: kublk: build with -Werror
+Message-ID: <aAmA6kjGb8ZVJgTJ@fedora>
+References: <20250423-ublk_selftests-v1-0-7d060e260e76@purestorage.com>
+ <20250423-ublk_selftests-v1-1-7d060e260e76@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,40 +58,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3wpydsib5maytq4m4ve4b7wfbfkxwzd5m6u5woqr43qr6mickk@gw4ww6vvgyo5>
+In-Reply-To: <20250423-ublk_selftests-v1-1-7d060e260e76@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On Wed, Apr 23, 2025 at 09:31:42AM +0200, Alejandro Colomar wrote:
+On Wed, Apr 23, 2025 at 03:29:02PM -0600, Uday Shankar wrote:
+> Heeding compiler warnings is generally a good idea, and is easy to do
+> for kublk since there is not much source code. Turn warnings into errors
+> so that anyone making changes is forced to heed them.
 > 
-> <http://austingroupbugs.net/view.php?id=251>
+> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
+> ---
+>  tools/testing/selftests/ublk/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/ublk/Makefile b/tools/testing/selftests/ublk/Makefile
+> index ec4624a283bce2ebeed80509be6573c1b7a3623d..57e580253a68bc497b4292d07ab94d21f4feafdd 100644
+> --- a/tools/testing/selftests/ublk/Makefile
+> +++ b/tools/testing/selftests/ublk/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> -CFLAGS += -O3 -Wl,-no-as-needed -Wall -I $(top_srcdir)
+> +CFLAGS += -O3 -Wl,-no-as-needed -Wall -Werror -I $(top_srcdir)
+>  LDLIBS += -lpthread -lm -luring
 
-Ugh.  Reading through that bug, despite the fact that the original
-proposal was *significantly* bared down, has greatly reduced my
-respect for the Austin Group.
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-One of the people in that bug argued unironically that using pipes
-should be deprecated.  i.e., that somehow "find . ... -print0 | xargs
--0 ..." was a security problem.
 
-<<Sigh>>
+Thanks,
+Ming
 
-Other people pointed out that creating proscriptions that were not
-implemented by many/most historical implementations would fragment the
-standard and decrease the respect people would have towards the POSIX
-specification.  That was the "toilet paper" comment which you
-referenced.
-
-Well, they got that right.
-
-> I think a mode for disallowing _any control characters_ (aka
-> [:cntrl:], aka 0-31) would be a good choice.
-
-As the Austin Group Bug pointed out, the problem is that the control
-characters can be printable characters, depending on the code page
-that you might be using.  The example that was given was cp437.
-
-The problem is that historically speaking, the kernel does *not* know
-about what locale that is in use.  We made an exception to handle case
-folding, where we added Unicode tables into the kernel.  Some would
-say that was a major mistake, and it's certainly been a headache.
-
-    	       	     	      	       - Ted
