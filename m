@@ -1,61 +1,62 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A461943AA1;
-	Thu, 24 Apr 2025 14:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F214E2DF68;
+	Thu, 24 Apr 2025 14:38:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505518; cv=none; b=tWy1aF4CXmd1etD2CuyehfPJpjLmCciteA3xRKAYuFGdPx9wFT7n30eKKudbuNeeT3Pza04jiZUjEKAiy9Aype5gyFhiJQALzo56WLEvwZBNviZb7f8/19yE2fQbz82P0TBPAIAwxpf9VZNOP/BpGR/inMjI3AeVk8ThthphJIg=
+	t=1745505530; cv=none; b=Biqrj9yPGpAE5XL+wIhARnXj3GDWbaAVQmNcgLBs4nnVKZD4WdHQXmziI81TkWByTUaLCYbAeR+fyXJ7RLEzIfMqYqgvY0PlLwkseqnHZAYIIkxnH0jXwV5jY/zZxaofTbRFkPd2U59+MDvMUeLchFDQ8spvMSsAvE/wlyPduis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505518; c=relaxed/simple;
-	bh=0shyGyjWgRAR/8tg/n5qJjtkOYqa15lSbO+H7hie4Ng=;
+	s=arc-20240116; t=1745505530; c=relaxed/simple;
+	bh=WM7zfm0bT2ItDzzbHgZkWzBdQu/I59c8crE3d85m7Sg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r/cacxJsnTTH8gmpcdIRh7M8Nd/d9BtmxI1p/PtML5m3IALTT7OPLREVH0UcM/I3KPOX9qWweeCBdR/qzj7GtBqp5MPn8P+e3TgoiOXZkzkJTVH/MrbfgXUUB62vn8Bo95o+nH5kQeWzSrksaLB7qV8CQ+rX7Y5OMNXyKE5btTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=TFp7cV7X; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	 Content-Type:Content-Disposition:In-Reply-To; b=Hs2jKbQjazKSkqt0BDPOLrrrJe66VYXTPgRRonxxb00gLtX8ct51Bgn2O6zNSimYOBJt5/CeuGgIx2D+vPtk6+WIBw5A14Jb7shCAanAc6NPmKzA5tVJ6pDW3oApXlu4stWrryYYloLVju932m8Ixo6+Rhf+S3qPArc5gNn2YFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fJVGWmn4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TFp7cV7X"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=iP7yszLUsUADo0WsHtRm94kACcNDCCcdMa0yUAjuQ/g=; b=TFp7cV7XHU3T0+OTtLxOJEDQZm
-	Qok3jV0AAmSTjzTw4o3X/nCuZ4ajVctMMy8gACT/IXXouHEpcVxAV0R0KuYD705LT2heSF/QJ2K0i
-	5gWAWmzHt+q8Cepdr2nooXRJAgNT9/MipTh3ffSJRsHXvq/Ps9r7oIrJHc1LcB/Til7rSZzoi3QGe
-	6YIpiosNpb2K7pMSmIo/Fwxgd6M0ASGZ6CE9wI+tdynUoN3be9a7C/qhYe+PiVdeV23q5+pbhe7Ae
-	g8mZGvx0O7ZQilogp+L8358szTQddWzEoBH/m+OjZnZgqgfC8+s7zwM4Vrw+cr3MiFFEDTutIDCFP
-	d9bZVdkA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35610)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1u7xia-0007WE-0w;
-	Thu, 24 Apr 2025 15:38:26 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1u7xiW-0001Ag-0w;
-	Thu, 24 Apr 2025 15:38:20 +0100
-Date: Thu, 24 Apr 2025 15:38:20 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v1 3/4] net: phy: Don't report advertised EEE
- modes if EEE is disabled
-Message-ID: <aApM3MC_FW6BSpW8@shell.armlinux.org.uk>
-References: <20250424130222.3959457-1-o.rempel@pengutronix.de>
- <20250424130222.3959457-4-o.rempel@pengutronix.de>
- <07bd8b38-c49c-481b-b08b-fff78b9ffe98@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fJVGWmn4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60655C4CEE3;
+	Thu, 24 Apr 2025 14:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745505529;
+	bh=WM7zfm0bT2ItDzzbHgZkWzBdQu/I59c8crE3d85m7Sg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fJVGWmn4v45l8WbiQwosdrijUHNMc637MOvicJxYlgxabqPeQTrlGaPCp6FRNvW4t
+	 5VwyC/mU9NdVJtmH4Vuf7Qr6pY9v29qFYa12FPzKlM2an91t1wSg4+H2+klzjQzwT9
+	 hS2beHMQTDgyeic7qRYktPe1ypBYTEDPD9xfrtzMP0npkfbxngnLfDFm9ECrIqu4Ar
+	 8mxrgHrltGVe6EBrkAUzvgBR4795/tVd/is3RuDRvIRc1TrnZVIS+Z8txKTNTwoyDE
+	 H6IoCmJavtTmgwwoqwG7fl56NAwc7SG0TwW9KSoyArW/nDLh8QQHxm++8njNhHX5/h
+	 rJ23St7P5TFlA==
+Date: Thu, 24 Apr 2025 07:38:48 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Groves <John@groves.net>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Miklos Szeredi <miklos@szeredb.hu>,
+	Bernd Schubert <bschubert@ddn.com>,
+	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Luis Henriques <luis@igalia.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Jeff Layton <jlayton@kernel.org>,
+	Kent Overstreet <kent.overstreet@linux.dev>,
+	Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Stefan Hajnoczi <shajnocz@redhat.com>,
+	Joanne Koong <joannelkoong@gmail.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	Aravind Ramesh <arramesh@micron.com>,
+	Ajay Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC PATCH 13/19] famfs_fuse: Create files with famfs fmaps
+Message-ID: <20250424143848.GN25700@frogsfrogsfrogs>
+References: <20250421013346.32530-1-john@groves.net>
+ <20250421013346.32530-14-john@groves.net>
+ <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,57 +65,109 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <07bd8b38-c49c-481b-b08b-fff78b9ffe98@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <nedxmpb7fnovsgbp2nu6y3cpvduop775jw6leywmmervdrenbn@kp6xy2sm4gxr>
 
-On Thu, Apr 24, 2025 at 04:30:40PM +0200, Andrew Lunn wrote:
-> On Thu, Apr 24, 2025 at 03:02:21PM +0200, Oleksij Rempel wrote:
-> > Currently, `ethtool --show-eee` reports "Advertised EEE link modes" even when
-> > EEE is disabled, which can be misleading. For example:
+On Thu, Apr 24, 2025 at 08:43:33AM -0500, John Groves wrote:
+> On 25/04/20 08:33PM, John Groves wrote:
+> > On completion of GET_FMAP message/response, setup the full famfs
+> > metadata such that it's possible to handle read/write/mmap directly to
+> > dax. Note that the devdax_iomap plumbing is not in yet...
 > > 
-> >   EEE settings for lan1:
-> >           EEE status: disabled
-> >           Tx LPI: disabled
-> >           Supported EEE link modes:  100baseT/Full
-> >                                      1000baseT/Full
-> >           Advertised EEE link modes:  100baseT/Full
-> >                                       1000baseT/Full
-> >           Link partner advertised EEE link modes:  Not reported
+> > Update MAINTAINERS for the new files.
+> > 
+> > Signed-off-by: John Groves <john@groves.net>
+> > ---
+> >  MAINTAINERS               |   9 +
+> >  fs/fuse/Makefile          |   2 +-
+> >  fs/fuse/dir.c             |   3 +
+> >  fs/fuse/famfs.c           | 344 ++++++++++++++++++++++++++++++++++++++
+> >  fs/fuse/famfs_kfmap.h     |  63 +++++++
+> >  fs/fuse/fuse_i.h          |  16 +-
+> >  fs/fuse/inode.c           |   2 +-
+> >  include/uapi/linux/fuse.h |  42 +++++
+> >  8 files changed, 477 insertions(+), 4 deletions(-)
+> >  create mode 100644 fs/fuse/famfs.c
+> >  create mode 100644 fs/fuse/famfs_kfmap.h
+> > 
+
+<snip>
+
+> > diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+> > index d85fb692cf3b..0f6ff1ffb23d 100644
+> > --- a/include/uapi/linux/fuse.h
+> > +++ b/include/uapi/linux/fuse.h
+> > @@ -1286,4 +1286,46 @@ struct fuse_uring_cmd_req {
+> >  	uint8_t padding[6];
+> >  };
+> >  
+> > +/* Famfs fmap message components */
+> > +
+> > +#define FAMFS_FMAP_VERSION 1
+> > +
+> > +#define FUSE_FAMFS_MAX_EXTENTS 2
+> > +#define FUSE_FAMFS_MAX_STRIPS 16
 > 
-> What is the behaviour for normal link mode advertisement? If i turn
-> autoneg off, do the advertised link modes disappear? Do they reappear
-> when i turn autoneg back on again?
+> FYI, after thinking through the conversation with Darrick,  I'm planning 
+> to drop FUSE_FAMFS_MAX_(EXTENTS|STRIPS) in the next version.  In the 
+> response to GET_FMAP, it's the structures below serialized into a message 
+> buffer. If it fits, it's good - and if not it's invalid. When the
+> in-memory metadata (defined in famfs_kfmap.h) gets assembled, if there is
+> a reason to apply limits it can be done - but I don't currently see a reason
+> do to that (so if I'm currently enforcing limits there, I'll probably drop
+> that.
+
+You could also define GET_FMAP to have an offset in the request buffer,
+and have the famfs daemon send back the next offset at the end of its
+reply (or -1ULL to stop).  Then the kernel can call GET_FMAP again with
+that new offset to get more mappings.
+
+Though at this point maybe it should go the /other/ way, where the fuse
+server can sends a "notification" to the kernel to populate its mapping
+data?  fuse already defines a handful of notifications for invalidating
+pagecache and directory links.
+
+(Ugly wart: notifications aren't yet implemented for the iouring channel)
+
+--D
+
 > 
-> I would expect EEE to follow what the normal link modes do. Assuming
-> the Read/modify/write does not break this.
-
-It's difficult to compare, because ethtool is implemented differently
-between modifying the link modes and the EEE stuff. ethtool -s autoneg
-on uses this:
-
-                        if (autoneg_wanted == AUTONEG_ENABLE &&
-                            advertising_wanted == NULL &&
-                            full_advertising_wanted == NULL) {
-                                unsigned int i;
-
-                                /* Auto negotiation enabled, but with
-                                 * unspecified speed and duplex: enable all
-                                 * supported speeds and duplexes.
-                                 */
-
-whereas do_seee() has no special handling.
-
-So, if we want ethtool --set-eee eee off; ethtool --set-eee eee on *not*
-to end up with the advertising mask being cleared, then we have to
-preserve it, or force the advertising mask to something if the
-advertising mask is empty and eee_enabled is true.
-
-Or we preserve the advertising mask when eee_enabled is cleared, which
-is what we do today.
-
-I think, given the different implementations in ethtool, we can't just
-say "we want it to be have the same" by just modifying the kernel.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+> > +
+> > +enum fuse_famfs_file_type {
+> > +	FUSE_FAMFS_FILE_REG,
+> > +	FUSE_FAMFS_FILE_SUPERBLOCK,
+> > +	FUSE_FAMFS_FILE_LOG,
+> > +};
+> > +
+> > +enum famfs_ext_type {
+> > +	FUSE_FAMFS_EXT_SIMPLE = 0,
+> > +	FUSE_FAMFS_EXT_INTERLEAVE = 1,
+> > +};
+> > +
+> > +struct fuse_famfs_simple_ext {
+> > +	uint32_t se_devindex;
+> > +	uint32_t reserved;
+> > +	uint64_t se_offset;
+> > +	uint64_t se_len;
+> > +};
+> > +
+> > +struct fuse_famfs_iext { /* Interleaved extent */
+> > +	uint32_t ie_nstrips;
+> > +	uint32_t ie_chunk_size;
+> > +	uint64_t ie_nbytes; /* Total bytes for this interleaved_ext; sum of strips may be more */
+> > +	uint64_t reserved;
+> > +};
+> > +
+> > +struct fuse_famfs_fmap_header {
+> > +	uint8_t file_type; /* enum famfs_file_type */
+> > +	uint8_t reserved;
+> > +	uint16_t fmap_version;
+> > +	uint32_t ext_type; /* enum famfs_log_ext_type */
+> > +	uint32_t nextents;
+> > +	uint32_t reserved0;
+> > +	uint64_t file_size;
+> > +	uint64_t reserved1;
+> > +};
+> >  #endif /* _LINUX_FUSE_H */
+> > -- 
+> > 2.49.0
+> > 
