@@ -1,65 +1,65 @@
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BE121D5B4
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:21:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDF5221D8F
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:21:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745479278; cv=none; b=FZk7HfY8fBwZyfdCT8gfdOC+F327qlcCOlALufsKl/XMCWQrZVDssfdzC/HVyI62Vx4T2cY262tY0ALogyHvgJEgSigblkPsp+iEMOX/IIbFuAu25O9ZQlB/uKDRpim66OY8DaNm1JF6AbFYrBNNv3zVETrlZZZDCihLhL3EHxc=
+	t=1745479284; cv=none; b=sZlTzxMTInHbTjuMcRRAqauKDsz3StfYaKpwM3BZzkUyLOBSSX/qs/nm4ibLiObZKjhocqpcFCqkytd1H3CUN3b3lWeDrzePhyqCuVIWHHBGs/7d2MPrTYztzK5yXYT+BJKUJf7xL8/GcVGoQ+TkWcAety0VIB+6srA6T2QLfAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745479278; c=relaxed/simple;
-	bh=MWHORhhDrzBD5xYKXHmYuqbsYg8MAv5FLe7duVKblSA=;
+	s=arc-20240116; t=1745479284; c=relaxed/simple;
+	bh=HSj61/DKHbscjrSxiKNrJbrvkTbOzS+iDBZfj2iqRRw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HGjXKemjrAA36nPoYPnFYrcbclCIp+HnX7D/+E/U2Bjq39xGvQSNh/nV3KtLm3F753f0Km4gO52s5f0emr0Yw0a/eluHMr4SqrP/LXIylqVUZ5CzmNGrxi7VhmvtcpNGTLBbXbc45joTitHPodT14Yby2hnI1NoYMp/EHU0aq/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ET4QH+GV; arc=none smtp.client-ip=209.85.222.54
+	 In-Reply-To:To:Cc; b=VbLWdH4rgaMHiqC57Uk+9JY4d8yfebMUtMQ6yX+ai9Krfz6oa8JEI4YBV4jOevMYjw2ZSL6Okxi+Co2Oi6Af2ZJBKIbcaKL9GDttMGBfT5BQ8Gx+PTxRePceH3ARMzU1RpKBMjXZnHctu97TsjopXpu5RK3nxdtntqfuzDyZnxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ubg6cZpa; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ET4QH+GV"
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86d587dbc15so757225241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:21:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ubg6cZpa"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225df540edcso19240655ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:21:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745479275; x=1746084075; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745479281; x=1746084081; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=uTOlWSgIfNg/m3Oqt+BmGM6XFRmcXruZeuBu1MNVaGQ=;
-        b=ET4QH+GVNCRFN1JbOvl8nGb/7xbcxSsLSkulwHdLlIBT4Cx9/1TAk48TJgrjhNvklh
-         0eCB65DfS5gMsmlVIiI8n1ZkwidvpNAHDRFIPoFYTgvUassC99DyElnSdVc4dMGxPGA1
-         MFkdna2viYLu3oWVwfQ4MrQFviQIJTCrwxcFyYTzEvkSzwUquOZcU7yPIROKhNCn5UFT
-         zkWLMPJucgGpVkqGivJ8vfgGY3QbauYIC2wp7aopLNeaQ8vUdk3BUXmVDxU4+hdKmZRi
-         dSsWa6dw+N5hUEzucZajtyEugU6J0YS62IbspTv6lSHJV5RXWlhImY0XI6vgYqM8M+6B
-         5soQ==
+        bh=puoahas2OCQQdRJkSX5kN4b6Bd2MCUgo7wt+1uTIqSI=;
+        b=ubg6cZpa5Vo6Fxp4Uf4waBarfwLeXRuCfcO/4vqI+fldUtLeg3Xx22zxIpeTEkrUay
+         HsuBdUC+tJ+I1kp5tR6Q0ZqsH/bfmJC3GzVbx4DHQLeyTqNYCSeaQWO8RoS7tNWAarVj
+         cflSY0Nge5CjCiFk3STI8oQKDo/gdP18lAXiMQtn9HFxM1l5a61OFBuA940E6+cI3nuk
+         YJ2AWET8CwN+QBYeHaHRu2AklzMluGu+JAmgYD8Z5PKT/DBxzcObMjvY7fKUdaCrqrmJ
+         oSulIA8fMwbtSGXjDZ7bW/WAuTovz/takJJtL4SX5Ea/ERtDKG0IH5+tUqoFuA3AnCkW
+         DdQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745479275; x=1746084075;
+        d=1e100.net; s=20230601; t=1745479281; x=1746084081;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uTOlWSgIfNg/m3Oqt+BmGM6XFRmcXruZeuBu1MNVaGQ=;
-        b=DQCAK4bIjmDAvbJHBuieHGPDwVz0KxTlb1xklVleq9HUNCmTElSGJ/2FaFU8A9NRbq
-         PlI6OddFBF3ut0io5KceJBGYcntc6U/bg8wABTR0v7V1s4Xf7swcKGyhgtOysaQjWezw
-         Sbf8kwR+WFIQtus5nCuDUSxFrs5WOmbp4XhmlvKeg5PxkuXoF0R6Av5RhURq/7Sn9PGj
-         6GAumFHshNnytbyZ6x38loNkFVz+xMw8SAfnYIklfRvGg3ljAhkqWm1Jx9VTXMNEJYlD
-         U86EA4Xg3OQV7lSeDu9dDAXXKoQM4tH2N3+Q+yGX0Cd89p4ZhElm079haBDuWVaYH1nQ
-         g3cg==
-X-Gm-Message-State: AOJu0YybTJnRE4F+VDhQLsVW0DdSjqNmZ8fx2XGLeTZcBa2GO349K7WG
-	49g6jleiIpkKcE8P2wkl9cYGqtZjzCXIBguyDQ94I3EVCZMrA9YUgsg/He4sPE8=
-X-Gm-Gg: ASbGncupyQbxSL6QwEt0vuSENOo4eP5al0efQ3lD1sRGrErodrxBoN3LIkJ2YdmM2rE
-	zuz64zJ184N3rcooUzVPyMCMA1ARz0CDIYvNJrcBudveMANF9aXqwAF7/6pmhf7bEHPY3ZfKK8C
-	qD6QPyHkhbR9kjhn5AC0rgvdkwu7bAQg4FIXLvat2d14gZg7Z480fCAVn3kSsHfTNb/M2w9o738
-	WsLLwQr4JJ+/pvAvjgq1UpYH59xWaqbSEILXuPqru0jNH1ZBfYA+W+HAtoeTK5ZWGNFZDwhI4e1
-	nTFDeIHOdcK6i4i2Kui9ozd2G3U5By7J8Au3UIOqm69Num/DLWcwRvi0GsqtAQ==
-X-Google-Smtp-Source: AGHT+IG6rfYKWcrpqCiMIv7u+v5lHTdXwUfRT7tn0rH3sRxk3D1hWLROMKGb0/WJjtbUj6Z//dN74Q==
-X-Received: by 2002:a17:903:2290:b0:215:ba2b:cd55 with SMTP id d9443c01a7336-22db47ad1c7mr19626865ad.2.1745479264519;
-        Thu, 24 Apr 2025 00:21:04 -0700 (PDT)
+        bh=puoahas2OCQQdRJkSX5kN4b6Bd2MCUgo7wt+1uTIqSI=;
+        b=Ll2ZmViKTmbADLbeM0aH6n1sVUnAsYULHdwtk6Io4uRZGuH1VpbDOrvjbYvJ/SyNUt
+         ry04/AQaTLdzbtDgakhxA9icGPUGyxVBItzNwhsXM+cNrdJwgY5VKjAdB3rdSM5I+brC
+         CIYvBivDC40xpqyV6GPWAwDzDPGjmhyvmveDOjbVuPmfGQSk8phgsOsW4witCtGbZNOX
+         h41ix0vMESlGqIbfnvhnrVsj2eJds49tQTdnW0VwmO7E46fFT9pVSLkY4Ib21wX0v2/4
+         1XXxy5gUxwLgeajsCyJpuOb11PCimA/Pqu6DL+6dKvdtphGC4pJ8xWVyvjUTfS6eMvIr
+         /beg==
+X-Gm-Message-State: AOJu0Yz0R3+vbLo+1VT+sB0M8MbNV4sQ3KdHuWd6mvqO/sjaMUNR65ZV
+	ff4yCUWHr/38wT7kI2zaJV8EdywZEaI5VRNFiVWFJK3MJ1uNWCS13QlOQJTRY5c=
+X-Gm-Gg: ASbGnctrbEtmzcafgggcFRPdT/CXfnt4EGfKL2lv5whuMTV5A+vTx+iU+9OgY5Q56G7
+	YXtNfJjns720UADXbiSKRA2hPQ8tuWuJtFMqb2asCS2zLe6B2Z6vPUFbzibBSrRV45o0M2c7mff
+	sjDu7jJP3xANd4i+5y6h8ArcXs1WPiMy2mn77H0wxt9Fr0SNnlVzpvQJL3elPGrWRTJk8k1Op7E
+	pGqAR4LZWtoaxyN08HoF+MKaehW+BJYlMCka8XmiVf5Mu8LxffEs1rouUNvXa2jXimswujdqC0X
+	v/Dvn51SZBPL6TLW/8w+p1gCcWyjyZhkhdkUfnVNNv18UOYo4Eo=
+X-Google-Smtp-Source: AGHT+IGB31thuufoxJYlKx2OJ9+59LtpnF6oD6iN+AzfxNeqUgzSARE3kzGHVOeHGGHAiVK6EGT83Q==
+X-Received: by 2002:a17:902:c94c:b0:215:a56f:1e50 with SMTP id d9443c01a7336-22db47e5457mr21504655ad.8.1745479281373;
+        Thu, 24 Apr 2025 00:21:21 -0700 (PDT)
 Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db52163d6sm6240765ad.214.2025.04.24.00.21.01
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db52163d6sm6240765ad.214.2025.04.24.00.21.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 00:21:04 -0700 (PDT)
+        Thu, 24 Apr 2025 00:21:20 -0700 (PDT)
 From: Deepak Gupta <debug@rivosinc.com>
-Date: Thu, 24 Apr 2025 00:20:28 -0700
-Subject: [PATCH v13 13/28] prctl: arch-agnostic prctl for indirect branch
- tracking
+Date: Thu, 24 Apr 2025 00:20:33 -0700
+Subject: [PATCH v13 18/28] riscv/kernel: update __show_regs to print shadow
+ stack register
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-v5_user_cfi_series-v13-13-971437de586a@rivosinc.com>
+Message-Id: <20250424-v5_user_cfi_series-v13-18-971437de586a@rivosinc.com>
 References: <20250424-v5_user_cfi_series-v13-0-971437de586a@rivosinc.com>
 In-Reply-To: <20250424-v5_user_cfi_series-v13-0-971437de586a@rivosinc.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
@@ -102,144 +102,33 @@ Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
  atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
  alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
  rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org, 
- Zong Li <zong.li@sifive.com>, Deepak Gupta <debug@rivosinc.com>
+ Deepak Gupta <debug@rivosinc.com>
 X-Mailer: b4 0.13.0
 
-Three architectures (x86, aarch64, riscv) have support for indirect branch
-tracking feature in a very similar fashion. On a very high level, indirect
-branch tracking is a CPU feature where CPU tracks branches which uses
-memory operand to perform control transfer in program. As part of this
-tracking on indirect branches, CPU goes in a state where it expects a
-landing pad instr on target and if not found then CPU raises some fault
-(architecture dependent)
+Updating __show_regs to print captured shadow stack pointer as well.
+On tasks where shadow stack is disabled, it'll simply print 0.
 
-x86 landing pad instr - `ENDBRANCH`
-arch64 landing pad instr - `BTI`
-riscv landing instr - `lpad`
-
-Given that three major arches have support for indirect branch tracking,
-This patch makes `prctl` for indirect branch tracking arch agnostic.
-
-To allow userspace to enable this feature for itself, following prtcls are
-defined:
- - PR_GET_INDIR_BR_LP_STATUS: Gets current configured status for indirect
-   branch tracking.
- - PR_SET_INDIR_BR_LP_STATUS: Sets a configuration for indirect branch
-   tracking.
-   Following status options are allowed
-       - PR_INDIR_BR_LP_ENABLE: Enables indirect branch tracking on user
-         thread.
-       - PR_INDIR_BR_LP_DISABLE; Disables indirect branch tracking on user
-         thread.
- - PR_LOCK_INDIR_BR_LP_STATUS: Locks configured status for indirect branch
-   tracking for user thread.
-
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Reviewed-by: Zong Li <zong.li@sifive.com>
 Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 ---
- include/linux/cpu.h        |  4 ++++
- include/uapi/linux/prctl.h | 27 +++++++++++++++++++++++++++
- kernel/sys.c               | 30 ++++++++++++++++++++++++++++++
- 3 files changed, 61 insertions(+)
+ arch/riscv/kernel/process.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-index 6a0a8f1c7c90..fb0c394430c6 100644
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -204,4 +204,8 @@ static inline bool cpu_mitigations_auto_nosmt(void)
- }
- #endif
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index 4587201dd81d..6bb53ce72ed5 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -90,8 +90,8 @@ void __show_regs(struct pt_regs *regs)
+ 		regs->s8, regs->s9, regs->s10);
+ 	pr_cont(" s11: " REG_FMT " t3 : " REG_FMT " t4 : " REG_FMT "\n",
+ 		regs->s11, regs->t3, regs->t4);
+-	pr_cont(" t5 : " REG_FMT " t6 : " REG_FMT "\n",
+-		regs->t5, regs->t6);
++	pr_cont(" t5 : " REG_FMT " t6 : " REG_FMT " ssp : " REG_FMT "\n",
++		regs->t5, regs->t6, get_active_shstk(current));
  
-+int arch_get_indir_br_lp_status(struct task_struct *t, unsigned long __user *status);
-+int arch_set_indir_br_lp_status(struct task_struct *t, unsigned long status);
-+int arch_lock_indir_br_lp_status(struct task_struct *t, unsigned long status);
-+
- #endif /* _LINUX_CPU_H_ */
-diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
-index 5c6080680cb2..6cd90460cbad 100644
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -353,4 +353,31 @@ struct prctl_mm_map {
-  */
- #define PR_LOCK_SHADOW_STACK_STATUS      76
- 
-+/*
-+ * Get the current indirect branch tracking configuration for the current
-+ * thread, this will be the value configured via PR_SET_INDIR_BR_LP_STATUS.
-+ */
-+#define PR_GET_INDIR_BR_LP_STATUS      77
-+
-+/*
-+ * Set the indirect branch tracking configuration. PR_INDIR_BR_LP_ENABLE will
-+ * enable cpu feature for user thread, to track all indirect branches and ensure
-+ * they land on arch defined landing pad instruction.
-+ * x86 - If enabled, an indirect branch must land on `ENDBRANCH` instruction.
-+ * arch64 - If enabled, an indirect branch must land on `BTI` instruction.
-+ * riscv - If enabled, an indirect branch must land on `lpad` instruction.
-+ * PR_INDIR_BR_LP_DISABLE will disable feature for user thread and indirect
-+ * branches will no more be tracked by cpu to land on arch defined landing pad
-+ * instruction.
-+ */
-+#define PR_SET_INDIR_BR_LP_STATUS      78
-+# define PR_INDIR_BR_LP_ENABLE		   (1UL << 0)
-+
-+/*
-+ * Prevent further changes to the specified indirect branch tracking
-+ * configuration.  All bits may be locked via this call, including
-+ * undefined bits.
-+ */
-+#define PR_LOCK_INDIR_BR_LP_STATUS      79
-+
- #endif /* _LINUX_PRCTL_H */
-diff --git a/kernel/sys.c b/kernel/sys.c
-index cb366ff8703a..f347f3518d0b 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -2336,6 +2336,21 @@ int __weak arch_lock_shadow_stack_status(struct task_struct *t, unsigned long st
- 	return -EINVAL;
- }
- 
-+int __weak arch_get_indir_br_lp_status(struct task_struct *t, unsigned long __user *status)
-+{
-+	return -EINVAL;
-+}
-+
-+int __weak arch_set_indir_br_lp_status(struct task_struct *t, unsigned long status)
-+{
-+	return -EINVAL;
-+}
-+
-+int __weak arch_lock_indir_br_lp_status(struct task_struct *t, unsigned long status)
-+{
-+	return -EINVAL;
-+}
-+
- #define PR_IO_FLUSHER (PF_MEMALLOC_NOIO | PF_LOCAL_THROTTLE)
- 
- #ifdef CONFIG_ANON_VMA_NAME
-@@ -2811,6 +2826,21 @@ SYSCALL_DEFINE5(prctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 			return -EINVAL;
- 		error = arch_lock_shadow_stack_status(me, arg2);
- 		break;
-+	case PR_GET_INDIR_BR_LP_STATUS:
-+		if (arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		error = arch_get_indir_br_lp_status(me, (unsigned long __user *)arg2);
-+		break;
-+	case PR_SET_INDIR_BR_LP_STATUS:
-+		if (arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		error = arch_set_indir_br_lp_status(me, arg2);
-+		break;
-+	case PR_LOCK_INDIR_BR_LP_STATUS:
-+		if (arg3 || arg4 || arg5)
-+			return -EINVAL;
-+		error = arch_lock_indir_br_lp_status(me, arg2);
-+		break;
- 	default:
- 		trace_task_prctl_unknown(option, arg2, arg3, arg4, arg5);
- 		error = -EINVAL;
+ 	pr_cont("status: " REG_FMT " badaddr: " REG_FMT " cause: " REG_FMT "\n",
+ 		regs->status, regs->badaddr, regs->cause);
 
 -- 
 2.43.0
