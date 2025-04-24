@@ -1,95 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8923727FD4D
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 16:25:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1F62820A3;
+	Thu, 24 Apr 2025 16:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745511922; cv=none; b=I81GsrVz/Qf3WE1DT/z3tHzP2H+ivFznOfUlumRK8Rm2ZI119p26hjYd6IA6xuVyofF+TXbnjV6O+q7yi6p/MfIJ6IWEtq1lZI+TNc/1PyITYv1MRjX3noMG1CDiMVIIQ2wLCzIMzPuacEYe7bYMXmmuZlbjH1Wf6e+0wmNYxtg=
+	t=1745512029; cv=none; b=d/IqG8jRolJPqcZMcKR/vAKRbo1l75lIZ+95JTLmKAkxb4ArRCQ+qGxcvfreIna4wSAX6sCNFyjeP82d3OGZ3YARZrrJSPRKMyOUVytqLbFM4EsHv/kdSnH5Qo3Wb5GPr8cSlC5gDS6TrXMLoLzoovldpA81sXIL/mbBeUS6Ifo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745511922; c=relaxed/simple;
-	bh=DtpT7xWNCKJCP1wtqX3ELlicJiarxdeHGximxQW4Xsg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kyLSDML2BHVnNXtYDktexDljWr0FSTamfQkO45zenKR3JfsYpfN3RdYqpF2k7fs5h5PZEHv++n26nmxcd3adEJREKKAsFJRqyzOYuuA9ZcAsptfE0OoRp0ZiTYXnIYXhZzcXnaMS1p7OIKqqhYu5C0Np4tpEtTUWOgauKj+axWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fuf30jNc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745512029; c=relaxed/simple;
+	bh=d1i2vxS7CCH8AHpspZpCA8aleNzCCGucvlzIXJ8m8lk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Q9Ue9cyF9S+VvKks/ggqmiVKd7M2vqjQ0wS8xIW7mUO977qydgmNzkZuNWpXRVIpGQ/+g2ipa7HGJ5Jl4ehW5TnmWt/sMGDgTHe1MWZcaF6mvusY139390Lp75vaH7xadoCDOkW7xGsxVymxl0dtknmhSJXKdwVIAxaw3OAoijM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dOBHLsyp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fuf30jNc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD233C4CEE3;
-	Thu, 24 Apr 2025 16:25:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dOBHLsyp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE3DC4CEE3;
+	Thu, 24 Apr 2025 16:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745511921;
-	bh=DtpT7xWNCKJCP1wtqX3ELlicJiarxdeHGximxQW4Xsg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fuf30jNc9sPzyD9aqbcysibPXpg3o3SjWNpJb7KDQmn2G/DC9xlezLiKh0cVDMJYG
-	 dPZ05ybqm5fU6eGUHDyCFaJMgfbrwYt5Fo4pMkDsTSX1kd/D/Ws9W3t1ydF1JZAnu8
-	 LuixoK5ENSL+s4e1nGn0y/OsxRmuvRCTrL7EliSEyzRy7qXDIIQzV0Lmt2QZ2u8d/a
-	 n5s1m8N6OpdM+WBu/ZMTWQmo/ySHXbvVb9YNrPACSDiiQiEATRYYz5HF5ZSjpUsfTF
-	 5X+kuX7++NJhqqnplTqEZCMvdkDVmB3VZLR93wHjH25vb2BHOpFVcRSp6OdGdg4/9B
-	 GdiQpixtr7oRA==
-Date: Thu, 24 Apr 2025 18:25:18 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: phasta@kernel.org
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH] x86/boot: Work around broken busybox truncate tool
-Message-ID: <aApl7iqRl--uZFZE@gmail.com>
-References: <20250424101917.1552527-2-ardb+git@google.com>
- <cc549efcd078fdefafc12442b08ae7ceaa197eb9.camel@mailbox.org>
+	s=k20201202; t=1745512028;
+	bh=d1i2vxS7CCH8AHpspZpCA8aleNzCCGucvlzIXJ8m8lk=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=dOBHLsypE4rC02aLc6grE+cStS/j6LGRdO3yyBW3rrrJQmvep/Ecz0x3sOk0+IRtY
+	 X/tDfNK0Pgomdax/LIoqBA/91p2VUfnWDTXWwAkoO2RRIqWYDI0evMO1aN/uHctP6h
+	 hyqoUq8iYYxADE+GIWsVVy9YyHD26f/wEYuIh/beYerx2s942Et3ITVMIZ1qWzYsq4
+	 Ed25TZMdrTW/5N3/RnO6FeTyFqGnlObSl2KVqN3ygw1kt9RpK4sIpEg2XB1Hv1bZri
+	 rLdKxP03iK3Ba8UCH/kVl612EdrW3tBWLpczD8KZFUZdb/asGq8xbrd9ENqk3wR3qc
+	 4vnbogUlAUeIA==
+From: Lee Jones <lee@kernel.org>
+To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Riku Voipio <riku.voipio@iki.fi>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+In-Reply-To: <20250423-gpiochip-set-rv-leds-v1-0-2f42d8fbb525@linaro.org>
+References: <20250423-gpiochip-set-rv-leds-v1-0-2f42d8fbb525@linaro.org>
+Subject: Re: [PATCH 0/4] leds: use new GPIO setter callbacks
+Message-Id: <174551202650.1497727.15230416483981358083.b4-ty@kernel.org>
+Date: Thu, 24 Apr 2025 17:27:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <cc549efcd078fdefafc12442b08ae7ceaa197eb9.camel@mailbox.org>
+X-Mailer: b4 0.15-dev-510f9
 
-
-* Philipp Stanner <phasta@mailbox.org> wrote:
-
-> Thank you very much for this fix :)
+On Wed, 23 Apr 2025 09:53:49 +0200, Bartosz Golaszewski wrote:
+> Commit 98ce1eb1fd87e ("gpiolib: introduce gpio_chip setters that return
+> values") added new line setter callbacks to struct gpio_chip. They allow
+> to indicate failures to callers. We're in the process of converting all
+> GPIO controllers to using them before removing the old ones. This series
+> converts all GPIO drivers under drivers/leds/.
 > 
-> On Thu, 2025-04-24 at 12:19 +0200, Ard Biesheuvel wrote:
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> > 
-> > The GNU coreutils version of truncate, which is the original, accepts
-> > a
-> > % prefix for the -s size argument which means the file in question
-> > should be padded to a multiple of the given size. This is currently
-> > used
-> > to pad the setup block of bzImage to a multiple of 4k before
-> > appending
-> > the decompressor.
-> > 
-> > busybux reimplements truncate but does not support this idiom, and
 > 
-> typo, busybox.
+> [...]
 
-Fixed, thx.
+Applied, thanks!
 
-> 
-> > therefore fails the build since commit
-> > 
-> > � 9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool
-> > that generates it")
-> 
-> Should this be marked as an official bug?
-> 
-> If so, I'd put this as a Fixes: tag below.
+[1/4] leds: lgm-sso: use new line value setter callbacks
+      commit: d48b4a8402c07453f82a95af60702d06c14bca18
+[2/4] leds: pca955x: use new line value setter callbacks
+      commit: f5800749963eefb11001fe961434a1b0fdf12382
+[3/4] leds: pca9532: use new line value setter callbacks
+      commit: e3f286285f19d985323f4e3454894d6f8ba83dbc
+[4/4] leds: tca6507: use new line value setter callbacks
+      commit: df80e14ebe1035004c515b952cb700a391f220f5
 
-So I've added a Fixes tag, because it's informative, but 9c54baab4401 
-is new in v6.15-rc1 so there's no backporting need.
+--
+Lee Jones [李琼斯]
 
-> > Work around this by avoiding truncate altogether, and relying on dd
-> > to
-> > perform the padding.
-> > 
-> > Reported-by: <phasta@kernel.org>
-> 
-> Tested-by: Philipp Stanner <phasta@kernel.org>
-
-Thanks!
-
-	Ingo
