@@ -1,91 +1,122 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811D4284685;
-	Thu, 24 Apr 2025 16:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B0A28A1CE;
+	Thu, 24 Apr 2025 16:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745513093; cv=none; b=KvQJHZRZ47H4QWOA0s1EUQ51zsg2et1U53JqxvvXxh25W/JdUAcXNGHKjM3PSHfypqe60MXUxAEVopPi9KYgLUXUZfgB8t6ub9ESxLj0vKz5W3GdQ3+MPdrD/sqFmNVAnw/eH6+GpaeT0n0HeyeYcC3yZ5mFfhNnwM/arL+cVSQ=
+	t=1745513113; cv=none; b=bvLFJVPzLVBguRqt6JpjgSU9X/YMwS4Kll8uDFenzHKzzS3f3Ke5gi4yd2PgLPW7PlXaDAzRjecQaIV9P8VSVaCDqBjZ751dhLw8UuRpyZGx/5M1GqBOkF1xEVJBF1zsgGWkpPedrjl2yb8p2rmIllV6nAHhvx91jILJ3JUW6q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745513093; c=relaxed/simple;
-	bh=7NCmOr8ivNGpObb9WZ6jd5tfqxQcsNUuuFxY9SHRXRE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=daINND96914+w0qEjfTQmxcAzfsayymXrtSMRKO42rKVl07hWqEKW4/adUlrPy2WWGGGMWzXFLcdCiVx0+6v8jYOpuFHDzKyrjFTg3ADOVnpeDcHq41fESGUd1kmRaJoxAFVjX1vX61tHx5+Dc96kafuE2dX0JIfTvs0zTpNqeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DHhLeZB6; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745513113; c=relaxed/simple;
+	bh=WTCPC6me0UUZGdyCdncOvrVaoH5MZBIcs5xmtWo09Kc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=dJu5VIz21T4mq3LhFSfG5yVJg+3hDPr323tuUbUOBeVr2XqpFZCr2kw0rT9LxhXA0En7G7CCtZcAjTeW/6lLJOXtw0HVwqKgyYRbi4MnLUmoL19gm7ib5SYxn/aRiAOJe+vNdiw/cnqBA+XQwqQBkgJUGqW7EQPV3hb617X0dho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PCm8clwV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+yogsccb; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHhLeZB6"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4775ce8a4b0so23582061cf.1;
-        Thu, 24 Apr 2025 09:44:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745513090; x=1746117890; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7NCmOr8ivNGpObb9WZ6jd5tfqxQcsNUuuFxY9SHRXRE=;
-        b=DHhLeZB6SyBzfDLaqc6yJCeLTFzzFATT/5c1kBzOu6prTSRO56Rd1lYMFzb0QD/hB2
-         73HMIGpFhUmdwWRkGSuHCU5LBfW8aJf9F0xNpRD62P3S2+w7n7kLmPXZvqjh2UxU4ev6
-         6nf4VNP39PkRtrZKF5XdIU/k1JVA2tK88f1Ef6ORMb2HkcCiFjD+fjRMAOozSJfu22C/
-         fZfr9QQj9w1vH0+rYJ3gAIKpFMdIuEOB6e3d0v/Eet8IdF8DfGjWszr1KEmDA1dOUpDW
-         pMvahxWwQXWKWRU/6ldtYK4ipSzrUakghNaok4LdzUyemPUsfBn/G51sKPKG8b4OxAWX
-         Eh0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745513090; x=1746117890;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7NCmOr8ivNGpObb9WZ6jd5tfqxQcsNUuuFxY9SHRXRE=;
-        b=NF6D7FLGn+l0Oj7OW5FRpSWN3mWo0KLRFrr6JkhXUgtQzc9YmAnvTmakWnLIK6EJPj
-         /d5Ae+7EX8NivKlThBp4b2ESjiJT+NSocpYQCu9mdePsOuV5NDZ1imHSc4Y+RW/nhgUG
-         qM/mV8jFotkJMRrWKUJos4Q/YRnwt3sKEl+vMRaGOoFzhTotBWebl3ZZdWyxwoza/JJ/
-         icE+P2Ebdrxeic7d+1P839kmNW17h2zSBv+dYfYzIgo4cOoXVYrHaBo+T99FdxUXIVun
-         9gBKvaRzQ40DIUQFbDOABoYbkglg7/qwIp3FdOzC7Fg5pi0pgiCb+IFybZynRuHA4T3m
-         PI3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU9ZHI+7hGwdWkD/JWBVXZzclUmEtBxWsNCpoL/3z0WEH1sIBqv333ZtTVHtlGt3ym3+bVLmw6QO2AY37Ii@vger.kernel.org, AJvYcCVGPgqs22MjSG2kcuKFJusEUzi9tW0LvV4d5QsnGewcPJAcwgIGMw5Acz0AFfDbXuEP90fon0QMmDKe@vger.kernel.org, AJvYcCWIa0M8B2oORYCXarKtuJUeIs2LioZdkgy0hK36eB4XRlZy39ZxgpZJs0zelfpKF2A8nugqtnsU6vZp@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIBFnzVkk7dUTdu4jPuqPV/O5yYPsRpgQkvUpLLP2VGsODdawV
-	MMxbpwvAVbb+tqGkOjPurOU9NX8DFxPOi2SefJU+IDQ4KUwtCcGdGjNM4qbnD0uWQxEDh9Ul6Cj
-	xb64PtPKDe15JgxTX+sL1TMEAQFY=
-X-Gm-Gg: ASbGncvPUPsRqcylEJpI8BvX1A08987opJWBnJTPULMYftp3+EVtfTgptFSm0vDnqqB
-	md1ZfLjFZJopY78M/oOEdRzkAf0jVm8Qjls56fy6pd0Q0XUedzlvCIfshLIYCm6iVWnSMz1tMoF
-	NjkNXWGw4yT5aWX/Ruz/ysJJalR7fLkH/W2StmV6C94l6OWqo8bCKyEZE=
-X-Google-Smtp-Source: AGHT+IGwl9qg5A47WQV5p425vPqexd2FWCCDotFZYmPIcXKIAZfxaFLI9IbWZk6/iOtRT3QN34xhomcTq3HV9qCkZj4=
-X-Received: by 2002:a05:622a:15cb:b0:476:97d3:54f with SMTP id
- d75a77b69052e-47fb9bd7a15mr6813021cf.14.1745513090302; Thu, 24 Apr 2025
- 09:44:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PCm8clwV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+yogsccb"
+Date: Thu, 24 Apr 2025 16:45:01 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745513109;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Gsm8C6ZSxaKbaMEe1Yfo9NNH4KponKBkPpmeAIjepE=;
+	b=PCm8clwVYPU4oVo0yHQx5k5Zu1U2U6yfPPuMpRer3aRJ1+rLpgVyX6VA0h46IwBeQSYWdF
+	6CSVl8vD93QzJzxOAg5tWV2cEwU8oXf6Yzi5Mja5p/R426Wm81hSSRWkNdGGMLtgLN5LCW
+	Sw2qNRffIi+lpRmcmm77qaIsBzflKPDuDRDzPTRBmh9nc37CMtMQ3Uf2ogpQzU16GZWh6L
+	Yi6jeJI0SLC7LjcXLMcOCGTf3t/YpACEqSNdtSEEu4ei0fYLUz4Jhkg56Nz409xUKXmiGm
+	ipGmLIrWArSQWk9k/fM6gRPZP4rG123UbpnEsY1ws+ZK1EnQ8gsXuiR4F6kevw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745513109;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2Gsm8C6ZSxaKbaMEe1Yfo9NNH4KponKBkPpmeAIjepE=;
+	b=+yogsccbwOH6VcPlS0U/qQe95xS4cXPirw9RAQNjNn2XL/TscwYkmcSOK4PBgHc4OY8SyE
+	ylmq1Gx6d/VDqnCA==
+From: "tip-bot2 for Ard Biesheuvel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/urgent] x86/boot: Work around broken busybox 'truncate' tool
+Cc:  <phasta@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ Kees Cook <keescook@chromium.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250424101917.1552527-2-ardb+git@google.com>
+References: <20250424101917.1552527-2-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423-vt8500-ehci-binding-v1-1-1edcb0d330c2@gmail.com> <20250424-chaffing-mating-e512c198c0e6@spud>
-In-Reply-To: <20250424-chaffing-mating-e512c198c0e6@spud>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Thu, 24 Apr 2025 20:44:58 +0400
-X-Gm-Features: ATxdqUGf0ng_ZmgBzRLblE9E8xZ_d46r02HWPlW-sjruIqBiqFg4Xxg7sTs7hGw
-Message-ID: <CABjd4YzyUfE7YUGw+B5VbVzhVJevsbODnSJ14gwyydvfJxfb6Q@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: usb: generic-ehci: Add VIA/WonderMedia compatible
-To: Conor Dooley <conor@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-usb@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174551310208.31282.4477051029885255124.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 7:27=E2=80=AFPM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Wed, Apr 23, 2025 at 11:49:45PM +0400, Alexey Charkov wrote:
-> > VIA/WonderMedia SoCs use a plain vanilla EHCI controller with a
-> > compatible string "via,vt8500-ehci". Add it to the binding.
->
-> You should elaborate here that this is already in the driver and dts
-> files. With that,
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+The following commit has been merged into the x86/urgent branch of tip:
 
-Thanks a lot Conor! Will submit v2 with your tag and elaborate in the
-commit message.
+Commit-ID:     032ce1ea9442e140a80e41078b5431d4c0fa2893
+Gitweb:        https://git.kernel.org/tip/032ce1ea9442e140a80e41078b5431d4c0fa2893
+Author:        Ard Biesheuvel <ardb@kernel.org>
+AuthorDate:    Thu, 24 Apr 2025 12:19:18 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 24 Apr 2025 18:23:27 +02:00
 
-Best regards,
-Alexey
+x86/boot: Work around broken busybox 'truncate' tool
+
+The GNU coreutils version of truncate, which is the original, accepts a
+% prefix for the -s size argument which means the file in question
+should be padded to a multiple of the given size. This is currently used
+to pad the setup block of bzImage to a multiple of 4k before appending
+the decompressor.
+
+busybox reimplements truncate but does not support this idiom, and
+therefore fails the build since commit
+
+  9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
+
+Since very little build code within the kernel depends on the 'truncate'
+utility, work around this incompatibility by avoiding truncate altogether,
+and relying on dd to perform the padding.
+
+Fixes: 9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
+Reported-by: <phasta@kernel.org>
+Tested-by: Philipp Stanner <phasta@kernel.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250424101917.1552527-2-ardb+git@google.com
+---
+ arch/x86/boot/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+index 81f55da..640fcac 100644
+--- a/arch/x86/boot/Makefile
++++ b/arch/x86/boot/Makefile
+@@ -59,7 +59,7 @@ KBUILD_CFLAGS	+= $(CONFIG_CC_IMPLICIT_FALLTHROUGH)
+ $(obj)/bzImage: asflags-y  := $(SVGA_MODE)
+ 
+ quiet_cmd_image = BUILD   $@
+-      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
++      cmd_image = (dd if=$< bs=4k conv=sync status=none; cat $(filter-out $<,$(real-prereqs))) >$@
+ 
+ $(obj)/bzImage: $(obj)/setup.bin $(obj)/vmlinux.bin FORCE
+ 	$(call if_changed,image)
