@@ -1,243 +1,511 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE078634F
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E89A204C2E
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 10:17:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745489856; cv=none; b=APZa4o6DnHMA5v4SYCAvM/8TuzxsxbVhd5WyjnlhGAyBVT3qmina+JJs1gAmyyZNNm0hLWFBLR4a9G/gqomVbRqe1zB/0XMP9YMM5wweAEfR92/1gJBaypADjvAkJX2gbDmHsDrEV136uRk+Xbzj8tz6u3EX0/qKfm2f94Kl+fU=
+	t=1745489856; cv=none; b=heyA/Kl9OLzstd5RtoEaat3WA3OSWmH5lfJ0L+KR4H9Cd+YIoTGdNIpVDMsFwmj3vEQxDhs4DbPOHH/0M4h/iUwRvtWbTpWn0VnLVv6mkHEtVKmVUAM53/oLUbiWr3/uBZ3l0UFdfXwXAAhO4UiQzL+klPDjVqirj9bYlVH+0lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745489856; c=relaxed/simple;
-	bh=qjrrvqL4xavkYZUv+Xj+svdFXWyb2dWNxM1kho/LnJ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AgjceJzSm7+YAGEjWEfE/8AfWja4W7CCYtRoSeLt70PJwmMJfXUa8iuEzjEnbwOv5XrxVXJ/asX4BK9uLZHcgiOESaI6FITN568TlcMd1cN4naBltgsDWeQLKE8juIwaIgHqIVb1feUVvUJkNzixNTOiit1ZLMHt0pDfwfMRkr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=s4nSWQtC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uBmBj3A6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=s4nSWQtC; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=uBmBj3A6; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	bh=4kWTuSimUr1pYZh+WfiFm80hj0CVGThj3XOhNiJmo8A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EoRF3+BQS5il3W4nJTGpIMQH0RR6pMXQTmaihgmBpdKc3dvOTtzYRCLLsBZ5gsI+wnYHvjyE4oCedlADc5/Q/GEm5yHEu4X5Xm6b3Ct1O8ENeVnyIs5vdtS7FUoAtOgS4sRBA17KFfx8D5yvf5eCFrbJszzv2A1NceR9iRwjrtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=giYjCGgd; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="s4nSWQtC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uBmBj3A6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="s4nSWQtC";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="uBmBj3A6"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1F4AF1F399;
-	Thu, 24 Apr 2025 10:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745489853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oXu0xToKAPO25fLhe2rMHBfxuHS/THmrVmv/bkCC9KY=;
-	b=s4nSWQtCo6+QGjsRUDwCGwwpQ/fpa53Eh8lU/LstcikM8KFwYcQ9AMWJhaHh1+jE9GdA4d
-	5ZPOIiDJ2/kFlniRZy1sIHrLG1+Oxj2FA78Pn2mFfcTNaYapxssjre7rKMTIQxHzuhkPab
-	WoZUgcnLztL1IfQaRel/8N9IlHU3nOI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745489853;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oXu0xToKAPO25fLhe2rMHBfxuHS/THmrVmv/bkCC9KY=;
-	b=uBmBj3A6z5PZfg79qv/WL/gZE5Q/6V6mRY5TBcET26WLX+N/oeOMFdfjxMaGtJ7zamJy8w
-	mdqIV88re7KEV6DQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=s4nSWQtC;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=uBmBj3A6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745489853; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oXu0xToKAPO25fLhe2rMHBfxuHS/THmrVmv/bkCC9KY=;
-	b=s4nSWQtCo6+QGjsRUDwCGwwpQ/fpa53Eh8lU/LstcikM8KFwYcQ9AMWJhaHh1+jE9GdA4d
-	5ZPOIiDJ2/kFlniRZy1sIHrLG1+Oxj2FA78Pn2mFfcTNaYapxssjre7rKMTIQxHzuhkPab
-	WoZUgcnLztL1IfQaRel/8N9IlHU3nOI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745489853;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=oXu0xToKAPO25fLhe2rMHBfxuHS/THmrVmv/bkCC9KY=;
-	b=uBmBj3A6z5PZfg79qv/WL/gZE5Q/6V6mRY5TBcET26WLX+N/oeOMFdfjxMaGtJ7zamJy8w
-	mdqIV88re7KEV6DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DA92A139D0;
-	Thu, 24 Apr 2025 10:17:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rFqzMrwPCmjTJwAAD6G6ig
-	(envelope-from <hare@suse.de>); Thu, 24 Apr 2025 10:17:32 +0000
-Message-ID: <10fec246-82a6-40bf-a522-ea3de7fa0624@suse.de>
-Date: Thu, 24 Apr 2025 12:17:32 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="giYjCGgd"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-5259327a93bso346533e0c.2
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:17:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745489852; x=1746094652; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qd8dX3L8McnJnzG1kvO6TAZzdRIThdzIaWgli/YUdKM=;
+        b=giYjCGgdECVej30OmLJlBvsMDI22bNMmhlLfN/JAXMeDfnWTqC/A692vNnB9ehDGeN
+         gvr0Y9T5JK2TTkCqkHtzB52/LabQVIOzbSzxmrwQpxWzQLGEPwjcU+VUFDif28PDpJ9u
+         KcEGOJUzi8yfyjbofJednuB1uhTY9fmvp5WenNQBTfqqaRzvljQhCsfz5Jhh1EO6kq/m
+         PskU49TGBSL0xEpS331fNOXelAu3aO6/zf17JzwUNXwFQKlwIkbBpXTgqhN0YTS2Jqvm
+         pBP/1oVEvQPFiMOGpVMlqRQtpyiuiNOYn0FGraw/si+VxxFUhoZTYde3zSbIjs6vkZba
+         75Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745489852; x=1746094652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Qd8dX3L8McnJnzG1kvO6TAZzdRIThdzIaWgli/YUdKM=;
+        b=rITwmCfvwWy5erDkIwce2bpoKV9noXyyrFCUpnSP7+A07asdhDEzyUOTCEZewzvLCz
+         +4m+pHelHEiEQPQXDTVm55WlB+Tyu3we3HO5ZNm2VnZpGheTV+1tbHWy5QTmSrvwnDHs
+         Lz1cYuON0wTfMHjcfgdoHsSjgUQvHNzn16x4nTRCw6yrDuiQEUuWxSwhL5Wa8pStOcY4
+         uSLrBRoTJF1nDLtx9ew1cnmRbwJ3+qOYCEttnkJP3/7Faqm7bNYOV4HWGyboW0J3vukF
+         cGPT8OxZEK5KfAb5byrX7PMXDH3EGIvRa6ltdHIGC5koo/L7pK9WS03/+T4vT7Fv8Avv
+         cxbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfqJX3Adkc8eyjKegznn+NLJNhbciLusLPM5R83Epm1r0i5IbAMTgPe0ouPL1soM3k5pQ0noNyAR0eMy0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWMgRIN3jVdXO+ydbhuBROnNmPQ6z3PYnlEE+p37abbQWrdYjy
+	bPRWgZJvgBdwtAM9ZPCPiVfcjA0HxsRWg4xm0Kuhn3c1oXzkabBJ7mhH47GauqqtNpXfbO3EQ7K
+	fDezUgpnISWVGg3qy3fo5N1+tFPAq0piXs7eGeA==
+X-Gm-Gg: ASbGncsNSfPyehKuwaqXwl7J0aZYml+AwMnjCEYn1fvB5i5/wPyB0YzPNRHCtcfVOOy
+	G2eX66yJfJiebZp3p/80LT9wDnDjhvEtto8NZKRW0bAkrlPtChs0jXKzhKIpkd2knBLl220cMID
+	FweiAveVhVKQIpNMgxEXPN9o6UVUl+s2VPDF/WEgVV78kdaxmVHxELqv5U
+X-Google-Smtp-Source: AGHT+IHQmArbDwQam2sWEQKw6pbqXdNil5MR8eQL6AdbVtr0QFMFFp3md/kIphk9kqhOb8uf4oWAI1RyOhRl8fNdoJ4=
+X-Received: by 2002:a05:6122:1e07:b0:529:2644:76bf with SMTP id
+ 71dfb90a1353d-52a783c99f0mr1174387e0c.9.1745489851657; Thu, 24 Apr 2025
+ 03:17:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/14] nvmet-fcloop: prevent double port deletion
-To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250423-nvmet-fcloop-v5-0-3d7f968728a5@kernel.org>
- <20250423-nvmet-fcloop-v5-8-3d7f968728a5@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250423-nvmet-fcloop-v5-8-3d7f968728a5@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 1F4AF1F399
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_TLS_ALL(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+References: <20250417175111.386381660@linuxfoundation.org> <CA+G9fYstVDU_e27mkqEJC0O742zUb0A=wny59n2SiiH7Z_ouJg@mail.gmail.com>
+ <2176888.9o76ZdvQCi@n9w6sw14>
+In-Reply-To: <2176888.9o76ZdvQCi@n9w6sw14>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 24 Apr 2025 15:47:20 +0530
+X-Gm-Features: ATxdqUGDEnTdSBrRVMt156QB4SDgoFuxTxkyO3uYFz6_81C_JLQx6gbJz1oMvs0
+Message-ID: <CA+G9fYurAWoKRTxUrGMEUfaU-GBdRQc5AHUSHPESq8k4Tp=9gg@mail.gmail.com>
+Subject: Re: [PATCH 6.13 000/414] 6.13.12-rc1 review
+To: Christian Eggers <ceggers@arri.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	torvalds@linux-foundation.org, akpm@linux-foundation.org, linux@roeck-us.net, 
+	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
+	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, Tudor Ambarus <tudor.ambarus@linaro.org>, 
+	Bjorn Andersson <andersson@kernel.org>, 
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/23/25 15:21, Daniel Wagner wrote:
-> The delete callback can be called either via the unregister function or
-> from the transport directly. Thus it is necessary ensure resources are
-> not freed multiple times.
-> 
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->   drivers/nvme/target/fcloop.c | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
-> index 9adaee3c7129f7e270842c5d09f78de2e108479a..014cc66f92cb1db0a81a79d2109eae3fff5fd38a 100644
-> --- a/drivers/nvme/target/fcloop.c
-> +++ b/drivers/nvme/target/fcloop.c
-> @@ -215,6 +215,9 @@ struct fcloop_lport_priv {
->   	struct fcloop_lport *lport;
->   };
->   
-> +/* The port is already being removed, avoid double free */
-> +#define PORT_DELETED	0
-> +
->   struct fcloop_rport {
->   	struct nvme_fc_remote_port	*remoteport;
->   	struct nvmet_fc_target_port	*targetport;
-> @@ -223,6 +226,7 @@ struct fcloop_rport {
->   	spinlock_t			lock;
->   	struct list_head		ls_list;
->   	struct work_struct		ls_work;
-> +	unsigned long			flags;
->   };
->   
->   struct fcloop_tport {
-> @@ -233,6 +237,7 @@ struct fcloop_tport {
->   	spinlock_t			lock;
->   	struct list_head		ls_list;
->   	struct work_struct		ls_work;
-> +	unsigned long			flags;
->   };
->   
->   struct fcloop_nport {
-> @@ -1067,14 +1072,20 @@ static void
->   fcloop_remoteport_delete(struct nvme_fc_remote_port *remoteport)
->   {
->   	struct fcloop_rport *rport = remoteport->private;
-> +	bool delete_port = true;
->   	unsigned long flags;
->   
->   	flush_work(&rport->ls_work);
->   
->   	spin_lock_irqsave(&fcloop_lock, flags);
-> +	if (test_and_set_bit(PORT_DELETED, &rport->flags))
-> +		delete_port = false;
->   	rport->nport->rport = NULL;
->   	spin_unlock_irqrestore(&fcloop_lock, flags);
->   
-> +	if (!delete_port)
-> +		return;
-> +
+Hi Christian,
 
-The double negation is hard to follow. Can't you
-rename it to 'put_port' or somesuch and invert the logic?
+On Thu, 24 Apr 2025 at 15:15, Christian Eggers <ceggers@arri.de> wrote:
+>
+> Hi all,
+>
+> unfortunately I was away and couldn't look on this in time. Meanwhile
+> the git trees have been rebased, so I am unsure whether patches have
+> been dropped of other work is left.
+>
+> @Naresh: Can you please provide a pointer to the offending commit?
 
->   	fcloop_nport_put(rport->nport);
->   }
->   
-> @@ -1082,14 +1093,20 @@ static void
->   fcloop_targetport_delete(struct nvmet_fc_target_port *targetport)
->   {
->   	struct fcloop_tport *tport = targetport->private;
-> +	bool delete_port = true;
->   	unsigned long flags;
->   
->   	flush_work(&tport->ls_work);
->   
->   	spin_lock_irqsave(&fcloop_lock, flags);
-> +	if (test_and_set_bit(PORT_DELETED, &tport->flags))
-> +		delete_port = false;
->   	tport->nport->tport = NULL;
->   	spin_unlock_irqrestore(&fcloop_lock, flags);
->   
-> +	if (!delete_port)
-> +		return;
-> +
-Same here.
+The build regressions have been fixed by dropping the problematic patches.
 
->   	fcloop_nport_put(tport->nport);
->   }
->   
-> @@ -1433,6 +1450,7 @@ fcloop_create_remote_port(struct device *dev, struct device_attribute *attr,
->   	rport->nport = nport;
->   	rport->lport = nport->lport;
->   	nport->rport = rport;
-> +	rport->flags = 0;
->   	spin_lock_init(&rport->lock);
->   	INIT_WORK(&rport->ls_work, fcloop_rport_lsrqst_work);
->   	INIT_LIST_HEAD(&rport->ls_list);
-> @@ -1530,6 +1548,7 @@ fcloop_create_target_port(struct device *dev, struct device_attribute *attr,
->   	tport->nport = nport;
->   	tport->lport = nport->lport;
->   	nport->tport = tport;
-> +	tport->flags = 0;
->   	spin_lock_init(&tport->lock);
->   	INIT_WORK(&tport->ls_work, fcloop_tport_lsrqst_work);
->   	INIT_LIST_HEAD(&tport->ls_list);
-> 
-Cheers,
+The open issue is on arm64 Dragonboard 410c boot warning and internal oops
+and followed by boot failures.
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+ WARNING drivers/regulator/core.c:2396 regulator_put
+ (drivers/regulator/core.c:2419 drivers/regulator/core.c:2417)
+
+Tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+Bad: v6.14.3
+Good: v6.14.2
+
+- Naresh
+
+>
+> regards,
+> Christian
+>
+>
+> On Friday, 18 April 2025, 10:39:41 CEST, Naresh Kamboju wrote:
+> > On Thu, 17 Apr 2025 at 23:47, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > This is the start of the stable review cycle for the 6.13.12 release.
+> > > There are 414 patches in this series, all will be posted as a respons=
+e
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> > >
+> > > Responses should be made by Sat, 19 Apr 2025 17:49:48 +0000.
+> > > Anything received after that time might be too late.
+> > >
+> > > The whole patch series can be found in one patch at:
+> > >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/pa=
+tch-6.13.12-rc1.gz
+> > > or in the git tree and branch at:
+> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
+able-rc.git linux-6.13.y
+> > > and the diffstat can be found below.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> >
+> > The following two regressions found on stable-rc 6.13.12-rc1 review,
+> >
+> > 1)
+> > Regressions on arm64 allmodconfig and allyesconfig builds failed
+> > on the stable rc 6.13.12-rc1.
+> >
+> > 2)
+> > Regressions on arm64 dragonboard 410c boot failed with lkftconfig
+> > on the stable rc 6.13.12-rc1.
+> >
+> > First seen on the 6.13.12-rc1
+> > Good: v6.13.11
+> > Bad:  v6.13.11-415-gd973e9e70c8f
+> >
+> > Regressions found on arm64:
+> > - build/gcc-13-allmodconfig
+> > - build/gcc-13-allyesconfig
+> > - build/clang-20-allmodconfig
+> > - build/clang-20-allyesconfig
+> >
+> > Regressions found on arm64 dragonboard-410c:
+> > - boot/clang-20-lkftconfig
+> >
+> > Regression Analysis:
+> > - New regression? Yes
+> > - Reproducibility? Yes
+> >
+> > Build regression: arm64 ufs-qcom.c implicit declaration 'devm_of_qcom_i=
+ce_get'
+> >
+> > Boot regression: arm64 dragonboard 410c WARNING regulator core.c regula=
+tor_put
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > ## Build log arm64
+> > drivers/ufs/host/ufs-qcom.c: In function 'ufs_qcom_ice_init':
+> > drivers/ufs/host/ufs-qcom.c:121:15: error: implicit declaration of
+> > function 'devm_of_qcom_ice_get'; did you mean 'of_qcom_ice_get'?
+> > [-Werror=3Dimplicit-function-declaration]
+> > 121 |         ice =3D devm_of_qcom_ice_get(dev);
+> > |               ^~~~~~~~~~~~~~~~~~~~
+> > |               of_qcom_ice_get
+> > drivers/ufs/host/ufs-qcom.c:121:13: error: assignment to 'struct
+> > qcom_ice *' from 'int' makes pointer from integer without a cast
+> > [-Werror=3Dint-conversion]
+> > 121 |         ice =3D devm_of_qcom_ice_get(dev);
+> > |             ^
+> > cc1: all warnings being treated as errors
+> >
+> >
+> > ## Boot log arm64 dragonboard 410c:
+> > [    3.863371]  remoteproc:smd-edge: failed to parse smd edge
+> > [    3.989304] msm_hsusb 78d9000.usb: Failed to create device link
+> > (0x180) with supplier remoteproc for /soc@0/usb@78d9000/ulpi/phy
+> > [    3.993079] qcom-clk-smd-rpm
+> > remoteproc:smd-edge:rpm-requests:clock-controller: Error registering
+> > SMD clock driver (-1431655766)
+> > [    4.000071] qcom-clk-smd-rpm
+> > remoteproc:smd-edge:rpm-requests:clock-controller: probe with driver
+> > qcom-clk-smd-rpm failed with error -1431655766
+> > [    4.028243] sdhci_msm 7864900.mmc: Got CD GPIO
+> > [    4.039730] s3: Bringing 0uV into 1250000-1250000uV
+> > [    4.039886] s3: failed to enable: (____ptrval____)
+> > [    4.043538] ------------[ cut here ]------------
+> > [    4.048299] WARNING: CPU: 0 PID: 46 at
+> > drivers/regulator/core.c:2396 regulator_put
+> > (drivers/regulator/core.c:2419 drivers/regulator/core.c:2417)
+> > [    4.053085] Modules linked in:
+> > [    4.053087] input: gpio-keys as /devices/platform/gpio-keys/input/in=
+put0
+> > [    4.060581] sdhci_msm 7864900.mmc: Got CD GPIO
+> > [    4.061476]
+> > [    4.061484] CPU: 0 UID: 0 PID: 46 Comm: kworker/u16:2 Not tainted
+> > 6.13.12-rc1 #1
+> > [    4.061495] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC =
+(DT)
+> > [    4.061501] Workqueue: async async_run_entry_fn
+> > [    4.069821] clk: Disabling unused clocks
+> > [    4.071199]
+> > [    4.071204] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BT=
+YPE=3D--)
+> > [    4.076270] PM: genpd: Disabling unused power domains
+> > [    4.077108] pc : regulator_put (drivers/regulator/core.c:2419
+> > drivers/regulator/core.c:2417)
+> > [    4.084640] qcom-rpmpd
+> > remoteproc:smd-edge:rpm-requests:power-controller: failed to sync cx:
+> > -1431655766
+> > [    4.091163] lr : regulator_put (drivers/regulator/core.c:2390
+> > drivers/regulator/core.c:2417)
+> > [    4.091174] sp : ffff8000832eba50
+> > [    4.091178] x29: ffff8000832eba50
+> > [    4.095545] qcom-rpmpd
+> > remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
+> > cx_ao: -1431655766
+> > [    4.099579]  x28: 0000000000000000 x27: ffff800081b54020
+> > [    4.099592] x26: ffff800081b53fe0 x25: 0000000000000001
+> > [    4.101088] qcom-rpmpd
+> > remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
+> > cx_vfc: -1431655766
+> > [    4.107745]  x24: 00000000aaaaaaaa
+> > [    4.107752] x23: ffff000004362a80 x22: ffff0000045fa800
+> > [    4.112988] qcom-rpmpd
+> > remoteproc:smd-edge:rpm-requests:power-controller: failed to sync mx:
+> > -1431655766
+> > [    4.116953]  x21: ffff0000045fa800
+> > [    4.116961] x20: ffff0000038dfcc0 x19: ffff000003885d80 x18: 0000000=
+000000068
+> > [    4.126432] qcom-rpmpd
+> > remoteproc:smd-edge:rpm-requests:power-controller: failed to sync
+> > mx_ao: -1431655766
+> > [    4.130312]
+> > [    4.130315] x17: 0000000000000000 x16: 0000000000000001 x15: 0000000=
+000000003
+> > [    4.133541] ALSA device list:
+> > [    4.136833]
+> > [    4.136836] x14: ffff80008284e1f0 x13: 0000000000000003 x12: 0000000=
+000000003
+> > [    4.146411]   No soundcards found.
+> > [    4.151929]
+> > [    4.151933] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000=
+000000000
+> > [    4.230459] x8 : 0000000000000001 x7 : 0720072007200720 x6 : 0720072=
+007200720
+> > [    4.230478] x5 : ffff000003201f00 x4 : 0000000000000000 x3 : 0000000=
+000000000
+> > [    4.230491] x2 : 0000000000000000 x1 : ffff8000801fe6e4 x0 : ffff000=
+003885d80
+> > [    4.230506] Call trace:
+> > [    4.230512] regulator_put (drivers/regulator/core.c:2419
+> > drivers/regulator/core.c:2417) (P)
+> > [    4.230529] regulator_register (drivers/regulator/core.c:5823)
+> > [    4.230543] devm_regulator_register (drivers/regulator/devres.c:477)
+> > [    4.230554] rpm_reg_probe
+> > (drivers/regulator/qcom_smd-regulator.c:1425
+> > drivers/regulator/qcom_smd-regulator.c:1462)
+> > [    4.230569] platform_probe (drivers/base/platform.c:1405)
+> > [    4.230583] really_probe (drivers/base/dd.c:581 drivers/base/dd.c:65=
+8)
+> > [    4.280941] __driver_probe_device (drivers/base/dd.c:0)
+> > [    4.284581] driver_probe_device (drivers/base/dd.c:830)
+> > [    4.288919] __device_attach_driver (drivers/base/dd.c:959)
+> > [    4.292911] bus_for_each_drv (drivers/base/bus.c:459)
+> > [    4.297426] __device_attach_async_helper
+> > (arch/arm64/include/asm/jump_label.h:36 drivers/base/dd.c:988)
+> > [    4.301593] async_run_entry_fn
+> > (arch/arm64/include/asm/jump_label.h:36 kernel/async.c:131)
+> > [    4.306626] process_scheduled_works (kernel/workqueue.c:3241
+> > kernel/workqueue.c:3317)
+> > [    4.310533] worker_thread (include/linux/list.h:373
+> > kernel/workqueue.c:946 kernel/workqueue.c:3399)
+> > [    4.315305] kthread (kernel/kthread.c:391)
+> > [    4.318863] ret_from_fork (arch/arm64/kernel/entry.S:863)
+> > [    4.322250] ---[ end trace 0000000000000=C3=AF=C2=BF=C2=BD[    4.330=
+596] s4:
+> > failed to enable: (____ptrval____)
+> > [    4.330739] ------------[ cut here ]------------
+> > [    4.334298] WARNING: CPU: 3 PID: 46 at
+> > drivers/regulator/core.c:2396 regulator_put
+> > (drivers/regulator/core.c:2419 drivers/regulator/core.c:2417)
+> > [    4.339086] Modules linked in:
+> > [    4.347491] CPU: 3 UID: 0 PID: 46 Comm: kworker/u16:2 Tainted: G
+> >     W          6.13.12-rc1 #1
+> > [    4.350372] Tainted: [W]=3DWARN
+> > [    4.359293] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC =
+(DT)
+> > [    4.360333] sdhci_msm 7864900.mmc: Got CD GPIO
+> > [    4.362242] Workqueue: async async_run_entry_fn
+> > [    4.373272] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BT=
+YPE=3D--)
+> > [    4.377705] pc : regulator_put (drivers/regulator/core.c:2419
+> > drivers/regulator/core.c:2417)
+> > [    4.384641] lr : regulator_put (drivers/regulator/core.c:2390
+> > drivers/regulator/core.c:2417)
+> > [    4.388807] sp : ffff8000832eba50
+> > [    4.392711] x29: ffff8000832eba50 x28: 0000000000000000 x27: ffff800=
+081b54040
+> > [    4.395934] x26: ffff800081b53fe0 x25: 0000000000000001 x24: 0000000=
+0aaaaaaaa
+> > [    4.403052] x23: ffff000009d10c80 x22: ffff000009c48800 x21: ffff000=
+009c48800
+> > [    4.410170] x20: ffff0000044e2900 x19: ffff000003f90840 x18: ffff800=
+0817025c0
+> > [    4.417287] x17: 0000000000000000 x16: 0000000000000001 x15: 0000000=
+000000003
+> > [    4.424405] x14: ffff80008284e1f0 x13: 0000000000000003 x12: 0000000=
+000000003
+> > [    4.431524] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000=
+000000000
+> > [    4.438642] x8 : 0000000000000001 x7 : 0720072007200720 x6 : 0720072=
+007200720
+> > [    4.445760] x5 : ffff000003201f00 x4 : 0000000000000000 x3 : 0000000=
+000000000
+> > [    4.452878] x2 : 0000000000000000 x1 : ffff8000801fe6e4 x0 : ffff000=
+003f90840
+> > [    4.459997] Call trace:
+> > [    4.467103] regulator_put (drivers/regulator/core.c:2419
+> > drivers/regulator/core.c:2417) (P)
+> > [    4.469364] regulator_register (drivers/regulator/core.c:5823)
+> > [    4.473530] devm_regulator_register (drivers/regulator/devres.c:477)
+> > [    4.477437] rpm_reg_probe
+> > (drivers/regulator/qcom_smd-regulator.c:1425
+> > drivers/regulator/qcom_smd-regulator.c:1462)
+> > [    4.481948] platform_probe (drivers/base/platform.c:1405)
+> > [    4.485681] really_probe (drivers/base/dd.c:581 drivers/base/dd.c:65=
+8)
+> > [    4.489415] __driver_probe_device (drivers/base/dd.c:0)
+> > [    4.493062] driver_probe_device (drivers/base/dd.c:830)
+> > [    4.497401] __device_attach_driver (drivers/base/dd.c:959)
+> > [    4.501396] bus_for_each_drv (drivers/base/bus.c:459)
+> > [    4.505908] __device_attach_async_helper
+> > (arch/arm64/include/asm/jump_label.h:36 drivers/base/dd.c:988)
+> > [    4.510078] async_run_entry_fn
+> > (arch/arm64/include/asm/jump_label.h:36 kernel/async.c:131)
+> > [    4.515109] process_scheduled_works (kernel/workqueue.c:3241
+> > kernel/workqueue.c:3317)
+> > [    4.519017] worker_thread (include/linux/list.h:373
+> > kernel/workqueue.c:946 kernel/workqueue.c:3399)
+> > [    4.523790] kthread (kernel/kthread.c:391)
+> > [    4.527347] ret_from_fork (arch/arm64/kernel/entry.S:863)
+> > [    4.530735] ---[ end trace 0000000000000000 ]---
+> > [    4.535440] l2: Bringing 0uV into 1200000-1200000uV
+> > [    4.539050] qcom_rpm_smd_regulator
+> > remoteproc:smd-edge:rpm-requests:regulators: l2:
+> > devm_regulator_register() failed, ret=3D-517
+> > [    4.544075] Unable to handle kernel paging request at virtual
+> > address ffffffffaaaaae6a
+> > [    4.554991] Mem abort info:
+> > [    4.562869]   ESR =3D 0x0000000096000005
+> > [    4.565560]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> > [    4.569384]   SET =3D 0, FnV =3D 0
+> > [    4.574846]   EA =3D 0, S1PTW =3D 0
+> > [    4.577710]   FSC =3D 0x05: level 1 translation fault
+> > [    4.580755] Data abort info:
+> > [    4.585612]   ISV =3D 0, ISS =3D 0x00000005, ISS2 =3D 0x00000000
+> > [    4.588742]   CM =3D 0, WnR =3D 0, TnD =3D 0, TagAccess =3D 0
+> > [    4.594036]   GCS =3D 0, Overlay =3D 0, DirtyBit =3D 0, Xs =3D 0
+> > [    4.599158] swapper pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000082=
+4a4000
+> > [    4.604544] [ffffffffaaaaae6a] pgd=3D0000000000000000,
+> > p4d=3D0000000082e7d403, pud=3D0000000000000000
+> > [    4.611238] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+> > [    4.619631] Modules linked in:
+> > [    4.625875] CPU: 3 UID: 0 PID: 46 Comm: kworker/u16:2 Tainted: G
+> >     W          6.13.12-rc1 #1
+> > [    4.629015] Tainted: [W]=3DWARN
+> > [    4.637936] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC =
+(DT)
+> > [    4.640900] Workqueue: async async_run_entry_fn
+> > [    4.647664] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BT=
+YPE=3D--)
+> > [    4.651924] pc : regulator_unregister (drivers/regulator/core.c:5850=
+)
+> > [    4.658861] lr : devm_rdev_release (drivers/regulator/devres.c:453)
+> > [    4.663721] sp : ffff8000832ebaf0
+> > [    4.667974] x29: ffff8000832ebb10 x28: ffff000004520000 x27: 0000000=
+0000001c8
+> > [    4.671195] x26: ffff0000042c6040 x25: ffff000009d10c00 x24: ffff000=
+004520000
+> > [    4.678311] x23: ffff80008280ed00 x22: ffff8000823b07cd x21: ffff000=
+003f90780
+> > [    4.685431] x20: ffff000009c7b810 x19: ffff8000832ebbb8 x18: 0000000=
+000000068
+> > [    4.692548] x17: 6f74616c75676572 x16: 3a73747365757165 x15: 00000ff=
+00003fd3a
+> > [    4.699666] x14: 000000000000ffff x13: 0000000000000020 x12: 0000000=
+000000003
+> > [    4.706784] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff800=
+080b52bb0
+> > [    4.713901] x8 : 50dfedbf8d5fec00 x7 : 3d4e5f454c424954 x6 : 0000000=
+04e514553
+> > [    4.721021] x5 : 0000000000000008 x4 : ffff80008222c178 x3 : 0000000=
+000000010
+> > [    4.728139] x2 : ffff8000832eba70 x1 : ffff000003f90800 x0 : fffffff=
+faaaaaaaa
+> > [    4.735257] Call trace:
+> > [    4.742362] regulator_unregister (drivers/regulator/core.c:5850) (P)
+> > [    4.744625] devm_rdev_release (drivers/regulator/devres.c:453)
+> > [    4.749484] release_nodes (drivers/base/devres.c:506)
+> > [    4.753388] devres_release_all (drivers/base/devres.c:0)
+> > [    4.756950] really_probe (drivers/base/dd.c:551 drivers/base/dd.c:72=
+4)
+> > [    4.760941] __driver_probe_device (drivers/base/dd.c:0)
+> > [    4.764588] driver_probe_device (drivers/base/dd.c:830)
+> > [    4.768842] __device_attach_driver (drivers/base/dd.c:959)
+> > [    4.772836] bus_for_each_drv (drivers/base/bus.c:459)
+> > [    4.777348] __device_attach_async_helper
+> > (arch/arm64/include/asm/jump_label.h:36 drivers/base/dd.c:988)
+> > [    4.781518] async_run_entry_fn
+> > (arch/arm64/include/asm/jump_label.h:36 kernel/async.c:131)
+> > [    4.786552] process_scheduled_works (kernel/workqueue.c:3241
+> > kernel/workqueue.c:3317)
+> > [    4.790458] worker_thread (include/linux/list.h:373
+> > kernel/workqueue.c:946 kernel/workqueue.c:3399)
+> > [    4.795229] kthread (kernel/kthread.c:391)
+> > [    4.798788] ret_from_fork (arch/arm64/kernel/entry.S:863)
+> > [ 4.802179] Code: d5384108 f9430508 f81f83a8 b4000bc0 (f941e014)
+> > All code
+> > =3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > Code starting with the faulting instruction
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > [    4.805745] ---[ end trace 0000000000000000 ]---
+> > [   14.254255] platform ci_hdrc.0: deferred probe pending: (reason unkn=
+own)
+> >
+> > ## Source
+> > * Kernel version: 6.13.12-rc1
+> > * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linu=
+x-stable-rc.git
+> > * Git sha: d973e9e70c8f0ad1a53a96ce48db9f3f882db4a8
+> > * Git describe: v6.13.11-415-gd973e9e70c8f
+> > * Project details:
+> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.14.y/build/v=
+6.13.11-415-gd973e9e70c8f/
+> > * Architectures: arm64
+> > * Toolchains: clang-20, gcc-13
+> > * Kconfigs: allmodconfig, allyesconfig
+> >
+> > ## Build arm64
+> > * Build log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6=
+.13.y/build/v6.13.11-415-gd973e9e70c8f/testrun/28151211/suite/build/test/gc=
+c-13-allmodconfig/log
+> > * Build history:
+> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v=
+6.13.11-415-gd973e9e70c8f/testrun/28151211/suite/build/test/gcc-13-allmodco=
+nfig/history/
+> > * Build details:
+> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v=
+6.13.11-415-gd973e9e70c8f/testrun/28151211/suite/build/test/gcc-13-allmodco=
+nfig/details/
+> > * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2v=
+rtUC0M5hDCMYsjZId4uKICXy7/
+> > * Kernel config:
+> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrtUC0M5hDCMYsj=
+ZId4uKICXy7/config
+> >
+> > ## Steps to reproduce on arm64
+> > - tuxmake --runtime podman --target-arch arm64 --toolchain gcc-13
+> > --kconfig allmodconfig
+> >
+> >
+> > ## Boot arm64 dragonboard-410c
+> > * Boot log: https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.=
+13.y/build/v6.13.11-415-gd973e9e70c8f/testrun/28155237/suite/boot/test/clan=
+g-20-lkftconfig/log
+> > * Boot history:
+> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v=
+6.13.11-415-gd973e9e70c8f/testrun/28149517/suite/boot/test/clang-20-lkftcon=
+fig/history/
+> > * Boot details:
+> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.13.y/build/v=
+6.13.11-415-gd973e9e70c8f/testrun/28151170/suite/boot/test/clang-20-lkftcon=
+fig/details/
+> > * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2v=
+rtSg9ngthHYlLhDI9xR3a2T5K/
+> > * Kernel config:
+> > https://storage.tuxsuite.com/public/linaro/lkft/builds/2vrtSg9ngthHYlLh=
+DI9xR3a2T5K/config
+> >
+> > --
+> > Linaro LKFT
+> > https://lkft.linaro.org
+> >
+>
+>
+>
+>
