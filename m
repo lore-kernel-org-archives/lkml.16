@@ -1,155 +1,81 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BDE214A91
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB79A2701B2
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 11:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745494874; cv=none; b=NZpsVUqkNOTCaFhEJyVEYn31/ljFfna7M6X+nFtEig/Ur0MbMKnW21+cv/edIrwdfN1FyJYRvicYSiZSExVE+BzcezvGxfm1DQppHs3L07bF2f67icfJRIKxcyEDC/KiD2/Zk6PmwvEK/GGOq8WdsFqTSo+IcbJ5jOADoKqkhr4=
+	t=1745495184; cv=none; b=IbhmupyeeySmf4IN2gpZBSju5zqGm7Gup88uQZohiCa5LIicHazbX/VAb7UTcsV703I5zYHlZGzhmxrjmB7nhooErBMKggs4FMkmmX7vZ6SMDeuUyeaDxrTUaKl1/PVsDsR6MBb2hCztqDbXOpVs6B6J0qG2Xn6GzZ57uneaWj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745494874; c=relaxed/simple;
-	bh=lx55gR3E7QplPbPeQROY0+HXvPpMlZ5kqkByJl98LWs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tPbXEe4OwxXFt2O79mCykrqlvc0tKaigyACtRxRYoiXjkvyUCQJk5pNQAiD0EEWIDjJF2REYdzXG9DXQh42u746xU65o9h05k5i0k8kTKWoBG3tbThDTgpIpzazqMRwNk8INDAqCfTSFt+7/0F6s+bOYVUD9rvNI/MyVTRgMJd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=PJdAdV+0; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1745495184; c=relaxed/simple;
+	bh=tKqVlHmpfXGvqxbTPuKG2EQSAwPdMyT6wVMimvYvW9I=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hdJJeB1Al5yyqABsl0piW3vsrcLqfwiC3JOh0kgvS3qB0HSAp9pLTOFvB2l6N5gaab7K34vXD9lRnSIvmUkppePV+s4guETnj2klCLtIYuRARUP/2st0JuYCjzE12wht0ZPbUJEyTYXnk/Ms63zzDNLgo2FOBtfKhHU7kbyF+s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NFm07lVN; arc=none smtp.client-ip=209.85.221.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="PJdAdV+0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1745494869;
-	bh=lx55gR3E7QplPbPeQROY0+HXvPpMlZ5kqkByJl98LWs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=PJdAdV+04P4RrwqslAisnOgF6jhqDiygpBxjBFQYw1vNAFYdaU4tH53qF/s/bh3Ql
-	 dHHpjpIMRGV5hYYVOTVqM9/Ij9eHcgxvLpCrV2IkIqbXQGaom7Yzu1g84Zi2mLVKUb
-	 fQ89U2WUk+FljX/s4AjcX7/Y1vx29GmyhK+8QMkXwH+57/3QEIL0uWrv4T8TTu15kR
-	 Y8QqiQ44/dO0DheLqbMNpCuGaBVlVtWHDQIz+WQpZhBhaGBtZQ/cSwqv/c/WehcetA
-	 81w9WFM4SktdmNqP8jvwF1OkA21qPtyDUrz4zV0/mD58mk8ak3pKT38+EilAkxEgSm
-	 ePR+Eskc0roag==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0F65417E091E;
-	Thu, 24 Apr 2025 13:41:09 +0200 (CEST)
-Date: Thu, 24 Apr 2025 13:41:05 +0200
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, =?UTF-8?B?QWRyacOh?=
- =?UTF-8?B?bg==?= Larumbe <adrian.larumbe@collabora.com>, Arnd Bergmann
- <arnd@arndb.de>, Dmitry Osipenko <dmitry.osipenko@collabora.com>, Florent
- Tomasin <florent.tomasin@arm.com>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/panthor: fix building without CONFIG_DEBUG_FS
-Message-ID: <20250424134105.087ec2f8@collabora.com>
-In-Reply-To: <20250424112637.3432563-1-arnd@kernel.org>
-References: <20250424112637.3432563-1-arnd@kernel.org>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NFm07lVN"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-391492acb59so432788f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 04:46:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745495181; x=1746099981; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pv3qTtqvksyrvZvDhY9gIkkVdBN4Bt/kZWJLa3Dx0M0=;
+        b=NFm07lVNYCgUCR/72s02TO+ipBS7gcN03UCQ45Q3vqTq92+0gUdMq7c4rUO890Mmbr
+         L2PDa2ZTUoFR3fQQgKRKOWaGSL7lBaGxlVSvVcfU0WsFOYjpEQp2QPZmLn682iQAFgu2
+         LopYiQYbII9yKl4DnAkzH7h5AIkeeOecrj9yYq8obV9NF6z2o/TH7uKEAThcmsYtKiy/
+         Puu534c8CK22SILDL+JDtUa3JUomqcr5Vl8awELShKFOLlrKSTT0Pb15KuZueUd+Fro2
+         EdcoHcjT5Fiw2fUqvucql2G7KIZSnTl5BGvv0QfWV2uWaSynCIgqeWB7eLhgBb+VZL4i
+         RrZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745495181; x=1746099981;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pv3qTtqvksyrvZvDhY9gIkkVdBN4Bt/kZWJLa3Dx0M0=;
+        b=Smx//VDLvFq69PEaWGlPywRItPi1VtYG93SfTEeASkdo94SfXs0uWJ9+fu5gAKX/Oz
+         585WaqixH0FbRrPXHUd4huq67IIgYotZTgtWLEi6UrSwB0h60Kl2Th5ytOBqBvSRkdj8
+         lXMRuDdxK8rFmueO/l8XGIJ3hKSMzbLh+ipMvcP7GxO6OVrnf5IaL92+e6GwYA5BVjQz
+         BkOWeWVqya28gwKcU0hXtJwI/g+L76v8pLmmDQ3pQriTW2sNIvn4CqA8BpjiIb4BRg3s
+         8TbnCHbGU2iYsAxv/B2nnuMpEJjSI18hamOCctBe0UMCAFuAbAWZ9zx0scI2oOmDHzmx
+         +zlA==
+X-Forwarded-Encrypted: i=1; AJvYcCUu8XelMIL+VWnb3BFtIn3457zvgo1c2JR0i7s0V/w0LSG4Eqz3S4OeMZGeaAnTcmKawxXkStQXR0GQsSM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyqy44IYFWe1PaVoKZacuM2V8aKn6fs2vEqJifOKrsqTEUvNOrC
+	fbCblOl2MDzBdu0qsomCUtqtAaLuDuqvQLrDY4LfyxWXCtZoSduJbo6smDrPkQcOYxY8oLl4aAD
+	QuwE3zXXyHfyrYg==
+X-Google-Smtp-Source: AGHT+IEYYz0+FRELarcqfnvIPpsiCWUeTdBrsBlupLd2xdONltEuQe0B3Z6DNSOQsFEQyXE6MMBDv4/Sy6DgyNo=
+X-Received: from wrbfu20.prod.google.com ([2002:a05:6000:25f4:b0:38f:40d1:831b])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a5d:47ab:0:b0:39c:1257:ccae with SMTP id ffacd0b85a97d-3a06cfabb6dmr2040072f8f.57.1745495181128;
+ Thu, 24 Apr 2025 04:46:21 -0700 (PDT)
+Date: Thu, 24 Apr 2025 11:46:19 +0000
+In-Reply-To: <5fb8bfb7-961a-442a-b091-0349c8aa5ddc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250422-vec-methods-v3-0-deff5eea568a@google.com>
+ <20250422-vec-methods-v3-5-deff5eea568a@google.com> <5fb8bfb7-961a-442a-b091-0349c8aa5ddc@kernel.org>
+Message-ID: <aAokixHVo5YjazmL@google.com>
+Subject: Re: [PATCH v3 5/7] rust: alloc: add Vec::retain
+From: Alice Ryhl <aliceryhl@google.com>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Thu, 24 Apr 2025 13:25:47 +0200
-Arnd Bergmann <arnd@kernel.org> wrote:
+On Wed, Apr 23, 2025 at 02:14:11PM +0200, Danilo Krummrich wrote:
+> On 4/22/25 11:52 AM, Alice Ryhl wrote:
+> > Unfortunately this can't be a kunit test because it uses the upstream
+> > Rust implementation of Vec::retain as a comparison, which we can't call
+> > from a kunit test.
+> 
+> Would it work from the rusttest target? We can use our kernel Vec type from
+> there, but I don't remember if we still can use std Vec from there.
 
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> When debugfs is disabled, including panthor_gem.h causes warnings
-> about a non-static global function defined in a header:
-> 
-> In file included from drivers/gpu/drm/panthor/panthor_drv.c:30:
-> drivers/gpu/drm/panthor/panthor_gem.h:222:6: error: no previous prototype for 'panthor_gem_debugfs_set_usage_flags' [-Werror=missing-prototypes]
->   222 | void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
-> 
-> This could be changed to a static inline function, but as the normal
-> one is also static inline, just move the #ifdef check in there.
-> The #ifdef is still needed to avoid accessing a struct member that
-> does not exist without debugfs.
-> 
-> Fixes: a3707f53eb3f ("drm/panthor: show device-wide list of DRM GEM objects over DebugFS")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpu/drm/panthor/panthor_gem.h | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
-> index 4641994ddd7f..693842e10dee 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.h
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
-> @@ -209,17 +209,14 @@ panthor_kernel_bo_create(struct panthor_device *ptdev, struct panthor_vm *vm,
->  
->  void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
->  
-> -#ifdef CONFIG_DEBUG_FS
->  void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
->  				   struct seq_file *m);
->  static inline void
->  panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags)
->  {
-> +#ifdef CONFIG_DEBUG_FS
->  	bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
-> -}
-> -
-> -#else
-> -void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
->  #endif
-> +}
->  
+My guess is no, but I don't know for sure.
 
-Oops. I actually don't see a good reason to expose this function, so
-could we go for something like that instead?
-
-diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/panthor/panthor_gem.c
-index 2dcf308094b2..962c2dc075db 100644
---- a/drivers/gpu/drm/panthor/panthor_gem.c
-+++ b/drivers/gpu/drm/panthor/panthor_gem.c
-@@ -42,11 +42,20 @@ static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo)
-        mutex_unlock(&ptdev->gems.lock);
- }
- 
-+static void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo,
-+                                               u32 usage_flags)
-+{
-+       bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
-+}
- #else
- static void panthor_gem_debugfs_bo_add(struct panthor_device *ptdev,
-                                       struct panthor_gem_object *bo)
- {}
- static void panthor_gem_debugfs_bo_rm(struct panthor_gem_object *bo) {}
-+static void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo,
-+                                               u32 usage_flags)
-+{
-+}
- #endif
- 
- static void panthor_gem_free_object(struct drm_gem_object *obj)
-diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/panthor/panthor_gem.h
-index 4641994ddd7f..4dd732dcd59f 100644
---- a/drivers/gpu/drm/panthor/panthor_gem.h
-+++ b/drivers/gpu/drm/panthor/panthor_gem.h
-@@ -212,14 +212,6 @@ void panthor_kernel_bo_destroy(struct panthor_kernel_bo *bo);
- #ifdef CONFIG_DEBUG_FS
- void panthor_gem_debugfs_print_bos(struct panthor_device *pfdev,
-                                   struct seq_file *m);
--static inline void
--panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags)
--{
--       bo->debugfs.flags = usage_flags | PANTHOR_DEBUGFS_GEM_USAGE_FLAG_INITIALIZED;
--}
--
--#else
--void panthor_gem_debugfs_set_usage_flags(struct panthor_gem_object *bo, u32 usage_flags) {};
- #endif
- 
- #endif /* __PANTHOR_GEM_H__ */
+Alice
