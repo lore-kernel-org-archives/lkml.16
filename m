@@ -1,278 +1,208 @@
-Received: from mx07-0063e101.pphosted.com (mx07-0063e101.pphosted.com [205.220.184.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426C612CDA5;
-	Thu, 24 Apr 2025 14:08:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.184.123
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745503725; cv=fail; b=FEUAoRrCsb+4WEDfiH9dTvgpn58A2V7LE5fahMy7Dh38xUlVrVH/wils2U8WLSGGxV+gSXvahehYbbQqU8OShkHSzR4kFI15igF1/Q1YUVj7DkA8ZJmfbCRxSvWjeHsu6+iGX88qYk44hebsTMv3juoXEfp+i1Azo9gbK+RdvvM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745503725; c=relaxed/simple;
-	bh=FjsGTVq6/6WBHcefRVDVW6Auhqd52x4sq+VnPGcLSGU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=AxESqt+GlOZdeuDcwV5BmFBeg2o8je+ERjL1jxCDFVeFq4xgsA1Hz6D60uQ6LQ6qL5IE7pPKdzVqoPZ7eMUz3efUPvq/K0VugjbR/0MfqoTAftOG3DxDsj5nb0TX5c6z5w8wy9i4lGwVJta6Tk9oiVq0wJVaxJIjVQRDesTEun4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com; spf=pass smtp.mailfrom=blaize.com; dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b=jrUafrK0; arc=fail smtp.client-ip=205.220.184.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=blaize.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=blaize.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3610518A959;
+	Thu, 24 Apr 2025 14:09:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745503745; cv=none; b=W919jNXEdQLeksipV7YQRQQwDfbP/H3FsZgGYP+m0WhmgymrX5qcClNX9dR31KGwoktMYVwrCPwoddaeTmeCNbV5oVk0AYFpWMvx9K493IrVtPmKb7KeT/0zXTThe8J9EsANtSs8CPNn2E2MO36Foy/+T38Jn5Nq70L8soOBuPs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745503745; c=relaxed/simple;
+	bh=up1Um3M3kGiHu6p/+D24TGU7LMGvU4eXrXsB4JFc960=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NXYulkzplR7qNak3p9dW89CgGLUv8KQ4k0pfNIMmcu7JeVuUsazrj02dQfzJ9chUTxjVMSFf8UhEis0SO0jCi2b5b1O5Ne40ihAqgqDp69NaGTUV6ghOaPFpwBvbGT9PgSuliyD0OQjOnQTm7uUhmPcqYNQSml4F6fPX3n+RBTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U5luU2fa; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=BLAIZE.COM header.i=@BLAIZE.COM header.b="jrUafrK0"
-Received: from pps.filterd (m0247495.ppops.net [127.0.0.1])
-	by mx08-0063e101.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53ODrH2S019219;
-	Thu, 24 Apr 2025 14:55:41 +0100
-Received: from pnzpr01cu001.outbound.protection.outlook.com (mail-centralindiaazlp17011028.outbound.protection.outlook.com [40.93.132.28])
-	by mx08-0063e101.pphosted.com (PPS) with ESMTPS id 466jhvrt0u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 24 Apr 2025 14:55:41 +0100 (BST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Rj0n5voM/jKE1zQKs3m/RhsvVifNply2qKbBnfyCnhaKoQGMoi2roQ13QO+bt+K9nlopRjszRqmD4sq5a51uYa0DEREGIdXiOeFRi2I+LxB+9Gj+AbD+7YcJqvS5J8Gm6V+1NNZTgcycLgC2KdG4d7J2IgCWPIjPwlC0l+FWfLZ4NbjpQmEXpLasHoaWBc1eqck0Uk4/DxwQ0lSr3xufCeOrSIKNqqjIW3DS5uai5AnCV9ozr2x+ifhBF2P3YYrV2ndWMQUlK6VuJ3+v+UbaIo/p31PU+78ltZone5hkwuTVSPViHZun1i7nTWGr2YlZaAOO9m6G+p6fuRtX/J4QBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mCfi89pA/QUIh5DO1zvxYlWl73Iex1drdWSLpw/QnRk=;
- b=oOJQqg9OmwTDr3A5EXHkfJAC3277Q3NMmmeC3JfVPyf5MDXFbBHJiYgy+b326Pss/OPnGSK+KKkX9u6gcsuFOmZOMI0QeffDmPfnYaAI1QluKFA0aXRreAbNf/0GG4H07bsGntWmFQPJa8vX29kv4MHfDlVGy+/B5MILH4WztwnefML/FOoFX/m1SR9J1I0PLoRgO5W07+F+frp7nYl7AkCsn4Fl4nsbeDvOHhEffbxSEv5HsrJsQZmB6c2jGhjGUrm4EPg2wTfCHkr3y3iKc4DUzyoH6SrBphZf0vVG9v7jWwS3MsH9f7P+ZGcjtsU5Z11VrfLdAWJ0q09Hr7D6hQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=blaize.com; dmarc=pass action=none header.from=blaize.com;
- dkim=pass header.d=blaize.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=BLAIZE.COM;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mCfi89pA/QUIh5DO1zvxYlWl73Iex1drdWSLpw/QnRk=;
- b=jrUafrK0GajA55rk8uMcpdbFjVKXnCat6OiMdQSxYYIpjshA6LkZyOLfL0s4KOH1KE+VIT5TwxnkKBRHfmVcG0Sh8a3tv/vKp4YHfmtclp8bLdh3E8tYj7mwQVoNrYTX4GZz/BqVj59kxWpWf4aEG1kxTa5DiQxMzJOrSSzSi0w=
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:12a::5)
- by PN3PR01MB9776.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:16e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.23; Thu, 24 Apr
- 2025 13:55:37 +0000
-Received: from MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655]) by MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::309a:12cf:74a4:5655%3]) with mapi id 15.20.8678.021; Thu, 24 Apr 2025
- 13:55:36 +0000
-Message-ID: <0aecfa4c-f00c-4914-8ca1-d54c41b3a948@blaize.com>
-Date: Thu, 24 Apr 2025 14:55:30 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] arm64: dts: blaize-blzp1600: Enable GPIO support
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        James Cowgill
- <james.cowgill@blaize.com>,
-        Matt Redfearn <matt.redfearn@blaize.com>,
-        Neil Jones <neil.jones@blaize.com>,
-        Linus Walleij
- <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Matthew Redfearn <matthew.redfearn@blaize.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20250327-kernel-upstreaming-add_gpio_support-v2-0-bbe51f8d66da@blaize.com>
- <20250327-kernel-upstreaming-add_gpio_support-v2-3-bbe51f8d66da@blaize.com>
-Content-Language: en-US
-From: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-In-Reply-To: <20250327-kernel-upstreaming-add_gpio_support-v2-3-bbe51f8d66da@blaize.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0195.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:318::12) To MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:12a::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U5luU2fa"
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-601b6146b9cso602319eaf.0;
+        Thu, 24 Apr 2025 07:09:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745503743; x=1746108543; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2CAkVkU/OxnMww8X2FpR50DRF3NZTt9BRpF414jxVPw=;
+        b=U5luU2fa3aCLzRWLcYctPoqbTvi2CyxGQh6SS5sggzDK3aUXj17vgVKJjHYMCJh3UB
+         jMbZrivhsyWpcgdDWicu+r2FPx+lVshXBRkQdacg6LBh2g5fInXa2QNQ/Tk/h8G0A9JY
+         flM2pOc4g6GCGolIyxPk7HC7Fk3CEOHBQLwxg3lO48Z2IroimsopHzv4IscaVnoVe0E1
+         9rSd8N2B+mnphkQxHKgz6mWrb8bdO2joYN+keHD2gsJD4qOEcVYkANjONsdPjxA7rXeQ
+         H308rSb3W5UIPnB+psgoW+PCrXhwRr8QnRqAVURGczYISLmnvQ0ypU6l45Zx9MOJe1qr
+         oFaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745503743; x=1746108543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2CAkVkU/OxnMww8X2FpR50DRF3NZTt9BRpF414jxVPw=;
+        b=qUaZpWzTi+iBJGBdWDHHLo478e/Ys6hvDMN2SWPGaWTomDX+SPZ2pAzIuN1HXKa2Be
+         yWakeA5FhnMPUcC4FOk5tUrfQdespcr+Cb1pwV98Rs0FvYGIyLW+1vFzUpSVl5mT/Gle
+         9yCQ65lzvkAT8LXutQGLmKpoK76JcuU6Ymt80Sj34J+S0H2xhSv31C63JraLbJifQdlU
+         rYc40Z1zJoO1nZBTi6j5eJqD5SmEkN6Z7LMYcl25G7UguNR6WlaQIgmiMsUBeO6R2foR
+         TxpMUtIgCMPjKq/cK0sbrFnFteiiXTfVrOAPiuBZVnI8+uRkHhiZSKM1FTfeOtC5fkO/
+         G5FA==
+X-Forwarded-Encrypted: i=1; AJvYcCVqGxnxoT8ZUtOgzjuKnhSyCPGmYSiO9dpP0rBU9gxQrasoR66QK0dFgFf5ehzaieSUWYxbF7RgMN/H8BFC@vger.kernel.org, AJvYcCWav7sMFLSoLS1ij0XHFNpHr3lD+mVcNflpeQuW8/ELz1p413P5rYv1PKUb6e5aC91Uvm4rTayonFL/5oWh6Q==@vger.kernel.org, AJvYcCXL2onAFG9GVmA1meHP+GjCQ6NXNYRf3xh+Zz+NoMwxJKuHN9p/JSdDy9us0m2khln2BCiYnMwyLQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfXK/c7Indnf3pm0g1l0YHVGfI0UKmJ02XI9anWuLk4+eW1+mM
+	towqNFY4ixxWk/GnUZLfGl/G42FjeOIfigqYjegvdc02/VZZUO9ILCVOjnfqb1QfgUaLIdpxxEb
+	GIlhbl9w1BOpc97Xeqkk6ndy4Lkc=
+X-Gm-Gg: ASbGncu+so+hcCSJ8CBmNFLJsUXXRRW9ihUCBiWZ4Mn/s4mSCFe4hPP2VSxJwjUVxJb
+	3OolO/uCck5E/sW71X5oWVwmkavaeAlbTU7f9rXSIOG+I1y8vnVAfNJjsJT13ZlWmW1EmkFZ7WD
+	5tNop96f1hs6OGErsi/HcRNiw=
+X-Google-Smtp-Source: AGHT+IH33bg6O/Rlzqan9kyG0UjeT6AF4yJ5sNzMyKR5fDnkXrMhiDWqYuid7ea+COTDLkcFINWneffryByzL7tziFc=
+X-Received: by 2002:a05:6870:808d:b0:2d5:4f4:e24d with SMTP id
+ 586e51a60fabf-2d96e2203f8mr1857960fac.6.1745503742322; Thu, 24 Apr 2025
+ 07:09:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MA0PR01MB10184:EE_|PN3PR01MB9776:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5de82a71-c3f0-4899-f67f-08dd8337b05c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?Q0FXbmFtb0NLL2txRmp2MVdMUG1BUUltVlc0QVF0QmsvVnNiR01WMzFnZFU1?=
- =?utf-8?B?QWFMS0tMRnlwMVdZRGZrdjlrcEwwcllwOFl5d1EyNjhRWnN2eHFRaGJWd0lC?=
- =?utf-8?B?emlEOWRUWFRQS3hSNjN5OHFCS04vWjBEVzVnYUxmV2RzdnlDTUhvTnNFb2tQ?=
- =?utf-8?B?cjNvYmlhdTR3c1ZNR1RkamxKS3gzUmFKdkJMNE04VURqY0hJRkRuVVFhOTdM?=
- =?utf-8?B?b3RiczZwb2pnT0VzT0lxdXlwTStsaExBSVlMOUhwZUU2d1M2UVdTQ0haSysy?=
- =?utf-8?B?SEtLeTBMeFAvTUkvVTVjaEJVcDN3dHQvMElZVXluMlNhekpBNzU4blBIQmpu?=
- =?utf-8?B?cldFMFd6aE90Uy9adkE1dE1qM25uZHlueXpGWXkxODRGM00xRHMyZmk3ZEY4?=
- =?utf-8?B?cVRxRnhMaU1RR3VmYjFmeUtydm9kc0IwbVY3VTk2SzhYdnlHalRXdGNycVVv?=
- =?utf-8?B?NHNjM09RRmE2QWp2WU0vb0RhbFBtNGh4cURycnAxMWk4YmpnUGdydFpueUFH?=
- =?utf-8?B?dFBldFNIcjF6SWMyM2RqNVVCQ2dHWnpFeHdFYkVhVE54UWxlVHlqMmg2Wkpz?=
- =?utf-8?B?NDI1UEhhaVdKS3d3bHlPMFpOT05Ob2c1WUlaQU9TRE9LcmljdE1RZStGN0hv?=
- =?utf-8?B?NllSeFBzTkJ4Nmhhdk0ya2U5eHZhaFV0eTJiclBudGhGNlJZa284ekNTMkJ5?=
- =?utf-8?B?R0l2aCt0dmYyM21TaVdpOFJhWG92ejdpcXpFUVc0U2xjQmhVTnNJYUVpRWh0?=
- =?utf-8?B?dEoxZDdFNnBzZWE2VVVRUE00cDk3VFNIMG1HNVp3TVdKU0hFcXFraTZUeFRn?=
- =?utf-8?B?YXRZMHpNWnNBS0tqUm9iQjIrT3NQU0IvRSt1NnlMcWpqVzg2ZDh5aE1wTm9o?=
- =?utf-8?B?RjZ0cUZCZGxLcHQrVk10WWNzL2g5UmRHMDhKeDR6N3Zla3l1V3VVTjluWFRF?=
- =?utf-8?B?d1cyYzFqZ0NaUWl6ZjlMbzdqOGdsc3UwS2FxY0d4WG94VHpXOG5MbUR4U01y?=
- =?utf-8?B?ckpwc1UyMUkvZ0NoNWlibzAxRE5TSk9GVmtGZUJhMW1keWFZRmYrWDhQSzQr?=
- =?utf-8?B?U1FVcnZaS2xUY3dRaUttZnhHc1I0SFgvNHJ4eG9BelF2TVJHemtPM3BMNzRG?=
- =?utf-8?B?cnhUbWJyaUNud1NGMXkxeFozOU8rK29jVlY4d0pwRTlZYWx1VEVEY1ZOOHZo?=
- =?utf-8?B?a2pnanphbkRaTVc2U3pBT3Q2WEVZV0F3cCszR2dQL3JCbnpvWW40M0hqNmlQ?=
- =?utf-8?B?Z3RpdDgyWlJuQ2lITW91MGx0ZU54OHVNa0p0QVQxSE9XQlhwZlhybUVqN3A3?=
- =?utf-8?B?cTRwK1VlTTBSYnpISWpYM1lISFNVOW1JYlJLL3NqVzU0MkdFY2MxMEhuQmFV?=
- =?utf-8?B?emNNMEtoVkI2WTJFcXM3cTA4MG56M01yUXpmTWQrWWc3ZG5RRHNNRmkvcEpq?=
- =?utf-8?B?VStUUWpWWTRXY0VnRTc2TDdIRmkyMkhqeVNEeDJoVWRHUE9Sa2JuTDJxMzU4?=
- =?utf-8?B?OUtmTDZ0MldzS0c2a1VQSnBqMmJSTWxYajdnZzhyemw0SUhYajdVdS9xVUt6?=
- =?utf-8?B?NStWVlFrM1gxWkFlZ1RlaHMxNE9FQU5lYWFlbEdWTkQrL3VTMG5EY2lYZTA4?=
- =?utf-8?B?Yzl0bFZPUlFJUVJSTkpkMmNMejV3N1dFQm9KWHlDaEFoa3pHSHBVYjdvU1pP?=
- =?utf-8?B?VHBDd003bDgrQUZBcGhCOXV1WGFkZ2RCeXhiZkNmelFFdU84aUlTZU9YajM4?=
- =?utf-8?B?Sm1SQlpGVEVtaXRJZWg4K0ZJcFluQnhMVFFmd3ZmZUEzcXN1UlFYc3hkeVd0?=
- =?utf-8?B?UFZueFpHbVQzcWUyaGhBOUpVS3pjZ2h3dXJDK2wyTTJaOXFrVk5KV3pxUW80?=
- =?utf-8?B?cDFMTUhrMWZxRVpISXRncCtLcThkcFJZRGV4R0l0V0s0VmdBS1hSdGpURU9G?=
- =?utf-8?B?WXJBcDZIeDlVTjVZOGlJRk1oVzMxQkxwbVdRZlkvS0YwemNWSENDaUlDSGdI?=
- =?utf-8?B?T0ZvY1hlZ2VBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T2laVTdVV29WWUcyaEhGbFpvTVJsMkNzSFA3aXRSTHFHTXpJN0xPb3M0eDdy?=
- =?utf-8?B?UnI0MUpqUkVSMm4xY0wwaVNSM2NQVTAwTithdlFSdnQxc2l1TTdCeU5YVW5s?=
- =?utf-8?B?TExWZTY1K1pBdDBJb0ozQ1p0NkJ5MjZSY0N6Q3dyS1ZnT2V5YkxhVzdMc1li?=
- =?utf-8?B?YmdtQkswdEF2RFZLUEJtYWpyTDNVb2tNaFJQNGdlZXVyd1IvSERob3BmdXNx?=
- =?utf-8?B?LzYvcXQ2Y3dFVFBFYURlRXpieUxBVlJScCtmcGVSNktDaWltaXNKSElzL0gr?=
- =?utf-8?B?SHRBNWpFK1VGQTU3V3pOaEZYK1NiVVkzN0NjUkYvSWVncmtKdVc5TGYzVlJk?=
- =?utf-8?B?Q014VEFNYnAwVDhFdmpOOEQ5dVRpTHlWd3AzaDRvREVvNmN0cVREelZDY1VY?=
- =?utf-8?B?QWVOZVlKOWErTmN6NGRaY1hrQ3EwNWcxVS9lRkRHbGlOTGdMYUFIdHhNNVZL?=
- =?utf-8?B?b0lJc0hJNldOS2pjL0dBNmJCR2QzdzcwTGFDU2ZreEJkY08yTldWODJ6MDdp?=
- =?utf-8?B?N29QMExHaFp6ZUE3NWkxSit3aXZpc1JtUzZmREFmYWU5TTh0MG5idzJrSS81?=
- =?utf-8?B?YmlDNjc1YkJpZGkrMDdGcWY4bTZ4SFIvaHZPd0xEZUJnNVBmbWFBY0pRanEv?=
- =?utf-8?B?dzJkdzVsY3lYSS84Sll5NlVQQnpLZVVmTHBzRlVzL0ZRYTVFenloYnJiZmtP?=
- =?utf-8?B?UEpnY0lnVEpXUDgwaXoxdjhoYWc4WFkycmNDQ3NqM29SdjdaOGwra203dEFh?=
- =?utf-8?B?RjJtYWoyL0JuVmk2MVd3MzJ5RHNFZng5cFdNMGd2WUdsNWVna0Z0a25udkpx?=
- =?utf-8?B?d1Q0OTcrNGJYMjZPajdsb0lETGU1TlQwYlBpQTk0QmtTNUQvekZYVnlJUklH?=
- =?utf-8?B?ZkEyQmhNak1ERThtdzdJUHlvRDY4MU5rZUhCb2dRZ0pNc040NlZuMG90YndK?=
- =?utf-8?B?K1pmRlc2aXpiVTdIUVp1S25GMDQ1Y01ZcDdXRmV5TExzTkJNZnBmc0V2enVD?=
- =?utf-8?B?SVI3MUxoQ0tBNm5XYytreGZUOUgxSGVLSFpPbHJrSFZpaWNTRWxLM05TS2hK?=
- =?utf-8?B?N0lxKzlzZVpjZWVVK1NmTUthK2VxZjRGZmEvNUpvVjY1L1pmOWl4UFVnMkZ4?=
- =?utf-8?B?cWZmSEVDRUhvRjgzejJVU0lRUXljZ2JOWERCREtqY3FmMi9mczZDVHVVTWY2?=
- =?utf-8?B?QWNIM2t4bGQ2aWJEc0tET1pMNXZoOUxUVFVMa3AwbXBKRmlvT25ZVDZqR0o1?=
- =?utf-8?B?NDByUWM4M3FhOE1uYTJ1RDEvb0o0ajhyK25rQXcwZno4V3VPQzlRSkZlUCtn?=
- =?utf-8?B?MXo3QmxkU282ejhJRERNVzBESW9MN3c0QUd3cG4zY2dtQ2UrTWFOSFo1bk5j?=
- =?utf-8?B?aWkwL3pBSGJiN3ozVzlUZlQrUjJMNm9hVFYwOEZGeUQ3VTF3OWtFRlFMTEty?=
- =?utf-8?B?c1A0bzVUaUlVWVRZOUNwR09COUR5cGkzV2w4RHpnYSsxb1dDOGNpMEN6NFZS?=
- =?utf-8?B?cEJuU3NXK2Y2aW80TnVNRUdJTFBnckVMYytudnFScUZ4SHRGYTR6SDZxRjlp?=
- =?utf-8?B?TlNPc0Q3U3MvblgrUTRhMUxMQkVnUStvWWFOelFHYmRkZkkxZ0t6ZDBrUStE?=
- =?utf-8?B?VGp0SU1QRS9SbnRHSUFOcWpkZzFLTzFHYmhFWjFOSDVGa2IvNWJSNGZEK3c1?=
- =?utf-8?B?NTBkU1hlQTFXdDdHQW5UU3pIVW5JZGx1dTFwT0k4LzEzejBVMVgvQnk1RlV2?=
- =?utf-8?B?ajRyd2F5U2JrWlhhUlk1NFpnTVpNdmN6b1R3N2Z1ME1McHlHdTRuSkdKZWlN?=
- =?utf-8?B?dnpUaXNpaVNibG5CdFdlTmZMc05rdTFIMUNsNWt1NGhqSWd5aFFBWU9zSENC?=
- =?utf-8?B?My9zelZzMEpXVzAxZnphTkpEZnlnUnQ3OW51QlF3aHViTjNPV1lWaWVFd2RN?=
- =?utf-8?B?cVI5VVNpZXpkdkdUa0g4YkprUFQxTFZkOUVYMFd1aGkyV000WmhPdEZSMzVk?=
- =?utf-8?B?cXBKaFJrZklHOE1yWSt3UFduL1VQUTVaRlk1ZWZoaVNIU2tXdGpiL2d1U3py?=
- =?utf-8?B?WmF1a2hLZG5lMWkwbGJMRjFPbUs5bUlQT0U3a2UvdEVZNzZPUUF0bER4NmxU?=
- =?utf-8?B?ODNNMDhuMWZuaUhpUmV0NUpHbFNsZDh1M3hxL1UrWnBCZDJMcDRrekFlSW94?=
- =?utf-8?Q?ar+HujnWRgrKT1JjgJHzbKs=3D?=
-X-OriginatorOrg: blaize.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5de82a71-c3f0-4899-f67f-08dd8337b05c
-X-MS-Exchange-CrossTenant-AuthSource: MA0PR01MB10184.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2025 13:55:36.5070
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 9d1c3c89-8615-4064-88a7-bb1a8537c779
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ufV1FQipwHDYPfH0TOPV5vej8Hd2umk5XiU4/OAI+n17CCvuslCRGXXgicE9/WemCjQQfJNQ+eh1fQ2OvNWpS2w0o+nPoVZvhs+FeMrgP/E=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN3PR01MB9776
-X-Proofpoint-GUID: cv0_1cqoUw7e4Ju5uXrkl-EiHB5Z4WnP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA5NCBTYWx0ZWRfX3iguP2qfftfc zCGVv7MZF/nqfTHfRCkU+r75dpIGAEyjtqqdn8pXRvzkfhssPi9iPttPn3xUCv0jS1VtVWdyHqi cTGDvZDnFQlEBzcf+E3C7Okn9YNSthtDQH7tbi5x9Gv7RTHgsQc/xGNkQDVGwsvswiS/crcZGRW
- ufNvU14F+j+hUvKziW9NIKQ4KM1/F/vzRkBKbxRKh/8R7vLHFCsw23JsLc12DuMYXm0HVaRZqp9 VolKNwj7tj8wWQA8Aig61TrHdGtPIzCrNZlWudA6mg1vU7+noRcb0JuBe22Dc+x9QnGHZq5lPz/ d3I13Y356zis7+720u1LF08Dq3yL3U85rardFSTC80PHGGUsXB0cGBhFCtz0lcYaWcP4ElfuIZH
- 74EDqIATDdJJKsAPFkFDJ++Dh7owZoSbvRCe0vPeBfHOhDyN/grMaqUEwCIxnmX63X1rELNN
-X-Authority-Analysis: v=2.4 cv=ao6yCTZV c=1 sm=1 tr=0 ts=680a42dd cx=c_pps a=gncIvgqb4a+koTErn0Mphw==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
- a=XR8D0OoHHMoA:10 a=-5LYVjoNHPMA:10 a=SrsycIMJAAAA:8 a=x-MnYZxxJV6qP73kXPMA:9 a=QEXdDO2ut3YA:10 a=zapPnUM7SFj2ezx6rUw-:22
-X-Proofpoint-ORIG-GUID: cv0_1cqoUw7e4Ju5uXrkl-EiHB5Z4WnP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-24_06,2025-04-24_01,2025-02-21_01
-X-Proofpoint-Spam-Reason: orgsafe
+References: <20250422162913.1242057-1-qq282012236@gmail.com>
+ <20250422162913.1242057-2-qq282012236@gmail.com> <14195206-47b1-4483-996d-3315aa7c33aa@kernel.dk>
+ <CANHzP_uW4+-M1yTg-GPdPzYWAmvqP5vh6+s1uBhrMZ3eBusLug@mail.gmail.com>
+ <b61ac651-fafe-449a-82ed-7239123844e1@kernel.dk> <CANHzP_tLV29_uk2gcRAjT9sJNVPH3rMyVuQP07q+c_TWWgsfDg@mail.gmail.com>
+ <7bea9c74-7551-4312-bece-86c4ad5c982f@kernel.dk> <52d55891-36e3-43e7-9726-a2cd113f5327@kernel.dk>
+ <cac3a5c9-e798-47f2-81ff-3c6003c6d8bb@kernel.dk>
+In-Reply-To: <cac3a5c9-e798-47f2-81ff-3c6003c6d8bb@kernel.dk>
+From: =?UTF-8?B?5aec5pm65Lyf?= <qq282012236@gmail.com>
+Date: Thu, 24 Apr 2025 22:08:50 +0800
+X-Gm-Features: ATxdqUFf6_g9o4TAG75rI3AXOHGexfQMUN56anr7lPfaQPN_FZU4nYJA67nCd1Y
+Message-ID: <CANHzP_uJft1FPJ0W++0Zp5rUjayaULEdpAQRn1VuuqDVq3DmJA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] io_uring: Add new functions to handle user fault scenarios
+To: Jens Axboe <axboe@kernel.dk>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	akpm@linux-foundation.org, peterx@redhat.com, asml.silence@gmail.com, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 27/03/2025 11:26, Nikolaos Pasaloukos wrote:
-
-> Blaize BLZP1600 uses the custom silicon provided from
-> VeriSilicon to add GPIO support.
-> This interface is used to control signals on many other
-> peripherals, such as Ethernet, USB, SD and eMMC.
+Jens Axboe <axboe@kernel.dk> =E4=BA=8E2025=E5=B9=B44=E6=9C=8824=E6=97=A5=E5=
+=91=A8=E5=9B=9B 06:58=E5=86=99=E9=81=93=EF=BC=9A
 >
-> Signed-off-by: Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>
-> ---
->   arch/arm64/boot/dts/blaize/blaize-blzp1600-cb2.dts | 36 ++++++++++++++++++++++
->   arch/arm64/boot/dts/blaize/blaize-blzp1600.dtsi    | 12 ++++++++
->   2 files changed, 48 insertions(+)
+> On 4/23/25 9:55 AM, Jens Axboe wrote:
+> > Something like this, perhaps - it'll ensure that io-wq workers get a
+> > chance to flush out pending work, which should prevent the looping. I'v=
+e
+> > attached a basic test case. It'll issue a write that will fault, and
+> > then try and cancel that as a way to trigger the TIF_NOTIFY_SIGNAL base=
+d
+> > looping.
 >
-> diff --git a/arch/arm64/boot/dts/blaize/blaize-blzp1600-cb2.dts b/arch/arm64/boot/dts/blaize/blaize-blzp1600-cb2.dts
-> index 7e3cef2ed3522e202487e799b2021cd45398e006..fb5415eb347a028fc65090027a4c4fc89c8280f5 100644
-> --- a/arch/arm64/boot/dts/blaize/blaize-blzp1600-cb2.dts
-> +++ b/arch/arm64/boot/dts/blaize/blaize-blzp1600-cb2.dts
-> @@ -81,3 +81,39 @@ gpio_expander_m2: gpio@75 {
->   				  "UART1_TO_RSP";	/* GPIO_15 */
->   	};
->   };
-> +
-> +&gpio0 {
-> +	status = "okay";
-> +	gpio-line-names = "PERST_N",		/* GPIO_0 */
-> +			  "LM96063_ALERT_N",	/* GPIO_1 */
-> +			  "INA3221_PV",		/* GPIO_2 */
-> +			  "INA3221_CRIT",	/* GPIO_3 */
-> +			  "INA3221_WARN",	/* GPIO_4 */
-> +			  "INA3221_TC",		/* GPIO_5 */
-> +			  "QSPI0_RST_N",	/* GPIO_6 */
-> +			  "LM96063_TCRIT_N",	/* GPIO_7 */
-> +			  "DSI_TCH_INT",	/* GPIO_8 */
-> +			  "DSI_RST",		/* GPIO_9 */
-> +			  "DSI_BL",		/* GPIO_10 */
-> +			  "DSI_INT",		/* GPIO_11 */
-> +			  "ETH_RST",		/* GPIO_12 */
-> +			  "CSI0_RST",		/* GPIO_13 */
-> +			  "CSI0_PWDN",		/* GPIO_14 */
-> +			  "CSI1_RST",		/* GPIO_15 */
-> +			  "CSI1_PWDN",		/* GPIO_16 */
-> +			  "CSI2_RST",		/* GPIO_17 */
-> +			  "CSI2_PWDN",		/* GPIO_18 */
-> +			  "CSI3_RST",		/* GPIO_19 */
-> +			  "CSI3_PWDN",		/* GPIO_20 */
-> +			  "ADAC_RST",		/* GPIO_21 */
-> +			  "SD_SW_VDD",		/* GPIO_22 */
-> +			  "SD_PON_VDD",		/* GPIO_23 */
-> +			  "GPIO_EXP_INT",	/* GPIO_24 */
-> +			  "BOARD_ID_0",		/* GPIO_25 */
-> +			  "SDIO1_SW_VDD",	/* GPIO_26 */
-> +			  "SDIO1_PON_VDD",	/* GPIO_27 */
-> +			  "SDIO2_SW_VDD",	/* GPIO_28 */
-> +			  "SDIO2_PON_VDD",	/* GPIO_29 */
-> +			  "BOARD_ID_1",		/* GPIO_30 */
-> +			  "BOARD_ID_2";		/* GPIO_31 */
+> Something that may actually work - use TASK_UNINTERRUPTIBLE IFF
+> signal_pending() is true AND the fault has already been tried once
+> before. If that's the case, rather than just call schedule() with
+> TASK_INTERRUPTIBLE, use TASK_UNINTERRUPTIBLE and schedule_timeout() with
+> a suitable timeout length that prevents the annoying parts busy looping.
+> I used HZ / 10.
+>
+> I don't see how to fix userfaultfd for this case, either using io_uring
+> or normal write(2). Normal syscalls can pass back -ERESTARTSYS and get
+> it retried, but there's no way to do that from inside fault handling. So
+> I think we just have to be nicer about it.
+>
+> Andrew, as the userfaultfd maintainer, what do you think?
+>
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index d80f94346199..1016268c7b51 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -334,15 +334,29 @@ static inline bool userfaultfd_must_wait(struct use=
+rfaultfd_ctx *ctx,
+>         return ret;
+>  }
+>
+> -static inline unsigned int userfaultfd_get_blocking_state(unsigned int f=
+lags)
+> +struct userfault_wait {
+> +       unsigned int task_state;
+> +       bool timeout;
 > +};
-> diff --git a/arch/arm64/boot/dts/blaize/blaize-blzp1600.dtsi b/arch/arm64/boot/dts/blaize/blaize-blzp1600.dtsi
-> index 7d399e6a532f5b24385dd837be965be771c7d24c..5a6c882b2f57d57d304869dee877c996cbabb712 100644
-> --- a/arch/arm64/boot/dts/blaize/blaize-blzp1600.dtsi
-> +++ b/arch/arm64/boot/dts/blaize/blaize-blzp1600.dtsi
-> @@ -120,6 +120,18 @@ gic: interrupt-controller@410000 {
->   						 IRQ_TYPE_LEVEL_LOW)>;
->   		};
->   
-> +		gpio0: gpio@4c0000 {
-> +			compatible = "blaize,blzp1600-gpio";
-> +			reg = <0x4c0000 0x1000>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			ngpios = <32>;
-> +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			status = "disabled";
-> +		};
 > +
->   		uart0: serial@4d0000 {
->   			compatible = "ns16550a";
->   			reg = <0x4d0000 0x1000>;
+> +static struct userfault_wait userfaultfd_get_blocking_state(unsigned int=
+ flags)
+>  {
+> +       /*
+> +        * If the fault has already been tried AND there's a signal pendi=
+ng
+> +        * for this task, use TASK_UNINTERRUPTIBLE with a small timeout.
+> +        * This prevents busy looping where schedule() otherwise does not=
+hing
+> +        * for TASK_INTERRUPTIBLE when the task has a signal pending.
+> +        */
+> +       if ((flags & FAULT_FLAG_TRIED) && signal_pending(current))
+> +               return (struct userfault_wait) { TASK_UNINTERRUPTIBLE, tr=
+ue };
+> +
+>         if (flags & FAULT_FLAG_INTERRUPTIBLE)
+> -               return TASK_INTERRUPTIBLE;
+> +               return (struct userfault_wait) { TASK_INTERRUPTIBLE, fals=
+e };
 >
-Hi,
-
-Since the rest of the patches have already been accepted, should I wait for a review
-here before I send this patch to the SoC list?
-
-Kind regards,
-Nikolaos Pasaloukos
-
+>         if (flags & FAULT_FLAG_KILLABLE)
+> -               return TASK_KILLABLE;
+> +               return (struct userfault_wait) { TASK_KILLABLE, false };
+>
+> -       return TASK_UNINTERRUPTIBLE;
+> +       return (struct userfault_wait) { TASK_UNINTERRUPTIBLE, false };
+>  }
+>
+>  /*
+> @@ -368,7 +382,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, uns=
+igned long reason)
+>         struct userfaultfd_wait_queue uwq;
+>         vm_fault_t ret =3D VM_FAULT_SIGBUS;
+>         bool must_wait;
+> -       unsigned int blocking_state;
+> +       struct userfault_wait wait_mode;
+>
+>         /*
+>          * We don't do userfault handling for the final child pid update
+> @@ -466,7 +480,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, uns=
+igned long reason)
+>         uwq.ctx =3D ctx;
+>         uwq.waken =3D false;
+>
+> -       blocking_state =3D userfaultfd_get_blocking_state(vmf->flags);
+> +       wait_mode =3D userfaultfd_get_blocking_state(vmf->flags);
+>
+>          /*
+>           * Take the vma lock now, in order to safely call
+> @@ -488,7 +502,7 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, uns=
+igned long reason)
+>          * following the spin_unlock to happen before the list_add in
+>          * __add_wait_queue.
+>          */
+> -       set_current_state(blocking_state);
+> +       set_current_state(wait_mode.task_state);
+>         spin_unlock_irq(&ctx->fault_pending_wqh.lock);
+>
+>         if (!is_vm_hugetlb_page(vma))
+> @@ -501,7 +515,11 @@ vm_fault_t handle_userfault(struct vm_fault *vmf, un=
+signed long reason)
+>
+>         if (likely(must_wait && !READ_ONCE(ctx->released))) {
+>                 wake_up_poll(&ctx->fd_wqh, EPOLLIN);
+> -               schedule();
+> +               /* See comment in userfaultfd_get_blocking_state() */
+> +               if (!wait_mode.timeout)
+> +                       schedule();
+> +               else
+> +                       schedule_timeout(HZ / 10);
+>         }
+>
+>         __set_current_state(TASK_RUNNING);
+>
+> --
+> Jens Axboe
+I guess the previous io_work_fault patch might have already addressed the
+issue sufficiently. The later patch that adds a timeout for userfaultfd mig=
+ht
+not be necessary  wouldn=E2=80=99t returning after a timeout just cause the=
+ same
+fault to repeat indefinitely again? Regardless of whether the thread is in
+UN or IN state, the expected behavior should be to wait until the page is
+filled or the uffd resource is released to be woken up,
+which seems like the correct logic.
