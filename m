@@ -1,50 +1,62 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D804478F2D;
-	Thu, 24 Apr 2025 14:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8D7146D53
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745505279; cv=none; b=RnSFADXyZm+fUl/9eUJwP47JX/iihc6kx0ehpIUYtfJnNe1VgI8ymPlC638KhW5DymONJ8tYpZWvqxZ258U2GT+1uzrMAfjeB67b0IXWO10gSBm5HUbZU4Qui6z/cNiQPduEVUmpml1wQXdVVu280sK/7hQOPNmIajWpMkCrUJs=
+	t=1745505453; cv=none; b=Pe0RJFFvy6iV8lRcE8vhuiZzuVB6zBDC4nv+gGSaUpIQeXAqm9dWMqvScdB4QLy8zldNXmsL9YWPM/gSo+cP8zlO1oL1UwipeFJfn9eus/0hXW4lXymPvxxC1UhPtzc04FO709hCdj7/xkNY2s0DSvtGCYRM1XooUPgI5NIUXok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745505279; c=relaxed/simple;
-	bh=N5x8Q2Rtm6QOgQXSotXHqtHIw+J1TfNo82tMF3wwHPU=;
+	s=arc-20240116; t=1745505453; c=relaxed/simple;
+	bh=MF8yM0hDLJMunXliqAKRJc3PoReh69CIks5Rz58mYHI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y/lBCS8Z6c3OPvaGPFnZDktZKZbzMrFXTc1hLdA465X6urdaE4xudqXRKpfzgFgdFfUwifebNkrW3zSCYgNlrJvE2llI/CT4iuAUlaJUbJXCyLcJvN/cRYCP5ebLaYJWnuGmGpLqvWfxLf1xzdPz1aNB+HgDoFaRhrXWgrO/NVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=A0AnKotE; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=bwb+mbmgeTvkfOPs0hFU5MBYQoYu9hyZUBQiOC/X0BW6q0pFhFPpePIpLVl6AT62pZ48B6UOBA7HOEwn+iskutD380L9jMoL6G6mNMcaIxiM+zCKAYzFeDAdaHPQxzPf86IURk6yNiCAiClNBAtDjIiVzlkN6SOSTfaXGJ37ipM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C+laFChW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="A0AnKotE"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=HLdrHvKgL2r7FEcbNA5oSIPt8Kl3IHS6iUHcW2h0DFU=; b=A0AnKotE7i/6YTmaTlQrNahIQ9
-	uKrGeuVhcZ2b1GaBzKlRWg1xtvcJ5Pi/q30OoxyL2P+SZbWH0gjdadxXo9vZk1i+NLFdtH5ipm6WD
-	2FSzknsD0+awMwLFxnXsGpWuxnQC+C4WAuKrs80PXjFLSCyYU5YobZeHxBcZ4rwPRiFQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1u7xel-00ATPZ-R9; Thu, 24 Apr 2025 16:34:27 +0200
-Date: Thu, 24 Apr 2025 16:34:27 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Woojung Huh <woojung.huh@microchip.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	UNGLinuxDriver@microchip.com, Simon Horman <horms@kernel.org>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v1 4/4] net: phy: Always read EEE LPA in
- genphy_c45_ethtool_get_eee()
-Message-ID: <8f0d5725-04b7-4e15-897d-1fd5e540dacb@lunn.ch>
-References: <20250424130222.3959457-1-o.rempel@pengutronix.de>
- <20250424130222.3959457-5-o.rempel@pengutronix.de>
- <aAo5keWOAVWxj9_o@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C+laFChW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745505451;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bYUUd0z6A0+ZkWdTi7S3yGhP4LTb46IOeiMEmdUvozc=;
+	b=C+laFChWg4wrBN/8AjNMKbjOMKhx7ZVUdx4+pciMfUc+K5NG3zD+Vz6ix6+3xljA5P0EhW
+	XFg+mO11wiBGt2njtBTLIr3D6aa4KjtST7pWd1Wrmw+DqGcJvQgqYeaCLTX2dHrxWlFTns
+	mndCGuia1vjFMX3b5WuRKbcN5ISvdm0=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-145-pZpKcBiLNymKpzeyzdU94w-1; Thu,
+ 24 Apr 2025 10:37:26 -0400
+X-MC-Unique: pZpKcBiLNymKpzeyzdU94w-1
+X-Mimecast-MFC-AGG-ID: pZpKcBiLNymKpzeyzdU94w_1745505444
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2090718004A7;
+	Thu, 24 Apr 2025 14:37:23 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.62])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CAFAC18002AD;
+	Thu, 24 Apr 2025 14:37:20 +0000 (UTC)
+Date: Thu, 24 Apr 2025 22:37:16 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v13 0/9] ima: kexec: measure events between kexec load
+ and execute
+Message-ID: <aApMnEl1Xzarmimn@fedora>
+References: <20250421222516.9830-1-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,51 +65,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aAo5keWOAVWxj9_o@shell.armlinux.org.uk>
+In-Reply-To: <20250421222516.9830-1-chenste@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Thu, Apr 24, 2025 at 02:16:01PM +0100, Russell King (Oracle) wrote:
-> On Thu, Apr 24, 2025 at 03:02:22PM +0200, Oleksij Rempel wrote:
-> > Previously, genphy_c45_ethtool_get_eee() used genphy_c45_eee_is_active(),
-> > which skips reading the EEE LPA register if local EEE is disabled. This
-> > prevents ethtool from reporting the link partner's EEE capabilities in
-> > that case.
-> > 
-> > Replace it with genphy_c45_read_eee_lpa(), which always reads the LPA
-> > register regardless of local EEE state. This allows users to see the
-> > link partner's EEE advertisement even when EEE is disabled locally.
-> > 
-> > Example before the patch:
-> > 
-> >   EEE settings for lan1:
-> >           EEE status: disabled
-> >           Tx LPI: disabled
-> >           Supported EEE link modes:  100baseT/Full
-> >                                      1000baseT/Full
-> >           Advertised EEE link modes:  Not reported
-> >           Link partner advertised EEE link modes:  Not reported
-> > 
-> > After the patch:
-> > 
-> >   EEE settings for lan1:
-> >           EEE status: disabled
-> >           Tx LPI: disabled
-> >           Supported EEE link modes:  100baseT/Full
-> >                                      1000baseT/Full
-> >           Advertised EEE link modes:  Not reported
-> >           Link partner advertised EEE link modes:  100baseT/Full
-> >                                                    1000baseT/Full
-> 
-> Seems to me this takes the opposite view to patch 3... not sure there's
-> much consistency here.
+Hi Steven,
 
-+1
+Could you test below code and post a formal patch to not copy
+measurement list buffer to kdump kernel? Below log is just for your
+reference, please feel free to modify or rephrase. 
 
-> However, I've no objection to reading the LPA EEE state and
-> reporting it.
+===
+Kdump kernel doesn't need IMA to do integrity measurement.
+Hence the measurement list in 1st kernel doesn't need to be copied to
+kdump kenrel.
 
-What happens with normal link mode LPA when autoneg is disabled? I
-guess they are not reported because the PHY is not even listening for
-the autoneg pulses. We could be inconsistent between normal LPA and
-LPA EEE, but is that a good idea?
+Here skip allocating buffer for measurement list copying if loading
+kdump kernel. Then there won't be the later handling related to
+ima_kexec_buffer.
+===
 
-	Andrew
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 38cb2500f4c3..7362f68f2d8b 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -146,6 +146,9 @@ void ima_add_kexec_buffer(struct kimage *image)
+ 	void *kexec_buffer = NULL;
+ 	int ret;
+ 
++	if (image->type == KEXEC_TYPE_CRASH)
++		return;
++
+ 	/*
+ 	 * Reserve extra memory for measurements added during kexec.
+ 	 */
+
