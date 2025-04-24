@@ -1,313 +1,129 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EB61A9B4D;
-	Thu, 24 Apr 2025 03:11:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15DF1A23BE
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 03:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745464282; cv=none; b=eUDHDjVBhafgjFnYxDu+JyKYIH+JWFP0x/fU9GklNVMjXDpd2A3MbfkEyTdwQxCUPTA/BVGOWJvhsCZ8C24fArmGQ9QZcm651m4hGM8tJ8vF8BvTFtQAdSgkaOoKmmIuN/zED2z3zJokeQxWjFkUdNEtXTUQogR65+WPjyYtuf8=
+	t=1745464318; cv=none; b=pQl1de1GkD5fR164TxZ8VgntvwaWcI2GySTqT9n5G2r8Ju1+y/KtVrQhAB+bd6IIdYKbBzu3uU0LMOSKJ/a+rHlcNaUFyPcfcICKyez6fZvLX47vHeOGFZCu9KMSOZYjKjfl+odXttdJlKrwSHYghHsTgAhD4hqSIQCY5RGk6bk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745464282; c=relaxed/simple;
-	bh=zRFvAmxtMph549CzIA/AmyU/e7s3BzXqr9YPnTCY/aM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QOdqsPipaHZaQV0JEKIkiSp6NxmvMIikJ2aPoP0nVDbRf2LjBDs/YtXCMCTn+tHEcyv2FnG87nM3Z7w55S1Y0SVWvkgfh+h3bVurfHKx04/kHrpXlVJfnorll8T6P+YHBtARuW7Oe9SDlYBaOOLmU+PbW2CXMhTVaxodpgq8vG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/7ldhVa; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745464318; c=relaxed/simple;
+	bh=JwOksf4B29z069WOf69FaTunOS4j0GfB7eBpiEZONzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ljuCIzEuBUcE/2zosxJAW4Y9xWEtXgnKQHaNznePydX9uxe/kTnkhreS1Cjos1nzVWVFdnrgyfuxcinzyjXby9cZYT3EyyNcS/iPuV8F7eT8TQxm9Zr1i6sky4A/frrg6sT9dlQxTVZa1vFy0B6sLzf0qAijtJbVX9vZ8JjsQEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XIrBJVIC; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/7ldhVa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745464281; x=1777000281;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zRFvAmxtMph549CzIA/AmyU/e7s3BzXqr9YPnTCY/aM=;
-  b=a/7ldhVa7gKA2fixopaiw8bFjPbW8ol+02lwn5SeovUwbRrJmLRR/js8
-   FDHW9uBXCTz4fJhJhotPwxglSq57PkH+gb64sptfLAw3yDbsINJhkvOk2
-   C3K72kcHKzKC7rpRdgsHfwkdt1AkfnIpbr7GqfE6NRmk7sabSoM7POEDH
-   rcuVJXXmYLD+0IRseANmZx5tpsx30284h/mNq8+Ps5+hk0ambs61KL4NI
-   1x38CpTSiQKQ54ZVTG5ZVp2di/EGecNr1iwhGaKQBiFOdc/9YbrYKdtN1
-   DIXoj3k0zuxPHbOQZ8URaDVj0xIuRnE9ciJcB4Xn3dDVxYh50jqT1aSAM
-   g==;
-X-CSE-ConnectionGUID: O0WvX5blTPSXtNkFuyuFJg==
-X-CSE-MsgGUID: P4kXdGt3QXeZWQhsHy7KGA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="64491627"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="64491627"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:11:18 -0700
-X-CSE-ConnectionGUID: 9y83hrGHQAetUBDbV6N0jA==
-X-CSE-MsgGUID: 7NIpUHhjTEGnnojBLd951A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="136565685"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:11:12 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	x86@kernel.org,
-	rick.p.edgecombe@intel.com,
-	dave.hansen@intel.com,
-	kirill.shutemov@intel.com,
-	tabba@google.com,
-	ackerleytng@google.com,
-	quic_eberman@quicinc.com,
-	michael.roth@amd.com,
-	david@redhat.com,
-	vannapurve@google.com,
-	vbabka@suse.cz,
-	jroedel@suse.de,
-	thomas.lendacky@amd.com,
-	pgonda@google.com,
-	zhiquan1.li@intel.com,
-	fan.du@intel.com,
-	jun.miao@intel.com,
-	ira.weiny@intel.com,
-	isaku.yamahata@intel.com,
-	xiaoyao.li@intel.com,
-	binbin.wu@linux.intel.com,
-	chao.p.peng@intel.com,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [RFC PATCH 21/21] KVM: x86: Ignore splitting huge pages in fault path for TDX
-Date: Thu, 24 Apr 2025 11:09:26 +0800
-Message-ID: <20250424030926.554-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20250424030033.32635-1-yan.y.zhao@intel.com>
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIrBJVIC"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-73c17c770a7so595879b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 20:11:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745464315; x=1746069115; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5KwGgD9VQC/2dUan7jrHG+qH6zjlfqwlPGHyOdQtows=;
+        b=XIrBJVICFfqOmAoCwJdIRoMqnpNI+G1FUTT5qqBksipMX3GPBQVfXp7hG0KCt9GHnw
+         yg1FbDnrLpFwcLoW+SnsaCbez9hHnwnZFA/9mwbRWEEY2R9xW9uJRnCHslxD05nnMNo+
+         MkxuvS+DmQOo/+aTP5lgjmZwxUyzcsQVTWA4h+OyDyAdMFKBkNYDbM5bEPok7jj0ieCB
+         Ul5jSAJzYF702gzC/ff7rTVzdv9hdVdy4WtYZWTNnQyghTWrAJtdbCR5taPrK6f8OFc+
+         YtZti3fuMim4gRj8LIpi88laBCfB90makHpTw5ZW441SI49idpAedkV2F17SyUbfp//P
+         Apaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745464315; x=1746069115;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5KwGgD9VQC/2dUan7jrHG+qH6zjlfqwlPGHyOdQtows=;
+        b=ShVMIFW9f/92ySCUPirAOABvTSO/Of0SyXvmrY4JDmMggWKg0mOd9GKV9IE1Dc9vka
+         tAtS6vHY8lIBvrr2ASi84UgVTFJf0qB5NbFdKb5OY4DKetYxX42nk/T5U9RPBPdjZqAQ
+         BupzgfMyGGxFjRvO6KmmVil3dzecanCkB3eEVzOrmadtMiyQzE/4wvexoam8XF6Chsh2
+         mWYWIahmcfA5oV/NowbfyKWXuytzLVmimCBXmYzeC1ZXHaE4MNOiOGbIhe1WbrqvsKRu
+         zNc/5cleXhtVB4f7DBIYef8QANRelApwbE81cW4T/D8BySbTz7IlErOSkRvD1K47kBVq
+         F8VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVtnasg58/MDgdcy9d44giFBhNR7JCAkWs6DIvxR0VtbPYHbfozH1dx383baZaS9TeCb8O61u8ffGqw0Uo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxX3y9X0KKNoNJnk+TKZokVkbHuBwFci8wa74JJFMMHxD4aNgHb
+	5YhGfYFa9ZRACUjjwvGRkuE23PNU1wY/o3JCkc+ggALak5kT7dzn
+X-Gm-Gg: ASbGncs73WFHnfudJthN9hDqFAUvz1iupyeATnng8fo/PcI0o6Venl/7VonDy+/vm0E
+	ejkO55L4UlwBeDLvcKhG8z/MegIq4oulxtXKsXdpB99rFNO+RYcenT46nQfWGx3gD/Zq59h6NZD
+	V9ZzwLcsJB9PvnfBWNEezt/hE05KLGVJta0KDs58os56AgQt4NZzozGKIail0yKKLW9aTI7gAEv
+	vZwd784oh5VmV7Y1WMSl4UKjpd70mLjVC3B3EGYQbEhZnsdoeDlfKIqIHCvjGHUNJkPx6l6m8Df
+	fuvWrmr747v2ZRnuKoFtAlU4zrM2jMYLngYkPNUQn5renz8lGPI=
+X-Google-Smtp-Source: AGHT+IHvRakZu+AS1ZJ07+rcHCZ25CI0ki6eQKawATNdO9nx7I1xsboL2eIP8OhCYfuuXa87KsaqDQ==
+X-Received: by 2002:a05:6a00:1483:b0:736:35d4:f03f with SMTP id d2e1a72fcca58-73e246188b5mr1574407b3a.6.1745464315031;
+        Wed, 23 Apr 2025 20:11:55 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73e25912fc6sm353610b3a.12.2025.04.23.20.11.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Apr 2025 20:11:54 -0700 (PDT)
+Date: Wed, 23 Apr 2025 23:11:52 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>, Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, x86@kernel.org,
+	linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 0/4] cpumask: add missing API and simplify
+ cpumask_any_housekeeping()
+Message-ID: <aAmr-FktkJiI-bxd@yury>
+References: <20250407153856.133093-1-yury.norov@gmail.com>
+ <240d0962-b381-479f-b3ed-4e6ce72d6570@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <240d0962-b381-479f-b3ed-4e6ce72d6570@intel.com>
 
-As handling the BUSY error from SEAMCALLs for splitting huge pages is more
-comprehensive in the fault path, which is with kvm->mmu_lock held for
-reading, simply ignore the splitting huge page request in fault path for
-TDX.
+On Wed, Apr 23, 2025 at 02:27:46PM -0700, Reinette Chatre wrote:
+> +James
+> 
+> Hi Yury,
+> 
+> On 4/7/25 8:38 AM, Yury Norov wrote:
+> > From: Yury Norov [NVIDIA] <yury.norov@gmail.com>
+> > 
+> > cpumask library missed some flavors of cpumask_any_but(), which makes
+> > users to workaround it by using less efficient cpumask_nth() functions.
+> > 
+> > Yury Norov (4):
+> >   relax cpumask_any_but()
+> >   find: add find_first_andnot_bit()
+> >   cpumask_first_andnot
+> >   resctrl
+> 
+> (sidenote: above list of patch subjects do not match the series)
+> 
+> Thank you very much for doing this work. This simplifies resctrl code
+> significantly. I do have a couple of comments that you will find in
+> the individual patches. 
 
-Splitting in fault path can now be caused by vCPUs' concurrent ACCEPT
-operations at diffent levels, e.g. one vCPU accepts at 2MB level while
-another vCPU accepts at 4KB level. As the first vCPU will accepts the whole
-2MB range ultimately, ignoring the mapping request (which leads to huge
-page splitting) caused by the second 4KB ACCEPT operation is fine.
+Sure, glad to see you like it.
+ 
+> Regarding upstreaming I would like to propose that the upstreaming of
+> this work be split so that resctrl changes do not go upstream
+> via separate trees during this cycle. I am ok with delaying the resctrl
+> portion of this work for a cycle. This is because we hope to include a
+> huge change [1] to resctrl that includes the code modified in this series.
+> Having these two changes meet during merge window will be inconvenient
+> for maintainers involved. If you require a user to upstream these new
+> helpers then another possibility is to upstream this work via the tip repo
+> if that is ok with x86 maintainers so that that huge resctrl patch is created on
+> top if this work.
+> 
+> Reinette
+> 
+> [1] https://lore.kernel.org/lkml/20250411164229.23413-18-james.morse@arm.com/
 
-A rare case that could lead to splitting in the fault path is when a TD is
-configured to receive #VE and accesses memory before the ACCEPT operation.
-By the time a vCPU accesses a private GFN, due to the lack of any guest
-preferred level, KVM could create a mapping at 2MB level. If the TD then
-only performs the ACCEPT operation at 4KB level, splitting in the fault
-path will be triggered. However, this is not regarded as a typical use
-case, as usually TD always accepts pages in the order from 1GB->2MB->4KB.
-The worst outcome to ignore the resulting splitting request is an endless
-EPT violation. This would not happen for a Linux guest, which does not
-expect any #VE.
+I can move all the patches with my branch (bitmap-for-next) if you ack
+the restcl part, or let resctl folks (you, I guess) take over the series.
+Or we can split it, so I'll move generic part myself, and you'll move
+the last patch.
 
-This ignoring of splitting huge page in fault path is achieved in 3 parts:
-1. In KVM TDP MMU,
-   allow splitting huge pages in fault path for the mirror page table and
-   propagate the splitting request to TDX.
-2. Enhance the hook split_external_spt by
-   passing in shared/exclusive status of kvm->mmu_lock
-3. In TDX's implementation of hook split_external_spt,
-   do nothing but to set the max_level of the next fault on the splitting
-   GFN range on the vCPU to 2MB and return -EBUSY.
-
-Then after tdx_sept_split_private_spt() returns, TDX's EPT violation
-handler may (a) return to guest directly (when signal/interrupt pending) or
-(b) retry locally in the TDX's code.
-- for (a), the TD can retry the ACCEPT operation, finding the memory is
-  accepted at 2MB level by another vCPU.
-- for (b), as the violation_request_level is set to 2MB, the next
-  kvm_mmu_page_fault() will return RET_PF_SPURIOUS, causing re-entering of
-  the TD.
-
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- arch/x86/include/asm/kvm_host.h |  2 +-
- arch/x86/kvm/mmu/tdp_mmu.c      | 44 ++++++++++++++++++++-------------
- arch/x86/kvm/vmx/tdx.c          | 25 ++++++++++++++++++-
- arch/x86/kvm/vmx/x86_ops.h      |  5 ++--
- 4 files changed, 55 insertions(+), 21 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 5167458742bf..faae82eefd99 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1814,7 +1814,7 @@ struct kvm_x86_ops {
- 
- 	/* Split the external page table into smaller page tables */
- 	int (*split_external_spt)(struct kvm *kvm, gfn_t gfn, enum pg_level level,
--				  void *external_spt);
-+				  void *external_spt, bool mmu_lock_shared);
- 
- 	bool (*has_wbinvd_exit)(void);
- 
-diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-index d3fba5d11ea2..1b2bacde009f 100644
---- a/arch/x86/kvm/mmu/tdp_mmu.c
-+++ b/arch/x86/kvm/mmu/tdp_mmu.c
-@@ -388,15 +388,15 @@ static void remove_external_spte(struct kvm *kvm, gfn_t gfn, u64 old_spte,
- }
- 
- static int split_external_spt(struct kvm *kvm, gfn_t gfn, u64 old_spte,
--			      u64 new_spte, int level)
-+			      u64 new_spte, int level, bool shared)
- {
- 	void *external_spt = get_external_spt(gfn, new_spte, level);
- 	int ret;
- 
- 	KVM_BUG_ON(!external_spt, kvm);
- 
--	ret = static_call(kvm_x86_split_external_spt)(kvm, gfn, level, external_spt);
--	KVM_BUG_ON(ret, kvm);
-+	ret = static_call(kvm_x86_split_external_spt)(kvm, gfn, level, external_spt, shared);
-+	KVM_BUG_ON(ret && !shared, kvm);
- 
- 	return ret;
- }
-@@ -536,11 +536,13 @@ static int __must_check set_external_spte_present(struct kvm *kvm, tdp_ptep_t sp
- {
- 	bool was_present = is_shadow_present_pte(old_spte);
- 	bool is_present = is_shadow_present_pte(new_spte);
-+	bool was_leaf = was_present && is_last_spte(old_spte, level);
- 	bool is_leaf = is_present && is_last_spte(new_spte, level);
- 	kvm_pfn_t new_pfn = spte_to_pfn(new_spte);
- 	int ret = 0;
- 
--	KVM_BUG_ON(was_present, kvm);
-+	/* leaf to leaf or non-leaf to non-leaf updates are not allowed */
-+	KVM_BUG_ON((was_leaf && is_leaf) || (was_present && !was_leaf && !is_leaf), kvm);
- 
- 	lockdep_assert_held(&kvm->mmu_lock);
- 	/*
-@@ -551,18 +553,28 @@ static int __must_check set_external_spte_present(struct kvm *kvm, tdp_ptep_t sp
- 	if (!try_cmpxchg64(rcu_dereference(sptep), &old_spte, FROZEN_SPTE))
- 		return -EBUSY;
- 
--	/*
--	 * Use different call to either set up middle level
--	 * external page table, or leaf.
--	 */
--	if (is_leaf) {
--		ret = static_call(kvm_x86_set_external_spte)(kvm, gfn, level, new_pfn);
--	} else {
--		void *external_spt = get_external_spt(gfn, new_spte, level);
-+	if (!was_present) {
-+		/*
-+		 * Propagate to install a new leaf or non-leaf entry in external
-+		 * page table.
-+		 */
-+		if (is_leaf) {
-+			ret = static_call(kvm_x86_set_external_spte)(kvm, gfn, level, new_pfn);
-+		} else {
-+			void *external_spt = get_external_spt(gfn, new_spte, level);
- 
--		KVM_BUG_ON(!external_spt, kvm);
--		ret = static_call(kvm_x86_link_external_spt)(kvm, gfn, level, external_spt);
-+			KVM_BUG_ON(!external_spt, kvm);
-+			ret = static_call(kvm_x86_link_external_spt)(kvm, gfn, level, external_spt);
-+		}
-+	} else if (was_leaf && is_present && !is_leaf) {
-+		/* demote */
-+		ret = split_external_spt(kvm, gfn, old_spte, new_spte, level, true);
-+	} else {
-+		/* Promotion is not supported by mirror root (TDX)*/
-+		KVM_BUG_ON(1, kvm);
-+		ret = -EOPNOTSUPP;
- 	}
-+
- 	if (ret)
- 		__kvm_tdp_mmu_write_spte(sptep, old_spte);
- 	else
-@@ -784,7 +796,7 @@ static u64 tdp_mmu_set_spte(struct kvm *kvm, int as_id, tdp_ptep_t sptep,
- 		if (!is_shadow_present_pte(new_spte))
- 			remove_external_spte(kvm, gfn, old_spte, level);
- 		else if (is_last_spte(old_spte, level) && !is_last_spte(new_spte, level))
--			split_external_spt(kvm, gfn, old_spte, new_spte, level);
-+			split_external_spt(kvm, gfn, old_spte, new_spte, level, false);
- 		else
- 			KVM_BUG_ON(1, kvm);
- 	}
-@@ -1315,8 +1327,6 @@ int kvm_tdp_mmu_map(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
- 		sp->nx_huge_page_disallowed = fault->huge_page_disallowed;
- 
- 		if (is_shadow_present_pte(iter.old_spte)) {
--			/* Don't support large page for mirrored roots (TDX) */
--			KVM_BUG_ON(is_mirror_sptep(iter.sptep), vcpu->kvm);
- 			r = tdp_mmu_split_huge_page(kvm, &iter, sp, true);
- 		} else {
- 			r = tdp_mmu_link_sp(kvm, &iter, sp, true);
-diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-index e24d1cbcc762..e994a6c08a75 100644
---- a/arch/x86/kvm/vmx/tdx.c
-+++ b/arch/x86/kvm/vmx/tdx.c
-@@ -1834,7 +1834,7 @@ static int tdx_spte_demote_private_spte(struct kvm *kvm, gfn_t gfn,
- }
- 
- int tdx_sept_split_private_spt(struct kvm *kvm, gfn_t gfn, enum pg_level level,
--			       void *private_spt)
-+			       void *private_spt, bool mmu_lock_shared)
- {
- 	struct page *page = virt_to_page(private_spt);
- 	int ret;
-@@ -1842,6 +1842,29 @@ int tdx_sept_split_private_spt(struct kvm *kvm, gfn_t gfn, enum pg_level level,
- 	if (KVM_BUG_ON(to_kvm_tdx(kvm)->state != TD_STATE_RUNNABLE || level != PG_LEVEL_2M, kvm))
- 		return -EINVAL;
- 
-+	/*
-+	 * Split request with mmu_lock held for reading can only occur when one
-+	 * vCPU accepts at 2MB level while another vCPU accepts at 4KB level.
-+	 * Ignore this 4KB mapping request by setting violation_request_level to
-+	 * 2MB and returning -EBUSY for retry. Then the next fault at 2MB level
-+	 * would be a spurious fault. The vCPU accepting at 2MB will accept the
-+	 * whole 2MB range.
-+	 */
-+	if (mmu_lock_shared) {
-+		struct kvm_vcpu *vcpu = kvm_get_running_vcpu();
-+		struct vcpu_tdx *tdx = to_tdx(vcpu);
-+
-+		if (KVM_BUG_ON(!vcpu, kvm))
-+			return -EOPNOTSUPP;
-+
-+		/* Request to map as 2MB leaf for the whole 2MB range */
-+		tdx->violation_gfn_start = gfn_round_for_level(gfn, level);
-+		tdx->violation_gfn_end = tdx->violation_gfn_start + KVM_PAGES_PER_HPAGE(level);
-+		tdx->violation_request_level = level;
-+
-+		return -EBUSY;
-+	}
-+
- 	ret = tdx_sept_zap_private_spte(kvm, gfn, level, page);
- 	if (ret <= 0)
- 		return ret;
-diff --git a/arch/x86/kvm/vmx/x86_ops.h b/arch/x86/kvm/vmx/x86_ops.h
-index 0619e9390e5d..fcba76887508 100644
---- a/arch/x86/kvm/vmx/x86_ops.h
-+++ b/arch/x86/kvm/vmx/x86_ops.h
-@@ -159,7 +159,7 @@ int tdx_sept_set_private_spte(struct kvm *kvm, gfn_t gfn,
- int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 				 enum pg_level level, kvm_pfn_t pfn);
- int tdx_sept_split_private_spt(struct kvm *kvm, gfn_t gfn, enum pg_level level,
--			       void *private_spt);
-+			       void *private_spt, bool mmu_lock_shared);
- 
- void tdx_flush_tlb_current(struct kvm_vcpu *vcpu);
- void tdx_flush_tlb_all(struct kvm_vcpu *vcpu);
-@@ -228,7 +228,8 @@ static inline int tdx_sept_remove_private_spte(struct kvm *kvm, gfn_t gfn,
- 
- static inline int tdx_sept_split_private_spt(struct kvm *kvm, gfn_t gfn,
- 					     enum pg_level level,
--					     void *private_spt)
-+					     void *private_spt,
-+					     bool mmu_lock_shared)
- {
- 	return -EOPNOTSUPP;
- }
--- 
-2.43.2
-
+Thanks,
+Yury
