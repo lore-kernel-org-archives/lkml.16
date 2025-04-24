@@ -1,67 +1,29 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0E9822A1D4
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:41:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B9322170B;
+	Thu, 24 Apr 2025 09:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487669; cv=none; b=Kx4JBP/GE6bipA9HbOGzA7MqU0kflV9ctl9X9waBy6cYa7ZP0BRw9+fB7ksXfqbGV50hnUOq6yv1zLT7W9hLMCiX9zPCpTKmETB+DjeTxShFIQOXmWkzYOJFTztB1meeuNPbNH9b47mWoij9s/G8aEncRdo+daUnz/m3wSc6Ubs=
+	t=1745487691; cv=none; b=BTOcE3Su6IqkE5z+z2qUfxOW2E9lL/CLOhE1TqtENPR8NZefNr1PZdSVePNwwNDxq6pxX4toeePdjRKBNQmlkoghsOxxdZ9Vi6/vsUtmp/2+49wAkxiAkQb0TzS1z7+ADfDh0Pym3R0PvMJQ/Sst3Bxq20vFKIp2t9LXETRfEmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487669; c=relaxed/simple;
-	bh=TBsg5Gw/8VRnL9eYpB9Ca+nqmePgCSvmXxRDLHsuTtw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SgYae6aZoR89sNnNxpUghmaO4DLsYSPxO4mK7Zn53qUTvwXiaNRoHX79+XWl5K5lXMWAjhVzwvS0Evnpm3+WFzdz2Jyu/nCv6sbul7hN99ZnL4ojD9+7RkzDw5nCI2aNZXUJRg7rT8tOOjQgdsTQpjhaRE1c3nlo5NAWXg4vlGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lL/C0EU4; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lL/C0EU4"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-44069f5f3aaso1070995e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:41:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745487666; x=1746092466; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bjIVmmwPwi2abb7R3JFlYVKuU635PTKZL4Ry4YZxTjA=;
-        b=lL/C0EU4Ugq2LH4UOkRzI6XZDynDAroY3QiU3uolOdUPdnywpj4Uv6mg6uHWaO/Z+K
-         vrYD/oPpepCdSAAYxt4G18EO4QKPanAH3BJhJhgb8bBiFXTCQdjW3hmO7JYmxMWjg9eF
-         mi1r3l2pM5LPDBbqcDQK9+7U8J5haTA87cqwANa3pw/wiYff4sphSjh/T5MjoG7Lb7Sk
-         x4uS8/sgKzNFTgI5hAn5HvI/MQ15gan1klysREX113KdeRP9vZc5WNpKSFgaNBk8F8Tw
-         9yIN9lh3QngXRqVTiqBZ00jMK06k3Xf6u9Dd++NKEsl1uLduW2+5MFasTVgIfqvTrWGs
-         e3fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745487666; x=1746092466;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bjIVmmwPwi2abb7R3JFlYVKuU635PTKZL4Ry4YZxTjA=;
-        b=rmwJxSHzkAer/zItOTS7tFK8xJa/kvomjH8m2UGIcm+HGIW0Rh66VD8i6HApNA2XaP
-         GOTGp5luVfNzUAm16oVloz5Lc8pZ1rRt1ZeXtyyGa6OCK0is80B9HHLY7M8Invrb4st6
-         BTo2ntm+agjg3I0dz/ClM2a7+xDVcbgebt0/ePkAndsYrSfnPl+7nzSS8GzcR7fWXtKt
-         BzW6pCgZZWbHFXx0poVE7c51oBe0QWrAWDZ2S7gsVg2+1VkY0KPFEYgcwICEFdnAbRxQ
-         b9anbO3SaFmGsCePBOi7uu3tCTmuebzTXIjwFJKe8qQBJIE33kJdSX0FpEWiYA+9xH+O
-         LIcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDN6csghlFVUzRf6PN7ZnxYhTIrMD6r70WrcIQL64Zku3J+vzJHmtFJ95Wn8LN5+u0za2HVXaTMc4Ebfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrsXnyCW2q2V6NO+41RIZ6U4XuVAlCNGOUIe8BC86bnXc4uXw5
-	aCnQY1WzzWFXu/7CjNbVAIhEBij/MpfemxZmUZPHWZGsfOTulARVz7ekchsNxHKTZum/VNfDErG
-	Z
-X-Gm-Gg: ASbGnctDDnaU5anM+ioE8kYpW+S5lpSySUVpzLgLUm4/Y5uq4VBjeZN4ZSrpmkpezX7
-	ZI+k7+KjWaeVp9T2tycPgeQcNgGmwqpAOAiEE2gDIJGjXIUbFo3fk8L7y5Y/10ec/pXLOVvYB0u
-	FrSr2OPiZJiqlApxr6+yUyl4gPaljMvX5xSiopU802G3R49nlhPP/cEH7zFZ5ijdQYGbXhxO2KS
-	VTJw2R3Ky2CFR5BN1ikxfavj5TabAb5W3anSFjjuKpw+OYNvsHoG+E6vqWt9zvMPB9mBc3Jey22
-	VeSA9SborlGlcyK9jOipMFtoilQTzbk8PujlrOwbo73oTB8/k+zNmPgh4tc=
-X-Google-Smtp-Source: AGHT+IHO6+G6nbwN5cAabfQNCEyEBsMncf95D8gvWL5KJRsDwm8ofE95JLIy0JYeePV9fJhO30RiYQ==
-X-Received: by 2002:a05:600c:1e26:b0:43b:c938:1d0e with SMTP id 5b1f17b1804b1-4409bd0ce01mr6010255e9.2.1745487665819;
-        Thu, 24 Apr 2025 02:41:05 -0700 (PDT)
-Received: from [192.168.1.29] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4408c8b0ea0sm41526975e9.2.2025.04.24.02.41.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 02:41:05 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Thu, 24 Apr 2025 11:40:53 +0200
-Subject: [PATCH 2/2] arm64: dts: qcom: sm8750-mtp: Add sound (speakers,
- headset codec, dmics)
+	s=arc-20240116; t=1745487691; c=relaxed/simple;
+	bh=19tL4jN41z9FQI4XEWC1T0aTF7LcGwsN47y3eQ/Ipt8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ws+2NG61olaAzCuQQjZCQ2eLYiNVuBrYXkEUGg1Fg4RL1uzEvYL6rwc7L5LsMN6ueGj9Hd+pF81SmFaUPDKMH6ZWc8X/9R+eZ8Vh2L2bpjemYYQlW4GMNRn5oA3YXFhu4Up/0jrT6MgqPDm1neYO7jLK3MR2vrMYDSGTx9rE2J4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.18.95])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id B7F49341C25;
+	Thu, 24 Apr 2025 09:41:23 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH v9 0/3] riscv: spacemit: add gpio support for K1 SoC
+Date: Thu, 24 Apr 2025 17:40:48 +0800
+Message-Id: <20250424-03-k1-gpio-v9-0-eaece8cc5a86@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,297 +32,151 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250424-sm8750-audio-part-2-v1-2-50133a0ec35f@linaro.org>
-References: <20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org>
-In-Reply-To: <20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+X-B4-Tracking: v=1; b=H4sIACEHCmgC/2XSy27DIBAF0F+JWJeKGePBZNX/qLrgMSSoapzar
+ tUqyr+XOGpj5OUgncvlcREjD5lHsd9dxMBzHnN/KoN92olwdKcDyxzLLFChVh12UjXyHeThnHt
+ J4JPFZFWDQRRwHjjl7yXs9e0+D/z5VTKn+6LwbmQZ+o+PPO13aGxswUWbKAYViEyiBBockfUYL
+ AIaE8GJW9Yxj1M//Cw9Z1jClkpW6XWlGaSSpAyyZw6O1cuBT1PfP/fDYcmZ8d8Cgq0sFoud1jp
+ FRAhxY5uVxbayzc0a743XGiLhxuo/26qycWXLCaQmDcG2QYHVG9s+LIKpbLt0poZDw8aT2VhaW
+ WwqS8VGj6xdZE4QNtasLVW2tJCedWeDdqSs39juYcttVbZ8IgmBOsKI5aXqfa/X6y+C/TkdlQI
+ AAA==
+X-Change-ID: 20240828-03-k1-gpio-61bf92f9032c
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
  Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6636;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=TBsg5Gw/8VRnL9eYpB9Ca+nqmePgCSvmXxRDLHsuTtw=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoCgcrlv0Hrm+KiCF0Uw74/6za1QWwf6cMXe1GJ
- IcvvrXprSSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaAoHKwAKCRDBN2bmhouD
- 17jPD/4usJQWPljbPzU/u73tBnbGfVtehlZpVCF1o7slU/rzS0L05KQcPEluPFE1TLsFUJs1JMw
- Xz7BDapU7u9RLJjrYRBLdWtyh0wXp+kGt96Kpo+pA2J+YLW6x3vCw7RD0BuSgGPMI2W2fOFhP2B
- chP7GR3cpBTQW7YBV3Q+M1WTZj3F8Wosqe1FKx0N+9VrUPd8A0jStQsU3KHhjoIgkRm5zvt5xsm
- wOuGk5yhTtXUIo9R5srpP1FyhV8uHmSViLox8d72hh94mMedmL2gGeLmPiJS9OOWj9kB1uLj758
- LayIlyfVHN7O8PfpVVI0nymToXsEnm+WDqC7i3jL4iFni2iTvaT8v4RNwUs5lgCwk9AWgzpK4ij
- /28/T8TKVzB5VDCElRx2hZe0Ffowzelq3UxB8L7CqpuaCloxPBA98MvvCuwCEJfrRBH60+EKIP3
- eVGP+9G2GEzreCggbeCvRRgOJa8WuwVsScYya4xZuDTDL8MjjOf/G2dAzeIO7zIkepO2o5Of3Xn
- H6uLyZ527vv6Ne8vOBOtxDhiszbRLhd9c+hcMFC8VGxyCi5NgsebtdLEYzbORcsJCkwr9dXmQX/
- abDxTlP9nMJAyWF6GgSrPXMoAW6oglBnnFoZ4cogGeg6ihSba/sud2ptJTUQWn9PIPh7DfZrd6r
- aqwcLfgjApqt7eA==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Cc: Alex Elder <elder@riscstar.com>, Yangyu Chen <cyy@cyyself.name>, 
+ Jisheng Zhang <jszhang@kernel.org>, Jesse Taube <mr.bossman075@gmail.com>, 
+ Inochi Amaoto <inochiama@outlook.com>, Icenowy Zheng <uwu@icenowy.me>, 
+ Meng Zhang <zhangmeng.kevin@linux.spacemit.com>, 
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ spacemit@lists.linux.dev, devicetree@vger.kernel.org, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4903; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=19tL4jN41z9FQI4XEWC1T0aTF7LcGwsN47y3eQ/Ipt8=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoCgc2ipfCvflkv7IgzKm2TGKqrcIQE852JrMGz
+ XONCyCYo6+JApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaAoHNl8UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277VsID/9oBNZQAUHgvMsCPG
+ Cx92IzG1YBqV3eqH307VhjshCnq2QZELYTeEHZEq2vdmuPYaCfaBobhFSyathnO8oY/UlNyFW3f
+ ilBcqOpNHU/O+jlb7sjyh8sDs6q2nBhJWa7xlj04QDWf/4tdWiaHyDDqN3kvf5UuoBw2mU/fFRu
+ uMqMG6vf46eUhClRxjHXt5CT/2mrsEDgjhJk2R8nULeUHLK8ItTDtO8XeLsgZ1Mrjv2a9Jj+IWC
+ 426c2oDIGEn+jHlb835Y4HOKYKQS9ICWe5OwQAj5BKFuajFQ3Reb7es2SS/QI+E8AIZ9wLKTqA1
+ Mc/7dj9Y4BjZH2Vq3uPY6y2Q0j9/QQqE3Wgz8e6eLuOB4xVR49/zV27T4eY/5cWJVPeSkydsCgs
+ sbPRP4Q+b1dlg5HWXJ2PorIO3Pe4JOrjTztb75iLE1UsnJRQaPRmz4CR6B25PbxU5RhkmqC3/r5
+ L1DZG4JYAYNDh6pQ86abV2q/5176Pb3Gn+kl80zP3hHq9rj1oKSPuS0nFhwOcqVUmg8Td0au6ir
+ eTEcz53prLxG9gkeMHwnMLSgdSe5pyA2rMV+zP/GXsSX7UxOUBDKlAv1K2RoUJUtILphUC7Fmtk
+ 0aYgUz/sg2I/C3vqF+Ji6VjoZFfejPLAtrA0D4Qs+pFCYrjTqiQ1ucVUuVN5dSvNY5wQ==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-Add device nodes for most of the sound support - WSA883x smart speakers,
-WCD9395 audio codec (headset) and sound card - which allows sound
-playback via speakers and recording via DMIC microphones.  Changes bring
-necessary foundation for headset playback/recording via USB, but that
-part is not yet ready.
+The gpio controller of K1 support basic GPIO functions,
+which capable of enabling as input, output. It can also be used
+as GPIO interrupt which able to detect rising edge, falling edge,
+or both. There are four GPIO ports, each consisting of 32 pins and
+has indepedent register sets, while still sharing IRQ line and clocks.
+The GPIO controller request the two clock sources from APBC block.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Due to first three GPIO ports has interleave register settings, some
+resources (IRQ, clock) are shared by all pins.
+
+The GPIO docs of K1 SoC can be found here, chapter 16.4 GPIO [1]
+
+This patch series has been tested on Bananapi-F3 board,
+with following GPIO cases passed:
+ 1) gpio input
+ 2) gpio output - set to high, low
+ 3) gpio interrupt - rising trigger, falling trigger, both edge trigger
+
+This version should resolve DT related concern in V4, and register each bank as
+indepedent gpio chip in driver, no more sub children gpio DT node needed.
+
+Please notice in this version, the reset property is added, but optional.
+as I see no need to activate it in driver, instead I suspect it may
+break cases if bootloader did some prerequisite settings, so I'm leaving
+it for future implementation if really necessary.
+
+Add clock property and rebase patch on top of SpacemiT's k1/dt-for-next branch
+
+Link: https://developer.spacemit.com/documentation?token=Rn9Kw3iFHirAMgkIpTAcV2Arnkf [1]
+Link: https://lore.kernel.org/all/20240730-k1-01-basic-dt-v5-0-98263aae83be@gentoo.org [2]
+Link: https://lore.kernel.org/all/20241016-02-k1-pinctrl-v5-0-03d395222e4f@gentoo.org/ [3]
+Link: https://lore.kernel.org/all/20250218-gpio-ranges-fourcell-v1-0-b1f3db6c8036@linaro.org [4]
+Link: https://lore.kernel.org/all/20250225-gpio-ranges-fourcell-v3-0-860382ba4713@linaro.org [5]
+Link: https://lore.kernel.org/all/2174489329731.7849.17910336598453828998.b4-ty@bgdev.pl [6]
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
 ---
- arch/arm64/boot/dts/qcom/sm8750-mtp.dts | 214 ++++++++++++++++++++++++++++++++
- 1 file changed, 214 insertions(+)
+Changes in v9:
+- drop patch 1,2 from v8 which already merged by gpio tree [6]
+- add clock property to gpio node
+- Link to v8: https://lore.kernel.org/r/20250412-03-k1-gpio-v8-0-1c6862d272ec@gentoo.org
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
-index 72f081a890dfe49bfbee5e91b9e51da53b9d8baf..47645f15e6e327620840de8c3e03105540faf9cc 100644
---- a/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8750-mtp.dts
-@@ -29,6 +29,32 @@ aliases {
- 		serial0 = &uart7;
- 	};
- 
-+	wcd939x: audio-codec {
-+		compatible = "qcom,wcd9395-codec", "qcom,wcd9390-codec";
-+
-+		pinctrl-0 = <&wcd_default>;
-+		pinctrl-names = "default";
-+
-+		qcom,micbias1-microvolt = <1800000>;
-+		qcom,micbias2-microvolt = <1800000>;
-+		qcom,micbias3-microvolt = <1800000>;
-+		qcom,micbias4-microvolt = <1800000>;
-+		qcom,mbhc-buttons-vthreshold-microvolt = <75000 150000 237000 500000 500000 500000 500000 500000>;
-+		qcom,mbhc-headset-vthreshold-microvolt = <1700000>;
-+		qcom,mbhc-headphone-vthreshold-microvolt = <50000>;
-+		qcom,rx-device = <&wcd_rx>;
-+		qcom,tx-device = <&wcd_tx>;
-+
-+		reset-gpios = <&tlmm 101 GPIO_ACTIVE_LOW>;
-+
-+		vdd-buck-supply = <&vreg_l15b_1p8>;
-+		vdd-rxtx-supply = <&vreg_l15b_1p8>;
-+		vdd-io-supply = <&vreg_l15b_1p8>;
-+		vdd-mic-bias-supply = <&vreg_bob1>;
-+
-+		#sound-dai-cells = <1>;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -81,6 +107,89 @@ key-volume-up {
- 		};
- 	};
- 
-+	sound {
-+		compatible = "qcom,sm8750-sndcard", "qcom,sm8450-sndcard";
-+		model = "SM8750-MTP";
-+		audio-routing = "SpkrLeft IN", "WSA_SPK1 OUT",
-+				"SpkrRight IN", "WSA_SPK2 OUT",
-+				"IN1_HPHL", "HPHL_OUT",
-+				"IN2_HPHR", "HPHR_OUT",
-+				"AMIC2", "MIC BIAS2",
-+				"VA DMIC0", "MIC BIAS3", /* MIC4 on schematics */
-+				"VA DMIC1", "MIC BIAS3", /* MIC1 on schematics */
-+				"VA DMIC2", "MIC BIAS1",
-+				"VA DMIC3", "MIC BIAS1",
-+				"VA DMIC0", "VA MIC BIAS3",
-+				"VA DMIC1", "VA MIC BIAS3",
-+				"VA DMIC2", "VA MIC BIAS1",
-+				"VA DMIC3", "VA MIC BIAS1",
-+				"TX SWR_INPUT1", "ADC2_OUTPUT";
-+
-+		wcd-playback-dai-link {
-+			link-name = "WCD Playback";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai RX_CODEC_DMA_RX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&wcd939x 0>, <&swr1 0>, <&lpass_rxmacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		wcd-capture-dai-link {
-+			link-name = "WCD Capture";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai TX_CODEC_DMA_TX_3>;
-+			};
-+
-+			codec {
-+				sound-dai = <&wcd939x 1>, <&swr2 0>, <&lpass_txmacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		wsa-dai-link {
-+			link-name = "WSA Playback";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai WSA_CODEC_DMA_RX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&left_spkr>, <&right_spkr>, <&swr0 0>, <&lpass_wsamacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		va-dai-link {
-+			link-name = "VA Capture";
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai VA_CODEC_DMA_TX_0>;
-+			};
-+
-+			codec {
-+				sound-dai = <&lpass_vamacro 0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+	};
-+
- 	vph_pwr: vph-pwr-regulator {
- 		compatible = "regulator-fixed";
- 
-@@ -702,6 +811,14 @@ vreg_l7n_3p3: ldo7 {
- 	};
- };
- 
-+&lpass_vamacro {
-+	pinctrl-0 = <&dmic01_default>, <&dmic23_default>;
-+	pinctrl-names = "default";
-+
-+	vdd-micb-supply = <&vreg_l1b_1p8>;
-+	qcom,dmic-sample-rate = <4800000>;
-+};
-+
- &pm8550_flash {
- 	status = "okay";
- 
-@@ -806,6 +923,74 @@ &remoteproc_mpss {
- 	status = "fail";
- };
- 
-+&swr0 {
-+	status = "okay";
-+
-+	/* WSA883x, left/front speaker */
-+	left_spkr: speaker@0,1 {
-+		compatible = "sdw10217020200";
-+		reg = <0 1>;
-+		pinctrl-0 = <&spkr_0_sd_n_active>;
-+		pinctrl-names = "default";
-+		powerdown-gpios = <&lpass_tlmm 17 GPIO_ACTIVE_LOW>;
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "SpkrLeft";
-+		#thermal-sensor-cells = <0>;
-+		vdd-supply = <&vreg_l15b_1p8>;
-+	};
-+
-+	/* WSA883x, right/back speaker */
-+	right_spkr: speaker@0,2 {
-+		compatible = "sdw10217020200";
-+		reg = <0 2>;
-+		pinctrl-0 = <&spkr_1_sd_n_active>;
-+		pinctrl-names = "default";
-+		powerdown-gpios = <&lpass_tlmm 18 GPIO_ACTIVE_LOW>;
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "SpkrRight";
-+		#thermal-sensor-cells = <0>;
-+		vdd-supply = <&vreg_l15b_1p8>;
-+	};
-+};
-+
-+&swr1 {
-+	status = "okay";
-+
-+	/* WCD9395 RX */
-+	wcd_rx: codec@0,4 {
-+		compatible = "sdw20217010e00";
-+		reg = <0 4>;
-+
-+		/*
-+		 * WCD9395 RX Port 1 (HPH_L/R)      <=> SWR1 Port 1 (HPH_L/R)
-+		 * WCD9395 RX Port 2 (CLSH)         <=> SWR1 Port 2 (CLSH)
-+		 * WCD9395 RX Port 3 (COMP_L/R)     <=> SWR1 Port 3 (COMP_L/R)
-+		 * WCD9395 RX Port 4 (LO)           <=> SWR1 Port 4 (LO)
-+		 * WCD9395 RX Port 5 (DSD_L/R)      <=> SWR1 Port 5 (DSD_L/R)
-+		 * WCD9395 RX Port 6 (HIFI_PCM_L/R) <=> SWR1 Port 9 (HIFI_PCM_L/R)
-+		 */
-+		qcom,rx-port-mapping = <1 2 3 4 5 9>;
-+	};
-+};
-+
-+&swr2 {
-+	status = "okay";
-+
-+	/* WCD9395 TX */
-+	wcd_tx: codec@0,3 {
-+		compatible = "sdw20217010e00";
-+		reg = <0 3>;
-+
-+		/*
-+		 * WCD9395 TX Port 1 (ADC1,2,3,4)         <=> SWR2 Port 2 (TX SWR_INPUT 0,1,2,3)
-+		 * WCD9395 TX Port 2 (ADC3,4 & DMIC0,1)   <=> SWR2 Port 2 (TX SWR_INPUT 0,1,2,3)
-+		 * WCD9395 TX Port 3 (DMIC0,1,2,3 & MBHC) <=> SWR2 Port 3 (TX SWR_INPUT 4,5,6,7)
-+		 * WCD9395 TX Port 4 (DMIC4,5,6,7)        <=> SWR2 Port 4 (TX SWR_INPUT 8,9,10,11)
-+		 */
-+		qcom,tx-port-mapping = <2 2 3 4>;
-+	};
-+};
-+
- &tlmm {
- 	/* reserved for secure world */
- 	gpio-reserved-ranges = <36 4>, <74 1>;
-@@ -814,3 +999,32 @@ &tlmm {
- &uart7 {
- 	status = "okay";
- };
-+
-+/* Pinctrl */
-+&lpass_tlmm {
-+	spkr_0_sd_n_active: spkr-0-sd-n-active-state {
-+		pins = "gpio17";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+		output-low;
-+	};
-+
-+	spkr_1_sd_n_active: spkr-1-sd-n-active-state {
-+		pins = "gpio18";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
-+
-+&tlmm {
-+	wcd_default: wcd-reset-n-active-state {
-+		pins = "gpio101";
-+		function = "gpio";
-+		drive-strength = <16>;
-+		bias-disable;
-+		output-low;
-+	};
-+};
+Changes in v8:
+- rebased to v6.15-rc1
+- adjust dt-binding/code to request clocks
+- add reset property
+- call irq_domain_update_bus_token() to support threecells interrupt mode
+- use devm_platform_ioremap_resource(), so drop "struct resource"
+- fix Kconfig
+  - select GPIO_GENERIC as calling bgpio_init()
+  - change to tristate, make it possible to build as module
+- adjust defconfig to enable gpio 
+- Link to v7: https://lore.kernel.org/r/20250226-03-k1-gpio-v7-0-be489c4a609b@gentoo.org
 
+Changes in v7:
+- dt-binding: fix 80 column, drop unneeded dependencies
+- tested with patch v3 of "gpiolib: of: Handle threecell gpios" [5]
+- collect review tags
+- Link to v6: https://lore.kernel.org/r/20250223-03-k1-gpio-v6-0-db2e4adeef1c@gentoo.org
+
+Changes in v6:
+- rebase to threecell gpio patch which proposed by LinusW at [4], 
+  drop unneeded *xlate(), *add_pin_range() function
+- add SPACEMIT prefix to macro
+- adjust register comments
+- drop 'index' member, instead calculate from offset
+- add IRQCHIP_SKIP_SET_WAKE as gpio doesn't support irq wake up
+- drop #ifdef CONFIG_OF_GPIO
+- move interrupt mask disabling/enabling into irq_*mask()
+- Link to v5: https://lore.kernel.org/r/20250217-03-k1-gpio-v5-0-2863ec3e7b67@gentoo.org
+
+Changes in v5:
+- export add_pin_range() from gpio core, support to add custom version
+- change to 3 gpio cells, model to <bank number>, <bank offset>, <gpio flag>
+- fold children DT nodes into parent
+- Link to v4: https://lore.kernel.org/r/20250121-03-k1-gpio-v4-0-4641c95c0194@gentoo.org
+
+Changes in v4:
+- gpio: re-construct gpio as four independent ports, also leverage gpio mmio API
+- gpio interrupt: convert to generic gpio irqchip
+- Link to v3: https://lore.kernel.org/r/20241225-03-k1-gpio-v3-0-27bb7b441d62@gentoo.org
+
+Changes in v3:
+- dt: drop ranges, interrupt-names property
+- Link to v2: https://lore.kernel.org/r/20241219-03-k1-gpio-v2-0-28444fd221cd@gentoo.org
+
+Changes in v2:
+- address dt-bindings comments, simplify example
+- rebase to 6.13-rc3 
+- Link to v1: https://lore.kernel.org/r/20240904-03-k1-gpio-v1-0-6072ebeecae0@gentoo.org
+
+---
+Yixun Lan (3):
+      riscv: defconfig: spacemit: enable gpio support for K1 SoC
+      riscv: dts: spacemit: add gpio support for K1 SoC
+      riscv: dts: spacemit: add gpio LED for system heartbeat
+
+ arch/riscv/boot/dts/spacemit/k1-bananapi-f3.dts | 11 +++++++++++
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi    |  3 +++
+ arch/riscv/boot/dts/spacemit/k1.dtsi            | 18 ++++++++++++++++++
+ arch/riscv/configs/defconfig                    |  1 +
+ 4 files changed, 33 insertions(+)
+---
+base-commit: 279d51ad9f6dc0c667f6f141a669b2c921277d1a
+change-id: 20240828-03-k1-gpio-61bf92f9032c
+
+Best regards,
 -- 
-2.45.2
+Yixun Lan
 
