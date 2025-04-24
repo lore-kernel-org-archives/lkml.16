@@ -1,84 +1,93 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9A3E545
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290C915B0EC
 	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 14:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745503446; cv=none; b=IPhrWKGRKuVNXueBtaZWl4HJqMFRPdzZFSYEBiLj5w774tacXg/4Bge+gRKx8plJSSWNBGOZ3ELfI/JorVc49B8DDW9N0iRdaboa3i5JPOZvZt+90syJeXjiR3urAaUXmaV4dBKb9Ix0zG7g5TN1J4FET8WkfPegKOr6/k14FL0=
+	t=1745503445; cv=none; b=ahB32B21PWq9HzZ6FGZ/arEmKuJc2fE2gUe/4Q+vXS0yaz3hV2uoI3pO44Xn+QULc2klOkhDlV9bk+ZhImbSi1Wrm41bXFuAlHXYfez78VWMNlGJwmqjA9orHZ0w6ppGQbFHSxgP604Iv5vOdmzCD7ZJ9OU9o758e2QC/Uh47UU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745503446; c=relaxed/simple;
-	bh=DbkXLLMiBk0YrHxa0nSuY06ZZogYG6FMv64IFAM7UnQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K5cQEbfxGkDh5P78nPnK6aZJOpZJbW9gnUzRIMq3YCEJ56KnCtZYExUrmdPMrU1F6HjNtdKKwfX3VV0y5JilTF4VVzpd+xCc92D6RI0kxdLanv/AzHDfHf5WKCKdqNCA8bwMRgBWpYVM2JV3s1p/ALxBXVrsUD2aiJ/eEOgWv9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4ZjyQP6592z27hWM;
-	Thu, 24 Apr 2025 22:04:29 +0800 (CST)
-Received: from kwepemg200012.china.huawei.com (unknown [7.202.181.63])
-	by mail.maildlp.com (Postfix) with ESMTPS id 638BB1402CD;
-	Thu, 24 Apr 2025 22:03:46 +0800 (CST)
-Received: from DESKTOP-A37P9LK.huawei.com (10.67.108.232) by
- kwepemg200012.china.huawei.com (7.202.181.63) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Thu, 24 Apr 2025 22:03:45 +0800
-From: xieyuanbin1 <xieyuanbin1@huawei.com>
-To: <linux@armlinux.org.uk>
-CC: <liaohua4@huawei.com>, <lincheng8@huawei.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<nixiaoming@huawei.com>, <sfr@canb.auug.org.au>, <wangbing6@huawei.com>,
-	<wangfangpeng1@huawei.com>, <will@kernel.org>, <xieyuanbin1@huawei.com>
-Subject: RE: [PATCH] ARM: spectre-v2: fix unstable cpu get
-Date: Thu, 24 Apr 2025 22:03:30 +0800
-Message-ID: <20250424140330.42007-1-xieyuanbin1@huawei.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <aApBpnDcq2KNkfAs@shell.armlinux.org.uk>
-References: <aApBpnDcq2KNkfAs@shell.armlinux.org.uk>
+	s=arc-20240116; t=1745503445; c=relaxed/simple;
+	bh=dBqryzxFowwxhppBGiman9vzM6x2rHYiNf1C6NBfwok=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hOKpd2y9q5SAiDAua7LMTGbn5/YrVCPQxZopIuwKIvggF3Adnxvhhq9+Pj2pshp2CUzYJRJp+wDrloh/+jnd/ftHkL44rAV+2+f4LE5smeTL9xUedyHFUwDEVcFHTHR52zO7qfksATfH9zAxKUAh996WK1OzQaUulL2SjXnEyXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GYIqTjOM; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GYIqTjOM"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2ff799d99dcso1029473a91.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745503443; x=1746108243; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6ngV1N+K2wLCHm2Zau2mYRJ29Fj0ceXNMX7YLmapOIk=;
+        b=GYIqTjOMhc62tezAScM9lqVg3F3EBCUeMoXsCmHOZI5HDALTE1lNdjLf9Bfdowj15C
+         QoKvNN76PrjHlKKm2+TU/Ekwa+Q+bZHVCr4U5ZikocGZl9QS5sQNf0A0oPIpaTJyPdcs
+         0t0sVDfQbNpF0wOFova/Emj7aG4/qx0xak6e80pL9D97ryNpES9E0cm911/yXbPbYMeM
+         /bEvjahgpfOF3oMt9tby7nJRolavt902Z1tIO9xBqNZKSlGkVgdme8A2V9cZPflsmpqJ
+         Qvr4YK4WnyYajaappN7Zbaoclfzdv57EyOynZQkVoG7GU22Rv22V2BVvcoXBVh4F6F76
+         /jJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745503443; x=1746108243;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6ngV1N+K2wLCHm2Zau2mYRJ29Fj0ceXNMX7YLmapOIk=;
+        b=uV4/E9s60TI4uHLifBVXELQHSsKIqZ/WMN4sTRSzujeZfC2ffvdbbLiTHBXHHqtGlZ
+         NsvPvClH1NXbTlZnmN17cHsAEFZiHPqUk+vNSVnyG4AiC+CsItRJf0fkgKA9tbWYSbtN
+         7flPO6hwo3tuyacadtPg7ZJOXeS+YlwYcpP/VzGn8Q6YVMhgpt7sDhWtsNFPhFLZ1EQn
+         ZuXdUXyXDheZ/aU4Q2uD8kslT6BUUOTVsoKXwMif0fvpSKYEEh4yUihXt4+100ecBZCh
+         a2/CKhsZemddfXP06gQjLG8iYsH3s1YzwagkOOKvS1JJYazYfncyuLqGRg0U5edTVSSP
+         hiyw==
+X-Forwarded-Encrypted: i=1; AJvYcCVd81W/H3PTX/hhWvXfkinmpcIpgPFf0fO4o8psIMiVyir3+KYnHNJLWuVnIR1IiIAsWw7DRhWBjl0ulXQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTukWGg13FNA7mmXlfcS1O6/AJ2vNWizKAAP2SMaqNzluue+HX
+	WJyqjR+RNoy7LPmnMRj1GWt63TxWwLmNtT5NPx4FXqU546N5AKjh7yjej69NNA5WGqN+3uYT17s
+	6KOz4NV08Qr/TzM3OswfVV2LtUGmjFhCmiDXW
+X-Gm-Gg: ASbGncsmgvIWtynSHMRmuZyc/qQp/oBydCF7pFR84L53gv7vvHgdfOGAvbvYVSg66Sr
+	QeL+umd+btyNtZdtiVXyvr/j8tS4gnTg/Mv8W8stflnm9jUBcbo0rq2xlj1WJ+dF/ErGnwGw2to
+	E7BNAeHb7su9ExgTMO9PUJbw8BbAj5r8k0EiYGbl1MYXuOcnykywGx
+X-Google-Smtp-Source: AGHT+IFI7REgkeRSxQxSd1FHDaxZf97gZlVyXo0QeWMvvGcT9esWNTNUQbLcm1jfhn6LWHmLFgt6vZLSMvWBK0v7PLU=
+X-Received: by 2002:a17:90b:2b46:b0:2fe:b016:a6ac with SMTP id
+ 98e67ed59e1d1-309ed29d050mr4311829a91.15.1745503443200; Thu, 24 Apr 2025
+ 07:04:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemg200012.china.huawei.com (7.202.181.63)
+References: <20250416085446.480069-1-glider@google.com> <20250416085446.480069-4-glider@google.com>
+ <CANpmjNNmyXd9YkYSTpWrKRqBzJp5bBaEZEuZLHK9Tw-D6NDezQ@mail.gmail.com> <CAG_fn=UBVzq3V4EHQ94zOUwdFLd_awwkQUPLb5XjnMmgBoXpgg@mail.gmail.com>
+In-Reply-To: <CAG_fn=UBVzq3V4EHQ94zOUwdFLd_awwkQUPLb5XjnMmgBoXpgg@mail.gmail.com>
+From: Marco Elver <elver@google.com>
+Date: Thu, 24 Apr 2025 16:03:26 +0200
+X-Gm-Features: ATxdqUGU-siYw04IIKznlGV5anGHNOlCDPYBUIfwFfw_Fq57MHjDZ_h43sRjrBo
+Message-ID: <CANpmjNM8W67r2W8FNbcDzjaV1HVE5R77ZFgbUABYusgWBzqpTA@mail.gmail.com>
+Subject: Re: [PATCH 3/7] kcov: x86: introduce CONFIG_KCOV_ENABLE_GUARDS
+To: Alexander Potapenko <glider@google.com>
+Cc: quic_jiangenj@quicinc.com, linux-kernel@vger.kernel.org, 
+	kasan-dev@googlegroups.com, x86@kernel.org, 
+	Aleksandr Nogikh <nogikh@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Ingo Molnar <mingo@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Xie Yuanbin <xieyuanbin1@huawei.com>
+On Thu, 24 Apr 2025 at 15:59, Alexander Potapenko <glider@google.com> wrote:
+>
+> > > --- a/arch/x86/kernel/vmlinux.lds.S
+> > > +++ b/arch/x86/kernel/vmlinux.lds.S
+> > > @@ -390,6 +390,7 @@ SECTIONS
+> > >                 . = ALIGN(PAGE_SIZE);
+> > >                 __bss_stop = .;
+> > >         }
+> > > +       SANCOV_GUARDS_BSS
+> >
+> > Right now this will be broken on other architectures, right?
+>
+> Right. I'm going to make it depend on X86_64 for now.
 
->Consider your test program running on CPU 1 which requires fixup. It
->takes a fault, and before we enter harden_branch_predictor(), we end
->up being migrated to CPU 0, but doesn't require a switch of the MM.
->Let's say we then disable preemption and then call
->harden_branch_predictor(), and then restore the preemption state.
->The thread then gets migrated back to CPU 1. Again, no switch of
->the MM.
-
-Your assumption is correct, and I agree with it.
-
->I don't care if this disrupts test tooling. The trade off between
->test tooling having a problem and a silent data leak through this
->channel... the answer is pretty obvious that the test tooling
->failing is less important than having a silent data leak.
-
-I have never mentioned a test tool, and I agree with you.
-The problem I mentioned before is possible illegal instruction and panic.
-
-
-
-If we want to fix this problem without affecting performance,
-can we add a new hook functions (in fsr-3level.c)?
-
-I don't know much about the details of the ARM manual,
-Are all user-mode access to kernel-mode addresses are `permission fault`
-and common page faults (hot code) are `access flag fault`?
-If so, we can add a new hook function to deal with `permission fault`
-and set it in fsr-3level.c.
-This means we fix the problem without adding a branch,
-that there is no performance loss.
-
-Otherwise, we can only add condition judgment before enabling irq,
-which means that performance loss occurs. This is so sad. :(
+This needs to be done with a 'select HAVE_KCOV_UNIQUE' or such from
+arch/x86/Kconfig.
