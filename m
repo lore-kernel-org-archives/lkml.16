@@ -1,221 +1,120 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA65B1A4F12;
-	Thu, 24 Apr 2025 03:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD171A316A;
+	Thu, 24 Apr 2025 03:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745464238; cv=none; b=REDoZlT5Y4FPR6ImQaUSpkH9cSdRrKdONb3mjn/8zj7Lk17JCSFMzAG3vD4A/v56kLoPkCf14uH1AZYcwr81hThzR/MvA2xVV1LOMuw4s2MDg1LwmyISbgs8C8mosz2EyzNqECf3s53GzhfqVomI83eduL+MsrTzpAc6eHkzb9g=
+	t=1745464246; cv=none; b=HbdHup15StPgh9Zkf8B+YfSE3/pcJxrZvt0IpEXdmXK8RPZOelBc/OOQJiGjjdtgF0SiammA9ba+IgvRwBNaBZavYVmt0oLML70ti5PxmAYCUm16kBbf9fErM9IaayoQL8TpCDlencdkInj+FTkc2B8pU4LceuFLw8ekMsd4l5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745464238; c=relaxed/simple;
-	bh=4Q49F1KukDj1GrSV5/vRYAfmizgIQDt+rh/0z9uXGO0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dZZJRqeW3tBBavedQ3bF6+Ok8tgTJZvUg85wv0Hd93BpecAhlUYUWbcBazN5Lk0a0n0KavCW1CDKMjNQbqBe0ecoT00PQuVps0RzVEzork0tKSxBVLnI81EBkhWkDqrnkEhKvm+kJRakjiXMnUDKf5QOCOudY6B3pSSP3Y1dWcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G5XyVcda; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745464246; c=relaxed/simple;
+	bh=/p3HVjFgpxqGQ0V/0D9C9PiDNbGsiswou45qg6NTwtU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t388JYm69WAqYlNyqLmipd/DdoUQPjzVJ2Lcf+6ZqTPmvWlb5m7mumw7Is+XCACTEZaBaFIw4NPngIUT6b7XeP/uvGGzZIo6fauJgSpfT4uITlreA2o5crl8zzr4Uh5KeoMK9DP9+QutoiJK5ftyLHL32dgkD8Lq5swiC6WYoZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JyY0SXQI; arc=none smtp.client-ip=209.85.208.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G5XyVcda"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745464237; x=1777000237;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4Q49F1KukDj1GrSV5/vRYAfmizgIQDt+rh/0z9uXGO0=;
-  b=G5XyVcdaXAtyFi+rf1R4tH5J0ypxPfN3xMiQUnZ0LL7sRd6t9PzJZ+7V
-   H4Ag8MIwDk50zLU82msq3B2ClWWqAsZyhBW3sb0d+tb338lLJrdznmaRD
-   894IcrThXkeRcfDrzmBcQ+LwDUWgl5zRQnjCdpVD08ksBPivQ8M1NcPP/
-   mk5ljUlpKnKSxt3167RmI0zk0garVcK7Pz3Sj1Q02Nua7YITxS6C5Jgxx
-   dCH1J5zn0wd+/V5DJI1NjD+j2F1i6GQ/9fTgoRlsSsVfhHXdQGGxvESs9
-   myU0ENNazitWcTJZVDEZCRnDn815om8m4GojObBznDWIFuOqkeYUEqzUz
-   g==;
-X-CSE-ConnectionGUID: d+winD++RemqZ2pSou1zJA==
-X-CSE-MsgGUID: Co7aXWvMS2apDZbdq9zdag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11412"; a="58072918"
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="58072918"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:10:36 -0700
-X-CSE-ConnectionGUID: el00KPCjQSSoadQq8uKZ/w==
-X-CSE-MsgGUID: HHBrlznYQSicNFNPz9RIkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,233,1739865600"; 
-   d="scan'208";a="137659327"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Apr 2025 20:10:30 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	x86@kernel.org,
-	rick.p.edgecombe@intel.com,
-	dave.hansen@intel.com,
-	kirill.shutemov@intel.com,
-	tabba@google.com,
-	ackerleytng@google.com,
-	quic_eberman@quicinc.com,
-	michael.roth@amd.com,
-	david@redhat.com,
-	vannapurve@google.com,
-	vbabka@suse.cz,
-	jroedel@suse.de,
-	thomas.lendacky@amd.com,
-	pgonda@google.com,
-	zhiquan1.li@intel.com,
-	fan.du@intel.com,
-	jun.miao@intel.com,
-	ira.weiny@intel.com,
-	isaku.yamahata@intel.com,
-	xiaoyao.li@intel.com,
-	binbin.wu@linux.intel.com,
-	chao.p.peng@intel.com,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [RFC PATCH 18/21] KVM: x86: Split huge boundary leafs before private to shared conversion
-Date: Thu, 24 Apr 2025 11:08:44 +0800
-Message-ID: <20250424030844.502-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20250424030033.32635-1-yan.y.zhao@intel.com>
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JyY0SXQI"
+Received: by mail-lj1-f194.google.com with SMTP id 38308e7fff4ca-30bfd4d4c63so4901631fa.2;
+        Wed, 23 Apr 2025 20:10:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745464243; x=1746069043; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z1Co0cn3i/A9qHsD58ViRmTVSi6PlF7GGnjifnz4juU=;
+        b=JyY0SXQIM882aVXORUattmPHBAo2WIehb6Y6m78XCchdPMmPkhVp3iksxvzYd3UK70
+         ODsdCxRqNkvm2+oI9Uam7Z7O2MIM0/FIpa3EufEIRx7VmoAfKv/0FWB/6kkvVXwjeAJT
+         aHtfNI5HGFRJwqdM9ASPzcAsprQukHTrDf6TUTZT3JUcEgxHHQFXHz77HyKtNi/mUS5o
+         8SeE96xlQMnP/l0YJYOj6Kb/tlTqMFDDyUGfOEf/ee+PZSPPAjF3fRzm6shwZGKdaM5/
+         kFSYs953OgWc4kYPEgd3AOk+FGSn5k+bX08B1Qb9e5fn+BCSdsYYQD8Wj2F5xeMbnFb6
+         YiZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745464243; x=1746069043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z1Co0cn3i/A9qHsD58ViRmTVSi6PlF7GGnjifnz4juU=;
+        b=UhO+gG+KBGAhww5mYO2fjO34YhqB59ZF3nciElt2v+t+o+aodkgC4iSmqk5x3prbPy
+         z3idnoA4knhVDnOu5SwmR2WAFvCJJ3YxqyGy4Tv/651vod823Fi17u1ae4970C7nqswx
+         fYH5yjBkEabE8ePOquL+c65c9rdSB2112A0+1hVKRrwfTukYFbDCcfBB8PZY/AH9FqfD
+         GfIEzjpd63YbyG53Qmi0ekae0i0TKnHPSjylihRmCYtormlhhZsxKNf5+gzim6Ikdy3o
+         5RxbvqUPMqXh7ISbggComgskQRPndiVulWwjHk6FX8OHQeQliULTF6qBtu8dUTLCed/J
+         o/iA==
+X-Forwarded-Encrypted: i=1; AJvYcCUjuH1ojWF2TV70JD3Ixa6jHAyH1cZGhm6jB6jdJHC9tGSh74uhaivpI8C3t+ylzfaCiqT0eJtCez5dCxk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVQ7Efur7VJ4m6nDHl7gOUEr9MsfqFUYuDBA3OoPNFuqPcz4da
+	9xby7bTjSekOLP3vGmNqFmZEW/hGPD5nqlwGnawxb7fH0WYahp9XPYxlKM/ZgsXyIsig1lfyxAO
+	Wmh2nIJY637P+SfL1JCxxFieBMiE=
+X-Gm-Gg: ASbGncshFvJOKZChAjx8KBhhrkgK2hEhTbkkTksFPwvl+SonTr4luSyO7LofQwkxWrq
+	jYvPEkoD+pHX6/SbOISUcAW7SQr1JTaIH4+Abo+OynFtiqWyekGJINMCZK1lrIE6nnvuHFmv5eG
+	es5uMrUEpMH5Tr7ZnjhbWn8A==
+X-Google-Smtp-Source: AGHT+IGZPSs7I6wLb18rgC6nawaXmuu+0OnenPZD2gVkjXjHu/WC+qoSZNv9ANWDtXHAuVFiIVEFsiL/H6OUSYZNrTI=
+X-Received: by 2002:a2e:a99c:0:b0:30b:d474:12d1 with SMTP id
+ 38308e7fff4ca-3179fcc7607mr3719251fa.30.1745464242862; Wed, 23 Apr 2025
+ 20:10:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250402023900.43440-1-bsdhenrymartin@gmail.com>
+In-Reply-To: <20250402023900.43440-1-bsdhenrymartin@gmail.com>
+From: henry martin <bsdhenrymartin@gmail.com>
+Date: Thu, 24 Apr 2025 11:10:32 +0800
+X-Gm-Features: ATxdqUFb6X6iv50PzP6nEFnaRkPadE_lrFGoYoV1uyUuwfYYHIe7ojHQ5K9Gtgo
+Message-ID: <CAEnQdOrR19H84EooKsFTMCPypeEZwR3GD7FA-sj=toxQP-Xoyg@mail.gmail.com>
+Subject: Re: [PATCH v1] dmaengine: ti: Add NULL check in udma_probe()
+To: peter.ujfalusi@gmail.com, vkoul@kernel.org
+Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	nathan.lynch@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Before converting a GFN range from private to shared, it is necessary to
-zap the mirror page table. When huge pages are supported and the GFN range
-intersects with a huge leaf, split the huge leaf to prevent zapping GFNs
-outside the conversion range.
+Hi Peter, Vinod,
 
-Invoke kvm_split_boundary_leafs() in kvm_arch_pre_set_memory_attributes()
-to split the huge boundary leafs before calling kvm_unmap_gfn_range() to
-zap the GFN range that will be converted to shared.
+I hope this email finds you well. I wanted to follow up on my previous patc=
+h
+submission to check if there are any additional feedback or changes you'd l=
+ike
+me to address. If so, I=E2=80=99d be happy to incorporate them and send a v=
+2.
 
-Unlike kvm_unmap_gfn_range(), which cannot fail, kvm_split_boundary_leafs()
-may fail due to out of memory during splitting.
-Update kvm_handle_gfn_range() to propagate the splitting error back to
-kvm_vm_set_mem_attributes(), which will subsequently fail the ioctl
-KVM_SET_MEMORY_ATTRIBUTES.
+Please let me know your thoughts. Thanks for your time and review!
 
-The downside of this approach is that although kvm_split_boundary_leafs()
-is invoked before kvm_unmap_gfn_range() for each GFN range, the entire
-conversion range may consist of several GFN ranges. If an out-of-memory
-error occurs during the splitting of a GFN range, some previous GFN ranges
-may have been successfully split and zapped, even though their page
-attributes remain unchanged due to the splitting failure. This may not be a
-big problem as the user can retry the ioctl to split and zap the full
-range.
+Best regards,
+Henry
 
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- arch/x86/kvm/mmu/mmu.c | 17 +++++++++++++----
- virt/kvm/kvm_main.c    | 13 +++++++++----
- 2 files changed, 22 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index ba993445a00e..1a34e43bd349 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -7694,6 +7694,9 @@ void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
- int kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 				       struct kvm_gfn_range *range)
- {
-+	bool flush = false;
-+	int ret;
-+
- 	/*
- 	 * Zap SPTEs even if the slot can't be mapped PRIVATE.  KVM x86 only
- 	 * supports KVM_MEMORY_ATTRIBUTE_PRIVATE, and so it *seems* like KVM
-@@ -7706,7 +7709,7 @@ int kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 	 * a hugepage can be used for affected ranges.
- 	 */
- 	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
--		return false;
-+		return 0;
- 
- 	/* Unmap the old attribute page. */
- 	if (range->arg.attributes & KVM_MEMORY_ATTRIBUTE_PRIVATE)
-@@ -7714,7 +7717,13 @@ int kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
- 	else
- 		range->attr_filter = KVM_FILTER_PRIVATE;
- 
--	return kvm_unmap_gfn_range(kvm, range);
-+	ret = kvm_split_boundary_leafs(kvm, range);
-+	if (ret < 0)
-+		return ret;
-+	flush |= ret;
-+
-+	flush |= kvm_unmap_gfn_range(kvm, range);
-+	return flush;
- }
- 
- static bool hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
-@@ -7769,7 +7778,7 @@ int kvm_arch_post_set_memory_attributes(struct kvm *kvm,
- 	 * SHARED may now allow hugepages.
- 	 */
- 	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
--		return false;
-+		return 0;
- 
- 	/*
- 	 * The sequence matters here: upper levels consume the result of lower
-@@ -7816,7 +7825,7 @@ int kvm_arch_post_set_memory_attributes(struct kvm *kvm,
- 				hugepage_set_mixed(slot, gfn, level);
- 		}
- 	}
--	return false;
-+	return 0;
- }
- 
- void kvm_mmu_init_memslot_memory_attributes(struct kvm *kvm,
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 72bd98c100cf..6d9b82890f15 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2408,8 +2408,8 @@ bool kvm_range_has_memory_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 	return true;
- }
- 
--static __always_inline void kvm_handle_gfn_range(struct kvm *kvm,
--						 struct kvm_mmu_notifier_range *range)
-+static __always_inline int kvm_handle_gfn_range(struct kvm *kvm,
-+						struct kvm_mmu_notifier_range *range)
- {
- 	struct kvm_gfn_range gfn_range;
- 	struct kvm_memory_slot *slot;
-@@ -2462,6 +2462,8 @@ static __always_inline void kvm_handle_gfn_range(struct kvm *kvm,
- 
- 	if (found_memslot)
- 		KVM_MMU_UNLOCK(kvm);
-+
-+	return ret < 0 ? ret : 0;
- }
- 
- static int kvm_pre_set_memory_attributes(struct kvm *kvm,
-@@ -2526,7 +2528,9 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 			goto out_unlock;
- 	}
- 
--	kvm_handle_gfn_range(kvm, &pre_set_range);
-+	r = kvm_handle_gfn_range(kvm, &pre_set_range);
-+	if (r)
-+		goto out_unlock;
- 
- 	for (i = start; i < end; i++) {
- 		r = xa_err(xa_store(&kvm->mem_attr_array, i, entry,
-@@ -2534,7 +2538,8 @@ static int kvm_vm_set_mem_attributes(struct kvm *kvm, gfn_t start, gfn_t end,
- 		KVM_BUG_ON(r, kvm);
- 	}
- 
--	kvm_handle_gfn_range(kvm, &post_set_range);
-+	r = kvm_handle_gfn_range(kvm, &post_set_range);
-+	KVM_BUG_ON(r, kvm);
- 
- out_unlock:
- 	mutex_unlock(&kvm->slots_lock);
--- 
-2.43.2
-
+Henry Martin <bsdhenrymartin@gmail.com> =E4=BA=8E2025=E5=B9=B44=E6=9C=882=
+=E6=97=A5=E5=91=A8=E4=B8=89 10:39=E5=86=99=E9=81=93=EF=BC=9A
+>
+> devm_kasprintf() returns NULL when memory allocation fails. Currently,
+> udma_probe() does not check for this case, which results in a NULL
+> pointer dereference.
+>
+> Add NULL check after devm_kasprintf() to prevent this issue.
+>
+> Fixes: 25dcb5dd7b7c ("dmaengine: ti: New driver for K3 UDMA")
+> Signed-off-by: Henry Martin <bsdhenrymartin@gmail.com>
+> ---
+>  drivers/dma/ti/k3-udma.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+> index 7ed1956b4642..f1c2f8170730 100644
+> --- a/drivers/dma/ti/k3-udma.c
+> +++ b/drivers/dma/ti/k3-udma.c
+> @@ -5582,7 +5582,8 @@ static int udma_probe(struct platform_device *pdev)
+>                 uc->config.dir =3D DMA_MEM_TO_MEM;
+>                 uc->name =3D devm_kasprintf(dev, GFP_KERNEL, "%s chan%d",
+>                                           dev_name(dev), i);
+> -
+> +               if (!uc->name)
+> +                       return -ENOMEM;
+>                 vchan_init(&uc->vc, &ud->ddev);
+>                 /* Use custom vchan completion handling */
+>                 tasklet_setup(&uc->vc.task, udma_vchan_complete);
+> --
+> 2.34.1
+>
