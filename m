@@ -1,107 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE7C1D7E4A;
-	Thu, 24 Apr 2025 15:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11F54315C;
+	Thu, 24 Apr 2025 15:28:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745508475; cv=none; b=NBgRYUfUoTFsTFLK+wREQWG9BN/zffUx+DstXZRYvSyZkScgYJqoBjP1/ZxJzMdSwYSmISwEENuLlreqXv1rkuD8rVBS35h5DhZLPuS7lFXytCLk/2jbDPWTf9qTKveeTp4iL2jQK5UzQFsMCtNsGO3YR84T4+6TMSTw+zyVDN0=
+	t=1745508519; cv=none; b=a1clfs6i6WCOzZCpWHo12ewEQwukM6aX10HkzOHpYa3fUZoaCGTu5lo8sJzA6/IuRdpXjOfcwFqtF4n+mGkicvAnQC5KeXuRau5x/ncN2gRBhSLkyHdp9+omt9kzHYBO1nv7zqs/pq7GS+fqPGl3tlpoeWeM/2GJ0TELryfqJjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745508475; c=relaxed/simple;
-	bh=u/QtdMUzBzBtMDX1S0v4wSSMPI+jL4o/EmMuWHiQGew=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bHqLHKuJKC1iq7XCVk03Jy2I6zfHiuHnIShRkhEMBdgPiWLULec0EJ3EKm4lUxE1aaQM5UJAoSgiZ1NM11VErCualVECqqx0+sLZzfI3IcGoWWHguEjLmS0PHLhpHI99faVWB5nrbBqWr0C+TE3NSvO8ZzQSCL+XGzIa+ObM6+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IoerhUH1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745508519; c=relaxed/simple;
+	bh=7i67DHTTp0mD9qhweNExe/vd7EB2jhk7sH0q8SWYgGQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EBcRSsMTyZByVnKMzHlx3nQHEeY5mR5Zyh01FU/NR4ZdBvyeVAWcn7YgQEPAxJGGrySVePs85/mDkUt75zyKBTEYbA/9mjxIUz70G5O5FPnsCR7jyWU96VgeA3UcS7z46aLBQeQ2EhtznUWWEfztFvzVflKvOTR+gT5IRnc/vgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UZa6MpPp; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IoerhUH1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA4E6C4CEE3;
-	Thu, 24 Apr 2025 15:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745508474;
-	bh=u/QtdMUzBzBtMDX1S0v4wSSMPI+jL4o/EmMuWHiQGew=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IoerhUH1fRxW5aABJs8abtvAg/u8a0qria0HkXkB8rUzGG38+W3mOpesD9vLeaGF8
-	 klyOb1at3fSI2jwXvK8nA+iF6OMVmeZ7AyhPTjshM0dEkj0BYc887GThrQpEIQSAyJ
-	 saU/QUY0JJTiwxhJeBpEicQKQ4tJHZM5OPk679dh6uJjDMRLIs5n+NlX5UrbKBZwKm
-	 PNZpiCTCJG15ZW7isPDuc2/d3qvKPGZ+XrKiXmRpsO7QvZe6p96zLRhfiDLASrlxr5
-	 swdvLB5k+t4cWNb0vCwCsOPzxZ1L4DnYMTpnPEgdTmbeCAzxEYle7+SC+QstLKX1O2
-	 /SleApDzN6HQA==
-Date: Thu, 24 Apr 2025 16:27:50 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: usb: generic-ehci: Add VIA/WonderMedia
- compatible
-Message-ID: <20250424-chaffing-mating-e512c198c0e6@spud>
-References: <20250423-vt8500-ehci-binding-v1-1-1edcb0d330c2@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UZa6MpPp"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c55500d08cso123660785a.0;
+        Thu, 24 Apr 2025 08:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745508516; x=1746113316; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hxUaLc+eAAOlr10PhVJK/e76IalwRfvS586Oa3BeZcE=;
+        b=UZa6MpPpUUf6CIAP4OUYJFTU/f15c4LyeVd2hqjsLeh32z9mLIXFOa2PoFsDS837I+
+         8z+/ST40n7WO4+JupU3tPVcjStWzrqOtX5xbzFQ3KAnHXKJYgzDVLU9cnNBvrYsoTtsB
+         +dkxNVx3QNZPK35FGvMFbl2JA+iit2SpRPkxRimQevq8BYQMss7mnRf9VjlZnsNcEoG/
+         krPcUNJRX6JIJKbKiQliKg+3WDVXFLQcoYNIyO3fgzOd58KE07IQWWVoJw8OQz5//dN6
+         bbSczN6whInWa4KX4okQgG5llhXnSQM7Lfascwa1ddcgcIl8vPanI8rPAx/zQ8GIFPUl
+         QQTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745508516; x=1746113316;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hxUaLc+eAAOlr10PhVJK/e76IalwRfvS586Oa3BeZcE=;
+        b=gjPeW38+gNkwqOUvAN15hUG3MS4mvVNBHorpEXXLj2P3L4qbm3CnXnXt4ATkAHjrHQ
+         RcC5k8zYdL2q8A4eXAKLbbBNG6RyppXBeYsboI+wpI+BGZJZiCIPTQNSwM2t4SyErtrX
+         HXkff+Ngd55oF4O8W8bNKyZwdF7CznmK6c3EMGnZk/RaHlICdKM9oijVwNiqek710JP/
+         e4FeLYGlQbO25APVfoq8c4tEvSzC3zC6AB1TAeQWufDlG6PMvsnAOqdYWUSoxpLW5I7u
+         XTNYtZlZZsjiuPiHUTKoD9OnBuMVpDVcHzKWPzev1d5/sQJ5DxhiRcQjYHdgsIq1iGoa
+         ktHw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/uPFP2jF2RunWORcbSnoS4KIvS49qQJ3Z92eG5r2RmNlrpavZmY8x3kDDyURRU+zNT7GpXYR33lDh4fY2@vger.kernel.org, AJvYcCUVRVuLYOPGmk1fjrdboznUSYsLx0z7RY8rv2e7MIM6GBT86rUgKlFxQddEu7Jl07wyqfqCvLrVOeKRBdT2@vger.kernel.org, AJvYcCX7K1AqMOnDaE/OBJLd7nyIrNnAoukq2xOBCJyKrNYjiRRbXWrwWD6kYJf4u9mss50sdSItbs+t2A==@vger.kernel.org, AJvYcCXUZqhgWaThiDghSHjo2w+UxRCK+bGv+nCCoy7AZZG8LNPNQze62aDdRbzDm3wQ70KS0Bm70aN2C9K7y5KmhTAIXgculxa1@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPHlBb/OMzWHXRoqgUN3OeHOCiCDF5LAtKmCgu79jcD1PwZCDw
+	V0wajeP8HGDuteiWtV1rLVl6FXuyeluA3dBnX14jdme8erjwB+5OhVow02Q+
+X-Gm-Gg: ASbGncuXhfFqvSKIniVs4W4fLw5mslHRaNaukx3t935ZBgboiv1dhTZRSH6gs+/+VJp
+	DDb0MWAu6s3O9epxWUt/qZ0mfxAq2DQ4xucsFuHU4Ws9ADzNDg9/mK+xZNKsP2fu86/4kR1AuHd
+	MKw6AKlIGAv5Z99dAWi2rtpYdJ5Voo/SMW5dXIFuMtIpkeD7CiAgDCgss31SgkHOJmi9/aHtijv
+	eBAFz29P8sn30HKzHxrctogLA3AgYV4Izf5x2OxWtN1ptZmTmRFa3nXHMO1XlwEyuMqqRFJlJh6
+	YBT3kpV+w7JgkdGMt1lPBOnBoSLAJ7Zci7ToPiGs+h0wAxlqdtzXR72K6xIIRKCqDWiFhtwOHOA
+	VAi1g+5G/3/d5FUq7eNHRSK8gBy52rmLzMJxHX4um15768hTNjJ4HTUJEQiEwvz5WyzhI
+X-Google-Smtp-Source: AGHT+IHuVep7wcdvkBt64FmXooKgNcSCpYuvYwk+/ttIsu2FF0Lr5ouXgL7PRcjfHKFl1Bw+Ee36aA==
+X-Received: by 2002:a05:620a:4382:b0:7c9:50a6:8595 with SMTP id af79cd13be357-7c956f0026fmr485281385a.28.1745508516460;
+        Thu, 24 Apr 2025 08:28:36 -0700 (PDT)
+Received: from fuse-fed34-svr.evoforge.org (ec2-52-70-167-183.compute-1.amazonaws.com. [52.70.167.183])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c958c948a6sm99295085a.18.2025.04.24.08.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 08:28:36 -0700 (PDT)
+From: Stephen Smalley <stephen.smalley.work@gmail.com>
+To: 
+Cc: paul@paul-moore.com,
+	omosnace@redhat.com,
+	selinux@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] fs/xattr.c: fix simple_xattr_list to always include security.* xattrs
+Date: Thu, 24 Apr 2025 11:28:20 -0400
+Message-ID: <20250424152822.2719-1-stephen.smalley.work@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="AkuIQLd6f/4BOskW"
-Content-Disposition: inline
-In-Reply-To: <20250423-vt8500-ehci-binding-v1-1-1edcb0d330c2@gmail.com>
+Content-Transfer-Encoding: 8bit
 
+The vfs has long had a fallback to obtain the security.* xattrs from the
+LSM when the filesystem does not implement its own listxattr, but
+shmem/tmpfs and kernfs later gained their own xattr handlers to support
+other xattrs. Unfortunately, as a side effect, tmpfs and kernfs-based
+filesystems like sysfs no longer return the synthetic security.* xattr
+names via listxattr unless they are explicitly set by userspace or
+initially set upon inode creation after policy load. coreutils has
+recently switched from unconditionally invoking getxattr for security.*
+for ls -Z via libselinux to only doing so if listxattr returns the xattr
+name, breaking ls -Z of such inodes.
 
---AkuIQLd6f/4BOskW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Before:
+$ getfattr -m.* /run/initramfs
+<no output>
+$ getfattr -m.* /sys/kernel/fscaps
+<no output>
+$ setfattr -n user.foo /run/initramfs
+$ getfattr -m.* /run/initramfs
+user.foo
 
-On Wed, Apr 23, 2025 at 11:49:45PM +0400, Alexey Charkov wrote:
-> VIA/WonderMedia SoCs use a plain vanilla EHCI controller with a
-> compatible string "via,vt8500-ehci". Add it to the binding.
+After:
+$ getfattr -m.* /run/initramfs
+security.selinux
+$ getfattr -m.* /sys/kernel/fscaps
+security.selinux
+$ setfattr -n user.foo /run/initramfs
+$ getfattr -m.* /run/initramfs
+security.selinux
+user.foo
 
-You should elaborate here that this is already in the driver and dts
-files. With that,
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Link: https://lore.kernel.org/selinux/CAFqZXNtF8wDyQajPCdGn=iOawX4y77ph0EcfcqcUUj+T87FKyA@mail.gmail.com/
+Link: https://lore.kernel.org/selinux/20250423175728.3185-2-stephen.smalley.work@gmail.com/
+Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+---
+ fs/xattr.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
->=20
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
->  Documentation/devicetree/bindings/usb/generic-ehci.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/generic-ehci.yaml b/Do=
-cumentation/devicetree/bindings/usb/generic-ehci.yaml
-> index 223f2abd5e592ff8cc3ad97f9a325356ea57044a..508d958e698c2e8dad748a6fc=
-def65d6e883b97d 100644
-> --- a/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-> +++ b/Documentation/devicetree/bindings/usb/generic-ehci.yaml
-> @@ -86,6 +86,7 @@ properties:
->            - nuvoton,npcm845-ehci
->            - ti,ehci-omap
->            - usb-ehci
-> +          - via,vt8500-ehci
-> =20
->    reg:
->      minItems: 1
->=20
-> ---
-> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
-> change-id: 20250423-vt8500-ehci-binding-e607bfafdcbf
->=20
-> Best regards,
-> --=20
-> Alexey Charkov <alchark@gmail.com>
->=20
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 02bee149ad96..2fc314b27120 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -1428,6 +1428,15 @@ static bool xattr_is_trusted(const char *name)
+ 	return !strncmp(name, XATTR_TRUSTED_PREFIX, XATTR_TRUSTED_PREFIX_LEN);
+ }
+ 
++static bool xattr_is_maclabel(const char *name)
++{
++	const char *suffix = name + XATTR_SECURITY_PREFIX_LEN;
++
++	return !strncmp(name, XATTR_SECURITY_PREFIX,
++			XATTR_SECURITY_PREFIX_LEN) &&
++		security_ismaclabel(suffix);
++}
++
+ /**
+  * simple_xattr_list - list all xattr objects
+  * @inode: inode from which to get the xattrs
+@@ -1460,6 +1469,17 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
+ 	if (err)
+ 		return err;
+ 
++	err = security_inode_listsecurity(inode, buffer, remaining_size);
++	if (err < 0)
++		return err;
++
++	if (buffer) {
++		if (remaining_size < err)
++			return -ERANGE;
++		buffer += err;
++	}
++	remaining_size -= err;
++
+ 	read_lock(&xattrs->lock);
+ 	for (rbp = rb_first(&xattrs->rb_root); rbp; rbp = rb_next(rbp)) {
+ 		xattr = rb_entry(rbp, struct simple_xattr, rb_node);
+@@ -1468,6 +1488,10 @@ ssize_t simple_xattr_list(struct inode *inode, struct simple_xattrs *xattrs,
+ 		if (!trusted && xattr_is_trusted(xattr->name))
+ 			continue;
+ 
++		/* skip MAC labels; these are provided by LSM above */
++		if (xattr_is_maclabel(xattr->name))
++			continue;
++
+ 		err = xattr_list_one(&buffer, &remaining_size, xattr->name);
+ 		if (err)
+ 			break;
+-- 
+2.49.0
 
---AkuIQLd6f/4BOskW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaApYdgAKCRB4tDGHoIJi
-0pqXAP9UXO7DomFd+ehGdU6VYHx7BPH5waiSfQwdAxqurbIoLwEAm1wFLmWrACe4
-zDXd4Iak4cyD/GEfwFKwLIqprYjaKQQ=
-=n/2W
------END PGP SIGNATURE-----
-
---AkuIQLd6f/4BOskW--
