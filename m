@@ -1,77 +1,85 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC041DED69
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 06:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EAAA1DEFE1;
+	Thu, 24 Apr 2025 06:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745476027; cv=none; b=sUXCyuqp0SfDSuo5DOvzZhuM2FcLxlmnADP9Lw9/bUILzjlYJd4hDclwfvcinTXzKhFqr/QEl9boGpm95aFJeCPFc3l8s548VBRcOS+6uNiAbaLF6lUzQYMRsMFx2KAkEedPMVRQ7NgXpdcXbf7wBiCP3xw0PVyE6jm0ZwtEpT0=
+	t=1745476099; cv=none; b=GbtDR5b1j7G20BBRE5ZrzPjWXiQGXYsvzO+BS9BWj1udUABQsMKUlRQaH1Pma0a4WKk+j3NERfkQtBotp/odosMVuXPh4AZl5CXi9gKh17s2QGLJPvfayyebDuGjnzSQXNewNVgINcp4AVEe3XZev+AlaYiaCYPBbfD6OJobG4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745476027; c=relaxed/simple;
-	bh=1CEUNaxsGYi+QBHFI7XRuBkvQhG1Q2jnC2EGOCsAxeU=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=tUaK837ouu+7Xoh/cBKnMMytFYcWzEbofZa2BrcHQmmOm5wuMngCYUxxk6t4236ni7t/Pj4JUMo9D2aPTMW6vTQzkrEJwHx5mSSl0/6lR+DqZwQgwUSkJzL+RZxA7xl9eQe8n749qLEVDGP+E/9jKKgCObsvj7CS60CNihfTyJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3d5b38276deso12291645ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 23 Apr 2025 23:27:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745476025; x=1746080825;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=abwTUHeE/uM/GG3wbgxZgYH14k44x/XKVziJanaRMJQ=;
-        b=t7kSa+Uhc3u2UvW40nAzrLERW4GHEqOmsrRAMMK+axVoSievtz51H3UCzQaOv2fC5r
-         VSZTumfk1ZlYUmEa8enEKBAASPOh8s9pKMy6Il+/rIaJlyAJZc+h+ShuBWWggcuINH3V
-         GjBpKX80qMw4ITrx0PlUQfvKjoTJYLyaombnsO92fyimLUYSgdHy7e9IA6WeBhiDSMna
-         h3EQlxEim9H1tshaRwJRyQCIvAjnCGba/syW0wNWy8S8YnksOhiw6JMnabuO8eXJCdbk
-         JRX+9EAuGGruz2OBl28PI6OQBX62HAuTb4WEDq3HlxEVgRz4tdNOIbc0wA2AoqL7CSgI
-         o6Gw==
-X-Forwarded-Encrypted: i=1; AJvYcCVCZE6T4av4zC6nN5P0C3Q90o9qrX1CvcvLybAuwWcuFenyuFZqpdRZ61GriG1GciIkArTSB/QbqX+92to=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpHqslgeeVIMg3eiJofUCp7ZYZbRn/45QMwu0ETcTJyN0hNajf
-	Gh8bcv7uuLg+TfBY8bZycBEz/8xe8Vnn0ZvzukN0ZFAYgSvT77F1wcHL40qkodBQW6sQw7vUXRx
-	FdRXNJ0yBFIWzWWy2xs3Bqp6SZcSiOdKYFBxBAlog0kY6aZwmQuKDMu8=
-X-Google-Smtp-Source: AGHT+IFAG+7LNAPZtc1E5WJPuIr/o5oInRFOA+A/8lLUB47/WjeWDwH0OueyKOJzZl0O1FTB1Y/2Re9FjK7IGhotHKn+KtxGYm/U
+	s=arc-20240116; t=1745476099; c=relaxed/simple;
+	bh=iYSuVzTT55E0HMkjyHQ48u+Pp9i1B0teArWGYGyPXkg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LZHSApqKixMOanN53Bhl14Yke/dDmhuh0BU0Yxn5X7o6IMAhEqvoum7doYRW/hNqA1yO+8RDH9hMptbfyaziIWSufeYihKBm9qDIchsFjTOhkYcaGr7LDFaFX3V5245Cf6mlyVZDsGJXKJ2RIf4EBR5OzDizgsd4v2jy2I1oV/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=N8+wBd80; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="N8+wBd80"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53O6RulQ6051983, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1745476076; bh=iYSuVzTT55E0HMkjyHQ48u+Pp9i1B0teArWGYGyPXkg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:
+	 Content-Transfer-Encoding:Content-Type;
+	b=N8+wBd80nTllR28y7wvjC8pRnf63KIVTVc263mLOzIhtKLsxuOE59eq+eLqBN8FR6
+	 sZkke2cR+AHqPdz8t9hy+ZAebmpQMskeWoJeKRWnvzY3XzIyLAaymTpGjbpKjpNWKZ
+	 BhzV8gTo7jBhc24yUZO5Nj4hGP9ZGH22uUAbwErOUuLkYbhWR8uUDh/YRDQPZUx5+C
+	 nawKIf7RAtI5ZEsvIjqA99gehCl+SIrnLlmFq/xpBNY59MECT1SSatFnumaBBmZ8we
+	 qac1bG8a2roUT7nVQxdP70vYwGMr7UrVJ40eUfhtvmL4kB1DeThlBPkfqROv/N0e58
+	 xP07yvu9kCYHQ==
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53O6RulQ6051983
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 24 Apr 2025 14:27:56 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 24 Apr 2025 14:27:56 +0800
+Received: from RTDOMAIN (172.21.210.124) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Thu, 24 Apr
+ 2025 14:27:56 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <andrew+netdev@lunn.ch>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <horms@kernel.org>, <pkshih@realtek.com>,
+        <larry.chiu@realtek.com>, Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net-next] rtase: Modify the format specifier in snprintf to %u.
+Date: Thu, 24 Apr 2025 14:27:46 +0800
+Message-ID: <20250424062746.9693-1-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:12c3:b0:3d3:f7ed:c903 with SMTP id
- e9e14a558f8ab-3d930234869mr14493155ab.0.1745476024913; Wed, 23 Apr 2025
- 23:27:04 -0700 (PDT)
-Date: Wed, 23 Apr 2025 23:27:04 -0700
-In-Reply-To: <67f76c11.050a0220.258fea.0029.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6809d9b8.050a0220.2c0118.0ac6.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs?] kernel BUG in __bch2_str_hash_check_key
-From: syzbot <syzbot+843981bb836d699c07d1@syzkaller.appspotmail.com>
-To: contact@arnaud-lcm.com, joshua@froggi.es, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-syzbot has bisected this issue to:
+Modify the format specifier in snprintf to %u.
 
-commit d37c14ac6f05ec98db9b3d9db424dc73a0f5b1cd
-Author: Joshua Ashton <joshua@froggi.es>
-Date:   Sun Aug 13 17:34:17 2023 +0000
+Fixes: ea244d7d8dce ("rtase: Implement the .ndo_open function")
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ drivers/net/ethernet/realtek/rtase/rtase_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-    bcachefs: bcachefs_metadata_version_casefolding
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 8c902eaeb5ec..5996b13572c9 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1114,7 +1114,7 @@ static int rtase_open(struct net_device *dev)
+ 		/* request other interrupts to handle multiqueue */
+ 		for (i = 1; i < tp->int_nums; i++) {
+ 			ivec = &tp->int_vector[i];
+-			snprintf(ivec->name, sizeof(ivec->name), "%s_int%i",
++			snprintf(ivec->name, sizeof(ivec->name), "%s_int%u",
+ 				 tp->dev->name, i);
+ 			ret = request_irq(ivec->irq, rtase_q_interrupt, 0,
+ 					  ivec->name, ivec);
+-- 
+2.34.1
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10718ecc580000
-start commit:   a79be02bba5c Fix mis-uses of 'cc-option' for warning disab..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=12718ecc580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14718ecc580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3bbffc3b5b4301e1
-dashboard link: https://syzkaller.appspot.com/bug?extid=843981bb836d699c07d1
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11f8c1b3980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=177ce574580000
-
-Reported-by: syzbot+843981bb836d699c07d1@syzkaller.appspotmail.com
-Fixes: d37c14ac6f05 ("bcachefs: bcachefs_metadata_version_casefolding")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
