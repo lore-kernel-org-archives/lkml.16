@@ -1,128 +1,116 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1BC21858E;
-	Thu, 24 Apr 2025 20:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5327A218858;
+	Thu, 24 Apr 2025 20:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745527155; cv=none; b=lp5FFl3FVYyWqqsBu4OeTbUSNNmqDBujb6QiCASo+lnpfiYYRr0XC8ncypP4uwxTzMONJhoTj1FfjsrSGiIrWbb6KuHMDn6qtmc10xP4NGBELfYhRjt5wBZe9/toMk4EN4oA/C3RTX4CZuEIa5cHLOCWxbh7KrWEFF50NSIox8k=
+	t=1745527196; cv=none; b=EJnvyAmI+fLsYvBcjIIAfWYpFMNz6al9wYh+a6xASHxkRAghFNtS1NARpa32Knr2LiOarZJGSLplPkjTeXi+WpXilo7+S1y4b2F52Oop1rWaD5eJ7vFQVHpBVQAA9y0FcL3SFXlbp3mbGC1dqsSCDLTaU02pFTmBrdEsxFkZ8Dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745527155; c=relaxed/simple;
-	bh=nQ3Mzb7NWRMTNOmlLbpDQ1R5Ala77p/VWpIAROQn9Sw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JEQmNInLCItlOJt6lGIJFdeOmqQFu8JjsA2r2k87n/epAk+4drUPsht5RaJ24xmJNKZolO9S+SxTPwEzvw9RnODffzHUR8RLpVWjEX/e24jhmRC9yyCrsrtk/rLghTNq24rZXBL3XAGcRcOG0rkqBmQAONAuN/JMFo3Czk/nx2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0+vlke7; arc=none smtp.client-ip=209.85.128.45
+	s=arc-20240116; t=1745527196; c=relaxed/simple;
+	bh=MOaizA7/cPjk1n7GbvSqBxEZuwZ9s6/Zi44Gr3N7O58=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Z74AFwcrqo4Ht0QV5/y5VdRnQC34Vk2qriTvmk9eq2SLNasO5HnTCiTAtbzBDn01lawX0Xe2EtPpBGyutymL5SQi4HVLixvVmkzfmV5kFZ67zwQdbw4UD1JpcETHEH344Ptsy041x7mptk5utiPbGi0422Kz8XGqVzA6thFGxX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ebkcwyQ6; arc=none smtp.client-ip=209.85.166.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0+vlke7"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso8818535e9.3;
-        Thu, 24 Apr 2025 13:39:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebkcwyQ6"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-86135ad7b4cso43801239f.1;
+        Thu, 24 Apr 2025 13:39:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745527152; x=1746131952; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=r/D/PH0rUFFrYhqeW74Gp1hY0bf9Umd1t66r00ZISm4=;
-        b=C0+vlke7qA3s0HTeg0S+XhFJr1UOSEeAsRDOtv4ca1+Vk4on6EzdvvrOO8R4WpNFRi
-         nuI5hoRVZI3hITPtRuVM073tmjezl13GnZtgPPGzSN1YrDcZ8cajt0RKDypapCWc5Zcz
-         53P+NCv6u4jlw54gPE958GA/BVcmDWNk6CnsTdI05G4EIDZhOvqYDu3n0hi4D5yWX7QV
-         ZlXe2CLmAwTlYIRuTVfNHscEpkV4rbQAsjs95pLo4tBgmlDfXM16EtLAm+Jrw/kqN4Jr
-         kXdChwR6SP3h25QBp+kJ75J64rAL7IqlUBg+/1sCsn3jkNI9R7VpL5beW2uwXQQyi/zJ
-         J0mQ==
+        d=gmail.com; s=20230601; t=1745527194; x=1746131994; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/DIJ7hKZyuv8K+5D97GAZoWCIR3qZehsx72eh6SK2kc=;
+        b=ebkcwyQ6Wnwa1WvTEZ4CyOnKkgQ/xode34lZ82URqqJbuAXAZqfF+2eNAi8nqz5V3Z
+         GKTKyLn7e3At9c3nkb/E8eSHtAdWLW7f/M0Bv4OsJpCMFfKWOwkWR847HYmpIamf0R6d
+         un7w8GiC5Mtce6HCfLfO3I8z3KYSLrd356Wz3xiX6/YaVTip3MF52wHQhg6qwPFsBwPA
+         a82baD9PYhhREVw5SgvufJ0E8BmgKdX0Vk8g87OsoqsPSxP25i0nyNfagwKrxggueOOA
+         BQRy2wk021dhiwBKjZJnCRvnnbejFIo65n7Z9s5NAhdayyoO8Bbge1FQUkaHuw9xhu5Q
+         Q2Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745527152; x=1746131952;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r/D/PH0rUFFrYhqeW74Gp1hY0bf9Umd1t66r00ZISm4=;
-        b=OTcl9PVAeIM1JF02AszpZl7rPCgpbPtJGjrdt9hWva5QtuaHf42c1xdkkKYizB1E8a
-         4BEwKieUiJZpquObz4zDbj6TLDudCFbfrriIOwGaP3bM+BQm8A5IA5lsJ3mNcMeuEqxF
-         oylxwZxZiVGsDAjch9YkRfrp/T6beELDeFmrPJ9lr2ZMFyndZO+y2tu0kQyBfqYaRRJU
-         AFkRCmY+mTS1zOq37erEeMqg3u3RotKiM4ItEXI5iWlS03Ot8SYr+NALqPpMH7FR3+Tr
-         qtjIFu+k1Xh4F0xL1c+/pGZAkenNCX0wrWub9kaV6BSS5HAFtJv4TkJ6pncf5EoyLJLf
-         x4EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdSuZhBxUczXrwCEbjoDud/P5iFgfUDTAdfqBjCA98lk9j3xISfz2cr1cwx35ujaAY5SyZKmFgCD1wJn4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTEieXTu4+mmzP8awylLARcjJPuN6MxddDYA+ng//1wd8+Lvdt
-	cEda4AVx0Zd2newmFH29/wv/6v44SYq2xfM3zi4ccQytNav9hrlj
-X-Gm-Gg: ASbGnctMD9unfC3+tMXP4lq45woyKh2n3qVnky7fhwyYCXIMQm2UiLsltCfvT8BKYE2
-	cS/n0RNAPCfyCyAC+p6K74iwHKV2ftUY/gnot4kkn1DtMrj0BCjAinRxL/U4RFgazXoH9XNOS08
-	C7jmUC7AMHEtmr8kJdgtSDOWMKGBfYJQiz/1DFzt62u13EVbCq3xdtX6gmgvMt1rnwuulVAB8/x
-	AgwtytSZvjKGlRW2573dizkjSehscPa/ez2jpv+ruEYe6KOI6SnLalxaM8B4qK9yPuKKIFTquXA
-	PGIrvVePwiqQ39ZzKrHhyBacodaZRUbie6/0KhavZA==
-X-Google-Smtp-Source: AGHT+IG+6KKZSu15xf0leSuksMynDxPCWVzAORsheH70mD8f61JVwVtDr0F6+30YIXrEJALffEigAw==
-X-Received: by 2002:a05:6000:1acb:b0:39c:1258:2dc9 with SMTP id ffacd0b85a97d-3a06cfc8283mr3557246f8f.58.1745527151654;
-        Thu, 24 Apr 2025 13:39:11 -0700 (PDT)
-Received: from Red ([2a01:cb1d:898:ab00:4a02:2aff:fe07:1efc])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073cc4025sm320188f8f.56.2025.04.24.13.39.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 13:39:11 -0700 (PDT)
-Date: Thu, 24 Apr 2025 22:39:09 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: Remove CRYPTO_ALG_ENGINE bit
-Message-ID: <aAqhbdiLmkHV350S@Red>
-References: <aAop_uMhxVh2l5Fy@Red>
- <aApN64n7i15ArnX4@gondor.apana.org.au>
+        d=1e100.net; s=20230601; t=1745527194; x=1746131994;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/DIJ7hKZyuv8K+5D97GAZoWCIR3qZehsx72eh6SK2kc=;
+        b=YX+L2dzsji46+Y/uOcin6nslEEeSZEI3kGEQKYiIEGS9BL6pthcTwh5de8r53kgwQ3
+         sSJ9ts4pB4EAD5Oox4kX7PRSKqohmO4WCLxkeUnL9vwCN5wAHCLVRXPmPF2p8PpDiNpu
+         +5GIT11qcJEaAYqvUJApkaF/Rt+206Rw1B68ii17paoOpda91RBOXs4kliHDFi109APx
+         OxjPzo5afKVRocOR+6bJYWFrf9Kl9YQoEdqHUM9xb2EzZYOQ3Ps9whxrl3vDTlA/38/4
+         J7/8nSsvTNZmGKYGvbeau1CdPjKSvsa4hgjwpyWRGzsRRfCLxKtBP3blaZJRxtu3khQn
+         yLGw==
+X-Forwarded-Encrypted: i=1; AJvYcCU3YhOwt6zs3Fo6VsbJn4+OyqyQnyqBUL57CIwyUvdR6N7UMEk5fCWEW8m8Uc6qqSSFrEsnP0CezF5+hQ==@vger.kernel.org, AJvYcCXaPnvUHRWPQG5ZYhF0CZSWU7lvxE69mEwaMdNj42vFiEWO3LAOM7d6O/fVx+zLK562tYMNiohmLgEHImb7@vger.kernel.org
+X-Gm-Message-State: AOJu0YwAMguVFlgzRwz7FUChrt/wNaaB9jByujugyMFmZQpX19WxU+cb
+	R3tI0tfbkbnefSavqWwtaR7v7AHiXVN99f4xxoE+6P3qJFI17Xi6CKFj03f+jg2jsYEnh2nHxzZ
+	FEwlEW/zi8xcT7bWoGpaXNarsozQ=
+X-Gm-Gg: ASbGncu3nUAu1KsdayDHsb0bc0qgCfkrHefctXsdEmhA+LBWBXzqOgoiWltISoa8x5q
+	rJidN2bVXj/8aRiMolrGoug06wMLza8JdWXcOFs4emAD5A10aK+VDzF2eifYCLP3UV+ITVJUVfm
+	JZQTmd5YRxcy+rq4ZuwUkCz0Jo0kj9kf7QxMLDn3OLCe0QPn7JhpPBOQ==
+X-Google-Smtp-Source: AGHT+IHHS9wzkcxA+F4lJ1WAQU9GRSkd+HNkRKTeBjFi26lr9f0zQo52sz0xrFxaa5EHjk6OAfBp/Jor6Sa08C0wkx4=
+X-Received: by 2002:a05:6e02:1b0a:b0:3d8:1b0b:c92b with SMTP id
+ e9e14a558f8ab-3d930388f18mr49131045ab.2.1745527194328; Thu, 24 Apr 2025
+ 13:39:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aApN64n7i15ArnX4@gondor.apana.org.au>
+References: <20250424202654.5902-1-a.safin@rosa.ru>
+In-Reply-To: <20250424202654.5902-1-a.safin@rosa.ru>
+From: Eugene Shalygin <eugene.shalygin@gmail.com>
+Date: Thu, 24 Apr 2025 22:39:43 +0200
+X-Gm-Features: ATxdqUET9zyF-iL8O7-Gzyuk4V5RBrVF1T59mNi77O4_oOHZ4zcYNqBMC05oMZs
+Message-ID: <CAB95QAQ7P=sET9nxtp9OQ-kqosHXTcyBKvqwo_aDFuav=OVoEA@mail.gmail.com>
+Subject: Re: [PATCH] hwmon: (asus-ec-sensors) check sensor index in read_string()
+To: Alexei Safin <a.safin@rosa.ru>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+Content-Type: text/plain; charset="UTF-8"
 
-Le Thu, Apr 24, 2025 at 10:42:51PM +0800, Herbert Xu a écrit :
-> On Thu, Apr 24, 2025 at 02:09:34PM +0200, Corentin Labbe wrote:
-> > 
-> > Example on x86_64:
-> > [    4.637589] BUG: kernel NULL pointer dereference, address: 0000000000000000
-> > [    4.637822] #PF: supervisor instruction fetch in kernel mode
-> > [    4.637931] #PF: error_code(0x0010) - not-present page
-> > [    4.638166] PGD 0 P4D 0 
-> > [    4.638359] Oops: Oops: 0010 [#1] SMP NOPTI
-> > [    4.638808] CPU: 0 UID: 0 PID: 64 Comm: virtio1-engine Not tainted 6.15.0-rc1-g63dc06cd12f9 #1 PREEMPT(voluntary) 
-> 
-> This patch should fix the crypto_engine failures:
-> 
-> ---8<---
-> Remove the private and obsolete CRYPTO_ALG_ENGINE bit which is
-> conflicting with the new CRYPTO_ALG_DUP_FIRST bit.
-> 
-> Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Fixes: f1440a90465b ("crypto: api - Add support for duplicating algorithms before registration")
-> Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-> 
+Hi,
 
-Thanks it fixes my crypto hw devices.
-So Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
+maybe return the value of sensor_index, which already contains the
+error code, rather than EINVAL?
 
-But I still got some crash with blake2b:
-+[   54.348477] alg: shash: blake2b-256-neon test failed (wrong result) on test vector 1, cfg="init+update+final aligned buffer"
-+[   54.348525] alg: self-tests for blake2b-256 using blake2b-256-neon failed (rc=-22)
-+[   54.348536] ------------[ cut here ]------------
-+[   54.348545] WARNING: CPU: 1 PID: 909 at crypto/testmgr.c:5871 alg_test+0x644/0x654
-+[   54.348575] alg: self-tests for blake2b-256 using blake2b-256-neon failed (rc=-22)
-+[   54.348583] Modules linked in: blake2b_neon(+) blake2b_generic rmd160 xxhash_generic ccm gcm crypto_null ghash_generic ghash_arm_ce camellia_generic fcrypt pcbc anubis wp512 khazad tea michael_mic arc4 libarc4 cast6_generic cast5_generic cast_common xctr serpent_generic lrw gf128mul twofish_generic twofish_common blowfish_generic blowfish_common md4 md5 tcrypt(+) cfg80211 bluetooth ecdh_generic ecc ctr sun8i_drm_hdmi uas des_generic libdes sun4i_codec snd_soc_core ac97_bus snd_pcm_dmaengine snd_pcm snd_timer snd lima drm_shmem_helper dw_hdmi gpu_sched aes_arm_bs aes_arm soundcore sunxi musb_hdrc sun4i_drm sun4i_frontend sun4i_tcon sun8i_mixer sun8i_ce sun8i_tcon_top drm_dma_helper display_connector
-+[   54.348927] CPU: 1 UID: 0 PID: 909 Comm: cryptomgr_test Not tainted 6.15.0-rc1-g0ba1b8bdf183 #22 NONE 
-+[   54.348941] Hardware name: Allwinner sun8i Family
-+[   54.348947] Call trace: 
-+[   54.348961]  unwind_backtrace from show_stack+0x10/0x14
-+[   54.348989]  show_stack from dump_stack_lvl+0x54/0x68
-+[   54.349010]  dump_stack_lvl from __warn+0x7c/0x128
-+[   54.349035]  __warn from warn_slowpath_fmt+0x124/0x18c
-+[   54.349059]  warn_slowpath_fmt from alg_test+0x644/0x654
-+[   54.349081]  alg_test from cryptomgr_test+0x18/0x38
-+[   54.349097]  cryptomgr_test from kthread+0x10c/0x238
-+[   54.349121]  kthread from ret_from_fork+0x14/0x28
-+[   54.349140] Exception stack(0xf0aa9fb0 to 0xf0aa9ff8)
-+[   54.349151] 9fa0:                                     00000000 00000000 00000000 00000000
-+[   54.349162] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-+[   54.349171] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-+[   54.349177] ---[ end trace 0000000000000000 ]---
+Eugene
 
-Regards
+On Thu, 24 Apr 2025 at 22:27, Alexei Safin <a.safin@rosa.ru> wrote:
+>
+> Prevent a potential invalid memory access when the requested sensor
+> is not found.
+>
+> find_ec_sensor_index() may return a negative value (e.g. -ENOENT),
+> but its result was used without checking, which could lead to
+> undefined behavior when passed to get_sensor_info().
+>
+> Add a proper check to return -EINVAL if sensor_index is negative.
+>
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>
+> Fixes: d0ddfd241e57 ("hwmon: (asus-ec-sensors) add driver for ASUS EC")
+> Signed-off-by: Alexei Safin <a.safin@rosa.ru>
+> ---
+>  drivers/hwmon/asus-ec-sensors.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/hwmon/asus-ec-sensors.c b/drivers/hwmon/asus-ec-sensors.c
+> index d893cfd1cb82..769725ea18db 100644
+> --- a/drivers/hwmon/asus-ec-sensors.c
+> +++ b/drivers/hwmon/asus-ec-sensors.c
+> @@ -839,6 +839,10 @@ static int asus_ec_hwmon_read_string(struct device *dev,
+>  {
+>         struct ec_sensors_data *state = dev_get_drvdata(dev);
+>         int sensor_index = find_ec_sensor_index(state, type, channel);
+> +
+> +       if (sensor_index < 0)
+> +               return -EINVAL;
+> +
+>         *str = get_sensor_info(state, sensor_index)->label;
+>
+>         return 0;
+> --
+> 2.39.5 (Apple Git-154)
+>
