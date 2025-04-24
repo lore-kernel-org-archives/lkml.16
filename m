@@ -1,92 +1,83 @@
-Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5FB51F4613;
-	Thu, 24 Apr 2025 07:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB071F4E57
+	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 07:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745480162; cv=none; b=kN4Gdzingtd6FlhE/4YEXHZ8DS67SBCZ479jBigXquQDcbhdIfqOUNvDSJz0zcEfv1StWa3MQ7rVNRqDkVm8mk2Gp1OBYHw0KW70Id4u4WQaEW0f4Pf0MdwXtvQ8oy/JsVictFfN/czdc5o5eH7/tRER+S1Y9WqVtQSdkCnSRtE=
+	t=1745480188; cv=none; b=Lvf1eQpKWcJqoRYaBnxWS2hMet4e8pPEXfUxknxbVFKLkCtk1HDG1+MVikszHWUZCdow0TqdRoOkNjthLywc1QSPEIivh2+W3oGiHVcFnxnZMXrWDjCX3xqHos4bWI8VP5QroHAb8IVjD4HAR8C8ci37MQIzWjOPa/wHNA1XjCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745480162; c=relaxed/simple;
-	bh=FwqWYvwhnEDcEU87VMGnMcVBX3KVPcm53vG0XZGk0fc=;
+	s=arc-20240116; t=1745480188; c=relaxed/simple;
+	bh=Kq3s++rgvtQWtgsslDUakCjoW1pmvc8YL7a3KpKjKak=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jbocC9WymusU14Xbum0dXxTzf9BYxnW+rXVcZCHFofCOUbzP8fGYWTze2+q5FwnVEzBEiEFFYX/E5rtvAKvaZu2pcPnStQoes1XodvKwBXu2ZmlAtdgr/NXEHZUFLPb8PjqqJmw0ZTqfAO5a2WA2DTnNVGhpjbX41bqIgFkH4+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name; spf=pass smtp.mailfrom=shutemov.name; dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b=sRRfuces; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=cGG6XUO9; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=shutemov.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=shutemov.name
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sb+o2zrvAm4tEwkUOVsB4Bur/sJ32g5eOfO9rUPMixSl40jWElHdfZjH/LA+rVT8m5/FNIMRb8aKpZgpwirVIrlhrN/cD8EcE0md5RRPhvUcgpspK609LPjOWqQ76rbCbGEjVnhVaZppy+ImWLRyzzITXUH77yEX+xA3nQupF+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SKkxg7KQ; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov.name header.i=@shutemov.name header.b="sRRfuces";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cGG6XUO9"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id DB5011380770;
-	Thu, 24 Apr 2025 03:35:58 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Thu, 24 Apr 2025 03:35:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm1; t=1745480158; x=
-	1745566558; bh=JmRRPNiHQTgvCph8cPeBpNXrdoLeFWx/bdL5x/UOzP0=; b=s
-	RRfuces5HnFBihs0V54dB/XKjv3DXB4SBmxIX2yIb9XSvsqufkAEbZgOItp+Rsbb
-	TtFSsMhJQcvrS8hpIQ+HpJnUhPG9nQOlahy4T0cgQk6GKYO/hYRc8kvOSzTrVh2S
-	mcX6y1RxqM2x4DASRb+FxNTm40WC0fDELrYXnCh3yyZN/6qIV/nCrqRC1KD5ZdA3
-	smgm2oQS7riENzrgTjM5uqSr73HLJU1gDnGO24WAffJOnhVf0gLNpeNv2u9cTsFe
-	gCtgnnczqrfupXpERzGDnbI183et8On3dJF1osVmlo/koaufV8+dKlxTq6++W0Zf
-	S9WBY5y7zwI2wr7eyTEkQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1745480158; x=1745566558; bh=JmRRPNiHQTgvCph8cPeBpNXrdoLeFWx/bdL
-	5x/UOzP0=; b=cGG6XUO9SfnPnXzhOyuOP0jkCfqsImm6Q2SlBBGhUoAHZ8XJeY+
-	1HEbPctkra3xjoVzEefia3Do72FQPRbAnGJQWY9uiQWFWBgFjWL9qp/fI3JRxW03
-	N4B3VQhhrzBdoY4uFNAOwc7F8EPyWD+KqKUYoKq0pAumoVo02K1u8fMI+cSrfHu8
-	DGOZzn8joT02I/w8HAKNowmpqiIQut3nSk3IA4HWzfsSETO2CG5CK2iCXI7PW/gQ
-	28r9vMg5e14L6Db2RckLQCDvq8DzsLo/nDzTPBwqdsF+eeDXgaQfggybeBDlyIyC
-	0e6bwIIWD17M3bMF54es2WKmOQOg6SEyTog==
-X-ME-Sender: <xms:3ukJaJkfn20V6v8ezNxYYFxVr3dqY1ocB3vqi5T8-hpZkgmhMW7Y6g>
-    <xme:3ukJaE0GJrpLffvqHjNuKcJ4gHry_oH3QxGTt8ZlCHv52BVycTSwscSnASZszZK0_
-    iEuT1pYUhZht7Nuw10>
-X-ME-Received: <xmr:3ukJaPo0NvjDBzaLw4WEgNAVuypRXe6SVBvrv3NVRyO2_VmZN5ybdWOPLJ6V1BKGiReExw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvgeekkeekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtsfdttddt
-    vdenucfhrhhomhepfdfmihhrihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilh
-    hlsehshhhuthgvmhhovhdrnhgrmhgvqeenucggtffrrghtthgvrhhnpeffvdevueetudfh
-    hfffveelhfetfeevveekleevjeduudevvdduvdelteduvefhkeenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghm
-    ohhvrdhnrghmvgdpnhgspghrtghpthhtohepvdegpdhmohguvgepshhmthhpohhuthdprh
-    gtphhtthhopeihrghnrdihrdiihhgrohesihhnthgvlhdrtghomhdprhgtphhtthhopehp
-    sghonhiiihhnihesrhgvughhrghtrdgtohhmpdhrtghpthhtohepshgvrghnjhgtsehgoh
-    hoghhlvgdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhk
-    vghrnhgvlhdrohhrghdprhgtphhtthhopehkvhhmsehvghgvrhdrkhgvrhhnvghlrdhorh
-    hgpdhrtghpthhtohepgiekieeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhitghk
-    rdhprdgvughgvggtohhmsggvsehinhhtvghlrdgtohhmpdhrtghpthhtohepuggrvhgvrd
-    hhrghnshgvnhesihhnthgvlhdrtghomhdprhgtphhtthhopehkihhrihhllhdrshhhuhht
-    vghmohhvsehinhhtvghlrdgtohhm
-X-ME-Proxy: <xmx:3ukJaJmWCEpYhUScDD-TVhkuLNSZ4pYPDtSyFE_HWF_GjKljGOmBmg>
-    <xmx:3ukJaH1ZRfya3jgmcf1Eti77RH_MyKimpbhXc3AvjPaYVXkPp9aJmQ>
-    <xmx:3ukJaIsEEB5NfgYx39f0zMpkoWP5mzRelJp-GwIajjtFKcnkGS1j4A>
-    <xmx:3ukJaLViqF3ZVED7kXMqrKalTrHepVS57JPnChqeVdGOF06BudZAdQ>
-    <xmx:3ukJaPbW_RqprNhNq0MIPHBUBqBx-F3h4skszIu2MQ1ag42DK5jRxDhw>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 24 Apr 2025 03:35:50 -0400 (EDT)
-Date: Thu, 24 Apr 2025 10:35:47 +0300
-From: "Kirill A. Shutemov" <kirill@shutemov.name>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: pbonzini@redhat.com, seanjc@google.com, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, x86@kernel.org, rick.p.edgecombe@intel.com, 
-	dave.hansen@intel.com, kirill.shutemov@intel.com, tabba@google.com, 
-	ackerleytng@google.com, quic_eberman@quicinc.com, michael.roth@amd.com, david@redhat.com, 
-	vannapurve@google.com, vbabka@suse.cz, jroedel@suse.de, thomas.lendacky@amd.com, 
-	pgonda@google.com, zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
-	ira.weiny@intel.com, chao.p.peng@intel.com
-Subject: Re: [RFC PATCH 00/21] KVM: TDX huge page support for private memory
-Message-ID: <e735cpugrs3k5gncjcbjyycft3tuhkm75azpwv6ctwqfjr6gkg@rsf4lyq4gqoj>
-References: <20250424030033.32635-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SKkxg7KQ"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43d2d952eb1so4018645e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 00:36:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1745480184; x=1746084984; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=n3PlX1g3WvkTquEDOT/3KP8Qz93IfG3BoXc8zl+KOuQ=;
+        b=SKkxg7KQN+GUipELtbxQmRGodx225okkFsHYCn300iw74w+SpPcsjztqDbAuOgFMR7
+         Ip+Q8od6yiUW1qXTwi/p1bMDJ8qd9PTEinec+102rvBfHWF4Xvu+PuFBcNLeZEWGUJtf
+         o2mynkOCYkKXH2260PKGYvZIhe8ORDZiqUSZBfeK6e7sAQ/F3+qpkRgHMMHhTiQDMyei
+         K3EXnOBMHV46BaybzRHDkG4gp3IC8O6LKGqNMNRJz18XPMqjkdWTdTsSaW3KCNOrYSaW
+         E7Aowq9EvzK8exNLMCy7TyNX/lz9qtoRf+t96phPeJYf+AxO4shMOIpIMJfc/7y+QBlF
+         XfaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745480184; x=1746084984;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n3PlX1g3WvkTquEDOT/3KP8Qz93IfG3BoXc8zl+KOuQ=;
+        b=QA6MiLTqTrQrSnCVc0DhXdfkER0EZ2HUQ5SKx4HlbQkG9pGvvkHP/aco4DkVNqT4Ok
+         wtUS4ym3SgcqBz+0+anZuMgC+zQhPtBcgO50AxxEhrVqAguMmpvUj1OwOerexfmMEn7j
+         5lmuhX+KnF7W5VL3Lpoh+/OrNzygQcmLfFVDNnXCtyYuEpv2T0dYIGJa3CE87E2/dZBn
+         YmAikcmELISepc7pH1PsPmrfgpgMbUdZmMooASPiOTXgmzNiW+sdHlfvIOqiBUhn8H59
+         36T9bOlSwEIHwcb4DT1wjRWe8RKgQk0tccBHJKyz2WWq8weRQ53aKCFOJA0NeTH/j2qS
+         +PxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVcO9EfMlRXR+U1wMZn9CFCr6WW8jzsjEvQyLkC6csdwZRBAsq56d+3u5UJXp+Ndu8ASlFZVRydwAdUXtw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhGpmff2M5qy+4T5pNULhhgs21rbUn9eoXnIG7XQ+DaqxA3THo
+	0XQLuB2smkkEkTyIwcjbipd5UjN916SrHfskf2GxhzYwHVAytf744y+FFKLRi8U=
+X-Gm-Gg: ASbGncvuiyjT9SLPRM80qftK0To4/FAF+UVe+EcqK8tgF8TwFBuduzrX8TC+fAl2lCc
+	aT7R2CMiMG0/5uAbkGuq365FX4/0GLDEVO+nsSqXx6eDSXXwOFm86A/iE3Z/4zLitGztXFQH6d0
+	K3OVCxep8YKggikQCrjy6fjAKUoQzn4SUnZKzE/oM7L3DgTFeymif6JNVJWP/dVI6X6OO/SPc8W
+	vZBU9mj/ALr/P2ntMkOZAe+5QWvzFbeg9wPjpxpkvCO3SHWtjDE0564l1DfhHio1wqNgZ99IrY0
+	sv/HsjRRUkE1z/vQ8Zk5/z6Gc3tow0iNQvLSwYHvrr8=
+X-Google-Smtp-Source: AGHT+IFcPSZIM/Eb6N3TfSme3U2cKw8HuWV8KenlAUgSdFXWQVEoFGprh1v+S+HeojSEe2tWbMSH1A==
+X-Received: by 2002:a05:600c:a403:b0:43d:7413:cb3f with SMTP id 5b1f17b1804b1-4409c81864fmr8893135e9.5.1745480184382;
+        Thu, 24 Apr 2025 00:36:24 -0700 (PDT)
+Received: from pathway.suse.cz ([176.114.240.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4409d2d8976sm9253195e9.27.2025.04.24.00.36.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Apr 2025 00:36:23 -0700 (PDT)
+Date: Thu, 24 Apr 2025 09:36:22 +0200
+From: Petr Mladek <pmladek@suse.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Bert Karwatzki <spasswolf@web.de>,
+	"Aithal, Srikanth" <sraithal@amd.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Mateusz Guzik <mjguzik@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	John Ogness <john.ogness@linutronix.de>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	linux-kernel@vger.kernel.org,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: commit dd4cf8c9e1f4 leads to failed boot
+Message-ID: <aAnp9rdPhRY52F7N@pathway.suse.cz>
+References: <20250423115409.3425-1-spasswolf@web.de>
+ <647b9aa4-f46e-4009-a223-78bfc6cc6768@amd.com>
+ <fa8dd394-45c1-48d3-881c-5f3d5422df39@paulmck-laptop>
+ <5a4a3d0d-a2e1-4fd3-acd2-3ae12a2ac7b0@amd.com>
+ <82ff38fc-b295-472c-bde5-bd96f0d144fb@paulmck-laptop>
+ <1509f29e04b3d1ac899981e0adaad98bbc0ee61a.camel@web.de>
+ <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,96 +86,216 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424030033.32635-1-yan.y.zhao@intel.com>
+In-Reply-To: <8ded350c-fc05-4bc2-aff2-33b440f6e2d6@paulmck-laptop>
 
-On Thu, Apr 24, 2025 at 11:00:32AM +0800, Yan Zhao wrote:
-> Basic huge page mapping/unmapping
-> ---------------------------------
-> - TD build time
->   This series enforces that all private mappings be 4KB during the TD build
->   phase, due to the TDX module's requirement that tdh_mem_page_add(), the
->   SEAMCALL for adding private pages during TD build time, only supports 4KB
->   mappings. Enforcing 4KB mappings also simplifies the implementation of
->   code for TD build time, by eliminating the need to consider merging or
->   splitting in the mirror page table during TD build time.
->   
->   The underlying pages allocated from guest_memfd during TD build time
->   phase can still be large, allowing for potential merging into 2MB
->   mappings once the TD is running.
-
-It can be done before TD is running. The merging is allowed on TD build
-stage.
-
-But, yes, for simplicity we can skip it for initial enabling.
-
-> Page splitting (page demotion)
-> ------------------------------
-> Page splitting occurs in two paths:
-> (a) with exclusive kvm->mmu_lock, triggered by zapping operations,
+On Wed 2025-04-23 12:56:53, Paul E. McKenney wrote:
+> On Wed, Apr 23, 2025 at 09:19:56PM +0200, Bert Karwatzki wrote:
+> > Am Mittwoch, dem 23.04.2025 um 11:07 -0700 schrieb Paul E. McKenney:
+> > > On Wed, Apr 23, 2025 at 08:49:08PM +0530, Aithal, Srikanth wrote:
+> > > > On 4/23/2025 7:48 PM, Paul E. McKenney wrote:
+> > > > > On Wed, Apr 23, 2025 at 07:09:42PM +0530, Aithal, Srikanth wrote:
+> > > > > > On 4/23/2025 5:24 PM, Bert Karwatzki wrote:
+> > > > > > > Since linux next-20250422 booting fails on my MSI Alpha 15 Laptop runnning
+> > > > > > > debian sid. When booting kernel message appear on screen but no messages from
+> > > > > > > init (systemd). There are also no logs written even thought emergency sync
+> > > > > > > via magic sysrq works (a message is printed on screen), presumably because
+> > > > > > > / is not mounted. I bisected this (from 6.15-rc3 to next-20250422) and found
+> > > > > > > commit dd4cf8c9e1f4 as the first bad commit.
+> > > > > > > Reverting commit dd4cf8c9e1f4 in next-20250422 fixes the issue.
+> > > > > > 
+> > > > > > 
+> > > > > > Hello,
+> > > > > > 
+> > > > > > On AMD platform as well boot failed starting next-20250422, bisecting the
+> > > > > > issue led me to same commit dd4cf8c9e1f4. I have attached kernel config and
+> > > > > > logs.
+> > > > > 
+> > > > > Thank you all for the bisection and the report!
+> > > > > 
+> > > > > Please check out the predecessor of commit dd4cf8c9e1f4 ("ratelimit:
+> > > > > Force re-initialization when rate-limiting re-enabled"):
+> > > > > 
+> > > > > 13fa70e052dd ("ratelimit: Allow zero ->burst to disable ratelimiting")
+> > > > > 
+> > > > > Then please apply the patch shown below, and let me know what happens?
+> > > > > (Yes, I should have split that commit up...)
+> > > > > 
+> > > > > 							Thanx, Paul
+> > > > > 
+> > > > > ------------------------------------------------------------------------
+> > > > > 
+> > > > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+> > > > > index 04f16b8e24575..13ed636642270 100644
+> > > > > --- a/lib/ratelimit.c
+> > > > > +++ b/lib/ratelimit.c
+> > > > > @@ -35,7 +35,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+> > > > >   	unsigned long flags;
+> > > > >   	int ret;
+> > > > > -	if (!interval || !burst)
+> > > > > +	if (interval <= 0 || burst <= 0)
+> > > > >   		return 1;
+> > > > >   	/*
+> > > > 
+> > > > 
+> > > > I applied above patch on top of 13fa70e052dd ("ratelimit: Allow zero ->burst
+> > > > to disable ratelimiting") [linux-20250423]. This is fixing the boot issue.
+> > > > 
+> > > > Tested-by: Srikanth Aithal <sraithal@amd.com>
+> > > 
+> > > Thank you both, and to Bert for intuiting the correct -next commit!
+> > > 
+> > > Could you please try the next increment, which is this patch, again
+> > > on top of 24ff89c63355 ("ratelimit: Allow zero ->burst to > disable
+> > > ratelimiting")?
+> > > 
+> > > In the meantime, I will expose the version you two just tested to
+> > > -next.
+> > > 
+> > > 							Thanx, Paul
+> > > 
+> > > ------------------------------------------------------------------------
+> > > 
+> > > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+> > > index 04f16b8e24575..8f6c54f719ef2 100644
+> > > --- a/lib/ratelimit.c
+> > > +++ b/lib/ratelimit.c
+> > > @@ -35,8 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+> > >  	unsigned long flags;
+> > >  	int ret;
+> > >  
+> > > -	if (!interval || !burst)
+> > > +	if (interval <= 0 || burst <= 0) {
+> > > +		ret = burst > 0;
+> > >  		return 1;
+> > > +	}
+> > >  
+> > >  	/*
+> > >  	 * If we contend on this state's lock then just check if
+> > 
+> > If you set "ret = burst > 0", but "return 1" this will make no difference
+> > (except in the case of a major compiler bug, probably), as I wrote in my other
+> > email which overlapped yours, this fixes the issue in next-20250422:
+> > 
+> > diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+> > index b5c727e976d2..fc28f6cf8269 100644
+> > --- a/lib/ratelimit.c
+> > +++ b/lib/ratelimit.c
+> > @@ -40,7 +40,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+> >          * interval says never limit.
+> >          */
+> >         if (interval <= 0 || burst <= 0) {
+> > -               ret = burst > 0;
+> > +               ret = 1;
+> >                 if (!(READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED) ||
+> >                     !raw_spin_trylock_irqsave(&rs->lock, flags))
+> >                         return ret;
 > 
->     For normal VMs, if zapping a narrow region that would need to split a
->     huge page, KVM can simply zap the surrounding GFNs rather than
->     splitting a huge page. The pages can then be faulted back in, where KVM
->     can handle mapping them at a 4KB level.
-> 
->     The reason why TDX can't use the normal VM solution is that zapping
->     private memory that is accepted cannot easily be re-faulted, since it
->     can only be re-faulted as unaccepted. So KVM will have to sometimes do
->     the page splitting as part of the zapping operations.
-> 
->     These zapping operations can occur for few reasons:
->     1. VM teardown.
->     2. Memslot removal.
->     3. Conversion of private pages to shared.
->     4. Userspace does a hole punch to guest_memfd for some reason.
-> 
->     For case 1 and 2, splitting before zapping is unnecessary because
->     either the entire range will be zapped or huge pages do not span
->     memslots.
->     
->     Case 3 or case 4 requires splitting, which is also followed by a
->     backend page splitting in guest_memfd.
-> 
-> (b) with shared kvm->mmu_lock, triggered by fault.
-> 
->     Splitting in this path is not accompanied by a backend page splitting
->     (since backend page splitting necessitates a splitting and zapping
->      operation in the former path).  It is triggered when KVM finds that a
->     non-leaf entry is replacing a huge entry in the fault path, which is
->     usually caused by vCPUs' concurrent ACCEPT operations at different
->     levels.
+> You are quite right, your patch does fix the issue that you three say.
 
-Hm. This sounds like funky behaviour on the guest side.
+Honestly, I do not understand what a ratelimit user could cause this
+issue. And I am not able to reproduce it on my test system (x86_64,
+kvm). I mean that my system boots and I see the systemd meesages.
 
-You only saw it in a synthetic test, right? No real guest OS should do
-this.
+> Unfortunately, it prevents someone from completely suppressing output
+> by setting burst to zero.  Could you please try the patch below?
 
-It can only be possible if guest is reckless enough to be exposed to
-double accept attacks.
+I wondered whether some code used a non-initialized struct ratelimit_state.
+I tried the following patch:
 
-We should consider putting a warning if we detect such case on KVM side.
+diff --git a/lib/ratelimit.c b/lib/ratelimit.c
+index b5c727e976d2..f949a18e9c2b 100644
+--- a/lib/ratelimit.c
++++ b/lib/ratelimit.c
+@@ -35,6 +35,10 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+ 	unsigned long flags;
+ 	int ret;
+ 
++	WARN_ONCE(interval <= 0 || burst <= 0,
++		  "Possibly using a non-initilized ratelimit struct with interval:%d, burst:%d\n",
++		  interval, burst);
++
+ 	/*
+ 	 * Non-positive burst says always limit, otherwise, non-positive
+ 	 * interval says never limit.
 
->     This series simply ignores the splitting request in the fault path to
->     avoid unnecessary bounces between levels. The vCPU that performs ACCEPT
->     at a lower level would finally figures out the page has been accepted
->     at a higher level by another vCPU.
-> 
->     A rare case that could lead to splitting in the fault path is when a TD
->     is configured to receive #VE and accesses memory before the ACCEPT
->     operation. By the time a vCPU accesses a private GFN, due to the lack
->     of any guest preferred level, KVM could create a mapping at 2MB level.
->     If the TD then only performs the ACCEPT operation at 4KB level,
->     splitting in the fault path will be triggered. However, this is not
->     regarded as a typical use case, as usually TD always accepts pages in
->     the order from 1GB->2MB->4KB. The worst outcome to ignore the resulting
->     splitting request is an endless EPT violation. This would not happen
->     for a Linux guest, which does not expect any #VE.
 
-Even if guest accepts memory in response to #VE, it still has to serialize
-ACCEPT requests to the same memory block. And track what has been
-accepted.
+And it triggered:
 
-Double accept is a guest bug.
+[    2.874504] ------------[ cut here ]------------
+[    2.875552] Possibly using a non-initilized ratelimit struct with interval:0, burst:0
+[    2.876990] WARNING: CPU: 2 PID: 1 at lib/ratelimit.c:38 ___ratelimit+0x1e8/0x200
+[    2.878435] Modules linked in:
+[    2.879045] CPU: 2 UID: 0 PID: 1 Comm: swapper/0 Tainted: G        W           6.15.0-rc3-next-20250422-default+ #22 PREEMPT(full)  f5d77f8de4aec34e420e26410c34bcb56f692aae
+[    2.881287] Tainted: [W]=WARN
+[    2.882010] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.16.3-2-gc13ff2cd-prebuilt.qemu.org 04/01/2014
+[    2.886452] RIP: 0010:___ratelimit+0x1e8/0x200
+[    2.888405] Code: 00 00 e9 b5 fe ff ff 41 bc 01 00 00 00 e9 f2 fe ff ff 89 ea 44 89 e6 48 c7 c7 f8 40 eb 92 c6 05 b5 4d 0f 01 01 e8 28 a0 de fe <0f> 0b e9 71 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 80 00 00
+[    2.891223] RSP: 0000:ffffcf1340013bd8 EFLAGS: 00010282
+[    2.892033] RAX: 0000000000000000 RBX: ffff8a8cc2bfbaf0 RCX: 0000000000000000
+[    2.893091] RDX: 0000000000000002 RSI: 00000000ffff7fff RDI: 00000000ffffffff
+[    2.894158] RBP: 0000000000000000 R08: 00000000ffff7fff R09: ffff8a8d3fe3ffa8
+[    2.895168] R10: 00000000ffff8000 R11: 0000000000000001 R12: 0000000000000000
+[    2.896150] R13: ffffffff92e08d38 R14: ffff8a8cc369e400 R15: ffff8a8cc2e39f00
+[    2.897138] FS:  0000000000000000(0000) GS:ffff8a8da6f3c000(0000) knlGS:0000000000000000
+[    2.898224] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    2.899181] CR2: 0000000000000000 CR3: 0000000153256001 CR4: 0000000000370ef0
+[    2.901865] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    2.903516] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    2.906593] Call Trace:
+[    2.907143]  <TASK>
+[    2.907582]  __ext4_msg+0x6e/0xa0
+[    2.908132]  ? lock_is_held_type+0xd8/0x130
+[    2.908755]  ext4_check_feature_compatibility+0x15e/0x2c0
+[    2.909427]  __ext4_fill_super+0x543/0x1480
+[    2.910049]  ext4_fill_super+0xcc/0x280
+[    2.910641]  ? setup_bdev_super+0xfc/0x200
+[    2.911265]  ? __pfx_ext4_fill_super+0x10/0x10
+[    2.911882]  get_tree_bdev_flags+0x13e/0x1e0
+[    2.912485]  vfs_get_tree+0x29/0xe0
+[    2.912958]  ? capable+0x3a/0x60
+[    2.913407]  do_new_mount+0x176/0x360
+[    2.913920]  init_mount+0x5a/0x90
+[    2.914389]  do_mount_root+0xa2/0x130
+[    2.914923]  mount_root_generic+0xdd/0x270
+[    2.916127]  ? mount_root+0x147/0x190
+[    2.917989]  prepare_namespace+0x1e0/0x230
+[    2.919124]  kernel_init_freeable+0x1ec/0x200
+[    2.920907]  ? __pfx_kernel_init+0x10/0x10
+[    2.922113]  kernel_init+0x1a/0x130
+[    2.922616]  ret_from_fork+0x31/0x50
+[    2.923093]  ? __pfx_kernel_init+0x10/0x10
+[    2.923612]  ret_from_fork_asm+0x1a/0x30
+[    2.924110]  </TASK>
+[    2.924433] irq event stamp: 1696665
+[    2.924955] hardirqs last  enabled at (1696675): [<ffffffff913fa54e>] __up_console_sem+0x5e/0x70
+[    2.926072] hardirqs last disabled at (1696686): [<ffffffff913fa533>] __up_console_sem+0x43/0x70
+[    2.927149] softirqs last  enabled at (1696612): [<ffffffff9135134e>] handle_softirqs+0x32e/0x400
+[    2.928221] softirqs last disabled at (1696591): [<ffffffff91351509>] __irq_exit_rcu+0xd9/0x150
+[    2.929167] ---[ end trace 0000000000000000 ]---
+[    3.003162] EXT4-fs (vda2): mounted filesystem 587ae802-e330-4059-9b48-d5b845e1075a ro with ordered data mode. Quota mode: none.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+I guess that it happens because the structure is initialized too late,
+see:
+
+static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+{
+
+	[ ... skipping a lot of initialization code ... ]
+
+	/* Enable message ratelimiting. Default is 10 messages per 5 secs. */
+	ratelimit_state_init(&sbi->s_err_ratelimit_state, 5 * HZ, 10);
+	ratelimit_state_init(&sbi->s_warning_ratelimit_state, 5 * HZ, 10);
+	ratelimit_state_init(&sbi->s_msg_ratelimit_state, 5 * HZ, 10);
+
+	[...]
+}
+
+I guess that it is on purpose. They most likely do not want to
+ratelimit the _very initial messages_ printed when the initialization
+fails.
+
+Maybe, it is not a good idea to allow to disable the ratelimit by
+zero burst.
+
+Best Regards,
+Petr
