@@ -1,122 +1,86 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D0AB22128F
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F8522128F;
+	Thu, 24 Apr 2025 09:44:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487855; cv=none; b=giFteBH9flQtpP8mcM4RKe3q6L6IW5NDIhdN/jvUA0babx3fuf5VEnHCmn736IXxO+v1groLkYU7tuFPRNtkc4P0Re7wJ0FL9mXYXjQvwx+EsMaAXubyG0XwuIiqfSdNGy74FJQ6qG+UCaXyoX8Wxevz9IRLnCv5Ua3d7iQygxw=
+	t=1745487887; cv=none; b=QfdX5u9Zro4mShnORvHFcXGQokQgKQZXpX8JBzGQVLJUiPNftnxHqTtdR7h+gBeW7L9zITEJiw7Q409NLGDlaLx8YP5aXV+zPrIasKtOiSw2CUKOyFzo/zTdDU1atYnvFAitaEsZSTx0wK+UQg91ZGLYPh7fC/7STy1L/iGp0IE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487855; c=relaxed/simple;
-	bh=MwdZHCqoOa7UC1GRiFLqeRXN+akYsh2GZzlGgx8yQhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h9pFzgELbHgg2x1SBRWhlVWNhF9j8Vb3UdWJ6okIbEeGn4SMfINPTDvF0CNiTBSRejDJAZDO4SK7cl+OCqfs+UYwAVVwIhaTb+VjksRk2fYWSiuMooxqjGXluTFjv1xq/43f2OIJFSWVmpGDsfGYsEA6M5vrq9X3j7Qt6iKXHwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=H7dXEqnq; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1745487887; c=relaxed/simple;
+	bh=8jRSZqjbmdE01PoeHQIXSWpg7bgymSnumnNJpHBOUIs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=S3V6baktYSgyXDa+HGPAGjnsA3L9kbVTOkKbF9q5N5X9F7B6SxEQi5/iPLJvvkeK9qOkuLLRFl5gYwZlFE8tXo+DGislvAtut+ItxSVxJ8EL1PBmxg8LEiCGxeyXWZwRyAow40O+n+i6KIGcC3o5Ftby0eOJ3I2+BrbF419eywM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PdRFK1PL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="H7dXEqnq"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-224341bbc1dso8955995ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1745487852; x=1746092652; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i6Sm2Sefq4TT11w/sXp14WqAq4etg6y6vhDyNnpKZvo=;
-        b=H7dXEqnq85UBG1ZLfq/XMxX2x04/qFlKc0luv+n52Dslafr/VD0o2zn1cDWRgHzey4
-         Z0JR6JwBr6VBqrRIK1EQriDbmhhaMZCtv9BaSaH8YGGVpcQo4sJRwgVj7yF4oAArqbJq
-         +miyHgRFvH3nMTLLZRgwhGCdg+wrz4go8qhvZz1iAoXCaJY02NLBGn1L2PLz2A6icB8Z
-         2VI+YQin1N1+uZuBEHU/LAcwgMAXLVnggOmwzyIKMMgoxOKpqIitFEFXHJIdy30hj/Dv
-         As+rC3QDDfrZ6imvjbvy9rdKtlLZSbR8VDDCPr7/nl4KUE66JqclOLiRzHOLaiho/aQe
-         pD2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745487852; x=1746092652;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i6Sm2Sefq4TT11w/sXp14WqAq4etg6y6vhDyNnpKZvo=;
-        b=AXgiYnVVBzMpja00OojTBNwH4McHJT+1214r8UBlmCahRgzPJIy34TJ6KqTYNvDosj
-         hKT7grhBFtUx0Zv/5FzpgSF8V5tJv2uuVlqbEhzlsJ77QSzgcD71zcUkmIiwxGZC5vqy
-         AKNi2sD7DqaJiAkR/lyov8fnzfNG9CR5xd4Hy/xCseeMzIfw9BTgfEKpt13gRkjBKY+m
-         QXH13ntm0l5UnR0vs1z98tDI60Y2xgW88GASHpYsPPSB0fBb4E+gTslCozw9YaP//KN1
-         otmGxf9bmDHbDRu4rYaWn6ftGGWq0Vv8azLwh/WzFmjaEFVvGurbovFSXFgwoz2zISgR
-         pxPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXX5reSAsNGRJhN70XTylHRa6pOJnE4GIYy36eex/30g0PrEMGB18cPELHYSOIkoDs4RcChLRg1bvHzm0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7/11d74rnTa2j0YWbvDq1y3TUcdYZXpZz0md7GacxP5ke3+jA
-	aXnwJaumbpVJXOGumYvYJFPKHpPTWpU71RGN71QPsICyIZSRF+VbWGlCuwqj1oU=
-X-Gm-Gg: ASbGncv7t47dy1kgyV7J1rOvBSaN5T/UVMdqELBWAnfFPetQhVuUXRZjgvJvxF4reJy
-	V/ZBQbBzZEaeQO+Gut8CP9hnvoryWe/zkNlwsyocXlkgluMZs8zxc5zEyzx8Wq9eQWBV8pGPr5c
-	2lKR4Wtxt+V6Mn45aS5pHFyixxEoRXS7fN+rsZWOxZR3VaOqHvkDnaYJ3qDALPl9To9T+/QGABz
-	SHIu4MWyVibWP3cfvzKMqyMhq0/838kqeWJdXV1Y7a/aR05pd/oteEEXQNdx+rXpDP4cCo34dES
-	UIo83y+psM+x/CApH/n0suMt8a3V85GUoDYUjpo0emyH1/EB7zbUoOxrHRACrGwPC9aK
-X-Google-Smtp-Source: AGHT+IGukAsBU7Q5nnnMlHg+4I8VzMt30RKwOjK1lfUSNCSc8vF0+ANSupH8FH8jzNSzinh9FvpGVw==
-X-Received: by 2002:a17:902:d102:b0:224:584:6f07 with SMTP id d9443c01a7336-22db3d777d0mr20300035ad.37.1745487852455;
-        Thu, 24 Apr 2025 02:44:12 -0700 (PDT)
-Received: from H7GWF0W104 ([139.177.225.249])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbcc1bsm9003585ad.74.2025.04.24.02.44.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 02:44:12 -0700 (PDT)
-Date: Thu, 24 Apr 2025 17:44:06 +0800
-From: Diangang Li <lidiangang@bytedance.com>
-To: Bart Van Assche <bvanassche@acm.org>
-Cc: Hannes Reinecke <hare@suse.de>, JiangJianJun <jiangjianjun3@huawei.com>,
-	jejb@linux.ibm.com, martin.petersen@oracle.com,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	lixiaokeng@huawei.com, hewenliang4@huawei.com,
-	yangkunlin7@huawei.com, changfengnan@bytedance.com
-Subject: Re: [RFC PATCH v3 00/19] scsi: scsi_error: Introduce new error
- handle mechanism
-Message-ID: <20250424094406.GB48639@bytedance.com>
-References: <20250314012927.150860-1-jiangjianjun3@huawei.com>
- <f35b2485-588b-40c4-a2e7-1bb65fb7a9fc@suse.de>
- <fc08e3a1-da7f-4eb0-a738-cf6b6958316b@acm.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PdRFK1PL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E84FBC4CEEA;
+	Thu, 24 Apr 2025 09:44:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745487887;
+	bh=8jRSZqjbmdE01PoeHQIXSWpg7bgymSnumnNJpHBOUIs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=PdRFK1PLQ/xltWSF3DL6KnH5r0JiK646v1c6sLpqqic0B5Iz0fyJf6y6rjbJMRRzb
+	 qzX5Uysj9YUm1w1vMXPQbVBlP5aNHi/7dlP8+n/YQkQNqP6yiR1iu4LYuFpUo4yV3h
+	 Ptr2f3H7Ot3C2IfHtiIWn6D79HOM+m64+ZIXRsu4aSJ3uzur6ALgpKVzl82ewZ6zle
+	 gZdJzgHLGm3el4tdMYr6AH2r3Jn3nfUjrvzk2JjvMF0XSslvoTwdwsFOJb+MypCafP
+	 7CMVdanV7izDj1+hs3pThFlX2DVD7s8Lvy0L7BFScHzgco6wFw4Qvsz1rWVQg7tK/1
+	 Yi+xRkfsouqVg==
+From: Christian Brauner <brauner@kernel.org>
+To: slava@dubeyko.com,
+	Slava.Dubeyko@ibm.com,
+	glaubitz@physik.fu-berlin.de,
+	linux-fsdevel@vger.kernel.org,
+	Yangtao Li <frank.li@vivo.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	dsterba@suse.cz,
+	torvalds@linux-foundation.org,
+	willy@infradead.org,
+	jack@suse.com,
+	viro@zeniv.linux.org.uk,
+	josef@toxicpanda.com,
+	sandeen@redhat.com,
+	linux-kernel@vger.kernel.org,
+	djwong@kernel.org
+Subject: Re: [PATCH] MAINTAINERS: hfs/hfsplus: add myself as maintainer
+Date: Thu, 24 Apr 2025 11:44:38 +0200
+Message-ID: <20250424-identisch-artig-756caa667a9e@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250423123423.2062619-1-frank.li@vivo.com>
+References: <20250423123423.2062619-1-frank.li@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc08e3a1-da7f-4eb0-a738-cf6b6958316b@acm.org>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1024; i=brauner@kernel.org; h=from:subject:message-id; bh=8jRSZqjbmdE01PoeHQIXSWpg7bgymSnumnNJpHBOUIs=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWRwcXCcvOyy/HBit8F2BqetjeuPesqelHxs4+p2iX//N RV9qbjPHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPJ+MjwT+n2vSJh63+aAur3 HtT937zOXPPzmpYrzIv7lyRV9VrPZmBkuLxjVWfB1AbbW2H6jtuP/NrwqMiqZIrv37kPX/A9ijs cwwIA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 14, 2025 at 08:55:25AM -0700, Bart Van Assche wrote:
-> On 3/14/25 2:01 AM, Hannes Reinecke wrote:
-> > 3. The current EH framework is designed around 'struct scsi_cmnd'.
-> > Which means that the command _initiating_ the error handling can
-> > only be returned once the _entire_ error handling (with all
-> > escalations) is finished. And more often than not, the application
-> > is waiting on that command to be completed before the next I/O
-> > is sent. And that really limits the effectiveness of any improved
-> > error handler; the application ultimatively has to wait for a
-> > host reset before it can contine.
-> > 
-> > But anyway.
-> > We already have a mechanism for asynchronous command aborts;
-> > have you checked if you can adapt if for LUN reset, too?
-> > That would be the easiest solution, I guess ...
+On Wed, 23 Apr 2025 06:34:22 -0600, Yangtao Li wrote:
+> I used to maintain Allwinner SoC cpufreq and thermal drivers and
+> have some work experience in the F2FS file system.
 > 
-> Hmm ... does this mean submitting a LUN reset while concurrently new
-> SCSI commands can be submitted from another thread? I don't think that's
-> safe.
+> I volunteered to maintain the code together with Slava and Adrian.
 > 
-> Additionally, how could a LUN reset help if a SCSI abort doesn't help?
-> If a SCSI abort doesn't help, it probably means that the host controller
-> locked up, e.g. due to a firmware bug. How to recover from this without
-> resetting the host controller?
->
-
-Hi Bart,
-
-Based on our statistic data, nearly 80% of scsi_error_handler cases recover
-successfully after scsi_eh_target_reset. The current solution effectively
-prevents all targets under the host from being blocked, which is particularly
-beneficial for servers with large numbers of HDD data disks.
- 
-> Thanks,
 > 
-> Bart.
 
-Thanks,
+Applied to the vfs.fixes branch of the vfs/vfs.git tree.
+Patches in the vfs.fixes branch should appear in linux-next soon.
 
-Diangang Li
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.fixes
+
+[1/1] MAINTAINERS: hfs/hfsplus: add myself as maintainer
+      https://git.kernel.org/vfs/vfs/c/ed11344c2b80
