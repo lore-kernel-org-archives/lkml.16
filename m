@@ -1,141 +1,115 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB30221F0E
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815A721C9F1;
+	Thu, 24 Apr 2025 09:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745487466; cv=none; b=KjDkLRM1ixhRGopK8c5cp2pNFtWApnLnWt1iJkQGRuXbMokObAULk7gkZenVMbUF7yuBOX36DkyX7JTiV/6hz6zKWiZ5jCYdI7F79bQaStdoUXC8os1+p93GqJY+CGtykrEet/3lpfs6MYkQlSoHBrcoWYIhl8OtLZWchZ1dlTs=
+	t=1745487485; cv=none; b=a039DRthmka7m6HcnZN8HT4r5f8ejfZ2ZW9q/7OVEAQPgysgwVO0eNsDYKTEDN87o6QXjMtdPfVz1cWxIGuf/6K9Wmo1/q5vPAYdF5n5sFUKRY5Avyqvfp1DVqXTc1iSY5tpsccIWt+mLDCayN7S6Y9VSypB2Ja6oONw7i/S0FA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745487466; c=relaxed/simple;
-	bh=US2PVtNLZaFkAuVXr5SpyazmZmP4+ZVR7PKcZZegtjY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r205qnPEkpCR60zavTtmhBZq9feGzVJ5hMrzp0Cqoddi+tomxDR/gLZZa3GdAYYDpnnqE0GoLPzRAF7VVZ0VIvQf06URwb0YO9E+BzsISNWaNDeE8tP+6/loH0y6hnTraSwnNEqZ9SLCOFz6W+kT8Uf36NeCSbP9LqVEXJYUmCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hp8m0nAX; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1745487485; c=relaxed/simple;
+	bh=9kwF46iJORcY9TFOIlZtjm/YNpS0T5SJximkUDFlW60=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=NcyGq/btqzqEBFN9320zCLOpjwJohhf7Ga75TBFEUKzcM7JSMLESBuZ+DPA0sDOPPOTnkKijnsOwJ3jrAWHppagsM8aNM6FC9TKtXunvEgRFffqdE3WLZdFczor+Gbo0PrnnO7gMvqfFsNw+RI5uo3YZJQR4MvfHb+BK2tArLnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=USjHibLV; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hp8m0nAX"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53O0F7cJ010257
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:37:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=DgOyK6Aj8y9bqEdW8CqXJdRw
-	Zh5pW+vbS8PbU9FROaw=; b=hp8m0nAXnk4d4G02FKP6jguqp+UJUzC/82qow50d
-	0L7MigqO8ITXrjG01Ox7yDCBSQMzPp6l8v3ZvSHeEqTiTX0L0jBwionjBfVRlCqZ
-	sUwSw8jI5DLKU5IkJI/q4VZXIKW7BaVSbVObrfeAS8ZdP6oUnaM9W02ZgE2NA5pl
-	GqOXFCdp1mmQ9J/Oziptyfj041KAOufp1hFq6dY8nshF5y/x4/efekkiqUbGLv7z
-	BNVnAYRw4+WgrXvhPsJ2pmkkEdS6g+WlgyIzOuYO9oKFtI2AuThDuFWms17ecRwx
-	1BnG3atS1yT9goBfnBj/5LnBzmk9UTOpkSk0bg8hiIRZDA==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 466jh3n0j4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 09:37:44 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47ae87b5182so14588691cf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 24 Apr 2025 02:37:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745487463; x=1746092263;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DgOyK6Aj8y9bqEdW8CqXJdRwZh5pW+vbS8PbU9FROaw=;
-        b=eSJI5vTF+1KAxR/uzHEKhoPwxsrAZk7ozIVxkCcPRwlDZnAi1UppkhD2QlRW83c4Bu
-         0vXZS2X8EpCwSOX+CYa+SIOW/19Hg906dxQEukfPZfOUWedTcfguC6nZk5KdF0B4mVcX
-         y5i7IJ2cZYFSxeMxB/Vp5/a8zuLbGrtQ0AkSxZusNssn5ArfN4iOh7C/xmupbV5i/IFJ
-         vN2m5sZf+M3vfPtDgXDeZUES0aY7jAr4hiI63UrkwB3f4e+u2E1cl9ZA1P29jo9sQPg9
-         c/kzwK+DSkwUgciBNM2EeKsZcvvhv/P5SS31LRW2ZBvuzWw97zY9Ra+wUXkgexkgNWMS
-         hb+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXVGmNQdDr1Xv5h0I0QKO69oYgrkki5gV3TpumJIuYLdscCtSI4T7Tkd9EIVqbRIbbXlvtsXePCV6oWZzU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4D3oJkvzwcXqfiKfGrGGugmb1KtgUD2Cfr8HWgDWKnblDtMmU
-	7R/B2bFiJBGbZ6MPZEmcur4zeelrYYgf8a7IXw5Y7FiX+wIZ+DOmbbFAyhD3V+X/Y5E759afAMJ
-	YPiKa9O20TPfXyrH1Ow9JsRbXnsC3UjAeRXkuyVBuI82v9UBQ71jylWzD4OVDg2o=
-X-Gm-Gg: ASbGncvZRycK+v/P2MvMABlE2qodbxxycnlsSo6LCwGNyT/Xe5XoBfSFf0s0T+SnqPo
-	yHZl8kWB/v0r7UjzmYaJ9QKyjzMMEa/J90vCdtAMGSUwitkstRAFCfGQwmW98UReKzwyZP0J+Cs
-	e/BmFHjCgf2VEH08M2lyTmCun9Xnc5NDjotU3qYRuAKhOJe1nAEI3DZwFmFm7uNqBIV3ahPwEnV
-	XTA6LgHpZrNHY9KICeSIAdv69ZrA0b6Lkn3hGcctU3a67qD4YhECyYJVW3pw1qK1MD0gRzcrt5g
-	us35AEegp1ADCqGK06JxM3EEDBCLfffiDwgfa8j/fRQonv5bSJAhDPib+m7h4RqoLnFZ01+s8SU
-	=
-X-Received: by 2002:ac8:7e92:0:b0:476:850a:5b34 with SMTP id d75a77b69052e-47eb33a7730mr30466891cf.30.1745487463425;
-        Thu, 24 Apr 2025 02:37:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE1eEvXAeDIBJ+oaIV6NuXCx1ty2W8MF/z7TiaW3cFjO6fXs6cgqkeV3Jv4TZtIDAyz/pl37w==
-X-Received: by 2002:ac8:7e92:0:b0:476:850a:5b34 with SMTP id d75a77b69052e-47eb33a7730mr30466451cf.30.1745487462999;
-        Thu, 24 Apr 2025 02:37:42 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54e7cc9ea4asm166075e87.149.2025.04.24.02.37.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Apr 2025 02:37:41 -0700 (PDT)
-Date: Thu, 24 Apr 2025 12:37:39 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Melody Olvera <melody.olvera@oss.qualcomm.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Wesley Cheng <quic_wcheng@quicinc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v5 04/10] phy: qcom: qmp-combo: Add new PHY sequences for
- SM8750
-Message-ID: <ayfgkx7ep3pglzydno3waipm4xqcbuj4v4go7tvm5j3hu7mswr@ceqbynkuidcb>
-References: <20250421-sm8750_usb_master-v5-0-25c79ed01d02@oss.qualcomm.com>
- <20250421-sm8750_usb_master-v5-4-25c79ed01d02@oss.qualcomm.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="USjHibLV"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A828840E01ED;
+	Thu, 24 Apr 2025 09:37:54 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id XNyt89XR2037; Thu, 24 Apr 2025 09:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1745487470; bh=dzIiNMjy0H4E0Jt/t7PcVoUSltod6To/hbE5oCVaQ8E=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=USjHibLVo3pFcy3R9wI9oTDCVXEZuDWfA+B6EXabjE8FArtrbas5oKoAI+L60Izvy
+	 gY1UqWwwzQLeRjTlu/vmnmJdsWAM3aCa22Al3sLbBPIDqpOCza5SN9zsjgzTAAxwLQ
+	 3WZd9F3Hn+27SUey24ZrxmkvqW7oVnEgUur7mWVo5Pr/rKlHg/BcuW3trgR5PPGzFZ
+	 jF2kBkPnWGm/Gnl91KTLejxm4HdEL+BB0KY8dgQ0p+B3uK6miQGqiq6MW85iVlq29l
+	 4e+wpm24sJkqwxmPXNqB1pv9Di1gHqa39Zetp18F6BQLi6OpvmI9rSk4CIqil9qkZO
+	 jvQGqeEdjWrjKwGfpK0LEWAwSEXG532YHiIUDQJlmST04tm/eZn0ZKB9XCtfiB0AMD
+	 r5ZB8fsqd6ABsy09UFOOxAxOS05OIgXo5q8P57UMmcmBn9daIU274nin8EIQpdCOX3
+	 ldJEdddi6cY5nrABYTx2s4Y98DAEa9W2Dn9NEAcJh7JVdoKXkJM3OGeCRFgqB4MzhX
+	 jcTBhmiifs65vBuLJGcFL0xmfR0wusB89itmTRK3zBAR85ZY5Isf+D+um+2BNYkhVs
+	 NzSbqONuz5EgNeiG52eQXf3TO7yndT2X1fOIIeqX7qEpf/N1HyMACq/V95DsrS0xYg
+	 7wo9DlxYbIOIwLfDy1dbqZ18=
+Received: from [127.0.0.1] (unknown [78.130.214.207])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 87E5640E021A;
+	Thu, 24 Apr 2025 09:37:41 +0000 (UTC)
+Date: Thu, 24 Apr 2025 12:37:38 +0300
+From: Borislav Petkov <bp@alien8.de>
+To: Ard Biesheuvel <ardb@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>
+CC: Ard Biesheuvel <ardb+git@google.com>, linux-kernel@vger.kernel.org,
+ linux-efi@vger.kernel.org, x86@kernel.org, mingo@kernel.org,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ Kevin Loughlin <kevinloughlin@google.com>
+Subject: Re: [PATCH v5 3/6] x86/sev: Split off startup code from core code
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAMj1kXGDyM-W1umDsBGO17+UqczhODBcb73StPELfOAQN2_V2A@mail.gmail.com>
+References: <20250418141253.2601348-8-ardb+git@google.com> <20250418141253.2601348-11-ardb+git@google.com> <cf878810-81ed-3017-52c6-ce6aa41b5f01@amd.com> <CAMj1kXGDyM-W1umDsBGO17+UqczhODBcb73StPELfOAQN2_V2A@mail.gmail.com>
+Message-ID: <C8291B70-FC38-43DF-B0DE-EF20DA769ABA@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250421-sm8750_usb_master-v5-4-25c79ed01d02@oss.qualcomm.com>
-X-Proofpoint-ORIG-GUID: Gketiot9wHPjr13okjOh1DUoBMXi2Ps2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDI0MDA2MyBTYWx0ZWRfX0z4afkLkPorp FuuQ5pJfs2oBBF91ALBc/knm4CYO/yeiXPEVoOMtgd30NjLdaNB9z6hEMOwTjFfkZAppubsQNTl wscsYNSvRGdcoucw2QQLEu8ofBldsvn7xXEWHPrWwwW5vqu2uYtTEYPabhKIhB0gkc1C2Cd6+bz
- zyVIHPZhsOeWBt+F/552HPXTs5jG8av7lRgY+BaMoWj89RiHpm03liunXqmdQR1BKd1L6OcabRy wZDMPI+WsEVUUe64qiheUJjFkoEHXG6c7YaGa90AON1GaczBgMfLLJy1e2s455UUEAjUB/QaBQ9 xjZ+3VEiNsaOKAQZp1hGbDHoj5U2Y13g8iK+bXt3rWHs+mrP4CUPdPgMw2khfPobIHoH9Gty4s+
- /8PxbhjN2K862VzZuDSou7O6CUhG1HvNeUfEhu80DRpi3KpJDHKPXAZ9FOMMN6MoR+u7IQ1x
-X-Authority-Analysis: v=2.4 cv=ELgG00ZC c=1 sm=1 tr=0 ts=680a0668 cx=c_pps a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=9yGODh8E-QI5J-fucZYA:9 a=CjuIK1q_8ugA:10
- a=dawVfQjAaf238kedN5IG:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: Gketiot9wHPjr13okjOh1DUoBMXi2Ps2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.680,FMLib:17.12.80.40
- definitions=2025-04-24_04,2025-04-22_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- malwarescore=0 clxscore=1015 bulkscore=0 phishscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- mlxlogscore=858 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504240063
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 21, 2025 at 03:00:11PM -0700, Melody Olvera wrote:
-> From: Wesley Cheng <quic_wcheng@quicinc.com>
-> 
-> Add new register offsets and PHY values for SM8750. Some of the previous
-> definitions can be leveraged from older PHY versions as offsets within
-> registers have not changed. This also updates the PHY sequence that is
-> recommended after running hardware characterization.
+On April 23, 2025 6:50:00 PM GMT+03:00, Ard Biesheuvel <ardb@kernel=2Eorg> =
+wrote:
+>On Wed, 23 Apr 2025 at 17:22, Tom Lendacky <thomas=2Elendacky@amd=2Ecom> =
+wrote:
+>>
+>> On 4/18/25 09:12, Ard Biesheuvel wrote:
+>> > From: Ard Biesheuvel <ardb@kernel=2Eorg>
+>> >
+>> > Disentangle the SEV core code and the SEV code that is called during
+>> > early boot=2E The latter piece will be moved into startup/ in a subse=
+quent
+>> > patch=2E
+>> >
+>> > Signed-off-by: Ard Biesheuvel <ardb@kernel=2Eorg>
+>>
+>> This patch breaks SNP guests=2E The SNP guest boots, but no longer has
+>> access to the VMPCK keys needed to communicate with the ASP, which is
+>> used, for example, to obtain an attestation report=2E
+>>
+>> It looks like the secrets_pa is defined as static in both startup=2Ec a=
+nd
+>> core=2Ec=2E It is set by a function in startup=2Ec and so when used in =
+core=2Ec
+>> its value will be 0=2E
+>>
+>> The following fixed the issue for me=2E Let me know if it can be squash=
+ed
+>> in or a full patch is needed=2E Although, it likely should be named
+>> sev_secrets_pa since it is no longer static=2E
+>>
+>
+>Thanks for the fix, and apologies for using you as a guinea pig - I've
+>been struggling to get access to SEV-SNP capable hardware, although a
+>suitable EPYC based machine should be arriving in a month or 2=2E
+>
+>I'd assume a proper patch is better, and renaming it to sev_secrets_pa
+>doesn't seem that intrusive=2E But it is ultimately Ingo's call=2E
 
-What is updated? I see only additions.
+Those patches should be applied *after* they have been tested=2E mingo kno=
+ws that but does it anyway=2E :-(
 
-> 
-> Signed-off-by: Wesley Cheng <quic_wcheng@quicinc.com>
-> Signed-off-by: Melody Olvera <melody.olvera@oss.qualcomm.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-qmp-combo.c          | 221 +++++++++++++++++++++
->  drivers/phy/qualcomm/phy-qcom-qmp-pcs-usb-v8.h     |  38 ++++
->  drivers/phy/qualcomm/phy-qcom-qmp-pcs-v8.h         |  32 +++
->  drivers/phy/qualcomm/phy-qcom-qmp-qserdes-com-v8.h |  64 ++++++
->  .../phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v8.h    |  68 +++++++
->  drivers/phy/qualcomm/phy-qcom-qmp.h                |   5 +
->  6 files changed, 428 insertions(+)
-> 
+This rushed patch application and hurried testing and sticking fixes ontop=
+ is completely counterproductive and annoying=2E
 
--- 
-With best wishes
-Dmitry
+--=20
+Sent from a small device: formatting sucks and brevity is inevitable=2E 
